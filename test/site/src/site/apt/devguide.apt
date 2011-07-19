@@ -1,0 +1,20 @@
+How to contribute to iTest
+~~~~~~~~~~~~~~~~~~
+
+  The project is licenced under Apache (ASF) 2.0 license.
+
+  At the moment it is hosted on github.com social coding network.
+
+  If you find this project interesting and want to contribute your time, ideas,
+  code, documentation writing skills, testing cycles - you are very welcome!
+
+  Contributing is easy! Simply go to the {{{http://github.com/cloudera/iTest}project git repository}},
+  fork it and go ahead! GitHub provides a nice collaboration feature called
+  'pull request' where one case easily offer new code to be included into
+  mainstream code base upon successful code review and discussion.
+
+  If you find a problem with iTest, or have a feature request you can
+  {{{https://github.com/cloudera/iTest/issues}open new issue}}
+
+  So, jump on and code with us! It is fun!
+

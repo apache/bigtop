@@ -1,0 +1,28 @@
+#!/bin/sh
+# postinst script for hbase
+
+set -e
+
+case "$1" in
+	configure)
+		install -d -m 0755 -o hbase -g hbase /var/log/hbase
+		install -d -m 0755 -o hbase -g hbase /var/run/hbase
+		rm -f /usr/lib/hbase/logs || :
+		rm -f /usr/lib/hbase/pids || :
+
+		chown hbase:hbase -R /var/run/hbase /var/log/hbase
+		ln -s  /var/log/hbase /usr/lib/hbase/logs
+		ln -s  /var/run/hbase /usr/lib/hbase/pids
+
+	;;
+
+	abort-upgrade|abort-remove|abort-deconfigure)
+	;;
+
+	*)
+		echo "postinst called with unknown argument \`$1'" >&2
+		exit 1
+	;;
+esac
+
+#DEBHELPER#

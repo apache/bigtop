@@ -1,0 +1,17 @@
+hive (0.3.0-0cloudera0.3.0) cloudera; urgency=low
+
+  * New upstream
+
+ -- Todd Lipcon <todd@cloudera.com>  Thu, 04 Jun 2009 15:42:42 -0700
+
+hive (0.3~svn759018-0cloudera0.3.0) cloudera; urgency=low
+
+  * New upstream
+
+ --  <todd@cloudera.com>  Mon, 06 Apr 2009 04:24:57 +0000
+
+hive (0~svn748058-0cloudera0.3.0) cloudera; urgency=low
+
+  * Initial release
+
+ -- Todd Lipcon <todd@cloudera.com>  Thu, 02 Apr 2009 23:36:13 -0400

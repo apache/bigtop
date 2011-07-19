@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <parent>
+      <groupId>com.cloudera.itest</groupId>
+      <artifactId>smoke-tests</artifactId>
+      <version>1.0-cdh3u1-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.cloudera.itest</groupId>
+  <artifactId>hivesmokes.smoke-tests</artifactId>
+  <version>1.1-SNAPSHOT</version>
+  <name>hivesmokes</name>
+
+  <properties>
+    <org.apache.maven-dependency-plugin.groupId>com.cloudera.itest</org.apache.maven-dependency-plugin.groupId>
+    <org.apache.maven-dependency-plugin.artifactId>hivesmoke</org.apache.maven-dependency-plugin.artifactId>
+    <org.apache.maven-dependency-plugin.version>${hive-smoke.version}</org.apache.maven-dependency-plugin.version>
+
+    <HIVE_HOME>${env.HIVE_HOME}</HIVE_HOME>
+    <HBASE_HOME>${env.HBASE_HOME}</HBASE_HOME>
+    <ZOOKEEPER_HOME>${env.ZOOKEEPER_HOME}</ZOOKEEPER_HOME>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.cloudera.itest</groupId>
+      <artifactId>hivesmoke</artifactId>
+      <version>${hive-smoke.version}</version>
+      <type>test-jar</type>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>1.0</version>
+        <executions>
+          <execution>
+            <id>enforce-property</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireProperty>
+                  <property>HIVE_HOME</property>
+                  <message>HIVE_HOME env. variable has to be set</message>
+                </requireProperty>
+                <requireProperty>
+                  <property>HBASE_HOME</property>
+                  <message>HBASE_HOME env. variable has to be set</message>
+                </requireProperty>
+                <requireProperty>
+                  <property>ZOOKEEPER_HOME</property>
+                  <message>ZOOKEEPER_HOME env. variable has to be set</message>
+                </requireProperty>
+              </rules>
+              <fail>true</fail>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>2.7.1</version>
+        <configuration>
+          <systemPropertyVariables>
+            <com.cloudera.itest.hivesmoke.IntegrationTestHiveSmokeBulk.extra_jars>
+            ${HBASE_HOME}/lib/${hbase.jar},${HIVE_HOME}/lib/${hive-hbase-handler.jar},${ZOOKEEPER_HOME}/${zookeeper.jar},${HIVE_HOME}/lib/${guava.jar}
+            </com.cloudera.itest.hivesmoke.IntegrationTestHiveSmokeBulk.extra_jars>
+          </systemPropertyVariables>
+          <forkMode>always</forkMode>
+          <additionalClasspathElements>
+            <additionalClasspathElement>${HIVE_HOME}/lib/${hive-exec.jar}</additionalClasspathElement>
+            <additionalClasspathElement>${HIVE_HOME}/lib/${hive-jdbc.jar}</additionalClasspathElement>
+            <additionalClasspathElement>${HIVE_HOME}/lib/${hive-metastore.jar}</additionalClasspathElement>
+            <additionalClasspathElement>${HIVE_HOME}/lib/${hive-service.jar}</additionalClasspathElement>
+            <additionalClasspathElement>${HIVE_HOME}/lib/libfb303.jar</additionalClasspathElement>
+            <additionalClasspathElement>${HIVE_HOME}/lib/${slf4j-api.jar}</additionalClasspathElement>
+            <additionalClasspathElement>${HIVE_HOME}/lib/${slf4j-log4j12.jar}</additionalClasspathElement>
+          </additionalClasspathElements>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.groovy.maven</groupId>
+        <artifactId>gmaven-plugin</artifactId>
+        <version>1.0</version>
+        <executions>
+          <execution>
+            <id>find-versioned-jar</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <configuration>
+              <source>
+                if (!System.getProperties().keySet().contains('enforcer.skip')) {
+                  project.properties['zookeeper.jar'] =
+                    com.cloudera.itest.JarContent.getJarName(
+                        "${ZOOKEEPER_HOME}", 'zookeeper-.*.jar');
+                  if ( project.properties['zookeeper.jar'] == null ) {
+                    throw new IOException ("zookeeper*.jar isn't found");
+                  }
+                  project.properties['hbase.jar'] =
+                    com.cloudera.itest.JarContent.getJarName(
+                        "${HBASE_HOME}/lib", 'hbase-.*.jar');
+                  if ( project.properties['hbase.jar'] == null ) {
+                    throw new IOException ("hbase*.jar isn't found");
+                  }
+                  [ 'hive-hbase-handler.jar', 'hive-exec.jar', 'hive-jdbc.jar', 'hive-metastore.jar', 'hive-service.jar', 'slf4j-api.jar', 'slf4j-log4j12.jar', 'guava.jar' ].each {
+                    project.properties[it] =
+                      com.cloudera.itest.JarContent.getJarName(
+                          "${HIVE_HOME}/lib", "${it.replaceAll(/.jar$/, '')}-.*\\.jar");
+                    if ( project.properties[it] == null ) {
+                      throw new IOException ("$it isn't found");
+                    }
+                  }
+                }
+              </source>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+    </plugins>
+  </build>
+</project>

@@ -1,0 +1,21 @@
+Source: sqoop
+Section: misc
+Priority: extra
+Maintainer: Alex Newman <newalex@cloudera.com>
+Build-Depends: debhelper (>= 6), ant, sun-java6-jdk, ant-optional, git-core, sed, asciidoc, xmlto
+Standards-Version: 3.8.0
+Homepage: http://www.cloudera.com
+
+Package:  sqoop
+Architecture: all
+Depends: sun-java6-jre, hadoop
+Description: Tool for easy imports and exports of data sets between databases and HDFS
+ Sqoop is a tool that provides the ability to import and export data sets between
+ the Hadoop Distributed File System (HDFS) and relational databases.
+
+Package: sqoop-metastore
+Architecture: all
+Depends: sqoop (= ${source:Version}), adduser
+Description: Shared metadata repository for Sqoop.
+ This optional package hosts a metadata server for Sqoop clients across a network to use.
+

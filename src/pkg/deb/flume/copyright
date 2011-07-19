@@ -1,0 +1,11 @@
+This package was debianized by Alex Newman <newalex@cloudera.com> on
+Mon, 22 Feb 2010 23:07:14 -0800
+
+The Cloudera Distribution for Hadoop is from <http://cloudera.com/distribution>
+
+License:
+    Apache 2.0 - see /usr/share/common-licenses/Apache-2.0
+
+This Debian Package contains the Cloudera Distribution for Hadoop.
+This distribution is Copyright 2009, Cloudera, Inc. and is licensed under
+the Apache 2.0 License as above. See http://cloudera.com/distribution

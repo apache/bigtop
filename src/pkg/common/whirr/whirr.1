@@ -1,0 +1,73 @@
+.\" Process this file with
+.\" groff -man -Tascii whirr.1
+.\"
+.TH whirr 1 "November 2010 " Linux "User Manuals"
+
+.SH NAME
+\fBwhirr\fR \- run software services on cloud infrastructure
+
+.SH SYNOPSIS
+
+.B whirr
+COMMAND [OPTIONS]
+
+.SH DESCRIPTION
+
+Apache Whirr runs services in the cloud. You don't have to worry about the
+idiosyncrasies of each provider.
+
+For more information about Whirr, see
+http://incubator.apache.org/whirr/.
+
+.SH COMMANDS
+
+.IP "version"
+Print the version number and exit.
+.IP "launch-cluster"
+Launch a new cluster running a service.
+.IP "destroy-cluster"
+Terminate and cleanup resources for a running cluster.
+.IP "list-cluster"
+List the nodes in a cluster.
+
+.SH OPTIONS
+
+.IP "--client-cidrs"
+A comma-separated list of CIDR (http://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing)
+blocks. E.g. '208.128.0.0/11,108.128.0.0/11'.
+.IP "--cluster-name"
+The name of the cluster to operate on. E.g. 'hadoopcluster'. The cluster name is
+used to tag the instances in some cloud-specific way. For example, in Amazon it
+is used to form the security group name.
+.IP "--config"
+A filename of a properties file containing option properties. Note that Whirr
+properties specified in this file all have a 'whirr.' prefix.
+.IP "--credential"
+The (secret) cloud credential for your account.
+.IP "--hardware-id"
+The type of hardware to use for the instance. This must be compatible with the image ID.
+.IP "--identity"
+The cloud identity (username) for you account.
+.IP "--image-id"
+The ID of the image to use for instances. If not specified then a vanilla Linux image is chosen.
+.IP "--instance-templates"
+The number of instances to launch for each set of roles. E.g. '1 nn+jt,10 dn+tt'
+means one instance with the roles 'nn' (namenode) and 'jt' (jobtracker), and ten
+instances each with the roles 'dn' (datanode) and 'tt' (tasktracker).
+.IP "--location-id"
+The location to launch instances in. If not specified then an arbitrary location will be chosen.
+.IP "--private-key-file"
+The filename of the private key used to connect to instances. Defaults to '~/.ssh/id_rsa'.
+.IP "--provider"
+The name of the cloud provider. Defaults to 'ec2'.
+.IP "--public-key-file"
+The filename of the public key used to connect to instances. Defaults to '~/.ssh/id_rsa.pub'.
+.IP "--run-url-base"
+The base URL for forming run urls from. Change this to host your own set of
+launch scripts, as explained at http://incubator.apache.org/whirr/faq.html.
+.IP "--service-name"
+The name of the service to use. E.g. 'hadoop'. A list of available services is
+printed when the command is run with no arguments.
+
+.SH COPYRIGHT
+Copyright (C) 2010 The Apache Software Foundation. All rights reserved.

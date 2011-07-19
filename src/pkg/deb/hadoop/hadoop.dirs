@@ -1,0 +1,8 @@
+/usr/lib/hadoop
+/var/log/hadoop
+/usr/bin
+/var/run/hadoop
+/var/lib/hadoop
+/var/lib/hadoop/cache/hadoop
+/etc/default
+/usr/share/doc/hadoop

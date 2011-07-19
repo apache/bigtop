@@ -1,0 +1,3 @@
+sed -re 's#hdfs://.*/-(ext|mr)-1000#hdfs://HADOOP/-\1-1000#' \
+     -e 's#Copying file:.*/T..txt#Copying file:TX.txt#' \
+     -e '/^Deleted hdfs:/d'

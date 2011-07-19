@@ -1,0 +1,135 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <parent>
+    <groupId>com.cloudera.itest</groupId>
+    <artifactId>stacks-common</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <relativePath>../common</relativePath>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.cloudera.itest</groupId>
+  <artifactId>integration-tests</artifactId>
+  <packaging>pom</packaging>
+  <version>1.0-SNAPSHOT</version>
+  <name>hadoop-stack-integration</name>
+
+  <properties>
+    <!--
+      BOM definitions
+    -->
+    <itest-conf.version>1.1-SNAPSHOT</itest-conf.version>
+    <itest-common.version>1.1-SNAPSHOT</itest-common.version>
+    <sqoop-integration.version>1.2.0-cdh3u1-SNAPSHOT</sqoop-integration.version>
+    <!--
+      End of BOM definitions
+    -->
+  </properties>
+
+  <scm>
+    <connection>scm:git:git://github.com/cloudera/stacks.git</connection>
+  </scm>
+
+  <!--
+    List of modules which should be executed as a part of stack testing run
+  -->
+  <modules>
+    <module>sqoop</module>
+  </modules>
+
+  <dependencyManagement>
+    <dependencies>
+      <!-- Import configuration resources for the stack validation -->
+      <dependency>
+        <groupId>com.cloudera.itest</groupId>
+        <artifactId>smoke-tests-conf</artifactId>
+        <version>${itest-conf.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <!-- Import of iTest artifact serving out-of-the-jar convenience methods -->
+      <dependency>
+        <groupId>com.cloudera.itest</groupId>
+        <artifactId>itest-common</artifactId>
+        <version>${itest-common.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <!-- We HAVE to enforce use of this particular version of the launcher
+             so it isn't overridden by any of transitive dependencies later on
+        -->
+        <groupId>org.apache.ant</groupId>
+        <artifactId>ant-launcher</artifactId>
+        <version>1.8.2</version>
+      </dependency>
+      <!-- Gmaven plugin enables a lot of runtime flexibility for us -->
+      <dependency>
+        <groupId>org.codehaus.groovy.maven.runtime</groupId>
+        <artifactId>gmaven-runtime-1.6</artifactId>
+        <version>1.0</version>
+      </dependency>
+
+<!--
+  BOM definitions
+-->
+<!-- Test artifacts -->
+      <dependency>
+        <groupId>com.cloudera.itest</groupId>
+        <artifactId>sqoop-integration</artifactId>
+        <version>${sqoop-integration.version}</version>
+        <type>test-jar</type>
+        <scope>test</scope>
+      </dependency>
+<!--
+  End of BOM definitions
+-->
+
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <!-- We have to be configured in order to function properly -->
+    <dependency>
+      <groupId>com.cloudera.itest</groupId>
+      <artifactId>smoke-tests-conf</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!-- Turn them on for all children -->
+    <dependency>
+      <groupId>com.cloudera.itest</groupId>
+      <artifactId>itest-common</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!-- Gmaven plugin enables a lot of runtime flexibility for us -->
+    <dependency>
+      <groupId>org.codehaus.groovy.maven.runtime</groupId>
+      <artifactId>gmaven-runtime-1.6</artifactId>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <!-- Enabling gmaven plugin -->
+      <plugin>
+        <groupId>org.codehaus.groovy.maven</groupId>
+        <artifactId>gmaven-plugin</artifactId>
+      </plugin>
+      <!-- Enabling tests execution  -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+      </plugin>
+
+      <!--Let's skip unit tests all together for there are none-->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.7</version>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+
+    </plugins>
+  </build>
+</project>

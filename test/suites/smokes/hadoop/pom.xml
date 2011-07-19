@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+      <groupId>com.cloudera.itest</groupId>
+      <artifactId>smoke-tests</artifactId>
+      <version>1.0-cdh3u1-SNAPSHOT</version>
+  </parent>
+  <groupId>com.cloudera.itest</groupId>
+  <artifactId>hadoopsmokes.smoke-tests</artifactId>
+  <version>1.1-SNAPSHOT</version>
+  <name>hadoopsmokes</name>
+
+  <properties>
+    <org.apache.maven-dependency-plugin.groupId>com.cloudera.itest</org.apache.maven-dependency-plugin.groupId>
+    <org.apache.maven-dependency-plugin.artifactId>hadoopsmoke</org.apache.maven-dependency-plugin.artifactId>
+    <org.apache.maven-dependency-plugin.version>${hadoop-smoke.version}</org.apache.maven-dependency-plugin.version>
+    <org.apache.maven-dependency-plugin.output>${project.build.directory}</org.apache.maven-dependency-plugin.output>
+    <org.apache.maven-dependency-plugin.pattern>**/*</org.apache.maven-dependency-plugin.pattern>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-core</artifactId>
+    </dependency>
+    <!-- explicit dependency is needed to pull down transient deps. such as hadoop-examples -->
+    <dependency>
+      <groupId>${org.apache.maven-dependency-plugin.groupId}</groupId>
+      <artifactId>${org.apache.maven-dependency-plugin.artifactId}</artifactId>
+      <version>${hadoop-smoke.version}</version>
+      <type>test-jar</type>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>2.7.1</version>
+        <configuration>
+          <forkMode>always</forkMode>
+          <systemPropertyVariables>
+            <test.cache.data>
+              ${project.build.directory}/clitest_data
+            </test.cache.data>
+          </systemPropertyVariables>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

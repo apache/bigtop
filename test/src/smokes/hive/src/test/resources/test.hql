@@ -1,0 +1,16 @@
+DROP TABLE u_data;
+
+CREATE TABLE u_data (
+  userid INT,
+  movieid INT,
+  rating INT,
+  unixtime STRING)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\t'
+STORED AS TEXTFILE;
+
+LOAD DATA LOCAL INPATH 'ml-data/u.data'
+OVERWRITE INTO TABLE u_data;
+
+INSERT OVERWRITE DIRECTORY '/tmp/count'
+SELECT COUNT(1) FROM u_data;

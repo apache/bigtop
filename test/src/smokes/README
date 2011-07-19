@@ -1,0 +1,17 @@
+This repository contains Hadoop stack stack tests such as smokes, load, etc.
+
+Release Notes:
+
+  at the moment release process is pretty awkward. The following needs to be taken into consideration
+ 
+  1) Preparation needs to have extra arguments passed along:
+       % mvn release:prepare -Darguments="-DskipTests -DskipITs"
+  2) Because two different projects (with separate pom files) are kept in the same repository you need to run
+       % mvn release:perform -Darguments="-DskipTests -DskipITs"
+     and after it fails 
+       % cd target/checkout
+       % mvn deploy -DperformRelease -DskipTests -DskipITs
+     At this point release plugin has prepared everything and it can't just find proper pom.xml
+  3) Longevity isn't a module of smokes thus a manual changes of
+     artifacts versions and amendment of git commits (initially done by
+     release pluging in 1) above) is required. This will be fixes soon. (FIXME)

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <parent>
+      <groupId>com.cloudera.itest</groupId>
+      <artifactId>smoke-tests</artifactId>
+      <version>1.0-cdh3u1-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.cloudera.itest</groupId>
+  <artifactId>hbasesmokes.smoke-tests</artifactId>
+  <version>1.1-SNAPSHOT</version>
+  <name>hbasesmokes</name>
+
+  <properties>
+    <org.apache.maven-dependency-plugin.groupId>com.cloudera.itest</org.apache.maven-dependency-plugin.groupId>
+    <org.apache.maven-dependency-plugin.artifactId>hbasesmoke</org.apache.maven-dependency-plugin.artifactId>
+    <org.apache.maven-dependency-plugin.version>${hbase-smoke.version}</org.apache.maven-dependency-plugin.version>
+
+    <HBASE_HOME>${env.HBASE_HOME}</HBASE_HOME>
+    <ZOOKEEPER_HOME>${env.ZOOKEEPER_HOME}</ZOOKEEPER_HOME>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.cloudera.itest</groupId>
+      <artifactId>hbasesmoke</artifactId>
+      <version>${hbase-smoke.version}</version>
+      <type>test-jar</type>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>1.0</version>
+        <executions>
+          <execution>
+            <id>enforce-property</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireProperty>
+                  <property>HBASE_HOME</property>
+                  <message>HBASE_HOME env. variable has to be set</message>
+                </requireProperty>
+                <requireProperty>
+                  <property>ZOOKEEPER_HOME</property>
+                  <message>ZOOKEEPER_HOME env. variable has to be set</message>
+                </requireProperty>
+              </rules>
+              <fail>true</fail>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>2.7.1</version>
+        <configuration>
+          <systemPropertyVariables>
+            <com.cloudera.itest.hbasesmoke.TestHbasePigSmoke.extra_jars>
+            ${ZOOKEEPER_HOME}/${zookeeper.jar}:${HBASE_HOME}/lib/${hbase.jar}:${HBASE_HOME}/lib/guava-r06.jar
+            </com.cloudera.itest.hbasesmoke.TestHbasePigSmoke.extra_jars>
+          </systemPropertyVariables>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.groovy.maven</groupId>
+        <artifactId>gmaven-plugin</artifactId>
+        <version>1.0</version>
+        <executions>
+          <execution>
+            <id>find-versioned-jar</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <configuration>
+              <source>
+                if (!System.getProperties().keySet().contains('enforcer.skip')) {
+                  project.properties['zookeeper.jar'] =
+                    com.cloudera.itest.JarContent.getJarName(
+                        "${ZOOKEEPER_HOME}", 'zookeeper-.*.jar');
+                  if ( project.properties['zookeeper.jar'] == null ) {
+                    throw new IOException ("zookeeper*.jar isn't found");
+                  }
+                  project.properties['hbase.jar'] =
+                    com.cloudera.itest.JarContent.getJarName(
+                        "${HBASE_HOME}/lib", 'hbase-.*.jar');
+                  if ( project.properties['hbase.jar'] == null ) {
+                    throw new IOException ("hbase*.jar isn't found");
+                  }
+                }
+              </source>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

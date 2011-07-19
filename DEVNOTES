@@ -1,0 +1,5 @@
+1. Debian
+  1.0. apt-get install -y git subversion build-essential dh-make debhelper devscripts ant ant-optional autoconf automake subversion liblzo2-dev libz-dev sharutils libfuse-dev reprepro
+
+2. RedHat
+  2.0 yum install -y git subversion fuse-devel fuse fuse-libs

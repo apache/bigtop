@@ -1,0 +1,8 @@
+sed -e 's#hdfs://[^/]*/#HDFS_URL/#' \
+    -e 's#createTime:[0-9][0-9]*#createTime:NOW#g' \
+    -e 's#transient_lastDdlTime=[0-9][0-9]*#transient_lastDdlTime=NOW#g' \
+    -e '/Map Operator Tree:/,/Reduce Output Operator/d' \
+    -e '/^  (TOK_QUERY/d' \
+    -e '/Detailed Table Information/s#owner:[^,]*,#owner:OWNER,#' \
+    -e 's#name: default.hbase_table_3#name: HBASE_TABLE#' \
+    -e 's#name: hbase_table_3#name: HBASE_TABLE#'

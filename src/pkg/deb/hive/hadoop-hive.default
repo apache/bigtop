@@ -1,0 +1,5 @@
+# The port for Hive @HIVE_DAEMON@ daemon to listen to.
+# Unfortunatelly, there is no way to specify the interfaces 
+# to which the daemon binds.
+#
+# PORT=12345

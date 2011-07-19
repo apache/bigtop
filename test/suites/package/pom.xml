@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+      <groupId>com.cloudera.itest</groupId>
+      <artifactId>smoke-tests</artifactId>
+      <version>1.0-cdh3u1-SNAPSHOT</version>
+  </parent>
+  <groupId>com.cloudera.itest</groupId>
+  <artifactId>packagesmokes.smoke-tests</artifactId>
+  <version>1.1-SNAPSHOT</version>
+  <name>packagesmokes</name>
+
+  <!-- FIXME: we really have to have a way to bootstrap from a Maven repo  -->
+  <!--        -Dproject.pom=com.cloudera.itest:packagesmokes:1.0-SNAPSHOT  -->
+  <repositories>
+    <repository>
+      <id>cloudera-snapshot</id>
+      <name>Cloudera Snapshots</name>
+      <url>https://repository.cloudera.com/content/repositories/testsnaps</url>
+    </repository>
+    <repository>
+      <id>cloudera-rcs</id>
+      <name>Cloudera RCS</name>
+      <url>https://repository.cloudera.com/content/groups/cdh-releases-rcs</url>
+    </repository>
+  </repositories>
+
+  <properties>
+    <cdh.repo.host>archive.cloudera.com</cdh.repo.host>
+    <cdh.repo.version>3</cdh.repo.version>
+
+    <org.apache.maven-dependency-plugin.groupId>com.cloudera.itest</org.apache.maven-dependency-plugin.groupId>
+    <org.apache.maven-dependency-plugin.artifactId>packagesmoke</org.apache.maven-dependency-plugin.artifactId>
+    <org.apache.maven-dependency-plugin.version>${package-smoke.version}</org.apache.maven-dependency-plugin.version>
+    <org.apache.maven-dependency-plugin.output>${project.build.directory}</org.apache.maven-dependency-plugin.output>
+
+    <org.apache.maven-failsafe-plugin.testInclude>**/PackagesSuite*</org.apache.maven-failsafe-plugin.testInclude>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.cloudera.itest</groupId>
+      <artifactId>packagesmoke</artifactId>
+      <version>${package-smoke.version}</version>
+      <type>test-jar</type>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <configuration>
+          <systemPropertyVariables>
+             <cdh.repo.host>${cdh.repo.host}</cdh.repo.host>
+             <cdh.repo.version>${cdh.repo.version}</cdh.repo.version>
+          </systemPropertyVariables>
+        </configuration>
+      </plugin>
+
+      <!-- Enabling dependency plugin -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+</project>

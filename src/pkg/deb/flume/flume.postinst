@@ -1,0 +1,22 @@
+#!/bin/sh
+# postinst script for flume
+
+set -e
+
+case "$1" in
+    configure)
+        # Install config alternatives
+        update-alternatives  --install /etc/flume/conf flume-conf /etc/flume/conf.empty 30
+
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+#DEBHELPER#

@@ -1,0 +1,8 @@
+export HADOOP_HOME=/usr/lib/hadoop
+export HADOOP_NAMENODE_USER=hdfs
+export HADOOP_SECONDARYNAMENODE_USER=hdfs
+export HADOOP_DATANODE_USER=hdfs
+export HADOOP_JOBTRACKER_USER=mapred
+export HADOOP_TASKTRACKER_USER=mapred
+export HADOOP_IDENT_STRING=hadoop
+export HADOOP_PID_DIR=/var/run/hadoop

@@ -1,0 +1,39 @@
+#!/bin/sh
+# postinst script for hive
+
+set -e
+
+case "$1" in
+    configure)
+        # Install config alternatives
+        update-alternatives  --install /etc/hive/conf hive-conf /etc/hive/conf.dist 30
+
+        # Set up directories on HDFS
+        # TODO(todd) should this stuff be something like "hive create-warehosue"?
+        su -s /bin/bash - ${hadoop_username} -c 'hadoop fs -mkdir       /tmp' 1>/dev/null 2>/dev/null || :
+        su -s /bin/bash - ${hadoop_username} -c 'hadoop fs -mkdir       /user/hive/warehouse' 1>/dev/null 2>/dev/null || :
+        su -s /bin/bash - ${hadoop_username} -c 'hadoop fs -chmod g+w   /tmp' 1>/dev/null 2>/dev/null || :
+        su -s /bin/bash - ${hadoop_username} -c 'hadoop fs -chmod g+w   /user/hive/warehouse' 1>/dev/null 2>/dev/null || :
+
+        # Ensure sticky bit on metastore dir - debian likes this to be done in postinst rather than the package
+        chmod 1777 /var/lib/hive/metastore
+
+        if [ "$2" ]; then
+          old_metastore="/var/lib/hive/metastore/\${user.name}_db"
+          new_metastore="/var/lib/hive/metastore/metastore_db"
+          if [ -d $old_metastore ]; then
+            mv $old_metastore $new_metastore || echo "Failed to automatically rename old metastore. Make sure to resolve this before running Hive."
+          fi
+        fi
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+#DEBHELPER#

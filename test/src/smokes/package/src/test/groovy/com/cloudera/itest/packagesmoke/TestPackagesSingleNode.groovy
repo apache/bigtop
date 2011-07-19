@@ -1,0 +1,259 @@
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.cloudera.itest.packagesmoke
+
+import org.junit.BeforeClass
+import org.junit.Test
+import org.junit.rules.ErrorCollector
+import org.junit.Rule
+import static org.junit.Assert.assertTrue
+import static org.hamcrest.CoreMatchers.equalTo
+import org.junit.runner.RunWith
+import org.junit.runners.Parameterized.Parameters
+import org.junit.AfterClass
+
+import com.cloudera.itest.pmanager.PackageInstance
+import com.cloudera.itest.junit.OrderedParameterized
+import com.cloudera.itest.junit.OrderedParameterized.RunStage
+
+import static com.cloudera.itest.shell.OS.linux_flavor
+import com.cloudera.itest.shell.Shell
+
+@RunWith(OrderedParameterized.class)
+class TestPackagesSingleNode extends PackageTestCommon {
+  private static PackageTestRepoMgr repo;
+  // Ideally, we would want to have PackageInstance implementation be efficient in how it manages different
+  // objects representing the same package. That would allow us to have PackageInstance per testcase and
+  // not worry about managing it ourselves via the following static Map. For now, however, we rely on
+  // constructors being synchronized and thus inserting just one copy of PackageInstance for each package we test
+  private static Map<String, PackageInstance> pkgs = [:];
+  private static String selectedTests = System.getProperty("cdh.packages.test", ".");
+  private static String skippedTests = System.getProperty("cdh.packages.skip", "\$^");
+
+  private Node golden;
+
+  static {
+    // repo = new PackageTestRepoMgr("3", "", "http://nightly.cloudera.com/debian/",
+    //                                       "http://nightly.cloudera.com/debian/archive.key");
+    repo = new PackageTestRepoMgr();
+    TestPackagesSingleNode.pm = repo.getPm();
+  }
+
+  @Rule
+  public ErrorCollector errors = new ErrorCollector();
+
+  @BeforeClass
+  public static void setUp() {
+    tryOrFail({repo.addRepo()}, 2, "adding repository failed");
+    tryOrFail({(repo.getPm().refresh() == 0)}, 1, "refreshing repository failed");
+  }
+
+  @AfterClass
+  public static void tearDown() {
+    repo.removeRepo();
+  }
+
+  @Parameters
+  public static Map<String, Object[]> generateTests() {
+    String type = TestPackagesSingleNode.pm.getType();
+    String arch = (new Shell()).exec("uname -m").getOut().get(0).replaceAll(/i.86/,"i386").replaceAll(/x86_64/,"amd64");
+    String archTranslated = (type == "apt") ? "" : ((arch == "amd64") ? ".x86_64" : ".${arch}");
+    def config = new XmlParser().parse(TestPackagesSingleNode.class.getClassLoader().
+                                       getResourceAsStream("package_data_${type}.xml"));
+
+    Map<String, Object[]> res = [:];
+
+    config.children().each {
+      String name = it.name();
+
+      if ((name =~ /\.(amd64|i386)$/).find()) {
+        name = (name =~ "${arch}\$").find() ? name.replaceAll("\\.${arch}\$", archTranslated) : null;
+
+        // TODO: this is a total hack
+        if ((name =~ /\.i386$/).find() && linux_flavor == "RedHatEnterpriseServer") {
+          name = null;
+        }
+      }
+
+      if (name != null && (name =~ selectedTests).find() && !(name =~ skippedTests).find()) {
+        res[name] = ([name, it] as Object[]);
+      }
+    };
+
+    return res;
+  }
+
+  public TestPackagesSingleNode(String pkgName, Node pkgGolden) {
+    result = errors;
+    name = pkgName;
+    golden = pkgGolden;
+    // hopefully the following line will go away soon, once PackageInstance becomes more sophisticated
+    synchronized (pkgs) { pkgs[name] = pkgs[name] ?: PackageInstance.getPackageInstance(pm, name); }
+    pkg = pkgs[name];
+  }
+
+  @RunStage(level=-3)
+  @Test
+  synchronized void testRemoteMetadata() { 
+    if (!isUpgrade()) {
+      if (pkg.isInstalled()) {
+        checkThat("package $name is alredy installed and could not be removed",
+                  pkg.remove(), equalTo(0));
+      }
+
+      checkRemoteMetadata(getMap(golden.metadata), false);
+    }
+  }
+
+  @RunStage(level=-2)
+  @Test
+  synchronized void testPackageInstall() {
+    // WARNING: sometimes packages do not install because the server is busy
+    int i;
+    for (i=3; pkg.install() && i>0; i--);
+    checkThat("could only install package $name on the ${3-i} try",
+              i, equalTo(3));
+
+    // TODO: we need to come up with a way to abort any further execution to avoid spurious failures
+
+    checkThat("package $name is expected to be installed",
+              pm.isInstalled(pkg), equalTo(true));
+
+    pkg.refresh();
+  }
+
+  @RunStage(level=-1)
+  @Test
+  void testPackageUpgrade() {
+    if (isUpgrade()) {
+      checkThat("upgrade sequence on a package $name failed to be executed",
+                CDHUpgradeSequence.execute(name, System.getProperty("cdh.prev.repo.version"), "3"), equalTo(0));
+    }
+  }
+
+  @Test
+  void testRepoFile() {
+    // TODO: not sure what level of textual comparison of repo files do we actually need to implement
+  }
+
+  @Test
+  void testPulledDeps() {
+    checkPulledDeps(getMap(golden.deps));
+  }
+
+  @Test
+  void testPackageMetadata() {
+    checkMetadata(getMap(golden.metadata));
+  }
+
+  @Test
+  void testPackageContent() {
+    Map files = getMap(golden.content);
+    checkFiles(files.config, files.doc, files.file);
+  }
+
+  @Test
+  void testPackageServices() {
+    checkServices(getMap(golden.services));
+  }
+
+  @Test
+  void testUsers() {
+    checkUsers(getMap(golden.users));
+  }
+
+  @Test
+  void testGroups() {
+    checkGroups(getMap(golden.groups));
+  }
+
+  @Test
+  void testAlternatives() {
+    checkAlternatives(getMap(golden.alternatives));
+  }
+
+  @RunStage(level=1)
+  @Test
+  void testPackageRemove() {
+    checkRemoval();
+  }
+
+  static void tryOrFail(Closure cl, int retries, String fail) {
+    while (!cl.call()) {
+      retries--;
+      assertTrue(fail, retries > 0);
+      sleep(3001);
+    }
+  }
+
+  Map getMap(NodeList nodeList) {
+    switch (nodeList.size()) {
+      case 0: return [:];
+      case 1: return getMapN(nodeList.get(0));
+      default: return null;  // poor man's XML validation
+    }
+  }
+
+  Map getMapN(Node node) {
+    String packagerType = pm.getType();
+    Map res = [:];
+                                 node.attributes()
+    node.children().each {
+      String key = it.name().toString();
+      if (key == "tag" && it.attributes()["name"] != null) { // <tag name="foo"/> -> <foo/>
+        key = it.attributes()["name"];
+      }
+      def value = null;
+      if (it.children().size() == 0) {  // empty tags <foo/>
+        Map attr = it.attributes();
+        value = (attr.size() > 0) ? attr : key;
+      } else if (it.children().size() == 1 && it.children().get(0) instanceof java.lang.String) { // text tags <foo>bar</foo>
+        value = it.text();
+      } else if (["apt", "yum", "zypper"].contains(key)) { // poor man's XML filtering
+        res.putAll((packagerType == key) ? getMapN(it) : [:]);
+      } else {
+        value = getMapN(it);
+      }
+
+      // this is a little bit more tricky than it has to be :-(
+      if (value != null) {
+        // turn tags with a property name into a tag of its own <tag name="foo"> -> <tag><foo name="foo"</foo></tag>
+        if (value instanceof Map && value.name != null) {
+          Map tmpMap = [:];
+          tmpMap.put(value.name, value);
+          value = tmpMap;
+        }
+        if (res[key] == null) {
+          res[key] = value;
+        } else {
+          if (res[key] instanceof Map && value instanceof Map) {
+            res[key].putAll(value);
+          } else {
+          if (!(res[key] instanceof List)) {
+            res[key] = [res[key]];
+          }
+          res[key].add(value);
+          }
+        }
+      }
+    }
+
+    return res;
+  }
+}

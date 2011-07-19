@@ -1,0 +1,48 @@
+.\" Process this file with
+.\" groff -man -Tascii zookeeper.1
+.\"
+.TH zookeeper 1 "November 2010 " Linux "User Manuals"
+
+.SH NAME
+\fBzookeeper\fR \- a high-performance coordination service for distributed applications
+
+.SH SYNOPSIS
+
+.B zookeeper-client
+[-server host:port(,host:port)*] COMMAND [OPTIONS]
+.RS 0
+.B zookeeper-server
+<start|stop|restart|status>
+
+.SH DESCRIPTION
+
+Apache ZooKeeper is a centralized service for maintaining configuration information,
+naming, providing distributed synchronization, and providing group services.
+All of these kinds of services are used in some form or another by distributed
+applications. Each time they are implemented there is a lot of work that goes
+into fixing the bugs and race conditions that are inevitable. Because of the
+difficulty of implementing these kinds of services, applications initially
+usually skimp on them, which make them brittle in the presence of change and
+difficult to manage. Even when done correctly, different implementations of
+these services lead to management complexity when the applications are deployed.
+
+For more information about ZooKeeper, see
+.RS 0
+http://hadoop.apache.org/zookeeper/.
+
+To find the list of available commands and options for \fBzookeeper-client\fR type:
+\fBzookeeper-client help\fR
+
+.SH ENVIRONMENT
+
+.IP ZOOKEEPER_HOME
+Alternate home directory. Default is /usr/lib/zookeeper.
+
+.IP ZOOKEEPER_CONF
+Alternate conf dir. Default is /etc/zookeeper.
+
+.IP ZOOPIDFILE
+Alternate server PID file. Default is /var/run/zookeeper/zookeeper-server.pid.
+
+.SH COPYRIGHT
+Copyright (C) 2010 The Apache Software Foundation. All rights reserved.

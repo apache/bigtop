@@ -1,0 +1,15 @@
+This package was debianized by Todd Lipcon <todd@cloudera.com> on
+Tue, 24 Mar 2009 00:33:33 -0400.
+
+The upstream package is from <http://hadoop.apache.org/hive>
+The Cloudera Distribution for Hadoop is from <http://cloudera.com/distribution>
+
+License:
+    Apache 2.0 - see /usr/share/common-licenses/Apache-2.0
+
+This Debian Package contains the Cloudera Distribution for Hadoop.
+This distribution is Copyright 2009, Cloudera, Inc. and is licensed under
+the Apache 2.0 License as above. See http://cloudera.com/distribution
+
+This product includes software developed by The Apache Software
+Foundation (http://www.apache.org/).

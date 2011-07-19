@@ -1,0 +1,12 @@
+This project will develop a set of JarRunner adapters to perform the following
+tasks via specific adapters:
+  - provide a list of files within a jar file (artifact) which can be passed to a test
+    framework such as JUnit for further execution (generic adapter)
+  - request a list of tests from an artifact to be execute by an external
+    framework (specific adapter)
+  - get a list of tests within an artifact, supply them with certain arguments
+    and run as POJO applications (concrete adapter: an extension of generic)
+
+This project contains the experimental foundation of JarRunner and a
+meta-service utilizing it to perform tests execution. These two components
+might be joined together later.

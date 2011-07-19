@@ -1,0 +1,152 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.cloudera.itest</groupId>
+  <artifactId>cdh-smokes</artifactId>
+  <packaging>pom</packaging>
+  <version>1.0-cdh3u1-SNAPSHOT</version>
+  <name>cdh-smokes</name>
+
+  <properties>
+    <maven.internal.releases>http://azov01.sf.cloudera.com:8081/artifactory/libs-release-local</maven.internal.releases>
+    <maven.internal.snapshots>https://repository.cloudera.com/content/repositories/testsnaps/</maven.internal.snapshots>
+    <maven.releases.repository>https://repository.cloudera.com/content/groups/cdh-releases-rcs/</maven.releases.repository>
+  </properties>
+
+  <scm>
+    <connection>scm:git:git://github.sf.cloudera.com/QE/stack.tests.git</connection>
+  </scm>
+
+  <repositories>
+    <repository>
+      <id>cloudera-snapshots</id>
+      <name>Internal Snapshots</name>
+      <url>${maven.internal.snapshots}</url>
+    </repository>
+    <repository>
+      <id>releases</id>
+      <name>Cloudera Releases</name>
+      <url>${maven.releases.repository}</url>
+    </repository>
+  </repositories>
+
+  <distributionManagement>
+    <snapshotRepository>
+      <id>cloudera-snapshots</id>
+      <name>Internal Snapshots</name>
+      <url>${maven.internal.snapshots}</url>
+    </snapshotRepository>
+    <repository>
+      <id>azov01.sf.cloudera.com</id>
+      <name>Internal Releases</name>
+      <url>${maven.internal.releases}</url>
+    </repository>
+  </distributionManagement>
+
+  <modules>
+    <module>hadoop</module>
+    <module>hive</module>
+    <module>package</module>
+    <module>oozie</module>
+    <module>hbase</module>
+    <module>flume</module>
+  </modules>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.cloudera.itest</groupId>
+      <artifactId>itest-common</artifactId>
+      <version>1.1-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.5</source>
+          <target>1.5</target>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.groovy.maven</groupId>
+        <artifactId>gmaven-plugin</artifactId>
+        <version>1.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>generateTestStubs</goal>
+              <goal>testCompile</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!--Let's skip unit tests all together for there are none-->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.7</version>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.4.3</version>
+        <configuration>
+          <outputDirectory>${project.build.testOutputDirectory}
+          </outputDirectory>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.2</version>
+        <executions>
+          <execution>
+            <goals>
+              <!-- Make sure that test artifacts is being deployed as well -->
+              <goal>test-jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>2.7.1</version>
+        <configuration>
+          <includes>
+            <include>**/Test*</include>
+          </includes>
+          <workingDirectory>${project.build.directory}/test-classes</workingDirectory>
+        </configuration>
+        <executions>
+          <execution>
+            <id>integration-test</id>
+            <goals>
+              <goal>integration-test</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>verify</id>
+            <goals>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
