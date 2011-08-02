@@ -1,9 +1,3 @@
-package com.cloudera.itest.hivesmoke
-
-import com.cloudera.itest.JarContent
-import com.cloudera.itest.shell.Shell
-import static junit.framework.Assert.assertEquals
-
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -21,6 +15,11 @@ import static junit.framework.Assert.assertEquals
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.cloudera.itest.hivesmoke
+
+import com.cloudera.itest.JarContent
+import com.cloudera.itest.shell.Shell
+import static junit.framework.Assert.assertEquals
 
 public class HiveBulkScriptExecutor {
   static Shell sh = new Shell("/bin/bash -s");

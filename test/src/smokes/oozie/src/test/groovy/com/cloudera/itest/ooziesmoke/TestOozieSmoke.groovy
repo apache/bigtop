@@ -1,13 +1,3 @@
-package com.cloudera.itest.ooziesmoke
-
-import org.junit.Test
-import static org.junit.Assert.assertTrue
-import com.cloudera.itest.shell.Shell
-import org.junit.AfterClass
-import org.junit.BeforeClass
-import static junit.framework.Assert.assertEquals
-import org.apache.hadoop.conf.Configuration
-
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -25,6 +15,16 @@ import org.apache.hadoop.conf.Configuration
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.cloudera.itest.ooziesmoke
+
+import org.junit.Test
+import static org.junit.Assert.assertTrue
+import com.cloudera.itest.shell.Shell
+import org.junit.AfterClass
+import org.junit.BeforeClass
+import static junit.framework.Assert.assertEquals
+import org.apache.hadoop.conf.Configuration
+
 class TestOozieSmoke {
   private static final int WAIT_TIMEOUT = 60000;
   private static Shell sh = new Shell("/bin/bash -s");

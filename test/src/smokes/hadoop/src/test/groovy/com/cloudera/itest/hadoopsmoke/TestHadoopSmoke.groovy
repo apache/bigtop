@@ -1,14 +1,3 @@
-package com.cloudera.itest.hadoopsmoke
-
-import com.cloudera.itest.JarContent
-import com.cloudera.itest.shell.Shell
-import org.junit.AfterClass
-import org.junit.BeforeClass
-import org.junit.Test
-import org.apache.hadoop.conf.Configuration
-import org.apache.hadoop.hdfs.DFSConfigKeys
-import static org.junit.Assert.assertEquals
-
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -26,6 +15,18 @@ import static org.junit.Assert.assertEquals
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package com.cloudera.itest.hadoopsmoke
+
+import com.cloudera.itest.JarContent
+import com.cloudera.itest.shell.Shell
+import org.junit.AfterClass
+import org.junit.BeforeClass
+import org.junit.Test
+import org.apache.hadoop.conf.Configuration
+import org.apache.hadoop.hdfs.DFSConfigKeys
+import static org.junit.Assert.assertEquals
+
 class TestHadoopSmoke {
   static Shell sh = new Shell("/bin/bash -s")
 

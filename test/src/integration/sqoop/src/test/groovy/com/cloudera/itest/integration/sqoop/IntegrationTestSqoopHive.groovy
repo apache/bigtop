@@ -1,13 +1,3 @@
-package com.cloudera.itest.integration.sqoop
-
-import org.junit.Test
-import org.junit.After
-import static org.junit.Assert.assertEquals
-import static org.junit.Assert.assertNotNull
-import com.cloudera.itest.JarContent
-import org.junit.Before
-import com.cloudera.itest.shell.Shell
-
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -25,6 +15,17 @@ import com.cloudera.itest.shell.Shell
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package com.cloudera.itest.integration.sqoop
+
+import org.junit.Test
+import org.junit.After
+import static org.junit.Assert.assertEquals
+import static org.junit.Assert.assertNotNull
+import com.cloudera.itest.JarContent
+import org.junit.Before
+import com.cloudera.itest.shell.Shell
+
 class IntegrationTestSqoopHive {
   private static final String MYSQL_ROOTPW =
     System.getProperty("MYSQL_ROOTPW", "");

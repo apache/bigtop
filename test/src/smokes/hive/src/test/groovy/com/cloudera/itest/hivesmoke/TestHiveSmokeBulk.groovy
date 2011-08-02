@@ -1,14 +1,3 @@
-package com.cloudera.itest.hivesmoke
-
-import org.junit.Test
-import org.junit.AfterClass
-import org.junit.Before
-import org.junit.BeforeClass
-import com.cloudera.itest.shell.Shell
-import com.cloudera.itest.junit.OrderedParameterized
-import org.junit.runner.RunWith
-import org.junit.runners.Parameterized.Parameters
-
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -26,6 +15,16 @@ import org.junit.runners.Parameterized.Parameters
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.cloudera.itest.hivesmoke
+
+import org.junit.Test
+import org.junit.AfterClass
+import org.junit.Before
+import org.junit.BeforeClass
+import com.cloudera.itest.shell.Shell
+import com.cloudera.itest.junit.OrderedParameterized
+import org.junit.runner.RunWith
+import org.junit.runners.Parameterized.Parameters
 
 @RunWith(OrderedParameterized.class)
 public class TestHiveSmokeBulk {
