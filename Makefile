@@ -18,6 +18,7 @@ BUILD_DIR ?=$(BASE_DIR)/build
 DL_DIR    ?=$(BASE_DIR)/dl
 OUTPUT_DIR?=$(BASE_DIR)/output
 REPO_DIR  ?=$(BASE_DIR)/src
+DIST_DIR  ?=$(BASE_DIR)/dist
 
 REQUIRED_DIRS = $(BUILD_DIR) $(DL_DIR) $(OUTPUT_DIR)
 _MKDIRS :=$(shell for d in $(REQUIRED_DIRS); \
@@ -60,6 +61,7 @@ package-help: help-header $(TARGETS_HELP)
 clean: $(TARGETS_CLEAN)
 	-rm -rf $(BUILD_DIR)
 	-rm -rf $(OUTPUT_DIR)
+	-rm -rf $(DIST_DIR)
 
 realclean: clean
 	-rm -rf $(DL_DIR)
@@ -80,6 +82,11 @@ relnotes: $(TARGETS_RELNOTES)
 
 checkenv:
 	./check-env.sh
+
+dist: realclean
+	mkdir -p $(DIST_DIR)
+	rsync -avz --exclude=.svn --exclude=.git --exclude=dist "$(BASE_DIR)/" "$(DIST_DIR)/bigtop-$(BIGTOP_VERSION)"
+	cd $(DIST_DIR) && tar -cvzf "$(DIST_DIR)/bigtop-$(BIGTOP_VERSION).tar.gz" "bigtop-$(BIGTOP_VERSION)"
 
 .DEFAULT_GOAL:= help
 .PHONY: clean package-help help-header packages all world help srpm sdeb

@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-BIGTOP_VERSION=1
+BIGTOP_VERSION=0.1.0-incubating
 
 # Hadoop 0.20.0-based hadoop package
 HADOOP_NAME=hadoop
