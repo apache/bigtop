@@ -72,7 +72,7 @@ HIVE_PKG_VERSION=$(HIVE_BASE_VERSION)
 HIVE_RELEASE_VERSION=1
 HIVE_TARBALL_DST=hive-$(HIVE_BASE_VERSION).tar.gz
 HIVE_TARBALL_SRC=$(HIVE_TARBALL_DST)
-HIVE_SITE=http://archive.apache.org/dist/hive/hive-0.7.1/
+HIVE_SITE=http://archive.apache.org/dist/hive/hive-$(HIVE_BASE_VERSION)/
 $(eval $(call PACKAGE,hive,HIVE))
 
 # Sqoop
