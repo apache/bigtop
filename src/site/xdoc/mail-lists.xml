@@ -26,7 +26,7 @@ xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd
     <subsection name="Bigtop User List"></subsection>
     <p>
     If you use Bigtop, please subscribe to the Bigtop user mailing list.<br /> 
-    The Hama user mailing list is : 
+    The Bigtop user mailing list is : 
     <a href="mailto:bigtop-user@incubator.apache.org">bigtop-user@incubator.apache.org</a>.
     </p>
     <ul>
@@ -37,7 +37,7 @@ xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd
     <subsection name="Bigtop Developer List"></subsection>
     <p>
     If you'd like to contribute to Bigtop, please subscribe to the Bigtop developer mailing list.<br /> 
-    The Hama developer mailing list is : 
+    The Bigtop developer mailing list is : 
     <a href="mailto:bigtop-dev@incubator.apache.org">bigtop-dev@incubator.apache.org</a>.
     </p>
     <ul>
