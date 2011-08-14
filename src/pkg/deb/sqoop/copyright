@@ -1,12 +1,15 @@
-This package was debianized by Alex Newman <newalex@cloudera.com> on
-Mon, 22 Feb 2010 23:07:14 -0800
+Format: http://dep.debian.net/deps/dep5
+Source: http://incubator.apache.org/projects/sqoop.html
+Upstream-Name: Sqoop
 
-The upstream package is from cloudera
-The Cloudera Distribution for Hadoop is from <http://cloudera.com/distribution>
+Files: *
+Copyright: 2010-2011, Cloudera, Inc.
+License: Apache-2.0
 
-License:
-    Apache 2.0 - see /usr/share/common-licenses/Apache-2.0
+Files debian/*
+Copyright: 2011, The Apache Software Foundation
+License: Apache-2.0
 
-This Debian Package contains the Cloudera Distribution for Hadoop.
-This distribution is Copyright 2010, Cloudera, Inc. and is licensed under
-the Apache 2.0 License as above. See http://cloudera.com/distribution
+License: Apache-2.0
+ On Debian systems, the complete text of the Apache 2.0 license
+ can be found in "/usr/share/common-licenses/Apache-2.0".
