@@ -40,7 +40,7 @@
 %endif
 
 
-%if  %{!?suse_version:1}0
+%if  0%{?fedora_version}%{?rhel_version}%{?centos_version}
 # brp-repack-jars uses unzip to expand jar files
 # Unfortunately aspectjtools-1.6.5.jar pulled by ivy contains some files and directories without any read permission
 # and make whole process to fail.
@@ -54,10 +54,11 @@
     %{nil}
 
 %define alternatives_cmd alternatives
-
 %global initd_dir %{_sysconfdir}/rc.d/init.d
+%endif
 
-%else
+
+%if  %{?suse_version:1}0
 
 # Only tested on openSUSE 11.4. le'ts update it for previous release when confirmed
 %if 0%{suse_version} > 1130
@@ -71,9 +72,12 @@
     %{nil}
 
 %define alternatives_cmd update-alternatives
-
 %global initd_dir %{_sysconfdir}/rc.d
+%endif
 
+%if  0%{?mgaversion}
+%define alternatives_cmd update-alternatives
+%global initd_dir %{_sysconfdir}/rc.d/init.d
 %endif
 
 
@@ -100,8 +104,8 @@ Source3: hadoop-init.tmpl.suse
 Source4: hadoop.1
 Source5: hadoop-fuse-dfs.1
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: lzo-devel, python >= 2.4, git, fuse-devel,fuse, automake, autoconf
-Requires: sh-utils, textutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service
+BuildRequires: python >= 2.4, git, fuse-devel,fuse, automake, autoconf
+Requires: textutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service
 Provides: hadoop
 
 # RHEL6 provides natively java
@@ -114,14 +118,22 @@ Requires: jre >= 1.6
 %endif
 
 %if  %{?suse_version:1}0
-BuildRequires: libfuse2, libopenssl-devel, gcc-c++, ant, ant-nodeps, ant-trax
+BuildRequires: libfuse2, libopenssl-devel, gcc-c++, ant, ant-nodeps, ant-trax, liblzo-devel
 # Required for init scripts
-Requires: insserv
-%else
-BuildRequires: fuse-libs, libtool, redhat-rpm-config
-# Required for init scripts
-Requires: redhat-lsb
+Requires: sh-utils, insserv
 %endif
+
+%if  0%{?fedora_version}%{?rhel_version}%{?centos_version}
+BuildRequires: fuse-libs, libtool, redhat-rpm-config, liblzo-devel
+# Required for init scripts
+Requires: sh-utils, redhat-lsb
+%endif
+
+%if  0%{?mgaversion}
+BuildRequires: libfuse-devel, libfuse2 , libopenssl-devel, gcc-c++, ant, libtool, automake, autoconf, liblzo-devel, libzlib-devel
+Requires: chkconfig, xinetd-simple-services, libzlib
+%endif
+
 
 %description
 Hadoop is a software platform that lets one easily write and
@@ -382,7 +394,7 @@ getent passwd hdfs >/dev/null || /usr/sbin/useradd --comment "Hadoop HDFS" --she
   --slave %{log_hadoop_dirname}/%{hadoop_name} %{hadoop_name}-log %{log_hadoop} \
   --slave %{lib_hadoop_dirname}/%{hadoop_name} %{hadoop_name}-lib %{lib_hadoop} \
   --slave /etc/%{hadoop_name} %{hadoop_name}-etc %{etc_hadoop} \
-  --slave %{man_hadoop}/man1/%{hadoop_name}.1.gz %{hadoop_name}-man %{man_hadoop}/man1/%{name}.1.gz
+  --slave %{man_hadoop}/man1/%{hadoop_name}.1.*z %{hadoop_name}-man %{man_hadoop}/man1/%{name}.1.*z
 
 
 %preun
@@ -402,7 +414,7 @@ fi
 /etc/default/hadoop
 %{lib_hadoop}
 %{bin_hadoop}/%{name}
-%{man_hadoop}/man1/hadoop.1.gz
+%{man_hadoop}/man1/hadoop.1.*z
 %attr(0775,root,hadoop) /var/run/%{name}
 %attr(0775,root,hadoop) %{log_hadoop}
 

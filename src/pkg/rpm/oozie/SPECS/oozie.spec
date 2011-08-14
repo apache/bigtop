@@ -161,5 +161,5 @@ fi
 %{lib_oozie}/lib
 %{_docdir}
 %docdir %{_docdir}
-%{man_dir}/man1/oozie.1.gz
+%{man_dir}/man1/oozie.1.*
 

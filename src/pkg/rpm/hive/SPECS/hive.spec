@@ -200,7 +200,7 @@ fi
 %{var_lib_hive}
 %attr(1777,root,root) %{var_lib_hive}/metastore
 %doc %{doc_hive}
-%{man_dir}/man1/hive.1.gz
+%{man_dir}/man1/hive.1.*
 
 %define service_macro() \
 %files %1 \
