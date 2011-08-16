@@ -39,8 +39,9 @@
 %global hadoop_arch Linux-amd64-64
 %endif
 
-
-%if  0%{?fedora_version}%{?rhel_version}%{?centos_version}
+# CentOS 5 does not have any dist macro
+# So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
+%if %{!?suse_version:1}%{!?mgaversion:1}0
 # brp-repack-jars uses unzip to expand jar files
 # Unfortunately aspectjtools-1.6.5.jar pulled by ivy contains some files and directories without any read permission
 # and make whole process to fail.
@@ -123,8 +124,10 @@ BuildRequires: libfuse2, libopenssl-devel, gcc-c++, ant, ant-nodeps, ant-trax, l
 Requires: sh-utils, insserv
 %endif
 
-%if  0%{?fedora_version}%{?rhel_version}%{?centos_version}
-BuildRequires: fuse-libs, libtool, redhat-rpm-config, liblzo-devel
+# CentOS 5 does not have any dist macro
+# So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
+%if %{!?suse_version:1}%{!?mgaversion:1}0
+BuildRequires: fuse-libs, libtool, redhat-rpm-config, lzo-devel
 # Required for init scripts
 Requires: sh-utils, redhat-lsb
 %endif
