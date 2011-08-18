@@ -23,7 +23,7 @@ HADOOP_PKG_VERSION=0.20.2
 HADOOP_RELEASE_VERSION=1
 HADOOP_TARBALL_DST=$(HADOOP_NAME)-$(HADOOP_BASE_VERSION).tar.gz
 HADOOP_TARBALL_SRC=$(HADOOP_TARBALL_DST)
-HADOOP_SITE=http://www.apache.org/dist/hadoop/common/$(HADOOP_NAME)-$(HADOOP_BASE_VERSION)/
+HADOOP_SITE=$(APACHE_MIRROR)/hadoop/common/$(HADOOP_NAME)-$(HADOOP_BASE_VERSION)/
 $(eval $(call PACKAGE,hadoop,HADOOP))
 
 # ZooKeeper
@@ -36,7 +36,7 @@ ZOOKEEPER_RELEASE_VERSION=1
 ZOOKEEPER_TARBALL_DST=zookeeper-$(ZOOKEEPER_BASE_VERSION).tar.gz
 ZOOKEEPER_TARBALL_SRC=$(ZOOKEEPER_TARBALL_DST)
 ZOOKEEPER_PACKAGE_GIT_REPO=$(REPO_DIR)/cdh3/zookeeper-package
-ZOOKEEPER_SITE=http://archive.apache.org/dist/zookeeper/zookeeper-3.3.3/
+ZOOKEEPER_SITE=$(APACHE_MIRROR)/zookeeper/zookeeper-3.3.3/
 $(eval $(call PACKAGE,zookeeper,ZOOKEEPER))
 
 # HBase
@@ -48,7 +48,7 @@ HBASE_PKG_VERSION=$(HBASE_BASE_VERSION)
 HBASE_RELEASE_VERSION=1
 HBASE_TARBALL_DST=hbase-$(HBASE_BASE_VERSION).tar.gz
 HBASE_TARBALL_SRC=$(HBASE_TARBALL_DST)
-HBASE_SITE=http://www.apache.org/dist/hbase/hbase-0.90.3/
+HBASE_SITE=$(APACHE_MIRROR)/hbase/hbase-0.90.3/
 $(eval $(call PACKAGE,hbase,HBASE))
 
 # Pig
@@ -60,7 +60,7 @@ PIG_RELNOTES_NAME=Apache Pig
 PIG_PKG_NAME=hadoop-pig
 PIG_TARBALL_DST=pig-$(PIG_BASE_VERSION).tar.gz
 PIG_TARBALL_SRC=$(PIG_TARBALL_DST)
-PIG_SITE=http://archive.apache.org/dist/pig/pig-0.8.1/
+PIG_SITE=$(APACHE_MIRROR)/pig/pig-0.8.1/
 $(eval $(call PACKAGE,pig,PIG))
 
 # Hive
@@ -72,7 +72,7 @@ HIVE_PKG_VERSION=$(HIVE_BASE_VERSION)
 HIVE_RELEASE_VERSION=1
 HIVE_TARBALL_DST=hive-$(HIVE_BASE_VERSION).tar.gz
 HIVE_TARBALL_SRC=$(HIVE_TARBALL_DST)
-HIVE_SITE=http://archive.apache.org/dist/hive/hive-$(HIVE_BASE_VERSION)/
+HIVE_SITE=$(APACHE_MIRROR)/hive/hive-$(HIVE_BASE_VERSION)/
 $(eval $(call PACKAGE,hive,HIVE))
 
 # Sqoop
@@ -109,7 +109,7 @@ WHIRR_PKG_VERSION=0.5.0
 WHIRR_RELEASE_VERSION=1
 WHIRR_TARBALL_DST=whirr-$(WHIRR_BASE_VERSION)-incubating-src.tar.gz
 WHIRR_TARBALL_SRC=$(WHIRR_TARBALL_DST)
-WHIRR_SITE=http://apache.osuosl.org//incubator/whirr/whirr-0.5.0-incubating/
+WHIRR_SITE=$(APACHE_MIRROR)//incubator/whirr/whirr-0.5.0-incubating/
 $(eval $(call PACKAGE,whirr,WHIRR))
 
 # Flume

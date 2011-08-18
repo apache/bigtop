@@ -32,7 +32,7 @@ TARGETS_CLEAN:=
 
 
 # Default Apache mirror
-APACHE_MIRROR ?= http://mirrors.ibiblio.org/apache
+APACHE_MIRROR ?= http://apache.osuosl.org
 CLOUDERA_ARCHIVE ?= http://archive.cloudera.com/tarballs/
 
 # Include the implicit rules and functions for building packages
