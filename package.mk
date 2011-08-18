@@ -98,6 +98,7 @@ $(BUILD_DIR)/%/.deb:
 				--preserve-envvar FORREST_HOME \
 				--preserve-envvar MAVEN3_HOME \
 				--preserve-envvar JAVA_HOME \
+				--set-envvar=$(PKG)_BASE_VERSION=$($(PKG)_BASE_VERSION) \
 				--set-envvar=$(PKG)_VERSION=$($(PKG)_PKG_VERSION)$(BIGTOP_BUILD_STAMP) \
 				--set-envvar=$(PKG)_RELEASE=$($(PKG)_RELEASE_VERSION) \
 				-uc -us -b

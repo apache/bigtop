@@ -108,7 +108,7 @@ language called Pig Latin, which has the following key properties:
 
 %build
 
-ant -Djavac.version=1.6 -Djava5.home=$JAVA5_HOME -Dforrest.home=$FORREST_HOME package
+ant -Djavac.version=1.6 -Djava5.home=$JAVA5_HOME -Dforrest.home=$FORREST_HOME -Dversion=%{pig_base_version} package
 
 
 #########################

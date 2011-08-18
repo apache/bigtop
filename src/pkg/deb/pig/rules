@@ -22,7 +22,7 @@ clean:
 
 build-indep: build-indep-stamp
 build-indep-stamp: patch-stamp
-	ant -Divy.home=`pwd`/debian/.ivy -Djava5.home=${JAVA5_HOME} -Dforrest.home=${FORREST_HOME} -Ddist.dir=debian/tmp package
+	ant -Divy.home=`pwd`/debian/.ivy -Djava5.home=${JAVA5_HOME} -Dforrest.home=${FORREST_HOME} -Ddist.dir=debian/tmp -Dversion=${PIG_BASE_VERSION} package
 	touch $@
 
 install: install-indep
