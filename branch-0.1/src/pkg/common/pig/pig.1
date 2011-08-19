@@ -1,0 +1,130 @@
+.\" Licensed to the Apache Software Foundation (ASF) under one or more
+.\" contributor license agreements.  See the NOTICE file distributed with
+.\" this work for additional information regarding copyright ownership.
+.\" The ASF licenses this file to You under the Apache License, Version 2.0
+.\" (the "License"); you may not use this file except in compliance with
+.\" the License.  You may obtain a copy of the License at
+.\"
+.\"     http://www.apache.org/licenses/LICENSE-2.0
+.\"
+.\" Unless required by applicable law or agreed to in writing, software
+.\" distributed under the License is distributed on an "AS IS" BASIS,
+.\" WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+.\" See the License for the specific language governing permissions and
+.\" limitations under the License.
+.\"
+.\" Process this file with
+.\" groff -man -Tascii pig.1
+.\"
+.TH pig 1 "October 2010 " Linux "User Manuals"
+
+.SH NAME
+Pig \- A high-level language for expressing data analysis programs,
+coupled with infrastructure for evaluating these programs.
+
+.SH SYNOPSIS
+
+.B pig
+[options] [-] : Run interactively in grunt shell.
+
+.B pig
+[options] -e[xecute] cmd [cmd ...] : Run cmd(s).
+
+.B pig
+[options] [-f[ile]] file : Run cmds found in file.
+
+.SH DESCRIPTION
+
+Apache Pig is a platform for analyzing large data sets that consists
+of a high-level language for expressing data analysis programs,
+coupled with infrastructure for evaluating these programs. The salient
+property of Pig programs is that their structure is amenable to
+substantial parallelization, which in turns enables them to handle
+very large data sets.
+
+For more information about Pig, see http://pig.apache.org.
+
+.SH OPTIONS
+
+.IP "-4, -log4jconf"
+log4j configuration file, overrides log conf
+
+.IP "-b, -brief"
+brief logging (no timestamps)
+
+.IP "-c, -cluster"
+clustername, kryptonite is default
+
+.IP "-d, -debug"
+debug level, INFO is default
+
+.IP "-e, -execute"
+commands to execute (within quotes)
+
+.IP "-f, -file"
+path to the script to execute
+
+.IP "-h, -help"
+display this message
+
+.IP "-i, -version"
+display version information
+
+.IP "-j, -jar jarfile"
+load jarfile
+
+.IP "-l, -logfile"
+path to client side log file; current working directory is default
+
+.IP "-m, -param_file"
+path to the parameter file
+
+.IP "-p, -param"
+key value pair of the form param=val
+
+.IP "-r, -dryrun"
+
+.IP "-t, -optimizer_off"
+optimizer rule name, turn optimizer off for this rule; use all to turn
+all rules off, optimizer is turned on by default
+
+.IP "-v, -verbose"
+print all error messages to screen
+
+.IP "-w, -warning"
+turn warning on; also turns warning aggregation off
+
+.IP "-x, -exectype=[local|mapreduce]"
+execution type; mapreduce is default
+
+.IP "-F, -stop_on_failure"
+aborts execution on the first failed job; off by default
+
+.IP "-M, -no_multiquery"
+turn multiquery optimization off; Multiquery is on by default
+
+.SH ENVIRONMENT
+
+.IP JAVA_HOME
+The java implementation to use.
+
+.IP PIG_CLASSPATH
+Extra Java CLASSPATH entries.
+
+.IP PIG_HEAPSIZE
+The maximum amount of heap to use, in MB. Default is 1000.
+
+.IP PIG_OPTS
+Extra Java runtime options.
+
+.IP PIG_CONF_DIR
+Alternate conf dir. Default is ${PIG_HOME}/conf.
+
+.IP PIG_ROOT_LOGGER
+The root appender. Default is INFO,console.
+
+.IP HADOOP_HOME
+Optionally, the Hadoop home to run with.
+
+.SH COPYRIGHT
+Copyright (C) 2010 The Apache Software Foundation. All rights reserved.

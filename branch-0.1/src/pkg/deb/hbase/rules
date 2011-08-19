@@ -1,0 +1,99 @@
+#!/usr/bin/make -f
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# 
+# -*- makefile -*-
+
+# Uncomment this to turn on verbose mode.
+export DH_VERBOSE=1
+
+# This has to be exported to make some magic below work.
+export DH_OPTIONS
+
+patch: patch-stamp
+patch-stamp:	
+	touch $@
+
+clean:	
+	dh_testdir
+	dh_testroot
+	rm -f *-stamp
+	dh_clean
+	find debian -name .\*swp -exec rm -f {} \;
+
+build:
+	# This target doesn't do anything since the tarball already has the
+	# project built!
+	dh_testdir
+	
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	dh_installdirs
+	sh -x debian/install_hbase.sh \
+		--build-dir=. \
+		--doc-dir=usr/share/doc/hadoop-hbase-doc \
+		--prefix=debian/tmp
+	# Symlink in the dependency jars from their packages. Both of these packages
+	# provide an unversioned symlink foo.jar -> foo-0.1.2.jar.
+	rm debian/tmp/usr/lib/hbase/lib/zookeeper-*.jar
+	rm debian/tmp/usr/lib/hbase/lib/hadoop-*.jar
+	ln -s /usr/lib/zookeeper/zookeeper.jar debian/tmp/usr/lib/hbase/lib/zookeeper.jar
+	ln -s /usr/lib/hadoop/hadoop-core.jar debian/tmp/usr/lib/hbase/lib/hadoop-core.jar
+
+	# Wage war on "executable-not-elf-or-script" warnings:
+	### ruby scripts should not be executable - they require
+	### hbase org.jruby.Main <script>
+	find debian/tmp/usr/lib/hbase/bin debian/tmp/usr/lib/hbase/lib -name \*.rb -exec chmod 644 {} \;
+	### webapps should not be executable either
+	find debian/tmp/usr/lib/hbase/hbase-webapps -type f -exec chmod 644 {} \;
+
+	(dh_lintian) || /bin/true
+
+	touch $@
+
+install-indep:
+	dh_install --sourcedir=debian/tmp
+	sh debian/install_init_scripts.sh
+
+binary-common:	
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs
+	dh_installdocs
+	dh_installman
+	dh_link
+	dh_strip
+	dh_compress
+	dh_fixperms
+	dh_makeshlibs
+	dh_installinit --onlyscripts
+	# dh_installinit has a bug whereby it makes preinst/postinst files
+	# even for subpackages that don't have an init script!
+	rm -f debian/hadoop-hbase-doc*debhelper debian/hadoop-hbase.*debhelper || :
+
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary-indep: build install install-indep
+	$(MAKE) -f debian/rules DH_OPTIONS=-i binary-common
+
+binary: binary-indep
+.PHONY: clean build binary-indep binary install configure

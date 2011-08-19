@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <parent>
+      <groupId>com.cloudera.itest</groupId>
+      <artifactId>smoke-tests</artifactId>
+      <version>1.0-cdh3u1-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.cloudera.itest</groupId>
+  <artifactId>sqoopsmoke.smoke-tests</artifactId>
+  <version>1.1-SNAPSHOT</version>
+  <name>sqoopsmoke</name>
+
+  <properties>
+    <org.codehaus.maven-failsafe-plugin.dbhost>172.29.12.207</org.codehaus.maven-failsafe-plugin.dbhost>
+    <org.codehaus.maven-failsafe-plugin.dbname>db2</org.codehaus.maven-failsafe-plugin.dbname>
+
+    <org.apache.maven-dependency-plugin.groupId>com.cloudera.sqoop</org.apache.maven-dependency-plugin.groupId>
+    <org.apache.maven-dependency-plugin.artifactId>sqoop</org.apache.maven-dependency-plugin.artifactId>
+    <org.apache.maven-dependency-plugin.version>${sqoop.version}</org.apache.maven-dependency-plugin.version>
+    <org.apache.maven-dependency-plugin.output>${project.build.directory}</org.apache.maven-dependency-plugin.output>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>${org.apache.maven-dependency-plugin.groupId}</groupId>
+      <artifactId>${org.apache.maven-dependency-plugin.artifactId}</artifactId>
+      <version>${org.apache.maven-dependency-plugin.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${org.apache.maven-dependency-plugin.groupId}</groupId>
+      <artifactId>${org.apache.maven-dependency-plugin.artifactId}</artifactId>
+      <version>${org.apache.maven-dependency-plugin.version}</version>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.1</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>2.7.1</version>
+        <configuration>
+          <includes>
+            <include>**/TestColumnTypes*</include>
+            <include>**/TestAllTables*</include>
+            <include>**/TestAppendUtils*</include>
+            <include>**/TestExport*</include>
+            <include>**/TestExportUpdate*</include>
+            <include>**/TestBlobRef*</include>
+            <include>**/TestClobRef*</include>
+          </includes>
+          <forkMode>always</forkMode>
+          <argLine>
+            -Dhsql.server.host=hsql://${org.codehaus.maven-failsafe-plugin.dbhost} -Dhsql.database.name=${org.codehaus.maven-failsafe-plugin.dbname}
+          </argLine>
+          <additionalClasspathElements>
+            <additionalClasspathElement>
+              ${HADOOP_CONF_DIR}
+            </additionalClasspathElement>
+            <additionalClasspathElement>
+              <!-- the value of ${lzo.jar} property is set by a groovy
+                   script during pre-integration-test phase below-->
+              ${HADOOP_HOME}/lib/${lzo.jar}
+            </additionalClasspathElement>
+          </additionalClasspathElements>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.groovy.maven</groupId>
+        <artifactId>gmaven-plugin</artifactId>
+        <version>1.0</version>
+        <executions>
+          <execution>
+            <id>find-lzo-jar</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <configuration>
+              <source>
+                if (!System.getProperties().keySet().contains('enforcer.skip')) {
+                  project.properties['lzo.jar'] =
+                    com.cloudera.itest.JarContent.getJarName(
+                        "${HADOOP_HOME}/lib", 'hadoop.*lzo.*.jar');
+                  if ( project.properties['lzo.jar'] == null ) {
+                      throw new IOException ("hadoop-lzo.jar isn't found");
+                  }
+                }
+              </source>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
