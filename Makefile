@@ -85,7 +85,7 @@ checkenv:
 
 dist: realclean
 	mkdir -p $(DIST_DIR)
-	rsync -avz --exclude=.svn --exclude=.git --exclude=dist "$(BASE_DIR)/" "$(DIST_DIR)/bigtop-$(BIGTOP_VERSION)"
+	rsync -avz --exclude=.svn --exclude=.git --exclude=.gitignore --exclude=dist "$(BASE_DIR)/" "$(DIST_DIR)/bigtop-$(BIGTOP_VERSION)"
 	cd $(DIST_DIR) && tar -cvzf "$(DIST_DIR)/bigtop-$(BIGTOP_VERSION).tar.gz" "bigtop-$(BIGTOP_VERSION)"
 
 .DEFAULT_GOAL:= help

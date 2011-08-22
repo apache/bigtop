@@ -1,4 +1,0 @@
-This is a project to develop and build Hive smoke and system tests.
-
-To be able to run this a started project is also required such as 
-  http://github.sf.cloudera.com/cos/iTest/blob/master/metaTest/hive.pom

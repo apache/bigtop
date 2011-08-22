@@ -1,7 +1,0 @@
-hadoop: extra-license-file usr/lib/hadoop/LICENSE.txt
-hadoop: new-package-should-close-itp-bug
-hadoop: shell-script-fails-syntax-check ./usr/lib/hadoop/contrib/hod/bin/hod
-hadoop: shell-script-fails-syntax-check ./usr/lib/hadoop/contrib/hod/bin/hodcleanup
-hadoop: shell-script-fails-syntax-check ./usr/lib/hadoop/contrib/hod/bin/hodring
-hadoop: shell-script-fails-syntax-check ./usr/lib/hadoop/contrib/hod/bin/ringmaster
-hadoop: shell-script-fails-syntax-check ./usr/lib/hadoop/contrib/hod/support/logcondense.py

@@ -1,2 +1,0 @@
-sed -e 's#^grantTime.[0-9]*#grantTime\tJUSTNOW#' \
-    -e 's#^grantor.*$#grantor\t\tBORG#'

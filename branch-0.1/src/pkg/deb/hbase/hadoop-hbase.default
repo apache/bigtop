@@ -1,2 +1,0 @@
-export HADOOP_HOME=/usr/lib/hadoop
-export HBASE_HOME=/usr/lib/hbase

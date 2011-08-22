@@ -1,4 +1,0 @@
-sed -re 's#hdfs://[^/]*/#hdfs://HADOOP/#g' \
-     -e 's#Copying file:.*/srcbucket2#Copying file:srcbucket2#' \
-     -e 's#hdfs://.*/-(ext|mr)-1000#hdfs://HADOOP/-\1-1000#' \
-     -e 's#transient_lastDdlTime [0-9]*#transient_lastDdlTime JUSTNOW#'
