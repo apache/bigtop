@@ -35,9 +35,9 @@ clean:
 	find debian -name .\*swp -exec rm -f {} \;
 
 build:
-	# This target doesn't do anything since the tarball already has the
-	# project built!
 	dh_testdir
+	mvn clean -DskipTests -Dhbase.version=${HBASE_VERSION} install assembly:assembly -Dmaven.repo.local=${HOME}/.m2/repository  
+
 	
 install: build
 	dh_testdir
