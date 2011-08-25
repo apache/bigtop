@@ -1,0 +1,64 @@
+<?xml-stylesheet type="text/xsl" href="./xdoc.xsl"?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one or more
+ contributor license agreements.  See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ The ASF licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->  
+
+<document>
+
+    <properties>
+        <title>Bigtop Project Release Notes</title>
+    </properties>
+    <body>
+    <!-- Paste release notes from https://issues.apache.org/jira/browse/BIGTOP here. -->
+
+        <h1>Release Notes - Bigtop - Version 0.1.0</h1>
+                
+<h2>        Bug
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2'>BIGTOP-2</a>] -         License headers need to be added
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-7'>BIGTOP-7</a>] -         Some components are pulling tarballs from archive.cloudera.com/tarballs rather than Apache
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-8'>BIGTOP-8</a>] -         Debian copyright files need to be updated for ASF in the right format
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-10'>BIGTOP-10</a>] -         Fix NOTICE file
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-13'>BIGTOP-13</a>] -         BIGTOP-7 introduced a version mismatch for Hive
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-18'>BIGTOP-18</a>] -         OrderedParameterized.java is not ASL-compatbile
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-23'>BIGTOP-23</a>] -         Out of heap errors when building pig
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-24'>BIGTOP-24</a>] -         Errors downloading tarballs from dist.apache.org via curl 
+</li>
+</ul>
+                                        
+<h2>        Task
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-5'>BIGTOP-5</a>] -         Remove Cloudera references in packaging and test source.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-6'>BIGTOP-6</a>] -         Add tarball target to top-level makefile
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-9'>BIGTOP-9</a>] -         Set up Bigtop podling website
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-14'>BIGTOP-14</a>] -         Add CHANGES.txt generation to Makefile
+</li>
+</ul>
+
+</body>
+</document>

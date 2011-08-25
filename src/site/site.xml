@@ -50,6 +50,8 @@
 
     <menu name="Bigtop">
       <item name="Overview" href="index.html"/>
+      <item name="Download" href="http://www.apache.org/dyn/closer.cgi/incubator/bigtop/" />
+      <item name="Release Notes" href="release-notes.html"/>
       <item name="Who We Are" href="team-list.html" />
     </menu>
 

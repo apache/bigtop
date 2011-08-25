@@ -27,7 +27,7 @@
 
   <groupId>org.apache.bigtop</groupId>
   <artifactId>bigtop</artifactId>
-  <version>0.1.0-incubating</version>
+  <version>0.2.0-incubating-SNAPSHOT</version>
   <packaging>pom</packaging>
   
   <name>Bigtop</name>
