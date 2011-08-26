@@ -197,7 +197,6 @@ fi
 %define service_macro() \
 %files %1 \
 %attr(0755,root,root)/%{initd_dir}/%{name}-%1 \
-%attr(0755,root,root)%{lib_flume}/bin/flume-daemon.sh \
 %dir %{lib_flume}/bin \
 %dir %{lib_flume} \
 %post %1 \
