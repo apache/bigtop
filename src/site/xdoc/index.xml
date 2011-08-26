@@ -43,12 +43,13 @@ xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd
       <li>autoconf</li>
       <li>automake</li>
       <li>liblzo2-dev</li>
-      <li>libz-dev</li>
+      <li>libzip-dev</li>
       <li>sharutils</li>
       <li>libfuse-dev</li>
       <li>libssl-dev</li>
       <li>asciidoc</li>
       <li>xmlto</li>
+      <li>libssl-dev</li>
     </ul>
     <p>On Debian-based systems one also needs</p>
     <ul>
