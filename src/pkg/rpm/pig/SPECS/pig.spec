@@ -22,7 +22,10 @@
 %define doc_pig %{_docdir}/pig-%{pig_version}
 %define man_dir %{_mandir}
 
-%if  %{!?suse_version:1}0
+# CentOS 5 does not have any dist macro
+# So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
+%if %{!?suse_version:1}0 && %{!?mgaversion:1}0
+
 # brp-repack-jars uses unzip to expand jar files
 # Unfortunately aspectjtools-1.6.5.jar pulled by ivy contains some files and directories without any read permission
 # and make whole process to fail.
@@ -37,7 +40,10 @@
 
 %define alternatives_cmd alternatives
 
-%else
+%endif
+
+
+%if  %{?suse_version:1}0
 
 # Only tested on openSUSE 11.4. le'ts update it for previous release when confirmed
 %if 0%{suse_version} > 1130
@@ -50,6 +56,11 @@
     /usr/lib/rpm/brp-compress ; \
     %{nil}
 
+%endif
+
+
+%if  0%{?mgaversion}
+%define alternatives_cmd update-alternatives
 %endif
 
 
@@ -150,4 +161,4 @@ fi
 %doc %{doc_pig}
 %{lib_pig}
 %{bin_pig}/pig
-%{man_dir}/man1/pig.1.gz
+%{man_dir}/man1/pig.1.*
