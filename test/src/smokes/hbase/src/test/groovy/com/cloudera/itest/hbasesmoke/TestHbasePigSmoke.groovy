@@ -16,9 +16,9 @@
  * limitations under the License.
  */
 
-package com.cloudera.itest.hbasesmoke
+package org.apache.bigtop.itest.hbasesmoke
 
-import com.cloudera.itest.shell.Shell
+import org.apache.bigtop.itest.shell.Shell
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test
@@ -29,7 +29,7 @@ class TestHbasePigSmoke {
   private static final int ROW_CNT = 10;
 
   private static String extra_jars = 
-    System.getProperty("com.cloudera.itest.hbasesmoke.TestHbasePigSmoke.extra_jars",
+    System.getProperty("org.apache.bigtop.itest.hbasesmoke.TestHbasePigSmoke.extra_jars",
                                                         "");
   private static String register_clause = "";
   private static String tmp = "TestHbasePigSmoke-${(new Date().getTime())}";

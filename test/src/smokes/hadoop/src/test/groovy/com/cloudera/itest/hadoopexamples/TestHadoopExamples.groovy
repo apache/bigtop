@@ -16,15 +16,15 @@
  * limitations under the License.
  */
 
-package com.cloudera.itest.hadoopexamples
+package org.apache.bigtop.itest.hadoopexamples
 
 import org.junit.Before
 import static org.junit.Assert.assertNotNull
-import com.cloudera.itest.shell.Shell
+import org.apache.bigtop.itest.shell.Shell
 import static org.junit.Assert.assertTrue
 import org.junit.Test
 import org.apache.hadoop.conf.Configuration
-import com.cloudera.itest.JarContent
+import org.apache.bigtop.itest.JarContent
 import org.apache.commons.logging.LogFactory
 import org.apache.commons.logging.Log
 

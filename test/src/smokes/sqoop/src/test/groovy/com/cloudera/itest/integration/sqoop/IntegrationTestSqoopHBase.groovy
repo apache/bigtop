@@ -16,12 +16,12 @@
  * limitations under the License.
  */
 
-package com.cloudera.itest.integration.sqoop;
+package org.apache.bigtop.itest.integration.sqoop;
 
-import com.cloudera.itest.shell.Shell
+import org.apache.bigtop.itest.shell.Shell
 import org.junit.Test
 import org.junit.Before
-import com.cloudera.itest.JarContent
+import org.apache.bigtop.itest.JarContent
 import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertNotNull
 import org.junit.After

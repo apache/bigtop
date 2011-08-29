@@ -15,10 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.cloudera.itest.hivesmoke
+package org.apache.bigtop.itest.hivesmoke
 
-import com.cloudera.itest.JarContent
-import com.cloudera.itest.shell.Shell
+import org.apache.bigtop.itest.JarContent
+import org.apache.bigtop.itest.shell.Shell
 import static junit.framework.Assert.assertEquals
 
 public class HiveBulkScriptExecutor {

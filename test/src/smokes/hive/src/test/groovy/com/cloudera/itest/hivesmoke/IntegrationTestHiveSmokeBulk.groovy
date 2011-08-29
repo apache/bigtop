@@ -15,21 +15,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.cloudera.itest.hivesmoke
+package org.apache.bigtop.itest.hivesmoke
 
 import org.junit.Test
 import org.junit.AfterClass
 import org.junit.BeforeClass
-import com.cloudera.itest.shell.Shell
+import org.apache.bigtop.itest.shell.Shell
 import static junit.framework.Assert.assertEquals
-import com.cloudera.itest.junit.OrderedParameterized
+import org.apache.bigtop.itest.junit.OrderedParameterized
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized.Parameters
 
 @RunWith(OrderedParameterized.class)
 public class IntegrationTestHiveSmokeBulk {
   private static String extra_jars =
-    System.getProperty("com.cloudera.itest.hivesmoke.IntegrationTestHiveSmokeBulk.extra_jars","");
+    System.getProperty("org.apache.bigtop.itest.hivesmoke.IntegrationTestHiveSmokeBulk.extra_jars","");
 
   static Shell sh = new Shell("/bin/bash -s");
   static HiveBulkScriptExecutor scripts = new HiveBulkScriptExecutor("scripts/integration");

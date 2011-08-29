@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package com.cloudera.itest.hivesmoke;
+package org.apache.bigtop.itest.hivesmoke;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -36,7 +36,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 
-import com.cloudera.itest.shell.Shell;
+import org.apache.bigtop.itest.shell.Shell;
 
 public class TestJdbcDriver {
 

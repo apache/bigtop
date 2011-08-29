@@ -16,11 +16,11 @@
  * limitations under the License.
  */
 
-package com.cloudera.itest.packagesmoke
+package org.apache.bigtop.itest.packagesmoke
 
 import org.junit.Test
-import com.cloudera.itest.pmanager.PackageManager
-import com.cloudera.itest.pmanager.PackageInstance
+import org.apache.bigtop.itest.pmanager.PackageManager
+import org.apache.bigtop.itest.pmanager.PackageInstance
 import org.hamcrest.Matcher
 import org.junit.Rule
 import org.junit.rules.ErrorCollector

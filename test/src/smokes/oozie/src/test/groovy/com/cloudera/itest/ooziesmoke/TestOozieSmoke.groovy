@@ -15,11 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.cloudera.itest.ooziesmoke
+package org.apache.bigtop.itest.ooziesmoke
 
 import org.junit.Test
 import static org.junit.Assert.assertTrue
-import com.cloudera.itest.shell.Shell
+import org.apache.bigtop.itest.shell.Shell
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import static junit.framework.Assert.assertEquals
@@ -40,11 +40,11 @@ class TestOozieSmoke {
     Configuration conf = new Configuration();
     conf.addResource('mapred-site.xml');
 
-    oozie_url = System.getProperty("com.cloudera.itest.oozie_url", "http://localhost:11000/oozie");
-    jobtracker = System.getProperty("com.cloudera.itest.jobtracker", "${conf.get('mapred.job.tracker')}");
-    namenode = System.getProperty("com.cloudera.itest.namenode", "${conf.get('fs.default.name')}");
+    oozie_url = System.getProperty("org.apache.bigtop.itest.oozie_url", "http://localhost:11000/oozie");
+    jobtracker = System.getProperty("org.apache.bigtop.itest.jobtracker", "${conf.get('mapred.job.tracker')}");
+    namenode = System.getProperty("org.apache.bigtop.itest.namenode", "${conf.get('fs.default.name')}");
 
-    oozie_tar_home = System.getProperty("com.cloudera.itest.oozie_tar_home",
+    oozie_tar_home = System.getProperty("org.apache.bigtop.itest.oozie_tar_home",
                                         (new File("/usr/share/doc/oozie/")).exists() ?
                                            "/usr/share/doc/oozie/" :
                                            "/usr/share/doc/packages/oozie/");

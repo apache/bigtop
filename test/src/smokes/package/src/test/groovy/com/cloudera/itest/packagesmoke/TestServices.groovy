@@ -15,17 +15,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.cloudera.itest.packagesmoke
+package org.apache.bigtop.itest.packagesmoke
 
 import org.junit.Test
 import org.junit.runner.RunWith
-import com.cloudera.itest.junit.OrderedParameterized
+import org.apache.bigtop.itest.junit.OrderedParameterized
 import org.junit.Rule
 import org.junit.rules.ErrorCollector
 import org.junit.runners.Parameterized.Parameters
 import org.junit.AfterClass
-import com.cloudera.itest.posix.Service
-import com.cloudera.itest.junit.OrderedParameterized.RunStage
+import org.apache.bigtop.itest.posix.Service
+import org.apache.bigtop.itest.junit.OrderedParameterized.RunStage
 import org.hamcrest.Matcher
 import static org.hamcrest.core.IsEqual.equalTo
 

@@ -16,15 +16,15 @@
  * limitations under the License.
  */
 
-package com.cloudera.itest.integration.sqoop
+package org.apache.bigtop.itest.integration.sqoop
 
 import org.junit.Test
 import org.junit.After
 import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertNotNull
-import com.cloudera.itest.JarContent
+import org.apache.bigtop.itest.JarContent
 import org.junit.Before
-import com.cloudera.itest.shell.Shell
+import org.apache.bigtop.itest.shell.Shell
 
 class IntegrationTestSqoopHive {
   private static final String MYSQL_ROOTPW =

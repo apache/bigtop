@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package com.cloudera.itest.packagesmoke
+package org.apache.bigtop.itest.packagesmoke
 
 import org.junit.BeforeClass
 import org.junit.Test
@@ -28,12 +28,12 @@ import org.junit.runner.RunWith
 import org.junit.runners.Parameterized.Parameters
 import org.junit.AfterClass
 
-import com.cloudera.itest.pmanager.PackageInstance
-import com.cloudera.itest.junit.OrderedParameterized
-import com.cloudera.itest.junit.OrderedParameterized.RunStage
+import org.apache.bigtop.itest.pmanager.PackageInstance
+import org.apache.bigtop.itest.junit.OrderedParameterized
+import org.apache.bigtop.itest.junit.OrderedParameterized.RunStage
 
-import static com.cloudera.itest.shell.OS.linux_flavor
-import com.cloudera.itest.shell.Shell
+import static org.apache.bigtop.itest.shell.OS.linux_flavor
+import org.apache.bigtop.itest.shell.Shell
 
 @RunWith(OrderedParameterized.class)
 class TestPackagesSingleNode extends PackageTestCommon {

@@ -15,11 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.cloudera.itest.packagesmoke
+package org.apache.bigtop.itest.packagesmoke
 
-import com.cloudera.itest.junit.OrderedParameterized
+import org.apache.bigtop.itest.junit.OrderedParameterized
 import org.junit.runner.RunWith
-import com.cloudera.itest.junit.OrderedParameterized.RunStage
+import org.apache.bigtop.itest.junit.OrderedParameterized.RunStage
 import org.junit.Test
 
 @RunWith(OrderedParameterized.class)

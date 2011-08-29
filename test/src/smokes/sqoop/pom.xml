@@ -21,11 +21,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.cloudera.itest</groupId>
+    <groupId>org.apache.bigtop.itest</groupId>
     <artifactId>cdh-smokes</artifactId>
     <version>1.0-cdh3u1-SNAPSHOT</version>
   </parent>
-  <groupId>com.cloudera.itest</groupId>
+  <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>sqoop-integration</artifactId>
   <version>1.2.0-cdh3u1-SNAPSHOT</version>
   <name>sqoop-integration</name>

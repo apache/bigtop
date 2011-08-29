@@ -18,7 +18,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.cloudera.itest</groupId>
+  <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>cdh-smokes</artifactId>
   <packaging>pom</packaging>
   <version>1.0-cdh3u1-SNAPSHOT</version>
@@ -67,11 +67,12 @@
     <module>oozie</module>
     <module>hbase</module>
     <module>flume</module>
+    <module>sqoop</module>
   </modules>
 
   <dependencies>
     <dependency>
-      <groupId>com.cloudera.itest</groupId>
+      <groupId>org.apache.bigtop.itest</groupId>
       <artifactId>itest-common</artifactId>
       <version>1.1-SNAPSHOT</version>
       <scope>test</scope>
@@ -84,6 +85,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.3.2</version>
         <configuration>
           <source>1.5</source>
           <target>1.5</target>

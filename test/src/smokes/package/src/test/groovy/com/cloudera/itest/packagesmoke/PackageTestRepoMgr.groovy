@@ -15,11 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.cloudera.itest.packagesmoke
+package org.apache.bigtop.itest.packagesmoke
 
-import com.cloudera.itest.pmanager.PackageManager
-import static com.cloudera.itest.shell.OS.linux_codename
-import static com.cloudera.itest.shell.OS.linux_flavor
+import org.apache.bigtop.itest.pmanager.PackageManager
+import static org.apache.bigtop.itest.shell.OS.linux_codename
+import static org.apache.bigtop.itest.shell.OS.linux_flavor
 
 
 class PackageTestRepoMgr {

@@ -16,20 +16,20 @@
  * limitations under the License.
  */
 
-package com.cloudera.itest.packagesmoke
+package org.apache.bigtop.itest.packagesmoke
 
 import org.junit.rules.ErrorCollector
-import com.cloudera.itest.pmanager.PackageManager
-import com.cloudera.itest.pmanager.PackageInstance
-import com.cloudera.itest.posix.Service
-import com.cloudera.itest.posix.UGI
-import com.cloudera.itest.posix.Alternative
+import org.apache.bigtop.itest.pmanager.PackageManager
+import org.apache.bigtop.itest.pmanager.PackageInstance
+import org.apache.bigtop.itest.posix.Service
+import org.apache.bigtop.itest.posix.UGI
+import org.apache.bigtop.itest.posix.Alternative
 import junit.framework.AssertionFailedError
 import static org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.Matcher
 
-import static com.cloudera.itest.packagesmoke.PackageTestMatchers.MapHasKeys.hasSameKeys
-import com.cloudera.itest.shell.Shell
+import static org.apache.bigtop.itest.packagesmoke.PackageTestMatchers.MapHasKeys.hasSameKeys
+import org.apache.bigtop.itest.shell.Shell
 
 class PackageTestCommon {
   static public PackageManager pm;

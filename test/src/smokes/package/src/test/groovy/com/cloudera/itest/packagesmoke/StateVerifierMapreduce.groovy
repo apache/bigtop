@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.cloudera.itest.packagesmoke
+package org.apache.bigtop.itest.packagesmoke
 
-import com.cloudera.itest.shell.Shell
+import org.apache.bigtop.itest.shell.Shell
 import java.security.MessageDigest
 
 class StateVerifierMapreduce extends StateVerifier {

@@ -16,15 +16,15 @@
  * limitations under the License.
  */
 
-package com.cloudera.itest.flumesmoke
+package org.apache.bigtop.itest.flumesmoke
 
 import org.junit.Test
-import com.cloudera.itest.shell.Shell
+import org.apache.bigtop.itest.shell.Shell
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import static junit.framework.Assert.assertEquals
 import org.apache.hadoop.conf.Configuration
-import com.cloudera.itest.JarContent
+import org.apache.bigtop.itest.JarContent
 import org.apache.hadoop.hdfs.DFSConfigKeys
 
 class TestFlumeSmoke {

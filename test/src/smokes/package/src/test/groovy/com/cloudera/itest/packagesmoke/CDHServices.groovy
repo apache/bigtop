@@ -16,9 +16,9 @@
  * limitations under the License.
  */
 
-package com.cloudera.itest.packagesmoke
+package org.apache.bigtop.itest.packagesmoke
 
-import com.cloudera.itest.pmanager.PackageManager
+import org.apache.bigtop.itest.pmanager.PackageManager
 
 class CDHServices {
   static final Map components = [

@@ -18,12 +18,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <parent>
-      <groupId>com.cloudera.itest</groupId>
+      <groupId>org.apache.bigtop.itest</groupId>
       <artifactId>cdh-smokes</artifactId>
       <version>1.0-cdh3u1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.cloudera.itest</groupId>
+  <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>packagesmoke</artifactId>
   <version>1.0-cdh3u1-SNAPSHOT</version>
   <name>packagesmoke</name> 
@@ -49,7 +49,7 @@
     </dependency>
 
     <dependency>
-      <groupId>com.cloudera.itest</groupId>
+      <groupId>org.apache.bigtop.itest</groupId>
       <artifactId>hadoopsmoke</artifactId>
       <version>0.20.2-cdh3u1-SNAPSHOT</version>
       <type>test-jar</type>

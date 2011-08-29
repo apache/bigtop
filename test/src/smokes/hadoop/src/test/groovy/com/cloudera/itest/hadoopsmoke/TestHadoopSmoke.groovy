@@ -16,10 +16,10 @@
  * limitations under the License.
  */
 
-package com.cloudera.itest.hadoopsmoke
+package org.apache.bigtop.itest.hadoopsmoke
 
-import com.cloudera.itest.JarContent
-import com.cloudera.itest.shell.Shell
+import org.apache.bigtop.itest.JarContent
+import org.apache.bigtop.itest.shell.Shell
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test

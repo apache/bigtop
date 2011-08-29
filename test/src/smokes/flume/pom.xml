@@ -19,11 +19,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-      <groupId>com.cloudera.itest</groupId>
+      <groupId>org.apache.bigtop.itest</groupId>
       <artifactId>cdh-smokes</artifactId>
       <version>1.0-cdh3u1-SNAPSHOT</version>
   </parent>
-  <groupId>com.cloudera.itest</groupId>
+  <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>flumesmoke</artifactId>
   <version>0.9.3-cdh3u1-SNAPSHOT</version>
   <name>flumesmoke</name>
