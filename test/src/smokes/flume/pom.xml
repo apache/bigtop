@@ -19,20 +19,22 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-      <groupId>org.apache.bigtop.itest</groupId>
-      <artifactId>cdh-smokes</artifactId>
-      <version>1.0-cdh3u1-SNAPSHOT</version>
+    <groupId>org.apache.bigtop.itest</groupId>
+    <artifactId>bigtop-smokes</artifactId>
+    <version>0.2.0-incubating-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
   <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>flumesmoke</artifactId>
-  <version>0.9.3-cdh3u1-SNAPSHOT</version>
+  <version>0.2.0-incubating-SNAPSHOT</version>
+
   <name>flumesmoke</name>
 
   <dependencies>
      <dependency>
       <groupId>org.apache.hadoop</groupId>
       <artifactId>hadoop-core</artifactId>
-      <version>0.20.2-CDH3B4</version>
+      <version>0.20.2</version>
     </dependency>
   </dependencies>
 </project>

@@ -18,47 +18,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.apache.bigtop</groupId>
+    <artifactId>bigtop</artifactId>
+    <version>0.2.0-incubating-SNAPSHOT</version>
+    <relativePath>../../../pom.xml</relativePath>
+  </parent>
+
   <groupId>org.apache.bigtop.itest</groupId>
-  <artifactId>cdh-smokes</artifactId>
+  <artifactId>bigtop-smokes</artifactId>
   <packaging>pom</packaging>
-  <version>1.0-cdh3u1-SNAPSHOT</version>
-  <name>cdh-smokes</name>
+  <version>0.2.0-incubating-SNAPSHOT</version>
+  <name>bigtop-smokes</name>
 
-  <properties>
-    <maven.internal.releases>http://azov01.sf.cloudera.com:8081/artifactory/libs-release-local</maven.internal.releases>
-    <maven.internal.snapshots>https://repository.cloudera.com/content/repositories/testsnaps/</maven.internal.snapshots>
-    <maven.releases.repository>https://repository.cloudera.com/content/groups/cdh-releases-rcs/</maven.releases.repository>
-  </properties>
-
-  <scm>
-    <connection>scm:git:git://github.sf.cloudera.com/QE/stack.tests.git</connection>
-  </scm>
-
-  <repositories>
-    <repository>
-      <id>cloudera-snapshots</id>
-      <name>Internal Snapshots</name>
-      <url>${maven.internal.snapshots}</url>
-    </repository>
-    <repository>
-      <id>releases</id>
-      <name>Cloudera Releases</name>
-      <url>${maven.releases.repository}</url>
-    </repository>
-  </repositories>
-
-  <distributionManagement>
-    <snapshotRepository>
-      <id>cloudera-snapshots</id>
-      <name>Internal Snapshots</name>
-      <url>${maven.internal.snapshots}</url>
-    </snapshotRepository>
-    <repository>
-      <id>azov01.sf.cloudera.com</id>
-      <name>Internal Releases</name>
-      <url>${maven.internal.releases}</url>
-    </repository>
-  </distributionManagement>
 
   <modules>
     <module>hadoop</module>
@@ -74,7 +46,7 @@
     <dependency>
       <groupId>org.apache.bigtop.itest</groupId>
       <artifactId>itest-common</artifactId>
-      <version>1.1-SNAPSHOT</version>
+      <version>0.2.0-incubating-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
 

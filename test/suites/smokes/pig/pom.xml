@@ -20,15 +20,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <parent>
-      <groupId>org.apache.bigtop.itest</groupId>
-      <artifactId>smoke-tests</artifactId>
-      <version>1.0-cdh3u1-SNAPSHOT</version>
+    <groupId>org.apache.bigtop.itest</groupId>
+    <artifactId>smoke-tests</artifactId>
+    <version>0.2.0-incubating-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
+
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>pigsmokes.smoke-tests</artifactId>
   <packaging>jar</packaging>
-  <version>1.1-SNAPSHOT</version>
+  <version>0.2.0-incubating-SNAPSHOT</version>
   <name>pigsmokes</name>
 
   <properties>

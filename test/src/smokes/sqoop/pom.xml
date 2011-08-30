@@ -22,11 +22,13 @@
 
   <parent>
     <groupId>org.apache.bigtop.itest</groupId>
-    <artifactId>cdh-smokes</artifactId>
-    <version>1.0-cdh3u1-SNAPSHOT</version>
+    <artifactId>bigtop-smokes</artifactId>
+    <version>0.2.0-incubating-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
+
   <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>sqoop-integration</artifactId>
-  <version>1.2.0-cdh3u1-SNAPSHOT</version>
+  <version>0.2.0-incubating-SNAPSHOT</version>
   <name>sqoop-integration</name>
 </project>

@@ -22,40 +22,37 @@
   <parent>
     <groupId>org.apache.bigtop.itest</groupId>
     <artifactId>stacks-common</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <relativePath>../common</relativePath>
+    <version>0.2.0-incubating-SNAPSHOT</version>
+    <relativePath>../common/pom.xml</relativePath>
   </parent>
+
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>smoke-tests</artifactId>
   <packaging>pom</packaging>
-  <version>1.0-cdh3u1-SNAPSHOT</version>
+  <version>0.2.0-incubating-SNAPSHOT</version>
   <name>hadoop-stack-validation</name>
 
   <properties>
     <!--
       BOM definitions
     -->
-    <itest-conf.version>1.1-SNAPSHOT</itest-conf.version>
-    <itest-common.version>1.1-SNAPSHOT</itest-common.version>
-    <hadoop.version>0.20.2-cdh3u0</hadoop.version>
-    <hadoop-smoke.version>0.20.2-cdh3u1-SNAPSHOT</hadoop-smoke.version>
-    <flume-smoke.version>0.9.3-cdh3u1-SNAPSHOT</flume-smoke.version>
-    <hbase-smoke.version>0.90.1-cdh3u1-SNAPSHOT</hbase-smoke.version>
-    <hive-smoke.version>0.7.0-cdh3u1-SNAPSHOT</hive-smoke.version>
-    <oozie-smoke.version>2.3.0-cdh3u1-SNAPSHOT</oozie-smoke.version>
-    <package-smoke.version>1.0-cdh3u1-SNAPSHOT</package-smoke.version>
-    <pig-smoke.version>0.8.0-SNAPSHOT</pig-smoke.version>
-    <pig.version>0.8.0-cdh3u0</pig.version>
+    <itest-conf.version>0.2.0-incubating-SNAPSHOT</itest-conf.version>
+    <itest-common.version>0.2.0-incubating-SNAPSHOT</itest-common.version>
+    <hadoop.version>0.20.2</hadoop.version>
+    <hadoop-smoke.version>0.2.0-incubating-SNAPSHOT</hadoop-smoke.version>
+    <flume-smoke.version>0.2.0-incubating-SNAPSHOT</flume-smoke.version>
+    <hbase-smoke.version>0.2.0-incubating-SNAPSHOT</hbase-smoke.version>
+    <hive-smoke.version>0.2.0-incubating-SNAPSHOT</hive-smoke.version>
+    <oozie-smoke.version>0.2.0-incubating-SNAPSHOT</oozie-smoke.version>
+    <package-smoke.version>0.2.0-incubating-SNAPSHOT</package-smoke.version>
+    <pig-smoke.version>0.9.0-SNAPSHOT</pig-smoke.version>
+    <pig.version>0.9.0</pig.version>
     <sqoop.version>1.2.0-cdh3u0</sqoop.version>
     <!--
       End of BOM definitions
     -->
   </properties>
-
-  <scm>
-    <connection>scm:git:git://github.sf.cloudera.com/cloudera/stacks.git</connection>
-  </scm>
 
   <!--
     List of modules which should be executed as a part of stack testing run

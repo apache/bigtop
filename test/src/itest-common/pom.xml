@@ -18,11 +18,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
-
+  <parent>
+    <groupId>org.apache.bigtop</groupId>
+    <artifactId>bigtop</artifactId>
+    <version>0.2.0-incubating-SNAPSHOT</version>
+    <relativePath>../../../pom.xml</relativePath>
+  </parent>
+    
   <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>itest-common</artifactId>
   <name>iTest: system and integration testing in the cloud</name>
-  <version>1.1-SNAPSHOT</version>
+  <version>0.2.0-incubating-SNAPSHOT</version>
+
 
   <dependencies>
     <dependency>
@@ -115,24 +122,4 @@
     </extensions>
   </build>
 
-  <scm>
-    <connection>scm:git:git://github.com/cloudera/iTest.git</connection>
-  </scm>
-
-  <distributionManagement>
-    <snapshotRepository>
-      <id>cloudera-snapshots</id>
-      <name>Internal Snapshots</name>
-      <url>https://repository.cloudera.com/content/repositories/testsnaps/</url>
-    </snapshotRepository>
-    <repository>
-      <id>azov01.sf.cloudera.com</id>
-      <name>Internal Releases</name>
-      <url>http://azov01.sf.cloudera.com:8081/artifactory/libs-release-local</url>
-    </repository>
-    <site>
-      <id>github-project-site</id>
-      <url>gitsite:git@github.com/cloudera/iTest.git</url>
-    </site>
-  </distributionManagement>
 </project>
