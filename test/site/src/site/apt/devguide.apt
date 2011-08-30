@@ -22,13 +22,11 @@ How to contribute to iTest
   If you find this project interesting and want to contribute your time, ideas,
   code, documentation writing skills, testing cycles - you are very welcome!
 
-  Contributing is easy! Simply go to the {{{http://github.com/cloudera/iTest}project git repository}},
-  fork it and go ahead! GitHub provides a nice collaboration feature called
-  'pull request' where one case easily offer new code to be included into
-  mainstream code base upon successful code review and discussion.
+  Contributing is easy! Simply go to the {{{http://incubator.apache.org/bigtop/}project website}},
+  join it and go ahead! 
 
   If you find a problem with iTest, or have a feature request you can
-  {{{https://github.com/cloudera/iTest/issues}open new issue}}
+  {{{https://issues.apache.org/jira/browse/BIGTOP}open new issue}}
 
   So, jump on and code with us! It is fun!
 

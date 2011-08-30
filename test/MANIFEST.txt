@@ -10,12 +10,12 @@ Public Code License 1.0
 
 Developed by Cloudera
     com.cloudera.sqoop:sqoop:jar:1.2.0-cdh3u0
-    com.cloudera.itest:smoke-tests-conf:jar:1.1-SNAPSHOT
-    com.cloudera.itest:itest-common:jar:1.1-SNAPSHOT
-    com.cloudera.itest:hivesmoke:test-jar:tests:0.7.0-cdh3u1-SNAPSHOT
-    com.cloudera.itest:smoke-tests-conf:jar:1.1-SNAPSHOT
-    com.cloudera.itest:itest-common:jar:1.1-SNAPSHOT
-    com.cloudera.itest:hadoopsmoke:test-jar:tests:0.20.2-cdh3u1-SNAPSHOT
-    com.cloudera.itest:ooziesmoke:test-jar:tests:2.3.0-cdh3u1-SNAPSHOT
-    com.cloudera.itest:flumesmoke:test-jar:tests:0.9.3-cdh3u1-SNAPSHOT
-    com.cloudera.itest:hbasesmoke:test-jar:tests:0.90.1-cdh3u1-SNAPSHOT
+    org.apache.bigtop.itest:smoke-tests-conf:jar:1.1-SNAPSHOT
+    org.apache.bigtop.itest:itest-common:jar:1.1-SNAPSHOT
+    org.apache.bigtop.itest:hivesmoke:test-jar:tests:0.7.0-cdh3u1-SNAPSHOT
+    org.apache.bigtop.itest:smoke-tests-conf:jar:1.1-SNAPSHOT
+    org.apache.bigtop.itest:itest-common:jar:1.1-SNAPSHOT
+    org.apache.bigtop.itest:hadoopsmoke:test-jar:tests:0.20.2-cdh3u1-SNAPSHOT
+    org.apache.bigtop.itest:ooziesmoke:test-jar:tests:2.3.0-cdh3u1-SNAPSHOT
+    org.apache.bigtop.itest:flumesmoke:test-jar:tests:0.9.3-cdh3u1-SNAPSHOT
+    org.apache.bigtop.itest:hbasesmoke:test-jar:tests:0.90.1-cdh3u1-SNAPSHOT

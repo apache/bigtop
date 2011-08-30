@@ -20,13 +20,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <parent>
-    <groupId>com.cloudera.itest</groupId>
+    <groupId>org.apache.bigtop.itest</groupId>
     <artifactId>stacks-common</artifactId>
     <version>1.0-SNAPSHOT</version>
     <relativePath>../common</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.cloudera.itest</groupId>
+  <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>smoke-tests</artifactId>
   <packaging>pom</packaging>
   <version>1.0-cdh3u1-SNAPSHOT</version>
@@ -74,14 +74,14 @@
     <dependencies>
       <!-- Import configuration resources for the stack validation -->
       <dependency>
-        <groupId>com.cloudera.itest</groupId>
+        <groupId>org.apache.bigtop.itest</groupId>
         <artifactId>smoke-tests-conf</artifactId>
         <version>${itest-conf.version}</version>
         <scope>test</scope>
       </dependency>
       <!-- Import of iTest artifact serving out-of-the-jar convenience methods -->
       <dependency>
-        <groupId>com.cloudera.itest</groupId>
+        <groupId>org.apache.bigtop.itest</groupId>
         <artifactId>itest-common</artifactId>
         <version>${itest-common.version}</version>
         <scope>test</scope>
@@ -118,7 +118,7 @@
       </dependency>
 <!-- Test artifacts -->
       <dependency>
-        <groupId>com.cloudera.itest</groupId>
+        <groupId>org.apache.bigtop.itest</groupId>
         <artifactId>hadoopsmoke</artifactId>
         <version>${hadoop-smoke.version}</version>
         <!-- FIXME: test-jar seems to be an suboptimal thing to use for
@@ -130,21 +130,21 @@
         <scope>test</scope>
       </dependency>
       <dependency>
-        <groupId>com.cloudera.itest</groupId>
+        <groupId>org.apache.bigtop.itest</groupId>
         <artifactId>hbasesmoke</artifactId>
         <version>${hbase-smoke.version}</version>
         <type>test-jar</type>
         <scope>test</scope>
       </dependency>
       <dependency>
-        <groupId>com.cloudera.itest</groupId>
+        <groupId>org.apache.bigtop.itest</groupId>
         <artifactId>hivesmoke</artifactId>
         <version>${hive-smoke.version}</version>
         <type>test-jar</type>
         <scope>test</scope>
       </dependency>
       <dependency>
-        <groupId>com.cloudera.itest</groupId>
+        <groupId>org.apache.bigtop.itest</groupId>
         <artifactId>ooziesmoke</artifactId>
         <version>${oozie-smoke.version}</version>
         <type>test-jar</type>
@@ -157,7 +157,7 @@
         <scope>test</scope>
       </dependency>
       <dependency>
-        <groupId>com.cloudera.itest</groupId>
+        <groupId>org.apache.bigtop.itest</groupId>
         <artifactId>packagesmoke</artifactId>
         <version>${package-smoke.version}</version>
         <type>test-jar</type>
@@ -181,13 +181,13 @@
   <dependencies>
     <!-- We have to be configured in order to function properly -->
     <dependency>
-      <groupId>com.cloudera.itest</groupId>
+      <groupId>org.apache.bigtop.itest</groupId>
       <artifactId>smoke-tests-conf</artifactId>
       <scope>test</scope>
     </dependency>
     <!-- Turn them on for all children -->
     <dependency>
-      <groupId>com.cloudera.itest</groupId>
+      <groupId>org.apache.bigtop.itest</groupId>
       <artifactId>itest-common</artifactId>
       <scope>test</scope>
     </dependency>

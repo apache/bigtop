@@ -19,7 +19,7 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.cloudera.itest</groupId>
+  <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>itest-common</artifactId>
   <name>iTest: system and integration testing in the cloud</name>
   <version>1.1-SNAPSHOT</version>

@@ -20,18 +20,18 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <parent>
-      <groupId>com.cloudera.itest</groupId>
+      <groupId>org.apache.bigtop.itest</groupId>
       <artifactId>smoke-tests</artifactId>
       <version>1.0-cdh3u1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.cloudera.itest</groupId>
+  <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>hivesmokes.smoke-tests</artifactId>
   <version>1.1-SNAPSHOT</version>
   <name>hivesmokes</name>
 
   <properties>
-    <org.apache.maven-dependency-plugin.groupId>com.cloudera.itest</org.apache.maven-dependency-plugin.groupId>
+    <org.apache.maven-dependency-plugin.groupId>org.apache.bigtop.itest</org.apache.maven-dependency-plugin.groupId>
     <org.apache.maven-dependency-plugin.artifactId>hivesmoke</org.apache.maven-dependency-plugin.artifactId>
     <org.apache.maven-dependency-plugin.version>${hive-smoke.version}</org.apache.maven-dependency-plugin.version>
 
@@ -46,7 +46,7 @@
       <artifactId>hadoop-core</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.cloudera.itest</groupId>
+      <groupId>org.apache.bigtop.itest</groupId>
       <artifactId>hivesmoke</artifactId>
       <version>${hive-smoke.version}</version>
       <type>test-jar</type>
@@ -97,9 +97,9 @@
         <version>2.7.1</version>
         <configuration>
           <systemPropertyVariables>
-            <com.cloudera.itest.hivesmoke.IntegrationTestHiveSmokeBulk.extra_jars>
+            <org.apache.bigtop.itest.hivesmoke.IntegrationTestHiveSmokeBulk.extra_jars>
             ${HBASE_HOME}/lib/${hbase.jar},${HIVE_HOME}/lib/${hive-hbase-handler.jar},${ZOOKEEPER_HOME}/${zookeeper.jar},${HIVE_HOME}/lib/${guava.jar}
-            </com.cloudera.itest.hivesmoke.IntegrationTestHiveSmokeBulk.extra_jars>
+            </org.apache.bigtop.itest.hivesmoke.IntegrationTestHiveSmokeBulk.extra_jars>
           </systemPropertyVariables>
           <forkMode>always</forkMode>
           <additionalClasspathElements>
@@ -128,20 +128,20 @@
               <source>
                 if (!System.getProperties().keySet().contains('enforcer.skip')) {
                   project.properties['zookeeper.jar'] =
-                    com.cloudera.itest.JarContent.getJarName(
+                    org.apache.bigtop.itest.JarContent.getJarName(
                         "${ZOOKEEPER_HOME}", 'zookeeper-.*.jar');
                   if ( project.properties['zookeeper.jar'] == null ) {
                     throw new IOException ("zookeeper*.jar isn't found");
                   }
                   project.properties['hbase.jar'] =
-                    com.cloudera.itest.JarContent.getJarName(
+                    org.apache.bigtop.itest.JarContent.getJarName(
                         "${HBASE_HOME}/lib", 'hbase-.*.jar');
                   if ( project.properties['hbase.jar'] == null ) {
                     throw new IOException ("hbase*.jar isn't found");
                   }
                   [ 'hive-hbase-handler.jar', 'hive-exec.jar', 'hive-jdbc.jar', 'hive-metastore.jar', 'hive-service.jar', 'slf4j-api.jar', 'slf4j-log4j12.jar', 'guava.jar' ].each {
                     project.properties[it] =
-                      com.cloudera.itest.JarContent.getJarName(
+                      org.apache.bigtop.itest.JarContent.getJarName(
                           "${HIVE_HOME}/lib", "${it.replaceAll(/.jar$/, '')}-.*\\.jar");
                     if ( project.properties[it] == null ) {
                       throw new IOException ("$it isn't found");

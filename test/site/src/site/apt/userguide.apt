@@ -20,7 +20,7 @@ Develop with iTest
 ** Shell support
 
   iTest implements transparent shell-outs from test written in Java and Groovy.
-  This support is implemented in <<<com.cloudera.itest.shell>>> package.
+  This support is implemented in <<<org.apache.bigtop.itest.shell>>> package.
 
 +------------------------+
 ...

@@ -19,7 +19,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.cloudera.itest</groupId>
+  <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>itest-site</artifactId>
   <version>1.0-SNAPSHOT</version>
 
@@ -43,11 +43,11 @@
     </license>
   </licenses>
   <issueManagement>
-    <system>github</system>
-    <url>https://github.com/cloudera/iTest/issues</url>
+    <system>jira</system>
+    <url>https://issues.apache.org/jira/browse/BIGTOP</url>
   </issueManagement>
   <scm>
-    <url>http://github.com/cloudera/iTest</url>
+    <url>https://svn.apache.org/repos/asf/incubator/bigtop/</url>
   </scm>
   <distributionManagement>
     <site>

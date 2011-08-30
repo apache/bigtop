@@ -20,12 +20,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <parent>
-      <groupId>com.cloudera.itest</groupId>
+      <groupId>org.apache.bigtop.itest</groupId>
       <artifactId>smoke-tests</artifactId>
       <version>1.0-cdh3u1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.cloudera.itest</groupId>
+  <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>ooziesmokes.smoke-tests</artifactId>
   <version>1.1-SNAPSHOT</version>
   <name>ooziesmokes</name>
@@ -33,14 +33,14 @@
   <properties>
     <OOZIE_URL>${env.OOZIE_URL}</OOZIE_URL>
 
-    <org.apache.maven-dependency-plugin.groupId>com.cloudera.itest</org.apache.maven-dependency-plugin.groupId>
+    <org.apache.maven-dependency-plugin.groupId>org.apache.bigtop.itest</org.apache.maven-dependency-plugin.groupId>
     <org.apache.maven-dependency-plugin.artifactId>ooziesmoke</org.apache.maven-dependency-plugin.artifactId>
     <org.apache.maven-dependency-plugin.version>${oozie-smoke.version}</org.apache.maven-dependency-plugin.version>
   </properties>
 
   <dependencies>
     <dependency>
-      <groupId>com.cloudera.itest</groupId>
+      <groupId>org.apache.bigtop.itest</groupId>
       <artifactId>ooziesmoke</artifactId>
       <version>${oozie-smoke.version}</version>
       <type>test-jar</type>
@@ -60,7 +60,7 @@
         <version>2.7.1</version>
         <configuration>
           <systemPropertyVariables>
-            <com.cloudera.itest.oozie_url>${OOZIE_URL}</com.cloudera.itest.oozie_url>
+            <org.apache.bigtop.itest.oozie_url>${OOZIE_URL}</org.apache.bigtop.itest.oozie_url>
           </systemPropertyVariables>
           <forkMode>always</forkMode>
         </configuration>

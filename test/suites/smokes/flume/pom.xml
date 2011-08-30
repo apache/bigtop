@@ -20,25 +20,25 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <parent>
-      <groupId>com.cloudera.itest</groupId>
+      <groupId>org.apache.bigtop.itest</groupId>
       <artifactId>smoke-tests</artifactId>
       <version>1.0-cdh3u1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.cloudera.itest</groupId>
+  <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>flumesmokes.smoke-tests</artifactId>
   <version>1.1-SNAPSHOT</version>
   <name>flumesmokes</name>
 
   <properties>
-    <org.apache.maven-dependency-plugin.groupId>com.cloudera.itest</org.apache.maven-dependency-plugin.groupId>
+    <org.apache.maven-dependency-plugin.groupId>org.apache.bigtop.itest</org.apache.maven-dependency-plugin.groupId>
     <org.apache.maven-dependency-plugin.artifactId>flumesmoke</org.apache.maven-dependency-plugin.artifactId>
     <org.apache.maven-dependency-plugin.version>${flume-smoke.version}</org.apache.maven-dependency-plugin.version>
   </properties>
 
   <dependencies>
     <dependency>
-      <groupId>com.cloudera.itest</groupId>
+      <groupId>org.apache.bigtop.itest</groupId>
       <artifactId>flumesmoke</artifactId>
       <version>${flume-smoke.version}</version>
       <type>test-jar</type>

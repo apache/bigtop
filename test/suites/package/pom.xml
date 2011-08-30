@@ -21,17 +21,17 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-      <groupId>com.cloudera.itest</groupId>
+      <groupId>org.apache.bigtop.itest</groupId>
       <artifactId>smoke-tests</artifactId>
       <version>1.0-cdh3u1-SNAPSHOT</version>
   </parent>
-  <groupId>com.cloudera.itest</groupId>
+  <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>packagesmokes.smoke-tests</artifactId>
   <version>1.1-SNAPSHOT</version>
   <name>packagesmokes</name>
 
   <!-- FIXME: we really have to have a way to bootstrap from a Maven repo  -->
-  <!--        -Dproject.pom=com.cloudera.itest:packagesmokes:1.0-SNAPSHOT  -->
+  <!--        -Dproject.pom=org.apache.bigtop.itest:packagesmokes:1.0-SNAPSHOT  -->
   <repositories>
     <repository>
       <id>cloudera-snapshot</id>
@@ -49,7 +49,7 @@
     <cdh.repo.host>archive.cloudera.com</cdh.repo.host>
     <cdh.repo.version>3</cdh.repo.version>
 
-    <org.apache.maven-dependency-plugin.groupId>com.cloudera.itest</org.apache.maven-dependency-plugin.groupId>
+    <org.apache.maven-dependency-plugin.groupId>org.apache.bigtop.itest</org.apache.maven-dependency-plugin.groupId>
     <org.apache.maven-dependency-plugin.artifactId>packagesmoke</org.apache.maven-dependency-plugin.artifactId>
     <org.apache.maven-dependency-plugin.version>${package-smoke.version}</org.apache.maven-dependency-plugin.version>
     <org.apache.maven-dependency-plugin.output>${project.build.directory}</org.apache.maven-dependency-plugin.output>
@@ -59,7 +59,7 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.cloudera.itest</groupId>
+      <groupId>org.apache.bigtop.itest</groupId>
       <artifactId>packagesmoke</artifactId>
       <version>${package-smoke.version}</version>
       <type>test-jar</type>

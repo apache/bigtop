@@ -20,7 +20,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.cloudera.itest</groupId>
+  <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>stacks-common</artifactId>
   <packaging>pom</packaging>
   <version>1.0-SNAPSHOT</version>
@@ -151,7 +151,7 @@
         <version>1.0</version>
       </dependency>
       <dependency>
-        <groupId>com.cloudera.itest</groupId>
+        <groupId>org.apache.bigtop.itest</groupId>
         <artifactId>itest-common</artifactId>
         <version>1.0</version>
         <scope>test</scope>
@@ -241,7 +241,7 @@
               </goals>
               <configuration>
                 <source><![CDATA[
-                  import com.cloudera.itest.*
+                  import org.apache.bigtop.itest.*
 
                   def nm   = project.properties['org.apache.maven-dependency-plugin.artifactId'];
                   def vers = project.properties['org.apache.maven-dependency-plugin.version'];
@@ -306,12 +306,12 @@
             <workingDirectory>${project.build.directory}</workingDirectory>
             <systemPropertyVariables>
                <HADOOP_HOME>${HADOOP_HOME}</HADOOP_HOME>
-               <log4j.configuration>com.cloudera.itest.log4j.configuration</log4j.configuration>
-               <com.cloudera.itest.log4j.level>INFO</com.cloudera.itest.log4j.level>
+               <log4j.configuration>org.apache.bigtop.itest.log4j.configuration</log4j.configuration>
+               <org.apache.bigtop.itest.log4j.level>INFO</org.apache.bigtop.itest.log4j.level>
             </systemPropertyVariables>
             <additionalClasspathElements>
               <additionalClasspathElement>${HADOOP_CONF_DIR}</additionalClasspathElement>
-              <com.cloudera.itest.JUnitUtils.results.dir>${project.build.directory}/failsafe-reports</com.cloudera.itest.JUnitUtils.results.dir>
+              <org.apache.bigtop.itest.JUnitUtils.results.dir>${project.build.directory}/failsafe-reports</org.apache.bigtop.itest.JUnitUtils.results.dir>
             </additionalClasspathElements>
           </configuration>
           <executions>

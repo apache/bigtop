@@ -85,7 +85,7 @@ mvn verify
 
 * Putting it all together
 
-  As you can see in the {{{https://github.com/cloudera/iTest/tree/master/examples}examples}}
+  As you can see in the {{{https://svn.apache.org/repos/asf/incubator/bigtop/trunk/test/suites/}suites}}
   we are using Maven failsafe plugin to execute tests in the integration testing
   phase of a maven project lifecycle.
 
@@ -97,7 +97,7 @@ mvn verify
   ones from jars found in the classpath will be executed.
 
   You can see this step being done in the toplevel
-  {{{https://github.com/cloudera/iTest/blob/master/examples/pom.xml}pom.xml}}
+  {{{https://svn.apache.org/repos/asf/incubator/bigtop/trunk/test/suites/common/pom.xml}pom.xml}}
   file in the configuration section of <<<org.codehaus.groovy.maven>>> plugin
 
   iTest provides a convenient method of unpacking data files included

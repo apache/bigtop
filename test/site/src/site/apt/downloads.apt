@@ -28,7 +28,7 @@ repository. The repository is located at repository.cloudera.com
 
 +--------------------------------------+
 <dependency>
-  <groupId>com.cloudera.itest</groupId>
+  <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>itest-common</artifactId>
   <version>1.0-SNAPSHOT</version>
 </dependency>
@@ -40,12 +40,12 @@ repository. The repository is located at repository.cloudera.com
 
 +--------------------------------------+
 <dependency>
-  <groupId>com.cloudera.itest</groupId>
+  <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>itest-common</artifactId>
   <version>1.0-SNAPSHOT</version>
   <classifier>sources</classifier>
 </dependency>
 +--------------------------------------+
 
-  Or you can clone iTest workspace from github.com/cloudera/iTest using {{{http://git-scm.com/}git}}
+  Or you can fetch iTest workspace from https://svn.apache.org/repos/asf/incubator/bigtop/
 
