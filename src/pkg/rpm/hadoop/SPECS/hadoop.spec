@@ -104,6 +104,7 @@ Source2: hadoop-init.tmpl
 Source3: hadoop-init.tmpl.suse
 Source4: hadoop.1
 Source5: hadoop-fuse-dfs.1
+Source6: hadoop-fuse.default
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: python >= 2.4, git, fuse-devel,fuse, automake, autoconf
 Requires: textutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service
@@ -370,6 +371,7 @@ do
 done
 %__install -d -m 0755 $RPM_BUILD_ROOT/etc/default
 %__cp $RPM_SOURCE_DIR/hadoop.default $RPM_BUILD_ROOT/etc/default/hadoop
+%__cp $RPM_SOURCE_DIR/hadoop-fuse.default $RPM_BUILD_ROOT/etc/default/hadoop-fuse
 
 
 # /var/lib/hadoop/cache
@@ -484,6 +486,7 @@ fi
 #%defattr(-,root,root)
 #%attr(0755,root,root) %{bin_hadoop}/hadoop-fuse-dfs
 #%attr(0755,root,root) %{man_hadoop}/man1/hadoop-fuse-dfs.1.gz
+/etc/default/hadoop-fuse
 
 %files pipes
 %defattr(-,root,root)

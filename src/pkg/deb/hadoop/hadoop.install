@@ -1,5 +1,5 @@
 /usr/bin
 /usr/lib/hadoop
 /etc/hadoop/conf.empty
-/etc/default
+/etc/default/hadoop
 /usr/share/doc/hadoop

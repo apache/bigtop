@@ -1,0 +1,1 @@
+export LIBHDFS_OPTS="-Xms128m -Xmx512m"
