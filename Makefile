@@ -17,7 +17,7 @@ BASE_DIR  :=$(shell pwd)
 BUILD_DIR ?=$(BASE_DIR)/build
 DL_DIR    ?=$(BASE_DIR)/dl
 OUTPUT_DIR?=$(BASE_DIR)/output
-REPO_DIR  ?=$(BASE_DIR)/src
+REPO_DIR  ?=$(BASE_DIR)/bigtop-repos
 DIST_DIR  ?=$(BASE_DIR)/dist
 
 REQUIRED_DIRS = $(BUILD_DIR) $(DL_DIR) $(OUTPUT_DIR)

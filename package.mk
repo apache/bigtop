@@ -27,10 +27,10 @@ $(BUILD_DIR)/%/.download:
 $(BUILD_DIR)/%/.srpm:
 	-rm -rf $(PKG_BUILD_DIR)/rpm/
 	mkdir -p $(PKG_BUILD_DIR)/rpm/
-	cp -r $(BASE_DIR)/src/pkg/rpm/$($(PKG)_NAME)/* $(PKG_BUILD_DIR)/rpm/
+	cp -r $(BASE_DIR)/bigtop-packages/src/rpm/$($(PKG)_NAME)/* $(PKG_BUILD_DIR)/rpm/
 	mkdir -p $(PKG_BUILD_DIR)/rpm/{INSTALL,SOURCES,BUILD,SRPMS}
 	cp $($(PKG)_DOWNLOAD_DST) $(PKG_BUILD_DIR)/rpm/SOURCES
-	[ -d $(BASE_DIR)/src/pkg/common/$($(PKG)_NAME) ] && cp -r $(BASE_DIR)/src/pkg/common/$($(PKG)_NAME)/* $(PKG_BUILD_DIR)/rpm/SOURCES
+	[ -d $(BASE_DIR)/bigtop-packages/src/common/$($(PKG)_NAME) ] && cp -r $(BASE_DIR)/bigtop-packages/src/common/$($(PKG)_NAME)/* $(PKG_BUILD_DIR)/rpm/SOURCES
 	rpmbuild --define "_topdir $(PKG_BUILD_DIR)/rpm/" \
 						--define "$($(PKG)_NAME)_base_version $($(PKG)_BASE_VERSION)" \
 						--define "$($(PKG)_NAME)_version $($(PKG)_PKG_VERSION)$(BIGTOP_BUILD_STAMP)" \
@@ -68,8 +68,8 @@ $(BUILD_DIR)/%/.sdeb:
 	cd $(PKG_BUILD_DIR)/deb/$($(PKG)_NAME)-$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP) && \
 	  tar --strip-components 1 -xvf ../$($(PKG)_PKG_NAME)_$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP).orig.tar.gz
 	cd $(PKG_BUILD_DIR)/deb/$($(PKG)_NAME)-$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP) && \
-          cp -r $(BASE_DIR)/src/pkg/deb/$($(PKG)_NAME) debian && \
-	  cp -r $(BASE_DIR)/src/pkg/common/$($(PKG)_NAME)/* debian && \
+          cp -r $(BASE_DIR)/bigtop-packages/src/deb/$($(PKG)_NAME) debian && \
+	  cp -r $(BASE_DIR)/bigtop-packages/src/common/$($(PKG)_NAME)/* debian && \
 	  echo -e "version=$(PKG_PKG_VERSION)\ngit.hash=deadbeaf" >> debian/build.properties && \
 	  (echo -e "$($(PKG)_PKG_NAME) ($(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP)-$($(PKG)_RELEASE)) stable; urgency=low\n" && \
            echo    "  Clean build" && \
@@ -108,7 +108,7 @@ $(BUILD_DIR)/%/.deb:
 # Make apt repo
 $(BUILD_DIR)/%/.apt: $(BUILD_DIR)/%/.deb
 	-mkdir -p $(OUTPUT_DIR)/apt/conf
-	cp $(REPO_DIR)/repos/distributions $(OUTPUT_DIR)/apt/conf
+	cp $(REPO_DIR)/apt/distributions $(OUTPUT_DIR)/apt/conf
 	for i in $($(PKG)_OUTPUT_DIR)/$($(PKG)_PKG_NAME)_$(PKG_PKG_VERSION)*.changes ; do reprepro -Vb $(OUTPUT_DIR)/apt include bigtop $$i ; done
 	touch $@
 
