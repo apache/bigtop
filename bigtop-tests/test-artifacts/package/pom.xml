@@ -54,7 +54,6 @@
       <groupId>org.apache.bigtop.itest</groupId>
       <artifactId>hadoopsmoke</artifactId>
       <version>0.2.0-incubating-SNAPSHOT</version>
-      <type>test-jar</type>
     </dependency>
   </dependencies>
 </project>
