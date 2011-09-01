@@ -41,6 +41,7 @@
     <org.apache.maven-dependency-plugin.version>${package-smoke.version}</org.apache.maven-dependency-plugin.version>
     <org.apache.maven-dependency-plugin.output>${project.build.directory}</org.apache.maven-dependency-plugin.output>
 
+    <org.apache.maven-dependency-plugin.type>jar</org.apache.maven-dependency-plugin.type>
     <org.apache.maven-failsafe-plugin.testInclude>**/PackagesSuite*</org.apache.maven-failsafe-plugin.testInclude>
   </properties>
 
@@ -49,7 +50,6 @@
       <groupId>org.apache.bigtop.itest</groupId>
       <artifactId>packagesmoke</artifactId>
       <version>${package-smoke.version}</version>
-      <type>test-jar</type>
     </dependency>
   </dependencies>
 

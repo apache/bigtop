@@ -38,6 +38,7 @@
     <org.apache.maven-dependency-plugin.version>${hadoop-smoke.version}</org.apache.maven-dependency-plugin.version>
     <org.apache.maven-dependency-plugin.output>${project.build.directory}</org.apache.maven-dependency-plugin.output>
     <org.apache.maven-dependency-plugin.pattern>**/*</org.apache.maven-dependency-plugin.pattern>
+    <org.apache.maven-dependency-plugin.type>jar</org.apache.maven-dependency-plugin.type>
   </properties>
 
   <dependencies>
@@ -56,7 +57,6 @@
       <groupId>${org.apache.maven-dependency-plugin.groupId}</groupId>
       <artifactId>${org.apache.maven-dependency-plugin.artifactId}</artifactId>
       <version>${hadoop-smoke.version}</version>
-      <type>test-jar</type>
     </dependency>
   </dependencies>
 

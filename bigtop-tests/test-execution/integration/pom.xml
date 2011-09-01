@@ -91,7 +91,6 @@
         <groupId>org.apache.bigtop.itest</groupId>
         <artifactId>sqoop-integration</artifactId>
         <version>${sqoop-integration.version}</version>
-        <type>test-jar</type>
         <scope>test</scope>
       </dependency>
 <!--

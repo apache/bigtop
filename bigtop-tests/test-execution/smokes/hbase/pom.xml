@@ -36,6 +36,7 @@
     <org.apache.maven-dependency-plugin.groupId>org.apache.bigtop.itest</org.apache.maven-dependency-plugin.groupId>
     <org.apache.maven-dependency-plugin.artifactId>hbasesmoke</org.apache.maven-dependency-plugin.artifactId>
     <org.apache.maven-dependency-plugin.version>${hbase-smoke.version}</org.apache.maven-dependency-plugin.version>
+    <org.apache.maven-dependency-plugin.type>jar</org.apache.maven-dependency-plugin.type>
 
     <HBASE_HOME>${env.HBASE_HOME}</HBASE_HOME>
     <ZOOKEEPER_HOME>${env.ZOOKEEPER_HOME}</ZOOKEEPER_HOME>
@@ -46,7 +47,6 @@
       <groupId>org.apache.bigtop.itest</groupId>
       <artifactId>hbasesmoke</artifactId>
       <version>${hbase-smoke.version}</version>
-      <type>test-jar</type>
     </dependency>
   </dependencies>
 

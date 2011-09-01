@@ -40,6 +40,7 @@
     <org.apache.maven-dependency-plugin.artifactId>sqoop</org.apache.maven-dependency-plugin.artifactId>
     <org.apache.maven-dependency-plugin.version>${sqoop.version}</org.apache.maven-dependency-plugin.version>
     <org.apache.maven-dependency-plugin.output>${project.build.directory}</org.apache.maven-dependency-plugin.output>
+    <org.apache.maven-dependency-plugin.type>jar</org.apache.maven-dependency-plugin.type>
   </properties>
 
   <dependencies>

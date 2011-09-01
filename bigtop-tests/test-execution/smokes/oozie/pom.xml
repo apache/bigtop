@@ -38,6 +38,7 @@
     <org.apache.maven-dependency-plugin.groupId>org.apache.bigtop.itest</org.apache.maven-dependency-plugin.groupId>
     <org.apache.maven-dependency-plugin.artifactId>ooziesmoke</org.apache.maven-dependency-plugin.artifactId>
     <org.apache.maven-dependency-plugin.version>${oozie-smoke.version}</org.apache.maven-dependency-plugin.version>
+    <org.apache.maven-dependency-plugin.type>jar</org.apache.maven-dependency-plugin.type>
   </properties>
 
   <dependencies>
@@ -45,7 +46,6 @@
       <groupId>org.apache.bigtop.itest</groupId>
       <artifactId>ooziesmoke</artifactId>
       <version>${oozie-smoke.version}</version>
-      <type>test-jar</type>
     </dependency>
   </dependencies>
 

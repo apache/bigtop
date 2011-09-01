@@ -256,7 +256,7 @@
                   def trgt = project.build.directory;
 
                   def src = project.properties['org.codehaus.groovy.maven.jar'] ?:
-                            "${trgt}/${nm}-${vers}-tests.jar";
+                            "${trgt}/${nm}-${vers}.jar";
                   def prefix = project.properties['org.codehaus.groovy.maven.destination'];
 
                   try {

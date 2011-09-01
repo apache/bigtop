@@ -36,6 +36,7 @@
     <org.apache.maven-dependency-plugin.groupId>org.apache.bigtop.itest</org.apache.maven-dependency-plugin.groupId>
     <org.apache.maven-dependency-plugin.artifactId>hivesmoke</org.apache.maven-dependency-plugin.artifactId>
     <org.apache.maven-dependency-plugin.version>${hive-smoke.version}</org.apache.maven-dependency-plugin.version>
+    <org.apache.maven-dependency-plugin.type>jar</org.apache.maven-dependency-plugin.type>
 
     <HIVE_HOME>${env.HIVE_HOME}</HIVE_HOME>
     <HBASE_HOME>${env.HBASE_HOME}</HBASE_HOME>
@@ -51,7 +52,6 @@
       <groupId>org.apache.bigtop.itest</groupId>
       <artifactId>hivesmoke</artifactId>
       <version>${hive-smoke.version}</version>
-      <type>test-jar</type>
     </dependency>
   </dependencies>
 

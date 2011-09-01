@@ -123,28 +123,24 @@
           need to explicitly specify the version of the artifact
           in the module POM file.
           Same goes for the rest of the bunch here-->
-        <type>test-jar</type>
         <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.apache.bigtop.itest</groupId>
         <artifactId>hbasesmoke</artifactId>
         <version>${hbase-smoke.version}</version>
-        <type>test-jar</type>
         <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.apache.bigtop.itest</groupId>
         <artifactId>hivesmoke</artifactId>
         <version>${hive-smoke.version}</version>
-        <type>test-jar</type>
         <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.apache.bigtop.itest</groupId>
         <artifactId>ooziesmoke</artifactId>
         <version>${oozie-smoke.version}</version>
-        <type>test-jar</type>
         <scope>test</scope>
       </dependency>
       <dependency>
@@ -157,14 +153,12 @@
         <groupId>org.apache.bigtop.itest</groupId>
         <artifactId>packagesmoke</artifactId>
         <version>${package-smoke.version}</version>
-        <type>test-jar</type>
         <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>com.cloudera.sqoop</groupId>
         <artifactId>sqoop</artifactId>
         <version>${sqoop.version}</version>
-        <type>test-jar</type>
         <scope>test</scope>
       </dependency>
 
