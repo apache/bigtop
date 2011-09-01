@@ -22,7 +22,7 @@ Bigtop Changelog
 - IMPROVEMENTS
 
 - BUG FIXES
-
+  - BIGTOP-27: Add disclaimer to website. (edwardyoon)
 
 * Release 0.1.0 (2011-08-19)
 
@@ -40,4 +40,4 @@ Bigtop Changelog
   - BIGTOP-8: Debian copyright files needed to be reformatted. (bmahe from James Page)
   - BIGTOP-3: Add top-level, real .gitignore file for git-svn. (abayer)
   - BIGTOP-2: Adding/updating license headers for ASF. (abayer)
-  - BIGTOP-1: Initial code import (abayer)
+  - BIGTOP-1: Initial code import. (abayer)
