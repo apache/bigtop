@@ -28,13 +28,13 @@
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.bigtop.itest</groupId>
-  <artifactId>hivesmokes.smoke-tests</artifactId>
+  <artifactId>hive-smoke-execution</artifactId>
   <version>0.2.0-incubating-SNAPSHOT</version>
-  <name>hivesmokes</name>
+  <name>Hive smoke test execution</name>
 
   <properties>
     <org.apache.maven-dependency-plugin.groupId>org.apache.bigtop.itest</org.apache.maven-dependency-plugin.groupId>
-    <org.apache.maven-dependency-plugin.artifactId>hivesmoke</org.apache.maven-dependency-plugin.artifactId>
+    <org.apache.maven-dependency-plugin.artifactId>hive-smoke</org.apache.maven-dependency-plugin.artifactId>
     <org.apache.maven-dependency-plugin.version>${hive-smoke.version}</org.apache.maven-dependency-plugin.version>
     <org.apache.maven-dependency-plugin.type>jar</org.apache.maven-dependency-plugin.type>
 
@@ -50,7 +50,7 @@
     </dependency>
     <dependency>
       <groupId>org.apache.bigtop.itest</groupId>
-      <artifactId>hivesmoke</artifactId>
+      <artifactId>hive-smoke</artifactId>
       <version>${hive-smoke.version}</version>
     </dependency>
   </dependencies>

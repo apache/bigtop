@@ -26,7 +26,7 @@
   </parent>
 
   <groupId>org.apache.bigtop.itest</groupId>
-  <artifactId>hbasesmoke</artifactId>
+  <artifactId>hbase-smoke</artifactId>
   <version>0.2.0-incubating-SNAPSHOT</version>
   <name>hbasesmoke</name>
 </project>

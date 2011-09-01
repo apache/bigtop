@@ -26,7 +26,7 @@
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.bigtop.itest</groupId>
-  <artifactId>hadoopsmoke</artifactId>
+  <artifactId>hadoop-smoke</artifactId>
   <version>0.2.0-incubating-SNAPSHOT</version>
     <name>hadoopsmoke</name> 
 

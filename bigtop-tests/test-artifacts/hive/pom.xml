@@ -26,7 +26,7 @@
   </parent>
 
   <groupId>org.apache.bigtop.itest</groupId>
-  <artifactId>hivesmoke</artifactId>
+  <artifactId>hive-smoke</artifactId>
   <version>0.2.0-incubating-SNAPSHOT</version>
   <name>hivesmoke</name>
 </project>

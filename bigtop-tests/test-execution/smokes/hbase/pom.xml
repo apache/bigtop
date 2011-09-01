@@ -28,13 +28,13 @@
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.bigtop.itest</groupId>
-  <artifactId>hbasesmokes.smoke-tests</artifactId>
+  <artifactId>hbase-smoke-execution</artifactId>
   <version>0.2.0-incubating-SNAPSHOT</version>
-  <name>hbasesmokes</name>
+  <name>HBase smoke test execution</name>
 
   <properties>
     <org.apache.maven-dependency-plugin.groupId>org.apache.bigtop.itest</org.apache.maven-dependency-plugin.groupId>
-    <org.apache.maven-dependency-plugin.artifactId>hbasesmoke</org.apache.maven-dependency-plugin.artifactId>
+    <org.apache.maven-dependency-plugin.artifactId>hbase-smoke</org.apache.maven-dependency-plugin.artifactId>
     <org.apache.maven-dependency-plugin.version>${hbase-smoke.version}</org.apache.maven-dependency-plugin.version>
     <org.apache.maven-dependency-plugin.type>jar</org.apache.maven-dependency-plugin.type>
 
@@ -45,7 +45,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.bigtop.itest</groupId>
-      <artifactId>hbasesmoke</artifactId>
+      <artifactId>hbase-smoke</artifactId>
       <version>${hbase-smoke.version}</version>
     </dependency>
   </dependencies>

@@ -116,7 +116,7 @@
 <!-- Test artifacts -->
       <dependency>
         <groupId>org.apache.bigtop.itest</groupId>
-        <artifactId>hadoopsmoke</artifactId>
+        <artifactId>hadoop-smoke</artifactId>
         <version>${hadoop-smoke.version}</version>
         <!-- FIXME: test-jar seems to be an suboptimal thing to use for
           artifacts of this kind: it causes all sorts of the issue such as
@@ -127,31 +127,31 @@
       </dependency>
       <dependency>
         <groupId>org.apache.bigtop.itest</groupId>
-        <artifactId>hbasesmoke</artifactId>
+        <artifactId>hbase-smoke</artifactId>
         <version>${hbase-smoke.version}</version>
         <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.apache.bigtop.itest</groupId>
-        <artifactId>hivesmoke</artifactId>
+        <artifactId>hive-smoke</artifactId>
         <version>${hive-smoke.version}</version>
         <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.apache.bigtop.itest</groupId>
-        <artifactId>ooziesmoke</artifactId>
+        <artifactId>oozie-smoke</artifactId>
         <version>${oozie-smoke.version}</version>
         <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.apache.pig</groupId>
-        <artifactId>pigsmoke</artifactId>
+        <artifactId>pig-smoke</artifactId>
         <version>${pig-smoke.version}</version>
         <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.apache.bigtop.itest</groupId>
-        <artifactId>packagesmoke</artifactId>
+        <artifactId>package-smoke</artifactId>
         <version>${package-smoke.version}</version>
         <scope>test</scope>
       </dependency>

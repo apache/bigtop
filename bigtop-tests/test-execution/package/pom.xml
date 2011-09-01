@@ -28,7 +28,7 @@
   </parent>
 
   <groupId>org.apache.bigtop.itest</groupId>
-  <artifactId>packagesmokes.smoke-tests</artifactId>
+  <artifactId>package-smoke-execution</artifactId>
   <version>0.2.0-incubating-SNAPSHOT</version>
   <name>packagesmokes</name>
 
@@ -37,7 +37,7 @@
     <cdh.repo.version>3</cdh.repo.version>
 
     <org.apache.maven-dependency-plugin.groupId>org.apache.bigtop.itest</org.apache.maven-dependency-plugin.groupId>
-    <org.apache.maven-dependency-plugin.artifactId>packagesmoke</org.apache.maven-dependency-plugin.artifactId>
+    <org.apache.maven-dependency-plugin.artifactId>package-smoke</org.apache.maven-dependency-plugin.artifactId>
     <org.apache.maven-dependency-plugin.version>${package-smoke.version}</org.apache.maven-dependency-plugin.version>
     <org.apache.maven-dependency-plugin.output>${project.build.directory}</org.apache.maven-dependency-plugin.output>
 
@@ -48,7 +48,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.bigtop.itest</groupId>
-      <artifactId>packagesmoke</artifactId>
+      <artifactId>package-smoke</artifactId>
       <version>${package-smoke.version}</version>
     </dependency>
   </dependencies>

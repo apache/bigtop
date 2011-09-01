@@ -28,13 +28,13 @@
   </parent>
 
   <groupId>org.apache.bigtop.itest</groupId>
-  <artifactId>hadoopsmokes.smoke-tests</artifactId>
+  <artifactId>hadoop-smoke-execution</artifactId>
   <version>0.2.0-incubating-SNAPSHOT</version>
-  <name>hadoopsmokes</name>
+  <name>Hadoop smoke test execution</name>
 
   <properties>
     <org.apache.maven-dependency-plugin.groupId>org.apache.bigtop.itest</org.apache.maven-dependency-plugin.groupId>
-    <org.apache.maven-dependency-plugin.artifactId>hadoopsmoke</org.apache.maven-dependency-plugin.artifactId>
+    <org.apache.maven-dependency-plugin.artifactId>hadoop-smoke</org.apache.maven-dependency-plugin.artifactId>
     <org.apache.maven-dependency-plugin.version>${hadoop-smoke.version}</org.apache.maven-dependency-plugin.version>
     <org.apache.maven-dependency-plugin.output>${project.build.directory}</org.apache.maven-dependency-plugin.output>
     <org.apache.maven-dependency-plugin.pattern>**/*</org.apache.maven-dependency-plugin.pattern>

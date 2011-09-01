@@ -28,15 +28,15 @@
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.bigtop.itest</groupId>
-  <artifactId>ooziesmokes.smoke-tests</artifactId>
+  <artifactId>oozie-smoke-test</artifactId>
   <version>0.2.0-incubating-SNAPSHOT</version>
-  <name>ooziesmokes</name>
+  <name>Oozie smoke test execution</name>
 
   <properties>
     <OOZIE_URL>${env.OOZIE_URL}</OOZIE_URL>
 
     <org.apache.maven-dependency-plugin.groupId>org.apache.bigtop.itest</org.apache.maven-dependency-plugin.groupId>
-    <org.apache.maven-dependency-plugin.artifactId>ooziesmoke</org.apache.maven-dependency-plugin.artifactId>
+    <org.apache.maven-dependency-plugin.artifactId>oozie-smoke</org.apache.maven-dependency-plugin.artifactId>
     <org.apache.maven-dependency-plugin.version>${oozie-smoke.version}</org.apache.maven-dependency-plugin.version>
     <org.apache.maven-dependency-plugin.type>jar</org.apache.maven-dependency-plugin.type>
   </properties>
@@ -44,7 +44,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.bigtop.itest</groupId>
-      <artifactId>ooziesmoke</artifactId>
+      <artifactId>oozie-smoke</artifactId>
       <version>${oozie-smoke.version}</version>
     </dependency>
   </dependencies>

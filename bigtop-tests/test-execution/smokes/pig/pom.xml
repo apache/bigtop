@@ -28,7 +28,7 @@
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.bigtop.itest</groupId>
-  <artifactId>pigsmokes.smoke-tests</artifactId>
+  <artifactId>pig-smoke-execution</artifactId>
   <packaging>jar</packaging>
   <version>0.2.0-incubating-SNAPSHOT</version>
   <name>pigsmokes</name>

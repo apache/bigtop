@@ -28,9 +28,9 @@
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.bigtop.itest</groupId>
-  <artifactId>sqoopsmoke.smoke-tests</artifactId>
+  <artifactId>sqoop-test-execution</artifactId>
   <version>0.2.0-incubating-SNAPSHOT</version>
-  <name>sqoopsmoke</name>
+  <name>Sqoop smoke test execution</name>
 
   <properties>
     <org.codehaus.maven-failsafe-plugin.dbhost>172.29.12.207</org.codehaus.maven-failsafe-plugin.dbhost>

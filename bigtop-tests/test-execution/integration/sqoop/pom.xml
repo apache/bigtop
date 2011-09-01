@@ -28,9 +28,9 @@
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.bigtop.itest</groupId>
-  <artifactId>sqoopintegration.integration-tests</artifactId>
+  <artifactId>sqoop-integration-execution</artifactId>
   <version>0.2.0-incubating-SNAPSHOT</version>
-  <name>sqoopintegration</name>
+  <name>sqoop-integration-execution</name>
 
   <properties>
     <!--Additional environment variables are required-->
@@ -49,7 +49,6 @@
     <dependency>
       <groupId>org.apache.bigtop.itest</groupId>
       <artifactId>sqoop-integration</artifactId>
-      <type>test-jar</type>
     </dependency>
   </dependencies>
 
