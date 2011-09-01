@@ -18,8 +18,13 @@
 package org.apache.bigtop.itest.hadooptests
 
 import org.apache.hadoop.conf.Configuration
-import org.apache.hadoop.fs.CommonConfigurationKeys
 import org.apache.hadoop.cli.*
+
+// TODO: we have to stub it for 0.20.2 release, once we move to 0.21+ this can go
+// import org.apache.hadoop.fs.CommonConfigurationKeys
+class CommonConfigurationKeys {
+  static final public String  FS_DEFAULT_NAME_KEY = "fs.default.name";
+}
 
 /** This test class serves only one purpose: to prepare environment for proper
  execution of parent (TestCLI)

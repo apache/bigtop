@@ -24,8 +24,13 @@ import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test
 import org.apache.hadoop.conf.Configuration
-import org.apache.hadoop.hdfs.DFSConfigKeys
 import static org.junit.Assert.assertEquals
+
+// TODO: we have to stub it for 0.20.2 release, once we move to 0.21+ this can go
+// import org.apache.hadoop.hdfs.DFSConfigKeys
+class DFSConfigKeys {
+  static public final FS_DEFAULT_NAME_KEY = "fs.default.name";
+}
 
 class TestHadoopSmoke {
   static Shell sh = new Shell("/bin/bash -s")

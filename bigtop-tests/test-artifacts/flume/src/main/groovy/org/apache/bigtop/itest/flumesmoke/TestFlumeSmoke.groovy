@@ -25,7 +25,12 @@ import org.junit.BeforeClass
 import static junit.framework.Assert.assertEquals
 import org.apache.hadoop.conf.Configuration
 import org.apache.bigtop.itest.JarContent
-import org.apache.hadoop.hdfs.DFSConfigKeys
+
+// TODO: we have to stub it for 0.20.2 release, once we move to 0.21+ this can go
+// import org.apache.hadoop.hdfs.DFSConfigKeys
+class DFSConfigKeys {
+  static public final FS_DEFAULT_NAME_KEY = "fs.default.name";
+}
 
 class TestFlumeSmoke {
   private static String tmp = "TestFlumeSmoke-${(new Date().getTime())}";
