@@ -16,13 +16,13 @@ Source: sqoop
 Section: misc
 Priority: extra
 Maintainer: Alex Newman <newalex@cloudera.com>
-Build-Depends: debhelper (>= 6), ant, sun-java6-jdk, ant-optional, git-core, sed, asciidoc, xmlto
+Build-Depends: debhelper (>= 6), ant, ant-optional, git-core, sed, asciidoc, xmlto
 Standards-Version: 3.8.0
 Homepage: http://www.cloudera.com
 
 Package:  sqoop
 Architecture: all
-Depends: sun-java6-jre, hadoop
+Depends: hadoop
 Description: Tool for easy imports and exports of data sets between databases and HDFS
  Sqoop is a tool that provides the ability to import and export data sets between
  the Hadoop Distributed File System (HDFS) and relational databases.

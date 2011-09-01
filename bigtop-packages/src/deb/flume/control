@@ -17,13 +17,13 @@ Source: flume
 Section: misc
 Priority: extra
 Maintainer: Alex Newman <newalex@cloudera.com>
-Build-Depends: debhelper (>= 6), ant, sun-java6-jdk, ant-optional, git-core
+Build-Depends: debhelper (>= 6), ant, ant-optional, git-core
 Standards-Version: 3.8.0
 Homepage: http://www.cloudera.com
 
 Package: flume
 Architecture: all
-Depends: sun-java6-jre, hadoop-zookeeper, adduser, hadoop
+Depends: hadoop-zookeeper, adduser, hadoop
 Description: reliable, scalable, and manageable distributed data collection application
  Flume is a reliable, scalable, and manageable distributed data collection
  application for collecting data such as logs and delivering it to data stores

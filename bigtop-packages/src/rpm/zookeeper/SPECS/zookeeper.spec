@@ -66,16 +66,6 @@ Source4: zookeeper.1
 BuildArch: noarch
 BuildRequires: autoconf, automake, subversion
 
-# RHEL6 provides natively java
-%if 0%{?rhel} == 6
-BuildRequires: java-1.6.0-sun-devel
-Requires: java-1.6.0-sun
-%else
-BuildRequires: jdk >= 1.6
-Requires: jre >= 1.6
-%endif
-
-
 %description 
 ZooKeeper is a centralized service for maintaining configuration information, 
 naming, providing distributed synchronization, and providing group services. 

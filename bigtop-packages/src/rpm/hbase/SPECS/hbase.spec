@@ -68,15 +68,6 @@ Source4: install_hbase.sh
 BuildArch: noarch
 Requires: sh-utils, textutils, /usr/sbin/useradd, /sbin/chkconfig, /sbin/service, hadoop-zookeeper, hadoop >= 0.20.2, hadoop-zookeeper >= 3.3.1
 
-# RHEL6 provides natively java
-%if 0%{?rhel} == 6
-BuildRequires: java-1.6.0-sun-devel
-Requires: java-1.6.0-sun
-%else
-BuildRequires: jdk >= 1.6
-Requires: jre >= 1.6
-%endif
-
 %description 
 HBase is an open-source, distributed, column-oriented store modeled after Google' Bigtable: A Distributed Storage System for Structured Data by Chang et al. Just as Bigtable leverages the distributed data storage provided by the Google File System, HBase provides Bigtable-like capabilities on top of Hadoop. HBase includes:
 

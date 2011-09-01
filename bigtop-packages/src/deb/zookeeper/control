@@ -16,13 +16,12 @@ Source: hadoop-zookeeper
 Section: misc
 Priority: extra
 Maintainer: Alex Newman <newalex@cloudera.com>
-Build-Depends: debhelper (>= 6), ant, sun-java6-jdk, ant-optional, git-core, autoconf, automake, subversion
+Build-Depends: debhelper (>= 6), ant, ant-optional, git-core, autoconf, automake, subversion
 Standards-Version: 3.8.0
 Homepage: http://hadoop.apache.org/zookeeper/
 
 Package: hadoop-zookeeper
 Architecture: all
-Depends: sun-java6-jre
 Conflicts: zookeeper
 Replaces: zookeeper
 Description: A high-performance coordination service for distributed applications.

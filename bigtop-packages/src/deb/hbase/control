@@ -16,13 +16,13 @@ Source: hadoop-hbase
 Section: misc
 Priority: extra
 Maintainer: Alex Newman <newalex@cloudera.com>
-Build-Depends: debhelper (>= 6), sun-java6-jdk, git-core, adduser
+Build-Depends: debhelper (>= 6), git-core, adduser
 Standards-Version: 3.8.0
 Homepage: http://hadoop.apache.org/hbase/
 
 Package: hadoop-hbase
 Architecture: all
-Depends: adduser, sun-java6-jre, hadoop-zookeeper (>= 3.3.1), hadoop
+Depends: adduser, hadoop-zookeeper (>= 3.3.1), hadoop
 Recommends: ntp
 Description: HBase is the Hadoop database
  Use it when you need random, realtime read/write access to your Big Data. 

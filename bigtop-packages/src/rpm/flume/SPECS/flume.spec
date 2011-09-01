@@ -65,16 +65,6 @@ Source3: install_flume.sh
 Requires: sh-utils, textutils, /usr/sbin/useradd, /sbin/chkconfig, /sbin/service, hadoop-zookeeper >= 3.3.1, hadoop >= 0.20.2
 BuildRequires: ant xml-commons xml-commons-apis
 
-# RHEL6 provides natively java
-%if 0%{?rhel} == 6
-BuildRequires: java-1.6.0-sun-devel
-Requires: java-1.6.0-sun
-%else
-BuildRequires: jdk >= 1.6
-Requires: jre >= 1.6
-%endif
-
-
 %description 
 Flume is a reliable, scalable, and manageable distributed data collection application for collecting data such as logs and delivering it to data stores such as Hadoop's HDFS.  It can efficiently collect, aggregate, and move large amounts of log data.  It has a simple, but flexible, architecture based on streaming data flows.  It is robust and fault tolerant with tunable reliability mechanisms and many failover and recovery mechanisms.  The system is centrally managed and allows for intelligent dynamic management. It uses a simple extensible data model that allows for online analytic applications.
 
@@ -86,13 +76,6 @@ Requires: %{name} = %{version}-%{release}
 Requires: sh-utils, textutils, /usr/sbin/useradd, /sbin/chkconfig, /sbin/service
 Requires(post): /sbin/chkconfig
 Requires(preun): /sbin/service, /sbin/chkconfig, %{name}
-
-# RHEL6 provides natively java
-%if 0%{?rhel} == 6
-Requires: java-1.6.0-sun
-%else
-Requires: jre >= 1.6
-%endif
 
 %if  %{?suse_version:1}0
 # Required for init scripts
@@ -114,15 +97,6 @@ Requires: %{name} = %{version}-%{release}
 Requires: sh-utils, textutils, /usr/sbin/useradd, /sbin/chkconfig, /sbin/service
 Requires(post): /sbin/chkconfig
 Requires(preun): /sbin/service, /sbin/chkconfig, %{name}
-
-# RHEL6 provides natively java
-%if 0%{?rhel} == 6
-BuildRequires: java-1.6.0-sun-devel
-Requires: java-1.6.0-sun
-%else
-BuildRequires: jdk >= 1.6
-Requires: jre >= 1.6
-%endif
 
 %if  %{?suse_version:1}0
 # Required for init scripts

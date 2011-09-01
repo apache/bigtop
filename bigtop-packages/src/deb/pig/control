@@ -2,13 +2,13 @@ Source: hadoop-pig
 Section: misc
 Priority: extra
 Maintainer: Todd Lipcon <todd@cloudera.com>
-Build-Depends: debhelper (>= 6), ant, sun-java6-jdk, ant-optional, git-core
+Build-Depends: debhelper (>= 6), ant, ant-optional, git-core
 Standards-Version: 3.8.0
 Homepage: http://hadoop.apache.org/pig/
 
 Package: hadoop-pig
 Architecture: all
-Depends: sun-java6-jre, hadoop
+Depends: hadoop
 Description: A platform for analyzing large data sets using Hadoop
  Pig is a platform for analyzing large data sets that consists of a high-level language
  for expressing data analysis programs, coupled with infrastructure for evaluating these

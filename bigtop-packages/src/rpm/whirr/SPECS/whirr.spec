@@ -31,16 +31,6 @@ Source0: %{name}-%{whirr_base_version}-incubating-src.tar.gz
 Source1: install_%{name}.sh
 Source2: whirr.1
 
-# RHEL6 provides natively java
-%if 0%{?rhel} == 6
-BuildRequires: java-1.6.0-sun-devel
-Requires: java-1.6.0-sun
-%else
-BuildRequires: jdk >= 1.6
-Requires: jre >= 1.6
-%endif
-
-
 %description 
 Whirr provides
 

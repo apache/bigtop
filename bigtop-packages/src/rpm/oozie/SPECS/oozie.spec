@@ -39,15 +39,6 @@ Requires(preun): /sbin/chkconfig, /sbin/service
 Requires: oozie-client = %{version}
 BuildArch: noarch
 
-# RHEL6 provides natively java
-%if 0%{?rhel} == 6
-BuildRequires: java-1.6.0-sun-devel
-Requires: java-1.6.0-sun
-%else
-BuildRequires: jdk >= 1.6
-Requires: jre >= 1.6
-%endif
-
 %description 
  Oozie is a system that runs workflows of Hadoop jobs.
  Oozie workflows are actions arranged in a control dependency DAG (Direct

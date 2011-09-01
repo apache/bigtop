@@ -16,13 +16,12 @@ Source: whirr
 Section: misc
 Priority: extra
 Maintainer: Tom White <tom@cloudera.com>
-Build-Depends: debhelper (>= 6), sun-java6-jdk, git-core
+Build-Depends: debhelper (>= 6), git-core
 Standards-Version: 3.8.0
 Homepage: http://incubator.apache.org/whirr
 
 Package:  whirr
 Architecture: all
-Depends: sun-java6-jre 
 Description: Scripts and libraries for running software services on cloud infrastructure
  Whirr provides
  .

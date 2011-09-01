@@ -17,14 +17,14 @@ Source: hadoop
 Section: misc
 Priority: extra
 Maintainer: Todd Lipcon <todd@cloudera.com>
-Build-Depends: debhelper (>= 6), ant, ant-optional, liblzo2-dev, sun-java6-jdk, python, libzip-dev,automake, autoconf (>= 2.61), sharutils, g++ (>= 4), git-core, libfuse-dev, libssl-dev
+Build-Depends: debhelper (>= 6), ant, ant-optional, liblzo2-dev, python, libzip-dev,automake, autoconf (>= 2.61), sharutils, g++ (>= 4), git-core, libfuse-dev, libssl-dev
 Standards-Version: 3.8.0
 Homepage: http://hadoop.apache.org/core/
 
 Package: hadoop
 Provides: hadoop
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, adduser, sun-java6-jre, sun-java6-bin
+Depends: ${shlibs:Depends}, ${misc:Depends}, adduser 
 Recommends: hadoop-native
 Description: A software platform for processing vast amounts of data
  Hadoop is a software platform that lets one easily write and

@@ -81,16 +81,6 @@ Source3: pig.1
 Source4: pig.properties
 Requires: hadoop
 
-# RHEL6 provides natively java
-%if 0%{?rhel} == 6
-BuildRequires: java-1.6.0-sun-devel
-Requires: java-1.6.0-sun
-%else
-BuildRequires: jdk >= 1.6
-Requires: jre >= 1.6
-%endif
-
-
 %description 
 Pig is a platform for analyzing large data sets that consists of a high-level language 
 for expressing data analysis programs, coupled with infrastructure for evaluating these 

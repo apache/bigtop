@@ -110,15 +110,6 @@ BuildRequires: python >= 2.4, git, fuse-devel,fuse, automake, autoconf
 Requires: textutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service
 Provides: hadoop
 
-# RHEL6 provides natively java
-%if 0%{?rhel} == 6
-BuildRequires: java-1.6.0-sun-devel
-Requires: java-1.6.0-sun
-%else
-BuildRequires: jdk >= 1.6
-Requires: jre >= 1.6
-%endif
-
 %if  %{?suse_version:1}0
 BuildRequires: libfuse2, libopenssl-devel, gcc-c++, ant, ant-nodeps, ant-trax, liblzo-devel
 # Required for init scripts
@@ -273,15 +264,6 @@ Requires: %{name} = %{version}-%{release}
 # TODO: reconcile libjvm
 AutoReq: no
 
-# RHEL6 provides natively java
-%if 0%{?rhel} == 6
-BuildRequires: java-1.6.0-sun-devel
-Requires: java-1.6.0-sun
-%else
-BuildRequires: jdk >= 1.6
-Requires: jre >= 1.6
-%endif
-
 %description libhdfs
 Hadoop Filesystem Library
 
@@ -298,8 +280,8 @@ Hadoop Pipes Library
 %setup -n %{name}-%{hadoop_base_version}
 
 %build
-# This assumes that you installed Java JDK 6 via RPM
-# This assumes that you installed Java JDK 5 i386 via RPM
+# This assumes that you installed Java JDK 6 and set JAVA_HOME
+# This assumes that you installed Java JDK 5 and set JAVA5_HOME
 # This assumes that you installed Forrest and set FORREST_HOME
 
 ant -Dversion=%{version} \
