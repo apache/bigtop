@@ -18,6 +18,7 @@
 
 package org.apache.bigtop.itest.shell
 
+import org.junit.Ignore
 import org.junit.Test
 
 import static org.junit.Assert.assertEquals
@@ -35,6 +36,7 @@ class ShellTest {
     assertEquals("got extra stderr ${sh.err}", 0, sh.err.size())
   }
 
+  @Ignore("requires sudo")
   @Test
   void superUserShell() {
     Shell sh = new Shell("/bin/bash -s")

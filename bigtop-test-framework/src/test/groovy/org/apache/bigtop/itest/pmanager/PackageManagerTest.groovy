@@ -19,6 +19,7 @@
 package org.apache.bigtop.itest.pmanager
 
 import org.junit.Test
+import org.junit.Ignore
 import static org.junit.Assert.assertTrue
 import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertFalse
@@ -44,6 +45,7 @@ class PackageManagerTest {
     assertFalse("can not get description for the gcc package", pkgs.get(0).getMeta()["description"].length() == 0);
   }
 
+  @Ignore("required sudo")
   @Test
   void installBash() {
     PackageInstance bash_pkg = PackageInstance.getPackageInstance(pmgr, "bash");
@@ -104,6 +106,7 @@ class PackageManagerTest {
     assertTrue("cron package is expected to contain at least a few config files", list.size() > 0);
   }
 
+  @Ignore("required sudo")
   @Test
   void testRepoManagement() {
     String repo_id = "test-repo";
@@ -113,6 +116,7 @@ class PackageManagerTest {
                  0, pmgr.removeBinRepo(repo_id));
   }
 
+  @Ignore("required sudo")
   @Test
   void testRepoFileManagement() {
     String repo_id = "test-repo";
