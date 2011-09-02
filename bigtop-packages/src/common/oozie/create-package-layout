@@ -196,13 +196,6 @@ install -d -m 0755 ${OOZIE_DATA}
 failIfNotOK
 cp -R ${OOZIE_BUILD_DIR}/bin/*.sh ${OOZIE_SERVER_DIR}/bin
 
-# We need to find a better way of doing this
-# for DEB dirs are different so we have to delete the examples from the server
-# for RPM dirs are the same and RPM SPEC selectively picks the scripts to add
-if [ "${OOZIE_CLIENT_DIR}" != "${OOZIE_SERVER_DIR}" ]; then
-  rm ${OOZIE_SERVER_DIR}/bin/oozie-examples.sh
-fi
-
 failIfNotOK
 install -d -m 0755 ${OOZIE_CONF}
 failIfNotOK
