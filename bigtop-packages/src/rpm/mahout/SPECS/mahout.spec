@@ -34,7 +34,7 @@
 Name: mahout
 Version: %{mahout_version}
 Release: %{mahout_release}
-Summary: Mahout is a set of Java libraries for scalable machine learning.
+Summary: A set of Java libraries for scalable machine learning.
 URL: http://mahout.apache.org
 Group: Development/Libraries
 BuildArch: noarch

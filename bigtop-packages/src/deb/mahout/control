@@ -24,7 +24,7 @@ Homepage: http://mahout.apache.org
 Package:  mahout
 Architecture: all
 Depends: hadoop 
-Description: Mahout is a set of Java libraries for scalable machine learning.
+Description: A set of Java libraries for scalable machine learning.
  Mahout's goal is to build scalable machine learning libraries. 
  With scalable we mean:
  .

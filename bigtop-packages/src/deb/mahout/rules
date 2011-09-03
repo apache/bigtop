@@ -50,7 +50,7 @@ install-indep:
 	dh_testroot
 	sh -x debian/install_mahout.sh \
 	  --build-dir=debian/tmp \
-          --doc-dir=debian/mahout/usr/share/doc/mahout \
+          --doc-dir=/usr/share/doc/mahout \
 	  --prefix=debian/mahout
 	dh_install -i
 	(dh_lintian) || /bin/true
