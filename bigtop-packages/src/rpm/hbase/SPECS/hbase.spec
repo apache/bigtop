@@ -164,6 +164,12 @@ sh $RPM_SOURCE_DIR/install_hbase.sh \
 %__install -d -m 0755 $RPM_BUILD_ROOT/etc/default/
 %__install -m 0644 $RPM_SOURCE_DIR/hbase.default $RPM_BUILD_ROOT/etc/default/hbase
 
+%__install -d  -m 0755  %{buildroot}/%{_localstatedir}/log/hbase
+ln -s %{_localstatedir}/log/hbase %{buildroot}/%{logs_hbase}
+
+%__install -d  -m 0755  %{buildroot}/%{_localstatedir}/run/hbase
+ln -s %{_localstatedir}/run/hbase %{buildroot}/%{pids_hbase}
+
 %if  %{?suse_version:1}0
 orig_init_file=$RPM_SOURCE_DIR/hadoop-hbase.sh.suse
 %else
@@ -190,22 +196,15 @@ ln -s /usr/lib/zookeeper/zookeeper.jar $RPM_BUILD_ROOT/usr/lib/hbase/lib/zookeep
 getent group hbase 2>/dev/null >/dev/null || /usr/sbin/groupadd -r hbase
 getent passwd hbase 2>&1 > /dev/null || /usr/sbin/useradd -c "HBase" -s /sbin/nologin -g hbase -r -d /var/run/hbase hbase 2> /dev/null || :
 
-%__install -d -m 0755 -o hbase -g hbase /var/log/hbase
-%__install -d -m 0755 -o hbase -g hbase /var/run/hbase
-
-%post
-unlink %{logs_hbase} 2> /dev/null
-unlink %{pids_hbase} 2> /dev/null
-
-ln -s /var/log/hbase %{logs_hbase}
-ln -s /var/run/hbase %{pids_hbase}
-
-
 #######################
 #### FILES SECTION ####
 #######################
 %files 
 %defattr(-,hbase,hbase)
+%{logs_hbase}
+%{pids_hbase}
+%dir %{_localstatedir}/log/hbase
+%dir %{_localstatedir}/run/hbase
 %config(noreplace) %{_sysconfdir}/default/hbase
 %{hbase_home}
 %{hbase_home}/hbase-*.jar
