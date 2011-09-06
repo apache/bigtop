@@ -89,7 +89,7 @@ fi
 #######################
 %files 
 %defattr(-,root,root,755)
-%config %{config_mahout}.dist
+%config(noreplace) %{config_mahout}.dist
 %doc %{doc_mahout}
 %{lib_mahout}
 %{bin_mahout}/mahout

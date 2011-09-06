@@ -147,7 +147,7 @@ fi
 #######################
 %files 
 %defattr(-,root,root,755)
-%config %{etc_pig}/conf.dist
+%config(noreplace) %{etc_pig}/conf.dist
 %doc %{doc_pig}
 %{lib_pig}
 %{bin_pig}/pig

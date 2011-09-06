@@ -118,7 +118,7 @@ chkconfig --del sqoop-metastore
 %files 
 %defattr(0755,root,root)
 %{lib_sqoop}
-%{_sysconfdir}/sqoop/conf
+%config(noreplace) %{_sysconfdir}/sqoop/conf
 %{_bindir}/sqoop
 %{_bindir}/sqoop-codegen
 %{_bindir}/sqoop-create-hive-table

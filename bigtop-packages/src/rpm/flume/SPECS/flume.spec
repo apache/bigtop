@@ -162,7 +162,7 @@ fi
 
 %files 
 %defattr(-,flume,flume)
-%config %{etc_flume}.empty
+%config(noreplace) %{etc_flume}.empty
 %doc %{doc_flume}
 
 %attr(0755,root,root) %{bin_flume}

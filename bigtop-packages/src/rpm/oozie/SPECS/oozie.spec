@@ -139,7 +139,7 @@ fi
 %{lib_oozie}/oozie.war
 %{lib_oozie}/oozie-sharelib.tar.gz
 %{lib_oozie}/oozie-server
-%{conf_oozie}
+%config(noreplace) %{conf_oozie}
 %{initd_dir}/oozie
 %defattr(-, oozie, oozie)
 %{data_oozie}

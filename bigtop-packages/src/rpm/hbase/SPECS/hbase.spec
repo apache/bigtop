@@ -206,14 +206,14 @@ ln -s /var/run/hbase %{pids_hbase}
 #######################
 %files 
 %defattr(-,hbase,hbase)
-%{_sysconfdir}/default/hbase
+%config(noreplace) %{_sysconfdir}/default/hbase
 %{hbase_home}
 %{hbase_home}/hbase-*.jar
 %{webapps_hbase}
 
 %defattr(0755,root,root)
 /usr/bin/hbase
-%config %{etc_hbase}/conf
+%config(noreplace) %{etc_hbase}/conf
 
 %files doc
 %defattr(-,root,root)

@@ -153,7 +153,7 @@ fi
 #######################
 %files
 %defattr(-,root,root)
-%config %{etc_zookeeper}/conf.dist
+%config(noreplace) %{etc_zookeeper}/conf.dist
 %{lib_zookeeper}
 %{bin_zookeeper}/zookeeper-server
 %{bin_zookeeper}/zookeeper-client

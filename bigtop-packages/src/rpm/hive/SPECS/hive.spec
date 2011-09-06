@@ -185,7 +185,7 @@ fi
 #######################
 %files
 %defattr(-,root,root,755)
-%config %{etc_hive}/conf.dist
+%config(noreplace) %{etc_hive}/conf.dist
 %{usr_lib_hive}
 %{bin_hive}/hive
 %{var_lib_hive}
@@ -196,7 +196,7 @@ fi
 %define service_macro() \
 %files %1 \
 %attr(0755,root,root)/%{initd_dir}/%{name}-%1 \
-/etc/default/%{name}-%1 \
+%config(noreplace) /etc/default/%{name}-%1 \
 %post %1 \
 chkconfig --add %{name}-%1 \
 \

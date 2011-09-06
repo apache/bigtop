@@ -397,8 +397,8 @@ fi
 
 %files
 %defattr(-,root,root)
-%config %{etc_hadoop}/conf.empty
-/etc/default/hadoop
+%config(noreplace) %{etc_hadoop}/conf.empty
+%config(noreplace) /etc/default/hadoop
 %{lib_hadoop}
 %{bin_hadoop}/%{name}
 %{man_hadoop}/man1/hadoop.1.*z
@@ -450,7 +450,7 @@ fi
 
 %files conf-pseudo
 %defattr(-,root,root)
-%config %attr(755,root,root) %{etc_hadoop}/conf.pseudo
+%config(noreplace) %attr(755,root,root) %{etc_hadoop}/conf.pseudo
 %dir %attr(0755,root,hadoop) /var/lib/%{name}
 %dir %attr(1777,root,hadoop) /var/lib/%{name}/cache
 
@@ -468,7 +468,7 @@ fi
 #%defattr(-,root,root)
 #%attr(0755,root,root) %{bin_hadoop}/hadoop-fuse-dfs
 #%attr(0755,root,root) %{man_hadoop}/man1/hadoop-fuse-dfs.1.gz
-/etc/default/hadoop-fuse
+%config(noreplace) /etc/default/hadoop-fuse
 
 %files pipes
 %defattr(-,root,root)
