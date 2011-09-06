@@ -64,7 +64,10 @@ Source2: hadoop-zookeeper.sh.suse
 Source3: install_zookeeper.sh
 Source4: zookeeper.1
 BuildArch: noarch
-BuildRequires: autoconf, automake, subversion
+BuildRequires: ant, autoconf, automake, subversion
+Requires(pre): coreutils, shadow-utils
+Requires(post): chkconfig
+Requires(preun): chkconfig
 
 %description 
 ZooKeeper is a centralized service for maintaining configuration information, 
@@ -81,6 +84,8 @@ Summary: The Hadoop Zookeeper server
 Group: System/Daemons
 Provides: hadoop-zookeeper-server
 Requires: hadoop-zookeeper = %{version}-%{release}
+Requires(post): chkconfig
+Requires(preun): initscripts, chkconfig
 BuildArch: noarch
 
 %if  %{?suse_version:1}0
