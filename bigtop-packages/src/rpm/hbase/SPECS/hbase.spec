@@ -205,12 +205,12 @@ getent passwd hbase 2>&1 > /dev/null || /usr/sbin/useradd -c "HBase" -s /sbin/no
 %{pids_hbase}
 %dir %{_localstatedir}/log/hbase
 %dir %{_localstatedir}/run/hbase
+
+%defattr(-,root,root)
 %config(noreplace) %{_sysconfdir}/default/hbase
 %{hbase_home}
 %{hbase_home}/hbase-*.jar
 %{webapps_hbase}
-
-%defattr(0755,root,root)
 /usr/bin/hbase
 %config(noreplace) %{etc_hbase}/conf
 
