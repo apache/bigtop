@@ -113,6 +113,9 @@ BuildArch: noarch
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/usr/bin
 
+%__install -d  -m 0755  %{buildroot}/%{_localstatedir}/log/oozie
+%__install -d  -m 0755  %{buildroot}/%{_localstatedir}/run/oozie
+
 %pre
 getent group oozie >/dev/null || /usr/sbin/groupadd -r oozie >/dev/null
 getent passwd oozie >/dev/null || /usr/sbin/useradd --comment "Oozie User" --shell /bin/false -M -r -g oozie --home /var/run/oozie oozie >/dev/null
@@ -142,6 +145,8 @@ fi
 %config(noreplace) %{conf_oozie}
 %{initd_dir}/oozie
 %defattr(-, oozie, oozie)
+%dir %{_localstatedir}/log/hbase
+%dir %{_localstatedir}/run/hbase
 %{data_oozie}
 
 %files client
