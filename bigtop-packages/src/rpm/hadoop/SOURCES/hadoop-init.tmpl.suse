@@ -34,6 +34,8 @@
 source /lib/lsb/init-functions
 source /etc/default/hadoop
 
+source @HADOOP_COMMON_ROOT@/bin/hadoop-config.sh 
+
 RETVAL_SUCCESS=0
 
 STATUS_RUNNING=0
@@ -49,7 +51,8 @@ ERROR_PROGRAM_NOT_CONFIGURED=6
 RETVAL=0
 EXEC_PATH=@HADOOP_COMMON_ROOT@/bin/hadoop-daemon.sh
 CONFIG_PATH="@HADOOP_CONF_DIR@"
-PIDFILE="/var/run/hadoop/hadoop-$HADOOP_IDENT_STRING-@HADOOP_DAEMON@.pid"
+HADOOP_PID_DIR=${HADOOP_PID_DIR:-/var/run/hadoop}
+PIDFILE="$HADOOP_PID_DIR/hadoop-$HADOOP_IDENT_STRING-@HADOOP_DAEMON@.pid"
 LOCKFILE="/var/lock/subsys/hadoop-@HADOOP_DAEMON@"
 desc="Hadoop @HADOOP_DAEMON@ daemon"
 USER="@HADOOP_DAEMON_USER@"

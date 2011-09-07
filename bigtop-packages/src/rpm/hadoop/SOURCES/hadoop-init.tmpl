@@ -23,6 +23,8 @@
 source /etc/rc.d/init.d/functions
 source /etc/default/hadoop
 
+source @HADOOP_COMMON_ROOT@/bin/hadoop-config.sh
+
 RETVAL_SUCCESS=0
 
 STATUS_RUNNING=0
@@ -31,7 +33,8 @@ STATUS_DEAD_AND_LOCK=2
 STATUS_NOT_RUNNING=3
 
 RETVAL=0
-PIDFILE="/var/run/hadoop/hadoop-$HADOOP_IDENT_STRING-@HADOOP_DAEMON@.pid"
+HADOOP_PID_DIR=${HADOOP_PID_DIR:-/var/run/hadoop}
+PIDFILE="$HADOOP_PID_DIR/hadoop-$HADOOP_IDENT_STRING-@HADOOP_DAEMON@.pid"
 LOCKFILE="/var/lock/subsys/hadoop-@HADOOP_DAEMON@"
 desc="Hadoop @HADOOP_DAEMON@ daemon"
 SLEEP_TIME=5
