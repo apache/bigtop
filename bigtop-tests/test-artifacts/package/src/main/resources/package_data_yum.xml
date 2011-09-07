@@ -2728,9 +2728,9 @@ difficult to manage. Even when done correctly, different implementations of thes
   <alternatives>
     <hadoop-zookeeper-conf>
       <status>auto</status>
-      <link>/etc/zookeeper</link>  <!-- BUG https://jira.cloudera.com/browse/KITCHEN-1092 -->
-      <value>/etc/zookeeper.dist</value>
-      <alt>/etc/zookeeper.dist</alt>
+      <link>/etc/zookeeper/conf</link>
+      <value>/etc/zookeeper/conf.dist</value>
+      <alt>/etc/zookeeper/conf.dist</alt>
     </hadoop-zookeeper-conf>
   </alternatives>
 </hadoop-zookeeper>
@@ -6696,12 +6696,12 @@ difficult to manage. Even when done correctly, different implementations of thes
     <doc  name="/usr/share/man/man1/pig.1.gz" owners="1" perm="-rw-r--r--" user="root" group="root"/>
   </content>
   <alternatives>
-    <pig> <!-- BUG: https://issues.cloudera.org/browse/DISTRO-223 -->
+    <pig-conf>
       <status>auto</status>
       <link>/etc/pig/conf</link>
       <value>/etc/pig/conf.dist</value>
       <alt>/etc/pig/conf.dist</alt>
-    </pig>
+    </pig-conf>
   </alternatives>
 </hadoop-pig>
 <hadoop-hive>

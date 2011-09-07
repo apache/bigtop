@@ -2774,12 +2774,12 @@
     </zookeeper>
   </users>
   <alternatives>
-    <zookeeper-conf> <!-- BUG https://jira.cloudera.com/browse/KITCHEN-1093 -->
+    <hadoop-zookeeper-conf>
       <status>auto</status>
-      <link>/etc/zookeeper</link>
-      <value>/etc/zookeeper.dist</value>
-      <alt>/etc/zookeeper.dist</alt>
-    </zookeeper-conf>
+      <link>/etc/zookeeper/conf</link>
+      <value>/etc/zookeeper/conf.dist</value>
+      <alt>/etc/zookeeper/conf.dist</alt>
+    </hadoop-zookeeper-conf>
   </alternatives>
 </hadoop-zookeeper>
 <hadoop-zookeeper-server>
