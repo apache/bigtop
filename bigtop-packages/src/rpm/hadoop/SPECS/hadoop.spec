@@ -405,6 +405,8 @@ fi
 %attr(0775,root,hadoop) /var/run/%{name}
 %attr(0775,root,hadoop) %{log_hadoop}
 
+%exclude %{lib_hadoop}/lib/native
+
 %files doc
 %defattr(-,root,root)
 %doc %{doc_hadoop}
