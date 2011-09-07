@@ -31,6 +31,7 @@
 ### END INIT INFO
 set -e
 
+source /etc/default/hadoop-0.20
 source /etc/default/hbase
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin

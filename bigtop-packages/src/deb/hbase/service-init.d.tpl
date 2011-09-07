@@ -38,6 +38,8 @@
 
 set -e
 
+source /etc/default/hadoop-0.20
+
 # Our default HBASE_HOME and HBASE_PID_DIR
 export HBASE_HOME=/usr/lib/hbase
 export HBASE_PID_DIR=/var/run/hbase
