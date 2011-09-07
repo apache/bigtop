@@ -412,17 +412,16 @@ class PackageTestCommon {
     }
   }
 
-  public void checkRemoval() {
-    checkComplimentary32bitInstall();
-
+  public void checkDaemonStart() {
     // We need to start service for one more time to make sure that package
     // removal would succeed even when services are still running
     pkg.getServices().each { name, svc ->
       checkThat("can not start service $name",
                 svc.start(), equalTo(0));
     }
-    sleep(3001); // TODO FIXME: CDH-2816 should address the timing of daemons start.
+  }
 
+  public void checkRemoval() {
     checkThat("package $name failed to be removed",
               pkg.remove(), equalTo(0));
     checkThat("package $name is NOT expected to remain installed after removal",
