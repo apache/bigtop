@@ -145,8 +145,8 @@ fi
 %config(noreplace) %{conf_oozie}
 %{initd_dir}/oozie
 %defattr(-, oozie, oozie)
-%dir %{_localstatedir}/log/hbase
-%dir %{_localstatedir}/run/hbase
+%dir %{_localstatedir}/log/oozie
+%dir %{_localstatedir}/run/oozie
 %{data_oozie}
 
 %files client
