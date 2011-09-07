@@ -131,7 +131,6 @@ fi
 
 %files 
 %defattr(-,root,root)
-%dir %{lib_oozie}/bin
 %{lib_oozie}/bin/addtowar.sh
 %{lib_oozie}/bin/oozie-run.sh
 %{lib_oozie}/bin/oozie-setup.sh
@@ -152,6 +151,7 @@ fi
 %files client
 %defattr(-,root,root)
 %{usr_bin}/oozie
+%dir %{lib_oozie}/bin
 %{lib_oozie}/bin/oozie
 %{lib_oozie}/bin/oozie-examples.sh
 %{lib_oozie}/lib

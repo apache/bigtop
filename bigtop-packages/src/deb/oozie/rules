@@ -68,6 +68,7 @@ binary-common:
 	dh_installchangelogs
 	dh_installdocs
 	dh_installman
+	dh_installdirs
 	dh_link
 	dh_strip
 	dh_compress
