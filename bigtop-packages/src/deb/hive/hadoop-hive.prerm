@@ -23,8 +23,7 @@ set -e
 
 case "$1" in
     remove|upgrade|deconfigure)
-      rmdir /var/log/hive 2>/dev/null || :
-      rmdir /var/run/hive 2>/dev/null || :
+      update-alternatives --remove hive-conf /etc/hive/conf.dist
     ;;
 
     failed-upgrade)

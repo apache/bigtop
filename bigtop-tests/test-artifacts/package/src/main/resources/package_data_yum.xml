@@ -1445,7 +1445,6 @@ also on potential use cases. Come to the mailing lists to find out more.</descri
     <file name="/etc/oozie/oozie-log4j.properties" owners="1" perm="-rw-r--r--" user="root" group="root"/>
     <file name="/etc/oozie/oozie-site.xml" owners="1" perm="-rw-r--r--" user="root" group="root"/>
     <file name="/etc/rc.d/init.d/oozie" owners="1" perm="-rwxr-xr-x" user="root" group="root"/>
-    <file name="/usr/lib/oozie/bin" owners="1" perm="drwxr-xr-x" user="root" group="root"/>
     <file name="/usr/lib/oozie/bin/addtowar.sh" owners="1" perm="-rwxr-xr-x" user="root" group="root"/>
     <file name="/usr/lib/oozie/bin/oozie-env.sh" owners="1" perm="-rwxr-xr-x" user="root" group="root"/>
     <file name="/usr/lib/oozie/bin/oozie-run.sh" owners="1" perm="-rwxr-xr-x" user="root" group="root"/>
@@ -1551,6 +1550,7 @@ also on potential use cases. Come to the mailing lists to find out more.</descri
   </deps>
   <content>
     <file name="/usr/bin/oozie" owners="1" perm="-rwxr-xr-x" user="root" group="root"/>
+    <file name="/usr/lib/oozie/bin" owners="1" perm="drwxr-xr-x" user="root" group="root"/>
     <file name="/usr/lib/oozie/bin/oozie" owners="1" perm="-rwxr-xr-x" user="root" group="root"/>
     <file name="/usr/lib/oozie/bin/oozie-examples.sh" owners="1" perm="-rwxr-xr-x" user="root" group="root"/>
     <file name="/usr/lib/oozie/lib" owners="1" perm="drwxr-xr-x" user="root" group="root"/>

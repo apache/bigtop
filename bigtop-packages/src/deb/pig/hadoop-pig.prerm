@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# prerm script for hbase
+# prerm script for hadoop
 #
 # see: dh_installdeb(1)
 
@@ -35,7 +35,7 @@ set -e
 
 case "$1" in
     remove|upgrade|deconfigure)
-      unlink /usr/lib/hbase/logs
+      update-alternatives --remove pig-conf /etc/pig/conf.dist
     ;;
 
     failed-upgrade)

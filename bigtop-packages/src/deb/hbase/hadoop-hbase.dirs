@@ -1,3 +1,4 @@
 /usr/bin
 /var/log/hbase
+/var/run/hbase
 /etc/default
