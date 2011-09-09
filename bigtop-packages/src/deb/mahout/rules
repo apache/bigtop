@@ -52,6 +52,8 @@ install-indep:
 	  --build-dir=debian/tmp \
           --doc-dir=/usr/share/doc/mahout \
 	  --prefix=debian/mahout
+	rm debian/mahout/usr/lib/mahout/lib/hadoop-*.jar
+	ln -s /usr/lib/hadoop/hadoop-core.jar debian/mahout/usr/lib/mahout/lib/hadoop-core.jar
 	dh_install -i
 	(dh_lintian) || /bin/true
 
