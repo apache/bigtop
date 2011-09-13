@@ -39,11 +39,17 @@
 
 
 %define alternatives_cmd update-alternatives
+%define alternatives_dep update-alternatives
+%define chkconfig_dep    aaa_base
+%define service_dep      aaa_base
 %global initd_dir %{_sysconfdir}/rc.d
 
 %else
 
 %define alternatives_cmd alternatives
+%define alternatives_dep chkconfig 
+%define chkconfig_dep    chkconfig
+%define service_dep      initscripts
 %global initd_dir %{_sysconfdir}/rc.d/init.d
 
 %endif
@@ -66,8 +72,8 @@ Source4: zookeeper.1
 BuildArch: noarch
 BuildRequires: ant, autoconf, automake, subversion
 Requires(pre): coreutils, shadow-utils
-Requires(post): chkconfig
-Requires(preun): chkconfig
+Requires(post): %{alternatives_dep}
+Requires(preun): %{alternatives_dep}
 
 %description 
 ZooKeeper is a centralized service for maintaining configuration information, 
@@ -84,8 +90,8 @@ Summary: The Hadoop Zookeeper server
 Group: System/Daemons
 Provides: hadoop-zookeeper-server
 Requires: hadoop-zookeeper = %{version}-%{release}
-Requires(post): chkconfig
-Requires(preun): initscripts, chkconfig
+Requires(post): %{chkconfig_dep}
+Requires(preun): %{service_dep}, %{chkconfig_dep}
 BuildArch: noarch
 
 %if  %{?suse_version:1}0
