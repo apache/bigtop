@@ -25,6 +25,10 @@
 #
 # Version:  @(#)skeleton  1.9  26-Feb-2001  miquels@cistron.nl
 #
+# chkconfig: 2345 82 13
+# description: Summary: HBase is the Hadoop database. Use it when you need random, realtime read/write access to your Big Data. This project's goal is the hosting of very large tables -- billions of rows X millions of columns -- atop clusters of commodity hardware.
+# processname: HBase
+#
 ### BEGIN INIT INFO
 # Provides:          hbase-@HBASE_DAEMON@
 # Required-Start:    $network $local_fs $remote_fs

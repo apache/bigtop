@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# chkconfig: 2345 85 15
+# chkconfig: 2345 90 10
 # description: 
 # processname: hive
 # pidfile: /var/run/hive/hive-@HIVE_DAEMON@.pid

@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# chkconfig: 2345 85 15
+# chkconfig: 2345 90 10
 # description: Sqoop allows easy imports and exports of data sets between \
 # databases and the Hadoop Distributed File System (HDFS). The Sqoop \
 # metastore allows users to define saved jobs for repeated execution and \

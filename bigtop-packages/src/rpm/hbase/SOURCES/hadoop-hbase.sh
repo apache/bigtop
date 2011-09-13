@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # 
-# chkconfig: 2345 85 15
+# chkconfig: 2345 82 13
 # description: Summary: HBase is the Hadoop database. Use it when you need random, realtime read/write access to your Big Data. This project's goal is the hosting of very large tables -- billions of rows X millions of columns -- atop clusters of commodity hardware.
 # processname: HBase
 # pidfile: /usr/lib/hbase/pids/hadoop_hbase.pid

@@ -17,7 +17,7 @@
 
 # Starts a Hive @HIVE_DAEMON@
 #
-# chkconfig: 345 85 15
+# chkconfig: 345 90 10
 # description: Starts a Hive @HIVE_DAEMON@
 # processname: hive
 #

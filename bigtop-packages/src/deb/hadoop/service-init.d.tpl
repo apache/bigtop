@@ -25,6 +25,11 @@
 #
 # Version:  @(#)skeleton  1.9  26-Feb-2001  miquels@cistron.nl
 #
+# Starts a Hadoop @HADOOP_DAEMON@
+#
+# chkconfig: 2345 85 15
+# description: Hadoop @HADOOP_DAEMON@
+#
 ### BEGIN INIT INFO
 # Provides:          hadoop-@HADOOP_DAEMON@
 # Required-Start:    $network $local_fs
