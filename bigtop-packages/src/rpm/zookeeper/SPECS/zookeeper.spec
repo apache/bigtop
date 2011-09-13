@@ -146,7 +146,7 @@ getent passwd zookeeper > /dev/null || useradd -c "ZooKeeper" -s /sbin/nologin -
 
 %preun
 if [ "$1" = 0 ]; then
-        %{alternatives_cmd} --remove %{name}-conf %{etc_zookeeper}/conf.dist
+        %{alternatives_cmd} --remove %{name}-conf %{etc_zookeeper}/conf.dist || :
 fi
 
 %post server

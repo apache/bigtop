@@ -35,7 +35,7 @@ set -e
 
 case "$1" in
     remove|upgrade|deconfigure)
-      update-alternatives --remove pig-conf /etc/pig/conf.dist
+      update-alternatives --remove pig-conf /etc/pig/conf.dist || :
     ;;
 
     failed-upgrade)

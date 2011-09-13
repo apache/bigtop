@@ -157,7 +157,7 @@ getent passwd flume >/dev/null || useradd -c "Flume" -s /sbin/nologin -g flume -
 
 %preun
 if [ "$1" = 0 ]; then
-        %{alternatives_cmd} --remove %{name}-conf %{etc_flume}.empty
+        %{alternatives_cmd} --remove %{name}-conf %{etc_flume}.empty || :
 fi
 
 %files 

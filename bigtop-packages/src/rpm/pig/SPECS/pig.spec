@@ -139,7 +139,7 @@ fi
 %preun
 # If we are uninstalling pig
 if [ "$1" = 0 ]; then
-        %{alternatives_cmd} --remove pig-conf %{etc_pig}/conf.dist
+        %{alternatives_cmd} --remove pig-conf %{etc_pig}/conf.dist || :
 fi
 
 #######################

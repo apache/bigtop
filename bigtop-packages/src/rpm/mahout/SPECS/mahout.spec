@@ -83,7 +83,7 @@ ln -s /usr/lib/hadoop/hadoop-core.jar $RPM_BUILD_ROOT/usr/lib/mahout/lib/hadoop-
 
 %preun
 if [ "$1" = 0 ]; then
-        %{alternatives_cmd} --remove %{mahout_name}-conf %{config_mahout}.dist
+        %{alternatives_cmd} --remove %{mahout_name}-conf %{config_mahout}.dist || :
 fi
 
 #######################

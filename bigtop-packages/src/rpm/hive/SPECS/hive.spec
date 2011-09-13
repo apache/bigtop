@@ -173,7 +173,7 @@ fi
 
 %preun
 if [ "$1" = 0 ]; then
-  %{alternatives_cmd} --remove hive-conf %{etc_hive}/conf.dist
+  %{alternatives_cmd} --remove hive-conf %{etc_hive}/conf.dist || :
 fi
 
 %__rmdir /var/log/hive 2>/dev/null || :

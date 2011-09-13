@@ -392,8 +392,8 @@ if [ "$1" = 0 ]; then
   do
      service hadoop-$service stop 1>/dev/null 2>/dev/null || :
   done
-  %{alternatives_cmd} --remove %{name}-conf %{etc_hadoop}/conf.empty
-  %{alternatives_cmd} --remove %{hadoop_name}-default %{bin_hadoop}/%{name}
+  %{alternatives_cmd} --remove %{name}-conf %{etc_hadoop}/conf.empty || :
+  %{alternatives_cmd} --remove %{hadoop_name}-default %{bin_hadoop}/%{name} || :
 fi
 
 %files

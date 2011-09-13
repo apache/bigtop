@@ -23,7 +23,7 @@ set -e
 
 case "$1" in
     remove|upgrade|deconfigure)
-      update-alternatives --remove hive-conf /etc/hive/conf.dist
+      update-alternatives --remove hive-conf /etc/hive/conf.dist || :
     ;;
 
     failed-upgrade)

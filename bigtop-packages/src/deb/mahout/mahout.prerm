@@ -3,7 +3,7 @@ set -e
 
 case "$1" in
     remove|upgrade|deconfigure)
-      update-alternatives --remove mahout-conf /etc/mahout/conf.dist
+      update-alternatives --remove mahout-conf /etc/mahout/conf.dist || :
     ;;
 
     failed-upgrade)
