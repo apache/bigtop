@@ -151,5 +151,4 @@ chkconfig --del sqoop-metastore
 %{_mandir}/man1/sqoop-metastore.1.gz
 %{_mandir}/man1/sqoop-version.1.gz
 %{_mandir}/man1/sqoop-merge.1.gz
-%{_docdir}/sqoop-%{sqoop_version}
-
+%doc %{doc_sqoop}

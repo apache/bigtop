@@ -60,6 +60,5 @@ sh $RPM_SOURCE_DIR/install_whirr.sh \
 %defattr(-,root,root)
 %attr(0755,root,root) %{lib_whirr}
 %attr(0755,root,root) %{_bindir}/%{name}
-%attr(0644,root,root) %{man_dir}/man1/whirr.1.gz
+%doc %attr(0644,root,root) %{man_dir}/man1/whirr.1.gz
 %ghost %{lib_whirr}/cli/whirr.log
-

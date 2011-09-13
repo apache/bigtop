@@ -216,7 +216,7 @@ getent passwd hbase 2>&1 > /dev/null || /usr/sbin/useradd -c "HBase" -s /sbin/no
 
 %files doc
 %defattr(-,root,root)
-%{doc_hbase}/
+%doc %{doc_hbase}/
 
 
 %define service_macro() \

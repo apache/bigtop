@@ -319,6 +319,7 @@ bash $RPM_SOURCE_DIR/install_hadoop.sh \
   --installed-lib-dir=%{lib_hadoop} \
   --man-dir=$RPM_BUILD_ROOT%{man_hadoop} \
 
+%__mv -f $RPM_BUILD_ROOT/usr/share/doc/libhdfs-devel $RPM_BUILD_ROOT/%{_docdir}/libhdfs-%{hadoop_version}
 
 # Init.d scripts
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
@@ -483,5 +484,4 @@ fi
 %{_libdir}/libhdfs*
 %{_includedir}/hdfs.h
 # -devel should be its own package
-%doc %{_docdir}/libhdfs-devel
-
+%doc %{_docdir}/libhdfs-%{hadoop_version}
