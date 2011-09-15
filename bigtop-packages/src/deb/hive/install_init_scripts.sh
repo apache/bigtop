@@ -22,8 +22,8 @@ for node in server metastore ; do
     template="debian/service-init.d.tpl"
 
     mkdir -p $service_pkgdir/etc/init.d/ $service_pkgdir/etc/default/ $debdir
+    cp debian/$SRC_PKG-${node}.default  $service_pkgdir/etc/default/$SRC_PKG-$node
     sed -e "s|@HIVE_DAEMON@|$node|" $template > $service_pkgdir/etc/init.d/$SRC_PKG-$node
-    sed -e "s|@HIVE_DAEMON@|$node|" debian/hadoop-hive.default > $service_pkgdir/etc/default/$SRC_PKG-$node 
     sed -e "s|@HIVE_DAEMON@|$node|" debian/service-postinst.tpl > $debdir/postinst
     sed -e "s|@HIVE_DAEMON@|$node|" debian/service-postrm.tpl > $debdir/postrm
     chmod 755 $debdir/postinst $debdir/postrm $service_pkgdir/etc/init.d*

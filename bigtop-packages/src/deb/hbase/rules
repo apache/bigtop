@@ -44,6 +44,7 @@ install: build
 	dh_testroot
 	dh_clean -k
 	dh_installdirs
+	cp debian/hbase.default debian/hadoop-hbase/etc/default/hbase
 	sh -x debian/install_hbase.sh \
 		--build-dir=. \
 		--doc-dir=usr/share/doc/hadoop-hbase-doc \
