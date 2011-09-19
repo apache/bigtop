@@ -99,12 +99,14 @@ License: Apache License v2.0
 URL: http://hadoop.apache.org/core/
 Group: Development/Libraries
 Source0: %{name}-%{hadoop_base_version}.tar.gz
-Source1: hadoop.default
-Source2: hadoop-init.tmpl
-Source3: hadoop-init.tmpl.suse
-Source4: hadoop.1
-Source5: hadoop-fuse-dfs.1
-Source6: hadoop-fuse.default
+Source1: do-component-build
+Source2: install_%{name}.sh
+Source3: hadoop.default
+Source4: hadoop-init.tmpl
+Source5: hadoop-init.tmpl.suse
+Source6: hadoop.1
+Source7: hadoop-fuse-dfs.1
+Source8: hadoop-fuse.default
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: python >= 2.4, git, fuse-devel,fuse, automake, autoconf
 Requires: textutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service
@@ -284,15 +286,7 @@ Hadoop Pipes Library
 # This assumes that you installed Java JDK 5 and set JAVA5_HOME
 # This assumes that you installed Forrest and set FORREST_HOME
 
-ant -Dversion=%{version} \
-    -Djava5.home=$JAVA5_HOME \
-    -Dforrest.home=$FORREST_HOME \
-    -Dcompile.native=true \
-	 -Dhadoop.conf.dir=/etc/hadoop/conf \
-	 -Dlibhdfs=1 \
-	 -Dcompile.c++=true \
-	 -Djdiff.build.dir=build/docs/jdiff-cloudera \
-	 api-report bin-package compile-contrib package
+env HADOOP_VERSION=%{hadoop_version} bash %{SOURCE1}
 
 %clean
 %__rm -rf $RPM_BUILD_ROOT
@@ -305,7 +299,7 @@ ant -Dversion=%{version} \
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{lib_hadoop}
 
-bash $RPM_SOURCE_DIR/install_hadoop.sh \
+bash %{SOURCE2} \
   --distro-dir=$RPM_SOURCE_DIR \
   --build-dir=$PWD/build/%{name}-%{version} \
   --src-dir=$RPM_BUILD_ROOT%{src_hadoop} \

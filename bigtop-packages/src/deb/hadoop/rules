@@ -39,13 +39,8 @@ endif
 build: build-stamp
 build-stamp:
 	dh_testdir
-	ant  \
-   -Dversion=${hadoop_version} \
-	-Divy.home=$(shell pwd)/build/ivy.home \
-	-Dcompile.native=true \
-	-Dhadoop.conf.dir=/etc/hadoop/conf \
-	-Dlibhdfs=1 -Dcompile.c++=true -Djdiff.build.dir=build/docs/jdiff-cloudera \
-	api-report bin-package compile-contrib
+	env HADOOP_VERSION=${hadoop_version} \
+		sh debian/do-component-build -Divy.home=`pwd`/debian/.ivy
 	touch $@
 
 clean:  

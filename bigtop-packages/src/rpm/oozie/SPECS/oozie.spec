@@ -33,6 +33,8 @@ Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 License: APL2
 Source0: %{name}-%{oozie_base_version}.tar.gz
+Source1: do-component-build
+Source2: create-package-layout
 Requires(pre): /usr/sbin/groupadd, /usr/sbin/useradd
 Requires(post): /sbin/chkconfig
 Requires(preun): /sbin/chkconfig, /sbin/service
@@ -104,12 +106,12 @@ BuildArch: noarch
     M2_CACHE=`mktemp -d /tmp/oozie.m2.XXXXX`
     mkdir -p distro/downloads
     # curl --retry 5 -# -L -k -o distro/downloads/tomcat.tar.gz http://archive.apache.org/dist/tomcat/tomcat-6/v6.0.29/bin/apache-tomcat-6.0.29.tar.gz    
-    (export DO_MAVEN_DEPLOY="";export FULL_VERSION=%{version};cp $RPM_SOURCE_DIR/do-release-build bin; sh -x bin/do-release-build -Dmaven.repo.local=${HOME}/.m2/repository -DskipTests)
+    (export DO_MAVEN_DEPLOY="";export FULL_VERSION=%{version};cp %{SOURCE1} bin; sh -x bin/do-component-build -Dmaven.repo.local=${HOME}/.m2/repository -DskipTests)
     rm -rf ${M2_CACHE}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
-    sh $RPM_SOURCE_DIR/create-package-layout --extra-dir=$RPM_SOURCE_DIR --build-dir=. --server-dir=$RPM_BUILD_ROOT --client-dir=$RPM_BUILD_ROOT --docs-dir=$RPM_BUILD_ROOT%{_docdir}/%{name}-%{version} --initd-dir=$RPM_BUILD_ROOT%{initd_dir}
+    sh %{SOURCE2} --extra-dir=$RPM_SOURCE_DIR --build-dir=. --server-dir=$RPM_BUILD_ROOT --client-dir=$RPM_BUILD_ROOT --docs-dir=$RPM_BUILD_ROOT%{_docdir}/%{name}-%{version} --initd-dir=$RPM_BUILD_ROOT%{initd_dir}
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/usr/bin
 

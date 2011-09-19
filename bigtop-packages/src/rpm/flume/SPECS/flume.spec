@@ -59,9 +59,10 @@ Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 BuildArch: noarch
 License: APL2
 Source0: flume-%{flume_base_version}.tar.gz
-Source1: init.d
-Source2: init.d.suse
-Source3: install_flume.sh
+Source1: do-component-build
+Source2: install_%{name}.sh
+Source3: init.d
+Source4: init.d.suse
 Requires: sh-utils, textutils, /usr/sbin/useradd, /sbin/chkconfig, /sbin/service, hadoop-zookeeper >= 3.3.1, hadoop >= 0.20.2
 BuildRequires: ant xml-commons xml-commons-apis
 
@@ -114,11 +115,11 @@ Flume is a reliable, scalable, and manageable distributed data collection applic
 %setup -n %{name}-%{flume_base_version}
 
 %build
-ant -f build.xml tar -Dversion=%{version}
+env FLUME_VERSION=%{version} sh %{SOURCE1}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
-sh $RPM_SOURCE_DIR/install_flume.sh \
+sh %{SOURCE2} \
           --build-dir=. \
           --prefix=$RPM_BUILD_ROOT \
 	  --doc-dir=%{doc_flume}

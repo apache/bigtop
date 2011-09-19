@@ -75,10 +75,11 @@ Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 BuildRequires: /usr/bin/git
 BuildArch: noarch
 Source0: pig-%{pig_base_version}.tar.gz
-Source1: install_pig.sh
-Source2: log4j.properties
-Source3: pig.1
-Source4: pig.properties
+Source1: do-component-build
+Source2: install_pig.sh
+Source3: log4j.properties
+Source4: pig.1
+Source5: pig.properties
 Requires: hadoop
 
 %description 
@@ -108,8 +109,7 @@ language called Pig Latin, which has the following key properties:
 %setup -n pig-%{pig_base_version}
 
 %build
-
-ant -Djavac.version=1.6 -Djava5.home=$JAVA5_HOME -Dforrest.home=$FORREST_HOME -Dversion=%{pig_base_version} package
+env PIG_BASE_VERSION=%{pig_base_version} bash %{SOURCE1}
 
 
 #########################
@@ -121,7 +121,7 @@ ant -Djavac.version=1.6 -Djava5.home=$JAVA5_HOME -Dforrest.home=$FORREST_HOME -D
 cp $RPM_SOURCE_DIR/log4j.properties .
 cp $RPM_SOURCE_DIR/pig.1 .
 cp $RPM_SOURCE_DIR/pig.properties .
-sh -x $RPM_SOURCE_DIR/install_pig.sh \
+sh -x %{SOURCE2} \
           --build-dir=. \
           --doc-dir=$RPM_BUILD_ROOT%{doc_pig} \
           --prefix=$RPM_BUILD_ROOT

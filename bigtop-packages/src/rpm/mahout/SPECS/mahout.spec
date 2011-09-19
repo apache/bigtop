@@ -41,7 +41,8 @@ BuildArch: noarch
 Buildroot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 License: ASL 2.0 
 Source0: %{name}-distribution-%{mahout_base_version}-src.tar.gz
-Source1: install_%{name}.sh
+Source1: do-component-build 
+Source2: install_%{name}.sh
 Requires: hadoop >= 0.20.2, /sbin/chkconfig
 
 
@@ -66,8 +67,7 @@ also on potential use cases. Come to the mailing lists to find out more.
 %setup -n %{name}-distribution-%{mahout_base_version}
 
 %build
-
-mvn clean install -Dmahout.skip.distribution=false -DskipTests
+bash $RPM_SOURCE_DIR/do-component-build
 
 %install
 %__rm -rf $RPM_BUILD_ROOT

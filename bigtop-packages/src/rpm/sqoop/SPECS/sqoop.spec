@@ -36,9 +36,10 @@ Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 License: APL2
 Source0: %{name}-%{sqoop_base_version}.tar.gz
-Source1: sqoop-metastore.sh
-Source2: sqoop-metastore.sh.suse
-Source3: install_sqoop.sh
+Source1: do-component-build
+Source2: install_%{name}.sh
+Source3: sqoop-metastore.sh
+Source4: sqoop-metastore.sh.suse
 Buildarch: noarch
 BuildRequires:  asciidoc, xmlto
 Prereq: hadoop
@@ -70,11 +71,11 @@ server for Sqoop clients across a network to use.
 %setup -n sqoop-%{sqoop_base_version}
 
 %build
-ant -f build.xml package -Dversion=%{version}
+bash %{SOURCE1} -Dversion=%{version}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
-sh $RPM_SOURCE_DIR/install_sqoop.sh \
+sh %{SOURCE2} \
           --build-dir=. \
           --doc-dir=%{doc_sqoop} \
           --prefix=$RPM_BUILD_ROOT

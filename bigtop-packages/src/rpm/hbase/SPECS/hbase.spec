@@ -61,10 +61,11 @@ Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 License: APL2
 Source0: hbase-%{hbase_base_version}.tar.gz
-Source1: hadoop-hbase.sh
-Source2: hadoop-hbase.sh.suse
-Source3: hbase.default
-Source4: install_hbase.sh
+Source1: do-component-build
+Source2: install_hbase.sh
+Source3: hadoop-hbase.sh
+Source4: hadoop-hbase.sh.suse
+Source5: hbase.default
 BuildArch: noarch
 Requires: sh-utils, textutils, /usr/sbin/useradd, /sbin/chkconfig, /sbin/service, hadoop-zookeeper, hadoop >= 0.20.2, hadoop-zookeeper >= 3.3.1
 
@@ -149,12 +150,11 @@ Documentation for Hbase
 %setup -n hbase-%{hbase_base_version}
 
 %build
-mvn clean
-mvn -DskipTests -Dhbase.version=%{version} install assembly:assembly  
+env HBASE_VERSION=%{version} bash %{SOURCE1}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
-sh $RPM_SOURCE_DIR/install_hbase.sh \
+sh %{SOURCE2} \
 	--build-dir=. \
    --doc-dir=%{doc_hbase} \
 	--prefix=$RPM_BUILD_ROOT

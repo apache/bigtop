@@ -28,8 +28,9 @@ BuildArch: noarch
 Buildroot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 License: ASL 2.0 
 Source0: %{name}-%{whirr_base_version}-incubating-src.tar.gz
-Source1: install_%{name}.sh
-Source2: whirr.1
+Source1: do-component-build
+Source2: install_%{name}.sh
+Source3: whirr.1
 
 %description 
 Whirr provides
@@ -46,13 +47,12 @@ Whirr provides
 %setup -n %{name}-%{whirr_base_version}-incubating
 
 %build
-
-mvn clean source:jar install assembly:assembly -Pjavadoc site
+bash %{SOURCE1}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
 cp $RPM_SOURCE_DIR/whirr.1 .
-sh $RPM_SOURCE_DIR/install_whirr.sh \
+sh %{SOURCE2} \
           --build-dir=. \
           --prefix=$RPM_BUILD_ROOT
 

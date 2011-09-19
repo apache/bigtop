@@ -38,7 +38,7 @@ clean:
 build-indep: build-indep-stamp
 build-indep-stamp: patch-stamp
 	# we'll just use the build from the tarball.
-	(export DO_MAVEN_DEPLOY="";mvn clean install -Dmahout.skip.distribution=false -Dmaven.repo.local=${HOME}/.m2/repository -DskipTests)
+	bash debian/do-component-build -Dmaven.repo.local=${HOME}/.m2/repository
 	mkdir -p debian/tmp
 	(cd distribution/target/mahout-distribution-${MAHOUT_BASE_VERSION}/mahout-distribution-${MAHOUT_BASE_VERSION} && tar cf - --exclude=debian/\* .) | (cd debian/tmp && tar xf -)
 #	(cd debian/tmp && tar xvzf ../../distribution/target/mahout-distribution-${MAHOUT_BASE_VERSION}.tar.gz)

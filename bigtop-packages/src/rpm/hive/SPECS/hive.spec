@@ -61,12 +61,14 @@ Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 BuildArch: noarch
 Source0: hive-%{hive_base_version}.tar.gz
-Source1: hadoop-hive.sh
-Source2: hadoop-hive.sh.suse
-Source3: hadoop-hive-server.default
-Source4: hadoop-hive-metastore.default
-Source5: hive.1
-Source6: hive-site.xml
+Source1: do-component-build
+Source2: install_hive.sh
+Source3: hadoop-hive.sh
+Source4: hadoop-hive.sh.suse
+Source5: hadoop-hive-server.default
+Source6: hadoop-hive-metastore.default
+Source7: hive.1
+Source8: hive-site.xml
 Requires: hadoop >= 0.20.1
 Obsoletes: %{name}-webinterface
 
@@ -114,7 +116,7 @@ This optional package hosts a metadata server for Hive clients across a network 
 %setup -n hive-%{hive_base_version}
 
 %build
-ant -f src/build.xml package
+bash %{SOURCE1}
 
 #########################
 #### INSTALL SECTION ####
@@ -124,7 +126,7 @@ ant -f src/build.xml package
 
 cp $RPM_SOURCE_DIR/hive.1 .
 cp $RPM_SOURCE_DIR/hive-site.xml .
-/bin/bash $RPM_SOURCE_DIR/install_hive.sh \
+/bin/bash %{SOURCE2} \
   --prefix=$RPM_BUILD_ROOT \
   --build-dir=%{hive_dist} \
   --doc-dir=$RPM_BUILD_ROOT/%{doc_hive}

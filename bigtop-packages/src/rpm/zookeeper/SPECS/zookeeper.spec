@@ -65,10 +65,11 @@ Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 License: APL2
 Source0: zookeeper-%{zookeeper_base_version}.tar.gz
-Source1: hadoop-zookeeper.sh
-Source2: hadoop-zookeeper.sh.suse
-Source3: install_zookeeper.sh
-Source4: zookeeper.1
+Source1: do-component-build
+Source2: install_zookeeper.sh
+Source3: hadoop-zookeeper.sh
+Source4: hadoop-zookeeper.sh.suse
+Source5: zookeeper.1
 BuildArch: noarch
 BuildRequires: ant, autoconf, automake, subversion
 Requires(pre): coreutils, shadow-utils
@@ -109,12 +110,12 @@ This package starts the zookeeper server on startup
 %setup -n zookeeper-%{zookeeper_base_version}
 
 %build
-ant -f build.xml package -Dversion=%{version}
+bash %{SOURCE1} -Dversion=%{version}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
 cp $RPM_SOURCE_DIR/zookeeper.1 .
-sh $RPM_SOURCE_DIR/install_zookeeper.sh \
+sh %{SOURCE2} \
           --build-dir=. \
           --doc-dir=%{doc_zookeeper} \
           --prefix=$RPM_BUILD_ROOT

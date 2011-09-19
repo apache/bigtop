@@ -37,7 +37,7 @@ clean:
 
 build-indep: build-indep-stamp
 build-indep-stamp: patch-stamp
-	mvn clean source:jar install assembly:assembly -Pjavadoc site -Dmaven.repo.local=${HOME}/.m2/repository -Dskiptests
+	bash debian/do-component-build -Dmaven.repo.local=${HOME}/.m2/repository
 	mkdir -p debian/tmp
 	# NOTE: FIXME me right away
 	cp -r debian/whirr.1 .

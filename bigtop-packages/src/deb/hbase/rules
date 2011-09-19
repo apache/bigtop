@@ -36,7 +36,7 @@ clean:
 
 build:
 	dh_testdir
-	mvn clean -DskipTests -Dhbase.version=${HBASE_VERSION} install assembly:assembly -Dmaven.repo.local=${HOME}/.m2/repository  
+	bash debian/do-component-build -Dmaven.repo.local=${HOME}/.m2/repository  
 
 	
 install: build
