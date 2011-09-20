@@ -16,5 +16,5 @@
 
 set -ex
 
-mvn clean source:jar install assembly:assembly -Pjavadoc site -DskipTests "$@"
+mvn clean source:jar install assembly:assembly -Pjavadoc site "$@"
 
