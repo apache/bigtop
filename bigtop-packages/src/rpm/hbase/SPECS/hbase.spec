@@ -226,9 +226,13 @@ getent passwd hbase 2>&1 > /dev/null || /usr/sbin/useradd -c "HBase" -s /sbin/no
 chkconfig --add %{name}-%1 \
 \
 %preun %1 \
-if [ "$1" = 0 ] ; then \
-	service %{name}-%1 stop > /dev/null \
-	chkconfig --del %{name}-%1 \
+if [ $1 = 0 ] ; then \
+        service %{name}-%1 stop > /dev/null 2>&1 \
+        chkconfig --del %{name}-%1 \
+fi \
+%postun %1 \
+if [ $1 -ge 1 ]; then \
+        service %{name}-%1 condrestart >/dev/null 2>&1 \
 fi
 %service_macro master
 %service_macro thrift

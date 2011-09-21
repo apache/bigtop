@@ -131,6 +131,11 @@ if [ "$1" = 0 ]; then
   /sbin/chkconfig --del oozie
 fi
 
+%postun
+if [ $1 -ge 1 ]; then
+  /sbin/service oozie condrestart > /dev/null
+fi
+
 %files 
 %defattr(-,root,root)
 %{lib_oozie}/bin/addtowar.sh

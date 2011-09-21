@@ -87,7 +87,15 @@ case "$1" in
         start_oozie
         exit 0
         ;;
-  restart|reload|force-reload)
+  force-reload|condrestart|try-restart)
+        is_oozie_alive
+        if [ ${STATUS} -eq 0 ] ; then
+          stop_oozie
+          start_oozie
+        fi
+        exit 0
+        ;;
+  restart|reload)
         stop_oozie
         start_oozie
         exit 0
@@ -118,7 +126,7 @@ case "$1" in
         esac 
         ;;
   *)
-        echo "Usage: $0 start|stop|status|restart|reload|force-reload" >&2
+        echo "Usage: $0 start|stop|status|restart|reload|force-reload|condrestart|try-restart" >&2
         exit 3
         ;;
 esac

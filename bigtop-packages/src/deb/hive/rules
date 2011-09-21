@@ -37,8 +37,11 @@ build-indep-stamp:
 	bash debian/do-component-build -Divy.home=`pwd`/debian/.ivy
 	touch $@
 
+server metastore: debian/service-init.d.tpl
+	sed -e "s|@HIVE_DAEMON@|$@|" $< > debian/hadoop-hive-$@.init
+
 install: install-indep
-install-indep:	
+install-indep: metastore server	
 	dh_testdir
 	dh_testroot
 	dh_clean -k -i
@@ -52,7 +55,6 @@ install-indep:
 	  --python-dir=debian/python-hive/usr/share/python-support/python-hive/hive
 	dh_pysupport
 	dh_install -i
-	sh debian/install_init_scripts.sh
 	ls -ld debian/hadoop-hive/var/lib/hive/metastore
 	(dh_lintian) || /bin/true
 
@@ -69,7 +71,7 @@ binary-common:
 #	dh_installpam
 #	dh_installmime
 #	dh_python
-#	dh_installinit
+	dh_installinit
 #	dh_installcron
 #	dh_installinfo
 	dh_installman

@@ -132,7 +132,7 @@ case "$1" in
     condrestart
     ;;
   *)
-    echo $"Usage: $0 {start|stop|status|restart|try-restart}"
+    echo $"Usage: $0 {start|stop|status|restart|try-restart|condrestart}"
     exit 1
 esac
 

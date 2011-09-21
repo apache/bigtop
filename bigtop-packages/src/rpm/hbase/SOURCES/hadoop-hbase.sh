@@ -157,19 +157,10 @@ case "$1" in
             echo " ERROR."
         fi
 	;;
-    force-reload)
+    force-reload|condrestart|try-restart)
   # check wether $DAEMON is running. If so, restart
         hadoop_check_pidfile $PID_FILE && $0 restart
 	;;
-    restart)
-        echo -n "Restarting $DESC: "
-        stop
-        [ -n "$DODTIME" ] && sleep $DODTIME
-        $0 start
-	;;
-
-
-
     restart|reload)
         echo -n "Restarting $DESC: "
         stop
@@ -189,7 +180,7 @@ case "$1" in
     *)
 	N=/etc/init.d/$NAME
   # echo "Usage: $N {start|stop|restart|reload|force-reload}" >&2
-	echo "Usage: $N {start|stop|restart|force-reload|status|force-stop}" >&2
+	echo "Usage: $N {start|stop|restart|force-reload|status|force-stop|condrestart|try-restart}" >&2
 
 	exit 1
 	;;

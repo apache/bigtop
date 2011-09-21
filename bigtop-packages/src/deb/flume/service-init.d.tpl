@@ -16,26 +16,26 @@
 # limitations under the License.
 #
 ### BEGIN INIT INFO
-# Provides:             flume-master
+# Provides:             flume-@FLUME_DAEMON@
 # Required-Start:       $local_fs $remote_fs $syslog $named $network $time
 # Required-Stop:        $local_fs $remote_fs $syslog $named $network
 # Default-Start:        2 3 4 5
 # Default-Stop:         0 1 6
-# Short-Description:    Cloudera Flume Master
+# Short-Description:    Apache Flume @FLUME_DAEMON@
 ### END INIT INFO
-# Starts a Flume master
+# Starts a Flume @FLUME_DAEMON@
 #
-# description: Flume master
+# description: Flume @FLUME_DAEMON@
 
 
 export FLUME_HOME=/usr/lib/flume
 export FLUME_LOG_DIR=/var/log/flume
 export FLUME_RUN=/var/run/flume
-export FLUME_PID=${FLUME_RUN}/flume-flume-master.pid
+export FLUME_PID=${FLUME_RUN}/flume-flume-@FLUME_DAEMON@.pid
 export DOTIME=3
 install -d -m 0755 -o flume -g flume ${FLUME_RUN}
 
-desc="Flume master daemon"
+desc="Flume @FLUME_DAEMON@ daemon"
 
 
 # Checks if the given pid represents a live process.
@@ -65,14 +65,14 @@ flume_check_pidfile() {
 
 
 start() {
-  echo -n $"Starting $desc (flume-master): "
-  su -s /bin/sh  flume -c '${FLUME_HOME}/bin/flume-daemon.sh start master '
+  echo -n $"Starting $desc (flume-@FLUME_DAEMON@): "
+  su -s /bin/sh  flume -c '${FLUME_HOME}/bin/flume-daemon.sh start @FLUME_DAEMON@'
   echo
 }
 
 stop() {
-  echo -n $"Stopping $desc (flume-master): "
-  su -s /bin/sh  flume -c '${FLUME_HOME}/bin/flume-daemon.sh stop master '
+  echo -n $"Stopping $desc (flume-@FLUME_DAEMON@): "
+  su -s /bin/sh  flume -c '${FLUME_HOME}/bin/flume-daemon.sh stop @FLUME_DAEMON@'
   [ $? -eq 0 ] && rm -f $FLUME_PID
   echo
 }

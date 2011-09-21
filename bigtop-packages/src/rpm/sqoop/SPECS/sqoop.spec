@@ -107,8 +107,15 @@ getent passwd sqoop > /dev/null || useradd -c "Sqoop" -s /sbin/nologin \
 chkconfig --add sqoop-metastore
 
 %preun metastore
-service sqoop-metastore stop
-chkconfig --del sqoop-metastore
+if [ $1 = 0 ] ; then
+  service sqoop-metastore stop > /dev/null 2>&1
+  chkconfig --del sqoop-metastore
+fi
+
+%postun metastore
+if [ $1 -ge 1 ]; then
+  service sqoop-metastore condrestart > /dev/null 2>&1
+fi
 
 %files metastore
 %attr(0755,root,root) %{initd_dir}/sqoop-metastore

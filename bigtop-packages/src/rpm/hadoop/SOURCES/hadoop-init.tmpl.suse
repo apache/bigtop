@@ -170,11 +170,11 @@ hadoopservice() {
           DAEMON_FLAGS=-$1 $0 start
           RETVAL=$?
         else
-          echo $"Usage: $0 {start|stop|status|restart|try-restart|upgrade|rollback}"
+          echo $"Usage: $0 {start|stop|status|restart|try-restart|condrestart|upgrade|rollback}"
           exit 1
         fi
       else
-        echo $"Usage: $0 {start|stop|status|restart|try-restart}"
+        echo $"Usage: $0 {start|stop|status|restart|try-restart|condrestart}"
         exit 1
       fi
   esac

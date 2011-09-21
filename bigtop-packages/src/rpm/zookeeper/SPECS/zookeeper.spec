@@ -154,8 +154,15 @@ fi
 	chkconfig --add hadoop-zookeeper-server
 
 %preun server
-	service hadoop-zookeeper-server stop
+if [ $1 = 0 ] ; then
+	service hadoop-zookeeper-server stop > /dev/null 2>&1
 	chkconfig --del hadoop-zookeeper-server
+fi
+
+%postun server
+if [ $1 -ge 1 ]; then
+        service hadoop-zookeeper-server condrestart > /dev/null 2>&1
+fi
 
 %files server
 	%attr(0755,root,root) %{initd_dir}/hadoop-zookeeper-server

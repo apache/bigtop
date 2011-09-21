@@ -46,8 +46,11 @@ build-indep-stamp: patch-stamp
 	tar cf - --exclude=debian/\* . | (cd debian/tmp && tar xf -)
 	touch $@
 
+master node: debian/service-init.d.tpl
+	sed -e 's#@FLUME_DAEMON@#$@#g' $< > debian/flume-$@.init
+
 install: install-indep
-install-indep:	
+install-indep:	master node
 	dh_testdir
 	dh_testroot
 #	ant package

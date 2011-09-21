@@ -79,8 +79,12 @@ case "$1" in
   restart)
     restart
     ;;
+  force-reload|condrestart|try-restart)
+    checkstatus
+    [ $RETVAL -eq 0 ] && restart
+    ;;
   *)
-    echo $"Usage: $0 {start|stop|restart}"
+    echo $"Usage: $0 {start|stop|restart|force-reload|condrestart|try-restart}"
     exit 1
 esac
 
