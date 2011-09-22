@@ -46,12 +46,13 @@
 # this directory exists.
 install -d -m 0775 -o root -g hadoop /var/run/hadoop
 
-# Include hadoop defaults if available
-if [ -f /etc/default/hadoop ] ; then
-  . /etc/default/hadoop
-fi
+. /etc/default/hadoop
 
 . $HADOOP_HOME/bin/hadoop-config.sh
+
+# FIXME: this needs to be removed once hadoop-config.sh stop clobbering HADOOP_HOME
+. /etc/default/hadoop
+
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 DAEMON_SCRIPT=$HADOOP_HOME/bin/hadoop-daemon.sh

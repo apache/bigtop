@@ -24,6 +24,8 @@ source /etc/rc.d/init.d/functions
 source /etc/default/hadoop
 
 source @HADOOP_COMMON_ROOT@/bin/hadoop-config.sh
+# FIXME: this needs to be removed once hadoop-config.sh stop clobbering HADOOP_HOME
+source /etc/default/hadoop
 
 RETVAL_SUCCESS=0
 
