@@ -1,0 +1,241 @@
+Index: oozie-2.3.2/core/pom.xml
+===================================================================
+--- oozie-2.3.2.orig/core/pom.xml	2011-09-27 11:02:40.463593538 -0700
++++ oozie-2.3.2/core/pom.xml	2011-09-27 11:05:14.000000000 -0700
+@@ -82,15 +82,33 @@
+         </dependency>
+ 
+         <dependency>
+-            <!-- groupId to be correct by GH-0226 -->
+-            <groupId>com.yahoo.hadoop</groupId>
+-            <artifactId>hadoop-core</artifactId>
++            <groupId>org.apache.hadoop</groupId>
++            <artifactId>hadoop-common</artifactId>
+             <scope>provided</scope>
+         </dependency>
+         <dependency>
+-            <!-- groupId to be correct by GH-0226 -->
+-            <groupId>com.yahoo.hadoop</groupId>
+-            <artifactId>hadoop-test</artifactId>
++            <groupId>org.apache.hadoop</groupId>
++            <artifactId>hadoop-hdfs</artifactId>
++            <scope>provided</scope>
++        </dependency>
++        <dependency>
++            <groupId>org.apache.hadoop</groupId>
++            <artifactId>hadoop-mapred</artifactId>
++            <scope>provided</scope>
++        </dependency>
++        <dependency>
++            <groupId>org.apache.hadoop</groupId>
++            <artifactId>hadoop-common-test</artifactId>
++            <scope>test</scope>
++        </dependency>
++        <dependency>
++            <groupId>org.apache.hadoop</groupId>
++            <artifactId>hadoop-hdfs-test</artifactId>
++            <scope>test</scope>
++        </dependency>
++        <dependency>
++            <groupId>org.apache.hadoop</groupId>
++            <artifactId>hadoop-mapred-test</artifactId>
+             <scope>test</scope>
+         </dependency>
+ 
+Index: oozie-2.3.2/examples/pom.xml
+===================================================================
+--- oozie-2.3.2.orig/examples/pom.xml	2011-09-27 11:02:40.483592614 -0700
++++ oozie-2.3.2/examples/pom.xml	2011-09-27 11:05:30.000000000 -0700
+@@ -65,18 +65,36 @@
+         </dependency>
+ 
+         <dependency>
+-            <!-- groupId to be correct by GH-0226 -->
+-            <groupId>com.yahoo.hadoop</groupId>
+-            <artifactId>hadoop-core</artifactId>
++            <groupId>org.apache.hadoop</groupId>
++            <artifactId>hadoop-common</artifactId>
++            <scope>provided</scope>
++        </dependency>
++        <dependency>
++            <groupId>org.apache.hadoop</groupId>
++            <artifactId>hadoop-hdfs</artifactId>
++            <scope>provided</scope>
++        </dependency>
++        <dependency>
++            <groupId>org.apache.hadoop</groupId>
++            <artifactId>hadoop-mapred</artifactId>
+             <scope>provided</scope>
+         </dependency>
+-
+         <dependency>
+-            <!-- groupId to be correct by GH-0226 -->
+-            <groupId>com.yahoo.hadoop</groupId>
+-            <artifactId>hadoop-test</artifactId>
++            <groupId>org.apache.hadoop</groupId>
++            <artifactId>hadoop-common-test</artifactId>
+             <scope>test</scope>
+         </dependency>
++        <dependency>
++            <groupId>org.apache.hadoop</groupId>
++            <artifactId>hadoop-hdfs-test</artifactId>
++            <scope>test</scope>
++        </dependency>
++        <dependency>
++            <groupId>org.apache.hadoop</groupId>
++            <artifactId>hadoop-mapred-test</artifactId>
++            <scope>test</scope>
++        </dependency>
++
+ 
+         <dependency>
+            <groupId>org.slf4j</groupId>
+Index: oozie-2.3.2/pom.xml
+===================================================================
+--- oozie-2.3.2.orig/pom.xml	2011-09-27 10:58:44.126086886 -0700
++++ oozie-2.3.2/pom.xml	2011-09-27 11:17:27.003588594 -0700
+@@ -228,23 +228,44 @@
+             </dependency>
+             
+             <dependency>
+-                <!-- groupId to be correct by GH-0226 -->
+-                <groupId>com.yahoo.hadoop</groupId>
+-                <artifactId>hadoop-core</artifactId>
+-                <version>0.20.104.2</version>
++                <groupId>org.apache.hadoop</groupId>
++                <artifactId>hadoop-common</artifactId>
++                <version>0.22.0-SNAPSHOT</version>
++                <exclusions>
++                    <exclusion>
++                        <groupId>org.apache.commons</groupId>
++                        <artifactId>commons-cli</artifactId>
++                    </exclusion>
++                </exclusions>
++            </dependency>
++            <dependency>
++                <groupId>org.apache.hadoop</groupId>
++                <artifactId>hadoop-hdfs</artifactId>
++                <version>0.22.0-SNAPSHOT</version>
++                <exclusions>
++                    <exclusion>
++                        <groupId>org.apache.commons</groupId>
++                        <artifactId>commons-cli</artifactId>
++                    </exclusion>
++                </exclusions>
++            </dependency>
++            <dependency>
++                <groupId>org.apache.hadoop</groupId>
++                <artifactId>hadoop-mapred</artifactId>
++                <version>0.22.0-SNAPSHOT</version>
+                 <exclusions>
+                     <exclusion>
+                         <groupId>org.apache.commons</groupId>
+                         <artifactId>commons-cli</artifactId>
+                     </exclusion>
+                 </exclusions>
++
+             </dependency>
+ 
+             <dependency>
+-                <!-- groupId to be correct by GH-0226 -->
+-                <groupId>com.yahoo.hadoop</groupId>
+-                <artifactId>hadoop-test</artifactId>
+-                <version>0.20.104.2</version>
++                <groupId>org.apache.hadoop</groupId>
++                <artifactId>hadoop-common-test</artifactId>
++                <version>0.22.0-SNAPSHOT</version>
+                 <exclusions>
+                     <exclusion>
+                         <groupId>org.apache.commons</groupId>
+@@ -265,11 +286,59 @@
+                 </exclusions>
+             </dependency>
+ 
++
+             <dependency>
+-                <!-- groupId to be correct by GH-0226 -->
+-                <groupId>com.yahoo.hadoop</groupId>
++                <groupId>org.apache.hadoop</groupId>
++                <artifactId>hadoop-hdfs-test</artifactId>
++                <version>0.22.0-SNAPSHOT</version>
++                <exclusions>
++                    <exclusion>
++                        <groupId>org.apache.commons</groupId>
++                        <artifactId>commons-cli</artifactId>
++                    </exclusion>
++                    <exclusion>
++                        <groupId>commons-cli</groupId>
++                        <artifactId>commons-cli</artifactId>
++                    </exclusion>
++                    <exclusion>
++                        <groupId>org.slf4j</groupId>
++                        <artifactId>slf4j-api</artifactId>
++                    </exclusion>
++                    <exclusion>
++                        <groupId>org.slf4j</groupId>
++                        <artifactId>slf4j-log4j12</artifactId>
++                    </exclusion>
++                </exclusions>
++            </dependency>
++
++            <dependency>
++                <groupId>org.apache.hadoop</groupId>
++                <artifactId>hadoop-mapred-test</artifactId>
++                <version>0.22.0-SNAPSHOT</version>
++                <exclusions>
++                    <exclusion>
++                        <groupId>org.apache.commons</groupId>
++                        <artifactId>commons-cli</artifactId>
++                    </exclusion>
++                    <exclusion>
++                        <groupId>commons-cli</groupId>
++                        <artifactId>commons-cli</artifactId>
++                    </exclusion>
++                    <exclusion>
++                        <groupId>org.slf4j</groupId>
++                        <artifactId>slf4j-api</artifactId>
++                    </exclusion>
++                    <exclusion>
++                        <groupId>org.slf4j</groupId>
++                        <artifactId>slf4j-log4j12</artifactId>
++                    </exclusion>
++                </exclusions>
++            </dependency>
++
++            <dependency>
++                <groupId>org.apache.hadoop</groupId>
+                 <artifactId>hadoop-streaming</artifactId>
+-                <version>0.20.104.2</version>
++                <version>0.22-SNAPSHOT</version>
+                 <exclusions>
+                     <exclusion>
+                         <groupId>org.apache.commons</groupId>
+Index: oozie-2.3.2/sharelib/pom.xml
+===================================================================
+--- oozie-2.3.2.orig/sharelib/pom.xml	2011-09-27 11:02:40.503587889 -0700
++++ oozie-2.3.2/sharelib/pom.xml	2011-09-27 11:05:57.000000000 -0700
+@@ -39,8 +39,7 @@
+ 
+     <dependencies>
+         <dependency>
+-            <!-- groupId to be correct by GH-0226 -->
+-            <groupId>com.yahoo.hadoop</groupId>
++            <groupId>org.apache.hadoop</groupId>
+             <artifactId>hadoop-streaming</artifactId>
+             <scope>compile</scope>
+             <exclusions>
+Index: oozie-2.3.2/webapp/pom.xml
+===================================================================
+--- oozie-2.3.2.orig/webapp/pom.xml	2011-09-27 11:02:40.513589837 -0700
++++ oozie-2.3.2/webapp/pom.xml	2011-09-27 11:06:53.000000000 -0700
+@@ -134,8 +134,8 @@
+             </activation>
+             <dependencies>
+                 <dependency>
+-                    <groupId>com.yahoo.hadoop</groupId>
+-                    <artifactId>hadoop-core</artifactId>
++                    <groupId>org.apache.hadoop</groupId>
++                    <artifactId>hadoop-common</artifactId>
+                     <scope>compile</scope>
+                     <exclusions>
+                         <exclusion>

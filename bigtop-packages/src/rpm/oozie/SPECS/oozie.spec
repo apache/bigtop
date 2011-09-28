@@ -35,6 +35,7 @@ License: APL2
 Source0: %{name}-%{oozie_base_version}.tar.gz
 Source1: do-component-build
 Source2: create-package-layout
+Patch0: patch
 Requires(pre): /usr/sbin/groupadd, /usr/sbin/useradd
 Requires(post): /sbin/chkconfig
 Requires(preun): /sbin/chkconfig, /sbin/service
@@ -101,6 +102,7 @@ BuildArch: noarch
 
 %prep
 %setup -n yahoo-oozie-af10263
+%patch0 -p1
 
 %build
     M2_CACHE=`mktemp -d /tmp/oozie.m2.XXXXX`
