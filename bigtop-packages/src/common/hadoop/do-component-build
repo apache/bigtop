@@ -16,14 +16,42 @@
 
 set -ex
 
-ant  \
-  -Djava5.home=$JAVA5_HOME \
-  -Dforrest.home=$FORREST_HOME \
-  -Dversion=${HADOOP_VERSION} \
-  -Dcompile.native=true \
-  -Dhadoop.conf.dir=/etc/hadoop/conf \
-  -Dlibhdfs=1 -Dcompile.c++=true -Djdiff.build.dir=build/docs/jdiff-cloudera \
-  api-report bin-package compile-contrib package \
-  "$@"
+STITCH_FILES="CHANGES.txt LICENSE.txt NOTICE.txt README.txt"
 
-	
+mkdir build
+rm -f $STITCH_FILES
+
+if uname -m | grep -q 64 ; then
+  JSVC_URL=http://archive.apache.org/dist/commons/daemon/binaries/1.0.2/linux/commons-daemon-1.0.2-bin-linux-x86_64.tar.gz
+else
+  JSVC_URL=http://archive.apache.org/dist/commons/daemon/binaries/1.0.2/linux/commons-daemon-1.0.2-bin-linux-i386.tar.gz
+fi
+
+for project in common hdfs mapreduce ; do 
+  cd $project
+  ant  \
+    -Djava5.home=$JAVA5_HOME \
+    -Dforrest.home=$FORREST_HOME \
+    -Dversion=${HADOOP_VERSION} \
+    -Djsvc.location=${JSVC_URL} \
+    -Dcompile.native=true \
+    -Dhadoop.conf.dir=/etc/hadoop/conf \
+    -Dlibhdfs=1 -Dfusedfs=true -Dcompile.c++=true -Djdiff.build.dir=build/docs/jdiff-cloudera \
+   api-report bin-package $BUILD_CONTRIB package \
+    "$@"
+  (cd build/hadoop-*-0.22 ; tar cf - * ) | (cd ../build ; tar xf - )
+
+  for file in $STITCH_FILES ; do
+    [ -f $file ] && cat $file >> ../$file
+  done
+
+  BUILD_CONTRIB="compile-contrib"
+  cd ..
+done
+
+# NOTE: This is a total hack and needs to be generalized for future versions of Bigtop
+# Installing maven artifacts for downstream components
+for i in hadoop-common hadoop-hdfs hadoop-mapred ; do
+  mvn install:install-file -Dfile=build/$i-0.22.jar -DgroupId=org.apache.hadoop -DartifactId=$i -Dversion=0.22-SNAPSHOT -Dpackaging=jar
+  mvn install:install-file -Dfile=build/$i-test-0.22.jar -DgroupId=org.apache.hadoop -DartifactId=$i -Dversion=0.22-SNAPSHOT -Dpackaging=jar -Dclassifier=test
+done

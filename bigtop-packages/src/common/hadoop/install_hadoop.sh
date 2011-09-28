@@ -120,7 +120,6 @@ SRC_DIR=${SRC_DIR:-$PREFIX/usr/src/hadoop}
 ETC_DIR=${ETC_DIR:-$PREFIX/etc/hadoop}
 
 INSTALLED_LIB_DIR=${INSTALLED_LIB_DIR:-/usr/lib/hadoop}
-BUILD_SRC_DIR=./src
 
 mkdir -p $LIB_DIR
 (cd $BUILD_DIR && tar -cf - .) | (cd $LIB_DIR && tar xf - )
@@ -152,21 +151,21 @@ for x in $LIB_DIR/*examples*jar ; do
 done
 # And copy the source
 mkdir -p $EXAMPLE_DIR/src
-cp -a $BUILD_SRC_DIR/examples/* $EXAMPLE_DIR/src
+cp -a mapreduce/src/examples/* $EXAMPLE_DIR/src
 
 # Install docs
 mkdir -p $DOC_DIR
-cp -r ./docs/* $DOC_DIR
+cp -r build/docs/* $DOC_DIR
 
 # Install source
 mkdir -p ${SRC_DIR}
-rm -f ${BUILD_SRC_DIR}/contrib/fuse-dfs/src/*.o 
-rm -f ${BUILD_SRC_DIR}/contrib/fuse-dfs/src/fuse_dfs
-rm -rf ${BUILD_SRC_DIR}/contrib/hod
-#rm -f ${SRC_DIR}/contrib/fuse-dfs/fuse_dfs
+rm -f hdfs/src/contrib/fuse-dfs/src/*.o 
+rm -f hdfs/src/contrib/fuse-dfs/src/fuse_dfs
+# rm -rf ${BUILD_SRC_DIR}/contrib/hod
+# rm -f ${SRC_DIR}/contrib/fuse-dfs/fuse_dfs
 
 
-cp -a ${BUILD_SRC_DIR}/* ${SRC_DIR}/
+cp -a mapreduce/src/* hdfs/src/* common/src/* ${SRC_DIR}/
 
 # Make the empty config
 install -d -m 0755 $ETC_DIR/conf.empty
@@ -202,7 +201,8 @@ gzip -c < $DISTRO_DIR/hadoop.1 > $MAN_DIR/man1/hadoop.1.gz
 if [ ! -z "$NATIVE_BUILD_STRING" ]; then
   # Fuse 
   mkdir -p $LIB_DIR/bin
-  if [ -d ./src/contrib/fuse-dfs ]; then
+  if [ -d $BUILD_DIR/contrib/fuse-dfs ]; then
+    ln -s ../contrib/fuse-dfs/fuse_dfs $LIB_DIR/bin/fuse_dfs
     gzip -c < $DISTRO_DIR/hadoop-fuse-dfs.1 > $MAN_DIR/man1/hadoop-fuse-dfs.1.gz
 
     fuse_wrapper=${BIN_DIR}/hadoop-fuse-dfs
@@ -240,31 +240,35 @@ EOF
     chmod 755 $fuse_wrapper
   fi
 
+  # sbin
+  mkdir -p $LIB_DIR/sbin/${NATIVE_BUILD_STRING}
+  mv $LIB_DIR/bin/jsvc $LIB_DIR/sbin/${NATIVE_BUILD_STRING}
+
   # Native compression libs
   mkdir -p $LIB_DIR/lib/native/
   cp -r ${BUILD_DIR}/lib/native/${NATIVE_BUILD_STRING} $LIB_DIR/lib/native/
 
   # Pipes
   mkdir -p $PREFIX/$SYSTEM_LIB_DIR $PREFIX/usr/include
-  cp ./c++/${NATIVE_BUILD_STRING}/lib/libhadooppipes.a \
-      ./c++/${NATIVE_BUILD_STRING}/lib/libhadooputils.a \
+  cp mapreduce/build/c++/${NATIVE_BUILD_STRING}/lib/libhadooppipes.a \
+      mapreduce/build/c++/${NATIVE_BUILD_STRING}/lib/libhadooputils.a \
       $PREFIX/$SYSTEM_LIB_DIR
-  cp -r ./c++/${NATIVE_BUILD_STRING}/include/hadoop $PREFIX/usr/include/
+  cp -r mapreduce/build/c++/${NATIVE_BUILD_STRING}/include/hadoop $PREFIX/usr/include/
 
   # libhdfs
-  cp ./c++/${NATIVE_BUILD_STRING}/lib/libhdfs.so.0.0.0 $PREFIX/$SYSTEM_LIB_DIR
+  cp hdfs/build/c++/${NATIVE_BUILD_STRING}/lib/libhdfs.so.0.0.0 $PREFIX/$SYSTEM_LIB_DIR
   ln -sf libhdfs.so.0.0.0 $PREFIX/$SYSTEM_LIB_DIR/libhdfs.so.0
 
   # libhdfs-devel - hadoop doesn't realy install these things in nice places :(
   mkdir -p $PREFIX/usr/share/doc/libhdfs-devel/examples
 
-  cp ${BUILD_SRC_DIR}/c++/libhdfs/hdfs.h $PREFIX/usr/include/
-  cp ${BUILD_SRC_DIR}/c++/libhdfs/hdfs_*.c $PREFIX/usr/share/doc/libhdfs-devel/examples
+  cp hdfs/src/c++/libhdfs/hdfs.h $PREFIX/usr/include/
+  cp hdfs/src/c++/libhdfs/hdfs_*.c $PREFIX/usr/share/doc/libhdfs-devel/examples
 
   #    This is somewhat unintuitive, but the -devel package has this symlink (see Debian Library Packaging Guide)
   ln -sf libhdfs.so.0.0.0 $PREFIX/$SYSTEM_LIB_DIR/libhdfs.so
   sed -e "s|^libdir='.*'|libdir=\"$SYSTEM_LIB_DIR\"|" \
-      ./c++/${NATIVE_BUILD_STRING}/lib/libhdfs.la > $PREFIX/$SYSTEM_LIB_DIR/libhdfs.la
+      hdfs/build/c++/${NATIVE_BUILD_STRING}/lib/libhdfs.la > $PREFIX/$SYSTEM_LIB_DIR/libhdfs.la
 fi
 
 # XXX Hack to get hadoop to get packaged
