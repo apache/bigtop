@@ -46,7 +46,7 @@ install: build
 	dh_installdirs
 	cp debian/hbase.default debian/hadoop-hbase/etc/default/hbase
 	sh -x debian/install_hbase.sh \
-		--build-dir=. \
+		--build-dir=target/hbase-0.92/hbase-0.92 \
 		--doc-dir=usr/share/doc/hadoop-hbase-doc \
 		--prefix=debian/tmp
 	# Symlink in the dependency jars from their packages. Both of these packages
