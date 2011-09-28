@@ -171,6 +171,8 @@ cp -a ${BUILD_SRC_DIR}/* ${SRC_DIR}/
 # Make the empty config
 install -d -m 0755 $ETC_DIR/conf.empty
 (cd ${BUILD_DIR}/conf && tar cf - .) | (cd $ETC_DIR/conf.empty && tar xf -)
+# Overlay the -site files
+(cd $DISTRO_DIR/conf.empty && tar --exclude='.svn' -cf - .) | (cd $ETC_DIR/conf.empty && tar -xf -)
 
 # Link the HADOOP_HOME conf, log and pid dir to installed locations
 rm -rf $LIB_DIR/conf
@@ -186,7 +188,7 @@ for conf in conf.pseudo ; do
   # Install the default configurations
   (cd ${BUILD_DIR}/conf && tar -cf - .) | (cd $ETC_DIR/$conf && tar -xf -)
   # Overlay the -site files
-  (cd $DISTRO_DIR/$conf && tar -cf - .) | (cd $ETC_DIR/$conf && tar -xf -)
+  (cd $DISTRO_DIR/$conf && tar --exclude='.svn' -cf - .) | (cd $ETC_DIR/$conf && tar -xf -)
 done
 
 # man pages
