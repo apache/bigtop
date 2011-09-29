@@ -40,6 +40,7 @@ Source1: do-component-build
 Source2: install_%{name}.sh
 Source3: sqoop-metastore.sh
 Source4: sqoop-metastore.sh.suse
+Patch0: patch
 Buildarch: noarch
 BuildRequires:  asciidoc, xmlto
 Prereq: hadoop
@@ -69,6 +70,7 @@ server for Sqoop clients across a network to use.
 
 %prep
 %setup -n sqoop-%{sqoop_base_version}
+%patch0 -p1
 
 %build
 bash %{SOURCE1} -Dversion=%{version}

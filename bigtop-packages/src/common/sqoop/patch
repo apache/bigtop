@@ -1,0 +1,43 @@
+Index: sqoop-1.3.0/ivy.xml
+===================================================================
+--- sqoop-1.3.0.orig/ivy.xml	2011-09-27 10:28:59.474837063 -0700
++++ sqoop-1.3.0/ivy.xml	2011-09-27 10:28:46.733590903 -0700
+@@ -66,10 +66,18 @@
+   </publications>
+   <dependencies>
+     <!-- Dependencies for Cloudera's Distribution for Hadoop -->
+-    <dependency org="com.cloudera.hadoop" name="hadoop-core"
+-      rev="${hadoop-core.cloudera.version}" conf="cloudera->default"/>
+-    <dependency org="com.cloudera.hadoop" name="hadoop-test"
+-      rev="${hadoop-core.cloudera.version}" conf="clouderatest->default"/>
++    <dependency org="org.apache.hadoop" name="hadoop-common" rev="${hadoop-common.version}"
++      conf="cloudera->default"/> 
++    <dependency org="org.apache.hadoop" name="hadoop-common-test" rev="${hadoop-common.version}"
++      conf="clouderatest->default"/> 
++    <dependency org="org.apache.hadoop" name="hadoop-hdfs" rev="${hadoop-hdfs.version}"
++      conf="cloudera->default"/>
++    <dependency org="org.apache.hadoop" name="hadoop-hdfs-test" rev="${hadoop-hdfs.version}"
++      conf="clouderatest->default"/>
++    <dependency org="org.apache.hadoop" name="hadoop-mapred" rev="${hadoop-mapred.version}"
++       conf="cloudera->default"/>
++    <dependency org="org.apache.hadoop" name="hadoop-mapred-test" rev="${hadoop-mapred.version}"
++      conf="clouderatest->default"/>
+
+ 
+     <!-- Common dependencies for Sqoop -->
+     <dependency org="commons-cli" name="commons-cli"
+Index: sqoop-1.3.0/ivy/libraries.properties
+===================================================================
+--- sqoop-1.3.0.orig/ivy/libraries.properties	2011-09-27 10:30:10.136087155 -0700
++++ sqoop-1.3.0/ivy/libraries.properties	2011-09-27 10:29:29.734839438 -0700
+@@ -27,7 +27,9 @@
+ commons-logging.version=1.0.4
+ 
+ # Cloudera Distribution dependency version
+-hadoop-core.cloudera.version=0.20.2-737
++hadoop-common.version=0.23.0-SNAPSHOT
++hadoop-hdfs.version=0.23.0-SNAPSHOT
++hadoop-mapred.version=0.23.0-SNAPSHOT
+ 
+ hbase.version=0.89.20100924-28
+ zookeeper.version=3.3.1+7
