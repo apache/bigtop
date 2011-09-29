@@ -1,0 +1,75 @@
+Index: apache-pig-5568709/build.xml
+===================================================================
+--- apache-pig-5568709.orig/build.xml	2011-09-26 11:30:09.444295122 -0700
++++ apache-pig-5568709/build.xml	2011-09-26 11:30:15.112364255 -0700
+@@ -563,7 +563,9 @@
+                     <attribute name="Svn-Revision" value="${svnString}" />
+                 </section>
+             </manifest>
+-            <zipfileset src="${ivy.lib.dir}/hadoop-core-${hadoop-core.version}.jar" />
++            <zipfileset src="${ivy.lib.dir}/hadoop-common-${hadoop-common.version}.jar" />
++        	<zipfileset src="${ivy.lib.dir}/hadoop-hdfs-${hadoop-hdfs.version}.jar" />
++        	<zipfileset src="${ivy.lib.dir}/hadoop-mapred-${hadoop-mapred.version}.jar" />
+             <zipfileset src="${lib.dir}/${automaton.jarfile}" />
+             <zipfileset src="${ivy.lib.dir}/antlr-runtime-${antlr.version}.jar" />
+             <zipfileset src="${ivy.lib.dir}/ST4-${stringtemplate.version}.jar" />
+Index: apache-pig-5568709/ivy/ivysettings.xml
+===================================================================
+--- apache-pig-5568709.orig/ivy/ivysettings.xml	2011-09-26 11:30:09.484296767 -0700
++++ apache-pig-5568709/ivy/ivysettings.xml	2011-09-26 11:30:30.191795685 -0700
+@@ -30,6 +30,7 @@
+           http://www.ibiblio.net/pub/packages/maven2
+   -->
+   <property name="repo.maven.org" value="${mvnrepo}" override="true"/>
++  <property name="snapshot.apache.org" value="https://repository.apache.org/content/repositories/snapshots/" override="false"/>
+   <property name="repo.jboss.org" value="http://repository.jboss.com/nexus/content/groups/public/" override="false"/>
+ 
+   <property name="maven2.pattern"  value="[organisation]/[module]/[revision]/[module]-[revision](-[classifier])"/> 
+@@ -38,10 +39,12 @@
+   <include url="${ivy.default.conf.dir}/ivyconf-local.xml"/>
+   <settings defaultResolver="default"/>
+   <resolvers>
++    <ibiblio name="apache-snapshot" root="${snapshot.apache.org}" m2compatible="true" checkmodified="true" changingPattern=".*SNAPSHOT"/>
+     <ibiblio name="maven2" root="${repo.maven.org}" pattern="${maven2.pattern.ext}" m2compatible="true"/>
+     <ibiblio name="jboss-maven2" root="${repo.jboss.org}" pattern="${maven2.pattern.ext}" m2compatible="true"/>
+     <chain name="default" dual="true">
+       <resolver ref="local"/>
++      <resolver ref="apache-snapshot"/> 
+       <resolver ref="maven2"/>
+       <resolver ref="jboss-maven2"/>
+     </chain>
+Index: apache-pig-5568709/ivy/libraries.properties
+===================================================================
+--- apache-pig-5568709.orig/ivy/libraries.properties	2011-09-26 11:30:09.474296571 -0700
++++ apache-pig-5568709/ivy/libraries.properties	2011-09-26 11:30:24.543413316 -0700
+@@ -24,7 +24,9 @@
+ checkstyle.version=4.2
+ ivy.version=2.2.0
+ guava.version=r06
+-hadoop-core.version=0.20.2
++hadoop-common.version=0.23.0-SNAPSHOT
++hadoop-hdfs.version=0.23.0-SNAPSHOT
++hadoop-mapred.version=0.23.0-SNAPSHOT
+ hadoop-test.version=0.20.2
+ hbase.version=0.90.0
+ hsqldb.version=1.8.0.10
+Index: apache-pig-5568709/ivy.xml
+===================================================================
+--- apache-pig-5568709.orig/ivy.xml	2011-09-26 11:30:09.474296571 -0700
++++ apache-pig-5568709/ivy.xml	2011-09-26 11:30:24.543413316 -0700
+@@ -54,9 +54,13 @@
+       conf="compile->master"/>
+     <dependency org="log4j" name="log4j" rev="${log4j.version}"
+       conf="compile->master"/>
+-    <dependency org="org.apache.hadoop" name="hadoop-core" rev="${hadoop-core.version}"
++    <dependency org="org.apache.hadoop" name="hadoop-common" rev="${hadoop-common.version}"
++      conf="compile->default;test->default"/> 
++    <dependency org="org.apache.hadoop" name="hadoop-common-test" rev="${hadoop-common.version}"
++      conf="compile->default;test->default"/> 
++    <dependency org="org.apache.hadoop" name="hadoop-hdfs" rev="${hadoop-hdfs.version}"
+       conf="compile->default;test->default"/>
+-    <dependency org="org.apache.hadoop" name="hadoop-test" rev="${hadoop-test.version}"
++    <dependency org="org.apache.hadoop" name="hadoop-mapred" rev="${hadoop-mapred.version}"
+       conf="compile->default;test->default"/>
+     <dependency org="org.mortbay.jetty" name="jetty-util" rev="${jetty-util.version}"
+       conf="compile->master"/>

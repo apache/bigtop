@@ -80,6 +80,7 @@ Source2: install_pig.sh
 Source3: log4j.properties
 Source4: pig.1
 Source5: pig.properties
+Patch0: patch
 Requires: hadoop
 
 %description 
@@ -107,6 +108,7 @@ language called Pig Latin, which has the following key properties:
 
 %prep
 %setup -n pig-%{pig_base_version}
+%patch0 -p1
 
 %build
 env PIG_BASE_VERSION=%{pig_base_version} bash %{SOURCE1}
