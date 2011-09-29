@@ -16,5 +16,4 @@
 
 set -ex
 
-mvn clean -DskipTests -Dhbase.version=${HBASE_VERSION} install assembly:assembly "$@"
-
+mvn clean -DskipTests -Dhbase.version=${HBASE_VERSION} -Dhadoop.profile=23 install site assembly:assembly "$@"

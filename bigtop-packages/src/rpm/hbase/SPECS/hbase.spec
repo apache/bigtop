@@ -147,7 +147,7 @@ Documentation for Hbase
 
 
 %prep
-%setup -n hbase-%{hbase_base_version}
+%setup -n apache-hbase-8146460
 
 %build
 env HBASE_VERSION=%{version} bash %{SOURCE1}
@@ -155,7 +155,7 @@ env HBASE_VERSION=%{version} bash %{SOURCE1}
 %install
 %__rm -rf $RPM_BUILD_ROOT
 sh %{SOURCE2} \
-	--build-dir=. \
+	--build-dir=target/hbase-0.92/hbase-0.92 \
    --doc-dir=%{doc_hbase} \
 	--prefix=$RPM_BUILD_ROOT
 

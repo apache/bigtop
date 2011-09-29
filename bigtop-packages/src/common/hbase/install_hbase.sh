@@ -105,14 +105,14 @@ install -d -m 0755 $PREFIX/$BIN_DIR
 install -d -m 0755 $PREFIX/$ETC_DIR
 install -d -m 0755 $PREFIX/$MAN_DIR
 
-cp -ra lib/* ${PREFIX}/${LIB_DIR}/lib/
-cp hbase*.jar $PREFIX/$LIB_DIR
-cp -a docs/* $PREFIX/$DOC_DIR
-cp *.txt $PREFIX/$DOC_DIR/
-cp -a hbase-webapps $PREFIX/$LIB_DIR
+cp -ra $BUILD_DIR/lib/* ${PREFIX}/${LIB_DIR}/lib/
+cp $BUILD_DIR/hbase*.jar $PREFIX/$LIB_DIR
+cp -a $BUILD_DIR/docs/* $PREFIX/$DOC_DIR
+cp $BUILD_DIR/*.txt $PREFIX/$DOC_DIR/
+cp -a $BUILD_DIR/hbase-webapps $PREFIX/$LIB_DIR
 
-cp -a conf $PREFIX/$ETC_DIR/conf
-cp -a bin/* $PREFIX/$BIN_DIR
+cp -a $BUILD_DIR/conf $PREFIX/$ETC_DIR/conf
+cp -a $BUILD_DIR/bin/* $PREFIX/$BIN_DIR
 
 ln -s $ETC_DIR/conf $PREFIX/$LIB_DIR/conf
 
