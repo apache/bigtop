@@ -25,7 +25,7 @@ export DH_OPTIONS
 
 
 hadoop_version=${HADOOP_VERSION}
-hadoop_build_path=$(shell pwd)/build/hadoop-${hadoop_version}
+hadoop_build_path=$(shell pwd)/build
 
 ifeq (${DEB_BUILD_ARCH},amd64)
   native_dir=Linux-amd64-64
@@ -47,7 +47,6 @@ clean:
 	dh_testdir
 	dh_testroot
 	rm -f build-arch-stamp build-indep-stamp build-stamp
-	ant clean
 
 	dh_clean
 

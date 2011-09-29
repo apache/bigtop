@@ -234,21 +234,21 @@ AutoReq: no
 The Java source code for Hadoop and its contributed packages. This is handy when
 trying to debug programs that depend on Hadoop.
 
-#%package fuse
-#Summary: Mountable HDFS
-#Group: Development/Libraries
-#Requires: %{name} = %{version}-%{release}, fuse
-#AutoReq: no
-#
-#%if  %{?suse_version:1}0
-#Requires: libfuse2
-#%else
-#Requires: fuse-libs
-#%endif
-#
-#
-#%description fuse
-#These projects (enumerated below) allow HDFS to be mounted (on most flavors of Unix) as a standard file system using the mount command. Once mounted, the user can operate on an instance of hdfs using standard Unix utilities such as 'ls', 'cd', 'cp', 'mkdir', 'find', 'grep', or use standard Posix libraries like open, write, read, close from C, C++, Python, Ruby, Perl, Java, bash, etc.
+%package fuse
+Summary: Mountable HDFS
+Group: Development/Libraries
+Requires: %{name} = %{version}-%{release}, fuse
+AutoReq: no
+
+%if  %{?suse_version:1}0
+Requires: libfuse2
+%else
+Requires: fuse-libs
+%endif
+
+
+%description fuse
+These projects (enumerated below) allow HDFS to be mounted (on most flavors of Unix) as a standard file system using the mount command. Once mounted, the user can operate on an instance of hdfs using standard Unix utilities such as 'ls', 'cd', 'cp', 'mkdir', 'find', 'grep', or use standard Posix libraries like open, write, read, close from C, C++, Python, Ruby, Perl, Java, bash, etc.
 
 %package native
 Summary: Native libraries for Hadoop Compression
@@ -277,9 +277,22 @@ Requires: %{name} = %{version}-%{release}
 %description pipes
 Hadoop Pipes Library
 
+%package sbin
+Summary: Binaries for secured Hadoop clusters
+Group: System/Daemons
+Requires: %{name} = %{version}-%{release}
+
+%description sbin
+This package contains a setuid program, 'task-controller', which is used for
+launching MapReduce tasks in a secured MapReduce cluster. This program allows
+the tasks to run as the Unix user who submitted the job, rather than the
+Unix user running the MapReduce daemons.
+This package also contains 'jsvc', a daemon wrapper necessary to allow
+DataNodes to bind to a low (privileged) port and then drop root privileges
+before continuing operation.
 
 %prep
-%setup -n %{name}-%{hadoop_base_version}
+%setup -n apache-hadoop-common-e141664
 
 %build
 # This assumes that you installed Java JDK 6 and set JAVA_HOME
@@ -301,7 +314,7 @@ env HADOOP_VERSION=%{hadoop_version} bash %{SOURCE1}
 
 bash %{SOURCE2} \
   --distro-dir=$RPM_SOURCE_DIR \
-  --build-dir=$PWD/build/%{name}-%{version} \
+  --build-dir=$PWD/build \
   --src-dir=$RPM_BUILD_ROOT%{src_hadoop} \
   --lib-dir=$RPM_BUILD_ROOT%{lib_hadoop} \
   --system-lib-dir=%{_libdir} \
@@ -465,10 +478,10 @@ fi
 %defattr(-,root,root)
 %{lib_hadoop}/lib/native
 
-#%files fuse
-#%defattr(-,root,root)
-#%attr(0755,root,root) %{bin_hadoop}/hadoop-fuse-dfs
-#%attr(0755,root,root) %{man_hadoop}/man1/hadoop-fuse-dfs.1.gz
+%files fuse
+%defattr(-,root,root)
+%attr(0755,root,root) %{bin_hadoop}/hadoop-fuse-dfs
+%attr(0755,root,root) %{man_hadoop}/man1/hadoop-fuse-dfs.1.gz
 %config(noreplace) /etc/default/hadoop-fuse
 
 %files pipes
@@ -483,3 +496,10 @@ fi
 %{_includedir}/hdfs.h
 # -devel should be its own package
 %doc %{_docdir}/libhdfs-%{hadoop_version}
+
+%files sbin
+%defattr(-,root,root)
+%dir %{lib_hadoop}/sbin
+%dir %{lib_hadoop}/sbin/%{hadoop_arch}
+# %attr(4754,root,mapred) %{lib_hadoop}/sbin/%{hadoop_arch}/task-controller
+%attr(0755,root,root) %{lib_hadoop}/sbin/%{hadoop_arch}/jsvc
