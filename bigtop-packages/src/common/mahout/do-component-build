@@ -16,5 +16,5 @@
 
 set -ex
 
-mvn clean install -Dmahout.skip.distribution=false -DskipTests "$@"
+mvn clean install -Dmahout.skip.distribution=false -DskipTests -Dhadoop.version=0.22.0-SNAPSHOT "$@"
 
