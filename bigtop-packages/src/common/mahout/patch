@@ -1,36 +1,73 @@
-Index: mahout-distribution-0.5/core/pom.xml
+Index: apache-mahout-c298f70/core/pom.xml
 ===================================================================
---- mahout-distribution-0.5.orig/core/pom.xml	2011-09-27 11:46:02.336086231 -0700
-+++ mahout-distribution-0.5/core/pom.xml	2011-09-27 11:46:46.166088670 -0700
-@@ -141,7 +141,15 @@
+--- apache-mahout-c298f70.orig/core/pom.xml	2011-09-29 15:22:25.369554983 -0700
++++ apache-mahout-c298f70/core/pom.xml	2011-09-29 15:22:34.417110581 -0700
+@@ -140,10 +140,6 @@
+ 
      <!-- Third Party -->
      <dependency>
-       <groupId>org.apache.hadoop</groupId>
+-      <groupId>org.apache.hadoop</groupId>
 -      <artifactId>hadoop-core</artifactId>
-+      <artifactId>hadoop-common</artifactId>
-+    </dependency>
-+    <dependency>
-+      <groupId>org.apache.hadoop</groupId>
-+      <artifactId>hadoop-hdfs</artifactId>
-+    </dependency>
-+    <dependency>
-+      <groupId>org.apache.hadoop</groupId>
-+      <artifactId>hadoop-mapred</artifactId>
+-    </dependency>
+-    <dependency>
+       <groupId>org.codehaus.jackson</groupId>
+       <artifactId>jackson-core-asl</artifactId>
+     </dependency>
+@@ -211,4 +207,43 @@
      </dependency>
  
-     <dependency>
-Index: mahout-distribution-0.5/pom.xml
+   </dependencies>
++  
++  <profiles>
++    <profile>
++      <id>hadoop-0.20</id>
++      <activation>
++        <property>
++          <name>!hadoop.version</name>
++        </property>
++      </activation>
++      <dependencies>
++        <dependency>
++          <groupId>org.apache.hadoop</groupId>
++          <artifactId>hadoop-core</artifactId>
++        </dependency>
++      </dependencies>
++    </profile>
++    <profile>
++      <id>hadoop-0.2X</id>
++      <activation>
++        <property>
++          <name>hadoop.version</name>
++        </property>
++      </activation>
++      <dependencies>
++        <dependency>
++          <groupId>org.apache.hadoop</groupId>
++          <artifactId>hadoop-common</artifactId>
++        </dependency>
++        <dependency>
++          <groupId>org.apache.hadoop</groupId>
++          <artifactId>hadoop-hdfs</artifactId>
++        </dependency>
++        <dependency>
++          <groupId>org.apache.hadoop</groupId>
++          <artifactId>hadoop-mapred</artifactId>
++        </dependency>
++      </dependencies>
++    </profile>
++  </profiles>
+ </project>
+Index: apache-mahout-c298f70/pom.xml
 ===================================================================
---- mahout-distribution-0.5.orig/pom.xml	2011-09-27 11:46:02.366087510 -0700
-+++ mahout-distribution-0.5/pom.xml	2011-09-27 11:48:01.487338359 -0700
-@@ -196,8 +196,150 @@
-       
+--- apache-mahout-c298f70.orig/pom.xml	2011-09-29 15:22:25.347055295 -0700
++++ apache-mahout-c298f70/pom.xml	2011-09-29 15:22:29.555805208 -0700
+@@ -189,6 +189,220 @@
+       </dependency>
+ 
        <dependency>
-         <groupId>org.apache.hadoop</groupId>
--        <artifactId>hadoop-core</artifactId>
--        <version>0.20.2</version>
++         <groupId>org.apache.hadoop</groupId>
 +        <artifactId>hadoop-common</artifactId>
-+        <version>0.22.0-SNAPSHOT</version>
++        <version>${hadoop.version}</version>
 +        <exclusions>
 +          <exclusion>
 +            <groupId>net.sf.kosmosfs</groupId>
@@ -101,7 +138,7 @@ Index: mahout-distribution-0.5/pom.xml
 +      <dependency>
 +        <groupId>org.apache.hadoop</groupId>
 +        <artifactId>hadoop-hdfs</artifactId>
-+        <version>0.22.0-SNAPSHOT</version>
++        <version>${hadoop.version}</version>
 +        <exclusions>
 +          <exclusion>
 +            <groupId>net.sf.kosmosfs</groupId>
@@ -172,28 +209,76 @@ Index: mahout-distribution-0.5/pom.xml
 +      <dependency>
 +        <groupId>org.apache.hadoop</groupId>
 +        <artifactId>hadoop-mapred</artifactId>
-+        <version>0.22.0-SNAPSHOT</version>
-         <exclusions>
-           <exclusion>
-             <groupId>net.sf.kosmosfs</groupId>
-Index: mahout-distribution-0.5/taste-web/pom.xml
-===================================================================
---- mahout-distribution-0.5.orig/taste-web/pom.xml	2011-09-27 11:46:02.356086272 -0700
-+++ mahout-distribution-0.5/taste-web/pom.xml	2011-09-27 11:47:08.227340928 -0700
-@@ -119,7 +119,15 @@
-       <exclusions>
-         <exclusion>
-           <groupId>org.apache.hadoop</groupId>
--          <artifactId>hadoop-core</artifactId>
-+          <artifactId>hadoop-common</artifactId>
-+        </exclusion>
-+        <exclusion>
-+          <groupId>org.apache.hadoop</groupId>
-+          <artifactId>hadoop-hdfs</artifactId>
-+        </exclusion>
-+        <exclusion>
-+          <groupId>org.apache.hadoop</groupId>
-+          <artifactId>hadoop-mapred</artifactId>
-         </exclusion>
-         <exclusion>
-           <groupId>xmlenc</groupId>
++        <version>${hadoop.version}</version>
++        <exclusions>
++          <exclusion>
++            <groupId>net.sf.kosmosfs</groupId>
++            <artifactId>kfs</artifactId>
++          </exclusion>
++          <exclusion>
++            <groupId>org.mortbay.jetty</groupId>
++            <artifactId>jetty</artifactId>
++          </exclusion>
++          <exclusion>
++            <groupId>org.mortbay.jetty</groupId>
++            <artifactId>jetty-util</artifactId>
++          </exclusion>
++          <exclusion>
++            <groupId>hsqldb</groupId>
++            <artifactId>hsqldb</artifactId>
++          </exclusion>
++          <exclusion>
++            <groupId>commons-el</groupId>
++            <artifactId>commons-el</artifactId>
++          </exclusion>
++          <exclusion>
++            <groupId>junit</groupId>
++            <artifactId>junit</artifactId>
++          </exclusion>
++          <exclusion>
++            <groupId>oro</groupId>
++            <artifactId>oro</artifactId>
++          </exclusion>
++          <exclusion>
++            <groupId>org.mortbay.jetty</groupId>
++            <artifactId>jsp-2.1</artifactId>
++          </exclusion>
++          <exclusion>
++            <groupId>org.mortbay.jetty</groupId>
++            <artifactId>jsp-api-2.1</artifactId>
++          </exclusion>
++          <exclusion>
++            <groupId>org.mortbay.jetty</groupId>
++            <artifactId>servlet-api-2.5</artifactId>
++          </exclusion>
++          <exclusion>
++            <groupId>commons-net</groupId>
++            <artifactId>commons-net</artifactId>
++          </exclusion>
++          <exclusion>
++            <groupId>tomcat</groupId>
++            <artifactId>jasper-runtime</artifactId>
++          </exclusion>
++          <exclusion>
++            <groupId>tomcat</groupId>
++            <artifactId>jasper-compiler</artifactId>
++          </exclusion>
++          <exclusion>
++            <groupId>xmlenc</groupId>
++            <artifactId>xmlenc</artifactId>
++          </exclusion>
++          <exclusion>
++            <groupId>net.java.dev.jets3t</groupId>
++            <artifactId>jets3t</artifactId>
++          </exclusion>
++          <exclusion>
++            <groupId>org.eclipse.jdt</groupId>
++            <artifactId>core</artifactId>
++          </exclusion>
++        </exclusions>
++      </dependency>
++
++      <dependency>
+         <groupId>org.apache.hadoop</groupId>
+         <artifactId>hadoop-core</artifactId>
+         <version>0.20.204.0</version>
