@@ -43,6 +43,7 @@ License: ASL 2.0
 Source0: %{name}-distribution-%{mahout_base_version}-src.tar.gz
 Source1: do-component-build 
 Source2: install_%{name}.sh
+Patch0: patch
 Requires: hadoop >= 0.20.2, /sbin/chkconfig
 
 
@@ -65,6 +66,7 @@ also on potential use cases. Come to the mailing lists to find out more.
     
 %prep
 %setup -n %{name}-distribution-%{mahout_base_version}
+%patch0 -p1 
 
 %build
 bash $RPM_SOURCE_DIR/do-component-build
