@@ -66,7 +66,7 @@ install: build
 	  --doc-dir=debian/tmp/usr/share/doc/hadoop-doc \
 	  --example-dir=debian/tmp/usr/share/doc/hadoop/examples \
 	  --native-build-string=${native_dir} \
-	  --installed-lib-dir=debian/tmp/usr/lib/hadoop
+	  --installed-lib-dir=/usr/lib/hadoop
 
 # Run dh_lintian if we've got it - this doesn't exist on debhelper 6 (eg Ubuntu Hardy)
 	(dh_lintian) || /bin/true
