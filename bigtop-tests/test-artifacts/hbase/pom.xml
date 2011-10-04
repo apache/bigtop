@@ -31,20 +31,20 @@
   <name>hbasesmoke</name>
 
   <dependencies>
-    <dependency>
+     <dependency>
       <groupId>org.apache.hadoop</groupId>
-      <artifactId>hadoop-core</artifactId>
-      <version>0.20.2-cdh3u2-SNAPSHOT</version>
+      <artifactId>hadoop-mapred</artifactId>
+      <version>0.22.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.hbase</groupId>
       <artifactId>hbase</artifactId>
-      <version>0.90.3-cdh3u2-SNAPSHOT</version>
+      <version>0.90.4</version>
     </dependency>
     <dependency>
       <groupId>org.apache.hbase</groupId>
       <artifactId>hbase</artifactId>
-      <version>0.90.3-cdh3u2-SNAPSHOT</version>
+      <version>0.90.4</version>
       <type>test-jar</type>
     </dependency>
   </dependencies>

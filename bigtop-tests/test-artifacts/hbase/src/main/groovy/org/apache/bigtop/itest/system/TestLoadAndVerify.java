@@ -49,6 +49,7 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.mapreduce.TaskCounter;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -290,8 +291,7 @@ public class TestLoadAndVerify {
     FileOutputFormat.setOutputPath(job, outputDir);
     assertTrue(job.waitForCompletion(true));
 
-    long numOutputRecords = job.getCounters().findCounter(
-        org.apache.hadoop.mapred.Task.Counter.REDUCE_OUTPUT_RECORDS).getValue();
+    long numOutputRecords = job.getCounters().findCounter(TaskCounter.REDUCE_OUTPUT_RECORDS).getValue();
     assertEquals(0, numOutputRecords);
   }
 
