@@ -63,7 +63,7 @@ class TestHadoopExamples {
   private static String HADOOP_OPTIONS;
 
   @BeforeClass
-  void setUp() {
+  static void setUp() {
     conf = new Configuration();
     conf.addResource('mapred-site.xml');
     HADOOP_OPTIONS =
