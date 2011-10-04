@@ -103,40 +103,29 @@ class TestHadoopExamples {
         randomtextwriter  :"-Dtest.randomtextwrite.total_bytes=1073741824 $EXAMPLES_OUT/randomtextwriter"
     ];
 
-  static Map jars =
-    [
-        pi                : HADOOP_EXAMPLES_JAR,
-        wordcount         : HADOOP_EXAMPLES_JAR,
-        multifilewc       : HADOOP_EXAMPLES_JAR,
-//        aggregatewordcount:"$EXAMPLES/text $EXAMPLES_OUT/aggregatewordcount 5 textinputformat",
-//        aggregatewordhist :"$EXAMPLES/text $EXAMPLES_OUT/aggregatewordhist 5 textinputformat",
-        grep              : HADOOP_EXAMPLES_JAR,
-        sleep             : HADOOP_MR_TEST_JAR,
-        secondarysort     : HADOOP_EXAMPLES_JAR,
-        randomtextwriter  : HADOOP_EXAMPLES_JAR,
-    ];
-
- 
-  private String exampleName;
+  private String testName;
+  private String testJar;
+  private String testArgs;
 
   @Parameters
   public static Map<String, Object[]> generateTests() {
     Map<String, Object[]> res = [:];
-    examples.each { res[it] = it; }
+    examples.each { k, v -> res[k] = [k, v] as Object[]; }
     return res;
   }
 
-  public TestHadoopExamples(String example) {
-    exampleName = example;
+  public TestHadoopExamples(String name, String args) {
+    testName = name;
+    testArgs = args;
+    testJar = (name == "sleep") ? HADOOP_MR_TEST_JAR : 
+                                  HADOOP_EXAMPLES_JAR;
   }
 
   @Test
   void testMRExample() {
-    testJar = jars[exampleName];
-    testArgs = examples[exampleName];
-    sh.exec("$hadoop jar $testJar $exampleName $HADOOP_OPTIONS $testArgs");
+    sh.exec("$hadoop jar $testJar $testName $HADOOP_OPTIONS $testArgs");
 
-    assertTrue("Example $exampleName failed", 
+    assertTrue("Example $testName failed", 
                sh.getRet() == 0);
   }
 }
