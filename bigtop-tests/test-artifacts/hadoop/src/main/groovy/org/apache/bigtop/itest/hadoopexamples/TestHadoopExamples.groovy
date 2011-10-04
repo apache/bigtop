@@ -110,7 +110,7 @@ class TestHadoopExamples {
   @Parameters
   public static Map<String, Object[]> generateTests() {
     Map<String, Object[]> res = [:];
-    examples.each { k, v -> res[k] = [k, v] as Object[]; }
+    examples.each { k, v -> res[k] = [k.toString(), v.toString()] as Object[]; }
     return res;
   }
 
