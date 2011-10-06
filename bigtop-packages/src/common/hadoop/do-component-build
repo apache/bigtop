@@ -27,8 +27,8 @@ else
   JSVC_URL=http://archive.apache.org/dist/commons/daemon/binaries/1.0.2/linux/commons-daemon-1.0.2-bin-linux-i386.tar.gz
 fi
 
-for project in common hdfs mapreduce ; do 
-  cd $project
+for project in common hdfs mapred ; do 
+  cd $project || cd mapreduce
   ant  \
     -Djava5.home=$JAVA5_HOME \
     -Dforrest.home=$FORREST_HOME \
@@ -39,7 +39,7 @@ for project in common hdfs mapreduce ; do
     -Dlibhdfs=1 -Dfusedfs=true -Dcompile.c++=true -Djdiff.build.dir=build/docs/jdiff-cloudera \
    api-report bin-package $BUILD_CONTRIB package \
     "$@"
-  (cd build/hadoop-*-0.22 ; tar cf - * ) | (cd ../build ; tar xf - )
+  (cd build/hadoop-$project-0.22.0 || cd mapreduce ; tar cf - * ) | (cd ../build ; tar xf - )
 
   for file in $STITCH_FILES ; do
     [ -f $file ] && cat $file >> ../$file
@@ -47,11 +47,9 @@ for project in common hdfs mapreduce ; do
 
   BUILD_CONTRIB="compile-contrib"
   cd ..
-done
 
-# NOTE: This is a total hack and needs to be generalized for future versions of Bigtop
-# Installing maven artifacts for downstream components
-for i in hadoop-common hadoop-hdfs hadoop-mapred ; do
-  mvn install:install-file -Dfile=build/$i-0.22.jar -DgroupId=org.apache.hadoop -DartifactId=$i -Dversion=0.22-SNAPSHOT -Dpackaging=jar
-  mvn install:install-file -Dfile=build/$i-test-0.22.jar -DgroupId=org.apache.hadoop -DartifactId=$i -Dversion=0.22-SNAPSHOT -Dpackaging=jar -Dclassifier=test
+  # NOTE: This is a total hack and needs to be generalized for future versions of Bigtop
+  # Installing maven artifacts for downstream components
+  mvn install:install-file -Dfile=build/hadoop-$i-0.22.0.jar -DgroupId=org.apache.hadoop -DartifactId=hadoop-$i -Dversion=0.22.0-SNAPSHOT -Dpackaging=jar
+  mvn install:install-file -Dfile=build/hadoop-$i-test-0.22.0.jar -DgroupId=org.apache.hadoop -DartifactId=hadoop-$i -Dversion=0.22.0-SNAPSHOT -Dpackaging=jar -Dclassifier=test
 done
