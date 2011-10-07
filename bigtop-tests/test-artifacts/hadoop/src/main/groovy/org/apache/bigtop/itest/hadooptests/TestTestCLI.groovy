@@ -29,7 +29,7 @@ class CommonConfigurationKeys {
 /** This test class serves only one purpose: to prepare environment for proper
  execution of parent (TestCLI)
  */
-class TestTestCLI extends TestCLI {
+class TestTestCLI extends TestHDFSCLI {
   private static final String JT = "mapred.job.tracker";
 
   static {
