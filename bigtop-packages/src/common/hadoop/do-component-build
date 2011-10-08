@@ -29,7 +29,7 @@ fi
 
 for project in common hdfs mapred ; do 
   cd $project || cd mapreduce
-  ant  \
+  ant -Dresolvers=internal \
     -Djava5.home=$JAVA5_HOME \
     -Dforrest.home=$FORREST_HOME \
     -Dversion=${HADOOP_VERSION} \
@@ -50,6 +50,7 @@ for project in common hdfs mapred ; do
 
   # NOTE: This is a total hack and needs to be generalized for future versions of Bigtop
   # Installing maven artifacts for downstream components
-  mvn install:install-file -Dfile=build/hadoop-$i-0.22.0.jar -DgroupId=org.apache.hadoop -DartifactId=hadoop-$i -Dversion=0.22.0-SNAPSHOT -Dpackaging=jar
-  mvn install:install-file -Dfile=build/hadoop-$i-test-0.22.0.jar -DgroupId=org.apache.hadoop -DartifactId=hadoop-$i -Dversion=0.22.0-SNAPSHOT -Dpackaging=jar -Dclassifier=test
+  mvn install:install-file -Dfile=build/hadoop-$project-0.22.0.jar -DgroupId=org.apache.hadoop -DartifactId=hadoop-$project -Dversion=0.22.0-SNAPSHOT -Dpackaging=jar
+  mvn install:install-file -Dfile=build/hadoop-$project-test-0.22.0.jar -DgroupId=org.apache.hadoop -DartifactId=hadoop-$project-test -Dversion=0.22.0-SNAPSHOT -Dpackaging=jar
+  rm -rf ~/.ivy2/cache/org.apache.hadoop/hadoop-*-test debian/.ivy/cache/org.apache.hadoop/hadoop-*-test 
 done
