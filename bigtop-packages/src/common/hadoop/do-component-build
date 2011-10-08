@@ -27,9 +27,15 @@ else
   JSVC_URL=http://archive.apache.org/dist/commons/daemon/binaries/1.0.2/linux/commons-daemon-1.0.2-bin-linux-i386.tar.gz
 fi
 
+if [ -d debian ] ; then 
+  IVY_LOCATION=debian/.ivy
+else
+  IVY_LOCATION=~/.ivy2
+fi
+
 for project in common hdfs mapred ; do 
   cd $project || cd mapreduce
-  ant -Dresolvers=internal \
+  ant \
     -Djava5.home=$JAVA5_HOME \
     -Dforrest.home=$FORREST_HOME \
     -Dversion=${HADOOP_VERSION} \
@@ -50,7 +56,8 @@ for project in common hdfs mapred ; do
 
   # NOTE: This is a total hack and needs to be generalized for future versions of Bigtop
   # Installing maven artifacts for downstream components
-  mvn install:install-file -Dfile=build/hadoop-$project-0.22.0.jar -DgroupId=org.apache.hadoop -DartifactId=hadoop-$project -Dversion=0.22.0-SNAPSHOT -Dpackaging=jar
-  mvn install:install-file -Dfile=build/hadoop-$project-test-0.22.0.jar -DgroupId=org.apache.hadoop -DartifactId=hadoop-$project-test -Dversion=0.22.0-SNAPSHOT -Dpackaging=jar
-  rm -rf ~/.ivy2/cache/org.apache.hadoop/hadoop-*-test debian/.ivy/cache/org.apache.hadoop/hadoop-*-test 
+  mkdir -p $IVY_LOCATION/cache/org.apache.hadoop/hadoop-$project/jars/ $IVY_LOCATION/cache/org.apache.hadoop/hadoop-$project-test/jars/
+  rm -rf $IVY_LOCATION/cache/org.apache.hadoop/hadoop-$project-*/jars/*
+  cp build/hadoop-$project-0.22.0.jar $IVY_LOCATION/cache/org.apache.hadoop/hadoop-$project/jars/hadoop-$project-0.22.0-SNAPSHOT.jar
+  cp build/hadoop-$project-test-0.22.0.jar $IVY_LOCATION/cache/org.apache.hadoop/hadoop-$project-test/jars/hadoop-$project-test-0.22.0-SNAPSHOT.jar
 done
