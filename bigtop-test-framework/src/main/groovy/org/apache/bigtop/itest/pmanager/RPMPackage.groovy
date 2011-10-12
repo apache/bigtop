@@ -44,7 +44,7 @@ class RPMPackage extends ManagedPackage {
       if (curMetaKey == "description" || ((it =~ /^\s+: /).find() && curMetaKey == "summary")) {
         pkg.meta[curMetaKey] <<= "\n${it.replaceAll(/^\s+:/,'')}";
       } else {
-        def m = (it =~ /(\S+) *: *(.+)/);
+        def m = (it =~ /(\S+)\s*:\s*(.*)/);
         if (m.size()) {
           String[] matcher = m[0];
           if ("Name" == matcher[1] && !givenPkg) {

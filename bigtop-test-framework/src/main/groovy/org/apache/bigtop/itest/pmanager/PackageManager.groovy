@@ -213,6 +213,8 @@ public abstract class PackageManager {
         return new YumCmdLinePackageManager();
       case ~/(?is).*(suse|sles|sled).*/:
         return new ZypperCmdLinePackageManager();
+      case ~/(?is).*(mageia).*/:
+        return new UrpmiCmdLinePackageManager();
       default:
         return null;
     }
