@@ -128,7 +128,7 @@ Requires: sh-utils, redhat-lsb
 
 %if  0%{?mgaversion}
 BuildRequires: libfuse-devel, libfuse2 , libopenssl-devel, gcc-c++, ant, libtool, automake, autoconf, liblzo-devel, zlib-devel
-Requires: chkconfig, xinetd-simple-services, zlib
+Requires: chkconfig, xinetd-simple-services, zlib, initscripts
 %endif
 
 
