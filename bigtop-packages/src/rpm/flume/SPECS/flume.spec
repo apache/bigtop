@@ -63,8 +63,14 @@ Source1: do-component-build
 Source2: install_%{name}.sh
 Source3: init.d
 Source4: init.d.suse
-Requires: sh-utils, textutils, /usr/sbin/useradd, /sbin/chkconfig, /sbin/service, hadoop-zookeeper >= 3.3.1, hadoop >= 0.20.2
+Requires: coreutils, /usr/sbin/useradd, /sbin/chkconfig, /sbin/service, hadoop-zookeeper >= 3.3.1, hadoop >= 0.20.2
 BuildRequires: ant xml-commons xml-commons-apis
+
+%if  0%{?mgaversion}
+Requires: bsh-utils
+%else
+Requires: sh-utils
+%endif
 
 %description 
 Flume is a reliable, scalable, and manageable distributed data collection application for collecting data such as logs and delivering it to data stores such as Hadoop's HDFS.  It can efficiently collect, aggregate, and move large amounts of log data.  It has a simple, but flexible, architecture based on streaming data flows.  It is robust and fault tolerant with tunable reliability mechanisms and many failover and recovery mechanisms.  The system is centrally managed and allows for intelligent dynamic management. It uses a simple extensible data model that allows for online analytic applications.
@@ -74,7 +80,7 @@ Summary: The flume master daemon is the central administration and data path con
 Group: Development/Libraries
 BuildArch: noarch
 Requires: %{name} = %{version}-%{release}
-Requires: sh-utils, textutils, /usr/sbin/useradd, /sbin/chkconfig, /sbin/service
+Requires: /usr/sbin/useradd, /sbin/chkconfig, /sbin/service
 Requires(post): /sbin/chkconfig
 Requires(preun): /sbin/service, /sbin/chkconfig, %{name}
 
@@ -95,7 +101,7 @@ Summary: The flume node daemon is a core element of flume's data path and is res
 Group: Development/Libraries
 BuildArch: noarch
 Requires: %{name} = %{version}-%{release}
-Requires: sh-utils, textutils, /usr/sbin/useradd, /sbin/chkconfig, /sbin/service
+Requires: /usr/sbin/useradd, /sbin/chkconfig, /sbin/service
 Requires(post): /sbin/chkconfig
 Requires(preun): /sbin/service, /sbin/chkconfig, %{name}
 

@@ -109,7 +109,7 @@ Source7: hadoop-fuse-dfs.1
 Source8: hadoop-fuse.default
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: python >= 2.4, git, fuse-devel,fuse, automake, autoconf
-Requires: textutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service
+Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service
 Provides: hadoop
 
 %if  %{?suse_version:1}0
@@ -127,8 +127,8 @@ Requires: sh-utils, redhat-lsb
 %endif
 
 %if  0%{?mgaversion}
-BuildRequires: libfuse-devel, libfuse2 , libopenssl-devel, gcc-c++, ant, libtool, automake, autoconf, liblzo-devel, libzlib-devel
-Requires: chkconfig, xinetd-simple-services, libzlib
+BuildRequires: libfuse-devel, libfuse2 , libopenssl-devel, gcc-c++, ant, libtool, automake, autoconf, liblzo-devel, zlib-devel
+Requires: chkconfig, xinetd-simple-services, zlib
 %endif
 
 
