@@ -37,12 +37,15 @@ import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.io.hfile.Compression;
 import org.apache.hadoop.hbase.io.hfile.HFile;
 import org.apache.hadoop.hbase.util.Bytes;
+import org.apache.hadoop.hbase.HBaseTestingUtility;
 
 public class HBaseTestUtil {
 
   public static int BLOCKSIZE = 64*1024;
   public static String COMPRESSION =
     Compression.Algorithm.NONE.getName();
+
+  private final static Configuration conf = new HBaseTestingUtility().getConfiguration();
 
   private static String getTestPrefix() {
     return String.valueOf(System.currentTimeMillis());
@@ -83,8 +86,8 @@ public class HBaseTestUtil {
       byte[] family, byte[] qualifier,
       byte[] startKey, byte[] endKey, int numRows) throws IOException
   {
-    HFile.Writer writer = new HFile.Writer(fs, path, BLOCKSIZE, COMPRESSION,
-        KeyValue.KEY_COMPARATOR);
+    HFile.Writer writer = HFile.getWriterFactory(conf).createWriter(fs, path, BLOCKSIZE, COMPRESSION,
+                                                                    KeyValue.KEY_COMPARATOR);
     long now = System.currentTimeMillis();
     try {
       // subtract 2 since iterateOnSplits doesn't include boundary keys

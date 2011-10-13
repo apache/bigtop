@@ -44,7 +44,7 @@
     <dependency>
       <groupId>org.apache.hbase</groupId>
       <artifactId>hbase</artifactId>
-      <version>0.90.5-SNAPSHOT</version>
+      <version>0.92.0-SNAPSHOT</version>
       <exclusions>
         <exclusion>
           <groupId>org.apache.hadoop</groupId>
@@ -55,7 +55,7 @@
     <dependency>
       <groupId>org.apache.hbase</groupId>
       <artifactId>hbase</artifactId>
-      <version>0.90.5-SNAPSHOT</version>
+      <version>0.92.0-SNAPSHOT</version>
       <type>test-jar</type>
       <exclusions>
         <exclusion>
