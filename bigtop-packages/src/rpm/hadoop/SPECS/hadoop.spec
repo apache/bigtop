@@ -293,7 +293,7 @@ DataNodes to bind to a low (privileged) port and then drop root privileges
 before continuing operation.
 
 %prep
-%setup -n apache-hadoop-common-b6e920e
+%setup -n apache-hadoop-common-c6e42d3
 %patch0 -p0
 
 %build
