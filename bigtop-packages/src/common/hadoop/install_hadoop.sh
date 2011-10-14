@@ -172,6 +172,18 @@ cp -a ${BUILD_SRC_DIR}/* ${SRC_DIR}/
 install -d -m 0755 $ETC_DIR/conf.empty
 (cd ${BUILD_DIR}/conf && tar cf - .) | (cd $ETC_DIR/conf.empty && tar xf -)
 
+# Create symlinks to preserve old jar names
+# Also create symlinks of versioned jars to jars without version names, which other
+# packages can depend on
+(cd $LIB_DIR &&
+for j in hadoop-*.jar; do
+  if [[ $j =~ hadoop-(.*)-([^-]+).jar ]]; then
+    ver=${BASH_REMATCH[1]}
+    name=${BASH_REMATCH[2]}
+    ln -s hadoop-$ver-$name.jar hadoop-$name.jar
+  fi
+done)
+
 # Link the HADOOP_HOME conf, log and pid dir to installed locations
 rm -rf $LIB_DIR/conf
 ln -s ${ETC_DIR#$PREFIX}/conf $LIB_DIR/conf
