@@ -58,14 +58,13 @@ HADOOP_PID_DIR=${HADOOP_PID_DIR:-/var/run/hadoop}
 PIDFILE="$HADOOP_PID_DIR/hadoop-$HADOOP_IDENT_STRING-@HADOOP_DAEMON@.pid"
 LOCKFILE="/var/lock/subsys/hadoop-@HADOOP_DAEMON@"
 desc="Hadoop @HADOOP_DAEMON@ daemon"
-USER="@HADOOP_DAEMON_USER@"
 SLEEP_TIME=5
 
 start() {
   [ -x $exec ] || exit $ERROR_PROGRAM_NOT_INSTALLED
   [ -f $config ] || exit $ERROR_PROGRAM_NOT_CONFIGURED
   log_success_msg "Starting $desc (hadoop-@HADOOP_DAEMON@): "
-  start_daemon -u $USER $EXEC_PATH --config "$CONFIG_PATH" start @HADOOP_DAEMON@ $DAEMON_FLAGS
+  start_daemon $EXEC_PATH --config "$CONFIG_PATH" start @HADOOP_DAEMON@ $DAEMON_FLAGS
   RETVAL=$?
 
   if [ "@HADOOP_DAEMON@" = "datanode" ]; then
@@ -81,7 +80,7 @@ start() {
 
 stop() {
   log_success_msg "Stopping $desc (hadoop-@HADOOP_DAEMON@): "
-  start_daemon -u $USER $EXEC_PATH --config "$CONFIG_PATH" stop @HADOOP_DAEMON@
+  start_daemon $EXEC_PATH --config "$CONFIG_PATH" stop @HADOOP_DAEMON@
   RETVAL=$?
 
   [ $RETVAL -eq $RETVAL_SUCCESS ] && rm -f $LOCKFILE $PIDFILE
