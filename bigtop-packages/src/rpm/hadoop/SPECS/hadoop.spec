@@ -107,7 +107,7 @@ Source5: hadoop-init.tmpl.suse
 Source6: hadoop.1
 Source7: hadoop-fuse-dfs.1
 Source8: hadoop-fuse.default
-Patch0: patch
+# Patch0: patch
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: python >= 2.4, git, fuse-devel,fuse, automake, autoconf
 Requires: textutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service
@@ -294,7 +294,7 @@ before continuing operation.
 
 %prep
 %setup -n apache-hadoop-common-c606b00
-%patch0 -p0
+# %patch0 -p0
 
 %build
 # This assumes that you installed Java JDK 6 and set JAVA_HOME
