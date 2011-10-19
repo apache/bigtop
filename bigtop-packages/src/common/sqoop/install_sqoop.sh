@@ -143,7 +143,6 @@ done
 
 install -d -m 0755 $PREFIX/$ETC_DIR/conf
 (cd ${BUILD_DIR}/conf && tar cf - .) | (cd $PREFIX/$ETC_DIR/conf && tar xf -)
-rm $PREFIX/$ETC_DIR/conf/.gitignore
 
 unlink $PREFIX/$LIB_DIR/conf || /bin/true
 ln -s /etc/sqoop/conf $PREFIX/$LIB_DIR/conf
