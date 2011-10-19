@@ -133,6 +133,7 @@ install -d -m 0755 $DOC_DIR
 (cd $BUILD_DIR/docs && tar -cf - .)|(cd $DOC_DIR && tar -xf -)
 
 install -d -m 0755 $EXAMPLES_DIR
+(cd $LIB_DIR ; mv pig*withouthadoop.jar `echo pig*withouthadoop.jar | sed -e 's#withouthadoop#core#'`)
 PIG_JAR=$(basename $(ls $LIB_DIR/pig*core.jar))
 sed -i -e "s|../pig.jar|/usr/lib/pig/$PIG_JAR|" $BUILD_DIR/tutorial/build.xml
 (cd $BUILD_DIR/tutorial && tar -cf - .)|(cd $EXAMPLES_DIR && tar -xf -)
