@@ -100,7 +100,7 @@ BuildArch: noarch
 
 
 %prep
-%setup -n yahoo-oozie-af10263
+%setup -n yahoo-oozie-39697f6
 
 %build
     M2_CACHE=`mktemp -d /tmp/oozie.m2.XXXXX`
@@ -145,6 +145,7 @@ fi
 %{lib_oozie}/bin/oozie-stop.sh
 %{lib_oozie}/bin/oozie-sys.sh
 %{lib_oozie}/bin/oozie-env.sh
+%{lib_oozie}/bin/oozied.sh
 %{lib_oozie}/oozie.war
 %{lib_oozie}/oozie-sharelib.tar.gz
 %{lib_oozie}/oozie-server
