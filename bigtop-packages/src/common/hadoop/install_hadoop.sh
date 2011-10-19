@@ -126,7 +126,7 @@ mkdir -p $LIB_DIR
 (cd $BUILD_DIR && tar -cf - .) | (cd $LIB_DIR && tar xf - )
 
 # Take out things we've installed elsewhere
-for x in docs lib/native c++ src conf usr/bin/fuse_dfs contrib/fuse ; do
+for x in docs lib/native c++ src conf usr/bin/fuse_dfs contrib/fuse share 'lib/lib*so*'  ; do
   rm -rf $LIB_DIR/$x 
 done
 
@@ -178,9 +178,9 @@ install -d -m 0755 $ETC_DIR/conf.empty
 (cd $LIB_DIR &&
 for j in hadoop-*.jar; do
   if [[ $j =~ hadoop-(.*)-([^-]+).jar ]]; then
-    ver=${BASH_REMATCH[1]}
-    name=${BASH_REMATCH[2]}
-    ln -s hadoop-$ver-$name.jar hadoop-$name.jar
+    name=${BASH_REMATCH[1]}
+    ver=${BASH_REMATCH[2]}
+    ln -s hadoop-$name-$ver.jar hadoop-$name.jar
   fi
 done)
 
@@ -262,7 +262,7 @@ EOF
   cp -r ./c++/${NATIVE_BUILD_STRING}/include/hadoop $PREFIX/usr/include/
 
   # libhdfs
-  cp ./c++/${NATIVE_BUILD_STRING}/lib/libhdfs.so.0.0.0 $PREFIX/$SYSTEM_LIB_DIR
+  cp ./build/c++/${NATIVE_BUILD_STRING}/lib/libhdfs.so.0.0.0 $PREFIX/$SYSTEM_LIB_DIR
   ln -sf libhdfs.so.0.0.0 $PREFIX/$SYSTEM_LIB_DIR/libhdfs.so.0
 
   # libhdfs-devel - hadoop doesn't realy install these things in nice places :(
@@ -274,7 +274,7 @@ EOF
   #    This is somewhat unintuitive, but the -devel package has this symlink (see Debian Library Packaging Guide)
   ln -sf libhdfs.so.0.0.0 $PREFIX/$SYSTEM_LIB_DIR/libhdfs.so
   sed -e "s|^libdir='.*'|libdir=\"$SYSTEM_LIB_DIR\"|" \
-      ./c++/${NATIVE_BUILD_STRING}/lib/libhdfs.la > $PREFIX/$SYSTEM_LIB_DIR/libhdfs.la
+      ./build/c++/${NATIVE_BUILD_STRING}/lib/libhdfs.la > $PREFIX/$SYSTEM_LIB_DIR/libhdfs.la
 fi
 
 # XXX Hack to get hadoop to get packaged

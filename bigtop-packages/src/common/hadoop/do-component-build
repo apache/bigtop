@@ -16,7 +16,8 @@
 
 set -ex
 
-ant  \
+# FIXME: the LDFLAGS="-lcrypto" is a workaround for MAPREDUCE-2127
+LDFLAGS="-lcrypto" ant  \
   -Djava5.home=$JAVA5_HOME \
   -Dforrest.home=$FORREST_HOME \
   -Dversion=${HADOOP_VERSION} \
