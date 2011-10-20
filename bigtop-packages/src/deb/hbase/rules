@@ -49,6 +49,8 @@ install: build
 		--build-dir=. \
 		--doc-dir=usr/share/doc/hadoop-hbase-doc \
 		--prefix=debian/tmp
+	mkdir -p debian/tmp/etc/security/limits.d
+	cp debian/hbase.nofiles.conf debian/tmp/etc/security/limits.d
 	# Symlink in the dependency jars from their packages. Both of these packages
 	# provide an unversioned symlink foo.jar -> foo-0.1.2.jar.
 	rm debian/tmp/usr/lib/hbase/lib/zookeeper-*.jar

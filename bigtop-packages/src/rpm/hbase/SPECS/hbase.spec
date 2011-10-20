@@ -66,6 +66,7 @@ Source2: install_hbase.sh
 Source3: hadoop-hbase.sh
 Source4: hadoop-hbase.sh.suse
 Source5: hbase.default
+Source6: hbase.nofiles.conf
 BuildArch: noarch
 Requires: coreutils, /usr/sbin/useradd, /sbin/chkconfig, /sbin/service, hadoop-zookeeper, hadoop >= 0.20.2, hadoop-zookeeper >= 3.3.1
 
@@ -197,6 +198,9 @@ sh %{SOURCE2} \
 %__install -d -m 0755 $RPM_BUILD_ROOT/etc/default/
 %__install -m 0644 $RPM_SOURCE_DIR/hbase.default $RPM_BUILD_ROOT/etc/default/hbase
 
+%__install -d -m 0755 $RPM_BUILD_ROOT/etc/security/limits.d
+%__install -m 0644 %{SOURCE6} $RPM_BUILD_ROOT/etc/security/limits.d/hbase.nofiles.conf
+
 %__install -d  -m 0755  %{buildroot}/%{_localstatedir}/log/hbase
 ln -s %{_localstatedir}/log/hbase %{buildroot}/%{logs_hbase}
 
@@ -241,6 +245,7 @@ getent passwd hbase 2>&1 > /dev/null || /usr/sbin/useradd -c "HBase" -s /sbin/no
 
 %defattr(-,root,root)
 %config(noreplace) %{_sysconfdir}/default/hbase
+%config(noreplace) /etc/security/limits.d/hbase.nofiles.conf
 %{hbase_home}
 %{hbase_home}/hbase-*.jar
 %{webapps_hbase}
