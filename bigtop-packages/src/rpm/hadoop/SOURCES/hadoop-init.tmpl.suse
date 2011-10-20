@@ -45,6 +45,7 @@ STATUS_RUNNING=0
 STATUS_DEAD=1
 STATUS_DEAD_AND_LOCK=2
 STATUS_NOT_RUNNING=3
+STATUS_OTHER_ERROR=102
 
 
 ERROR_PROGRAM_NOT_INSTALLED=5
@@ -92,8 +93,10 @@ stop() {
     RETVAL=$?
 
     # Stopping a non running process should be a success
-    if [ $RETVAL -eq $STATUS_NOT_RUNNING ]; then
+    if [ $RETVAL -ne $STATUS_RUNNING ]; then
         RETVAL=0
+    else
+        RETVAL=$STATUS_OTHER_ERROR
     fi
   fi
 }
@@ -105,7 +108,13 @@ restart() {
 
 
 checkstatusofproc(){
-  pidofproc -p $PIDFILE java > /dev/null
+  # Under certain conditions datanode manifests as jsvc.exec
+  if [ "@HADOOP_DAEMON@" = "datanode" -a -x @HADOOP_COMMON_ROOT@/sbin/Linux-amd64-64/jsvc ] ; then
+    PROC_NAME="jsvc"
+  else
+    PROC_NAME="su"
+  fi
+  pidofproc -p $PIDFILE $PROC_NAME > /dev/null
 }
 
 checkstatus(){
