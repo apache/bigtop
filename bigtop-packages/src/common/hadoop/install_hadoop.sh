@@ -163,7 +163,7 @@ mkdir -p ${SRC_DIR}
 rm -f ${BUILD_SRC_DIR}/contrib/fuse-dfs/src/*.o 
 rm -f ${BUILD_SRC_DIR}/contrib/fuse-dfs/src/fuse_dfs
 rm -rf ${BUILD_SRC_DIR}/contrib/hod
-#rm -f ${SRC_DIR}/contrib/fuse-dfs/fuse_dfs
+rm -f ${SRC_DIR}/contrib/fuse-dfs/fuse_dfs
 
 
 cp -a ${BUILD_SRC_DIR}/* ${SRC_DIR}/
@@ -214,6 +214,11 @@ if [ ! -z "$NATIVE_BUILD_STRING" ]; then
   mkdir -p $LIB_DIR/bin
   if [ -d ./src/contrib/fuse-dfs ]; then
     gzip -c < $DISTRO_DIR/hadoop-fuse-dfs.1 > $MAN_DIR/man1/hadoop-fuse-dfs.1.gz
+
+    # Fuse 
+    mkdir -p $LIB_DIR/bin
+    mv  ${BUILD_DIR}/contrib/fuse-dfs/* $LIB_DIR/bin
+    rmdir ${BUILD_DIR}/contrib/fuse-dfs
 
     fuse_wrapper=${BIN_DIR}/hadoop-fuse-dfs
   cat > $fuse_wrapper << EOF

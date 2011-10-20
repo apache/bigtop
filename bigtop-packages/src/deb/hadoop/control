@@ -71,17 +71,17 @@ Description: Server-side binaries necessary for secured Hadoop clusters
  DataNodes to bind to a low (privileged) port and then drop root privileges
  before continuing operation.
 
-#Package: hadoop-fuse
-#Provides: hadoop-fuse
-#Architecture: i386 amd64
-#Depends: ${shlibs:Depends}, hadoop (= ${source:Version}), libfuse2, fuse-utils
-#Enhances: hadoop
-#Description: HDFS exposed over a Filesystem in Userspace
-# These projects (enumerated below) allow HDFS to be mounted (on most flavors 
-# of Unix) as a standard file system using the mount command. Once mounted, the
-#  user can operate on an instance of hdfs using standard Unix utilities such 
-# as 'ls', 'cd', 'cp', 'mkdir', 'find', 'grep', or use standard Posix libraries 
-# like open, write, read, close from C, C++, Python, Ruby, Perl, Java, bash, etc.
+Package: hadoop-fuse
+Provides: hadoop-fuse
+Architecture: i386 amd64
+Depends: ${shlibs:Depends}, hadoop (= ${source:Version}), libfuse2, fuse-utils
+Enhances: hadoop
+Description: HDFS exposed over a Filesystem in Userspace
+ These projects (enumerated below) allow HDFS to be mounted (on most flavors 
+ of Unix) as a standard file system using the mount command. Once mounted, the
+  user can operate on an instance of hdfs using standard Unix utilities such 
+ as 'ls', 'cd', 'cp', 'mkdir', 'find', 'grep', or use standard Posix libraries 
+ like open, write, read, close from C, C++, Python, Ruby, Perl, Java, bash, etc.
 
 Package: hadoop-doc
 Provides: hadoop-doc

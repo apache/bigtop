@@ -240,21 +240,21 @@ AutoReq: no
 The Java source code for Hadoop and its contributed packages. This is handy when
 trying to debug programs that depend on Hadoop.
 
-#%package fuse
-#Summary: Mountable HDFS
-#Group: Development/Libraries
-#Requires: %{name} = %{version}-%{release}, fuse
-#AutoReq: no
-#
-#%if  %{?suse_version:1}0
-#Requires: libfuse2
-#%else
-#Requires: fuse-libs
-#%endif
-#
-#
-#%description fuse
-#These projects (enumerated below) allow HDFS to be mounted (on most flavors of Unix) as a standard file system using the mount command. Once mounted, the user can operate on an instance of hdfs using standard Unix utilities such as 'ls', 'cd', 'cp', 'mkdir', 'find', 'grep', or use standard Posix libraries like open, write, read, close from C, C++, Python, Ruby, Perl, Java, bash, etc.
+%package fuse
+Summary: Mountable HDFS
+Group: Development/Libraries
+Requires: %{name} = %{version}-%{release}, fuse
+AutoReq: no
+
+%if  %{?suse_version:1}0
+Requires: libfuse2
+%else
+Requires: fuse-libs
+%endif
+
+
+%description fuse
+These projects (enumerated below) allow HDFS to be mounted (on most flavors of Unix) as a standard file system using the mount command. Once mounted, the user can operate on an instance of hdfs using standard Unix utilities such as 'ls', 'cd', 'cp', 'mkdir', 'find', 'grep', or use standard Posix libraries like open, write, read, close from C, C++, Python, Ruby, Perl, Java, bash, etc.
 
 %package native
 Summary: Native libraries for Hadoop Compression
@@ -305,7 +305,7 @@ before continuing operation.
 # This assumes that you installed Java JDK 5 and set JAVA5_HOME
 # This assumes that you installed Forrest and set FORREST_HOME
 
-env HADOOP_VERSION=%{hadoop_version} bash %{SOURCE1}
+env HADOOP_VERSION=%{hadoop_version} HADOOP_ARCH=%{hadoop_arch} bash %{SOURCE1}
 
 %clean
 %__rm -rf $RPM_BUILD_ROOT
@@ -484,10 +484,13 @@ fi
 %defattr(-,root,root)
 %{lib_hadoop}/lib/native
 
-#%files fuse
-#%defattr(-,root,root)
-#%attr(0755,root,root) %{bin_hadoop}/hadoop-fuse-dfs
-#%attr(0755,root,root) %{man_hadoop}/man1/hadoop-fuse-dfs.1.gz
+%files fuse
+%defattr(-,root,root)
+%config(noreplace) /etc/default/hadoop-fuse
+%attr(0755,root,root) %{lib_hadoop}/bin/fuse_dfs
+%attr(0755,root,root) %{lib_hadoop}/bin/fuse_dfs_wrapper.sh
+%attr(0755,root,root) %{bin_hadoop}/hadoop-fuse-dfs
+%attr(0755,root,root) %{man_hadoop}/man1/hadoop-fuse-dfs.1.gz
 %config(noreplace) /etc/default/hadoop-fuse
 
 %files pipes
