@@ -20,11 +20,12 @@
 %define log_mahout /var/log/%{mahout_name}
 %define bin_mahout /usr/bin
 %define man_dir /usr/share/man
-%define doc_mahout %{_docdir}/mahout-%{mahout_version}
 
 %if  %{?suse_version:1}0
+%define doc_mahout %{_docdir}/mahout
 %define alternatives_cmd update-alternatives
 %else
+%define doc_mahout %{_docdir}/mahout-%{mahout_version}
 %define alternatives_cmd alternatives
 %endif
 
@@ -43,7 +44,7 @@ License: ASL 2.0
 Source0: %{name}-distribution-%{mahout_base_version}-src.tar.gz
 Source1: do-component-build 
 Source2: install_%{name}.sh
-Requires: hadoop >= 0.20.2, /sbin/chkconfig
+Requires: hadoop >= 0.20.2
 
 
 %description 
