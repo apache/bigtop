@@ -283,6 +283,19 @@ Requires: %{name} = %{version}-%{release}
 %description pipes
 Hadoop Pipes Library
 
+%package sbin
+Summary: Binaries for secured Hadoop clusters
+Group: System/Daemons
+Requires: %{name} = %{version}-%{release}
+
+%description sbin
+This package contains a setuid program, 'task-controller', which is used for
+launching MapReduce tasks in a secured MapReduce cluster. This program allows
+the tasks to run as the Unix user who submitted the job, rather than the
+Unix user running the MapReduce daemons.
+This package also contains 'jsvc', a daemon wrapper necessary to allow
+DataNodes to bind to a low (privileged) port and then drop root privileges
+before continuing operation.
 
 %prep
 %setup -n %{name}-%{hadoop_base_version}
@@ -489,3 +502,10 @@ fi
 %{_includedir}/hdfs.h
 # -devel should be its own package
 %doc %{_docdir}/libhdfs-%{hadoop_version}
+
+%files sbin
+%defattr(-,root,root)
+%dir %{lib_hadoop}/sbin
+%dir %{lib_hadoop}/sbin/%{hadoop_arch}
+%attr(4754,root,mapred) %{lib_hadoop}/sbin/%{hadoop_arch}/task-controller
+%attr(0755,root,root) %{lib_hadoop}/sbin/%{hadoop_arch}/jsvc

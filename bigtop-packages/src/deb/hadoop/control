@@ -56,20 +56,20 @@ Description: Native libraries for Hadoop (e.g., compression)
  This optional package contains native libraries that increase the performance
  of Hadoop's compression.
 
-#Package: hadoop-sbin
-#Provides: hadoop-sbin
-#Architecture: i386 amd64
-#Depends: ${shlibs:Depends}, hadoop (= ${source:Version})
-#Enhances: hadoop
-#Description: Server-side binaries necessary for secured Hadoop clusters
-# This package contains a setuid program, 'task-controller', which is used for
-# launching MapReduce tasks in a secured MapReduce cluster. This program allows
-# the tasks to run as the Unix user who submitted the job, rather than the
-# Unix user running the MapReduce daemons.
-# .
-# This package also contains 'jsvc', a daemon wrapper necessary to allow
-# DataNodes to bind to a low (privileged) port and then drop root privileges
-# before continuing operation.
+Package: hadoop-sbin
+Provides: hadoop-sbin
+Architecture: i386 amd64
+Depends: ${shlibs:Depends}, hadoop (= ${source:Version})
+Enhances: hadoop
+Description: Server-side binaries necessary for secured Hadoop clusters
+ This package contains a setuid program, 'task-controller', which is used for
+ launching MapReduce tasks in a secured MapReduce cluster. This program allows
+ the tasks to run as the Unix user who submitted the job, rather than the
+ Unix user running the MapReduce daemons.
+ .
+ This package also contains 'jsvc', a daemon wrapper necessary to allow
+ DataNodes to bind to a low (privileged) port and then drop root privileges
+ before continuing operation.
 
 #Package: hadoop-fuse
 #Provides: hadoop-fuse

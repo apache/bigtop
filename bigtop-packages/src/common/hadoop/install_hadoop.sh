@@ -126,7 +126,7 @@ mkdir -p $LIB_DIR
 (cd $BUILD_DIR && tar -cf - .) | (cd $LIB_DIR && tar xf - )
 
 # Take out things we've installed elsewhere
-for x in docs lib/native c++ src conf usr/bin/fuse_dfs contrib/fuse share 'lib/lib*so*'  ; do
+for x in docs lib/native c++ src conf usr/bin/fuse_dfs contrib/fuse share bin/task-controller 'lib/lib*so*'  ; do
   rm -rf $LIB_DIR/$x 
 done
 
@@ -249,6 +249,11 @@ EOF
 
     chmod 755 $fuse_wrapper
   fi
+
+  # Security related binaries
+  mkdir -p $LIB_DIR/sbin/${NATIVE_BUILD_STRING}
+  mv -f $LIB_DIR/sbin/task-controller $LIB_DIR/sbin/${NATIVE_BUILD_STRING}
+  mv -f $LIB_DIR/libexec/jsvc* $LIB_DIR/sbin/${NATIVE_BUILD_STRING}/jsvc
 
   # Native compression libs
   mkdir -p $LIB_DIR/lib/native/
