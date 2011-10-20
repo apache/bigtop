@@ -72,7 +72,7 @@ Source4: hadoop-zookeeper.sh.suse
 Source5: zookeeper.1
 BuildArch: noarch
 BuildRequires: ant, autoconf, automake, subversion
-Requires(pre): coreutils, shadow-utils
+Requires(pre): coreutils, shadow-utils, /usr/sbin/groupadd, /usr/sbin/useradd
 Requires(post): %{alternatives_dep}
 Requires(preun): %{alternatives_dep}
 
