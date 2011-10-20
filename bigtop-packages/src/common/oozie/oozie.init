@@ -54,7 +54,7 @@ start_oozie() {
 stop_oozie() {
   is_oozie_alive
   if [ "${STATUS}" = "0" ]; then
-    su --shell=/bin/sh -l oozie -c /usr/lib/oozie/bin/oozie-stop.sh
+    su --shell=/bin/sh -l oozie -c '/usr/lib/oozie/bin/oozied.sh stop -force'
     if [ $? -eq 0 ]; then
       is_oozie_alive
       if [ "${STATUS}" = "1" ]; then
