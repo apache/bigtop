@@ -63,7 +63,7 @@ Source1: do-component-build
 Source2: install_%{name}.sh
 Source3: init.d
 Source4: init.d.suse
-Requires: coreutils, /usr/sbin/useradd, /sbin/chkconfig, /sbin/service, hadoop-zookeeper >= 3.3.1, hadoop >= 0.20.2
+Requires: coreutils, /usr/sbin/useradd, hadoop-zookeeper >= 3.3.1, hadoop >= 0.20.2
 BuildRequires: ant xml-commons xml-commons-apis
 
 %if  0%{?mgaversion}
@@ -79,10 +79,9 @@ Flume is a reliable, scalable, and manageable distributed data collection applic
 Summary: The flume master daemon is the central administration and data path control point for flume nodes.
 Group: Development/Libraries
 BuildArch: noarch
-Requires: %{name} = %{version}-%{release}
-Requires: /usr/sbin/useradd, /sbin/chkconfig, /sbin/service
+Requires: %{name} = %{version}-%{release}, /sbin/service
 Requires(post): /sbin/chkconfig
-Requires(preun): /sbin/service, /sbin/chkconfig, %{name}
+Requires(preun): /sbin/chkconfig
 
 %if  %{?suse_version:1}0
 # Required for init scripts
@@ -108,10 +107,9 @@ Flume is a reliable, scalable, and manageable distributed data collection applic
 Summary: The flume node daemon is a core element of flume's data path and is responsible for generating, processing, and delivering data.
 Group: Development/Libraries
 BuildArch: noarch
-Requires: %{name} = %{version}-%{release}
-Requires: /usr/sbin/useradd, /sbin/chkconfig, /sbin/service
+Requires: %{name} = %{version}-%{release}, /sbin/service
 Requires(post): /sbin/chkconfig
-Requires(preun): /sbin/service, /sbin/chkconfig, %{name}
+Requires(preun): /sbin/chkconfig
 
 %if  %{?suse_version:1}0
 # Required for init scripts
