@@ -30,7 +30,6 @@
 %define log_hadoop %{log_hadoop_dirname}/%{name}
 %define bin_hadoop %{_bindir}
 %define man_hadoop %{_mandir}
-%define doc_hadoop %{_docdir}/%{name}-%{hadoop_version}
 %define src_hadoop /usr/src/%{name}
 %define hadoop_username mapred
 %define hadoop_services namenode secondarynamenode datanode jobtracker tasktracker
@@ -60,6 +59,7 @@
     /usr/lib/rpm/brp-python-bytecompile ; \
     %{nil}
 
+%define doc_hadoop %{_docdir}/%{name}-%{hadoop_version}
 %define alternatives_cmd alternatives
 %global initd_dir %{_sysconfdir}/rc.d/init.d
 %endif
@@ -78,11 +78,13 @@
     /usr/lib/rpm/brp-compress ; \
     %{nil}
 
+%define doc_hadoop %{_docdir}/%{name}
 %define alternatives_cmd update-alternatives
 %global initd_dir %{_sysconfdir}/rc.d
 %endif
 
 %if  0%{?mgaversion}
+%define doc_hadoop %{_docdir}/%{name}-%{hadoop_version}
 %define alternatives_cmd update-alternatives
 %global initd_dir %{_sysconfdir}/rc.d/init.d
 %endif

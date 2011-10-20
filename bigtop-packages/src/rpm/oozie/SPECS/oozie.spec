@@ -19,8 +19,10 @@
 %define data_oozie /var/lib/oozie
 
 %if  %{!?suse_version:1}0
+  %define doc_oozie %{_docdir}/oozie-%{package_version}
   %define initd_dir %{_sysconfdir}/rc.d/init.d
 %else
+  %define doc_oozie %{_docdir}/oozie
   %define initd_dir %{_sysconfdir}/rc.d
 %endif
 
@@ -111,7 +113,7 @@ BuildArch: noarch
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
-    sh %{SOURCE2} --extra-dir=$RPM_SOURCE_DIR --build-dir=. --server-dir=$RPM_BUILD_ROOT --client-dir=$RPM_BUILD_ROOT --docs-dir=$RPM_BUILD_ROOT%{_docdir}/%{name}-%{version} --initd-dir=$RPM_BUILD_ROOT%{initd_dir}
+    sh %{SOURCE2} --extra-dir=$RPM_SOURCE_DIR --build-dir=. --server-dir=$RPM_BUILD_ROOT --client-dir=$RPM_BUILD_ROOT --docs-dir=$RPM_BUILD_ROOT%{doc_oozie} --initd-dir=$RPM_BUILD_ROOT%{initd_dir}
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/usr/bin
 
@@ -163,7 +165,5 @@ fi
 %{lib_oozie}/bin/oozie
 %{lib_oozie}/bin/oozie-examples.sh
 %{lib_oozie}/lib
-%{_docdir}
-%docdir %{_docdir}
+%doc %{doc_oozie}
 %{man_dir}/man1/oozie.1.*
-

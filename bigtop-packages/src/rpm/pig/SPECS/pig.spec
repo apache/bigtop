@@ -19,7 +19,6 @@
 %define log_pig /var/log/%{pig_name}
 %define bin_pig /usr/bin
 %define pig_config_virtual pig_active_configuration
-%define doc_pig %{_docdir}/pig-%{pig_version}
 %define man_dir %{_mandir}
 
 # CentOS 5 does not have any dist macro
@@ -38,6 +37,7 @@
     /usr/lib/rpm/brp-python-bytecompile ; \
     %{nil}
 
+%define doc_pig %{_docdir}/pig-%{pig_version}
 %define alternatives_cmd alternatives
 
 %endif
@@ -50,6 +50,7 @@
 %define suse_check \# Define an empty suse_check for compatibility with older sles
 %endif
 
+%define doc_pig %{_docdir}/pig
 %define alternatives_cmd update-alternatives
 %define __os_install_post \
     %{suse_check} ; \
@@ -60,6 +61,7 @@
 
 
 %if  0%{?mgaversion}
+%define doc_pig %{_docdir}/pig-%{pig_version}
 %define alternatives_cmd update-alternatives
 %endif
 

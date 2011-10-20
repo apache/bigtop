@@ -20,7 +20,6 @@
 %define logs_hbase %{hbase_home}/logs
 %define pids_hbase %{hbase_home}/pids
 %define webapps_hbase %{hbase_home}/hbase-webapps
-%define doc_hbase %{_docdir}/hbase-%{hbase_version}
 %define man_dir %{_mandir}
 %define hbase_username hbase
 %define hbase_services master regionserver thrift
@@ -42,11 +41,12 @@
     /usr/lib/rpm/brp-compress ; \
     %{nil}
 
-
+%define doc_hbase %{_docdir}/hbase
 %global initd_dir %{_sysconfdir}/rc.d
 
 %else
 
+%define doc_hbase %{_docdir}/hbase-%{hbase_version}
 %global initd_dir %{_sysconfdir}/rc.d/init.d
 
 %endif

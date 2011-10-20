@@ -12,16 +12,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-%define doc_sqoop %{_docdir}/sqoop-%{sqoop_version}
 %define lib_sqoop /usr/lib/sqoop
 
 
 %if  %{?suse_version:1}0
 
+%define doc_sqoop %{_docdir}/sqoop
 %global initd_dir %{_sysconfdir}/rc.d
 
 %else
 
+%define doc_sqoop %{_docdir}/sqoop-%{sqoop_version}
 %global initd_dir %{_sysconfdir}/rc.d/init.d
 
 %endif

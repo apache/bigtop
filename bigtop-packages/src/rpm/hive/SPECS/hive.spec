@@ -19,7 +19,6 @@
 %define var_lib_hive /var/lib/hive
 %define bin_hive /usr/bin
 %define hive_config_virtual hive_active_configuration
-%define doc_hive %{_docdir}/hive-%{hive_version}
 %define man_dir %{_mandir}
 %define hive_services server metastore
 # After we run "ant package" we'll find the distribution here
@@ -27,6 +26,7 @@
 
 %if  %{!?suse_version:1}0
 
+%define doc_hive %{_docdir}/hive-%{hive_version}
 %define alternatives_cmd alternatives
 
 %global initd_dir %{_sysconfdir}/rc.d/init.d
@@ -38,6 +38,7 @@
 %define suse_check \# Define an empty suse_check for compatibility with older sles
 %endif
 
+%define doc_hive %{_docdir}/hive
 %define alternatives_cmd update-alternatives
 
 %global initd_dir %{_sysconfdir}/rc.d

@@ -14,7 +14,6 @@
 # limitations under the License.
 %define etc_flume /etc/flume/conf
 %define bin_flume %{_bindir}
-%define doc_flume %{_docdir}/flume-%{flume_version}
 %define man_flume %{_mandir}
 %define lib_flume /usr/lib/flume
 %define log_flume /var/log/flume
@@ -37,11 +36,13 @@
     /usr/lib/rpm/brp-compress ; \
     %{nil}
 
+%define doc_flume %{_docdir}/flume
 %define alternatives_cmd update-alternatives
 %global initd_dir %{_sysconfdir}/rc.d
 
 %else
 
+%define doc_flume %{_docdir}/flume-%{flume_version}
 %define alternatives_cmd alternatives
 %global initd_dir %{_sysconfdir}/rc.d/init.d
 

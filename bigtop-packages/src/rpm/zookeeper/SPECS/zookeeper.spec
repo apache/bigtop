@@ -14,7 +14,6 @@
 # limitations under the License.
 %define etc_zookeeper /etc/zookeeper
 %define bin_zookeeper %{_bindir}
-%define doc_zookeeper %{_docdir}/zookeeper-%{zookeeper_version}
 %define lib_zookeeper /usr/lib/zookeeper
 %define log_zookeeper /var/log/zookeeper
 %define run_zookeeper /var/run/zookeeper
@@ -38,6 +37,7 @@
     %{nil}
 
 
+%define doc_zookeeper %{_docdir}/zookeeper
 %define alternatives_cmd update-alternatives
 %define alternatives_dep update-alternatives
 %define chkconfig_dep    aaa_base
@@ -46,6 +46,7 @@
 
 %else
 
+%define doc_zookeeper %{_docdir}/zookeeper-%{zookeeper_version}
 %define alternatives_cmd alternatives
 %define alternatives_dep chkconfig 
 %define chkconfig_dep    chkconfig
