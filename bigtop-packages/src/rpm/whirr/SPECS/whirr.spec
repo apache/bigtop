@@ -15,6 +15,12 @@
 %define lib_whirr /usr/lib/whirr
 %define man_dir /usr/share/man
 
+%if  %{?suse_version:1}0
+  %define doc_whirr %{_docdir}/whirr
+%else
+  %define doc_whirr %{_docdir}/whirr-%{package_version}
+%endif
+
 # disable repacking jars
 %define __os_install_post %{nil}
 
@@ -52,8 +58,9 @@ bash %{SOURCE1}
 %install
 %__rm -rf $RPM_BUILD_ROOT
 cp $RPM_SOURCE_DIR/whirr.1 .
-sh %{SOURCE2} \
-          --build-dir=. \
+bash %{SOURCE2} \
+          --build-dir=build \
+	  --doc-dir=$RPM_BUILD_ROOT%{doc_whirr} \
           --prefix=$RPM_BUILD_ROOT
 
 %files 
@@ -61,4 +68,4 @@ sh %{SOURCE2} \
 %attr(0755,root,root) %{lib_whirr}
 %attr(0755,root,root) %{_bindir}/%{name}
 %doc %attr(0644,root,root) %{man_dir}/man1/whirr.1.gz
-%ghost %{lib_whirr}/cli/whirr.log
+%doc %{doc_whirr}

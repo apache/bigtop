@@ -41,15 +41,15 @@ build-indep-stamp: patch-stamp
 	mkdir -p debian/tmp
 	# NOTE: FIXME me right away
 	cp -r debian/whirr.1 .
-	tar cf - --exclude=debian/\* . | (cd debian/tmp && tar xf -)
 	touch $@
 
 install: install-indep
 install-indep:	
 	dh_testdir
 	dh_testroot
-	sh -x debian/install_whirr.sh \
-	  --build-dir=debian/tmp \
+	bash -x debian/install_whirr.sh \
+	  --build-dir=build \
+	  --doc-dir=debian/whirr/usr/share/doc/whirr \
 	  --prefix=debian/whirr
 	(dh_lintian) || /bin/true
 

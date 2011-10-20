@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -114,3 +114,8 @@ chmod 755 $BIN_DIR/whirr
 
 install -d -m 0755 $MAN_DIR
 gzip -c whirr.1 > $MAN_DIR/whirr.1.gz
+
+# Move the docs, but leave a symlink in place for compat. reasons
+install -d -m 0755 $DOC_DIR
+mv $LIB_DIR/docs/* $DOC_DIR
+ln -s /${DOC_DIR/#$PREFIX/} $LIB_DIR/docs
