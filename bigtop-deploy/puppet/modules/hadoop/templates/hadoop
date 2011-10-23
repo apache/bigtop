@@ -2,6 +2,9 @@ export HADOOP_HOME=/usr/lib/hadoop
 export HADOOP_NAMENODE_USER=hdfs
 export HADOOP_SECONDARYNAMENODE_USER=hdfs
 export HADOOP_DATANODE_USER=hdfs
+<% if hadoop_security_authentication == "kerberos" %>
+export HADOOP_SECURE_DN_USER=hdfs
+<% end %>
 export HADOOP_JOBTRACKER_USER=mapred
 export HADOOP_TASKTRACKER_USER=mapred
 export HADOOP_IDENT_STRING=hadoop
