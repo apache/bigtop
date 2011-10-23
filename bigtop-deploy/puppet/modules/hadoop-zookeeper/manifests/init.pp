@@ -28,17 +28,17 @@ class hadoop-zookeeper {
     service { "hadoop-zookeeper-server":
       ensure => running,
       require => Package["hadoop-zookeeper-server"],
-      subscribe => File["/etc/zookeeper/zoo.cfg"],
+      subscribe => File["/etc/zookeeper/conf/zoo.cfg"],
       hasrestart => true,
       hasstatus => true,
     } 
 
-    file { "/etc/zookeeper/zoo.cfg":
+    file { "/etc/zookeeper/conf/zoo.cfg":
       content => template("hadoop-zookeeper/zoo.cfg"),
       require => Package["hadoop-zookeeper-server"],
     }
 
-    file { "/var/zookeeper/myid":
+    file { "/var/lib/zookeeper/myid":
       content => inline_template("<%= myid %>"),
       require => Package["hadoop-zookeeper-server"],
     }
