@@ -16,6 +16,9 @@
 
 set -ex
 
+# FIXME: BIGTOP-137
+chmod 777 src/c++/task-controller/configure
+
 # FIXME: the LDFLAGS="-lcrypto" is a workaround for MAPREDUCE-2127
 # FIXME: the FUSE_HOME="..." and LDFLAGS="-lm" is a workaround for HADOOP-3344
 LDFLAGS="-lcrypto -lm" FUSE_HOME=`pwd`/build/c++/${HADOOP_ARCH} ant \
@@ -25,7 +28,7 @@ LDFLAGS="-lcrypto -lm" FUSE_HOME=`pwd`/build/c++/${HADOOP_ARCH} ant \
   -Dcompile.native=true \
   -Dhadoop.conf.dir=/etc/hadoop/conf \
   -Dlibhdfs=1 -Dfusedfs=true -Dcompile.c++=true -Djdiff.build.dir=build/docs/jdiff-cloudera \
-  api-report bin-package compile-contrib package \
+  task-controller api-report bin-package compile-contrib package \
   "$@"
 
 	
