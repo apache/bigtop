@@ -426,6 +426,9 @@ fi
 %attr(0775,root,hadoop) %{log_hadoop}
 
 %exclude %{lib_hadoop}/lib/native
+# FIXME: The following is a workaround for BIGTOP-139
+%exclude %{lib_hadoop}/bin/task-controller
+%exclude %{lib_hadoop}/libexec/jsvc*
 
 %files doc
 %defattr(-,root,root)
@@ -516,5 +519,9 @@ fi
 %defattr(-,root,root)
 %dir %{lib_hadoop}/sbin
 %dir %{lib_hadoop}/sbin/%{hadoop_arch}
-%attr(4754,root,mapred) %{lib_hadoop}/sbin/%{hadoop_arch}/task-controller
+%attr(4750,root,mapred) %{lib_hadoop}/sbin/%{hadoop_arch}/task-controller
 %attr(0755,root,root) %{lib_hadoop}/sbin/%{hadoop_arch}/jsvc
+
+# FIXME: The following is a workaround for BIGTOP-139
+%attr(4750,root,mapred) %{lib_hadoop}/bin/task-controller
+%attr(0755,root,root) %{lib_hadoop}/libexec/jsvc*

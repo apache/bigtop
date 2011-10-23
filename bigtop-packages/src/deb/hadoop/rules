@@ -97,6 +97,10 @@ install-indep: namenode secondarynamenode jobtracker tasktracker datanode
 	rm -Rf debian/hadoop/usr/bin/hadoop-fuse-dfs
 	rm -Rf debian/hadoop/usr/lib/hadoop/contrib/fuse-dfs
 
+	# FIXME: The following is a workaround for BIGTOP-139
+	rm -Rf debian/hadoop/usr/lib/hadoop/libexec/jsvc*
+	rm -Rf debian/hadoop/usr/lib/hadoop/bin/task-controller
+
 install-arch:
 	mkdir -p debian/tmp/etc/default
 	cp debian/hadoop-fuse.default debian/tmp/etc/default/hadoop-fuse

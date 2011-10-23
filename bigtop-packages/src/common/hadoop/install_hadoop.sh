@@ -126,7 +126,7 @@ mkdir -p $LIB_DIR
 (cd $BUILD_DIR && tar -cf - .) | (cd $LIB_DIR && tar xf - )
 
 # Take out things we've installed elsewhere
-for x in docs lib/native c++ src conf usr/bin/fuse_dfs contrib/fuse share bin/task-controller 'lib/lib*so*' 'lib/lib*a' ; do
+for x in docs lib/native c++ src conf usr/bin/fuse_dfs contrib/fuse share sbin/task-controller 'lib/lib*so*' 'lib/lib*a' ; do
   rm -rf $LIB_DIR/$x 
 done
 
@@ -257,8 +257,9 @@ EOF
 
   # Security related binaries
   mkdir -p $LIB_DIR/sbin/${NATIVE_BUILD_STRING}
-  mv -f $LIB_DIR/sbin/task-controller $LIB_DIR/sbin/${NATIVE_BUILD_STRING}
-  mv -f $LIB_DIR/libexec/jsvc* $LIB_DIR/sbin/${NATIVE_BUILD_STRING}/jsvc
+  # FIXME: workaround for BIGTOP-139
+  cp -f $LIB_DIR/bin/task-controller $LIB_DIR/sbin/${NATIVE_BUILD_STRING}
+  cp -f $LIB_DIR/libexec/jsvc* $LIB_DIR/sbin/${NATIVE_BUILD_STRING}/jsvc
 
   # Native compression libs
   mkdir -p $LIB_DIR/lib/native/
