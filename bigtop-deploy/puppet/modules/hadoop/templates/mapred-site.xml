@@ -130,7 +130,7 @@
   <property>
     <!-- set this to ~1.5x the heap size in mapred.child.java.opts -->
     <name>mapred.child.ulimit</name>
-    <value>1572864</value> <!-- 1.5 GB in KB -->
+    <value>unlimited</value>
   </property>
 <% end %>
 

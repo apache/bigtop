@@ -40,6 +40,11 @@ class hadoop {
         content => template('hadoop/hadoop-env.sh'),
     }
 
+    file {
+      "/etc/default/hadoop":
+        content => template('hadoop/hadoop'),
+    }
+
     package { "hadoop":
       ensure => latest,
     }
