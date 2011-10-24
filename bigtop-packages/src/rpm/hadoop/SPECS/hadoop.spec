@@ -499,7 +499,7 @@ fi
 %attr(0755,root,root) %{lib_hadoop}/bin/fuse_dfs
 %attr(0755,root,root) %{lib_hadoop}/bin/fuse_dfs_wrapper.sh
 %attr(0755,root,root) %{bin_hadoop}/hadoop-fuse-dfs
-%attr(0755,root,root) %{man_hadoop}/man1/hadoop-fuse-dfs.1.gz
+%attr(0644,root,root) %{man_hadoop}/man1/hadoop-fuse-dfs.1.*
 %config(noreplace) /etc/default/hadoop-fuse
 
 %files pipes
