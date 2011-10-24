@@ -28,7 +28,7 @@ LDFLAGS="-lcrypto -lm" FUSE_HOME=`pwd`/build/c++/${HADOOP_ARCH} ant \
   -Dcompile.native=true \
   -Dhadoop.conf.dir=/etc/hadoop/conf \
   -Dlibhdfs=1 -Dfusedfs=true -Dcompile.c++=true -Djdiff.build.dir=build/docs/jdiff-cloudera \
-  task-controller api-report bin-package compile-contrib package \
+  create-c++-configure task-controller api-report bin-package compile-contrib package \
   "$@"
 
 	
