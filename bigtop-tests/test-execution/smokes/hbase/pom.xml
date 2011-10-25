@@ -90,7 +90,7 @@
         <configuration>
           <systemPropertyVariables>
             <org.apache.bigtop.itest.hbasesmoke.TestHbasePigSmoke.extra_jars>
-            ${ZOOKEEPER_HOME}/${zookeeper.jar}:${HBASE_HOME}/lib/${hbase.jar}:${HBASE_HOME}/lib/guava-r06.jar
+            ${ZOOKEEPER_HOME}/${zookeeper.jar}:${HBASE_HOME}/${hbase.jar}:${HBASE_HOME}/lib/guava-r06.jar
             </org.apache.bigtop.itest.hbasesmoke.TestHbasePigSmoke.extra_jars>
           </systemPropertyVariables>
         </configuration>
@@ -117,7 +117,7 @@
                   }
                   project.properties['hbase.jar'] =
                     org.apache.bigtop.itest.JarContent.getJarName(
-                        "${HBASE_HOME}/lib", 'hbase-.*.jar');
+                        "${HBASE_HOME}", 'hbase-.*.jar');
                   if ( project.properties['hbase.jar'] == null ) {
                     throw new IOException ("hbase*.jar isn't found");
                   }

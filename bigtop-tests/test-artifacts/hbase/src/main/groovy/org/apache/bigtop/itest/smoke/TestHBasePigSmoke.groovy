@@ -15,8 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package org.apache.bigtop.itest.hbasesmoke
+package org.apache.bigtop.itest.hbase.smoke
 
 import org.apache.bigtop.itest.shell.Shell
 import org.junit.AfterClass
@@ -25,19 +24,19 @@ import org.junit.Test
 import static junit.framework.Assert.assertEquals
 import static org.junit.Assert.assertTrue
 
-class TestHbasePigSmoke {
+class TestHBasePigSmoke {
   private static final int ROW_CNT = 10;
 
-  private static String extra_jars = 
-    System.getProperty("org.apache.bigtop.itest.hbasesmoke.TestHbasePigSmoke.extra_jars",
-                                                        "");
+  private static String extra_jars =
+    System.getProperty("org.apache.bigtop.itest.hbase.smoke.TestHBasePigSmoke.extra_jars",
+                       "");
   private static String register_clause = "";
-  private static String tmp = "TestHbasePigSmoke-${(new Date().getTime())}";
+  private static String tmp = "TestHBasePigSmoke-${(new Date().getTime())}";
   private static String TABLE="smoke-${tmp}";
   private static String FAM1='family1';
   private static String FAM2='family2';
 
-  private static Shell shHbase = new Shell('hbase shell');
+  private static Shell shHBase = new Shell('hbase shell');
   private static Shell shPig = new Shell('pig');
   private static Shell sh = new Shell('/bin/bash -s');
 
@@ -49,16 +48,16 @@ class TestHbasePigSmoke {
 
   @BeforeClass
   static void setUp() {
-    shHbase.exec("create '$TABLE', '$FAM1', '$FAM2'",
+    shHBase.exec("create '$TABLE', '$FAM1', '$FAM2'",
                  "describe '$TABLE'",
                  "quit\n");
     assertEquals("Creating of the ${TABLE} failed",
-                 0, shHbase.ret);
+                 0, shHBase.ret);
   }
 
   @AfterClass
   static void tearDown() {
-    shHbase.exec("disable '$TABLE'",
+    shHBase.exec("disable '$TABLE'",
                  "drop '$TABLE'",
                  "quit\n");
 
@@ -66,7 +65,7 @@ class TestHbasePigSmoke {
   }
 
   @Test(timeout=300000L)
-  public void Pig2Hbase() {
+  public void Pig2HBase() {
     def script = "\n";
 
     (1..ROW_CNT).each { script <<= String.format('%020d %d %s\n', it, it, 'localhost') }
@@ -86,14 +85,14 @@ class TestHbasePigSmoke {
     assertEquals("Failed loading data via PIG",
                  0, shPig.ret);
 
-    shHbase.exec("scan '$TABLE'",
+    shHBase.exec("scan '$TABLE'",
                  "quit\n");
     assertTrue("Scanning the table returned wrong # of rows",
-               (shHbase.out.get(shHbase.out.size() - 3) =~ "^$ROW_CNT row.s. in .* seconds").find());
+               (shHBase.out.get(shHBase.out.size() - 3) =~ "^$ROW_CNT row.s. in .* seconds").find());
   }
 
   @Test(timeout=300000L)
-  public void Hbase2Pig() {
+  public void HBase2Pig() {
     def script = "\n";
 
     (1..10).each {
@@ -102,7 +101,7 @@ class TestHbasePigSmoke {
     }
     script << "quit\n\n";
 
-    shHbase.exec(script);
+    shHBase.exec(script);
 
     shPig.exec("""
       ${register_clause}
