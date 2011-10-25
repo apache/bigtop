@@ -59,6 +59,8 @@ install: build
 	ln -s /usr/lib/hadoop/hadoop-core.jar debian/tmp/usr/lib/hbase/lib/hadoop-core.jar
 	ln -s /var/log/hbase debian/tmp/usr/lib/hbase/logs
 	ln -s /var/run/hbase debian/tmp/usr/lib/hbase/pids
+	# FIXME: workaround for BIGTOP-149
+	ln -s /usr/lib/hadoop/lib/commons-configuration*.jar debian/tmp/usr/lib/hbase/lib/
 
 	# Wage war on "executable-not-elf-or-script" warnings:
 	### ruby scripts should not be executable - they require
