@@ -19,17 +19,22 @@ yumrepo { "Bigtop":
     baseurl => "http://bigtop01.cloudera.org:8080/job/Bigtop-trunk-centos5/lastSuccessfulBuild/artifact/output/",
     descr => "Bigtop packages",
     enabled => 1,
-    gpgcheck => 0
+    gpgcheck => 0,
 }
 
 package { "jdk":
    ensure => "installed",
 }
 
+# $hadoop_head_node="beefy.my.org"
+# $hadoop_security_authentication="kerberos"
+
 import "cluster.pp"
 
-node default inherits hadoop_worker_node {
-}
-
-node 'ip-10-114-221-125.ec2.internal' inherits hadoop_head_node {
+node default {
+  if ($hadoop_head_node == $fqdn) {
+    include hadoop_head_node
+  } else {
+    include hadoop_worker_node
+  }
 }

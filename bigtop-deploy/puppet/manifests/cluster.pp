@@ -13,9 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-node hadoop_cluster_node {
-  $hadoop_head_node="ip-10-114-221-125.ec2.internal"
-
+class hadoop_cluster_node {
   $hadoop_namenode_host="$hadoop_head_node"
   $hadoop_namenode_port="17020"
   $hadoop_namenode_thrift_port="10090"
@@ -35,26 +33,27 @@ node hadoop_cluster_node {
 
   $hadoop_zookeeper_ensemble = ["$hadoop_head_node:2888:3888"]
 
-  # $hadoop_security_authentication="kerberos"
+  
+  if ($hadoop_security_authentication == "kerberos") {
+    $kerberos_domain = "compute-1.internal"
+    $kerberos_realm = "EXAMPLE.COM"
+    $kerberos_kdc_server = "$hadoop_head_node"
 
-  # $kerberos_domain = "example.com"
-  # $kerberos_realm = "EXAMPLE.COM"
-  # $kerberos_kdc_server = "c0405"
-
-  # include kerberos::client
-  # kerberos::client::host_keytab { ["hdfs", "mapred", "hbase", "oozie"]:
-  #  princs_map => { hdfs   => [ "host", "hdfs" ],
-  #                  mapred => [ "mapred" ],
-  #                  hbase  => [ "hbase"  ],
-  #                  oozie  => [ "oozie"  ], },
-  # }
+    include kerberos::client
+    kerberos::client::host_keytab { ["hdfs", "mapred", "hbase", "oozie"]:
+      princs_map => { hdfs   => [ "host", "hdfs" ],
+                      mapred => [ "mapred" ],
+                      hbase  => [ "hbase"  ],
+                      oozie  => [ "oozie"  ], },
+    }
+  }
 }
 
-node hadoop_worker_node inherits hadoop_cluster_node {
+class hadoop_worker_node inherits hadoop_cluster_node {
   hadoop::datanode { "datanode":
         namenode_host => $hadoop_namenode_host,
         namenode_port => $hadoop_namenode_port,
-        # auth => $hadoop_security_authentication,
+        auth => $hadoop_security_authentication,
   }
 
   hadoop::tasktracker { "tasktracker":
@@ -62,16 +61,16 @@ node hadoop_worker_node inherits hadoop_cluster_node {
         namenode_port => $hadoop_namenode_port,
         jobtracker_host => $hadoop_jobtracker_host,
         jobtracker_port => $hadoop_jobtracker_port,
-        # auth => $hadoop_security_authentication,
+        auth => $hadoop_security_authentication,
   }
 
   hadoop-hbase::server { "hbase region server":
         rootdir => $hadoop_hbase_rootdir,
         zookeeper_quorum => $hadoop_hbase_zookeeper_quorum,
-        # kerberos_realm => $kerberos_realm, 
+        kerberos_realm => $kerberos_realm, 
   }
 
-  $hdfs_data_dir = ["/mnt/data"]
+  $hdfs_data_dir = ["/mnt/hdfs"]
   $mapred_data_dir = [ "/mnt/scratch" ]
 
   file {
@@ -87,27 +86,28 @@ node hadoop_worker_node inherits hadoop_cluster_node {
           ensure => directory,
           owner => hdfs,
           group => hdfs,
-          mode => 700,
+          mode => 755,
   }
 }
 
+class hadoop_head_node inherits hadoop_cluster_node {
 
-node hadoop_head_node inherits hadoop_cluster_node {
-
-  # include kerberos::kdc, kerberos::kdc::admin_server
+  if ($hadoop_security_authentication == "kerberos") {
+    include kerberos::kdc, kerberos::kdc::admin_server
+  }
 
   hadoop::namenode { "namenode":
         port => $hadoop_namenode_port,
         jobtracker_host => $hadoop_jobtracker_host,
         jobtracker_port => $hadoop_jobtracker_port,
         # thrift_port => $hadoop_namenode_thrift_port,
-        # auth => $hadoop_security_authentication,
+        auth => $hadoop_security_authentication,
   }
 
   hadoop::secondarynamenode { "secondary namenode":
         namenode_host => $hadoop_namenode_host,
         namenode_port => $hadoop_namenode_port,
-        # auth => $hadoop_security_authentication,
+        auth => $hadoop_security_authentication,
   }
 
   hadoop::jobtracker { "jobtracker":
@@ -116,17 +116,17 @@ node hadoop_head_node inherits hadoop_cluster_node {
         host => $hadoop_jobtracker_host,
         port => $hadoop_jobtracker_port,
         # thrift_port => $hadoop_jobtracker_thrift_port,
-        # auth => $hadoop_security_authentication,
+        auth => $hadoop_security_authentication,
   }
 
   hadoop-hbase::master { "hbase master":
         rootdir => $hadoop_hbase_rootdir,
         zookeeper_quorum => $hadoop_hbase_zookeeper_quorum,
-        # kerberos_realm => $kerberos_realm, 
+        kerberos_realm => $kerberos_realm, 
   }
 
   hadoop-oozie::server { "oozie server":
-        # kerberos_realm => $kerberos_realm, 
+        kerberos_realm => $kerberos_realm, 
   }
 
   hadoop-zookeeper::server { "zookeeper":
@@ -153,7 +153,7 @@ node hadoop_head_node inherits hadoop_cluster_node {
   }
 }
 
-node hadoop_gateway_node inherits hadoop_head_node {
+class hadoop_gateway_node inherits hadoop_head_node {
   # hadoop::client { "gateway":
   #   namenode_host => $hadoop_namenode_host,
   #   namenode_port => $hadoop_namenode_port,
