@@ -19,6 +19,25 @@ set -ex
 # FIXME: BIGTOP-137
 chmod 777 src/c++/task-controller/configure
 
+
+# This is a poor man version comparison of autoconf.
+# Current autotools files target autotools 2.61 or sup.
+# There will be some build issues if we try to regenerate them with a lesser version of autotools
+# So we will only regenerate the autotools files if they are installed and their version is greater than
+# 2.60
+DO_AUTORECONF=""
+if [ -n `which autoconf` ]; then
+
+	AUTOCONF_VERSION=`autoconf --version | head -n 1 | sed -e 's/.* \([.0-9]\+\)$/\1/'`
+	echo $AUTOCONF_VERSION
+
+	if [[ $AUTOCONF_VERSION > 2.60 ]]; then
+		DO_AUTORECONF="create-c++-configure"
+	fi
+fi
+
+
+
 # FIXME: the LDFLAGS="-lcrypto" is a workaround for MAPREDUCE-2127
 # FIXME: the FUSE_HOME="..." and LDFLAGS="-lm" is a workaround for HADOOP-3344
 LDFLAGS="-lcrypto -lm" FUSE_HOME=`pwd`/build/c++/${HADOOP_ARCH} ant \
@@ -28,7 +47,7 @@ LDFLAGS="-lcrypto -lm" FUSE_HOME=`pwd`/build/c++/${HADOOP_ARCH} ant \
   -Dcompile.native=true \
   -Dhadoop.conf.dir=/etc/hadoop/conf \
   -Dlibhdfs=1 -Dfusedfs=true -Dcompile.c++=true -Djdiff.build.dir=build/docs/jdiff-cloudera \
-  create-c++-configure task-controller api-report bin-package compile-contrib package \
+  $DO_AUTORECONF task-controller api-report bin-package compile-contrib package \
   "$@"
 
 	
