@@ -49,11 +49,10 @@ class hadoop {
       ensure => latest,
     }
 
-    package { ["hadoop-native"]:  # KRB: "hadoop-sbin"
+    package { "hadoop-native":
       ensure => latest,
       require => [Package["hadoop"], Yumrepo["Bigtop"]],
     }
-
   }
 
 
@@ -78,7 +77,12 @@ class hadoop {
       require => [ Package["hadoop-datanode"] ],
     }
 
-
+    if ($hadoop_security_authentication == "kerberos") {
+      package { "hadoop-sbin":
+        ensure => latest,
+        require => [Package["hadoop"], Yumrepo["Bigtop"]],
+      }
+    }
   }
 
   define create_hdfs_dirs() {
