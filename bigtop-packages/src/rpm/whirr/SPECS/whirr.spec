@@ -37,6 +37,7 @@ Source0: %{name}-%{whirr_base_version}-incubating-src.tar.gz
 Source1: do-component-build
 Source2: install_%{name}.sh
 Source3: whirr.1
+Requires: bigtop-utils
 
 %description 
 Whirr provides
@@ -67,5 +68,5 @@ bash %{SOURCE2} \
 %defattr(-,root,root)
 %attr(0755,root,root) %{lib_whirr}
 %attr(0755,root,root) %{_bindir}/%{name}
-%doc %attr(0644,root,root) %{man_dir}/man1/whirr.1.gz
+%doc %attr(0644,root,root) %{man_dir}/man1/whirr.1.*
 %doc %{doc_whirr}

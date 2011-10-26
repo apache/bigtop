@@ -22,6 +22,7 @@ Homepage: http://incubator.apache.org/whirr
 
 Package:  whirr
 Architecture: all
+Depends: bigtop-utils
 Description: Scripts and libraries for running software services on cloud infrastructure
  Whirr provides
  .
