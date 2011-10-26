@@ -119,8 +119,7 @@ do
   wrapper=$BIN_DIR/$file
   cat >>$wrapper <<EOF
 #!/bin/sh
-
-export HADOOP_HOME=\${HADOOP_HOME:-/usr/lib/hadoop}
+. /etc/default/hadoop
 export HIVE_HOME=$INSTALLED_LIB_DIR
 exec $INSTALLED_LIB_DIR/bin/$file "\$@"
 EOF

@@ -1,3 +1,4 @@
+export HADOOP_HOME_WARN_SUPPRESS=true
 export HADOOP_HOME=/usr/lib/hadoop
 export HADOOP_NAMENODE_USER=hdfs
 export HADOOP_SECONDARYNAMENODE_USER=hdfs

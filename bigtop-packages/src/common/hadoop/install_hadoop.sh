@@ -145,7 +145,7 @@ elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
   source /usr/lib/bigtop-utils/bigtop-detect-javahome
 fi
 
-export HADOOP_HOME=$INSTALLED_LIB_DIR
+. /etc/default/hadoop
 exec $INSTALLED_LIB_DIR/bin/$bin_wrapper "\$@"
 EOF
   chmod 755 $wrapper
@@ -240,7 +240,7 @@ elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
   source /usr/lib/bigtop-utils/bigtop-detect-javahome
 fi
 
-export HADOOP_HOME=$INSTALLED_LIB_DIR
+. /etc/default/hadoop
 
 if [ -f /etc/default/hadoop-fuse ] 
   then . /etc/default/hadoop-fuse

@@ -135,6 +135,7 @@ for i in sqoop sqoop-codegen sqoop-export sqoop-import-all-tables sqoop-version 
 	mkdir -p `dirname $wrapper`
 	cat > $wrapper <<EOF
 #!/bin/sh
+. /etc/default/hadoop
 export SQOOP_HOME=$LIB_DIR
 exec $BIN_DIR/$i "\$@"
 EOF
