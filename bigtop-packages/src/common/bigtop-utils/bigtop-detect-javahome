@@ -31,7 +31,11 @@ if [ -z "$JAVA_HOME" ]; then
     /usr/java/jre1.6* \
     /Library/Java/Home \
     /usr/java/default \
-    /usr/lib/jvm/default-java ; do
+    /usr/lib/jvm/default-java \
+    /usr/lib/jvm/java-openjdk \
+    /usr/lib/jvm/jre-openjdk \
+    /usr/lib/jvm/java-1.6.0-openjdk-1.6.* \
+    /usr/lib/jvm/jre-1.6.0-openjdk* ; do
     if [ -e $candidate/bin/java ]; then
       export JAVA_HOME=$candidate
       break
