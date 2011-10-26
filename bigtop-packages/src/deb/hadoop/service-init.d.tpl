@@ -48,6 +48,13 @@ install -d -m 0775 -o root -g hadoop /var/run/hadoop
 
 . /etc/default/hadoop
 
+# Autodetect JAVA_HOME if not defined
+if [ -e /usr/libexec/bigtop-detect-javahome ]; then
+  source /usr/libexec/bigtop-detect-javahome
+elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
+  source /usr/lib/bigtop-utils/bigtop-detect-javahome
+fi
+
 . $HADOOP_HOME/bin/hadoop-config.sh
 
 # FIXME: this needs to be removed once hadoop-config.sh stop clobbering HADOOP_HOME
