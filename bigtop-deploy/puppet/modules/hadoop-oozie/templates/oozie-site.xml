@@ -22,19 +22,6 @@
 -->
 
     <property>
-        <name>oozie.service.ActionService.executor.ext.classes</name>
-        <value>
-            org.apache.oozie.action.hadoop.HiveActionExecutor,
-            org.apache.oozie.action.hadoop.SqoopActionExecutor
-        </value>
-    </property>
-
-    <property>
-        <name>oozie.service.SchemaService.wf.ext.schemas</name>
-        <value>hive-action-0.2.xsd,sqoop-action-0.2.xsd</value>
-    </property>
-
-    <property>
         <name>oozie.system.id</name>
         <value>oozie-${user.name}</value>
         <description>
