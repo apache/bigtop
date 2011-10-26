@@ -70,7 +70,7 @@ Source5: hadoop-hive-server.default
 Source6: hadoop-hive-metastore.default
 Source7: hive.1
 Source8: hive-site.xml
-Requires: hadoop >= 0.20.1
+Requires: hadoop >= 0.20.2, bigtop-utils
 Obsoletes: %{name}-webinterface
 
 %description 
