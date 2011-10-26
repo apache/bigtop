@@ -121,6 +121,13 @@ mkdir -p `dirname $wrapper`
 cat > $wrapper <<EOF
 #!/bin/sh
 
+# Autodetect JAVA_HOME if not defined
+if [ -e /usr/libexec/bigtop-detect-javahome ]; then
+  source /usr/libexec/bigtop-detect-javahome
+elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
+  source /usr/lib/bigtop-utils/bigtop-detect-javahome
+fi
+
 exec /usr/lib/flume/bin/flume "\$@"
 EOF
 chmod 755 $wrapper
