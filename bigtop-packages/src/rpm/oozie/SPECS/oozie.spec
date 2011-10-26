@@ -90,6 +90,8 @@ URL: http://www.cloudera.com
 Group: Development/Libraries
 License: APL2
 BuildArch: noarch
+Requires: bigtop-utils
+
 
 %description client
  Oozie client is a command line client utility that allows remote

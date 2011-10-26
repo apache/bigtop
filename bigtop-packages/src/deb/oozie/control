@@ -23,6 +23,7 @@ Homepage: http://archive.cloudera.com/cdh/3/oozie
 
 Package: oozie-client
 Architecture: all
+Depends: bigtop-utils
 Description: Command line utility that allows
  remote access and operation of oozie. Using this utility, the
  user can deploy workflows and perform other administrative and
