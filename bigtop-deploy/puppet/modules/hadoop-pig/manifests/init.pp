@@ -17,7 +17,7 @@ class hadoop-pig {
   define client {
     package { "hadoop-pig":
       ensure => latest,
-      require => Package["hadoop-0.20"],
+      require => Package["hadoop"],
     } 
  
     file { "/etc/pig/conf/pig.properties":
