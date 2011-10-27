@@ -150,7 +150,9 @@ hadoop_stop_pidfile() {
 }
 
 start() {
-
+    TARGET_USER_NAME="HADOOP_`echo @HADOOP_DAEMON@ | tr a-z A-Z`_USER"
+    TARGET_USER=$(eval "echo \$$TARGET_USER_NAME")
+    
     if [ "@HADOOP_DAEMON@" = "datanode" ]; then
       # The following needs to be removed once HDFS-1943 gets finally put to rest.
       # The logic of this ugly hack is this: IFF we do NOT have jsvc installed it is
@@ -161,18 +163,14 @@ start() {
       #    1. HADOOP_DATANODE_USER being set to root
       #    2. jsvc is installed but Hadoop is configures to run in an unsecure mode
       # Both will currently fail
-      if [ -f $HADOOP_HOME/libexec/jsvc.amd64 -o -f $HADOOP_HOME/libexec/jsvc.i386 ] ; then
-         DN_USER=root
-      else
-         DN_USER=$HADOOP_DATANODE_USER
+      if [ -f $HADOOP_HOME/libexec/jsvc.amd64 -o -f $HADOOP_HOME/libexec/jsvc.i386 ] && [ -n "$HADOOP_SECURE_DN_USER" ]; then
+         TARGET_USER=root
       fi
-      su -s /bin/bash $DN_USER -c "$HADOOP_HOME/bin/hadoop-daemon.sh start @HADOOP_DAEMON@ $DAEMON_FLAGS"
-      # Some processes are slow to start
-      sleep $SLEEP_TIME
-    else
-      $HADOOP_HOME/bin/hadoop-daemon.sh start @HADOOP_DAEMON@ $DAEMON_FLAGS
     fi
+    su -s /bin/bash $TARGET_USER -c "$HADOOP_HOME/bin/hadoop-daemon.sh start @HADOOP_DAEMON@ $DAEMON_FLAGS"
 
+    # Some processes are slow to start
+    sleep $SLEEP_TIME
 }
 stop() {
     $HADOOP_HOME/bin/hadoop-daemon.sh stop @HADOOP_DAEMON@
