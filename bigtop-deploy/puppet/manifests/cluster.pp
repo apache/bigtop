@@ -26,7 +26,7 @@ class hadoop_cluster_node {
   # $hadoop_mapred_jobtracker_plugins="org.apache.hadoop.thriftfs.ThriftJobTrackerPlugin"
   # $hadoop_mapred_tasktracker_plugins="org.apache.hadoop.mapred.TaskTrackerCmonInst"
 
-  $hadoop_core_proxyusers = { oozie => { groups => '*', hosts => '*' } }
+  $hadoop_core_proxyusers = { oozie => { groups => 'root,hadoop,jenkins,oozie,users', hosts => "${hadoop_head_node},localhost,127.0.0.1" } }
 
   $hadoop_hbase_rootdir = "hdfs://$hadoop_namenode_host:$hadoop_namenode_port/hbase"
   $hadoop_hbase_zookeeper_quorum = "$hadoop_head_node"
