@@ -139,9 +139,9 @@ for i in sqoop sqoop-codegen sqoop-export sqoop-import-all-tables sqoop-version 
 
 # Autodetect JAVA_HOME if not defined
 if [ -e /usr/libexec/bigtop-detect-javahome ]; then
-  source /usr/libexec/bigtop-detect-javahome
+  . /usr/libexec/bigtop-detect-javahome
 elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
-  source /usr/lib/bigtop-utils/bigtop-detect-javahome
+  . /usr/lib/bigtop-utils/bigtop-detect-javahome
 fi
 
 export SQOOP_HOME=$LIB_DIR

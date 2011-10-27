@@ -31,20 +31,20 @@
 # Short-Description: Hadoop @HADOOP_DAEMON@
 ### END INIT INFO
 
-source /lib/lsb/init-functions
-source /etc/default/hadoop
+. /lib/lsb/init-functions
+. /etc/default/hadoop
 
 # Autodetect JAVA_HOME if not defined
 if [ -e /usr/libexec/bigtop-detect-javahome ]; then
-  source /usr/libexec/bigtop-detect-javahome
+  . /usr/libexec/bigtop-detect-javahome
 elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
-  source /usr/lib/bigtop-utils/bigtop-detect-javahome
+  . /usr/lib/bigtop-utils/bigtop-detect-javahome
 fi
 
-source @HADOOP_COMMON_ROOT@/bin/hadoop-config.sh 
+. @HADOOP_COMMON_ROOT@/bin/hadoop-config.sh 
 
 # FIXME: this needs to be removed once hadoop-config.sh stop clobbering HADOOP_HOME
-source /etc/default/hadoop
+. /etc/default/hadoop
 
 RETVAL_SUCCESS=0
 

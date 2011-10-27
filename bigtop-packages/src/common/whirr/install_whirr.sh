@@ -110,9 +110,9 @@ cat > $BIN_DIR/whirr <<EOF
 
 # Autodetect JAVA_HOME if not defined
 if [ -e /usr/libexec/bigtop-detect-javahome ]; then
-  source /usr/libexec/bigtop-detect-javahome
+  . /usr/libexec/bigtop-detect-javahome
 elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
-  source /usr/lib/bigtop-utils/bigtop-detect-javahome
+  . /usr/lib/bigtop-utils/bigtop-detect-javahome
 fi
 
 exec $INSTALLED_LIB_DIR/bin/whirr "\$@"

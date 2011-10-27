@@ -121,14 +121,14 @@ mkdir -p `dirname $wrapper`
 cat > $wrapper <<EOF
 #!/bin/sh
 
-source /etc/default/hadoop
-source /etc/default/hbase
+. /etc/default/hadoop
+. /etc/default/hbase
 
 # Autodetect JAVA_HOME if not defined
 if [ -e /usr/libexec/bigtop-detect-javahome ]; then
-  source /usr/libexec/bigtop-detect-javahome
+  . /usr/libexec/bigtop-detect-javahome
 elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
-  source /usr/lib/bigtop-utils/bigtop-detect-javahome
+  . /usr/lib/bigtop-utils/bigtop-detect-javahome
 fi
 
 export ZOOKEEPER_CONF=\${ZOOKEEPER_CONF:-/etc/zookeeper}

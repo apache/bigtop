@@ -140,9 +140,9 @@ for bin_wrapper in hadoop ; do
 
 # Autodetect JAVA_HOME if not defined
 if [ -e /usr/libexec/bigtop-detect-javahome ]; then
-  source /usr/libexec/bigtop-detect-javahome
+  . /usr/libexec/bigtop-detect-javahome
 elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
-  source /usr/lib/bigtop-utils/bigtop-detect-javahome
+  . /usr/lib/bigtop-utils/bigtop-detect-javahome
 fi
 
 . /etc/default/hadoop
@@ -235,9 +235,9 @@ if [ ! -z "$NATIVE_BUILD_STRING" ]; then
 
 # Autodetect JAVA_HOME if not defined
 if [ -e /usr/libexec/bigtop-detect-javahome ]; then
-  source /usr/libexec/bigtop-detect-javahome
+  . /usr/libexec/bigtop-detect-javahome
 elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
-  source /usr/lib/bigtop-utils/bigtop-detect-javahome
+  . /usr/lib/bigtop-utils/bigtop-detect-javahome
 fi
 
 . /etc/default/hadoop

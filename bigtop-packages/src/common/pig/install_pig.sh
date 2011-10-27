@@ -120,13 +120,13 @@ ln -s /etc/pig/conf $LIB_DIR/conf
 install -d -m 0755 $BIN_DIR
 cat > $BIN_DIR/pig <<EOF
 #!/bin/sh
-source /etc/default/hadoop
+. /etc/default/hadoop
 
 # Autodetect JAVA_HOME if not defined
 if [ -e /usr/libexec/bigtop-detect-javahome ]; then
-  source /usr/libexec/bigtop-detect-javahome
+  . /usr/libexec/bigtop-detect-javahome
 elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
-  source /usr/lib/bigtop-utils/bigtop-detect-javahome
+  . /usr/lib/bigtop-utils/bigtop-detect-javahome
 fi
 
 exec $INSTALLED_LIB_DIR/bin/pig "\$@"
