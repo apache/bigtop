@@ -130,7 +130,7 @@ Requires: sh-utils, insserv
 # CentOS 5 does not have any dist macro
 # So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
 %if %{!?suse_version:1}0 && %{!?mgaversion:1}0
-BuildRequires: fuse-libs, libtool, redhat-rpm-config, lzo-devel
+BuildRequires: fuse-libs, libtool, redhat-rpm-config, lzo-devel, openssl-devel
 # Required for init scripts
 Requires: sh-utils, redhat-lsb
 %endif
