@@ -151,6 +151,17 @@ class hadoop_head_node inherits hadoop_cluster_node {
     group => mapred,
     mode => 755,
   }
+
+  hadoop::create_hdfs_dirs { [ "/mapred", "/tmp", "/system", "/user", "/hbase", "/benchmarks", "/user/jenkins", "/user/hive" ]:
+    hdfs_dirs_meta => { "/tmp"          => { perm => "777", user => "hdfs"   },
+                        "/mapred"       => { perm => "755", user => "mapred" },
+                        "/system"       => { perm => "755", user => "hdfs"   },
+                        "/user"         => { perm => "755", user => "hdfs"   },
+                        "/hbase"        => { perm => "755", user => "hbase"  },
+                        "/benchmarks"   => { perm => "777", user => "hdfs"   },
+                        "/user/jenkins" => { perm => "777", user => "jenkins"},
+                        "/user/hive"    => { perm => "777", user => "hive"   } },
+  }
 }
 
 class hadoop_gateway_node inherits hadoop_head_node {

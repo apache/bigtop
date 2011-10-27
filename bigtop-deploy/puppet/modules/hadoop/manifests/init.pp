@@ -85,25 +85,15 @@ class hadoop {
     }
   }
 
-  define create_hdfs_dirs() {
-    $hdfs_dirs_meta = { "/tmp"        => { perm => "777", user => "hdfs"   },
-                        "/mapred"     => { perm => "755", user => "mapred" },
-                        "/system"     => { perm => "755", user => "hdfs"   },
-                        "/user"       => { perm => "755", user => "hdfs"   }, 
-                        "/hbase"      => { perm => "755", user => "hbase"  }, 
-                        "/benchmarks" => { perm => "777", user => "hdfs"   }, 
-                        "/user/hudson" => { perm => "777", user => "hudson"},
-                        "/user/hive"  => { perm => "777", user => "hive"   } }
-          
-
+  define create_hdfs_dirs($hdfs_dirs_meta) {
     $user = $hdfs_dirs_meta[$title][user]
     $perm = $hdfs_dirs_meta[$title][perm]
 
     exec { "HDFS init $title":
       user => "hdfs",
-      command => "/bin/bash -c 'hadoop fs -mkdir $title && hadoop fs -chown $user $name && hadoop fs -chmod $perm $name'",
+      command => "/bin/bash -c 'hadoop fs -mkdir $title && hadoop fs -chmod $perm $title && hadoop fs -chown $user $title'",
       unless => "/bin/bash -c 'hadoop fs -ls $name >/dev/null 2>&1'",
-      require => Service["hadoop-namenode"],
+      require => [ Service["hadoop-namenode"], Exec["namenode format"] ],
     }
   }
 
@@ -135,9 +125,6 @@ class hadoop {
       command => "/bin/bash -c 'yes Y | hadoop namenode -format'",
       creates => inline_template("<%= hadoop_storage_locations.split(';')[0] %>/namenode/image"),
       require => [Package["hadoop-namenode"]],
-    }
-
-    create_hdfs_dirs { [ "/mapred", "/tmp", "/system", "/user", "/hbase", "/benchmarks", "/user/hudson", "/user/hive" ]:
     }
   }
 
