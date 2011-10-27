@@ -229,8 +229,6 @@ rm -f $RPM_BUILD_ROOT/usr/lib/hbase/lib/hadoop* \
       $RPM_BUILD_ROOT/usr/lib/hbase/lib/zookeeper*
 ln -s /usr/lib/hadoop/hadoop-core.jar $RPM_BUILD_ROOT/usr/lib/hbase/lib/hadoop-core.jar
 ln -s /usr/lib/zookeeper/zookeeper.jar $RPM_BUILD_ROOT/usr/lib/hbase/lib/zookeeper.jar
-# FIXME: workaround for BIGTOP-149
-ln -s /usr/lib/hadoop/lib/commons-configuration*.jar $RPM_BUILD_ROOT/usr/lib/hbase/lib/
 
 %pre
 getent group hbase 2>/dev/null >/dev/null || /usr/sbin/groupadd -r hbase
