@@ -74,7 +74,6 @@ License: Apache License v2.0
 URL: http://hadoop.apache.org/pig/
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
-BuildRequires: /usr/bin/git
 BuildArch: noarch
 Source0: pig-%{pig_base_version}.tar.gz
 Source1: do-component-build
