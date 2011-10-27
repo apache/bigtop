@@ -38,7 +38,7 @@ Source0: %{name}-%{oozie_base_version}.tar.gz
 Source1: do-component-build
 Source2: create-package-layout
 Requires(pre): /usr/sbin/groupadd, /usr/sbin/useradd
-Requires(post): /sbin/chkconfig
+Requires(post): /sbin/chkconfig, hadoop
 Requires(preun): /sbin/chkconfig, /sbin/service
 Requires: oozie-client = %{version}
 BuildArch: noarch
@@ -127,6 +127,7 @@ getent group oozie >/dev/null || /usr/sbin/groupadd -r oozie >/dev/null
 getent passwd oozie >/dev/null || /usr/sbin/useradd --comment "Oozie User" --shell /bin/false -M -r -g oozie --home /var/run/oozie oozie >/dev/null
 
 %post 
+%{lib_oozie}/bin/oozie-setup.sh -hadoop 0.20.200 /usr/lib/hadoop
 /sbin/chkconfig --add oozie 
 
 %preun
