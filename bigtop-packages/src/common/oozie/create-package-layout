@@ -209,6 +209,8 @@ if [ "${OOZIE_INITD}" != "" ]; then
   failIfNotOK
   cp -R ${EXTRADIR}/oozie.init ${OOZIE_INITD}/oozie
   failIfNotOK
+  chmod 755 ${OOZIE_INITD}/oozie
+ failIfNotOK
 fi
 cp -R ${OOZIE_BUILD_DIR}/oozie-sharelib*.tar.gz ${OOZIE_SERVER_DIR}/oozie-sharelib.tar.gz
 failIfNotOK
