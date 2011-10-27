@@ -445,7 +445,6 @@ fi
 %files %1 \
 %defattr(-,root,root) \
 %{initd_dir}/%{name}-%1 \
-%{lib_hadoop}/bin/hadoop-daemon.sh \
 %post %1 \
 chkconfig --add %{name}-%1 \
 \
