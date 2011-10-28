@@ -83,6 +83,8 @@ namenode secondarynamenode jobtracker tasktracker datanode: debian/service-init.
 	sed -e "s|@HADOOP_DAEMON@|$@|" \
             -e "s|@HADOOP_MAJOR_VERSION@|$hadoop_version|" \
 	    -e "s|@DAEMON_USER@|$($@_user)|" $< > debian/hadoop-$@.init
+	# FIXME: workaround for BIGTOP-105
+	sed -e "s|@HADOOP_DAEMON@|$@|" < debian/hadoop.daemon.postinst.tpl > debian/hadoop-$@.postinst
 
 install-indep: namenode secondarynamenode jobtracker tasktracker datanode
 	mkdir -p debian/tmp/etc/default
