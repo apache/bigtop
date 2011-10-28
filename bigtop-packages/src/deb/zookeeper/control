@@ -15,10 +15,10 @@
 Source: hadoop-zookeeper
 Section: misc
 Priority: extra
-Maintainer: Alex Newman <newalex@cloudera.com>
+Maintainer: Bigtop <bigtop-dev@incubator.apache.org>
 Build-Depends: debhelper (>= 6), ant, ant-optional, git-core, autoconf, automake, subversion
 Standards-Version: 3.8.0
-Homepage: http://hadoop.apache.org/zookeeper/
+Homepage: http://zookeeper.apache.org/
 
 Package: hadoop-zookeeper
 Architecture: all

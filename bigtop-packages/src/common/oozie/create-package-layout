@@ -26,8 +26,8 @@ usage() {
   echo "
 usage: $0 <options>
   Required not-so-options:
-     --extra-dir=DIR    path to cloudera distribution files
-     --build-dir=DIR    path to cloudera distribution files
+     --extra-dir=DIR    path to Bigtop distribution files
+     --build-dir=DIR    path to Bigtop distribution files
      --server-dir=DIR   path to server package root
      --client-dir=DIR   path to the client package root
      --initd-dir=DIR    path to the server init.d directory

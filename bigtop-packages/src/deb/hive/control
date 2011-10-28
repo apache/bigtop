@@ -16,7 +16,7 @@
 Source: hadoop-hive
 Section: misc
 Priority: extra
-Maintainer: Todd Lipcon <todd@cloudera.com>
+Maintainer: Bigtop <bigtop-dev@incubator.apache.org>
 Build-Depends: debhelper (>= 6), ant, python-support, git-core
 Standards-Version: 3.8.0
 Homepage: http://hadoop.apache.org/hive/

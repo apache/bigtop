@@ -54,7 +54,7 @@ Name: flume
 Version: %{flume_version}
 Release: %{flume_release}
 Summary:  Flume is a reliable, scalable, and manageable distributed log collection application for collecting data such as logs and delivering it to data stores such as Hadoop's HDFS.
-URL: https://github.com/cloudera/flume
+URL: http://incubator.apache.org/projects/flume.html
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 BuildArch: noarch

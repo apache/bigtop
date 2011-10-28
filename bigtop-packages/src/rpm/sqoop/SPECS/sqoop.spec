@@ -32,7 +32,7 @@ Name: sqoop
 Version: %{sqoop_version}
 Release: %{sqoop_release}
 Summary:   Sqoop allows easy imports and exports of data sets between databases and the Hadoop Distributed File System (HDFS).
-URL: http://www.cloudera.com
+URL: http://incubator.apache.org/sqoop/
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 License: APL2
@@ -50,7 +50,7 @@ Sqoop allows easy imports and exports of data sets between databases and the Had
 
 %package metastore
 Summary: Shared metadata repository for Sqoop.
-URL: http://www.cloudera.com
+URL: http://incubator.apache.org/sqoop/
 Group: System/Daemons
 Provides: sqoop-metastore
 Requires: sqoop = %{version}-%{release} 

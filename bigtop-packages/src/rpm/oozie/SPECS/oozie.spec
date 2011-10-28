@@ -30,7 +30,7 @@ Name: oozie
 Version: %{oozie_version}
 Release: %{oozie_release}
 Summary:  Oozie is a system that runs workflows of Hadoop jobs.
-URL: http://www.cloudera.com
+URL: http://incubator.apache.org/oozie/
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 License: APL2
@@ -86,7 +86,7 @@ BuildArch: noarch
 Version: %{version}
 Release: %{release} 
 Summary:  Client for Oozie Workflow Engine
-URL: http://www.cloudera.com
+URL: http://incubator.apache.org/oozie/
 Group: Development/Libraries
 License: APL2
 BuildArch: noarch
