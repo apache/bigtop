@@ -56,7 +56,7 @@ class hadoop {
   }
 
 
-  define datanode ($namenode_host, $namenode_port, $port = "50075", $auth = "simple") {
+  define datanode ($namenode_host, $namenode_port, $port = "50075", $auth = "simple", $dirs = ["/tmp/data"]) {
 
     $hadoop_namenode_host = $namenode_host
     $hadoop_namenode_port = $namenode_port
@@ -70,18 +70,24 @@ class hadoop {
       require => Package["jdk"],
     }
 
-    service { "hadoop-datanode":
-      ensure => running,
-      hasstatus => true,
-      subscribe => [Package["hadoop-datanode"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
-      require => [ Package["hadoop-datanode"] ],
-    }
-
     if ($hadoop_security_authentication == "kerberos") {
       package { "hadoop-sbin":
         ensure => latest,
         require => [Package["hadoop"], Yumrepo["Bigtop"]],
       }
+    }
+
+    service { "hadoop-datanode":
+      ensure => running,
+      hasstatus => true,
+      subscribe => [Package["hadoop-datanode"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
+      require => [ Package["hadoop-datanode"] ],
+    } -> file { $dirs:
+      ensure => directory,
+      owner => hdfs,
+      group => hdfs,
+      mode => 755,
+      require => [Package["hadoop"]],
     }
   }
 
@@ -97,7 +103,7 @@ class hadoop {
     }
   }
 
-  define namenode ($jobtracker_host, $jobtracker_port, $host = $fqdn , $port = "8020", $thrift_port= "10090", $auth = "simple") {
+  define namenode ($jobtracker_host, $jobtracker_port, $host = $fqdn , $port = "8020", $thrift_port= "10090", $auth = "simple", $dirs = ["/tmp/nn"]) {
 
     $hadoop_namenode_host = $host
     $hadoop_namenode_port = $port
@@ -118,6 +124,11 @@ class hadoop {
       hasstatus => true,
       subscribe => [Package["hadoop-namenode"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
       require => [Package["hadoop-namenode"], Exec["namenode format"]],
+    } -> file { $dirs:
+      ensure => directory,
+      owner => hdfs,
+      group => hdfs,
+      mode => 700,
     }
 
     exec { "namenode format":
@@ -129,7 +140,7 @@ class hadoop {
   }
 
 
-  define jobtracker ($namenode_host, $namenode_port, $host = $fqdn, $port = "8021", $thrift_port = "9290", $auth = "simple") {
+  define jobtracker ($namenode_host, $namenode_port, $host = $fqdn, $port = "8021", $thrift_port = "9290", $auth = "simple", $dirs = ["/tmp/mr"]) {
 
     $hadoop_namenode_host = $namenode_host
       $hadoop_namenode_port = $namenode_port
@@ -150,11 +161,17 @@ class hadoop {
       hasstatus => true,
       subscribe => [Package["hadoop-jobtracker"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/mapred-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
       require => [ Package["hadoop-jobtracker"] ]
+    } -> file { $dirs:
+      ensure => directory,
+      owner => mapred,
+      group => mapred,
+      mode => 755,
+      require => [Package["hadoop"]],
     }
   }
 
 
-  define tasktracker ($namenode_host, $namenode_port, $jobtracker_host, $jobtracker_port, $auth = "simple"){
+  define tasktracker ($namenode_host, $namenode_port, $jobtracker_host, $jobtracker_port, $auth = "simple", $dirs = ["/tmp/mr"]){
 
     $hadoop_namenode_host = $namenode_host
       $hadoop_namenode_port = $namenode_port
@@ -178,6 +195,12 @@ class hadoop {
       hasstatus => true,
       subscribe => [Package["hadoop-tasktracker"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/mapred-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
       require => [ Package["hadoop-tasktracker"], File["/etc/hadoop/conf/taskcontroller.cfg"] ],
+    } -> file { $dirs:
+      ensure => directory,
+      owner => mapred,
+      group => mapred,
+      mode => 755,
+      require => [Package["hadoop"]],
     }
   }
 

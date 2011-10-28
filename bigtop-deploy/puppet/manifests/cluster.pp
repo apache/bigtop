@@ -33,7 +33,10 @@ class hadoop_cluster_node {
 
   $hadoop_zookeeper_ensemble = ["$hadoop_head_node:2888:3888"]
 
-  
+  $namenode_data_dirs = ["/mnt/namenode"]
+  $hdfs_data_dirs = ["/mnt/hdfs"]
+  $mapred_data_dirs = ["/mnt/scratch"]
+
   if ($hadoop_security_authentication == "kerberos") {
     $kerberos_domain = "compute-1.internal"
     $kerberos_realm = "EXAMPLE.COM"
@@ -53,6 +56,7 @@ class hadoop_worker_node inherits hadoop_cluster_node {
   hadoop::datanode { "datanode":
         namenode_host => $hadoop_namenode_host,
         namenode_port => $hadoop_namenode_port,
+        dirs => $hdfs_data_dirs,
         auth => $hadoop_security_authentication,
   }
 
@@ -61,6 +65,7 @@ class hadoop_worker_node inherits hadoop_cluster_node {
         namenode_port => $hadoop_namenode_port,
         jobtracker_host => $hadoop_jobtracker_host,
         jobtracker_port => $hadoop_jobtracker_port,
+        dirs => $mapred_data_dirs,
         auth => $hadoop_security_authentication,
   }
 
@@ -68,25 +73,6 @@ class hadoop_worker_node inherits hadoop_cluster_node {
         rootdir => $hadoop_hbase_rootdir,
         zookeeper_quorum => $hadoop_hbase_zookeeper_quorum,
         kerberos_realm => $kerberos_realm, 
-  }
-
-  $hdfs_data_dir = ["/mnt/hdfs"]
-  $mapred_data_dir = [ "/mnt/scratch" ]
-
-  file {
-      $mapred_data_dir:
-          ensure => directory,
-          owner => mapred,
-          group => mapred,
-          mode => 755,
-  }
-
-  file {
-      $hdfs_data_dir:
-          ensure => directory,
-          owner => hdfs,
-          group => hdfs,
-          mode => 755,
   }
 }
 
@@ -100,6 +86,7 @@ class hadoop_head_node inherits hadoop_cluster_node {
         port => $hadoop_namenode_port,
         jobtracker_host => $hadoop_jobtracker_host,
         jobtracker_port => $hadoop_jobtracker_port,
+        dirs => $namenode_data_dirs,
         # thrift_port => $hadoop_namenode_thrift_port,
         auth => $hadoop_security_authentication,
   }
@@ -115,6 +102,7 @@ class hadoop_head_node inherits hadoop_cluster_node {
         namenode_port => $hadoop_namenode_port,
         host => $hadoop_jobtracker_host,
         port => $hadoop_jobtracker_port,
+        dirs => $mapred_data_dirs,
         # thrift_port => $hadoop_jobtracker_thrift_port,
         auth => $hadoop_security_authentication,
   }
@@ -132,24 +120,6 @@ class hadoop_head_node inherits hadoop_cluster_node {
   hadoop-zookeeper::server { "zookeeper":
         myid => "0",
         ensemble => $hadoop_zookeeper_ensemble,
-  }
-
-  $namenode_data_dir = ["/mnt/namenode"]
-
-  file { $namenode_data_dir:
-    ensure => directory,
-    owner => hdfs,
-    group => hdfs,
-    mode => 700,
-  }
-
-  $mapred_data_dir = ["/mnt/scratch"]
-
-  file { $mapred_data_dir:
-    ensure => directory,
-    owner => mapred,
-    group => mapred,
-    mode => 755,
   }
 
   hadoop::create_hdfs_dirs { [ "/mapred", "/tmp", "/system", "/user", "/hbase", "/benchmarks", "/user/jenkins", "/user/hive" ]:
