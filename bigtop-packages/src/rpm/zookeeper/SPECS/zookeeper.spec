@@ -71,6 +71,7 @@ Source2: install_zookeeper.sh
 Source3: hadoop-zookeeper.sh
 Source4: hadoop-zookeeper.sh.suse
 Source5: zookeeper.1
+Source6: zoo.cfg
 BuildArch: noarch
 BuildRequires: ant, autoconf, automake, subversion
 Requires(pre): coreutils, shadow-utils, /usr/sbin/groupadd, /usr/sbin/useradd
@@ -126,7 +127,7 @@ bash %{SOURCE1} -Dversion=%{version}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
-cp $RPM_SOURCE_DIR/zookeeper.1 .
+cp $RPM_SOURCE_DIR/zookeeper.1 $RPM_SOURCE_DIR/zoo.cfg .
 sh %{SOURCE2} \
           --build-dir=. \
           --doc-dir=%{doc_zookeeper} \

@@ -118,7 +118,7 @@ cp build/lib/*.jar $PREFIX/$LIB_DIR/lib
 
 # Copy in the configuration files
 install -d -m 0755 $PREFIX/$CONF_DIST_DIR
-cp conf/* $PREFIX/$CONF_DIST_DIR/
+cp zoo.cfg conf/* $PREFIX/$CONF_DIST_DIR/
 ln -s $CONF_DIR $PREFIX/$LIB_DIR/conf
 
 # Copy in the /usr/bin/zookeeper-server wrapper

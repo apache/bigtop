@@ -46,7 +46,7 @@ install: install-indep
 install-indep:	
 	dh_testdir
 	dh_testroot
-	cp debian/zookeeper.1 .
+	cp debian/zookeeper.1 debian/zoo.cfg .
 	sh -x debian/install_zookeeper.sh \
 	  --build-dir=. \
 	  --prefix=debian/hadoop-zookeeper 
