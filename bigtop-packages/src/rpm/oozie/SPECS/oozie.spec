@@ -40,7 +40,7 @@ Source2: create-package-layout
 Requires(pre): /usr/sbin/groupadd, /usr/sbin/useradd
 Requires(post): /sbin/chkconfig, hadoop
 Requires(preun): /sbin/chkconfig, /sbin/service
-Requires: oozie-client = %{version}
+Requires: unzip, oozie-client = %{version}
 BuildArch: noarch
 
 %description 
