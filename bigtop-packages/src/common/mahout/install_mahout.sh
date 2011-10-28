@@ -116,6 +116,9 @@ install -d -m 0755 $PREFIX/$CONF_DIR
 cp -a ${BUILD_DIR}/conf/* $PREFIX/$CONF_DIR
 ln -s /etc/mahout/conf $PREFIX/$LIB_DIR/conf
 
+# Copy in the example files
+cp -a ${BUILD_DIR}/examples/ $PREFIX/$DOC_DIR/
+
 # Copy in the /usr/bin/mahout wrapper
 install -d -m 0755 $PREFIX/$BIN_DIR
 cat > $PREFIX/$BIN_DIR/mahout <<EOF
