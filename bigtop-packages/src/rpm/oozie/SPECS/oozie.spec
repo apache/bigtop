@@ -19,7 +19,7 @@
 %define data_oozie /var/lib/oozie
 
 %if  %{!?suse_version:1}0
-  %define doc_oozie %{_docdir}/oozie-%{package_version}
+  %define doc_oozie %{_docdir}/oozie-%{oozie_version}
   %define initd_dir %{_sysconfdir}/rc.d/init.d
 %else
   %define doc_oozie %{_docdir}/oozie
