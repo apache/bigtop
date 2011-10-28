@@ -121,6 +121,20 @@ install -d -m 0755 $PREFIX/$CONF_DIST_DIR
 cp zoo.cfg conf/* $PREFIX/$CONF_DIST_DIR/
 ln -s $CONF_DIR $PREFIX/$LIB_DIR/conf
 
+# FIXME:
+cat << __EOT__ >> $PREFIX/$CONF_DIST_DIR/log4j.properties
+# Define some default values that can be overridden by system properties
+zookeeper.root.logger=INFO, CONSOLE
+zookeeper.console.threshold=INFO
+zookeeper.log.dir=.
+zookeeper.log.file=zookeeper.log
+zookeeper.log.threshold=DEBUG
+zookeeper.tracelog.dir=.
+zookeeper.tracelog.file=zookeeper_trace.log
+
+log4j.rootLogger=\${zookeeper.root.logger}
+__EOT__
+
 # Copy in the /usr/bin/zookeeper-server wrapper
 install -d -m 0755 $PREFIX/$LIB_DIR/bin
 
