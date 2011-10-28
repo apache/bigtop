@@ -51,7 +51,8 @@ RETVAL=0
 EXEC_PATH="/usr/bin/zookeeper-server"
 NAME=hadoop-zookeeper-server
 DESC="$NAME"
-PIDFILE=/var/run/zookeeper/zookeeper-server.pid
+# FIXME: a workaround for BIGTOP-207
+PIDFILE=/var/lib/zookeeper/zookeeper_server.pid
 LOCKFILE="/var/lock/subsys/zookeeper"
 USER=zookeeper
 

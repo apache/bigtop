@@ -43,7 +43,8 @@ DAEMON_SCRIPT="/usr/bin/zookeeper-server"
 
 NAME=hadoop-zookeeper-server
 DESC="ZooKeeper daemon"
-PID_FILE=/var/run/zookeeper/zookeeper-server.pid
+# FIXME: a workaround for BIGTOP-207
+PID_FILE=/var/lib/zookeeper/zookeeper_server.pid
 install -d -m 0755 -o zookeeper -g zookeeper /var/run/zookeeper/
 
 DODTIME=3

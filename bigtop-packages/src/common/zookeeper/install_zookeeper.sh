@@ -132,6 +132,7 @@ zookeeper.log.threshold=DEBUG
 zookeeper.tracelog.dir=.
 zookeeper.tracelog.file=zookeeper_trace.log
 
+log4j.appender.ROLLINGFILE.File=\${zookeeper.log.dir}/\${zookeeper.log.file}
 log4j.rootLogger=\${zookeeper.root.logger}
 __EOT__
 
