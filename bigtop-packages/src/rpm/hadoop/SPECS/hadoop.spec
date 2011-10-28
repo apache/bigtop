@@ -426,6 +426,8 @@ fi
 %attr(0775,root,hadoop) %{log_hadoop}
 
 %exclude %{lib_hadoop}/lib/native
+%exclude %{lib_hadoop}/sbin/%{hadoop_arch}
+%exclude %{lib_hadoop}/bin/fuse_dfs
 # FIXME: The following is a workaround for BIGTOP-139
 %exclude %{lib_hadoop}/bin/task-controller
 %exclude %{lib_hadoop}/libexec/jsvc*

@@ -126,7 +126,7 @@ mkdir -p $LIB_DIR
 (cd $BUILD_DIR && tar -cf - .) | (cd $LIB_DIR && tar xf - )
 
 # Take out things we've installed elsewhere
-for x in docs lib/native c++ src conf usr/bin/fuse_dfs contrib/fuse share sbin/task-controller 'lib/lib*so*' 'lib/lib*a' ; do
+for x in docs lib/native c++ src conf contrib/fuse-dfs/fuse_dfs usr/bin/fuse_dfs contrib/fuse share sbin/task-controller 'lib/lib*so*' 'lib/lib*a' ; do
   rm -rf $LIB_DIR/$x 
 done
 
