@@ -18,7 +18,7 @@
 %if  %{?suse_version:1}0
   %define doc_whirr %{_docdir}/whirr
 %else
-  %define doc_whirr %{_docdir}/whirr-%{package_version}
+  %define doc_whirr %{_docdir}/whirr-%{whirr_version}
 %endif
 
 # disable repacking jars
