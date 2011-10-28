@@ -120,7 +120,8 @@ hadoop_stop_pidfile() {
 
 
 start() {
-    su -s /bin/sh zookeeper -c "${DAEMON_SCRIPT} start"
+    # FIXME: nohup is a workaround for BIGTOP-205
+    su -s /bin/sh zookeeper -c "nohup ${DAEMON_SCRIPT} start >/dev/null 2>&1 </dev/null"
 }
 stop() {
 	if hadoop_check_pidfile $PID_FILE ;  then
