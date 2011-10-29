@@ -16,7 +16,7 @@ Source: hadoop-zookeeper
 Section: misc
 Priority: extra
 Maintainer: Bigtop <bigtop-dev@incubator.apache.org>
-Build-Depends: debhelper (>= 6), ant, ant-optional, git-core, autoconf, automake, subversion
+Build-Depends: debhelper (>= 6), ant, ant-optional, autoconf, automake
 Standards-Version: 3.8.0
 Homepage: http://zookeeper.apache.org/
 
