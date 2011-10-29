@@ -469,14 +469,6 @@ fi
 %post conf-pseudo
 %{alternatives_cmd} --install %{config_hadoop} %{name}-conf %{etc_hadoop}/conf.pseudo 30
 
-if [ ! -e %{etc_hadoop}/conf ]; then
-  ln -s %{etc_hadoop}/conf.pseudo %{etc_hadoop}/conf
-fi
-
-nn_dfs_dir="/var/lib/%{name}/cache/hadoop/dfs"
-if [ -z "$(ls -A $nn_dfs_dir 2>/dev/null)" ]; then
-   HADOOP_NAMENODE_USER=hdfs hadoop --config %{etc_hadoop}/conf.pseudo namenode -format 2>/dev/null 1>/dev/null || :
-fi
 
 %files conf-pseudo
 %defattr(-,root,root)
