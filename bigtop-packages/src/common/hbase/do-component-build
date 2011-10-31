@@ -17,4 +17,4 @@
 set -ex
 
 mvn clean -DskipTests -Dhbase.version=${HBASE_VERSION} -Dhadoop.profile=22 install site assembly:assembly "$@"
-tar --strip-components=1 -xzf target/hbase*.tar.gz
+tar --strip-components=2 -xzf target/hbase*.tar.gz
