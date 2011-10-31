@@ -125,5 +125,8 @@ tar czf hadoop-$HADOOP_VERSION.tar.gz hadoop-$HADOOP_VERSION
 mv hadoop-$HADOOP_VERSION build
 
 # FIXME: this is a hack for shv
-[ -d ../../RPMS ] && mv hadoop-$HADOOP_VERSION.tar.gz ../../RPMS
-[ -d ../../../output ] && mv hadoop-$HADOOP_VERSION.tar.gz ../../../output
+if [ -d ../../RPMS ] ; then 
+  mv hadoop-$HADOOP_VERSION.tar.gz ../../RPMS
+elif [ -d ../../../output ] ; then
+  mv hadoop-$HADOOP_VERSION.tar.gz ../../../output
+fi
