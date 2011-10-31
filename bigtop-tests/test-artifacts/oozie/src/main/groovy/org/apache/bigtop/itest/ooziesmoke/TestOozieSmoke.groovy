@@ -45,9 +45,9 @@ class TestOozieSmoke {
     namenode = System.getProperty("org.apache.bigtop.itest.namenode", "${conf.get('fs.default.name')}");
 
     oozie_tar_home = System.getProperty("org.apache.bigtop.itest.oozie_tar_home",
-                                        (new File("/usr/share/doc/oozie/")).exists() ?
-                                           "/usr/share/doc/oozie/" :
-                                           "/usr/share/doc/packages/oozie/");
+                                        (new File("/usr/share/doc/packages/oozie/")).exists() ?
+                                           "/usr/share/doc/packages/oozie/" :
+                                           "/usr/share/doc/oozie*/");
 
     sh.exec("mkdir /tmp/${tmp_dir}",
             "cd /tmp/${tmp_dir}",
