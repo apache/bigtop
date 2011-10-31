@@ -120,7 +120,15 @@ do
   cat >>$wrapper <<EOF
 #!/bin/sh
 
-export HADOOP_HOME=\${HADOOP_HOME:-/usr/lib/hadoop}
+. /etc/default/hadoop
+
+# Autodetect JAVA_HOME if not defined
+if [ -e /usr/libexec/bigtop-detect-javahome ]; then
+  . /usr/libexec/bigtop-detect-javahome
+elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
+  . /usr/lib/bigtop-utils/bigtop-detect-javahome
+fi
+
 export HIVE_HOME=$INSTALLED_LIB_DIR
 exec $INSTALLED_LIB_DIR/bin/$file "\$@"
 EOF

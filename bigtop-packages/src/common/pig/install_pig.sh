@@ -120,6 +120,14 @@ ln -s /etc/pig/conf $LIB_DIR/conf
 install -d -m 0755 $BIN_DIR
 cat > $BIN_DIR/pig <<EOF
 #!/bin/sh
+. /etc/default/hadoop
+
+# Autodetect JAVA_HOME if not defined
+if [ -e /usr/libexec/bigtop-detect-javahome ]; then
+  . /usr/libexec/bigtop-detect-javahome
+elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
+  . /usr/lib/bigtop-utils/bigtop-detect-javahome
+fi
 
 exec $INSTALLED_LIB_DIR/bin/pig "\$@"
 EOF
@@ -133,6 +141,9 @@ install -d -m 0755 $DOC_DIR
 (cd $BUILD_DIR/docs && tar -cf - .)|(cd $DOC_DIR && tar -xf -)
 
 install -d -m 0755 $EXAMPLES_DIR
+(cd $LIB_DIR ; mv pig*withouthadoop.jar `echo pig*withouthadoop.jar | sed -e 's#withouthadoop#core#'`)
+# FIXME: workaround for BIGTOP-161
+(cd $LIB_DIR ; ln -s pig-*-core.jar pig-withouthadoop.jar)
 PIG_JAR=$(basename $(ls $LIB_DIR/pig*core.jar))
 sed -i -e "s|../pig.jar|/usr/lib/pig/$PIG_JAR|" $BUILD_DIR/tutorial/build.xml
 (cd $BUILD_DIR/tutorial && tar -cf - .)|(cd $EXAMPLES_DIR && tar -xf -)

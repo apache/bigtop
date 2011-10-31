@@ -14,7 +14,6 @@
 # limitations under the License.
 %define etc_flume /etc/flume/conf
 %define bin_flume %{_bindir}
-%define doc_flume %{_docdir}/flume-%{flume_version}
 %define man_flume %{_mandir}
 %define lib_flume /usr/lib/flume
 %define log_flume /var/log/flume
@@ -37,11 +36,13 @@
     /usr/lib/rpm/brp-compress ; \
     %{nil}
 
+%define doc_flume %{_docdir}/flume
 %define alternatives_cmd update-alternatives
 %global initd_dir %{_sysconfdir}/rc.d
 
 %else
 
+%define doc_flume %{_docdir}/flume-%{flume_version}
 %define alternatives_cmd alternatives
 %global initd_dir %{_sysconfdir}/rc.d/init.d
 
@@ -53,7 +54,7 @@ Name: flume
 Version: %{flume_version}
 Release: %{flume_release}
 Summary:  Flume is a reliable, scalable, and manageable distributed log collection application for collecting data such as logs and delivering it to data stores such as Hadoop's HDFS.
-URL: https://github.com/cloudera/flume
+URL: http://incubator.apache.org/projects/flume.html
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 BuildArch: noarch
@@ -63,8 +64,15 @@ Source1: do-component-build
 Source2: install_%{name}.sh
 Source3: init.d
 Source4: init.d.suse
-Requires: sh-utils, textutils, /usr/sbin/useradd, /sbin/chkconfig, /sbin/service, hadoop-zookeeper >= 3.3.1, hadoop >= 0.20.2
+Requires: coreutils, /usr/sbin/useradd, hadoop-zookeeper >= 3.3.1, hadoop >= 0.20.2
+Requires: bigtop-utils
 BuildRequires: ant xml-commons xml-commons-apis
+
+%if  0%{?mgaversion}
+Requires: bsh-utils
+%else
+Requires: sh-utils
+%endif
 
 %description 
 Flume is a reliable, scalable, and manageable distributed data collection application for collecting data such as logs and delivering it to data stores such as Hadoop's HDFS.  It can efficiently collect, aggregate, and move large amounts of log data.  It has a simple, but flexible, architecture based on streaming data flows.  It is robust and fault tolerant with tunable reliability mechanisms and many failover and recovery mechanisms.  The system is centrally managed and allows for intelligent dynamic management. It uses a simple extensible data model that allows for online analytic applications.
@@ -73,19 +81,26 @@ Flume is a reliable, scalable, and manageable distributed data collection applic
 Summary: The flume master daemon is the central administration and data path control point for flume nodes.
 Group: Development/Libraries
 BuildArch: noarch
-Requires: %{name} = %{version}-%{release}
-Requires: sh-utils, textutils, /usr/sbin/useradd, /sbin/chkconfig, /sbin/service
+Requires: %{name} = %{version}-%{release}, /sbin/service
 Requires(post): /sbin/chkconfig
-Requires(preun): /sbin/service, /sbin/chkconfig, %{name}
+Requires(preun): /sbin/chkconfig
 
 %if  %{?suse_version:1}0
 # Required for init scripts
 Requires: insserv
-%else
+%endif
+
+%if  0%{?mgaversion}
+# Required for init scripts
+Requires: initscripts
+%endif
+
+# CentOS 5 does not have any dist macro
+# So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
+%if %{!?suse_version:1}0 && %{!?mgaversion:1}0
 # Required for init scripts
 Requires: redhat-lsb
 %endif
-
 
 %description master
 Flume is a reliable, scalable, and manageable distributed data collection application for collecting data such as logs and delivering it to data stores such as Hadoop's HDFS.  It can efficiently collect, aggregate, and move large amounts of log data.  It has a simple, but flexible, architecture based on streaming data flows.  It is robust and fault tolerant with tunable reliability mechanisms and many failover and recovery mechanisms.  The system is centrally managed and allows for intelligent dynamic management. It uses a simple extensible data model that allows for online analytic applications.
@@ -94,19 +109,26 @@ Flume is a reliable, scalable, and manageable distributed data collection applic
 Summary: The flume node daemon is a core element of flume's data path and is responsible for generating, processing, and delivering data.
 Group: Development/Libraries
 BuildArch: noarch
-Requires: %{name} = %{version}-%{release}
-Requires: sh-utils, textutils, /usr/sbin/useradd, /sbin/chkconfig, /sbin/service
+Requires: %{name} = %{version}-%{release}, /sbin/service
 Requires(post): /sbin/chkconfig
-Requires(preun): /sbin/service, /sbin/chkconfig, %{name}
+Requires(preun): /sbin/chkconfig
 
 %if  %{?suse_version:1}0
 # Required for init scripts
 Requires: insserv
-%else
+%endif
+
+%if  0%{?mgaversion}
+# Required for init scripts
+Requires: initscripts
+%endif
+
+# CentOS 5 does not have any dist macro
+# So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
+%if %{!?suse_version:1}0 && %{!?mgaversion:1}0
 # Required for init scripts
 Requires: redhat-lsb
 %endif
-
 
 %description node
 Flume is a reliable, scalable, and manageable distributed data collection application for collecting data such as logs and delivering it to data stores such as Hadoop's HDFS.  It can efficiently collect, aggregate, and move large amounts of log data.  It has a simple, but flexible, architecture based on streaming data flows.  It is robust and fault tolerant with tunable reliability mechanisms and many failover and recovery mechanisms.  The system is centrally managed and allows for intelligent dynamic management. It uses a simple extensible data model that allows for online analytic applications.

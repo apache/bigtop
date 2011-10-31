@@ -48,6 +48,13 @@ install -d -m 0775 -o root -g hadoop /var/run/hadoop
 
 . /etc/default/hadoop
 
+# Autodetect JAVA_HOME if not defined
+if [ -e /usr/libexec/bigtop-detect-javahome ]; then
+  . /usr/libexec/bigtop-detect-javahome
+elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
+  . /usr/lib/bigtop-utils/bigtop-detect-javahome
+fi
+
 . $HADOOP_HOME/bin/hadoop-config.sh
 
 # FIXME: this needs to be removed once hadoop-config.sh stop clobbering HADOOP_HOME
@@ -143,13 +150,27 @@ hadoop_stop_pidfile() {
 }
 
 start() {
-    $HADOOP_HOME/bin/hadoop-daemon.sh start @HADOOP_DAEMON@ $DAEMON_FLAGS
-
+    TARGET_USER_NAME="HADOOP_`echo @HADOOP_DAEMON@ | tr a-z A-Z`_USER"
+    TARGET_USER=$(eval "echo \$$TARGET_USER_NAME")
+    
     if [ "@HADOOP_DAEMON@" = "datanode" ]; then
-      # Some processes are slow to start
-      sleep $SLEEP_TIME
+      # The following needs to be removed once HDFS-1943 gets finally put to rest.
+      # The logic of this ugly hack is this: IFF we do NOT have jsvc installed it is
+      # guaranteed that we can NOT be running in a secure mode and thus we need to
+      # workaround HDFS-1943 (start as non-root). As soon as jsvc gets installed
+      # we are assuming a secure installation and starting a data node as root.
+      # This leaves 2 corner cases:
+      #    1. HADOOP_DATANODE_USER being set to root
+      #    2. jsvc is installed but Hadoop is configures to run in an unsecure mode
+      # Both will currently fail
+      if [ -f $HADOOP_HOME/libexec/jsvc.amd64 -o -f $HADOOP_HOME/libexec/jsvc.i386 ] && [ -n "$HADOOP_SECURE_DN_USER" ]; then
+         TARGET_USER=root
+      fi
     fi
+    su -s /bin/bash $TARGET_USER -c "$HADOOP_HOME/bin/hadoop-daemon.sh start @HADOOP_DAEMON@ $DAEMON_FLAGS"
 
+    # Some processes are slow to start
+    sleep $SLEEP_TIME
 }
 stop() {
     $HADOOP_HOME/bin/hadoop-daemon.sh stop @HADOOP_DAEMON@

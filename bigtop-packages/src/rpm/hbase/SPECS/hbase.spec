@@ -20,7 +20,6 @@
 %define logs_hbase %{hbase_home}/logs
 %define pids_hbase %{hbase_home}/pids
 %define webapps_hbase %{hbase_home}/hbase-webapps
-%define doc_hbase %{_docdir}/hbase-%{hbase_version}
 %define man_dir %{_mandir}
 %define hbase_username hbase
 %define hbase_services master regionserver thrift
@@ -42,11 +41,12 @@
     /usr/lib/rpm/brp-compress ; \
     %{nil}
 
-
+%define doc_hbase %{_docdir}/hbase
 %global initd_dir %{_sysconfdir}/rc.d
 
 %else
 
+%define doc_hbase %{_docdir}/hbase-%{hbase_version}
 %global initd_dir %{_sysconfdir}/rc.d/init.d
 
 %endif
@@ -66,8 +66,17 @@ Source2: install_hbase.sh
 Source3: hadoop-hbase.sh
 Source4: hadoop-hbase.sh.suse
 Source5: hbase.default
+Source6: hbase.nofiles.conf
 BuildArch: noarch
-Requires: sh-utils, textutils, /usr/sbin/useradd, /sbin/chkconfig, /sbin/service, hadoop-zookeeper, hadoop >= 0.20.2, hadoop-zookeeper >= 3.3.1
+Requires: coreutils, /usr/sbin/useradd, /sbin/chkconfig, /sbin/service
+Requires: hadoop >= 0.20.2, hadoop-zookeeper >= 3.3.1, bigtop-utils
+
+%if  0%{?mgaversion}
+Requires: bsh-utils
+%else
+Requires: sh-utils
+%endif
+
 
 %description 
 HBase is an open-source, distributed, column-oriented store modeled after Google' Bigtable: A Distributed Storage System for Structured Data by Chang et al. Just as Bigtable leverages the distributed data storage provided by the Google File System, HBase provides Bigtable-like capabilities on top of Hadoop. HBase includes:
@@ -90,11 +99,19 @@ Requires: %{name} = %{version}-%{release}
 %if  %{?suse_version:1}0
 # Required for init scripts
 Requires: insserv
-%else
+%endif
+
+%if  0%{?mgaversion}
+# Required for init scripts
+Requires: initscripts
+%endif
+
+# CentOS 5 does not have any dist macro
+# So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
+%if %{!?suse_version:1}0 && %{!?mgaversion:1}0
 # Required for init scripts
 Requires: redhat-lsb
 %endif
-
 
 %description master
 HMaster is the "master server" for a HBase. There is only one HMaster for a single HBase deployment.
@@ -108,7 +125,16 @@ Requires: %{name} = %{version}-%{release}
 %if  %{?suse_version:1}0
 # Required for init scripts
 Requires: insserv
-%else
+%endif
+
+%if  0%{?mgaversion}
+# Required for init scripts
+Requires: initscripts
+%endif
+
+# CentOS 5 does not have any dist macro
+# So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
+%if %{!?suse_version:1}0 && %{!?mgaversion:1}0
 # Required for init scripts
 Requires: redhat-lsb
 %endif
@@ -126,7 +152,16 @@ Requires: %{name} = %{version}-%{release}
 %if  %{?suse_version:1}0
 # Required for init scripts
 Requires: insserv
-%else
+%endif
+
+%if  0%{?mgaversion}
+# Required for init scripts
+Requires: initscripts
+%endif
+
+# CentOS 5 does not have any dist macro
+# So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
+%if %{!?suse_version:1}0 && %{!?mgaversion:1}0
 # Required for init scripts
 Requires: redhat-lsb
 %endif
@@ -147,7 +182,7 @@ Documentation for Hbase
 
 
 %prep
-%setup -n apache-hbase-8146460
+%setup -n apache-hbase-a07486c
 
 %build
 env HBASE_VERSION=%{version} bash %{SOURCE1}
@@ -163,6 +198,9 @@ sh %{SOURCE2} \
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/etc/default/
 %__install -m 0644 $RPM_SOURCE_DIR/hbase.default $RPM_BUILD_ROOT/etc/default/hbase
+
+%__install -d -m 0755 $RPM_BUILD_ROOT/etc/security/limits.d
+%__install -m 0644 %{SOURCE6} $RPM_BUILD_ROOT/etc/security/limits.d/hbase.nofiles.conf
 
 %__install -d  -m 0755  %{buildroot}/%{_localstatedir}/log/hbase
 ln -s %{_localstatedir}/log/hbase %{buildroot}/%{logs_hbase}
@@ -208,6 +246,7 @@ getent passwd hbase 2>&1 > /dev/null || /usr/sbin/useradd -c "HBase" -s /sbin/no
 
 %defattr(-,root,root)
 %config(noreplace) %{_sysconfdir}/default/hbase
+%config(noreplace) /etc/security/limits.d/hbase.nofiles.conf
 %{hbase_home}
 %{hbase_home}/hbase-*.jar
 %{webapps_hbase}

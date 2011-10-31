@@ -125,7 +125,7 @@ mkdir -p $LIB_DIR
 (cd $BUILD_DIR && tar -cf - .) | (cd $LIB_DIR && tar xf - )
 
 # Take out things we've installed elsewhere
-for x in docs lib/native c++ src conf usr/bin/fuse_dfs contrib/fuse ; do
+for x in docs lib/native c++ src conf contrib/fuse-dfs/fuse_dfs usr/bin/fuse_dfs contrib/fuse share sbin/task-controller 'lib/lib*so*' 'lib/lib*a' ; do
   rm -rf $LIB_DIR/$x 
 done
 
@@ -137,7 +137,14 @@ for bin_wrapper in hadoop ; do
   cat > $wrapper <<EOF
 #!/bin/sh
 
-export HADOOP_HOME=$INSTALLED_LIB_DIR
+# Autodetect JAVA_HOME if not defined
+if [ -e /usr/libexec/bigtop-detect-javahome ]; then
+  . /usr/libexec/bigtop-detect-javahome
+elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
+  . /usr/lib/bigtop-utils/bigtop-detect-javahome
+fi
+
+. /etc/default/hadoop
 exec $INSTALLED_LIB_DIR/bin/$bin_wrapper "\$@"
 EOF
   chmod 755 $wrapper
@@ -162,7 +169,7 @@ mkdir -p ${SRC_DIR}
 rm -f hdfs/src/contrib/fuse-dfs/src/*.o 
 rm -f hdfs/src/contrib/fuse-dfs/src/fuse_dfs
 # rm -rf ${BUILD_SRC_DIR}/contrib/hod
-# rm -f ${SRC_DIR}/contrib/fuse-dfs/fuse_dfs
+rm -f hdfs/contrib/fuse-dfs/fuse_dfs
 
 
 cp -a mapreduce/src/* hdfs/src/* common/src/* ${SRC_DIR}/
@@ -172,6 +179,18 @@ install -d -m 0755 $ETC_DIR/conf.empty
 (cd ${BUILD_DIR}/conf && tar cf - .) | (cd $ETC_DIR/conf.empty && tar xf -)
 # Overlay the -site files
 (cd $DISTRO_DIR/conf.empty && tar --exclude='.svn' -cf - .) | (cd $ETC_DIR/conf.empty && tar -xf -)
+
+# Create symlinks to preserve old jar names
+# Also create symlinks of versioned jars to jars without version names, which other
+# packages can depend on
+(cd $LIB_DIR &&
+for j in hadoop-*.jar; do
+  if [[ $j =~ hadoop-(.*)-([^-]+).jar ]]; then
+    name=${BASH_REMATCH[1]}
+    ver=${BASH_REMATCH[2]}
+    ln -s hadoop-$name-$ver.jar hadoop-$name.jar
+  fi
+done)
 
 # Link the HADOOP_HOME conf, log and pid dir to installed locations
 rm -rf $LIB_DIR/conf
@@ -205,13 +224,25 @@ if [ ! -z "$NATIVE_BUILD_STRING" ]; then
     ln -s ../contrib/fuse-dfs/fuse_dfs $LIB_DIR/bin/fuse_dfs
     gzip -c < $DISTRO_DIR/hadoop-fuse-dfs.1 > $MAN_DIR/man1/hadoop-fuse-dfs.1.gz
 
+    # Fuse 
+    mkdir -p $LIB_DIR/bin
+    mv  ${BUILD_DIR}/contrib/fuse-dfs/* $LIB_DIR/bin
+    rmdir ${BUILD_DIR}/contrib/fuse-dfs
+
     fuse_wrapper=${BIN_DIR}/hadoop-fuse-dfs
   cat > $fuse_wrapper << EOF
 #!/bin/bash
 
 /sbin/modprobe fuse
 
-export HADOOP_HOME=$INSTALLED_LIB_DIR
+# Autodetect JAVA_HOME if not defined
+if [ -e /usr/libexec/bigtop-detect-javahome ]; then
+  . /usr/libexec/bigtop-detect-javahome
+elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
+  . /usr/lib/bigtop-utils/bigtop-detect-javahome
+fi
+
+. /etc/default/hadoop
 
 if [ -f /etc/default/hadoop-fuse ] 
   then . /etc/default/hadoop-fuse
@@ -240,9 +271,11 @@ EOF
     chmod 755 $fuse_wrapper
   fi
 
-  # sbin
+  # Security related binaries
   mkdir -p $LIB_DIR/sbin/${NATIVE_BUILD_STRING}
-  mv $LIB_DIR/bin/jsvc $LIB_DIR/sbin/${NATIVE_BUILD_STRING}
+  # FIXME: workaround for BIGTOP-139
+  # cp -f $LIB_DIR/bin/task-controller $LIB_DIR/sbin/${NATIVE_BUILD_STRING}
+  cp -f $LIB_DIR/bin/jsvc* $LIB_DIR/sbin/${NATIVE_BUILD_STRING}/jsvc
 
   # Native compression libs
   mkdir -p $LIB_DIR/lib/native/

@@ -19,8 +19,10 @@
 %define data_oozie /var/lib/oozie
 
 %if  %{!?suse_version:1}0
+  %define doc_oozie %{_docdir}/oozie-%{oozie_version}
   %define initd_dir %{_sysconfdir}/rc.d/init.d
 %else
+  %define doc_oozie %{_docdir}/oozie
   %define initd_dir %{_sysconfdir}/rc.d
 %endif
 
@@ -28,7 +30,7 @@ Name: oozie
 Version: %{oozie_version}
 Release: %{oozie_release}
 Summary:  Oozie is a system that runs workflows of Hadoop jobs.
-URL: http://www.cloudera.com
+URL: http://incubator.apache.org/oozie/
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 License: APL2
@@ -37,9 +39,9 @@ Source1: do-component-build
 Source2: create-package-layout
 Patch0: patch
 Requires(pre): /usr/sbin/groupadd, /usr/sbin/useradd
-Requires(post): /sbin/chkconfig
+Requires(post): /sbin/chkconfig, hadoop
 Requires(preun): /sbin/chkconfig, /sbin/service
-Requires: oozie-client = %{version}
+Requires: zip, unzip, oozie-client = %{version}
 BuildArch: noarch
 
 %description 
@@ -85,10 +87,12 @@ BuildArch: noarch
 Version: %{version}
 Release: %{release} 
 Summary:  Client for Oozie Workflow Engine
-URL: http://www.cloudera.com
+URL: http://incubator.apache.org/oozie/
 Group: Development/Libraries
 License: APL2
 BuildArch: noarch
+Requires: bigtop-utils
+
 
 %description client
  Oozie client is a command line client utility that allows remote
@@ -113,7 +117,7 @@ BuildArch: noarch
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
-    sh %{SOURCE2} --extra-dir=$RPM_SOURCE_DIR --build-dir=. --server-dir=$RPM_BUILD_ROOT --client-dir=$RPM_BUILD_ROOT --docs-dir=$RPM_BUILD_ROOT%{_docdir}/%{name}-%{version} --initd-dir=$RPM_BUILD_ROOT%{initd_dir}
+    sh %{SOURCE2} --extra-dir=$RPM_SOURCE_DIR --build-dir=. --server-dir=$RPM_BUILD_ROOT --client-dir=$RPM_BUILD_ROOT --docs-dir=$RPM_BUILD_ROOT%{doc_oozie} --initd-dir=$RPM_BUILD_ROOT%{initd_dir}
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/usr/bin
 
@@ -125,6 +129,7 @@ getent group oozie >/dev/null || /usr/sbin/groupadd -r oozie >/dev/null
 getent passwd oozie >/dev/null || /usr/sbin/useradd --comment "Oozie User" --shell /bin/false -M -r -g oozie --home /var/run/oozie oozie >/dev/null
 
 %post 
+%{lib_oozie}/bin/oozie-setup.sh -hadoop 0.20.200 /usr/lib/hadoop
 /sbin/chkconfig --add oozie 
 
 %preun
@@ -147,6 +152,7 @@ fi
 %{lib_oozie}/bin/oozie-stop.sh
 %{lib_oozie}/bin/oozie-sys.sh
 %{lib_oozie}/bin/oozie-env.sh
+%{lib_oozie}/bin/oozied.sh
 %{lib_oozie}/oozie.war
 %{lib_oozie}/oozie-sharelib.tar.gz
 %{lib_oozie}/oozie-server
@@ -164,7 +170,5 @@ fi
 %{lib_oozie}/bin/oozie
 %{lib_oozie}/bin/oozie-examples.sh
 %{lib_oozie}/lib
-%{_docdir}
-%docdir %{_docdir}
+%doc %{doc_oozie}
 %{man_dir}/man1/oozie.1.*
-

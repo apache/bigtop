@@ -49,6 +49,21 @@ On Debian-based systems one also needs
 * build-essential dh-make debhelper devscripts
 * reprepro
 
+On openSUSE 11.4+, in addition, one also needs to ensure the following is installed:
+
+
+relaxngDatatype
+docbook-utils docbook-simple
+asciidoc
+fuse-devel
+docbook5
+docbook5-xsl-stylesheets
+libxml2-devel
+xmlformat
+xmlto
+libxslt
+libopenssl-devel
+
 ## Building packages
 
     $ make [component-name]-[rpm|deb]

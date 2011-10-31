@@ -27,6 +27,12 @@
 #
 # description: Flume @FLUME_DAEMON@
 
+# Autodetect JAVA_HOME if not defined
+if [ -e /usr/libexec/bigtop-detect-javahome ]; then
+  . /usr/libexec/bigtop-detect-javahome
+elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
+  . /usr/lib/bigtop-utils/bigtop-detect-javahome
+fi
 
 export FLUME_HOME=/usr/lib/flume
 export FLUME_LOG_DIR=/var/log/flume

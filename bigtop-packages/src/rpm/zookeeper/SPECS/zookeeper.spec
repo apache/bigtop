@@ -14,7 +14,6 @@
 # limitations under the License.
 %define etc_zookeeper /etc/zookeeper
 %define bin_zookeeper %{_bindir}
-%define doc_zookeeper %{_docdir}/zookeeper-%{zookeeper_version}
 %define lib_zookeeper /usr/lib/zookeeper
 %define log_zookeeper /var/log/zookeeper
 %define run_zookeeper /var/run/zookeeper
@@ -38,6 +37,7 @@
     %{nil}
 
 
+%define doc_zookeeper %{_docdir}/zookeeper
 %define alternatives_cmd update-alternatives
 %define alternatives_dep update-alternatives
 %define chkconfig_dep    aaa_base
@@ -46,6 +46,7 @@
 
 %else
 
+%define doc_zookeeper %{_docdir}/zookeeper-%{zookeeper_version}
 %define alternatives_cmd alternatives
 %define alternatives_dep chkconfig 
 %define chkconfig_dep    chkconfig
@@ -70,11 +71,13 @@ Source2: install_zookeeper.sh
 Source3: hadoop-zookeeper.sh
 Source4: hadoop-zookeeper.sh.suse
 Source5: zookeeper.1
+Source6: zoo.cfg
 BuildArch: noarch
-BuildRequires: ant, autoconf, automake, subversion
-Requires(pre): coreutils, shadow-utils
+BuildRequires: ant, autoconf, automake
+Requires(pre): coreutils, shadow-utils, /usr/sbin/groupadd, /usr/sbin/useradd
 Requires(post): %{alternatives_dep}
 Requires(preun): %{alternatives_dep}
+Requires: bigtop-utils
 
 %description 
 ZooKeeper is a centralized service for maintaining configuration information, 
@@ -98,10 +101,20 @@ BuildArch: noarch
 %if  %{?suse_version:1}0
 # Required for init scripts
 Requires: insserv
-%else
+%endif
+
+%if  0%{?mgaversion}
+# Required for init scripts
+Requires: initscripts
+%endif
+
+# CentOS 5 does not have any dist macro
+# So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
+%if %{!?suse_version:1}0 && %{!?mgaversion:1}0
 # Required for init scripts
 Requires: redhat-lsb
 %endif
+
 
 %description server
 This package starts the zookeeper server on startup
@@ -114,7 +127,7 @@ bash %{SOURCE1} -Dversion=%{version}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
-cp $RPM_SOURCE_DIR/zookeeper.1 .
+cp $RPM_SOURCE_DIR/zookeeper.1 $RPM_SOURCE_DIR/zoo.cfg .
 sh %{SOURCE2} \
           --build-dir=. \
           --doc-dir=%{doc_zookeeper} \

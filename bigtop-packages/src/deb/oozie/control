@@ -15,14 +15,15 @@
 Source: oozie
 Section: misc
 Priority: extra
-Maintainer: Arvind Prabhakar <arvind@cloudera.com>
+Maintainer: Bigtop <bigtop-dev@incubator.apache.org>
 Build-Depends: debhelper (>= 6)
 Depends: zip, unzip
 Standards-Version: 3.8.0
-Homepage: http://archive.cloudera.com/cdh/3/oozie
+Homepage: http://incubator.apache.org/oozie/
 
 Package: oozie-client
 Architecture: all
+Depends: bigtop-utils
 Description: Command line utility that allows
  remote access and operation of oozie. Using this utility, the
  user can deploy workflows and perform other administrative and
@@ -31,7 +32,7 @@ Description: Command line utility that allows
 
 Package: oozie
 Architecture: all
-Depends: oozie-client (= ${source:Version})
+Depends: oozie-client (= ${source:Version}), hadoop, zip, unzip
 Description: A workflow and coordinator sytem for Hadoop jobs.
  Oozie workflows are actions arranged in a control dependency DAG (Direct
  Acyclic Graph).

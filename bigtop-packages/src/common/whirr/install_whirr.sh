@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -108,9 +108,21 @@ install -d -m 0755 $BIN_DIR
 cat > $BIN_DIR/whirr <<EOF
 #!/bin/sh
 
+# Autodetect JAVA_HOME if not defined
+if [ -e /usr/libexec/bigtop-detect-javahome ]; then
+  . /usr/libexec/bigtop-detect-javahome
+elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
+  . /usr/lib/bigtop-utils/bigtop-detect-javahome
+fi
+
 exec $INSTALLED_LIB_DIR/bin/whirr "\$@"
 EOF
 chmod 755 $BIN_DIR/whirr
 
 install -d -m 0755 $MAN_DIR
 gzip -c whirr.1 > $MAN_DIR/whirr.1.gz
+
+# Move the docs, but leave a symlink in place for compat. reasons
+install -d -m 0755 $DOC_DIR
+mv $LIB_DIR/docs/* $DOC_DIR
+ln -s /${DOC_DIR/#$PREFIX/} $LIB_DIR/docs

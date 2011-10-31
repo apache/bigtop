@@ -12,7 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+export HADOOP_HOME_WARN_SUPPRESS=true
 export HADOOP_HOME=/usr/lib/hadoop
 export HADOOP_NAMENODE_USER=hdfs
 export HADOOP_SECONDARYNAMENODE_USER=hdfs
@@ -21,3 +21,4 @@ export HADOOP_JOBTRACKER_USER=mapred
 export HADOOP_TASKTRACKER_USER=mapred
 export HADOOP_IDENT_STRING=hadoop
 export HADOOP_PID_DIR=/var/run/hadoop
+export HADOOP_LOG_DIR=/var/log/hadoop
