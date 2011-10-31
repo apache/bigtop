@@ -125,7 +125,7 @@ mkdir -p $LIB_DIR
 (cd $BUILD_DIR && tar -cf - .) | (cd $LIB_DIR && tar xf - )
 
 # Take out things we've installed elsewhere
-for x in docs lib/native c++ src conf contrib/fuse-dfs/fuse_dfs usr/bin/fuse_dfs contrib/fuse share sbin/task-controller 'lib/lib*so*' 'lib/lib*a' ; do
+for x in docs lib/native c++ src conf share sbin/task-controller hdfs/src/contrib/fuse-dfs/src/fuse_dfs 'lib/lib*so*' 'lib/lib*a' ; do
   rm -rf $LIB_DIR/$x 
 done
 
@@ -169,7 +169,7 @@ mkdir -p ${SRC_DIR}
 rm -f hdfs/src/contrib/fuse-dfs/src/*.o 
 rm -f hdfs/src/contrib/fuse-dfs/src/fuse_dfs
 # rm -rf ${BUILD_SRC_DIR}/contrib/hod
-rm -f hdfs/contrib/fuse-dfs/fuse_dfs
+# rm -f hdfs/contrib/fuse-dfs/fuse_dfs
 
 
 cp -a mapreduce/src/* hdfs/src/* common/src/* ${SRC_DIR}/
@@ -185,10 +185,16 @@ install -d -m 0755 $ETC_DIR/conf.empty
 # packages can depend on
 (cd $LIB_DIR &&
 for j in hadoop-*.jar; do
-  if [[ $j =~ hadoop-(.*)-([^-]+).jar ]]; then
-    name=${BASH_REMATCH[1]}
-    ver=${BASH_REMATCH[2]}
-    ln -s hadoop-$name-$ver.jar hadoop-$name.jar
+  if [[ $j =~ hadoop-([^-]+)-([^-]+)-([0-9].*)-sources.jar ]]; then
+    comp=${BASH_REMATCH[1]}
+    name=${BASH_REMATCH[2]}
+    vers=${BASH_REMATCH[3]}
+    ln -s hadoop-$comp-$name-$vers-sources.jar hadoop-$comp-$name-sources.jar
+  elif [[ $j =~ hadoop-([^-]+)-([^-]+)-([0-9].*).jar ]]; then
+    comp=${BASH_REMATCH[1]}
+    name=${BASH_REMATCH[2]}
+    vers=${BASH_REMATCH[3]}
+    ln -s hadoop-$comp-$name-$vers.jar hadoop-$comp-$name.jar
   fi
 done)
 

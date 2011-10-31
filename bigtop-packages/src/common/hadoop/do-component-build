@@ -16,7 +16,7 @@
 
 set -ex
 
-STITCH_FILES="CHANGES.txt README.txt"
+STITCH_FILES="CHANGES.txt LICENSE.txt NOTICE.txt README.txt"
 
 WORKDIR=hadoop-$HADOOP_VERSION
 
@@ -73,6 +73,14 @@ for dir in docs; do
   done
 done
 
+# munge the contrib directories
+for dir in contrib; do
+  mkdir $dir
+  for proj in hdfs mapred; do
+    cp -Rp $proj/$dir/* $dir
+  done
+done
+
 # munge the bin and conf directories
 for dir in bin conf; do
   mkdir $dir
@@ -108,7 +116,14 @@ done
 # get our jar files
 mv {common,hdfs,mapred}/*.jar .
 
+# remove native build files
+rm `find . -type f | egrep "\.(P|)o$"`
+
 # tar up the result
 cd ..
-tar czf "hadoop-$HADOOP_VERSION.tar.gz" "hadoop-$HADOOP_VERSION"
+tar czf hadoop-$HADOOP_VERSION.tar.gz hadoop-$HADOOP_VERSION
 mv hadoop-$HADOOP_VERSION build
+
+# FIXME: this is a hack for shv
+[ -d ../../RPMS ] && mv hadoop-$HADOOP_VERSION.tar.gz ../../RPMS
+[ -d ../../../output ] && mv hadoop-$HADOOP_VERSION.tar.gz ../../../output
