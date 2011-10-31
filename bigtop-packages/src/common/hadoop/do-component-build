@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -16,21 +16,18 @@
 
 set -ex
 
-STITCH_FILES="CHANGES.txt LICENSE.txt NOTICE.txt README.txt"
+STITCH_FILES="CHANGES.txt README.txt"
 
-mkdir build
+WORKDIR=hadoop-$HADOOP_VERSION
+
+rm -rf $WORKDIR
+mkdir $WORKDIR
 rm -f $STITCH_FILES
 
 if uname -m | grep -q 64 ; then
   JSVC_URL=http://archive.apache.org/dist/commons/daemon/binaries/1.0.2/linux/commons-daemon-1.0.2-bin-linux-x86_64.tar.gz
 else
   JSVC_URL=http://archive.apache.org/dist/commons/daemon/binaries/1.0.2/linux/commons-daemon-1.0.2-bin-linux-i386.tar.gz
-fi
-
-if [ -d debian ] ; then 
-  IVY_LOCATION=debian/.ivy
-else
-  IVY_LOCATION=~/.ivy2
 fi
 
 for project in common hdfs mapred ; do 
@@ -43,9 +40,10 @@ for project in common hdfs mapred ; do
     -Dcompile.native=true \
     -Dhadoop.conf.dir=/etc/hadoop/conf \
     -Dlibhdfs=1 -Dfusedfs=true -Dcompile.c++=true -Djdiff.build.dir=build/docs/jdiff-cloudera \
-   api-report bin-package $BUILD_CONTRIB package \
+   api-report bin-package $BUILD_CONTRIB tar \
     "$@"
-  (cd build/hadoop-$project-0.22.0 || cd mapreduce ; tar cf - * ) | (cd ../build ; tar xf - )
+  
+  cat build/hadoop-*.tar.gz | (cd ../$WORKDIR ; tar xzf -)
 
   for file in $STITCH_FILES ; do
     [ -f $file ] && cat $file >> ../$file
@@ -53,11 +51,56 @@ for project in common hdfs mapred ; do
 
   BUILD_CONTRIB="compile-contrib"
   cd ..
-
-  # NOTE: This is a total hack and needs to be generalized for future versions of Bigtop
-  # Installing maven artifacts for downstream components
-  mkdir -p $IVY_LOCATION/cache/org.apache.hadoop/hadoop-$project/jars/ $IVY_LOCATION/cache/org.apache.hadoop/hadoop-$project-test/jars/
-  rm -rf $IVY_LOCATION/cache/org.apache.hadoop/hadoop-$project-*/jars/*
-  cp build/hadoop-$project-0.22.0.jar $IVY_LOCATION/cache/org.apache.hadoop/hadoop-$project/jars/hadoop-$project-0.22.0-SNAPSHOT.jar
-  cp build/hadoop-$project-test-0.22.0.jar $IVY_LOCATION/cache/org.apache.hadoop/hadoop-$project-test/jars/hadoop-$project-test-0.22.0-SNAPSHOT.jar
 done
+
+cd "$WORKDIR"
+
+# get rid of the version names
+mv hadoop-common-* common
+mv hadoop-hdfs-* hdfs
+mv hadoop-mapred-* mapred
+
+# munge text docs
+mv common/{LICENSE,NOTICE,README}.txt .
+rm hdfs/{LICENSE,NOTICE}.txt # same as common
+rm mapred/{LICENSE,NOTICE}.txt # same as common
+
+# munge the bin and conf directories
+for dir in bin conf; do
+  mkdir $dir
+  for proj in common hdfs mapred; do
+    cp -Rp $proj/$dir/* $dir
+  done
+done
+
+# munge the lib directory
+mkdir lib
+for proj in common hdfs mapred; do
+  cp -Rp $proj/lib/* lib
+  rm -r $proj/lib
+done
+rm lib/hadoop-*.jar # hdfs and mapred dependencies on common, hdfs jars
+
+# munge the webapps directory
+mkdir webapps
+for proj in hdfs mapred; do
+  cp -Rp $proj/webapps/* webapps
+  rm -r $proj/webapps
+done
+
+# get the mapred c++ (if compiled)
+mkdir c++
+for proj in hdfs mapred; do
+  if [ -d $proj/c++ ]; then
+    cp -Rp $proj/c++/* c++
+    rm -r $proj/c++
+  fi
+done
+
+# get our jar files
+mv {common,hdfs,mapred}/*.jar .
+
+# tar up the result
+cd ..
+tar czf "hadoop-$HADOOP_VERSION.tar.gz" "hadoop-$HADOOP_VERSION"
+mv hadoop-$HADOOP_VERSION build

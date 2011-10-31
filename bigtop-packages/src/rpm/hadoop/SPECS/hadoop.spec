@@ -430,7 +430,7 @@ fi
 %exclude %{lib_hadoop}/sbin/%{hadoop_arch}
 %exclude %{lib_hadoop}/bin/fuse_dfs
 # FIXME: The following is a workaround for BIGTOP-139
-%exclude %{lib_hadoop}/bin/task-controller
+# %exclude %{lib_hadoop}/bin/task-controller
 %exclude %{lib_hadoop}/libexec/jsvc*
 
 %files doc
@@ -500,7 +500,6 @@ fi
 %attr(0755,root,root) %{lib_hadoop}/bin/fuse_dfs_wrapper.sh
 %attr(0755,root,root) %{bin_hadoop}/hadoop-fuse-dfs
 %attr(0644,root,root) %{man_hadoop}/man1/hadoop-fuse-dfs.1.*
-%config(noreplace) /etc/default/hadoop-fuse
 
 %files pipes
 %defattr(-,root,root)
