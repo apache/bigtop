@@ -65,6 +65,14 @@ mv common/{LICENSE,NOTICE,README}.txt .
 rm hdfs/{LICENSE,NOTICE}.txt # same as common
 rm mapred/{LICENSE,NOTICE}.txt # same as common
 
+# munge the docs directories
+for dir in docs; do
+  mkdir $dir
+  for proj in common hdfs mapred; do
+    cp -Rp $proj/$dir/* $dir
+  done
+done
+
 # munge the bin and conf directories
 for dir in bin conf; do
   mkdir $dir
