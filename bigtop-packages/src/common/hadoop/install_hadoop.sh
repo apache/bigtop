@@ -62,8 +62,8 @@ while true ; do
         --distro-dir)
         DISTRO_DIR=$2 ; shift 2
         ;;
-        --lib-dir)
-        LIB_DIR=$2 ; shift 2
+        --hadoop-dir)
+        HADOOP_DIR=$2 ; shift 2
         ;;
         --system-lib-dir)
         SYSTEM_LIB_DIR=$2 ; shift 2
@@ -77,8 +77,11 @@ while true ; do
         --doc-dir)
         DOC_DIR=$2 ; shift 2
         ;;
-        --etc-dir)
-        ETC_DIR=$2 ; shift 2
+        --hadoop-etc-dir)
+        HADOOP_ETC_DIR=$2 ; shift 2
+        ;;
+        --yarn-etc-dir)
+        YARN_ETC_DIR=$2 ; shift 2
         ;;
         --installed-lib-dir)
         INSTALLED_LIB_DIR=$2 ; shift 2
@@ -110,24 +113,20 @@ for var in PREFIX BUILD_DIR; do
   fi
 done
 
-LIB_DIR=${LIB_DIR:-$PREFIX/usr/lib/hadoop}
+HADOOP_DIR=${HADOOP_DIR:-$PREFIX/usr/lib/hadoop}
 SYSTEM_LIB_DIR=${SYSTEM_LIB_DIR:-/usr/lib}
 BIN_DIR=${BIN_DIR:-$PREFIX/usr/bin}
 DOC_DIR=${DOC_DIR:-$PREFIX/usr/share/doc/hadoop}
 MAN_DIR=${MAN_DIR:-$PREFIX/usr/man}
 EXAMPLE_DIR=${EXAMPLE_DIR:-$DOC_DIR/examples}
 SRC_DIR=${SRC_DIR:-$PREFIX/usr/src/hadoop}
-ETC_DIR=${ETC_DIR:-$PREFIX/etc/hadoop}
+HADOOP_ETC_DIR=${HADOOP_ETC_DIR:-$PREFIX/etc/hadoop}
+YARN_ETC_DIR=${YARN_ETC_DIR:-$PREFIX/etc/yarn}
 
-INSTALLED_LIB_DIR=${INSTALLED_LIB_DIR:-/usr/lib/hadoop}
+INSTALLED_HADOOP_DIR=${INSTALLED_HADOOP_DIR:-/usr/lib/hadoop}
 
-mkdir -p $LIB_DIR
-(cd $BUILD_DIR && tar -cf - .) | (cd $LIB_DIR && tar xf - )
-
-# Take out things we've installed elsewhere
-for x in sources conf etc share/doc lib/libhdfs* ; do
-  rm -rf $LIB_DIR/$x 
-done
+HADOOP_BIN_DIR=${HADOOP_DIR}/bin
+HADOOP_SBIN_DIR=${HADOOP_DIR}/bin
 
 # Make bin wrappers
 mkdir -p $BIN_DIR
@@ -137,139 +136,20 @@ for bin_wrapper in hadoop ; do
   cat > $wrapper <<EOF
 #!/bin/sh
 
-export HADOOP_HOME=$INSTALLED_LIB_DIR
-exec $INSTALLED_LIB_DIR/bin/$bin_wrapper "\$@"
+export HADOOP_HOME=$INSTALLED_HADOOP_DIR
+exec $INSTALLED_HADOOP_DIR/bin/$bin_wrapper "\$@"
 EOF
   chmod 755 $wrapper
 done
 
-# Link examples to /usr/share
-mkdir -p $EXAMPLE_DIR
-# FIXME
-#for x in $LIB_DIR/*examples*jar ; do
-#  INSTALL_LOC=`echo $x | sed -e "s,$LIB_DIR,$INSTALLED_LIB_DIR,"`
-#  ln -sf $INSTALL_LOC $EXAMPLE_DIR/
-#done
-# And copy the source
-mkdir -p $EXAMPLE_DIR/src
-cp -a $BUILD_DIR/sources/src/examples/* $EXAMPLE_DIR/src
+mkdir -p ${HADOOP_BIN_DIR}
+cp -a ${BUILD_DIR}/bin/* ${HADOOP_BIN_DIR}/
 
-# Install docs
-mkdir -p $DOC_DIR
-cp -r $BUILD_DIR/share/doc/* $DOC_DIR
+mkdir -p ${HADOOP_SBIN_DIR}
+cp ${BUILD_DIR}/sbin/* ${HADOOP_SBIN_DIR}/
 
-# Install source
-mkdir -p ${SRC_DIR}
-rm -f hdfs/src/contrib/fuse-dfs/src/*.o 
-rm -f hdfs/src/contrib/fuse-dfs/src/fuse_dfs
-# rm -rf ${BUILD_SRC_DIR}/contrib/hod
-# rm -f ${SRC_DIR}/contrib/fuse-dfs/fuse_dfs
+install -d -m 0755 $PREFIX/$HADOOP_ETC_DIR/conf.empty
+install -d -m 0755 $PREFIX/$YARN_ETC_DIR/conf.empty
 
-
-cp -a $BUILD_DIR/sources ${SRC_DIR}/
-
-# Make the empty config
-install -d -m 0755 $ETC_DIR/conf.empty
-(cd ${BUILD_DIR}/etc/hadoop && tar cf - .) | (cd $ETC_DIR/conf.empty && tar xf -)
-# Overlay the -site files
-(cd $DISTRO_DIR/conf.empty && tar --exclude='.svn' -cf - .) | (cd $ETC_DIR/conf.empty && tar -xf -)
-
-# Link the HADOOP_HOME conf, log and pid dir to installed locations
-rm -rf $LIB_DIR/conf
-ln -s ${ETC_DIR#$PREFIX}/conf $LIB_DIR/conf
-mkdir $LIB_DIR/etc
-ln -s ${ETC_DIR#$PREFIX}/conf $LIB_DIR/etc/hadoop
-rm -rf $LIB_DIR/logs
-ln -s /var/log/hadoop $LIB_DIR/logs
-rm -rf $LIB_DIR/pids
-ln -s /var/run/hadoop $LIB_DIR/pids
-
-# Make the pseudo-distributed config
-for conf in conf.pseudo ; do
-  install -d -m 0755 $ETC_DIR/$conf
-  # Install the default configurations
-  (cd ${BUILD_DIR}/conf && tar -cf - .) | (cd $ETC_DIR/$conf && tar -xf -)
-  # Overlay the -site files
-  (cd $DISTRO_DIR/$conf && tar --exclude='.svn' -cf - .) | (cd $ETC_DIR/$conf && tar -xf -)
-done
-
-# man pages
-mkdir -p $MAN_DIR/man1
-gzip -c < $DISTRO_DIR/hadoop.1 > $MAN_DIR/man1/hadoop.1.gz
-
-############################################################
-# ARCH DEPENDENT STUFF
-############################################################
-
-if [ ! -z "$NATIVE_BUILD_STRING" ]; then
-  # Fuse 
-  mkdir -p $LIB_DIR/bin
-  if [ -d $BUILD_DIR/contrib/fuse-dfs ]; then
-    ln -s ../contrib/fuse-dfs/fuse_dfs $LIB_DIR/bin/fuse_dfs
-    gzip -c < $DISTRO_DIR/hadoop-fuse-dfs.1 > $MAN_DIR/man1/hadoop-fuse-dfs.1.gz
-
-    fuse_wrapper=${BIN_DIR}/hadoop-fuse-dfs
-  cat > $fuse_wrapper << EOF
-#!/bin/bash
-
-/sbin/modprobe fuse
-
-export HADOOP_HOME=$INSTALLED_LIB_DIR
-
-if [ -f /etc/default/hadoop-fuse ] 
-  then . /etc/default/hadoop-fuse
-fi
-
-if [ -f \$HADOOP_HOME/bin/hadoop-config.sh ] 
-  then . \$HADOOP_HOME/bin/hadoop-config.sh
-fi
-
-if [ "\${LD_LIBRARY_PATH}" = "" ]; then
-  export LD_LIBRARY_PATH=/usr/lib
-  for f in \`find \${JAVA_HOME}/jre/lib -name client -prune -o -name libjvm.so -exec dirname {} \;\`; do
-    export LD_LIBRARY_PATH=\$f:\${LD_LIBRARY_PATH}
-  done
-fi
-
-for i in \${HADOOP_HOME}/*.jar \${HADOOP_HOME}/lib/*.jar
-  do CLASSPATH+=\$i:
-done
-
-export PATH=\$PATH:\${HADOOP_HOME}/bin/
-
-env CLASSPATH=\$CLASSPATH \${HADOOP_HOME}/bin/fuse_dfs \$@
-EOF
-
-    chmod 755 $fuse_wrapper
-  fi
-
-  # sbin
-  mkdir -p $LIB_DIR/sbin/${NATIVE_BUILD_STRING}
-  mv $LIB_DIR/libexec/jsvc $LIB_DIR/sbin/${NATIVE_BUILD_STRING}
-
-  # Native compression libs
-  mkdir -p $LIB_DIR/lib/native/${NATIVE_BUILD_STRING}
-  cp ${BUILD_DIR}/lib/lib* $LIB_DIR/lib/native/${NATIVE_BUILD_STRING}
-
-  # Pipes
-  mkdir -p $PREFIX/$SYSTEM_LIB_DIR $PREFIX/usr/include
-  cp ${BUILD_DIR}/lib/libhadooppipes.a ${BUILD_DIR}/lib/libhadooputils.a $PREFIX/$SYSTEM_LIB_DIR
-  cp -r ${BUILD_DIR}/sources/src/c++/pipes/api/hadoop $PREFIX/usr/include/
-  cp -r ${BUILD_DIR}/sources/src/c++/utils/api/hadoop $PREFIX/usr/include/
-
-  # libhdfs
-  cp ${BUILD_DIR}/lib/libhdfs* $PREFIX/$SYSTEM_LIB_DIR
-
-  # libhdfs-devel - hadoop doesn't realy install these things in nice places :(
-  mkdir -p $PREFIX/usr/share/doc/libhdfs-devel/examples
-
-  cp hadoop-hdfs-project/hadoop-hdfs/src/main/native/hdfs.h $PREFIX/usr/include/
-  #cp hdfs/src/c++/libhdfs/hdfs_*.c $PREFIX/usr/share/doc/libhdfs-devel/examples
-
-  #    This is somewhat unintuitive, but the -devel package has this symlink (see Debian Library Packaging Guide)
-  #ln -sf libhdfs.so.0.0.0 $PREFIX/$SYSTEM_LIB_DIR/libhdfs.so
-  sed -ie "s|^libdir='.*'|libdir=\"$SYSTEM_LIB_DIR\"|" $PREFIX/$SYSTEM_LIB_DIR/libhdfs.la
-fi
-
-# XXX Hack to get hadoop to get packaged
-find $PREFIX -name "*.debug" | xargs rm -fv
+cp  ${BUILD_DIR}/conf/* $PREFIX/$YARN_ETC_DIR/conf.empty
+cp ${BUILD_DIR}/etc/hadoop/* $PREFIX/$YARN_ETC_DIR/conf.empty

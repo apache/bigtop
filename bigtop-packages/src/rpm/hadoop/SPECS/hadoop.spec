@@ -17,6 +17,7 @@
 #
 %define hadoop_name hadoop
 %define etc_hadoop /etc/%{name}
+%define etc_yarn /etc/yarn
 %define config_hadoop %{etc_hadoop}/conf
 %define lib_hadoop_dirname /usr/lib
 %define lib_hadoop %{lib_hadoop_dirname}/%{name}
@@ -292,7 +293,7 @@ DataNodes to bind to a low (privileged) port and then drop root privileges
 before continuing operation.
 
 %prep
-%setup -n apache-hadoop-common-e141664
+%setup -n apache-hadoop-common-ee19013
 
 %build
 # This assumes that you installed Java JDK 6 and set JAVA_HOME
@@ -318,7 +319,8 @@ bash %{SOURCE2} \
   --src-dir=$RPM_BUILD_ROOT%{src_hadoop} \
   --lib-dir=$RPM_BUILD_ROOT%{lib_hadoop} \
   --system-lib-dir=%{_libdir} \
-  --etc-dir=$RPM_BUILD_ROOT%{etc_hadoop} \
+  --hadoop-etc-dir=$RPM_BUILD_ROOT%{etc_hadoop} \
+  --yarn-etc-dir=$RPM_BUILD_ROOT%{etc_yarn} \
   --prefix=$RPM_BUILD_ROOT \
   --doc-dir=$RPM_BUILD_ROOT%{doc_hadoop} \
   --example-dir=$RPM_BUILD_ROOT%{doc_hadoop}/examples \

@@ -17,38 +17,25 @@
 set -ex
 
 # FIXME: there has to be a better way
-(wget http://protobuf.googlecode.com/files/protobuf-2.4.1.tar.bz2
-tar xjvf protobuf-2.4.1.tar.bz2
-cd protobuf-2.4.1
-./configure --prefix=`pwd`/root
-make install)
+#(wget http://protobuf.googlecode.com/files/protobuf-2.4.1.tar.bz2
+#tar xjvf protobuf-2.4.1.tar.bz2
+#cd protobuf-2.4.1
+#./configure --prefix=`pwd`/root
+#make install)
 
-PATH=`pwd`/protobuf-2.4.1/root/bin:$PATH
-export PATH
+#PATH=`pwd`/protobuf-2.4.1/root/bin:$PATH
+#export PATH
 
-STITCH_FILES="CHANGES.txt LICENSE.txt NOTICE.txt README.txt"
 
 mkdir build
-rm -f $STITCH_FILES
+mkdir build/src
 
-mvn -Pdist -Pnative -Dtar -DskipTests -DskipITs package  "$@"
-# FIXME: MR should really be part of the above
-(cd hadoop-mapreduce-project ; mvn -Dtar -DskipTests -DskipITs package assembly:single "$@")
+MAVEN_SKIP_TESTS="-DskipTests -DskipTest -DskipITs"
+mvn -Pdist -Pnative -Psrc -Pdocs -Dtar ${MAVEN_SKIP_TESTS} package  "$@"
+mvn install ${MAVEN_SKIP_TESTS} $@
+mvn site site:stage ${MAVEN_SKIP_TESTS} $@
 
-(cd build ; tar --strip-components=1 -xzvf  ../hadoop-hdfs-project/hadoop-hdfs/target/hadoop-hdfs-0.23.0-SNAPSHOT.tar.gz)
-(cd build ; tar --strip-components=1 -xzvf  ../hadoop-common-project/hadoop-common/target/hadoop-common-0.23.0-SNAPSHOT.tar.gz)
-(cd build ; tar --strip-components=1 -xzvf  ../hadoop-mapreduce-project/target/hadoop-mapreduce-0.23.0-SNAPSHOT-all.tar.gz)
+(cd build ; tar --strip-components=1 -xzvf  ../hadoop-dist/target/hadoop-0.23.0-SNAPSHOT.tar.gz)
+(cd build/src ; tar --strip-components=1 -xzvf  ../../hadoop-dist/target/hadoop-dist-0.23.0-SNAPSHOT-src.tar.gz)
 
-# FIXME: This could be missing MR 
-for file in $STITCH_FILES ; do
-  cat hadoop*project/hadoop*/$file >> $file
-done
 
-# A bunch of workarounds
-cp build/conf/* build/etc/hadoop
-mkdir -p build/contrib/fuse-dfs
-cp build/lib/libhdfs.a build/lib/libhadooppipes.a
-cp build/lib/libhdfs.a build/lib/libhadooputils.a
-rm build/libexec/jsvc
-cp /bin/true build/libexec/jsvc
-cp build/sbin/hadoop-daemon.sh build/bin/hadoop-daemon.sh
