@@ -161,8 +161,10 @@ mkdir -p $EXAMPLE_DIR/src
 cp -a mapreduce/src/examples/* $EXAMPLE_DIR/src
 
 # Install docs
-mkdir -p $DOC_DIR
-cp -r build/docs/* $DOC_DIR
+for i in common hdfs mapred ; do
+  mkdir -p $DOC_DIR/$i
+  cp -r build/$i/docs/* $DOC_DIR/$i
+done
 
 # Install source
 mkdir -p ${SRC_DIR}
