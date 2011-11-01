@@ -36,19 +36,21 @@ class StateVerifierHue extends StateVerifier {
 
   public void createState() {
     // first call creates admin/admin username/keypair
-    sh.exec("curl --data '${creds}' ${loginURL}");
+    sh.exec("curl -m 60 --data '${creds}' ${loginURL}");
   }
 
   public boolean verifyState() {
     String sessionId;
     boolean res;
 
-    sh.exec("curl -i --data '${creds}' ${loginURL} | sed -e 's#Set-Cookie: *##' -e 's#;.*\$##' | grep '^sessionid'");
+    sh.exec("curl -m 60 -i --data '${creds}' ${loginURL} | sed -e 's#Set-Cookie: *##' -e 's#;.*\$##' | grep '^sessionid'");
     sessionId = sh.getOut().join('');
 
-    res = (sh.exec("curl -b '${sessionId}' ${checkURL} | grep -q 'All ok. Configuration check passed'").getRet() == 0);
+    sh.exec("curl -m 60 -b '${sessionId}' ${checkURL}");
+    res = (sh.getOut().grep( ~/.*All ok. Configuration check passed.*/ ).size() != 0)
     checkApps.each {
-      res = res && (sh.exec("curl -b '${sessionId}' ${hueServer}/${it}/ | grep -q 'Page Not Found'").getRet() != 0);
+      sh.exec("curl -m 60 -b '${sessionId}' ${hueServer}/${it}/");
+      res = res && (sh.getOut().grep( ~/.*Page Not Found.*/ ).size() == 0);
     }
     return res;
   }

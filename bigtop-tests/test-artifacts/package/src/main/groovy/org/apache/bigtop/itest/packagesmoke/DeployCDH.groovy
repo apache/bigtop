@@ -58,13 +58,16 @@ class DeployCDH {
     Map<String, LinkedHashMap<String, Collection>> distPackages = [
       "2" : [ "apt" : cdh2 + aptPkg,
               "yum" : cdh2 + yumPkg + [ "hadoop-0.20-docs", "hadoop-hive-webinterface" ],
+               "zypper" : [],
               // "cloudera-desktop", "cloudera-desktop-plugins",
             ],
     "3b2" : [ "apt" : cdh3b2 + aptPkg,
               "yum" : cdh3b2 + yumPkg + [ "hadoop-0.20-docs", "hadoop-hive-webinterface" ],
+              "zypper" : [],
             ],
     "3b3" : [ "apt" : cdh3b3 + aptPkg + [ "hadoop-hbase-doc",  ],
               "yum" : cdh3b3 + yumPkg + [ "hadoop-0.20-docs", "hadoop-hive-webinterface" ],
+              "zypper" : [],
             ],
     "3b4" : [ "apt" : cdh3b3 + aptPkg + [ "hadoop-hbase-doc",  ],
               "yum" : cdh3b3 + yumPkg + [ "hadoop-0.20-doc",  "hadoop-hive-webinterface" ],
@@ -75,6 +78,10 @@ class DeployCDH {
               "zypper" : cdh3b3 + zypperPkg,
             ],
     "3u0" : [ "apt" : cdh3b3 + aptPkg + [ "hadoop-hbase-doc",  ],
+              "yum" : cdh3b3 + yumPkg + [ "hadoop-0.20-doc" ],
+              "zypper" : cdh3b3 + zypperPkg,
+            ],
+    "3u1" : [ "apt" : cdh3b3 + aptPkg + [ "hadoop-hbase-doc",  ],
               "yum" : cdh3b3 + yumPkg + [ "hadoop-0.20-doc" ],
               "zypper" : cdh3b3 + zypperPkg,
             ],
@@ -94,10 +101,22 @@ class DeployCDH {
     checkThat("failed to add repository for pre-upgrade CDH deployment",
               oldRepo.getPm().refresh(), equalTo(0));
 
+    // Lets try to remove existing packages -- just in case
+    List stalePkgs = [];
+    distPackages.each { key, value -> stalePkgs.addAll(value[pm.type]); }
+    (stalePkgs as Set).each {
+      PackageInstance pkg = PackageInstance.getPackageInstance(pm, it);
+      pkg.remove();
+    }
+
     packages.each {
       PackageInstance pkg = PackageInstance.getPackageInstance(pm, it);
-      checkThat("failed to install required package ${pkg.getName()}",
-                pkg.install(), equalTo(0));
+      // Some packages get installed as requirement for others that we install.
+      // We don't want to install them for a second time.
+      if (!pkg.isInstalled()) {
+        checkThat("failed to install required package ${pkg.getName()}",
+                  pkg.install(), equalTo(0));
+      }
       pkg.getServices().each { it.value.stop(); }
     }
 

@@ -27,35 +27,10 @@ import org.apache.bigtop.itest.junit.OrderedParameterized
 import org.apache.bigtop.itest.junit.OrderedParameterized.RunStage
 
 @RunWith(OrderedParameterized.class)
-class TestPackagesSingleNode extends TestPackagesBasics {
+class TestPackagesPseudoDistributedWithRM extends TestPackagesPseudoDistributed {
 
-  public TestPackagesSingleNode(String pkgName, Node pkgGolden) {
+  public TestPackagesPseudoDistributedWithRM(String pkgName, Node pkgGolden) {
     super(pkgName, pkgGolden);
-  }
-
-  @RunStage(level=-1)
-  @Test
-  void testPackageUpgrade() {
-    if (isUpgrade()) {
-      checkThat("upgrade sequence on a package $name failed to be executed",
-                CDHUpgradeSequence.execute(name, System.getProperty("cdh.prev.repo.version"), "3"), equalTo(0));
-    }
-  }
-
-  @Test
-  void testPulledDeps() {
-    checkPulledDeps(getMap(golden.deps));
-  }
-
-  @Test
-  void testPackageContent() {
-    Map files = getMap(golden.content);
-    checkFiles(files.config, files.doc, files.file);
-  }
-
-  @Test
-  void testPackageServices() {
-    checkServices(getMap(golden.services));
   }
 
   @RunStage(level=1)

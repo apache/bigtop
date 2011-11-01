@@ -36,6 +36,7 @@ class StateVerifierHBase extends StateVerifier {
   public static void createStaticState() {
     shHBase.exec("create 't1', 'f1'",
                  "put 't1', 'r1', 'f1:q', 'val'",
+                 "flush 't1'",
                  "quit\n");
   }
 

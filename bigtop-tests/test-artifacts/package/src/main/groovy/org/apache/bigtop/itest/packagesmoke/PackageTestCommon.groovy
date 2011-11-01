@@ -30,6 +30,7 @@ import org.hamcrest.Matcher
 
 import static org.apache.bigtop.itest.packagesmoke.PackageTestMatchers.MapHasKeys.hasSameKeys
 import org.apache.bigtop.itest.shell.Shell
+import groovy.xml.MarkupBuilder
 
 class PackageTestCommon {
   static public PackageManager pm;
@@ -48,7 +49,7 @@ class PackageTestCommon {
   }
 
   String formatDescription(String description, String summary) {
-    return ((summary ?: "") + ' ' + description).replaceAll(/\s+/,' ').trim();
+    return ((summary ?: "") + ' ' + description).replaceAll(/\s+/,' ').replaceAll(/\s\.\s/,' ').replaceAll(/\s\.$/,' ').trim();
   }
 
   private void checkMetadata(PackageInstance pkg, Map expected_metadata) {
@@ -96,7 +97,13 @@ class PackageTestCommon {
   }
 
   public void checkPulledDeps(Map expected_deps) {
-    Map pkgDeps = pkg.getDeps();
+    Map pkgDeps = [:];
+
+    pkg.getDeps().each { k, v ->
+      if (!(k =~ /\.so\.[0-9]/).find()) {
+        pkgDeps[k] = v;
+      }
+    }
 
     checkThat("a set of dependencies of package $name is different from what was expected",
               pkgDeps, hasSameKeys(expected_deps));
@@ -367,14 +374,23 @@ class PackageTestCommon {
                 problemFiles, equalTo([]));
 
     // a bit of debug output
-    pkg.getFiles().each {
-      Map meta = fileMeta[it] ?: [:];
-      String target = meta.target ? " target=\"${meta.target}\"" : "";
-      String tip = configs[it] ? "config" : (docs[it] ? "doc " : "file");
-      println "\n::: ${name}    <${tip} name=\"${it}\" owners=\"${meta.owners}\" perm=\"${meta.perm}\"" +
-                                  " user=\"${meta.user}\" group=\"${meta.group}\"${target}/>";
+    def newManifest = new MarkupBuilder(new FileWriter("${pkg.name}_manifest.xml"));
+
+    newManifest.content() {
+      fileMeta = getLsMetadata(pkg.getFiles());
+
+      pkg.getFiles().each {
+        Map meta = fileMeta[it] ?: [:];
+        String node = configs[it] ? "config" : (docs[it] ? "doc " : "file");
+        int owners = meta.owners ?: -1;
+
+        if (meta.target) {
+          "$node"(name : it, owners : owners, perm : meta.perm, user : meta.user, group : meta.group, target : meta.target);
+        } else {
+          "$node"(name : it, owners : owners, perm : meta.perm, user : meta.user, group : meta.group);
+        }
+      }
     }
-    // println "";
   }
 
   public void checkComplimentary32bitInstall() {
