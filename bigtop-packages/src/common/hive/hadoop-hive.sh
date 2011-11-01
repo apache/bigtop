@@ -14,22 +14,27 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-# chkconfig: 2345 90 10
-# description: 
+#
+#
+#
+# Starts a Hive @HIVE_DAEMON@
+#
+# chkconfig: 345 90 10
+# description: Starts a Hive @HIVE_DAEMON@
 # processname: hive
 # pidfile: /var/run/hive/hive-@HIVE_DAEMON@.pid
 ### BEGIN INIT INFO
-# Provides:          hive-@HIVE_DAEMON@
-# Required-Start:    $network $local_fs
-# Required-Stop:
-# Should-Start:      $named
+# Provides:          hadoop-hive-@HIVE_DAEMON@
+# Required-Start:    $syslog $remote_fs
+# Should-Start:
+# Required-Stop:     $syslog $remote_fs
 # Should-Stop:
-# Default-Start:     2 3 4 5
-# Default-Stop:      0 1 6
-# Short-Description: hive
+# Default-Start:     3 4 5
+# Default-Stop:      0 1 2 6
+# Short-Description: Starts a Hive @HIVE_DAEMON@
 ### END INIT INFO
 
+source /lib/lsb/init-functions
 
 # Autodetect JAVA_HOME if not defined
 if [ -e /usr/libexec/bigtop-detect-javahome ]; then
@@ -38,125 +43,91 @@ elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
   . /usr/lib/bigtop-utils/bigtop-detect-javahome
 fi
 
-# Modelled after $HADOOP_HOME/bin/hadoop-daemon.sh
+RETVAL_SUCCESS=0
+
+STATUS_RUNNING=0
+STATUS_DEAD=1
+STATUS_DEAD_AND_LOCK=2
+STATUS_NOT_RUNNING=3
+
+ERROR_PROGRAM_NOT_INSTALLED=5
+ERROR_PROGRAM_NOT_CONFIGURED=6
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 SYS_FILE="/etc/default/hadoop-hive-@HIVE_DAEMON@"
 EXE_FILE="/usr/lib/hive/bin/hive"
 PID_FILE="/var/run/hive/hive-@HIVE_DAEMON@.pid"
+LOCKFILE="/var/lock/subsys/hadoop-hive-@HIVE_DAEMON@"
 LOG_FILE="/var/log/hive/hive-@HIVE_DAEMON@.log"
 HIVE_USER="hive"
-NICENESS="0"
+HIVE_HOME="`eval echo ~$HIVE_USER`"
+NICENESS="+0"
 NAME="hadoop-hive-@HIVE_DAEMON@"
-DESC="Hive daemon"
- 
-DODTIME=3
-SLAVE_TIMEOUT=300
+DESC="Hive @HIVE_DAEMON@ daemon"
+TIMEOUT=3
 
 [ -f $SYS_FILE ] && . $SYS_FILE
 
-hive_die() {
-    echo "$@"
-    exit 1
-}
-hive_is_process_alive() {
-    local pid="$1"
-    kill -0 $pid > /dev/null 2>&1
-}
-hive_check_pidfile() {
-    local pidfile="$1" # IN
-    local pid
-
-    pid=`cat "$pidfile" 2>/dev/null`
-    if [ "$pid" = '' ]; then
-    # The file probably does not exist or is empty. 
-	return 1
-    fi
-    
-    set -- $pid
-    pid="$1"
-
-    hive_is_process_alive $pid
-}
-hive_process_kill() {
-    local pid="$1"    # IN
-    local signal="$2" # IN
-    local second
-
-    kill -$signal $pid 2>/dev/null
-
-    for second in 0 1 2 3 4 5 6 7 8 9 10; do
-      hive_is_process_alive "$pid" || return 0
-      sleep 1
-    done
-
-    return 1
-}
-hive_stop_pidfile() {
-    local pidfile="$1" # IN
-    local pid
-
-    pid=`cat "$pidfile" 2>/dev/null`
-    if [ "$pid" = '' ]; then
-      # The file probably does not exist or is empty. Success
-	return 0
-    fi
-    
-    set -- $pid
-    pid="$1"
-
-    # First try the easy way
-    if hive_process_kill "$pid" 15; then
-	return 0
-    fi
-
-    # Otherwise try the hard way
-    if hive_process_kill "$pid" 9; then
-	return 0
-    fi
-
-    return 1
-}
-
 hive_start() {
-    if hive_check_pidfile $PID_FILE ; then
-      exit 0
-    fi
+    [ -x $EXE_FILE ] || exit $ERROR_PROGRAM_NOT_INSTALLED
 
     service_name="@HIVE_DAEMON@"
     if [ $service_name = "server" ] ; then
       service_name="hiveserver"
       exec_env="HADOOP_OPTS=\"-Dhive.log.dir=`dirname $LOG_FILE`\""
     fi
-    echo starting $EXE_FILE, logging to $LOG_FILE
-    su -s /bin/sh $HIVE_USER \
-       -c "$exec_env nohup nice -n $NICENESS       \
+
+    log_success_msg "Starting $desc (hadoop-hive-@HIVE_DAEMON@): "
+    start_daemon -u $HIVE_USER -p $PID_FILE -n $NICENESS  /bin/sh -c "cd $HIVE_HOME ; $exec_env nohup \
            $EXE_FILE --service $service_name $PORT \
              > $LOG_FILE 2>&1 < /dev/null & "'echo $! '"> $PID_FILE"
-    sleep 3
 
-    hive_check_pidfile $PID_FILE || hive_die "failed to start @HIVE_DAEMON@"
+    RETVAL=$?
+    [ $RETVAL -eq $RETVAL_SUCCESS ] && touch $LOCKFILE
+    return $RETVAL
 }
+
 hive_stop() {
-    if [ -f $PID_FILE ]; then
-      hive_stop_pidfile $PID_FILE || hive_die "failed to stop metastore"
-      rm $PID_FILE  
-    fi
+    log_success_msg "Stopping $desc (hadoop-hive-@HIVE_DAEMON@): "
+    killproc -p $PID_FILE java
+    RETVAL=$?
+
+    [ $RETVAL -eq $RETVAL_SUCCESS ] && rm -f $LOCKFILE $PID_FILE
+    return $RETVAL
 }
+
 hive_restart() {
     hive_stop
-    [ -n "$DODTIME" ] && sleep $DODTIME
+    [ -n "$TIMEOUT" ] && sleep $TIMEOUT
     hive_start
 }
+
 hive_status() {
-    echo -n "$NAME is "
-    if hive_check_pidfile $PID_FILE ;  then
-     echo "running"
-    else
-     echo "not running"
-     exit 1
-    fi
+    echo -n "Checking for service $desc: "
+    pidofproc -p $PID_FILE java > /dev/null
+    status=$?
+
+    case "$status" in
+      $STATUS_RUNNING)
+        log_success_msg "@HADOOP_DAEMON@ is running"
+        ;;
+      $STATUS_DEAD)
+        log_failure_msg "@HADOOP_DAEMON@ is dead and pid file exists"
+        ;;
+      $STATUS_DEAD_AND_LOCK)
+        log_failure_msg "@HADOOP_DAEMON@ is dead and lock file exists"
+        ;;
+      $STATUS_NOT_RUNNING)
+        log_failure_msg "@HADOOP_DAEMON@ is not running"
+        ;;
+      *)
+        log_failure_msg "@HADOOP_DAEMON@ status is unknown"
+        ;;
+    esac
+    return $status
 }
+
+RETVAL=0
 
 case "$1" in
     start)
@@ -168,7 +139,7 @@ case "$1" in
       ;; 
 
     force-reload|condrestart|try-restart)
-      hive_check_pidfile $PID_FILE && hive_restart
+      [ -e $LOCKFILE ] && hive_restart || :
       ;;
 
     restart|reload)
@@ -186,3 +157,5 @@ case "$1" in
 	exit 1
 	;;
 esac
+
+exit $RETVAL
