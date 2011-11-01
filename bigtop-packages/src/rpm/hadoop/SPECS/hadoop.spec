@@ -403,6 +403,11 @@ getent passwd hdfs >/dev/null || /usr/sbin/useradd --comment "Hadoop HDFS" --she
   --slave /etc/%{hadoop_name} %{hadoop_name}-etc %{etc_hadoop} \
   --slave %{man_hadoop}/man1/%{hadoop_name}.1.*z %{hadoop_name}-man %{man_hadoop}/man1/%{name}.1.*z
 
+chmod g+w /var/lib/hadoop/cache/hadoop/
+mkdir -p /var/log/hadoop || :
+touch /var/log/hadoop/SecurityAuth.audit
+chgrp hadoop /var/log/hadoop/SecurityAuth.audit
+chmod g+w /var/log/hadoop/SecurityAuth.audit
 
 %preun
 if [ "$1" = 0 ]; then
