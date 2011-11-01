@@ -1,1 +1,2 @@
 /usr/lib/hadoop/sbin
+/usr/lib/hadoop/bin/jsvc*

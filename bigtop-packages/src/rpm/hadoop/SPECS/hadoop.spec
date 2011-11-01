@@ -15,6 +15,12 @@
 #
 # Hadoop RPM spec file
 #
+
+# FIXME: we need to disable a more strict checks on native files for now,
+# since Hadoop build system makes it difficult to pass the kind of flags
+# that would make newer RPM debuginfo generation scripts happy.
+%undefine _missing_build_ids_terminate_build
+
 %define hadoop_name hadoop
 %define etc_hadoop /etc/%{name}
 %define etc_yarn /etc/yarn
@@ -25,7 +31,6 @@
 %define log_hadoop %{log_hadoop_dirname}/%{name}
 %define bin_hadoop %{_bindir}
 %define man_hadoop %{_mandir}
-%define doc_hadoop %{_docdir}/%{name}-%{hadoop_version}
 %define src_hadoop /usr/src/%{name}
 %define hadoop_username mapred
 %define hadoop_services namenode secondarynamenode datanode jobtracker tasktracker
@@ -55,6 +60,7 @@
     /usr/lib/rpm/brp-python-bytecompile ; \
     %{nil}
 
+%define doc_hadoop %{_docdir}/%{name}-%{hadoop_version}
 %define alternatives_cmd alternatives
 %global initd_dir %{_sysconfdir}/rc.d/init.d
 %endif
@@ -73,11 +79,13 @@
     /usr/lib/rpm/brp-compress ; \
     %{nil}
 
+%define doc_hadoop %{_docdir}/%{name}
 %define alternatives_cmd update-alternatives
 %global initd_dir %{_sysconfdir}/rc.d
 %endif
 
 %if  0%{?mgaversion}
+%define doc_hadoop %{_docdir}/%{name}-%{hadoop_version}
 %define alternatives_cmd update-alternatives
 %global initd_dir %{_sysconfdir}/rc.d/init.d
 %endif
@@ -108,13 +116,14 @@ Source5: hadoop-init.tmpl.suse
 Source6: hadoop.1
 Source7: hadoop-fuse-dfs.1
 Source8: hadoop-fuse.default
+Source9: hadoop.nofiles.conf
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: python >= 2.4, git, fuse-devel,fuse, automake, autoconf
-Requires: textutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service
+Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils
 Provides: hadoop
 
 %if  %{?suse_version:1}0
-BuildRequires: libfuse2, libopenssl-devel, gcc-c++, ant, ant-nodeps, ant-trax, liblzo-devel
+BuildRequires: libfuse2, libopenssl-devel, gcc-c++, ant, ant-nodeps, ant-trax
 # Required for init scripts
 Requires: sh-utils, insserv
 %endif
@@ -122,14 +131,14 @@ Requires: sh-utils, insserv
 # CentOS 5 does not have any dist macro
 # So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
 %if %{!?suse_version:1}0 && %{!?mgaversion:1}0
-BuildRequires: fuse-libs, libtool, redhat-rpm-config, lzo-devel
+BuildRequires: fuse-libs, libtool, redhat-rpm-config, lzo-devel, openssl-devel
 # Required for init scripts
 Requires: sh-utils, redhat-lsb
 %endif
 
 %if  0%{?mgaversion}
-BuildRequires: libfuse-devel, libfuse2 , libopenssl-devel, gcc-c++, ant, libtool, automake, autoconf, liblzo-devel, libzlib-devel
-Requires: chkconfig, xinetd-simple-services, libzlib
+BuildRequires: libfuse-devel, libfuse2 , libopenssl-devel, gcc-c++, ant, libtool, automake, autoconf, liblzo-devel, zlib-devel
+Requires: chkconfig, xinetd-simple-services, zlib, initscripts
 %endif
 
 
@@ -300,7 +309,7 @@ before continuing operation.
 # This assumes that you installed Java JDK 5 and set JAVA5_HOME
 # This assumes that you installed Forrest and set FORREST_HOME
 
-env HADOOP_VERSION=%{hadoop_version} bash %{SOURCE1}
+env HADOOP_VERSION=%{hadoop_version} HADOOP_ARCH=%{hadoop_arch} bash %{SOURCE1}
 
 %clean
 %__rm -rf $RPM_BUILD_ROOT
@@ -365,6 +374,8 @@ done
 %__cp $RPM_SOURCE_DIR/hadoop.default $RPM_BUILD_ROOT/etc/default/hadoop
 %__cp $RPM_SOURCE_DIR/hadoop-fuse.default $RPM_BUILD_ROOT/etc/default/hadoop-fuse
 
+%__install -d -m 0755 $RPM_BUILD_ROOT/etc/security/limits.d
+%__install -m 0644 %{SOURCE9} $RPM_BUILD_ROOT/etc/security/limits.d/hadoop.nofiles.conf
 
 # /var/lib/hadoop/cache
 %__install -d -m 1777 $RPM_BUILD_ROOT/var/lib/%{name}/cache
@@ -393,6 +404,11 @@ getent passwd hdfs >/dev/null || /usr/sbin/useradd --comment "Hadoop HDFS" --she
   --slave /etc/%{hadoop_name} %{hadoop_name}-etc %{etc_hadoop} \
   --slave %{man_hadoop}/man1/%{hadoop_name}.1.*z %{hadoop_name}-man %{man_hadoop}/man1/%{name}.1.*z
 
+chmod g+w /var/lib/hadoop/cache/hadoop/
+mkdir -p /var/log/hadoop || :
+touch /var/log/hadoop/SecurityAuth.audit
+chgrp hadoop /var/log/hadoop/SecurityAuth.audit
+chmod g+w /var/log/hadoop/SecurityAuth.audit
 
 %preun
 if [ "$1" = 0 ]; then
@@ -409,6 +425,7 @@ fi
 %defattr(-,root,root)
 %config(noreplace) %{etc_hadoop}/conf.empty
 %config(noreplace) /etc/default/hadoop
+%config(noreplace) /etc/security/limits.d/hadoop.nofiles.conf
 %{lib_hadoop}
 %{bin_hadoop}/%{name}
 %{man_hadoop}/man1/hadoop.1.*z
@@ -416,6 +433,14 @@ fi
 %attr(0775,root,hadoop) %{log_hadoop}
 
 %exclude %{lib_hadoop}/lib/native
+%exclude %{lib_hadoop}/sbin/%{hadoop_arch}
+%exclude %{lib_hadoop}/bin/fuse_dfs
+%exclude %{lib_hadoop}/contrib/fuse-dfs
+%exclude %{lib_hadoop}/hdfs/contrib/fuse-dfs
+# FIXME: The following is a workaround for BIGTOP-139
+# %exclude %{lib_hadoop}/bin/task-controller
+%exclude %{lib_hadoop}/bin/jsvc*
+%exclude %{lib_hadoop}/hdfs/bin/jsvc*
 
 %files doc
 %defattr(-,root,root)
@@ -432,7 +457,6 @@ fi
 %files %1 \
 %defattr(-,root,root) \
 %{initd_dir}/%{name}-%1 \
-%{lib_hadoop}/bin/hadoop-daemon.sh \
 %post %1 \
 chkconfig --add %{name}-%1 \
 %2 \
@@ -480,9 +504,12 @@ fi
 
 %files fuse
 %defattr(-,root,root)
-%attr(0755,root,root) %{bin_hadoop}/hadoop-fuse-dfs
-%attr(0755,root,root) %{man_hadoop}/man1/hadoop-fuse-dfs.1.gz
 %config(noreplace) /etc/default/hadoop-fuse
+%{lib_hadoop}/contrib/fuse-dfs
+%attr(0755,root,root) %{lib_hadoop}/bin/fuse_dfs
+%attr(0755,root,root) %{lib_hadoop}/bin/fuse_dfs_wrapper.sh
+%attr(0755,root,root) %{bin_hadoop}/hadoop-fuse-dfs
+%attr(0644,root,root) %{man_hadoop}/man1/hadoop-fuse-dfs.1.*
 
 %files pipes
 %defattr(-,root,root)
@@ -501,5 +528,9 @@ fi
 %defattr(-,root,root)
 %dir %{lib_hadoop}/sbin
 %dir %{lib_hadoop}/sbin/%{hadoop_arch}
-# %attr(4754,root,mapred) %{lib_hadoop}/sbin/%{hadoop_arch}/task-controller
+# %attr(4750,root,mapred) %{lib_hadoop}/sbin/%{hadoop_arch}/task-controller
 %attr(0755,root,root) %{lib_hadoop}/sbin/%{hadoop_arch}/jsvc
+
+# FIXME: The following is a workaround for BIGTOP-139
+# %attr(4750,root,mapred) %{lib_hadoop}/bin/task-controller
+%attr(0755,root,root) %{lib_hadoop}/bin/jsvc*

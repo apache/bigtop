@@ -39,8 +39,8 @@ endif
 build: build-stamp
 build-stamp:
 	dh_testdir
-	env HADOOP_VERSION=${hadoop_version} \
-		sh debian/do-component-build -Divy.home=`pwd`/debian/.ivy
+	env HADOOP_VERSION=${hadoop_version} HADOOP_ARCH=${native_dir} \
+		bash debian/do-component-build -Divy.home=`pwd`/debian/.ivy
 	touch $@
 
 clean:  
@@ -82,6 +82,8 @@ namenode secondarynamenode jobtracker tasktracker datanode: debian/service-init.
 	sed -e "s|@HADOOP_DAEMON@|$@|" \
             -e "s|@HADOOP_MAJOR_VERSION@|$hadoop_version|" \
 	    -e "s|@DAEMON_USER@|$($@_user)|" $< > debian/hadoop-$@.init
+	# FIXME: workaround for BIGTOP-105
+	sed -e "s|@HADOOP_DAEMON@|$@|" < debian/hadoop.daemon.postinst.tpl > debian/hadoop-$@.postinst
 
 install-indep: namenode secondarynamenode jobtracker tasktracker datanode
 	mkdir -p debian/tmp/etc/default
@@ -95,10 +97,18 @@ install-indep: namenode secondarynamenode jobtracker tasktracker datanode
 	rm -Rf debian/hadoop/usr/lib/hadoop/bin/fuse_dfs 
 	rm -Rf debian/hadoop/usr/bin/hadoop-fuse-dfs
 	rm -Rf debian/hadoop/usr/lib/hadoop/contrib/fuse-dfs
+	rm -Rf debian/hadoop/usr/lib/hadoop/hdfs/contrib/fuse-dfs
+
+	# FIXME: The following is a workaround for BIGTOP-139
+	rm -Rf debian/hadoop/usr/lib/hadoop/bin/jsvc 
+	rm -Rf debian/hadoop/usr/lib/hadoop/hdfs/bin/jsvc
+	rm -Rf debian/hadoop/usr/lib/hadoop/bin/task-controller
 
 install-arch:
 	mkdir -p debian/tmp/etc/default
 	cp debian/hadoop-fuse.default debian/tmp/etc/default/hadoop-fuse
+	mkdir -p debian/tmp/etc/security/limits.d
+	cp debian/hadoop.nofiles.conf debian/tmp/etc/security/limits.d
 	dh_install --sourcedir=debian/tmp -s
 
 # Must not depend on anything. This is to be called by
