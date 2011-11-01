@@ -28,7 +28,14 @@
 # Default-Stop:      0 1 6
 # Short-Description: Flume @FLUME_DAEMON@
 
-source /etc/rc.d/init.d/functions
+. /etc/rc.d/init.d/functions
+
+# Autodetect JAVA_HOME if not defined
+if [ -e /usr/libexec/bigtop-detect-javahome ]; then
+  . /usr/libexec/bigtop-detect-javahome
+elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
+  . /usr/lib/bigtop-utils/bigtop-detect-javahome
+fi
 
 desc="Flume @FLUME_DAEMON@ daemon"
 

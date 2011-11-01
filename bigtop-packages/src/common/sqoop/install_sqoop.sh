@@ -135,6 +135,15 @@ for i in sqoop sqoop-codegen sqoop-export sqoop-import-all-tables sqoop-version 
 	mkdir -p `dirname $wrapper`
 	cat > $wrapper <<EOF
 #!/bin/sh
+. /etc/default/hadoop
+
+# Autodetect JAVA_HOME if not defined
+if [ -e /usr/libexec/bigtop-detect-javahome ]; then
+  . /usr/libexec/bigtop-detect-javahome
+elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
+  . /usr/lib/bigtop-utils/bigtop-detect-javahome
+fi
+
 export SQOOP_HOME=$LIB_DIR
 exec $BIN_DIR/$i "\$@"
 EOF
@@ -143,7 +152,6 @@ done
 
 install -d -m 0755 $PREFIX/$ETC_DIR/conf
 (cd ${BUILD_DIR}/conf && tar cf - .) | (cd $PREFIX/$ETC_DIR/conf && tar xf -)
-rm $PREFIX/$ETC_DIR/conf/.gitignore
 
 unlink $PREFIX/$LIB_DIR/conf || /bin/true
 ln -s /etc/sqoop/conf $PREFIX/$LIB_DIR/conf

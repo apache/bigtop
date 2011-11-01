@@ -15,14 +15,14 @@
 Source: hadoop-hbase
 Section: misc
 Priority: extra
-Maintainer: Alex Newman <newalex@cloudera.com>
+Maintainer: Bigtop <bigtop-dev@incubator.apache.org>
 Build-Depends: debhelper (>= 6), git-core, adduser
 Standards-Version: 3.8.0
-Homepage: http://hadoop.apache.org/hbase/
+Homepage: http://hbase.apache.org/
 
 Package: hadoop-hbase
 Architecture: all
-Depends: adduser, hadoop-zookeeper (>= 3.3.1), hadoop
+Depends: adduser, hadoop-zookeeper (>= 3.3.1), hadoop, bigtop-utils
 Recommends: ntp
 Description: HBase is the Hadoop database
  Use it when you need random, realtime read/write access to your Big Data. 

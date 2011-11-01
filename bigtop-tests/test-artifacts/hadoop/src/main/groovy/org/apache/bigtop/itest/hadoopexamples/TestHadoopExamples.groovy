@@ -18,7 +18,7 @@
 
 package org.apache.bigtop.itest.hadoopexamples
 
-import org.junit.Before
+import org.junit.BeforeClass
 import static org.junit.Assert.assertNotNull
 import org.apache.bigtop.itest.shell.Shell
 import static org.junit.Assert.assertTrue
@@ -28,6 +28,11 @@ import org.apache.bigtop.itest.JarContent
 import org.apache.commons.logging.LogFactory
 import org.apache.commons.logging.Log
 
+import org.apache.bigtop.itest.junit.OrderedParameterized
+import org.junit.runners.Parameterized.Parameters
+import org.junit.runner.RunWith
+
+@RunWith(OrderedParameterized.class)
 class TestHadoopExamples {
   static private Log LOG = LogFactory.getLog(TestHadoopExamples.class);
 
@@ -35,15 +40,20 @@ class TestHadoopExamples {
   private static final String HADOOP_CONF_DIR = System.getenv('HADOOP_CONF_DIR');
   private static String hadoopExamplesJar =
     JarContent.getJarName(HADOOP_HOME, 'hadoop.*examples.*.jar');
+  private static String hadoopMapredTestJar =
+    JarContent.getJarName(HADOOP_HOME, 'hadoop.*mapred-test.*.jar');
   static {
     assertNotNull("HADOOP_HOME has to be set to run this test",
         HADOOP_HOME);
     assertNotNull("HADOOP_CONF_DIR has to be set to run this test",
         HADOOP_CONF_DIR);
     assertNotNull("Can't find hadoop-examples.jar file", hadoopExamplesJar);
+    assertNotNull("Can't find hadoop-mapred-test.jar file", hadoopMapredTestJar);
   }
   static final String HADOOP_EXAMPLES_JAR =
     HADOOP_HOME + "/" + hadoopExamplesJar;
+  static final String HADOOP_MR_TEST_JAR =
+    HADOOP_HOME + "/" + hadoopMapredTestJar;
   private static final String hadoop = "$HADOOP_HOME/bin/hadoop";
 
   static Shell sh = new Shell("/bin/bash -s");
@@ -52,8 +62,8 @@ class TestHadoopExamples {
   private static Configuration conf;
   private static String HADOOP_OPTIONS;
 
-  @Before
-  void setUp() {
+  @BeforeClass
+  static void setUp() {
     conf = new Configuration();
     conf.addResource('mapred-site.xml');
     HADOOP_OPTIONS =
@@ -80,9 +90,7 @@ class TestHadoopExamples {
     assertTrue("Could not create output directory", sh.getRet() == 0);
   }
 
-  def failures = [];
-
-  def examples =
+  static Map examples =
     [
         pi                :'20 10',
         wordcount         :"$EXAMPLES/text $EXAMPLES_OUT/wordcount",
@@ -95,15 +103,29 @@ class TestHadoopExamples {
         randomtextwriter  :"-Dtest.randomtextwrite.total_bytes=1073741824 $EXAMPLES_OUT/randomtextwriter"
     ];
 
-  @Test
-  void testMRExamples() {
-    examples.each { testName, args ->
-      sh.exec("$hadoop jar $HADOOP_EXAMPLES_JAR $testName $HADOOP_OPTIONS $args");
+  private String testName;
+  private String testJar;
+  private String testArgs;
 
-      if (sh.getRet()) {
-        failures.add(testName);
-      }
-    }
-    assertTrue("The following tests have failed: " + failures, failures.size() == 0);
+  @Parameters
+  public static Map<String, Object[]> generateTests() {
+    Map<String, Object[]> res = [:];
+    examples.each { k, v -> res[k] = [k.toString(), v.toString()] as Object[]; }
+    return res;
+  }
+
+  public TestHadoopExamples(String name, String args) {
+    testName = name;
+    testArgs = args;
+    testJar = (name == "sleep") ? HADOOP_MR_TEST_JAR : 
+                                  HADOOP_EXAMPLES_JAR;
+  }
+
+  @Test
+  void testMRExample() {
+    sh.exec("$hadoop jar $testJar $testName $HADOOP_OPTIONS $testArgs");
+
+    assertTrue("Example $testName failed", 
+               sh.getRet() == 0);
   }
 }

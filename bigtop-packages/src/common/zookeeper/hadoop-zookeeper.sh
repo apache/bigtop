@@ -31,12 +31,20 @@
 ### END INIT INFO
 set -e
 
+# Autodetect JAVA_HOME if not defined
+if [ -e /usr/libexec/bigtop-detect-javahome ]; then
+  . /usr/libexec/bigtop-detect-javahome
+elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
+  . /usr/lib/bigtop-utils/bigtop-detect-javahome
+fi
+
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 DAEMON_SCRIPT="/usr/bin/zookeeper-server"
 
 NAME=hadoop-zookeeper-server
 DESC="ZooKeeper daemon"
-PID_FILE=/var/run/zookeeper/zookeeper-server.pid
+# FIXME: a workaround for BIGTOP-207
+PID_FILE=/var/lib/zookeeper/zookeeper_server.pid
 install -d -m 0755 -o zookeeper -g zookeeper /var/run/zookeeper/
 
 DODTIME=3
@@ -113,7 +121,8 @@ hadoop_stop_pidfile() {
 
 
 start() {
-    su -s /bin/sh zookeeper -c "${DAEMON_SCRIPT} start"
+    # FIXME: nohup is a workaround for BIGTOP-205
+    su -s /bin/sh zookeeper -c "nohup ${DAEMON_SCRIPT} start >/dev/null 2>&1 </dev/null"
 }
 stop() {
 	if hadoop_check_pidfile $PID_FILE ;  then

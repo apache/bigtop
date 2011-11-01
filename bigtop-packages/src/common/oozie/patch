@@ -104,7 +104,11 @@ Index: oozie-2.3.2/pom.xml
 -                <version>0.20.104.2</version>
 +                <groupId>org.apache.hadoop</groupId>
 +                <artifactId>hadoop-common</artifactId>
+<<<<<<< HEAD
++                <version>0.22.0-SNAPSHOT</version>
+=======
 +                <version>0.23.0-SNAPSHOT</version>
+>>>>>>> Enabling Oozie
 +                <exclusions>
 +                    <exclusion>
 +                        <groupId>org.apache.commons</groupId>
@@ -115,7 +119,11 @@ Index: oozie-2.3.2/pom.xml
 +            <dependency>
 +                <groupId>org.apache.hadoop</groupId>
 +                <artifactId>hadoop-hdfs</artifactId>
+<<<<<<< HEAD
++                <version>0.22.0-SNAPSHOT</version>
+=======
 +                <version>0.23.0-SNAPSHOT</version>
+>>>>>>> Enabling Oozie
 +                <exclusions>
 +                    <exclusion>
 +                        <groupId>org.apache.commons</groupId>
@@ -126,7 +134,11 @@ Index: oozie-2.3.2/pom.xml
 +            <dependency>
 +                <groupId>org.apache.hadoop</groupId>
 +                <artifactId>hadoop-mapred</artifactId>
+<<<<<<< HEAD
++                <version>0.22.0-SNAPSHOT</version>
+=======
 +                <version>0.23.0-SNAPSHOT</version>
+>>>>>>> Enabling Oozie
                  <exclusions>
                      <exclusion>
                          <groupId>org.apache.commons</groupId>
@@ -143,7 +155,11 @@ Index: oozie-2.3.2/pom.xml
 -                <version>0.20.104.2</version>
 +                <groupId>org.apache.hadoop</groupId>
 +                <artifactId>hadoop-common-test</artifactId>
+<<<<<<< HEAD
++                <version>0.22.0-SNAPSHOT</version>
+=======
 +                <version>0.23.0-SNAPSHOT</version>
+>>>>>>> Enabling Oozie
                  <exclusions>
                      <exclusion>
                          <groupId>org.apache.commons</groupId>
@@ -157,7 +173,11 @@ Index: oozie-2.3.2/pom.xml
 -                <groupId>com.yahoo.hadoop</groupId>
 +                <groupId>org.apache.hadoop</groupId>
 +                <artifactId>hadoop-hdfs-test</artifactId>
+<<<<<<< HEAD
++                <version>0.22.0-SNAPSHOT</version>
+=======
 +                <version>0.23.0-SNAPSHOT</version>
+>>>>>>> Enabling Oozie
 +                <exclusions>
 +                    <exclusion>
 +                        <groupId>org.apache.commons</groupId>
@@ -181,7 +201,11 @@ Index: oozie-2.3.2/pom.xml
 +            <dependency>
 +                <groupId>org.apache.hadoop</groupId>
 +                <artifactId>hadoop-mapred-test</artifactId>
+<<<<<<< HEAD
++                <version>0.22.0-SNAPSHOT</version>
+=======
 +                <version>0.23.0-SNAPSHOT</version>
+>>>>>>> Enabling Oozie
 +                <exclusions>
 +                    <exclusion>
 +                        <groupId>org.apache.commons</groupId>
@@ -206,7 +230,11 @@ Index: oozie-2.3.2/pom.xml
 +                <groupId>org.apache.hadoop</groupId>
                  <artifactId>hadoop-streaming</artifactId>
 -                <version>0.20.104.2</version>
+<<<<<<< HEAD
++                <version>0.22-SNAPSHOT</version>
+=======
 +                <version>0.23-SNAPSHOT</version>
+>>>>>>> Enabling Oozie
                  <exclusions>
                      <exclusion>
                          <groupId>org.apache.commons</groupId>

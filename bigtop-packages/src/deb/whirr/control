@@ -15,13 +15,14 @@
 Source: whirr
 Section: misc
 Priority: extra
-Maintainer: Tom White <tom@cloudera.com>
+Maintainer: Bigtop <bigtop-dev@incubator.apache.org>
 Build-Depends: debhelper (>= 6), git-core
 Standards-Version: 3.8.0
-Homepage: http://incubator.apache.org/whirr
+Homepage: http://whirr.apache.org/
 
 Package:  whirr
 Architecture: all
+Depends: bigtop-utils
 Description: Scripts and libraries for running software services on cloud infrastructure
  Whirr provides
  .

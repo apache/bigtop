@@ -12,16 +12,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-%define doc_sqoop %{_docdir}/sqoop-%{sqoop_version}
 %define lib_sqoop /usr/lib/sqoop
 
 
 %if  %{?suse_version:1}0
 
+%define doc_sqoop %{_docdir}/sqoop
 %global initd_dir %{_sysconfdir}/rc.d
 
 %else
 
+%define doc_sqoop %{_docdir}/sqoop-%{sqoop_version}
 %global initd_dir %{_sysconfdir}/rc.d/init.d
 
 %endif
@@ -31,7 +32,7 @@ Name: sqoop
 Version: %{sqoop_version}
 Release: %{sqoop_release}
 Summary:   Sqoop allows easy imports and exports of data sets between databases and the Hadoop Distributed File System (HDFS).
-URL: http://www.cloudera.com
+URL: http://incubator.apache.org/sqoop/
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 License: APL2
@@ -42,15 +43,15 @@ Source3: sqoop-metastore.sh
 Source4: sqoop-metastore.sh.suse
 Patch0: patch
 Buildarch: noarch
-BuildRequires:  asciidoc, xmlto
-Prereq: hadoop
+BuildRequires: asciidoc, xmlto
+Requires: hadoop, bigtop-utils
 
 %description 
 Sqoop allows easy imports and exports of data sets between databases and the Hadoop Distributed File System (HDFS).
 
 %package metastore
 Summary: Shared metadata repository for Sqoop.
-URL: http://www.cloudera.com
+URL: http://incubator.apache.org/sqoop/
 Group: System/Daemons
 Provides: sqoop-metastore
 Requires: sqoop = %{version}-%{release} 
@@ -58,7 +59,16 @@ Requires: sqoop = %{version}-%{release}
 %if  %{?suse_version:1}0
 # Required for init scripts
 Requires: insserv
-%else
+%endif
+
+%if  0%{?mgaversion}
+# Required for init scripts
+Requires: initscripts
+%endif
+
+# CentOS 5 does not have any dist macro
+# So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
+%if %{!?suse_version:1}0 && %{!?mgaversion:1}0
 # Required for init scripts
 Requires: redhat-lsb
 %endif

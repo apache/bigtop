@@ -118,8 +118,23 @@ cp build/lib/*.jar $PREFIX/$LIB_DIR/lib
 
 # Copy in the configuration files
 install -d -m 0755 $PREFIX/$CONF_DIST_DIR
-cp conf/* $PREFIX/$CONF_DIST_DIR/
+cp zoo.cfg conf/* $PREFIX/$CONF_DIST_DIR/
 ln -s $CONF_DIR $PREFIX/$LIB_DIR/conf
+
+# FIXME:
+cat << __EOT__ >> $PREFIX/$CONF_DIST_DIR/log4j.properties
+# Define some default values that can be overridden by system properties
+zookeeper.root.logger=INFO, CONSOLE
+zookeeper.console.threshold=INFO
+zookeeper.log.dir=.
+zookeeper.log.file=zookeeper.log
+zookeeper.log.threshold=DEBUG
+zookeeper.tracelog.dir=.
+zookeeper.tracelog.file=zookeeper_trace.log
+
+log4j.appender.ROLLINGFILE.File=\${zookeeper.log.dir}/\${zookeeper.log.file}
+log4j.rootLogger=\${zookeeper.root.logger}
+__EOT__
 
 # Copy in the /usr/bin/zookeeper-server wrapper
 install -d -m 0755 $PREFIX/$LIB_DIR/bin
@@ -133,6 +148,14 @@ wrapper=$PREFIX/usr/bin/zookeeper-client
 install -d -m 0755 `dirname $wrapper`
 cat > $wrapper <<EOF
 #!/bin/sh
+
+# Autodetect JAVA_HOME if not defined
+if [ -e /usr/libexec/bigtop-detect-javahome ]; then
+  . /usr/libexec/bigtop-detect-javahome
+elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
+  . /usr/lib/bigtop-utils/bigtop-detect-javahome
+fi
+
 export ZOOKEEPER_HOME=\${ZOOKEEPER_CONF:-/usr/lib/zookeeper}
 export ZOOKEEPER_CONF=\${ZOOKEEPER_CONF:-/etc/zookeeper/conf}
 export CLASSPATH=\$CLASSPATH:\$ZOOKEEPER_CONF:\$ZOOKEEPER_HOME/*:\$ZOOKEEPER_HOME/lib/*
@@ -144,6 +167,14 @@ chmod 755 $wrapper
 wrapper=$PREFIX/usr/bin/zookeeper-server
 cat > $wrapper <<EOF
 #!/bin/sh
+
+# Autodetect JAVA_HOME if not defined
+if [ -e /usr/libexec/bigtop-detect-javahome ]; then
+  . /usr/libexec/bigtop-detect-javahome
+elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
+  . /usr/lib/bigtop-utils/bigtop-detect-javahome
+fi
+
 export ZOOPIDFILE=\${ZOOPIDFILE:-/var/run/zookeeper/zookeeper-server.pid}
 export ZOOKEEPER_HOME=\${ZOOKEEPER_CONF:-/usr/lib/zookeeper}
 export ZOOKEEPER_CONF=\${ZOOKEEPER_CONF:-/etc/zookeeper/conf}

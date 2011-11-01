@@ -16,4 +16,4 @@
 
 set -ex
 
-ant -f src/build.xml package "$@"
+ant -f src/build.xml -Dhadoop.mirror=http://archive.cloudera.com/hive-deps package "$@"

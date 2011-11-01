@@ -39,7 +39,7 @@ class TestHadoopSmoke {
   static String testDir      = "test.hadoopsmoke." + (new Date().getTime())
   static String nn           = (new Configuration()).get(DFSConfigKeys.FS_DEFAULT_NAME_KEY)
 
-  String cmd = "hadoop  jar ${hadoopHome}/contrib/streaming/hadoop-streaming*.jar" +
+  String cmd = "hadoop  jar ${hadoopHome}/contrib/streaming/hadoop*streaming*.jar" +
                  " -D mapred.map.tasks=1 -D mapred.reduce.tasks=1 -D mapred.job.name=Experiment "
   String cmd2 =" -input  ${testDir}/cachefile/input.txt -mapper map.sh -file map.sh -reducer cat" +
                  " -output ${testDir}/cachefile/out -verbose "

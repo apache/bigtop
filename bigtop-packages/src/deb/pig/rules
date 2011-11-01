@@ -25,7 +25,6 @@ export DH_OPTIONS
 
 patch: patch-stamp
 patch-stamp:	
-	patch -p1 < debian/patch
 	touch $@
 
 clean:	
@@ -50,7 +49,7 @@ install-indep:
 	cp debian/*.properties .
 	cp debian/pig.1 .
 	sh -x debian/install_pig.sh \
-	  --build-dir=debian/tmp \
+	  --build-dir=build/pig-${PIG_BASE_VERSION} \
 	  --prefix=debian/hadoop-pig \
           --doc-dir=debian/hadoop-pig/usr/share/doc/hadoop-pig \
           --examples-dir=debian/hadoop-pig/usr/share/doc/hadoop-pig/examples

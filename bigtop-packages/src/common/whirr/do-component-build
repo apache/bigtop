@@ -16,5 +16,7 @@
 
 set -ex
 
-mvn clean source:jar install assembly:assembly -Pjavadoc site "$@"
+mvn clean -Pjavadoc site source:jar package assembly:assembly -DskipTests "$@" 
 
+mkdir build
+tar -C build --strip-components=1 -xzf target/*.tar.gz

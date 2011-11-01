@@ -31,6 +31,13 @@
 # Short-Description: Oozie server daemon
 ### END INIT INFO
 
+# Autodetect JAVA_HOME if not defined
+if [ -e /usr/libexec/bigtop-detect-javahome ]; then
+  . /usr/libexec/bigtop-detect-javahome
+elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
+  . /usr/lib/bigtop-utils/bigtop-detect-javahome
+fi
+
 is_oozie_alive() {
   if [ ! -f "$OOZIE_PID" ]; then
     #not running
@@ -54,7 +61,7 @@ start_oozie() {
 stop_oozie() {
   is_oozie_alive
   if [ "${STATUS}" = "0" ]; then
-    su --shell=/bin/sh -l oozie -c /usr/lib/oozie/bin/oozie-stop.sh
+    su --shell=/bin/sh -l oozie -c '/usr/lib/oozie/bin/oozied.sh stop -force'
     if [ $? -eq 0 ]; then
       is_oozie_alive
       if [ "${STATUS}" = "1" ]; then

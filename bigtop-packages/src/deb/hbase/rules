@@ -49,12 +49,14 @@ install: build
 		--build-dir=target/hbase-0.92/hbase-0.92 \
 		--doc-dir=usr/share/doc/hadoop-hbase-doc \
 		--prefix=debian/tmp
+	mkdir -p debian/tmp/etc/security/limits.d
+	cp debian/hbase.nofiles.conf debian/tmp/etc/security/limits.d
 	# Symlink in the dependency jars from their packages. Both of these packages
 	# provide an unversioned symlink foo.jar -> foo-0.1.2.jar.
 	rm debian/tmp/usr/lib/hbase/lib/zookeeper-*.jar
 	rm debian/tmp/usr/lib/hbase/lib/hadoop-*.jar
 	ln -s /usr/lib/zookeeper/zookeeper.jar debian/tmp/usr/lib/hbase/lib/zookeeper.jar
-	ln -s /usr/lib/hadoop/hadoop-core.jar debian/tmp/usr/lib/hbase/lib/hadoop-core.jar
+	ln -s /usr/lib/hadoop/hadoop-common.jar /usr/lib/hadoop/hadoop-hdfs.jar /usr/lib/hadoop/hadoop-mapred.jar  debian/tmp/usr/lib/hbase/lib/
 	ln -s /var/log/hbase debian/tmp/usr/lib/hbase/logs
 	ln -s /var/run/hbase debian/tmp/usr/lib/hbase/pids
 

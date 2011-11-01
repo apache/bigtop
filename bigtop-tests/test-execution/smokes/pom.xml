@@ -39,16 +39,17 @@
     -->
     <itest-conf.version>0.2.0-incubating-SNAPSHOT</itest-conf.version>
     <itest-common.version>0.2.0-incubating-SNAPSHOT</itest-common.version>
-    <hadoop.version>0.20.2</hadoop.version>
     <hadoop-smoke.version>0.2.0-incubating-SNAPSHOT</hadoop-smoke.version>
     <flume-smoke.version>0.2.0-incubating-SNAPSHOT</flume-smoke.version>
     <hbase-smoke.version>0.2.0-incubating-SNAPSHOT</hbase-smoke.version>
     <hive-smoke.version>0.2.0-incubating-SNAPSHOT</hive-smoke.version>
     <oozie-smoke.version>0.2.0-incubating-SNAPSHOT</oozie-smoke.version>
     <package-smoke.version>0.2.0-incubating-SNAPSHOT</package-smoke.version>
+    <hadoop.version>0.22.0-SNAPSHOT</hadoop.version>
+    <hbase.version>0.92.0-SNAPSHOT</hbase.version>
     <pig-smoke.version>0.9.0-SNAPSHOT</pig-smoke.version>
-    <pig.version>0.9.0</pig.version>
-    <sqoop.version>1.2.0-cdh3u0</sqoop.version>
+    <pig.version>0.9.1</pig.version>
+    <sqoop.version>1.3.0</sqoop.version>
     <!--
       End of BOM definitions
     -->
@@ -104,8 +105,34 @@
 <!-- Product artifacts -->
       <dependency>
         <groupId>org.apache.hadoop</groupId>
-        <artifactId>hadoop-core</artifactId>
+        <artifactId>hadoop-common</artifactId>
         <version>${hadoop.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-common-test</artifactId>
+        <version>${hadoop.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-hdfs-test</artifactId>
+        <version>${hadoop.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-mapred</artifactId>
+        <version>${hadoop.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hbase</groupId>
+        <artifactId>hbase</artifactId>
+        <version>${hbase.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hbase</groupId>
+        <artifactId>hbase</artifactId>
+        <version>${hbase.version}</version>
+        <type>test-jar</type>
       </dependency>
       <dependency>
         <groupId>org.apache.pig</groupId>

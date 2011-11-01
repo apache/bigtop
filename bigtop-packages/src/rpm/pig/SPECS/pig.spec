@@ -19,7 +19,6 @@
 %define log_pig /var/log/%{pig_name}
 %define bin_pig /usr/bin
 %define pig_config_virtual pig_active_configuration
-%define doc_pig %{_docdir}/pig-%{pig_version}
 %define man_dir %{_mandir}
 
 # CentOS 5 does not have any dist macro
@@ -38,6 +37,7 @@
     /usr/lib/rpm/brp-python-bytecompile ; \
     %{nil}
 
+%define doc_pig %{_docdir}/pig-%{pig_version}
 %define alternatives_cmd alternatives
 
 %endif
@@ -50,6 +50,7 @@
 %define suse_check \# Define an empty suse_check for compatibility with older sles
 %endif
 
+%define doc_pig %{_docdir}/pig
 %define alternatives_cmd update-alternatives
 %define __os_install_post \
     %{suse_check} ; \
@@ -60,6 +61,7 @@
 
 
 %if  0%{?mgaversion}
+%define doc_pig %{_docdir}/pig-%{pig_version}
 %define alternatives_cmd update-alternatives
 %endif
 
@@ -72,7 +74,6 @@ License: Apache License v2.0
 URL: http://hadoop.apache.org/pig/
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
-BuildRequires: /usr/bin/git
 BuildArch: noarch
 Source0: pig-%{pig_base_version}.tar.gz
 Source1: do-component-build
@@ -80,8 +81,7 @@ Source2: install_pig.sh
 Source3: log4j.properties
 Source4: pig.1
 Source5: pig.properties
-Patch0: patch
-Requires: hadoop
+Requires: hadoop, bigtop-utils
 
 %description 
 Pig is a platform for analyzing large data sets that consists of a high-level language 
@@ -108,7 +108,6 @@ language called Pig Latin, which has the following key properties:
 
 %prep
 %setup -n apache-pig-e42a1e6
-%patch0 -p1
 
 %build
 env PIG_BASE_VERSION=%{pig_base_version} bash %{SOURCE1}
@@ -124,7 +123,7 @@ cp $RPM_SOURCE_DIR/log4j.properties .
 cp $RPM_SOURCE_DIR/pig.1 .
 cp $RPM_SOURCE_DIR/pig.properties .
 sh -x %{SOURCE2} \
-          --build-dir=. \
+          --build-dir=build/pig-%{pig_base_version} \
           --doc-dir=$RPM_BUILD_ROOT%{doc_pig} \
           --prefix=$RPM_BUILD_ROOT
 

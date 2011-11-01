@@ -31,8 +31,15 @@
 ### END INIT INFO
 set -e
 
-source /etc/default/hadoop
-source /etc/default/hbase
+. /etc/default/hadoop
+. /etc/default/hbase
+
+# Autodetect JAVA_HOME if not defined
+if [ -e /usr/libexec/bigtop-detect-javahome ]; then
+  . /usr/libexec/bigtop-detect-javahome
+elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
+  . /usr/lib/bigtop-utils/bigtop-detect-javahome
+fi
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 DAEMON_SCRIPT="/usr/lib/hbase/bin/hbase-daemon.sh"

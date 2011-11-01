@@ -20,7 +20,7 @@ SHELL := /bin/bash
 $(BUILD_DIR)/%/.download:
 	mkdir -p $(@D)
 	mkdir -p $(DL_DIR)
-	[ -f $($(PKG)_DOWNLOAD_DST) ] || (cd $(DL_DIR) && curl --retry 5 -# -L -k -o $($(PKG)_TARBALL_DST) $($(PKG)_DOWNLOAD_URL))
+	[ -z "$($(PKG)_TARBALL_SRC)" -o -f $($(PKG)_DOWNLOAD_DST) ] || (cd $(DL_DIR) && curl --retry 5 -# -L -k -o $($(PKG)_TARBALL_DST) $($(PKG)_DOWNLOAD_URL))
 	touch $@
 
 # Make source RPMs
@@ -29,12 +29,13 @@ $(BUILD_DIR)/%/.srpm:
 	mkdir -p $(PKG_BUILD_DIR)/rpm/
 	cp -r $(BASE_DIR)/bigtop-packages/src/rpm/$($(PKG)_NAME)/* $(PKG_BUILD_DIR)/rpm/
 	mkdir -p $(PKG_BUILD_DIR)/rpm/{INSTALL,SOURCES,BUILD,SRPMS}
-	cp $($(PKG)_DOWNLOAD_DST) $(PKG_BUILD_DIR)/rpm/SOURCES
+	[ -z "$($(PKG)_TARBALL_SRC)" ] || cp $($(PKG)_DOWNLOAD_DST) $(PKG_BUILD_DIR)/rpm/SOURCES
 	[ -d $(BASE_DIR)/bigtop-packages/src/common/$($(PKG)_NAME) ] && cp -r $(BASE_DIR)/bigtop-packages/src/common/$($(PKG)_NAME)/* $(PKG_BUILD_DIR)/rpm/SOURCES
+	PKG_NAME_FOR_PKG=$(subst -,_,$($(PKG)_NAME)); \
 	rpmbuild --define "_topdir $(PKG_BUILD_DIR)/rpm/" \
-						--define "$($(PKG)_NAME)_base_version $($(PKG)_BASE_VERSION)" \
-						--define "$($(PKG)_NAME)_version $($(PKG)_PKG_VERSION)$(BIGTOP_BUILD_STAMP)" \
-						--define "$($(PKG)_NAME)_release $($(PKG)_RELEASE_VERSION)" \
+						--define "$${PKG_NAME_FOR_PKG}_base_version $($(PKG)_BASE_VERSION)" \
+						--define "$${PKG_NAME_FOR_PKG}_version $($(PKG)_PKG_VERSION)$(BIGTOP_BUILD_STAMP)" \
+						--define "$${PKG_NAME_FOR_PKG}_release $($(PKG)_RELEASE_VERSION)" \
 						-bs \
 						--nodeps \
 						--buildroot="$(PKG_BUILD_DIR)/rpm/INSTALL" \
@@ -64,16 +65,21 @@ $(BUILD_DIR)/%/.yum: $(BUILD_DIR)/%/.rpm
 $(BUILD_DIR)/%/.sdeb:
 	-rm -rf $(PKG_BUILD_DIR)/deb/
 	mkdir -p $(PKG_BUILD_DIR)/deb/$($(PKG)_NAME)-$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP)
-	cp $($(PKG)_DOWNLOAD_DST) $(PKG_BUILD_DIR)/deb/$($(PKG)_PKG_NAME)_$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP).orig.tar.gz
-	cd $(PKG_BUILD_DIR)/deb/$($(PKG)_NAME)-$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP) && \
-	  tar --strip-components 1 -xvf ../$($(PKG)_PKG_NAME)_$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP).orig.tar.gz
+	# Only expands the tar if there is a source artifact
+	if [ -n "$($(PKG)_TARBALL_SRC)" ]; then \
+	  cp $($(PKG)_DOWNLOAD_DST) $(PKG_BUILD_DIR)/deb/$($(PKG)_PKG_NAME)_$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP).orig.tar.gz ;\
+	  cd $(PKG_BUILD_DIR)/deb/$($(PKG)_NAME)-$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP) && \
+	    tar --strip-components 1 -xvf ../$($(PKG)_PKG_NAME)_$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP).orig.tar.gz;\
+	else \
+		 tar -czf $(PKG_BUILD_DIR)/deb/$($(PKG)_PKG_NAME)_$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP).orig.tar.gz LICENSE ;\
+	fi
 	cd $(PKG_BUILD_DIR)/deb/$($(PKG)_NAME)-$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP) && \
           cp -r $(BASE_DIR)/bigtop-packages/src/deb/$($(PKG)_NAME) debian && \
 	  cp -r $(BASE_DIR)/bigtop-packages/src/common/$($(PKG)_NAME)/* debian && \
 	  echo -e "version=$(PKG_PKG_VERSION)\ngit.hash=deadbeaf" >> debian/build.properties && \
 	  (echo -e "$($(PKG)_PKG_NAME) ($(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP)-$($(PKG)_RELEASE)) stable; urgency=low\n" && \
            echo    "  Clean build" && \
-           echo    " -- Jenkins <jenkins@cloudera.com>  "`date +'%a, %d %b %Y %T %z'`) > debian/changelog && \
+           echo    " -- Bigtop <bigtop-dev@incubator.apache.org>  "`date +'%a, %d %b %Y %T %z'`) > debian/changelog && \
 	  find debian -name "*.[ex,EX,~]" | xargs rm -f && \
 	  dpkg-buildpackage -uc -us -sa -S
 	mkdir -p $($(PKG)_OUTPUT_DIR)/
@@ -81,8 +87,8 @@ $(BUILD_DIR)/%/.sdeb:
                     $($(PKG)_PKG_NAME)_$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP)-$($(PKG)_RELEASE).diff.gz \
                     $($(PKG)_PKG_NAME)_$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP)-$($(PKG)_RELEASE)_source.changes \
                     $($(PKG)_PKG_NAME)_$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP).orig.tar.gz ; \
-            do cp $(PKG_BUILD_DIR)/deb/$$file $($(PKG)_OUTPUT_DIR); \
-          done
+            do [ -e $(PKG_BUILD_DIR)/deb/$$file ] && cp $(PKG_BUILD_DIR)/deb/$$file $($(PKG)_OUTPUT_DIR); \
+   done
 	touch $@
 
 $(BUILD_DIR)/%/.deb: SRCDEB=$($(PKG)_PKG_NAME)_$($(PKG)_PKG_VERSION)$(BIGTOP_BUILD_STAMP)-$($(PKG)_RELEASE).dsc
