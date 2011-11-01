@@ -75,16 +75,17 @@ HIVE_SITE=$(APACHE_MIRROR)/hive/hive-$(HIVE_BASE_VERSION)/
 $(eval $(call PACKAGE,hive,HIVE))
 
 # Sqoop
-SQOOP_NAME=sqoop
-SQOOP_RELNOTES_NAME=Sqoop
-SQOOP_PKG_NAME=sqoop
-SQOOP_BASE_VERSION=1.3.0
-SQOOP_PKG_VERSION=1.3.0
-SQOOP_RELEASE_VERSION=1
-SQOOP_TARBALL_DST=sqoop-$(SQOOP_BASE_VERSION).tar.gz
-SQOOP_TARBALL_SRC=$(SQOOP_TARBALL_DST)
-SQOOP_SITE=http://github.com/downloads/cloudera/sqoop/
-$(eval $(call PACKAGE,sqoop,SQOOP))
+# FIXME: disabled because of BIGTOP-203
+# SQOOP_NAME=sqoop
+# SQOOP_RELNOTES_NAME=Sqoop
+# SQOOP_PKG_NAME=sqoop
+# SQOOP_BASE_VERSION=1.3.0
+# SQOOP_PKG_VERSION=1.3.0
+# SQOOP_RELEASE_VERSION=1
+# SQOOP_TARBALL_DST=sqoop-$(SQOOP_BASE_VERSION).tar.gz
+# SQOOP_TARBALL_SRC=$(SQOOP_TARBALL_DST)
+# SQOOP_SITE=http://github.com/downloads/cloudera/sqoop/
+# $(eval $(call PACKAGE,sqoop,SQOOP))
 
 # Oozie
 OOZIE_NAME=oozie
