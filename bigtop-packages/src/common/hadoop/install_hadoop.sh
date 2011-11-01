@@ -185,16 +185,14 @@ install -d -m 0755 $ETC_DIR/conf.empty
 # packages can depend on
 (cd $LIB_DIR &&
 for j in hadoop-*.jar; do
-  if [[ $j =~ hadoop-([^-]+)-([^-]+)-([0-9].*)-sources.jar ]]; then
-    comp=${BASH_REMATCH[1]}
-    name=${BASH_REMATCH[2]}
-    vers=${BASH_REMATCH[3]}
-    ln -s hadoop-$comp-$name-$vers-sources.jar hadoop-$comp-$name-sources.jar
-  elif [[ $j =~ hadoop-([^-]+)-([^-]+)-([0-9].*).jar ]]; then
-    comp=${BASH_REMATCH[1]}
-    name=${BASH_REMATCH[2]}
-    vers=${BASH_REMATCH[3]}
-    ln -s hadoop-$comp-$name-$vers.jar hadoop-$comp-$name.jar
+  if [[ $j =~ hadoop-(.+)-([0-9].*)-sources.jar ]]; then
+    name=${BASH_REMATCH[1]}
+    vers=${BASH_REMATCH[2]}
+    ln -s hadoop-$name-$vers-sources.jar hadoop-$name-sources.jar
+  elif [[ $j =~ hadoop-(.+)-([0-9].*).jar ]]; then
+    name=${BASH_REMATCH[1]}
+    vers=${BASH_REMATCH[2]}
+    ln -s hadoop-$name-$vers.jar hadoop-$name.jar
   fi
 done)
 
