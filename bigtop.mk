@@ -55,7 +55,7 @@ HBASE_SITE=https://github.com/apache/hbase/tarball
 $(eval $(call PACKAGE,hbase,HBASE))
 
 # Pig
-PIG_BASE_VERSION=0.9.1
+PIG_BASE_VERSION=0.10.0
 PIG_PKG_VERSION=$(PIG_BASE_VERSION)
 PIG_RELEASE_VERSION=1
 PIG_NAME=pig

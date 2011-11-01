@@ -16,6 +16,6 @@
 
 set -ex
 
-ant -Djavac.version=1.6 -Djava5.home=${JAVA5_HOME} -Dforrest.home=${FORREST_HOME} -Dversion=${PIG_BASE_VERSION} package "$@"
+ant -Djavac.version=1.6 -Djava5.home=${JAVA5_HOME} -Dforrest.home=${FORREST_HOME} -Dversion=${PIG_BASE_VERSION} -Dhadoopversion=23 package "$@"
 
 
