@@ -83,6 +83,7 @@ class TestHBaseCompression {
   }
 
   @Test
+  @Ignore("BIGTOP-218")
   void testSnappyCompression() {
     _testCompression("snappy");
   }

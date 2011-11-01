@@ -64,6 +64,7 @@ class TestHBasePigSmoke {
     sh.exec("hadoop fs -rmr $TABLE");
   }
 
+  @Ignore("BIGTOP-219")
   @Test(timeout=300000L)
   public void Pig2HBase() {
     def script = "\n";
@@ -92,6 +93,7 @@ class TestHBasePigSmoke {
   }
 
   @Test(timeout=300000L)
+  @Ignore("BIGTOP-219")
   public void HBase2Pig() {
     def script = "\n";
 
