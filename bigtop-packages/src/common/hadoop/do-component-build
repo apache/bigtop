@@ -39,7 +39,7 @@ for project in common hdfs mapred ; do
     -Djsvc.location=${JSVC_URL} \
     -Dcompile.native=true \
     -Dhadoop.conf.dir=/etc/hadoop/conf \
-    -Dlibhdfs=1 -Dfusedfs=true -Dcompile.c++=true -Djdiff.build.dir=build/docs/jdiff-cloudera \
+    -Dlibhdfs=1 -Dfusedfs=true -Dcompile.c++=true -Djdiff.build.dir=build/docs/jdiff \
    api-report bin-package $BUILD_CONTRIB tar \
     "$@"
   
@@ -65,13 +65,16 @@ mv common/{LICENSE,NOTICE,README}.txt .
 rm hdfs/{LICENSE,NOTICE}.txt # same as common
 rm mapred/{LICENSE,NOTICE}.txt # same as common
 
-# munge the docs directories
-for dir in docs; do
-  mkdir $dir
-  for proj in common hdfs mapred; do
-    cp -Rp $proj/$dir/* $dir
-  done
-done
+# we can NOT simply munge the docs directories, since
+# index.html is per-component (even though everything else
+# doesn't collide). We have to come up with a better way
+# of solving this, but lets simply disable it for now
+# for dir in docs; do
+#  mkdir $dir
+#  for proj in common hdfs mapred; do
+#    cp -Rp $proj/$dir/* $dir
+#  done
+# done
 
 # munge the contrib directories
 for dir in contrib; do
