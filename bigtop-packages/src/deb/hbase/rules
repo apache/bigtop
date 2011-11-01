@@ -56,7 +56,7 @@ install: build
 	rm debian/tmp/usr/lib/hbase/lib/zookeeper-*.jar
 	rm debian/tmp/usr/lib/hbase/lib/hadoop-*.jar
 	ln -s /usr/lib/zookeeper/zookeeper.jar debian/tmp/usr/lib/hbase/lib/zookeeper.jar
-	ln -s /usr/lib/hadoop/hadoop-core.jar debian/tmp/usr/lib/hbase/lib/hadoop-core.jar
+	ln -s /usr/lib/hadoop/hadoop-common.jar /usr/lib/hadoop/hadoop-hdfs.jar /usr/lib/hadoop/hadoop-mapred.jar  debian/tmp/usr/lib/hbase/lib/
 	ln -s /var/log/hbase debian/tmp/usr/lib/hbase/logs
 	ln -s /var/run/hbase debian/tmp/usr/lib/hbase/pids
 
