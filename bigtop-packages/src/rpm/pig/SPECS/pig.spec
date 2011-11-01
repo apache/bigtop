@@ -107,7 +107,7 @@ language called Pig Latin, which has the following key properties:
 
 
 %prep
-%setup -n pig-%{pig_base_version}
+%setup -n apache-pig-e42a1e6
 %patch0 -p1
 
 %build
