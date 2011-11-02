@@ -104,7 +104,6 @@
     <!--
         MAINTAINER property: not to be overridden by users
     -->
-    <maven.internal.releases>http://azov01.sf.cloudera.com:8081/artifactory/libs-release-local</maven.internal.releases>
     <asf.snapshots>https://repository.apache.org/content/repositories/snapshots</asf.snapshots>
     <maven.testsnaps>https://repository.cloudera.com/content/repositories/testsnaps/</maven.testsnaps>
     <maven.releases>https://repository.cloudera.com/content/repositories/releases/</maven.releases>
@@ -134,7 +133,7 @@
   </repositories>
 
   <scm>
-    <connection>scm:git:git://github.sf.cloudera.com/QE/stacks.git</connection>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/incubator/bigtop/</connection>
   </scm>
 
   <distributionManagement>
@@ -143,11 +142,6 @@
       <name>Internal Snapshots</name>
       <url>${maven.testsnaps}</url>
     </snapshotRepository>
-    <repository>
-      <id>azov01.sf.cloudera.com</id>
-      <name>Internal Releases</name>
-      <url>${maven.internal.releases}</url>
-    </repository>
   </distributionManagement>
 
   <dependencyManagement>
