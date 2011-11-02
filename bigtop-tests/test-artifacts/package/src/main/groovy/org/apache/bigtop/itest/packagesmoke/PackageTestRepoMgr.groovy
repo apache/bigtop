@@ -50,7 +50,7 @@ class PackageTestRepoMgr {
 
   public parseRepoSpec(String prefix) {
     cdhRepoHost = System.getProperty("${prefix}.host", "nightly.cloudera.com");
-    cdhRepoVersion = System.getProperty("${prefix}.version", "3");
+    cdhRepoVersion = System.getProperty("${prefix}.version", "bigtop");
 
     Map cdhKeys  = [ yum    : "http://${cdhRepoHost}/redhat/cdh/RPM-GPG-KEY-cloudera",
                      zypper : null,
@@ -69,6 +69,7 @@ class PackageTestRepoMgr {
 
   public boolean addRepo() {
     repoName = "cloudera-cdh${cdhRepoVersion}";
+    pm.cleanup();
     try {
       String repoText = cdhRepoFileURL.toURL().text;
       if (pm.addBinRepo(repoName, repoText)) {
@@ -80,6 +81,7 @@ class PackageTestRepoMgr {
         return false;
       }
     }
+    pm.refresh();
     return true;
   }
 

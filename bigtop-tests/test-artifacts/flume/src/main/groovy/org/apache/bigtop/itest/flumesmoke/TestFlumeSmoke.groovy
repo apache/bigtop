@@ -67,6 +67,7 @@ class TestFlumeSmoke {
     compressionCommonTest("FlumeSmokeBzip2", "bzip2 -d", "*.bz2");
   }
 
+  @Ignore("BIGTOP-218")
   @Test(timeout=300000L)
   public void testDeflate() {
     compressionCommonTest("FlumeSmokeDeflate", "perl -MCompress::Zlib -e 'undef \$/; print uncompress(<>)'", "*.deflate");

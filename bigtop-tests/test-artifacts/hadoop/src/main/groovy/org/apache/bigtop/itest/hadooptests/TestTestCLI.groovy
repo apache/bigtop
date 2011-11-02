@@ -45,4 +45,11 @@ class TestTestCLI extends TestHDFSCLI {
     // The property needs to be set from runtime
     System.properties.setProperty('test.cache.data', 'clitest_data');
   }
+
+  @Test
+  @Ignore("HADOOP-7730")
+  @Override
+  public void testAll() {
+    super.testAll();
+  }
 }

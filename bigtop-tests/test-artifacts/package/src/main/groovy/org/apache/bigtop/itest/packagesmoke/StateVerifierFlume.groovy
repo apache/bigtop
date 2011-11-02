@@ -28,6 +28,7 @@ class StateVerifierFlume extends StateVerifier {
 
   public void createState() {
     String node;
+    sleep(120001);
     shFlume.exec("connect localhost",
                  "getnodestatus",
                  "quit\n");
@@ -35,14 +36,15 @@ class StateVerifierFlume extends StateVerifier {
                                      .replaceAll(/^.*Master knows about [0-9]* nodes /,'')
                                      .trim();
     shFlume.exec("connect localhost",
-                 "exec config $node 'text(\"/etc/group\")' 'dfs(\"hdfs://localhost/flume.test\")'",
+                 "exec config $node 'text(\"/etc/group\")' 'collectorSink(\"hdfs://localhost/flume\",\"test\")'",
                  "quit\n");
     sleep(5001);
-    (new Shell()).exec("hadoop fs -rm /flume.test");
   }
 
   public boolean verifyState() {
     sleep(5001);
-    return ((new Shell()).exec("hadoop fs -ls /flume.test >/dev/null 2>&1").getRet() == 0);
+    boolean ret = ((new Shell()).exec("hadoop fs -ls /flume >/dev/null 2>&1").getRet() == 0);
+    (new Shell()).exec("hadoop fs -rmr /flume");
+    return ret;
   }
 }

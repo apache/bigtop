@@ -89,11 +89,13 @@ public class TestHFileOutputFormat {
     assertTrue("HDFS cleanup failed", sh.getRet() == 0);
   }
 
+  @Ignore("HBASE-1861")
   @Test
   public void testMRIncrementalLoad() throws Exception {
     doIncrementalLoadTest("testMRIncrementalLoad", false);
   }
 
+  @Ignore("HBASE-1861")
   @Test
   public void testMRIncrementalLoadWithSplit() throws Exception {
     doIncrementalLoadTest("testMRIncrementalLoadWithSplit", true);

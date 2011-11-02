@@ -16,7 +16,7 @@
 stage {"pre": before => Stage["main"]}
 
 yumrepo { "Bigtop":
-    baseurl => "http://bigtop01.cloudera.org:8080/job/Bigtop-trunk-centos5/lastSuccessfulBuild/artifact/output/",
+    baseurl => "http://bigtop01.cloudera.org:8080/job/Bigtop-trunk-matrix/label=centos5/lastSuccessfulBuild/artifact/output/",
     descr => "Bigtop packages",
     enabled => 1,
     gpgcheck => 0,
@@ -33,8 +33,10 @@ import "cluster.pp"
 
 node default {
   if ($hadoop_head_node == $fqdn) {
-    include hadoop_head_node
+    include hadoop_gateway_node
   } else {
     include hadoop_worker_node
   }
 }
+
+Yumrepo<||> -> Package<||>

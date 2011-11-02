@@ -107,7 +107,6 @@ class kerberos {
 
 
     class admin_server inherits kerberos::kdc {
-      /* BUG: KITCHEN-751 */
       $se_hack = "setsebool -P kadmind_disable_trans  1 ; setsebool -P krb5kdc_disable_trans 1"
 
       package { "$package_name_admin":

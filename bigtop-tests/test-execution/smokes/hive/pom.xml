@@ -137,7 +137,7 @@
                   }
                   project.properties['hbase.jar'] =
                     org.apache.bigtop.itest.JarContent.getJarName(
-                        "${HBASE_HOME}/lib", 'hbase-.*.jar');
+                        "${HBASE_HOME}", 'hbase-.*.jar');
                   if ( project.properties['hbase.jar'] == null ) {
                     throw new IOException ("hbase*.jar isn't found");
                   }
