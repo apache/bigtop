@@ -14,6 +14,3 @@
 # limitations under the License.
 
 This is a project to develop and build Hadoop (HDFS and MAPREDUCE) smoke and system tests.
-
-To be able to run this a started project is also required such as 
-  http://github.sf.cloudera.com/cos/iTest/blob/master/metaTest/hadoop.pom
