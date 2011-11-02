@@ -21,6 +21,7 @@ import org.apache.bigtop.itest.shell.Shell
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test
+import org.junit.Ignore
 import static junit.framework.Assert.assertEquals
 import static org.junit.Assert.assertTrue
 
