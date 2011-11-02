@@ -34,15 +34,17 @@ usage: $0 <options>
 OPTS=$(getopt \
   -n $0 \
   -o '' \
-  -l 'distro-dir:' \
   -l 'prefix:' \
+  -l 'distro-dir:' \
   -l 'build-dir:' \
   -l 'native-build-string:' \
   -l 'installed-lib-dir:' \
-  -l 'lib-dir:' \
+  -l 'hadoop-dir:' \
+  -l 'system-include-dir:' \
   -l 'system-lib-dir:' \
-  -l 'src-dir:' \
-  -l 'etc-dir:' \
+  -l 'system-libexec-dir:' \
+  -l 'hadoop-etc-dir:' \
+  -l 'yarn-etc-dir:' \
   -l 'doc-dir:' \
   -l 'man-dir:' \
   -l 'example-dir:' \
@@ -65,8 +67,14 @@ while true ; do
         --hadoop-dir)
         HADOOP_DIR=$2 ; shift 2
         ;;
+        --system-include-dir)
+        SYSTEM_INCLUDE_DIR=$2 ; shift 2
+        ;;
         --system-lib-dir)
         SYSTEM_LIB_DIR=$2 ; shift 2
+        ;;
+        --system-libexec-dir)
+        SYSTEM_LIBEXEC_DIR=$2 ; shift 2
         ;;
         --build-dir)
         BUILD_DIR=$2 ; shift 2
@@ -92,9 +100,6 @@ while true ; do
         --example-dir)
         EXAMPLE_DIR=$2 ; shift 2
         ;;
-        --src-dir)
-        SRC_DIR=$2 ; shift 2
-        ;;
         --)
         shift ; break
         ;;
@@ -118,15 +123,17 @@ SYSTEM_LIB_DIR=${SYSTEM_LIB_DIR:-/usr/lib}
 BIN_DIR=${BIN_DIR:-$PREFIX/usr/bin}
 DOC_DIR=${DOC_DIR:-$PREFIX/usr/share/doc/hadoop}
 MAN_DIR=${MAN_DIR:-$PREFIX/usr/man}
+SYSTEM_INCLUDE_DIR=${SYSTEM_INCLUDE_DIR:-$PREFIX/usr/include}
+SYSTEM_LIBEXEC_DIR=${SYSTEM_LIBEXEC_DIR:-$PREFIX/usr/libexec}
 EXAMPLE_DIR=${EXAMPLE_DIR:-$DOC_DIR/examples}
-SRC_DIR=${SRC_DIR:-$PREFIX/usr/src/hadoop}
 HADOOP_ETC_DIR=${HADOOP_ETC_DIR:-$PREFIX/etc/hadoop}
 YARN_ETC_DIR=${YARN_ETC_DIR:-$PREFIX/etc/yarn}
 
 INSTALLED_HADOOP_DIR=${INSTALLED_HADOOP_DIR:-/usr/lib/hadoop}
 
 HADOOP_BIN_DIR=${HADOOP_DIR}/bin
-HADOOP_SBIN_DIR=${HADOOP_DIR}/bin
+HADOOP_SBIN_DIR=${HADOOP_DIR}/sbin
+HADOOP_LIB_DIR=${HADOOP_DIR}/lib
 
 # Make bin wrappers
 mkdir -p $BIN_DIR
@@ -142,14 +149,53 @@ EOF
   chmod 755 $wrapper
 done
 
-mkdir -p ${HADOOP_BIN_DIR}
+# bin
+install -d -m 0755 ${HADOOP_BIN_DIR}
 cp -a ${BUILD_DIR}/bin/* ${HADOOP_BIN_DIR}/
 
-mkdir -p ${HADOOP_SBIN_DIR}
+# sbin
+install -d -m 0755 ${HADOOP_SBIN_DIR}
 cp ${BUILD_DIR}/sbin/* ${HADOOP_SBIN_DIR}/
 
-install -d -m 0755 $PREFIX/$HADOOP_ETC_DIR/conf.empty
-install -d -m 0755 $PREFIX/$YARN_ETC_DIR/conf.empty
+# jars
+install -d -m 0755 ${HADOOP_LIB_DIR}
+cp ${BUILD_DIR}/lib/*.jar ${HADOOP_LIB_DIR}/
 
-cp  ${BUILD_DIR}/conf/* $PREFIX/$YARN_ETC_DIR/conf.empty
-cp ${BUILD_DIR}/etc/hadoop/* $PREFIX/$YARN_ETC_DIR/conf.empty
+# hadoop jar
+install -d -m 0755 ${HADOOP_DIR}
+cp ${BUILD_DIR}/modules/*.jar ${HADOOP_DIR}/
+
+# native libs
+install -d -m 0755 ${SYSTEM_LIB_DIR}
+cp ${BUILD_DIR}/lib/*.a ${SYSTEM_LIB_DIR}/
+for library in libhdfs.so.0.0.0 libhadoop.so.1.0.0; do
+  cp ${BUILD_DIR}/lib/${library} ${SYSTEM_LIB_DIR}/
+  ldconfig -vlN ${SYSTEM_LIB_DIR}/${library}
+done
+install -d -m 0755 ${SYSTEM_INCLUDE_DIR}
+cp ${BUILD_DIR}/../hadoop-hdfs-project/hadoop-hdfs/src/main/native/hdfs.h ${SYSTEM_INCLUDE_DIR}/
+
+#libexec
+install -d -m 0755 ${SYSTEM_LIBEXEC_DIR}
+rm -fv ${BUILD_DIR}/libexec/jsvc
+cp ${BUILD_DIR}/libexec/* ${SYSTEM_LIBEXEC_DIR}/
+
+# conf
+install -d -m 0755 $HADOOP_ETC_DIR/conf.empty
+install -d -m 0755 $YARN_ETC_DIR/conf.empty
+
+cp ${BUILD_DIR}/conf/* $YARN_ETC_DIR/conf.empty
+cp ${BUILD_DIR}/etc/hadoop/* $YARN_ETC_DIR/conf.empty
+
+# docs
+install -d -m 0755 ${DOC_DIR}
+cp -r ${BUILD_DIR}/../target/site/* ${DOC_DIR}/
+
+# source
+cp -r ${BUILD_DIR}/src ${DOC_DIR}/
+
+# man pages
+mkdir -p $MAN_DIR/man1
+gzip -c < $DISTRO_DIR/hadoop.1 > $MAN_DIR/man1/hadoop.1.gz
+
+

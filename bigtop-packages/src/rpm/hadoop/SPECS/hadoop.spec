@@ -31,7 +31,7 @@
 %define log_hadoop %{log_hadoop_dirname}/%{name}
 %define bin_hadoop %{_bindir}
 %define man_hadoop %{_mandir}
-%define src_hadoop /usr/src/%{name}
+%define doc_hadoop %{_docdir}/%{name}-%{hadoop_version}
 %define hadoop_username mapred
 %define hadoop_services namenode secondarynamenode datanode jobtracker tasktracker
 # Hadoop outputs built binaries into %{hadoop_build}
@@ -219,14 +219,14 @@ assigns MapReduce work to the tasktracker that is nearest the data
 with an available work slot.
 
 
-%package conf-pseudo
-Summary: Hadoop installation in pseudo-distributed mode
-Group: System/Daemons
-Requires: %{name} = %{version}-%{release}, %{name}-namenode = %{version}-%{release}, %{name}-datanode = %{version}-%{release}, %{name}-secondarynamenode = %{version}-%{release}, %{name}-tasktracker = %{version}-%{release}, %{name}-jobtracker = %{version}-%{release}
-
-%description conf-pseudo
-Installation of this RPM will setup your machine to run in pseudo-distributed mode
-where each Hadoop daemon runs in a separate Java process.
+#%package conf-pseudo
+#Summary: Hadoop installation in pseudo-distributed mode
+#Group: System/Daemons
+#Requires: %{name} = %{version}-%{release}, %{name}-namenode = %{version}-%{release}, %{name}-datanode = %{version}-%{release}, %{name}-secondarynamenode = %{version}-%{release}, %{name}-tasktracker = %{version}-%{release}, %{name}-jobtracker = %{version}-%{release}
+#
+#%description conf-pseudo
+#Installation of this RPM will setup your machine to run in pseudo-distributed mode
+#where each Hadoop daemon runs in a separate Java process.
 
 %package doc
 Summary: Hadoop Documentation
@@ -234,40 +234,6 @@ Group: Documentation
 Obsoletes: %{name}-docs
 %description doc
 Documentation for Hadoop
-
-%package source
-Summary: Source code for Hadoop
-Group: System/Daemons
-AutoReq: no
-
-%description source
-The Java source code for Hadoop and its contributed packages. This is handy when
-trying to debug programs that depend on Hadoop.
-
-%package fuse
-Summary: Mountable HDFS
-Group: Development/Libraries
-Requires: %{name} = %{version}-%{release}, fuse
-AutoReq: no
-
-%if  %{?suse_version:1}0
-Requires: libfuse2
-%else
-Requires: fuse-libs
-%endif
-
-
-%description fuse
-These projects (enumerated below) allow HDFS to be mounted (on most flavors of Unix) as a standard file system using the mount command. Once mounted, the user can operate on an instance of hdfs using standard Unix utilities such as 'ls', 'cd', 'cp', 'mkdir', 'find', 'grep', or use standard Posix libraries like open, write, read, close from C, C++, Python, Ruby, Perl, Java, bash, etc.
-
-%package native
-Summary: Native libraries for Hadoop Compression
-Group: Development/Libraries
-Requires: %{name} = %{version}-%{release}
-AutoReq: no
-
-%description native
-Native libraries for Hadoop compression
 
 %package libhdfs
 Summary: Hadoop Filesystem Library
@@ -278,14 +244,6 @@ AutoReq: no
 
 %description libhdfs
 Hadoop Filesystem Library
-
-%package pipes
-Summary: Hadoop Pipes Library
-Group: Development/Libraries
-Requires: %{name} = %{version}-%{release}
-
-%description pipes
-Hadoop Pipes Library
 
 %package sbin
 Summary: Binaries for secured Hadoop clusters
@@ -302,7 +260,7 @@ DataNodes to bind to a low (privileged) port and then drop root privileges
 before continuing operation.
 
 %prep
-%setup -n apache-hadoop-common-ee19013
+%setup -n apache-hadoop-common-562cef1
 
 %build
 # This assumes that you installed Java JDK 6 and set JAVA_HOME
@@ -325,9 +283,9 @@ env HADOOP_VERSION=%{hadoop_version} HADOOP_ARCH=%{hadoop_arch} bash %{SOURCE1}
 bash %{SOURCE2} \
   --distro-dir=$RPM_SOURCE_DIR \
   --build-dir=$PWD/build \
-  --src-dir=$RPM_BUILD_ROOT%{src_hadoop} \
-  --lib-dir=$RPM_BUILD_ROOT%{lib_hadoop} \
-  --system-lib-dir=%{_libdir} \
+  --system-include-dir=$RPM_BUILD_ROOT%{_includedir} \
+  --system-lib-dir=$RPM_BUILD_ROOT%{_libdir} \
+  --system-libexec-dir=$RPM_BUILD_ROOT%{_libexecdir} \
   --hadoop-etc-dir=$RPM_BUILD_ROOT%{etc_hadoop} \
   --yarn-etc-dir=$RPM_BUILD_ROOT%{etc_yarn} \
   --prefix=$RPM_BUILD_ROOT \
@@ -336,8 +294,6 @@ bash %{SOURCE2} \
   --native-build-string=%{hadoop_arch} \
   --installed-lib-dir=%{lib_hadoop} \
   --man-dir=$RPM_BUILD_ROOT%{man_hadoop} \
-
-%__mv -f $RPM_BUILD_ROOT/usr/share/doc/libhdfs-devel $RPM_BUILD_ROOT/%{_docdir}/libhdfs-%{hadoop_version}
 
 # Init.d scripts
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
@@ -427,29 +383,15 @@ fi
 %config(noreplace) /etc/default/hadoop
 %config(noreplace) /etc/security/limits.d/hadoop.nofiles.conf
 %{lib_hadoop}
+%{_libdir}/libhadoop*
 %{bin_hadoop}/%{name}
-%{man_hadoop}/man1/hadoop.1.*z
 %attr(0775,root,hadoop) /var/run/%{name}
 %attr(0775,root,hadoop) %{log_hadoop}
-
-%exclude %{lib_hadoop}/lib/native
-%exclude %{lib_hadoop}/sbin/%{hadoop_arch}
-%exclude %{lib_hadoop}/bin/fuse_dfs
-%exclude %{lib_hadoop}/contrib/fuse-dfs
-%exclude %{lib_hadoop}/hdfs/contrib/fuse-dfs
-# FIXME: The following is a workaround for BIGTOP-139
-# %exclude %{lib_hadoop}/bin/task-controller
-%exclude %{lib_hadoop}/bin/jsvc*
-%exclude %{lib_hadoop}/hdfs/bin/jsvc*
+%{man_hadoop}/man1/hadoop.1.*
 
 %files doc
 %defattr(-,root,root)
 %doc %{doc_hadoop}
-
-%files source
-%defattr(-,root,root)
-%{src_hadoop}
-
 
 
 # Service file management RPMs
@@ -483,54 +425,28 @@ fi
 %service_macro tasktracker
 
 # Pseudo-distributed Hadoop installation
-%post conf-pseudo
-%{alternatives_cmd} --install %{config_hadoop} %{name}-conf %{etc_hadoop}/conf.pseudo 30
+#%post conf-pseudo
+#%{alternatives_cmd} --install %{config_hadoop} %{name}-conf %{etc_hadoop}/conf.pseudo 30
 
-%files conf-pseudo
-%defattr(-,root,root)
-%config(noreplace) %attr(755,root,root) %{etc_hadoop}/conf.pseudo
-%dir %attr(0755,root,hadoop) /var/lib/%{name}
-%dir %attr(1777,root,hadoop) /var/lib/%{name}/cache
+#%files conf-pseudo
+#%defattr(-,root,root)
+#%config(noreplace) %attr(755,root,root) %{etc_hadoop}/conf.pseudo
+#%dir %attr(0755,root,hadoop) /var/lib/%{name}
+#%dir %attr(1777,root,hadoop) /var/lib/%{name}/cache
 
-%preun conf-pseudo
-if [ "$1" = 0 ]; then
-        %{alternatives_cmd} --remove %{name}-conf %{etc_hadoop}/conf.pseudo
-        rm -f %{etc_hadoop}/conf
-fi
-
-%files native
-%defattr(-,root,root)
-%{lib_hadoop}/lib/native
-
-%files fuse
-%defattr(-,root,root)
-%config(noreplace) /etc/default/hadoop-fuse
-%{lib_hadoop}/contrib/fuse-dfs
-%attr(0755,root,root) %{lib_hadoop}/bin/fuse_dfs
-%attr(0755,root,root) %{lib_hadoop}/bin/fuse_dfs_wrapper.sh
-%attr(0755,root,root) %{bin_hadoop}/hadoop-fuse-dfs
-%attr(0644,root,root) %{man_hadoop}/man1/hadoop-fuse-dfs.1.*
-
-%files pipes
-%defattr(-,root,root)
-%{_libdir}/libhadooppipes*
-%{_libdir}/libhadooputil*
-%{_includedir}/hadoop/*
+#%preun conf-pseudo
+#if [ "$1" = 0 ]; then
+#        %{alternatives_cmd} --remove %{name}-conf %{etc_hadoop}/conf.pseudo
+#        rm -f %{etc_hadoop}/conf
+#fi
 
 %files libhdfs
 %defattr(-,root,root)
 %{_libdir}/libhdfs*
-%{_includedir}/hdfs.h
+#%{_includedir}/hdfs.h
 # -devel should be its own package
-%doc %{_docdir}/libhdfs-%{hadoop_version}
+#%doc %{_docdir}/libhdfs-%{hadoop_version}
 
 %files sbin
 %defattr(-,root,root)
 %dir %{lib_hadoop}/sbin
-%dir %{lib_hadoop}/sbin/%{hadoop_arch}
-# %attr(4750,root,mapred) %{lib_hadoop}/sbin/%{hadoop_arch}/task-controller
-%attr(0755,root,root) %{lib_hadoop}/sbin/%{hadoop_arch}/jsvc
-
-# FIXME: The following is a workaround for BIGTOP-139
-# %attr(4750,root,mapred) %{lib_hadoop}/bin/task-controller
-%attr(0755,root,root) %{lib_hadoop}/bin/jsvc*
