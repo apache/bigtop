@@ -45,10 +45,10 @@
   <properties>
     <junit.version>4.8.2</junit.version>
     <itest-common.version>0.2.0-incubating-SNAPSHOT</itest-common.version>
-    <hadoop.version>0.20.205.0</hadoop.version>
+    <hadoop.version>0.22.0-SNAPSHOT</hadoop.version>
     <pig.version>0.9.1</pig.version>
     <sqoop.version>1.3.0</sqoop.version>
-    <hbase.version>0.90.4</hbase.version>
+    <hbase.version>0.92.0-SNAPSHOT</hbase.version>
   </properties>
 
   <dependencyManagement>
@@ -65,7 +65,32 @@
       </dependency>
       <dependency>
         <groupId>org.apache.hadoop</groupId>
-        <artifactId>hadoop-core</artifactId>
+        <artifactId>hadoop-common</artifactId>
+        <version>${hadoop.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-common-test</artifactId>
+        <version>${hadoop.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-hdfs</artifactId>
+        <version>${hadoop.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-hdfs-test</artifactId>
+        <version>${hadoop.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-mapred</artifactId>
+        <version>${hadoop.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-mapred-test</artifactId>
         <version>${hadoop.version}</version>
       </dependency>
       <dependency>

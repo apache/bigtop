@@ -19,6 +19,7 @@
 package org.apache.bigtop.itest.flumesmoke
 
 import org.junit.Test
+import org.junit.Ignore
 import org.apache.bigtop.itest.shell.Shell
 import org.junit.AfterClass
 import org.junit.BeforeClass
