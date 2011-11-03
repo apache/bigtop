@@ -122,9 +122,10 @@ class hadoop_head_node inherits hadoop_cluster_node {
         ensemble => $hadoop_zookeeper_ensemble,
   }
 
-  hadoop::create_hdfs_dirs { [ "/mapred", "/tmp", "/system", "/user", "/hbase", "/benchmarks", "/user/jenkins", "/user/hive" ]:
+  hadoop::create_hdfs_dirs { [ "/mapred", "/jobtracker", "/tmp", "/system", "/user", "/hbase", "/benchmarks", "/user/jenkins", "/user/hive" ]:
     hdfs_dirs_meta => { "/tmp"          => { perm => "777", user => "hdfs"   },
                         "/mapred"       => { perm => "755", user => "mapred" },
+                        "/jobtracker"   => { perm => "755", user => "mapred" },
                         "/system"       => { perm => "755", user => "hdfs"   },
                         "/user"         => { perm => "755", user => "hdfs"   },
                         "/hbase"        => { perm => "755", user => "hbase"  },
