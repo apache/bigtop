@@ -182,7 +182,7 @@ Documentation for Hbase
 
 
 %prep
-%setup -n apache-hbase-a07486c
+%setup -n apache-hbase-57c3211
 
 %build
 env HBASE_VERSION=%{version} bash %{SOURCE1}
