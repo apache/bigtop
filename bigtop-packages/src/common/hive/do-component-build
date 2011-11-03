@@ -15,5 +15,5 @@
 # limitations under the License.
 
 set -ex
-
-ant -f src/build.xml -Dhadoop.mirror=http://archive.cloudera.com/hive-deps package "$@"
+# -f src/build.xml
+ant package "$@"

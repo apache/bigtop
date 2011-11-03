@@ -70,6 +70,7 @@ Source5: hadoop-hive-server.default
 Source6: hadoop-hive-metastore.default
 Source7: hive.1
 Source8: hive-site.xml
+Patch0: patch
 Requires: hadoop >= 0.20.2, bigtop-utils
 Obsoletes: %{name}-webinterface
 
@@ -114,7 +115,8 @@ This optional package hosts a metadata server for Hive clients across a network 
 
 
 %prep
-%setup -n hive-%{hive_base_version}
+%setup -n apache-hive-6e882d8
+%patch0 -p0 
 
 %build
 bash %{SOURCE1}
