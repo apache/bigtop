@@ -88,6 +88,10 @@
         <artifactId>maven-failsafe-plugin</artifactId>
         <version>2.7.1</version>
         <configuration>
+          <additionalClasspathElements>
+            <additionalClasspathElement>${HBASE_HOME}/conf</additionalClasspathElement>
+            <additionalClasspathElement>${ZOOKEEPER_HOME}/conf</additionalClasspathElement>
+          </additionalClasspathElements>
           <systemPropertyVariables>
             <org.apache.bigtop.itest.hbasesmoke.TestHbasePigSmoke.extra_jars>
             ${ZOOKEEPER_HOME}/${zookeeper.jar}:${HBASE_HOME}/${hbase.jar}:${HBASE_HOME}/lib/guava-r06.jar
