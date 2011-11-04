@@ -122,6 +122,9 @@ Source6: hadoop.1
 Source7: hadoop-fuse-dfs.1
 Source8: hadoop-fuse.default
 Source9: hadoop.nofiles.conf
+Patch0: HADOOP-7787.patch
+Patch1: HADOOP-7801.patch
+Patch2: HADOOP-7802.patch
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: python >= 2.4, git, fuse-devel,fuse, automake, autoconf
 Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils
@@ -266,6 +269,9 @@ before continuing operation.
 
 %prep
 %setup -n apache-hadoop-common-c6c6fb0
+%patch0
+%patch1
+%patch2
 
 %build
 # This assumes that you installed Java JDK 6 and set JAVA_HOME

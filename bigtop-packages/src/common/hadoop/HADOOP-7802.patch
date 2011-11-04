@@ -1,0 +1,15 @@
+diff --git hadoop-common-project/hadoop-common/src/main/bin/hadoop hadoop-common-project/hadoop-common/src/main/bin/hadoop
+index a3bed69..c047952 100755
+--- hadoop-common-project/hadoop-common/src/main/bin/hadoop
++++ hadoop-common-project/hadoop-common/src/main/bin/hadoop
+@@ -21,7 +21,9 @@ bin=`which $0`
+ bin=`dirname ${bin}`
+ bin=`cd "$bin"; pwd`
+  
+-. "$bin"/../libexec/hadoop-config.sh
++DEFAULT_LIBEXEC_DIR="$bin"/../libexec
++HADOOP_LIBEXEC_DIR=${HADOOP_LIBEXEC_DIR:-$DEFAULT_LIBEXED_DIR}
++. $HADOOP_LIBEXEC_DIR/hadoop-config.sh
+ 
+ function print_usage(){
+   echo "Usage: hadoop [--config confdir] COMMAND"
