@@ -79,7 +79,7 @@ HIVE_TARBALL_DST=hive-$(HIVE_BASE_VERSION).tar.gz
 #HIVE_TARBALL_SRC=$(HIVE_TARBALL_DST)
 #HIVE_SITE=$(APACHE_MIRROR)/hive/hive-$(HIVE_BASE_VERSION)/
 HIVE_SITE=https://github.com/apache/hive/tarball
-HIVE_TARBALL_SRC=6e882d8
+HIVE_TARBALL_SRC=f412000
 $(eval $(call PACKAGE,hive,HIVE))
 
 # Sqoop

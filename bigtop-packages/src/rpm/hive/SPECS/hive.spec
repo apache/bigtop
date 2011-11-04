@@ -115,7 +115,7 @@ This optional package hosts a metadata server for Hive clients across a network 
 
 
 %prep
-%setup -n apache-hive-6e882d8
+%setup -n apache-hive-f412000
 %patch0 -p0 
 
 %build
