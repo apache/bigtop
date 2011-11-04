@@ -1,8 +1,357 @@
-Index: apache-mahout-c298f70/core/pom.xml
+Index: core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/Step1MapperTest.java
 ===================================================================
---- apache-mahout-c298f70.orig/core/pom.xml	2011-09-29 15:22:25.369554983 -0700
-+++ apache-mahout-c298f70/core/pom.xml	2011-09-29 15:22:34.417110581 -0700
-@@ -140,10 +140,6 @@
+--- core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/Step1MapperTest.java	(revision 1197192)
++++ core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/Step1MapperTest.java	(working copy)
+@@ -22,6 +22,7 @@
+ import org.apache.hadoop.conf.Configuration;
+ import org.apache.hadoop.io.LongWritable;
+ import org.apache.hadoop.io.Text;
++import org.apache.hadoop.mapreduce.Mapper;
+ import org.apache.hadoop.mapreduce.TaskAttemptID;
+ import org.apache.mahout.common.MahoutTestCase;
+ import org.apache.mahout.common.RandomUtils;
+@@ -30,6 +31,7 @@
+ import org.apache.mahout.classifier.df.data.DataLoader;
+ import org.apache.mahout.classifier.df.data.Dataset;
+ import org.apache.mahout.classifier.df.data.Utils;
++import org.apache.mahout.classifier.df.mapreduce.MapredOutput;
+ import org.apache.mahout.classifier.df.node.Leaf;
+ import org.apache.mahout.classifier.df.node.Node;
+ import org.junit.Test;
+@@ -109,8 +111,11 @@
+       // expected number of trees that this mapper will build
+       int mapNbTrees = Step1Mapper.nbTrees(NUM_MAPPERS, NUM_TREES, partition);
+ 
+-      MockContext context = new MockContext(new Step1Mapper(),
+-          new Configuration(), new TaskAttemptID(), mapNbTrees);
++      MockMapContextWrapper<LongWritable,Text,TreeID,MapredOutput> mockMapContextWrapper =
++        new MockMapContextWrapper<LongWritable,Text,TreeID,MapredOutput>();
++      Mapper<LongWritable,Text,TreeID,MapredOutput>.Context context =
++        mockMapContextWrapper.getMockContext(new Configuration(),
++            new TaskAttemptID(), mapNbTrees);
+ 
+       MockStep1Mapper mapper = new MockStep1Mapper(treeBuilder, dataset, seed,
+           partition, NUM_MAPPERS, NUM_TREES);
+@@ -127,10 +132,10 @@
+       mapper.cleanup(context);
+ 
+       // make sure the mapper built all its trees
+-      assertEquals(mapNbTrees, context.nbOutputs());
++      assertEquals(mapNbTrees, mockMapContextWrapper.nbOutputs());
+ 
+       // check the returned keys
+-      for (TreeID k : context.getKeys()) {
++      for (TreeID k : mockMapContextWrapper.getKeys()) {
+         assertEquals(partition, k.partition());
+         assertEquals(treeIndex, k.treeId());
+ 
+Index: core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/MockMapContextWrapper.java
+===================================================================
+--- core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/MockMapContextWrapper.java	(revision 0)
++++ core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/MockMapContextWrapper.java	(revision 0)
+@@ -0,0 +1,94 @@
++/**
++ * Licensed to the Apache Software Foundation (ASF) under one
++ * or more contributor license agreements.  See the NOTICE file
++ * distributed with this work for additional information
++ * regarding copyright ownership.  The ASF licenses this file
++ * to you under the Apache License, Version 2.0 (the
++ * "License"); you may not use this file except in compliance
++ * with the License.  You may obtain a copy of the License at
++ *
++ *     http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package org.apache.mahout.classifier.df.mapreduce.partial;
++
++import java.io.IOException;
++
++import org.apache.hadoop.conf.Configuration;
++import org.apache.hadoop.mapreduce.Mapper;
++import org.apache.hadoop.mapreduce.TaskAttemptID;
++import org.apache.hadoop.mapreduce.lib.map.WrappedMapper;
++import org.apache.hadoop.mapreduce.task.MapContextImpl;
++import org.apache.mahout.classifier.df.mapreduce.MapredOutput;
++
++public class MockMapContextWrapper<K1, V1, K2, V2> extends Mapper<K1, V1, K2, V2> {
++  
++  private MockMapContext mockMapContext;
++  
++  public class MockMapContext extends MapContextImpl<K1, V1, K2, V2> {
++    
++    private final TreeID[] keys;
++    private final MapredOutput[] values;
++    private int index;
++
++    public MockMapContext(Configuration conf, TaskAttemptID taskAttemptID, int nbTrees) {
++      super(conf, taskAttemptID, null, null, null, null, null);
++      
++      keys = new TreeID[nbTrees];
++      values = new MapredOutput[nbTrees];
++    }
++    
++    @Override
++    public void write(Object key, Object value) throws IOException {
++      if (index == keys.length) {
++        throw new IOException("Received more output than expected : " + index);
++      }
++
++      keys[index] = ((TreeID) key).clone();
++      values[index] = ((MapredOutput) value).clone();
++
++      index++;
++    }
++
++    /**
++     * @return number of outputs collected
++     */
++    public int nbOutputs() {
++      return index;
++    }
++
++    public TreeID[] getKeys() {
++      return keys;
++    }
++
++    public MapredOutput[] getValues() {
++      return values;
++    }
++  }
++
++  public Mapper<K1, V1, K2, V2>.Context getMockContext(Configuration conf, TaskAttemptID taskAttemptID, int nbTrees) {
++    mockMapContext = new MockMapContext(conf, taskAttemptID, nbTrees);
++    return new WrappedMapper<K1, V1, K2, V2>().getMapContext(mockMapContext);
++  }
++
++  /**
++   * @return number of outputs collected
++   */
++  public int nbOutputs() {
++    return mockMapContext.nbOutputs();
++  }
++
++  public TreeID[] getKeys() {
++    return mockMapContext.getKeys();
++  }
++
++  public MapredOutput[] getValues() {
++    return mockMapContext.getValues();
++  }
++}
+
+Property changes on: core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/MockMapContextWrapper.java
+___________________________________________________________________
+Added: svn:eol-style
+   + native
+
+Index: core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/MockContext.java
+===================================================================
+--- core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/MockContext.java	(revision 1197192)
++++ core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/MockContext.java	(working copy)
+@@ -1,70 +0,0 @@
+-/**
+- * Licensed to the Apache Software Foundation (ASF) under one or more
+- * contributor license agreements.  See the NOTICE file distributed with
+- * this work for additional information regarding copyright ownership.
+- * The ASF licenses this file to You under the Apache License, Version 2.0
+- * (the "License"); you may not use this file except in compliance with
+- * the License.  You may obtain a copy of the License at
+- *
+- *     http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS,
+- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+- * See the License for the specific language governing permissions and
+- * limitations under the License.
+- */
+-package org.apache.mahout.classifier.df.mapreduce.partial;
+-
+-import java.io.IOException;
+-
+-import org.apache.hadoop.conf.Configuration;
+-import org.apache.hadoop.mapreduce.Mapper;
+-import org.apache.hadoop.mapreduce.TaskAttemptID;
+-import org.apache.hadoop.mapreduce.Mapper.Context;
+-import org.apache.mahout.classifier.df.mapreduce.MapredOutput;
+-
+-/**
+- * Special implementation that collects the output of the mappers
+- */
+-final class MockContext extends Context {
+-
+-  private final TreeID[] keys;
+-  private final MapredOutput[] values;
+-  private int index;
+-
+-  MockContext(Mapper<?,?,?,?> mapper, Configuration conf, TaskAttemptID taskid, int nbTrees)
+-    throws IOException, InterruptedException {
+-    mapper.super(conf, taskid, null, null, null, null, null);
+-
+-    keys = new TreeID[nbTrees];
+-    values = new MapredOutput[nbTrees];
+-  }
+-
+-  @Override
+-  public void write(Object key, Object value) throws IOException {
+-    if (index == keys.length) {
+-      throw new IOException("Received more output than expected : " + index);
+-    }
+-
+-    keys[index] = ((TreeID) key).clone();
+-    values[index] = ((MapredOutput) value).clone();
+-
+-    index++;
+-  }
+-
+-  /**
+-   * @return number of outputs collected
+-   */
+-  public int nbOutputs() {
+-    return index;
+-  }
+-
+-  public TreeID[] getKeys() {
+-    return keys;
+-  }
+-
+-  public MapredOutput[] getValues() {
+-    return values;
+-  }
+-}
+Index: core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/PartialSequentialBuilder.java
+===================================================================
+--- core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/PartialSequentialBuilder.java	(revision 1197192)
++++ core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/PartialSequentialBuilder.java	(working copy)
+@@ -27,10 +27,12 @@
+ import org.apache.hadoop.io.Text;
+ import org.apache.hadoop.mapreduce.InputSplit;
+ import org.apache.hadoop.mapreduce.Job;
++import org.apache.hadoop.mapreduce.Mapper;
+ import org.apache.hadoop.mapreduce.RecordReader;
+ import org.apache.hadoop.mapreduce.TaskAttemptContext;
+ import org.apache.hadoop.mapreduce.TaskAttemptID;
+ import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
++import org.apache.hadoop.mapreduce.task.TaskAttemptContextImpl;
+ import org.apache.mahout.classifier.df.DFUtils;
+ import org.apache.mahout.classifier.df.DecisionForest;
+ import org.apache.mahout.classifier.df.builder.TreeBuilder;
+@@ -51,7 +53,7 @@
+ 
+   private static final Logger log = LoggerFactory.getLogger(PartialSequentialBuilder.class);
+ 
+-  private MockContext firstOutput;
++  private MockMapContextWrapper<LongWritable,Text,TreeID,MapredOutput> mockMapContextWrapper;
+ 
+   private final Dataset dataset;
+ 
+@@ -96,9 +98,11 @@
+ 
+     int numTrees = Builder.getNbTrees(conf); // total number of trees
+ 
+-    TaskAttemptContext task = new TaskAttemptContext(conf, new TaskAttemptID());
++    TaskAttemptContext task = new TaskAttemptContextImpl(conf, new TaskAttemptID());
+ 
+-    firstOutput = new MockContext(new Step1Mapper(), conf, task.getTaskAttemptID(), numTrees);
++    mockMapContextWrapper = new MockMapContextWrapper<LongWritable,Text,TreeID,MapredOutput>();
++    Mapper<LongWritable,Text,TreeID,MapredOutput>.Context firstOutput =
++      mockMapContextWrapper.getMockContext(conf, task.getTaskAttemptID(), numTrees);
+ 
+     /* first instance id in hadoop's order */
+     int[] firstIds = new int[nbSplits];
+@@ -143,7 +147,7 @@
+ 
+   @Override
+   protected DecisionForest parseOutput(Job job) throws IOException {
+-    return processOutput(firstOutput.getKeys(), firstOutput.getValues());
++    return processOutput(mockMapContextWrapper.getKeys(), mockMapContextWrapper.getValues());
+   }
+ 
+   /**
+Index: core/src/test/java/org/apache/mahout/common/DummyStatusReporter.java
+===================================================================
+--- core/src/test/java/org/apache/mahout/common/DummyStatusReporter.java	(revision 1197192)
++++ core/src/test/java/org/apache/mahout/common/DummyStatusReporter.java	(working copy)
+@@ -55,4 +55,9 @@
+   public void setStatus(String status) {
+   }
+ 
++  @Override
++  public float getProgress() {
++    return 0;
++  }
++
+ }
+Index: core/src/test/java/org/apache/mahout/common/DummyRecordWriter.java
+===================================================================
+--- core/src/test/java/org/apache/mahout/common/DummyRecordWriter.java	(revision 1197192)
++++ core/src/test/java/org/apache/mahout/common/DummyRecordWriter.java	(working copy)
+@@ -30,6 +30,10 @@
+ import org.apache.hadoop.mapreduce.Reducer;
+ import org.apache.hadoop.mapreduce.TaskAttemptContext;
+ import org.apache.hadoop.mapreduce.TaskAttemptID;
++import org.apache.hadoop.mapreduce.lib.map.WrappedMapper;
++import org.apache.hadoop.mapreduce.lib.reduce.WrappedReducer;
++import org.apache.hadoop.mapreduce.task.MapContextImpl;
++import org.apache.hadoop.mapreduce.task.ReduceContextImpl;
+ 
+ public final class DummyRecordWriter<K, V> extends RecordWriter<K, V> {
+ 
+@@ -65,7 +69,8 @@
+                                                                       Configuration configuration,
+                                                                       RecordWriter<K2, V2> output)
+     throws IOException, InterruptedException {
+-    return mapper.new Context(configuration, new TaskAttemptID(), null, output, null, new DummyStatusReporter(), null);
++    return new WrappedMapper<K1, V1, K2, V2>().getMapContext(
++      new MapContextImpl<K1, V1, K2, V2>(configuration, new TaskAttemptID(), null, output, null, new DummyStatusReporter(), null));
+   }
+ 
+   public static <K1, V1, K2, V2> Reducer<K1, V1, K2, V2>.Context build(Reducer<K1, V1, K2, V2> reducer,
+@@ -74,7 +79,8 @@
+                                                                        Class<K1> keyClass,
+                                                                        Class<V1> valueClass)
+     throws IOException, InterruptedException {
+-    return reducer.new Context(configuration,
++    return new WrappedReducer<K1, V1, K2, V2>().getReducerContext(
++      new ReduceContextImpl<K1, V1, K2, V2>(configuration,
+                                new TaskAttemptID(),
+                                new MockIterator(),
+                                null,
+@@ -84,7 +90,7 @@
+                                new DummyStatusReporter(),
+                                null,
+                                keyClass,
+-                               valueClass);
++                               valueClass));
+   }
+ 
+ }
+Index: core/src/test/java/org/apache/mahout/common/DummyCounter.java
+===================================================================
+--- core/src/test/java/org/apache/mahout/common/DummyCounter.java	(revision 1197192)
++++ core/src/test/java/org/apache/mahout/common/DummyCounter.java	(working copy)
+@@ -19,8 +19,8 @@
+ 
+ package org.apache.mahout.common;
+ 
+-import org.apache.hadoop.mapreduce.Counter;
++import org.apache.hadoop.mapreduce.counters.GenericCounter;
+ 
+-final class DummyCounter extends Counter {
++final class DummyCounter extends GenericCounter {
+ 
+ }
+Index: core/pom.xml
+===================================================================
+--- core/pom.xml	(revision 1197192)
++++ core/pom.xml	(working copy)
+@@ -140,19 +140,6 @@
  
      <!-- Third Party -->
      <dependency>
@@ -10,10 +359,19 @@ Index: apache-mahout-c298f70/core/pom.xml
 -      <artifactId>hadoop-core</artifactId>
 -    </dependency>
 -    <dependency>
-       <groupId>org.codehaus.jackson</groupId>
-       <artifactId>jackson-core-asl</artifactId>
+-      <groupId>org.codehaus.jackson</groupId>
+-      <artifactId>jackson-core-asl</artifactId>
+-    </dependency>
+-    <dependency>
+-      <groupId>org.codehaus.jackson</groupId>
+-      <artifactId>jackson-mapper-asl</artifactId>
+-    </dependency>
+-
+-    <dependency>
+       <groupId>org.slf4j</groupId>
+       <artifactId>slf4j-api</artifactId>
      </dependency>
-@@ -211,4 +207,43 @@
+@@ -211,4 +198,51 @@
      </dependency>
  
    </dependencies>
@@ -47,25 +405,51 @@ Index: apache-mahout-c298f70/core/pom.xml
 +        </dependency>
 +        <dependency>
 +          <groupId>org.apache.hadoop</groupId>
-+          <artifactId>hadoop-hdfs</artifactId>
++          <artifactId>hadoop-mapreduce-client-common</artifactId>
 +        </dependency>
 +        <dependency>
 +          <groupId>org.apache.hadoop</groupId>
-+          <artifactId>hadoop-mapred</artifactId>
++          <artifactId>hadoop-mapreduce-client-core</artifactId>
++        </dependency>
++        <dependency>
++          <groupId>org.codehaus.jackson</groupId>
++          <artifactId>jackson-core-asl</artifactId>
++        </dependency>
++        <dependency>
++          <groupId>org.codehaus.jackson</groupId>
++          <artifactId>jackson-mapper-asl</artifactId>
 +        </dependency>
 +      </dependencies>
 +    </profile>
 +  </profiles>
  </project>
-Index: apache-mahout-c298f70/pom.xml
+Index: pom.xml
 ===================================================================
---- apache-mahout-c298f70.orig/pom.xml	2011-09-29 15:22:25.347055295 -0700
-+++ apache-mahout-c298f70/pom.xml	2011-09-29 15:22:29.555805208 -0700
-@@ -189,6 +189,220 @@
+--- pom.xml	(revision 1197192)
++++ pom.xml	(working copy)
+@@ -103,6 +103,17 @@
+     <url>https://issues.apache.org/jira/browse/MAHOUT</url>
+   </issueManagement>
+   
++  <repositories>
++    <repository>
++      <id>apache.snapshots</id>
++      <name>Apache Snapshot Repository</name>
++      <url>http://repository.apache.org/snapshots</url>
++      <releases>
++        <enabled>false</enabled>
++      </releases>
++    </repository>
++  </repositories>
++  
+   <dependencyManagement>
+     <dependencies>
+     
+@@ -260,6 +271,100 @@
+         </exclusions>
        </dependency>
- 
        <dependency>
-+         <groupId>org.apache.hadoop</groupId>
++        <groupId>org.apache.hadoop</groupId>
 +        <artifactId>hadoop-common</artifactId>
 +        <version>${hadoop.version}</version>
 +        <exclusions>
@@ -133,152 +517,32 @@ Index: apache-mahout-c298f70/pom.xml
 +            <groupId>org.eclipse.jdt</groupId>
 +            <artifactId>core</artifactId>
 +          </exclusion>
-+        </exclusions>
-+      </dependency>
-+      <dependency>
-+        <groupId>org.apache.hadoop</groupId>
-+        <artifactId>hadoop-hdfs</artifactId>
-+        <version>${hadoop.version}</version>
-+        <exclusions>
 +          <exclusion>
-+            <groupId>net.sf.kosmosfs</groupId>
-+            <artifactId>kfs</artifactId>
++            <groupId>org.slf4j</groupId>
++            <artifactId>slf4j-api</artifactId>
 +          </exclusion>
 +          <exclusion>
-+            <groupId>org.mortbay.jetty</groupId>
-+            <artifactId>jetty</artifactId>
++            <groupId>org.slf4j</groupId>
++            <artifactId>slf4j-jcl</artifactId>
 +          </exclusion>
 +          <exclusion>
-+            <groupId>org.mortbay.jetty</groupId>
-+            <artifactId>jetty-util</artifactId>
-+          </exclusion>
-+          <exclusion>
-+            <groupId>hsqldb</groupId>
-+            <artifactId>hsqldb</artifactId>
-+          </exclusion>
-+          <exclusion>
-+            <groupId>commons-el</groupId>
-+            <artifactId>commons-el</artifactId>
-+          </exclusion>
-+          <exclusion>
-+            <groupId>junit</groupId>
-+            <artifactId>junit</artifactId>
-+          </exclusion>
-+          <exclusion>
-+            <groupId>oro</groupId>
-+            <artifactId>oro</artifactId>
-+          </exclusion>
-+          <exclusion>
-+            <groupId>org.mortbay.jetty</groupId>
-+            <artifactId>jsp-2.1</artifactId>
-+          </exclusion>
-+          <exclusion>
-+            <groupId>org.mortbay.jetty</groupId>
-+            <artifactId>jsp-api-2.1</artifactId>
-+          </exclusion>
-+          <exclusion>
-+            <groupId>org.mortbay.jetty</groupId>
-+            <artifactId>servlet-api-2.5</artifactId>
-+          </exclusion>
-+          <exclusion>
-+            <groupId>commons-net</groupId>
-+            <artifactId>commons-net</artifactId>
-+          </exclusion>
-+          <exclusion>
-+            <groupId>tomcat</groupId>
-+            <artifactId>jasper-runtime</artifactId>
-+          </exclusion>
-+          <exclusion>
-+            <groupId>tomcat</groupId>
-+            <artifactId>jasper-compiler</artifactId>
-+          </exclusion>
-+          <exclusion>
-+            <groupId>xmlenc</groupId>
-+            <artifactId>xmlenc</artifactId>
-+          </exclusion>
-+          <exclusion>
-+            <groupId>net.java.dev.jets3t</groupId>
-+            <artifactId>jets3t</artifactId>
-+          </exclusion>
-+          <exclusion>
-+            <groupId>org.eclipse.jdt</groupId>
-+            <artifactId>core</artifactId>
++            <groupId>org.slf4j</groupId>
++            <artifactId>slf4j-log4j12</artifactId>
 +          </exclusion>
 +        </exclusions>
 +      </dependency>
 +      <dependency>
 +        <groupId>org.apache.hadoop</groupId>
-+        <artifactId>hadoop-mapred</artifactId>
++        <artifactId>hadoop-mapreduce-client-core</artifactId>
 +        <version>${hadoop.version}</version>
-+        <exclusions>
-+          <exclusion>
-+            <groupId>net.sf.kosmosfs</groupId>
-+            <artifactId>kfs</artifactId>
-+          </exclusion>
-+          <exclusion>
-+            <groupId>org.mortbay.jetty</groupId>
-+            <artifactId>jetty</artifactId>
-+          </exclusion>
-+          <exclusion>
-+            <groupId>org.mortbay.jetty</groupId>
-+            <artifactId>jetty-util</artifactId>
-+          </exclusion>
-+          <exclusion>
-+            <groupId>hsqldb</groupId>
-+            <artifactId>hsqldb</artifactId>
-+          </exclusion>
-+          <exclusion>
-+            <groupId>commons-el</groupId>
-+            <artifactId>commons-el</artifactId>
-+          </exclusion>
-+          <exclusion>
-+            <groupId>junit</groupId>
-+            <artifactId>junit</artifactId>
-+          </exclusion>
-+          <exclusion>
-+            <groupId>oro</groupId>
-+            <artifactId>oro</artifactId>
-+          </exclusion>
-+          <exclusion>
-+            <groupId>org.mortbay.jetty</groupId>
-+            <artifactId>jsp-2.1</artifactId>
-+          </exclusion>
-+          <exclusion>
-+            <groupId>org.mortbay.jetty</groupId>
-+            <artifactId>jsp-api-2.1</artifactId>
-+          </exclusion>
-+          <exclusion>
-+            <groupId>org.mortbay.jetty</groupId>
-+            <artifactId>servlet-api-2.5</artifactId>
-+          </exclusion>
-+          <exclusion>
-+            <groupId>commons-net</groupId>
-+            <artifactId>commons-net</artifactId>
-+          </exclusion>
-+          <exclusion>
-+            <groupId>tomcat</groupId>
-+            <artifactId>jasper-runtime</artifactId>
-+          </exclusion>
-+          <exclusion>
-+            <groupId>tomcat</groupId>
-+            <artifactId>jasper-compiler</artifactId>
-+          </exclusion>
-+          <exclusion>
-+            <groupId>xmlenc</groupId>
-+            <artifactId>xmlenc</artifactId>
-+          </exclusion>
-+          <exclusion>
-+            <groupId>net.java.dev.jets3t</groupId>
-+            <artifactId>jets3t</artifactId>
-+          </exclusion>
-+          <exclusion>
-+            <groupId>org.eclipse.jdt</groupId>
-+            <artifactId>core</artifactId>
-+          </exclusion>
-+        </exclusions>
++      </dependency>
++      <dependency>
++        <groupId>org.apache.hadoop</groupId>
++        <artifactId>hadoop-mapreduce-client-common</artifactId>
++        <version>${hadoop.version}</version>
 +      </dependency>
 +
 +      <dependency>
-         <groupId>org.apache.hadoop</groupId>
-         <artifactId>hadoop-core</artifactId>
-         <version>0.20.204.0</version>
+         <groupId>org.codehaus.jackson</groupId>
+         <artifactId>jackson-core-asl</artifactId>
+         <version>1.8.2</version>
