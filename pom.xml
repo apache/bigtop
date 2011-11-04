@@ -46,6 +46,34 @@
     <pluginManagement>
       <plugins>
         <plugin>
+          <groupId>org.apache.rat</groupId>
+          <artifactId>apache-rat-plugin</artifactId>
+          <version>0.7</version>
+          <configuration>
+            <excludes>
+              <exclude>.git/**</exclude>
+              <exclude>**/.gitignore</exclude> 
+              <!-- Test data with rigid structure and/or binary -->
+              <exclude>bigtop-tests/test-artifacts/**/resources/**</exclude>
+              <!-- Debian package files that have a rigid structure (* matches package name) -->
+              <exclude>bigtop-packages/src/deb/*/*.dirs</exclude>
+              <exclude>bigtop-packages/src/deb/*/dirs</exclude>
+              <exclude>bigtop-packages/src/deb/*/*.install</exclude>
+              <exclude>bigtop-packages/src/deb/*/*.manpages</exclude>
+              <exclude>bigtop-packages/src/deb/*/*.docs</exclude>
+              <exclude>bigtop-packages/src/deb/*/docs</exclude>
+              <exclude>bigtop-packages/src/deb/*/compat</exclude>
+              <exclude>bigtop-packages/src/deb/*/*.lintian-overrides</exclude>
+              <exclude>bigtop-packages/src/deb/*/shlibs.local</exclude>
+              <exclude>bigtop-repos/apt/distributions</exclude>
+              <!-- Miscelaneous individual files -->
+              <exclude>src/site/resources/images/bigtop-logo.ai</exclude>
+              <exclude>test/MANIFEST.txt</exclude>
+              <exclude>bigtop-deploy/puppet/modules/hadoop/templates/taskcontroller.cfg</exclude>
+            </excludes>
+          </configuration>
+        </plugin>
+        <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-pdf-plugin</artifactId>
           <version>1.1</version>
@@ -105,4 +133,26 @@
       <url>scpexe://people.apache.org/www/incubator.apache.org/bigtop</url>
     </site>
   </distributionManagement>
+
+  <profiles>
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.rat</groupId>
+            <artifactId>apache-rat-plugin</artifactId>
+            <executions>
+              <execution>
+                <phase>verify</phase>
+                <goals>
+                  <goal>check</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
