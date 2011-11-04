@@ -55,7 +55,7 @@ HBASE_SITE=https://github.com/apache/hbase/tarball
 $(eval $(call PACKAGE,hbase,HBASE))
 
 # Pig
-PIG_BASE_VERSION=0.10.0
+PIG_BASE_VERSION=0.9.2
 PIG_PKG_VERSION=$(PIG_BASE_VERSION)
 PIG_RELEASE_VERSION=1
 PIG_NAME=pig
@@ -65,7 +65,7 @@ PIG_TARBALL_DST=pig-$(PIG_BASE_VERSION).tar.gz
 #PIG_TARBALL_SRC=$(PIG_TARBALL_DST)
 #PIG_SITE=$(APACHE_MIRROR)/pig/pig-$(PIG_BASE_VERSION)/
 PIG_SITE=https://github.com/apache/pig/tarball
-PIG_TARBALL_SRC=e42a1e6
+PIG_TARBALL_SRC=a078a99
 $(eval $(call PACKAGE,pig,PIG))
 
 # Hive
