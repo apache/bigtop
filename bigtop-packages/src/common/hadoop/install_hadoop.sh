@@ -135,6 +135,8 @@ HADOOP_BIN_DIR=${HADOOP_DIR}/bin
 HADOOP_SBIN_DIR=${HADOOP_DIR}/sbin
 HADOOP_LIB_DIR=${HADOOP_DIR}/lib
 
+HADOOP_VERSION=0.23.0-SNAPSHOT
+
 # Make bin wrappers
 mkdir -p $BIN_DIR
 
@@ -164,6 +166,7 @@ cp ${BUILD_DIR}/lib/*.jar ${HADOOP_LIB_DIR}/
 # hadoop jar
 install -d -m 0755 ${HADOOP_DIR}
 cp ${BUILD_DIR}/modules/*.jar ${HADOOP_DIR}/
+chmod 644 ${HADOOP_DIR}/*.jar
 
 # native libs
 install -d -m 0755 ${SYSTEM_LIB_DIR}
@@ -191,11 +194,17 @@ cp ${BUILD_DIR}/etc/hadoop/* $YARN_ETC_DIR/conf.empty
 install -d -m 0755 ${DOC_DIR}
 cp -r ${BUILD_DIR}/../target/site/* ${DOC_DIR}/
 
-# source
-cp -r ${BUILD_DIR}/src ${DOC_DIR}/
+# source jars
+cp ${BUILD_DIR}/../hadoop-common-project/hadoop-auth/target/hadoop-auth-${HADOOP_VERSION}-sources.jar ${HADOOP_DIR}/
+cp ${BUILD_DIR}/../hadoop-common-project/hadoop-common/target/hadoop-common-${HADOOP_VERSION}-test-sources.jar ${HADOOP_DIR}/
+cp ${BUILD_DIR}/../hadoop-common-project/hadoop-common/target/hadoop-common-${HADOOP_VERSION}-sources.jar ${HADOOP_DIR}/
+cp ${BUILD_DIR}/../hadoop-hdfs-project/hadoop-hdfs/target/hadoop-hdfs-${HADOOP_VERSION}-sources.jar ${HADOOP_DIR}/
+cp ${BUILD_DIR}/../hadoop-hdfs-project/hadoop-hdfs/target/hadoop-hdfs-${HADOOP_VERSION}-test-sources.jar ${HADOOP_DIR}/
+chmod 644 ${HADOOP_DIR}/*.jar
 
 # man pages
 mkdir -p $MAN_DIR/man1
 gzip -c < $DISTRO_DIR/hadoop.1 > $MAN_DIR/man1/hadoop.1.gz
+chmod 644 $MAN_DIR/man1/hadoop.1.gz
 
 

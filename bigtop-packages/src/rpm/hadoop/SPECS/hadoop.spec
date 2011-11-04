@@ -48,6 +48,7 @@
 # CentOS 5 does not have any dist macro
 # So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
 %if %{!?suse_version:1}0 && %{!?mgaversion:1}0
+
 # brp-repack-jars uses unzip to expand jar files
 # Unfortunately aspectjtools-1.6.5.jar pulled by ivy contains some files and directories without any read permission
 # and make whole process to fail.
@@ -60,6 +61,8 @@
     /usr/lib/rpm/brp-python-bytecompile ; \
     %{nil}
 
+
+%define libexecdir %{_libexecdir}
 %define doc_hadoop %{_docdir}/%{name}-%{hadoop_version}
 %define alternatives_cmd alternatives
 %global initd_dir %{_sysconfdir}/rc.d/init.d
@@ -79,12 +82,14 @@
     /usr/lib/rpm/brp-compress ; \
     %{nil}
 
+%define libexecdir %{_libexecdir}
 %define doc_hadoop %{_docdir}/%{name}
 %define alternatives_cmd update-alternatives
 %global initd_dir %{_sysconfdir}/rc.d
 %endif
 
 %if  0%{?mgaversion}
+%define libexecdir /usr/libexec/
 %define doc_hadoop %{_docdir}/%{name}-%{hadoop_version}
 %define alternatives_cmd update-alternatives
 %global initd_dir %{_sysconfdir}/rc.d/init.d
@@ -260,7 +265,7 @@ DataNodes to bind to a low (privileged) port and then drop root privileges
 before continuing operation.
 
 %prep
-%setup -n apache-hadoop-common-562cef1
+%setup -n apache-hadoop-common-c6c6fb0
 
 %build
 # This assumes that you installed Java JDK 6 and set JAVA_HOME
@@ -285,7 +290,7 @@ bash %{SOURCE2} \
   --build-dir=$PWD/build \
   --system-include-dir=$RPM_BUILD_ROOT%{_includedir} \
   --system-lib-dir=$RPM_BUILD_ROOT%{_libdir} \
-  --system-libexec-dir=$RPM_BUILD_ROOT%{_libexecdir} \
+  --system-libexec-dir=$RPM_BUILD_ROOT%{libexecdir} \
   --hadoop-etc-dir=$RPM_BUILD_ROOT%{etc_hadoop} \
   --yarn-etc-dir=$RPM_BUILD_ROOT%{etc_yarn} \
   --prefix=$RPM_BUILD_ROOT \
@@ -334,7 +339,7 @@ done
 %__install -m 0644 %{SOURCE9} $RPM_BUILD_ROOT/etc/security/limits.d/hadoop.nofiles.conf
 
 # /var/lib/hadoop/cache
-%__install -d -m 1777 $RPM_BUILD_ROOT/var/lib/%{name}/cache
+%__install -d -m 1777 $RPM_BUILD_ROOT/var/lib/%{name}/cache/hadoop
 # /var/log/hadoop
 %__install -d -m 0755 $RPM_BUILD_ROOT/var/log
 %__install -d -m 0775 $RPM_BUILD_ROOT/var/run/%{name}
@@ -380,14 +385,19 @@ fi
 %files
 %defattr(-,root,root)
 %config(noreplace) %{etc_hadoop}/conf.empty
+%config(noreplace) %{etc_yarn}/conf.empty
 %config(noreplace) /etc/default/hadoop
 %config(noreplace) /etc/security/limits.d/hadoop.nofiles.conf
 %{lib_hadoop}
 %{_libdir}/libhadoop*
+%{libexecdir}/hadoop-config.sh
+%{libexecdir}/hdfs-config.sh
 %{bin_hadoop}/%{name}
 %attr(0775,root,hadoop) /var/run/%{name}
 %attr(0775,root,hadoop) %{log_hadoop}
 %{man_hadoop}/man1/hadoop.1.*
+
+%exclude %{lib_hadoop}/sbin
 
 %files doc
 %defattr(-,root,root)
@@ -411,11 +421,6 @@ fi \
 %postun %1 \
 if [ $1 -ge 1 ]; then \
   service %{name}-%1 condrestart >/dev/null 2>&1 \
-fi
-
-%define post_namenode \
-if [ ! -d /var/lib/%{name}/cache/hadoop/dfs/name ]; then \
-   HADOOP_NAMENODE_USER=hdfs hadoop namenode -format 2>/dev/null 1>/dev/null || : \
 fi
 
 %service_macro namenode post_namenode
@@ -443,10 +448,11 @@ fi
 %files libhdfs
 %defattr(-,root,root)
 %{_libdir}/libhdfs*
-#%{_includedir}/hdfs.h
+%{_includedir}/hdfs.h
 # -devel should be its own package
 #%doc %{_docdir}/libhdfs-%{hadoop_version}
 
 %files sbin
 %defattr(-,root,root)
 %dir %{lib_hadoop}/sbin
+%{lib_hadoop}/sbin/*
