@@ -149,7 +149,16 @@ for bin_wrapper in hadoop ; do
   cat > $wrapper <<EOF
 #!/bin/sh
 
-export HADOOP_HOME=$INSTALLED_HADOOP_DIR
+
+# Autodetect JAVA_HOME if not defined
+if [ -e /usr/libexec/bigtop-detect-javahome ]; then
+. /usr/libexec/bigtop-detect-javahome
+elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
+. /usr/lib/bigtop-utils/bigtop-detect-javahome
+fi
+
+. /etc/default/hadoop
+
 exec $INSTALLED_HADOOP_DIR/bin/$bin_wrapper "\$@"
 EOF
   chmod 755 $wrapper
