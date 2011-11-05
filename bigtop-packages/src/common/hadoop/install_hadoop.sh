@@ -139,7 +139,7 @@ HADOOP_NATIVE_LIB_DIR=${HADOOP_LIB_DIR}/native
 HADOOP_VERSION=0.23.0-SNAPSHOT
 
 ##Needed for some distros to find ldconfig
-export PATH="/sbin/$PATH"
+export PATH="/sbin/:$PATH"
 
 # Make bin wrappers
 mkdir -p $BIN_DIR
