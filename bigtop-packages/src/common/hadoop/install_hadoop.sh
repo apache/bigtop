@@ -134,6 +134,7 @@ INSTALLED_HADOOP_DIR=${INSTALLED_HADOOP_DIR:-/usr/lib/hadoop}
 HADOOP_BIN_DIR=${HADOOP_DIR}/bin
 HADOOP_SBIN_DIR=${HADOOP_DIR}/sbin
 HADOOP_LIB_DIR=${HADOOP_DIR}/lib
+HADOOP_NATIVE_LIB_DIR=${HADOOP_LIB_DIR}/native
 
 HADOOP_VERSION=0.23.0-SNAPSHOT
 
@@ -162,21 +163,32 @@ cp ${BUILD_DIR}/sbin/* ${HADOOP_SBIN_DIR}/
 # jars
 install -d -m 0755 ${HADOOP_LIB_DIR}
 cp ${BUILD_DIR}/lib/*.jar ${HADOOP_LIB_DIR}/
+cp ${BUILD_DIR}/share/hadoop/common/lib/*.jar ${HADOOP_LIB_DIR}/
+cp ${BUILD_DIR}/share/hadoop/hdfs/lib/*.jar ${HADOOP_LIB_DIR}/
+chmod 644 ${HADOOP_LIB_DIR}/*.jar
 
 # hadoop jar
 install -d -m 0755 ${HADOOP_DIR}
 cp ${BUILD_DIR}/modules/*.jar ${HADOOP_DIR}/
+cp ${BUILD_DIR}/share/hadoop/common/*.jar ${HADOOP_DIR}/
+cp ${BUILD_DIR}/share/hadoop/hdfs/*.jar ${HADOOP_DIR}/
 chmod 644 ${HADOOP_DIR}/*.jar
 
 # native libs
 install -d -m 0755 ${SYSTEM_LIB_DIR}
+install -d -m 0755 ${HADOOP_NATIVE_LIB_DIR}
 cp ${BUILD_DIR}/lib/*.a ${SYSTEM_LIB_DIR}/
-for library in libhdfs.so.0.0.0 libhadoop.so.1.0.0; do
+for library in libhdfs.so.0.0.0; do
   cp ${BUILD_DIR}/lib/${library} ${SYSTEM_LIB_DIR}/
   ldconfig -vlN ${SYSTEM_LIB_DIR}/${library}
 done
 install -d -m 0755 ${SYSTEM_INCLUDE_DIR}
 cp ${BUILD_DIR}/../hadoop-hdfs-project/hadoop-hdfs/src/main/native/hdfs.h ${SYSTEM_INCLUDE_DIR}/
+
+for library in libhadoop.so.1.0.0; do
+  cp ${BUILD_DIR}/lib/${library} ${HADOOP_NATIVE_LIB_DIR}/
+  ldconfig -vlN ${HADOOP_NATIVE_LIB_DIR}/${library}
+done
 
 #libexec
 install -d -m 0755 ${SYSTEM_LIBEXEC_DIR}
