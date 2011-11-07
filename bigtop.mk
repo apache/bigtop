@@ -86,12 +86,14 @@ $(eval $(call PACKAGE,hive,HIVE))
 SQOOP_NAME=sqoop
 SQOOP_RELNOTES_NAME=Sqoop
 SQOOP_PKG_NAME=sqoop
-SQOOP_BASE_VERSION=1.3.0
-SQOOP_PKG_VERSION=1.3.0
+SQOOP_BASE_VERSION=1.4.0
+SQOOP_PKG_VERSION=1.4.0
 SQOOP_RELEASE_VERSION=1
 SQOOP_TARBALL_DST=sqoop-$(SQOOP_BASE_VERSION).tar.gz
-SQOOP_TARBALL_SRC=$(SQOOP_TARBALL_DST)
-SQOOP_SITE=http://github.com/downloads/cloudera/sqoop/
+#SQOOP_TARBALL_SRC=$(SQOOP_TARBALL_DST)
+#SQOOP_SITE=http://github.com/downloads/cloudera/sqoop/
+SQOOP_SITE=https://github.com/apache/sqoop/tarball
+SQOOP_TARBALL_SRC=e9d0bed
 $(eval $(call PACKAGE,sqoop,SQOOP))
 
 # Oozie

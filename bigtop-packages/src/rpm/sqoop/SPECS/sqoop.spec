@@ -79,8 +79,8 @@ Shared metadata repository for Sqoop. This optional package hosts a metadata
 server for Sqoop clients across a network to use.
 
 %prep
-%setup -n sqoop-%{sqoop_base_version}
-%patch0 -p1
+%setup -n apache-sqoop-e9d0be
+%patch0 -p0
 
 %build
 bash %{SOURCE1} -Dversion=%{version}
