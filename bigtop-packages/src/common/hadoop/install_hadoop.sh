@@ -206,13 +206,14 @@ done
 install -d -m 0755 ${SYSTEM_LIBEXEC_DIR}
 rm -fv ${BUILD_DIR}/libexec/jsvc
 cp ${BUILD_DIR}/libexec/* ${SYSTEM_LIBEXEC_DIR}/
+cp ${BUILD_DIR}/bin/*-config.sh ${SYSTEM_LIBEXEC_DIR}/
 
 # conf
 install -d -m 0755 $HADOOP_ETC_DIR/conf.empty
 install -d -m 0755 $YARN_ETC_DIR/conf.empty
 
 cp ${BUILD_DIR}/conf/* $YARN_ETC_DIR/conf.empty
-cp ${BUILD_DIR}/etc/hadoop/* $YARN_ETC_DIR/conf.empty
+cp ${BUILD_DIR}/etc/hadoop/* $HADOOP_ETC_DIR/conf.empty
 
 # docs
 install -d -m 0755 ${DOC_DIR}
