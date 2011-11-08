@@ -410,6 +410,8 @@ fi
 %{_libdir}/libhadoop*
 %{libexecdir}/hadoop-config.sh
 %{libexecdir}/hdfs-config.sh
+%{libexecdir}/mapred-config.sh
+%{libexecdir}/yarn-config.sh
 %{bin_hadoop}/%{name}
 %attr(0775,root,hadoop) /var/run/%{name}
 %attr(0775,root,hadoop) %{log_hadoop}
