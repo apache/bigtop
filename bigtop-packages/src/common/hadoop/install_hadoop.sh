@@ -179,6 +179,11 @@ cp ${BUILD_DIR}/share/hadoop/common/lib/*.jar ${HADOOP_LIB_DIR}/
 cp ${BUILD_DIR}/share/hadoop/hdfs/lib/*.jar ${HADOOP_LIB_DIR}/
 chmod 644 ${HADOOP_LIB_DIR}/*.jar
 
+# Remove duplicate libraries:
+rm -fv ${HADOOP_LIB_DIR}/slf4j-*-1.5.11.jar
+rm -fv ${HADOOP_LIB_DIR}/stax-api-1.0.1.jar
+rm -fv ${HADOOP_LIB_DIR}/netty-3.2.3.Final.jar
+
 # hadoop jar
 install -d -m 0755 ${HADOOP_DIR}
 cp ${BUILD_DIR}/modules/*.jar ${HADOOP_DIR}/

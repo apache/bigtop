@@ -1,24 +1,8 @@
-diff --git hadoop-dist/pom.xml hadoop-dist/pom.xml
-index 2a5d7a9..cce1f56 100644
---- hadoop-dist/pom.xml
-+++ hadoop-dist/pom.xml
-@@ -152,9 +152,9 @@
-                         fi
-                       }
- 
--                      run tar czf hadoop-${project.version}.tar.gz hadoop-${project.version}
-+                      run tar czf hadoop-${project.version}-bin.tar.gz hadoop-${project.version}
-                       echo
--                      echo "Hadoop dist tar available at: ${project.build.directory}/hadoop-${project.version}.tar.gz"
-+                      echo "Hadoop dist tar available at: ${project.build.directory}/hadoop-${project.version}-bin.tar.gz"
-                       echo
-                     </echo>
-                     <exec executable="sh" dir="${project.build.directory}" failonerror="true">
 diff --git pom.xml pom.xml
-index 96c627b..16cc708 100644
+index a3bdcd0..de5715f 100644
 --- pom.xml
 +++ pom.xml
-@@ -201,7 +201,7 @@
+@@ -264,7 +264,7 @@
                  <configuration>
                    <appendAssemblyId>false</appendAssemblyId>
                    <attach>false</attach>
@@ -27,7 +11,7 @@ index 96c627b..16cc708 100644
                    <outputDirectory>hadoop-dist/target</outputDirectory>
                    <!-- Not using descriptorRef and hadoop-assembly dependency -->
                    <!-- to avoid making hadoop-main to depend on a module      -->
-@@ -225,7 +225,7 @@
+@@ -288,7 +288,7 @@
                  <configuration>
                    <target>
                      <echo/>

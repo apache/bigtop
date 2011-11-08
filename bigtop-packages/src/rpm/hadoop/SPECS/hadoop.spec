@@ -25,6 +25,7 @@
 %define etc_hadoop /etc/%{name}
 %define etc_yarn /etc/yarn
 %define config_hadoop %{etc_hadoop}/conf
+%define config_yarn %{etc_yarn}/conf
 %define lib_hadoop_dirname /usr/lib
 %define lib_hadoop %{lib_hadoop_dirname}/%{name}
 %define log_hadoop_dirname /var/log
@@ -125,6 +126,10 @@ Source9: hadoop.nofiles.conf
 Patch0: HADOOP-7787.patch
 Patch1: HADOOP-7801.patch
 Patch2: HADOOP-7802.patch
+Patch3: MAPREDUCE-3372.patch
+Patch4: HDFS-2543.patch
+Patch5: MAPREDUCE-3373.patch
+Patch6: HDFS-2544.patch
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: python >= 2.4, git, fuse-devel,fuse, automake, autoconf
 Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils
@@ -272,6 +277,10 @@ before continuing operation.
 %patch0
 %patch1
 %patch2
+%patch3
+%patch4
+%patch5
+%patch6
 
 %build
 # This assumes that you installed Java JDK 6 and set JAVA_HOME
@@ -365,12 +374,15 @@ getent passwd hdfs >/dev/null || /usr/sbin/useradd --comment "Hadoop HDFS" --she
 
 %post
 %{alternatives_cmd} --install %{config_hadoop} %{name}-conf %{etc_hadoop}/conf.empty 10
+%{alternatives_cmd} --install %{config_yarn} yarn-conf %{etc_yarn}/conf.empty 10
 %{alternatives_cmd} --install %{bin_hadoop}/%{hadoop_name} %{hadoop_name}-default %{bin_hadoop}/%{name} 20 \
   --slave %{log_hadoop_dirname}/%{hadoop_name} %{hadoop_name}-log %{log_hadoop} \
   --slave %{lib_hadoop_dirname}/%{hadoop_name} %{hadoop_name}-lib %{lib_hadoop} \
   --slave /etc/%{hadoop_name} %{hadoop_name}-etc %{etc_hadoop} \
   --slave %{man_hadoop}/man1/%{hadoop_name}.1.*z %{hadoop_name}-man %{man_hadoop}/man1/%{name}.1.*z
 
+mkdir -p /var/lib/hadoop/cache/hadoop || :
+chown hdfs:hadoop /var/lib/hadoop/cache/hadoop || :
 chmod g+w /var/lib/hadoop/cache/hadoop/
 mkdir -p /var/log/hadoop || :
 touch /var/log/hadoop/SecurityAuth.audit
@@ -429,7 +441,7 @@ if [ $1 -ge 1 ]; then \
   service %{name}-%1 condrestart >/dev/null 2>&1 \
 fi
 
-%service_macro namenode post_namenode
+%service_macro namenode
 %service_macro secondarynamenode
 %service_macro datanode
 %service_macro jobtracker
