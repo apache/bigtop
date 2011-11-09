@@ -242,5 +242,9 @@ for conf in conf.pseudo ; do
   install -d -m 0755 $HADOOP_ETC_DIR/$conf
   # Overlay the -site files
   (cd $DISTRO_DIR/$conf && tar -cf - .) | (cd $HADOOP_ETC_DIR/$conf && tar -xf -)
+
+  install -d -m 0755 $YARN_ETC_DIR/$conf
+  # Overlay the -site files
+  (cd $DISTRO_DIR/$conf.yarn && tar -cf - .) | (cd $YARN_ETC_DIR/$conf && tar -xf -)
 done
 

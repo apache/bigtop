@@ -17,4 +17,4 @@ export YARN_IDENT_STRING=yarn
 export YARN_PID_DIR=/var/run/yarn
 export YARN_LOG_DIR=/var/log/yarn
 export YARN_CONF_DIR=/etc/yarn/conf
-export YARN_CLASSPATH="${HADOOP_CLASSPATH}:${HADOOP_PREFIX}/*:${HADOOP_PREFIX}/lib/*"
+export YARN_CLASSPATH="${YARN_CLASSPATH}:${YARN_HOME}/*:${YARN_HOME}/lib/*"

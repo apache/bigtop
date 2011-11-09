@@ -348,6 +348,7 @@ do
 done
 %__install -d -m 0755 $RPM_BUILD_ROOT/etc/default
 %__cp $RPM_SOURCE_DIR/hadoop.default $RPM_BUILD_ROOT/etc/default/hadoop
+%__cp $RPM_SOURCE_DIR/yarn.default $RPM_BUILD_ROOT/etc/default/yarn
 %__cp $RPM_SOURCE_DIR/hadoop-fuse.default $RPM_BUILD_ROOT/etc/default/hadoop-fuse
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/etc/security/limits.d
@@ -365,12 +366,11 @@ done
 getent group hadoop >/dev/null || groupadd -r hadoop
 getent group hdfs >/dev/null   || groupadd -r hdfs
 getent group mapred >/dev/null || groupadd -r mapred
+getent group yarn >/dev/null   || groupadd -r yarn
 
 getent passwd mapred >/dev/null || /usr/sbin/useradd --comment "Hadoop MapReduce" --shell /bin/bash -M -r -g mapred -G hadoop --home %{lib_hadoop} mapred
-
-# Create an hdfs user if one does not already exist.
 getent passwd hdfs >/dev/null || /usr/sbin/useradd --comment "Hadoop HDFS" --shell /bin/bash -M -r -g hdfs -G hadoop --home %{lib_hadoop} hdfs
-
+getent passwd yarn >/dev/null || /usr/sbin/useradd --comment "Hadoop Yarn" --shell /bin/bash -M -r -g yarn -G hadoop --home %{lib_hadoop} yarn
 
 %post
 %{alternatives_cmd} --install %{config_hadoop} %{name}-conf %{etc_hadoop}/conf.empty 10
@@ -405,6 +405,7 @@ fi
 %config(noreplace) %{etc_hadoop}/conf.empty
 %config(noreplace) %{etc_yarn}/conf.empty
 %config(noreplace) /etc/default/hadoop
+%config(noreplace) /etc/default/yarn
 %config(noreplace) /etc/security/limits.d/hadoop.nofiles.conf
 %{lib_hadoop}
 %{libexecdir}/hadoop-config.sh
