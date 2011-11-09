@@ -126,7 +126,7 @@ class TestPackagesBasics extends PackageTestCommon {
   synchronized void testPackageInstall() {
     // WARNING: sometimes packages do not install because the server is busy
     for (int i=3; pkg.install() && i>0; i--) {
-      recordFailure("can not install pacakge $name will retry $i times");
+      recordFailure("can not install package $name will retry $i times");
     }
 
     // TODO: we need to come up with a way to abort any further execution to avoid spurious failures
