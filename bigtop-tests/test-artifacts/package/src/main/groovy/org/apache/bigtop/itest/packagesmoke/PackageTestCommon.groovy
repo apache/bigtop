@@ -328,12 +328,12 @@ class PackageTestCommon {
     if (pm.type == "apt" && doc != null) {
       file.putAll(doc);
     } else {
-      checkThat("list of documentation files of pacakge $name is different from what was expected",
+      checkThat("list of documentation files of package $name is different from what was expected",
                 docs, hasSameKeys(doc));
     }
-    checkThat("list of config files of pacakge $name is different from what was expected",
+    checkThat("list of config files of package $name is different from what was expected",
               configs, hasSameKeys(config));
-    checkThat("list of regular files of pacakge $name is different from what was expected",
+    checkThat("list of regular files of package $name is different from what was expected",
               files, hasSameKeys(file));
 
     // TODO: we should probably iterate over a different set of files to include loose files as well
