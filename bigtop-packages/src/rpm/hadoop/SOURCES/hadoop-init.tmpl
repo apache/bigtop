@@ -30,7 +30,7 @@ elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
   . /usr/lib/bigtop-utils/bigtop-detect-javahome
 fi
 
-. @HADOOP_COMMON_ROOT@/bin/hadoop-config.sh
+. /usr/libexec/hadoop-config.sh
 # FIXME: this needs to be removed once hadoop-config.sh stop clobbering HADOOP_HOME
 . /etc/default/hadoop
 
@@ -68,7 +68,9 @@ start() {
       TARGET_USER=root
     fi
   fi
-  su -s /bin/bash $TARGET_USER -c "@HADOOP_COMMON_ROOT@/bin/hadoop-daemon.sh --config '@HADOOP_CONF_DIR@' start @HADOOP_DAEMON@ $DAEMON_FLAGS"
+
+  export HADOOP_IDENT_STRING=$TARGET_USER
+  su -s /bin/bash $TARGET_USER -c "@HADOOP_COMMON_ROOT@/sbin/hadoop-daemon.sh --config '@HADOOP_CONF_DIR@' start @HADOOP_DAEMON@ $DAEMON_FLAGS"
 
   # Some processes are slow to start
   sleep $SLEEP_TIME
@@ -81,7 +83,7 @@ start() {
 
 stop() {
   echo -n $"Stopping $desc (hadoop-@HADOOP_DAEMON@): "
-  daemon @HADOOP_COMMON_ROOT@/bin/hadoop-daemon.sh --config "@HADOOP_CONF_DIR@" stop @HADOOP_DAEMON@
+  daemon @HADOOP_COMMON_ROOT@/sbin/hadoop-daemon.sh --config "@HADOOP_CONF_DIR@" stop @HADOOP_DAEMON@
   RETVAL=$?
 
   [ $RETVAL -eq $RETVAL_SUCCESS ] && rm -f $LOCKFILE $PIDFILE

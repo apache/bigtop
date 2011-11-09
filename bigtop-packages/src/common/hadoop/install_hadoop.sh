@@ -144,7 +144,7 @@ export PATH="/sbin/:$PATH"
 # Make bin wrappers
 mkdir -p $BIN_DIR
 
-for bin_wrapper in hadoop ; do
+for bin_wrapper in hadoop yarn hdfs mapred; do
   wrapper=$BIN_DIR/$bin_wrapper
   cat > $wrapper <<EOF
 #!/bin/sh
@@ -194,7 +194,6 @@ chmod 644 ${HADOOP_DIR}/*.jar
 # native libs
 install -d -m 0755 ${SYSTEM_LIB_DIR}
 install -d -m 0755 ${HADOOP_NATIVE_LIB_DIR}
-cp ${BUILD_DIR}/lib/*.a ${SYSTEM_LIB_DIR}/
 for library in libhdfs.so.0.0.0; do
   cp ${BUILD_DIR}/lib/${library} ${SYSTEM_LIB_DIR}/
   ldconfig -vlN ${SYSTEM_LIB_DIR}/${library}
@@ -202,6 +201,7 @@ done
 install -d -m 0755 ${SYSTEM_INCLUDE_DIR}
 cp ${BUILD_DIR}/../hadoop-hdfs-project/hadoop-hdfs/src/main/native/hdfs.h ${SYSTEM_INCLUDE_DIR}/
 
+cp ${BUILD_DIR}/lib/*.a ${HADOOP_NATIVE_LIB_DIR}/
 for library in libhadoop.so.1.0.0; do
   cp ${BUILD_DIR}/lib/${library} ${HADOOP_NATIVE_LIB_DIR}/
   ldconfig -vlN ${HADOOP_NATIVE_LIB_DIR}/${library}
@@ -237,4 +237,10 @@ mkdir -p $MAN_DIR/man1
 gzip -c < $DISTRO_DIR/hadoop.1 > $MAN_DIR/man1/hadoop.1.gz
 chmod 644 $MAN_DIR/man1/hadoop.1.gz
 
+# Make the pseudo-distributed config
+for conf in conf.pseudo ; do
+  install -d -m 0755 $HADOOP_ETC_DIR/$conf
+  # Overlay the -site files
+  (cd $DISTRO_DIR/$conf && tar -cf - .) | (cd $HADOOP_ETC_DIR/$conf && tar -xf -)
+done
 

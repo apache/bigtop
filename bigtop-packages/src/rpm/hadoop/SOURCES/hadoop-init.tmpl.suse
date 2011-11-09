@@ -41,7 +41,7 @@ elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
   . /usr/lib/bigtop-utils/bigtop-detect-javahome
 fi
 
-. @HADOOP_COMMON_ROOT@/bin/hadoop-config.sh 
+. /usr/libexec/hadoop-config.sh 
 
 # FIXME: this needs to be removed once hadoop-config.sh stop clobbering HADOOP_HOME
 . /etc/default/hadoop
@@ -60,7 +60,7 @@ ERROR_PROGRAM_NOT_CONFIGURED=6
 
 
 RETVAL=0
-EXEC_PATH=@HADOOP_COMMON_ROOT@/bin/hadoop-daemon.sh
+EXEC_PATH=@HADOOP_COMMON_ROOT@/sbin/hadoop-daemon.sh
 CONFIG_PATH="@HADOOP_CONF_DIR@"
 HADOOP_PID_DIR=${HADOOP_PID_DIR:-/var/run/hadoop}
 PIDFILE="$HADOOP_PID_DIR/hadoop-$HADOOP_IDENT_STRING-@HADOOP_DAEMON@.pid"
@@ -90,6 +90,8 @@ start() {
       TARGET_USER=root
     fi
   fi
+
+  export HADOOP_IDENT_STRING=$TARGET_USER
   su -s /bin/bash $TARGET_USER -c "$EXEC_PATH --config '$CONFIG_PATH' start @HADOOP_DAEMON@ $DAEMON_FLAGS"
 
   # Some processes are slow to start

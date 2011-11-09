@@ -232,14 +232,14 @@ assigns MapReduce work to the tasktracker that is nearest the data
 with an available work slot.
 
 
-#%package conf-pseudo
-#Summary: Hadoop installation in pseudo-distributed mode
-#Group: System/Daemons
-#Requires: %{name} = %{version}-%{release}, %{name}-namenode = %{version}-%{release}, %{name}-datanode = %{version}-%{release}, %{name}-secondarynamenode = %{version}-%{release}, %{name}-tasktracker = %{version}-%{release}, %{name}-jobtracker = %{version}-%{release}
-#
-#%description conf-pseudo
-#Installation of this RPM will setup your machine to run in pseudo-distributed mode
-#where each Hadoop daemon runs in a separate Java process.
+%package conf-pseudo
+Summary: Hadoop installation in pseudo-distributed mode
+Group: System/Daemons
+Requires: %{name} = %{version}-%{release}, %{name}-namenode = %{version}-%{release}, %{name}-datanode = %{version}-%{release}, %{name}-secondarynamenode = %{version}-%{release}, %{name}-tasktracker = %{version}-%{release}, %{name}-jobtracker = %{version}-%{release}
+
+%description conf-pseudo
+Installation of this RPM will setup your machine to run in pseudo-distributed mode
+where each Hadoop daemon runs in a separate Java process.
 
 %package doc
 Summary: Hadoop Documentation
@@ -407,12 +407,14 @@ fi
 %config(noreplace) /etc/default/hadoop
 %config(noreplace) /etc/security/limits.d/hadoop.nofiles.conf
 %{lib_hadoop}
-%{_libdir}/libhadoop*
 %{libexecdir}/hadoop-config.sh
 %{libexecdir}/hdfs-config.sh
 %{libexecdir}/mapred-config.sh
 %{libexecdir}/yarn-config.sh
 %{bin_hadoop}/%{name}
+%{bin_hadoop}/yarn
+%{bin_hadoop}/hdfs
+%{bin_hadoop}/mapred
 %attr(0775,root,hadoop) /var/run/%{name}
 %attr(0775,root,hadoop) %{log_hadoop}
 %{man_hadoop}/man1/hadoop.1.*
@@ -431,7 +433,6 @@ fi
 %{initd_dir}/%{name}-%1 \
 %post %1 \
 chkconfig --add %{name}-%1 \
-%2 \
 \
 %preun %1 \
 if [ $1 = 0 ]; then \
@@ -450,20 +451,20 @@ fi
 %service_macro tasktracker
 
 # Pseudo-distributed Hadoop installation
-#%post conf-pseudo
-#%{alternatives_cmd} --install %{config_hadoop} %{name}-conf %{etc_hadoop}/conf.pseudo 30
+%post conf-pseudo
+%{alternatives_cmd} --install %{config_hadoop} %{name}-conf %{etc_hadoop}/conf.pseudo 30
 
-#%files conf-pseudo
-#%defattr(-,root,root)
-#%config(noreplace) %attr(755,root,root) %{etc_hadoop}/conf.pseudo
-#%dir %attr(0755,root,hadoop) /var/lib/%{name}
-#%dir %attr(1777,root,hadoop) /var/lib/%{name}/cache
+%files conf-pseudo
+%defattr(-,root,root)
+%config(noreplace) %attr(755,root,root) %{etc_hadoop}/conf.pseudo
+%dir %attr(0755,root,hadoop) /var/lib/%{name}
+%dir %attr(1777,root,hadoop) /var/lib/%{name}/cache
 
-#%preun conf-pseudo
-#if [ "$1" = 0 ]; then
-#        %{alternatives_cmd} --remove %{name}-conf %{etc_hadoop}/conf.pseudo
-#        rm -f %{etc_hadoop}/conf
-#fi
+%preun conf-pseudo
+if [ "$1" = 0 ]; then
+        %{alternatives_cmd} --remove %{name}-conf %{etc_hadoop}/conf.pseudo
+        rm -f %{etc_hadoop}/conf
+fi
 
 %files libhdfs
 %defattr(-,root,root)
