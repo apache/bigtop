@@ -189,6 +189,7 @@ install -d -m 0755 ${HADOOP_DIR}
 cp ${BUILD_DIR}/modules/*.jar ${HADOOP_DIR}/
 cp ${BUILD_DIR}/share/hadoop/common/*.jar ${HADOOP_DIR}/
 cp ${BUILD_DIR}/share/hadoop/hdfs/*.jar ${HADOOP_DIR}/
+cp ${BUILD_DIR}/../hadoop-mapreduce-project/build/hadoop-mapreduce-examples-${HADOOP_VERSION}.jar ${HADOOP_DIR}/
 chmod 644 ${HADOOP_DIR}/*.jar
 
 # native libs
@@ -230,6 +231,7 @@ cp ${BUILD_DIR}/../hadoop-common-project/hadoop-common/target/hadoop-common-${HA
 cp ${BUILD_DIR}/../hadoop-common-project/hadoop-common/target/hadoop-common-${HADOOP_VERSION}-sources.jar ${HADOOP_DIR}/
 cp ${BUILD_DIR}/../hadoop-hdfs-project/hadoop-hdfs/target/hadoop-hdfs-${HADOOP_VERSION}-sources.jar ${HADOOP_DIR}/
 cp ${BUILD_DIR}/../hadoop-hdfs-project/hadoop-hdfs/target/hadoop-hdfs-${HADOOP_VERSION}-test-sources.jar ${HADOOP_DIR}/
+cp ${BUILD_DIR}/../hadoop-mapreduce-project/build/hadoop-mapreduce-examples-${HADOOP_VERSION}-sources.jar ${HADOOP_DIR}/
 chmod 644 ${HADOOP_DIR}/*.jar
 
 # man pages
