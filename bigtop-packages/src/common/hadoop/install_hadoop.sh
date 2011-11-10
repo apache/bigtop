@@ -223,7 +223,13 @@ cp ${BUILD_DIR}/etc/hadoop/* $HADOOP_ETC_DIR/conf.empty
 
 # docs
 install -d -m 0755 ${DOC_DIR}
-cp -r ${BUILD_DIR}/../target/site/* ${DOC_DIR}/
+pushd  ${BUILD_DIR}/../
+  cp hadoop-common-project/hadoop-common/CHANGES.txt target/staging/hadoop-project/hadoop-project-dist/hadoop-common
+  cp hadoop-hdfs-project/hadoop-hdfs/CHANGES.txt target/staging/hadoop-project/hadoop-project-dist/hadoop-hdfs
+  mkdir target/staging/hadoop-project/hadoop-project-dist/hadoop-mapreduce
+  cp hadoop-mapreduce-project/CHANGES.txt target/staging/hadoop-project/hadoop-project-dist/hadoop-mapreduce
+popd
+cp -r ${BUILD_DIR}/../target/staging/hadoop-project/* ${DOC_DIR}/
 
 # source jars
 cp ${BUILD_DIR}/../hadoop-common-project/hadoop-auth/target/hadoop-auth-${HADOOP_VERSION}-sources.jar ${HADOOP_DIR}/
