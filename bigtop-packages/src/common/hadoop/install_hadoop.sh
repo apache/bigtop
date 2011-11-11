@@ -256,3 +256,9 @@ for conf in conf.pseudo ; do
   (cd $DISTRO_DIR/$conf.yarn && tar -cf - .) | (cd $YARN_ETC_DIR/$conf && tar -xf -)
 done
 
+# Remove all hadoop test jars
+rm -fv ${HADOOP_DIR}/*test*.jar
+
+# Install webapps
+cp -ra ${BUILD_DIR}/share/hadoop/hdfs/webapps ${HADOOP_DIR}/
+
