@@ -30,11 +30,12 @@
 %define lib_hadoop %{lib_hadoop_dirname}/%{name}
 %define log_hadoop_dirname /var/log
 %define log_hadoop %{log_hadoop_dirname}/%{name}
+%define log_yarn %{log_hadoop_dirname}/yarn
 %define bin_hadoop %{_bindir}
 %define man_hadoop %{_mandir}
 %define doc_hadoop %{_docdir}/%{name}-%{hadoop_version}
-%define hadoop_username mapred
-%define hadoop_services namenode secondarynamenode datanode jobtracker tasktracker
+%define hadoop_services namenode secondarynamenode datanode
+%define yarn_services resourcemanager nodemanager historyserver
 # Hadoop outputs built binaries into %{hadoop_build}
 %define hadoop_build_path build
 %define static_images_dir src/webapps/static/images
@@ -123,6 +124,7 @@ Source6: hadoop.1
 Source7: hadoop-fuse-dfs.1
 Source8: hadoop-fuse.default
 Source9: hadoop.nofiles.conf
+Source10: yarn-init.tmpl
 Patch0: HADOOP-7787.patch
 Patch1: HADOOP-7801.patch
 Patch2: HADOOP-7802.patch
@@ -220,22 +222,36 @@ The Data Nodes in the Hadoop Cluster are responsible for serving up
 blocks of data over the network to Hadoop Distributed Filesystem
 (HDFS) clients.
 
-
-%package tasktracker
-Summary: Hadoop Task Tracker
+%package resourcemanager
+Summary: Yarn Resource Manager
 Group: System/Daemons
 Requires: %{name} = %{version}-%{release}
 
-%description tasktracker
-The tasktracker has a fixed number of work slots.  The jobtracker
-assigns MapReduce work to the tasktracker that is nearest the data
-with an available work slot.
+%description resourcemanager
+The resource manager manages the global assignment of compute resources to applications
 
+%package nodemanager
+Summary: Yarn Node Manager
+Group: System/Daemons
+Requires: %{name} = %{version}-%{release}
+
+%description nodemanager
+The NodeManager is the per-machine framework agent who is responsible for
+containers, monitoring their resource usage (cpu, memory, disk, network) and
+reporting the same to the ResourceManager/Scheduler.
+
+%package historyserver
+Summary: Yarn History Server
+Group: System/Daemons
+Requires: %{name} = %{version}-%{release}
+
+%description historyserver
+The History server keeps records of the different activities being performed on a Apache Hadoop cluster
 
 %package conf-pseudo
 Summary: Hadoop installation in pseudo-distributed mode
 Group: System/Daemons
-Requires: %{name} = %{version}-%{release}, %{name}-namenode = %{version}-%{release}, %{name}-datanode = %{version}-%{release}, %{name}-secondarynamenode = %{version}-%{release}, %{name}-tasktracker = %{version}-%{release}, %{name}-jobtracker = %{version}-%{release}
+Requires: %{name} = %{version}-%{release}, %{name}-namenode = %{version}-%{release}, %{name}-datanode = %{version}-%{release}, %{name}-secondarynamenode = %{version}-%{release}, %{name}-resourcemanager = %{version}-%{release}, %{name}-nodemanager = %{version}-%{release}, %{name}-historyserver = %{version}-%{release}
 
 %description conf-pseudo
 Installation of this RPM will setup your machine to run in pseudo-distributed mode
@@ -325,6 +341,8 @@ orig_init_file=$RPM_SOURCE_DIR/hadoop-init.tmpl.suse
 orig_init_file=$RPM_SOURCE_DIR/hadoop-init.tmpl
 %endif
 
+yarn_orig_init_file=$RPM_SOURCE_DIR/yarn-init.tmpl
+
 # Generate the init.d scripts
 for service in %{hadoop_services}
 do
@@ -333,19 +351,21 @@ do
        %__sed -i -e 's|@HADOOP_COMMON_ROOT@|%{lib_hadoop}|' $init_file
        %__sed -i -e "s|@HADOOP_DAEMON@|${service}|" $init_file
        %__sed -i -e 's|@HADOOP_CONF_DIR@|%{config_hadoop}|' $init_file
-
-
-       case "$service" in
-         hadoop_services|namenode|secondarynamenode|datanode)
-             %__sed -i -e 's|@HADOOP_DAEMON_USER@|hdfs|' $init_file
-             ;;
-         jobtracker|tasktracker)
-             %__sed -i -e 's|@HADOOP_DAEMON_USER@|mapred|' $init_file
-             ;;
-       esac
-
+       %__sed -i -e 's|@HADOOP_DAEMON_USER@|hdfs|' $init_file
        chmod 755 $init_file
 done
+for service in %{yarn_services}
+do
+       init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{name}-${service}
+       %__cp $yarn_orig_init_file $init_file
+       %__sed -i -e 's|@YARN_COMMON_ROOT@|%{lib_hadoop}|' $init_file
+       %__sed -i -e "s|@YARN_DAEMON@|${service}|" $init_file
+       %__sed -i -e 's|@YARN_CONF_DIR@|%{config_yarn}|' $init_file
+       %__sed -i -e 's|@YARN_DAEMON_USER@|yarn|' $init_file
+       chmod 755 $init_file
+done
+
+
 %__install -d -m 0755 $RPM_BUILD_ROOT/etc/default
 %__cp $RPM_SOURCE_DIR/hadoop.default $RPM_BUILD_ROOT/etc/default/hadoop
 %__cp $RPM_SOURCE_DIR/yarn.default $RPM_BUILD_ROOT/etc/default/yarn
@@ -359,16 +379,16 @@ done
 # /var/log/hadoop
 %__install -d -m 0755 $RPM_BUILD_ROOT/var/log
 %__install -d -m 0775 $RPM_BUILD_ROOT/var/run/%{name}
+%__install -d -m 0775 $RPM_BUILD_ROOT/var/run/yarn
 %__install -d -m 0775 $RPM_BUILD_ROOT/%{log_hadoop}
+%__install -d -m 0775 $RPM_BUILD_ROOT/%{log_yarn}
 
 
 %pre
 getent group hadoop >/dev/null || groupadd -r hadoop
 getent group hdfs >/dev/null   || groupadd -r hdfs
-getent group mapred >/dev/null || groupadd -r mapred
 getent group yarn >/dev/null   || groupadd -r yarn
 
-getent passwd mapred >/dev/null || /usr/sbin/useradd --comment "Hadoop MapReduce" --shell /bin/bash -M -r -g mapred -G hadoop --home %{lib_hadoop} mapred
 getent passwd hdfs >/dev/null || /usr/sbin/useradd --comment "Hadoop HDFS" --shell /bin/bash -M -r -g hdfs -G hadoop --home %{lib_hadoop} hdfs
 getent passwd yarn >/dev/null || /usr/sbin/useradd --comment "Hadoop Yarn" --shell /bin/bash -M -r -g yarn -G hadoop --home %{lib_hadoop} yarn
 
@@ -418,6 +438,8 @@ fi
 %{bin_hadoop}/mapred
 %attr(0775,root,hadoop) /var/run/%{name}
 %attr(0775,root,hadoop) %{log_hadoop}
+%attr(0775,root,hadoop) /var/run/yarn
+%attr(0775,root,hadoop) %{log_yarn}
 %{man_hadoop}/man1/hadoop.1.*
 
 %exclude %{lib_hadoop}/sbin
@@ -448,8 +470,9 @@ fi
 %service_macro namenode
 %service_macro secondarynamenode
 %service_macro datanode
-%service_macro jobtracker
-%service_macro tasktracker
+%service_macro resourcemanager
+%service_macro nodemanager
+%service_macro historyserver
 
 # Pseudo-distributed Hadoop installation
 %post conf-pseudo
