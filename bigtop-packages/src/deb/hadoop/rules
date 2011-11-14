@@ -39,6 +39,14 @@ endif
 build: build-stamp
 build-stamp:
 	dh_testdir
+	patch -p0 < ./debian/HADOOP-7787.patch
+	patch -p0 < ./debian/HADOOP-7801.patch	
+	patch -p0 < ./debian/HDFS-2543.patch
+	patch -p0 < ./debian/MAPREDUCE-3372.patch
+	patch -p0 < ./debian/HADOOP-7802.patch
+	patch -p0 < ./debian/HDFS-2544.patch
+	patch -p0 < ./debian/MAPREDUCE-3373.patch
+
 	env HADOOP_VERSION=${hadoop_version} HADOOP_ARCH=${native_dir} \
 		bash debian/do-component-build -Divy.home=`pwd`/debian/.ivy
 	touch $@
@@ -57,12 +65,13 @@ install: build
 	dh_installdirs
 
 	bash debian/install_hadoop.sh \
+	  --prefix=debian/tmp/ \
 	  --distro-dir=debian \
 	  --build-dir=${hadoop_build_path} \
-	  --src-dir=debian/tmp/usr/src/hadoop \
-	  --lib-dir=debian/tmp/usr/lib/hadoop \
-	  --etc-dir=debian/tmp/etc/hadoop \
-	  --prefix=debian/tmp \
+	  --system-lib-dir=debian/tmp/usr/lib/ \
+	  --system-libexec-dir=debian/tmp/usr/libexec/ \
+	  --yarn-etc-dir=debian/tmp/etc/yarn \
+	  --system-include-dir=debian/tmp/usr/include \
 	  --doc-dir=debian/tmp/usr/share/doc/hadoop-doc \
 	  --example-dir=debian/tmp/usr/share/doc/hadoop/examples \
 	  --native-build-string=${native_dir} \
@@ -95,7 +104,7 @@ install-indep: namenode secondarynamenode jobtracker tasktracker datanode
 	rm -Rf debian/hadoop/usr/lib/hadoop/sbin
 
 	rm -Rf debian/hadoop/usr/lib/hadoop/bin/fuse_dfs 
-	rm -Rf debian/hadoop/usr/bin/hadoop-fuse-dfs
+#	rm -Rf debian/hadoop/usr/bin/hadoop-fuse-dfs
 	rm -Rf debian/hadoop/usr/lib/hadoop/contrib/fuse-dfs
 	rm -Rf debian/hadoop/usr/lib/hadoop/hdfs/contrib/fuse-dfs
 
@@ -117,9 +126,9 @@ install-arch:
 binary-common:  
 	dh_testdir
 	dh_testroot
-	dh_installchangelogs CHANGES.txt -phadoop
-	dh_installdocs
-	sh debian/append_licenses.sh
+	#dh_installchangelogs CHANGES.txt -phadoop
+#	dh_installdocs   ## PL this line and the above/below are only temp
+#	#sh debian/append_licenses.sh
 #	dh_installexamples
 #	dh_installmenu
 #	dh_installdebconf
