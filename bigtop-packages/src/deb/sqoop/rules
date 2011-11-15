@@ -38,7 +38,7 @@ clean:
 
 build-indep: build-indep-stamp
 build-indep-stamp: patch-stamp
-	bash debian/do-component-build -Divy.home=`pwd`/debian/.ivy
+	bash debian/do-component-build -Dversion=${SQOOP_VERSION} -Divy.home=`pwd`/debian/.ivy
 	touch $@
 
 install: install-indep
@@ -46,7 +46,7 @@ install-indep:
 	dh_testdir
 	dh_testroot
 	sh -x debian/install_sqoop.sh \
-	  --build-dir=build/sqoop-1.4.0-incubating \
+	  --build-dir=build/sqoop-${SQOOP_VERSION} \
 	  --prefix=debian/sqoop
 	dh_install -i
 

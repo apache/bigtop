@@ -88,7 +88,7 @@ bash %{SOURCE1} -Dversion=%{version}
 %install
 %__rm -rf $RPM_BUILD_ROOT
 sh %{SOURCE2} \
-          --build-dir=build/sqoop-1.4.0-incubating \
+          --build-dir=build/sqoop-%{version} \
           --doc-dir=%{doc_sqoop} \
           --prefix=$RPM_BUILD_ROOT
 
