@@ -31,7 +31,7 @@ endif
 
 patch: patch-stamp
 patch-stamp:	
-	patch -p1 < debian/patch
+	patch -p0 < debian/patch
 	touch $@
 
 clean:	

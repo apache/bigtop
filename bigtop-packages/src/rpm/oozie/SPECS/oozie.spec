@@ -105,8 +105,8 @@ Requires: bigtop-utils
 
 
 %prep
-%setup -n yahoo-oozie-af10263
-%patch0 -p1
+%setup -n apache-oozie-135dcce
+%patch0 -p0
 
 %build
     M2_CACHE=`mktemp -d /tmp/oozie.m2.XXXXX`

@@ -100,12 +100,14 @@ $(eval $(call PACKAGE,sqoop,SQOOP))
 OOZIE_NAME=oozie
 OOZIE_RELNOTES_NAME=Apache Oozie
 OOZIE_PKG_NAME=oozie
-OOZIE_BASE_VERSION=2.3.2
-OOZIE_PKG_VERSION=2.3.2
+OOZIE_BASE_VERSION=3.1.2
+OOZIE_PKG_VERSION=3.1.2
 OOZIE_RELEASE_VERSION=1
-OOZIE_TARBALL_DST=oozie-2.3.2.tar.gz
-OOZIE_TARBALL_SRC=2.3.2
-OOZIE_SITE=http://github.com/yahoo/oozie/tarball
+OOZIE_TARBALL_DST=oozie-$(OOZIE_BASE_VERSION).tar.gz
+#OOZIE_TARBALL_SRC=2.3.2
+#OOZIE_SITE=http://github.com/yahoo/oozie/tarball
+OOZIE_SITE=https://github.com/apache/oozie/tarball
+OOZIE_TARBALL_SRC=135dcce
 $(eval $(call PACKAGE,oozie,OOZIE))
 
 # Whirr

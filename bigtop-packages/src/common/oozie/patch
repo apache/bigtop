@@ -1,269 +1,1127 @@
-Index: oozie-2.3.2/core/pom.xml
+Index: core/pom.xml
 ===================================================================
---- oozie-2.3.2.orig/core/pom.xml	2011-09-27 11:02:40.463593538 -0700
-+++ oozie-2.3.2/core/pom.xml	2011-09-27 11:05:14.000000000 -0700
-@@ -82,15 +82,33 @@
-         </dependency>
- 
-         <dependency>
--            <!-- groupId to be correct by GH-0226 -->
--            <groupId>com.yahoo.hadoop</groupId>
--            <artifactId>hadoop-core</artifactId>
-+            <groupId>org.apache.hadoop</groupId>
-+            <artifactId>hadoop-common</artifactId>
-             <scope>provided</scope>
-         </dependency>
-         <dependency>
--            <!-- groupId to be correct by GH-0226 -->
--            <groupId>com.yahoo.hadoop</groupId>
--            <artifactId>hadoop-test</artifactId>
-+            <groupId>org.apache.hadoop</groupId>
-+            <artifactId>hadoop-hdfs</artifactId>
-+            <scope>provided</scope>
-+        </dependency>
-+        <dependency>
-+            <groupId>org.apache.hadoop</groupId>
-+            <artifactId>hadoop-mapred</artifactId>
-+            <scope>provided</scope>
-+        </dependency>
-+        <dependency>
-+            <groupId>org.apache.hadoop</groupId>
-+            <artifactId>hadoop-common-test</artifactId>
-+            <scope>test</scope>
-+        </dependency>
-+        <dependency>
-+            <groupId>org.apache.hadoop</groupId>
-+            <artifactId>hadoop-hdfs-test</artifactId>
-+            <scope>test</scope>
-+        </dependency>
-+        <dependency>
-+            <groupId>org.apache.hadoop</groupId>
-+            <artifactId>hadoop-mapred-test</artifactId>
-             <scope>test</scope>
-         </dependency>
- 
-Index: oozie-2.3.2/examples/pom.xml
-===================================================================
---- oozie-2.3.2.orig/examples/pom.xml	2011-09-27 11:02:40.483592614 -0700
-+++ oozie-2.3.2/examples/pom.xml	2011-09-27 11:05:30.000000000 -0700
-@@ -65,18 +65,36 @@
-         </dependency>
- 
-         <dependency>
--            <!-- groupId to be correct by GH-0226 -->
--            <groupId>com.yahoo.hadoop</groupId>
--            <artifactId>hadoop-core</artifactId>
-+            <groupId>org.apache.hadoop</groupId>
-+            <artifactId>hadoop-common</artifactId>
-+            <scope>provided</scope>
-+        </dependency>
-+        <dependency>
-+            <groupId>org.apache.hadoop</groupId>
-+            <artifactId>hadoop-hdfs</artifactId>
-+            <scope>provided</scope>
-+        </dependency>
-+        <dependency>
-+            <groupId>org.apache.hadoop</groupId>
-+            <artifactId>hadoop-mapred</artifactId>
-             <scope>provided</scope>
-         </dependency>
--
-         <dependency>
--            <!-- groupId to be correct by GH-0226 -->
--            <groupId>com.yahoo.hadoop</groupId>
--            <artifactId>hadoop-test</artifactId>
-+            <groupId>org.apache.hadoop</groupId>
-+            <artifactId>hadoop-common-test</artifactId>
-             <scope>test</scope>
-         </dependency>
-+        <dependency>
-+            <groupId>org.apache.hadoop</groupId>
-+            <artifactId>hadoop-hdfs-test</artifactId>
-+            <scope>test</scope>
-+        </dependency>
-+        <dependency>
-+            <groupId>org.apache.hadoop</groupId>
-+            <artifactId>hadoop-mapred-test</artifactId>
-+            <scope>test</scope>
-+        </dependency>
+--- core/pom.xml	(revision 1200045)
++++ core/pom.xml	(working copy)
+@@ -7,9 +7,9 @@
+   to you under the Apache License, Version 2.0 (the
+   "License"); you may not use this file except in compliance
+   with the License.  You may obtain a copy of the License at
+-  
 +
+        http://www.apache.org/licenses/LICENSE-2.0
+-  
++
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+@@ -85,19 +85,6 @@
+         </dependency>
  
          <dependency>
-            <groupId>org.slf4j</groupId>
-Index: oozie-2.3.2/pom.xml
+-            <!-- groupId to be correct by GH-0226 -->
+-            <groupId>com.yahoo.hadoop</groupId>
+-            <artifactId>hadoop-core</artifactId>
+-            <scope>provided</scope>
+-        </dependency>
+-        <dependency>
+-            <!-- groupId to be correct by GH-0226 -->
+-            <groupId>com.yahoo.hadoop</groupId>
+-            <artifactId>hadoop-test</artifactId>
+-            <scope>test</scope>
+-        </dependency>
+-
+-        <dependency>
+             <groupId>com.yahoo.oozie</groupId>
+             <artifactId>oozie-sharelib</artifactId>
+             <scope>provided</scope>
+@@ -126,14 +113,14 @@
+             <artifactId>commons-el</artifactId>
+             <scope>compile</scope>
+         </dependency>
+-        
++
+         <dependency>
+             <groupId>org.jdom</groupId>
+             <artifactId>jdom</artifactId>
+             <scope>compile</scope>
+         </dependency>
+-        
+ 
++
+         <dependency>
+             <groupId>commons-dbcp</groupId>
+             <artifactId>commons-dbcp</artifactId>
+@@ -449,7 +436,7 @@
+ 										<include>**/XTestCase$1.class</include>
+ 										<include>**/XFsTestCase.class</include>
+ 										<include>**/MiniOozieTestCase.class</include>
+-										<include>**/XTestCase$Predicate.class</include>										
++										<include>**/XTestCase$Predicate.class</include>
+ 									</includes>
+ 								</configuration>
+ 							</execution>
+@@ -496,6 +483,110 @@
+             </dependencies>
+         </profile>
+ 
++        <profile>
++            <id>mr1</id>
++            <activation>
++                <activeByDefault>true</activeByDefault>
++                <property>
++                    <name>!mr2</name>
++                </property>
++            </activation>
++            <dependencies>
++                <dependency>
++                    <!-- groupId to be correct by GH-0226 -->
++                    <groupId>com.yahoo.hadoop</groupId>
++                    <artifactId>hadoop-core</artifactId>
++                    <scope>provided</scope>
++                </dependency>
++                <dependency>
++                    <!-- groupId to be correct by GH-0226 -->
++                    <groupId>com.yahoo.hadoop</groupId>
++                    <artifactId>hadoop-test</artifactId>
++                    <scope>test</scope>
++                </dependency>
++            </dependencies>
++        </profile>
++        <profile>
++            <id>mr2</id>
++            <activation>
++                <activeByDefault>false</activeByDefault>
++                <property>
++                    <name>mr2</name>
++                </property>
++            </activation>
++            <dependencies>
++                <dependency>
++                    <groupId>org.apache.hadoop</groupId>
++                    <artifactId>hadoop-common</artifactId>
++                    <scope>provided</scope>
++                </dependency>
++
++                <dependency>
++                    <groupId>org.apache.hadoop</groupId>
++                    <artifactId>hadoop-common</artifactId>
++                    <type>test-jar</type>
++                    <scope>test</scope>
++                </dependency>
++
++                <dependency>
++                    <groupId>org.apache.hadoop</groupId>
++                    <artifactId>hadoop-mapreduce-client-hs</artifactId>
++                    <scope>test</scope>
++                </dependency>
++
++                <dependency>
++                    <groupId>org.apache.hadoop</groupId>
++                    <artifactId>hadoop-hdfs</artifactId>
++                    <scope>provided</scope>
++                </dependency>
++
++                <dependency>
++                    <groupId>org.apache.hadoop</groupId>
++                    <artifactId>hadoop-mapreduce-client-app</artifactId>
++                    <scope>provided</scope>
++                </dependency>
++
++                <dependency>
++                    <groupId>org.apache.hadoop</groupId>
++                    <artifactId>hadoop-yarn-api</artifactId>
++                    <scope>provided</scope>
++                </dependency>
++
++                <dependency>
++                    <groupId>org.apache.hadoop</groupId>
++                    <artifactId>hadoop-mapreduce-client-core</artifactId>
++                    <scope>provided</scope>
++                </dependency>
++
++                <dependency>
++                    <groupId>org.apache.hadoop</groupId>
++                    <artifactId>hadoop-mapreduce-client-jobclient</artifactId>
++                    <scope>provided</scope>
++                </dependency>
++
++                <dependency>
++                    <groupId>org.apache.hadoop</groupId>
++                    <artifactId>hadoop-yarn-server-tests</artifactId>
++                    <type>test-jar</type>
++                    <scope>test</scope>
++                </dependency>
++
++                <dependency>
++                    <groupId>org.apache.hadoop</groupId>
++                    <artifactId>hadoop-mapreduce-client-jobclient</artifactId>
++                    <type>test-jar</type>
++                    <scope>test</scope>
++                </dependency>
++
++                <dependency>
++                    <groupId>org.apache.hadoop</groupId>
++                    <artifactId>hadoop-hdfs</artifactId>
++                    <type>test-jar</type>
++                    <scope>test</scope>
++                </dependency>
++            </dependencies>
++        </profile>
++
+     </profiles>
+ 
+ </project>
+Index: core/src/main/java/org/apache/oozie/service/KerberosHadoopAccessorService.java
 ===================================================================
---- oozie-2.3.2.orig/pom.xml	2011-09-27 10:58:44.126086886 -0700
-+++ oozie-2.3.2/pom.xml	2011-09-27 11:17:27.003588594 -0700
-@@ -228,23 +228,44 @@
+--- core/src/main/java/org/apache/oozie/service/KerberosHadoopAccessorService.java	(revision 1200045)
++++ core/src/main/java/org/apache/oozie/service/KerberosHadoopAccessorService.java	(working copy)
+@@ -6,9 +6,9 @@
+  * to you under the Apache License, Version 2.0 (the
+  * "License"); you may not use this file except in compliance
+  * with the License.  You may obtain a copy of the License at
+- * 
++ *
+  *      http://www.apache.org/licenses/LICENSE-2.0
+- * 
++ *
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
+  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+@@ -31,10 +31,6 @@
+ import org.apache.oozie.util.XConfiguration;
+ import org.apache.oozie.util.ParamChecker;
+ import org.apache.oozie.ErrorCode;
+-import org.apache.oozie.service.HadoopAccessorService;
+-import org.apache.oozie.service.HadoopAccessorException;
+-import org.apache.oozie.service.Service;
+-import org.apache.oozie.service.ServiceException;
+ 
+ import java.io.IOException;
+ import java.net.URI;
+@@ -129,6 +125,7 @@
+             UserGroupInformation ugi = getUGI(user);
+             JobClient jobClient = ugi.doAs(new PrivilegedExceptionAction<JobClient>() {
+                 public JobClient run() throws Exception {
++                    conf.set("mapreduce.framework.name", "yarn");
+                     return new JobClient(conf);
+                 }
+             });
+Index: examples/pom.xml
+===================================================================
+--- examples/pom.xml	(revision 1200045)
++++ examples/pom.xml	(working copy)
+@@ -7,9 +7,9 @@
+   to you under the Apache License, Version 2.0 (the
+   "License"); you may not use this file except in compliance
+   with the License.  You may obtain a copy of the License at
+-  
++
+        http://www.apache.org/licenses/LICENSE-2.0
+-  
++
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+@@ -68,20 +68,6 @@
+         </dependency>
+ 
+         <dependency>
+-            <!-- groupId to be correct by GH-0226 -->
+-            <groupId>com.yahoo.hadoop</groupId>
+-            <artifactId>hadoop-core</artifactId>
+-            <scope>provided</scope>
+-        </dependency>
+-
+-        <dependency>
+-            <!-- groupId to be correct by GH-0226 -->
+-            <groupId>com.yahoo.hadoop</groupId>
+-            <artifactId>hadoop-test</artifactId>
+-            <scope>test</scope>
+-        </dependency>
+-
+-        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <scope>test</scope>
+@@ -141,6 +127,110 @@
+                </plugins>
+              </build>
+         </profile>
++        <profile>
++            <id>mr1</id>
++            <activation>
++                <activeByDefault>true</activeByDefault>
++                <property>
++                    <name>!mr2</name>
++                </property>
++            </activation>
++            <dependencies>
++                <dependency>
++                    <!-- groupId to be correct by GH-0226 -->
++                    <groupId>com.yahoo.hadoop</groupId>
++                    <artifactId>hadoop-core</artifactId>
++                    <scope>provided</scope>
++                </dependency>
++
++                <dependency>
++                    <!-- groupId to be correct by GH-0226 -->
++                    <groupId>com.yahoo.hadoop</groupId>
++                    <artifactId>hadoop-test</artifactId>
++                    <scope>test</scope>
++                </dependency>
++            </dependencies>
++        </profile>
++        <profile>
++            <id>mr2</id>
++            <activation>
++                <activeByDefault>false</activeByDefault>
++                <property>
++                    <name>mr2</name>
++                </property>
++            </activation>
++            <dependencies>
++                <dependency>
++                    <groupId>org.apache.hadoop</groupId>
++                    <artifactId>hadoop-common</artifactId>
++                    <scope>provided</scope>
++                </dependency>
++
++                <dependency>
++                    <groupId>org.apache.hadoop</groupId>
++                    <artifactId>hadoop-common</artifactId>
++                    <type>test-jar</type>
++                    <scope>test</scope>
++                </dependency>
++
++                <dependency>
++                    <groupId>org.apache.hadoop</groupId>
++                    <artifactId>hadoop-hdfs</artifactId>
++                    <scope>provided</scope>
++                </dependency>
++
++                <dependency>
++                    <groupId>org.apache.hadoop</groupId>
++                    <artifactId>hadoop-mapreduce-client-app</artifactId>
++                    <scope>provided</scope>
++                </dependency>
++
++                <dependency>
++                    <groupId>org.apache.hadoop</groupId>
++                    <artifactId>hadoop-yarn-api</artifactId>
++                    <scope>test</scope>
++                </dependency>
++
++                <dependency>
++                    <groupId>org.apache.hadoop</groupId>
++                    <artifactId>hadoop-mapreduce-client-core</artifactId>
++                    <scope>provided</scope>
++                </dependency>
++
++                <dependency>
++                    <groupId>org.apache.hadoop</groupId>
++                    <artifactId>hadoop-mapreduce-client-jobclient</artifactId>
++                    <scope>provided</scope>
++                </dependency>
++
++                <dependency>
++                    <groupId>org.apache.hadoop</groupId>
++                    <artifactId>hadoop-mapreduce-client-hs</artifactId>
++                    <scope>test</scope>
++                </dependency>
++
++                <dependency>
++                    <groupId>org.apache.hadoop</groupId>
++                    <artifactId>hadoop-yarn-server-tests</artifactId>
++                    <type>test-jar</type>
++                    <scope>test</scope>
++                </dependency>
++
++                <dependency>
++                    <groupId>org.apache.hadoop</groupId>
++                    <artifactId>hadoop-mapreduce-client-jobclient</artifactId>
++                    <type>test-jar</type>
++                    <scope>test</scope>
++                </dependency>
++
++                <dependency>
++                    <groupId>org.apache.hadoop</groupId>
++                    <artifactId>hadoop-hdfs</artifactId>
++                    <type>test-jar</type>
++                    <scope>test</scope>
++                </dependency>
++            </dependencies>
++        </profile>
+     </profiles>
+ 
+ </project>
+Index: pom.xml
+===================================================================
+--- pom.xml	(revision 1200045)
++++ pom.xml	(working copy)
+@@ -7,9 +7,9 @@
+   to you under the Apache License, Version 2.0 (the
+   "License"); you may not use this file except in compliance
+   with the License.  You may obtain a copy of the License at
+-  
++
+        http://www.apache.org/licenses/LICENSE-2.0
+-  
++
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+@@ -95,6 +95,13 @@
+             </snapshots>
+         </repository>
+         <repository>
++            <id>apache-snapshots</id>
++            <url>https://repository.apache.org/content/groups/snapshots</url>
++            <snapshots>
++                <enabled>true</enabled>
++            </snapshots>
++        </repository>
++        <repository>
+             <id>Codehaus repository</id>
+             <url>http://repository.codehaus.org/</url>
+             <snapshots>
+@@ -225,66 +225,15 @@
+                 <artifactId>openjpa-persistence-jdbc</artifactId>
+                 <version>2.1.0</version>
              </dependency>
-             
+-            
++
              <dependency>
+                 <groupId>commons-codec</groupId>
+                 <artifactId>commons-codec</artifactId>
+                 <version>1.3</version>
+             </dependency>
+-            
+-            <dependency>
 -                <!-- groupId to be correct by GH-0226 -->
 -                <groupId>com.yahoo.hadoop</groupId>
 -                <artifactId>hadoop-core</artifactId>
 -                <version>0.20.104.2</version>
-+                <groupId>org.apache.hadoop</groupId>
-+                <artifactId>hadoop-common</artifactId>
-<<<<<<< HEAD
-+                <version>0.22.0-SNAPSHOT</version>
-=======
-+                <version>0.23.0-SNAPSHOT</version>
->>>>>>> Enabling Oozie
-+                <exclusions>
-+                    <exclusion>
-+                        <groupId>org.apache.commons</groupId>
-+                        <artifactId>commons-cli</artifactId>
-+                    </exclusion>
-+                </exclusions>
-+            </dependency>
-+            <dependency>
-+                <groupId>org.apache.hadoop</groupId>
-+                <artifactId>hadoop-hdfs</artifactId>
-<<<<<<< HEAD
-+                <version>0.22.0-SNAPSHOT</version>
-=======
-+                <version>0.23.0-SNAPSHOT</version>
->>>>>>> Enabling Oozie
-+                <exclusions>
-+                    <exclusion>
-+                        <groupId>org.apache.commons</groupId>
-+                        <artifactId>commons-cli</artifactId>
-+                    </exclusion>
-+                </exclusions>
-+            </dependency>
-+            <dependency>
-+                <groupId>org.apache.hadoop</groupId>
-+                <artifactId>hadoop-mapred</artifactId>
-<<<<<<< HEAD
-+                <version>0.22.0-SNAPSHOT</version>
-=======
-+                <version>0.23.0-SNAPSHOT</version>
->>>>>>> Enabling Oozie
-                 <exclusions>
-                     <exclusion>
-                         <groupId>org.apache.commons</groupId>
-                         <artifactId>commons-cli</artifactId>
-                     </exclusion>
-                 </exclusions>
-+
-             </dependency>
+-                <exclusions>
+-                    <exclusion>
+-                        <groupId>org.apache.commons</groupId>
+-                        <artifactId>commons-cli</artifactId>
+-                    </exclusion>
+-                </exclusions>
+-            </dependency>
  
              <dependency>
--                <!-- groupId to be correct by GH-0226 -->
+                 <!-- groupId to be correct by GH-0226 -->
 -                <groupId>com.yahoo.hadoop</groupId>
 -                <artifactId>hadoop-test</artifactId>
 -                <version>0.20.104.2</version>
-+                <groupId>org.apache.hadoop</groupId>
-+                <artifactId>hadoop-common-test</artifactId>
-<<<<<<< HEAD
-+                <version>0.22.0-SNAPSHOT</version>
-=======
-+                <version>0.23.0-SNAPSHOT</version>
->>>>>>> Enabling Oozie
-                 <exclusions>
-                     <exclusion>
-                         <groupId>org.apache.commons</groupId>
-@@ -265,11 +286,59 @@
-                 </exclusions>
-             </dependency>
- 
-+
-             <dependency>
+-                <exclusions>
+-                    <exclusion>
+-                        <groupId>org.apache.commons</groupId>
+-                        <artifactId>commons-cli</artifactId>
+-                    </exclusion>
+-                    <exclusion>
+-                        <groupId>commons-cli</groupId>
+-                        <artifactId>commons-cli</artifactId>
+-                    </exclusion>
+-                    <exclusion>
+-                        <groupId>org.slf4j</groupId>
+-                        <artifactId>slf4j-api</artifactId>
+-                    </exclusion>
+-                    <exclusion>
+-                        <groupId>org.slf4j</groupId>
+-                        <artifactId>slf4j-log4j12</artifactId>
+-                    </exclusion>
+-                </exclusions>
+-            </dependency>
+-
+-            <dependency>
 -                <!-- groupId to be correct by GH-0226 -->
 -                <groupId>com.yahoo.hadoop</groupId>
-+                <groupId>org.apache.hadoop</groupId>
-+                <artifactId>hadoop-hdfs-test</artifactId>
-<<<<<<< HEAD
-+                <version>0.22.0-SNAPSHOT</version>
-=======
-+                <version>0.23.0-SNAPSHOT</version>
->>>>>>> Enabling Oozie
-+                <exclusions>
-+                    <exclusion>
-+                        <groupId>org.apache.commons</groupId>
-+                        <artifactId>commons-cli</artifactId>
-+                    </exclusion>
-+                    <exclusion>
-+                        <groupId>commons-cli</groupId>
-+                        <artifactId>commons-cli</artifactId>
-+                    </exclusion>
-+                    <exclusion>
-+                        <groupId>org.slf4j</groupId>
-+                        <artifactId>slf4j-api</artifactId>
-+                    </exclusion>
-+                    <exclusion>
-+                        <groupId>org.slf4j</groupId>
-+                        <artifactId>slf4j-log4j12</artifactId>
-+                    </exclusion>
-+                </exclusions>
-+            </dependency>
-+
-+            <dependency>
-+                <groupId>org.apache.hadoop</groupId>
-+                <artifactId>hadoop-mapred-test</artifactId>
-<<<<<<< HEAD
-+                <version>0.22.0-SNAPSHOT</version>
-=======
-+                <version>0.23.0-SNAPSHOT</version>
->>>>>>> Enabling Oozie
-+                <exclusions>
-+                    <exclusion>
-+                        <groupId>org.apache.commons</groupId>
-+                        <artifactId>commons-cli</artifactId>
-+                    </exclusion>
-+                    <exclusion>
-+                        <groupId>commons-cli</groupId>
-+                        <artifactId>commons-cli</artifactId>
-+                    </exclusion>
-+                    <exclusion>
-+                        <groupId>org.slf4j</groupId>
-+                        <artifactId>slf4j-api</artifactId>
-+                    </exclusion>
-+                    <exclusion>
-+                        <groupId>org.slf4j</groupId>
-+                        <artifactId>slf4j-log4j12</artifactId>
-+                    </exclusion>
-+                </exclusions>
-+            </dependency>
-+
-+            <dependency>
-+                <groupId>org.apache.hadoop</groupId>
-                 <artifactId>hadoop-streaming</artifactId>
+-                <artifactId>hadoop-streaming</artifactId>
 -                <version>0.20.104.2</version>
-<<<<<<< HEAD
-+                <version>0.22-SNAPSHOT</version>
-=======
-+                <version>0.23-SNAPSHOT</version>
->>>>>>> Enabling Oozie
-                 <exclusions>
-                     <exclusion>
-                         <groupId>org.apache.commons</groupId>
-Index: oozie-2.3.2/sharelib/pom.xml
+-                <exclusions>
+-                    <exclusion>
+-                        <groupId>org.apache.commons</groupId>
+-                        <artifactId>commons-cli</artifactId>
+-                    </exclusion>
+-                </exclusions>
+-            </dependency>
+-
+-            <dependency>
+-                <!-- groupId to be correct by GH-0226 -->
+                 <groupId>org.apache.pig</groupId>
+                 <artifactId>pig</artifactId>
+                 <version>0.9.0</version>
+@@ -403,7 +352,7 @@
+                 <artifactId>commons-pool</artifactId>
+                 <version>1.5.4</version>
+             </dependency>
+-            
++
+             <dependency>
+                 <groupId>commons-dbcp</groupId>
+                 <artifactId>commons-dbcp</artifactId>
+@@ -527,12 +476,12 @@
+                 <plugin>
+                     <groupId>org.apache.maven.plugins</groupId>
+                     <artifactId>maven-project-info-reports-plugin</artifactId>
+-                    <version>2.3</version>                    
++                    <version>2.3</version>
+                 </plugin>
+                 <plugin>
+                     <groupId>org.apache.maven.plugins</groupId>
+                     <artifactId>maven-war-plugin</artifactId>
+-                    <version>2.1</version>                    
++                    <version>2.1</version>
+                 </plugin>
+ 		<plugin>
+                     <groupId>org.apache.rat</groupId>
+@@ -633,6 +582,158 @@
+ 
+     <profiles>
+         <profile>
++            <id>mr1</id>
++            <activation>
++                <activeByDefault>true</activeByDefault>
++                <property>
++                    <name>!mr2</name>
++                </property>
++            </activation>
++            <dependencyManagement>
++                <dependencies>
++                    <dependency>
++                        <!-- groupId to be correct by GH-0226 -->
++                        <groupId>com.yahoo.hadoop</groupId>
++                        <artifactId>hadoop-core</artifactId>
++                        <version>0.20.104.2</version>
++                        <exclusions>
++                            <exclusion>
++                                <groupId>org.apache.commons</groupId>
++                                <artifactId>commons-cli</artifactId>
++                            </exclusion>
++                        </exclusions>
++                    </dependency>
++
++                    <dependency>
++                        <!-- groupId to be correct by GH-0226 -->
++                        <groupId>com.yahoo.hadoop</groupId>
++                        <artifactId>hadoop-test</artifactId>
++                        <version>0.20.104.2</version>
++                        <exclusions>
++                            <exclusion>
++                                <groupId>org.apache.commons</groupId>
++                                <artifactId>commons-cli</artifactId>
++                            </exclusion>
++                            <exclusion>
++                                <groupId>commons-cli</groupId>
++                                <artifactId>commons-cli</artifactId>
++                            </exclusion>
++                            <exclusion>
++                                <groupId>org.slf4j</groupId>
++                                <artifactId>slf4j-api</artifactId>
++                            </exclusion>
++                            <exclusion>
++                                <groupId>org.slf4j</groupId>
++                                <artifactId>slf4j-log4j12</artifactId>
++                            </exclusion>
++                        </exclusions>
++                    </dependency>
++
++                    <dependency>
++                        <!-- groupId to be correct by GH-0226 -->
++                        <groupId>com.yahoo.hadoop</groupId>
++                        <artifactId>hadoop-streaming</artifactId>
++                        <version>0.20.104.2</version>
++                        <exclusions>
++                            <exclusion>
++                                <groupId>org.apache.commons</groupId>
++                                <artifactId>commons-cli</artifactId>
++                            </exclusion>
++                        </exclusions>
++                    </dependency>
++                </dependencies>
++            </dependencyManagement>
++        </profile>
++        <profile>
++            <id>mr2</id>
++            <activation>
++                <activeByDefault>false</activeByDefault>
++                <property>
++                    <name>mr2</name>
++                </property>
++            </activation>
++            <properties>
++                <hadoop.version>0.23.0</hadoop.version>
++            </properties>
++            <dependencyManagement>
++                <dependencies>
++                    <dependency>
++                        <groupId>org.apache.hadoop</groupId>
++                        <artifactId>hadoop-common</artifactId>
++                        <version>${hadoop.version}</version>
++                    </dependency>
++
++                    <dependency>
++                        <groupId>org.apache.hadoop</groupId>
++                        <artifactId>hadoop-hdfs</artifactId>
++                        <version>${hadoop.version}</version>
++                    </dependency>
++                    <dependency>
++                        <groupId>org.apache.hadoop</groupId>
++                        <artifactId>hadoop-mapreduce-client-app</artifactId>
++                        <version>${hadoop.version}</version>
++                    </dependency>
++                    <dependency>
++                        <groupId>org.apache.hadoop</groupId>
++                        <artifactId>hadoop-yarn-api</artifactId>
++                        <version>${hadoop.version}</version>
++                    </dependency>
++
++                    <dependency>
++                        <groupId>org.apache.hadoop</groupId>
++                        <artifactId>hadoop-mapreduce-client-core</artifactId>
++                        <version>${hadoop.version}</version>
++                    </dependency>
++
++                    <dependency>
++                        <groupId>org.apache.hadoop</groupId>
++                        <artifactId>hadoop-mapreduce-client-jobclient</artifactId>
++                        <version>${hadoop.version}</version>
++                    </dependency>
++
++                    <dependency>
++                        <groupId>org.apache.hadoop</groupId>
++                        <artifactId>hadoop-yarn-server-tests</artifactId>
++                        <version>${hadoop.version}</version>
++                        <type>test-jar</type>
++                    </dependency>
++
++                    <dependency>
++                        <groupId>org.apache.hadoop</groupId>
++                        <artifactId>hadoop-mapreduce-client-jobclient</artifactId>
++                        <version>${hadoop.version}</version>
++                        <type>test-jar</type>
++                    </dependency>
++
++                    <dependency>
++                        <groupId>org.apache.hadoop</groupId>
++                        <artifactId>hadoop-common</artifactId>
++                        <version>${hadoop.version}</version>
++                        <type>test-jar</type>
++                    </dependency>
++
++                    <dependency>
++                        <groupId>org.apache.hadoop</groupId>
++                        <artifactId>hadoop-hdfs</artifactId>
++                        <version>${hadoop.version}</version>
++                        <type>test-jar</type>
++                    </dependency>
++
++                    <dependency>
++                        <groupId>org.apache.hadoop</groupId>
++                        <artifactId>hadoop-mapreduce-client-hs</artifactId>
++                        <version>${hadoop.version}</version>
++                    </dependency>
++
++                    <dependency>
++                        <groupId>org.apache.hadoop</groupId>
++                        <artifactId>hadoop-streaming</artifactId>
++                        <version>${hadoop.version}</version>
++                    </dependency>
++                </dependencies>
++            </dependencyManagement>
++        </profile>
++        <profile>
+             <id>derby-test</id>
+             <activation>
+                 <activeByDefault>false</activeByDefault>
+@@ -646,5 +747,5 @@
+             </properties>
+         </profile>
+     </profiles>
+-    
++
+ </project>
+Index: sharelib/pom.xml
 ===================================================================
---- oozie-2.3.2.orig/sharelib/pom.xml	2011-09-27 11:02:40.503587889 -0700
-+++ oozie-2.3.2/sharelib/pom.xml	2011-09-27 11:05:57.000000000 -0700
-@@ -39,8 +39,7 @@
+--- sharelib/pom.xml	(revision 1200045)
++++ sharelib/pom.xml	(working copy)
+@@ -7,9 +7,9 @@
+   to you under the Apache License, Version 2.0 (the
+   "License"); you may not use this file except in compliance
+   with the License.  You may obtain a copy of the License at
+-  
++
+        http://www.apache.org/licenses/LICENSE-2.0
+-  
++
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+@@ -41,21 +41,9 @@
+     </organization>
  
      <dependencies>
++
          <dependency>
--            <!-- groupId to be correct by GH-0226 -->
+             <!-- groupId to be correct by GH-0226 -->
 -            <groupId>com.yahoo.hadoop</groupId>
-+            <groupId>org.apache.hadoop</groupId>
-             <artifactId>hadoop-streaming</artifactId>
-             <scope>compile</scope>
-             <exclusions>
-Index: oozie-2.3.2/webapp/pom.xml
-===================================================================
---- oozie-2.3.2.orig/webapp/pom.xml	2011-09-27 11:02:40.513589837 -0700
-+++ oozie-2.3.2/webapp/pom.xml	2011-09-27 11:06:53.000000000 -0700
-@@ -134,8 +134,8 @@
-             </activation>
-             <dependencies>
-                 <dependency>
+-            <artifactId>hadoop-streaming</artifactId>
+-            <scope>compile</scope>
+-            <exclusions>
+-                <exclusion>
+-                    <!-- groupId to be correct by GH-0226 -->
 -                    <groupId>com.yahoo.hadoop</groupId>
 -                    <artifactId>hadoop-core</artifactId>
+-                </exclusion>
+-            </exclusions>
+-        </dependency>
+-        <dependency>
+-            <!-- groupId to be correct by GH-0226 -->
+             <groupId>org.apache.pig</groupId>
+             <artifactId>pig</artifactId>
+             <scope>compile</scope>
+@@ -112,5 +100,49 @@
+         </plugins>
+     </build>
+ 
++    <profiles>
++        <profile>
++            <id>mr1</id>
++            <activation>
++                <activeByDefault>true</activeByDefault>
++                <property>
++                    <name>!mr2</name>
++                </property>
++            </activation>
++            <dependencies>
++
++                <dependency>
++                    <!-- groupId to be correct by GH-0226 -->
++                    <groupId>com.yahoo.hadoop</groupId>
++                    <artifactId>hadoop-streaming</artifactId>
++                    <scope>compile</scope>
++                    <exclusions>
++                        <exclusion>
++                            <!-- groupId to be correct by GH-0226 -->
++                            <groupId>com.yahoo.hadoop</groupId>
++                            <artifactId>hadoop-core</artifactId>
++                        </exclusion>
++                    </exclusions>
++                </dependency>
++            </dependencies>
++        </profile>
++        <profile>
++            <id>mr2</id>
++            <activation>
++                <activeByDefault>false</activeByDefault>
++                <property>
++                    <name>mr2</name>
++                </property>
++            </activation>
++            <!-- dependencies>
++                <dependency>
 +                    <groupId>org.apache.hadoop</groupId>
-+                    <artifactId>hadoop-common</artifactId>
-                     <scope>compile</scope>
++                    <artifactId>hadoop-streaming</artifactId>
++                    <version>${hadoop.version}</version>
++                </dependency>
++            </dependencies -->
++        </profile>
++    </profiles>
++
+ </project>
+ 
+Index: webapp/pom.xml
+===================================================================
+--- webapp/pom.xml	(revision 1200045)
++++ webapp/pom.xml	(working copy)
+@@ -7,9 +7,9 @@
+   to you under the Apache License, Version 2.0 (the
+   "License"); you may not use this file except in compliance
+   with the License.  You may obtain a copy of the License at
+-  
++
+        http://www.apache.org/licenses/LICENSE-2.0
+-  
++
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+@@ -40,72 +40,13 @@
+         <url>http://www.yahoo.com</url>
+     </organization>
+ 
++    <properties>
++        <hadoop.jars.scope>provided</hadoop.jars.scope>
++    </properties>
++
+     <dependencies>
+         <dependency>
+             <groupId>com.yahoo.oozie</groupId>
+-            <artifactId>oozie-core</artifactId>
+-            <scope>compile</scope>
+-            <exclusions>
+-                <exclusion>
+-                    <groupId>commons-cli</groupId>
+-                    <artifactId>commons-cli</artifactId>
+-                </exclusion>
+-                <exclusion>
+-                    <groupId>commons-httpclient</groupId>
+-                    <artifactId>commons-httpclient</artifactId>
+-                </exclusion>
+-                <exclusion>
+-                    <groupId>tomcat</groupId>
+-                    <artifactId>jasper-compiler</artifactId>
+-                </exclusion>
+-                <exclusion>
+-                    <groupId>tomcat</groupId>
+-                    <artifactId>jasper-runtime</artifactId>
+-                </exclusion>
+-                <exclusion>
+-                    <groupId>javax.servlet</groupId>
+-                    <artifactId>servlet-api</artifactId>
+-                </exclusion>
+-                <exclusion>
+-                    <groupId>javax.servlet</groupId>
+-                    <artifactId>jsp-api</artifactId>
+-                </exclusion>
+-                <exclusion>
+-                    <groupId>org.slf4j</groupId>
+-                    <artifactId>slf4j-api</artifactId>
+-                </exclusion>
+-                <exclusion>
+-                    <groupId>org.slf4j</groupId>
+-                    <artifactId>slf4j-log4j12</artifactId>
+-                </exclusion>
+-                <exclusion>
+-                    <groupId>commons-logging</groupId>
+-                    <artifactId>commons-logging-api</artifactId>
+-                </exclusion>
+-                <exclusion>
+-                    <groupId>jetty</groupId>
+-                    <artifactId>org.mortbay.jetty</artifactId>
+-                </exclusion>
+-                <exclusion>
+-                    <groupId>org.mortbay.jetty</groupId>
+-                    <artifactId>jetty</artifactId>
+-                </exclusion>
+-                <exclusion>
+-                    <groupId>org.mortbay.jetty</groupId>
+-                    <artifactId>jetty-util</artifactId>
+-                </exclusion>
+-                <exclusion>
+-                    <groupId>org.mortbay.jetty</groupId>
+-                    <artifactId>jsp-api-2.1</artifactId>
+-                </exclusion>
+-                <exclusion>
+-                    <groupId>org.mortbay.jetty</groupId>
+-                    <artifactId>servlet-api-2.5</artifactId>
+-                </exclusion>
+-            </exclusions>
+-        </dependency>
+-        <dependency>
+-            <groupId>com.yahoo.oozie</groupId>
+             <artifactId>oozie-docs</artifactId>
+             <type>war</type>
+             <scope>compile</scope>
+@@ -144,11 +85,126 @@
+                     <name>includeHadoopJars</name>
+                 </property>
+             </activation>
++            <properties>
++                <hadoop.jars.scope>compile</hadoop.jars.scope>
++            </properties>
++        </profile>
++        <profile>
++            <id>generateDocs</id>
++            <activation>
++                <activeByDefault>false</activeByDefault>
++                <property>
++                    <name>generateDocs</name>
++                </property>
++            </activation>
++            <build>
++                <plugins>
++                    <plugin>
++                        <groupId>org.apache.maven.plugins</groupId>
++                        <artifactId>maven-project-info-reports-plugin</artifactId>
++                        <executions>
++                            <execution>
++                                <configuration>
++                                    <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
++                                </configuration>
++                                <goals>
++                                    <goal>dependencies</goal>
++                                </goals>
++                                <phase>prepare-package</phase>
++                            </execution>
++                        </executions>
++                    </plugin>
++                    <plugin>
++                        <groupId>org.apache.maven.plugins</groupId>
++                        <artifactId>maven-war-plugin</artifactId>
++                        <configuration>
++                            <webResources>
++                                <resource>
++                                    <directory>target/site</directory>
++                                    <targetPath>docs</targetPath>
++                                </resource>
++                            </webResources>
++                        </configuration>
++                    </plugin>
++                </plugins>
++            </build>
++        </profile>
++        <profile>
++            <id>mr1</id>
++            <activation>
++                <activeByDefault>true</activeByDefault>
++                <property>
++                    <name>!mr2</name>
++                </property>
++            </activation>
+             <dependencies>
+                 <dependency>
++                    <groupId>com.yahoo.oozie</groupId>
++                    <artifactId>oozie-core</artifactId>
++                    <scope>compile</scope>
++                    <exclusions>
++                        <exclusion>
++                            <groupId>commons-cli</groupId>
++                            <artifactId>commons-cli</artifactId>
++                        </exclusion>
++                        <exclusion>
++                            <groupId>commons-httpclient</groupId>
++                            <artifactId>commons-httpclient</artifactId>
++                        </exclusion>
++                        <exclusion>
++                            <groupId>tomcat</groupId>
++                            <artifactId>jasper-compiler</artifactId>
++                        </exclusion>
++                        <exclusion>
++                            <groupId>tomcat</groupId>
++                            <artifactId>jasper-runtime</artifactId>
++                        </exclusion>
++                        <exclusion>
++                            <groupId>javax.servlet</groupId>
++                            <artifactId>servlet-api</artifactId>
++                        </exclusion>
++                        <exclusion>
++                            <groupId>javax.servlet</groupId>
++                            <artifactId>jsp-api</artifactId>
++                        </exclusion>
++                        <exclusion>
++                            <groupId>org.slf4j</groupId>
++                            <artifactId>slf4j-api</artifactId>
++                        </exclusion>
++                        <exclusion>
++                            <groupId>org.slf4j</groupId>
++                            <artifactId>slf4j-log4j12</artifactId>
++                        </exclusion>
++                        <exclusion>
++                            <groupId>commons-logging</groupId>
++                            <artifactId>commons-logging-api</artifactId>
++                        </exclusion>
++                        <exclusion>
++                            <groupId>jetty</groupId>
++                            <artifactId>org.mortbay.jetty</artifactId>
++                        </exclusion>
++                        <exclusion>
++                            <groupId>org.mortbay.jetty</groupId>
++                            <artifactId>jetty</artifactId>
++                        </exclusion>
++                        <exclusion>
++                            <groupId>org.mortbay.jetty</groupId>
++                            <artifactId>jetty-util</artifactId>
++                        </exclusion>
++                        <exclusion>
++                            <groupId>org.mortbay.jetty</groupId>
++                            <artifactId>jsp-api-2.1</artifactId>
++                        </exclusion>
++                        <exclusion>
++                            <groupId>org.mortbay.jetty</groupId>
++                            <artifactId>servlet-api-2.5</artifactId>
++                        </exclusion>
++                    </exclusions>
++                </dependency>
++                <dependency>
+                     <groupId>com.yahoo.hadoop</groupId>
+                     <artifactId>hadoop-core</artifactId>
+-                    <scope>compile</scope>
++                    <scope>${hadoop.jars.scope}</scope>
                      <exclusions>
                          <exclusion>
+                             <groupId>commons-cli</groupId>
+@@ -208,47 +264,139 @@
+                         </exclusion>
+                     </exclusions>
+                 </dependency>
++
+             </dependencies>
+         </profile>
+         <profile>
+-            <id>generateDocs</id>
++            <id>mr2</id>
+             <activation>
+                 <activeByDefault>false</activeByDefault>
+                 <property>
+-                    <name>generateDocs</name>
++                    <name>mr2</name>
+                 </property>
+             </activation>
+-            <build>
+-                <plugins>
+-                    <plugin>
+-                        <groupId>org.apache.maven.plugins</groupId>
+-                        <artifactId>maven-project-info-reports-plugin</artifactId>
+-                        <executions>
+-                            <execution>
+-                                <configuration>
+-                                    <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+-                                </configuration>
+-                                <goals>
+-                                    <goal>dependencies</goal>
+-                                </goals>
+-                                <phase>prepare-package</phase>
+-                            </execution>
+-                        </executions>
+-                    </plugin>
+-                    <plugin>
+-                        <groupId>org.apache.maven.plugins</groupId>
+-                        <artifactId>maven-war-plugin</artifactId>
+-                        <configuration>
+-                            <webResources>
+-                                <resource>
+-                                    <directory>target/site</directory>
+-                                    <targetPath>docs</targetPath>
+-                                </resource>
+-                            </webResources>
+-                        </configuration>
+-                    </plugin>
+-                </plugins>
+-            </build>
++            <dependencies>
++                <dependency>
++                    <groupId>com.yahoo.oozie</groupId>
++                    <artifactId>oozie-core</artifactId>
++                    <scope>compile</scope>
++                    <exclusions>
++                        <exclusion>
++                            <groupId>commons-cli</groupId>
++                            <artifactId>commons-cli</artifactId>
++                        </exclusion>
++                        <exclusion>
++                            <groupId>commons-httpclient</groupId>
++                            <artifactId>commons-httpclient</artifactId>
++                        </exclusion>
++                        <exclusion>
++                            <groupId>org.mortbay.jetty</groupId>
++                            <artifactId>jetty-util</artifactId>
++                        </exclusion>
++                        <exclusion>
++                            <groupId>com.sun.jersey</groupId>
++                            <artifactId>jersey-core</artifactId>
++                        </exclusion>
++                        <exclusion>
++                            <groupId>com.sun.jersey</groupId>
++                            <artifactId>jersey-json</artifactId>
++                        </exclusion>
++                        <exclusion>
++                            <groupId>com.sun.jersey</groupId>
++                            <artifactId>jersey-server</artifactId>
++                        </exclusion>
++                        <exclusion>
++                            <groupId>tomcat</groupId>
++                            <artifactId>jasper-compiler</artifactId>
++                        </exclusion>
++                        <exclusion>
++                            <groupId>tomcat</groupId>
++                            <artifactId>jasper-runtime</artifactId>
++                        </exclusion>
++                        <exclusion>
++                            <groupId>org.eclipse.jdt</groupId>
++                            <artifactId>core</artifactId>
++                        </exclusion>
++                        <exclusion>
++                            <groupId>org.aspectj</groupId>
++                            <artifactId>aspectjrt</artifactId>
++                        </exclusion>
++                        <exclusion>
++                            <groupId>commons-daemon</groupId>
++                            <artifactId>commons-daemon</artifactId>
++                        </exclusion>
++                        <exclusion>
++                            <groupId>com.cenqua.clover</groupId>
++                            <artifactId>clover</artifactId>
++                        </exclusion>
++
++                        <exclusion>
++                            <groupId>org.apache.hadoop</groupId>
++                            <artifactId>hadoop-annotations</artifactId>
++                        </exclusion>
++                        <exclusion>
++                            <groupId>com.google.inject.extensions</groupId>
++                            <artifactId>guice-servlet</artifactId>
++                        </exclusion>
++                        <exclusion>
++                            <groupId>junit</groupId>
++                            <artifactId>junit</artifactId>
++                        </exclusion>
++                        <exclusion>
++                            <groupId>javax.servlet</groupId>
++                            <artifactId>servlet-api</artifactId>
++                        </exclusion>
++                        <exclusion>
++                            <groupId>javax.servlet.jsp</groupId>
++                            <artifactId>jsp-api</artifactId>
++                        </exclusion>
++                        <exclusion>
++                            <groupId>junit</groupId>
++                            <artifactId>junit</artifactId>
++                        </exclusion>
++                        <exclusion>
++                            <groupId>org.mortbay.jetty</groupId>
++                            <artifactId>jetty</artifactId>
++                        </exclusion>
++                    </exclusions>
++                </dependency>
++                <dependency>
++                    <groupId>org.apache.hadoop</groupId>
++                    <artifactId>hadoop-common</artifactId>
++                    <scope>${hadoop.jars.scope}</scope>
++                </dependency>
++
++                <dependency>
++                    <groupId>org.apache.hadoop</groupId>
++                    <artifactId>hadoop-hdfs</artifactId>
++                    <scope>${hadoop.jars.scope}</scope>
++                </dependency>
++
++                <dependency>
++                    <groupId>org.apache.hadoop</groupId>
++                    <artifactId>hadoop-mapreduce-client-app</artifactId>
++                    <scope>${hadoop.jars.scope}</scope>
++                </dependency>
++
++                <dependency>
++                    <groupId>org.apache.hadoop</groupId>
++                    <artifactId>hadoop-yarn-api</artifactId>
++                    <scope>${hadoop.jars.scope}</scope>
++                </dependency>
++
++                <dependency>
++                    <groupId>org.apache.hadoop</groupId>
++                    <artifactId>hadoop-mapreduce-client-core</artifactId>
++                    <scope>${hadoop.jars.scope}</scope>
++                </dependency>
++
++                <dependency>
++                    <groupId>org.apache.hadoop</groupId>
++                    <artifactId>hadoop-mapreduce-client-jobclient</artifactId>
++                    <scope>${hadoop.jars.scope}</scope>
++                </dependency>
++
++            </dependencies>
+         </profile>
+     </profiles>
+ 
