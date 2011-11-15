@@ -255,6 +255,7 @@ for conf in conf.pseudo ; do
   # Overlay the -site files
   (cd $DISTRO_DIR/$conf.yarn && tar -cf - .) | (cd $YARN_ETC_DIR/$conf && tar -xf -)
 done
+cp ${BUILD_DIR}/etc/hadoop/log4j.properties $HADOOP_ETC_DIR/conf.pseudo
 
 # Remove all hadoop test jars
 rm -fv ${HADOOP_DIR}/*test*.jar
