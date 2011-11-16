@@ -44,6 +44,7 @@
     <flume-smoke.version>0.3.0-incubating-SNAPSHOT</flume-smoke.version>
     <hbase-smoke.version>0.3.0-incubating-SNAPSHOT</hbase-smoke.version>
     <hive-smoke.version>0.3.0-incubating-SNAPSHOT</hive-smoke.version>
+    <mahout-smoke.version>0.3.0-incubating-SNAPSHOT</mahout-smoke.version>
     <oozie-smoke.version>0.3.0-incubating-SNAPSHOT</oozie-smoke.version>
     <package-smoke.version>0.3.0-incubating-SNAPSHOT</package-smoke.version>
     <pig-smoke.version>0.9.0-SNAPSHOT</pig-smoke.version>
@@ -65,6 +66,7 @@
     <module>sqoop</module>
     <module>flume</module>
     <module>hbase</module>
+    <module>mahout</module>
   </modules>
 
   <dependencyManagement>
@@ -135,6 +137,12 @@
         <groupId>org.apache.bigtop.itest</groupId>
         <artifactId>hive-smoke</artifactId>
         <version>${hive-smoke.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.bigtop.itest</groupId>
+        <artifactId>mahout-smoke</artifactId>
+        <version>${mahout-smoke.version}</version>
         <scope>test</scope>
       </dependency>
       <dependency>
