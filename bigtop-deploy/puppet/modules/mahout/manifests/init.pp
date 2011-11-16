@@ -13,5 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-include hadoop-pig
-hadoop-pig::client { "test-pig": } 
+class mahout {
+  define client {
+    package { "mahout":
+      ensure => latest,
+      require => Package["hadoop"],
+    } 
+  }
+}
