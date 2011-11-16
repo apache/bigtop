@@ -33,9 +33,9 @@ class CommonConfigurationKeys {
  */
 class TestTestCLI extends TestCLI {
   private static final String JT = "mapred.job.tracker";
+  private static Configuration conf = new Configuration();
 
   static {
-    private static Configuration conf = new Configuration();
     conf.addDefaultResource('mapred-site.xml');
     System.properties.setProperty(CommonConfigurationKeys.FS_DEFAULT_NAME_KEY,
         conf.get(CommonConfigurationKeys.FS_DEFAULT_NAME_KEY));
