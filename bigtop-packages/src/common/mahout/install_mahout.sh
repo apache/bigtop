@@ -134,6 +134,8 @@ fi
 
 export MAHOUT_HOME=\${MAHOUT_HOME:-$INSTALLED_LIB_DIR}
 export MAHOUT_CONF_DIR=\${MAHOUT_CONF_DIR:-$CONF_DIR}
+# FIXME: the following line is a workaround for BIGTOP-259 
+export HADOOP_CLASSPATH="`echo /usr/lib/mahout/mahout-examples-*-job.jar`":\$HADOOP_CLASSPATH
 exec $INSTALLED_LIB_DIR/bin/mahout "\$@"
 EOF
 chmod 755 $PREFIX/$BIN_DIR/mahout
