@@ -477,18 +477,20 @@ fi
 # Pseudo-distributed Hadoop installation
 %post conf-pseudo
 %{alternatives_cmd} --install %{config_hadoop} %{name}-conf %{etc_hadoop}/conf.pseudo 30
-
-%files conf-pseudo
-%defattr(-,root,root)
-%config(noreplace) %attr(755,root,root) %{etc_hadoop}/conf.pseudo
-%dir %attr(0755,root,hadoop) /var/lib/%{name}
-%dir %attr(1777,root,hadoop) /var/lib/%{name}/cache
+%{alternatives_cmd} --install %{config_yarn} yarn-conf %{etc_yarn}/conf.pseudo 30
 
 %preun conf-pseudo
 if [ "$1" = 0 ]; then
         %{alternatives_cmd} --remove %{name}-conf %{etc_hadoop}/conf.pseudo
         rm -f %{etc_hadoop}/conf
 fi
+
+%files conf-pseudo
+%defattr(-,root,root)
+%config(noreplace) %attr(755,root,root) %{etc_hadoop}/conf.pseudo
+%config(noreplace) %attr(755,root,root) %{etc_yarn}/conf.pseudo
+%dir %attr(0755,root,hadoop) /var/lib/%{name}
+%dir %attr(1777,root,hadoop) /var/lib/%{name}/cache
 
 %files libhdfs
 %defattr(-,root,root)
