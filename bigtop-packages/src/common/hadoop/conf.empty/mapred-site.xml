@@ -22,4 +22,10 @@
     <name>mapred.job.tracker</name>
     <value>localhost:8021</value>
   </property>
+
+  <property>
+    <name>mapreduce.admin.user.env</name>
+    <value>CLASSPATH=/etc/hadoop/conf/*:/usr/lib/hadoop/*:/usr/lib/hadoop/lib/*:/usr/lib/hadoop/lib/native/*</value>
+  </property>
+
 </configuration>
