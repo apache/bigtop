@@ -222,6 +222,8 @@ install -d -m 0755 $YARN_ETC_DIR/conf.empty
 
 cp ${BUILD_DIR}/conf/* $YARN_ETC_DIR/conf.empty
 cp ${BUILD_DIR}/etc/hadoop/* $HADOOP_ETC_DIR/conf.empty
+cp $DISTRO_DIR/mrapp-generated-classpath $HADOOP_ETC_DIR/conf.empty
+cp $DISTRO_DIR/mrapp-generated-classpath $YARN_ETC_DIR/conf.empty
 
 # docs
 install -d -m 0755 ${DOC_DIR}
@@ -252,10 +254,12 @@ for conf in conf.pseudo ; do
   install -d -m 0755 $HADOOP_ETC_DIR/$conf
   # Overlay the -site files
   (cd $DISTRO_DIR/$conf && tar -cf - .) | (cd $HADOOP_ETC_DIR/$conf && tar -xf -)
+  cp $DISTRO_DIR/mrapp-generated-classpath $HADOOP_ETC_DIR/$conf
 
   install -d -m 0755 $YARN_ETC_DIR/$conf
   # Overlay the -site files
   (cd $DISTRO_DIR/$conf.yarn && tar -cf - .) | (cd $YARN_ETC_DIR/$conf && tar -xf -)
+  cp $DISTRO_DIR/mrapp-generated-classpath $YARN_ETC_DIR/$conf
 done
 cp ${BUILD_DIR}/etc/hadoop/log4j.properties $HADOOP_ETC_DIR/conf.pseudo
 
