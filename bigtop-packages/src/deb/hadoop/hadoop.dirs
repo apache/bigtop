@@ -5,3 +5,4 @@
 /var/lib/hadoop
 /var/lib/hadoop/cache/hadoop
 /usr/share/doc/hadoop
+/usr/libexec 
