@@ -227,7 +227,7 @@ done
 # Pull zookeeper and hadoop from their packages
 rm -f $RPM_BUILD_ROOT/usr/lib/hbase/lib/hadoop* \
       $RPM_BUILD_ROOT/usr/lib/hbase/lib/zookeeper*
-ln -s /usr/lib/hadoop/hadoop-common.jar /usr/lib/hadoop/hadoop-hdfs.jar /usr/lib/hadoop/hadoop-mapred.jar  $RPM_BUILD_ROOT/usr/lib/hbase/lib
+ln -s /usr/lib/hadoop/hadoop-common.jar /usr/lib/hadoop/hadoop-hdfs.jar /usr/lib/hadoop/hadoop-mapreduce-client-core.jar /usr/lib/hadoop/hadoop-auth.jar  $RPM_BUILD_ROOT/usr/lib/hbase/lib
 ln -s /usr/lib/zookeeper/zookeeper.jar $RPM_BUILD_ROOT/usr/lib/hbase/lib/zookeeper.jar
 
 %pre
