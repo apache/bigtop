@@ -40,6 +40,7 @@
 
     <HBASE_HOME>${env.HBASE_HOME}</HBASE_HOME>
     <ZOOKEEPER_HOME>${env.ZOOKEEPER_HOME}</ZOOKEEPER_HOME>
+    <HBASE_CONF_DIR>${env.HBASE_CONF_DIR}</HBASE_CONF_DIR>
   </properties>
 
   <dependencies>
@@ -69,6 +70,10 @@
                   <message>HBASE_HOME env. variable has to be set</message>
                 </requireProperty>
                 <requireProperty>
+                  <property>HBASE_CONF_DIR</property>
+                  <message>HBASE_CONF_DIR env. variable has to be set</message>
+                </requireProperty>
+                <requireProperty>
                   <property>ZOOKEEPER_HOME</property>
                   <message>ZOOKEEPER_HOME env. variable has to be set</message>
                 </requireProperty>
@@ -93,6 +98,9 @@
             ${ZOOKEEPER_HOME}/${zookeeper.jar}:${HBASE_HOME}/${hbase.jar}:${HBASE_HOME}/lib/guava-r06.jar
             </org.apache.bigtop.itest.hbasesmoke.TestHbasePigSmoke.extra_jars>
           </systemPropertyVariables>
+          <additionalClasspathElements>
+            <additionalClasspathElement>${HBASE_CONF_DIR}</additionalClasspathElement>
+          </additionalClasspathElements>
         </configuration>
       </plugin>
       <plugin>
