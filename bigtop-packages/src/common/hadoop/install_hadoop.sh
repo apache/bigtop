@@ -269,3 +269,13 @@ rm -fv ${HADOOP_DIR}/*test*.jar
 # Install webapps
 cp -ra ${BUILD_DIR}/share/hadoop/hdfs/webapps ${HADOOP_DIR}/
 
+
+# Create version-less symlinks to offer integration point with other projects
+(cd $HADOOP_DIR &&
+for j in hadoop-*.jar; do
+  if [[ $j =~ hadoop-(.*)-${HADOOP_VERSION}.jar ]]; then
+    name=${BASH_REMATCH[1]}
+    ln -s $j hadoop-$name.jar
+  fi
+done)
+
