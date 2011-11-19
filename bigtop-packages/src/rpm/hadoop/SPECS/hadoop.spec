@@ -274,20 +274,6 @@ AutoReq: no
 %description libhdfs
 Hadoop Filesystem Library
 
-%package sbin
-Summary: Binaries for secured Hadoop clusters
-Group: System/Daemons
-Requires: %{name} = %{version}-%{release}
-
-%description sbin
-This package contains a setuid program, 'task-controller', which is used for
-launching MapReduce tasks in a secured MapReduce cluster. This program allows
-the tasks to run as the Unix user who submitted the job, rather than the
-Unix user running the MapReduce daemons.
-This package also contains 'jsvc', a daemon wrapper necessary to allow
-DataNodes to bind to a low (privileged) port and then drop root privileges
-before continuing operation.
-
 %prep
 %setup -n apache-hadoop-common-a823266
 %patch0
@@ -442,8 +428,6 @@ fi
 %attr(0775,root,hadoop) %{log_yarn}
 %{man_hadoop}/man1/hadoop.1.*
 
-%exclude %{lib_hadoop}/sbin
-
 %files doc
 %defattr(-,root,root)
 %doc %{doc_hadoop}
@@ -498,8 +482,3 @@ fi
 %{_includedir}/hdfs.h
 # -devel should be its own package
 #%doc %{_docdir}/libhdfs-%{hadoop_version}
-
-%files sbin
-%defattr(-,root,root)
-%dir %{lib_hadoop}/sbin
-%{lib_hadoop}/sbin/*
