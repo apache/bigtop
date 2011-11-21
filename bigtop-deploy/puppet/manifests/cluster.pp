@@ -143,6 +143,8 @@ class hadoop_gateway_node inherits hadoop_head_node {
   #   # auth => $hadoop_security_authentication,
   # }
 
+  mahout::client { "mahout client":
+  }
   hadoop-pig::client { "pig client":
   }
   hadoop-hive::client { "hive client":

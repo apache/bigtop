@@ -125,10 +125,9 @@ class TestPackagesBasics extends PackageTestCommon {
   @Test
   synchronized void testPackageInstall() {
     // WARNING: sometimes packages do not install because the server is busy
-    int i;
-    for (i=3; pkg.install() && i>0; i--) {};
-    checkThat("could only install package $name on the ${3-i} try",
-              i, equalTo(3));
+    for (int i=3; pkg.install() && i>0; i--) {
+      recordFailure("can not install package $name will retry $i times");
+    }
 
     // TODO: we need to come up with a way to abort any further execution to avoid spurious failures
 
@@ -161,12 +160,6 @@ class TestPackagesBasics extends PackageTestCommon {
   @Test
   void testAlternatives() {
     checkAlternatives(getMap(golden.alternatives));
-  }
-
-  @RunStage(level=1)
-  @Test
-  void testPackageRemove() {
-    checkRemoval();
   }
 
   static void tryOrFail(Closure cl, int retries, String fail) {

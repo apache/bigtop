@@ -20,14 +20,14 @@
   <parent>
     <groupId>org.apache.bigtop.itest</groupId>
     <artifactId>bigtop-smokes</artifactId>
-    <version>0.2.0-incubating-SNAPSHOT</version>
+    <version>0.3.0-hadoop23-incubating-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>package-smoke</artifactId>
-  <version>0.2.0-incubating-SNAPSHOT</version>
+  <version>0.3.0-hadoop23-incubating-SNAPSHOT</version>
   <name>packagesmoke</name> 
 
   <dependencies>
@@ -49,11 +49,33 @@
       <artifactId>ant-junit</artifactId>
       <version>1.8.2</version>
     </dependency>
-
-    <dependency>
-      <groupId>org.apache.bigtop.itest</groupId>
-      <artifactId>hadoop-smoke</artifactId>
-      <version>0.2.0-incubating-SNAPSHOT</version>
-    </dependency>
   </dependencies>
+
+  <build>
+    <plugins>
+        <plugin>
+          <groupId>org.codehaus.groovy.maven</groupId>
+          <artifactId>gmaven-plugin</artifactId>
+          <version>1.0</version>
+          <executions>
+            <execution>
+              <id>check-manifest</id>
+              <phase>process-test-classes</phase>
+              <goals>
+                <goal>execute</goal>
+              </goals>
+              <configuration>
+                <source><![CDATA[
+                   ["yum", "zypper", "apt", "urpmi"].each { 
+                     def a = new XmlSlurper().parseText(new File("${project.build.directory}/classes/package_data_${it}.xml").text);
+                   }
+                   println "Manifest XML validated";
+                  ]]>
+                </source>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+     </plugins>
+  </build>
 </project>

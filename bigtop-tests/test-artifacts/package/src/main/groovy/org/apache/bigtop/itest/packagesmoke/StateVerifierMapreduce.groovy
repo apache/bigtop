@@ -28,7 +28,7 @@ class StateVerifierMapreduce extends StateVerifier {
   }
 
   public static boolean verifyStaticState() {
-    return sh.exec("hadoop jar `ls /usr/lib/hadoop-0.20/hadoop*examples*jar | head -1` pi 10 100").getRet() == 0;
+    return sh.exec("hadoop jar `ls /usr/lib/hadoop*/hadoop*examples*jar | head -1` pi 10 100").getRet() == 0;
   }
 
   void createState() {

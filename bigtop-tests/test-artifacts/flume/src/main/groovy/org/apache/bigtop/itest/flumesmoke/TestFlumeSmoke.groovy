@@ -19,6 +19,7 @@
 package org.apache.bigtop.itest.flumesmoke
 
 import org.junit.Test
+import org.junit.Ignore
 import org.apache.bigtop.itest.shell.Shell
 import org.junit.AfterClass
 import org.junit.BeforeClass
@@ -67,6 +68,7 @@ class TestFlumeSmoke {
     compressionCommonTest("FlumeSmokeBzip2", "bzip2 -d", "*.bz2");
   }
 
+  @Ignore("BIGTOP-218")
   @Test(timeout=300000L)
   public void testDeflate() {
     compressionCommonTest("FlumeSmokeDeflate", "perl -MCompress::Zlib -e 'undef \$/; print uncompress(<>)'", "*.deflate");

@@ -17,6 +17,8 @@
  */
 package org.apache.bigtop.itest.hadooptests
 
+import org.junit.Ignore
+import org.junit.Test
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.cli.*
 
@@ -31,9 +33,9 @@ class CommonConfigurationKeys {
  */
 class TestTestCLI extends TestHDFSCLI {
   private static final String JT = "mapred.job.tracker";
+  private static Configuration conf = new Configuration();
 
   static {
-    private static Configuration conf = new Configuration();
     conf.addDefaultResource('mapred-site.xml');
     System.properties.setProperty(CommonConfigurationKeys.FS_DEFAULT_NAME_KEY,
         conf.get(CommonConfigurationKeys.FS_DEFAULT_NAME_KEY));
@@ -44,5 +46,12 @@ class TestTestCLI extends TestHDFSCLI {
     // we get here it's too late already.
     // The property needs to be set from runtime
     System.properties.setProperty('test.cache.data', 'clitest_data');
+  }
+
+  @Test
+  @Ignore("HADOOP-7730")
+  @Override
+  public void testAll() {
+    super.testAll();
   }
 }

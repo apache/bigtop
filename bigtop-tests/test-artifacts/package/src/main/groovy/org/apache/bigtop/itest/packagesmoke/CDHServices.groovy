@@ -21,47 +21,65 @@ package org.apache.bigtop.itest.packagesmoke
 import org.apache.bigtop.itest.pmanager.PackageManager
 
 class CDHServices {
+  static final List serviceDaemonUserNames = [ "flume", "hbase" , "hdfs" , "hue" , "mapred" , "oozie" , "sqoop" ,
+                                               "zookeeper", "hadoop"];
+
   static final Map components = [
-                     HDFS           : [ services : [ "hadoop-0.20-namenode", "hadoop-0.20-datanode",
-                                                     "hadoop-0.20-secondarynamenode" ],
+                     HDFS           : [ services : [ "hadoop-namenode", "hadoop-datanode",
+                                                     "hadoop-secondarynamenode" ],
                                         verifier : new StateVerifierHDFS(),
+                                        killIDs  : [ "hdfs" ],
                                       ],
-                     mapreduce      : [ services : [ "hadoop-0.20-namenode", "hadoop-0.20-datanode",
-                                                     "hadoop-0.20-jobtracker", "hadoop-0.20-tasktracker" ],
+                     mapreduce      : [ services : [ "hadoop-namenode", "hadoop-datanode",
+                                                     "hadoop-jobtracker", "hadoop-tasktracker" ],
+                                        killIDs  : [ "hdfs", "mapred" ],
                                         verifier : new StateVerifierMapreduce(),
                                       ],
-                     HBase          : [ services : [ "hadoop-0.20-namenode", "hadoop-0.20-datanode",
+                     hive           : [ services : [ "hadoop-namenode", "hadoop-datanode",
+                                                     "hadoop-jobtracker", "hadoop-tasktracker" ],
+                                        killIDs  : [ "hdfs", "mapred" ],
+                                        verifier : new StateVerifierHive(),
+                                      ],
+                     HBase          : [ services : [ "hadoop-namenode", "hadoop-datanode",
                                                      "hadoop-hbase-master" ],
+                                        killIDs  : [ "hdfs", "hbase" ],
                                         verifier : new StateVerifierHBase(),
                                       ],
-                     zookeeper      : [ services : [ "${PackageManager.getPackageManager().type == 'apt' ? 'hadoop-zookeeper-server' : 'hadoop-zookeeper'}" ],
+                     zookeeper      : [ services : [ "hadoop-zookeeper" ],
                                         verifier : new StateVerifierZookeeper(),
+                                        killIDs  : [ "zookeeper" ],
                                       ],
-                     oozie          : [ services : [ "hadoop-0.20-namenode", "hadoop-0.20-datanode", "hadoop-0.20-jobtracker", "hadoop-0.20-tasktracker",
+                     oozie          : [ services : [ "hadoop-namenode", "hadoop-datanode", "hadoop-jobtracker", "hadoop-tasktracker",
                                                      "oozie" ],
+                                        killIDs  : [ "hdfs", "mapred", "oozie" ],
                                         verifier : new StateVerifierOozie(),
                                       ],
-                     flume          : [ services : [ "hadoop-0.20-namenode", "hadoop-0.20-datanode",
+                     flume          : [ services : [ "hadoop-namenode", "hadoop-datanode",
                                                      "flume-master", "flume-node" ],
+                                        killIDs  : [ "hdfs", "flume" ],
                                         verifier : new StateVerifierFlume(),
                                       ],
-                     sqoop          : [ services : [ "hadoop-0.20-namenode", "hadoop-0.20-datanode",
+                     sqoop          : [ services : [ "hadoop-namenode", "hadoop-datanode",
                                                      "sqoop-metastore" ],
+                                        killIDs  : [ "hdfs", "sqoop" ],
                                         verifier : new StateVerifierSqoop(),
                                       ],
-                     hue            : [ services : [ "hadoop-0.20-namenode", "hadoop-0.20-datanode", "hadoop-0.20-jobtracker", "hadoop-0.20-tasktracker",
+                     hue            : [ services : [ "hadoop-namenode", "hadoop-datanode", "hadoop-jobtracker", "hadoop-tasktracker",
                                                      "hue" ],
+                                        killIDs  : [ "hdfs", "mapred", "hue" ],
                                         verifier : new StateVerifierHue(),
                                       ],
                    ];
 
   static final Map<String, List<String>> release2services = [
-                     "2"            : [ "HDFS", "mapreduce" ],
-                     "3b2"          : [ "HDFS", "mapreduce", "HBase", "zookeeper", "oozie", "flume",          "hue" ],
-                     "3b3"          : [ "HDFS", "mapreduce", "HBase", "zookeeper", "oozie", "flume", "sqoop", "hue" ],
-                     "3b4"          : [ "HDFS", "mapreduce", "HBase", "zookeeper", "oozie", "flume", "sqoop", "hue" ],
-                     "3u0"          : [ "HDFS", "mapreduce", "HBase", "zookeeper", "oozie", "flume", "sqoop", "hue" ],
-                     "3"            : [ "HDFS", "mapreduce", "HBase", "zookeeper", "oozie", "flume", "sqoop", "hue" ],
+                     "bigtop"       : [ "HDFS", "mapreduce", "hive", "HBase", "zookeeper", "oozie", "flume" ],
+                     "2"            : [ "HDFS", "mapreduce", "hive" ],
+                     "3b2"          : [ "HDFS", "mapreduce", "hive", "HBase", "zookeeper", "oozie", "flume",          "hue" ],
+                     "3b3"          : [ "HDFS", "mapreduce", "hive", "HBase", "zookeeper", "oozie", "flume", "sqoop", "hue" ],
+                     "3b4"          : [ "HDFS", "mapreduce", "hive", "HBase", "zookeeper", "oozie", "flume", "sqoop", "hue" ],
+                     "3u0"          : [ "HDFS", "mapreduce", "hive", "HBase", "zookeeper", "oozie", "flume", "sqoop", "hue" ],
+                     "3u1"          : [ "HDFS", "mapreduce", "hive", "HBase", "zookeeper", "oozie", "flume", "sqoop", "hue" ],
+                     "3"            : [ "HDFS", "mapreduce", "hive", "HBase", "zookeeper", "oozie", "flume" ],
                    ];
 
   public static Map getServices(String release) {
@@ -69,8 +87,10 @@ class CDHServices {
     List<String> services;
 
     if ((release =~ /\.\./).find()) {
-      services = release2services[release.replaceAll(/^.*\.\./, "")].clone();
-      release2services[release.replaceAll(/\.\..*$/, "")].each {
+      String release_from = release.replaceAll(/\.\..*$/, "");
+      release = release.replaceAll(/^.*\.\./, "");
+      services = release2services[release].clone();
+      release2services[release_from].each {
         services.remove(it);
       }
     } else {
@@ -78,7 +98,16 @@ class CDHServices {
     }
 
     services.each {
-        res[it] = components[it];
+        // zookeeper is a very messy case of naming :-(
+        if (it == "zookeeper" &&
+            (PackageManager.getPackageManager().type == 'apt' ||
+             release == "3" || release == "3u1" || release == "bigtop")) {
+          res[it] = [ services : [ "hadoop-zookeeper-server" ],
+                      verifier : new StateVerifierZookeeper(),
+                    ];
+        } else {
+          res[it] = components[it];
+        }
     }
     return res;
   }

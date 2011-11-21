@@ -65,7 +65,7 @@ Source0: hive-%{hive_base_version}.tar.gz
 Source1: do-component-build
 Source2: install_hive.sh
 Source3: hadoop-hive.sh
-Source4: hadoop-hive.sh.suse
+Source4: hive-site.xml
 Source5: hadoop-hive-server.default
 Source6: hadoop-hive-metastore.default
 Source7: hive.1
@@ -139,16 +139,10 @@ cp $RPM_SOURCE_DIR/hive-site.xml .
 %__install -m 0644 $RPM_SOURCE_DIR/hadoop-hive-metastore.default $RPM_BUILD_ROOT/etc/default/hadoop-hive-metastore
 %__install -m 0644 $RPM_SOURCE_DIR/hadoop-hive-server.default $RPM_BUILD_ROOT/etc/default/hadoop-hive-server
 
-%if  %{?suse_version:1}0
-orig_init_file=$RPM_SOURCE_DIR/hadoop-hive.sh.suse
-%else
-orig_init_file=$RPM_SOURCE_DIR/hadoop-hive.sh
-%endif
-
 for service in %{hive_services}
 do
         init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{name}-${service}
-        %__cp $orig_init_file $init_file
+        %__cp $RPM_SOURCE_DIR/hadoop-hive.sh $init_file
         %__sed -i -e "s|@HIVE_DAEMON@|${service}|" $init_file
         chmod 755 $init_file
 done

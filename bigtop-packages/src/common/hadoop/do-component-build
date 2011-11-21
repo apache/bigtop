@@ -32,4 +32,3 @@ mvn site site:stage ${MAVEN_SKIP_TESTS} $@
 (cd build ; tar --strip-components=1 -xzvf  ../hadoop-dist/target/hadoop-0.23.0-SNAPSHOT.tar.gz)
 (cd build/src ; tar --strip-components=1 -xzvf  ../../hadoop-dist/target/hadoop-0.23.0-SNAPSHOT-src.tar.gz)
 
-

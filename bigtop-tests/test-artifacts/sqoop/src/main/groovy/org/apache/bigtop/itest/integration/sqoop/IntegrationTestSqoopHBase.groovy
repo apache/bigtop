@@ -73,10 +73,8 @@ public class IntegrationTestSqoopHBase {
   public void setUp () {
     JarContent.unpackJarContainer(IntegrationTestSqoopHBase.class, '.', DATA_DIR);
 
-    if (!"".equals(MYSQL_ROOTPW))
-      MYSQL_ROOTPW = " -p$MYSQL_ROOTPW";
     rmr('test_table');
-    shell.exec("cat $DATA_DIR/mysql-create-db.sql | $MYSQL_COMMAND -u root $MYSQL_ROOTPW");
+    shell.exec("cat $DATA_DIR/mysql-create-db.sql | $MYSQL_COMMAND -u root ${''.equals(MYSQL_ROOTPW) ?: '-p' + MYSQL_ROOTPW}");
     assertEquals('Unable to run mysql-create-db.sql script', 0, shell.getRet());
     shell.exec("cat $DATA_DIR/mysql-load-db.sql | $MYSQL_COMMAND -u root testhbase");
     assertEquals('Unable to run mysql-load-db.sql script', 0, shell.getRet());

@@ -23,26 +23,31 @@ class hadoop {
     file {
       "/etc/hadoop/conf/core-site.xml":
         content => template('hadoop/core-site.xml'),
+        require => [Package["hadoop"]],
     }
 
     file {
       "/etc/hadoop/conf/mapred-site.xml":
         content => template('hadoop/mapred-site.xml'),
+        require => [Package["hadoop"]],
     }
 
     file {
       "/etc/hadoop/conf/hdfs-site.xml":
         content => template('hadoop/hdfs-site.xml'),
+        require => [Package["hadoop"]],
     }
 
     file {
       "/etc/hadoop/conf/hadoop-env.sh":
         content => template('hadoop/hadoop-env.sh'),
+        require => [Package["hadoop"]],
     }
 
     file {
       "/etc/default/hadoop":
         content => template('hadoop/hadoop'),
+        require => [Package["hadoop"]],
     }
 
     package { "hadoop":
@@ -51,7 +56,7 @@ class hadoop {
 
     package { "hadoop-native":
       ensure => latest,
-      require => [Package["hadoop"], Yumrepo["Bigtop"]],
+      require => [Package["hadoop"]],
     }
   }
 
@@ -73,7 +78,7 @@ class hadoop {
     if ($hadoop_security_authentication == "kerberos") {
       package { "hadoop-sbin":
         ensure => latest,
-        require => [Package["hadoop"], Yumrepo["Bigtop"]],
+        require => [Package["hadoop"]],
       }
     }
 
@@ -82,7 +87,7 @@ class hadoop {
       hasstatus => true,
       subscribe => [Package["hadoop-datanode"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
       require => [ Package["hadoop-datanode"] ],
-    } -> file { $dirs:
+    } <- file { $dirs:
       ensure => directory,
       owner => hdfs,
       group => hdfs,
@@ -124,18 +129,19 @@ class hadoop {
       hasstatus => true,
       subscribe => [Package["hadoop-namenode"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
       require => [Package["hadoop-namenode"], Exec["namenode format"]],
-    } -> file { $dirs:
+    } 
+
+    exec { "namenode format":
+      user => "hdfs",
+      command => "/bin/bash -c 'yes Y | hadoop namenode -format >> /tmp/nn.format.log 2>&1'",
+      creates => inline_template("<%= hadoop_storage_locations.split(';')[0] %>/namenode/image"),
+      require => [Package["hadoop-namenode"]],
+    } <- file { $dirs:
       ensure => directory,
       owner => hdfs,
       group => hdfs,
       mode => 700,
-    }
-
-    exec { "namenode format":
-      user => "hdfs",
-      command => "/bin/bash -c 'yes Y | hadoop namenode -format'",
-      creates => inline_template("<%= hadoop_storage_locations.split(';')[0] %>/namenode/image"),
-      require => [Package["hadoop-namenode"]],
+      require => [Package["hadoop"]], 
     }
   }
 
@@ -161,7 +167,7 @@ class hadoop {
       hasstatus => true,
       subscribe => [Package["hadoop-jobtracker"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/mapred-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
       require => [ Package["hadoop-jobtracker"] ]
-    } -> file { $dirs:
+    } <- file { $dirs:
       ensure => directory,
       owner => mapred,
       group => mapred,
@@ -195,7 +201,7 @@ class hadoop {
       hasstatus => true,
       subscribe => [Package["hadoop-tasktracker"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/mapred-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
       require => [ Package["hadoop-tasktracker"], File["/etc/hadoop/conf/taskcontroller.cfg"] ],
-    } -> file { $dirs:
+    } <- file { $dirs:
       ensure => directory,
       owner => mapred,
       group => mapred,

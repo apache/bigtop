@@ -26,6 +26,16 @@
      <name>dfs.permissions</name>
      <value>false</value>
   </property>
+  <!-- Immediately exit safemode as soon as one DataNode checks in. 
+       On a multi-node cluster, these configurations must be removed.  -->
+  <property>
+    <name>dfs.safemode.extension</name>
+    <value>0</value>
+  </property>
+  <property>
+     <name>dfs.safemode.min.datanodes</name>
+     <value>1</value>
+  </property>
   <property>
      <!-- specify this so that running 'hadoop namenode -format' formats the right dir -->
      <name>dfs.name.dir</name>

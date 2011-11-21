@@ -28,12 +28,16 @@ import org.apache.bigtop.itest.posix.Service
 import org.apache.bigtop.itest.junit.OrderedParameterized.RunStage
 import org.hamcrest.Matcher
 import static org.hamcrest.core.IsEqual.equalTo
+import org.apache.bigtop.itest.shell.Shell
 
 @RunWith(OrderedParameterized.class)
 class TestServices {
   Map.Entry svcDescr;
   List<Service> svcs;
   StateVerifier verifier;
+  List<String> killIDs;
+
+  static Shell shRoot = new Shell("/bin/bash", "root");
 
   @Rule
   public ErrorCollector errors = new ErrorCollector();
@@ -49,6 +53,7 @@ class TestServices {
     svcDescr = svc;
     svcs = svcDescr.value.services.collect { new Service(it); };
     verifier = svcDescr.value.verifier;
+    killIDs = svcDescr.value.killIDs;
   }
 
   static Map<String, Object[]> selectServices(String CDHrelease) {
@@ -58,6 +63,14 @@ class TestServices {
       res[name] = ([it] as Object[]);
     }
     return res;
+  }
+
+  @AfterClass
+  static void tearDown() {
+    // TODO: this is pretty silly, but it'll do for now
+    CDHServices.serviceDaemonUserNames.each {
+      shRoot.exec("kill -9 `ps -U${it} -opid=`");
+    }
   }
 
   @RunStage(level=-1)
@@ -79,15 +92,27 @@ class TestServices {
               verifier.verifyState(), equalTo(true));
 
     svcs.reverseEach {
-      checkThat("service ${it.getName()} failed to stop",
-                it.stop(), equalTo(0));
+      // TODO: we're only trying the best we can here
+      // there's a total eradication of  services happening at @BeforeClass
+      it.stop();
+      sleep(5001);
     }
     sleep(5001);
+
+    // TODO: this is pretty silly, but it'll do for now
+    killIDs.each {
+      shRoot.exec("kill -9 `ps -U${it} -opid=`");
+    }
   }
 
   @RunStage(level=1)
   @Test
   void verifyState() {
+    svcs.each {
+      checkThat("failed to configure service ${it.getName()}",
+                verifier.config(), equalTo(true));
+    }
+
     svcs.each {
       checkThat("service ${it.getName()} failed to start",
                 it.start(), equalTo(0));
@@ -97,6 +122,16 @@ class TestServices {
               verifier.verifyState(), equalTo(true));
 
     svcs.reverseEach { it.stop(); }
+    sleep(5001);
+    // lets check if they are really stopped (if not -- we'll complain and kill them)
+    killIDs.each {
+      shRoot.exec("kill -0 `ps -U${it} -opid=`");
+      if (!shRoot.getRet()) {
+        shRoot.exec("kill -9 `ps -U${it} -opid=`");
+        checkThat("service running under the name of $it is supposed to be stopped, but it is not",
+                  true, equalTo(false));
+      }
+    }
   }
 
   public void checkThat(String msg, Object value, Matcher<Object> matcher) {

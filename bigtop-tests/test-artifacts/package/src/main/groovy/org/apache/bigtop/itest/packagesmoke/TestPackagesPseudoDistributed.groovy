@@ -23,7 +23,7 @@ import org.apache.bigtop.itest.junit.OrderedParameterized.RunStage
 import org.junit.Test
 
 @RunWith(OrderedParameterized.class)
-class TestPackagesPseudoDistributed extends TestPackagesSingleNode {
+class TestPackagesPseudoDistributed extends TestPackagesBasics {
   public TestPackagesPseudoDistributed(String pkgName, Node pkgGolden) {
     super(pkgName, pkgGolden);
   }
@@ -33,8 +33,28 @@ class TestPackagesPseudoDistributed extends TestPackagesSingleNode {
   synchronized void testRemoteMetadata() {
   }
 
-  @RunStage(level=1)
+  @RunStage(level=-1)
   @Test
-  void testPackageRemove() {
+  void testPackageUpgrade() {
+    if (isUpgrade()) {
+      checkThat("upgrade sequence on a package $name failed to be executed",
+                CDHUpgradeSequence.execute(name, System.getProperty("cdh.prev.repo.version"), "3"), equalTo(0));
+    }
+  }
+
+  @Test
+  void testPulledDeps() {
+    checkPulledDeps(getMap(golden.deps));
+  }
+
+  @Test
+  void testPackageContent() {
+    Map files = getMap(golden.content);
+    checkFiles(files.config, files.doc, files.file);
+  }
+
+  @Test
+  void testPackageServices() {
+    checkServices(getMap(golden.services));
   }
 }
