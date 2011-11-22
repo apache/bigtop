@@ -1,158 +1,133 @@
+Index: core/src/test/java/org/apache/mahout/clustering/meanshift/TestMeanShift.java
+===================================================================
+--- core/src/test/java/org/apache/mahout/clustering/meanshift/TestMeanShift.java	(revision 1202420)
++++ core/src/test/java/org/apache/mahout/clustering/meanshift/TestMeanShift.java	(working copy)
+@@ -25,6 +25,7 @@
+ import com.google.common.collect.Lists;
+ import com.google.common.collect.Maps;
+ import org.apache.hadoop.conf.Configuration;
++import org.apache.hadoop.fs.FileStatus;
+ import org.apache.hadoop.fs.FileSystem;
+ import org.apache.hadoop.fs.Path;
+ import org.apache.hadoop.io.Text;
+@@ -376,10 +377,13 @@
+         optKey(DefaultOptionCreator.CONVERGENCE_DELTA_OPTION), "0.2",
+         optKey(DefaultOptionCreator.OVERWRITE_OPTION) };
+     ToolRunner.run(conf, new MeanShiftCanopyDriver(), args);
+-    Path outPart = new Path(output, "clusters-4-final/part-r-00000");
+-    long count = HadoopUtil.countRecords(outPart, conf);
++    
++    FileStatus[] outParts = FileSystem.get(conf).globStatus(
++        new Path(output, "clusters-?-final/part-r-00000"));
++    assertEquals("One matching final part", 1, outParts.length);
++    long count = HadoopUtil.countRecords(outParts[0].getPath(), conf);
+     assertEquals("count", 3, count);
+-    outPart = new Path(output, "clusters-0/part-m-00000");
++    Path outPart = new Path(output, "clusters-0/part-m-00000");
+     Iterator<?> iterator = new SequenceFileValueIterator<Writable>(outPart,
+         true, conf);
+     // now test the initial clusters to ensure the type of their centers has
 Index: core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/Step1MapperTest.java
 ===================================================================
---- core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/Step1MapperTest.java	(revision 1197192)
+--- core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/Step1MapperTest.java	(revision 1202420)
 +++ core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/Step1MapperTest.java	(working copy)
-@@ -22,6 +22,7 @@
- import org.apache.hadoop.conf.Configuration;
+@@ -17,21 +17,30 @@
+ 
+ package org.apache.mahout.classifier.df.mapreduce.partial;
+ 
++import static org.easymock.EasyMock.anyObject;
++import static org.easymock.EasyMock.capture;
++import static org.easymock.EasyMock.createMock;
++import static org.easymock.EasyMock.expectLastCall;
++import static org.easymock.EasyMock.replay;
++import static org.easymock.EasyMock.verify;
++
+ import java.util.Random;
+ 
+-import org.apache.hadoop.conf.Configuration;
  import org.apache.hadoop.io.LongWritable;
  import org.apache.hadoop.io.Text;
+-import org.apache.hadoop.mapreduce.TaskAttemptID;
+-import org.apache.mahout.common.MahoutTestCase;
 +import org.apache.hadoop.mapreduce.Mapper;
- import org.apache.hadoop.mapreduce.TaskAttemptID;
- import org.apache.mahout.common.MahoutTestCase;
  import org.apache.mahout.common.RandomUtils;
-@@ -30,6 +31,7 @@
+ import org.apache.mahout.classifier.df.builder.TreeBuilder;
+ import org.apache.mahout.classifier.df.data.Data;
  import org.apache.mahout.classifier.df.data.DataLoader;
  import org.apache.mahout.classifier.df.data.Dataset;
  import org.apache.mahout.classifier.df.data.Utils;
 +import org.apache.mahout.classifier.df.mapreduce.MapredOutput;
  import org.apache.mahout.classifier.df.node.Leaf;
  import org.apache.mahout.classifier.df.node.Node;
++import org.apache.mahout.common.MahoutTestCase;
++import org.easymock.Capture;
++import org.easymock.CaptureType;
  import org.junit.Test;
-@@ -109,8 +111,11 @@
+ 
+ public final class Step1MapperTest extends MahoutTestCase {
+@@ -70,7 +79,18 @@
+       configure(seed, partition, numMapTasks, numTrees);
+     }
+   }
++  
++  private static class TreeIDCapture extends Capture<TreeID> {
++    
++    public TreeIDCapture() {
++      super(CaptureType.ALL);
++    }
+ 
++    public void setValue(final TreeID value) {
++      super.setValue(value.clone());
++    }
++  }
++
+   /** nb attributes per generated data instance */
+   static final int NUM_ATTRIBUTES = 4;
+ 
+@@ -83,6 +103,7 @@
+   /** nb mappers to use */
+   static final int NUM_MAPPERS = 2;
+ 
++  @SuppressWarnings({ "rawtypes", "unchecked" })
+   @Test
+   public void testMapper() throws Exception {
+     Long seed = null;
+@@ -109,8 +130,13 @@
        // expected number of trees that this mapper will build
        int mapNbTrees = Step1Mapper.nbTrees(NUM_MAPPERS, NUM_TREES, partition);
  
 -      MockContext context = new MockContext(new Step1Mapper(),
 -          new Configuration(), new TaskAttemptID(), mapNbTrees);
-+      MockMapContextWrapper<LongWritable,Text,TreeID,MapredOutput> mockMapContextWrapper =
-+        new MockMapContextWrapper<LongWritable,Text,TreeID,MapredOutput>();
-+      Mapper<LongWritable,Text,TreeID,MapredOutput>.Context context =
-+        mockMapContextWrapper.getMockContext(new Configuration(),
-+            new TaskAttemptID(), mapNbTrees);
++      Mapper.Context context =
++        createMock(Mapper.Context.class);
++      Capture<TreeID> capturedKeys = new TreeIDCapture();
++      context.write(capture(capturedKeys), anyObject());
++      expectLastCall().anyTimes();
++      
++      replay(context);
  
        MockStep1Mapper mapper = new MockStep1Mapper(treeBuilder, dataset, seed,
            partition, NUM_MAPPERS, NUM_TREES);
-@@ -127,10 +132,10 @@
-       mapper.cleanup(context);
+@@ -125,12 +151,13 @@
+       }
  
+       mapper.cleanup(context);
+-
++      verify(context);
++      
        // make sure the mapper built all its trees
 -      assertEquals(mapNbTrees, context.nbOutputs());
-+      assertEquals(mapNbTrees, mockMapContextWrapper.nbOutputs());
++      assertEquals(mapNbTrees, capturedKeys.getValues().size());
  
        // check the returned keys
 -      for (TreeID k : context.getKeys()) {
-+      for (TreeID k : mockMapContextWrapper.getKeys()) {
++      for (TreeID k : capturedKeys.getValues()) {
          assertEquals(partition, k.partition());
          assertEquals(treeIndex, k.treeId());
  
-Index: core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/MockMapContextWrapper.java
-===================================================================
---- core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/MockMapContextWrapper.java	(revision 0)
-+++ core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/MockMapContextWrapper.java	(revision 0)
-@@ -0,0 +1,94 @@
-+/**
-+ * Licensed to the Apache Software Foundation (ASF) under one
-+ * or more contributor license agreements.  See the NOTICE file
-+ * distributed with this work for additional information
-+ * regarding copyright ownership.  The ASF licenses this file
-+ * to you under the Apache License, Version 2.0 (the
-+ * "License"); you may not use this file except in compliance
-+ * with the License.  You may obtain a copy of the License at
-+ *
-+ *     http://www.apache.org/licenses/LICENSE-2.0
-+ *
-+ * Unless required by applicable law or agreed to in writing, software
-+ * distributed under the License is distributed on an "AS IS" BASIS,
-+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-+ * See the License for the specific language governing permissions and
-+ * limitations under the License.
-+ */
-+
-+package org.apache.mahout.classifier.df.mapreduce.partial;
-+
-+import java.io.IOException;
-+
-+import org.apache.hadoop.conf.Configuration;
-+import org.apache.hadoop.mapreduce.Mapper;
-+import org.apache.hadoop.mapreduce.TaskAttemptID;
-+import org.apache.hadoop.mapreduce.lib.map.WrappedMapper;
-+import org.apache.hadoop.mapreduce.task.MapContextImpl;
-+import org.apache.mahout.classifier.df.mapreduce.MapredOutput;
-+
-+public class MockMapContextWrapper<K1, V1, K2, V2> extends Mapper<K1, V1, K2, V2> {
-+  
-+  private MockMapContext mockMapContext;
-+  
-+  public class MockMapContext extends MapContextImpl<K1, V1, K2, V2> {
-+    
-+    private final TreeID[] keys;
-+    private final MapredOutput[] values;
-+    private int index;
-+
-+    public MockMapContext(Configuration conf, TaskAttemptID taskAttemptID, int nbTrees) {
-+      super(conf, taskAttemptID, null, null, null, null, null);
-+      
-+      keys = new TreeID[nbTrees];
-+      values = new MapredOutput[nbTrees];
-+    }
-+    
-+    @Override
-+    public void write(Object key, Object value) throws IOException {
-+      if (index == keys.length) {
-+        throw new IOException("Received more output than expected : " + index);
-+      }
-+
-+      keys[index] = ((TreeID) key).clone();
-+      values[index] = ((MapredOutput) value).clone();
-+
-+      index++;
-+    }
-+
-+    /**
-+     * @return number of outputs collected
-+     */
-+    public int nbOutputs() {
-+      return index;
-+    }
-+
-+    public TreeID[] getKeys() {
-+      return keys;
-+    }
-+
-+    public MapredOutput[] getValues() {
-+      return values;
-+    }
-+  }
-+
-+  public Mapper<K1, V1, K2, V2>.Context getMockContext(Configuration conf, TaskAttemptID taskAttemptID, int nbTrees) {
-+    mockMapContext = new MockMapContext(conf, taskAttemptID, nbTrees);
-+    return new WrappedMapper<K1, V1, K2, V2>().getMapContext(mockMapContext);
-+  }
-+
-+  /**
-+   * @return number of outputs collected
-+   */
-+  public int nbOutputs() {
-+    return mockMapContext.nbOutputs();
-+  }
-+
-+  public TreeID[] getKeys() {
-+    return mockMapContext.getKeys();
-+  }
-+
-+  public MapredOutput[] getValues() {
-+    return mockMapContext.getValues();
-+  }
-+}
-
-Property changes on: core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/MockMapContextWrapper.java
-___________________________________________________________________
-Added: svn:eol-style
-   + native
-
 Index: core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/MockContext.java
 ===================================================================
---- core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/MockContext.java	(revision 1197192)
+--- core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/MockContext.java	(revision 1202420)
 +++ core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/MockContext.java	(working copy)
 @@ -1,70 +0,0 @@
 -/**
@@ -227,62 +202,235 @@ Index: core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/Mock
 -}
 Index: core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/PartialSequentialBuilder.java
 ===================================================================
---- core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/PartialSequentialBuilder.java	(revision 1197192)
+--- core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/PartialSequentialBuilder.java	(revision 1202420)
 +++ core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/PartialSequentialBuilder.java	(working copy)
-@@ -27,10 +27,12 @@
- import org.apache.hadoop.io.Text;
- import org.apache.hadoop.mapreduce.InputSplit;
- import org.apache.hadoop.mapreduce.Job;
-+import org.apache.hadoop.mapreduce.Mapper;
- import org.apache.hadoop.mapreduce.RecordReader;
- import org.apache.hadoop.mapreduce.TaskAttemptContext;
- import org.apache.hadoop.mapreduce.TaskAttemptID;
- import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
-+import org.apache.hadoop.mapreduce.task.TaskAttemptContextImpl;
- import org.apache.mahout.classifier.df.DFUtils;
- import org.apache.mahout.classifier.df.DecisionForest;
- import org.apache.mahout.classifier.df.builder.TreeBuilder;
-@@ -51,7 +53,7 @@
- 
-   private static final Logger log = LoggerFactory.getLogger(PartialSequentialBuilder.class);
- 
+@@ -1,176 +0,0 @@
+-/**
+- * Licensed to the Apache Software Foundation (ASF) under one or more
+- * contributor license agreements.  See the NOTICE file distributed with
+- * this work for additional information regarding copyright ownership.
+- * The ASF licenses this file to You under the Apache License, Version 2.0
+- * (the "License"); you may not use this file except in compliance with
+- * the License.  You may obtain a copy of the License at
+- *
+- *     http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS,
+- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+- * See the License for the specific language governing permissions and
+- * limitations under the License.
+- */
+-
+-package org.apache.mahout.classifier.df.mapreduce.partial;
+-
+-import java.io.IOException;
+-import java.util.List;
+-
+-import org.apache.commons.lang.ArrayUtils;
+-import org.apache.hadoop.conf.Configuration;
+-import org.apache.hadoop.fs.Path;
+-import org.apache.hadoop.io.LongWritable;
+-import org.apache.hadoop.io.Text;
+-import org.apache.hadoop.mapreduce.InputSplit;
+-import org.apache.hadoop.mapreduce.Job;
+-import org.apache.hadoop.mapreduce.RecordReader;
+-import org.apache.hadoop.mapreduce.TaskAttemptContext;
+-import org.apache.hadoop.mapreduce.TaskAttemptID;
+-import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
+-import org.apache.mahout.classifier.df.DFUtils;
+-import org.apache.mahout.classifier.df.DecisionForest;
+-import org.apache.mahout.classifier.df.builder.TreeBuilder;
+-import org.apache.mahout.classifier.df.data.Dataset;
+-import org.apache.mahout.classifier.df.mapreduce.Builder;
+-import org.apache.mahout.classifier.df.mapreduce.MapredOutput;
+-import org.apache.mahout.classifier.df.node.Node;
+-import org.slf4j.Logger;
+-import org.slf4j.LoggerFactory;
+-
+-import com.google.common.collect.Lists;
+-
+-/**
+- * Simulates the Partial mapreduce implementation in a sequential manner. Must
+- * receive a seed
+- */
+-public class PartialSequentialBuilder extends PartialBuilder {
+-
+-  private static final Logger log = LoggerFactory.getLogger(PartialSequentialBuilder.class);
+-
 -  private MockContext firstOutput;
-+  private MockMapContextWrapper<LongWritable,Text,TreeID,MapredOutput> mockMapContextWrapper;
- 
-   private final Dataset dataset;
- 
-@@ -96,9 +98,11 @@
- 
-     int numTrees = Builder.getNbTrees(conf); // total number of trees
- 
+-
+-  private final Dataset dataset;
+-
+-  public PartialSequentialBuilder(TreeBuilder treeBuilder, Path dataPath,
+-      Dataset dataset, long seed, Configuration conf) {
+-    super(treeBuilder, dataPath, new Path("notUsed"), seed, conf);
+-    this.dataset = dataset;
+-  }
+-
+-  public PartialSequentialBuilder(TreeBuilder treeBuilder, Path dataPath,
+-      Dataset dataset, long seed) {
+-    this(treeBuilder, dataPath, dataset, seed, new Configuration());
+-  }
+-
+-  @Override
+-  protected void configureJob(Job job, int nbTrees)
+-      throws IOException {
+-    Configuration conf = job.getConfiguration();
+-    
+-    int num = conf.getInt("mapred.map.tasks", -1);
+-
+-    super.configureJob(job, nbTrees);
+-
+-    // PartialBuilder sets the number of maps to 1 if we are running in 'local'
+-    conf.setInt("mapred.map.tasks", num);
+-  }
+-
+-  @Override
+-  protected boolean runJob(Job job) throws IOException, InterruptedException {
+-    Configuration conf = job.getConfiguration();
+-    
+-    // retrieve the splits
+-    TextInputFormat input = new TextInputFormat();
+-    List<InputSplit> splits = input.getSplits(job);
+-    
+-    int nbSplits = splits.size();
+-    log.debug("Nb splits : {}", nbSplits);
+-
+-    InputSplit[] sorted = new InputSplit[nbSplits];
+-    splits.toArray(sorted);
+-    Builder.sortSplits(sorted);
+-
+-    int numTrees = Builder.getNbTrees(conf); // total number of trees
+-
 -    TaskAttemptContext task = new TaskAttemptContext(conf, new TaskAttemptID());
-+    TaskAttemptContext task = new TaskAttemptContextImpl(conf, new TaskAttemptID());
- 
+-
 -    firstOutput = new MockContext(new Step1Mapper(), conf, task.getTaskAttemptID(), numTrees);
-+    mockMapContextWrapper = new MockMapContextWrapper<LongWritable,Text,TreeID,MapredOutput>();
-+    Mapper<LongWritable,Text,TreeID,MapredOutput>.Context firstOutput =
-+      mockMapContextWrapper.getMockContext(conf, task.getTaskAttemptID(), numTrees);
- 
-     /* first instance id in hadoop's order */
-     int[] firstIds = new int[nbSplits];
-@@ -143,7 +147,7 @@
- 
-   @Override
-   protected DecisionForest parseOutput(Job job) throws IOException {
+-
+-    /* first instance id in hadoop's order */
+-    int[] firstIds = new int[nbSplits];
+-    /* partitions' sizes in hadoop order */
+-    int[] sizes = new int[nbSplits];
+-    
+-    // to compute firstIds, process the splits in file order
+-    long slowest = 0; // duration of slowest map
+-    int firstId = 0;
+-    for (InputSplit split : splits) {
+-      int hp = ArrayUtils.indexOf(sorted, split); // hadoop's partition
+-
+-      RecordReader<LongWritable, Text> reader = input.createRecordReader(split, task);
+-      reader.initialize(split, task);
+-
+-      Step1Mapper mapper = new MockStep1Mapper(getTreeBuilder(), dataset, getSeed(),
+-                                               hp, nbSplits, numTrees);
+-
+-      long time = System.currentTimeMillis();
+-
+-      firstIds[hp] = firstId;
+-
+-      while (reader.nextKeyValue()) {
+-        mapper.map(reader.getCurrentKey(), reader.getCurrentValue(), firstOutput);
+-        firstId++;
+-        sizes[hp]++;
+-      }
+-
+-      mapper.cleanup(firstOutput);
+-
+-      time = System.currentTimeMillis() - time;
+-      log.info("Duration : {}", DFUtils.elapsedTime(time));
+-
+-      if (time > slowest) {
+-        slowest = time;
+-      }
+-    }
+-
+-    log.info("Longest duration : {}", DFUtils.elapsedTime(slowest));
+-    return true;
+-  }
+-
+-  @Override
+-  protected DecisionForest parseOutput(Job job) throws IOException {
 -    return processOutput(firstOutput.getKeys(), firstOutput.getValues());
-+    return processOutput(mockMapContextWrapper.getKeys(), mockMapContextWrapper.getValues());
-   }
- 
-   /**
+-  }
+-
+-  /**
+-   * extract the decision forest
+-   */
+-  protected DecisionForest processOutput(TreeID[] keys, MapredOutput[] values) {
+-    List<Node> trees = Lists.newArrayList();
+-
+-    for (int index = 0; index < keys.length; index++) {
+-      MapredOutput value = values[index];
+-      trees.add(value.getTree());
+-    }
+-    
+-    return new DecisionForest(trees);
+-  }
+-
+-  /**
+-   * Special Step1Mapper that can be configured without using a Configuration
+-   * 
+-   */
+-  private static class MockStep1Mapper extends Step1Mapper {
+-    protected MockStep1Mapper(TreeBuilder treeBuilder, Dataset dataset, Long seed,
+-        int partition, int numMapTasks, int numTrees) {
+-      configure(false, treeBuilder, dataset);
+-      configure(seed, partition, numMapTasks, numTrees);
+-    }
+-
+-  }
+-
+-}
 Index: core/src/test/java/org/apache/mahout/common/DummyStatusReporter.java
 ===================================================================
---- core/src/test/java/org/apache/mahout/common/DummyStatusReporter.java	(revision 1197192)
+--- core/src/test/java/org/apache/mahout/common/DummyStatusReporter.java	(revision 1202420)
 +++ core/src/test/java/org/apache/mahout/common/DummyStatusReporter.java	(working copy)
-@@ -55,4 +55,9 @@
+@@ -19,6 +19,8 @@
+ 
+ package org.apache.mahout.common;
+ 
++import static org.easymock.EasyMock.createMockBuilder;
++
+ import java.util.Map;
+ 
+ import com.google.common.collect.Maps;
+@@ -29,11 +31,22 @@
+ 
+   private final Map<Enum<?>, Counter> counters = Maps.newHashMap();
+   private final Map<String, Counter> counterGroups = Maps.newHashMap();
++  
++  private Counter newCounter() {
++    try {
++      // 0.23 case
++      String c = "org.apache.hadoop.mapreduce.counters.GenericCounter";
++      return (Counter) createMockBuilder(Class.forName(c)).createMock();
++    } catch (ClassNotFoundException e) {
++      // 0.20 case
++      return createMockBuilder(Counter.class).createMock();
++    }
++  }
+ 
+   @Override
+   public Counter getCounter(Enum<?> name) {
+     if (!counters.containsKey(name)) {
+-      counters.put(name, new DummyCounter());
++      counters.put(name, newCounter());
+     }
+     return counters.get(name);
+   }
+@@ -42,7 +55,7 @@
+   @Override
+   public Counter getCounter(String group, String name) {
+     if (!counterGroups.containsKey(group + name)) {
+-      counterGroups.put(group + name, new DummyCounter());
++      counterGroups.put(group + name, newCounter());
+     }
+     return counterGroups.get(group+name);
+   }
+@@ -55,4 +68,8 @@
    public void setStatus(String status) {
    }
  
-+  @Override
 +  public float getProgress() {
 +    return 0;
 +  }
@@ -290,68 +438,298 @@ Index: core/src/test/java/org/apache/mahout/common/DummyStatusReporter.java
  }
 Index: core/src/test/java/org/apache/mahout/common/DummyRecordWriter.java
 ===================================================================
---- core/src/test/java/org/apache/mahout/common/DummyRecordWriter.java	(revision 1197192)
+--- core/src/test/java/org/apache/mahout/common/DummyRecordWriter.java	(revision 1202420)
 +++ core/src/test/java/org/apache/mahout/common/DummyRecordWriter.java	(working copy)
-@@ -30,6 +30,10 @@
+@@ -17,16 +17,21 @@
+ 
+ package org.apache.mahout.common;
+ 
++import com.google.common.collect.Lists;
++
+ import java.io.IOException;
++import java.lang.reflect.Constructor;
++import java.lang.reflect.Method;
+ import java.util.List;
+ import java.util.Map;
+ import java.util.Set;
+ import java.util.TreeMap;
+ 
+-import com.google.common.collect.Lists;
+ import org.apache.hadoop.conf.Configuration;
++import org.apache.hadoop.mapreduce.MapContext;
+ import org.apache.hadoop.mapreduce.Mapper;
+ import org.apache.hadoop.mapreduce.RecordWriter;
++import org.apache.hadoop.mapreduce.ReduceContext;
  import org.apache.hadoop.mapreduce.Reducer;
  import org.apache.hadoop.mapreduce.TaskAttemptContext;
  import org.apache.hadoop.mapreduce.TaskAttemptID;
-+import org.apache.hadoop.mapreduce.lib.map.WrappedMapper;
-+import org.apache.hadoop.mapreduce.lib.reduce.WrappedReducer;
-+import org.apache.hadoop.mapreduce.task.MapContextImpl;
-+import org.apache.hadoop.mapreduce.task.ReduceContextImpl;
- 
- public final class DummyRecordWriter<K, V> extends RecordWriter<K, V> {
- 
-@@ -65,7 +69,8 @@
+@@ -65,7 +70,18 @@
                                                                        Configuration configuration,
                                                                        RecordWriter<K2, V2> output)
      throws IOException, InterruptedException {
 -    return mapper.new Context(configuration, new TaskAttemptID(), null, output, null, new DummyStatusReporter(), null);
-+    return new WrappedMapper<K1, V1, K2, V2>().getMapContext(
-+      new MapContextImpl<K1, V1, K2, V2>(configuration, new TaskAttemptID(), null, output, null, new DummyStatusReporter(), null));
++    
++    // Use reflection since the context types changed incompatibly between 0.20
++    // and 0.23.
++    try {
++      return buildNewMapperContext(configuration, output);
++    } catch (Exception e) {
++      try {
++        return buildOldMapperContext(mapper, configuration, output);
++      } catch (Exception ex) {
++        throw new IllegalStateException(ex);
++      }
++    }
    }
  
    public static <K1, V1, K2, V2> Reducer<K1, V1, K2, V2>.Context build(Reducer<K1, V1, K2, V2> reducer,
-@@ -74,7 +79,8 @@
+@@ -74,17 +90,96 @@
                                                                         Class<K1> keyClass,
                                                                         Class<V1> valueClass)
      throws IOException, InterruptedException {
 -    return reducer.new Context(configuration,
-+    return new WrappedReducer<K1, V1, K2, V2>().getReducerContext(
-+      new ReduceContextImpl<K1, V1, K2, V2>(configuration,
-                                new TaskAttemptID(),
-                                new MockIterator(),
-                                null,
-@@ -84,7 +90,7 @@
-                                new DummyStatusReporter(),
-                                null,
-                                keyClass,
+-                               new TaskAttemptID(),
+-                               new MockIterator(),
+-                               null,
+-                               null,
+-                               output,
+-                               null,
+-                               new DummyStatusReporter(),
+-                               null,
+-                               keyClass,
 -                               valueClass);
-+                               valueClass));
++    
++    // Use reflection since the context types changed incompatibly between 0.20
++    // and 0.23.
++    try {
++      return buildNewReducerContext(configuration, output, keyClass, valueClass);
++    } catch (Exception e) {
++      try {
++        return buildOldReducerContext(reducer, configuration, output, keyClass, valueClass);
++      } catch (Exception ex) {
++        throw new IllegalStateException(ex);
++      }
++    }
    }
++  
++  @SuppressWarnings({ "unchecked", "rawtypes" })
++  private static <K1, V1, K2, V2> Mapper<K1, V1, K2, V2>.Context buildNewMapperContext(
++      Configuration configuration, RecordWriter<K2, V2> output) throws Exception {
++    Class<?> mapContextImplClass = Class.forName("org.apache.hadoop.mapreduce.task.MapContextImpl");
++    Constructor<?> cons = mapContextImplClass.getConstructors()[0];
++    Object mapContextImpl = cons.newInstance(configuration,
++        new TaskAttemptID(), null, output, null, new DummyStatusReporter(), null);
++    
++    Class<?> wrappedMapperClass = Class.forName("org.apache.hadoop.mapreduce.lib.map.WrappedMapper");
++    Object wrappedMapper = wrappedMapperClass.newInstance();
++    Method getMapContext = wrappedMapperClass.getMethod("getMapContext", MapContext.class);
++    return (Mapper.Context) getMapContext.invoke(wrappedMapper, mapContextImpl);
++  }
  
++  @SuppressWarnings({ "unchecked", "rawtypes" })
++  private static <K1, V1, K2, V2> Mapper<K1, V1, K2, V2>.Context buildOldMapperContext(
++      Mapper<K1, V1, K2, V2> mapper, Configuration configuration,
++      RecordWriter<K2, V2> output) throws Exception {
++    Constructor<?> cons = getNestedContextConstructor(mapper.getClass());
++    // first argument to the constructor is the enclosing instance
++    return (Mapper.Context) cons.newInstance(mapper, configuration,
++        new TaskAttemptID(), null, output, null, new DummyStatusReporter(), null);
++  }
++
++  @SuppressWarnings({ "unchecked", "rawtypes" })
++  private static <K1, V1, K2, V2> Reducer<K1, V1, K2, V2>.Context buildNewReducerContext(
++      Configuration configuration, RecordWriter<K2, V2> output, Class<K1> keyClass,
++      Class<V1> valueClass) throws Exception {
++    Class<?> reduceContextImplClass = Class.forName("org.apache.hadoop.mapreduce.task.ReduceContextImpl");
++    Constructor<?> cons = reduceContextImplClass.getConstructors()[0];
++    Object reduceContextImpl = cons.newInstance(configuration,
++      new TaskAttemptID(),
++      new MockIterator(),
++      null,
++      null,
++      output,
++      null,
++      new DummyStatusReporter(),
++      null,
++      keyClass,
++      valueClass);
++    
++    Class<?> wrappedReducerClass = Class.forName("org.apache.hadoop.mapreduce.lib.reduce.WrappedReducer");
++    Object wrappedReducer = wrappedReducerClass.newInstance();
++    Method getReducerContext = wrappedReducerClass.getMethod("getReducerContext", ReduceContext.class);
++    return (Reducer.Context) getReducerContext.invoke(wrappedReducer, reduceContextImpl);
++  }
++  
++  @SuppressWarnings({ "unchecked", "rawtypes" })
++  private static <K1, V1, K2, V2> Reducer<K1, V1, K2, V2>.Context buildOldReducerContext(
++      Reducer<K1, V1, K2, V2> reducer, Configuration configuration,
++      RecordWriter<K2, V2> output, Class<K1> keyClass,
++      Class<V1> valueClass) throws Exception {
++    Constructor<?> cons = getNestedContextConstructor(reducer.getClass());
++    // first argument to the constructor is the enclosing instance
++    return (Reducer.Context) cons.newInstance(reducer,
++        configuration,
++        new TaskAttemptID(),
++        new MockIterator(),
++        null,
++        null,
++        output,
++        null,
++        new DummyStatusReporter(),
++        null,
++        keyClass,
++        valueClass);
++  }
++
++  private static Constructor<?> getNestedContextConstructor(Class<?> outerClass) {
++    for (Class<?> nestedClass : outerClass.getClasses()) {
++      if ("Context".equals(nestedClass.getSimpleName())) {
++        return nestedClass.getConstructors()[0];
++      }
++    }
++    throw new IllegalStateException("Cannot find context class for " + outerClass);
++  }
++
  }
 Index: core/src/test/java/org/apache/mahout/common/DummyCounter.java
 ===================================================================
---- core/src/test/java/org/apache/mahout/common/DummyCounter.java	(revision 1197192)
+--- core/src/test/java/org/apache/mahout/common/DummyCounter.java	(revision 1202420)
 +++ core/src/test/java/org/apache/mahout/common/DummyCounter.java	(working copy)
-@@ -19,8 +19,8 @@
+@@ -1,26 +0,0 @@
+-/**
+- * Licensed to the Apache Software Foundation (ASF) under one
+- * or more contributor license agreements. See the NOTICE file
+- * distributed with this work for additional information
+- * regarding copyright ownership. The ASF licenses this file
+- * to you under the Apache License, Version 2.0 (the
+- * "License"); you may not use this file except in compliance
+- * with the License. You may obtain a copy of the License at
+- *
+- * http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing,
+- * software distributed under the License is distributed on an
+- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+- * KIND, either express or implied. See the License for the
+- * specific language governing permissions and limitations
+- * under the License.
+- */
+-
+-package org.apache.mahout.common;
+-
+-import org.apache.hadoop.mapreduce.Counter;
+-
+-final class DummyCounter extends Counter {
+-
+-}
+Index: core/src/test/java/org/apache/mahout/math/hadoop/TestDistributedRowMatrix.java
+===================================================================
+--- core/src/test/java/org/apache/mahout/math/hadoop/TestDistributedRowMatrix.java	(revision 1202420)
++++ core/src/test/java/org/apache/mahout/math/hadoop/TestDistributedRowMatrix.java	(working copy)
+@@ -25,6 +25,7 @@
+ import org.apache.hadoop.fs.FileSystem;
+ import org.apache.hadoop.fs.Path;
+ import org.apache.mahout.clustering.ClusteringTestUtils;
++import org.apache.mahout.common.HadoopUtil;
+ import org.apache.mahout.common.MahoutTestCase;
+ import org.apache.mahout.common.iterator.sequencefile.PathFilters;
+ import org.apache.mahout.math.Matrix;
+@@ -219,14 +220,14 @@
+ 
+     deleteContentsOfPath(conf, outputPath);
+ 
+-    assertEquals(0, fs.listStatus(outputPath).length);
++    assertEquals(0, HadoopUtil.listStatus(fs, outputPath).length);
+ 
+     Vector result1 = dm.times(v);
+ 
+-    assertEquals(0, fs.listStatus(outputPath).length);
++    assertEquals(0, HadoopUtil.listStatus(fs, outputPath).length);
+     
+     deleteContentsOfPath(conf, outputPath);
+-    assertEquals(0, fs.listStatus(outputPath).length);
++    assertEquals(0, HadoopUtil.listStatus(fs, outputPath).length);
+     
+     conf.setBoolean(DistributedRowMatrix.KEEP_TEMP_FILES, true);
+     dm.setConf(conf);
+@@ -256,14 +257,14 @@
+ 
+     deleteContentsOfPath(conf, outputPath);
+ 
+-    assertEquals(0, fs.listStatus(outputPath).length);
++    assertEquals(0, HadoopUtil.listStatus(fs, outputPath).length);
+ 
+     Vector result1 = dm.timesSquared(v);
+ 
+-    assertEquals(0, fs.listStatus(outputPath).length);
++    assertEquals(0, HadoopUtil.listStatus(fs, outputPath).length);
+     
+     deleteContentsOfPath(conf, outputPath);
+-    assertEquals(0, fs.listStatus(outputPath).length);
++    assertEquals(0, HadoopUtil.listStatus(fs, outputPath).length);
+     
+     conf.setBoolean(DistributedRowMatrix.KEEP_TEMP_FILES, true);
+     dm.setConf(conf);
+@@ -290,7 +291,7 @@
+   private static void deleteContentsOfPath(Configuration conf, Path path) throws Exception {
+     FileSystem fs = path.getFileSystem(conf);
+     
+-    FileStatus[] statuses = fs.listStatus(path);
++    FileStatus[] statuses = HadoopUtil.listStatus(fs, path);
+     for (FileStatus status : statuses) {
+       fs.delete(status.getPath(), true);
+     }    
+Index: core/src/main/java/org/apache/mahout/common/HadoopUtil.java
+===================================================================
+--- core/src/main/java/org/apache/mahout/common/HadoopUtil.java	(revision 1202420)
++++ core/src/main/java/org/apache/mahout/common/HadoopUtil.java	(working copy)
+@@ -17,6 +17,7 @@
  
  package org.apache.mahout.common;
  
--import org.apache.hadoop.mapreduce.Counter;
-+import org.apache.hadoop.mapreduce.counters.GenericCounter;
++import java.io.FileNotFoundException;
+ import java.io.IOException;
+ import java.io.InputStream;
+ import java.net.URI;
+@@ -235,15 +236,31 @@
+     FileStatus[] statuses;
+     FileSystem fs = path.getFileSystem(conf);
+     if (filter == null) {
+-      statuses = pathType == PathType.GLOB ? fs.globStatus(path) : fs.listStatus(path);
++      statuses = pathType == PathType.GLOB ? fs.globStatus(path) : listStatus(fs, path);
+     } else {
+-      statuses = pathType == PathType.GLOB ? fs.globStatus(path, filter) : fs.listStatus(path, filter);
++      statuses = pathType == PathType.GLOB ? fs.globStatus(path, filter) : listStatus(fs, path, filter);
+     }
+     if (ordering != null) {
+       Arrays.sort(statuses, ordering);
+     }
+     return statuses;
+   }
++  
++  public static FileStatus[] listStatus(FileSystem fs, Path path) throws IOException {
++    try {
++      return fs.listStatus(path);
++    } catch (FileNotFoundException e) {
++      return new FileStatus[0]; // retain compatibility with Hadoop 0.20
++    }
++  }
++  
++  public static FileStatus[] listStatus(FileSystem fs, Path path, PathFilter filter) throws IOException {
++    try {
++      return fs.listStatus(path, filter);
++    } catch (FileNotFoundException e) {
++      return new FileStatus[0]; // retain compatibility with Hadoop 0.20
++    }
++  }
  
--final class DummyCounter extends Counter {
-+final class DummyCounter extends GenericCounter {
- 
- }
+   public static void cacheFiles(Path fileToCache, Configuration conf) {
+     DistributedCache.setCacheFiles(new URI[]{fileToCache.toUri()}, conf);
 Index: core/pom.xml
 ===================================================================
---- core/pom.xml	(revision 1197192)
+--- core/pom.xml	(revision 1202420)
 +++ core/pom.xml	(working copy)
-@@ -140,19 +140,6 @@
+@@ -140,10 +140,6 @@
  
      <!-- Third Party -->
      <dependency>
@@ -359,19 +737,10 @@ Index: core/pom.xml
 -      <artifactId>hadoop-core</artifactId>
 -    </dependency>
 -    <dependency>
--      <groupId>org.codehaus.jackson</groupId>
--      <artifactId>jackson-core-asl</artifactId>
--    </dependency>
--    <dependency>
--      <groupId>org.codehaus.jackson</groupId>
--      <artifactId>jackson-mapper-asl</artifactId>
--    </dependency>
--
--    <dependency>
-       <groupId>org.slf4j</groupId>
-       <artifactId>slf4j-api</artifactId>
+       <groupId>org.codehaus.jackson</groupId>
+       <artifactId>jackson-core-asl</artifactId>
      </dependency>
-@@ -211,4 +198,51 @@
+@@ -211,4 +207,43 @@
      </dependency>
  
    </dependencies>
@@ -392,7 +761,7 @@ Index: core/pom.xml
 +      </dependencies>
 +    </profile>
 +    <profile>
-+      <id>hadoop-0.2X</id>
++      <id>hadoop-0.23</id>
 +      <activation>
 +        <property>
 +          <name>hadoop.version</name>
@@ -411,21 +780,13 @@ Index: core/pom.xml
 +          <groupId>org.apache.hadoop</groupId>
 +          <artifactId>hadoop-mapreduce-client-core</artifactId>
 +        </dependency>
-+        <dependency>
-+          <groupId>org.codehaus.jackson</groupId>
-+          <artifactId>jackson-core-asl</artifactId>
-+        </dependency>
-+        <dependency>
-+          <groupId>org.codehaus.jackson</groupId>
-+          <artifactId>jackson-mapper-asl</artifactId>
-+        </dependency>
 +      </dependencies>
 +    </profile>
 +  </profiles>
  </project>
 Index: pom.xml
 ===================================================================
---- pom.xml	(revision 1197192)
+--- pom.xml	(revision 1202420)
 +++ pom.xml	(working copy)
 @@ -103,6 +103,17 @@
      <url>https://issues.apache.org/jira/browse/MAHOUT</url>
