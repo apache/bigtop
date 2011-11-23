@@ -66,7 +66,7 @@ diverse community to facilitate discussions not only on the project itself but
 also on potential use cases. Come to the mailing lists to find out more.
     
 %prep
-%setup -n apache-mahout-464be41
+%setup -n apache-mahout-dc3dcf5
 %patch0 -p0
 
 %build

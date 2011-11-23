@@ -1,8 +1,20 @@
-diff --git ivy.xml ivy.xml
-index d686c76..a882dae 100644
---- ivy.xml
-+++ ivy.xml
-@@ -67,12 +67,19 @@ under the License.
+Index: src/test/com/cloudera/sqoop/TestCompression.java
+===================================================================
+--- src/test/com/cloudera/sqoop/TestCompression.java	(revision 1205535)
++++ src/test/com/cloudera/sqoop/TestCompression.java	(working copy)
+@@ -163,6 +163,7 @@
+ 
+     if (codec == null) {
+       codec = new GzipCodec();
++      ReflectionUtils.setConf(codec, getConf());
+     }
+     Path p = new Path(getDataFilePath().toString()
+         + codec.getDefaultExtension());
+Index: ivy.xml
+===================================================================
+--- ivy.xml	(revision 1205535)
++++ ivy.xml	(working copy)
+@@ -67,11 +67,20 @@
      <artifact conf="master"/>
    </publications>
    <dependencies>
@@ -11,24 +23,24 @@ index d686c76..a882dae 100644
 -      rev="${hadoop-core.cloudera.version}" conf="cloudera->default"/>
 -    <dependency org="org.apache.hadoop" name="hadoop-test"
 -      rev="${hadoop-core.cloudera.version}" conf="clouderatest->default"/>
--
 +    <dependency org="org.apache.hadoop" name="hadoop-common" rev="${hadoop.version}"
-+      conf="cloudera->default"/> 
-+    <dependency org="org.apache.hadoop" name="hadoop-common-test" rev="${hadoop.version}"
-+                conf="clouderatest->default"/> 
++      conf="cloudera->default">
++      <artifact name="hadoop-common" type="jar" />
++      <artifact name="hadoop-common" type="jar" m:classifier="tests"/>
++    </dependency>
 +    <dependency org="org.apache.hadoop" name="hadoop-hdfs" rev="${hadoop.version}"
-+      conf="cloudera->default"/>
-+    <dependency org="org.apache.hadoop" name="hadoop-hdfs-test" rev="${hadoop.version}"
-+      conf="clouderatest->default"/>
-+    <dependency org="org.apache.hadoop" name="hadoop-mapred" rev="${hadoop.version}"
++      conf="cloudera->default">
++      <artifact name="hadoop-hdfs" type="jar" />
++      <artifact name="hadoop-hdfs" type="jar" m:classifier="tests"/>
++    </dependency>
++    <dependency org="org.apache.hadoop" name="hadoop-mapreduce-client-common" rev="${hadoop.version}"
 +       conf="cloudera->default"/>
-+    <dependency org="org.apache.hadoop" name="hadoop-mapred-test" rev="${hadoop.version}"
-+      conf="clouderatest->default"/>
-+    
++    <dependency org="org.apache.hadoop" name="hadoop-mapreduce-client-core" rev="${hadoop.version}"
++       conf="cloudera->default"/>
+ 
      <!-- Common dependencies for Sqoop -->
      <dependency org="commons-cli" name="commons-cli"
-       rev="${commons-cli.version}" conf="common->default"/>
-@@ -121,9 +128,13 @@ under the License.
+@@ -121,9 +130,12 @@
        <exclude org="com.sun.jersey" module="jersey-server"/>
        <exclude org="org.apache.thrift" module="thrift"/>
        <exclude org="log4j" module="log4j"/>
@@ -37,19 +49,19 @@ index d686c76..a882dae 100644
      </dependency>
  
      <exclude org="org.apache.hadoop" module="avro"/>
-+    <exclude org="commons-configuration" module="commons-configuration" />
 +    <exclude org="commons-daemon" module="commons-daemon" />
  
    </dependencies>
  </ivy-module>
-diff --git ivy/libraries.properties b/ivy/libraries.properties
-index dbbcb3b..8ba9a8b 100644
---- ivy/libraries.properties
-+++ ivy/libraries.properties
-@@ -29,14 +29,14 @@ commons-lang.version=2.4
+Index: ivy/libraries.properties
+===================================================================
+--- ivy/libraries.properties	(revision 1205535)
++++ ivy/libraries.properties	(working copy)
+@@ -28,15 +28,14 @@
+ commons-lang.version=2.4
  commons-logging.version=1.0.4
  
- # Cloudera Distribution dependency version
+-# Cloudera Distribution dependency version
 -hadoop-core.cloudera.version=0.20.2-cdh3u1
 +hadoop.version=0.23.0-SNAPSHOT
  
@@ -63,190 +75,3 @@ index dbbcb3b..8ba9a8b 100644
  
  junit.version=4.5
  
-Index: src/test/com/cloudera/sqoop/lib/TestLargeObjectLoader.java
-===================================================================
---- src/test/com/cloudera/sqoop/lib/TestLargeObjectLoader.java	(revision 1198954)
-+++ src/test/com/cloudera/sqoop/lib/TestLargeObjectLoader.java	(working copy)
-@@ -31,10 +31,7 @@
- import org.apache.hadoop.conf.Configuration;
- import org.apache.hadoop.fs.FileSystem;
- import org.apache.hadoop.fs.Path;
--import org.apache.hadoop.mapreduce.MapContext;
--import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
- 
--import com.cloudera.sqoop.testutil.MockObjectFactory;
- import com.cloudera.sqoop.testutil.MockResultSet;
- 
- /**
-@@ -45,7 +42,6 @@
-   protected Configuration conf;
-   protected LargeObjectLoader loader;
-   protected Path outDir;
--  protected MapContext mapContext;
- 
-   public void setUp() throws IOException, InterruptedException {
-     conf = new Configuration();
-@@ -60,17 +56,7 @@
-     }
-     fs.mkdirs(outDir);
- 
--    /* A mock MapContext that uses FileOutputCommitter.
--     * This MapContext is actually serving two roles here; when writing the
--     * CLOB files, its OutputCommitter is used to determine where to write
--     * the CLOB data, as these are placed in the task output work directory.
--     * When reading the CLOB data back for verification, we use the
--     * getInputSplit() to determine where to read our source data from--the same
--     * directory. We are repurposing the same context for both output and input.
--     */
--    mapContext = MockObjectFactory.getMapContextForIOPath(conf, outDir);
--    loader = new LargeObjectLoader(mapContext.getConfiguration(),
--        FileOutputFormat.getWorkOutputPath(mapContext));
-+    loader = new LargeObjectLoader(conf, outDir);
-   }
- 
-   public void testReadClobRef()
-@@ -88,7 +74,6 @@
-     assertNotNull(clob);
-     assertTrue(clob.isExternal());
-     loader.close();
--    mapContext.getOutputCommitter().commitTask(mapContext);
-     Reader r = clob.getDataStream(conf, outDir);
-     char [] buf = new char[4096];
-     int chars = r.read(buf, 0, 4096);
-@@ -117,7 +102,6 @@
-     assertNotNull(blob);
-     assertTrue(blob.isExternal());
-     loader.close();
--    mapContext.getOutputCommitter().commitTask(mapContext);
-     InputStream is = blob.getDataStream(conf, outDir);
-     byte [] buf = new byte[4096];
-     int bytes = is.read(buf, 0, 4096);
-Index: src/test/com/cloudera/sqoop/testutil/MockObjectFactory.java
-===================================================================
---- src/test/com/cloudera/sqoop/testutil/MockObjectFactory.java	(revision 1198954)
-+++ src/test/com/cloudera/sqoop/testutil/MockObjectFactory.java	(working copy)
-@@ -1,84 +0,0 @@
--/**
-- * Licensed to the Apache Software Foundation (ASF) under one
-- * or more contributor license agreements.  See the NOTICE file
-- * distributed with this work for additional information
-- * regarding copyright ownership.  The ASF licenses this file
-- * to you under the Apache License, Version 2.0 (the
-- * "License"); you may not use this file except in compliance
-- * with the License.  You may obtain a copy of the License at
-- *
-- *     http://www.apache.org/licenses/LICENSE-2.0
-- *
-- * Unless required by applicable law or agreed to in writing, software
-- * distributed under the License is distributed on an "AS IS" BASIS,
-- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-- * See the License for the specific language governing permissions and
-- * limitations under the License.
-- */
--
--package com.cloudera.sqoop.testutil;
--
--import java.io.IOException;
--
--import org.apache.hadoop.conf.Configuration;
--import org.apache.hadoop.fs.Path;
--import org.apache.hadoop.mapreduce.Counters;
--import org.apache.hadoop.mapreduce.InputSplit;
--import org.apache.hadoop.mapreduce.MapContext;
--import org.apache.hadoop.mapreduce.OutputCommitter;
--import org.apache.hadoop.mapreduce.TaskAttemptID;
--import org.apache.hadoop.mapreduce.lib.input.FileSplit;
--import org.apache.hadoop.mapreduce.lib.output.FileOutputCommitter;
--import org.apache.hadoop.mrunit.mapreduce.mock.MockReporter;
--
--/**
-- * Allows the creation of various mock objects for testing purposes.
-- */
--public final class MockObjectFactory {
--
--  /**
--   * Returns a mock MapContext that has both an OutputCommitter and an
--   * InputSplit wired to the specified path.
--   * Used for testing LargeObjectLoader.
--   */
--  public static MapContext getMapContextForIOPath(Configuration conf, Path p) {
--    return new MockMapContextWithCommitter(conf, p);
--  }
--
--  private static class MockMapContextWithCommitter
--      extends MapContext<Object, Object, Object, Object> {
--    private Path path;
--    private Configuration conf;
--
--    public MockMapContextWithCommitter(Configuration c, Path p) {
--      super(c, new TaskAttemptID("jt", 0, true, 0, 0),
--            null, null, null, new MockReporter(new Counters()), null);
--
--      this.path = p;
--      this.conf = c;
--    }
--
--    @Override
--    public OutputCommitter getOutputCommitter() {
--      try {
--        return new FileOutputCommitter(path, this);
--      } catch (IOException ioe) {
--        return null;
--      }
--    }
--
--    @Override
--    public InputSplit getInputSplit() {
--      return new FileSplit(new Path(path, "inputFile"), 0, 0, new String[0]);
--    }
--
--    @Override
--    public Configuration getConfiguration() {
--      return conf;
--    }
--  }
--
--  private MockObjectFactory() {
--    // Disable explicity object creation
--  }
--}
-Index: src/test/com/cloudera/sqoop/mapreduce/db/TestDataDrivenDBInputFormat.java
-===================================================================
---- src/test/com/cloudera/sqoop/mapreduce/db/TestDataDrivenDBInputFormat.java	(revision 1198954)
-+++ src/test/com/cloudera/sqoop/mapreduce/db/TestDataDrivenDBInputFormat.java	(working copy)
-@@ -23,13 +23,14 @@
- import java.io.DataOutput;
- import java.io.IOException;
- 
-+import junit.framework.TestCase;
-+
- import org.apache.commons.logging.Log;
- import org.apache.commons.logging.LogFactory;
- import org.apache.hadoop.fs.*;
- import org.apache.hadoop.conf.Configuration;
- import org.apache.hadoop.io.NullWritable;
- import org.apache.hadoop.io.WritableComparable;
--import org.apache.hadoop.mapred.HadoopTestCase;
- import org.apache.hadoop.mapreduce.*;
- import org.apache.hadoop.mapreduce.lib.db.*;
- import org.apache.hadoop.mapreduce.lib.output.*;
-@@ -38,7 +39,7 @@
- /**
-  * Test aspects of DataDrivenDBInputFormat.
-  */
--public class TestDataDrivenDBInputFormat extends HadoopTestCase {
-+public class TestDataDrivenDBInputFormat extends TestCase {
- 
-   private static final Log LOG = LogFactory.getLog(
-       TestDataDrivenDBInputFormat.class);
-@@ -52,10 +53,6 @@
- 
-   private static final String OUT_DIR;
- 
--  public TestDataDrivenDBInputFormat() throws IOException {
--    super(LOCAL_MR, LOCAL_FS, 1, 1);
--  }
--
-   static {
-     OUT_DIR = System.getProperty("test.build.data", "/tmp") + "/dddbifout";
-   }

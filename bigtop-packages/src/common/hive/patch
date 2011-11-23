@@ -1,6 +1,350 @@
+Index: shims/src/0.20/java/org/apache/hadoop/fs/ProxyLocalFileSystem.java
+===================================================================
+--- shims/src/0.20/java/org/apache/hadoop/fs/ProxyLocalFileSystem.java	(revision 1203794)
++++ shims/src/0.20/java/org/apache/hadoop/fs/ProxyLocalFileSystem.java	(working copy)
+@@ -1,61 +0,0 @@
+-/**
+- * Licensed to the Apache Software Foundation (ASF) under one
+- * or more contributor license agreements.  See the NOTICE file
+- * distributed with this work for additional information
+- * regarding copyright ownership.  The ASF licenses this file
+- * to you under the Apache License, Version 2.0 (the
+- * "License"); you may not use this file except in compliance
+- * with the License.  You may obtain a copy of the License at
+- *
+- *     http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS,
+- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+- * See the License for the specific language governing permissions and
+- * limitations under the License.
+- */
+-
+-package org.apache.hadoop.fs;
+-
+-import java.io.*;
+-import java.net.URI;
+-import java.net.URISyntaxException;
+-
+-import org.apache.hadoop.conf.Configuration;
+-import org.apache.hadoop.fs.permission.FsPermission;
+-import org.apache.hadoop.util.Progressable;
+-
+-/****************************************************************
+- * A Proxy for LocalFileSystem
+- *
+- * Serves uri's corresponding to 'pfile:///' namespace with using
+- * a LocalFileSystem 
+- *****************************************************************/
+-
+-public class ProxyLocalFileSystem extends FilterFileSystem {
+-
+-  protected LocalFileSystem localFs;
+-
+-  public ProxyLocalFileSystem() {
+-    localFs = new LocalFileSystem();
+-  }
+-
+-  public ProxyLocalFileSystem(FileSystem fs) {
+-    throw new RuntimeException ("Unsupported Constructor");
+-  }
+-
+-  @Override
+-  public void initialize(URI name, Configuration conf) throws IOException {
+-    // create a proxy for the local filesystem
+-    // the scheme/authority serving as the proxy is derived
+-    // from the supplied URI
+-
+-    String scheme = name.getScheme();
+-    String authority = name.getAuthority() != null ? name.getAuthority() : "";
+-    String proxyUriString = name + "://" + authority + "/";
+-    fs = new ProxyFileSystem(localFs, URI.create(proxyUriString));
+-
+-    fs.initialize(name, conf);
+-  }
+-}
+Index: shims/src/0.20/java/org/apache/hadoop/fs/ProxyFileSystem.java
+===================================================================
+--- shims/src/0.20/java/org/apache/hadoop/fs/ProxyFileSystem.java	(revision 1203794)
++++ shims/src/0.20/java/org/apache/hadoop/fs/ProxyFileSystem.java	(working copy)
+@@ -1,273 +0,0 @@
+-/**
+- * Licensed to the Apache Software Foundation (ASF) under one
+- * or more contributor license agreements.  See the NOTICE file
+- * distributed with this work for additional information
+- * regarding copyright ownership.  The ASF licenses this file
+- * to you under the Apache License, Version 2.0 (the
+- * "License"); you may not use this file except in compliance
+- * with the License.  You may obtain a copy of the License at
+- *
+- *     http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS,
+- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+- * See the License for the specific language governing permissions and
+- * limitations under the License.
+- */
+-
+-package org.apache.hadoop.fs;
+-
+-import java.io.IOException;
+-import java.net.URI;
+-import java.net.URISyntaxException;
+-
+-import org.apache.hadoop.conf.Configuration;
+-import org.apache.hadoop.fs.permission.FsPermission;
+-import org.apache.hadoop.util.Progressable;
+-
+-/****************************************************************
+- * A FileSystem that can serve a given scheme/authority using some
+- * other file system. In that sense, it serves as a proxy for the
+- * real/underlying file system
+- *****************************************************************/
+-
+-public class ProxyFileSystem extends FilterFileSystem {
+-
+-  protected String myScheme;
+-  protected String myAuthority;
+-  protected URI myUri;
+-
+-  protected String realScheme;
+-  protected String realAuthority;
+-  protected URI realUri;
+-
+-  
+-
+-  private Path swizzleParamPath(Path p) {
+-    return new Path (realScheme, realAuthority, p.toUri().getPath());
+-  }
+-
+-  private Path swizzleReturnPath(Path p) {
+-    return new Path (myScheme, myAuthority, p.toUri().getPath());
+-  }
+-
+-  private FileStatus swizzleFileStatus(FileStatus orig, boolean isParam) {
+-    FileStatus ret =
+-      new FileStatus(orig.getLen(), orig.isDir(), orig.getReplication(),
+-                     orig.getBlockSize(), orig.getModificationTime(),
+-                     orig.getAccessTime(), orig.getPermission(),
+-                     orig.getOwner(), orig.getGroup(),
+-                     isParam ? swizzleParamPath(orig.getPath()) :
+-                     swizzleReturnPath(orig.getPath()));
+-    return ret;
+-  }
+-
+-  public ProxyFileSystem() {
+-    throw new RuntimeException ("Unsupported constructor");
+-  }
+-  
+-  public ProxyFileSystem(FileSystem fs) {
+-    throw new RuntimeException ("Unsupported constructor");
+-  }
+-
+-  /**
+-   * Create a proxy file system for fs.
+-   * 
+-   * @param fs FileSystem to create proxy for
+-   * @param myUri URI to use as proxy. Only the scheme and authority from
+-   *              this are used right now
+-   */
+-  public ProxyFileSystem(FileSystem fs, URI myUri) {
+-    super(fs);
+-
+-    URI realUri = fs.getUri();
+-    this.realScheme = realUri.getScheme();
+-    this.realAuthority=realUri.getAuthority();
+-    this.realUri = realUri;
+-
+-    this.myScheme = myUri.getScheme();
+-    this.myAuthority=myUri.getAuthority();
+-    this.myUri = myUri;
+-  }
+-
+-  @Override
+-  public void initialize(URI name, Configuration conf) throws IOException {
+-    try {
+-      URI realUri = new URI (realScheme, realAuthority,
+-                            name.getPath(), name.getQuery(), name.getFragment());
+-      super.initialize(realUri, conf);
+-    } catch (URISyntaxException e) {
+-      throw new RuntimeException(e);
+-    }
+-  }
+-
+-  @Override
+-  public URI getUri() {
+-    return myUri;
+-  }
+-
+-  @Override
+-  public String getName() {
+-    return getUri().toString();
+-  }
+-
+-  @Override
+-  public Path makeQualified(Path path) {
+-    return swizzleReturnPath(super.makeQualified(swizzleParamPath(path)));
+-  }
+-
+-
+-  @Override
+-  protected void checkPath(Path path) {
+-    super.checkPath(swizzleParamPath(path));
+-  }
+-
+-  @Override
+-  public BlockLocation[] getFileBlockLocations(FileStatus file, long start,
+-    long len) throws IOException {
+-    return super.getFileBlockLocations(swizzleFileStatus(file, true),
+-                                       start, len);
+-  }
+-
+-  @Override
+-  public FSDataInputStream open(Path f, int bufferSize) throws IOException {
+-    return super.open(swizzleParamPath(f), bufferSize);
+-  }
+-
+-  @Override
+-  public FSDataOutputStream append(Path f, int bufferSize,
+-      Progressable progress) throws IOException {
+-    return super.append(swizzleParamPath(f), bufferSize, progress);
+-  }
+-
+-  @Override
+-  public FSDataOutputStream create(Path f, FsPermission permission,
+-      boolean overwrite, int bufferSize, short replication, long blockSize,
+-      Progressable progress) throws IOException {
+-    return super.create(swizzleParamPath(f), permission,
+-        overwrite, bufferSize, replication, blockSize, progress);
+-  }
+-
+-  @Override
+-  public boolean setReplication(Path src, short replication) throws IOException {
+-    return super.setReplication(swizzleParamPath(src), replication);
+-  }
+-
+-  @Override
+-  public boolean rename(Path src, Path dst) throws IOException {
+-    return super.rename(swizzleParamPath(src), swizzleParamPath(dst));
+-  }
+-  
+-  @Override
+-  public boolean delete(Path f, boolean recursive) throws IOException {
+-    return super.delete(swizzleParamPath(f), recursive);
+-  }
+-
+-  @Override
+-  public boolean deleteOnExit(Path f) throws IOException {
+-    return super.deleteOnExit(swizzleParamPath(f));
+-  }    
+-    
+-  @Override
+-  public FileStatus[] listStatus(Path f) throws IOException {
+-    FileStatus[] orig = super.listStatus(swizzleParamPath(f));
+-    FileStatus[] ret = new FileStatus [orig.length];
+-    for (int i=0; i<orig.length; i++) {
+-      ret[i] = swizzleFileStatus(orig[i], false);
+-    }
+-    return ret;
+-  }
+-  
+-  @Override
+-  public Path getHomeDirectory() {
+-    return swizzleReturnPath(super.getHomeDirectory());
+-  }
+-
+-  @Override
+-  public void setWorkingDirectory(Path newDir) {
+-    super.setWorkingDirectory(swizzleParamPath(newDir));
+-  }
+-  
+-  @Override
+-  public Path getWorkingDirectory() {
+-    return swizzleReturnPath(super.getWorkingDirectory());
+-  }
+-  
+-  @Override
+-  public boolean mkdirs(Path f, FsPermission permission) throws IOException {
+-    return super.mkdirs(swizzleParamPath(f), permission);
+-  }
+-
+-  @Override
+-  public void copyFromLocalFile(boolean delSrc, Path src, Path dst)
+-    throws IOException {
+-    super.copyFromLocalFile(delSrc, swizzleParamPath(src), swizzleParamPath(dst));
+-  }
+-
+-  @Override
+-  public void copyFromLocalFile(boolean delSrc, boolean overwrite, 
+-                                Path[] srcs, Path dst)
+-    throws IOException {
+-    super.copyFromLocalFile(delSrc, overwrite, srcs, swizzleParamPath(dst));
+-  }
+-  
+-  @Override
+-  public void copyFromLocalFile(boolean delSrc, boolean overwrite, 
+-                                Path src, Path dst)
+-    throws IOException {
+-    super.copyFromLocalFile(delSrc, overwrite, src, swizzleParamPath(dst));
+-  }
+-
+-  @Override
+-  public void copyToLocalFile(boolean delSrc, Path src, Path dst)
+-    throws IOException {
+-    super.copyToLocalFile(delSrc, swizzleParamPath(src), dst);
+-  }
+-
+-  @Override
+-  public Path startLocalOutput(Path fsOutputFile, Path tmpLocalFile)
+-    throws IOException {
+-    return super.startLocalOutput(swizzleParamPath(fsOutputFile), tmpLocalFile);
+-  }
+-
+-  @Override
+-  public void completeLocalOutput(Path fsOutputFile, Path tmpLocalFile)
+-    throws IOException {
+-    super.completeLocalOutput(swizzleParamPath(fsOutputFile), tmpLocalFile);
+-  }
+-
+-  @Override
+-  public ContentSummary getContentSummary(Path f) throws IOException {
+-    return super.getContentSummary(swizzleParamPath(f));
+-  }
+-
+-  @Override
+-  public FileStatus getFileStatus(Path f) throws IOException {
+-    return swizzleFileStatus(super.getFileStatus(swizzleParamPath(f)), false);
+-  }
+-
+-  @Override
+-  public FileChecksum getFileChecksum(Path f) throws IOException {
+-    return super.getFileChecksum(swizzleParamPath(f));
+-  }
+-  
+-  @Override
+-  public void setOwner(Path p, String username, String groupname
+-      ) throws IOException {
+-    super.setOwner(swizzleParamPath(p), username, groupname);
+-  }
+-
+-  @Override
+-  public void setTimes(Path p, long mtime, long atime
+-      ) throws IOException {
+-    super.setTimes(swizzleParamPath(p), mtime, atime);
+-  }
+-
+-  @Override
+-  public void setPermission(Path p, FsPermission permission
+-      ) throws IOException {
+-    super.setPermission(swizzleParamPath(p), permission);
+-  }
+-}
+-  
 Index: shims/src/0.20/java/org/apache/hadoop/hive/shims/Hadoop20Shims.java
 ===================================================================
---- shims/src/0.20/java/org/apache/hadoop/hive/shims/Hadoop20Shims.java	(revision 1196775)
+--- shims/src/0.20/java/org/apache/hadoop/hive/shims/Hadoop20Shims.java	(revision 1203794)
 +++ shims/src/0.20/java/org/apache/hadoop/hive/shims/Hadoop20Shims.java	(working copy)
 @@ -35,6 +35,7 @@
  import org.apache.hadoop.hive.io.HiveIOExceptionHandlerChain;
@@ -80,7 +424,7 @@ Index: shims/src/0.20/java/org/apache/hadoop/hive/shims/Hadoop20Shims.java
  }
 Index: shims/src/0.20S/java/org/apache/hadoop/hive/shims/Hadoop20SShims.java
 ===================================================================
---- shims/src/0.20S/java/org/apache/hadoop/hive/shims/Hadoop20SShims.java	(revision 1196775)
+--- shims/src/0.20S/java/org/apache/hadoop/hive/shims/Hadoop20SShims.java	(revision 1203794)
 +++ shims/src/0.20S/java/org/apache/hadoop/hive/shims/Hadoop20SShims.java	(working copy)
 @@ -38,6 +38,7 @@
  import org.apache.hadoop.hive.thrift.DelegationTokenSelector;
@@ -139,527 +483,10 @@ Index: shims/src/0.20S/java/org/apache/hadoop/hive/shims/Hadoop20SShims.java
 +    return new org.apache.hadoop.mapreduce.JobContext(job.getConfiguration(), job.getJobID());
 +  }
  }
-Index: shims/src/0.23/java/org/apache/hadoop/fs/ProxyLocalFileSystem.java
+Index: shims/src/0.23/java/org/apache/hadoop/hive/thrift/DelegationTokenSelector23.java
 ===================================================================
---- shims/src/0.23/java/org/apache/hadoop/fs/ProxyLocalFileSystem.java	(revision 0)
-+++ shims/src/0.23/java/org/apache/hadoop/fs/ProxyLocalFileSystem.java	(revision 0)
-@@ -0,0 +1,61 @@
-+/**
-+ * Licensed to the Apache Software Foundation (ASF) under one
-+ * or more contributor license agreements.  See the NOTICE file
-+ * distributed with this work for additional information
-+ * regarding copyright ownership.  The ASF licenses this file
-+ * to you under the Apache License, Version 2.0 (the
-+ * "License"); you may not use this file except in compliance
-+ * with the License.  You may obtain a copy of the License at
-+ *
-+ *     http://www.apache.org/licenses/LICENSE-2.0
-+ *
-+ * Unless required by applicable law or agreed to in writing, software
-+ * distributed under the License is distributed on an "AS IS" BASIS,
-+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-+ * See the License for the specific language governing permissions and
-+ * limitations under the License.
-+ */
-+
-+package org.apache.hadoop.fs;
-+
-+import java.io.*;
-+import java.net.URI;
-+import java.net.URISyntaxException;
-+
-+import org.apache.hadoop.conf.Configuration;
-+import org.apache.hadoop.fs.permission.FsPermission;
-+import org.apache.hadoop.util.Progressable;
-+
-+/****************************************************************
-+ * A Proxy for LocalFileSystem
-+ *
-+ * Serves uri's corresponding to 'pfile:///' namespace with using
-+ * a LocalFileSystem 
-+ *****************************************************************/
-+
-+public class ProxyLocalFileSystem extends FilterFileSystem {
-+
-+  protected LocalFileSystem localFs;
-+
-+  public ProxyLocalFileSystem() {
-+    localFs = new LocalFileSystem();
-+  }
-+
-+  public ProxyLocalFileSystem(FileSystem fs) {
-+    throw new RuntimeException ("Unsupported Constructor");
-+  }
-+
-+  @Override
-+  public void initialize(URI name, Configuration conf) throws IOException {
-+    // create a proxy for the local filesystem
-+    // the scheme/authority serving as the proxy is derived
-+    // from the supplied URI
-+
-+    String scheme = name.getScheme();
-+    String authority = name.getAuthority() != null ? name.getAuthority() : "";
-+    String proxyUriString = name + "://" + authority + "/";
-+    fs = new ProxyFileSystem(localFs, URI.create(proxyUriString));
-+
-+    fs.initialize(name, conf);
-+  }
-+}
-
-Property changes on: shims/src/0.23/java/org/apache/hadoop/fs/ProxyLocalFileSystem.java
-___________________________________________________________________
-Added: svn:eol-style
-   + native
-
-Index: shims/src/0.23/java/org/apache/hadoop/fs/ProxyFileSystem.java
-===================================================================
---- shims/src/0.23/java/org/apache/hadoop/fs/ProxyFileSystem.java	(revision 0)
-+++ shims/src/0.23/java/org/apache/hadoop/fs/ProxyFileSystem.java	(revision 0)
-@@ -0,0 +1,273 @@
-+/**
-+ * Licensed to the Apache Software Foundation (ASF) under one
-+ * or more contributor license agreements.  See the NOTICE file
-+ * distributed with this work for additional information
-+ * regarding copyright ownership.  The ASF licenses this file
-+ * to you under the Apache License, Version 2.0 (the
-+ * "License"); you may not use this file except in compliance
-+ * with the License.  You may obtain a copy of the License at
-+ *
-+ *     http://www.apache.org/licenses/LICENSE-2.0
-+ *
-+ * Unless required by applicable law or agreed to in writing, software
-+ * distributed under the License is distributed on an "AS IS" BASIS,
-+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-+ * See the License for the specific language governing permissions and
-+ * limitations under the License.
-+ */
-+
-+package org.apache.hadoop.fs;
-+
-+import java.io.IOException;
-+import java.net.URI;
-+import java.net.URISyntaxException;
-+
-+import org.apache.hadoop.conf.Configuration;
-+import org.apache.hadoop.fs.permission.FsPermission;
-+import org.apache.hadoop.util.Progressable;
-+
-+/****************************************************************
-+ * A FileSystem that can serve a given scheme/authority using some
-+ * other file system. In that sense, it serves as a proxy for the
-+ * real/underlying file system
-+ *****************************************************************/
-+
-+public class ProxyFileSystem extends FilterFileSystem {
-+
-+  protected String myScheme;
-+  protected String myAuthority;
-+  protected URI myUri;
-+
-+  protected String realScheme;
-+  protected String realAuthority;
-+  protected URI realUri;
-+
-+  
-+
-+  private Path swizzleParamPath(Path p) {
-+    return new Path (realScheme, realAuthority, p.toUri().getPath());
-+  }
-+
-+  private Path swizzleReturnPath(Path p) {
-+    return new Path (myScheme, myAuthority, p.toUri().getPath());
-+  }
-+
-+  private FileStatus swizzleFileStatus(FileStatus orig, boolean isParam) {
-+    FileStatus ret =
-+      new FileStatus(orig.getLen(), orig.isDir(), orig.getReplication(),
-+                     orig.getBlockSize(), orig.getModificationTime(),
-+                     orig.getAccessTime(), orig.getPermission(),
-+                     orig.getOwner(), orig.getGroup(),
-+                     isParam ? swizzleParamPath(orig.getPath()) :
-+                     swizzleReturnPath(orig.getPath()));
-+    return ret;
-+  }
-+
-+  public ProxyFileSystem() {
-+    throw new RuntimeException ("Unsupported constructor");
-+  }
-+  
-+  public ProxyFileSystem(FileSystem fs) {
-+    throw new RuntimeException ("Unsupported constructor");
-+  }
-+
-+  /**
-+   * Create a proxy file system for fs.
-+   * 
-+   * @param fs FileSystem to create proxy for
-+   * @param myUri URI to use as proxy. Only the scheme and authority from
-+   *              this are used right now
-+   */
-+  public ProxyFileSystem(FileSystem fs, URI myUri) {
-+    super(fs);
-+
-+    URI realUri = fs.getUri();
-+    this.realScheme = realUri.getScheme();
-+    this.realAuthority=realUri.getAuthority();
-+    this.realUri = realUri;
-+
-+    this.myScheme = myUri.getScheme();
-+    this.myAuthority=myUri.getAuthority();
-+    this.myUri = myUri;
-+  }
-+
-+  @Override
-+  public void initialize(URI name, Configuration conf) throws IOException {
-+    try {
-+      URI realUri = new URI (realScheme, realAuthority,
-+                            name.getPath(), name.getQuery(), name.getFragment());
-+      super.initialize(realUri, conf);
-+    } catch (URISyntaxException e) {
-+      throw new RuntimeException(e);
-+    }
-+  }
-+
-+  @Override
-+  public URI getUri() {
-+    return myUri;
-+  }
-+
-+  @Override
-+  public String getName() {
-+    return getUri().toString();
-+  }
-+
-+  @Override
-+  public Path makeQualified(Path path) {
-+    return swizzleReturnPath(super.makeQualified(swizzleParamPath(path)));
-+  }
-+
-+
-+  @Override
-+  protected void checkPath(Path path) {
-+    super.checkPath(swizzleParamPath(path));
-+  }
-+
-+  @Override
-+  public BlockLocation[] getFileBlockLocations(FileStatus file, long start,
-+    long len) throws IOException {
-+    return super.getFileBlockLocations(swizzleFileStatus(file, true),
-+                                       start, len);
-+  }
-+
-+  @Override
-+  public FSDataInputStream open(Path f, int bufferSize) throws IOException {
-+    return super.open(swizzleParamPath(f), bufferSize);
-+  }
-+
-+  @Override
-+  public FSDataOutputStream append(Path f, int bufferSize,
-+      Progressable progress) throws IOException {
-+    return super.append(swizzleParamPath(f), bufferSize, progress);
-+  }
-+
-+  @Override
-+  public FSDataOutputStream create(Path f, FsPermission permission,
-+      boolean overwrite, int bufferSize, short replication, long blockSize,
-+      Progressable progress) throws IOException {
-+    return super.create(swizzleParamPath(f), permission,
-+        overwrite, bufferSize, replication, blockSize, progress);
-+  }
-+
-+  @Override
-+  public boolean setReplication(Path src, short replication) throws IOException {
-+    return super.setReplication(swizzleParamPath(src), replication);
-+  }
-+
-+  @Override
-+  public boolean rename(Path src, Path dst) throws IOException {
-+    return super.rename(swizzleParamPath(src), swizzleParamPath(dst));
-+  }
-+  
-+  @Override
-+  public boolean delete(Path f, boolean recursive) throws IOException {
-+    return super.delete(swizzleParamPath(f), recursive);
-+  }
-+
-+  @Override
-+  public boolean deleteOnExit(Path f) throws IOException {
-+    return super.deleteOnExit(swizzleParamPath(f));
-+  }    
-+    
-+  @Override
-+  public FileStatus[] listStatus(Path f) throws IOException {
-+    FileStatus[] orig = super.listStatus(swizzleParamPath(f));
-+    FileStatus[] ret = new FileStatus [orig.length];
-+    for (int i=0; i<orig.length; i++) {
-+      ret[i] = swizzleFileStatus(orig[i], false);
-+    }
-+    return ret;
-+  }
-+  
-+  @Override
-+  public Path getHomeDirectory() {
-+    return swizzleReturnPath(super.getHomeDirectory());
-+  }
-+
-+  @Override
-+  public void setWorkingDirectory(Path newDir) {
-+    super.setWorkingDirectory(swizzleParamPath(newDir));
-+  }
-+  
-+  @Override
-+  public Path getWorkingDirectory() {
-+    return swizzleReturnPath(super.getWorkingDirectory());
-+  }
-+  
-+  @Override
-+  public boolean mkdirs(Path f, FsPermission permission) throws IOException {
-+    return super.mkdirs(swizzleParamPath(f), permission);
-+  }
-+
-+  @Override
-+  public void copyFromLocalFile(boolean delSrc, Path src, Path dst)
-+    throws IOException {
-+    super.copyFromLocalFile(delSrc, swizzleParamPath(src), swizzleParamPath(dst));
-+  }
-+
-+  @Override
-+  public void copyFromLocalFile(boolean delSrc, boolean overwrite, 
-+                                Path[] srcs, Path dst)
-+    throws IOException {
-+    super.copyFromLocalFile(delSrc, overwrite, srcs, swizzleParamPath(dst));
-+  }
-+  
-+  @Override
-+  public void copyFromLocalFile(boolean delSrc, boolean overwrite, 
-+                                Path src, Path dst)
-+    throws IOException {
-+    super.copyFromLocalFile(delSrc, overwrite, src, swizzleParamPath(dst));
-+  }
-+
-+  @Override
-+  public void copyToLocalFile(boolean delSrc, Path src, Path dst)
-+    throws IOException {
-+    super.copyToLocalFile(delSrc, swizzleParamPath(src), dst);
-+  }
-+
-+  @Override
-+  public Path startLocalOutput(Path fsOutputFile, Path tmpLocalFile)
-+    throws IOException {
-+    return super.startLocalOutput(swizzleParamPath(fsOutputFile), tmpLocalFile);
-+  }
-+
-+  @Override
-+  public void completeLocalOutput(Path fsOutputFile, Path tmpLocalFile)
-+    throws IOException {
-+    super.completeLocalOutput(swizzleParamPath(fsOutputFile), tmpLocalFile);
-+  }
-+
-+  @Override
-+  public ContentSummary getContentSummary(Path f) throws IOException {
-+    return super.getContentSummary(swizzleParamPath(f));
-+  }
-+
-+  @Override
-+  public FileStatus getFileStatus(Path f) throws IOException {
-+    return swizzleFileStatus(super.getFileStatus(swizzleParamPath(f)), false);
-+  }
-+
-+  @Override
-+  public FileChecksum getFileChecksum(Path f) throws IOException {
-+    return super.getFileChecksum(swizzleParamPath(f));
-+  }
-+  
-+  @Override
-+  public void setOwner(Path p, String username, String groupname
-+      ) throws IOException {
-+    super.setOwner(swizzleParamPath(p), username, groupname);
-+  }
-+
-+  @Override
-+  public void setTimes(Path p, long mtime, long atime
-+      ) throws IOException {
-+    super.setTimes(swizzleParamPath(p), mtime, atime);
-+  }
-+
-+  @Override
-+  public void setPermission(Path p, FsPermission permission
-+      ) throws IOException {
-+    super.setPermission(swizzleParamPath(p), permission);
-+  }
-+}
-+  
-
-Property changes on: shims/src/0.23/java/org/apache/hadoop/fs/ProxyFileSystem.java
-___________________________________________________________________
-Added: svn:eol-style
-   + native
-
-Index: shims/src/0.23/java/org/apache/hadoop/hive/thrift/DelegationTokenIdentifier.java
-===================================================================
---- shims/src/0.23/java/org/apache/hadoop/hive/thrift/DelegationTokenIdentifier.java	(revision 0)
-+++ shims/src/0.23/java/org/apache/hadoop/hive/thrift/DelegationTokenIdentifier.java	(revision 0)
-@@ -0,0 +1,52 @@
-+/**
-+ * Licensed to the Apache Software Foundation (ASF) under one
-+ * or more contributor license agreements.  See the NOTICE file
-+ * distributed with this work for additional information
-+ * regarding copyright ownership.  The ASF licenses this file
-+ * to you under the Apache License, Version 2.0 (the
-+ * "License"); you may not use this file except in compliance
-+ * with the License.  You may obtain a copy of the License at
-+ *
-+ *     http://www.apache.org/licenses/LICENSE-2.0
-+ *
-+ * Unless required by applicable law or agreed to in writing, software
-+ * distributed under the License is distributed on an "AS IS" BASIS,
-+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-+ * See the License for the specific language governing permissions and
-+ * limitations under the License.
-+ */
-+
-+package org.apache.hadoop.hive.thrift;
-+
-+import org.apache.hadoop.io.Text;
-+import org.apache.hadoop.security.token.delegation.AbstractDelegationTokenIdentifier;
-+
-+/**
-+ * A delegation token identifier that is specific to Hive.
-+ */
-+public class DelegationTokenIdentifier
-+    extends AbstractDelegationTokenIdentifier {
-+  public static final Text HIVE_DELEGATION_KIND = new Text("HIVE_DELEGATION_TOKEN");
-+
-+  /**
-+   * Create an empty delegation token identifier for reading into.
-+   */
-+  public DelegationTokenIdentifier() {
-+  }
-+
-+  /**
-+   * Create a new delegation token identifier
-+   * @param owner the effective username of the token owner
-+   * @param renewer the username of the renewer
-+   * @param realUser the real username of the token owner
-+   */
-+  public DelegationTokenIdentifier(Text owner, Text renewer, Text realUser) {
-+    super(owner, renewer, realUser);
-+  }
-+
-+  @Override
-+  public Text getKind() {
-+    return HIVE_DELEGATION_KIND;
-+  }
-+
-+}
-
-Property changes on: shims/src/0.23/java/org/apache/hadoop/hive/thrift/DelegationTokenIdentifier.java
-___________________________________________________________________
-Added: svn:eol-style
-   + native
-
-Index: shims/src/0.23/java/org/apache/hadoop/hive/thrift/DelegationTokenSecretManager.java
-===================================================================
---- shims/src/0.23/java/org/apache/hadoop/hive/thrift/DelegationTokenSecretManager.java	(revision 0)
-+++ shims/src/0.23/java/org/apache/hadoop/hive/thrift/DelegationTokenSecretManager.java	(revision 0)
-@@ -0,0 +1,87 @@
-+/**
-+ * Licensed to the Apache Software Foundation (ASF) under one
-+ * or more contributor license agreements.  See the NOTICE file
-+ * distributed with this work for additional information
-+ * regarding copyright ownership.  The ASF licenses this file
-+ * to you under the Apache License, Version 2.0 (the
-+ * "License"); you may not use this file except in compliance
-+ * with the License.  You may obtain a copy of the License at
-+ *
-+ *     http://www.apache.org/licenses/LICENSE-2.0
-+ *
-+ * Unless required by applicable law or agreed to in writing, software
-+ * distributed under the License is distributed on an "AS IS" BASIS,
-+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-+ * See the License for the specific language governing permissions and
-+ * limitations under the License.
-+ */
-+
-+package org.apache.hadoop.hive.thrift;
-+
-+import java.io.IOException;
-+
-+import org.apache.hadoop.io.Text;
-+import org.apache.hadoop.security.UserGroupInformation;
-+import org.apache.hadoop.security.token.Token;
-+import org.apache.hadoop.security.token.delegation.AbstractDelegationTokenSecretManager;
-+
-+/**
-+ * A Hive specific delegation token secret manager.
-+ * The secret manager is responsible for generating and accepting the password
-+ * for each token.
-+ */
-+public class DelegationTokenSecretManager
-+    extends AbstractDelegationTokenSecretManager<DelegationTokenIdentifier> {
-+
-+  /**
-+   * Create a secret manager
-+   * @param delegationKeyUpdateInterval the number of seconds for rolling new
-+   *        secret keys.
-+   * @param delegationTokenMaxLifetime the maximum lifetime of the delegation
-+   *        tokens
-+   * @param delegationTokenRenewInterval how often the tokens must be renewed
-+   * @param delegationTokenRemoverScanInterval how often the tokens are scanned
-+   *        for expired tokens
-+   */
-+  public DelegationTokenSecretManager(long delegationKeyUpdateInterval,
-+                                      long delegationTokenMaxLifetime,
-+                                      long delegationTokenRenewInterval,
-+                                      long delegationTokenRemoverScanInterval) {
-+    super(delegationKeyUpdateInterval, delegationTokenMaxLifetime,
-+          delegationTokenRenewInterval, delegationTokenRemoverScanInterval);
-+  }
-+
-+  @Override
-+  public DelegationTokenIdentifier createIdentifier() {
-+    return new DelegationTokenIdentifier();
-+  }
-+
-+  public synchronized void cancelDelegationToken(String tokenStrForm) throws IOException {
-+    Token<DelegationTokenIdentifier> t= new Token<DelegationTokenIdentifier>();
-+    t.decodeFromUrlString(tokenStrForm);
-+    String user = UserGroupInformation.getCurrentUser().getUserName();
-+    cancelToken(t, user);
-+  }
-+
-+  public synchronized long renewDelegationToken(String tokenStrForm) throws IOException {
-+    Token<DelegationTokenIdentifier> t= new Token<DelegationTokenIdentifier>();
-+    t.decodeFromUrlString(tokenStrForm);
-+    String user = UserGroupInformation.getCurrentUser().getUserName();
-+    return renewToken(t, user);
-+  }
-+
-+  public synchronized String getDelegationToken(String renewer) throws IOException {
-+    UserGroupInformation ugi = UserGroupInformation.getCurrentUser();
-+    Text owner = new Text(ugi.getUserName());
-+    Text realUser = null;
-+    if (ugi.getRealUser() != null) {
-+      realUser = new Text(ugi.getRealUser().getUserName());
-+    }
-+    DelegationTokenIdentifier ident =
-+      new DelegationTokenIdentifier(owner, new Text(renewer), realUser);
-+    Token<DelegationTokenIdentifier> t = new Token<DelegationTokenIdentifier>(
-+        ident, this);
-+    return t.encodeToUrlString();
-+  }
-+}
-+
-
-Property changes on: shims/src/0.23/java/org/apache/hadoop/hive/thrift/DelegationTokenSecretManager.java
-___________________________________________________________________
-Added: svn:eol-style
-   + native
-
-Index: shims/src/0.23/java/org/apache/hadoop/hive/thrift/DelegationTokenSelector.java
-===================================================================
---- shims/src/0.23/java/org/apache/hadoop/hive/thrift/DelegationTokenSelector.java	(revision 0)
-+++ shims/src/0.23/java/org/apache/hadoop/hive/thrift/DelegationTokenSelector.java	(revision 0)
+--- shims/src/0.23/java/org/apache/hadoop/hive/thrift/DelegationTokenSelector23.java	(revision 0)
++++ shims/src/0.23/java/org/apache/hadoop/hive/thrift/DelegationTokenSelector23.java	(revision 0)
 @@ -0,0 +1,33 @@
 +/**
 + * Licensed to the Apache Software Foundation (ASF) under one
@@ -687,30 +514,78 @@ Index: shims/src/0.23/java/org/apache/hadoop/hive/thrift/DelegationTokenSelector
 + * A delegation token that is specialized for Hive
 + */
 +
-+public class DelegationTokenSelector
-+    extends AbstractDelegationTokenSelector<DelegationTokenIdentifier>{
++public class DelegationTokenSelector23
++    extends AbstractDelegationTokenSelector<DelegationTokenIdentifier23>{
 +
-+  public DelegationTokenSelector() {
-+    super(DelegationTokenIdentifier.HIVE_DELEGATION_KIND);
++  public DelegationTokenSelector23() {
++    super(DelegationTokenIdentifier23.HIVE_DELEGATION_KIND);
 +  }
 +}
 
-Property changes on: shims/src/0.23/java/org/apache/hadoop/hive/thrift/DelegationTokenSelector.java
+Property changes on: shims/src/0.23/java/org/apache/hadoop/hive/thrift/DelegationTokenSelector23.java
 ___________________________________________________________________
 Added: svn:eol-style
    + native
 
-Index: shims/src/0.23/java/org/apache/hadoop/hive/shims/EmptyShim.java
+Index: shims/src/0.23/java/org/apache/hadoop/hive/thrift/DelegationTokenIdentifier23.java
 ===================================================================
---- shims/src/0.23/java/org/apache/hadoop/hive/shims/EmptyShim.java	(revision 0)
-+++ shims/src/0.23/java/org/apache/hadoop/hive/shims/EmptyShim.java	(revision 0)
-@@ -0,0 +1,4 @@
-+package org.apache.hadoop.hive.shims;
+--- shims/src/0.23/java/org/apache/hadoop/hive/thrift/DelegationTokenIdentifier23.java	(revision 0)
++++ shims/src/0.23/java/org/apache/hadoop/hive/thrift/DelegationTokenIdentifier23.java	(revision 0)
+@@ -0,0 +1,52 @@
++/**
++ * Licensed to the Apache Software Foundation (ASF) under one
++ * or more contributor license agreements.  See the NOTICE file
++ * distributed with this work for additional information
++ * regarding copyright ownership.  The ASF licenses this file
++ * to you under the Apache License, Version 2.0 (the
++ * "License"); you may not use this file except in compliance
++ * with the License.  You may obtain a copy of the License at
++ *
++ *     http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
 +
-+class EmptyShim {
++package org.apache.hadoop.hive.thrift;
++
++import org.apache.hadoop.io.Text;
++import org.apache.hadoop.security.token.delegation.AbstractDelegationTokenIdentifier;
++
++/**
++ * A delegation token identifier that is specific to Hive.
++ */
++public class DelegationTokenIdentifier23
++    extends AbstractDelegationTokenIdentifier {
++  public static final Text HIVE_DELEGATION_KIND = new Text("HIVE_DELEGATION_TOKEN");
++
++  /**
++   * Create an empty delegation token identifier for reading into.
++   */
++  public DelegationTokenIdentifier23() {
++  }
++
++  /**
++   * Create a new delegation token identifier
++   * @param owner the effective username of the token owner
++   * @param renewer the username of the renewer
++   * @param realUser the real username of the token owner
++   */
++  public DelegationTokenIdentifier23(Text owner, Text renewer, Text realUser) {
++    super(owner, renewer, realUser);
++  }
++
++  @Override
++  public Text getKind() {
++    return HIVE_DELEGATION_KIND;
++  }
++
 +}
 
-Property changes on: shims/src/0.23/java/org/apache/hadoop/hive/shims/EmptyShim.java
+Property changes on: shims/src/0.23/java/org/apache/hadoop/hive/thrift/DelegationTokenIdentifier23.java
 ___________________________________________________________________
 Added: svn:eol-style
    + native
@@ -757,7 +632,7 @@ Index: shims/src/0.23/java/org/apache/hadoop/hive/shims/Hadoop23Shims.java
 +import org.apache.hadoop.hive.io.HiveIOExceptionHandlerChain;
 +import org.apache.hadoop.hive.io.HiveIOExceptionHandlerUtil;
 +import org.apache.hadoop.hive.shims.HadoopShims.JobTrackerState;
-+import org.apache.hadoop.hive.thrift.DelegationTokenSelector;
++import org.apache.hadoop.hive.thrift.DelegationTokenSelector23;
 +import org.apache.hadoop.io.Text;
 +import org.apache.hadoop.mapred.ClusterStatus;
 +import org.apache.hadoop.mapred.FileInputFormat;
@@ -1230,7 +1105,7 @@ Index: shims/src/0.23/java/org/apache/hadoop/hive/shims/Hadoop23Shims.java
 +  @Override
 +  public String getTokenStrForm(String tokenSignature) throws IOException {
 +    UserGroupInformation ugi = UserGroupInformation.getCurrentUser();
-+    TokenSelector<? extends TokenIdentifier> tokenSelector = new DelegationTokenSelector();
++    TokenSelector<? extends TokenIdentifier> tokenSelector = new DelegationTokenSelector23();
 +
 +    Token<? extends TokenIdentifier> token = tokenSelector.selectToken(
 +        tokenSignature == null ? new Text() : new Text(tokenSignature), ugi.getTokens());
@@ -1339,11 +1214,11 @@ ___________________________________________________________________
 Added: svn:eol-style
    + native
 
-Index: shims/src/0.23/java/org/apache/hadoop/hive/shims/HiveHarFileSystem.java
+Index: shims/src/common/java/org/apache/hadoop/fs/ProxyLocalFileSystem.java
 ===================================================================
---- shims/src/0.23/java/org/apache/hadoop/hive/shims/HiveHarFileSystem.java	(revision 0)
-+++ shims/src/0.23/java/org/apache/hadoop/hive/shims/HiveHarFileSystem.java	(revision 0)
-@@ -0,0 +1,66 @@
+--- shims/src/common/java/org/apache/hadoop/fs/ProxyLocalFileSystem.java	(revision 0)
++++ shims/src/common/java/org/apache/hadoop/fs/ProxyLocalFileSystem.java	(revision 0)
+@@ -0,0 +1,61 @@
 +/**
 + * Licensed to the Apache Software Foundation (ASF) under one
 + * or more contributor license agreements.  See the NOTICE file
@@ -1362,63 +1237,342 @@ Index: shims/src/0.23/java/org/apache/hadoop/hive/shims/HiveHarFileSystem.java
 + * limitations under the License.
 + */
 +
-+package org.apache.hadoop.hive.shims;
++package org.apache.hadoop.fs;
++
++import java.io.*;
++import java.net.URI;
++import java.net.URISyntaxException;
++
++import org.apache.hadoop.conf.Configuration;
++import org.apache.hadoop.fs.permission.FsPermission;
++import org.apache.hadoop.util.Progressable;
++
++/****************************************************************
++ * A Proxy for LocalFileSystem
++ *
++ * Serves uri's corresponding to 'pfile:///' namespace with using
++ * a LocalFileSystem 
++ *****************************************************************/
++
++public class ProxyLocalFileSystem extends FilterFileSystem {
++
++  protected LocalFileSystem localFs;
++
++  public ProxyLocalFileSystem() {
++    localFs = new LocalFileSystem();
++  }
++
++  public ProxyLocalFileSystem(FileSystem fs) {
++    throw new RuntimeException ("Unsupported Constructor");
++  }
++
++  @Override
++  public void initialize(URI name, Configuration conf) throws IOException {
++    // create a proxy for the local filesystem
++    // the scheme/authority serving as the proxy is derived
++    // from the supplied URI
++
++    String scheme = name.getScheme();
++    String authority = name.getAuthority() != null ? name.getAuthority() : "";
++    String proxyUriString = name + "://" + authority + "/";
++    fs = new ProxyFileSystem(localFs, URI.create(proxyUriString));
++
++    fs.initialize(name, conf);
++  }
++}
+
+Property changes on: shims/src/common/java/org/apache/hadoop/fs/ProxyLocalFileSystem.java
+___________________________________________________________________
+Added: svn:eol-style
+   + native
+
+Index: shims/src/common/java/org/apache/hadoop/fs/ProxyFileSystem.java
+===================================================================
+--- shims/src/common/java/org/apache/hadoop/fs/ProxyFileSystem.java	(revision 0)
++++ shims/src/common/java/org/apache/hadoop/fs/ProxyFileSystem.java	(revision 0)
+@@ -0,0 +1,273 @@
++/**
++ * Licensed to the Apache Software Foundation (ASF) under one
++ * or more contributor license agreements.  See the NOTICE file
++ * distributed with this work for additional information
++ * regarding copyright ownership.  The ASF licenses this file
++ * to you under the Apache License, Version 2.0 (the
++ * "License"); you may not use this file except in compliance
++ * with the License.  You may obtain a copy of the License at
++ *
++ *     http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package org.apache.hadoop.fs;
 +
 +import java.io.IOException;
++import java.net.URI;
++import java.net.URISyntaxException;
 +
-+import org.apache.hadoop.fs.BlockLocation;
-+import org.apache.hadoop.fs.ContentSummary;
-+import org.apache.hadoop.fs.FileStatus;
-+import org.apache.hadoop.fs.HarFileSystem;
-+import org.apache.hadoop.fs.Path;
++import org.apache.hadoop.conf.Configuration;
++import org.apache.hadoop.fs.permission.FsPermission;
++import org.apache.hadoop.util.Progressable;
 +
-+/**
-+ * HiveHarFileSystem - fixes issues with Hadoop's HarFileSystem
-+ *
-+ */
-+public class HiveHarFileSystem extends HarFileSystem {
++/****************************************************************
++ * A FileSystem that can serve a given scheme/authority using some
++ * other file system. In that sense, it serves as a proxy for the
++ * real/underlying file system
++ *****************************************************************/
++
++public class ProxyFileSystem extends FilterFileSystem {
++
++  protected String myScheme;
++  protected String myAuthority;
++  protected URI myUri;
++
++  protected String realScheme;
++  protected String realAuthority;
++  protected URI realUri;
++
++  
++
++  private Path swizzleParamPath(Path p) {
++    return new Path (realScheme, realAuthority, p.toUri().getPath());
++  }
++
++  private Path swizzleReturnPath(Path p) {
++    return new Path (myScheme, myAuthority, p.toUri().getPath());
++  }
++
++  private FileStatus swizzleFileStatus(FileStatus orig, boolean isParam) {
++    FileStatus ret =
++      new FileStatus(orig.getLen(), orig.isDir(), orig.getReplication(),
++                     orig.getBlockSize(), orig.getModificationTime(),
++                     orig.getAccessTime(), orig.getPermission(),
++                     orig.getOwner(), orig.getGroup(),
++                     isParam ? swizzleParamPath(orig.getPath()) :
++                     swizzleReturnPath(orig.getPath()));
++    return ret;
++  }
++
++  public ProxyFileSystem() {
++    throw new RuntimeException ("Unsupported constructor");
++  }
++  
++  public ProxyFileSystem(FileSystem fs) {
++    throw new RuntimeException ("Unsupported constructor");
++  }
++
++  /**
++   * Create a proxy file system for fs.
++   * 
++   * @param fs FileSystem to create proxy for
++   * @param myUri URI to use as proxy. Only the scheme and authority from
++   *              this are used right now
++   */
++  public ProxyFileSystem(FileSystem fs, URI myUri) {
++    super(fs);
++
++    URI realUri = fs.getUri();
++    this.realScheme = realUri.getScheme();
++    this.realAuthority=realUri.getAuthority();
++    this.realUri = realUri;
++
++    this.myScheme = myUri.getScheme();
++    this.myAuthority=myUri.getAuthority();
++    this.myUri = myUri;
++  }
++
++  @Override
++  public void initialize(URI name, Configuration conf) throws IOException {
++    try {
++      URI realUri = new URI (realScheme, realAuthority,
++                            name.getPath(), name.getQuery(), name.getFragment());
++      super.initialize(realUri, conf);
++    } catch (URISyntaxException e) {
++      throw new RuntimeException(e);
++    }
++  }
++
++  @Override
++  public URI getUri() {
++    return myUri;
++  }
++
++  @Override
++  public String getName() {
++    return getUri().toString();
++  }
++
++  @Override
++  public Path makeQualified(Path path) {
++    return swizzleReturnPath(super.makeQualified(swizzleParamPath(path)));
++  }
++
++
++  @Override
++  protected void checkPath(Path path) {
++    super.checkPath(swizzleParamPath(path));
++  }
 +
 +  @Override
 +  public BlockLocation[] getFileBlockLocations(FileStatus file, long start,
-+      long len) throws IOException {
++    long len) throws IOException {
++    return super.getFileBlockLocations(swizzleFileStatus(file, true),
++                                       start, len);
++  }
 +
-+    // In some places (e.g. FileInputFormat) this BlockLocation is used to
-+    // figure out sizes/offsets and so a completely blank one will not work.
-+    String [] hosts = {"DUMMY_HOST"};
-+    return new BlockLocation[]{new BlockLocation(null, hosts, 0, file.getLen())};
++  @Override
++  public FSDataInputStream open(Path f, int bufferSize) throws IOException {
++    return super.open(swizzleParamPath(f), bufferSize);
++  }
++
++  @Override
++  public FSDataOutputStream append(Path f, int bufferSize,
++      Progressable progress) throws IOException {
++    return super.append(swizzleParamPath(f), bufferSize, progress);
++  }
++
++  @Override
++  public FSDataOutputStream create(Path f, FsPermission permission,
++      boolean overwrite, int bufferSize, short replication, long blockSize,
++      Progressable progress) throws IOException {
++    return super.create(swizzleParamPath(f), permission,
++        overwrite, bufferSize, replication, blockSize, progress);
++  }
++
++  @Override
++  public boolean setReplication(Path src, short replication) throws IOException {
++    return super.setReplication(swizzleParamPath(src), replication);
++  }
++
++  @Override
++  public boolean rename(Path src, Path dst) throws IOException {
++    return super.rename(swizzleParamPath(src), swizzleParamPath(dst));
++  }
++  
++  @Override
++  public boolean delete(Path f, boolean recursive) throws IOException {
++    return super.delete(swizzleParamPath(f), recursive);
++  }
++
++  @Override
++  public boolean deleteOnExit(Path f) throws IOException {
++    return super.deleteOnExit(swizzleParamPath(f));
++  }    
++    
++  @Override
++  public FileStatus[] listStatus(Path f) throws IOException {
++    FileStatus[] orig = super.listStatus(swizzleParamPath(f));
++    FileStatus[] ret = new FileStatus [orig.length];
++    for (int i=0; i<orig.length; i++) {
++      ret[i] = swizzleFileStatus(orig[i], false);
++    }
++    return ret;
++  }
++  
++  @Override
++  public Path getHomeDirectory() {
++    return swizzleReturnPath(super.getHomeDirectory());
++  }
++
++  @Override
++  public void setWorkingDirectory(Path newDir) {
++    super.setWorkingDirectory(swizzleParamPath(newDir));
++  }
++  
++  @Override
++  public Path getWorkingDirectory() {
++    return swizzleReturnPath(super.getWorkingDirectory());
++  }
++  
++  @Override
++  public boolean mkdirs(Path f, FsPermission permission) throws IOException {
++    return super.mkdirs(swizzleParamPath(f), permission);
++  }
++
++  @Override
++  public void copyFromLocalFile(boolean delSrc, Path src, Path dst)
++    throws IOException {
++    super.copyFromLocalFile(delSrc, swizzleParamPath(src), swizzleParamPath(dst));
++  }
++
++  @Override
++  public void copyFromLocalFile(boolean delSrc, boolean overwrite, 
++                                Path[] srcs, Path dst)
++    throws IOException {
++    super.copyFromLocalFile(delSrc, overwrite, srcs, swizzleParamPath(dst));
++  }
++  
++  @Override
++  public void copyFromLocalFile(boolean delSrc, boolean overwrite, 
++                                Path src, Path dst)
++    throws IOException {
++    super.copyFromLocalFile(delSrc, overwrite, src, swizzleParamPath(dst));
++  }
++
++  @Override
++  public void copyToLocalFile(boolean delSrc, Path src, Path dst)
++    throws IOException {
++    super.copyToLocalFile(delSrc, swizzleParamPath(src), dst);
++  }
++
++  @Override
++  public Path startLocalOutput(Path fsOutputFile, Path tmpLocalFile)
++    throws IOException {
++    return super.startLocalOutput(swizzleParamPath(fsOutputFile), tmpLocalFile);
++  }
++
++  @Override
++  public void completeLocalOutput(Path fsOutputFile, Path tmpLocalFile)
++    throws IOException {
++    super.completeLocalOutput(swizzleParamPath(fsOutputFile), tmpLocalFile);
 +  }
 +
 +  @Override
 +  public ContentSummary getContentSummary(Path f) throws IOException {
-+    // HarFileSystem has a bug where this method does not work properly
-+    // if the underlying FS is HDFS. See MAPREDUCE-1877 for more
-+    // information. This method is from FileSystem.
-+    FileStatus status = getFileStatus(f);
-+    if (!status.isDir()) {
-+      // f is a file
-+      return new ContentSummary(status.getLen(), 1, 0);
-+    }
-+    // f is a directory
-+    long[] summary = {0, 0, 1};
-+    for(FileStatus s : listStatus(f)) {
-+      ContentSummary c = s.isDir() ? getContentSummary(s.getPath()) :
-+                                     new ContentSummary(s.getLen(), 1, 0);
-+      summary[0] += c.getLength();
-+      summary[1] += c.getFileCount();
-+      summary[2] += c.getDirectoryCount();
-+    }
-+    return new ContentSummary(summary[0], summary[1], summary[2]);
++    return super.getContentSummary(swizzleParamPath(f));
++  }
++
++  @Override
++  public FileStatus getFileStatus(Path f) throws IOException {
++    return swizzleFileStatus(super.getFileStatus(swizzleParamPath(f)), false);
++  }
++
++  @Override
++  public FileChecksum getFileChecksum(Path f) throws IOException {
++    return super.getFileChecksum(swizzleParamPath(f));
++  }
++  
++  @Override
++  public void setOwner(Path p, String username, String groupname
++      ) throws IOException {
++    super.setOwner(swizzleParamPath(p), username, groupname);
++  }
++
++  @Override
++  public void setTimes(Path p, long mtime, long atime
++      ) throws IOException {
++    super.setTimes(swizzleParamPath(p), mtime, atime);
++  }
++
++  @Override
++  public void setPermission(Path p, FsPermission permission
++      ) throws IOException {
++    super.setPermission(swizzleParamPath(p), permission);
 +  }
 +}
++  
 
-Property changes on: shims/src/0.23/java/org/apache/hadoop/hive/shims/HiveHarFileSystem.java
+Property changes on: shims/src/common/java/org/apache/hadoop/fs/ProxyFileSystem.java
 ___________________________________________________________________
 Added: svn:eol-style
    + native
 
 Index: shims/src/common/java/org/apache/hadoop/hive/shims/ShimLoader.java
 ===================================================================
---- shims/src/common/java/org/apache/hadoop/hive/shims/ShimLoader.java	(revision 1196775)
+--- shims/src/common/java/org/apache/hadoop/hive/shims/ShimLoader.java	(revision 1203794)
 +++ shims/src/common/java/org/apache/hadoop/hive/shims/ShimLoader.java	(working copy)
 @@ -40,6 +40,7 @@
    static {
@@ -1449,7 +1603,7 @@ Index: shims/src/common/java/org/apache/hadoop/hive/shims/ShimLoader.java
    }
 Index: shims/src/common/java/org/apache/hadoop/hive/shims/HadoopShims.java
 ===================================================================
---- shims/src/common/java/org/apache/hadoop/hive/shims/HadoopShims.java	(revision 1196775)
+--- shims/src/common/java/org/apache/hadoop/hive/shims/HadoopShims.java	(revision 1203794)
 +++ shims/src/common/java/org/apache/hadoop/hive/shims/HadoopShims.java	(working copy)
 @@ -31,6 +31,7 @@
  import org.apache.hadoop.fs.Path;
@@ -1497,9 +1651,40 @@ Index: shims/src/common/java/org/apache/hadoop/hive/shims/HadoopShims.java
     */
 Index: shims/build.xml
 ===================================================================
---- shims/build.xml	(revision 1196775)
+--- shims/build.xml	(revision 1203794)
 +++ shims/build.xml	(working copy)
-@@ -66,7 +66,7 @@
+@@ -26,9 +26,13 @@
+   <import file="../build-common.xml"/>
+ 
+   <path id="classpath">
+-    <fileset dir="${hadoop.root}/lib">
+-      <include name="**/*.jar" />
+-      <exclude name="**/excluded/" />
++    <fileset dir="${hadoop.root}">
++      <include name="lib/**/*.jar" />
++      <exclude name="lib/**/excluded/" />
++      <!-- below is for 0.23 onwards -->
++      <include name="share/hadoop/common/lib/*.jar" />
++      <exclude name="share/hadoop/common/lib/hadoop-mapreduce-*.jar" />
++      <exclude name="share/hadoop/common/lib/hadoop-yarn-*.jar" />
+     </fileset>
+     <pathelement location="${hadoop.oldstyle-name.jar}"/>
+     <pathelement location="${hadoop.oldstyle-name.tools.jar}"/>
+@@ -36,6 +40,13 @@
+     <pathelement location="${hadoop.newstyle-name.jar}"/>
+     <pathelement location="${hadoop.newstyle-name.test.jar}"/>
+     <pathelement location="${hadoop.newstyle-name.tools.jar}"/>
++    <pathelement location="${hadoop.common.jar}"/>
++    <pathelement location="${hadoop.common.test.jar}"/>
++    <pathelement location="${hadoop.hdfs.jar}"/>
++    <pathelement location="${hadoop.hdfs.test.jar}"/>
++    <pathelement location="${hadoop.mapreduce.jar}"/>
++    <pathelement location="${hadoop.mapreduce.test.jar}"/>
++    <pathelement location="${hadoop.mapreduce.tools.jar}"/>
+   	<fileset dir="../lib" includes="*.jar" />
+     <path refid="common-classpath"/>
+   </path>
+@@ -67,7 +78,7 @@
      </antcall>
      <antcall target="build_shims" inheritRefs="false" inheritAll="false">
        <param name="hadoop.version.ant-internal" value="${hadoop.security.version}" />
@@ -1508,45 +1693,80 @@ Index: shims/build.xml
      </antcall>
      <getversionpref property="hadoop.version.ant-internal.prefix" input="${hadoop.version}" />
      <javac
-@@ -119,7 +119,7 @@
+@@ -79,7 +90,7 @@
+      includeantruntime="false">
+       <compilerarg line="${javac.args} ${javac.args.warnings}" />
+       <classpath refid="classpath"/>
+-      <src path="${basedir}/src/${hadoop.version.ant-internal.prefix}/java" />
++      <src path="${basedir}/src/common/java" />
+     </javac>
+   </target>
+   
+@@ -121,9 +132,10 @@
+   
+   <target name="compile-test" depends="compile">
      <echo message="Project: ${ant.project.name}"/>
-     <antcall target="compile_secure_test" inheritRefs="false" inheritAll="false">
+-    <antcall target="compile_secure_test" inheritRefs="false" inheritAll="false">
++    <!-- TODO: move tests to version directory -->
++    <!--antcall target="compile_secure_test" inheritRefs="false" inheritAll="false">
        <param name="hadoop.version.ant-internal" value="${hadoop.security.version}" />
 -      <param name="hadoop.version.ant-internal.prefix" value="0.20S" />
+-    </antcall>
 +      <param name="hadoop.version.ant-internal.prefix" value="${hadoop.security.version.prefix}" />
-     </antcall>
++    </antcall-->
    </target>
  </project>
+Index: conf/hive-default.xml
+===================================================================
+--- conf/hive-default.xml	(revision 1203794)
++++ conf/hive-default.xml	(working copy)
+@@ -240,13 +240,13 @@
+ 
+ <property>
+   <name>hive.metastore.event.expiry.duration</name>
+-  <value>0L</value>
++  <value>0</value>
+   <description>Duration after which events expire from events table (in seconds)</description>
+ </property>
+ 
+ <property>
+   <name>hive.metastore.event.clean.freq</name>
+-  <value>0L</value>
++  <value>0</value>
+   <description>Frequency at which timer task runs to purge expired events in metastore(in seconds).</description>
+ </property>
+ 
 Index: build.properties
 ===================================================================
---- build.properties	(revision 1196775)
+--- build.properties	(revision 1203794)
 +++ build.properties	(working copy)
-@@ -10,11 +10,18 @@
- javac.args=
- javac.args.warnings=
+@@ -12,6 +12,7 @@
  
--hadoop.version=0.20.1
--hadoop.security.version=0.20.3-CDH3-SNAPSHOT
--hadoop.mirror=http://mirror.facebook.net/facebook/hive-deps
--hadoop.mirror2=http://archive.cloudera.com/hive-deps
-+#hadoop.version=0.20.1
-+#hadoop.security.version=0.20.3-CDH3-SNAPSHOT
-+#hadoop.security.version.prefix=0.20S
-+#hadoop.mirror=http://mirror.facebook.net/facebook/hive-deps
-+#hadoop.mirror2=http://archive.cloudera.com/hive-deps
+ hadoop.version=0.20.1
+ hadoop.security.version=0.20.3-CDH3-SNAPSHOT
++hadoop.security.version.prefix=0.20S
+ hadoop.mirror=http://mirror.facebook.net/facebook/hive-deps
+ hadoop.mirror2=http://archive.cloudera.com/hive-deps
  
-+hadoop.version=0.23.0
-+hadoop.security.version=0.23.0
-+hadoop.security.version.prefix=0.23
-+hadoop.mirror=http://people.apache.org/~rvs/
-+hadoop.mirror2=http://people.apache.org/~rvs/
-+
- build.dir.hive=${hive.root}/build
- build.dir.hadoop=${build.dir.hive}/hadoopcore
+@@ -30,6 +31,15 @@
+ hadoop.newstyle-name.jar=${hadoop.root}/hadoop-core-${hadoop.version.ant-internal}.jar
+ hadoop.newstyle-name.test.jar=${hadoop.root}/hadoop-test-${hadoop.version.ant-internal}.jar
+ hadoop.newstyle-name.tools.jar=${hadoop.root}/hadoop-tools-${hadoop.version.ant-internal}.jar
++# The following are used for versions of Hadoop that are broken into separate jars
++# They are ignored if not present
++hadoop.common.jar=${hadoop.root}/share/hadoop/common/hadoop-common-${hadoop.version.ant-internal}.jar
++hadoop.common.test.jar=${hadoop.root}/share/hadoop/common/hadoop-common-${hadoop.version.ant-internal}-tests.jar
++hadoop.hdfs.jar=${hadoop.root}/share/hadoop/hdfs/hadoop-hdfs-${hadoop.version.ant-internal}.jar
++hadoop.hdfs.test.jar=${hadoop.root}/share/hadoop/hdfs/hadoop-hdfs-${hadoop.version.ant-internal}-tests.jar
++hadoop.mapreduce.jar=${hadoop.root}/modules/hadoop-mapreduce-client-core-${hadoop.version.ant-internal}.jar
++hadoop.mapreduce.test.jar=${hadoop.root}/hadoop-mapreduce-test-${hadoop.version.ant-internal}.jar
++hadoop.mapreduce.tools.jar=${hadoop.root}/hadoop-mapreduce-tools-${hadoop.version.ant-internal}.jar
  
+ jetty.test.jar=${hadoop.root}/lib/jetty-5.1.4.jar
+ servlet.test.jar=${hadoop.root}/lib/servlet-api.jar
 Index: hbase-handler/src/java/org/apache/hadoop/hive/hbase/HiveHBaseTableInputFormat.java
 ===================================================================
---- hbase-handler/src/java/org/apache/hadoop/hive/hbase/HiveHBaseTableInputFormat.java	(revision 1196775)
+--- hbase-handler/src/java/org/apache/hadoop/hive/hbase/HiveHBaseTableInputFormat.java	(revision 1203794)
 +++ hbase-handler/src/java/org/apache/hadoop/hive/hbase/HiveHBaseTableInputFormat.java	(working copy)
 @@ -54,6 +54,7 @@
  import org.apache.hadoop.hive.serde2.lazy.LazyUtils;
@@ -1594,7 +1814,7 @@ Index: hbase-handler/src/java/org/apache/hadoop/hive/hbase/HiveHBaseTableInputFo
      List<org.apache.hadoop.mapreduce.InputSplit> splits =
 Index: hbase-handler/src/java/org/apache/hadoop/hive/hbase/HiveHBaseTableOutputFormat.java
 ===================================================================
---- hbase-handler/src/java/org/apache/hadoop/hive/hbase/HiveHBaseTableOutputFormat.java	(revision 1196775)
+--- hbase-handler/src/java/org/apache/hadoop/hive/hbase/HiveHBaseTableOutputFormat.java	(revision 1203794)
 +++ hbase-handler/src/java/org/apache/hadoop/hive/hbase/HiveHBaseTableOutputFormat.java	(working copy)
 @@ -33,6 +33,7 @@
  import org.apache.hadoop.hive.conf.HiveConf;
@@ -1616,7 +1836,7 @@ Index: hbase-handler/src/java/org/apache/hadoop/hive/hbase/HiveHBaseTableOutputF
        checkOutputSpecs(jobContext);
 Index: hbase-handler/src/java/org/apache/hadoop/hive/hbase/HiveHFileOutputFormat.java
 ===================================================================
---- hbase-handler/src/java/org/apache/hadoop/hive/hbase/HiveHFileOutputFormat.java	(revision 1196775)
+--- hbase-handler/src/java/org/apache/hadoop/hive/hbase/HiveHFileOutputFormat.java	(revision 1203794)
 +++ hbase-handler/src/java/org/apache/hadoop/hive/hbase/HiveHFileOutputFormat.java	(working copy)
 @@ -35,6 +35,7 @@
  import org.apache.hadoop.hbase.util.Bytes;
@@ -1642,19 +1862,106 @@ Index: hbase-handler/src/java/org/apache/hadoop/hive/hbase/HiveHFileOutputFormat
      final Path outputdir = FileOutputFormat.getOutputPath(tac);
      final org.apache.hadoop.mapreduce.RecordWriter<
        ImmutableBytesWritable, KeyValue> fileWriter = getFileWriter(tac);
+Index: hbase-handler/build.xml
+===================================================================
+--- hbase-handler/build.xml	(revision 1203794)
++++ hbase-handler/build.xml	(working copy)
+@@ -39,6 +39,9 @@
+     <pathelement location="${hive.root}/cli/lib/jline-0.9.94.jar"/>
+     <pathelement location="${hadoop.oldstyle-name.test.jar}"/>
+     <pathelement location="${hadoop.newstyle-name.test.jar}"/>
++    <pathelement location="${hadoop.common.test.jar}"/>
++    <pathelement location="${hadoop.hdfs.test.jar}"/>
++    <pathelement location="${hadoop.mapreduce.test.jar}"/>
+     <pathelement location="${jetty.test.jar}"/>
+     <pathelement location="${servlet.test.jar}"/>
+     <pathelement location="${jasper.test.jar}"/>
+@@ -47,7 +50,7 @@
+     <pathelement location="${common.jar}"/>
+     <fileset dir="${hive.root}" includes="testlibs/*.jar"/>
+     <fileset dir="${hadoop.root}/lib" includes="*.jar"/>
+-    <fileset dir="${hadoop.root}/lib/jsp-2.1" includes="*.jar"/>
++    <fileset dir="${hadoop.root}/lib" includes="jsp-2.1/*.jar"/>
+     <path refid="classpath"/>
+   </path>
+ 
+Index: build.xml
+===================================================================
+--- build.xml	(revision 1203794)
++++ build.xml	(working copy)
+@@ -154,6 +154,9 @@
+   <path id="common-classpath">
+     <pathelement location="${hadoop.oldstyle-name.jar}"/>
+     <pathelement location="${hadoop.newstyle-name.jar}"/>
++    <pathelement location="${hadoop.common.jar}"/>
++    <pathelement location="${hadoop.hdfs.jar}"/>
++    <pathelement location="${hadoop.mapreduce.jar}"/>
+     <pathelement location="${build.dir.hive}/classes"/>
+     <fileset dir="${hive.root}" includes="hive-*.jar"/>
+     <fileset dir="${hive.root}/lib" includes="*.jar"/>
+Index: build-common.xml
+===================================================================
+--- build-common.xml	(revision 1203794)
++++ build-common.xml	(working copy)
+@@ -69,6 +69,12 @@
+     <pathelement location="${hive.conf.dir}"/>
+     <fileset dir="${hive.root}" includes="testlibs/*.jar"/>
+     <path refid="classpath"/>
++    <fileset dir="${hadoop.root}">
++      <!-- below is for 0.23 onwards -->
++      <include name="share/hadoop/common/lib/*.jar" />
++      <exclude name="share/hadoop/common/lib/hadoop-mapreduce-*.jar" />
++      <exclude name="share/hadoop/common/lib/hadoop-yarn-*.jar" />
++    </fileset>
+   </path>
+ 
+ 
+@@ -147,6 +153,10 @@
+     <pathelement location="${hadoop.oldstyle-name.tools.jar}"/>
+     <pathelement location="${hadoop.newstyle-name.jar}"/>
+     <pathelement location="${hadoop.newstyle-name.tools.jar}"/>
++    <pathelement location="${hadoop.common.jar}"/>
++    <pathelement location="${hadoop.hdfs.jar}"/>
++    <pathelement location="${hadoop.mapreduce.jar}"/>
++    <pathelement location="${hadoop.mapreduce.tools.jar}"/>
+     <pathelement location="${build.dir.hive}/classes"/>
+     <fileset dir="${build.dir.hive}" includes="*/*.jar"/>
+     <fileset dir="${hive.root}/lib" includes="*.jar"/>
+Index: hwi/build.xml
+===================================================================
+--- hwi/build.xml	(revision 1203794)
++++ hwi/build.xml	(working copy)
+@@ -26,7 +26,14 @@
+        Hive classpath. Some HWI components are linked
+        to the servlet libraries.  -->
+   <path id="classpath-hwi">
+-    <fileset dir="${hadoop.root}/lib" includes="**/*.jar"/>
++    <fileset dir="${hadoop.root}">
++      <include name="lib/**/*.jar" />
++      <exclude name="lib/**/excluded/" />
++      <!-- below is for 0.23 onwards -->
++      <include name="share/hadoop/common/lib/*.jar" />
++      <exclude name="share/hadoop/common/lib/hadoop-mapreduce-*.jar" />
++      <exclude name="share/hadoop/common/lib/hadoop-yarn-*.jar" />
++    </fileset>
+     <path refid="classpath"/>
+   </path>
+ 
 Index: service/src/java/org/apache/hadoop/hive/service/HiveServer.java
 ===================================================================
---- service/src/java/org/apache/hadoop/hive/service/HiveServer.java	(revision 1196775)
+--- service/src/java/org/apache/hadoop/hive/service/HiveServer.java	(revision 1203794)
 +++ service/src/java/org/apache/hadoop/hive/service/HiveServer.java	(working copy)
-@@ -49,6 +49,7 @@
+@@ -49,8 +49,8 @@
  import org.apache.hadoop.hive.ql.processors.CommandProcessorFactory;
  import org.apache.hadoop.hive.ql.processors.CommandProcessorResponse;
  import org.apache.hadoop.hive.ql.session.SessionState;
 +import org.apache.hadoop.hive.shims.ShimLoader;
  import org.apache.hadoop.mapred.ClusterStatus;
- import org.apache.hadoop.mapred.JobTracker;
+-import org.apache.hadoop.mapred.JobTracker;
  import org.apache.thrift.TException;
-@@ -241,22 +242,8 @@
+ import org.apache.thrift.TProcessor;
+ import org.apache.thrift.TProcessorFactory;
+@@ -241,22 +241,8 @@
          drv.init();
  
          ClusterStatus cs = drv.getClusterStatus();
@@ -1678,7 +1985,7 @@ Index: service/src/java/org/apache/hadoop/hive/service/HiveServer.java
          hcs = new HiveClusterStatus(cs.getTaskTrackers(), cs.getMapTasks(), cs
              .getReduceTasks(), cs.getMaxMapTasks(), cs.getMaxReduceTasks(),
              state);
-@@ -649,7 +636,7 @@
+@@ -649,7 +635,7 @@
        }
      }
    }
@@ -1687,7 +1994,7 @@ Index: service/src/java/org/apache/hadoop/hive/service/HiveServer.java
    public static void main(String[] args) {
      try {
        HiveServerCli cli = new HiveServerCli();
-@@ -686,7 +673,7 @@
+@@ -686,7 +672,7 @@
          .protocolFactory(new TBinaryProtocol.Factory())
          .minWorkerThreads(cli.minWorkerThreads)
          .maxWorkerThreads(cli.maxWorkerThreads);
@@ -1696,3 +2003,78 @@ Index: service/src/java/org/apache/hadoop/hive/service/HiveServer.java
        TServer server = new TThreadPoolServer(sargs);
  
        String msg = "Starting hive server on port " + cli.port
+Index: service/build.xml
+===================================================================
+--- service/build.xml	(revision 1203794)
++++ service/build.xml	(working copy)
+@@ -38,6 +38,12 @@
+     <fileset dir="${hive.root}" includes="testlibs/*.jar"/>
+     <pathelement location="${build.dir.hive}/ql/test/classes"/>
+     <path refid="classpath"/>
++    <fileset dir="${hadoop.root}">
++      <!-- below is for 0.23 onwards -->
++      <include name="share/hadoop/common/lib/*.jar" />
++      <exclude name="share/hadoop/common/lib/hadoop-mapreduce-*.jar" />
++      <exclude name="share/hadoop/common/lib/hadoop-yarn-*.jar" />
++    </fileset>
+   </path>
+ 
+   <target name="thriftif" depends="check-thrift-home">
+Index: ql/src/java/org/apache/hadoop/hive/ql/exec/JobTrackerURLResolver.java
+===================================================================
+--- ql/src/java/org/apache/hadoop/hive/ql/exec/JobTrackerURLResolver.java	(revision 1203794)
++++ ql/src/java/org/apache/hadoop/hive/ql/exec/JobTrackerURLResolver.java	(working copy)
+@@ -22,7 +22,6 @@
+ import java.net.InetSocketAddress;
+ 
+ import org.apache.hadoop.mapred.JobConf;
+-import org.apache.hadoop.mapred.JobTracker;
+ import org.apache.hadoop.net.NetUtils;
+ 
+ /**
+@@ -38,7 +37,12 @@
+     InetSocketAddress infoSocAddr = NetUtils.createSocketAddr(infoAddr);
+     int infoPort = infoSocAddr.getPort();
+ 
+-    String tracker = "http://" + JobTracker.getAddress(conf).getHostName()
++    String jobTrackerStr =
++      conf.get("mapred.job.tracker", "localhost:8012");
++    InetSocketAddress jobTrackerSocAddr =
++      NetUtils.createSocketAddr(jobTrackerStr);
++
++    String tracker = "http://" + jobTrackerSocAddr.getHostName()
+         + ":" + infoPort;
+ 
+     return tracker;
+Index: ql/build.xml
+===================================================================
+--- ql/build.xml	(revision 1203794)
++++ ql/build.xml	(working copy)
+@@ -40,6 +40,9 @@
+     <pathelement location="${hive.conf.dir}"/>
+     <pathelement location="${hadoop.oldstyle-name.test.jar}"/>
+     <pathelement location="${hadoop.newstyle-name.test.jar}"/>
++    <pathelement location="${hadoop.common.test.jar}"/>
++    <pathelement location="${hadoop.hdfs.test.jar}"/>
++    <pathelement location="${hadoop.mapreduce.test.jar}"/>
+     <pathelement location="${jetty.test.jar}"/>
+     <pathelement location="${servlet.test.jar}"/>
+     <pathelement location="${jasper.test.jar}"/>
+@@ -48,8 +51,15 @@
+     <pathelement location="${common.jar}"/>
+     <pathelement location="${hive.root}/build/ivy/lib/default/derby-${derby.version}.jar"/>
+     <fileset dir="${hive.root}" includes="testlibs/*.jar"/>
+-    <fileset dir="${hadoop.root}/lib" includes="*.jar"/>
+-    <fileset dir="${hadoop.root}/lib" includes="jsp-2.1/*.jar"/>
++    <fileset dir="${hadoop.root}">
++      <include name="lib/**/*.jar" />
++      <exclude name="lib/**/excluded/" />
++      <!-- below is for 0.23 onwards -->
++      <include name="share/hadoop/common/lib/*.jar" />
++      <exclude name="share/hadoop/common/lib/hadoop-mapreduce-*.jar" />
++      <exclude name="share/hadoop/common/lib/hadoop-yarn-*.jar" />
++    </fileset>
++
+     <path refid="classpath"/>
+   </path>
+ 

@@ -79,7 +79,7 @@ HIVE_TARBALL_DST=hive-$(HIVE_BASE_VERSION).tar.gz
 #HIVE_TARBALL_SRC=$(HIVE_TARBALL_DST)
 #HIVE_SITE=$(APACHE_MIRROR)/hive/hive-$(HIVE_BASE_VERSION)/
 HIVE_SITE=https://github.com/apache/hive/tarball
-HIVE_TARBALL_SRC=f412000
+HIVE_TARBALL_SRC=4910f33
 $(eval $(call PACKAGE,hive,HIVE))
 
 # Sqoop
@@ -93,7 +93,7 @@ SQOOP_TARBALL_DST=sqoop-$(SQOOP_BASE_VERSION).tar.gz
 #SQOOP_TARBALL_SRC=$(SQOOP_TARBALL_DST)
 #SQOOP_SITE=http://github.com/downloads/cloudera/sqoop/
 SQOOP_SITE=https://github.com/apache/sqoop/tarball
-SQOOP_TARBALL_SRC=e9d0bed
+SQOOP_TARBALL_SRC=1bf7cbf
 $(eval $(call PACKAGE,sqoop,SQOOP))
 
 # Oozie
@@ -132,7 +132,7 @@ MAHOUT_RELEASE_VERSION=1
 MAHOUT_TARBALL_DST=mahout-distribution-$(MAHOUT_BASE_VERSION)-src.tar.gz
 #MAHOUT_TARBALL_SRC=$(MAHOUT_TARBALL_DST)
 #MAHOUT_SITE=$(APACHE_MIRROR)/mahout/0.5/
-MAHOUT_TARBALL_SRC=464be41
+MAHOUT_TARBALL_SRC=dc3dcf5
 MAHOUT_SITE=https://github.com/apache/mahout/tarball
 $(eval $(call PACKAGE,mahout,MAHOUT))
 
