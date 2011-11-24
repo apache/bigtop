@@ -65,7 +65,7 @@ PIG_TARBALL_DST=pig-$(PIG_BASE_VERSION).tar.gz
 #PIG_TARBALL_SRC=$(PIG_TARBALL_DST)
 #PIG_SITE=$(APACHE_MIRROR)/pig/pig-$(PIG_BASE_VERSION)/
 PIG_SITE=https://github.com/apache/pig/tarball
-PIG_TARBALL_SRC=a078a99
+PIG_TARBALL_SRC=ec01b30
 $(eval $(call PACKAGE,pig,PIG))
 
 # Hive

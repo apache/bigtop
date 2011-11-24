@@ -25,6 +25,7 @@ export DH_OPTIONS
 
 patch: patch-stamp
 patch-stamp:	
+	patch -p0 < debian/patch
 	touch $@
 
 clean:	
