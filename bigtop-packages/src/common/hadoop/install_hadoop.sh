@@ -160,6 +160,9 @@ fi
 . /etc/default/hadoop
 . /etc/default/yarn
 
+# FIXME: this might need to be fixed upstream
+HADOOP_CLASSPATH="\${HADOOP_CLASSPATH}:\${YARN_CONF_DIR}"
+
 exec $INSTALLED_HADOOP_DIR/bin/$bin_wrapper "\$@"
 EOF
   chmod 755 $wrapper
