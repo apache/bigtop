@@ -51,7 +51,7 @@ install-indep: metastore server
 	cp debian/hive.1 .
 	sh debian/install_hive.sh \
 	  --prefix=debian/hadoop-hive \
-	  --build-dir=src/build/dist \
+	  --build-dir=build/dist \
 	  --doc-dir=debian/hadoop-hive/usr/share/doc/hive \
 	  --python-dir=debian/python-hive/usr/share/python-support/python-hive/hive
 	dh_pysupport

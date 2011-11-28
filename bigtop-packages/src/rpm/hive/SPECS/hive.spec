@@ -22,7 +22,7 @@
 %define man_dir %{_mandir}
 %define hive_services server metastore
 # After we run "ant package" we'll find the distribution here
-%define hive_dist src/build/dist
+%define hive_dist build/dist
 
 %if  %{!?suse_version:1}0
 
