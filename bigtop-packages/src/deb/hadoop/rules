@@ -40,7 +40,7 @@ build: build-stamp
 build-stamp:
 	dh_testdir
 	env HADOOP_VERSION=${hadoop_version} HADOOP_ARCH=${native_dir} \
-		sh debian/do-component-build -Divy.home=`pwd`/debian/.ivy
+		bash debian/do-component-build -Divy.home=`pwd`/debian/.ivy
 	touch $@
 
 clean:  
