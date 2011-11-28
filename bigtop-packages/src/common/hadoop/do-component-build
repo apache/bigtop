@@ -33,13 +33,14 @@ fi
 for project in common hdfs mapred ; do 
   cd $project || cd mapreduce
   ant \
+    -Dxercescroot=$XERCESCROOT \
     -Djava5.home=$JAVA5_HOME \
     -Dforrest.home=$FORREST_HOME \
     -Dversion=${HADOOP_VERSION} \
     -Djsvc.location=${JSVC_URL} \
     -Dcompile.native=true \
     -Dhadoop.conf.dir=/etc/hadoop/conf \
-    -Dlibhdfs=1 -Dfusedfs=true -Dcompile.c++=true -Djdiff.build.dir=build/docs/jdiff \
+    -Dlibrecordio=true -Dlibhdfs=1 -Dfusedfs=true -Dcompile.c++=true -Djdiff.build.dir=build/docs/jdiff \
    api-report bin-package $BUILD_CONTRIB tar \
     "$@"
   
