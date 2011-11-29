@@ -985,11 +985,11 @@ Index: shims/src/0.23/java/org/apache/hadoop/hive/shims/Hadoop23Shims.java
 +        super.setMaxSplitSize(minSize);
 +      }
 +
-+      CombineFileSplit[] splits = (CombineFileSplit[]) super.getSplits(job, numSplits);
++      InputSplit[] splits = super.getSplits(job, numSplits);
 +
 +      InputSplitShim[] isplits = new InputSplitShim[splits.length];
 +      for (int pos = 0; pos < splits.length; pos++) {
-+        isplits[pos] = new InputSplitShim(splits[pos]);
++        isplits[pos] = new InputSplitShim((CombineFileSplit) splits[pos]);
 +      }
 +
 +      return isplits;
@@ -1899,6 +1899,25 @@ Index: build.xml
      <pathelement location="${build.dir.hive}/classes"/>
      <fileset dir="${hive.root}" includes="hive-*.jar"/>
      <fileset dir="${hive.root}/lib" includes="*.jar"/>
+Index: jdbc/build.xml
+===================================================================
+--- jdbc/build.xml	(revision 1203794)
++++ jdbc/build.xml	(working copy)
+@@ -37,6 +37,14 @@
+     <fileset dir="${test.src.data.dir}" includes="files/*.jar"/>
+     <fileset dir="${hive.root}" includes="testlibs/*.jar"/>
+     <pathelement location="${build.dir.hive}/ql/test/classes"/>
++    <fileset dir="${hadoop.root}">
++      <include name="lib/**/*.jar" />
++      <exclude name="lib/**/excluded/" />
++      <!-- below is for 0.23 onwards -->
++      <include name="share/hadoop/common/lib/*.jar" />
++      <exclude name="share/hadoop/common/lib/hadoop-mapreduce-*.jar" />
++      <exclude name="share/hadoop/common/lib/hadoop-yarn-*.jar" />
++    </fileset>
+     <path refid="classpath"/>
+   </path>
+ 
 Index: build-common.xml
 ===================================================================
 --- build-common.xml	(revision 1203794)
@@ -1927,6 +1946,15 @@ Index: build-common.xml
      <pathelement location="${build.dir.hive}/classes"/>
      <fileset dir="${build.dir.hive}" includes="*/*.jar"/>
      <fileset dir="${hive.root}/lib" includes="*.jar"/>
+@@ -344,7 +354,7 @@
+            errorProperty="tests.failed" failureProperty="tests.failed" filtertrace="off">
+      
+       <env key="HADOOP_HOME" value="${hadoop.root}"/>
+-      <env key="HADOOP_CLASSPATH" value="${test.src.data.dir}/conf:${build.dir.hive}/dist/lib/derby-${derby.version}.jar:${build.dir.hive}/dist/lib/javaewah-${javaewah.version}.jar"/>
++      <env key="HADOOP_CLASSPATH" value="${test.src.data.dir}/conf:${build.dir.hive}/dist/lib/derby-${derby.version}.jar:${build.dir.hive}/dist/lib/javaewah-${javaewah.version}.jar:${hadoop.root}/modules/*"/> <!-- Modules needed for Hadoop 0.23 -->
+       <env key="TZ" value="US/Pacific"/>
+       <sysproperty key="test.output.overwrite" value="${overwrite}"/>
+       <sysproperty key="test.service.standalone.server" value="${standalone}"/>
 Index: hwi/build.xml
 ===================================================================
 --- hwi/build.xml	(revision 1203794)
@@ -1936,6 +1964,26 @@ Index: hwi/build.xml
         to the servlet libraries.  -->
    <path id="classpath-hwi">
 -    <fileset dir="${hadoop.root}/lib" includes="**/*.jar"/>
++    <fileset dir="${hadoop.root}">
++      <include name="lib/**/*.jar" />
++      <exclude name="lib/**/excluded/" />
++      <!-- below is for 0.23 onwards -->
++      <include name="share/hadoop/common/lib/*.jar" />
++      <exclude name="share/hadoop/common/lib/hadoop-mapreduce-*.jar" />
++      <exclude name="share/hadoop/common/lib/hadoop-yarn-*.jar" />
++    </fileset>
+     <path refid="classpath"/>
+   </path>
+ 
+Index: contrib/build.xml
+===================================================================
+--- contrib/build.xml	(revision 1203794)
++++ contrib/build.xml	(working copy)
+@@ -43,7 +43,14 @@
+     <pathelement location="${jsp.test.jar}"/>
+     <pathelement location="${common.jar}"/>
+     <fileset dir="${hive.root}" includes="testlibs/*.jar"/>
+-    <fileset dir="${hadoop.root}/lib" includes="*.jar"/>
 +    <fileset dir="${hadoop.root}">
 +      <include name="lib/**/*.jar" />
 +      <exclude name="lib/**/excluded/" />
@@ -2046,6 +2094,57 @@ Index: ql/src/java/org/apache/hadoop/hive/ql/exec/JobTrackerURLResolver.java
          + ":" + infoPort;
  
      return tracker;
+Index: ql/src/java/org/apache/hadoop/hive/ql/exec/HadoopJobExecHelper.java
+===================================================================
+--- ql/src/java/org/apache/hadoop/hive/ql/exec/HadoopJobExecHelper.java	(revision 1203794)
++++ ql/src/java/org/apache/hadoop/hive/ql/exec/HadoopJobExecHelper.java	(working copy)
+@@ -282,17 +282,18 @@
+         initOutputPrinted = true;
+       }
+ 
+-      RunningJob newRj = jc.getJob(rj.getJobID());
+-      if (newRj == null) {
+-        // under exceptional load, hadoop may not be able to look up status
+-        // of finished jobs (because it has purged them from memory). From
+-        // hive's perspective - it's equivalent to the job having failed.
+-        // So raise a meaningful exception
+-        throw new IOException("Could not find status of job: + rj.getJobID()");
+-      } else {
+-        th.setRunningJob(newRj);
+-        rj = newRj;
+-      }
++      // TODO: Temporarily commented out until https://issues.apache.org/jira/browse/MAPREDUCE-3479 is fixed
++//      RunningJob newRj = jc.getJob(rj.getJobID());
++//      if (newRj == null) {
++//        // under exceptional load, hadoop may not be able to look up status
++//        // of finished jobs (because it has purged them from memory). From
++//        // hive's perspective - it's equivalent to the job having failed.
++//        // So raise a meaningful exception
++//        throw new IOException("Could not find status of job:" + rj.getJobID());
++//      } else {
++//        th.setRunningJob(newRj);
++//        rj = newRj;
++//      }
+ 
+       // If fatal errors happen we should kill the job immediately rather than
+       // let the job retry several times, which eventually lead to failure.
+@@ -310,7 +311,7 @@
+       errMsg.setLength(0);
+ 
+       updateCounters(ctrs, rj);
+-      
++
+       // Prepare data for Client Stat Publishers (if any present) and execute them
+       if (clientStatPublishers.size() > 0 && ctrs != null) {
+         Map<String, Double> exctractedCounters = extractAllCounterValues(ctrs);
+@@ -657,6 +658,7 @@
+ 
+   public int progress(RunningJob rj, JobClient jc) throws IOException {
+     jobId = rj.getJobID();
++    console.printInfo("Job id is " + jobId);
+ 
+     int returnVal = 0;
+ 
 Index: ql/build.xml
 ===================================================================
 --- ql/build.xml	(revision 1203794)
