@@ -35,7 +35,7 @@ build-indep: build-indep-stamp
 build-indep-stamp:
 	patch -p0 < debian/patch
 	mkdir -p /tmp/debian-hive/.ivy
-	bash debian/do-component-build -Divy.home=`pwd`/debian/.ivy
+	bash debian/do-component-build  -Divy.home=${HOME}/.ivy2
 	touch $@
 
 server metastore: debian/service-init.d.tpl
