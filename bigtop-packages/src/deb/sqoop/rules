@@ -37,7 +37,7 @@ clean:
 
 build-indep: build-indep-stamp
 build-indep-stamp: patch-stamp
-	bash debian/do-component-build -Divy.home=`pwd`/debian/.ivy
+	bash debian/do-component-build -Divy.home=${HOME}/.ivy2
 	touch $@
 
 install: install-indep
