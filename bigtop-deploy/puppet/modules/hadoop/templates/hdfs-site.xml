@@ -116,6 +116,12 @@
     <value><% hadoop_storage_locations.split(";").each do |storage_location| %><%= storage_location%>/namenode,<% end %></value>
   </property>
 
+  <property>
+    <name>dfs.permissions.superusergroup</name>
+    <value>hadoop</value>
+    <description>The name of the group of super-users.</description>
+  </property>
+
   <!-- Enable Hue plugins -->
 <% if has_variable?("hadoop_dfs_namenode_plugins") %>
   <property>

@@ -49,7 +49,7 @@
   
   <!-- TaskController settings -->
   <property>
-    <name>mapred.task.tracker.task-controller</name>
+    <name>mapreduce.tasktracker.taskcontroller</name>
     <value>org.apache.hadoop.mapred.LinuxTaskController</value>
   </property>
   <property>
@@ -60,7 +60,7 @@
 
 <% if has_variable?("mapred_acls_enabled") %>
   <property>
-    <name>mapred.acls.enabled</name>
+    <name>mapreduce.cluster.acls.enabled</name>
     <value><%= mapred_acls_enabled %></value>
   </property>
 <% end %>
@@ -68,7 +68,7 @@
 <!-- specify JobTracker TaskScheduler -->
 <% if has_variable?("hadoop_jobtracker_taskscheduler") %>
   <property>
-    <name>mapred.jobtracker.taskScheduler</name>
+    <name>mapreduce.jobtracker.taskscheduler</name>
     <value><%= hadoop_jobtracker_taskscheduler %></value>
   </property>
 <% end %>
@@ -95,19 +95,34 @@
 <% end %>
 
   <property>
-    <name>mapred.job.tracker</name>
+    <name>mapreduce.framework.name</name>
+    <value>yarn</value>
+  </property>
+
+  <property>
+    <name>mapreduce.admin.user.env</name>
+    <value>CLASSPATH=/etc/hadoop/conf/*:/usr/lib/hadoop/*:/usr/lib/hadoop/lib/*:/usr/lib/hadoop/lib/native/*</value>
+  </property>
+
+  <property>
+    <name>mapreduce.jobtracker.address</name>
     <value><%= hadoop_jobtracker_host %>:<%= hadoop_jobtracker_port%></value>
   </property>
 
   <property>
-    <name>mapred.local.dir</name>
-    <value><% hadoop_storage_locations.split(";").each do |storage_location| %><%= storage_location%>/scratch,<% end %></value>
+    <name>mapreduce.cluster.local.dir</name>
+    <value><% hadoop_storage_locations.split(";").each do |storage_location| %><%= storage_location%>/mapred,<% end %></value>
     <final>true</final>
   </property>
 
+  <!-- property>
+    <name>mapreduce.cluster.temp.dir</name>
+    <value>/mapred/system</value>
+  </property -->
+
   <property>
-    <name>mapred.child.java.opts</name>
-    <value>-Xmx1024m</value>
+    <name>mapreduce.jobtracker.system.dir</name>
+    <value>/mapred/system</value>
   </property>
 
   <property>
@@ -116,8 +131,13 @@
   </property>
 
   <property>
-    <name>mapred.system.dir</name>
-    <value>/mapred/system</value>
+    <name>yarn.app.mapreduce.am.staging-dir</name>
+    <value>/user</value>
+  </property>
+
+  <property>
+    <name>mapred.child.java.opts</name>
+    <value>-Xmx1024m</value>
   </property>
 
 <% if has_variable?("hadoop_config_mapred_child_ulimit") %>

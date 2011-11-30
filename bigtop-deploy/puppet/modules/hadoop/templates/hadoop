@@ -12,9 +12,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 export HADOOP_HOME_WARN_SUPPRESS=true
-export HADOOP_HOME=/usr/lib/hadoop
-export HADOOP_PID_DIR=/var/run/hadoop
-export HADOOP_LOG_DIR=/var/log/hadoop
+export HADOOP_PREFIX=/usr/lib/hadoop
+export HADOOP_LIBEXEC_DIR=/usr/libexec
 export HADOOP_NAMENODE_USER=hdfs
 export HADOOP_SECONDARYNAMENODE_USER=hdfs
 export HADOOP_DATANODE_USER=hdfs
@@ -25,4 +24,13 @@ export HADOOP_SECURE_DN_LOG_DIR=$HADOOP_LOG_DIR
 <% end %>
 export HADOOP_JOBTRACKER_USER=mapred
 export HADOOP_TASKTRACKER_USER=mapred
-export HADOOP_IDENT_STRING=hadoop
+export HADOOP_IDENT_STRING=hdfs
+export HADOOP_PID_DIR=/var/run/hadoop
+export HADOOP_LOG_DIR=/var/log/hadoop
+export HADOOP_CONF_DIR=/etc/hadoop/conf
+export YARN_CONF_DIR=/etc/yarn/conf
+export HADOOP_CLASSPATH="${HADOOP_CLASSPATH}:${HADOOP_PREFIX}/*:${HADOOP_PREFIX}/lib/*"
+
+# Pointless definitions making yarn happy
+export HADOOP_COMMON_HOME=${HADOOP_PREFIX}
+export HADOOP_HDFS_HOME=${HADOOP_PREFIX}

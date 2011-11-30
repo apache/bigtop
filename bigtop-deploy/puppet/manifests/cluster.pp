@@ -20,6 +20,12 @@ class hadoop_cluster_node {
   # $hadoop_dfs_namenode_plugins="org.apache.hadoop.thriftfs.NamenodePlugin"
   # $hadoop_dfs_datanode_plugins="org.apache.hadoop.thriftfs.DatanodePlugin"
 
+  $hadoop_rm_host="$hadoop_head_node"
+  $hadoop_rt_port="8025"
+  $hadoop_rm_port="8040"
+  $hadoop_sc_port="8030"
+  $hadoop_rt_thrift_port="9290"
+
   $hadoop_jobtracker_host="$hadoop_head_node"
   $hadoop_jobtracker_port="8021"
   $hadoop_jobtracker_thrift_port="9290"
@@ -35,7 +41,8 @@ class hadoop_cluster_node {
 
   $namenode_data_dirs = ["/mnt/namenode"]
   $hdfs_data_dirs = ["/mnt/hdfs"]
-  $mapred_data_dirs = ["/mnt/scratch"]
+  $mapred_data_dirs = ["/mnt/mapred"]
+  $yarn_data_dirs = ["/mnt/yarn"]
 
   if ($hadoop_security_authentication == "kerberos") {
     $kerberos_domain = "compute-1.internal"
@@ -60,12 +67,11 @@ class hadoop_worker_node inherits hadoop_cluster_node {
         auth => $hadoop_security_authentication,
   }
 
-  hadoop::tasktracker { "tasktracker":
-        namenode_host => $hadoop_namenode_host,
-        namenode_port => $hadoop_namenode_port,
-        jobtracker_host => $hadoop_jobtracker_host,
-        jobtracker_port => $hadoop_jobtracker_port,
-        dirs => $mapred_data_dirs,
+  hadoop::nodemanager { "nodemanager":
+        rm_host => $hadoop_rm_host,
+        rm_port => $hadoop_rm_port,
+        rt_port => $hadoop_rt_port,
+        dirs => $yarn_data_dirs,
         auth => $hadoop_security_authentication,
   }
 
@@ -73,6 +79,15 @@ class hadoop_worker_node inherits hadoop_cluster_node {
         rootdir => $hadoop_hbase_rootdir,
         zookeeper_quorum => $hadoop_hbase_zookeeper_quorum,
         kerberos_realm => $kerberos_realm, 
+  }
+
+  hadoop::mapred-app { "mapred-app":
+        namenode_host => $hadoop_namenode_host,
+        namenode_port => $hadoop_namenode_port,
+        jobtracker_host => $hadoop_jobtracker_host,
+        jobtracker_port => $hadoop_jobtracker_port,
+        auth => $hadoop_security_authentication,
+        dirs => $mapred_data_dirs,
   }
 }
 
@@ -83,9 +98,8 @@ class hadoop_head_node inherits hadoop_cluster_node {
   }
 
   hadoop::namenode { "namenode":
+        host => $hadoop_namenode_host,
         port => $hadoop_namenode_port,
-        jobtracker_host => $hadoop_jobtracker_host,
-        jobtracker_port => $hadoop_jobtracker_port,
         dirs => $namenode_data_dirs,
         # thrift_port => $hadoop_namenode_thrift_port,
         auth => $hadoop_security_authentication,
@@ -97,12 +111,11 @@ class hadoop_head_node inherits hadoop_cluster_node {
         auth => $hadoop_security_authentication,
   }
 
-  hadoop::jobtracker { "jobtracker":
-        namenode_host => $hadoop_namenode_host,
-        namenode_port => $hadoop_namenode_port,
-        host => $hadoop_jobtracker_host,
-        port => $hadoop_jobtracker_port,
-        dirs => $mapred_data_dirs,
+  hadoop::resourcemanager { "resourcemanager":
+        host => $hadoop_rm_host,
+        port => $hadoop_rm_port,
+        rt_port => $hadoop_rt_port,
+        sc_port => $hadoop_sc_port,
         # thrift_port => $hadoop_jobtracker_thrift_port,
         auth => $hadoop_security_authentication,
   }
@@ -122,7 +135,7 @@ class hadoop_head_node inherits hadoop_cluster_node {
         ensemble => $hadoop_zookeeper_ensemble,
   }
 
-  hadoop::create_hdfs_dirs { [ "/mapred", "/tmp", "/system", "/user", "/hbase", "/benchmarks", "/user/jenkins", "/user/hive" ]:
+  hadoop::create_hdfs_dirs { [ "/mapred", "/tmp", "/system", "/user", "/hbase", "/benchmarks", "/user/jenkins", "/user/hive", "/user/root", "/user/history" ]:
     hdfs_dirs_meta => { "/tmp"          => { perm => "777", user => "hdfs"   },
                         "/mapred"       => { perm => "755", user => "mapred" },
                         "/system"       => { perm => "755", user => "hdfs"   },
@@ -130,19 +143,20 @@ class hadoop_head_node inherits hadoop_cluster_node {
                         "/hbase"        => { perm => "755", user => "hbase"  },
                         "/benchmarks"   => { perm => "777", user => "hdfs"   },
                         "/user/jenkins" => { perm => "777", user => "jenkins"},
+                        "/user/history" => { perm => "777", user => "mapred" },
+                        "/user/root"    => { perm => "777", user => "root"   },
                         "/user/hive"    => { perm => "777", user => "hive"   } },
   }
 }
 
 class hadoop_gateway_node inherits hadoop_head_node {
-  # hadoop::client { "gateway":
-  #   namenode_host => $hadoop_namenode_host,
-  #   namenode_port => $hadoop_namenode_port,
-  #   jobtracker_host => $hadoop_jobtracker_host,
-  #   jobtracker_port => $hadoop_jobtracker_port,
-  #   # auth => $hadoop_security_authentication,
-  # }
-
+  hadoop::client { "hadoop client":
+    namenode_host => $hadoop_namenode_host,
+    namenode_port => $hadoop_namenode_port,
+    jobtracker_host => $hadoop_jobtracker_host,
+    jobtracker_port => $hadoop_jobtracker_port,
+    # auth => $hadoop_security_authentication,
+  }
   mahout::client { "mahout client":
   }
   hadoop-pig::client { "pig client":

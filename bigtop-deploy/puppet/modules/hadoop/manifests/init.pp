@@ -21,24 +21,6 @@ class hadoop {
    */
   class common {
     file {
-      "/etc/hadoop/conf/core-site.xml":
-        content => template('hadoop/core-site.xml'),
-        require => [Package["hadoop"]],
-    }
-
-    file {
-      "/etc/hadoop/conf/mapred-site.xml":
-        content => template('hadoop/mapred-site.xml'),
-        require => [Package["hadoop"]],
-    }
-
-    file {
-      "/etc/hadoop/conf/hdfs-site.xml":
-        content => template('hadoop/hdfs-site.xml'),
-        require => [Package["hadoop"]],
-    }
-
-    file {
       "/etc/hadoop/conf/hadoop-env.sh":
         content => template('hadoop/hadoop-env.sh'),
         require => [Package["hadoop"]],
@@ -52,14 +34,49 @@ class hadoop {
 
     package { "hadoop":
       ensure => latest,
+      require => Package["jdk"],
     }
 
-    package { "hadoop-native":
-      ensure => latest,
-      require => [Package["hadoop"]],
+    #FIXME: package { "hadoop-native":
+    #  ensure => latest,
+    #  require => [Package["hadoop"]],
+    #}
+  }
+
+  class common-yarn inherits common {
+    file {
+      "/etc/yarn/conf/yarn-site.xml":
+        content => template('hadoop/yarn-site.xml'),
+        require => [Package["hadoop"]],
     }
   }
 
+  class common-hdfs inherits common {
+    file {
+      "/etc/hadoop/conf/core-site.xml":
+        content => template('hadoop/core-site.xml'),
+        require => [Package["hadoop"]],
+    }
+
+    file {
+      "/etc/hadoop/conf/hdfs-site.xml":
+        content => template('hadoop/hdfs-site.xml'),
+        require => [Package["hadoop"]],
+    }
+  }
+
+  class common-mapred-app inherits common-hdfs {
+    file {
+      "/etc/hadoop/conf/mapred-site.xml":
+        content => template('hadoop/mapred-site.xml'),
+        require => [Package["hadoop"]],
+    }
+
+    file { "/etc/hadoop/conf/taskcontroller.cfg":
+      content => template('hadoop/taskcontroller.cfg'), 
+      require => [Package["hadoop"]],
+    }
+  }
 
   define datanode ($namenode_host, $namenode_port, $port = "50075", $auth = "simple", $dirs = ["/tmp/data"]) {
 
@@ -68,7 +85,7 @@ class hadoop {
     $hadoop_datanode_port = $port
     $hadoop_security_authentication = $auth
 
-    include common
+    include common-hdfs
 
     package { "hadoop-datanode":
       ensure => latest,
@@ -76,10 +93,10 @@ class hadoop {
     }
 
     if ($hadoop_security_authentication == "kerberos") {
-      package { "hadoop-sbin":
-        ensure => latest,
-        require => [Package["hadoop"]],
-      }
+      #FIXME: package { "hadoop-sbin":
+      #  ensure => latest,
+      #  require => [Package["hadoop"]],
+      #}
     }
 
     service { "hadoop-datanode":
@@ -108,16 +125,14 @@ class hadoop {
     }
   }
 
-  define namenode ($jobtracker_host, $jobtracker_port, $host = $fqdn , $port = "8020", $thrift_port= "10090", $auth = "simple", $dirs = ["/tmp/nn"]) {
+  define namenode ($host = $fqdn , $port = "8020", $thrift_port= "10090", $auth = "simple", $dirs = ["/tmp/nn"]) {
 
     $hadoop_namenode_host = $host
     $hadoop_namenode_port = $port
     $hadoop_namenode_thrift_port = $thrift_port
-    $hadoop_jobtracker_host = $jobtracker_host
-    $hadoop_jobtracker_port = $jobtracker_port
     $hadoop_security_authentication = $auth
 
-    include common
+    include common-hdfs
 
     package { "hadoop-namenode":
       ensure => latest,
@@ -127,14 +142,14 @@ class hadoop {
     service { "hadoop-namenode":
       ensure => running,
       hasstatus => true,
-      subscribe => [Package["hadoop-namenode"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
+      subscribe => [Package["hadoop-namenode"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
       require => [Package["hadoop-namenode"], Exec["namenode format"]],
     } 
 
     exec { "namenode format":
       user => "hdfs",
       command => "/bin/bash -c 'yes Y | hadoop namenode -format >> /tmp/nn.format.log 2>&1'",
-      creates => inline_template("<%= hadoop_storage_locations.split(';')[0] %>/namenode/image"),
+      creates => inline_template("<%= hadoop_storage_locations.split(';')[0] %>/namenode/current/VERSION"),
       require => [Package["hadoop-namenode"]],
     } <- file { $dirs:
       ensure => directory,
@@ -145,88 +160,91 @@ class hadoop {
     }
   }
 
-
-  define jobtracker ($namenode_host, $namenode_port, $host = $fqdn, $port = "8021", $thrift_port = "9290", $auth = "simple", $dirs = ["/tmp/mr"]) {
-
-    $hadoop_namenode_host = $namenode_host
-      $hadoop_namenode_port = $namenode_port
-      $hadoop_jobtracker_thrift_port = $thrift_port
-      $hadoop_jobtracker_host = $host
-      $hadoop_jobtracker_port = $port
-      $hadoop_security_authentication = $auth
-
-      include common
-
-      package { "hadoop-jobtracker":
-        ensure => latest,
-               require => Package["jdk"],
-      }
-
-    service { "hadoop-jobtracker":
-      ensure => running,
-      hasstatus => true,
-      subscribe => [Package["hadoop-jobtracker"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/mapred-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
-      require => [ Package["hadoop-jobtracker"] ]
-    } <- file { $dirs:
-      ensure => directory,
-      owner => mapred,
-      group => mapred,
-      mode => 755,
-      require => [Package["hadoop"]],
-    }
-  }
-
-
-  define tasktracker ($namenode_host, $namenode_port, $jobtracker_host, $jobtracker_port, $auth = "simple", $dirs = ["/tmp/mr"]){
-
-    $hadoop_namenode_host = $namenode_host
-      $hadoop_namenode_port = $namenode_port
-      $hadoop_jobtracker_host = $jobtracker_host
-      $hadoop_jobtracker_port = $jobtracker_port
-      $hadoop_security_authentication = $auth
-
-      include common
-
-      package { "hadoop-tasktracker":
-        ensure => latest,
-        require => Package["jdk"],
-      }
- 
-    file { "/etc/hadoop/conf/taskcontroller.cfg":
-      content => template('hadoop/taskcontroller.cfg'), 
-    }
-
-    service { "hadoop-tasktracker":
-      ensure => running,
-      hasstatus => true,
-      subscribe => [Package["hadoop-tasktracker"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/mapred-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
-      require => [ Package["hadoop-tasktracker"], File["/etc/hadoop/conf/taskcontroller.cfg"] ],
-    } <- file { $dirs:
-      ensure => directory,
-      owner => mapred,
-      group => mapred,
-      mode => 755,
-      require => [Package["hadoop"]],
-    }
-  }
-
-
   define secondarynamenode ($namenode_host, $namenode_port, $port = "50090", $auth = "simple") {
 
     $hadoop_secondarynamenode_port = $port
     $hadoop_security_authentication = $auth
-      include common
 
-      package { "hadoop-secondarynamenode":
-        ensure => latest,
-        require => Package["jdk"],
-      }
+    include common-hdfs
+
+    package { "hadoop-secondarynamenode":
+      ensure => latest,
+      require => Package["jdk"],
+    }
 
     service { "hadoop-secondarynamenode":
       ensure => running,
       hasstatus => true,
-      subscribe => [Package["hadoop-secondarynamenode"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
+      subscribe => [Package["hadoop-secondarynamenode"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
       require => [Package["hadoop-secondarynamenode"]],
+    }
+  }
+
+
+  define resourcemanager ($host = $fqdn, $port = "8040", $rt_port = "8025", $sc_port = "8030", $thrift_port = "9290", $auth = "simple") {
+    $hadoop_rm_host = $host
+    $hadoop_rm_port = $port
+    $hadoop_rt_port = $rt_port
+    $hadoop_sc_port = $sc_port
+    $hadoop_security_authentication = $auth
+
+    include common-yarn
+
+    package { "hadoop-resourcemanager":
+      ensure => latest,
+      require => Package["jdk"],
+    }
+
+    service { "hadoop-resourcemanager":
+      ensure => running,
+      hasstatus => true,
+      subscribe => [Package["hadoop-resourcemanager"], File["/etc/hadoop/conf/hadoop-env.sh"], File["/etc/yarn/conf/yarn-site.xml"]],
+      require => [ Package["hadoop-resourcemanager"] ]
+    }
+  }
+
+
+  define nodemanager ($rm_host, $rm_port, $rt_port, $auth = "simple", $dirs = ["/tmp/yarn"]){
+    $hadoop_rm_host = $rm_host
+    $hadoop_rm_port = $rm_port
+    $hadoop_rt_port = $rt_port
+
+    include common-yarn
+
+    package { "hadoop-nodemanager":
+      ensure => latest,
+      require => Package["jdk"],
+    }
+ 
+    service { "hadoop-nodemanager":
+      ensure => running,
+      hasstatus => true,
+      subscribe => [Package["hadoop-nodemanager"], File["/etc/hadoop/conf/hadoop-env.sh"], File["/etc/yarn/conf/yarn-site.xml"]],
+      require => [ Package["hadoop-nodemanager"] ],
+    } <- file { $dirs:
+      ensure => directory,
+      owner => yarn,
+      group => yarn,
+      mode => 755,
+      require => [Package["hadoop"]],
+    }
+  }
+
+  define mapred-app ($namenode_host, $namenode_port, $jobtracker_host, $jobtracker_port, $auth = "simple", $dirs = ["/tmp/mr"]){
+    $hadoop_namenode_host = $namenode_host
+    $hadoop_namenode_port = $namenode_port
+    $hadoop_jobtracker_host = $jobtracker_host
+    $hadoop_jobtracker_port = $jobtracker_port
+    $hadoop_security_authentication = $auth
+
+    include common-mapred-app
+
+    file { $dirs:
+      ensure => directory,
+      owner => mapred,
+      group => mapred,
+      mode => 755,
+      require => [Package["hadoop"]],
     }
   }
 
@@ -237,10 +255,10 @@ class hadoop {
       $hadoop_jobtracker_port = $jobtracker_port
       $hadoop_security_authentication = $auth
 
-      include common
+      include common-mapred-app
   
-      package { ["hadoop-doc", "hadoop-source", "hadoop-debuginfo", 
-                 "hadoop-fuse", "hadoop-libhdfs", "hadoop-pipes"]:
+      # FIXME: "hadoop-source", "hadoop-fuse", "hadoop-pipes"
+      package { ["hadoop-doc", "hadoop-debuginfo", "hadoop-libhdfs"]:
         ensure => latest,
         require => [Package["jdk"], Package["hadoop"]],  
       }
