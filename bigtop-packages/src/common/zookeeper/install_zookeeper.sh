@@ -101,46 +101,29 @@ CONF_DIR=/etc/zookeeper/conf
 CONF_DIST_DIR=/etc/zookeeper/conf.dist/
 
 install -d -m 0755 $PREFIX/$LIB_DIR/
-rm build/zookeeper-*-javadoc.jar
-rm build/zookeeper-*-bin.jar
-rm build/zookeeper-*-sources.jar
-cp build/zookeeper*.jar $PREFIX/$LIB_DIR/
+rm -f $BUILD_DIR/zookeeper-*-javadoc.jar $BUILD_DIR/zookeeper-*-bin.jar $BUILD_DIR/zookeeper-*-sources.jar $BUILD_DIR/zookeeper-*-test.jar
+cp $BUILD_DIR/zookeeper*.jar $PREFIX/$LIB_DIR/
 
 # Make a symlink of zookeeper.jar to zookeeper-version.jar
-for x in build/zookeeper*jar ; do
+for x in $PREFIX/$LIB_DIR/zookeeper*jar ; do
   x=$(basename $x)
   ln -s $x $PREFIX/$LIB_DIR/zookeeper.jar
 done
   
 
 install -d -m 0755 $PREFIX/$LIB_DIR/lib
-cp build/lib/*.jar $PREFIX/$LIB_DIR/lib
+cp $BUILD_DIR/lib/*.jar $PREFIX/$LIB_DIR/lib
 
 # Copy in the configuration files
 install -d -m 0755 $PREFIX/$CONF_DIST_DIR
-cp zoo.cfg conf/* $PREFIX/$CONF_DIST_DIR/
+cp zoo.cfg $BUILD_DIR/conf/* $PREFIX/$CONF_DIST_DIR/
 ln -s $CONF_DIR $PREFIX/$LIB_DIR/conf
-
-# FIXME:
-cat << __EOT__ >> $PREFIX/$CONF_DIST_DIR/log4j.properties
-# Define some default values that can be overridden by system properties
-zookeeper.root.logger=INFO, CONSOLE
-zookeeper.console.threshold=INFO
-zookeeper.log.dir=.
-zookeeper.log.file=zookeeper.log
-zookeeper.log.threshold=DEBUG
-zookeeper.tracelog.dir=.
-zookeeper.tracelog.file=zookeeper_trace.log
-
-log4j.appender.ROLLINGFILE.File=\${zookeeper.log.dir}/\${zookeeper.log.file}
-log4j.rootLogger=\${zookeeper.root.logger}
-__EOT__
 
 # Copy in the /usr/bin/zookeeper-server wrapper
 install -d -m 0755 $PREFIX/$LIB_DIR/bin
 
 for i in zkServer.sh zkEnv.sh zkCli.sh zkCleanup.sh
-	do cp bin/$i $PREFIX/$LIB_DIR/bin
+	do cp $BUILD_DIR/bin/$i $PREFIX/$LIB_DIR/bin
 	chmod 755 $PREFIX/$LIB_DIR/bin/$i
 done
 
@@ -190,7 +173,7 @@ chmod 755 $wrapper
 # Copy in the docs
 install -d -m 0755 $PREFIX/$DOC_DIR
 cp -a $BUILD_DIR/docs/* $PREFIX/$DOC_DIR
-cp *.txt $PREFIX/$DOC_DIR/
+cp $BUILD_DIR/*.txt $PREFIX/$DOC_DIR/
 
 install -d -m 0755 $MAN_DIR
 gzip -c zookeeper.1 > $MAN_DIR/zookeeper.1.gz
