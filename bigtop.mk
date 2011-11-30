@@ -91,10 +91,10 @@ SQOOP_BASE_VERSION=1.4.0
 SQOOP_PKG_VERSION=1.4.0
 SQOOP_RELEASE_VERSION=1
 SQOOP_TARBALL_DST=sqoop-$(SQOOP_BASE_VERSION).tar.gz
-#SQOOP_TARBALL_SRC=$(SQOOP_TARBALL_DST)
-#SQOOP_SITE=http://github.com/downloads/cloudera/sqoop/
-SQOOP_SITE=https://github.com/apache/sqoop/tarball
-SQOOP_TARBALL_SRC=1bf7cbf
+SQOOP_TARBALL_SRC=sqoop-$(SQOOP_BASE_VERSION)-incubating.tar.gz
+SQOOP_SITE=$(APACHE_MIRROR)/incubator/sqoop/sqoop-$(SQOOP_BASE_VERSION)-incubating
+#SQOOP_SITE=https://github.com/apache/sqoop/tarball
+#SQOOP_TARBALL_SRC=1bf7cbf
 $(eval $(call PACKAGE,sqoop,SQOOP))
 
 # Oozie
