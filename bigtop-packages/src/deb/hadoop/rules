@@ -39,14 +39,6 @@ endif
 build: build-stamp
 build-stamp:
 	dh_testdir
-	patch -p0 < ./debian/HADOOP-7787.patch
-	patch -p0 < ./debian/HADOOP-7801.patch	
-	patch -p0 < ./debian/HDFS-2543.patch
-	patch -p0 < ./debian/MAPREDUCE-3372.patch
-	patch -p0 < ./debian/HADOOP-7802.patch
-	patch -p0 < ./debian/HDFS-2544.patch
-	patch -p0 < ./debian/MAPREDUCE-3373.patch
-
 	env HADOOP_VERSION=${hadoop_version} HADOOP_ARCH=${native_dir} \
 		bash debian/do-component-build -Divy.home=${HOME}/.ivy2
 	touch $@

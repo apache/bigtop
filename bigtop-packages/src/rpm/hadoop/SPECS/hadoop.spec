@@ -125,13 +125,6 @@ Source7: hadoop-fuse-dfs.1
 Source8: hadoop-fuse.default
 Source9: hadoop.nofiles.conf
 Source10: yarn-init.tmpl
-Patch0: HADOOP-7787.patch
-Patch1: HADOOP-7801.patch
-Patch2: HADOOP-7802.patch
-Patch3: MAPREDUCE-3372.patch
-Patch4: HDFS-2543.patch
-Patch5: MAPREDUCE-3373.patch
-Patch6: HDFS-2544.patch
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: python >= 2.4, git, fuse-devel,fuse, automake, autoconf
 Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils
@@ -275,14 +268,7 @@ AutoReq: no
 Hadoop Filesystem Library
 
 %prep
-%setup -n apache-hadoop-common-a823266
-%patch0
-%patch1
-%patch2
-%patch3
-%patch4
-%patch5
-%patch6
+%setup -n apache-hadoop-common-61572bb
 
 %build
 # This assumes that you installed Java JDK 6 and set JAVA_HOME

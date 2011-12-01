@@ -27,6 +27,10 @@ pushd hadoop-mapreduce-project
 popd
 
 # Build documentation
+# FIXME: the pushd/popd block is an ugly workaround for spurious Maven failures
+pushd hadoop-mapreduce-project/hadoop-yarn/hadoop-yarn-site
+  mvn site site:stage ${MAVEN_SKIP_TESTS} $@ || :
+popd
 mvn site site:stage ${MAVEN_SKIP_TESTS} $@
 
 (cd build ; tar --strip-components=1 -xzvf  ../hadoop-dist/target/hadoop-0.23.0-SNAPSHOT.tar.gz)
