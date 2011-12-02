@@ -129,7 +129,7 @@ bash %{SOURCE1} -Dversion=%{version}
 %__rm -rf $RPM_BUILD_ROOT
 cp $RPM_SOURCE_DIR/zookeeper.1 $RPM_SOURCE_DIR/zoo.cfg .
 sh %{SOURCE2} \
-          --build-dir=. \
+          --build-dir=build/zookeeper-%{zookeeper_version} \
           --doc-dir=%{doc_zookeeper} \
           --prefix=$RPM_BUILD_ROOT
 
