@@ -61,10 +61,13 @@ mv hadoop-common-* common
 mv hadoop-hdfs-* hdfs
 mv hadoop-mapred-* mapred
 
+# create empty lib directories so that build.xml logic doesn't break
+mkdir common/lib hdfs/lib mapred/lib
+
 # munge text docs
-mv common/{LICENSE,NOTICE,README}.txt .
-rm hdfs/{LICENSE,NOTICE}.txt # same as common
-rm mapred/{LICENSE,NOTICE}.txt # same as common
+cp common/{LICENSE,NOTICE,README}.txt .
+#rm hdfs/{LICENSE,NOTICE}.txt # same as common
+#rm mapred/{LICENSE,NOTICE}.txt # same as common
 
 # we can NOT simply munge the docs directories, since
 # index.html is per-component (even though everything else
