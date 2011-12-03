@@ -30,8 +30,8 @@ else
   JSVC_URL=http://archive.apache.org/dist/commons/daemon/binaries/1.0.2/linux/commons-daemon-1.0.2-bin-linux-i386.tar.gz
 fi
 
-for project in common hdfs mapred ; do 
-  cd $project || cd mapreduce
+for project in common hdfs mapreduce ; do 
+  cd $project
   ant \
     -Dxercescroot=$XERCESCROOT \
     -Djava5.home=$JAVA5_HOME \
@@ -59,7 +59,7 @@ cd "$WORKDIR"
 # get rid of the version names
 mv hadoop-common-* common
 mv hadoop-hdfs-* hdfs
-mv hadoop-mapred-* mapred
+mv hadoop-mapred-* mapreduce
 
 # make sure configure scripts are executable
 chmod 755 common/src/test/system/c++/runAs/configure hdfs/src/contrib/fuse-dfs/configure
@@ -83,7 +83,7 @@ cp common/{LICENSE,NOTICE,README}.txt .
 # munge the contrib directories
 for dir in contrib; do
   mkdir $dir
-  for proj in hdfs mapred; do
+  for proj in hdfs mapreduce; do
     cp -Rp $proj/$dir/* $dir
   done
 done
@@ -91,14 +91,14 @@ done
 # munge the bin and conf directories
 for dir in bin conf; do
   mkdir $dir
-  for proj in common hdfs mapred; do
+  for proj in common hdfs mapreduce; do
     cp -Rp $proj/$dir/* $dir
   done
 done
 
 # munge the lib directory
 mkdir lib
-for proj in common hdfs mapred; do
+for proj in common hdfs mapreduce; do
   cp -Rp $proj/lib/* lib
   rm -r $proj/lib
   # create empty lib directories so that build.xml logic doesn't break
@@ -108,14 +108,14 @@ rm lib/hadoop-*.jar # hdfs and mapred dependencies on common, hdfs jars
 
 # munge the webapps directory
 mkdir webapps
-for proj in hdfs mapred; do
+for proj in hdfs mapreduce; do
   cp -Rp $proj/webapps/* webapps
   rm -r $proj/webapps
 done
 
 # get the mapred c++ (if compiled)
 mkdir c++
-for proj in hdfs mapred; do
+for proj in hdfs mapreduce; do
   if [ -d $proj/c++ ]; then
     cp -Rp $proj/c++/* c++
     rm -r $proj/c++
@@ -123,7 +123,7 @@ for proj in hdfs mapred; do
 done
 
 # get our jar files
-mv {common,hdfs,mapred}/*.jar .
+mv {common,hdfs,mapreduce}/*.jar .
 
 # remove native build files
 rm `find . -type f | egrep "\.(P|)o$"`
