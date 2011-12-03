@@ -22,9 +22,6 @@ mkdir build/src
 # Build artifacts
 MAVEN_SKIP_TESTS="-DskipTests -DskipTest -DskipITs"
 mvn -Pdist -Pnative -Psrc -Dtar ${MAVEN_SKIP_TESTS} install "$@"
-pushd hadoop-mapreduce-project
-  ant examples -Dresolvers=internal
-popd
 
 # Build documentation
 # FIXME: the pushd/popd block is an ugly workaround for spurious Maven failures
