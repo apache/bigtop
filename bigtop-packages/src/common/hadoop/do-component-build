@@ -64,6 +64,9 @@ mv hadoop-mapred-* mapred
 # create empty lib directories so that build.xml logic doesn't break
 mkdir common/lib hdfs/lib mapred/lib
 
+# make sure configure scripts are executable
+chmod 755 common/src/test/system/c++/runAs/configure hdfs/src/contrib/fuse-dfs/configure
+
 # munge text docs
 cp common/{LICENSE,NOTICE,README}.txt .
 #rm hdfs/{LICENSE,NOTICE}.txt # same as common
