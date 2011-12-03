@@ -1,29 +1,98 @@
---- ivy.xml	2011-11-21 17:26:11.000000000 -0800
-+++ ivy.xml	2011-11-23 16:17:13.618899092 -0800
-@@ -108,6 +108,10 @@
+Index: shims/test/hadoop23/org/apache/pig/test/MiniCluster.java
+===================================================================
+--- shims/test/hadoop23/org/apache/pig/test/MiniCluster.java	(revision 1208121)
++++ shims/test/hadoop23/org/apache/pig/test/MiniCluster.java	(working copy)
+@@ -92,14 +92,16 @@
+ 				e.printStackTrace();
+ 			}
+ 			*/
+-			m_dfs.getFileSystem().copyFromLocalFile(new Path("file:///hadoop-mapreduce-client-app-0.23.0-SNAPSHOT.jar"), new Path("/hadoop-mapreduce-client-app-0.23.0-SNAPSHOT.jar"));
+-			m_dfs.getFileSystem().copyFromLocalFile(new Path("file:///hadoop-mapreduce-client-jobclient-0.23.0-SNAPSHOT.jar"), new Path("/hadoop-mapreduce-client-jobclient-0.23.0-SNAPSHOT.jar"));
+-			m_dfs.getFileSystem().copyFromLocalFile(new Path("file:///pig.jar"), new Path("/pig.jar"));
+-			m_dfs.getFileSystem().copyFromLocalFile(new Path("file:///pig-test.jar"), new Path("/pig-test.jar"));
++			File jarBaseDir = new File("./build/ivy/lib/Pig");
++			
++			m_dfs.getFileSystem().copyFromLocalFile(new Path(new File(jarBaseDir, "hadoop-mapreduce-client-app-0.23.0-SNAPSHOT.jar").toURI()), new Path("/hadoop-mapreduce-client-app-0.23.0-SNAPSHOT.jar"));
++			m_dfs.getFileSystem().copyFromLocalFile(new Path(new File(jarBaseDir, "hadoop-mapreduce-client-jobclient-0.23.0-SNAPSHOT.jar").toURI()), new Path("/hadoop-mapreduce-client-jobclient-0.23.0-SNAPSHOT.jar"));
++			m_dfs.getFileSystem().copyFromLocalFile(new Path(new File("pig-withouthadoop.jar").toURI()), new Path("/pig-withouthadoop.jar"));
++			//m_dfs.getFileSystem().copyFromLocalFile(new Path(new File(jarBaseDir, "pig-test.jar").toURI()), new Path("/pig-test.jar"));
+ 
+             DistributedCache.addFileToClassPath(new Path("/hadoop-mapreduce-client-app-0.23.0-SNAPSHOT.jar"), m_conf);
+-            DistributedCache.addFileToClassPath(new Path("/pig.jar"), m_conf);
+-            DistributedCache.addFileToClassPath(new Path("/pig-test.jar"), m_conf);
++            DistributedCache.addFileToClassPath(new Path("/pig-withouthadoop.jar"), m_conf);
++            //DistributedCache.addFileToClassPath(new Path("/pig-test.jar"), m_conf);
+             DistributedCache.addFileToClassPath(new Path("/hadoop-mapreduce-client-jobclient-0.23.0-SNAPSHOT.jar"), m_conf);
+             String cachefile = m_conf.get("mapreduce.job.cache.files");
+             m_conf.set("alternative.mapreduce.job.cache.files", cachefile);
+Index: ivy.xml
+===================================================================
+--- ivy.xml	(revision 1208121)
++++ ivy.xml	(working copy)
+@@ -67,41 +67,50 @@
+     <dependency org="org.apache.hadoop" name="hadoop-test" rev="${hadoop-test.version}"
+       conf="hadoop20->default"/>
+     <dependency org="org.apache.hadoop" name="hadoop-annotations" 
+-      rev="${hadoop-common.version}" conf="hadoop23->master"/>
++      rev="${hadoop-common.version}" conf="hadoop23->default"/>
+     <dependency org="org.apache.hadoop" name="hadoop-auth" 
+-      rev="${hadoop-common.version}" conf="hadoop23->master"/>
++      rev="${hadoop-common.version}" conf="hadoop23->default"/>
+     <dependency org="org.apache.hadoop" name="hadoop-common" 
+-      rev="${hadoop-common.version}" conf="hadoop23->master">
++      rev="${hadoop-common.version}" conf="hadoop23->default">
+       <artifact name="hadoop-common" ext="jar" />
+       <artifact name="hadoop-common" type="tests" ext="jar" m:classifier="tests" />
+     </dependency>
+     <dependency org="org.apache.hadoop" name="hadoop-hdfs"
+-      rev="${hadoop-hdfs.version}" conf="hadoop23->master">
++      rev="${hadoop-hdfs.version}" conf="hadoop23->default">
+       <artifact name="hadoop-hdfs" ext="jar" />
+       <artifact name="hadoop-hdfs" type="tests" ext="jar" m:classifier="tests" />
++      <exclude org="commons-daemon" module="commons-daemon"/><!--bad POM-->
++      <exclude org="org.apache.commons" module="commons-daemon"/><!--bad POM-->
+     </dependency>
++    <dependency org="org.apache.hadoop" name="hadoop-mapreduce-client-app" rev="${hadoop-mapreduce.version}"
++      conf="hadoop23->default"/>
++    <dependency org="org.apache.hadoop" name="hadoop-mapreduce-client-common" 
++      rev="${hadoop-mapreduce.version}" conf="hadoop23->default"/>
+     <dependency org="org.apache.hadoop" name="hadoop-mapreduce-client-core" rev="${hadoop-mapreduce.version}"
+-      conf="hadoop23->master"/>
++      conf="hadoop23->default"/>
++    <dependency org="org.apache.hadoop" name="hadoop-mapreduce-client-hs" rev="${hadoop-mapreduce.version}"
++      conf="hadoop23->default"/>
+     <dependency org="org.apache.hadoop" name="hadoop-mapreduce-client-jobclient" rev="${hadoop-mapreduce.version}"
+-      conf="hadoop23->master">
++      conf="hadoop23->default">
++        <artifact name="hadoop-mapreduce-client-jobclient" type="jar"/>
+         <artifact name="hadoop-mapreduce-client-jobclient" type="jar" m:classifier="tests"/>
+         <exclude org="commons-daemon" module="commons-daemon"/><!--bad POM-->
+         <exclude org="org.apache.commons" module="commons-daemon"/><!--bad POM-->
+     </dependency>
++    <dependency org="org.apache.hadoop" name="hadoop-mapreduce-client-shuffle" 
++      rev="${hadoop-mapreduce.version}" conf="hadoop23->default"/>
++    <dependency org="org.apache.hadoop" name="hadoop-yarn-api" 
++      rev="${hadoop-common.version}" conf="hadoop23->default"/>
++    <dependency org="org.apache.hadoop" name="hadoop-yarn-common" 
++      rev="${hadoop-common.version}" conf="hadoop23->default"/>
++    <dependency org="org.apache.hadoop" name="hadoop-yarn-server-nodemanager" 
++      rev="${hadoop-common.version}" conf="hadoop23->default"/>
++    <dependency org="org.apache.hadoop" name="hadoop-yarn-server-resourcemanager" 
++      rev="${hadoop-common.version}" conf="hadoop23->default"/>
+     <dependency org="org.apache.hadoop" name="hadoop-yarn-server-tests" rev="${hadoop-mapreduce.version}"
+       conf="hadoop23->master">
+       <artifact name="hadoop-yarn-server-tests" type="jar" m:classifier="tests"/>
+     </dependency>
+-    <dependency org="org.apache.hadoop" name="hadoop-mapreduce-client-common" 
+-      rev="${hadoop-mapreduce.version}" conf="hadoop23->master"/>
+-    <dependency org="org.apache.hadoop" name="hadoop-yarn-api" 
+-      rev="${hadoop-common.version}" conf="hadoop23->master"/>
+-    <dependency org="org.apache.hadoop" name="hadoop-yarn-common" 
+-      rev="${hadoop-common.version}" conf="hadoop23->master"/>
+-    <dependency org="org.apache.hadoop" name="hadoop-yarn-server-nodemanager" 
+-      rev="${hadoop-common.version}" conf="hadoop23->master"/>
+-    <dependency org="org.apache.hadoop" name="hadoop-yarn-server-resourcemanager" 
+-      rev="${hadoop-common.version}" conf="hadoop23->master"/>
+     <dependency org="org.mortbay.jetty" name="jetty" rev="${jetty.version}"
        conf="compile->master"/>
-     <dependency org="commons-logging" name="commons-logging" rev="${commons-logging.version}"
-       conf="compile->master;checkstyle->master"/>
-+    <dependency org="commons-collections" name="commons-collections" rev="${commons-collections.version}"
-+      conf="compile->master;checkstyle->master"/>
-+    <dependency org="javax.servlet" name="servlet-api" rev="${servlet-api.version}"
-+      conf="compile->master;checkstyle->master"/>
-      <dependency org="org.slf4j" name="slf4j-log4j12" rev="${slf4j-log4j12.version}"
-       conf="compile->master;test->master"/>
-     <dependency org="commons-cli" name="commons-cli" rev="${commons-cli.version}"
---- ivy/libraries.properties	2011-11-21 17:26:11.000000000 -0800
-+++ ivy/libraries.properties	2011-11-23 16:17:22.268899097 -0800
-@@ -24,11 +24,13 @@
- commons-codec.version=1.4
- commons-el.version=1.0
- commons-logging.version=1.1.1
-+commons-collections.version=3.2.1
- commons-lang.version=2.4
- commons-configuration.version=1.6
- commons-httpclient.version=3.1
- checkstyle.version=4.2
- ivy.version=2.2.0
-+servlet-api.version=2.5
- guava.version=r06
- hadoop-core.version=0.20.2
- hadoop-test.version=0.20.2
+     <dependency org="org.mortbay.jetty" name="jetty-util" rev="${jetty-util.version}"
