@@ -27,8 +27,8 @@ Index: shims/test/hadoop23/org/apache/pig/test/MiniCluster.java
              m_conf.set("alternative.mapreduce.job.cache.files", cachefile);
 Index: ivy.xml
 ===================================================================
---- ivy.xml	(revision 1208121)
-+++ ivy.xml	(working copy)
+--- ivy.xml	2011-11-21 17:26:11.000000000 -0800
++++ ivy.xml	2011-12-02 20:49:31.149818867 -0800
 @@ -67,41 +67,50 @@
      <dependency org="org.apache.hadoop" name="hadoop-test" rev="${hadoop-test.version}"
        conf="hadoop20->default"/>
@@ -69,30 +69,30 @@ Index: ivy.xml
          <exclude org="commons-daemon" module="commons-daemon"/><!--bad POM-->
          <exclude org="org.apache.commons" module="commons-daemon"/><!--bad POM-->
      </dependency>
+-    <dependency org="org.apache.hadoop" name="hadoop-yarn-server-tests" rev="${hadoop-mapreduce.version}"
+-      conf="hadoop23->master">
+-      <artifact name="hadoop-yarn-server-tests" type="jar" m:classifier="tests"/>
+-    </dependency>
+-    <dependency org="org.apache.hadoop" name="hadoop-mapreduce-client-common"
+-      rev="${hadoop-mapreduce.version}" conf="hadoop23->master"/>
 +    <dependency org="org.apache.hadoop" name="hadoop-mapreduce-client-shuffle" 
 +      rev="${hadoop-mapreduce.version}" conf="hadoop23->default"/>
-+    <dependency org="org.apache.hadoop" name="hadoop-yarn-api" 
-+      rev="${hadoop-common.version}" conf="hadoop23->default"/>
-+    <dependency org="org.apache.hadoop" name="hadoop-yarn-common" 
-+      rev="${hadoop-common.version}" conf="hadoop23->default"/>
-+    <dependency org="org.apache.hadoop" name="hadoop-yarn-server-nodemanager" 
-+      rev="${hadoop-common.version}" conf="hadoop23->default"/>
-+    <dependency org="org.apache.hadoop" name="hadoop-yarn-server-resourcemanager" 
-+      rev="${hadoop-common.version}" conf="hadoop23->default"/>
-     <dependency org="org.apache.hadoop" name="hadoop-yarn-server-tests" rev="${hadoop-mapreduce.version}"
-       conf="hadoop23->master">
-       <artifact name="hadoop-yarn-server-tests" type="jar" m:classifier="tests"/>
-     </dependency>
--    <dependency org="org.apache.hadoop" name="hadoop-mapreduce-client-common" 
--      rev="${hadoop-mapreduce.version}" conf="hadoop23->master"/>
--    <dependency org="org.apache.hadoop" name="hadoop-yarn-api" 
+     <dependency org="org.apache.hadoop" name="hadoop-yarn-api" 
 -      rev="${hadoop-common.version}" conf="hadoop23->master"/>
--    <dependency org="org.apache.hadoop" name="hadoop-yarn-common" 
++      rev="${hadoop-common.version}" conf="hadoop23->default"/>
+     <dependency org="org.apache.hadoop" name="hadoop-yarn-common" 
 -      rev="${hadoop-common.version}" conf="hadoop23->master"/>
--    <dependency org="org.apache.hadoop" name="hadoop-yarn-server-nodemanager" 
++      rev="${hadoop-common.version}" conf="hadoop23->default"/>
+     <dependency org="org.apache.hadoop" name="hadoop-yarn-server-nodemanager" 
 -      rev="${hadoop-common.version}" conf="hadoop23->master"/>
--    <dependency org="org.apache.hadoop" name="hadoop-yarn-server-resourcemanager" 
++      rev="${hadoop-common.version}" conf="hadoop23->default"/>
+     <dependency org="org.apache.hadoop" name="hadoop-yarn-server-resourcemanager" 
 -      rev="${hadoop-common.version}" conf="hadoop23->master"/>
++      rev="${hadoop-common.version}" conf="hadoop23->default"/>
++    <dependency org="org.apache.hadoop" name="hadoop-yarn-server-tests" rev="${hadoop-mapreduce.version}"
++      conf="hadoop23->master">
++      <artifact name="hadoop-yarn-server-tests" type="jar" m:classifier="tests"/>
++    </dependency>
      <dependency org="org.mortbay.jetty" name="jetty" rev="${jetty.version}"
        conf="compile->master"/>
      <dependency org="org.mortbay.jetty" name="jetty-util" rev="${jetty-util.version}"
