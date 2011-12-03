@@ -61,9 +61,6 @@ mv hadoop-common-* common
 mv hadoop-hdfs-* hdfs
 mv hadoop-mapred-* mapred
 
-# create empty lib directories so that build.xml logic doesn't break
-mkdir common/lib hdfs/lib mapred/lib
-
 # make sure configure scripts are executable
 chmod 755 common/src/test/system/c++/runAs/configure hdfs/src/contrib/fuse-dfs/configure
 
@@ -104,6 +101,8 @@ mkdir lib
 for proj in common hdfs mapred; do
   cp -Rp $proj/lib/* lib
   rm -r $proj/lib
+  # create empty lib directories so that build.xml logic doesn't break
+  mkdir $proj/lib
 done
 rm lib/hadoop-*.jar # hdfs and mapred dependencies on common, hdfs jars
 
