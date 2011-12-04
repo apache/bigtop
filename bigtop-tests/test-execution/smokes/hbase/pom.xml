@@ -91,6 +91,7 @@
           <additionalClasspathElements>
             <additionalClasspathElement>${HBASE_HOME}/conf</additionalClasspathElement>
             <additionalClasspathElement>${ZOOKEEPER_HOME}/conf</additionalClasspathElement>
+            <additionalClasspathElement>${HADOOP_HOME}/conf</additionalClasspathElement>
           </additionalClasspathElements>
           <systemPropertyVariables>
             <org.apache.bigtop.itest.hbasesmoke.TestHbasePigSmoke.extra_jars>
