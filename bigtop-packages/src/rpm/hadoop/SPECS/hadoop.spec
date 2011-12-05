@@ -125,7 +125,7 @@ Source7: hadoop-fuse-dfs.1
 Source8: hadoop-fuse.default
 Source9: hadoop.nofiles.conf
 Source10: yarn-init.tmpl
-Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
 BuildRequires: python >= 2.4, git, fuse-devel,fuse, automake, autoconf
 Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils
 Provides: hadoop
