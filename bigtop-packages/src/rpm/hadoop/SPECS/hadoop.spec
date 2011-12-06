@@ -51,11 +51,11 @@
 # So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
 %if %{!?suse_version:1}0 && %{!?mgaversion:1}0
 
-# brp-repack-jars uses unzip to expand jar files
+# FIXME: brp-repack-jars uses unzip to expand jar files
 # Unfortunately aspectjtools-1.6.5.jar pulled by ivy contains some files and directories without any read permission
 # and make whole process to fail.
 # So for now brp-repack-jars is being deactivated until this is fixed.
-# See CDH-2151
+# See BIGTOP-294
 %define __os_install_post \
     /usr/lib/rpm/redhat/brp-compress ; \
     /usr/lib/rpm/redhat/brp-strip-static-archive %{__strip} ; \
