@@ -5,3 +5,4 @@
 /etc/default/hadoop
 /etc/security/limits.d/hadoop.nofiles.conf
 #/usr/share/doc/hadoop
+/usr/lib/hadoop/lib/native
