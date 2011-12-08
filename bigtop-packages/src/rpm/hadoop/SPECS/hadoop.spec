@@ -285,7 +285,6 @@ bash %{SOURCE2} \
   --system-lib-dir=$RPM_BUILD_ROOT%{_libdir} \
   --system-libexec-dir=$RPM_BUILD_ROOT%{libexecdir} \
   --hadoop-etc-dir=$RPM_BUILD_ROOT%{etc_hadoop} \
-  --yarn-etc-dir=$RPM_BUILD_ROOT%{etc_yarn} \
   --prefix=$RPM_BUILD_ROOT \
   --doc-dir=$RPM_BUILD_ROOT%{doc_hadoop} \
   --example-dir=$RPM_BUILD_ROOT%{doc_hadoop}/examples \
