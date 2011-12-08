@@ -16,12 +16,17 @@
 
 set -ex
 
+if [ -z "$BUNDLE_SNAPPY" ] ; then
+  [ -f /usr/lib/libsnappy.so ] && BUNDLE_SNAPPY="-Dsnappy.prefix=x -Dbundle.snappy=true -Dsnappy.lib=/usr/lib"
+  [ -f /usr/lib64/libsnappy.so ] && BUNDLE_SNAPPY="-Dsnappy.prefix=x -Dbundle.snappy=true -Dsnappy.lib=/usr/lib64"
+fi
+
 mkdir build
 mkdir build/src
 
 # Build artifacts
 MAVEN_SKIP_TESTS="-DskipTests -DskipTest -DskipITs"
-mvn -Pdist -Pnative -Psrc -Dtar ${MAVEN_SKIP_TESTS} install "$@"
+mvn $BUNDLE_SNAPPY -Pdist -Pnative -Psrc -Dtar ${MAVEN_SKIP_TESTS} install "$@"
 
 # Build documentation
 # FIXME: the pushd/popd block is an ugly workaround for spurious Maven failures
