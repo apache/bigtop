@@ -355,7 +355,7 @@ getent passwd yarn >/dev/null || /usr/sbin/useradd --comment "Hadoop Yarn" --she
 
 %post
 %{alternatives_cmd} --install %{config_hadoop} %{name}-conf %{etc_hadoop}/conf.empty 10
-%{alternatives_cmd} --install %{config_yarn} yarn-conf %{etc_yarn}/conf.empty 10
+#%{alternatives_cmd} --install %{config_yarn} yarn-conf %{etc_yarn}/conf.empty 10
 %{alternatives_cmd} --install %{bin_hadoop}/%{hadoop_name} %{hadoop_name}-default %{bin_hadoop}/%{name} 20 \
   --slave %{log_hadoop_dirname}/%{hadoop_name} %{hadoop_name}-log %{log_hadoop} \
   --slave %{lib_hadoop_dirname}/%{hadoop_name} %{hadoop_name}-lib %{lib_hadoop} \
@@ -384,7 +384,7 @@ fi
 %files
 %defattr(-,root,root)
 %config(noreplace) %{etc_hadoop}/conf.empty
-%config(noreplace) %{etc_yarn}/conf.empty
+#%config(noreplace) %{etc_yarn}/conf.empty
 %config(noreplace) /etc/default/hadoop
 %config(noreplace) /etc/default/yarn
 %config(noreplace) /etc/security/limits.d/hadoop.nofiles.conf
@@ -436,7 +436,7 @@ fi
 # Pseudo-distributed Hadoop installation
 %post conf-pseudo
 %{alternatives_cmd} --install %{config_hadoop} %{name}-conf %{etc_hadoop}/conf.pseudo 30
-%{alternatives_cmd} --install %{config_yarn} yarn-conf %{etc_yarn}/conf.pseudo 30
+#%{alternatives_cmd} --install %{config_yarn} yarn-conf %{etc_yarn}/conf.pseudo 30
 
 %preun conf-pseudo
 if [ "$1" = 0 ]; then
@@ -447,7 +447,7 @@ fi
 %files conf-pseudo
 %defattr(-,root,root)
 %config(noreplace) %attr(755,root,root) %{etc_hadoop}/conf.pseudo
-%config(noreplace) %attr(755,root,root) %{etc_yarn}/conf.pseudo
+#%config(noreplace) %attr(755,root,root) %{etc_yarn}/conf.pseudo
 %dir %attr(0755,root,hadoop) /var/lib/%{name}
 %dir %attr(1777,root,hadoop) /var/lib/%{name}/cache
 
