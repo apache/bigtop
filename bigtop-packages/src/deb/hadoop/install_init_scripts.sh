@@ -21,10 +21,10 @@ SRC_PKG=hadoop
 namenode_user=hdfs
 secondarynamenode_user=hdfs
 datanode_user=hdfs
-jobtracker_user=mapred
-tasktracker_user=mapred
+jobtracker_user=yarn
+tasktracker_user=yarn
 
-for node in namenode secondarynamenode jobtracker tasktracker datanode ; do
+for node in namenode secondarynamenode datanode resourcemanager nodemanager; do
     service_pkgdir=debian/$SRC_PKG-$node
     debdir=$service_pkgdir/DEBIAN
     template="debian/service-init.d.tpl"

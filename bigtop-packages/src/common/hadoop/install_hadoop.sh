@@ -44,7 +44,6 @@ OPTS=$(getopt \
   -l 'system-lib-dir:' \
   -l 'system-libexec-dir:' \
   -l 'hadoop-etc-dir:' \
-  -l 'yarn-etc-dir:' \
   -l 'doc-dir:' \
   -l 'man-dir:' \
   -l 'example-dir:' \
@@ -88,9 +87,6 @@ while true ; do
         --hadoop-etc-dir)
         HADOOP_ETC_DIR=$2 ; shift 2
         ;;
-        --yarn-etc-dir)
-        YARN_ETC_DIR=$2 ; shift 2
-        ;;
         --installed-lib-dir)
         INSTALLED_LIB_DIR=$2 ; shift 2
         ;;
@@ -127,7 +123,6 @@ SYSTEM_INCLUDE_DIR=${SYSTEM_INCLUDE_DIR:-$PREFIX/usr/include}
 SYSTEM_LIBEXEC_DIR=${SYSTEM_LIBEXEC_DIR:-$PREFIX/usr/libexec}
 EXAMPLE_DIR=${EXAMPLE_DIR:-$DOC_DIR/examples}
 HADOOP_ETC_DIR=${HADOOP_ETC_DIR:-$PREFIX/etc/hadoop}
-YARN_ETC_DIR=${YARN_ETC_DIR:-$PREFIX/etc/yarn}
 
 INSTALLED_HADOOP_DIR=${INSTALLED_HADOOP_DIR:-/usr/lib/hadoop}
 
@@ -167,6 +162,13 @@ exec $INSTALLED_HADOOP_DIR/bin/$bin_wrapper "\$@"
 EOF
   chmod 755 $wrapper
 done
+
+#libexec
+install -d -m 0755 ${SYSTEM_LIBEXEC_DIR}
+rm -fv ${BUILD_DIR}/libexec/jsvc
+mv ${BUILD_DIR}/libexec/* ${SYSTEM_LIBEXEC_DIR}/
+mv ${BUILD_DIR}/bin/*-config.sh ${SYSTEM_LIBEXEC_DIR}/
+
 
 # bin
 install -d -m 0755 ${HADOOP_BIN_DIR}
@@ -212,20 +214,12 @@ for library in libsnappy.so.1.* libhadoop.so.1.0.0; do
   ldconfig -vlN ${HADOOP_NATIVE_LIB_DIR}/${library}
 done
 
-#libexec
-install -d -m 0755 ${SYSTEM_LIBEXEC_DIR}
-rm -fv ${BUILD_DIR}/libexec/jsvc
-cp ${BUILD_DIR}/libexec/* ${SYSTEM_LIBEXEC_DIR}/
-cp ${BUILD_DIR}/bin/*-config.sh ${SYSTEM_LIBEXEC_DIR}/
-
 # conf
 install -d -m 0755 $HADOOP_ETC_DIR/conf.empty
-install -d -m 0755 $YARN_ETC_DIR/conf.empty
 
-cp ${BUILD_DIR}/conf/* $YARN_ETC_DIR/conf.empty
+cp ${BUILD_DIR}/conf/* $HADOOP_ETC_DIR/conf.empty
 cp ${BUILD_DIR}/etc/hadoop/* $HADOOP_ETC_DIR/conf.empty
 cp $DISTRO_DIR/mrapp-generated-classpath $HADOOP_ETC_DIR/conf.empty
-cp $DISTRO_DIR/mrapp-generated-classpath $YARN_ETC_DIR/conf.empty
 
 # docs
 install -d -m 0755 ${DOC_DIR}
@@ -248,11 +242,6 @@ for conf in conf.pseudo ; do
   # Overlay the -site files
   (cd $DISTRO_DIR/$conf && tar -cf - .) | (cd $HADOOP_ETC_DIR/$conf && tar -xf -)
   cp $DISTRO_DIR/mrapp-generated-classpath $HADOOP_ETC_DIR/$conf
-
-  install -d -m 0755 $YARN_ETC_DIR/$conf
-  # Overlay the -site files
-  (cd $DISTRO_DIR/$conf.yarn && tar -cf - .) | (cd $YARN_ETC_DIR/$conf && tar -xf -)
-  cp $DISTRO_DIR/mrapp-generated-classpath $YARN_ETC_DIR/$conf
 done
 cp ${BUILD_DIR}/etc/hadoop/log4j.properties $HADOOP_ETC_DIR/conf.pseudo
 

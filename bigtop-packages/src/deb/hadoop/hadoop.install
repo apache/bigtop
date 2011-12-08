@@ -1,4 +1,5 @@
 /usr/bin
+/usr/libexec
 /usr/lib/hadoop
 /etc/hadoop/conf.empty
 /etc/default/hadoop

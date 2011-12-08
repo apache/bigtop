@@ -47,30 +47,6 @@ Description: A software platform for processing vast amounts of data
  nodes around the cluster. MapReduce can then process the data where it is
  located.
 
-Package: hadoop-native
-Provides: hadoop-native
-Architecture: i386 amd64
-Depends: ${shlibs:Depends}, hadoop (= ${source:Version}), liblzo2-2, libzip1
-Enhances: hadoop
-Description: Native libraries for Hadoop (e.g., compression)
- This optional package contains native libraries that increase the performance
- of Hadoop's compression.
-
-Package: hadoop-sbin
-Provides: hadoop-sbin
-Architecture: i386 amd64
-Depends: ${shlibs:Depends}, hadoop (= ${source:Version})
-Enhances: hadoop
-Description: Server-side binaries necessary for secured Hadoop clusters
- This package contains a setuid program, 'task-controller', which is used for
- launching MapReduce tasks in a secured MapReduce cluster. This program allows
- the tasks to run as the Unix user who submitted the job, rather than the
- Unix user running the MapReduce daemons.
- .
- This package also contains 'jsvc', a daemon wrapper necessary to allow
- DataNodes to bind to a low (privileged) port and then drop root privileges
- before continuing operation.
-
 Package: hadoop-fuse
 Provides: hadoop-fuse
 Architecture: i386 amd64
@@ -100,30 +76,27 @@ Description: Source code for Hadoop
 Package: hadoop-conf-pseudo
 Provides: hadoop-conf-pseudo
 Architecture: all
-Depends: hadoop (= ${source:Version}), hadoop-namenode (= ${source:Version}), hadoop-datanode (= ${source:Version}), hadoop-secondarynamenode (= ${source:Version}), hadoop-jobtracker (= ${source:Version}), hadoop-tasktracker (= ${source:Version})
+Depends: hadoop (= ${source:Version}), hadoop-namenode (= ${source:Version}), hadoop-datanode (= ${source:Version}), hadoop-secondarynamenode (= ${source:Version}), hadoop-resourcemanager (= ${source:Version}), hadoop-nodemanager (= ${source:Version})
 Description: Pseudo-distributed Hadoop configuration
  Contains configuration files for a "pseudo-distributed" Hadoop deployment.
  In this mode, each of the hadoop components runs as a separate Java process,
  but all on the same machine.
 
-Package: hadoop-tasktracker
-Provides: hadoop-tasktracker
+Package: hadoop-nodemanager
+Provides: hadoop-nodemanager
 Architecture: all
 Depends: hadoop (= ${source:Version})
-Description: Task Tracker for Hadoop
- The Task Tracker is the Hadoop service that accepts MapReduce tasks and
- computes results. Each node in a Hadoop cluster that should be doing
- computation should run a Task Tracker.
+Description: Node manager for Hadoop
+ The NodeManager is the per-machine framework agent who is responsible for
+ containers, monitoring their resource usage (cpu, memory, disk, network) and
+ reporting the same to the ResourceManager/Scheduler.
 
-Package: hadoop-jobtracker
-Provides: hadoop-jobtracker
+Package: hadoop-resourcemanager
+Provides: hadoop-resourcemanager
 Architecture: all
 Depends: hadoop (= ${source:Version})
-Description: Job Tracker for Hadoop
- The jobtracker is a central service which is responsible for managing
- the tasktracker services running on all nodes in a Hadoop Cluster.
- The jobtracker allocates work to the tasktracker nearest to the data
- with an available work slot.
+Description: Resource manager for Hadoop
+ The resource manager manages the global assignment of compute resources to applications.
 
 Package: hadoop-namenode
 Provides: hadoop-namenode

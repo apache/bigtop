@@ -125,6 +125,7 @@ Source7: hadoop-fuse-dfs.1
 Source8: hadoop-fuse.default
 Source9: hadoop.nofiles.conf
 Source10: yarn-init.tmpl
+Patch0: MAPREDUCE-3436_rev2.patch
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
 BuildRequires: python >= 2.4, git, fuse-devel,fuse, automake, autoconf
 Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils
@@ -193,18 +194,6 @@ into a checkpoint.  This compaction ensures that Name Node restarts
 do not incur unnecessary downtime.
 
 
-%package jobtracker
-Summary: Hadoop Job Tracker
-Group: System/Daemons
-Requires: %{name} = %{version}-%{release}
-
-%description jobtracker
-The jobtracker is a central service which is responsible for managing
-the tasktracker services running on all nodes in a Hadoop Cluster.
-The jobtracker allocates work to the tasktracker nearest to the data
-with an available work slot.
-
-
 %package datanode
 Summary: Hadoop Data Node
 Group: System/Daemons
@@ -269,6 +258,7 @@ Hadoop Filesystem Library
 
 %prep
 %setup -n apache-hadoop-common-61572bb
+%patch0 -p0
 
 %build
 # This assumes that you installed Java JDK 6 and set JAVA_HOME

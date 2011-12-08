@@ -62,7 +62,6 @@ install: build
 	  --build-dir=${hadoop_build_path} \
 	  --system-lib-dir=debian/tmp/usr/lib/ \
 	  --system-libexec-dir=debian/tmp/usr/libexec/ \
-	  --yarn-etc-dir=debian/tmp/etc/yarn \
 	  --system-include-dir=debian/tmp/usr/include \
 	  --doc-dir=debian/tmp/usr/share/doc/hadoop-doc \
 	  --example-dir=debian/tmp/usr/share/doc/hadoop/examples \
@@ -76,19 +75,20 @@ install: build
 namenode_user=hdfs
 secondarynamenode_user=hdfs
 datanode_user=hdfs
-jobtracker_user=mapred
-tasktracker_user=mapred
+resourcemanager_user=yarn
+nodemanager_user=yarn
 
-namenode secondarynamenode jobtracker tasktracker datanode: debian/service-init.d.tpl
+namenode secondarynamenode datanode resourcemanager nodemanager: debian/service-init.d.tpl
 	sed -e "s|@HADOOP_DAEMON@|$@|" \
             -e "s|@HADOOP_MAJOR_VERSION@|$hadoop_version|" \
 	    -e "s|@DAEMON_USER@|$($@_user)|" $< > debian/hadoop-$@.init
 	# FIXME: workaround for BIGTOP-105
 	sed -e "s|@HADOOP_DAEMON@|$@|" < debian/hadoop.daemon.postinst.tpl > debian/hadoop-$@.postinst
 
-install-indep: namenode secondarynamenode jobtracker tasktracker datanode
+install-indep: namenode secondarynamenode datanode resourcemanager nodemanager
 	mkdir -p debian/tmp/etc/default
 	cp debian/hadoop.default debian/tmp/etc/default/hadoop
+	cp debian/yarn.default debian/tmp/etc/default/yarn
 
 	dh_install --sourcedir=debian/tmp -i
 
