@@ -241,8 +241,8 @@ class hadoop {
 
     file { $dirs:
       ensure => directory,
-      owner => mapred,
-      group => mapred,
+      owner => yarn,
+      group => yarn,
       mode => 755,
       require => [Package["hadoop"]],
     }
