@@ -13,7 +13,7 @@ hardware:
       type: ext3
 repos:
   - name: "Bigtop-jenkins"
-    baseurl: "http://www.apache.org/dist/incubator/bigtop/stable/repos/centos6/"
+    baseurl: "http://bigtop01.cloudera.org:8080/job/Bigtop-23-matrix/label=centos6/lastSuccessfulBuild/artifact/output/"
     ephemeral: true
 packages:
   - @core
