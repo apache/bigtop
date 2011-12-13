@@ -78,12 +78,20 @@ datanode_user=hdfs
 resourcemanager_user=yarn
 nodemanager_user=yarn
 
-namenode secondarynamenode datanode resourcemanager nodemanager: debian/service-init.d.tpl
+namenode secondarynamenode datanode: debian/service-init.d.tpl
 	sed -e "s|@HADOOP_DAEMON@|$@|" \
             -e "s|@HADOOP_MAJOR_VERSION@|$hadoop_version|" \
 	    -e "s|@DAEMON_USER@|$($@_user)|" $< > debian/hadoop-$@.init
 	# FIXME: workaround for BIGTOP-105
 	sed -e "s|@HADOOP_DAEMON@|$@|" < debian/hadoop.daemon.postinst.tpl > debian/hadoop-$@.postinst
+
+resourcemanager nodemanager: debian/service-init.d-yarn.tpl
+	sed -e "s|@HADOOP_DAEMON@|$@|" \
+            -e "s|@HADOOP_MAJOR_VERSION@|$hadoop_version|" \
+	    -e "s|@DAEMON_USER@|$($@_user)|" $< > debian/hadoop-$@.init
+	# FIXME: workaround for BIGTOP-105
+	sed -e "s|@HADOOP_DAEMON@|$@|" < debian/hadoop.daemon.postinst.tpl > debian/hadoop-$@.postinst
+
 
 install-indep: namenode secondarynamenode datanode resourcemanager nodemanager
 	mkdir -p debian/tmp/etc/default
@@ -93,7 +101,6 @@ install-indep: namenode secondarynamenode datanode resourcemanager nodemanager
 	dh_install --sourcedir=debian/tmp -i
 
 	rm -Rf debian/hadoop/usr/lib/hadoop/lib/native
-	rm -Rf debian/hadoop/usr/lib/hadoop/sbin
 
 	rm -Rf debian/hadoop/usr/lib/hadoop/bin/fuse_dfs 
 #	rm -Rf debian/hadoop/usr/bin/hadoop-fuse-dfs

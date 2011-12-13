@@ -124,6 +124,7 @@ $(BUILD_DIR)/%/.deb:
 				--preserve-envvar JAVA5_HOME \
 				--preserve-envvar FORREST_HOME \
 				--preserve-envvar MAVEN3_HOME \
+				--preserve-envvar MAVEN_OPTS \
 				--preserve-envvar JAVA_HOME \
 				--set-envvar=$(PKG)_BASE_VERSION=$($(PKG)_BASE_VERSION) \
 				--set-envvar=$(PKG)_VERSION=$($(PKG)_PKG_VERSION)$(BIGTOP_BUILD_STAMP) \

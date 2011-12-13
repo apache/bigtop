@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 export HADOOP_HOME_WARN_SUPPRESS=true
+export HADOOP_HOME=/usr/lib/hadoop
 export HADOOP_PREFIX=/usr/lib/hadoop
 export HADOOP_LIBEXEC_DIR=/usr/libexec
 export HADOOP_NAMENODE_USER=hdfs
@@ -24,7 +25,6 @@ export HADOOP_IDENT_STRING=hdfs
 export HADOOP_PID_DIR=/var/run/hadoop
 export HADOOP_LOG_DIR=/var/log/hadoop
 export HADOOP_CONF_DIR=/etc/hadoop/conf
-export YARN_CONF_DIR=/etc/yarn/conf
 export HADOOP_CLASSPATH="${HADOOP_CLASSPATH}:${HADOOP_PREFIX}/*:${HADOOP_PREFIX}/lib/*"
 
 # Pointless definitions making yarn happy

@@ -42,9 +42,9 @@
 ### END INIT INFO
 
 # Support ephemeral /var/run. We need to create this directory before
-# hadoop-config.sh is sourced below since it sets HADOOP_PID_DIR if
+# hadoop-config.sh is sourced below since it sets YARN_PID_DIR if
 # this directory exists.
-install -d -m 0775 -o root -g hadoop /var/run/hadoop
+install -d -m 0775 -o root -g hadoop /var/run/yarn
 
 . /etc/default/hadoop
 . /etc/default/yarn
@@ -65,10 +65,10 @@ fi
 
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-DAEMON_SCRIPT=$HADOOP_HOME/sbin/hadoop-daemon.sh
+DAEMON_SCRIPT=$HADOOP_HOME/bin/yarn-daemon.sh
 NAME=hadoop-@HADOOP_DAEMON@
 DESC="Hadoop @HADOOP_DAEMON@ daemon"
-PID_FILE=$HADOOP_PID_DIR/hadoop-$HADOOP_IDENT_STRING-@HADOOP_DAEMON@.pid
+PID_FILE=$YARN_PID_DIR/hadoop-$YARN_IDENT_STRING-@HADOOP_DAEMON@.pid
 SLEEP_TIME=5
 
 test -x $DAEMON_SCRIPT || exit 1
@@ -153,35 +153,15 @@ hadoop_stop_pidfile() {
 }
 
 start() {
-    TARGET_USER_NAME="HADOOP_`echo @HADOOP_DAEMON@ | tr a-z A-Z`_USER"
+    TARGET_USER_NAME="YARN_`echo @HADOOP_DAEMON@ | tr a-z A-Z`_USER"
     TARGET_USER=$(eval "echo \$$TARGET_USER_NAME")
-    
-    if [ "@HADOOP_DAEMON@" = "datanode" ]; then
-      # The following needs to be removed once HDFS-1943 gets finally put to rest.
-      # The logic of this ugly hack is this: IFF we do NOT have jsvc installed it is
-      # guaranteed that we can NOT be running in a secure mode and thus we need to
-      # workaround HDFS-1943 (start as non-root). As soon as jsvc gets installed
-      # we are assuming a secure installation and starting a data node as root.
-      # This leaves 2 corner cases:
-      #    1. HADOOP_DATANODE_USER being set to root
-      #    2. jsvc is installed but Hadoop is configures to run in an unsecure mode
-      # Both will currently fail
-      if [ -f $HADOOP_HOME/libexec/jsvc.amd64 -o -f $HADOOP_HOME/libexec/jsvc.i386 ] && [ -n "$HADOOP_SECURE_DN_USER" ]; then
-         TARGET_USER=root
-      fi
-    fi
-    su -s /bin/bash $TARGET_USER -c "$HADOOP_HOME/sbin/hadoop-daemon.sh start @HADOOP_DAEMON@ $DAEMON_FLAGS"
+    su -s /bin/bash $TARGET_USER -c "$HADOOP_HOME/bin/yarn-daemon.sh start @HADOOP_DAEMON@ $DAEMON_FLAGS"
 
     # Some processes are slow to start
     sleep $SLEEP_TIME
 }
 stop() {
-    $HADOOP_HOME/sbin/hadoop-daemon.sh stop @HADOOP_DAEMON@
-
-    if [ "@HADOOP_DAEMON@" = "datanode" ]; then
-      # Some processes are slow to stop
-      sleep $SLEEP_TIME
-    fi
+    $HADOOP_HOME/bin/yarn-daemon.sh stop @HADOOP_DAEMON@
 }
 
 check_for_root() {
@@ -253,18 +233,8 @@ hadoop_service() {
             ;;
         *)
             N=/etc/init.d/$NAME
-            if [ "@HADOOP_DAEMON@" = "namenode" ]; then
-              if [ "$1" = "upgrade" -o "$1" = "rollback" ]; then
-                DAEMON_FLAGS=-$1 $0 start
-                exit $?
-              else
-                echo "Usage: $N {start|stop|restart|force-reload|status|force-stop|upgrade|rollback}" >&2
-                exit 1
-              fi
-            else
-              echo "Usage: $N {start|stop|restart|force-reload|status|force-stop}" >&2
-              exit 1
-            fi
+			  	echo "Usage: $N {start|stop|restart|force-reload|status|force-stop}" >&2
+			  	exit 1
             ;;
     esac
 }

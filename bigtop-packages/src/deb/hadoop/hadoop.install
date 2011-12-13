@@ -3,6 +3,7 @@
 /usr/lib/hadoop
 /etc/hadoop/conf.empty
 /etc/default/hadoop
+/etc/default/yarn
 /etc/security/limits.d/hadoop.nofiles.conf
 #/usr/share/doc/hadoop
 /usr/lib/hadoop/lib/native
