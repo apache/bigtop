@@ -1,0 +1,26 @@
+name: bigtop_hadoop
+summary: Apache Bigtop VM with Apache Hadoop
+version: 2
+release: 0
+os:
+  name: centos
+  version: 6
+  password: bigtop
+hardware:
+  partitions:
+    "/":
+      size: 2
+      type: ext3
+repos:
+  - name: "Bigtop-jenkins"
+    baseurl: "http://www.apache.org/dist/incubator/bigtop/stable/repos/centos6/"
+    ephemeral: true
+packages:
+  - @core
+  - shadow-utils
+  - passwd
+  - java-1.6.0-openjdk-devel
+  - hadoop-conf-pseudo
+post:
+  base:
+    - "/usr/bin/yes Y | su hdfs /bin/bash -c '/usr/bin/hadoop namenode -format'"
