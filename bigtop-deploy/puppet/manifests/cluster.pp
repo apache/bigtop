@@ -26,6 +26,10 @@ class hadoop_cluster_node {
   $hadoop_sc_port="8030"
   $hadoop_rt_thrift_port="9290"
 
+  $hadoop_hs_host="$hadoop_head_node"
+  $hadoop_hs_port="10020"
+  $hadoop_hs_webapp_port="19888"
+
   $hadoop_jobtracker_host="$hadoop_head_node"
   $hadoop_jobtracker_port="8021"
   $hadoop_jobtracker_thrift_port="9290"
@@ -117,6 +121,13 @@ class hadoop_head_node inherits hadoop_cluster_node {
         rt_port => $hadoop_rt_port,
         sc_port => $hadoop_sc_port,
         # thrift_port => $hadoop_jobtracker_thrift_port,
+        auth => $hadoop_security_authentication,
+  }
+
+  hadoop::historyserver { "historyserver":
+        host => $hadoop_hs_host,
+        port => $hadoop_hs_port,
+        webapp_port => $hadoop_hs_webapp_port,
         auth => $hadoop_security_authentication,
   }
 

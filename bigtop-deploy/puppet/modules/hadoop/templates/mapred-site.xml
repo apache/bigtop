@@ -94,6 +94,17 @@
   </property>
 <% end %>
 
+<% if has_variable?("hadoop_hs_host") %>
+  <property>
+    <name>mapreduce.jobhistory.address</name>
+    <value><%= hadoop_hs_host %>:<%= hadoop_hs_port %></value>
+  </property>
+  <property>
+    <name>mapreduce.jobhistory.webapp.address</name>
+    <value><%= hadoop_hs_host %>:<%= hadoop_hs_webapp_port %></value>
+  </property>
+<% end %>
+
   <property>
     <name>mapreduce.framework.name</name>
     <value>yarn</value>

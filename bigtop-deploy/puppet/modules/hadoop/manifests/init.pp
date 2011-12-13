@@ -203,6 +203,27 @@ class hadoop {
     }
   }
 
+  define historyserver ($host = $fqdn, $port = "10020", $webapp_port = "19888", $auth = "simple") {
+    $hadoop_hs_host = $host
+    $hadoop_hs_port = $port
+    $hadoop_hs_webapp_port = $app_port
+    $hadoop_security_authentication = $auth
+
+    include common-mapred-app
+
+    package { "hadoop-historyserver":
+      ensure => latest,
+      require => Package["jdk"],
+    }
+
+    service { "hadoop-historyserver":
+      ensure => running,
+      hasstatus => true,
+      subscribe => [Package["hadoop-historyserver"], File["/etc/hadoop/conf/hadoop-env.sh"], File["/etc/hadoop/conf/mapred-site.xml"]],
+      require => [Package["hadoop-historyserver"]],
+    }
+  }
+
 
   define nodemanager ($rm_host, $rm_port, $rt_port, $auth = "simple", $dirs = ["/tmp/yarn"]){
     $hadoop_rm_host = $rm_host
@@ -230,7 +251,7 @@ class hadoop {
     }
   }
 
-  define mapred-app ($namenode_host, $namenode_port, $jobtracker_host, $jobtracker_port, $auth = "simple", $dirs = ["/tmp/mr"]){
+  define mapred-app ($namenode_host, $namenode_port, $jobtracker_host, $jobtracker_port, $auth = "simple", $jobhistory_host = "", $jobhistory_port="10020", $dirs = ["/tmp/mr"]){
     $hadoop_namenode_host = $namenode_host
     $hadoop_namenode_port = $namenode_port
     $hadoop_jobtracker_host = $jobtracker_host
@@ -238,6 +259,11 @@ class hadoop {
     $hadoop_security_authentication = $auth
 
     include common-mapred-app
+
+    if ($jobhistory_host != "") {
+      $hadoop_hs_host = $jobhistory_host
+      $hadoop_hs_port = $jobhistory_port
+    }
 
     file { $dirs:
       ensure => directory,
