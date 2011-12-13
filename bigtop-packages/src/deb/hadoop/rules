@@ -100,8 +100,6 @@ install-indep: namenode secondarynamenode datanode resourcemanager nodemanager
 
 	dh_install --sourcedir=debian/tmp -i
 
-	rm -Rf debian/hadoop/usr/lib/hadoop/lib/native
-
 	rm -Rf debian/hadoop/usr/lib/hadoop/bin/fuse_dfs 
 #	rm -Rf debian/hadoop/usr/bin/hadoop-fuse-dfs
 	rm -Rf debian/hadoop/usr/lib/hadoop/contrib/fuse-dfs
