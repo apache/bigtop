@@ -15,5 +15,4 @@
 # limitations under the License.
 
 set -ex
-# -f src/build.xml
-ant -Dhadoop.version=0.23.0 -Dhadoop.security.version=0.23.0 -Dhadoop.security.version.prefix=0.23 package "$@"
+ant -f src/build.xml -Dhadoop.version=0.23.0 -Dhadoop.security.version=0.23.0 -Dhadoop.security.version.prefix=0.23 package "$@"

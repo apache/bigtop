@@ -26,14 +26,12 @@ export DH_OPTIONS
 clean:	
 	dh_testdir
 	dh_testroot
-	ant clean
 	rm -f *-stamp
 	rm -Rf debian/.ivy
 	dh_clean
 
 build-indep: build-indep-stamp
 build-indep-stamp:
-	patch -p0 < debian/patch
 	mkdir -p /tmp/debian-hive/.ivy
 	bash debian/do-component-build  -Divy.home=${HOME}/.ivy2
 	touch $@
@@ -51,7 +49,7 @@ install-indep: metastore server
 	cp debian/hive.1 .
 	sh debian/install_hive.sh \
 	  --prefix=debian/hadoop-hive \
-	  --build-dir=build/dist \
+	  --build-dir=src/build/dist \
 	  --doc-dir=debian/hadoop-hive/usr/share/doc/hive \
 	  --python-dir=debian/python-hive/usr/share/python-support/python-hive/hive
 	dh_pysupport
