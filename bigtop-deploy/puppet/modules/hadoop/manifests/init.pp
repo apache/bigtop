@@ -103,8 +103,10 @@ class hadoop {
       ensure => running,
       hasstatus => true,
       subscribe => [Package["hadoop-datanode"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
-      require => [ Package["hadoop-datanode"] ],
-    } <- file { $dirs:
+      require => [ Package["hadoop-datanode"], File[$dirs] ],
+    }
+
+    file { $dirs:
       ensure => directory,
       owner => hdfs,
       group => hdfs,
@@ -150,8 +152,10 @@ class hadoop {
       user => "hdfs",
       command => "/bin/bash -c 'yes Y | hadoop namenode -format >> /tmp/nn.format.log 2>&1'",
       creates => inline_template("<%= hadoop_storage_locations.split(';')[0] %>/namenode/current/VERSION"),
-      require => [Package["hadoop-namenode"]],
-    } <- file { $dirs:
+      require => [ Package["hadoop-namenode"], File[$dirs] ],
+    } 
+    
+    file { $dirs:
       ensure => directory,
       owner => hdfs,
       group => hdfs,
@@ -241,8 +245,10 @@ class hadoop {
       ensure => running,
       hasstatus => true,
       subscribe => [Package["hadoop-nodemanager"], File["/etc/hadoop/conf/hadoop-env.sh"], File["/etc/yarn/conf/yarn-site.xml"]],
-      require => [ Package["hadoop-nodemanager"] ],
-    } <- file { $dirs:
+      require => [ Package["hadoop-nodemanager"], File[$dirs] ],
+    }
+
+    file { $dirs:
       ensure => directory,
       owner => yarn,
       group => yarn,
