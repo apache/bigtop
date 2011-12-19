@@ -86,8 +86,10 @@ class hadoop {
       ensure => running,
       hasstatus => true,
       subscribe => [Package["hadoop-datanode"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
-      require => [ Package["hadoop-datanode"] ],
-    } <- file { $dirs:
+      require => [ Package["hadoop-datanode"], File[$dirs] ],
+    }
+
+    file { $dirs:
       ensure => directory,
       owner => hdfs,
       group => hdfs,
@@ -135,8 +137,10 @@ class hadoop {
       user => "hdfs",
       command => "/bin/bash -c 'yes Y | hadoop namenode -format >> /tmp/nn.format.log 2>&1'",
       creates => inline_template("<%= hadoop_storage_locations.split(';')[0] %>/namenode/image"),
-      require => [Package["hadoop-namenode"]],
-    } <- file { $dirs:
+      require => [ Package["hadoop-namenode"], File[$dirs] ],
+    } 
+    
+    file { $dirs:
       ensure => directory,
       owner => hdfs,
       group => hdfs,
@@ -166,8 +170,10 @@ class hadoop {
       ensure => running,
       hasstatus => true,
       subscribe => [Package["hadoop-jobtracker"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/mapred-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
-      require => [ Package["hadoop-jobtracker"] ]
-    } <- file { $dirs:
+      require => [ Package["hadoop-jobtracker"], File[$dirs] ],
+    }
+   
+    file { $dirs:
       ensure => directory,
       owner => mapred,
       group => mapred,
@@ -200,8 +206,10 @@ class hadoop {
       ensure => running,
       hasstatus => true,
       subscribe => [Package["hadoop-tasktracker"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/mapred-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
-      require => [ Package["hadoop-tasktracker"], File["/etc/hadoop/conf/taskcontroller.cfg"] ],
-    } <- file { $dirs:
+      require => [ Package["hadoop-tasktracker"], File["/etc/hadoop/conf/taskcontroller.cfg"], File[$dirs] ],
+    }
+ 
+    file { $dirs:
       ensure => directory,
       owner => mapred,
       group => mapred,

@@ -24,6 +24,7 @@ class hadoop-sqoop {
     #        extra jars to sqoop classpath
     file { "/usr/lib/sqoop/lib/mysql-connector-java-5.1.12.jar":
       ensure => "/usr/share/java/mysql-connector-java-5.1.12.jar",
+      require => Package["sqoop"],
     }
   }
 

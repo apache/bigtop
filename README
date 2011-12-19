@@ -43,6 +43,7 @@ Building Bigtop requires the following tools:
 * libz-dev
 * sharutils
 * libfuse-dev
+* libssl-dev 
 
 On Debian-based systems one also needs
 
