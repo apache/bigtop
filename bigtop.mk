@@ -24,7 +24,7 @@ HADOOP_RELEASE_VERSION=1
 HADOOP_TARBALL_DST=$(HADOOP_NAME)-$(HADOOP_BASE_VERSION).tar.gz
 HADOOP_TARBALL_SRC=$(HADOOP_TARBALL_DST)
 #HADOOP_SITE=$(APACHE_MIRROR)/hadoop/common/$(HADOOP_NAME)-$(HADOOP_BASE_VERSION)/
-HADOOP_SITE=http://people.apache.org/~mattf/hadoop-1.0.0-rc2/
+HADOOP_SITE=http://people.apache.org/~mattf/hadoop-1.0.0-rc3/
 $(eval $(call PACKAGE,hadoop,HADOOP))
 
 # ZooKeeper
@@ -43,12 +43,13 @@ $(eval $(call PACKAGE,zookeeper,ZOOKEEPER))
 HBASE_NAME=hbase
 HBASE_RELNOTES_NAME=Apache HBase
 HBASE_PKG_NAME=hadoop-hbase
-HBASE_BASE_VERSION=0.90.4
+HBASE_BASE_VERSION=0.92.0
 HBASE_PKG_VERSION=$(HBASE_BASE_VERSION)
 HBASE_RELEASE_VERSION=1
 HBASE_TARBALL_DST=hbase-$(HBASE_BASE_VERSION).tar.gz
 HBASE_TARBALL_SRC=$(HBASE_TARBALL_DST)
-HBASE_SITE=$(APACHE_MIRROR)/hbase/hbase-0.90.4/
+#HBASE_SITE=$(APACHE_MIRROR)/hbase/hbase-0.90.4/
+HBASE_SITE=http://people.apache.org/~stack/hbase-0.92.0-candidate-1/
 $(eval $(call PACKAGE,hbase,HBASE))
 
 # Pig
@@ -72,8 +73,7 @@ HIVE_PKG_VERSION=$(HIVE_BASE_VERSION)
 HIVE_RELEASE_VERSION=1
 HIVE_TARBALL_DST=hive-$(HIVE_BASE_VERSION).tar.gz
 HIVE_TARBALL_SRC=$(HIVE_TARBALL_DST)
-#HIVE_SITE=$(APACHE_MIRROR)/hive/hive-$(HIVE_BASE_VERSION)/
-HIVE_SITE=http://people.apache.org/~cws/hive-0.8.0-candidate-3/
+HIVE_SITE=$(APACHE_MIRROR)/hive/hive-$(HIVE_BASE_VERSION)/
 $(eval $(call PACKAGE,hive,HIVE))
 
 # Sqoop
