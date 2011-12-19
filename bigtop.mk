@@ -48,11 +48,9 @@ HBASE_BASE_VERSION=0.92.0
 HBASE_PKG_VERSION=$(HBASE_BASE_VERSION)
 HBASE_RELEASE_VERSION=1
 HBASE_TARBALL_DST=hbase-$(HBASE_BASE_VERSION).tar.gz
-HBASE_TARBALL_SRC=hbase-0.92.0-RC0.tar.gz
-HBASE_SITE=http://archive.cloudera.com/tarballs/
+HBASE_TARBALL_SRC=$(HBASE_TARBALL_DST)
 #HBASE_SITE=$(APACHE_MIRROR)/hbase/hbase-0.90.4/
-#HBASE_TARBALL_SRC=b570745
-#HBASE_SITE=https://github.com/apache/hbase/tarball
+HBASE_SITE=http://people.apache.org/~stack/hbase-0.92.0-candidate-1/
 $(eval $(call PACKAGE,hbase,HBASE))
 
 # Pig
