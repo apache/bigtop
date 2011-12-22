@@ -109,19 +109,19 @@ hive_status() {
 
     case "$status" in
       $STATUS_RUNNING)
-        log_success_msg "@HADOOP_DAEMON@ is running"
+        log_success_msg "@HIVE_DAEMON@ is running"
         ;;
       $STATUS_DEAD)
-        log_failure_msg "@HADOOP_DAEMON@ is dead and pid file exists"
+        log_failure_msg "@HIVE_DAEMON@ is dead and pid file exists"
         ;;
       $STATUS_DEAD_AND_LOCK)
-        log_failure_msg "@HADOOP_DAEMON@ is dead and lock file exists"
+        log_failure_msg "@HIVE_DAEMON@ is dead and lock file exists"
         ;;
       $STATUS_NOT_RUNNING)
-        log_failure_msg "@HADOOP_DAEMON@ is not running"
+        log_failure_msg "@HIVE_DAEMON@ is not running"
         ;;
       *)
-        log_failure_msg "@HADOOP_DAEMON@ status is unknown"
+        log_failure_msg "@HIVE_DAEMON@ status is unknown"
         ;;
     esac
     return $status
