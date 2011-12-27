@@ -137,6 +137,9 @@ cp $RPM_SOURCE_DIR/hive-site.xml .
 %__install -m 0644 $RPM_SOURCE_DIR/hadoop-hive-metastore.default $RPM_BUILD_ROOT/etc/default/hadoop-hive-metastore
 %__install -m 0644 $RPM_SOURCE_DIR/hadoop-hive-server.default $RPM_BUILD_ROOT/etc/default/hadoop-hive-server
 
+%__install -d -m 0755 $RPM_BUILD_ROOT/%{_localstatedir}/log/hive
+%__install -d -m 0755 $RPM_BUILD_ROOT/%{_localstatedir}/run/hive
+
 for service in %{hive_services}
 do
         init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{name}-${service}
@@ -148,9 +151,6 @@ done
 %pre
 getent group hive >/dev/null || groupadd -r hive
 getent passwd hive >/dev/null || useradd -c "Hive" -s /sbin/nologin -g hive -r -d %{var_lib_hive} hive 2> /dev/null || :
-
-%__install -d -m 0755 -o hive -g hive /var/log/hive
-%__install -d -m 0755 -o hive -g hive /var/run/hive
 
 # Manage configuration symlink
 %post
@@ -173,10 +173,6 @@ if [ "$1" = 0 ]; then
   %{alternatives_cmd} --remove hive-conf %{etc_hive}/conf.dist || :
 fi
 
-%__rmdir /var/log/hive 2>/dev/null || :
-%__rmdir /var/run/hive 2>/dev/null || : 
-
-
 #######################
 #### FILES SECTION ####
 #######################
@@ -186,6 +182,8 @@ fi
 %{usr_lib_hive}
 %{bin_hive}/hive
 %{var_lib_hive}
+%attr(0755,hive,hive) %dir %{_localstatedir}/log/hive
+%attr(0755,hive,hive) %dir %{_localstatedir}/run/hive
 %attr(1777,root,root) %{var_lib_hive}/metastore
 %doc %{doc_hive}
 %{man_dir}/man1/hive.1.*
