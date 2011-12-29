@@ -17,17 +17,20 @@
  */
 package org.apache.bigtop.itest.hbase.system;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Random;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.bigtop.itest.hbase.util.HBaseTestUtil;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hbase.HBaseConfiguration;
+import org.apache.hadoop.hbase.HColumnDescriptor;
 import org.apache.hadoop.hbase.HConstants;
 import org.apache.hadoop.hbase.HTableDescriptor;
 import org.apache.hadoop.hbase.KeyValue;
@@ -49,16 +52,13 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.apache.hadoop.util.Tool;
+import org.apache.hadoop.util.ToolRunner;
 import org.junit.Test;
 
 import com.google.common.collect.Lists;
 
-import org.apache.bigtop.itest.hbase.util.HBaseTestUtil;
-
-public class TestLoadAndVerify {
+public class TestLoadAndVerify  extends Configured implements Tool {
   private static final String TEST_NAME = "TestLoadAndVerify";
   private static final byte[] TEST_FAMILY = Bytes.toBytes("f1");
   private static final byte[] TEST_QUALIFIER = Bytes.toBytes("q1");
@@ -245,12 +245,11 @@ public class TestLoadAndVerify {
     }
   }
 
-  private void doLoad(HTableDescriptor htd) throws Exception {
+  private void doLoad(Configuration conf, HTableDescriptor htd) throws Exception {
     Path outputDir = 
       new Path(HBaseTestUtil.getMROutputDir(TEST_NAME),
           "load-output");
 
-    Configuration conf = HBaseConfiguration.create();
     NMapInputFormat.setNumMapTasks(conf, NUM_TASKS);
     conf.set(TABLE_NAME_KEY, htd.getNameAsString());
 
@@ -268,12 +267,11 @@ public class TestLoadAndVerify {
     assertTrue(job.waitForCompletion(true));
   }
 
-  private void doVerify(HTableDescriptor htd) throws Exception {
+  private void doVerify(Configuration conf, HTableDescriptor htd) throws Exception {
     Path outputDir = 
       new Path(HBaseTestUtil.getMROutputDir(TEST_NAME),
           "verify-output");
 
-    Configuration conf = HBaseConfiguration.create();
     Job job = new Job(conf);
     job.setJarByClass(this.getClass());
     job.setJobName(TEST_NAME + " Verification for " + htd.getNameAsString());
@@ -303,12 +301,85 @@ public class TestLoadAndVerify {
     int numPreCreate = 40;
     admin.createTable(htd, Bytes.toBytes(0L), Bytes.toBytes(-1L), numPreCreate);
 
-    doLoad(htd);
-    doVerify(htd);
+    Configuration conf = HBaseConfiguration.create();
+
+    doLoad(conf, htd);
+    doVerify(conf, htd);
 
     // Only disable and drop if we succeeded to verify - otherwise it's useful
     // to leave it around for post-mortem
-    admin.disableTable(htd.getName());
+    
+    // Use disableTestAsync because disable can take a long time to complete
+    admin.disableTableAsync(htd.getName());
+    System.out.print("Disabling table " + htd.getNameAsString() +" ");
+    while (admin.isTableEnabled(htd.getName())) {
+      System.out.print(".");
+      Thread.sleep(3000);
+    }
     admin.deleteTable(htd.getName());
+  }
+
+  public void usage() {
+    System.err.println(this.getClass().getSimpleName() + " [-Doptions] <load|verify|loadAndVerify>");
+    System.err.println("  Loads a table with row dependencies and verifies the dependency chains");
+    System.err.println("Options");
+    System.err.println("  -Dloadmapper.table=<name>      Table to write/verify (default autogen)");
+    System.err.println("  -Dloadmapper.backrefs=<n>      Number of backreferences per row (default 50)");
+    System.err.println("  -Dloadmapper.num_to_write=<n>  Number of rows per mapper (default 100,000 per mapper)");
+  }
+  
+  public int run(String argv[]) throws Exception {
+    if (argv.length < 1 || argv.length > 1) {
+      usage();
+      return 1;
+    }
+
+    boolean doLoad = false;
+    boolean doVerify = false;
+
+    if (argv[0].equals("load")) {
+      doLoad = true;
+    } else if (argv[0].equals("verify")) {
+      doVerify= true;
+    } else if (argv[0].equals("loadAndVerify")) {
+      doLoad=true;
+      doVerify= true;
+    } else {
+      System.err.println("Invalid argument " + argv[0]);
+      usage();
+      return 1;
+    }
+
+    // create HTableDescriptor for specified table
+    String table = getConf().get(TABLE_NAME_KEY, "");
+    HTableDescriptor htd ;
+    if ("".equals(table)) {
+      // Just like the unit test.
+      htd = HBaseTestUtil.createTestTableDescriptor(TEST_NAME, TEST_FAMILY);
+    } else {
+      // overridden by the user.
+      htd = new HTableDescriptor(table);
+      htd.addFamily(new HColumnDescriptor(TEST_FAMILY));
+    }
+
+    TestLoadAndVerify verify = new TestLoadAndVerify();
+    
+    if (doLoad) {
+      int numPreCreate = 40;
+      HBaseAdmin admin = new HBaseAdmin(getConf());
+      admin.createTable(htd, Bytes.toBytes(0L), Bytes.toBytes(-1L), numPreCreate);
+
+      verify.doLoad(getConf(), htd);
+    }
+    if (doVerify) {
+      verify.doVerify(getConf(), htd);
+    }
+    return 0;
+  }
+
+  public static void main(String argv[]) throws Exception {
+    Configuration conf = HBaseConfiguration.create();
+    int ret = ToolRunner.run(conf, new TestLoadAndVerify(), argv);
+    System.exit(ret);
   }
 }
