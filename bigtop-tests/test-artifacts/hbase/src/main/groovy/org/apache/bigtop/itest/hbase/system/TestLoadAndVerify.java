@@ -308,24 +308,38 @@ public class TestLoadAndVerify  extends Configured implements Tool {
 
     // Only disable and drop if we succeeded to verify - otherwise it's useful
     // to leave it around for post-mortem
-    
-    // Use disableTestAsync because disable can take a long time to complete
-    admin.disableTableAsync(htd.getName());
-    System.out.print("Disabling table " + htd.getNameAsString() +" ");
-    while (admin.isTableEnabled(htd.getName())) {
-      System.out.print(".");
-      Thread.sleep(3000);
-    }
-    admin.deleteTable(htd.getName());
+    deleteTable(admin, htd);
   }
 
+  private void deleteTable(HBaseAdmin admin, HTableDescriptor htd) 
+    throws IOException, InterruptedException {
+    // Use disableTestAsync because disable can take a long time to complete
+    System.out.print("Disabling table " + htd.getNameAsString() +" ");
+    admin.disableTableAsync(htd.getName());
+    
+    long start = System.currentTimeMillis();
+    // NOTE tables can be both admin.isTableEnabled=false and 
+    // isTableDisabled=false, when disabling must use isTableDisabled!
+    while (!admin.isTableDisabled(htd.getName())) {
+      System.out.print(".");
+      Thread.sleep(1000);
+    }
+    long delta = System.currentTimeMillis() - start;
+    System.out.println(" " + delta +" ms");
+    System.out.println("Deleting table " + htd.getNameAsString() +" ");
+    admin.deleteTable(htd.getName());
+  }
+  
   public void usage() {
     System.err.println(this.getClass().getSimpleName() + " [-Doptions] <load|verify|loadAndVerify>");
     System.err.println("  Loads a table with row dependencies and verifies the dependency chains");
     System.err.println("Options");
-    System.err.println("  -Dloadmapper.table=<name>      Table to write/verify (default autogen)");
-    System.err.println("  -Dloadmapper.backrefs=<n>      Number of backreferences per row (default 50)");
-    System.err.println("  -Dloadmapper.num_to_write=<n>  Number of rows per mapper (default 100,000 per mapper)");
+    System.err.println("  -Dloadmapper.table=<name>        Table to write/verify (default autogen)");
+    System.err.println("  -Dloadmapper.backrefs=<n>        Number of backreferences per row (default 50)");
+    System.err.println("  -Dloadmapper.num_to_write=<n>    Number of rows per mapper (default 100,000 per mapper)");
+    System.err.println("  -Dloadmapper.deleteAfter=<bool>  Delete after a successful verify (default true)");
+    System.err.println("  -Dloadmapper.numPresplits=<n>    Number of presplit regions to start with (default 40)");
+
   }
   
   public int run(String argv[]) throws Exception {
@@ -336,6 +350,8 @@ public class TestLoadAndVerify  extends Configured implements Tool {
 
     boolean doLoad = false;
     boolean doVerify = false;
+    boolean doDelete = getConf().getBoolean("loadmapper.deleteAfter",true);
+    int numPresplits = getConf().getInt("loadmapper.numPresplits", 40);
 
     if (argv[0].equals("load")) {
       doLoad = true;
@@ -363,16 +379,17 @@ public class TestLoadAndVerify  extends Configured implements Tool {
     }
 
     TestLoadAndVerify verify = new TestLoadAndVerify();
-    
-    if (doLoad) {
-      int numPreCreate = 40;
-      HBaseAdmin admin = new HBaseAdmin(getConf());
-      admin.createTable(htd, Bytes.toBytes(0L), Bytes.toBytes(-1L), numPreCreate);
 
+    HBaseAdmin admin = new HBaseAdmin(getConf());
+    if (doLoad) {
+      admin.createTable(htd, Bytes.toBytes(0L), Bytes.toBytes(-1L), numPresplits);
       verify.doLoad(getConf(), htd);
     }
     if (doVerify) {
       verify.doVerify(getConf(), htd);
+      if (doDelete) {
+        deleteTable(admin, htd);
+      }
     }
     return 0;
   }
