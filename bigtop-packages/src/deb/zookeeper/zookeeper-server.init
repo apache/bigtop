@@ -20,7 +20,7 @@
 # processname: java
 # pidfile: /var/run/zookeeper/zookeeper-server.pid
 ### BEGIN INIT INFO
-# Provides:          hadoop-zookeeper-server
+# Provides:          zookeeper-server
 # Required-Start:    $network $local_fs
 # Required-Stop:
 # Should-Start:      $named
@@ -34,7 +34,7 @@ set -e
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 DAEMON_SCRIPT="/usr/bin/zookeeper-server"
 
-NAME=hadoop-zookeeper-server
+NAME=zookeeper-server
 DESC="ZooKeeper daemon"
 PID_FILE=/var/run/zookeeper/zookeeper_server.pid
 install -d -m 0755 -o zookeeper -g zookeeper /var/run/zookeeper/

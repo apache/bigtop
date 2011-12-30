@@ -12,11 +12,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-%define etc_zookeeper /etc/zookeeper
+%define etc_zookeeper /etc/%{name}
 %define bin_zookeeper %{_bindir}
-%define lib_zookeeper /usr/lib/zookeeper
-%define log_zookeeper /var/log/zookeeper
-%define run_zookeeper /var/run/zookeeper
+%define lib_zookeeper /usr/lib/%{name}
+%define log_zookeeper /var/log/%{name}
+%define run_zookeeper /var/run/%{name}
+%define vlb_zookeeper /var/lib/%{name}
+%define svc_zookeeper %{name}-server
 %define man_dir %{_mandir}
 
 %if  %{?suse_version:1}0
@@ -37,7 +39,7 @@
     %{nil}
 
 
-%define doc_zookeeper %{_docdir}/zookeeper
+%define doc_zookeeper %{_docdir}/%{name}
 %define alternatives_cmd update-alternatives
 %define alternatives_dep update-alternatives
 %define chkconfig_dep    aaa_base
@@ -46,7 +48,7 @@
 
 %else
 
-%define doc_zookeeper %{_docdir}/zookeeper-%{zookeeper_version}
+%define doc_zookeeper %{_docdir}/%{name}-%{zookeeper_version}
 %define alternatives_cmd alternatives
 %define alternatives_dep chkconfig 
 %define chkconfig_dep    chkconfig
@@ -57,7 +59,7 @@
 
 
 
-Name: hadoop-zookeeper
+Name: zookeeper
 Version: %{zookeeper_version}
 Release: %{zookeeper_release}
 Summary: A high-performance coordination service for distributed applications.
@@ -65,11 +67,11 @@ URL: http://hadoop.apache.org/zookeeper/
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 License: APL2
-Source0: zookeeper-%{zookeeper_base_version}.tar.gz
+Source0: %{name}-%{zookeeper_base_version}.tar.gz
 Source1: do-component-build
 Source2: install_zookeeper.sh
-Source3: hadoop-zookeeper.sh
-Source4: hadoop-zookeeper.sh.suse
+Source3: zookeeper-server.sh
+Source4: zookeeper-server.sh.suse
 Source5: zookeeper.1
 Source6: zoo.cfg
 BuildArch: noarch
@@ -92,8 +94,8 @@ difficult to manage. Even when done correctly, different implementations of thes
 %package server
 Summary: The Hadoop Zookeeper server
 Group: System/Daemons
-Provides: hadoop-zookeeper-server
-Requires: hadoop-zookeeper = %{version}-%{release}
+Provides: %{svc_zookeeper}
+Requires: %{name} = %{version}-%{release}
 Requires(post): %{chkconfig_dep}
 Requires(preun): %{service_dep}, %{chkconfig_dep}
 BuildArch: noarch
@@ -120,7 +122,7 @@ Requires: redhat-lsb
 This package starts the zookeeper server on startup
 
 %prep
-%setup -n zookeeper-%{zookeeper_base_version}
+%setup -n %{name}-%{zookeeper_base_version}
 
 %build
 bash %{SOURCE1} -Dversion=%{version}
@@ -129,19 +131,19 @@ bash %{SOURCE1} -Dversion=%{version}
 %__rm -rf $RPM_BUILD_ROOT
 cp $RPM_SOURCE_DIR/zookeeper.1 $RPM_SOURCE_DIR/zoo.cfg .
 sh %{SOURCE2} \
-          --build-dir=build/zookeeper-%{zookeeper_version} \
+          --build-dir=build/%{name}-%{zookeeper_version} \
           --doc-dir=%{doc_zookeeper} \
           --prefix=$RPM_BUILD_ROOT
 
 
 %if  %{?suse_version:1}0
-orig_init_file=$RPM_SOURCE_DIR/hadoop-zookeeper.sh.suse
+orig_init_file=%{SOURCE4}
 %else
-orig_init_file=$RPM_SOURCE_DIR/hadoop-zookeeper.sh
+orig_init_file=%{SOURCE3}
 %endif
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
-init_file=$RPM_BUILD_ROOT/%{initd_dir}/hadoop-zookeeper-server
+init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{svc_zookeeper}
 %__cp $orig_init_file $init_file
 chmod 755 $init_file
 
@@ -151,12 +153,12 @@ getent group zookeeper >/dev/null || groupadd -r zookeeper
 getent passwd zookeeper > /dev/null || useradd -c "ZooKeeper" -s /sbin/nologin -g zookeeper -r -d %{run_zookeeper} zookeeper 2> /dev/null || :
 
 %__install -d -o zookeeper -g zookeeper -m 0755 %{run_zookeeper}
-%__install -d -o zookeeper -g zookeeper -m 0755 /var/log/zookeeper
+%__install -d -o zookeeper -g zookeeper -m 0755 %{log_zookeeper}
 
 # Manage configuration symlink
 %post
 %{alternatives_cmd} --install %{etc_zookeeper}/conf %{name}-conf %{etc_zookeeper}/conf.dist 30
-%__install -d -o zookeeper -g zookeeper -m 0755 /var/lib/zookeeper
+%__install -d -o zookeeper -g zookeeper -m 0755 %{vlb_zookeeper}
 
 %preun
 if [ "$1" = 0 ]; then
@@ -164,21 +166,21 @@ if [ "$1" = 0 ]; then
 fi
 
 %post server
-	chkconfig --add hadoop-zookeeper-server
+	chkconfig --add %{svc_zookeeper}
 
 %preun server
 if [ $1 = 0 ] ; then
-	service hadoop-zookeeper-server stop > /dev/null 2>&1
-	chkconfig --del hadoop-zookeeper-server
+	service %{svc_zookeeper} stop > /dev/null 2>&1
+	chkconfig --del %{svc_zookeeper}
 fi
 
 %postun server
 if [ $1 -ge 1 ]; then
-        service hadoop-zookeeper-server condrestart > /dev/null 2>&1
+        service %{svc_zookeeper} condrestart > /dev/null 2>&1
 fi
 
 %files server
-	%attr(0755,root,root) %{initd_dir}/hadoop-zookeeper-server
+	%attr(0755,root,root) %{initd_dir}/%{svc_zookeeper}
 
 #######################
 #### FILES SECTION ####

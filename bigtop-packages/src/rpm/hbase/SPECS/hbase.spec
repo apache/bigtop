@@ -87,7 +87,7 @@ Source5: hbase.default
 Source6: hbase.nofiles.conf
 BuildArch: noarch
 Requires: coreutils, /usr/sbin/useradd, /sbin/chkconfig, /sbin/service
-Requires: hadoop >= 0.20.2, hadoop-zookeeper >= 3.3.1, bigtop-utils
+Requires: hadoop >= 0.20.2, zookeeper >= 3.3.1, bigtop-utils
 
 %if  0%{?mgaversion}
 Requires: bsh-utils
