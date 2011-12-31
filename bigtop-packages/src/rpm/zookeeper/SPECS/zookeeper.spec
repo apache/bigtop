@@ -63,7 +63,7 @@ Name: zookeeper
 Version: %{zookeeper_version}
 Release: %{zookeeper_release}
 Summary: A high-performance coordination service for distributed applications.
-URL: http://hadoop.apache.org/zookeeper/
+URL: http://zookeeper.apache.org/
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 License: APL2
