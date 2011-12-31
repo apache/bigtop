@@ -22,7 +22,7 @@
 # processname: hive
 #
 ### BEGIN INIT INFO
-# Provides:          hadoop-hive-@HIVE_DAEMON@
+# Provides:          hive-@HIVE_DAEMON@
 # Required-Start:    $syslog $remote_fs
 # Should-Start:
 # Required-Stop:     $syslog $remote_fs
@@ -44,14 +44,14 @@ fi
 # Modelled after $HADOOP_HOME/bin/hadoop-daemon.sh
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-SYS_FILE="/etc/default/hadoop-hive-@HIVE_DAEMON@"
+NAME="hive-@HIVE_DAEMON@"
+SYS_FILE="/etc/default/${NAME}"
 EXE_FILE="/usr/lib/hive/bin/hive"
-PID_FILE="/var/run/hive/hive-@HIVE_DAEMON@.pid"
-LOCKFILE="/var/lock/subsys/hadoop-hive-@HBASE_DAEMON@"
-LOG_FILE="/var/log/hive/hive-@HIVE_DAEMON@.log"
+PID_FILE="/var/run/hive/${NAME}.pid"
+LOCKFILE="/var/lock/subsys/${NAME}"
+LOG_FILE="/var/log/hive/${NAME}.log"
 HIVE_USER="hive"
 NICENESS="0"
-NAME="hadoop-hive-@HIVE_DAEMON@"
 DESC="Hive daemon"
  
 DODTIME=3
@@ -126,7 +126,7 @@ hive_start() {
     ERROR_PROGRAM_NOT_INSTALLED=5
 
     [ -x $EXE_FILE ] || exit $ERROR_PROGRAM_NOT_INSTALLED
-    log_success_msg "Starting $desc (hadoop-hive-@HIVE_DAEMON@): "
+    log_success_msg "Starting $desc (${NAME}): "
 
     if hive_check_pidfile $PID_FILE ; then
       exit 0
@@ -150,7 +150,7 @@ hive_start() {
     return $RETVAL
 }
 hive_stop() {
-    log_success_msg "Stopping $desc (hadoop-hive-@HIVE_DAEMON@): "
+    log_success_msg "Stopping $desc (${NAME}): "
     if [ -f $PID_FILE ]; then
       hive_stop_pidfile $PID_FILE
       RETVAL=$?
@@ -168,7 +168,7 @@ hive_status() {
     local STATUS_DEAD=1
     local STATUS_DEAD_AND_LOCK=2
     local STATUS_NOT_RUNNING=3
-    local DAEMON="hadoop-hive-@HIVE_DAEMON@"
+    local DAEMON="${NAME}"
 
     pidofproc -p $PID_FILE java > /dev/null
     status=$?
