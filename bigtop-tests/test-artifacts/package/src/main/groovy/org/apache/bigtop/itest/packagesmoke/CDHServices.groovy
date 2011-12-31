@@ -41,7 +41,7 @@ class CDHServices {
                                         verifier : new StateVerifierHive(),
                                       ],
                      HBase          : [ services : [ "hadoop-namenode", "hadoop-datanode",
-                                                     "hadoop-hbase-master" ],
+                                                     "hbase-master" ],
                                         killIDs  : [ "hdfs", "hbase" ],
                                         verifier : new StateVerifierHBase(),
                                       ],

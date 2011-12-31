@@ -49,8 +49,8 @@ export HBASE_HOME=/usr/lib/hbase
 export HBASE_PID_DIR=/var/run/hbase
 
 # Include HBase defaults if available
-if [ -f /etc/default/hadoop-hbase ] ; then
-  . /etc/default/hadoop-hbase
+if [ -f /etc/default/hbase ] ; then
+  . /etc/default/hbase
 fi
 
 if [ -f /usr/lib/hbase/bin/hbase-config.sh ] ; then
