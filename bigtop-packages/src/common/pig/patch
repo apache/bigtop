@@ -2,7 +2,7 @@ diff --git build.xml build.xml
 index 1edc448..e8af7ce 100644
 --- build.xml
 +++ build.xml
-@@ -156,7 +156,7 @@
+@@ -157,7 +157,7 @@
             input="${hadoop-core.version}"
             regexp="\d+\.(\d+)\.\d+"
             select="\1" /-->
@@ -98,7 +98,7 @@ diff --git ivy/libraries.properties ivy/libraries.properties
 index 5af5c3a..f0deea9 100644
 --- ivy/libraries.properties
 +++ ivy/libraries.properties
-@@ -24,14 +24,15 @@ commons-logging.version=1.1.1
+@@ -27,14 +27,15 @@
  commons-lang.version=2.4
  commons-configuration.version=1.6
  commons-httpclient.version=3.1
@@ -116,8 +116,8 @@ index 5af5c3a..f0deea9 100644
 +hadoop-mapreduce.version=0.23.1-SNAPSHOT
  hbase.version=0.90.0
  hsqldb.version=1.8.0.10
- jackson.version=1.7.3
-@@ -57,3 +58,10 @@ slf4j-log4j12.version=1.6.1
+ jackson.version=1.6.0
+@@ -59,3 +60,10 @@
  xerces.version=1.4.4
  wagon-http.version=1.0-beta-2
  zookeeper.version=3.3.3
