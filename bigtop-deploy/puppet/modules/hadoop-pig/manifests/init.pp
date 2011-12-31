@@ -15,14 +15,14 @@
 
 class hadoop-pig {
   define client {
-    package { "hadoop-pig":
+    package { "pig":
       ensure => latest,
       require => Package["hadoop"],
     } 
  
     file { "/etc/pig/conf/pig.properties":
       content => template('hadoop-pig/pig.properties'),
-      require => Package["hadoop-pig"],
+      require => Package["pig"],
       owner => "root", /* FIXME: I'm really no sure about these -- we might end  */
       mode => "755",   /*        up deploying/testing a different thing compared */
                        /*        to a straight rpm/deb deployment                */

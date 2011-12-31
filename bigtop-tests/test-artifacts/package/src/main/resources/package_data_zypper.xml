@@ -2765,7 +2765,7 @@ difficult to manage. Even when done correctly, different implementations of thes
     <file name="/etc/rc.d/zookeeper-server" owners="1" perm="-rwxr-xr-x" user="root" group="root"/>
   </content>
 </zookeeper-server>
-<hadoop-pig>
+<pig>
   <metadata>
     <summary>Pig is a platform for analyzing large data sets</summary>
     <description>Pig is a platform for analyzing large data sets that consists of a high-level language
@@ -6703,7 +6703,7 @@ difficult to manage. Even when done correctly, different implementations of thes
       <alt>/etc/pig/conf.dist</alt>
     </pig>
   </alternatives>
-</hadoop-pig>
+</pig>
 <hadoop-hive>
   <metadata>
     <summary>Hive is a data warehouse infrastructure built on top of Hadoop</summary>

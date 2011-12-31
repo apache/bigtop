@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-Source: hadoop-pig
+Source: pig
 Section: misc
 Priority: extra
 Maintainer: Bigtop <bigtop-dev@incubator.apache.org>
@@ -21,7 +21,7 @@ Build-Depends: debhelper (>= 6), ant, ant-optional
 Standards-Version: 3.8.0
 Homepage: http://pig.apache.org/
 
-Package: hadoop-pig
+Package: pig
 Architecture: all
 Depends: hadoop, bigtop-utils
 Description: A platform for analyzing large data sets using Hadoop
