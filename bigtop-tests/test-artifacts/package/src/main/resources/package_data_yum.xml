@@ -1069,7 +1069,7 @@ also on potential use cases. Come to the mailing lists to find out more.</descri
       <tag name="/usr/bin/env"/>
       <tag name="/usr/sbin/useradd"/>
       <hadoop>&gt;=0.20.2+710</hadoop>
-      <hadoop-zookeeper>&gt;=3.3.1+10</hadoop-zookeeper>
+      <zookeeper>&gt;=3.3.1+10</zookeeper>
       <jre>&gt;=1.6</jre>
       <sh-utils/>
       <textutils/>
@@ -4160,7 +4160,7 @@ also on potential use cases. Come to the mailing lists to find out more.</descri
       <doc name="/usr/share/man/man1/oozie.1.gz" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
     </content>
   </oozie-client>
-  <hadoop-zookeeper>
+  <zookeeper>
     <metadata>
       <summary>A high-performance coordination service for distributed applications.</summary>
       <description>ZooKeeper is a centralized service for maintaining configuration information,
@@ -4538,15 +4538,15 @@ difficult to manage. Even when done correctly, different implementations of thes
       </zookeeper>
     </users>
     <alternatives>
-      <hadoop-zookeeper-conf>
+      <zookeeper-conf>
         <status>auto</status>
         <link>/etc/zookeeper/conf</link>
         <value>/etc/zookeeper/conf.dist</value>
         <alt>/etc/zookeeper/conf.dist</alt>
-      </hadoop-zookeeper-conf>
+      </zookeeper-conf>
     </alternatives>
-  </hadoop-zookeeper>
-  <hadoop-zookeeper-server>
+  </zookeeper>
+  <zookeeper-server>
     <metadata>
       <summary>The Hadoop Zookeeper server</summary>
       <description>This package starts the zookeeper server on startup</description>
@@ -4555,23 +4555,23 @@ difficult to manage. Even when done correctly, different implementations of thes
     <deps>
       <tag name="/bin/bash"/>
       <tag name="/bin/sh"/>
-      <hadoop-zookeeper>/self</hadoop-zookeeper>
+      <zookeeper>/self</zookeeper>
       <redhat-lsb/>
     </deps>
     <services>
-      <hadoop-zookeeper-server>
+      <zookeeper-server>
         <runlevel>2</runlevel>
         <runlevel>3</runlevel>
         <runlevel>4</runlevel>
         <runlevel>5</runlevel>
         <oninstall>stop</oninstall>
         <configured>true</configured>
-      </hadoop-zookeeper-server>
+      </zookeeper-server>
     </services>
     <content>
-      <file name="/etc/rc.d/init.d/hadoop-zookeeper-server" perm="-rwxr-xr-x" group="root" owners="-1" user="root"/>
+      <file name="/etc/rc.d/init.d/zookeeper-server" perm="-rwxr-xr-x" group="root" owners="-1" user="root"/>
     </content>
-  </hadoop-zookeeper-server>
+  </zookeeper-server>
   <hadoop-pig>
     <metadata>
       <summary>Pig is a platform for analyzing large data sets</summary>
@@ -8936,7 +8936,7 @@ difficult to manage. Even when done correctly, different implementations of thes
       <tag name="/usr/bin/env"/>
       <tag name="/usr/sbin/useradd"/>
       <hadoop>&gt;=0.20.2+700</hadoop>
-      <hadoop-zookeeper>&gt;=3.3.1+8</hadoop-zookeeper>
+      <zookeeper>&gt;=3.3.1+8</zookeeper>
       <jre>&gt;=1.6</jre>
       <sh-utils/>
       <textutils/>

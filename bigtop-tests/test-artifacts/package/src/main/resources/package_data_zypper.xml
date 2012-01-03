@@ -812,7 +812,7 @@ also on potential use cases. Come to the mailing lists to find out more.</descri
     <tag name="/usr/sbin/useradd"/>
     <tag name="/sbin/chkconfig"/>
     <tag name="/sbin/service"/>
-    <hadoop-zookeeper>>=3.3.1+10</hadoop-zookeeper>
+    <zookeeper>>=3.3.1+10</zookeeper>
     <hadoop>>=0.20.2+710</hadoop>
     <jre>>=1.6</jre>
     <tag name="/bin/sh"/>
@@ -2345,7 +2345,7 @@ also on potential use cases. Come to the mailing lists to find out more.</descri
     <doc  name="/usr/share/man/man1/oozie.1.gz" owners="1" perm="-rw-r--r--" user="root" group="root"/>
   </content>
 </oozie-client>
-<hadoop-zookeeper>
+<zookeeper>
   <metadata>
     <summary>A high-performance coordination service for distributed applications.</summary>
     <description>ZooKeeper is a centralized service for maintaining configuration information,
@@ -2726,15 +2726,15 @@ difficult to manage. Even when done correctly, different implementations of thes
     </zookeeper>
   </users>
   <alternatives>
-    <hadoop-zookeeper-conf>
+    <zookeeper-conf>
       <status>auto</status>
       <link>/etc/zookeeper</link>
       <value>/etc/zookeeper.dist</value>
       <alt>/etc/zookeeper.dist</alt>
-    </hadoop-zookeeper-conf>
+    </zookeeper-conf>
   </alternatives>
-</hadoop-zookeeper>
-<hadoop-zookeeper-server>
+</zookeeper>
+<zookeeper-server>
   <metadata>
     <!-- license>APL2</license -->
     <!-- arch>universal</arch -->
@@ -2749,22 +2749,22 @@ difficult to manage. Even when done correctly, different implementations of thes
     <!-- provides>zookeeper</provides -->
   </metadata>
   <deps>
-    <hadoop-zookeeper>/self</hadoop-zookeeper>
+    <zookeeper>/self</zookeeper>
     <insserv/>
     <tag name="/bin/sh"/>
     <tag name="/bin/bash"/>
   </deps>
   <services>
-    <hadoop-zookeeper-server>
+    <zookeeper-server>
       <!-- BUG https://jira.cloudera.com/browse/KITCHEN-1095 --><runlevel>3</runlevel><runlevel>4</runlevel><runlevel>5</runlevel>
       <oninstall>stop</oninstall>
       <configured>true</configured>
-    </hadoop-zookeeper-server>
+    </zookeeper-server>
   </services>
   <content>
-    <file name="/etc/rc.d/hadoop-zookeeper-server" owners="1" perm="-rwxr-xr-x" user="root" group="root"/>
+    <file name="/etc/rc.d/zookeeper-server" owners="1" perm="-rwxr-xr-x" user="root" group="root"/>
   </content>
-</hadoop-zookeeper-server>
+</zookeeper-server>
 <hadoop-pig>
   <metadata>
     <summary>Pig is a platform for analyzing large data sets</summary>
@@ -7086,7 +7086,7 @@ difficult to manage. Even when done correctly, different implementations of thes
     <tag name="/usr/sbin/useradd"/>
     <tag name="/sbin/chkconfig"/>
     <tag name="/sbin/service"/>
-    <hadoop-zookeeper>>=3.3.1+8</hadoop-zookeeper>
+    <zookeeper>>=3.3.1+8</zookeeper>
     <hadoop>>=0.20.2+700</hadoop>
     <jre>>=1.6</jre>
     <tag name="/bin/sh"/>

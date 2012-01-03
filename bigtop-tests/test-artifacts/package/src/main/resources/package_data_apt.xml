@@ -820,7 +820,7 @@
   </metadata>
   <deps>
     <sun-java6-jre/>
-    <hadoop-zookeeper/>
+    <zookeeper/>
     <adduser/>
     <hadoop>>=0.20.2+720</hadoop>
   </deps>
@@ -2385,7 +2385,7 @@
     <file name="/usr/lib/oozie/lib/commons-lang-2.4.jar" owners="1" perm="-rw-r--r--" user="root" group="root"/>
   </content>
 </oozie-client>
-<hadoop-zookeeper>
+<zookeeper>
   <metadata>
     <summary>A high-performance coordination service for distributed applications.</summary>
     <description>ZooKeeper is a centralized service for maintaining configuration information, naming, providing distributed synchronization, and providing group services.  All of these kinds of services are used in some form or another by distributed applications. Each time they are implemented there is a lot of work that goes into fixing the bugs and race conditions that are inevitable. Because of the difficulty of implementing these kinds of services, applications initially usually skimp on them ,which make them brittle in the presence of change and difficult to manage. Even when done correctly, different implementations of these services lead to management complexity when the applications are deployed.
@@ -2422,9 +2422,9 @@
     <file name="/usr/lib/zookeeper/zookeeper.jar" owners="1" perm="lrwxrwxrwx" user="root" group="root" target="zookeeper-3.3.3-cdh3u1-SNAPSHOT.jar"/>
     <file name="/usr/share" owners="418" perm="drwxr-xr-x" user="root" group="root"/>
     <file name="/usr/share/doc" owners="418" perm="drwxr-xr-x" user="root" group="root"/>
-    <file name="/usr/share/doc/hadoop-zookeeper" owners="1" perm="drwxr-xr-x" user="root" group="root"/>
-    <file name="/usr/share/doc/hadoop-zookeeper/changelog.Debian.gz" owners="1" perm="-rw-r--r--" user="root" group="root"/>
-    <file name="/usr/share/doc/hadoop-zookeeper/copyright" owners="1" perm="-rw-r--r--" user="root" group="root"/>
+    <file name="/usr/share/doc/zookeeper" owners="1" perm="drwxr-xr-x" user="root" group="root"/>
+    <file name="/usr/share/doc/zookeeper/changelog.Debian.gz" owners="1" perm="-rw-r--r--" user="root" group="root"/>
+    <file name="/usr/share/doc/zookeeper/copyright" owners="1" perm="-rw-r--r--" user="root" group="root"/>
     <file name="/usr/share/doc/zookeeper" owners="1" perm="drwxr-xr-x" user="root" group="root"/>
     <file name="/usr/share/doc/zookeeper/api" owners="1" perm="drwxr-xr-x" user="root" group="root"/>
     <file name="/usr/share/doc/zookeeper/api/allclasses-frame.html" owners="1" perm="-rw-r--r--" user="root" group="root"/>
@@ -2774,15 +2774,15 @@
     </zookeeper>
   </users>
   <alternatives>
-    <hadoop-zookeeper-conf>
+    <zookeeper-conf>
       <status>auto</status>
       <link>/etc/zookeeper/conf</link>
       <value>/etc/zookeeper/conf.dist</value>
       <alt>/etc/zookeeper/conf.dist</alt>
-    </hadoop-zookeeper-conf>
+    </zookeeper-conf>
   </alternatives>
-</hadoop-zookeeper>
-<hadoop-zookeeper-server>
+</zookeeper>
+<zookeeper-server>
   <metadata>
     <!-- license>APL2</license -->
     <!-- arch>universal</arch -->
@@ -2796,19 +2796,19 @@
     <!-- provides>zookeeper</provides -->
   </metadata>
   <deps>
-    <hadoop-zookeeper>/self</hadoop-zookeeper>
+    <zookeeper>/self</zookeeper>
   </deps>
   <services>
-    <hadoop-zookeeper-server>
+    <zookeeper-server>
       <runlevel>2</runlevel><runlevel>3</runlevel><runlevel>4</runlevel><runlevel>5</runlevel>
       <oninstall>start</oninstall>
       <configured>true</configured>
-    </hadoop-zookeeper-server>
+    </zookeeper-server>
   </services>
   <content>
-    <config name="/etc/init.d/hadoop-zookeeper-server" owners="1" perm="-rwxr-xr-x" user="root" group="root"/>
-    <file name="/usr/share/doc/hadoop-zookeeper-server/changelog.Debian.gz" owners="1" perm="-rw-r--r--" user="root" group="root"/>
-    <file name="/usr/share/doc/hadoop-zookeeper-server/copyright" owners="1" perm="-rw-r--r--" user="root" group="root"/>
+    <config name="/etc/init.d/zookeeper-server" owners="1" perm="-rwxr-xr-x" user="root" group="root"/>
+    <file name="/usr/share/doc/zookeeper-server/changelog.Debian.gz" owners="1" perm="-rw-r--r--" user="root" group="root"/>
+    <file name="/usr/share/doc/zookeeper-server/copyright" owners="1" perm="-rw-r--r--" user="root" group="root"/>
 
     <file name="/." owners="0" perm="drwxr-xr-x" user="root" group="root"/>
     <file name="/etc" owners="119" perm="drwxr-xr-x" user="root" group="root"/>
@@ -2816,9 +2816,9 @@
     <file name="/usr" owners="418" perm="drwxr-xr-x" user="root" group="root"/>
     <file name="/usr/share" owners="418" perm="drwxr-xr-x" user="root" group="root"/>
     <file name="/usr/share/doc" owners="418" perm="drwxr-xr-x" user="root" group="root"/>
-    <file name="/usr/share/doc/hadoop-zookeeper-server" owners="1" perm="drwxr-xr-x" user="root" group="root"/>
+    <file name="/usr/share/doc/zookeeper-server" owners="1" perm="drwxr-xr-x" user="root" group="root"/>
   </content>
-</hadoop-zookeeper-server>
+</zookeeper-server>
 <hadoop-pig>
   <metadata>
     <summary>A platform for analyzing large data sets using Hadoop</summary>
@@ -7105,7 +7105,7 @@
   <deps>
     <adduser/>
     <sun-java6-jre/>
-    <hadoop-zookeeper>>=3.3.1+8</hadoop-zookeeper>
+    <zookeeper>>=3.3.1+8</zookeeper>
     <hadoop>>=0.20.2+700</hadoop>
   </deps>
   <content>

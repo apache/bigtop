@@ -23,6 +23,8 @@ export DH_VERBOSE=1
 # This has to be exported to make some magic below work.
 export DH_OPTIONS
 
+zookeeper_pkg_name=zookeeper
+
 patch: patch-stamp
 patch-stamp:	
 	touch $@
@@ -32,7 +34,7 @@ clean:
 	dh_testroot
 	rm -f *-stamp
 	dh_clean
-	rm -Rf debian/tmp debian/hadoop-zookeeper debian/zookeeper
+	rm -Rf debian/tmp debian/$(zookeeper_pkg_name)
 	find debian -name .\*swp -exec rm -f {} \;
 
 build-indep: build-indep-stamp
@@ -49,7 +51,7 @@ install-indep:
 	cp debian/zookeeper.1 debian/zoo.cfg .
 	sh -x debian/install_zookeeper.sh \
 	  --build-dir=build/zookeeper-${ZOOKEEPER_BASE_VERSION} \
-	  --prefix=debian/hadoop-zookeeper 
+	  --prefix=debian/$(zookeeper_pkg_name)
 	dh_install -i
 
 binary-common:	

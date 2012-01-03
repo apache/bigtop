@@ -22,7 +22,7 @@ Homepage: http://hbase.apache.org/
 
 Package: hadoop-hbase
 Architecture: all
-Depends: adduser, hadoop-zookeeper (>= 3.3.1), hadoop, bigtop-utils
+Depends: adduser, zookeeper (>= 3.3.1), hadoop, bigtop-utils
 Recommends: ntp
 Description: HBase is the Hadoop database
  Use it when you need random, realtime read/write access to your Big Data. 
