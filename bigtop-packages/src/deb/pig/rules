@@ -27,7 +27,6 @@ pig_pkg_name=pig
 
 patch: patch-stamp
 patch-stamp:	
-	patch -p0 < debian/patch
 	touch $@
 
 clean:	

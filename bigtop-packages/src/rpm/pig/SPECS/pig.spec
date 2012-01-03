@@ -81,7 +81,6 @@ Source2: install_pig.sh
 Source3: log4j.properties
 Source4: pig.1
 Source5: pig.properties
-Patch0: patch
 Requires: hadoop, bigtop-utils
 
 %description 
@@ -108,8 +107,7 @@ language called Pig Latin, which has the following key properties:
 
 
 %prep
-%setup -n apache-pig-ec01b30
-%patch0
+%setup -n apache-pig-c6bc768
 
 %build
 env PIG_BASE_VERSION=%{pig_base_version} bash %{SOURCE1}
