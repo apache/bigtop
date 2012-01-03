@@ -6774,7 +6774,7 @@
     </pig-conf>
   </alternatives>
 </pig>
-<hadoop-hive>
+<hive>
   <metadata>
     <summary>A data warehouse infrastructure built on top of Hadoop</summary>
     <description>Hive is a data warehouse infrastructure built on top of Hadoop that
@@ -6808,9 +6808,9 @@
     <file name="/usr/bin/hive" owners="1" perm="-rwxr-xr-x" user="root" group="root"/>
     <file name="/usr/share" owners="426" perm="drwxr-xr-x" user="root" group="root"/>
     <file name="/usr/share/doc" owners="426" perm="drwxr-xr-x" user="root" group="root"/>
-    <file name="/usr/share/doc/hadoop-hive" owners="1" perm="drwxr-xr-x" user="root" group="root"/>
-    <file name="/usr/share/doc/hadoop-hive/copyright" owners="1" perm="-rw-r--r--" user="root" group="root"/>
-    <file name="/usr/share/doc/hadoop-hive/changelog.Debian.gz" owners="1" perm="-rw-r--r--" user="root" group="root"/>
+    <file name="/usr/share/doc/hive" owners="1" perm="drwxr-xr-x" user="root" group="root"/>
+    <file name="/usr/share/doc/hive/copyright" owners="1" perm="-rw-r--r--" user="root" group="root"/>
+    <file name="/usr/share/doc/hive/changelog.Debian.gz" owners="1" perm="-rw-r--r--" user="root" group="root"/>
     <file name="/usr/share/doc/hive" owners="1" perm="drwxr-xr-x" user="root" group="root"/>
     <file name="/usr/share/doc/hive/examples" owners="1" perm="drwxr-xr-x" user="root" group="root"/>
     <file name="/usr/share/doc/hive/examples/files" owners="1" perm="drwxr-xr-x" user="root" group="root"/>
@@ -7092,7 +7092,7 @@
       <alt>/etc/hive/conf.dist</alt>
     </hive-conf>
   </alternatives>
-</hadoop-hive>
+</hive>
 <hbase>
   <metadata>
     <summary>HBase is the Hadoop database</summary>

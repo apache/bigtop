@@ -15,13 +15,13 @@
 
 class hadoop-hive {
   define client($hbase_master = "", $hbase_zookeeper_quorum = "") {
-    package { "hadoop-hive":
+    package { "hive":
       ensure => latest,
     } 
 
     file { "/etc/hive/conf/hive-site.xml":
       content => template('hadoop-hive/hive-site.xml'),
-      require => Package["hadoop-hive"],
+      require => Package["hive"],
     }
   }
 }
