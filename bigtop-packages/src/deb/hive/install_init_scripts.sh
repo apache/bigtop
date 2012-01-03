@@ -15,7 +15,7 @@
 # limitations under the License.
 
 
-SRC_PKG=hadoop-hive
+SRC_PKG=hive
 for node in server metastore ; do
     service_pkgdir=debian/$SRC_PKG-$node
     debdir=$service_pkgdir/DEBIAN

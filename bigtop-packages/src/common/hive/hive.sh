@@ -24,7 +24,7 @@
 # processname: hive
 # pidfile: /var/run/hive/hive-@HIVE_DAEMON@.pid
 ### BEGIN INIT INFO
-# Provides:          hadoop-hive-@HIVE_DAEMON@
+# Provides:          hive-@HIVE_DAEMON@
 # Required-Start:    $syslog $remote_fs
 # Should-Start:
 # Required-Stop:     $syslog $remote_fs
@@ -54,16 +54,16 @@ ERROR_PROGRAM_NOT_INSTALLED=5
 ERROR_PROGRAM_NOT_CONFIGURED=6
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-SYS_FILE="/etc/default/hadoop-hive-@HIVE_DAEMON@"
+NAME="hive-@HIVE_DAEMON@"
+DESC="Hive @HIVE_DAEMON@ daemon"
+SYS_FILE="/etc/default/${NAME}"
 EXE_FILE="/usr/lib/hive/bin/hive"
-PID_FILE="/var/run/hive/hive-@HIVE_DAEMON@.pid"
-LOCKFILE="/var/lock/subsys/hadoop-hive-@HIVE_DAEMON@"
-LOG_FILE="/var/log/hive/hive-@HIVE_DAEMON@.log"
+PID_FILE="/var/run/hive/${NAME}.pid"
+LOCKFILE="/var/lock/subsys/${NAME}"
+LOG_FILE="/var/log/hive/${NAME}.log"
 HIVE_USER="hive"
 HIVE_HOME="`eval echo ~$HIVE_USER`"
 NICENESS="+0"
-NAME="hadoop-hive-@HIVE_DAEMON@"
-DESC="Hive @HIVE_DAEMON@ daemon"
 TIMEOUT=3
 
 [ -f $SYS_FILE ] && . $SYS_FILE
@@ -77,7 +77,7 @@ hive_start() {
       exec_env="HADOOP_OPTS=\"-Dhive.log.dir=`dirname $LOG_FILE`\""
     fi
 
-    log_success_msg "Starting $desc (hadoop-hive-@HIVE_DAEMON@): "
+    log_success_msg "Starting $desc (${NAME}): "
     start_daemon -u $HIVE_USER -p $PID_FILE -n $NICENESS  /bin/sh -c "cd $HIVE_HOME ; $exec_env nohup \
            $EXE_FILE --service $service_name $PORT \
              > $LOG_FILE 2>&1 < /dev/null & "'echo $! '"> $PID_FILE"
@@ -88,7 +88,7 @@ hive_start() {
 }
 
 hive_stop() {
-    log_success_msg "Stopping $desc (hadoop-hive-@HIVE_DAEMON@): "
+    log_success_msg "Stopping $desc (${NAME}): "
     killproc -p $PID_FILE java
     RETVAL=$?
 
