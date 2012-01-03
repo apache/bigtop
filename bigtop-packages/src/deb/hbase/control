@@ -12,7 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-Source: hadoop-hbase
+Source: hbase
 Section: misc
 Priority: extra
 Maintainer: Bigtop <bigtop-dev@incubator.apache.org>
@@ -20,7 +20,7 @@ Build-Depends: debhelper (>= 6), git-core, adduser
 Standards-Version: 3.8.0
 Homepage: http://hbase.apache.org/
 
-Package: hadoop-hbase
+Package: hbase
 Architecture: all
 Depends: adduser, zookeeper (>= 3.3.1), hadoop, bigtop-utils
 Recommends: ntp
@@ -29,28 +29,28 @@ Description: HBase is the Hadoop database
  This project's goal is the hosting of very large tables -- billions of rows  
  X millions of columns -- atop clusters of commodity hardware.
 
-Package: hadoop-hbase-doc
+Package: hbase-doc
 Architecture: all
 Section: doc
 Description: Documentation for HBase
  This package contains the HBase manual and JavaDoc.
 
-Package: hadoop-hbase-master
+Package: hbase-master
 Architecture: all
-Depends: hadoop-hbase (= ${source:Version}) 
+Depends: hbase (= ${source:Version}) 
 Description: HMaster is the "master server" for a HBase
  There is only one HMaster for a single HBase deployment.
 
-Package: hadoop-hbase-regionserver
+Package: hbase-regionserver
 Architecture: all
-Depends: hadoop-hbase (= ${source:Version}) 
+Depends: hbase (= ${source:Version}) 
 Description: HRegionServer makes a set of HRegions available to clients
  It checks in with the HMaster. There are many HRegionServers in a single 
  HBase deployment.
 
-Package: hadoop-hbase-thrift
+Package: hbase-thrift
 Architecture: all
-Depends: hadoop-hbase (= ${source:Version}) 
+Depends: hbase (= ${source:Version}) 
 Description: Provides an HBase Thrift service
  This package provides a Thrift service interface to the HBase distributed
  database.

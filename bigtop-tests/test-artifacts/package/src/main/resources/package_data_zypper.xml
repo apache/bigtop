@@ -7064,7 +7064,7 @@ difficult to manage. Even when done correctly, different implementations of thes
     </hive-conf>
   </alternatives>
 </hadoop-hive>
-<hadoop-hbase>
+<hbase>
   <metadata>
     <summary>HBase is the Hadoop database. Use it when you need random, realtime read/write access to your Big Data. This project's goal is the hosting of very large tables -- billions of rows X millions of columns -- atop clusters of commodity hardware.</summary>
     <description>HBase is an open-source, distributed, column-oriented store modeled after Google' Bigtable: A Distributed Storage System for Structured Data by Chang et al. Just as Bigtable leverages the distributed data storage provided by the Google File System, HBase provides Bigtable-like capabilities on top of Hadoop. HBase includes:
@@ -7251,8 +7251,8 @@ difficult to manage. Even when done correctly, different implementations of thes
       <shell>/sbin/nologin</shell>
     </hbase>
   </users>
-</hadoop-hbase>
-<hadoop-hbase-doc>
+</hbase>
+<hbase-doc>
   <metadata>
     <summary>Hbase Documentation</summary>
     <description>Documentation for Hbase</description>
@@ -9020,76 +9020,76 @@ difficult to manage. Even when done correctly, different implementations of thes
     <doc  name="/usr/share/doc/packages/hbase/wal_splitting.html" owners="1" perm="-rwxr-xr-x" user="root" group="root"/>
     <doc  name="/usr/share/doc/packages/hbase/wal_tools.html" owners="1" perm="-rwxr-xr-x" user="root" group="root"/>
   </content>
-</hadoop-hbase-doc>
-<hadoop-hbase-master>
+</hbase-doc>
+<hbase-master>
   <metadata>
     <summary>The Hadoop HBase master Server.</summary>
     <description>HMaster is the "master server" for a HBase. There is only one HMaster for a single HBase deployment.</description>
     <url>http://hadoop.apache.org/hbase/</url>
   </metadata>
   <deps>
-    <hadoop-hbase>/self</hadoop-hbase>
+    <hbase>/self</hbase>
     <insserv/>
     <tag name="/bin/sh"/>
     <tag name="/bin/bash"/>
   </deps>
   <services>
-    <hadoop-hbase-master>
+    <hbase-master>
        <!-- BUG https://jira.cloudera.com/browse/KITCHEN-1095 --><runlevel>3</runlevel><runlevel>4</runlevel><runlevel>5</runlevel>
        <oninstall>stop</oninstall>
        <configured>true</configured>
-    </hadoop-hbase-master>
+    </hbase-master>
   </services>
   <content>
-    <file name="/etc/rc.d/hadoop-hbase-master" owners="1" perm="-rwxr-xr-x" user="root" group="root"/>
+    <file name="/etc/rc.d/hbase-master" owners="1" perm="-rwxr-xr-x" user="root" group="root"/>
   </content>
-</hadoop-hbase-master>
-<hadoop-hbase-regionserver>
+</hbase-master>
+<hbase-regionserver>
   <metadata>
     <summary>The Hadoop HBase RegionServer server.</summary>
     <description>HRegionServer makes a set of HRegions available to clients. It checks in with the HMaster. There are many HRegionServers in a single HBase deployment.</description>
     <url>http://hadoop.apache.org/hbase/</url>
   </metadata>
   <deps>
-    <hadoop-hbase>/self</hadoop-hbase>
+    <hbase>/self</hbase>
     <insserv/>
     <tag name="/bin/sh"/>
     <tag name="/bin/bash"/>
   </deps>
   <services>
-    <hadoop-hbase-regionserver>
+    <hbase-regionserver>
        <!-- BUG https://jira.cloudera.com/browse/KITCHEN-1095 --><runlevel>3</runlevel><runlevel>4</runlevel><runlevel>5</runlevel>
        <oninstall>stop</oninstall>
        <configured>false</configured>
-    </hadoop-hbase-regionserver>
+    </hbase-regionserver>
   </services>
   <content>
-    <file name="/etc/rc.d/hadoop-hbase-regionserver" owners="1" perm="-rwxr-xr-x" user="root" group="root"/>
+    <file name="/etc/rc.d/hbase-regionserver" owners="1" perm="-rwxr-xr-x" user="root" group="root"/>
   </content>
-</hadoop-hbase-regionserver>
-<hadoop-hbase-thrift>
+</hbase-regionserver>
+<hbase-thrift>
   <metadata>
     <summary>The Hadoop HBase Thrift Interface</summary>
     <description>ThriftServer - this class starts up a Thrift server which implements the Hbase API specified in the Hbase.thrift IDL file. "Thrift is a software framework for scalable cross-language services development. It combines a powerful software stack with a code generation engine to build services that work efficiently and seamlessly between C++, Java, Python, PHP, and Ruby. Thrift was developed at Facebook, and we are now releasing it as open source." For additional information, see http://developers.facebook.com/thrift/. Facebook has announced their intent to migrate Thrift into Apache Incubator.</description>
     <url>http://hadoop.apache.org/hbase/</url>
   </metadata>
   <deps>
-    <hadoop-hbase>/self</hadoop-hbase>
+    <hbase>/self</hbase>
     <insserv/>
     <tag name="/bin/sh"/>
     <tag name="/bin/bash"/>
   </deps>
   <services>
-    <hadoop-hbase-thrift>
+    <hbase-thrift>
        <!-- BUG https://jira.cloudera.com/browse/KITCHEN-1095 --><runlevel>3</runlevel><runlevel>4</runlevel><runlevel>5</runlevel>
        <oninstall>stop</oninstall>
        <configured>false</configured>
-    </hadoop-hbase-thrift>
+    </hbase-thrift>
   </services>
   <content>
-    <file name="/etc/rc.d/hadoop-hbase-thrift" owners="1" perm="-rwxr-xr-x" user="root" group="root"/>
+    <file name="/etc/rc.d/hbase-thrift" owners="1" perm="-rwxr-xr-x" user="root" group="root"/>
   </content>
-</hadoop-hbase-thrift>
+</hbase-thrift>
 <hadoop>
   <metadata>
     <summary>Hadoop is a software platform for processing vast amounts of data</summary>
