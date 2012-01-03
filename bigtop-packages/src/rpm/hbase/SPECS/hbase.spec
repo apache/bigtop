@@ -12,8 +12,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-%define etc_hbase /etc/hbase
-%define hbase_home /usr/lib/hbase
+%define etc_hbase /etc/%{name}
+%define hbase_home /usr/lib/%{name}
 %define bin_hbase %{hbase_home}/bin
 %define lib_hbase %{hbase_home}/lib
 %define conf_hbase %{hbase_home}/conf
@@ -23,6 +23,9 @@
 %define man_dir %{_mandir}
 %define hbase_username hbase
 %define hbase_services master regionserver thrift
+%define hadoop_home /usr/lib/hadoop
+%define zookeeper_home /usr/lib/zookeeper
+%define hbase_jar_deps %{hadoop_home}/hadoop-core.jar %{zookeeper_home}/zookeeper.jar
 
 %if  %{?suse_version:1}0
 
@@ -41,30 +44,30 @@
     /usr/lib/rpm/brp-compress ; \
     %{nil}
 
-%define doc_hbase %{_docdir}/hbase
+%define doc_hbase %{_docdir}/%{name}
 %global initd_dir %{_sysconfdir}/rc.d
 
 %else
 
-%define doc_hbase %{_docdir}/hbase-%{hbase_version}
+%define doc_hbase %{_docdir}/%{name}-%{hbase_version}
 %global initd_dir %{_sysconfdir}/rc.d/init.d
 
 %endif
 
 
-Name: hadoop-hbase
+Name: hbase
 Version: %{hbase_version}
 Release: %{hbase_release}
 Summary: HBase is the Hadoop database. Use it when you need random, realtime read/write access to your Big Data. This project's goal is the hosting of very large tables -- billions of rows X millions of columns -- atop clusters of commodity hardware. 
-URL: http://hadoop.apache.org/hbase/
+URL: http://hbase.apache.org/
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 License: APL2
-Source0: hbase-%{hbase_base_version}.tar.gz
+Source0: %{name}-%{hbase_base_version}.tar.gz
 Source1: do-component-build
 Source2: install_hbase.sh
-Source3: hadoop-hbase.sh
-Source4: hadoop-hbase.sh.suse
+Source3: hbase.sh
+Source4: hbase.sh.suse
 Source5: hbase.default
 Source6: hbase.nofiles.conf
 BuildArch: noarch
@@ -93,7 +96,7 @@ HBase is an open-source, distributed, column-oriented store modeled after Google
 %package master
 Summary: The Hadoop HBase master Server.
 Group: System/Daemons
-Provides: hbase-master
+Provides: %{name}-master
 Requires: %{name} = %{version}-%{release}
 
 %if  %{?suse_version:1}0
@@ -119,7 +122,7 @@ HMaster is the "master server" for a HBase. There is only one HMaster for a sing
 %package regionserver
 Summary: The Hadoop HBase RegionServer server.
 Group: System/Daemons
-Provides: hbase-regionserver
+Provides: %{name}-regionserver
 Requires: %{name} = %{version}-%{release}
 
 %if  %{?suse_version:1}0
@@ -146,7 +149,7 @@ HRegionServer makes a set of HRegions available to clients. It checks in with th
 %package thrift
 Summary: The Hadoop HBase Thrift Interface
 Group: System/Daemons
-Provides: hbase-thrift
+Provides: %{name}-thrift
 Requires: %{name} = %{version}-%{release}
 
 %if  %{?suse_version:1}0
@@ -182,7 +185,7 @@ Documentation for Hbase
 
 
 %prep
-%setup -n hbase-%{hbase_base_version}
+%setup -n %{name}-%{hbase_base_version}
 
 %build
 env HBASE_VERSION=%{version} bash %{SOURCE1}
@@ -197,21 +200,21 @@ sh %{SOURCE2} \
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/etc/default/
-%__install -m 0644 $RPM_SOURCE_DIR/hbase.default $RPM_BUILD_ROOT/etc/default/hbase
+%__install -m 0644 %{SOURCE5} $RPM_BUILD_ROOT/etc/default/%{name}
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/etc/security/limits.d
-%__install -m 0644 %{SOURCE6} $RPM_BUILD_ROOT/etc/security/limits.d/hbase.nofiles.conf
+%__install -m 0644 %{SOURCE6} $RPM_BUILD_ROOT/etc/security/limits.d/%{name}.nofiles.conf
 
-%__install -d  -m 0755  %{buildroot}/%{_localstatedir}/log/hbase
-ln -s %{_localstatedir}/log/hbase %{buildroot}/%{logs_hbase}
+%__install -d  -m 0755  %{buildroot}/%{_localstatedir}/log/%{name}
+ln -s %{_localstatedir}/log/%{name} %{buildroot}/%{logs_hbase}
 
-%__install -d  -m 0755  %{buildroot}/%{_localstatedir}/run/hbase
-ln -s %{_localstatedir}/run/hbase %{buildroot}/%{pids_hbase}
+%__install -d  -m 0755  %{buildroot}/%{_localstatedir}/run/%{name}
+ln -s %{_localstatedir}/run/%{name} %{buildroot}/%{pids_hbase}
 
 %if  %{?suse_version:1}0
-orig_init_file=$RPM_SOURCE_DIR/hadoop-hbase.sh.suse
+orig_init_file=%{SOURCE4}
 %else
-orig_init_file=$RPM_SOURCE_DIR/hadoop-hbase.sh
+orig_init_file=%{SOURCE3}
 %endif
 
 for service in %{hbase_services}
@@ -225,10 +228,7 @@ done
 %__install -d -m 0755 $RPM_BUILD_ROOT/usr/bin
 
 # Pull zookeeper and hadoop from their packages
-rm -f $RPM_BUILD_ROOT/usr/lib/hbase/lib/hadoop* \
-      $RPM_BUILD_ROOT/usr/lib/hbase/lib/zookeeper*
-ln -s /usr/lib/hadoop/hadoop-core.jar $RPM_BUILD_ROOT/usr/lib/hbase/lib/hadoop-core.jar
-ln -s /usr/lib/zookeeper/zookeeper.jar $RPM_BUILD_ROOT/usr/lib/hbase/lib/zookeeper.jar
+ln -f -s %{hbase_jar_deps} $RPM_BUILD_ROOT/%{lib_hbase}
 
 %pre
 getent group hbase 2>/dev/null >/dev/null || /usr/sbin/groupadd -r hbase

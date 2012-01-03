@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-SRC_PKG=hadoop-hbase
+SRC_PKG=hbase
 for node in master regionserver thrift ; do
     service_pkgdir=debian/$SRC_PKG-$node
     debdir=$service_pkgdir/DEBIAN

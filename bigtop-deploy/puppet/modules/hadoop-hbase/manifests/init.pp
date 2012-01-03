@@ -15,7 +15,7 @@
 
 class hadoop-hbase {
   class client-package  {
-    package { "hadoop-hbase":
+    package { "hbase":
       ensure => latest,
     } 
   }
@@ -25,11 +25,11 @@ class hadoop-hbase {
 
     file { "/etc/hbase/conf/hbase-site.xml":
       content => template("hadoop-hbase/hbase-site.xml"),
-      require => Package["hadoop-hbase"],
+      require => Package["hbase"],
     }
     file { "/etc/hbase/conf/hbase-env.sh":
       content => template("hadoop-hbase/hbase-env.sh"),
-      require => Package["hadoop-hbase"],
+      require => Package["hbase"],
     }
   }
 
@@ -40,13 +40,13 @@ class hadoop-hbase {
   define server($rootdir, $zookeeper_quorum, $kerberos_realm = "") {
     include common-server-config
 
-    package { "hadoop-hbase-regionserver":
+    package { "hbase-regionserver":
       ensure => latest,
     }
 
-    service { "hadoop-hbase-regionserver":
+    service { "hbase-regionserver":
       ensure => running,
-      require => Package["hadoop-hbase-regionserver"],
+      require => Package["hbase-regionserver"],
       subscribe => File["/etc/hbase/conf/hbase-site.xml", "/etc/hbase/conf/hbase-env.sh"],
       hasrestart => true,
       hasstatus => true,
@@ -56,13 +56,13 @@ class hadoop-hbase {
   define master($rootdir, $zookeeper_quorum, $kerberos_realm = "") {
     include common-server-config
 
-    package { "hadoop-hbase-master":
+    package { "hbase-master":
       ensure => latest,
     }
 
-    service { "hadoop-hbase-master":
+    service { "hbase-master":
       ensure => running,
-      require => Package["hadoop-hbase-master"],
+      require => Package["hbase-master"],
       subscribe => File["/etc/hbase/conf/hbase-site.xml", "/etc/hbase/conf/hbase-env.sh"],
       hasrestart => true,
       hasstatus => true,
