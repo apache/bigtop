@@ -32,6 +32,7 @@ else
   JSVC_URL=http://archive.apache.org/dist/commons/daemon/binaries/1.0.2/linux/commons-daemon-1.0.2-bin-linux-i386.tar.gz
 fi
 
+# -Dlibrecordio=true
 for project in common hdfs mapreduce ; do 
   cd $project
   ant \
@@ -44,7 +45,7 @@ for project in common hdfs mapreduce ; do
     -Djsvc.location=${JSVC_URL} \
     -Dcompile.native=true \
     -Dhadoop.conf.dir=/etc/hadoop/conf \
-    -Dlibrecordio=true -Dlibhdfs=1 -Dfusedfs=true -Dcompile.c++=true -Djdiff.build.dir=build/docs/jdiff \
+    -Dlibhdfs=1 -Dfusedfs=true -Dcompile.c++=true -Djdiff.build.dir=build/docs/jdiff \
    api-report bin-package $BUILD_CONTRIB tar \
     "$@"
   
