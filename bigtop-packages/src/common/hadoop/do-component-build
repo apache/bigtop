@@ -35,6 +35,6 @@ pushd hadoop-mapreduce-project/hadoop-yarn/hadoop-yarn-site
 popd
 mvn site site:stage ${MAVEN_SKIP_TESTS} $@
 
-(cd build ; tar --strip-components=1 -xzvf  ../hadoop-dist/target/hadoop-0.23.0-SNAPSHOT.tar.gz)
-(cd build/src ; tar --strip-components=1 -xzvf  ../../hadoop-dist/target/hadoop-0.23.0-SNAPSHOT-src.tar.gz)
+(cd build ; tar --strip-components=1 -xzvf  ../hadoop-dist/target/hadoop-${HADOOP_VERSION}.tar.gz)
+(cd build/src ; tar --strip-components=1 -xzvf  ../../hadoop-dist/target/hadoop-${HADOOP_VERSION}-src.tar.gz)
 

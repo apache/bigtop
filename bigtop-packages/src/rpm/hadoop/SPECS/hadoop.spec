@@ -257,7 +257,7 @@ AutoReq: no
 Hadoop Filesystem Library
 
 %prep
-%setup -n apache-hadoop-common-61572bb
+%setup -n apache-hadoop-common-915892c
 %patch0 -p0
 
 %build
@@ -265,7 +265,7 @@ Hadoop Filesystem Library
 # This assumes that you installed Java JDK 5 and set JAVA5_HOME
 # This assumes that you installed Forrest and set FORREST_HOME
 
-env HADOOP_VERSION=%{hadoop_version} HADOOP_ARCH=%{hadoop_arch} bash %{SOURCE1}
+env HADOOP_VERSION=%{hadoop_base_version} HADOOP_ARCH=%{hadoop_arch} bash %{SOURCE1}
 
 %clean
 %__rm -rf $RPM_BUILD_ROOT
@@ -280,7 +280,7 @@ env HADOOP_VERSION=%{hadoop_version} HADOOP_ARCH=%{hadoop_arch} bash %{SOURCE1}
 
 bash %{SOURCE2} \
   --distro-dir=$RPM_SOURCE_DIR \
-  --build-dir=$PWD/build \
+  --build-dir=$PWD/hadoop-dist/target/hadoop-%{hadoop_base_version} \
   --system-include-dir=$RPM_BUILD_ROOT%{_includedir} \
   --system-lib-dir=$RPM_BUILD_ROOT%{_libdir} \
   --system-libexec-dir=$RPM_BUILD_ROOT%{libexecdir} \

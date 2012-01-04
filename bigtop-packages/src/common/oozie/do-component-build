@@ -84,7 +84,7 @@ if [ "${DO_MAVEN_DEPLOY}" = "deploy" ]; then
 fi
 
 # Invoke Oozie build script with CDH options
-${WORKDIR}/bin/mkdistro.sh -Pmr2 -Dhadoop.version=0.23.0-SNAPSHOT -DskipTests -Dnot.cdh.release.build=false ${EXTRA_GOALS} "$@"
+${WORKDIR}/bin/mkdistro.sh -Pmr2 -Dhadoop.version=0.23.1-SNAPSHOT -DskipTests -Dnot.cdh.release.build=false ${EXTRA_GOALS} "$@"
 MKDISTRO_RESULT=$?
 if [ "${MKDISTRO_RESULT}" != "0" ]; then
   echo "ERROR: mkdistro.sh failed with error ${MKDISTRO_RESULT}"

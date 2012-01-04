@@ -24,8 +24,8 @@
 export DH_OPTIONS
 
 
-hadoop_version=${HADOOP_VERSION}
-hadoop_build_path=$(shell pwd)/build
+hadoop_version=${HADOOP_BASE_VERSION}
+hadoop_build_path=$(shell pwd)/hadoop-dist/target/hadoop-${hadoop_version}
 
 ifeq (${DEB_BUILD_ARCH},amd64)
   native_dir=Linux-amd64-64

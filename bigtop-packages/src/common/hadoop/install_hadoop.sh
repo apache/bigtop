@@ -131,7 +131,7 @@ HADOOP_SBIN_DIR=${HADOOP_DIR}/sbin
 HADOOP_LIB_DIR=${HADOOP_DIR}/lib
 HADOOP_NATIVE_LIB_DIR=${HADOOP_LIB_DIR}/native
 
-HADOOP_VERSION=0.23.0-SNAPSHOT
+HADOOP_VERSION=0.23.1-SNAPSHOT
 
 ##Needed for some distros to find ldconfig
 export PATH="/sbin/:$PATH"
@@ -167,8 +167,6 @@ done
 install -d -m 0755 ${SYSTEM_LIBEXEC_DIR}
 rm -fv ${BUILD_DIR}/libexec/jsvc
 mv ${BUILD_DIR}/libexec/* ${SYSTEM_LIBEXEC_DIR}/
-mv ${BUILD_DIR}/bin/*-config.sh ${SYSTEM_LIBEXEC_DIR}/
-
 
 # bin
 install -d -m 0755 ${HADOOP_BIN_DIR}
@@ -180,7 +178,7 @@ cp ${BUILD_DIR}/sbin/* ${HADOOP_SBIN_DIR}/
 
 # jars
 install -d -m 0755 ${HADOOP_LIB_DIR}
-cp ${BUILD_DIR}/lib/*.jar ${HADOOP_LIB_DIR}/
+cp ${BUILD_DIR}/share/hadoop/mapreduce/lib/*.jar ${HADOOP_LIB_DIR}/
 cp ${BUILD_DIR}/share/hadoop/common/lib/*.jar ${HADOOP_LIB_DIR}/
 cp ${BUILD_DIR}/share/hadoop/hdfs/lib/*.jar ${HADOOP_LIB_DIR}/
 chmod 644 ${HADOOP_LIB_DIR}/*.jar
@@ -192,7 +190,7 @@ rm -fv ${HADOOP_LIB_DIR}/netty-3.2.3.Final.jar
 
 # hadoop jar
 install -d -m 0755 ${HADOOP_DIR}
-cp ${BUILD_DIR}/modules/*.jar ${HADOOP_DIR}/
+cp ${BUILD_DIR}/share/hadoop/mapreduce/*.jar ${HADOOP_DIR}/
 cp ${BUILD_DIR}/share/hadoop/common/*.jar ${HADOOP_DIR}/
 cp ${BUILD_DIR}/share/hadoop/hdfs/*.jar ${HADOOP_DIR}/
 mv ${HADOOP_LIB_DIR}/hadoop*.jar ${HADOOP_DIR}/
@@ -202,16 +200,17 @@ chmod 644 ${HADOOP_DIR}/*.jar
 install -d -m 0755 ${SYSTEM_LIB_DIR}
 install -d -m 0755 ${HADOOP_NATIVE_LIB_DIR}
 for library in libhdfs.so.0.0.0; do
-  cp ${BUILD_DIR}/lib/${library} ${SYSTEM_LIB_DIR}/
+  cp ${BUILD_DIR}/lib/native/${library} ${SYSTEM_LIB_DIR}/
   ldconfig -vlN ${SYSTEM_LIB_DIR}/${library}
   ln -s ${library} ${SYSTEM_LIB_DIR}/${library/.so.*/}.so
 done
-install -d -m 0755 ${SYSTEM_INCLUDE_DIR}
-cp ${BUILD_DIR}/../hadoop-hdfs-project/hadoop-hdfs/src/main/native/hdfs.h ${SYSTEM_INCLUDE_DIR}/
 
-cp ${BUILD_DIR}/lib/*.a ${HADOOP_NATIVE_LIB_DIR}/
+install -d -m 0755 ${SYSTEM_INCLUDE_DIR}
+cp ${BUILD_DIR}/include/hdfs.h ${SYSTEM_INCLUDE_DIR}/
+
+cp ${BUILD_DIR}/lib/native/*.a ${HADOOP_NATIVE_LIB_DIR}/
 for library in `cd ${BUILD_DIR}/lib ; ls libsnappy.so.1.* 2>/dev/null` libhadoop.so.1.0.0; do
-  cp ${BUILD_DIR}/lib/${library} ${HADOOP_NATIVE_LIB_DIR}/
+  cp ${BUILD_DIR}/lib/native/${library} ${HADOOP_NATIVE_LIB_DIR}/
   ldconfig -vlN ${HADOOP_NATIVE_LIB_DIR}/${library}
   ln -s ${library} ${HADOOP_NATIVE_LIB_DIR}/${library/.so.*/}.so
 done
@@ -219,19 +218,12 @@ done
 # conf
 install -d -m 0755 $HADOOP_ETC_DIR/conf.empty
 
-cp ${BUILD_DIR}/conf/* $HADOOP_ETC_DIR/conf.empty
 cp ${BUILD_DIR}/etc/hadoop/* $HADOOP_ETC_DIR/conf.empty
 cp $DISTRO_DIR/mrapp-generated-classpath $HADOOP_ETC_DIR/conf.empty
 
 # docs
 install -d -m 0755 ${DOC_DIR}
-pushd  ${BUILD_DIR}/../
-  cp hadoop-common-project/hadoop-common/CHANGES.txt target/staging/hadoop-project/hadoop-project-dist/hadoop-common
-  cp hadoop-hdfs-project/hadoop-hdfs/CHANGES.txt target/staging/hadoop-project/hadoop-project-dist/hadoop-hdfs
-  mkdir target/staging/hadoop-project/hadoop-project-dist/hadoop-mapreduce
-  cp hadoop-mapreduce-project/CHANGES.txt target/staging/hadoop-project/hadoop-project-dist/hadoop-mapreduce
-popd
-cp -r ${BUILD_DIR}/../target/staging/hadoop-project/* ${DOC_DIR}/
+cp -r ${BUILD_DIR}/share/doc/* ${DOC_DIR}/
 
 # man pages
 mkdir -p $MAN_DIR/man1
