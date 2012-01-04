@@ -35,7 +35,7 @@ fi
 # -Dlibrecordio=true
 for project in common hdfs mapreduce ; do 
   cd $project
-  ant \
+  LDFLAGS="-lcrypto -lm" ant \
     -Dxercescroot=$XERCESCROOT \
     -Djava5.home=$JAVA5_HOME \
     -Dforrest.home=$FORREST_HOME \
