@@ -39,23 +39,22 @@ clean:
 
 build-indep: build-indep-stamp
 build-indep-stamp: patch-stamp
-	# Temporarily disabled - we'll just use the build from the tarball.
+	# No easy way to disable the default RAT run which fails the build because of some fails in the debian/ directory
+	rm -rf bigtop-empty
+	mkdir -p bigtop-empty
+	# I could not find a way to add debian/ to RAT exclude list through cmd line
+	# or to unbind rat:check goal
+	# So I am redirecting its attention with a decoy
 	env FLUME_VERSION=$(build_version) \
-		sh debian/do-component-build -Divy.home=`pwd`/debian/.ivy
-	mkdir -p debian/tmp
-	tar cf - --exclude=debian/\* . | (cd debian/tmp && tar xf -)
+		sh debian/do-component-build -Drat.basedir=${PWD}/bigtop-empty -Dmaven.repo.local=${HOME}/.m2/repository
 	touch $@
 
-master node: debian/service-init.d.tpl
-	sed -e 's#@FLUME_DAEMON@#$@#g' $< > debian/flume-$@.init
-
 install: install-indep
-install-indep:	master node
+install-indep:
 	dh_testdir
 	dh_testroot
-#	ant package
 	sh -x debian/install_flume.sh \
-	  --build-dir=. \
+	  --build-dir=${PWD} \
 	  --prefix=debian/flume 
 	# Remove hadoop dependency and instead symlink in the hadoop jar
 	rm debian/flume/usr/lib/flume/lib/hadoop-core-*

@@ -15,20 +15,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# Starts a Flume @FLUME_DAEMON@
+# Starts a Flume node
 #
 # chkconfig: 345 90 10
-# description: Flume @FLUME_DAEMON@
+# description: Flume node
 #
 ### BEGIN INIT INFO
-# Provides:          flume-@FLUME_DAEMON@
+# Provides:          flume-node
 # Required-Start:    $remote_fs
 # Should-Start:
 # Required-Stop:     $remote_fs
 # Should-Stop:
 # Default-Start:     3 4 5
 # Default-Stop:      0 1 2 6
-# Short-Description: Flume @FLUME_DAEMON@
+# Short-Description: Flume node
 ### END INIT INFO
 
 . /lib/lsb/init-functions
@@ -48,34 +48,55 @@ STATUS_NOT_RUNNING=3
 ERROR_PROGRAM_NOT_INSTALLED=5
 
 FLUME_LOG_DIR=/var/log/flume
-FLUME_HOME=/usr/lib/flume
-EXEC_PATH=${FLUME_HOME}/bin/flume-daemon.sh
-DOTIME=3
+FLUME_CONF_DIR=/etc/flume/conf
 FLUME_RUN=/var/run/flume
-FLUME_PID=/var/run/flume/flume-flume-@FLUME_DAEMON@.pid
-LOCKFILE="/var/lock/subsys/flume-@FLUME_DAEMON@"
-desc="Flume @FLUME_DAEMON@ daemon"
+FLUME_HOME=/usr/lib/flume
+
+LOCKFILE="/var/lock/subsys/flume-node"
+desc="Flume node daemon"
+
+FLUME_CONF_FILE=${FLUME_CONF_FILE:-${FLUME_CONF_DIR}/flume.conf}
+EXEC_PATH=/usr/bin/flume-ng
+FLUME_PID_FILE=${FLUME_RUN}/flume-node.pid
+
 install -d -m 0755 -o flume -g flume ${FLUME_RUN} 
 USER=flume
 
+HOSTNAME=`hostname`
+FLUME_NODE_NAME=${FLUME_NODE_NAME:-$HOSTNAME}
 
 start() {
   [ -x $exec ] || exit $ERROR_PROGRAM_NOT_INSTALLED
-  log_success_msg "Starting $desc (flume-@FLUME_DAEMON@): "
-  start_daemon -u $USER $EXEC_PATH start @FLUME_DAEMON@
+  log_success_msg "Starting $desc (flume-node): "
+  export FLUME_PID_FILE
+  /bin/su -s /bin/bash -c "${EXEC_PATH} node --conf $FLUME_CONF_DIR --conf-file $FLUME_CONF_FILE --name $FLUME_NODE_NAME &>>${FLUME_LOG_DIR}/flume-node.log &" $USER
   RETVAL=$?
-  echo
   [ $RETVAL -eq 0 ] && touch $LOCKFILE
   return $RETVAL
 }
 
 stop() {
-  log_success_msg "Stopping $desc (flume-@FLUME_DAEMON@): "
-  start_daemon -u $USER $EXEC_PATH stop @FLUME_DAEMON@
-  RETVAL=$?
-  sleep 5
-  echo
-  [ $RETVAL -eq 0 ] && rm -f $LOCKFILE $FLUME_PID
+  if [ ! -e $FLUME_PID_FILE ]; then
+    log_failure_msg "Flume node is not running"
+    exit $STATUS_NOT_RUNNING
+  fi
+
+  log_success_msg "Stopping $desc (flume-node): "
+
+  # FLUME-919 will put an end to such extreme violence
+  FLUME_PID=`cat $FLUME_PID_FILE`
+  if [ -n $FLUME_PID ]; then
+    FLUME_PID_GROUP=$(ps -o pgrp -p ${FLUME_PID} h)
+
+    if [ -n $FLUME_PID_GROUP ]; then
+      kill -TERM -${FLUME_PID_GROUP} &>/dev/null
+      sleep 5
+      kill -KILL -${FLUME_PID_GROUP} &>/dev/null
+
+      rm -f $LOCKFILE $FLUME_PID_FILE
+    fi
+  fi
+  return 0
 }
 
 restart() {
@@ -84,31 +105,31 @@ restart() {
 }
 
 checkstatus(){
-  pidofproc -p $FLUME_PID java > /dev/null
+  pidofproc -p $FLUME_PID_FILE java > /dev/null
   status=$?
 
   case "$status" in
     $STATUS_RUNNING)
-      log_success_msg "@FLUME_DAEMON@ is running"
+      log_success_msg "Flume node is running"
       ;;
     $STATUS_DEAD)
-      log_failure_msg "@FLUME_DAEMON@ is dead and pid file exists"
+      log_failure_msg "Flume node is dead and pid file exists"
       ;;
     $STATUS_DEAD_AND_LOCK)
-      log_failure_msg "@FLUME_DAEMON@ is dead and lock file exists"
+      log_failure_msg "Flume node is dead and lock file exists"
       ;;
     $STATUS_NOT_RUNNING)
-      log_failure_msg "@FLUME_DAEMON@ is not running"
+      log_failure_msg "Flume node is not running"
       ;;
     *)
-      log_failure_msg "@FLUME_DAEMON@ status is unknown"
+      log_failure_msg "Flume node status is unknown"
       ;;
   esac
   return $status
 }
 
 condrestart(){
-  [ -e /var/lock/subsys/hadoop-@FLUME_DAEMON@ ] && restart || :
+  [ -e /var/lock/subsys/flume-node ] && restart || :
 }
 
 case "$1" in

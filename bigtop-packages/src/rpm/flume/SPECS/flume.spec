@@ -17,7 +17,6 @@
 %define man_flume %{_mandir}
 %define lib_flume /usr/lib/flume
 %define log_flume /var/log/flume
-%define flume_services master node
 
 %if  %{?suse_version:1}0
 
@@ -62,9 +61,8 @@ License: APL2
 Source0: flume-%{flume_base_version}.tar.gz
 Source1: do-component-build
 Source2: install_%{name}.sh
-Source3: init.d
-Source4: init.d.suse
-Requires: coreutils, /usr/sbin/useradd, zookeeper >= 3.3.1, hadoop >= 0.20.2
+Source3: %{name}-node.init
+Requires: coreutils, /usr/sbin/useradd, hadoop
 Requires: bigtop-utils
 BuildRequires: ant xml-commons xml-commons-apis
 
@@ -75,34 +73,6 @@ Requires: sh-utils
 %endif
 
 %description 
-Flume is a reliable, scalable, and manageable distributed data collection application for collecting data such as logs and delivering it to data stores such as Hadoop's HDFS.  It can efficiently collect, aggregate, and move large amounts of log data.  It has a simple, but flexible, architecture based on streaming data flows.  It is robust and fault tolerant with tunable reliability mechanisms and many failover and recovery mechanisms.  The system is centrally managed and allows for intelligent dynamic management. It uses a simple extensible data model that allows for online analytic applications.
-
-%package master
-Summary: The flume master daemon is the central administration and data path control point for flume nodes.
-Group: Development/Libraries
-BuildArch: noarch
-Requires: %{name} = %{version}-%{release}, /sbin/service
-Requires(post): /sbin/chkconfig
-Requires(preun): /sbin/chkconfig
-
-%if  %{?suse_version:1}0
-# Required for init scripts
-Requires: insserv
-%endif
-
-%if  0%{?mgaversion}
-# Required for init scripts
-Requires: initscripts
-%endif
-
-# CentOS 5 does not have any dist macro
-# So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
-%if %{!?suse_version:1}0 && %{!?mgaversion:1}0
-# Required for init scripts
-Requires: redhat-lsb
-%endif
-
-%description master
 Flume is a reliable, scalable, and manageable distributed data collection application for collecting data such as logs and delivering it to data stores such as Hadoop's HDFS.  It can efficiently collect, aggregate, and move large amounts of log data.  It has a simple, but flexible, architecture based on streaming data flows.  It is robust and fault tolerant with tunable reliability mechanisms and many failover and recovery mechanisms.  The system is centrally managed and allows for intelligent dynamic management. It uses a simple extensible data model that allows for online analytic applications.
 
 %package node
@@ -142,25 +112,17 @@ env FLUME_VERSION=%{version} sh %{SOURCE1}
 %install
 %__rm -rf $RPM_BUILD_ROOT
 sh %{SOURCE2} \
-          --build-dir=. \
+          --build-dir=$PWD \
           --prefix=$RPM_BUILD_ROOT \
 	  --doc-dir=%{doc_flume}
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
 
 
-%if  %{?suse_version:1}0
-orig_init_file=$RPM_SOURCE_DIR/init.d.suse
-%else
-orig_init_file=$RPM_SOURCE_DIR/init.d
-%endif
+# Install init script
+init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{name}-node
+%__cp %{SOURCE3} $init_file
+chmod 755 $init_file
 
-for service in %{flume_services}
-do
-        init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{name}-${service}
-        %__cp $orig_init_file $init_file
-        %__sed -i -e "s|@FLUME_DAEMON@|${service}|" $init_file
-        chmod 755 $init_file
-done
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/usr/bin
 
@@ -183,6 +145,20 @@ if [ "$1" = 0 ]; then
         %{alternatives_cmd} --remove %{name}-conf %{etc_flume}.empty || :
 fi
 
+%post node
+chkconfig --add %{name}-node
+
+%preun node
+if [ $1 = 0 ] ; then
+        service %{name}-node stop > /dev/null 2>&1
+        chkconfig --del %{name}-node
+fi
+%postun node
+if [ $1 -ge 1 ]; then
+        service %{name}-node condrestart >/dev/null 2>&1
+fi
+
+
 %files 
 %defattr(-,flume,flume)
 %config(noreplace) %{etc_flume}.empty
@@ -191,22 +167,7 @@ fi
 %attr(0755,root,root) %{bin_flume}
 %attr(0755,root,root) %{lib_flume}
 
-%define service_macro() \
-%files %1 \
-%attr(0755,root,root)/%{initd_dir}/%{name}-%1 \
-%dir %{lib_flume}/bin \
-%dir %{lib_flume} \
-%post %1 \
-chkconfig --add %{name}-%1 \
-\
-%preun %1 \
-if [ $1 = 0 ] ; then \
-        service %{name}-%1 stop > /dev/null 2>&1 \
-        chkconfig --del %{name}-%1 \
-fi \
-%postun %1 \
-if [ $1 -ge 1 ]; then \
-        service %{name}-%1 condrestart >/dev/null 2>&1 \
-fi
-%service_macro node
-%service_macro master
+%files node
+%attr(0755,root,root)/%{initd_dir}/%{name}-node
+%dir %{lib_flume}/bin
+%dir %{lib_flume}

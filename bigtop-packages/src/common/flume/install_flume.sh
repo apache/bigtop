@@ -25,7 +25,7 @@ usage: $0 <options>
 
   Optional options:
      --doc-dir=DIR               path to install docs into [/usr/share/doc/flume]
-     --lib-dir=DIR               path to install flume home [/usr/lib/flume]
+     --flume-dir=DIR               path to install flume home [/usr/lib/flume]
      --installed-lib-dir=DIR     path where lib-dir will end up on target system
      --bin-dir=DIR               path to install bins [/usr/bin]
      --examples-dir=DIR          path to install examples [doc-dir/examples]
@@ -39,7 +39,7 @@ OPTS=$(getopt \
   -o '' \
   -l 'prefix:' \
   -l 'doc-dir:' \
-  -l 'lib-dir:' \
+  -l 'flume-dir:' \
   -l 'installed-lib-dir:' \
   -l 'bin-dir:' \
   -l 'examples-dir:' \
@@ -62,8 +62,8 @@ while true ; do
         --doc-dir)
         DOC_DIR=$2 ; shift 2
         ;;
-        --lib-dir)
-        LIB_DIR=$2 ; shift 2
+        --flume-dir)
+        FLUME_DIR=$2 ; shift 2
         ;;
         --installed-lib-dir)
         INSTALLED_LIB_DIR=$2 ; shift 2
@@ -94,32 +94,27 @@ done
 
 MAN_DIR=${MAN_DIR:-/usr/share/man/man1}
 DOC_DIR=${DOC_DIR:-/usr/share/doc/flume}
-LIB_DIR=${LIB_DIR:-/usr/lib/flume}
+FLUME_DIR=${FLUME_DIR:-/usr/lib/flume}
 BIN_DIR=${BIN_DIR:-/usr/lib/flume/bin}
 CONF_DIR=/etc/flume/
 CONF_DIST_DIR=/etc/flume/conf.dist/
 ETC_DIR=${ETC_DIR:-/etc/flume}
 
+install -d -m 0755 ${PREFIX}/${FLUME_DIR}
 
-install -d -m 0755 ${PREFIX}/${LIB_DIR}
+(cd ${PREFIX}/${FLUME_DIR} &&
+  tar --strip-components=1 -xvzf ${BUILD_DIR}/flume-ng-dist/target/flume-ng-dist-*-dist.tar.gz)
 
-install -d -m 0755 ${PREFIX}/${LIB_DIR}/lib
-for i in `find lib/*.jar build/lib/*.jar -type f |grep -v zookeeper`
-	do echo "Copying $i"
-	cp $i ${PREFIX}/${LIB_DIR}/lib #don't copy directories by default
+# Take out things we've installed elsewhere
+for x in flume-ng-* conf pom.xml CHANGELOG DEVNOTES DISCLAIMER LICENSE NOTICE README RELEASE-NOTES; do
+  rm -rf ${PREFIX}/$FLUME_DIR/$x 
 done
 
-cp flume*.jar ${PREFIX}/${LIB_DIR}/lib
 
-cp -a webapps ${PREFIX}/${LIB_DIR}
-
-install -d -m 0755 $PREFIX/$BIN_DIR
-cp bin/flume bin/flume-daemon.sh bin/flume-env.sh.template $PREFIX/${BIN_DIR}
-
-wrapper=$PREFIX/usr/bin/flume
+wrapper=$PREFIX/usr/bin/flume-ng
 mkdir -p `dirname $wrapper`
 cat > $wrapper <<EOF
-#!/bin/sh
+#!/bin/bash
 
 # Autodetect JAVA_HOME if not defined
 if [ -e /usr/libexec/bigtop-detect-javahome ]; then
@@ -128,22 +123,24 @@ elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
   . /usr/lib/bigtop-utils/bigtop-detect-javahome
 fi
 
-exec /usr/lib/flume/bin/flume "\$@"
+if [ -n "\$FLUME_PID_FILE" ]; then
+  echo \$$ > \$FLUME_PID_FILE
+fi
+
+# See FLUME-920
+bash exec /usr/lib/flume/bin/flume-ng "\$@"
 EOF
 chmod 755 $wrapper
 
 
 install -d -m 0755 $PREFIX/$ETC_DIR/conf.empty
 (cd ${BUILD_DIR}/conf && tar cf - .) | (cd $PREFIX/$ETC_DIR/conf.empty && tar xf -)
+touch $PREFIX/$ETC_DIR/conf.empty/flume.conf
 
-unlink $PREFIX/$LIB_DIR/conf || /bin/true
-ln -s /etc/flume/conf $PREFIX/$LIB_DIR/conf
+unlink $PREFIX/$FLUME_DIR/conf || /bin/true
+ln -s /etc/flume/conf $PREFIX/$FLUME_DIR/conf
 
 # Docs
 install -d -m 0755 $PREFIX/${DOC_DIR}
-cp -r docs/* $PREFIX/${DOC_DIR}
-
-
-# man pages
-install -d -m 0755 $PREFIX/$MAN_DIR
+cp -r CHANGELOG DEVNOTES DISCLAIMER LICENSE NOTICE README RELEASE-NOTES $PREFIX/${DOC_DIR}
 

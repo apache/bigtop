@@ -14,6 +14,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -ex
+set -e
+if [ -x "/etc/init.d/flume-node" ]; then
+  update-rc.d flume-node defaults >/dev/null
+  if [ -x "`which invoke-rc.d 2>/dev/null`" ]; then
+    invoke-rc.d flume-node start || :
+  else
+    /etc/init.d/flume-node start || :
+  fi
+fi
 
-mvn clean install -DskipTests "$@" 

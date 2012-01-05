@@ -17,13 +17,13 @@ Source: flume
 Section: misc
 Priority: extra
 Maintainer: Bigtop <bigtop-dev@incubator.apache.org>
-Build-Depends: debhelper (>= 6), ant, ant-optional, git-core
+Build-Depends: debhelper (>= 6), ant, ant-optional
 Standards-Version: 3.8.0
 Homepage: http://incubator.apache.org/projects/flume.html
 
 Package: flume
 Architecture: all
-Depends: zookeeper (>= 3.3.1), adduser, hadoop, bigtop-utils
+Depends: adduser, hadoop, bigtop-utils
 Description: reliable, scalable, and manageable distributed data collection application
  Flume is a reliable, scalable, and manageable distributed data collection
  application for collecting data such as logs and delivering it to data stores
@@ -33,13 +33,6 @@ Description: reliable, scalable, and manageable distributed data collection appl
  mechanisms and many failover and recovery mechanisms.  The system is centrally
  managed and allows for intelligent dynamic management.  It uses a simple
  extensible data model that allows for online analytic applications.
-
-Package: flume-master
-Architecture: all
-Depends: flume (= ${source:Version})
-Description: central administration point for the flume data collection system
- The Flume master daemon is the central administration and data path control
- point for flume nodes.
 
 Package: flume-node
 Architecture: all
