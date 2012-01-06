@@ -32,6 +32,7 @@
 ### END INIT INFO
 
 . /lib/lsb/init-functions
+. /etc/default/hadoop
 . /etc/default/yarn
 
 # Autodetect JAVA_HOME if not defined
@@ -61,8 +62,7 @@ ERROR_PROGRAM_NOT_CONFIGURED=6
 
 
 RETVAL=0
-EXEC_PATH=@YARN_COMMON_ROOT@/bin/yarn-daemon.sh
-CONFIG_PATH="@YARN_CONF_DIR@"
+EXEC_PATH=@YARN_COMMON_ROOT@/sbin/yarn-daemon.sh
 YARN_PID_DIR=${YARN_PID_DIR:-/var/run/yarn}
 PIDFILE="$YARN_PID_DIR/yarn-$YARN_IDENT_STRING-@YARN_DAEMON@.pid"
 LOCKFILE="/var/lock/subsys/yarn-@YARN_DAEMON@"
@@ -74,7 +74,7 @@ start() {
   [ -f $config ] || exit $ERROR_PROGRAM_NOT_CONFIGURED
   log_success_msg "Starting $desc (yarn-@YARN_DAEMON@): "
 
-  su -s /bin/bash $YARN_IDENT_STRING -c "$EXEC_PATH --config '$CONFIG_PATH' start @YARN_DAEMON@ $DAEMON_FLAGS"
+  su -s /bin/bash $YARN_IDENT_STRING -c "$EXEC_PATH --config '$YARN_CONF_DIR' start @YARN_DAEMON@ $DAEMON_FLAGS"
 
   # Some processes are slow to start
   sleep $SLEEP_TIME
@@ -87,7 +87,7 @@ start() {
 
 stop() {
   log_success_msg "Stopping $desc (yarn-@YARN_DAEMON@): "
-  start_daemon $EXEC_PATH --config "$CONFIG_PATH" stop @YARN_DAEMON@
+  start_daemon $EXEC_PATH --config "$YARN_CONF_DIR" stop @YARN_DAEMON@
   RETVAL=$?
 
   [ $RETVAL -eq $RETVAL_SUCCESS ] && rm -f $LOCKFILE $PIDFILE

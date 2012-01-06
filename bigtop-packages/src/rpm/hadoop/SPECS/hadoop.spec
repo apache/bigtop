@@ -321,7 +321,7 @@ do
        %__cp $yarn_orig_init_file $init_file
        %__sed -i -e 's|@YARN_COMMON_ROOT@|%{lib_hadoop}|' $init_file
        %__sed -i -e "s|@YARN_DAEMON@|${service}|" $init_file
-       %__sed -i -e 's|@YARN_CONF_DIR@|%{config_yarn}|' $init_file
+       %__sed -i -e 's|@YARN_CONF_DIR@|%{config_hadoop}|' $init_file
        %__sed -i -e 's|@YARN_DAEMON_USER@|yarn|' $init_file
        chmod 755 $init_file
 done
