@@ -257,7 +257,7 @@ AutoReq: no
 Hadoop Filesystem Library
 
 %prep
-%setup -n apache-hadoop-common-915892c
+%setup -n apache-hadoop-common-aa85a29
 %patch0 -p0
 
 %build
