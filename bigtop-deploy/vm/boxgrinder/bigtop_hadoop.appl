@@ -27,8 +27,8 @@ hardware:
       size: 2
       type: ext3
 repos:
-  - name: "Apache Bigtop - incubating"
-    baseurl: "http://www.apache.org/dist/incubator/bigtop/stable/repos/centos6/"
+  - name: "Bigtop"
+    baseurl: "http://bigtop01.cloudera.org:8080/view/Trunk/job/Bigtop-trunk-matrix/label=centos6/lastSuccessfulBuild/artifact/output/"
 packages:
   - @core
   - shadow-utils
