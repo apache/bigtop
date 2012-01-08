@@ -57,7 +57,7 @@ install-indep:
 	  --build-dir=${PWD} \
 	  --prefix=debian/flume-ng
 	# Remove hadoop dependency and instead symlink in the hadoop jar
-	rm debian/flume-ng/usr/lib/flume-ng/lib/hadoop-core-*
+	rm debian/flume-ng/usr/lib/flume-ng/lib/hadoop-*
 	ln -s /usr/lib/hadoop/hadoop-common.jar debian/flume-ng/usr/lib/flume-ng/lib/hadoop-common.jar
 	ln -s /usr/lib/hadoop/hadoop-auth.jar debian/flume-ng/usr/lib/flume-ng/lib/hadoop-auth.jar
 	dh_install -i
