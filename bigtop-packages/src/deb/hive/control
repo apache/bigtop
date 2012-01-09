@@ -13,15 +13,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-Source: hadoop-hive
+Source: hive
 Section: misc
 Priority: extra
 Maintainer: Bigtop <bigtop-dev@incubator.apache.org>
 Build-Depends: debhelper (>= 6), ant, python-support, git-core
 Standards-Version: 3.8.0
-Homepage: http://hadoop.apache.org/hive/
+Homepage: http://hive.apache.org/
 
-Package: hadoop-hive
+Package: hive
 Architecture: all
 Depends: adduser, hadoop, bigtop-utils
 Description: A data warehouse infrastructure built on top of Hadoop
@@ -45,14 +45,14 @@ XS-Python-Version: >= 2.4
 Description: Python client library to talk to the Hive Metastore
  This is a generated Thrift client to talk to the Hive Metastore.
 
-Package: hadoop-hive-server
+Package: hive-server
 Architecture: all
-Depends: hadoop-hive (= ${source:Version})
+Depends: hive (= ${source:Version})
 Description: Provides a Hive Thrift service
  This optional package hosts a Thrift server for Hive clients across a network to use.
 
-Package: hadoop-hive-metastore
+Package: hive-metastore
 Architecture: all
-Depends: hadoop-hive (= ${source:Version})
+Depends: hive (= ${source:Version})
 Description: Shared metadata repository for Hive
  This optional package hosts a metadata server for Hive clients across a network to use.

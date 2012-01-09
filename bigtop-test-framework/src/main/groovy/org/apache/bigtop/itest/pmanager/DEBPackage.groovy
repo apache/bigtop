@@ -105,7 +105,7 @@ class DEBPackage extends ManagedPackage {
 
   Map<String, String> getDeps() {
     Map<String, String> res = [:];
-    // sample input: sun-java6-jre | sun-java6-sdk, hadoop-zookeeper (= 3.3.1+8), hadoop-0.20 (>= 0.20.2+700)
+    // sample input: sun-java6-jre | sun-java6-sdk, zookeeper (= 3.3.1+8), hadoop-0.20 (>= 0.20.2+700)
     // NOTE: we currently do NOT support alternative specification i.e. sun-java6-jre | sun-java6-sdk
     shUser.exec("dpkg -s $name | sed -ne 's#^Depends: ##p'").getOut().join(' ').split(',').each {
       def matcher = (it =~ /(\S+)( \(.+\))*/);

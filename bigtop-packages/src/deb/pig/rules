@@ -23,6 +23,8 @@
 # This has to be exported to make some magic below work.
 export DH_OPTIONS
 
+pig_pkg_name=pig
+
 patch: patch-stamp
 patch-stamp:	
 	touch $@
@@ -33,7 +35,7 @@ clean:
 	ant clean
 	rm -f *-stamp
 	dh_clean
-	rm -Rf debian/tmp debian/hadoop-pig debian/pig
+	rm -Rf debian/tmp debian/${pig_pkg_name}
 	find debian -name .\*swp -exec rm -f {} \;
 
 build-indep: build-indep-stamp
@@ -50,9 +52,9 @@ install-indep:
 	cp debian/pig.1 .
 	sh -x debian/install_pig.sh \
 	  --build-dir=build/pig-${PIG_BASE_VERSION} \
-	  --prefix=debian/hadoop-pig \
-          --doc-dir=debian/hadoop-pig/usr/share/doc/hadoop-pig \
-          --examples-dir=debian/hadoop-pig/usr/share/doc/hadoop-pig/examples
+	  --prefix=debian/${pig_pkg_name} \
+          --doc-dir=debian/${pig_pkg_name}/usr/share/doc/${pig_pkg_name} \
+          --examples-dir=debian/${pig_pkg_name}/usr/share/doc/${pig_pkg_name}/examples
 
 	dh_install -i
 	(dh_lintian) || /bin/true

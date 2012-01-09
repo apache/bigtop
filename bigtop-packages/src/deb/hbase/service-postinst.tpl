@@ -36,7 +36,7 @@ set -e
 
 case "$1" in
     configure)
-        update-rc.d hadoop-hbase-@HBASE_DAEMON@ defaults >/dev/null || exit 1
+        update-rc.d hbase-@HBASE_DAEMON@ defaults >/dev/null || exit 1
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

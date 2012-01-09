@@ -15,19 +15,19 @@
 
 class hadoop-zookeeper {
   define client {
-    package { "hadoop-zookeeper":
+    package { "zookeeper":
       ensure => latest,
     } 
   }
 
   define server($myid, $ensemble = ["localhost:2888:3888"]) {
-    package { "hadoop-zookeeper-server":
+    package { "zookeeper-server":
       ensure => latest,
     }
 
-    service { "hadoop-zookeeper-server":
+    service { "zookeeper-server":
       ensure => running,
-      require => Package["hadoop-zookeeper-server"],
+      require => Package["zookeeper-server"],
       subscribe => File["/etc/zookeeper/conf/zoo.cfg"],
       hasrestart => true,
       hasstatus => true,
@@ -35,12 +35,12 @@ class hadoop-zookeeper {
 
     file { "/etc/zookeeper/conf/zoo.cfg":
       content => template("hadoop-zookeeper/zoo.cfg"),
-      require => Package["hadoop-zookeeper-server"],
+      require => Package["zookeeper-server"],
     }
 
     file { "/var/lib/zookeeper/myid":
       content => inline_template("<%= myid %>"),
-      require => Package["hadoop-zookeeper-server"],
+      require => Package["zookeeper-server"],
     }
   }
 }

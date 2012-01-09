@@ -37,7 +37,7 @@ set -e
 
 case "$1" in
     purge)
-        update-rc.d -f hadoop-hbase-@HBASE_DAEMON@ remove > /dev/null || exit 1
+        update-rc.d -f hbase-@HBASE_DAEMON@ remove > /dev/null || exit 1
     ;;
     remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
     ;;

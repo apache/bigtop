@@ -23,6 +23,8 @@
 # This has to be exported to make some magic below work.
 export DH_OPTIONS
 
+hive_pkg_name=hive
+
 clean:	
 	dh_testdir
 	dh_testroot
@@ -38,7 +40,7 @@ build-indep-stamp:
 	touch $@
 
 server metastore: debian/service-init.d.tpl
-	sed -e "s|@HIVE_DAEMON@|$@|" $< > debian/hadoop-hive-$@.init
+	sed -e "s|@HIVE_DAEMON@|$@|" $< > debian/${hive_pkg_name}-$@.init
 
 install: install-indep
 install-indep: metastore server	
@@ -49,13 +51,13 @@ install-indep: metastore server
 	cp debian/hive-site.xml .
 	cp debian/hive.1 .
 	sh debian/install_hive.sh \
-	  --prefix=debian/hadoop-hive \
+	  --prefix=debian/${hive_pkg_name} \
 	  --build-dir=src/build/dist \
-	  --doc-dir=debian/hadoop-hive/usr/share/doc/hive \
-	  --python-dir=debian/python-hive/usr/share/python-support/python-hive/hive
+	  --doc-dir=debian/${hive_pkg_name}/usr/share/doc/${hive_pkg_name} \
+	  --python-dir=debian/python-${hive_pkg_name}/usr/share/python-support/python-${hive_pkg_name}/${hive_pkg_name}
 	dh_pysupport
 	dh_install -i
-	ls -ld debian/hadoop-hive/var/lib/hive/metastore
+	ls -ld debian/${hive_pkg_name}/var/lib/${hive_pkg_name}/metastore
 	(dh_lintian) || /bin/true
 
 binary-common:	

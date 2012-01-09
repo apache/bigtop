@@ -12,7 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-Source: hadoop-zookeeper
+Source: zookeeper
 Section: misc
 Priority: extra
 Maintainer: Bigtop <bigtop-dev@incubator.apache.org>
@@ -20,15 +20,13 @@ Build-Depends: debhelper (>= 6), ant, ant-optional, autoconf, automake
 Standards-Version: 3.8.0
 Homepage: http://zookeeper.apache.org/
 
-Package: hadoop-zookeeper
+Package: zookeeper
 Architecture: all
-Conflicts: zookeeper
-Replaces: zookeeper
 Depends: bigtop-utils
 Description: A high-performance coordination service for distributed applications.
  ZooKeeper is a centralized service for maintaining configuration information, naming, providing distributed synchronization, and providing group services.  All of these kinds of services are used in some form or another by distributed applications. Each time they are implemented there is a lot of work that goes into fixing the bugs and race conditions that are inevitable. Because of the difficulty of implementing these kinds of services, applications initially usually skimp on them ,which make them brittle in the presence of change and difficult to manage. Even when done correctly, different implementations of these services lead to management complexity when the applications are deployed.
 
-Package: hadoop-zookeeper-server
+Package: zookeeper-server
 Architecture: all
-Depends: hadoop-zookeeper (= ${source:Version})
+Depends: zookeeper (= ${source:Version})
 Description: This runs the zookeeper server on startup.

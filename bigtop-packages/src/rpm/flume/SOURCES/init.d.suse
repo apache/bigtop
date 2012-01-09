@@ -53,7 +53,7 @@ EXEC_PATH=${FLUME_HOME}/bin/flume-daemon.sh
 DOTIME=3
 FLUME_RUN=/var/run/flume
 FLUME_PID=/var/run/flume/flume-flume-@FLUME_DAEMON@.pid
-LOCKFILE="/var/lock/subsys/hadoop-@HADOOP_DAEMON@"
+LOCKFILE="/var/lock/subsys/flume-@FLUME_DAEMON@"
 desc="Flume @FLUME_DAEMON@ daemon"
 install -d -m 0755 -o flume -g flume ${FLUME_RUN} 
 USER=flume
