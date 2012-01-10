@@ -280,7 +280,7 @@ env HADOOP_VERSION=%{hadoop_base_version} HADOOP_ARCH=%{hadoop_arch} bash %{SOUR
 
 bash %{SOURCE2} \
   --distro-dir=$RPM_SOURCE_DIR \
-  --build-dir=$PWD/hadoop-dist/target/hadoop-%{hadoop_base_version} \
+  --build-dir=$PWD/build \
   --system-include-dir=$RPM_BUILD_ROOT%{_includedir} \
   --system-lib-dir=$RPM_BUILD_ROOT%{_libdir} \
   --system-libexec-dir=$RPM_BUILD_ROOT%{libexecdir} \

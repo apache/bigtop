@@ -38,3 +38,7 @@ mvn site site:stage ${MAVEN_SKIP_TESTS} $@
 (cd build ; tar --strip-components=1 -xzvf  ../hadoop-dist/target/hadoop-${HADOOP_VERSION}.tar.gz)
 (cd build/src ; tar --strip-components=1 -xzvf  ../../hadoop-dist/target/hadoop-${HADOOP_VERSION}-src.tar.gz)
 
+# Copy generated docs
+mkdir -p build/share/doc/
+cp -r target/site/* build/share/doc/
+

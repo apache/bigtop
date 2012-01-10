@@ -25,7 +25,6 @@ export DH_OPTIONS
 
 
 hadoop_version=${HADOOP_BASE_VERSION}
-hadoop_build_path=$(shell pwd)/hadoop-dist/target/hadoop-${hadoop_version}
 
 ifeq (${DEB_BUILD_ARCH},amd64)
   native_dir=Linux-amd64-64
@@ -59,7 +58,7 @@ install: build
 	bash debian/install_hadoop.sh \
 	  --prefix=debian/tmp/ \
 	  --distro-dir=debian \
-	  --build-dir=${hadoop_build_path} \
+	  --build-dir=${PWD}/build \
 	  --system-lib-dir=debian/tmp/usr/lib/ \
 	  --system-libexec-dir=debian/tmp/usr/libexec/ \
 	  --system-include-dir=debian/tmp/usr/include \
