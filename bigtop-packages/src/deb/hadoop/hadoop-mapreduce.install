@@ -1,0 +1,7 @@
+/usr/lib/hadoop/hadoop-mapreduce*.jar
+/usr/lib/hadoop/libexec/mapred-config.sh
+/usr/lib/hadoop/bin/mapred
+/usr/bin/mapred
+# FIXME: HADOOP-7939
+/var/log/mapreduce
+/var/run/mapreduce

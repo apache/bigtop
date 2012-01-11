@@ -47,7 +47,6 @@
 install -d -m 0775 -o root -g hadoop /var/run/hadoop
 
 . /etc/default/hadoop
-. /etc/default/yarn
 
 # Autodetect JAVA_HOME if not defined
 if [ -e /usr/libexec/bigtop-detect-javahome ]; then
@@ -55,14 +54,6 @@ if [ -e /usr/libexec/bigtop-detect-javahome ]; then
 elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
   . /usr/lib/bigtop-utils/bigtop-detect-javahome
 fi
-
-. /usr/libexec/hadoop-config.sh
-. /usr/libexec/yarn-config.sh 
-
-# FIXME: this needs to be removed once hadoop-config.sh stop clobbering HADOOP_HOME
-. /etc/default/hadoop
-. /etc/default/yarn
-
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 DAEMON_SCRIPT=$HADOOP_HOME/sbin/hadoop-daemon.sh

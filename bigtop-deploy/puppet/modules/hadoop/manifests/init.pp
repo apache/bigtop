@@ -44,6 +44,11 @@ class hadoop {
   }
 
   class common-yarn inherits common {
+    package { "hadoop-yarn":
+      ensure => latest,
+      require => [Package["jdk"], Package["hadoop"]],
+    }
+ 
     file {
       "/etc/yarn/conf/yarn-site.xml":
         content => template('hadoop/yarn-site.xml'),
@@ -52,6 +57,12 @@ class hadoop {
   }
 
   class common-hdfs inherits common {
+    package { "hadoop-hdfs":
+      ensure => latest,
+      require => [Package["jdk"], Package["hadoop"]],
+    }
+ 
+
     file {
       "/etc/hadoop/conf/core-site.xml":
         content => template('hadoop/core-site.xml'),
@@ -66,6 +77,11 @@ class hadoop {
   }
 
   class common-mapred-app inherits common-hdfs {
+    package { "hadoop-mapreduce":
+      ensure => latest,
+      require => [Package["jdk"], Package["hadoop"]],
+    }
+
     file {
       "/etc/hadoop/conf/mapred-site.xml":
         content => template('hadoop/mapred-site.xml'),
@@ -87,7 +103,7 @@ class hadoop {
 
     include common-hdfs
 
-    package { "hadoop-datanode":
+    package { "hadoop-hdfs-datanode":
       ensure => latest,
       require => Package["jdk"],
     }
@@ -99,11 +115,11 @@ class hadoop {
       #}
     }
 
-    service { "hadoop-datanode":
+    service { "hadoop-hdfs-datanode":
       ensure => running,
       hasstatus => true,
-      subscribe => [Package["hadoop-datanode"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
-      require => [ Package["hadoop-datanode"], File[$dirs] ],
+      subscribe => [Package["hadoop-hdfs-datanode"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
+      require => [ Package["hadoop-hdfs-datanode"], File[$dirs] ],
     }
 
     file { $dirs:
@@ -111,7 +127,7 @@ class hadoop {
       owner => hdfs,
       group => hdfs,
       mode => 755,
-      require => [Package["hadoop"]],
+      require => [Package["hadoop-hdfs"]],
     }
   }
 
@@ -123,7 +139,7 @@ class hadoop {
       user => "hdfs",
       command => "/bin/bash -c 'hadoop fs -mkdir $title && hadoop fs -chmod $perm $title && hadoop fs -chown $user $title'",
       unless => "/bin/bash -c 'hadoop fs -ls $name >/dev/null 2>&1'",
-      require => [ Service["hadoop-namenode"], Exec["namenode format"] ],
+      require => [ Service["hadoop-hdfs-namenode"], Exec["namenode format"] ],
     }
   }
 
@@ -136,23 +152,23 @@ class hadoop {
 
     include common-hdfs
 
-    package { "hadoop-namenode":
+    package { "hadoop-hdfs-namenode":
       ensure => latest,
       require => Package["jdk"],
     }
 
-    service { "hadoop-namenode":
+    service { "hadoop-hdfs-namenode":
       ensure => running,
       hasstatus => true,
-      subscribe => [Package["hadoop-namenode"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
-      require => [Package["hadoop-namenode"], Exec["namenode format"]],
+      subscribe => [Package["hadoop-hdfs-namenode"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
+      require => [Package["hadoop-hdfs-namenode"], Exec["namenode format"]],
     } 
 
     exec { "namenode format":
       user => "hdfs",
       command => "/bin/bash -c 'yes Y | hadoop namenode -format >> /tmp/nn.format.log 2>&1'",
       creates => inline_template("<%= hadoop_storage_locations.split(';')[0] %>/namenode/current/VERSION"),
-      require => [ Package["hadoop-namenode"], File[$dirs] ],
+      require => [ Package["hadoop-hdfs-namenode"], File[$dirs] ],
     } 
     
     file { $dirs:
@@ -160,7 +176,7 @@ class hadoop {
       owner => hdfs,
       group => hdfs,
       mode => 700,
-      require => [Package["hadoop"]], 
+      require => [Package["hadoop-hdfs"]], 
     }
   }
 
@@ -171,16 +187,16 @@ class hadoop {
 
     include common-hdfs
 
-    package { "hadoop-secondarynamenode":
+    package { "hadoop-hdfs-secondarynamenode":
       ensure => latest,
       require => Package["jdk"],
     }
 
-    service { "hadoop-secondarynamenode":
+    service { "hadoop-hdfs-secondarynamenode":
       ensure => running,
       hasstatus => true,
-      subscribe => [Package["hadoop-secondarynamenode"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
-      require => [Package["hadoop-secondarynamenode"]],
+      subscribe => [Package["hadoop-hdfs-secondarynamenode"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
+      require => [Package["hadoop-hdfs-secondarynamenode"]],
     }
   }
 
@@ -194,16 +210,16 @@ class hadoop {
 
     include common-yarn
 
-    package { "hadoop-resourcemanager":
+    package { "hadoop-yarn-resourcemanager":
       ensure => latest,
       require => Package["jdk"],
     }
 
-    service { "hadoop-resourcemanager":
+    service { "hadoop-yarn-resourcemanager":
       ensure => running,
       hasstatus => true,
-      subscribe => [Package["hadoop-resourcemanager"], File["/etc/hadoop/conf/hadoop-env.sh"], File["/etc/yarn/conf/yarn-site.xml"]],
-      require => [ Package["hadoop-resourcemanager"] ]
+      subscribe => [Package["hadoop-yarn-resourcemanager"], File["/etc/hadoop/conf/hadoop-env.sh"], File["/etc/yarn/conf/yarn-site.xml"]],
+      require => [ Package["hadoop-yarn-resourcemanager"] ]
     }
   }
 
@@ -215,16 +231,16 @@ class hadoop {
 
     include common-mapred-app
 
-    package { "hadoop-historyserver":
+    package { "hadoop-mapreduce-historyserver":
       ensure => latest,
       require => Package["jdk"],
     }
 
-    service { "hadoop-historyserver":
+    service { "hadoop-mapreduce-historyserver":
       ensure => running,
       hasstatus => true,
-      subscribe => [Package["hadoop-historyserver"], File["/etc/hadoop/conf/hadoop-env.sh"], File["/etc/hadoop/conf/mapred-site.xml"]],
-      require => [Package["hadoop-historyserver"]],
+      subscribe => [Package["hadoop-mapreduce-historyserver"], File["/etc/hadoop/conf/hadoop-env.sh"], File["/etc/hadoop/conf/mapred-site.xml"]],
+      require => [Package["hadoop-mapreduce-historyserver"]],
     }
   }
 
@@ -236,16 +252,16 @@ class hadoop {
 
     include common-yarn
 
-    package { "hadoop-nodemanager":
+    package { "hadoop-yarn-nodemanager":
       ensure => latest,
       require => Package["jdk"],
     }
  
-    service { "hadoop-nodemanager":
+    service { "hadoop-yarn-nodemanager":
       ensure => running,
       hasstatus => true,
-      subscribe => [Package["hadoop-nodemanager"], File["/etc/hadoop/conf/hadoop-env.sh"], File["/etc/yarn/conf/yarn-site.xml"]],
-      require => [ Package["hadoop-nodemanager"], File[$dirs] ],
+      subscribe => [Package["hadoop-yarn-nodemanager"], File["/etc/hadoop/conf/hadoop-env.sh"], File["/etc/yarn/conf/yarn-site.xml"]],
+      require => [ Package["hadoop-yarn-nodemanager"], File[$dirs] ],
     }
 
     file { $dirs:
@@ -253,7 +269,7 @@ class hadoop {
       owner => yarn,
       group => yarn,
       mode => 755,
-      require => [Package["hadoop"]],
+      require => [Package["hadoop-yarn"]],
     }
   }
 
@@ -276,7 +292,7 @@ class hadoop {
       owner => yarn,
       group => yarn,
       mode => 755,
-      require => [Package["hadoop"]],
+      require => [Package["hadoop-mapreduce"]],
     }
   }
 
@@ -292,7 +308,7 @@ class hadoop {
       # FIXME: "hadoop-source", "hadoop-fuse", "hadoop-pipes"
       package { ["hadoop-doc", "hadoop-debuginfo", "hadoop-libhdfs"]:
         ensure => latest,
-        require => [Package["jdk"], Package["hadoop"]],  
+        require => [Package["jdk"], Package["hadoop"], Package["hadoop-hdfs"], Package["hadoop-mapreduce"]],  
       }
   }
 }

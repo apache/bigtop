@@ -33,5 +33,10 @@
     <value>CLASSPATH=/etc/hadoop/conf/*:/usr/lib/hadoop/*:/usr/lib/hadoop/lib/*:/usr/lib/hadoop/lib/native/*</value>
   </property>
 
+  <property>
+    <description>To set the value of tmp directory for map and reduce tasks.</description>
+    <name>mapreduce.task.tmp.dir</name>
+    <value>/var/lib/mapreduce/cache/${user.name}/tasks</value>
+  </property>
 
 </configuration>

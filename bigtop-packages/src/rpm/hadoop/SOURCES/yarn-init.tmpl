@@ -42,12 +42,6 @@ elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
   . /usr/lib/bigtop-utils/bigtop-detect-javahome
 fi
 
-. /usr/libexec/yarn-config.sh 
-
-# FIXME: this needs to be removed once yarn-config.sh stop clobbering YARN_HOME
-. /etc/default/hadoop
-. /etc/default/yarn
-
 RETVAL_SUCCESS=0
 
 STATUS_RUNNING=0

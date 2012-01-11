@@ -41,11 +41,6 @@ elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
   . /usr/lib/bigtop-utils/bigtop-detect-javahome
 fi
 
-. /usr/libexec/hadoop-config.sh 
-
-# FIXME: this needs to be removed once hadoop-config.sh stop clobbering HADOOP_HOME
-. /etc/default/hadoop
-
 RETVAL_SUCCESS=0
 
 STATUS_RUNNING=0

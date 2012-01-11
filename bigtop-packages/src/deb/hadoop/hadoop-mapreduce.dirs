@@ -1,0 +1,6 @@
+/etc/conf.empty/
+/usr/lib/hadoop
+/usr/bin
+/var/lib/mapreduce/cache
+# /var/log/mapreduce
+# /var/run/mapreduce

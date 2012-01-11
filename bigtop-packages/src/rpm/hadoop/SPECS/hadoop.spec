@@ -31,11 +31,25 @@
 %define log_hadoop_dirname /var/log
 %define log_hadoop %{log_hadoop_dirname}/%{name}
 %define log_yarn %{log_hadoop_dirname}/yarn
+%define log_hdfs %{log_hadoop_dirname}/hdfs
+%define log_mapreduce %{log_hadoop_dirname}/mapreduce
+%define run_hadoop_dirname /var/run
+%define run_hadoop %{run_hadoop_dirname}/hadoop
+%define run_yarn %{run_hadoop_dirname}/yarn
+%define run_hdfs %{run_hadoop_dirname}/hdfs
+%define run_mapreduce %{run_hadoop_dirname}/mapreduce
+%define state_hadoop_dirname /var/lib
+%define state_hadoop %{state_hadoop_dirname}/hadoop
+%define state_yarn %{state_hadoop_dirname}/yarn
+%define state_hdfs %{state_hadoop_dirname}/hdfs
+%define state_mapreduce %{state_hadoop_dirname}/mapreduce
 %define bin_hadoop %{_bindir}
 %define man_hadoop %{_mandir}
 %define doc_hadoop %{_docdir}/%{name}-%{hadoop_version}
-%define hadoop_services namenode secondarynamenode datanode
-%define yarn_services resourcemanager nodemanager historyserver
+%define mapreduce_services mapreduce-historyserver
+%define hdfs_services hdfs-namenode hdfs-secondarynamenode hdfs-datanode
+%define yarn_services yarn-resourcemanager yarn-nodemanager
+%define hadoop_services %{hdfs_services} %{mapreduce_services} %{yarn_services}
 # Hadoop outputs built binaries into %{hadoop_build}
 %define hadoop_build_path build
 %define static_images_dir src/webapps/static/images
@@ -172,68 +186,109 @@ multiple replicas of data blocks for reliability, placing them on compute
 nodes around the cluster. MapReduce can then process the data where it is
 located.
 
-
-%package namenode
-Summary: The Hadoop namenode manages the block locations of HDFS files
+%package hdfs
+Summary: The Hadoop Distributed File System
 Group: System/Daemons
 Requires: %{name} = %{version}-%{release}
 
-%description namenode
+%description hdfs
+Hadoop Distributed File System (HDFS) is the primary storage system used by 
+Hadoop applications. HDFS creates multiple replicas of data blocks and distributes 
+them on compute nodes throughout a cluster to enable reliable, extremely rapid 
+computations.
+
+%package yarn
+Summary: The Hadoop NextGen MapReduce (YARN)
+Group: System/Daemons
+Requires: %{name} = %{version}-%{release}
+
+%description yarn
+YARN (Hadoop NextGen MapReduce) is a general purpose data-computation framework.
+The fundamental idea of YARN is to split up the two major functionalities of the 
+JobTracker, resource management and job scheduling/monitoring, into separate daemons:
+ResourceManager and NodeManager.
+
+The ResourceManager is the ultimate authority that arbitrates resources among all 
+the applications in the system. The NodeManager is a per-node slave managing allocation
+of computational resources on a single node. Both work in support of per-application 
+ApplicationMaster (AM).
+
+An ApplicationMaster is, in effect, a framework specific library and is tasked with 
+negotiating resources from the ResourceManager and working with the NodeManager(s) to 
+execute and monitor the tasks. 
+
+
+%package mapreduce
+Summary: The Hadoop MapReduce (MRv2)
+Group: System/Daemons
+Requires: %{name}-yarn = %{version}-%{release}
+
+%description mapreduce
+Hadoop MapReduce is a programming model and software framework for writing applications 
+that rapidly process vast amounts of data in parallel on large clusters of compute nodes.
+
+
+%package hdfs-namenode
+Summary: The Hadoop namenode manages the block locations of HDFS files
+Group: System/Daemons
+Requires: %{name}-hdfs = %{version}-%{release}
+
+%description hdfs-namenode
 The Hadoop Distributed Filesystem (HDFS) requires one unique server, the
 namenode, which manages the block locations of files on the filesystem.
 
 
-%package secondarynamenode
+%package hdfs-secondarynamenode
 Summary: Hadoop Secondary namenode
 Group: System/Daemons
-Requires: %{name} = %{version}-%{release}
+Requires: %{name}-hdfs = %{version}-%{release}
 
-%description secondarynamenode
+%description hdfs-secondarynamenode
 The Secondary Name Node periodically compacts the Name Node EditLog
 into a checkpoint.  This compaction ensures that Name Node restarts
 do not incur unnecessary downtime.
 
 
-%package datanode
+%package hdfs-datanode
 Summary: Hadoop Data Node
 Group: System/Daemons
-Requires: %{name} = %{version}-%{release}
+Requires: %{name}-hdfs = %{version}-%{release}
 
-%description datanode
+%description hdfs-datanode
 The Data Nodes in the Hadoop Cluster are responsible for serving up
 blocks of data over the network to Hadoop Distributed Filesystem
 (HDFS) clients.
 
-%package resourcemanager
+%package yarn-resourcemanager
 Summary: Yarn Resource Manager
 Group: System/Daemons
-Requires: %{name} = %{version}-%{release}
+Requires: %{name}-yarn = %{version}-%{release}
 
-%description resourcemanager
+%description yarn-resourcemanager
 The resource manager manages the global assignment of compute resources to applications
 
-%package nodemanager
+%package yarn-nodemanager
 Summary: Yarn Node Manager
 Group: System/Daemons
-Requires: %{name} = %{version}-%{release}
+Requires: %{name}-yarn = %{version}-%{release}
 
-%description nodemanager
+%description yarn-nodemanager
 The NodeManager is the per-machine framework agent who is responsible for
 containers, monitoring their resource usage (cpu, memory, disk, network) and
 reporting the same to the ResourceManager/Scheduler.
 
-%package historyserver
-Summary: Yarn History Server
+%package mapreduce-historyserver
+Summary: MapReduce History Server
 Group: System/Daemons
-Requires: %{name} = %{version}-%{release}
+Requires: %{name}-mapreduce = %{version}-%{release}
 
-%description historyserver
+%description mapreduce-historyserver
 The History server keeps records of the different activities being performed on a Apache Hadoop cluster
 
 %package conf-pseudo
 Summary: Hadoop installation in pseudo-distributed mode
 Group: System/Daemons
-Requires: %{name} = %{version}-%{release}, %{name}-namenode = %{version}-%{release}, %{name}-datanode = %{version}-%{release}, %{name}-secondarynamenode = %{version}-%{release}, %{name}-resourcemanager = %{version}-%{release}, %{name}-nodemanager = %{version}-%{release}, %{name}-historyserver = %{version}-%{release}
+Requires: %{name} = %{version}-%{release}, %{name}-hdfs-namenode = %{version}-%{release}, %{name}-hdfs-datanode = %{version}-%{release}, %{name}-hdfs-secondarynamenode = %{version}-%{release}, %{name}-yarn-resourcemanager = %{version}-%{release}, %{name}-yarn-nodemanager = %{version}-%{release}, %{name}-mapreduce-historyserver = %{version}-%{release}
 
 %description conf-pseudo
 Installation of this RPM will setup your machine to run in pseudo-distributed mode
@@ -249,7 +304,7 @@ Documentation for Hadoop
 %package libhdfs
 Summary: Hadoop Filesystem Library
 Group: Development/Libraries
-Requires: %{name} = %{version}-%{release}
+Requires: %{name}-hdfs = %{version}-%{release}
 # TODO: reconcile libjvm
 AutoReq: no
 
@@ -283,7 +338,7 @@ bash %{SOURCE2} \
   --build-dir=$PWD/build \
   --system-include-dir=$RPM_BUILD_ROOT%{_includedir} \
   --system-lib-dir=$RPM_BUILD_ROOT%{_libdir} \
-  --system-libexec-dir=$RPM_BUILD_ROOT%{libexecdir} \
+  --system-libexec-dir=$RPM_BUILD_ROOT/%{lib_hadoop}/libexec \
   --hadoop-etc-dir=$RPM_BUILD_ROOT%{etc_hadoop} \
   --prefix=$RPM_BUILD_ROOT \
   --doc-dir=$RPM_BUILD_ROOT%{doc_hadoop} \
@@ -305,12 +360,12 @@ orig_init_file=$RPM_SOURCE_DIR/hadoop-init.tmpl
 yarn_orig_init_file=$RPM_SOURCE_DIR/yarn-init.tmpl
 
 # Generate the init.d scripts
-for service in %{hadoop_services}
+for service in %{hdfs_services} %{mapreduce_services}
 do
        init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{name}-${service}
        %__cp $orig_init_file $init_file
        %__sed -i -e 's|@HADOOP_COMMON_ROOT@|%{lib_hadoop}|' $init_file
-       %__sed -i -e "s|@HADOOP_DAEMON@|${service}|" $init_file
+       %__sed -i -e "s|@HADOOP_DAEMON@|${service#*-}|" $init_file
        %__sed -i -e 's|@HADOOP_CONF_DIR@|%{config_hadoop}|' $init_file
        %__sed -i -e 's|@HADOOP_DAEMON_USER@|hdfs|' $init_file
        chmod 755 $init_file
@@ -320,7 +375,7 @@ do
        init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{name}-${service}
        %__cp $yarn_orig_init_file $init_file
        %__sed -i -e 's|@YARN_COMMON_ROOT@|%{lib_hadoop}|' $init_file
-       %__sed -i -e "s|@YARN_DAEMON@|${service}|" $init_file
+       %__sed -i -e "s|@YARN_DAEMON@|${service#yarn-}|" $init_file
        %__sed -i -e 's|@YARN_CONF_DIR@|%{config_hadoop}|' $init_file
        %__sed -i -e 's|@YARN_DAEMON_USER@|yarn|' $init_file
        chmod 755 $init_file
@@ -335,23 +390,36 @@ done
 %__install -d -m 0755 $RPM_BUILD_ROOT/etc/security/limits.d
 %__install -m 0644 %{SOURCE9} $RPM_BUILD_ROOT/etc/security/limits.d/hadoop.nofiles.conf
 
-# /var/lib/hadoop/cache
-%__install -d -m 1777 $RPM_BUILD_ROOT/var/lib/%{name}/cache/hadoop
-# /var/log/hadoop
-%__install -d -m 0755 $RPM_BUILD_ROOT/var/log
-%__install -d -m 0775 $RPM_BUILD_ROOT/var/run/%{name}
-%__install -d -m 0775 $RPM_BUILD_ROOT/var/run/yarn
+# /var/lib/*/cache
+%__install -d -m 1777 $RPM_BUILD_ROOT/%{state_hadoop}/cache
+%__install -d -m 1777 $RPM_BUILD_ROOT/%{state_yarn}/cache
+%__install -d -m 1777 $RPM_BUILD_ROOT/%{state_hdfs}/cache
+%__install -d -m 1777 $RPM_BUILD_ROOT/%{state_mapreduce}/cache
+# /var/log/*
 %__install -d -m 0775 $RPM_BUILD_ROOT/%{log_hadoop}
 %__install -d -m 0775 $RPM_BUILD_ROOT/%{log_yarn}
-
+# %__install -d -m 0775 $RPM_BUILD_ROOT/%{log_hdfs}
+# %__install -d -m 0775 $RPM_BUILD_ROOT/%{log_mapreduce}
+# /var/run/*
+%__install -d -m 0775 $RPM_BUILD_ROOT/%{run_hadoop}
+%__install -d -m 0775 $RPM_BUILD_ROOT/%{run_yarn}
+#%__install -d -m 0775 $RPM_BUILD_ROOT/%{run_hdfs}
+#%__install -d -m 0775 $RPM_BUILD_ROOT/%{run_mapreduce}
 
 %pre
 getent group hadoop >/dev/null || groupadd -r hadoop
-getent group hdfs >/dev/null   || groupadd -r hdfs
-getent group yarn >/dev/null   || groupadd -r yarn
 
-getent passwd hdfs >/dev/null || /usr/sbin/useradd --comment "Hadoop HDFS" --shell /bin/bash -M -r -g hdfs -G hadoop --home %{lib_hadoop} hdfs
-getent passwd yarn >/dev/null || /usr/sbin/useradd --comment "Hadoop Yarn" --shell /bin/bash -M -r -g yarn -G hadoop --home %{lib_hadoop} yarn
+%pre hdfs
+getent group hdfs >/dev/null   || groupadd -r hdfs
+getent passwd hdfs >/dev/null || /usr/sbin/useradd --comment "Hadoop HDFS" --shell /bin/bash -M -r -g hdfs -G hadoop --home %{state_hdfs} hdfs
+
+%pre yarn
+getent group yarn >/dev/null   || groupadd -r yarn
+getent passwd yarn >/dev/null || /usr/sbin/useradd --comment "Hadoop Yarn" --shell /bin/bash -M -r -g yarn -G hadoop --home %{state_yarn} yarn
+
+%pre mapreduce
+getent group mapreduce >/dev/null   || groupadd -r mapreduce
+getent passwd mapreduce >/dev/null || /usr/sbin/useradd --comment "Hadoop MapReduce" --shell /bin/bash -M -r -g mapreduce -G hadoop --home %{state_mapreduce} mapreduce
 
 %post
 %{alternatives_cmd} --install %{config_hadoop} %{name}-conf %{etc_hadoop}/conf.empty 10
@@ -362,13 +430,10 @@ getent passwd yarn >/dev/null || /usr/sbin/useradd --comment "Hadoop Yarn" --she
   --slave /etc/%{hadoop_name} %{hadoop_name}-etc %{etc_hadoop} \
   --slave %{man_hadoop}/man1/%{hadoop_name}.1.*z %{hadoop_name}-man %{man_hadoop}/man1/%{name}.1.*z
 
-mkdir -p /var/lib/hadoop/cache/hadoop || :
-chown hdfs:hadoop /var/lib/hadoop/cache/hadoop || :
-chmod g+w /var/lib/hadoop/cache/hadoop/
-mkdir -p /var/log/hadoop || :
-touch /var/log/hadoop/SecurityAuth.audit
-chgrp hadoop /var/log/hadoop/SecurityAuth.audit
-chmod g+w /var/log/hadoop/SecurityAuth.audit
+touch %{log_hadoop}/SecurityAuth.audit
+chgrp hadoop %{log_hadoop}/SecurityAuth.audit
+chmod g+w %{log_hadoop}/SecurityAuth.audit
+
 
 %preun
 if [ "$1" = 0 ]; then
@@ -381,27 +446,94 @@ if [ "$1" = 0 ]; then
   %{alternatives_cmd} --remove %{hadoop_name}-default %{bin_hadoop}/%{name} || :
 fi
 
+
+%files yarn
+%defattr(-,root,root)
+%config(noreplace) %{etc_hadoop}/conf.empty/yarn-env.sh
+%config(noreplace) %{etc_hadoop}/conf.empty/yarn-site.xml
+%config(noreplace) %{etc_hadoop}/conf.empty/mrapp-generated-classpath
+%config(noreplace) /etc/default/yarn
+%{lib_hadoop}/hadoop-yarn*.jar
+%{lib_hadoop}/libexec/yarn-config.sh
+%{lib_hadoop}/sbin/start-yarn.sh
+%{lib_hadoop}/sbin/stop-yarn.sh
+%{lib_hadoop}/sbin/yarn-daemon.sh
+%{lib_hadoop}/sbin/yarn-daemons.sh
+%{lib_hadoop}/bin/yarn
+%{lib_hadoop}/bin/container-executor
+%{bin_hadoop}/yarn
+%attr(0775,yarn,hadoop) %{run_yarn}
+%attr(0775,yarn,hadoop) %{log_yarn}
+%attr(0775,yarn,hadoop) %{state_yarn}
+%attr(1777,yarn,hadoop) %{state_yarn}/cache
+
+%files hdfs
+%defattr(-,root,root)
+%config(noreplace) %{etc_hadoop}/conf.empty/hdfs-site.xml
+%config(noreplace) %{etc_hadoop}/conf.empty/httpfs-*
+%config(noreplace) /etc/default/hadoop-fuse
+%{lib_hadoop}/hadoop-hdfs*.jar
+%{lib_hadoop}/libexec/hdfs-config.sh
+%{lib_hadoop}/libexec/httpfs-config.sh
+%{lib_hadoop}/webapps
+%{lib_hadoop}/sbin/update-hdfs-env.sh
+%{lib_hadoop}/sbin/start-secure-dns.sh
+%{lib_hadoop}/sbin/stop-secure-dns.sh
+%{lib_hadoop}/sbin/start-balancer.sh
+%{lib_hadoop}/sbin/stop-balancer.sh
+%{lib_hadoop}/sbin/start-dfs.sh
+%{lib_hadoop}/sbin/stop-dfs.sh
+%{lib_hadoop}/sbin/refresh-namenodes.sh
+%{lib_hadoop}/sbin/distribute-exclude.sh
+%{lib_hadoop}/sbin/httpfs.sh
+%{lib_hadoop}/bin/hdfs
+%{bin_hadoop}/hdfs
+%attr(0775,hdfs,hadoop) %{run_hdfs}
+%attr(0775,hdfs,hadoop) %{log_hdfs}
+%attr(0775,hdfs,hadoop) %{state_hdfs}
+%attr(1777,hdfs,hadoop) %{state_hdfs}/cache
+
+%files mapreduce
+%defattr(-,root,root)
+%{lib_hadoop}/hadoop-mapreduce*.jar
+%{lib_hadoop}/libexec/mapred-config.sh
+%{lib_hadoop}/bin/mapred
+%{bin_hadoop}/mapred
+%attr(0775,mapreduce,hadoop) %{run_mapreduce}
+%attr(0775,mapreduce,hadoop) %{log_mapreduce}
+%attr(0775,mapreduce,hadoop) %{state_mapreduce}
+%attr(1777,mapreduce,hadoop) %{state_mapreduce}/cache
+
+
 %files
 %defattr(-,root,root)
-%config(noreplace) %{etc_hadoop}/conf.empty
-#%config(noreplace) %{etc_yarn}/conf.empty
+%config(noreplace) %{etc_hadoop}/conf.empty/hadoop-metrics.properties
+%config(noreplace) %{etc_hadoop}/conf.empty/hadoop-metrics2.properties
+%config(noreplace) %{etc_hadoop}/conf.empty/log4j.properties
+%config(noreplace) %{etc_hadoop}/conf.empty/slaves
+%config(noreplace) %{etc_hadoop}/conf.empty/ssl-client.xml.example
+%config(noreplace) %{etc_hadoop}/conf.empty/ssl-server.xml.example
 %config(noreplace) /etc/default/hadoop
-%config(noreplace) /etc/default/yarn
 %config(noreplace) /etc/security/limits.d/hadoop.nofiles.conf
-%{lib_hadoop}
-%{libexecdir}/hadoop-config.sh
-%{libexecdir}/hdfs-config.sh
-%{libexecdir}/mapred-config.sh
-%{libexecdir}/yarn-config.sh
-%{bin_hadoop}/%{name}
-%{bin_hadoop}/yarn
-%{bin_hadoop}/hdfs
-%{bin_hadoop}/mapred
-%attr(0775,root,hadoop) /var/run/%{name}
-%attr(0775,root,hadoop) %{log_hadoop}
-%attr(0775,root,hadoop) /var/run/yarn
-%attr(0775,root,hadoop) %{log_yarn}
+%{lib_hadoop}/hadoop-common*.jar
+%{lib_hadoop}/hadoop-auth*.jar
+%{lib_hadoop}/hadoop-annotations*.jar
+%{lib_hadoop}/lib
+%{lib_hadoop}/etc
+%{lib_hadoop}/libexec/hadoop-config.sh
+%{lib_hadoop}/sbin/hadoop-*.sh
+%{lib_hadoop}/sbin/update-hadoop-env.sh
+%{lib_hadoop}/sbin/slaves.sh
+%{lib_hadoop}/sbin/start-all.sh
+%{lib_hadoop}/sbin/stop-all.sh
+%{lib_hadoop}/bin/hadoop
+%{lib_hadoop}/bin/rcc
+%{bin_hadoop}/hadoop
 %{man_hadoop}/man1/hadoop.1.*
+%attr(0775,root,hadoop) %{run_hadoop}
+%attr(0775,root,hadoop) %{log_hadoop}
+%attr(0775,root,hadoop) %{state_hadoop}
+%attr(1777,root,hadoop) %{state_hadoop}/cache
 
 %files doc
 %defattr(-,root,root)
@@ -426,12 +558,12 @@ if [ $1 -ge 1 ]; then \
   service %{name}-%1 condrestart >/dev/null 2>&1 \
 fi
 
-%service_macro namenode
-%service_macro secondarynamenode
-%service_macro datanode
-%service_macro resourcemanager
-%service_macro nodemanager
-%service_macro historyserver
+%service_macro hdfs-namenode
+%service_macro hdfs-secondarynamenode
+%service_macro hdfs-datanode
+%service_macro yarn-resourcemanager
+%service_macro yarn-nodemanager
+%service_macro mapreduce-historyserver
 
 # Pseudo-distributed Hadoop installation
 %post conf-pseudo

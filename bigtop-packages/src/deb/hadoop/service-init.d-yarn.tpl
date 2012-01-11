@@ -56,16 +56,8 @@ elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
   . /usr/lib/bigtop-utils/bigtop-detect-javahome
 fi
 
-. /usr/libexec/hadoop-config.sh
-. /usr/libexec/yarn-config.sh 
-
-# FIXME: this needs to be removed once hadoop-config.sh stop clobbering HADOOP_HOME
-. /etc/default/hadoop
-. /etc/default/yarn
-
-
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-DAEMON_SCRIPT=$HADOOP_HOME/bin/yarn-daemon.sh
+DAEMON_SCRIPT=$HADOOP_HOME/sbin/yarn-daemon.sh
 NAME=hadoop-@HADOOP_DAEMON@
 DESC="Hadoop @HADOOP_DAEMON@ daemon"
 PID_FILE=$YARN_PID_DIR/hadoop-$YARN_IDENT_STRING-@HADOOP_DAEMON@.pid
@@ -155,13 +147,13 @@ hadoop_stop_pidfile() {
 start() {
     TARGET_USER_NAME="YARN_`echo @HADOOP_DAEMON@ | tr a-z A-Z`_USER"
     TARGET_USER=$(eval "echo \$$TARGET_USER_NAME")
-    su -s /bin/bash $TARGET_USER -c "$HADOOP_HOME/bin/yarn-daemon.sh start @HADOOP_DAEMON@ $DAEMON_FLAGS"
+    su -s /bin/bash $TARGET_USER -c "$DAEMON_SCRIPT start @HADOOP_DAEMON@ $DAEMON_FLAGS"
 
     # Some processes are slow to start
     sleep $SLEEP_TIME
 }
 stop() {
-    $HADOOP_HOME/bin/yarn-daemon.sh stop @HADOOP_DAEMON@
+    $DAEMON_SCRIPT stop @HADOOP_DAEMON@
 }
 
 check_for_root() {

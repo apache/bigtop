@@ -32,7 +32,16 @@ set -e
 
 case "$1" in
     install|upgrade)
-        addgroup --system hadoop >/dev/null 2>/dev/null || :
+        if ! getent passwd mapreduce >/dev/null; then
+            adduser \
+                --system \
+                --group \
+                --home /var/lib/mapreduce \
+                --gecos "Hadoop MapReduce" \
+                --shell /bin/bash \
+                mapreduce >/dev/null 2>/dev/null || :
+            usermod --append --groups hadoop mapreduce || :
+        fi
     ;;
 
     abort-upgrade)

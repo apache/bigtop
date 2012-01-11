@@ -153,7 +153,7 @@ elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
 fi
 
 . /etc/default/hadoop
-. /etc/default/yarn
+[ -f /etc/default/${bin_wrapper/hadoop/yarn} ] && . /etc/default/${bin_wrapper/hadoop/yarn}
 
 # FIXME: this might need to be fixed upstream
 HADOOP_CLASSPATH="\${HADOOP_CLASSPATH}:\${YARN_CONF_DIR}"
@@ -182,11 +182,6 @@ cp ${BUILD_DIR}/share/hadoop/mapreduce/lib/*.jar ${HADOOP_LIB_DIR}/
 cp ${BUILD_DIR}/share/hadoop/common/lib/*.jar ${HADOOP_LIB_DIR}/
 cp ${BUILD_DIR}/share/hadoop/hdfs/lib/*.jar ${HADOOP_LIB_DIR}/
 chmod 644 ${HADOOP_LIB_DIR}/*.jar
-
-# Remove duplicate libraries:
-rm -fv ${HADOOP_LIB_DIR}/slf4j-*-1.5.11.jar
-rm -fv ${HADOOP_LIB_DIR}/stax-api-1.0.1.jar
-rm -fv ${HADOOP_LIB_DIR}/netty-3.2.3.Final.jar
 
 # hadoop jar
 install -d -m 0755 ${HADOOP_DIR}
@@ -238,6 +233,21 @@ for conf in conf.pseudo ; do
   cp $DISTRO_DIR/mrapp-generated-classpath $HADOOP_ETC_DIR/$conf
 done
 cp ${BUILD_DIR}/etc/hadoop/log4j.properties $HADOOP_ETC_DIR/conf.pseudo
+
+# FIXME: Provide a convenience link for configuration (HADOOP-7939)
+install -d -m 0755 ${HADOOP_DIR}/etc
+ln -s ${HADOOP_ETC_DIR##${PREFIX}}/conf ${HADOOP_DIR}/etc/hadoop
+
+# FIXME: Provide convenience links for log/run in hdfs and mapreduce (HADOOP-7939)
+install -d -m 0755 $PREFIX/var/log/ $PREFIX/var/run/
+ln -s hadoop $PREFIX/var/log/hdfs
+ln -s hadoop $PREFIX/var/run/hdfs
+ln -s hadoop $PREFIX/var/log/mapreduce
+ln -s hadoop $PREFIX/var/run/mapreduce
+
+# FIXME: The following needs to be untangled upstream (HADOOP-7939)
+cp ${BUILD_DIR}/share/hadoop/mapreduce/hadoop-mapreduce-client-shuffle*.jar ${HADOOP_DIR}/lib/
+cp ${BUILD_DIR}/share/hadoop/mapreduce/hadoop-mapreduce-client-core*.jar ${HADOOP_DIR}/lib/
 
 # Remove all hadoop test jars
 rm -fv ${HADOOP_DIR}/*test*.jar

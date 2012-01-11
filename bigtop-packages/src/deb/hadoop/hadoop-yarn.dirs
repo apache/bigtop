@@ -1,0 +1,6 @@
+/etc/conf.empty/
+/usr/lib/hadoop
+/usr/bin
+/var/lib/yarn/cache
+/var/log/yarn
+/var/run/yarn

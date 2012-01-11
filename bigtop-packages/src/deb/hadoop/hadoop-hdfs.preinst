@@ -32,7 +32,17 @@ set -e
 
 case "$1" in
     install|upgrade)
-        addgroup --system hadoop >/dev/null 2>/dev/null || :
+        if ! getent passwd hdfs >/dev/null; then
+            # Adding system user: hdfs.
+            adduser \
+                --system \
+                --group \
+                --home /var/lib/hdfs \
+                --gecos "Hadoop HDFS" \
+                --shell /bin/bash \
+                hdfs >/dev/null 2>/dev/null || :
+            usermod --append --groups hadoop hdfs || :
+        fi
     ;;
 
     abort-upgrade)

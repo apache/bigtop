@@ -1,0 +1,13 @@
+/etc/hadoop/conf.empty/yarn-env.sh
+/etc/hadoop/conf.empty/yarn-site.xml
+/etc/hadoop/conf.empty/mrapp-generated-classpath
+/etc/default/yarn
+/usr/lib/hadoop/hadoop-yarn*.jar
+/usr/lib/hadoop/libexec/yarn-config.sh
+/usr/lib/hadoop/sbin/start-yarn.sh
+/usr/lib/hadoop/sbin/stop-yarn.sh
+/usr/lib/hadoop/sbin/yarn-daemon.sh
+/usr/lib/hadoop/sbin/yarn-daemons.sh
+/usr/lib/hadoop/bin/yarn
+/usr/lib/hadoop/bin/container-executor
+/usr/bin/yarn

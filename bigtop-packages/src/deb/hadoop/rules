@@ -60,9 +60,10 @@ install: build
 	  --distro-dir=debian \
 	  --build-dir=${PWD}/build \
 	  --system-lib-dir=debian/tmp/usr/lib/ \
-	  --system-libexec-dir=debian/tmp/usr/libexec/ \
+	  --system-libexec-dir=debian/tmp/usr/lib/hadoop/libexec/ \
 	  --system-include-dir=debian/tmp/usr/include \
 	  --doc-dir=debian/tmp/usr/share/doc/hadoop-doc \
+          --man-dir=debian/tmp/usr/share/man \
 	  --example-dir=debian/tmp/usr/share/doc/hadoop/examples \
 	  --native-build-string=${native_dir} \
 	  --installed-lib-dir=/usr/lib/hadoop
@@ -77,22 +78,22 @@ datanode_user=hdfs
 resourcemanager_user=yarn
 nodemanager_user=yarn
 
-namenode secondarynamenode datanode: debian/service-init.d.tpl
-	sed -e "s|@HADOOP_DAEMON@|$@|" \
+hdfs-namenode hdfs-secondarynamenode hdfs-datanode mapreduce-historyserver: debian/service-init.d.tpl
+	sed -e "s|@HADOOP_DAEMON@|$(patsubst mapreduce-%,%,$(patsubst hdfs-%,%,$@))|" \
             -e "s|@HADOOP_MAJOR_VERSION@|$hadoop_version|" \
 	    -e "s|@DAEMON_USER@|$($@_user)|" $< > debian/hadoop-$@.init
 	# FIXME: workaround for BIGTOP-105
 	sed -e "s|@HADOOP_DAEMON@|$@|" < debian/hadoop.daemon.postinst.tpl > debian/hadoop-$@.postinst
 
-resourcemanager nodemanager: debian/service-init.d-yarn.tpl
-	sed -e "s|@HADOOP_DAEMON@|$@|" \
+yarn-resourcemanager yarn-nodemanager: debian/service-init.d-yarn.tpl
+	sed -e "s|@HADOOP_DAEMON@|$(patsubst yarn-%,%,$@)|" \
             -e "s|@HADOOP_MAJOR_VERSION@|$hadoop_version|" \
 	    -e "s|@DAEMON_USER@|$($@_user)|" $< > debian/hadoop-$@.init
 	# FIXME: workaround for BIGTOP-105
 	sed -e "s|@HADOOP_DAEMON@|$@|" < debian/hadoop.daemon.postinst.tpl > debian/hadoop-$@.postinst
 
 
-install-indep: namenode secondarynamenode datanode resourcemanager nodemanager
+install-indep: hdfs-namenode hdfs-secondarynamenode hdfs-datanode yarn-resourcemanager yarn-nodemanager mapreduce-historyserver
 	mkdir -p debian/tmp/etc/default
 	cp debian/hadoop.default debian/tmp/etc/default/hadoop
 	cp debian/yarn.default debian/tmp/etc/default/yarn
