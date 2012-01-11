@@ -43,7 +43,7 @@ DAEMON_SCRIPT="/usr/bin/zookeeper-server"
 
 NAME=zookeeper-server
 DESC="ZooKeeper daemon"
-PID_FILE=/var/run/zookeeper/zookeeper_server.pid
+PID_FILE=/var/run/zookeeper/zookeeper-server.pid
 install -d -m 0755 -o zookeeper -g zookeeper /var/run/zookeeper/
 
 DODTIME=3
