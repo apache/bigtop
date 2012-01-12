@@ -136,7 +136,7 @@ class hadoop {
     exec { "namenode format":
       user => "hdfs",
       command => "/bin/bash -c 'yes Y | hadoop namenode -format >> /tmp/nn.format.log 2>&1'",
-      creates => inline_template("<%= hadoop_storage_locations.split(';')[0] %>/namenode/image"),
+      creates => "${namenode_data_dirs[0]}/image"),
       require => [ Package["hadoop-namenode"], File[$dirs] ],
     } 
     

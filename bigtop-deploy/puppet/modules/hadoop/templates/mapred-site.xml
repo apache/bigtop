@@ -101,7 +101,7 @@
 
   <property>
     <name>mapred.local.dir</name>
-    <value><% hadoop_storage_locations.split(";").each do |storage_location| %><%= storage_location%>/scratch,<% end %></value>
+    <value><%= mapred_data_dirs.join(",") %></value>
     <final>true</final>
   </property>
 
