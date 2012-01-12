@@ -13,10 +13,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+require bigtop_util
+$puppet_confdir = get_setting("confdir")
+$default_yumrepo = "http://bigtop01.cloudera.org:8080/view/Hadoop%200.23/job/Bigtop-23-matrix/label=centos5/lastSuccessfulBuild/artifact/output/"
+$extlookup_datadir="$puppet_confdir/config"
+$extlookup_precedence = ["site", "default"]
+
 stage {"pre": before => Stage["main"]}
 
 yumrepo { "Bigtop":
-    baseurl => "http://bigtop01.cloudera.org:8080/view/Hadoop%200.23/job/Bigtop-23-matrix/label=centos5/lastSuccessfulBuild/artifact/output/",
+    baseurl => extlookup("bigtop_yumrepo_uri", $default_yumrepo),
     descr => "Bigtop packages",
     enabled => 1,
     gpgcheck => 0,
@@ -32,6 +38,11 @@ package { "jdk":
 import "cluster.pp"
 
 node default {
+  # Fails if hadoop_head_node is unset
+  if (!$::hadoop_head_node) {
+    $hadoop_head_node = extlookup("hadoop_head_node") 
+  }
+
   if ($hadoop_head_node == $fqdn) {
     include hadoop_gateway_node
   } else {

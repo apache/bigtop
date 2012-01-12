@@ -14,44 +14,54 @@
 # limitations under the License.
 
 class hadoop_cluster_node {
-  $hadoop_namenode_host="$hadoop_head_node"
-  $hadoop_namenode_port="17020"
-  $hadoop_namenode_thrift_port="10090"
+  require bigtop_util  
+
+  $hadoop_namenode_host        = $hadoop_head_node
+  $hadoop_namenode_port        = extlookup("hadoop_namenode_port", "17020")
+  $hadoop_namenode_thrift_port = extlookup("hadoop_namenode_thrift_port", "10090")
+  $hadoop_dfs_namenode_plugins = extlookup("hadoop_dfs_namenode_plugins", "")
+  $hadoop_dfs_datanode_plugins = extlookup("hadoop_dfs_datanode_plugins", "")
   # $hadoop_dfs_namenode_plugins="org.apache.hadoop.thriftfs.NamenodePlugin"
   # $hadoop_dfs_datanode_plugins="org.apache.hadoop.thriftfs.DatanodePlugin"
 
-  $hadoop_rm_host="$hadoop_head_node"
-  $hadoop_rt_port="8025"
-  $hadoop_rm_port="8040"
-  $hadoop_sc_port="8030"
-  $hadoop_rt_thrift_port="9290"
+  $hadoop_rm_host        = $hadoop_head_node
+  $hadoop_rt_port        = extlookup("hadoop_rt_port", "8025")
+  $hadoop_rm_port        = extlookup("hadoop_rm_port", "8040")
+  $hadoop_sc_port        = extlookup("hadoop_sc_port", "8030")
+  $hadoop_rt_thrift_port = extlookup("hadoop_rt_thrift_port", "9290")
 
-  $hadoop_hs_host="$hadoop_head_node"
-  $hadoop_hs_port="10020"
-  $hadoop_hs_webapp_port="19888"
+  $hadoop_hs_host        = $hadoop_head_node
+  $hadoop_hs_port        = extlookup("hadoop_hs_port", "10020")
+  $hadoop_hs_webapp_port = extlookup("hadoop_hs_webapp_port", "19888")
 
-  $hadoop_jobtracker_host="$hadoop_head_node"
-  $hadoop_jobtracker_port="8021"
-  $hadoop_jobtracker_thrift_port="9290"
+  $hadoop_jobtracker_host            = $hadoop_head_node
+  $hadoop_jobtracker_port            = extlookup("hadoop_jobtracker_port", "8021")
+  $hadoop_jobtracker_thrift_port     = extlookup("hadoop_jobtracker_thrift_port", "9290")
+  $hadoop_mapred_jobtracker_plugins  = extlookup("hadoop_mapred_jobtracker_plugins", "")
+  $hadoop_mapred_tasktracker_plugins = extlookup("hadoop_mapred_tasktracker_plugins", "")
   # $hadoop_mapred_jobtracker_plugins="org.apache.hadoop.thriftfs.ThriftJobTrackerPlugin"
   # $hadoop_mapred_tasktracker_plugins="org.apache.hadoop.mapred.TaskTrackerCmonInst"
 
   $hadoop_core_proxyusers = { oozie => { groups => 'root,hadoop,jenkins,oozie,users', hosts => "${hadoop_head_node},localhost,127.0.0.1" } }
 
-  $hadoop_hbase_rootdir = "hdfs://$hadoop_namenode_host:$hadoop_namenode_port/hbase"
-  $hadoop_hbase_zookeeper_quorum = "$hadoop_head_node"
+  $hbase_relative_rootdir        = extlookup("hadoop_hbase_rootdir", "/hbase")
+  $hadoop_hbase_rootdir = "hdfs://$hadoop_namenode_host:$hadoop_namenode_port/$hbase_relative_rootdir"
+  $hadoop_hbase_zookeeper_quorum = $hadoop_head_node
 
   $hadoop_zookeeper_ensemble = ["$hadoop_head_node:2888:3888"]
 
-  $namenode_data_dirs = ["/mnt/namenode"]
-  $hdfs_data_dirs = ["/mnt/hdfs"]
-  $mapred_data_dirs = ["/mnt/mapred"]
-  $yarn_data_dirs = ["/mnt/yarn"]
+  # Set from facter if available
+  $roots              = extlookup("hadoop_storage_dirs",       split($hadoop_storage_dirs, ";"))
+  $namenode_data_dirs = extlookup("hadoop_namenode_data_dirs", append_each("/namenode", $roots))
+  $hdfs_data_dirs     = extlookup("hadoop_hdfs_data_dirs",     append_each("/hdfs",     $roots))
+  $mapred_data_dirs   = extlookup("hadoop_mapred_data_dirs",   append_each("/mapred",   $roots))
+  $yarn_data_dirs     = extlookup("hadoop_yarn_data_dirs",     append_each("/yarn",     $roots))
 
+  $hadoop_security_authentication = extlookup("hadoop_security", "simple")
   if ($hadoop_security_authentication == "kerberos") {
-    $kerberos_domain = "compute-1.internal"
-    $kerberos_realm = "EXAMPLE.COM"
-    $kerberos_kdc_server = "$hadoop_head_node"
+    $kerberos_domain     = extlookup("hadoop_kerberos_domain")
+    $kerberos_realm      = extlookup("hadoop_kerberos_realm")
+    $kerberos_kdc_server = extlookup("hadoop_kerberos_kdc_server")
 
     include kerberos::client
     kerberos::client::host_keytab { ["hdfs", "mapred", "hbase", "oozie"]:

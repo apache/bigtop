@@ -108,12 +108,12 @@
  
   <property>
     <name>dfs.data.dir</name>
-    <value><% hadoop_storage_locations.split(";").each do |storage_location| %><%= storage_location%>/hdfs,<% end %></value>
+    <value><%= hdfs_data_dirs.join(",") %></value>
   </property>
  
   <property>
     <name>dfs.name.dir</name>
-    <value><% hadoop_storage_locations.split(";").each do |storage_location| %><%= storage_location%>/namenode,<% end %></value>
+    <value><%= namenode_data_dirs.join(",") %></value>
   </property>
 
   <property>
