@@ -473,6 +473,7 @@ fi
 %config(noreplace) %{etc_hadoop}/conf.empty/httpfs-*
 %config(noreplace) /etc/default/hadoop-fuse
 %{lib_hadoop}/hadoop-hdfs*.jar
+%{lib_hadoop}/hadoop-archives*.jar
 %{lib_hadoop}/libexec/hdfs-config.sh
 %{lib_hadoop}/libexec/httpfs-config.sh
 %{lib_hadoop}/webapps
@@ -496,6 +497,7 @@ fi
 %files mapreduce
 %defattr(-,root,root)
 %{lib_hadoop}/hadoop-mapreduce*.jar
+%{lib_hadoop}/hadoop-streaming*.jar
 %{lib_hadoop}/libexec/mapred-config.sh
 %{lib_hadoop}/bin/mapred
 %{bin_hadoop}/mapred

@@ -188,6 +188,7 @@ install -d -m 0755 ${HADOOP_DIR}
 cp ${BUILD_DIR}/share/hadoop/mapreduce/*.jar ${HADOOP_DIR}/
 cp ${BUILD_DIR}/share/hadoop/common/*.jar ${HADOOP_DIR}/
 cp ${BUILD_DIR}/share/hadoop/hdfs/*.jar ${HADOOP_DIR}/
+cp ${BUILD_DIR}/share/hadoop/tools/lib/*.jar ${HADOOP_DIR}/
 mv ${HADOOP_LIB_DIR}/hadoop*.jar ${HADOOP_DIR}/
 chmod 644 ${HADOOP_DIR}/*.jar
 
