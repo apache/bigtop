@@ -476,6 +476,7 @@ fi
 %{lib_hadoop}/hadoop-archives*.jar
 %{lib_hadoop}/libexec/hdfs-config.sh
 %{lib_hadoop}/libexec/httpfs-config.sh
+%{lib_hadoop}/libexec/jsvc
 %{lib_hadoop}/webapps
 %{lib_hadoop}/sbin/update-hdfs-env.sh
 %{lib_hadoop}/sbin/start-secure-dns.sh

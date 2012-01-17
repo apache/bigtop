@@ -165,8 +165,7 @@ done
 
 #libexec
 install -d -m 0755 ${SYSTEM_LIBEXEC_DIR}
-rm -fv ${BUILD_DIR}/libexec/jsvc
-mv ${BUILD_DIR}/libexec/* ${SYSTEM_LIBEXEC_DIR}/
+cp ${BUILD_DIR}/libexec/* ${SYSTEM_LIBEXEC_DIR}/
 
 # bin
 install -d -m 0755 ${HADOOP_BIN_DIR}

@@ -2,6 +2,7 @@
 /etc/hadoop/conf.empty/httpfs-*
 /usr/lib/hadoop/hadoop-hdfs*.jar
 /usr/lib/hadoop/hadoop-archives*.jar
+/usr/lib/hadoop/libexec/jsvc
 /usr/lib/hadoop/libexec/hdfs-config.sh
 /usr/lib/hadoop/libexec/httpfs-config.sh
 /usr/lib/hadoop/webapps
