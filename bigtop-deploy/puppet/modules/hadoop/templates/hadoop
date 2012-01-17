@@ -18,11 +18,6 @@ export HADOOP_LIBEXEC_DIR=/usr/lib/hadoop/libexec
 export HADOOP_NAMENODE_USER=hdfs
 export HADOOP_SECONDARYNAMENODE_USER=hdfs
 export HADOOP_DATANODE_USER=hdfs
-<% if hadoop_security_authentication == "kerberos" %>
-export HADOOP_SECURE_DN_USER=hdfs
-export HADOOP_SECURE_DN_PID_DIR=$HADOOP_PID_DIR
-export HADOOP_SECURE_DN_LOG_DIR=$HADOOP_LOG_DIR
-<% end %>
 export HADOOP_JOBTRACKER_USER=mapred
 export HADOOP_TASKTRACKER_USER=mapred
 export HADOOP_IDENT_STRING=hdfs
@@ -34,3 +29,9 @@ export HADOOP_CLASSPATH="${HADOOP_CLASSPATH}:${HADOOP_PREFIX}/*:${HADOOP_PREFIX}
 # Pointless definitions making yarn happy
 export HADOOP_COMMON_HOME=${HADOOP_PREFIX}
 export HADOOP_HDFS_HOME=${HADOOP_PREFIX}
+
+<% if hadoop_security_authentication == "kerberos" %>
+export HADOOP_SECURE_DN_USER=hdfs
+export HADOOP_SECURE_DN_PID_DIR=$HADOOP_PID_DIR
+export HADOOP_SECURE_DN_LOG_DIR=$HADOOP_LOG_DIR
+<% end %>
