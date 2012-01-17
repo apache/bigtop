@@ -26,13 +26,7 @@ mkdir build/src
 
 # Build artifacts
 MAVEN_SKIP_TESTS="-DskipTests -DskipTest -DskipITs"
-mvn $BUNDLE_SNAPPY -Pdist -Pnative -Psrc -Dtar ${MAVEN_SKIP_TESTS} install "$@"
-
-# Build documentation
-# FIXME: the pushd/popd block is an ugly workaround for spurious Maven failures
-pushd hadoop-mapreduce-project/hadoop-yarn/hadoop-yarn-site
-  mvn site site:stage ${MAVEN_SKIP_TESTS} $@ || :
-popd
+mvn $BUNDLE_SNAPPY -Dcontainer-executor.conf.dir=/etc/hadoop/conf -Pdist -Pnative -Psrc -Dtar ${MAVEN_SKIP_TESTS} install "$@"
 mvn site site:stage ${MAVEN_SKIP_TESTS} $@
 
 (cd build ; tar --strip-components=1 -xzvf  ../hadoop-dist/target/hadoop-${HADOOP_VERSION}.tar.gz)
