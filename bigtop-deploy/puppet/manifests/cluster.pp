@@ -64,8 +64,9 @@ class hadoop_cluster_node {
     $kerberos_kdc_server = extlookup("hadoop_kerberos_kdc_server")
 
     include kerberos::client
-    kerberos::client::host_keytab { ["hdfs", "mapred", "hbase", "oozie"]:
+    kerberos::client::host_keytab { ["hdfs", "yarn", "mapred", "hbase", "oozie"]:
       princs_map => { hdfs   => [ "host", "hdfs" ],
+                      yarn   => [ "yarn"   ],
                       mapred => [ "mapred" ],
                       hbase  => [ "hbase"  ],
                       oozie  => [ "oozie"  ], },

@@ -18,6 +18,44 @@
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 
 <configuration>
+<% if hadoop_security_authentication == "kerberos" %>
+  <!-- JobTracker security configs -->
+  <property>
+    <name>yarn.resourcemanager.principal</name>
+    <value>yarn/_HOST@<%= kerberos_realm %></value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.keytab</name>
+    <value>/etc/yarn.keytab</value>
+  </property>
+
+  <property>
+    <name>yarn.nodemanager.principal</name>
+    <value>yarn/_HOST@<%= kerberos_realm %></value>
+  </property>
+  <property>
+    <name>yarn.nodemanager.keytab</name>
+    <value>/etc/yarn.keytab</value>
+  </property>
+  <property>
+    <name>yarn.nodemanager.container-executor.class</name>
+    <value>org.apache.hadoop.yarn.server.nodemanager.LinuxContainerExecutor</value>
+  </property>
+  <property>
+    <name>yarn.nodemanager.linux-container-executor.group</name>
+    <value>hadoop</value>
+  </property>
+
+  <property>
+    <name>yarn.web-proxy.principal</name>
+    <value>yarn/_HOST@<%= kerberos_realm %></value>
+  </property>
+  <property>
+    <name>yarn.web-proxy.keytab</name>
+    <value>/etc/yarn.keytab</value>
+  </property>
+<% end %>
+
   <property>
     <name>yarn.resourcemanager.resource-tracker.address</name>
     <value><%= hadoop_rm_host %>:<%= hadoop_rt_port %></value>

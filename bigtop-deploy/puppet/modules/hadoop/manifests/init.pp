@@ -50,9 +50,14 @@ class hadoop {
     }
  
     file {
-      "/etc/yarn/conf/yarn-site.xml":
+      "/etc/hadoop/conf/yarn-site.xml":
         content => template('hadoop/yarn-site.xml'),
         require => [Package["hadoop"]],
+    }
+
+    file { "/etc/hadoop/conf/container-executor.cfg":
+      content => template('hadoop/container-executor.cfg'), 
+      require => [Package["hadoop"]],
     }
   }
 
@@ -218,7 +223,7 @@ class hadoop {
     service { "hadoop-yarn-resourcemanager":
       ensure => running,
       hasstatus => true,
-      subscribe => [Package["hadoop-yarn-resourcemanager"], File["/etc/hadoop/conf/hadoop-env.sh"], File["/etc/yarn/conf/yarn-site.xml"]],
+      subscribe => [Package["hadoop-yarn-resourcemanager"], File["/etc/hadoop/conf/hadoop-env.sh"], File["/etc/hadoop/conf/yarn-site.xml"]],
       require => [ Package["hadoop-yarn-resourcemanager"] ]
     }
   }
@@ -260,7 +265,7 @@ class hadoop {
     service { "hadoop-yarn-nodemanager":
       ensure => running,
       hasstatus => true,
-      subscribe => [Package["hadoop-yarn-nodemanager"], File["/etc/hadoop/conf/hadoop-env.sh"], File["/etc/yarn/conf/yarn-site.xml"]],
+      subscribe => [Package["hadoop-yarn-nodemanager"], File["/etc/hadoop/conf/hadoop-env.sh"], File["/etc/hadoop/conf/yarn-site.xml"]],
       require => [ Package["hadoop-yarn-nodemanager"], File[$dirs] ],
     }
 
