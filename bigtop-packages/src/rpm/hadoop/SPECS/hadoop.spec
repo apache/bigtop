@@ -460,7 +460,7 @@ fi
 %{lib_hadoop}/sbin/yarn-daemon.sh
 %{lib_hadoop}/sbin/yarn-daemons.sh
 %{lib_hadoop}/bin/yarn
-%{lib_hadoop}/bin/container-executor
+%attr(6050,root,yarn) %{lib_hadoop}/bin/container-executor
 %{bin_hadoop}/yarn
 %attr(0775,yarn,hadoop) %{run_yarn}
 %attr(0775,yarn,hadoop) %{log_yarn}

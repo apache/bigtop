@@ -21,6 +21,8 @@ set -e
 
 case "$1" in
     configure)
+        chown root:yarn /usr/lib/hadoop/bin/container-executor
+        chmod 6050 /usr/lib/hadoop/bin/container-executor
 	mkdir -p /var/log/yarn /var/run/yarn /var/lib/yarn/cache || :
 	chgrp -R hadoop /var/log/yarn /var/run/yarn
 	chmod g+w /var/log/yarn /var/run/yarn
