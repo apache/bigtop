@@ -47,6 +47,7 @@ class hadoop_cluster_node {
   $hbase_relative_rootdir        = extlookup("hadoop_hbase_rootdir", "/hbase")
   $hadoop_hbase_rootdir = "hdfs://$hadoop_namenode_host:$hadoop_namenode_port/$hbase_relative_rootdir"
   $hadoop_hbase_zookeeper_quorum = $hadoop_head_node
+  $hbase_heap_size               = extlookup("hbase_heap_size", "1024")
 
   $hadoop_zookeeper_ensemble = ["$hadoop_head_node:2888:3888"]
 
@@ -92,6 +93,7 @@ class hadoop_worker_node inherits hadoop_cluster_node {
 
   hadoop-hbase::server { "hbase region server":
         rootdir => $hadoop_hbase_rootdir,
+        heap_size => $hbase_heap_size,
         zookeeper_quorum => $hadoop_hbase_zookeeper_quorum,
         kerberos_realm => $kerberos_realm, 
   }
@@ -144,6 +146,7 @@ class hadoop_head_node inherits hadoop_cluster_node {
 
   hadoop-hbase::master { "hbase master":
         rootdir => $hadoop_hbase_rootdir,
+        heap_size => $hbase_heap_size,
         zookeeper_quorum => $hadoop_hbase_zookeeper_quorum,
         kerberos_realm => $kerberos_realm, 
   }
