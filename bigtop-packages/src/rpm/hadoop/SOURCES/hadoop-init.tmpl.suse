@@ -81,7 +81,7 @@ start() {
     #    1. HADOOP_DATANODE_USER being set to root
     #    2. jsvc is installed but Hadoop is configures to run in an unsecure mode
     # Both will currently fail
-    if [ -f $HADOOP_HOME/libexec/jsvc.amd64 -o -f $HADOOP_HOME/libexec/jsvc.i386 ] && [ -n "$HADOOP_SECURE_DN_USER" ]; then
+    if [ -f $HADOOP_PREFIX/libexec/jsvc ] && [ -n "$HADOOP_SECURE_DN_USER" ]; then
       TARGET_USER=root
     fi
   fi
