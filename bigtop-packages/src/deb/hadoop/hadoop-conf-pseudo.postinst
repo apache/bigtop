@@ -40,13 +40,6 @@ case "$1" in
         if [ ! -e /etc/hadoop/conf ]; then 
           ln -s /etc/hadoop/conf.pseudo /etc/hadoop/conf 
         fi
-        nn_dfs_dir="/var/lib/hadoop/cache/hadoop/dfs"
-        if [ -z "$(ls -A $nn_dfs_dir/name 2>/dev/null)" ]; then
-            mkdir -p $nn_dfs_dir
-            chown hdfs:hadoop $nn_dfs_dir
-            su -s /bin/sh hdfs -c \
-             'hadoop --config /etc/hadoop/conf.pseudo namenode -format' 2>/dev/null 1>/dev/null || :
-        fi
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
