@@ -25,7 +25,7 @@
 %define hbase_services master regionserver thrift
 %define hadoop_home /usr/lib/hadoop
 %define zookeeper_home /usr/lib/zookeeper
-%define hbase_jar_deps %{hadoop_home}/hadoop-common.jar %{hadoop_home}/hadoop-hdfs.jar %{hadoop_home}/hadoop-mapreduce-client-core.jar %{hadoop_home}/hadoop-auth.jar %{zookeeper_home}/zookeeper.jar
+%define hbase_jar_deps_hadoop hadoop-annotations,hadoop-auth,hadoop-common,hadoop-hdfs,hadoop-mapreduce-client-common,hadoop-mapreduce-client-core,hadoop-yarn-api,hadoop-yarn-common 
 
 %if  %{?suse_version:1}0
 
@@ -246,7 +246,8 @@ done
 %__install -d -m 0755 $RPM_BUILD_ROOT/usr/bin
 
 # Pull zookeeper and hadoop from their packages
-ln -f -s %{hbase_jar_deps} $RPM_BUILD_ROOT/%{lib_hbase}
+rm -f $RPM_BUILD_ROOT/%{lib_hbase}/{%{hbase_jar_deps_hadoop},zookeeper}*.jar
+ln -f -s %{hadoop_home}/{%{hbase_jar_deps_hadoop}}.jar %{zookeeper_home}/zookeeper.jar $RPM_BUILD_ROOT/%{lib_hbase}
 
 %pre
 getent group hbase 2>/dev/null >/dev/null || /usr/sbin/groupadd -r hbase
