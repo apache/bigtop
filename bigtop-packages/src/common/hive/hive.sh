@@ -65,6 +65,7 @@ HIVE_USER="hive"
 HIVE_HOME="`eval echo ~$HIVE_USER`"
 NICENESS="+0"
 TIMEOUT=3
+USER="hive"
 
 [ -f $SYS_FILE ] && . $SYS_FILE
 
@@ -77,8 +78,14 @@ hive_start() {
       exec_env="HADOOP_OPTS=\"-Dhive.log.dir=`dirname $LOG_FILE`\""
     fi
 
+    if [ -x /sbin/runuser ]; then
+      SU="runuser -s /bin/bash $USER"
+    else
+      SU="su -s /bin/sh $USER"
+    fi
+
     log_success_msg "Starting $desc (${NAME}): "
-    start_daemon -u $HIVE_USER -p $PID_FILE -n $NICENESS  /bin/sh -c "cd $HIVE_HOME ; $exec_env nohup \
+     $SU -c "cd $HIVE_HOME ; $exec_env nohup \ 
            $EXE_FILE --service $service_name $PORT \
              > $LOG_FILE 2>&1 < /dev/null & "'echo $! '"> $PID_FILE"
 
