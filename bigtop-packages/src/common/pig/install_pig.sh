@@ -139,6 +139,7 @@ gzip -c pig.1 > $MAN_DIR/pig.1.gz
 # Copy in the docs
 install -d -m 0755 $DOC_DIR
 (cd $BUILD_DIR/docs && tar -cf - .)|(cd $DOC_DIR && tar -xf -)
+mv $LIB_DIR/license $DOC_DIR
 
 install -d -m 0755 $EXAMPLES_DIR
 (cd $LIB_DIR ; mv pig*withouthadoop.jar `echo pig*withouthadoop.jar | sed -e 's#withouthadoop#core#'`)
