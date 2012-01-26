@@ -107,7 +107,7 @@ language called Pig Latin, which has the following key properties:
 
 
 %prep
-%setup -n apache-pig-c6bc768
+%setup -n %{name}-%{pig_base_version}
 
 %build
 env PIG_BASE_VERSION=%{pig_base_version} bash %{SOURCE1}
