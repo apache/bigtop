@@ -28,12 +28,12 @@ Name: whirr
 Version: %{whirr_version}
 Release: %{whirr_release}
 Summary: Scripts and libraries for running software services on cloud infrastructure.
-URL: http://incubator.apache.org/whirr
+URL: http://whirr.apache.org/
 Group: Development/Libraries
 BuildArch: noarch
 Buildroot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 License: ASL 2.0 
-Source0: %{name}-%{whirr_base_version}-incubating-src.tar.gz
+Source0: %{name}-%{whirr_base_version}.tar.gz
 Source1: do-component-build
 Source2: install_%{name}.sh
 Source3: whirr.1
@@ -51,7 +51,7 @@ Whirr provides
     
 
 %prep
-%setup -n %{name}-%{whirr_base_version}-incubating
+%setup -n %{name}-%{whirr_base_version}
 
 %build
 bash %{SOURCE1}
