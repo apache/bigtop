@@ -143,6 +143,10 @@ Patch0: MAPREDUCE-3436_rev2.patch
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
 BuildRequires: python >= 2.4, git, fuse-devel,fuse, automake, autoconf
 Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils
+# Sadly, Sun/Oracle JDK in RPM form doesn't provide libjvm.so, which means we have
+# to set AutoReq to no in order to minimize confusion. Not ideal, but seems to work.
+# I wish there was a way to disable just one auto dependency (libjvm.so)
+AutoReq: no
 Provides: hadoop
 
 %if  %{?suse_version:1}0
