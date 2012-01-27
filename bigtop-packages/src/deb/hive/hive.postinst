@@ -22,7 +22,7 @@ set -e
 case "$1" in
     configure)
         chown hive:hive -R /var/run/hive /var/log/hive
-
+	chown hive:hive -R /var/lib/hive
         # Install config alternatives
         update-alternatives  --install /etc/hive/conf hive-conf /etc/hive/conf.dist 30
 
