@@ -80,6 +80,7 @@ Summary: Provides a Hive Thrift service.
 Group: System/Daemons
 Provides: %{name}-server
 Requires: %{name} = %{version}-%{release}
+Requires(pre): %{name} = %{version}-%{release}
 
 %if  %{?suse_version:1}0
 # Required for init scripts
@@ -98,6 +99,7 @@ Summary: Shared metadata repository for Hive.
 Group: System/Daemons
 Provides: %{name}-metastore
 Requires: %{name} = %{version}-%{release}
+Requires(pre): %{name} = %{version}-%{release}
 
 %if  %{?suse_version:1}0
 # Required for init scripts

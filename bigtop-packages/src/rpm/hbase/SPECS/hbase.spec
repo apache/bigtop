@@ -98,6 +98,7 @@ Summary: The Hadoop HBase master Server.
 Group: System/Daemons
 Provides: %{name}-master
 Requires: %{name} = %{version}-%{release}
+Requires(pre): %{name} = %{version}-%{release}
 
 %if  %{?suse_version:1}0
 # Required for init scripts
@@ -124,6 +125,7 @@ Summary: The Hadoop HBase RegionServer server.
 Group: System/Daemons
 Provides: %{name}-regionserver
 Requires: %{name} = %{version}-%{release}
+Requires(pre): %{name} = %{version}-%{release}
 
 %if  %{?suse_version:1}0
 # Required for init scripts
@@ -151,6 +153,7 @@ Summary: The Hadoop HBase Thrift Interface
 Group: System/Daemons
 Provides: %{name}-thrift
 Requires: %{name} = %{version}-%{release}
+Requires(pre): %{name} = %{version}-%{release}
 
 %if  %{?suse_version:1}0
 # Required for init scripts

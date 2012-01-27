@@ -167,6 +167,7 @@ located.
 Summary: The Hadoop namenode manages the block locations of HDFS files
 Group: System/Daemons
 Requires: %{name} = %{version}-%{release}
+Requires(pre): %{name} = %{version}-%{release}
 
 %description namenode
 The Hadoop Distributed Filesystem (HDFS) requires one unique server, the
@@ -177,6 +178,7 @@ namenode, which manages the block locations of files on the filesystem.
 Summary: Hadoop Secondary namenode
 Group: System/Daemons
 Requires: %{name} = %{version}-%{release}
+Requires(pre): %{name} = %{version}-%{release}
 
 %description secondarynamenode
 The Secondary Name Node periodically compacts the Name Node EditLog
@@ -188,6 +190,7 @@ do not incur unnecessary downtime.
 Summary: Hadoop Job Tracker
 Group: System/Daemons
 Requires: %{name} = %{version}-%{release}
+Requires(pre): %{name} = %{version}-%{release}
 
 %description jobtracker
 The jobtracker is a central service which is responsible for managing
@@ -200,6 +203,7 @@ with an available work slot.
 Summary: Hadoop Data Node
 Group: System/Daemons
 Requires: %{name} = %{version}-%{release}
+Requires(pre): %{name} = %{version}-%{release}
 
 %description datanode
 The Data Nodes in the Hadoop Cluster are responsible for serving up
@@ -211,6 +215,7 @@ blocks of data over the network to Hadoop Distributed Filesystem
 Summary: Hadoop Task Tracker
 Group: System/Daemons
 Requires: %{name} = %{version}-%{release}
+Requires(pre): %{name} = %{version}-%{release}
 
 %description tasktracker
 The tasktracker has a fixed number of work slots.  The jobtracker
