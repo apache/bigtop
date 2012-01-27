@@ -184,7 +184,7 @@ fi
 %{var_lib_hive}
 %attr(0755,hive,hive) %dir %{_localstatedir}/log/%{name}
 %attr(0755,hive,hive) %dir %{_localstatedir}/run/%{name}
-%attr(1777,root,root) %{var_lib_hive}/metastore
+%attr(1777,hive,hive) %{var_lib_hive}/metastore
 %doc %{doc_hive}
 %{man_dir}/man1/hive.1.*
 
