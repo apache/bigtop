@@ -128,6 +128,9 @@ elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
   . /usr/lib/bigtop-utils/bigtop-detect-javahome
 fi
 
+#FIXME: workaround for HIVE-2757 (NOTE: HADOOP_HOME is obsolete for Hadoop .23)
+export HADOOP_HOME=\${HADOOP_HOME:-/usr/lib/hadoop}
+
 export HIVE_HOME=$INSTALLED_LIB_DIR
 exec $INSTALLED_LIB_DIR/bin/$file "\$@"
 EOF
