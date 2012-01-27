@@ -307,7 +307,6 @@ where each Hadoop daemon runs in a separate Java process.
 %package doc
 Summary: Hadoop Documentation
 Group: Documentation
-Obsoletes: %{name}-docs
 %description doc
 Documentation for Hadoop
 
