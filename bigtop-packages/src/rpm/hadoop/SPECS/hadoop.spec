@@ -236,6 +236,7 @@ that rapidly process vast amounts of data in parallel on large clusters of compu
 Summary: The Hadoop namenode manages the block locations of HDFS files
 Group: System/Daemons
 Requires: %{name}-hdfs = %{version}-%{release}
+Requires(pre): %{name} = %{version}-%{release}
 
 %description hdfs-namenode
 The Hadoop Distributed Filesystem (HDFS) requires one unique server, the
@@ -246,6 +247,7 @@ namenode, which manages the block locations of files on the filesystem.
 Summary: Hadoop Secondary namenode
 Group: System/Daemons
 Requires: %{name}-hdfs = %{version}-%{release}
+Requires(pre): %{name} = %{version}-%{release}
 
 %description hdfs-secondarynamenode
 The Secondary Name Node periodically compacts the Name Node EditLog
@@ -257,6 +259,7 @@ do not incur unnecessary downtime.
 Summary: Hadoop Data Node
 Group: System/Daemons
 Requires: %{name}-hdfs = %{version}-%{release}
+Requires(pre): %{name} = %{version}-%{release}
 
 %description hdfs-datanode
 The Data Nodes in the Hadoop Cluster are responsible for serving up
@@ -267,6 +270,7 @@ blocks of data over the network to Hadoop Distributed Filesystem
 Summary: Yarn Resource Manager
 Group: System/Daemons
 Requires: %{name}-yarn = %{version}-%{release}
+Requires(pre): %{name} = %{version}-%{release}
 
 %description yarn-resourcemanager
 The resource manager manages the global assignment of compute resources to applications
@@ -275,6 +279,7 @@ The resource manager manages the global assignment of compute resources to appli
 Summary: Yarn Node Manager
 Group: System/Daemons
 Requires: %{name}-yarn = %{version}-%{release}
+Requires(pre): %{name} = %{version}-%{release}
 
 %description yarn-nodemanager
 The NodeManager is the per-machine framework agent who is responsible for
@@ -285,6 +290,7 @@ reporting the same to the ResourceManager/Scheduler.
 Summary: MapReduce History Server
 Group: System/Daemons
 Requires: %{name}-mapreduce = %{version}-%{release}
+Requires(pre): %{name} = %{version}-%{release}
 
 %description mapreduce-historyserver
 The History server keeps records of the different activities being performed on a Apache Hadoop cluster

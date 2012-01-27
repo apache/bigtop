@@ -55,6 +55,7 @@ URL: http://incubator.apache.org/sqoop/
 Group: System/Daemons
 Provides: sqoop-metastore
 Requires: sqoop = %{version}-%{release} 
+Requires(pre): %{name} = %{version}-%{release}
 
 %if  %{?suse_version:1}0
 # Required for init scripts

@@ -82,6 +82,7 @@ Summary: The flume master daemon is the central administration and data path con
 Group: Development/Libraries
 BuildArch: noarch
 Requires: %{name} = %{version}-%{release}, /sbin/service
+Requires(pre): %{name} = %{version}-%{release}
 Requires(post): /sbin/chkconfig
 Requires(preun): /sbin/chkconfig
 
@@ -110,6 +111,7 @@ Summary: The flume node daemon is a core element of flume's data path and is res
 Group: Development/Libraries
 BuildArch: noarch
 Requires: %{name} = %{version}-%{release}, /sbin/service
+Requires(pre): %{name} = %{version}-%{release}
 Requires(post): /sbin/chkconfig
 Requires(preun): /sbin/chkconfig
 
