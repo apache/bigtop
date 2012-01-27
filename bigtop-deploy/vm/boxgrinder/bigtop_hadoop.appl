@@ -28,7 +28,7 @@ hardware:
       type: ext3
 repos:
   - name: "Bigtop"
-    baseurl: "http://bigtop01.cloudera.org:8080/view/Trunk/job/Bigtop-trunk-matrix/label=centos6/lastSuccessfulBuild/artifact/output/"
+    baseurl: "http://bigtop01.cloudera.org:8080/view/Bigtop-trunk/job/Bigtop-trunk-Repository/label=centos6/lastSuccessfulBuild/artifact/repo/"
 packages:
   - @core
   - shadow-utils
