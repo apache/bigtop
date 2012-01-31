@@ -1,0 +1,3 @@
+hadoop_head_node,hadoopmaster.example.com
+hadoop_storage_dirs,/data/1,/data/2,/data/3,/data/4
+bigtop_yumrepo_uri,http://mirror.example.com/path/to/mirror/

@@ -51,7 +51,7 @@ RETVAL=0
 EXEC_PATH="/usr/bin/zookeeper-server"
 NAME=zookeeper-server
 DESC="$NAME"
-PIDFILE=/var/run/zookeeper/zookeeper_server.pid
+PIDFILE=/var/run/zookeeper/zookeeper-server.pid
 LOCKFILE="/var/lock/subsys/zookeeper"
 USER=zookeeper
 

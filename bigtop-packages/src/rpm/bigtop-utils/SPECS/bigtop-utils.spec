@@ -23,6 +23,7 @@ License:	APL2
 URL:		http://incubator.apache.org/bigtop/
 Source0:	bigtop-detect-javahome
 Source1:	LICENSE
+Source2:    bigtop-utils.default
 
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
@@ -36,13 +37,16 @@ This includes a collection of useful tools and files for Bigtop
 %setup -q -T -c
 install -p -m 644 %{SOURCE0} .
 install -p -m 644 %{SOURCE1} .
+install -p -m 644 %{SOURCE2} .
 
 %build
 
 
 %install
 install -d -p -m 755 $RPM_BUILD_ROOT%{_libexecdir}/
+install -d -p -m 755 $RPM_BUILD_ROOT/etc/default
 install -p -m 755 %{SOURCE0} $RPM_BUILD_ROOT%{_libexecdir}/
+install -p -m 644 %{SOURCE2} $RPM_BUILD_ROOT/etc/default/bigtop-utils
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -51,6 +55,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %doc LICENSE
+%config(noreplace) /etc/default/bigtop-utils
 
 %{_libexecdir}/bigtop-detect-javahome
 

@@ -51,6 +51,8 @@ install-indep:
 	# Copy repo file
 	install -d -p -m 755 debian/bigtop-utils/usr/lib/bigtop-utils/
 	install -p -m 755 debian/bigtop-detect-javahome debian/bigtop-utils/usr/lib/bigtop-utils/
+	install -d -p -m 755 debian/bigtop-utils/etc/default
+	install -p -m 644 debian/bigtop-utils.default debian/bigtop-utils/etc/default/bigtop-utils
 	dh_install
 
 
