@@ -107,7 +107,6 @@ install -d -m 0755 $PREFIX/$DOC_DIR
 
 cp -ra ${BUILD_DIR}/lib/* $PREFIX/${LIB_DIR}/lib/
 cp ${BUILD_DIR}/mahout*.jar $PREFIX/$LIB_DIR
-cp ${BUILD_DIR}/mahout*.war $PREFIX/$LIB_DIR
 cp -a ${BUILD_DIR}/*.txt $PREFIX/$DOC_DIR
 cp -a ${BUILD_DIR}/bin/* $PREFIX/${LIB_DIR}/bin
 
