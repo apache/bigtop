@@ -598,7 +598,7 @@ fi
 %defattr(-,root,root)
 %config(noreplace) %{etc_httpfs}/conf.empty
 %config(noreplace) /etc/default/%{name}-httpfs
-%{initd_dir}/%{name}-%1
+%{initd_dir}/%{name}-httpfs
 %{lib_httpfs}
 %attr(0775,httpfs,httpfs) %{run_httpfs}
 %attr(0775,httpfs,httpfs) %{log_httpfs}
