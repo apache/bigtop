@@ -24,19 +24,24 @@
 %define hadoop_name hadoop
 %define etc_hadoop /etc/%{name}
 %define etc_yarn /etc/yarn
+%define etc_httpfs /etc/%{name}-httpfs
 %define config_hadoop %{etc_hadoop}/conf
 %define config_yarn %{etc_yarn}/conf
+%define config_httpfs %{etc_httpfs}/conf
 %define lib_hadoop_dirname /usr/lib
 %define lib_hadoop %{lib_hadoop_dirname}/%{name}
+%define lib_httpfs %{lib_hadoop_dirname}/%{name}-httpfs
 %define log_hadoop_dirname /var/log
 %define log_hadoop %{log_hadoop_dirname}/%{name}
 %define log_yarn %{log_hadoop_dirname}/yarn
 %define log_hdfs %{log_hadoop_dirname}/hdfs
+%define log_httpfs %{log_hadoop_dirname}/%{name}-httpfs
 %define log_mapreduce %{log_hadoop_dirname}/mapreduce
 %define run_hadoop_dirname /var/run
 %define run_hadoop %{run_hadoop_dirname}/hadoop
 %define run_yarn %{run_hadoop_dirname}/yarn
 %define run_hdfs %{run_hadoop_dirname}/hdfs
+%define run_httpfs %{run_hadoop_dirname}/%{name}-httpfs
 %define run_mapreduce %{run_hadoop_dirname}/mapreduce
 %define state_hadoop_dirname /var/lib
 %define state_hadoop %{state_hadoop_dirname}/hadoop
@@ -139,6 +144,8 @@ Source7: hadoop-fuse-dfs.1
 Source8: hadoop-fuse.default
 Source9: hadoop.nofiles.conf
 Source10: yarn-init.tmpl
+Source11: hadoop-httpfs.default
+Source12: service-hadoop-httpfs
 Patch0: MAPREDUCE-3436_rev2.patch
 Patch1: MAPREDUCE-3791.patch
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
@@ -267,6 +274,16 @@ The Data Nodes in the Hadoop Cluster are responsible for serving up
 blocks of data over the network to Hadoop Distributed Filesystem
 (HDFS) clients.
 
+%package httpfs
+Summary: HTTPFS for Hadoop
+Group: System/Daemons
+Requires: %{name}-hdfs = %{version}-%{release}
+Requires(pre): %{name} = %{version}-%{release}
+
+%description httpfs
+The server providing HTTP REST API support for the complete FileSystem/FileContext
+interface in HDFS.
+
 %package yarn-resourcemanager
 Summary: Yarn Resource Manager
 Group: System/Daemons
@@ -347,10 +364,12 @@ env HADOOP_VERSION=%{hadoop_base_version} HADOOP_ARCH=%{hadoop_arch} bash %{SOUR
 bash %{SOURCE2} \
   --distro-dir=$RPM_SOURCE_DIR \
   --build-dir=$PWD/build \
+  --httpfs-dir=$RPM_BUILD_ROOT%{lib_httpfs} \
   --system-include-dir=$RPM_BUILD_ROOT%{_includedir} \
   --system-lib-dir=$RPM_BUILD_ROOT%{_libdir} \
   --system-libexec-dir=$RPM_BUILD_ROOT/%{lib_hadoop}/libexec \
   --hadoop-etc-dir=$RPM_BUILD_ROOT%{etc_hadoop} \
+  --httpfs-etc-dir=$RPM_BUILD_ROOT%{etc_httpfs} \
   --prefix=$RPM_BUILD_ROOT \
   --doc-dir=$RPM_BUILD_ROOT%{doc_hadoop} \
   --example-dir=$RPM_BUILD_ROOT%{doc_hadoop}/examples \
@@ -369,6 +388,7 @@ orig_init_file=$RPM_SOURCE_DIR/hadoop-init.tmpl
 %endif
 
 yarn_orig_init_file=$RPM_SOURCE_DIR/yarn-init.tmpl
+httpfs_orig_init_file=$RPM_SOURCE_DIR/service-hadoop-httpfs
 
 # Generate the init.d scripts
 for service in %{hdfs_services} %{mapreduce_services}
@@ -391,12 +411,15 @@ do
        %__sed -i -e 's|@YARN_DAEMON_USER@|yarn|' $init_file
        chmod 755 $init_file
 done
+%__cp $httpfs_orig_init_file $RPM_BUILD_ROOT/%{initd_dir}/%{name}-httpfs
+chmod 755 $RPM_BUILD_ROOT/%{initd_dir}/%{name}-httpfs
 
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/etc/default
 %__cp $RPM_SOURCE_DIR/hadoop.default $RPM_BUILD_ROOT/etc/default/hadoop
 %__cp $RPM_SOURCE_DIR/yarn.default $RPM_BUILD_ROOT/etc/default/yarn
-%__cp $RPM_SOURCE_DIR/hadoop-fuse.default $RPM_BUILD_ROOT/etc/default/hadoop-fuse
+%__cp $RPM_SOURCE_DIR/%{name}-fuse.default $RPM_BUILD_ROOT/etc/default/%{name}-fuse
+%__cp $RPM_SOURCE_DIR/%{name}-httpfs.default $RPM_BUILD_ROOT/etc/default/%{name}-httpfs
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/etc/security/limits.d
 %__install -m 0644 %{SOURCE9} $RPM_BUILD_ROOT/etc/security/limits.d/hadoop.nofiles.conf
@@ -411,11 +434,13 @@ done
 %__install -d -m 0775 $RPM_BUILD_ROOT/%{log_yarn}
 # %__install -d -m 0775 $RPM_BUILD_ROOT/%{log_hdfs}
 # %__install -d -m 0775 $RPM_BUILD_ROOT/%{log_mapreduce}
+%__install -d -m 0775 $RPM_BUILD_ROOT/%{log_httpfs}
 # /var/run/*
 %__install -d -m 0775 $RPM_BUILD_ROOT/%{run_hadoop}
 %__install -d -m 0775 $RPM_BUILD_ROOT/%{run_yarn}
 #%__install -d -m 0775 $RPM_BUILD_ROOT/%{run_hdfs}
 #%__install -d -m 0775 $RPM_BUILD_ROOT/%{run_mapreduce}
+%__install -d -m 0775 $RPM_BUILD_ROOT/%{run_httpfs}
 
 %pre
 getent group hadoop >/dev/null || groupadd -r hadoop
@@ -423,6 +448,10 @@ getent group hadoop >/dev/null || groupadd -r hadoop
 %pre hdfs
 getent group hdfs >/dev/null   || groupadd -r hdfs
 getent passwd hdfs >/dev/null || /usr/sbin/useradd --comment "Hadoop HDFS" --shell /bin/bash -M -r -g hdfs -G hadoop --home %{state_hdfs} hdfs
+
+%pre httpfs 
+getent group httpfs >/dev/null   || groupadd -r httpfs
+getent passwd httpfs >/dev/null || /usr/sbin/useradd --comment "Hadoop HTTPFS" --shell /bin/bash -M -r -g httpfs -G httpfs --home %{run_httpfs} httpfs
 
 %pre yarn
 getent group yarn >/dev/null   || groupadd -r yarn
@@ -445,6 +474,9 @@ touch %{log_hadoop}/SecurityAuth.audit
 chgrp hadoop %{log_hadoop}/SecurityAuth.audit
 chmod g+w %{log_hadoop}/SecurityAuth.audit
 
+%post httpfs
+%{alternatives_cmd} --install %{config_httpfs} %{name}-httpfs-conf %{etc_httpfs}/conf.empty 10
+chkconfig --add %{name}-httpfs
 
 %preun
 if [ "$1" = 0 ]; then
@@ -455,6 +487,18 @@ if [ "$1" = 0 ]; then
   done
   %{alternatives_cmd} --remove %{name}-conf %{etc_hadoop}/conf.empty || :
   %{alternatives_cmd} --remove %{hadoop_name}-default %{bin_hadoop}/%{name} || :
+fi
+
+%preun httpfs
+%{alternatives_cmd} --remove %{name}-httpfs-conf %{etc_httpfs}/conf.empty 10
+if [ $1 = 0 ]; then
+  service %{name}-httpfs stop > /dev/null 2>&1
+  chkconfig --del %{name}-httpfs
+fi
+
+%postun httpfs
+if [ $1 -ge 1 ]; then
+  service %{name}-httpfs condrestart >/dev/null 2>&1
 fi
 
 
@@ -481,12 +525,10 @@ fi
 %files hdfs
 %defattr(-,root,root)
 %config(noreplace) %{etc_hadoop}/conf.empty/hdfs-site.xml
-%config(noreplace) %{etc_hadoop}/conf.empty/httpfs-*
 %config(noreplace) /etc/default/hadoop-fuse
 %{lib_hadoop}/hadoop-hdfs*.jar
 %{lib_hadoop}/hadoop-archives*.jar
 %{lib_hadoop}/libexec/hdfs-config.sh
-%{lib_hadoop}/libexec/httpfs-config.sh
 %{lib_hadoop}/libexec/jsvc
 %{lib_hadoop}/webapps
 %{lib_hadoop}/sbin/update-hdfs-env.sh
@@ -498,7 +540,6 @@ fi
 %{lib_hadoop}/sbin/stop-dfs.sh
 %{lib_hadoop}/sbin/refresh-namenodes.sh
 %{lib_hadoop}/sbin/distribute-exclude.sh
-%{lib_hadoop}/sbin/httpfs.sh
 %{lib_hadoop}/bin/hdfs
 %{bin_hadoop}/hdfs
 %attr(0775,hdfs,hadoop) %{run_hdfs}
@@ -553,6 +594,14 @@ fi
 %defattr(-,root,root)
 %doc %{doc_hadoop}
 
+%files httpfs
+%defattr(-,root,root)
+%config(noreplace) %{etc_httpfs}/conf.empty
+%config(noreplace) /etc/default/%{name}-httpfs
+%{initd_dir}/%{name}-%1
+%{lib_httpfs}
+%attr(0775,httpfs,httpfs) %{run_httpfs}
+%attr(0775,httpfs,httpfs) %{log_httpfs}
 
 # Service file management RPMs
 %define service_macro() \

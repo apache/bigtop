@@ -136,6 +136,41 @@ class hadoop {
     }
   }
 
+  define httpfs ($namenode_host, $namenode_port, $port = "14000", $auth = "simple", $secret = "hadoop httpfs secret") {
+
+    $hadoop_namenode_host = $namenode_host
+    $hadoop_namenode_port = $namenode_port
+    $hadoop_httpfs_port = $port
+    $hadoop_security_authentication = $auth
+
+    package { "hadoop-httpfs":
+      ensure => latest,
+      require => Package["jdk"],
+    }
+
+    file { "/etc/hadoop-httpfs/conf/httpfs-site.xml":
+      content => template('hadoop/httpfs-site.xml'),
+      require => [Package["hadoop-hdfs"]],
+    }
+
+    file { "/etc/hadoop-httpfs/conf/httpfs-env.sh":
+      content => template('hadoop/httpfs-env.sh'),
+      require => [Package["hadoop-hdfs"]],
+    }
+
+    file { "/etc/hadoop-httpfs/conf/httpfs-signature.secret":
+      content => inline_template("<%= secret %>"),
+      require => [Package["hadoop-hdfs"]],
+    }
+
+    service { "hadoop-httpfs":
+      ensure => running,
+      hasstatus => true,
+      subscribe => [Package["hadoop-httpfs"], File["/etc/hadoop-httpfs/conf/httpfs-site.xml"], File["/etc/hadoop-httpfs/conf/httpfs-env.sh"], File["/etc/hadoop-httpfs/conf/httpfs-signature.secret"]],
+      require => [ Package["hadoop-httpfs"] ],
+    }
+  }
+
   define create_hdfs_dirs($hdfs_dirs_meta) {
     $user = $hdfs_dirs_meta[$title][user]
     $perm = $hdfs_dirs_meta[$title][perm]

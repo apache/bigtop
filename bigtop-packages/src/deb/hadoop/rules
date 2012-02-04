@@ -61,6 +61,8 @@ install: build
 	  --prefix=debian/tmp/ \
 	  --distro-dir=debian \
 	  --build-dir=${PWD}/build \
+	  --httpfs-dir=debian/tmp/usr/lib/hadoop-httpfs \
+	  --httpfs-etc-dir=debian/tmp/etc/hadoop-httpfs \
 	  --system-lib-dir=debian/tmp/usr/lib/ \
 	  --system-libexec-dir=debian/tmp/usr/lib/hadoop/libexec/ \
 	  --system-include-dir=debian/tmp/usr/include \
@@ -80,6 +82,9 @@ datanode_user=hdfs
 resourcemanager_user=yarn
 nodemanager_user=yarn
 
+httpfs: debian/service-hadoop-httpfs
+	cp $< debian/hadoop-$@.init
+
 hdfs-namenode hdfs-secondarynamenode hdfs-datanode mapreduce-historyserver: debian/service-init.d.tpl
 	sed -e "s|@HADOOP_DAEMON@|$(patsubst mapreduce-%,%,$(patsubst hdfs-%,%,$@))|" \
             -e "s|@HADOOP_MAJOR_VERSION@|$hadoop_version|" \
@@ -95,10 +100,11 @@ yarn-resourcemanager yarn-nodemanager: debian/service-init.d-yarn.tpl
 	sed -e "s|@HADOOP_DAEMON@|$@|" < debian/hadoop.daemon.postinst.tpl > debian/hadoop-$@.postinst
 
 
-install-indep: hdfs-namenode hdfs-secondarynamenode hdfs-datanode yarn-resourcemanager yarn-nodemanager mapreduce-historyserver
+install-indep: hdfs-namenode hdfs-secondarynamenode hdfs-datanode yarn-resourcemanager yarn-nodemanager mapreduce-historyserver httpfs
 	mkdir -p debian/tmp/etc/default
 	cp debian/hadoop.default debian/tmp/etc/default/hadoop
 	cp debian/yarn.default debian/tmp/etc/default/yarn
+	cp debian/hadoop-httpfs.default debian/tmp/etc/default/hadoop-httpfs
 
 	dh_install --sourcedir=debian/tmp -i
 
