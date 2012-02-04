@@ -49,11 +49,11 @@ index 711dd18..c1da2fe 100644
        hsAddress, JHAdminConfig.DEFAULT_MR_HISTORY_WEBAPP_PORT,
        JHAdminConfig.DEFAULT_MR_HISTORY_WEBAPP_ADDRESS);
 diff --git hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-core/src/main/resources/mapred-default.xml hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-core/src/main/resources/mapred-default.xml
-index 5d02250..140d93a 100644
+index 6681b1a..0f5fe82 100644
 --- hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-core/src/main/resources/mapred-default.xml
 +++ hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-core/src/main/resources/mapred-default.xml
-@@ -1224,4 +1224,18 @@
-     mapreduce.job.end-notification.max.retry.interval</description>
+@@ -1255,4 +1255,18 @@
+     heartbeats to the ResourceManager</description>
  </property>
  
 +<!-- jobhistory properties -->

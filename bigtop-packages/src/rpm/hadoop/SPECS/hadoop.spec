@@ -140,6 +140,7 @@ Source8: hadoop-fuse.default
 Source9: hadoop.nofiles.conf
 Source10: yarn-init.tmpl
 Patch0: MAPREDUCE-3436_rev2.patch
+Patch1: MAPREDUCE-3791.patch
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
 BuildRequires: python >= 2.4, git, fuse-devel,fuse, automake, autoconf
 Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils
@@ -321,8 +322,9 @@ AutoReq: no
 Hadoop Filesystem Library
 
 %prep
-%setup -n apache-hadoop-common-aa85a29
+%setup -n apache-hadoop-common-f1d8a9b
 %patch0 -p0
+%patch1 -p0
 
 %build
 # This assumes that you installed Java JDK 6 and set JAVA_HOME
