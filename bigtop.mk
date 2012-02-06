@@ -121,7 +121,7 @@ MAHOUT_PKG_VERSION=0.6
 MAHOUT_RELEASE_VERSION=1
 MAHOUT_TARBALL_DST=mahout-distribution-$(MAHOUT_BASE_VERSION)-src.tar.gz
 MAHOUT_TARBALL_SRC=$(MAHOUT_TARBALL_DST)
-MAHOUT_SITE=https://repository.apache.org/content/repositories/orgapachemahout-169/org/apache/mahout/mahout-distribution/0.6/
+MAHOUT_SITE=$(APACHE_MIRROR)/mahout/$(MAHOUT_BASE_VERSION)/
 $(eval $(call PACKAGE,mahout,MAHOUT))
 
 # Flume
