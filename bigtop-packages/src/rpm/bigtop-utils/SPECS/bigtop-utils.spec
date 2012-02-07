@@ -13,6 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# See BIGTOP-383
+%if  %{?suse_version:1}0
+%define _libexecdir /usr/lib
+%endif
+
 Name: bigtop-utils
 Version: %{bigtop_utils_version}
 Release: %{bigtop_utils_release}
