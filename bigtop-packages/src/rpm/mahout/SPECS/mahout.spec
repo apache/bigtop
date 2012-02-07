@@ -44,7 +44,7 @@ License: ASL 2.0
 Source0: %{name}-distribution-%{mahout_base_version}-src.tar.gz
 Source1: do-component-build 
 Source2: install_%{name}.sh
-Patch0: patch
+Patch0: MAHOUT-822.patch
 Requires: hadoop >= 0.20.2, bigtop-utils
 
 
@@ -66,7 +66,7 @@ diverse community to facilitate discussions not only on the project itself but
 also on potential use cases. Come to the mailing lists to find out more.
     
 %prep
-%setup -n apache-mahout-dc3dcf5
+%setup -n %{name}-distribution-%{mahout_base_version}
 %patch0 -p0
 
 %build

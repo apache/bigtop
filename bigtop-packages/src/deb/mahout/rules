@@ -25,7 +25,7 @@ export DH_OPTIONS
 
 patch: patch-stamp
 patch-stamp:	
-	patch -p0 < debian/patch
+	patch -p0 < debian/MAHOUT-822.patch
 	touch $@
 
 clean:	

@@ -1,8 +1,209 @@
+Index: core/src/test/java/org/apache/mahout/clustering/canopy/TestCanopyCreation.java
+===================================================================
+--- core/src/test/java/org/apache/mahout/clustering/canopy/TestCanopyCreation.java	(revision 1232711)
++++ core/src/test/java/org/apache/mahout/clustering/canopy/TestCanopyCreation.java	(working copy)
+@@ -41,6 +41,7 @@
+ import org.apache.mahout.common.DummyRecordWriter;
+ import org.apache.mahout.common.HadoopUtil;
+ import org.apache.mahout.common.MahoutTestCase;
++import org.apache.mahout.common.Pair;
+ import org.apache.mahout.common.commandline.DefaultOptionCreator;
+ import org.apache.mahout.common.distance.DistanceMeasure;
+ import org.apache.mahout.common.distance.EuclideanDistanceMeasure;
+@@ -139,8 +140,8 @@
+       int[] expectedNumPoints = { 4, 4, 3 };
+       double[][] expectedCentroids = { { 1.5, 1.5 }, { 4.0, 4.0 },
+           { 4.666666666666667, 4.6666666666666667 } };
+-      assertEquals("canopy points " + canopyIx, expectedNumPoints[canopyIx],
+-          testCanopy.getNumPoints());
++      assertEquals("canopy points " + canopyIx, testCanopy.getNumPoints(),
++                   expectedNumPoints[canopyIx]);
+       double[] refCentroid = expectedCentroids[canopyIx];
+       Vector testCentroid = testCanopy.computeCentroid();
+       for (int pointIx = 0; pointIx < refCentroid.length; pointIx++) {
+@@ -164,8 +165,8 @@
+         { 4.666666666666667, 4.666666666666667 } };
+     for (int canopyIx = 0; canopyIx < referenceEuclidean.size(); canopyIx++) {
+       Canopy testCanopy = referenceEuclidean.get(canopyIx);
+-      assertEquals("canopy points " + canopyIx, expectedNumPoints[canopyIx],
+-          testCanopy.getNumPoints());
++      assertEquals("canopy points " + canopyIx, testCanopy.getNumPoints(),
++                    expectedNumPoints[canopyIx]);
+       double[] refCentroid = expectedCentroids[canopyIx];
+       Vector testCentroid = testCanopy.computeCentroid();
+       for (int pointIx = 0; pointIx < refCentroid.length; pointIx++) {
+@@ -341,20 +342,36 @@
+       Canopy canopy = new Canopy();
+       assertTrue("more to come", reader.next(key, canopy));
+       assertEquals("1st key", "C-0", key.toString());
+-      assertEquals("1st x value", 1.5, canopy.getCenter().get(0), EPSILON);
+-      assertEquals("1st y value", 1.5, canopy.getCenter().get(1), EPSILON);
++
++      List<Pair<Double,Double>> refCenters = Lists.newArrayList();
++      refCenters.add(new Pair<Double,Double>(1.5,1.5));
++      refCenters.add(new Pair<Double,Double>(4.333333333333334,4.333333333333334));
++      Pair<Double,Double> c = new Pair<Double,Double>(canopy.getCenter().get(0),
++                                                      canopy.getCenter().get(1));
++      assertTrue("center "+c+" not found", findAndRemove(c, refCenters, EPSILON));
+       assertTrue("more to come", reader.next(key, canopy));
+       assertEquals("2nd key", "C-1", key.toString());
+-      assertEquals("2nd x value", 4.333333333333334, canopy.getCenter().get(0),
+-          EPSILON);
+-      assertEquals("2nd y value", 4.333333333333334, canopy.getCenter().get(1),
+-          EPSILON);
++      c = new Pair<Double,Double>(canopy.getCenter().get(0),
++                                  canopy.getCenter().get(1));
++      assertTrue("center "+c+" not found", findAndRemove(c, refCenters, EPSILON));
+       assertFalse("more to come", reader.next(key, canopy));
+     } finally {
+       Closeables.closeQuietly(reader);
+     }
+   }
+ 
++  boolean findAndRemove(Pair<Double,Double> target, 
++                        List<Pair<Double,Double>> list, double epsilon) {
++    for (Pair<Double,Double> curr : list) {
++      if ( (Math.abs(target.getFirst() - curr.getFirst()) < epsilon) 
++           && (Math.abs(target.getSecond() - curr.getSecond()) < epsilon) ) {
++        list.remove(curr);
++        return true;
++      } 
++    }
++    return false;
++  }
++
+   /**
+    * Story: User can produce final canopy centers using a Hadoop map/reduce job
+    * and a EuclideanDistanceMeasure.
+@@ -381,14 +398,18 @@
+       Canopy value = new Canopy();
+       assertTrue("more to come", reader.next(key, value));
+       assertEquals("1st key", "C-0", key.toString());
+-      assertEquals("1st x value", 1.8, value.getCenter().get(0), EPSILON);
+-      assertEquals("1st y value", 1.8, value.getCenter().get(1), EPSILON);
++
++      List<Pair<Double,Double>> refCenters = Lists.newArrayList();
++      refCenters.add(new Pair<Double,Double>(1.8,1.8));
++      refCenters.add(new Pair<Double,Double>(4.433333333333334, 4.433333333333334));
++      Pair<Double,Double> c = new Pair<Double,Double>(value.getCenter().get(0),
++                                                      value.getCenter().get(1));
++      assertTrue("center "+c+" not found", findAndRemove(c, refCenters, EPSILON));
+       assertTrue("more to come", reader.next(key, value));
+       assertEquals("2nd key", "C-1", key.toString());
+-      assertEquals("2nd x value", 4.433333333333334, value.getCenter().get(0),
+-          EPSILON);
+-      assertEquals("2nd y value", 4.433333333333334, value.getCenter().get(1),
+-          EPSILON);
++      c = new Pair<Double,Double>(value.getCenter().get(0),
++                                  value.getCenter().get(1));
++      assertTrue("center "+c+" not found", findAndRemove(c, refCenters, EPSILON));
+       assertFalse("more to come", reader.next(key, value));
+     } finally {
+       Closeables.closeQuietly(reader);
+Index: core/src/test/java/org/apache/mahout/clustering/kmeans/TestKmeansClustering.java
+===================================================================
+--- core/src/test/java/org/apache/mahout/clustering/kmeans/TestKmeansClustering.java	(revision 1232711)
++++ core/src/test/java/org/apache/mahout/clustering/kmeans/TestKmeansClustering.java	(working copy)
+@@ -26,6 +26,7 @@
+ import com.google.common.collect.Maps;
+ import com.google.common.io.Closeables;
+ import org.apache.hadoop.conf.Configuration;
++import org.apache.hadoop.fs.FileStatus;
+ import org.apache.hadoop.fs.FileSystem;
+ import org.apache.hadoop.fs.Path;
+ import org.apache.hadoop.io.IntWritable;
+@@ -39,6 +40,7 @@
+ import org.apache.mahout.clustering.ClusterObservations;
+ import org.apache.mahout.clustering.ClusteringTestUtils;
+ import org.apache.mahout.clustering.WeightedVectorWritable;
++import org.apache.mahout.clustering.canopy.Canopy;
+ import org.apache.mahout.clustering.canopy.CanopyDriver;
+ import org.apache.mahout.common.DummyOutputCollector;
+ import org.apache.mahout.common.DummyRecordWriter;
+@@ -489,6 +491,42 @@
+     // now run the Canopy job
+     CanopyDriver.run(conf, pointsPath, outputPath, new ManhattanDistanceMeasure(), 3.1, 2.1, false, false);
+ 
++    DummyOutputCollector<Text, Canopy> collector1 =
++        new DummyOutputCollector<Text, Canopy>();
++
++    FileStatus[] outParts = FileSystem.get(conf).globStatus(
++                    new Path(outputPath, "clusters-0-final/*-0*"));
++    for (FileStatus outPartStat : outParts) {
++      for (Pair<Text,Canopy> record :
++               new SequenceFileIterable<Text,Canopy>(
++                 outPartStat.getPath(), conf)) {
++          collector1.collect(record.getFirst(), record.getSecond());
++      }
++    }
++
++    boolean got15 = false;
++    boolean got43 = false;
++    int count = 0;
++    for (Text k : collector1.getKeys()) {
++      count++;
++      List<Canopy> vl = collector1.getValue(k);
++      assertEquals("non-singleton centroid!", 1, vl.size());
++      Vector v = vl.get(0).getCenter();
++      assertEquals("cetriod vector is wrong length", 2, v.size());
++      if ( (Math.abs(v.get(0) - 1.5) < EPSILON) 
++                  && (Math.abs(v.get(1) - 1.5) < EPSILON)
++                  && !got15) {
++        got15 = true;
++      } else if ( (Math.abs(v.get(0) - 4.333333333333334) < EPSILON) 
++                  && (Math.abs(v.get(1) - 4.333333333333334) < EPSILON)
++                  && !got43) {
++        got43 = true;
++      } else {
++        assertTrue("got unexpected center: "+v+" ["+v.getClass().toString()+"]", false);
++      }
++    }
++    assertEquals("got unexpected number of centers", 2, count);
++
+     // now run the KMeans job
+     KMeansDriver.run(pointsPath,
+                      new Path(outputPath, "clusters-0-final"),
+@@ -511,7 +549,28 @@
+       collector.collect(record.getFirst(), record.getSecond());
+     }
+ 
+-    assertEquals("num points[0]", 4, collector.getValue(new IntWritable(0)).size());
+-    assertEquals("num points[1]", 5, collector.getValue(new IntWritable(1)).size());
++    boolean gotLowClust = false;  // clusters should be [1, *] and [2, *] 
++    boolean gotHighClust = false; // vs [3 , *],  [4 , *] and [5, *] 
++    for (IntWritable k : collector.getKeys()) {
++      List<WeightedVectorWritable> wvList = collector.getValue(k);
++      assertTrue("empty cluster!", wvList.size() != 0);
++      if (wvList.get(0).getVector().get(0) <= 2.0) {
++        for (WeightedVectorWritable wv : wvList) {
++          Vector v = wv.getVector();
++          int idx = v.maxValueIndex();
++          assertTrue("bad cluster!", v.get(idx) <= 2.0);
++        }
++        assertEquals("Wrong size cluster", 4, wvList.size());
++        gotLowClust= true;
++      } else {
++        for (WeightedVectorWritable wv : wvList) {
++          Vector v = wv.getVector();
++          int idx = v.minValueIndex();
++          assertTrue("bad cluster!", v.get(idx) > 2.0);
++        }
++        assertEquals("Wrong size cluster", 5, wvList.size());
++        gotHighClust= true;
++      }
++    }
+   }
+ }
 Index: core/src/test/java/org/apache/mahout/clustering/meanshift/TestMeanShift.java
 ===================================================================
---- core/src/test/java/org/apache/mahout/clustering/meanshift/TestMeanShift.java	(revision 1202420)
+--- core/src/test/java/org/apache/mahout/clustering/meanshift/TestMeanShift.java	(revision 1232711)
 +++ core/src/test/java/org/apache/mahout/clustering/meanshift/TestMeanShift.java	(working copy)
-@@ -25,6 +25,7 @@
+@@ -21,10 +21,12 @@
+ import java.util.Iterator;
+ import java.util.List;
+ import java.util.Map;
++import java.util.Random;
+ 
  import com.google.common.collect.Lists;
  import com.google.common.collect.Maps;
  import org.apache.hadoop.conf.Configuration;
@@ -10,26 +211,42 @@ Index: core/src/test/java/org/apache/mahout/clustering/meanshift/TestMeanShift.j
  import org.apache.hadoop.fs.FileSystem;
  import org.apache.hadoop.fs.Path;
  import org.apache.hadoop.io.Text;
-@@ -376,10 +377,13 @@
+@@ -350,7 +352,13 @@
+     Configuration conf = new Configuration();
+     FileSystem fs = FileSystem.get(input.toUri(), conf);
+     Collection<VectorWritable> points = Lists.newArrayList();
+-    for (Vector v : raw) {
++    Random r = new Random(123);
++    Vector[] permutedRaw = new Vector[raw.length];
++    for (int i = 0; i < raw.length; i++)
++      permutedRaw = raw;
++    for (int i = 0; i < permutedRaw.length; i++)
++      permutedRaw[i] = permutedRaw[i + r.nextInt(raw.length - i)];
++    for (Vector v : permutedRaw) {
+       points.add(new VectorWritable(v));
+     }
+     ClusteringTestUtils.writePointsToFile(points,
+@@ -376,10 +384,13 @@
          optKey(DefaultOptionCreator.CONVERGENCE_DELTA_OPTION), "0.2",
          optKey(DefaultOptionCreator.OVERWRITE_OPTION) };
      ToolRunner.run(conf, new MeanShiftCanopyDriver(), args);
 -    Path outPart = new Path(output, "clusters-4-final/part-r-00000");
 -    long count = HadoopUtil.countRecords(outPart, conf);
+-    assertEquals("count", 3, count);
+-    outPart = new Path(output, "clusters-0/part-m-00000");
 +    
 +    FileStatus[] outParts = FileSystem.get(conf).globStatus(
-+        new Path(output, "clusters-?-final/part-r-00000"));
-+    assertEquals("One matching final part", 1, outParts.length);
++        new Path(output, "clusters-?-final/part-r-*"));
++    assertEquals("Wrong number of matching final parts", 1, outParts.length);
 +    long count = HadoopUtil.countRecords(outParts[0].getPath(), conf);
-     assertEquals("count", 3, count);
--    outPart = new Path(output, "clusters-0/part-m-00000");
++    assertEquals("count", 5, count);
 +    Path outPart = new Path(output, "clusters-0/part-m-00000");
      Iterator<?> iterator = new SequenceFileValueIterator<Writable>(outPart,
          true, conf);
      // now test the initial clusters to ensure the type of their centers has
 Index: core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/Step1MapperTest.java
 ===================================================================
---- core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/Step1MapperTest.java	(revision 1202420)
+--- core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/Step1MapperTest.java	(revision 1232711)
 +++ core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/Step1MapperTest.java	(working copy)
 @@ -17,21 +17,30 @@
  
@@ -127,7 +344,7 @@ Index: core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/Step
  
 Index: core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/MockContext.java
 ===================================================================
---- core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/MockContext.java	(revision 1202420)
+--- core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/MockContext.java	(revision 1232711)
 +++ core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/MockContext.java	(working copy)
 @@ -1,70 +0,0 @@
 -/**
@@ -202,7 +419,7 @@ Index: core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/Mock
 -}
 Index: core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/PartialSequentialBuilder.java
 ===================================================================
---- core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/PartialSequentialBuilder.java	(revision 1202420)
+--- core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/PartialSequentialBuilder.java	(revision 1232711)
 +++ core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/PartialSequentialBuilder.java	(working copy)
 @@ -1,176 +0,0 @@
 -/**
@@ -274,13 +491,13 @@ Index: core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/Part
 -  }
 -
 -  @Override
--  protected void configureJob(Job job, int nbTrees)
+-  protected void configureJob(Job job)
 -      throws IOException {
 -    Configuration conf = job.getConfiguration();
 -    
 -    int num = conf.getInt("mapred.map.tasks", -1);
 -
--    super.configureJob(job, nbTrees);
+-    super.configureJob(job);
 -
 -    // PartialBuilder sets the number of maps to 1 if we are running in 'local'
 -    conf.setInt("mapred.map.tasks", num);
@@ -308,7 +525,7 @@ Index: core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/Part
 -    firstOutput = new MockContext(new Step1Mapper(), conf, task.getTaskAttemptID(), numTrees);
 -
 -    /* first instance id in hadoop's order */
--    int[] firstIds = new int[nbSplits];
+-    //int[] firstIds = new int[nbSplits];
 -    /* partitions' sizes in hadoop order */
 -    int[] sizes = new int[nbSplits];
 -    
@@ -326,7 +543,7 @@ Index: core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/Part
 -
 -      long time = System.currentTimeMillis();
 -
--      firstIds[hp] = firstId;
+-      //firstIds[hp] = firstId;
 -
 -      while (reader.nextKeyValue()) {
 -        mapper.map(reader.getCurrentKey(), reader.getCurrentValue(), firstOutput);
@@ -356,7 +573,7 @@ Index: core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/Part
 -  /**
 -   * extract the decision forest
 -   */
--  protected DecisionForest processOutput(TreeID[] keys, MapredOutput[] values) {
+-  protected static DecisionForest processOutput(TreeID[] keys, MapredOutput[] values) {
 -    List<Node> trees = Lists.newArrayList();
 -
 -    for (int index = 0; index < keys.length; index++) {
@@ -383,7 +600,7 @@ Index: core/src/test/java/org/apache/mahout/classifier/df/mapreduce/partial/Part
 -}
 Index: core/src/test/java/org/apache/mahout/common/DummyStatusReporter.java
 ===================================================================
---- core/src/test/java/org/apache/mahout/common/DummyStatusReporter.java	(revision 1202420)
+--- core/src/test/java/org/apache/mahout/common/DummyStatusReporter.java	(revision 1232711)
 +++ core/src/test/java/org/apache/mahout/common/DummyStatusReporter.java	(working copy)
 @@ -19,6 +19,8 @@
  
@@ -438,7 +655,7 @@ Index: core/src/test/java/org/apache/mahout/common/DummyStatusReporter.java
  }
 Index: core/src/test/java/org/apache/mahout/common/DummyRecordWriter.java
 ===================================================================
---- core/src/test/java/org/apache/mahout/common/DummyRecordWriter.java	(revision 1202420)
+--- core/src/test/java/org/apache/mahout/common/DummyRecordWriter.java	(revision 1232711)
 +++ core/src/test/java/org/apache/mahout/common/DummyRecordWriter.java	(working copy)
 @@ -17,16 +17,21 @@
  
@@ -593,7 +810,7 @@ Index: core/src/test/java/org/apache/mahout/common/DummyRecordWriter.java
  }
 Index: core/src/test/java/org/apache/mahout/common/DummyCounter.java
 ===================================================================
---- core/src/test/java/org/apache/mahout/common/DummyCounter.java	(revision 1202420)
+--- core/src/test/java/org/apache/mahout/common/DummyCounter.java	(revision 1232711)
 +++ core/src/test/java/org/apache/mahout/common/DummyCounter.java	(working copy)
 @@ -1,26 +0,0 @@
 -/**
@@ -624,7 +841,7 @@ Index: core/src/test/java/org/apache/mahout/common/DummyCounter.java
 -}
 Index: core/src/test/java/org/apache/mahout/math/hadoop/TestDistributedRowMatrix.java
 ===================================================================
---- core/src/test/java/org/apache/mahout/math/hadoop/TestDistributedRowMatrix.java	(revision 1202420)
+--- core/src/test/java/org/apache/mahout/math/hadoop/TestDistributedRowMatrix.java	(revision 1232711)
 +++ core/src/test/java/org/apache/mahout/math/hadoop/TestDistributedRowMatrix.java	(working copy)
 @@ -25,6 +25,7 @@
  import org.apache.hadoop.fs.FileSystem;
@@ -681,7 +898,7 @@ Index: core/src/test/java/org/apache/mahout/math/hadoop/TestDistributedRowMatrix
      }    
 Index: core/src/main/java/org/apache/mahout/common/HadoopUtil.java
 ===================================================================
---- core/src/main/java/org/apache/mahout/common/HadoopUtil.java	(revision 1202420)
+--- core/src/main/java/org/apache/mahout/common/HadoopUtil.java	(revision 1232711)
 +++ core/src/main/java/org/apache/mahout/common/HadoopUtil.java	(working copy)
 @@ -17,6 +17,7 @@
  
@@ -691,7 +908,7 @@ Index: core/src/main/java/org/apache/mahout/common/HadoopUtil.java
  import java.io.IOException;
  import java.io.InputStream;
  import java.net.URI;
-@@ -235,15 +236,31 @@
+@@ -229,15 +230,31 @@
      FileStatus[] statuses;
      FileSystem fs = path.getFileSystem(conf);
      if (filter == null) {
@@ -727,7 +944,7 @@ Index: core/src/main/java/org/apache/mahout/common/HadoopUtil.java
      DistributedCache.setCacheFiles(new URI[]{fileToCache.toUri()}, conf);
 Index: core/pom.xml
 ===================================================================
---- core/pom.xml	(revision 1202420)
+--- core/pom.xml	(revision 1232711)
 +++ core/pom.xml	(working copy)
 @@ -140,10 +140,6 @@
  
@@ -786,7 +1003,7 @@ Index: core/pom.xml
  </project>
 Index: pom.xml
 ===================================================================
---- pom.xml	(revision 1202420)
+--- pom.xml	(revision 1232711)
 +++ pom.xml	(working copy)
 @@ -103,6 +103,17 @@
      <url>https://issues.apache.org/jira/browse/MAHOUT</url>
