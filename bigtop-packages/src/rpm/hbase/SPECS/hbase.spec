@@ -231,6 +231,8 @@ done
 %__install -d -m 0755 $RPM_BUILD_ROOT/usr/bin
 
 # Pull zookeeper and hadoop from their packages
+rm -f $RPM_BUILD_ROOT/%{lib_hbase}/hadoop-*
+rm -f $RPM_BUILD_ROOT/%{lib_hbase}/zookeeper-*
 ln -f -s %{hbase_jar_deps} $RPM_BUILD_ROOT/%{lib_hbase}
 
 %pre

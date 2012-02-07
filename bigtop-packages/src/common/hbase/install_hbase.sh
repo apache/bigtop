@@ -131,10 +131,9 @@ elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
   . /usr/lib/bigtop-utils/bigtop-detect-javahome
 fi
 
-export ZOOKEEPER_CONF=\${ZOOKEEPER_CONF:-/etc/zookeeper}
 export HADOOP_CONF=\${HADOOP_CONF:-/etc/hadoop/conf}
 export ZOOKEEPER_HOME=\${ZOOKEEPER_HOME:-/usr/lib/zookeeper}
-export HBASE_CLASSPATH=\$ZOOKEEPER_CONF:\$HADOOP_CONF:\$HADOOP_HOME/*:\$HADOOP_HOME/lib/*:\$ZOOKEEPER_HOME/*:\$ZOOKEEPER_HOME/lib/*:\$HBASE_CLASSPATH
+export HBASE_CLASSPATH=\$HADOOP_CONF:\$HADOOP_HOME/*:\$HADOOP_HOME/lib/*:\$ZOOKEEPER_HOME/*:\$ZOOKEEPER_HOME/lib/*:\$HBASE_CLASSPATH
 
 exec /usr/lib/hbase/bin/hbase "\$@"
 EOF
