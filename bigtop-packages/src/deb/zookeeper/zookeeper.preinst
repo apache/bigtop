@@ -37,12 +37,12 @@ case "$1" in
                 adduser \
                   --system \
                   --group \
-                  --home /var/zookeeper \
+                  --home /var/lib/zookeeper \
                   --gecos "ZooKeeper User" \
                   --shell /bin/false \
                   zookeeper >/dev/null
         fi
-	install -d -m 0755 -o zookeeper -g zookeeper /var/log/zookeeper
+        install -d -m 0755 -o zookeeper -g zookeeper /var/log/zookeeper
         install -d -m 0755 -o zookeeper -g zookeeper /var/lib/zookeeper
     ;;
 
