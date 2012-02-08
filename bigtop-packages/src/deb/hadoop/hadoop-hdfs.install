@@ -1,10 +1,8 @@
 /etc/hadoop/conf.empty/hdfs-site.xml
-/etc/hadoop/conf.empty/httpfs-*
 /usr/lib/hadoop/hadoop-hdfs*.jar
 /usr/lib/hadoop/hadoop-archives*.jar
 /usr/lib/hadoop/libexec/jsvc
 /usr/lib/hadoop/libexec/hdfs-config.sh
-/usr/lib/hadoop/libexec/httpfs-config.sh
 /usr/lib/hadoop/webapps
 /usr/lib/hadoop/sbin/update-hdfs-env.sh
 /usr/lib/hadoop/sbin/start-secure-dns.sh
@@ -15,7 +13,6 @@
 /usr/lib/hadoop/sbin/stop-dfs.sh
 /usr/lib/hadoop/sbin/refresh-namenodes.sh
 /usr/lib/hadoop/sbin/distribute-exclude.sh
-/usr/lib/hadoop/sbin/httpfs.sh
 /usr/lib/hadoop/bin/hdfs
 /usr/bin/hdfs
 # FIXME: HADOOP-7939

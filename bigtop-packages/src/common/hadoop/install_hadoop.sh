@@ -185,16 +185,6 @@ cp -a ${BUILD_DIR}/bin/* ${HADOOP_BIN_DIR}/
 install -d -m 0755 ${HADOOP_SBIN_DIR}
 cp ${BUILD_DIR}/sbin/* ${HADOOP_SBIN_DIR}/
 
-# HTTPFS
-install -d -m 0755 ${HTTPFS_DIR}/sbin
-cp ${HADOOP_SBIN_DIR}/httpfs.sh ${HTTPFS_DIR}/sbin/
-install -d -m 0755 ${HTTPFS_DIR}/libexec
-cp ${SYSTEM_LIBEXEC_DIR}/httpfs-config.sh ${HTTPFS_DIR}/libexec/
-cp -r ${BUILD_DIR}/share/hadoop/httpfs/tomcat/* ${HTTPFS_DIR}/
-chmod 644 ${HTTPFS_DIR}/conf/*
-install -d -m 0755 $HTTPFS_ETC_DIR/conf.empty
-cp ${BUILD_DIR}/etc/hadoop/httpfs* $HTTPFS_ETC_DIR/conf.empty
-
 # jars
 install -d -m 0755 ${HADOOP_LIB_DIR}
 cp ${BUILD_DIR}/share/hadoop/mapreduce/lib/*.jar ${HADOOP_LIB_DIR}/
@@ -244,6 +234,16 @@ cp -r ${BUILD_DIR}/share/doc/* ${DOC_DIR}/
 mkdir -p $MAN_DIR/man1
 gzip -c < $DISTRO_DIR/hadoop.1 > $MAN_DIR/man1/hadoop.1.gz
 chmod 644 $MAN_DIR/man1/hadoop.1.gz
+
+# HTTPFS
+install -d -m 0755 ${HTTPFS_DIR}/sbin
+mv ${HADOOP_SBIN_DIR}/httpfs.sh ${HTTPFS_DIR}/sbin/
+install -d -m 0755 ${HTTPFS_DIR}/libexec
+mv ${SYSTEM_LIBEXEC_DIR}/httpfs-config.sh ${HTTPFS_DIR}/libexec/
+cp -r ${BUILD_DIR}/share/hadoop/httpfs/tomcat/* ${HTTPFS_DIR}/
+chmod 644 ${HTTPFS_DIR}/conf/*
+install -d -m 0755 $HTTPFS_ETC_DIR/conf.empty
+mv $HADOOP_ETC_DIR/conf.empty/httpfs* $HTTPFS_ETC_DIR/conf.empty
 
 # Make the pseudo-distributed config
 for conf in conf.pseudo ; do
