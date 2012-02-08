@@ -148,7 +148,6 @@ Source11: hadoop-httpfs.default
 Source12: service-hadoop-httpfs
 Source13: yarn.conf
 Source14: mapreduce.conf
-Patch0: MAPREDUCE-3436_rev2.patch
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
 BuildRequires: python >= 2.4, git, fuse-devel,fuse, automake, autoconf
 Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils
