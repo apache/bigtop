@@ -65,7 +65,7 @@
   * Smart defaults for services. You can get a properly configured system
     running quickly, while still being able to override settings as needed.
     </description>
-    <url>http://incubator.apache.org/whirr</url>
+    <url>http://whirr.apache.org/</url>
   </metadata>
   <deps>
     <sun-java6-jre/>
@@ -1139,36 +1139,6 @@
     </flume-conf>
   </alternatives>
 </flume>
-<flume-master>
-  <metadata>
-    <summary>central administration point for the flume data collection system</summary>
-    <description>The Flume master daemon is the central administration and data path control
- point for flume nodes.</description>
-    <url>http://www.cloudera.com</url>
-  </metadata>
-  <deps>
-    <flume>/self</flume>
-  </deps>
-  <services>
-    <flume-master>
-       <runlevel>2</runlevel><runlevel>3</runlevel><runlevel>4</runlevel><runlevel>5</runlevel>
-       <oninstall>start</oninstall>
-       <configured>true</configured>
-    </flume-master>
-  </services>
-  <content>
-    <file name="/." owners="0" perm="drwxr-xr-x" user="root" group="root"/>
-    <file name="/etc" owners="119" perm="drwxr-xr-x" user="root" group="root"/>
-    <file name="/etc/init.d" owners="32" perm="drwxr-xr-x" user="root" group="root"/>
-    <config name="/etc/init.d/flume-master" owners="1" perm="-rwxr-xr-x" user="root" group="root"/>
-    <file name="/usr" owners="418" perm="drwxr-xr-x" user="root" group="root"/>
-    <file name="/usr/share" owners="418" perm="drwxr-xr-x" user="root" group="root"/>
-    <file name="/usr/share/doc" owners="418" perm="drwxr-xr-x" user="root" group="root"/>
-    <file name="/usr/share/doc/flume-master" owners="1" perm="drwxr-xr-x" user="root" group="root"/>
-    <file name="/usr/share/doc/flume-master/copyright" owners="1" perm="-rw-r--r--" user="root" group="root"/>
-    <file name="/usr/share/doc/flume-master/changelog.Debian.gz" owners="1" perm="-rw-r--r--" user="root" group="root"/>
-  </content>
-</flume-master>
 <flume-node>
   <metadata>
     <summary>core element of Flume's data path that collects and delivers data</summary>
@@ -1446,7 +1416,7 @@
  In case of workflow job failure, the workflow job can be rerun skipping
  previously completed actions, the workflow application can be patched before
  being rerun.</description>
-    <url>http://archive.cloudera.com/cdh/3/oozie</url>
+    <url>http://incubator.apache.org/oozie/</url>
   </metadata>
   <deps>
     <oozie-client>/self</oozie-client>
@@ -1575,7 +1545,7 @@
  user can deploy workflows and perform other administrative and
  monitoring tasks such as start, stop, kill, resume workflows
  and coordinator jobs.</description>
-    <url>http://archive.cloudera.com/cdh/3/oozie</url>
+    <url>http://incubator.apache.org/oozie/</url>
   </metadata>
   <content>
     <file name="/." owners="0" perm="drwxr-xr-x" user="root" group="root"/>
@@ -2390,7 +2360,7 @@
     <summary>A high-performance coordination service for distributed applications.</summary>
     <description>ZooKeeper is a centralized service for maintaining configuration information, naming, providing distributed synchronization, and providing group services.  All of these kinds of services are used in some form or another by distributed applications. Each time they are implemented there is a lot of work that goes into fixing the bugs and race conditions that are inevitable. Because of the difficulty of implementing these kinds of services, applications initially usually skimp on them ,which make them brittle in the presence of change and difficult to manage. Even when done correctly, different implementations of these services lead to management complexity when the applications are deployed.
     </description>
-    <url>http://hadoop.apache.org/zookeeper/</url>
+    <url>http://zookeeper.apache.org/</url>
     <!-- group>misc</group -->
   </metadata>
   <deps>
@@ -2787,7 +2757,7 @@
     <!-- license>APL2</license -->
     <!-- arch>universal</arch -->
     <summary>This runs the zookeeper server on startup.</summary>
-    <url>http://hadoop.apache.org/zookeeper/</url>
+    <url>http://zookeeper.apache.org/</url>
     <!-- vendor>(none)</vendor -->
     <!-- group>Development/Libraries</group -->
     <!-- depends><dep>adduser</dep><dep>sun-java6-jre</dep><dep>sun-java6-bin</dep></depends -->
@@ -2842,7 +2812,7 @@
     automatically, allowing the user to focus on semantics rather than efficiency.
  * Extensibility
     Users can create their own functions to do special-purpose processing.</description>
-    <url>http://hadoop.apache.org/pig/</url>
+    <url>http://pig.apache.org/</url>
   </metadata>
   <deps>
     <sun-java6-jre/>
@@ -6787,7 +6757,7 @@
  plug in their custom mappers and reducers to do more sophisticated
  analysis which may not be supported by the built-in capabilities of
  the language.</description>
-    <url>http://hadoop.apache.org/hive/</url>
+    <url>http://hive.apache.org/</url>
   </metadata>
   <deps>
     <sun-java6-jre/>
@@ -7099,7 +7069,7 @@
     <description>Use it when you need random, realtime read/write access to your Big Data.
  This project's goal is the hosting of very large tables -- billions of rows
  X millions of columns -- atop clusters of commodity hardware.</description>
-    <url>http://hadoop.apache.org/hbase/</url>
+    <url>http://hbase.apache.org/</url>
     <!-- group>misc</group -->
   </metadata>
   <deps>
@@ -7290,7 +7260,7 @@
   <metadata>
     <summary>Documentation for HBase</summary>
     <description>This package contains the HBase manual and JavaDoc.</description>
-    <url>http://hadoop.apache.org/hbase/</url>
+    <url>http://hbase.apache.org/</url>
     <!-- group>misc</group -->
   </metadata>
   <content>
@@ -9065,7 +9035,7 @@
   <metadata>
     <summary>HMaster is the "master server" for a HBase</summary>
     <description>There is only one HMaster for a single HBase deployment.</description>
-    <url>http://hadoop.apache.org/hbase/</url>
+    <url>http://hbase.apache.org/</url>
   </metadata>
   <deps>
     <hbase>/self</hbase>
@@ -9098,7 +9068,7 @@
     <summary>HRegionServer makes a set of HRegions available to clients</summary>
     <description>It checks in with the HMaster. There are many HRegionServers in a single
  HBase deployment.</description>
-    <url>http://hadoop.apache.org/hbase/</url>
+    <url>http://hbase.apache.org/</url>
   </metadata>
   <deps>
     <hbase>/self</hbase>
@@ -9131,7 +9101,7 @@
     <summary>Provides an HBase Thrift service</summary>
     <description>This package provides a Thrift service interface to the HBase distributed
  database.</description>
-    <url>http://hadoop.apache.org/hbase/</url>
+    <url>http://hbase.apache.org/</url>
   </metadata>
   <deps>
     <hbase>/self</hbase>
