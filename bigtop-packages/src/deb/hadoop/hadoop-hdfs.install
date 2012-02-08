@@ -1,3 +1,4 @@
+/etc/security/limits.d/hdfs.conf
 /etc/hadoop/conf.empty/hdfs-site.xml
 /usr/lib/hadoop/hadoop-hdfs*.jar
 /usr/lib/hadoop/hadoop-archives*.jar

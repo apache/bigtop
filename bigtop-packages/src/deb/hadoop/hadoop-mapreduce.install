@@ -1,3 +1,4 @@
+/etc/security/limits.d/mapreduce.conf
 /usr/lib/hadoop/hadoop-mapreduce*.jar
 /usr/lib/hadoop/hadoop-streaming*.jar
 /usr/lib/hadoop/libexec/mapred-config.sh

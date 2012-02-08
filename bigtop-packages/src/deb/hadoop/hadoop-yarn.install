@@ -1,3 +1,4 @@
+/etc/security/limits.d/yarn.conf
 /etc/hadoop/conf.empty/yarn-env.sh
 /etc/hadoop/conf.empty/yarn-site.xml
 /etc/hadoop/conf.empty/mrapp-generated-classpath

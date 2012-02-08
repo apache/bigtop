@@ -142,10 +142,12 @@ Source5: hadoop-init.tmpl.suse
 Source6: hadoop.1
 Source7: hadoop-fuse-dfs.1
 Source8: hadoop-fuse.default
-Source9: hadoop.nofiles.conf
+Source9: hdfs.conf
 Source10: yarn-init.tmpl
 Source11: hadoop-httpfs.default
 Source12: service-hadoop-httpfs
+Source13: yarn.conf
+Source14: mapreduce.conf
 Patch0: MAPREDUCE-3436_rev2.patch
 Patch1: MAPREDUCE-3791.patch
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
@@ -422,7 +424,9 @@ chmod 755 $RPM_BUILD_ROOT/%{initd_dir}/%{name}-httpfs
 %__cp $RPM_SOURCE_DIR/%{name}-httpfs.default $RPM_BUILD_ROOT/etc/default/%{name}-httpfs
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/etc/security/limits.d
-%__install -m 0644 %{SOURCE9} $RPM_BUILD_ROOT/etc/security/limits.d/hadoop.nofiles.conf
+%__install -m 0644 %{SOURCE9} $RPM_BUILD_ROOT/etc/security/limits.d/hdfs.conf
+%__install -m 0644 %{SOURCE13} $RPM_BUILD_ROOT/etc/security/limits.d/yarn.conf
+%__install -m 0644 %{SOURCE14} $RPM_BUILD_ROOT/etc/security/limits.d/mapreduce.conf
 
 # /var/lib/*/cache
 %__install -d -m 1777 $RPM_BUILD_ROOT/%{state_hadoop}/cache
@@ -508,6 +512,7 @@ fi
 %config(noreplace) %{etc_hadoop}/conf.empty/yarn-site.xml
 %config(noreplace) %{etc_hadoop}/conf.empty/mrapp-generated-classpath
 %config(noreplace) /etc/default/yarn
+%config(noreplace) /etc/security/limits.d/yarn.conf
 %{lib_hadoop}/hadoop-yarn*.jar
 %{lib_hadoop}/libexec/yarn-config.sh
 %{lib_hadoop}/sbin/start-yarn.sh
@@ -526,6 +531,7 @@ fi
 %defattr(-,root,root)
 %config(noreplace) %{etc_hadoop}/conf.empty/hdfs-site.xml
 %config(noreplace) /etc/default/hadoop-fuse
+%config(noreplace) /etc/security/limits.d/hdfs.conf
 %{lib_hadoop}/hadoop-hdfs*.jar
 %{lib_hadoop}/hadoop-archives*.jar
 %{lib_hadoop}/libexec/hdfs-config.sh
@@ -549,6 +555,7 @@ fi
 
 %files mapreduce
 %defattr(-,root,root)
+%config(noreplace) /etc/security/limits.d/mapreduce.conf
 %{lib_hadoop}/hadoop-mapreduce*.jar
 %{lib_hadoop}/hadoop-streaming*.jar
 %{lib_hadoop}/libexec/mapred-config.sh
@@ -569,7 +576,6 @@ fi
 %config(noreplace) %{etc_hadoop}/conf.empty/ssl-client.xml.example
 %config(noreplace) %{etc_hadoop}/conf.empty/ssl-server.xml.example
 %config(noreplace) /etc/default/hadoop
-%config(noreplace) /etc/security/limits.d/hadoop.nofiles.conf
 %{lib_hadoop}/hadoop-common*.jar
 %{lib_hadoop}/hadoop-auth*.jar
 %{lib_hadoop}/hadoop-annotations*.jar

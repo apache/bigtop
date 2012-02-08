@@ -5,7 +5,6 @@
 /etc/hadoop/conf.empty/ssl-client.xml.example
 /etc/hadoop/conf.empty/ssl-server.xml.example
 /etc/default/hadoop
-/etc/security/limits.d/hadoop.nofiles.conf
 /usr/lib/hadoop/hadoop-common*.jar
 /usr/lib/hadoop/hadoop-auth*.jar
 /usr/lib/hadoop/hadoop-annotations*.jar
