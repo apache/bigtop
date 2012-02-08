@@ -2,5 +2,6 @@
 /usr/lib/hadoop
 /etc/hadoop/conf.empty
 /etc/default/hadoop
-/etc/security/limits.d/hadoop.nofiles.conf
+/etc/security/limits.d/hdfs.conf
+/etc/security/limits.d/mapred.conf
 /usr/share/doc/hadoop

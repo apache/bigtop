@@ -107,7 +107,7 @@ install-arch:
 	mkdir -p debian/tmp/etc/default
 	cp debian/hadoop-fuse.default debian/tmp/etc/default/hadoop-fuse
 	mkdir -p debian/tmp/etc/security/limits.d
-	cp debian/hadoop.nofiles.conf debian/tmp/etc/security/limits.d
+	cp debian/hdfs.conf debian/mapred.conf debian/tmp/etc/security/limits.d
 	dh_install --sourcedir=debian/tmp -s
 
 # Must not depend on anything. This is to be called by
