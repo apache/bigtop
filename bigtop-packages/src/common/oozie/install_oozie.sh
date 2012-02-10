@@ -47,6 +47,7 @@ OPTS=$(getopt \
   -l 'client-dir:' \
   -l 'docs-dir:' \
   -l 'initd-dir:' \
+  -l 'conf-dir:' \
   -- "$@")
 
 if [ $? != 0 ] ; then
@@ -73,6 +74,9 @@ while true ; do
         ;;
         --initd-dir)
         INITDDIR=$2 ; shift 2
+        ;;
+        --conf-dir)
+        CONFDIR=$2 ; shift 2
         ;;
         --)
         shift; break
@@ -187,7 +191,7 @@ failIfNotOK
 
 ## Install server image
 OOZIE_SERVER_DIR=${SERVERDIR}/usr/lib/oozie
-OOZIE_CONF=${SERVERDIR}/etc/oozie
+OOZIE_CONF=${CONFDIR:-"${SERVERDIR}/etc/oozie/conf.dist"}
 OOZIE_INITD=${INITDDIR}
 OOZIE_DATA=${SERVERDIR}/var/lib/oozie
 

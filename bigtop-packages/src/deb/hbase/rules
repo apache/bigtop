@@ -52,6 +52,7 @@ install: build
 	cp debian/hbase.default debian/${hbase_pkg_name}/etc/default/${hbase_pkg_name}
 	sh -x debian/install_hbase.sh \
 		--build-dir=. \
+		--conf-dir=/etc/hbase/conf.dist \
 		--doc-dir=usr/share/doc/${hbase_pkg_name}-doc \
 		--prefix=debian/tmp
 	mkdir -p debian/tmp/etc/security/limits.d

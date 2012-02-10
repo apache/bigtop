@@ -13,17 +13,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 %define lib_sqoop /usr/lib/sqoop
+%define conf_sqoop %{_sysconfdir}/%{name}/conf
+%define conf_sqoop_dist %{conf_sqoop}.dist
 
 
 %if  %{?suse_version:1}0
 
 %define doc_sqoop %{_docdir}/sqoop
 %global initd_dir %{_sysconfdir}/rc.d
+%define alternatives_cmd update-alternatives
 
 %else
 
 %define doc_sqoop %{_docdir}/sqoop-%{sqoop_version}
 %global initd_dir %{_sysconfdir}/rc.d/init.d
+%define alternatives_cmd alternatives
 
 %endif
 
@@ -88,6 +92,7 @@ bash %{SOURCE1} -Dversion=%{version}
 %__rm -rf $RPM_BUILD_ROOT
 sh %{SOURCE2} \
           --build-dir=. \
+          --conf-dir=%{conf_sqoop_dist} \
           --doc-dir=%{doc_sqoop} \
           --prefix=$RPM_BUILD_ROOT
 
@@ -114,6 +119,14 @@ getent group sqoop >/dev/null || groupadd -r sqoop
 getent passwd sqoop > /dev/null || useradd -c "Sqoop" -s /sbin/nologin \
 	-g sqoop -r -d /var/lib/sqoop sqoop 2> /dev/null || :
 
+%post
+%{alternatives_cmd} --install %{conf_sqoop} %{name}-conf %{conf_sqoop_dist} 30
+
+%preun
+if [ "$1" = 0 ]; then
+  %{alternatives_cmd} --remove %{name}-conf %{conf_sqoop_dist} || :
+fi
+
 %post metastore
 chkconfig --add sqoop-metastore
 
@@ -137,7 +150,7 @@ fi
 %files 
 %defattr(0755,root,root)
 %{lib_sqoop}
-%config(noreplace) %{_sysconfdir}/sqoop/conf
+%config(noreplace) %{conf_sqoop_dist}
 %{_bindir}/sqoop
 %{_bindir}/sqoop-codegen
 %{_bindir}/sqoop-create-hive-table

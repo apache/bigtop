@@ -59,7 +59,7 @@ install: install-indep
 install-indep:
 	dh_testdir
 	dh_testroot
-	sh -x debian/create-package-layout --extra-dir=debian/ --build-dir=. --server-dir=./debian/oozie --client-dir=./debian/oozie-client --docs-dir=./debian/oozie-client/usr/share/doc/oozie --initd-dir=./debian/oozie/etc/init.d
+	sh -x debian/install_oozie.sh --extra-dir=debian/ --build-dir=. --server-dir=./debian/oozie --client-dir=./debian/oozie-client --docs-dir=./debian/oozie-client/usr/share/doc/oozie --initd-dir=./debian/oozie/etc/init.d --conf-dir=./debian/oozie/etc/oozie/conf.dist
 	dh_install -i
 
 binary-common:

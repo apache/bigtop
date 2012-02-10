@@ -12,7 +12,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-%define etc_hbase /etc/%{name}
+%define etc_hbase_conf %{_sysconfdir}/%{name}/conf
+%define etc_hbase_conf_dist %{etc_hbase_conf}.dist
 %define hbase_home /usr/lib/%{name}
 %define bin_hbase %{hbase_home}/bin
 %define lib_hbase %{hbase_home}/lib
@@ -46,11 +47,13 @@
 
 %define doc_hbase %{_docdir}/%{name}
 %global initd_dir %{_sysconfdir}/rc.d
+%define alternatives_cmd update-alternatives
 
 %else
 
 %define doc_hbase %{_docdir}/%{name}-%{hbase_version}
 %global initd_dir %{_sysconfdir}/rc.d/init.d
+%define alternatives_cmd alternatives
 
 %endif
 
@@ -197,7 +200,8 @@ env HBASE_VERSION=%{version} bash %{SOURCE1}
 %__rm -rf $RPM_BUILD_ROOT
 sh %{SOURCE2} \
 	--build-dir=. \
-   --doc-dir=%{doc_hbase} \
+        --doc-dir=%{doc_hbase} \
+        --conf-dir=%{etc_hbase_conf_dist} \
 	--prefix=$RPM_BUILD_ROOT
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
@@ -239,6 +243,15 @@ ln -f -s %{hbase_jar_deps} $RPM_BUILD_ROOT/%{lib_hbase}
 getent group hbase 2>/dev/null >/dev/null || /usr/sbin/groupadd -r hbase
 getent passwd hbase 2>&1 > /dev/null || /usr/sbin/useradd -c "HBase" -s /sbin/nologin -g hbase -r -d /var/run/hbase hbase 2> /dev/null || :
 
+%post
+%{alternatives_cmd} --install %{etc_hbase_conf} %{name}-conf %{etc_hbase_conf_dist} 30
+
+%preun
+if [ "$1" = 0 ]; then
+        %{alternatives_cmd} --remove %{name}-conf %{etc_hbase_conf_dist} || :
+fi
+
+
 #######################
 #### FILES SECTION ####
 #######################
@@ -256,7 +269,7 @@ getent passwd hbase 2>&1 > /dev/null || /usr/sbin/useradd -c "HBase" -s /sbin/no
 %{hbase_home}/hbase-*.jar
 %{webapps_hbase}
 /usr/bin/hbase
-%config(noreplace) %{etc_hbase}/conf
+%config(noreplace) %{etc_hbase_conf_dist}
 
 %files doc
 %defattr(-,root,root)

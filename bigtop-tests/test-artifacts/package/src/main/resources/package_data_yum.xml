@@ -1570,6 +1570,14 @@ also on potential use cases. Come to the mailing lists to find out more.</descri
       <doc name="/usr/share/man/man1/sqoop-version.1.gz" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
       <doc name="/usr/share/man/man1/sqoop.1.gz" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
     </content>
+    <alternatives>
+     <sqoop-conf>
+       <status>auto</status>
+       <link>/etc/sqoop/conf</link>
+       <value>/etc/sqoop/conf.dist</value>
+       <alt>/etc/sqoop/conf.dist</alt>
+     </sqoop-conf>
+    </alternatives>
   </sqoop>
   <sqoop-metastore>
     <metadata>
@@ -4124,6 +4132,14 @@ also on potential use cases. Come to the mailing lists to find out more.</descri
       <doc name="/usr/share/doc/oozie-%{package_version}/target/site/index.html" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
       <doc name="/usr/share/man/man1/oozie.1.gz" perm="-rw-r--r--" group="root" owners="-1" user="root"/>
     </content>
+    <alternatives>
+      <oozie-conf>
+        <status>auto</status>
+        <link>/etc/oozie/conf</link>
+        <value>/etc/oozie/conf.dist</value>
+        <alt>/etc/oozie/conf.dist</alt>
+      </oozie-conf>
+    </alternatives>
   </oozie-client>
   <zookeeper>
     <metadata>
@@ -9062,6 +9078,14 @@ difficult to manage. Even when done correctly, different implementations of thes
       <file name="/var/log/hbase" perm="drwxr-xr-x" group="hbase" owners="-1" user="hbase"/>
       <file name="/var/run/hbase" perm="drwxr-xr-x" group="hbase" owners="-1" user="hbase"/>
     </content>
+    <alternatives>
+      <hbase-conf>
+        <status>auto</status>
+        <value>/etc/hbase/conf.dist</value>
+        <link>/etc/hbase/conf</link>
+        <alt>/etc/hbase/conf.dist</alt>
+      </hbase-conf>
+    </alternatives>
     <groups>
       <hbase>
         <user>hbase</user>

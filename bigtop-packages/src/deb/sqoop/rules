@@ -46,6 +46,7 @@ install-indep:
 	dh_testroot
 	sh -x debian/install_sqoop.sh \
 	  --build-dir=. \
+	  --conf-dir=/etc/sqoop/conf.dist \
 	  --prefix=debian/sqoop
 	dh_install -i
 

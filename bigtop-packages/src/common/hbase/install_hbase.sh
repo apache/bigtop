@@ -44,6 +44,7 @@ OPTS=$(getopt \
   -l 'installed-lib-dir:' \
   -l 'bin-dir:' \
   -l 'examples-dir:' \
+  -l 'conf-dir:' \
   -l 'build-dir:' -- "$@")
 
 if [ $? != 0 ] ; then
@@ -74,6 +75,9 @@ while true ; do
         --examples-dir)
         EXAMPLES_DIR=$2 ; shift 2
         ;;
+        --conf-dir)
+        CONF_DIR=$2 ; shift 2
+        ;;
         --)
         shift ; break
         ;;
@@ -97,6 +101,7 @@ DOC_DIR=${DOC_DIR:-/usr/share/doc/hbase}
 LIB_DIR=${LIB_DIR:-/usr/lib/hbase}
 BIN_DIR=${BIN_DIR:-/usr/lib/hbase/bin}
 ETC_DIR=${ETC_DIR:-/etc/hbase}
+CONF_DIR=${CONF_DIR:-${ETC_DIR}/conf.dist}
 
 install -d -m 0755 $PREFIX/$LIB_DIR
 install -d -m 0755 $PREFIX/$LIB_DIR/lib
@@ -111,7 +116,7 @@ cp -a docs/* $PREFIX/$DOC_DIR
 cp *.txt $PREFIX/$DOC_DIR/
 cp -a hbase-webapps $PREFIX/$LIB_DIR
 
-cp -a conf $PREFIX/$ETC_DIR/conf
+cp -a conf $PREFIX/$CONF_DIR
 cp -a bin/* $PREFIX/$BIN_DIR
 
 ln -s $ETC_DIR/conf $PREFIX/$LIB_DIR/conf

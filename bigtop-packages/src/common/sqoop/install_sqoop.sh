@@ -29,6 +29,7 @@ usage: $0 <options>
      --lib-dir=DIR               path to install sqoop home [/usr/lib/sqoop]
      --installed-lib-dir=DIR     path where lib-dir will end up on target system
      --bin-dir=DIR               path to install bins [/usr/bin]
+     --conf-dir=DIR              path to configuration files provided by the package [/etc/sqoop/conf.dist]
      --examples-dir=DIR          path to install examples [doc-dir/examples]
      ... [ see source for more similar options ]
   "
@@ -41,6 +42,7 @@ OPTS=$(getopt \
   -l 'prefix:' \
   -l 'doc-dir:' \
   -l 'lib-dir:' \
+  -l 'conf-dir:' \
   -l 'installed-lib-dir:' \
   -l 'bin-dir:' \
   -l 'examples-dir:' \
@@ -65,6 +67,9 @@ while true ; do
         ;;
         --lib-dir)
         LIB_DIR=$2 ; shift 2
+        ;;
+        --conf-dir)
+        CONF_DIR=$2 ; shift 2
         ;;
         --installed-lib-dir)
         INSTALLED_LIB_DIR=$2 ; shift 2
@@ -96,12 +101,9 @@ done
 DOC_DIR=${DOC_DIR:-/usr/share/doc/sqoop}
 LIB_DIR=${LIB_DIR:-/usr/lib/sqoop}
 BIN_DIR=${BIN_DIR:-/usr/lib/sqoop/bin}
-CONF_DIR=/etc/sqoop/
-CONF_DIST_DIR=/etc/sqoop/conf/
 ETC_DIR=${ETC_DIR:-/etc/sqoop}
 MAN_DIR=${MAN_DIR:-/usr/share/man/man1}
-
-
+CONF_DIR=${CONF_DIR:-${ETC_DIR}/conf.dist}
 
 install -d -m 0755 ${PREFIX}/${LIB_DIR}
 
@@ -150,8 +152,8 @@ EOF
    chmod 0755 $wrapper
 done
 
-install -d -m 0755 $PREFIX/$ETC_DIR/conf
-(cd ${BUILD_DIR}/conf && tar cf - .) | (cd $PREFIX/$ETC_DIR/conf && tar xf -)
+install -d -m 0755 $PREFIX/$CONF_DIR
+(cd ${BUILD_DIR}/conf && tar cf - .) | (cd $PREFIX/$CONF_DIR && tar xf -)
 
 unlink $PREFIX/$LIB_DIR/conf || /bin/true
-ln -s /etc/sqoop/conf $PREFIX/$LIB_DIR/conf
+ln -s $ETC_DIR/conf $PREFIX/$LIB_DIR/conf
