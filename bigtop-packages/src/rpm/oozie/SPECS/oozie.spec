@@ -15,15 +15,18 @@
 %define usr_bin /usr/bin
 %define lib_oozie /usr/lib/oozie
 %define man_dir /usr/share/man
-%define conf_oozie /etc/oozie
+%define conf_oozie %{_sysconfdir}/%{name}/conf
+%define conf_oozie_dist %{conf_oozie}.dist
 %define data_oozie /var/lib/oozie
 
 %if  %{!?suse_version:1}0
   %define doc_oozie %{_docdir}/oozie-%{oozie_version}
   %define initd_dir %{_sysconfdir}/rc.d/init.d
+  %define alternatives_cmd alternatives
 %else
   %define doc_oozie %{_docdir}/oozie
   %define initd_dir %{_sysconfdir}/rc.d
+  %define alternatives_cmd update-alternatives
 %endif
 
 Name: oozie
@@ -36,7 +39,7 @@ Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 License: APL2
 Source0: %{name}-%{oozie_base_version}.tar.gz
 Source1: do-component-build
-Source2: create-package-layout
+Source2: install_oozie.sh
 Patch0: patch
 Requires(pre): /usr/sbin/groupadd, /usr/sbin/useradd
 Requires(post): /sbin/chkconfig, hadoop
@@ -117,7 +120,7 @@ Requires: bigtop-utils
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
-    sh %{SOURCE2} --extra-dir=$RPM_SOURCE_DIR --build-dir=. --server-dir=$RPM_BUILD_ROOT --client-dir=$RPM_BUILD_ROOT --docs-dir=$RPM_BUILD_ROOT%{doc_oozie} --initd-dir=$RPM_BUILD_ROOT%{initd_dir}
+    sh %{SOURCE2} --extra-dir=$RPM_SOURCE_DIR --build-dir=. --server-dir=$RPM_BUILD_ROOT --client-dir=$RPM_BUILD_ROOT --docs-dir=$RPM_BUILD_ROOT%{doc_oozie} --initd-dir=$RPM_BUILD_ROOT%{initd_dir} --conf-dir=$RPM_BUILD_ROOT%{conf_oozie_dist}
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/usr/bin
 
@@ -143,6 +146,14 @@ if [ $1 -ge 1 ]; then
   /sbin/service oozie condrestart > /dev/null
 fi
 
+%post client
+%{alternatives_cmd} --install %{conf_oozie} %{name}-conf %{conf_oozie_dist} 30
+
+%preun client
+if [ "$1" = 0 ]; then
+  %{alternatives_cmd} --remove %{name}-conf %{conf_oozie_dist} || :
+fi
+
 %files 
 %defattr(-,root,root)
 %{lib_oozie}/bin/addtowar.sh
@@ -156,7 +167,6 @@ fi
 %{lib_oozie}/oozie.war
 %{lib_oozie}/oozie-sharelib.tar.gz
 %{lib_oozie}/oozie-server
-%config(noreplace) %{conf_oozie}
 %{initd_dir}/oozie
 %defattr(-, oozie, oozie)
 %dir %{_localstatedir}/log/oozie
@@ -165,6 +175,7 @@ fi
 
 %files client
 %defattr(-,root,root)
+%config(noreplace) %{conf_oozie_dist}
 %{usr_bin}/oozie
 %dir %{lib_oozie}/bin
 %{lib_oozie}/bin/oozie

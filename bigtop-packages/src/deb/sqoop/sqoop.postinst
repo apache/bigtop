@@ -15,23 +15,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# postinst script for hbase
+# postinst script for sqoop 
 
 set -e
 
 case "$1" in
-	configure)
-                update-alternatives --install /etc/hbase/conf hbase-conf /etc/hbase/conf.dist 30
-		chown hbase:hbase -R /var/run/hbase /var/log/hbase
-	;;
+    configure)
+        # Install config alternatives
+        update-alternatives  --install /etc/sqoop/conf sqoop-conf /etc/sqoop/conf.dist 30
 
-	abort-upgrade|abort-remove|abort-deconfigure)
-	;;
+    ;;
 
-	*)
-		echo "postinst called with unknown argument \`$1'" >&2
-		exit 1
-	;;
+    abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
 esac
 
 #DEBHELPER#

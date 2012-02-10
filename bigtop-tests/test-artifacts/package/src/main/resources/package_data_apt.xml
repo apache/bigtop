@@ -1366,6 +1366,14 @@
     <file name="/usr/share/man/man1/sqoop-metastore.1.gz" owners="1" perm="-rw-r--r--" user="root" group="root"/>
     <file name="/usr/share/man/man1/sqoop-version.1.gz" owners="1" perm="-rw-r--r--" user="root" group="root"/>
   </content>
+  <alternatives>
+    <sqoop-conf>
+      <status>auto</status>
+      <link>/etc/sqoop/conf</link>
+      <value>/etc/sqoop/conf.dist</value>
+      <alt>/etc/sqoop/conf.dist</alt>
+    </sqoop-conf>
+  </alternatives>
 </sqoop>
 <sqoop-metastore>
   <metadata>
@@ -2384,6 +2392,14 @@
     <file name="/usr/lib/oozie/lib/alfredo-0.1.4.jar" owners="1" perm="-rw-r--r--" user="root" group="root"/>
     <file name="/usr/lib/oozie/lib/commons-lang-2.4.jar" owners="1" perm="-rw-r--r--" user="root" group="root"/>
   </content>
+  <alternatives>
+    <oozie-conf>
+      <status>auto</status>
+      <link>/etc/oozie/conf</link>
+      <value>/etc/oozie/conf.dist</value>
+      <alt>/etc/oozie/conf.dist</alt>
+    </oozie-conf>
+  </alternatives>
 </oozie-client>
 <zookeeper>
   <metadata>
@@ -7273,6 +7289,14 @@
     <file name="/usr/lib/hbase/lib/hadoop-core.jar" owners="1" perm="lrwxrwxrwx" user="root" group="root" target="../../hadoop/hadoop-core.jar"/>
     <file name="/usr/lib/hbase/conf" owners="1" perm="lrwxrwxrwx" user="root" group="root" target="/etc/hbase/conf"/>
   </content>
+  <alternatives>
+    <hbase-conf>
+      <status>auto</status>
+      <value>/etc/hbase/conf.dist</value>
+      <link>/etc/hbase/conf</link>
+      <alt>/etc/hbase/conf.dist</alt>
+    </hbase-conf>
+  </alternatives>
   <groups>
     <hbase>
       <user>hbase</user>
