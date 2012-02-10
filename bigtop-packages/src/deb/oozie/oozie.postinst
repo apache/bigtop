@@ -36,7 +36,6 @@ set -e
 
 case "$1" in
     configure)
-        update-alternatives  --install /etc/oozie/conf oozie-conf /etc/oozie/conf.dist 30 
         chown -R oozie:oozie /var/lib/oozie /var/log/oozie
         update-rc.d oozie defaults >/dev/null || exit 1
         /usr/lib/oozie/bin/oozie-setup.sh -hadoop 0.20.200 /usr/lib/hadoop
