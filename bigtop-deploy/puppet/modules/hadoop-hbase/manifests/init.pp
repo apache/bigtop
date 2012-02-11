@@ -22,6 +22,11 @@ class hadoop-hbase {
 
   class common-server-config {
     include client-package
+    if ($kerberos_realm) {
+      require kerberos::client
+      kerberos::host_keytab { "hbase": 
+      }
+    }
 
     file { "/etc/hbase/conf/hbase-site.xml":
       content => template("hadoop-hbase/hbase-site.xml"),
@@ -51,6 +56,7 @@ class hadoop-hbase {
       hasrestart => true,
       hasstatus => true,
     } 
+    Kerberos::Host_keytab <| title == "hbase" |> -> Service["hbase-regionserver"]
   }
 
   define master($rootdir, $zookeeper_quorum, $kerberos_realm = "", $heap_size="1024") {
@@ -67,5 +73,6 @@ class hadoop-hbase {
       hasrestart => true,
       hasstatus => true,
     } 
+    Kerberos::Host_keytab <| title == "hbase" |> -> Service["hbase-master"]
   }
 }

@@ -21,6 +21,12 @@ class hadoop-oozie {
   }
 
   define server($kerberos_realm = "") {
+    if ($kerberos_realm) {
+      require kerberos::client
+      kerberos::host_keytab { "oozie":
+      }
+    }
+
     package { "oozie":
       ensure => latest,
     }
@@ -36,6 +42,7 @@ class hadoop-oozie {
       hasrestart => true,
       hasstatus => true,
     } 
+    Kerberos::Host_keytab <| title == "oozie" |> -> Service["oozie"]
 
   }
 }
