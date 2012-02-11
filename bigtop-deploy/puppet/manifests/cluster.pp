@@ -53,12 +53,6 @@ class hadoop_cluster_node {
     $kerberos_kdc_server = extlookup("hadoop_kerberos_kdc_server")
 
     include kerberos::client
-    kerberos::client::host_keytab { ["hdfs", "mapred", "hbase", "oozie"]:
-      princs_map => { hdfs   => [ "host", "hdfs" ],
-                      mapred => [ "mapred" ],
-                      hbase  => [ "hbase"  ],
-                      oozie  => [ "oozie"  ], },
-    }
   }
 }
 
@@ -89,7 +83,7 @@ class hadoop_worker_node inherits hadoop_cluster_node {
 class hadoop_head_node inherits hadoop_cluster_node {
 
   if ($hadoop_security_authentication == "kerberos") {
-    include kerberos::kdc, kerberos::kdc::admin_server
+    include kerberos::server
   }
 
   hadoop::namenode { "namenode":
@@ -133,6 +127,7 @@ class hadoop_head_node inherits hadoop_cluster_node {
   }
 
   hadoop::create_hdfs_dirs { [ "/mapred", "/tmp", "/system", "/user", "/hbase", "/benchmarks", "/user/jenkins", "/user/hive" ]:
+    auth           => $hadoop_security_authentication,
     hdfs_dirs_meta => { "/tmp"          => { perm => "777", user => "hdfs"   },
                         "/mapred"       => { perm => "755", user => "mapred" },
                         "/system"       => { perm => "755", user => "hdfs"   },

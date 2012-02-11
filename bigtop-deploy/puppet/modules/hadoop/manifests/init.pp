@@ -19,7 +19,23 @@ class hadoop {
    * Common definitions for hadoop nodes.
    * They all need these files so we can access hdfs/jobs from any node
    */
+   
+  class kerberos {
+    require kerberos::client
+    
+    kerberos::host_keytab { "hdfs":
+      princs => [ "host", "hdfs" ],
+    }
+   
+    kerberos::host_keytab { [ "yarn", "mapred" ]:
+    }
+  }
+
   class common {
+    if ($auth == "kerberos") {
+      include hadoop::kerberos
+    }
+
     file {
       "/etc/hadoop/conf/core-site.xml":
         content => template('hadoop/core-site.xml'),
@@ -88,6 +104,7 @@ class hadoop {
       subscribe => [Package["hadoop-datanode"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
       require => [ Package["hadoop-datanode"], File[$dirs] ],
     }
+    Kerberos::Host_keytab <| title == "hdfs" |> -> Service["hadoop-datanode"]
 
     file { $dirs:
       ensure => directory,
@@ -98,9 +115,24 @@ class hadoop {
     }
   }
 
-  define create_hdfs_dirs($hdfs_dirs_meta) {
+  class kinit {
+    include hadoop::kerberos
+
+    exec { "HDFS kinit":
+      command => "/usr/bin/kinit -kt /etc/hdfs.keytab hdfs/$fqdn && /usr/bin/kinit -R",
+      user    => "hdfs",
+      require => Kerberos::Host_keytab["hdfs"],
+    }
+  }
+
+  define create_hdfs_dirs($hdfs_dirs_meta, $auth="simple") {
     $user = $hdfs_dirs_meta[$title][user]
     $perm = $hdfs_dirs_meta[$title][perm]
+
+    if ($auth == "kerberos") {
+      require hadoop::kinit
+      Exec["HDFS kinit"] -> Exec["HDFS init $title"]
+    }
 
     exec { "HDFS init $title":
       user => "hdfs",
@@ -132,6 +164,7 @@ class hadoop {
       subscribe => [Package["hadoop-namenode"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
       require => [Package["hadoop-namenode"], Exec["namenode format"]],
     } 
+    Kerberos::Host_keytab <| title == "hdfs" |> -> Service["hadoop-namenode"]
 
     exec { "namenode format":
       user => "hdfs",
@@ -180,6 +213,7 @@ class hadoop {
       mode => 755,
       require => [Package["hadoop"]],
     }
+    Kerberos::Host_keytab <| title == "mapred" |> -> Service["hadoop-jobtracker"]
   }
 
 
@@ -216,6 +250,7 @@ class hadoop {
       mode => 755,
       require => [Package["hadoop"]],
     }
+    Kerberos::Host_keytab <| title == "mapred" |> -> Service["hadoop-tasktracker"]
   }
 
 
@@ -236,6 +271,7 @@ class hadoop {
       subscribe => [Package["hadoop-secondarynamenode"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
       require => [Package["hadoop-secondarynamenode"]],
     }
+    Kerberos::Host_keytab <| title == "hdfs" |> -> Service["hadoop-secondarynamenode"]
   }
 
   define client ($namenode_host, $namenode_port, $jobtracker_host, $jobtracker_port, $auth = "simple") {
