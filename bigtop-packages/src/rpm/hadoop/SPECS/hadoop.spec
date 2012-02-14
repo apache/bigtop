@@ -115,7 +115,8 @@ Source5: hadoop-init.tmpl.suse
 Source6: hadoop.1
 Source7: hadoop-fuse-dfs.1
 Source8: hadoop-fuse.default
-Source9: hadoop.nofiles.conf
+Source9: hdfs.conf
+Source10: mapred.conf
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: python >= 2.4, git, fuse-devel,fuse, automake, autoconf
 Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils
@@ -305,8 +306,7 @@ DataNodes to bind to a low (privileged) port and then drop root privileges
 before continuing operation.
 
 %prep
-# %setup -n %{name}-%{hadoop_base_version}
-%setup -n apache-hadoop-common-85219d6
+%setup -n %{name}-%{hadoop_base_version}
 
 %build
 # This assumes that you installed Java JDK 6 and set JAVA_HOME
@@ -378,7 +378,8 @@ done
 %__cp $RPM_SOURCE_DIR/hadoop-fuse.default $RPM_BUILD_ROOT/etc/default/hadoop-fuse
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/etc/security/limits.d
-%__install -m 0644 %{SOURCE9} $RPM_BUILD_ROOT/etc/security/limits.d/hadoop.nofiles.conf
+%__install -m 0644 %{SOURCE9} $RPM_BUILD_ROOT/etc/security/limits.d/hdfs.conf
+%__install -m 0644 %{SOURCE10} $RPM_BUILD_ROOT/etc/security/limits.d/mapred.conf
 
 # /var/lib/hadoop/cache
 %__install -d -m 1777 $RPM_BUILD_ROOT/var/lib/%{name}/cache
@@ -423,7 +424,8 @@ fi
 %defattr(-,root,root)
 %config(noreplace) %{etc_hadoop}/conf.empty
 %config(noreplace) /etc/default/hadoop
-%config(noreplace) /etc/security/limits.d/hadoop.nofiles.conf
+%config(noreplace) /etc/security/limits.d/hdfs.conf
+%config(noreplace) /etc/security/limits.d/mapred.conf
 %{lib_hadoop}
 %{bin_hadoop}/%{name}
 %{man_hadoop}/man1/hadoop.1.*z

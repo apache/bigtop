@@ -15,17 +15,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# postinst script for zookeeper
-
-zookeeper_pkg_name=zookeeper
+# postinst script for oozie 
+#
+# see: dh_installdeb(1)
 
 set -e
 
+# summary of how this script can be called:
+#        * <postinst> `configure' <most-recently-configured-version>
+#        * <old-postinst> `abort-upgrade' <new version>
+#        * <conflictor's-postinst> `abort-remove' `in-favour' <package>
+#          <new-version>
+#        * <postinst> `abort-remove'
+#        * <deconfigured's-postinst> `abort-deconfigure' `in-favour'
+#          <failed-install-package> <version> `removing'
+#          <conflicting-package> <version>
+# for details, see http://www.debian.org/doc/debian-policy/ or
+# the debian-policy package
+
+
 case "$1" in
     configure)
-        # Install config alternatives
-        chown -R zookeeper:zookeeper /var/log/zookeeper
-        update-alternatives  --install /etc/${zookeeper_pkg_name}/conf ${zookeeper_pkg_name}-conf /etc/${zookeeper_pkg_name}/conf.dist 30
+        update-alternatives  --install /etc/oozie/conf oozie-conf /etc/oozie/conf.dist 30 
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
@@ -37,4 +48,5 @@ case "$1" in
     ;;
 esac
 
-#DEBHELPER#
+exit 0
+

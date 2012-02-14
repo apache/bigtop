@@ -1,3 +1,5 @@
+#!/bin/sh
+#
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -13,36 +15,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class hadoop-oozie {
-  define client($kerberos_realm = "") {
-    package { "oozie-client":
-      ensure => latest,
-    } 
-  }
+# postinst script for sqoop 
 
-  define server($kerberos_realm = "") {
-    if ($kerberos_realm) {
-      require kerberos::client
-      kerberos::host_keytab { "oozie":
-      }
-    }
+set -e
 
-    package { "oozie":
-      ensure => latest,
-    }
+case "$1" in
+    configure)
+        # Install config alternatives
+        update-alternatives  --install /etc/sqoop/conf sqoop-conf /etc/sqoop/conf.dist 30
 
-    file { "/etc/oozie/oozie-site.xml":
-      content => template("hadoop-oozie/oozie-site.xml"),
-      require => Package["oozie"],
-    }
+    ;;
 
-    service { "oozie":
-      ensure => running,
-      require => Package["oozie"],
-      hasrestart => true,
-      hasstatus => true,
-    } 
-    Kerberos::Host_keytab <| title == "oozie" |> -> Service["oozie"]
+    abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
 
-  }
-}
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+#DEBHELPER#

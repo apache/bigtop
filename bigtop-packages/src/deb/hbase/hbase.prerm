@@ -15,42 +15,34 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# preinst script for zookeeper
+# prerm script for hbase 
 #
 # see: dh_installdeb(1)
 
 set -e
 
 # summary of how this script can be called:
-#        * <new-preinst> `install'
-#        * <new-preinst> `install' <old-version>
-#        * <new-preinst> `upgrade' <old-version>
-#        * <old-preinst> `abort-upgrade' <new-version>
+#        * <prerm> `remove'
+#        * <old-prerm> `upgrade' <new-version>
+#        * <new-prerm> `failed-upgrade' <old-version>
+#        * <conflictor's-prerm> `remove' `in-favour' <package> <new-version>
+#        * <deconfigured's-prerm> `deconfigure' `in-favour'
+#          <package-being-installed> <version> `removing'
+#          <conflicting-package> <version>
 # for details, see http://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
 
 case "$1" in
-    install|upgrade)
-        if ! getent passwd zookeeper >/dev/null; then
-                # Adding system user: zookeeper .
-                adduser \
-                  --system \
-                  --group \
-                  --home /var/zookeeper \
-                  --gecos "ZooKeeper User" \
-                  --shell /bin/false \
-                  zookeeper >/dev/null
-        fi
-	install -d -m 0755 -o zookeeper -g zookeeper /var/log/zookeeper
-        install -d -m 0755 -o zookeeper -g zookeeper /var/lib/zookeeper
+    remove|upgrade|deconfigure)
+      update-alternatives --remove hbase-conf /etc/hbase/conf.dist || :
     ;;
 
-    abort-upgrade)
+    failed-upgrade)
     ;;
 
     *)
-        echo "preinst called with unknown argument \`$1'" >&2
+        echo "prerm called with unknown argument \`$1'" >&2
         exit 1
     ;;
 esac
@@ -61,3 +53,5 @@ esac
 #DEBHELPER#
 
 exit 0
+
+

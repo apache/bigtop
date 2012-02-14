@@ -1308,6 +1308,14 @@ also on potential use cases. Come to the mailing lists to find out more.</descri
     <doc  name="/usr/share/man/man1/sqoop-version.1.gz" owners="1" perm="-rw-r--r--" user="root" group="root"/>
     <doc  name="/usr/share/man/man1/sqoop.1.gz" owners="1" perm="-rw-r--r--" user="root" group="root"/>
   </content>
+  <alternatives>
+    <sqoop-conf>
+      <status>auto</status>
+      <link>/etc/sqoop/conf</link>
+      <value>/etc/sqoop/conf.dist</value>
+      <alt>/etc/sqoop/conf.dist</alt>
+    </sqoop-conf>
+  </alternatives>
 </sqoop>
 <sqoop-metastore>
   <metadata>
@@ -2311,6 +2319,14 @@ also on potential use cases. Come to the mailing lists to find out more.</descri
     <doc  name="/usr/share/doc/oozie/release-log.txt" owners="1" perm="-rw-r--r--" user="root" group="root"/>
     <doc  name="/usr/share/man/man1/oozie.1.gz" owners="1" perm="-rw-r--r--" user="root" group="root"/>
   </content>
+  <alternatives>
+    <oozie-conf>
+      <status>auto</status>
+      <link>/etc/oozie/conf</link>
+      <value>/etc/oozie/conf.dist</value>
+      <alt>/etc/oozie/conf.dist</alt>
+    </oozie-conf>
+  </alternatives>
 </oozie-client>
 <zookeeper>
   <metadata>
@@ -7286,6 +7302,14 @@ difficult to manage. Even when done correctly, different implementations of thes
     <file name="/usr/lib/hbase/lib/zookeeper.jar" owners="1" perm="lrwxrwxrwx" user="hbase" group="hbase" target="/usr/lib/zookeeper/zookeeper.jar"/>
     <doc  name="/usr/share/man/man1/hbase.1.gz" owners="1" perm="-rw-r--r--" user="root" group="root"/>
   </content>
+  <alternatives>
+    <hbase-conf>
+      <status>auto</status>
+      <value>/etc/hbase/conf.dist</value>
+      <link>/etc/hbase/conf</link>
+      <alt>/etc/hbase/conf.dist</alt>
+    </hbase-conf>
+  </alternatives>
   <groups>
     <hbase>
       <user>hbase</user>

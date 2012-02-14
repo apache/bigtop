@@ -61,15 +61,16 @@ class kerberos {
   }
 
   class kdc inherits kerberos::site {
-    package { "$package_name_kdc":
+    package { $package_name_kdc:
       ensure => installed,
     }
 
-    file { "$kdc_etc_path":
+    file { $kdc_etc_path:
     	ensure => directory,
         owner => root,
         group => root,
         mode => "0700",
+        require => Package["$package_name_kdc"],
     }
     file { "${kdc_etc_path}/kdc.conf":
       content => template('kerberos/kdc.conf'),
@@ -98,7 +99,7 @@ class kerberos {
       require => [Package["$package_name_kdc"], File["${kdc_etc_path}/kdc.conf"], File["/etc/krb5.conf"]],
     }
 
-    service { "$service_name_kdc":
+    service { $service_name_kdc:
       ensure => running,
       require => [Package["$package_name_kdc"], File["${kdc_etc_path}/kdc.conf"], Exec["kdb5_util"]],
       subscribe => File["${kdc_etc_path}/kdc.conf"],
@@ -125,32 +126,50 @@ class kerberos {
   }
 
   class client inherits kerberos::site {
-    define create_princs {
-      exec { "addprinc.$title":
-         path => $kerberos::site::exec_path, # BUG: I really shouldn't need to do a FQVN here
-         command => "kadmin -w secure -p kadmin/admin -q 'addprinc -randkey $title/$fqdn'",
-         unless => "kadmin -w secure -p kadmin/admin -q listprincs | grep -q $title/$fqdn"
-      }
-    }
-
-    define host_keytab($fqdn = "$hostname.$domain", $princs_map) {
-      $princs = $princs_map[$title]
-      $keytab = "/etc/${title}.keytab"
-      $exports = inline_template("<%= princs.join('/$fqdn ') + '/$fqdn ' %>")
-
-      create_princs { $princs:
-      }
-
-      exec { "xst.$title":
-         path => $kerberos::site::exec_path, # BUG: I really shouldn't need to do a FQVN here
-         command => "kadmin -w secure -p kadmin/admin -q 'xst -k $keytab $exports' ; chown $title $keytab",
-         unless => "klist -kt $keytab 2>/dev/null | grep -q $title/$fqdn",
-         require => [ Create_princs[$princs] ],
-      }
-    }
-
-    package { "$package_name_client":
+    package { $package_name_client:
       ensure => installed,
     }
   }
+
+  class server {
+    include kerberos::client
+
+    class { "kerberos::kdc": } 
+    ->
+    Class["kerberos::client"] 
+
+    class { "kerberos::kdc::admin_server": }
+    -> 
+    Class["kerberos::client"]
+  }
+
+  define create_princs {
+    exec { "addprinc.$title":
+       path => $kerberos::site::exec_path, # BUG: I really shouldn't need to do a FQVN here
+       command => "kadmin -w secure -p kadmin/admin -q 'addprinc -randkey $title/$fqdn'",
+       unless => "kadmin -w secure -p kadmin/admin -q listprincs | grep -q $title/$fqdn",
+       require => Package[$kerberos::site::package_name_client],
+    }
+  }
+
+  define host_keytab($fqdn = "$hostname.$domain", $princs = undef) {
+    $real_princs = $princs ? { 
+      undef   => [ $title ],
+      default => $princs,
+    }
+ 
+    $keytab = "/etc/${title}.keytab"
+    $exports = inline_template("<%= real_princs.join('/$fqdn ') + '/$fqdn ' %>")
+
+    create_princs { $real_princs:
+    }
+
+    exec { "xst.$title":
+       path => $kerberos::site::exec_path, # BUG: I really shouldn't need to do a FQVN here
+       command => "kadmin -w secure -p kadmin/admin -q 'xst -k $keytab $exports' ; chown $title $keytab",
+       unless => "klist -kt $keytab 2>/dev/null | grep -q $title/$fqdn",
+       require => [ Create_princs[$real_princs] ],
+    }
+  }
+
 }
