@@ -163,7 +163,7 @@ cp -a $BUILD_SRC_DIR/examples/* $EXAMPLE_DIR/src
 
 # Install docs
 mkdir -p $DOC_DIR
-cp -r ./docs/* $DOC_DIR
+cp -r $BUILD_DIR/docs/* $DOC_DIR
 
 # Install source
 mkdir -p ${SRC_DIR}
@@ -281,13 +281,13 @@ EOF
 
   # Pipes
   mkdir -p $PREFIX/$SYSTEM_LIB_DIR $PREFIX/usr/include
-  cp ./c++/${NATIVE_BUILD_STRING}/lib/libhadooppipes.a \
-      ./c++/${NATIVE_BUILD_STRING}/lib/libhadooputils.a \
+  cp ${BUILD_DIR}/c++/${NATIVE_BUILD_STRING}/lib/libhadooppipes.a \
+      ${BUILD_DIR}/c++/${NATIVE_BUILD_STRING}/lib/libhadooputils.a \
       $PREFIX/$SYSTEM_LIB_DIR
-  cp -r ./c++/${NATIVE_BUILD_STRING}/include/hadoop $PREFIX/usr/include/
+  cp -r ${BUILD_DIR}/c++/${NATIVE_BUILD_STRING}/include/hadoop $PREFIX/usr/include/
 
   # libhdfs
-  cp ./build/c++/${NATIVE_BUILD_STRING}/lib/libhdfs.so.0.0.0 $PREFIX/$SYSTEM_LIB_DIR
+  cp ${BUILD_DIR}/c++/${NATIVE_BUILD_STRING}/lib/libhdfs.so.0.0.0 $PREFIX/$SYSTEM_LIB_DIR
   ln -sf libhdfs.so.0.0.0 $PREFIX/$SYSTEM_LIB_DIR/libhdfs.so.0
 
   # libhdfs-devel - hadoop doesn't realy install these things in nice places :(

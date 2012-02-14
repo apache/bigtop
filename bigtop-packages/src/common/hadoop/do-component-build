@@ -17,7 +17,7 @@
 set -ex
 
 # FIXME: BIGTOP-137
-chmod 777 src/c++/task-controller/configure
+chmod 777 src/c++/task-controller/configure || :
 
 
 # This is a poor man version comparison of autoconf.
