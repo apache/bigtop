@@ -16,6 +16,6 @@
 
 set -ex
 
-ant -f build.xml package "$@"
+ant -f build.xml -Dhadoopversion=100 package "$@"
 
 
