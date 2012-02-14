@@ -107,7 +107,7 @@ Requires: bigtop-utils
 
 
 %prep
-%setup -n yahoo-oozie-39697f6
+%setup -n %{name}-%{oozie_base_version}
 
 %build
     M2_CACHE=`mktemp -d /tmp/oozie.m2.XXXXX`
