@@ -86,7 +86,7 @@ server for Sqoop clients across a network to use.
 %setup -n sqoop-%{sqoop_base_version}-src
 
 %build
-bash %{SOURCE1} -Dversion=%{version}
+bash %{SOURCE1} -Dversion=%{sqoop_base_version}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
