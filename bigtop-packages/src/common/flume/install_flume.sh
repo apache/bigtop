@@ -128,7 +128,7 @@ if [ -n "\$FLUME_PID_FILE" ]; then
 fi
 
 # See FLUME-920
-bash exec /usr/lib/flume/bin/flume-ng "\$@"
+exec bash /usr/lib/flume/bin/flume-ng "\$@"
 EOF
 chmod 755 $wrapper
 
