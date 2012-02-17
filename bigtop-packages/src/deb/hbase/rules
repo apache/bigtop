@@ -31,6 +31,7 @@ hbase_jar_deps_hadoop=hadoop-annotations,hadoop-auth,hadoop-common,hadoop-hdfs,h
 
 patch: patch-stamp
 patch-stamp:	
+	patch -p0 < debian/HBASE-5212.patch
 	touch $@
 
 clean:	
@@ -40,7 +41,7 @@ clean:
 	dh_clean
 	find debian -name .\*swp -exec rm -f {} \;
 
-build:
+build: patch
 	dh_testdir
 	bash debian/do-component-build -Dmaven.repo.local=${HOME}/.m2/repository  
 
