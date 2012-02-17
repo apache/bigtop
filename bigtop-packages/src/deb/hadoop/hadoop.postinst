@@ -33,9 +33,8 @@ case "$1" in
 
         # We don't want to do this recursively since we may be reinstalling, in which case
         # users have their own cache/<username> directories which shouldn't be stolen
-        chown root:hadoop /var/lib/hadoop/ /var/lib/hadoop/cache/ /var/lib/hadoop/cache/hadoop/
+        chown root:hadoop /var/lib/hadoop/ /var/lib/hadoop/cache/
 	chmod 1777 /var/lib/hadoop/cache/
-        chmod g+w /var/lib/hadoop/cache/hadoop/
 	mkdir -p /var/log/hadoop || :
 	touch /var/log/hadoop/SecurityAuth.audit
         chgrp hadoop /var/log/hadoop/SecurityAuth.audit

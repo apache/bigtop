@@ -37,9 +37,9 @@ mkdir -p build/share/doc/
 cp -r target/site/* build/share/doc/
 
 # FIXME: this a workaround for HDFS-2303 (see BIGTOP-349 for details)
-rm -rf commons-daemon-1.0.8-src
-curl --retry 5 -s -L -k  http://mirrors.axint.net/apache/commons/daemon/source/commons-daemon-1.0.8-src.tar.gz | tar xzf -
-pushd commons-daemon-1.0.8-src/src/native/unix
+rm -rf commons-daemon-1.0.9-src
+curl --retry 5 -s -L -k  http://www.apache.org/dist/commons/daemon/source/commons-daemon-1.0.9-src.tar.gz | tar xzf -
+pushd commons-daemon-1.0.9-src/src/native/unix
   ./configure --prefix=/usr
   make
   cp -f jsvc ../../../../build/libexec/jsvc
