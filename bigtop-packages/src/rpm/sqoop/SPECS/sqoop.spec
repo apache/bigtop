@@ -19,6 +19,21 @@
 
 %if  %{?suse_version:1}0
 
+# Only tested on openSUSE 11.4. le'ts update it for previous release when confirmed
+%if 0%{suse_version} > 1130
+%define suse_check \# Define an empty suse_check for compatibility with older sles
+%endif
+
+# SLES is more strict anc check all symlinks point to valid path
+# But we do point to a hadoop jar which is not there at build time
+# (but would be at install time).
+# Since our package build system does not handle dependencies,
+# these symlink checks are deactivated
+%define __os_install_post \
+    %{suse_check} ; \
+    /usr/lib/rpm/brp-compress ; \
+    %{nil}
+
 %define doc_sqoop %{_docdir}/sqoop
 %global initd_dir %{_sysconfdir}/rc.d
 %define alternatives_cmd update-alternatives
@@ -45,7 +60,6 @@ Source1: do-component-build
 Source2: install_%{name}.sh
 Source3: sqoop-metastore.sh
 Source4: sqoop-metastore.sh.suse
-Patch0: patch
 Buildarch: noarch
 BuildRequires: asciidoc, xmlto
 Requires: hadoop, bigtop-utils
@@ -84,16 +98,15 @@ Shared metadata repository for Sqoop. This optional package hosts a metadata
 server for Sqoop clients across a network to use.
 
 %prep
-%setup -n %{name}-%{sqoop_base_version}-incubating
-%patch0 -p0
+%setup -n %{name}-%{sqoop_base_version}-src
 
 %build
-bash %{SOURCE1} -Dversion=%{version}
+bash %{SOURCE1}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
 sh %{SOURCE2} \
-          --build-dir=build/sqoop-%{version} \
+          --build-dir=build/sqoop-%{sqoop_base_version} \
           --conf-dir=%{conf_sqoop_dist} \
           --doc-dir=%{doc_sqoop} \
           --prefix=$RPM_BUILD_ROOT
