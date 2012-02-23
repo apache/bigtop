@@ -40,67 +40,61 @@ class TestHadoopExamples {
   private static final String HADOOP_CONF_DIR = System.getenv('HADOOP_CONF_DIR');
   private static String hadoopExamplesJar =
     JarContent.getJarName(HADOOP_HOME, 'hadoop.*examples.*.jar');
-  private static String hadoopMapredTestJar =
-    JarContent.getJarName(HADOOP_HOME, 'hadoop.*mapred-test.*.jar');
   static {
     assertNotNull("HADOOP_HOME has to be set to run this test",
         HADOOP_HOME);
     assertNotNull("HADOOP_CONF_DIR has to be set to run this test",
         HADOOP_CONF_DIR);
     assertNotNull("Can't find hadoop-examples.jar file", hadoopExamplesJar);
-    assertNotNull("Can't find hadoop-mapred-test.jar file", hadoopMapredTestJar);
   }
   static final String HADOOP_EXAMPLES_JAR =
     HADOOP_HOME + "/" + hadoopExamplesJar;
-  static final String HADOOP_MR_TEST_JAR =
-    HADOOP_HOME + "/" + hadoopMapredTestJar;
-  private static final String hadoop = "$HADOOP_HOME/bin/hadoop";
 
   static Shell sh = new Shell("/bin/bash -s");
   private static final String EXAMPLES = "examples";
   private static final String EXAMPLES_OUT = "examples-output";
   private static Configuration conf;
-  private static String HADOOP_OPTIONS;
+
+  private static String mr_version = System.getProperty("mr.version", "mr2");
+  static final String RANDOMTEXTWRITER_TOTALBYTES = (mr_version == "mr1") ?
+      "test.randomtextwrite.total_bytes" : "mapreduce.randomtextwriter.totalbytes";
 
   @BeforeClass
   static void setUp() {
     conf = new Configuration();
-    conf.addResource('mapred-site.xml');
-    HADOOP_OPTIONS =
-      "-fs ${conf.get('fs.default.name')} -jt ${conf.get('mapred.job.tracker')}";
     // Unpack resource
     JarContent.unpackJarContainer(TestHadoopExamples.class, '.' , null)
 
-    sh.exec("$hadoop fs $HADOOP_OPTIONS -test -e $EXAMPLES");
+    sh.exec("hadoop fs -test -e $EXAMPLES");
     if (sh.getRet() == 0) {
-      sh.exec("$hadoop fs $HADOOP_OPTIONS -rmr -skipTrash $EXAMPLES");
+      sh.exec("hadoop fs -rmr -skipTrash $EXAMPLES");
       assertTrue("Deletion of previous $EXAMPLES from HDFS failed",
           sh.getRet() == 0);
     }
-    sh.exec("$hadoop fs $HADOOP_OPTIONS -test -e $EXAMPLES_OUT");
+    sh.exec("hadoop fs -test -e $EXAMPLES_OUT");
     if (sh.getRet() == 0) {
-      sh.exec("$hadoop fs $HADOOP_OPTIONS -rmr -skipTrash $EXAMPLES_OUT");
+      sh.exec("hadoop fs -rmr -skipTrash $EXAMPLES_OUT");
       assertTrue("Deletion of previous examples output from HDFS failed",
           sh.getRet() == 0);
     }
 
-// copy test files to HDFS
-    sh.exec("hadoop fs $HADOOP_OPTIONS -put $EXAMPLES $EXAMPLES",
-        "hadoop fs $HADOOP_OPTIONS -mkdir $EXAMPLES_OUT");
+    // copy test files to HDFS
+    sh.exec("hadoop fs -put $EXAMPLES $EXAMPLES",
+        "hadoop fs -mkdir $EXAMPLES_OUT");
     assertTrue("Could not create output directory", sh.getRet() == 0);
   }
 
   static Map examples =
     [
-        pi                :'20 10',
+        pi                :'2 1000',
         wordcount         :"$EXAMPLES/text $EXAMPLES_OUT/wordcount",
         multifilewc       :"$EXAMPLES/text $EXAMPLES_OUT/multifilewc",
-//        aggregatewordcount:"$EXAMPLES/text $EXAMPLES_OUT/aggregatewordcount 5 textinputformat",
-//        aggregatewordhist :"$EXAMPLES/text $EXAMPLES_OUT/aggregatewordhist 5 textinputformat",
+        aggregatewordcount:"$EXAMPLES/text $EXAMPLES_OUT/aggregatewordcount 2 textinputformat",
+        aggregatewordhist :"$EXAMPLES/text $EXAMPLES_OUT/aggregatewordhist 2 textinputformat",
         grep              :"$EXAMPLES/text $EXAMPLES_OUT/grep '[Cc]uriouser'",
-        sleep             :"-m 10 -r 10",
+//        sleep             :"-m 10 -r 10",
         secondarysort     :"$EXAMPLES/ints $EXAMPLES_OUT/secondarysort",
-        randomtextwriter  :"-Dtest.randomtextwrite.total_bytes=1073741824 $EXAMPLES_OUT/randomtextwriter"
+        randomtextwriter  :"-D $RANDOMTEXTWRITER_TOTALBYTES=1073741824 $EXAMPLES_OUT/randomtextwriter"
     ];
 
   private String testName;
@@ -117,13 +111,12 @@ class TestHadoopExamples {
   public TestHadoopExamples(String name, String args) {
     testName = name;
     testArgs = args;
-    testJar = (name == "sleep") ? HADOOP_MR_TEST_JAR : 
-                                  HADOOP_EXAMPLES_JAR;
+    testJar = HADOOP_EXAMPLES_JAR;
   }
 
   @Test
   void testMRExample() {
-    sh.exec("$hadoop jar $testJar $testName $HADOOP_OPTIONS $testArgs");
+    sh.exec("hadoop jar $testJar $testName $testArgs");
 
     assertTrue("Example $testName failed", 
                sh.getRet() == 0);

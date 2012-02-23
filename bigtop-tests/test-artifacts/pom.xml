@@ -34,22 +34,22 @@
 
   <modules>
     <module>hadoop</module>
-    <module>hive</module>
     <module>package</module>
-    <module>oozie</module>
+    <!-- module>oozie</module>
+    <module>hive</module>
     <module>hbase</module>
     <module>flume</module>
     <module>sqoop</module>
-    <module>mahout</module>
+    <module>mahout</module-->
   </modules>
 
   <properties>
     <junit.version>4.8.2</junit.version>
     <itest-common.version>0.3.0-hadoop23-incubating-SNAPSHOT</itest-common.version>
-    <hadoop.version>0.20.205.0</hadoop.version>
-    <pig.version>0.9.1</pig.version>
-    <sqoop.version>1.3.0</sqoop.version>
-    <hbase.version>0.90.4</hbase.version>
+    <hadoop.version>0.23.1-SNAPSHOT</hadoop.version>
+    <pig.version>0.9.2</pig.version>
+    <sqoop.version>1.4.0-incubating</sqoop.version>
+    <hbase.version>0.92.0-SNAPSHOT</hbase.version>
   </properties>
 
   <dependencyManagement>
@@ -64,6 +64,7 @@
         <artifactId>itest-common</artifactId>
         <version>${itest-common.version}</version>
       </dependency>
+      <!--
       <dependency>
         <groupId>org.apache.hadoop</groupId>
         <artifactId>hadoop-core</artifactId>
@@ -85,6 +86,7 @@
         <version>${hbase.version}</version>
         <type>test-jar</type>
       </dependency>
+      -->
     </dependencies>
   </dependencyManagement>
 

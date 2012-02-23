@@ -28,20 +28,24 @@
   <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>hadoop-smoke</artifactId>
   <version>0.3.0-hadoop23-incubating-SNAPSHOT</version>
-    <name>hadoopsmoke</name> 
+  <name>hadoopsmoke</name>
 
   <dependencies>
     <dependency>
       <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-mapreduce-client-core</artifactId>
+      <version>${hadoop.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
       <artifactId>hadoop-common</artifactId>
+      <version>${hadoop.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.hadoop</groupId>
-      <artifactId>hadoop-common-test</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.hadoop</groupId>
-      <artifactId>hadoop-hdfs-test</artifactId>
+      <artifactId>hadoop-common</artifactId>
+      <version>${hadoop.version}</version>
+      <type>test-jar</type>
     </dependency>
   </dependencies>
 
