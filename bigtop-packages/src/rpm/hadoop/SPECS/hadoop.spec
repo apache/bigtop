@@ -154,6 +154,7 @@ Source16: hadoop-yarn-resourcemanager.svc
 Source17: hadoop-yarn-nodemanager.svc
 Source18: hadoop-httpfs.svc
 Source19: hadoop-mapreduce-historyserver.default
+Patch0: MAPREDUCE-3890.patch
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
 BuildRequires: python >= 2.4, git, fuse-devel,fuse, automake, autoconf
 Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils
@@ -346,6 +347,7 @@ Hadoop Filesystem Library
 
 %prep
 %setup -n %{name}-%{hadoop_base_version}-src 
+%patch0 -p0
 
 %build
 # This assumes that you installed Java JDK 6 and set JAVA_HOME

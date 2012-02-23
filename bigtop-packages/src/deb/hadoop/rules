@@ -33,10 +33,14 @@ ifeq (${DEB_BUILD_ARCH},i386)
   native_dir=Linux-i386-32
 endif
 
+patch: patch-stamp
+patch-stamp:	
+	patch -p0 < debian/MAPREDUCE-3890.patch
+	touch $@
 
 #Architecture
 build: build-stamp
-build-stamp:
+build-stamp: patch-stamp
 	dh_testdir
 	env HADOOP_VERSION=${hadoop_version} HADOOP_ARCH=${native_dir} \
 		bash debian/do-component-build -Divy.home=${HOME}/.ivy2
