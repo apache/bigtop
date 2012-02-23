@@ -108,10 +108,10 @@ CONF_DIR=${CONF_DIR:-${ETC_DIR}/conf.dist}
 install -d -m 0755 ${PREFIX}/${LIB_DIR}
 
 install -d -m 0755 ${PREFIX}/${LIB_DIR}
-cp sqoop*.jar ${PREFIX}/${LIB_DIR}
+cp $BUILD_DIR/sqoop*.jar ${PREFIX}/${LIB_DIR}
 
 install -d -m 0755 ${PREFIX}/${LIB_DIR}/lib
-cp -a lib/*.jar ${PREFIX}/${LIB_DIR}/lib
+cp -a $BUILD_DIR/lib/*.jar ${PREFIX}/${LIB_DIR}/lib
 
 #install -d -m 0755 ${PREFIX}/${LIB_DIR}/shims
 #cp -a shims/*.jar ${PREFIX}/${LIB_DIR}/shims
@@ -119,19 +119,19 @@ cp -a lib/*.jar ${PREFIX}/${LIB_DIR}/lib
 install -d -m 0755 $PREFIX/usr/bin
 
 install -d -m 0755 $PREFIX/${BIN_DIR}
-cp bin/* $PREFIX/${BIN_DIR}
+cp $BUILD_DIR/bin/* $PREFIX/${BIN_DIR}
 
 install -d -m 0755 $PREFIX/${DOC_DIR}
-cp docs/*.html  $PREFIX/${DOC_DIR}
-cp docs/*.css $PREFIX/${DOC_DIR}
-cp -r docs/api $PREFIX/${DOC_DIR}
-cp -r docs/images $PREFIX/${DOC_DIR}
+cp $BUILD_DIR/docs/*.html  $PREFIX/${DOC_DIR}
+cp $BUILD_DIR/docs/*.css $PREFIX/${DOC_DIR}
+cp -r $BUILD_DIR/docs/api $PREFIX/${DOC_DIR}
+cp -r $BUILD_DIR/docs/images $PREFIX/${DOC_DIR}
 
 
 install -d -m 0755 $PREFIX/$MAN_DIR
 for i in sqoop sqoop-codegen sqoop-export sqoop-import-all-tables sqoop-version sqoop-create-hive-table sqoop-help sqoop-list-databases sqoop-eval sqoop-import sqoop-list-tables sqoop-job sqoop-metastore sqoop-merge
 	do echo "Copying manpage $i"
-	cp docs/man/$i* $PREFIX/$MAN_DIR
+	cp $BUILD_DIR/docs/man/$i* $PREFIX/$MAN_DIR
 	echo "Creating wrapper for $i"
 	wrapper=$PREFIX/usr/bin/$i
 	mkdir -p `dirname $wrapper`
