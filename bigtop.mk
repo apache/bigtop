@@ -24,7 +24,7 @@ HADOOP_RELEASE_VERSION=1
 HADOOP_TARBALL_DST=$(HADOOP_NAME)-$(HADOOP_BASE_VERSION).tar.gz
 HADOOP_TARBALL_SRC=$(HADOOP_NAME)-$(HADOOP_BASE_VERSION)-src.tar.gz
 #HADOOP_SITE=$(APACHE_MIRROR)/hadoop/common/$(HADOOP_NAME)-$(HADOOP_BASE_VERSION)/
-HADOOP_SITE=http://people.apache.org/~acmurthy/hadoop-0.23.1-rc1/
+HADOOP_SITE=http://people.apache.org/~acmurthy/hadoop-0.23.1-rc2/
 $(eval $(call PACKAGE,hadoop,HADOOP))
 
 # ZooKeeper
