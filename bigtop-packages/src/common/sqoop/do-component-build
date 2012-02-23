@@ -17,5 +17,3 @@
 set -ex
 
 ant -f build.xml -Dhadoopversion=23  package "$@"
-
-
