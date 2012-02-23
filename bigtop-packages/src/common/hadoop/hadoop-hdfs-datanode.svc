@@ -1,0 +1,66 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+HADOOP_NAME="datanode"
+DAEMON="hadoop-hdfs-$HADOOP_NAME"
+DESC="Hadoop $HADOOP_NAME"
+EXEC_PATH="/usr/lib/hadoop/sbin/hadoop-daemon.sh"
+SVC_USER="hdfs"
+DAEMON_FLAGS="$HADOOP_NAME"
+CONF_DIR="/etc/hadoop/conf"
+PIDFILE="/var/run/hadoop/hadoop-$SVC_USER-$HADOOP_NAME.pid"
+LOCKFILE="/var/lock/subsys/hadoop-$HADOOP_NAME"
+
+CHKCONFIG="2345 85 15"
+INIT_DEFAULT_START="3 4 5"
+INIT_DEFAULT_STOP="0 1 2 6"
+
+generate_start() {
+
+cat <<'__EOT__'
+start() {
+  [ -x $EXEC_PATH ] || exit $ERROR_PROGRAM_NOT_INSTALLED
+  [ -d $CONF_DIR ] || exit $ERROR_PROGRAM_NOT_CONFIGURED
+  log_success_msg "Starting ${DESC}: "
+
+  TARGET_USER_NAME="HADOOP_`echo datanode | tr a-z A-Z`_USER"
+  TARGET_USER=$(eval "echo \$$TARGET_USER_NAME")
+
+  # The following needs to be removed once HDFS-1943 gets finally put to rest.
+  # The logic of this ugly hack is this: IFF we do NOT have jsvc installed it is
+  # guaranteed that we can NOT be running in a secure mode and thus we need to
+  # workaround HDFS-1943 (start as non-root). As soon as jsvc gets installed
+  # we are assuming a secure installation and starting a data node as root.
+  # This leaves 2 corner cases:
+  #    1. HADOOP_DATANODE_USER being set to root
+  #    2. jsvc is installed but Hadoop is configures to run in an unsecure mode
+  # Both will currently fail
+  if [ -f $HADOOP_PREFIX/libexec/jsvc ] && [ -n "$HADOOP_SECURE_DN_USER" ]; then
+    TARGET_USER=root
+  fi
+
+  export HADOOP_IDENT_STRING=$TARGET_USER
+  su -s /bin/bash $TARGET_USER -c "$EXEC_PATH --config '$CONF_DIR' start $DAEMON_FLAGS"
+
+  # Some processes are slow to start
+  sleep $SLEEP_TIME
+  checkstatusofproc
+  RETVAL=$?
+
+  [ $RETVAL -eq $RETVAL_SUCCESS ] && touch $LOCKFILE
+  return $RETVAL
+}
+__EOT__
+
+}

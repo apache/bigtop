@@ -51,10 +51,11 @@
 %define bin_hadoop %{_bindir}
 %define man_hadoop %{_mandir}
 %define doc_hadoop %{_docdir}/%{name}-%{hadoop_version}
+%define httpfs_services httpfs
 %define mapreduce_services mapreduce-historyserver
 %define hdfs_services hdfs-namenode hdfs-secondarynamenode hdfs-datanode
 %define yarn_services yarn-resourcemanager yarn-nodemanager
-%define hadoop_services %{hdfs_services} %{mapreduce_services} %{yarn_services}
+%define hadoop_services %{hdfs_services} %{mapreduce_services} %{yarn_services} %{httpfs_services}
 # Hadoop outputs built binaries into %{hadoop_build}
 %define hadoop_build_path build
 %define static_images_dir src/webapps/static/images
@@ -137,17 +138,22 @@ Source0: %{name}-%{hadoop_base_version}.tar.gz
 Source1: do-component-build
 Source2: install_%{name}.sh
 Source3: hadoop.default
-Source4: hadoop-init.tmpl
-Source5: hadoop-init.tmpl.suse
+Source4: hadoop-fuse.default
+Source5: hadoop-httpfs.default
 Source6: hadoop.1
 Source7: hadoop-fuse-dfs.1
-Source8: hadoop-fuse.default
-Source9: hdfs.conf
-Source10: yarn-init.tmpl
-Source11: hadoop-httpfs.default
-Source12: service-hadoop-httpfs
-Source13: yarn.conf
-Source14: mapreduce.conf
+Source8: hdfs.conf
+Source9: yarn.conf
+Source10: mapreduce.conf
+Source11: init.d.tmpl 
+Source12: hadoop-hdfs-namenode.svc
+Source13: hadoop-hdfs-datanode.svc
+Source14: hadoop-hdfs-secondarynamenode.svc
+Source15: hadoop-mapreduce-historyserver.svc
+Source16: hadoop-yarn-resourcemanager.svc
+Source17: hadoop-yarn-nodemanager.svc
+Source18: hadoop-httpfs.svc
+Source19: hadoop-mapreduce-historyserver.default
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
 BuildRequires: python >= 2.4, git, fuse-devel,fuse, automake, autoconf
 Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils
@@ -378,51 +384,25 @@ bash %{SOURCE2} \
 # Init.d scripts
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
 
-
-%if  %{?suse_version:1}0
-orig_init_file=$RPM_SOURCE_DIR/hadoop-init.tmpl.suse
-%else
-orig_init_file=$RPM_SOURCE_DIR/hadoop-init.tmpl
-%endif
-
-yarn_orig_init_file=$RPM_SOURCE_DIR/yarn-init.tmpl
-httpfs_orig_init_file=$RPM_SOURCE_DIR/service-hadoop-httpfs
-
 # Generate the init.d scripts
-for service in %{hdfs_services} %{mapreduce_services}
+for service in %{hadoop_services}
 do
        init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{name}-${service}
-       %__cp $orig_init_file $init_file
-       %__sed -i -e 's|@HADOOP_COMMON_ROOT@|%{lib_hadoop}|' $init_file
-       %__sed -i -e "s|@HADOOP_DAEMON@|${service#*-}|" $init_file
-       %__sed -i -e 's|@HADOOP_CONF_DIR@|%{config_hadoop}|' $init_file
-       %__sed -i -e 's|@HADOOP_DAEMON_USER@|hdfs|' $init_file
+       bash $RPM_SOURCE_DIR/init.d.tmpl $RPM_SOURCE_DIR/%{name}-${service}.svc > $init_file
        chmod 755 $init_file
 done
-for service in %{yarn_services}
-do
-       init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{name}-${service}
-       %__cp $yarn_orig_init_file $init_file
-       %__sed -i -e 's|@YARN_COMMON_ROOT@|%{lib_hadoop}|' $init_file
-       %__sed -i -e "s|@YARN_DAEMON@|${service#yarn-}|" $init_file
-       %__sed -i -e 's|@YARN_CONF_DIR@|%{config_hadoop}|' $init_file
-       %__sed -i -e 's|@YARN_DAEMON_USER@|yarn|' $init_file
-       chmod 755 $init_file
-done
-%__cp $httpfs_orig_init_file $RPM_BUILD_ROOT/%{initd_dir}/%{name}-httpfs
-chmod 755 $RPM_BUILD_ROOT/%{initd_dir}/%{name}-httpfs
-
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/etc/default
 %__cp $RPM_SOURCE_DIR/hadoop.default $RPM_BUILD_ROOT/etc/default/hadoop
 %__cp $RPM_SOURCE_DIR/yarn.default $RPM_BUILD_ROOT/etc/default/yarn
 %__cp $RPM_SOURCE_DIR/%{name}-fuse.default $RPM_BUILD_ROOT/etc/default/%{name}-fuse
 %__cp $RPM_SOURCE_DIR/%{name}-httpfs.default $RPM_BUILD_ROOT/etc/default/%{name}-httpfs
+%__cp $RPM_SOURCE_DIR/%{name}-mapreduce-historyserver.default $RPM_BUILD_ROOT/etc/default/%{name}-mapreduce-historyserver
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/etc/security/limits.d
-%__install -m 0644 %{SOURCE9} $RPM_BUILD_ROOT/etc/security/limits.d/hdfs.conf
-%__install -m 0644 %{SOURCE13} $RPM_BUILD_ROOT/etc/security/limits.d/yarn.conf
-%__install -m 0644 %{SOURCE14} $RPM_BUILD_ROOT/etc/security/limits.d/mapreduce.conf
+%__install -m 0644 %{SOURCE8} $RPM_BUILD_ROOT/etc/security/limits.d/hdfs.conf
+%__install -m 0644 %{SOURCE9} $RPM_BUILD_ROOT/etc/security/limits.d/yarn.conf
+%__install -m 0644 %{SOURCE10} $RPM_BUILD_ROOT/etc/security/limits.d/mapreduce.conf
 
 # /var/lib/*/cache
 %__install -d -m 1777 $RPM_BUILD_ROOT/%{state_hadoop}/cache
@@ -490,7 +470,7 @@ if [ "$1" = 0 ]; then
 fi
 
 %preun httpfs
-%{alternatives_cmd} --remove %{name}-httpfs-conf %{etc_httpfs}/conf.empty 10
+%{alternatives_cmd} --remove %{name}-httpfs-conf %{etc_httpfs}/conf.empty || :
 if [ $1 = 0 ]; then
   service %{name}-httpfs stop > /dev/null 2>&1
   chkconfig --del %{name}-httpfs
@@ -551,11 +531,16 @@ fi
 
 %files mapreduce
 %defattr(-,root,root)
+%config(noreplace) /etc/default/hadoop-mapreduce-historyserver
 %config(noreplace) /etc/security/limits.d/mapreduce.conf
 %{lib_hadoop}/hadoop-mapreduce*.jar
 %{lib_hadoop}/hadoop-streaming*.jar
+%{lib_hadoop}/hadoop-extras*.jar
+%{lib_hadoop}/hadoop-distcp*.jar
+%{lib_hadoop}/hadoop-rumen*.jar
 %{lib_hadoop}/libexec/mapred-config.sh
 %{lib_hadoop}/bin/mapred
+%{lib_hadoop}/sbin/mr-jobhistory-daemon.sh
 %{bin_hadoop}/mapred
 %attr(0775,mapreduce,hadoop) %{run_mapreduce}
 %attr(0775,mapreduce,hadoop) %{log_mapreduce}
@@ -565,6 +550,7 @@ fi
 
 %files
 %defattr(-,root,root)
+%config(noreplace) %{etc_hadoop}/conf.empty/core-site.xml
 %config(noreplace) %{etc_hadoop}/conf.empty/hadoop-metrics.properties
 %config(noreplace) %{etc_hadoop}/conf.empty/hadoop-metrics2.properties
 %config(noreplace) %{etc_hadoop}/conf.empty/log4j.properties

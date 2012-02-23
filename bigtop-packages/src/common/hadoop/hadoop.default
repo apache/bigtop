@@ -30,3 +30,9 @@ export HADOOP_CLASSPATH="${HADOOP_CLASSPATH}:${HADOOP_PREFIX}/*:${HADOOP_PREFIX}
 # Pointless definitions making yarn happy
 export HADOOP_COMMON_HOME=${HADOOP_PREFIX}
 export HADOOP_HDFS_HOME=${HADOOP_PREFIX}
+export YARN_HOME=/usr/lib/hadoop
+export YARN_IDENT_STRING=yarn
+export YARN_PID_DIR=/var/run/yarn
+export YARN_LOG_DIR=/var/log/yarn
+export YARN_CONF_DIR=/etc/hadoop/conf
+export YARN_CLASSPATH="${YARN_CLASSPATH}:${YARN_HOME}/*:${YARN_HOME}/lib/*"
