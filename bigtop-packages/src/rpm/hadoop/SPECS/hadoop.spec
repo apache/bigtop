@@ -54,7 +54,7 @@
 %define httpfs_services httpfs
 %define mapreduce_services mapreduce-historyserver
 %define hdfs_services hdfs-namenode hdfs-secondarynamenode hdfs-datanode
-%define yarn_services yarn-resourcemanager yarn-nodemanager
+%define yarn_services yarn-resourcemanager yarn-nodemanager yarn-proxyserver
 %define hadoop_services %{hdfs_services} %{mapreduce_services} %{yarn_services} %{httpfs_services}
 # Hadoop outputs built binaries into %{hadoop_build}
 %define hadoop_build_path build
@@ -310,6 +310,15 @@ Requires(pre): %{name} = %{version}-%{release}
 The NodeManager is the per-machine framework agent who is responsible for
 containers, monitoring their resource usage (cpu, memory, disk, network) and
 reporting the same to the ResourceManager/Scheduler.
+
+%package yarn-proxyserver
+Summary: Yarn Web Proxy
+Group: System/Daemons
+Requires: %{name}-yarn = %{version}-%{release}
+Requires(pre): %{name} = %{version}-%{release}
+
+%description yarn-proxyserver
+The web proxy server sits in front of the YARN application master web UI.
 
 %package mapreduce-historyserver
 Summary: MapReduce History Server
@@ -616,6 +625,7 @@ fi
 %service_macro hdfs-datanode
 %service_macro yarn-resourcemanager
 %service_macro yarn-nodemanager
+%service_macro yarn-proxyserver
 %service_macro mapreduce-historyserver
 
 # Pseudo-distributed Hadoop installation

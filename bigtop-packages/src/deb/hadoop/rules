@@ -77,13 +77,17 @@ install: build
 # Run dh_lintian if we've got it - this doesn't exist on debhelper 6 (eg Ubuntu Hardy)
 	(dh_lintian) || /bin/true
 
-hdfs-namenode hdfs-secondarynamenode hdfs-datanode yarn-resourcemanager yarn-nodemanager mapreduce-historyserver httpfs: debian/init.d.tmpl
+hadoop_svcs=hdfs-namenode hdfs-secondarynamenode hdfs-datanode \
+            yarn-resourcemanager yarn-nodemanager yarn-proxyserver \
+            mapreduce-historyserver httpfs
+
+$(hadoop_svcs): debian/init.d.tmpl
 	bash $< debian/hadoop-$@.svc > debian/hadoop-$@.init
 	# FIXME: workaround for BIGTOP-105
 	[ -f debian/hadoop-$@.postinst ] || cp debian/hadoop.daemon.postinst.tpl debian/hadoop-$@.postinst
 	sed -i -e "s|@HADOOP_DAEMON@|$@|" debian/hadoop-$@.postinst
 
-install-indep: hdfs-namenode hdfs-secondarynamenode hdfs-datanode yarn-resourcemanager yarn-nodemanager mapreduce-historyserver httpfs
+install-indep: $(hadoop_svcs) 
 	mkdir -p debian/tmp/etc/default
 	cp debian/hadoop.default debian/tmp/etc/default/hadoop
 	cp debian/yarn.default debian/tmp/etc/default/yarn

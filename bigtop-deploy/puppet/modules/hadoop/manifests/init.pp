@@ -300,6 +300,28 @@ class hadoop {
     Kerberos::Host_keytab <| title == "yarn" |> -> Service["hadoop-yarn-resourcemanager"]
   }
 
+  define proxyserver ($host = $fqdn, $port = "8088", $auth = "simple") {
+    $hadoop_ps_host = $host
+    $hadoop_ps_port = $port
+    $hadoop_security_authentication = $auth
+
+    include common-yarn
+
+    package { "hadoop-yarn-proxyserver":
+      ensure => latest,
+      require => Package["jdk"],
+    }
+
+    service { "hadoop-yarn-proxyserver":
+      ensure => running,
+      hasstatus => true,
+      subscribe => [Package["hadoop-yarn-proxyserver"], File["/etc/hadoop/conf/hadoop-env.sh"], 
+                    File["/etc/hadoop/conf/yarn-site.xml"], File["/etc/hadoop/conf/core-site.xml"]],
+      require => [ Package["hadoop-yarn-proxyserver"] ],
+    }
+    Kerberos::Host_keytab <| title == "yarn" |> -> Service["hadoop-yarn-proxyserver"]
+  }
+
   define historyserver ($host = $fqdn, $port = "10020", $webapp_port = "19888", $auth = "simple") {
     $hadoop_hs_host = $host
     $hadoop_hs_port = $port

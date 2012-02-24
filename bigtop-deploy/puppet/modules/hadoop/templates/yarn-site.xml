@@ -30,6 +30,15 @@
   </property>
 
   <property>
+    <name>yarn.web-proxy.principal</name>
+    <value>yarn/_HOST@<%= kerberos_realm %></value>
+  </property>
+  <property>
+    <name>yarn.web-proxy.keytab</name>
+    <value>/etc/yarn.keytab</value>
+  </property>
+
+  <property>
     <name>yarn.nodemanager.principal</name>
     <value>yarn/_HOST@<%= kerberos_realm %></value>
   </property>
@@ -55,6 +64,11 @@
     <value>/etc/yarn.keytab</value>
   </property>
 <% end %>
+
+  <!-- FIXME: MAPREDUCE-3916 property>
+    <name>yarn.web-proxy.address</name>
+    <value><%= hadoop_ps_host %>:<%= hadoop_ps_port %></value>
+  </property -->
 
   <property>
     <name>yarn.resourcemanager.resource-tracker.address</name>

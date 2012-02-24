@@ -139,6 +139,13 @@ Depends: hadoop-yarn (= ${source:Version})
 Description: Resource manager for Hadoop
  The resource manager manages the global assignment of compute resources to applications.
 
+Package: hadoop-yarn-proxyserver
+Provides: hadoop-yarn-proxyserver
+Architecture: all
+Depends: hadoop-yarn (= ${source:Version})
+Description: Web proxy for YARN
+ The web proxy server sits in front of the YARN application master web UI.
+
 Package: hadoop-hdfs-namenode
 Provides: hadoop-hdfs-namenode
 Architecture: all
