@@ -208,7 +208,7 @@ located.
 %package hdfs
 Summary: The Hadoop Distributed File System
 Group: System/Daemons
-Requires: %{name} = %{version}-%{release}
+Requires: %{name} = %{version}-%{release}, bigtop-jsvc
 
 %description hdfs
 Hadoop Distributed File System (HDFS) is the primary storage system used by 
@@ -391,6 +391,9 @@ bash %{SOURCE2} \
   --native-build-string=%{hadoop_arch} \
   --installed-lib-dir=%{lib_hadoop} \
   --man-dir=$RPM_BUILD_ROOT%{man_hadoop} \
+
+# Replace the bundled jsvc with a link to a bigtop-jsvc one
+%__ln -fs /usr/lib/bigtop-utils/jsvc $RPM_BUILD_ROOT/%{lib_hadoop}/libexec/jsvc
 
 # Init.d scripts
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/

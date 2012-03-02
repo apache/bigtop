@@ -48,7 +48,7 @@ Description: A software platform for processing vast amounts of data
 
 Package: hadoop-hdfs
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, adduser, bigtop-utils, hadoop (= ${source:Version})
+Depends: ${shlibs:Depends}, ${misc:Depends}, adduser, bigtop-utils, hadoop (= ${source:Version}), bigtop-jsvc
 Description: The Hadoop Distributed File System
  Hadoop Distributed File System (HDFS) is the primary storage system used by 
  Hadoop applications. HDFS creates multiple replicas of data blocks and distributes 
