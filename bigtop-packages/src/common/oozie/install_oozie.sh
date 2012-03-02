@@ -218,8 +218,6 @@ if [ "${OOZIE_INITD}" != "" ]; then
 fi
 cp -R ${OOZIE_BUILD_DIR}/oozie-sharelib*.tar.gz ${OOZIE_SERVER_DIR}/oozie-sharelib.tar.gz
 failIfNotOK
-cp -R ${OOZIE_BUILD_DIR}/oozie-server ${OOZIE_SERVER_DIR}
-failIfNotOK
 install -d -m 0755 ${OOZIE_DATA}/oozie-server
 failIfNotOK
 mv ${OOZIE_SERVER_DIR}/oozie-server/conf ${OOZIE_DATA}/oozie-server/

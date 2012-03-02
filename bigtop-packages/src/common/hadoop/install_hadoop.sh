@@ -240,8 +240,11 @@ install -d -m 0755 ${HTTPFS_DIR}/sbin
 mv ${HADOOP_SBIN_DIR}/httpfs.sh ${HTTPFS_DIR}/sbin/
 install -d -m 0755 ${HTTPFS_DIR}/libexec
 mv ${SYSTEM_LIBEXEC_DIR}/httpfs-config.sh ${HTTPFS_DIR}/libexec/
-cp -r ${BUILD_DIR}/share/hadoop/httpfs/tomcat/* ${HTTPFS_DIR}/
+cp -r ${BUILD_DIR}/share/hadoop/httpfs/tomcat/webapps ${HTTPFS_DIR}/
+cp -r ${BUILD_DIR}/share/hadoop/httpfs/tomcat/conf ${HTTPFS_DIR}/
 chmod 644 ${HTTPFS_DIR}/conf/*
+# FIXME: bug in HADOOP
+ln -s /usr/lib/bigtop-tomcat/bin ${HTTPFS_DIR}/bin
 install -d -m 0755 $HTTPFS_ETC_DIR/conf.empty
 mv $HADOOP_ETC_DIR/conf.empty/httpfs* $HTTPFS_ETC_DIR/conf.empty
 
