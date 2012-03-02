@@ -24,6 +24,22 @@
   %define initd_dir %{_sysconfdir}/rc.d/init.d
   %define alternatives_cmd alternatives
 %else
+
+# Only tested on openSUSE 11.4. le'ts update it for previous release when confirmed
+%if 0%{suse_version} > 1130
+%define suse_check \# Define an empty suse_check for compatibility with older sles
+%endif
+
+# SLES is more strict anc check all symlinks point to valid path
+# But we do point to a hadoop jar which is not there at build time
+# (but would be at install time).
+# Since our package build system does not handle dependencies,
+# these symlink checks are deactivated
+%define __os_install_post \
+    %{suse_check} ; \
+    /usr/lib/rpm/brp-compress ; \
+    %{nil}
+
   %define doc_oozie %{_docdir}/oozie
   %define initd_dir %{_sysconfdir}/rc.d
   %define alternatives_cmd update-alternatives
@@ -40,6 +56,9 @@ License: APL2
 Source0: %{name}-%{oozie_base_version}.tar.gz
 Source1: do-component-build
 Source2: install_oozie.sh
+Source3: oozie.1
+Source4: oozie-env.sh
+Source5: oozie.init
 Patch0: patch
 Requires(pre): /usr/sbin/groupadd, /usr/sbin/useradd
 Requires(post): /sbin/chkconfig, hadoop
@@ -108,15 +127,12 @@ Requires: bigtop-utils
 
 
 %prep
-%setup -n apache-oozie-135dcce
+%setup -n oozie-%{oozie_base_version}
 %patch0 -p0
 
 %build
-    M2_CACHE=`mktemp -d /tmp/oozie.m2.XXXXX`
     mkdir -p distro/downloads
-    # curl --retry 5 -# -L -k -o distro/downloads/tomcat.tar.gz http://archive.apache.org/dist/tomcat/tomcat-6/v6.0.29/bin/apache-tomcat-6.0.29.tar.gz    
-    (export DO_MAVEN_DEPLOY="";export FULL_VERSION=%{version};cp %{SOURCE1} bin; sh -x bin/do-component-build -Dmaven.repo.local=${HOME}/.m2/repository -DskipTests)
-    rm -rf ${M2_CACHE}
+    env DO_MAVEN_DEPLOY="" FULL_VERSION=%{oozie_base_version} bash -x %{SOURCE1}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
@@ -132,7 +148,6 @@ getent group oozie >/dev/null || /usr/sbin/groupadd -r oozie >/dev/null
 getent passwd oozie >/dev/null || /usr/sbin/useradd --comment "Oozie User" --shell /bin/false -M -r -g oozie --home /var/run/oozie oozie >/dev/null
 
 %post 
-%{lib_oozie}/bin/oozie-setup.sh -hadoop 0.20.200 /usr/lib/hadoop
 /sbin/chkconfig --add oozie 
 
 %preun
@@ -164,7 +179,9 @@ fi
 %{lib_oozie}/bin/oozie-sys.sh
 %{lib_oozie}/bin/oozie-env.sh
 %{lib_oozie}/bin/oozied.sh
-%{lib_oozie}/oozie.war
+%{lib_oozie}/bin/ooziedb.sh
+%{lib_oozie}/webapps
+%{lib_oozie}/libtools
 %{lib_oozie}/oozie-sharelib.tar.gz
 %{lib_oozie}/oozie-server
 %{initd_dir}/oozie
@@ -179,7 +196,6 @@ fi
 %{usr_bin}/oozie
 %dir %{lib_oozie}/bin
 %{lib_oozie}/bin/oozie
-%{lib_oozie}/bin/oozie-examples.sh
 %{lib_oozie}/lib
 %doc %{doc_oozie}
 %{man_dir}/man1/oozie.1.*

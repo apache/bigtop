@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-export OOZIE_CONFIG=/etc/oozie
+export OOZIE_CONFIG=/etc/oozie/conf
 export OOZIE_DATA=/var/lib/oozie
 export OOZIE_LOG=/var/log/oozie
 export CATALINA_BASE=${OOZIE_DATA}/oozie-server

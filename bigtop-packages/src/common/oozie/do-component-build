@@ -14,13 +14,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+set -x
 #
 # Resolve source directory
 #
 
 # $0 may be a softlink
-PRG="${0}"
+PRG="$0"
 while [ -h "${PRG}" ]; do
   ls=`ls -ld "${PRG}"`
   link=`expr "$ls" : '.*-> \(.*\)$'`
@@ -34,10 +34,12 @@ done
 RELEASE_DIR=`dirname ${PRG}`
 RELEASE_DIR=`cd ${RELEASE_DIR}/..;pwd`
 
+RELEASE_DIR=$PWD
+
 #
 # Resolve build version
 #
-OOZIE_VERSION=2.3.0
+OOZIE_VERSION=3.1.3-incubating
 RELEASE_ENV_FILENAME=release.env
 RELEASE_ENV_FILE=${RELEASE_DIR}/cloudera/${RELEASE_ENV_FILENAME}
 if [ -f "${RELEASE_ENV_FILE}" ]; then
@@ -84,7 +86,7 @@ if [ "${DO_MAVEN_DEPLOY}" = "deploy" ]; then
 fi
 
 # Invoke Oozie build script with CDH options
-${WORKDIR}/bin/mkdistro.sh -Pmr2 -Dhadoop.version=0.23.1-SNAPSHOT -DskipTests -Dnot.cdh.release.build=false ${EXTRA_GOALS} "$@"
+${WORKDIR}/bin/mkdistro.sh -DskipTests -Dhadoop.version=0.23.1 ${EXTRA_GOALS} -Dmaven.repo.local=${HOME}/.m2/repository "$@"
 MKDISTRO_RESULT=$?
 if [ "${MKDISTRO_RESULT}" != "0" ]; then
   echo "ERROR: mkdistro.sh failed with error ${MKDISTRO_RESULT}"
@@ -114,10 +116,6 @@ fi
 
 cd ${EXPDIR}
 rm -rf ${EXPDIR}/oozie-client-*.tar.gz
-
-# creating the examples installer script for TAR distros, if doing DEB/RPM the script
-# is overriden in the create-package-layout directory
-cp ${RELEASE_DIR}/cloudera/oozie-examples.sh ${EXPDIR}/bin/
 
 SRCDIR=${EXPDIR}/src
 mkdir -p ${SRCDIR}
