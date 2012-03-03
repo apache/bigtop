@@ -141,7 +141,7 @@ HADOOP_SBIN_DIR=${HADOOP_DIR}/sbin
 HADOOP_LIB_DIR=${HADOOP_DIR}/lib
 HADOOP_NATIVE_LIB_DIR=${HADOOP_LIB_DIR}/native
 
-HADOOP_VERSION=0.23.1-SNAPSHOT
+HADOOP_VERSION=0.23.1
 
 ##Needed for some distros to find ldconfig
 export PATH="/sbin/:$PATH"
