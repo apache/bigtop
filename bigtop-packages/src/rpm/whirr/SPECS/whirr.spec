@@ -51,7 +51,7 @@ Whirr provides
     
 
 %prep
-%setup -n %{name}-%{whirr_base_version}
+%setup -n %{name}-%{whirr_base_version}-src
 
 %build
 bash %{SOURCE1}
