@@ -209,7 +209,7 @@ public abstract class PackageManager {
     switch (linux_flavor ?: OS.linux_flavor) {
       case ~/(?is).*(ubuntu|debian).*/:
         return new AptCmdLinePackageManager();
-      case ~/(?is).*(redhat|centos|rhel|fedora).*/:
+      case ~/(?is).*(redhat|centos|rhel|fedora|enterpriseenterpriseserver).*/:
         return new YumCmdLinePackageManager();
       case ~/(?is).*(suse|sles|sled).*/:
         return new ZypperCmdLinePackageManager();
