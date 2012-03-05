@@ -38,7 +38,6 @@ case "$1" in
     configure)
         chown -R oozie:oozie /var/lib/oozie /var/log/oozie
         update-rc.d oozie defaults >/dev/null || exit 1
-        /usr/lib/oozie/bin/oozie-setup.sh -hadoop 0.20.200 /usr/lib/hadoop
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

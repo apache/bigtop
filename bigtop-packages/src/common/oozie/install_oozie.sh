@@ -151,8 +151,6 @@ install -d -m 0755 ${OOZIE_MAN_DIR}
 failIfNotOK
 gzip -c ${EXTRADIR}/oozie.1 > ${OOZIE_MAN_DIR}/oozie.1.gz
 failIfNotOK
-cp -R ${EXTRADIR}/oozie-examples.sh ${OOZIE_CLIENT_DIR}/bin
-failIfNotOK
 
 # Create the /usr/bin/oozie wrapper
 install -d -m 0755 $BIN_DIR
@@ -202,8 +200,10 @@ failIfNotOK
 install -d -m 0755 ${OOZIE_DATA}
 failIfNotOK
 cp -R ${OOZIE_BUILD_DIR}/bin/*.sh ${OOZIE_SERVER_DIR}/bin
-
 failIfNotOK
+cp -R ${OOZIE_BUILD_DIR}/libtools ${OOZIE_SERVER_DIR}
+failIfNotOK
+
 install -d -m 0755 ${OOZIE_CONF}
 failIfNotOK
 cp -R ${OOZIE_BUILD_DIR}/conf/* ${OOZIE_CONF}
@@ -218,18 +218,31 @@ if [ "${OOZIE_INITD}" != "" ]; then
 fi
 cp -R ${OOZIE_BUILD_DIR}/oozie-sharelib*.tar.gz ${OOZIE_SERVER_DIR}/oozie-sharelib.tar.gz
 failIfNotOK
-cp -R ${OOZIE_BUILD_DIR}/oozie.war ${OOZIE_SERVER_DIR}
-failIfNotOK
-cp -R ${OOZIE_BUILD_DIR}/oozie-server ${OOZIE_SERVER_DIR}
-failIfNotOK
 install -d -m 0755 ${OOZIE_DATA}/oozie-server
 failIfNotOK
-mv ${OOZIE_SERVER_DIR}/oozie-server/conf ${OOZIE_DATA}/oozie-server/
+cp -R ${OOZIE_BUILD_DIR}/oozie-server/conf ${OOZIE_DATA}/oozie-server/conf
 failIfNotOK
-mv ${OOZIE_SERVER_DIR}/oozie-server/webapps ${OOZIE_DATA}/oozie-server/
+cp -R ${OOZIE_BUILD_DIR}/oozie-server/webapps ${OOZIE_SERVER_DIR}/webapps
 failIfNotOK
 cp -R ${EXTRADIR}/oozie-env.sh ${OOZIE_SERVER_DIR}/bin
 failIfNotOK
 chmod 755 ${OOZIE_SERVER_DIR}/bin/oozie-env.sh
 failIfNotOK
 
+# Unpack oozie.war some place reasonable
+OOZIE_WEBAPP=${OOZIE_SERVER_DIR}/webapps/oozie
+mkdir ${OOZIE_WEBAPP}
+unzip -d ${OOZIE_WEBAPP} ${OOZIE_BUILD_DIR}/oozie.war
+touch ${OOZIE_SERVER_DIR}/webapps/oozie.war
+
+# Create an exploded-war oozie deployment in /var/lib/oozie
+sed -i -e 's#<Context#<Context allowLinking="true"#g' ${OOZIE_DATA}/oozie-server/conf/context.xml 
+mkdir                        ${OOZIE_DATA}/oozie-server/lib
+ln -s /usr/lib/oozie/webapps ${OOZIE_DATA}/oozie-server/webapps
+
+# Finally do a trick where all the libs go to a writable place
+mv -f ${OOZIE_WEBAPP}/WEB-INF/lib ${OOZIE_DATA}/oozie-libs 
+ln -s /var/lib/oozie/oozie-libs ${OOZIE_WEBAPP}/WEB-INF/lib
+for i in `cd ${OOZIE_SERVER_DIR} ; echo lib/* libtools/*` ; do
+   ln -fs /usr/lib/oozie/$i ${OOZIE_DATA}/oozie-libs/${i#*/}
+done
