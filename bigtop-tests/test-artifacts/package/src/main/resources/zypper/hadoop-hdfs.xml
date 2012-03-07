@@ -1,0 +1,43 @@
+<hadoop-hdfs>
+<content>
+  <config name='/etc/default/hadoop-fuse' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+  <config name='/etc/hadoop/conf.empty/hdfs-site.xml' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+  <config name='/etc/security/limits.d/hdfs.conf' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+  <file name='/usr/bin/hdfs' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+  <file name='/usr/lib/hadoop/bin/hdfs' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+  <file name='/usr/lib/hadoop/hadoop-archives-0.23.1.jar' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+  <file name='/usr/lib/hadoop/hadoop-hdfs-0.23.1-sources.jar' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+  <file name='/usr/lib/hadoop/hadoop-hdfs-0.23.1.jar' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+  <file name='/usr/lib/hadoop/libexec/hdfs-config.sh' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+  <file name='/usr/lib/hadoop/libexec/jsvc' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+  <file name='/usr/lib/hadoop/sbin/distribute-exclude.sh' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+  <file name='/usr/lib/hadoop/sbin/refresh-namenodes.sh' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+  <file name='/usr/lib/hadoop/sbin/start-balancer.sh' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+  <file name='/usr/lib/hadoop/sbin/start-dfs.sh' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+  <file name='/usr/lib/hadoop/sbin/start-secure-dns.sh' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+  <file name='/usr/lib/hadoop/sbin/stop-balancer.sh' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+  <file name='/usr/lib/hadoop/sbin/stop-dfs.sh' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+  <file name='/usr/lib/hadoop/sbin/stop-secure-dns.sh' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+  <file name='/usr/lib/hadoop/sbin/update-hdfs-env.sh' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+  <file name='/usr/lib/hadoop/webapps' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+  <file name='/usr/lib/hadoop/webapps/datanode' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+  <file name='/usr/lib/hadoop/webapps/datanode/WEB-INF' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+  <file name='/usr/lib/hadoop/webapps/datanode/WEB-INF/web.xml' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+  <file name='/usr/lib/hadoop/webapps/datanode/robots.txt' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+  <file name='/usr/lib/hadoop/webapps/hdfs' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+  <file name='/usr/lib/hadoop/webapps/hdfs/WEB-INF' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+  <file name='/usr/lib/hadoop/webapps/hdfs/WEB-INF/web.xml' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+  <file name='/usr/lib/hadoop/webapps/hdfs/decommission.xsl' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+  <file name='/usr/lib/hadoop/webapps/hdfs/dfsclusterhealth.xsl' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+  <file name='/usr/lib/hadoop/webapps/hdfs/dfsclusterhealth_utils.xsl' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+  <file name='/usr/lib/hadoop/webapps/hdfs/index.html' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+  <file name='/usr/lib/hadoop/webapps/secondary' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+  <file name='/usr/lib/hadoop/webapps/secondary/WEB-INF' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+  <file name='/usr/lib/hadoop/webapps/secondary/WEB-INF/web.xml' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+  <file name='/usr/lib/hadoop/webapps/secondary/index.html' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+  <file name='/var/lib/hdfs' owners='-1' perm='drwxrwxr-x' user='hdfs' group='hadoop' />
+  <file name='/var/lib/hdfs/cache' owners='-1' perm='drwxrwxrwt' user='hdfs' group='hadoop' />
+  <file name='/var/log/hdfs' owners='-1' perm='lrwxrwxrwx' user='hdfs' group='hadoop' target='hadoop' />
+  <file name='/var/run/hdfs' owners='-1' perm='lrwxrwxrwx' user='hdfs' group='hadoop' target='hadoop' />
+</content>
+</hadoop-hdfs>

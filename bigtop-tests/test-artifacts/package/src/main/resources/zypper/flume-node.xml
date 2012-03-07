@@ -1,0 +1,7 @@
+<flume-node>
+<content>
+  <file name='/etc/rc.d/flume-node' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+  <file name='/usr/lib/flume' owners='-1' perm='drwxr-xr-x' user='root' group='users' />
+  <file name='/usr/lib/flume/bin' owners='-1' perm='drwxr-xr-x' user='root' group='users' />
+</content>
+</flume-node>

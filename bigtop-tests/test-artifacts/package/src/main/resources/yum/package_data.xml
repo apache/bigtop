@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<packages>
+  <mahout>
+  </mahout>
+  <whirr>
+    <deps>
+      <tag name="/bin/bash"/>
+      <tag name="/bin/sh"/>
+      <tag name="/usr/bin/env"/>
+      <jre>&gt;=1.6</jre>
+    </deps>
+  </whirr>
+  <flume>
+    <deps>
+      <tag name="/bin/sh"/>
+      <tag name="/sbin/chkconfig"/>
+      <tag name="/sbin/service"/>
+      <tag name="/usr/bin/env"/>
+      <tag name="/usr/sbin/useradd"/>
+      <jre>&gt;=1.6</jre>
+      <sh-utils/>
+      <textutils/>
+    </deps>
+  </flume>
+  <flume-master>
+    <deps>
+      <tag name="/bin/bash"/>
+      <tag name="/bin/sh"/>
+      <tag name="/sbin/chkconfig"/>
+      <tag name="/sbin/service"/>
+      <tag name="/usr/bin/env"/>
+      <tag name="/usr/sbin/useradd"/>
+      <jre>&gt;=1.6</jre>
+      <redhat-lsb/>
+      <sh-utils/>
+      <textutils/>
+    </deps>
+  </flume-master>
+  <flume-node>
+    <deps>
+      <tag name="/bin/bash"/>
+      <tag name="/bin/sh"/>
+      <tag name="/sbin/chkconfig"/>
+      <tag name="/sbin/service"/>
+      <tag name="/usr/bin/env"/>
+      <tag name="/usr/sbin/useradd"/>
+      <jre>&gt;=1.6</jre>
+      <redhat-lsb/>
+      <sh-utils/>
+      <textutils/>
+    </deps>
+  </flume-node>
+  <sqoop>
+    <deps>
+      <tag name="/bin/bash"/>
+      <tag name="/bin/sh"/>
+      <jre>&gt;=1.6</jre>
+    </deps>
+  </sqoop>
+  <sqoop-metastore>
+    <deps>
+      <redhat-lsb/>
+      <tag name="/bin/bash"/>
+      <tag name="/bin/sh"/>
+    </deps>
+  </sqoop-metastore>
+  <oozie>
+    <deps>
+      <tag name="/bin/bash"/>
+      <tag name="/bin/sh"/>
+      <tag name="/sbin/chkconfig"/>
+      <tag name="/sbin/service"/>
+      <tag name="/usr/sbin/groupadd"/>
+      <tag name="/usr/sbin/useradd"/>
+      <jre>&gt;=1.6</jre>
+    </deps>
+  </oozie>
+  <oozie-client>
+    <deps>
+      <tag name="/bin/bash"/>
+      <tag name="/bin/sh"/>
+    </deps>
+  </oozie-client>
+  <zookeeper>
+    <deps>
+      <tag name="/bin/sh"/>
+      <jre>&gt;=1.6</jre>
+    </deps>
+  </zookeeper>
+  <zookeeper-server>
+    <deps>
+      <tag name="/bin/bash"/>
+      <tag name="/bin/sh"/>
+      <redhat-lsb/>
+    </deps>
+  </zookeeper-server>
+  <pig>
+    <deps>
+      <tag name="/bin/sh"/>
+      <tag name="/usr/bin/env"/>
+      <jre>&gt;=1.6</jre>
+    </deps>
+  </pig>
+  <hive>
+    <deps>
+      <tag name="/bin/sh"/>
+      <tag name="/usr/bin/env"/>
+      <jre>&gt;=1.6</jre>
+    </deps>
+  </hive>
+  <hbase>
+    <deps>
+      <tag name="/bin/sh"/>
+      <tag name="/sbin/chkconfig"/>
+      <tag name="/sbin/service"/>
+      <tag name="/usr/bin/env"/>
+      <tag name="/usr/sbin/useradd"/>
+      <jre>&gt;=1.6</jre>
+      <sh-utils/>
+      <textutils/>
+    </deps>
+  </hbase>
+  <hbase-doc>
+  </hbase-doc>
+  <hbase-master>
+    <deps>
+      <tag name="/bin/bash"/>
+      <tag name="/bin/sh"/>
+      <redhat-lsb/>
+    </deps>
+  </hbase-master>
+  <hbase-regionserver>
+    <deps>
+      <tag name="/bin/bash"/>
+      <tag name="/bin/sh"/>
+      <redhat-lsb/>
+    </deps>
+  </hbase-regionserver>
+  <hbase-thrift>
+    <deps>
+      <tag name="/bin/bash"/>
+      <tag name="/bin/sh"/>
+      <redhat-lsb/>
+    </deps>
+  </hbase-thrift>
+  <hadoop>
+    <deps>
+      <sh-utils/>
+      <textutils/>
+      <tag name="/usr/sbin/useradd"/>
+      <tag name="/usr/sbin/usermod"/>
+      <tag name="/sbin/chkconfig"/>
+      <tag name="/sbin/service"/>
+      <jre>&gt;=1.6</jre>
+      <redhat-lsb/>
+      <tag name="/bin/sh"/>
+      <tag name="/bin/bash"/>
+      <tag name="/usr/bin/env"/>
+    </deps>
+  </hadoop>
+  <hadoop-hdfs-namenode>
+    <deps>
+      <tag name="/bin/sh"/>
+      <tag name="/bin/bash"/>
+      <tag name="/usr/bin/env"/>
+    </deps>
+  </hadoop-hdfs-namenode>
+  <hadoop-hdfs-secondarynamenode>
+    <deps>
+      <tag name="/bin/sh"/>
+      <tag name="/bin/bash"/>
+      <tag name="/usr/bin/env"/>
+    </deps>
+  </hadoop-hdfs-secondarynamenode>
+  <hadoop-hdfs-datanode>
+    <deps>
+      <tag name="/bin/sh"/>
+      <tag name="/bin/bash"/>
+      <tag name="/usr/bin/env"/>
+    </deps>
+  </hadoop-hdfs-datanode>
+  <hadoop-yarn-resourcemanager>
+    <deps>
+      <tag name="/bin/sh"/>
+      <tag name="/bin/bash"/>
+      <tag name="/usr/bin/env"/>
+    </deps>
+  </hadoop-yarn-resourcemanager>
+  <hadoop-yarn-nodemanager>
+    <deps>
+      <tag name="/bin/sh"/>
+      <tag name="/bin/bash"/>
+      <tag name="/usr/bin/env"/>
+    </deps>
+  </hadoop-yarn-nodemanager>
+  <hadoop-conf-pseudo>
+    <deps>
+      <tag name="/bin/sh"/>
+    </deps>
+  </hadoop-conf-pseudo>
+  <hadoop-doc>
+  </hadoop-doc>
+  <hadoop-libhdfs>
+    <metadata>
+      <summary>Hadoop Filesystem Library</summary>
+      <description>Hadoop Filesystem Library</description>
+      <url>http://hadoop.apache.org/core/</url>
+    </metadata>
+    <deps>
+      <hadoop>/self</hadoop>
+      <jre>&gt;=1.6</jre>
+    </deps>
+  </hadoop-libhdfs>
+  <hadoop-debuginfo>
+    <metadata>
+      <summary>Debug information for package hadoop</summary>
+      <description>This package provides debug information for package hadoop.
+Debug information is useful when developing applications that use this
+package or when debugging this package.</description>
+      <url>http://hadoop.apache.org/core/</url>
+    </metadata>
+  </hadoop-debuginfo>
+</packages>

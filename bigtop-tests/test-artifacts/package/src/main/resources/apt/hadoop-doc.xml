@@ -1,0 +1,12 @@
+<hadoop-doc>
+  <content>
+    <file name='/.' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/share' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/share/doc' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/share/doc/hadoop-doc' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/share/lintian' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/share/lintian/overrides' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/share/lintian/overrides/hadoop-doc' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+  </content>
+</hadoop-doc>

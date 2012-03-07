@@ -374,20 +374,22 @@ class PackageTestCommon {
                 problemFiles, equalTo([]));
 
     // a bit of debug output
-    def newManifest = new MarkupBuilder(new FileWriter("${pkg.name}_manifest.xml"));
+    def newManifest = new MarkupBuilder(new FileWriter("${pkg.name}.xml"));
 
-    newManifest.content() {
-      fileMeta = getLsMetadata(pkg.getFiles());
+    newManifest."${pkg.name}" {
+      content {
+        fileMeta = getLsMetadata(pkg.getFiles());
 
-      pkg.getFiles().each {
-        Map meta = fileMeta[it] ?: [:];
-        String node = configs[it] ? "config" : (docs[it] ? "doc " : "file");
-        int owners = meta.owners ?: -1;
+        pkg.getFiles().each {
+          Map meta = fileMeta[it] ?: [:];
+          String node = configs[it] ? "config" : (docs[it] ? "doc " : "file");
+          int owners = meta.owners ?: -1;
 
-        if (meta.target) {
-          "$node"(name : it, owners : owners, perm : meta.perm, user : meta.user, group : meta.group, target : meta.target);
-        } else {
-          "$node"(name : it, owners : owners, perm : meta.perm, user : meta.user, group : meta.group);
+          if (meta.target) {
+            "$node"(name : it, owners : owners, perm : meta.perm, user : meta.user, group : meta.group, target : meta.target);
+          } else {
+            "$node"(name : it, owners : owners, perm : meta.perm, user : meta.user, group : meta.group);
+          }
         }
       }
     }

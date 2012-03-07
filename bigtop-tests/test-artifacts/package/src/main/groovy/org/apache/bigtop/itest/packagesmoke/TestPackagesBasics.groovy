@@ -69,13 +69,40 @@ class TestPackagesBasics extends PackageTestCommon {
     repo.removeRepo();
   }
 
+
+  private static void mergeTreeIntoForrest(NodeList forrest, Node tree) {
+    for (it in forrest) {
+      if (it instanceof Node && it.name() == tree.name()) {
+        tree.value().groupBy({(it instanceof Node)?it.name():"-$it"}).each { k,v -> 
+          if (v.size() == 1 && v.get(0) instanceof Node) {
+            mergeTreeIntoForrest(it.value(), v.get(0));
+          } else if (v.size() != 1) {
+            it.value().addAll(v);
+          }
+        }
+      return;
+     }
+   }
+   forrest.add(tree);
+  }
+    
+  private static Node mergeTrees(Node n1, Node n2) {
+     Node merge = new Node(null, "merge");
+     merge.append(n1);
+     mergeTreeIntoForrest(merge.value(), n2);
+     return (merge.children().size() == 1) ? merge.children().get(0) :
+                                             merge;
+  } 
+
   @Parameters
   public static Map<String, Object[]> generateTests() {
     String type = TestPackagesBasics.pm.getType();
     String arch = (new Shell()).exec("uname -m").getOut().get(0).replaceAll(/i.86/,"i386").replaceAll(/x86_64/,"amd64");
     String archTranslated = (type == "apt") ? "" : ((arch == "amd64") ? ".x86_64" : ".${arch}");
-    def config = new XmlParser().parse(TestPackagesBasics.class.getClassLoader().
-                                       getResourceAsStream("package_data_${type}.xml"));
+    def config = mergeTrees(new XmlParser().parse(TestPackagesBasics.class.getClassLoader().
+                                            getResourceAsStream("package_data.xml")),
+                            new XmlParser().parse(TestPackagesBasics.class.getClassLoader().
+                                            getResourceAsStream("${type}/package_data.xml")));
 
     Map<String, Object[]> res = [:];
 
@@ -92,7 +119,13 @@ class TestPackagesBasics extends PackageTestCommon {
       }
 
       if (name != null && (name =~ selectedTests).find() && !(name =~ skippedTests).find()) {
-        res[name] = ([name, it] as Object[]);
+        def strm = TestPackagesBasics.class.getClassLoader().getResourceAsStream("${type}/${name}.xml");
+        if (strm) {
+          Node manifest = mergeTrees(it, new XmlParser().parse(strm));
+          res[name] = ([name, manifest] as Object[]);
+        } else {
+          res[name] = ([name, it] as Object[]);
+        }
       }
     };
 

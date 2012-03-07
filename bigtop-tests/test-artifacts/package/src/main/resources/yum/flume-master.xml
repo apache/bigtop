@@ -1,0 +1,7 @@
+<flume-master>
+<content>
+  <file name='/etc/rc.d/init.d/flume-master' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+  <file name='/usr/lib/flume' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+  <file name='/usr/lib/flume/bin' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+</content>
+</flume-master>
