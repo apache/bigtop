@@ -66,8 +66,8 @@
               </goals>
               <configuration>
                 <source><![CDATA[
-                   ["yum", "zypper", "apt", "urpmi"].each { 
-                     def a = new XmlSlurper().parseText(new File("${project.build.directory}/classes/package_data_${it}.xml").text);
+                   ["", "yum", "zypper", "apt", "urpmi"].each { 
+                     def a = new XmlSlurper().parseText(new File("${project.build.directory}/classes/${it}/package_data.xml").text);
                    }
                    println "Manifest XML validated";
                   ]]>
