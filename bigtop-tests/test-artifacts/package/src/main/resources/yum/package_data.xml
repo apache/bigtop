@@ -37,7 +37,10 @@ also on potential use cases. Come to the mailing lists to find out more.</descri
       <url>http://mahout.apache.org</url>
     </metadata>
     <deps>
-      <hadoop/>
+      <hadoop>&gt;=0.20.2</hadoop>
+      <bigtop-utils/>
+      <tag name="/bin/bash"/>
+      <tag name="/bin/sh"/>
     </deps>
     <alternatives>
       <mahout-conf>
@@ -62,10 +65,8 @@ also on potential use cases. Come to the mailing lists to find out more.</descri
       <url>http://whirr.apache.org/</url>
     </metadata>
     <deps>
-      <tag name="/bin/bash"/>
+      <bigtop-utils/>
       <tag name="/bin/sh"/>
-      <tag name="/usr/bin/env"/>
-      <jre>&gt;=1.6</jre>
     </deps>
   </whirr>
   <flume>
@@ -82,16 +83,13 @@ also on potential use cases. Come to the mailing lists to find out more.</descri
       <url>http://incubator.apache.org/projects/flume.html</url>
     </metadata>
     <deps>
+      <tag name="/bin/bash"/>
       <tag name="/bin/sh"/>
-      <tag name="/sbin/chkconfig"/>
-      <tag name="/sbin/service"/>
-      <tag name="/usr/bin/env"/>
       <tag name="/usr/sbin/useradd"/>
-      <hadoop>&gt;=0.20.2+710</hadoop>
-      <zookeeper>&gt;=3.3.1+10</zookeeper>
-      <jre>&gt;=1.6</jre>
+      <hadoop/>
       <sh-utils/>
-      <textutils/>
+      <coreutils/>
+      <bigtop-utils/>
     </deps>
     <groups>
       <flume>
@@ -125,13 +123,8 @@ also on potential use cases. Come to the mailing lists to find out more.</descri
       <tag name="/bin/sh"/>
       <tag name="/sbin/chkconfig"/>
       <tag name="/sbin/service"/>
-      <tag name="/usr/bin/env"/>
-      <tag name="/usr/sbin/useradd"/>
       <flume>/self</flume>
-      <jre>&gt;=1.6</jre>
       <redhat-lsb/>
-      <sh-utils/>
-      <textutils/>
     </deps>
     <services>
       <flume-node>
@@ -148,12 +141,12 @@ also on potential use cases. Come to the mailing lists to find out more.</descri
     <metadata>
       <summary>Sqoop allows easy imports and exports of data sets between databases and the Hadoop Distributed File System (HDFS).</summary>
       <description>Sqoop allows easy imports and exports of data sets between databases and the Hadoop Distributed File System (HDFS).</description>
-      <url>http://www.cloudera.com</url>
+      <url>http://incubator.apache.org/sqoop/</url>
     </metadata>
     <deps>
       <tag name="/bin/bash"/>
       <tag name="/bin/sh"/>
-      <jre>&gt;=1.6</jre>
+      <bigtop-utils/>
       <hadoop/>
     </deps>
     <alternatives>
@@ -169,7 +162,7 @@ also on potential use cases. Come to the mailing lists to find out more.</descri
     <metadata>
       <summary>Shared metadata repository for Sqoop.</summary>
       <description>Shared metadata repository for Sqoop. This optional package hosts a metadata server for Sqoop clients across a network to use.</description>
-      <url>http://www.cloudera.com</url>
+      <url>http://incubator.apache.org/sqoop/</url>
     </metadata>
     <deps>
       <sqoop>/self</sqoop>
@@ -248,8 +241,10 @@ also on potential use cases. Come to the mailing lists to find out more.</descri
       <tag name="/sbin/service"/>
       <tag name="/usr/sbin/groupadd"/>
       <tag name="/usr/sbin/useradd"/>
-      <jre>&gt;=1.6</jre>
+      <hadoop/>
       <oozie-client>/self</oozie-client>
+      <unzip/>
+      <zip/>
     </deps>
     <services>
       <oozie>
@@ -289,6 +284,7 @@ also on potential use cases. Come to the mailing lists to find out more.</descri
     <deps>
       <tag name="/bin/bash"/>
       <tag name="/bin/sh"/>
+      <bigtop-utils/>
     </deps>
     <alternatives>
       <oozie-conf>
@@ -314,7 +310,13 @@ difficult to manage. Even when done correctly, different implementations of thes
     </metadata>
     <deps>
       <tag name="/bin/sh"/>
-      <jre>&gt;=1.6</jre>
+      <tag name="/usr/bin/env"/>
+      <tag name="/usr/sbin/groupadd"/>
+      <tag name="/usr/sbin/useradd"/>
+      <bigtop-utils/>
+      <chkconfig/>
+      <coreutils/>
+      <shadow-utils/>
     </deps>
     <groups>
       <zookeeper>
@@ -346,8 +348,10 @@ difficult to manage. Even when done correctly, different implementations of thes
     <deps>
       <tag name="/bin/bash"/>
       <tag name="/bin/sh"/>
-      <zookeeper>/self</zookeeper>
+      <chkconfig/>
+      <initscripts/>
       <redhat-lsb/>
+      <zookeeper>/self</zookeeper>
     </deps>
     <services>
       <zookeeper-server>
@@ -389,7 +393,7 @@ difficult to manage. Even when done correctly, different implementations of thes
       <tag name="/bin/sh"/>
       <tag name="/usr/bin/env"/>
       <hadoop/>
-      <jre>&gt;=1.6</jre>
+      <bigtop-utils/>
     </deps>
     <alternatives>
       <pig-conf>
@@ -418,8 +422,8 @@ difficult to manage. Even when done correctly, different implementations of thes
     <deps>
       <tag name="/bin/sh"/>
       <tag name="/usr/bin/env"/>
-      <hadoop>&gt;=0.20.1</hadoop>
-      <jre>&gt;=1.6</jre>
+      <bigtop-utils/>
+      <hadoop>&gt;=0.20.2</hadoop>
     </deps>
     <alternatives>
       <hive-conf>
@@ -451,11 +455,11 @@ difficult to manage. Even when done correctly, different implementations of thes
       <tag name="/sbin/service"/>
       <tag name="/usr/bin/env"/>
       <tag name="/usr/sbin/useradd"/>
-      <hadoop>&gt;=0.20.2+700</hadoop>
-      <zookeeper>&gt;=3.3.1+8</zookeeper>
-      <jre>&gt;=1.6</jre>
+      <bigtop-utils/>
+      <coreutils/>
+      <hadoop>&gt;=0.20.2</hadoop>
       <sh-utils/>
-      <textutils/>
+      <zookeeper>&gt;=3.3.1</zookeeper>
     </deps>
     <alternatives>
       <hbase-conf>
@@ -579,16 +583,15 @@ located.</description>
       <url>http://hadoop.apache.org/core/</url>
     </metadata>
     <deps>
-      <sh-utils/>
-      <textutils/>
+      <coreutils/>
       <tag name="/usr/sbin/useradd"/>
       <tag name="/usr/sbin/usermod"/>
       <tag name="/sbin/chkconfig"/>
       <tag name="/sbin/service"/>
-      <jre>&gt;=1.6</jre>
+      <bigtop-utils/>
+      <sh-utils/>
       <redhat-lsb/>
       <tag name="/bin/sh"/>
-      <tag name="/bin/bash"/>
       <tag name="/usr/bin/env"/>
     </deps>
     <groups>
@@ -655,7 +658,6 @@ namenode, which manages the block locations of files on the filesystem.</descrip
       <hadoop>/self</hadoop>
       <tag name="/bin/sh"/>
       <tag name="/bin/bash"/>
-      <tag name="/usr/bin/env"/>
     </deps>
     <services>
       <hadoop-namenode>
@@ -680,7 +682,6 @@ do not incur unnecessary downtime.</description>
       <hadoop>/self</hadoop>
       <tag name="/bin/sh"/>
       <tag name="/bin/bash"/>
-      <tag name="/usr/bin/env"/>
     </deps>
     <services>
       <hadoop-secondarynamenode>
@@ -705,7 +706,6 @@ blocks of data over the network to Hadoop Distributed Filesystem
       <hadoop>/self</hadoop>
       <tag name="/bin/sh"/>
       <tag name="/bin/bash"/>
-      <tag name="/usr/bin/env"/>
     </deps>
     <services>
       <hadoop-datanode>
@@ -731,7 +731,6 @@ with an available work slot.</description>
       <hadoop>/self</hadoop>
       <tag name="/bin/sh"/>
       <tag name="/bin/bash"/>
-      <tag name="/usr/bin/env"/>
     </deps>
     <services>
       <hadoop-jobtracker>
@@ -756,7 +755,6 @@ with an available work slot.</description>
       <hadoop>/self</hadoop>
       <tag name="/bin/sh"/>
       <tag name="/bin/bash"/>
-      <tag name="/usr/bin/env"/>
     </deps>
     <services>
       <hadoop-tasktracker>
@@ -792,6 +790,9 @@ where each Hadoop daemon runs in a separate Java process.</description>
       <description>Documentation for Hadoop</description>
       <url>http://hadoop.apache.org/core/</url>
     </metadata>
+    <deps>
+      <tag name="/bin/sh"/>
+    </deps>
   </hadoop-doc>
   <hadoop-source>
     <metadata>
@@ -809,7 +810,6 @@ trying to debug programs that depend on Hadoop.</description>
     </metadata>
     <deps>
       <hadoop>/self</hadoop>
-      <jre>&gt;=1.6</jre>
     </deps>
   </hadoop-libhdfs>
   <hadoop-debuginfo>

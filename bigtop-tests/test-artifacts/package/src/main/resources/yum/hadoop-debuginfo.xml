@@ -1,4 +1,4 @@
-<hadoop-debuginfo.x86_64>
+<hadoop-debuginfo>
   <content>
     <file name='/usr/lib/debug' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib/debug/.build-id' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
@@ -47,4 +47,4 @@
     <file name='/usr/src/debug/mnt/jenkins/workspace/Bigtop-trunk-Hadoop/label/centos6/build/hadoop/rpm/BUILD/hadoop-1.0.1/build/native' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/src/debug/mnt/jenkins/workspace/Bigtop-trunk-Hadoop/label/centos6/build/hadoop/rpm/BUILD/hadoop-1.0.1/build/native/Linux-amd64-64' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
   </content>
-</hadoop-debuginfo.x86_64>
+</hadoop-debuginfo>

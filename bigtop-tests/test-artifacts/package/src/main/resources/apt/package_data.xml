@@ -37,7 +37,7 @@
     <url>http://mahout.apache.org</url>
   </metadata>
   <deps>
-    <sun-java6-jre/>
+    <bigtop-utils/>
     <hadoop/>
   </deps>
   <alternatives>
@@ -64,7 +64,7 @@
     <url>http://whirr.apache.org/</url>
   </metadata>
   <deps>
-    <sun-java6-jre/>
+    <bigtop-utils/>
   </deps>
 </whirr>
 <flume>
@@ -78,13 +78,12 @@
  mechanisms and many failover and recovery mechanisms.  The system is centrally
  managed and allows for intelligent dynamic management.  It uses a simple
  extensible data model that allows for online analytic applications.</description>
-    <url>http://www.cloudera.com</url>
+    <url>http://incubator.apache.org/projects/flume.html</url>
   </metadata>
   <deps>
-    <sun-java6-jre/>
-    <zookeeper/>
+    <bigtop-utils/>
     <adduser/>
-    <hadoop>>=0.20.2+720</hadoop>
+    <hadoop/>
   </deps>
   <groups>
     <flume>
@@ -112,10 +111,10 @@
     <summary>Tool for easy imports and exports of data sets between databases and HDFS</summary>
     <description>Sqoop is a tool that provides the ability to import and export data sets between
  the Hadoop Distributed File System (HDFS) and relational databases.</description>
-    <url>http://www.cloudera.com</url>
+    <url>http://incubator.apache.org/sqoop/</url>
   </metadata>
   <deps>
-    <sun-java6-jre/>
+    <bigtop-utils/>
     <hadoop/>
   </deps>
   <alternatives>
@@ -131,7 +130,7 @@
   <metadata>
     <summary>Shared metadata repository for Sqoop.</summary>
     <description>This optional package hosts a metadata server for Sqoop clients across a network to use.</description>
-    <url>http://www.cloudera.com</url>
+    <url>http://incubator.apache.org/sqoop/</url>
   </metadata>
   <deps>
     <sqoop>/self</sqoop>
@@ -198,6 +197,9 @@
   </metadata>
   <deps>
     <oozie-client>/self</oozie-client>
+    <hadoop/>
+    <zip/>
+    <unzip/>
   </deps>
   <services>
     <oozie>
@@ -229,6 +231,9 @@
  and coordinator jobs.</description>
     <url>http://incubator.apache.org/oozie/</url>
   </metadata>
+  <deps>
+    <bigtop-utils/>
+  </deps>
   <alternatives>
     <oozie-conf>
       <status>auto</status>
@@ -247,7 +252,7 @@
     <!-- group>misc</group -->
   </metadata>
   <deps>
-    <sun-java6-jre/>
+    <bigtop-utils/>
   </deps>
   <groups>
     <zookeeper>
@@ -256,7 +261,7 @@
   </groups>
   <users>
     <zookeeper>
-      <home>/var/zookeeper</home>
+      <home>/var/lib/zookeeper</home>
       <descr>ZooKeeper User</descr>
       <shell>/bin/false</shell>
     </zookeeper>
@@ -320,7 +325,7 @@
     <url>http://pig.apache.org/</url>
   </metadata>
   <deps>
-    <sun-java6-jre/>
+    <bigtop-utils/>
     <hadoop/>
   </deps>
   <!-- BUG: https://issues.cloudera.org/browse/DISTRO-223 -->
@@ -349,7 +354,8 @@
     <url>http://hive.apache.org/</url>
   </metadata>
   <deps>
-    <sun-java6-jre/>
+    <adduser/>
+    <bigtop-utils/>
     <hadoop/>
   </deps>
   <alternatives>
@@ -372,9 +378,9 @@
   </metadata>
   <deps>
     <adduser/>
-    <sun-java6-jre/>
-    <zookeeper>>=3.3.1+8</zookeeper>
-    <hadoop>>=0.20.2+700</hadoop>
+    <bigtop-utils/>
+    <zookeeper>>=3.3.1</zookeeper>
+    <hadoop/>
   </deps>
   <alternatives>
     <hbase-conf>
@@ -486,8 +492,7 @@
   </metadata>
   <deps>
     <adduser/>
-    <sun-java6-jre/>
-    <sun-java6-bin/>
+    <bigtop-utils/>
   </deps>
   <groups>
     <hadoop>
@@ -560,9 +565,10 @@
   </metadata>
   <deps>
     <libc6>>=2.7</libc6>
+    <libssl0.9.8>>=0.9.8k-1</libssl0.9.8>
     <hadoop>/self</hadoop>
     <liblzo2-2/>
-    <libz1/>
+    <libzip1/>
   </deps>
 </hadoop-native>
 <hadoop-namenode>
@@ -782,6 +788,7 @@
   <deps>
     <hadoop>/self</hadoop>
     <libc6>>=2.4</libc6>
+    <libssl0.9.8>>=0.9.8k-1</libssl0.9.8>
   </deps>
 </libhdfs0>
 <libhdfs0-dev>

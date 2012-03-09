@@ -1,4 +1,4 @@
-<hadoop-pipes.x86_64>
+<hadoop-pipes>
   <content>
     <file name='/usr/include/hadoop/Pipes.hh' owners='-1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/include/hadoop/SerialUtils.hh' owners='-1' perm='-rw-r--r--' user='root' group='root' />
@@ -7,4 +7,4 @@
     <file name='/usr/lib64/libhadooppipes.a' owners='-1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib64/libhadooputils.a' owners='-1' perm='-rw-r--r--' user='root' group='root' />
   </content>
-</hadoop-pipes.x86_64>
+</hadoop-pipes>
