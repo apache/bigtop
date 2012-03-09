@@ -36,11 +36,20 @@ if [ -n `which autoconf` ]; then
 	fi
 fi
 
+pushd src/native
+  autoreconf -if
+popd
 
+LIBJVMS=`find ${JAVA_HOME}/jre/lib/ -name "libjvm.so" -exec dirname {} \;`
+LIBRARIES="-lcrypto -lm "
+for jvm in $LIBJVMS;
+do
+  LIBRARIES="${LIBRARIES} -L${jvm}"
+done
 
 # FIXME: the LDFLAGS="-lcrypto" is a workaround for MAPREDUCE-2127
 # FIXME: the FUSE_HOME="..." and LDFLAGS="-lm" is a workaround for HADOOP-3344
-LDFLAGS="-lcrypto -lm" FUSE_HOME=`pwd`/build/c++/${HADOOP_ARCH} ant \
+LDFLAGS="$LIBRARIES" FUSE_HOME=`pwd`/build/c++/${HADOOP_ARCH} ant \
   -Djava5.home=$JAVA5_HOME \
   -Dforrest.home=$FORREST_HOME \
   -Dversion=${HADOOP_VERSION} \
