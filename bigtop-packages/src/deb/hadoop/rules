@@ -75,6 +75,7 @@ install: build
 	  --installed-lib-dir=/usr/lib/hadoop
 
 	ln -fs /usr/lib/bigtop-utils/jsvc debian/tmp/usr/lib/hadoop/libexec/jsvc
+	ln -fs /usr/lib/bigtop-tomcat/bin debian/tmp/usr/lib/hadoop-httpfs/bin
 
 # Run dh_lintian if we've got it - this doesn't exist on debhelper 6 (eg Ubuntu Hardy)
 	(dh_lintian) || /bin/true
@@ -85,6 +86,8 @@ hadoop_svcs=hdfs-namenode hdfs-secondarynamenode hdfs-datanode \
 
 $(hadoop_svcs): debian/init.d.tmpl
 	bash $< debian/hadoop-$@.svc > debian/hadoop-$@.init
+	cp debian/$(firstword $(subst -, ,$@)).default debian/tmp/etc/default/hadoop-$@
+	echo /etc/default/hadoop-$@ >> debian/hadoop-$@.install
 	# FIXME: workaround for BIGTOP-105
 	[ -f debian/hadoop-$@.postinst ] || cp debian/hadoop.daemon.postinst.tpl debian/hadoop-$@.postinst
 	sed -i -e "s|@HADOOP_DAEMON@|$@|" debian/hadoop-$@.postinst
@@ -92,9 +95,6 @@ $(hadoop_svcs): debian/init.d.tmpl
 install-indep: $(hadoop_svcs) 
 	mkdir -p debian/tmp/etc/default
 	cp debian/hadoop.default debian/tmp/etc/default/hadoop
-	cp debian/yarn.default debian/tmp/etc/default/yarn
-	cp debian/hadoop-httpfs.default debian/tmp/etc/default/hadoop-httpfs
-	cp debian/hadoop-mapreduce-historyserver.default debian/tmp/etc/default/hadoop-mapreduce-historyserver
 
 	dh_install --sourcedir=debian/tmp -i
 
@@ -102,15 +102,6 @@ install-indep: $(hadoop_svcs)
 #	rm -Rf debian/hadoop/usr/bin/hadoop-fuse-dfs
 	rm -Rf debian/hadoop/usr/lib/hadoop/contrib/fuse-dfs
 	rm -Rf debian/hadoop/usr/lib/hadoop/hdfs/contrib/fuse-dfs
-
-	# FIXME: The following is a workaround for BIGTOP-139
-	rm -Rf debian/hadoop/usr/lib/hadoop/bin/jsvc 
-	rm -Rf debian/hadoop/usr/lib/hadoop/hdfs/bin/jsvc
-	rm -Rf debian/hadoop/usr/lib/hadoop/bin/task-controller
-
-	# FIXME: The following is a workaround for BIGTOP-139
-	rm -Rf debian/hadoop/usr/lib/hadoop/libexec/jsvc*
-	rm -Rf debian/hadoop/usr/lib/hadoop/bin/task-controller
 
 install-arch:
 	mkdir -p debian/tmp/etc/default

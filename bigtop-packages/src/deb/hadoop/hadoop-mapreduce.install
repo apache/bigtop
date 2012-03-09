@@ -1,11 +1,7 @@
 /etc/security/limits.d/mapreduce.conf
-/usr/lib/hadoop/hadoop-mapreduce*.jar
-/usr/lib/hadoop/hadoop-streaming*.jar
-/usr/lib/hadoop/hadoop-extras*.jar
+/usr/lib/hadoop-mapreduce
 /usr/lib/hadoop/libexec/mapred-config.sh
-/usr/lib/hadoop/bin/mapred
-/usr/lib/hadoop/sbin/mr-jobhistory-daemon.sh
 /usr/bin/mapred
-# FIXME: HADOOP-7939
-/var/log/mapreduce
-/var/run/mapreduce
+/var/lib/hadoop-mapreduce
+/var/log/hadoop-mapreduce
+/var/run/hadoop-mapreduce

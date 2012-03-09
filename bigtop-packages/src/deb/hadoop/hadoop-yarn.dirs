@@ -1,6 +1,7 @@
-/etc/conf.empty/
-/usr/lib/hadoop
+/etc/hadoop/conf.empty/
+/usr/lib/hadoop/libexec
+/usr/lib/hadoop-yarn
 /usr/bin
-/var/lib/yarn/cache
-/var/log/yarn
-/var/run/yarn
+/var/lib/hadoop-yarn/cache
+/var/log/hadoop-yarn
+/var/run/hadoop-yarn

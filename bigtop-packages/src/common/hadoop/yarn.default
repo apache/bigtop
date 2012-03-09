@@ -12,9 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-export YARN_HOME=/usr/lib/hadoop
 export YARN_IDENT_STRING=yarn
-export YARN_PID_DIR=/var/run/yarn
-export YARN_LOG_DIR=/var/log/yarn
+export YARN_PID_DIR=/var/run/hadoop-yarn
+export YARN_LOG_DIR=/var/log/hadoop-yarn
 export YARN_CONF_DIR=/etc/hadoop/conf
-export YARN_CLASSPATH="${YARN_CLASSPATH}:${YARN_HOME}/*:${YARN_HOME}/lib/*"

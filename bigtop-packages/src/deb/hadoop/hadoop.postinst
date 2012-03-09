@@ -23,23 +23,8 @@ case "$1" in
     configure)
 	# We used to chown /usr/lib/hadoop here, but with security we don't want to do that -
 	# things like task-controller are very particular about ownership
-        chown -R root:hadoop /etc/hadoop
-	chgrp -R hadoop /var/log/hadoop /var/run/hadoop
-	chmod g+w /var/run/hadoop /var/log/hadoop 
-
-	# Change the ownership of old logs so that we don't fail rotation on next startup
-	find /var/log/hadoop/ | egrep 'jobtracker|tasktracker|userlogs|history' | xargs --no-run-if-empty chown mapred
-	find /var/log/hadoop/ | egrep 'namenode|datanode' | xargs --no-run-if-empty chown hdfs
-
-        # We don't want to do this recursively since we may be reinstalling, in which case
-        # users have their own cache/<username> directories which shouldn't be stolen
-        chown root:hadoop /var/lib/hadoop/ /var/lib/hadoop/cache/
-	chmod 1777 /var/lib/hadoop/cache/
-	mkdir -p /var/log/hadoop || :
-	touch /var/log/hadoop/SecurityAuth.audit
-        chgrp hadoop /var/log/hadoop/SecurityAuth.audit
-	chmod g+w /var/log/hadoop/SecurityAuth.audit
-        update-alternatives --install /etc/hadoop/conf hadoop-conf /etc/hadoop/conf.empty 10
+	chown -R root:hadoop /etc/hadoop
+	update-alternatives --install /etc/hadoop/conf hadoop-conf /etc/hadoop/conf.empty 10
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

@@ -12,14 +12,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-export HADOOP_HOME_WARN_SUPPRESS=true
-export HADOOP_HOME=/usr/lib/hadoop
-export HADOOP_PREFIX=/usr/lib/hadoop
-
-export HADOOP_LIBEXEC_DIR=/usr/lib/hadoop/libexec
-export HADOOP_CONF_DIR=/etc/hadoop/conf
-
-export HADOOP_COMMON_HOME=/usr/lib/hadoop
-export HADOOP_HDFS_HOME=/usr/lib/hadoop-hdfs
-export HADOOP_MAPRED_HOME=/usr/lib/hadoop-mapreduce
-export YARN_HOME=/usr/lib/hadoop-yarn
+HADOOP_COMMON_DIR="./"
+HADOOP_COMMON_LIB_JARS_DIR="lib"
+HADOOP_COMMON_LIB_NATIVE_DIR="lib/native"
+HDFS_DIR="./"
+HDFS_LIB_JARS_DIR="lib"
+YARN_DIR="./"
+YARN_LIB_JARS_DIR="lib"
+MAPRED_DIR="./"
+MAPRED_LIB_JARS_DIR="lib"

@@ -19,7 +19,7 @@ EXEC_PATH="/usr/lib/hadoop/sbin/hadoop-daemon.sh"
 SVC_USER="hdfs"
 DAEMON_FLAGS="$HADOOP_NAME"
 CONF_DIR="/etc/hadoop/conf"
-PIDFILE="/var/run/hadoop/hadoop-$SVC_USER-$HADOOP_NAME.pid"
+PIDFILE="/var/run/hadoop-hdfs/hadoop-$SVC_USER-$HADOOP_NAME.pid"
 LOCKFILE="/var/lock/subsys/hadoop-$HADOOP_NAME"
 
 CHKCONFIG="2345 85 15"
@@ -46,7 +46,7 @@ start() {
   #    1. HADOOP_DATANODE_USER being set to root
   #    2. jsvc is installed but Hadoop is configures to run in an unsecure mode
   # Both will currently fail
-  if [ -f $HADOOP_PREFIX/libexec/jsvc ] && [ -n "$HADOOP_SECURE_DN_USER" ]; then
+  if [ -n "$HADOOP_SECURE_DN_USER" ]; then
     TARGET_USER=root
   fi
 

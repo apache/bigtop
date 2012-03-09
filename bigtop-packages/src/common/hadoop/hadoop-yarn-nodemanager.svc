@@ -15,11 +15,11 @@
 HADOOP_NAME="nodemanager"
 DAEMON="hadoop-yarn-$HADOOP_NAME"
 DESC="Hadoop $HADOOP_NAME"
-EXEC_PATH="/usr/lib/hadoop/sbin/yarn-daemon.sh"
+EXEC_PATH="/usr/lib/hadoop-yarn/sbin/yarn-daemon.sh"
 SVC_USER="yarn"
 DAEMON_FLAGS="$HADOOP_NAME"
 CONF_DIR="/etc/hadoop/conf"
-PIDFILE="/var/run/yarn/yarn-$SVC_USER-$HADOOP_NAME.pid"
+PIDFILE="/var/run/hadoop-yarn/yarn-$SVC_USER-$HADOOP_NAME.pid"
 LOCKFILE="/var/lock/subsys/hadoop-$HADOOP_NAME"
 
 CHKCONFIG="345 85 15"

@@ -36,7 +36,7 @@
   <property>
     <description>To set the value of tmp directory for map and reduce tasks.</description>
     <name>mapreduce.task.tmp.dir</name>
-    <value>/var/lib/mapreduce/cache/${user.name}/tasks</value>
+    <value>/var/lib/hadoop-mapreduce/cache/${user.name}/tasks</value>
   </property>
 
 </configuration>

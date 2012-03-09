@@ -1,7 +1,4 @@
-/etc/conf.empty/
+/etc/hadoop/conf.empty/
 /usr/lib/hadoop
 /usr/bin
 /usr/share/doc/hadoop
-/var/lib/hadoop/cache/
-/var/log/hadoop
-/var/run/hadoop

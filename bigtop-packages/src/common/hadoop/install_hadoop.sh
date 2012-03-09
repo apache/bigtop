@@ -41,6 +41,9 @@ OPTS=$(getopt \
   -l 'installed-lib-dir:' \
   -l 'hadoop-dir:' \
   -l 'httpfs-dir:' \
+  -l 'hdfs-dir:' \
+  -l 'yarn-dir:' \
+  -l 'mapreduce-dir:' \
   -l 'system-include-dir:' \
   -l 'system-lib-dir:' \
   -l 'system-libexec-dir:' \
@@ -70,6 +73,15 @@ while true ; do
         ;;
         --hadoop-dir)
         HADOOP_DIR=$2 ; shift 2
+        ;;
+        --hdfs-dir)
+        HDFS_DIR=$2 ; shift 2
+        ;;
+        --yarn-dir)
+        YARN_DIR=$2 ; shift 2
+        ;;
+        --mapreduce-dir)
+        MAPREDUCE_DIR=$2 ; shift 2
         ;;
         --system-include-dir)
         SYSTEM_INCLUDE_DIR=$2 ; shift 2
@@ -123,6 +135,9 @@ for var in PREFIX BUILD_DIR; do
 done
 
 HADOOP_DIR=${HADOOP_DIR:-$PREFIX/usr/lib/hadoop}
+HDFS_DIR=${HDFS_DIR:-$PREFIX/usr/lib/hadoop-hdfs}
+YARN_DIR=${YARN_DIR:-$PREFIX/usr/lib/hadoop-yarn}
+MAPREDUCE_DIR=${MAPREDUCE_DIR:-$PREFIX/usr/lib/hadoop-mapreduce}
 HTTPFS_DIR=${HTTPFS_DIR:-$PREFIX/usr/lib/hadoop-httpfs}
 SYSTEM_LIB_DIR=${SYSTEM_LIB_DIR:-/usr/lib}
 BIN_DIR=${BIN_DIR:-$PREFIX/usr/bin}
@@ -135,11 +150,7 @@ HADOOP_ETC_DIR=${HADOOP_ETC_DIR:-$PREFIX/etc/hadoop}
 HTTPFS_ETC_DIR=${HTTPFS_ETC_DIR:-$PREFIX/etc/hadoop-httpfs}
 
 INSTALLED_HADOOP_DIR=${INSTALLED_HADOOP_DIR:-/usr/lib/hadoop}
-
-HADOOP_BIN_DIR=${HADOOP_DIR}/bin
-HADOOP_SBIN_DIR=${HADOOP_DIR}/sbin
-HADOOP_LIB_DIR=${HADOOP_DIR}/lib
-HADOOP_NATIVE_LIB_DIR=${HADOOP_LIB_DIR}/native
+HADOOP_NATIVE_LIB_DIR=${HADOOP_DIR}/lib/native
 
 HADOOP_VERSION=0.23.1
 
@@ -149,11 +160,10 @@ export PATH="/sbin/:$PATH"
 # Make bin wrappers
 mkdir -p $BIN_DIR
 
-for bin_wrapper in hadoop yarn hdfs mapred; do
-  wrapper=$BIN_DIR/$bin_wrapper
+for component in $HADOOP_DIR/bin/hadoop $HDFS_DIR/bin/hdfs $YARN_DIR/bin/yarn $MAPREDUCE_DIR/bin/mapred ; do
+  wrapper=$BIN_DIR/${component#*/bin/}
   cat > $wrapper <<EOF
 #!/bin/sh
-
 
 # Autodetect JAVA_HOME if not defined
 if [ -e /usr/libexec/bigtop-detect-javahome ]; then
@@ -163,12 +173,8 @@ elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
 fi
 
 . /etc/default/hadoop
-[ -f /etc/default/${bin_wrapper/hadoop/yarn} ] && . /etc/default/${bin_wrapper/hadoop/yarn}
 
-# FIXME: this might need to be fixed upstream
-HADOOP_CLASSPATH="\${HADOOP_CLASSPATH}:\${YARN_CONF_DIR}"
-
-exec $INSTALLED_HADOOP_DIR/bin/$bin_wrapper "\$@"
+exec ${component#${PREFIX}} "\$@"
 EOF
   chmod 755 $wrapper
 done
@@ -176,30 +182,57 @@ done
 #libexec
 install -d -m 0755 ${SYSTEM_LIBEXEC_DIR}
 cp ${BUILD_DIR}/libexec/* ${SYSTEM_LIBEXEC_DIR}/
-
-# bin
-install -d -m 0755 ${HADOOP_BIN_DIR}
-cp -a ${BUILD_DIR}/bin/* ${HADOOP_BIN_DIR}/
-
-# sbin
-install -d -m 0755 ${HADOOP_SBIN_DIR}
-cp ${BUILD_DIR}/sbin/* ${HADOOP_SBIN_DIR}/
-
-# jars
-install -d -m 0755 ${HADOOP_LIB_DIR}
-cp ${BUILD_DIR}/share/hadoop/mapreduce/lib/*.jar ${HADOOP_LIB_DIR}/
-cp ${BUILD_DIR}/share/hadoop/common/lib/*.jar ${HADOOP_LIB_DIR}/
-cp ${BUILD_DIR}/share/hadoop/hdfs/lib/*.jar ${HADOOP_LIB_DIR}/
-chmod 644 ${HADOOP_LIB_DIR}/*.jar
+cp ${DISTRO_DIR}/hadoop-layout.sh ${SYSTEM_LIBEXEC_DIR}/
 
 # hadoop jar
 install -d -m 0755 ${HADOOP_DIR}
-cp ${BUILD_DIR}/share/hadoop/mapreduce/*.jar ${HADOOP_DIR}/
 cp ${BUILD_DIR}/share/hadoop/common/*.jar ${HADOOP_DIR}/
-cp ${BUILD_DIR}/share/hadoop/hdfs/*.jar ${HADOOP_DIR}/
-cp ${BUILD_DIR}/share/hadoop/tools/lib/*.jar ${HADOOP_DIR}/
-mv ${HADOOP_LIB_DIR}/hadoop*.jar ${HADOOP_DIR}/
-chmod 644 ${HADOOP_DIR}/*.jar
+cp ${BUILD_DIR}/share/hadoop/common/lib/hadoop-auth*.jar ${HADOOP_DIR}/
+install -d -m 0755 ${MAPREDUCE_DIR}
+cp ${BUILD_DIR}/share/hadoop/mapreduce/hadoop-mapreduce*.jar ${MAPREDUCE_DIR}
+cp ${BUILD_DIR}/share/hadoop/tools/lib/*.jar ${MAPREDUCE_DIR}
+install -d -m 0755 ${HDFS_DIR}
+cp ${BUILD_DIR}/share/hadoop/hdfs/*.jar ${HDFS_DIR}/
+install -d -m 0755 ${YARN_DIR}
+cp ${BUILD_DIR}/share/hadoop/mapreduce/hadoop-yarn*.jar ${YARN_DIR}/
+chmod 644 ${HADOOP_DIR}/*.jar ${MAPREDUCE_DIR}/*.jar ${HDFS_DIR}/*.jar ${YARN_DIR}/*.jar
+
+# lib jars
+install -d -m 0755 ${HADOOP_DIR}/lib
+cp ${BUILD_DIR}/share/hadoop/common/lib/*.jar ${HADOOP_DIR}/lib
+rm -f ${HADOOP_DIR}/lib/hadoop*.jar
+install -d -m 0755 ${MAPREDUCE_DIR}/lib
+cp ${BUILD_DIR}/share/hadoop/mapreduce/lib/*.jar ${MAPREDUCE_DIR}/lib
+install -d -m 0755 ${HDFS_DIR}/lib 
+cp ${BUILD_DIR}/share/hadoop/hdfs/lib/*.jar ${HDFS_DIR}/lib
+install -d -m 0755 ${YARN_DIR}/lib
+cp ${BUILD_DIR}/share/hadoop/mapreduce/lib/*.jar ${YARN_DIR}/lib
+chmod 644 ${HADOOP_DIR}/lib/*.jar ${MAPREDUCE_DIR}/lib/*.jar ${HDFS_DIR}/lib/*.jar ${YARN_DIR}/lib/*.jar
+
+# Install webapps
+cp -ra ${BUILD_DIR}/share/hadoop/hdfs/webapps ${HDFS_DIR}/
+
+# bin
+install -d -m 0755 ${HADOOP_DIR}/bin
+cp -a ${BUILD_DIR}/bin/{hadoop,rcc} ${HADOOP_DIR}/bin
+install -d -m 0755 ${HDFS_DIR}/bin
+cp -a ${BUILD_DIR}/bin/hdfs ${HDFS_DIR}/bin
+install -d -m 0755 ${YARN_DIR}/bin
+cp -a ${BUILD_DIR}/bin/{yarn,container-executor} ${YARN_DIR}/bin
+install -d -m 0755 ${MAPREDUCE_DIR}/bin
+cp -a ${BUILD_DIR}/bin/mapred ${MAPREDUCE_DIR}/bin
+# FIXME: MAPREDUCE-3980
+cp -a ${BUILD_DIR}/bin/mapred ${YARN_DIR}/bin
+
+# sbin
+install -d -m 0755 ${HADOOP_DIR}/sbin
+cp -a ${BUILD_DIR}/sbin/{hadoop-daemon,hadoop-daemons,slaves,start-all,stop-all}.sh ${HADOOP_DIR}/sbin
+install -d -m 0755 ${HDFS_DIR}/sbin
+cp -a ${BUILD_DIR}/sbin/{distribute-exclude,refresh-namenodes,start-balancer,start-dfs,start-secure-dns,stop-balancer,stop-dfs,stop-secure-dns}.sh ${HDFS_DIR}/sbin
+install -d -m 0755 ${YARN_DIR}/sbin
+cp -a ${BUILD_DIR}/sbin/*yarn* ${BUILD_DIR}/sbin/slaves.sh  ${YARN_DIR}/sbin
+install -d -m 0755 ${MAPREDUCE_DIR}/sbin
+cp -a ${BUILD_DIR}/sbin/mr-jobhistory-daemon.sh ${MAPREDUCE_DIR}/sbin
 
 # native libs
 install -d -m 0755 ${SYSTEM_LIB_DIR}
@@ -224,7 +257,6 @@ done
 install -d -m 0755 $HADOOP_ETC_DIR/conf.empty
 
 cp ${BUILD_DIR}/etc/hadoop/* $HADOOP_ETC_DIR/conf.empty
-cp $DISTRO_DIR/mrapp-generated-classpath $HADOOP_ETC_DIR/conf.empty
 
 # docs
 install -d -m 0755 ${DOC_DIR}
@@ -237,14 +269,12 @@ chmod 644 $MAN_DIR/man1/hadoop.1.gz
 
 # HTTPFS
 install -d -m 0755 ${HTTPFS_DIR}/sbin
-mv ${HADOOP_SBIN_DIR}/httpfs.sh ${HTTPFS_DIR}/sbin/
+cp ${BUILD_DIR}/sbin/httpfs.sh ${HTTPFS_DIR}/sbin/
 install -d -m 0755 ${HTTPFS_DIR}/libexec
-mv ${SYSTEM_LIBEXEC_DIR}/httpfs-config.sh ${HTTPFS_DIR}/libexec/
+cp ${BUILD_DIR}/libexec/httpfs-config.sh ${HTTPFS_DIR}/libexec/
 cp -r ${BUILD_DIR}/share/hadoop/httpfs/tomcat/webapps ${HTTPFS_DIR}/
 cp -r ${BUILD_DIR}/share/hadoop/httpfs/tomcat/conf ${HTTPFS_DIR}/
 chmod 644 ${HTTPFS_DIR}/conf/*
-# FIXME: bug in HADOOP
-ln -s /usr/lib/bigtop-tomcat/bin ${HTTPFS_DIR}/bin
 install -d -m 0755 $HTTPFS_ETC_DIR/conf.empty
 mv $HADOOP_ETC_DIR/conf.empty/httpfs* $HTTPFS_ETC_DIR/conf.empty
 
@@ -253,7 +283,6 @@ for conf in conf.pseudo ; do
   install -d -m 0755 $HADOOP_ETC_DIR/$conf
   # Overlay the -site files
   (cd $DISTRO_DIR/$conf && tar -cf - .) | (cd $HADOOP_ETC_DIR/$conf && tar -xf -)
-  cp $DISTRO_DIR/mrapp-generated-classpath $HADOOP_ETC_DIR/$conf
 done
 cp ${BUILD_DIR}/etc/hadoop/log4j.properties $HADOOP_ETC_DIR/conf.pseudo
 
@@ -262,29 +291,22 @@ install -d -m 0755 ${HADOOP_DIR}/etc
 ln -s ${HADOOP_ETC_DIR##${PREFIX}}/conf ${HADOOP_DIR}/etc/hadoop
 
 # FIXME: Provide convenience links for log/run in hdfs and mapreduce (HADOOP-7939)
-install -d -m 0755 $PREFIX/var/log/ $PREFIX/var/run/
-ln -s hadoop $PREFIX/var/log/hdfs
-ln -s hadoop $PREFIX/var/run/hdfs
-ln -s hadoop $PREFIX/var/log/mapreduce
-ln -s hadoop $PREFIX/var/run/mapreduce
+install -d -m 0755 $PREFIX/var/{log,run,lib}/hadoop-hdfs
+install -d -m 0755 $PREFIX/var/{log,run,lib}/hadoop-yarn
+install -d -m 0755 $PREFIX/var/{log,run,lib}/hadoop-mapreduce
 
 # FIXME: The following needs to be untangled upstream (HADOOP-7939)
 cp ${BUILD_DIR}/share/hadoop/mapreduce/hadoop-mapreduce-client-shuffle*.jar ${HADOOP_DIR}/lib/
 cp ${BUILD_DIR}/share/hadoop/mapreduce/hadoop-mapreduce-client-core*.jar ${HADOOP_DIR}/lib/
 
-# Remove all hadoop test jars
-rm -fv ${HADOOP_DIR}/*test*.jar
-
-# Install webapps
-cp -ra ${BUILD_DIR}/share/hadoop/hdfs/webapps ${HADOOP_DIR}/
-
-
-# Create version-less symlinks to offer integration point with other projects
-(cd $HADOOP_DIR &&
-for j in hadoop-*.jar; do
-  if [[ $j =~ hadoop-(.*)-${HADOOP_VERSION}.jar ]]; then
-    name=${BASH_REMATCH[1]}
-    ln -s $j hadoop-$name.jar
-  fi
-done)
-
+# Remove all source and test jars and create version-less symlinks to offer integration point with other projects
+for DIR in ${HADOOP_DIR} ${HDFS_DIR} ${YARN_DIR} ${MAPREDUCE_DIR} ${HTTPFS_DIR} ; do
+  (cd $DIR &&
+   rm -fv *-test.jar *-sources.jar
+   for j in hadoop-*.jar; do
+     if [[ $j =~ hadoop-(.*)-${HADOOP_VERSION}.jar ]]; then
+       name=${BASH_REMATCH[1]}
+       ln -s $j hadoop-$name.jar
+     fi
+   done)
+done

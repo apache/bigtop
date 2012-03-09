@@ -21,13 +21,13 @@ set -e
 
 case "$1" in
     configure)
-        chown root:yarn /usr/lib/hadoop/bin/container-executor
-        chmod 6050 /usr/lib/hadoop/bin/container-executor
-	mkdir -p /var/log/yarn /var/run/yarn /var/lib/yarn/cache || :
-	chgrp -R hadoop /var/log/yarn /var/run/yarn
-	chmod g+w /var/log/yarn /var/run/yarn
-        chown yarn:hadoop /var/lib/yarn/ /var/lib/yarn/cache
-	chmod 1777 /var/lib/yarn/cache
+	chown root:yarn /usr/lib/hadoop-yarn/bin/container-executor
+	chmod 6050 /usr/lib/hadoop-yarn/bin/container-executor
+	mkdir -p /var/log/hadoop-yarn /var/run/hadoop-yarn /var/lib/hadoop-yarn/cache || :
+	chgrp -R hadoop /var/log/hadoop-yarn /var/run/hadoop-yarn
+	chmod g+w /var/log/hadoop-yarn /var/run/hadoop-yarn
+	chown yarn:hadoop /var/lib/hadoop-yarn/ /var/lib/hadoop-yarn/cache
+	chmod 1777 /var/lib/hadoop-yarn/cache
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

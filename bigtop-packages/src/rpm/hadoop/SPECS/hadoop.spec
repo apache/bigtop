@@ -31,23 +31,26 @@
 %define lib_hadoop_dirname /usr/lib
 %define lib_hadoop %{lib_hadoop_dirname}/%{name}
 %define lib_httpfs %{lib_hadoop_dirname}/%{name}-httpfs
+%define lib_hdfs %{lib_hadoop_dirname}/%{name}-hdfs
+%define lib_yarn %{lib_hadoop_dirname}/%{name}-yarn
+%define lib_mapreduce %{lib_hadoop_dirname}/%{name}-mapreduce
 %define log_hadoop_dirname /var/log
 %define log_hadoop %{log_hadoop_dirname}/%{name}
-%define log_yarn %{log_hadoop_dirname}/yarn
-%define log_hdfs %{log_hadoop_dirname}/hdfs
+%define log_yarn %{log_hadoop_dirname}/%{name}-yarn
+%define log_hdfs %{log_hadoop_dirname}/%{name}-hdfs
 %define log_httpfs %{log_hadoop_dirname}/%{name}-httpfs
-%define log_mapreduce %{log_hadoop_dirname}/mapreduce
+%define log_mapreduce %{log_hadoop_dirname}/%{name}-mapreduce
 %define run_hadoop_dirname /var/run
 %define run_hadoop %{run_hadoop_dirname}/hadoop
-%define run_yarn %{run_hadoop_dirname}/yarn
-%define run_hdfs %{run_hadoop_dirname}/hdfs
+%define run_yarn %{run_hadoop_dirname}/%{name}-yarn
+%define run_hdfs %{run_hadoop_dirname}/%{name}-hdfs
 %define run_httpfs %{run_hadoop_dirname}/%{name}-httpfs
-%define run_mapreduce %{run_hadoop_dirname}/mapreduce
+%define run_mapreduce %{run_hadoop_dirname}/%{name}-mapreduce
 %define state_hadoop_dirname /var/lib
 %define state_hadoop %{state_hadoop_dirname}/hadoop
-%define state_yarn %{state_hadoop_dirname}/yarn
-%define state_hdfs %{state_hadoop_dirname}/hdfs
-%define state_mapreduce %{state_hadoop_dirname}/mapreduce
+%define state_yarn %{state_hadoop_dirname}/%{name}-yarn
+%define state_hdfs %{state_hadoop_dirname}/%{name}-hdfs
+%define state_mapreduce %{state_hadoop_dirname}/%{name}-mapreduce
 %define bin_hadoop %{_bindir}
 %define man_hadoop %{_mandir}
 %define doc_hadoop %{_docdir}/%{name}-%{hadoop_version}
@@ -139,7 +142,7 @@ Source1: do-component-build
 Source2: install_%{name}.sh
 Source3: hadoop.default
 Source4: hadoop-fuse.default
-Source5: hadoop-httpfs.default
+Source5: httpfs.default
 Source6: hadoop.1
 Source7: hadoop-fuse-dfs.1
 Source8: hdfs.conf
@@ -153,7 +156,10 @@ Source15: hadoop-mapreduce-historyserver.svc
 Source16: hadoop-yarn-resourcemanager.svc
 Source17: hadoop-yarn-nodemanager.svc
 Source18: hadoop-httpfs.svc
-Source19: hadoop-mapreduce-historyserver.default
+Source19: mapreduce.default
+Source20: hdfs.default
+Source21: yarn.default
+Source22: hadoop-layout.sh
 Patch0: MAPREDUCE-3890.patch
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
 BuildRequires: python >= 2.4, git, fuse-devel,fuse, automake, autoconf
@@ -395,8 +401,16 @@ bash %{SOURCE2} \
 # Replace the bundled jsvc with a link to a bigtop-jsvc one
 %__ln_s -f %{libexecdir}/bigtop-utils/jsvc $RPM_BUILD_ROOT/%{lib_hadoop}/libexec/jsvc
 
+# Provide a symlink to the bigtop-tomcat
+%__ln_s -f /usr/lib/bigtop-tomcat/bin $RPM_BUILD_ROOT/%{lib_httpfs}/bin
+
 # Init.d scripts
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
+
+# Install top level /etc/default files
+%__install -d -m 0755 $RPM_BUILD_ROOT/etc/default
+%__cp $RPM_SOURCE_DIR/hadoop.default $RPM_BUILD_ROOT/etc/default/hadoop
+%__cp $RPM_SOURCE_DIR/%{name}-fuse.default $RPM_BUILD_ROOT/etc/default/%{name}-fuse
 
 # Generate the init.d scripts
 for service in %{hadoop_services}
@@ -404,36 +418,29 @@ do
        init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{name}-${service}
        bash $RPM_SOURCE_DIR/init.d.tmpl $RPM_SOURCE_DIR/%{name}-${service}.svc > $init_file
        chmod 755 $init_file
+       cp $RPM_SOURCE_DIR/${service/-*/}.default $RPM_BUILD_ROOT/etc/default/%{name}-${service}
+       chmod 644 $RPM_BUILD_ROOT/etc/default/%{name}-${service}
 done
 
-%__install -d -m 0755 $RPM_BUILD_ROOT/etc/default
-%__cp $RPM_SOURCE_DIR/hadoop.default $RPM_BUILD_ROOT/etc/default/hadoop
-%__cp $RPM_SOURCE_DIR/yarn.default $RPM_BUILD_ROOT/etc/default/yarn
-%__cp $RPM_SOURCE_DIR/%{name}-fuse.default $RPM_BUILD_ROOT/etc/default/%{name}-fuse
-%__cp $RPM_SOURCE_DIR/%{name}-httpfs.default $RPM_BUILD_ROOT/etc/default/%{name}-httpfs
-%__cp $RPM_SOURCE_DIR/%{name}-mapreduce-historyserver.default $RPM_BUILD_ROOT/etc/default/%{name}-mapreduce-historyserver
-
+# Install security limits
 %__install -d -m 0755 $RPM_BUILD_ROOT/etc/security/limits.d
 %__install -m 0644 %{SOURCE8} $RPM_BUILD_ROOT/etc/security/limits.d/hdfs.conf
 %__install -m 0644 %{SOURCE9} $RPM_BUILD_ROOT/etc/security/limits.d/yarn.conf
 %__install -m 0644 %{SOURCE10} $RPM_BUILD_ROOT/etc/security/limits.d/mapreduce.conf
 
 # /var/lib/*/cache
-%__install -d -m 1777 $RPM_BUILD_ROOT/%{state_hadoop}/cache
 %__install -d -m 1777 $RPM_BUILD_ROOT/%{state_yarn}/cache
 %__install -d -m 1777 $RPM_BUILD_ROOT/%{state_hdfs}/cache
 %__install -d -m 1777 $RPM_BUILD_ROOT/%{state_mapreduce}/cache
 # /var/log/*
-%__install -d -m 0775 $RPM_BUILD_ROOT/%{log_hadoop}
 %__install -d -m 0775 $RPM_BUILD_ROOT/%{log_yarn}
-# %__install -d -m 0775 $RPM_BUILD_ROOT/%{log_hdfs}
-# %__install -d -m 0775 $RPM_BUILD_ROOT/%{log_mapreduce}
+%__install -d -m 0775 $RPM_BUILD_ROOT/%{log_hdfs}
+%__install -d -m 0775 $RPM_BUILD_ROOT/%{log_mapreduce}
 %__install -d -m 0775 $RPM_BUILD_ROOT/%{log_httpfs}
 # /var/run/*
-%__install -d -m 0775 $RPM_BUILD_ROOT/%{run_hadoop}
 %__install -d -m 0775 $RPM_BUILD_ROOT/%{run_yarn}
-#%__install -d -m 0775 $RPM_BUILD_ROOT/%{run_hdfs}
-#%__install -d -m 0775 $RPM_BUILD_ROOT/%{run_mapreduce}
+%__install -d -m 0775 $RPM_BUILD_ROOT/%{run_hdfs}
+%__install -d -m 0775 $RPM_BUILD_ROOT/%{run_mapreduce}
 %__install -d -m 0775 $RPM_BUILD_ROOT/%{run_httpfs}
 
 %pre
@@ -457,16 +464,6 @@ getent passwd mapreduce >/dev/null || /usr/sbin/useradd --comment "Hadoop MapRed
 
 %post
 %{alternatives_cmd} --install %{config_hadoop} %{name}-conf %{etc_hadoop}/conf.empty 10
-#%{alternatives_cmd} --install %{config_yarn} yarn-conf %{etc_yarn}/conf.empty 10
-%{alternatives_cmd} --install %{bin_hadoop}/%{hadoop_name} %{hadoop_name}-default %{bin_hadoop}/%{name} 20 \
-  --slave %{log_hadoop_dirname}/%{hadoop_name} %{hadoop_name}-log %{log_hadoop} \
-  --slave %{lib_hadoop_dirname}/%{hadoop_name} %{hadoop_name}-lib %{lib_hadoop} \
-  --slave /etc/%{hadoop_name} %{hadoop_name}-etc %{etc_hadoop} \
-  --slave %{man_hadoop}/man1/%{hadoop_name}.1.*z %{hadoop_name}-man %{man_hadoop}/man1/%{name}.1.*z
-
-touch %{log_hadoop}/SecurityAuth.audit
-chgrp hadoop %{log_hadoop}/SecurityAuth.audit
-chmod g+w %{log_hadoop}/SecurityAuth.audit
 
 %post httpfs
 %{alternatives_cmd} --install %{config_httpfs} %{name}-httpfs-conf %{etc_httpfs}/conf.empty 10
@@ -480,7 +477,6 @@ if [ "$1" = 0 ]; then
      service hadoop-$service stop 1>/dev/null 2>/dev/null || :
   done
   %{alternatives_cmd} --remove %{name}-conf %{etc_hadoop}/conf.empty || :
-  %{alternatives_cmd} --remove %{hadoop_name}-default %{bin_hadoop}/%{name} || :
 fi
 
 %preun httpfs
@@ -500,17 +496,10 @@ fi
 %defattr(-,root,root)
 %config(noreplace) %{etc_hadoop}/conf.empty/yarn-env.sh
 %config(noreplace) %{etc_hadoop}/conf.empty/yarn-site.xml
-%config(noreplace) %{etc_hadoop}/conf.empty/mrapp-generated-classpath
-%config(noreplace) /etc/default/yarn
 %config(noreplace) /etc/security/limits.d/yarn.conf
-%{lib_hadoop}/hadoop-yarn*.jar
 %{lib_hadoop}/libexec/yarn-config.sh
-%{lib_hadoop}/sbin/start-yarn.sh
-%{lib_hadoop}/sbin/stop-yarn.sh
-%{lib_hadoop}/sbin/yarn-daemon.sh
-%{lib_hadoop}/sbin/yarn-daemons.sh
-%{lib_hadoop}/bin/yarn
-%attr(6050,root,yarn) %{lib_hadoop}/bin/container-executor
+%{lib_yarn}
+%attr(6050,root,yarn) %{lib_yarn}/bin/container-executor
 %{bin_hadoop}/yarn
 %attr(0775,yarn,hadoop) %{run_yarn}
 %attr(0775,yarn,hadoop) %{log_yarn}
@@ -522,21 +511,9 @@ fi
 %config(noreplace) %{etc_hadoop}/conf.empty/hdfs-site.xml
 %config(noreplace) /etc/default/hadoop-fuse
 %config(noreplace) /etc/security/limits.d/hdfs.conf
-%{lib_hadoop}/hadoop-hdfs*.jar
-%{lib_hadoop}/hadoop-archives*.jar
+%{lib_hdfs}
 %{lib_hadoop}/libexec/hdfs-config.sh
 %{lib_hadoop}/libexec/jsvc
-%{lib_hadoop}/webapps
-%{lib_hadoop}/sbin/update-hdfs-env.sh
-%{lib_hadoop}/sbin/start-secure-dns.sh
-%{lib_hadoop}/sbin/stop-secure-dns.sh
-%{lib_hadoop}/sbin/start-balancer.sh
-%{lib_hadoop}/sbin/stop-balancer.sh
-%{lib_hadoop}/sbin/start-dfs.sh
-%{lib_hadoop}/sbin/stop-dfs.sh
-%{lib_hadoop}/sbin/refresh-namenodes.sh
-%{lib_hadoop}/sbin/distribute-exclude.sh
-%{lib_hadoop}/bin/hdfs
 %{bin_hadoop}/hdfs
 %attr(0775,hdfs,hadoop) %{run_hdfs}
 %attr(0775,hdfs,hadoop) %{log_hdfs}
@@ -545,16 +522,9 @@ fi
 
 %files mapreduce
 %defattr(-,root,root)
-%config(noreplace) /etc/default/hadoop-mapreduce-historyserver
 %config(noreplace) /etc/security/limits.d/mapreduce.conf
-%{lib_hadoop}/hadoop-mapreduce*.jar
-%{lib_hadoop}/hadoop-streaming*.jar
-%{lib_hadoop}/hadoop-extras*.jar
-%{lib_hadoop}/hadoop-distcp*.jar
-%{lib_hadoop}/hadoop-rumen*.jar
+%{lib_mapreduce}
 %{lib_hadoop}/libexec/mapred-config.sh
-%{lib_hadoop}/bin/mapred
-%{lib_hadoop}/sbin/mr-jobhistory-daemon.sh
 %{bin_hadoop}/mapred
 %attr(0775,mapreduce,hadoop) %{run_mapreduce}
 %attr(0775,mapreduce,hadoop) %{log_mapreduce}
@@ -572,25 +542,15 @@ fi
 %config(noreplace) %{etc_hadoop}/conf.empty/ssl-client.xml.example
 %config(noreplace) %{etc_hadoop}/conf.empty/ssl-server.xml.example
 %config(noreplace) /etc/default/hadoop
-%{lib_hadoop}/hadoop-common*.jar
-%{lib_hadoop}/hadoop-auth*.jar
-%{lib_hadoop}/hadoop-annotations*.jar
+%{lib_hadoop}/*.jar
 %{lib_hadoop}/lib
+%{lib_hadoop}/sbin
+%{lib_hadoop}/bin
 %{lib_hadoop}/etc
 %{lib_hadoop}/libexec/hadoop-config.sh
-%{lib_hadoop}/sbin/hadoop-*.sh
-%{lib_hadoop}/sbin/update-hadoop-env.sh
-%{lib_hadoop}/sbin/slaves.sh
-%{lib_hadoop}/sbin/start-all.sh
-%{lib_hadoop}/sbin/stop-all.sh
-%{lib_hadoop}/bin/hadoop
-%{lib_hadoop}/bin/rcc
+%{lib_hadoop}/libexec/hadoop-layout.sh
 %{bin_hadoop}/hadoop
 %{man_hadoop}/man1/hadoop.1.*
-%attr(0775,root,hadoop) %{run_hadoop}
-%attr(0775,root,hadoop) %{log_hadoop}
-%attr(0775,root,hadoop) %{state_hadoop}
-%attr(1777,root,hadoop) %{state_hadoop}/cache
 
 %files doc
 %defattr(-,root,root)
@@ -600,6 +560,7 @@ fi
 %defattr(-,root,root)
 %config(noreplace) %{etc_httpfs}/conf.empty
 %config(noreplace) /etc/default/%{name}-httpfs
+%{lib_hadoop}/libexec/httpfs-config.sh
 %{initd_dir}/%{name}-httpfs
 %{lib_httpfs}
 %attr(0775,httpfs,httpfs) %{run_httpfs}
@@ -610,6 +571,7 @@ fi
 %files %1 \
 %defattr(-,root,root) \
 %{initd_dir}/%{name}-%1 \
+/etc/default/%{name}-%1 \
 %post %1 \
 chkconfig --add %{name}-%1 \
 \
@@ -634,7 +596,6 @@ fi
 # Pseudo-distributed Hadoop installation
 %post conf-pseudo
 %{alternatives_cmd} --install %{config_hadoop} %{name}-conf %{etc_hadoop}/conf.pseudo 30
-#%{alternatives_cmd} --install %{config_yarn} yarn-conf %{etc_yarn}/conf.pseudo 30
 
 %preun conf-pseudo
 if [ "$1" = 0 ]; then
@@ -645,9 +606,6 @@ fi
 %files conf-pseudo
 %defattr(-,root,root)
 %config(noreplace) %attr(755,root,root) %{etc_hadoop}/conf.pseudo
-#%config(noreplace) %attr(755,root,root) %{etc_yarn}/conf.pseudo
-%dir %attr(0755,root,hadoop) /var/lib/%{name}
-%dir %attr(1777,root,hadoop) /var/lib/%{name}/cache
 
 %files libhdfs
 %defattr(-,root,root)

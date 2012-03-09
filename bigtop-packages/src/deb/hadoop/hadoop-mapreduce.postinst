@@ -21,12 +21,11 @@ set -e
 
 case "$1" in
     configure)
-        # FIXME: HADOOP-7939
-	# mkdir -p /var/log/mapreduce /var/run/mapreduce || :
-	# chgrp -R hadoop /var/log/mapreduce /var/run/mapreduce
-	# chmod g+w /var/run/mapreduce /var/log/mapreduce
-        chown mapreduce:hadoop /var/lib/mapreduce /var/lib/mapreduce/cache
-	chmod 1777 /var/lib/mapreduce/cache
+	mkdir -p /var/log/hadoop-mapreduce /var/run/hadoop-mapreduce || :
+	chgrp -R hadoop /var/log/hadoop-mapreduce /var/run/hadoop-mapreduce
+	chmod g+w /var/run/hadoop-mapreduce /var/log/hadoop-mapreduce
+	chown mapreduce:hadoop /var/lib/hadoop-mapreduce /var/lib/hadoop-mapreduce/cache
+	chmod 1777 /var/lib/hadoop-mapreduce/cache
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

@@ -1,6 +1,7 @@
-/etc/conf.empty/
-/usr/lib/hadoop
+/etc/hadoop/conf.empty/
+/usr/lib/hadoop/libexec
+/usr/lib/hadoop-hdfs
 /usr/bin
-/var/lib/hdfs/cache
-# /var/log/hdfs
-# /var/run/hdfs
+/var/lib/hadoop-hdfs/cache
+/var/log/hadoop-hdfs
+/var/run/hadoop-hdfs

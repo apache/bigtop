@@ -12,10 +12,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+export HADOOP_PID_DIR=/var/run/hadoop-hdfs
+export HADOOP_LOG_DIR=/var/log/hadoop-hdfs
+export HADOOP_NAMENODE_USER=hdfs
+export HADOOP_SECONDARYNAMENODE_USER=hdfs
+export HADOOP_DATANODE_USER=hdfs
+export HADOOP_IDENT_STRING=hdfs
 
-# FIXME: MAPREDUCE-3900
-export YARN_HOME=/usr/lib/hadoop
-export YARN_IDENT_STRING=mapreduce
-export YARN_PID_DIR=/var/run/mapreduce
-export YARN_LOG_DIR=/var/log/mapreduce
-export YARN_CONF_DIR=/etc/hadoop/conf
+# export HADOOP_SECURE_DN_USER=hdfs

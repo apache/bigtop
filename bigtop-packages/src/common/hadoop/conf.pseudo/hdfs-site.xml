@@ -38,18 +38,18 @@
   </property>
   <property>
      <name>hadoop.tmp.dir</name>
-     <value>/var/lib/hdfs/cache/${user.name}</value>
+     <value>/var/lib/hadoop-hdfs/cache/${user.name}</value>
   </property>
   <property>
      <name>dfs.namenode.name.dir</name>
-     <value>/var/lib/hdfs/cache/${user.name}/dfs/name</value>
+     <value>/var/lib/hadoop-hdfs/cache/${user.name}/dfs/name</value>
   </property>
   <property>
      <name>dfs.namenode.checkpoint.dir</name>
-     <value>/var/lib/hdfs/cache/${user.name}/dfs/namesecondary</value>
+     <value>/var/lib/hadoop-hdfs/cache/${user.name}/dfs/namesecondary</value>
   </property>
   <property>
      <name>dfs.datanode.data.dir</name>
-     <value>/var/lib/hdfs/cache/${user.name}/dfs/data</value>
+     <value>/var/lib/hadoop-hdfs/cache/${user.name}/dfs/data</value>
   </property>
 </configuration>

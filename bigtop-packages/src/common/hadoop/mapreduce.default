@@ -12,14 +12,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-export HADOOP_HOME_WARN_SUPPRESS=true
-export HADOOP_HOME=/usr/lib/hadoop
-export HADOOP_PREFIX=/usr/lib/hadoop
 
-export HADOOP_LIBEXEC_DIR=/usr/lib/hadoop/libexec
-export HADOOP_CONF_DIR=/etc/hadoop/conf
-
-export HADOOP_COMMON_HOME=/usr/lib/hadoop
-export HADOOP_HDFS_HOME=/usr/lib/hadoop-hdfs
-export HADOOP_MAPRED_HOME=/usr/lib/hadoop-mapreduce
-export YARN_HOME=/usr/lib/hadoop-yarn
+# FIXME: MAPREDUCE-3900
+export YARN_IDENT_STRING=mapreduce
+export YARN_PID_DIR=/var/run/hadoop-mapreduce
+export YARN_LOG_DIR=/var/log/hadoop-mapreduce
+export HADOOP_LOG_DIR=/var/log/hadoop-mapreduce

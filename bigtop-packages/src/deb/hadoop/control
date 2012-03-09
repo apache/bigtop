@@ -100,12 +100,6 @@ Description: Documentation for Hadoop
  This package contains the Java Documentation for Hadoop and its relevant
  APIs.
 
-Package: hadoop-source
-Provides: hadoop-source
-Architecture: all
-Description: Source code for Hadoop
- This package contains the source code for Hadoop and its contrib modules.
-
 Package: hadoop-conf-pseudo
 Provides: hadoop-conf-pseudo
 Architecture: all
@@ -171,14 +165,6 @@ Description: Data Node for Hadoop
  The Data Nodes in the Hadoop Cluster are responsible for serving up
  blocks of data over the network to Hadoop Distributed Filesystem
  (HDFS) clients.
-
-Package: hadoop-pipes
-Provides: hadoop-pipes
-Architecture: any
-Depends: hadoop (= ${source:Version})
-Description: Interface to author Hadoop MapReduce jobs in C++
- Contains Hadoop Pipes, a library which allows Hadoop MapReduce jobs to be
- written in C++.
 
 Package: libhdfs0
 Architecture: any
