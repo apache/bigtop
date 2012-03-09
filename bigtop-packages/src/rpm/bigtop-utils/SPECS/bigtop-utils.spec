@@ -15,7 +15,7 @@
 
 # See BIGTOP-383
 %if  %{?suse_version:1}0
-%define _libexecdir /usr/lib
+%define _libexecdir /usr/lib/bigtop-utils/
 %endif
 
 Name: bigtop-utils
