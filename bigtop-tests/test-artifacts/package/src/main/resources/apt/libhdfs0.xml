@@ -1,0 +1,15 @@
+<libhdfs0>
+  <content>
+    <file name='/.' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/libhdfs.so.0.0.0' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+    <file name='/usr/share' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/share/doc' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/share/doc/libhdfs0' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/share/doc/libhdfs0/changelog.Debian.gz' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+    <file name='/usr/share/doc/libhdfs0/changelog.gz' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+    <file name='/usr/share/doc/libhdfs0/copyright' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+    <file name='/usr/lib/libhdfs.so.0' owners='-1' perm='lrwxrwxrwx' user='root' group='root' target='libhdfs.so.0.0.0' />
+  </content>
+</libhdfs0>

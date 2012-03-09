@@ -1,0 +1,14 @@
+<hadoop-libhdfs.x86_64>
+  <content>
+    <file name='/usr/include/hdfs.h' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+    <file name='/usr/lib64/libhdfs.la' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+    <file name='/usr/lib64/libhdfs.so' owners='-1' perm='lrwxrwxrwx' user='root' group='root' target='libhdfs.so.0.0.0' />
+    <file name='/usr/lib64/libhdfs.so.0' owners='-1' perm='lrwxrwxrwx' user='root' group='root' target='libhdfs.so.0.0.0' />
+    <file name='/usr/lib64/libhdfs.so.0.0.0' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+    <file name='/usr/share/doc/libhdfs-1.0.1.13' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/share/doc/libhdfs-1.0.1.13/examples' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <doc  name='/usr/share/doc/libhdfs-1.0.1.13/examples/hdfs_read.c' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+    <doc  name='/usr/share/doc/libhdfs-1.0.1.13/examples/hdfs_test.c' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+    <doc  name='/usr/share/doc/libhdfs-1.0.1.13/examples/hdfs_write.c' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+  </content>
+</hadoop-libhdfs.x86_64>

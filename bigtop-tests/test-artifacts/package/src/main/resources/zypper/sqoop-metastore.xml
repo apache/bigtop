@@ -1,0 +1,7 @@
+<sqoop-metastore>
+  <content>
+    <file name='/etc/rc.d/sqoop-metastore' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+    <file name='/var/lib/sqoop' owners='-1' perm='drwxr-xr-x' user='sqoop' group='sqoop' />
+    <file name='/var/log/sqoop' owners='-1' perm='drwxr-xr-x' user='sqoop' group='sqoop' />
+  </content>
+</sqoop-metastore>

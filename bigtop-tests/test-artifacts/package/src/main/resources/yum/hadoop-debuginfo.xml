@@ -1,0 +1,50 @@
+<hadoop-debuginfo.x86_64>
+  <content>
+    <file name='/usr/lib/debug' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/debug/.build-id' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/debug/.build-id/0b' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/debug/.build-id/0b/9f95b78003a6a2e727864a49c7047e6df5dd37' owners='-1' perm='lrwxrwxrwx' user='root' group='root' target='../../../hadoop/bin/fuse_dfs' />
+    <file name='/usr/lib/debug/.build-id/0b/9f95b78003a6a2e727864a49c7047e6df5dd37.debug' owners='-1' perm='lrwxrwxrwx' user='root' group='root' target='../../usr/lib/hadoop/bin/fuse_dfs.debug' />
+    <file name='/usr/lib/debug/.build-id/51' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/debug/.build-id/51/74300d3a95b73b002252af1628d2516ccb472c' owners='-1' perm='lrwxrwxrwx' user='root' group='root' target='../../../hadoop/lib/native/Linux-amd64-64/libhadoop.so.1.0.0' />
+    <file name='/usr/lib/debug/.build-id/51/74300d3a95b73b002252af1628d2516ccb472c.debug' owners='-1' perm='lrwxrwxrwx' user='root' group='root' target='../../usr/lib/hadoop/lib/native/Linux-amd64-64/libhadoop.so.1.0.0.debug' />
+    <file name='/usr/lib/debug/.build-id/82' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/debug/.build-id/82/846f323d0097603811271aab43bd569873654a' owners='-1' perm='lrwxrwxrwx' user='root' group='root' target='../../../hadoop/bin/task-controller' />
+    <file name='/usr/lib/debug/.build-id/82/846f323d0097603811271aab43bd569873654a.debug' owners='-1' perm='lrwxrwxrwx' user='root' group='root' target='../../usr/lib/hadoop/bin/task-controller.debug' />
+    <file name='/usr/lib/debug/usr' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/debug/usr/lib' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/debug/usr/lib/hadoop' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/debug/usr/lib/hadoop/bin' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/debug/usr/lib/hadoop/bin/fuse_dfs.debug' owners='-1' perm='-r--r--r--' user='root' group='root' />
+    <file name='/usr/lib/debug/usr/lib/hadoop/bin/task-controller.debug' owners='-1' perm='-r--r--r--' user='root' group='root' />
+    <file name='/usr/lib/debug/usr/lib/hadoop/lib' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/debug/usr/lib/hadoop/lib/native' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/debug/usr/lib/hadoop/lib/native/Linux-amd64-64' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/debug/usr/lib/hadoop/lib/native/Linux-amd64-64/libhadoop.so.1.0.0.debug' owners='-1' perm='-r--r--r--' user='root' group='root' />
+    <file name='/usr/lib/debug/usr/lib/hadoop/lib/native/Linux-amd64-64/libhadoop.so.1.debug' owners='-1' perm='lrwxrwxrwx' user='root' group='root' target='libhadoop.so.1.0.0.debug' />
+    <file name='/usr/lib/debug/usr/lib/hadoop/lib/native/Linux-amd64-64/libhadoop.so.debug' owners='-1' perm='lrwxrwxrwx' user='root' group='root' target='libhadoop.so.1.0.0.debug' />
+    <file name='/usr/lib/debug/usr/lib/hadoop/libexec' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/debug/usr/lib/hadoop/libexec/jsvc.amd64.debug' owners='-1' perm='-r--r--r--' user='root' group='root' />
+    <file name='/usr/lib/debug/usr/lib/hadoop/sbin' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/debug/usr/lib/hadoop/sbin/Linux-amd64-64' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/debug/usr/lib/hadoop/sbin/Linux-amd64-64/jsvc.debug' owners='-1' perm='-r--r--r--' user='root' group='root' />
+    <file name='/usr/lib/debug/usr/lib/hadoop/sbin/Linux-amd64-64/task-controller.debug' owners='-1' perm='-r--r--r--' user='root' group='root' />
+    <file name='/usr/src/debug/mnt' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/src/debug/mnt/jenkins' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/src/debug/mnt/jenkins/workspace' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/src/debug/mnt/jenkins/workspace/Bigtop-trunk-Hadoop' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/src/debug/mnt/jenkins/workspace/Bigtop-trunk-Hadoop/label' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/src/debug/mnt/jenkins/workspace/Bigtop-trunk-Hadoop/label/centos6' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/src/debug/mnt/jenkins/workspace/Bigtop-trunk-Hadoop/label/centos6/build' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/src/debug/mnt/jenkins/workspace/Bigtop-trunk-Hadoop/label/centos6/build/hadoop' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/src/debug/mnt/jenkins/workspace/Bigtop-trunk-Hadoop/label/centos6/build/hadoop/rpm' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/src/debug/mnt/jenkins/workspace/Bigtop-trunk-Hadoop/label/centos6/build/hadoop/rpm/BUILD' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/src/debug/mnt/jenkins/workspace/Bigtop-trunk-Hadoop/label/centos6/build/hadoop/rpm/BUILD/hadoop-1.0.1' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/src/debug/mnt/jenkins/workspace/Bigtop-trunk-Hadoop/label/centos6/build/hadoop/rpm/BUILD/hadoop-1.0.1/build' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/src/debug/mnt/jenkins/workspace/Bigtop-trunk-Hadoop/label/centos6/build/hadoop/rpm/BUILD/hadoop-1.0.1/build/c++-build' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/src/debug/mnt/jenkins/workspace/Bigtop-trunk-Hadoop/label/centos6/build/hadoop/rpm/BUILD/hadoop-1.0.1/build/c++-build/Linux-amd64-64' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/src/debug/mnt/jenkins/workspace/Bigtop-trunk-Hadoop/label/centos6/build/hadoop/rpm/BUILD/hadoop-1.0.1/build/c++-build/Linux-amd64-64/task-controller' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/src/debug/mnt/jenkins/workspace/Bigtop-trunk-Hadoop/label/centos6/build/hadoop/rpm/BUILD/hadoop-1.0.1/build/native' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/src/debug/mnt/jenkins/workspace/Bigtop-trunk-Hadoop/label/centos6/build/hadoop/rpm/BUILD/hadoop-1.0.1/build/native/Linux-amd64-64' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+  </content>
+</hadoop-debuginfo.x86_64>

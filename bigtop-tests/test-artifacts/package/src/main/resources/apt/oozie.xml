@@ -1,0 +1,29 @@
+<oozie>
+  <content>
+    <file name='/.' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/oozie' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/oozie/bin' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/oozie/bin/oozie-stop.sh' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/oozie/bin/oozie-setup.sh' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/oozie/bin/oozie-run.sh' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/oozie/bin/oozie-sys.sh' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/oozie/bin/oozie-start.sh' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/oozie/bin/oozied.sh' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/oozie/bin/addtowar.sh' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+    <file name='/usr/share' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/share/doc' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/share/doc/oozie' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/share/doc/oozie/changelog.Debian.gz' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+    <file name='/usr/share/doc/oozie/copyright' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+    <file name='/var' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/var/lib' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/var/lib/oozie' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/var/log' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/var/log/oozie' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/etc' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/etc/init.d' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <config name='/etc/init.d/oozie' owners='-1' perm='' user='' group='' />
+  </content>
+</oozie>
