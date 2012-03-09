@@ -100,49 +100,11 @@
         This equals to classifier="tests"
     -->
     <org.apache.maven-dependency-plugin.type>test-jar</org.apache.maven-dependency-plugin.type>
-
-    <!--
-        MAINTAINER property: not to be overridden by users
-    -->
-    <asf.snapshots>https://repository.apache.org/content/repositories/snapshots</asf.snapshots>
-    <maven.testsnaps>https://repository.cloudera.com/content/repositories/testsnaps/</maven.testsnaps>
-    <maven.releases>https://repository.cloudera.com/content/repositories/releases/</maven.releases>
-    <maven.rcs>https://repository.cloudera.com/content/groups/cdh-releases-rcs/</maven.rcs>
   </properties>
-
-  <repositories>
-    <repository>
-      <releases>
-        <enabled>false</enabled>
-        <updatePolicy>always</updatePolicy>
-      </releases>
-      <id>snapshots</id>
-      <name>Test Snapshots</name>
-      <url>${maven.testsnaps}</url>
-    </repository>
-    <repository>
-      <id>rcs</id>
-      <name>Cloudera RCS</name>
-      <url>${maven.rcs}</url>
-    </repository>
-    <repository>
-      <id>releases</id>
-      <name>Cloudera Releases</name>
-      <url>${maven.releases}</url>
-    </repository>
-  </repositories>
 
   <scm>
     <connection>scm:svn:https://svn.apache.org/repos/asf/incubator/bigtop/</connection>
   </scm>
-
-  <distributionManagement>
-    <snapshotRepository>
-      <id>cloudera-snapshots</id>
-      <name>Internal Snapshots</name>
-      <url>${maven.testsnaps}</url>
-    </snapshotRepository>
-  </distributionManagement>
 
   <dependencyManagement>
     <dependencies>

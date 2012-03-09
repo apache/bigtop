@@ -37,9 +37,12 @@
     <!--
       BOM definitions
     -->
+    <hadoop.version>1.0.1</hadoop.version>
+    <pig.version>0.9.2</pig.version>
+    <pig-smoke.version>0.9.2-SNAPSHOT</pig-smoke.version>
+    <sqoop.version>1.4.1-incubating</sqoop.version>
     <itest-conf.version>0.3.0-incubating-SNAPSHOT</itest-conf.version>
     <itest-common.version>0.3.0-incubating-SNAPSHOT</itest-common.version>
-    <hadoop.version>0.20.205.0</hadoop.version>
     <hadoop-smoke.version>0.3.0-incubating-SNAPSHOT</hadoop-smoke.version>
     <flume-smoke.version>0.3.0-incubating-SNAPSHOT</flume-smoke.version>
     <hbase-smoke.version>0.3.0-incubating-SNAPSHOT</hbase-smoke.version>
@@ -47,9 +50,6 @@
     <mahout-smoke.version>0.3.0-incubating-SNAPSHOT</mahout-smoke.version>
     <oozie-smoke.version>0.3.0-incubating-SNAPSHOT</oozie-smoke.version>
     <package-smoke.version>0.3.0-incubating-SNAPSHOT</package-smoke.version>
-    <pig-smoke.version>0.9.0-SNAPSHOT</pig-smoke.version>
-    <pig.version>0.9.1</pig.version>
-    <sqoop.version>1.3.0</sqoop.version>
     <!--
       End of BOM definitions
     -->
