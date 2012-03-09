@@ -70,6 +70,8 @@
               <exclude>src/site/resources/images/bigtop-logo.ai</exclude>
               <exclude>test/MANIFEST.txt</exclude>
               <exclude>bigtop-deploy/puppet/modules/hadoop/templates/taskcontroller.cfg</exclude>
+              <exclude>bigtop-deploy/puppet/README.md</exclude>
+              <exclude>bigtop-deploy/puppet/config/site.csv.example</exclude>
             </excludes>
           </configuration>
         </plugin>
