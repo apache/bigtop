@@ -35,7 +35,6 @@ endif
 
 patch: patch-stamp
 patch-stamp:	
-	patch -p0 < debian/MAPREDUCE-3890.patch
 	touch $@
 
 #Architecture

@@ -160,7 +160,6 @@ Source19: mapreduce.default
 Source20: hdfs.default
 Source21: yarn.default
 Source22: hadoop-layout.sh
-Patch0: MAPREDUCE-3890.patch
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
 BuildRequires: python >= 2.4, git, fuse-devel,fuse, automake, autoconf
 Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils
@@ -361,8 +360,8 @@ AutoReq: no
 Hadoop Filesystem Library
 
 %prep
-%setup -n %{name}-%{hadoop_base_version}-src 
-%patch0 -p0
+# %setup -n %{name}-%{hadoop_base_version}-src 
+%setup -n apache-hadoop-common-2cbb181
 
 %build
 # This assumes that you installed Java JDK 6 and set JAVA_HOME
