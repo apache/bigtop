@@ -22,7 +22,7 @@
   <parent>
     <groupId>org.apache.bigtop.itest</groupId>
     <artifactId>smoke-tests</artifactId>
-    <version>0.3.0-incubating-SNAPSHOT</version>
+    <version>0.3.0-incubating</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -30,7 +30,7 @@
   <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>pig-smoke-execution</artifactId>
   <packaging>jar</packaging>
-  <version>0.3.0-incubating-SNAPSHOT</version>
+  <version>0.3.0-incubating</version>
   <name>pigsmokes</name>
 
   <properties>
