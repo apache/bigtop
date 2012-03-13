@@ -22,7 +22,7 @@ set -e
 case "$1" in
     configure)
         # Install config alternatives
-        update-alternatives  --install /etc/flume/conf flume-conf /etc/flume/conf.empty 30
+        update-alternatives  --install /etc/flume-ng/conf flume-ng-conf /etc/flume-ng/conf.empty 30
 
     ;;
 

@@ -35,7 +35,7 @@ set -e
 
 case "$1" in
     remove|upgrade|deconfigure)
-      update-alternatives --remove flume-conf /etc/flume/conf.empty || :
+      update-alternatives --remove flume-ng-conf /etc/flume-ng/conf.empty || :
     ;;
 
     failed-upgrade)
