@@ -337,8 +337,8 @@ The History server keeps records of the different activities being performed on 
 %package client
 Summary: Hadoop client side dependencies
 Group: System/Daemons
-Requires: %{name} = %{version}-%{release}, %{name}-hdfs = %{version}-%{release},
-          %{name}-yarn = %{version}-%{release}, %{name}-mapreduce = %{version}-%{release}
+Requires: %{name} = %{version}-%{release}, %{name}-hdfs = %{version}-%{release}
+Requires: %{name}-yarn = %{version}-%{release}, %{name}-mapreduce = %{version}-%{release}
 
 %description client
 Installation of this package will provide you with all the dependencies for Hadoop clients.
@@ -346,10 +346,10 @@ Installation of this package will provide you with all the dependencies for Hado
 %package conf-pseudo
 Summary: Hadoop installation in pseudo-distributed mode
 Group: System/Daemons
-Requires: %{name} = %{version}-%{release}, %{name}-hdfs-namenode = %{version}-%{release},
-          %{name}-hdfs-datanode = %{version}-%{release}, %{name}-hdfs-secondarynamenode = %{version}-%{release},
-          %{name}-yarn-resourcemanager = %{version}-%{release}, %{name}-yarn-nodemanager = %{version}-%{release},
-          %{name}-mapreduce-historyserver = %{version}-%{release}
+Requires: %{name} = %{version}-%{release}, %{name}-hdfs-namenode = %{version}-%{release}
+Requires: %{name}-hdfs-datanode = %{version}-%{release}, %{name}-hdfs-secondarynamenode = %{version}-%{release}
+Requires: %{name}-yarn-resourcemanager = %{version}-%{release}, %{name}-yarn-nodemanager = %{version}-%{release}
+Requires: %{name}-mapreduce-historyserver = %{version}-%{release}
 
 %description conf-pseudo
 Installation of this RPM will setup your machine to run in pseudo-distributed mode
