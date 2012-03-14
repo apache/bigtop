@@ -172,8 +172,6 @@ elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
 fi
 
-. /etc/default/hadoop
-
 exec ${component#${PREFIX}} "\$@"
 EOF
   chmod 755 $wrapper
@@ -188,6 +186,7 @@ cp ${DISTRO_DIR}/hadoop-layout.sh ${SYSTEM_LIBEXEC_DIR}/
 install -d -m 0755 ${HADOOP_DIR}
 cp ${BUILD_DIR}/share/hadoop/common/*.jar ${HADOOP_DIR}/
 cp ${BUILD_DIR}/share/hadoop/common/lib/hadoop-auth*.jar ${HADOOP_DIR}/
+cp ${BUILD_DIR}/share/hadoop/mapreduce/lib/hadoop-annotations*.jar ${HADOOP_DIR}/
 install -d -m 0755 ${MAPREDUCE_DIR}
 cp ${BUILD_DIR}/share/hadoop/mapreduce/hadoop-mapreduce*.jar ${MAPREDUCE_DIR}
 cp ${BUILD_DIR}/share/hadoop/tools/lib/*.jar ${MAPREDUCE_DIR}
@@ -200,7 +199,6 @@ chmod 644 ${HADOOP_DIR}/*.jar ${MAPREDUCE_DIR}/*.jar ${HDFS_DIR}/*.jar ${YARN_DI
 # lib jars
 install -d -m 0755 ${HADOOP_DIR}/lib
 cp ${BUILD_DIR}/share/hadoop/common/lib/*.jar ${HADOOP_DIR}/lib
-rm -f ${HADOOP_DIR}/lib/hadoop*.jar
 install -d -m 0755 ${MAPREDUCE_DIR}/lib
 cp ${BUILD_DIR}/share/hadoop/mapreduce/lib/*.jar ${MAPREDUCE_DIR}/lib
 install -d -m 0755 ${HDFS_DIR}/lib 
@@ -270,8 +268,6 @@ chmod 644 $MAN_DIR/man1/hadoop.1.gz
 # HTTPFS
 install -d -m 0755 ${HTTPFS_DIR}/sbin
 cp ${BUILD_DIR}/sbin/httpfs.sh ${HTTPFS_DIR}/sbin/
-install -d -m 0755 ${HTTPFS_DIR}/libexec
-cp ${BUILD_DIR}/libexec/httpfs-config.sh ${HTTPFS_DIR}/libexec/
 cp -r ${BUILD_DIR}/share/hadoop/httpfs/tomcat/webapps ${HTTPFS_DIR}/
 cp -r ${BUILD_DIR}/share/hadoop/httpfs/tomcat/conf ${HTTPFS_DIR}/
 chmod 644 ${HTTPFS_DIR}/conf/*
@@ -290,19 +286,16 @@ cp ${BUILD_DIR}/etc/hadoop/log4j.properties $HADOOP_ETC_DIR/conf.pseudo
 install -d -m 0755 ${HADOOP_DIR}/etc
 ln -s ${HADOOP_ETC_DIR##${PREFIX}}/conf ${HADOOP_DIR}/etc/hadoop
 
-# FIXME: Provide convenience links for log/run in hdfs and mapreduce (HADOOP-7939)
+# Create log, var and lib
 install -d -m 0755 $PREFIX/var/{log,run,lib}/hadoop-hdfs
 install -d -m 0755 $PREFIX/var/{log,run,lib}/hadoop-yarn
 install -d -m 0755 $PREFIX/var/{log,run,lib}/hadoop-mapreduce
-
-# FIXME: The following needs to be untangled upstream (HADOOP-7939)
-cp ${BUILD_DIR}/share/hadoop/mapreduce/hadoop-mapreduce-client-shuffle*.jar ${HADOOP_DIR}/lib/
-cp ${BUILD_DIR}/share/hadoop/mapreduce/hadoop-mapreduce-client-core*.jar ${HADOOP_DIR}/lib/
 
 # Remove all source and test jars and create version-less symlinks to offer integration point with other projects
 for DIR in ${HADOOP_DIR} ${HDFS_DIR} ${YARN_DIR} ${MAPREDUCE_DIR} ${HTTPFS_DIR} ; do
   (cd $DIR &&
    rm -fv *-test.jar *-sources.jar
+   rm -fv lib/hadoop-*.jar
    for j in hadoop-*.jar; do
      if [[ $j =~ hadoop-(.*)-${HADOOP_VERSION}.jar ]]; then
        name=${BASH_REMATCH[1]}

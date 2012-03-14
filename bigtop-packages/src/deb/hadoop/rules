@@ -73,9 +73,6 @@ install: build
 	  --native-build-string=${native_dir} \
 	  --installed-lib-dir=/usr/lib/hadoop
 
-	ln -fs /usr/lib/bigtop-utils/jsvc debian/tmp/usr/lib/hadoop/libexec/jsvc
-	ln -fs /usr/lib/bigtop-tomcat/bin debian/tmp/usr/lib/hadoop-httpfs/bin
-
 # Run dh_lintian if we've got it - this doesn't exist on debhelper 6 (eg Ubuntu Hardy)
 	(dh_lintian) || /bin/true
 

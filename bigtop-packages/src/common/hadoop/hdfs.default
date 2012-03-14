@@ -20,3 +20,5 @@ export HADOOP_DATANODE_USER=hdfs
 export HADOOP_IDENT_STRING=hdfs
 
 # export HADOOP_SECURE_DN_USER=hdfs
+# export HADOOP_SECURE_DN_PID_DIR=/var/run/hadoop-hdfs
+# export HADOOP_SECURE_DN_LOG_DIR=/var/log/hadoop-hdfs

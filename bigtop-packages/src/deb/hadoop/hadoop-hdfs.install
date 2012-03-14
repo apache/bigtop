@@ -1,7 +1,6 @@
 /etc/security/limits.d/hdfs.conf
 /etc/hadoop/conf.empty/hdfs-site.xml
 /usr/lib/hadoop-hdfs
-/usr/lib/hadoop/libexec/jsvc
 /usr/lib/hadoop/libexec/hdfs-config.sh
 /usr/bin/hdfs
 /var/lib/hadoop-hdfs
