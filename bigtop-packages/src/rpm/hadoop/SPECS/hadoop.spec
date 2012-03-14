@@ -162,7 +162,7 @@ Source21: yarn.default
 Source22: hadoop-layout.sh
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
 BuildRequires: python >= 2.4, git, fuse-devel,fuse, automake, autoconf
-Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils
+Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils, zookeeper >= 3.4.0
 # Sadly, Sun/Oracle JDK in RPM form doesn't provide libjvm.so, which means we have
 # to set AutoReq to no in order to minimize confusion. Not ideal, but seems to work.
 # I wish there was a way to disable just one auto dependency (libjvm.so)
@@ -396,6 +396,9 @@ bash %{SOURCE2} \
   --native-build-string=%{hadoop_arch} \
   --installed-lib-dir=%{lib_hadoop} \
   --man-dir=$RPM_BUILD_ROOT%{man_hadoop} \
+
+# Forcing Zookeeper dependency to be on the packaged jar
+%__ln_s -f /usr/lib/zookeeper/zookeeper.jar %{lib_hadoop}/lib/zookeeper*.jar
 
 # Init.d scripts
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
