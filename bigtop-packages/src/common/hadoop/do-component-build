@@ -35,3 +35,6 @@ mvn site site:stage ${MAVEN_SKIP_TESTS} $@
 # Copy generated docs
 mkdir -p build/share/doc/
 cp -r target/site/* build/share/doc/
+
+# Create a manifest for hadoop client package
+(cd hadoop-client/target/hadoop-client-*/share/hadoop/client/lib ; ls) > build/hadoop-client.list

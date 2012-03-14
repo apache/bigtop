@@ -44,6 +44,7 @@ OPTS=$(getopt \
   -l 'hdfs-dir:' \
   -l 'yarn-dir:' \
   -l 'mapreduce-dir:' \
+  -l 'client-dir:' \
   -l 'system-include-dir:' \
   -l 'system-lib-dir:' \
   -l 'system-libexec-dir:' \
@@ -82,6 +83,9 @@ while true ; do
         ;;
         --mapreduce-dir)
         MAPREDUCE_DIR=$2 ; shift 2
+        ;;
+        --client-dir)
+        CLIENT_DIR=$2 ; shift 2
         ;;
         --system-include-dir)
         SYSTEM_INCLUDE_DIR=$2 ; shift 2
@@ -138,6 +142,7 @@ HADOOP_DIR=${HADOOP_DIR:-$PREFIX/usr/lib/hadoop}
 HDFS_DIR=${HDFS_DIR:-$PREFIX/usr/lib/hadoop-hdfs}
 YARN_DIR=${YARN_DIR:-$PREFIX/usr/lib/hadoop-yarn}
 MAPREDUCE_DIR=${MAPREDUCE_DIR:-$PREFIX/usr/lib/hadoop-mapreduce}
+CLIENT_DIR=${CLIENT_DIR:-$PREFIX/usr/lib/hadoop/client}
 HTTPFS_DIR=${HTTPFS_DIR:-$PREFIX/usr/lib/hadoop-httpfs}
 SYSTEM_LIB_DIR=${SYSTEM_LIB_DIR:-/usr/lib}
 BIN_DIR=${BIN_DIR:-$PREFIX/usr/bin}
@@ -302,4 +307,13 @@ for DIR in ${HADOOP_DIR} ${HDFS_DIR} ${YARN_DIR} ${MAPREDUCE_DIR} ${HTTPFS_DIR} 
        ln -s $j hadoop-$name.jar
      fi
    done)
+done
+
+# Now create a client installation area full of symlinks
+install -d -m 0755 ${CLIENT_DIR}
+for file in `cat ${BUILD_DIR}/hadoop-client.list` ; do
+  for dir in ${HADOOP_DIR}/{lib,} ${HDFS_DIR}/{lib,} ${YARN_DIR}/{lib,} ${MAPREDUCE_DIR}/{lib,} ; do
+    [ -e $dir/$file ] && ln -fs ${dir#$PREFIX}/$file ${CLIENT_DIR}/$file && continue 2
+  done
+  exit 1
 done
