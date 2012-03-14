@@ -410,7 +410,7 @@ bash %{SOURCE2} \
   --man-dir=$RPM_BUILD_ROOT%{man_hadoop} \
 
 # Forcing Zookeeper dependency to be on the packaged jar
-%__ln_s -f /usr/lib/zookeeper/zookeeper.jar %{lib_hadoop}/lib/zookeeper*.jar
+%__ln_s -f /usr/lib/zookeeper/zookeeper.jar $RPM_BUILD_ROOT/%{lib_hadoop}/lib/zookeeper*.jar
 
 # Init.d scripts
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
