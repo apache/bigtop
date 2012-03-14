@@ -20461,3 +20461,16 @@ index 15606db..79352d8 100644
 +    </filter-mapping>
 +
  </web-app>
+diff --git distro/src/main/bin/oozied.sh distro/src/main/bin/oozied.sh 
+index 15606db..79352d8 100644
+--- distro/src/main/bin/oozied.sh	(revision 1300625)
++++ distro/src/main/bin/oozied.sh	(working copy)
+@@ -43,7 +43,7 @@
+ 
+ source ${BASEDIR}/bin/oozie-sys.sh
+ 
+-CATALINA=${BASEDIR}/oozie-server/bin/catalina.sh
++CATALINA=${OOZIE_CATALINA_HOME:-${BASEDIR}/oozie-server}/bin/catalina.sh
+ 
+ setup_catalina_opts() {
+   # The Java System property 'oozie.http.port' it is not used by Oozie,
