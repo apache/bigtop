@@ -286,6 +286,8 @@ for conf in conf.pseudo ; do
   install -d -m 0755 $HADOOP_ETC_DIR/$conf
   # Overlay the -site files
   (cd $DISTRO_DIR/$conf && tar -cf - .) | (cd $HADOOP_ETC_DIR/$conf && tar -xf -)
+  # When building straight out of svn we have to account for pesky .svn subdirs 
+  rm -rf `find $HADOOP_ETC_DIR/$conf -name .svn -type d` 
 done
 cp ${BUILD_DIR}/etc/hadoop/log4j.properties $HADOOP_ETC_DIR/conf.pseudo
 
