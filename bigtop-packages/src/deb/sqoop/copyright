@@ -2,11 +2,7 @@ Format: http://dep.debian.net/deps/dep5
 Source: http://incubator.apache.org/projects/sqoop.html
 Upstream-Name: Sqoop
 
-Files: *
-Copyright: 2010-2011, Cloudera, Inc.
-License: Apache-2.0
-
-Files debian/*
+Files *
 Copyright: 2011, The Apache Software Foundation
 License: Apache-2.0
 

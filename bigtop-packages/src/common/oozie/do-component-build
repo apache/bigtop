@@ -40,12 +40,6 @@ RELEASE_DIR=$PWD
 # Resolve build version
 #
 OOZIE_VERSION=3.1.3-incubating
-RELEASE_ENV_FILENAME=release.env
-RELEASE_ENV_FILE=${RELEASE_DIR}/cloudera/${RELEASE_ENV_FILENAME}
-if [ -f "${RELEASE_ENV_FILE}" ]; then
-  echo "Setting release environment using ${RELEASE_ENV_FILE}"
-  . ${RELEASE_ENV_FILE}
-fi
 
 # IMPORTANT: THE FULL_VERSION, if set, will be used only for the final TARBALL,
 #            Everything inside of the TARBALL uses the version specified in the POM
@@ -138,10 +132,6 @@ rm -rf ${SRCDIR}/target \
        ${SRCDIR}/*.ipr \
        ${SRCDIR}/*.iws 
 
-cat > ${SRCDIR}/cloudera/${RELEASE_ENV_FILENAME} <<EOM
-FULL_VERSION=${FULL_VERSION}
-export FULL_VERSION
-EOM
 cp ${SRCDIR}/LICENSE.txt ${EXPDIR}
 cp ${SRCDIR}/NOTICE.txt ${EXPDIR}
 cd ${EXPDIR}
