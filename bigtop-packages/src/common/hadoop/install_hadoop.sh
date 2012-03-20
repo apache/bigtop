@@ -206,6 +206,8 @@ for conf in conf.pseudo ; do
   (cd ${BUILD_DIR}/conf && tar -cf - .) | (cd $ETC_DIR/$conf && tar -xf -)
   # Overlay the -site files
   (cd $DISTRO_DIR/$conf && tar -cf - .) | (cd $ETC_DIR/$conf && tar -xf -)
+  # When building straight out of svn we have to account for pesky .svn subdirs
+  rm -rf `find $ETC_DIR/$conf -name .svn -type d`
 done
 
 # man pages
