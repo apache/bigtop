@@ -16,10 +16,10 @@
 .\" Process this file with
 .\" groff -man -Tascii oozie.1
 .\"
-.TH oozie 1 "February 2011 " Linux "User Manuals"
+.TH oozie 1 
 
 .SH NAME
-Oozie \- Oozie is the workflow/coordinator engine for Hadoop.
+Oozie \- Oozie command line client tool
 
 .SH SYNOPSIS
 
@@ -28,156 +28,18 @@ subcommand [options]
 
 .SH DESCRIPTION
 
-Oozie is a workflow/coordination service to manage data processing
-jobs for Hadoop. It is an extensible, scalable and data-aware service
-to orchestrate dependencies between jobs running on Hadoop (including
-HDFS, Pig,  MapReduce, Streaming, Pipes).
-
-
-Oozie Client Authentication:
-
-Oozie supports Kerberos authentication.  If the Oozie server is configured 
-with Kerberos authentication for Oozie users, the oozie client command will 
-use the Kerberos credentials available in the OS Kerberos cache (normally 
-initialized with the kinit commmand).
-
-
-For more information about Oozie, see 
-
-   http://incubator.apache.org/oozie/
-
-.SH SUBCOMMANDS
-
-.IP "help"
-display usage
-
-.IP "version"
-show client version
-
-.IP "job <OPTIONS>"
- job operations
-
-OPTIONS:
-
--action <arg> : coordinator rerun on action ids (requires -rerun)
-
--change <arg> : change a coordinator job
-
--config <arg> : job configuration file '.xml' or '.properties'
-
--D <property=value> : set/override value for given property
-
--date <arg> : coordinator rerun on action dates (requires -rerun)
-
--definition <arg> : job definition
-
--dryrun : Supported in Oozie-2.0 or later versions ONLY - dryrun or
-test run a coordinator job (requires -config) - job is not queued
-
--info <arg> : info of a job
-
--kill <arg> : kill a job
-
--len <arg> : number of actions (default TOTAL ACTIONS, requires -info)
-
--localtime : use local time (default GMT)
-
--log <arg> : job log
-
--nocleanup : do not clean up output-events of the coordiantor rerun
-actions (requires -rerun)
-
--offset <arg> : job info offset of actions (default '1', requires -info)
-
--oozie <arg> : Oozie URL
-
--refresh : re-materialize the coordinator rerun actions (requires -rerun)
-
--rerun <arg> : rerun a job (workflow requires -config, coordinator
-requires -action or -date)
-
--resume <arg> : resume a job
-
--run : run a job (requires -config)
-
--start <arg> : start a job
-
--submit : submit a job (requires -config)
-
--suspend <arg> : suspend a job
-
--value <arg> : new endtime/concurrency/pausetime value for changing a
-coordinator job
-
--verbose : verbose mode
-
-.IP "jobs <OPTIONS>"
-jobs status
-
-OPTIONS:
-
--filter <arg> : user=<U>;name=<N>;group=<G>;status=<S>;...
-
--jobtype <arg> : job type ('Supported in Oozie-2.0 or later versions
-ONLY - coordinator' or 'wf' (default))
-
--len <arg> : number of jobs (default '100')
-
--localtime : use local time (default GMT)
-
--offset <arg> : jobs offset (default '1')
-
--oozie <arg> : Oozie URL
-
--verbose : verbose mode
-
-.IP "admin <OPTIONS>"
-admin operations
-
--oozie <arg> : Oozie URL
-
--queuedump : show Oozie server queue elements
-
--status : show the current system status
-
--systemmode <arg> : Supported in Oozie-2.0 or later versions ONLY.
-Changes oozie system mode [NORMAL|NOWEBSERVICE|SAFEMODE]
-
--version : show Oozie server build version
-
-.IP "validate <ARGS>"
-validate a workflow XML file
-
-.IP "sla <OPTIONS>"
-sla operations (Supported in Oozie-2.0 or later)
-
-OPTIONS:
-
--len <arg> : number of results (default '100')
-
--offset <arg> : start offset (default '0')
-
--oozie <arg> : Oozie URL
-
-.IP "pig <OPTIONS> -X <ARGS>"
-submit a pig job
-
-everything after '-X' are pass-through parameters to pig
-
-OPTIONS:
-
--config <arg> : job configuration file '.properties'
-
--D <property=value> : set/override value for given property
-
--file <arg> : Pig script
-
--oozie <arg> : Oozie URL
-
-.SH ENVIRONMENT
-
-.IP OOZIE_URL
-if set, it is used as the default value for the '-oozie' option.
-
-.SH COPYRIGHT
-Copyright (C) 2010 Yahoo! Inc. All rights reserved.
+Apache Oozie Workflow Scheduler for Hadoop is a workflow/coordination 
+service to manage Apache Hadoop jobs. Oozie Workflow jobs are Directed
+Acyclical Graphs (DAGs) of actions, actions are typically Hadoop jobs
+(MapReduce, Streaming, Pipes, Pig, Hive, Sqoop, etc). Oozie Coordinator 
+jobs trigger recurrent Workflow jobs based on time (frequency) and data
+availability. Oozie Bundle jobs are sets of Coordinator jobs managed as a
+single job. Oozie is an extensible, scalable and data-aware service to
+to orchestrate dependencies among jobs running on Hadoop.
+
+For more information about Apache Oozie project and detailed documentation,
+visit 
+
+       http://incubator.apache.org/oozie/
+
+Run 'oozie help' to access the built-in tool documentation.
