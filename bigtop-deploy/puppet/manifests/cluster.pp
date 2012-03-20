@@ -158,6 +158,7 @@ class hadoop_head_node inherits hadoop_cluster_node {
   hadoop-zookeeper::server { "zookeeper":
         myid => "0",
         ensemble => $hadoop_zookeeper_ensemble,
+        kerberos_realm => $kerberos_realm, 
   }
 
   hadoop::create_hdfs_dirs { [ "/mapred", "/tmp", "/system", "/user", "/hbase", "/benchmarks", "/user/jenkins", "/user/hive", "/user/root", "/user/history" ]:
