@@ -488,10 +488,10 @@ if [ "$1" = 0 ]; then
 fi
 
 %preun httpfs
-%{alternatives_cmd} --remove %{name}-httpfs-conf %{etc_httpfs}/conf.empty || :
 if [ $1 = 0 ]; then
   service %{name}-httpfs stop > /dev/null 2>&1
   chkconfig --del %{name}-httpfs
+  %{alternatives_cmd} --remove %{name}-httpfs-conf %{etc_httpfs}/conf.empty || :
 fi
 
 %postun httpfs
