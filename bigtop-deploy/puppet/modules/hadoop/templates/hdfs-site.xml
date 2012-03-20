@@ -45,6 +45,15 @@
     <name>dfs.namenode.kerberos.https.principal</name>
     <value>host/_HOST@<%= kerberos_realm %></value>
   </property>
+  <property>
+    <name>dfs.web.authentication.kerberos.keytab</name>
+    <value>/etc/hdfs.keytab</value> <!-- path to the HDFS keytab -->
+  </property>
+  <property>
+    <name>dfs.web.authentication.kerberos.principal</name>
+    <value>HTTP/_HOST@<%= kerberos_realm %></value>
+  </property>
+
   
   <!-- Secondary NameNode security config -->
   <property>

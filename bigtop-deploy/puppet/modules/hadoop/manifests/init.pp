@@ -24,7 +24,7 @@ class hadoop {
     require kerberos::client
 
     kerberos::host_keytab { "hdfs":
-      princs => [ "host", "hdfs" ],
+      princs => [ "host", "hdfs", "HTTP" ],
     }
    
     kerberos::host_keytab { [ "yarn", "mapreduce" ]:
