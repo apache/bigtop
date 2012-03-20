@@ -26,6 +26,11 @@ class hadoop-hbase {
       require kerberos::client
       kerberos::host_keytab { "hbase": 
       }
+
+      file { "/etc/hbase/conf/jaas.conf":
+        content => template("hadoop-hbase/jaas.conf"),
+        require => Package["hbase"],
+      }
     }
 
     file { "/etc/hbase/conf/hbase-site.xml":

@@ -36,6 +36,12 @@ export HBASE_HEAPSIZE=<%= heap_size %>
 # see http://wiki.apache.org/hadoop/PerformanceTuning
 export HBASE_OPTS="$HBASE_OPTS -ea -XX:+UseConcMarkSweepGC -XX:+CMSIncrementalMode"
 
+<% if kerberos_realm != "" -%>
+# Secure Zookeeper settings
+export HBASE_MASTER_OPTS="$HBASE_MASTER_OPTS -Djava.security.auth.login.config=/etc/hbase/conf/jaas.conf"
+export HBASE_REGIONSERVER_OPTS="$HBASE_REGIONSERVER_OPTS -Djava.security.auth.login.config=/etc/hbase/conf/jaas.conf"
+<% end -%>
+
 # Uncomment below to enable java garbage collection logging.
 # export HBASE_OPTS="$HBASE_OPTS -verbose:gc -XX:+PrintGCDetails -XX:+PrintGCDateStamps -Xloggc:$HBASE_HOME/logs/gc-hbase.log" 
 
