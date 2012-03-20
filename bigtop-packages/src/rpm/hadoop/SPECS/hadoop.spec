@@ -418,6 +418,8 @@ bash %{SOURCE2} \
 # Install top level /etc/default files
 %__install -d -m 0755 $RPM_BUILD_ROOT/etc/default
 %__cp $RPM_SOURCE_DIR/hadoop.default $RPM_BUILD_ROOT/etc/default/hadoop
+# FIXME: BIGTOP-463
+echo 'export JSVC_HOME=%{libexecdir}/bigtop-utils' >> $RPM_BUILD_ROOT/etc/default/hadoop
 %__cp $RPM_SOURCE_DIR/%{name}-fuse.default $RPM_BUILD_ROOT/etc/default/%{name}-fuse
 
 # Generate the init.d scripts

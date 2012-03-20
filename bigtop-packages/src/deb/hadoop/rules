@@ -94,6 +94,8 @@ $(hadoop_svcs): debian/init.d.tmpl
 install-indep: $(hadoop_svcs) 
 	mkdir -p debian/tmp/etc/default
 	cp debian/hadoop.default debian/tmp/etc/default/hadoop
+	# FIXME: BIGTOP-463
+	echo 'export JSVC_HOME=/usr/lib/bigtop-utils' >> debian/tmp/etc/default/hadoop
 
 	dh_install --sourcedir=debian/tmp -i
 
