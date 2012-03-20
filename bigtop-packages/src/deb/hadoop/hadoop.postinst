@@ -34,6 +34,8 @@ case "$1" in
         # We don't want to do this recursively since we may be reinstalling, in which case
         # users have their own cache/<username> directories which shouldn't be stolen
         chown root:hadoop /var/lib/hadoop/ /var/lib/hadoop/cache/ /var/lib/hadoop/cache/hadoop/
+        # Ensure group write on this directory or we can't start/format namenode or datanode
+        chmod 775 /var/lib/hadoop/cache/hadoop
         chmod 1777 /var/lib/hadoop/cache/
         update-alternatives --install /etc/hadoop/conf hadoop-conf /etc/hadoop/conf.empty 10
     ;;
