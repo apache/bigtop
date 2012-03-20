@@ -27,7 +27,8 @@ class hadoop {
       princs => [ "host", "hdfs" ],
     }
    
-    kerberos::host_keytab { [ "yarn", "mapred" ]:
+    kerberos::host_keytab { [ "yarn", "mapreduce" ]:
+      tag    => "mapreduce",
     }
   }
 
@@ -297,7 +298,7 @@ class hadoop {
                     File["/etc/hadoop/conf/yarn-site.xml"], File["/etc/hadoop/conf/core-site.xml"]],
       require => [ Package["hadoop-yarn-resourcemanager"] ],
     }
-    Kerberos::Host_keytab <| title == "yarn" |> -> Service["hadoop-yarn-resourcemanager"]
+    Kerberos::Host_keytab <| tag == "mapreduce" |> -> Service["hadoop-yarn-resourcemanager"]
   }
 
   define proxyserver ($host = $fqdn, $port = "8088", $auth = "simple") {
@@ -319,7 +320,7 @@ class hadoop {
                     File["/etc/hadoop/conf/yarn-site.xml"], File["/etc/hadoop/conf/core-site.xml"]],
       require => [ Package["hadoop-yarn-proxyserver"] ],
     }
-    Kerberos::Host_keytab <| title == "yarn" |> -> Service["hadoop-yarn-proxyserver"]
+    Kerberos::Host_keytab <| tag == "mapreduce" |> -> Service["hadoop-yarn-proxyserver"]
   }
 
   define historyserver ($host = $fqdn, $port = "10020", $webapp_port = "19888", $auth = "simple") {
@@ -342,7 +343,7 @@ class hadoop {
                     File["/etc/hadoop/conf/yarn-site.xml"], File["/etc/hadoop/conf/core-site.xml"]],
       require => [Package["hadoop-mapreduce-historyserver"]],
     }
-    Kerberos::Host_keytab <| title == "yarn" |> -> Service["hadoop-mapreduce-historyserver"]
+    Kerberos::Host_keytab <| tag == "mapreduce" |> -> Service["hadoop-mapreduce-historyserver"]
   }
 
 
@@ -365,7 +366,7 @@ class hadoop {
                     File["/etc/hadoop/conf/yarn-site.xml"], File["/etc/hadoop/conf/core-site.xml"]],
       require => [ Package["hadoop-yarn-nodemanager"], File[$dirs] ],
     }
-    Kerberos::Host_keytab <| title == "yarn" |> -> Service["hadoop-yarn-nodemanager"]
+    Kerberos::Host_keytab <| tag == "mapreduce" |> -> Service["hadoop-yarn-nodemanager"]
 
     file { $dirs:
       ensure => directory,
