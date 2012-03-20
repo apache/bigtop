@@ -27,7 +27,10 @@
 [-server host:port(,host:port)*] COMMAND [OPTIONS]
 .RS 0
 .B zookeeper-server
-<start|stop|restart|status>
+<start|start-foreground|stop|restart|status|upgrade|print-cmd>
+.RS 0
+.B zookeeper-server-initialize
+[--configfile=<file>] [--myid=###] [--force]
 
 .SH DESCRIPTION
 
@@ -45,8 +48,22 @@ For more information about ZooKeeper, see
 .RS 0
 http://zookeeper.apache.org/.
 
-To find the list of available commands and options for \fBzookeeper-client\fR type:
-\fBzookeeper-client help\fR
+\fBzookeeper-server\fR starts/stops/etc... the ZooKeeper server. To
+find the list of available commands and options for
+\fBzookeeper-server\fR type: \fBzookeeper-server help\fR
+
+\fBzookeeper-server-initialize\fR initializes the ZooKeeper data
+directory. This must be run after configuring the server, prior to
+starting the service (the server will not start on an uninitialized
+data directory). On a production system it is important to run
+zookeeper-server-initialize under the same user id used for running
+zookeeper-server (sudo -u zookeeper). To find the list of available
+commands and options for \fBzookeeper-server-initialize\fR type:
+\fBzookeeper-server-initialize -h\fR
+
+\fBzookeeper-client\fR starts the ZooKeeper client shell. To find the
+list of available commands and options for \fBzookeeper-client\fR
+type: \fBzookeeper-client help\fR
 
 .SH ENVIRONMENT
 
@@ -54,10 +71,10 @@ To find the list of available commands and options for \fBzookeeper-client\fR ty
 Alternate home directory. Default is /usr/lib/zookeeper.
 
 .IP ZOOKEEPER_CONF
-Alternate conf dir. Default is /etc/zookeeper.
+Alternate conf dir. Default is /etc/zookeeper/conf.
 
 .IP ZOOPIDFILE
 Alternate server PID file. Default is /var/run/zookeeper/zookeeper-server.pid.
 
 .SH COPYRIGHT
-Copyright (C) 2010 The Apache Software Foundation. All rights reserved.
+Copyright (C) 2010-2012 The Apache Software Foundation. All rights reserved.
