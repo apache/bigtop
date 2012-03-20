@@ -65,10 +65,14 @@
   </property>
 <% end %>
 
-  <!-- FIXME: MAPREDUCE-3916 property>
+<% 
+=begin FIXME: MAPREDUCE-3916 -%> 
+  <property>
     <name>yarn.web-proxy.address</name>
     <value><%= hadoop_ps_host %>:<%= hadoop_ps_port %></value>
-  </property -->
+  </property> 
+<% 
+=end -%>
 
   <property>
     <name>yarn.resourcemanager.resource-tracker.address</name>
