@@ -43,12 +43,6 @@ class hadoop {
         require => [Package["hadoop"]],
     }
 
-    file {
-      "/etc/default/hadoop":
-        content => template('hadoop/hadoop'),
-        require => [Package["hadoop"]],
-    }
-
     package { "hadoop":
       ensure => latest,
       require => Package["jdk"],
@@ -84,7 +78,6 @@ class hadoop {
       require => [Package["jdk"], Package["hadoop"]],
     }
  
-
     file {
       "/etc/hadoop/conf/core-site.xml":
         content => template('hadoop/core-site.xml'),
@@ -130,11 +123,10 @@ class hadoop {
       require => Package["jdk"],
     }
 
-    if ($hadoop_security_authentication == "kerberos") {
-      #FIXME: package { "hadoop-sbin":
-      #  ensure => latest,
-      #  require => [Package["hadoop"]],
-      #}
+    file {
+      "/etc/default/hadoop-hdfs-datanode":
+        content => template('hadoop/hadoop-hdfs'),
+        require => [Package["hadoop-hdfs-datanode"]],
     }
 
     service { "hadoop-hdfs-datanode":
@@ -250,6 +242,12 @@ class hadoop {
       creates => "${namenode_data_dirs[0]}/current/VERSION",
       require => [ Package["hadoop-hdfs-namenode"], File[$dirs] ],
     } 
+
+    file {
+      "/etc/default/hadoop-hdfs-namenode":
+        content => template('hadoop/hadoop-hdfs'),
+        require => [Package["hadoop-hdfs-namenode"]],
+    }
     
     file { $dirs:
       ensure => directory,
@@ -270,6 +268,12 @@ class hadoop {
     package { "hadoop-hdfs-secondarynamenode":
       ensure => latest,
       require => Package["jdk"],
+    }
+
+    file {
+      "/etc/default/hadoop-hdfs-secondarynamenode":
+        content => template('hadoop/hadoop-hdfs'),
+        require => [Package["hadoop-hdfs-secondarynamenode"]],
     }
 
     service { "hadoop-hdfs-secondarynamenode":
