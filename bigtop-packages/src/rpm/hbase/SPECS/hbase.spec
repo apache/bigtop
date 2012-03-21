@@ -23,7 +23,7 @@
 %define webapps_hbase %{hbase_home}/hbase-webapps
 %define man_dir %{_mandir}
 %define hbase_username hbase
-%define hbase_services master regionserver thrift
+%define hbase_services master regionserver thrift rest
 %define hadoop_home /usr/lib/hadoop
 %define zookeeper_home /usr/lib/zookeeper
 %define hbase_jar_deps_hadoop hadoop-annotations,hadoop-auth,hadoop-common,hadoop-hdfs,hadoop-mapreduce-client-common,hadoop-mapreduce-client-core,hadoop-yarn-api,hadoop-yarn-common 
@@ -173,7 +173,6 @@ HRegionServer makes a set of HRegions available to clients. It checks in with th
 %package thrift
 Summary: The Hadoop HBase Thrift Interface
 Group: System/Daemons
-Provides: %{name}-thrift
 Requires: %{name} = %{version}-%{release}
 Requires(pre): %{name} = %{version}-%{release}
 
@@ -208,6 +207,32 @@ Obsoletes: %{name}-docs
 %description doc
 Documentation for Hbase
 
+%package rest
+Summary: The Apache HBase REST gateway
+Group: System/Daemons
+Requires: %{name} = %{version}-%{release}
+Requires(pre): %{name} = %{version}-%{release}
+
+%if  %{?suse_version:1}0
+# Required for init scripts
+Requires: insserv
+%endif
+
+%if  0%{?mgaversion}
+# Required for init scripts
+Requires: initscripts
+%endif
+
+# CentOS 5 does not have any dist macro
+# So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
+%if %{!?suse_version:1}0 && %{!?mgaversion:1}0
+# Required for init scripts
+Requires: redhat-lsb
+%endif
+
+
+%description rest
+The Apache HBase REST gateway
 
 %prep
 %setup -n %{name}-%{hbase_base_version}
@@ -313,3 +338,4 @@ fi
 %service_macro master
 %service_macro thrift
 %service_macro regionserver
+%service_macro rest
