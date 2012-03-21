@@ -206,9 +206,11 @@ failIfNotOK
 
 install -d -m 0755 ${OOZIE_CONF}
 failIfNotOK
-cp -R ${OOZIE_BUILD_DIR}/conf/* ${OOZIE_CONF}
+cp ${OOZIE_BUILD_DIR}/conf/* ${OOZIE_CONF}
+sed -i -e '/oozie.service.HadoopAccessorService.hadoop.configurations/,/<\/property>/s#<value>\*=hadoop-conf</value>#<value>*=/etc/hadoop/conf</value>#g' \
+          ${OOZIE_CONF}/oozie-site.xml
 failIfNotOK
-cp -R ${EXTRADIR}/oozie-env.sh ${OOZIE_CONF}
+cp ${EXTRADIR}/oozie-env.sh ${OOZIE_CONF}
 failIfNotOK
 if [ "${OOZIE_INITD}" != "" ]; then
   install -d -m 0755 ${OOZIE_INITD}
@@ -231,7 +233,7 @@ mkdir ${OOZIE_WEBAPP}
 failIfNotOK
 unzip -d ${OOZIE_WEBAPP} ${OOZIE_BUILD_DIR}/oozie.war
 failIfNotOK
-mv -f ${OOZIE_WEBAPP}/WEB-INF/lib ${OOZIE_SERVER_DIR}/server-core
+mv -f ${OOZIE_WEBAPP}/WEB-INF/lib ${OOZIE_SERVER_DIR}/libserver
 failIfNotOK
 touch ${OOZIE_SERVER_DIR}/webapps/oozie.war
 failIfNotOK
