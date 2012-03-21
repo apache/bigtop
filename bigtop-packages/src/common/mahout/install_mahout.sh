@@ -122,7 +122,6 @@ cp -a ${BUILD_DIR}/examples/ $PREFIX/$DOC_DIR/
 install -d -m 0755 $PREFIX/$BIN_DIR
 cat > $PREFIX/$BIN_DIR/mahout <<EOF
 #!/bin/sh
-. /etc/default/hadoop
 
 # Autodetect JAVA_HOME if not defined
 if [ -e /usr/libexec/bigtop-detect-javahome ]; then
@@ -130,6 +129,10 @@ if [ -e /usr/libexec/bigtop-detect-javahome ]; then
 elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
   . /usr/lib/bigtop-utils/bigtop-detect-javahome
 fi
+
+# FIXME: MAHOUT-994
+export HADOOP_HOME=\${HADOOP_HOME:-/usr/lib/hadoop}
+export HADOOP_CONF_DIR=\${HADOOP_CONF_DIR:-/etc/hadoop/conf}
 
 export MAHOUT_HOME=\${MAHOUT_HOME:-$INSTALLED_LIB_DIR}
 export MAHOUT_CONF_DIR=\${MAHOUT_CONF_DIR:-$CONF_DIR}

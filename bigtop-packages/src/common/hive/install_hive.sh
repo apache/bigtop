@@ -119,7 +119,6 @@ do
   wrapper=$BIN_DIR/$file
   cat >>$wrapper <<EOF
 #!/bin/sh
-. /etc/default/hadoop
 
 # Autodetect JAVA_HOME if not defined
 if [ -e /usr/libexec/bigtop-detect-javahome ]; then
