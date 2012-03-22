@@ -535,10 +535,10 @@ fi
 %{lib_mapreduce}
 %{lib_hadoop}/libexec/mapred-config.sh
 %{bin_hadoop}/mapred
-%attr(0775,mapreduce,hadoop) %{run_mapreduce}
-%attr(0775,mapreduce,hadoop) %{log_mapreduce}
-%attr(0775,mapreduce,hadoop) %{state_mapreduce}
-%attr(1777,mapreduce,hadoop) %{state_mapreduce}/cache
+%attr(0775,mapred,hadoop) %{run_mapreduce}
+%attr(0775,mapred,hadoop) %{log_mapreduce}
+%attr(0775,mapred,hadoop) %{state_mapreduce}
+%attr(1777,mapred,hadoop) %{state_mapreduce}/cache
 
 
 %files
