@@ -14,7 +14,7 @@
 # limitations under the License.
 
 # FIXME: MAPREDUCE-3900
-export YARN_IDENT_STRING=mapreduce
+export YARN_IDENT_STRING=mapred
 export YARN_PID_DIR=/var/run/hadoop-mapreduce
 export YARN_LOG_DIR=/var/log/hadoop-mapreduce
 export HADOOP_LOG_DIR=/var/log/hadoop-mapreduce

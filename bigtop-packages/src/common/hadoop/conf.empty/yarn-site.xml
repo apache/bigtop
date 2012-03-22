@@ -29,6 +29,11 @@
   </property>
 
   <property>
+    <name>yarn.log-aggregation-enable</name>
+    <value>true</value>
+  </property>
+
+  <property>
     <description>List of directories to store localized files in.</description>
     <name>yarn.nodemanager.local-dirs</name>
     <value>/var/lib/hadoop-yarn/cache/${user.name}/nm-local-dir</value>
