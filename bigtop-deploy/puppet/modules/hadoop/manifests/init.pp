@@ -27,7 +27,7 @@ class hadoop {
       princs => [ "host", "hdfs", "HTTP" ],
     }
    
-    kerberos::host_keytab { [ "yarn", "mapreduce" ]:
+    kerberos::host_keytab { [ "yarn", "mapred" ]:
       tag    => "mapreduce",
     }
   }

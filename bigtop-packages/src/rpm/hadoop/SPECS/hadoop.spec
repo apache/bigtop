@@ -469,8 +469,8 @@ getent group yarn >/dev/null   || groupadd -r yarn
 getent passwd yarn >/dev/null || /usr/sbin/useradd --comment "Hadoop Yarn" --shell /bin/bash -M -r -g yarn -G hadoop --home %{state_yarn} yarn
 
 %pre mapreduce
-getent group mapreduce >/dev/null   || groupadd -r mapreduce
-getent passwd mapreduce >/dev/null || /usr/sbin/useradd --comment "Hadoop MapReduce" --shell /bin/bash -M -r -g mapreduce -G hadoop --home %{state_mapreduce} mapreduce
+getent group mapred >/dev/null   || groupadd -r mapred
+getent passwd mapred >/dev/null || /usr/sbin/useradd --comment "Hadoop MapReduce" --shell /bin/bash -M -r -g mapred -G hadoop --home %{state_mapreduce} mapred
 
 %post
 %{alternatives_cmd} --install %{config_hadoop} %{name}-conf %{etc_hadoop}/conf.empty 10

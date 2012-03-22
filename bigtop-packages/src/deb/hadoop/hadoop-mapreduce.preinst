@@ -32,15 +32,15 @@ set -e
 
 case "$1" in
     install|upgrade)
-        if ! getent passwd mapreduce >/dev/null; then
+        if ! getent passwd mapred >/dev/null; then
             adduser \
                 --system \
                 --group \
                 --home /var/lib/mapreduce \
                 --gecos "Hadoop MapReduce" \
                 --shell /bin/bash \
-                mapreduce >/dev/null 2>/dev/null || :
-            usermod --append --groups hadoop mapreduce || :
+                mapred >/dev/null 2>/dev/null || :
+            usermod --append --groups hadoop mapred || :
         fi
     ;;
 
