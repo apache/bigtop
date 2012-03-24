@@ -31,7 +31,7 @@ class hadoop-oozie {
       ensure => latest,
     }
 
-    file { "/etc/oozie/oozie-site.xml":
+    file { "/etc/oozie/conf/oozie-site.xml":
       content => template("hadoop-oozie/oozie-site.xml"),
       require => Package["oozie"],
     }
