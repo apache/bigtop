@@ -29,6 +29,18 @@ class AptCmdLinePackageManager extends PackageManager {
      shRoot.exec("debconf-set-selections <<__EOT__\n${defaults}\n__EOT__");
   }
 
+  public int addBinRepo(String record, String url, String key) {
+    if (key) {
+      def text = key.toURL().text;
+      shRoot.exec("apt-key add - <<__EOT__\n${text}\n__EOT__");
+      if (shRoot.getRet()) {
+        return shRoot.getRet();
+      }
+    } else {
+      return addBinRepo(record, url);
+    }
+  }
+
   public int addBinRepo(String record, String url, String key, String cookie) {
     if (!url)
       url = ROOT_URL;
