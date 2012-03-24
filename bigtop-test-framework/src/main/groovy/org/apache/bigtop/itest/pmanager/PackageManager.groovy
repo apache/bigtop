@@ -42,6 +42,17 @@ public abstract class PackageManager {
    */
   abstract public int addBinRepo(String record, String url, String key, String cookie)
   /**
+  * Register a binary package repository so that packages can be accessed from it.
+  * NOTE: repository management is assumed to follow a KVP API with unique implementation
+  * specific keys (records) referencing tuples of information describing a repository
+  *
+  * @param record a package manager specific KEY portion of the repository registration (null is default)
+  * @param url a URL containing the packages constituting the repository (null is default)
+  * @param key an optional (can be null) cryptographic key for authenticating the content of the repository
+  * @return int return code of the operation: o in case of success, non-zero otherwise
+  */
+ abstract public int addBinRepo(String record, String url, String key)
+  /**
    * Register a binary package repository so that packages can be accessed from it.
    * NOTE: repository management is assumed to follow a KVP API with unique implementation
    * specific keys (records) referencing tuples of information describing a repository
