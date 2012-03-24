@@ -49,6 +49,7 @@ class hadoop-zookeeper {
       require kerberos::client
 
       kerberos::host_keytab { "zookeeper":
+        spnego => true,
         notify => Service["zookeeper-server"],
       }
 

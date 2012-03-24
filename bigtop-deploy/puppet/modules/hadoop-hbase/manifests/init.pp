@@ -25,6 +25,7 @@ class hadoop-hbase {
     if ($kerberos_realm) {
       require kerberos::client
       kerberos::host_keytab { "hbase": 
+        spnego => true,
       }
 
       file { "/etc/hbase/conf/jaas.conf":

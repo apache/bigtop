@@ -22,11 +22,11 @@
   <!-- HistoryServer security configs -->
   <property>
     <name>mapreduce.jobhistory.principal</name>
-    <value>mapreduce/_HOST@<%= kerberos_realm %></value>
+    <value>mapred/_HOST@<%= kerberos_realm %></value>
   </property>
   <property>
     <name>mapreduce.jobhistory.keytab</name>
-    <value>/etc/mapreduce.keytab</value> <!-- path to the MapReduce keytab -->
+    <value>/etc/mapred.keytab</value> <!-- path to the MapReduce keytab -->
   </property>
 
   <!-- JobTracker security configs -->

@@ -24,6 +24,7 @@ class hadoop-oozie {
     if ($kerberos_realm) {
       require kerberos::client
       kerberos::host_keytab { "oozie":
+        spnego => true,
       }
     }
 

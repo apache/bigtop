@@ -18,7 +18,20 @@
 
 <configuration>
 
-<% if hadoop_security_authentication == "kerberos" %>
+<% if has_variable?("hadoop_core_proxyusers") -%>
+<% hadoop_core_proxyusers.each do |superuser, data| -%>
+  <property>
+    <name>httpfs.proxyuser.<%= superuser %>.hosts</name>
+    <value><%= data['hosts'] %></value>
+  </property>
+  <property>
+    <name>httpfs.proxyuser.<%= superuser %>.groups</name>
+    <value><%= data['groups'] %></value>
+  </property>
+<% end -%>
+<% end -%>
+
+<% if hadoop_security_authentication == "kerberos" -%>
   <property>
     <name>httpfs.authentication.type</name>
     <value>kerberos</value>
@@ -29,7 +42,7 @@
   </property>
   <property>
     <name>httpfs.authentication.kerberos.principal</name>
-    <value>httpfs/<%= fqdn %></value>
+    <value>HTTP/<%= fqdn %></value>
   </property>
   <property>
     <name>httpfs.authentication.kerberos.keytab</name>
@@ -42,7 +55,7 @@
   </property>
   <property>
     <name>httpfs.hadoop.authentication.kerberos.principal</name>
-    <value>${httpfs.authentication.kerberos.principal}</value>
+    <value>httpfs/<%= fqdn %></value>
   </property>
   <property>
     <name>httpfs.hadoop.authentication.kerberos.keytab</name>
@@ -52,7 +65,7 @@
     <name>httpfs.hadoop.conf:dfs.namenode.kerberos.principal</name>
     <value>hdfs/<%= hadoop_namenode_host %>@<%= kerberos_realm %></value>
   </property>
-<% end %>
+<% end -%>
 
   <property>
     <name>httpfs.hadoop.conf:fs.default.name</name>
