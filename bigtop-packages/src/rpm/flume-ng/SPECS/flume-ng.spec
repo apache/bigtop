@@ -62,7 +62,7 @@ Source0: %{name}-%{flume_ng_base_version}.tar.gz
 Source1: do-component-build
 Source2: install_%{name}.sh
 Source3: %{name}-node.init
-Requires: coreutils, /usr/sbin/useradd, hadoop
+Requires: coreutils, /usr/sbin/useradd, hadoop-hdfs
 Requires: bigtop-utils
 BuildRequires: ant xml-commons xml-commons-apis
 

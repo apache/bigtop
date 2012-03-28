@@ -94,7 +94,7 @@ Source6: hbase.nofiles.conf
 Patch0: HBASE-5212.patch
 BuildArch: noarch
 Requires: coreutils, /usr/sbin/useradd, /sbin/chkconfig, /sbin/service
-Requires: hadoop >= 0.20.2, zookeeper >= 3.3.1, bigtop-utils
+Requires: hadoop-hdfs, zookeeper >= 3.3.1, bigtop-utils
 
 %if  0%{?mgaversion}
 Requires: bsh-utils

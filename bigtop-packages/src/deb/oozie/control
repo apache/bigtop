@@ -32,7 +32,7 @@ Description: Command line utility that allows
 
 Package: oozie
 Architecture: all
-Depends: oozie-client (= ${source:Version}), hadoop, bigtop-tomcat
+Depends: oozie-client (= ${source:Version}), hadoop-client, bigtop-tomcat
 Description: A workflow and coordinator sytem for Hadoop jobs.
  Oozie workflows are actions arranged in a control dependency DAG (Direct
  Acyclic Graph).

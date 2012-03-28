@@ -45,7 +45,7 @@ Source0: %{name}-distribution-%{mahout_base_version}-src.tar.gz
 Source1: do-component-build 
 Source2: install_%{name}.sh
 Patch0: MAHOUT-822.patch
-Requires: hadoop >= 0.20.2, bigtop-utils
+Requires: hadoop-client, bigtop-utils
 
 
 %description 
