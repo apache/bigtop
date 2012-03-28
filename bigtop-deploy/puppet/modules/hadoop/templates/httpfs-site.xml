@@ -16,6 +16,7 @@
 <!-- See the License for the specific language governing permissions and      -->
 <!-- limitations under the License.                                           -->
 
+<% namenode_hosts = hadoop_namenode_host.to_a -%>
 <configuration>
 
 <% if has_variable?("hadoop_core_proxyusers") -%>
@@ -63,12 +64,12 @@
   </property>
   <property>
     <name>httpfs.hadoop.conf:dfs.namenode.kerberos.principal</name>
-    <value>hdfs/<%= hadoop_namenode_host %>@<%= kerberos_realm %></value>
+    <value>hdfs/<%= namenode_hosts[0] %>@<%= kerberos_realm %></value>
   </property>
 <% end -%>
 
   <property>
     <name>httpfs.hadoop.conf:fs.default.name</name>
-    <value>hdfs://<%= hadoop_namenode_host %>:<%= hadoop_namenode_port%></value>
+    <value>hdfs://<%= namenode_hosts[0] %>:<%= hadoop_namenode_port%></value>
   </property>
 </configuration>

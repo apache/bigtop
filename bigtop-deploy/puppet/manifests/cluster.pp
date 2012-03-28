@@ -16,13 +16,30 @@
 class hadoop_cluster_node {
   require bigtop_util  
 
-  $hadoop_namenode_host        = $hadoop_head_node
+  $hadoop_head_node        = extlookup("hadoop_head_node") 
+  $standby_head_node = extlookup("standby_head_node", "")
+  $hadoop_gateway_node     = extlookup("hadoop_gateway_node", $hadoop_head_node)
+
+  $hadoop_ha = $standby_head_node ? {
+    ""      => disabled,
+    default => enabled,
+  }
+
+  $hadoop_namenode_host        = $hadoop_ha ? {
+    "enabled" => [ $hadoop_head_node, $standby_head_node ],
+    default   => $hadoop_head_node,
+  }
   $hadoop_namenode_port        = extlookup("hadoop_namenode_port", "17020")
   $hadoop_namenode_thrift_port = extlookup("hadoop_namenode_thrift_port", "10090")
   $hadoop_dfs_namenode_plugins = extlookup("hadoop_dfs_namenode_plugins", "")
   $hadoop_dfs_datanode_plugins = extlookup("hadoop_dfs_datanode_plugins", "")
   # $hadoop_dfs_namenode_plugins="org.apache.hadoop.thriftfs.NamenodePlugin"
   # $hadoop_dfs_datanode_plugins="org.apache.hadoop.thriftfs.DatanodePlugin"
+  $hadoop_ha_nameservice_id    = extlookup("hadoop_ha_nameservice_id", "ha-nn-uri")
+  $hadoop_namenode_uri   = $hadoop_ha ? {
+    "enabled" => "hdfs://${hadoop_ha_nameservice_id}:8020",
+    default   => "hdfs://$hadoop_namenode_host:$hadoop_namenode_port",
+  }
 
   $hadoop_rm_host        = $hadoop_head_node
   $hadoop_rt_port        = extlookup("hadoop_rt_port", "8025")
@@ -42,11 +59,11 @@ class hadoop_cluster_node {
   # $hadoop_mapred_jobtracker_plugins="org.apache.hadoop.thriftfs.ThriftJobTrackerPlugin"
   # $hadoop_mapred_tasktracker_plugins="org.apache.hadoop.mapred.TaskTrackerCmonInst"
 
-  $hadoop_core_proxyusers = { oozie => { groups => 'root,hadoop,jenkins,oozie,users', hosts => "${hadoop_head_node},localhost,127.0.0.1" },
-                             httpfs => { groups => 'root,hadoop,jenkins,oozie,users', hosts => "${hadoop_head_node},localhost,127.0.0.1" } }
+  $hadoop_core_proxyusers = { oozie => { groups => 'hudson,testuser,root,hadoop,jenkins,oozie,users', hosts => "${hadoop_head_node},localhost,127.0.0.1" },
+                             httpfs => { groups => 'hudson,testuser,root,hadoop,jenkins,oozie,users', hosts => "${hadoop_head_node},localhost,127.0.0.1" } }
 
   $hbase_relative_rootdir        = extlookup("hadoop_hbase_rootdir", "/hbase")
-  $hadoop_hbase_rootdir = "hdfs://$hadoop_namenode_host:$hadoop_namenode_port/$hbase_relative_rootdir"
+  $hadoop_hbase_rootdir = "$hadoop_namenode_uri$hbase_relative_rootdir"
   $hadoop_hbase_zookeeper_quorum = $hadoop_head_node
   $hbase_heap_size               = extlookup("hbase_heap_size", "1024")
 
@@ -69,12 +86,14 @@ class hadoop_cluster_node {
   }
 }
 
+
 class hadoop_worker_node inherits hadoop_cluster_node {
   hadoop::datanode { "datanode":
         namenode_host => $hadoop_namenode_host,
         namenode_port => $hadoop_namenode_port,
         dirs => $hdfs_data_dirs,
         auth => $hadoop_security_authentication,
+        ha   => $hadoop_ha,
   }
 
   hadoop::nodemanager { "nodemanager":
@@ -114,12 +133,15 @@ class hadoop_head_node inherits hadoop_cluster_node {
         dirs => $namenode_data_dirs,
         # thrift_port => $hadoop_namenode_thrift_port,
         auth => $hadoop_security_authentication,
+        ha   => $hadoop_ha,
   }
 
-  hadoop::secondarynamenode { "secondary namenode":
-        namenode_host => $hadoop_namenode_host,
-        namenode_port => $hadoop_namenode_port,
-        auth => $hadoop_security_authentication,
+  if ($hadoop_ha != "enabled") {
+    hadoop::secondarynamenode { "secondary namenode":
+          namenode_host => $hadoop_namenode_host,
+          namenode_port => $hadoop_namenode_port,
+          auth => $hadoop_security_authentication,
+    }
   }
 
   hadoop::resourcemanager { "resourcemanager":
@@ -176,7 +198,18 @@ class hadoop_head_node inherits hadoop_cluster_node {
   }
 }
 
-class hadoop_gateway_node inherits hadoop_head_node {
+class standby_head_node inherits hadoop_worker_node {
+  hadoop::namenode { "namenode":
+        host => $hadoop_namenode_host,
+        port => $hadoop_namenode_port,
+        dirs => $namenode_data_dirs,
+        # thrift_port => $hadoop_namenode_thrift_port,
+        auth => $hadoop_security_authentication,
+        ha   => $hadoop_ha,
+  }
+}
+
+class hadoop_gateway_node inherits hadoop_cluster_node {
   hadoop::client { "hadoop client":
     namenode_host => $hadoop_namenode_host,
     namenode_port => $hadoop_namenode_port,

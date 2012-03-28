@@ -75,6 +75,14 @@ class hadoop {
   }
 
   class common-hdfs inherits common {
+    if ($auth == "kerberos" and $ha == "enabled") {
+      fail("High-availability secure clusters are not currently supported")
+    }
+
+    if ($ha == 'enabled') {
+      $nameservice_id = extlookup("hadoop_ha_nameservice_id", "ha-nn-uri")
+    }
+
     package { "hadoop-hdfs":
       ensure => latest,
       require => [Package["jdk"], Package["hadoop"]],
@@ -111,12 +119,20 @@ class hadoop {
     }
   }
 
-  define datanode ($namenode_host, $namenode_port, $port = "50075", $auth = "simple", $dirs = ["/tmp/data"]) {
+  define datanode ($namenode_host, $namenode_port, $port = "50075", $auth = "simple", $dirs = ["/tmp/data"], $ha = 'disabled') {
 
-    $hadoop_namenode_host = $namenode_host
-    $hadoop_namenode_port = $namenode_port
-    $hadoop_datanode_port = $port
+    $hadoop_namenode_host           = $namenode_host
+    $hadoop_namenode_port           = $namenode_port
+    $hadoop_datanode_port           = $port
     $hadoop_security_authentication = $auth
+
+    if ($ha == 'enabled') {
+      # Needed by hdfs-site.xml
+      $sshfence_keydir  = "/usr/lib/hadoop/.ssh"
+      $sshfence_keypath = "$sshfence_keydir/id_sshfence"
+      $sshfence_user    = extlookup("hadoop_ha_sshfence_user",    "hdfs") 
+      $shared_edits_dir = extlookup("hadoop_ha_shared_edits_dir", "/hdfs_shared")
+    }
 
     include common-hdfs
 
@@ -213,16 +229,78 @@ class hadoop {
       user => "hdfs",
       command => "/bin/bash -c 'hadoop fs -mkdir $title && hadoop fs -chmod $perm $title && hadoop fs -chown $user $title'",
       unless => "/bin/bash -c 'hadoop fs -ls $name >/dev/null 2>&1'",
-      require => [ Service["hadoop-hdfs-namenode"], Exec["namenode format"] ],
+      require => Service["hadoop-hdfs-namenode"],
     }
+    Exec <| title == "activate nn1" |>  -> Exec["HDFS init $title"]
   }
 
-  define namenode ($host = $fqdn , $port = "8020", $thrift_port= "10090", $auth = "simple", $dirs = ["/tmp/nn"]) {
+  define namenode ($host = $fqdn , $port = "8020", $thrift_port= "10090", $auth = "simple", $dirs = ["/tmp/nn"], $ha = 'disabled') {
 
+    $first_namenode = inline_template("<%= host.to_a[0] %>")
     $hadoop_namenode_host = $host
     $hadoop_namenode_port = $port
     $hadoop_namenode_thrift_port = $thrift_port
     $hadoop_security_authentication = $auth
+
+    if ($ha == 'enabled') {
+      $sshfence_user      = extlookup("hadoop_ha_sshfence_user",      "hdfs") 
+      $sshfence_user_home = extlookup("hadoop_ha_sshfence_user_home", "/var/lib/hadoop-hdfs")
+      $sshfence_keydir    = "$sshfence_user_home/.ssh"
+      $sshfence_keypath   = "$sshfence_keydir/id_sshfence"
+      $sshfence_privkey   = extlookup("hadoop_ha_sshfence_privkey",   "$extlookup_datadir/hadoop/id_sshfence")
+      $sshfence_pubkey    = extlookup("hadoop_ha_sshfence_pubkey",    "$extlookup_datadir/hadoop/id_sshfence.pub")
+      $shared_edits_dir   = extlookup("hadoop_ha_shared_edits_dir",   "/hdfs_shared")
+      $nfs_server         = extlookup("hadoop_ha_nfs_server",         "")
+      $nfs_path           = extlookup("hadoop_ha_nfs_path",           "")
+
+      file { $sshfence_keydir:
+        ensure  => directory,
+        owner   => 'hdfs',
+        group   => 'hdfs',
+        mode    => '0700',
+        require => Package["hadoop-hdfs"],
+      }
+
+      file { $sshfence_keypath:
+        source  => $sshfence_privkey,
+        owner   => 'hdfs',
+        group   => 'hdfs',
+        mode    => '0600',
+        before  => Service["hadoop-hdfs-namenode"],
+        require => File[$sshfence_keydir],
+      }
+
+      file { "$sshfence_keydir/authorized_keys":
+        source  => $sshfence_pubkey,
+        owner   => 'hdfs',
+        group   => 'hdfs',
+        mode    => '0600',
+        before  => Service["hadoop-hdfs-namenode"],
+        require => File[$sshfence_keydir],
+      }
+
+      file { $shared_edits_dir:
+        ensure => directory,
+      }
+
+      if ($nfs_server) {
+        if (!$nfs_path) {
+          fail("No nfs share specified for shared edits dir")
+        }
+
+        require nfs::client
+
+        mount { $shared_edits_dir:
+          ensure  => "mounted",
+          atboot  => true,
+          device  => "${nfs_server}:${nfs_path}",
+          fstype  => "nfs",
+          options => "tcp,soft,timeo=10,intr,rsize=32768,wsize=32768",
+          require => File[$shared_edits_dir],
+          before  => Service["hadoop-hdfs-namenode"],
+        }
+      }
+    }
 
     include common-hdfs
 
@@ -235,16 +313,35 @@ class hadoop {
       ensure => running,
       hasstatus => true,
       subscribe => [Package["hadoop-hdfs-namenode"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
-      require => [Package["hadoop-hdfs-namenode"], Exec["namenode format"]],
+      require => [Package["hadoop-hdfs-namenode"]],
     } 
+    Exec <| tag == "namenode-format" |>         -> Service["hadoop-hdfs-namenode"]
     Kerberos::Host_keytab <| title == "hdfs" |> -> Service["hadoop-hdfs-namenode"]
 
-    exec { "namenode format":
-      user => "hdfs",
-      command => "/bin/bash -c 'yes Y | hadoop namenode -format >> /tmp/nn.format.log 2>&1'",
-      creates => "${namenode_data_dirs[0]}/current/VERSION",
-      require => [ Package["hadoop-hdfs-namenode"], File[$dirs] ],
-    } 
+    if ($::fqdn == $first_namenode) {
+      exec { "namenode format":
+        user => "hdfs",
+        command => "/bin/bash -c 'yes Y | hadoop namenode -format >> /tmp/nn.format.log 2>&1'",
+        creates => "${namenode_data_dirs[0]}/current/VERSION",
+        require => [ Package["hadoop-hdfs-namenode"], File[$dirs] ],
+        tag     => "namenode-format",
+      } 
+      
+      if ($ha == "enabled") {
+        exec { "activate nn1":
+          command => "/usr/bin/hdfs haadmin -transitionToActive nn1",
+          user    => "hdfs",
+          unless  => "/usr/bin/test $(/usr/bin/hdfs haadmin -getServiceState nn1) = active",
+          require => Service["hadoop-hdfs-namenode"],
+        }
+      }
+    } elsif ($ha == "enabled") {
+      hadoop::namedir_copy { $namenode_data_dirs: 
+        source       => $first_namenode,
+        ssh_identity => $sshfence_keypath,
+        require      => File[$sshfence_keypath],
+      }
+    }
 
     file {
       "/etc/default/hadoop-hdfs-namenode":
@@ -261,6 +358,15 @@ class hadoop {
     }
   }
 
+  define namedir_copy ($source, $ssh_identity) {
+    exec { "copy namedir $title from first namenode":
+      command => "/usr/bin/rsync -avz -e '/usr/bin/ssh -oStrictHostKeyChecking=no -i $ssh_identity' '${source}:$title/' '$title/'",
+      user    => "hdfs",
+      tag     => "namenode-format",
+      creates => "$title/current/VERSION",
+    }
+  }
+      
   define secondarynamenode ($namenode_host, $namenode_port, $port = "50090", $auth = "simple") {
 
     $hadoop_secondarynamenode_port = $port

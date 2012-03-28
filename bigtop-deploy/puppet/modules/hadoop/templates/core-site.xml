@@ -16,13 +16,19 @@
 <!-- See the License for the specific language governing permissions and      -->
 <!-- limitations under the License.                                           -->
 
+<% namenode_hosts = hadoop_namenode_host.to_a -%>
 <configuration>
 
   <property>
     <!-- URI of NN. Fully qualified. No IP.-->
-    <name>fs.default.name</name>
-    <value>hdfs://<%= hadoop_namenode_host %>:<%= hadoop_namenode_port%></value>
+    <name>fs.defaultFS</name>
+<% if ha == "enabled" -%>
+    <value>hdfs://<%= nameservice_id %></value>
+<% else -%>
+    <value>hdfs://<%= namenode_hosts[0] %>:<%= hadoop_namenode_port%></value>
+<% end -%>
   </property>
+
 
   <property>
     <name>hadoop.security.authentication</name>
