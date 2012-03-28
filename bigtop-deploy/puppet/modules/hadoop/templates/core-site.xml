@@ -50,7 +50,7 @@
 <% end %>
 
 <% if has_variable?("hadoop_core_proxyusers") %>
-<% hadoop_core_proxyusers.each do |superuser, data| %>
+<% hadoop_core_proxyusers.sort.each do |superuser, data| %>
   <property>
     <name>hadoop.proxyuser.<%= superuser %>.hosts</name>
     <value><%= data['hosts'] %></value>
