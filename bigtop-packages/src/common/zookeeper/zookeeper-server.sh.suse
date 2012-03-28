@@ -126,8 +126,18 @@ case "$1" in
   condrestart|try-restart)
     condrestart
     ;;
+  init)
+    checkstatus
+    if [ "$?" = "$STATUS_RUNNING" ] ; then
+      echo "Error: $DESC is running. Stop it first." >&2
+      exit 1
+    else
+      shift
+      su -s /bin/sh $USER -c "zookeeper-server-initialize $*"
+    fi
+    ;;
   *)
-    echo $"Usage: $0 {start|stop|status|restart|try-restart|condrestart}"
+    echo $"Usage: $0 {start|stop|status|restart|try-restart|condrestart|init}"
     exit 1
 esac
 

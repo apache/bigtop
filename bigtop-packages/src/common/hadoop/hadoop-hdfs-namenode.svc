@@ -33,8 +33,18 @@ cat <<'__EOT__'
       DAEMON_FLAGS="$DAEMON_FLAGS -${1}"
       start
       ;;
+    init)
+      check_for_root
+      checkstatusofproc
+      if [ "$?" = "$STATUS_RUNNING" ] ; then
+        echo "Error: $DESC is running. Stop it first."
+        exit 1
+      else
+        su -s /bin/bash $SVC_USER -c "hdfs namenode -format"
+      fi
+      ;;
     *)
-      echo $"Usage: $0 {start|stop|status|restart|try-restart|condrestart|upgrade|rollback}"
+      echo $"Usage: $0 {start|stop|status|restart|try-restart|condrestart|upgrade|rollback|init}"
       exit 1
 __EOT__
 
