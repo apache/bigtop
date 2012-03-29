@@ -152,7 +152,7 @@ Requires: bigtop-utils
 
 %pre
 getent group oozie >/dev/null || /usr/sbin/groupadd -r oozie >/dev/null
-getent passwd oozie >/dev/null || /usr/sbin/useradd --comment "Oozie User" --shell /bin/false -M -r -g oozie --home /var/run/oozie oozie >/dev/null
+getent passwd oozie >/dev/null || /usr/sbin/useradd --comment "Oozie User" --shell /bin/false -M -r -g oozie --home %{data_oozie} oozie >/dev/null
 
 %post 
 /sbin/chkconfig --add oozie 
@@ -196,7 +196,7 @@ fi
 %defattr(-, oozie, oozie)
 %dir %{_localstatedir}/log/oozie
 %dir %{_localstatedir}/run/oozie
-%{data_oozie}
+%attr(0755,oozie,oozie) %{data_oozie}
 
 %files client
 %defattr(-,root,root)
