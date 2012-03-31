@@ -97,16 +97,27 @@ DOC_DIR=${DOC_DIR:-/usr/share/doc/flume}
 FLUME_DIR=${FLUME_DIR:-/usr/lib/flume}
 BIN_DIR=${BIN_DIR:-/usr/lib/flume/bin}
 CONF_DIR=/etc/flume/
-CONF_DIST_DIR=/etc/flume-ng/conf.dist/
-ETC_DIR=${ETC_DIR:-/etc/flume-ng}
+CONF_DIST_DIR=/etc/flume/conf.dist/
+ETC_DIR=${ETC_DIR:-/etc/flume}
 
 install -d -m 0755 ${PREFIX}/${FLUME_DIR}
 
 (cd ${PREFIX}/${FLUME_DIR} &&
   tar --strip-components=1 -xvzf ${BUILD_DIR}/flume-ng-dist/target/flume-ng-dist-*-dist.tar.gz)
 
-# Take out things we've installed elsewhere
-for x in flume-ng-* conf pom.xml CHANGELOG DEVNOTES DISCLAIMER LICENSE NOTICE README RELEASE-NOTES; do
+# Take out useless things or we've installed elsewhere
+for x in flume-ng-* \
+          conf \
+          pom.xml \
+          CHANGELOG \
+          DEVNOTES \
+          DISCLAIMER \
+          LICENSE \
+          NOTICE \
+          README \
+          RELEASE-NOTES \
+          bin/ia64 \
+          bin/amd64; do
   rm -rf ${PREFIX}/$FLUME_DIR/$x 
 done
 
