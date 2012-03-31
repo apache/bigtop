@@ -47,12 +47,12 @@ STATUS_NOT_RUNNING=3
 
 ERROR_PROGRAM_NOT_INSTALLED=5
 
-FLUME_LOG_DIR=/var/log/flume-ng
-FLUME_CONF_DIR=/etc/flume-ng/conf
-FLUME_RUN=/var/run/flume-ng
-FLUME_HOME=/usr/lib/flume-ng
+FLUME_LOG_DIR=/var/log/flume
+FLUME_CONF_DIR=/etc/flume/conf
+FLUME_RUN=/var/run/flume
+FLUME_HOME=/usr/lib/flume
 
-LOCKFILE="/var/lock/subsys/flume-ng-node"
+LOCKFILE="/var/lock/subsys/flume-node"
 desc="Flume NG node daemon"
 
 FLUME_CONF_FILE=${FLUME_CONF_FILE:-${FLUME_CONF_DIR}/flume.conf}
@@ -67,9 +67,9 @@ FLUME_NODE_NAME=${FLUME_NODE_NAME:-$HOSTNAME}
 
 start() {
   [ -x $exec ] || exit $ERROR_PROGRAM_NOT_INSTALLED
-  log_success_msg "Starting $desc (flume-ng-node): "
+  log_success_msg "Starting $desc (flume-node): "
   export FLUME_PID_FILE
-  /bin/su -s /bin/bash -c "${EXEC_PATH} node --conf $FLUME_CONF_DIR --conf-file $FLUME_CONF_FILE --name $FLUME_NODE_NAME &>>${FLUME_LOG_DIR}/flume-ng-node.log &" $USER
+  /bin/su -s /bin/bash -c "${EXEC_PATH} node --conf $FLUME_CONF_DIR --conf-file $FLUME_CONF_FILE --name $FLUME_NODE_NAME &>>${FLUME_LOG_DIR}/flume-node.log &" $USER
   RETVAL=$?
   [ $RETVAL -eq 0 ] && touch $LOCKFILE
   return $RETVAL
@@ -81,7 +81,7 @@ stop() {
     exit $STATUS_NOT_RUNNING
   fi
 
-  log_success_msg "Stopping $desc (flume-ng-node): "
+  log_success_msg "Stopping $desc (flume-node): "
 
   # FLUME-919 will put an end to such extreme violence
   FLUME_PID=`cat $FLUME_PID_FILE`
@@ -129,7 +129,7 @@ checkstatus(){
 }
 
 condrestart(){
-  [ -e /var/lock/subsys/flume-ng-node ] && restart || :
+  [ -e ${LOCKFILE} ] && restart || :
 }
 
 case "$1" in

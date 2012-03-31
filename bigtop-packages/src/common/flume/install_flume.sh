@@ -93,10 +93,10 @@ for var in PREFIX BUILD_DIR ; do
 done
 
 MAN_DIR=${MAN_DIR:-/usr/share/man/man1}
-DOC_DIR=${DOC_DIR:-/usr/share/doc/flume-ng}
-FLUME_DIR=${FLUME_DIR:-/usr/lib/flume-ng}
-BIN_DIR=${BIN_DIR:-/usr/lib/flume-ng/bin}
-CONF_DIR=/etc/flume-ng/
+DOC_DIR=${DOC_DIR:-/usr/share/doc/flume}
+FLUME_DIR=${FLUME_DIR:-/usr/lib/flume}
+BIN_DIR=${BIN_DIR:-/usr/lib/flume/bin}
+CONF_DIR=/etc/flume/
 CONF_DIST_DIR=/etc/flume-ng/conf.dist/
 ETC_DIR=${ETC_DIR:-/etc/flume-ng}
 
@@ -128,7 +128,7 @@ if [ -n "\$FLUME_PID_FILE" ]; then
 fi
 
 # See FLUME-920
-exec bash /usr/lib/flume-ng/bin/flume-ng "\$@"
+exec bash /usr/lib/flume/bin/flume-ng "\$@"
 EOF
 chmod 755 $wrapper
 
@@ -138,7 +138,7 @@ install -d -m 0755 $PREFIX/$ETC_DIR/conf.empty
 touch $PREFIX/$ETC_DIR/conf.empty/flume.conf
 
 unlink $PREFIX/$FLUME_DIR/conf || /bin/true
-ln -s /etc/flume-ng/conf $PREFIX/$FLUME_DIR/conf
+ln -s /etc/flume/conf $PREFIX/$FLUME_DIR/conf
 
 # Docs
 install -d -m 0755 $PREFIX/${DOC_DIR}
