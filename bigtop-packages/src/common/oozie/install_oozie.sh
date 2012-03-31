@@ -212,6 +212,10 @@ sed -i -e '/oozie.service.HadoopAccessorService.hadoop.configurations/,/<\/prope
 failIfNotOK
 cp ${EXTRADIR}/oozie-env.sh ${OOZIE_CONF}
 failIfNotOK
+install -d -m 0755 ${OOZIE_CONF}/action-conf
+failIfNotOK
+cp ${EXTRADIR}/hive.xml ${OOZIE_CONF}/action-conf
+failIfNotOK
 if [ "${OOZIE_INITD}" != "" ]; then
   install -d -m 0755 ${OOZIE_INITD}
   failIfNotOK

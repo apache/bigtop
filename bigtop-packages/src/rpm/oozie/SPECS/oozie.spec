@@ -61,6 +61,7 @@ Source4: oozie-env.sh
 Source5: oozie.init
 Source6: catalina.properties
 Source7: context.xml
+Source8: hive.xml
 Patch0: patch
 Requires(pre): /usr/sbin/groupadd, /usr/sbin/useradd
 Requires(post): /sbin/chkconfig
