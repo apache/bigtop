@@ -253,3 +253,6 @@ cp ${EXTRADIR}/catalina.properties ${OOZIE_SERVER_DIR}/oozie-server/conf/
 failIfNotOK
 ln -s ../webapps ${OOZIE_SERVER_DIR}/oozie-server/webapps
 failIfNotOK
+
+# Provide a convenience symlink to be more consistent with tarball deployment
+ln -s ${OOZIE_DATA#${SERVERDIR}} ${OOZIE_SERVER_DIR}/libext
