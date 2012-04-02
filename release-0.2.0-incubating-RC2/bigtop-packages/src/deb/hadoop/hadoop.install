@@ -1,0 +1,6 @@
+/usr/bin
+/usr/lib/hadoop
+/etc/hadoop/conf.empty
+/etc/default/hadoop
+/etc/security/limits.d/hadoop.nofiles.conf
+/usr/share/doc/hadoop

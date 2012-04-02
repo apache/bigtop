@@ -1,0 +1,165 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<!-- Licensed to the Apache Software Foundation (ASF) under one or more       -->
+<!-- contributor license agreements.  See the NOTICE file distributed with    -->
+<!-- this work for additional information regarding copyright ownership.      -->
+<!-- The ASF licenses this file to You under the Apache License, Version 2.0  -->
+<!-- (the "License"); you may not use this file except in compliance with     -->
+<!-- the License.  You may obtain a copy of the License at                    -->
+<!--                                                                          -->
+<!--     http://www.apache.org/licenses/LICENSE-2.0                           -->
+<!--                                                                          -->
+<!-- Unless required by applicable law or agreed to in writing, software      -->
+<!-- distributed under the License is distributed on an "AS IS" BASIS,        -->
+<!-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. -->
+<!-- See the License for the specific language governing permissions and      -->
+<!-- limitations under the License.                                           -->
+
+<configuration>
+
+<% if hadoop_security_authentication == "kerberos" %>
+  <property>
+    <name>dfs.block.access.token.enable</name>
+    <value>true</value>
+  </property>
+  
+  <!-- NameNode security config -->
+  <property>
+    <name>dfs.https.address</name>
+    <value><%= hadoop_namenode_host %>:50475</value>
+  </property>
+  <property>
+    <name>dfs.https.port</name>
+    <value>50475</value>
+  </property>
+  <property>
+    <name>dfs.namenode.keytab.file</name>
+    <value>/etc/hdfs.keytab</value> <!-- path to the HDFS keytab -->
+  </property>
+  <property>
+    <name>dfs.namenode.kerberos.principal</name>
+    <value>hdfs/_HOST@<%= kerberos_realm %></value>
+  </property>
+  <property>
+    <name>dfs.namenode.kerberos.https.principal</name>
+    <value>host/_HOST@<%= kerberos_realm %></value>
+  </property>
+  
+  <!-- Secondary NameNode security config -->
+  <property>
+    <name>dfs.secondary.http.address</name>
+    <value><%= hadoop_namenode_host %>:0</value>
+  </property>
+  <property>
+    <name>dfs.secondary.https.address</name>
+    <value><%= hadoop_namenode_host %>:50495</value>
+  </property>
+  <property>
+    <name>dfs.secondary.https.port</name>
+    <value>50495</value>
+  </property>
+  <property>
+    <name>dfs.secondary.namenode.keytab.file</name>
+    <value>/etc/hdfs.keytab</value> <!-- path to the HDFS keytab -->
+  </property>
+  <property>
+    <name>dfs.secondary.namenode.kerberos.principal</name>
+    <value>hdfs/_HOST@<%= kerberos_realm %></value>
+  </property>
+  <property>
+    <name>dfs.secondary.namenode.kerberos.https.principal</name>
+    <value>host/_HOST@<%= kerberos_realm %></value>
+  </property>
+  
+  <!-- DataNode security config -->
+  <property>
+    <name>dfs.datanode.data.dir.perm</name>
+    <value>700</value> 
+  </property>
+  <property>
+    <name>dfs.datanode.address</name>
+    <value>0.0.0.0:1004</value>
+  </property>
+  <property>
+    <name>dfs.datanode.http.address</name>
+    <value>0.0.0.0:1006</value>
+  </property>
+  <property>
+    <name>dfs.datanode.keytab.file</name>
+    <value>/etc/hdfs.keytab</value> <!-- path to the HDFS keytab -->
+  </property>
+  <property>
+    <name>dfs.datanode.kerberos.principal</name>
+    <value>hdfs/_HOST@<%= kerberos_realm %></value>
+  </property>
+  <property>
+    <name>dfs.datanode.kerberos.https.principal</name>
+    <value>host/_HOST@<%= kerberos_realm %></value>
+  </property>
+<% end %>
+
+  <!-- name node -->
+  <property>
+    <!-- URI of NN. Fully qualified. No IP.-->
+    <name>fs.default.name</name>
+    <value>hdfs://<%= hadoop_namenode_host %>:<%= hadoop_namenode_port%></value>
+  </property>
+ 
+  <property>
+    <name>dfs.data.dir</name>
+    <value><% hadoop_storage_locations.split(";").each do |storage_location| %><%= storage_location%>/hdfs,<% end %></value>
+  </property>
+ 
+  <property>
+    <name>dfs.name.dir</name>
+    <value><% hadoop_storage_locations.split(";").each do |storage_location| %><%= storage_location%>/namenode,<% end %></value>
+  </property>
+
+  <!-- Enable Hue plugins -->
+<% if has_variable?("hadoop_dfs_namenode_plugins") %>
+  <property>
+    <name>dfs.namenode.plugins</name>
+    <value><%= hadoop_dfs_namenode_plugins %></value>
+    <description>Comma-separated list of namenode plug-ins to be activated.
+    </description>
+  </property>
+<% end %>
+<% if has_variable?("hadoop_dfs_datanode_plugins") %>
+  <property>
+    <name>dfs.datanode.plugins</name>
+    <value><%= hadoop_dfs_datanode_plugins %></value>
+    <description>Comma-separated list of datanode plug-ins to be activated.
+    </description>
+  </property>
+<% end %>
+<% if has_variable?("hadoop_namenode_thrift_port") %>
+  <property>
+    <name>dfs.thrift.address</name>
+    <value>0.0.0.0:<%= hadoop_namenode_thrift_port %></value>
+  </property>
+<% end %>
+
+  <!-- increase the number of datanode transceivers way above the default of 256
+     - this is for hbase -->
+  <property>
+    <name>dfs.datanode.max.xcievers</name>
+    <value>4096</value>
+  </property>
+
+  <!-- Configurations for large cluster -->
+<% if has_variable?("hadoop_config_dfs_block_size") %>
+  <property>
+    <name>dfs.block.size</name>
+    <value><%= hadoop_config_dfs_block_size %></value>
+  </property>
+<% end %>
+
+<% if has_variable?("hadoop_config_namenode_handler_count") %>
+  <property>
+    <name>dfs.namenode.handler.count</name>
+    <value><%= hadoop_config_namenode_handler_count %></value>
+  </property>
+<% end %>
+
+</configuration>

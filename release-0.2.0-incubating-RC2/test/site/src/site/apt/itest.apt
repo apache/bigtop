@@ -1,0 +1,63 @@
+~~ Licensed to the Apache Software Foundation (ASF) under one or more
+~~ contributor license agreements.  See the NOTICE file distributed with
+~~ this work for additional information regarding copyright ownership.
+~~ The ASF licenses this file to You under the Apache License, Version 2.0
+~~ (the "License"); you may not use this file except in compliance with
+~~ the License.  You may obtain a copy of the License at
+~~
+~~     http://www.apache.org/licenses/LICENSE-2.0
+~~
+~~ Unless required by applicable law or agreed to in writing, software
+~~ distributed under the License is distributed on an "AS IS" BASIS,
+~~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~~ See the License for the specific language governing permissions and
+~~ limitations under the License.
+ -----
+ iTest details
+ -----
+
+iTest project details
+
+* iTest application scope
+
+  iTest doesn't have narrowly defined scope of application. However, it is
+reasonable to use for whatever from integration testing and higher in the chain:
+
+  * integration
+
+  * system
+
+  * load
+
+  * reliability
+
+  * benchmarking
+
+* iTest architecture
+
+  The framework provides the following components:
+
+  * shell support
+
+    This module provides easy to use primitives to quickly execute a shell-out
+    command or statement. Return code of the execution as well as content of
+    standard input/error are available through properties.
+
+  * package management support
+
+    This module defines an abstract set of commands to work with native Linux
+    packages (deb, rpm, etc.) and some concrete implementations. A user can
+    write a test code which manipulates with native packages - install, remove,
+    update, etc. - which will work on any of supported platforms.
+
+  * jar utils
+
+    The module implements certain helper functionality to ease manipulations with
+    jar files (such as Maven artifacts).
+
+* iTest technology
+
+  iTest is written in {{{http://groovy.codehaus.org}Groovy}}
+
+  iTest facilitate certain operations for Maven based projects. However, it isn't
+  specific to Maven and can be used as a standalone framework.

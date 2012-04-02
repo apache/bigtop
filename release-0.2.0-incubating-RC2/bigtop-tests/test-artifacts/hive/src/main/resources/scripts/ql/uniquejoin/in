@@ -1,0 +1,39 @@
+-- Licensed to the Apache Software Foundation (ASF) under one or more
+-- contributor license agreements.  See the NOTICE file distributed with
+-- this work for additional information regarding copyright ownership.
+-- The ASF licenses this file to You under the Apache License, Version 2.0
+-- (the "License") you may not use this file except in compliance with
+-- the License.  You may obtain a copy of the License at
+--
+--     http://www.apache.org/licenses/LICENSE-2.0
+--
+-- Unless required by applicable law or agreed to in writing, software
+-- distributed under the License is distributed on an "AS IS" BASIS,
+-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-- See the License for the specific language governing permissions and
+-- limitations under the License.
+CREATE TABLE T1(key STRING, val STRING) STORED AS TEXTFILE;
+CREATE TABLE T2(key STRING, val STRING) STORED AS TEXTFILE;
+CREATE TABLE T3(key STRING, val STRING) STORED AS TEXTFILE;
+
+LOAD DATA LOCAL INPATH 'seed_data_files/T1.txt' INTO TABLE T1;
+LOAD DATA LOCAL INPATH 'seed_data_files/T2.txt' INTO TABLE T2;
+LOAD DATA LOCAL INPATH 'seed_data_files/T3.txt' INTO TABLE T3;
+
+FROM UNIQUEJOIN PRESERVE T1 a (a.key), PRESERVE T2 b (b.key), PRESERVE T3 c (c.key)
+SELECT a.key, b.key, c.key;
+
+FROM UNIQUEJOIN T1 a (a.key), T2 b (b.key), T3 c (c.key)
+SELECT a.key, b.key, c.key;
+
+FROM UNIQUEJOIN T1 a (a.key), T2 b (b.key-1), T3 c (c.key)
+SELECT a.key, b.key, c.key;
+
+FROM UNIQUEJOIN PRESERVE T1 a (a.key, a.val), PRESERVE T2 b (b.key, b.val), PRESERVE T3 c (c.key, c.val)
+SELECT a.key, a.val, b.key, b.val, c.key, c.val;
+
+FROM UNIQUEJOIN PRESERVE T1 a (a.key), T2 b (b.key), PRESERVE T3 c (c.key)
+SELECT a.key, b.key, c.key;
+
+FROM UNIQUEJOIN PRESERVE T1 a (a.key), T2 b(b.key)
+SELECT a.key, b.key;

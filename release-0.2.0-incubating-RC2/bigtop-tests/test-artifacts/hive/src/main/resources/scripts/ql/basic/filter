@@ -1,0 +1,3 @@
+sed -e 's#hdfs://[^/]*/#hdfs://HADOOP/#' \
+    -e 's#Copying file:.*u.data#Copying file: u.data#' \
+    -e '/^Deleted.*u_data$/d'

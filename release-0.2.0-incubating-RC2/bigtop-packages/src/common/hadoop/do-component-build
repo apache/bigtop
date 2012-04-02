@@ -1,0 +1,53 @@
+#!/bin/sh
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+set -ex
+
+# FIXME: BIGTOP-137
+chmod 777 src/c++/task-controller/configure
+
+
+# This is a poor man version comparison of autoconf.
+# Current autotools files target autotools 2.61 or sup.
+# There will be some build issues if we try to regenerate them with a lesser version of autotools
+# So we will only regenerate the autotools files if they are installed and their version is greater than
+# 2.60
+DO_AUTORECONF=""
+if [ -n `which autoconf` ]; then
+
+	AUTOCONF_VERSION=`autoconf --version | head -n 1 | sed -e 's/.* \([.0-9]\+\)$/\1/'`
+	echo $AUTOCONF_VERSION
+
+	if [[ $AUTOCONF_VERSION > 2.60 ]]; then
+		DO_AUTORECONF="create-c++-configure"
+	fi
+fi
+
+
+
+# FIXME: the LDFLAGS="-lcrypto" is a workaround for MAPREDUCE-2127
+# FIXME: the FUSE_HOME="..." and LDFLAGS="-lm" is a workaround for HADOOP-3344
+LDFLAGS="-lcrypto -lm" FUSE_HOME=`pwd`/build/c++/${HADOOP_ARCH} ant \
+  -Djava5.home=$JAVA5_HOME \
+  -Dforrest.home=$FORREST_HOME \
+  -Dversion=${HADOOP_VERSION} \
+  -Dcompile.native=true \
+  -Dhadoop.conf.dir=/etc/hadoop/conf \
+  -Dlibhdfs=1 -Dfusedfs=true -Dcompile.c++=true -Djdiff.build.dir=build/docs/jdiff \
+  $DO_AUTORECONF task-controller api-report bin-package compile-contrib package \
+  "$@"
+
+	

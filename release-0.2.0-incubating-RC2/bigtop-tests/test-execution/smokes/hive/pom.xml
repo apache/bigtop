@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <parent>
+    <groupId>org.apache.bigtop.itest</groupId>
+    <artifactId>smoke-tests</artifactId>
+    <version>0.2.0-incubating</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.apache.bigtop.itest</groupId>
+  <artifactId>hive-smoke-execution</artifactId>
+  <version>0.2.0-incubating</version>
+  <name>Hive smoke test execution</name>
+
+  <properties>
+    <org.apache.maven-dependency-plugin.groupId>org.apache.bigtop.itest</org.apache.maven-dependency-plugin.groupId>
+    <org.apache.maven-dependency-plugin.artifactId>hive-smoke</org.apache.maven-dependency-plugin.artifactId>
+    <org.apache.maven-dependency-plugin.version>${hive-smoke.version}</org.apache.maven-dependency-plugin.version>
+    <org.apache.maven-dependency-plugin.type>jar</org.apache.maven-dependency-plugin.type>
+
+    <HIVE_HOME>${env.HIVE_HOME}</HIVE_HOME>
+    <HBASE_HOME>${env.HBASE_HOME}</HBASE_HOME>
+    <ZOOKEEPER_HOME>${env.ZOOKEEPER_HOME}</ZOOKEEPER_HOME>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.bigtop.itest</groupId>
+      <artifactId>hive-smoke</artifactId>
+      <version>${hive-smoke.version}</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>1.0</version>
+        <executions>
+          <execution>
+            <id>enforce-property</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireProperty>
+                  <property>HIVE_HOME</property>
+                  <message>HIVE_HOME env. variable has to be set</message>
+                </requireProperty>
+                <requireProperty>
+                  <property>HBASE_HOME</property>
+                  <message>HBASE_HOME env. variable has to be set</message>
+                </requireProperty>
+                <requireProperty>
+                  <property>ZOOKEEPER_HOME</property>
+                  <message>ZOOKEEPER_HOME env. variable has to be set</message>
+                </requireProperty>
+              </rules>
+              <fail>true</fail>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>2.7.1</version>
+        <configuration>
+          <systemPropertyVariables>
+            <org.apache.bigtop.itest.hivesmoke.IntegrationTestHiveSmokeBulk.extra_jars>
+            ${HBASE_HOME}/lib/${hbase.jar},${HIVE_HOME}/lib/${hive-hbase-handler.jar},${ZOOKEEPER_HOME}/${zookeeper.jar},${HIVE_HOME}/lib/${guava.jar}
+            </org.apache.bigtop.itest.hivesmoke.IntegrationTestHiveSmokeBulk.extra_jars>
+          </systemPropertyVariables>
+          <forkMode>always</forkMode>
+          <additionalClasspathElements>
+            <additionalClasspathElement>${HIVE_HOME}/lib/${hive-exec.jar}</additionalClasspathElement>
+            <additionalClasspathElement>${HIVE_HOME}/lib/${hive-jdbc.jar}</additionalClasspathElement>
+            <additionalClasspathElement>${HIVE_HOME}/lib/${hive-metastore.jar}</additionalClasspathElement>
+            <additionalClasspathElement>${HIVE_HOME}/lib/${hive-service.jar}</additionalClasspathElement>
+            <additionalClasspathElement>${HIVE_HOME}/lib/libfb303.jar</additionalClasspathElement>
+            <additionalClasspathElement>${HIVE_HOME}/lib/${slf4j-api.jar}</additionalClasspathElement>
+            <additionalClasspathElement>${HIVE_HOME}/lib/${slf4j-log4j12.jar}</additionalClasspathElement>
+          </additionalClasspathElements>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.groovy.maven</groupId>
+        <artifactId>gmaven-plugin</artifactId>
+        <version>1.0</version>
+        <executions>
+          <execution>
+            <id>find-versioned-jar</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <configuration>
+              <source>
+                if (!System.getProperties().keySet().contains('enforcer.skip')) {
+                  project.properties['zookeeper.jar'] =
+                    org.apache.bigtop.itest.JarContent.getJarName(
+                        "${ZOOKEEPER_HOME}", 'zookeeper-.*.jar');
+                  if ( project.properties['zookeeper.jar'] == null ) {
+                    throw new IOException ("zookeeper*.jar isn't found");
+                  }
+                  project.properties['hbase.jar'] =
+                    org.apache.bigtop.itest.JarContent.getJarName(
+                        "${HBASE_HOME}", 'hbase-.*.jar');
+                  if ( project.properties['hbase.jar'] == null ) {
+                    throw new IOException ("hbase*.jar isn't found");
+                  }
+                  [ 'hive-hbase-handler.jar', 'hive-exec.jar', 'hive-jdbc.jar', 'hive-metastore.jar', 'hive-service.jar', 'slf4j-api.jar', 'slf4j-log4j12.jar', 'guava.jar' ].each {
+                    project.properties[it] =
+                      org.apache.bigtop.itest.JarContent.getJarName(
+                          "${HIVE_HOME}/lib", "${it.replaceAll(/.jar$/, '')}-.*\\.jar");
+                    if ( project.properties[it] == null ) {
+                      throw new IOException ("$it isn't found");
+                    }
+                  }
+                }
+              </source>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+    </plugins>
+  </build>
+</project>

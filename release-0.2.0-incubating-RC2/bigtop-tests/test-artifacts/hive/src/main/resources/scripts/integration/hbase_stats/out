@@ -1,0 +1,170 @@
+-- Licensed to the Apache Software Foundation (ASF) under one or more
+-- contributor license agreements.  See the NOTICE file distributed with
+-- this work for additional information regarding copyright ownership.
+-- The ASF licenses this file to You under the Apache License, Version 2.0
+-- (the "License") you may not use this file except in compliance with
+-- the License.  You may obtain a copy of the License at
+--
+--     http://www.apache.org/licenses/LICENSE-2.0
+--
+-- Unless required by applicable law or agreed to in writing, software
+-- distributed under the License is distributed on an "AS IS" BASIS,
+-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-- See the License for the specific language governing permissions and
+-- limitations under the License.
+set datanucleus.cache.collections=false
+set hive.stats.dbclass=hbase
+
+
+create table stats_src like src
+
+insert overwrite table stats_src select * from src
+Deleted HDFS_URL/user/hive/warehouse/stats_src
+
+analyze table stats_src compute statistics
+
+desc formatted stats_src
+# col_name            	data_type           	comment             
+	 	 
+key                 	string              	None                
+value               	string              	None                
+	 	 
+# Detailed Table Information	 	 
+Database:           	default             	 
+Owner:              	testuser1@MINOTAUR.CLOUDERA.COM	 
+CreateTime:         	Fri Mar 25 11:29:26 PDT 2011	 
+LastAccessTime:     	UNKNOWN             	 
+Protect Mode:       	None                	 
+Retention:          	0                   	 
+Location:           	hdfs://minotaur01.sf.cloudera.com:17020/user/hive/warehouse/stats_src	 
+Table Type:         	MANAGED_TABLE       	 
+Table Parameters:	 	 
+	transient_lastDdlTime	1301077789          
+	 	 
+# Storage Information	 	 
+SerDe Library:      	org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe	 
+InputFormat:        	org.apache.hadoop.mapred.TextInputFormat	 
+OutputFormat:       	org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat	 
+Compressed:         	No                  	 
+Num Buckets:        	-1                  	 
+Bucket Columns:     	[]                  	 
+Sort Columns:       	[]                  	 
+Storage Desc Params:	 	 
+	serialization.format	1                   
+
+
+create table hbase_part like srcpart
+
+
+insert overwrite table hbase_part partition (ds='2010-04-08', hr = '11') select key, value from src
+
+insert overwrite table hbase_part partition (ds='2010-04-08', hr = '12') select key, value from src
+
+
+analyze table hbase_part partition(ds='2008-04-08', hr=11) compute statistics
+
+analyze table hbase_part partition(ds='2008-04-08', hr=12) compute statistics
+
+
+desc formatted hbase_part
+# col_name            	data_type           	comment             
+	 	 
+key                 	string              	None                
+value               	string              	None                
+	 	 
+# Partition Information	 	 
+# col_name            	data_type           	comment             
+	 	 
+ds                  	string              	None                
+hr                  	string              	None                
+	 	 
+# Detailed Table Information	 	 
+Database:           	default             	 
+Owner:              	testuser1@MINOTAUR.CLOUDERA.COM	 
+CreateTime:         	Fri Mar 25 11:30:31 PDT 2011	 
+LastAccessTime:     	UNKNOWN             	 
+Protect Mode:       	None                	 
+Retention:          	0                   	 
+Location:           	hdfs://minotaur01.sf.cloudera.com:17020/user/hive/warehouse/hbase_part	 
+Table Type:         	MANAGED_TABLE       	 
+Table Parameters:	 	 
+	transient_lastDdlTime	1301077831          
+	 	 
+# Storage Information	 	 
+SerDe Library:      	org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe	 
+InputFormat:        	org.apache.hadoop.mapred.TextInputFormat	 
+OutputFormat:       	org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat	 
+Compressed:         	No                  	 
+Num Buckets:        	-1                  	 
+Bucket Columns:     	[]                  	 
+Sort Columns:       	[]                  	 
+Storage Desc Params:	 	 
+	serialization.format	1                   
+
+desc formatted hbase_part partition (ds='2010-04-08', hr = '11')
+# col_name            	data_type           	comment             
+	 	 
+key                 	string              	None                
+value               	string              	None                
+	 	 
+# Partition Information	 	 
+# col_name            	data_type           	comment             
+	 	 
+ds                  	string              	None                
+hr                  	string              	None                
+	 	 
+# Detailed Partition Information	 	 
+Partition Value:    	[2010-04-08, 11]    	 
+Database:           	default             	 
+Table:              	hbase_part          	 
+CreateTime:         	Fri Mar 25 11:30:54 PDT 2011	 
+LastAccessTime:     	UNKNOWN             	 
+Protect Mode:       	None                	 
+Location:           	hdfs://minotaur01.sf.cloudera.com:17020/user/hive/warehouse/hbase_part/ds=2010-04-08/hr=11	 
+Partition Parameters:	 	 
+	transient_lastDdlTime	1301077854          
+	 	 
+# Storage Information	 	 
+SerDe Library:      	org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe	 
+InputFormat:        	org.apache.hadoop.mapred.TextInputFormat	 
+OutputFormat:       	org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat	 
+Compressed:         	No                  	 
+Num Buckets:        	-1                  	 
+Bucket Columns:     	[]                  	 
+Sort Columns:       	[]                  	 
+Storage Desc Params:	 	 
+	serialization.format	1                   
+
+desc formatted hbase_part partition (ds='2010-04-08', hr = '12')
+# col_name            	data_type           	comment             
+	 	 
+key                 	string              	None                
+value               	string              	None                
+	 	 
+# Partition Information	 	 
+# col_name            	data_type           	comment             
+	 	 
+ds                  	string              	None                
+hr                  	string              	None                
+	 	 
+# Detailed Partition Information	 	 
+Partition Value:    	[2010-04-08, 12]    	 
+Database:           	default             	 
+Table:              	hbase_part          	 
+CreateTime:         	Fri Mar 25 11:31:29 PDT 2011	 
+LastAccessTime:     	UNKNOWN             	 
+Protect Mode:       	None                	 
+Location:           	hdfs://minotaur01.sf.cloudera.com:17020/user/hive/warehouse/hbase_part/ds=2010-04-08/hr=12	 
+Partition Parameters:	 	 
+	transient_lastDdlTime	1301077889          
+	 	 
+# Storage Information	 	 
+SerDe Library:      	org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe	 
+InputFormat:        	org.apache.hadoop.mapred.TextInputFormat	 
+OutputFormat:       	org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat	 
+Compressed:         	No                  	 
+Num Buckets:        	-1                  	 
+Bucket Columns:     	[]                  	 
+Sort Columns:       	[]                  	 
+Storage Desc Params:	 	 
+	serialization.format	1                   

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one or more
+ contributor license agreements.  See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ The ASF licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+  <properties></properties>
+  <body>
+
+    <section name="Apache Bigtop"></section>
+    <p>Bigtop is a project for the development of packaging and tests of the Apache Hadoop ecosystem.
+    <br/><br/>
+     The primary goal of Bigtop is to build a community around the packaging and interoperability testing 
+     of Hadoop-related projects. This includes testing at various levels (packaging, platform, runtime, upgrade, etc...) 
+     developed by a community with a focus on the system as a whole, rather than individual projects.</p>
+     <p>Bigtop is currently being incubated in the <a class="externalLink" href="http://incubator.apache.org/">Apache Incubator</a></p>
+     <br/><br/>
+    <subsection name="Building Bigtop"></subsection>
+    <p>Packages have been built on Ubuntu 10.10, CentOS 5, Mageia 1 and openSUSE 11.4.
+    They can probably be built on other platforms as well.<br/><br/>
+    Building Bigtop requires the following tools:</p>
+    <ul>
+      <li>Java JDK 1.6</li>
+      <li>Apache Forrest 0.8 (requires 32bit version of Java JDK 1.5)</li>
+      <li>Apache Ant</li>
+      <li>Apache Maven</li>
+      <li>git</li>
+      <li>subversion</li>
+      <li>autoconf</li>
+      <li>automake</li>
+      <li>liblzo2-dev</li>
+      <li>libzip-dev</li>
+      <li>sharutils</li>
+      <li>libfuse-dev</li>
+      <li>libssl-dev</li>
+      <li>asciidoc</li>
+      <li>xmlto</li>
+      <li>libssl-dev</li>
+    </ul>
+    <p>On Debian-based systems one also needs</p>
+    <ul>
+      <li>build-essential dh-make debhelper devscripts</li>
+      <li>reprepro</li>
+    </ul>
+    <subsection name="Disclaimer"></subsection>
+    <p>
+       Apache Bigtop is an effort undergoing incubation at The Apache Software Foundation (ASF), 
+      sponsored by the Apache Incubator. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, 
+      communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. 
+      While incubation status is not necessarily a reflection of the completeness or stability of the code, 
+      it does indicate that the project has yet to be fully endorsed by the ASF.
+    </p>
+  </body>
+</document>
