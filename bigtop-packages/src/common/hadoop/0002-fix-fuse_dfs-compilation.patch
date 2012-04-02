@@ -1,0 +1,206 @@
+From b0d6ef692636fd65a6fe7c2fef6afd3d339a03f3 Mon Sep 17 00:00:00 2001
+From: Petru Dimulescu <petru.dimulescu@gmail.com>
+Date: Fri, 16 Dec 2011 14:51:51 +0100
+Subject: [PATCH 2/3] fix fuse_dfs compilation
+
+---
+ .../hadoop-hdfs/src/contrib/build-contrib.xml      |    2 +-
+ .../hadoop-hdfs/src/contrib/fuse-dfs/Makefile.am   |    1 +
+ .../hadoop-hdfs/src/contrib/fuse-dfs/build.xml     |    4 +-
+ .../hadoop-hdfs/src/contrib/fuse-dfs/configure.ac  |   57 +++++++++++++++++++-
+ .../src/contrib/fuse-dfs/global_header.mk          |    1 +
+ .../src/contrib/fuse-dfs/src/Makefile.am           |   13 ++++-
+ .../hadoop-hdfs/src/main/native/Makefile.am        |    1 +
+ .../hadoop-hdfs/src/main/native/configure.ac       |    2 +-
+ 8 files changed, 73 insertions(+), 8 deletions(-)
+
+diff --git a/hadoop-hdfs-project/hadoop-hdfs/src/contrib/build-contrib.xml b/hadoop-hdfs-project/hadoop-hdfs/src/contrib/build-contrib.xml
+index 0c57fb9..b4ad24a 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs/src/contrib/build-contrib.xml
++++ b/hadoop-hdfs-project/hadoop-hdfs/src/contrib/build-contrib.xml
+@@ -70,7 +70,7 @@
+   <property name="ivy.dir" location="ivy" />
+   <property name="ivysettings.xml" location="${hadoop.root}/ivy/ivysettings.xml"/>
+   <loadproperties srcfile="${ivy.dir}/libraries.properties"/>
+-  <loadproperties srcfile="${hadoop.root}/ivy/libraries.properties"/>
++  <!--loadproperties srcfile="${hadoop.root}/ivy/libraries.properties"/-->
+   <property name="ivy.jar" location="${hadoop.root}/ivy/ivy-${ivy.version}.jar"/>
+   <property name="ivy_repo_url" 
+ 	value="http://repo2.maven.org/maven2/org/apache/ivy/ivy/${ivy.version}/ivy-${ivy.version}.jar" />
+diff --git a/hadoop-hdfs-project/hadoop-hdfs/src/contrib/fuse-dfs/Makefile.am b/hadoop-hdfs-project/hadoop-hdfs/src/contrib/fuse-dfs/Makefile.am
+index f4d6c57..b86c6af 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs/src/contrib/fuse-dfs/Makefile.am
++++ b/hadoop-hdfs-project/hadoop-hdfs/src/contrib/fuse-dfs/Makefile.am
+@@ -17,6 +17,7 @@
+ @GLOBAL_HEADER_MK@
+ 
+ @PRODUCT_MK@
++ACLOCAL_AMFLAGS = -I m4
+ 
+ SUBDIRS = . src
+ 
+diff --git a/hadoop-hdfs-project/hadoop-hdfs/src/contrib/fuse-dfs/build.xml b/hadoop-hdfs-project/hadoop-hdfs/src/contrib/fuse-dfs/build.xml
+index c8795c5..eb69039 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs/src/contrib/fuse-dfs/build.xml
++++ b/hadoop-hdfs-project/hadoop-hdfs/src/contrib/fuse-dfs/build.xml
+@@ -17,7 +17,7 @@
+    limitations under the License.
+ -->
+ 
+-<project name="fuse-dfs" default="jar" xmlns:ivy="antlib:org.apache.ivy.ant">
++<project name="fuse-dfs" default="compile" xmlns:ivy="antlib:org.apache.ivy.ant">
+ 
+   <import file="../build-contrib.xml"/>
+ 
+@@ -29,7 +29,7 @@
+     </fail>
+   </target>
+ 
+-  <target name="compile" if="fusedfs">
++  <target name="compile">
+     <exec executable="autoreconf" dir="${basedir}" 
+           searchpath="yes" failonerror="yes">
+        <arg value="-if"/>
+diff --git a/hadoop-hdfs-project/hadoop-hdfs/src/contrib/fuse-dfs/configure.ac b/hadoop-hdfs-project/hadoop-hdfs/src/contrib/fuse-dfs/configure.ac
+index 1062ec3..f17c704 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs/src/contrib/fuse-dfs/configure.ac
++++ b/hadoop-hdfs-project/hadoop-hdfs/src/contrib/fuse-dfs/configure.ac
+@@ -15,7 +15,7 @@
+ # limitations under the License.
+ #
+ 
+-# Autoconf input file
++# Autoconf input file for fuse_dfs
+ # $Id$
+ # AC - autoconf
+ #########################################################################
+@@ -30,6 +30,7 @@ AC_CANONICAL_TARGET()
+ FUSE_DFS_INITIALIZE([localinstall])
+ AC_PREFIX_DEFAULT([`pwd`])
+ 
++AC_CONFIG_MACRO_DIR([m4])
+ 
+ 
+ #case $target in
+@@ -51,6 +52,60 @@ AC_TYPE_GETGROUPS
+ AC_PROG_CC
+ AC_SYS_LARGEFILE
+ 
++### java env detection
++dnl -------------------------------------------------------------------------
++dnl Check if this host is supported
++dnl -------------------------------------------------------------------------
++AP_MSG_HEADER([Host support])
++AP_SUPPORTED_HOST()
++if test "$supported_os" = "darwin"
++then
++  if test -z "$JAVA_HOME" -a -d /System/Library/Frameworks/JavaVM.framework/Home; then
++  	JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Home
++  fi
++
++  _prevdir=`/bin/pwd`
++  if test -n "$JAVA_HOME" -a -d "$JAVA_HOME/include"; then
++    cd "$JAVA_HOME/include"
++  elif test -n "$JAVA_HOME" -a -d "$JAVA_HOME/../Headers"; then
++    cd "$JAVA_HOME/../Headers"
++  else
++    cd /System/Library/Frameworks/JavaVM.framework/Headers
++  fi
++  # JNI_CFLAGS="-m${JVM_ARCH} -I`/bin/pwd -P`"
++	JNI_CFLAGS="-I`/bin/pwd -P`"
++  cd $_prevdir
++  unset _prevdir
++  AC_SUBST(JNI_CFLAGS)
++fi
++
++dnl -------------------------------------------------------------------------
++dnl Check JAVA environment
++dnl -------------------------------------------------------------------------
++AP_MSG_HEADER([Java compilation tools])
++AP_JAVA()
++AP_SABLEVM()
++AP_KAFFE()
++AP_PROG_JAVAC()
++AP_PROG_JAR()
++AP_JVM_LIBDIR()
++if test "$supported_os" != "darwin"
++then
++  case $host_cpu in
++  arm*) ;;
++  *)
++    CFLAGS="$CFLAGS -m${JVM_ARCH}"
++    LDFLAGS="$LDFLAGS -m${JVM_ARCH}"
++    ;;
++  esac
++  AC_MSG_RESULT([VALUE OF JVM_ARCH IS :$JVM_ARCH])
++  CFLAGS="$CFLAGS -I$JAVA_HOME/include -I$JAVA_HOME/include/$supported_os"
++  LDFLAGS="$LDFLAGS -L$LIB_JVM_DIR -ljvm -Wl,-x"
++fi
++
++
++
++
+ ############################################################################
+ # Section 2:
+ # User Configurable system defaults. Change With CAUTION!
+diff --git a/hadoop-hdfs-project/hadoop-hdfs/src/contrib/fuse-dfs/global_header.mk b/hadoop-hdfs-project/hadoop-hdfs/src/contrib/fuse-dfs/global_header.mk
+index f67fa8b..7c4d2b8 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs/src/contrib/fuse-dfs/global_header.mk
++++ b/hadoop-hdfs-project/hadoop-hdfs/src/contrib/fuse-dfs/global_header.mk
+@@ -24,6 +24,7 @@ showvars:
+ 	@echo BUILD_SOURCES = $(BUILT_SOURCES)
+ 	@echo XBUILTSOURCES = $(XBUILT_SOURCES)
+ 	@echo DEFS = $(DEFS)
++	@echo CFLAGS = $(CFLAGS)
+ 	@echo CXXFLAGS = $(CXXFLAGS)
+ 	@echo AM_CXXFLAGS = $(AM_CXXFLAGS)
+ 	@echo CPPFLAGS = $(CPPFLAGS)
+diff --git a/hadoop-hdfs-project/hadoop-hdfs/src/contrib/fuse-dfs/src/Makefile.am b/hadoop-hdfs-project/hadoop-hdfs/src/contrib/fuse-dfs/src/Makefile.am
+index d62384d..5d78ede 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs/src/contrib/fuse-dfs/src/Makefile.am
++++ b/hadoop-hdfs-project/hadoop-hdfs/src/contrib/fuse-dfs/src/Makefile.am
+@@ -16,6 +16,13 @@
+ #
+ bin_PROGRAMS = fuse_dfs
+ fuse_dfs_SOURCES = fuse_dfs.c fuse_options.c fuse_trash.c fuse_stat_struct.c fuse_users.c fuse_init.c fuse_connect.c fuse_impls_access.c fuse_impls_chmod.c  fuse_impls_chown.c  fuse_impls_create.c  fuse_impls_flush.c fuse_impls_getattr.c  fuse_impls_mkdir.c  fuse_impls_mknod.c  fuse_impls_open.c fuse_impls_read.c fuse_impls_release.c fuse_impls_readdir.c fuse_impls_rename.c fuse_impls_rmdir.c fuse_impls_statfs.c fuse_impls_symlink.c fuse_impls_truncate.c fuse_impls_utimens.c  fuse_impls_unlink.c fuse_impls_write.c
+-AM_CFLAGS= -Wall -g
+-AM_CPPFLAGS= -DPERMS=$(PERMS) -D_FILE_OFFSET_BITS=64 -I$(JAVA_HOME)/include -I$(HADOOP_PREFIX)/src/c++/libhdfs -I$(JAVA_HOME)/include/linux -D_FUSE_DFS_VERSION=\"$(PACKAGE_VERSION)\" -DPROTECTED_PATHS=\"$(PROTECTED_PATHS)\" -I$(FUSE_HOME)/include
+-AM_LDFLAGS= -L$(HADOOP_PREFIX)/build/c++/$(BUILD_PLATFORM)/lib -lhdfs -L$(FUSE_HOME)/lib -lfuse -L$(JAVA_HOME)/jre/lib/$(OS_ARCH)/server -ljvm
++
++#AM_CFLAGS= -Wall -g
++
++#AM_CPPFLAGS= -DPERMS=$(PERMS) -D_FILE_OFFSET_BITS=64 -I$(JAVA_HOME)/include -I$(HADOOP_PREFIX)/src/c++/libhdfs -I$(JAVA_HOME)/include/linux -D_FUSE_DFS_VERSION=\"$(PACKAGE_VERSION)\" -DPROTECTED_PATHS=\"$(PROTECTED_PATHS)\" -I$(FUSE_HOME)/include
++
++fuse_dfs_CFLAGS=-Wall -g -DPERMS=$(PERMS) -D_FILE_OFFSET_BITS=64 -I$(JAVA_HOME)/include -I$(HADOOP_PREFIX)/src/c++/libhdfs -I$(JAVA_HOME)/include/linux -D_FUSE_DFS_VERSION=\"$(PACKAGE_VERSION)\" -DPROTECTED_PATHS=\"$(PROTECTED_PATHS)\" -I$(FUSE_HOME)/include $(JNI_CFLAGS)
++
++fuse_dfs_LDADD=-L$(HADOOP_PREFIX)/build/c++/$(BUILD_PLATFORM)/lib -lhdfs -L$(FUSE_HOME)/lib -lfuse -L$(JAVA_HOME)/jre/lib/$(OS_ARCH)/server -ljvm
++
++#AM_LDFLAGS= -L$(HADOOP_PREFIX)/build/c++/$(BUILD_PLATFORM)/lib -lhdfs -L$(FUSE_HOME)/lib -lfuse -L$(JAVA_HOME)/jre/lib/$(OS_ARCH)/server -ljvm
+diff --git a/hadoop-hdfs-project/hadoop-hdfs/src/main/native/Makefile.am b/hadoop-hdfs-project/hadoop-hdfs/src/main/native/Makefile.am
+index 8bbd627..2507885 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs/src/main/native/Makefile.am
++++ b/hadoop-hdfs-project/hadoop-hdfs/src/main/native/Makefile.am
+@@ -22,6 +22,7 @@ ACLOCAL_AMFLAGS = -I m4
+ 
+ lib_LTLIBRARIES = libhdfs.la
+ libhdfs_la_SOURCES = hdfs.c hdfsJniHelper.c hdfs.h
++include_HEADERS = hdfs.h
+ 
+ #check_PROGRAMS = hdfs_test hdfs_read hdfs_write
+ check_PROGRAMS = hdfs_test hdfs_read hdfs_write
+diff --git a/hadoop-hdfs-project/hadoop-hdfs/src/main/native/configure.ac b/hadoop-hdfs-project/hadoop-hdfs/src/main/native/configure.ac
+index d801fc4..f8ecd43 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs/src/main/native/configure.ac
++++ b/hadoop-hdfs-project/hadoop-hdfs/src/main/native/configure.ac
+@@ -15,7 +15,7 @@
+ # limitations under the License.
+ #
+ 
+-# Autoconf input file
++# Autoconf input file for libhdfs
+ # $Id$
+ 
+ AC_INIT([libhdfs], [0.1.0], omalley@apache.org)
+-- 
+1.7.4.1
+

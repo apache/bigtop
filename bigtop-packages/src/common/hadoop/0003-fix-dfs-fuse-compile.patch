@@ -1,0 +1,45 @@
+From ad2b5d5ca8622b38aecda3d631750d9659839310 Mon Sep 17 00:00:00 2001
+From: Petru Dimulescu <petru.dimulescu@gmail.com>
+Date: Fri, 16 Dec 2011 18:31:18 +0100
+Subject: [PATCH 3/3] fix dfs-fuse compile
+
+---
+ .../hadoop-hdfs/src/contrib/build-contrib.xml      |    2 +-
+ .../hadoop-hdfs/src/contrib/fuse-dfs/configure.ac  |    8 --------
+ 2 files changed, 1 insertions(+), 9 deletions(-)
+
+diff --git a/hadoop-hdfs-project/hadoop-hdfs/src/contrib/build-contrib.xml b/hadoop-hdfs-project/hadoop-hdfs/src/contrib/build-contrib.xml
+index b4ad24a..bde5e4e 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs/src/contrib/build-contrib.xml
++++ b/hadoop-hdfs-project/hadoop-hdfs/src/contrib/build-contrib.xml
+@@ -70,7 +70,7 @@
+   <property name="ivy.dir" location="ivy" />
+   <property name="ivysettings.xml" location="${hadoop.root}/ivy/ivysettings.xml"/>
+   <loadproperties srcfile="${ivy.dir}/libraries.properties"/>
+-  <!--loadproperties srcfile="${hadoop.root}/ivy/libraries.properties"/-->
++  <loadproperties srcfile="ivy/libraries.properties"/>
+   <property name="ivy.jar" location="${hadoop.root}/ivy/ivy-${ivy.version}.jar"/>
+   <property name="ivy_repo_url" 
+ 	value="http://repo2.maven.org/maven2/org/apache/ivy/ivy/${ivy.version}/ivy-${ivy.version}.jar" />
+diff --git a/hadoop-hdfs-project/hadoop-hdfs/src/contrib/fuse-dfs/configure.ac b/hadoop-hdfs-project/hadoop-hdfs/src/contrib/fuse-dfs/configure.ac
+index f17c704..de663d6 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs/src/contrib/fuse-dfs/configure.ac
++++ b/hadoop-hdfs-project/hadoop-hdfs/src/contrib/fuse-dfs/configure.ac
+@@ -91,14 +91,6 @@ AP_PROG_JAR()
+ AP_JVM_LIBDIR()
+ if test "$supported_os" != "darwin"
+ then
+-  case $host_cpu in
+-  arm*) ;;
+-  *)
+-    CFLAGS="$CFLAGS -m${JVM_ARCH}"
+-    LDFLAGS="$LDFLAGS -m${JVM_ARCH}"
+-    ;;
+-  esac
+-  AC_MSG_RESULT([VALUE OF JVM_ARCH IS :$JVM_ARCH])
+   CFLAGS="$CFLAGS -I$JAVA_HOME/include -I$JAVA_HOME/include/$supported_os"
+   LDFLAGS="$LDFLAGS -L$LIB_JVM_DIR -ljvm -Wl,-x"
+ fi
+-- 
+1.7.4.1
+

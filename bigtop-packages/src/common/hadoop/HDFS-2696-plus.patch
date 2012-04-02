@@ -1,0 +1,15 @@
+diff --git hadoop-hdfs-project/hadoop-hdfs/src/contrib/fuse-dfs/src/Makefile.am hadoop-hdfs-project/hadoop-hdfs/src/contrib/fuse-dfs/src/Makefile.am
+index 5d78ede..3fbdfa7 100644
+--- hadoop-hdfs-project/hadoop-hdfs/src/contrib/fuse-dfs/src/Makefile.am
++++ hadoop-hdfs-project/hadoop-hdfs/src/contrib/fuse-dfs/src/Makefile.am
+@@ -21,8 +21,8 @@ fuse_dfs_SOURCES = fuse_dfs.c fuse_options.c fuse_trash.c fuse_stat_struct.c fus
+ 
+ #AM_CPPFLAGS= -DPERMS=$(PERMS) -D_FILE_OFFSET_BITS=64 -I$(JAVA_HOME)/include -I$(HADOOP_PREFIX)/src/c++/libhdfs -I$(JAVA_HOME)/include/linux -D_FUSE_DFS_VERSION=\"$(PACKAGE_VERSION)\" -DPROTECTED_PATHS=\"$(PROTECTED_PATHS)\" -I$(FUSE_HOME)/include
+ 
+-fuse_dfs_CFLAGS=-Wall -g -DPERMS=$(PERMS) -D_FILE_OFFSET_BITS=64 -I$(JAVA_HOME)/include -I$(HADOOP_PREFIX)/src/c++/libhdfs -I$(JAVA_HOME)/include/linux -D_FUSE_DFS_VERSION=\"$(PACKAGE_VERSION)\" -DPROTECTED_PATHS=\"$(PROTECTED_PATHS)\" -I$(FUSE_HOME)/include $(JNI_CFLAGS)
++fuse_dfs_CFLAGS=-Wall -g -DPERMS=$(PERMS) -D_FILE_OFFSET_BITS=64 -I$(JAVA_HOME)/include -I$(HADOOP_PREFIX)/src/main/native -I$(JAVA_HOME)/include/linux -D_FUSE_DFS_VERSION=\"$(PACKAGE_VERSION)\" -DPROTECTED_PATHS=\"$(PROTECTED_PATHS)\" -I$(FUSE_HOME)/include $(JNI_CFLAGS)
+ 
+-fuse_dfs_LDADD=-L$(HADOOP_PREFIX)/build/c++/$(BUILD_PLATFORM)/lib -lhdfs -L$(FUSE_HOME)/lib -lfuse -L$(JAVA_HOME)/jre/lib/$(OS_ARCH)/server -ljvm
++fuse_dfs_LDADD=-L$(HADOOP_PREFIX)/target/native/target/usr/local/lib/ -lhdfs -L$(FUSE_HOME)/lib -lm -lfuse -L$(JAVA_HOME)/jre/lib/$(OS_ARCH)/server -ljvm
+ 
+ #AM_LDFLAGS= -L$(HADOOP_PREFIX)/build/c++/$(BUILD_PLATFORM)/lib -lhdfs -L$(FUSE_HOME)/lib -lfuse -L$(JAVA_HOME)/jre/lib/$(OS_ARCH)/server -ljvm
