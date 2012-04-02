@@ -62,8 +62,8 @@ FLUME_PID_FILE=${FLUME_RUN}/flume-node.pid
 install -d -m 0755 -o flume -g flume ${FLUME_RUN} 
 USER=flume
 
-HOSTNAME=`hostname`
-FLUME_NODE_NAME=${FLUME_NODE_NAME:-$HOSTNAME}
+DEFAULT_FLUME_NODE_NAME="agent"
+FLUME_NODE_NAME=${FLUME_NODE_NAME:-${DEFAULT_FLUME_NODE_NAME}}
 
 start() {
   [ -x $exec ] || exit $ERROR_PROGRAM_NOT_INSTALLED
