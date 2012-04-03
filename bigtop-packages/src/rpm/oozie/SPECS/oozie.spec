@@ -179,11 +179,6 @@ fi
 
 %files 
 %defattr(-,root,root)
-%{lib_oozie}/bin/addtowar.sh
-%{lib_oozie}/bin/oozie-run.sh
-%{lib_oozie}/bin/oozie-setup.sh
-%{lib_oozie}/bin/oozie-start.sh
-%{lib_oozie}/bin/oozie-stop.sh
 %{lib_oozie}/bin/oozie-sys.sh
 %{lib_oozie}/bin/oozie-env.sh
 %{lib_oozie}/bin/oozied.sh
