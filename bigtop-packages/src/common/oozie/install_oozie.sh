@@ -199,8 +199,10 @@ install -d -m 0755 ${OOZIE_SERVER_DIR}/bin
 failIfNotOK
 install -d -m 0755 ${OOZIE_DATA}
 failIfNotOK
-cp -R ${OOZIE_BUILD_DIR}/bin/*.sh ${OOZIE_SERVER_DIR}/bin
-failIfNotOK
+for file in oozie ooziedb.sh oozied.sh oozie-sys.sh ; do
+  cp ${OOZIE_BUILD_DIR}/bin/$file ${OOZIE_SERVER_DIR}/bin
+  failIfNotOK
+done
 cp -R ${OOZIE_BUILD_DIR}/libtools ${OOZIE_SERVER_DIR}
 failIfNotOK
 

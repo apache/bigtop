@@ -118,6 +118,11 @@ cp -a $BUILD_DIR/hbase-webapps $PREFIX/$LIB_DIR
 
 cp -a $BUILD_DIR/conf $PREFIX/$CONF_DIR
 cp -a $BUILD_DIR/bin/* $PREFIX/$BIN_DIR
+# Purge scripts that don't work with packages
+for file in rolling-restart.sh graceful_stop.sh local-regionservers.sh \
+            start-hbase.sh stop-hbase.sh local-master-backup.sh ; do
+  rm -f $PREFIX/$BIN_DIR/$file
+done
 
 ln -s $ETC_DIR/conf $PREFIX/$LIB_DIR/conf
 
