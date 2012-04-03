@@ -67,6 +67,13 @@ FLUME_NODE_NAME=${FLUME_NODE_NAME:-$HOSTNAME}
 
 start() {
   [ -x $exec ] || exit $ERROR_PROGRAM_NOT_INSTALLED
+
+  checkstatus
+  status=$?
+  if [ "$status" -eq "$STATUS_RUNNING" ]; then
+    exit 0
+  fi
+
   log_success_msg "Starting $desc (flume-node): "
   /bin/su -s /bin/bash -c "/bin/bash -c 'echo \$\$ > ${FLUME_PID_FILE} && exec ${EXEC_PATH} node --conf $FLUME_CONF_DIR --conf-file $FLUME_CONF_FILE --name $FLUME_NODE_NAME &>>${FLUME_LOG_DIR}/flume-node.log' &" $USER
   RETVAL=$?
