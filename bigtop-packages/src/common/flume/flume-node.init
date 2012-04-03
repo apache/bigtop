@@ -77,7 +77,7 @@ start() {
 stop() {
   if [ ! -e $FLUME_PID_FILE ]; then
     log_failure_msg "Flume node is not running"
-    exit $STATUS_NOT_RUNNING
+    exit 0
   fi
 
   log_success_msg "Stopping $desc (flume-node): "
