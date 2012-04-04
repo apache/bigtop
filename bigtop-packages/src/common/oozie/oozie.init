@@ -55,7 +55,7 @@ start_oozie() {
   install -d -o oozie -g oozie /var/run/oozie
   install -d -o oozie -g oozie /var/log/oozie
   install -d -o oozie -g oozie /var/tmp/oozie
-  su --shell=/bin/sh -l oozie -c /usr/lib/oozie/bin/oozied.sh start
+  su --shell=/bin/sh -l oozie -c '/usr/lib/oozie/bin/oozied.sh start'
 }
 
 stop_oozie() {
