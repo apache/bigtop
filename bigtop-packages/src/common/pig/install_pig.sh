@@ -106,10 +106,17 @@ install -d -m 0755 $LIB_DIR
 (cd $BUILD_DIR && tar -cf - .) | (cd $LIB_DIR && tar -xf -)
 
 # Remove directories that are going elsewhere
-for dir in conf src lib-src docs tutorial test build.xml
+for dir in conf src lib-src docs tutorial test build.xml contrib/zebra/src contrib/piggybank ivy contrib/zebra/src-gen 
+
 do
    rm -rf $LIB_DIR/$dir
 done
+
+# Remove the unwanted xml and build files
+	rm -rf $LIB_DIR/cloudera-pom.xml 
+	rm -rf $LIB_DIR/ivy.xml
+	rm -rf $LIB_DIR/build.properties
+	rm -rf $LIB_DIR/contrib/zebra/src/*.xml
 
 # Copy in the configuration files
 install -d -m 0755 $PREFIX/$CONF_DIST_DIR
