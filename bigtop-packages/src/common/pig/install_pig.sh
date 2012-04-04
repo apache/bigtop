@@ -113,10 +113,9 @@ do
 done
 
 # Remove the unwanted xml and build files
-	rm -rf $LIB_DIR/cloudera-pom.xml 
-	rm -rf $LIB_DIR/ivy.xml
-	rm -rf $LIB_DIR/build.properties
-	rm -rf $LIB_DIR/contrib/zebra/src/*.xml
+rm -rf $LIB_DIR/ivy.xml
+rm -rf $LIB_DIR/build.properties
+rm -rf $LIB_DIR/contrib/zebra/src/*.xml
 
 # Copy in the configuration files
 install -d -m 0755 $PREFIX/$CONF_DIST_DIR
