@@ -199,7 +199,7 @@ install -d -m 0755 ${OOZIE_SERVER_DIR}/bin
 failIfNotOK
 install -d -m 0755 ${OOZIE_DATA}
 failIfNotOK
-for file in oozie ooziedb.sh oozied.sh oozie-sys.sh ; do
+for file in ooziedb.sh oozied.sh oozie-sys.sh ; do
   cp ${OOZIE_BUILD_DIR}/bin/$file ${OOZIE_SERVER_DIR}/bin
   failIfNotOK
 done
