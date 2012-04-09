@@ -616,7 +616,7 @@ fi
 %files %1 \
 %defattr(-,root,root) \
 %{initd_dir}/%{name}-%1 \
-/etc/default/%{name}-%1 \
+%config(noreplace) /etc/default/%{name}-%1 \
 %post %1 \
 chkconfig --add %{name}-%1 \
 \
