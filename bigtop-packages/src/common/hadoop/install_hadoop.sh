@@ -219,7 +219,7 @@ cp -ra ${BUILD_DIR}/share/hadoop/hdfs/webapps ${HDFS_DIR}/
 
 # bin
 install -d -m 0755 ${HADOOP_DIR}/bin
-cp -a ${BUILD_DIR}/bin/{hadoop,rcc,fuse_dfs,fuse_dfs_wrapper.sh} ${HADOOP_DIR}/bin
+cp -a ${BUILD_DIR}/bin/{hadoop,rcc} ${HADOOP_DIR}/bin
 install -d -m 0755 ${HDFS_DIR}/bin
 cp -a ${BUILD_DIR}/bin/hdfs ${HDFS_DIR}/bin
 install -d -m 0755 ${YARN_DIR}/bin
@@ -231,9 +231,9 @@ cp -a ${BUILD_DIR}/bin/mapred ${YARN_DIR}/bin
 
 # sbin
 install -d -m 0755 ${HADOOP_DIR}/sbin
-cp -a ${BUILD_DIR}/sbin/{hadoop-daemon,hadoop-daemons,slaves}.sh ${HADOOP_DIR}/sbin
+cp -a ${BUILD_DIR}/sbin/{hadoop-daemon,hadoop-daemons,slaves,start-all,stop-all}.sh ${HADOOP_DIR}/sbin
 install -d -m 0755 ${HDFS_DIR}/sbin
-cp -a ${BUILD_DIR}/sbin/{distribute-exclude,refresh-namenodes}.sh ${HDFS_DIR}/sbin
+cp -a ${BUILD_DIR}/sbin/{distribute-exclude,refresh-namenodes,start-balancer,start-dfs,start-secure-dns,stop-balancer,stop-dfs,stop-secure-dns}.sh ${HDFS_DIR}/sbin
 install -d -m 0755 ${YARN_DIR}/sbin
 cp -a ${BUILD_DIR}/sbin/{yarn-daemon,yarn-daemons}.sh ${YARN_DIR}/sbin
 install -d -m 0755 ${MAPREDUCE_DIR}/sbin
@@ -321,31 +321,3 @@ for file in `cat ${BUILD_DIR}/hadoop-client.list` ; do
   done
   exit 1
 done
-
-# Install fuse wrapper
-
-fuse_wrapper=${BIN_DIR}/hadoop-fuse-dfs
-cat > $fuse_wrapper << EOF
-#!/bin/bash
-
-/sbin/modprobe fuse
-
-export HADOOP_HOME=\${HADOOP_HOME:-${HADOOP_DIR#${PREFIX}}}
-
-if [ -f /etc/default/hadoop-fuse ]
-then . /etc/default/hadoop-fuse
-fi
-
-export HADOOP_LIBEXEC_DIR=/${SYSTEM_LIBEXEC_DIR#${PREFIX}}
-
-if [ "\${LD_LIBRARY_PATH}" = "" ]; then
-export LD_LIBRARY_PATH=/usr/lib
-for f in \`find \${JAVA_HOME}/jre/lib -name client -prune -o -name libjvm.so -exec dirname {} \;\`; do
-export LD_LIBRARY_PATH=\$f:\${LD_LIBRARY_PATH}
-done
-fi
-
-env \${HADOOP_HOME}/bin/fuse_dfs \$@
-EOF
-
-chmod 755 $fuse_wrapper
