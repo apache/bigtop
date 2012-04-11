@@ -337,8 +337,10 @@ The History server keeps records of the different activities being performed on 
 %package client
 Summary: Hadoop client side dependencies
 Group: System/Daemons
-Requires: %{name} = %{version}-%{release}, %{name}-hdfs = %{version}-%{release}
-Requires: %{name}-yarn = %{version}-%{release}, %{name}-mapreduce = %{version}-%{release}
+Requires: %{name} = %{version}-%{release}
+Requires: %{name}-hdfs = %{version}-%{release}
+Requires: %{name}-yarn = %{version}-%{release}
+Requires: %{name}-mapreduce = %{version}-%{release}
 
 %description client
 Installation of this package will provide you with all the dependencies for Hadoop clients.
@@ -346,9 +348,12 @@ Installation of this package will provide you with all the dependencies for Hado
 %package conf-pseudo
 Summary: Hadoop installation in pseudo-distributed mode
 Group: System/Daemons
-Requires: %{name} = %{version}-%{release}, %{name}-hdfs-namenode = %{version}-%{release}
-Requires: %{name}-hdfs-datanode = %{version}-%{release}, %{name}-hdfs-secondarynamenode = %{version}-%{release}
-Requires: %{name}-yarn-resourcemanager = %{version}-%{release}, %{name}-yarn-nodemanager = %{version}-%{release}
+Requires: %{name} = %{version}-%{release}
+Requires: %{name}-hdfs-namenode = %{version}-%{release}
+Requires: %{name}-hdfs-datanode = %{version}-%{release}
+Requires: %{name}-hdfs-secondarynamenode = %{version}-%{release}
+Requires: %{name}-yarn-resourcemanager = %{version}-%{release}
+Requires: %{name}-yarn-nodemanager = %{version}-%{release}
 Requires: %{name}-mapreduce-historyserver = %{version}-%{release}
 
 %description conf-pseudo
@@ -371,9 +376,30 @@ AutoReq: no
 %description libhdfs
 Hadoop Filesystem Library
 
+
+%package fuse
+Summary: Mountable HDFS
+Group: Development/Libraries
+Requires: %{name} = %{version}-%{release}
+Requires: %{name}-libhdfs = %{version}-%{release}
+Requires: fuse
+AutoReq: no
+
+%if %{?suse_version:1}0
+Requires: libfuse2
+%else
+Requires: fuse-libs
+%endif
+
+
+%description fuse
+These projects (enumerated below) allow HDFS to be mounted (on most flavors of Unix) as a standard file system using
+
+
 %prep
 # %setup -n %{name}-%{hadoop_base_version}-src 
-%setup -n apache-hadoop-common-f616c85
+%setup -n apache-hadoop-common-8c0466d
+
 
 %build
 # This assumes that you installed Java JDK 6 and set JAVA_HOME
@@ -626,3 +652,11 @@ fi
 %{_includedir}/hdfs.h
 # -devel should be its own package
 #%doc %{_docdir}/libhdfs-%{hadoop_version}
+
+%files fuse
+%defattr(-,root,root)
+%attr(0755,root,root) %{lib_hadoop}/bin/fuse_dfs
+%attr(0755,root,root) %{lib_hadoop}/bin/fuse_dfs_wrapper.sh
+%attr(0755,root,root) %{bin_hadoop}/hadoop-fuse-dfs
+
+

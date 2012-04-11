@@ -26,7 +26,7 @@ mkdir build/src
 
 # Build artifacts
 MAVEN_SKIP_TESTS="-DskipTests -DskipTest -DskipITs"
-mvn $BUNDLE_SNAPPY -Dcontainer-executor.conf.dir=/etc/hadoop/conf -Pdist -Pnative -Psrc -Dtar ${MAVEN_SKIP_TESTS} install "$@"
+mvn $BUNDLE_SNAPPY -Dcontainer-executor.conf.dir=/etc/hadoop/conf -Pdist -Pnative -Pfuse -Psrc -Dtar ${MAVEN_SKIP_TESTS} install "$@"
 mvn site site:stage ${MAVEN_SKIP_TESTS} $@
 
 (cd build ; tar --strip-components=1 -xzvf  ../hadoop-dist/target/hadoop-${HADOOP_VERSION}.tar.gz)
@@ -38,3 +38,6 @@ cp -r target/site/* build/share/doc/
 
 # Create a manifest for hadoop client package
 (cd hadoop-client/target/hadoop-client-*/share/hadoop/client/lib ; ls) > build/hadoop-client.list
+
+# Copy fuse output to the build directory
+cp hadoop-hdfs-project/hadoop-hdfs/src/contrib/fuse-dfs/target/fuse-dfs/src/{fuse_dfs,fuse_dfs_wrapper.sh} build/bin/
