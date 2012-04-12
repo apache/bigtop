@@ -377,11 +377,12 @@ AutoReq: no
 Hadoop Filesystem Library
 
 
-%package fuse
+%package hdfs-fuse
 Summary: Mountable HDFS
 Group: Development/Libraries
 Requires: %{name} = %{version}-%{release}
 Requires: %{name}-libhdfs = %{version}-%{release}
+Requires: %{name}-client = %{version}-%{release}
 Requires: fuse
 AutoReq: no
 
@@ -392,7 +393,7 @@ Requires: fuse-libs
 %endif
 
 
-%description fuse
+%description hdfs-fuse
 These projects (enumerated below) allow HDFS to be mounted (on most flavors of Unix) as a standard file system using
 
 

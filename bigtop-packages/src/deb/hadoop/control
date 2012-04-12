@@ -80,10 +80,9 @@ Description: The Hadoop MapReduce (MRv2)
  Hadoop MapReduce is a programming model and software framework for writing applications 
  that rapidly process vast amounts of data in parallel on large clusters of compute nodes.
 
-Package: hadoop-fuse
-Provides: hadoop-fuse
+Package: hadoop-hdfs-fuse
 Architecture: i386 amd64
-Depends: ${shlibs:Depends}, hadoop-hdfs (= ${source:Version}), libfuse2, fuse-utils
+Depends: ${shlibs:Depends}, hadoop-hdfs (= ${source:Version}), hadoop-client (= ${source:Version}), libfuse2, fuse-utils
 Enhances: hadoop
 Description: HDFS exposed over a Filesystem in Userspace
  These projects (enumerated below) allow HDFS to be mounted (on most flavors 
