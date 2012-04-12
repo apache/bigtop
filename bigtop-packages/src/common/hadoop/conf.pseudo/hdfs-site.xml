@@ -22,10 +22,6 @@
     <name>dfs.replication</name>
     <value>1</value>
   </property>
-  <property>
-     <name>dfs.permissions</name>
-     <value>false</value>
-  </property>
   <!-- Immediately exit safemode as soon as one DataNode checks in. 
        On a multi-node cluster, these configurations must be removed.  -->
   <property>

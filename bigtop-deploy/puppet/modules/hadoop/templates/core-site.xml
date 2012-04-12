@@ -62,11 +62,6 @@
 <% end %>
 
 <% end %>
-  <property>
-    <name>dfs.permissions</name>
-    <value>false</value>
-  </property>
-
 <% if has_variable?("hadoop_snappy_codec") %>
   <property>
     <name>io.compression.codecs</name>
