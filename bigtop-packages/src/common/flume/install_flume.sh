@@ -146,6 +146,8 @@ chmod 755 $wrapper
 
 install -d -m 0755 $PREFIX/$ETC_DIR/conf.empty
 (cd ${BUILD_DIR}/conf && tar cf - .) | (cd $PREFIX/$ETC_DIR/conf.empty && tar xf -)
+# XXX FIXME: We should handle this upstream more gracefully
+sed -i -e "s|flume\.log\.dir=.*|flume.log.dir=/var/log/flume-ng|" $PREFIX/$ETC_DIR/conf.empty/log4j.properties
 touch $PREFIX/$ETC_DIR/conf.empty/flume.conf
 
 unlink $PREFIX/$FLUME_DIR/conf || /bin/true
