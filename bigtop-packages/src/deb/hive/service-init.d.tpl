@@ -113,9 +113,9 @@ hive_restart() {
 hive_status() {
     echo -n "Checking for service $desc: "
     pidofproc -p $PID_FILE java > /dev/null
-    status=$?
+    $RETVAL
 
-    case "$status" in
+    case "$RETVAL" in
       $STATUS_RUNNING)
         log_success_msg "@HIVE_DAEMON@ is running"
         ;;
@@ -132,7 +132,7 @@ hive_status() {
         log_failure_msg "@HIVE_DAEMON@ status is unknown"
         ;;
     esac
-    return $status
+    return $RETVAL
 }
 
 RETVAL=0
