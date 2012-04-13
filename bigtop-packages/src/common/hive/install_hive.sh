@@ -149,6 +149,11 @@ gzip -c hive.1 > $MAN_DIR/hive.1.gz
 # Docs
 install -d -m 0755 ${DOC_DIR}
 cp ${BUILD_DIR}/README.txt ${DOC_DIR}
+mv ${LIB_DIR}/NOTICE ${DOC_DIR}
+mv ${LIB_DIR}/LICENSE ${DOC_DIR}
+mv ${LIB_DIR}/RELEASE_NOTES.txt ${DOC_DIR}
+
+
 
 # Examples
 install -d -m 0755 ${EXAMPLES_DIR}
