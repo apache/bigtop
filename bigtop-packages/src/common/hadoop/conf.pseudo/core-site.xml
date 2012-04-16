@@ -23,11 +23,6 @@
     <value>hdfs://localhost:8020</value>
   </property>
 
-  <property>
-     <name>hadoop.tmp.dir</name>
-     <value>/var/lib/hadoop/cache/${user.name}</value>
-  </property>
-
   <!-- OOZIE proxy user setting -->
   <property>
     <name>hadoop.proxyuser.oozie.hosts</name>
@@ -35,6 +30,16 @@
   </property>
   <property>
     <name>hadoop.proxyuser.oozie.groups</name>
+    <value>*</value>
+  </property>
+
+  <!-- HTTPFS proxy user setting -->
+  <property>
+    <name>hadoop.proxyuser.httpfs.hosts</name>
+    <value>*</value>
+  </property>
+  <property>
+    <name>hadoop.proxyuser.httpfs.groups</name>
     <value>*</value>
   </property>
 

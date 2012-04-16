@@ -22,4 +22,21 @@
     <name>mapred.job.tracker</name>
     <value>localhost:8021</value>
   </property>
+
+  <property>
+    <name>mapreduce.framework.name</name>
+    <value>yarn</value>
+  </property>
+
+  <property>
+    <name>mapreduce.admin.user.env</name>
+    <value>CLASSPATH=/etc/hadoop/conf/*:/usr/lib/hadoop/*:/usr/lib/hadoop/lib/*:/usr/lib/hadoop/lib/native/*</value>
+  </property>
+
+  <property>
+    <description>To set the value of tmp directory for map and reduce tasks.</description>
+    <name>mapreduce.task.tmp.dir</name>
+    <value>/var/lib/hadoop-mapreduce/cache/${user.name}/tasks</value>
+  </property>
+
 </configuration>

@@ -25,11 +25,11 @@
 # So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
 %if %{!?suse_version:1}0 && %{!?mgaversion:1}0
 
-# brp-repack-jars uses unzip to expand jar files
+# FIXME: brp-repack-jars uses unzip to expand jar files
 # Unfortunately aspectjtools-1.6.5.jar pulled by ivy contains some files and directories without any read permission
 # and make whole process to fail.
 # So for now brp-repack-jars is being deactivated until this is fixed.
-# See CDH-2151
+# See BIGTOP-294
 %define __os_install_post \
     /usr/lib/rpm/redhat/brp-compress ; \
     /usr/lib/rpm/redhat/brp-strip-static-archive %{__strip} ; \
@@ -81,7 +81,7 @@ Source2: install_pig.sh
 Source3: log4j.properties
 Source4: pig.1
 Source5: pig.properties
-Requires: hadoop, bigtop-utils
+Requires: hadoop-client, bigtop-utils
 
 %description 
 Pig is a platform for analyzing large data sets that consists of a high-level language 
@@ -107,7 +107,7 @@ language called Pig Latin, which has the following key properties:
 
 
 %prep
-%setup -n pig-%{pig_base_version}
+%setup -n %{name}-%{pig_base_version}
 
 %build
 env PIG_BASE_VERSION=%{pig_base_version} bash %{SOURCE1}

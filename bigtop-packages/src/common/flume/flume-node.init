@@ -15,10 +15,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# Starts a Flume node
+# Starts a Flume NG node
 #
 # chkconfig: 345 90 10
-# description: Flume node
+# description: Flume NG node
 #
 ### BEGIN INIT INFO
 # Provides:          flume-node
@@ -28,7 +28,7 @@
 # Should-Stop:
 # Default-Start:     3 4 5
 # Default-Stop:      0 1 2 6
-# Short-Description: Flume node
+# Short-Description: Flume NG node
 ### END INIT INFO
 
 . /lib/lsb/init-functions
@@ -53,7 +53,7 @@ FLUME_RUN=/var/run/flume
 FLUME_HOME=/usr/lib/flume
 
 LOCKFILE="/var/lock/subsys/flume-node"
-desc="Flume node daemon"
+desc="Flume NG node daemon"
 
 FLUME_CONF_FILE=${FLUME_CONF_FILE:-${FLUME_CONF_DIR}/flume.conf}
 EXEC_PATH=/usr/bin/flume-ng
@@ -110,19 +110,19 @@ checkstatus(){
 
   case "$status" in
     $STATUS_RUNNING)
-      log_success_msg "Flume node is running"
+      log_success_msg "Flume NG node is running"
       ;;
     $STATUS_DEAD)
-      log_failure_msg "Flume node is dead and pid file exists"
+      log_failure_msg "Flume NG node is dead and pid file exists"
       ;;
     $STATUS_DEAD_AND_LOCK)
-      log_failure_msg "Flume node is dead and lock file exists"
+      log_failure_msg "Flume NG node is dead and lock file exists"
       ;;
     $STATUS_NOT_RUNNING)
-      log_failure_msg "Flume node is not running"
+      log_failure_msg "Flume NG node is not running"
       ;;
     *)
-      log_failure_msg "Flume node status is unknown"
+      log_failure_msg "Flume NG node status is unknown"
       ;;
   esac
   return $status

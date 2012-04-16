@@ -20,7 +20,9 @@ class hadoop-zookeeper {
     } 
   }
 
-  define server($myid, $ensemble = ["localhost:2888:3888"]) {
+  define server($myid, $ensemble = ["localhost:2888:3888"],
+                $kerberos_realm = "") 
+  {
     package { "zookeeper-server":
       ensure => latest,
     }
@@ -41,6 +43,27 @@ class hadoop-zookeeper {
     file { "/var/lib/zookeeper/myid":
       content => inline_template("<%= myid %>"),
       require => Package["zookeeper-server"],
+    }
+
+    if ($kerberos_realm) {
+      require kerberos::client
+
+      kerberos::host_keytab { "zookeeper":
+        spnego => true,
+        notify => Service["zookeeper-server"],
+      }
+
+      file { "/etc/zookeeper/conf/java.env":
+        source  => "puppet:///modules/hadoop-zookeeper/java.env",
+        require => Package["zookeeper-server"],
+        notify  => Service["zookeeper-server"],
+      }
+
+      file { "/etc/zookeeper/conf/jaas.conf":
+        content => template("hadoop-zookeeper/jaas.conf"),
+        require => Package["zookeeper-server"],
+        notify  => Service["zookeeper-server"],
+      }
     }
   }
 }

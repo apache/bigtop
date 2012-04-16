@@ -876,13 +876,6 @@
     <file name='/usr/lib/pig/CHANGES.txt' owners='-1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/pig/pig-0.9.2.jar' owners='-1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/pig/RELEASE_NOTES.txt' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/lib/pig/license' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/lib/pig/license/jline-LICENSE.txt' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/lib/pig/license/brics-LICENSE.txt' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/lib/pig/license/javacc-LICENSE.txt' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/lib/pig/license/jsch-LICENSE.txt' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/lib/pig/license/hadoop-LICENSE.txt' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/lib/pig/license/junit-LICENSE.txt' owners='-1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/share' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/share/doc' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/share/doc/pig' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
@@ -3849,6 +3842,13 @@
     <file name='/usr/share/doc/pig/locationmap.xml' owners='-1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/share/doc/pig/zebra_users.pdf.gz' owners='-1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/share/doc/pig/test.html' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+    <file name='/usr/share/doc/pig/license' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/share/doc/pig/license/jline-LICENSE.txt.gz' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+    <file name='/usr/share/doc/pig/license/junit-LICENSE.txt.gz' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+    <file name='/usr/share/doc/pig/license/brics-LICENSE.txt' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+    <file name='/usr/share/doc/pig/license/javacc-LICENSE.txt' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+    <file name='/usr/share/doc/pig/license/jsch-LICENSE.txt' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+    <file name='/usr/share/doc/pig/license/hadoop-LICENSE.txt' owners='-1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/share/doc/pig/index.pdf.gz' owners='-1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/share/doc/pig/copyright' owners='-1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/share/doc/pig/zebra_pig.pdf.gz' owners='-1' perm='-rw-r--r--' user='root' group='root' />

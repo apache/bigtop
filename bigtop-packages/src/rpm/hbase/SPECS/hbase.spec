@@ -26,7 +26,7 @@
 %define hbase_services master regionserver thrift rest
 %define hadoop_home /usr/lib/hadoop
 %define zookeeper_home /usr/lib/zookeeper
-%define hbase_jar_deps %{hadoop_home}/hadoop-core.jar %{zookeeper_home}/zookeeper.jar
+%define hbase_jar_deps_hadoop hadoop-annotations,hadoop-auth,hadoop-common,hadoop-hdfs,hadoop-mapreduce-client-common,hadoop-mapreduce-client-core,hadoop-yarn-api,hadoop-yarn-common 
 
 %if  %{?suse_version:1}0
 
@@ -51,6 +51,24 @@
 
 %else
 
+# CentOS 5 does not have any dist macro
+# So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
+%if %{!?mgaversion:1}0
+
+# FIXME: brp-repack-jars uses unzip to expand jar files
+# Unfortunately guice-2.0.jar pulled by ivy contains some files and directories without any read permission
+# and make whole process to fail.
+# So for now brp-repack-jars is being deactivated until this is fixed.
+# See BIGTOP-294
+%define __os_install_post \
+    /usr/lib/rpm/redhat/brp-compress ; \
+    /usr/lib/rpm/redhat/brp-strip-static-archive %{__strip} ; \
+    /usr/lib/rpm/redhat/brp-strip-comment-note %{__strip} %{__objdump} ; \
+    /usr/lib/rpm/brp-python-bytecompile ; \
+    %{nil}
+%endif
+
+
 %define doc_hbase %{_docdir}/%{name}-%{hbase_version}
 %global initd_dir %{_sysconfdir}/rc.d/init.d
 %define alternatives_cmd alternatives
@@ -73,9 +91,10 @@ Source3: hbase.sh
 Source4: hbase.sh.suse
 Source5: hbase.default
 Source6: hbase.nofiles.conf
+Patch0: HBASE-5212.patch
 BuildArch: noarch
 Requires: coreutils, /usr/sbin/useradd, /sbin/chkconfig, /sbin/service
-Requires: hadoop >= 0.20.2, zookeeper >= 3.3.1, bigtop-utils
+Requires: hadoop-hdfs, zookeeper >= 3.3.1, bigtop-utils
 
 %if  0%{?mgaversion}
 Requires: bsh-utils
@@ -217,6 +236,7 @@ The Apache HBase REST gateway
 
 %prep
 %setup -n %{name}-%{hbase_base_version}
+%patch0 -p0
 
 %build
 env HBASE_VERSION=%{version} bash %{SOURCE1}
@@ -260,9 +280,8 @@ done
 %__install -d -m 0755 $RPM_BUILD_ROOT/usr/bin
 
 # Pull zookeeper and hadoop from their packages
-rm -f $RPM_BUILD_ROOT/%{lib_hbase}/hadoop-*
-rm -f $RPM_BUILD_ROOT/%{lib_hbase}/zookeeper-*
-ln -f -s %{hbase_jar_deps} $RPM_BUILD_ROOT/%{lib_hbase}
+rm -f $RPM_BUILD_ROOT/%{lib_hbase}/{%{hbase_jar_deps_hadoop},zookeeper}*.jar
+ln -f -s %{hadoop_home}/{%{hbase_jar_deps_hadoop}}.jar %{zookeeper_home}/zookeeper.jar $RPM_BUILD_ROOT/%{lib_hbase}
 
 %pre
 getent group hbase 2>/dev/null >/dev/null || /usr/sbin/groupadd -r hbase

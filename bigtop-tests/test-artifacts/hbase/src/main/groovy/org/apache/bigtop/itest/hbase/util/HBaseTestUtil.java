@@ -70,7 +70,7 @@ public class HBaseTestUtil {
   }
 
   public static Path getMROutputDir(String testName) throws IOException {
-    Path p = new Path("/tmp/" + testName + "_" + getTestPrefix());
+    Path p = new Path(testName + "_" + getTestPrefix());
     return p.makeQualified(getClusterFileSystem());
   }
 
@@ -79,11 +79,14 @@ public class HBaseTestUtil {
    * start key and end key.
    */
   public static void createHFile(
+      Configuration conf,
       FileSystem fs, Path path,
       byte[] family, byte[] qualifier,
       byte[] startKey, byte[] endKey, int numRows) throws IOException
   {
-    HFile.Writer writer = new HFile.Writer(fs, path, BLOCKSIZE, COMPRESSION,
+    HFile.Writer writer =
+      HFile.getWriterFactory(conf).createWriter(fs, path,
+        BLOCKSIZE, COMPRESSION,
         KeyValue.KEY_COMPARATOR);
     long now = System.currentTimeMillis();
     try {

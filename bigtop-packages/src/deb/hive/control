@@ -23,7 +23,7 @@ Homepage: http://hive.apache.org/
 
 Package: hive
 Architecture: all
-Depends: adduser, hadoop, bigtop-utils
+Depends: adduser, hadoop-client, bigtop-utils
 Description: A data warehouse infrastructure built on top of Hadoop
  Hive is a data warehouse infrastructure built on top of Hadoop that
  provides tools to enable easy data summarization, adhoc querying and

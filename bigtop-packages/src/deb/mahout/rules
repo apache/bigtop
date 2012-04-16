@@ -25,6 +25,7 @@ export DH_OPTIONS
 
 patch: patch-stamp
 patch-stamp:	
+	patch -p0 < debian/MAHOUT-822.patch
 	touch $@
 
 clean:	
@@ -39,9 +40,6 @@ build-indep: build-indep-stamp
 build-indep-stamp: patch-stamp
 	# we'll just use the build from the tarball.
 	bash debian/do-component-build -Dmaven.repo.local=${HOME}/.m2/repository
-	mkdir -p debian/tmp
-	(cd distribution/target/mahout-distribution-${MAHOUT_BASE_VERSION}/mahout-distribution-${MAHOUT_BASE_VERSION} && tar cf - --exclude=debian/\* .) | (cd debian/tmp && tar xf -)
-#	(cd debian/tmp && tar xvzf ../../distribution/target/mahout-distribution-${MAHOUT_BASE_VERSION}.tar.gz)
 	touch $@
 
 install: install-indep
@@ -49,7 +47,7 @@ install-indep:
 	dh_testdir
 	dh_testroot
 	sh -x debian/install_mahout.sh \
-	  --build-dir=debian/tmp \
+	  --build-dir=build \
           --doc-dir=/usr/share/doc/mahout \
 	  --prefix=debian/mahout
 	rm debian/mahout/usr/lib/mahout/lib/hadoop-*.jar

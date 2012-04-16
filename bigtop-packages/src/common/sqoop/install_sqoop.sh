@@ -131,13 +131,12 @@ cp -r $BUILD_DIR/docs/images $PREFIX/${DOC_DIR}
 install -d -m 0755 $PREFIX/$MAN_DIR
 for i in sqoop sqoop-codegen sqoop-export sqoop-import-all-tables sqoop-version sqoop-create-hive-table sqoop-help sqoop-list-databases sqoop-eval sqoop-import sqoop-list-tables sqoop-job sqoop-metastore sqoop-merge
 	do echo "Copying manpage $i"
-	cp $BUILD_DIR/docs/man/$i* $PREFIX/$MAN_DIR
+	cp ${BUILD_DIR}/docs/man/$i* $PREFIX/$MAN_DIR
 	echo "Creating wrapper for $i"
 	wrapper=$PREFIX/usr/bin/$i
 	mkdir -p `dirname $wrapper`
 	cat > $wrapper <<EOF
 #!/bin/sh
-. /etc/default/hadoop
 
 # Autodetect JAVA_HOME if not defined
 if [ -e /usr/libexec/bigtop-detect-javahome ]; then

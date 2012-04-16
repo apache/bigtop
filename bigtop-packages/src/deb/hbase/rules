@@ -16,6 +16,7 @@
 # limitations under the License.
 # 
 # -*- makefile -*-
+SHELL=/bin/bash
 
 # Uncomment this to turn on verbose mode.
 export DH_VERBOSE=1
@@ -26,10 +27,11 @@ export DH_OPTIONS
 hadoop_home=/usr/lib/hadoop
 zookeeper_home=/usr/lib/zookeeper
 hbase_pkg_name=hbase
-hbase_jar_deps=${hadoop_home}/hadoop-core.jar ${zookeeper_home}/zookeeper.jar
+hbase_jar_deps_hadoop=hadoop-annotations,hadoop-auth,hadoop-common,hadoop-hdfs,hadoop-mapreduce-client-common,hadoop-mapreduce-client-core,hadoop-yarn-api,hadoop-yarn-common
 
 patch: patch-stamp
 patch-stamp:	
+	patch -p0 < debian/HBASE-5212.patch
 	touch $@
 
 clean:	
@@ -39,7 +41,7 @@ clean:
 	dh_clean
 	find debian -name .\*swp -exec rm -f {} \;
 
-build:
+build: patch
 	dh_testdir
 	bash debian/do-component-build -Dmaven.repo.local=${HOME}/.m2/repository  
 
@@ -59,9 +61,8 @@ install: build
 	cp debian/hbase.nofiles.conf debian/tmp/etc/security/limits.d/${hbase_pkg_name}.nofiles.conf
 	# Symlink in the dependency jars from their packages. Both of these packages
 	# provide an unversioned symlink foo.jar -> foo-0.1.2.jar.
-	rm -f debian/tmp/usr/lib/hadoop-*
-	rm -f debian/tmp/usr/lib/zookeeper-*
-	ln -f -s ${hbase_jar_deps} debian/tmp/usr/lib/${hbase_pkg_name}/lib/
+	rm -f debian/tmp/usr/lib/${hbase_pkg_name}/lib/{${hbase_jar_deps_hadoop},zookeeper}*.jar
+	ln -f -s ${hadoop_home}/{${hbase_jar_deps_hadoop}}.jar ${zookeeper_home}/zookeeper.jar debian/tmp/usr/lib/${hbase_pkg_name}/lib/
 	ln -s /var/log/${hbase_pkg_name} debian/tmp/usr/lib/${hbase_pkg_name}/logs
 	ln -s /var/run/${hbase_pkg_name} debian/tmp/usr/lib/${hbase_pkg_name}/pids
 

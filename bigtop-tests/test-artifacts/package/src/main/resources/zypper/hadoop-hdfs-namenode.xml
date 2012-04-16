@@ -1,0 +1,5 @@
+<hadoop-hdfs-namenode>
+<content>
+  <file name='/etc/rc.d/hadoop-hdfs-namenode' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+</content>
+</hadoop-hdfs-namenode>

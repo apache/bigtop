@@ -44,7 +44,8 @@ License: ASL 2.0
 Source0: %{name}-distribution-%{mahout_base_version}-src.tar.gz
 Source1: do-component-build 
 Source2: install_%{name}.sh
-Requires: hadoop >= 0.20.2, bigtop-utils
+Patch0: MAHOUT-822.patch
+Requires: hadoop-client, bigtop-utils
 
 
 %description 
@@ -66,6 +67,7 @@ also on potential use cases. Come to the mailing lists to find out more.
     
 %prep
 %setup -n %{name}-distribution-%{mahout_base_version}
+%patch0 -p0
 
 %build
 bash $RPM_SOURCE_DIR/do-component-build
@@ -73,7 +75,7 @@ bash $RPM_SOURCE_DIR/do-component-build
 %install
 %__rm -rf $RPM_BUILD_ROOT
 sh $RPM_SOURCE_DIR/install_mahout.sh \
-          --build-dir=distribution/target/mahout-distribution-%{mahout_base_version}/mahout-distribution-%{mahout_base_version} \
+          --build-dir=build \
           --prefix=$RPM_BUILD_ROOT \
           --doc-dir=%{doc_mahout} 
 rm -f $RPM_BUILD_ROOT/usr/lib/mahout/lib/hadoop*.jar

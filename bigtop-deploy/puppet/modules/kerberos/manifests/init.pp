@@ -126,6 +126,11 @@ class kerberos {
   }
 
   class client inherits kerberos::site {
+    # Required for SPNEGO
+    @principal { "HTTP": 
+
+    }
+
     package { $package_name_client:
       ensure => installed,
     }
@@ -143,7 +148,7 @@ class kerberos {
     Class["kerberos::client"]
   }
 
-  define create_princs {
+  define principal {
     exec { "addprinc.$title":
        path => $kerberos::site::exec_path, # BUG: I really shouldn't need to do a FQVN here
        command => "kadmin -w secure -p kadmin/admin -q 'addprinc -randkey $title/$fqdn'",
@@ -152,23 +157,35 @@ class kerberos {
     }
   }
 
-  define host_keytab($fqdn = "$hostname.$domain", $princs = undef) {
-    $real_princs = $princs ? { 
+  define host_keytab($fqdn = "$hostname.$domain", $princs = undef, $spnego = disabled) {
+
+    require "kerberos::client"
+
+    $needed_princs = $princs ? { 
       undef   => [ $title ],
       default => $princs,
     }
  
     $keytab = "/etc/${title}.keytab"
-    $exports = inline_template("<%= real_princs.join('/$fqdn ') + '/$fqdn ' %>")
+    $exports = inline_template("<%= needed_princs.map { |x| x+'/$fqdn' }.join(' ') %>")
+    $spnego_export = $spnego ? {
+       /(true|enabled)/ => "HTTP/$fqdn",
+       default          => "",
+    }
 
-    create_princs { $real_princs:
+    principal { $needed_princs:
+
     }
 
     exec { "xst.$title":
        path => $kerberos::site::exec_path, # BUG: I really shouldn't need to do a FQVN here
-       command => "kadmin -w secure -p kadmin/admin -q 'xst -k $keytab $exports' ; chown $title $keytab",
+       command => "kadmin -w secure -p kadmin/admin -q 'xst -k $keytab $exports $spnego_export' ; chown $title $keytab",
        unless => "klist -kt $keytab 2>/dev/null | grep -q $title/$fqdn",
-       require => [ Create_princs[$real_princs] ],
+       require => [ Kerberos::Principal[$needed_princs] ],
+    }
+
+    if ($spnego =~ /(true|enabled)/) {
+      Kerberos::Principal <| title == "HTTP" |> -> Exec["xst.$title"]
     }
   }
 

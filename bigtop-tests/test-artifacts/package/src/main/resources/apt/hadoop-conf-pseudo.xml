@@ -3,11 +3,6 @@
     <file name='/.' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/share' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/share/doc' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/share/doc/hadoop-conf-pseudo' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/share/doc/hadoop-conf-pseudo/changelog.Debian.gz' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/share/doc/hadoop-conf-pseudo/changelog.gz' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/share/doc/hadoop-conf-pseudo/copyright' owners='-1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/share/lintian' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/share/lintian/overrides' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/share/lintian/overrides/hadoop-conf-pseudo' owners='-1' perm='-rw-r--r--' user='root' group='root' />
@@ -27,26 +22,17 @@
     <file name='/etc/hadoop/conf.pseudo/.svn/text-base' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <config name='/etc/hadoop/conf.pseudo/.svn/text-base/hadoop-metrics.properties.svn-base' owners='-1' perm='-rw-r--r--' user='root' group='root' />
     <config name='/etc/hadoop/conf.pseudo/.svn/text-base/hdfs-site.xml.svn-base' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+    <config name='/etc/hadoop/conf.pseudo/.svn/text-base/yarn-site.xml.svn-base' owners='-1' perm='-rw-r--r--' user='root' group='root' />
     <config name='/etc/hadoop/conf.pseudo/.svn/text-base/README.svn-base' owners='-1' perm='-rw-r--r--' user='root' group='root' />
     <config name='/etc/hadoop/conf.pseudo/.svn/text-base/core-site.xml.svn-base' owners='-1' perm='-rw-r--r--' user='root' group='root' />
     <config name='/etc/hadoop/conf.pseudo/.svn/text-base/mapred-site.xml.svn-base' owners='-1' perm='-rw-r--r--' user='root' group='root' />
     <config name='/etc/hadoop/conf.pseudo/hadoop-metrics.properties' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <config name='/etc/hadoop/conf.pseudo/capacity-scheduler.xml' owners='-1' perm='-rw-r--r--' user='root' group='root' />
     <config name='/etc/hadoop/conf.pseudo/hdfs-site.xml' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <config name='/etc/hadoop/conf.pseudo/mapred-queue-acls.xml' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <config name='/etc/hadoop/conf.pseudo/hadoop-policy.xml' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+    <config name='/etc/hadoop/conf.pseudo/yarn-site.xml' owners='-1' perm='-rw-r--r--' user='root' group='root' />
     <config name='/etc/hadoop/conf.pseudo/mapred-site.xml' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <config name='/etc/hadoop/conf.pseudo/log4j.properties' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <config name='/etc/hadoop/conf.pseudo/masters' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <config name='/etc/hadoop/conf.pseudo/ssl-server.xml.example' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <config name='/etc/hadoop/conf.pseudo/hadoop-metrics2.properties' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+    <config name='/etc/hadoop/conf.pseudo/log4j.properties' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+    <config name='/etc/hadoop/conf.pseudo/mrapp-generated-classpath' owners='-1' perm='-rw-r--r--' user='root' group='root' />
     <config name='/etc/hadoop/conf.pseudo/README' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <config name='/etc/hadoop/conf.pseudo/configuration.xsl' owners='-1' perm='-rw-r--r--' user='root' group='root' />
     <config name='/etc/hadoop/conf.pseudo/core-site.xml' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <config name='/etc/hadoop/conf.pseudo/taskcontroller.cfg' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <config name='/etc/hadoop/conf.pseudo/fair-scheduler.xml' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <config name='/etc/hadoop/conf.pseudo/slaves' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <config name='/etc/hadoop/conf.pseudo/ssl-client.xml.example' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <config name='/etc/hadoop/conf.pseudo/hadoop-env.sh' owners='-1' perm='-rw-r--r--' user='root' group='root' />
   </content>
 </hadoop-conf-pseudo>

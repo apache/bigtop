@@ -23,6 +23,27 @@ $(BUILD_DIR)/%/.download:
 	[ -z "$($(PKG)_TARBALL_SRC)" -o -f $($(PKG)_DOWNLOAD_DST) ] || (cd $(DL_DIR) && curl --retry 5 -# -L -k -o $($(PKG)_TARBALL_DST) $($(PKG)_DOWNLOAD_URL))
 	touch $@
 
+# Untar and patch
+$(BUILD_DIR)/%/.tar:
+	-rm -rf $(PKG_BUILD_DIR)/tar/
+	mkdir -p $(PKG_BUILD_DIR)/tar/$($(PKG)_NAME)-$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP)
+	if [ -n "$($(PKG)_TARBALL_SRC)" ]; then \
+	  cp $($(PKG)_DOWNLOAD_DST) $(PKG_BUILD_DIR)/tar/$($(PKG)_PKG_NAME)_$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP).orig.tar.gz ;\
+	  tar -C $(PKG_BUILD_DIR)/tar/$($(PKG)_NAME)-$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP) \
+              --strip-components 1 -xzvf $(PKG_BUILD_DIR)/tar/$($(PKG)_PKG_NAME)_$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP).orig.tar.gz; \
+	fi
+	if [ -f $(BASE_DIR)/bigtop-packages/src/common/$($(PKG)_NAME)/series ]; then    \
+	  PATCHES="`cat $(BASE_DIR)/bigtop-packages/src/common/$($(PKG)_NAME)/series`" ;\
+	elif [ -f $(BASE_DIR)/bigtop-packages/src/common/$($(PKG)_NAME)/patch ]; then   \
+	  PATCHES="patch"                                                              ;\
+	else                                                                            \
+	  PATCHES="/dev/null"                                                          ;\
+	fi ; (cd $(BASE_DIR)/bigtop-packages/src/common/$($(PKG)_NAME); cat $$PATCHES)| \
+             (cd $(PKG_BUILD_DIR)/tar/$($(PKG)_NAME)-$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP) ; patch -p0)
+	tar -C $(PKG_BUILD_DIR)/tar -czf $(PKG_BUILD_DIR)/tar/$($(PKG)_PKG_NAME)_$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP).patched.tar.gz \
+               $($(PKG)_NAME)-$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP)
+	touch $@
+
 # Make source RPMs
 $(BUILD_DIR)/%/.srpm:
 	-rm -rf $(PKG_BUILD_DIR)/rpm/
@@ -105,6 +126,7 @@ $(BUILD_DIR)/%/.deb:
 				--preserve-envvar JAVA5_HOME \
 				--preserve-envvar FORREST_HOME \
 				--preserve-envvar MAVEN3_HOME \
+				--preserve-envvar MAVEN_OPTS \
 				--preserve-envvar JAVA_HOME \
 				--set-envvar=$(PKG)_BASE_VERSION=$($(PKG)_BASE_VERSION) \
 				--set-envvar=$(PKG)_VERSION=$($(PKG)_PKG_VERSION)$(BIGTOP_BUILD_STAMP) \
@@ -147,6 +169,7 @@ ifneq ($$(shell curl -o /dev/null --silent --head --write-out '%{http_code}' $$(
 endif 
 
 $(2)_TARGET_DL       = $$($(2)_BUILD_DIR)/.download
+$(2)_TARGET_TAR      = $$($(2)_BUILD_DIR)/.tar
 $(2)_TARGET_SRPM     = $$($(2)_BUILD_DIR)/.srpm
 $(2)_TARGET_RPM      = $$($(2)_BUILD_DIR)/.rpm
 $(2)_TARGET_YUM      = $$($(2)_BUILD_DIR)/.yum
@@ -157,6 +180,9 @@ $(2)_TARGET_RELNOTES = $$($(2)_BUILD_DIR)/.relnotes
 
 # We download target when the source is not in the download directory
 $(1)-download: $$($(2)_TARGET_DL)
+
+# Make a patched tarball (patch could be null)
+$(1)-tar: $(1)-download $$($(2)_TARGET_TAR)
 
 # To make srpms, we need to build the package
 $(1)-srpm: $(1)-download $$($(2)_TARGET_SRPM)
@@ -209,11 +235,11 @@ $(1)-info:
 
 # Implicit rules with PKG variable
 $$($(2)_TARGET_DL):       PKG=$(2)
-$$($(2)_TARGET_APT) $$($(2)_TARGET_RPM) $$($(2)_TARGET_SRPM) $$($(2)_TARGET_SDEB) $$($(2)_TARGET_DEB): PKG=$(2)
-$$($(2)_TARGET_RPM) $$($(2)_TARGET_SRPM) $$($(2)_TARGET_SDEB) $$($(2)_TARGET_DEB): PKG_BASE_VERSION=$$($(2)_BASE_VERSION)
-$$($(2)_TARGET_APT) $$($(2)_TARGET_RPM) $$($(2)_TARGET_SRPM) $$($(2)_TARGET_SDEB) $$($(2)_TARGET_DEB): PKG_PKG_VERSION=$$($(2)_PKG_VERSION)
-$$($(2)_TARGET_RPM) $$($(2)_TARGET_SRPM) $$($(2)_TARGET_SDEB) $$($(2)_TARGET_DEB): PKG_SOURCE_DIR=$$($(2)_SOURCE_DIR)
-$$($(2)_TARGET_RPM) $$($(2)_TARGET_SRPM) $$($(2)_TARGET_SDEB) $$($(2)_TARGET_DEB): PKG_BUILD_DIR=$$($(2)_BUILD_DIR)
+$$($(2)_TARGET_TAR) $$($(2)_TARGET_APT) $$($(2)_TARGET_RPM) $$($(2)_TARGET_SRPM) $$($(2)_TARGET_SDEB) $$($(2)_TARGET_DEB): PKG=$(2)
+$$($(2)_TARGET_TAR) $$($(2)_TARGET_RPM) $$($(2)_TARGET_SRPM) $$($(2)_TARGET_SDEB) $$($(2)_TARGET_DEB): PKG_BASE_VERSION=$$($(2)_BASE_VERSION)
+$$($(2)_TARGET_TAR) $$($(2)_TARGET_APT) $$($(2)_TARGET_RPM) $$($(2)_TARGET_SRPM) $$($(2)_TARGET_SDEB) $$($(2)_TARGET_DEB): PKG_PKG_VERSION=$$($(2)_PKG_VERSION)
+$$($(2)_TARGET_TAR) $$($(2)_TARGET_RPM) $$($(2)_TARGET_SRPM) $$($(2)_TARGET_SDEB) $$($(2)_TARGET_DEB): PKG_SOURCE_DIR=$$($(2)_SOURCE_DIR)
+$$($(2)_TARGET_TAR) $$($(2)_TARGET_RPM) $$($(2)_TARGET_SRPM) $$($(2)_TARGET_SDEB) $$($(2)_TARGET_DEB): PKG_BUILD_DIR=$$($(2)_BUILD_DIR)
 
 
 TARGETS += $(1)

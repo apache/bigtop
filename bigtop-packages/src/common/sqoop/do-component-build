@@ -16,6 +16,4 @@
 
 set -ex
 
-ant -f build.xml -Dhadoopversion=100 -Dhbase.version=0.92.0 -Dhadoop.version=1.0.1 -Dzookeeper.version=3.4.3 package "$@"
-
-
+ant -f build.xml -Dhadoopversion=23 -Dhadoop.version=0.23.1 -Dhbase.version=0.92.0 -Dzookeeper.version=3.4.3 package "$@"

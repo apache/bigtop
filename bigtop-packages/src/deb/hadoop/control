@@ -24,8 +24,7 @@ Homepage: http://hadoop.apache.org/core/
 Package: hadoop
 Provides: hadoop
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, adduser, bigtop-utils
-Recommends: hadoop-native
+Depends: ${shlibs:Depends}, ${misc:Depends}, adduser, bigtop-utils, zookeeper (>= 3.4.0)
 Description: A software platform for processing vast amounts of data
  Hadoop is a software platform that lets one easily write and
  run applications that process vast amounts of data.
@@ -47,34 +46,43 @@ Description: A software platform for processing vast amounts of data
  nodes around the cluster. MapReduce can then process the data where it is
  located.
 
-Package: hadoop-native
-Provides: hadoop-native
-Architecture: i386 amd64
-Depends: ${shlibs:Depends}, hadoop (= ${source:Version}), liblzo2-2, libzip1
-Enhances: hadoop
-Description: Native libraries for Hadoop (e.g., compression)
- This optional package contains native libraries that increase the performance
- of Hadoop's compression.
+Package: hadoop-hdfs
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, adduser, bigtop-utils, hadoop (= ${source:Version}), bigtop-jsvc
+Description: The Hadoop Distributed File System
+ Hadoop Distributed File System (HDFS) is the primary storage system used by 
+ Hadoop applications. HDFS creates multiple replicas of data blocks and distributes 
+ them on compute nodes throughout a cluster to enable reliable, extremely rapid 
+ computations.
 
-Package: hadoop-sbin
-Provides: hadoop-sbin
-Architecture: i386 amd64
-Depends: ${shlibs:Depends}, hadoop (= ${source:Version})
-Enhances: hadoop
-Description: Server-side binaries necessary for secured Hadoop clusters
- This package contains a setuid program, 'task-controller', which is used for
- launching MapReduce tasks in a secured MapReduce cluster. This program allows
- the tasks to run as the Unix user who submitted the job, rather than the
- Unix user running the MapReduce daemons.
+Package: hadoop-yarn
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, adduser, bigtop-utils, hadoop (= ${source:Version})
+Description: The Hadoop NextGen MapReduce (YARN)
+ YARN (Hadoop NextGen MapReduce) is a general purpose data-computation framework.
+ The fundamental idea of YARN is to split up the two major functionalities of the 
+ JobTracker, resource management and job scheduling/monitoring, into separate daemons:
+ ResourceManager and NodeManager.
  .
- This package also contains 'jsvc', a daemon wrapper necessary to allow
- DataNodes to bind to a low (privileged) port and then drop root privileges
- before continuing operation.
+ The ResourceManager is the ultimate authority that arbitrates resources among all 
+ the applications in the system. The NodeManager is a per-node slave managing allocation
+ of computational resources on a single node. Both work in support of per-application 
+ ApplicationMaster (AM).
+ .
+ An ApplicationMaster is, in effect, a framework specific library and is tasked with 
+ negotiating resources from the ResourceManager and working with the NodeManager(s) to 
+ execute and monitor the tasks. 
 
-Package: hadoop-fuse
-Provides: hadoop-fuse
+Package: hadoop-mapreduce
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, adduser, bigtop-utils, hadoop-yarn (= ${source:Version})
+Description: The Hadoop MapReduce (MRv2)
+ Hadoop MapReduce is a programming model and software framework for writing applications 
+ that rapidly process vast amounts of data in parallel on large clusters of compute nodes.
+
+Package: hadoop-hdfs-fuse
 Architecture: i386 amd64
-Depends: ${shlibs:Depends}, hadoop (= ${source:Version}), libfuse2, fuse-utils
+Depends: ${shlibs:Depends}, hadoop-hdfs (= ${source:Version}), hadoop-client (= ${source:Version}), libfuse2, fuse-utils
 Enhances: hadoop
 Description: HDFS exposed over a Filesystem in Userspace
  These projects (enumerated below) allow HDFS to be mounted (on most flavors 
@@ -91,73 +99,74 @@ Description: Documentation for Hadoop
  This package contains the Java Documentation for Hadoop and its relevant
  APIs.
 
-Package: hadoop-source
-Provides: hadoop-source
-Architecture: all
-Description: Source code for Hadoop
- This package contains the source code for Hadoop and its contrib modules.
-
 Package: hadoop-conf-pseudo
 Provides: hadoop-conf-pseudo
 Architecture: all
-Depends: hadoop (= ${source:Version}), hadoop-namenode (= ${source:Version}), hadoop-datanode (= ${source:Version}), hadoop-secondarynamenode (= ${source:Version}), hadoop-jobtracker (= ${source:Version}), hadoop-tasktracker (= ${source:Version})
+Depends: hadoop (= ${source:Version}), hadoop-hdfs-namenode (= ${source:Version}),
+         hadoop-hdfs-datanode (= ${source:Version}), hadoop-hdfs-secondarynamenode (= ${source:Version}),
+         hadoop-yarn-resourcemanager (= ${source:Version}), hadoop-yarn-nodemanager (= ${source:Version}),
+         hadoop-mapreduce-historyserver (= ${source:Version})
 Description: Pseudo-distributed Hadoop configuration
  Contains configuration files for a "pseudo-distributed" Hadoop deployment.
  In this mode, each of the hadoop components runs as a separate Java process,
  but all on the same machine.
 
-Package: hadoop-tasktracker
-Provides: hadoop-tasktracker
+Package: hadoop-mapreduce-historyserver
+Provides: hadoop-mapreduce-historyserver
 Architecture: all
-Depends: hadoop (= ${source:Version})
-Description: Task Tracker for Hadoop
- The Task Tracker is the Hadoop service that accepts MapReduce tasks and
- computes results. Each node in a Hadoop cluster that should be doing
- computation should run a Task Tracker.
+Depends: hadoop-mapreduce (= ${source:Version})
+Description: MapReduce History Server
+ The History server keeps records of the different activities being performed 
+ on a Apache Hadoop cluster.
 
-Package: hadoop-jobtracker
-Provides: hadoop-jobtracker
+Package: hadoop-yarn-nodemanager
+Provides: hadoop-yarn-nodemanager
 Architecture: all
-Depends: hadoop (= ${source:Version})
-Description: Job Tracker for Hadoop
- The jobtracker is a central service which is responsible for managing
- the tasktracker services running on all nodes in a Hadoop Cluster.
- The jobtracker allocates work to the tasktracker nearest to the data
- with an available work slot.
+Depends: hadoop-yarn (= ${source:Version})
+Description: Node manager for Hadoop
+ The NodeManager is the per-machine framework agent who is responsible for
+ containers, monitoring their resource usage (cpu, memory, disk, network) and
+ reporting the same to the ResourceManager/Scheduler.
 
-Package: hadoop-namenode
-Provides: hadoop-namenode
+Package: hadoop-yarn-resourcemanager
+Provides: hadoop-yarn-resourcemanager
 Architecture: all
-Depends: hadoop (= ${source:Version})
+Depends: hadoop-yarn (= ${source:Version})
+Description: Resource manager for Hadoop
+ The resource manager manages the global assignment of compute resources to applications.
+
+Package: hadoop-yarn-proxyserver
+Provides: hadoop-yarn-proxyserver
+Architecture: all
+Depends: hadoop-yarn (= ${source:Version})
+Description: Web proxy for YARN
+ The web proxy server sits in front of the YARN application master web UI.
+
+Package: hadoop-hdfs-namenode
+Provides: hadoop-hdfs-namenode
+Architecture: all
+Depends: hadoop-hdfs (= ${source:Version})
 Description: Name Node for Hadoop
  The Hadoop Distributed Filesystem (HDFS) requires one unique server, the
  namenode, which manages the block locations of files on the filesystem.
 
-Package: hadoop-secondarynamenode
-Provides: hadoop-secondarynamenode
+Package: hadoop-hdfs-secondarynamenode
+Provides: hadoop-hdfs-secondarynamenode
 Architecture: all
-Depends: hadoop (= ${source:Version})
+Depends: hadoop-hdfs (= ${source:Version})
 Description: Secondary Name Node for Hadoop
  The Secondary Name Node is responsible for checkpointing file system images.
  It is _not_ a failover pair for the namenode, and may safely be run on the
  same machine.
 
-Package: hadoop-datanode
-Provides: hadoop-datanode
+Package: hadoop-hdfs-datanode
+Provides: hadoop-hdfs-datanode
 Architecture: all
-Depends: hadoop (= ${source:Version})
+Depends: hadoop-hdfs (= ${source:Version})
 Description: Data Node for Hadoop
  The Data Nodes in the Hadoop Cluster are responsible for serving up
  blocks of data over the network to Hadoop Distributed Filesystem
  (HDFS) clients.
-
-Package: hadoop-pipes
-Provides: hadoop-pipes
-Architecture: any
-Depends: hadoop (= ${source:Version})
-Description: Interface to author Hadoop MapReduce jobs in C++
- Contains Hadoop Pipes, a library which allows Hadoop MapReduce jobs to be
- written in C++.
 
 Package: libhdfs0
 Architecture: any
@@ -171,3 +180,19 @@ Section: libdevel
 Depends: hadoop (= ${source:Version}), libhdfs0 (= ${binary:Version})
 Description: Development support for libhdfs0
  Includes examples and header files for accessing HDFS from C
+
+Package: hadoop-httpfs
+Provides: hadoop-httpfs
+Architecture: all
+Depends: hadoop-hdfs (= ${source:Version}), bigtop-tomcat
+Description: HTTPFS for Hadoop
+  The server providing HTTP REST API support for the complete FileSystem/FileContext
+  interface in HDFS.
+
+Package: hadoop-client
+Provides: hadoop-client
+Architecture: all
+Depends: hadoop (= ${source:Version}), hadoop-hdfs (= ${source:Version}),
+         hadoop-yarn (= ${source:Version}), hadoop-mapreduce (= ${source:Version})
+Description: Hadoop client side dependencies
+ Installation of this package will provide you with all the dependencies for Hadoop clients.

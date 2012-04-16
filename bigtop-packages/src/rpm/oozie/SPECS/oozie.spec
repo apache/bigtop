@@ -59,10 +59,14 @@ Source2: install_oozie.sh
 Source3: oozie.1
 Source4: oozie-env.sh
 Source5: oozie.init
+Source6: catalina.properties
+Source7: context.xml
+Source8: hive.xml
+Patch0: patch
 Requires(pre): /usr/sbin/groupadd, /usr/sbin/useradd
-Requires(post): /sbin/chkconfig, hadoop
+Requires(post): /sbin/chkconfig
 Requires(preun): /sbin/chkconfig, /sbin/service
-Requires: zip, unzip, oozie-client = %{version}
+Requires: oozie-client = %{version}, hadoop-client, bigtop-tomcat
 BuildArch: noarch
 
 %description 
@@ -127,6 +131,7 @@ Requires: bigtop-utils
 
 %prep
 %setup -n oozie-%{oozie_base_version}
+%patch0 -p0
 
 %build
     mkdir -p distro/downloads
@@ -135,6 +140,11 @@ Requires: bigtop-utils
 %install
 %__rm -rf $RPM_BUILD_ROOT
     sh %{SOURCE2} --extra-dir=$RPM_SOURCE_DIR --build-dir=. --server-dir=$RPM_BUILD_ROOT --client-dir=$RPM_BUILD_ROOT --docs-dir=$RPM_BUILD_ROOT%{doc_oozie} --initd-dir=$RPM_BUILD_ROOT%{initd_dir} --conf-dir=$RPM_BUILD_ROOT%{conf_oozie_dist}
+
+%__ln_s -f %{data_oozie}/ext-2.2 $RPM_BUILD_ROOT/%{lib_oozie}/webapps/oozie/ext-2.2
+%__rm  -rf              $RPM_BUILD_ROOT/%{lib_oozie}/webapps/oozie/docs
+%__ln_s -f %{doc_oozie} $RPM_BUILD_ROOT/%{lib_oozie}/webapps/oozie/docs
+
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/usr/bin
 
@@ -169,17 +179,16 @@ fi
 
 %files 
 %defattr(-,root,root)
-%{lib_oozie}/bin/addtowar.sh
-%{lib_oozie}/bin/oozie-run.sh
-%{lib_oozie}/bin/oozie-setup.sh
-%{lib_oozie}/bin/oozie-start.sh
-%{lib_oozie}/bin/oozie-stop.sh
 %{lib_oozie}/bin/oozie-sys.sh
 %{lib_oozie}/bin/oozie-env.sh
 %{lib_oozie}/bin/oozied.sh
-%{lib_oozie}/oozie.war
+%{lib_oozie}/bin/ooziedb.sh
+%{lib_oozie}/webapps
+%{lib_oozie}/libtools
+%{lib_oozie}/libserver
 %{lib_oozie}/oozie-sharelib.tar.gz
 %{lib_oozie}/oozie-server
+%{lib_oozie}/libext
 %{initd_dir}/oozie
 %defattr(-, oozie, oozie)
 %dir %{_localstatedir}/log/oozie

@@ -22,7 +22,7 @@
   <parent>
     <groupId>org.apache.bigtop.itest</groupId>
     <artifactId>stacks-common</artifactId>
-    <version>0.3.0-incubating-SNAPSHOT</version>
+    <version>0.4.0-incubating-SNAPSHOT</version>
     <relativePath>../common/pom.xml</relativePath>
   </parent>
 
@@ -30,16 +30,16 @@
   <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>integration-tests</artifactId>
   <packaging>pom</packaging>
-  <version>0.3.0-incubating-SNAPSHOT</version>
+  <version>0.4.0-incubating-SNAPSHOT</version>
   <name>hadoop-stack-integration</name>
 
   <properties>
     <!--
       BOM definitions
     -->
-    <itest-conf.version>0.3.0-incubating-SNAPSHOT</itest-conf.version>
-    <itest-common.version>0.3.0-incubating-SNAPSHOT</itest-common.version>
-    <sqoop-integration.version>0.3.0-incubating-SNAPSHOT</sqoop-integration.version>
+    <itest-conf.version>0.4.0-incubating-SNAPSHOT</itest-conf.version>
+    <itest-common.version>0.4.0-incubating-SNAPSHOT</itest-common.version>
+    <sqoop-integration.version>0.4.0-incubating-SNAPSHOT</sqoop-integration.version>
     <!--
       End of BOM definitions
     -->

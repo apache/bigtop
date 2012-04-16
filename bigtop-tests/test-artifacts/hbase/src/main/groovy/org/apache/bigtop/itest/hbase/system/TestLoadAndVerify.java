@@ -48,6 +48,7 @@ import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Counter;
+import org.apache.hadoop.mapreduce.TaskCounter;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
@@ -288,8 +289,7 @@ public class TestLoadAndVerify  extends Configured implements Tool {
     FileOutputFormat.setOutputPath(job, outputDir);
     assertTrue(job.waitForCompletion(true));
 
-    long numOutputRecords = job.getCounters().findCounter(
-        org.apache.hadoop.mapred.Task.Counter.REDUCE_OUTPUT_RECORDS).getValue();
+    long numOutputRecords = job.getCounters().findCounter(TaskCounter.REDUCE_OUTPUT_RECORDS).getValue();
     assertEquals(0, numOutputRecords);
   }
 

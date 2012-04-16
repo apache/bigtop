@@ -24,26 +24,31 @@ import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test
 import org.apache.hadoop.conf.Configuration
+import org.apache.hadoop.hdfs.DFSConfigKeys
 import static org.junit.Assert.assertEquals
-
-// TODO: we have to stub it for 0.20.2 release, once we move to 0.21+ this can go
-// import org.apache.hadoop.hdfs.DFSConfigKeys
-class DFSConfigKeys {
-  static public final FS_DEFAULT_NAME_KEY = "fs.default.name";
-}
+import static org.junit.Assert.assertNotNull
 
 class TestHadoopSmoke {
   static Shell sh = new Shell("/bin/bash -s")
 
-  static String hadoopHome   = System.getProperty('HADOOP_HOME', '/thisfileneverwillexist')
-  static String testDir      = "test.hadoopsmoke." + (new Date().getTime())
-  static String nn           = (new Configuration()).get(DFSConfigKeys.FS_DEFAULT_NAME_KEY)
+  static String hadoopHome = System.getProperty('HADOOP_HOME', '/usr/lib/hadoop')
+  static String streamingHome = System.getenv('STREAMING_HOME')
+  static final String STREAMING_HOME =
+    (streamingHome == null) ? hadoopHome + "/contrib/streaming" : streamingHome;
+  static String streaming_jar =
+    JarContent.getJarName(STREAMING_HOME, 'hadoop.*streaming.*.jar');
+  static {
+    assertNotNull("Can't find hadoop-streaming.jar", streaming_jar);
+  }
+  static final String STREAMING_JAR = STREAMING_HOME + "/" + streaming_jar;
+  static String testDir = "test.hadoopsmoke." + (new Date().getTime())
+  static String nn = (new Configuration()).get(DFSConfigKeys.FS_DEFAULT_NAME_KEY)
 
-  String cmd = "hadoop  jar ${hadoopHome}/contrib/streaming/hadoop*streaming*.jar" +
-                 " -D mapred.map.tasks=1 -D mapred.reduce.tasks=1 -D mapred.job.name=Experiment "
-  String cmd2 =" -input  ${testDir}/cachefile/input.txt -mapper map.sh -file map.sh -reducer cat" +
-                 " -output ${testDir}/cachefile/out -verbose "
-  String arg = "${nn}/user/${System.properties['user.name']}/${testDir}/cachefile/cachedir.jar#testlink "
+  String cmd = "hadoop jar ${STREAMING_JAR}" +
+      " -D mapred.map.tasks=1 -D mapred.reduce.tasks=1 -D mapred.job.name=Experiment"
+  String cmd2 = " -input ${testDir}/cachefile/input.txt -mapper map.sh -file map.sh -reducer cat" +
+      " -output ${testDir}/cachefile/out -verbose"
+  String arg = "${nn}/user/${System.properties['user.name']}/${testDir}/cachefile/cachedir.jar#testlink"
 
   @BeforeClass
   static void  setUp() throws IOException {

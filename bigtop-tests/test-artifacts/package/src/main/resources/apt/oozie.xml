@@ -91,12 +91,5 @@
     <file name='/etc' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/etc/init.d' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <config name='/etc/init.d/oozie' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
-    <file name='/etc/oozie' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/etc/oozie/conf.dist' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
-    <config name='/etc/oozie/conf.dist/oozie-default.xml' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <config name='/etc/oozie/conf.dist/oozie-env.sh' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <config name='/etc/oozie/conf.dist/oozie-site.xml' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <config name='/etc/oozie/conf.dist/adminusers.txt' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <config name='/etc/oozie/conf.dist/oozie-log4j.properties' owners='-1' perm='-rw-r--r--' user='root' group='root' />
   </content>
 </oozie>

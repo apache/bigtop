@@ -24,14 +24,14 @@
   <parent>
     <groupId>org.apache.bigtop</groupId>
     <artifactId>bigtop</artifactId>
-    <version>0.3.0-incubating-SNAPSHOT</version>
+    <version>0.4.0-incubating-SNAPSHOT</version>
     <relativePath>../../../pom.xml</relativePath>
   </parent>
 
   <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>stacks-common</artifactId>
   <packaging>pom</packaging>
-  <version>0.3.0-incubating-SNAPSHOT</version>
+  <version>0.4.0-incubating-SNAPSHOT</version>
   <name>stacks-validation-common</name>
 
   <properties>
@@ -117,7 +117,7 @@
       <dependency>
         <groupId>org.apache.bigtop.itest</groupId>
         <artifactId>itest-common</artifactId>
-        <version>0.3.0-incubating-SNAPSHOT</version>
+        <version>0.4.0-incubating-SNAPSHOT</version>
         <scope>test</scope>
       </dependency>
     </dependencies>

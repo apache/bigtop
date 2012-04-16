@@ -69,7 +69,8 @@ Source4: hive-site.xml
 Source5: hive-server.default
 Source6: hive-metastore.default
 Source7: hive.1
-Requires: hadoop >= 0.20.2, bigtop-utils
+Source8: hive-site.xml
+Requires: hadoop-client, bigtop-utils
 Obsoletes: %{name}-webinterface
 
 %description 

@@ -22,10 +22,6 @@
     <name>dfs.replication</name>
     <value>1</value>
   </property>
-  <property>
-     <name>dfs.permissions</name>
-     <value>false</value>
-  </property>
   <!-- Immediately exit safemode as soon as one DataNode checks in. 
        On a multi-node cluster, these configurations must be removed.  -->
   <property>
@@ -37,8 +33,19 @@
      <value>1</value>
   </property>
   <property>
-     <!-- specify this so that running 'hadoop namenode -format' formats the right dir -->
-     <name>dfs.name.dir</name>
-     <value>/var/lib/hadoop/cache/hadoop/dfs/name</value>
+     <name>hadoop.tmp.dir</name>
+     <value>/var/lib/hadoop-hdfs/cache/${user.name}</value>
+  </property>
+  <property>
+     <name>dfs.namenode.name.dir</name>
+     <value>/var/lib/hadoop-hdfs/cache/${user.name}/dfs/name</value>
+  </property>
+  <property>
+     <name>dfs.namenode.checkpoint.dir</name>
+     <value>/var/lib/hadoop-hdfs/cache/${user.name}/dfs/namesecondary</value>
+  </property>
+  <property>
+     <name>dfs.datanode.data.dir</name>
+     <value>/var/lib/hadoop-hdfs/cache/${user.name}/dfs/data</value>
   </property>
 </configuration>

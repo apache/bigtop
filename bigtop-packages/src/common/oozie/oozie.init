@@ -55,7 +55,7 @@ start_oozie() {
   install -d -o oozie -g oozie /var/run/oozie
   install -d -o oozie -g oozie /var/log/oozie
   install -d -o oozie -g oozie /var/tmp/oozie
-  su --shell=/bin/sh -l oozie -c /usr/lib/oozie/bin/oozie-start.sh
+  su --shell=/bin/sh -l oozie -c '/usr/lib/oozie/bin/oozied.sh start'
 }
 
 stop_oozie() {
@@ -132,8 +132,18 @@ case "$1" in
             ;;
         esac 
         ;;
+  init)
+        is_oozie_alive
+        if [ ${STATUS} -eq 0 ] ; then
+          "Error: Oozie is running. Stop it first."
+          exit 1
+        else
+          (cd /tmp ; su --shell=/bin/sh -l oozie -c '/usr/lib/oozie/bin/ooziedb.sh create -run')
+        fi
+        exit 0
+        ;;
   *)
-        echo "Usage: $0 start|stop|status|restart|reload|force-reload|condrestart|try-restart" >&2
+        echo "Usage: $0 start|stop|status|restart|reload|force-reload|condrestart|try-restart|init" >&2
         exit 3
         ;;
 esac

@@ -24,8 +24,7 @@
 export DH_OPTIONS
 
 
-hadoop_version=${HADOOP_VERSION}
-hadoop_build_path=$(shell pwd)/build/hadoop-${hadoop_version}
+hadoop_version=${HADOOP_BASE_VERSION}
 
 ifeq (${DEB_BUILD_ARCH},amd64)
   native_dir=Linux-amd64-64
@@ -34,10 +33,13 @@ ifeq (${DEB_BUILD_ARCH},i386)
   native_dir=Linux-i386-32
 endif
 
+patch: patch-stamp
+patch-stamp:	
+	touch $@
 
 #Architecture
 build: build-stamp
-build-stamp:
+build-stamp: patch-stamp
 	dh_testdir
 	env HADOOP_VERSION=${hadoop_version} HADOOP_ARCH=${native_dir} \
 		bash debian/do-component-build -Divy.home=${HOME}/.ivy2
@@ -47,7 +49,6 @@ clean:
 	dh_testdir
 	dh_testroot
 	rm -f build-arch-stamp build-indep-stamp build-stamp
-	ant clean
 
 	dh_clean
 
@@ -58,56 +59,56 @@ install: build
 	dh_installdirs
 
 	bash debian/install_hadoop.sh \
+	  --prefix=debian/tmp/ \
 	  --distro-dir=debian \
-	  --build-dir=${hadoop_build_path} \
-	  --src-dir=debian/tmp/usr/src/hadoop \
-	  --lib-dir=debian/tmp/usr/lib/hadoop \
-	  --etc-dir=debian/tmp/etc/hadoop \
-	  --prefix=debian/tmp \
+	  --build-dir=${PWD}/build \
+	  --httpfs-dir=debian/tmp/usr/lib/hadoop-httpfs \
+	  --httpfs-etc-dir=debian/tmp/etc/hadoop-httpfs \
+	  --system-lib-dir=debian/tmp/usr/lib/ \
+	  --system-libexec-dir=debian/tmp/usr/lib/hadoop/libexec/ \
+	  --system-include-dir=debian/tmp/usr/include \
 	  --doc-dir=debian/tmp/usr/share/doc/hadoop-doc \
+          --man-dir=debian/tmp/usr/share/man \
 	  --example-dir=debian/tmp/usr/share/doc/hadoop/examples \
 	  --native-build-string=${native_dir} \
 	  --installed-lib-dir=/usr/lib/hadoop
 
+	# Forcing Zookeeper dependency to be on the packaged jar
+	ln -sf /usr/lib/zookeeper/zookeeper.jar debian/tmp/usr/lib/hadoop/lib/zookeeper*.jar
+
 # Run dh_lintian if we've got it - this doesn't exist on debhelper 6 (eg Ubuntu Hardy)
 	(dh_lintian) || /bin/true
 
+hadoop_svcs=hdfs-namenode hdfs-secondarynamenode hdfs-datanode \
+            yarn-resourcemanager yarn-nodemanager yarn-proxyserver \
+            mapreduce-historyserver httpfs
 
-namenode_user=hdfs
-secondarynamenode_user=hdfs
-datanode_user=hdfs
-jobtracker_user=mapred
-tasktracker_user=mapred
-
-namenode secondarynamenode jobtracker tasktracker datanode: debian/service-init.d.tpl
-	sed -e "s|@HADOOP_DAEMON@|$@|" \
-            -e "s|@HADOOP_MAJOR_VERSION@|$hadoop_version|" \
-	    -e "s|@DAEMON_USER@|$($@_user)|" $< > debian/hadoop-$@.init
+$(hadoop_svcs): debian/init.d.tmpl
+	bash $< debian/hadoop-$@.svc > debian/hadoop-$@.init
+	cp debian/$(firstword $(subst -, ,$@)).default debian/tmp/etc/default/hadoop-$@
+	echo /etc/default/hadoop-$@ >> debian/hadoop-$@.install
 	# FIXME: workaround for BIGTOP-105
-	sed -e "s|@HADOOP_DAEMON@|$@|" < debian/hadoop.daemon.postinst.tpl > debian/hadoop-$@.postinst
+	[ -f debian/hadoop-$@.postinst ] || cp debian/hadoop.daemon.postinst.tpl debian/hadoop-$@.postinst
+	sed -i -e "s|@HADOOP_DAEMON@|$@|" debian/hadoop-$@.postinst
 
-install-indep: namenode secondarynamenode jobtracker tasktracker datanode
+install-indep: $(hadoop_svcs) 
 	mkdir -p debian/tmp/etc/default
 	cp debian/hadoop.default debian/tmp/etc/default/hadoop
+	# FIXME: BIGTOP-463
+	echo 'export JSVC_HOME=/usr/lib/bigtop-utils' >> debian/tmp/etc/default/hadoop
 
 	dh_install --sourcedir=debian/tmp -i
 
-	rm -Rf debian/hadoop/usr/lib/hadoop/lib/native
-	rm -Rf debian/hadoop/usr/lib/hadoop/sbin
-
 	rm -Rf debian/hadoop/usr/lib/hadoop/bin/fuse_dfs 
-	rm -Rf debian/hadoop/usr/bin/hadoop-fuse-dfs
+#	rm -Rf debian/hadoop/usr/bin/hadoop-fuse-dfs
 	rm -Rf debian/hadoop/usr/lib/hadoop/contrib/fuse-dfs
-
-	# FIXME: The following is a workaround for BIGTOP-139
-	rm -Rf debian/hadoop/usr/lib/hadoop/libexec/jsvc*
-	rm -Rf debian/hadoop/usr/lib/hadoop/bin/task-controller
+	rm -Rf debian/hadoop/usr/lib/hadoop/hdfs/contrib/fuse-dfs
 
 install-arch:
 	mkdir -p debian/tmp/etc/default
 	cp debian/hadoop-fuse.default debian/tmp/etc/default/hadoop-fuse
 	mkdir -p debian/tmp/etc/security/limits.d
-	cp debian/hdfs.conf debian/mapred.conf debian/tmp/etc/security/limits.d
+	cp debian/hdfs.conf debian/yarn.conf debian/mapreduce.conf debian/tmp/etc/security/limits.d
 	dh_install --sourcedir=debian/tmp -s
 
 # Must not depend on anything. This is to be called by
@@ -116,9 +117,9 @@ install-arch:
 binary-common:  
 	dh_testdir
 	dh_testroot
-	dh_installchangelogs CHANGES.txt -phadoop
-	dh_installdocs
-	sh debian/append_licenses.sh
+	#dh_installchangelogs CHANGES.txt -phadoop
+#	dh_installdocs   ## PL this line and the above/below are only temp
+#	#sh debian/append_licenses.sh
 #	dh_installexamples
 #	dh_installmenu
 #	dh_installdebconf

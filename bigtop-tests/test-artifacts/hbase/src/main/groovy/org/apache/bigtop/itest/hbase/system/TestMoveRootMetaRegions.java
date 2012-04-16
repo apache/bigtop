@@ -17,22 +17,21 @@
  */
 package org.apache.bigtop.itest.hbase.system;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.not;
+
+import org.apache.bigtop.itest.shell.Shell;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.HConstants;
-import org.apache.hadoop.hbase.HServerAddress;
+import org.apache.hadoop.hbase.ServerName;
 import org.apache.hadoop.hbase.catalog.CatalogTracker;
 import org.apache.hadoop.hbase.client.HBaseAdmin;
 import org.apache.hadoop.hbase.util.Bytes;
-
-import org.junit.Assert;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import static org.hamcrest.CoreMatchers.*;
-
-import org.apache.bigtop.itest.shell.Shell;
 
 /**
   This test contains 3 tests:
@@ -55,6 +54,7 @@ import org.apache.bigtop.itest.shell.Shell;
   -Dmeta.timeout.ms=<milliseconds to wait while trying to find .META.>
   -Dwait.after.move.ms=<milliseconds to wait after moving -ROOT- or .META.>
 */
+
 public class TestMoveRootMetaRegions {
   private static final String HBASE_HOME = System.getenv("HBASE_HOME");
   static {
@@ -95,7 +95,7 @@ public class TestMoveRootMetaRegions {
     conf = HBaseConfiguration.create();
     admin = new HBaseAdmin(conf);
 
-    ct = new CatalogTracker(admin.getConnection());
+    ct = new CatalogTracker(admin.getConfiguration());
     ct.start();
 
     Assert.assertTrue(admin.tableExists(HConstants.ROOT_TABLE_NAME));
@@ -110,18 +110,18 @@ public class TestMoveRootMetaRegions {
     ct.stop();
   }
 
-  public static HServerAddress getRootAddress() throws Exception{
+  public static ServerName getRootAddress() throws Exception{
     ct.verifyRootRegionLocation(root_timeout_ms);
     return ct.getRootLocation();
   }
 
-  public static HServerAddress getMetaAddress() throws Exception{
+  public static ServerName getMetaAddress() throws Exception{
     return ct.waitForMeta(meta_timeout_ms);
   }
 
   @Test
   public void unloadRootRegionServer() throws Exception{
-    HServerAddress root_address = getRootAddress();
+    ServerName root_address = getRootAddress();
     String cmd = unload_regionserver + root_address.getHostname();
     System.out.println("Unloading the region server hosting " + root_table);
     System.out.println(cmd);
@@ -138,7 +138,7 @@ public class TestMoveRootMetaRegions {
 
   @Test
   public void unloadMetaRegionServer() throws Exception{
-    HServerAddress meta_address = getMetaAddress();
+    ServerName meta_address = getMetaAddress();
     String cmd = unload_regionserver + meta_address.getHostname();
     System.out.println("Unloading the region server hosting " + meta_table);
     System.out.println(cmd);
@@ -155,8 +155,8 @@ public class TestMoveRootMetaRegions {
 
   @Test
   public void testStopRootMetaRegionServers() throws Exception {
-    HServerAddress root_address = getRootAddress();
-    HServerAddress meta_address = getMetaAddress();
+    ServerName root_address = getRootAddress();
+    ServerName meta_address = getMetaAddress();
 
     boolean same_server = false;
     if (root_address.equals(meta_address)) {
@@ -167,15 +167,15 @@ public class TestMoveRootMetaRegions {
     System.out.println(meta_table + " server address: " + meta_address);
 
     System.out.println("Stopping region server(s)");
-    admin.stopRegionServer(root_address);
+    admin.stopRegionServer(root_address.getHostAndPort());
     if (!same_server) {
-      admin.stopRegionServer(meta_address);
+      admin.stopRegionServer(meta_address.getHostAndPort());
     }
 
     Thread.sleep(wait_after_move_ms);
 
-    HServerAddress new_root_address = getRootAddress();
-    HServerAddress new_meta_address = getMetaAddress();
+    ServerName new_root_address = getRootAddress();
+    ServerName new_meta_address = getMetaAddress();
 
     System.out.println(meta_table + " server address: " +  new_meta_address);
     System.out.println(root_table + " server address: " +  new_root_address);

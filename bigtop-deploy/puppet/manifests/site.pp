@@ -15,7 +15,7 @@
 
 require bigtop_util
 $puppet_confdir = get_setting("confdir")
-$default_yumrepo = "http://bigtop01.cloudera.org:8080/view/RCs/job/Bigtop-trunk-rc-zookeeper-3.4.0/label=centos5/lastSuccessfulBuild/artifact/output/"
+$default_yumrepo = "http://bigtop01.cloudera.org:8080/view/Hadoop%200.23/job/Bigtop-23-matrix/label=centos5/lastSuccessfulBuild/artifact/output/"
 $extlookup_datadir="$puppet_confdir/config"
 $extlookup_precedence = ["site", "default"]
 
@@ -32,21 +32,27 @@ package { "jdk":
    ensure => "installed",
 }
 
-# $hadoop_head_node="beefy.my.org"
-# $hadoop_security_authentication="kerberos"
-
 import "cluster.pp"
 
 node default {
-  # Fails if hadoop_head_node is unset
-  if (!$::hadoop_head_node) {
-    $hadoop_head_node = extlookup("hadoop_head_node") 
+  $hadoop_head_node = extlookup("hadoop_head_node") 
+  $standby_head_node = extlookup("standby_head_node", "")
+  $hadoop_gateway_node = extlookup("hadoop_gateway_node", $hadoop_head_node)
+
+  case $::fqdn {
+    $hadoop_head_node: {
+      include hadoop_head_node
+    }
+    $standby_head_node: {
+      include standby_head_node
+    }
+    default: {
+      include hadoop_worker_node
+    }
   }
 
-  if ($hadoop_head_node == $fqdn) {
+  if ($hadoop_gateway_node == $::fqdn) {
     include hadoop_gateway_node
-  } else {
-    include hadoop_worker_node
   }
 }
 

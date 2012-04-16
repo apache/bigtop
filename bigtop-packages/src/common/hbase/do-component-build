@@ -16,5 +16,5 @@
 
 set -ex
 
-mvn clean -DskipTests -Dhbase.version=${HBASE_VERSION} -Dhadoop.version=0.20.205.0 install assembly:assembly "$@"
-tar --strip-components=1 -xzf target/hbase*.tar.gz
+mvn clean -DskipTests -Dhadoop.profile=23 -Dhadoop.version=0.23.1 install site assembly:assembly "$@"
+tar --strip-components=2 -xzf target/hbase*.tar.gz

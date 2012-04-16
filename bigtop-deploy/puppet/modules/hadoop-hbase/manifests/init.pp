@@ -25,6 +25,12 @@ class hadoop-hbase {
     if ($kerberos_realm) {
       require kerberos::client
       kerberos::host_keytab { "hbase": 
+        spnego => true,
+      }
+
+      file { "/etc/hbase/conf/jaas.conf":
+        content => template("hadoop-hbase/jaas.conf"),
+        require => Package["hbase"],
       }
     }
 
@@ -42,7 +48,7 @@ class hadoop-hbase {
     include client-package
   }
 
-  define server($rootdir, $zookeeper_quorum, $kerberos_realm = "") {
+  define server($rootdir, $zookeeper_quorum, $kerberos_realm = "", $heap_size="1024") {
     include common-server-config
 
     package { "hbase-regionserver":
@@ -59,7 +65,7 @@ class hadoop-hbase {
     Kerberos::Host_keytab <| title == "hbase" |> -> Service["hbase-regionserver"]
   }
 
-  define master($rootdir, $zookeeper_quorum, $kerberos_realm = "") {
+  define master($rootdir, $zookeeper_quorum, $kerberos_realm = "", $heap_size="1024") {
     include common-server-config
 
     package { "hbase-master":

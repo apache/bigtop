@@ -35,7 +35,7 @@ case "$1" in
 
         # Ensure sticky bit on metastore dir - debian likes this to be done in postinst rather than the package
         chmod 1777 /var/lib/hive/metastore
-
+	chown hive:hive -R /var/lib/hive
         if [ "$2" ]; then
           old_metastore="/var/lib/hive/metastore/\${user.name}_db"
           new_metastore="/var/lib/hive/metastore/metastore_db"

@@ -62,7 +62,7 @@ Source0: apache-%{name}-%{flume_base_version}.tar.gz
 Source1: do-component-build
 Source2: install_%{name}.sh
 Source3: %{name}-node.init
-Requires: coreutils, /usr/sbin/useradd, hadoop
+Requires: coreutils, /usr/sbin/useradd, hadoop-hdfs
 Requires: bigtop-utils
 BuildRequires: ant xml-commons xml-commons-apis
 
@@ -129,7 +129,8 @@ chmod 755 $init_file
 
 # Get rid of hadoop jar, and instead link to installed hadoop
 rm $RPM_BUILD_ROOT/usr/lib/flume/lib/hadoop-*
-ln -s /usr/lib/hadoop/hadoop-core.jar $RPM_BUILD_ROOT/usr/lib/flume/lib/hadoop-core.jar
+ln -s /usr/lib/hadoop/hadoop-common.jar $RPM_BUILD_ROOT/usr/lib/flume/lib/hadoop-common.jar
+ln -s /usr/lib/hadoop/hadoop-auth.jar $RPM_BUILD_ROOT/usr/lib/flume/lib/hadoop-auth.jar
 
 %pre
 getent group flume >/dev/null || groupadd -r flume

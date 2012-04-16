@@ -27,10 +27,10 @@ import org.apache.hadoop.hbase.client.HBaseAdmin;
 import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.mapreduce.LoadIncrementalHFiles;
 import org.apache.hadoop.hbase.util.Bytes;
-import org.junit.Assert;
 import org.junit.Test;
-
+import static org.junit.Assert.assertEquals;
 import org.apache.bigtop.itest.hbase.util.HBaseTestUtil;
+import org.apache.bigtop.itest.shell.Shell;
 
 public class TestLoadIncrementalHFiles {
   private static final byte[] FAMILY = Bytes.toBytes("f1");
@@ -39,6 +39,7 @@ public class TestLoadIncrementalHFiles {
     Bytes.toBytes("ddd"),
     Bytes.toBytes("ppp")
   };
+  private static Shell sh = new Shell("/bin/bash -s");
 
   /**
    * Test case that creates some regions and loads
@@ -66,22 +67,27 @@ public class TestLoadIncrementalHFiles {
     });
   }
 
+  private void chmod(String uri) {
+    sh.exec("hadoop fs -chmod -R 777 " + uri);
+    assertEquals("chmod failed", 0, sh.getRet());
+  }
+
   private void runTest(String testName, byte[][][] hfileRanges)
       throws Exception {
     FileSystem fs = HBaseTestUtil.getClusterFileSystem();
     Path dir = HBaseTestUtil.getMROutputDir(testName);
     Path familyDir = new Path(dir, Bytes.toString(FAMILY));
+    Configuration conf = HBaseConfiguration.create();
 
     int hfileIdx = 0;
     for (byte[][] range : hfileRanges) {
       byte[] from = range[0];
       byte[] to = range[1];
-      HBaseTestUtil.createHFile(fs, new Path(familyDir, "hfile_" + hfileIdx++),
+      HBaseTestUtil.createHFile(conf, fs, new Path(familyDir, "hfile_" + hfileIdx++),
           FAMILY, QUALIFIER, from, to, 1000);
     }
     int expectedRows = hfileIdx * 1000;
 
-    Configuration conf = HBaseConfiguration.create();
     HBaseAdmin admin = new HBaseAdmin(conf);
     final byte[] TABLE = HBaseTestUtil.getTestTableName(testName);
     HTableDescriptor htd = new HTableDescriptor(TABLE);
@@ -89,11 +95,15 @@ public class TestLoadIncrementalHFiles {
 
     admin.createTable(htd, SPLIT_KEYS);
 
+    // Before we can load the HFiles, we need to set the permissions so that
+    // HBase has write access to familyDir's contents
+    chmod(familyDir.toString());
+
     HTable table = new HTable(conf, TABLE);
     LoadIncrementalHFiles loader = new LoadIncrementalHFiles(conf);
     loader.doBulkLoad(dir, table);
 
-    Assert.assertEquals(expectedRows, HBaseTestUtil.countRows(table));
+    assertEquals(expectedRows, HBaseTestUtil.countRows(table));
 
     // disable and drop if we succeeded to verify
     admin.disableTable(TABLE);

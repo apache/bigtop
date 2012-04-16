@@ -23,7 +23,7 @@ Homepage: http://pig.apache.org/
 
 Package: pig
 Architecture: all
-Depends: hadoop, bigtop-utils
+Depends: hadoop-client, bigtop-utils
 Description: A platform for analyzing large data sets using Hadoop
  Pig is a platform for analyzing large data sets that consists of a high-level language
  for expressing data analysis programs, coupled with infrastructure for evaluating these

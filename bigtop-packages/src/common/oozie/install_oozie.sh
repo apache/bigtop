@@ -199,11 +199,24 @@ install -d -m 0755 ${OOZIE_SERVER_DIR}/bin
 failIfNotOK
 install -d -m 0755 ${OOZIE_DATA}
 failIfNotOK
-cp -R ${OOZIE_BUILD_DIR}/bin/*.sh ${OOZIE_SERVER_DIR}/bin
+for file in ooziedb.sh oozied.sh oozie-sys.sh ; do
+  cp ${OOZIE_BUILD_DIR}/bin/$file ${OOZIE_SERVER_DIR}/bin
+  failIfNotOK
+done
+cp -R ${OOZIE_BUILD_DIR}/libtools ${OOZIE_SERVER_DIR}
 failIfNotOK
+
 install -d -m 0755 ${OOZIE_CONF}
 failIfNotOK
-cp -R ${OOZIE_BUILD_DIR}/conf/* ${OOZIE_CONF}
+cp ${OOZIE_BUILD_DIR}/conf/* ${OOZIE_CONF}
+sed -i -e '/oozie.service.HadoopAccessorService.hadoop.configurations/,/<\/property>/s#<value>\*=hadoop-conf</value>#<value>*=/etc/hadoop/conf</value>#g' \
+          ${OOZIE_CONF}/oozie-site.xml
+failIfNotOK
+cp ${EXTRADIR}/oozie-env.sh ${OOZIE_CONF}
+failIfNotOK
+install -d -m 0755 ${OOZIE_CONF}/action-conf
+failIfNotOK
+cp ${EXTRADIR}/hive.xml ${OOZIE_CONF}/action-conf
 failIfNotOK
 if [ "${OOZIE_INITD}" != "" ]; then
   install -d -m 0755 ${OOZIE_INITD}
@@ -215,18 +228,33 @@ if [ "${OOZIE_INITD}" != "" ]; then
 fi
 cp -R ${OOZIE_BUILD_DIR}/oozie-sharelib*.tar.gz ${OOZIE_SERVER_DIR}/oozie-sharelib.tar.gz
 failIfNotOK
-cp -R ${OOZIE_BUILD_DIR}/oozie.war ${OOZIE_SERVER_DIR}
+cp -R ${OOZIE_BUILD_DIR}/oozie-server/webapps ${OOZIE_SERVER_DIR}/webapps
 failIfNotOK
-cp -R ${OOZIE_BUILD_DIR}/oozie-server ${OOZIE_SERVER_DIR}
-failIfNotOK
-install -d -m 0755 ${OOZIE_DATA}/oozie-server
-failIfNotOK
-mv ${OOZIE_SERVER_DIR}/oozie-server/conf ${OOZIE_DATA}/oozie-server/
-failIfNotOK
-mv ${OOZIE_SERVER_DIR}/oozie-server/webapps ${OOZIE_DATA}/oozie-server/
-failIfNotOK
-cp -R ${EXTRADIR}/oozie-env.sh ${OOZIE_SERVER_DIR}/bin
-failIfNotOK
-chmod 755 ${OOZIE_SERVER_DIR}/bin/oozie-env.sh
+ln -s -f /etc/oozie/conf/oozie-env.sh ${OOZIE_SERVER_DIR}/bin
 failIfNotOK
 
+# Unpack oozie.war some place reasonable
+OOZIE_WEBAPP=${OOZIE_SERVER_DIR}/webapps/oozie
+mkdir ${OOZIE_WEBAPP}
+failIfNotOK
+unzip -d ${OOZIE_WEBAPP} ${OOZIE_BUILD_DIR}/oozie.war
+failIfNotOK
+mv -f ${OOZIE_WEBAPP}/WEB-INF/lib ${OOZIE_SERVER_DIR}/libserver
+failIfNotOK
+touch ${OOZIE_SERVER_DIR}/webapps/oozie.war
+failIfNotOK
+
+# Create an exploded-war oozie deployment in /var/lib/oozie
+install -d -m 0755 ${OOZIE_SERVER_DIR}/oozie-server
+failIfNotOK
+cp -R ${OOZIE_BUILD_DIR}/oozie-server/conf ${OOZIE_SERVER_DIR}/oozie-server/conf
+failIfNotOK
+cp ${EXTRADIR}/context.xml ${OOZIE_SERVER_DIR}/oozie-server/conf/
+failIfNotOK
+cp ${EXTRADIR}/catalina.properties ${OOZIE_SERVER_DIR}/oozie-server/conf/
+failIfNotOK
+ln -s ../webapps ${OOZIE_SERVER_DIR}/oozie-server/webapps
+failIfNotOK
+
+# Provide a convenience symlink to be more consistent with tarball deployment
+ln -s ${OOZIE_DATA#${SERVERDIR}} ${OOZIE_SERVER_DIR}/libext

@@ -33,27 +33,6 @@ set -e
 case "$1" in
     install|upgrade)
         addgroup --system hadoop >/dev/null 2>/dev/null || :
-        if ! getent passwd hdfs >/dev/null; then
-            # Adding system user: hdfs.
-            adduser \
-                --system \
-                --group \
-                --home /usr/lib/hadoop \
-                --gecos "Hadoop HDFS" \
-                --shell /bin/bash \
-                hdfs >/dev/null 2>/dev/null || :
-            usermod --append --groups hadoop hdfs || :
-        fi
-        if ! getent passwd mapred >/dev/null; then
-            adduser \
-                --system \
-                --group \
-                --home /usr/lib/hadoop \
-                --gecos "Hadoop MapReduce" \
-                --shell /bin/bash \
-                mapred >/dev/null 2>/dev/null || :
-            usermod --append --groups hadoop mapred || :
-        fi
     ;;
 
     abort-upgrade)

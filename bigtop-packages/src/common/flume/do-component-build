@@ -16,4 +16,4 @@
 
 set -ex
 
-mvn clean install -DskipTests "$@" 
+mvn clean install -DskipTests -Dhadoop.profile=23 "$@" 

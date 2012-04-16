@@ -1,0 +1,29 @@
+<hadoop-yarn>
+<content>
+  <config name='/etc/default/yarn' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+  <config name='/etc/hadoop/conf.empty/mrapp-generated-classpath' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+  <config name='/etc/hadoop/conf.empty/yarn-env.sh' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+  <config name='/etc/hadoop/conf.empty/yarn-site.xml' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+  <config name='/etc/security/limits.d/yarn.conf' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+  <file name='/usr/bin/yarn' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+  <file name='/usr/lib/hadoop/bin/container-executor' owners='-1' perm='---Sr-s---' user='root' group='yarn' />
+  <file name='/usr/lib/hadoop/bin/yarn' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+  <file name='/usr/lib/hadoop/hadoop-yarn-api-0.23.1.jar' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+  <file name='/usr/lib/hadoop/hadoop-yarn-applications-distributedshell-0.23.1.jar' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+  <file name='/usr/lib/hadoop/hadoop-yarn-common-0.23.1.jar' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+  <file name='/usr/lib/hadoop/hadoop-yarn-server-common-0.23.1.jar' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+  <file name='/usr/lib/hadoop/hadoop-yarn-server-nodemanager-0.23.1.jar' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+  <file name='/usr/lib/hadoop/hadoop-yarn-server-resourcemanager-0.23.1.jar' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+  <file name='/usr/lib/hadoop/hadoop-yarn-server-web-proxy-0.23.1.jar' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+  <file name='/usr/lib/hadoop/hadoop-yarn-site-0.23.1.jar' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+  <file name='/usr/lib/hadoop/libexec/yarn-config.sh' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+  <file name='/usr/lib/hadoop/sbin/start-yarn.sh' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+  <file name='/usr/lib/hadoop/sbin/stop-yarn.sh' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+  <file name='/usr/lib/hadoop/sbin/yarn-daemon.sh' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+  <file name='/usr/lib/hadoop/sbin/yarn-daemons.sh' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+  <file name='/var/lib/yarn' owners='-1' perm='drwxrwxr-x' user='yarn' group='hadoop' />
+  <file name='/var/lib/yarn/cache' owners='-1' perm='drwxrwxrwt' user='yarn' group='hadoop' />
+  <file name='/var/log/yarn' owners='-1' perm='drwxrwxr-x' user='yarn' group='hadoop' />
+  <file name='/var/run/yarn' owners='-1' perm='drwxrwxr-x' user='yarn' group='hadoop' />
+</content>
+</hadoop-yarn>

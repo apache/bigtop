@@ -28,7 +28,6 @@ hive_pkg_name=hive
 clean:	
 	dh_testdir
 	dh_testroot
-	ant -f src/build.xml clean
 	rm -f *-stamp
 	rm -Rf debian/.ivy
 	dh_clean
@@ -36,7 +35,7 @@ clean:
 build-indep: build-indep-stamp
 build-indep-stamp:
 	mkdir -p /tmp/debian-hive/.ivy
-	bash debian/do-component-build -Divy.home=${HOME}/.ivy2
+	bash debian/do-component-build  -Divy.home=${HOME}/.ivy2
 	touch $@
 
 server metastore: debian/service-init.d.tpl

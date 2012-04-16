@@ -16,47 +16,28 @@
 
 set -ex
 
-# FIXME: BIGTOP-137
-chmod 777 src/c++/task-controller/configure || :
-
-
-# This is a poor man version comparison of autoconf.
-# Current autotools files target autotools 2.61 or sup.
-# There will be some build issues if we try to regenerate them with a lesser version of autotools
-# So we will only regenerate the autotools files if they are installed and their version is greater than
-# 2.60
-DO_AUTORECONF=""
-if [ -n `which autoconf` ]; then
-
-	AUTOCONF_VERSION=`autoconf --version | head -n 1 | sed -e 's/.* \([.0-9]\+\)$/\1/'`
-	echo $AUTOCONF_VERSION
-
-	if [[ $AUTOCONF_VERSION > 2.60 ]]; then
-		DO_AUTORECONF="create-c++-configure"
-	fi
+if [ -z "$BUNDLE_SNAPPY" ] ; then
+  [ -f /usr/lib/libsnappy.so ] && BUNDLE_SNAPPY="-Dsnappy.prefix=x -Dbundle.snappy=true -Dsnappy.lib=/usr/lib"
+  [ -f /usr/lib64/libsnappy.so ] && BUNDLE_SNAPPY="-Dsnappy.prefix=x -Dbundle.snappy=true -Dsnappy.lib=/usr/lib64"
 fi
 
-pushd src/native
-  autoreconf -if
-popd
+mkdir build
+mkdir build/src
 
-LIBJVMS=`find ${JAVA_HOME}/jre/lib/ -name "libjvm.so" -exec dirname {} \;`
-LIBRARIES="-lcrypto -lm "
-for jvm in $LIBJVMS;
-do
-  LIBRARIES="${LIBRARIES} -L${jvm}"
-done
+# Build artifacts
+MAVEN_SKIP_TESTS="-DskipTests -DskipTest -DskipITs"
+mvn $BUNDLE_SNAPPY -Dcontainer-executor.conf.dir=/etc/hadoop/conf -Pdist -Pnative -Pfuse -Psrc -Dtar ${MAVEN_SKIP_TESTS} install "$@"
+mvn site site:stage ${MAVEN_SKIP_TESTS} $@
 
-# FIXME: the LDFLAGS="-lcrypto" is a workaround for MAPREDUCE-2127
-# FIXME: the FUSE_HOME="..." and LDFLAGS="-lm" is a workaround for HADOOP-3344
-LDFLAGS="$LIBRARIES" FUSE_HOME=`pwd`/build/c++/${HADOOP_ARCH} ant \
-  -Djava5.home=$JAVA5_HOME \
-  -Dforrest.home=$FORREST_HOME \
-  -Dversion=${HADOOP_VERSION} \
-  -Dcompile.native=true \
-  -Dhadoop.conf.dir=/etc/hadoop/conf \
-  -Dlibhdfs=1 -Dfusedfs=true -Dcompile.c++=true -Djdiff.build.dir=build/docs/jdiff \
-  $DO_AUTORECONF task-controller api-report bin-package compile-contrib package \
-  "$@"
+(cd build ; tar --strip-components=1 -xzvf  ../hadoop-dist/target/hadoop-${HADOOP_VERSION}.tar.gz)
+(cd build/src ; tar --strip-components=1 -xzvf  ../../hadoop-dist/target/hadoop-${HADOOP_VERSION}-src.tar.gz)
 
-	
+# Copy generated docs
+mkdir -p build/share/doc/
+cp -r target/site/* build/share/doc/
+
+# Create a manifest for hadoop client package
+(cd hadoop-client/target/hadoop-client-*/share/hadoop/client/lib ; ls) > build/hadoop-client.list
+
+# Copy fuse output to the build directory
+cp hadoop-hdfs-project/hadoop-hdfs/src/contrib/fuse-dfs/target/fuse-dfs/src/{fuse_dfs,fuse_dfs_wrapper.sh} build/bin/

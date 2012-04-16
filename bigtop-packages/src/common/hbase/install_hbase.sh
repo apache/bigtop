@@ -110,14 +110,19 @@ install -d -m 0755 $PREFIX/$BIN_DIR
 install -d -m 0755 $PREFIX/$ETC_DIR
 install -d -m 0755 $PREFIX/$MAN_DIR
 
-cp -ra lib/* ${PREFIX}/${LIB_DIR}/lib/
-cp hbase*.jar $PREFIX/$LIB_DIR
-cp -a docs/* $PREFIX/$DOC_DIR
-cp *.txt $PREFIX/$DOC_DIR/
-cp -a hbase-webapps $PREFIX/$LIB_DIR
+cp -ra $BUILD_DIR/lib/* ${PREFIX}/${LIB_DIR}/lib/
+cp $BUILD_DIR/hbase*.jar $PREFIX/$LIB_DIR
+cp -a $BUILD_DIR/docs/* $PREFIX/$DOC_DIR
+cp $BUILD_DIR/*.txt $PREFIX/$DOC_DIR/
+cp -a $BUILD_DIR/hbase-webapps $PREFIX/$LIB_DIR
 
-cp -a conf $PREFIX/$CONF_DIR
-cp -a bin/* $PREFIX/$BIN_DIR
+cp -a $BUILD_DIR/conf $PREFIX/$CONF_DIR
+cp -a $BUILD_DIR/bin/* $PREFIX/$BIN_DIR
+# Purge scripts that don't work with packages
+for file in rolling-restart.sh graceful_stop.sh local-regionservers.sh \
+            start-hbase.sh stop-hbase.sh local-master-backup.sh ; do
+  rm -f $PREFIX/$BIN_DIR/$file
+done
 
 ln -s $ETC_DIR/conf $PREFIX/$LIB_DIR/conf
 

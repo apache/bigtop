@@ -163,11 +163,19 @@ case "$1" in
 	    exit 1
 	fi
 	;;
-
+    init)
+        if hadoop_check_pidfile $PID_FILE ; then
+          echo "Error: $DESC is running. Stop it first." >&2
+          exit 1
+        else
+          shift
+          su -s /bin/sh zookeeper -c "zookeeper-server-initialize $*"
+        fi
+	;;
     *)
 	N=/etc/init.d/$NAME
   # echo "Usage: $N {start|stop|restart|reload|force-reload}" >&2
-	echo "Usage: $N {start|stop|restart|force-reload|status|force-stop|condrestart|try-restart}" >&2
+	echo "Usage: $N {start|stop|restart|force-reload|status|force-stop|condrestart|try-restart|init}" >&2
 
 	exit 1
 	;;

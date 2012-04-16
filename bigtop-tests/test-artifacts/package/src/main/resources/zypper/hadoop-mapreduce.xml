@@ -1,0 +1,25 @@
+<hadoop-mapreduce>
+<content>
+  <config name='/etc/default/hadoop-mapreduce-historyserver' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+  <config name='/etc/security/limits.d/mapreduce.conf' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+  <file name='/usr/bin/mapred' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+  <file name='/usr/lib/hadoop/bin/mapred' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+  <file name='/usr/lib/hadoop/hadoop-distcp-0.23.1.jar' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+  <file name='/usr/lib/hadoop/hadoop-extras-0.23.1.jar' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+  <file name='/usr/lib/hadoop/hadoop-mapreduce-client-app-0.23.1.jar' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+  <file name='/usr/lib/hadoop/hadoop-mapreduce-client-common-0.23.1.jar' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+  <file name='/usr/lib/hadoop/hadoop-mapreduce-client-core-0.23.1.jar' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+  <file name='/usr/lib/hadoop/hadoop-mapreduce-client-hs-0.23.1.jar' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+  <file name='/usr/lib/hadoop/hadoop-mapreduce-client-jobclient-0.23.1.jar' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+  <file name='/usr/lib/hadoop/hadoop-mapreduce-client-shuffle-0.23.1.jar' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+  <file name='/usr/lib/hadoop/hadoop-mapreduce-examples-0.23.1.jar' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+  <file name='/usr/lib/hadoop/hadoop-rumen-0.23.1.jar' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+  <file name='/usr/lib/hadoop/hadoop-streaming-0.23.1.jar' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+  <file name='/usr/lib/hadoop/libexec/mapred-config.sh' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+  <file name='/usr/lib/hadoop/sbin/mr-jobhistory-daemon.sh' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+  <file name='/var/lib/mapreduce' owners='-1' perm='drwxrwxr-x' user='mapreduce' group='hadoop' />
+  <file name='/var/lib/mapreduce/cache' owners='-1' perm='drwxrwxrwt' user='mapreduce' group='hadoop' />
+  <file name='/var/log/mapreduce' owners='-1' perm='lrwxrwxrwx' user='mapreduce' group='hadoop' target='hadoop' />
+  <file name='/var/run/mapreduce' owners='-1' perm='lrwxrwxrwx' user='mapreduce' group='hadoop' target='hadoop' />
+</content>
+</hadoop-mapreduce>
