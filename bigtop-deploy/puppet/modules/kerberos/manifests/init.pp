@@ -30,6 +30,8 @@ class kerberos {
                                            default => $kerberos_kdc_port } 
     $admin_port = 749 /* BUG: linux daemon packaging doesn't let us tweak this */
 
+    $keytab_export_dir = "/var/lib/bigtop_keytabs"
+
     case $operatingsystem {
         'ubuntu': {
             $package_name_kdc    = 'krb5-kdc'
@@ -57,6 +59,17 @@ class kerberos {
       owner => "root",
       group => "root",
       mode => "0644",
+    }
+
+    @file { $keytab_export_dir:
+      ensure => directory,
+      owner  => "root",
+      group  => "root",
+    }
+
+    # Required for SPNEGO
+    @principal { "HTTP": 
+
     }
   }
 
@@ -126,11 +139,6 @@ class kerberos {
   }
 
   class client inherits kerberos::site {
-    # Required for SPNEGO
-    @principal { "HTTP": 
-
-    }
-
     package { $package_name_client:
       ensure => installed,
     }
@@ -149,44 +157,61 @@ class kerberos {
   }
 
   define principal {
+    require "kerberos::client"
+
+    realize(File[$kerberos::site::keytab_export_dir])
+
+    $principal = "$title/$::fqdn"
+    $keytab    = "$kerberos::site::keytab_export_dir/$title.keytab"
+
     exec { "addprinc.$title":
-       path => $kerberos::site::exec_path, # BUG: I really shouldn't need to do a FQVN here
-       command => "kadmin -w secure -p kadmin/admin -q 'addprinc -randkey $title/$fqdn'",
-       unless => "kadmin -w secure -p kadmin/admin -q listprincs | grep -q $title/$fqdn",
-       require => Package[$kerberos::site::package_name_client],
+      path => $kerberos::site::exec_path,
+      command => "kadmin -w secure -p kadmin/admin -q 'addprinc -randkey $principal'",
+      unless => "kadmin -w secure -p kadmin/admin -q listprincs | grep -q $principal",
+      require => Package[$kerberos::site::package_name_client],
+    } 
+    ->
+    exec { "xst.$title":
+      path    => $kerberos::site::exec_path, 
+      command => "kadmin -w secure -p kadmin/admin -q 'xst -k $keytab $principal'",
+      unless  => "klist -kt $keytab 2>/dev/null | grep -q $principal",
+      require => File[$kerberos::site::keytab_export_dir],
     }
   }
 
-  define host_keytab($fqdn = "$hostname.$domain", $princs = undef, $spnego = disabled) {
+  define host_keytab($princs = undef, $spnego = disabled) {
+    $keytab = "/etc/$title.keytab"
 
-    require "kerberos::client"
-
-    $needed_princs = $princs ? { 
+    $requested_princs = $princs ? { 
       undef   => [ $title ],
       default => $princs,
     }
- 
-    $keytab = "/etc/${title}.keytab"
-    $exports = inline_template("<%= needed_princs.map { |x| x+'/$fqdn' }.join(' ') %>")
-    $spnego_export = $spnego ? {
-       /(true|enabled)/ => "HTTP/$fqdn",
-       default          => "",
+
+    $internal_princs = $spnego ? {
+      /(true|enabled)/ => [ 'HTTP' ],
+      default          => [ ],
+    }
+    realize(Kerberos::Principal[$internal_princs])
+
+    $includes = inline_template("<%=
+      [requested_princs, internal_princs].flatten.map { |x|
+        \"rkt $kerberos::site::keytab_export_dir/#{x}.keytab\"
+      }.join(\"\n\")
+    %>")
+
+    kerberos::principal { $requested_princs:
     }
 
-    principal { $needed_princs:
-
-    }
-
-    exec { "xst.$title":
-       path => $kerberos::site::exec_path, # BUG: I really shouldn't need to do a FQVN here
-       command => "kadmin -w secure -p kadmin/admin -q 'xst -k $keytab $exports $spnego_export' ; chown $title $keytab",
-       unless => "klist -kt $keytab 2>/dev/null | grep -q $title/$fqdn",
-       require => [ Kerberos::Principal[$needed_princs] ],
-    }
-
-    if ($spnego =~ /(true|enabled)/) {
-      Kerberos::Principal <| title == "HTTP" |> -> Exec["xst.$title"]
+    exec { "ktinject.$title":
+      path     => $kerberos::site::exec_path,
+      command  => "/usr/bin/ktutil <<EOF
+        $includes
+        wkt $keytab
+EOF
+        chown $title $keytab",
+      creates => $keytab,
+      require => [ Kerberos::Principal[$requested_princs],
+                   Kerberos::Principal[$internal_princs] ],
     }
   }
-
 }
