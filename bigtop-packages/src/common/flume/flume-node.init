@@ -62,14 +62,20 @@ FLUME_PID_FILE=${FLUME_RUN}/flume-node.pid
 install -d -m 0755 -o flume -g flume ${FLUME_RUN} 
 USER=flume
 
-HOSTNAME=`hostname`
-FLUME_NODE_NAME=${FLUME_NODE_NAME:-$HOSTNAME}
+DEFAULT_FLUME_NODE_NAME="agent"
+FLUME_NODE_NAME=${FLUME_NODE_NAME:-${DEFAULT_FLUME_NODE_NAME}}
 
 start() {
   [ -x $exec ] || exit $ERROR_PROGRAM_NOT_INSTALLED
+
+  checkstatus
+  status=$?
+  if [ "$status" -eq "$STATUS_RUNNING" ]; then
+    exit 0
+  fi
+
   log_success_msg "Starting $desc (flume-node): "
-  export FLUME_PID_FILE
-  /bin/su -s /bin/bash -c "${EXEC_PATH} node --conf $FLUME_CONF_DIR --conf-file $FLUME_CONF_FILE --name $FLUME_NODE_NAME &>>${FLUME_LOG_DIR}/flume-node.log &" $USER
+  /bin/su -s /bin/bash -c "/bin/bash -c 'echo \$\$ > ${FLUME_PID_FILE} && exec ${EXEC_PATH} node --conf $FLUME_CONF_DIR --conf-file $FLUME_CONF_FILE --name $FLUME_NODE_NAME &>>${FLUME_LOG_DIR}/flume-node.log' &" $USER
   RETVAL=$?
   [ $RETVAL -eq 0 ] && touch $LOCKFILE
   return $RETVAL
@@ -78,24 +84,18 @@ start() {
 stop() {
   if [ ! -e $FLUME_PID_FILE ]; then
     log_failure_msg "Flume node is not running"
-    exit $STATUS_NOT_RUNNING
+    exit 0
   fi
 
   log_success_msg "Stopping $desc (flume-node): "
 
-  # FLUME-919 will put an end to such extreme violence
   FLUME_PID=`cat $FLUME_PID_FILE`
   if [ -n $FLUME_PID ]; then
-    FLUME_PID_GROUP=$(ps -o pgrp -p ${FLUME_PID} h)
-
-    if [ -n $FLUME_PID_GROUP ]; then
-      kill -TERM -${FLUME_PID_GROUP} &>/dev/null
-      sleep 5
-      kill -KILL -${FLUME_PID_GROUP} &>/dev/null
-
-      rm -f $LOCKFILE $FLUME_PID_FILE
-    fi
+    kill -TERM ${FLUME_PID} &>/dev/null
+    sleep 5
+    kill -KILL ${FLUME_PID} &>/dev/null
   fi
+  rm -f $LOCKFILE $FLUME_PID_FILE
   return 0
 }
 
@@ -129,7 +129,7 @@ checkstatus(){
 }
 
 condrestart(){
-  [ -e /var/lock/subsys/flume-node ] && restart || :
+  [ -e ${LOCKFILE} ] && restart || :
 }
 
 case "$1" in

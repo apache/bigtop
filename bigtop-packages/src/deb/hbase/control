@@ -48,6 +48,12 @@ Description: HRegionServer makes a set of HRegions available to clients
  It checks in with the HMaster. There are many HRegionServers in a single 
  HBase deployment.
 
+Package: hbase-rest
+Architecture: all
+Depends: hbase (= ${source:Version})
+Description: The Apache HBase REST gateway
+ The Apache HBase REST gateway
+
 Package: hbase-thrift
 Architecture: all
 Depends: hbase (= ${source:Version}) 

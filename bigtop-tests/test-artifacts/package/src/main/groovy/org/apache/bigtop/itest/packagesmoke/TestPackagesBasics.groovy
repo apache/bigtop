@@ -146,7 +146,7 @@ class TestPackagesBasics extends PackageTestCommon {
   synchronized void testRemoteMetadata() { 
     if (!isUpgrade()) {
       if (pkg.isInstalled()) {
-        checkThat("package $name is alredy installed and could not be removed",
+        checkThat("package $name is already installed and could not be removed",
                   pkg.remove(), equalTo(0));
       }
 

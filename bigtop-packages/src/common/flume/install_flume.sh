@@ -105,8 +105,19 @@ install -d -m 0755 ${PREFIX}/${FLUME_DIR}
 (cd ${PREFIX}/${FLUME_DIR} &&
   tar --strip-components=1 -xvzf ${BUILD_DIR}/flume-ng-dist/target/flume-ng-dist-*-dist.tar.gz)
 
-# Take out things we've installed elsewhere
-for x in flume-ng-* conf pom.xml CHANGELOG DEVNOTES DISCLAIMER LICENSE NOTICE README RELEASE-NOTES; do
+# Take out useless things or we've installed elsewhere
+for x in flume-ng-* \
+          conf \
+          pom.xml \
+          CHANGELOG \
+          DEVNOTES \
+          DISCLAIMER \
+          LICENSE \
+          NOTICE \
+          README \
+          RELEASE-NOTES \
+          bin/ia64 \
+          bin/amd64; do
   rm -rf ${PREFIX}/$FLUME_DIR/$x 
 done
 

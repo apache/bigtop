@@ -38,7 +38,7 @@ case "$1" in
                   --system \
                   --disabled-login \
                   --group \
-                  --home /var/run/oozie \
+                  --home /var/lib/oozie \
                   --gecos "Oozie User" \
                   --shell /bin/false \
                   oozie  >/dev/null

@@ -141,7 +141,11 @@ $(2)_SOURCE_DIR       = $$($(2)_BUILD_DIR)/source
 $(2)_DOWNLOAD_URL = $($(2)_SITE)/$($(2)_TARBALL_SRC)
 $(2)_DOWNLOAD_DST = $(DL_DIR)/$($(2)_TARBALL_DST)
 
-# Define the file stamps
+# test that the download url will return http 200.  If it does not, use the ARCHIVE url instead of the MIRROR SITE url
+ifneq ($$(shell curl -o /dev/null --silent --head --write-out '%{http_code}' $$($(2)_DOWNLOAD_URL)),200)
+	$(2)_DOWNLOAD_URL = $($(2)_ARCHIVE)/$($(2)_TARBALL_SRC)
+endif 
+
 $(2)_TARGET_DL       = $$($(2)_BUILD_DIR)/.download
 $(2)_TARGET_SRPM     = $$($(2)_BUILD_DIR)/.srpm
 $(2)_TARGET_RPM      = $$($(2)_BUILD_DIR)/.rpm

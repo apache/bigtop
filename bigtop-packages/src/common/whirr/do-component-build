@@ -16,6 +16,8 @@
 
 set -ex
 
+# BIGTOP-472 whirr build needs more perm gen space
+export MAVEN_OPT="-XX:MaxPermSize=128m"
 mvn clean -Pjavadoc site source:jar package assembly:assembly -DskipTests "$@" 
 
 mkdir build
