@@ -29,8 +29,10 @@ class hadoop-zookeeper {
 
     service { "zookeeper-server":
       ensure => running,
-      require => Package["zookeeper-server"],
-      subscribe => File["/etc/zookeeper/conf/zoo.cfg"],
+      require => [ Package["zookeeper-server"], 
+                   Exec["zookeeper-server-initialize"] ],
+      subscribe => [ File["/etc/zookeeper/conf/zoo.cfg"],
+                     File["/var/lib/zookeeper/myid"] ],
       hasrestart => true,
       hasstatus => true,
     } 
@@ -42,6 +44,13 @@ class hadoop-zookeeper {
 
     file { "/var/lib/zookeeper/myid":
       content => inline_template("<%= myid %>"),
+      require => Package["zookeeper-server"],
+    }
+    
+    exec { "zookeeper-server-initialize":
+      command => "/usr/bin/zookeeper-server-initialize",
+      user    => "zookeeper",
+      creates => "/var/lib/zookeeper/version-2",
       require => Package["zookeeper-server"],
     }
 
