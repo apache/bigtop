@@ -18,6 +18,10 @@
 
 <% namenode_hosts = hadoop_namenode_host.to_a -%>
 <configuration>
+  <property>
+    <name>httpfs.hadoop.hdfs.configuration.dir</name>
+    <value>/etc/hadoop/conf</value>
+  </property>
 
 <% if has_variable?("hadoop_core_proxyusers") -%>
 <% hadoop_core_proxyusers.sort.each do |superuser, data| -%>
@@ -62,14 +66,5 @@
     <name>httpfs.hadoop.authentication.kerberos.keytab</name>
     <value>${httpfs.authentication.kerberos.keytab}</value>
   </property>
-  <property>
-    <name>httpfs.hadoop.conf:dfs.namenode.kerberos.principal</name>
-    <value>hdfs/<%= namenode_hosts[0] %>@<%= kerberos_realm %></value>
-  </property>
 <% end -%>
-
-  <property>
-    <name>httpfs.hadoop.conf:fs.default.name</name>
-    <value>hdfs://<%= namenode_hosts[0] %>:<%= hadoop_namenode_port%></value>
-  </property>
 </configuration>
