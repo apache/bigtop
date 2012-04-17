@@ -159,6 +159,17 @@ Description: Secondary Name Node for Hadoop
  It is _not_ a failover pair for the namenode, and may safely be run on the
  same machine.
 
+Package: hadoop-hdfs-zkfc
+Provides: hadoop-hdfs-zkfc
+Architecture: all
+Depends: hadoop-hdfs (= ${source:Version})
+Description: Hadoop HDFS failover controller
+ The Hadoop HDFS failover controller is a ZooKeeper client which also
+ monitors and manages the state of the NameNode. Each of the machines
+ which runs a NameNode also runs a ZKFC, and that ZKFC is responsible
+ for: Health monitoring, ZooKeeper session management, ZooKeeper-based
+ election.
+
 Package: hadoop-hdfs-datanode
 Provides: hadoop-hdfs-datanode
 Architecture: all

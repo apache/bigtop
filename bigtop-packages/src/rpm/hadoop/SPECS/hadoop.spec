@@ -56,7 +56,7 @@
 %define doc_hadoop %{_docdir}/%{name}-%{hadoop_version}
 %define httpfs_services httpfs
 %define mapreduce_services mapreduce-historyserver
-%define hdfs_services hdfs-namenode hdfs-secondarynamenode hdfs-datanode
+%define hdfs_services hdfs-namenode hdfs-secondarynamenode hdfs-datanode hdfs-zkfc
 %define yarn_services yarn-resourcemanager yarn-nodemanager yarn-proxyserver
 %define hadoop_services %{hdfs_services} %{mapreduce_services} %{yarn_services} %{httpfs_services}
 # Hadoop outputs built binaries into %{hadoop_build}
@@ -160,6 +160,7 @@ Source19: mapreduce.default
 Source20: hdfs.default
 Source21: yarn.default
 Source22: hadoop-layout.sh
+Source23: hadoop-hdfs-zkfc.svc
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
 BuildRequires: python >= 2.4, git, fuse-devel,fuse, automake, autoconf
 Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils, zookeeper >= 3.4.0
@@ -274,6 +275,18 @@ The Secondary Name Node periodically compacts the Name Node EditLog
 into a checkpoint.  This compaction ensures that Name Node restarts
 do not incur unnecessary downtime.
 
+%package hdfs-zkfc
+Summary: Hadoop HDFS failover controller
+Group: System/Daemons
+Requires: %{name}-hdfs = %{version}-%{release}
+Requires(pre): %{name} = %{version}-%{release}
+
+%description hdfs-zkfc
+The Hadoop HDFS failover controller is a ZooKeeper client which also
+monitors and manages the state of the NameNode. Each of the machines
+which runs a NameNode also runs a ZKFC, and that ZKFC is responsible
+for: Health monitoring, ZooKeeper session management, ZooKeeper-based
+election.
 
 %package hdfs-datanode
 Summary: Hadoop Data Node
@@ -623,6 +636,7 @@ fi
 
 %service_macro hdfs-namenode
 %service_macro hdfs-secondarynamenode
+%service_macro hdfs-zkfc
 %service_macro hdfs-datanode
 %service_macro yarn-resourcemanager
 %service_macro yarn-nodemanager

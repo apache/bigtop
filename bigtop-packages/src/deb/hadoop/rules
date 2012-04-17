@@ -79,7 +79,7 @@ install: build
 # Run dh_lintian if we've got it - this doesn't exist on debhelper 6 (eg Ubuntu Hardy)
 	(dh_lintian) || /bin/true
 
-hadoop_svcs=hdfs-namenode hdfs-secondarynamenode hdfs-datanode \
+hadoop_svcs=hdfs-namenode hdfs-secondarynamenode hdfs-datanode hdfs-zkfc \
             yarn-resourcemanager yarn-nodemanager yarn-proxyserver \
             mapreduce-historyserver httpfs
 
