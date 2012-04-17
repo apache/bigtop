@@ -668,7 +668,7 @@ fi
 # -devel should be its own package
 #%doc %{_docdir}/libhdfs-%{hadoop_version}
 
-%files fuse
+%files hdfs-fuse
 %defattr(-,root,root)
 %attr(0755,root,root) %{lib_hadoop}/bin/fuse_dfs
 %attr(0755,root,root) %{lib_hadoop}/bin/fuse_dfs_wrapper.sh
