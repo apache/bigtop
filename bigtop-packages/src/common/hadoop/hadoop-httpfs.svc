@@ -60,8 +60,13 @@ generate_stop() {
 cat <<'__EOT__'
 stop() {
   log_success_msg "Stopping ${DESC}: "
-  su -s /bin/bash $SVC_USER -c "${EXEC_PATH} stop $SLEEP_TIME -force"
-  RETVAL=$?
+  # FIXME: workaround for BIGTOP-537
+  if [ -s $PIDFILE ] ; then
+    su -s /bin/bash $SVC_USER -c "${EXEC_PATH} stop $SLEEP_TIME -force"
+    RETVAL=$?
+  else
+    RETVAL=$RETVAL_SUCCESS
+  fi
 
   [ $RETVAL -eq $RETVAL_SUCCESS ] && rm -f $LOCKFILE $PIDFILE
 }
