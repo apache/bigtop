@@ -478,6 +478,10 @@ done
 %__install -m 0644 %{SOURCE9} $RPM_BUILD_ROOT/etc/security/limits.d/yarn.conf
 %__install -m 0644 %{SOURCE10} $RPM_BUILD_ROOT/etc/security/limits.d/mapreduce.conf
 
+# Install fuse default file
+%__install -d -m 0755 $RPM_BUILD_ROOT/etc/default
+%__cp %{SOURCE4} $RPM_BUILD_ROOT/etc/default/hadoop-fuse
+
 # /var/lib/*/cache
 %__install -d -m 1777 $RPM_BUILD_ROOT/%{state_yarn}/cache
 %__install -d -m 1777 $RPM_BUILD_ROOT/%{state_hdfs}/cache
@@ -670,6 +674,7 @@ fi
 
 %files hdfs-fuse
 %defattr(-,root,root)
+%attr(0644,root,root) %config(noreplace) /etc/default/hadoop-fuse
 %attr(0755,root,root) %{lib_hadoop}/bin/fuse_dfs
 %attr(0755,root,root) %{bin_hadoop}/hadoop-fuse-dfs
 
