@@ -219,7 +219,7 @@ cp -ra ${BUILD_DIR}/share/hadoop/hdfs/webapps ${HDFS_DIR}/
 
 # bin
 install -d -m 0755 ${HADOOP_DIR}/bin
-cp -a ${BUILD_DIR}/bin/{hadoop,rcc,fuse_dfs,fuse_dfs_wrapper.sh} ${HADOOP_DIR}/bin
+cp -a ${BUILD_DIR}/bin/{hadoop,rcc,fuse_dfs} ${HADOOP_DIR}/bin
 install -d -m 0755 ${HDFS_DIR}/bin
 cp -a ${BUILD_DIR}/bin/hdfs ${HDFS_DIR}/bin
 install -d -m 0755 ${YARN_DIR}/bin

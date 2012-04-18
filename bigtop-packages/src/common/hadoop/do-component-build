@@ -40,4 +40,4 @@ cp -r target/site/* build/share/doc/
 (cd hadoop-client/target/hadoop-client-*/share/hadoop/client/lib ; ls) > build/hadoop-client.list
 
 # Copy fuse output to the build directory
-cp hadoop-hdfs-project/hadoop-hdfs/src/contrib/fuse-dfs/target/fuse-dfs/src/{fuse_dfs,fuse_dfs_wrapper.sh} build/bin/
+cp hadoop-hdfs-project/hadoop-hdfs/src/contrib/fuse-dfs/target/fuse-dfs/src/fuse_dfs build/bin/
