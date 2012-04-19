@@ -29,16 +29,17 @@ class AptCmdLinePackageManager extends PackageManager {
      shRoot.exec("debconf-set-selections <<__EOT__\n${defaults}\n__EOT__");
   }
 
-  public int addBinRepo(String record, String url, String key) {
+  // FIXME: Debian doesn't have a way ot passing a full description
+  // of the repository that also includes a GPG key -- we have to workaround
+  public int addBinRepo(String record, String desc, String key) {
     if (key) {
       def text = key.toURL().text;
       shRoot.exec("apt-key add - <<__EOT__\n${text}\n__EOT__");
-      if (shRoot.getRet()) {
+      if (shRoot.getRet() != 0) {
         return shRoot.getRet();
       }
-    } else {
-      return addBinRepo(record, url);
     }
+    return addBinRepo(record, desc);
   }
 
   public int addBinRepo(String record, String url, String key, String cookie) {

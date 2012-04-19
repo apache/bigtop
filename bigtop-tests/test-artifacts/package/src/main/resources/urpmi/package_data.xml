@@ -2166,7 +2166,7 @@
     <zookeeper>
       <home>/var/lib/zookeeper</home>
       <descr>ZooKeeper</descr>
-      <shell>/bin/false</shell>
+      <shell>/sbin/nologin</shell>
     </zookeeper>
   </users>
   <deps>
@@ -6880,7 +6880,7 @@
     <hbase>
       <home>/var/run/hbase</home>
       <descr>HBase</descr>
-      <shell>/bin/bash</shell>
+      <shell>/sbin/nologin</shell>
     </hbase>
   </users>
   <deps>

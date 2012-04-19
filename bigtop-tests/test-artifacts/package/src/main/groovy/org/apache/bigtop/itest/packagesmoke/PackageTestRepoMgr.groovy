@@ -72,7 +72,7 @@ class PackageTestRepoMgr {
     pm.cleanup();
     try {
       String repoText = cdhRepoFileURL.toURL().text;
-      if (pm.addBinRepo(repoName, repoText, cdhKeyURL)) {
+      if (pm.addBinRepo(repoName, repoText, cdhKeyURL) != 0) {
         return false;
       }
 
