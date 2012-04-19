@@ -23,6 +23,21 @@
     <url>http://incubator.apache.org/bigtop/</url>
   </metadata>
 </bigtop-utils>
+<bigtop-jsvc>
+  <metadata>
+    <summary>Application to launch java daemon</summary>
+    <description>jsvc executes classfile that implements a Daemon interface.</description>
+    <url>http://commons.apache.org/daemon/</url>
+  </metadata>
+</bigtop-jsvc>
+<bigtop-tomcat>
+  <metadata>
+    <summary>Apache Tomcat</summary>
+    <description>Apache Tomcat is an open source software implementation of the
+Java Servlet and JavaServer Pages technologies.</description>
+    <url>http://tomcat.apache.org/</url>
+  </metadata>
+</bigtop-tomcat>
 <mahout>
   <metadata>
     <summary>A set of Java libraries for scalable machine learning.</summary>
@@ -100,7 +115,7 @@
   <users>
     <flume>
       <home>/var/run/flume</home>
-      <descr>Flume User</descr>
+      <descr>Flume</descr>
       <shell>/bin/false</shell>
     </flume>
   </users>
@@ -113,24 +128,6 @@
     </flume-conf>
   </alternatives>
 </flume>
-<flume-master>
-  <metadata>
-    <summary>central administration point for the flume data collection system</summary>
-    <description>The Flume master daemon is the central administration and data path control
- point for flume nodes.</description>
-    <url>http://incubator.apache.org/projects/flume.html</url>
-  </metadata>
-  <deps>
-    <flume>/self</flume>
-  </deps>
-  <services>
-    <flume-master>
-       <runlevel>2</runlevel><runlevel>3</runlevel><runlevel>4</runlevel><runlevel>5</runlevel>
-       <oninstall>start</oninstall>
-       <configured>true</configured>
-    </flume-master>
-  </services>
-</flume-master>
 <flume-node>
   <metadata>
     <summary>core element of Flume's data path that collects and delivers data</summary>
@@ -192,7 +189,7 @@
   <users>
     <sqoop>
       <home>/var/lib/sqoop</home>
-      <descr>Sqoop User</descr>
+      <descr>Sqoop</descr>
       <shell>/bin/false</shell>
     </sqoop>
   </users>
@@ -253,7 +250,7 @@
   </groups>
   <users>
     <oozie>
-      <home>/var/run/oozie</home>
+      <home>/var/lib/oozie</home>
       <descr>Oozie User</descr>
       <shell>/bin/false</shell>
     </oozie>
@@ -420,7 +417,7 @@
   <users>
     <hive>
       <home>/var/lib/hive</home>
-      <descr>Hive User</descr>
+      <descr>Hive</descr>
       <shell>/bin/false</shell>
     </hive>
   </users>
@@ -449,7 +446,7 @@
   <users>
     <hive>
       <home>/var/lib/hive</home>
-      <descr>Hive User</descr>
+      <descr>Hive</descr>
       <shell>/bin/false</shell>
     </hive>
   </users>
@@ -482,7 +479,7 @@
   </groups>
   <users>
     <hbase>
-      <home>/var/lib/hbase</home>
+      <home>/var/run/hbase</home>
       <descr>HBase User</descr>
       <shell>/bin/bash</shell>
     </hbase>
@@ -548,6 +545,23 @@
     </hbase-thrift>
   </services>
 </hbase-thrift>
+<hbase-rest>
+  <metadata>
+    <summary>The Apache HBase REST gateway</summary>
+    <description>The Apache HBase REST gateway</description>
+    <url>http://hbase.apache.org/</url>
+  </metadata>
+  <deps>
+    <hbase>/self</hbase>
+  </deps>
+  <services>
+    <hbase-rest>
+       <runlevel>2</runlevel><runlevel>3</runlevel><runlevel>4</runlevel><runlevel>5</runlevel>
+       <oninstall>start</oninstall>
+       <configured>false</configured>
+    </hbase-rest>
+  </services>
+</hbase-rest>
 <hadoop>
   <metadata>
     <summary>Hadoop is a software platform for processing vast amounts of data</summary>
@@ -576,9 +590,6 @@
   <deps>
     <bigtop-utils/>
   </deps>
-  <groups>
-    <hadoop/>
-  </groups>
   <alternatives>
     <hadoop-conf>
       <status>auto</status>
@@ -607,7 +618,7 @@
   </groups>
   <users>
     <hdfs>
-      <home>/var/lib/hdfs</home>
+      <home>/var/lib/hadoop-hdfs</home>
       <descr>Hadoop HDFS</descr>
       <shell>/bin/bash</shell>
     </hdfs>
@@ -632,7 +643,7 @@
   </groups>
   <users>
     <yarn>
-      <home>/var/lib/yarn</home>
+      <home>/var/lib/hadoop-yarn</home>
       <descr>Hadoop YARN</descr>
       <shell>/bin/bash</shell>
     </yarn>
@@ -651,16 +662,16 @@
     <bigtop-utils/>
   </deps>
   <groups>
-    <mapreduce>
-      <user>mapreduce</user>
-    </mapreduce>
+    <mapred>
+      <user>mapred</user>
+    </mapred>
   </groups>
   <users>
-    <mapreduce>
-      <home>/var/lib/mapreduce</home>
+    <mapred>
+      <home>/var/lib/hadoop-mapreduce</home>
       <descr>Hadoop MapReduce</descr>
       <shell>/bin/bash</shell>
-    </mapreduce>
+    </mapred>
   </users>
 </hadoop-mapreduce>
 <hadoop-httpfs>
@@ -714,6 +725,27 @@
     </hadoop-hdfs-namenode>
   </services>
 </hadoop-hdfs-namenode>
+<hadoop-hdfs-zkfc>
+  <metadata>
+    <summary>Hadoop HDFS failover controller</summary>
+    <description>The Hadoop HDFS failover controller is a ZooKeeper client which also
+monitors and manages the state of the NameNode. Each of the machines
+which runs a NameNode also runs a ZKFC, and that ZKFC is responsible
+for: Health monitoring, ZooKeeper session management, ZooKeeper-based
+election.</description>
+    <url>http://hadoop.apache.org/core/</url>
+  </metadata>
+  <deps>
+    <hadoop-hdfs>/self</hadoop-hdfs>
+  </deps>
+  <services>
+    <hadoop-hdfs-zkfc>
+      <runlevel>2</runlevel><runlevel>3</runlevel><runlevel>4</runlevel><runlevel>5</runlevel>
+      <oninstall>stop</oninstall>
+      <configured>false</configured>
+    </hadoop-hdfs-zkfc>
+  </services>
+</hadoop-hdfs-zkfc>
 <hadoop-hdfs-secondarynamenode>
   <metadata>
     <summary>Hadoop Secondary namenode</summary>
@@ -863,4 +895,29 @@
     <url>http://hadoop.apache.org/core/</url>
   </metadata>
 </hadoop-doc>
+<hadoop-client>
+  <metadata>
+    <summary>Hadoop client side dependencies</summary>
+    <description>Installation of this package will provide you with all the dependencies for Hadoop clients.</description>
+    <url>http://hadoop.apache.org/core/</url>
+  </metadata>
+  <deps>
+    <hadoop>/self</hadoop>
+    <hadoop-hdfs>/self</hadoop-hdfs>
+    <hadoop-yarn>/self</hadoop-yarn>
+    <hadoop-mapreduce>/self</hadoop-mapreduce>
+  </deps>
+</hadoop-client>
+<hadoop-hdfs-fuse>
+  <metadata>
+    <summary>Mountable HDFS</summary>
+    <description>These projects (enumerated below) allow HDFS to be mounted (on most flavors of Unix) as a standard file system using</description>
+    <url>http://hadoop.apache.org/core/</url>
+  </metadata>
+  <deps>
+    <hadoop-client>/self</hadoop-client>
+    <hadoop>/self</hadoop>
+    <hadoop-libhdfs>/self</hadoop-libhdfs>
+  </deps>
+</hadoop-hdfs-fuse>
 </packages>
