@@ -151,7 +151,7 @@ chmod 755 $init_file
 
 %pre
 getent group zookeeper >/dev/null || groupadd -r zookeeper
-getent passwd zookeeper > /dev/null || useradd -c "ZooKeeper" -s /sbin/nologin -g zookeeper -r -d %{run_zookeeper} zookeeper 2> /dev/null || :
+getent passwd zookeeper > /dev/null || useradd -c "ZooKeeper" -s /sbin/nologin -g zookeeper -r -d %{vlb_zookeeper} zookeeper 2> /dev/null || :
 
 %__install -d -o zookeeper -g zookeeper -m 0755 %{run_zookeeper}
 %__install -d -o zookeeper -g zookeeper -m 0755 %{log_zookeeper}
@@ -191,6 +191,7 @@ fi
 %config(noreplace) %{etc_zookeeper}/conf.dist
 %{lib_zookeeper}
 %{bin_zookeeper}/zookeeper-server
+%{bin_zookeeper}/zookeeper-server-initialize
 %{bin_zookeeper}/zookeeper-client
 %doc %{doc_zookeeper}
 %{man_dir}/man1/zookeeper.1.*

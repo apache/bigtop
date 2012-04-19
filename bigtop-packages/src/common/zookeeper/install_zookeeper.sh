@@ -121,8 +121,10 @@ ln -s $CONF_DIR $PREFIX/$LIB_DIR/conf
 
 # Copy in the /usr/bin/zookeeper-server wrapper
 install -d -m 0755 $PREFIX/$LIB_DIR/bin
+# FIXME: a workaround in preparation for Zookeeper 3.5
+echo '#!/bin/bash' > $BUILD_DIR/bin/zkServer-initialize.sh
 
-for i in zkServer.sh zkEnv.sh zkCli.sh zkCleanup.sh
+for i in zkServer.sh zkEnv.sh zkCli.sh zkCleanup.sh zkServer-initialize.sh
 	do cp $BUILD_DIR/bin/$i $PREFIX/$LIB_DIR/bin
 	chmod 755 $PREFIX/$LIB_DIR/bin/$i
 done
@@ -147,8 +149,9 @@ env CLASSPATH=\$CLASSPATH /usr/lib/zookeeper/bin/zkCli.sh "\$@"
 EOF
 chmod 755 $wrapper
 
-wrapper=$PREFIX/usr/bin/zookeeper-server
-cat > $wrapper <<EOF
+for bin_wrapper in zookeeper-server zookeeper-server-initialize ; do
+  wrapper=$PREFIX/usr/bin/$bin_wrapper
+  cat > $wrapper <<EOF
 #!/bin/sh
 
 # Autodetect JAVA_HOME if not defined
@@ -166,9 +169,11 @@ export CLASSPATH=\$CLASSPATH:\$ZOOKEEPER_CONF:\$ZOOKEEPER_HOME/*:\$ZOOKEEPER_HOM
 export ZOO_LOG_DIR=/var/log/zookeeper
 export ZOO_LOG4J_PROP=INFO,ROLLINGFILE
 export JVMFLAGS=-Dzookeeper.log.threshold=INFO
-env CLASSPATH=\$CLASSPATH /usr/lib/zookeeper/bin/zkServer.sh "\$@"
+export ZOO_DATADIR_AUTOCREATE_DISABLE=true
+env CLASSPATH=\$CLASSPATH /usr/lib/zookeeper/bin/zkServer${bin_wrapper#zookeeper-server}.sh "\$@"
 EOF
-chmod 755 $wrapper
+  chmod 755 $wrapper
+done
 
 # Copy in the docs
 install -d -m 0755 $PREFIX/$DOC_DIR
