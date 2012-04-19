@@ -27,6 +27,13 @@
     </deps>
   </whirr>
   <flume>
+    <users>
+      <flume>
+        <home>/var/run/flume</home>
+        <descr>Flume</descr>
+        <shell>/sbin/nologin</shell>
+      </flume>
+    </users>
     <deps>
       <tag name="/bin/sh"/>
       <tag name="/sbin/chkconfig"/>
@@ -38,20 +45,6 @@
       <textutils/>
     </deps>
   </flume>
-  <flume-master>
-    <deps>
-      <tag name="/bin/bash"/>
-      <tag name="/bin/sh"/>
-      <tag name="/sbin/chkconfig"/>
-      <tag name="/sbin/service"/>
-      <tag name="/usr/bin/env"/>
-      <tag name="/usr/sbin/useradd"/>
-      <jre>&gt;=1.6</jre>
-      <redhat-lsb/>
-      <sh-utils/>
-      <textutils/>
-    </deps>
-  </flume-master>
   <flume-node>
     <deps>
       <tag name="/bin/bash"/>
@@ -74,6 +67,13 @@
     </deps>
   </sqoop>
   <sqoop-metastore>
+    <users>
+      <sqoop>
+        <home>/var/lib/sqoop</home>
+        <descr>Sqoop</descr>
+        <shell>/sbin/nologin</shell>
+      </sqoop>
+    </users>
     <deps>
       <redhat-lsb/>
       <tag name="/bin/bash"/>
@@ -81,6 +81,13 @@
     </deps>
   </sqoop-metastore>
   <oozie>
+    <users>
+      <oozie>
+        <home>/var/lib/oozie</home>
+        <descr>Oozie User</descr>
+        <shell>/bin/false</shell>
+      </oozie>
+    </users>
     <deps>
       <tag name="/bin/bash"/>
       <tag name="/bin/sh"/>
@@ -98,6 +105,13 @@
     </deps>
   </oozie-client>
   <zookeeper>
+    <users>
+      <zookeeper>
+        <home>/var/lib/zookeeper</home>
+        <descr>ZooKeeper</descr>
+        <shell>/bin/false</shell>
+      </zookeeper>
+    </users>
     <deps>
       <tag name="/bin/sh"/>
       <jre>&gt;=1.6</jre>
@@ -124,7 +138,32 @@
       <jre>&gt;=1.6</jre>
     </deps>
   </hive>
+  <hive-metastore>
+    <users>
+      <hive>
+        <home>/var/lib/hive</home>
+        <descr>Hive</descr>
+        <shell>/sbin/nologin</shell>
+      </hive>
+    </users>
+  </hive-metastore>
+  <hive-server>
+    <users>
+      <hive>
+        <home>/var/lib/hive</home>
+        <descr>Hive</descr>
+        <shell>/sbin/nologin</shell>
+      </hive>
+    </users>
+  </hive-server>
   <hbase>
+    <users>
+      <hbase>
+        <home>/var/run/hbase</home>
+        <descr>HBase</descr>
+        <shell>/bin/bash</shell>
+      </hbase>
+    </users>
     <deps>
       <tag name="/bin/sh"/>
       <tag name="/sbin/chkconfig"/>
@@ -174,6 +213,15 @@
       <tag name="/usr/bin/env"/>
     </deps>
   </hadoop>
+  <hadoop-hdfs>
+    <users>
+      <hdfs>
+        <home>/var/lib/hadoop-hdfs</home>
+        <descr>Hadoop HDFS</descr>
+        <shell>/bin/bash</shell>
+      </hdfs>
+    </users>
+  </hadoop-hdfs>
   <hadoop-hdfs-namenode>
     <deps>
       <tag name="/bin/sh"/>
@@ -195,6 +243,15 @@
       <tag name="/usr/bin/env"/>
     </deps>
   </hadoop-hdfs-datanode>
+  <hadoop-yarn>
+    <users>
+      <yarn>
+        <home>/var/lib/hadoop-yarn</home>
+        <descr>Hadoop Yarn</descr>
+        <shell>/bin/bash</shell>
+      </yarn>
+    </users>
+  </hadoop-yarn>
   <hadoop-yarn-resourcemanager>
     <deps>
       <tag name="/bin/sh"/>
@@ -209,6 +266,24 @@
       <tag name="/usr/bin/env"/>
     </deps>
   </hadoop-yarn-nodemanager>
+  <hadoop-mapreduce>
+    <users>
+      <mapred>
+        <home>/var/lib/hadoop-mapreduce</home>
+        <descr>Hadoop MapReduce</descr>
+        <shell>/bin/bash</shell>
+      </mapred>
+    </users>
+  </hadoop-mapreduce>
+  <hadoop-httpfs>
+    <users>
+      <httpfs>
+        <home>/var/run/hadoop-httpfs</home>
+        <descr>Hadoop HTTPFS</descr>
+        <shell>/bin/bash</shell>
+      </httpfs>
+    </users>
+  </hadoop-httpfs>
   <hadoop-conf-pseudo>
     <deps>
       <tag name="/bin/sh"/>

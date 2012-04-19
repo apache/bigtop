@@ -17,21 +17,49 @@
 -->
 <packages>
 <flume>
+  <users>
+    <flume>
+      <home>/var/run/flume</home>
+      <descr>Flume</descr>
+      <shell>/sbin/nologin</shell>
+    </flume>
+  </users>
   <deps>
     <adduser/>
   </deps>
 </flume>
 <sqoop-metastore>
+  <users>
+    <sqoop>
+      <home>/var/lib/sqoop</home>
+      <descr>Sqoop</descr>
+      <shell>/sbin/nologin</shell>
+    </sqoop>
+  </users>
   <deps>
     <adduser/>
   </deps>
 </sqoop-metastore>
 <zookeeper>
+  <users>
+    <zookeeper>
+      <home>/var/lib/zookeeper</home>
+      <descr>ZooKeeper</descr>
+      <shell>/bin/false</shell>
+    </zookeeper>
+  </users>
   <deps>
     <adduser/>
   </deps>
 </zookeeper>
 <oozie>
+  <users>
+    <oozie>
+      <home>/var/lib/oozie</home>
+      <descr>Oozie User</descr>
+      <shell>/bin/false</shell>
+    </oozie>
+  </users>
   <deps>
     <adduser/>
     <zip/>
@@ -43,7 +71,32 @@
     <adduser/>
   </deps>
 </hive>
+<hive-metastore>
+  <users>
+    <hive>
+      <home>/var/lib/hive</home>
+      <descr>Hive</descr>
+      <shell>/sbin/nologin</shell>
+    </hive>
+  </users>
+</hive-metastore>
+<hive-server>
+  <users>
+    <hive>
+      <home>/var/lib/hive</home>
+      <descr>Hive</descr>
+      <shell>/sbin/nologin</shell>
+    </hive>
+  </users>
+</hive-server>
 <hbase>
+  <users>
+    <hbase>
+      <home>/var/run/hbase</home>
+      <descr>HBase</descr>
+      <shell>/bin/bash</shell>
+    </hbase>
+  </users>
   <deps>
     <adduser/>
   </deps>
@@ -55,22 +108,52 @@
   </deps>
 </hadoop>
 <hadoop-hdfs>
+  <users>
+    <hdfs>
+      <home>/var/lib/hadoop-hdfs</home>
+      <descr>Hadoop HDFS</descr>
+      <shell>/bin/bash</shell>
+    </hdfs>
+  </users>
   <deps>
     <libc6/>
     <adduser/>
   </deps>
 </hadoop-hdfs>
 <hadoop-yarn>
+  <users>
+    <yarn>
+      <home>/var/lib/hadoop-yarn</home>
+      <descr>Hadoop Yarn</descr>
+      <shell>/bin/bash</shell>
+    </yarn>
+  </users>
   <deps>
     <libc6/>
     <adduser/>
   </deps>
 </hadoop-yarn>
 <hadoop-mapreduce>
+  <users>
+    <mapred>
+      <home>/var/lib/hadoop-mapreduce</home>
+      <descr>Hadoop MapReduce</descr>
+      <shell>/bin/bash</shell>
+    </mapred>
+  </users>
   <deps>
     <adduser/>
   </deps>
 </hadoop-mapreduce>
+<hadoop-httpfs>
+  <users>
+    <httpfs>
+      <home>/var/run/hadoop-httpfs</home>
+      <descr>Hadoop HTTPFS</descr>
+      <shell>/bin/bash</shell>
+    </httpfs>
+  </users>
+</hadoop-httpfs>
 <libhdfs0>
   <metadata>
     <summary>Mountable HDFS</summary>

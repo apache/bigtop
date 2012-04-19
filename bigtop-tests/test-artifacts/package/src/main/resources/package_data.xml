@@ -112,13 +112,6 @@ Java Servlet and JavaServer Pages technologies.</description>
       <user>flume</user>
     </flume>
   </groups>
-  <users>
-    <flume>
-      <home>/var/run/flume</home>
-      <descr>Flume</descr>
-      <shell>/bin/false</shell>
-    </flume>
-  </users>
   <alternatives>
     <flume-conf>
       <status>auto</status>
@@ -186,13 +179,6 @@ Java Servlet and JavaServer Pages technologies.</description>
       <user>sqoop</user>
     </sqoop>
   </groups>
-  <users>
-    <sqoop>
-      <home>/var/lib/sqoop</home>
-      <descr>Sqoop</descr>
-      <shell>/bin/false</shell>
-    </sqoop>
-  </users>
 </sqoop-metastore>
 <oozie>
   <metadata>
@@ -248,13 +234,6 @@ Java Servlet and JavaServer Pages technologies.</description>
       <user>oozie</user>
     </oozie>
   </groups>
-  <users>
-    <oozie>
-      <home>/var/lib/oozie</home>
-      <descr>Oozie User</descr>
-      <shell>/bin/false</shell>
-    </oozie>
-  </users>
 </oozie>
 <oozie-client>
   <metadata>
@@ -294,13 +273,6 @@ Java Servlet and JavaServer Pages technologies.</description>
       <user>zookeeper</user>
     </zookeeper>
   </groups>
-  <users>
-    <zookeeper>
-      <home>/var/lib/zookeeper</home>
-      <descr>ZooKeeper User</descr>
-      <shell>/bin/false</shell>
-    </zookeeper>
-  </users>
   <alternatives>
     <zookeeper-conf>
       <status>auto</status>
@@ -414,13 +386,6 @@ Java Servlet and JavaServer Pages technologies.</description>
       <user>hive</user>
     </hive>
   </groups>
-  <users>
-    <hive>
-      <home>/var/lib/hive</home>
-      <descr>Hive</descr>
-      <shell>/bin/false</shell>
-    </hive>
-  </users>
 </hive-metastore>
 <hive-server>
   <metadata>
@@ -443,13 +408,6 @@ Java Servlet and JavaServer Pages technologies.</description>
       <user>hive</user>
     </hive>
   </groups>
-  <users>
-    <hive>
-      <home>/var/lib/hive</home>
-      <descr>Hive</descr>
-      <shell>/bin/false</shell>
-    </hive>
-  </users>
 </hive-server>
 <hbase>
   <metadata>
@@ -477,13 +435,6 @@ Java Servlet and JavaServer Pages technologies.</description>
       <user>hbase</user>
     </hbase>
   </groups>
-  <users>
-    <hbase>
-      <home>/var/run/hbase</home>
-      <descr>HBase User</descr>
-      <shell>/bin/bash</shell>
-    </hbase>
-  </users>
 </hbase>
 <hbase-doc>
   <metadata>
@@ -616,13 +567,6 @@ Java Servlet and JavaServer Pages technologies.</description>
       <user>hdfs</user>
     </hdfs>
   </groups>
-  <users>
-    <hdfs>
-      <home>/var/lib/hadoop-hdfs</home>
-      <descr>Hadoop HDFS</descr>
-      <shell>/bin/bash</shell>
-    </hdfs>
-  </users>
 </hadoop-hdfs>
 <hadoop-yarn>
   <metadata>
@@ -641,13 +585,6 @@ Java Servlet and JavaServer Pages technologies.</description>
       <user>yarn</user>
     </yarn>
   </groups>
-  <users>
-    <yarn>
-      <home>/var/lib/hadoop-yarn</home>
-      <descr>Hadoop YARN</descr>
-      <shell>/bin/bash</shell>
-    </yarn>
-  </users>
 </hadoop-yarn>
 <hadoop-mapreduce>
   <metadata>
@@ -666,13 +603,6 @@ Java Servlet and JavaServer Pages technologies.</description>
       <user>mapred</user>
     </mapred>
   </groups>
-  <users>
-    <mapred>
-      <home>/var/lib/hadoop-mapreduce</home>
-      <descr>Hadoop MapReduce</descr>
-      <shell>/bin/bash</shell>
-    </mapred>
-  </users>
 </hadoop-mapreduce>
 <hadoop-httpfs>
   <metadata>
@@ -691,13 +621,6 @@ Java Servlet and JavaServer Pages technologies.</description>
       <user>httpfs</user>
     </httpfs>
   </groups>
-  <users>
-    <httpfs>
-      <home>/var/run/hadoop-httpfs</home>
-      <descr>Hadoop HTTPFS</descr>
-      <shell>/bin/bash</shell>
-    </httpfs>
-  </users>
   <services>
     <hadoop-httpfs>
       <runlevel>2</runlevel><runlevel>3</runlevel><runlevel>4</runlevel><runlevel>5</runlevel>
