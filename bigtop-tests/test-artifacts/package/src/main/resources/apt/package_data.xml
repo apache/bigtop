@@ -20,7 +20,7 @@
   <users>
     <flume>
       <home>/var/run/flume</home>
-      <descr>Flume</descr>
+      <descr>Flume User</descr>
       <shell>/sbin/nologin</shell>
     </flume>
   </users>
@@ -32,7 +32,7 @@
   <users>
     <sqoop>
       <home>/var/lib/sqoop</home>
-      <descr>Sqoop</descr>
+      <descr>Sqoop User</descr>
       <shell>/sbin/nologin</shell>
     </sqoop>
   </users>
@@ -44,7 +44,7 @@
   <users>
     <zookeeper>
       <home>/var/lib/zookeeper</home>
-      <descr>ZooKeeper</descr>
+      <descr>ZooKeeper User</descr>
       <shell>/bin/false</shell>
     </zookeeper>
   </users>
@@ -75,7 +75,7 @@
   <users>
     <hive>
       <home>/var/lib/hive</home>
-      <descr>Hive</descr>
+      <descr>Hive User</descr>
       <shell>/sbin/nologin</shell>
     </hive>
   </users>
@@ -84,7 +84,7 @@
   <users>
     <hive>
       <home>/var/lib/hive</home>
-      <descr>Hive</descr>
+      <descr>Hive User</descr>
       <shell>/sbin/nologin</shell>
     </hive>
   </users>

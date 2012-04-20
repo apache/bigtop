@@ -91,7 +91,7 @@ Java Servlet and JavaServer Pages technologies.</description>
 </whirr>
 <flume>
   <metadata>
-    <summary>reliable, scalable, and manageable distributed data collection application</summary>
+    <summary>Flume is a reliable, scalable, and manageable distributed log collection application for collecting data such as logs and delivering it to data stores such as Hadoop's HDFS.</summary>
     <description>Flume is a reliable, scalable, and manageable distributed data collection
  application for collecting data such as logs and delivering it to data stores
  such as Hadoop's HDFS.  It can efficiently collect, aggregate, and move large
@@ -123,7 +123,7 @@ Java Servlet and JavaServer Pages technologies.</description>
 </flume>
 <flume-node>
   <metadata>
-    <summary>core element of Flume's data path that collects and delivers data</summary>
+    <summary>The flume node daemon is a core element of flume's data path and is responsible for generating, processing, and delivering data.</summary>
     <description>The Flume node daemon is a core element of flume's data path and is responsible for generating, processing, and delivering data.</description>
     <url>http://incubator.apache.org/projects/flume.html</url>
   </metadata>
@@ -140,7 +140,7 @@ Java Servlet and JavaServer Pages technologies.</description>
 </flume-node>
 <sqoop>
   <metadata>
-    <summary>Tool for easy imports and exports of data sets between databases and HDFS</summary>
+    <summary>Sqoop allows easy imports and exports of data sets between databases and the Hadoop Distributed File System (HDFS).</summary>
     <description>Sqoop is a tool that provides the ability to import and export data sets between
  the Hadoop Distributed File System (HDFS) and relational databases.</description>
     <url>http://incubator.apache.org/sqoop/</url>
@@ -161,7 +161,7 @@ Java Servlet and JavaServer Pages technologies.</description>
 <sqoop-metastore>
   <metadata>
     <summary>Shared metadata repository for Sqoop.</summary>
-    <description>This optional package hosts a metadata server for Sqoop clients across a network to use.</description>
+    <description>Shared metadata repository for Sqoop. This optional package hosts a metadata server for Sqoop clients across a network to use.</description>
     <url>http://incubator.apache.org/sqoop/</url>
   </metadata>
   <deps>
@@ -182,7 +182,7 @@ Java Servlet and JavaServer Pages technologies.</description>
 </sqoop-metastore>
 <oozie>
   <metadata>
-    <summary>A workflow and coordinator sytem for Hadoop jobs.</summary>
+    <summary>Oozie is a system that runs workflows of Hadoop jobs.</summary>
     <description>Oozie workflows are actions arranged in a control dependency DAG (Direct
  Acyclic Graph).
  Oozie coordinator functionality allows to start workflows at regular
@@ -238,11 +238,14 @@ Java Servlet and JavaServer Pages technologies.</description>
 <oozie-client>
   <metadata>
     <summary>Client for Oozie Workflow Engine</summary>
-    <description>Command line utility that allows
- remote access and operation of oozie. Using this utility, the
- user can deploy workflows and perform other administrative and
- monitoring tasks such as start, stop, kill, resume workflows
- and coordinator jobs.</description>
+    <description>Oozie client is a command line client utility that allows remote
+administration and monitoring of worflows. Using this client
+utility you can submit worflows, start/suspend/resume/kill
+workflows and find out their status at any instance. Apart from
+such operations, you can also change the status of the entire
+system, get vesion information. This client utility also allows
+you to validate any worflows before they are deployed to the Oozie
+server.</description>
     <url>http://incubator.apache.org/oozie/</url>
   </metadata>
   <alternatives>
@@ -284,7 +287,7 @@ Java Servlet and JavaServer Pages technologies.</description>
 </zookeeper>
 <zookeeper-server>
   <metadata>
-    <summary>This runs the zookeeper server on startup.</summary>
+    <summary>The Hadoop Zookeeper server</summary>
     <description>This package starts the zookeeper server on startup</description>
     <url>http://zookeeper.apache.org/</url>
   </metadata>
@@ -301,7 +304,7 @@ Java Servlet and JavaServer Pages technologies.</description>
 </zookeeper-server>
 <pig>
   <metadata>
-    <summary>A platform for analyzing large data sets using Hadoop</summary>
+    <summary>Pig is a platform for analyzing large data sets</summary>
     <description>Pig is a platform for analyzing large data sets that consists of a high-level language
  for expressing data analysis programs, coupled with infrastructure for evaluating these
  programs. The salient property of Pig programs is that their structure is amenable
@@ -339,7 +342,7 @@ Java Servlet and JavaServer Pages technologies.</description>
 </pig>
 <hive>
   <metadata>
-    <summary>A data warehouse infrastructure built on top of Hadoop</summary>
+    <summary>Hive is a data warehouse infrastructure built on top of Hadoop</summary>
     <description>Hive is a data warehouse infrastructure built on top of Hadoop that
  provides tools to enable easy data summarization, adhoc querying and
  analysis of large datasets data stored in Hadoop files. It provides a
@@ -368,7 +371,7 @@ Java Servlet and JavaServer Pages technologies.</description>
 <hive-metastore>
   <metadata>
     <summary>Shared metadata repository for Hive.</summary>
-    <description>This optional package hosts a metadata server for Sqoop clients across a network to use.</description>
+    <description>This optional package hosts a metadata server for Hive clients across a network to use.</description>
     <url>http://hive.apache.org/</url>
   </metadata>
   <deps>
@@ -389,8 +392,8 @@ Java Servlet and JavaServer Pages technologies.</description>
 </hive-metastore>
 <hive-server>
   <metadata>
-    <summary>Shared metadata repository for Hive.</summary>
-    <description>This optional package hosts a metadata server for Sqoop clients across a network to use.</description>
+    <summary>Provides a Hive Thrift service.</summary>
+    <description>This optional package hosts a Thrift server for Hive clients across a network to use.</description>
     <url>http://hive.hadoop.apache.org/</url>
   </metadata>
   <deps>
@@ -411,7 +414,7 @@ Java Servlet and JavaServer Pages technologies.</description>
 </hive-server>
 <hbase>
   <metadata>
-    <summary>HBase is the Hadoop database</summary>
+    <summary>HBase is the Hadoop database. Use it when you need random, realtime read/write access to your Big Data. This project's goal is the hosting of very large tables -- billions of rows X millions of columns -- atop clusters of commodity hardware.</summary>
     <description>Use it when you need random, realtime read/write access to your Big Data.
  This project's goal is the hosting of very large tables -- billions of rows
  X millions of columns -- atop clusters of commodity hardware.</description>
@@ -438,14 +441,14 @@ Java Servlet and JavaServer Pages technologies.</description>
 </hbase>
 <hbase-doc>
   <metadata>
-    <summary>Documentation for HBase</summary>
+    <summary>Hbase Documentation</summary>
     <description>This package contains the HBase manual and JavaDoc.</description>
     <url>http://hbase.apache.org/</url>
   </metadata>
 </hbase-doc>
 <hbase-master>
   <metadata>
-    <summary>HMaster is the "master server" for a HBase</summary>
+    <summary>The Hadoop HBase master Server.</summary>
     <description>There is only one HMaster for a single HBase deployment.</description>
     <url>http://hbase.apache.org/</url>
   </metadata>
@@ -462,7 +465,7 @@ Java Servlet and JavaServer Pages technologies.</description>
 </hbase-master>
 <hbase-regionserver>
   <metadata>
-    <summary>HRegionServer makes a set of HRegions available to clients</summary>
+    <summary>The Hadoop HBase RegionServer server.</summary>
     <description>It checks in with the HMaster. There are many HRegionServers in a single
  HBase deployment.</description>
     <url>http://hbase.apache.org/</url>
@@ -480,7 +483,7 @@ Java Servlet and JavaServer Pages technologies.</description>
 </hbase-regionserver>
 <hbase-thrift>
   <metadata>
-    <summary>Provides an HBase Thrift service</summary>
+    <summary>The Hadoop HBase Thrift Interface</summary>
     <description>This package provides a Thrift service interface to the HBase distributed
  database.</description>
     <url>http://hbase.apache.org/</url>
@@ -516,26 +519,25 @@ Java Servlet and JavaServer Pages technologies.</description>
 <hadoop>
   <metadata>
     <summary>Hadoop is a software platform for processing vast amounts of data</summary>
-    <description>A software platform for processing vast amounts of data
- Hadoop is a software platform that lets one easily write and
- run applications that process vast amounts of data.
- .
- Here's what makes Hadoop especially useful:
-  * Scalable: Hadoop can reliably store and process petabytes.
-  * Economical: It distributes the data and processing across clusters
-                of commonly available computers. These clusters can number
-                into the thousands of nodes.
-  * Efficient: By distributing the data, Hadoop can process it in parallel
-               on the nodes where the data is located. This makes it
-               extremely rapid.
-  * Reliable: Hadoop automatically maintains multiple copies of data and
-              automatically redeploys computing tasks based on failures.
- .
- Hadoop implements MapReduce, using the Hadoop Distributed File System (HDFS).
- MapReduce divides applications into many small blocks of work. HDFS creates
- multiple replicas of data blocks for reliability, placing them on compute
- nodes around the cluster. MapReduce can then process the data where it is
- located.</description>
+    <description>Hadoop is a software platform that lets one easily write and
+run applications that process vast amounts of data.
+
+Here's what makes Hadoop especially useful:
+* Scalable: Hadoop can reliably store and process petabytes.
+* Economical: It distributes the data and processing across clusters
+              of commonly available computers. These clusters can number
+              into the thousands of nodes.
+* Efficient: By distributing the data, Hadoop can process it in parallel
+             on the nodes where the data is located. This makes it
+             extremely rapid.
+* Reliable: Hadoop automatically maintains multiple copies of data and
+            automatically redeploys computing tasks based on failures.
+
+Hadoop implements MapReduce, using the Hadoop Distributed File System (HDFS).
+MapReduce divides applications into many small blocks of work. HDFS creates
+multiple replicas of data blocks for reliability, placing them on compute
+nodes around the cluster. MapReduce can then process the data where it is
+located.</description>
     <url>http://hadoop.apache.org/core/</url>
   </metadata>
   <deps>
@@ -552,10 +554,11 @@ Java Servlet and JavaServer Pages technologies.</description>
 </hadoop>
 <hadoop-hdfs>
   <metadata>
-    <summary>Hadoop Pipes Library</summary>
-    <description>Interface to author Hadoop MapReduce jobs in C++
- Contains Hadoop Pipes, a library which allows Hadoop MapReduce jobs to be
- written in C++.</description>
+    <summary>The Hadoop Distributed File System</summary>
+    <description>Hadoop Distributed File System (HDFS) is the primary storage system used by
+Hadoop applications. HDFS creates multiple replicas of data blocks and distributes
+them on compute nodes throughout a cluster to enable reliable, extremely rapid
+computations.</description>
     <url>http://hadoop.apache.org/core/</url>
   </metadata>
   <deps>
@@ -570,10 +573,20 @@ Java Servlet and JavaServer Pages technologies.</description>
 </hadoop-hdfs>
 <hadoop-yarn>
   <metadata>
-    <summary>Hadoop Pipes Library</summary>
-    <description>Interface to author Hadoop MapReduce jobs in C++
- Contains Hadoop Pipes, a library which allows Hadoop MapReduce jobs to be
- written in C++.</description>
+    <summary>The Hadoop NextGen MapReduce (YARN)</summary>
+    <description>YARN (Hadoop NextGen MapReduce) is a general purpose data-computation framework.
+The fundamental idea of YARN is to split up the two major functionalities of the
+JobTracker, resource management and job scheduling/monitoring, into separate daemons:
+ResourceManager and NodeManager.
+
+The ResourceManager is the ultimate authority that arbitrates resources among all
+the applications in the system. The NodeManager is a per-node slave managing allocation
+of computational resources on a single node. Both work in support of per-application
+ApplicationMaster (AM).
+
+An ApplicationMaster is, in effect, a framework specific library and is tasked with
+negotiating resources from the ResourceManager and working with the NodeManager(s) to
+execute and monitor the tasks.</description>
     <url>http://hadoop.apache.org/core/</url>
   </metadata>
   <deps>
@@ -588,10 +601,9 @@ Java Servlet and JavaServer Pages technologies.</description>
 </hadoop-yarn>
 <hadoop-mapreduce>
   <metadata>
-    <summary>Hadoop Pipes Library</summary>
-    <description>Interface to author Hadoop MapReduce jobs in C++
- Contains Hadoop Pipes, a library which allows Hadoop MapReduce jobs to be
- written in C++.</description>
+    <summary>The Hadoop MapReduce (MRv2)</summary>
+    <description>Hadoop MapReduce is a programming model and software framework for writing applications
+that rapidly process vast amounts of data in parallel on large clusters of compute nodes.</description>
     <url>http://hadoop.apache.org/core/</url>
   </metadata>
   <deps>
@@ -606,10 +618,9 @@ Java Servlet and JavaServer Pages technologies.</description>
 </hadoop-mapreduce>
 <hadoop-httpfs>
   <metadata>
-    <summary>Native libraries for Hadoop Compression</summary>
-    <description>Native libraries for Hadoop (e.g., compression)
- This optional package contains native libraries that increase the performance
- of Hadoop's compression.</description>
+    <summary>HTTPFS for Hadoop</summary>
+    <description>The server providing HTTP REST API support for the complete FileSystem/FileContext
+interface in HDFS.</description>
     <url>http://hadoop.apache.org/core/</url>
   </metadata>
   <deps>
@@ -632,9 +643,8 @@ Java Servlet and JavaServer Pages technologies.</description>
 <hadoop-hdfs-namenode>
   <metadata>
     <summary>The Hadoop namenode manages the block locations of HDFS files</summary>
-    <description>Name Node for Hadoop
- The Hadoop Distributed Filesystem (HDFS) requires one unique server, the
- namenode, which manages the block locations of files on the filesystem.</description>
+    <description>The Hadoop Distributed Filesystem (HDFS) requires one unique server, the
+namenode, which manages the block locations of files on the filesystem.</description>
     <url>http://hadoop.apache.org/core/</url>
   </metadata>
   <deps>
@@ -672,10 +682,9 @@ election.</description>
 <hadoop-hdfs-secondarynamenode>
   <metadata>
     <summary>Hadoop Secondary namenode</summary>
-    <description>Secondary Name Node for Hadoop
- The Secondary Name Node is responsible for checkpointing file system images.
- It is _not_ a failover pair for the namenode, and may safely be run on the
- same machine.</description>
+    <description>The Secondary Name Node periodically compacts the Name Node EditLog
+into a checkpoint.  This compaction ensures that Name Node restarts
+do not incur unnecessary downtime.</description>
     <url>http://hadoop.apache.org/core/</url>
   </metadata>
   <deps>
@@ -692,10 +701,9 @@ election.</description>
 <hadoop-hdfs-datanode>
   <metadata>
     <summary>Hadoop Data Node</summary>
-    <description>Data Node for Hadoop
- The Data Nodes in the Hadoop Cluster are responsible for serving up
- blocks of data over the network to Hadoop Distributed Filesystem
- (HDFS) clients.</description>
+    <description>The Data Nodes in the Hadoop Cluster are responsible for serving up
+blocks of data over the network to Hadoop Distributed Filesystem
+(HDFS) clients.</description>
     <url>http://hadoop.apache.org/core/</url>
   </metadata>
   <deps>
@@ -711,12 +719,8 @@ election.</description>
 </hadoop-hdfs-datanode>
 <hadoop-yarn-resourcemanager>
   <metadata>
-    <summary>Hadoop Job Tracker</summary>
-    <description>Job Tracker for Hadoop
- The jobtracker is a central service which is responsible for managing
- the tasktracker services running on all nodes in a Hadoop Cluster.
- The jobtracker allocates work to the tasktracker nearest to the data
- with an available work slot.</description>
+    <summary>Yarn Resource Manager</summary>
+    <description>The resource manager manages the global assignment of compute resources to applications</description>
     <url>http://hadoop.apache.org/core/</url>
   </metadata>
   <deps>
@@ -732,11 +736,10 @@ election.</description>
 </hadoop-yarn-resourcemanager>
 <hadoop-yarn-nodemanager>
   <metadata>
-    <summary>Hadoop Task Tracker</summary>
-    <description>Task Tracker for Hadoop
- The Task Tracker is the Hadoop service that accepts MapReduce tasks and
- computes results. Each node in a Hadoop cluster that should be doing
- computation should run a Task Tracker.</description>
+    <summary>Yarn Node Manager</summary>
+    <description>The NodeManager is the per-machine framework agent who is responsible for
+containers, monitoring their resource usage (cpu, memory, disk, network) and
+reporting the same to the ResourceManager/Scheduler.</description>
     <url>http://hadoop.apache.org/core/</url>
   </metadata>
   <deps>
@@ -752,11 +755,8 @@ election.</description>
 </hadoop-yarn-nodemanager>
 <hadoop-yarn-proxyserver>
   <metadata>
-    <summary>Hadoop Task Tracker</summary>
-    <description>Task Tracker for Hadoop
- The Task Tracker is the Hadoop service that accepts MapReduce tasks and
- computes results. Each node in a Hadoop cluster that should be doing
- computation should run a Task Tracker.</description>
+    <summary>Yarn Web Proxy</summary>
+    <description>The web proxy server sits in front of the YARN application master web UI.</description>
     <url>http://hadoop.apache.org/core/</url>
   </metadata>
   <deps>
@@ -772,11 +772,8 @@ election.</description>
 </hadoop-yarn-proxyserver>
 <hadoop-mapreduce-historyserver>
   <metadata>
-    <summary>Hadoop Task Tracker</summary>
-    <description>Task Tracker for Hadoop
- The Task Tracker is the Hadoop service that accepts MapReduce tasks and
- computes results. Each node in a Hadoop cluster that should be doing
- computation should run a Task Tracker.</description>
+    <summary>MapReduce History Server</summary>
+    <description>The History server keeps records of the different activities being performed on a Apache Hadoop cluster</description>
     <url>http://hadoop.apache.org/core/</url>
   </metadata>
   <deps>
@@ -812,9 +809,7 @@ election.</description>
 <hadoop-doc>
   <metadata>
     <summary>Hadoop Documentation</summary>
-    <description>Documentation for Hadoop
- This package contains the Java Documentation for Hadoop and its relevant
- APIs.</description>
+    <description>Documentation for Hadoop</description>
     <url>http://hadoop.apache.org/core/</url>
   </metadata>
 </hadoop-doc>
