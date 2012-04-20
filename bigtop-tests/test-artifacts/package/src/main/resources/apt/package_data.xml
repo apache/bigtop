@@ -21,7 +21,7 @@
     <flume>
       <home>/var/run/flume</home>
       <descr>Flume User</descr>
-      <shell>/sbin/nologin</shell>
+      <shell>/bin/false</shell>
     </flume>
   </users>
   <deps>
@@ -33,7 +33,7 @@
     <sqoop>
       <home>/var/lib/sqoop</home>
       <descr>Sqoop User</descr>
-      <shell>/sbin/nologin</shell>
+      <shell>/bin/false</shell>
     </sqoop>
   </users>
   <deps>
@@ -76,7 +76,7 @@
     <hive>
       <home>/var/lib/hive</home>
       <descr>Hive User</descr>
-      <shell>/sbin/nologin</shell>
+      <shell>/bin/false</shell>
     </hive>
   </users>
 </hive-metastore>
@@ -85,7 +85,7 @@
     <hive>
       <home>/var/lib/hive</home>
       <descr>Hive User</descr>
-      <shell>/sbin/nologin</shell>
+      <shell>/bin/false</shell>
     </hive>
   </users>
 </hive-server>
@@ -156,9 +156,8 @@
 </hadoop-httpfs>
 <libhdfs0>
   <metadata>
-    <summary>Mountable HDFS</summary>
-    <description>JNI Bindings to access Hadoop HDFS from C
- See http://wiki.apache.org/hadoop/LibHDFS</description>
+    <summary>Hadoop Filesystem Library</summary>
+    <description>Hadoop Filesystem Library</description>
     <url>http://hadoop.apache.org/core/</url>
   </metadata>
   <deps>
@@ -168,9 +167,8 @@
 </libhdfs0>
 <libhdfs0-dev>
   <metadata>
-    <summary>Mountable HDFS</summary>
-    <description>JNI Bindings to access Hadoop HDFS from C
- See http://wiki.apache.org/hadoop/LibHDFS</description>
+    <summary>Development support for libhdfs0</summary>
+    <description>Includes examples and header files for accessing HDFS from C</description>
     <url>http://hadoop.apache.org/core/</url>
   </metadata>
   <deps>

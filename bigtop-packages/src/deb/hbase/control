@@ -24,29 +24,42 @@ Package: hbase
 Architecture: all
 Depends: adduser, zookeeper (>= 3.3.1), hadoop-hdfs, bigtop-utils
 Recommends: ntp
-Description: HBase is the Hadoop database
- Use it when you need random, realtime read/write access to your Big Data. 
- This project's goal is the hosting of very large tables -- billions of rows  
- X millions of columns -- atop clusters of commodity hardware.
+Description: HBase is the Hadoop database. Use it when you need random, realtime read/write access to your Big Data. This project's goal is the hosting of very large tables -- billions of rows X millions of columns -- atop clusters of commodity hardware.
+ HBase is an open-source, distributed, column-oriented store modeled after
+ Google' Bigtable: A Distributed Storage System for Structured Data by 
+ Chang et al. Just as Bigtable leverages the distributed data storage 
+ provided by the Google File System, HBase provides Bigtable-like capabilities
+ on top of Hadoop. HBase includes:
+ .
+    * Convenient base classes for backing Hadoop MapReduce jobs with HBase tables
+    * Query predicate push down via server side scan and get filters
+    * Optimizations for real time queries
+    * A high performance Thrift gateway
+    * A REST-ful Web service gateway that supports XML, Protobuf, and binary data encoding options
+    * Cascading source and sink modules
+    * Extensible jruby-based (JIRB) shell
+    * Support for exporting metrics via the Hadoop metrics subsystem to files or Ganglia; or via JMX
 
 Package: hbase-doc
 Architecture: all
 Section: doc
-Description: Documentation for HBase
- This package contains the HBase manual and JavaDoc.
+Description: Hbase Documentation
+ Documentation for Hbase
 
 Package: hbase-master
 Architecture: all
 Depends: hbase (= ${source:Version}) 
-Description: HMaster is the "master server" for a HBase
+Description: The Hadoop HBase master Server.
+ HMaster is the "master server" for a HBase. 
  There is only one HMaster for a single HBase deployment.
 
 Package: hbase-regionserver
 Architecture: all
 Depends: hbase (= ${source:Version}) 
-Description: HRegionServer makes a set of HRegions available to clients
- It checks in with the HMaster. There are many HRegionServers in a single 
- HBase deployment.
+Description: The Hadoop HBase RegionServer server.
+ HRegionServer makes a set of HRegions available to clients.
+ It checks in with the HMaster. There are many HRegionServers
+ in a single HBase deployment.
 
 Package: hbase-rest
 Architecture: all
@@ -57,6 +70,14 @@ Description: The Apache HBase REST gateway
 Package: hbase-thrift
 Architecture: all
 Depends: hbase (= ${source:Version}) 
-Description: Provides an HBase Thrift service
- This package provides a Thrift service interface to the HBase distributed
- database.
+Description: The Hadoop HBase Thrift Interface
+ ThriftServer - this class starts up a Thrift server which 
+ implements the Hbase API specified in the Hbase.thrift IDL file.
+ "Thrift is a software framework for scalable cross-language 
+ services development. It combines a powerful software stack with 
+ a code generation engine to build services that work efficiently 
+ and seamlessly between C++, Java, Python, PHP, and Ruby. Thrift 
+ was developed at Facebook, and we are now releasing it as open 
+ source." For additional information, see 
+    http://developers.facebook.com/thrift/. 
+ Facebook has announced their intent to migrate Thrift into Apache Incubator.

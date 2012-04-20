@@ -29,4 +29,5 @@ Description: A high-performance coordination service for distributed application
 Package: zookeeper-server
 Architecture: all
 Depends: zookeeper (= ${source:Version})
-Description: This runs the zookeeper server on startup.
+Description: The Hadoop Zookeeper server
+ This package starts the zookeeper server on startup

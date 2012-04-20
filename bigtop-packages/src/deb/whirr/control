@@ -23,12 +23,12 @@ Homepage: http://whirr.apache.org/
 Package:  whirr
 Architecture: all
 Depends: bigtop-utils
-Description: Scripts and libraries for running software services on cloud infrastructure
+Description: Scripts and libraries for running software services on cloud infrastructure.
  Whirr provides
  .
-  * A cloud-neutral way to run services. You don't have to worry about the
-    idiosyncrasies of each provider.
-  * A common service API. The details of provisioning are particular to the
-    service.
-  * Smart defaults for services. You can get a properly configured system
-    running quickly, while still being able to override settings as needed.
+ * A cloud-neutral way to run services. You don't have to worry about the
+   idiosyncrasies of each provider.
+ * A common service API. The details of provisioning are particular to the
+   service.
+ * Smart defaults for services. You can get a properly configured system
+   running quickly, while still being able to override settings as needed.

@@ -726,7 +726,7 @@ blocks of data over the network to Hadoop Distributed Filesystem
 </hadoop-hdfs-datanode>
 <hadoop-yarn-resourcemanager>
   <metadata>
-    <summary>Yarn Resource Manager</summary>
+    <summary>YARN Resource Manager</summary>
     <description>The resource manager manages the global assignment of compute resources to applications</description>
     <url>http://hadoop.apache.org/core/</url>
   </metadata>
@@ -743,7 +743,7 @@ blocks of data over the network to Hadoop Distributed Filesystem
 </hadoop-yarn-resourcemanager>
 <hadoop-yarn-nodemanager>
   <metadata>
-    <summary>Yarn Node Manager</summary>
+    <summary>YARN Node Manager</summary>
     <description>The NodeManager is the per-machine framework agent who is responsible for
 containers, monitoring their resource usage (cpu, memory, disk, network) and
 reporting the same to the ResourceManager/Scheduler.</description>
@@ -762,7 +762,7 @@ reporting the same to the ResourceManager/Scheduler.</description>
 </hadoop-yarn-nodemanager>
 <hadoop-yarn-proxyserver>
   <metadata>
-    <summary>Yarn Web Proxy</summary>
+    <summary>YARN Web Proxy</summary>
     <description>The web proxy server sits in front of the YARN application master web UI.</description>
     <url>http://hadoop.apache.org/core/</url>
   </metadata>
@@ -796,11 +796,10 @@ reporting the same to the ResourceManager/Scheduler.</description>
 </hadoop-mapreduce-historyserver>
 <hadoop-conf-pseudo>
   <metadata>
-    <summary>Hadoop installation in pseudo-distributed mode</summary>
-    <description>Pseudo-distributed Hadoop configuration
- Contains configuration files for a "pseudo-distributed" Hadoop deployment.
- In this mode, each of the hadoop components runs as a separate Java process,
- but all on the same machine.</description>
+    <summary>Pseudo-distributed Hadoop configuration</summary>
+    <description>Contains configuration files for a "pseudo-distributed" Hadoop deployment.
+In this mode, each of the hadoop components runs as a separate Java process,
+but all on the same machine.</description>
     <url>http://hadoop.apache.org/core/</url>
   </metadata>
   <deps>

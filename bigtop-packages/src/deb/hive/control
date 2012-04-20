@@ -24,35 +24,24 @@ Homepage: http://hive.apache.org/
 Package: hive
 Architecture: all
 Depends: adduser, hadoop-client, bigtop-utils
-Description: A data warehouse infrastructure built on top of Hadoop
- Hive is a data warehouse infrastructure built on top of Hadoop that
- provides tools to enable easy data summarization, adhoc querying and
- analysis of large datasets data stored in Hadoop files. It provides a
- mechanism to put structure on this data and it also provides a simple
- query language called Hive QL which is based on SQL and which enables
- users familiar with SQL to query this data. At the same time, this
- language also allows traditional map/reduce programmers to be able to
- plug in their custom mappers and reducers to do more sophisticated
- analysis which may not be supported by the built-in capabilities of
- the language.
-
-Package: python-hive
-Architecture: all
-Section: python
-Depends: ${python:Depends}
-Provides: ${python:Provides}
-XS-Python-Version: >= 2.4
-Description: Python client library to talk to the Hive Metastore
- This is a generated Thrift client to talk to the Hive Metastore.
+Description: Hive is a data warehouse infrastructure built on top of Hadoop
+ Hive is a data warehouse infrastructure built on top of Hadoop that provides
+ tools to enable easy data summarization, adhoc querying and analysis of large
+ datasets data stored in Hadoop files. It provides a mechanism to put structure
+ on this data and it also provides a simple query language called Hive QL which
+ is based on SQL and which enables users familiar with SQL to query this data.
+ At the same time, this language also allows traditional map/reduce programmers
+ to be able to plug in their custom mappers and reducers to do more sophisticated 
+ analysis which may not be supported by the built-in capabilities of the language.
 
 Package: hive-server
 Architecture: all
 Depends: hive (= ${source:Version})
-Description: Provides a Hive Thrift service
+Description: Provides a Hive Thrift service.
  This optional package hosts a Thrift server for Hive clients across a network to use.
 
 Package: hive-metastore
 Architecture: all
 Depends: hive (= ${source:Version})
-Description: Shared metadata repository for Hive
+Description: Shared metadata repository for Hive.
  This optional package hosts a metadata server for Hive clients across a network to use.

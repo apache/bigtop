@@ -25,20 +25,20 @@ Package: hadoop
 Provides: hadoop
 Architecture: all
 Depends: ${shlibs:Depends}, ${misc:Depends}, adduser, bigtop-utils, zookeeper (>= 3.4.0)
-Description: A software platform for processing vast amounts of data
+Description: Hadoop is a software platform for processing vast amounts of data
  Hadoop is a software platform that lets one easily write and
  run applications that process vast amounts of data.
  .
  Here's what makes Hadoop especially useful:
-  * Scalable: Hadoop can reliably store and process petabytes.
-  * Economical: It distributes the data and processing across clusters
-                of commonly available computers. These clusters can number
-                into the thousands of nodes.
-  * Efficient: By distributing the data, Hadoop can process it in parallel
-               on the nodes where the data is located. This makes it
-               extremely rapid.
-  * Reliable: Hadoop automatically maintains multiple copies of data and
-              automatically redeploys computing tasks based on failures.
+ * Scalable: Hadoop can reliably store and process petabytes.
+ * Economical: It distributes the data and processing across clusters
+               of commonly available computers. These clusters can number
+               into the thousands of nodes.
+ * Efficient: By distributing the data, Hadoop can process it in parallel
+              on the nodes where the data is located. This makes it
+              extremely rapid.
+ * Reliable: Hadoop automatically maintains multiple copies of data and
+             automatically redeploys computing tasks based on failures.
  .
  Hadoop implements MapReduce, using the Hadoop Distributed File System (HDFS).
  MapReduce divides applications into many small blocks of work. HDFS creates
@@ -84,20 +84,15 @@ Package: hadoop-hdfs-fuse
 Architecture: i386 amd64
 Depends: ${shlibs:Depends}, hadoop-hdfs (= ${source:Version}), hadoop-client (= ${source:Version}), libfuse2, fuse-utils
 Enhances: hadoop
-Description: HDFS exposed over a Filesystem in Userspace
- These projects (enumerated below) allow HDFS to be mounted (on most flavors 
- of Unix) as a standard file system using the mount command. Once mounted, the
-  user can operate on an instance of hdfs using standard Unix utilities such 
- as 'ls', 'cd', 'cp', 'mkdir', 'find', 'grep', or use standard Posix libraries 
- like open, write, read, close from C, C++, Python, Ruby, Perl, Java, bash, etc.
+Description: Mountable HDFS
+ These projects (enumerated below) allow HDFS to be mounted (on most flavors of Unix) as a standard file system using
 
 Package: hadoop-doc
 Provides: hadoop-doc
 Architecture: all
 Section: doc
-Description: Documentation for Hadoop
- This package contains the Java Documentation for Hadoop and its relevant
- APIs.
+Description: Hadoop Documentation
+ Documentation for Hadoop
 
 Package: hadoop-conf-pseudo
 Provides: hadoop-conf-pseudo
@@ -116,14 +111,13 @@ Provides: hadoop-mapreduce-historyserver
 Architecture: all
 Depends: hadoop-mapreduce (= ${source:Version})
 Description: MapReduce History Server
- The History server keeps records of the different activities being performed 
- on a Apache Hadoop cluster.
+ The History server keeps records of the different activities being performed on a Apache Hadoop cluster
 
 Package: hadoop-yarn-nodemanager
 Provides: hadoop-yarn-nodemanager
 Architecture: all
 Depends: hadoop-yarn (= ${source:Version})
-Description: Node manager for Hadoop
+Description: YARN Node Manager
  The NodeManager is the per-machine framework agent who is responsible for
  containers, monitoring their resource usage (cpu, memory, disk, network) and
  reporting the same to the ResourceManager/Scheduler.
@@ -132,21 +126,21 @@ Package: hadoop-yarn-resourcemanager
 Provides: hadoop-yarn-resourcemanager
 Architecture: all
 Depends: hadoop-yarn (= ${source:Version})
-Description: Resource manager for Hadoop
- The resource manager manages the global assignment of compute resources to applications.
+Description: YARN Resource Manager
+ The resource manager manages the global assignment of compute resources to applications
 
 Package: hadoop-yarn-proxyserver
 Provides: hadoop-yarn-proxyserver
 Architecture: all
 Depends: hadoop-yarn (= ${source:Version})
-Description: Web proxy for YARN
+Description: YARN Web Proxy
  The web proxy server sits in front of the YARN application master web UI.
 
 Package: hadoop-hdfs-namenode
 Provides: hadoop-hdfs-namenode
 Architecture: all
 Depends: hadoop-hdfs (= ${source:Version})
-Description: Name Node for Hadoop
+Description: The Hadoop namenode manages the block locations of HDFS files
  The Hadoop Distributed Filesystem (HDFS) requires one unique server, the
  namenode, which manages the block locations of files on the filesystem.
 
@@ -154,10 +148,10 @@ Package: hadoop-hdfs-secondarynamenode
 Provides: hadoop-hdfs-secondarynamenode
 Architecture: all
 Depends: hadoop-hdfs (= ${source:Version})
-Description: Secondary Name Node for Hadoop
- The Secondary Name Node is responsible for checkpointing file system images.
- It is _not_ a failover pair for the namenode, and may safely be run on the
- same machine.
+Description: Hadoop Secondary namenode
+ The Secondary Name Node periodically compacts the Name Node EditLog
+ into a checkpoint.  This compaction ensures that Name Node restarts
+ do not incur unnecessary downtime.
 
 Package: hadoop-hdfs-zkfc
 Provides: hadoop-hdfs-zkfc
@@ -174,7 +168,7 @@ Package: hadoop-hdfs-datanode
 Provides: hadoop-hdfs-datanode
 Architecture: all
 Depends: hadoop-hdfs (= ${source:Version})
-Description: Data Node for Hadoop
+Description: Hadoop Data Node
  The Data Nodes in the Hadoop Cluster are responsible for serving up
  blocks of data over the network to Hadoop Distributed Filesystem
  (HDFS) clients.
@@ -182,8 +176,8 @@ Description: Data Node for Hadoop
 Package: libhdfs0
 Architecture: any
 Depends: hadoop (= ${source:Version}), ${shlibs:Depends}
-Description: JNI Bindings to access Hadoop HDFS from C
- See http://wiki.apache.org/hadoop/LibHDFS
+Description: Hadoop Filesystem Library
+ Hadoop Filesystem Library
 
 Package: libhdfs0-dev
 Architecture: any

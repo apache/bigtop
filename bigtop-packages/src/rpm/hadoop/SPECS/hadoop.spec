@@ -310,7 +310,7 @@ The server providing HTTP REST API support for the complete FileSystem/FileConte
 interface in HDFS.
 
 %package yarn-resourcemanager
-Summary: Yarn Resource Manager
+Summary: YARN Resource Manager
 Group: System/Daemons
 Requires: %{name}-yarn = %{version}-%{release}
 Requires(pre): %{name} = %{version}-%{release}
@@ -319,7 +319,7 @@ Requires(pre): %{name} = %{version}-%{release}
 The resource manager manages the global assignment of compute resources to applications
 
 %package yarn-nodemanager
-Summary: Yarn Node Manager
+Summary: YARN Node Manager
 Group: System/Daemons
 Requires: %{name}-yarn = %{version}-%{release}
 Requires(pre): %{name} = %{version}-%{release}
@@ -330,7 +330,7 @@ containers, monitoring their resource usage (cpu, memory, disk, network) and
 reporting the same to the ResourceManager/Scheduler.
 
 %package yarn-proxyserver
-Summary: Yarn Web Proxy
+Summary: YARN Web Proxy
 Group: System/Daemons
 Requires: %{name}-yarn = %{version}-%{release}
 Requires(pre): %{name} = %{version}-%{release}
@@ -359,7 +359,7 @@ Requires: %{name}-mapreduce = %{version}-%{release}
 Installation of this package will provide you with all the dependencies for Hadoop clients.
 
 %package conf-pseudo
-Summary: Hadoop installation in pseudo-distributed mode
+Summary: Pseudo-distributed Hadoop configuration
 Group: System/Daemons
 Requires: %{name} = %{version}-%{release}
 Requires: %{name}-hdfs-namenode = %{version}-%{release}
@@ -370,8 +370,9 @@ Requires: %{name}-yarn-nodemanager = %{version}-%{release}
 Requires: %{name}-mapreduce-historyserver = %{version}-%{release}
 
 %description conf-pseudo
-Installation of this RPM will setup your machine to run in pseudo-distributed mode
-where each Hadoop daemon runs in a separate Java process.
+Contains configuration files for a "pseudo-distributed" Hadoop deployment.
+In this mode, each of the hadoop components runs as a separate Java process,
+but all on the same machine.
 
 %package doc
 Summary: Hadoop Documentation

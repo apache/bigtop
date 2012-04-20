@@ -24,16 +24,20 @@ Homepage: http://incubator.apache.org/oozie/
 Package: oozie-client
 Architecture: all
 Depends: bigtop-utils
-Description: Command line utility that allows
- remote access and operation of oozie. Using this utility, the
- user can deploy workflows and perform other administrative and
- monitoring tasks such as start, stop, kill, resume workflows
- and coordinator jobs.
+Description: Client for Oozie Workflow Engine
+ Oozie client is a command line client utility that allows remote
+ administration and monitoring of worflows. Using this client utility
+ you can submit worflows, start/suspend/resume/kill workflows and
+ find out their status at any instance. Apart from such operations,
+ you can also change the status of the entire system, get vesion
+ information. This client utility also allows you to validate
+ any worflows before they are deployed to the Oozie server.
 
 Package: oozie
 Architecture: all
 Depends: oozie-client (= ${source:Version}), hadoop-client, bigtop-tomcat
-Description: A workflow and coordinator sytem for Hadoop jobs.
+Description: Oozie is a system that runs workflows of Hadoop jobs.
+ Oozie is a system that runs workflows of Hadoop jobs.
  Oozie workflows are actions arranged in a control dependency DAG (Direct
  Acyclic Graph).
  .
@@ -57,8 +61,8 @@ Description: A workflow and coordinator sytem for Hadoop jobs.
  JAR files for Map/Reduce jobs, shells for streaming Map/Reduce jobs, native
  libraries, Pig scripts, and other resource files.
  .
- Running workflow jobs is done via command line tools, a WebServices API or
- a Java API.
+ Running workflow jobs is done via command line tools, a WebServices API
+ or a Java API.
  .
  Monitoring the system and workflow jobs can be done via a web console, the
  command line tools, the WebServices API and the Java API.
