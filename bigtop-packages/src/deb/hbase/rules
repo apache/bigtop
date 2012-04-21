@@ -31,7 +31,6 @@ hbase_jar_deps_hadoop=hadoop-annotations,hadoop-auth,hadoop-common,hadoop-hdfs,h
 
 patch: patch-stamp
 patch-stamp:	
-	patch -p0 < debian/HBASE-5212.patch
 	touch $@
 
 clean:	

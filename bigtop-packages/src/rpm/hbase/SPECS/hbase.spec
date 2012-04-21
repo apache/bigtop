@@ -91,7 +91,6 @@ Source3: hbase.sh
 Source4: hbase.sh.suse
 Source5: hbase.default
 Source6: hbase.nofiles.conf
-Patch0: HBASE-5212.patch
 BuildArch: noarch
 Requires: coreutils, /usr/sbin/useradd, /sbin/chkconfig, /sbin/service
 Requires: hadoop-hdfs, zookeeper >= 3.3.1, bigtop-utils
@@ -236,7 +235,6 @@ The Apache HBase REST gateway
 
 %prep
 %setup -n %{name}-%{hbase_base_version}
-%patch0 -p0
 
 %build
 env HBASE_VERSION=%{version} bash %{SOURCE1}
