@@ -37,6 +37,18 @@
     <value><%= rootdir %></value>
   </property>
 
+  <property>
+    <name>dfs.support.append</name>
+    <value>true</value>
+  </property>
+
+<% if has_variable?("hdfs_shortcut_reader_user") %>
+  <property>
+    <name>dfs.client.read.shortcircuit</name>
+    <value>true</value>
+  </property>
+<% end %>
+
 <% if kerberos_realm != "" %>
   <property> 
     <name>hbase.regionserver.kerberos.principal</name> 
