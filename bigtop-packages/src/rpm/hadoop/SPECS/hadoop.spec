@@ -413,7 +413,7 @@ These projects (enumerated below) allow HDFS to be mounted (on most flavors of U
 
 %prep
 # %setup -n %{name}-%{hadoop_base_version}-src 
-%setup -n apache-hadoop-common-8c0466d
+%setup -n apache-hadoop-common-7ed45d0
 
 
 %build
