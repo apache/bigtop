@@ -168,6 +168,25 @@
     <name>dfs.data.dir</name>
     <value><%= hdfs_data_dirs.join(",") %></value>
   </property>
+
+<% if has_variable?("hdfs_support_append") %>
+  <property>
+    <name>dfs.support.append</name>
+    <value><%= hdfs_support_append %></value>
+  </property>
+<% end %>
+
+<% if has_variable?("hdfs_shortcut_reader_user") %>
+  <property>
+    <name>dfs.client.read.shortcircuit</name>
+    <value>true</value>
+  </property>
+
+  <property>
+    <name>dfs.block.local-path-access.user</name>
+    <value><%= hdfs_shortcut_reader_user %></value>
+  </property>
+<% end %>
  
   <property>
     <name>dfs.name.dir</name>
