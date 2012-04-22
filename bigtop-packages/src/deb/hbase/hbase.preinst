@@ -37,7 +37,7 @@ case "$1" in
                 adduser \
                   --system \
                   --group \
-                  --home /var/lib/hbase \
+                  --home /var/run/hbase \
                   --gecos "HBase User" \
                   --shell /bin/bash \
                   hbase >/dev/null

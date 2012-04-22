@@ -37,7 +37,7 @@ case "$1" in
             adduser \
                 --system \
                 --group \
-                --home /var/lib/yarn \
+                --home /var/lib/hadoop-yarn \
                 --gecos "Hadoop YARN" \
                 --shell /bin/bash \
                 yarn >/dev/null 2>/dev/null || :
