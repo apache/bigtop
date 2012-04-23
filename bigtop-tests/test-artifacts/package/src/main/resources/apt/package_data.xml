@@ -93,7 +93,7 @@
   <users>
     <hbase>
       <home>/var/run/hbase</home>
-      <descr>HBase</descr>
+      <descr>HBase User</descr>
       <shell>/bin/bash</shell>
     </hbase>
   </users>
@@ -124,7 +124,7 @@
   <users>
     <yarn>
       <home>/var/lib/hadoop-yarn</home>
-      <descr>Hadoop Yarn</descr>
+      <descr>Hadoop YARN</descr>
       <shell>/bin/bash</shell>
     </yarn>
   </users>

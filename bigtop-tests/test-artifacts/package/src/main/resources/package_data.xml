@@ -770,11 +770,11 @@ reporting the same to the ResourceManager/Scheduler.</description>
     <hadoop-yarn>/self</hadoop-yarn>
   </deps>
   <services>
-    <hadoop-yarn-proxyserver>>
+    <hadoop-yarn-proxyserver>
       <runlevel>2</runlevel><runlevel>3</runlevel><runlevel>4</runlevel><runlevel>5</runlevel>
       <oninstall>stop</oninstall>
       <configured>false</configured>
-    </hadoop-yarn-proxyserver>>
+    </hadoop-yarn-proxyserver>
   </services>
 </hadoop-yarn-proxyserver>
 <hadoop-mapreduce-historyserver>
