@@ -156,12 +156,14 @@ getent group oozie >/dev/null || /usr/sbin/groupadd -r oozie >/dev/null
 getent passwd oozie >/dev/null || /usr/sbin/useradd --comment "Oozie User" --shell /bin/false -M -r -g oozie --home %{data_oozie} oozie >/dev/null
 
 %post 
+%{alternatives_cmd} --install %{conf_oozie} %{name}-conf %{conf_oozie_dist} 30
 /sbin/chkconfig --add oozie 
 
 %preun
 if [ "$1" = 0 ]; then
   /sbin/service oozie stop > /dev/null
   /sbin/chkconfig --del oozie
+  %{alternatives_cmd} --remove %{name}-conf %{conf_oozie_dist} || :
 fi
 
 %postun
@@ -169,16 +171,9 @@ if [ $1 -ge 1 ]; then
   /sbin/service oozie condrestart > /dev/null
 fi
 
-%post client
-%{alternatives_cmd} --install %{conf_oozie} %{name}-conf %{conf_oozie_dist} 30
-
-%preun client
-if [ "$1" = 0 ]; then
-  %{alternatives_cmd} --remove %{name}-conf %{conf_oozie_dist} || :
-fi
-
 %files 
 %defattr(-,root,root)
+%config(noreplace) %{conf_oozie_dist}
 %{lib_oozie}/bin/oozie-sys.sh
 %{lib_oozie}/bin/oozie-env.sh
 %{lib_oozie}/bin/oozied.sh
@@ -197,7 +192,6 @@ fi
 
 %files client
 %defattr(-,root,root)
-%config(noreplace) %{conf_oozie_dist}
 %{usr_bin}/oozie
 %dir %{lib_oozie}/bin
 %{lib_oozie}/bin/oozie
