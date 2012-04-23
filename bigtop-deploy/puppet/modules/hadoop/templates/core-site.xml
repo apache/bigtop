@@ -22,7 +22,7 @@
   <property>
     <!-- URI of NN. Fully qualified. No IP.-->
     <name>fs.defaultFS</name>
-<% if ha == "enabled" -%>
+<% if ha != "disabled" -%>
     <value>hdfs://<%= nameservice_id %></value>
 <% else -%>
     <value>hdfs://<%= namenode_hosts[0] %>:<%= hadoop_namenode_port%></value>

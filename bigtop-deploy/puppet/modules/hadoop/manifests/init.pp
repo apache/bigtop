@@ -75,11 +75,11 @@ class hadoop {
   }
 
   class common-hdfs inherits common {
-    if ($auth == "kerberos" and $ha == "enabled") {
+    if ($auth == "kerberos" and $ha != "disabled") {
       fail("High-availability secure clusters are not currently supported")
     }
 
-    if ($ha == 'enabled') {
+    if ($ha != 'disabled') {
       $nameservice_id = extlookup("hadoop_ha_nameservice_id", "ha-nn-uri")
     }
 
@@ -126,7 +126,7 @@ class hadoop {
     $hadoop_datanode_port           = $port
     $hadoop_security_authentication = $auth
 
-    if ($ha == 'enabled') {
+    if ($ha != 'disabled') {
       # Needed by hdfs-site.xml
       $sshfence_keydir  = "/usr/lib/hadoop/.ssh"
       $sshfence_keypath = "$sshfence_keydir/id_sshfence"
@@ -234,7 +234,7 @@ class hadoop {
     Exec <| title == "activate nn1" |>  -> Exec["HDFS init $title"]
   }
 
-  define namenode ($host = $fqdn , $port = "8020", $thrift_port= "10090", $auth = "simple", $dirs = ["/tmp/nn"], $ha = 'disabled') {
+  define namenode ($host = $fqdn , $port = "8020", $thrift_port= "10090", $auth = "simple", $dirs = ["/tmp/nn"], $ha = 'disabled', $zk = '') {
 
     $first_namenode = inline_template("<%= host.to_a[0] %>")
     $hadoop_namenode_host = $host
@@ -242,7 +242,7 @@ class hadoop {
     $hadoop_namenode_thrift_port = $thrift_port
     $hadoop_security_authentication = $auth
 
-    if ($ha == 'enabled') {
+    if ($ha != 'disabled') {
       $sshfence_user      = extlookup("hadoop_ha_sshfence_user",      "hdfs") 
       $sshfence_user_home = extlookup("hadoop_ha_sshfence_user_home", "/var/lib/hadoop-hdfs")
       $sshfence_keydir    = "$sshfence_user_home/.ssh"
@@ -318,24 +318,50 @@ class hadoop {
     Exec <| tag == "namenode-format" |>         -> Service["hadoop-hdfs-namenode"]
     Kerberos::Host_keytab <| title == "hdfs" |> -> Service["hadoop-hdfs-namenode"]
 
+    if ($ha == "auto") {
+      package { "hadoop-hdfs-zkfc":
+        ensure => latest,
+        require => Package["jdk"],
+      }
+
+      service { "hadoop-hdfs-zkfc":
+        ensure => running,
+        hasstatus => true,
+        subscribe => [Package["hadoop-hdfs-zkfc"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
+        require => [Package["hadoop-hdfs-zkfc"]],
+      } 
+      Service <| title == "hadoop-hdfs-zkfc" |> -> Service <| title == "hadoop-hdfs-namenode" |>
+    }
+
     if ($::fqdn == $first_namenode) {
       exec { "namenode format":
         user => "hdfs",
-        command => "/bin/bash -c 'yes Y | hadoop namenode -format >> /tmp/nn.format.log 2>&1'",
+        command => "/bin/bash -c 'yes Y | hdfs namenode -format >> /var/lib/hadoop-hdfs/nn.format.log 2>&1'",
         creates => "${namenode_data_dirs[0]}/current/VERSION",
-        require => [ Package["hadoop-hdfs-namenode"], File[$dirs] ],
+        require => [ Package["hadoop-hdfs-namenode"], File[$dirs], File["/etc/hadoop/conf/hdfs-site.xml"] ],
         tag     => "namenode-format",
       } 
-      
-      if ($ha == "enabled") {
-        exec { "activate nn1":
-          command => "/usr/bin/hdfs haadmin -transitionToActive nn1",
-          user    => "hdfs",
-          unless  => "/usr/bin/test $(/usr/bin/hdfs haadmin -getServiceState nn1) = active",
-          require => Service["hadoop-hdfs-namenode"],
+
+      if ($ha != "disabled") {
+        if ($ha == "auto") {
+          exec { "namenode zk format":
+            user => "hdfs",
+            command => "/bin/bash -c 'yes N | hdfs zkfc -formatZK >> /var/lib/hadoop-hdfs/zk.format.log 2>&1 || :'",
+            require => [ Package["hadoop-hdfs-zkfc"], File["/etc/hadoop/conf/hdfs-site.xml"] ],
+            tag     => "namenode-format",
+          }
+          Service <| title == "zookeeper-server" |> -> Exec <| title == "namenode zk format" |>
+          Exec <| title == "namenode zk format" |>  -> Service <| title == "hadoop-hdfs-zkfc" |>
+        } else {
+          exec { "activate nn1": 
+            command => "/usr/bin/hdfs haadmin -transitionToActive nn1",
+            user    => "hdfs",
+            unless  => "/usr/bin/test $(/usr/bin/hdfs haadmin -getServiceState nn1) = active",
+            require => Service["hadoop-hdfs-namenode"],
+          }
         }
       }
-    } elsif ($ha == "enabled") {
+    } elsif ($ha != "disabled") {
       hadoop::namedir_copy { $namenode_data_dirs: 
         source       => $first_namenode,
         ssh_identity => $sshfence_keypath,

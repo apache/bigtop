@@ -19,8 +19,22 @@
 <% namenode_hosts = hadoop_namenode_host.to_a -%>
 <configuration>
 
-<% if ha == "enabled" -%>
+<% if ha != "disabled" -%>
   <!-- HA -->
+
+<% if ha == "auto" -%>
+  <property>
+    <name>dfs.ha.automatic-failover.enabled</name>
+    <value>true</value>
+  </property>
+<%   if has_variable?("zk") -%>
+  <property>
+    <name>ha.zookeeper.quorum</name>
+    <value><%= zk %></value>
+  </property>
+<%   end -%>
+<%   end -%>
+
   <property> 
     <name>dfs.federation.nameservices</name>
     <value><%= nameservice_id %></value>

@@ -22,12 +22,12 @@ class hadoop_cluster_node {
 
   $hadoop_ha = $standby_head_node ? {
     ""      => disabled,
-    default => enabled,
+    default => extlookup("hadoop_ha", "manual"),
   }
 
   $hadoop_namenode_host        = $hadoop_ha ? {
-    "enabled" => [ $hadoop_head_node, $standby_head_node ],
-    default   => $hadoop_head_node,
+    "disabled" => $hadoop_head_node,
+    default    => [ $hadoop_head_node, $standby_head_node ],
   }
   $hadoop_namenode_port        = extlookup("hadoop_namenode_port", "17020")
   $hadoop_namenode_thrift_port = extlookup("hadoop_namenode_thrift_port", "10090")
@@ -37,8 +37,8 @@ class hadoop_cluster_node {
   # $hadoop_dfs_datanode_plugins="org.apache.hadoop.thriftfs.DatanodePlugin"
   $hadoop_ha_nameservice_id    = extlookup("hadoop_ha_nameservice_id", "ha-nn-uri")
   $hadoop_namenode_uri   = $hadoop_ha ? {
-    "enabled" => "hdfs://${hadoop_ha_nameservice_id}:8020",
-    default   => "hdfs://$hadoop_namenode_host:$hadoop_namenode_port",
+    "disabled" => "hdfs://$hadoop_namenode_host:$hadoop_namenode_port",
+    default    => "hdfs://${hadoop_ha_nameservice_id}:8020",
   }
 
   $hadoop_rm_host        = $hadoop_head_node
@@ -56,6 +56,7 @@ class hadoop_cluster_node {
   $hadoop_jobtracker_thrift_port     = extlookup("hadoop_jobtracker_thrift_port", "9290")
   $hadoop_mapred_jobtracker_plugins  = extlookup("hadoop_mapred_jobtracker_plugins", "")
   $hadoop_mapred_tasktracker_plugins = extlookup("hadoop_mapred_tasktracker_plugins", "")
+  $hadoop_ha_zookeeper_quorum        = "${hadoop_head_node}:2181"
   # $hadoop_mapred_jobtracker_plugins="org.apache.hadoop.thriftfs.ThriftJobTrackerPlugin"
   # $hadoop_mapred_tasktracker_plugins="org.apache.hadoop.mapred.TaskTrackerCmonInst"
 
@@ -134,9 +135,10 @@ class hadoop_head_node inherits hadoop_cluster_node {
         # thrift_port => $hadoop_namenode_thrift_port,
         auth => $hadoop_security_authentication,
         ha   => $hadoop_ha,
+        zk   => $hadoop_ha_zookeeper_quorum,
   }
 
-  if ($hadoop_ha != "enabled") {
+  if ($hadoop_ha == "disabled") {
     hadoop::secondarynamenode { "secondary namenode":
           namenode_host => $hadoop_namenode_host,
           namenode_port => $hadoop_namenode_port,
@@ -198,7 +200,7 @@ class hadoop_head_node inherits hadoop_cluster_node {
   }
 }
 
-class standby_head_node inherits hadoop_worker_node {
+class standby_head_node inherits hadoop_cluster_node {
   hadoop::namenode { "namenode":
         host => $hadoop_namenode_host,
         port => $hadoop_namenode_port,
@@ -206,6 +208,7 @@ class standby_head_node inherits hadoop_worker_node {
         # thrift_port => $hadoop_namenode_thrift_port,
         auth => $hadoop_security_authentication,
         ha   => $hadoop_ha,
+        zk   => $hadoop_ha_zookeeper_quorum,
   }
 }
 
