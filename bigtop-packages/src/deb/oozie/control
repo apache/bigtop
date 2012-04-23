@@ -54,7 +54,7 @@ Description: Oozie is a system that runs workflows of Hadoop jobs.
  Actions and decisions can be parameterized with job properties, actions
  output (i.e. Hadoop counters) and HDFS  file information (file exists,
  file size, etc). Formal parameters are expressed in the workflow definition
- as ${VAR} variables.
+ as ${VARIABLE NAME} variables.
  .
  A Workflow application is an HDFS directory that contains the workflow
  definition (an XML file), all the necessary files to run all the actions:
