@@ -1,5 +1,6 @@
 <hadoop-hdfs-datanode>
-<content>
-  <file name='/etc/rc.d/hadoop-hdfs-datanode' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
-</content>
+  <content>
+    <config name='/etc/default/hadoop-hdfs-datanode' owners='1' perm='-rw-r--r--' user='root' group='root' />
+    <file name='/etc/rc.d/hadoop-hdfs-datanode' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
+  </content>
 </hadoop-hdfs-datanode>

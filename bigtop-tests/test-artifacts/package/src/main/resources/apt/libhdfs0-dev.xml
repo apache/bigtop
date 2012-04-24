@@ -1,12 +1,5 @@
 <libhdfs0-dev>
   <content>
-    <file name='/.' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/share' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/share/doc' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/share/doc/libhdfs0-dev' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/share/doc/libhdfs0-dev/changelog.Debian.gz' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/share/doc/libhdfs0-dev/changelog.gz' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/share/doc/libhdfs0-dev/copyright' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+    <file name='/.' owners='1' perm='drwxr-xr-x' user='root' group='root' />
   </content>
 </libhdfs0-dev>

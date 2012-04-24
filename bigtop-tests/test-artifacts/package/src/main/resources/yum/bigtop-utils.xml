@@ -1,8 +1,8 @@
 <bigtop-utils>
-<content>
-  <config name='/etc/default/bigtop-utils' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-  <file name='/usr/libexec/bigtop-detect-javahome' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
-  <file name='/usr/share/doc/bigtop-utils-0.3.0.hadoop23.incubating.8' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
-  <doc  name='/usr/share/doc/bigtop-utils-0.3.0.hadoop23.incubating.8/LICENSE' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-</content>
+  <content>
+    <config name='/etc/default/bigtop-utils' owners='1' perm='-rw-r--r--' user='root' group='root' />
+    <file name='/usr/libexec/bigtop-detect-javahome' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
+    <file name='/usr/share/doc/bigtop-utils-BIGTOP-PACKAGE-VERSION' owners='1' perm='drwxr-xr-x' user='root' group='root' />
+    <doc  name='/usr/share/doc/bigtop-utils-BIGTOP-PACKAGE-VERSION/LICENSE' owners='1' perm='-rw-r--r--' user='root' group='root' />
+  </content>
 </bigtop-utils>

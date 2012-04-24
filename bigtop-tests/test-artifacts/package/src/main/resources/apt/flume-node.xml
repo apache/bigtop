@@ -1,14 +1,14 @@
 <flume-node>
   <content>
-    <file name='/.' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/.' owners='1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/share' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/share/doc' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/share/doc/flume-node' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/share/doc/flume-node/changelog.Debian.gz' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/share/doc/flume-node/copyright' owners='-1' perm='-rw-r--r--' user='root' group='root' />
+    <file name='/usr/share/doc/flume-node' owners='1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/share/doc/flume-node/changelog.Debian.gz' owners='1' perm='-rw-r--r--' user='root' group='root' />
+    <file name='/usr/share/doc/flume-node/copyright' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/etc' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/etc/init.d' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
-    <config name='/etc/init.d/flume-node' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+    <config name='/etc/init.d/flume-node' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
   </content>
 </flume-node>

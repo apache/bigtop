@@ -316,14 +316,23 @@ class PackageTestCommon {
     }
   }
 
+  String formatFileName(String file) {
+    return file.replace("${pkg.getVersion()}", 'BIGTOP-PACKAGE-VERSION');
+  }
+
+  String restoreFileName(String file) {
+    return file.replace('BIGTOP-PACKAGE-VERSION', "${pkg.getVersion()}");
+  }
+
   public void checkFiles(Map config, Map doc, Map file) {
+    String fName;
     Map files = [:];
     Map docs = [:];
     Map configs = [:];
 
-    pkg.getFiles().each { files[it.toString()] = it; }
-    pkg.getConfigs().each { configs[it.toString()] = it; files.remove(it.toString()); }
-    pkg.getDocs().each { docs[it.toString()] = it; files.remove(it.toString()); }
+    pkg.getFiles().each { fName = formatFileName(it); files[fName] = fName; }
+    pkg.getConfigs().each { fName = formatFileName(it); configs[fName] = fName; files.remove(fName); }
+    pkg.getDocs().each { fName = formatFileName(it); docs[fName] = fName; files.remove(fName); }
 
     if (pm.type == "apt" && doc != null) {
       file.putAll(doc);
@@ -337,11 +346,10 @@ class PackageTestCommon {
               files, hasSameKeys(file));
 
     // TODO: we should probably iterate over a different set of files to include loose files as well
-    Shell sh = new Shell();
     List fileList = [];
-    file.each { fileList.add(it.key.toString()); }
-    doc.each { fileList.add(it.key.toString()); }
-    config.each { fileList.add(it.key.toString()); }
+    file.each { fileList.add(restoreFileName(it.key)); }
+    doc.each { fileList.add(restoreFileName(it.key)); }
+    config.each { fileList.add(restoreFileName(it.key)); }
     fileList.sort();
 
     Map fileMeta = getLsMetadata(fileList);
@@ -357,7 +365,9 @@ class PackageTestCommon {
 
     fileList.each {
       Map meta = fileMeta[it];
-      Map goldenMeta = goldenFileMeta[it];
+      Map goldenMeta = goldenFileMeta[formatFileName(it)];
+
+      println goldenMeta;
 
       if (goldenMeta.owners != "-1") { // TODO: we shouldn't really skip anything even for multi-owned dirs
       if (meta == null ||
@@ -381,14 +391,15 @@ class PackageTestCommon {
         fileMeta = getLsMetadata(pkg.getFiles());
 
         pkg.getFiles().each {
+          fName = formatFileName(it);
           Map meta = fileMeta[it] ?: [:];
-          String node = configs[it] ? "config" : (docs[it] ? "doc " : "file");
+          String node = configs[fName] ? "config" : (docs[fName] ? "doc " : "file");
           int owners = meta.owners ?: -1;
 
           if (meta.target) {
-            "$node"(name : it, owners : owners, perm : meta.perm, user : meta.user, group : meta.group, target : meta.target);
+            "$node"(name : fName, owners : owners, perm : meta.perm, user : meta.user, group : meta.group, target : meta.target);
           } else {
-            "$node"(name : it, owners : owners, perm : meta.perm, user : meta.user, group : meta.group);
+            "$node"(name : fName, owners : owners, perm : meta.perm, user : meta.user, group : meta.group);
           }
         }
       }

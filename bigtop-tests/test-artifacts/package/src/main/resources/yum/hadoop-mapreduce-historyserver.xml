@@ -1,5 +1,6 @@
 <hadoop-mapreduce-historyserver>
-<content>
-  <file name='/etc/rc.d/init.d/hadoop-mapreduce-historyserver' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
-</content>
+  <content>
+    <config name='/etc/default/hadoop-mapreduce-historyserver' owners='1' perm='-rw-r--r--' user='root' group='root' />
+    <file name='/etc/rc.d/init.d/hadoop-mapreduce-historyserver' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
+  </content>
 </hadoop-mapreduce-historyserver>

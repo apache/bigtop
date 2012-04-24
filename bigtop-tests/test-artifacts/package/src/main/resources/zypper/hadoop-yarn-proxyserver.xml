@@ -1,5 +1,6 @@
 <hadoop-yarn-proxyserver>
   <content>
-    <file name='/etc/rc.d/hadoop-yarn-proxyserver' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
+    <config name='/etc/default/hadoop-yarn-proxyserver' owners='1' perm='-rw-r--r--' user='root' group='root' />
+    <file name='/etc/rc.d/hadoop-yarn-proxyserver' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
   </content>
 </hadoop-yarn-proxyserver>
