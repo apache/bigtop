@@ -322,7 +322,7 @@ install -d -m 0755 $HTTPFS_ETC_DIR/conf.empty
 mv $HADOOP_ETC_DIR/conf.empty/httpfs* $HTTPFS_ETC_DIR/conf.empty
 sed -i -e '/<\/configuration>/i\
   <property>\
-    <name>httpfs.hadoop.hdfs.configuration.dir</name>\
+    <name>httpfs.hadoop.config.dir</name>\
     <value>/etc/hadoop/conf</value>\
   </property>' $HTTPFS_ETC_DIR/conf.empty/httpfs-site.xml
 

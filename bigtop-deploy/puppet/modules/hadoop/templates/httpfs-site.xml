@@ -19,7 +19,7 @@
 <% namenode_hosts = hadoop_namenode_host.to_a -%>
 <configuration>
   <property>
-    <name>httpfs.hadoop.hdfs.configuration.dir</name>
+    <name>httpfs.hadoop.config.dir</name>
     <value>/etc/hadoop/conf</value>
   </property>
 
