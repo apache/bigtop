@@ -46,10 +46,10 @@
   <properties>
     <junit.version>4.8.2</junit.version>
     <itest-common.version>0.4.0-incubating-SNAPSHOT</itest-common.version>
-    <hadoop.version>0.23.1</hadoop.version>
+    <hadoop.version>2.0.0-SNAPSHOT</hadoop.version>
     <pig.version>0.9.2</pig.version>
-    <sqoop.version>1.4.0-incubating</sqoop.version>
-    <hbase.version>0.92.0</hbase.version>
+    <sqoop.version>1.4.1-incubating</sqoop.version>
+    <hbase.version>0.92.1</hbase.version>
   </properties>
 
   <dependencyManagement>

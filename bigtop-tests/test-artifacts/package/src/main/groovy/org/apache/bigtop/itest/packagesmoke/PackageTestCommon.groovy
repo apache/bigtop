@@ -273,7 +273,7 @@ class PackageTestCommon {
         meta.target = fileName.replaceAll(/^.*-> /, '');
         fileName = fileName.replaceAll(/ ->.*$/, '');
       }
-      meta.perm  = matcher[0];
+      meta.perm  = matcher[0].replace('.', '');
       meta.user  = matcher[2];
       meta.group = matcher[3];
       lsFiles[fileName] = meta;
@@ -366,8 +366,6 @@ class PackageTestCommon {
     fileList.each {
       Map meta = fileMeta[it];
       Map goldenMeta = goldenFileMeta[formatFileName(it)];
-
-      println goldenMeta;
 
       if (goldenMeta.owners != "-1") { // TODO: we shouldn't really skip anything even for multi-owned dirs
       if (meta == null ||

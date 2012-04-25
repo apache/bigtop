@@ -37,7 +37,8 @@
     <!--
       BOM definitions
     -->
-    <hadoop.version>1.0.1</hadoop.version>
+    <hadoop.version>2.0.0-SNAPSHOT</hadoop.version>
+    <hbase.version>0.92.1</hbase.version>
     <pig.version>0.9.2</pig.version>
     <pig-smoke.version>0.9.2-SNAPSHOT</pig-smoke.version>
     <sqoop.version>1.4.1-incubating</sqoop.version>
@@ -108,7 +109,6 @@
   BOM definitions
 -->
 <!-- Product artifacts -->
-      <!--
       <dependency>
         <groupId>org.apache.hadoop</groupId>
         <artifactId>hadoop-common</artifactId>
@@ -121,12 +121,17 @@
       </dependency>
       <dependency>
         <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-hdfs</artifactId>
+        <version>${hadoop.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
         <artifactId>hadoop-hdfs-test</artifactId>
         <version>${hadoop.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.hadoop</groupId>
-        <artifactId>hadoop-mapred</artifactId>
+        <artifactId>hadoop-mapreduce</artifactId>
         <version>${hadoop.version}</version>
       </dependency>
       <dependency>
@@ -146,7 +151,12 @@
         <version>${pig.version}</version>
         <scope>test</scope>
       </dependency>
-      -->
+      <dependency>
+        <groupId>org.apache.pig</groupId>
+        <artifactId>pigsmoke</artifactId>
+        <version>${pig.version}</version>
+        <scope>test</scope>
+      </dependency>
 <!-- Test artifacts -->
       <dependency>
         <groupId>org.apache.bigtop.itest</groupId>
