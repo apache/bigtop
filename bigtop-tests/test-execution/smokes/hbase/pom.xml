@@ -49,6 +49,10 @@
       <artifactId>hbase-smoke</artifactId>
       <version>${hbase-smoke.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-client</artifactId>
+    </dependency>
   </dependencies>
 
   <build>
