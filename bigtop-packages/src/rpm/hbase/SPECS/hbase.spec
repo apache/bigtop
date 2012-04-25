@@ -26,7 +26,6 @@
 %define hbase_services master regionserver thrift rest
 %define hadoop_home /usr/lib/hadoop
 %define zookeeper_home /usr/lib/zookeeper
-%define hbase_jar_deps_hadoop hadoop-annotations,hadoop-auth,hadoop-common,hadoop-hdfs,hadoop-mapreduce-client-common,hadoop-mapreduce-client-core,hadoop-yarn-api,hadoop-yarn-common 
 
 %if  %{?suse_version:1}0
 
@@ -242,7 +241,7 @@ env HBASE_VERSION=%{version} bash %{SOURCE1}
 %install
 %__rm -rf $RPM_BUILD_ROOT
 sh %{SOURCE2} \
-	--build-dir=. \
+	--build-dir=build \
         --doc-dir=%{doc_hbase} \
         --conf-dir=%{etc_hbase_conf_dist} \
 	--prefix=$RPM_BUILD_ROOT
@@ -278,8 +277,8 @@ done
 %__install -d -m 0755 $RPM_BUILD_ROOT/usr/bin
 
 # Pull zookeeper and hadoop from their packages
-rm -f $RPM_BUILD_ROOT/%{lib_hbase}/{%{hbase_jar_deps_hadoop},zookeeper}*.jar
-ln -f -s %{hadoop_home}/{%{hbase_jar_deps_hadoop}}.jar %{zookeeper_home}/zookeeper.jar $RPM_BUILD_ROOT/%{lib_hbase}
+rm -f $RPM_BUILD_ROOT/%{lib_hbase}/{hadoop,zookeeper}*.jar
+ln -f -s %{zookeeper_home}/zookeeper.jar $RPM_BUILD_ROOT/%{lib_hbase}
 
 %pre
 getent group hbase 2>/dev/null >/dev/null || /usr/sbin/groupadd -r hbase
