@@ -21,6 +21,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.After;
 import org.junit.Test;
 
 import org.apache.bigtop.itest.JarContent;
@@ -30,12 +31,6 @@ import org.apache.bigtop.itest.shell.Shell;
  * Test Mahout examples shipped with the distribution.
  */
 public class TestMahoutExamples {
-  public static final String HADOOP_HOME =
-    System.getenv("HADOOP_HOME");
-  static {
-    assertNotNull("HADOOP_HOME is not set", HADOOP_HOME);
-  }
-
   public static final String TEMP_DIR = "/tmp/mahout.${(new Date().getTime())}";
   public static final String WORK_DIR = TEMP_DIR;
   private static Shell sh = new Shell("/bin/bash -s");
@@ -103,11 +98,18 @@ public class TestMahoutExamples {
     }
   }
 
-  @Test
+  @After
+  public void killHangingProcess() {
+    sh.exec("mapred job -list | grep 'Total jobs:0'");
+    if (sh.getRet() == 0) {
+      sh.exec("for jobid in `mapred job -list | grep 'RUNNING' |awk '{print \$1}'`;",
+              "do mapred job -kill \${jobid};",
+              "done");
+    }
+  }
+
+  @Test(timeout=1200000L)
   public void factorizeMovieLensRatings() {
-    // convert ratings
-    sh.exec("cat ${TEMP_DIR}/movielens/ml-1m/ratings.dat |sed -e s/::/,/g| cut -d, -f1,2,3 > ${TEMP_DIR}/movielens/ratings.csv");
-    assertEquals("Unexpected error from converting ratings", 0, sh.getRet());
     // put ratings in hdfs
     sh.exec("hadoop fs -mkdir ${WORK_DIR}/movielens",
             "hadoop fs -put ${TEMP_DIR}/movielens/ratings.csv ${WORK_DIR}/movielens/ratings.csv");
@@ -124,8 +126,14 @@ public class TestMahoutExamples {
     assertEquals("Unexpected error from running mahout", 0, sh.getRet());
 
     //compute predictions against the probe set, measure the error
-    sh.exec("mahout evaluateFactorizationParallel --output ${WORK_DIR}/als/rmse --pairs ${WORK_DIR}/dataset/probeSet/ " +
-            "--userFeatures ${WORK_DIR}/als/out/U/ --itemFeatures ${WORK_DIR}/als/out/M/");
+    sh.exec("mahout evaluateFactorization --output ${WORK_DIR}/als/rmse --input ${WORK_DIR}/dataset/probeSet/ " +
+            "--userFeatures ${WORK_DIR}/als/out/U/ --itemFeatures ${WORK_DIR}/als/out/M/ --tempDir ${WORK_DIR}/als/tmp");
+    assertEquals("Unexpected error from running mahout", 0, sh.getRet());
+
+    //compute recommendations
+    sh.exec("mahout recommendfactorized --input ${WORK_DIR}/als/out/userRatings/ --output ${WORK_DIR}/recommendations " +
+            "--userFeatures ${WORK_DIR}/als/out/U/ --itemFeatures ${WORK_DIR}/als/out/M/ " +
+            "--numRecommendations 6 --maxRating 5");
     assertEquals("Unexpected error from running mahout", 0, sh.getRet());
 
     // check that error has been calculated
@@ -134,6 +142,10 @@ public class TestMahoutExamples {
     // print the error
     sh.exec("hadoop fs -cat ${WORK_DIR}/als/rmse/rmse.txt");
     assertEquals("Unexpected error from running hadoop", 0, sh.getRet());
+
+    // check that recommendations has been calculated
+    sh.exec("hadoop fs -test -e ${WORK_DIR}/recommendations/part-m-00000");
+    assertEquals("${WORK_DIR}/recommendations/part-m-00000 does not exist", 0, sh.getRet());
   }
 
   // it's too much of a pain to use junit parameterized tests, so do it
@@ -147,37 +159,41 @@ public class TestMahoutExamples {
     assertEquals("Unexpected error from running mahout", 0, sh.getRet());
   }
 
-  @Test
+  @Test(timeout=900000L)
   public void clusterControlDataWithCanopy() {
     _clusterSyntheticControlData("canopy");
   }
 
-  @Test
+  @Test(timeout=900000L)
   public void clusterControlDataWithKMeans() {
     _clusterSyntheticControlData("kmeans");
   }
 
-  @Test
+  @Test(timeout=900000L)
   public void clusterControlDataWithFuzzyKMeans() {
     _clusterSyntheticControlData("fuzzykmeans");
   }
 
-  @Test
+  @Test(timeout=900000L)
   public void clusterControlDataWithDirichlet() {
     _clusterSyntheticControlData("dirichlet");
   }
 
-  @Test
+  @Test(timeout=900000L)
   public void clusterControlDataWithMeanShift() {
     _clusterSyntheticControlData("meanshift");
   }
 
-  @Test
+  @Test(timeout=7200000L)
   public void testReutersLDA() {
     // where does lda.algorithm come in?
     sh.exec("mahout org.apache.lucene.benchmark.utils.ExtractReuters ${TEMP_DIR}/reuters-sgm ${TEMP_DIR}/reuters-out");
     assertEquals("Unexpected error from running mahout", 0, sh.getRet());
-    sh.exec("MAHOUT_LOCAL=true mahout seqdirectory -i ${TEMP_DIR}/reuters-out -o ${TEMP_DIR}/reuters-out-seqdir -c UTF-8 -chunk 5");
+    //put ${TEMP_DIR}/reuters-out into hdfs as we have to run seqdirectory in mapreduce mode, so files need be in hdfs
+    sh.exec("hadoop fs -put ${TEMP_DIR}/reuters-out ${WORK_DIR}/reuters-out");
+    assertEquals("Unable to put reuters-out-seqdir in hdfs", 0, sh.getRet());   
+
+    sh.exec("mahout seqdirectory -i ${TEMP_DIR}/reuters-out -o ${TEMP_DIR}/reuters-out-seqdir -c UTF-8 -chunk 5");
     assertEquals("Unexpected error from running mahout", 0, sh.getRet());
     /*
     // reuters-out-seqdir exists on a local disk at this point,
@@ -189,11 +205,15 @@ public class TestMahoutExamples {
     sh.exec("""mahout seq2sparse \
     -i ${WORK_DIR}/reuters-out-seqdir/ \
     -o ${WORK_DIR}/reuters-out-seqdir-sparse-lda \
-    -wt tf -seq -nr 3 \
-  && \
-  mahout lda \
+    -wt tf -seq -nr 3 --namedVector""");
+    assertEquals("Unexpected error from running mahout", 0, sh.getRet());
+
+    sh.exec("hadoop fs -mkdir ${WORK_DIR}/reuters-lda");
+    assertEquals("Unable to make dir reuters-lda in hdfs", 0, sh.getRet());
+
+    sh.exec("""mahout lda \
     -i ${WORK_DIR}/reuters-out-seqdir-sparse-lda/tf-vectors \
-    -o ${WORK_DIR}/reuters-lda -k 20 -v 50000 -ow -x 20 \
+    -o ${WORK_DIR}/reuters-lda -k 20 -x 20 \
   && \
   mahout ldatopics \
     -i ${WORK_DIR}/reuters-lda/state-20 \
@@ -202,7 +222,7 @@ public class TestMahoutExamples {
     assertEquals("Unexpected error from running mahout", 0, sh.getRet());
   }
 
-  @Test
+  @Test(timeout=1200000L)
   public void testBayesNewsgroupClassifier() {
     sh.exec("""mahout org.apache.mahout.classifier.bayes.PrepareTwentyNewsgroups \
   -p ${TEMP_DIR}/20news-bydate/20news-bydate-train \
@@ -218,27 +238,27 @@ public class TestMahoutExamples {
     assertEquals("Unexpected error from running mahout", 0, sh.getRet());
 
     // put bayes-train-input and bayes-test-input in hdfs
+    sh.exec("hadoop fs -mkdir ${WORK_DIR}/20news-bydate");
     sh.exec("hadoop fs -put ${TEMP_DIR}/20news-bydate/bayes-train-input ${WORK_DIR}/20news-bydate/bayes-train-input");
     assertEquals("Unable to put bayes-train-input in hdfs", 0, sh.getRet());
     sh.exec("hadoop fs -put ${TEMP_DIR}/20news-bydate/bayes-test-input ${WORK_DIR}/20news-bydate/bayes-test-input");
     assertEquals("Unable to put bayes-test-input in hdfs", 0, sh.getRet());
 
     sh.exec("""mahout trainclassifier \
-  -i ${WORK_DIR}/20news-bydate/bayes-train-input \
-  -o ${WORK_DIR}/20news-bydate/bayes-model \
-  -type bayes \
-  -ng 1 \
-  -source hdfs""");
+-i ${WORK_DIR}/20news-bydate/bayes-train-input \
+-o ${WORK_DIR}/20news-bydate/bayes-model \
+-type bayes \
+-ng 1 \
+-source hdfs""");
     assertEquals("Unexpected error from running mahout", 0, sh.getRet());
     sh.exec("""mahout testclassifier \
-  -m ${WORK_DIR}/20news-bydate/bayes-model \
-  -d ${WORK_DIR}/20news-bydate/bayes-test-input \
-  -type bayes \
-  -ng 1 \
-  -source hdfs \
-  -method mapreduce""");
+-m ${WORK_DIR}/20news-bydate/bayes-model \
+-d ${WORK_DIR}/20news-bydate/bayes-test-input \
+-type bayes \
+-ng 1 \
+-source hdfs \
+-method mapreduce""");
     assertEquals("Unexpected error from running mahout", 0, sh.getRet());
 
   }
-
 }
