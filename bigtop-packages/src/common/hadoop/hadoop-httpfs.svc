@@ -61,7 +61,8 @@ cat <<'__EOT__'
 stop() {
   log_success_msg "Stopping ${DESC}: "
   # FIXME: workaround for BIGTOP-537
-  if [ -s $PIDFILE ] ; then
+  checkstatusofproc
+  if [ "$?" = "$STATUS_RUNNING" ] ; then
     su -s /bin/bash $SVC_USER -c "${EXEC_PATH} stop $SLEEP_TIME -force"
     RETVAL=$?
   else
