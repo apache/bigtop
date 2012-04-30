@@ -1652,6 +1652,8 @@
     <test> <!-- TESTED -->
       <description>put: putting file into a directory(absolute path)</description>
       <test-commands>
+        <command>-fs NAMENODE -mkdir TEST_DIR_ABSOLUTE/dir0</command>
+        <command>-fs NAMENODE -mkdir TEST_DIR_ABSOLUTE/dir0/dir1</command>
         <command>-fs NAMENODE -put CLITEST_DATA TEST_DIR_ABSOLUTE/dir0/dir1/data</command>
         <command>-fs NAMENODE -du TEST_DIR_ABSOLUTE/dir0/dir1/data</command>
       </test-commands>
@@ -1681,6 +1683,8 @@
     <test> <!-- TESTED -->
       <description>put: putting file into a directory(relative path)</description>
       <test-commands>
+        <command>-fs NAMENODE -mkdir dir0</command>
+        <command>-fs NAMENODE -mkdir dir0/dir1</command>
         <command>-fs NAMENODE -put CLITEST_DATA dir0/dir1/data</command>
         <command>-fs NAMENODE -du dir0/dir1/data</command>
       </test-commands>
@@ -1890,6 +1894,8 @@
     <test> <!-- TESTED -->
       <description>copyFromLocal: copying file into a directory(absolute path)</description>
       <test-commands>
+        <command>-fs NAMENODE -mkdir TEST_DIR_ABSOLUTE/dir0</command>
+        <command>-fs NAMENODE -mkdir TEST_DIR_ABSOLUTE/dir0/dir1</command>
         <command>-fs NAMENODE -copyFromLocal CLITEST_DATA TEST_DIR_ABSOLUTE/dir0/dir1/data</command>
         <command>-fs NAMENODE -du TEST_DIR_ABSOLUTE/dir0/dir1/data</command>
       </test-commands>
@@ -1919,6 +1925,8 @@
     <test> <!-- TESTED -->
       <description>copyFromLocal: copying file into a directory(relative path)</description>
       <test-commands>
+        <command>-fs NAMENODE -mkdir dir0</command>
+        <command>-fs NAMENODE -mkdir dir0/dir1</command>
         <command>-fs NAMENODE -copyFromLocal CLITEST_DATA dir0/dir1/data</command>
         <command>-fs NAMENODE -du dir0/dir1/data</command>
       </test-commands>
@@ -2790,7 +2798,7 @@
     <test> <!-- TESTED -->
       <description>stat: statistics about files (absolute path) using globbing</description>
       <test-commands>
-        <command>-fs -mkdir TEST_DIR_ABSOLUTE/dir0</command>
+        <command>-fs NAMENODE -mkdir TEST_DIR_ABSOLUTE/dir0</command>
         <command>-fs NAMENODE -put CLITEST_DATA/data15bytes TEST_DIR_ABSOLUTE/dir0/data15bytes</command>
         <command>-fs NAMENODE -put CLITEST_DATA/data30bytes TEST_DIR_ABSOLUTE/dir0/data30bytes</command>
         <command>-fs NAMENODE -put CLITEST_DATA/data60bytes TEST_DIR_ABSOLUTE/dir0/data60bytes</command>
