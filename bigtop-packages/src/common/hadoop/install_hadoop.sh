@@ -329,6 +329,8 @@ sed -i -e '/<\/configuration>/i\
 # Make the pseudo-distributed config
 for conf in conf.pseudo ; do
   install -d -m 0755 $HADOOP_ETC_DIR/$conf
+  # Install the upstream config files
+  cp ${BUILD_DIR}/etc/hadoop/*metrics* $HADOOP_ETC_DIR/$conf
   # Overlay the -site files
   (cd $DISTRO_DIR/$conf && tar -cf - .) | (cd $HADOOP_ETC_DIR/$conf && tar -xf -)
   chmod -R 0644 $HADOOP_ETC_DIR/$conf/*
