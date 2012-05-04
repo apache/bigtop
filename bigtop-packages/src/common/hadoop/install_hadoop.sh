@@ -342,8 +342,8 @@ cp ${BUILD_DIR}/etc/hadoop/log4j.properties $HADOOP_ETC_DIR/conf.pseudo
 # FIXME: Provide a convenience link for configuration (HADOOP-7939)
 install -d -m 0755 ${HADOOP_DIR}/etc
 ln -s ${HADOOP_ETC_DIR##${PREFIX}}/conf ${HADOOP_DIR}/etc/hadoop
-install -d -m 0755 ${MAPREDUCE_DIR}/etc
-ln -s ${HADOOP_ETC_DIR##${PREFIX}}/conf ${MAPREDUCE_DIR}/etc/hadoop
+install -d -m 0755 ${YARN_DIR}/etc
+ln -s ${HADOOP_ETC_DIR##${PREFIX}}/conf ${YARN_DIR}/etc/hadoop
 
 # Create log, var and lib
 install -d -m 0755 $PREFIX/var/{log,run,lib}/hadoop-hdfs
