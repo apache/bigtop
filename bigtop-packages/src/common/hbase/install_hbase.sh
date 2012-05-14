@@ -126,6 +126,9 @@ done
 
 ln -s $ETC_DIR/conf $PREFIX/$LIB_DIR/conf
 
+# Make a symlink of hbase.jar to hbase-version.jar
+ln -s `cd $PREFIX/$LIB_DIR ; ls hbase*jar | grep -v tests.jar` $PREFIX/$LIB_DIR/hbase.jar
+
 wrapper=$PREFIX/usr/bin/hbase
 mkdir -p `dirname $wrapper`
 cat > $wrapper <<EOF
