@@ -70,7 +70,7 @@ Source5: hive-server.default
 Source6: hive-metastore.default
 Source7: hive.1
 Source8: hive-site.xml
-Requires: hadoop-client, bigtop-utils
+Requires: hadoop-client, bigtop-utils, hbase, zookeeper
 Obsoletes: %{name}-webinterface
 
 %description 
@@ -144,6 +144,10 @@ cp $RPM_SOURCE_DIR/hive-site.xml .
 
 # Workaround for BIGTOP-583
 %__rm -f $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/slf4j-log4j12-*.jar
+
+# We need to get rid of jars that happen to be shipped in other CDH packages
+%__rm -f $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/hbase-*.jar $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/zookeeper-*.jar
+%__ln_s  /usr/lib/hbase/hbase.jar /usr/lib/zookeeper/zookeeper.jar  $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/
 
 for service in %{hive_services}
 do
