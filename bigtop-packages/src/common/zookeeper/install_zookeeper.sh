@@ -149,8 +149,9 @@ env CLASSPATH=\$CLASSPATH /usr/lib/zookeeper/bin/zkCli.sh "\$@"
 EOF
 chmod 755 $wrapper
 
-for bin_wrapper in zookeeper-server zookeeper-server-initialize ; do
-  wrapper=$PREFIX/usr/bin/$bin_wrapper
+for pairs in zkServer.sh/zookeeper-server zkServer-initialize.sh/zookeeper-server-initialize zkCleanup.sh/zookeeper-server-cleanup ; do
+  wrapper=$PREFIX/usr/bin/`basename $pairs`
+  upstream_script=`dirname $pairs`
   cat > $wrapper <<EOF
 #!/bin/sh
 
@@ -170,7 +171,7 @@ export ZOO_LOG_DIR=/var/log/zookeeper
 export ZOO_LOG4J_PROP=INFO,ROLLINGFILE
 export JVMFLAGS=-Dzookeeper.log.threshold=INFO
 export ZOO_DATADIR_AUTOCREATE_DISABLE=true
-env CLASSPATH=\$CLASSPATH /usr/lib/zookeeper/bin/zkServer${bin_wrapper#zookeeper-server}.sh "\$@"
+env CLASSPATH=\$CLASSPATH /usr/lib/zookeeper/bin/${upstream_script} "\$@"
 EOF
   chmod 755 $wrapper
 done
