@@ -25,7 +25,6 @@ export DH_OPTIONS
 
 patch: patch-stamp
 patch-stamp:	
-	patch -p0 < debian/MAHOUT-822.patch
 	touch $@
 
 clean:	
@@ -50,8 +49,8 @@ install-indep:
 	  --build-dir=build \
           --doc-dir=/usr/share/doc/mahout \
 	  --prefix=debian/mahout
-	rm debian/mahout/usr/lib/mahout/lib/hadoop-*.jar
-	ln -s /usr/lib/hadoop/hadoop-core.jar debian/mahout/usr/lib/mahout/lib/hadoop-core.jar
+	rm -rf debian/mahout/usr/lib/mahout/lib/slf4j-*.jar debian/mahout/usr/lib/mahout/lib/hadoop
+	ln -fs /usr/lib/hadoop/client debian/mahout/usr/lib/mahout/lib/hadoop
 	dh_install -i
 	(dh_lintian) || /bin/true
 

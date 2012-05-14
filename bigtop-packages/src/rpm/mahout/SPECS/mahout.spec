@@ -66,8 +66,8 @@ diverse community to facilitate discussions not only on the project itself but
 also on potential use cases. Come to the mailing lists to find out more.
     
 %prep
-%setup -n %{name}-distribution-%{mahout_base_version}
-%patch0 -p0
+#%setup -n %{name}-distribution-%{mahout_base_version}
+%setup -n apache-mahout-72ad12d
 
 %build
 bash $RPM_SOURCE_DIR/do-component-build
@@ -78,8 +78,8 @@ sh $RPM_SOURCE_DIR/install_mahout.sh \
           --build-dir=build \
           --prefix=$RPM_BUILD_ROOT \
           --doc-dir=%{doc_mahout} 
-rm -f $RPM_BUILD_ROOT/usr/lib/mahout/lib/hadoop*.jar
-ln -s /usr/lib/hadoop/hadoop-core.jar $RPM_BUILD_ROOT/usr/lib/mahout/lib/hadoop-core.jar
+rm -rf $RPM_BUILD_ROOT/usr/lib/mahout/lib/slf4j-*.jar $RPM_BUILD_ROOT/usr/lib/mahout/lib/hadoop
+ln -fs /usr/lib/hadoop/client $RPM_BUILD_ROOT/usr/lib/mahout/lib/hadoop
 
 %post
 %{alternatives_cmd} --install %{config_mahout} %{mahout_name}-conf %{config_mahout}.dist 30

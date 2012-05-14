@@ -16,7 +16,7 @@
 
 set -ex
 
-mvn clean install -Dmahout.skip.distribution=false -DskipTests -Dhadoop.version=0.23.1 "$@"
+mvn clean install -Dmahout.skip.distribution=false -DskipTests -Dhadoop.version=2.0.0-SNAPSHOT "$@"
 mkdir build
 for i in distribution/target/mahout*.tar.gz ; do
   tar -C build --strip-components=1 -xzf $i
