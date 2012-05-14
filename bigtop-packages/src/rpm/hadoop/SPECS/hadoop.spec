@@ -452,6 +452,8 @@ bash %{SOURCE2} \
 
 # Forcing Zookeeper dependency to be on the packaged jar
 %__ln_s -f /usr/lib/zookeeper/zookeeper.jar $RPM_BUILD_ROOT/%{lib_hadoop}/lib/zookeeper*.jar
+# Workaround for BIGTOP-583
+%__rm -f $RPM_BUILD_ROOT/%{lib_hadoop}-*/lib/slf4j-log4j12-*.jar
 
 # Init.d scripts
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/

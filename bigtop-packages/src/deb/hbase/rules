@@ -60,7 +60,7 @@ install: build
 	cp debian/hbase.nofiles.conf debian/tmp/etc/security/limits.d/${hbase_pkg_name}.nofiles.conf
 	# Symlink in the dependency jars from their packages. Both of these packages
 	# provide an unversioned symlink foo.jar -> foo-0.1.2.jar.
-	rm -f debian/tmp/usr/lib/${hbase_pkg_name}/lib/{hadoop,zookeeper}*.jar
+	rm -f debian/tmp/usr/lib/${hbase_pkg_name}/lib/{hadoop,zookeeper,slf4j-log4j12-}*.jar
 	ln -f -s ${zookeeper_home}/zookeeper.jar debian/tmp/usr/lib/${hbase_pkg_name}/lib/
 	ln -s /var/log/${hbase_pkg_name} debian/tmp/usr/lib/${hbase_pkg_name}/logs
 	ln -s /var/run/${hbase_pkg_name} debian/tmp/usr/lib/${hbase_pkg_name}/pids

@@ -142,6 +142,9 @@ cp $RPM_SOURCE_DIR/hive-site.xml .
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{_localstatedir}/log/%{name}
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{_localstatedir}/run/%{name}
 
+# Workaround for BIGTOP-583
+%__rm -f $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/slf4j-log4j12-*.jar
+
 for service in %{hive_services}
 do
         init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{name}-${service}

@@ -75,6 +75,8 @@ install: build
 
 	# Forcing Zookeeper dependency to be on the packaged jar
 	ln -sf /usr/lib/zookeeper/zookeeper.jar debian/tmp/usr/lib/hadoop/lib/zookeeper*.jar
+	# Workaround for BIGTOP-583
+	rm -f debian/tmp/usr/lib/hadoop-*/lib/slf4j-log4j12-*.jar
 
 # Run dh_lintian if we've got it - this doesn't exist on debhelper 6 (eg Ubuntu Hardy)
 	(dh_lintian) || /bin/true

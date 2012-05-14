@@ -54,6 +54,8 @@ install-indep: metastore server
 	  --build-dir=src/build/dist \
 	  --doc-dir=debian/${hive_pkg_name}/usr/share/doc/${hive_pkg_name} \
 	  --python-dir=debian/python-${hive_pkg_name}/usr/share/python-support/python-${hive_pkg_name}/${hive_pkg_name}
+	# Workaround for BIGTOP-583
+	rm -f debian/${hive_pkg_name}/usr/lib/hive/lib/slf4j-log4j12-*.jar
 	dh_pysupport
 	dh_install -i
 	ls -ld debian/${hive_pkg_name}/var/lib/${hive_pkg_name}/metastore
