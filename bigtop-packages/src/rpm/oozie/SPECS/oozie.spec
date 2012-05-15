@@ -62,7 +62,6 @@ Source5: oozie.init
 Source6: catalina.properties
 Source7: context.xml
 Source8: hive.xml
-Patch0: patch
 Requires(pre): /usr/sbin/groupadd, /usr/sbin/useradd
 Requires(post): /sbin/chkconfig
 Requires(preun): /sbin/chkconfig, /sbin/service
@@ -130,8 +129,8 @@ Requires: bigtop-utils
 
 
 %prep
-%setup -n oozie-%{oozie_base_version}
-%patch0 -p0
+#%setup -n oozie-%{oozie_base_version}
+%setup -n apache-oozie-263a301
 
 %build
     mkdir -p distro/downloads
