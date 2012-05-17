@@ -158,7 +158,22 @@
 Hadoop \-  Hadoop is a software platform that lets one easily write and run applications that process vast amounts of data.
 .SH "SYNOPSIS"
 .IX Header "SYNOPSIS"
-Usage: hadoop [\-\-config confdir] \s-1COMMAND\s0
+.PP
+.B hadoop 
+.RB [\-\-config\ confdir] 
+.I COMMAND
+.PP
+.B hdfs
+.RB [\-\-config\ confdir]
+.I COMMAND
+.PP
+.B yarn
+.RB [\-\-config\ confdir]
+.I COMMAND
+.PP
+.B mapred
+.RB [\-\-config\ confdir]
+.I COMMAND
 .SH "DESCRIPTION"
 .IX Header "DESCRIPTION"
 Here's what makes Hadoop especially useful:
@@ -185,62 +200,8 @@ For more details about hadoop, see the Hadoop Wiki at http://wiki.apache.org/had
 Overrides the \f(CW\*(C`HADOOP_CONF_DIR\*(C'\fR environment variable.  See \f(CW\*(C`ENVIRONMENT\*(C'\fR section below.
 .SH "COMMANDS"
 .IX Header "COMMANDS"
-.IP "namenode \-format" 4
-.IX Item "namenode -format"
-format the \s-1DFS\s0 filesystem
-.IP "secondarynamenode" 4
-.IX Item "secondarynamenode"
-run the \s-1DFS\s0 secondary namenode
-.IP "namenode" 4
-.IX Item "namenode"
-run the \s-1DFS\s0 namenode
-.IP "datanode" 4
-.IX Item "datanode"
-run a \s-1DFS\s0 datanode
-.IP "dfsadmin" 4
-.IX Item "dfsadmin"
-run a \s-1DFS\s0 admin client
-.IP "fsck" 4
-.IX Item "fsck"
-run a \s-1DFS\s0 filesystem checking utility
-.IP "fs" 4
-.IX Item "fs"
-run a generic filesystem user client
-.IP "balancer" 4
-.IX Item "balancer"
-run a cluster balancing utility
-.IP "jobtracker" 4
-.IX Item "jobtracker"
-run the MapReduce job Tracker node
-.IP "pipes" 4
-.IX Item "pipes"
-run a Pipes job
-.IP "tasktracker" 4
-.IX Item "tasktracker"
-run a MapReduce task Tracker node
-.IP "job" 4
-.IX Item "job"
-manipulate MapReduce jobs
-.IP "version" 4
-.IX Item "version"
-print the version
-.IP "jar <jar>" 4
-.IX Item "jar <jar>"
-run a jar file
-.IP "distcp <srcurl> <desturl>" 4
-.IX Item "distcp <srcurl> <desturl>"
-copy file or directories recursively
-.IP "archive \-archiveName \s-1NAME\s0 <src>* <dest>" 4
-.IX Item "archive -archiveName NAME <src>* <dest>"
-create a hadoop archive
-.IP "daemonlog" 4
-.IX Item "daemonlog"
-get/set the log level for each daemon
-.IP "\s-1CLASSNAME\s0" 4
-.IX Item "CLASSNAME"
-run the class named \s-1CLASSNAME\s0
 .PP
-Most commands print help when invoked w/o parameters.
+Run each tool (hadoop, hdfs, yarn, mapred) without arguments to access the built-in tool documentation.
 .SH "FILES"
 .IX Header "FILES"
 .IP "/etc/hadoop/conf" 4
@@ -255,11 +216,10 @@ symlink directly.
 To see what current \fIalternative\fR\|(8) Hadoop configurations you have, run the following command:
 .Sp
 .Vb 6
-\& # alternatives --display hadoop
-\& hadoop - status is auto.
+\& # alternatives --display hadoop-conf
+\& hadoop-conf - status is auto.
 \&  link currently points to /etc/hadoop/conf.pseudo
-\& /etc/hadoop/conf.empty - priority 10
-\& /etc/hadoop/conf.pseudo - priority 30
+\& /etc/hadoop/conf.pseudo - priority 10
 \& Current `best' version is /etc/hadoop/conf.pseudo.
 .Ve
 .Sp
@@ -278,13 +238,13 @@ until you have the configuration you want.
 To activate your new configuration and see the new configuration list:
 .Sp
 .Vb 1
-\& # alternatives --install /etc/hadoop/conf hadoop /etc/hadoop/conf.my 90
+\& # alternatives --install /etc/hadoop/conf hadoop-conf /etc/hadoop/conf.my 90
 .Ve
 .Sp
 You can verify your new configuration is active by runnning the following:
 .Sp
 .Vb 7
-\& # alternatives --display hadoop
+\& # alternatives --display hadoop-conf
 \& hadoop - status is auto.
 \&  link currently points to /etc/hadoop/conf.my
 \& /etc/hadoop/conf.empty - priority 10
@@ -296,56 +256,69 @@ You can verify your new configuration is active by runnning the following:
 At this point, it might be a good idea to restart your services with the new configuration, e.g.,
 .Sp
 .Vb 1
-\& # /etc/init.d/hadoop-namenode restart
+\& # /etc/init.d/hadoop-hdfs-namenode restart
 .Ve
 .RE
 .RS 4
 .RE
-.IP "/etc/hadoop/conf/hadoop\-site.xml" 4
-.IX Item "/etc/hadoop/conf/hadoop-site.xml"
-This is the path to the currently deployed Hadoop site configuration.  See \f(CW\*(C`/etc/hadoop/conf\*(C'\fR above.
 .IP "/usr/bin/hadoop\-config.sh" 4
 .IX Item "/usr/bin/hadoop-config.sh"
-This script searches for a useable \f(CW\*(C`JAVA_HOME\*(C'\fR location if \f(CW\*(C`JAVA_HOME\*(C'\fR is not already set.  It
-also sets up environment variables that Hadoop components need at startup (see \f(CW\*(C`ENVIRONMENT\*(C'\fR section).
-.IP "/etc/init.d/hadoop\-namenode" 4
-.IX Item "/etc/init.d/hadoop-namenode"
+This script sets up environment variables that Hadoop components need at startup (see \f(CW\*(C`ENVIRONMENT\*(C'\fR section).
+.IP "/etc/init.d/hadoop\-hdfs\-namenode" 4
+.IX Item "/etc/init.d/hadoop-hdfs-namenode"
 Service script for starting and stopping the Hadoop NameNode
-.IP "/etc/init.d/hadoop\-datanode" 4
-.IX Item "/etc/init.d/hadoop-datanode"
+.IP "/etc/init.d/hadoop\-hdfs\-datanode" 4
+.IX Item "/etc/init.d/hadoop-hdfs-datanode"
 Service script for starting and stopping the Hadoop DataNode
-.IP "/etc/init.d/hadoop\-secondarynamenode" 4
+.IP "/etc/init.d/hadoop\-hdfs\-secondarynamenode" 4
 .IX Item "/etc/init.d/hadoop-secondarynamenode"
 Service script for starting and stopping the Hadoop Secondary NameNode
-.IP "/etc/init.d/hadoop\-jobtracker" 4
-.IX Item "/etc/init.d/hadoop-jobtracker"
-Service script for starting and stopping the Hadoop JobTracker
-.IP "/etc/init.d/hadoop\-tasktracker" 4
-.IX Item "/etc/init.d/hadoop-tasktracker"
-Service script for starting and stopping the Hadoop TaskTracker
+.IP "/etc/init.d/hadoop\-hdfs\-zkfc" 4
+.IX Item "/etc/init.d/hadoop-secondarynamenode"
+Service script for starting and stopping the Hadoop HDFS failover controller
+.IP "/etc/init.d/hadoop\-yarn\-resourcemanager" 4
+.IX Item "/etc/init.d/hadoop-yarn-resourcemanager"
+Service script for starting and stopping the Hadoop YARN Resource Manager
+.IP "/etc/init.d/hadoop\-yarn\-nodemanager" 4
+.IX Item "/etc/init.d/hadoop-yarn-nodemanager"
+Service script for starting and stopping the Hadoop YARN Node Manager
+.IP "/etc/init.d/hadoop\-yarn\-proxyserver" 4
+.IX Item "/etc/init.d/hadoop-yarn-proxyserver"
+Service script for starting and stopping the Hadoop YARN Web Proxy
+.IP "/etc/init.d/hadoop\-mapreduce\-historyserver" 4
+.IX Item "/etc/init.d/hadoop-mapreduce-historyserver"
+Service script for starting and stopping the Hadoop MapReduce Historyserver
 .SH "ENVIRONMENT"
 .IX Header "ENVIRONMENT"
 .IP "\s-1JAVA_HOME\s0" 4
 .IX Item "JAVA_HOME"
 Hadoop will honor the location of your \f(CW\*(C`JAVA_HOME\*(C'\fR environment variable.  Hadoop requires Sun Java 1.6
 which can be downloaded from http://java.sun.com.
-.IP "\s-1HADOOP_HOME\s0" 4
-.IX Item "HADOOP_HOME"
-The location of the Hadoop jar files are by default in \f(CW\*(C`/usr/lib/hadoop\*(C'\fR.  You can change the location 
-with this environment variable (not recommeded).
 .IP "\s-1HADOOP_CONF_DIR\s0" 4
 .IX Item "HADOOP_CONF_DIR"
 The location of the Hadoop configuration files.  Defaults to \f(CW\*(C`/etc/hadoop/conf\*(C'\fR.  For more details,
 see the \f(CW\*(C`FILES\*(C'\fR section.
-.IP "\s-1HADOOP_LOG_DIR\s0" 4
-.IX Item "HADOOP_LOG_DIR"
-All Hadoop services log to \f(CW\*(C`/var/log/hadoop\*(C'\fR by default.  You can change the location with this environment variable.
+.IP "\s-1HADOOP_MAPRED_HOME\s0" 4
+.IX Item "HADOOP_MAPRED_HOME"
+The location of the Hadoop MapReduce implementation jar files are by default in \f(CW\*(C`/usr/lib/hadoop-mapred\*(C'\fR.  You can change the location with this environment variable.
+.IP "\s-1HADOOP_COMMON_HOME\s0" 4
+.IX Item "HADOOP_COMMON_HOME"
+The location of the Hadoop common jar files are by default in \f(CW\*(C`/usr/lib/hadoop\*(C'\fR.  You can change the location 
+with this environment variable (not recommeded).
+.IP "\s-1HADOOP_HDFS_HOME\s0" 4
+.IX Item "HADOOP_HDFS_HOME"
+The location of the Hadoop HDFS jar files are by default in \f(CW\*(C`/usr/lib/hadoop-hdfs\*(C'\fR.  You can change the location 
+with this environment variable (not recommeded).
+.IP "\s-1HADOOP_YARN_HOME\s0" 4
+.IX Item "HADOOP_YARN_HOME"
+The location of the Hadoop YARN jar files are by default in \f(CW\*(C`/usr/lib/hadoop-yarn\*(C'\fR.  You can change the location 
+with this environment variable (not recommeded).
 .SH "EXAMPLES"
 .IX Header "EXAMPLES"
 .Vb 4
 \& $ mkdir input
 \& $ cp <txt files> input
-\& $ hadoop jar /usr/lib/hadoop/*example*.jar input output 'grep string'
+\& $ hadoop jar /usr/lib/hadoop-mapreduce/*example*.jar input output 'grep string'
 \& $ cat output/*
 .Ve
 .SH "COPYRIGHT"
