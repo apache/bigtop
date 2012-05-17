@@ -77,7 +77,7 @@ public class TestLoadAndVerify  extends Configured implements Tool {
   private static final int NUM_TASKS = 200;
   private static final int NUM_REDUCE_TASKS = 35;
 
-  private static final int SCANNER_CACHING = 5000;
+  private static final int SCANNER_CACHING = 500;
 
   private enum Counters {
     ROWS_WRITTEN,
@@ -282,6 +282,7 @@ public class TestLoadAndVerify  extends Configured implements Tool {
     TableMapReduceUtil.initTableMapperJob(
         htd.getNameAsString(), scan, VerifyMapper.class,
         BytesWritable.class, BytesWritable.class, job);
+    int scannerCaching = conf.getInt("verify.scannercaching", SCANNER_CACHING);
     TableMapReduceUtil.setScannerCaching(job, SCANNER_CACHING);
 
     job.setReducerClass(VerifyReducer.class);
@@ -339,7 +340,7 @@ public class TestLoadAndVerify  extends Configured implements Tool {
     System.err.println("  -Dloadmapper.num_to_write=<n>    Number of rows per mapper (default 100,000 per mapper)");
     System.err.println("  -Dloadmapper.deleteAfter=<bool>  Delete after a successful verify (default true)");
     System.err.println("  -Dloadmapper.numPresplits=<n>    Number of presplit regions to start with (default 40)");
-
+    System.err.println("  -Dverify.scannercaching=<n>      Number hbase scanner caching rows to read (default 50)");
   }
   
   public int run(String argv[]) throws Exception {
