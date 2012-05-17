@@ -300,7 +300,7 @@ The location of the Hadoop configuration files.  Defaults to \f(CW\*(C`/etc/hado
 see the \f(CW\*(C`FILES\*(C'\fR section.
 .IP "\s-1HADOOP_MAPRED_HOME\s0" 4
 .IX Item "HADOOP_MAPRED_HOME"
-The location of the Hadoop MapReduce implementation jar files are by default in \f(CW\*(C`/usr/lib/hadoop-mapred\*(C'\fR.  You can change the location with this environment variable.
+The location of the Hadoop MapReduce implementation jar files are by default in \f(CW\*(C`/usr/lib/hadoop-mapreduce\*(C'\fR.  You can change the location with this environment variable.
 .IP "\s-1HADOOP_COMMON_HOME\s0" 4
 .IX Item "HADOOP_COMMON_HOME"
 The location of the Hadoop common jar files are by default in \f(CW\*(C`/usr/lib/hadoop\*(C'\fR.  You can change the location 
@@ -318,7 +318,7 @@ with this environment variable (not recommeded).
 .Vb 4
 \& $ mkdir input
 \& $ cp <txt files> input
-\& $ hadoop jar /usr/lib/hadoop-mapreduce/*example*.jar input output 'grep string'
+\& $ HADOOP_CONF_DIR=/ hadoop jar /usr/lib/hadoop-mapreduce/hadoop-mapreduce-examples.jar grep input output 'string'
 \& $ cat output/*
 .Ve
 .SH "COPYRIGHT"
