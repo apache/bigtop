@@ -1,4 +1,5 @@
 /etc/security/limits.d/mapreduce.conf
+/etc/hadoop/conf.empty/mapred-site.xml
 /usr/lib/hadoop-mapreduce
 /usr/lib/hadoop/libexec/mapred-config.sh
 /usr/bin/mapred

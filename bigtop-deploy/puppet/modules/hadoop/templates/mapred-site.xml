@@ -121,11 +121,6 @@
   </property>
 
   <property>
-    <name>mapreduce.admin.user.env</name>
-    <value>CLASSPATH=/etc/hadoop/conf/*:/usr/lib/hadoop/*:/usr/lib/hadoop/lib/*:/usr/lib/hadoop/lib/native/*</value>
-  </property>
-
-  <property>
     <name>mapreduce.jobtracker.address</name>
     <value><%= hadoop_jobtracker_host %>:<%= hadoop_jobtracker_port%></value>
   </property>
