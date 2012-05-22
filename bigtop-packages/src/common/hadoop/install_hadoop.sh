@@ -300,7 +300,7 @@ chmod 755 $fuse_wrapper
 
 # conf
 install -d -m 0755 $HADOOP_ETC_DIR/conf.empty
-
+cp ${DISTRO_DIR}/conf.empty/mapred-site.xml $HADOOP_ETC_DIR/conf.empty
 cp ${BUILD_DIR}/etc/hadoop/* $HADOOP_ETC_DIR/conf.empty
 
 # docs
