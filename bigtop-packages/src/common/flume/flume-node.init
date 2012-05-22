@@ -33,6 +33,10 @@
 
 . /lib/lsb/init-functions
 
+if [ -f /etc/default/flume-node ] ; then
+  . /etc/default/flume-node
+fi
+
 # Autodetect JAVA_HOME if not defined
 if [ -e /usr/libexec/bigtop-detect-javahome ]; then
   . /usr/libexec/bigtop-detect-javahome

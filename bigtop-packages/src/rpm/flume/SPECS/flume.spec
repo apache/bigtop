@@ -63,6 +63,7 @@ Source0: apache-%{name}-%{flume_base_version}.tar.gz
 Source1: do-component-build
 Source2: install_%{name}.sh
 Source3: %{name}-node.init
+Source4: flume-node.default
 Requires: /usr/sbin/useradd
 Requires: coreutils
 Requires: hadoop-hdfs
@@ -130,6 +131,9 @@ chmod 755 $init_file
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/usr/bin
 
+%__install -d -m 0755 $RPM_BUILD_ROOT/etc/default
+%__cp %{SOURCE4} $RPM_BUILD_ROOT/etc/default/%{name}-node
+
 # Get rid of hadoop jar, and instead link to installed hadoop
 rm $RPM_BUILD_ROOT/usr/lib/flume/lib/hadoop-*
 ln -s /usr/lib/hadoop/hadoop-common.jar $RPM_BUILD_ROOT/usr/lib/flume/lib/hadoop-common.jar
@@ -181,3 +185,4 @@ fi
 
 %files node
 %attr(0755,root,root)/%{initd_dir}/%{name}-node
+%attr(0644,root,root) %config(noreplace) /etc/default/%{name}-node
