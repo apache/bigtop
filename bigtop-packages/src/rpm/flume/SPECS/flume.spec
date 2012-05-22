@@ -17,6 +17,7 @@
 %define man_flume %{_mandir}
 %define lib_flume /usr/lib/flume
 %define log_flume /var/log/flume
+%define run_flume /var/run/flume
 
 %if  %{?suse_version:1}0
 
@@ -136,9 +137,8 @@ ln -s /usr/lib/hadoop/hadoop-auth.jar $RPM_BUILD_ROOT/usr/lib/flume/lib/hadoop-a
 
 %pre
 getent group flume >/dev/null || groupadd -r flume
-getent passwd flume >/dev/null || useradd -c "Flume" -s /sbin/nologin -g flume -r -d /var/run/flume flume 2> /dev/null || :
-%__install -d -o flume -g flume -m 0755 /var/run/flume
-%__install -d -o flume -g flume -m 0755 /var/log/flume
+getent passwd flume >/dev/null || useradd -c "Flume" -s /sbin/nologin -g flume -r -d %{run_flume} flume 2> /dev/null || :
+%__install -d -o flume -g flume -m 0755 %{log_flume}
 
 # Manage configuration symlink
 %post

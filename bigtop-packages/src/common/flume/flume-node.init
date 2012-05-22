@@ -49,18 +49,23 @@ ERROR_PROGRAM_NOT_INSTALLED=5
 
 FLUME_LOG_DIR=/var/log/flume
 FLUME_CONF_DIR=/etc/flume/conf
-FLUME_RUN=/var/run/flume
+FLUME_RUN_DIR=/var/run/flume
 FLUME_HOME=/usr/lib/flume
+FLUME_USER=flume
 
-LOCKFILE="/var/lock/subsys/flume-node"
+FLUME_LOCK_DIR="/var/lock/subsys"
+LOCKFILE="${FLUME_LOCK_DIR}/flume-node"
 desc="Flume NG node daemon"
 
 FLUME_CONF_FILE=${FLUME_CONF_FILE:-${FLUME_CONF_DIR}/flume.conf}
 EXEC_PATH=/usr/bin/flume-ng
-FLUME_PID_FILE=${FLUME_RUN}/flume-node.pid
+FLUME_PID_FILE=${FLUME_RUN_DIR}/flume-node.pid
 
-install -d -m 0755 -o flume -g flume ${FLUME_RUN} 
-USER=flume
+# These directories may be tmpfs and may or may not exist
+# depending on the OS (ex: /var/lock/subsys does not exist on debian/ubuntu)
+for dir in "$FLUME_RUN_DIR" "$FLUME_LOCK_DIR"; do
+  [ -d "${dir}" ] || install -d -m 0755 -o $FLUME_USER -g $FLUME_USER ${dir}
+done
 
 DEFAULT_FLUME_NODE_NAME="agent"
 FLUME_NODE_NAME=${FLUME_NODE_NAME:-${DEFAULT_FLUME_NODE_NAME}}
@@ -75,7 +80,7 @@ start() {
   fi
 
   log_success_msg "Starting $desc (flume-node): "
-  /bin/su -s /bin/bash -c "/bin/bash -c 'echo \$\$ > ${FLUME_PID_FILE} && exec ${EXEC_PATH} node --conf $FLUME_CONF_DIR --conf-file $FLUME_CONF_FILE --name $FLUME_NODE_NAME &>>${FLUME_LOG_DIR}/flume-node.log' &" $USER
+  /bin/su -s /bin/bash -c "/bin/bash -c 'echo \$\$ > ${FLUME_PID_FILE} && exec ${EXEC_PATH} node --conf $FLUME_CONF_DIR --conf-file $FLUME_CONF_FILE --name $FLUME_NODE_NAME &>>${FLUME_LOG_DIR}/flume-node.log' &" $FLUME_USER
   RETVAL=$?
   [ $RETVAL -eq 0 ] && touch $LOCKFILE
   return $RETVAL
