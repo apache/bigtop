@@ -46,9 +46,6 @@ DAEMON_SCRIPT="/usr/lib/hbase/bin/hbase-daemon.sh"
 NAME=HBase
 DESC="HBase daemon"
  
-if [ -f /usr/lib/hbase/bin/hbase-config.sh ] ; then
-  . /usr/lib/hbase/bin/hbase-config.sh
-fi
 install -d -m 0755 -o hbase -g hbase ${HBASE_PID_DIR}
 
 PID_FILE=${HBASE_PID_DIR}/hbase-hbase-@HBASE_DAEMON@.pid

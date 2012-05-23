@@ -53,8 +53,11 @@ if [ -f /etc/default/hbase ] ; then
   . /etc/default/hbase
 fi
 
-if [ -f /usr/lib/hbase/bin/hbase-config.sh ] ; then
-  . /usr/lib/hbase/bin/hbase-config.sh
+# Autodetect JAVA_HOME if not defined                                                                                                                  
+if [ -e /usr/libexec/bigtop-detect-javahome ]; then
+  . /usr/libexec/bigtop-detect-javahome
+elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
+  . /usr/lib/bigtop-utils/bigtop-detect-javahome
 fi
 
 if [ -z "$HBASE_PID_DIR" -o -z "$HBASE_HOME" ]; then
