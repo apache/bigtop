@@ -471,7 +471,11 @@ echo 'export JSVC_HOME=%{libexecdir}/bigtop-utils' >> $RPM_BUILD_ROOT/etc/defaul
 for service in %{hadoop_services}
 do
        init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{name}-${service}
-       bash $RPM_SOURCE_DIR/init.d.tmpl $RPM_SOURCE_DIR/%{name}-${service}.svc > $init_file
+       # On RedHat, SuSE and Mageia run-level 2 is networkless, hence excluding it
+       /bin/env CHKCONFIG="345 85 15"       \
+                INIT_DEFAULT_START="3 4 5"  \
+                INIT_DEFAULT_STOP="0 1 2 6" \
+         bash $RPM_SOURCE_DIR/init.d.tmpl $RPM_SOURCE_DIR/%{name}-${service}.svc > $init_file
        chmod 755 $init_file
        cp $RPM_SOURCE_DIR/${service/-*/}.default $RPM_BUILD_ROOT/etc/default/%{name}-${service}
        chmod 644 $RPM_BUILD_ROOT/etc/default/%{name}-${service}

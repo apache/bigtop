@@ -104,6 +104,14 @@ __EOT__
 }
 
 ###################################################################
+# Some reasonable defaults for the run-level settings, these are
+# tweaked on a per-OS basis from the SPEC/rules files that call us
+# and can be further tweaked inside of individual .svc templates
+CHKCONFIG=${CHKCONFIG:-"2345 85 15"}
+INIT_DEFAULT_START=${INIT_DEFAULT_START:-"2 3 4 5"}
+INIT_DEFAULT_STOP=${INIT_DEFAULT_STOP:-"0 1 6"}
+
+###################################################################
 # NOTE how we are sourcing the argument here so that a user-defined
 # settings have a chance to override the default values for 
 # generate_start, generate_stop and generate_extra_commands. If you
