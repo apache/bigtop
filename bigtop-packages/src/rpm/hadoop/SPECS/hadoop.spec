@@ -86,7 +86,7 @@
     /usr/lib/rpm/brp-python-bytecompile ; \
     %{nil}
 
-
+%define netcat_package nc
 %define libexecdir %{_libexecdir}
 %define doc_hadoop %{_docdir}/%{name}-%{hadoop_version}
 %define alternatives_cmd alternatives
@@ -107,6 +107,7 @@
     /usr/lib/rpm/brp-compress ; \
     %{nil}
 
+%define netcat_package netcat-openbsd
 %define libexecdir /usr/lib
 %define doc_hadoop %{_docdir}/%{name}
 %define alternatives_cmd update-alternatives
@@ -114,6 +115,7 @@
 %endif
 
 %if  0%{?mgaversion}
+%define netcat_package netcat-openbsd
 %define libexecdir /usr/libexec/
 %define doc_hadoop %{_docdir}/%{name}-%{hadoop_version}
 %define alternatives_cmd update-alternatives
@@ -164,6 +166,7 @@ Source23: hadoop-hdfs-zkfc.svc
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
 BuildRequires: python >= 2.4, git, fuse-devel,fuse, automake, autoconf
 Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils, zookeeper >= 3.4.0
+Requires: psmisc, %{netcat_package}
 # Sadly, Sun/Oracle JDK in RPM form doesn't provide libjvm.so, which means we have
 # to set AutoReq to no in order to minimize confusion. Not ideal, but seems to work.
 # I wish there was a way to disable just one auto dependency (libjvm.so)
