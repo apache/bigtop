@@ -81,6 +81,7 @@ Source2: install_pig.sh
 Source3: log4j.properties
 Source4: pig.1
 Source5: pig.properties
+Source6: bigtop.bom
 Requires: hadoop-client, bigtop-utils
 
 %description 
@@ -123,7 +124,7 @@ cp $RPM_SOURCE_DIR/log4j.properties .
 cp $RPM_SOURCE_DIR/pig.1 .
 cp $RPM_SOURCE_DIR/pig.properties .
 sh -x %{SOURCE2} \
-          --build-dir=build/pig-%{pig_base_version} \
+          --build-dir=build/tar/pig-%{pig_base_version} \
           --doc-dir=$RPM_BUILD_ROOT%{doc_pig} \
           --prefix=$RPM_BUILD_ROOT
 

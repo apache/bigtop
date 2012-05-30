@@ -16,6 +16,17 @@
 
 set -ex
 
-ant -Djavac.version=1.6 -Djava5.home=${JAVA5_HOME} -Dforrest.home=${FORREST_HOME} -Dversion=${PIG_BASE_VERSION} -Dhadoopversion=23 package "$@"
+. `dirname ${0}`/bigtop.bom
 
+cat <<__EOT__ >> ivy/libraries.properties
+hbase.version=$HBASE_VERSION
+hive.version=$HIVE_VERSION
+zookeeper.version=$ZOOKEEPER_VERSION
+hadoop-core.version=$HADOOP_VERSION
+hadoop-test.version=$HADOOP_VERSION
+hadoop-common.version=$HADOOP_VERSION
+hadoop-hdfs.version=$HADOOP_VERSION
+hadoop-mapreduce.version=$HADOOP_VERSION
+__EOT__
 
+ant -Djavac.version=1.6 -Dforrest.home=${FORREST_HOME} -Dversion=${PIG_VERSION} -Dhadoopversion=23 package "$@"
