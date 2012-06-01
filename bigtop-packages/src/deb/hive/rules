@@ -58,7 +58,6 @@ install-indep: metastore server
 	ln -s  /usr/lib/hbase/hbase.jar /usr/lib/zookeeper/zookeeper.jar debian/${hive_pkg_name}/usr/lib/hive/lib
 	# Workaround for BIGTOP-583
 	rm -f debian/${hive_pkg_name}/usr/lib/hive/lib/slf4j-log4j12-*.jar
-	dh_pysupport
 	dh_install -i
 	ls -ld debian/${hive_pkg_name}/var/lib/${hive_pkg_name}/metastore
 	(dh_lintian) || /bin/true
