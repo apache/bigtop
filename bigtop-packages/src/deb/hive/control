@@ -17,7 +17,7 @@ Source: hive
 Section: misc
 Priority: extra
 Maintainer: Bigtop <bigtop-dev@incubator.apache.org>
-Build-Depends: debhelper (>= 6), ant, python-support, git-core
+Build-Depends: debhelper (>= 6), ant, git-core
 Standards-Version: 3.8.0
 Homepage: http://hive.apache.org/
 
