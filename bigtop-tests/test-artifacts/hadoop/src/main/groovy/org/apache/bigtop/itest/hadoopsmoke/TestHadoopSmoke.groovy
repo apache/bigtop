@@ -27,6 +27,7 @@ import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.hdfs.DFSConfigKeys
 import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertNotNull
+import static org.apache.bigtop.itest.LogErrorsUtils.logError
 
 class TestHadoopSmoke {
   static Shell sh = new Shell("/bin/bash -s")
@@ -89,12 +90,4 @@ class TestHadoopSmoke {
     assertEquals("cache1\t\ncache2\t", sh.out.join('\n'))
   }
 
-  private static void logError (final Shell sh) {
-    if (sh.getRet()) {
-      println ('Failed command: ' + sh.script);
-      println ('\terror code: ' + sh.getRet());
-      println ('\tstdout: ' + sh.getOut());
-      println ('\tstderr: ' + sh.getErr());
-    }
-  }
 }
