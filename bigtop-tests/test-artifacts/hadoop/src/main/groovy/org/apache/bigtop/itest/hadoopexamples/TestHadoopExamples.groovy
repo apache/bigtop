@@ -36,19 +36,19 @@ import org.junit.runner.RunWith
 class TestHadoopExamples {
   static private Log LOG = LogFactory.getLog(TestHadoopExamples.class);
 
-  private static final String HADOOP_HOME = System.getenv('HADOOP_HOME');
+  private static final String HADOOP_MAPRED_HOME = System.getenv('HADOOP_MAPRED_HOME');
   private static final String HADOOP_CONF_DIR = System.getenv('HADOOP_CONF_DIR');
   private static String hadoopExamplesJar =
-    JarContent.getJarName(HADOOP_HOME, 'hadoop.*examples.*.jar');
+    JarContent.getJarName(HADOOP_MAPRED_HOME, 'hadoop.*examples.*.jar');
   static {
-    assertNotNull("HADOOP_HOME has to be set to run this test",
-        HADOOP_HOME);
+    assertNotNull("HADOOP_MAPRED_HOME has to be set to run this test",
+        HADOOP_MAPRED_HOME);
     assertNotNull("HADOOP_CONF_DIR has to be set to run this test",
         HADOOP_CONF_DIR);
     assertNotNull("Can't find hadoop-examples.jar file", hadoopExamplesJar);
   }
   static final String HADOOP_EXAMPLES_JAR =
-    HADOOP_HOME + "/" + hadoopExamplesJar;
+    HADOOP_MAPRED_HOME + "/" + hadoopExamplesJar;
 
   static Shell sh = new Shell("/bin/bash -s");
   private static final String EXAMPLES = "examples";
