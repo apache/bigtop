@@ -66,7 +66,7 @@ also on potential use cases. Come to the mailing lists to find out more.
     
 %prep
 #%setup -n %{name}-distribution-%{mahout_base_version}
-%setup -n apache-mahout-72ad12d
+%setup -n apache-mahout-ab6159a
 
 %build
 bash $RPM_SOURCE_DIR/do-component-build
