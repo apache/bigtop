@@ -15,4 +15,27 @@
 # limitations under the License.
 
 set -ex
-ant -f src/build.xml -Dhadoop.version=0.23.0 -Dhadoop.security.version=0.23.0 -Dhadoop.security.version.prefix=0.23 package "$@"
+
+. `dirname ${0}`/bigtop.bom
+
+bom2props() {
+cat <<__EOT__ 
+hbase.version=$HBASE_VERSION
+zookeeper.version=$ZOOKEEPER_VERSION
+hadoop.version=$HADOOP_VERSION
+hadoop.security.version=$HADOOP_VERSION
+hadoop-0.23.version=$HADOOP_VERSION
+__EOT__
+}
+
+bom2props >> src/ivy/libraries.properties
+bom2props >> src/build.properties 
+
+# The following is a workaround for Hadoop 0.23 layout
+cat >> src/build.properties << __EOT__
+hadoop.mapreduce.jar=\${hadoop.root}/share/hadoop/mapreduce/hadoop-mapreduce-client-core-\${hadoop.version.ant-internal}.jar
+hadoop.mapreduce.test.jar=\${hadoop.root}/share/hadoop/mapreduce/hadoop-mapreduce-test-\${hadoop.version.ant-internal}.jar
+hadoop.mapreduce.tools.jar=\${hadoop.root}/share/hadoop/mapreduce/hadoop-mapreduce-tools-\${hadoop.version.ant-internal}.jar
+__EOT__
+
+ant -f src/build.xml `bom2props | sed -e 's#^#-D#'`  -Dhadoop.security.version.prefix=0.23 package "$@"
