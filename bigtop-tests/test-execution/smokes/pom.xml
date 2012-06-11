@@ -50,6 +50,7 @@
     <hive-smoke.version>0.4.0-incubating-SNAPSHOT</hive-smoke.version>
     <mahout-smoke.version>0.4.0-incubating-SNAPSHOT</mahout-smoke.version>
     <oozie-smoke.version>0.4.0-incubating-SNAPSHOT</oozie-smoke.version>
+    <giraph-smoke.version>0.4.0-incubating-SNAPSHOT</giraph-smoke.version>
     <package-smoke.version>0.4.0-incubating-SNAPSHOT</package-smoke.version>
     <!--
       End of BOM definitions
@@ -71,6 +72,7 @@
     <module>flume</module>
     <module>hbase</module>
     <module>mahout</module>
+    <module>giraph</module>
     -->
   </modules>
 

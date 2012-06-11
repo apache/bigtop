@@ -222,6 +222,8 @@ class hadoop_gateway_node inherits hadoop_cluster_node {
   }
   mahout::client { "mahout client":
   }
+  giraph::client { "giraph client":
+  }
   hadoop-pig::client { "pig client":
   }
   hadoop-hive::client { "hive client":
