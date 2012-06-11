@@ -79,7 +79,7 @@ sh %{SOURCE2} \
           --doc-dir=%{doc_giraph} \
           --prefix=$RPM_BUILD_ROOT
 # Workaround for GIRAPH-198
-%__cp -f %{SOURCE3} $RPM_BUILD_ROOT/etc/giraph/conf
+%__cp -f %{SOURCE3} $RPM_BUILD_ROOT/etc/giraph/conf.dist
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/usr/bin
 

@@ -51,7 +51,7 @@ install-indep:
           --doc-dir=/usr/share/doc/giraph  \
 	  --prefix=debian/giraph
 	# Workaround for GIRAPH-198
-	cp -f debian/giraph-site.xml debian/giraph/etc/giraph/
+	cp -f debian/giraph-site.xml debian/giraph/etc/giraph/conf.dist
 	dh_install -i
 	(dh_lintian) || /bin/true
 
