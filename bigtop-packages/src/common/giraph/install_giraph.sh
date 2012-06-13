@@ -160,3 +160,6 @@ ln -s `cd $PREFIX/$LIB_DIR ; ls giraph*jar | grep jar-with-dependencies.jar` $PR
 
 # Workaround for GIRAPH-205
 ln -s ../giraph.jar $PREFIX/$LIB_DIR/lib
+
+# Enforcing dependency on the Bigtop's version of Zookeeper
+ln -fs /usr/lib/zookeeper/zookeeper.jar $PREFIX/$LIB_DIR/lib/zookeeper*.jar

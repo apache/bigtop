@@ -32,7 +32,7 @@ public class TestGiraphSmoke {
 
   static Shell sh = new Shell("/bin/bash -s")
 
-  @Test
+  @Test(timeout=300000L)
   public void testPageRankBenchmark() {
     sh.exec("${runnerScript} ${giraphJar}"
       + " org.apache.giraph.benchmark.PageRankBenchmark"
@@ -45,7 +45,7 @@ public class TestGiraphSmoke {
     assertEquals("running PageRankBenchmark failed", sh.getRet(), 0);
   }
 
-  @Test
+  @Test(timeout=300000L)
   public void testRandomMessageBenchmark() {
     sh.exec("${runnerScript} ${giraphJar}"
       + " org.apache.giraph.benchmark.RandomMessageBenchmark"
@@ -60,8 +60,7 @@ public class TestGiraphSmoke {
     assertEquals("running RandomMessageBenchmark failed", sh.getRet(), 0);
   }
 
-
-  @Test
+  @Test(timeout=300000L)
   public void testSimpleCheckpointVertex() {
     sh.exec("hadoop fs -rmr ${testDir}");
     sh.exec("${runnerScript} ${giraphJar}"
@@ -74,7 +73,7 @@ public class TestGiraphSmoke {
     assertEquals("running SimpleCheckpointVertex failed", sh.getRet(), 0);
   }
 
-  @Test
+  @Test(timeout=300000L)
   public void testSimpleVertexWithWorkerContext() {
     sh.exec("hadoop fs -rmr ${testDir}");
     sh.exec("${runnerScript} ${giraphJar}"
@@ -84,7 +83,7 @@ public class TestGiraphSmoke {
     assertEquals("running SimpleCheckpointVertex failed", sh.getRet(), 0);
   }
 
-  @Test
+  @Test(timeout=300000L)
   public void testSimpleShortestPathsVertex() {
     // A graph definition: 
     //   [vertex id, vertex value, [[edge1, value1], .. [edgeN, valueN]]] 

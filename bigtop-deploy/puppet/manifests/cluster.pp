@@ -68,6 +68,8 @@ class hadoop_cluster_node {
   $hadoop_hbase_zookeeper_quorum = $hadoop_head_node
   $hbase_heap_size               = extlookup("hbase_heap_size", "1024")
 
+  $giraph_zookeeper_quorum       = $hadoop_head_node
+
   $hadoop_zookeeper_ensemble = ["$hadoop_head_node:2888:3888"]
 
   # Set from facter if available
@@ -223,6 +225,7 @@ class hadoop_gateway_node inherits hadoop_cluster_node {
   mahout::client { "mahout client":
   }
   giraph::client { "giraph client":
+     zookeeper_quorum => $giraph_zookeeper_quorum,
   }
   hadoop-pig::client { "pig client":
   }
