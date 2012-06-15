@@ -65,8 +65,7 @@ diverse community to facilitate discussions not only on the project itself but
 also on potential use cases. Come to the mailing lists to find out more.
     
 %prep
-#%setup -n %{name}-distribution-%{mahout_base_version}
-%setup -n apache-mahout-05ce70d
+%setup -n %{name}-distribution-0.7
 
 %build
 bash $RPM_SOURCE_DIR/do-component-build
