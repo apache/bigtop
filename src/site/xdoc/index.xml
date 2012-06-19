@@ -38,22 +38,58 @@ xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd
       <li>Apache Forrest 0.8 (requires 32bit version of Java JDK 1.5)</li>
       <li>Apache Ant</li>
       <li>Apache Maven</li>
+      <li>wget</li>
+      <li>tar</li>
       <li>git</li>
       <li>subversion</li>
+      <li>gcc</li>
+      <li>gcc-c++</li>
+      <li>make</li>
+      <li>fuse</li>
+      <li>protobuf-compiler</li>
       <li>autoconf</li>
       <li>automake</li>
-      <li>liblzo2-dev</li>
-      <li>libzip-dev</li>
+      <li>libtool</li>
       <li>sharutils</li>
-      <li>libfuse-dev</li>
-      <li>libssl-dev</li>
       <li>asciidoc</li>
       <li>xmlto</li>
-      <li>libssl-dev</li>
     </ul>
-    <p>On Debian-based systems one also needs</p>
+    <p>On RPM-based systems one also needs</p>
     <ul>
-      <li>build-essential dh-make debhelper devscripts</li>
+      <li>lzo-devel</li>
+      <li>zlib-devel</li>
+      <li>fuse-devel</li>
+      <li>openssl-devel</li>
+      <li>python-devel</li>
+      <li>libxml2-devel</li>
+      <li>libxslt-devel</li>
+      <li>cyrus-sasl-devel</li>
+      <li>sqlite-devel</li>
+      <li>mysql-devel</li>
+      <li>openldap-devel</li>
+      <li>rpm-build</li>
+      <li>createrepo</li>
+      <li>redhat-rpm-config</li>
+    </ul>
+    <p>On DEB-based systems one also needs</p>
+    <ul>
+      <li>libxslt1-dev</li>
+      <li>libkrb5-dev</li>
+      <li>libldap2-dev</li>
+      <li>libmysqlclient-dev</li>
+      <li>libsasl2-dev</li>
+      <li>libsqlite3-dev</li>
+      <li>libxml2-dev</li>
+      <li>python-dev</li>
+      <li>python-setuptools</li>
+      <li>liblzo2-dev</li>
+      <li>libzip-dev</li>
+      <li>libfuse-dev</li>
+      <li>libssl-dev</li>
+      <li>build-essential</li>
+      <li>dh-make</li>
+      <li>debhelper</li> 
+      <li>devscripts</li>
       <li>reprepro</li>
     </ul>
     <subsection name="Disclaimer"></subsection>

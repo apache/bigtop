@@ -72,6 +72,9 @@ class hadoop_cluster_node {
 
   $hadoop_zookeeper_ensemble = ["$hadoop_head_node:2888:3888"]
 
+  $hadoop_oozie_url  = "http://${hadoop_head_node}:11000/oozie"
+  $hadoop_httpfs_url = "http://${hadoop_head_node}:14000/webhdfs/v1"
+
   # Set from facter if available
   $roots              = extlookup("hadoop_storage_dirs",       split($hadoop_storage_dirs, ";"))
   $namenode_data_dirs = extlookup("hadoop_namenode_data_dirs", append_each("/namenode", $roots))
@@ -179,6 +182,14 @@ class hadoop_head_node inherits hadoop_cluster_node {
 
   hadoop-oozie::server { "oozie server":
         kerberos_realm => $kerberos_realm, 
+  }
+
+  hue::server { "hue server":
+        webhdfs_url => $hadoop_httpfs_url,
+        rm_host     => $hadoop_rm_host,
+        rm_port     => $hadoop_rm_port,
+        oozie_url   => $hadoop_oozie_url,
+        kerberos_realm => $kerberos_realm,
   }
 
   hadoop-zookeeper::server { "zookeeper":

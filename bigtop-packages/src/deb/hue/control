@@ -1,0 +1,59 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+Source: hue
+Section: misc
+Priority: extra
+Maintainer: Apache Bigtopr <bigtop-dev@incubator.apache.org>
+Build-Depends: debhelper (>= 7), ant, python2.4-dev | python2.5-dev | python2.6-dev | python2.7-dev, libxml2-dev, libxslt1-dev, zlib1g-dev, libsqlite3-dev, libldap2-dev, libsasl2-dev, libmysqlclient-dev, make, python-setuptools
+Depends: libsasl2, libsqlite3, zlib1g, libxslt1, libxml2Standards-Version: 3.8.0
+Homepage: http://github.com/cloudera/hue
+
+Package: hue-common
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${build:SYS-PYTHON}, libsasl2-modules-gssapi-mit, libxslt1.1, make
+Description: A browser-based desktop interface for Hadoop
+ Hue is a browser-based desktop interface for interacting with Hadoop.
+ It supports a file browser, job tracker interface, cluster health monitor, and more.
+
+# FIXME: Hue plugins don't yet quite work with Hadoop 2.X
+#Package: hue-plugins
+#Architecture: all
+#Depends: hadoop, bigtop-utils
+#Description: Plug-ins for Hadoop to enable integration with Hue
+# These plug-ins enable the Hadoop Daemons to communicate with Hue.
+# This package must be installed on every node in the Hadoop cluster.
+
+Package: hue
+Architecture: all
+Depends: hue-common (= ${source:Version}), hue-server (= ${source:Version}), hue-beeswax (= ${source:Version})
+Description: The hue metapackage
+ .
+
+Package: hue-server
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, hue-common (= ${source:Version})
+Description: The server scripts for Hue.
+ This only has the initscript.
+
+Package: hue-beeswax
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.4), python (<< 3), make (>= 3.8), hue-common (= ${source:Version}), hive
+Description: A UI for Hive on Hue
+ Beeswax is a web interface for Hive.
+ .
+ It allows users to construct and run queries on Hive, manage tables,
+ and import and export data.
+

@@ -863,4 +863,60 @@ but all on the same machine.</description>
     <hadoop-libhdfs>/self</hadoop-libhdfs>
   </deps>
 </hadoop-hdfs-fuse>
+<hue-common>
+  <metadata>
+    <summary>A browser-based desktop interface for Hadoop</summary>
+    <description>Hue is a browser-based desktop interface for interacting with Hadoop.
+It supports a file browser, job tracker interface, cluster health monitor, and more.</description>
+    <url>http://github.com/cloudera/hue</url>
+  </metadata>
+  <deps>
+    <hue-server>/self</hue-server>
+    <hue-beeswax>/self</hue-beeswax>
+  </deps>
+  <alternatives>
+    <hue-conf>
+      <status>auto</status>
+      <link>/etc/hue/conf</link>
+      <value>/etc/hue/conf.dist</value>
+      <alt>/etc/hue/conf.dist</alt>
+    </hue-conf>
+  </alternatives>
+</hue-common>
+<hue-server>
+  <metadata>
+    <summary>Service Scripts for Hue</summary>
+    <description>This package provides the service scripts for Hue server.</description>
+    <url>http://github.com/cloudera/hue</url>
+  </metadata>
+  <deps>
+    <hue-common>/self</hue-common>
+  </deps>
+</hue-server>
+<hue-beeswax>
+  <metadata>
+    <summary>A UI for Hive on Hue</summary>
+    <description>Beeswax is a web interface for Hive.
+
+It allows users to construct and run queries on Hive, manage tables,
+and import and export data.</description>
+    <url>http://github.com/cloudera/hue</url>
+  </metadata>
+  <deps>
+    <hue-common>/self</hue-common>
+    <hive/>
+    <make/>
+  </deps>
+</hue-beeswax>
+<hue>
+  <metadata>
+    <summary>The hue metapackage</summary>
+    <description>Will install the entire set of hue and its plugins/applications</description>
+    <url>http://github.com/cloudera/hue</url>
+  </metadata>
+  <deps>
+    <hue-server>/self</hue-server>
+    <hue-beeswax>/self</hue-beeswax>
+  </deps>
+</hue>
 </packages>

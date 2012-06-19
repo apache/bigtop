@@ -171,8 +171,20 @@ GIRAPH_TARBALL_DST=$(GIRAPH_NAME)-$(GIRAPH_BASE_VERSION).tar.gz
 GIRAPH_TARBALL_SRC=79962a3
 GIRAPH_SITE=https://github.com/apache/giraph/tarball
 GIRAPH_ARCHIVE=$(GIRAPH_SITE)
-
 $(eval $(call PACKAGE,giraph,GIRAPH))
+
+# Hue
+HUE_NAME=hue
+HUE_RELNOTES_NAME=Hadoop User Experience
+HUE_PKG_NAME=hue
+HUE_BASE_VERSION=2.0.1
+HUE_PKG_VERSION=2.0.1
+HUE_RELEASE_VERSION=1
+HUE_TARBALL_DST=hue-$(HUE_BASE_VERSION).tar.gz
+HUE_TARBALL_SRC=hue-$(HUE_BASE_VERSION).tgz
+HUE_SITE=https://github.com/downloads/cloudera/hue
+HUE_ARCHIVE=$(HUE_SITE)
+$(eval $(call PACKAGE,hue,HUE))
 
 # Bigtop-utils
 BIGTOP_UTILS_NAME=bigtop-utils

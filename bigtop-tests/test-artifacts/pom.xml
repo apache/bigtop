@@ -42,6 +42,7 @@
     <module>sqoop</module>
     <module>mahout</module>
     <module>giraph</module>
+    <module>hue</module>
   </modules>
 
   <properties>

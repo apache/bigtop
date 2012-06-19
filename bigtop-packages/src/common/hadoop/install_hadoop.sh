@@ -321,6 +321,16 @@ chmod 644 ${HTTPFS_DIR}/conf/*
 install -d -m 0755 $HTTPFS_ETC_DIR/conf.empty
 mv $HADOOP_ETC_DIR/conf.empty/httpfs* $HTTPFS_ETC_DIR/conf.empty
 sed -i -e '/<\/configuration>/i\
+  <!-- HUE proxy user setting -->\
+  <property>\
+    <name>httpfs.proxyuser.hue.hosts</name>\
+    <value>*</value>\
+  </property>\
+  <property>\
+    <name>httpfs.proxyuser.hue.groups</name>\
+    <value>*</value>\
+  </property>\
+\
   <property>\
     <name>httpfs.hadoop.config.dir</name>\
     <value>/etc/hadoop/conf</value>\
