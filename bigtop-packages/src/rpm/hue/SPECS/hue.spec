@@ -122,6 +122,8 @@ find %{apps_dir}/%1 -iname \*.py[co] -type f -print0 | xargs -0 /bin/rm -f
 Hue is a browser-based desktop interface for interacting with Hadoop.
 It supports a file browser, job tracker interface, cluster health monitor, and more.
 
+%files -n hue
+
 %clean
 %__rm -rf $RPM_BUILD_ROOT
 
@@ -326,7 +328,7 @@ This package provides the service scripts for Hue server.
 
 # Install and start init scripts
 
-%post -n %{name}  
+%post -n %{name}-server 
 /sbin/chkconfig --add hue
 
 ########################################

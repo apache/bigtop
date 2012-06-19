@@ -60,8 +60,9 @@ class hadoop_cluster_node {
   # $hadoop_mapred_jobtracker_plugins="org.apache.hadoop.thriftfs.ThriftJobTrackerPlugin"
   # $hadoop_mapred_tasktracker_plugins="org.apache.hadoop.mapred.TaskTrackerCmonInst"
 
-  $hadoop_core_proxyusers = { oozie => { groups => 'hudson,testuser,root,hadoop,jenkins,oozie,users', hosts => "${hadoop_head_node},localhost,127.0.0.1" },
-                             httpfs => { groups => 'hudson,testuser,root,hadoop,jenkins,oozie,users', hosts => "${hadoop_head_node},localhost,127.0.0.1" } }
+  $hadoop_core_proxyusers = { oozie => { groups => 'hudson,testuser,root,hadoop,jenkins,oozie,users',  hosts => "${hadoop_head_node},localhost,127.0.0.1" },
+                                hue => { groups => 'hudson,testuser,root,hadoop,jenkins,hue,users',    hosts => "${hadoop_head_node},localhost,127.0.0.1" },
+                             httpfs => { groups => 'hudson,testuser,root,hadoop,jenkins,httpfs,users', hosts => "${hadoop_head_node},localhost,127.0.0.1" } }
 
   $hbase_relative_rootdir        = extlookup("hadoop_hbase_rootdir", "/hbase")
   $hadoop_hbase_rootdir = "$hadoop_namenode_uri$hbase_relative_rootdir"
