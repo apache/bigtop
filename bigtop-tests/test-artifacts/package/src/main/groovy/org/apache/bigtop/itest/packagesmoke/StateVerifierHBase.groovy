@@ -23,16 +23,6 @@ import java.security.MessageDigest
 class StateVerifierHBase extends StateVerifier {
   static Shell shHBase = new Shell('hbase shell');
 
-  public boolean config() {
-    Shell shRoot = new Shell("/bin/bash", "root");
-    return 0 == shRoot.exec("""echo '<configuration>
-                                       <property>
-                                         <name>hbase.rootdir</name>
-                                         <value>hdfs://localhost/hbase</value>
-                                       </property>
-                                     </configuration>' > /etc/hbase/conf/hbase-site.xml""").getRet();
-  }
-
   public static void createStaticState() {
     shHBase.exec("create 't1', 'f1'",
                  "put 't1', 'r1', 'f1:q', 'val'",

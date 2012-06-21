@@ -55,11 +55,6 @@ class StateVerifierHDFS extends StateVerifier {
     return (Arrays.equals(digest, MD5.digest()));
   } */
 
-  public boolean config() {
-    Shell shRoot = new Shell("/bin/bash", "root");
-    return 0 == shRoot.exec("sed -i -e 's#<configuration>\$#<configuration><property><name>dfs.safemode.min.datanodes</name><value>1</value></property><property><name>dfs.safemode.extension</name><value>0</value></property>#' /etc/hadoop/conf/hdfs-site.xml").getRet();
-  }
-
   public static void createStaticState() {
     sh.exec("hadoop fs -put <(echo StateHDFSVErifier) /StateHDFSVErifier");
   }

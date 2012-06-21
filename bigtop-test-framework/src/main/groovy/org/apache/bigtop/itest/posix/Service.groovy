@@ -63,6 +63,16 @@ class Service {
   }
 
   /**
+   * init a System V service via a service(8)
+   *
+   * @return exit code of a service(8) call
+   */
+  public int init() {
+    shRoot.exec("service $svc_name init");
+    return shRoot.ret;
+  }
+
+  /**
    * Get a status of a System V service via a service(8)
    *
    * @return an output of a service(8) call 

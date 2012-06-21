@@ -319,6 +319,7 @@ server.</description>
       <runlevel>2</runlevel><runlevel>3</runlevel><runlevel>4</runlevel><runlevel>5</runlevel>
       <oninstall>start</oninstall>
       <configured>true</configured>
+      <init>true</init>
     </zookeeper-server>
   </services>
 </zookeeper-server>
@@ -487,6 +488,13 @@ server.</description>
        <runlevel>2</runlevel><runlevel>3</runlevel><runlevel>4</runlevel><runlevel>5</runlevel>
        <oninstall>start</oninstall>
        <configured>true</configured>
+       <config>
+         <configfile>/etc/hbase/conf/hbase-site.xml</configfile>
+         <property>
+          <name>hbase.rootdir</name>
+          <value>hdfs://localhost/hbase</value>
+         </property>
+       </config>
     </hbase-master>
   </services>
 </hbase-master>
@@ -681,6 +689,7 @@ namenode, which manages the block locations of files on the filesystem.</descrip
       <runlevel>2</runlevel><runlevel>3</runlevel><runlevel>4</runlevel><runlevel>5</runlevel>
       <oninstall>stop</oninstall>
       <configured>false</configured>
+      <init>true</init>
     </hadoop-hdfs-namenode>
   </services>
 </hadoop-hdfs-namenode>

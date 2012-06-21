@@ -134,6 +134,8 @@ class PackageTestCommon {
     String name = svc.getName();
     Map runlevels = [:];
 
+    configService(svc, svc_metadata);
+
     // TODO: this should really be taken care of by the matcher
     svc.getRunLevels().each {
       runlevels[it] = it;
@@ -189,6 +191,36 @@ class PackageTestCommon {
         checkService(svcs[key], value);
       }
     }
+  }
+
+  private void configService(Service svc, Map svc_metadata) {
+    Shell shRoot = new Shell("/bin/bash", "root");
+      if (svc_metadata.config != null) {
+        def config = svc_metadata.config;
+        def configfile = svc_metadata.config.configfile;
+
+        def configcontent = "";
+        def property = new TreeMap(config.property);
+        property.keySet().eachWithIndex() {
+          v,j ->
+          configcontent = configcontent + "<property>";
+          property.get(v).eachWithIndex() {
+            obj, i ->
+            if(obj.toString().contains("name")) {
+              configcontent = configcontent + "<name>" + obj.toString()[5..-1] + "</name>";
+            } else {
+              configcontent = configcontent + "<value>" + obj.toString()[6..-1] + "</value>";
+            }
+          };
+          configcontent = configcontent + "</property>";
+        };
+
+        shRoot.exec("""sed -e '/\\/configuration/i \\ $configcontent' $configfile > temp.xml
+                       mv temp.xml $configfile""");
+      }
+      if (svc_metadata.init != null) {
+        svc.init();
+      }
   }
 
   public void checkUsers(Map expectedUsers) {
