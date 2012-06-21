@@ -37,6 +37,7 @@ if [ -z "$JAVA_HOME" ]; then
     /usr/lib/jvm/jre-openjdk \
     /usr/lib/jvm/java-1.7.0-openjdk* \
     /usr/lib/jvm/java-7-openjdk* \
+    /usr/lib/jvm/java-7-oracle* \
     /usr/lib/jvm/java-1.6.0-openjdk \
     /usr/lib/jvm/java-1.6.0-openjdk-* \
     /usr/lib/jvm/jre-1.6.0-openjdk* ; do
