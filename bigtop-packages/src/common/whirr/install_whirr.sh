@@ -125,4 +125,12 @@ gzip -c whirr.1 > $MAN_DIR/whirr.1.gz
 # Move the docs, but leave a symlink in place for compat. reasons
 install -d -m 0755 $DOC_DIR
 mv $LIB_DIR/docs/* $DOC_DIR
+mv $LIB_DIR/{NOTICE.txt,LICENSE.txt,BUILD.txt,CHANGES.txt,doap_Whirr.rdf,README.txt} $DOC_DIR
+rmdir $LIB_DIR/docs
 ln -s /${DOC_DIR/#$PREFIX/} $LIB_DIR/docs
+
+# Remove some bits which sould not be shipped.
+for dir in src services pom.xml patch-stamp examples debian core cli build-tools bigtop-empty 
+do
+  rm -rf $LIB_DIR/$dir
+done
