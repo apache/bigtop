@@ -103,11 +103,14 @@ CONF_DIST_DIR=/etc/pig/conf.dist
 
 # First we'll move everything into lib
 install -d -m 0755 $LIB_DIR
-(cd $BUILD_DIR && tar -cf - .) | (cd $LIB_DIR && tar -xf -)
+(cd $BUILD_DIR/tar/pig* && tar -cf - .) | (cd $LIB_DIR && tar -xf -)
+
+# Salavage a few files from the contrib &co
+find $LIB_DIR/contrib -name \*.jar -exec cp {} $LIB_DIR \;
+cp $BUILD_DIR/pig-*-smoketests.jar $LIB_DIR/
 
 # Remove directories that are going elsewhere
-for dir in conf src lib-src docs tutorial test build.xml contrib/zebra/src contrib/piggybank ivy contrib/zebra/src-gen 
-
+for dir in shims conf src lib-src docs tutorial test build.xml contrib ivy pig-*.stage.jar
 do
    rm -rf $LIB_DIR/$dir
 done
@@ -143,7 +146,7 @@ gzip -c pig.1 > $MAN_DIR/pig.1.gz
 
 # Copy in the docs
 install -d -m 0755 $DOC_DIR
-(cd $BUILD_DIR/docs && tar -cf - .)|(cd $DOC_DIR && tar -xf -)
+(cd $BUILD_DIR/tar/pig*/docs && tar -cf - .)|(cd $DOC_DIR && tar -xf -)
 mv $LIB_DIR/license $DOC_DIR
 
 install -d -m 0755 $EXAMPLES_DIR
@@ -151,8 +154,8 @@ install -d -m 0755 $EXAMPLES_DIR
 # FIXME: workaround for BIGTOP-161
 (cd $LIB_DIR ; ln -s pig-*-core.jar pig-withouthadoop.jar)
 PIG_JAR=$(basename $(ls $LIB_DIR/pig*core.jar))
-sed -i -e "s|../pig.jar|/usr/lib/pig/$PIG_JAR|" $BUILD_DIR/tutorial/build.xml
-(cd $BUILD_DIR/tutorial && tar -cf - .)|(cd $EXAMPLES_DIR && tar -xf -)
+(cd $BUILD_DIR/tar/pig*/tutorial && tar -cf - .)|(cd $EXAMPLES_DIR && tar -xf -)
+sed -i -e "s|../pig.jar|/usr/lib/pig/$PIG_JAR|" $EXAMPLES_DIR/build.xml
 
 # It's somewhat silly that the hadoop jars are included in the pig lib
 # dir, since we depend on hadoop in our packages. We can rm them

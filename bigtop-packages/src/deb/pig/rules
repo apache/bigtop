@@ -51,7 +51,7 @@ install-indep:
 	cp debian/*.properties .
 	cp debian/pig.1 .
 	sh -x debian/install_pig.sh \
-	  --build-dir=build/tar/pig-${PIG_BASE_VERSION} \
+	  --build-dir=build \
 	  --prefix=debian/${pig_pkg_name} \
           --doc-dir=debian/${pig_pkg_name}/usr/share/doc/${pig_pkg_name} \
           --examples-dir=debian/${pig_pkg_name}/usr/share/doc/${pig_pkg_name}/examples

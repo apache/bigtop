@@ -29,4 +29,11 @@ hadoop-hdfs.version=$HADOOP_VERSION
 hadoop-mapreduce.version=$HADOOP_VERSION
 __EOT__
 
-ant -Djavac.version=1.6 -Dforrest.home=${FORREST_HOME} -Dversion=${PIG_VERSION} -Dhadoopversion=23 package "$@"
+BUILD_OPTS="-Djavac.version=1.6 -Dforrest.home=${FORREST_HOME} -Dversion=${PIG_VERSION} -Dhadoopversion=23"
+
+rm test/org/apache/pig/test/TestHBaseStorage.java
+ant $BUILD_OPTS clean jar jar-withouthadoop pigunit-jar smoketests-jar "$@"
+for build_file in contrib/piggybank/java/build.xml contrib/penny/java/build.xml contrib/zebra/build.xml ; do
+  ant $BUILD_OPTS -buildfile $build_file clean jar "$@"
+done
+ant $BUILD_OPTS tar "$@"

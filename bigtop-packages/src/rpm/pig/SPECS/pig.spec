@@ -124,7 +124,7 @@ cp $RPM_SOURCE_DIR/log4j.properties .
 cp $RPM_SOURCE_DIR/pig.1 .
 cp $RPM_SOURCE_DIR/pig.properties .
 sh -x %{SOURCE2} \
-          --build-dir=build/tar/pig-%{pig_base_version} \
+          --build-dir=build \
           --doc-dir=$RPM_BUILD_ROOT%{doc_pig} \
           --prefix=$RPM_BUILD_ROOT
 
