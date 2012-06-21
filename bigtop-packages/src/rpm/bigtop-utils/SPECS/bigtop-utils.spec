@@ -21,19 +21,26 @@
 Name: bigtop-utils
 Version: %{bigtop_utils_version}
 Release: %{bigtop_utils_release}
-Summary:	Collection of useful tools for Bigtop
+Summary: Collection of useful tools for Bigtop
 
-Group:		Applications/Engineering
-License:	APL2
-URL:		http://incubator.apache.org/bigtop/
-Source0:	bigtop-detect-javahome
-Source1:	LICENSE
+Group:      Applications/Engineering
+License:    APL2
+URL:        http://incubator.apache.org/bigtop/
+BuildRoot:  %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
+BuildArch:  noarch
+Source0:    bigtop-detect-javahome
+Source1:    LICENSE
 Source2:    bigtop-utils.default
+
+# "which" command is needed for a lot of projects.
+# It is part of the package "util-linux" on suse and "which" everywhere else
+%if  %{?suse_version:1}0
+Requires:  util-linux
+%else
 Requires:       which
+%endif
 
-BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
-BuildArch: noarch
 
 %description
 This includes a collection of useful tools and files for Bigtop
