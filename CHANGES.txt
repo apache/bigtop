@@ -22,6 +22,7 @@ Bigtop Changelog
 - IMPROVEMENTS
 
 - BUG FIXES
+  - BIGTOP-643: Fix package statement in TestHDFSQuota 
 
 * Release 0.3.0 (2012-03-20)
 

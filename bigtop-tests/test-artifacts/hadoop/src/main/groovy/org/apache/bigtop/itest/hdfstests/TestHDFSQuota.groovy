@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.cloudera.itest.hadoop;
+package org.apache.bigtop.itest.hdfstests
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
