@@ -40,13 +40,14 @@ Package: hue
 Architecture: all
 Depends: hue-common (= ${source:Version}), hue-server (= ${source:Version}), hue-beeswax (= ${source:Version})
 Description: The hue metapackage
- .
+ Hue is a browser-based desktop interface for interacting with Hadoop.
+ It supports a file browser, job tracker interface, cluster health monitor, and more.
 
 Package: hue-server
 Architecture: all
 Depends: ${shlibs:Depends}, ${misc:Depends}, hue-common (= ${source:Version})
-Description: The server scripts for Hue.
- This only has the initscript.
+Description: Service Scripts for Hue
+ This package provides the service scripts for Hue server.
 
 Package: hue-beeswax
 Architecture: all

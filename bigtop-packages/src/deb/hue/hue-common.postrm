@@ -36,7 +36,7 @@ set -e
 
 
 case "$1" in
-    remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
+    remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear|purge)
         if [ -d /usr/lib/hue ] ; then
                 find /usr/lib/hue -name \*.py[co] -exec rm -f {} \;
         fi

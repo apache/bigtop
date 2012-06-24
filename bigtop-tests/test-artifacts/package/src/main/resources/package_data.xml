@@ -887,8 +887,8 @@ It supports a file browser, job tracker interface, cluster health monitor, and m
     <hue-conf>
       <status>auto</status>
       <link>/etc/hue/conf</link>
-      <value>/etc/hue/conf.dist</value>
-      <alt>/etc/hue/conf.dist</alt>
+      <value>/etc/hue/conf.empty</value>
+      <alt>/etc/hue/conf.empty</alt>
     </hue-conf>
   </alternatives>
 </hue-common>
@@ -920,7 +920,7 @@ and import and export data.</description>
 <hue>
   <metadata>
     <summary>The hue metapackage</summary>
-    <description>Will install the entire set of hue and its plugins/applications</description>
+    <description>Hue is a browser-based desktop interface for interacting with Hadoop. It supports a file browser, job tracker interface, cluster health monitor, and more.</description>
     <url>http://github.com/cloudera/hue</url>
   </metadata>
   <deps>
