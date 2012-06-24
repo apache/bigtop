@@ -14,7 +14,7 @@
 # limitations under the License.
 
 # See BIGTOP-383
-%if  %{?suse_version:1}0
+%if  %{?suse_version:1}%{?mgaversion:1}0
 %define _libexecdir /usr/lib/bigtop-utils/
 %endif
 
