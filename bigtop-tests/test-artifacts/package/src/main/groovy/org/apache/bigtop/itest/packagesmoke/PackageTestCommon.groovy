@@ -480,15 +480,6 @@ class PackageTestCommon {
     }
   }
 
-  public void checkRemoval() {
-    checkThat("package $name failed to be removed",
-              pkg.remove(), equalTo(0));
-    checkThat("package $name is NOT expected to remain installed after removal",
-              pm.isInstalled(pkg), equalTo(false));
-
-    checkPackageFilesGotRemoved(getMap(golden.content));
-  }
-
   static public boolean isUpgrade() {
     return System.getProperty("cdh.prev.repo.version", "") != "";
   }

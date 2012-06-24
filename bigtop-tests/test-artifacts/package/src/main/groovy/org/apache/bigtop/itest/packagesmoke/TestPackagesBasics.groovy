@@ -257,4 +257,14 @@ class TestPackagesBasics extends PackageTestCommon {
 
     return res;
   }
+
+  public void checkRemoval() {
+    checkThat("package $name failed to be removed",
+              pkg.remove(), equalTo(0));
+    checkThat("package $name is NOT expected to remain installed after removal",
+              pm.isInstalled(pkg), equalTo(false));
+
+    checkPackageFilesGotRemoved(getMap(golden.content));
+  }
+
 }
