@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.bigtop.itest.hadooptests
+package org.apache.bigtop.itest.hdfstests
 
 import org.junit.Test
 import org.apache.bigtop.itest.shell.Shell
@@ -26,14 +26,26 @@ import static org.apache.bigtop.itest.LogErrorsUtils.logError
  * Tests the HDFS fsck command.
  */
 public class TestFsck {
-  static Shell sh = new Shell("/bin/bash -s")
-  static final String fsck_cmd = "hdfs fsck /"
+  static Shell shHDFS = new Shell("/bin/bash", "hdfs" )
+  String[] fsckCmds = [
+    "hdfs fsck /",
+    "hdfs fsck -move /",
+    "hdfs fsck -delete /",
+    "hdfs fsck / -files",
+    "hdfs fsck -openforwrite /",
+    "hdfs fsck -list-corruptfileblocks /",
+    "hdfs fsck -blocks /",
+    "hdfs fsck -locations /",
+    "hdfs fsck -racks /"
+  ]
 
   @Test
   public void testFsckBasic() {
-    sh.exec(fsck_cmd)
-    logError(sh)
-    assertTrue(sh.getRet() == 0)
+    for (cmd in fsckCmds) {
+      shHDFS.exec(cmd)
+      logError(shHDFS)
+      assertTrue(shHDFS.getRet() == 0)
+    }
   }
 
 }
