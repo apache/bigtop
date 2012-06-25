@@ -23,6 +23,498 @@
     </properties>
     <body>
     <!-- Paste release notes from https://issues.apache.org/jira/browse/BIGTOP here. -->
+    <h1>Release Notes - Bigtop - Version 0.4.0</h1>
+<h2>        Sub-task
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-249'>BIGTOP-249</a>] -         Fix namenode webapp
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-250'>BIGTOP-250</a>] -         Build contrib modules
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-251'>BIGTOP-251</a>] -         Making sure security works with the new packages for hadoop 0.23
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-254'>BIGTOP-254</a>] -         Write init scripts for the new yarn services
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-268'>BIGTOP-268</a>] -         Examples do not run
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-270'>BIGTOP-270</a>] -         Need to create versionless jars for integration point with other projects
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-271'>BIGTOP-271</a>] -         Kill the sbin package for hadoop 0.23
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-299'>BIGTOP-299</a>] -         Recording the fact that Java needs to be installed *before* installing Bigtop (at least on Ubuntu)
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-300'>BIGTOP-300</a>] -         Record the information on slow mirrors
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-387'>BIGTOP-387</a>] -         Zookeeper version needs to be updated to 3.4.3
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-424'>BIGTOP-424</a>] -         Bump version of Oozie to 3.1.3
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-527'>BIGTOP-527</a>] -         Integrate Hue 2.0.0 into Bigtop
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-538'>BIGTOP-538</a>] -         update puppet code for  BIGTOP-535
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-539'>BIGTOP-539</a>] -         update puppet code for  BIGTOP-534
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-603'>BIGTOP-603</a>] -         Bump version of Pig to 0.10.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-604'>BIGTOP-604</a>] -         Bump version of Hive to 0.9.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-605'>BIGTOP-605</a>] -         Create How To Release document
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-606'>BIGTOP-606</a>] -         Bump version of HBase to 0.94.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-617'>BIGTOP-617</a>] -         Bump version of Oozie to 3.2.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-628'>BIGTOP-628</a>] -         bump version of Mahout to 0.7.0
+</li>
+</ul>
+            
+<h2>        Bug
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-96'>BIGTOP-96</a>] -         Mahout examples try to write to /usr/lib/mahout/examples/bin/work
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-162'>BIGTOP-162</a>] -         downstream components need to be patched to be compatible with MR2
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-186'>BIGTOP-186</a>] -         whirr package ships source code and needs some permissions fixes
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-264'>BIGTOP-264</a>] -         Hadoop 23 upstream tarball put some of its hadoop jars in the same directory as some of the dependencies
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-269'>BIGTOP-269</a>] -         in .23 HBase need to link to a much wider set of hadoop jars
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-272'>BIGTOP-272</a>] -         small cleanup for hadoop 0.23
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-274'>BIGTOP-274</a>] -         yarn-site.xml needs to be addedd to the Hadoop client classpath
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-277'>BIGTOP-277</a>] -         hive package in hadoop-0.23 branch is hopelessly broken
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-283'>BIGTOP-283</a>] -         in hadoop-0.23 the sha for Hadoop needs to be bumped to the 23.1-SNAPSHOT cut off point
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-285'>BIGTOP-285</a>] -         Remove source jars from hadoop-0.23
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-286'>BIGTOP-286</a>] -         hadoop-0.23: hadoop-mapreduce-examples.jar is empty
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-288'>BIGTOP-288</a>] -         hadoop-0.23: pig contrib should have jars
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-289'>BIGTOP-289</a>] -         hadoop-0.23: need to package native libraries for compression
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-291'>BIGTOP-291</a>] -         __id_u RPM macro seems to be disabled in newer versions of RPMs
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-294'>BIGTOP-294</a>] -         brp-repack-jars chokes on guice-2.0.jar because of the directories without any read permission
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-308'>BIGTOP-308</a>] -         hadoop-0.23 branch doesn&#39;t provide .so links to hadoop native libraries
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-309'>BIGTOP-309</a>] -         hadoop-0.23 puppet code needs to deploy history server
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-312'>BIGTOP-312</a>] -         Puppet resource dependency syntax used in hadoop/manifests/init.pp doesn&#39;t always work
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-316'>BIGTOP-316</a>] -         split up hadoop packages into common, hdfs, mapreduce (and yarn)
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-325'>BIGTOP-325</a>] -         bump version of Zookeeper to 3.4.2
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-331'>BIGTOP-331</a>] -         our init scripts fail to detect a failed history server in hadoop 0.23
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-333'>BIGTOP-333</a>] -         heed to start properly packaging httpfs
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-338'>BIGTOP-338</a>] -         hadoop 0.23 doc package does not contain generated documentation
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-339'>BIGTOP-339</a>] -         zookeeper init.d script has a typo in PID file location
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-341'>BIGTOP-341</a>] -          hadoop streaming is not available in hadoop-0.23 branch
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-344'>BIGTOP-344</a>] -         puppet code needs to be updated to be able to deploy Hadoop 0.23 YARN in a secure fashion
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-345'>BIGTOP-345</a>] -         container-executor.conf.dir needs to be set to /etc/hadoop/conf
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-346'>BIGTOP-346</a>] -         container-executor needs to be owned by root:yarn and have permissions of 6050
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-348'>BIGTOP-348</a>] -         jsvc location needs to be updated in init.d datanode script
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-349'>BIGTOP-349</a>] -         jsvc from hadoop build fails on some of the Linux systems that Bigtop has to support
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-355'>BIGTOP-355</a>] -         missed yarn.nodemanager.local-dirs, yarn.nodemanager.log-dirs and yarn.nodemanager.remote-app-log-dir in our puppet code
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-357'>BIGTOP-357</a>] -         libjvm.so dependency on CentOS can only be satisfied by libgcj in some cases
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-359'>BIGTOP-359</a>] -         documentation build is picked from the wrong place
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-367'>BIGTOP-367</a>] -         Upgrade sequencing issue
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-369'>BIGTOP-369</a>] -         pig package has license files in the wrong location
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-372'>BIGTOP-372</a>] -         hive can&#39;t be started without setting HADOOP_HOME
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-373'>BIGTOP-373</a>] -         bigtop-detect-javahome not customizable
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-376'>BIGTOP-376</a>] -         Remove unused obsolete statement in hadoop packaging
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-378'>BIGTOP-378</a>] -         history server security configs are missing
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-381'>BIGTOP-381</a>] -         need to catch up with the HEAD of hadoop-common in hadoop-0.23
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-383'>BIGTOP-383</a>] -         bigtop-detect-javahome installed at location unexpected by scripts on SLES
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-389'>BIGTOP-389</a>] -         need to start packaging apache commons daemon jsvc
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-392'>BIGTOP-392</a>] -         zookeeper package needs to be updated for 3.4 series
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-393'>BIGTOP-393</a>] -         hadoop packages don&#39;t set nproc
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-396'>BIGTOP-396</a>] -         Missing resource dependencies in puppet for secure clusters
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-397'>BIGTOP-397</a>] -         hbase, sqoop and oozie don&#39;t use alternatives for managing configuration
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-402'>BIGTOP-402</a>] -         manifests for package testing contain way too many duplicate data
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-407'>BIGTOP-407</a>] -         hadoop package can&#39;t be installed on debian
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-408'>BIGTOP-408</a>] -         HBase build needs to be worked around in hadoop-0.23 branch
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-409'>BIGTOP-409</a>] -         sqoop build fails on SLES
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-415'>BIGTOP-415</a>] -         need to workaround MAPREDUCE-3890
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-416'>BIGTOP-416</a>] -         run levels for init.d scripts need to be harmonized
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-417'>BIGTOP-417</a>] -         webapps shipped by bigtop components should be using a system-provided Tomcat
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-418'>BIGTOP-418</a>] -         Package MAPREDUCE-2858 (MRv2 WebApp Security)
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-420'>BIGTOP-420</a>] -         bigtop-detect-javahome installed at location unexpected by scripts on SLES
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-421'>BIGTOP-421</a>] -         Sign every single file from the convenience artefact in the releases
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-422'>BIGTOP-422</a>] -         need to start packaging fuse for Hadoop 0.23
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-423'>BIGTOP-423</a>] -         hadoop package needs to be split into hadoop-client and hadoop-server packages
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-426'>BIGTOP-426</a>] -         build failures in hadoop-0.23 branch
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-428'>BIGTOP-428</a>] -         sqoop build needs to be forced to depend on HBase 0.92.0 artifacts
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-429'>BIGTOP-429</a>] -         CATALINA_PID needs to be updated in hadoop-httpfs.default to correspond to the calculated value
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-430'>BIGTOP-430</a>] -         oozie examples are missing
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-434'>BIGTOP-434</a>] -         Potential issue in the way Bigtop test infrastructure deal with arch in packages
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-435'>BIGTOP-435</a>] -         need to split hadoop subpackages even further for hadoop-0.23
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-438'>BIGTOP-438</a>] -         need to bump the version of hadoop .23 to hadoop-0.23.3-SNAPSHOT
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-443'>BIGTOP-443</a>] -         deb/oozie/oozie-client.postinst installs an alternative for a path that isn&#39;t there
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-448'>BIGTOP-448</a>] -         Cannot install flume-ng-node pkg
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-449'>BIGTOP-449</a>] -         hadoop package cleanup for hadoop-0.23
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-450'>BIGTOP-450</a>] -         repackage Oozie as a true webapp
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-453'>BIGTOP-453</a>] -         hadoop needs to depend on Zookeeper
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-455'>BIGTOP-455</a>] -         we still need at HADOOP_LIBEXEC_DIR=/usr/lib/hadoop/libexec to be present in our launcher scrtips
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-461'>BIGTOP-461</a>] -         hadoop-httpfs unconditionally removes the alternative
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-462'>BIGTOP-462</a>] -         JSVC_HOME location can be both /usr/lib/bigtop-utils and /usr/libexec/bigtop-utils
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-464'>BIGTOP-464</a>] -         There&#39;s currently a commented block in puppet/modules/hadoop/templates/yarn-site.xml that fails to render in some cases
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-467'>BIGTOP-467</a>] -         [puppet] yarn historyserver currently doesn&#39;t depend on the mapreduce keytab as it should
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-468'>BIGTOP-468</a>] -         [puppet] Fix httpfs dependencies and give it its own keytab 
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-469'>BIGTOP-469</a>] -         [puppet] web authentication principal missing from hdfs-site.xml
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-472'>BIGTOP-472</a>] -         make deb fails when building Whirr - OutOfMemoryError: PermGen space
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-473'>BIGTOP-473</a>] -         zookeeper man page needs to be updated
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-474'>BIGTOP-474</a>] -         improve Oozie integration with Hadoop 0.23
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-477'>BIGTOP-477</a>] -         launcher script for pig, hive, sqoop and mahout should not source /etc/default/hadoop anymore
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-478'>BIGTOP-478</a>] -         perhaps we should go back to mapred as a user name for mapreduce daemons in Hadoop 0.23
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-479'>BIGTOP-479</a>] -         init.d scripts should provide an option for initializing persistent state of the services that require it
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-480'>BIGTOP-480</a>] -         log aggregation knob is now yarn.log-aggregation-enable and needs to be enabled
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-481'>BIGTOP-481</a>] -         fix the way to handle repo key for Debian like system
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-482'>BIGTOP-482</a>] -         HTTPFS puppet code needs to be updated
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-484'>BIGTOP-484</a>] -         Fix typo error (&#39;alredy&#39; -&gt; &#39;already&#39;)
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-485'>BIGTOP-485</a>] -         transition package dependencies to hadoop-client package
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-487'>BIGTOP-487</a>] -         oozie security configuration needs to be updated
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-488'>BIGTOP-488</a>] -         TestCLI missing dependency
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-493'>BIGTOP-493</a>] -         [puppet] core-site.xml and httpfs-site.xml end up changing every few times puppet is run
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-496'>BIGTOP-496</a>] -         Hive ships some source code in the package.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-498'>BIGTOP-498</a>] -         Oozie&#39;s home dir is currently set to /var/run/oozie but should be /var/lib/oozie
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-500'>BIGTOP-500</a>] -         Oozie hive workflows are broken because of the HADOOP_HOME being deprecated
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-501'>BIGTOP-501</a>] -         it would help to have libext point to /var/lib/oozie in Oozie packaging
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-502'>BIGTOP-502</a>] -         Flume NG init script should pass --name &quot;agent&quot; instead of --name &quot;&lt;hostname&gt;&quot;
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-503'>BIGTOP-503</a>] -         remove unsupported upstream launcher scripts from packaging
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-505'>BIGTOP-505</a>] -         Flume should exit 0 when trying to stop a non-running service
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-506'>BIGTOP-506</a>] -         Flume should exit 0 when trying to start an already running service
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-507'>BIGTOP-507</a>] -         sqoop deb package is empty
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-509'>BIGTOP-509</a>] -         make all is failing because flume-1.0.0-incubating.tar.gz does not exist in APACHE_MIRROR
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-510'>BIGTOP-510</a>] -         log4j property must be set with property in for Flume NG pkg
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-512'>BIGTOP-512</a>] -         oozie can&#39;t be installed on debian
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-513'>BIGTOP-513</a>] -         Pig Packaging Cleanup
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-516'>BIGTOP-516</a>] -         it would be cleaner to get rid of mapreduce entries in limits.d/mapreduce.conf now that we consolidated the user back to mapred
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-519'>BIGTOP-519</a>] -         /etc/default files are not marked as configs by various hadoop packages
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-521'>BIGTOP-521</a>] -         Hadoop Pseudo-conf files have wrong permissions
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-526'>BIGTOP-526</a>] -         it could be useful to have dfs.permissions.enabled set to true in our configs
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-528'>BIGTOP-528</a>] -         A small patch to give better return codes which can be understood by chef and pupper among others.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-529'>BIGTOP-529</a>] -         [puppet] We don&#39;t currently format zookeeper nodes on first run
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-530'>BIGTOP-530</a>] -         [puppet] We currently xst the HTTP principal multiple times, each time invalidating the previous one
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-537'>BIGTOP-537</a>] -         provide a workaround for non-LSB compliant catalina.sh handling of a stop action
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-540'>BIGTOP-540</a>] -         hadoop package on debian is missing JSVC_HOME specification
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-541'>BIGTOP-541</a>] -         Build issue for hadoop RPM
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-543'>BIGTOP-543</a>] -         fuse_dfs_wrapper.sh should not be provided
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-544'>BIGTOP-544</a>] -         zookeeper-server init doesn&#39;t work
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-546'>BIGTOP-546</a>] -         Hadoop rpm is missing fuse default file
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-548'>BIGTOP-548</a>] -         we should consider moving the creation of the hive user into the hive package
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-552'>BIGTOP-552</a>] -         Enable HDFS durable sync
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-554'>BIGTOP-554</a>] -         rat is complaining again
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-556'>BIGTOP-556</a>] -         hbase, yarn and hdfs users are getting incorrect home directories on Debian
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-557'>BIGTOP-557</a>] -         /etc/oozie/conf and oozie-conf alternative should belong to oozie instead of oozie-client
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-558'>BIGTOP-558</a>] -         debian description can&#39;t have the following set of characters ${VAR}
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-559'>BIGTOP-559</a>] -         HttpFS fails to load Hadoop configuration after installation. 
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-560'>BIGTOP-560</a>] -         Flume-ng does not depend on ant or xml-commons anymore
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-561'>BIGTOP-561</a>] -         HBase packaging has dangling symlinks
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-562'>BIGTOP-562</a>] -         fix Mahout smoke test in trunk branch
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-563'>BIGTOP-563</a>] -         Build behind proxy fails
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-564'>BIGTOP-564</a>] -         Build failure for big-top trunk for pig, oozie, and whirr
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-565'>BIGTOP-565</a>] -         catalina-based services should be really careful with catalina stop
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-568'>BIGTOP-568</a>] -         Move the configuration directory for hadoop to /etc/hadoop
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-574'>BIGTOP-574</a>] -         Add netcat and fuser as dependencies for some of the Bigtop stack. 
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-579'>BIGTOP-579</a>] -         hadoop-yarn creates log files with inconsistent ownership on Debian/Ubuntu
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-580'>BIGTOP-580</a>] -         a wrapper for the ZooKeeper cleanup script is missing
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-582'>BIGTOP-582</a>] -         when running Hadoop daemons pidofproc is mistakenly looking for &#39;su&#39; instead of &#39;java&#39;
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-583'>BIGTOP-583</a>] -         &quot;Class path contains multiple SLF4J bindings&quot; warnings
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-585'>BIGTOP-585</a>] -         hbase package has dangling symlinks
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-586'>BIGTOP-586</a>] -         HBase package should provide a versionless symlink to a jar for other projects to depend upon
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-587'>BIGTOP-587</a>] -         Hive package needs to depend on Zookeper and HBase
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-588'>BIGTOP-588</a>] -         Oozie puppet code needs to take care of initializing the DB
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-589'>BIGTOP-589</a>] -         TestLoadAndVerify&#39;s HBase scanner caching setting too high
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-590'>BIGTOP-590</a>] -         hadoop man page needs to be updated
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-592'>BIGTOP-592</a>] -         clean up content of conf.empty and conf.pseudo config files
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-593'>BIGTOP-593</a>] -         improve the package test to handle [arch=xx] in the repo file
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-595'>BIGTOP-595</a>] -         flume-ng agent should honor /etc/default settings
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-596'>BIGTOP-596</a>] -         move service configuration from groovy code to package xml manifest file
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-597'>BIGTOP-597</a>] -         Flume init scripts should not create the log and lock directories.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-598'>BIGTOP-598</a>] -         missing zookeeper init on debian
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-599'>BIGTOP-599</a>] -         /var/lock/subsys may not exist on some distributions and this create some issues in Apache Hadoop
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-600'>BIGTOP-600</a>] -         hbase init script should not source hbase-config
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-607'>BIGTOP-607</a>] -         remove python build dependency from Hive package
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-608'>BIGTOP-608</a>] -         remove source/build artifacts from the Pig package
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-609'>BIGTOP-609</a>] -         add support for openjdk 1.7
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-616'>BIGTOP-616</a>] -         Fix TestHadoopSmoke and TestHadoopExamples: tests look for streaming and examples jar in wrong directory
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-626'>BIGTOP-626</a>] -         small misc. issues with the newly introduced Giraph package
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-630'>BIGTOP-630</a>] -         Fix services priorities
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-633'>BIGTOP-633</a>] -         bigtop-utils packages should depend on &#39;which&#39;
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-636'>BIGTOP-636</a>] -         a few minor tweaks to the Hue deployment code
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-638'>BIGTOP-638</a>] -         move &lt;services&gt; block from common package_date.xml to each platform&#39;s (yum, apt, zypper) package_data.xml
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-639'>BIGTOP-639</a>] -         sqoop-metastore cannot stop because &quot;Could not load db driver class: org.hsqldb.jdbcDriver&quot;
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-642'>BIGTOP-642</a>] -         Suse does not have a package named which 
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-643'>BIGTOP-643</a>] -         Fix package statement in TestHDFSQuota
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-646'>BIGTOP-646</a>] -         update metadata for Hue in the package testing manifest
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-647'>BIGTOP-647</a>] -         service flume-node fail to start
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-648'>BIGTOP-648</a>] -         hbase-thrift cannot be started properly
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-649'>BIGTOP-649</a>] -         PackageTestCommon.checkRemoval() is broken
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-650'>BIGTOP-650</a>] -         Override libexecdir for bigtop-utils on mageia
+</li>
+</ul>
+            
+<h2>        Improvement
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-266'>BIGTOP-266</a>] -         Need to override default yarn task classpath
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-273'>BIGTOP-273</a>] -         Need to update puppet recipies for Hadoop 0.23 deployment
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-313'>BIGTOP-313</a>] -         Move puppet configuration out of manifest and into extlookup() CSV
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-322'>BIGTOP-322</a>] -         update .gitignore to ignore backup files and eclipse generated files.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-332'>BIGTOP-332</a>] -         it would be nice to bump hadoop version to 0.23.1-SNAPSHOT across the stack
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-366'>BIGTOP-366</a>] -         Set some minimum versions for ZK + Flume
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-371'>BIGTOP-371</a>] -         Update bigtop repository url for the applance
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-454'>BIGTOP-454</a>] -         update oozie man page
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-465'>BIGTOP-465</a>] -         webhdfs isn&#39;t in the puppeted hadoop configuration
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-466'>BIGTOP-466</a>] -         Secure zookeeper support missing from puppet
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-470'>BIGTOP-470</a>] -         [puppet] Improve secure configuration for zk and hbase
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-475'>BIGTOP-475</a>] -         Provides initscript for the REST HBase gateway
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-522'>BIGTOP-522</a>] -         Minor Hive Packaging Cleanup
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-534'>BIGTOP-534</a>] -         Need init.d script for zkfc
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-535'>BIGTOP-535</a>] -         add httpfs config property pointing to hadoop conf dir
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-555'>BIGTOP-555</a>] -         Bump version of HBase to 0.92.1
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-567'>BIGTOP-567</a>] -         Make sure we can detect the JAVA_HOME for java-package built JDK package
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-572'>BIGTOP-572</a>] -         Fix HDFS directory values in pseudo-conf hdfs-site.xml for 0.23+ NN/DN/SNN
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-573'>BIGTOP-573</a>] -         we no longer have to override container-executor.conf.dir
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-577'>BIGTOP-577</a>] -         [base conf] There&#39;s no hadoop-metrics2.properties present in the configs that are shipped.
+</li>
+</ul>
+    
+<h2>        New Feature
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-248'>BIGTOP-248</a>] -         Update packages for Hadoop 0.23
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-267'>BIGTOP-267</a>] -         Need to implement implement makefiles logic for tarball builds
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-306'>BIGTOP-306</a>] -         Make a boxgrinder appliance
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-405'>BIGTOP-405</a>] -         Create a bootable ISO
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-495'>BIGTOP-495</a>] -         [puppet] Add support for HA namenodes
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-570'>BIGTOP-570</a>] -         Build package for Apache Giraph
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-578'>BIGTOP-578</a>] -         Integrate Hue 2.0.0 into Bigtop
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-602'>BIGTOP-602</a>] -         Bigtop 0.4.0 release
+</li>
+</ul>
+                            
+<h2>        Task
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-298'>BIGTOP-298</a>] -         Upgrade to ZooKeeper 3.4.1
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-319'>BIGTOP-319</a>] -         update to Mahout 0.6
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-494'>BIGTOP-494</a>] -         Create Flume 1.1.0 packages in Bigtop
+</li>
+</ul>
+        
+<h2>        Test
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-321'>BIGTOP-321</a>] -         Make TestLoadAndVerify parameterizable and runnable from command line
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-444'>BIGTOP-444</a>] -         Add sqoop smoke tests
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-569'>BIGTOP-569</a>] -         fix for TestCLI failures due to change in behavior of hadoop fs -put
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-610'>BIGTOP-610</a>] -         Add basic hdfs fsck test and move logError helper to bigtop-test-framework
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-611'>BIGTOP-611</a>] -         Add HBase TestImportTsv
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-618'>BIGTOP-618</a>] -         Add HBase hbck test 
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-619'>BIGTOP-619</a>] -         Add HBase CopyTable test
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-620'>BIGTOP-620</a>] -         Add test for dfsadmin commands
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-622'>BIGTOP-622</a>] -         Add test for HDFS Balancer
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-623'>BIGTOP-623</a>] -         Add test for HDFS Quota Testing
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-627'>BIGTOP-627</a>] -         Add HBase balancer test 
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-631'>BIGTOP-631</a>] -         Add HBase Import/Export test
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-641'>BIGTOP-641</a>] -         Add hdfs fsck options in TestFsck
+</li>
+</ul>
 
     <h1>Release Notes - Bigtop - Version 0.2.0</h1>
 <h2>        Sub-task

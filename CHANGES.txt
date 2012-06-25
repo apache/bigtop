@@ -15,22 +15,250 @@
 
 Bigtop Changelog
 
-* Release 0.5.0 (unreleased)
-
-- INCOMPATIBLE CHANGES
-
-- IMPROVEMENTS
-
-- BUG FIXES
-
 * Release 0.4.0 (2012-06-25)
 
-- INCOMPATIBLE CHANGES
-
-- IMPROVEMENTS
+- SUB-TASK
+  - [BIGTOP-249] - Fix namenode webapp
+  - [BIGTOP-250] - Build contrib modules
+  - [BIGTOP-251] - Making sure security works with the new packages for hadoop 0.23
+  - [BIGTOP-254] - Write init scripts for the new yarn services
+  - [BIGTOP-268] - Examples do not run
+  - [BIGTOP-270] - Need to create versionless jars for integration point with other projects
+  - [BIGTOP-271] - Kill the sbin package for hadoop 0.23
+  - [BIGTOP-299] - Recording the fact that Java needs to be installed *before* installing Bigtop (at least on Ubuntu)
+  - [BIGTOP-300] - Record the information on slow mirrors
+  - [BIGTOP-387] - Zookeeper version needs to be updated to 3.4.3
+  - [BIGTOP-424] - Bump version of Oozie to 3.1.3
+  - [BIGTOP-527] - Integrate Hue 2.0.0 into Bigtop
+  - [BIGTOP-538] - update puppet code for  BIGTOP-535
+  - [BIGTOP-539] - update puppet code for  BIGTOP-534
+  - [BIGTOP-603] - Bump version of Pig to 0.10.0
+  - [BIGTOP-604] - Bump version of Hive to 0.9.0
+  - [BIGTOP-605] - Create How To Release document
+  - [BIGTOP-606] - Bump version of HBase to 0.94.0
+  - [BIGTOP-617] - Bump version of Oozie to 3.2.0
+  - [BIGTOP-628] - bump version of Mahout to 0.7.0
 
 - BUG FIXES
-  - BIGTOP-643: Fix package statement in TestHDFSQuota 
+  - [BIGTOP-96] - Mahout examples try to write to /usr/lib/mahout/examples/bin/work
+  - [BIGTOP-162] - downstream components need to be patched to be compatible with MR2
+  - [BIGTOP-186] - whirr package ships source code and needs some permissions fixes
+  - [BIGTOP-264] - Hadoop 23 upstream tarball put some of its hadoop jars in the same directory as some of the dependencies
+  - [BIGTOP-269] - in .23 HBase need to link to a much wider set of hadoop jars
+  - [BIGTOP-272] - small cleanup for hadoop 0.23
+  - [BIGTOP-274] - yarn-site.xml needs to be addedd to the Hadoop client classpath
+  - [BIGTOP-277] - hive package in hadoop-0.23 branch is hopelessly broken
+  - [BIGTOP-283] - in hadoop-0.23 the sha for Hadoop needs to be bumped to the 23.1-SNAPSHOT cut off point
+  - [BIGTOP-285] - Remove source jars from hadoop-0.23
+  - [BIGTOP-286] - hadoop-0.23: hadoop-mapreduce-examples.jar is empty
+  - [BIGTOP-288] - hadoop-0.23: pig contrib should have jars
+  - [BIGTOP-289] - hadoop-0.23: need to package native libraries for compression
+  - [BIGTOP-291] - __id_u RPM macro seems to be disabled in newer versions of RPMs
+  - [BIGTOP-294] - brp-repack-jars chokes on guice-2.0.jar because of the directories without any read permission
+  - [BIGTOP-308] - hadoop-0.23 branch doesn't provide .so links to hadoop native libraries
+  - [BIGTOP-309] - hadoop-0.23 puppet code needs to deploy history server
+  - [BIGTOP-312] - Puppet resource dependency syntax used in hadoop/manifests/init.pp doesn't always work
+  - [BIGTOP-316] - split up hadoop packages into common, hdfs, mapreduce (and yarn)
+  - [BIGTOP-325] - bump version of Zookeeper to 3.4.2
+  - [BIGTOP-331] - our init scripts fail to detect a failed history server in hadoop 0.23
+  - [BIGTOP-333] - heed to start properly packaging httpfs
+  - [BIGTOP-338] - hadoop 0.23 doc package does not contain generated documentation
+  - [BIGTOP-339] - zookeeper init.d script has a typo in PID file location
+  - [BIGTOP-341] -  hadoop streaming is not available in hadoop-0.23 branch
+  - [BIGTOP-344] - puppet code needs to be updated to be able to deploy Hadoop 0.23 YARN in a secure fashion
+  - [BIGTOP-345] - container-executor.conf.dir needs to be set to /etc/hadoop/conf
+  - [BIGTOP-346] - container-executor needs to be owned by root:yarn and have permissions of 6050
+  - [BIGTOP-348] - jsvc location needs to be updated in init.d datanode script
+  - [BIGTOP-349] - jsvc from hadoop build fails on some of the Linux systems that Bigtop has to support
+  - [BIGTOP-355] - missed yarn.nodemanager.local-dirs, yarn.nodemanager.log-dirs and yarn.nodemanager.remote-app-log-dir in our puppet code
+  - [BIGTOP-357] - libjvm.so dependency on CentOS can only be satisfied by libgcj in some cases
+  - [BIGTOP-359] - documentation build is picked from the wrong place
+  - [BIGTOP-367] - Upgrade sequencing issue
+  - [BIGTOP-369] - pig package has license files in the wrong location
+  - [BIGTOP-372] - hive can't be started without setting HADOOP_HOME
+  - [BIGTOP-373] - bigtop-detect-javahome not customizable
+  - [BIGTOP-376] - Remove unused obsolete statement in hadoop packaging
+  - [BIGTOP-378] - history server security configs are missing
+  - [BIGTOP-381] - need to catch up with the HEAD of hadoop-common in hadoop-0.23
+  - [BIGTOP-383] - bigtop-detect-javahome installed at location unexpected by scripts on SLES
+  - [BIGTOP-389] - need to start packaging apache commons daemon jsvc
+  - [BIGTOP-392] - zookeeper package needs to be updated for 3.4 series
+  - [BIGTOP-393] - hadoop packages don't set nproc
+  - [BIGTOP-396] - Missing resource dependencies in puppet for secure clusters
+  - [BIGTOP-397] - hbase, sqoop and oozie don't use alternatives for managing configuration
+  - [BIGTOP-402] - manifests for package testing contain way too many duplicate data
+  - [BIGTOP-407] - hadoop package can't be installed on debian
+  - [BIGTOP-408] - HBase build needs to be worked around in hadoop-0.23 branch
+  - [BIGTOP-409] - sqoop build fails on SLES
+  - [BIGTOP-415] - need to workaround MAPREDUCE-3890
+  - [BIGTOP-416] - run levels for init.d scripts need to be harmonized
+  - [BIGTOP-417] - webapps shipped by bigtop components should be using a system-provided Tomcat
+  - [BIGTOP-418] - Package MAPREDUCE-2858 (MRv2 WebApp Security)
+  - [BIGTOP-420] - bigtop-detect-javahome installed at location unexpected by scripts on SLES
+  - [BIGTOP-421] - Sign every single file from the convenience artefact in the releases
+  - [BIGTOP-422] - need to start packaging fuse for Hadoop 0.23
+  - [BIGTOP-423] - hadoop package needs to be split into hadoop-client and hadoop-server packages
+  - [BIGTOP-426] - build failures in hadoop-0.23 branch
+  - [BIGTOP-428] - sqoop build needs to be forced to depend on HBase 0.92.0 artifacts
+  - [BIGTOP-429] - CATALINA_PID needs to be updated in hadoop-httpfs.default to correspond to the calculated value
+  - [BIGTOP-430] - oozie examples are missing
+  - [BIGTOP-434] - Potential issue in the way Bigtop test infrastructure deal with arch in packages
+  - [BIGTOP-435] - need to split hadoop subpackages even further for hadoop-0.23
+  - [BIGTOP-438] - need to bump the version of hadoop .23 to hadoop-0.23.3-SNAPSHOT
+  - [BIGTOP-443] - deb/oozie/oozie-client.postinst installs an alternative for a path that isn't there
+  - [BIGTOP-448] - Cannot install flume-ng-node pkg
+  - [BIGTOP-449] - hadoop package cleanup for hadoop-0.23
+  - [BIGTOP-450] - repackage Oozie as a true webapp
+  - [BIGTOP-453] - hadoop needs to depend on Zookeeper
+  - [BIGTOP-455] - we still need at HADOOP_LIBEXEC_DIR=/usr/lib/hadoop/libexec to be present in our launcher scrtips
+  - [BIGTOP-461] - hadoop-httpfs unconditionally removes the alternative
+  - [BIGTOP-462] - JSVC_HOME location can be both /usr/lib/bigtop-utils and /usr/libexec/bigtop-utils
+  - [BIGTOP-464] - There's currently a commented block in puppet/modules/hadoop/templates/yarn-site.xml that fails to render in some cases
+  - [BIGTOP-467] - [puppet] yarn historyserver currently doesn't depend on the mapreduce keytab as it should
+  - [BIGTOP-468] - [puppet] Fix httpfs dependencies and give it its own keytab 
+  - [BIGTOP-469] - [puppet] web authentication principal missing from hdfs-site.xml
+  - [BIGTOP-472] - make deb fails when building Whirr - OutOfMemoryError: PermGen space
+  - [BIGTOP-473] - zookeeper man page needs to be updated
+  - [BIGTOP-474] - improve Oozie integration with Hadoop 0.23
+  - [BIGTOP-477] - launcher script for pig, hive, sqoop and mahout should not source /etc/default/hadoop anymore
+  - [BIGTOP-478] - perhaps we should go back to mapred as a user name for mapreduce daemons in Hadoop 0.23
+  - [BIGTOP-479] - init.d scripts should provide an option for initializing persistent state of the services that require it
+  - [BIGTOP-480] - log aggregation knob is now yarn.log-aggregation-enable and needs to be enabled
+  - [BIGTOP-481] - fix the way to handle repo key for Debian like system
+  - [BIGTOP-482] - HTTPFS puppet code needs to be updated
+  - [BIGTOP-484] - Fix typo error ('alredy' -> 'already')
+  - [BIGTOP-485] - transition package dependencies to hadoop-client package
+  - [BIGTOP-487] - oozie security configuration needs to be updated
+  - [BIGTOP-488] - TestCLI missing dependency
+  - [BIGTOP-493] - [puppet] core-site.xml and httpfs-site.xml end up changing every few times puppet is run
+  - [BIGTOP-496] - Hive ships some source code in the package.
+  - [BIGTOP-498] - Oozie's home dir is currently set to /var/run/oozie but should be /var/lib/oozie
+  - [BIGTOP-500] - Oozie hive workflows are broken because of the HADOOP_HOME being deprecated
+  - [BIGTOP-501] - it would help to have libext point to /var/lib/oozie in Oozie packaging
+  - [BIGTOP-502] - Flume NG init script should pass --name "agent" instead of --name "<hostname>"
+  - [BIGTOP-503] - remove unsupported upstream launcher scripts from packaging
+  - [BIGTOP-505] - Flume should exit 0 when trying to stop a non-running service
+  - [BIGTOP-506] - Flume should exit 0 when trying to start an already running service
+  - [BIGTOP-507] - sqoop deb package is empty
+  - [BIGTOP-509] - make all is failing because flume-1.0.0-incubating.tar.gz does not exist in APACHE_MIRROR
+  - [BIGTOP-510] - log4j property must be set with property in for Flume NG pkg
+  - [BIGTOP-512] - oozie can't be installed on debian
+  - [BIGTOP-513] - Pig Packaging Cleanup
+  - [BIGTOP-516] - it would be cleaner to get rid of mapreduce entries in limits.d/mapreduce.conf now that we consolidated the user back to mapred
+  - [BIGTOP-519] - /etc/default files are not marked as configs by various hadoop packages
+  - [BIGTOP-521] - Hadoop Pseudo-conf files have wrong permissions
+  - [BIGTOP-526] - it could be useful to have dfs.permissions.enabled set to true in our configs
+  - [BIGTOP-528] - A small patch to give better return codes which can be understood by chef and pupper among others.
+  - [BIGTOP-529] - [puppet] We don't currently format zookeeper nodes on first run
+  - [BIGTOP-530] - [puppet] We currently xst the HTTP principal multiple times, each time invalidating the previous one
+  - [BIGTOP-537] - provide a workaround for non-LSB compliant catalina.sh handling of a stop action
+  - [BIGTOP-540] - hadoop package on debian is missing JSVC_HOME specification
+  - [BIGTOP-541] - Build issue for hadoop RPM
+  - [BIGTOP-543] - fuse_dfs_wrapper.sh should not be provided
+  - [BIGTOP-544] - zookeeper-server init doesn't work
+  - [BIGTOP-546] - Hadoop rpm is missing fuse default file
+  - [BIGTOP-548] - we should consider moving the creation of the hive user into the hive package
+  - [BIGTOP-552] - Enable HDFS durable sync
+  - [BIGTOP-554] - rat is complaining again
+  - [BIGTOP-556] - hbase, yarn and hdfs users are getting incorrect home directories on Debian
+  - [BIGTOP-557] - /etc/oozie/conf and oozie-conf alternative should belong to oozie instead of oozie-client
+  - [BIGTOP-558] - debian description can't have the following set of characters ${VAR}
+  - [BIGTOP-559] - HttpFS fails to load Hadoop configuration after installation. 
+  - [BIGTOP-560] - Flume-ng does not depend on ant or xml-commons anymore
+  - [BIGTOP-561] - HBase packaging has dangling symlinks
+  - [BIGTOP-562] - fix Mahout smoke test in trunk branch
+  - [BIGTOP-563] - Build behind proxy fails
+  - [BIGTOP-564] - Build failure for big-top trunk for pig, oozie, and whirr
+  - [BIGTOP-565] - catalina-based services should be really careful with catalina stop
+  - [BIGTOP-568] - Move the configuration directory for hadoop to /etc/hadoop
+  - [BIGTOP-574] - Add netcat and fuser as dependencies for some of the Bigtop stack. 
+  - [BIGTOP-579] - hadoop-yarn creates log files with inconsistent ownership on Debian/Ubuntu
+  - [BIGTOP-580] - a wrapper for the ZooKeeper cleanup script is missing
+  - [BIGTOP-582] - when running Hadoop daemons pidofproc is mistakenly looking for 'su' instead of 'java'
+  - [BIGTOP-583] - "Class path contains multiple SLF4J bindings" warnings
+  - [BIGTOP-585] - hbase package has dangling symlinks
+  - [BIGTOP-586] - HBase package should provide a versionless symlink to a jar for other projects to depend upon
+  - [BIGTOP-587] - Hive package needs to depend on Zookeper and HBase
+  - [BIGTOP-588] - Oozie puppet code needs to take care of initializing the DB
+  - [BIGTOP-589] - TestLoadAndVerify's HBase scanner caching setting too high
+  - [BIGTOP-590] - hadoop man page needs to be updated
+  - [BIGTOP-592] - clean up content of conf.empty and conf.pseudo config files
+  - [BIGTOP-593] - improve the package test to handle [arch=xx] in the repo file
+  - [BIGTOP-595] - flume-ng agent should honor /etc/default settings
+  - [BIGTOP-596] - move service configuration from groovy code to package xml manifest file
+  - [BIGTOP-597] - Flume init scripts should not create the log and lock directories.
+  - [BIGTOP-598] - missing zookeeper init on debian
+  - [BIGTOP-599] - /var/lock/subsys may not exist on some distributions and this create some issues in Apache Hadoop
+  - [BIGTOP-600] - hbase init script should not source hbase-config
+  - [BIGTOP-607] - remove python build dependency from Hive package
+  - [BIGTOP-608] - remove source/build artifacts from the Pig package
+  - [BIGTOP-609] - add support for openjdk 1.7
+  - [BIGTOP-616] - Fix TestHadoopSmoke and TestHadoopExamples: tests look for streaming and examples jar in wrong directory
+  - [BIGTOP-626] - small misc. issues with the newly introduced Giraph package
+  - [BIGTOP-630] - Fix services priorities
+  - [BIGTOP-633] - bigtop-utils packages should depend on 'which'
+  - [BIGTOP-636] - a few minor tweaks to the Hue deployment code
+  - [BIGTOP-638] - move <services> block from common package_date.xml to each platform's (yum, apt, zypper) package_data.xml
+  - [BIGTOP-639] - sqoop-metastore cannot stop because "Could not load db driver class: org.hsqldb.jdbcDriver"
+  - [BIGTOP-642] - Suse does not have a package named which 
+  - [BIGTOP-643] - Fix package statement in TestHDFSQuota
+  - [BIGTOP-646] - update metadata for Hue in the package testing manifest
+  - [BIGTOP-647] - service flume-node fail to start
+  - [BIGTOP-648] - hbase-thrift cannot be started properly
+  - [BIGTOP-649] - PackageTestCommon.checkRemoval() is broken
+  - [BIGTOP-650] - Override libexecdir for bigtop-utils on mageia
+
+- IMPROVEMENT
+  - [BIGTOP-266] - Need to override default yarn task classpath
+  - [BIGTOP-273] - Need to update puppet recipies for Hadoop 0.23 deployment
+  - [BIGTOP-313] - Move puppet configuration out of manifest and into extlookup() CSV
+  - [BIGTOP-322] - update .gitignore to ignore backup files and eclipse generated files.
+  - [BIGTOP-332] - it would be nice to bump hadoop version to 0.23.1-SNAPSHOT across the stack
+  - [BIGTOP-366] - Set some minimum versions for ZK + Flume
+  - [BIGTOP-371] - Update bigtop repository url for the applance
+  - [BIGTOP-454] - update oozie man page
+  - [BIGTOP-465] - webhdfs isn't in the puppeted hadoop configuration
+  - [BIGTOP-466] - Secure zookeeper support missing from puppet
+  - [BIGTOP-470] - [puppet] Improve secure configuration for zk and hbase
+  - [BIGTOP-475] - Provides initscript for the REST HBase gateway
+  - [BIGTOP-522] - Minor Hive Packaging Cleanup
+  - [BIGTOP-534] - Need init.d script for zkfc
+  - [BIGTOP-535] - add httpfs config property pointing to hadoop conf dir
+  - [BIGTOP-555] - Bump version of HBase to 0.92.1
+  - [BIGTOP-567] - Make sure we can detect the JAVA_HOME for java-package built JDK package
+  - [BIGTOP-572] - Fix HDFS directory values in pseudo-conf hdfs-site.xml for 0.23+ NN/DN/SNN
+  - [BIGTOP-573] - we no longer have to override container-executor.conf.dir
+  - [BIGTOP-577] - [base conf] There's no hadoop-metrics2.properties present in the configs that are shipped.
+
+- NEW FEATURE
+  - [BIGTOP-248] - Update packages for Hadoop 0.23
+  - [BIGTOP-267] - Need to implement implement makefiles logic for tarball builds
+  - [BIGTOP-306] - Make a boxgrinder appliance
+  - [BIGTOP-405] - Create a bootable ISO
+  - [BIGTOP-495] - [puppet] Add support for HA namenodes
+  - [BIGTOP-570] - Build package for Apache Giraph
+  - [BIGTOP-578] - Integrate Hue 2.0.0 into Bigtop
+  - [BIGTOP-602] - Bigtop 0.4.0 release
+
+- TASK
+  - [BIGTOP-298] - Upgrade to ZooKeeper 3.4.1
+  - [BIGTOP-319] - update to Mahout 0.6
+  - [BIGTOP-494] - Create Flume 1.1.0 packages in Bigtop
+
+- TEST
+  - [BIGTOP-321] - Make TestLoadAndVerify parameterizable and runnable from command line
+  - [BIGTOP-444] - Add sqoop smoke tests
+  - [BIGTOP-569] - fix for TestCLI failures due to change in behavior of hadoop fs -put
+  - [BIGTOP-610] - Add basic hdfs fsck test and move logError helper to bigtop-test-framework
+  - [BIGTOP-611] - Add HBase TestImportTsv
+  - [BIGTOP-618] - Add HBase hbck test 
+  - [BIGTOP-619] - Add HBase CopyTable test
+  - [BIGTOP-620] - Add test for dfsadmin commands
+  - [BIGTOP-622] - Add test for HDFS Balancer
+  - [BIGTOP-623] - Add test for HDFS Quota Testing
+  - [BIGTOP-627] - Add HBase balancer test 
+  - [BIGTOP-631] - Add HBase Import/Export test
+  - [BIGTOP-641] - Add hdfs fsck options in TestFsck
 
 * Release 0.3.0 (2012-03-20)
 
