@@ -15,7 +15,15 @@
 
 Bigtop Changelog
 
-* Release 0.4.0 (unreleased)
+* Release 0.5.0 (unreleased)
+
+- INCOMPATIBLE CHANGES
+
+- IMPROVEMENTS
+
+- BUG FIXES
+
+* Release 0.4.0 (2012-06-25)
 
 - INCOMPATIBLE CHANGES
 
