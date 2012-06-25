@@ -16,4 +16,13 @@
 
 set -ex
 
-ant -f build.xml -Dhadoopversion=23 -Dhadoop.version=0.23.1 -Dhbase.version=0.92.0 -Dzookeeper.version=3.4.3 package "$@"
+. `dirname ${0}`/bigtop.bom
+
+BUILD_OPTS="-Dhadoopversion=23                    \
+            -Dhadoop.version=$HADOOP_VERSION      \
+            -Dhbase.version=$HBASE_VERSION        \
+            -Dzookeeper.version=$ZOOKEEPER_VERSION"
+
+# FIXME: BIGTOP-639 (workaround for SQOOP-508
+ant $BUILD_OPTS package jar "$@"
+cp ./build/ivy/lib/sqoop/hadoop23/hsqldb-*.jar build/sqoop-${SQOOP_VERSION}/lib
