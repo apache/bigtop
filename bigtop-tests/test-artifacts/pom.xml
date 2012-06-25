@@ -21,14 +21,14 @@
   <parent>
     <groupId>org.apache.bigtop</groupId>
     <artifactId>bigtop</artifactId>
-    <version>0.4.0-incubating-SNAPSHOT</version>
+    <version>0.4.0-incubating</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
   <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>bigtop-smokes</artifactId>
   <packaging>pom</packaging>
-  <version>0.4.0-incubating-SNAPSHOT</version>
+  <version>0.4.0-incubating</version>
   <name>bigtop-smokes</name>
 
 
@@ -47,7 +47,7 @@
 
   <properties>
     <junit.version>4.8.2</junit.version>
-    <itest-common.version>0.4.0-incubating-SNAPSHOT</itest-common.version>
+    <itest-common.version>0.4.0-incubating</itest-common.version>
     <hadoop.version>2.0.0-SNAPSHOT</hadoop.version>
     <pig.version>0.9.2</pig.version>
     <sqoop.version>1.4.1-incubating</sqoop.version>
