@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
    Licensed to the Apache Software Foundation (ASF) under one or more
    contributor license agreements.  See the NOTICE file distributed with
@@ -58,6 +58,15 @@
       <sh-utils/>
       <textutils/>
     </deps>
+    <services>
+      <flume-node>
+        <runlevel>3</runlevel>
+        <runlevel>4</runlevel>
+        <runlevel>5</runlevel>
+        <oninstall>stop</oninstall>
+        <configured>true</configured>
+      </flume-node>
+    </services>
   </flume-node>
   <sqoop>
     <deps>
@@ -79,6 +88,16 @@
       <tag name="/bin/bash"/>
       <tag name="/bin/sh"/>
     </deps>
+    <services>
+      <sqoop-metastore>
+        <runlevel>2</runlevel> <!--workaround BIGTOP-644-->
+        <runlevel>3</runlevel>
+        <runlevel>4</runlevel>
+        <runlevel>5</runlevel>
+        <oninstall>stop</oninstall>
+        <configured>true</configured>
+      </sqoop-metastore>
+    </services>
   </sqoop-metastore>
   <oozie>
     <users>
@@ -97,6 +116,16 @@
       <tag name="/usr/sbin/useradd"/>
       <jre>&gt;=1.6</jre>
     </deps>
+    <services>
+      <oozie>
+        <runlevel>2</runlevel> <!--workaround BIGTOP-644-->
+        <runlevel>3</runlevel>
+        <runlevel>4</runlevel>
+        <runlevel>5</runlevel>
+        <oninstall>stop</oninstall>
+        <configured>true</configured>
+      </oozie>
+    </services>
   </oozie>
   <oozie-client>
     <deps>
@@ -123,6 +152,16 @@
       <tag name="/bin/sh"/>
       <redhat-lsb/>
     </deps>
+    <services>
+      <zookeeper-server>
+        <runlevel>3</runlevel>
+        <runlevel>4</runlevel>
+        <runlevel>5</runlevel>
+        <oninstall>stop</oninstall>
+        <configured>true</configured>
+        <init>true</init>
+      </zookeeper-server>
+    </services>
   </zookeeper-server>
   <pig>
     <deps>
@@ -146,6 +185,15 @@
         <shell>/sbin/nologin</shell>
       </hive>
     </users>
+    <services>
+      <hive-metastore>
+        <runlevel>3</runlevel>
+        <runlevel>4</runlevel>
+        <runlevel>5</runlevel>
+        <oninstall>stop</oninstall>
+        <configured>true</configured>
+      </hive-metastore>
+    </services>
   </hive-metastore>
   <hive-server>
     <users>
@@ -155,6 +203,15 @@
         <shell>/sbin/nologin</shell>
       </hive>
     </users>
+    <services>
+      <hive-server>
+        <runlevel>3</runlevel>
+        <runlevel>4</runlevel>
+        <runlevel>5</runlevel>
+        <oninstall>stop</oninstall>
+        <configured>true</configured>
+      </hive-server>
+    </services>
   </hive-server>
   <hbase>
     <users>
@@ -183,6 +240,27 @@
       <tag name="/bin/sh"/>
       <redhat-lsb/>
     </deps>
+    <services>
+      <hbase-master>
+        <runlevel>2</runlevel> <!--workaround BIGTOP-644--> 
+        <runlevel>3</runlevel>
+        <runlevel>4</runlevel>
+        <runlevel>5</runlevel>
+        <oninstall>stop</oninstall>
+        <configured>true</configured>
+        <config>
+          <configfile>/etc/hbase/conf/hbase-site.xml</configfile>
+          <property>
+            <name>hbase.rootdir</name>
+            <value>hdfs://localhost/hbase</value>
+          </property>
+          <property> <!-- workaround for HBASE-5975 and HBASE-5963 -->
+            <name>hbase.cluster.distributed</name>
+            <value>true</value>
+          </property>
+        </config>
+      </hbase-master>
+    </services>
   </hbase-master>
   <hbase-regionserver>
     <deps>
@@ -190,6 +268,16 @@
       <tag name="/bin/sh"/>
       <redhat-lsb/>
     </deps>
+    <services>
+      <hbase-regionserver>
+        <runlevel>2</runlevel> <!--workaround BIGTOP-644-->
+        <runlevel>3</runlevel>
+        <runlevel>4</runlevel>
+        <runlevel>5</runlevel>
+        <oninstall>stop</oninstall>
+        <configured>false</configured>
+      </hbase-regionserver>
+    </services>
   </hbase-regionserver>
   <hbase-thrift>
     <deps>
@@ -197,7 +285,33 @@
       <tag name="/bin/sh"/>
       <redhat-lsb/>
     </deps>
+    <services>
+      <hbase-thrift>
+        <runlevel>2</runlevel> <!--workaround BIGTOP-644-->
+        <runlevel>3</runlevel>
+        <runlevel>4</runlevel>
+        <runlevel>5</runlevel>
+        <oninstall>stop</oninstall>
+        <configured>false</configured>
+      </hbase-thrift>
+    </services>
   </hbase-thrift>
+  <hbase-rest>
+    <deps>
+      <hbase>/self</hbase>
+      <redhat-lsb/>
+    </deps>
+    <services>
+      <hbase-rest>
+        <runlevel>2</runlevel> <!--workaround BIGTOP-644-->
+        <runlevel>3</runlevel>
+        <runlevel>4</runlevel>
+        <runlevel>5</runlevel>
+        <oninstall>stop</oninstall>
+        <configured>false</configured>
+      </hbase-rest>
+    </services>
+  </hbase-rest>
   <hadoop>
     <deps>
       <sh-utils/>
@@ -228,13 +342,43 @@
       <tag name="/bin/bash"/>
       <tag name="/usr/bin/env"/>
     </deps>
+    <services>
+      <hadoop-hdfs-namenode>
+        <runlevel>3</runlevel>
+        <runlevel>4</runlevel>
+        <runlevel>5</runlevel>
+        <oninstall>stop</oninstall>
+        <configured>false</configured>
+        <init>true</init>
+      </hadoop-hdfs-namenode>
+    </services>
   </hadoop-hdfs-namenode>
+  <hadoop-hdfs-zkfc>
+    <services>
+      <hadoop-hdfs-zkfc>
+        <runlevel>3</runlevel>
+        <runlevel>4</runlevel>
+        <runlevel>5</runlevel>
+        <oninstall>stop</oninstall>
+        <configured>false</configured>
+      </hadoop-hdfs-zkfc>
+    </services>
+  </hadoop-hdfs-zkfc>
   <hadoop-hdfs-secondarynamenode>
     <deps>
       <tag name="/bin/sh"/>
       <tag name="/bin/bash"/>
       <tag name="/usr/bin/env"/>
     </deps>
+    <services>
+      <hadoop-hdfs-secondarynamenode>
+        <runlevel>3</runlevel>
+        <runlevel>4</runlevel>
+        <runlevel>5</runlevel>
+        <oninstall>stop</oninstall>
+        <configured>false</configured>
+      </hadoop-hdfs-secondarynamenode>
+    </services>
   </hadoop-hdfs-secondarynamenode>
   <hadoop-hdfs-datanode>
     <deps>
@@ -242,6 +386,15 @@
       <tag name="/bin/bash"/>
       <tag name="/usr/bin/env"/>
     </deps>
+    <services>
+      <hadoop-hdfs-datanode>
+        <runlevel>3</runlevel>
+        <runlevel>4</runlevel>
+        <runlevel>5</runlevel>
+        <oninstall>stop</oninstall>
+        <configured>false</configured>
+      </hadoop-hdfs-datanode>
+    </services>
   </hadoop-hdfs-datanode>
   <hadoop-yarn>
     <users>
@@ -258,6 +411,15 @@
       <tag name="/bin/bash"/>
       <tag name="/usr/bin/env"/>
     </deps>
+    <services>
+      <hadoop-yarn-resourcemanager>
+        <runlevel>3</runlevel>
+        <runlevel>4</runlevel>
+        <runlevel>5</runlevel>
+        <oninstall>stop</oninstall>
+        <configured>false</configured>
+      </hadoop-yarn-resourcemanager>
+    </services>
   </hadoop-yarn-resourcemanager>
   <hadoop-yarn-nodemanager>
     <deps>
@@ -265,7 +427,53 @@
       <tag name="/bin/bash"/>
       <tag name="/usr/bin/env"/>
     </deps>
+    <services>
+      <hadoop-yarn-nodemanager>
+        <runlevel>3</runlevel>
+        <runlevel>4</runlevel>
+        <runlevel>5</runlevel>
+        <oninstall>stop</oninstall>
+        <configured>false</configured>
+      </hadoop-yarn-nodemanager>
+    </services>
   </hadoop-yarn-nodemanager>
+  <hadoop-yarn-proxyserver>
+    <deps>
+      <tag name="/bin/sh"/>
+      <tag name="/bin/bash"/>
+    </deps>
+    <services>
+      <hadoop-yarn-proxyserver>
+        <runlevel>3</runlevel>
+        <runlevel>4</runlevel>
+        <runlevel>5</runlevel>
+        <oninstall>stop</oninstall>
+        <configured>false</configured>
+        <config>
+          <configfile>/etc/hadoop/conf/yarn-site.xml</configfile>
+          <property>
+            <name>yarn.web-proxy.address</name>
+            <value>0.0.0.0:8032</value>
+          </property>
+       </config>
+      </hadoop-yarn-proxyserver>
+    </services>
+  </hadoop-yarn-proxyserver>
+  <hadoop-mapreduce-historyserver>
+    <deps>
+      <tag name="/bin/sh"/>
+      <tag name="/bin/bash"/>
+    </deps>
+    <services>
+      <hadoop-mapreduce-historyserver>
+        <runlevel>3</runlevel>
+        <runlevel>4</runlevel>
+        <runlevel>5</runlevel>
+        <oninstall>stop</oninstall>
+        <configured>false</configured>
+      </hadoop-mapreduce-historyserver>
+    </services>
+  </hadoop-mapreduce-historyserver>
   <hadoop-mapreduce>
     <users>
       <mapred>
@@ -283,6 +491,15 @@
         <shell>/bin/bash</shell>
       </httpfs>
     </users>
+    <services>
+      <hadoop-httpfs>
+        <runlevel>3</runlevel>
+        <runlevel>4</runlevel>
+        <runlevel>5</runlevel>
+        <oninstall>stop</oninstall>
+        <configured>false</configured>
+      </hadoop-httpfs>
+    </services>
   </hadoop-httpfs>
   <hadoop-conf-pseudo>
     <deps>
@@ -311,4 +528,15 @@ package or when debugging this package.</description>
       <url>http://hadoop.apache.org/core/</url>
     </metadata>
   </hadoop-debuginfo>
+  <hue-server>
+    <services>
+      <hue>
+        <runlevel>3</runlevel>
+        <runlevel>4</runlevel>
+        <runlevel>5</runlevel>
+        <oninstall>stop</oninstall>
+        <configured>true</configured>
+      </hue>
+     </services>
+  </hue-server>
 </packages>
