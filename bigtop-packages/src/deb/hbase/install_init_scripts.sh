@@ -33,3 +33,5 @@ for node in master regionserver rest thrift ; do
 
 done
 
+# FIXME: BIGTOP-648 workaround for HBASE-6263
+sed -i -e 's# start thrift"# start thrift $HBASE_THRIFT_MODE"#' debian/hbase-thrift/etc/init.d/hbase-thrift
