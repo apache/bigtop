@@ -84,7 +84,7 @@ start() {
   fi
 
   log_success_msg "Starting $desc (flume-node): "
-  /bin/su -s /bin/bash -c "/bin/bash -c 'echo \$\$ > ${FLUME_PID_FILE} && exec ${EXEC_PATH} node --conf $FLUME_CONF_DIR --conf-file $FLUME_CONF_FILE --name $FLUME_NODE_NAME &>>${FLUME_LOG_DIR}/flume-node.log' &" $FLUME_USER
+  /bin/su -s /bin/bash -c "/bin/bash -c 'echo \$\$ > ${FLUME_PID_FILE} && exec ${EXEC_PATH} node --conf $FLUME_CONF_DIR --conf-file $FLUME_CONF_FILE --name $FLUME_NODE_NAME >>${FLUME_LOG_DIR}/flume-node.log 2>&1' &" $FLUME_USER
   RETVAL=$?
   [ $RETVAL -eq 0 ] && touch $LOCKFILE
   return $RETVAL
