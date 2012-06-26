@@ -207,6 +207,7 @@ Bigtop Changelog
   - [BIGTOP-648] - hbase-thrift cannot be started properly
   - [BIGTOP-649] - PackageTestCommon.checkRemoval() is broken
   - [BIGTOP-650] - Override libexecdir for bigtop-utils on mageia
+  - [BIGTOP-652] - Hadoop install script is trying to remove some tests jars but fails to do so
 
 - IMPROVEMENT
   - [BIGTOP-266] - Need to override default yarn task classpath

@@ -360,10 +360,10 @@ install -d -m 0755 $PREFIX/var/{log,run,lib}/hadoop-hdfs
 install -d -m 0755 $PREFIX/var/{log,run,lib}/hadoop-yarn
 install -d -m 0755 $PREFIX/var/{log,run,lib}/hadoop-mapreduce
 
-# Remove all source and test jars and create version-less symlinks to offer integration point with other projects
+# Remove all source and create version-less symlinks to offer integration point with other projects
 for DIR in ${HADOOP_DIR} ${HDFS_DIR} ${YARN_DIR} ${MAPREDUCE_DIR} ${HTTPFS_DIR} ; do
   (cd $DIR &&
-   rm -fv *-test.jar *-sources.jar
+   rm -fv *-sources.jar
    rm -fv lib/hadoop-*.jar
    for j in hadoop-*.jar; do
      if [[ $j =~ hadoop-(.*)-${HADOOP_VERSION}.jar ]]; then

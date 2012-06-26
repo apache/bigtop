@@ -406,6 +406,8 @@
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-650'>BIGTOP-650</a>] -         Override libexecdir for bigtop-utils on mageia
 </li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-652'>BIGTOP-652</a>] -         Hadoop install script is trying to remove some tests jars but fails to do so 
+</li>
 </ul>
             
 <h2>        Improvement
