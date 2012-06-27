@@ -22,10 +22,10 @@
 %define man_dir /usr/share/man
 
 %if  %{?suse_version:1}0
-%define doc_mahout %{_docdir}/mahout
+%define doc_mahout %{_docdir}/mahout-doc
 %define alternatives_cmd update-alternatives
 %else
-%define doc_mahout %{_docdir}/mahout-%{mahout_version}
+%define doc_mahout %{_docdir}/mahout-doc-%{mahout_version}
 %define alternatives_cmd alternatives
 %endif
 
@@ -63,7 +63,15 @@ commercially friendly Apache Software license.
 Scalable community. The goal of Mahout is to build a vibrant, responsive,
 diverse community to facilitate discussions not only on the project itself but
 also on potential use cases. Come to the mailing lists to find out more.
-    
+
+
+%package doc
+Summary: Apache Mahout Documentation
+Group: Documentation
+%description doc
+Documentation for Apache Mahout
+
+
 %prep
 %setup -n %{name}-distribution-%{mahout_base_version}
 
@@ -92,9 +100,11 @@ fi
 #######################
 %files 
 %defattr(-,root,root,755)
+%doc LICENSE.txt README.txt NOTICE.txt
 %config(noreplace) %{config_mahout}.dist
-%doc %{doc_mahout}
 %{lib_mahout}
 %{bin_mahout}/mahout
 
-
+%files doc
+%defattr(-,root,root)
+%doc %{doc_mahout}
