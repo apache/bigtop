@@ -16,4 +16,8 @@
 
 set -ex
 
-mvn clean install -DskipTests -Dhadoop.profile=23 "$@" 
+. `dirname $0`/bigtop.bom
+
+mvn -DskipTests -Dhadoop.profile=23 \
+  -Dhadoop.version=$HADOOP_VERSION  \
+  clean install "$@"
