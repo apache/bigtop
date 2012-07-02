@@ -53,6 +53,7 @@
     <!--
       End of BOM definitions
     -->
+    <hama-smoke.version>0.3.1-incubating-SNAPSHOT</hama-smoke.version>
   </properties>
 
   <!--
@@ -67,8 +68,8 @@
     <module>flume</module>
     <module>hbase</module>
     <module>mahout</module>
+    <module>hama</module>
   </modules>
-
   <dependencyManagement>
     <dependencies>
       <!-- Import configuration resources for the stack validation -->
@@ -169,7 +170,12 @@
         <version>${sqoop.version}</version>
         <scope>test</scope>
       </dependency>
-
+      <dependency>
+      	<groupId>org.apache.bigtop.itest</groupId>
+      	<artifactId>hama-smoke</artifactId>
+      	<version>${hama-smoke.version}</version>
+      	<scope>test</scope>
+      </dependency>
 <!--
   End of BOM definitions
 -->

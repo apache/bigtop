@@ -41,6 +41,7 @@
     <module>flume</module>
     <module>sqoop</module>
     <module>mahout</module>
+    <module>hama</module>
   </modules>
 
   <properties>
