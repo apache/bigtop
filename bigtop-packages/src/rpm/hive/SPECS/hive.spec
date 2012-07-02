@@ -115,6 +115,18 @@ Requires: redhat-lsb
 This optional package hosts a metadata server for Hive clients across a network to use.
 
 
+%package hbase
+Summary: Provides integration between Apache HBase and Apache Hive
+Group: Development/Libraries
+Provides: %{name}-server
+Requires: hbase
+
+
+%description hbase
+This optional package provides integration between Apache HBase and Apache Hive
+
+
+
 %prep
 %setup -n %{name}-%{hive_base_version}
 
@@ -196,6 +208,12 @@ fi
 %attr(1777,hive,hive) %{var_lib_hive}/metastore
 %doc %{doc_hive}
 %{man_dir}/man1/hive.1.*
+%exclude %{usr_lib_hive}/lib/hbase.jar
+
+%files hbase
+%defattr(-,root,root,755)
+%{usr_lib_hive}/lib/hbase.jar
+
 
 %define service_macro() \
 %files %1 \

@@ -17,13 +17,13 @@ Source: hive
 Section: misc
 Priority: extra
 Maintainer: Bigtop <bigtop-dev@incubator.apache.org>
-Build-Depends: debhelper (>= 6), ant, git-core
+Build-Depends: debhelper (>= 6), ant
 Standards-Version: 3.8.0
 Homepage: http://hive.apache.org/
 
 Package: hive
 Architecture: all
-Depends: adduser, hadoop-client, bigtop-utils, hbase, zookeeper
+Depends: adduser, hadoop-client, bigtop-utils, zookeeper
 Description: Hive is a data warehouse infrastructure built on top of Hadoop
  Hive is a data warehouse infrastructure built on top of Hadoop that provides
  tools to enable easy data summarization, adhoc querying and analysis of large
@@ -45,3 +45,9 @@ Architecture: all
 Depends: hive (= ${source:Version})
 Description: Shared metadata repository for Hive.
  This optional package hosts a metadata server for Hive clients across a network to use.
+
+Package: hive-hbase
+Architecture: all
+Depends: hive (= ${source:Version}), hbase
+Description: Provides integration between Apache HBase and Apache Hive
+ This optional package provides integration between Apache HBase and Apache Hive
