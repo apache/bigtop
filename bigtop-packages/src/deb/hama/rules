@@ -42,7 +42,7 @@ build-indep-stamp: patch-stamp
 		mkdir -p bigtop-empty
 		sh debian/do-component-build -Drat.basedir=${PWD}/bigtop-empty -Dmaven.repo.local=${HOME}/.m2/repository
 		mkdir -p debian/tmp
-		(cd dist/target/hama-dist-${HAMA_BASE_VERSION}/hama-${HAMA_BASE_VERSION} && tar cf - --exclude=debian/\* .) | (cd debian/tmp && tar xf -)
+		(cd dist/target/hama-${HAMA_BASE_VERSION}/hama-${HAMA_BASE_VERSION} && tar cf - --exclude=debian/\* .) | (cd debian/tmp && tar xf -)
 		touch $@
 
 install: install-indep

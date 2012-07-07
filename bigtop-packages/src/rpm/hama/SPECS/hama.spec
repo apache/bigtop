@@ -43,7 +43,7 @@ Group: Development/Libraries
 BuildArch: noarch
 Buildroot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 License: ASL 2.0 
-Source0: %{name}-dist-%{hama_base_version}-source.tar.gz
+Source0: %{name}-%{hama_base_version}-src.tar.gz
 Source1: do-component-build 
 Source2: install_%{name}.sh
 Source3: %{name}-bspmaster.init
@@ -167,7 +167,7 @@ bash $RPM_SOURCE_DIR/do-component-build
 %__rm -rf $RPM_BUILD_ROOT
 sh -x $RPM_SOURCE_DIR/install_hama.sh \
           --distro-dir=$RPM_SOURCE_DIR \
-          --build-dir=dist/target/hama-dist-%{hama_base_version}/hama-%{hama_base_version} \
+          --build-dir=dist/target/hama-%{hama_base_version}/hama-%{hama_base_version} \
           --prefix=$RPM_BUILD_ROOT \
           --doc-dir=%{doc_hama} 
 
