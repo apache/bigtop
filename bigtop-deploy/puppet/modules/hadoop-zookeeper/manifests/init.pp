@@ -17,6 +17,7 @@ class hadoop-zookeeper {
   define client {
     package { "zookeeper":
       ensure => latest,
+      require => Package["jdk"],
     } 
   }
 
@@ -25,6 +26,7 @@ class hadoop-zookeeper {
   {
     package { "zookeeper-server":
       ensure => latest,
+      require => Package["jdk"],
     }
 
     service { "zookeeper-server":
