@@ -48,7 +48,7 @@ public class TestJdbcDriver {
   private Connection con;
 
   @BeforeClass
-    public static void setUp() throws ClassNotFoundException, InterruptedException {
+  public static void setUp() throws ClassNotFoundException, InterruptedException {
     Class.forName(driverName);
     sh.exec("hadoop fs -mkdir " + testDir);
     assertTrue("Could not create test directory", sh.getRet() == 0);
@@ -57,7 +57,15 @@ public class TestJdbcDriver {
     // start hiveserver in background and remember the pid
     sh.exec("(HIVE_PORT=10000 hive --service hiveserver > /dev/null 2>&1 & echo $! ) 2> /dev/null");
     hiveserver_pid = sh.getOut().get(0);
-    Thread.sleep(1000); // allow time for hiveserver to be up
+    String hiveserver_startup_wait = System.getProperty("hiveserver.startup.wait");
+    int wait;
+    try {
+      wait = Integer.parseInt(hiveserver_startup_wait);
+    }
+    catch (Exception e) {
+      wait = 1000; // default
+    }
+    Thread.sleep(wait); // allow time for hiveserver to be up
   }
 
   @Before
@@ -80,11 +88,11 @@ public class TestJdbcDriver {
     sh.exec("kill -9 " + hiveserver_pid);
   }
 
-  @Test
+  @Test(timeout=120000L)
   public void testCreate() throws SQLException {
     Statement stmt = con.createStatement();
     String tableName = "hive_jdbc_driver_test";
-    stmt.executeQuery("drop table " + tableName);
+    stmt.executeQuery("drop table if exists " + tableName);
     ResultSet res = stmt.executeQuery("create table " + tableName +
         " (key int, value string)");
     // show tables
