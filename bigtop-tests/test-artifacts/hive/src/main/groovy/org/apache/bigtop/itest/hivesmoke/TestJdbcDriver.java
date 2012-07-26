@@ -36,8 +36,16 @@ import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 
+import org.apache.bigtop.itest.Parameters;
+import org.apache.bigtop.itest.ParameterSetter;
+import org.apache.bigtop.itest.Property;
 import org.apache.bigtop.itest.shell.Shell;
 
+@Parameters(
+  properties = {
+    @Property(name="hiveserver.startup.wait", type=Property.Type.INT, intValue=1000)
+  },
+  env = {})
 public class TestJdbcDriver {
 
   public static String driverName = "org.apache.hadoop.hive.jdbc.HiveDriver";
@@ -45,10 +53,13 @@ public class TestJdbcDriver {
   public static Shell sh = new Shell("/bin/bash -s");
   public static String testDir = "/tmp/hive-jdbc." + (new Date().getTime());
   public static String hiveserver_pid;
+  public static int hiveserver_startup_wait;
   private Connection con;
 
   @BeforeClass
-  public static void setUp() throws ClassNotFoundException, InterruptedException {
+  public static void setUp() throws ClassNotFoundException, InterruptedException, NoSuchFieldException, IllegalAccessException {
+    ParameterSetter.setProperties(TestJdbcDriver.class, new String[] {"hiveserver_startup_wait"});
+    System.out.println("hiveserver_startup_wait: " + hiveserver_startup_wait);
     Class.forName(driverName);
     sh.exec("hadoop fs -mkdir " + testDir);
     assertTrue("Could not create test directory", sh.getRet() == 0);
@@ -57,15 +68,7 @@ public class TestJdbcDriver {
     // start hiveserver in background and remember the pid
     sh.exec("(HIVE_PORT=10000 hive --service hiveserver > /dev/null 2>&1 & echo $! ) 2> /dev/null");
     hiveserver_pid = sh.getOut().get(0);
-    String hiveserver_startup_wait = System.getProperty("hiveserver.startup.wait");
-    int wait;
-    try {
-      wait = Integer.parseInt(hiveserver_startup_wait);
-    }
-    catch (Exception e) {
-      wait = 1000; // default
-    }
-    Thread.sleep(wait); // allow time for hiveserver to be up
+    Thread.sleep(hiveserver_startup_wait); // allow time for hiveserver to be up
   }
 
   @Before
