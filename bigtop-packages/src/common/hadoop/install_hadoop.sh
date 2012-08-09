@@ -291,6 +291,7 @@ fi
 for jar in \${HADOOP_HOME}/client/*.jar; do
   CLASSPATH+="\$jar:"
 done
+CLASSPATH="\${HADOOP_HOME}/etc/hadoop/:\${CLASSPATH}"
 
 env CLASSPATH="\${CLASSPATH}" \${HADOOP_HOME}/bin/fuse_dfs \$@
 EOF
