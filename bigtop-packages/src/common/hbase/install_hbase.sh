@@ -134,7 +134,6 @@ mkdir -p `dirname $wrapper`
 cat > $wrapper <<EOF
 #!/bin/sh
 
-. /etc/default/hadoop
 . /etc/default/hbase
 
 # Autodetect JAVA_HOME if not defined
