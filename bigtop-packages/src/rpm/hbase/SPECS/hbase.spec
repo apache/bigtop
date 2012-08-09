@@ -275,7 +275,7 @@ do
 done
 
 # FIXME: BIGTOP-648 workaround for HBASE-6263
-sed -i -e 's# start thrift"# start thrift \$HBASE_THRIFT_MODE"#' $RPM_BUILD_ROOT/%{initd_dir}/hbase-thrift
+sed -i -e 's# start thrift# start thrift \$HBASE_THRIFT_MODE#' $RPM_BUILD_ROOT/%{initd_dir}/hbase-thrift
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/usr/bin
 
