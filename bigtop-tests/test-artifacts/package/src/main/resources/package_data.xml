@@ -332,6 +332,25 @@ server.</description>
       </pig-conf>
     </alternatives>
   </pig>
+  <pig-udf-datafu>
+    <metadata>
+      <summary>A collection of user-defined functions for Hadoop and Pig.</summary>
+      <description> DataFu is a collection of user-defined functions for working with large-scale
+ data in Hadoop and Pig. This library was born out of the need for a stable,
+ well-tested library of UDFs for data mining and statistics. It is used
+ at LinkedIn in many of our off-line workflows for data derived products like
+ "People You May Know" and "Skills".
+
+ It contains functions for: PageRank, Quantiles (median), variance, Sessionization,
+ Convenience bag functions (e.g., set operations, enumerating bags, etc),
+ Convenience utility functions (e.g., assertions, easier writing of EvalFuncs)
+ and more...</description>
+      <url>https://github.com/linkedin/datafu</url>
+    </metadata>
+    <deps>
+      <pig/>
+    </deps>
+  </pig-udf-datafu>
   <hive>
     <metadata>
       <summary>Hive is a data warehouse infrastructure built on top of Hadoop</summary>
