@@ -167,10 +167,10 @@ export ZOOKEEPER_HOME=\${ZOOKEEPER_CONF:-/usr/lib/zookeeper}
 export ZOOKEEPER_CONF=\${ZOOKEEPER_CONF:-/etc/zookeeper/conf}
 export ZOOCFGDIR=\${ZOOCFGDIR:-\$ZOOKEEPER_CONF}
 export CLASSPATH=\$CLASSPATH:\$ZOOKEEPER_CONF:\$ZOOKEEPER_HOME/*:\$ZOOKEEPER_HOME/lib/*
-export ZOO_LOG_DIR=/var/log/zookeeper
-export ZOO_LOG4J_PROP=INFO,ROLLINGFILE
-export JVMFLAGS=-Dzookeeper.log.threshold=INFO
-export ZOO_DATADIR_AUTOCREATE_DISABLE=true
+export ZOO_LOG_DIR=\${ZOO_LOG_DIR:-/var/log/zookeeper}
+export ZOO_LOG4J_PROP=\${ZOO_LOG4J_PROP:-INFO,ROLLINGFILE}
+export JVMFLAGS=\${JVMFLAGS:--Dzookeeper.log.threshold=INFO}
+export ZOO_DATADIR_AUTOCREATE_DISABLE=\${ZOO_DATADIR_AUTOCREATE_DISABLE:-true}
 env CLASSPATH=\$CLASSPATH /usr/lib/zookeeper/bin/${upstream_script} "\$@"
 EOF
   chmod 755 $wrapper
