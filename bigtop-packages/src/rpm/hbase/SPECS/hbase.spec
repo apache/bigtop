@@ -233,8 +233,7 @@ Requires: redhat-lsb
 The Apache HBase REST gateway
 
 %prep
-#%setup -n %{name}-%{hbase_base_version}
-%setup -n apache-hbase-9728756
+%setup -n %{name}-%{hbase_base_version}
 
 %build
 env HBASE_VERSION=%{version} bash %{SOURCE1}
