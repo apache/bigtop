@@ -41,4 +41,11 @@ Description: A set of Java libraries for scalable machine learning.
  diverse community to facilitate discussions not only on the project itself but
  also on potential use cases. Come to the mailing lists to find out more.
 
+Package: mahout-doc
+Provides: mahout-doc
+Architecture: all
+Section: doc
+Description: Documentation for Apache Mahout
+ This package contains the documentation for Apache Mahout
+
 

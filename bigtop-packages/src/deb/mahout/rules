@@ -47,11 +47,12 @@ install-indep:
 	dh_testroot
 	sh -x debian/install_mahout.sh \
 	  --build-dir=build \
-          --doc-dir=/usr/share/doc/mahout \
-	  --prefix=debian/mahout
-	rm -rf debian/mahout/usr/lib/mahout/lib/slf4j-log4j12-*.jar debian/mahout/usr/lib/mahout/lib/hadoop
-	ln -fs /usr/lib/hadoop/client debian/mahout/usr/lib/mahout/lib/hadoop
-	dh_install -i
+	  --doc-dir=/usr/share/doc/mahout-doc \
+	  --prefix=debian/tmp/mahout
+	rm -rf debian/tmp/mahout/usr/lib/mahout/lib/slf4j-log4j12-*.jar debian/tmp/mahout/usr/lib/mahout/lib/hadoop
+	ln -fs /usr/lib/hadoop/client debian/tmp/mahout/usr/lib/mahout/lib/hadoop
+	dh_install --sourcedir=debian/tmp/mahout -i
+
 	(dh_lintian) || /bin/true
 
 binary-common:	
