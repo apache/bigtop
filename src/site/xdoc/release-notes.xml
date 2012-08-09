@@ -47,6 +47,8 @@
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-387'>BIGTOP-387</a>] -         Zookeeper version needs to be updated to 3.4.3
 </li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-413'>BIGTOP-413</a>] -         Modify ununtu install instruction #2: bigtop.list under stable directory does not exist!
+</li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-424'>BIGTOP-424</a>] -         Bump version of Oozie to 3.1.3
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-527'>BIGTOP-527</a>] -         Integrate Hue 2.0.0 into Bigtop
@@ -61,7 +63,7 @@
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-605'>BIGTOP-605</a>] -         Create How To Release document
 </li>
-<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-606'>BIGTOP-606</a>] -         Bump version of HBase to 0.94.0
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-606'>BIGTOP-606</a>] -         Bump version of HBase to 0.94.1
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-617'>BIGTOP-617</a>] -         Bump version of Oozie to 3.2.0
 </li>
@@ -286,6 +288,8 @@
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-521'>BIGTOP-521</a>] -         Hadoop Pseudo-conf files have wrong permissions
 </li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-523'>BIGTOP-523</a>] -         JAVA_HOME not found if JVM is java-7-oracle
+</li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-526'>BIGTOP-526</a>] -         it could be useful to have dfs.permissions.enabled set to true in our configs
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-528'>BIGTOP-528</a>] -         A small patch to give better return codes which can be understood by chef and pupper among others.
@@ -406,7 +410,31 @@
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-650'>BIGTOP-650</a>] -         Override libexecdir for bigtop-utils on mageia
 </li>
-<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-652'>BIGTOP-652</a>] -         Hadoop install script is trying to remove some tests jars but fails to do so 
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-651'>BIGTOP-651</a>] -         Hue init script should succeed when stopping a non running service
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-652'>BIGTOP-652</a>] -         Hadoop install script is trying to remove some tests jars but fails to do so
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-655'>BIGTOP-655</a>] -         We build hadoop 2.0.0-alpha but mahout points to 2.0.0-SNAPSHOT
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-656'>BIGTOP-656</a>] -         flume depends on hadoop 0.23.1. We need to override hadoop version to 2.0.0-alpha
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-657'>BIGTOP-657</a>] -         Mahout doc should be in its own package
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-659'>BIGTOP-659</a>] -         update team-list.xml with the latest commiters
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-660'>BIGTOP-660</a>] -         hbase client is getting confused because of importing /etc/default/hadoop
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-661'>BIGTOP-661</a>] -         remove Pig&#39;s fat jar from packaging
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-668'>BIGTOP-668</a>] -         unable to override zookeeper environment variables
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-669'>BIGTOP-669</a>] -         Add DataFu to Bigtop distribution
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-675'>BIGTOP-675</a>] -         fuse_dfs wrapper script(s) don&#39;t put configuration directory into CLASSPATH for fuse_dfs 
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-676'>BIGTOP-676</a>] -         Update HBase version to 0.94.1-rc0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-677'>BIGTOP-677</a>] -         Fix location of hadoop conf dir in the CLASSPATH passed to fuse_dfs
 </li>
 </ul>
             
@@ -453,6 +481,14 @@
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-577'>BIGTOP-577</a>] -         [base conf] There&#39;s no hadoop-metrics2.properties present in the configs that are shipped.
 </li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-653'>BIGTOP-653</a>] -         improve top level pom file to be able to produce release artifacts
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-671'>BIGTOP-671</a>] -         Bump maven-surefire-plugin and maven-failsafe-plugin to 2.11
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-673'>BIGTOP-673</a>] -         JDK dependency specification in puppet manifest should be configurable
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-678'>BIGTOP-678</a>] -         make hive TestJdbcDriver more robust
+</li>
 </ul>
     
 <h2>        New Feature
@@ -473,6 +509,8 @@
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-578'>BIGTOP-578</a>] -         Integrate Hue 2.0.0 into Bigtop
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-602'>BIGTOP-602</a>] -         Bigtop 0.4.0 release
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-685'>BIGTOP-685</a>] -         provide a way to specify the parameters expected by a test
 </li>
 </ul>
                             
@@ -515,6 +553,8 @@
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-631'>BIGTOP-631</a>] -         Add HBase Import/Export test
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-641'>BIGTOP-641</a>] -         Add hdfs fsck options in TestFsck
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-682'>BIGTOP-682</a>] -         Minor Clean up of TestHDFSQuota
 </li>
 </ul>
 
