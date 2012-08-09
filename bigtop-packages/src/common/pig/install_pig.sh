@@ -110,15 +110,17 @@ find $LIB_DIR/contrib -name \*.jar -exec cp {} $LIB_DIR \;
 cp $BUILD_DIR/pig-*-smoketests.jar $LIB_DIR/
 
 # Remove directories that are going elsewhere
-for dir in shims conf src lib-src docs tutorial test build.xml contrib ivy pig-*.stage.jar
+for dir in shims conf src lib-src docs tutorial test build.xml contrib ivy pig-*.stage.jar ivy.xml build.properties
 do
    rm -rf $LIB_DIR/$dir
 done
 
-# Remove the unwanted xml and build files
-rm -rf $LIB_DIR/ivy.xml
-rm -rf $LIB_DIR/build.properties
-rm -rf $LIB_DIR/contrib/zebra/src/*.xml
+# Remove a fat JAR that contains system Hadoop dependencies
+for jar in $LIB_DIR/pig*.jar ; do
+  if jar tvf $jar | fgrep -q ' org/apache/hadoop/hdfs' ; then
+    rm -f $jar
+  fi
+done
 
 # Copy in the configuration files
 install -d -m 0755 $PREFIX/$CONF_DIST_DIR
@@ -137,6 +139,13 @@ elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
   . /usr/lib/bigtop-utils/bigtop-detect-javahome
 fi
 
+# FIXME: a workaround for PIG-2786
+# HBase integration support
+HBASE_BINARY=\`PATH=\${HBASE_HOME}:\$PATH which hbase\`
+if [ -n "\$HBASE_BINARY" ] ; then
+  export PIG_CLASSPATH=\$PIG_CLASSPATH:\`\$HBASE_BINARY classpath\`
+fi
+
 exec $INSTALLED_LIB_DIR/bin/pig "\$@"
 EOF
 chmod 755 $BIN_DIR/pig
@@ -150,12 +159,9 @@ install -d -m 0755 $DOC_DIR
 mv $LIB_DIR/license $DOC_DIR
 
 install -d -m 0755 $EXAMPLES_DIR
-(cd $LIB_DIR ; mv pig*withouthadoop.jar `echo pig*withouthadoop.jar | sed -e 's#withouthadoop#core#'`)
-# FIXME: workaround for BIGTOP-161
-(cd $LIB_DIR ; ln -s pig-*-core.jar pig-withouthadoop.jar)
-PIG_JAR=$(basename $(ls $LIB_DIR/pig*core.jar))
+(cd $LIB_DIR ; ln -s pig*withouthadoop.jar pig.jar)
 (cd $BUILD_DIR/tar/pig*/tutorial && tar -cf - .)|(cd $EXAMPLES_DIR && tar -xf -)
-sed -i -e "s|../pig.jar|/usr/lib/pig/$PIG_JAR|" $EXAMPLES_DIR/build.xml
+sed -i -e "s|../pig.jar|/usr/lib/pig/pig.jar|" $EXAMPLES_DIR/build.xml
 
 # It's somewhat silly that the hadoop jars are included in the pig lib
 # dir, since we depend on hadoop in our packages. We can rm them
