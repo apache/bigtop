@@ -47,7 +47,8 @@ install-indep:
 	sh -x debian/install_sqoop.sh \
 	  --build-dir=build/sqoop-${SQOOP_BASE_VERSION} \
 	  --conf-dir=/etc/sqoop/conf.dist \
-	  --prefix=debian/sqoop
+	  --prefix=debian/sqoop 
+	cp debian/sqoop-metastore.sh debian/sqoop-metastore.init 
 	dh_install -i
 
 binary-common:	
