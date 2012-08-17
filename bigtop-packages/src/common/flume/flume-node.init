@@ -73,6 +73,7 @@ done
 
 DEFAULT_FLUME_NODE_NAME="agent"
 FLUME_NODE_NAME=${FLUME_NODE_NAME:-${DEFAULT_FLUME_NODE_NAME}}
+FLUME_SHUTDOWN_TIMEOUT=${FLUME_SHUTDOWN_TIMEOUT:-60}
 
 start() {
   [ -x $exec ] || exit $ERROR_PROGRAM_NOT_INSTALLED
@@ -101,7 +102,10 @@ stop() {
   FLUME_PID=`cat $FLUME_PID_FILE`
   if [ -n $FLUME_PID ]; then
     kill -TERM ${FLUME_PID} &>/dev/null
-    sleep 5
+    for i in `seq 1 ${FLUME_SHUTDOWN_TIMEOUT}` ; do
+      kill -0 ${FLUME_PID} &>/dev/null || break
+      sleep 1
+    done
     kill -KILL ${FLUME_PID} &>/dev/null
   fi
   rm -f $LOCKFILE $FLUME_PID_FILE
