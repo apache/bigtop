@@ -113,7 +113,7 @@ hive_restart() {
 hive_status() {
     echo -n "Checking for service $desc: "
     pidofproc -p $PID_FILE java > /dev/null
-    $RETVAL
+    RETVAL=$?
 
     case "$RETVAL" in
       $STATUS_RUNNING)
