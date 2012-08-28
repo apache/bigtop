@@ -19,6 +19,7 @@ Bigtop Changelog
 
 - BUG FIXES
   - [BIGTOP-634] - Weird output when doing an init action on oozie when it is already running
+  - [BIGTOP-664] - hive-metastore script has error when execute 'service hive-metastore status' in Ubuntu precise
 
 * Release 0.4.0 (2012-06-25)
 
