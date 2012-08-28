@@ -135,7 +135,7 @@ case "$1" in
   init)
         is_oozie_alive
         if [ ${STATUS} -eq 0 ] ; then
-          "Error: Oozie is running. Stop it first."
+          echo "Error: Oozie is running. Stop it first."
           exit 1
         else
           (cd /tmp ; su --shell=/bin/sh -l oozie -c '/usr/lib/oozie/bin/ooziedb.sh create -run')
