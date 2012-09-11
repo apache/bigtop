@@ -282,7 +282,7 @@ export HADOOP_LIBEXEC_DIR=${SYSTEM_LIBEXEC_DIR#${PREFIX}}
 
 if [ "\${LD_LIBRARY_PATH}" = "" ]; then
   export LD_LIBRARY_PATH=/usr/lib
-  for f in \`find \${JAVA_HOME} -name client -prune -o -name libjvm.so -exec dirname {} \;\`; do
+  for f in \`find \${JAVA_HOME}/ -name client -prune -o -name libjvm.so -exec dirname {} \;\`; do
     export LD_LIBRARY_PATH=\$f:\${LD_LIBRARY_PATH}
   done
 fi
