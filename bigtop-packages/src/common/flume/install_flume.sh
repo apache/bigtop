@@ -25,8 +25,7 @@ usage: $0 <options>
 
   Optional options:
      --doc-dir=DIR               path to install docs into [/usr/share/doc/flume]
-     --flume-dir=DIR               path to install flume home [/usr/lib/flume]
-     --installed-lib-dir=DIR     path where lib-dir will end up on target system
+     --lib-dir=DIR               path to install flume home [/usr/lib/flume]
      --bin-dir=DIR               path to install bins [/usr/bin]
      --examples-dir=DIR          path to install examples [doc-dir/examples]
      ... [ see source for more similar options ]
@@ -39,8 +38,7 @@ OPTS=$(getopt \
   -o '' \
   -l 'prefix:' \
   -l 'doc-dir:' \
-  -l 'flume-dir:' \
-  -l 'installed-lib-dir:' \
+  -l 'lib-dir:' \
   -l 'bin-dir:' \
   -l 'examples-dir:' \
   -l 'build-dir:' -- "$@")
@@ -62,11 +60,8 @@ while true ; do
         --doc-dir)
         DOC_DIR=$2 ; shift 2
         ;;
-        --flume-dir)
-        FLUME_DIR=$2 ; shift 2
-        ;;
-        --installed-lib-dir)
-        INSTALLED_LIB_DIR=$2 ; shift 2
+        --lib-dir)
+        LIB_DIR=$2 ; shift 2
         ;;
         --bin-dir)
         BIN_DIR=$2 ; shift 2
@@ -94,15 +89,14 @@ done
 
 MAN_DIR=${MAN_DIR:-/usr/share/man/man1}
 DOC_DIR=${DOC_DIR:-/usr/share/doc/flume}
-FLUME_DIR=${FLUME_DIR:-/usr/lib/flume}
+LIB_DIR=${LIB_DIR:-/usr/lib/flume}
 BIN_DIR=${BIN_DIR:-/usr/lib/flume/bin}
-CONF_DIR=/etc/flume/
 CONF_DIST_DIR=/etc/flume/conf.dist/
 ETC_DIR=${ETC_DIR:-/etc/flume}
 
-install -d -m 0755 ${PREFIX}/${FLUME_DIR}
+install -d -m 0755 ${PREFIX}/${LIB_DIR}
 
-(cd ${PREFIX}/${FLUME_DIR} &&
+(cd ${PREFIX}/${LIB_DIR} &&
   tar --strip-components=1 -xvzf ${BUILD_DIR}/flume-ng-dist/target/flume-ng-dist-*-dist.tar.gz)
 
 # Take out useless things or we've installed elsewhere
@@ -118,7 +112,7 @@ for x in flume-ng-* \
           RELEASE-NOTES \
           bin/ia64 \
           bin/amd64; do
-  rm -rf ${PREFIX}/$FLUME_DIR/$x 
+  rm -rf ${PREFIX}/$LIB_DIR/$x 
 done
 
 
@@ -150,8 +144,8 @@ install -d -m 0755 $PREFIX/$ETC_DIR/conf.empty
 sed -i -e "s|flume\.log\.dir=.*|flume.log.dir=/var/log/flume-ng|" $PREFIX/$ETC_DIR/conf.empty/log4j.properties
 touch $PREFIX/$ETC_DIR/conf.empty/flume.conf
 
-unlink $PREFIX/$FLUME_DIR/conf || /bin/true
-ln -s /etc/flume/conf $PREFIX/$FLUME_DIR/conf
+unlink $PREFIX/$LIB_DIR/conf || /bin/true
+ln -s /etc/flume/conf $PREFIX/$LIB_DIR/conf
 
 # Docs
 install -d -m 0755 $PREFIX/${DOC_DIR}
