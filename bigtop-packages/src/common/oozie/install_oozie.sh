@@ -58,25 +58,25 @@ eval set -- "$OPTS"
 while true ; do
     case "$1" in
         --extra-dir)
-        EXTRADIR=$2 ; shift 2
+        EXTRA_DIR=$2 ; shift 2
         ;;
         --build-dir)
-        BUILDDIR=$2 ; shift 2
+        BUILD_DIR=$2 ; shift 2
         ;;
         --server-dir)
-        SERVERDIR=$2 ; shift 2
+        SERVER_PREFIX=$2 ; shift 2
         ;;
         --client-dir)
-        CLIENTDIR=$2 ; shift 2
+        CLIENT_PREFIX=$2 ; shift 2
         ;;
         --docs-dir)
-        OOZIE_DOCS=$2 ; shift 2
+        DOC_DIR=$2 ; shift 2
         ;;
         --initd-dir)
-        INITDDIR=$2 ; shift 2
+        INITD_DIR=$2 ; shift 2
         ;;
         --conf-dir)
-        CONFDIR=$2 ; shift 2
+        CONF_DIR=$2 ; shift 2
         ;;
         --)
         shift; break
@@ -88,68 +88,66 @@ while true ; do
     esac
 done
 
-for var in BUILDDIR SERVERDIR CLIENTDIR; do
+for var in BUILD_DIR SERVER_PREFIX CLIENT_PREFIX; do
   if [ -z "$(eval "echo \$$var")" ]; then
     echo Missing param: $var
     usage
   fi
 done
 
-if [ ! -d "${BUILDDIR}" ]; then
-  echo "Build directory does not exist: ${BUILDDIR}"
+if [ ! -d "${BUILD_DIR}" ]; then
+  echo "Build directory does not exist: ${BUILD_DIR}"
   exit 1
 fi
 
-if [ -d "${SERVERDIR}" ]; then
-  echo "Server directory already exists, delete first: ${SERVERDIR}"
+if [ -d "${SERVER_PREFIX}" ]; then
+  echo "Server directory already exists, delete first: ${SERVER_PREFIX}"
   exit 1
 fi
 
-if [ -d "${CLIENTDIR}" ]; then
-  echo "Client directory already exists, delete first: ${CLIENTDIR}"
+if [ -d "${CLIENT_PREFIX}" ]; then
+  echo "Client directory already exists, delete first: ${CLIENT_PREFIX}"
   exit 1
 fi
 
-if [ -d "${OOZIE_DOCS}" ]; then
-  echo "Docs directory already exists, delete first: ${OOZIE_DOCS}"
+if [ -d "${DOC_DIR}" ]; then
+  echo "Docs directory already exists, delete first: ${DOC_DIR}"
   exit 1
 fi
-
-OOZIE_BUILD_DIR=${BUILDDIR}
 
 ## Install client image first
-OOZIE_CLIENT_DIR=${CLIENTDIR}/usr/lib/oozie
-OOZIE_MAN_DIR=${CLIENTDIR}/usr/share/man/man1
-DOC_DIR=${OOZIE_DOCS:-$PREFIX/usr/share/doc/oozie}
-BIN_DIR=${CLIENTDIR}/usr/bin
+CLIENT_LIB_DIR=${CLIENT_PREFIX}/usr/lib/oozie
+MAN_DIR=${CLIENT_PREFIX}/usr/share/man/man1
+DOC_DIR=${DOC_DIR:-$CLIENT_PREFIX/usr/share/doc/oozie}
+BIN_DIR=${CLIENT_PREFIX}/usr/bin
 
-install -d -m 0755 ${OOZIE_CLIENT_DIR}
+install -d -m 0755 ${CLIENT_LIB_DIR}
 failIfNotOK
-install -d -m 0755 ${OOZIE_CLIENT_DIR}/bin
+install -d -m 0755 ${CLIENT_LIB_DIR}/bin
 failIfNotOK
-cp -R ${OOZIE_BUILD_DIR}/bin/oozie ${OOZIE_CLIENT_DIR}/bin
+cp -R ${BUILD_DIR}/bin/oozie ${CLIENT_LIB_DIR}/bin
 failIfNotOK
-cp -R ${OOZIE_BUILD_DIR}/lib ${OOZIE_CLIENT_DIR}
+cp -R ${BUILD_DIR}/lib ${CLIENT_LIB_DIR}
 failIfNotOK
 install -d -m 0755 ${DOC_DIR}
 failIfNotOK
-cp -R ${OOZIE_BUILD_DIR}/LICENSE.txt ${DOC_DIR}
+cp -R ${BUILD_DIR}/LICENSE.txt ${DOC_DIR}
 failIfNotOK
-cp -R ${OOZIE_BUILD_DIR}/NOTICE.txt ${DOC_DIR}
+cp -R ${BUILD_DIR}/NOTICE.txt ${DOC_DIR}
 failIfNotOK
-cp -R ${OOZIE_BUILD_DIR}/oozie-examples.tar.gz ${DOC_DIR}
+cp -R ${BUILD_DIR}/oozie-examples.tar.gz ${DOC_DIR}
 failIfNotOK
-cp -R ${OOZIE_BUILD_DIR}/README.txt ${DOC_DIR}
+cp -R ${BUILD_DIR}/README.txt ${DOC_DIR}
 failIfNotOK
-cp -R ${OOZIE_BUILD_DIR}/release-log.txt ${DOC_DIR}
+cp -R ${BUILD_DIR}/release-log.txt ${DOC_DIR}
 failIfNotOK
-[ -f ${OOZIE_BUILD_DIR}/PATCH.txt ] && cp ${OOZIE_BUILD_DIR}/PATCH.txt ${DOC_DIR}
+[ -f ${BUILD_DIR}/PATCH.txt ] && cp ${BUILD_DIR}/PATCH.txt ${DOC_DIR}
 # failIfNotOK
-cp -R ${OOZIE_BUILD_DIR}/docs/* ${DOC_DIR}
+cp -R ${BUILD_DIR}/docs/* ${DOC_DIR}
 failIfNotOK
-install -d -m 0755 ${OOZIE_MAN_DIR}
+install -d -m 0755 ${MAN_DIR}
 failIfNotOK
-gzip -c ${EXTRADIR}/oozie.1 > ${OOZIE_MAN_DIR}/oozie.1.gz
+gzip -c ${EXTRA_DIR}/oozie.1 > ${MAN_DIR}/oozie.1.gz
 failIfNotOK
 
 # Create the /usr/bin/oozie wrapper
@@ -188,73 +186,72 @@ failIfNotOK
 
 
 ## Install server image
-OOZIE_SERVER_DIR=${SERVERDIR}/usr/lib/oozie
-OOZIE_CONF=${CONFDIR:-"${SERVERDIR}/etc/oozie/conf.dist"}
-OOZIE_INITD=${INITDDIR}
-OOZIE_DATA=${SERVERDIR}/var/lib/oozie
+SERVER_LIB_DIR=${SERVER_PREFIX}/usr/lib/oozie
+CONF_DIR=${CONF_DIR:-"${SERVER_PREFIX}/etc/oozie/conf.dist"}
+DATA_DIR=${SERVER_PREFIX}/var/lib/oozie
 
-install -d -m 0755 ${OOZIE_SERVER_DIR}
+install -d -m 0755 ${SERVER_LIB_DIR}
 failIfNotOK
-install -d -m 0755 ${OOZIE_SERVER_DIR}/bin
+install -d -m 0755 ${SERVER_LIB_DIR}/bin
 failIfNotOK
-install -d -m 0755 ${OOZIE_DATA}
+install -d -m 0755 ${DATA_DIR}
 failIfNotOK
 for file in ooziedb.sh oozied.sh oozie-sys.sh ; do
-  cp ${OOZIE_BUILD_DIR}/bin/$file ${OOZIE_SERVER_DIR}/bin
+  cp ${BUILD_DIR}/bin/$file ${SERVER_LIB_DIR}/bin
   failIfNotOK
 done
-cp -R ${OOZIE_BUILD_DIR}/libtools ${OOZIE_SERVER_DIR}
+cp -R ${BUILD_DIR}/libtools ${SERVER_LIB_DIR}
 failIfNotOK
 
-install -d -m 0755 ${OOZIE_CONF}
+install -d -m 0755 ${CONF_DIR}
 failIfNotOK
-cp ${OOZIE_BUILD_DIR}/conf/* ${OOZIE_CONF}
+cp ${BUILD_DIR}/conf/* ${CONF_DIR}
 sed -i -e '/oozie.service.HadoopAccessorService.hadoop.configurations/,/<\/property>/s#<value>\*=hadoop-conf</value>#<value>*=/etc/hadoop/conf</value>#g' \
-          ${OOZIE_CONF}/oozie-site.xml
+          ${CONF_DIR}/oozie-site.xml
 failIfNotOK
-cp ${EXTRADIR}/oozie-env.sh ${OOZIE_CONF}
+cp ${EXTRA_DIR}/oozie-env.sh ${CONF_DIR}
 failIfNotOK
-install -d -m 0755 ${OOZIE_CONF}/action-conf
+install -d -m 0755 ${CONF_DIR}/action-conf
 failIfNotOK
-cp ${EXTRADIR}/hive.xml ${OOZIE_CONF}/action-conf
+cp ${EXTRA_DIR}/hive.xml ${CONF_DIR}/action-conf
 failIfNotOK
-if [ "${OOZIE_INITD}" != "" ]; then
-  install -d -m 0755 ${OOZIE_INITD}
+if [ "${INITD_DIR}" != "" ]; then
+  install -d -m 0755 ${INITD_DIR}
   failIfNotOK
-  cp -R ${EXTRADIR}/oozie.init ${OOZIE_INITD}/oozie
+  cp -R ${EXTRA_DIR}/oozie.init ${INITD_DIR}/oozie
   failIfNotOK
-  chmod 755 ${OOZIE_INITD}/oozie
+  chmod 755 ${INITD_DIR}/oozie
  failIfNotOK
 fi
-cp -R ${OOZIE_BUILD_DIR}/oozie-sharelib*.tar.gz ${OOZIE_SERVER_DIR}/oozie-sharelib.tar.gz
+cp -R ${BUILD_DIR}/oozie-sharelib*.tar.gz ${SERVER_LIB_DIR}/oozie-sharelib.tar.gz
 failIfNotOK
-cp -R ${OOZIE_BUILD_DIR}/oozie-server/webapps ${OOZIE_SERVER_DIR}/webapps
+cp -R ${BUILD_DIR}/oozie-server/webapps ${SERVER_LIB_DIR}/webapps
 failIfNotOK
-ln -s -f /etc/oozie/conf/oozie-env.sh ${OOZIE_SERVER_DIR}/bin
+ln -s -f /etc/oozie/conf/oozie-env.sh ${SERVER_LIB_DIR}/bin
 failIfNotOK
 
 # Unpack oozie.war some place reasonable
-OOZIE_WEBAPP=${OOZIE_SERVER_DIR}/webapps/oozie
-mkdir ${OOZIE_WEBAPP}
+WEBAPP_DIR=${SERVER_LIB_DIR}/webapps/oozie
+mkdir ${WEBAPP_DIR}
 failIfNotOK
-unzip -d ${OOZIE_WEBAPP} ${OOZIE_BUILD_DIR}/oozie.war
+unzip -d ${WEBAPP_DIR} ${BUILD_DIR}/oozie.war
 failIfNotOK
-mv -f ${OOZIE_WEBAPP}/WEB-INF/lib ${OOZIE_SERVER_DIR}/libserver
+mv -f ${WEBAPP_DIR}/WEB-INF/lib ${SERVER_LIB_DIR}/libserver
 failIfNotOK
-touch ${OOZIE_SERVER_DIR}/webapps/oozie.war
+touch ${SERVER_LIB_DIR}/webapps/oozie.war
 failIfNotOK
 
 # Create an exploded-war oozie deployment in /var/lib/oozie
-install -d -m 0755 ${OOZIE_SERVER_DIR}/oozie-server
+install -d -m 0755 ${SERVER_LIB_DIR}/oozie-server
 failIfNotOK
-cp -R ${OOZIE_BUILD_DIR}/oozie-server/conf ${OOZIE_SERVER_DIR}/oozie-server/conf
+cp -R ${BUILD_DIR}/oozie-server/conf ${SERVER_LIB_DIR}/oozie-server/conf
 failIfNotOK
-cp ${EXTRADIR}/context.xml ${OOZIE_SERVER_DIR}/oozie-server/conf/
+cp ${EXTRA_DIR}/context.xml ${SERVER_LIB_DIR}/oozie-server/conf/
 failIfNotOK
-cp ${EXTRADIR}/catalina.properties ${OOZIE_SERVER_DIR}/oozie-server/conf/
+cp ${EXTRA_DIR}/catalina.properties ${SERVER_LIB_DIR}/oozie-server/conf/
 failIfNotOK
-ln -s ../webapps ${OOZIE_SERVER_DIR}/oozie-server/webapps
+ln -s ../webapps ${SERVER_LIB_DIR}/oozie-server/webapps
 failIfNotOK
 
 # Provide a convenience symlink to be more consistent with tarball deployment
-ln -s ${OOZIE_DATA#${SERVERDIR}} ${OOZIE_SERVER_DIR}/libext
+ln -s ${DATA_DIR#${SERVER_PREFIX}} ${SERVER_LIB_DIR}/libext
