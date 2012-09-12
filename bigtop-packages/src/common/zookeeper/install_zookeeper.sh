@@ -27,7 +27,6 @@ usage: $0 <options>
   Optional options:
      --doc-dir=DIR               path to install docs into [/usr/share/doc/zookeeper]
      --lib-dir=DIR               path to install zookeeper home [/usr/lib/zookeeper]
-     --installed-lib-dir=DIR     path where lib-dir will end up on target system
      --bin-dir=DIR               path to install bins [/usr/bin]
      --examples-dir=DIR          path to install examples [doc-dir/examples]
      ... [ see source for more similar options ]
@@ -41,7 +40,6 @@ OPTS=$(getopt \
   -l 'prefix:' \
   -l 'doc-dir:' \
   -l 'lib-dir:' \
-  -l 'installed-lib-dir:' \
   -l 'bin-dir:' \
   -l 'examples-dir:' \
   -l 'build-dir:' -- "$@")
@@ -64,9 +62,6 @@ while true ; do
         ;;
         --lib-dir)
         LIB_DIR=$2 ; shift 2
-        ;;
-        --installed-lib-dir)
-        INSTALLED_LIB_DIR=$2 ; shift 2
         ;;
         --bin-dir)
         BIN_DIR=$2 ; shift 2
@@ -92,10 +87,9 @@ for var in PREFIX BUILD_DIR ; do
   fi
 done
 
-MAN_DIR=$PREFIX/usr/share/man/man1
+MAN_DIR=/usr/share/man/man1
 DOC_DIR=${DOC_DIR:-/usr/share/doc/zookeeper}
 LIB_DIR=${LIB_DIR:-/usr/lib/zookeeper}
-INSTALLED_LIB_DIR=${INSTALLED_LIB_DIR:-/usr/lib/zookeeper}
 BIN_DIR=${BIN_DIR:-/usr/bin}
 CONF_DIR=/etc/zookeeper/conf
 CONF_DIST_DIR=/etc/zookeeper/conf.dist/
@@ -181,8 +175,8 @@ install -d -m 0755 $PREFIX/$DOC_DIR
 cp -a $BUILD_DIR/docs/* $PREFIX/$DOC_DIR
 cp $BUILD_DIR/*.txt $PREFIX/$DOC_DIR/
 
-install -d -m 0755 $MAN_DIR
-gzip -c zookeeper.1 > $MAN_DIR/zookeeper.1.gz
+install -d -m 0755 $PREFIX/$MAN_DIR
+gzip -c zookeeper.1 > $PREFIX/$MAN_DIR/zookeeper.1.gz
 
 # Zookeeper log and tx log directory
 install -d -m 1766 $PREFIX/var/log/zookeeper
