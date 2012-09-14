@@ -605,6 +605,7 @@ fi
 %config(noreplace) %{etc_hadoop}/conf.empty/ssl-client.xml.example
 %config(noreplace) %{etc_hadoop}/conf.empty/ssl-server.xml.example
 %config(noreplace) /etc/default/hadoop
+/etc/bash_completion.d/hadoop
 %{lib_hadoop}/*.jar
 %{lib_hadoop}/lib
 %{lib_hadoop}/sbin

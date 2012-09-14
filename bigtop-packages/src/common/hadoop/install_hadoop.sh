@@ -153,6 +153,7 @@ SYSTEM_LIBEXEC_DIR=${SYSTEM_LIBEXEC_DIR:-$PREFIX/usr/libexec}
 EXAMPLE_DIR=${EXAMPLE_DIR:-$DOC_DIR/examples}
 HADOOP_ETC_DIR=${HADOOP_ETC_DIR:-$PREFIX/etc/hadoop}
 HTTPFS_ETC_DIR=${HTTPFS_ETC_DIR:-$PREFIX/etc/hadoop-httpfs}
+BASH_COMPLETION_DIR=${BASH_COMPLETION_DIR:-$PREFIX/etc/bash_completion.d}
 
 INSTALLED_HADOOP_DIR=${INSTALLED_HADOOP_DIR:-/usr/lib/hadoop}
 HADOOP_NATIVE_LIB_DIR=${HADOOP_DIR}/lib/native
@@ -298,6 +299,11 @@ EOF
 
 chmod 755 $fuse_wrapper
 
+# Bash tab completion
+install -d -m 0755 $BASH_COMPLETION_DIR
+install -m 0644 \
+  hadoop-common-project/hadoop-common/src/contrib/bash-tab-completion/hadoop.sh \
+  $BASH_COMPLETION_DIR/hadoop
 
 # conf
 install -d -m 0755 $HADOOP_ETC_DIR/conf.empty
