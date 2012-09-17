@@ -100,7 +100,7 @@
         <configuration>
           <systemPropertyVariables>
             <org.apache.bigtop.itest.hivesmoke.IntegrationTestHiveSmokeBulk.extra_jars>
-            ${HBASE_HOME}/lib/${hbase.jar},${HIVE_HOME}/lib/${hive-hbase-handler.jar},${ZOOKEEPER_HOME}/${zookeeper.jar},${HIVE_HOME}/lib/${guava.jar}
+            ${HIVE_HOME}/lib/hbase.jar,${HIVE_HOME}/lib/${hive-hbase-handler.jar},${HIVE_HOME}/lib/zookeeper.jar,${HIVE_HOME}/lib/${guava.jar}
             </org.apache.bigtop.itest.hivesmoke.IntegrationTestHiveSmokeBulk.extra_jars>
           </systemPropertyVariables>
           <forkMode>always</forkMode>
@@ -129,18 +129,6 @@
             <configuration>
               <source>
                 if (!System.getProperties().keySet().contains('enforcer.skip')) {
-                  project.properties['zookeeper.jar'] =
-                    org.apache.bigtop.itest.JarContent.getJarName(
-                        "${ZOOKEEPER_HOME}", 'zookeeper-.*.jar');
-                  if ( project.properties['zookeeper.jar'] == null ) {
-                    throw new IOException ("zookeeper*.jar isn't found");
-                  }
-                  project.properties['hbase.jar'] =
-                    org.apache.bigtop.itest.JarContent.getJarName(
-                        "${HBASE_HOME}", 'hbase-.*.jar');
-                  if ( project.properties['hbase.jar'] == null ) {
-                    throw new IOException ("hbase*.jar isn't found");
-                  }
                   [ 'hive-hbase-handler.jar', 'hive-exec.jar', 'hive-jdbc.jar', 'hive-metastore.jar', 'hive-service.jar', 'slf4j-api.jar', 'slf4j-log4j12.jar', 'guava.jar' ].each {
                     project.properties[it] =
                       org.apache.bigtop.itest.JarContent.getJarName(
