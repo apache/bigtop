@@ -19,3 +19,6 @@ set -ex
 mvn -f maven/pom.xml clean install "$@"
 
 make apps
+
+# Make the entire tree relocatable
+bash tools/relocatable.sh

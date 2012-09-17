@@ -1,4 +1,5 @@
 /etc/hue/conf.empty
+/usr/lib/hue/app.reg
 /usr/lib/hue/desktop
 /usr/lib/hue/ext
 /usr/lib/hue/LICENSE.txt
@@ -24,3 +25,5 @@
 /usr/lib/hue/apps/proxy
 /usr/lib/hue/apps/shell
 /usr/lib/hue/apps/useradmin
+/var/log/hue
+/var/lib/hue

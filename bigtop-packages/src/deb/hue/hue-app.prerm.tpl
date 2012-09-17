@@ -29,8 +29,6 @@ set -e
 # the debian-policy package
 
 APP=@APP@
-USER=hue
-DO="su $USER -s /bin/bash -c"
 export ROOT=/usr/lib/hue
 APP_DIR=$ROOT/apps/$APP
 export DESKTOP_LOGLEVEL=WARN
@@ -41,10 +39,11 @@ app_reg="$ROOT/tools/app_reg/app_reg.py"
 case "$1" in
     remove|upgrade|deconfigure)
         if test -e $app_reg -a -e $env_python ; then
-	    $DO "$env_python $app_reg --remove $APP" ||:
+	    $env_python $app_reg --remove $APP ||:
         fi
         find $APP_DIR -name \*.py[co] -exec rm -f {} \; ||:
         find $APP_DIR -name \*.egg-info -prune -exec rm -Rf {} \; ||:
+        chown -R hue:hue /var/log/hue /var/lib/hue
     ;;
 
     failed-upgrade)

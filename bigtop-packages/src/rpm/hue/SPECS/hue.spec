@@ -92,31 +92,29 @@ AutoReqProv: no
 # Post macro for apps
 %define app_post_macro() \
 %post -n %{name}-%1 \
-DO="su --shell=/bin/bash -l %{username} -c" \
 export ROOT=%{hue_dir} \
 export DESKTOP_LOGLEVEL=WARN \
 export DESKTOP_LOG_DIR=/var/log/hue \
-chown -R %{username}:%{username} %{hue_dir}/apps/%1 \
 if [ "$1" != 1 ] ; then \
   echo %{hue_dir}/apps/%1 >> %{hue_dir}/.re_register \
 fi \
-$DO "%{hue_dir}/build/env/bin/python %{hue_dir}/tools/app_reg/app_reg.py --install %{apps_dir}/%1"
+%{hue_dir}/build/env/bin/python %{hue_dir}/tools/app_reg/app_reg.py --install %{apps_dir}/%1 \
+chown -R hue:hue /var/log/hue /var/lib/hue
 
 # Preun macro for apps
 %define app_preun_macro() \
 %preun -n %{name}-%1 \
 if [ "$1" = 0 ] ; then \
-  DO="su --shell=/bin/bash -l %{username} -c" \
-  ENV_PYTHON="%{hue_dir}/build/env/bin/python" \
   export ROOT=%{hue_dir} \
   export DESKTOP_LOGLEVEL=WARN \
   export DESKTOP_LOG_DIR=/var/log/hue \
   if [ -e $ENV_PYTHON ] ; then \
-    $DO "$ENV_PYTHON %{hue_dir}/tools/app_reg/app_reg.py --remove %1" ||: \
+    %{hue_dir}/build/env/bin/python %{hue_dir}/tools/app_reg/app_reg.py --remove %1 ||: \
   fi \
   find %{apps_dir}/%1 -name \*.egg-info -type f -print0 | xargs -0 /bin/rm -fR   \
 fi \
-find %{apps_dir}/%1 -iname \*.py[co] -type f -print0 | xargs -0 /bin/rm -f  
+find %{apps_dir}/%1 -iname \*.py[co] -type f -print0 | xargs -0 /bin/rm -f \
+chown -R hue:hue /var/log/hue /var/lib/hue 
 
 %description
 Hue is a browser-based desktop interface for interacting with Hadoop.
@@ -190,13 +188,6 @@ It supports a file browser, job tracker interface, cluster health monitor, and m
 getent group %{username} 2>/dev/null >/dev/null || /usr/sbin/groupadd -r %{username}
 getent passwd %{username} 2>&1 > /dev/null || /usr/sbin/useradd -c "Hue" -s /sbin/nologin -g %{username} -r -d %{hue_dir} %{username} 2> /dev/null || :
 
-
-# If there is an old DB in place, make a backup.
-if [ -e %{hue_dir}/desktop/desktop.db ]; then
-  echo "Backing up previous version of Hue database..."
-  cp -a %{hue_dir}/desktop/desktop.db %{hue_dir}/desktop/desktop.db.rpmsave.$(date +'%Y%m%d.%H%M%S')
-fi
-
 ########################################
 # Postinstall
 ########################################
@@ -204,44 +195,11 @@ fi
 
 %{alternatives_cmd} --install %{etc_hue} hue-conf %{etc_hue}.empty 30
 
-cd %{hue_dir}
-DO="su --shell=/bin/bash -l %{username} -c"
-DESKTOP_LOG_DIR=/var/log/hue
-# FIXME: jobbrowser HUE-10
-APPS="about filebrowser help jobsub proxy useradmin shell"
-
-mkdir -p $DESKTOP_LOG_DIR
-chown %{username}:%{username} $DESKTOP_LOG_DIR
-
-# Set permissions
-chown %{username}:%{username} %{hue_dir}/*
-chown %{username}:%{username} %{hue_dir}/apps
-chown -R %{username}:%{username} %{hue_dir}/ext
-chown -R %{username}:%{username} %{hue_dir}/tools
-chown -R %{username}:%{username} %{hue_dir}/desktop
-
-# Force regeneration of the virtual-env
-rm -f %{hue_dir}/build/env/stamp
-
-# Delete all pyc files since they contain the wrong path ()
-find %{hue_dir} -iname \*.py[co]  -exec rm -f {} \;
-
-# Install everything into the virtual environment
-export DESKTOP_LOG_DIR=$DESKTOP_LOG_DIR
-export DESKTOP_LOGLEVEL=WARN
-# TODO: Should this be in /var/log/hue?
-$DO "make desktop" >& %{hue_dir}/build_log.txt
-
-# Upgrading database...
-$DO "build/env/bin/hue syncdb --noinput"
-
-# Register or core apps
-for app in $APPS ; do
-  $DO "build/env/bin/python tools/app_reg/app_reg.py --install apps/$app"
-done
-
-# Delete all pyc files since they contain the wrong path ()
-find %{hue_dir} -iname \*.py[co]  -exec rm -f {} \;
+# If there is an old DB in place, make a backup.
+if [ -e %{hue_dir}/desktop/desktop.db ]; then
+  echo "Backing up previous version of Hue database..."
+  cp -a %{hue_dir}/desktop/desktop.db %{hue_dir}/desktop/desktop.db.rpmsave.$(date +'%Y%m%d.%H%M%S')
+fi
 
 %preun -n %{name}-common -p /bin/bash
 if [ "$1" = 0 ]; then
@@ -268,7 +226,7 @@ fi
 
 
 %files -n %{name}-common
-%defattr(-,%{username},%{username})
+%defattr(-,root,root)
 %attr(0755,root,root) %config(noreplace) %{etc_hue}.empty 
 %dir %{hue_dir}
 %{hue_dir}/desktop
@@ -282,13 +240,11 @@ fi
 %{hue_dir}/README
 %{hue_dir}/tools
 %{hue_dir}/VERSION
-%attr(0755,%{username},%{username}) %{hue_dir}/build/env/bin/*
+%{hue_dir}/build/env/bin/*
 %{hue_dir}/build/env/include/
 %{hue_dir}/build/env/lib*/
 %{hue_dir}/build/env/stamp
-## We exclude app.reg to prevent it getting overwritten,
-##  postinstall should generate this
-%exclude %{hue_dir}/app.reg
+%{hue_dir}/app.reg
 %{hue_dir}/apps/Makefile
 %dir %{hue_dir}/apps
 # Hue core apps
@@ -302,7 +258,10 @@ fi
 %{useradmin_app_dir}
 %{shell_app_dir}
 %attr(4750,root,hue) %{shell_app_dir}/src/shell/build/setuid
+%attr(0755,%{username},%{username}) /var/log/hue
+%attr(0755,%{username},%{username}) /var/lib/hue
 
+# beeswax is packaged as a plugin app
 %exclude %{beeswax_app_dir}
 
 # %exclude %{hadoop_lib}
@@ -316,7 +275,6 @@ fi
 Summary: Service Scripts for Hue
 Requires: %{name}-common = %{version}-%{release}
 Requires: /sbin/chkconfig
-Requires(pre): %{name} = %{version}-%{release}
 Group: Applications/Engineering
 
 %description -n %{name}-server

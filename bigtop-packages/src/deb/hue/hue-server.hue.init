@@ -121,7 +121,7 @@ start_server() {
         chown -R $DAEMONUSER $(dirname $PIDFILE) $LOGDIR ${PYTHON_EGG_CACHE}
         # dont setuid, since supervisor will drop privileges on its
         # own
-        start-stop-daemon --start --quiet --pidfile $PIDFILE \
+        PATH=/usr/lib/hue/build/env/bin:$PATH start-stop-daemon --start --quiet --pidfile $PIDFILE \
                     --exec $DAEMON -- $DAEMON_OPTS
         errcode=$?
         return $errcode

@@ -92,17 +92,14 @@ BUILD_DIR=`echo $BUILD_DIR | sed -e 's#/*$##'`
 
 CONF_DIR=${CONF_DIR:-/etc/hue}
 LIB_DIR=${LIB_DIR:-/usr/lib/hue}
+VAR_DIR=${VAR_DIR:-/var/lib/hue}
+LOG_DIR=${LOG_DIR:-/var/log/hue}
 HADOOP_DIR=${HADOOP_DIR:-/usr/lib/hadoop/lib}
 
 BUNDLED_BUILD_DIR=$PREFIX/$LIB_DIR/build
 
 # Install all the files 
 (cd $BUILD_DIR ; PREFIX=`dirname $PREFIX/$LIB_DIR` make install)
-
-# Install conf files
-install -d -m 0755 $PREFIX/$CONF_DIR
-mv -f $PREFIX/$LIB_DIR/desktop/conf $PREFIX/${CONF_DIR}/conf.empty
-ln -fs $CONF_DIR/conf $PREFIX/$LIB_DIR/desktop/conf
 
 # Install plugins
 install -d -m 0755 $PREFIX/$HADOOP_DIR
@@ -112,8 +109,45 @@ ln -fs $LIB_DIR/desktop/libs/hadoop/java-lib/*plugin*jar $PREFIX/$HADOOP_DIR
 install -d -m 0755 $PREFIX/$LIB_DIR/apps/shell/src/shell/build/
 cp -f $BUILD_DIR/apps/shell/src/shell/build/setuid $PREFIX/$LIB_DIR/apps/shell/src/shell/build
 
-# Remove Hue database
-rm -f $PREFIX/$LIB_DIR/desktop/desktop.db
+# Remove Hue database and then recreate it, but with just the "right" apps
+rm -f $PREFIX/$LIB_DIR/desktop/desktop.db $PREFIX/$LIB_DIR/app.reg
+# FIXME: jobbrowser HUE-10
+APPS="about filebrowser help jobsub proxy useradmin shell"
+export DESKTOP_LOG_DIR=$BUILD_DIR
+export DESKTOP_LOGLEVEL=WARN
+export ROOT=$PREFIX/$LIB_DIR
+for app in $APPS ; do
+  (cd $PREFIX/$LIB_DIR ; ./build/env/bin/python tools/app_reg/app_reg.py --install apps/$app)
+done
+find $PREFIX/$LIB_DIR -iname \*.py[co]  -exec rm -f {} \;
+
+# Making the resulting tree relocatable
+(cd $PREFIX/$LIB_DIR ; bash tools/relocatable.sh)
+
+# Move desktop.db to a var location
+install -d -m 0755 $PREFIX/$VAR_DIR
+mv $PREFIX/$LIB_DIR/desktop/desktop.db $PREFIX/$VAR_DIR
+
+# Install conf files
+install -d -m 0755 $PREFIX/$CONF_DIR
+mv -f $PREFIX/$LIB_DIR/desktop/conf $PREFIX/${CONF_DIR}/conf.empty
+ln -fs $CONF_DIR/conf $PREFIX/$LIB_DIR/desktop/conf
+sed -i -e '/\[\[database\]\]/a\
+    engine=sqlite3\
+    name=/var/lib/hue/desktop.db' $PREFIX/${CONF_DIR}/conf.empty/hue.ini
+sed -i -e '/\[\[yarn_clusters\]\]/,+20s@## submit_to=False@submit_to=True@' \
+    $PREFIX/${CONF_DIR}/conf.empty/hue.ini
+# Fix a redirection, since by default beeswax is not installed
+sed -i -e '/meta http-equiv="refresh"/s#/beeswax#/about#' \
+    $PREFIX/$LIB_DIR/desktop/core/src/desktop/templates/index.mako
+
+# Relink logs subdirectory just in case
+install -d -m 0755 $PREFIX/$LOG_DIR
+rm -rf $PREFIX/$LIB_DIR/desktop/logs
+ln -s $LOG_DIR $PREFIX/$LIB_DIR/desktop/logs
+
+# Make binary scripts executables
+chmod 755 $BUNDLED_BUILD_DIR/env/bin/*
 
 # Preparing filtering command
 SED_FILT="-e s|$PREFIX|| -e s|$BUILD_DIR|$LIB_DIR|"
@@ -130,9 +164,12 @@ for sm in $BUNDLED_BUILD_DIR/env/lib*; do
 done
 
 # Fix broken python scripts
+ALL_PTH_BORKED=`find $PREFIX -iname "*.pth"`
+ALL_REG_BORKED=`find $PREFIX -iname "app.reg"`
+ALL_PYTHON_BORKED=`find $PREFIX -iname "*.egg-link"`
 HUE_BIN_SCRIPTS=$BUNDLED_BUILD_DIR/env/bin/*
 HUE_EGG_SCRIPTS=$BUNDLED_BUILD_DIR/env/lib*/python*/site-packages/*/EGG-INFO/scripts/*
-for file in $HUE_BIN_SCRIPTS $HUE_EGG_SCRIPTS;
+for file in $HUE_BIN_SCRIPTS $HUE_EGG_SCRIPTS $ALL_PTH_BORKED $ALL_REG_BORKED $ALL_PYTHON_BORKED ;
 do
   if [ -f ${file} ]
   then
@@ -140,16 +177,5 @@ do
   fi
 done
 
-# Make binary scripts executables
-chmod 755 $BUNDLED_BUILD_DIR/env/bin/*
-
 # Remove bogus files
 rm -fv `find $PREFIX -iname "build_log.txt"`
-
-ALL_PTH_BORKED=`find $PREFIX -iname "*.pth"`
-ALL_REG_BORKED=`find $PREFIX -iname "app.reg"`
-ALL_PYTHON_BORKED=`find $PREFIX -iname "*.egg-link"`
-for file in $ALL_PTH_BORKED $ALL_REG_BORKED $ALL_PYTHON_BORKED;
-do
-  sed -i $SED_FILT ${file}
-done

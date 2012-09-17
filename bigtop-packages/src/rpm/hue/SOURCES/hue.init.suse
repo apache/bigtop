@@ -66,7 +66,7 @@ hue_start() {
     chown -R $USER $dir
   done
 
-  start_daemon -u $USER $DAEMON $DAEMON_OPTS
+  PATH=/usr/lib/hue/build/env/bin:$PATH start_daemon -u $USER $DAEMON $DAEMON_OPTS
   RETVAL=$?
   echo
   [ $RETVAL -eq 0 ] && touch $LOCKFILE

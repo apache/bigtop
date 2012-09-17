@@ -33,46 +33,14 @@ set -e
 # for details, see http://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
-USER=hue
-DO="su $USER -s /bin/bash -c"
-# FIXME: jobbrowser HUE-10
-APPS="about filebrowser help jobsub proxy useradmin shell"
-
-# We dont want ugly printouts of status during
-# install, etc
-export DESKTOP_LOGLEVEL=WARN
-export DESKTOP_LOG_DIR=/var/log/hue
-export ROOT=/usr/lib/hue
-
-mkdir -p $DESKTOP_LOG_DIR
-touch $DESKTOP_LOG_DIR/access.log
-touch $DESKTOP_LOG_DIR/error.log
-touch $DESKTOP_LOG_DIR/kt_renewer.log
-touch $DESKTOP_LOG_DIR/kt_renewer.out
-touch $DESKTOP_LOG_DIR/runcpserver.log
-touch $DESKTOP_LOG_DIR/runcpserver.out
-touch $DESKTOP_LOG_DIR/shell_input.log
-touch $DESKTOP_LOG_DIR/shell_output.log
-touch $DESKTOP_LOG_DIR/supervisor.log
-touch $DESKTOP_LOG_DIR/supervisor.out
-chown -R $USER:$USER $DESKTOP_LOG_DIR
-
 case "$1" in
     configure)
+        # tweak permissions
+        chown -R hue:hue /var/log/hue /var/lib/hue
+
         # Install config alternatives
         update-alternatives  --install /etc/hue/conf hue-conf /etc/hue/conf.empty 30
 
-        chown $USER $ROOT
-        cd $ROOT
-        chown $USER *
-        chown -R $USER apps
-        chown -R $USER build
-        chown -R $USER ext
-        chown -R $USER tools
-        chown -R $USER desktop
-        rm -f .installed.cfg build/env/stamp
-        find . -name \*.pyc -exec rm {} \;
-        $DO "make desktop" 2>&1 > /dev/null
         # If we're upgrading, copy their backed up db from the old version
         # and syncdb.
         if [ ! -z "$2" ]; then
@@ -82,18 +50,11 @@ case "$1" in
                         cp $OLD_DB /usr/share/hue/desktop/desktop.db
                 fi
         fi
-        $DO "./build/env/bin/hue syncdb --noinput"
-
-
-        for app in $APPS ; do
-          APP_DIR=$ROOT/apps/$app
-          chown -R hue:hue $APP_DIR
-          $DO "cd $ROOT; $ROOT/build/env/bin/python $ROOT/tools/app_reg/app_reg.py --install $APP_DIR"
-        done
 
         # Take care of hue-shell setuid binary
-        chown root:hue $APP_DIR/src/shell/build/setuid
-        chmod 4750 $APP_DIR/src/shell/build/setuid
+        SETUID=/usr/lib/hue/apps/shell/src/shell/build/setuid
+        chown root:hue $SETUID
+        chmod 4750 $SETUID
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
