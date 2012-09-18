@@ -31,9 +31,8 @@ OPTS=$(getopt \
   -o '' \
   -l 'prefix:' \
   -l 'build-dir:' \
-  -l 'bin-dir:' \
+  -l 'lib-dir:' \
   -l 'doc-dir:' \
-  -l 'man-dir:' \
   -- "$@")
 
 if [ $? != 0 ] ; then
@@ -49,11 +48,8 @@ while true ; do
         --build-dir)
         BUILD_DIR=$2 ; shift 2
         ;;
-        --bin-dir)
-        BIN_DIR=$2 ; shift 2
-        ;;
-        --man-dir)
-        MAN_DIR=$2 ; shift 2
+        --lib-dir)
+        LIB_DIR=$2 ; shift 2
         ;;
         --doc-dir)
         DOC_DIR=$2 ; shift 2
@@ -76,15 +72,14 @@ for var in PREFIX BUILD_DIR; do
   fi
 done
 
-BIN_DIR=${BIN_DIR:-$PREFIX/usr/lib/bigtop-utils}
-DOC_DIR=${DOC_DIR:-$PREFIX/usr/share/doc/bigtop-jsvc}
-MAN_DIR=${MAN_DIR:-$PREFIX/usr/man}
+LIB_DIR=${LIB_DIR:-/usr/lib/bigtop-utils}
+DOC_DIR=${DOC_DIR:-/usr/share/doc/bigtop-jsvc}
 
 #libexec
-install -d -m 0755 ${BIN_DIR}
-cp ${BUILD_DIR}/jsvc ${BIN_DIR}
+install -d -m 0755 ${PREFIX}/${LIB_DIR}
+cp ${BUILD_DIR}/jsvc ${PREFIX}/${LIB_DIR}
 
 # docs
-install -d -m 0755 ${DOC_DIR}
-cp ${BUILD_DIR}/*.txt  ${DOC_DIR}/
-cp ${BUILD_DIR}/README  ${DOC_DIR}/
+install -d -m 0755 ${PREFIX}/${DOC_DIR}
+cp ${BUILD_DIR}/*.txt  ${PREFIX}/${DOC_DIR}/
+cp ${BUILD_DIR}/README  ${PREFIX}/${DOC_DIR}/
