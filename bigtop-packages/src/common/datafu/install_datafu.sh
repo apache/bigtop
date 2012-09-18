@@ -25,11 +25,8 @@ usage: $0 <options>
      --prefix=PREFIX             path to install into
 
   Optional options:
-     --doc-dir=DIR               path to install docs into [/usr/share/doc/pig]
      --lib-dir=DIR               path to install pig home [/usr/lib/pig]
-     --installed-lib-dir=DIR     path where lib-dir will end up on target system
-     --bin-dir=DIR               path to install bins [/usr/bin]
-     --examples-dir=DIR          path to install examples [doc-dir/examples]
+     --build-dir=DIR             path to pig dist dir
      ... [ see source for more similar options ]
   "
   exit 1
@@ -39,11 +36,7 @@ OPTS=$(getopt \
   -n $0 \
   -o '' \
   -l 'prefix:' \
-  -l 'doc-dir:' \
   -l 'lib-dir:' \
-  -l 'installed-lib-dir:' \
-  -l 'bin-dir:' \
-  -l 'examples-dir:' \
   -l 'build-dir:' -- "$@")
 
 if [ $? != 0 ] ; then
@@ -59,20 +52,8 @@ while true ; do
         --build-dir)
         BUILD_DIR=$2 ; shift 2
         ;;
-        --doc-dir)
-        DOC_DIR=$2 ; shift 2
-        ;;
         --lib-dir)
         LIB_DIR=$2 ; shift 2
-        ;;
-        --installed-lib-dir)
-        INSTALLED_LIB_DIR=$2 ; shift 2
-        ;;
-        --bin-dir)
-        BIN_DIR=$2 ; shift 2
-        ;;
-        --examples-dir)
-        EXAMPLES_DIR=$2 ; shift 2
         ;;
         --)
         shift ; break
@@ -92,9 +73,8 @@ for var in PREFIX BUILD_DIR ; do
   fi
 done
 
-LIB_DIR=${LIB_DIR:-$PREFIX/usr/lib/pig}
-INSTALLED_LIB_DIR=${INSTALLED_LIB_DIR:-/usr/lib/pig}
+LIB_DIR=${LIB_DIR:-/usr/lib/pig}
 
 # First we'll move everything into lib
-install -d -m 0755 $LIB_DIR
-cp $BUILD_DIR/datafu-0.0.4.jar $LIB_DIR
+install -d -m 0755 $PREFIX/$LIB_DIR
+cp $BUILD_DIR/datafu-0.0.4.jar $PREFIX/$LIB_DIR
