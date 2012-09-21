@@ -45,8 +45,15 @@ start() {
 
   su -s /bin/bash -c "${EXEC_PATH} start $DAEMON_FLAGS" $HTTPFS_USER
 
-  checkstatusofproc
-  RETVAL=$?
+  for second in {5..0}
+  do
+    checkstatusofproc
+    RETVAL=$?
+    if [ "$RETVAL" -eq $RETVAL_SUCCESS ] ; then
+      break
+    fi
+    sleep 1
+  done
 
   [ $RETVAL -eq $RETVAL_SUCCESS ] && touch $LOCKFILE
   return $RETVAL
