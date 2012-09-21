@@ -51,10 +51,10 @@ bash %{SOURCE1}
 %install
 %__rm -rf $RPM_BUILD_ROOT
 sh %{SOURCE2} \
-          --build-dir=.                         \
-          --bin-dir=$RPM_BUILD_ROOT/%{bin_jsvc} \
-          --doc-dir=$RPM_BUILD_ROOT/%{doc_jsvc} \
-          --man-dir=$RPM_BUILD_ROOT/%{man_dir}  \
+          --build-dir=.         \
+          --bin-dir=%{bin_jsvc} \
+          --doc-dir=%{doc_jsvc} \
+          --man-dir=%{man_dir}  \
           --prefix=$RPM_BUILD_ROOT
 
 %files
