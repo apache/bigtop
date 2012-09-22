@@ -92,31 +92,30 @@ for var in PREFIX BUILD_DIR ; do
   fi
 done
 
-MAN_DIR=$PREFIX/usr/share/man/man1
-DOC_DIR=${DOC_DIR:-$PREFIX/usr/share/doc/pig}
-LIB_DIR=${LIB_DIR:-$PREFIX/usr/lib/pig}
+MAN_DIR=/usr/share/man/man1
+DOC_DIR=${DOC_DIR:-/usr/share/doc/pig}
+LIB_DIR=${LIB_DIR:-/usr/lib/pig}
 INSTALLED_LIB_DIR=${INSTALLED_LIB_DIR:-/usr/lib/pig}
 EXAMPLES_DIR=${EXAMPLES_DIR:-$DOC_DIR/examples}
-BIN_DIR=${BIN_DIR:-$PREFIX/usr/bin}
-CONF_DIR=/etc/pig
+BIN_DIR=${BIN_DIR:-/usr/bin}
 CONF_DIST_DIR=/etc/pig/conf.dist
 
 # First we'll move everything into lib
-install -d -m 0755 $LIB_DIR
-(cd $BUILD_DIR/tar/pig* && tar -cf - .) | (cd $LIB_DIR && tar -xf -)
+install -d -m 0755 $PREFIX/$LIB_DIR
+(cd $BUILD_DIR/tar/pig* && tar -cf - .) | (cd $PREFIX/$LIB_DIR && tar -xf -)
 
 # Salavage a few files from the contrib &co
-find $LIB_DIR/contrib -name \*.jar -exec cp {} $LIB_DIR \;
-cp $BUILD_DIR/pig-*-smoketests.jar $LIB_DIR/
+find $PREFIX/$LIB_DIR/contrib -name \*.jar -exec cp {} $PREFIX/$LIB_DIR \;
+cp $BUILD_DIR/pig-*-smoketests.jar $PREFIX/$LIB_DIR/
 
 # Remove directories that are going elsewhere
 for dir in shims conf src lib-src docs tutorial test build.xml contrib ivy pig-*.stage.jar ivy.xml build.properties
 do
-   rm -rf $LIB_DIR/$dir
+   rm -rf $PREFIX/$LIB_DIR/$dir
 done
 
 # Remove a fat JAR that contains system Hadoop dependencies
-for jar in $LIB_DIR/pig*.jar ; do
+for jar in $PREFIX/$LIB_DIR/pig*.jar ; do
   if jar tvf $jar | fgrep -q ' org/apache/hadoop/hdfs' ; then
     rm -f $jar
   fi
@@ -125,11 +124,11 @@ done
 # Copy in the configuration files
 install -d -m 0755 $PREFIX/$CONF_DIST_DIR
 cp *.properties $PREFIX/$CONF_DIST_DIR
-ln -s /etc/pig/conf $LIB_DIR/conf
+ln -s /etc/pig/conf $PREFIX/$LIB_DIR/conf
 
 # Copy in the /usr/bin/pig wrapper
-install -d -m 0755 $BIN_DIR
-cat > $BIN_DIR/pig <<EOF
+install -d -m 0755 $PREFIX/$BIN_DIR
+cat > $PREFIX/$BIN_DIR/pig <<EOF
 #!/bin/sh
 
 # Autodetect JAVA_HOME if not defined
@@ -148,24 +147,24 @@ fi
 
 exec $INSTALLED_LIB_DIR/bin/pig "\$@"
 EOF
-chmod 755 $BIN_DIR/pig
+chmod 755 $PREFIX/$BIN_DIR/pig
 
-install -d -m 0755 $MAN_DIR
-gzip -c pig.1 > $MAN_DIR/pig.1.gz
+install -d -m 0755 $PREFIX/$MAN_DIR
+gzip -c pig.1 > $PREFIX/$MAN_DIR/pig.1.gz
 
 # Copy in the docs
-install -d -m 0755 $DOC_DIR
-(cd $BUILD_DIR/tar/pig*/docs && tar -cf - .)|(cd $DOC_DIR && tar -xf -)
-mv $LIB_DIR/license $DOC_DIR
+install -d -m 0755 $PREFIX/$DOC_DIR
+(cd $BUILD_DIR/tar/pig*/docs && tar -cf - .)|(cd $PREFIX/$DOC_DIR && tar -xf -)
+mv $PREFIX/$LIB_DIR/license $PREFIX/$DOC_DIR
 
-install -d -m 0755 $EXAMPLES_DIR
-(cd $LIB_DIR ; ln -s pig*withouthadoop.jar pig.jar)
-(cd $BUILD_DIR/tar/pig*/tutorial && tar -cf - .)|(cd $EXAMPLES_DIR && tar -xf -)
-sed -i -e "s|../pig.jar|/usr/lib/pig/pig.jar|" $EXAMPLES_DIR/build.xml
+install -d -m 0755 $PREFIX/$EXAMPLES_DIR
+(cd $PREFIX/$LIB_DIR ; ln -s pig*withouthadoop.jar pig.jar)
+(cd $BUILD_DIR/tar/pig*/tutorial && tar -cf - .)|(cd $PREFIX/$EXAMPLES_DIR && tar -xf -)
+sed -i -e "s|../pig.jar|/usr/lib/pig/pig.jar|" $PREFIX/$EXAMPLES_DIR/build.xml
 
 # It's somewhat silly that the hadoop jars are included in the pig lib
 # dir, since we depend on hadoop in our packages. We can rm them
-rm -f $LIB_DIR/lib/hadoop*jar
+rm -f $PREFIX/$LIB_DIR/lib/hadoop*jar
 
 # Pig log directory
 install -d -m 1777 $PREFIX/var/log/pig

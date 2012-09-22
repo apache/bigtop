@@ -125,7 +125,7 @@ cp $RPM_SOURCE_DIR/pig.1 .
 cp $RPM_SOURCE_DIR/pig.properties .
 sh -x %{SOURCE2} \
           --build-dir=build \
-          --doc-dir=$RPM_BUILD_ROOT%{doc_pig} \
+          --doc-dir=%{doc_pig} \
           --prefix=$RPM_BUILD_ROOT
 
 %pre
