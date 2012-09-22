@@ -94,29 +94,29 @@ for var in PREFIX BUILD_DIR ; do
   fi
 done
 
-MAN_DIR=$PREFIX/usr/share/man/man1
-DOC_DIR=${DOC_DIR:-$PREFIX/usr/share/doc/hive}
-LIB_DIR=${LIB_DIR:-$PREFIX/usr/lib/hive}
+MAN_DIR=/usr/share/man/man1
+DOC_DIR=${DOC_DIR:-/usr/share/doc/hive}
+LIB_DIR=${LIB_DIR:-/usr/lib/hive}
 INSTALLED_LIB_DIR=${INSTALLED_LIB_DIR:-/usr/lib/hive}
 EXAMPLES_DIR=${EXAMPLES_DIR:-$DOC_DIR/examples}
-BIN_DIR=${BIN_DIR:-$PREFIX/usr/bin}
+BIN_DIR=${BIN_DIR:-/usr/bin}
 PYTHON_DIR=${PYTHON_DIR:-$LIB_DIR/lib/py}
 CONF_DIR=/etc/hive
 CONF_DIST_DIR=/etc/hive/conf.dist
 
 # First we'll move everything into lib
-install -d -m 0755 ${LIB_DIR}
-(cd ${BUILD_DIR} && tar -cf - .)|(cd ${LIB_DIR} && tar -xf -)
+install -d -m 0755 ${PREFIX}/${LIB_DIR}
+(cd ${BUILD_DIR} && tar -cf - .)|(cd ${PREFIX}/${LIB_DIR} && tar -xf -)
 
 for thing in conf README.txt examples lib/py;
 do
-  rm -rf ${LIB_DIR}/$thing
+  rm -rf ${PREFIX}/${LIB_DIR}/$thing
 done
 
-install -d -m 0755 ${BIN_DIR}
+install -d -m 0755 ${PREFIX}/${BIN_DIR}
 for file in hive
 do
-  wrapper=$BIN_DIR/$file
+  wrapper=${PREFIX}/$BIN_DIR/$file
   cat >>$wrapper <<EOF
 #!/bin/sh
 
@@ -141,30 +141,30 @@ install -d -m 0755 ${PREFIX}${CONF_DIST_DIR}
 (cd ${BUILD_DIR}/conf && tar -cf - .)|(cd ${PREFIX}${CONF_DIST_DIR} && tar -xf -)
 cp hive-site.xml ${PREFIX}${CONF_DIST_DIR}
 
-ln -s ${CONF_DIR}/conf $LIB_DIR/conf
+ln -s ${CONF_DIR}/conf $PREFIX/$LIB_DIR/conf
 
-install -d -m 0755 $MAN_DIR
-gzip -c hive.1 > $MAN_DIR/hive.1.gz
+install -d -m 0755 $PREFIX/$MAN_DIR
+gzip -c hive.1 > $PREFIX/$MAN_DIR/hive.1.gz
 
 # Docs
-install -d -m 0755 ${DOC_DIR}
-cp ${BUILD_DIR}/README.txt ${DOC_DIR}
-mv ${LIB_DIR}/NOTICE ${DOC_DIR}
-mv ${LIB_DIR}/LICENSE ${DOC_DIR}
-mv ${LIB_DIR}/RELEASE_NOTES.txt ${DOC_DIR}
+install -d -m 0755 ${PREFIX}/${DOC_DIR}
+cp ${BUILD_DIR}/README.txt ${PREFIX}/${DOC_DIR}
+mv ${PREFIX}/${LIB_DIR}/NOTICE ${PREFIX}/${DOC_DIR}
+mv ${PREFIX}/${LIB_DIR}/LICENSE ${PREFIX}/${DOC_DIR}
+mv ${PREFIX}/${LIB_DIR}/RELEASE_NOTES.txt ${PREFIX}/${DOC_DIR}
 
 
 # Examples
-install -d -m 0755 ${EXAMPLES_DIR}
-cp -a ${BUILD_DIR}/examples/* ${EXAMPLES_DIR}
+install -d -m 0755 ${PREFIX}/${EXAMPLES_DIR}
+cp -a ${BUILD_DIR}/examples/* ${PREFIX}/${EXAMPLES_DIR}
 
 # Python libs
-install -d -m 0755 ${PYTHON_DIR}
-(cd $BUILD_DIR/lib/py && tar cf - .) | (cd ${PYTHON_DIR} && tar xf -)
-chmod 755 ${PYTHON_DIR}/hive_metastore/*-remote
+install -d -m 0755 ${PREFIX}/${PYTHON_DIR}
+(cd $BUILD_DIR/lib/py && tar cf - .) | (cd ${PREFIX}/${PYTHON_DIR} && tar xf -)
+chmod 755 ${PREFIX}/${PYTHON_DIR}/hive_metastore/*-remote
 
 # Dir for Metastore DB
 install -d -m 1777 $PREFIX/var/lib/hive/metastore/
 
 # Remove some source which gets installed
-rm -rf ${LIB_DIR}/lib/php/ext
+rm -rf ${PREFIX}/${LIB_DIR}/lib/php/ext

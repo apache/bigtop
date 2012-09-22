@@ -52,7 +52,7 @@ install-indep: metastore server
 	sh debian/install_hive.sh \
 	  --prefix=debian/${hive_pkg_name} \
 	  --build-dir=src/build/dist \
-	  --doc-dir=debian/${hive_pkg_name}/usr/share/doc/${hive_pkg_name}
+	  --doc-dir=/usr/share/doc/${hive_pkg_name}
 	# We need to get rid of jars that happen to be shipped in other packages
 	rm -f debian/${hive_pkg_name}/usr/lib/hive/lib/hbase-*.jar debian/${hive_pkg_name}/usr/lib/hive/lib/zookeeper-*.jar
 	mkdir -p debian/${hive_pkg_name}-hbase/usr/lib/hive/lib
