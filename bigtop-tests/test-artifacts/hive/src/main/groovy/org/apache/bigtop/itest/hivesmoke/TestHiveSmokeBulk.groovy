@@ -28,6 +28,10 @@ import org.junit.runners.Parameterized.Parameters
 
 @RunWith(OrderedParameterized.class)
 public class TestHiveSmokeBulk {
+  private static String test_include =
+    System.getProperty("org.apache.bigtop.itest.hivesmoke.TestHiveSmokeBulk.test_include");
+  private static String test_exclude =
+    System.getProperty("org.apache.bigtop.itest.hivesmoke.TestHiveSmokeBulk.test_exclude");
   static Shell sh = new Shell("/bin/bash -s");
   static HiveBulkScriptExecutor scripts = new HiveBulkScriptExecutor("scripts/ql");
 
@@ -67,8 +71,16 @@ public class TestHiveSmokeBulk {
 
   @Parameters
   public static Map<String, Object[]> readTestCases() {
+    List<String> tests;
+    if (test_include != null) {
+      tests = scripts.getScripts().intersect(Arrays.asList(test_include.split(",")));
+    } else if (test_exclude != null) {
+      tests = scripts.getScripts() - Arrays.asList(test_exclude.split(","));
+    } else {
+      tests = scripts.getScripts();
+    }
     Map res = [:];
-    scripts.getScripts().collect { 
+    tests.each {
       res[it] = ([it] as String[]);
     };
     return res;
