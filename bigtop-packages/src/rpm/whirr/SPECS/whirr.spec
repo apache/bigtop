@@ -61,7 +61,7 @@ bash %{SOURCE1}
 cp $RPM_SOURCE_DIR/whirr.1 .
 bash %{SOURCE2} \
           --build-dir=build \
-	  --doc-dir=$RPM_BUILD_ROOT%{doc_whirr} \
+	  --doc-dir=%{doc_whirr} \
           --prefix=$RPM_BUILD_ROOT
 
 %files 

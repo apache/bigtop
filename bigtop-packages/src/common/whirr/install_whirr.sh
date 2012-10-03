@@ -29,7 +29,6 @@ usage: $0 <options>
      --lib-dir=DIR               path to install Whirr home [/usr/lib/whirr]
      --installed-lib-dir=DIR     path where lib-dir will end up on target system
      --bin-dir=DIR               path to install bins [/usr/bin]
-     --examples-dir=DIR          path to install examples [doc-dir/examples]
      ... [ see source for more similar options ]
   "
   exit 1
@@ -43,7 +42,6 @@ OPTS=$(getopt \
   -l 'lib-dir:' \
   -l 'installed-lib-dir:' \
   -l 'bin-dir:' \
-  -l 'examples-dir:' \
   -l 'build-dir:' -- "$@")
 
 if [ $? != 0 ] ; then
@@ -71,9 +69,6 @@ while true ; do
         --bin-dir)
         BIN_DIR=$2 ; shift 2
         ;;
-        --examples-dir)
-        EXAMPLES_DIR=$2 ; shift 2
-        ;;
         --)
         shift ; break
         ;;
@@ -92,20 +87,19 @@ for var in PREFIX BUILD_DIR ; do
   fi
 done
 
-MAN_DIR=$PREFIX/usr/share/man/man1
-DOC_DIR=${DOC_DIR:-$PREFIX/usr/share/doc/whirr}
-LIB_DIR=${LIB_DIR:-$PREFIX/usr/lib/whirr}
+MAN_DIR=/usr/share/man/man1
+DOC_DIR=${DOC_DIR:-/usr/share/doc/whirr}
+LIB_DIR=${LIB_DIR:-/usr/lib/whirr}
 INSTALLED_LIB_DIR=${INSTALLED_LIB_DIR:-/usr/lib/whirr}
-EXAMPLES_DIR=${EXAMPLES_DIR:-$DOC_DIR/examples}
-BIN_DIR=${BIN_DIR:-$PREFIX/usr/bin}
+BIN_DIR=${BIN_DIR:-/usr/bin}
 
 # First we'll move everything into lib
-install -d -m 0755 $LIB_DIR
-(cd $BUILD_DIR && tar -cf - .) | (cd $LIB_DIR && tar -xf -)
+install -d -m 0755 $PREFIX/$LIB_DIR
+(cd $BUILD_DIR && tar -cf - .) | (cd $PREFIX/$LIB_DIR && tar -xf -)
 
 # Copy in the /usr/bin/whirr wrapper
-install -d -m 0755 $BIN_DIR
-cat > $BIN_DIR/whirr <<EOF
+install -d -m 0755 $PREFIX/$BIN_DIR
+cat > $PREFIX/$BIN_DIR/whirr <<EOF
 #!/bin/sh
 
 # Autodetect JAVA_HOME if not defined
@@ -117,20 +111,20 @@ fi
 
 exec $INSTALLED_LIB_DIR/bin/whirr "\$@"
 EOF
-chmod 755 $BIN_DIR/whirr
+chmod 755 $PREFIX/$BIN_DIR/whirr
 
-install -d -m 0755 $MAN_DIR
-gzip -c whirr.1 > $MAN_DIR/whirr.1.gz
+install -d -m 0755 $PREFIX/$MAN_DIR
+gzip -c whirr.1 > $PREFIX/$MAN_DIR/whirr.1.gz
 
 # Move the docs, but leave a symlink in place for compat. reasons
-install -d -m 0755 $DOC_DIR
-mv $LIB_DIR/docs/* $DOC_DIR
-mv $LIB_DIR/{NOTICE.txt,LICENSE.txt,BUILD.txt,CHANGES.txt,doap_Whirr.rdf,README.txt} $DOC_DIR
-rmdir $LIB_DIR/docs
-ln -s /${DOC_DIR/#$PREFIX/} $LIB_DIR/docs
+install -d -m 0755 $PREFIX/$DOC_DIR
+mv $PREFIX/$LIB_DIR/docs/* $PREFIX/$DOC_DIR
+mv $PREFIX/$LIB_DIR/{NOTICE.txt,LICENSE.txt,BUILD.txt,CHANGES.txt,doap_Whirr.rdf,README.txt} $PREFIX/$DOC_DIR
+rmdir $PREFIX/$LIB_DIR/docs
+ln -s /${DOC_DIR/#$PREFIX/} $PREFIX/$LIB_DIR/docs
 
 # Remove some bits which sould not be shipped.
 for dir in src services pom.xml patch-stamp examples debian core cli build-tools bigtop-empty 
 do
-  rm -rf $LIB_DIR/$dir
+  rm -rf $PREFIX/$LIB_DIR/$dir
 done

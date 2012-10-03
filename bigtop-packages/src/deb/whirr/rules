@@ -55,7 +55,7 @@ install-indep:
 	dh_testroot
 	bash -x debian/install_whirr.sh \
 	  --build-dir=build \
-	  --doc-dir=debian/whirr/usr/share/doc/whirr \
+	  --doc-dir=/usr/share/doc/whirr \
 	  --prefix=debian/whirr
 	(dh_lintian) || /bin/true
 
