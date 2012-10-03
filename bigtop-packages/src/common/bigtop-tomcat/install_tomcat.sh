@@ -76,16 +76,15 @@ for var in PREFIX BUILD_DIR ; do
   fi
 done
 
-MAN_DIR=$PREFIX/usr/share/man/man1
-DOC_DIR=${DOC_DIR:-$PREFIX/usr/share/doc/bigtop-tomcat}
-LIB_DIR=${LIB_DIR:-$PREFIX/usr/lib/bigtop-tomcat}
+DOC_DIR=${DOC_DIR:-/usr/share/doc/bigtop-tomcat}
+LIB_DIR=${LIB_DIR:-/usr/lib/bigtop-tomcat}
 
 # First we'll move everything into lib
-install -d -m 0755 $LIB_DIR
-(cd $BUILD_DIR && tar -cf - .) | (cd $LIB_DIR && tar -xf -)
+install -d -m 0755 $PREFIX/$LIB_DIR
+(cd $BUILD_DIR && tar -cf - .) | (cd $PREFIX/$LIB_DIR && tar -xf -)
 
-rm -rf $LIB_DIR/webapps
-mv -f $LIB_DIR/conf $LIB_DIR/conf.template
+rm -rf $PREFIX/$LIB_DIR/webapps
+mv -f $PREFIX/$LIB_DIR/conf $PREFIX/$LIB_DIR/conf.template
 
-install -d -m 0755 $DOC_DIR
-mv $LIB_DIR/{RUNNING.txt,RELEASE-NOTES,NOTICE,LICENSE} $DOC_DIR
+install -d -m 0755 $PREFIX/$DOC_DIR
+mv $PREFIX/$LIB_DIR/{RUNNING.txt,RELEASE-NOTES,NOTICE,LICENSE} $PREFIX/$DOC_DIR

@@ -46,7 +46,7 @@ install-indep:
 	dh_testroot
 	bash -x debian/install_tomcat.sh                             \
 	  --build-dir=build                                          \
-	  --doc-dir=debian/bigtop-tomcat/usr/share/doc/bigtop-tomcat \
+	  --doc-dir=/usr/share/doc/bigtop-tomcat \
 	  --prefix=debian/bigtop-tomcat
 	(dh_lintian) || /bin/true
 
