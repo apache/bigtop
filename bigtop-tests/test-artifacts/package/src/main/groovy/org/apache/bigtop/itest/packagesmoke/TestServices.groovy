@@ -76,10 +76,8 @@ class TestServices {
   @RunStage(level=-1)
   @Test
   void createState() {
-    svcs.each {
-      checkThat("failed to configure service ${it.getName()}",
-                verifier.config(), equalTo(true));
-    }
+    checkThat("failed to configure service ${svcs.get(0).getName()}",
+              verifier.config(), equalTo(true));
 
     svcs.each {
       checkThat("service ${it.getName()} failed to start",
