@@ -92,6 +92,32 @@ xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd
       <li>devscripts</li>
       <li>reprepro</li>
     </ul>
+    <subsection name="Continuous Integration"></subsection>
+    <p>
+      Apache Bigtop uses Jenkins for continuous integration testing (you can learn more about Jenkins <a href="http://jenkins-ci.org/">here</a>).
+      There are 2 Jenkins servers currently running for the project:
+    </p>
+    <ul>
+      <li><a href="https://builds.apache.org/view/A-F/view/Bigtop/">https://builds.apache.org/view/A-F/view/Bigtop/</a></li>
+      <li><a href="http://bigtop01.cloudera.org:8080/">http://bigtop01.cloudera.org:8080/</a></li>
+    </ul>
+    <p>
+      The Apache Jenkins server runs the "Bigtop-trunk" job whenever code is committed to the trunk branch, which in turn runs several test jobs.
+    </p>
+    <p>
+      The Cloudera Jenkins server runs daily jobs for the 0.3 and trunk branches, and each job has a configuration for each supported operating system.
+      In each branch there is a job to build each component, a job to run package tests and a job to build package repositories.
+      There are also jobs for building virtual machine images as well as the 2 most recent releases and other miscellaneous tasks for various RCs and tests.
+      For example:
+    </p>
+    <ul>
+      <li><a href="http://bigtop01.cloudera.org:8080/view/Bigtop-trunk/job/Bigtop-trunk-All/">Bigtop-trunk-All</a>: Runs all of the jobs for the trunk branch.</li>
+      <li><a href="http://bigtop01.cloudera.org:8080/view/Bigtop-trunk/job/Bigtop-trunk-HBase/">Bigtop-trunk-HBase</a>: Builds the HBase packages only.</li>
+      <li><a href="http://bigtop01.cloudera.org:8080/view/Bigtop-trunk/job/Bigtop-trunk-packagetest/">Bigtop-trunk-packagetest</a>: Runs the package tests.</li>
+      <li><a href="http://bigtop01.cloudera.org:8080/view/Bigtop-trunk/job/Bigtop-trunk-repository/">Bigtop-trunk-repository</a>: Builds an APT or YUM package repository.</li>
+      <li><a href="http://bigtop01.cloudera.org:8080/view/Bigtop-trunk/job/Bigtop-0.4.0/">Bigtop-0.4.0</a>: Builds the 0.4.0 release.</li>
+      <li><a href="http://bigtop01.cloudera.org:8080/job/Bigtop-VM-matrix/">Bigtop-VM-matrix</a>: Builds virtual machines of branches trunk and 0.3 for KVM, VMWare and VirtualBox.</li>
+    </ul>
     <subsection name="Disclaimer"></subsection>
     <p>
        Apache Bigtop is an effort undergoing incubation at The Apache Software Foundation (ASF), 
