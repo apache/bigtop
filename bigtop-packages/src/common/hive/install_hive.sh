@@ -139,6 +139,10 @@ done
 # Config
 install -d -m 0755 ${PREFIX}${CONF_DIST_DIR}
 (cd ${BUILD_DIR}/conf && tar -cf - .)|(cd ${PREFIX}${CONF_DIST_DIR} && tar -xf -)
+for template in hive-exec-log4j.properties hive-log4j.properties
+do
+  mv ${PREFIX}${CONF_DIST_DIR}/${template}.template ${PREFIX}${CONF_DIST_DIR}/${template}
+done
 cp hive-site.xml ${PREFIX}${CONF_DIST_DIR}
 
 ln -s ${CONF_DIR}/conf $PREFIX/$LIB_DIR/conf

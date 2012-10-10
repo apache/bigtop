@@ -72,10 +72,10 @@ USER="hive"
 hive_start() {
     [ -x $EXE_FILE ] || exit $ERROR_PROGRAM_NOT_INSTALLED
 
+    exec_env="HADOOP_OPTS=\"-Dhive.log.dir=`dirname $LOG_FILE` -Dhive.log.file=${NAME}.log -Dhive.log.threshold=INFO\""
     service_name="@HIVE_DAEMON@"
     if [ $service_name = "server" ] ; then
       service_name="hiveserver"
-      exec_env="HADOOP_OPTS=\"-Dhive.log.dir=`dirname $LOG_FILE`\""
     fi
 
     if [ -x /sbin/runuser ]; then
