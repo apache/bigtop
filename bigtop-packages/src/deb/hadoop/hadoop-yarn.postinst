@@ -27,6 +27,7 @@ case "$1" in
 	chown yarn:hadoop /var/log/hadoop-yarn /var/run/hadoop-yarn
 	chmod g+w /var/log/hadoop-yarn /var/run/hadoop-yarn
 	chown yarn:hadoop /var/lib/hadoop-yarn/ /var/lib/hadoop-yarn/cache
+	chmod 0755 /var/lib/hadoop-yarn
 	chmod 1777 /var/lib/hadoop-yarn/cache
     ;;
 

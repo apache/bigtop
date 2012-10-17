@@ -25,6 +25,7 @@ case "$1" in
 	chgrp -R hadoop /var/log/hadoop-hdfs /var/run/hadoop-hdfs
 	chmod g+w /var/run/hadoop-hdfs /var/log/hadoop-hdfs
 	chown hdfs:hadoop /var/lib/hadoop-hdfs/ /var/lib/hadoop-hdfs/cache
+	chmod 0755 /var/lib/hadoop-hdfs
 	chmod 1777 /var/lib/hadoop-hdfs/cache
     ;;
 

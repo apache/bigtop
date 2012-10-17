@@ -566,7 +566,7 @@ fi
 %{bin_hadoop}/yarn
 %attr(0775,yarn,hadoop) %{run_yarn}
 %attr(0775,yarn,hadoop) %{log_yarn}
-%attr(0775,yarn,hadoop) %{state_yarn}
+%attr(0755,yarn,hadoop) %{state_yarn}
 %attr(1777,yarn,hadoop) %{state_yarn}/cache
 
 %files hdfs
@@ -579,7 +579,7 @@ fi
 %{bin_hadoop}/hdfs
 %attr(0775,hdfs,hadoop) %{run_hdfs}
 %attr(0775,hdfs,hadoop) %{log_hdfs}
-%attr(0775,hdfs,hadoop) %{state_hdfs}
+%attr(0755,hdfs,hadoop) %{state_hdfs}
 %attr(1777,hdfs,hadoop) %{state_hdfs}/cache
 
 %files mapreduce

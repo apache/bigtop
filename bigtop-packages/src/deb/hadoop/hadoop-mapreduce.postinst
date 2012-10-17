@@ -25,6 +25,7 @@ case "$1" in
 	chgrp -R hadoop /var/log/hadoop-mapreduce /var/run/hadoop-mapreduce
 	chmod g+w /var/run/hadoop-mapreduce /var/log/hadoop-mapreduce
 	chown mapred:hadoop /var/lib/hadoop-mapreduce /var/lib/hadoop-mapreduce/cache
+	chmod 0755 /var/lib/hadoop-mapreduce
 	chmod 1777 /var/lib/hadoop-mapreduce/cache
     ;;
 
