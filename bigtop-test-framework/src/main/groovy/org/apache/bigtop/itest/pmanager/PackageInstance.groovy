@@ -57,8 +57,6 @@ abstract class PackageInstance {
   abstract public int remove();
   /**
    * Re-sync metadata associated with this package with the underlying package management system
-   *
-   * @return int return code of the operation: o in case of success, non-zero otherwise
    */
   abstract public void refresh();
   /**
