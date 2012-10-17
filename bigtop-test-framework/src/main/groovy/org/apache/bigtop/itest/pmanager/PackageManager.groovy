@@ -95,7 +95,6 @@ public abstract class PackageManager {
    * Search for a package in all registered repositories
    *
    * @param name name of the package (inexact matches are ok)
-   * @param version a particular version of the package
    * @return list of matching packages found in all registered repositories (can be empty)
    */
   abstract public List<PackageInstance> search(String name)
@@ -103,7 +102,6 @@ public abstract class PackageManager {
    * Search for a package in all registered repositories
    *
    * @param name name of the package (inexact matches are ok)
-   * @param version a particular version of the package
    * @return list of matching packages found in all registered repositories (can be empty)
    */
   abstract public List<PackageInstance> lookup(String name)
