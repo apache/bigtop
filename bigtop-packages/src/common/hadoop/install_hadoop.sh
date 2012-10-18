@@ -201,7 +201,7 @@ cp ${BUILD_DIR}/share/hadoop/tools/lib/*.jar ${MAPREDUCE_DIR}
 install -d -m 0755 ${HDFS_DIR}
 cp ${BUILD_DIR}/share/hadoop/hdfs/*.jar ${HDFS_DIR}/
 install -d -m 0755 ${YARN_DIR}
-cp ${BUILD_DIR}/share/hadoop/mapreduce/hadoop-yarn*.jar ${YARN_DIR}/
+cp ${BUILD_DIR}/share/hadoop/yarn/hadoop-yarn*.jar ${YARN_DIR}/
 chmod 644 ${HADOOP_DIR}/*.jar ${MAPREDUCE_DIR}/*.jar ${HDFS_DIR}/*.jar ${YARN_DIR}/*.jar
 
 # lib jars
