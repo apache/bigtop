@@ -164,7 +164,7 @@ Source21: yarn.default
 Source22: hadoop-layout.sh
 Source23: hadoop-hdfs-zkfc.svc
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
-BuildRequires: python >= 2.4, git, fuse-devel,fuse, automake, autoconf
+BuildRequires: python >= 2.4, git, fuse-devel, fuse, cmake
 Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils, zookeeper >= 3.4.0
 Requires: psmisc, %{netcat_package}
 # Sadly, Sun/Oracle JDK in RPM form doesn't provide libjvm.so, which means we have
@@ -174,7 +174,7 @@ AutoReq: no
 Provides: hadoop
 
 %if  %{?suse_version:1}0
-BuildRequires: libfuse2, libopenssl-devel, gcc-c++, ant, ant-nodeps, ant-trax
+BuildRequires: pkg-config, libfuse2, libopenssl-devel, gcc-c++, ant, ant-nodeps, ant-trax
 # Required for init scripts
 Requires: sh-utils, insserv
 %endif
@@ -182,13 +182,13 @@ Requires: sh-utils, insserv
 # CentOS 5 does not have any dist macro
 # So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
 %if %{!?suse_version:1}0 && %{!?mgaversion:1}0
-BuildRequires: fuse-libs, libtool, redhat-rpm-config, lzo-devel, openssl-devel
+BuildRequires: pkgconfig, fuse-libs, libtool, redhat-rpm-config, lzo-devel, openssl-devel
 # Required for init scripts
 Requires: sh-utils, redhat-lsb
 %endif
 
 %if  0%{?mgaversion}
-BuildRequires: libfuse-devel, libfuse2 , libopenssl-devel, gcc-c++, ant, libtool, automake, autoconf, liblzo-devel, zlib-devel
+BuildRequires: pkgconfig, libfuse-devel, libfuse2 , libopenssl-devel, gcc-c++, ant, liblzo-devel, zlib-devel
 Requires: chkconfig, xinetd-simple-services, zlib, initscripts
 %endif
 
