@@ -20,4 +20,5 @@ set -ex
 
 mvn -DskipTests -Dhadoop.profile=23 \
   -Dhadoop.version=$HADOOP_VERSION  \
+  -Dhbase.version=$HBASE_VERSION    \
   clean install "$@"
