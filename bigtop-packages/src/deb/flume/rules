@@ -45,7 +45,6 @@ override_dh_auto_install:
 	install -d -m 0755 debian/flume-node/etc/default
 	cp debian/flume-node.default debian/flume-node/etc/default/flume-node
 	# Remove hadoop dependency and instead symlink in the hadoop jar
-	rm debian/flume/usr/lib/flume/lib/hadoop-*
-	ln -s /usr/lib/hadoop/hadoop-common.jar debian/flume/usr/lib/flume/lib/hadoop-common.jar
-	ln -s /usr/lib/hadoop/hadoop-auth.jar debian/flume/usr/lib/flume/lib/hadoop-auth.jar
-
+	# rm debian/flume/usr/lib/flume/lib/hadoop-*
+	# ln -s /usr/lib/hadoop/hadoop-common.jar debian/flume/usr/lib/flume/lib/hadoop-common.jar
+	# ln -s /usr/lib/hadoop/hadoop-auth.jar debian/flume/usr/lib/flume/lib/hadoop-auth.jar

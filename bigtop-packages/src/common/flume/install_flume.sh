@@ -97,7 +97,7 @@ ETC_DIR=${ETC_DIR:-/etc/flume}
 install -d -m 0755 ${PREFIX}/${LIB_DIR}
 
 (cd ${PREFIX}/${LIB_DIR} &&
-  tar --strip-components=1 -xvzf ${BUILD_DIR}/flume-ng-dist/target/flume-ng-dist-*-dist.tar.gz)
+  tar --strip-components=1 -xvzf ${BUILD_DIR}/flume-ng-dist/target/*flume-*-dist.tar.gz)
 
 # Take out useless things or we've installed elsewhere
 for x in flume-ng-* \
@@ -148,6 +148,15 @@ unlink $PREFIX/$LIB_DIR/conf || /bin/true
 ln -s /etc/flume/conf $PREFIX/$LIB_DIR/conf
 
 # Docs
+rm -rf $PREFIX/$LIB_DIR/docs
 install -d -m 0755 $PREFIX/${DOC_DIR}
-cp -r CHANGELOG DEVNOTES DISCLAIMER LICENSE NOTICE README RELEASE-NOTES $PREFIX/${DOC_DIR}
-
+for x in CHANGELOG \
+          DEVNOTES \
+          LICENSE \
+          NOTICE \
+          README \
+          RELEASE-NOTES ; do
+  if [ -x $x ] ; then
+    cp -r $x $PREFIX/${DOC_DIR}
+  fi
+done
