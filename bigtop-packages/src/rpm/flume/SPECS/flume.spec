@@ -135,7 +135,7 @@ chmod 755 $init_file
 %__cp %{SOURCE4} $RPM_BUILD_ROOT/etc/default/%{name}-node
 
 # Get rid of hadoop jar, and instead link to installed hadoop
-rm $RPM_BUILD_ROOT/usr/lib/flume/lib/hadoop-*
+rm $RPM_BUILD_ROOT/usr/lib/flume/lib/hadoop-* || true
 ln -s /usr/lib/hadoop/hadoop-common.jar $RPM_BUILD_ROOT/usr/lib/flume/lib/hadoop-common.jar
 ln -s /usr/lib/hadoop/hadoop-auth.jar $RPM_BUILD_ROOT/usr/lib/flume/lib/hadoop-auth.jar
 
