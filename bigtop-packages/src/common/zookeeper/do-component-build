@@ -16,6 +16,9 @@
 
 set -ex
 
-ant -f build.xml package "$@"
+. `dirname ${0}`/bigtop.bom
 
+ant -Dversion=$ZOOKEEPER_VERSION -f build.xml package "$@"
 
+mvn install:install-file -DgroupId=org.apache.zookeeper -DartifactId=zookeeper -Dversion=$ZOOKEEPER_VERSION -Dpackaging=jar -Dfile=build/zookeeper-$ZOOKEEPER_VERSION.jar
+mvn install:install-file -DgroupId=org.apache.zookeeper -DartifactId=zookeeper -Dversion=$ZOOKEEPER_VERSION -Dclassifier=tests -Dpackaging=jar -Dfile=build/zookeeper-$ZOOKEEPER_VERSION-test.jar
