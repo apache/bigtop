@@ -17,7 +17,7 @@ Source: hue
 Section: misc
 Priority: extra
 Maintainer: Apache Bigtopr <bigtop-dev@incubator.apache.org>
-Build-Depends: debhelper (>= 7), ant, python2.4-dev | python2.5-dev | python2.6-dev | python2.7-dev, libxml2-dev, libxslt1-dev, zlib1g-dev, libsqlite3-dev, libldap2-dev, libsasl2-dev, libmysqlclient-dev, make, python-setuptools
+Build-Depends: debhelper (>= 7.0.50~), ant, python2.4-dev | python2.5-dev | python2.6-dev | python2.7-dev, libxml2-dev, libxslt1-dev, zlib1g-dev, libsqlite3-dev, libldap2-dev, libsasl2-dev, libmysqlclient-dev, make, python-setuptools
 Depends: libsasl2, libsqlite3, zlib1g, libxslt1, libxml2Standards-Version: 3.8.0
 Homepage: http://github.com/cloudera/hue
 

@@ -25,52 +25,12 @@ export DH_OPTIONS
 
 DISTRO_CODENAME=$(shell lsb_release -sc)
 
-patch: patch-stamp
-patch-stamp:	
-	touch $@
+%:
+	dh $@
 
-build:
-	dh_testdir
-	dh_clean -k
-	
-
-build-indep: build-indep-stamp
-build-indep-stamp: patch-stamp
-	touch $@
-
-clean:	
-	dh_testdir
-	dh_testroot
-	rm -f *-stamp
-	dh_clean
-	find debian -name .\*swp -exec rm -f {} \;
-
-install: install-indep
-install-indep:	
-	dh_installdirs 
+override_dh_auto_install:
 	# Copy repo file
 	install -d -p -m 755 debian/bigtop-utils/usr/lib/bigtop-utils/
 	install -p -m 755 debian/bigtop-detect-javahome debian/bigtop-utils/usr/lib/bigtop-utils/
 	install -d -p -m 755 debian/bigtop-utils/etc/default
 	install -p -m 644 debian/bigtop-utils.default debian/bigtop-utils/etc/default/bigtop-utils
-	dh_install
-
-
-binary-common:
-	dh_testdir
-	dh_testroot
-	dh_compress
-	dh_fixperms
-	dh_makeshlibs
-	dh_installdocs
-	dh_installdeb
-	dh_shlibdeps
-	dh_gencontrol
-	dh_md5sums
-	dh_builddeb
-
-binary-indep: build install install-indep
-	$(MAKE) -f debian/rules DH_OPTIONS=-i binary-common
-binary: binary-indep
-
-.PHONY: clean install-indep binary-arc
