@@ -212,7 +212,7 @@ cp ${BUILD_DIR}/share/hadoop/mapreduce/lib/*.jar ${MAPREDUCE_DIR}/lib
 install -d -m 0755 ${HDFS_DIR}/lib 
 cp ${BUILD_DIR}/share/hadoop/hdfs/lib/*.jar ${HDFS_DIR}/lib
 install -d -m 0755 ${YARN_DIR}/lib
-cp ${BUILD_DIR}/share/hadoop/mapreduce/lib/*.jar ${YARN_DIR}/lib
+cp ${BUILD_DIR}/share/hadoop/yarn/lib/*.jar ${YARN_DIR}/lib
 chmod 644 ${HADOOP_DIR}/lib/*.jar ${MAPREDUCE_DIR}/lib/*.jar ${HDFS_DIR}/lib/*.jar ${YARN_DIR}/lib/*.jar
 
 # Install webapps
