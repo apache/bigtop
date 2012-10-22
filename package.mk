@@ -109,6 +109,7 @@ $(BUILD_DIR)/%/.sdeb:
 	mkdir -p $($(PKG)_OUTPUT_DIR)/
 	for file in $($(PKG)_PKG_NAME)_$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP)-$($(PKG)_RELEASE).dsc \
                     $($(PKG)_PKG_NAME)_$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP)-$($(PKG)_RELEASE).diff.gz \
+                    $($(PKG)_PKG_NAME)_$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP)-$($(PKG)_RELEASE).debian.tar.gz \
                     $($(PKG)_PKG_NAME)_$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP)-$($(PKG)_RELEASE)_source.changes \
                     $($(PKG)_PKG_NAME)_$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP).orig.tar.gz ; \
             do [ -e $(PKG_BUILD_DIR)/deb/$$file ] && cp $(PKG_BUILD_DIR)/deb/$$file $($(PKG)_OUTPUT_DIR); \

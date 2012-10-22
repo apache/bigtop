@@ -24,32 +24,17 @@ export DH_VERBOSE=1
 # This has to be exported to make some magic below work.
 export DH_OPTIONS
 
-hadoop_home=/usr/lib/hadoop
 zookeeper_home=/usr/lib/zookeeper
 hbase_pkg_name=hbase
 
-patch: patch-stamp
-patch-stamp:	
-	touch $@
+%:
+	dh $@
 
-clean:	
-	dh_testdir
-	dh_testroot
-	rm -f *-stamp
-	dh_clean
-	find debian -name .\*swp -exec rm -f {} \;
-
-build: patch
-	dh_testdir
+override_dh_auto_build:
 	bash debian/do-component-build -Dmaven.repo.local=${HOME}/.m2/repository  
-	touch $@
 
 	
-install: build
-	dh_testdir
-	dh_testroot
-	dh_clean -k
-	dh_installdirs
+override_dh_auto_install:
 	cp debian/hbase.default debian/${hbase_pkg_name}/etc/default/${hbase_pkg_name}
 	sh -x debian/install_hbase.sh \
 		--build-dir=build \
@@ -71,39 +56,4 @@ install: build
 	find debian/tmp/usr/lib/${hbase_pkg_name}/bin debian/tmp/usr/lib/${hbase_pkg_name}/lib -name \*.rb -exec chmod 644 {} \;
 	### webapps should not be executable either
 	find debian/tmp/usr/lib/${hbase_pkg_name}/hbase-webapps -type f -exec chmod 644 {} \;
-
-	(dh_lintian) || /bin/true
-
-	touch $@
-
-install-indep:
-	dh_install --sourcedir=debian/tmp
 	sh debian/install_init_scripts.sh
-
-binary-common:	
-	dh_testdir
-	dh_testroot
-	dh_installchangelogs
-	dh_installdocs
-	dh_installman
-	dh_link
-	dh_strip
-	dh_compress
-	dh_fixperms
-	dh_makeshlibs
-	dh_installinit --onlyscripts
-	# dh_installinit has a bug whereby it makes preinst/postinst files
-	# even for subpackages that don't have an init script!
-	rm -f debian/${hbase_pkg_name}-doc*debhelper debian/${hbase_pkg_name}.*debhelper || :
-
-	dh_installdeb
-	dh_shlibdeps
-	dh_gencontrol
-	dh_md5sums
-	dh_builddeb
-
-binary-indep: build install install-indep
-	$(MAKE) -f debian/rules DH_OPTIONS=-i binary-common
-
-binary: binary-indep
-.PHONY: clean build binary-indep binary install configure

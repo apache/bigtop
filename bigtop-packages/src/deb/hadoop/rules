@@ -23,6 +23,8 @@
 # This has to be exported to make some magic below work.
 export DH_OPTIONS
 
+%:
+	dh $@
 
 hadoop_version=${HADOOP_BASE_VERSION}
 
@@ -33,31 +35,23 @@ ifeq (${DEB_BUILD_ARCH},i386)
   native_dir=Linux-i386-32
 endif
 
-patch: patch-stamp
-patch-stamp:	
-	touch $@
-
-#Architecture
-build: build-stamp
-build-stamp: patch-stamp
-	dh_testdir
+override_dh_auto_build:
 	env HADOOP_VERSION=${hadoop_version} HADOOP_ARCH=${native_dir} \
-		bash debian/do-component-build -Divy.home=${HOME}/.ivy2
-	touch $@
+        bash debian/do-component-build -Divy.home=${HOME}/.ivy2
 
-clean:  
-	dh_testdir
-	dh_testroot
-	rm -f build-arch-stamp build-indep-stamp build-stamp
+hadoop_svcs=hdfs-namenode hdfs-secondarynamenode hdfs-datanode hdfs-zkfc \
+            yarn-resourcemanager yarn-nodemanager yarn-proxyserver \
+            mapreduce-historyserver httpfs
 
-	dh_clean
+$(hadoop_svcs): debian/init.d.tmpl
+	bash $< debian/hadoop-$@.svc > debian/hadoop-$@.init
+	cp debian/$(firstword $(subst -, ,$@)).default debian/tmp/etc/default/hadoop-$@
+	echo /etc/default/hadoop-$@ >> debian/hadoop-$@.install
+	# FIXME: workaround for BIGTOP-105
+	[ -f debian/hadoop-$@.postinst ] || cp debian/hadoop.daemon.postinst.tpl debian/hadoop-$@.postinst
+	sed -i -e "s|@HADOOP_DAEMON@|$@|" debian/hadoop-$@.postinst
 
-install: build
-	dh_testdir
-	dh_testroot
-	dh_clean -k
-	dh_installdirs
-
+override_dh_auto_install:
 	bash debian/install_hadoop.sh \
 	  --prefix=debian/tmp/ \
 	  --distro-dir=debian \
@@ -72,87 +66,22 @@ install: build
 	  --example-dir=debian/tmp/usr/share/doc/hadoop/examples \
 	  --native-build-string=${native_dir} \
 	  --installed-lib-dir=/usr/lib/hadoop
-
 	# Forcing Zookeeper dependency to be on the packaged jar
 	ln -sf /usr/lib/zookeeper/zookeeper.jar debian/tmp/usr/lib/hadoop/lib/zookeeper*.jar
 	# Workaround for BIGTOP-583
 	rm -f debian/tmp/usr/lib/hadoop-*/lib/slf4j-log4j12-*.jar
-
-# Run dh_lintian if we've got it - this doesn't exist on debhelper 6 (eg Ubuntu Hardy)
-	(dh_lintian) || /bin/true
-
-hadoop_svcs=hdfs-namenode hdfs-secondarynamenode hdfs-datanode hdfs-zkfc \
-            yarn-resourcemanager yarn-nodemanager yarn-proxyserver \
-            mapreduce-historyserver httpfs
-
-$(hadoop_svcs): debian/init.d.tmpl
-	bash $< debian/hadoop-$@.svc > debian/hadoop-$@.init
-	cp debian/$(firstword $(subst -, ,$@)).default debian/tmp/etc/default/hadoop-$@
-	echo /etc/default/hadoop-$@ >> debian/hadoop-$@.install
-	# FIXME: workaround for BIGTOP-105
-	[ -f debian/hadoop-$@.postinst ] || cp debian/hadoop.daemon.postinst.tpl debian/hadoop-$@.postinst
-	sed -i -e "s|@HADOOP_DAEMON@|$@|" debian/hadoop-$@.postinst
-
-install-indep: $(hadoop_svcs) 
 	# FIXME: BIGTOP-463
-	echo 'export JSVC_HOME=/usr/lib/bigtop-utils' >> debian/hadoop.default 
 	mkdir -p debian/tmp/etc/default
+	echo 'export JSVC_HOME=/usr/lib/bigtop-utils' >> debian/hadoop.default
 	cp debian/hadoop.default debian/tmp/etc/default/hadoop
-
-	dh_install --sourcedir=debian/tmp -i
-
-	rm -Rf debian/hadoop/usr/lib/hadoop/bin/fuse_dfs 
-#	rm -Rf debian/hadoop/usr/bin/hadoop-fuse-dfs
-	rm -Rf debian/hadoop/usr/lib/hadoop/contrib/fuse-dfs
-	rm -Rf debian/hadoop/usr/lib/hadoop/hdfs/contrib/fuse-dfs
-
-install-arch:
-	mkdir -p debian/tmp/etc/default
+	# Refactored from install-arch
 	cp debian/hadoop-fuse.default debian/tmp/etc/default/hadoop-fuse
 	mkdir -p debian/tmp/etc/security/limits.d
 	cp debian/hdfs.conf debian/yarn.conf debian/mapreduce.conf debian/tmp/etc/security/limits.d
-	dh_install --sourcedir=debian/tmp -s
 
-# Must not depend on anything. This is to be called by
-# binary-arch/binary-indep
-# in another 'make' thread.
-binary-common:  
-	dh_testdir
-	dh_testroot
-	#dh_installchangelogs CHANGES.txt -phadoop
-#	dh_installdocs   ## PL this line and the above/below are only temp
-#	#sh debian/append_licenses.sh
-#	dh_installexamples
-#	dh_installmenu
-#	dh_installdebconf
-#	dh_installlogrotate
-#	dh_installemacsen
-#	dh_installpam
-#	dh_installmime
-#	dh_python
-	dh_installinit
-#	dh_installcron
-#	dh_installinfo
-	dh_installman
-	dh_link
-	dh_strip
-	dh_compress
-#	dh_fixperms -Xtask-controller
-#	dh_perl
-	dh_makeshlibs
-	dh_installdeb
-	dh_shlibdeps
-	dh_gencontrol
-	dh_md5sums
-	dh_builddeb
-
-# Build architecture independant packages using the common target.
-binary-indep: build install install-indep
-	$(MAKE) -f debian/rules DH_OPTIONS=-i binary-common
-
-# Build architecture dependant packages using the common target.
-binary-arch: build install install-arch
-	$(MAKE) -f debian/rules DH_OPTIONS=-s binary-common
-
-binary: binary-arch binary-indep
-.PHONY: build clean binary-indep binary-arch binary install configure
+override_dh_install: $(hadoop_svcs)
+	dh_install
+	# Drop misc fuse_dfs directories
+	rm -Rf debian/hadoop/usr/lib/hadoop/bin/fuse_dfs 
+	rm -Rf debian/hadoop/usr/lib/hadoop/contrib/fuse-dfs
+	rm -Rf debian/hadoop/usr/lib/hadoop/hdfs/contrib/fuse-dfs

@@ -31,70 +31,13 @@ $(APPS:%=debian/hue-%.postinst): debian/hue-app.postinst.tpl
 $(APPS:%=debian/hue-%.prerm): debian/hue-app.prerm.tpl
 	sed -e 's#@APP@#$(patsubst debian/hue-%.prerm,%,$@)#'  < $< > $@
 
-configure: configure-stamp
-configure-stamp:
-	dh_testdir
-	touch configure-stamp
+%:
+	dh $@
 
-
-build: build-stamp
-
-build-stamp: configure-stamp
-	dh_testdir
+override_dh_auto_build:
 	bash -x debian/do-component-build -Dmaven.repo.local=${HOME}/.m2/repository
-	touch $@
 
-clean:
-	dh_testdir
-	dh_testroot
-	rm -f build-stamp configure-stamp debian/substvars
-	make clean
-	dh_clean
-
-install: build $(APPS:%=debian/hue-%.postinst) $(APPS:%=debian/hue-%.prerm)
-	dh_testdir
-	dh_testroot
-	dh_prep
-	dh_installdirs
+override_dh_auto_install: build $(APPS:%=debian/hue-%.postinst) $(APPS:%=debian/hue-%.prerm)
 	bash -x debian/install_hue.sh --build-dir=${PWD} --prefix=${PWD}/debian/tmp
 	sed -e 's,^,build:,;' debian/tmp/usr/lib/hue/Makefile.buildvars \
 	  | tr _ - >> debian/hue-common.substvars
-	dh_install --sourcedir=debian/tmp --list-missing
-
-# Build architecture-independent files here.
-binary-indep: install
-# We have nothing to do by default.
-
-# Build architecture-dependent files here.
-binary-arch: install
-	dh_testdir
-	dh_testroot
-	dh_installchangelogs
-	dh_installdocs
-	dh_installexamples
-#	dh_install
-#	dh_installmenu
-#	dh_installdebconf
-#	dh_installlogrotate
-#	dh_installemacsen
-#	dh_installpam
-#	dh_installmime
-#	dh_python
-	dh_installinit --no-start --name=hue
-#	dh_installcron
-#	dh_installinfo
-	dh_installman
-	dh_link
-	dh_strip
-	dh_compress
-	dh_fixperms
-#	dh_perl
-#	dh_makeshlibs
-	dh_installdeb
-	dh_shlibdeps
-	dh_gencontrol
-	dh_md5sums
-	dh_builddeb
-
-binary: binary-indep binary-arch
-.PHONY: build clean binary-indep binary-arch binary install configure
