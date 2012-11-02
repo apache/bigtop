@@ -1,0 +1,5 @@
+/etc/solr/conf.dist
+/etc/default
+/usr/lib/solr
+/var
+# /usr/bin/solr

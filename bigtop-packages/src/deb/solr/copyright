@@ -1,0 +1,15 @@
+Format: http://dep.debian.net/deps/dep5
+Source: http://lucene.apache.org/solr
+Upstream-Name: Apache Solr
+
+Files: *
+Copyright: 1999-2012, The Apache Software Foundation
+License: Apache-2.0
+
+Files debian/*
+Copyright: 2011, The Apache Software Foundation
+License: Apache-2.0
+
+License: Apache-2.0
+ On Debian systems, the complete text of the Apache 2.0 license
+ can be found in "/usr/share/common-licenses/Apache-2.0".
