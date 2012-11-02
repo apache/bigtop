@@ -53,6 +53,7 @@
     <giraph-smoke.version>0.5.0-incubating-SNAPSHOT</giraph-smoke.version>
     <hue-smoke.version>0.5.0-incubating-SNAPSHOT</hue-smoke.version>
     <package-smoke.version>0.5.0-incubating-SNAPSHOT</package-smoke.version>
+    <solr-smoke.version>0.5.0-incubating-SNAPSHOT</solr-smoke.version>
     <!--
       End of BOM definitions
     -->

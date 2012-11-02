@@ -54,6 +54,7 @@
     <hbase.version>0.92.1</hbase.version>
     <zookeeper.version>3.4.3</zookeeper.version>
     <giraph.version>0.2-SNAPSHOT</giraph.version>
+    <solr.version>4.0.0-BETA</solr.version>
   </properties>
 
   <dependencyManagement>
