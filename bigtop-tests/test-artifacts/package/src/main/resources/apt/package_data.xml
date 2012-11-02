@@ -51,6 +51,37 @@
       </flume-node>
     </services>
   </flume-node>
+  <solr>
+    <users>
+    </users>
+    <deps>
+    </deps>
+  </solr>
+  <solr-doc>
+    <users>
+    </users>
+    <deps>
+    </deps>
+  </solr-doc>
+  <solr-server>
+    <users>
+    </users>
+    <deps>
+      <slor>/self</slor>
+      <chkconfig/>
+      <initscripts/>
+    </deps>
+    <services>
+      <solr-server>
+        <runlevel>2</runlevel>
+        <runlevel>3</runlevel>
+        <runlevel>4</runlevel>
+        <runlevel>5</runlevel>
+        <oninstall>start</oninstall>
+        <configured>true</configured>
+      </solr-server>
+    </services>
+  </solr-server>
   <sqoop-metastore>
     <users>
       <sqoop>

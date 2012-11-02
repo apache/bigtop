@@ -68,6 +68,39 @@
       </flume-node>
     </services>
   </flume-node>
+  <solr>
+    <users>
+    </users>
+    <deps>
+      <tag name="/bin/sh"/>
+    </deps>
+  </solr>
+  <solr-doc>
+    <users>
+    </users>
+    <deps>
+    </deps>
+  </solr-doc>
+  <solr-server>
+    <users>
+    </users>
+    <deps>
+      <tag name="/bin/sh"/>
+      <tag name="/bin/bash"/>
+      <slor>&gt;=4.0.0.11-1.el5</slor>
+      <chkconfig/>
+      <initscripts/>
+    </deps>
+    <services>
+      <solr-server>
+        <runlevel>3</runlevel>
+        <runlevel>4</runlevel>
+        <runlevel>5</runlevel>
+        <oninstall>stop</oninstall>
+        <configured>true</configured>
+      </solr-server>
+    </services>
+  </solr-server>
   <sqoop>
     <deps>
       <tag name="/bin/bash"/>
