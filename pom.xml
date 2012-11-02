@@ -35,6 +35,11 @@
   <url>http://incubator.apache.org/bigtop</url>
   <inceptionYear>2011</inceptionYear>
 
+  <properties>
+    <groovy.version>1.8.6</groovy.version>
+    <groovy-eclipse-compiler.version>2.7.0-01</groovy-eclipse-compiler.version>
+  </properties>
+
   <build>
     <extensions>
       <extension>
