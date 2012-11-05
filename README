@@ -14,9 +14,9 @@
 # limitations under the License.
 # Welcome to Bigtop!
 
-Bigtop (http://incubator.apache.org/bigtop/) is a project for the development of
+Bigtop (http://bigtop.apache.org/) is a project for the development of
 packaging and tests of the Apache Hadoop (http://hadoop.apache.org/)
-ecosystem, currently in the Apache Incubator.
+ecosystem.
 
 The primary goal of Bigtop is to build a community around the
 packaging and interoperability testing of Hadoop-related
@@ -92,4 +92,4 @@ on iTest visit the iTest page
 
 ##  Contact us!
 
-You can get in touch with us on the Bigtop mailing lists (http://incubator.apache.org/bigtop/mail-lists.html).
+You can get in touch with us on the Bigtop mailing lists (http://bigtop.apache.org/mail-lists.html).

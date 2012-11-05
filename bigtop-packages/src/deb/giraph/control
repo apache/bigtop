@@ -16,7 +16,7 @@
 Source: giraph
 Section: misc
 Priority: extra
-Maintainer: Apache Bigtopr <bigtop-dev@incubator.apache.org>
+Maintainer: Apache Bigtopr <dev@bigtop.apache.org>
 Build-Depends: debhelper (>= 7.0.50~), git-core
 Standards-Version: 3.8.0
 Homepage: http://incubator.apache.org/giraph/

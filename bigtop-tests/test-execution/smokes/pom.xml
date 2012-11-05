@@ -22,7 +22,7 @@
   <parent>
     <groupId>org.apache.bigtop.itest</groupId>
     <artifactId>stacks-common</artifactId>
-    <version>0.5.0-incubating-SNAPSHOT</version>
+    <version>0.5.0-SNAPSHOT</version>
     <relativePath>../common/pom.xml</relativePath>
   </parent>
 
@@ -30,7 +30,7 @@
   <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>smoke-tests</artifactId>
   <packaging>pom</packaging>
-  <version>0.5.0-incubating-SNAPSHOT</version>
+  <version>0.5.0-SNAPSHOT</version>
   <name>hadoop-stack-validation</name>
 
   <properties>
@@ -42,18 +42,18 @@
     <pig.version>0.9.2</pig.version>
     <pig-smoke.version>0.9.2-SNAPSHOT</pig-smoke.version>
     <sqoop.version>1.4.1-incubating</sqoop.version>
-    <itest-conf.version>0.5.0-incubating-SNAPSHOT</itest-conf.version>
-    <itest-common.version>0.5.0-incubating-SNAPSHOT</itest-common.version>
-    <hadoop-smoke.version>0.5.0-incubating-SNAPSHOT</hadoop-smoke.version>
-    <flume-smoke.version>0.5.0-incubating-SNAPSHOT</flume-smoke.version>
-    <hbase-smoke.version>0.5.0-incubating-SNAPSHOT</hbase-smoke.version>
-    <hive-smoke.version>0.5.0-incubating-SNAPSHOT</hive-smoke.version>
-    <mahout-smoke.version>0.5.0-incubating-SNAPSHOT</mahout-smoke.version>
-    <oozie-smoke.version>0.5.0-incubating-SNAPSHOT</oozie-smoke.version>
-    <giraph-smoke.version>0.5.0-incubating-SNAPSHOT</giraph-smoke.version>
-    <hue-smoke.version>0.5.0-incubating-SNAPSHOT</hue-smoke.version>
-    <package-smoke.version>0.5.0-incubating-SNAPSHOT</package-smoke.version>
-    <solr-smoke.version>0.5.0-incubating-SNAPSHOT</solr-smoke.version>
+    <itest-conf.version>0.5.0-SNAPSHOT</itest-conf.version>
+    <itest-common.version>0.5.0-SNAPSHOT</itest-common.version>
+    <hadoop-smoke.version>0.5.0-SNAPSHOT</hadoop-smoke.version>
+    <flume-smoke.version>0.5.0-SNAPSHOT</flume-smoke.version>
+    <hbase-smoke.version>0.5.0-SNAPSHOT</hbase-smoke.version>
+    <hive-smoke.version>0.5.0-SNAPSHOT</hive-smoke.version>
+    <mahout-smoke.version>0.5.0-SNAPSHOT</mahout-smoke.version>
+    <oozie-smoke.version>0.5.0-SNAPSHOT</oozie-smoke.version>
+    <giraph-smoke.version>0.5.0-SNAPSHOT</giraph-smoke.version>
+    <hue-smoke.version>0.5.0-SNAPSHOT</hue-smoke.version>
+    <package-smoke.version>0.5.0-SNAPSHOT</package-smoke.version>
+    <solr-smoke.version>0.5.0-SNAPSHOT</solr-smoke.version>
     <!--
       End of BOM definitions
     -->

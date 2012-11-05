@@ -20,7 +20,7 @@
     <metadata>
       <summary>Collection of useful tools for Bigtop</summary>
       <description>This includes a collection of useful tools and files for Bigtop</description>
-      <url>http://incubator.apache.org/bigtop/</url>
+      <url>http://bigtop.apache.org/</url>
     </metadata>
   </bigtop-utils>
   <bigtop-jsvc>

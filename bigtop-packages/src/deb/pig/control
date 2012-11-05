@@ -16,7 +16,7 @@
 Source: pig
 Section: misc
 Priority: extra
-Maintainer: Bigtop <bigtop-dev@incubator.apache.org>
+Maintainer: Bigtop <dev@bigtop.apache.org>
 Build-Depends: debhelper (>= 7.0.50~), ant, ant-optional
 Standards-Version: 3.8.0
 Homepage: http://pig.apache.org/

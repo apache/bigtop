@@ -16,7 +16,7 @@
 Source: solr
 Section: misc
 Priority: extra
-Maintainer: Apache Bigtop <bigtop-dev@incubator.apache.org>
+Maintainer: Apache Bigtop <dev@bigtop.apache.org>
 Build-Depends: debhelper (>= 7.0.50~), git-core
 Standards-Version: 3.8.0
 Homepage: http://lucene.apache.org/solr

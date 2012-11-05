@@ -15,7 +15,7 @@
 Source: oozie
 Section: misc
 Priority: extra
-Maintainer: Bigtop <bigtop-dev@incubator.apache.org>
+Maintainer: Bigtop <dev@bigtop.apache.org>
 Build-Depends: debhelper (>= 7.0.50~)
 Depends: zip, unzip
 Standards-Version: 3.8.0

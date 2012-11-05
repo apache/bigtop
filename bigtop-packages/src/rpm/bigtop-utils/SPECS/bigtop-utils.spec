@@ -25,7 +25,7 @@ Summary: Collection of useful tools for Bigtop
 
 Group:      Applications/Engineering
 License:    APL2
-URL:        http://incubator.apache.org/bigtop/
+URL:        http://bigtop.apache.org/
 BuildRoot:  %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 BuildArch:  noarch
 Source0:    bigtop-detect-javahome

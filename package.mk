@@ -103,7 +103,7 @@ $(BUILD_DIR)/%/.sdeb:
 	  echo -e "$(BIGTOP_BOM)" | tr ' ' '\012' >> debian/bigtop.bom && \
 	  (echo -e "$($(PKG)_PKG_NAME) ($(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP)-$($(PKG)_RELEASE)) stable; urgency=low\n" && \
            echo    "  Clean build" && \
-           echo    " -- Bigtop <bigtop-dev@incubator.apache.org>  "`date +'%a, %d %b %Y %T %z'`) > debian/changelog && \
+           echo    " -- Bigtop <dev@bigtop.apache.org>  "`date +'%a, %d %b %Y %T %z'`) > debian/changelog && \
 	  find debian -name "*.[ex,EX,~]" | xargs rm -f && \
 	  dpkg-buildpackage -uc -us -sa -S
 	mkdir -p $($(PKG)_OUTPUT_DIR)/

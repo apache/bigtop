@@ -15,10 +15,10 @@
 Source: bigtop-utils
 Section: misc
 Priority: extra
-Maintainer: Bigtop <bigtop-dev@incubator.apache.org>
+Maintainer: Bigtop <dev@bigtop.apache.org>
 Build-Depends: debhelper (>= 7.0.50~)
 Standards-Version: 3.8.0
-Homepage: http://incubator.apache.org/bigtop/
+Homepage: http://bigtop.apache.org/
 
 Package: bigtop-utils
 Architecture: all
