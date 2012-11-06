@@ -68,6 +68,7 @@
               <exclude>bigtop-packages/src/deb/*/*.docs</exclude>
               <exclude>bigtop-packages/src/deb/*/docs</exclude>
               <exclude>bigtop-packages/src/deb/*/compat</exclude>
+              <exclude>bigtop-packages/src/deb/*/source/format</exclude>
               <exclude>bigtop-packages/src/deb/*/*.lintian-overrides</exclude>
               <exclude>bigtop-packages/src/deb/*/shlibs.local</exclude>
               <exclude>bigtop-repos/apt/distributions</exclude>
