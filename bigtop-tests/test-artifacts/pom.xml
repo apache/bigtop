@@ -43,7 +43,7 @@
     <module>mahout</module>
     <module>giraph</module>
     <module>hue</module>
-    <modeul>solr</module>
+    <module>solr</module>
   </modules>
 
   <properties>
