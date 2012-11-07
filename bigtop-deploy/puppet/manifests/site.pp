@@ -29,13 +29,6 @@ yumrepo { "Bigtop":
     gpgcheck => 0,
 }
 
-yumrepo { "Bigtop-Solr":
-    baseurl => "http://bigtop01.cloudera.org:8080/job/Bigtop-git/label=centos5/lastSuccessfulBuild/artifact/output/",
-    descr => "Bigtop packages",
-    enabled => 1,
-    gpgcheck => 0,
-}
-
 package { $jdk_package_name:
   ensure => "installed",
   alias => "jdk",

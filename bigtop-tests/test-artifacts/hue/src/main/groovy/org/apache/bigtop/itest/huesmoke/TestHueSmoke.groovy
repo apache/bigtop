@@ -35,7 +35,8 @@ public class TestHueSmoke {
                                  // FIXME: HUE-10 "jobbrowser"       : "<title>Error</title>",
                                  "jobsub"           : "<title>Job Designer</title>",
                                  "useradmin"        : "<title>Hue Users</title>",
-                                 "beeswax"          : "<title>Hive Query</title>" ];
+                                 "beeswax"          : "<title>Hive Query</title>",
+                                 "oozie"            : "<title>Oozie App</title>" ];
 
   Shell sh = new Shell();
 

@@ -23,7 +23,7 @@
 # Implicit targets
 SHELL := /bin/bash
 
-APPS=beeswax
+APPS=beeswax oozie
 
 $(APPS:%=debian/hue-%.postinst): debian/hue-app.postinst.tpl
 	sed -e 's#@APP@#$(patsubst debian/hue-%.postinst,%,$@)#'  < $< > $@
@@ -41,3 +41,6 @@ override_dh_auto_install: build $(APPS:%=debian/hue-%.postinst) $(APPS:%=debian/
 	bash -x debian/install_hue.sh --build-dir=${PWD} --prefix=${PWD}/debian/tmp
 	sed -e 's,^,build:,;' debian/tmp/usr/lib/hue/Makefile.buildvars \
 	  | tr _ - >> debian/hue-common.substvars
+
+override_dh_installinit:
+	dh_installinit --name=hue

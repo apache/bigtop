@@ -30,6 +30,7 @@ URL: http://github.com/cloudera/hue
 Requires: %{name}-common = %{version}-%{release}
 Requires: %{name}-server = %{version}-%{release}
 Requires: %{name}-beeswax = %{version}-%{release}
+Requires: %{name}-oozie = %{version}-%{release}
 
 ################ RPM CUSTOMIZATION ##############################
 # Disable automatic Provides generation - otherwise we will claim to provide all of the
@@ -74,6 +75,7 @@ AutoReqProv: no
 %define apps_dir %{hue_dir}/apps
 %define about_app_dir %{hue_dir}/apps/about
 %define beeswax_app_dir %{hue_dir}/apps/beeswax
+%define oozie_app_dir %{hue_dir}/apps/oozie
 %define filebrowser_app_dir %{hue_dir}/apps/filebrowser
 %define help_app_dir %{hue_dir}/apps/help
 %define jobbrowser_app_dir %{hue_dir}/apps/jobbrowser
@@ -158,6 +160,7 @@ BuildRequires: python-devel, python-setuptools, gcc, gcc-c++
 BuildRequires: libxml2-devel, libxslt-devel, zlib-devel
 BuildRequires: cyrus-sasl-devel
 BuildRequires: openssl
+BuildRequires: krb5-devel
 Group: Applications/Engineering
 Requires: cyrus-sasl-gssapi, libxml2, libxslt, zlib, python, sqlite
 Provides: %{name}-common = %{version}, config(%{name}-common) = %{version}
@@ -261,8 +264,9 @@ fi
 %attr(0755,%{username},%{username}) /var/log/hue
 %attr(0755,%{username},%{username}) /var/lib/hue
 
-# beeswax is packaged as a plugin app
+# beeswax, oozie are packaged as a plugin app
 %exclude %{beeswax_app_dir}
+%exclude %{oozie_app_dir}
 
 # %exclude %{hadoop_lib}
 
@@ -336,3 +340,22 @@ and import and export data.
 %files -n %{name}-beeswax
 %defattr(-, %{username}, %{username})
 %{beeswax_app_dir}
+
+#### HUE-OOZIE PLUGIN ######
+%package -n %{name}-oozie
+Summary: A UI for Oozie on Hue
+Group: Applications/Engineering
+Requires: make
+Requires: %{name}-common = %{version}-%{release}
+
+%description -n %{name}-oozie
+A web interface for Oozie.
+
+It allows users to construct and run Oozie workflows without explicitly
+managing the XML specification.
+
+%app_post_macro oozie
+%app_preun_macro oozie
+
+%files -n %{name}-oozie
+%{oozie_app_dir}
