@@ -39,3 +39,6 @@ override_dh_auto_install:
 	install -d -m 0755 debian/tmp/etc/init.d
 	cp debian/solr-server.init.debian debian/tmp/etc/init.d/solr-server
 	chmod 755 debian/tmp/etc/init.d/solr-server
+
+override_dh_installchangelogs:
+	dh_installchangelogs -Xchanges
