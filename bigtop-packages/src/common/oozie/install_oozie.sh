@@ -219,7 +219,7 @@ failIfNotOK
 WEBAPP_DIR=${SERVER_LIB_DIR}/webapps/oozie
 mkdir ${WEBAPP_DIR}
 failIfNotOK
-unzip -d ${WEBAPP_DIR} ${BUILD_DIR}/oozie.war
+(cd ${WEBAPP_DIR} ; jar xf ${BUILD_DIR}/oozie.war)
 failIfNotOK
 mv -f ${WEBAPP_DIR}/WEB-INF/lib ${SERVER_LIB_DIR}/libserver
 failIfNotOK
