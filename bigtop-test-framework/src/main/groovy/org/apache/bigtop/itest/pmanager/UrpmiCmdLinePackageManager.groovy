@@ -21,7 +21,7 @@ package org.apache.bigtop.itest.pmanager
 import org.apache.bigtop.itest.posix.Service
 
 class UrpmiCmdLinePackageManager extends PackageManager {
-  static String type  = "urpmi";
+  String type  = "urpmi";
   
   public void setDefaults(String defaults) {}
 

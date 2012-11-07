@@ -20,8 +20,8 @@ package org.apache.bigtop.itest.pmanager
 
 class AptCmdLinePackageManager extends PackageManager {
   // FIXME: NB export DEBIAN_FRONTEND=noninteractive
-  static String type  = "apt";
-  static String repository_registry = "/etc/apt/sources.list.d/%s.list";
+  String type  = "apt";
+  String repository_registry = "/etc/apt/sources.list.d/%s.list";
 
   private static final ROOT_URL = "http://us.archive.ubuntu.com/ubuntu/";
 

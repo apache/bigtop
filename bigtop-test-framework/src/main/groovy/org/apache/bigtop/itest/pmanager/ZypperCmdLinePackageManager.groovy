@@ -21,8 +21,8 @@ package org.apache.bigtop.itest.pmanager
 import org.apache.bigtop.itest.posix.Service
 
 class ZypperCmdLinePackageManager extends PackageManager {
-  static String type  = "zypper";
-  static String repository_registry = "/etc/zypp/repos.d/%s.repo";
+  String type  = "zypper";
+  String repository_registry = "/etc/zypp/repos.d/%s.repo";
   
   private String key_opts = "--gpg-auto-import-keys";
 

@@ -171,13 +171,13 @@ public abstract class PackageManager {
    * type of a package manager. expected to be overwritten by concrete subclasses implementing
    * particular package managers (yum, apt, zypper, etc.)
    */
-  static String type  = "abstract"
+  String type  = "abstract"
 
   /**
    * A registry location for repositories to be added to. Currently all the package managers
    * we have to support can be handled by treating this as a subdirectory in a local filesystem.
    */
-  static String repository_registry = "/tmp/%s.repo"
+  String repository_registry = "/tmp/%s.repo"
 
   Shell shRoot = new Shell("/bin/bash -s", "root")
   Shell shUser = new Shell("/bin/bash -s")

@@ -21,8 +21,8 @@ package org.apache.bigtop.itest.pmanager
 import org.apache.bigtop.itest.posix.Service
 
 class YumCmdLinePackageManager extends PackageManager {
-  static String type  = "yum";
-  static String repository_registry = "/etc/yum.repos.d/%s.repo";
+  String type  = "yum";
+  String repository_registry = "/etc/yum.repos.d/%s.repo";
 
   public void setDefaults(String defaults) {}
 
