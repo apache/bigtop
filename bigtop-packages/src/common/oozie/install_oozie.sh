@@ -100,21 +100,6 @@ if [ ! -d "${BUILD_DIR}" ]; then
   exit 1
 fi
 
-if [ -d "${SERVER_PREFIX}" ]; then
-  echo "Server directory already exists, delete first: ${SERVER_PREFIX}"
-  exit 1
-fi
-
-if [ -d "${CLIENT_PREFIX}" ]; then
-  echo "Client directory already exists, delete first: ${CLIENT_PREFIX}"
-  exit 1
-fi
-
-if [ -d "${DOC_DIR}" ]; then
-  echo "Docs directory already exists, delete first: ${DOC_DIR}"
-  exit 1
-fi
-
 ## Install client image first
 CLIENT_LIB_DIR=${CLIENT_PREFIX}/usr/lib/oozie
 MAN_DIR=${CLIENT_PREFIX}/usr/share/man/man1
