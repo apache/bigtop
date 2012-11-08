@@ -98,7 +98,7 @@ Shared metadata repository for Sqoop. This optional package hosts a metadata
 server for Sqoop clients across a network to use.
 
 %prep
-%setup -n %{name}-%{sqoop_base_version}-src
+%setup -n %{name}-%{sqoop_base_version}
 
 %build
 bash %{SOURCE1} -Dversion=%{sqoop_base_version}
@@ -106,7 +106,7 @@ bash %{SOURCE1} -Dversion=%{sqoop_base_version}
 %install
 %__rm -rf $RPM_BUILD_ROOT
 sh %{SOURCE2} \
-          --build-dir=build/sqoop-%{sqoop_base_version} \
+          --build-dir=build/sqoop-%{sqoop_base_version}.bin__hadoop-%{hadoop_base_version} \
           --conf-dir=%{conf_sqoop_dist} \
           --doc-dir=%{doc_sqoop} \
           --prefix=$RPM_BUILD_ROOT

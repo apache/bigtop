@@ -31,7 +31,7 @@ override_dh_auto_build:
 
 override_dh_auto_install:
 	sh -x debian/install_sqoop.sh \
-	  --build-dir=build/sqoop-${SQOOP_BASE_VERSION} \
+          --build-dir=build/sqoop-${SQOOP_BASE_VERSION}.bin__hadoop-${HADOOP_BASE_VERSION} \
 	  --conf-dir=/etc/sqoop/conf.dist \
 	  --prefix=debian/sqoop 
 	cp debian/sqoop-metastore.sh debian/sqoop-metastore.init 
