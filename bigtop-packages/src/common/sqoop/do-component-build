@@ -16,4 +16,4 @@
 
 set -ex
 . `dirname ${0}`/bigtop.bom
-ant -f build.xml -Dhadoopversion=200 -Dhadoop.version.full=$HADOOP_BASE_VERSION -Dhadoop.version=$HADOOP_VERSION -Dhbase.version=$HBASE_VERSION -Dzookeeper.version=$ZOOKEEPER_VERSION package jar "$@"
+ant -f build.xml -Dhadoopversion=200 -Dhadoop.version.full=$HADOOP_VERSION -Dhadoop.version=$HADOOP_VERSION -Dhbase.version=$HBASE_VERSION -Dzookeeper.version=$ZOOKEEPER_VERSION package jar "$@"
