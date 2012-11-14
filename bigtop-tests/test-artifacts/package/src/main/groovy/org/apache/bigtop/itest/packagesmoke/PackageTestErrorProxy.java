@@ -31,4 +31,8 @@ public class PackageTestErrorProxy {
         }
     });
   }
+
+  static public boolean checkEquals(final Object value, final Matcher<Object> matcher) {
+    return matcher.matches(value);
+  }
 }

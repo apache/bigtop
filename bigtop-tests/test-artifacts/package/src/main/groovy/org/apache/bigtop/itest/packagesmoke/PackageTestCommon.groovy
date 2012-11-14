@@ -44,6 +44,20 @@ class PackageTestCommon {
     PackageTestErrorProxy.checkThat(result, msg, value, matcher);
   }
 
+  public void checkThatService(String msg, Service svc, Matcher<Object> matcher) {
+    if (PackageTestErrorProxy.checkEquals(svcStatusDecoder(svc.status()), matcher) == true ) {
+      return;
+    } else {
+      sleep(3001);
+      if (PackageTestErrorProxy.checkEquals(svcStatusDecoder(svc.status()), matcher) == true ) {
+        return;
+      } else {
+        sleep(3001);
+        PackageTestErrorProxy.checkThat(result, msg, svcStatusDecoder(svc.status()), matcher);
+      }
+    }
+  }
+
   public void recordFailure(String message) {
     result.addError(new AssertionFailedError(message));
   }
@@ -144,40 +158,40 @@ class PackageTestCommon {
     checkThat("wrong list of runlevels for service $name",
               runlevels, hasSameKeys(svc_metadata.runlevel));
 
-    checkThat("wrong state of service $name after installation",
-              svcStatusDecoder(svc.status()), equalTo(svc_metadata.oninstall));
+    checkThatService("wrong state of service $name after installation",
+              svc, equalTo(svc_metadata.oninstall));
 
     svc.stop();
     sleep(3001);
-    checkThat("service $name is expected to be stopped",
-              svcStatusDecoder(svc.status()), equalTo("stop"));
+    checkThatService("service $name is expected to be stopped",
+              svc, equalTo("stop"));
 
     if (svc_metadata.configured == "true") {
       checkThat("can not start service $name",
                 svc.start(), equalTo(0));
       sleep(3001);
-      checkThat("service $name is expected to be started",
-                svcStatusDecoder(svc.status()), equalTo("start"));
+      checkThatService("service $name is expected to be started",
+                svc, equalTo("start"));
 
       checkThat("can not restart service $name",
                 svc.restart(), equalTo(0));
       sleep(3001);
-      checkThat("service $name is expected to be re-started",
-                svcStatusDecoder(svc.status()), equalTo("start"));
+      checkThatService("service $name is expected to be re-started",
+                svc, equalTo("start"));
 
       checkThat("can not stop service $name",
                 svc.stop(), equalTo(0));
       sleep(3001);
-      checkThat("service $name is expected to be stopped",
-                svcStatusDecoder(svc.status()), equalTo("stop"));
+      checkThatService("service $name is expected to be stopped",
+                svc, equalTo("stop"));
     }
 
     // Stopping 2nd time (making sure that a stopped service is
     // not freaked out by an extra stop)
     checkThat("can not stop an already stopped service $name",
               svc.stop(), equalTo(0));
-    checkThat("wrong status after stopping service $name for the second time",
-              svcStatusDecoder(svc.status()), equalTo("stop"));
+    checkThatService("wrong status after stopping service $name for the second time",
+              svc, equalTo("stop"));
   }
 
   public void checkServices(Map expectedServices) {
