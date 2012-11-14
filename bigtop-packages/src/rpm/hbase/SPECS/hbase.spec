@@ -116,7 +116,6 @@ HBase is an open-source, distributed, column-oriented store modeled after Google
 %package master
 Summary: The Hadoop HBase master Server.
 Group: System/Daemons
-Provides: %{name}-master
 Requires: %{name} = %{version}-%{release}
 Requires(pre): %{name} = %{version}-%{release}
 
@@ -143,7 +142,6 @@ HMaster is the "master server" for a HBase. There is only one HMaster for a sing
 %package regionserver
 Summary: The Hadoop HBase RegionServer server.
 Group: System/Daemons
-Provides: %{name}-regionserver
 Requires: %{name} = %{version}-%{release}
 Requires(pre): %{name} = %{version}-%{release}
 

@@ -171,7 +171,6 @@ Requires: psmisc, %{netcat_package}
 # to set AutoReq to no in order to minimize confusion. Not ideal, but seems to work.
 # I wish there was a way to disable just one auto dependency (libjvm.so)
 AutoReq: no
-Provides: hadoop
 
 %if  %{?suse_version:1}0
 BuildRequires: pkg-config, libfuse2, libopenssl-devel, gcc-c++, ant, ant-nodeps, ant-trax

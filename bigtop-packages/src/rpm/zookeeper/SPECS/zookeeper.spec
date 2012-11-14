@@ -94,7 +94,6 @@ difficult to manage. Even when done correctly, different implementations of thes
 %package server
 Summary: The Hadoop Zookeeper server
 Group: System/Daemons
-Provides: %{svc_zookeeper}
 Requires: %{name} = %{version}-%{release}
 Requires(pre): %{name} = %{version}-%{release}
 Requires(post): %{chkconfig_dep}

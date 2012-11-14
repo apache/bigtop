@@ -163,7 +163,8 @@ BuildRequires: openssl
 BuildRequires: krb5-devel
 Group: Applications/Engineering
 Requires: cyrus-sasl-gssapi, libxml2, libxslt, zlib, python, sqlite
-Provides: %{name}-common = %{version}, config(%{name}-common) = %{version}
+# The only reason we need the following is because we also have AutoProv: no
+Provides: config(%{name}-common) = %{version}
 
 %if  %{?suse_version:1}0
 BuildRequires: sqlite3-devel, openldap2-devel, libmysqlclient-devel, libopenssl-devel

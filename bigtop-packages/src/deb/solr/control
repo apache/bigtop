@@ -48,7 +48,6 @@ Description: The Solr server
  This package starts the Solr server on startup
 
 Package: solr-doc
-Provides: solr-doc
 Architecture: all
 Section: doc
 Description: Documentation for Apache Solr

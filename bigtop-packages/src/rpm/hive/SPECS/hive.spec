@@ -52,7 +52,6 @@
 
 
 Name: hive
-Provides: hive
 Version: %{hive_version}
 Release: %{hive_release}
 Summary: Hive is a data warehouse infrastructure built on top of Hadoop
@@ -79,7 +78,6 @@ Hive is a data warehouse infrastructure built on top of Hadoop that provides too
 %package server
 Summary: Provides a Hive Thrift service.
 Group: System/Daemons
-Provides: %{name}-server
 Requires: %{name} = %{version}-%{release}
 Requires(pre): %{name} = %{version}-%{release}
 
@@ -98,7 +96,6 @@ This optional package hosts a Thrift server for Hive clients across a network to
 %package metastore
 Summary: Shared metadata repository for Hive.
 Group: System/Daemons
-Provides: %{name}-metastore
 Requires: %{name} = %{version}-%{release}
 Requires(pre): %{name} = %{version}-%{release}
 
@@ -118,7 +115,6 @@ This optional package hosts a metadata server for Hive clients across a network 
 %package hbase
 Summary: Provides integration between Apache HBase and Apache Hive
 Group: Development/Libraries
-Provides: %{name}-hbase
 Requires: hbase
 
 

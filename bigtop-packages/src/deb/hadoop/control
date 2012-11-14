@@ -22,7 +22,6 @@ Standards-Version: 3.8.0
 Homepage: http://hadoop.apache.org/core/
 
 Package: hadoop
-Provides: hadoop
 Architecture: all
 Depends: ${shlibs:Depends}, ${misc:Depends}, adduser, bigtop-utils, zookeeper (>= 3.4.0), psmisc, netcat-openbsd
 Description: Hadoop is a software platform for processing vast amounts of data
@@ -88,14 +87,12 @@ Description: Mountable HDFS
  These projects (enumerated below) allow HDFS to be mounted (on most flavors of Unix) as a standard file system using
 
 Package: hadoop-doc
-Provides: hadoop-doc
 Architecture: all
 Section: doc
 Description: Hadoop Documentation
  Documentation for Hadoop
 
 Package: hadoop-conf-pseudo
-Provides: hadoop-conf-pseudo
 Architecture: all
 Depends: hadoop (= ${source:Version}), hadoop-hdfs-namenode (= ${source:Version}),
          hadoop-hdfs-datanode (= ${source:Version}), hadoop-hdfs-secondarynamenode (= ${source:Version}),
@@ -107,14 +104,12 @@ Description: Pseudo-distributed Hadoop configuration
  but all on the same machine.
 
 Package: hadoop-mapreduce-historyserver
-Provides: hadoop-mapreduce-historyserver
 Architecture: all
 Depends: hadoop-mapreduce (= ${source:Version})
 Description: MapReduce History Server
  The History server keeps records of the different activities being performed on a Apache Hadoop cluster
 
 Package: hadoop-yarn-nodemanager
-Provides: hadoop-yarn-nodemanager
 Architecture: all
 Depends: hadoop-yarn (= ${source:Version})
 Description: YARN Node Manager
@@ -123,21 +118,18 @@ Description: YARN Node Manager
  reporting the same to the ResourceManager/Scheduler.
 
 Package: hadoop-yarn-resourcemanager
-Provides: hadoop-yarn-resourcemanager
 Architecture: all
 Depends: hadoop-yarn (= ${source:Version})
 Description: YARN Resource Manager
  The resource manager manages the global assignment of compute resources to applications
 
 Package: hadoop-yarn-proxyserver
-Provides: hadoop-yarn-proxyserver
 Architecture: all
 Depends: hadoop-yarn (= ${source:Version})
 Description: YARN Web Proxy
  The web proxy server sits in front of the YARN application master web UI.
 
 Package: hadoop-hdfs-namenode
-Provides: hadoop-hdfs-namenode
 Architecture: all
 Depends: hadoop-hdfs (= ${source:Version})
 Description: The Hadoop namenode manages the block locations of HDFS files
@@ -145,7 +137,6 @@ Description: The Hadoop namenode manages the block locations of HDFS files
  namenode, which manages the block locations of files on the filesystem.
 
 Package: hadoop-hdfs-secondarynamenode
-Provides: hadoop-hdfs-secondarynamenode
 Architecture: all
 Depends: hadoop-hdfs (= ${source:Version})
 Description: Hadoop Secondary namenode
@@ -154,7 +145,6 @@ Description: Hadoop Secondary namenode
  do not incur unnecessary downtime.
 
 Package: hadoop-hdfs-zkfc
-Provides: hadoop-hdfs-zkfc
 Architecture: all
 Depends: hadoop-hdfs (= ${source:Version})
 Description: Hadoop HDFS failover controller
@@ -165,7 +155,6 @@ Description: Hadoop HDFS failover controller
  election.
 
 Package: hadoop-hdfs-datanode
-Provides: hadoop-hdfs-datanode
 Architecture: all
 Depends: hadoop-hdfs (= ${source:Version})
 Description: Hadoop Data Node
@@ -187,7 +176,6 @@ Description: Development support for libhdfs0
  Includes examples and header files for accessing HDFS from C
 
 Package: hadoop-httpfs
-Provides: hadoop-httpfs
 Architecture: all
 Depends: hadoop-hdfs (= ${source:Version}), bigtop-tomcat
 Description: HTTPFS for Hadoop
@@ -195,7 +183,6 @@ Description: HTTPFS for Hadoop
   interface in HDFS.
 
 Package: hadoop-client
-Provides: hadoop-client
 Architecture: all
 Depends: hadoop (= ${source:Version}), hadoop-hdfs (= ${source:Version}),
          hadoop-yarn (= ${source:Version}), hadoop-mapreduce (= ${source:Version})
