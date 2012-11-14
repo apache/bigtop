@@ -118,7 +118,7 @@ This optional package hosts a metadata server for Hive clients across a network 
 %package hbase
 Summary: Provides integration between Apache HBase and Apache Hive
 Group: Development/Libraries
-Provides: %{name}-server
+Provides: %{name}-hbase
 Requires: hbase
 
 
