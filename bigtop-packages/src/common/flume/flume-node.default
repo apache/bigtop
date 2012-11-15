@@ -13,6 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Set a custom agent name (default is agent)
-#
-# FLUME_AGENT_NAME=kings-river-flume
+# Set name of flume agent (default: agent)
+# FLUME_AGENT_NAME=agent
+
+# Set name of flume configuration file (default: /etc/flume/conf/flume.conf)
+# FLUME_CONF_FILE=/etc/flume/conf/flume.conf
+
+# Set amount of time (in seconds) to wait for agent to shutdown gracefully
+# If timeout is reached, then agent is force-killed.
+# FLUME_SHUTDOWN_TIMEOUT=60
