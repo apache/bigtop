@@ -16,7 +16,7 @@ Source: zookeeper
 Section: misc
 Priority: extra
 Maintainer: Bigtop <dev@bigtop.apache.org>
-Build-Depends: debhelper (>= 7.0.50~), ant, ant-optional, autoconf, automake
+Build-Depends: debhelper (>= 7.0.50~), autoconf, automake
 Standards-Version: 3.8.0
 Homepage: http://zookeeper.apache.org/
 

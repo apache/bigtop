@@ -16,7 +16,7 @@ Source: hbase
 Section: misc
 Priority: extra
 Maintainer: Bigtop <dev@bigtop.apache.org>
-Build-Depends: debhelper (>= 7.0.50~), git-core, adduser
+Build-Depends: debhelper (>= 7.0.50~)
 Standards-Version: 3.8.0
 Homepage: http://hbase.apache.org/
 

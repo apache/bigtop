@@ -16,7 +16,7 @@ Source: sqoop
 Section: misc
 Priority: extra
 Maintainer: Bigtop <dev@bigtop.apache.org>
-Build-Depends: debhelper (>= 7.0.50~), ant, ant-optional, git-core, sed, asciidoc, xmlto
+Build-Depends: debhelper (>= 7.0.50~), asciidoc, xmlto
 Standards-Version: 3.8.0
 Homepage: http://incubator.apache.org/sqoop/
 

@@ -17,7 +17,7 @@ Source: mahout
 Section: misc
 Priority: extra
 Maintainer: Andrew Bayer <abayer@apache.org>
-Build-Depends: debhelper (>= 7.0.50~), git-core
+Build-Depends: debhelper (>= 7.0.50~)
 Standards-Version: 3.8.0
 Homepage: http://mahout.apache.org
 

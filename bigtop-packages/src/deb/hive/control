@@ -17,7 +17,7 @@ Source: hive
 Section: misc
 Priority: extra
 Maintainer: Bigtop <dev@bigtop.apache.org>
-Build-Depends: debhelper (>= 7.0.50~), ant
+Build-Depends: debhelper (>= 7.0.50~)
 Standards-Version: 3.8.0
 Homepage: http://hive.apache.org/
 
