@@ -137,7 +137,7 @@ Requires: bigtop-utils
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
-    sh %{SOURCE2} --extra-dir=$RPM_SOURCE_DIR --build-dir=. --server-dir=$RPM_BUILD_ROOT --client-dir=$RPM_BUILD_ROOT --docs-dir=$RPM_BUILD_ROOT%{doc_oozie} --initd-dir=$RPM_BUILD_ROOT%{initd_dir} --conf-dir=$RPM_BUILD_ROOT%{conf_oozie_dist}
+    sh %{SOURCE2} --extra-dir=$RPM_SOURCE_DIR --build-dir=$PWD --server-dir=$RPM_BUILD_ROOT --client-dir=$RPM_BUILD_ROOT --docs-dir=$RPM_BUILD_ROOT%{doc_oozie} --initd-dir=$RPM_BUILD_ROOT%{initd_dir} --conf-dir=$RPM_BUILD_ROOT%{conf_oozie_dist}
 
 %__ln_s -f %{data_oozie}/ext-2.2 $RPM_BUILD_ROOT/%{lib_oozie}/webapps/oozie/ext-2.2
 %__rm  -rf              $RPM_BUILD_ROOT/%{lib_oozie}/webapps/oozie/docs
