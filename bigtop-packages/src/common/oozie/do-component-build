@@ -86,9 +86,7 @@ if [ "${DO_MAVEN_DEPLOY}" = "deploy" ]; then
   EXTRA_GOALS="${EXTRA_GOALS} source:jar deploy"
 fi
 
-# Invoke Oozie build script with CDH options
-# FIXME: the following need to go away once we transition to 3.3.X
-HADOOP_VERSION=0.23.1
+# Invoke Oozie build script
 ${WORKDIR}/bin/mkdistro.sh -DskipTests -Dhadoop.version=${HADOOP_VERSION} ${EXTRA_GOALS} -Dmaven.repo.local=${HOME}/.m2/repository "$@"
 MKDISTRO_RESULT=$?
 if [ "${MKDISTRO_RESULT}" != "0" ]; then
