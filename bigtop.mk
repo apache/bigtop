@@ -13,17 +13,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-BIGTOP_VERSION=0.3.1-incubating
+BIGTOP_VERSION=0.3.1
 
-# Hadoop 0.20.0-based hadoop package
+# Hadoop 1.1.0-based hadoop package
 HADOOP_NAME=hadoop
 HADOOP_RELNOTES_NAME=Apache Hadoop
 HADOOP_BASE_VERSION=1.1.0
 HADOOP_PKG_VERSION=$(HADOOP_BASE_VERSION)
 HADOOP_RELEASE_VERSION=1
 HADOOP_TARBALL_DST=$(HADOOP_NAME)-$(HADOOP_BASE_VERSION).tar.gz
-HADOOP_TARBALL_SRC=7471fabf103ae55db5b522c1f0764c35852a912c
-HADOOP_SITE=http://nodeload.github.com/apache/hadoop-common/tarball
+HADOOP_TARBALL_SRC=$(HADOOP_TARBALL_DST)
+HADOOP_DOWNLOAD_PATH=/$(HADOOP_NAME)/core/$(HADOOP_NAME)-$(HADOOP_BASE_VERSION)
+HADOOP_SITE=$(APACHE_MIRROR)$(HADOOP_DOWNLOAD_PATH)
 HADOOP_ARCHIVE=$(APACHE_ARCHIVE)$(HADOOP_DOWNLOAD_PATH)
 $(eval $(call PACKAGE,hadoop,HADOOP))
 
