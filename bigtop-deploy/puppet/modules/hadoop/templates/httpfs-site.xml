@@ -16,7 +16,7 @@
 <!-- See the License for the specific language governing permissions and      -->
 <!-- limitations under the License.                                           -->
 
-<% namenode_hosts = hadoop_namenode_host.to_a -%>
+<% namenode_hosts = Array(hadoop_namenode_host) -%>
 <configuration>
   <property>
     <name>httpfs.hadoop.config.dir</name>
