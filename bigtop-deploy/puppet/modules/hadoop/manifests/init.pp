@@ -550,11 +550,16 @@ class hadoop {
       $hadoop_jobtracker_host = $jobtracker_host
       $hadoop_jobtracker_port = $jobtracker_port
       $hadoop_security_authentication = $auth
+      $hadoop_client_packages = $operatingsystem ? {
+        /(OracleLinux|CentOS|RedHat|Fedora)/  => [ "hadoop-doc", "hadoop-hdfs-fuse", "hadoop-client", "hadoop-libhdfs", "hadoop-debuginfo" ],
+        /(SLES|OpenSuSE)/                     => [ "hadoop-doc", "hadoop-hdfs-fuse", "hadoop-client", "hadoop-libhdfs" ],
+        /(Ubuntu|Debian)/                     => [ "hadoop-doc", "hadoop-hdfs-fuse", "hadoop-client", "libhdfs0-dev"   ],
+        default                               => [ "hadoop-doc", "hadoop-hdfs-fuse", "hadoop-client" ],
+      }
 
       include common-mapred-app
   
-      # FIXME: "hadoop-source", "hadoop-fuse", "hadoop-pipes", "hadoop-debuginfo"
-      package { ["hadoop-doc", "hadoop-libhdfs"]:
+      package { $hadoop_client_packages:
         ensure => latest,
         require => [Package["jdk"], Package["hadoop"], Package["hadoop-hdfs"], Package["hadoop-mapreduce"]],  
       }
