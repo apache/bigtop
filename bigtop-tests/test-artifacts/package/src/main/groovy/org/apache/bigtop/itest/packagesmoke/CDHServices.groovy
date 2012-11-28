@@ -55,7 +55,7 @@ class CDHServices {
                                         verifier : new StateVerifierOozie(),
                                       ],
                      flume          : [ services : [ "hadoop-namenode", "hadoop-datanode",
-                                                     "flume-master", "flume-node" ],
+                                                     "flume-master", "flume-agent" ],
                                         killIDs  : [ "hdfs", "flume" ],
                                         verifier : new StateVerifierFlume(),
                                       ],

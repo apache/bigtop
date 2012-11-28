@@ -96,6 +96,10 @@ class hadoop_cluster_node {
 
     include kerberos::client
   }
+
+  # Flume agent is the only component that goes on EVERY node in the cluster
+  hadoop-flume::agent { "flume agent":
+  }
 }
 
 
@@ -294,7 +298,5 @@ class hadoop_gateway_node inherits hadoop_cluster_node {
   hadoop-hbase::client { "hbase client":
   }
   hadoop-zookeeper::client { "zookeeper client":
-  }
-  hadoop-flume::client { "flume client":
   }
 }

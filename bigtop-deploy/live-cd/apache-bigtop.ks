@@ -79,7 +79,7 @@ hive-server
 sqoop
 sqoop-metastore
 flume
-flume-node
+flume-agent
 mahout
 pig
 oozie

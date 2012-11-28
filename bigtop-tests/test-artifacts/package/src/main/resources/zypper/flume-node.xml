@@ -1,5 +1,0 @@
-<flume-node>
-  <content>
-    <file name='/etc/rc.d/flume-node' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
-  </content>
-</flume-node>

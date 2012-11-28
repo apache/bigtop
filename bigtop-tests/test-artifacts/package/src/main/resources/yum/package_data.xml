@@ -45,7 +45,7 @@
       <textutils/>
     </deps>
   </flume>
-  <flume-node>
+  <flume-agent>
     <deps>
       <tag name="/bin/bash"/>
       <tag name="/bin/sh"/>
@@ -59,15 +59,15 @@
       <textutils/>
     </deps>
     <services>
-      <flume-node>
+      <flume-agent>
         <runlevel>3</runlevel>
         <runlevel>4</runlevel>
         <runlevel>5</runlevel>
         <oninstall>stop</oninstall>
         <configured>true</configured>
-      </flume-node>
+      </flume-agent>
     </services>
-  </flume-node>
+  </flume-agent>
   <solr>
     <users>
     </users>

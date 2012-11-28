@@ -18,6 +18,9 @@
 %define lib_flume /usr/lib/flume
 %define log_flume /var/log/flume
 %define run_flume /var/run/flume
+%define vlb_flume /var/lib/flume
+
+%define flume_folder apache-%{name}-%{flume_base_version}-src
 
 %if  %{?suse_version:1}0
 
@@ -59,11 +62,11 @@ Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 BuildArch: noarch
 License: APL2
-Source0: apache-%{name}-%{flume_base_version}.tar.gz
+Source0: %{flume_folder}.tar.gz
 Source1: do-component-build
 Source2: install_%{name}.sh
-Source3: %{name}-node.init
-Source4: flume-node.default
+Source3: %{name}-agent.init
+Source4: flume-agent.default
 Requires: /usr/sbin/useradd
 Requires: coreutils
 Requires: hadoop-hdfs
@@ -78,8 +81,8 @@ Requires: sh-utils
 %description 
 Flume is a reliable, scalable, and manageable distributed data collection application for collecting data such as logs and delivering it to data stores such as Hadoop's HDFS.  It can efficiently collect, aggregate, and move large amounts of log data.  It has a simple, but flexible, architecture based on streaming data flows.  It is robust and fault tolerant with tunable reliability mechanisms and many failover and recovery mechanisms.  The system is centrally managed and allows for intelligent dynamic management. It uses a simple extensible data model that allows for online analytic applications.
 
-%package node
-Summary: The flume node daemon is a core element of flume's data path and is responsible for generating, processing, and delivering data.
+%package agent
+Summary: The flume agent daemon is a core element of flume's data path and is responsible for generating, processing, and delivering data.
 Group: Development/Libraries
 BuildArch: noarch
 Requires: %{name} = %{version}-%{release}
@@ -105,11 +108,11 @@ Requires: initscripts
 Requires: redhat-lsb
 %endif
 
-%description node
+%description agent
 Flume is a reliable, scalable, and manageable distributed data collection application for collecting data such as logs and delivering it to data stores such as Hadoop's HDFS.  It can efficiently collect, aggregate, and move large amounts of log data.  It has a simple, but flexible, architecture based on streaming data flows.  It is robust and fault tolerant with tunable reliability mechanisms and many failover and recovery mechanisms.  The system is centrally managed and allows for intelligent dynamic management. It uses a simple extensible data model that allows for online analytic applications.
 
 %prep
-%setup -n apache-%{name}-%{flume_base_version}
+%setup -n %{flume_folder}
 
 %build
 env FLUME_VERSION=%{version} sh %{SOURCE1}
@@ -124,7 +127,7 @@ sh %{SOURCE2} \
 
 
 # Install init script
-init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{name}-node
+init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{name}-agent
 %__cp %{SOURCE3} $init_file
 chmod 755 $init_file
 
@@ -132,7 +135,7 @@ chmod 755 $init_file
 %__install -d -m 0755 $RPM_BUILD_ROOT/usr/bin
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/etc/default
-%__cp %{SOURCE4} $RPM_BUILD_ROOT/etc/default/%{name}-node
+%__cp %{SOURCE4} $RPM_BUILD_ROOT/etc/default/%{name}-agent
 
 # Get rid of hadoop jar, and instead link to installed hadoop
 rm $RPM_BUILD_ROOT/usr/lib/flume/lib/hadoop-* || true
@@ -141,8 +144,10 @@ ln -s /usr/lib/hadoop/hadoop-auth.jar $RPM_BUILD_ROOT/usr/lib/flume/lib/hadoop-a
 
 %pre
 getent group flume >/dev/null || groupadd -r flume
-getent passwd flume >/dev/null || useradd -c "Flume" -s /sbin/nologin -g flume -r -d %{run_flume} flume 2> /dev/null || :
+getent passwd flume >/dev/null || useradd -c "Flume" -s /sbin/nologin -g flume -r -d %{vlb_flume} flume 2> /dev/null || :
 %__install -d -o flume -g flume -m 0755 %{log_flume}
+%__install -d -o flume -g flume -m 0755 %{run_flume}
+%__install -d -o flume -g flume -m 0755 %{vlb_flume}
 
 # Manage configuration symlink
 %post
@@ -153,17 +158,17 @@ if [ "$1" = 0 ]; then
         %{alternatives_cmd} --remove %{name}-conf %{etc_flume}.empty || :
 fi
 
-%post node
-chkconfig --add %{name}-node
+%post agent
+chkconfig --add %{name}-agent
 
-%preun node
+%preun agent
 if [ $1 = 0 ] ; then
-        service %{name}-node stop > /dev/null 2>&1
-        chkconfig --del %{name}-node
+        service %{name}-agent stop > /dev/null 2>&1
+        chkconfig --del %{name}-agent
 fi
-%postun node
+%postun agent
 if [ $1 -ge 1 ]; then
-        service %{name}-node condrestart >/dev/null 2>&1
+        service %{name}-agent condrestart >/dev/null 2>&1
 fi
 
 
@@ -183,6 +188,6 @@ fi
 %{lib_flume}/lib/*.jar
 %{lib_flume}/conf
 
-%files node
-%attr(0755,root,root)/%{initd_dir}/%{name}-node
-%attr(0644,root,root) %config(noreplace) /etc/default/%{name}-node
+%files agent
+%attr(0755,root,root)/%{initd_dir}/%{name}-agent
+%attr(0644,root,root) %config(noreplace) /etc/default/%{name}-agent

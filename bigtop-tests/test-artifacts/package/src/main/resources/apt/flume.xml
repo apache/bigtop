@@ -23,7 +23,6 @@
     <file name='/usr/lib/flume/lib/flume-file-channel-1.1.0-incubating.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/flume/lib/flume-irc-sink-1.1.0-incubating.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/flume/lib/flume-jdbc-channel-1.1.0-incubating.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/lib/flume/lib/flume-ng-node-1.1.0-incubating.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/flume/lib/jasper-compiler-5.5.23.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/flume/lib/commons-dbcp-1.4.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/flume/lib/jaxb-api-2.2.2.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />

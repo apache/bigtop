@@ -33,7 +33,7 @@ class DeployCDH {
      "hadoop-0.20-pipes", "hadoop-0.20-secondarynamenode", "hadoop-0.20-source",
      "hadoop-0.20-tasktracker", "hadoop-hive", "hadoop-pig" ];
     List<String> cdh3b2 = [
-     "flume", "flume-master", "flume-node", "hadoop-0.20", "hadoop-0.20-conf-pseudo", "hadoop-0.20-conf-pseudo-hue",
+     "flume", "flume-master", "flume-agent", "hadoop-0.20", "hadoop-0.20-conf-pseudo", "hadoop-0.20-conf-pseudo-hue",
      "hadoop-0.20-datanode", "hadoop-0.20-fuse", "hadoop-0.20-jobtracker", "hadoop-0.20-namenode", "hadoop-0.20-native",
      "hadoop-0.20-pipes", "hadoop-0.20-secondarynamenode", "hadoop-0.20-source",
      "hadoop-0.20-tasktracker", "hadoop-hbase",
@@ -42,7 +42,7 @@ class DeployCDH {
      "hue-filebrowser", "hue-help", "hue-jobbrowser", "hue-jobsub", "hue-plugins", "hue-proxy",
      "hue-useradmin", "oozie", "sqoop" ];
     List<String> cdh3b3 = [
-     "flume", "flume-master", "flume-node", "hadoop-0.20", "hadoop-0.20-conf-pseudo",
+     "flume", "flume-master", "flume-agent", "hadoop-0.20", "hadoop-0.20-conf-pseudo",
      "hadoop-0.20-datanode", "hadoop-0.20-fuse", "hadoop-0.20-jobtracker", "hadoop-0.20-namenode", "hadoop-0.20-native",
      "hadoop-0.20-pipes", "hadoop-0.20-sbin", "hadoop-0.20-secondarynamenode", "hadoop-0.20-source",
      "hadoop-0.20-tasktracker", "hadoop-hbase", "hadoop-hbase-doc",

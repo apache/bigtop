@@ -45,7 +45,7 @@
       <tag name="/usr/bin/env"/>
     </deps>
   </flume>
-  <flume-node>
+  <flume-agent>
     <deps>
       <sh-utils/>
       <textutils/>
@@ -59,15 +59,15 @@
       <tag name="/usr/bin/env"/>
     </deps>
     <services>
-      <flume-node>
+      <flume-agent>
         <runlevel>3</runlevel>
         <runlevel>4</runlevel>
         <runlevel>5</runlevel>
         <oninstall>stop</oninstall>
         <configured>true</configured>
-      </flume-node>
+      </flume-agent>
     </services>
-  </flume-node>
+  </flume-agent>
   <solr>
     <users>
     </users>

@@ -42,8 +42,8 @@ override_dh_auto_install:
 	sh -x debian/install_flume.sh \
 	  --build-dir=$${PWD} \
 	  --prefix=debian/flume
-	install -d -m 0755 debian/flume-node/etc/default
-	cp debian/flume-node.default debian/flume-node/etc/default/flume-node
+	install -d -m 0755 debian/flume-agent/etc/default
+	cp debian/flume-agent.default debian/flume-agent/etc/default/flume-agent
 	# Remove hadoop dependency and instead symlink in the hadoop jar
 	# rm debian/flume/usr/lib/flume/lib/hadoop-*
 	# ln -s /usr/lib/hadoop/hadoop-common.jar debian/flume/usr/lib/flume/lib/hadoop-common.jar

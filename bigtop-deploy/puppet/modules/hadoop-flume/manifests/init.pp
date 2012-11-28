@@ -14,36 +14,21 @@
 # limitations under the License.
 
 class hadoop-flume {
-  define client {
-    package { "flume":
-      ensure => latest,
-    } 
-  }
-
-  # It really is flume node, but node is a reserved keyword for puppet
-  define agent {
-    package { "flume-node":
+  define agent($sources = [], $sinks = [], $channels = []) {
+    package { "flume-agent":
       ensure => latest,
     } 
 
-    service { "flume-node":
-      ensure => running,
-      require => Package["flume-node"],
-      # FIXME: this need to be fixed in upstream flume
-      hasstatus => false,
-      hasrestart => true,
+    file {
+      "/etc/flume/conf/flume.conf":
+        content => template('hadoop-flume/flume.conf'),
+        require => Package["flume-agent"],
     }
-  }
 
-  define master {
-    package { "flume-master":
-      ensure => latest,
-    } 
-
-    service { "flume-master":
+    service { "flume-agent":
       ensure => running,
-      require => Package["flume-node"],
-      # FIXME: this need to be fixed in upstream flume
+      require => [Package["flume-agent"], File["/etc/flume/conf/flume.conf"]],
+      subscribe => [Package["flume-agent"], File["/etc/flume/conf/flume.conf"]],
       hasstatus => true,
       hasrestart => true,
     }

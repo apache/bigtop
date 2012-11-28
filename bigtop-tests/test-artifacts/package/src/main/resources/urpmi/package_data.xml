@@ -942,7 +942,7 @@
     <file name="/usr/share/doc/flume/man" owners="1" perm="drwxr-xr-x" user="flume" group="flume"/>
     <doc  name="/usr/share/doc/flume/man/flume.1" owners="1" perm="-rw-r--r--" user="flume" group="flume"/>
     <doc  name="/usr/share/doc/flume/man/flume-master.1" owners="1" perm="-rw-r--r--" user="flume" group="flume"/>
-    <doc  name="/usr/share/doc/flume/man/flume-node.1" owners="1" perm="-rw-r--r--" user="flume" group="flume"/>
+    <doc  name="/usr/share/doc/flume/man/flume-agent.1" owners="1" perm="-rw-r--r--" user="flume" group="flume"/>
     <doc  name="/usr/share/doc/flume/man/flume-shell.1" owners="1" perm="-rw-r--r--" user="flume" group="flume"/>
     <file name="/usr/share/doc/flume/UserGuide" owners="1" perm="drwxr-xr-x" user="flume" group="flume"/>
     <doc  name="/usr/share/doc/flume/UserGuide/architecture.png" owners="1" perm="-rw-r--r--" user="flume" group="flume"/>
@@ -1044,7 +1044,7 @@
     <doc  name="/usr/share/doc/flume/Windows/index.txt" owners="1" perm="-rw-r--r--" user="flume" group="flume"/>
     <doc  name="/usr/share/man/man1/flume.1.gz" owners="1" perm="-rw-r--r--" user="root" group="root"/>
     <doc  name="/usr/share/man/man1/flume-master.1.gz" owners="1" perm="-rw-r--r--" user="root" group="root"/>
-    <doc  name="/usr/share/man/man1/flume-node.1.gz" owners="1" perm="-rw-r--r--" user="root" group="root"/>
+    <doc  name="/usr/share/man/man1/flume-agent.1.gz" owners="1" perm="-rw-r--r--" user="root" group="root"/>
     <doc  name="/usr/share/man/man1/flume-shell.1.gz" owners="1" perm="-rw-r--r--" user="root" group="root"/>
   </content>
 </flume>
@@ -1068,7 +1068,7 @@
     <file name="/usr/lib/flume/bin/flume-daemon.sh" owners="2" perm="-rwxr-xr-x" user="root" group="root"/>
   </content>
 </flume-master>
-<flume-node>
+<flume-agent>
   <deps>
     <tag name="/bin/bash"/>
     <tag name="/bin/sh"/>
@@ -1082,12 +1082,12 @@
     <textutils/>
   </deps>
   <content>
-    <file name="/etc/rc.d/init.d/flume-node" owners="1" perm="-rwxr-xr-x" user="root" group="root"/>
+    <file name="/etc/rc.d/init.d/flume-agent" owners="1" perm="-rwxr-xr-x" user="root" group="root"/>
     <file name="/usr/lib/flume" owners="3" perm="drwxr-xr-x" user="root" group="root"/>
     <file name="/usr/lib/flume/bin" owners="3" perm="drwxr-xr-x" user="root" group="root"/>
     <file name="/usr/lib/flume/bin/flume-daemon.sh" owners="3" perm="-rwxr-xr-x" user="root" group="root"/>
   </content>
-</flume-node>
+</flume-agent>
 <sqoop>
   <deps>
     <tag name="/bin/bash"/>

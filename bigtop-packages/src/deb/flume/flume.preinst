@@ -37,12 +37,14 @@ case "$1" in
                 adduser \
                   --system \
                   --group \
-                  --home /var/run/flume \
+                  --home /var/lib/flume \
                   --gecos "Flume User" \
                   --shell /bin/false \
                   flume >/dev/null
         fi
         install -d -m 0755 -o flume -g flume /var/log/flume
+        install -d -m 0755 -o flume -g flume /var/run/flume
+        install -d -m 0755 -o flume -g flume /var/lib/flume
     ;;
 
     abort-upgrade)

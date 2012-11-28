@@ -43,7 +43,6 @@
     <file name='/usr/lib/flume/lib/flume-jdbc-channel-1.1.0-incubating.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/flume/lib/flume-ng-core-1.1.0-incubating.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/flume/lib/flume-ng-log4jappender-1.1.0-incubating.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/lib/flume/lib/flume-ng-node-1.1.0-incubating.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/flume/lib/flume-ng-sdk-1.1.0-incubating.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/flume/lib/flume-thrift-source-1.1.0-incubating.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/flume/lib/guava-10.0.1.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />

@@ -15,12 +15,12 @@
 # limitations under the License.
 
 set -e
-if [ -x "/etc/init.d/flume-node" ]; then
-  update-rc.d flume-node defaults >/dev/null
+if [ -x "/etc/init.d/flume-agent" ]; then
+  update-rc.d flume-agent defaults >/dev/null
   if [ -x "`which invoke-rc.d 2>/dev/null`" ]; then
-    invoke-rc.d flume-node start || :
+    invoke-rc.d flume-agent start || :
   else
-    /etc/init.d/flume-node start || :
+    /etc/init.d/flume-agent start || :
   fi
 fi
 

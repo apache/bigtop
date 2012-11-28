@@ -13,8 +13,32 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-hadoop-flume::client { "test-flume": } 
-hadoop-flume::agent  { "test-flume-node": } 
-hadoop-flume::master { "test-flume-master": }
-
-
+hadoop-flume::agent  { "test-flume-agent": 
+  channels => {  mem    => { type => "memory", 
+                             capacity => "1000", 
+                             transactionCapactiy => "100" 
+                           }, 
+                 file   => { type => "file",
+                             checkpointDir => "/var/lib/flume/checkpoint",
+                             dataDirs => "/var/lib/flume/data",
+                           }
+              },
+  sources  => {  netcat => { type => "netcat", 
+                             bind => "0.0.0.0", 
+                             port => "1949", 
+                             channels => "mem" 
+                           }, 
+              },
+  sinks    => {  hdfs   => { type => "hdfs",
+                             "hdfs.path" => "/flume/test-flume-agent",
+                             "hdfs.writeFormat" => "Text",
+                             "hdfs.fileType" => "DataStream",
+                             "hdfs.filePrefix" => "events-",
+                             "hdfs.round" => "true",
+                             "hdfs.roundValue" => "10",
+                             "hdfs.roundUnit" => "minute",
+                             "hdfs.serializer" => "org.apache.flume.serialization.BodyTextEventSerializer",
+                             channel => "mem",
+                           }
+              },
+}
