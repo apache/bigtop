@@ -140,6 +140,14 @@ sed -i -e '/\[\[yarn_clusters\]\]/,+20s@## submit_to=False@submit_to=True@' \
 # Fix a redirection, since by default beeswax is not installed
 sed -i -e '/meta http-equiv="refresh"/s#/beeswax#/about#' \
     $PREFIX/$LIB_DIR/desktop/core/src/desktop/templates/index.mako
+# FIXME: HUE-880
+sed -i -e '/"name": *"Hive"/,/description/s#"parameters":.*$#"parameters": "[{\\"name\\":\\"oozie.use.system.libpath\\",\\"value\\":\\"true\\"}]",#' \
+       -e '/"name": *"Pig"/,/description/s#"parameters":.*$#"parameters": "[{\\"name\\":\\"oozie.use.system.libpath\\",\\"value\\":\\"true\\"}]",#' \
+       -e '/"name": *"Sqoop"/,/description/s#"parameters":.*$#"parameters": "[{\\"name\\":\\"oozie.use.system.libpath\\",\\"value\\":\\"true\\"}]",#' \
+       -e '/"name": *"DistCp"/,/description/s#"parameters":.*$#"parameters": "[{\\"name\\":\\"oozie.use.system.libpath\\",\\"value\\":\\"true\\"}]",#' \
+    $PREFIX/$LIB_DIR/apps/oozie/src/oozie/fixtures/initial_example_data.json
+sed -i -e '/jobbrowser.views/s#<a href=[^>]*>#<a href=".">#' \
+    $PREFIX/$LIB_DIR/apps/oozie/src/oozie/templates/dashboard/list_oozie_workflow.mako
 
 # Relink logs subdirectory just in case
 install -d -m 0755 $PREFIX/$LOG_DIR
