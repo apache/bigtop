@@ -22,6 +22,20 @@ $jdk_package_name = extlookup("jdk_package_name", "jdk")
 
 stage {"pre": before => Stage["main"]}
 
+case $operatingsystem {
+    /(OracleLinux|CentOS|Fedora|RedHat)/: {
+       yumrepo { "Bigtop":
+          baseurl => extlookup("bigtop_yumrepo_uri", $default_yumrepo),
+          descr => "Bigtop packages",
+          enabled => 1,
+          gpgcheck => 0,
+       }
+    }
+    default: {
+      notify{"WARNING: running on a non-yum platform -- make sure Bigtop repo is setup": }
+    }
+}
+
 package { $jdk_package_name:
   ensure => "installed",
   alias => "jdk",
