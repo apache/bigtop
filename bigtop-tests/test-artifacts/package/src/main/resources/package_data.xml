@@ -343,6 +343,23 @@ server.</description>
       <zookeeper>/self</zookeeper>
     </deps>
   </zookeeper-server>
+  <crunch>
+    <metadata>
+      <summary>Simple and Efficient MapReduce Pipelines.</summary>
+      <description>Apache Crunch (incubating) is a Java library for writing, testing, and running
+MapReduce pipelines, based on Google's FlumeJava. Its goal is to make 
+pipelines that are composed of many user-defined functions simple to write, 
+easy to test, and efficient to run.</description>
+      <url></url>
+    </metadata>
+  </crunch>
+  <crunch-doc>
+    <metadata>
+      <summary>Apache Crunch (incubating) documentation</summary>
+      <description>Apache Crunch (incubating) documentation</description>
+      <url></url>
+    </metadata>
+  </crunch-doc>
   <pig>
     <metadata>
       <summary>Pig is a platform for analyzing large data sets</summary>

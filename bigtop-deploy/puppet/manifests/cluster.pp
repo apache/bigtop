@@ -286,6 +286,8 @@ class hadoop_gateway_node inherits hadoop_cluster_node {
   giraph::client { "giraph client":
      zookeeper_quorum => $giraph_zookeeper_quorum,
   }
+  crunch::client { "crunch client":
+  }
   hadoop-pig::client { "pig client":
   }
   hadoop-hive::client { "hive client":
