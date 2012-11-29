@@ -227,11 +227,26 @@ class hadoop {
 
     exec { "HDFS init $title":
       user => "hdfs",
-      command => "/bin/bash -c 'hadoop fs -mkdir $title && hadoop fs -chmod $perm $title && hadoop fs -chown $user $title'",
-      unless => "/bin/bash -c 'hadoop fs -ls $name >/dev/null 2>&1'",
+      command => "/bin/bash -c 'hadoop fs -mkdir $title ; hadoop fs -chmod $perm $title && hadoop fs -chown $user $title'",
       require => Service["hadoop-hdfs-namenode"],
     }
     Exec <| title == "activate nn1" |>  -> Exec["HDFS init $title"]
+  }
+
+  define rsync_hdfs($files, $auth="simple") {
+    $src = $files[$title]
+
+    if ($auth == "kerberos") {
+      require hadoop::kinit
+      Exec["HDFS kinit"] -> Exec["HDFS init $title"]
+    }
+
+    exec { "HDFS rsync $title":
+      user => "hdfs",
+      command => "/bin/bash -c 'hadoop fs -mkdir -p $title ; hadoop fs -put -f $src $title'",
+      require => Service["hadoop-hdfs-namenode"],
+    }
+    Exec <| title == "activate nn1" |>  -> Exec["HDFS rsync $title"]
   }
 
   define namenode ($host = $fqdn , $port = "8020", $thrift_port= "10090", $auth = "simple", $dirs = ["/tmp/nn"], $ha = 'disabled', $zk = '') {

@@ -18,14 +18,6 @@ class hadoop-sqoop {
     package { "sqoop":
       ensure => latest,
     } 
-
-    # FIXME: this is NOT supposed to be needed
-    #        but for now that's the easiest way to add
-    #        extra jars to sqoop classpath
-    file { "/usr/lib/sqoop/lib/mysql-connector-java-5.1.12.jar":
-      ensure => "/usr/share/java/mysql-connector-java-5.1.12.jar",
-      require => Package["sqoop"],
-    }
   }
 
   define metastore {
