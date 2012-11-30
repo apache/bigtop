@@ -51,6 +51,7 @@
     <mahout-smoke.version>0.5.0-SNAPSHOT</mahout-smoke.version>
     <oozie-smoke.version>0.5.0-SNAPSHOT</oozie-smoke.version>
     <giraph-smoke.version>0.5.0-SNAPSHOT</giraph-smoke.version>
+    <crunch-smoke.version>0.5.0-SNAPSHOT</crunch-smoke.version>
     <hue-smoke.version>0.5.0-SNAPSHOT</hue-smoke.version>
     <package-smoke.version>0.5.0-SNAPSHOT</package-smoke.version>
     <solr-smoke.version>0.5.0-SNAPSHOT</solr-smoke.version>
@@ -76,6 +77,7 @@
     <module>mahout</module>
     <module>giraph</module>
     <module>hue</module>
+    <module>crunch</module>
     -->
   </modules>
 
