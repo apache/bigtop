@@ -16,5 +16,4 @@ SOLR_PORT=1978
 SOLR_ADMIN_PORT=1979
 SOLR_LOG=/var/log/solr
 SOLR_DATA_DIR=/var/lib/solr/index
-# SOLR_ZK_ENSEMBLE=
-# SOLR_ZK_ROOT=
+# SOLR_ZK_ENSEMBLE=localhost:2181/solr

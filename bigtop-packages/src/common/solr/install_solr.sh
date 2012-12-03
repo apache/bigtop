@@ -115,8 +115,13 @@ cp -ra ${BUILD_DIR}/dist/solrj-lib $PREFIX/$LIB_DIR/lib
 install -d -m 0755 $PREFIX/$LIB_DIR/contrib
 cp -ra ${BUILD_DIR}/contrib/velocity $PREFIX/$LIB_DIR/contrib
 
+install -d -m 0755 $PREFIX/$LIB_DIR/server/webapps/solr
+(cd $PREFIX/$LIB_DIR/server/webapps/solr ; jar xf ../../../*.war)
+
 install -d -m 0755 $PREFIX/$LIB_DIR/server/webapps/ROOT
-(cd $PREFIX/$LIB_DIR/server/webapps/ROOT ; jar xf ../../../*.war)
+cat > $PREFIX/$LIB_DIR/server/webapps/ROOT/index.html <<__EOT__
+<html><head><meta http-equiv="refresh" content="0;url=./solr"></head><body><a href="/solr">Solr Console</a></body></html>
+__EOT__
 
 install -d -m 0755 $PREFIX/$LIB_DIR/server/conf
 cp $DISTRO_DIR/web.xml $PREFIX/$LIB_DIR/server/conf

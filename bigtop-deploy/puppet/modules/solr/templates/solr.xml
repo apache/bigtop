@@ -16,7 +16,7 @@
  limitations under the License.
 -->
 <solr persistent="false">
-  <cores adminPath="/admin/cores" host="<%= fqdn %>" hostPort="<%= port %>" hostContext=".">
+  <cores adminPath="/admin/cores" host="<%= fqdn %>" hostPort="<%= port %>" hostContext="${hostContext:}" zkClientTimeout="${zkClientTimeout:15000}">
 <% collections.each do |collection| %>
     <core name="<%= collection %>_<%= fqdn.to_s.tr('.', '_') %>" shard="<%= collection %>_<%= fqdn.to_s.tr('.', '_') %>" collection="<%= collection %>"
           instanceDir="<%= fqdn.to_s.tr('.', '_') %>/" schema="schema.xml" config="solrconfig.xml"/>
