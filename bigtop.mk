@@ -230,6 +230,7 @@ BIGTOP_JSVC_RELEASE_VERSION=1
 BIGTOP_JSVC_TARBALL_SRC=commons-daemon-$(BIGTOP_JSVC_BASE_VERSION)-native-src.tar.gz
 BIGTOP_JSVC_TARBALL_DST=commons-daemon-$(BIGTOP_JSVC_BASE_VERSION).tar.gz
 BIGTOP_JSVC_SITE=$(APACHE_MIRROR)/commons/daemon/source/
+BIGTOP_JSVC_ARCHIVE=$(APACHE_ARCHIVE)/commons/daemon/source/
 $(eval $(call PACKAGE,bigtop-jsvc,BIGTOP_JSVC))
 
 # Bigtop-tomcat
