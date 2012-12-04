@@ -61,3 +61,17 @@ start() {
 __EOT__
 
 }
+
+generate_extra_commands() {
+
+cat <<'__EOT__'
+    rollback)
+      DAEMON_FLAGS="$DAEMON_FLAGS -${1}"
+      start
+      ;;
+    *)
+      echo $"Usage: $0 {start|stop|status|restart|try-restart|condrestart|rollback}"
+      exit 1
+__EOT__
+
+}
