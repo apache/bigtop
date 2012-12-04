@@ -1,5 +1,5 @@
 #!/bin/sh
-set -x
+set -ex
 
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -161,7 +161,7 @@ for file in ooziedb.sh oozied.sh oozie-sys.sh ; do
 done
 
 install -d -m 0755 ${CONF_DIR}
-cp ${BUILD_DIR}/conf/* ${CONF_DIR}
+cp -r ${BUILD_DIR}/conf/* ${CONF_DIR}
 sed -i -e '/oozie.service.HadoopAccessorService.hadoop.configurations/,/<\/property>/s#<value>\*=hadoop-conf</value>#<value>*=/etc/hadoop/conf</value>#g' \
           ${CONF_DIR}/oozie-site.xml
 # FIXME: OOZIE-1089, MAPREDUCE-4820

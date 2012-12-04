@@ -19,7 +19,7 @@
   <flume>
     <users>
       <flume>
-        <home>/var/run/flume</home>
+        <home>/var/lib/flume</home>
         <descr>Flume User</descr>
         <shell>/bin/false</shell>
       </flume>
