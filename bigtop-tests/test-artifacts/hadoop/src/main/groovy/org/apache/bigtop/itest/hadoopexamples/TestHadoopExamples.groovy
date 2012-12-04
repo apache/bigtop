@@ -25,6 +25,7 @@ import static org.junit.Assert.assertTrue
 import org.junit.Test
 import org.apache.hadoop.conf.Configuration
 import org.apache.bigtop.itest.JarContent
+import org.apache.bigtop.itest.TestUtils
 import org.apache.commons.logging.LogFactory
 import org.apache.commons.logging.Log
 
@@ -62,26 +63,7 @@ class TestHadoopExamples {
   @BeforeClass
   static void setUp() {
     conf = new Configuration();
-    // Unpack resource
-    JarContent.unpackJarContainer(TestHadoopExamples.class, '.' , null)
-
-    sh.exec("hadoop fs -test -e $EXAMPLES");
-    if (sh.getRet() == 0) {
-      sh.exec("hadoop fs -rmr -skipTrash $EXAMPLES");
-      assertTrue("Deletion of previous $EXAMPLES from HDFS failed",
-          sh.getRet() == 0);
-    }
-    sh.exec("hadoop fs -test -e $EXAMPLES_OUT");
-    if (sh.getRet() == 0) {
-      sh.exec("hadoop fs -rmr -skipTrash $EXAMPLES_OUT");
-      assertTrue("Deletion of previous examples output from HDFS failed",
-          sh.getRet() == 0);
-    }
-
-    // copy test files to HDFS
-    sh.exec("hadoop fs -put $EXAMPLES $EXAMPLES",
-        "hadoop fs -mkdir $EXAMPLES_OUT");
-    assertTrue("Could not create output directory", sh.getRet() == 0);
+    TestUtils.unpackTestResources(TestHadoopExamples.class, EXAMPLES, null, EXAMPLES_OUT);
   }
 
   static Map examples =

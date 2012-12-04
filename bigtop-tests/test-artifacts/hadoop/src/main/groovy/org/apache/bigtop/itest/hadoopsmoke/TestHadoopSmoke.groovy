@@ -19,6 +19,7 @@
 package org.apache.bigtop.itest.hadoopsmoke
 
 import org.apache.bigtop.itest.JarContent
+import org.apache.bigtop.itest.TestUtils
 import org.apache.bigtop.itest.shell.Shell
 import org.junit.AfterClass
 import org.junit.BeforeClass
@@ -54,14 +55,8 @@ class TestHadoopSmoke {
 
   @BeforeClass
   static void  setUp() throws IOException {
-    JarContent.unpackJarContainer(TestHadoopSmoke.class, '.' , null)
-
-    sh.exec(
-    "hadoop fs  -mkdir ${testDir}/cachefile",
-    "hadoop dfs -put   cachedir.jar ${testDir}/cachefile",
-    "hadoop dfs -put   input.txt ${testDir}/cachefile",
-    )
-    logError(sh)
+    String[] inputFiles = ["cachedir.jar", "input.txt"];
+    TestUtils.unpackTestResources(TestHadoopSmoke.class, "${testDir}/cachefile", inputFiles, null);
   }
 
   @AfterClass
