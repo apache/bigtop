@@ -16,7 +16,7 @@
 class solr {
   define solrcloud_config($confdir, $zk) {
     exec { "ZK $title config upload":
-      command => "/usr/bin/java -classpath '/usr/lib/solr/server/webapps/ROOT/WEB-INF/lib/*' org.apache.solr.cloud.ZkCLI -cmd upconfig  -confdir ${confdir}/${title}/conf -confname $title -zkhost $zk",
+      command => "/bin/bash -c \"java -classpath '/usr/lib/solr/server/webapps/solr/WEB-INF/lib/*' org.apache.solr.cloud.ZkCLI -cmd makepath /solr -zkhost ${zk} ; java -classpath '/usr/lib/solr/server/webapps/solr/WEB-INF/lib/*' org.apache.solr.cloud.ZkCLI -cmd upconfig  -confdir ${confdir}/${title}/conf -confname $title -zkhost ${zk}/solr\"",
       logoutput => true,
     }
   }
