@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.bigtop.itest.hdfstests
+package org.apache.bigtop.itest.hadoop.hdfs
 
 import org.junit.Test
 import org.apache.bigtop.itest.shell.Shell
