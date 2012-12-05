@@ -23,11 +23,14 @@ import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertTrue
 
 import org.apache.bigtop.itest.shell.Shell
+import org.apache.bigtop.itest.TestUtils
 
 public class TestCrunchSmoke {
   static String runnerScript = "hadoop jar"
 
-  static String crunchJar = "/usr/lib/crunch/crunch-examples-*job.jar";
+  static String crunchJar = System.getProperty(
+    "org.apache.bigtop.itest.crunch.smoke.crunch.jar", 
+    "/usr/share/doc/crunch*/crunch-examples-*job.jar");
 
   static Shell sh = new Shell("/bin/bash -s");
   private static final String EXAMPLES = "crunch-examples";
@@ -35,23 +38,7 @@ public class TestCrunchSmoke {
 
   @BeforeClass
   static void setUp() {
-    sh.exec("hadoop fs -test -e $EXAMPLES");
-    if (sh.getRet() == 0) {
-      sh.exec("hadoop fs -rmr -skipTrash $EXAMPLES");
-      assertTrue("Deletion of previous $EXAMPLES from HDFS failed",
-          sh.getRet() == 0);
-    }
-    sh.exec("hadoop fs -test -e $EXAMPLES_OUT");
-    if (sh.getRet() == 0) {
-      sh.exec("hadoop fs -rmr -skipTrash $EXAMPLES_OUT");
-      assertTrue("Deletion of previous examples output from HDFS failed",
-          sh.getRet() == 0);
-    }
-
-    // copy test files to HDFS
-    sh.exec("hadoop fs -put $EXAMPLES $EXAMPLES",
-        "hadoop fs -mkdir $EXAMPLES_OUT");
-    assertTrue("Could not create output directory", sh.getRet() == 0);
+    TestUtils.unpackTestResources(TestCrunchSmoke.class, EXAMPLES, null, EXAMPLES_OUT);
   }
 
   static Map examples =
