@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.apache.bigtop.itest.hadooptests
+package org.apache.bigtop.itest.hadoop.hdfs
 
 import org.apache.bigtop.itest.shell.Shell
 import org.junit.AfterClass

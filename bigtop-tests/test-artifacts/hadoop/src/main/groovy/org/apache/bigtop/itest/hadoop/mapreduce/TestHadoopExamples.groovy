@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.apache.bigtop.itest.hadoopexamples
+package org.apache.bigtop.itest.hadoop.mapreduce
 
 import org.junit.BeforeClass
 import static org.junit.Assert.assertNotNull

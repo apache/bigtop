@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.apache.bigtop.itest.hadoopsmoke
+package org.apache.bigtop.itest.hadoop.mapreduce
 
 import org.apache.bigtop.itest.JarContent
 import org.apache.bigtop.itest.shell.Shell
