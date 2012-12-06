@@ -1,3 +1,4 @@
+#!/bin/sh
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -13,13 +14,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-1. Debian
-  1.0. apt-get install -y git subversion build-essential dh-make debhelper devscripts ant ant-optional autoconf automake subversion liblzo2-dev libzip-dev sharutils libfuse-dev reprepro libssl-dev
+set -ex
 
-  FIXME?: You also need to have Scala 2.9.1 or later installed and SCALA_HOME
-  env. var pointed properly. Otherwise, Spark project won't be build as it
-  requires scala. Only older version of the language environment is available
-  on Ubuntu at the moment.
+BUILD_OPTS="-Divy.home=${HOME}/.ivy2 -Dsbt.ivy.home=${HOME}/.ivy2 -Duser.home=${HOME}     \
+            -Drepo.maven.org=$IVY_MIRROR_PROP -Dreactor.repo=file://${HOME}/.m2/repository"
 
-2. RedHat
-  2.0 yum install -y git subversion fuse-devel fuse fuse-libs
+# FIXME: this is a really unfortunate hack
+sed -ie 's#EXTRA_ARGS=""#EXTRA_ARGS="'"$BUILD_OPTS"'"#' sbt/sbt
+
+HADOOP_VERSION=1.0.3
+# FIXME: even more crazy hack
+sed -ie 's#val HADOOP_VERSION =.*#val HADOOP_VERSION = "'$HADOOP_VERSION'"#' project/SparkBuild.scala
+
+sbt/sbt $BUILD_OPTS package "$@"
