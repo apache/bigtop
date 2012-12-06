@@ -53,6 +53,7 @@ DAEMON=/usr/lib/hue/build/env/bin/supervisor # Introduce the server's location h
 DAEMON_OPTS="-p $PIDFILE -l $LOGDIR -d"
 DESC="Hue web server"
 USER=hue
+HUE_SHUTDOWN_TIMEOUT=15
 
 export PYTHON_EGG_CACHE=/tmp/.hue-python-eggs
 
@@ -74,10 +75,23 @@ hue_start() {
 }
 
 hue_stop() {
+  HUE_PID=`cat $PIDFILE 2>/dev/null`
+
+  if [ ! -e $PIDFILE ]; then
+    success "Hue is not running"
+    return 0
+  fi
+
   log_success_msg "Stopping $DESC: "
-  killproc -p $PIDFILE $DAEMON
+  if [ -n "$HUE_PID" ]; then
+    kill -TERM ${HUE_PID} &>/dev/null
+    for i in `seq 1 ${HUE_SHUTDOWN_TIMEOUT}` ; do
+      kill -0 ${HUE_PID} &>/dev/null || break
+      sleep 1
+    done
+    kill -KILL ${HUE_PID} &>/dev/null
+  fi
   RETVAL=$?
-  sleep 5
   echo
   [ $RETVAL -eq 0 ] && rm -f $LOCKFILE $PIDFILE
 }

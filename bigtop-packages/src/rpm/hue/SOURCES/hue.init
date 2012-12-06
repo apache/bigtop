@@ -32,6 +32,7 @@ PIDFILE=/var/run/hue/supervisor.pid
 USER=hue
 EXEC=/usr/lib/hue/build/env/bin/python
 DAEMON_OPTS="-p $PIDFILE -l $LOGDIR -d"
+HUE_SHUTDOWN_TIMEOUT=15
 
 hue_start() {
         export PYTHON_EGG_CACHE='/tmp/.hue-python-eggs'
@@ -88,13 +89,22 @@ hue_start() {
 }
 
 hue_stop() {
+        HUE_PID=`cat $PIDFILE 2>/dev/null`
+
         if [ ! -e $PIDFILE ]; then
             success "Hue is not running"
             return 0
         fi
 
         echo -n "Shutting down hue: "
-        killproc -p $PIDFILE -d 15 $DAEMON
+        if [ -n "$HUE_PID" ]; then
+          kill -TERM ${HUE_PID} &>/dev/null
+          for i in `seq 1 ${HUE_SHUTDOWN_TIMEOUT}` ; do
+            kill -0 ${HUE_PID} &>/dev/null || break
+            sleep 1
+          done
+          kill -KILL ${HUE_PID} &>/dev/null
+        fi
         ret=$?
         echo
         rm -f $LOCKFILE
