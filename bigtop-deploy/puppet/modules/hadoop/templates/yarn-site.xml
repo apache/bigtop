@@ -92,6 +92,11 @@
   </property>
 
   <property>
+    <name>yarn.dispatcher.exit-on-error</name>
+    <value>true</value>
+  </property>
+
+  <property>
     <name>yarn.nodemanager.local-dirs</name>
     <value><%= yarn_data_dirs.join(",") %></value>
     <final>true</final>
