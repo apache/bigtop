@@ -54,25 +54,12 @@
     <name>yarn.nodemanager.linux-container-executor.group</name>
     <value>hadoop</value>
   </property>
-
-  <property>
-    <name>yarn.web-proxy.principal</name>
-    <value>yarn/_HOST@<%= kerberos_realm %></value>
-  </property>
-  <property>
-    <name>yarn.web-proxy.keytab</name>
-    <value>/etc/yarn.keytab</value>
-  </property>
 <% end %>
 
-<% 
-=begin FIXME: MAPREDUCE-3916 -%> 
   <property>
     <name>yarn.web-proxy.address</name>
     <value><%= hadoop_ps_host %>:<%= hadoop_ps_port %></value>
   </property> 
-<% 
-=end -%>
 
   <property>
     <name>yarn.resourcemanager.resource-tracker.address</name>

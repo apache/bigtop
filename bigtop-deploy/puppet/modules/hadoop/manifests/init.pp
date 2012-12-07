@@ -436,7 +436,7 @@ class hadoop {
   }
 
 
-  define resourcemanager ($host = $fqdn, $port = "8040", $rt_port = "8025", $sc_port = "8030", $thrift_port = "9290", $auth = "simple") {
+  define resourcemanager ($host = $fqdn, $port = "8032", $rt_port = "8025", $sc_port = "8030", $thrift_port = "9290", $auth = "simple") {
     $hadoop_rm_host = $host
     $hadoop_rm_port = $port
     $hadoop_rt_port = $rt_port

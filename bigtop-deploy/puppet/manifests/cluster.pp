@@ -43,13 +43,16 @@ class hadoop_cluster_node {
 
   $hadoop_rm_host        = $hadoop_head_node
   $hadoop_rt_port        = extlookup("hadoop_rt_port", "8025")
-  $hadoop_rm_port        = extlookup("hadoop_rm_port", "8040")
+  $hadoop_rm_port        = extlookup("hadoop_rm_port", "8032")
   $hadoop_sc_port        = extlookup("hadoop_sc_port", "8030")
   $hadoop_rt_thrift_port = extlookup("hadoop_rt_thrift_port", "9290")
 
   $hadoop_hs_host        = $hadoop_head_node
   $hadoop_hs_port        = extlookup("hadoop_hs_port", "10020")
   $hadoop_hs_webapp_port = extlookup("hadoop_hs_webapp_port", "19888")
+
+  $hadoop_ps_host        = $hadoop_head_node
+  $hadoop_ps_port        = extlookup("hadoop_ps_port", "20888")
 
   $hadoop_jobtracker_host            = $hadoop_head_node
   $hadoop_jobtracker_port            = extlookup("hadoop_jobtracker_port", "8021")
@@ -181,6 +184,12 @@ class hadoop_head_node inherits hadoop_cluster_node {
         host => $hadoop_hs_host,
         port => $hadoop_hs_port,
         webapp_port => $hadoop_hs_webapp_port,
+        auth => $hadoop_security_authentication,
+  }
+
+  hadoop::proxyserver { "proxyserver":
+        host => $hadoop_ps_host,
+        port => $hadoop_ps_port,
         auth => $hadoop_security_authentication,
   }
 
