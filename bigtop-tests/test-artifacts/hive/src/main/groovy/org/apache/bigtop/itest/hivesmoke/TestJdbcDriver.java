@@ -36,12 +36,12 @@ import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 
-import org.apache.bigtop.itest.Parameters;
+import org.apache.bigtop.itest.Contract;
 import org.apache.bigtop.itest.ParameterSetter;
 import org.apache.bigtop.itest.Property;
 import org.apache.bigtop.itest.shell.Shell;
 
-@Parameters(
+@Contract(
   properties = {
     @Property(name="hiveserver.startup.wait", type=Property.Type.INT, longValue=1000, intValue=1000, defaultValue="1000")
   },

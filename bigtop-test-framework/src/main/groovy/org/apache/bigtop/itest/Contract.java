@@ -25,11 +25,15 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Specifies the contract for a test: what environment variables and system
+ * properties are used or expected by the test.
+ */
 @Documented
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface Parameters {
+public @interface Contract {
   Variable[] env();
   Property[] properties();
 }

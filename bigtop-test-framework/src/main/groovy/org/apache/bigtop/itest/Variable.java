@@ -22,7 +22,7 @@ package org.apache.bigtop.itest;
    Specifies a parameter to be passed into a test via an environment variable.
    The parameter is a String.
    By default, the parameter is required. If it is required and a non-null value
-   cannot be found for it, an exception may be thrown.
+   cannot be found for it, an error may be thrown.
 */
 public @interface Variable {
   String name();

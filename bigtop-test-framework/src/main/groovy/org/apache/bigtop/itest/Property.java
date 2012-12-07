@@ -32,7 +32,7 @@ public @interface Property {
   }
   String name();
   Type type() default Type.STRING;
-  String defaultValue();
-  int intValue();
-  long longValue();
+  String defaultValue() default "";
+  int intValue() default 0;
+  long longValue() default 0L;
 }
