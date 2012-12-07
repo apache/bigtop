@@ -31,20 +31,10 @@ start() {
   [ -d $CONF_DIR ] || exit $ERROR_PROGRAM_NOT_CONFIGURED
   log_success_msg "Starting ${DESC}: "
 
-  TARGET_USER_NAME="HADOOP_`echo datanode | tr a-z A-Z`_USER"
-  TARGET_USER=$(eval "echo \$$TARGET_USER_NAME")
-
-  # The following needs to be removed once HDFS-1943 gets finally put to rest.
-  # The logic of this ugly hack is this: IFF we do NOT have jsvc installed it is
-  # guaranteed that we can NOT be running in a secure mode and thus we need to
-  # workaround HDFS-1943 (start as non-root). As soon as jsvc gets installed
-  # we are assuming a secure installation and starting a data node as root.
-  # This leaves 2 corner cases:
-  #    1. HADOOP_DATANODE_USER being set to root
-  #    2. jsvc is installed but Hadoop is configures to run in an unsecure mode
-  # Both will currently fail
   if [ -n "$HADOOP_SECURE_DN_USER" ]; then
     TARGET_USER=root
+  else
+    TARGET_USER=${HADOOP_DATANODE_USER:-hdfs}
   fi
 
   export HADOOP_IDENT_STRING=$TARGET_USER
