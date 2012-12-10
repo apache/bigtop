@@ -15,11 +15,267 @@
 
 Bigtop Changelog
 
-* Release 0.5.0 (unreleased)
+* Release 0.6.0 (unreleased)
 
-- BUG FIXES
+* Release 0.5.0 (2012-12-25)
+
+- SUB-TASK
+  - [BIGTOP-39] - Include Apache Avro in Bigtop
+  - [BIGTOP-41] - Add Apache Thrift to Bigtop
+  - [BIGTOP-65] - Package Apache Forrest
+  - [BIGTOP-225] - Exit consistently in init scripts for stop on stopped service
+  - [BIGTOP-232] - create an example .ks file for Bigtop
+  - [BIGTOP-237] - Oozie init scripts are way too verbose
+  - [BIGTOP-239] - HBase init scripts are shut down in the wrong order
+  - [BIGTOP-240] - hbase initscripts should be more explicit
+  - [BIGTOP-302] - 1. Start a separate Wiki page on Installing Bigtop in VMs (VirtualBox) (make sure to record the fact that one needs >> 2GB of RAM)    2. Record the experience with 32bit OSes 
+  - [BIGTOP-380] - Initscripts have misleading messages
+  - [BIGTOP-533] - BigTop Hama Integration Tests
+  - [BIGTOP-551] - Updates for packaging manifest
+  - [BIGTOP-612] - Add Crunch to Bigtop
+  - [BIGTOP-692] - Bump Whirr to 0.8.1
+  - [BIGTOP-695] - Make variables used in flume build/install scripts consistent
+  - [BIGTOP-696] - Make variables used in oozie build/install scripts consistent
+  - [BIGTOP-697] - Make variables used in zookeeper build/install scripts consistent
+  - [BIGTOP-700] - Make variables used in whirr build/install scripts consistent
+  - [BIGTOP-702] - Make variables used in datafu build/install scripts consistent
+  - [BIGTOP-703] - Make variables used in jsvc build/install scripts consistent
+  - [BIGTOP-704] - Make variables used in pig build/install scripts consistent
+  - [BIGTOP-705] - Make variables used in giraph build/install scripts consistent
+  - [BIGTOP-706] - Make variables used in hive build/install scripts consistent
+  - [BIGTOP-707] - Make variables used in tomcat build/install scripts consistent
+  - [BIGTOP-711] - update hadoop version to 2.0.2-alpha 
+  - [BIGTOP-714] - HDFS Fuse build broken for 0.23.3
+  - [BIGTOP-733] - Bump Hue to 2.1.0
+  - [BIGTOP-735] - Upgrade to pull Solr 4.0 when it's officially released
+  - [BIGTOP-736] - When Solr is integrated, we'll need some tests.
+  - [BIGTOP-744] - add package test for Solr
+  - [BIGTOP-750] - Bump Zookeeper to 3.4.5
+  - [BIGTOP-751] - Bump HBase to 0.94.2
+  - [BIGTOP-752] - Bump Sqoop to 1.4.2
+  - [BIGTOP-753] - Bump Flume to 1.3.0
+  - [BIGTOP-765] - Create deployment code for Solr
+  - [BIGTOP-791] - Bump Oozie to 3.3.0
+
+- BUG
+  - [BIGTOP-51] - Layout of Bigtop repository can be optimized
+  - [BIGTOP-79] - Audit RPM package dependencies for programs invoked from install/uninstall scripts
+  - [BIGTOP-98] - Ability to force ivy/maven version inter-dependency needs to be implemented
+  - [BIGTOP-105] - hadoop services can not be started with the default configs in place
+  - [BIGTOP-106] - review and cleanup install/unistall/upgrade time dependencies
+  - [BIGTOP-107] - make Bigtop packaging work in kick-start environment
+  - [BIGTOP-135] - make jsvc use detection more robust on SLES
+  - [BIGTOP-168] - all of the packages that link to hadoop-core need to also link commons-configuration-1.6.jar
+  - [BIGTOP-172] - Hadoop init.d scripts are flaky on stop
+  - [BIGTOP-177] - Remove or fix versioned dependencies between packages of Bigtop
+  - [BIGTOP-187] - some packages ship log files
+  - [BIGTOP-200] - /var/lib/hadoop is set to 777 on installation it should just be group writable
+  - [BIGTOP-213] - We should use another group than hadoop for system groups
+  - [BIGTOP-218] - we need to figure out which compressors/codecs need to be pulled into Bigtop
+  - [BIGTOP-219] - Pig/HBase integration is not working
+  - [BIGTOP-222] - some man pages in /usr/share/doc/flume
+  - [BIGTOP-223] -  install/ initscripts fixes 
+  - [BIGTOP-224] - Some configuration files have their permissions set to 755
+  - [BIGTOP-226] - everything in /usr/lib/pig is set to 755. Non executable files should just be 644
+  - [BIGTOP-227] - whirr has all its files (except its man page) set as 755
+  - [BIGTOP-228] - Whirr should have a symlink to the hadoop's jars it needs
+  - [BIGTOP-229] - pig package install an alternative with an inconsitent name
+  - [BIGTOP-230] - removing packages displays the following extraneous messages
+  - [BIGTOP-256] - Lintian Errors/Warnings - Hadoop Package
+  - [BIGTOP-275] - scoping of variable in puppet code is incorrect
+  - [BIGTOP-279] - we shouldn't be using properties that have been deprecated in config/puppet
+  - [BIGTOP-282] - the licensing status of the MovieLens data files needs to be cleared up
+  - [BIGTOP-292] - BIgtop SRPMs can not be rebuilt
+  - [BIGTOP-307] - README documentation is inaccurate
+  - [BIGTOP-311] - hadoop does not build in off-line mode
+  - [BIGTOP-326] - puppet modules need to be renamed to align with renaming that happens on the package front
+  - [BIGTOP-330] - hadoop 0.23 pseudo conf needs to set more properties to avoid using /tmp as its datadir
+  - [BIGTOP-335] - sqoop-metastore service fails to start because it ends up using /usr/lib/hadoop/bin/hadoop
+  - [BIGTOP-340] - wrapper scripts would benefit from being explicit
+  - [BIGTOP-347] - we need to get rid of workaround for HDFS-1943 in hadoop init.d scripts
+  - [BIGTOP-358] - now that hadoop packages have been split we have to update the dependencies on the downstream packages
+  - [BIGTOP-368] - /usr/bin/hadoop sources /etc/default/yarn unconditionally
+  - [BIGTOP-377] - Clean up packages
+  - [BIGTOP-379] - Package testing for Bigtop 0.5.0 release
+  - [BIGTOP-385] - new artifacts in Hadoop 0.23 need to be properly packaged
+  - [BIGTOP-395] - flume-ng init.d scripts seem to be unhappy on Debian
+  - [BIGTOP-425] - HMaster dies from RemoteException: Server IPC version 5 cannot communicate with client version 4
+  - [BIGTOP-436] - flume-node stop seems to mistarget some other java process on lucid
+  - [BIGTOP-445] - yarn default file has the wrong name
+  - [BIGTOP-463] - should we reconsider /usr/lib vs. /usr/libexec decision?
+  - [BIGTOP-471] - hive server setup after installation fails on creating /var/lock/subsys directory
+  - [BIGTOP-483] - Smoke test of Hadoop fails with clitest missing testConf.xml file
+  - [BIGTOP-486] - separate principals from keytabs in our kerberos module
+  - [BIGTOP-489] - TestCLI with two test cases fails ID - 146 and 147 related to refreshServiceAcl
+  - [BIGTOP-490] - SmokeTest-Mahout test failures
+  - [BIGTOP-492] - make our launcher scripts recognize cascading defaults
+  - [BIGTOP-504] - provide a functionality for detecting libjvm.so in bigtop-utils
+  - [BIGTOP-511] - Add debian repo to bigtop puppet
+  - [BIGTOP-520] - HBase Debian builds run do-component-build twice
+  - [BIGTOP-525] - make sure yarn.dispatcher.exit-on-error is set to true
+  - [BIGTOP-531] - package metadata check error: when description is empty, the summary will append text "description" at the end of summary
+  - [BIGTOP-542] - Issue when installing the new zkfc
+  - [BIGTOP-545] - package testing manifest in trunk needs to be updated
+  - [BIGTOP-549] - update puppet code for the latest state of HA in Hadoop
+  - [BIGTOP-553] - Metadata for packages needs to be harmonized between RPM and Debain
+  - [BIGTOP-566] - Flume NG pkg init script should allow user to customize the location of the conf dir
+  - [BIGTOP-581] - Need to move iTest website to a correct location
+  - [BIGTOP-584] - Fix hive smoke test failures in trunk
+  - [BIGTOP-591] - libhdfs0-dev is missing files
+  - [BIGTOP-615] - Add support for Ambrose Pig job visualization
+  - [BIGTOP-624] - running start on a service already running should return success
   - [BIGTOP-634] - Weird output when doing an init action on oozie when it is already running
+  - [BIGTOP-637] - Update boxgrinder appliance for the coming release
+  - [BIGTOP-644] - fix the runlevels for a few packages in yum/apt/zypper
+  - [BIGTOP-648] - hbase-thrift cannot be started properly
+  - [BIGTOP-654] - Set nproc for HDFS user
+  - [BIGTOP-658] - Move hbase dependency in hive out of the main package
+  - [BIGTOP-662] - cannot start hue-server
+  - [BIGTOP-663] - cannot start sqoop-metastore in Ubuntu precise
   - [BIGTOP-664] - hive-metastore script has error when execute 'service hive-metastore status' in Ubuntu precise
+  - [BIGTOP-667] - start hadoop-httpfs in SLES return 3 instead of 0
+  - [BIGTOP-669] - Add DataFu to Bigtop distribution
+  - [BIGTOP-676] - Update HBase version to 0.94.1-rc0
+  - [BIGTOP-679] - fuse_dfs binary has moved due to HDFS-3537
+  - [BIGTOP-684] - copyright header in bigtop-packages/src/common/hadoop/conf.secure/core-site.xml is in wrong place
+  - [BIGTOP-686] - Apache Flume 1.2.0 went out so we should upgrade to it
+  - [BIGTOP-689] - Oozie use of /var/tmp in some CentOS versions create issues
+  - [BIGTOP-691] - flume gets killed too fast when the service is asked to stop
+  - [BIGTOP-694] - Some HBase Scripts Need To Be Excluded From Packaging
+  - [BIGTOP-699] - hadoop-fuse-dfs fails to find libjvm.so when JAVA_HOME happens to be a symlink
+  - [BIGTOP-701] - Bigtop Hadoop package does not include bash tab completion
+  - [BIGTOP-708] - modify Hive integration test to depends on the correct jar file
+  - [BIGTOP-721] - improve the package daemon status check, check twice by some delay if status doesn't match expected value
+  - [BIGTOP-725] - package service test TestServices should only do config once for a group of services
+  - [BIGTOP-729] - zookeeper initd script status doesn't work
+  - [BIGTOP-734] - Proposed fixes to Hive logging configuration
+  - [BIGTOP-740] - improve the package file content tests to ignore platform specific file names
+  - [BIGTOP-745] - fix incorrect javadocs in test framework
+  - [BIGTOP-754] - libhdfs0-dev package is empty
+  - [BIGTOP-755] - YARN_HOME is now HADOOP_YARN_HOME
+  - [BIGTOP-758] - [Pig] Override hadoop-core and hadoop-test artifact versions only if Hadoop < 2.x
+  - [BIGTOP-759] - Flume do-component-build should set hbase.version according to BOM
+  - [BIGTOP-762] - Updates for building Flume versions >= 1.2
+  - [BIGTOP-766] - Make it possible to override Apache URLs for the builds that require them
+  - [BIGTOP-768] - Bump the version of Groovy to 1.8
+  - [BIGTOP-774] - solr build fails on Debian
+  - [BIGTOP-775] - In Groovy 1.8 the behavior of a getters of static fields changed slightly
+  - [BIGTOP-776] - A few updates to Oozie related packaging code to accomodate Oozie's TLP status
+  - [BIGTOP-778] - move Solr app to under /solr in Tomcat deployment and provide more knobs
+  - [BIGTOP-780] - cannot install hive-server in SLES
+  - [BIGTOP-781] - Bigtop packages seem to have a bunch of parasitic provides
+  - [BIGTOP-782] - 'service hue status' still show 'failed' after hue is started in SLES
+  - [BIGTOP-783] - 'service hue stop' cannot stop the hue service in SLES
+  - [BIGTOP-785] - clean up build-time dependencies in our packages
+  - [BIGTOP-788] - Oozie RPM build error due to lack of usr/lib/oozie/{libserver,oozie-server,libext}
+  - [BIGTOP-789] - remove shadow-utils dependency from zookeeper
+  - [BIGTOP-793] - add crunch integration tests
+  - [BIGTOP-794] - puppet code around hadoop_head_node breaks on newer puppets
+  - [BIGTOP-795] - need to abstract away the notion of Bigtop puppet repo
+  - [BIGTOP-796] - hive install tries to tickle HDFS and it shouldn't
+  - [BIGTOP-797] - provide a way to 'rsync' files into HDFS during puppet deployment
+  - [BIGTOP-798] - introduce a fatjar collection of all the Bigtop integration tests and all their dependencies
+  - [BIGTOP-800] - BIGTOP_JSVC is lacking ARCHIVE designation
+  - [BIGTOP-801] - prioritize jdk over jre in bigtop-utils javadetection
+  - [BIGTOP-803] - somehow puppet gets confused by the hadoop fs output
+
+- IMPROVEMENT
+  - [BIGTOP-12] - Add HCatalog to Bigtop
+  - [BIGTOP-22] - Unify init scripts
+  - [BIGTOP-58] - Add man page for Mahout
+  - [BIGTOP-60] - Add normal rpmbuild options for make rpm
+  - [BIGTOP-78] - Misc improvments 
+  - [BIGTOP-117] - Document incompatible API changes between releases
+  - [BIGTOP-153] - Build should detect invalid archives in the dl directory
+  - [BIGTOP-204] - Add information about supported projects and criteria for support to Apache Bigtop website
+  - [BIGTOP-233] - Ubuntu integration: ufw application profiles
+  - [BIGTOP-245] - Improve Bigtop layout
+  - [BIGTOP-263] - we need a way to provide supervision for long running daemon applications
+  - [BIGTOP-284] - It would be nice to integrate Nutch crawling as one of the MR (and perhaps HBase) tests for Bigtop
+  - [BIGTOP-304] - document test creation and test execution steps in Bigtop
+  - [BIGTOP-351] - Make HBASE_HEAPSIZE manageable via puppet
+  - [BIGTOP-375] - Publish a table of component dependency versions
+  - [BIGTOP-410] - Build secure version of HBase
+  - [BIGTOP-433] - Make variables used in build/install scripts consistent
+  - [BIGTOP-451] - ooziedb.sh script should run as the unix user that runs oozie server
+  - [BIGTOP-452] - oozie installation should offer to run ooziedb.sh
+  - [BIGTOP-456] - Consider splitting homedir between mapred and hdfs users?
+  - [BIGTOP-476] - Improvement of BigTop iTest framework
+  - [BIGTOP-497] - add bash tab completion to our hadoop packages
+  - [BIGTOP-517] - Flume packaging should use the term "agent" instead of "node".
+  - [BIGTOP-536] - provide suitable title in the <title> tag of the main home page for bigtop-incubating
+  - [BIGTOP-547] - create an HDFS setup helper script
+  - [BIGTOP-550] - Add ability to have multiple zookeeper servers to puppet
+  - [BIGTOP-571] - we might need to guard against direct use of the upstream launcher scripts
+  - [BIGTOP-575] - [Pseudo-dist config] Should yarn.nodemanager.remote-app-log-dir really be set?
+  - [BIGTOP-576] - Minor discrepancy in naming of logs/users vs. base log directories
+  - [BIGTOP-640] - Sync up dependency library versions automatically
+  - [BIGTOP-670] - provide a link to our Jenkins server from the Bigtop's project page
+  - [BIGTOP-680] - Write util function to capture test input parameters
+  - [BIGTOP-688] - improve hue packaging via making virtual env relocatable and moving DB files into /var/lib/hue
+  - [BIGTOP-710] - Create a higher level orchestration deployment framework
+  - [BIGTOP-712] - Bigtop 0.5.0 release
+  - [BIGTOP-713] - use newer debhelper and source format 3.0 (quilt) for Debian and Ubuntu packaging
+  - [BIGTOP-716] - standardize on bash as a shell of choice
+  - [BIGTOP-718] - Update wiki for component requirements
+  - [BIGTOP-726] - make it possible to run HiveBulkScriptExecutor scripts selectively
+  - [BIGTOP-731] - Reorganize Hadoop tests
+  - [BIGTOP-742] - tighten permissions on hadoop services home directories
+  - [BIGTOP-756] - Provide the thrift API interface file in the HBase packages
+  - [BIGTOP-757] - Install ZooKeeper jars into the local Maven cache
+  - [BIGTOP-769] - Create a generic shell executor iTest driver
+  - [BIGTOP-772] - Remove all references to the incubation from the trunk of Bigtop
+  - [BIGTOP-777] - separate the Package Tests into service tests, file content tests, and dependency tests
+  - [BIGTOP-779] - create a config management utility for SolrCloud
+  - [BIGTOP-784] - test deployment code on all of the supported platforms (using OpenJDK7 where available)
+  - [BIGTOP-787] - Surface all possible options in /etc/default/flume-node
+  - [BIGTOP-792] - org.apache.bigtop.itest.posix.Service needs to be updated to accomodate upstart/systemd
+  - [BIGTOP-799] - create an itest method for unpacking all the resources into the HDFS or local filesystem
+  - [BIGTOP-802] - Add rollback option to DataNode service script
+  - [BIGTOP-806] - now that MAPREDUCE-3916 is fixed we should enable webproxy
+
+- NEW FEATURE
+  - [BIGTOP-42] - Start doing testpatch-like patch validation
+  - [BIGTOP-64] - Package Apache tools used in Bigtop builds
+  - [BIGTOP-101] - Need to come up with a strategy for dealing with soft dependencies between packages
+  - [BIGTOP-103] - add support for upstart service management facility
+  - [BIGTOP-116] - Add support for systemd
+  - [BIGTOP-220] - Add mrunit to Bigtop
+  - [BIGTOP-246] - Provide more verbose output at artifact build time
+  - [BIGTOP-276] - Standardize how clients create classpaths and java.library.paths
+  - [BIGTOP-350] - Some sort of system expert would be useful for manifests reviews
+  - [BIGTOP-399] - Provide a one-click install package for seamless deployment of Bigtop from the release/nightly repos
+  - [BIGTOP-458] - Create some builds/tests jobs for openJDK 6 and 7 on bigtop01 jenkins
+  - [BIGTOP-460] - Add support for daemontools-encore
+  - [BIGTOP-524] - Add tests to verify that our init scripts conform to the LSB specification
+  - [BIGTOP-594] - Introduce git-style bigtop command line and BIGTOP_HOME environment variable
+  - [BIGTOP-601] - introduce bigtop-build packages for packaging build-time dependencies
+  - [BIGTOP-635] - Implement a cluster-abstraction, discovery and manipulation framework for iTest
+  - [BIGTOP-685] - provide a way to specify the parameters expected by a test
+  - [BIGTOP-687] - Support YARN as a subproject of Hadoop
+  - [BIGTOP-730] - add tarball driver into Bigtop
+
+- TASK
+  - [BIGTOP-236] - The user installed by hbase gets an incorrect home directory
+  - [BIGTOP-314] - add ZooKeeper systest to Bigtop testing regime 
+  - [BIGTOP-406] - Enable openSuse VM on bigtop01
+  - [BIGTOP-439] - we need to review package test manifest for the Bigtop 0.4.0 release
+  - [BIGTOP-681] - Package tests needed for new DataFu package
+  - [BIGTOP-715] - Add Spark packaging
+  - [BIGTOP-720] - Build environment automation
+  - [BIGTOP-760] - Push artifacts from non-Maven projects into local Maven cache
+
+- TEST
+  - [BIGTOP-614] - Add HDFS HA tests
+  - [BIGTOP-621] - Add test for distcp - intra cluster
+  - [BIGTOP-625] - Add HDFS Append Test
+  - [BIGTOP-629] - Adding Automated HA Tests 
+  - [BIGTOP-693] - Add hadoop-fuse-dfs test
+  - [BIGTOP-719] - Add TestTextSnappy to test hadoop fs -text with snappy compressed files
+  - [BIGTOP-728] - add datafu integration test
+
+- WISH
+  - [BIGTOP-67] - Resize bigtop logo in header of website
 
 * Release 0.4.0 (2012-06-25)
 
