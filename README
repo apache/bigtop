@@ -26,8 +26,11 @@ focus on the system as a whole, rather than individual projects.
 
 ## Building Bigtop
 
-Packages have been built on Ubuntu 10.10, CentOS 5 and openSUSE
-11.4. They can probably be built on other platforms as well.
+Packages have been built for CentOS/RHEL 5 and 6, Fedora 17,
+SuSE Linux Enterprise 11, OpenSUSE12.2, Ubuntu LTS Lucid and Precise,
+and Ubuntu Quantal. They can probably be built for other platforms as
+well.Some of the binary artifacts might be compatible with other closely
+related distributions.
 
 Building Bigtop requires the following tools:
 
