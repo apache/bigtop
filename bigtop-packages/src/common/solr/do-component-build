@@ -23,7 +23,7 @@ BUILD_OPTS="-Dversion=${FULL_VERSION}                                  \
 
 # FIXME: this needs to be fixed at the product level
 ant $BUILD_OPTS ivy-bootstrap
-mkdir solr/test-framework/lib || :
+mkdir -p solr/test-framework/lib || :
 
 ant $BUILD_OPTS clean
 
