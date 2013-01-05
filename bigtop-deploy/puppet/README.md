@@ -34,7 +34,7 @@ run the following on those nodes:
 
 <pre>
 # mkdir /etc/puppet/config
-# cat > /etc/puppet/config/site.csv <&lt;EOF
+# cat > /etc/puppet/config/site.csv &lt;&lt; EOF
 # hadoop_head_node,hadoopmaster.example.com
 # hadoop_storage_dirs,/data/1,/data/2
 # bigtop_yumrepo_uri,http://mirror.example.com/path/to/mirror/
