@@ -664,7 +664,6 @@ fi
 %preun conf-pseudo
 if [ "$1" = 0 ]; then
         %{alternatives_cmd} --remove %{name}-conf %{etc_hadoop}/conf.pseudo
-        rm -f %{etc_hadoop}/conf
 fi
 
 %files conf-pseudo
