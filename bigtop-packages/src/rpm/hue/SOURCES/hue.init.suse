@@ -75,14 +75,14 @@ hue_start() {
 }
 
 hue_stop() {
-  HUE_PID=`cat $PIDFILE 2>/dev/null`
-
   if [ ! -e $PIDFILE ]; then
     success "Hue is not running"
     return 0
   fi
 
   log_success_msg "Stopping $DESC: "
+
+  HUE_PID=`cat $PIDFILE 2>/dev/null`
   if [ -n "$HUE_PID" ]; then
     kill -TERM ${HUE_PID} &>/dev/null
     for i in `seq 1 ${HUE_SHUTDOWN_TIMEOUT}` ; do
@@ -91,9 +91,10 @@ hue_stop() {
     done
     kill -KILL ${HUE_PID} &>/dev/null
   fi
-  RETVAL=$?
   echo
-  [ $RETVAL -eq 0 ] && rm -f $LOCKFILE $PIDFILE
+  rm -f $LOCKFILE $PIDFILE
+  RETVAL=0
+  return $RETVAL
 }
 
 hue_restart() {
