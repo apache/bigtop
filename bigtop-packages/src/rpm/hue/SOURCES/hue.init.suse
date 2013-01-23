@@ -19,7 +19,7 @@
 #
 # chkconfig: 345 90 10
 # description: Hue web server
-# pidfile: /usr/lib/hue/pids/supervisor.pid
+# pidfile: /var/run/hue/supervisor.pid
 #
 ### BEGIN INIT INFO
 # Provides:          hue_webserver
@@ -103,7 +103,10 @@ hue_restart() {
 
 
 checkstatus(){
-  pidofproc -p $PIDFILE $DAEMON > /dev/null
+  # -L flag to follow symlinks is not in LSB spec and is distro specific
+  # It exists in SLES and therefore ok to be used here. It may or may not
+  # exist in other distros
+  pidofproc -L -p $PIDFILE python > /dev/null
   status=$?
 
   case "$status" in
