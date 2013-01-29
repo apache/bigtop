@@ -580,6 +580,7 @@ fi
 %attr(0775,hdfs,hadoop) %{log_hdfs}
 %attr(0755,hdfs,hadoop) %{state_hdfs}
 %attr(1777,hdfs,hadoop) %{state_hdfs}/cache
+%{lib_hadoop}/libexec/init-hdfs.sh
 
 %files mapreduce
 %defattr(-,root,root)

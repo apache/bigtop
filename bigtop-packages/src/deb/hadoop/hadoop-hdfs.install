@@ -2,6 +2,7 @@
 /etc/hadoop/conf.empty/hdfs-site.xml
 /usr/lib/hadoop-hdfs
 /usr/lib/hadoop/libexec/hdfs-config.sh
+/usr/lib/hadoop/libexec/init-hdfs.sh
 /usr/bin/hdfs
 /var/lib/hadoop-hdfs
 /var/log/hadoop-hdfs
