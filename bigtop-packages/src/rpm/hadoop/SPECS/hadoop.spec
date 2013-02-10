@@ -56,7 +56,7 @@
 %define doc_hadoop %{_docdir}/%{name}-%{hadoop_version}
 %define httpfs_services httpfs
 %define mapreduce_services mapreduce-historyserver
-%define hdfs_services hdfs-namenode hdfs-secondarynamenode hdfs-datanode hdfs-zkfc
+%define hdfs_services hdfs-namenode hdfs-secondarynamenode hdfs-datanode hdfs-zkfc hdfs-journalnode
 %define yarn_services yarn-resourcemanager yarn-nodemanager yarn-proxyserver
 %define hadoop_services %{hdfs_services} %{mapreduce_services} %{yarn_services} %{httpfs_services}
 # Hadoop outputs built binaries into %{hadoop_build}
@@ -163,6 +163,7 @@ Source20: hdfs.default
 Source21: yarn.default
 Source22: hadoop-layout.sh
 Source23: hadoop-hdfs-zkfc.svc
+Source24: hadoop-hdfs-journalnode.svc
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
 BuildRequires: fuse-devel, fuse, cmake
 Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils, zookeeper >= 3.4.0
@@ -289,6 +290,17 @@ monitors and manages the state of the NameNode. Each of the machines
 which runs a NameNode also runs a ZKFC, and that ZKFC is responsible
 for: Health monitoring, ZooKeeper session management, ZooKeeper-based
 election.
+
+%package hdfs-journalnode
+Summary: Hadoop HDFS JournalNode
+Group: System/Daemons
+Requires: %{name}-hdfs = %{version}-%{release}
+Requires(pre): %{name} = %{version}-%{release}
+
+%description hdfs-journalnode
+The HDFS JournalNode is responsible for persisting NameNode edit logs. 
+In a typical deployment the JournalNode daemon runs on at least three 
+separate machines in the cluster.
 
 %package hdfs-datanode
 Summary: Hadoop Data Node
@@ -660,6 +672,7 @@ fi
 %service_macro hdfs-namenode
 %service_macro hdfs-secondarynamenode
 %service_macro hdfs-zkfc
+%service_macro hdfs-journalnode
 %service_macro hdfs-datanode
 %service_macro yarn-resourcemanager
 %service_macro yarn-nodemanager

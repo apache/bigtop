@@ -154,6 +154,15 @@ Description: Hadoop HDFS failover controller
  for: Health monitoring, ZooKeeper session management, ZooKeeper-based
  election.
 
+Package: hadoop-hdfs-journalnode
+Provides: hadoop-hdfs-journalnode
+Architecture: all
+Depends: hadoop-hdfs (= ${source:Version})
+Description: Hadoop HDFS JournalNode 
+ The HDFS JournalNode is responsible for persisting NameNode edit logs. 
+ In a typical deployment the JournalNode daemon runs on at least three 
+ separate machines in the cluster.
+
 Package: hadoop-hdfs-datanode
 Architecture: all
 Depends: hadoop-hdfs (= ${source:Version})
