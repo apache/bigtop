@@ -86,6 +86,13 @@ if [ "${DO_MAVEN_DEPLOY}" = "deploy" ]; then
   EXTRA_GOALS="${EXTRA_GOALS} source:jar deploy"
 fi
 
+## Update hardcoded version of the Hadoop base to the current HADOOP VERSION
+## This approach might need to be reconsidered once OOZIE-1201 is fixed
+sed -i.orig -e "s#2.0.2-alpha#${HADOOP_VERSION}#" ${WORKDIR}/hadooplibs/hadoop-2/pom.xml
+sed -i.orig -e "s#2.0.2-alpha#${HADOOP_VERSION}#" ${WORKDIR}/hadooplibs/hadoop-distcp-2/pom.xml
+sed -i.orig -e "s#2.0.2-alpha#${HADOOP_VERSION}#" ${WORKDIR}/hadooplibs/hadoop-test-2/pom.xml
+sed -i.orig -e "s#2.0.2-alpha#${HADOOP_VERSION}#" ${WORKDIR}/pom.xml
+
 # Invoke Oozie build script
 ${WORKDIR}/bin/mkdistro.sh -DskipTests -Dhadoop.version=${HADOOP_VERSION} ${EXTRA_GOALS} -Dmaven.repo.local=${HOME}/.m2/repository "$@"
 MKDISTRO_RESULT=$?
