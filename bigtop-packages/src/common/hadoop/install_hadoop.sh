@@ -348,7 +348,9 @@ sed -i -e '/<\/configuration>/i\
 for conf in conf.pseudo ; do
   install -d -m 0755 $HADOOP_ETC_DIR/$conf
   # Install the upstream config files
-  cp ${BUILD_DIR}/etc/hadoop/*metrics* $HADOOP_ETC_DIR/$conf
+  cp ${BUILD_DIR}/etc/hadoop/* $HADOOP_ETC_DIR/$conf
+  # Remove the ones that shouldn't be installed
+  rm -rf $HADOOP_ETC_DIR/$conf/httpfs*
   # Overlay the -site files
   (cd $DISTRO_DIR/$conf && tar -cf - .) | (cd $HADOOP_ETC_DIR/$conf && tar -xf -)
   chmod -R 0644 $HADOOP_ETC_DIR/$conf/*
