@@ -88,6 +88,7 @@ fi
 
 ## Update hardcoded version of the Hadoop base to the current HADOOP VERSION
 ## This approach might need to be reconsidered once OOZIE-1201 is fixed
+sed -i.orig -e "/module.*hadoop.*\-1.*module/d"   ${WORKDIR}/hadooplibs/pom.xml
 sed -i.orig -e "s#2.0.2-alpha#${HADOOP_VERSION}#" ${WORKDIR}/hadooplibs/hadoop-2/pom.xml
 sed -i.orig -e "s#2.0.2-alpha#${HADOOP_VERSION}#" ${WORKDIR}/hadooplibs/hadoop-distcp-2/pom.xml
 sed -i.orig -e "s#2.0.2-alpha#${HADOOP_VERSION}#" ${WORKDIR}/hadooplibs/hadoop-test-2/pom.xml
