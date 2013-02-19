@@ -76,7 +76,7 @@ hue_start() {
 
 hue_stop() {
   if [ ! -e $PIDFILE ]; then
-    success "Hue is not running"
+    log_success_msg "Hue is not running"
     return 0
   fi
 
@@ -104,30 +104,37 @@ hue_restart() {
 
 
 checkstatus(){
-  # -L flag to follow symlinks is not in LSB spec and is distro specific
-  # It exists in SLES and therefore ok to be used here. It may or may not
-  # exist in other distros
-  pidofproc -L -p $PIDFILE python > /dev/null
+  pid=`cat "$PIDFILE" 2>/dev/null`
+  if [ "$pid" = '' ]; then
+    # The pidfile probably does not exist or is empty.
+    if [ -e $LOCKFILE ]; then
+      log_failure_msg "$DESC is dead and lock file exists"
+      RETVAL=$STATUS_DEAD_AND_LOCK
+    else
+      log_failure_msg "$DESC is not running"
+      RETVAL=$STATUS_NOT_RUNNING
+    fi
+    return $RETVAL
+  fi
+
+  set -- $pid
+  pid="$1"
+  ps -fp $pid | grep $pid | grep -i hue > /dev/null 2>&1
   status=$?
 
-  case "$status" in
-    $STATUS_RUNNING)
-      log_success_msg "$DESC is running"
-      ;;
-    $STATUS_DEAD)
-      log_failure_msg "$DESC is dead and pid file exists"
-      ;;
-    $STATUS_DEAD_AND_LOCK)
-      log_failure_msg "$DESC is dead and lock file exists"
-      ;;
-    $STATUS_NOT_RUNNING)
-      log_failure_msg "$DESC is not running"
-      ;;
-    *)
-      log_failure_msg "$DESC status is unknown"
-      ;;
-  esac
-  return $status
+  if [ "$status" = 0 ]; then
+    log_success_msg "$DESC is running"
+    RETVAL=$STATUS_RUNNING
+  elif [ -e $LOCKFILE ]; then
+    log_failure_msg "$DESC is dead and lock file exists"
+    RETVAL=$STATUS_DEAD_AND_LOCK
+  else
+    # pidfile exists, that's how we ended up here (by checking the
+    # the pid's status through ps
+    log_failure_msg "$DESC is dead and pid file exists"
+    RETVAL=$STATUS_DEAD
+  fi
+return $RETVAL
 }
 
 hue_condrestart(){
