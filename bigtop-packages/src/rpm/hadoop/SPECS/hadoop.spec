@@ -258,6 +258,7 @@ Summary: The Hadoop namenode manages the block locations of HDFS files
 Group: System/Daemons
 Requires: %{name}-hdfs = %{version}-%{release}
 Requires(pre): %{name} = %{version}-%{release}
+Requires(pre): %{name}-hdfs = %{version}-%{release}
 
 %description hdfs-namenode
 The Hadoop Distributed Filesystem (HDFS) requires one unique server, the
@@ -269,6 +270,7 @@ Summary: Hadoop Secondary namenode
 Group: System/Daemons
 Requires: %{name}-hdfs = %{version}-%{release}
 Requires(pre): %{name} = %{version}-%{release}
+Requires(pre): %{name}-hdfs = %{version}-%{release}
 
 %description hdfs-secondarynamenode
 The Secondary Name Node periodically compacts the Name Node EditLog
@@ -280,6 +282,7 @@ Summary: Hadoop HDFS failover controller
 Group: System/Daemons
 Requires: %{name}-hdfs = %{version}-%{release}
 Requires(pre): %{name} = %{version}-%{release}
+Requires(pre): %{name}-hdfs = %{version}-%{release}
 
 %description hdfs-zkfc
 The Hadoop HDFS failover controller is a ZooKeeper client which also
@@ -293,6 +296,7 @@ Summary: Hadoop Data Node
 Group: System/Daemons
 Requires: %{name}-hdfs = %{version}-%{release}
 Requires(pre): %{name} = %{version}-%{release}
+Requires(pre): %{name}-hdfs = %{version}-%{release}
 
 %description hdfs-datanode
 The Data Nodes in the Hadoop Cluster are responsible for serving up
@@ -304,6 +308,7 @@ Summary: HTTPFS for Hadoop
 Group: System/Daemons
 Requires: %{name}-hdfs = %{version}-%{release}, bigtop-tomcat
 Requires(pre): %{name} = %{version}-%{release}
+Requires(pre): %{name}-hdfs = %{version}-%{release}
 
 %description httpfs
 The server providing HTTP REST API support for the complete FileSystem/FileContext
@@ -314,6 +319,7 @@ Summary: YARN Resource Manager
 Group: System/Daemons
 Requires: %{name}-yarn = %{version}-%{release}
 Requires(pre): %{name} = %{version}-%{release}
+Requires(pre): %{name}-yarn = %{version}-%{release}
 
 %description yarn-resourcemanager
 The resource manager manages the global assignment of compute resources to applications
@@ -323,6 +329,7 @@ Summary: YARN Node Manager
 Group: System/Daemons
 Requires: %{name}-yarn = %{version}-%{release}
 Requires(pre): %{name} = %{version}-%{release}
+Requires(pre): %{name}-yarn = %{version}-%{release}
 
 %description yarn-nodemanager
 The NodeManager is the per-machine framework agent who is responsible for
@@ -334,6 +341,7 @@ Summary: YARN Web Proxy
 Group: System/Daemons
 Requires: %{name}-yarn = %{version}-%{release}
 Requires(pre): %{name} = %{version}-%{release}
+Requires(pre): %{name}-yarn = %{version}-%{release}
 
 %description yarn-proxyserver
 The web proxy server sits in front of the YARN application master web UI.
@@ -343,6 +351,7 @@ Summary: MapReduce History Server
 Group: System/Daemons
 Requires: %{name}-mapreduce = %{version}-%{release}
 Requires(pre): %{name} = %{version}-%{release}
+Requires(pre): %{name}-mapreduce = %{version}-%{release}
 
 %description mapreduce-historyserver
 The History server keeps records of the different activities being performed on a Apache Hadoop cluster
