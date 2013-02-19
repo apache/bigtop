@@ -283,10 +283,13 @@ fi
 export HADOOP_LIBEXEC_DIR=${SYSTEM_LIBEXEC_DIR#${PREFIX}}
 
 if [ "\${LD_LIBRARY_PATH}" = "" ]; then
-  export LD_LIBRARY_PATH=/usr/lib
-  for f in \`find \${JAVA_HOME}/ -name client -prune -o -name libjvm.so -exec dirname {} \;\`; do
-    export LD_LIBRARY_PATH=\$f:\${LD_LIBRARY_PATH}
-  done
+  export JAVA_NATIVE_LIBS="libjvm.so"
+  if [ -e /usr/libexec/bigtop-detect-javalibs ]; then
+  . /usr/libexec/bigtop-detect-javalibs
+  elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javalibs ]; then
+  . /usr/lib/bigtop-utils/bigtop-detect-javalibs
+  fi
+  export LD_LIBRARY_PATH=\${JAVA_NATIVE_PATH}:/usr/lib
 fi
 
 # Pulls all jars from hadoop client package

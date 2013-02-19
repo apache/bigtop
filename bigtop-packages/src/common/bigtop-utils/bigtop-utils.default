@@ -15,3 +15,6 @@
 
 # Override JAVA_HOME detection for all bigtop packages
 # export JAVA_HOME
+
+# Provide a colon-delimited list of directories to search for native Java libraries (e.g. libjvm.so)
+# export JAVA_NATIVE_PATH
