@@ -13,10 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# See BIGTOP-383
-%if  %{?suse_version:1}%{?mgaversion:1}0
-%define _libexecdir /usr/lib/bigtop-utils/
-%endif
+%define lib_dir /usr/lib/bigtop-utils
 
 Name: bigtop-utils
 Version: %{bigtop_utils_version}
@@ -58,10 +55,10 @@ install -p -m 644 %{SOURCE3} .
 
 
 %install
-install -d -p -m 755 $RPM_BUILD_ROOT%{_libexecdir}/
+install -d -p -m 755 $RPM_BUILD_ROOT%{lib_dir}/
 install -d -p -m 755 $RPM_BUILD_ROOT/etc/default
-install -p -m 755 %{SOURCE0} $RPM_BUILD_ROOT%{_libexecdir}/
-install -p -m 755 %{SOURCE3} $RPM_BUILD_ROOT%{_libexecdir}/
+install -p -m 755 %{SOURCE0} $RPM_BUILD_ROOT%{lib_dir}/
+install -p -m 755 %{SOURCE3} $RPM_BUILD_ROOT%{lib_dir}/
 install -p -m 644 %{SOURCE2} $RPM_BUILD_ROOT/etc/default/bigtop-utils
 
 %clean
@@ -73,8 +70,8 @@ rm -rf $RPM_BUILD_ROOT
 %doc LICENSE
 %config(noreplace) /etc/default/bigtop-utils
 
-%{_libexecdir}/bigtop-detect-javahome
-%{_libexecdir}/bigtop-detect-javalibs
+%{lib_dir}/bigtop-detect-javahome
+%{lib_dir}/bigtop-detect-javalibs
 
 %changelog
 

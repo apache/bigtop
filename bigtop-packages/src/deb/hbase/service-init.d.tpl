@@ -54,11 +54,7 @@ if [ -f /etc/default/hbase ] ; then
 fi
 
 # Autodetect JAVA_HOME if not defined                                                                                                                  
-if [ -e /usr/libexec/bigtop-detect-javahome ]; then
-  . /usr/libexec/bigtop-detect-javahome
-elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
-  . /usr/lib/bigtop-utils/bigtop-detect-javahome
-fi
+. /usr/lib/bigtop-utils/bigtop-detect-javahome
 
 if [ -z "$HBASE_PID_DIR" -o -z "$HBASE_HOME" ]; then
   echo No HBASE_HOME or HBASE_PID_DIR set.

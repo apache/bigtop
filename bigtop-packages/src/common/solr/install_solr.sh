@@ -153,11 +153,7 @@ cat > $PREFIX/$LIB_DIR/bin/solrd <<EOF
 [ -f /etc/default/solr ] && . /etc/default/solr
 
 # Autodetect JAVA_HOME if not defined
-if [ -e /usr/libexec/bigtop-detect-javahome ]; then
-  . /usr/libexec/bigtop-detect-javahome
-elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
-  . /usr/lib/bigtop-utils/bigtop-detect-javahome
-fi
+. /usr/lib/bigtop-utils/bigtop-detect-javahome
 
 export CATALINA_HOME=$LIB_DIR/../bigtop-tomcat
 export CATALINA_BASE=$LIB_DIR/server

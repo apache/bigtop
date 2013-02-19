@@ -172,11 +172,7 @@ for component in $HADOOP_DIR/bin/hadoop $HDFS_DIR/bin/hdfs $YARN_DIR/bin/yarn $M
 #!/bin/sh
 
 # Autodetect JAVA_HOME if not defined
-if [ -e /usr/libexec/bigtop-detect-javahome ]; then
-. /usr/libexec/bigtop-detect-javahome
-elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
-fi
 
 export HADOOP_LIBEXEC_DIR=/${SYSTEM_LIBEXEC_DIR#${PREFIX}}
 
@@ -268,11 +264,7 @@ cat > $fuse_wrapper << EOF
 /sbin/modprobe fuse
 
 # Autodetect JAVA_HOME if not defined
-if [ -e /usr/libexec/bigtop-detect-javahome ]; then
-. /usr/libexec/bigtop-detect-javahome
-elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
-fi
 
 export HADOOP_HOME=\${HADOOP_HOME:-${HADOOP_DIR#${PREFIX}}}
 
@@ -284,11 +276,7 @@ export HADOOP_LIBEXEC_DIR=${SYSTEM_LIBEXEC_DIR#${PREFIX}}
 
 if [ "\${LD_LIBRARY_PATH}" = "" ]; then
   export JAVA_NATIVE_LIBS="libjvm.so"
-  if [ -e /usr/libexec/bigtop-detect-javalibs ]; then
-  . /usr/libexec/bigtop-detect-javalibs
-  elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javalibs ]; then
   . /usr/lib/bigtop-utils/bigtop-detect-javalibs
-  fi
   export LD_LIBRARY_PATH=\${JAVA_NATIVE_PATH}:/usr/lib
 fi
 

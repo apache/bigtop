@@ -18,7 +18,7 @@
 %define bin_jsvc /usr/lib/bigtop-utils
 %define doc_jsvc %{_docdir}/%{name}
 %else
-%define bin_jsvc %{_libexecdir}/bigtop-utils
+%define bin_jsvc /usr/lib/bigtop-utils
 %define doc_jsvc %{_docdir}/%{name}-%{bigtop_jsvc_version}
 %endif
 

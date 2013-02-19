@@ -62,6 +62,7 @@
 # Hadoop outputs built binaries into %{hadoop_build}
 %define hadoop_build_path build
 %define static_images_dir src/webapps/static/images
+%define libexecdir /usr/lib
 
 %ifarch i386
 %global hadoop_arch Linux-i386-32
@@ -87,7 +88,6 @@
     %{nil}
 
 %define netcat_package nc
-%define libexecdir %{_libexecdir}
 %define doc_hadoop %{_docdir}/%{name}-%{hadoop_version}
 %define alternatives_cmd alternatives
 %global initd_dir %{_sysconfdir}/rc.d/init.d
@@ -108,7 +108,6 @@
     %{nil}
 
 %define netcat_package netcat-openbsd
-%define libexecdir /usr/lib
 %define doc_hadoop %{_docdir}/%{name}
 %define alternatives_cmd update-alternatives
 %global initd_dir %{_sysconfdir}/rc.d
@@ -116,7 +115,6 @@
 
 %if  0%{?mgaversion}
 %define netcat_package netcat-openbsd
-%define libexecdir /usr/libexec/
 %define doc_hadoop %{_docdir}/%{name}-%{hadoop_version}
 %define alternatives_cmd update-alternatives
 %global initd_dir %{_sysconfdir}/rc.d/init.d

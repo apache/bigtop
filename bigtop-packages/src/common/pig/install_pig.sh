@@ -132,11 +132,7 @@ cat > $PREFIX/$BIN_DIR/pig <<EOF
 #!/bin/sh
 
 # Autodetect JAVA_HOME if not defined
-if [ -e /usr/libexec/bigtop-detect-javahome ]; then
-  . /usr/libexec/bigtop-detect-javahome
-elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
-  . /usr/lib/bigtop-utils/bigtop-detect-javahome
-fi
+. /usr/lib/bigtop-utils/bigtop-detect-javahome
 
 # FIXME: a workaround for PIG-2786
 # HBase integration support

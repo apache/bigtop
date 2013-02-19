@@ -129,11 +129,7 @@ cat > $wrapper <<EOF
 #!/bin/sh
 
 # Autodetect JAVA_HOME if not defined
-if [ -e /usr/libexec/bigtop-detect-javahome ]; then
-  . /usr/libexec/bigtop-detect-javahome
-elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
-  . /usr/lib/bigtop-utils/bigtop-detect-javahome
-fi
+. /usr/lib/bigtop-utils/bigtop-detect-javahome
 
 export ZOOKEEPER_HOME=\${ZOOKEEPER_CONF:-/usr/lib/zookeeper}
 export ZOOKEEPER_CONF=\${ZOOKEEPER_CONF:-/etc/zookeeper/conf}
@@ -150,11 +146,7 @@ for pairs in zkServer.sh/zookeeper-server zkServer-initialize.sh/zookeeper-serve
 #!/bin/sh
 
 # Autodetect JAVA_HOME if not defined
-if [ -e /usr/libexec/bigtop-detect-javahome ]; then
-  . /usr/libexec/bigtop-detect-javahome
-elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
-  . /usr/lib/bigtop-utils/bigtop-detect-javahome
-fi
+. /usr/lib/bigtop-utils/bigtop-detect-javahome
 
 export ZOOPIDFILE=\${ZOOPIDFILE:-/var/run/zookeeper/zookeeper-server.pid}
 export ZOOKEEPER_HOME=\${ZOOKEEPER_CONF:-/usr/lib/zookeeper}

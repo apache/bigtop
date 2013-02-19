@@ -124,11 +124,7 @@ cat > $PREFIX/$BIN_DIR/mahout <<EOF
 #!/bin/sh
 
 # Autodetect JAVA_HOME if not defined
-if [ -e /usr/libexec/bigtop-detect-javahome ]; then
-  . /usr/libexec/bigtop-detect-javahome
-elif [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
-  . /usr/lib/bigtop-utils/bigtop-detect-javahome
-fi
+. /usr/lib/bigtop-utils/bigtop-detect-javahome
 
 # FIXME: MAHOUT-994
 export HADOOP_HOME=\${HADOOP_HOME:-/usr/lib/hadoop}
