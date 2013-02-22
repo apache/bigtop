@@ -28,7 +28,7 @@ fi
 # attempt to find native java libraries
 if [ -z "$JAVA_NATIVE_PATH" ]; then
   for library in $JAVA_NATIVE_LIBS; do
-    if [ -z "$JAVA_NATIVE_PATH" ]; then
+    if [ -z "$libraries_predicate" ]; then
       libraries_predicate="-name $library"
     else
       libraries_predicate="$libraries_predicate -o -name $library"
