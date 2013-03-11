@@ -255,8 +255,7 @@ fi
 %{about_app_dir}
 %{filebrowser_app_dir}
 %{help_app_dir}
-# FIXME: HUE-10
-# %{jobbrowser_app_dir}
+%{jobbrowser_app_dir}
 %{jobsub_app_dir}
 %{proxy_app_dir}
 %{useradmin_app_dir}

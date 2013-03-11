@@ -111,8 +111,7 @@ cp -f $BUILD_DIR/apps/shell/src/shell/build/setuid $PREFIX/$LIB_DIR/apps/shell/s
 
 # Remove Hue database and then recreate it, but with just the "right" apps
 rm -f $PREFIX/$LIB_DIR/desktop/desktop.db $PREFIX/$LIB_DIR/app.reg
-# FIXME: jobbrowser HUE-10
-APPS="about filebrowser help jobsub proxy useradmin shell"
+APPS="about filebrowser jobbrowser help jobsub proxy useradmin shell"
 export DESKTOP_LOG_DIR=$BUILD_DIR
 export DESKTOP_LOGLEVEL=WARN
 export ROOT=$PREFIX/$LIB_DIR
@@ -140,14 +139,9 @@ sed -i -e '/\[\[yarn_clusters\]\]/,+20s@## submit_to=False@submit_to=True@' \
 # Fix a redirection, since by default beeswax is not installed
 sed -i -e '/meta http-equiv="refresh"/s#/beeswax#/about#' \
     $PREFIX/$LIB_DIR/desktop/core/src/desktop/templates/index.mako
-# FIXME: HUE-880
-sed -i -e '/"name": *"Hive"/,/description/s#"parameters":.*$#"parameters": "[{\\"name\\":\\"oozie.use.system.libpath\\",\\"value\\":\\"true\\"}]",#' \
-       -e '/"name": *"Pig"/,/description/s#"parameters":.*$#"parameters": "[{\\"name\\":\\"oozie.use.system.libpath\\",\\"value\\":\\"true\\"}]",#' \
-       -e '/"name": *"Sqoop"/,/description/s#"parameters":.*$#"parameters": "[{\\"name\\":\\"oozie.use.system.libpath\\",\\"value\\":\\"true\\"}]",#' \
-       -e '/"name": *"DistCp"/,/description/s#"parameters":.*$#"parameters": "[{\\"name\\":\\"oozie.use.system.libpath\\",\\"value\\":\\"true\\"}]",#' \
-    $PREFIX/$LIB_DIR/apps/oozie/src/oozie/fixtures/initial_example_data.json
-sed -i -e '/jobbrowser.views/s#<a href=[^>]*>#<a href=".">#' \
-    $PREFIX/$LIB_DIR/apps/oozie/src/oozie/templates/dashboard/list_oozie_workflow.mako
+# FIXME: HUE-1097
+sed -i -e '/impala.conf/d' \
+    $PREFIX/$LIB_DIR/apps/beeswax/src/beeswax/server/dbms.py
 
 # Relink logs subdirectory just in case
 install -d -m 0755 $PREFIX/$LOG_DIR

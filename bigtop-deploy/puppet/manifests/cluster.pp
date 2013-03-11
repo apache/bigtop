@@ -78,6 +78,9 @@ class hadoop_cluster_node {
 
   $hadoop_oozie_url  = "http://${hadoop_head_node}:11000/oozie"
   $hadoop_httpfs_url = "http://${hadoop_head_node}:14000/webhdfs/v1"
+  $hadoop_rm_url             = "http://${hadoop_head_node}:8088"
+  $hadoop_rm_proxy_url       = "http://${hadoop_head_node}:8088"
+  $hadoop_history_server_url = "http://${hadoop_head_node}:19888"
 
   $solrcloud_collections = ["collection1"]
   $solrcloud_port        = "1978"
@@ -211,6 +214,9 @@ class hadoop_head_node inherits hadoop_cluster_node {
   }
 
   hue::server { "hue server":
+        rm_url      => $hadoop_rm_url,
+        rm_proxy_url => $hadoop_rm_proxy_url,
+        history_server_url => $hadoop_history_server_url,
         webhdfs_url => $hadoop_httpfs_url,
         rm_host     => $hadoop_rm_host,
         rm_port     => $hadoop_rm_port,

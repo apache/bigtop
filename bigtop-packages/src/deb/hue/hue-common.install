@@ -19,8 +19,7 @@
 /usr/lib/hue/apps/about
 /usr/lib/hue/apps/filebrowser
 /usr/lib/hue/apps/help
-# FIXME: HUE-10
-# /usr/lib/hue/apps/jobbrowser
+/usr/lib/hue/apps/jobbrowser
 /usr/lib/hue/apps/jobsub
 /usr/lib/hue/apps/proxy
 /usr/lib/hue/apps/shell
