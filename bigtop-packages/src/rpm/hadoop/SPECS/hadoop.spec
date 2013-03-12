@@ -540,11 +540,6 @@ chkconfig --add %{name}-httpfs
 
 %preun
 if [ "$1" = 0 ]; then
-  # Stop any services that might be running
-  for service in %{hadoop_services}
-  do
-     service hadoop-$service stop 1>/dev/null 2>/dev/null || :
-  done
   %{alternatives_cmd} --remove %{name}-conf %{etc_hadoop}/conf.empty || :
 fi
 
