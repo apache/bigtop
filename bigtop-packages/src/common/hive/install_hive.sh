@@ -140,6 +140,7 @@ do
   mv ${PREFIX}${CONF_DIST_DIR}/${template}.template ${PREFIX}${CONF_DIST_DIR}/${template}
 done
 cp hive-site.xml ${PREFIX}${CONF_DIST_DIR}
+sed -i -e "s|@VERSION@|${HIVE_VERSION}|" ${PREFIX}${CONF_DIST_DIR}/hive-site.xml
 
 ln -s ${CONF_DIR}/conf $PREFIX/$LIB_DIR/conf
 
