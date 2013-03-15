@@ -502,15 +502,15 @@ done
 %__install -d -m 1777 $RPM_BUILD_ROOT/%{state_hdfs}/cache
 %__install -d -m 1777 $RPM_BUILD_ROOT/%{state_mapreduce}/cache
 # /var/log/*
-%__install -d -m 0775 $RPM_BUILD_ROOT/%{log_yarn}
-%__install -d -m 0775 $RPM_BUILD_ROOT/%{log_hdfs}
-%__install -d -m 0775 $RPM_BUILD_ROOT/%{log_mapreduce}
-%__install -d -m 0775 $RPM_BUILD_ROOT/%{log_httpfs}
+%__install -d -m 0755 $RPM_BUILD_ROOT/%{log_yarn}
+%__install -d -m 0755 $RPM_BUILD_ROOT/%{log_hdfs}
+%__install -d -m 0755 $RPM_BUILD_ROOT/%{log_mapreduce}
+%__install -d -m 0755 $RPM_BUILD_ROOT/%{log_httpfs}
 # /var/run/*
-%__install -d -m 0775 $RPM_BUILD_ROOT/%{run_yarn}
-%__install -d -m 0775 $RPM_BUILD_ROOT/%{run_hdfs}
-%__install -d -m 0775 $RPM_BUILD_ROOT/%{run_mapreduce}
-%__install -d -m 0775 $RPM_BUILD_ROOT/%{run_httpfs}
+%__install -d -m 0755 $RPM_BUILD_ROOT/%{run_yarn}
+%__install -d -m 0755 $RPM_BUILD_ROOT/%{run_hdfs}
+%__install -d -m 0755 $RPM_BUILD_ROOT/%{run_mapreduce}
+%__install -d -m 0755 $RPM_BUILD_ROOT/%{run_httpfs}
 
 %pre
 getent group hadoop >/dev/null || groupadd -r hadoop
