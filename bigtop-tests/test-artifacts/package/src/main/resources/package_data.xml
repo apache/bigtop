@@ -350,14 +350,14 @@ server.</description>
 MapReduce pipelines, based on Google's FlumeJava. Its goal is to make 
 pipelines that are composed of many user-defined functions simple to write, 
 easy to test, and efficient to run.</description>
-      <url></url>
+      <url>http://incubator.apache.org/crunch/</url>
     </metadata>
   </crunch>
   <crunch-doc>
     <metadata>
       <summary>Apache Crunch (incubating) documentation</summary>
       <description>Apache Crunch (incubating) documentation</description>
-      <url></url>
+      <url>http://incubator.apache.org/crunch/</url>
     </metadata>
   </crunch-doc>
   <pig>
