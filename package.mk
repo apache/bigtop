@@ -51,6 +51,7 @@ $(BUILD_DIR)/%/.srpm:
 	cp -r $(BASE_DIR)/bigtop-packages/src/rpm/$($(PKG)_NAME)/* $(PKG_BUILD_DIR)/rpm/
 	mkdir -p $(PKG_BUILD_DIR)/rpm/{INSTALL,SOURCES,BUILD,SRPMS}
 	[ -z "$($(PKG)_TARBALL_SRC)" ] || cp $($(PKG)_DOWNLOAD_DST) $(PKG_BUILD_DIR)/rpm/SOURCES
+	cp $(BASE_DIR)/bigtop-packages/src/templates/init.d.tmpl $(PKG_BUILD_DIR)/rpm/SOURCES
 	[ -d $(BASE_DIR)/bigtop-packages/src/common/$($(PKG)_NAME) ] && cp -r $(BASE_DIR)/bigtop-packages/src/common/$($(PKG)_NAME)/* $(PKG_BUILD_DIR)/rpm/SOURCES
 	echo -e "$(BIGTOP_BOM)" | tr ' ' '\012' >> $(PKG_BUILD_DIR)/rpm/SOURCES/bigtop.bom
 	PKG_NAME_FOR_PKG=$(subst -,_,$($(PKG)_NAME)); \
@@ -99,6 +100,7 @@ $(BUILD_DIR)/%/.sdeb:
 	fi
 	cd $(PKG_BUILD_DIR)/deb/$($(PKG)_NAME)-$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP) && \
           cp -r $(BASE_DIR)/bigtop-packages/src/deb/$($(PKG)_NAME) debian && \
+	  cp $(BASE_DIR)/bigtop-packages/src/templates/init.d.tmpl debian && \
 	  cp -r $(BASE_DIR)/bigtop-packages/src/common/$($(PKG)_NAME)/* debian && \
 	  echo -e "$(BIGTOP_BOM)" | tr ' ' '\012' >> debian/bigtop.bom && \
 	  (echo -e "$($(PKG)_PKG_NAME) ($(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP)-$($(PKG)_RELEASE)) stable; urgency=low\n" && \

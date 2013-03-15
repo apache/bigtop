@@ -1,5 +1,4 @@
 #!/bin/sh
-#
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -15,21 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# postinst script for sqoop
-
 set -e
-
-case "$1" in
-    configure)
-    ;;
-
-    abort-upgrade|abort-remove|abort-deconfigure)
-    ;;
-
-    *)
-        echo "postinst called with unknown argument \`$1'" >&2
-        exit 1
-    ;;
-esac
-
-#DEBHELPER#
+if [ -x "/etc/init.d/sqoop-server" ]; then
+    update-rc.d sqoop-server defaults > /dev/null || exit 1
+    invoke-rc.d sqoop-server start || :
+fi

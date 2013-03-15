@@ -12,20 +12,21 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-%define lib_sqoop /usr/lib/sqoop
-%define conf_sqoop %{_sysconfdir}/%{name}/conf
-%define conf_sqoop_dist %{conf_sqoop}.dist
 
+%define lib_sqoop /usr/lib/sqoop
+%define conf_sqoop %{_sysconfdir}/sqoop/conf
+%define conf_sqoop_dist %{conf_sqoop}.dist
+%define run_sqoop /var/run/sqoop
 
 %if  %{?suse_version:1}0
 
-# Only tested on openSUSE 11.4. le'ts update it for previous release when confirmed
+# Only tested on openSUSE 11.4. let's update it for previous release when confirmed
 %if 0%{suse_version} > 1130
 %define suse_check \# Define an empty suse_check for compatibility with older sles
 %endif
 
 # SLES is more strict anc check all symlinks point to valid path
-# But we do point to a hadoop jar which is not there at build time
+# But we do point to a conf which is not there at build time
 # (but would be at install time).
 # Since our package build system does not handle dependencies,
 # these symlink checks are deactivated
@@ -35,22 +36,21 @@
     %{nil}
 
 %define doc_sqoop %{_docdir}/sqoop
-%global initd_dir %{_sysconfdir}/rc.d
+%define initd_dir %{_sysconfdir}/rc.d
 %define alternatives_cmd update-alternatives
 
 %else
 
 %define doc_sqoop %{_docdir}/sqoop-%{sqoop_version}
-%global initd_dir %{_sysconfdir}/rc.d/init.d
+%define initd_dir %{_sysconfdir}/rc.d/init.d
 %define alternatives_cmd alternatives
 
 %endif
 
-
 Name: sqoop
 Version: %{sqoop_version}
 Release: %{sqoop_release}
-Summary:   Sqoop allows easy imports and exports of data sets between databases and the Hadoop Distributed File System (HDFS).
+Summary:  Tool for easy imports and exports of data sets between databases and the Hadoop ecosystem
 URL: http://incubator.apache.org/sqoop/
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
@@ -58,21 +58,31 @@ License: APL2
 Source0: %{name}-%{sqoop_base_version}.tar.gz
 Source1: do-component-build
 Source2: install_%{name}.sh
-Source3: sqoop-metastore.sh
-Source4: sqoop-metastore.sh.suse
+Source3: sqoop.sh
+Source4: sqoop.properties
+Source5: catalina.properties
+Source6: setenv.sh
+Source7: sqoop.default
+Source8: init.d.tmpl
+Source9: sqoop-server.svc
+Source10: sqoop-server.sh
 Buildarch: noarch
-BuildRequires: asciidoc, xmlto
-Requires: hadoop-client, bigtop-utils
+BuildRequires: asciidoc
+Requires: hadoop-client, bigtop-utils, bigtop-tomcat, %{name}-client = %{version}-%{release}
 
-%description 
-Sqoop allows easy imports and exports of data sets between databases and the Hadoop Distributed File System (HDFS).
+%description
+Sqoop is a tool that provides the ability to import and export data sets between the Hadoop Distributed File System (HDFS) and relational databases.
 
-%package metastore
-Summary: Shared metadata repository for Sqoop.
-URL: http://incubator.apache.org/sqoop/
+%package client
+Summary: Client for Sqoop.
+URL: http://sqoop.apache.org
 Group: System/Daemons
-Requires: sqoop = %{version}-%{release} 
-Requires(pre): %{name} = %{version}-%{release}
+
+%package server
+Summary: Server for Sqoop.
+URL: http://sqoop.apache.org
+Group: System/Daemons
+Requires: sqoop = %{version}-%{release}
 
 %if  %{?suse_version:1}0
 # Required for init scripts
@@ -91,110 +101,86 @@ Requires: initscripts
 Requires: redhat-lsb
 %endif
 
+%description client
+Lightweight client for Sqoop.
 
-%description metastore
-Shared metadata repository for Sqoop. This optional package hosts a metadata
-server for Sqoop clients across a network to use.
+%description server
+Centralized server for Sqoop.
 
 %prep
-%setup -n %{name}-%{sqoop_base_version}
+%setup -n sqoop-%{sqoop_base_version}
 
 %build
-bash %{SOURCE1} -Dversion=%{sqoop_base_version}
+# No easy way to disable the default RAT run which fails the build because of some fails in the debian/ directory
+rm -rf bigtop-empty
+mkdir -p bigtop-empty
+# I could not find a way to add debian/ to RAT exclude list through cmd line
+# or to unbind rat:check goal
+# So I am redirecting its attention with a decoy
+env FULL_VERSION=%{sqoop_base_version} bash %{SOURCE1} -Drat.basedir=${PWD}/bigtop-empty
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
 sh %{SOURCE2} \
-          --build-dir=build/sqoop-%{sqoop_base_version}.bin__hadoop-* \
+          --build-dir=build/sqoop-%{sqoop_version} \
           --conf-dir=%{conf_sqoop_dist} \
           --doc-dir=%{doc_sqoop} \
-          --prefix=$RPM_BUILD_ROOT
+          --prefix=$RPM_BUILD_ROOT \
+          --extra-dir=$RPM_SOURCE_DIR \
+          --initd-dir=%{initd_dir}
+
+# Install init script
+init_file=$RPM_BUILD_ROOT/%{initd_dir}/sqoop-server
+bash $RPM_SOURCE_DIR/init.d.tmpl $RPM_SOURCE_DIR/sqoop-server.svc rpm $init_file
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/usr/bin
-%__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
-
-%__rm -f $RPM_BUILD_ROOT/%{lib_sqoop}/lib/hadoop-mrunit*.jar
-
-%if  %{?suse_version:1}0
-orig_init_file=$RPM_SOURCE_DIR/sqoop-metastore.sh.suse
-%else
-orig_init_file=$RPM_SOURCE_DIR/sqoop-metastore.sh
-%endif
-
-init_file=$RPM_BUILD_ROOT/%{initd_dir}/sqoop-metastore
-%__cp $orig_init_file $init_file
-chmod 0755 $init_file
-
-%__install -d  -m 0755 $RPM_BUILD_ROOT/var/lib/sqoop
-%__install -d  -m 0755 $RPM_BUILD_ROOT/var/log/sqoop
 
 %pre
 getent group sqoop >/dev/null || groupadd -r sqoop
-getent passwd sqoop > /dev/null || useradd -c "Sqoop" -s /sbin/nologin \
-	-g sqoop -r -d /var/lib/sqoop sqoop 2> /dev/null || :
+getent passwd sqoop >/dev/null || useradd -c "Sqoop User" -s /sbin/nologin -g sqoop -r -d %{run_sqoop} sqoop 2> /dev/null || :
+%__install -d -o sqoop -g sqoop -m 0755 /var/lib/sqoop
+%__install -d -o sqoop -g sqoop -m 0755 /var/log/sqoop
+%__install -d -o sqoop -g sqoop -m 0755 /var/tmp/sqoop
+%__install -d -o sqoop -g sqoop -m 0755 /var/run/sqoop
 
 %post
-%{alternatives_cmd} --install %{conf_sqoop} %{name}-conf %{conf_sqoop_dist} 30
+%{alternatives_cmd} --install %{conf_sqoop} sqoop-conf %{conf_sqoop_dist} 30
+
+%post server
+chkconfig --add sqoop-server
 
 %preun
-if [ "$1" = 0 ]; then
-  %{alternatives_cmd} --remove %{name}-conf %{conf_sqoop_dist} || :
+if [ "$1" = "0" ] ; then
+  %{alternatives_cmd} --remove sqoop-conf %{conf_sqoop_dist} || :
 fi
 
-%post metastore
-chkconfig --add sqoop-metastore
-
-%preun metastore
-if [ $1 = 0 ] ; then
-  service sqoop-metastore stop > /dev/null 2>&1
-  chkconfig --del sqoop-metastore
+%preun server
+if [ "$1" = "0" ] ; then
+  service sqoop-server stop > /dev/null 2>&1
+  chkconfig --del sqoop-server
 fi
 
-%postun metastore
+%postun server
 if [ $1 -ge 1 ]; then
-  service sqoop-metastore condrestart > /dev/null 2>&1
+  service sqoop-server condrestart > /dev/null 2>&1
 fi
 
-%files metastore
-%attr(0755,root,root) %{initd_dir}/sqoop-metastore
-%attr(0755,sqoop,sqoop) /var/lib/sqoop
-%attr(0755,sqoop,sqoop) /var/log/sqoop
-
-# Files for main package
-%files 
+%files
 %defattr(0755,root,root)
-%{lib_sqoop}
-%config(noreplace) %{conf_sqoop_dist}
-%{_bindir}/sqoop
-%{_bindir}/sqoop-codegen
-%{_bindir}/sqoop-create-hive-table
-%{_bindir}/sqoop-eval
-%{_bindir}/sqoop-export
-%{_bindir}/sqoop-help
-%{_bindir}/sqoop-import
-%{_bindir}/sqoop-import-all-tables
-%{_bindir}/sqoop-job
-%{_bindir}/sqoop-list-databases   
-%{_bindir}/sqoop-list-tables
-%{_bindir}/sqoop-metastore
-%{_bindir}/sqoop-version
-%{_bindir}/sqoop-merge
+/usr/bin/sqoop-server
+%config(noreplace) /etc/sqoop/conf.dist
+%config(noreplace) /etc/default/sqoop-server
+%{lib_sqoop}/sqoop-server
+%{lib_sqoop}/webapps
+%{lib_sqoop}/bin/setenv.sh
+%{lib_sqoop}/server-lib
 
-%defattr(0644,root,root,0755)
-%{lib_sqoop}/lib/
-%{lib_sqoop}/*.jar
-%{_mandir}/man1/sqoop.1.*
-%{_mandir}/man1/sqoop-codegen.1.*
-%{_mandir}/man1/sqoop-create-hive-table.1.*
-%{_mandir}/man1/sqoop-eval.1.*
-%{_mandir}/man1/sqoop-export.1.*
-%{_mandir}/man1/sqoop-help.1.*
-%{_mandir}/man1/sqoop-import-all-tables.1.*
-%{_mandir}/man1/sqoop-import.1.*
-%{_mandir}/man1/sqoop-job.1.*
-%{_mandir}/man1/sqoop-list-databases.1.*
-%{_mandir}/man1/sqoop-list-tables.1.*
-%{_mandir}/man1/sqoop-metastore.1.*
-%{_mandir}/man1/sqoop-version.1.*
-%{_mandir}/man1/sqoop-merge.1.*
-%doc %{doc_sqoop}
+%files client
+%attr(0755,root,root)
+/usr/bin/sqoop
+%{lib_sqoop}/bin/sqoop.sh
+%{lib_sqoop}/client-lib
+
+%files server
+%attr(0755,root,root) %{initd_dir}/sqoop-server
+

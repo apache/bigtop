@@ -16,20 +16,21 @@ Source: sqoop
 Section: misc
 Priority: extra
 Maintainer: Bigtop <dev@bigtop.apache.org>
-Build-Depends: debhelper (>= 7.0.50~), asciidoc, xmlto
 Standards-Version: 3.8.0
-Homepage: http://incubator.apache.org/sqoop/
+Homepage: http://sqoop.apache.org/
 
 Package:  sqoop
 Architecture: all
-Depends: hadoop-client, bigtop-utils
-Description: Sqoop allows easy imports and exports of data sets between databases and the Hadoop Distributed File System (HDFS).
- Sqoop allows easy imports and exports of data sets between databases and the Hadoop Distributed File System (HDFS).
+Depends: bigtop-utils, hadoop-client, bigtop-tomcat, sqoop-client (= ${source:Version})
+Description: Tool for easy imports and exports of data sets between databases and the Hadoop ecosystem
+ Sqoop is a tool that provides the ability to import and export data sets between
+ the Hadoop Distributed File System (HDFS) and relational databases.
 
-Package: sqoop-metastore
+Package: sqoop-client
 Architecture: all
-Depends: sqoop (= ${source:Version}), adduser
-Description: Shared metadata repository for Sqoop. 
- Shared metadata repository for Sqoop. This optional package hosts a metadata
- server for Sqoop clients across a network to use.
+Description: Lightweight client for Sqoop.
 
+Package: sqoop-server
+Architecture: all
+Depends: sqoop (= ${source:Version})
+Description: Server for Sqoop.

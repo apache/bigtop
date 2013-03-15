@@ -1,0 +1,7 @@
+/usr/bin/sqoop-server
+/etc/sqoop/conf.dist
+/etc/default/sqoop-server
+/usr/lib/sqoop/bin/setenv.sh
+/usr/lib/sqoop/sqoop-server
+/usr/lib/sqoop/webapps
+/usr/lib/sqoop/server-lib

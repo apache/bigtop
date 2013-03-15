@@ -1,9 +1,9 @@
 Format: http://dep.debian.net/deps/dep5
-Source: http://incubator.apache.org/projects/sqoop.html
+Source: http://sqoop.apache.org
 Upstream-Name: Sqoop
 
-Files *
-Copyright: 2011, The Apache Software Foundation
+Files debian/*
+Copyright: 2013, The Apache Software Foundation
 License: Apache-2.0
 
 License: Apache-2.0

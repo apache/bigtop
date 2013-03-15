@@ -1,0 +1,11 @@
+CATALINA_BASE=/usr/lib/sqoop/sqoop-server
+SQOOP_USER=sqoop
+SQOOP_CONFIG=/etc/conf/sqoop
+SQOOP_LOG=/var/log/sqoop
+SQOOP_TEMP=/var/run/sqoop
+SQOOP_PID=/var/run/sqoop/sqoop-server-sqoop.pid
+CATALINA_BIN=/usr/lib/bigtop-tomcat/bin
+CATALINA_TMPDIR=/var/tmp/sqoop
+CATALINA_OPTS=-Xmx1024m
+CATALINA_OUT=/var/log/sqoop/sqoop-tomcat.log
+
