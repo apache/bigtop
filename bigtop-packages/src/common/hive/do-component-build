@@ -39,4 +39,4 @@ hadoop.mapreduce.tools.jar=\${hadoop.root}/share/hadoop/mapreduce/hadoop-mapredu
 __EOT__
 
 ant -f src/build.xml `bom2props | sed -e 's#^#-D#'` -Dhadoop.security.version.prefix=0.23 \
-    -Dversion=$HIVE_VERSION -Dinclude.postgres=true package "$@"
+    -Dversion=$HIVE_VERSION -Dinclude.postgres=true very-clean package "$@"
