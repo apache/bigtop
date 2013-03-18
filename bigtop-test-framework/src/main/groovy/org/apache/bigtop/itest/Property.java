@@ -18,6 +18,8 @@
 
 package org.apache.bigtop.itest;
 
+import java.lang.annotation.Documented;
+
 /**
    Specifies a parameter to be passed into a test via a system property.
    The parameter may be a String, an int, a long, or a boolean. If the type
@@ -26,6 +28,7 @@ package org.apache.bigtop.itest;
    for the parameter if its type is not boolean; the default value of a
    boolean parameter is false.
 */
+@Documented
 public @interface Property {
   public static enum Type {
     STRING, INT, LONG, BOOLEAN;
