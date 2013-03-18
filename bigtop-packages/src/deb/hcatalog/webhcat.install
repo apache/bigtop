@@ -1,0 +1,5 @@
+/etc/webhcat/conf.dist
+/usr/lib/hcatalog/etc/webhcat
+/usr/lib/hcatalog/share/webhcat
+/usr/lib/hcatalog/sbin/webhcat_config.sh
+/usr/lib/hcatalog/sbin/webhcat_server.sh
