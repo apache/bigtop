@@ -50,7 +50,7 @@ Description: A software platform for processing vast amounts of data
 Package: hadoop-native
 Provides: hadoop-native
 Architecture: i386 amd64
-Depends: ${shlibs:Depends}, hadoop (= ${source:Version}), liblzo2-2, libzip1
+Depends: ${shlibs:Depends}, hadoop (= ${source:Version}), liblzo2-2
 Enhances: hadoop
 Description: Native libraries for Hadoop (e.g., compression)
  This optional package contains native libraries that increase the performance
