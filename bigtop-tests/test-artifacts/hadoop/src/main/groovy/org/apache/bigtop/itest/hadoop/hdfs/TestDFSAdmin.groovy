@@ -149,7 +149,7 @@ public class TestDFSAdmin {
       assertTrue("Deletion of previous testDistcpInputs from HDFS failed",
           shHDFS.getRet() == 0);
     }
-    shHDFS.exec("hadoop fs -mkdir $quota_test");
+    shHDFS.exec("hadoop fs -mkdir -p $quota_test");
     shHDFS.exec("hdfs dfsadmin -setQuota 1000 $quota_test");
     assertTrue("-setQuota failed", shHDFS.getRet() == 0);
     shHDFS.exec("hdfs dfsadmin -clrQuota $quota_test");
