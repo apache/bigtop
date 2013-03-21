@@ -120,21 +120,6 @@ public class TestDFSAdmin {
   }
 
   @Test
-  public void testDFSupgrades() {
-    // upgradeProgress
-    System.out.println("-upgradeProgress"); 
-    shHDFS.exec("hdfs dfsadmin -upgradeProgress details");
-    assertTrue("-upgradeProgress details failed", shHDFS.getRet() == 0);
-    shHDFS.exec("hdfs dfsadmin -upgradeProgress status");
-    assertTrue("-upgradeProgress status failed", shHDFS.getRet() == 0);
-
-    // finalizeUpgrade
-    System.out.println("-finalizeUpgrade");
-    shHDFS.exec("hdfs dfsadmin -finalizeUpgrade");
-    assertTrue("-finalizeUpgrade failed", shHDFS.getRet() == 0);
-  }
-
-  @Test
   public void testDFSstorage() {  
     // restoreFailedStorage
     System.out.println("-restoreFailedStorage"); 
