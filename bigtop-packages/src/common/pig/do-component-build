@@ -19,6 +19,7 @@ set -ex
 . `dirname ${0}`/bigtop.bom
 
 cat <<__EOT__ >> ivy/libraries.properties
+
 hbase.version=$HBASE_VERSION
 hive.version=$HIVE_VERSION
 zookeeper.version=$ZOOKEEPER_VERSION
@@ -27,11 +28,16 @@ hadoop-hdfs.version=$HADOOP_VERSION
 hadoop-mapreduce.version=$HADOOP_VERSION
 __EOT__
 
+# Workaround because renamed o.a.h.h.serde.Constants to o.a.h.h.serde.serdeConstants in a non-backwards compatible way in 0.10.0
+# This is being fixed via HIVE-4001. Please remove this workaround once that gets into a release (Hive 0.11?)
+sed -i -e "s/org.apache.hadoop.hive.serde.Constants/org.apache.hadoop.hive.serde.serdeConstants/g" \
+-e "s/Constants\./serdeConstants\./g" contrib/piggybank/java/src/main/java/org/apache/pig/piggybank/storage/HiveColumnarLoader.java
+
 BUILD_OPTS="-Djavac.version=1.6 -Dforrest.home=${FORREST_HOME} -Dversion=${PIG_VERSION} -Dhadoopversion=23"
 
 rm test/org/apache/pig/test/TestHBaseStorage.java
 ant $BUILD_OPTS clean jar jar-withouthadoop pigunit-jar smoketests-jar "$@"
-for build_file in contrib/piggybank/java/build.xml contrib/penny/java/build.xml contrib/zebra/build.xml ; do
+for build_file in contrib/piggybank/java/build.xml contrib/zebra/build.xml ; do
   ant $BUILD_OPTS -buildfile $build_file clean jar "$@"
 done
 ant $BUILD_OPTS tar "$@"
