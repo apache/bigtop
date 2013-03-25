@@ -77,4 +77,4 @@ LIB_DIR=${LIB_DIR:-/usr/lib/pig}
 
 # First we'll move everything into lib
 install -d -m 0755 $PREFIX/$LIB_DIR
-cp $BUILD_DIR/datafu-0.0.4.jar $PREFIX/$LIB_DIR
+cp $BUILD_DIR/datafu-*.jar $PREFIX/$LIB_DIR
