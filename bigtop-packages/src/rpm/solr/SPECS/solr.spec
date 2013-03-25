@@ -49,7 +49,7 @@ Group: Development/Libraries
 BuildArch: noarch
 Buildroot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 License: ASL 2.0 
-Source0: apache-solr-%{solr_base_version}-src.tgz
+Source0: solr-%{solr_base_version}-src.tgz
 Source1: do-component-build 
 Source2: install_%{name}.sh
 Source3: server.xml
@@ -98,7 +98,7 @@ This package contains the documentation for Apache Solr
 Documentation for Apache Solr
 
 %prep
-%setup -n apache-solr-%{solr_base_version}
+%setup -n solr-%{solr_base_version}
 
 %build
 env FULL_VERSION=%{solr_base_version} bash %{SOURCE1}
@@ -106,7 +106,7 @@ env FULL_VERSION=%{solr_base_version} bash %{SOURCE1}
 %install
 %__rm -rf $RPM_BUILD_ROOT
 sh $RPM_SOURCE_DIR/install_solr.sh \
-          --build-dir=solr/build/apache-solr-%{solr_base_version} \
+          --build-dir=solr/build/solr-%{solr_base_version} \
           --prefix=$RPM_BUILD_ROOT \
           --distro-dir=$RPM_SOURCE_DIR \
           --doc-dir=%{doc_solr} 
