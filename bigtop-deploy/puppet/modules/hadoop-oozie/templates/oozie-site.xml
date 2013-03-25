@@ -23,12 +23,6 @@
         Oozie configuration properties and their default values.
     -->
     
-    <!-- FIXME: OOZIE-1089, MAPREDUCE-4820  -->
-    <property>
-        <name>oozie.hadoop-2.0.2-alpha.workaround.for.distributed.cache</name>
-        <value>true</value>
-    </property>
-
     <property>
         <name>oozie.service.ActionService.executor.ext.classes</name>
         <value>

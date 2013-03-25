@@ -160,9 +160,6 @@ install -d -m 0755 ${CONF_DIR}
 cp -r ${BUILD_DIR}/conf/* ${CONF_DIR}
 sed -i -e '/oozie.service.HadoopAccessorService.hadoop.configurations/,/<\/property>/s#<value>\*=hadoop-conf</value>#<value>*=/etc/hadoop/conf</value>#g' \
           ${CONF_DIR}/oozie-site.xml
-# FIXME: OOZIE-1089, MAPREDUCE-4820
-sed -i -e '/<\/configuration>/i<property><name>oozie.hadoop-2.0.2-alpha.workaround.for.distributed.cache</name><value>true</value></property>' \
-          ${CONF_DIR}/oozie-site.xml
 cp ${EXTRA_DIR}/oozie-env.sh ${CONF_DIR}
 install -d -m 0755 ${CONF_DIR}/action-conf
 cp ${EXTRA_DIR}/hive.xml ${CONF_DIR}/action-conf
