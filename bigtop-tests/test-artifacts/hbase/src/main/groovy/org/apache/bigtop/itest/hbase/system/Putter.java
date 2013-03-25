@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.NavigableMap;
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Result;
@@ -108,10 +110,11 @@ public class Putter {
         loops = Integer.parseInt(argv[i]);
       }
     }
+    Configuration conf = HBaseConfiguration.create();
 
-    String tableName = argv[0];
+    byte [] tableName = Bytes.toBytes(argv[0]);
     int val = Integer.parseInt(argv[1]);
-    HTable table = new HTable(tableName);
+    HTable table = new HTable(conf, tableName);
     for (int i = 0; i < loops; i++) {
       try {
         doScanAndPut(table, val, autoflush);

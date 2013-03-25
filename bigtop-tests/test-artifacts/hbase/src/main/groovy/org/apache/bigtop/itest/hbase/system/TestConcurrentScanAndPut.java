@@ -53,7 +53,7 @@ public class TestConcurrentScanAndPut {
   public static Shell putSh = new Shell( "/bin/bash -s" );
 
   public static HBaseAdmin admin;
-  public static String tableName;
+  public static byte [] tableName;
   public static String putter_pid;
 
   public static int scannerLoops;
@@ -75,7 +75,7 @@ public class TestConcurrentScanAndPut {
     }
     
     tableName =
-      new String(HBaseTestUtil.getTestTableName("concurrentScanAndPut"));
+      Bytes.toBytes(new String(HBaseTestUtil.getTestTableName("concurrentScanAndPut")));
     HTableDescriptor htd = new HTableDescriptor(tableName);
     for (int i = 0; i < 10; i++) {
       htd.addFamily(new HColumnDescriptor("f" + i));
@@ -83,7 +83,7 @@ public class TestConcurrentScanAndPut {
     admin = new HBaseAdmin(conf);
     admin.createTable(htd);
 
-    HTable table = new HTable(tableName);
+    HTable table = new HTable(conf, tableName);
     ArrayList<Put> puts = new ArrayList<Put>(1000);
 
     Random rnd = new Random();
@@ -137,25 +137,26 @@ public class TestConcurrentScanAndPut {
     System.out.println("Killing putter process");
     putSh.exec("kill -9 " + putter_pid);
 
-    System.out.println("Removing test table " + tableName);
+    System.out.println("Removing test table " + Bytes.toString(tableName));
     admin.disableTable(tableName);
     admin.deleteTable(tableName);
   }
 
   @Test
   public void testConcurrentScanAndPut() {
-    System.out.println("Starting puts to test table " + tableName);
+    String tableNameStr = Bytes.toString(tableName);
+    System.out.println("Starting puts to test table " + tableNameStr);
     putSh.exec("(HBASE_CLASSPATH=. " +
                "hbase com.cloudera.itest.hbase.system.Putter " +
-               tableName + " 13 -l " + putterLoops +
+               tableNameStr + " 13 -l " + putterLoops +
                " > /dev/null 2>&1 & echo $! ) 2> /dev/null");
     putter_pid = putSh.getOut().get(0);
 
     System.out.println("Starting concurrent scans of test table " +
-                       tableName);
+                       tableNameStr);
     scanSh.exec("HBASE_CLASSPATH=. hbase " +
                 "com.cloudera.itest.hbase.system.Scanner " +
-                tableName + " 13 -l " + scannerLoops + " 2>/dev/null");
+                tableNameStr + " 13 -l " + scannerLoops + " 2>/dev/null");
 
     int splitRows = scanSh.getRet();
     System.out.println("Split rows: " + splitRows);

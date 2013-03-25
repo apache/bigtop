@@ -34,9 +34,11 @@ import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.ResultScanner;
 import org.apache.hadoop.hbase.client.Scan;
+import org.apache.hadoop.hbase.io.hfile.CacheConfig;
 import org.apache.hadoop.hbase.io.hfile.Compression;
 import org.apache.hadoop.hbase.io.hfile.HFile;
 import org.apache.hadoop.hbase.util.Bytes;
+import org.apache.hadoop.hbase.util.ChecksumType;
 
 public class HBaseTestUtil {
 
@@ -84,10 +86,13 @@ public class HBaseTestUtil {
       byte[] family, byte[] qualifier,
       byte[] startKey, byte[] endKey, int numRows) throws IOException
   {
-    HFile.Writer writer =
-      HFile.getWriterFactory(conf).createWriter(fs, path,
-        BLOCKSIZE, COMPRESSION,
-        KeyValue.KEY_COMPARATOR);
+      HFile.WriterFactory wf = HFile.getWriterFactory(conf, new CacheConfig(conf));
+      wf.withChecksumType(ChecksumType.CRC32);
+      wf.withBlockSize(BLOCKSIZE);
+      wf.withCompression(COMPRESSION);
+      wf.withComparator(KeyValue.KEY_COMPARATOR);
+      wf.withPath(fs, path);
+    HFile.Writer writer = wf.create();
     long now = System.currentTimeMillis();
     try {
       // subtract 2 since iterateOnSplits doesn't include boundary keys

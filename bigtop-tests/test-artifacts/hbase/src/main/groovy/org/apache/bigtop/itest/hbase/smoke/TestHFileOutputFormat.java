@@ -126,7 +126,7 @@ public class TestHFileOutputFormat {
     tbldesc.addFamily(coldesc1);
     tbldesc.addFamily(coldesc2);
     admin.createTable(tbldesc, splitKeys);
-    HTable table = new HTable(TABLE_NAME);
+    HTable table = new HTable(conf, TABLE_NAME);
     assertEquals("Should start with empty table",
         0, HBaseTestUtil.countRows(table));
 

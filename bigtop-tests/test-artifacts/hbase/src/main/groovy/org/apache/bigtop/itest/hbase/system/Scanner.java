@@ -25,6 +25,8 @@ import java.util.NavigableMap;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.ResultScanner;
@@ -106,8 +108,9 @@ public class Scanner {
       System.err.println(" <value>: a numeric value [0,500)");
       System.exit(1);
     }
+    Configuration conf = HBaseConfiguration.create();
 
-    String tableName = argv[0];
+    byte [] tableName = Bytes.toBytes(argv[0]);
     int val = Integer.parseInt(argv[1]);
     int loops = 1;
     for (int i = 1; i < argv.length; i++) {
@@ -117,7 +120,7 @@ public class Scanner {
       }
     }
 
-    HTable table = new HTable(tableName);
+    HTable table = new HTable(conf, tableName);
     int exitVal = 0;
     for (int i = 0; i < loops; i++) {
       try {

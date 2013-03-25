@@ -99,13 +99,14 @@ public class IncrementalPELoad extends Configured implements Tool {
   }
 
   public int run(String[] args) throws Exception {
-    Job job = new Job(getConf(), "testMRIncrementalLoad");
+    Configuration conf = getConf();
+    Job job = new Job(conf, "testMRIncrementalLoad");
     job.setJarByClass(IncrementalPELoad.class);
     job.setInputFormatClass(NMapInputFormat.class);
     job.setMapperClass(IncrementalPELoad.RandomKVGeneratingMapper.class);
     job.setMapOutputKeyClass(ImmutableBytesWritable.class);
     job.setMapOutputValueClass(KeyValue.class);
-    HTable table = new HTable(Bytes.toBytes(args[0]));
+    HTable table = new HTable(conf, Bytes.toBytes(args[0]));
     HFileOutputFormat.configureIncrementalLoad(job, table);
     FileOutputFormat.setOutputPath(job, new Path(args[1]));
 
