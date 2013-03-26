@@ -124,11 +124,10 @@ DIST_DIR=${DIST_DIR:-dist/target/sqoop-*}
 
 install -d -m 0755 ${PREFIX}/${LIB_DIR}
 install -d -m 0755 ${PREFIX}/${LIB_DIR}/client-lib
-install -d -m 0755 ${PREFIX}/${LIB_DIR}/server-lib
-install -d -m 0755 ${PREFIX}/${LIB_DIR}/lib
 install -d -m 0755 ${PREFIX}/${BIN_DIR}
 install -d -m 0755 ${PREFIX}/${CONF_DIR}
 install -d -m 0755 ${PREFIX}/etc/default
+install -d -m 0755 ${PREFIX}/var/lib/sqoop
 
 install -m 0644 ${DIST_DIR}/client/lib/*.jar ${PREFIX}/${LIB_DIR}/client-lib/
 install -m 0755 ${DIST_DIR}/bin/sqoop.sh ${PREFIX}/${BIN_DIR}/

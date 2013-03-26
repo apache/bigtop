@@ -173,7 +173,7 @@ fi
 %{lib_sqoop}/sqoop-server
 %{lib_sqoop}/webapps
 %{lib_sqoop}/bin/setenv.sh
-%{lib_sqoop}/server-lib
+/var/lib/sqoop
 
 %files client
 %attr(0755,root,root)
