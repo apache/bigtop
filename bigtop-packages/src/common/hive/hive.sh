@@ -81,7 +81,7 @@ hive_start() {
     fi
 
     log_success_msg "Starting $desc (${NAME}): "
-     $SU -c "cd $HIVE_HOME ; $exec_env nohup \ 
+     $SU -c "cd $HIVE_HOME ; $exec_env nohup \
            $EXE_FILE --service $service_name $PORT \
              > $LOG_FILE 2>&1 < /dev/null & "'echo $! '"> $PID_FILE"
 

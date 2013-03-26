@@ -198,7 +198,7 @@ fi
 %config(noreplace) %{etc_hive}/conf.dist
 %{usr_lib_hive}
 %{bin_hive}/hive
-%{var_lib_hive}
+%attr(0755,hive,hive) %dir %{var_lib_hive}
 %attr(0755,hive,hive) %dir %{_localstatedir}/log/%{name}
 %attr(0755,hive,hive) %dir %{_localstatedir}/run/%{name}
 %attr(1777,hive,hive) %{var_lib_hive}/metastore
