@@ -51,13 +51,13 @@ start_oozie() {
   install -d -o oozie -g oozie /var/run/oozie
   install -d -o oozie -g oozie /var/log/oozie
   install -d -o oozie -g oozie /var/tmp/oozie
-  su --shell=/bin/sh -l oozie -c '/usr/lib/oozie/bin/oozied.sh start'
+  su --shell=/bin/sh -l oozie -c "env JAVA_HOME=$JAVA_HOME /usr/lib/oozie/bin/oozied.sh start"
 }
 
 stop_oozie() {
   is_oozie_alive
   if [ "${STATUS}" = "0" ]; then
-    su --shell=/bin/sh -l oozie -c '/usr/lib/oozie/bin/oozied.sh stop -force'
+    su --shell=/bin/sh -l oozie -c "env JAVA_HOME=$JAVA_HOME /usr/lib/oozie/bin/oozied.sh stop -force"
     if [ $? -eq 0 ]; then
       is_oozie_alive
       if [ "${STATUS}" = "1" ]; then
@@ -133,7 +133,7 @@ case "$1" in
           echo "Error: Oozie is running. Stop it first."
           exit 1
         else
-          (cd /tmp ; su --shell=/bin/sh -l oozie -c '/usr/lib/oozie/bin/ooziedb.sh create -run')
+          (cd /tmp ; su --shell=/bin/sh -l oozie -c "env JAVA_HOME=$JAVA_HOME /usr/lib/oozie/bin/ooziedb.sh create -run")
         fi
         exit 0
         ;;
