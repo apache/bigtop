@@ -232,48 +232,25 @@ class hadoop_head_node inherits hadoop_cluster_node {
         kerberos_realm => $kerberos_realm, 
   }
 
-  hadoop::create_hdfs_dirs { [ "/tmp", "/var", "/var/log", "/hbase", "/benchmarks", "/user", "/user/history", "/user/jenkins", "/user/hive", "/user/root", "/user/hue", "/user/oozie" ]:
-    auth           => $hadoop_security_authentication,
-    hdfs_dirs_meta => { "/tmp"          => { perm =>"1777", user => "hdfs"   },
-                        "/var"          => { perm => "755", user => "hdfs"   },
-                        "/var/log"      => { perm =>"1775", user => "yarn:mapred" },
-                        "/hbase"        => { perm => "755", user => "hbase"  },
-                        "/benchmarks"   => { perm => "777", user => "hdfs"   },
-                        "/user"         => { perm => "755", user => "hdfs"   },
-                        "/user/history" => { perm => "775", user => "mapred" },
-                        "/user/jenkins" => { perm => "777", user => "jenkins"},
-                        "/user/hive"    => { perm => "777", user => "hive"   },
-                        "/user/root"    => { perm => "777", user => "root"   },
-                        "/user/hue"     => { perm => "777", user => "hue"    },
-                        "/user/oozie"   => { perm => "777", user => "oozie"  },
-                      },
-  }
-  Hadoop::Create_hdfs_dirs<||> -> Hadoop-hbase::Master<||>
-  Hadoop::Create_hdfs_dirs<||> -> Hadoop::Resourcemanager<||>
-  Hadoop::Create_hdfs_dirs<||> -> Hadoop::Historyserver<||>
-  Hadoop::Create_hdfs_dirs<||> -> Hadoop::Httpfs<||>
-  Hadoop::Create_hdfs_dirs<||> -> Hadoop::Rsync_hdfs<||>
-
-  hadoop::rsync_hdfs { [ "/user/oozie/share/lib/hive",
-                         "/user/oozie/share/lib/mapreduce-streaming",
-                         "/user/oozie/share/lib/distcp",
-                         "/user/oozie/share/lib/pig",
-                         "/user/oozie/share/lib/sqoop" ]:
-    auth           => $hadoop_security_authentication,
-    files          => {  "/user/oozie/share/lib/hive"                 => "/usr/lib/hive/lib/*.jar",
-                         "/user/oozie/share/lib/mapreduce-streaming"  => "/usr/lib/hadoop-mapreduce/hadoop-streaming*.jar",
-                         "/user/oozie/share/lib/distcp"               => "/usr/lib/hadoop-mapreduce/hadoop-distcp*.jar",
-                         "/user/oozie/share/lib/pig"                  => "/usr/lib/pig/{lib/,}*.jar",
-                         "/user/oozie/share/lib/sqoop"                => "/usr/lib/sqoop/{lib/,}*.jar" },
-  }
-  Hadoop::Rsync_hdfs<||> -> Hadoop-oozie::Server<||>
-
   solr::server { "solrcloud server":
        collections => $solrcloud_collections,
        port        => $solrcloud_port,
        port_admin  => $solrcloud_port_admin,
        zk          => $solrcloud_zk,
   }
+
+  exec { "init hdfs":
+        path    => ['/bin','/sbin','/usr/bin','/usr/sbin'],
+        command => 'bash -x /usr/lib/hadoop/libexec/init-hdfs.sh',
+        require => Package['hadoop-hdfs']
+  }
+
+  Exec<| title == "init hdfs" |> -> Hadoop-hbase::Master<||>
+  Exec<| title == "init hdfs" |> -> Hadoop::Resourcemanager<||>
+  Exec<| title == "init hdfs" |> -> Hadoop::Historyserver<||>
+  Exec<| title == "init hdfs" |> -> Hadoop::Httpfs<||>
+  Exec<| title == "init hdfs" |> -> Hadoop::Rsync_hdfs<||>
+  Exec<| title == "init hdfs" |> -> Hadoop-oozie::Server<||>
 }
 
 class standby_head_node inherits hadoop_cluster_node {
