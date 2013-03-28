@@ -42,6 +42,8 @@
     <org.apache.maven-dependency-plugin.output>${project.build.directory}</org.apache.maven-dependency-plugin.output>
     <org.apache.maven-dependency-plugin.pattern>test/data/**/*</org.apache.maven-dependency-plugin.pattern>
     <org.apache.maven-dependency-plugin.type>jar</org.apache.maven-dependency-plugin.type>
+
+    <antlr.version>3.4</antlr.version>
   </properties>
 
   <dependencies>
@@ -56,6 +58,20 @@
     <dependency>
       <groupId>org.apache.hadoop</groupId>
       <artifactId>hadoop-common</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-hdfs</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-mapreduce-client-core</artifactId>
+      <version>${hadoop.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.antlr</groupId>
+      <artifactId>antlr</artifactId>
+      <version>${antlr.version}</version>
     </dependency>
   </dependencies>
 
@@ -102,7 +118,7 @@
                 if (!System.getProperties().keySet().contains('enforcer.skip')) {
                   project.properties['lzo.jar'] =
                     org.apache.bigtop.itest.JarContent.getJarName(
-                        "${HADOOP_HOME}/lib", 'hadoop.*lzo.*.jar');
+                        "${HADOOP_HOME}/lib", '.*hadoop.*lzo.*.jar');
                   if ( project.properties['lzo.jar'] == null ) {
                     throw new IOException ("hadoop-lzo.jar isn't found");
                   }
