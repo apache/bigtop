@@ -561,6 +561,8 @@ fi
 %defattr(-,root,root)
 %config(noreplace) %{etc_hadoop}/conf.empty/yarn-env.sh
 %config(noreplace) %{etc_hadoop}/conf.empty/yarn-site.xml
+%config(noreplace) %{etc_hadoop}/conf.empty/capacity-scheduler.xml
+%config(noreplace) %{etc_hadoop}/conf.empty/container-executor.cfg
 %config(noreplace) /etc/security/limits.d/yarn.conf
 %{lib_hadoop}/libexec/yarn-config.sh
 %{lib_yarn}
@@ -588,6 +590,9 @@ fi
 %files mapreduce
 %defattr(-,root,root)
 %config(noreplace) %{etc_hadoop}/conf.empty/mapred-site.xml
+%config(noreplace) %{etc_hadoop}/conf.empty/mapred-env.sh
+%config(noreplace) %{etc_hadoop}/conf.empty/mapred-queues.xml.template
+%config(noreplace) %{etc_hadoop}/conf.empty/mapred-site.xml.template
 %config(noreplace) /etc/security/limits.d/mapreduce.conf
 %{lib_mapreduce}
 %{lib_hadoop}/libexec/mapred-config.sh
@@ -607,6 +612,9 @@ fi
 %config(noreplace) %{etc_hadoop}/conf.empty/slaves
 %config(noreplace) %{etc_hadoop}/conf.empty/ssl-client.xml.example
 %config(noreplace) %{etc_hadoop}/conf.empty/ssl-server.xml.example
+%config(noreplace) %{etc_hadoop}/conf.empty/configuration.xsl
+%config(noreplace) %{etc_hadoop}/conf.empty/hadoop-env.sh
+%config(noreplace) %{etc_hadoop}/conf.empty/hadoop-policy.xml
 %config(noreplace) /etc/default/hadoop
 /etc/bash_completion.d/hadoop
 %{lib_hadoop}/*.jar

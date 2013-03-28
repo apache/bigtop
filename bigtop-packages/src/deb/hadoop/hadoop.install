@@ -5,6 +5,9 @@
 /etc/hadoop/conf.empty/ssl-client.xml.example
 /etc/hadoop/conf.empty/ssl-server.xml.example
 /etc/hadoop/conf.empty/core-site.xml
+/etc/hadoop/conf.empty/configuration.xsl
+/etc/hadoop/conf.empty/hadoop-env.sh
+/etc/hadoop/conf.empty/hadoop-policy.xml
 /etc/default/hadoop
 /etc/bash_completion.d/hadoop
 /usr/lib/hadoop/etc
