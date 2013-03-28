@@ -19,10 +19,10 @@
 <% namenode_hosts = Array(hadoop_namenode_host) -%>
 <configuration>
 
-<% if ha != "disabled" -%>
+<% if @ha != "disabled" -%>
   <!-- HA -->
 
-<% if ha == "auto" -%>
+<% if @ha == "auto" -%>
   <property>
     <name>dfs.ha.automatic-failover.enabled</name>
     <value>true</value>

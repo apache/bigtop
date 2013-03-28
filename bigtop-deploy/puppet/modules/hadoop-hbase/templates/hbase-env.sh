@@ -28,7 +28,7 @@
 export HBASE_CLASSPATH=/etc/hadoop/conf
 
 # The maximum amount of heap to use, in MB. Default is 1000.
-export HBASE_HEAPSIZE=<%= heap_size %>
+export HBASE_HEAPSIZE=<%= @heap_size %>
 
 # Extra Java runtime options.
 # Below are what we set by default.  May only work with SUN JVM.
@@ -36,7 +36,7 @@ export HBASE_HEAPSIZE=<%= heap_size %>
 # see http://wiki.apache.org/hadoop/PerformanceTuning
 export HBASE_OPTS="$HBASE_OPTS -ea -XX:+UseConcMarkSweepGC -XX:+CMSIncrementalMode"
 
-<% if kerberos_realm != "" -%>
+<% if @kerberos_realm != "" -%>
 # Secure Zookeeper settings
 export HBASE_MASTER_OPTS="$HBASE_MASTER_OPTS -Djava.security.auth.login.config=/etc/hbase/conf/jaas.conf"
 export HBASE_REGIONSERVER_OPTS="$HBASE_REGIONSERVER_OPTS -Djava.security.auth.login.config=/etc/hbase/conf/jaas.conf"

@@ -29,12 +29,12 @@
 
   <property>
     <name>hbase.zookeeper.quorum</name>
-    <value><%= zookeeper_quorum %></value>
+    <value><%= @zookeeper_quorum %></value>
   </property>
 
   <property>
     <name>hbase.rootdir</name>
-    <value><%= rootdir %></value>
+    <value><%= @rootdir %></value>
   </property>
 
   <property>
@@ -49,10 +49,10 @@
   </property>
 <% end %>
 
-<% if kerberos_realm != "" %>
+<% if @kerberos_realm != "" %>
   <property> 
     <name>hbase.regionserver.kerberos.principal</name> 
-    <value>hbase/_HOST@<%= kerberos_realm %></value> 
+    <value>hbase/_HOST@<%= @kerberos_realm %></value>
     </property> 
   <property> 
     <name>hbase.regionserver.keytab.file</name> 
@@ -60,7 +60,7 @@
   </property>
   <property> 
     <name>hbase.master.kerberos.principal</name> 
-    <value>hbase/_HOST@<%= kerberos_realm %></value> 
+    <value>hbase/_HOST@<%= @kerberos_realm %></value>
   </property> 
   <property> 
     <name>hbase.master.keytab.file</name> 
