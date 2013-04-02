@@ -204,7 +204,7 @@ class kerberos {
 
     exec { "ktinject.$title":
       path     => $kerberos::site::exec_path,
-      command  => "/usr/bin/ktutil <<EOF
+      command  => "ktutil <<EOF
         $includes
         wkt $keytab
 EOF

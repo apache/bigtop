@@ -154,6 +154,8 @@ class hadoop_head_node inherits hadoop_worker_node {
 
   if ($hadoop_security_authentication == "kerberos") {
     include kerberos::server
+    include kerberos::kdc
+    include kerberos::kdc::admin_server
   }
 
   hadoop::namenode { "namenode":
