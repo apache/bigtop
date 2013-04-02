@@ -35,6 +35,9 @@ sed -i -e "s/org.apache.hadoop.hive.serde.Constants/org.apache.hadoop.hive.serde
 
 BUILD_OPTS="-Djavac.version=1.6 -Dforrest.home=${FORREST_HOME} -Dversion=${PIG_VERSION} -Dhadoopversion=23"
 
+# FIXME: BIGTOP-894. Please get rid of the line below when Bigtop integrates a version of Pig that includes the fix for PIG-3262
+export LC_ALL=en_US.UTF-8
+
 rm test/org/apache/pig/test/TestHBaseStorage.java
 ant $BUILD_OPTS clean jar jar-withouthadoop pigunit-jar smoketests-jar "$@"
 for build_file in contrib/piggybank/java/build.xml contrib/zebra/build.xml ; do
