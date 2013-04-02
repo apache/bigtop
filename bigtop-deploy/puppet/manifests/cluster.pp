@@ -150,7 +150,7 @@ class hadoop_worker_node inherits hadoop_cluster_node {
   }
 }
 
-class hadoop_head_node inherits hadoop_cluster_node {
+class hadoop_head_node inherits hadoop_worker_node {
 
   if ($hadoop_security_authentication == "kerberos") {
     include kerberos::server
@@ -230,13 +230,6 @@ class hadoop_head_node inherits hadoop_cluster_node {
         myid => "0",
         ensemble => $hadoop_zookeeper_ensemble,
         kerberos_realm => $kerberos_realm, 
-  }
-
-  solr::server { "solrcloud server":
-       collections => $solrcloud_collections,
-       port        => $solrcloud_port,
-       port_admin  => $solrcloud_port_admin,
-       zk          => $solrcloud_zk,
   }
 
   exec { "init hdfs":
