@@ -18,6 +18,8 @@
 package org.apache.bigtop.itest.ooziesmoke
 
 import org.junit.Test
+
+import static junit.framework.Assert.assertNull
 import static org.junit.Assert.assertTrue
 import org.apache.bigtop.itest.shell.Shell
 import org.junit.AfterClass
@@ -31,18 +33,22 @@ class TestOozieSmoke {
   private static String tmp_dir = "oozie.${(new Date().getTime())}";
 
   private static String oozie_url;
-  private static String jobtracker;
+  private static String resourcemanager;
   private static String namenode;
   private static String oozie_tar_home;
 
   @BeforeClass
   static void setUp() {
     Configuration conf = new Configuration();
-    conf.addResource('mapred-site.xml');
+    conf.addResource('yarn-site.xml');
 
     oozie_url = System.getProperty("org.apache.bigtop.itest.oozie_url", "http://localhost:11000/oozie");
-    jobtracker = System.getProperty("org.apache.bigtop.itest.jobtracker", "${conf.get('mapred.job.tracker')}");
-    namenode = System.getProperty("org.apache.bigtop.itest.namenode", "${conf.get('fs.default.name')}");
+    resourcemanager = ${conf.get("yarn.resourcemanager.address")}
+    resourcemanager = System.getProperty("org.apache.bigtop.itest.resourcemanager", resourcemanager);
+    namenode = ${conf.get('fs.defaultFS')} ? ${conf.get('fs.defaultFS')} : ${conf.get('fs.default.name')}
+    namenode = System.getProperty("org.apache.bigtop.itest.namenode", namenode);
+    assertNull("resourcemanager hostname isn't set", resourcemanager)
+    assertNull("namenode hostname isn't set", namenode)
 
     oozie_tar_home = System.getProperty("org.apache.bigtop.itest.oozie_tar_home",
                                         (new File("/usr/share/doc/packages/oozie/")).exists() ?
@@ -65,7 +71,7 @@ class TestOozieSmoke {
   }
 
   void testOozieExamplesCommon(String testname) {
-    sh.exec("oozie job -oozie ${oozie_url} -run -DjobTracker=${jobtracker} -DnameNode=${namenode} " +
+    sh.exec("oozie job -oozie ${oozie_url} -run -DjobTracker=${resourcemanager} -DnameNode=${namenode} " +
             "-DexamplesRoot=${tmp_dir}/examples -config /tmp/${tmp_dir}/examples/apps/${testname}/job.properties");
     assertEquals("Oozie job submition ${testname} failed",
                  0, sh.ret);
