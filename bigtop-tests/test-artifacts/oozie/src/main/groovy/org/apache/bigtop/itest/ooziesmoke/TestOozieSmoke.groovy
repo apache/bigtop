@@ -19,7 +19,7 @@ package org.apache.bigtop.itest.ooziesmoke
 
 import org.junit.Test
 
-import static junit.framework.Assert.assertNull
+import static junit.framework.Assert.assertNotNull
 import static org.junit.Assert.assertTrue
 import org.apache.bigtop.itest.shell.Shell
 import org.junit.AfterClass
@@ -43,12 +43,12 @@ class TestOozieSmoke {
     conf.addResource('yarn-site.xml');
 
     oozie_url = System.getProperty("org.apache.bigtop.itest.oozie_url", "http://localhost:11000/oozie");
-    resourcemanager = ${conf.get("yarn.resourcemanager.address")}
+    resourcemanager = conf.get("yarn.resourcemanager.address")
     resourcemanager = System.getProperty("org.apache.bigtop.itest.resourcemanager", resourcemanager);
-    namenode = ${conf.get('fs.defaultFS')} ? ${conf.get('fs.defaultFS')} : ${conf.get('fs.default.name')}
+    namenode = conf.get('fs.defaultFS') ? conf.get('fs.defaultFS') : conf.get('fs.default.name')
     namenode = System.getProperty("org.apache.bigtop.itest.namenode", namenode);
-    assertNull("resourcemanager hostname isn't set", resourcemanager)
-    assertNull("namenode hostname isn't set", namenode)
+    assertNotNull("resourcemanager hostname isn't set", resourcemanager)
+    assertNotNull("namenode hostname isn't set", namenode)
 
     oozie_tar_home = System.getProperty("org.apache.bigtop.itest.oozie_tar_home",
                                         (new File("/usr/share/doc/packages/oozie/")).exists() ?
