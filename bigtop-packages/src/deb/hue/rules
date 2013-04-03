@@ -23,7 +23,7 @@
 # Implicit targets
 SHELL := /bin/bash
 
-APPS=beeswax oozie
+APPS=beeswax oozie pig
 
 $(APPS:%=debian/hue-%.postinst): debian/hue-app.postinst.tpl
 	sed -e 's#@APP@#$(patsubst debian/hue-%.postinst,%,$@)#'  < $< > $@
@@ -44,3 +44,6 @@ override_dh_auto_install: build $(APPS:%=debian/hue-%.postinst) $(APPS:%=debian/
 
 override_dh_installinit:
 	dh_installinit --name=hue
+
+override_dh_auto_test:
+	@echo Tests are disabled

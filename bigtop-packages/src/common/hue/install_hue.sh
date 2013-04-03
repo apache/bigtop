@@ -136,12 +136,6 @@ sed -i -e '/\[\[database\]\]/a\
     name=/var/lib/hue/desktop.db' $PREFIX/${CONF_DIR}/conf.empty/hue.ini
 sed -i -e '/\[\[yarn_clusters\]\]/,+20s@## submit_to=False@submit_to=True@' \
     $PREFIX/${CONF_DIR}/conf.empty/hue.ini
-# Fix a redirection, since by default beeswax is not installed
-sed -i -e '/meta http-equiv="refresh"/s#/beeswax#/about#' \
-    $PREFIX/$LIB_DIR/desktop/core/src/desktop/templates/index.mako
-# FIXME: HUE-1097
-sed -i -e '/impala.conf/d' \
-    $PREFIX/$LIB_DIR/apps/beeswax/src/beeswax/server/dbms.py
 
 # Relink logs subdirectory just in case
 install -d -m 0755 $PREFIX/$LOG_DIR

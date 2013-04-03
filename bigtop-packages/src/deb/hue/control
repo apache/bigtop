@@ -29,17 +29,9 @@ Description: A browser-based desktop interface for Hadoop
  Hue is a browser-based desktop interface for interacting with Hadoop.
  It supports a file browser, job tracker interface, cluster health monitor, and more.
 
-# FIXME: Hue plugins don't yet quite work with Hadoop 2.X
-#Package: hue-plugins
-#Architecture: all
-#Depends: hadoop, bigtop-utils (>= 0.6)
-#Description: Plug-ins for Hadoop to enable integration with Hue
-# These plug-ins enable the Hadoop Daemons to communicate with Hue.
-# This package must be installed on every node in the Hadoop cluster.
-
 Package: hue
 Architecture: all
-Depends: hue-common (= ${source:Version}), hue-server (= ${source:Version}), hue-beeswax (= ${source:Version}), hue-oozie (= ${source:Version})
+Depends: hue-common (= ${source:Version}), hue-server (= ${source:Version}), hue-beeswax (= ${source:Version}), hue-oozie (= ${source:Version}), hue-pig (= ${source:Version})
 Description: The hue metapackage
  Hue is a browser-based desktop interface for interacting with Hadoop.
  It supports a file browser, job tracker interface, cluster health monitor, and more.
@@ -66,4 +58,12 @@ Description: A UI for Oozie on Hue
  A web interface for Oozie.
  .
  It allows users to construct and run Oozie workflows without explicitly managing the XML specification.
+
+Package: hue-pig
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.4), python (<< 3), make (>= 3.8), hue-common (= ${source:Version}) 
+Description: A UI for Pig on Hue
+ A web interface for Pig.
+ .
+ It allows users to construct and run Pig jobs.
 
