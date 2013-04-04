@@ -50,6 +50,7 @@ public class TestCrunchSmoke {
     ];
 
   private void _runExampleJobs(String algorithm) {
+    sh.exec("hadoop fs -rmr ${EXAMPLES_OUT}");
     sh.exec("${runnerScript} ${crunchJar}" 
       + " org.apache.crunch.examples.${algorithm}"
       + " ${examples.get(algorithm)}"
