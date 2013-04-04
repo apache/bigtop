@@ -37,11 +37,11 @@
     <!--
       BOM definitions
     -->
-    <hadoop.version>2.0.0-SNAPSHOT</hadoop.version>
-    <hbase.version>0.92.1</hbase.version>
-    <pig.version>0.9.2</pig.version>
-    <pig-smoke.version>0.9.2-SNAPSHOT</pig-smoke.version>
-    <sqoop.version>1.4.1-incubating</sqoop.version>
+    <hadoop.version>2.0.4-SNAPSHOT</hadoop.version>
+    <hbase.version>0.94.5</hbase.version>
+    <pig.version>0.11.0</pig.version>
+    <pig-smoke.version>0.11.0-SNAPSHOT</pig-smoke.version>
+    <sqoop.version>1.99.1-incubating</sqoop.version>
     <itest-conf.version>0.6.0-SNAPSHOT</itest-conf.version>
     <itest-common.version>0.6.0-SNAPSHOT</itest-common.version>
     <hadoop-smoke.version>0.6.0-SNAPSHOT</hadoop-smoke.version>
