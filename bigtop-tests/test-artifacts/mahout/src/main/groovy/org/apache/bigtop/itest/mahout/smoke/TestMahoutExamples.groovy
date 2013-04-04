@@ -34,13 +34,7 @@ public class TestMahoutExamples {
   public static final String TEMP_DIR = "/tmp/mahout.${(new Date().getTime())}";
   public static final String WORK_DIR = TEMP_DIR;
   private static Shell sh = new Shell("/bin/bash -s");
-  public static String download_dir = System.getProperty("mahout.examples.resources.download.path");
-  static {
-    if (download_dir == null) {
-      sh.exec("pwd");
-      download_dir = sh.out[0];
-    }
-  }
+  public static String download_dir = System.getProperty("mahout.examples.resources.download.path") ?: "/tmp" ;
 
   @BeforeClass
   public static void setUp() {
