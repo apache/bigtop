@@ -49,24 +49,11 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.pig</groupId>
-      <artifactId>pig</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.pig</groupId>
       <artifactId>pigsmoke</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.hadoop</groupId>
-      <artifactId>hadoop-common</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.hadoop</groupId>
-      <artifactId>hadoop-hdfs</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.hadoop</groupId>
-      <artifactId>hadoop-mapreduce-client-core</artifactId>
-      <version>${hadoop.version}</version>
+      <artifactId>hadoop-client</artifactId>
     </dependency>
     <dependency>
       <groupId>org.antlr</groupId>
@@ -84,6 +71,26 @@
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-install-plugin</artifactId>
+        <executions>
+        <execution>
+          <phase>initialize</phase>
+          <goals>
+            <goal>install-file</goal>
+          </goals>
+        </execution>
+        </executions>
+        <configuration>
+          <file>/usr/lib/pig/pig.jar</file>
+          <groupId>org.apache.pig</groupId>
+          <artifactId>pig</artifactId>
+          <version>${pig.version}</version>
+          <packaging>jar</packaging>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
         <version>2.11</version>
         <configuration>
@@ -93,40 +100,8 @@
             <additionalClasspathElement>
               ${HADOOP_CONF_DIR}
             </additionalClasspathElement>
-            <additionalClasspathElement>
-              <!-- the value of ${lzo.jar} property is set by a groovy
-                   script during pre-integration-test phase below-->
-              ${HADOOP_HOME}/lib/${lzo.jar}
-            </additionalClasspathElement>
           </additionalClasspathElements>
         </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>org.codehaus.groovy.maven</groupId>
-        <artifactId>gmaven-plugin</artifactId>
-        <version>1.0</version>
-        <executions>
-          <execution>
-            <id>find-lzo-jar</id>
-            <phase>pre-integration-test</phase>
-            <goals>
-              <goal>execute</goal>
-            </goals>
-            <configuration>
-              <source>
-                if (!System.getProperties().keySet().contains('enforcer.skip')) {
-                  project.properties['lzo.jar'] =
-                    org.apache.bigtop.itest.JarContent.getJarName(
-                        "${HADOOP_HOME}/lib", '.*hadoop.*lzo.*.jar');
-                  if ( project.properties['lzo.jar'] == null ) {
-                    throw new IOException ("hadoop-lzo.jar isn't found");
-                  }
-                }
-              </source>
-            </configuration>
-          </execution>
-        </executions>
       </plugin>
 
     </plugins>

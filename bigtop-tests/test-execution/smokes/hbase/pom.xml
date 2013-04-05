@@ -59,11 +59,33 @@
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-install-plugin</artifactId>
+        <executions>
+        <execution>
+          <phase>initialize</phase>
+          <goals>
+            <goal>install-file</goal>
+          </goals>
+        </execution>
+        </executions>
+        <configuration>
+          <file>${HBASE_HOME}/${hbase.jar}</file>
+          <groupId>org.apache.hbase</groupId>
+          <artifactId>hbase</artifactId>
+          <version>${hbase.version}</version>
+          <packaging>jar</packaging>
+          <classifier>tests</classifier>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
         <version>1.0</version>
         <executions>
           <execution>
             <id>enforce-property</id>
+            <phase>validate</phase>
             <goals>
               <goal>enforce</goal>
             </goals>
@@ -115,7 +137,7 @@
         <executions>
           <execution>
             <id>find-versioned-jar</id>
-            <phase>pre-integration-test</phase>
+            <phase>validate</phase>
             <goals>
               <goal>execute</goal>
             </goals>
@@ -133,6 +155,13 @@
                         "${HBASE_HOME}", 'hbase-.*.jar');
                   if ( project.properties['hbase.jar'] == null ) {
                     throw new IOException ("hbase*.jar isn't found");
+                  }
+
+                  project.properties['hbase.tests.jar'] =
+                    org.apache.bigtop.itest.JarContent.getJarName(
+                        "${HBASE_HOME}", 'hbase-.*tests.jar');
+                  if ( project.properties['hbase.tests.jar'] == null ) {
+                    throw new IOException ("hbase*tests.jar isn't found");
                   }
                 }
               </source>
