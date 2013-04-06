@@ -105,7 +105,7 @@ Description: Pseudo-distributed Hadoop configuration
 
 Package: hadoop-mapreduce-historyserver
 Architecture: all
-Depends: hadoop-mapreduce (= ${source:Version})
+Depends: hadoop-mapreduce (= ${source:Version}), hadoop-hdfs (= ${source:Version})
 Description: MapReduce History Server
  The History server keeps records of the different activities being performed on a Apache Hadoop cluster
 

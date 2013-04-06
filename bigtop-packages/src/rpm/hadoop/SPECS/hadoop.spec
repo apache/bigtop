@@ -362,6 +362,7 @@ The web proxy server sits in front of the YARN application master web UI.
 Summary: MapReduce History Server
 Group: System/Daemons
 Requires: %{name}-mapreduce = %{version}-%{release}
+Requires: %{name}-hdfs = %{version}-%{release}
 Requires(pre): %{name} = %{version}-%{release}
 Requires(pre): %{name}-mapreduce = %{version}-%{release}
 
