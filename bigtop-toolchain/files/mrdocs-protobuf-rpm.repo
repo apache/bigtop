@@ -1,0 +1,7 @@
+[home_mrdocs_protobuf-rpm]
+name=home:mrdocs:protobuf-rpm (CentOS_CentOS-6)
+type=rpm-md
+baseurl=http://download.opensuse.org/repositories/home:/mrdocs:/protobuf-rpm/CentOS_CentOS-6/
+gpgcheck=1
+gpgkey=http://download.opensuse.org/repositories/home:/mrdocs:/protobuf-rpm/CentOS_CentOS-6/repodata/repomd.xml.key
+enabled=1
