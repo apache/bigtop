@@ -306,7 +306,7 @@ DataNodes to bind to a low (privileged) port and then drop root privileges
 before continuing operation.
 
 %prep
-%setup -n apache-hadoop-common-7471fab
+%setup -n %{name}-%{hadoop_base_version}
 
 %build
 # This assumes that you installed Java JDK 6 and set JAVA_HOME
