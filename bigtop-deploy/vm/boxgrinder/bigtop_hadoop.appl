@@ -25,7 +25,7 @@ hardware:
   partitions:
     "/":
       size: 2
-      type: ext3
+      type: ext4
 repos:
   - name: "Bigtop"
     baseurl: "http://bigtop01.cloudera.org:8080/view/Bigtop-trunk/job/Bigtop-trunk-Repository/label=centos6/lastSuccessfulBuild/artifact/repo/"
@@ -33,8 +33,16 @@ packages:
   - @core
   - shadow-utils
   - passwd
+  - screen
+  - sed
+  - vim-enhanced
+  - wget  
   - java-1.6.0-openjdk-devel
   - hadoop-conf-pseudo
+files:
+  "/etc/init.d":
+    - "bigtop-init-hdfs"
 post:
   base:
-    - "/usr/bin/yes Y | su hdfs /bin/bash -c '/usr/bin/hadoop namenode -format'"
+    - "/etc/init.d/hadoop-hdfs-namenode init"
+    - "/sbin/chkconfig bigtop-init-hdfs on"
