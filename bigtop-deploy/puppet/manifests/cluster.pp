@@ -63,6 +63,8 @@ class hadoop_cluster_node {
   # $hadoop_mapred_jobtracker_plugins="org.apache.hadoop.thriftfs.ThriftJobTrackerPlugin"
   # $hadoop_mapred_tasktracker_plugins="org.apache.hadoop.mapred.TaskTrackerCmonInst"
 
+  $bigtop_real_users = [ 'jenkins', 'testuser', 'hudson' ]
+
   $hadoop_core_proxyusers = { oozie => { groups => 'hudson,testuser,root,hadoop,jenkins,oozie,httpfs,hue,users', hosts => "${hadoop_head_node},localhost,127.0.0.1" },
                                 hue => { groups => 'hudson,testuser,root,hadoop,jenkins,oozie,httpfs,hue,users', hosts => "${hadoop_head_node},localhost,127.0.0.1" },
                              httpfs => { groups => 'hudson,testuser,root,hadoop,jenkins,oozie,httpfs,hue,users', hosts => "${hadoop_head_node},localhost,127.0.0.1" } }
@@ -110,6 +112,13 @@ class hadoop_cluster_node {
 
 
 class hadoop_worker_node inherits hadoop_cluster_node {
+  user { $bigtop_real_users:
+    ensure     => present,
+    system     => false,
+    managehome => true,
+    groups     => 'wheel',
+  }
+
   hadoop::datanode { "datanode":
         namenode_host => $hadoop_namenode_host,
         namenode_port => $hadoop_namenode_port,
