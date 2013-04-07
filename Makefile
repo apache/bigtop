@@ -48,6 +48,7 @@ world: all
 packages: $(TARGETS)
 
 help-header:
+	@echo "    Bigtop BOM: $(BIGTOP_BOM)"
 	@echo "    targets:"
 	@echo "    all       (all TGZs/SRPMS/SDEBS)"
 	@echo "    srpm      (all SRPMs)"

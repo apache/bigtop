@@ -31,6 +31,7 @@ $(BUILD_DIR)/%/.srpm:
 	mkdir -p $(PKG_BUILD_DIR)/rpm/{INSTALL,SOURCES,BUILD,SRPMS}
 	[ -z "$($(PKG)_TARBALL_SRC)" ] || cp $($(PKG)_DOWNLOAD_DST) $(PKG_BUILD_DIR)/rpm/SOURCES
 	[ -d $(BASE_DIR)/bigtop-packages/src/common/$($(PKG)_NAME) ] && cp -r $(BASE_DIR)/bigtop-packages/src/common/$($(PKG)_NAME)/* $(PKG_BUILD_DIR)/rpm/SOURCES
+	echo -e "$(BIGTOP_BOM)" | tr ' ' '\012' >> $(PKG_BUILD_DIR)/rpm/SOURCES/bigtop.bom
 	PKG_NAME_FOR_PKG=$(subst -,_,$($(PKG)_NAME)); \
 	rpmbuild --define "_topdir $(PKG_BUILD_DIR)/rpm/" \
 						--define "$${PKG_NAME_FOR_PKG}_base_version $($(PKG)_BASE_VERSION)" \
@@ -78,7 +79,7 @@ $(BUILD_DIR)/%/.sdeb:
 	cd $(PKG_BUILD_DIR)/deb/$($(PKG)_NAME)-$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP) && \
           cp -r $(BASE_DIR)/bigtop-packages/src/deb/$($(PKG)_NAME) debian && \
 	  cp -r $(BASE_DIR)/bigtop-packages/src/common/$($(PKG)_NAME)/* debian && \
-	  echo -e "version=$(PKG_PKG_VERSION)\ngit.hash=deadbeaf" >> debian/build.properties && \
+	  echo -e "$(BIGTOP_BOM)" | tr ' ' '\012' >> debian/bigtop.bom && \
 	  (echo -e "$($(PKG)_PKG_NAME) ($(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP)-$($(PKG)_RELEASE)) stable; urgency=low\n" && \
            echo    "  Clean build" && \
            echo    " -- Bigtop <bigtop-dev@incubator.apache.org>  "`date +'%a, %d %b %Y %T %z'`) > debian/changelog && \
@@ -226,4 +227,6 @@ TARGETS_SDEB += $(1)-sdeb
 TARGETS_DEB += $(1)-deb
 TARGETS_YUM += $(1)-yum
 TARGETS_APT += $(1)-apt
+
+BIGTOP_BOM += $(2)_VERSION=$($(2)_BASE_VERSION)
 endef
