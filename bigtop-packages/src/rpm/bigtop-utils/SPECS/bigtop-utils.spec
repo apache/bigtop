@@ -30,6 +30,8 @@ Source1:    LICENSE
 Source2:    bigtop-utils.default
 Source3:    bigtop-detect-javalibs
 
+Requires:   bash
+
 # "which" command is needed for a lot of projects.
 # It is part of the package "util-linux" on suse and "which" everywhere else
 %if  %{?suse_version:1}0
@@ -37,8 +39,6 @@ Requires:  util-linux
 %else
 Requires:       which
 %endif
-
-
 
 %description
 This includes a collection of useful tools and files for Bigtop
