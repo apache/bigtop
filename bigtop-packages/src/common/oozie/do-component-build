@@ -18,6 +18,7 @@ set -x
 #
 # Resolve source directory
 #
+. `dirname ${0}`/bigtop.bom
 
 # $0 may be a softlink
 PRG="$0"
@@ -35,11 +36,6 @@ RELEASE_DIR=`dirname ${PRG}`
 RELEASE_DIR=`cd ${RELEASE_DIR}/..;pwd`
 
 RELEASE_DIR=$PWD
-
-#
-# Resolve build version
-#
-OOZIE_VERSION=3.1.3-incubating
 
 # IMPORTANT: THE FULL_VERSION, if set, will be used only for the final TARBALL,
 #            Everything inside of the TARBALL uses the version specified in the POM
@@ -79,8 +75,14 @@ if [ "${DO_MAVEN_DEPLOY}" = "deploy" ]; then
   EXTRA_GOALS="${EXTRA_GOALS} source:jar deploy"
 fi
 
+## Update hardcoded version of the Hadoop base to the current HADOOP VERSION
+## This approach might need to be reconsidered once OOZIE-1201 is fixed
+sed -i.orig -e "s#1.0.1#${HADOOP_VERSION}#" ${WORKDIR}/hadooplibs/hadoop-1_0_1/pom.xml
+sed -i.orig -e "s#1.0.1#${HADOOP_VERSION}#" ${WORKDIR}/hadooplibs/hadoop-test-1_0_1/pom.xml
+sed -i.orig -e "s#1.0.1#${HADOOP_VERSION}#" ${WORKDIR}/pom.xml
+
 # Invoke Oozie build script with CDH options
-${WORKDIR}/bin/mkdistro.sh -DskipTests -Dhadoop.version=1.0.0 ${EXTRA_GOALS} -Dmaven.repo.local=${HOME}/.m2/repository "$@"
+${WORKDIR}/bin/mkdistro.sh -DskipTests -Dhadoop.version=${HADOOP_VERSION} ${EXTRA_GOALS} -Dmaven.repo.local=${HOME}/.m2/repository "$@"
 MKDISTRO_RESULT=$?
 if [ "${MKDISTRO_RESULT}" != "0" ]; then
   echo "ERROR: mkdistro.sh failed with error ${MKDISTRO_RESULT}"
