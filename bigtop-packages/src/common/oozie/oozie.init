@@ -81,8 +81,7 @@ case "$1" in
   start)
         is_oozie_alive
         if [ "${STATUS}" = "0" ]; then
-          echo "already running"
-          exit 1
+          exit 0
         fi
         if [ "${STATUS}" = "1" ]; then
           rm ${OOZIE_PID}
