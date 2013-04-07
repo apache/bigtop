@@ -23,5 +23,6 @@ Homepage: http://incubator.apache.org/bigtop/
 Package: bigtop-utils
 Architecture: all
 Depends: ${misc:Depends}
+Depends: bash
 Description: Collection of useful tools for Bigtop
  This includes a collection of useful tools and files for Bigtop

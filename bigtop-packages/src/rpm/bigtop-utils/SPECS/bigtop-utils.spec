@@ -29,7 +29,7 @@ URL:		http://incubator.apache.org/bigtop/
 Source0:	bigtop-detect-javahome
 Source1:	LICENSE
 Source2:    bigtop-utils.default
-
+Requires:   bash
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 BuildArch: noarch
