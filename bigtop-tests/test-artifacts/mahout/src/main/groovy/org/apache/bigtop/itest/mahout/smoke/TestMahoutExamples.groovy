@@ -158,12 +158,12 @@ public class TestMahoutExamples {
     _clusterSyntheticControlData("canopy");
   }
 
-  @Test(timeout=900000L)
+  @Test(timeout=9000000L)
   public void clusterControlDataWithKMeans() {
     _clusterSyntheticControlData("kmeans");
   }
 
-  @Test(timeout=900000L)
+  @Test(timeout=9000000L)
   public void clusterControlDataWithFuzzyKMeans() {
     _clusterSyntheticControlData("fuzzykmeans");
   }
@@ -216,7 +216,7 @@ public class TestMahoutExamples {
     assertEquals("Unexpected error from running mahout", 0, sh.getRet());
   }
 
-  @Test(timeout=1200000L)
+  @Test(timeout=9000000L)
   public void testBayesNewsgroupClassifier() {
     sh.exec("""mahout org.apache.mahout.classifier.bayes.PrepareTwentyNewsgroups \
   -p ${TEMP_DIR}/20news-bydate/20news-bydate-train \

@@ -68,13 +68,13 @@ class TestHBaseImportExport {
     HTableDescriptor htd_orig =
       HBaseTestUtil.createTestTableDescriptor("orig", TEST_FAMILY)
     admin.createTable(htd_orig)
-    orig = htd_orig.getName()
+    orig = new String(htd_orig.getName())
     origTable = new HTable(conf, orig)
 
     HTableDescriptor htd_export =
       HBaseTestUtil.createTestTableDescriptor("export", TEST_FAMILY)
     admin.createTable(htd_export)
-    export = htd_export.getName()
+    export = new String(htd_export.getName())
     exportTable = new HTable(conf, export)
 
     // Write some rows to the table.

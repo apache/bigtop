@@ -61,21 +61,36 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-install-plugin</artifactId>
         <executions>
-        <execution>
-          <phase>initialize</phase>
-          <goals>
-            <goal>install-file</goal>
-          </goals>
-        </execution>
+          <execution>
+            <id>install-hbase</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>install-file</goal>
+            </goals>
+            <configuration>
+              <file>${HBASE_HOME}/${hbase.jar}</file>
+              <groupId>org.apache.hbase</groupId>
+              <artifactId>hbase</artifactId>
+              <version>${hbase.version}</version>
+              <packaging>jar</packaging>
+            </configuration>
+          </execution>
+          <execution>
+            <id>install-hbase-test</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>install-file</goal>
+            </goals>
+            <configuration>
+              <file>${HBASE_HOME}/${hbase.tests.jar}</file>
+              <groupId>org.apache.hbase</groupId>
+              <artifactId>hbase</artifactId>
+              <version>${hbase.version}</version>
+              <packaging>jar</packaging>
+              <classifier>tests</classifier>
+            </configuration>
+          </execution>
         </executions>
-        <configuration>
-          <file>${HBASE_HOME}/${hbase.jar}</file>
-          <groupId>org.apache.hbase</groupId>
-          <artifactId>hbase</artifactId>
-          <version>${hbase.version}</version>
-          <packaging>jar</packaging>
-          <classifier>tests</classifier>
-        </configuration>
       </plugin>
 
       <plugin>
@@ -123,6 +138,9 @@
             <org.apache.bigtop.itest.hbasesmoke.TestHbasePigSmoke.extra_jars>
             ${ZOOKEEPER_HOME}/${zookeeper.jar}:${HBASE_HOME}/${hbase.jar}:${HBASE_HOME}/lib/guava-r06.jar
             </org.apache.bigtop.itest.hbasesmoke.TestHbasePigSmoke.extra_jars>
+            <loadmapper.num_to_write>
+            10
+            </loadmapper.num_to_write>
           </systemPropertyVariables>
           <additionalClasspathElements>
             <additionalClasspathElement>${HBASE_CONF_DIR}</additionalClasspathElement>
@@ -152,7 +170,7 @@
                   }
                   project.properties['hbase.jar'] =
                     org.apache.bigtop.itest.JarContent.getJarName(
-                        "${HBASE_HOME}", 'hbase-.*.jar');
+                        "${HBASE_HOME}", 'hbase-[0-9.-]*.jar');
                   if ( project.properties['hbase.jar'] == null ) {
                     throw new IOException ("hbase*.jar isn't found");
                   }

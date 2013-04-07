@@ -222,7 +222,7 @@ public class TestImportTsv {
   private void countRows(String tableName) throws Exception {
     Configuration conf = HBaseConfiguration.create();
     HTable table = new HTable(conf, Bytes.toBytes(tableName));
-    int count = com.cloudera.itest.hbase.util.HBaseTestUtil.countRows(table);
+    int count = org.apache.bigtop.itest.hbase.util.HBaseTestUtil.countRows(table);
     assertEquals(1682, count);
   }
 }
