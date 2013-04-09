@@ -46,7 +46,6 @@
     <dependency>
       <groupId>org.apache.bigtop.itest</groupId>
       <artifactId>crunch-smoke</artifactId>
-      <version>${crunch-smoke.version}</version>
     </dependency>
   </dependencies>
 

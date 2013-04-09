@@ -45,7 +45,6 @@
     <dependency>
       <groupId>org.apache.bigtop.itest</groupId>
       <artifactId>oozie-smoke</artifactId>
-      <version>${oozie-smoke.version}</version>
     </dependency>
   </dependencies>
 

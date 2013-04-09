@@ -34,15 +34,9 @@
   <name>hadoop-stack-integration</name>
 
   <properties>
-    <!--
-      BOM definitions
-    -->
-    <itest-conf.version>0.6.0-SNAPSHOT</itest-conf.version>
-    <itest-common.version>0.6.0-SNAPSHOT</itest-common.version>
-    <sqoop-integration.version>0.6.0-SNAPSHOT</sqoop-integration.version>
-    <!--
-      End of BOM definitions
-    -->
+    <itest-conf.version>${project.version}</itest-conf.version>
+    <itest-common.version>${project.version}</itest-common.version>
+    <sqoop-integration.version>${project.version}</sqoop-integration.version>
   </properties>
 
   <!--
@@ -61,42 +55,13 @@
         <version>${itest-conf.version}</version>
         <scope>test</scope>
       </dependency>
-      <!-- Import of iTest artifact serving out-of-the-jar convenience methods -->
-      <dependency>
-        <groupId>org.apache.bigtop.itest</groupId>
-        <artifactId>itest-common</artifactId>
-        <version>${itest-common.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <!-- We HAVE to enforce use of this particular version of the launcher
-             so it isn't overridden by any of transitive dependencies later on
-        -->
-        <groupId>org.apache.ant</groupId>
-        <artifactId>ant-launcher</artifactId>
-        <version>1.8.2</version>
-      </dependency>
-      <!-- Gmaven plugin enables a lot of runtime flexibility for us -->
-      <dependency>
-        <groupId>org.codehaus.groovy.maven.runtime</groupId>
-        <artifactId>gmaven-runtime-1.6</artifactId>
-        <version>1.0</version>
-      </dependency>
 
-<!--
-  BOM definitions
--->
-<!-- Test artifacts -->
       <dependency>
         <groupId>org.apache.bigtop.itest</groupId>
         <artifactId>sqoop-integration</artifactId>
         <version>${sqoop-integration.version}</version>
         <scope>test</scope>
       </dependency>
-<!--
-  End of BOM definitions
--->
-
     </dependencies>
   </dependencyManagement>
 

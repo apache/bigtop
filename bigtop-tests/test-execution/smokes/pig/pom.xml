@@ -31,7 +31,7 @@
   <artifactId>pig-smoke-execution</artifactId>
   <packaging>jar</packaging>
   <version>0.6.0-SNAPSHOT</version>
-  <name>pigsmokes</name>
+  <name>Pig smoke test execution</name>
 
   <properties>
     <org.codehaus.groovy.maven.jar>${project.build.directory}/pigsmoke-${pig-smoke.version}.jar</org.codehaus.groovy.maven.jar>
@@ -42,8 +42,6 @@
     <org.apache.maven-dependency-plugin.output>${project.build.directory}</org.apache.maven-dependency-plugin.output>
     <org.apache.maven-dependency-plugin.pattern>test/data/**/*</org.apache.maven-dependency-plugin.pattern>
     <org.apache.maven-dependency-plugin.type>jar</org.apache.maven-dependency-plugin.type>
-
-    <antlr.version>3.4</antlr.version>
   </properties>
 
   <dependencies>
@@ -58,7 +56,6 @@
     <dependency>
       <groupId>org.antlr</groupId>
       <artifactId>antlr</artifactId>
-      <version>${antlr.version}</version>
     </dependency>
   </dependencies>
 

@@ -45,7 +45,6 @@
     <dependency>
       <groupId>org.apache.bigtop.itest</groupId>
       <artifactId>solr-smoke</artifactId>
-      <version>${solr-smoke.version}</version>
     </dependency>
   </dependencies>
 

@@ -35,31 +35,26 @@
     <dependency>
       <groupId>org.codehaus.groovy</groupId>
       <artifactId>groovy-all</artifactId>
-      <version>${groovy.version}</version>
     </dependency>
 
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.8.1</version>
     </dependency>
 
     <dependency>
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>
-      <version>1.1</version>
     </dependency>
 
     <dependency>
       <groupId>org.apache.ant</groupId>
       <artifactId>ant</artifactId>
-      <version>1.8.2</version>
     </dependency>
 
     <dependency>
       <groupId>org.apache.ant</groupId>
       <artifactId>ant-junit</artifactId>
-      <version>1.8.2</version>
     </dependency>
   </dependencies>
 
