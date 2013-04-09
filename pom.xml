@@ -43,7 +43,7 @@
     <sqoop.version>1.99.1</sqoop.version>
     <zookeeper.version>3.4.5</zookeeper.version>
     <giraph.version>0.2-SNAPSHOT</giraph.version>
-    <solr.version>4.2.0</solr.version>
+    <solr.version>4.2.1</solr.version>
 
     <itest-common.version>${project.version}</itest-common.version>
 
