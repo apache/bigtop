@@ -14,9 +14,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# 
-# chkconfig: 2345 87 13
-# description: Summary: HBase is the Hadoop database. Use it when you need random, realtime read/write access to your Big Data. This project's goal is the hosting of very large tables -- billions of rows X millions of columns -- atop clusters of commodity hardware.
+#
+# chkconfig: @CHKCONFIG@
+# description: Summary: HBase is the Hadoop database. Use it when you
+# need random, realtime read/write access to your Big Data. This project's
+# goal is the hosting of very large tables -- billions of rows X millions
+# of columns -- atop clusters of commodity hardware.
 # processname: HBase
 # pidfile: /usr/lib/hbase/pids/hadoop_hbase.pid
 ### BEGIN INIT INFO
@@ -25,8 +28,8 @@
 # Required-Stop:
 # Should-Start:      $named
 # Should-Stop:
-# Default-Start:     2 3 4 5
-# Default-Stop:      0 1 6
+# Default-Start:     3 4 5
+# Default-Stop:      0 1 2 6
 # Short-Description: HBase
 ### END INIT INFO
 set -e

@@ -266,8 +266,16 @@ orig_init_file=%{SOURCE3}
 
 for service in %{hbase_services}
 do
+  case $service in
+    master) chkconfig="345 85 15" ;;
+    thrift) chkconfig="345 86 14" ;;
+    regionserver) chkconfig="345 87 13" ;;
+    rest) chkconfig="345 88 12" ;;
+    *) chkconfig="345 89 13" ;;
+  esac
 	init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{name}-${service}
 	%__cp $orig_init_file $init_file
+	%__sed -i -e "s|@CHKCONFIG@|${chkconfig}|" $init_file
 	%__sed -i -e "s|@HBASE_DAEMON@|${service}|" $init_file
 	chmod 755 $init_file
 done

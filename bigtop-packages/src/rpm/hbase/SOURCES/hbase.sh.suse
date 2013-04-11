@@ -17,8 +17,11 @@
 #
 # Starts a HBase @HBASE_DAEMON@
 #
-# chkconfig: 345 87 13
-# description: Summary: HBase is the Hadoop database. Use it when you need random, realtime read/write access to your Big Data. This project's goal is the hosting of very large tables -- billions of rows X millions of columns -- atop clusters of commodity hardware.
+# chkconfig: @CHKCONFIG@
+# description: Summary: HBase is the Hadoop database. Use it when you
+# need random, realtime read/write access to your Big Data. This project's
+# goal is the hosting of very large tables -- billions of rows X millions
+# of columns -- atop clusters of commodity hardware.
 # processname: HBase
 #
 ### BEGIN INIT INFO
