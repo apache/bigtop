@@ -40,3 +40,9 @@ __EOT__
 
 ant -f src/build.xml `bom2props | sed -e 's#^#-D#'` -Dhadoop.security.version.prefix=0.23 \
     -Dversion=$HIVE_VERSION -Dinclude.postgres=true very-clean package "$@"
+
+# Install Hive artifacts needed by other components into the local Maven cache
+mvn install:install-file -DgroupId=org.apache.hive -DartifactId=hive-builtins -Dversion=$HIVE_VERSION -Dpackaging=jar -Dfile=src/build/builtins/hive-builtins-$HIVE_VERSION.jar
+mvn install:install-file -DgroupId=org.apache.hive -DartifactId=hive-cli -Dversion=$HIVE_VERSION -Dpackaging=jar -Dfile=src/build/cli/hive-cli-$HIVE_VERSION.jar
+mvn install:install-file -DgroupId=org.apache.hive -DartifactId=hive-contrib -Dversion=$HIVE_VERSION -Dpackaging=jar -Dfile=src/build/contrib/hive-contrib-$HIVE_VERSION.jar
+mvn install:install-file -DgroupId=org.apache.hive -DartifactId=hive-exec -Dversion=$HIVE_VERSION -Dpackaging=jar -Dfile=src/build/ql/hive-exec-$HIVE_VERSION.jar
