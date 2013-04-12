@@ -44,3 +44,6 @@ for build_file in contrib/piggybank/java/build.xml contrib/zebra/build.xml ; do
   ant $BUILD_OPTS -buildfile $build_file clean jar "$@"
 done
 ant $BUILD_OPTS tar "$@"
+
+# install the Pig jar into the local Maven cache
+mvn install:install-file -DgroupId=org.apache.pig -DartifactId=pig -Dversion=${PIG_VERSION} -Dpackaging=jar -Dfile=pig.jar
