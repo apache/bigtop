@@ -59,6 +59,12 @@ Source6: solr.default
 Source7: solr-server.init
 Requires: bigtop-utils, bigtop-tomcat
 
+# CentOS 5 does not have any dist macro
+# So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
+%if %{!?suse_version:1}0 && %{!?mgaversion:1}0
+# Required for init scripts
+Requires: redhat-lsb
+%endif
 
 %description 
 Solr is the popular, blazing fast open source enterprise search platform from
