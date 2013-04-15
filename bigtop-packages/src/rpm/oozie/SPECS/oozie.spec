@@ -142,6 +142,9 @@ Requires: bigtop-utils >= 0.6
 %__ln_s -f %{data_oozie}/ext-2.2 $RPM_BUILD_ROOT/%{lib_oozie}/webapps/oozie/ext-2.2
 %__rm  -rf              $RPM_BUILD_ROOT/%{lib_oozie}/webapps/oozie/docs
 %__ln_s -f %{doc_oozie} $RPM_BUILD_ROOT/%{lib_oozie}/webapps/oozie/docs
+%__ln_s -f %{data_oozie}/ext-2.2 $RPM_BUILD_ROOT/%{lib_oozie}/webapps-ssl/oozie/ext-2.2
+%__rm  -rf              $RPM_BUILD_ROOT/%{lib_oozie}/webapps-ssl/oozie/docs
+%__ln_s -f %{doc_oozie} $RPM_BUILD_ROOT/%{lib_oozie}/webapps-ssl/oozie/docs
 
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/usr/bin
@@ -177,10 +180,12 @@ fi
 %{lib_oozie}/bin/oozied.sh
 %{lib_oozie}/bin/ooziedb.sh
 %{lib_oozie}/webapps
+%{lib_oozie}/webapps-ssl
 %{lib_oozie}/libtools
 %{lib_oozie}/libserver
 %{lib_oozie}/oozie-sharelib.tar.gz
 %{lib_oozie}/oozie-server
+%{lib_oozie}/oozie-server-ssl
 %{lib_oozie}/libext
 %{initd_dir}/oozie
 %defattr(-, oozie, oozie)

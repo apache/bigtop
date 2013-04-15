@@ -189,7 +189,7 @@ for i in `cd ${BUILD_DIR}/libtools ; ls *` ; do
   fi
 done
 
-# Create an exploded-war oozie deployment in /var/lib/oozie
+# Create an exploded-war oozie deployment in /usr/lib/oozie
 install -d -m 0755 ${SERVER_LIB_DIR}/oozie-server
 cp -R ${BUILD_DIR}/oozie-server/conf ${SERVER_LIB_DIR}/oozie-server/conf
 cp ${EXTRA_DIR}/context.xml ${SERVER_LIB_DIR}/oozie-server/conf/
@@ -198,3 +198,12 @@ ln -s ../webapps ${SERVER_LIB_DIR}/oozie-server/webapps
 
 # Provide a convenience symlink to be more consistent with tarball deployment
 ln -s ${DATA_DIR#${SERVER_PREFIX}} ${SERVER_LIB_DIR}/libext
+
+# Create an exploded-war oozie deployment in /usr/lib/oozie/oozie-server-ssl for SSL
+cp -r ${SERVER_LIB_DIR}/oozie-server ${SERVER_LIB_DIR}/oozie-server-ssl
+cp -r ${SERVER_LIB_DIR}/webapps ${SERVER_LIB_DIR}/webapps-ssl
+rm -r ${SERVER_LIB_DIR}/oozie-server-ssl/webapps
+ln -s ../webapps-ssl ${SERVER_LIB_DIR}/oozie-server-ssl/webapps
+cp ${BUILD_DIR}/oozie-server/conf/ssl/ssl-server.xml ${SERVER_LIB_DIR}/oozie-server-ssl/conf/server.xml
+cp ${BUILD_DIR}/oozie-server/conf/ssl/ssl-web.xml ${SERVER_LIB_DIR}/webapps-ssl/oozie/WEB-INF/web.xml
+

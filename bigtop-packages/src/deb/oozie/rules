@@ -40,3 +40,6 @@ override_dh_auto_install:
 	ln -s -f /var/lib/oozie/ext-2.2 debian/oozie/usr/lib/oozie/webapps/oozie/ext-2.2
 	rm -rf                        debian/oozie/usr/lib/oozie/webapps/oozie/docs
 	ln -s -f /usr/share/doc/oozie debian/oozie/usr/lib/oozie/webapps/oozie/docs
+	ln -s -f /var/lib/oozie/ext-2.2 debian/oozie/usr/lib/oozie/webapps-ssl/oozie/ext-2.2
+	rm -rf                        debian/oozie/usr/lib/oozie/webapps-ssl/oozie/docs
+	ln -s -f /usr/share/doc/oozie debian/oozie/usr/lib/oozie/webapps-ssl/oozie/docs
