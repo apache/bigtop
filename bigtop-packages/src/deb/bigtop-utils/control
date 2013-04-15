@@ -22,7 +22,6 @@ Homepage: http://bigtop.apache.org/
 
 Package: bigtop-utils
 Architecture: all
-Depends: ${misc:Depends}, debianutils
-Depends: bash
+Depends: ${misc:Depends}, debianutils, bash
 Description: Collection of useful tools for Bigtop
  This includes a collection of useful tools and files for Bigtop
