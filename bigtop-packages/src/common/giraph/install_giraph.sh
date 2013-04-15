@@ -107,20 +107,30 @@ CONF_DIR=${CONF_DIR:-${ETC_DIR}/conf.dist}
 
 install -d -m 0755 ${PREFIX}/${LIB_DIR}
 
+# Installing Giraph core
 install -d -m 0755 ${PREFIX}/${LIB_DIR}
-mv $BUILD_DIR/lib/giraph*.jar $BUILD_DIR/
-cp $BUILD_DIR/giraph*.jar ${PREFIX}/${LIB_DIR}
+cp $BUILD_DIR/giraph-core/target/*.jar ${PREFIX}/${LIB_DIR}
 
 install -d -m 0755 ${PREFIX}/${LIB_DIR}/lib
-cp -a $BUILD_DIR/lib/*.jar ${PREFIX}/${LIB_DIR}/lib
+cp $BUILD_DIR/giraph-core/target/lib/*.jar ${PREFIX}/${LIB_DIR}/lib
 
+# Installing various Giraph modules
+cp $BUILD_DIR/giraph-hive/target/*.jar ${PREFIX}/${LIB_DIR}
+# FIXME: cp $BUILD_DIR/giraph-hbase/target/*.jar ${PREFIX}/${LIB_DIR}
+# FIXME: cp $BUILD_DIR/giraph-hcatalog/target/*.jar ${PREFIX}/${LIB_DIR}
+
+# Remove things we don't need
+rm -f ${PREFIX}/${LIB_DIR}/*tests.jar ${PREFIX}/${LIB_DIR}/*javadoc.jar ${PREFIX}/${LIB_DIR}/*sources.jar
+
+# Installing docs and examples
+install -d -m 0755 $PREFIX/${DOC_DIR}
+cp -r $BUILD_DIR/giraph-core/target/site/apidocs/*  $PREFIX/${DOC_DIR}
+cp $BUILD_DIR/giraph-examples/target/*.jar $PREFIX/${DOC_DIR}
+
+# Install executable wrappers
 install -d -m 0755 $PREFIX/usr/bin
-
 install -d -m 0755 $PREFIX/${BIN_DIR}
 cp $BUILD_DIR/bin/* $PREFIX/${BIN_DIR}
-
-install -d -m 0755 $PREFIX/${DOC_DIR}
-cp -r $BUILD_DIR/docs/*  $PREFIX/${DOC_DIR}
 
 for i in giraph ; do
 	#echo "Copying manpage $i"
@@ -151,8 +161,8 @@ unlink $PREFIX/$LIB_DIR/conf || /bin/true
 ln -s $ETC_DIR/conf $PREFIX/$LIB_DIR/conf
 
 # Create version independent symlinks
-ln -s `cd $PREFIX/$LIB_DIR ; ls giraph*jar | grep -v javadoc.jar | grep -v sources.jar | grep -v tests.jar | grep -v jar-with-dependencies.jar` $PREFIX/$LIB_DIR/giraph.jar
-ln -s `cd $PREFIX/$LIB_DIR ; ls giraph*jar | grep jar-with-dependencies.jar` $PREFIX/$LIB_DIR/giraph-jar-with-dependencies.jar
+ln -s `cd $PREFIX/$LIB_DIR ; ls giraph*jar | grep -v jar-with-dependencies.jar | grep -v giraph-hive` $PREFIX/$LIB_DIR/giraph.jar
+ln -s `cd $PREFIX/$LIB_DIR ; ls giraph*jar | grep jar-with-dependencies.jar    | grep -v giraph-hive` $PREFIX/$LIB_DIR/giraph-jar-with-dependencies.jar
 
 # Workaround for GIRAPH-205
 ln -s ../giraph.jar $PREFIX/$LIB_DIR/lib
