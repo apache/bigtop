@@ -70,7 +70,7 @@ Source4: flume-agent.default
 Requires: /usr/sbin/useradd
 Requires: coreutils
 Requires: hadoop-hdfs
-Requires: bigtop-utils
+Requires: bigtop-utils >= 0.6
 
 %if  0%{?mgaversion}
 Requires: bsh-utils

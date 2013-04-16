@@ -69,7 +69,7 @@ Source5: hive-server.default
 Source6: hive-metastore.default
 Source7: hive.1
 Source8: hive-site.xml
-Requires: hadoop-client, bigtop-utils, hbase, zookeeper
+Requires: hadoop-client, bigtop-utils >= 0.6, hbase, zookeeper
 Obsoletes: %{name}-webinterface
 
 %description 

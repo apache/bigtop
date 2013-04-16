@@ -23,7 +23,7 @@ Homepage: http://incubator.apache.org/giraph/
 
 Package:  giraph
 Architecture: all
-Depends: hadoop-client, zookeeper, bigtop-utils
+Depends: hadoop-client, zookeeper, bigtop-utils (>= 0.6)
 Description: Giraph is a BSP inspired graph processing platform that runs on Hadoop
  Giraph implements a graph processing platform to run large scale algorithms 
  (such as page rank, shared connections, personalization-based popularity, etc.)

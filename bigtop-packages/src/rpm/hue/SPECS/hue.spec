@@ -311,7 +311,7 @@ fi
 # FIXME: Hue plugins don't quite work with Hadoop 2.X
 # %package -n %{name}-plugins
 # Summary: Hadoop plugins for Hue
-# Requires: hadoop, bigtop-utils
+# Requires: hadoop, bigtop-utils >= 0.6
 # Group: Applications/Engineering
 # %description -n %{name}-plugins
 # Plugins for Hue

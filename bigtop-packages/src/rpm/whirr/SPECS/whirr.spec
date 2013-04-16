@@ -37,7 +37,7 @@ Source0: %{name}-%{whirr_base_version}.tar.gz
 Source1: do-component-build
 Source2: install_%{name}.sh
 Source3: whirr.1
-Requires: bigtop-utils
+Requires: bigtop-utils >= 0.6
 
 %description 
 Whirr provides

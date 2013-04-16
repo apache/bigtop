@@ -32,7 +32,7 @@ Description: A browser-based desktop interface for Hadoop
 # FIXME: Hue plugins don't yet quite work with Hadoop 2.X
 #Package: hue-plugins
 #Architecture: all
-#Depends: hadoop, bigtop-utils
+#Depends: hadoop, bigtop-utils (>= 0.6)
 #Description: Plug-ins for Hadoop to enable integration with Hue
 # These plug-ins enable the Hadoop Daemons to communicate with Hue.
 # This package must be installed on every node in the Hadoop cluster.

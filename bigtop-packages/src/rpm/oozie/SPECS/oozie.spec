@@ -115,7 +115,7 @@ URL: http://incubator.apache.org/oozie/
 Group: Development/Libraries
 License: APL2
 BuildArch: noarch
-Requires: bigtop-utils
+Requires: bigtop-utils >= 0.6
 
 
 %description client

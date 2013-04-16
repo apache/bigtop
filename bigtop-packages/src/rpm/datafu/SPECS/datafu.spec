@@ -37,7 +37,7 @@ License: ASL 2.0
 Source0: %{datafu_name}-%{datafu_base_version}.tar.gz
 Source1: do-component-build 
 Source2: install_%{datafu_name}.sh
-Requires: hadoop-client, bigtop-utils
+Requires: hadoop-client, bigtop-utils >= 0.6
 
 
 %description 

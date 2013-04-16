@@ -57,7 +57,7 @@ Source4: web.xml
 Source5: logging.properties
 Source6: solr.default
 Source7: solr-server.init
-Requires: bigtop-utils, bigtop-tomcat
+Requires: bigtop-utils >= 0.6, bigtop-tomcat
 
 # CentOS 5 does not have any dist macro
 # So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
