@@ -41,7 +41,7 @@ __EOT__
 sed -i.orig -e 's#<module organisation="org.apache.hadoop" name="hadoop-\*".*#<module organisation="org.apache.hadoop" name=".*" resolver="internal"/>#' src/ivy/ivysettings.xml
 
 ant -f src/build.xml `bom2props | sed -e 's#^#-D#'` -Dhadoop.security.version.prefix=0.23 \
-    -Dversion=$HIVE_VERSION -Dinclude.postgres=true very-clean package "$@"
+    -Dversion=$HIVE_VERSION -Dinclude.postgres=true package "$@"
 
 # Install Hive artifacts needed by other components into the local Maven cache
 mvn install:install-file -DgroupId=org.apache.hive -DartifactId=hive-builtins -Dversion=$HIVE_VERSION -Dpackaging=jar -Dfile=src/build/builtins/hive-builtins-$HIVE_VERSION.jar
