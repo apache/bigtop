@@ -39,6 +39,8 @@ BUILD_OPTS="-Djavac.version=1.6 -Dforrest.home=${FORREST_HOME} -Dversion=${PIG_V
 export LC_ALL=en_US.UTF-8
 
 rm test/org/apache/pig/test/TestHBaseStorage.java
+sed -i.orig -e 's#</modules>#<module organisation="org.apache.hadoop" name=".*" resolver="internal"/>\n</modules>#' ivy/ivysettings.xml
+
 ant $BUILD_OPTS clean jar jar-withouthadoop pigunit-jar smoketests-jar "$@"
 for build_file in contrib/piggybank/java/build.xml contrib/zebra/build.xml ; do
   ant $BUILD_OPTS -buildfile $build_file clean jar "$@"
