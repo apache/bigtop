@@ -26,6 +26,7 @@ class hadoop-hbase {
       require kerberos::client
       kerberos::host_keytab { "hbase": 
         spnego => true,
+        require => Package["hbase"],
       }
 
       file { "/etc/hbase/conf/jaas.conf":

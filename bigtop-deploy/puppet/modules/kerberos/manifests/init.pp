@@ -115,7 +115,7 @@ class kerberos {
     service { $service_name_kdc:
       ensure => running,
       require => [Package["$package_name_kdc"], File["${kdc_etc_path}/kdc.conf"], Exec["kdb5_util"]],
-      subscribe => File["${kdc_etc_path}/kdc.conf"],
+      subscribe => [File["${kdc_etc_path}/kadm5.acl"], File["${kdc_etc_path}/kdc.conf"]],
       hasrestart => true,
     }
 
@@ -131,6 +131,7 @@ class kerberos {
       service { "$service_name_admin":
         ensure => running,
         require => [Package["$package_name_admin"], Service["$service_name_kdc"]],
+        subscribe => [File["${kdc_etc_path}/kadm5.acl"], File["${kdc_etc_path}/kdc.conf"]],
         hasrestart => true,
         restart => "${se_hack} ; service ${service_name_admin} restart",
         start => "${se_hack} ; service ${service_name_admin} start",
@@ -212,6 +213,13 @@ EOF
       creates => $keytab,
       require => [ Kerberos::Principal[$requested_princs],
                    Kerberos::Principal[$internal_princs] ],
+    }
+
+    exec { "aquire $title keytab":
+        path    => $kerberos::site::exec_path,
+        user    => $title,
+        command => "kinit -kt $keytab ${title}/$::fqdn",
+        require => Exec["ktinject.$title"],
     }
   }
 }

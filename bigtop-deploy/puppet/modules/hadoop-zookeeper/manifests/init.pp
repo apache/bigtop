@@ -62,6 +62,7 @@ class hadoop-zookeeper {
       kerberos::host_keytab { "zookeeper":
         spnego => true,
         notify => Service["zookeeper-server"],
+        require => Package["zookeeper-server"],
       }
 
       file { "/etc/zookeeper/conf/java.env":

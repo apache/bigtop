@@ -26,11 +26,13 @@ class hadoop {
     kerberos::host_keytab { "hdfs":
       princs => [ "host", "hdfs" ],
       spnego => true,
+      require => Package["hadoop-hdfs"],
     }
    
     kerberos::host_keytab { [ "yarn", "mapred" ]:
       tag    => "mapreduce",
       spnego => true,
+      require => Package["hadoop-yarn"],
     }
   }
 
@@ -174,6 +176,7 @@ class hadoop {
     if ($auth == "kerberos") {
       kerberos::host_keytab { "httpfs":
         spnego => true,
+        require => Package["hadoop-httpfs"],
       }
     }
 

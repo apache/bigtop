@@ -119,6 +119,11 @@ class hadoop_worker_node inherits hadoop_cluster_node {
     groups     => 'wheel',
   }
 
+  if ($hadoop_security_authentication == "kerberos") {
+    kerberos::host_keytab { $bigtop_real_users: }
+    User<||> -> Kerberos::Host_keytab<||>
+  }
+
   hadoop::datanode { "datanode":
         namenode_host => $hadoop_namenode_host,
         namenode_port => $hadoop_namenode_port,

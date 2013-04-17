@@ -21,6 +21,7 @@ class hue {
       require kerberos::client
       kerberos::host_keytab { "hue":
         spnego => false,
+        require => Package["hue"],
       }
     }
 

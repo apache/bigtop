@@ -333,10 +333,8 @@
 
     <!-- Proxyuser Configuration -->
 
-    <!--
-
     <property>
-        <name>oozie.service.ProxyUserService.proxyuser.#USER#.hosts</name>
+        <name>oozie.service.ProxyUserService.proxyuser.hue.hosts</name>
         <value>*</value>
         <description>
             List of hosts the '#USER#' user is allowed to perform 'doAs'
@@ -353,7 +351,7 @@
     </property>
 
     <property>
-        <name>oozie.service.ProxyUserService.proxyuser.#USER#.groups</name>
+        <name>oozie.service.ProxyUserService.proxyuser.hue.groups</name>
         <value>*</value>
         <description>
             List of groups the '#USER#' user is allowed to impersonate users
@@ -368,7 +366,4 @@
             in the property name.
         </description>
     </property>
-
-    -->
-
 </configuration>
