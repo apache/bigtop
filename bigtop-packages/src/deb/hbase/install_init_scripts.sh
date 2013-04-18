@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -27,6 +27,13 @@ for node in master regionserver rest thrift ; do
     service_pkgdir=debian/$SRC_PKG-$node
     debdir=$service_pkgdir/DEBIAN
     template="debian/service-init.d.tpl"
+    if [ "$node" == "regionserver" ] ; then
+        # Region servers start from a different template that allows
+        # them to run multiple concurrent instances of the daemon
+        template="debian/regionserver-init.d.tpl"
+        sed -i -e "s|@INIT_DEFAULT_START@|2 3 4 5|" $template
+        sed -i -e "s|@INIT_DEFAULT_STOP@|0 1 6|" $template
+    fi
 
     mkdir -p $service_pkgdir/etc/init.d/ $debdir
     sed -e "s|@HBASE_DAEMON@|$node|" -e "s|@CHKCONFIG@|$chkconfig|" $template > $service_pkgdir/etc/init.d/$SRC_PKG-$node

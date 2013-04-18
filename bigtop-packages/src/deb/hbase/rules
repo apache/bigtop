@@ -36,7 +36,7 @@ override_dh_auto_build:
 	
 override_dh_auto_install:
 	cp debian/hbase.default debian/${hbase_pkg_name}/etc/default/${hbase_pkg_name}
-	sh -x debian/install_hbase.sh \
+	bash -x debian/install_hbase.sh \
 		--build-dir=build \
 		--conf-dir=/etc/hbase/conf.dist \
 		--doc-dir=usr/share/doc/${hbase_pkg_name}-doc \
@@ -56,4 +56,4 @@ override_dh_auto_install:
 	find debian/tmp/usr/lib/${hbase_pkg_name}/bin debian/tmp/usr/lib/${hbase_pkg_name}/lib -name \*.rb -exec chmod 644 {} \;
 	### webapps should not be executable either
 	find debian/tmp/usr/lib/${hbase_pkg_name}/hbase-webapps -type f -exec chmod 644 {} \;
-	sh debian/install_init_scripts.sh
+	bash debian/install_init_scripts.sh

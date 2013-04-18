@@ -90,6 +90,7 @@ Source3: hbase.sh
 Source4: hbase.sh.suse
 Source5: hbase.default
 Source6: hbase.nofiles.conf
+Source7: regionserver-init.d.tpl
 BuildArch: noarch
 Requires: coreutils, /usr/sbin/useradd, /sbin/chkconfig, /sbin/service
 Requires: hadoop-hdfs, zookeeper >= 3.3.1, bigtop-utils >= 0.6
@@ -273,11 +274,18 @@ do
     rest) chkconfig="345 88 12" ;;
     *) chkconfig="345 89 13" ;;
   esac
-	init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{name}-${service}
-	%__cp $orig_init_file $init_file
-	%__sed -i -e "s|@CHKCONFIG@|${chkconfig}|" $init_file
-	%__sed -i -e "s|@HBASE_DAEMON@|${service}|" $init_file
-	chmod 755 $init_file
+    init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{name}-${service}
+    %__cp $orig_init_file $init_file
+    if [[ "$service" = "regionserver" ]] ; then
+        # Region servers start from a different template that allows
+        # them to run multiple concurrent instances of the daemon
+        %__cp %{SOURCE7} $init_file
+        %__sed -i -e "s|@INIT_DEFAULT_START@|3 4 5|" $init_file
+        %__sed -i -e "s|@INIT_DEFAULT_STOP@|0 1 2 6|" $init_file
+    fi
+    %__sed -i -e "s|@CHKCONFIG@|${chkconfig}|" $init_file
+    %__sed -i -e "s|@HBASE_DAEMON@|${service}|" $init_file
+    chmod 755 $init_file
 done
 
 # FIXME: BIGTOP-648 workaround for HBASE-6263
