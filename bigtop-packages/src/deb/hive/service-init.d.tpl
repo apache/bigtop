@@ -69,6 +69,8 @@ HIVE_HOME="`eval echo ~$HIVE_USER`"
 NICENESS="+0"
 TIMEOUT=3
 
+install -d -m 0755 -o ${HIVE_USER} -g ${HIVE_USER} `dirname ${PID_FILE}`
+
 [ -f $SYS_FILE ] && . $SYS_FILE
 
 hive_start() {
