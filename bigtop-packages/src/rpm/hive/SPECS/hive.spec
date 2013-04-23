@@ -63,12 +63,14 @@ BuildArch: noarch
 Source0: %{name}-%{hive_base_version}.tar.gz
 Source1: do-component-build
 Source2: install_hive.sh
-Source3: hive.sh
+Source3: init.d.tmpl
 Source4: hive-site.xml
 Source5: hive-server.default
 Source6: hive-metastore.default
 Source7: hive.1
 Source8: hive-site.xml
+Source9: hive-server.svc
+Source10: hive-metastore.svc
 Requires: hadoop-client, bigtop-utils >= 0.6, hbase, zookeeper
 Obsoletes: %{name}-webinterface
 
@@ -142,7 +144,6 @@ cp $RPM_SOURCE_DIR/hive-site.xml .
   --build-dir=%{hive_dist} \
   --doc-dir=%{doc_hive}
 
-%__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
 %__install -d -m 0755 $RPM_BUILD_ROOT/etc/default/
 %__install -m 0644 %{SOURCE6} $RPM_BUILD_ROOT/etc/default/%{name}-metastore
 %__install -m 0644 %{SOURCE5} $RPM_BUILD_ROOT/etc/default/%{name}-server
@@ -159,10 +160,9 @@ cp $RPM_SOURCE_DIR/hive-site.xml .
 
 for service in %{hive_services}
 do
-        init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{name}-${service}
-        %__cp %{SOURCE3} $init_file
-        %__sed -i -e "s|@HIVE_DAEMON@|${service}|" $init_file
-        chmod 755 $init_file
+    # Install init script
+    init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{name}-${service}
+    bash $RPM_SOURCE_DIR/init.d.tmpl $RPM_SOURCE_DIR/hive-${service}.svc rpm $init_file
 done
 
 %pre
