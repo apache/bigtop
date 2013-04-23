@@ -352,7 +352,7 @@ managing the XML specification.
 %package -n %{name}-pig
 Summary: A UI for Pig on Hue
 Group: Applications/Engineering
-Requires: make
+Requires: make, pig
 Requires: %{name}-common = %{version}-%{release}
 
 %description -n %{name}-pig
