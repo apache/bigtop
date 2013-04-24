@@ -1,3 +1,6 @@
 sed -re 's#hdfs://[^/]*/#hdfs://HADOOP/#' \
     -e  's#hdfs://.*/-(ext|mr)-1000#hdfs://HADOOP/-\1-1000#' \
-    -e  's#Deleted hdfs://.*src_multi.$#Deleted hdfs://src_multi#'
+    -e  's#Deleted .*/.*src_multi.$#Deleted /src_multi#' \
+    -e 's#file:/.*/-(ext|mr)-1000#file:/HADOOP/-\1-1000#' \
+    -e '/.*jobconf.xml:an attempt to override final parameter: mapreduce.job.end-notification.*;  Ignoring\./ d'
+

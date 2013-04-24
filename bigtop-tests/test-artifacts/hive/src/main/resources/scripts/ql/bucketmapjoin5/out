@@ -1,66 +1,52 @@
--- Licensed to the Apache Software Foundation (ASF) under one or more
--- contributor license agreements.  See the NOTICE file distributed with
--- this work for additional information regarding copyright ownership.
--- The ASF licenses this file to You under the Apache License, Version 2.0
--- (the "License") you may not use this file except in compliance with
--- the License.  You may obtain a copy of the License at
---
---     http://www.apache.org/licenses/LICENSE-2.0
---
--- Unless required by applicable law or agreed to in writing, software
--- distributed under the License is distributed on an "AS IS" BASIS,
--- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
--- See the License for the specific language governing permissions and
--- limitations under the License.
 CREATE TABLE srcbucket_mapjoin(key int, value string) CLUSTERED BY (key) INTO 2 BUCKETS STORED AS TEXTFILE
 
 load data local inpath 'seed_data_files/srcbucket20.txt' INTO TABLE srcbucket_mapjoin
-Copying file: file:/var/lib/hudson/workspace/Nightly-smoke-testing-monster/examples/hive/target/seed_data_files/srcbucket20.txt
+Copying file: file:/root/bigtop/bigtop-tests/test-execution/smokes/hive/target/seed_data_files/srcbucket20.txt
 
 load data local inpath 'seed_data_files/srcbucket21.txt' INTO TABLE srcbucket_mapjoin
-Copying file: file:/var/lib/hudson/workspace/Nightly-smoke-testing-monster/examples/hive/target/seed_data_files/srcbucket21.txt
+Copying file: file:/root/bigtop/bigtop-tests/test-execution/smokes/hive/target/seed_data_files/srcbucket21.txt
 
 
 CREATE TABLE srcbucket_mapjoin_part (key int, value string) partitioned by (ds string) CLUSTERED BY (key) INTO 4 BUCKETS STORED AS TEXTFILE
 
 load data local inpath 'seed_data_files/srcbucket20.txt' INTO TABLE srcbucket_mapjoin_part partition(ds='2008-04-08')
-Copying file: file:/var/lib/hudson/workspace/Nightly-smoke-testing-monster/examples/hive/target/seed_data_files/srcbucket20.txt
+Copying file: file:/root/bigtop/bigtop-tests/test-execution/smokes/hive/target/seed_data_files/srcbucket20.txt
 
 load data local inpath 'seed_data_files/srcbucket21.txt' INTO TABLE srcbucket_mapjoin_part partition(ds='2008-04-08')
-Copying file: file:/var/lib/hudson/workspace/Nightly-smoke-testing-monster/examples/hive/target/seed_data_files/srcbucket21.txt
+Copying file: file:/root/bigtop/bigtop-tests/test-execution/smokes/hive/target/seed_data_files/srcbucket21.txt
 
 load data local inpath 'seed_data_files/srcbucket22.txt' INTO TABLE srcbucket_mapjoin_part partition(ds='2008-04-08')
-Copying file: file:/var/lib/hudson/workspace/Nightly-smoke-testing-monster/examples/hive/target/seed_data_files/srcbucket22.txt
+Copying file: file:/root/bigtop/bigtop-tests/test-execution/smokes/hive/target/seed_data_files/srcbucket22.txt
 
 load data local inpath 'seed_data_files/srcbucket23.txt' INTO TABLE srcbucket_mapjoin_part partition(ds='2008-04-08')
-Copying file: file:/var/lib/hudson/workspace/Nightly-smoke-testing-monster/examples/hive/target/seed_data_files/srcbucket23.txt
+Copying file: file:/root/bigtop/bigtop-tests/test-execution/smokes/hive/target/seed_data_files/srcbucket23.txt
 
 load data local inpath 'seed_data_files/srcbucket20.txt' INTO TABLE srcbucket_mapjoin_part partition(ds='2008-04-09')
-Copying file: file:/var/lib/hudson/workspace/Nightly-smoke-testing-monster/examples/hive/target/seed_data_files/srcbucket20.txt
+Copying file: file:/root/bigtop/bigtop-tests/test-execution/smokes/hive/target/seed_data_files/srcbucket20.txt
 
 load data local inpath 'seed_data_files/srcbucket21.txt' INTO TABLE srcbucket_mapjoin_part partition(ds='2008-04-09')
-Copying file: file:/var/lib/hudson/workspace/Nightly-smoke-testing-monster/examples/hive/target/seed_data_files/srcbucket21.txt
+Copying file: file:/root/bigtop/bigtop-tests/test-execution/smokes/hive/target/seed_data_files/srcbucket21.txt
 
 load data local inpath 'seed_data_files/srcbucket22.txt' INTO TABLE srcbucket_mapjoin_part partition(ds='2008-04-09')
-Copying file: file:/var/lib/hudson/workspace/Nightly-smoke-testing-monster/examples/hive/target/seed_data_files/srcbucket22.txt
+Copying file: file:/root/bigtop/bigtop-tests/test-execution/smokes/hive/target/seed_data_files/srcbucket22.txt
 
 load data local inpath 'seed_data_files/srcbucket23.txt' INTO TABLE srcbucket_mapjoin_part partition(ds='2008-04-09')
-Copying file: file:/var/lib/hudson/workspace/Nightly-smoke-testing-monster/examples/hive/target/seed_data_files/srcbucket23.txt
+Copying file: file:/root/bigtop/bigtop-tests/test-execution/smokes/hive/target/seed_data_files/srcbucket23.txt
 
 
 CREATE TABLE srcbucket_mapjoin_part_2 (key int, value string) partitioned by (ds string) CLUSTERED BY (key) INTO 2 BUCKETS STORED AS TEXTFILE
 
 load data local inpath 'seed_data_files/srcbucket22.txt' INTO TABLE srcbucket_mapjoin_part_2 partition(ds='2008-04-08')
-Copying file: file:/var/lib/hudson/workspace/Nightly-smoke-testing-monster/examples/hive/target/seed_data_files/srcbucket22.txt
+Copying file: file:/root/bigtop/bigtop-tests/test-execution/smokes/hive/target/seed_data_files/srcbucket22.txt
 
 load data local inpath 'seed_data_files/srcbucket23.txt' INTO TABLE srcbucket_mapjoin_part_2 partition(ds='2008-04-08')
-Copying file: file:/var/lib/hudson/workspace/Nightly-smoke-testing-monster/examples/hive/target/seed_data_files/srcbucket23.txt
+Copying file: file:/root/bigtop/bigtop-tests/test-execution/smokes/hive/target/seed_data_files/srcbucket23.txt
 
 load data local inpath 'seed_data_files/srcbucket22.txt' INTO TABLE srcbucket_mapjoin_part_2 partition(ds='2008-04-09')
-Copying file: file:/var/lib/hudson/workspace/Nightly-smoke-testing-monster/examples/hive/target/seed_data_files/srcbucket22.txt
+Copying file: file:/root/bigtop/bigtop-tests/test-execution/smokes/hive/target/seed_data_files/srcbucket22.txt
 
 load data local inpath 'seed_data_files/srcbucket23.txt' INTO TABLE srcbucket_mapjoin_part_2 partition(ds='2008-04-09')
-Copying file: file:/var/lib/hudson/workspace/Nightly-smoke-testing-monster/examples/hive/target/seed_data_files/srcbucket23.txt
+Copying file: file:/root/bigtop/bigtop-tests/test-execution/smokes/hive/target/seed_data_files/srcbucket23.txt
 
 
 create table bucketmapjoin_hash_result_1 (key bigint , value1 bigint, value2 bigint)
@@ -80,16 +66,18 @@ ABSTRACT SYNTAX TREE:
   (TOK_QUERY (TOK_FROM (TOK_JOIN (TOK_TABREF (TOK_TABNAME srcbucket_mapjoin) a) (TOK_TABREF (TOK_TABNAME srcbucket_mapjoin_part) b) (= (. (TOK_TABLE_OR_COL a) key) (. (TOK_TABLE_OR_COL b) key)))) (TOK_INSERT (TOK_DESTINATION (TOK_TAB (TOK_TABNAME bucketmapjoin_tmp_result))) (TOK_SELECT (TOK_HINTLIST (TOK_HINT TOK_MAPJOIN (TOK_HINTARGLIST a))) (TOK_SELEXPR (. (TOK_TABLE_OR_COL a) key)) (TOK_SELEXPR (. (TOK_TABLE_OR_COL a) value)) (TOK_SELEXPR (. (TOK_TABLE_OR_COL b) value)))))
 
 STAGE DEPENDENCIES:
-  Stage-7 is a root stage
-  Stage-1 depends on stages: Stage-7
-  Stage-5 depends on stages: Stage-1 , consists of Stage-4, Stage-3
+  Stage-9 is a root stage
+  Stage-1 depends on stages: Stage-9
+  Stage-7 depends on stages: Stage-1 , consists of Stage-4, Stage-3, Stage-5
   Stage-4
-  Stage-0 depends on stages: Stage-4, Stage-3
+  Stage-0 depends on stages: Stage-4, Stage-3, Stage-6
   Stage-2 depends on stages: Stage-0
   Stage-3
+  Stage-5
+  Stage-6 depends on stages: Stage-5
 
 STAGE PLANS:
-  Stage: Stage-7
+  Stage: Stage-9
     Map Reduce Local Work
       Alias -> Map Local Tables:
         a 
@@ -111,18 +99,18 @@ STAGE PLANS:
               Position of Big Table: 1
       Bucket Mapjoin Context:
           Alias Bucket Base File Name Mapping:
-            a {srcbucket20.txt=[srcbucket20.txt], srcbucket21.txt=[srcbucket21.txt], srcbucket22.txt=[srcbucket20.txt], srcbucket23.txt=[srcbucket21.txt], ds=2008-04-09/srcbucket20.txt=[srcbucket20.txt], ds=2008-04-09/srcbucket21.txt=[srcbucket21.txt], ds=2008-04-09/srcbucket22.txt=[srcbucket20.txt], ds=2008-04-09/srcbucket23.txt=[srcbucket21.txt]}
+            a {ds=2008-04-08/srcbucket20.txt=[srcbucket20.txt], ds=2008-04-08/srcbucket21.txt=[srcbucket21.txt], ds=2008-04-08/srcbucket22.txt=[srcbucket20.txt], ds=2008-04-08/srcbucket23.txt=[srcbucket21.txt], ds=2008-04-09/srcbucket20.txt=[srcbucket20.txt], ds=2008-04-09/srcbucket21.txt=[srcbucket21.txt], ds=2008-04-09/srcbucket22.txt=[srcbucket20.txt], ds=2008-04-09/srcbucket23.txt=[srcbucket21.txt]}
           Alias Bucket File Name Mapping:
-            a {hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-08/srcbucket20.txt=[hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin/srcbucket20.txt], hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-08/srcbucket21.txt=[hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin/srcbucket21.txt], hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-08/srcbucket22.txt=[hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin/srcbucket20.txt], hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-08/srcbucket23.txt=[hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin/srcbucket21.txt], hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-09/srcbucket20.txt=[hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin/srcbucket20.txt], hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-09/srcbucket21.txt=[hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin/srcbucket21.txt], hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-09/srcbucket22.txt=[hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin/srcbucket20.txt], hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-09/srcbucket23.txt=[hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin/srcbucket21.txt]}
+            a {hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-08/srcbucket20.txt=[hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin/srcbucket20.txt], hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-08/srcbucket21.txt=[hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin/srcbucket21.txt], hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-08/srcbucket22.txt=[hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin/srcbucket20.txt], hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-08/srcbucket23.txt=[hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin/srcbucket21.txt], hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-09/srcbucket20.txt=[hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin/srcbucket20.txt], hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-09/srcbucket21.txt=[hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin/srcbucket21.txt], hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-09/srcbucket22.txt=[hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin/srcbucket20.txt], hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-09/srcbucket23.txt=[hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin/srcbucket21.txt]}
           Alias Bucket Output File Name Mapping:
-            hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-08/srcbucket20.txt 0
-            hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-08/srcbucket21.txt 1
-            hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-08/srcbucket22.txt 2
-            hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-08/srcbucket23.txt 3
-            hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-09/srcbucket20.txt 0
-            hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-09/srcbucket21.txt 1
-            hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-09/srcbucket22.txt 2
-            hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-09/srcbucket23.txt 3
+            hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-08/srcbucket20.txt 0
+            hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-08/srcbucket21.txt 1
+            hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-08/srcbucket22.txt 2
+            hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-08/srcbucket23.txt 3
+            hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-09/srcbucket20.txt 0
+            hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-09/srcbucket21.txt 1
+            hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-09/srcbucket22.txt 2
+            hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-09/srcbucket23.txt 3
 
   Stage: Stage-1
     Map Reduce
@@ -164,9 +152,9 @@ STAGE PLANS:
                   File Output Operator
                     compressed: false
                     GlobalTableId: 1
-                    directory: hdfs://monster01.sf.cloudera.com:17020/tmp/hive-hudson/hive_2011-04-01_13-55-59_802_8749339940103211895/-ext-10002
+                    directory: hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-00-39_907_3836130325622754442/-ext-10002
                     NumFilesPerFileSink: 1
-                    Stats Publishing Key Prefix: hdfs://monster01.sf.cloudera.com:17020/tmp/hive-hudson/hive_2011-04-01_13-55-59_802_8749339940103211895/-ext-10000/
+                    Stats Publishing Key Prefix: hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-00-39_907_3836130325622754442/-ext-10000/
                     table:
                         input format: org.apache.hadoop.mapred.TextInputFormat
                         output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
@@ -176,12 +164,12 @@ STAGE PLANS:
                           columns.types string:string:string
                           file.inputformat org.apache.hadoop.mapred.TextInputFormat
                           file.outputformat org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
-                          location hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/bucketmapjoin_tmp_result
+                          location hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/bucketmapjoin_tmp_result
                           name default.bucketmapjoin_tmp_result
                           serialization.ddl struct bucketmapjoin_tmp_result { string key, string value1, string value2}
                           serialization.format 1
                           serialization.lib org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
-                          transient_lastDdlTime 1301691359
+                          transient_lastDdlTime 1366743639
                         serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
                         name: default.bucketmapjoin_tmp_result
                     TotalFiles: 1
@@ -191,10 +179,10 @@ STAGE PLANS:
         Map Reduce Local Work
       Needs Tagging: false
       Path -> Alias:
-        hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-08 [b]
-        hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-09 [b]
+        hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-08 [b]
+        hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-09 [b]
       Path -> Partition:
-        hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-08 
+        hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-08 
           Partition
             base file name: ds=2008-04-08
             input format: org.apache.hadoop.mapred.TextInputFormat
@@ -208,13 +196,18 @@ STAGE PLANS:
               columns.types int:string
               file.inputformat org.apache.hadoop.mapred.TextInputFormat
               file.outputformat org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
-              location hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-08
+              location hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-08
               name default.srcbucket_mapjoin_part
+              numFiles 4
+              numPartitions 2
+              numRows 0
               partition_columns ds
+              rawDataSize 0
               serialization.ddl struct srcbucket_mapjoin_part { i32 key, string value}
               serialization.format 1
               serialization.lib org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
-              transient_lastDdlTime 1301691354
+              totalSize 5812
+              transient_lastDdlTime 1366743633
             serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
           
               input format: org.apache.hadoop.mapred.TextInputFormat
@@ -226,17 +219,22 @@ STAGE PLANS:
                 columns.types int:string
                 file.inputformat org.apache.hadoop.mapred.TextInputFormat
                 file.outputformat org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
-                location hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part
+                location hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part
                 name default.srcbucket_mapjoin_part
+                numFiles 8
+                numPartitions 2
+                numRows 0
                 partition_columns ds
+                rawDataSize 0
                 serialization.ddl struct srcbucket_mapjoin_part { i32 key, string value}
                 serialization.format 1
                 serialization.lib org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
-                transient_lastDdlTime 1301691354
+                totalSize 11624
+                transient_lastDdlTime 1366743636
               serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
               name: default.srcbucket_mapjoin_part
             name: default.srcbucket_mapjoin_part
-        hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-09 
+        hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-09 
           Partition
             base file name: ds=2008-04-09
             input format: org.apache.hadoop.mapred.TextInputFormat
@@ -250,13 +248,18 @@ STAGE PLANS:
               columns.types int:string
               file.inputformat org.apache.hadoop.mapred.TextInputFormat
               file.outputformat org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
-              location hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-09
+              location hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part/ds=2008-04-09
               name default.srcbucket_mapjoin_part
+              numFiles 4
+              numPartitions 2
+              numRows 0
               partition_columns ds
+              rawDataSize 0
               serialization.ddl struct srcbucket_mapjoin_part { i32 key, string value}
               serialization.format 1
               serialization.lib org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
-              transient_lastDdlTime 1301691354
+              totalSize 5812
+              transient_lastDdlTime 1366743636
             serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
           
               input format: org.apache.hadoop.mapred.TextInputFormat
@@ -268,32 +271,40 @@ STAGE PLANS:
                 columns.types int:string
                 file.inputformat org.apache.hadoop.mapred.TextInputFormat
                 file.outputformat org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
-                location hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part
+                location hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part
                 name default.srcbucket_mapjoin_part
+                numFiles 8
+                numPartitions 2
+                numRows 0
                 partition_columns ds
+                rawDataSize 0
                 serialization.ddl struct srcbucket_mapjoin_part { i32 key, string value}
                 serialization.format 1
                 serialization.lib org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
-                transient_lastDdlTime 1301691354
+                totalSize 11624
+                transient_lastDdlTime 1366743636
               serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
               name: default.srcbucket_mapjoin_part
             name: default.srcbucket_mapjoin_part
+      Truncated Path -> Alias:
+        /srcbucket_mapjoin_part/ds=2008-04-08 [b]
+        /srcbucket_mapjoin_part/ds=2008-04-09 [b]
 
-  Stage: Stage-5
+  Stage: Stage-7
     Conditional Operator
 
   Stage: Stage-4
     Move Operator
       files:
           hdfs directory: true
-          source: hdfs://monster01.sf.cloudera.com:17020/tmp/hive-hudson/hive_2011-04-01_13-55-59_802_8749339940103211895/-ext-10002
-          destination: hdfs://monster01.sf.cloudera.com:17020/tmp/hive-hudson/hive_2011-04-01_13-55-59_802_8749339940103211895/-ext-10000
+          source: hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-00-39_907_3836130325622754442/-ext-10002
+          destination: hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-00-39_907_3836130325622754442/-ext-10000
 
   Stage: Stage-0
     Move Operator
       tables:
           replace: true
-          source: hdfs://monster01.sf.cloudera.com:17020/tmp/hive-hudson/hive_2011-04-01_13-55-59_802_8749339940103211895/-ext-10000
+          source: hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-00-39_907_3836130325622754442/-ext-10000
           table:
               input format: org.apache.hadoop.mapred.TextInputFormat
               output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
@@ -303,28 +314,28 @@ STAGE PLANS:
                 columns.types string:string:string
                 file.inputformat org.apache.hadoop.mapred.TextInputFormat
                 file.outputformat org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
-                location hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/bucketmapjoin_tmp_result
+                location hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/bucketmapjoin_tmp_result
                 name default.bucketmapjoin_tmp_result
                 serialization.ddl struct bucketmapjoin_tmp_result { string key, string value1, string value2}
                 serialization.format 1
                 serialization.lib org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
-                transient_lastDdlTime 1301691359
+                transient_lastDdlTime 1366743639
               serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
               name: default.bucketmapjoin_tmp_result
-          tmp directory: hdfs://monster01.sf.cloudera.com:17020/tmp/hive-hudson/hive_2011-04-01_13-55-59_802_8749339940103211895/-ext-10001
+          tmp directory: hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-00-39_907_3836130325622754442/-ext-10001
 
   Stage: Stage-2
     Stats-Aggr Operator
-      Stats Aggregation Key Prefix: hdfs://monster01.sf.cloudera.com:17020/tmp/hive-hudson/hive_2011-04-01_13-55-59_802_8749339940103211895/-ext-10000/
+      Stats Aggregation Key Prefix: hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-00-39_907_3836130325622754442/-ext-10000/
 
   Stage: Stage-3
     Map Reduce
       Alias -> Map Operator Tree:
-        hdfs://monster01.sf.cloudera.com:17020/tmp/hive-hudson/hive_2011-04-01_13-55-59_802_8749339940103211895/-ext-10002 
+        hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-00-39_907_3836130325622754442/-ext-10002 
             File Output Operator
               compressed: false
               GlobalTableId: 0
-              directory: hdfs://monster01.sf.cloudera.com:17020/tmp/hive-hudson/hive_2011-04-01_13-55-59_802_8749339940103211895/-ext-10000
+              directory: hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-00-39_907_3836130325622754442/-ext-10000
               NumFilesPerFileSink: 1
               table:
                   input format: org.apache.hadoop.mapred.TextInputFormat
@@ -335,12 +346,12 @@ STAGE PLANS:
                     columns.types string:string:string
                     file.inputformat org.apache.hadoop.mapred.TextInputFormat
                     file.outputformat org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
-                    location hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/bucketmapjoin_tmp_result
+                    location hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/bucketmapjoin_tmp_result
                     name default.bucketmapjoin_tmp_result
                     serialization.ddl struct bucketmapjoin_tmp_result { string key, string value1, string value2}
                     serialization.format 1
                     serialization.lib org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
-                    transient_lastDdlTime 1301691359
+                    transient_lastDdlTime 1366743639
                   serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
                   name: default.bucketmapjoin_tmp_result
               TotalFiles: 1
@@ -348,9 +359,9 @@ STAGE PLANS:
               MultiFileSpray: false
       Needs Tagging: false
       Path -> Alias:
-        hdfs://monster01.sf.cloudera.com:17020/tmp/hive-hudson/hive_2011-04-01_13-55-59_802_8749339940103211895/-ext-10002 [hdfs://monster01.sf.cloudera.com:17020/tmp/hive-hudson/hive_2011-04-01_13-55-59_802_8749339940103211895/-ext-10002]
+        hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-00-39_907_3836130325622754442/-ext-10002 [hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-00-39_907_3836130325622754442/-ext-10002]
       Path -> Partition:
-        hdfs://monster01.sf.cloudera.com:17020/tmp/hive-hudson/hive_2011-04-01_13-55-59_802_8749339940103211895/-ext-10002 
+        hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-00-39_907_3836130325622754442/-ext-10002 
           Partition
             base file name: -ext-10002
             input format: org.apache.hadoop.mapred.TextInputFormat
@@ -361,12 +372,12 @@ STAGE PLANS:
               columns.types string:string:string
               file.inputformat org.apache.hadoop.mapred.TextInputFormat
               file.outputformat org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
-              location hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/bucketmapjoin_tmp_result
+              location hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/bucketmapjoin_tmp_result
               name default.bucketmapjoin_tmp_result
               serialization.ddl struct bucketmapjoin_tmp_result { string key, string value1, string value2}
               serialization.format 1
               serialization.lib org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
-              transient_lastDdlTime 1301691359
+              transient_lastDdlTime 1366743639
             serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
           
               input format: org.apache.hadoop.mapred.TextInputFormat
@@ -377,15 +388,96 @@ STAGE PLANS:
                 columns.types string:string:string
                 file.inputformat org.apache.hadoop.mapred.TextInputFormat
                 file.outputformat org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
-                location hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/bucketmapjoin_tmp_result
+                location hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/bucketmapjoin_tmp_result
                 name default.bucketmapjoin_tmp_result
                 serialization.ddl struct bucketmapjoin_tmp_result { string key, string value1, string value2}
                 serialization.format 1
                 serialization.lib org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
-                transient_lastDdlTime 1301691359
+                transient_lastDdlTime 1366743639
               serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
               name: default.bucketmapjoin_tmp_result
             name: default.bucketmapjoin_tmp_result
+      Truncated Path -> Alias:
+        hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-00-39_907_3836130325622754442/-ext-10002 [hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-00-39_907_3836130325622754442/-ext-10002]
+
+  Stage: Stage-5
+    Map Reduce
+      Alias -> Map Operator Tree:
+        hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-00-39_907_3836130325622754442/-ext-10002 
+            File Output Operator
+              compressed: false
+              GlobalTableId: 0
+              directory: hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-00-39_907_3836130325622754442/-ext-10000
+              NumFilesPerFileSink: 1
+              table:
+                  input format: org.apache.hadoop.mapred.TextInputFormat
+                  output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                  properties:
+                    bucket_count -1
+                    columns key,value1,value2
+                    columns.types string:string:string
+                    file.inputformat org.apache.hadoop.mapred.TextInputFormat
+                    file.outputformat org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                    location hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/bucketmapjoin_tmp_result
+                    name default.bucketmapjoin_tmp_result
+                    serialization.ddl struct bucketmapjoin_tmp_result { string key, string value1, string value2}
+                    serialization.format 1
+                    serialization.lib org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                    transient_lastDdlTime 1366743639
+                  serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                  name: default.bucketmapjoin_tmp_result
+              TotalFiles: 1
+              GatherStats: false
+              MultiFileSpray: false
+      Needs Tagging: false
+      Path -> Alias:
+        hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-00-39_907_3836130325622754442/-ext-10002 [hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-00-39_907_3836130325622754442/-ext-10002]
+      Path -> Partition:
+        hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-00-39_907_3836130325622754442/-ext-10002 
+          Partition
+            base file name: -ext-10002
+            input format: org.apache.hadoop.mapred.TextInputFormat
+            output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+            properties:
+              bucket_count -1
+              columns key,value1,value2
+              columns.types string:string:string
+              file.inputformat org.apache.hadoop.mapred.TextInputFormat
+              file.outputformat org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+              location hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/bucketmapjoin_tmp_result
+              name default.bucketmapjoin_tmp_result
+              serialization.ddl struct bucketmapjoin_tmp_result { string key, string value1, string value2}
+              serialization.format 1
+              serialization.lib org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+              transient_lastDdlTime 1366743639
+            serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+          
+              input format: org.apache.hadoop.mapred.TextInputFormat
+              output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+              properties:
+                bucket_count -1
+                columns key,value1,value2
+                columns.types string:string:string
+                file.inputformat org.apache.hadoop.mapred.TextInputFormat
+                file.outputformat org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                location hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/bucketmapjoin_tmp_result
+                name default.bucketmapjoin_tmp_result
+                serialization.ddl struct bucketmapjoin_tmp_result { string key, string value1, string value2}
+                serialization.format 1
+                serialization.lib org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                transient_lastDdlTime 1366743639
+              serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+              name: default.bucketmapjoin_tmp_result
+            name: default.bucketmapjoin_tmp_result
+      Truncated Path -> Alias:
+        hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-00-39_907_3836130325622754442/-ext-10002 [hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-00-39_907_3836130325622754442/-ext-10002]
+
+  Stage: Stage-6
+    Move Operator
+      files:
+          hdfs directory: true
+          source: hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-00-39_907_3836130325622754442/-ext-10002
+          destination: hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-00-39_907_3836130325622754442/-ext-10000
 
 
 
@@ -394,7 +486,7 @@ insert overwrite table bucketmapjoin_tmp_result
 select /*+mapjoin(a)*/ a.key, a.value, b.value 
 from srcbucket_mapjoin a join srcbucket_mapjoin_part b 
 on a.key=b.key
-Deleted hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/bucketmapjoin_tmp_result
+Deleted /user/hive/warehouse/bucketmapjoin_tmp_result
 
 
 select count(1) from bucketmapjoin_tmp_result
@@ -402,14 +494,14 @@ select count(1) from bucketmapjoin_tmp_result
 
 insert overwrite table bucketmapjoin_hash_result_1
 select sum(hash(key)), sum(hash(value1)), sum(hash(value2)) from bucketmapjoin_tmp_result
-Deleted hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/bucketmapjoin_hash_result_1
+Deleted /user/hive/warehouse/bucketmapjoin_hash_result_1
 set hive.optimize.bucketmapjoin = false
 
 insert overwrite table bucketmapjoin_tmp_result 
 select /*+mapjoin(a)*/ a.key, a.value, b.value 
 from srcbucket_mapjoin a join srcbucket_mapjoin_part b 
 on a.key=b.key
-Deleted hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/bucketmapjoin_tmp_result
+Deleted /user/hive/warehouse/bucketmapjoin_tmp_result
 
 
 select count(1) from bucketmapjoin_tmp_result
@@ -417,7 +509,7 @@ select count(1) from bucketmapjoin_tmp_result
 
 insert overwrite table bucketmapjoin_hash_result_2
 select sum(hash(key)), sum(hash(value1)), sum(hash(value2)) from bucketmapjoin_tmp_result
-Deleted hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/bucketmapjoin_hash_result_2
+Deleted /user/hive/warehouse/bucketmapjoin_hash_result_2
 
 
 select a.key-b.key, a.value1-b.value1, a.value2-b.value2
@@ -435,16 +527,18 @@ ABSTRACT SYNTAX TREE:
   (TOK_QUERY (TOK_FROM (TOK_JOIN (TOK_TABREF (TOK_TABNAME srcbucket_mapjoin) a) (TOK_TABREF (TOK_TABNAME srcbucket_mapjoin_part_2) b) (= (. (TOK_TABLE_OR_COL a) key) (. (TOK_TABLE_OR_COL b) key)))) (TOK_INSERT (TOK_DESTINATION (TOK_TAB (TOK_TABNAME bucketmapjoin_tmp_result))) (TOK_SELECT (TOK_HINTLIST (TOK_HINT TOK_MAPJOIN (TOK_HINTARGLIST a))) (TOK_SELEXPR (. (TOK_TABLE_OR_COL a) key)) (TOK_SELEXPR (. (TOK_TABLE_OR_COL a) value)) (TOK_SELEXPR (. (TOK_TABLE_OR_COL b) value)))))
 
 STAGE DEPENDENCIES:
-  Stage-7 is a root stage
-  Stage-1 depends on stages: Stage-7
-  Stage-5 depends on stages: Stage-1 , consists of Stage-4, Stage-3
+  Stage-9 is a root stage
+  Stage-1 depends on stages: Stage-9
+  Stage-7 depends on stages: Stage-1 , consists of Stage-4, Stage-3, Stage-5
   Stage-4
-  Stage-0 depends on stages: Stage-4, Stage-3
+  Stage-0 depends on stages: Stage-4, Stage-3, Stage-6
   Stage-2 depends on stages: Stage-0
   Stage-3
+  Stage-5
+  Stage-6 depends on stages: Stage-5
 
 STAGE PLANS:
-  Stage: Stage-7
+  Stage: Stage-9
     Map Reduce Local Work
       Alias -> Map Local Tables:
         a 
@@ -466,14 +560,14 @@ STAGE PLANS:
               Position of Big Table: 1
       Bucket Mapjoin Context:
           Alias Bucket Base File Name Mapping:
-            a {srcbucket22.txt=[srcbucket20.txt], srcbucket23.txt=[srcbucket21.txt], ds=2008-04-09/srcbucket22.txt=[srcbucket20.txt], ds=2008-04-09/srcbucket23.txt=[srcbucket21.txt]}
+            a {ds=2008-04-08/srcbucket22.txt=[srcbucket20.txt], ds=2008-04-08/srcbucket23.txt=[srcbucket21.txt], ds=2008-04-09/srcbucket22.txt=[srcbucket20.txt], ds=2008-04-09/srcbucket23.txt=[srcbucket21.txt]}
           Alias Bucket File Name Mapping:
-            a {hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part_2/ds=2008-04-08/srcbucket22.txt=[hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin/srcbucket20.txt], hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part_2/ds=2008-04-08/srcbucket23.txt=[hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin/srcbucket21.txt], hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part_2/ds=2008-04-09/srcbucket22.txt=[hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin/srcbucket20.txt], hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part_2/ds=2008-04-09/srcbucket23.txt=[hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin/srcbucket21.txt]}
+            a {hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part_2/ds=2008-04-08/srcbucket22.txt=[hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin/srcbucket20.txt], hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part_2/ds=2008-04-08/srcbucket23.txt=[hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin/srcbucket21.txt], hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part_2/ds=2008-04-09/srcbucket22.txt=[hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin/srcbucket20.txt], hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part_2/ds=2008-04-09/srcbucket23.txt=[hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin/srcbucket21.txt]}
           Alias Bucket Output File Name Mapping:
-            hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part_2/ds=2008-04-08/srcbucket22.txt 0
-            hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part_2/ds=2008-04-08/srcbucket23.txt 1
-            hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part_2/ds=2008-04-09/srcbucket22.txt 0
-            hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part_2/ds=2008-04-09/srcbucket23.txt 1
+            hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part_2/ds=2008-04-08/srcbucket22.txt 0
+            hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part_2/ds=2008-04-08/srcbucket23.txt 1
+            hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part_2/ds=2008-04-09/srcbucket22.txt 0
+            hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part_2/ds=2008-04-09/srcbucket23.txt 1
 
   Stage: Stage-1
     Map Reduce
@@ -515,9 +609,9 @@ STAGE PLANS:
                   File Output Operator
                     compressed: false
                     GlobalTableId: 1
-                    directory: hdfs://monster01.sf.cloudera.com:17020/tmp/hive-hudson/hive_2011-04-01_13-57-41_645_9053634577540746990/-ext-10002
+                    directory: hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-03-31_286_2769775196968737402/-ext-10002
                     NumFilesPerFileSink: 1
-                    Stats Publishing Key Prefix: hdfs://monster01.sf.cloudera.com:17020/tmp/hive-hudson/hive_2011-04-01_13-57-41_645_9053634577540746990/-ext-10000/
+                    Stats Publishing Key Prefix: hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-03-31_286_2769775196968737402/-ext-10000/
                     table:
                         input format: org.apache.hadoop.mapred.TextInputFormat
                         output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
@@ -527,16 +621,17 @@ STAGE PLANS:
                           columns.types string:string:string
                           file.inputformat org.apache.hadoop.mapred.TextInputFormat
                           file.outputformat org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
-                          location hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/bucketmapjoin_tmp_result
+                          location hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/bucketmapjoin_tmp_result
                           name default.bucketmapjoin_tmp_result
                           numFiles 1
                           numPartitions 0
                           numRows 0
+                          rawDataSize 0
                           serialization.ddl struct bucketmapjoin_tmp_result { string key, string value1, string value2}
                           serialization.format 1
                           serialization.lib org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
                           totalSize 17966
-                          transient_lastDdlTime 1301691422
+                          transient_lastDdlTime 1366743737
                         serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
                         name: default.bucketmapjoin_tmp_result
                     TotalFiles: 1
@@ -546,10 +641,10 @@ STAGE PLANS:
         Map Reduce Local Work
       Needs Tagging: false
       Path -> Alias:
-        hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part_2/ds=2008-04-08 [b]
-        hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part_2/ds=2008-04-09 [b]
+        hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part_2/ds=2008-04-08 [b]
+        hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part_2/ds=2008-04-09 [b]
       Path -> Partition:
-        hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part_2/ds=2008-04-08 
+        hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part_2/ds=2008-04-08 
           Partition
             base file name: ds=2008-04-08
             input format: org.apache.hadoop.mapred.TextInputFormat
@@ -563,13 +658,18 @@ STAGE PLANS:
               columns.types int:string
               file.inputformat org.apache.hadoop.mapred.TextInputFormat
               file.outputformat org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
-              location hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part_2/ds=2008-04-08
+              location hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part_2/ds=2008-04-08
               name default.srcbucket_mapjoin_part_2
+              numFiles 2
+              numPartitions 2
+              numRows 0
               partition_columns ds
+              rawDataSize 0
               serialization.ddl struct srcbucket_mapjoin_part_2 { i32 key, string value}
               serialization.format 1
               serialization.lib org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
-              transient_lastDdlTime 1301691357
+              totalSize 3062
+              transient_lastDdlTime 1366743638
             serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
           
               input format: org.apache.hadoop.mapred.TextInputFormat
@@ -581,17 +681,22 @@ STAGE PLANS:
                 columns.types int:string
                 file.inputformat org.apache.hadoop.mapred.TextInputFormat
                 file.outputformat org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
-                location hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part_2
+                location hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part_2
                 name default.srcbucket_mapjoin_part_2
+                numFiles 4
+                numPartitions 2
+                numRows 0
                 partition_columns ds
+                rawDataSize 0
                 serialization.ddl struct srcbucket_mapjoin_part_2 { i32 key, string value}
                 serialization.format 1
                 serialization.lib org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
-                transient_lastDdlTime 1301691357
+                totalSize 6124
+                transient_lastDdlTime 1366743639
               serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
               name: default.srcbucket_mapjoin_part_2
             name: default.srcbucket_mapjoin_part_2
-        hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part_2/ds=2008-04-09 
+        hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part_2/ds=2008-04-09 
           Partition
             base file name: ds=2008-04-09
             input format: org.apache.hadoop.mapred.TextInputFormat
@@ -605,13 +710,18 @@ STAGE PLANS:
               columns.types int:string
               file.inputformat org.apache.hadoop.mapred.TextInputFormat
               file.outputformat org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
-              location hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part_2/ds=2008-04-09
+              location hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part_2/ds=2008-04-09
               name default.srcbucket_mapjoin_part_2
+              numFiles 2
+              numPartitions 2
+              numRows 0
               partition_columns ds
+              rawDataSize 0
               serialization.ddl struct srcbucket_mapjoin_part_2 { i32 key, string value}
               serialization.format 1
               serialization.lib org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
-              transient_lastDdlTime 1301691357
+              totalSize 3062
+              transient_lastDdlTime 1366743639
             serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
           
               input format: org.apache.hadoop.mapred.TextInputFormat
@@ -623,32 +733,40 @@ STAGE PLANS:
                 columns.types int:string
                 file.inputformat org.apache.hadoop.mapred.TextInputFormat
                 file.outputformat org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
-                location hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part_2
+                location hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/srcbucket_mapjoin_part_2
                 name default.srcbucket_mapjoin_part_2
+                numFiles 4
+                numPartitions 2
+                numRows 0
                 partition_columns ds
+                rawDataSize 0
                 serialization.ddl struct srcbucket_mapjoin_part_2 { i32 key, string value}
                 serialization.format 1
                 serialization.lib org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
-                transient_lastDdlTime 1301691357
+                totalSize 6124
+                transient_lastDdlTime 1366743639
               serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
               name: default.srcbucket_mapjoin_part_2
             name: default.srcbucket_mapjoin_part_2
+      Truncated Path -> Alias:
+        /srcbucket_mapjoin_part_2/ds=2008-04-08 [b]
+        /srcbucket_mapjoin_part_2/ds=2008-04-09 [b]
 
-  Stage: Stage-5
+  Stage: Stage-7
     Conditional Operator
 
   Stage: Stage-4
     Move Operator
       files:
           hdfs directory: true
-          source: hdfs://monster01.sf.cloudera.com:17020/tmp/hive-hudson/hive_2011-04-01_13-57-41_645_9053634577540746990/-ext-10002
-          destination: hdfs://monster01.sf.cloudera.com:17020/tmp/hive-hudson/hive_2011-04-01_13-57-41_645_9053634577540746990/-ext-10000
+          source: hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-03-31_286_2769775196968737402/-ext-10002
+          destination: hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-03-31_286_2769775196968737402/-ext-10000
 
   Stage: Stage-0
     Move Operator
       tables:
           replace: true
-          source: hdfs://monster01.sf.cloudera.com:17020/tmp/hive-hudson/hive_2011-04-01_13-57-41_645_9053634577540746990/-ext-10000
+          source: hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-03-31_286_2769775196968737402/-ext-10000
           table:
               input format: org.apache.hadoop.mapred.TextInputFormat
               output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
@@ -658,32 +776,33 @@ STAGE PLANS:
                 columns.types string:string:string
                 file.inputformat org.apache.hadoop.mapred.TextInputFormat
                 file.outputformat org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
-                location hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/bucketmapjoin_tmp_result
+                location hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/bucketmapjoin_tmp_result
                 name default.bucketmapjoin_tmp_result
                 numFiles 1
                 numPartitions 0
                 numRows 0
+                rawDataSize 0
                 serialization.ddl struct bucketmapjoin_tmp_result { string key, string value1, string value2}
                 serialization.format 1
                 serialization.lib org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
                 totalSize 17966
-                transient_lastDdlTime 1301691422
+                transient_lastDdlTime 1366743737
               serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
               name: default.bucketmapjoin_tmp_result
-          tmp directory: hdfs://monster01.sf.cloudera.com:17020/tmp/hive-hudson/hive_2011-04-01_13-57-41_645_9053634577540746990/-ext-10001
+          tmp directory: hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-03-31_286_2769775196968737402/-ext-10001
 
   Stage: Stage-2
     Stats-Aggr Operator
-      Stats Aggregation Key Prefix: hdfs://monster01.sf.cloudera.com:17020/tmp/hive-hudson/hive_2011-04-01_13-57-41_645_9053634577540746990/-ext-10000/
+      Stats Aggregation Key Prefix: hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-03-31_286_2769775196968737402/-ext-10000/
 
   Stage: Stage-3
     Map Reduce
       Alias -> Map Operator Tree:
-        hdfs://monster01.sf.cloudera.com:17020/tmp/hive-hudson/hive_2011-04-01_13-57-41_645_9053634577540746990/-ext-10002 
+        hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-03-31_286_2769775196968737402/-ext-10002 
             File Output Operator
               compressed: false
               GlobalTableId: 0
-              directory: hdfs://monster01.sf.cloudera.com:17020/tmp/hive-hudson/hive_2011-04-01_13-57-41_645_9053634577540746990/-ext-10000
+              directory: hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-03-31_286_2769775196968737402/-ext-10000
               NumFilesPerFileSink: 1
               table:
                   input format: org.apache.hadoop.mapred.TextInputFormat
@@ -694,16 +813,17 @@ STAGE PLANS:
                     columns.types string:string:string
                     file.inputformat org.apache.hadoop.mapred.TextInputFormat
                     file.outputformat org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
-                    location hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/bucketmapjoin_tmp_result
+                    location hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/bucketmapjoin_tmp_result
                     name default.bucketmapjoin_tmp_result
                     numFiles 1
                     numPartitions 0
                     numRows 0
+                    rawDataSize 0
                     serialization.ddl struct bucketmapjoin_tmp_result { string key, string value1, string value2}
                     serialization.format 1
                     serialization.lib org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
                     totalSize 17966
-                    transient_lastDdlTime 1301691422
+                    transient_lastDdlTime 1366743737
                   serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
                   name: default.bucketmapjoin_tmp_result
               TotalFiles: 1
@@ -711,9 +831,9 @@ STAGE PLANS:
               MultiFileSpray: false
       Needs Tagging: false
       Path -> Alias:
-        hdfs://monster01.sf.cloudera.com:17020/tmp/hive-hudson/hive_2011-04-01_13-57-41_645_9053634577540746990/-ext-10002 [hdfs://monster01.sf.cloudera.com:17020/tmp/hive-hudson/hive_2011-04-01_13-57-41_645_9053634577540746990/-ext-10002]
+        hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-03-31_286_2769775196968737402/-ext-10002 [hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-03-31_286_2769775196968737402/-ext-10002]
       Path -> Partition:
-        hdfs://monster01.sf.cloudera.com:17020/tmp/hive-hudson/hive_2011-04-01_13-57-41_645_9053634577540746990/-ext-10002 
+        hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-03-31_286_2769775196968737402/-ext-10002 
           Partition
             base file name: -ext-10002
             input format: org.apache.hadoop.mapred.TextInputFormat
@@ -724,16 +844,17 @@ STAGE PLANS:
               columns.types string:string:string
               file.inputformat org.apache.hadoop.mapred.TextInputFormat
               file.outputformat org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
-              location hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/bucketmapjoin_tmp_result
+              location hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/bucketmapjoin_tmp_result
               name default.bucketmapjoin_tmp_result
               numFiles 1
               numPartitions 0
               numRows 0
+              rawDataSize 0
               serialization.ddl struct bucketmapjoin_tmp_result { string key, string value1, string value2}
               serialization.format 1
               serialization.lib org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
               totalSize 17966
-              transient_lastDdlTime 1301691422
+              transient_lastDdlTime 1366743737
             serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
           
               input format: org.apache.hadoop.mapred.TextInputFormat
@@ -744,19 +865,116 @@ STAGE PLANS:
                 columns.types string:string:string
                 file.inputformat org.apache.hadoop.mapred.TextInputFormat
                 file.outputformat org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
-                location hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/bucketmapjoin_tmp_result
+                location hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/bucketmapjoin_tmp_result
                 name default.bucketmapjoin_tmp_result
                 numFiles 1
                 numPartitions 0
                 numRows 0
+                rawDataSize 0
                 serialization.ddl struct bucketmapjoin_tmp_result { string key, string value1, string value2}
                 serialization.format 1
                 serialization.lib org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
                 totalSize 17966
-                transient_lastDdlTime 1301691422
+                transient_lastDdlTime 1366743737
               serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
               name: default.bucketmapjoin_tmp_result
             name: default.bucketmapjoin_tmp_result
+      Truncated Path -> Alias:
+        hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-03-31_286_2769775196968737402/-ext-10002 [hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-03-31_286_2769775196968737402/-ext-10002]
+
+  Stage: Stage-5
+    Map Reduce
+      Alias -> Map Operator Tree:
+        hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-03-31_286_2769775196968737402/-ext-10002 
+            File Output Operator
+              compressed: false
+              GlobalTableId: 0
+              directory: hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-03-31_286_2769775196968737402/-ext-10000
+              NumFilesPerFileSink: 1
+              table:
+                  input format: org.apache.hadoop.mapred.TextInputFormat
+                  output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                  properties:
+                    bucket_count -1
+                    columns key,value1,value2
+                    columns.types string:string:string
+                    file.inputformat org.apache.hadoop.mapred.TextInputFormat
+                    file.outputformat org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                    location hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/bucketmapjoin_tmp_result
+                    name default.bucketmapjoin_tmp_result
+                    numFiles 1
+                    numPartitions 0
+                    numRows 0
+                    rawDataSize 0
+                    serialization.ddl struct bucketmapjoin_tmp_result { string key, string value1, string value2}
+                    serialization.format 1
+                    serialization.lib org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                    totalSize 17966
+                    transient_lastDdlTime 1366743737
+                  serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                  name: default.bucketmapjoin_tmp_result
+              TotalFiles: 1
+              GatherStats: false
+              MultiFileSpray: false
+      Needs Tagging: false
+      Path -> Alias:
+        hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-03-31_286_2769775196968737402/-ext-10002 [hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-03-31_286_2769775196968737402/-ext-10002]
+      Path -> Partition:
+        hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-03-31_286_2769775196968737402/-ext-10002 
+          Partition
+            base file name: -ext-10002
+            input format: org.apache.hadoop.mapred.TextInputFormat
+            output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+            properties:
+              bucket_count -1
+              columns key,value1,value2
+              columns.types string:string:string
+              file.inputformat org.apache.hadoop.mapred.TextInputFormat
+              file.outputformat org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+              location hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/bucketmapjoin_tmp_result
+              name default.bucketmapjoin_tmp_result
+              numFiles 1
+              numPartitions 0
+              numRows 0
+              rawDataSize 0
+              serialization.ddl struct bucketmapjoin_tmp_result { string key, string value1, string value2}
+              serialization.format 1
+              serialization.lib org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+              totalSize 17966
+              transient_lastDdlTime 1366743737
+            serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+          
+              input format: org.apache.hadoop.mapred.TextInputFormat
+              output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+              properties:
+                bucket_count -1
+                columns key,value1,value2
+                columns.types string:string:string
+                file.inputformat org.apache.hadoop.mapred.TextInputFormat
+                file.outputformat org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                location hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/bucketmapjoin_tmp_result
+                name default.bucketmapjoin_tmp_result
+                numFiles 1
+                numPartitions 0
+                numRows 0
+                rawDataSize 0
+                serialization.ddl struct bucketmapjoin_tmp_result { string key, string value1, string value2}
+                serialization.format 1
+                serialization.lib org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                totalSize 17966
+                transient_lastDdlTime 1366743737
+              serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+              name: default.bucketmapjoin_tmp_result
+            name: default.bucketmapjoin_tmp_result
+      Truncated Path -> Alias:
+        hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-03-31_286_2769775196968737402/-ext-10002 [hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-03-31_286_2769775196968737402/-ext-10002]
+
+  Stage: Stage-6
+    Move Operator
+      files:
+          hdfs directory: true
+          source: hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-03-31_286_2769775196968737402/-ext-10002
+          destination: hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/tmp/hive-root/hive_2013-04-23_12-03-31_286_2769775196968737402/-ext-10000
 
 
 
@@ -765,31 +983,33 @@ insert overwrite table bucketmapjoin_tmp_result
 select /*+mapjoin(a)*/ a.key, a.value, b.value 
 from srcbucket_mapjoin a join srcbucket_mapjoin_part_2 b 
 on a.key=b.key
+Deleted /user/hive/warehouse/bucketmapjoin_tmp_result
 
 
 select count(1) from bucketmapjoin_tmp_result
-928
+0
 
 insert overwrite table bucketmapjoin_hash_result_1
 select sum(hash(key)), sum(hash(value1)), sum(hash(value2)) from bucketmapjoin_tmp_result
-Deleted hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/bucketmapjoin_hash_result_1
+Deleted /user/hive/warehouse/bucketmapjoin_hash_result_1
 set hive.optimize.bucketmapjoin = false
 
 insert overwrite table bucketmapjoin_tmp_result 
 select /*+mapjoin(a)*/ a.key, a.value, b.value 
 from srcbucket_mapjoin a join srcbucket_mapjoin_part_2 b 
 on a.key=b.key
+Deleted /user/hive/warehouse/bucketmapjoin_tmp_result
 
 
 select count(1) from bucketmapjoin_tmp_result
-928
+0
 
 insert overwrite table bucketmapjoin_hash_result_2
 select sum(hash(key)), sum(hash(value1)), sum(hash(value2)) from bucketmapjoin_tmp_result
-Deleted hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/bucketmapjoin_hash_result_2
+Deleted /user/hive/warehouse/bucketmapjoin_hash_result_2
 
 
 select a.key-b.key, a.value1-b.value1, a.value2-b.value2
 from bucketmapjoin_hash_result_1 a left outer join bucketmapjoin_hash_result_2 b
 on a.key = b.key
-0	0	0
+NULL	NULL	NULL

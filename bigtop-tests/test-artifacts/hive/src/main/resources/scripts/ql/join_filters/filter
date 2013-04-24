@@ -1,1 +1,2 @@
-sed -e 's#Copying file:.*/in..txt#Copying file:inX.txt#'
+sed -e 's#Copying file:.*/in..txt#Copying file:inX.txt#' \
+    -e '/.*jobconf.xml:an attempt to override final parameter: mapreduce.job.end-notification.*;  Ignoring\./ d'

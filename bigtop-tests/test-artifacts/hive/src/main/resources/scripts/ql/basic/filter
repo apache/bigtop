@@ -1,3 +1,4 @@
 sed -e 's#hdfs://[^/]*/#hdfs://HADOOP/#' \
     -e 's#Copying file:.*u.data#Copying file: u.data#' \
-    -e '/^Deleted.*u_data$/d'
+    -e '/^Deleted.*u_data$/d' \
+    -e '/.*jobconf.xml:an attempt to override final parameter: mapreduce.job.end-notification.*;  Ignoring\./ d'

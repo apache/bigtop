@@ -2,4 +2,6 @@ sed -re 's#Copying file:.*/srcbucket#Copying file:srcbucket#' \
      -e 's#^owner:.*$#owner:BORG#' \
      -e 's#hdfs://[^/]*/#hdfs://HADOOP/#' \
      -e 's#hdfs://.*/-(ext|mr)-1000#hdfs://HADOOP/-\1-1000#' \
-     -e 's#last(Access|Update)Time:[0-9]*#last\1Time:JUSTNOW#'
+     -e 's#last(Access|Update)Time:[0-9]*#last\1Time:JUSTNOW#' \
+     -e 's#file:/.*/-(ext|mr)-1000#file:/HADOOP/-\1-1000#' \
+     -e '/.*jobconf.xml:an attempt to override final parameter: mapreduce.job.end-notification.*;  Ignoring\./ d'

@@ -1,17 +1,3 @@
--- Licensed to the Apache Software Foundation (ASF) under one or more
--- contributor license agreements.  See the NOTICE file distributed with
--- this work for additional information regarding copyright ownership.
--- The ASF licenses this file to You under the Apache License, Version 2.0
--- (the "License") you may not use this file except in compliance with
--- the License.  You may obtain a copy of the License at
---
---     http://www.apache.org/licenses/LICENSE-2.0
---
--- Unless required by applicable law or agreed to in writing, software
--- distributed under the License is distributed on an "AS IS" BASIS,
--- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
--- See the License for the specific language governing permissions and
--- limitations under the License.
 drop index src_index_2 on src
 
 drop index src_index_3 on src
@@ -38,7 +24,7 @@ key	string
 _bucketname	string	
 _offsets	array<bigint>	
 	 	 
-Detailed Table Information	Table(tableName:default__src_src_index_2__, dbName:default, owner:null, createTime:1301677813, lastAccessTime:0, retention:0, sd:StorageDescriptor(cols:[FieldSchema(name:key, type:string, comment:null), FieldSchema(name:_bucketname, type:string, comment:), FieldSchema(name:_offsets, type:array<bigint>, comment:)], location:hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/default__src_src_index_2__, inputFormat:org.apache.hadoop.mapred.TextInputFormat, outputFormat:org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat, compressed:false, numBuckets:-1, serdeInfo:SerDeInfo(name:null, serializationLib:org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe, parameters:{serialization.format=1}), bucketCols:[], sortCols:[Order(col:key, order:1)], parameters:{}), partitionKeys:[], parameters:{transient_lastDdlTime=1301677813}, viewOriginalText:null, viewExpandedText:null, tableType:INDEX_TABLE)	
+Detailed Table Information	Table(tableName:default__src_src_index_2__, dbName:default, owner:null, createTime:1366741979, lastAccessTime:0, retention:0, sd:StorageDescriptor(cols:[FieldSchema(name:key, type:string, comment:null), FieldSchema(name:_bucketname, type:string, comment:), FieldSchema(name:_offsets, type:array<bigint>, comment:)], location:hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/default__src_src_index_2__, inputFormat:org.apache.hadoop.mapred.TextInputFormat, outputFormat:org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat, compressed:false, numBuckets:-1, serdeInfo:SerDeInfo(name:null, serializationLib:org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe, parameters:{serialization.format=1}), bucketCols:[], sortCols:[Order(col:key, order:1)], parameters:{}, skewedInfo:SkewedInfo(skewedColNames:[], skewedColValues:[], skewedColValueLocationMaps:{}), storedAsSubDirectories:false), partitionKeys:[], parameters:{transient_lastDdlTime=1366741979}, viewOriginalText:null, viewExpandedText:null, tableType:INDEX_TABLE)	
 
 
 create index src_index_3 on table src(key) as 'compact' WITH DEFERRED REBUILD in table src_idx_src_index_3
@@ -48,7 +34,7 @@ key	string
 _bucketname	string	
 _offsets	array<bigint>	
 	 	 
-Detailed Table Information	Table(tableName:src_idx_src_index_3, dbName:default, owner:null, createTime:1301677813, lastAccessTime:0, retention:0, sd:StorageDescriptor(cols:[FieldSchema(name:key, type:string, comment:null), FieldSchema(name:_bucketname, type:string, comment:), FieldSchema(name:_offsets, type:array<bigint>, comment:)], location:hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/src_idx_src_index_3, inputFormat:org.apache.hadoop.mapred.TextInputFormat, outputFormat:org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat, compressed:false, numBuckets:-1, serdeInfo:SerDeInfo(name:null, serializationLib:org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe, parameters:{serialization.format=1}), bucketCols:[], sortCols:[Order(col:key, order:1)], parameters:{}), partitionKeys:[], parameters:{transient_lastDdlTime=1301677813}, viewOriginalText:null, viewExpandedText:null, tableType:INDEX_TABLE)	
+Detailed Table Information	Table(tableName:src_idx_src_index_3, dbName:default, owner:null, createTime:1366741980, lastAccessTime:0, retention:0, sd:StorageDescriptor(cols:[FieldSchema(name:key, type:string, comment:null), FieldSchema(name:_bucketname, type:string, comment:), FieldSchema(name:_offsets, type:array<bigint>, comment:)], location:hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/src_idx_src_index_3, inputFormat:org.apache.hadoop.mapred.TextInputFormat, outputFormat:org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat, compressed:false, numBuckets:-1, serdeInfo:SerDeInfo(name:null, serializationLib:org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe, parameters:{serialization.format=1}), bucketCols:[], sortCols:[Order(col:key, order:1)], parameters:{}, skewedInfo:SkewedInfo(skewedColNames:[], skewedColValues:[], skewedColValueLocationMaps:{}), storedAsSubDirectories:false), partitionKeys:[], parameters:{transient_lastDdlTime=1366741980}, viewOriginalText:null, viewExpandedText:null, tableType:INDEX_TABLE)	
 
 
 create index src_index_4 on table src(key) as 'compact' WITH DEFERRED REBUILD ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t' STORED AS TEXTFILE
@@ -58,7 +44,7 @@ key	string
 _bucketname	string	
 _offsets	array<bigint>	
 	 	 
-Detailed Table Information	Table(tableName:default__src_src_index_4__, dbName:default, owner:null, createTime:1301677814, lastAccessTime:0, retention:0, sd:StorageDescriptor(cols:[FieldSchema(name:key, type:string, comment:null), FieldSchema(name:_bucketname, type:string, comment:), FieldSchema(name:_offsets, type:array<bigint>, comment:)], location:hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/default__src_src_index_4__, inputFormat:org.apache.hadoop.mapred.TextInputFormat, outputFormat:org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat, compressed:false, numBuckets:-1, serdeInfo:SerDeInfo(name:null, serializationLib:org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe, parameters:{serialization.format=	, field.delim=
+Detailed Table Information	Table(tableName:default__src_src_index_4__, dbName:default, owner:null, createTime:1366741981, lastAccessTime:0, retention:0, sd:StorageDescriptor(cols:[FieldSchema(name:key, type:string, comment:null), FieldSchema(name:_bucketname, type:string, comment:), FieldSchema(name:_offsets, type:array<bigint>, comment:)], location:hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/default__src_src_index_4__, inputFormat:org.apache.hadoop.mapred.TextInputFormat, outputFormat:org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat, compressed:false, numBuckets:-1, serdeInfo:SerDeInfo(name:null, serializationLib:org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe, parameters:{serialization.format=	, field.delim=
 
 
 create index src_index_5 on table src(key) as 'compact' WITH DEFERRED REBUILD ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t' ESCAPED BY '\\'
@@ -68,27 +54,27 @@ key	string
 _bucketname	string	
 _offsets	array<bigint>	
 	 	 
-Detailed Table Information	Table(tableName:default__src_src_index_5__, dbName:default, owner:null, createTime:1301677814, lastAccessTime:0, retention:0, sd:StorageDescriptor(cols:[FieldSchema(name:key, type:string, comment:null), FieldSchema(name:_bucketname, type:string, comment:), FieldSchema(name:_offsets, type:array<bigint>, comment:)], location:hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/default__src_src_index_5__, inputFormat:org.apache.hadoop.mapred.TextInputFormat, outputFormat:org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat, compressed:false, numBuckets:-1, serdeInfo:SerDeInfo(name:null, serializationLib:org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe, parameters:{escape.delim=\, serialization.format=	, field.delim=
+Detailed Table Information	Table(tableName:default__src_src_index_5__, dbName:default, owner:null, createTime:1366741982, lastAccessTime:0, retention:0, sd:StorageDescriptor(cols:[FieldSchema(name:key, type:string, comment:null), FieldSchema(name:_bucketname, type:string, comment:), FieldSchema(name:_offsets, type:array<bigint>, comment:)], location:hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/default__src_src_index_5__, inputFormat:org.apache.hadoop.mapred.TextInputFormat, outputFormat:org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat, compressed:false, numBuckets:-1, serdeInfo:SerDeInfo(name:null, serializationLib:org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe, parameters:{escape.delim=\, serialization.format=	, field.delim=
 
 
 create index src_index_6 on table src(key) as 'compact' WITH DEFERRED REBUILD STORED AS RCFILE
 
 desc extended default__src_src_index_6__
-key	string	from deserializer
-_bucketname	string	from deserializer
-_offsets	array<bigint>	from deserializer
+key	string	
+_bucketname	string	
+_offsets	array<bigint>	
 	 	 
-Detailed Table Information	Table(tableName:default__src_src_index_6__, dbName:default, owner:null, createTime:1301677814, lastAccessTime:0, retention:0, sd:StorageDescriptor(cols:[FieldSchema(name:key, type:string, comment:null), FieldSchema(name:_bucketname, type:string, comment:), FieldSchema(name:_offsets, type:array<bigint>, comment:)], location:hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/default__src_src_index_6__, inputFormat:org.apache.hadoop.hive.ql.io.RCFileInputFormat, outputFormat:org.apache.hadoop.hive.ql.io.RCFileOutputFormat, compressed:false, numBuckets:-1, serdeInfo:SerDeInfo(name:null, serializationLib:org.apache.hadoop.hive.serde2.columnar.ColumnarSerDe, parameters:{serialization.format=1}), bucketCols:[], sortCols:[Order(col:key, order:1)], parameters:{}), partitionKeys:[], parameters:{transient_lastDdlTime=1301677814}, viewOriginalText:null, viewExpandedText:null, tableType:INDEX_TABLE)	
+Detailed Table Information	Table(tableName:default__src_src_index_6__, dbName:default, owner:null, createTime:1366741982, lastAccessTime:0, retention:0, sd:StorageDescriptor(cols:[FieldSchema(name:key, type:string, comment:null), FieldSchema(name:_bucketname, type:string, comment:), FieldSchema(name:_offsets, type:array<bigint>, comment:)], location:hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/default__src_src_index_6__, inputFormat:org.apache.hadoop.hive.ql.io.RCFileInputFormat, outputFormat:org.apache.hadoop.hive.ql.io.RCFileOutputFormat, compressed:false, numBuckets:-1, serdeInfo:SerDeInfo(name:null, serializationLib:org.apache.hadoop.hive.serde2.columnar.ColumnarSerDe, parameters:{serialization.format=1}), bucketCols:[], sortCols:[Order(col:key, order:1)], parameters:{}, skewedInfo:SkewedInfo(skewedColNames:[], skewedColValues:[], skewedColValueLocationMaps:{}), storedAsSubDirectories:false), partitionKeys:[], parameters:{transient_lastDdlTime=1366741982}, viewOriginalText:null, viewExpandedText:null, tableType:INDEX_TABLE)	
 
 
 create index src_index_7 on table src(key) as 'compact' WITH DEFERRED REBUILD in table src_idx_src_index_7 STORED AS RCFILE
  
 desc extended src_idx_src_index_7
-key	string	from deserializer
-_bucketname	string	from deserializer
-_offsets	array<bigint>	from deserializer
+key	string	
+_bucketname	string	
+_offsets	array<bigint>	
 	 	 
-Detailed Table Information	Table(tableName:src_idx_src_index_7, dbName:default, owner:null, createTime:1301677815, lastAccessTime:0, retention:0, sd:StorageDescriptor(cols:[FieldSchema(name:key, type:string, comment:null), FieldSchema(name:_bucketname, type:string, comment:), FieldSchema(name:_offsets, type:array<bigint>, comment:)], location:hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/src_idx_src_index_7, inputFormat:org.apache.hadoop.hive.ql.io.RCFileInputFormat, outputFormat:org.apache.hadoop.hive.ql.io.RCFileOutputFormat, compressed:false, numBuckets:-1, serdeInfo:SerDeInfo(name:null, serializationLib:org.apache.hadoop.hive.serde2.columnar.ColumnarSerDe, parameters:{serialization.format=1}), bucketCols:[], sortCols:[Order(col:key, order:1)], parameters:{}), partitionKeys:[], parameters:{transient_lastDdlTime=1301677815}, viewOriginalText:null, viewExpandedText:null, tableType:INDEX_TABLE)	
+Detailed Table Information	Table(tableName:src_idx_src_index_7, dbName:default, owner:null, createTime:1366741983, lastAccessTime:0, retention:0, sd:StorageDescriptor(cols:[FieldSchema(name:key, type:string, comment:null), FieldSchema(name:_bucketname, type:string, comment:), FieldSchema(name:_offsets, type:array<bigint>, comment:)], location:hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/src_idx_src_index_7, inputFormat:org.apache.hadoop.hive.ql.io.RCFileInputFormat, outputFormat:org.apache.hadoop.hive.ql.io.RCFileOutputFormat, compressed:false, numBuckets:-1, serdeInfo:SerDeInfo(name:null, serializationLib:org.apache.hadoop.hive.serde2.columnar.ColumnarSerDe, parameters:{serialization.format=1}), bucketCols:[], sortCols:[Order(col:key, order:1)], parameters:{}, skewedInfo:SkewedInfo(skewedColNames:[], skewedColValues:[], skewedColValueLocationMaps:{}), storedAsSubDirectories:false), partitionKeys:[], parameters:{transient_lastDdlTime=1366741983}, viewOriginalText:null, viewExpandedText:null, tableType:INDEX_TABLE)	
 
 
 create index src_index_8 on table src(key) as 'compact' WITH DEFERRED REBUILD IDXPROPERTIES ("prop1"="val1", "prop2"="val2")
@@ -98,7 +84,7 @@ key	string
 _bucketname	string	
 _offsets	array<bigint>	
 	 	 
-Detailed Table Information	Table(tableName:default__src_src_index_8__, dbName:default, owner:null, createTime:1301677815, lastAccessTime:0, retention:0, sd:StorageDescriptor(cols:[FieldSchema(name:key, type:string, comment:null), FieldSchema(name:_bucketname, type:string, comment:), FieldSchema(name:_offsets, type:array<bigint>, comment:)], location:hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/default__src_src_index_8__, inputFormat:org.apache.hadoop.mapred.TextInputFormat, outputFormat:org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat, compressed:false, numBuckets:-1, serdeInfo:SerDeInfo(name:null, serializationLib:org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe, parameters:{serialization.format=1}), bucketCols:[], sortCols:[Order(col:key, order:1)], parameters:{}), partitionKeys:[], parameters:{transient_lastDdlTime=1301677815}, viewOriginalText:null, viewExpandedText:null, tableType:INDEX_TABLE)	
+Detailed Table Information	Table(tableName:default__src_src_index_8__, dbName:default, owner:null, createTime:1366741983, lastAccessTime:0, retention:0, sd:StorageDescriptor(cols:[FieldSchema(name:key, type:string, comment:null), FieldSchema(name:_bucketname, type:string, comment:), FieldSchema(name:_offsets, type:array<bigint>, comment:)], location:hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/default__src_src_index_8__, inputFormat:org.apache.hadoop.mapred.TextInputFormat, outputFormat:org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat, compressed:false, numBuckets:-1, serdeInfo:SerDeInfo(name:null, serializationLib:org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe, parameters:{serialization.format=1}), bucketCols:[], sortCols:[Order(col:key, order:1)], parameters:{}, skewedInfo:SkewedInfo(skewedColNames:[], skewedColValues:[], skewedColValueLocationMaps:{}), storedAsSubDirectories:false), partitionKeys:[], parameters:{transient_lastDdlTime=1366741983}, viewOriginalText:null, viewExpandedText:null, tableType:INDEX_TABLE)	
 
 
 create index src_index_9 on table src(key) as 'compact' WITH DEFERRED REBUILD TBLPROPERTIES ("prop1"="val1", "prop2"="val2")
@@ -108,7 +94,7 @@ key	string
 _bucketname	string	
 _offsets	array<bigint>	
 	 	 
-Detailed Table Information	Table(tableName:default__src_src_index_9__, dbName:default, owner:null, createTime:1301677815, lastAccessTime:0, retention:0, sd:StorageDescriptor(cols:[FieldSchema(name:key, type:string, comment:null), FieldSchema(name:_bucketname, type:string, comment:), FieldSchema(name:_offsets, type:array<bigint>, comment:)], location:hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/default__src_src_index_9__, inputFormat:org.apache.hadoop.mapred.TextInputFormat, outputFormat:org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat, compressed:false, numBuckets:-1, serdeInfo:SerDeInfo(name:null, serializationLib:org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe, parameters:{serialization.format=1}), bucketCols:[], sortCols:[Order(col:key, order:1)], parameters:{}), partitionKeys:[], parameters:{prop2=val2, prop1=val1, transient_lastDdlTime=1301677815}, viewOriginalText:null, viewExpandedText:null, tableType:INDEX_TABLE)	
+Detailed Table Information	Table(tableName:default__src_src_index_9__, dbName:default, owner:null, createTime:1366741984, lastAccessTime:0, retention:0, sd:StorageDescriptor(cols:[FieldSchema(name:key, type:string, comment:null), FieldSchema(name:_bucketname, type:string, comment:), FieldSchema(name:_offsets, type:array<bigint>, comment:)], location:hdfs://mgrover-bigtop-centos-1.ent.cloudera.com:17020/user/hive/warehouse/default__src_src_index_9__, inputFormat:org.apache.hadoop.mapred.TextInputFormat, outputFormat:org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat, compressed:false, numBuckets:-1, serdeInfo:SerDeInfo(name:null, serializationLib:org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe, parameters:{serialization.format=1}), bucketCols:[], sortCols:[Order(col:key, order:1)], parameters:{}, skewedInfo:SkewedInfo(skewedColNames:[], skewedColValues:[], skewedColValueLocationMaps:{}), storedAsSubDirectories:false), partitionKeys:[], parameters:{prop2=val2, prop1=val1, transient_lastDdlTime=1366741984}, viewOriginalText:null, viewExpandedText:null, tableType:INDEX_TABLE)	
 
 
 create table `_t`(`_i` int, `_j` int)
@@ -116,14 +102,14 @@ create table `_t`(`_i` int, `_j` int)
 create index x on table `_t`(`_j`) as 'compact' WITH DEFERRED REBUILD
 
 alter index x on `_t` rebuild
-Deleted hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/default___t_x__
+Deleted /user/hive/warehouse/default___t_x__
 
 
 create index x2 on table `_t`(`_i`,`_j`) as 'compact' WITH DEFERRED
 REBUILD
 
 alter index x2 on `_t` rebuild
-Deleted hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/default___t_x2__
+Deleted /user/hive/warehouse/default___t_x2__
 
 
 drop index src_index_2 on src

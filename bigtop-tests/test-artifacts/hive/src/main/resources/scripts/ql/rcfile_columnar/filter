@@ -1,1 +1,2 @@
-sed -e 's#hdfs://[^/]*/#hdfs://HADOOP/#'
+sed -e 's#hdfs://[^/]*/#hdfs://HADOOP/#' \
+    -e '/.*jobconf.xml:an attempt to override final parameter: mapreduce.job.end-notification.*;  Ignoring\./ d'
