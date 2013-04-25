@@ -17,26 +17,20 @@
 
 SRC_PKG=hbase
 for node in master regionserver rest thrift ; do
-    case $service in
-        master) chkconfig="2345 85 15" ;;
-        thrift) chkconfig="2345 86 14" ;;
-        regionserver) chkconfig="2345 87 13" ;;
-        rest) chkconfig="2345 88 12" ;;
-        *) chkconfig="2345 89 13" ;;
-    esac
     service_pkgdir=debian/$SRC_PKG-$node
     debdir=$service_pkgdir/DEBIAN
-    template="debian/service-init.d.tpl"
+    mkdir -p $service_pkgdir/etc/init.d/ $debdir
     if [ "$node" == "regionserver" ] ; then
         # Region servers start from a different template that allows
         # them to run multiple concurrent instances of the daemon
-        template="debian/regionserver-init.d.tpl"
+        template=debian/regionserver-init.d.tpl
         sed -i -e "s|@INIT_DEFAULT_START@|2 3 4 5|" $template
         sed -i -e "s|@INIT_DEFAULT_STOP@|0 1 6|" $template
+        sed -e "s|@HBASE_DAEMON@|$node|" -e "s|@CHKCONFIG@|2345 87 13|" $template > $service_pkgdir/etc/init.d/$SRC_PKG-$node
+    else
+        sed -e "s|@HBASE_DAEMON@|$node|" debian/hbase.svc > debian/hbase-$node.svc
+        bash debian/init.d.tmpl debian/hbase-$node.svc deb $service_pkgdir/etc/init.d/$SRC_PKG-$node
     fi
-
-    mkdir -p $service_pkgdir/etc/init.d/ $debdir
-    sed -e "s|@HBASE_DAEMON@|$node|" -e "s|@CHKCONFIG@|$chkconfig|" $template > $service_pkgdir/etc/init.d/$SRC_PKG-$node
     sed -e "s|@HBASE_DAEMON@|$node|" debian/service-postinst.tpl > $debdir/postinst
     sed -e "s|@HBASE_DAEMON@|$node|" debian/service-postrm.tpl > $debdir/postrm
     echo /etc/init.d/$SRC_PKG-$node > $debdir/conffiles
