@@ -262,6 +262,7 @@ public class TestLoadAndVerify  extends Configured implements Tool {
     job.setNumReduceTasks(0);
     FileOutputFormat.setOutputPath(job, outputDir);
 
+    TableMapReduceUtil.initCredentials(job);
     TableMapReduceUtil.addDependencyJars(job);
     TableMapReduceUtil.addDependencyJars(
         job.getConfiguration(), HTable.class, Lists.class);
