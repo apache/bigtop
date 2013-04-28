@@ -39,6 +39,7 @@ public class TestCLI extends CLITestHelper {
   public static final String TEST_DIR_ABSOLUTE = "/tmp/testcli";
   private String nn;
   private String sug;
+  protected String namenode = null;
 
   @Before
   @Override
@@ -51,6 +52,7 @@ public class TestCLI extends CLITestHelper {
       new File(TEST_CACHE_DATA_DIR).toURI().toString().replace(' ', '+');
     nn = conf.get(CommonConfigurationKeys.FS_DEFAULT_NAME_KEY);
     sug = conf.get(DFSConfigKeys.DFS_PERMISSIONS_SUPERUSERGROUP_KEY);
+    namenode = conf.get(DFSConfigKeys.FS_DEFAULT_NAME_KEY, "file:///");
     // Many of the tests expect a replication value of 1 in the output
     conf.setInt("dfs.replication", 1);
   }
@@ -63,7 +65,7 @@ public class TestCLI extends CLITestHelper {
 
   @Override
   protected String getTestFile() {
-    return "testConf.xml";
+    return "testHDFSConf.xml";
   }
 
   @Test
@@ -77,7 +79,9 @@ public class TestCLI extends CLITestHelper {
     String expCmd = super.expandCommand(cmd);
     String testcliDir = TEST_DIR_ABSOLUTE;
     expCmd = expCmd.replaceAll("TEST_DIR_ABSOLUTE", testcliDir);
-    expCmd = expCmd.replaceAll("SUPERGROUP", sug);
+    expCmd = expCmd.replaceAll("supergroup", sug);
+    expCmd = expCmd.replaceAll("NAMENODE", namenode);
+    expCmd = expCmd.replaceAll("USER_NAME", System.getProperty("user.name"));
     return expCmd;
   }
 
