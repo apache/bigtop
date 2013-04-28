@@ -27,6 +27,7 @@ import org.apache.hadoop.cli.util.CLICommandFS;
 import org.apache.hadoop.cli.util.CommandExecutor;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.HdfsConfiguration;
+import org.apache.bigtop.itest.shell.Shell;
 
 import org.junit.After;
 import org.junit.Before;
@@ -36,10 +37,11 @@ import org.junit.Test;
  * Tests for the Command Line Interface (CLI)
  */
 public class TestCLI extends CLITestHelper {
-  public static final String TEST_DIR_ABSOLUTE = "/tmp/testcli";
+  public static final String TEST_DIR_ABSOLUTE = "/tmp/testcli_" + Long.valueOf(System.currentTimeMillis());
   private String nn;
   private String sug;
-  protected String namenode = null;
+  protected String namenode;
+  private static Shell shHDFS = new Shell("/bin/bash", "hdfs");
 
   @Before
   @Override
@@ -55,12 +57,19 @@ public class TestCLI extends CLITestHelper {
     namenode = conf.get(DFSConfigKeys.FS_DEFAULT_NAME_KEY, "file:///");
     // Many of the tests expect a replication value of 1 in the output
     conf.setInt("dfs.replication", 1);
+
+    String[] createTestcliDirCmds = {"hadoop fs -mkdir -p " + TEST_DIR_ABSOLUTE,
+      "hadoop fs -chmod 777 " + TEST_DIR_ABSOLUTE};
+    shHDFS.exec(createTestcliDirCmds);
   }
 
   @After
   @Override
   public void tearDown() throws Exception {
     super.tearDown();
+
+    String removeTestcliDirCmd = "hadoop fs -rm -r " + TEST_DIR_ABSOLUTE;
+    shHDFS.exec(removeTestcliDirCmd);
   }
 
   @Override
