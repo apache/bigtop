@@ -45,6 +45,7 @@
     <module>hue</module>
     <module>solr</module>
     <module>crunch</module>
+    <module>datafu</module>
     <module>fatjar</module>
   </modules>
 

@@ -179,13 +179,11 @@
         <groupId>org.apache.pig</groupId>
         <artifactId>pig</artifactId>
         <version>${pig.version}</version>
-        <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.apache.pig</groupId>
         <artifactId>pigsmoke</artifactId>
         <version>${pig-smoke.version}</version>
-        <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.apache.zookeeper</groupId>
@@ -206,7 +204,6 @@
         <groupId>org.apache.sqoop</groupId>
         <artifactId>sqoop</artifactId>
         <version>${sqoop.version}</version>
-        <scope>test</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
