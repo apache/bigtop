@@ -123,9 +123,6 @@ do
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
 
-#FIXME: workaround for HIVE-2757 (NOTE: HADOOP_HOME is obsolete for Hadoop .23)
-export HADOOP_HOME=\${HADOOP_HOME:-/usr/lib/hadoop}
-
 export HIVE_HOME=$INSTALLED_LIB_DIR
 exec $INSTALLED_LIB_DIR/bin/$file "\$@"
 EOF

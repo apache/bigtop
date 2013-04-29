@@ -194,6 +194,7 @@ fi
 #### FILES SECTION ####
 #######################
 %files
+%attr(1777,hive,hive) %dir %{var_lib_hive}/metastore
 %defattr(-,root,root,755)
 %config(noreplace) %{etc_hive}/conf.dist
 %{usr_lib_hive}
@@ -201,7 +202,6 @@ fi
 %attr(0755,hive,hive) %dir %{var_lib_hive}
 %attr(0755,hive,hive) %dir %{_localstatedir}/log/%{name}
 %attr(0755,hive,hive) %dir %{_localstatedir}/run/%{name}
-%attr(1777,hive,hive) %{var_lib_hive}/metastore
 %doc %{doc_hive}
 %{man_dir}/man1/hive.1.*
 %exclude %{usr_lib_hive}/lib/hbase.jar
