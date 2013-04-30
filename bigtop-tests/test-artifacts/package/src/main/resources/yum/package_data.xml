@@ -101,37 +101,70 @@
       </solr-server>
     </services>
   </solr-server>
-  <sqoop>
-    <deps>
-      <tag name="/bin/bash"/>
-      <tag name="/bin/sh"/>
-      <jre>&gt;=1.6</jre>
-    </deps>
-  </sqoop>
-  <sqoop-metastore>
+  <hcatalog>
     <users>
-      <sqoop>
-        <home>/var/lib/sqoop</home>
-        <descr>Sqoop</descr>
+      <hcatalog>
+        <home>/var/run/hcatalog</home>
+        <descr>HCatalog</descr>
         <shell>/sbin/nologin</shell>
-      </sqoop>
+      </hcatalog>
     </users>
-    <deps>
-      <redhat-lsb/>
-      <tag name="/bin/bash"/>
-      <tag name="/bin/sh"/>
-    </deps>
+  </hcatalog>
+  <hcatalog-server>
     <services>
-      <sqoop-metastore>
+      <hcatalog-server>
         <runlevel>2</runlevel> <!--workaround BIGTOP-644-->
         <runlevel>3</runlevel>
         <runlevel>4</runlevel>
         <runlevel>5</runlevel>
         <oninstall>stop</oninstall>
         <configured>true</configured>
-      </sqoop-metastore>
+      </hcatalog-server>
     </services>
-  </sqoop-metastore>
+  </hcatalog-server>
+  <webhcat-server>
+    <services>
+      <webhcat-server>
+        <runlevel>2</runlevel> <!--workaround BIGTOP-644-->
+        <runlevel>3</runlevel>
+        <runlevel>4</runlevel>
+        <runlevel>5</runlevel>
+        <oninstall>stop</oninstall>
+        <configured>true</configured>
+      </webhcat-server>
+    </services>
+  </webhcat-server>
+  <sqoop>
+    <deps>
+      <tag name="/bin/bash"/>
+      <tag name="/bin/sh"/>
+      <jre>&gt;=1.6</jre>
+    </deps>
+    <users>
+      <sqoop>
+        <home>/var/run/sqoop</home>
+        <descr>Sqoop</descr>
+        <shell>/sbin/nologin</shell>
+      </sqoop>
+    </users>
+  </sqoop>
+  <sqoop-server>
+    <deps>
+      <redhat-lsb/>
+      <tag name="/bin/bash"/>
+      <tag name="/bin/sh"/>
+    </deps>
+    <services>
+      <sqoop-server>
+        <runlevel>2</runlevel> <!--workaround BIGTOP-644-->
+        <runlevel>3</runlevel>
+        <runlevel>4</runlevel>
+        <runlevel>5</runlevel>
+        <oninstall>stop</oninstall>
+        <configured>true</configured>
+      </sqoop-server>
+    </services>
+  </sqoop-server>
   <oozie>
     <users>
       <oozie>
@@ -397,6 +430,17 @@
       </hadoop-hdfs-zkfc>
     </services>
   </hadoop-hdfs-zkfc>
+  <hadoop-hdfs-journalnode>
+    <services>
+      <hadoop-hdfs-journalnode>
+        <runlevel>3</runlevel>
+        <runlevel>4</runlevel>
+        <runlevel>5</runlevel>
+        <oninstall>stop</oninstall>
+        <configured>false</configured>
+      </hadoop-hdfs-journalnode>
+    </services>
+  </hadoop-hdfs-journalnode>
   <hadoop-hdfs-secondarynamenode>
     <deps>
       <tag name="/bin/sh"/>

@@ -201,13 +201,15 @@ when more advanced customization is required.</description>
   </solr-server>
   <sqoop>
     <metadata>
-      <summary>Sqoop allows easy imports and exports of data sets between databases and the Hadoop Distributed File System (HDFS).</summary>
-      <description>Sqoop allows easy imports and exports of data sets between databases and the Hadoop Distributed File System (HDFS).</description>
-      <url>http://incubator.apache.org/sqoop/</url>
+      <summary>Tool for easy imports and exports of data sets between databases and the Hadoop ecosystem</summary>
+      <description>Sqoop is a tool that provides the ability to import and export data sets between the Hadoop Distributed File System (HDFS) and relational databases.</description>
+      <url>http://sqoop.apache.org</url>
     </metadata>
     <deps>
-      <hadoop/>
+      <bigtop-tomcat/>
       <bigtop-utils/>
+      <hadoop-client/>
+      <sqoop-client>/self</sqoop-client>
     </deps>
     <alternatives>
       <sqoop-conf>
@@ -217,22 +219,29 @@ when more advanced customization is required.</description>
         <alt>/etc/sqoop/conf.dist</alt>
       </sqoop-conf>
     </alternatives>
-  </sqoop>
-  <sqoop-metastore>
-    <metadata>
-      <summary>Shared metadata repository for Sqoop.</summary>
-      <description>Shared metadata repository for Sqoop. This optional package hosts a metadata server for Sqoop clients across a network to use.</description>
-      <url>http://incubator.apache.org/sqoop/</url>
-    </metadata>
-    <deps>
-      <sqoop>/self</sqoop>
-    </deps>
     <groups>
       <sqoop>
         <user>sqoop</user>
       </sqoop>
     </groups>
-  </sqoop-metastore>
+  </sqoop>
+  <sqoop-server>
+    <metadata>
+      <summary>Server for Sqoop.</summary>
+      <description>Centralized server for Sqoop.</description>
+      <url>http://sqoop.apache.org</url>
+    </metadata>
+    <deps>
+      <sqoop>/self</sqoop>
+    </deps>
+  </sqoop-server>
+  <sqoop-client>
+    <metadata>
+      <summary>Client for Sqoop.</summary>
+      <description>Lightweight client for Sqoop.</description>
+      <url>http://sqoop.apache.org</url>
+    </metadata>
+  </sqoop-client>
   <oozie>
     <metadata>
       <summary>Oozie is a system that runs workflows of Hadoop jobs.</summary>
@@ -475,6 +484,88 @@ easy to test, and efficient to run.</description>
       </hive>
     </groups>
   </hive-server>
+  <hive-hbase>
+    <metadata>
+      <summary>Provides integration between Apache HBase and Apache Hive</summary>
+      <description>This optional package provides integration between Apache HBase and Apache Hive</description>
+      <url>http://hive.apache.org/</url>
+    </metadata>
+    <deps>
+      <hive>/self</hive>
+      <hbase/>
+    </deps>
+  </hive-hbase>
+  <hcatalog>
+    <metadata>
+      <summary>Apache Hcatalog (incubating) is a data warehouse infrastructure built on top of Hadoop</summary>
+      <description>
+Apache HCatalog (incubating) is a table and storage management service for data created using Apache Hadoop.
+This includes:
+    * Providing a shared schema and data type mechanism.
+    * Providing a table abstraction so that users need not be concerned with where or how their data is stored.
+    * Providing interoperability across data processing tools such as Pig, Map Reduce, Streaming, and Hive.
+      </description>
+      <url>http://incubator.apache.org/hcatalog</url>
+    </metadata>
+    <deps>
+      <hadoop/>
+      <bigtop-utils/>
+      <hive/>
+    </deps>
+    <alternatives>
+      <hcatalog-conf>
+        <status>auto</status>
+        <value>/etc/hcatalog/conf.dist</value>
+        <link>/etc/hcatalog/conf</link>
+        <alt>/etc/hcatalog/conf.dist</alt>
+      </hcatalog-conf>
+    </alternatives>
+    <groups>
+      <hcatalog>
+        <user>hcatalog</user>
+      </hcatalog>
+    </groups>
+  </hcatalog>
+  <hcatalog-server>
+    <metadata>
+      <summary>Server for HCatalog.</summary>
+      <description>Server for HCatalog.</description>
+      <url>http://incubator.apache.org/hcatalog</url>
+    </metadata>
+    <deps>
+      <hcatalog>/self</hcatalog>
+    </deps>
+  </hcatalog-server>
+  <webhcat>
+    <metadata>
+      <summary>WEBHcat provides a REST-like web API for HCatalog and related Hadoop components.</summary>
+      <description>
+WEBHcat provides a REST-like web API for HCatalog and related Hadoop components.
+      </description>
+      <url>http://incubator.apache.org/hcatalog</url>
+    </metadata>
+    <deps>
+      <hcatalog>/self</hcatalog>
+    </deps>
+    <alternatives>
+      <webhcat-conf>
+        <status>auto</status>
+        <value>/etc/webhcat/conf.dist</value>
+        <link>/etc/webhcat/conf</link>
+        <alt>/etc/webhcat/conf.dist</alt>
+      </webhcat-conf>
+    </alternatives>
+  </webhcat>
+  <webhcat-server>
+    <metadata>
+      <summary>Server for WEBHcat.</summary>
+      <description>Server for WEBHcat.</description>
+      <url>http://incubator.apache.org/hcatalog</url>
+    </metadata>
+    <deps>
+      <webhcat>/self</webhcat>
+    </deps>
+  </webhcat-server>
   <hbase>
     <metadata>
       <summary>HBase is the Hadoop database. Use it when you need random, realtime read/write access to your Big Data. This project's goal is the hosting of very large tables -- billions of rows X millions of columns -- atop clusters of commodity hardware.</summary>
@@ -699,6 +790,19 @@ election.</description>
       <hadoop-hdfs>/self</hadoop-hdfs>
     </deps>
   </hadoop-hdfs-zkfc>
+  <hadoop-hdfs-journalnode>
+    <metadata>
+      <summary>Hadoop HDFS JournalNode</summary>
+      <description>The HDFS JournalNode is responsible for persisting NameNode edit logs.
+In a typical deployment the JournalNode daemon runs on at least three
+separate machines in the cluster.</description>
+      <url>http://hadoop.apache.org/core/</url>
+    </metadata>
+    <deps>
+      <hadoop-hdfs>/self</hadoop-hdfs>
+      <hadoop>/self</hadoop>
+    </deps>
+  </hadoop-hdfs-journalnode>
   <hadoop-hdfs-secondarynamenode>
     <metadata>
       <summary>Hadoop Secondary namenode</summary>
@@ -860,6 +964,34 @@ and import and export data.</description>
       <make/>
     </deps>
   </hue-beeswax>
+  <hue-oozie>
+    <metadata>
+      <summary>A UI for Oozie on Hue</summary>
+      <description>A web interface for Oozie.
+
+It allows users to construct and run Oozie workflows without explicitly
+managing the XML specification.</description>
+      <url>http://github.com/cloudera/hue</url>
+    </metadata>
+    <deps>
+      <hue-common>/self</hue-common>
+      <make/>
+    </deps>
+  </hue-oozie>
+  <hue-pig>
+    <metadata>
+      <summary>A UI for Pig on Hue</summary>
+      <description>A web interface for Pig.
+
+It allows users to construct and run Pig jobs.</description>
+      <url>http://github.com/cloudera/hue</url>
+    </metadata>
+    <deps>
+      <hue-common>/self</hue-common>
+      <make/>
+      <pig/>
+    </deps>
+  </hue-pig>
   <hue>
     <metadata>
       <summary>The hue metapackage</summary>

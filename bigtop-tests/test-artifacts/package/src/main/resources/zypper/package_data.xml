@@ -100,36 +100,67 @@
       </solr-server>
     </services>
   </solr-server>
+  <hcatalog>
+    <users>
+      <hcatalog>
+        <home>/var/run/hcatalog</home>
+        <descr>HCatalog</descr>
+        <shell>/sbin/nologin</shell>
+      </hcatalog>
+    </users>
+  </hcatalog>
+  <hcatalog-server>
+    <services>
+      <hcatalog-server>
+        <runlevel>3</runlevel>
+        <runlevel>4</runlevel>
+        <runlevel>5</runlevel>
+        <oninstall>stop</oninstall>
+        <configured>true</configured>
+      </hcatalog-server>
+    </services>
+  </hcatalog-server>
+  <webhcat-server>
+    <services>
+      <webhcat-server>
+        <runlevel>3</runlevel>
+        <runlevel>4</runlevel>
+        <runlevel>5</runlevel>
+        <oninstall>stop</oninstall>
+        <configured>true</configured>
+      </webhcat-server>
+    </services>
+  </webhcat-server>
   <sqoop>
     <deps>
       <jre>&gt;=1.6</jre>
       <tag name="/bin/sh"/>
       <tag name="/bin/bash"/>
     </deps>
-  </sqoop>
-  <sqoop-metastore>
     <users>
       <sqoop>
-        <home>/var/lib/sqoop</home>
+        <home>/var/run/sqoop</home>
         <descr>Sqoop</descr>
         <shell>/sbin/nologin</shell>
       </sqoop>
     </users>
+  </sqoop>
+  <sqoop-server>
     <deps>
       <insserv/>
       <tag name="/bin/bash"/>
       <tag name="/bin/sh"/>
     </deps>
     <services>
-      <sqoop-metastore>
+      <sqoop-server>
         <runlevel>3</runlevel>
         <runlevel>4</runlevel>
         <runlevel>5</runlevel>
         <oninstall>stop</oninstall>
         <configured>true</configured>
-      </sqoop-metastore>
+      </sqoop-server>
     </services>
-  </sqoop-metastore>
+  </sqoop-server>
   <oozie>
     <users>
       <oozie>
@@ -389,6 +420,17 @@
       </hadoop-hdfs-zkfc>
     </services>
   </hadoop-hdfs-zkfc>
+  <hadoop-hdfs-journalnode>
+    <services>
+      <hadoop-hdfs-journalnode>
+        <runlevel>3</runlevel>
+        <runlevel>4</runlevel>
+        <runlevel>5</runlevel>
+        <oninstall>stop</oninstall>
+        <configured>true</configured>
+      </hadoop-hdfs-journalnode>
+    </services>
+  </hadoop-hdfs-journalnode>
   <hadoop-hdfs-secondarynamenode>
     <deps>
       <tag name="/bin/sh"/>

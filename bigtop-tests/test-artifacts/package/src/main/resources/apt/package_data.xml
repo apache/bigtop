@@ -67,7 +67,7 @@
     <users>
     </users>
     <deps>
-      <slor>/self</slor>
+      <solr>/self</solr>
       <chkconfig/>
       <initscripts/>
     </deps>
@@ -82,28 +82,60 @@
       </solr-server>
     </services>
   </solr-server>
-  <sqoop-metastore>
+  <hcatalog>
     <users>
-      <sqoop>
-        <home>/var/lib/sqoop</home>
-        <descr>Sqoop User</descr>
+      <hcatalog>
+        <home>/var/lib/hcatalog</home>
+        <descr>HCatalog User</descr>
         <shell>/bin/false</shell>
-      </sqoop>
+      </hcatalog>
     </users>
-    <deps>
-      <adduser/>
-    </deps>
+  </hcatalog>
+  <hcatalog-server>
     <services>
-      <sqoop-metastore>
+      <hcatalog-server>
         <runlevel>2</runlevel>
         <runlevel>3</runlevel>
         <runlevel>4</runlevel>
         <runlevel>5</runlevel>
         <oninstall>start</oninstall>
         <configured>true</configured>
-      </sqoop-metastore>
+      </hcatalog-server>
     </services>
-  </sqoop-metastore>
+  </hcatalog-server>
+  <webhcat-server>
+    <services>
+      <webhcat-server>
+        <runlevel>2</runlevel>
+        <runlevel>3</runlevel>
+        <runlevel>4</runlevel>
+        <runlevel>5</runlevel>
+        <oninstall>start</oninstall>
+        <configured>true</configured>
+      </webhcat-server>
+    </services>
+  </webhcat-server>
+  <sqoop>
+    <users>
+      <sqoop>
+        <home>/var/run/sqoop</home>
+        <descr>Sqoop User</descr>
+        <shell>/bin/false</shell>
+      </sqoop>
+    </users>
+  </sqoop>
+  <sqoop-server>
+    <services>
+      <sqoop-server>
+        <runlevel>2</runlevel>
+        <runlevel>3</runlevel>
+        <runlevel>4</runlevel>
+        <runlevel>5</runlevel>
+        <oninstall>start</oninstall>
+        <configured>true</configured>
+      </sqoop-server>
+    </services>
+  </sqoop-server>
   <zookeeper>
     <users>
       <zookeeper>
@@ -337,6 +369,18 @@
       </hadoop-hdfs-zkfc>
     </services>
   </hadoop-hdfs-zkfc>
+  <hadoop-hdfs-journalnode>
+    <services>
+      <hadoop-hdfs-journalnode>
+        <runlevel>2</runlevel>
+        <runlevel>3</runlevel>
+        <runlevel>4</runlevel>
+        <runlevel>5</runlevel>
+        <oninstall>stop</oninstall>
+        <configured>false</configured>
+      </hadoop-hdfs-journalnode>
+    </services>
+  </hadoop-hdfs-journalnode>
   <hadoop-hdfs-secondarynamenode>
     <deps>
       <tag name="/bin/sh"/>
