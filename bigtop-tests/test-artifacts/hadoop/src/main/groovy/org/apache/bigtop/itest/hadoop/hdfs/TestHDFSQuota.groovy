@@ -32,9 +32,10 @@ public class TestHDFSQuota {
   private static final long LARGE = Long.MAX_VALUE - 1;
   private static final String USERNAME = System.getProperty("user.name");
   private static String quotaDate = shHDFS.exec("date").getOut().get(0).replaceAll("\\s","").replaceAll(":","");
-  private static String testQuotaFolder = "testQuotaFolder" + quotaDate;
+  private static String testQuotaFolder = "/tmp/testQuotaFolder" + quotaDate;
   private static String testQuotaFolder1 = testQuotaFolder + "1";
   private static String testQuotaFolder2 = testQuotaFolder + "2";
+  private static String testQuotaFolder3 = testQuotaFolder + "3";
   
   @BeforeClass
   public static void setUp() {
@@ -42,7 +43,7 @@ public class TestHDFSQuota {
     shHDFS.exec("hadoop fs -mkdir $testQuotaFolder1");
     assertTrue("Could not create input directory", shHDFS.getRet() == 0);
 
-    sh.exec("hadoop fs -mkdir $testQuotaFolder1");
+    sh.exec("hadoop fs -mkdir $testQuotaFolder2");
     assertTrue("Could not create input directory", sh.getRet() == 0);
   }
 
@@ -112,15 +113,15 @@ public class TestHDFSQuota {
     shHDFS.exec("hadoop fs -count -q $testQuotaFolder1");
     assertTrue("Could not use count command", shHDFS.getRet() == 0);
     String[] status1 = shHDFS.getOut().get(0).trim().split();
-    shHDFS.exec("hadoop fs -mv $testQuotaFolder1" + " /user/hdfs/$testQuotaFolder2");
+    shHDFS.exec("hadoop fs -mv $testQuotaFolder1" + " $testQuotaFolder3");
     assertTrue("Could not use move command", shHDFS.getRet() == 0);
-    shHDFS.exec("hadoop fs -count -q $testQuotaFolder2");
+    shHDFS.exec("hadoop fs -count -q $testQuotaFolder3");
     assertTrue("Could not use count command", shHDFS.getRet() == 0);
     String[] status2 = shHDFS.getOut().get(0).trim().split();
     for (int i = 0; i < status1.length - 1; i++) {
       assertTrue("quotas changed after folder rename", status1[i].equals(status2[i]));
     }
-    shHDFS.exec("hadoop fs -mv $testQuotaFolder2" + " /user/hdfs/$testQuotaFolder1");
+    shHDFS.exec("hadoop fs -mv $testQuotaFolder3" + " $testQuotaFolder1");
     assertTrue("Could not use move command", shHDFS.getRet() == 0);
   }
 
@@ -200,8 +201,7 @@ public class TestHDFSQuota {
   //@Test - can be reinstated upon resolution of BIGTOP-635 due to restarting of hdfs service
   public void testLogEntries() {
     // Log entry created when nodes are started with both quota violations
-    shHDFS.exec("date");
-    String date = "logTest" + shHDFS.getOut().get(0).replaceAll("\\s","").replaceAll(":","");
+    String date = "logTest" + quotaDate;
     shHDFS.exec("hadoop fs -mkdir $date");
     assertTrue("Could not use mkdir command", shHDFS.getRet() == 0);
     shHDFS.exec("hadoop fs -put - $date" + "/testString1", "-------TEST STRING--------");
@@ -242,8 +242,7 @@ public class TestHDFSQuota {
 
   @Test
   public void testQuotasShouldFail() {
-    shHDFS.exec("date");
-    String date = "failTest" + shHDFS.getOut().get(0).replaceAll("\\s","").replaceAll(":","");
+    String date = "failTest" + quotaDate;
     shHDFS.exec("hadoop fs -mkdir $date");
     assertTrue("Could not use mkdir command", shHDFS.getRet() == 0);
     shHDFS.exec("hadoop fs -put - $date" + "/testString1", "-------TEST STRING--------");
@@ -276,8 +275,7 @@ public class TestHDFSQuota {
   @Test
   public void testReplicationFactor() {
     // increasing/decreasing replication factor of a file should debit/credit quota
-    shHDFS.exec("date");
-    String repFolder = "repFactorTest" + shHDFS.getOut().get(0).replaceAll("\\s","").replaceAll(":","");
+    String repFolder = "/tmp/repFactorTest" + quotaDate;
     shHDFS.exec("hadoop fs -mkdir $repFolder");
     assertTrue("Could not use mkdir command", shHDFS.getRet() == 0);    
     shHDFS.exec("hadoop fs -put - $repFolder" + "/testString1" , "-------TEST STRING--------");

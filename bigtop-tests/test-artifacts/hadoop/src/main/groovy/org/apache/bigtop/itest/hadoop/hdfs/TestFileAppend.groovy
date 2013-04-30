@@ -95,8 +95,8 @@ public class TestFileAppend {
     IOUtils.copyBytes(input1, output1, 4096, true);
 
     sh.exec("hadoop fs -cat $testAppendInput/appendinput1.txt$date > $testAppendOutput");
-    sh.exec("if diff $testAppendOutput appendCorrect.txt$date >/dev/null; then echo \"success\"; else echo \"failure\"; fi");
-    assertTrue("Append did not work", sh.getOut().get(0).equals("success"));
+    sh.exec("diff $testAppendOutput appendCorrect.txt$date");
+    assertTrue("Append did not work", sh.getRet() == 0);
     sh.exec("rm -rf appendinput1.txt$date", "rm -rf appendinput2.txt$date");
 
   }
@@ -127,8 +127,8 @@ public class TestFileAppend {
     IOUtils.copyBytes(input1, output1, 4096, true);
 
     sh.exec("hadoop fs -cat $testAppendInput/appendinput3.txt$date > $testAppendOutput");
-    sh.exec("if diff $testAppendOutput appendCorrect.txt$date >/dev/null; then echo \"success\"; else echo \"failure\"; fi");
-    assertTrue("Append did not work", sh.getOut().get(0).equals("success"));
+    sh.exec("diff $testAppendOutput appendCorrect.txt$date");
+    assertTrue("Append did not work", sh.getRet() == 0);
     sh.exec("rm -rf $testAppendOutput", "rm -rf appendinput1.txt$date", "rm -rf appendinput2.txt$date");
     sh.exec("rm -rf appendCorrect.txt$date");
     sh.exec("rm -rf appendinput3.txt$date"); 
@@ -163,8 +163,8 @@ public class TestFileAppend {
     IOUtils.copyBytes(input1, output1, 4096, true);
 
     sh.exec("hadoop fs -cat $testAppendInput/3mboutput.file$date > $testAppendOutput");
-    sh.exec("if diff $testAppendOutput 3mboutput.file$date >/dev/null; then echo \"success\"; else echo \"failure\"; fi");
-    assertTrue("Append result is not what is expected", sh.getOut().get(0).equals("success"));
+    sh.exec("diff $testAppendOutput 3mboutput.file$date");
+    assertTrue("Append result is not what is expected", sh.getRet() == 0);
     sh.exec("rm -rf $testAppendOutput", "rm -rf 3mboutput.file$date", "rm -rf 3mbinput.file$date");
   }
 
