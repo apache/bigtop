@@ -242,7 +242,7 @@ public class TestHDFSQuota {
 
   @Test
   public void testQuotasShouldFail() {
-    String date = "failTest" + quotaDate;
+    String date = "/tmp/failTest" + quotaDate;
     shHDFS.exec("hadoop fs -mkdir $date");
     assertTrue("Could not use mkdir command", shHDFS.getRet() == 0);
     shHDFS.exec("hadoop fs -put - $date" + "/testString1", "-------TEST STRING--------");
