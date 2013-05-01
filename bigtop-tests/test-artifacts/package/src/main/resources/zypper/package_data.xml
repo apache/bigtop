@@ -140,7 +140,7 @@
     <users>
       <sqoop>
         <home>/var/run/sqoop</home>
-        <descr>Sqoop</descr>
+        <descr>Sqoop User</descr>
         <shell>/sbin/nologin</shell>
       </sqoop>
     </users>
