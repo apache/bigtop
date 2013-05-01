@@ -229,6 +229,12 @@ class hadoop_head_node inherits hadoop_worker_node {
         kerberos_realm => $kerberos_realm, 
   }
 
+
+  hadoop-sqoop::server { "sqoop server":
+  }
+  hadoop-sqoop::client { "sqoop client":
+  }
+
   hue::server { "hue server":
         rm_url      => $hadoop_rm_url,
         rm_proxy_url => $hadoop_rm_proxy_url,
@@ -241,6 +247,7 @@ class hadoop_head_node inherits hadoop_worker_node {
         kerberos_realm => $kerberos_realm,
   }
   Hadoop::Httpfs<||> -> Hue::Server<||>
+  Hadoop-sqoop::Client<||> -> Hue::Server<||>
 
   hadoop-zookeeper::server { "zookeeper":
         myid => "0",
