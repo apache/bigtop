@@ -1,0 +1,8 @@
+export METASTORE_PORT=<%= @port %>
+
+export HADOOP_PREFIX=/usr
+export HIVE_HOME=/usr/lib/hive
+export HCAT_LOG_DIR=/var/log/hcatalog
+export HCAT_PID_DIR=/var/run/hcatalog
+#FIXME: workaround for HIVE-2757 (NOTE: HADOOP_HOME is obsolete for Hadoop .23)
+export HADOOP_HOME=${HADOOP_HOME:-/usr/lib/hadoop}
