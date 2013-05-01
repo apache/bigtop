@@ -43,7 +43,7 @@ import org.apache.bigtop.itest.shell.Shell;
 
 @Contract(
   properties = {
-    @Property(name="hiveserver.startup.wait", type=Property.Type.INT, longValue=1000, intValue=1000, defaultValue="1000")
+    @Property(name="hiveserver.startup.wait", type=Property.Type.INT, longValue=3000, intValue=3000, defaultValue="3000")
   },
   env = {})
 public class TestJdbcDriver {
