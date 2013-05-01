@@ -23,7 +23,6 @@ import org.junit.Test
 
 import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertFalse
-import static org.junit.Assert.assertTrue
 
 class ShellTest {
   @Test
@@ -47,51 +46,6 @@ class ShellTest {
 
     assertEquals("${sh.script} exited with a non-zero status", 0, sh.ret)
     assertEquals("got extra stdout ${sh.out}", 0, sh.out.size())
-    assertEquals("got extra stderr ${sh.err}", 0, sh.err.size())
-  }
-
-  @Test
-  void testRegularShellWithTimeout() {
-    Shell sh = new Shell("/bin/bash -s")
-    def preTime = System.currentTimeMillis()
-    sh.execWithTimeout(500, 'A=a ; sleep 30 ; r() { return $1; } ; echo $A ; ' +
-      'r `id -u`')
-    assertTrue(System.currentTimeMillis() - preTime < 30000)
-  }
-
-  @Test
-  void testBackgroundExecWithTimeoutFailure() {
-    Shell sh = new Shell("/bin/bash -s")
-    def preTime = System.currentTimeMillis()
-    sh.forkWithTimeout(500, 'A=a ; sleep 30 ; r() { return $1; } ' +
-      '; echo $A ; r `id -u`')
-    //Wait for script to get killed
-    Thread.sleep(750)
-    assertTrue("got wrong stdout ${sh.out}", sh.out.isEmpty())
-    assertTrue("got wrong srderr ${sh.out}", sh.err.isEmpty())
-  }
-
-  @Test
-  void testForkWithTimeoutSuccess() {
-    Shell sh = new Shell("/bin/bash -s")
-    def preTime = System.currentTimeMillis()
-    sh.forkWithTimeout(30000,
-      'A=a ; r() { return $1; } ; echo $A ; r `id -u`')
-    //Wait for the script to complete
-    Thread.sleep(500)
-    assertFalse("${sh.script} exited with a non-zero status", sh.ret == 0)
-    assertEquals("got wrong stdout ${sh.out}", "a", sh.out[0])
-    assertEquals("got extra stderr ${sh.err}", 0, sh.err.size())
-  }
-
-  @Test
-  void testForkWithoutTimeoutSuccess() {
-    Shell sh = new Shell("/bin/bash -s")
-    sh.fork('A=a ; r() { return $1; } ; echo $A ; r `id -u`')
-    //Wait for the script to complete
-    Thread.sleep(550)
-    assertFalse("${sh.script} exited with a non-zero status", sh.ret == 0)
-    assertEquals("got wrong stdout ${sh.out}", "a", sh.out[0])
     assertEquals("got extra stderr ${sh.err}", 0, sh.err.size())
   }
 }
