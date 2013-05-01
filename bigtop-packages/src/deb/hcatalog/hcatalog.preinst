@@ -26,7 +26,7 @@ case "$1" in
                 adduser \
                   --system \
                   --group \
-                  --home /usr/lib/hcatalog \
+                  --home /var/run/hcatalog \
                   --gecos "HCatalog User" \
                   --shell /bin/false \
                   hcatalog >/dev/null
