@@ -13,6 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+export HBASE_HOME="/usr/lib/hbase"
+export HBASE_CONF_DIR="/etc/hbase/conf"
+
 export HBASE_PID_DIR="/var/run/hbase"
 export HBASE_LOG_DIR="/var/log/hbase"
 export HBASE_IDENT_STRING=hbase

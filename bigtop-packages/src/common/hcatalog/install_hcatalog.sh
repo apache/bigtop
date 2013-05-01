@@ -117,6 +117,11 @@ cat >>$wrapper <<EOF
 #!/bin/sh
 . /etc/default/hadoop
 
+# look for HBase
+if [ -f /etc/default/hbase ] ; then
+  . /etc/default/hbase
+fi
+
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
 

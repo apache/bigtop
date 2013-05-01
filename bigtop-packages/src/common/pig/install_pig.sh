@@ -134,11 +134,9 @@ cat > $PREFIX/$BIN_DIR/pig <<EOF
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
 
-# FIXME: a workaround for PIG-2786
-# HBase integration support
-HBASE_BINARY=\`PATH=\${HBASE_HOME}:\$PATH which hbase\`
-if [ -n "\$HBASE_BINARY" ] ; then
-  export PIG_CLASSPATH=\$PIG_CLASSPATH:\`\$HBASE_BINARY classpath\`
+# look for HBase
+if [ -f /etc/default/hbase ] ; then
+  . /etc/default/hbase
 fi
 
 exec $INSTALLED_LIB_DIR/bin/pig "\$@"

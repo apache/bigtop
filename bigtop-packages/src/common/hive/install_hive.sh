@@ -123,6 +123,11 @@ do
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
 
+# look for HBase
+if [ -f /etc/default/hbase ] ; then
+  . /etc/default/hbase
+fi
+
 export HIVE_HOME=$INSTALLED_LIB_DIR
 exec $INSTALLED_LIB_DIR/bin/$file "\$@"
 EOF
