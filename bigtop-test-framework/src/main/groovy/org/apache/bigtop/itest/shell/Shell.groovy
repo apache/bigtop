@@ -83,13 +83,14 @@ class Shell {
     }
     ByteArrayOutputStream outStream = new ByteArrayOutputStream(4096)
     ByteArrayOutputStream errStream = new ByteArrayOutputStream(4096)
-    Thread.start {
-      proc.consumeProcessOutput(outStream, errStream)
-    }
     if (timeout >= 0) {
+      // WARNING: there's a potential race condition bellow
+      //          essentially what we really need here is
+      //          proc.waitForOrKillProcessOutput(outStream, errStream)
+      proc.consumeProcessOutput(outStream, errStream)
       proc.waitForOrKill(timeout)
     } else {
-      proc.waitFor()
+      proc.waitForProcessOutput(outStream, errStream)
     }
 
     // Possibly a bug in String.split as it generates a 1-element array on an
