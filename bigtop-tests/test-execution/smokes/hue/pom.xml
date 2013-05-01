@@ -30,9 +30,11 @@
   <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>hue-smoke-execution</artifactId>
   <version>0.6.0-SNAPSHOT</version>
-  <name>Giraph smoke test execution</name>
+  <name>Hue smoke test execution</name>
 
   <properties>
+    <HUE_URL>${env.HUE_URL}</HUE_URL>
+
     <org.apache.maven-dependency-plugin.groupId>org.apache.bigtop.itest</org.apache.maven-dependency-plugin.groupId>
     <org.apache.maven-dependency-plugin.artifactId>hue-smoke</org.apache.maven-dependency-plugin.artifactId>
     <org.apache.maven-dependency-plugin.version>${hue-smoke.version}</org.apache.maven-dependency-plugin.version>
@@ -55,8 +57,36 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
+        <configuration>
+          <systemPropertyVariables>
+            <org.apache.bigtop.itest.hue_url>${HUE_URL}</org.apache.bigtop.itest.hue_url>
+          </systemPropertyVariables>
+          <forkMode>always</forkMode>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>1.0</version>
+        <executions>
+          <execution>
+            <id>enforce-property-oozie</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireProperty>
+                  <property>HUE_URL</property>
+                  <message>HUE_URL env. variable has to be set</message>
+                </requireProperty>
+              </rules>
+              <fail>true</fail>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
-
 </project>

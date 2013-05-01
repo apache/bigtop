@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.bigtop.itest.giraph.smoke
+package org.apache.bigtop.itest.hue.smoke
 
 import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertTrue
@@ -25,7 +25,7 @@ import org.apache.bigtop.itest.shell.Shell
 import org.junit.Test
 
 public class TestHueSmoke {
-  final static String hueServer = "http://localhost:8888"
+  final static String hueServer = System.getProperty("org.apache.bigtop.itest.hue_url", "http://localhost:8888");
   final static String loginURL = "${hueServer}/accounts/login/";
   final static String checkURL = "${hueServer}/debug/check_config";
   final static String creds = "username=admin&password=admin";
