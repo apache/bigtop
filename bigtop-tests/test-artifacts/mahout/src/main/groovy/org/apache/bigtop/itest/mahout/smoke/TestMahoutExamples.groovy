@@ -65,6 +65,8 @@ public class TestMahoutExamples {
             "cd 20news-bydate",
             "tar xzf ${download_dir}/20news-bydate.tar.gz",
             "cd ..",
+            "mkdir 20news-all",
+            "cp -R 20news-bydate/*/* 20news-all",
             "mkdir reuters-sgm",
             "cd reuters-sgm",
             "tar xzf ${download_dir}/reuters21578.tar.gz",
