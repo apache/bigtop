@@ -20,5 +20,3 @@ DAEMON_FLAGS=""
 CONF_DIR="/etc/webhcat/conf"
 # FIXME: HCATALOG-636
 PIDFILE="/var/run/hcatalog/webhcat.pid"
-LOCKDIR="/var/lock/subsys"
-LOCKFILE="webhcat-server"

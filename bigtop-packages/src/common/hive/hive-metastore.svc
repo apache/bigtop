@@ -20,8 +20,6 @@ SVC_USER="hive"
 DAEMON_FLAGS=""
 CONF_DIR="/etc/hive/conf"
 PIDFILE="/var/run/hive/${DAEMON}.pid"
-LOCKDIR="/var/lock/subsys"
-LOCKFILE="${DAEMON}"
 
 generate_start() {
 

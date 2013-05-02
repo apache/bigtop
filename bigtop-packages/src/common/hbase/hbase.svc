@@ -20,8 +20,6 @@ SVC_USER="hbase"
 DAEMON_FLAGS=""
 CONF_DIR="/etc/hbase/conf"
 PIDFILE="/var/run/hbase/hbase-${DAEMON}.pid"
-LOCKDIR="/var/lock/subsys"
-LOCKFILE="${DAEMON}"
 
 generate_functions() {
 cat <<'__EOT__'

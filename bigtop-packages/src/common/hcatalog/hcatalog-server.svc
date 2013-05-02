@@ -20,5 +20,3 @@ DAEMON_FLAGS=""
 CONF_DIR="/etc/hcatalog/conf"
 # FIXME: HCATALOG-636
 PIDFILE="/var/run/hcatalog/hcat.pid"
-LOCKDIR="/var/lock/subsys"
-LOCKFILE="hcatalog-server"
