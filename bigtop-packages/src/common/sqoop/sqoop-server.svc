@@ -20,8 +20,6 @@ SVC_USER="${SQOOP_USER:-sqoop}"
 DAEMON_FLAGS=""
 CONF_DIR="${SQOOP_CONFIG:-/etc/sqoop/conf}"
 PIDFILE="${SQOOP_PID:-/var/run/sqoop/sqoop-server-$SVC_USER.pid}"
-LOCKDIR="/var/lock/subsys"
-LOCKFILE="sqoop-server"
 
 generate_functions() {
 

@@ -108,7 +108,7 @@
             <additionalClasspathElement>${HIVE_HOME}/lib/${hive-jdbc.jar}</additionalClasspathElement>
             <additionalClasspathElement>${HIVE_HOME}/lib/${hive-metastore.jar}</additionalClasspathElement>
             <additionalClasspathElement>${HIVE_HOME}/lib/${hive-service.jar}</additionalClasspathElement>
-            <additionalClasspathElement>${HIVE_HOME}/lib/libfb303.jar</additionalClasspathElement>
+            <additionalClasspathElement>${HIVE_HOME}/lib/${libfb303.jar}</additionalClasspathElement>
             <additionalClasspathElement>${HIVE_HOME}/lib/${slf4j-api.jar}</additionalClasspathElement>
           </additionalClasspathElements>
         </configuration>
@@ -127,7 +127,7 @@
             <configuration>
               <source>
                 if (!System.getProperties().keySet().contains('enforcer.skip')) {
-                  [ 'hive-hbase-handler.jar', 'hive-exec.jar', 'hive-jdbc.jar', 'hive-metastore.jar', 'hive-service.jar', 'slf4j-api.jar', 'guava.jar' ].each {
+                  [ 'hive-hbase-handler.jar', 'hive-exec.jar', 'hive-jdbc.jar', 'hive-metastore.jar', 'hive-service.jar', 'libfb303.jar', 'slf4j-api.jar', 'guava.jar' ].each {
                     project.properties[it] =
                       org.apache.bigtop.itest.JarContent.getJarName(
                           "${HIVE_HOME}/lib", "${it.replaceAll(/.jar$/, '')}-.*\\.jar");

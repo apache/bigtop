@@ -184,7 +184,7 @@ fi
 
 %pre
 getent group hcatalog >/dev/null || groupadd -r hcatalog || :
-getent passwd hcatalog >/dev/null || useradd -c "HCatalog User" -s /sbin/nologin -g hcatalog -r -d %{usr_lib_hcatalog} hcatalog 2> /dev/null || :
+getent passwd hcatalog >/dev/null || useradd -c "HCatalog User" -s /sbin/nologin -g hcatalog -r -d /var/run/hcatalog hcatalog 2> /dev/null || :
 
 %post
 %{alternatives_cmd} --install %{conf_hcatalog} hcatalog-conf %{conf_hcatalog}.dist 30

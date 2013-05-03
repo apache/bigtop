@@ -51,7 +51,7 @@ Name: sqoop
 Version: %{sqoop_version}
 Release: %{sqoop_release}
 Summary:  Tool for easy imports and exports of data sets between databases and the Hadoop ecosystem
-URL: http://incubator.apache.org/sqoop/
+URL: http://sqoop.apache.org
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 License: APL2

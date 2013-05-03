@@ -125,16 +125,6 @@ class TestOozieSmoke {
   }
 
   @Test(timeout=300000L)
-  public void testSqoop() {
-    testOozieExamplesCommon("sqoop");
-  }
-
-  @Test(timeout=300000L)
-  public void testSqoopFreeform() {
-    testOozieExamplesCommon("sqoop-freeform");
-  }
-
-  @Test(timeout=300000L)
   public void testSubwf() {
     testOozieExamplesCommon("subwf");
   }

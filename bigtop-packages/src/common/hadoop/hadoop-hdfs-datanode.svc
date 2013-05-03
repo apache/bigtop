@@ -20,8 +20,6 @@ SVC_USER="hdfs"
 DAEMON_FLAGS="$HADOOP_NAME"
 CONF_DIR="/etc/hadoop/conf"
 PIDFILE="/var/run/hadoop-hdfs/hadoop-$SVC_USER-$HADOOP_NAME.pid"
-LOCKDIR="/var/lock/subsys"
-LOCKFILE="hadoop-$HADOOP_NAME"
 
 generate_start() {
 

@@ -13,5 +13,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-hadoop-sqoop::client { "test-sqoop": } 
-hadoop-sqoop::metastore  { "test-sqoop-metastore": } 
+hadoop-sqoop::client { "test-sqoop-client": } 
+hadoop-sqoop::server { "test-sqoop-server": } 

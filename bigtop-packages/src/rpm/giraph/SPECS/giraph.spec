@@ -65,8 +65,7 @@ Requires: zookeeper, hadoop-client, bigtop-utils >= 0.6
 Giraph implements a graph processing platform to run large scale algorithms (such as page rank, shared connections, personalization-based popularity, etc.) on top of Hadoop infrastructure. Giraph builds upon the graph-oriented nature of Pregel but additionally adds fault-tolerance to the coordinator process with the use of ZooKeeper as its centralized coordination service.
 
 %prep
-#%setup -n %{name}-%{giraph_base_version}-src
-%setup -n apache-giraph-79962a3
+%setup -n %{name}-%{giraph_base_version}
 
 %build
 bash %{SOURCE1}
@@ -74,7 +73,7 @@ bash %{SOURCE1}
 %install
 %__rm -rf $RPM_BUILD_ROOT
 sh %{SOURCE2} \
-          --build-dir=target \
+          --build-dir=`pwd` \
           --conf-dir=%{conf_giraph}.dist \
           --doc-dir=%{doc_giraph} \
           --prefix=$RPM_BUILD_ROOT

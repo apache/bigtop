@@ -33,8 +33,8 @@ override_dh_auto_build:
 	bash debian/do-component-build  -Divy.home=${HOME}/.ivy2
 	touch $@
 
-server metastore: debian/service-init.d.tpl
-	sed -e "s|@HIVE_DAEMON@|$@|" $< > debian/${hive_pkg_name}-$@.init
+server metastore:
+	bash debian/init.d.tmpl debian/hive-$@.svc deb debian/${hive_pkg_name}-$@.init
 
 override_dh_auto_install: metastore server
 	cp debian/hive-site.xml .

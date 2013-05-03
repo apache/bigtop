@@ -16,4 +16,10 @@
 export HBASE_PID_DIR="/var/run/hbase"
 export HBASE_LOG_DIR="/var/log/hbase"
 export HBASE_IDENT_STRING=hbase
-export HBASE_THRIFT_MODE="-nonblocking"
+
+# Up to 100 region servers can be run on a single host by specifying offsets
+# here or as CLI args when using init scripts. Each offset identifies an
+# instance and is used to determine the network ports it uses. Each instance
+# will have have its own log and pid files.
+#
+# REGIONSERVER_OFFSETS="1 2 3"

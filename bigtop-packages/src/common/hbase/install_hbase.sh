@@ -102,6 +102,7 @@ LIB_DIR=${LIB_DIR:-/usr/lib/hbase}
 BIN_DIR=${BIN_DIR:-/usr/lib/hbase/bin}
 ETC_DIR=${ETC_DIR:-/etc/hbase}
 CONF_DIR=${CONF_DIR:-${ETC_DIR}/conf.dist}
+THRIFT_DIR=${THRIFT_DIR:-${LIB_DIR}/include/thrift}
 
 install -d -m 0755 $PREFIX/$LIB_DIR
 install -d -m 0755 $PREFIX/$LIB_DIR/lib
@@ -109,6 +110,7 @@ install -d -m 0755 $PREFIX/$DOC_DIR
 install -d -m 0755 $PREFIX/$BIN_DIR
 install -d -m 0755 $PREFIX/$ETC_DIR
 install -d -m 0755 $PREFIX/$MAN_DIR
+install -d -m 0755 $PREFIX/$THRIFT_DIR
 
 cp -ra $BUILD_DIR/lib/* ${PREFIX}/${LIB_DIR}/lib/
 cp $BUILD_DIR/hbase*.jar $PREFIX/$LIB_DIR
@@ -124,6 +126,9 @@ for file in rolling-restart.sh graceful_stop.sh local-regionservers.sh \
             start-hbase.sh stop-hbase.sh local-master-backup.sh ; do
   rm -f $PREFIX/$BIN_DIR/$file
 done
+
+cp $BUILD_DIR/src/main/resources/org/apache/hadoop/hbase/thrift/Hbase.thrift $PREFIX/$THRIFT_DIR/hbase1.thrift
+cp $BUILD_DIR/src/main/resources/org/apache/hadoop/hbase/thrift2/hbase.thrift $PREFIX/$THRIFT_DIR/hbase2.thrift
 
 ln -s $ETC_DIR/conf $PREFIX/$LIB_DIR/conf
 

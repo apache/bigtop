@@ -104,7 +104,7 @@
     <users>
       <hcatalog>
         <home>/var/run/hcatalog</home>
-        <descr>HCatalog</descr>
+        <descr>HCatalog User</descr>
         <shell>/sbin/nologin</shell>
       </hcatalog>
     </users>
@@ -140,7 +140,7 @@
     <users>
       <sqoop>
         <home>/var/run/sqoop</home>
-        <descr>Sqoop</descr>
+        <descr>Sqoop User</descr>
         <shell>/sbin/nologin</shell>
       </sqoop>
     </users>

@@ -65,6 +65,8 @@ public class TestMahoutExamples {
             "cd 20news-bydate",
             "tar xzf ${download_dir}/20news-bydate.tar.gz",
             "cd ..",
+            "mkdir 20news-all",
+            "cp -R 20news-bydate/*/* 20news-all",
             "mkdir reuters-sgm",
             "cd reuters-sgm",
             "tar xzf ${download_dir}/reuters21578.tar.gz",
@@ -102,8 +104,12 @@ public class TestMahoutExamples {
     }
   }
 
-  @Test(timeout=1200000L)
+  @Test(timeout=12000000L)
   public void factorizeMovieLensRatings() {
+    // convert ratings
+    sh.exec("cat ${TEMP_DIR}/movielens/ml-1m/ratings.dat |sed -e s/::/,/g| cut -d, -f1,2,3 > ${TEMP_DIR}/movielens/ratings.csv");
+    assertEquals("Unexpected error from converting ratings", 0, sh.getRet());
+
     // put ratings in hdfs
     sh.exec("hadoop fs -mkdir ${WORK_DIR}/movielens",
             "hadoop fs -put ${TEMP_DIR}/movielens/ratings.csv ${WORK_DIR}/movielens/ratings.csv");
@@ -218,40 +224,43 @@ public class TestMahoutExamples {
 
   @Test(timeout=9000000L)
   public void testBayesNewsgroupClassifier() {
-    sh.exec("""mahout org.apache.mahout.classifier.bayes.PrepareTwentyNewsgroups \
-  -p ${TEMP_DIR}/20news-bydate/20news-bydate-train \
-  -o ${TEMP_DIR}/20news-bydate/bayes-train-input \
-  -a org.apache.mahout.vectorizer.DefaultAnalyzer \
-  -c UTF-8""");
-    assertEquals("Unexpected error from running mahout", 0, sh.getRet());
-    sh.exec("""mahout org.apache.mahout.classifier.bayes.PrepareTwentyNewsgroups \
-  -p ${TEMP_DIR}/20news-bydate/20news-bydate-test \
-  -o ${TEMP_DIR}/20news-bydate/bayes-test-input \
-  -a org.apache.mahout.vectorizer.DefaultAnalyzer \
-  -c UTF-8""");
-    assertEquals("Unexpected error from running mahout", 0, sh.getRet());
-
     // put bayes-train-input and bayes-test-input in hdfs
-    sh.exec("hadoop fs -mkdir ${WORK_DIR}/20news-bydate");
-    sh.exec("hadoop fs -put ${TEMP_DIR}/20news-bydate/bayes-train-input ${WORK_DIR}/20news-bydate/bayes-train-input");
+    sh.exec("hadoop fs -mkdir ${WORK_DIR}/20news-vectors");
+    sh.exec("hadoop fs -put ${TEMP_DIR}/20news-all ${WORK_DIR}/20news-all");
     assertEquals("Unable to put bayes-train-input in hdfs", 0, sh.getRet());
-    sh.exec("hadoop fs -put ${TEMP_DIR}/20news-bydate/bayes-test-input ${WORK_DIR}/20news-bydate/bayes-test-input");
-    assertEquals("Unable to put bayes-test-input in hdfs", 0, sh.getRet());
 
-    sh.exec("""mahout trainclassifier \
--i ${WORK_DIR}/20news-bydate/bayes-train-input \
--o ${WORK_DIR}/20news-bydate/bayes-model \
--type bayes \
--ng 1 \
--source hdfs""");
+    sh.exec("mahout seqdirectory -i ${WORK_DIR}/20news-all -o ${WORK_DIR}/20news-seq");
     assertEquals("Unexpected error from running mahout", 0, sh.getRet());
-    sh.exec("""mahout testclassifier \
--m ${WORK_DIR}/20news-bydate/bayes-model \
--d ${WORK_DIR}/20news-bydate/bayes-test-input \
--type bayes \
--ng 1 \
--source hdfs \
--method mapreduce""");
+
+    sh.exec("mahout seq2sparse -i ${WORK_DIR}/20news-seq -o ${WORK_DIR}/20news-vectors  -lnorm -nv  -wt tfidf");
+    assertEquals("Unexpected error from running mahout", 0, sh.getRet());
+
+    sh.exec("""mahout split \
+-i ${WORK_DIR}/20news-vectors/tfidf-vectors \
+--trainingOutput ${WORK_DIR}/20news-train-vectors \
+--testOutput ${WORK_DIR}/20news-test-vectors \
+--randomSelectionPct 40 --overwrite --sequenceFiles -xm sequential""");
+    assertEquals("Unexpected error from running mahout", 0, sh.getRet());
+
+    sh.exec("""mahout trainnb \
+-i ${WORK_DIR}/20news-train-vectors -el \
+-o ${WORK_DIR}/model \
+-li ${WORK_DIR}/labelindex \
+-ow"""); 
+    assertEquals("Unexpected error from running mahout", 0, sh.getRet());
+
+    sh.exec("""mahout testnb \
+-i ${WORK_DIR}/20news-train-vectors \
+-m ${WORK_DIR}/model \
+-l ${WORK_DIR}/labelindex \
+-ow -o ${WORK_DIR}/20news-testing""");
+    assertEquals("Unexpected error from running mahout", 0, sh.getRet());
+
+    sh.exec("""mahout testnb \
+-i ${WORK_DIR}/20news-test-vectors \
+-m ${WORK_DIR}/model \
+-l ${WORK_DIR}/labelindex \
+-ow -o ${WORK_DIR}/20news-testing""");
     assertEquals("Unexpected error from running mahout", 0, sh.getRet());
 
   }

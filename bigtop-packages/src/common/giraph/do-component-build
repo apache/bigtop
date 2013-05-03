@@ -18,5 +18,7 @@ set -ex
 
 . `dirname $0`/bigtop.bom
 
-mvn -Phadoop_trunk -DskipTests -Dhadoop.version=$HADOOP_VERSION site package "$@"
-tar --strip-components 1 -C target -xzf target/giraph-*-bin.tar.gz
+mvn -Phadoop_yarn -DskipTests -Dhadoop.version=$HADOOP_VERSION clean package "$@"
+# FIXME: GIRAPH-640
+# mvn -Phadoop_yarn -DskipTests -Dhadoop.version=$HADOOP_VERSION site "$@"
+(cd giraph-core/target ; tar --strip-components 1 -xzf giraph-*-bin.tar.gz)

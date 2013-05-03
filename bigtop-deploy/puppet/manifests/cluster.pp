@@ -229,6 +229,18 @@ class hadoop_head_node inherits hadoop_worker_node {
         kerberos_realm => $kerberos_realm, 
   }
 
+  hadoop-sqoop::server { "sqoop server":
+  }
+  hadoop-sqoop::client { "sqoop client":
+  }
+
+  hcatalog::server { "hcatalog server":
+        kerberos_realm => $kerberos_realm,
+  }
+  hcatalog::webhcat::server { "webhcat server":
+        kerberos_realm => $kerberos_realm,
+  }
+
   hue::server { "hue server":
         rm_url      => $hadoop_rm_url,
         rm_proxy_url => $hadoop_rm_proxy_url,
@@ -241,6 +253,7 @@ class hadoop_head_node inherits hadoop_worker_node {
         kerberos_realm => $kerberos_realm,
   }
   Hadoop::Httpfs<||> -> Hue::Server<||>
+  Hadoop-sqoop::Client<||> -> Hue::Server<||>
 
   hadoop-zookeeper::server { "zookeeper":
         myid => "0",

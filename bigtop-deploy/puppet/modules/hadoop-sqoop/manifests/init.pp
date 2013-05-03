@@ -15,19 +15,19 @@
 
 class hadoop-sqoop {
   define client {
-    package { "sqoop":
+    package { "sqoop-client":
       ensure => latest,
     } 
   }
 
-  define metastore {
-    package { "sqoop-metastore":
+  define server {
+    package { "sqoop-server":
       ensure => latest,
     } 
 
-    service { "sqoop-metastore":
+    service { "sqoop-server":
       ensure => running,
-      require => Package["sqoop-metastore"],
+      require => Package["sqoop-server"],
       hasstatus => true,
       hasrestart => true,
     }

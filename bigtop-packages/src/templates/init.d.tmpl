@@ -21,7 +21,7 @@
 # a mandatory argument of a file containing the configuration for the service. 
 # The argument file should be a valid piece of bash code since it gets directly
 # source into this template. E.g.
-#    $ bash ./init.d.tmpl hadoop-hdfs-namenode.svc > hadoop-hdfs-namenode
+#    $ bash ./init.d.tmpl hadoop-hdfs-namenode.svc rpm hadoop-hdfs-namenode
 # 
 # You must declare the following in your .svc configuration file:
 #     DAEMON="name of the resulting init.d script"
@@ -216,8 +216,8 @@ SVC_USER="$SVC_USER"
 DAEMON_FLAGS="$DAEMON_FLAGS"
 CONF_DIR="$CONF_DIR"
 PIDFILE="$PIDFILE"
-LOCKDIR="$LOCKDIR"
-LOCKFILE="\$LOCKDIR/$LOCKFILE"
+LOCKDIR="/var/lock/subsys"
+LOCKFILE="\$LOCKDIR/$DAEMON"
 
 install -d -m 0755 -o $SVC_USER -g $SVC_USER $(dirname $PIDFILE) 1>/dev/null 2>&1 || :
 [ -d "\$LOCKDIR" ] || install -d -m 0755 \$LOCKDIR 1>/dev/null 2>&1 || :

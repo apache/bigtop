@@ -86,10 +86,11 @@ License: APL2
 Source0: %{name}-%{hbase_base_version}.tar.gz
 Source1: do-component-build
 Source2: install_hbase.sh
-Source3: hbase.sh
-Source4: hbase.sh.suse
+Source3: hbase.svc
+Source4: init.d.tmpl
 Source5: hbase.default
 Source6: hbase.nofiles.conf
+Source7: regionserver-init.d.tpl
 BuildArch: noarch
 Requires: coreutils, /usr/sbin/useradd, /sbin/chkconfig, /sbin/service
 Requires: hadoop-hdfs, zookeeper >= 3.3.1, bigtop-utils >= 0.6
@@ -258,30 +259,24 @@ ln -s %{_localstatedir}/log/%{name} %{buildroot}/%{logs_hbase}
 %__install -d  -m 0755  %{buildroot}/%{_localstatedir}/run/%{name}
 ln -s %{_localstatedir}/run/%{name} %{buildroot}/%{pids_hbase}
 
-%if  %{?suse_version:1}0
-orig_init_file=%{SOURCE4}
-%else
-orig_init_file=%{SOURCE3}
-%endif
-
 for service in %{hbase_services}
 do
-  case $service in
-    master) chkconfig="345 85 15" ;;
-    thrift) chkconfig="345 86 14" ;;
-    regionserver) chkconfig="345 87 13" ;;
-    rest) chkconfig="345 88 12" ;;
-    *) chkconfig="345 89 13" ;;
-  esac
-	init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{name}-${service}
-	%__cp $orig_init_file $init_file
-	%__sed -i -e "s|@CHKCONFIG@|${chkconfig}|" $init_file
-	%__sed -i -e "s|@HBASE_DAEMON@|${service}|" $init_file
-	chmod 755 $init_file
-done
+    init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{name}-${service}
+    if [[ "$service" = "regionserver" ]] ; then
+        # Region servers start from a different template that allows
+        # them to run multiple concurrent instances of the daemon
+        %__cp %{SOURCE7} $init_file
+        %__sed -i -e "s|@INIT_DEFAULT_START@|3 4 5|" $init_file
+        %__sed -i -e "s|@INIT_DEFAULT_STOP@|0 1 2 6|" $init_file
+        %__sed -i -e "s|@CHKCONFIG@|345 87 13|" $init_file
+        %__sed -i -e "s|@HBASE_DAEMON@|${service}|" $init_file
+    else
+        %__sed -e "s|@HBASE_DAEMON@|${service}|" %{SOURCE3} > ${RPM_SOURCE_DIR}/hbase-${service}.node
+        bash %{SOURCE4} ${RPM_SOURCE_DIR}/hbase-${service}.node rpm $init_file
+    fi
 
-# FIXME: BIGTOP-648 workaround for HBASE-6263
-sed -i -e 's# start thrift# start thrift \$HBASE_THRIFT_MODE#' $RPM_BUILD_ROOT/%{initd_dir}/hbase-thrift
+    chmod 755 $init_file
+done
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/usr/bin
 

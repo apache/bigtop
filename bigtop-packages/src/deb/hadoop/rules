@@ -44,7 +44,7 @@ hadoop_svcs=hdfs-namenode hdfs-secondarynamenode hdfs-datanode hdfs-zkfc hdfs-jo
             mapreduce-historyserver httpfs
 
 $(hadoop_svcs): debian/init.d.tmpl
-	bash $< debian/hadoop-$@.svc > debian/hadoop-$@.init
+	bash $< debian/hadoop-$@.svc deb debian/hadoop-$@.init
 	cp debian/$(firstword $(subst -, ,$@)).default debian/tmp/etc/default/hadoop-$@
 	echo /etc/default/hadoop-$@ >> debian/hadoop-$@.install
 	# FIXME: workaround for BIGTOP-105

@@ -12,11 +12,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-DAEMON="hcatalog-server"
-DESC="HCatalog server"
-EXEC_PATH="/usr/lib/hcatalog/sbin/hcat_server.sh"
-SVC_USER="hcatalog"
-DAEMON_FLAGS=""
-CONF_DIR="/etc/hcatalog/conf"
-# FIXME: HCATALOG-636
-PIDFILE="/var/run/hcatalog/hcat.pid"
+
+hcatalog::server { "test-hcatalog-server": }
+hcatalog::webhcat::server { "test-hcatalog-webhcat-server": }
