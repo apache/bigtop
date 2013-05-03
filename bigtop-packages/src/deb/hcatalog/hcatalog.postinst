@@ -20,8 +20,8 @@ case "$1" in
     configure)
         # Install config alternatives
         update-alternatives  --install /etc/hcatalog/conf hcatalog-conf /etc/hcatalog/conf.dist 30
-        chown hcatalog:hcatalog /var/run/hcatalog || :
-        chown hcatalog:hcatalog /var/log/hcatalog || :
+        chown hive:hive /var/run/hcatalog || :
+        chown hive:hive /var/log/hcatalog || :
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

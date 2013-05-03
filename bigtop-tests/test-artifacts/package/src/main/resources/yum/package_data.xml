@@ -101,15 +101,6 @@
       </solr-server>
     </services>
   </solr-server>
-  <hcatalog>
-    <users>
-      <hcatalog>
-        <home>/var/run/hcatalog</home>
-        <descr>HCatalog User</descr>
-        <shell>/sbin/nologin</shell>
-      </hcatalog>
-    </users>
-  </hcatalog>
   <hcatalog-server>
     <services>
       <hcatalog-server>

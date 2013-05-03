@@ -182,10 +182,6 @@ fi
 %service_macro hcatalog-server
 %service_macro webhcat-server
 
-%pre
-getent group hcatalog >/dev/null || groupadd -r hcatalog || :
-getent passwd hcatalog >/dev/null || useradd -c "HCatalog User" -s /sbin/nologin -g hcatalog -r -d /var/run/hcatalog hcatalog 2> /dev/null || :
-
 %post
 %{alternatives_cmd} --install %{conf_hcatalog} hcatalog-conf %{conf_hcatalog}.dist 30
 
@@ -218,8 +214,8 @@ fi
 %{bin_hcatalog}/hcat
 %doc %{doc_hcatalog}
 %{man_dir}/man1/hcatalog.1.*
-%attr(755,hcatalog,hcatalog) /var/run/hcatalog
-%attr(755,hcatalog,hcatalog) /var/log/hcatalog
+%attr(755,hive,hive) /var/run/hcatalog
+%attr(755,hive,hive) /var/log/hcatalog
 
 %files -n webhcat
 %defattr(-,root,root,755)

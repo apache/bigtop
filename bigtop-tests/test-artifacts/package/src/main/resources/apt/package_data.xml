@@ -82,15 +82,6 @@
       </solr-server>
     </services>
   </solr-server>
-  <hcatalog>
-    <users>
-      <hcatalog>
-        <home>/var/lib/hcatalog</home>
-        <descr>HCatalog User</descr>
-        <shell>/bin/false</shell>
-      </hcatalog>
-    </users>
-  </hcatalog>
   <hcatalog-server>
     <services>
       <hcatalog-server>

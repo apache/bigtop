@@ -15,7 +15,7 @@
 DAEMON="hcatalog-server"
 DESC="HCatalog server"
 EXEC_PATH="/usr/lib/hcatalog/sbin/hcat_server.sh"
-SVC_USER="hcatalog"
+SVC_USER="hive"
 DAEMON_FLAGS=""
 CONF_DIR="/etc/hcatalog/conf"
 # FIXME: HCATALOG-636

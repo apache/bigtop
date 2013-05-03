@@ -15,7 +15,7 @@
 DAEMON="webhcat-server"
 DESC="WEBHCat server"
 EXEC_PATH="/usr/lib/hcatalog/sbin/webhcat_server.sh"
-SVC_USER="hcatalog"
+SVC_USER="hive"
 DAEMON_FLAGS=""
 CONF_DIR="/etc/webhcat/conf"
 # FIXME: HCATALOG-636
