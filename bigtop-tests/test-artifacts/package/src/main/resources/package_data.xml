@@ -520,11 +520,6 @@ This includes:
         <alt>/etc/hcatalog/conf.dist</alt>
       </hcatalog-conf>
     </alternatives>
-    <groups>
-      <hcatalog>
-        <user>hcatalog</user>
-      </hcatalog>
-    </groups>
   </hcatalog>
   <hcatalog-server>
     <metadata>
