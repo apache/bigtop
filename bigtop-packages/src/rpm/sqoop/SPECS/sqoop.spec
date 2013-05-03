@@ -61,7 +61,6 @@ Source2: install_%{name}.sh
 Source3: sqoop.sh
 Source4: sqoop.properties
 Source5: catalina.properties
-Source6: setenv.sh
 Source7: sqoop.default
 Source8: init.d.tmpl
 Source9: sqoop-server.svc
@@ -173,6 +172,7 @@ fi
 %{lib_sqoop}/sqoop-server
 %{lib_sqoop}/webapps
 %{lib_sqoop}/bin/setenv.sh
+%defattr(0755,sqoop,sqoop)
 /var/lib/sqoop
 
 %files client

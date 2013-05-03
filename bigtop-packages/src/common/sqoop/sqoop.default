@@ -1,6 +1,6 @@
 CATALINA_BASE=/usr/lib/sqoop/sqoop-server
 SQOOP_USER=sqoop
-SQOOP_CONFIG=/etc/conf/sqoop
+SQOOP_CONFIG=/etc/sqoop/conf
 SQOOP_LOG=/var/log/sqoop
 SQOOP_TEMP=/var/run/sqoop
 SQOOP_PID=/var/run/sqoop/sqoop-server-sqoop.pid

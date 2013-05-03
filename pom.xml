@@ -40,7 +40,7 @@
     <hbase.version>0.94.5</hbase.version>
     <pig.version>0.11.1</pig.version>
     <pig-smoke.version>0.11.1</pig-smoke.version>
-    <sqoop.version>1.99.1</sqoop.version>
+    <sqoop.version>1.99.2</sqoop.version>
     <zookeeper.version>3.4.5</zookeeper.version>
     <giraph.version>0.2-SNAPSHOT</giraph.version>
     <solr.version>4.2.1</solr.version>

@@ -131,11 +131,15 @@ install -d -m 0755 ${PREFIX}/var/lib/sqoop
 
 install -m 0644 ${DIST_DIR}/client/lib/*.jar ${PREFIX}/${LIB_DIR}/client-lib/
 install -m 0755 ${DIST_DIR}/bin/sqoop.sh ${PREFIX}/${BIN_DIR}/
-install -m 0755 ${EXTRA_DIR}/setenv.sh ${PREFIX}/${BIN_DIR}/
 
 install -m 0644 ${DIST_DIR}/server/conf/sqoop_bootstrap.properties ${PREFIX}/${CONF_DIR}
 install -m 0644 ${EXTRA_DIR}/sqoop.properties ${PREFIX}/${CONF_DIR}
 install -m 0644 ${EXTRA_DIR}/sqoop.default ${PREFIX}/etc/default/sqoop-server
+rm ${EXTRA_DIR}/sqoop.default # Otherwise debhelper will re-install this
+
+install -m 0755 ${DIST_DIR}/server/bin/setenv.sh ${PREFIX}/${CONF_DIR}/
+sed -i -e 's#-Dsqoop.config.dir=.*conf#-Dsqoop.config.dir=/etc/sqoop/conf#' ${PREFIX}/${CONF_DIR}/setenv.sh
+ln -s ${CONF_DIR}/setenv.sh ${PREFIX}/${BIN_DIR}/
 
 # Explode the WAR
 SQOOP_WEBAPPS=${PREFIX}/${LIB_DIR}/webapps
