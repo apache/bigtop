@@ -1,6 +1,5 @@
 <hadoop-source>
   <content>
-    <file name='/.' owners=1 perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr' owners='-1'erm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/src' owners=1 perm='drwxrwsr-x' user='root' group='src' />
     <file name='/usr/src/hadoop' owners=1 perm='drwxr-xr-x' user='root' group='root' />

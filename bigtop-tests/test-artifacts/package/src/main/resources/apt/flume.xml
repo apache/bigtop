@@ -1,6 +1,5 @@
 <flume>
   <content>
-    <file name='/.' owners='1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/bin' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/bin/flume-ng' owners='1' perm='-rwxr-xr-x' user='root' group='root' />

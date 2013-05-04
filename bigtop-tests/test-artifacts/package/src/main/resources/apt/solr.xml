@@ -1,6 +1,5 @@
 <solr>
   <content>
-    <file name='/.' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib/solr' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
