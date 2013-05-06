@@ -19,13 +19,19 @@ Priority: extra
 Maintainer: Apache Bigtop <dev@bigtop.apache.org>
 Build-Depends: debhelper (>= 7.0.50~), ant, ant-optional
 Standards-Version: 3.8.0
-Homepage: http://incubator.apache.org/hcatalog/
+Homepage: http://incubator.apache.org/hcatalog
 
 Package: hcatalog
 Architecture: all
 Depends: hadoop, hive, bigtop-utils
-Description: Apache HCatalog (incubating) is a table and storage management service.
- Apache HCatalog (incubating) is a table and storage management service for data created using Apache Hadoop.
+Description: Apache Hcatalog (incubating) is a data warehouse infrastructure built on top of Hadoop
+ Apache HCatalog (incubating) is a table and storage management service
+ for data created using Apache Hadoop. This includes:
+  * Providing a shared schema and data type mechanism.
+  * Providing a table abstraction so that users need not be concerned with
+    where or how their data is stored.
+  * Providing interoperability across data processing tools such as Pig,
+    Map Reduce, Streaming, and Hive.
 
 Package: hcatalog-server
 Architecture: all

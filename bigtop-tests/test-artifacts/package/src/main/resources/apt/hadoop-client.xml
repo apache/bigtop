@@ -1,8 +1,9 @@
 <hadoop-client>
   <content>
+    <file name='/.' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/lib/hadoop' owners='1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/hadoop' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib/hadoop/client' owners='1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib/hadoop/client/commons-digester-1.8.jar' owners='1' perm='lrwxrwxrwx' user='root' group='root' target='../lib/commons-digester-1.8.jar' />
     <file name='/usr/lib/hadoop/client/commons-math-2.1.jar' owners='1' perm='lrwxrwxrwx' user='root' group='root' target='../lib/commons-math-2.1.jar' />

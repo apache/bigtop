@@ -17,7 +17,7 @@ Section: misc
 Priority: extra
 Maintainer: Bigtop <dev@bigtop.apache.org>
 Standards-Version: 3.8.0
-Homepage: http://sqoop.apache.org/
+Homepage: http://sqoop.apache.org
 
 Package:  sqoop
 Architecture: all
@@ -28,9 +28,11 @@ Description: Tool for easy imports and exports of data sets between databases an
 
 Package: sqoop-client
 Architecture: all
-Description: Lightweight client for Sqoop.
+Description: Client for Sqoop.
+ Lightweight client for Sqoop.
 
 Package: sqoop-server
 Architecture: all
 Depends: sqoop (= ${source:Version})
 Description: Server for Sqoop.
+ Centralized server for Sqoop.

@@ -1,9 +1,10 @@
 <hadoop-httpfs>
   <content>
+    <file name='/.' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/lib/hadoop' owners='1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/lib/hadoop/libexec' owners='1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/hadoop' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/hadoop/libexec' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib/hadoop/libexec/httpfs-config.sh' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib/hadoop-httpfs' owners='1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib/hadoop-httpfs/sbin' owners='1' perm='drwxr-xr-x' user='root' group='root' />
@@ -217,7 +218,7 @@
     <file name='/var/run' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/var/run/hadoop-httpfs' owners='1' perm='drwxr-xr-x' user='httpfs' group='httpfs' />
     <file name='/var/log' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/var/log/hadoop-httpfs' owners='1' perm='drwxr-xr-x' user='httpfs' group='httpfs' />
+    <file name='/var/log/hadoop-httpfs' owners='-1' perm='drwxr-xr-x' user='httpfs' group='httpfs' />
     <file name='/etc' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/etc/default' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <config name='/etc/default/hadoop-httpfs' owners='1' perm='-rw-r--r--' user='root' group='root' />

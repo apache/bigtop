@@ -1,8 +1,9 @@
 <oozie>
   <content>
+    <file name='/.' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/lib/oozie' owners='1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/oozie' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib/oozie/oozie-sharelib.tar.gz' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/oozie/libserver' owners='1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib/oozie/libserver/openjpa-persistence-2.1.0.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
@@ -34,7 +35,7 @@
     <file name='/usr/lib/oozie/libserver/commons-el-1.0.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/oozie/libserver/geronimo-jms_1.1_spec-1.1.1.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/oozie/libserver/slf4j-log4j12-1.5.8.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/lib/oozie/bin' owners='1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/oozie/bin' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib/oozie/bin/oozie-sys.sh' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib/oozie/bin/ooziedb.sh' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib/oozie/bin/oozied.sh' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
@@ -133,7 +134,7 @@
     <file name='/usr/lib/oozie/webapps/oozie/META-INF/context.xml' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/share' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/share/doc' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/share/doc/oozie' owners='1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/share/doc/oozie' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/share/doc/oozie/changelog.Debian.gz' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/share/doc/oozie/copyright' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/var' owners='-1' perm='drwxr-xr-x' user='root' group='root' />

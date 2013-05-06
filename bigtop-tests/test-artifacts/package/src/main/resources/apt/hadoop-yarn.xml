@@ -1,11 +1,12 @@
 <hadoop-yarn>
   <content>
+    <file name='/.' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/bin' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/bin/yarn' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/lib/hadoop' owners='1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/lib/hadoop/libexec' owners='1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/hadoop' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/hadoop/libexec' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib/hadoop/libexec/yarn-config.sh' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib/hadoop-yarn' owners='1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib/hadoop-yarn/hadoop-yarn-common-2.0.0-SNAPSHOT.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
@@ -55,8 +56,8 @@
     <file name='/var/log' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/var/log/hadoop-yarn' owners='1' perm='drwxrwxr-x' user='root' group='hadoop' />
     <file name='/etc' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/etc/hadoop' owners='1' perm='drwxr-xr-x' user='root' group='hadoop' />
-    <file name='/etc/hadoop/conf.empty' owners='1' perm='drwxr-xr-x' user='root' group='hadoop' />
+    <file name='/etc/hadoop' owners='-1' perm='drwxr-xr-x' user='root' group='hadoop' />
+    <file name='/etc/hadoop/conf.empty' owners='-1' perm='drwxr-xr-x' user='root' group='hadoop' />
     <config name='/etc/hadoop/conf.empty/yarn-site.xml' owners='1' perm='-rwxr-xr-x' user='root' group='hadoop' />
     <config name='/etc/hadoop/conf.empty/yarn-env.sh' owners='1' perm='-rwxr-xr-x' user='root' group='hadoop' />
     <file name='/etc/security' owners='-1' perm='drwxr-xr-x' user='root' group='root' />

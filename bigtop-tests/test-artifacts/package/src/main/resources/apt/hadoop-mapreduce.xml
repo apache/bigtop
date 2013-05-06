@@ -1,11 +1,12 @@
 <hadoop-mapreduce>
   <content>
+    <file name='/.' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/bin' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/bin/mapred' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/lib/hadoop' owners='1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/lib/hadoop/libexec' owners='1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/hadoop' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/hadoop/libexec' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib/hadoop/libexec/mapred-config.sh' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib/hadoop-mapreduce' owners='1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib/hadoop-mapreduce/hadoop-mapreduce-client-jobclient-2.0.0-SNAPSHOT.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
@@ -57,8 +58,8 @@
     <file name='/var/log' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/var/log/hadoop-mapreduce' owners='1' perm='drwxrwxr-x' user='root' group='hadoop' />
     <file name='/etc' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/etc/hadoop' owners='1' perm='drwxr-xr-x' user='root' group='hadoop' />
-    <file name='/etc/hadoop/conf.empty' owners='1' perm='drwxr-xr-x' user='root' group='hadoop' />
+    <file name='/etc/hadoop' owners='-1' perm='drwxr-xr-x' user='root' group='hadoop' />
+    <file name='/etc/hadoop/conf.empty' owners='-1' perm='drwxr-xr-x' user='root' group='hadoop' />
     <file name='/etc/security' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/etc/security/limits.d' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <config name='/etc/security/limits.d/mapreduce.conf' owners='1' perm='-rw-r--r--' user='root' group='root' />

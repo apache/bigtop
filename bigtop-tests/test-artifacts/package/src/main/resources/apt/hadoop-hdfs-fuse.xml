@@ -1,11 +1,12 @@
 <hadoop-hdfs-fuse>
   <content>
+    <file name='/.' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/bin' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/bin/hadoop-fuse-dfs' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/lib/hadoop' owners='1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/lib/hadoop/bin' owners='1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/hadoop' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/hadoop/bin' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib/hadoop/bin/fuse_dfs' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
     <file name='/usr/share' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/share/lintian' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
