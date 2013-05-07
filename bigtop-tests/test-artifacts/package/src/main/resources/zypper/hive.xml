@@ -358,8 +358,8 @@
     <doc  name='/usr/share/doc/packages/hive/examples/test-plugin/test/onerow.txt' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <doc  name='/usr/share/doc/packages/hive/examples/test-plugin/test/setup.sql' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <doc  name='/usr/share/man/man1/hive.1.gz' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/var/lib/hive' owners='1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/var/lib/hive/metastore' owners='1' perm='drwxrwxrwt' user='hive' group='hive' />
+    <file name='/var/lib/hive' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/var/lib/hive/metastore' owners='-1' perm='drwxrwxrwt' user='hive' group='hive' />
     <file name='/var/log/hive' owners='1' perm='drwxr-xr-x' user='hive' group='hive' />
     <file name='/var/run/hive' owners='1' perm='drwxr-xr-x' user='hive' group='hive' />
   </content>

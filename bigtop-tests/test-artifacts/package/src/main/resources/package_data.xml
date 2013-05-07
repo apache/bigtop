@@ -369,6 +369,42 @@ easy to test, and efficient to run.</description>
       <url>http://incubator.apache.org/crunch/</url>
     </metadata>
   </crunch-doc>
+  <hcatalog>
+    <metadata>
+      <summary>Apache Hcatalog (incubating) is a data warehouse infrastructure built on top of Hadoop</summary>
+      <description>
+Apache HCatalog (incubating) is a table and storage management service for data created using Apache Hadoop.
+This includes:
+    * Providing a shared schema and data type mechanism.
+    * Providing a table abstraction so that users need not be concerned with where or how their data is stored.
+    * Providing interoperability across data processing tools such as Pig, Map Reduce, Streaming, and Hive.
+      </description>
+      <url>http://incubator.apache.org/hcatalog</url>
+    </metadata>
+    <deps>
+      <hadoop/>
+      <bigtop-utils/>
+      <hive/>
+    </deps>
+    <alternatives>
+      <hcatalog-conf>
+        <status>auto</status>
+        <value>/etc/hcatalog/conf.dist</value>
+        <link>/etc/hcatalog/conf</link>
+        <alt>/etc/hcatalog/conf.dist</alt>
+      </hcatalog-conf>
+    </alternatives>
+  </hcatalog>
+  <hcatalog-server>
+    <metadata>
+      <summary>Server for HCatalog.</summary>
+      <description>Server for HCatalog.</description>
+      <url>http://incubator.apache.org/hcatalog</url>
+    </metadata>
+    <deps>
+      <hcatalog>/self</hcatalog>
+    </deps>
+  </hcatalog-server>
   <pig>
     <metadata>
       <summary>Pig is a platform for analyzing large data sets</summary>
@@ -495,42 +531,6 @@ easy to test, and efficient to run.</description>
       <hbase/>
     </deps>
   </hive-hbase>
-  <hcatalog>
-    <metadata>
-      <summary>Apache Hcatalog (incubating) is a data warehouse infrastructure built on top of Hadoop</summary>
-      <description>
-Apache HCatalog (incubating) is a table and storage management service for data created using Apache Hadoop.
-This includes:
-    * Providing a shared schema and data type mechanism.
-    * Providing a table abstraction so that users need not be concerned with where or how their data is stored.
-    * Providing interoperability across data processing tools such as Pig, Map Reduce, Streaming, and Hive.
-      </description>
-      <url>http://incubator.apache.org/hcatalog</url>
-    </metadata>
-    <deps>
-      <hadoop/>
-      <bigtop-utils/>
-      <hive/>
-    </deps>
-    <alternatives>
-      <hcatalog-conf>
-        <status>auto</status>
-        <value>/etc/hcatalog/conf.dist</value>
-        <link>/etc/hcatalog/conf</link>
-        <alt>/etc/hcatalog/conf.dist</alt>
-      </hcatalog-conf>
-    </alternatives>
-  </hcatalog>
-  <hcatalog-server>
-    <metadata>
-      <summary>Server for HCatalog.</summary>
-      <description>Server for HCatalog.</description>
-      <url>http://incubator.apache.org/hcatalog</url>
-    </metadata>
-    <deps>
-      <hcatalog>/self</hcatalog>
-    </deps>
-  </hcatalog-server>
   <webhcat>
     <metadata>
       <summary>WEBHcat provides a REST-like web API for HCatalog and related Hadoop components.</summary>

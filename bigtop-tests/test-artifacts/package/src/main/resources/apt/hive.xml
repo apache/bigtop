@@ -305,8 +305,8 @@
     <file name='/var/run' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/var/run/hive' owners='1' perm='drwxr-xr-x' user='hive' group='hive' />
     <file name='/var/lib' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/var/lib/hive' owners='1' perm='drwxr-xr-x' user='hive' group='hive' />
-    <file name='/var/lib/hive/metastore' owners='1' perm='drwxrwxrwt' user='hive' group='hive' />
+    <file name='/var/lib/hive' owners='-1' perm='drwxr-xr-x' user='hive' group='hive' />
+    <file name='/var/lib/hive/metastore' owners='-1' perm='drwxrwxrwt' user='hive' group='hive' />
     <file name='/var/log' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/var/log/hive' owners='1' perm='drwxr-xr-x' user='hive' group='hive' />
     <file name='/etc' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
