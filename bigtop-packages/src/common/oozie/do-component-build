@@ -88,10 +88,17 @@ fi
 
 ## Update hardcoded version of the Hadoop base to the current HADOOP VERSION
 ## This approach might need to be reconsidered once OOZIE-1201 is fixed
-sed -i.orig -e "s#2.0.2-alpha#${HADOOP_VERSION}#" ${WORKDIR}/hadooplibs/hadoop-2/pom.xml
-sed -i.orig -e "s#2.0.2-alpha#${HADOOP_VERSION}#" ${WORKDIR}/hadooplibs/hadoop-distcp-2/pom.xml
-sed -i.orig -e "s#2.0.2-alpha#${HADOOP_VERSION}#" ${WORKDIR}/hadooplibs/hadoop-test-2/pom.xml
-sed -i.orig -e "s#2.0.2-alpha#${HADOOP_VERSION}#" ${WORKDIR}/pom.xml
+OLD_VERSION="2.0.2-alpha"
+echo "Replacing old target Hadoop version ${OLD_VERSION} with ${HADOOP_VERSION}"
+POM_FILES="${WORKDIR}/hadooplibs/hadoop-2/pom.xml ${WORKDIR}/hadooplibs/hadoop-distcp-2/pom.xml ${WORKDIR}/hadooplibs/hadoop-test-2/pom.xml ${WORKDIR}/pom.xml"
+for pom in $POM_FILES; do
+  sed -i.orig -e "s#${OLD_VERSION}#${HADOOP_VERSION}#" $pom
+  grep ${HADOOP_VERSION} $pom 2>&1 > /dev/null
+  if [ $? != 0 ]; then
+    echo "Could not replace target hadoop version. Check if Oozie targets Hadoop $OLD_VERSION"
+    exit -1
+  fi
+done
 
 # Invoke Oozie build script
 ${WORKDIR}/bin/mkdistro.sh -DskipTests -Dhadoop.version=${HADOOP_VERSION} ${EXTRA_GOALS} -Dmaven.repo.local=${HOME}/.m2/repository "$@"
