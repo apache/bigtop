@@ -959,20 +959,6 @@ and import and export data.</description>
       <make/>
     </deps>
   </hue-beeswax>
-  <hue-oozie>
-    <metadata>
-      <summary>A UI for Oozie on Hue</summary>
-      <description>A web interface for Oozie.
-
-It allows users to construct and run Oozie workflows without explicitly
-managing the XML specification.</description>
-      <url>http://github.com/cloudera/hue</url>
-    </metadata>
-    <deps>
-      <hue-common>/self</hue-common>
-      <make/>
-    </deps>
-  </hue-oozie>
   <hue-pig>
     <metadata>
       <summary>A UI for Pig on Hue</summary>

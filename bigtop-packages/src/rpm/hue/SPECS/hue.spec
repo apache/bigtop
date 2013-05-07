@@ -30,7 +30,6 @@ URL: http://github.com/cloudera/hue
 Requires: %{name}-common = %{version}-%{release}
 Requires: %{name}-server = %{version}-%{release}
 Requires: %{name}-beeswax = %{version}-%{release}
-Requires: %{name}-oozie = %{version}-%{release}
 Requires: %{name}-pig = %{version}-%{release}
 
 ################ RPM CUSTOMIZATION ##############################
@@ -264,13 +263,13 @@ fi
 %{useradmin_app_dir}
 %{shell_app_dir}
 %{catalog_app_dir}
+%{oozie_app_dir}
 %attr(4750,root,hue) %{shell_app_dir}/src/shell/build/setuid
 %attr(0755,%{username},%{username}) /var/log/hue
 %attr(0755,%{username},%{username}) /var/lib/hue
 
-# beeswax, oozie are packaged as a plugin app
+# beeswax and pig are packaged as a plugin app
 %exclude %{beeswax_app_dir}
-%exclude %{oozie_app_dir}
 %exclude %{pig_app_dir}
 
 ############################################################
@@ -328,25 +327,6 @@ and import and export data.
 %files -n %{name}-beeswax
 %defattr(-, %{username}, %{username})
 %{beeswax_app_dir}
-
-#### HUE-OOZIE PLUGIN ######
-%package -n %{name}-oozie
-Summary: A UI for Oozie on Hue
-Group: Applications/Engineering
-Requires: make
-Requires: %{name}-common = %{version}-%{release}
-
-%description -n %{name}-oozie
-A web interface for Oozie.
-
-It allows users to construct and run Oozie workflows without explicitly
-managing the XML specification.
-
-%app_post_macro oozie
-%app_preun_macro oozie
-
-%files -n %{name}-oozie
-%{oozie_app_dir}
 
 #### HUE-PIG PLUGIN ######
 %package -n %{name}-pig
