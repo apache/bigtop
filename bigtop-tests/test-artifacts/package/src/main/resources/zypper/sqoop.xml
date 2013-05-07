@@ -4,7 +4,7 @@
     <config name='/etc/sqoop/conf.dist/.gitignore' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
     <config name='/etc/sqoop/conf.dist/sqoop-site-template.xml' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
     <config name='/etc/sqoop/conf.dist/sqoop-site.xml' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
-    <file name='/usr/bin/sqoop' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
+    <file name='/usr/bin/sqoop-server' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
     <file name='/usr/bin/sqoop-codegen' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
     <file name='/usr/bin/sqoop-create-hive-table' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
     <file name='/usr/bin/sqoop-eval' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
@@ -18,8 +18,8 @@
     <file name='/usr/bin/sqoop-merge' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
     <file name='/usr/bin/sqoop-metastore' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
     <file name='/usr/bin/sqoop-version' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
-    <file name='/usr/lib/sqoop' owners='1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/lib/sqoop/bin' owners='1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/sqoop' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/sqoop/bin' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib/sqoop/bin/configure-sqoop' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib/sqoop/bin/sqoop' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib/sqoop/bin/sqoop-codegen' owners='1' perm='-rwxr-xr-x' user='root' group='root' />

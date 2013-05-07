@@ -4,7 +4,7 @@
     <file name='/usr' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/bin' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/bin/sqoop-import' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
-    <file name='/usr/bin/sqoop' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
+    <file name='/usr/bin/sqoop-server' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
     <file name='/usr/bin/sqoop-version' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
     <file name='/usr/bin/sqoop-list-tables' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
     <file name='/usr/bin/sqoop-export' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
@@ -18,9 +18,9 @@
     <file name='/usr/bin/sqoop-codegen' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
     <file name='/usr/bin/sqoop-eval' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/lib/sqoop' owners='1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/sqoop' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib/sqoop/sqoop-test-1.4.1-incubating.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/lib/sqoop/bin' owners='1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/sqoop/bin' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib/sqoop/bin/start-metastore.sh' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib/sqoop/bin/sqoop-import' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib/sqoop/bin/sqoop' owners='1' perm='-rwxr-xr-x' user='root' group='root' />

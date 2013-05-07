@@ -582,7 +582,6 @@ fi
 %files hdfs
 %defattr(-,root,root)
 %config(noreplace) %{etc_hadoop}/conf.empty/hdfs-site.xml
-%config(noreplace) /etc/default/hadoop-fuse
 %config(noreplace) /etc/security/limits.d/hdfs.conf
 %{lib_hdfs}
 %{lib_hadoop}/libexec/hdfs-config.sh
@@ -626,7 +625,8 @@ fi
 %{lib_hadoop}/*.jar
 %{lib_hadoop}/lib
 %{lib_hadoop}/sbin
-%{lib_hadoop}/bin
+%{lib_hadoop}/bin/hadoop
+%{lib_hadoop}/bin/rcc
 %{lib_hadoop}/etc
 %{lib_hadoop}/libexec/hadoop-config.sh
 %{lib_hadoop}/libexec/hadoop-layout.sh
