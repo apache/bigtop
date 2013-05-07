@@ -47,6 +47,7 @@
     <module>crunch</module>
     <module>datafu</module>
     <module>fatjar</module>
+    <module>hcatalog</module>
   </modules>
 
   <dependencies>

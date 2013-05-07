@@ -47,6 +47,7 @@
     <hue-smoke.version>${project.version}</hue-smoke.version>
     <package-smoke.version>${project.version}</package-smoke.version>
     <solr-smoke.version>${project.version}</solr-smoke.version>
+    <hcatalog-smoke.version>${project.version}</hcatalog-smoke.version>
   </properties>
 
   <!--
@@ -67,6 +68,7 @@
     <module>flume</module>
     <module>sqoop</module>
     -->
+    <module>hcatalog</module>
   </modules>
 
   <dependencyManagement>
@@ -136,6 +138,12 @@
         <groupId>org.apache.bigtop.itest</groupId>
         <artifactId>package-smoke</artifactId>
         <version>${package-smoke.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.bigtop.itest</groupId>
+        <artifactId>hcatalog-smoke</artifactId>
+        <version>${hcatalog-smoke.version}</version>
         <scope>test</scope>
       </dependency>
     </dependencies>
