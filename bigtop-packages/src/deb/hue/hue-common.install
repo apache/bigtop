@@ -24,5 +24,6 @@
 /usr/lib/hue/apps/proxy
 /usr/lib/hue/apps/shell
 /usr/lib/hue/apps/useradmin
+/usr/lib/hue/apps/oozie
 /var/log/hue
 /var/lib/hue
