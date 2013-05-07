@@ -74,9 +74,9 @@ DODTIME=3                   # Time to wait for the server to die, in seconds
 
 UPPERCASE_HBASE_DAEMON=$(echo @HBASE_DAEMON@ | tr '[:lower:]' '[:upper:]')
 
-ALL_OFFSET_DAEMONS_RUNNING=0
-SOME_OFFSET_DAEMONS_FAILING=1
-NO_OFFSET_DAEMONS_RUNNING=2
+ALL_DAEMONS_RUNNING=0
+NO_DAEMONS_RUNNING=1
+SOME_OFFSET_DAEMONS_FAILING=2
 INVALID_OFFSETS_PROVIDED=3
 
 # These limits are not easily configurable - they are enforced by HBase
@@ -119,12 +119,12 @@ if [ -n "$(eval echo \${${UPPERCASE_HBASE_DAEMON}_OFFSETS})" ] ; then
 fi
 OFFSET_PID_FILES="`ls $HBASE_PID_DIR/hbase-hbase-*-@HBASE_DAEMON@.pid 2>/dev/null`"
 if [ -n "$OFFSET_PID_FILES" ] ; then
-    OFFSETS_FROM_PIDS=`echo "$OFFSET_PID_FILES" | sed "s#$HBASE_PID_DIR/hbase-hbase-##" | sed "s#-.*##"`
+    OFFSETS_FROM_PIDS=`echo "$OFFSET_PID_FILES" | sed "s#$HBASE_PID_DIR/hbase-hbase-##" | sed "s#-.*##" | tr '\n' ' '`
 fi
 
 multi_hbase_daemon_check_pidfiles() {
   if [ -z "$OFFSETS_FROM_PIDS" ] ; then
-    return $NO_OFFSET_DAEMONS_RUNNING
+    return $NO_DAEMONS_RUNNING
   fi
   if [ -n "$OFFSETS_FROM_CLI" ] ; then
     OFFSETS="$OFFSETS_FROM_CLI"
@@ -132,7 +132,7 @@ multi_hbase_daemon_check_pidfiles() {
     OFFSETS="$OFFSETS_FROM_PIDS"
   fi
 
-  RESULT=$ALL_OFFSET_DAEMONS_RUNNING
+  RESULT=$ALL_DAEMONS_RUNNING
   for OFFSET in $OFFSETS; do
     echo -n "HBase @HBASE_DAEMON@ $OFFSET: "
     if hbase_check_pidfile `offset_pidfile $OFFSET` ; then
@@ -147,7 +147,7 @@ multi_hbase_daemon_check_pidfiles() {
 
 multi_hbase_daemon_stop_pidfiles() {
   if [ -z "$OFFSETS_FROM_PIDS" ] ; then
-    return $NO_OFFSET_DAEMONS_RUNNING
+    return $NO_DAEMONS_RUNNING
   fi
   if [ -n "$OFFSETS_FROM_CLI" ] ; then
     OFFSETS="$OFFSETS_FROM_CLI"
@@ -155,7 +155,7 @@ multi_hbase_daemon_stop_pidfiles() {
     OFFSETS="$OFFSETS_FROM_PIDS"
   fi
 
-  RESULT=$NO_OFFSET_DAEMONS_RUNNING
+  RESULT=$NO_DAEMONS_RUNNING
   for OFFSET in $OFFSETS; do
     echo -n "Forcefully stopping HBase @HBASE_DAEMON@ $OFFSET: "
     PID_FILE=`offset_pidfile $OFFSET`
@@ -310,7 +310,7 @@ start() {
         exit $?
     fi
     multi_hbase_daemon_check_pidfiles > /dev/null
-    if [ "$?" != "$NO_OFFSET_DAEMONS_RUNNING" ] ; then
+    if [ "$?" != "$NO_DAEMONS_RUNNING" ] ; then
       echo "Cannot start $NAME - other @HBASE_DAEMON@ daemons have already been started."
       exit 1
     fi
@@ -340,7 +340,7 @@ stop() {
 force_stop() {
     MULTI_HBASE_DAEMON_STATUS_TEXT=`multi_hbase_daemon_check_pidfiles`
     MULTI_HBASE_DAEMON_STATUS=$?
-    if [ "$MULTI_HBASE_DAEMON_STATUS" == "$NO_OFFSET_DAEMONS_RUNNING" ] ; then
+    if [ "$MULTI_HBASE_DAEMON_STATUS" == "$NO_DAEMONS_RUNNING" ] ; then
         echo -n "Forcefully stopping $DESC: "
         hbase_stop_pidfile $PID_FILE
         if hbase_check_pidfile $PID_FILE ; then
@@ -360,7 +360,7 @@ force_reload() {
 
 restart() {
     echo -n "Restarting $DESC: "
-    stop
+    $0 stop
     [ -n "$DODTIME" ] && sleep $DODTIME
     $0 start $OFFSETS_FROM_CLI
 }
@@ -368,18 +368,26 @@ restart() {
 status() {
     MULTI_HBASE_DAEMON_STATUS_TEXT=`multi_hbase_daemon_check_pidfiles`
     MULTI_HBASE_DAEMON_STATUS=$?
-    if [ "$MULTI_HBASE_DAEMON_STATUS" == "$NO_OFFSET_DAEMONS_RUNNING" ] ; then
+    if [ "$MULTI_HBASE_DAEMON_STATUS" == "$NO_DAEMONS_RUNNING" ] ; then
         echo -n "$NAME is "
         if hbase_check_pidfile $PID_FILE ;  then
             echo "running"
         else
             echo "not running."
-            exit 1
+            return $NO_DAEMONS_RUNNING
         fi
     else
         IFS=''
         echo $MULTI_HBASE_DAEMON_STATUS_TEXT
-        exit $MULTI_HBAE_DAEMONS_STATUS
+        return $MULTI_HBASE_DAEMONS_STATUS
+    fi
+}
+
+condrestart(){
+    status $@ >/dev/null 2>/dev/null
+    DAEMON_STATUS=$?
+    if [ "$DAEMON_STATUS" == "$ALL_DAEMONS_RUNNING" -o "$DAEMON_STATUS" == "$SOME_OFFSET_DAEMONS_FAILING" ] ; then
+        restart $@
     fi
 }
 
@@ -398,13 +406,17 @@ case "$1" in
   ;;
   restart)
         restart
+        exit $?
+    ;;
+  condrestart)
+        condrestart
   ;;
   status)
         status
     ;;
   *)
   N=/etc/init.d/$NAME
-  echo "Usage: $N {start|stop|restart|force-reload|status|force-stop}" >&2
+  echo "Usage: $N {start|stop|restart|force-reload|status|force-stop|condrestart}" >&2
   exit 1
   ;;
 esac
