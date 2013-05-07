@@ -625,13 +625,15 @@ fi
 %{lib_hadoop}/*.jar
 %{lib_hadoop}/lib
 %{lib_hadoop}/sbin
-%{lib_hadoop}/bin/hadoop
-%{lib_hadoop}/bin/rcc
+%{lib_hadoop}/bin
 %{lib_hadoop}/etc
 %{lib_hadoop}/libexec/hadoop-config.sh
 %{lib_hadoop}/libexec/hadoop-layout.sh
 %{bin_hadoop}/hadoop
 %{man_hadoop}/man1/hadoop.1.*
+
+# Shouldn't the following be moved to hadoop-hdfs?
+%exclude %{lib_hadoop}/bin/fuse_dfs
 
 %files doc
 %defattr(-,root,root)
