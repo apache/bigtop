@@ -58,47 +58,6 @@
     <file name='/usr/share/doc/packages/sqoop/api' owners='1' perm='drwxr-xr-x' user='root' group='root' />
     <doc  name='/usr/share/doc/packages/sqoop/api/allclasses-frame.html' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <doc  name='/usr/share/doc/packages/sqoop/api/allclasses-noframe.html' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/share/doc/packages/sqoop/api/com' owners='1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/share/doc/packages/sqoop/api/com/cloudera' owners='1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/share/doc/packages/sqoop/api/com/cloudera/sqoop' owners='1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/share/doc/packages/sqoop/api/com/cloudera/sqoop/lib' owners='1' perm='drwxr-xr-x' user='root' group='root' />
-    <doc  name='/usr/share/doc/packages/sqoop/api/com/cloudera/sqoop/lib/BigDecimalSerializer.html' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <doc  name='/usr/share/doc/packages/sqoop/api/com/cloudera/sqoop/lib/BlobRef.html' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <doc  name='/usr/share/doc/packages/sqoop/api/com/cloudera/sqoop/lib/BooleanParser.html' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <doc  name='/usr/share/doc/packages/sqoop/api/com/cloudera/sqoop/lib/ClobRef.html' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <doc  name='/usr/share/doc/packages/sqoop/api/com/cloudera/sqoop/lib/DelimiterSet.html' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <doc  name='/usr/share/doc/packages/sqoop/api/com/cloudera/sqoop/lib/FieldFormatter.html' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <doc  name='/usr/share/doc/packages/sqoop/api/com/cloudera/sqoop/lib/FieldMapProcessor.html' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <doc  name='/usr/share/doc/packages/sqoop/api/com/cloudera/sqoop/lib/FieldMappable.html' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <doc  name='/usr/share/doc/packages/sqoop/api/com/cloudera/sqoop/lib/JdbcWritableBridge.html' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <doc  name='/usr/share/doc/packages/sqoop/api/com/cloudera/sqoop/lib/LargeObjectLoader.html' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <doc  name='/usr/share/doc/packages/sqoop/api/com/cloudera/sqoop/lib/LobRef.html' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <doc  name='/usr/share/doc/packages/sqoop/api/com/cloudera/sqoop/lib/LobSerializer.html' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <doc  name='/usr/share/doc/packages/sqoop/api/com/cloudera/sqoop/lib/ProcessingException.html' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <doc  name='/usr/share/doc/packages/sqoop/api/com/cloudera/sqoop/lib/RecordParser.ParseError.html' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <doc  name='/usr/share/doc/packages/sqoop/api/com/cloudera/sqoop/lib/RecordParser.html' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <doc  name='/usr/share/doc/packages/sqoop/api/com/cloudera/sqoop/lib/SqoopRecord.html' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/share/doc/packages/sqoop/api/com/cloudera/sqoop/lib/class-use' owners='1' perm='drwxr-xr-x' user='root' group='root' />
-    <doc  name='/usr/share/doc/packages/sqoop/api/com/cloudera/sqoop/lib/class-use/BigDecimalSerializer.html' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <doc  name='/usr/share/doc/packages/sqoop/api/com/cloudera/sqoop/lib/class-use/BlobRef.html' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <doc  name='/usr/share/doc/packages/sqoop/api/com/cloudera/sqoop/lib/class-use/BooleanParser.html' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <doc  name='/usr/share/doc/packages/sqoop/api/com/cloudera/sqoop/lib/class-use/ClobRef.html' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <doc  name='/usr/share/doc/packages/sqoop/api/com/cloudera/sqoop/lib/class-use/DelimiterSet.html' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <doc  name='/usr/share/doc/packages/sqoop/api/com/cloudera/sqoop/lib/class-use/FieldFormatter.html' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <doc  name='/usr/share/doc/packages/sqoop/api/com/cloudera/sqoop/lib/class-use/FieldMapProcessor.html' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <doc  name='/usr/share/doc/packages/sqoop/api/com/cloudera/sqoop/lib/class-use/FieldMappable.html' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <doc  name='/usr/share/doc/packages/sqoop/api/com/cloudera/sqoop/lib/class-use/JdbcWritableBridge.html' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <doc  name='/usr/share/doc/packages/sqoop/api/com/cloudera/sqoop/lib/class-use/LargeObjectLoader.html' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <doc  name='/usr/share/doc/packages/sqoop/api/com/cloudera/sqoop/lib/class-use/LobRef.html' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <doc  name='/usr/share/doc/packages/sqoop/api/com/cloudera/sqoop/lib/class-use/LobSerializer.html' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <doc  name='/usr/share/doc/packages/sqoop/api/com/cloudera/sqoop/lib/class-use/ProcessingException.html' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <doc  name='/usr/share/doc/packages/sqoop/api/com/cloudera/sqoop/lib/class-use/RecordParser.ParseError.html' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <doc  name='/usr/share/doc/packages/sqoop/api/com/cloudera/sqoop/lib/class-use/RecordParser.html' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <doc  name='/usr/share/doc/packages/sqoop/api/com/cloudera/sqoop/lib/class-use/SqoopRecord.html' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <doc  name='/usr/share/doc/packages/sqoop/api/com/cloudera/sqoop/lib/package-frame.html' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <doc  name='/usr/share/doc/packages/sqoop/api/com/cloudera/sqoop/lib/package-summary.html' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <doc  name='/usr/share/doc/packages/sqoop/api/com/cloudera/sqoop/lib/package-tree.html' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <doc  name='/usr/share/doc/packages/sqoop/api/com/cloudera/sqoop/lib/package-use.html' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <doc  name='/usr/share/doc/packages/sqoop/api/constant-values.html' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <doc  name='/usr/share/doc/packages/sqoop/api/deprecated-list.html' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <doc  name='/usr/share/doc/packages/sqoop/api/help-doc.html' owners='1' perm='-rw-r--r--' user='root' group='root' />

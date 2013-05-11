@@ -156,34 +156,6 @@
     <file name='/usr/lib/whirr/services/hadoop/src/test/java/org/apache/whirr/service/hadoop/integration/HadoopSingleNodeServiceTest.java' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/whirr/services/hadoop/src/test/java/org/apache/whirr/service/hadoop/HadoopConfigurationConverterTest.java' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/whirr/services/hadoop/pom.xml' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/lib/whirr/services/cdh' owners='1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/lib/whirr/services/cdh/src' owners='1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/lib/whirr/services/cdh/src/main' owners='1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/lib/whirr/services/cdh/src/main/resources' owners='1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/lib/whirr/services/cdh/src/main/resources/functions' owners='1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/lib/whirr/services/cdh/src/main/resources/functions/configure_cdh_hadoop.sh' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/lib/whirr/services/cdh/src/main/resources/functions/install_cdh_hbase.sh' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/lib/whirr/services/cdh/src/main/resources/functions/install_cdh_zookeeper.sh' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/lib/whirr/services/cdh/src/main/resources/functions/configure_cdh_zookeeper.sh' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/lib/whirr/services/cdh/src/main/resources/functions/configure_cdh_hbase.sh' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/lib/whirr/services/cdh/src/main/resources/functions/install_cdh_hadoop.sh' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/lib/whirr/services/cdh/src/test' owners='1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/lib/whirr/services/cdh/src/test/resources' owners='1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/lib/whirr/services/cdh/src/test/resources/whirr-zookeeper-test.properties' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/lib/whirr/services/cdh/src/test/resources/whirr-hbase-test.properties' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/lib/whirr/services/cdh/src/test/resources/log4j.xml' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/lib/whirr/services/cdh/src/test/resources/whirr-hadoop-test.properties' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/lib/whirr/services/cdh/src/test/java' owners='1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/lib/whirr/services/cdh/src/test/java/org' owners='1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/lib/whirr/services/cdh/src/test/java/org/apache' owners='1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/lib/whirr/services/cdh/src/test/java/org/apache/whirr' owners='1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/lib/whirr/services/cdh/src/test/java/org/apache/whirr/service' owners='1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/lib/whirr/services/cdh/src/test/java/org/apache/whirr/service/cdh' owners='1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/lib/whirr/services/cdh/src/test/java/org/apache/whirr/service/cdh/integration' owners='1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/lib/whirr/services/cdh/src/test/java/org/apache/whirr/service/cdh/integration/CdhHBaseServiceTest.java' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/lib/whirr/services/cdh/src/test/java/org/apache/whirr/service/cdh/integration/CdhHadoopServiceTest.java' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/lib/whirr/services/cdh/src/test/java/org/apache/whirr/service/cdh/integration/CdhZooKeeperServiceTest.java' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/lib/whirr/services/cdh/pom.xml' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/whirr/services/chef' owners='1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib/whirr/services/chef/src' owners='1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib/whirr/services/chef/src/main' owners='1' perm='drwxr-xr-x' user='root' group='root' />
@@ -743,7 +715,6 @@
     <file name='/usr/lib/whirr/lib/high-scale-lib-1.1.1.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/whirr/lib/aws-common-1.2.1.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/whirr/lib/softlayer-1.2.1.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/lib/whirr/lib/whirr-cdh-0.7.1.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/whirr/lib/gogrid-1.2.1.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/whirr/lib/cloudsigma-lvs-1.2.1.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/whirr/lib/eucalyptus-1.2.1.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
@@ -851,7 +822,6 @@
     <file name='/usr/lib/whirr/recipes/ganglia-byon.properties' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/whirr/recipes/zookeeper-ec2.properties' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/whirr/recipes/hbase-ec2.properties' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/lib/whirr/recipes/hbase-ec2-cdh.properties' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/whirr/recipes/nodes-byon.yaml' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/whirr/recipes/ganglia-ec2.properties' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/whirr/recipes/cassandra-ec2.properties' owners='1' perm='-rw-r--r--' user='root' group='root' />
