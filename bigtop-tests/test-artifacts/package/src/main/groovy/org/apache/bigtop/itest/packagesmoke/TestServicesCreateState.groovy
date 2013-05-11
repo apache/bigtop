@@ -24,8 +24,8 @@ import org.junit.runners.Parameterized.Parameters
 class TestServicesCreateState extends TestServices {
   @Parameters
   static Map<String, Object[]> generateTests() {
-    return selectServices(System.getProperty("cdh.prev.repo.version",
-                                      System.getProperty("cdh.repo.version", "3")));
+    return selectServices(System.getProperty("bigtop.prev.repo.version",
+                                      System.getProperty("bigtop.repo.version", "0.6.0")));
   }
 
   TestServicesCreateState(Map.Entry ent) {

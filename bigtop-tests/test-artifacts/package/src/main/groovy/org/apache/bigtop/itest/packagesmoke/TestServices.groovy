@@ -46,7 +46,7 @@ class TestServices {
   static Map<String, Object[]> generateTests() {
     // Look for how it gets reset by CreateServiceState class to understand
     // why it works in the upgrade scenario case
-    return selectServices(System.getProperty("cdh.repo.version", "3"));
+    return selectServices(System.getProperty("bigtop.repo.version", "0.6.0"));
   }
 
   TestServices(Map.Entry svc) {
@@ -56,9 +56,9 @@ class TestServices {
     killIDs = svcDescr.value.killIDs;
   }
 
-  static Map<String, Object[]> selectServices(String CDHrelease) {
+  static Map<String, Object[]> selectServices(String BTrelease) {
     Map<String, Object[]> res = [:];
-    CDHServices.getServices(CDHrelease).each {
+    BTServices.getServices(BTrelease).each {
       String name = it.key.toString();
       res[name] = ([it] as Object[]);
     }
@@ -68,7 +68,7 @@ class TestServices {
   @AfterClass
   static void tearDown() {
     // TODO: this is pretty silly, but it'll do for now
-    CDHServices.serviceDaemonUserNames.each {
+    BTServices.serviceDaemonUserNames.each {
       shRoot.exec("kill -9 `ps -U${it} -opid=`");
     }
   }

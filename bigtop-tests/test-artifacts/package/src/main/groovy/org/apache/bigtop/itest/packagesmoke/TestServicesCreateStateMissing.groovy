@@ -22,7 +22,7 @@ import org.junit.runners.Parameterized.Parameters
 class TestServicesCreateStateMissing extends TestServicesCreateState {
   @Parameters
   static Map<String, Object[]> generateTests() {
-    return selectServices("${System.getProperty('cdh.prev.repo.version','3')}..${System.getProperty('cdh.repo.version', '3')}");
+    return selectServices("${System.getProperty('bigtop.prev.repo.version','0.5.0')}..${System.getProperty('bigtop.repo.version', '0.6.0')}");
   }
 
   TestServicesCreateStateMissing(Map.Entry ent) {

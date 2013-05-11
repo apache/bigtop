@@ -21,8 +21,8 @@ Getting iTest
 
 * Download {binary} artifact.
 
-    iTest can be obtained in a form of binary maven artifact from Cloudera Maven
-repository. The repository is located at repository.cloudera.com
+    iTest can be obtained in a form of binary maven artifact from Maven
+repository http://mvnrepository.com/artifact/org.apache.bigtop.itest/itest-common
 
   All you need to do is to add the following dependency into your project pom
 

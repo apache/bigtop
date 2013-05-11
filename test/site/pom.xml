@@ -24,7 +24,7 @@
   <version>1.0-SNAPSHOT</version>
 
   <name>iTest</name>
-  <url>http://cloudera.github.com/iTest</url>
+  <url>http://bigtop.apache.org/</url>
   <inceptionYear>2011</inceptionYear>
   <developers>
     <developer>
@@ -51,8 +51,8 @@
   </scm>
   <distributionManagement>
     <site>
-      <id>github-project-site</id>
-      <url>gitsite:git@github.com/cloudera/iTest.git</url>
+      <id>git-project-site</id>
+      <url>http://git-wip-us.apache.org/repos/asf/bigtop.git</url>
     </site>
   </distributionManagement>
 

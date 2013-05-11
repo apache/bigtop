@@ -31,7 +31,6 @@ set -e
 
 case "$1" in
     install|upgrade)
-        # workaround for https://issues.cloudera.org/browse/DISTRO-223
         if [ "$2" -a -d /usr/lib/pig/conf ]; then
           mv /usr/lib/pig/conf /usr/lib/pig/conf.old.`date +'%s'` || :
         fi

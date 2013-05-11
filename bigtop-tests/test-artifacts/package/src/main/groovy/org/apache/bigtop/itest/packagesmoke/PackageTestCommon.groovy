@@ -495,6 +495,6 @@ class PackageTestCommon {
   }
 
   static public boolean isUpgrade() {
-    return System.getProperty("cdh.prev.repo.version", "") != "";
+    return System.getProperty("bigtop.prev.repo.version", "") != "";
   }
 }

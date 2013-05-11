@@ -127,9 +127,9 @@
           </systemPropertyVariables>
         </configuration>
 
-        <!-- configuration>
-          <testSourceDirectory>/root/stacks/smokes/datafu/target/com/cloudera/itest/datafu/</testSourceDirectory>
-          <testClassesDirectory>/root/.m2/repository/com/cloudera/itest/datafu/4.1-cdh4u1-SNAPSHOT/</testClassesDirectory>
+        <!-- Disabling for now: configuration>
+          <testSourceDirectory>src</testSourceDirectory>
+          <testClassesDirectory>target/classes</testClassesDirectory>
           <skipTests>false</skipTests>
           <testFailureIgnore>false</testFailureIgnore>
           <argLine>-Dsun.lang.ClassLoader.allowArraySyntax=true -Djava.endorsed.dirs=${project.build.testOutputDirectory}/endorsed</argLine>

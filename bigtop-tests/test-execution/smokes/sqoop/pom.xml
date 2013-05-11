@@ -36,7 +36,7 @@
     <org.codehaus.maven-failsafe-plugin.dbhost>172.29.12.207</org.codehaus.maven-failsafe-plugin.dbhost>
     <org.codehaus.maven-failsafe-plugin.dbname>db2</org.codehaus.maven-failsafe-plugin.dbname>
 
-    <org.apache.maven-dependency-plugin.groupId>com.cloudera.sqoop</org.apache.maven-dependency-plugin.groupId>
+    <org.apache.maven-dependency-plugin.groupId>org.apache.sqoop</org.apache.maven-dependency-plugin.groupId>
     <org.apache.maven-dependency-plugin.artifactId>sqoop</org.apache.maven-dependency-plugin.artifactId>
     <org.apache.maven-dependency-plugin.version>${sqoop.version}</org.apache.maven-dependency-plugin.version>
     <org.apache.maven-dependency-plugin.output>${project.build.directory}</org.apache.maven-dependency-plugin.output>

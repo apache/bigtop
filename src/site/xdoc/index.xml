@@ -107,7 +107,7 @@ xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd
       The Apache Jenkins server runs the "Bigtop-trunk" job whenever code is committed to the trunk branch, which in turn runs several test jobs.
     </p>
     <p>
-      The Cloudera Jenkins server runs daily jobs for the 0.3 and trunk branches, and each job has a configuration for each supported operating system.
+      The Bigtop Jenkins server runs daily jobs for the 0.3 and trunk branches, and each job has a configuration for each supported operating system.
       In each branch there is a job to build each component, a job to run package tests and a job to build package repositories.
       There are also jobs for building virtual machine images as well as the 2 most recent releases and other miscellaneous tasks for various RCs and tests.
       For example:

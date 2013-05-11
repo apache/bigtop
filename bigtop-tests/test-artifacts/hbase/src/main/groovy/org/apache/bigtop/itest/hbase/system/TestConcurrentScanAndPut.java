@@ -147,7 +147,7 @@ public class TestConcurrentScanAndPut {
     String tableNameStr = Bytes.toString(tableName);
     System.out.println("Starting puts to test table " + tableNameStr);
     putSh.exec("(HBASE_CLASSPATH=. " +
-               "hbase com.cloudera.itest.hbase.system.Putter " +
+               "hbase org.apache.bigtop.itest.hbase.system.Putter " +
                tableNameStr + " 13 -l " + putterLoops +
                " > /dev/null 2>&1 & echo $! ) 2> /dev/null");
     putter_pid = putSh.getOut().get(0);
@@ -155,7 +155,7 @@ public class TestConcurrentScanAndPut {
     System.out.println("Starting concurrent scans of test table " +
                        tableNameStr);
     scanSh.exec("HBASE_CLASSPATH=. hbase " +
-                "com.cloudera.itest.hbase.system.Scanner " +
+                "org.apache.bigtop.itest.hbase.system.Scanner " +
                 tableNameStr + " 13 -l " + scannerLoops + " 2>/dev/null");
 
     int splitRows = scanSh.getRet();

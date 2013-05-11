@@ -129,7 +129,7 @@ sh -x %{SOURCE2} \
           --prefix=$RPM_BUILD_ROOT
 
 %pre
-# workaround for https://issues.cloudera.org/browse/DISTRO-223
+# workaround for old style Pig conf dir  
 if [ $1 -gt 1 -a -d %{lib_pig}/conf ]; then
   %__mv %{lib_pig}/conf %{lib_pig}/conf.old.`date +'%s'` || :
 fi

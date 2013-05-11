@@ -38,16 +38,6 @@ RELEASE_DIR=`cd ${RELEASE_DIR}/..;pwd`
 
 RELEASE_DIR=$PWD
 
-#
-# Resolve build version
-#
-RELEASE_ENV_FILENAME=release.env
-RELEASE_ENV_FILE=${RELEASE_DIR}/cloudera/${RELEASE_ENV_FILENAME}
-if [ -f "${RELEASE_ENV_FILE}" ]; then
-  echo "Setting release environment using ${RELEASE_ENV_FILE}"
-  . ${RELEASE_ENV_FILE}
-fi
-
 # IMPORTANT: THE FULL_VERSION, if set, will be used only for the final TARBALL,
 #            Everything inside of the TARBALL uses the version specified in the POM
 if [ -z "${FULL_VERSION}" ]; then
@@ -110,7 +100,7 @@ if [ "${MKDISTRO_RESULT}" != "0" ]; then
 fi
 
 #
-# Expand Oozie TAR and create CDH Ooozie TAR
+# Expand Oozie TAR and create Bigtop Ooozie TAR
 #
 # (TODO: This logic is kind of twisted, revisit.)
 # (TODO: Consider doing the source copy before the build if we can assume a clean checkout.)

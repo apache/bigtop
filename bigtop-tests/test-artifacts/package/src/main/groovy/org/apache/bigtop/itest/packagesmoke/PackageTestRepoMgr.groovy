@@ -25,19 +25,19 @@ import static org.apache.bigtop.itest.shell.OS.linux_flavor
 class PackageTestRepoMgr {
   PackageManager pm = PackageManager.getPackageManager();
 
-  String cdhRepoVersion;
-  String cdhRepoFileURL;
-  String cdhRepoURL;
-  String cdhKeyURL;
-  String cdhRepoHost;
+  String btRepoVersion;
+  String btRepoFileURL;
+  String btRepoURL;
+  String btKeyURL;
+  String btRepoHost;
 
   String repoName;
 
-  public PackageTestRepoMgr(String _cdhRepoVersion, String _cdhRepoFileURL, String _cdhRepoURL, String _cdhKeyURL) {
-    cdhRepoVersion = _cdhRepoVersion;
-    cdhRepoFileURL = _cdhRepoFileURL;
-    cdhRepoURL = _cdhRepoURL;
-    cdhKeyURL = _cdhKeyURL;
+  public PackageTestRepoMgr(String _btRepoVersion, String _btRepoFileURL, String _btRepoURL, String _btKeyURL) {
+    btRepoVersion = _btRepoVersion;
+    btRepoFileURL = _btRepoFileURL;
+    btRepoURL = _btRepoURL;
+    btKeyURL = _btKeyURL;
   }
 
   public PackageTestRepoMgr(String prefix) {
@@ -45,39 +45,39 @@ class PackageTestRepoMgr {
   }
 
   public PackageTestRepoMgr() {
-    parseRepoSpec("cdh.repo");
+    parseRepoSpec("bigtop.repo");
   }
 
   public parseRepoSpec(String prefix) {
-    cdhRepoHost = System.getProperty("${prefix}.host", "nightly.cloudera.com");
-    cdhRepoVersion = System.getProperty("${prefix}.version", "bigtop");
+    btRepoHost = System.getProperty("${prefix}.host", "www.apache.org/dist/bigtop/stable/repos");
+    btRepoVersion = System.getProperty("${prefix}.version", "bigtop");
 
-    Map cdhKeys  = [ yum    : "http://${cdhRepoHost}/redhat/cdh/RPM-GPG-KEY-cloudera",
+    Map btKeys  = [ yum    : "http://${btRepoHost}/GPG-KEY-bigtop",
                      zypper : null,
-                     apt    : "http://${cdhRepoHost}/debian/archive.key" ];
-    Map cdhRepos = [ yum    : "http://${cdhRepoHost}/redhat/cdh/${cdhRepoVersion}",
-                     zypper : "http://${cdhRepoHost}/sles/11/x86_64/cdh/${cdhRepoVersion}",
-                     apt    : "http://${cdhRepoHost}/debian/" ];
+                     apt    : "http://${btRepoHost}/GPG-KEY-bigtop" ];
+    Map btRepos = [ yum    : "http://${btRepoHost}/centos6",
+                     zypper : "http://${btRepoHost}/sles11",
+                     apt    : "http://${btRepoHost}/precise/" ];
 
-    cdhRepoFileURL = System.getProperty("${prefix}.file.url.${linux_flavor.replaceAll(/\s/,'_')}",
+    btRepoFileURL = System.getProperty("${prefix}.file.url.${linux_flavor.replaceAll(/\s/,'_')}",
                        System.getProperty("${prefix}.file.url",
                          "http://does.not.exist"));
 
-    cdhRepoURL = System.getProperty("${prefix}.url", cdhRepos[pm.getType()]);
-    cdhKeyURL = System.getProperty("${prefix}.key.url", cdhKeys[pm.getType()]);
+    btRepoURL = System.getProperty("${prefix}.url", btRepos[pm.getType()]);
+    btKeyURL = System.getProperty("${prefix}.key.url", btKeys[pm.getType()]);
   }
 
   public boolean addRepo() {
-    repoName = "cloudera-cdh${cdhRepoVersion}";
+    repoName = "bigtop${btRepoVersion}";
     pm.cleanup();
     try {
-      String repoText = cdhRepoFileURL.toURL().text;
-      if (pm.addBinRepo(repoName, repoText, cdhKeyURL) != 0) {
+      String repoText = btRepoFileURL.toURL().text;
+      if (pm.addBinRepo(repoName, repoText, btKeyURL) != 0) {
         return false;
       }
 
     } catch (Throwable ex) {
-      if (pm.addBinRepo(repoName, cdhRepoURL, cdhKeyURL, "${linux_codename}-cdh${cdhRepoVersion} contrib")) {
+      if (pm.addBinRepo(repoName, btRepoURL, btKeyURL, "${linux_codename}-bt${btRepoVersion} contrib")) {
         return false;
       }
     }

@@ -20,7 +20,7 @@ package org.apache.bigtop.itest.packagesmoke
 
 import org.apache.bigtop.itest.pmanager.PackageManager
 
-class CDHServices {
+class BTServices {
   static final List serviceDaemonUserNames = [ "flume", "hbase" , "hdfs" , "hue" , "mapred" , "oozie" , "sqoop" ,
                                                "zookeeper", "hadoop"];
 

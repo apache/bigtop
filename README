@@ -82,8 +82,8 @@ WARNING: since testing packages requires installing them on a live
 system it is highly recommended to use VMs for that.
 
 Testing Bigtop is done using iTest framework. For more documentation
-on iTest visit the iTest page
-(http://cloudera.github.com/bigtop/iTest) but here's 2 steps to get started:
+on iTest and testing visit Bigtop wiki http://bigtop.apache.org/,
+but here's 2 steps to get started:
 
 * install package testing iTest artifacts locally:
 
@@ -91,7 +91,7 @@ on iTest visit the iTest page
 
 * use those locally installed iTest package testing artifacts to run a suite:
 
-        cd test/suites/package/ && mvn clean verify -Dcdh.repo.file.url.CentOS=XXX  -D'org.apache.maven-failsafe-plugin.testInclude=**/TestPackagesReadiness.*'
+        cd test/suites/package/ && mvn clean verify -Dbigtop.repo.file.url.CentOS=XXX  -D'org.apache.maven-failsafe-plugin.testInclude=**/TestPackagesReadiness.*'
 
 ##  Contact us!
 

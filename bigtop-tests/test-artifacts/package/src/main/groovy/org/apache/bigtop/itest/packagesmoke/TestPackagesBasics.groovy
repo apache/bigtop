@@ -43,14 +43,12 @@ class TestPackagesBasics extends PackageTestCommon {
   // not worry about managing it ourselves via the following static Map. For now, however, we rely on
   // constructors being synchronized and thus inserting just one copy of PackageInstance for each package we test
   private static Map<String, PackageInstance> pkgs = [:];
-  private static String selectedTests = System.getProperty("cdh.packages.test", ".");
-  private static String skippedTests = System.getProperty("cdh.packages.skip", "\$^");
+  private static String selectedTests = System.getProperty("bigtop.packages.test", ".");
+  private static String skippedTests = System.getProperty("bigtop.packages.skip", "\$^");
 
   public Node golden;
 
   static {
-    // repo = new PackageTestRepoMgr("3", "", "http://nightly.cloudera.com/debian/",
-    //                                       "http://nightly.cloudera.com/debian/archive.key");
     repo = new PackageTestRepoMgr();
     TestPackagesBasics.pm = repo.getPm();
   }

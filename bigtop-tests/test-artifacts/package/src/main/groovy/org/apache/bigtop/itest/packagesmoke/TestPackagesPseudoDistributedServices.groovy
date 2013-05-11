@@ -38,7 +38,7 @@ class TestPackagesPseudoDistributedServices extends TestPackagesBasics {
   void testPackageUpgrade() {
     if (isUpgrade()) {
       checkThat("upgrade sequence on a package $name failed to be executed",
-                CDHUpgradeSequence.execute(name, System.getProperty("cdh.prev.repo.version"), "3"), equalTo(0));
+                BTUpgradeSequence.execute(name, System.getProperty("bigtop.prev.repo.version"), "0.5.0"), equalTo(0));
     }
   }
 
