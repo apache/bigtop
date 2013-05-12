@@ -18,6 +18,8 @@ export METASTORE_PORT=9083
 export HADOOP_PREFIX=/usr
 export HCAT_LOG_DIR=/var/log/hcatalog
 export HCAT_PID_DIR=/var/run/hcatalog
+export HCAT_HOME=/usr/lib/hcatalog
 # FIXME: HCATALOG-636 (and also HIVE-2757)
 export HADOOP_HOME=${HADOOP_HOME:-/usr/lib/hadoop}
 export HIVE_HOME=/usr/lib/hive
+export HIVE_CONF_DIR=/etc/hive/conf

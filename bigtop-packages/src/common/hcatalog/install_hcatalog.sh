@@ -120,6 +120,11 @@ cat >>$wrapper <<EOF
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
 
+# FIXME: HCATALOG-636 (and also HIVE-2757)
+export HIVE_HOME=/usr/lib/hive
+export HIVE_CONF_DIR=/etc/hive/conf
+export HCAT_HOME=$INSTALLED_LIB_DIR
+
 export HCATALOG_HOME=$INSTALLED_LIB_DIR
 exec $INSTALLED_LIB_DIR/bin/hcat "\$@"
 EOF

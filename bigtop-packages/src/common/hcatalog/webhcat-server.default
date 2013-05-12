@@ -19,3 +19,5 @@ export WEBHCAT_LOG_DIR=/var/log/hcatalog
 export WEBHCAT_PID_DIR=/var/run/hcatalog
 # FIXME: HCATALOG-636
 export HIVE_HOME=/usr/lib/hive
+export HIVE_CONF_DIR=/etc/hive/conf
+export HCAT_HOME=/usr/lib/hcatalog
