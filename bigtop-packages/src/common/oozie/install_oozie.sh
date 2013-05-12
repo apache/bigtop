@@ -113,6 +113,7 @@ cp -R ${BUILD_DIR}/README.txt ${DOC_DIR}
 cp -R ${BUILD_DIR}/release-log.txt ${DOC_DIR}
 [ -f ${BUILD_DIR}/PATCH.txt ] && cp ${BUILD_DIR}/PATCH.txt ${DOC_DIR}
 cp -R ${BUILD_DIR}/docs/* ${DOC_DIR}
+rm -rf ${DOC_DIR}/target
 install -d -m 0755 ${MAN_DIR}
 gzip -c ${EXTRA_DIR}/oozie.1 > ${MAN_DIR}/oozie.1.gz
 
