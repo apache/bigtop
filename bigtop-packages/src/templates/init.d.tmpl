@@ -83,7 +83,7 @@ start() {
   [ -d $CONF_DIR ] || exit $ERROR_PROGRAM_NOT_CONFIGURED
   log_success_msg "Starting ${DESC}: "
 
-  su -s /bin/bash $SVC_USER -c "$EXEC_PATH --config '$CONF_DIR' start $DAEMON_FLAGS"
+  su -s /bin/bash $SVC_USER -c "cd $WORKING_DIR && $EXEC_PATH --config '$CONF_DIR' start $DAEMON_FLAGS"
 
   # Some processes are slow to start
   sleep $SLEEP_TIME
@@ -218,6 +218,7 @@ CONF_DIR="$CONF_DIR"
 PIDFILE="$PIDFILE"
 LOCKDIR="/var/lock/subsys"
 LOCKFILE="\$LOCKDIR/$DAEMON"
+WORKING_DIR="${WORKING_DIR:-~/}"
 
 install -d -m 0755 -o $SVC_USER -g $SVC_USER $(dirname $PIDFILE) 1>/dev/null 2>&1 || :
 [ -d "\$LOCKDIR" ] || install -d -m 0755 \$LOCKDIR 1>/dev/null 2>&1 || :

@@ -20,3 +20,4 @@ DAEMON_FLAGS=""
 CONF_DIR="/etc/webhcat/conf"
 # FIXME: HCATALOG-636
 PIDFILE="/var/run/hcatalog/webhcat.pid"
+WORKING_DIR="/var/run/hcatalog"
