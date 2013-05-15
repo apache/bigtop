@@ -1,3 +1,12 @@
+### This file needs to be customized to reflect the configuration of your cluster
+### Store it as $BIGTOP_DEPLOY_PATH/config/site.csv
+### use --confdir=$BIGTOP_DEPLOY_PATH (see README for more info)
+# FQDN of Namenode
 hadoop_head_node,hadoopmaster.example.com
+# FQDN of standby node (for HA)
+#standby_head_node,standbyNN.example.com
+# FQDN of gateway node (if separate from NN)
+#standby_head_node,gateway.example.com
+# Storage directories (will be created if doesn't exist)
 hadoop_storage_dirs,/data/1,/data/2,/data/3,/data/4
 bigtop_yumrepo_uri,http://mirror.example.com/path/to/mirror/
