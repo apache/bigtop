@@ -51,7 +51,12 @@ su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chown root /user/root'
 su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /user/hue'
 su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chmod -R 777 /user/hue'
 su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chown hue /user/hue'
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /user/sqoop'
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chmod -R 777 /user/sqoop'
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chown sqoop /user/sqoop'
 su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /user/oozie'
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chmod -R 777 /user/oozie'
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chown -R oozie /user/oozie'
 # Do more setup for oozie
 su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /user/oozie/share'
 su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /user/oozie/share/lib'
@@ -59,7 +64,6 @@ su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /user/oozie/share/lib/hive'
 su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /user/oozie/share/lib/mapreduce-streaming'
 su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /user/oozie/share/lib/distcp'
 su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /user/oozie/share/lib/pig'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /user/oozie/share/lib/sqoop'
 # Copy over files from local filesystem to HDFS that oozie might need
 if ls /usr/lib/hive/lib/*.jar &> /dev/null; then
   su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -put /usr/lib/hive/lib/*.jar /user/oozie/share/lib/hive'
@@ -76,10 +80,3 @@ fi
 if ls /usr/lib/pig/{lib/,}*.jar &> /dev/null; then
   su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -put /usr/lib/pig/{lib/,}*.jar /user/oozie/share/lib/pig'
 fi
-
-if ls /usr/lib/sqoop/{lib/,}*.jar &> /dev/null; then
-  su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -put /usr/lib/sqoop/{lib/,}*.jar /user/share/lib/sqoop'
-fi
-
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chmod -R 777 /user/oozie'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chown -R oozie /user/oozie'

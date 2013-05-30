@@ -17,7 +17,7 @@
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <parent>
     <groupId>org.apache.bigtop.itest</groupId>
@@ -28,18 +28,19 @@
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.bigtop.itest</groupId>
-  <artifactId>sqoop-test-execution</artifactId>
+  <artifactId>sqoop-smoke-execution</artifactId>
   <version>0.6.0-SNAPSHOT</version>
   <name>Sqoop smoke test execution</name>
-
+  
   <properties>
-    <org.codehaus.maven-failsafe-plugin.dbhost>172.29.12.207</org.codehaus.maven-failsafe-plugin.dbhost>
-    <org.codehaus.maven-failsafe-plugin.dbname>db2</org.codehaus.maven-failsafe-plugin.dbname>
-
-    <org.apache.maven-dependency-plugin.groupId>org.apache.sqoop</org.apache.maven-dependency-plugin.groupId>
-    <org.apache.maven-dependency-plugin.artifactId>sqoop</org.apache.maven-dependency-plugin.artifactId>
-    <org.apache.maven-dependency-plugin.version>${sqoop.version}</org.apache.maven-dependency-plugin.version>
-    <org.apache.maven-dependency-plugin.output>${project.build.directory}</org.apache.maven-dependency-plugin.output>
+    <!--Additional environment variables are required-->
+    <SQOOP_URL>${env.SQOOP_URL}</SQOOP_URL>
+    <MYSQL_HOST>${env.MYSQL_HOST}</MYSQL_HOST>
+ 
+    <!-- Integration tests are special -->
+    <org.apache.maven-dependency-plugin.groupId>org.apache.bigtop.itest</org.apache.maven-dependency-plugin.groupId>
+    <org.apache.maven-dependency-plugin.artifactId>sqoop-smoke</org.apache.maven-dependency-plugin.artifactId>
+    <org.apache.maven-dependency-plugin.version>0.6.0-SNAPSHOT</org.apache.maven-dependency-plugin.version>
     <org.apache.maven-dependency-plugin.type>jar</org.apache.maven-dependency-plugin.type>
   </properties>
 
@@ -49,23 +50,6 @@
       <artifactId>${org.apache.maven-dependency-plugin.artifactId}</artifactId>
       <version>${org.apache.maven-dependency-plugin.version}</version>
     </dependency>
-    <dependency>
-      <groupId>${org.apache.maven-dependency-plugin.groupId}</groupId>
-      <artifactId>${org.apache.maven-dependency-plugin.artifactId}</artifactId>
-      <version>${org.apache.maven-dependency-plugin.version}</version>
-      <type>test-jar</type>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.hadoop</groupId>
-      <artifactId>hadoop-common</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>commons-logging</groupId>
-      <artifactId>commons-logging</artifactId>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
 
   <build>
@@ -74,62 +58,45 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
       </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>1.0</version>
+        <executions>
+          <execution>
+            <id>enforce-property</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireProperty>
+                  <property>SQOOP_URL</property>
+                  <message>SQOOP_URL env. variable has to be set</message>
+                </requireProperty>
+                <requireProperty>
+                  <property>MYSQL_HOST</property>
+                  <message>MYSQL_HOST env. variable has to be set</message>
+                </requireProperty>
+              </rules>
+              <fail>true</fail>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
         <version>2.11</version>
         <configuration>
-          <includes>
-            <include>**/TestColumnTypes*</include>
-            <include>**/TestAllTables*</include>
-            <include>**/TestAppendUtils*</include>
-            <include>**/TestExport*</include>
-            <include>**/TestExportUpdate*</include>
-            <include>**/TestBlobRef*</include>
-            <include>**/TestClobRef*</include>
-          </includes>
+          <systemPropertyVariables>
+            <sqoop.server.url>${SQOOP_URL}</sqoop.server.url>
+            <mysql.host>${MYSQL_HOST}</mysql.host>
+          </systemPropertyVariables>
           <forkMode>always</forkMode>
-          <argLine>
-            -Dhsql.server.host=hsql://${org.codehaus.maven-failsafe-plugin.dbhost} -Dhsql.database.name=${org.codehaus.maven-failsafe-plugin.dbname}
-          </argLine>
-          <additionalClasspathElements>
-            <additionalClasspathElement>
-              ${HADOOP_CONF_DIR}
-            </additionalClasspathElement>
-            <additionalClasspathElement>
-              <!-- the value of ${lzo.jar} property is set by a groovy
-                   script during pre-integration-test phase below-->
-              ${HADOOP_HOME}/lib/${lzo.jar}
-            </additionalClasspathElement>
-          </additionalClasspathElements>
         </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>org.codehaus.groovy.maven</groupId>
-        <artifactId>gmaven-plugin</artifactId>
-        <version>1.0</version>
-        <executions>
-          <execution>
-            <id>find-lzo-jar</id>
-            <phase>pre-integration-test</phase>
-            <goals>
-              <goal>execute</goal>
-            </goals>
-            <configuration>
-              <source>
-                if (!System.getProperties().keySet().contains('enforcer.skip')) {
-                  project.properties['lzo.jar'] =
-                    org.apache.bigtop.itest.JarContent.getJarName(
-                        "${HADOOP_HOME}/lib", 'hadoop.*lzo.*.jar');
-                  if ( project.properties['lzo.jar'] == null ) {
-                      throw new IOException ("hadoop-lzo.jar isn't found");
-                  }
-                }
-              </source>
-            </configuration>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
   </build>

@@ -16,10 +16,19 @@
  * limitations under the License.
  */
 
-package org.apache.itest.sqoop;
+package org.apache.bigtop.itest.sqoop
+
+import org.apache.sqoop.client.SqoopClient
+import org.apache.sqoop.model.MConnection
+import org.apache.sqoop.model.MFormList
+import org.apache.sqoop.model.MJob
+import org.apache.sqoop.model.MPersistableEntity
+import org.apache.sqoop.model.MSubmission
+import org.apache.sqoop.validation.Status;
 
 import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertNotNull
+import static org.junit.Assert.assertNotSame
 import static org.junit.Assert.assertTrue
 import org.junit.AfterClass
 import org.junit.BeforeClass
@@ -38,34 +47,13 @@ class TestSqoopExport {
   private static final String MYSQL_PASSWORD =
     (mysql_password == null) ? "" : mysql_password;
   private static final String MYSQL_HOST = System.getProperty("mysql.host", "localhost");
-  private static final String HADOOP_HOME =
-    System.getenv('HADOOP_HOME');
-  private static String streaming_home = System.getenv('STREAMING_HOME');
-  private static final String STREAMING_HOME =
-    (streaming_home == null) ? HADOOP_HOME + "/contrib/streaming" :
-        streaming_home;
-  private static final String SQOOP_HOME =
-    System.getenv("SQOOP_HOME");
-  static {
-    assertNotNull("HADOOP_HOME is not set", HADOOP_HOME);
-    assertNotNull("SQOOP_HOME is not set", SQOOP_HOME);
-    assertNotNull("mysql connector jar is required to be present in $SQOOP_HOME/lib",
-      JarContent.getJarName("$SQOOP_HOME/lib", "mysql-connector-java.*.jar"));
-  }
-  private static String sqoop_jar =
-    JarContent.getJarName(SQOOP_HOME, "sqoop-1.*.jar");
-  private static String streaming_jar =
-    JarContent.getJarName(STREAMING_HOME, "hadoop.*streaming.*.jar");
-  static {
-    assertNotNull("Can't find sqoop.jar", sqoop_jar);
-    assertNotNull("Can't find hadoop-streaming.jar", streaming_jar);
-  }
-  private static final String SQOOP_JAR = SQOOP_HOME + "/" + sqoop_jar;
-  private static final String STREAMING_JAR = STREAMING_HOME + "/" + streaming_jar;
+
   private static final String MYSQL_COMMAND =
-    "mysql --user=$MYSQL_USER" +
+    "mysql -h $MYSQL_HOST --user=$MYSQL_USER" +
     (("".equals(MYSQL_PASSWORD)) ? "" : " --password=$MYSQL_PASSWORD");
   private static final String MYSQL_DBNAME = System.getProperty("mysql.dbname", "mysqltestdb");
+  private static final String SQOOP_CONNECTION_STRING =
+    "jdbc:mysql://$MYSQL_HOST/$MYSQL_DBNAME";
   private static final String SQOOP_CONNECTION =
     "--connect jdbc:mysql://$MYSQL_HOST/$MYSQL_DBNAME --username=$MYSQL_USER" +
     (("".equals(MYSQL_PASSWORD)) ? "" : " --password=$MYSQL_PASSWORD");
@@ -73,7 +61,8 @@ class TestSqoopExport {
     System.out.println("SQOOP_CONNECTION string is " + SQOOP_CONNECTION );
   }
   private static final String DATA_DIR = System.getProperty("data.dir", "mysql-files");
-  private static final String INPUT = System.getProperty("input.dir", "input-dir");
+  private static final String INPUT = System.getProperty("input.dir", "/tmp/input-dir");
+  private static final String SQOOP_SERVER_URL = System.getProperty("sqoop.server.url", "http://localhost:12000/sqoop/");
   private static Shell sh = new Shell("/bin/bash -s");
 
   @BeforeClass
@@ -86,10 +75,25 @@ class TestSqoopExport {
     }
     sh.exec("hadoop fs -mkdir $INPUT");
     assertTrue("Could not create $INPUT directory", sh.getRet() == 0);
+
+    sh.exec("hadoop fs -mkdir $INPUT/testtable");
+    assertTrue("Could not create $INPUT/testtable directory", sh.getRet() == 0);
+    sh.exec("hadoop fs -mkdir $INPUT/t_bool");
+    assertTrue("Could not create $INPUT/t_bool directory", sh.getRet() == 0);
+    sh.exec("hadoop fs -mkdir $INPUT/t_date");
+    assertTrue("Could not create $INPUT/t_date directory", sh.getRet() == 0);
+    sh.exec("hadoop fs -mkdir $INPUT/t_string");
+    assertTrue("Could not create $INPUT/t_string directory", sh.getRet() == 0);
+    sh.exec("hadoop fs -mkdir $INPUT/t_fp");
+    assertTrue("Could not create $INPUT/t_fp directory", sh.getRet() == 0);
+    sh.exec("hadoop fs -mkdir $INPUT/t_int");
+    assertTrue("Could not create $INPUT/t_int directory", sh.getRet() == 0);
+
     // unpack resource
     JarContent.unpackJarContainer(TestSqoopExport.class, '.' , null)
+
     // upload data to HDFS 
-    sh.exec("hadoop fs -put $DATA_DIR/sqoop-testtable.out input-dir/testtable/part-m-00000");
+    sh.exec("hadoop fs -put $DATA_DIR/sqoop-testtable.out $INPUT/testtable/part-m-00000");
     sh.exec("hadoop fs -put $DATA_DIR/sqoop-t_bool.out $INPUT/t_bool/part-m-00000");
     sh.exec("hadoop fs -put $DATA_DIR/sqoop-t_date-export.out $INPUT/t_date/part-m-00000");
     sh.exec("hadoop fs -put $DATA_DIR/sqoop-t_string.out $INPUT/t_string/part-m-00000");
@@ -107,27 +111,116 @@ class TestSqoopExport {
     if ('YES'.equals(System.getProperty('delete.testdata','no').toUpperCase())) {
       sh.exec("hadoop fs -test -e $INPUT");
       if (sh.getRet() == 0) {
-       // sh.exec("hadoop fs -rmr -skipTrash $INPUT");
+        sh.exec("hadoop fs -rmr -skipTrash $INPUT");
         assertTrue("Deletion of $INPUT from HDFS failed",
             sh.getRet() == 0);
       }
     }
   }
 
+  protected SqoopClient getClient() {
+    String sqoopServerUrl = "$SQOOP_SERVER_URL".toString();
+    return new SqoopClient(sqoopServerUrl);
+  }
+
+  /**
+   * Fill connection form based on currently active provider.
+   *
+   * @param connection MConnection object to fill
+   */
+  protected void fillConnectionForm(MConnection connection) {
+    MFormList forms = connection.getConnectorPart();
+    forms.getStringInput("connection.jdbcDriver").setValue("com.mysql.jdbc.Driver");
+    forms.getStringInput("connection.connectionString").setValue("$SQOOP_CONNECTION_STRING".toString());
+    forms.getStringInput("connection.username").setValue("$MYSQL_USER".toString());
+    forms.getStringInput("connection.password").setValue("$MYSQL_PASSWORD".toString());
+  }
+
+  /**
+   * Fill output form with specific storage and output type. Mapreduce output directory
+   * will be set to default test value.
+   *
+   * @param job MJOb object to fill
+   * @param storage Storage type that should be set
+   * @param output Output type that should be set
+   */
+  protected void fillInputForm(MJob job, String inputDir) {
+    MFormList forms = job.getFrameworkPart();
+    forms.getStringInput("input.inputDirectory").setValue(inputDir);
+  }
+
+  /**
+   * Create connection.
+   *
+   * With asserts to make sure that it was created correctly.
+   *
+   * @param connection
+   */
+  protected void createConnection(MConnection connection) {
+    assertEquals(Status.FINE, getClient().createConnection(connection));
+    assertNotSame(MPersistableEntity.PERSISTANCE_ID_DEFAULT, connection.getPersistenceId());
+  }
+
+  /**
+   * Create job.
+   *
+   * With asserts to make sure that it was created correctly.
+   *
+   * @param job
+   */
+  protected void createJob(MJob job) {
+    assertEquals(Status.FINE, getClient().createJob(job));
+    assertNotSame(MPersistableEntity.PERSISTANCE_ID_DEFAULT, job.getPersistenceId());
+  }
+
+  protected void runSqoopClientExport(String tableName) {
+    // Connection creation
+    MConnection connection = getClient().newConnection(1L);
+    fillConnectionForm(connection);
+    createConnection(connection);
+
+    // Job creation
+    MJob job = getClient().newJob(connection.getPersistenceId(), MJob.Type.EXPORT);
+
+    // Connector values
+    MFormList forms = job.getConnectorPart();
+    forms.getStringInput("table.schemaName").setValue("mysqltestdb");
+    forms.getStringInput("table.tableName").setValue(tableName);
+    // Framework values
+    fillInputForm(job, "$INPUT".toString() + "/" + tableName);
+    createJob(job);
+
+    MSubmission submission = getClient().startSubmission(job.getPersistenceId());
+    assertTrue(submission.getStatus().isRunning());
+
+    // Wait until the job finish - this active waiting will be removed once
+    // Sqoop client API will get blocking support.
+    while (true) {
+      Thread.sleep(5000);
+      submission = getClient().getSubmissionStatus(job.getPersistenceId());
+      if (!submission.getStatus().isRunning())
+        break;
+    }
+  }
+
+
   @Test
   public void testBooleanExport() {
-    sh.exec("sqoop export $SQOOP_CONNECTION --table t_bool --export-dir $INPUT/t_bool");
-    assertTrue("Sqoop job failed!", sh.getRet() == 0);
+    String tableName = "t_bool";
+
+    runSqoopClientExport(tableName);
+
     sh.exec("echo 'use mysqltestdb;select * from t_bool' | $MYSQL_COMMAND --skip-column-names | sed 's/\t/,/g' > t_bool.out");
     assertEquals("sqoop export did not write expected data",
         0, sh.exec("diff -u $DATA_DIR/sqoop-t_bool-export.out t_bool.out").getRet());
   }
 
-  
   @Test
   public void testIntegerExport() {
-    sh.exec("sqoop export $SQOOP_CONNECTION --table t_int --export-dir $INPUT/t_int");
-    assertTrue("Sqoop job failed!", sh.getRet() == 0);
+    String tableName = "t_int";
+
+    runSqoopClientExport(tableName);
+
     sh.exec("echo 'use mysqltestdb;select * from t_int' | $MYSQL_COMMAND --skip-column-names | sed 's/\t/,/g' > t_int.out");
     assertEquals("sqoop export did not write expected data",
         0, sh.exec("diff -u $DATA_DIR/sqoop-t_int.out t_int.out").getRet());
@@ -135,8 +228,10 @@ class TestSqoopExport {
 
   @Test
   public void testFixedPointFloatingPointExport() {
-    sh.exec("sqoop export $SQOOP_CONNECTION --table t_fp --export-dir $INPUT/t_fp");
-    assertTrue("Sqoop job failed!", sh.getRet() == 0);
+    String tableName = "t_fp";
+
+    runSqoopClientExport(tableName);
+
     sh.exec("echo 'use mysqltestdb;select * from t_fp' | $MYSQL_COMMAND --skip-column-names | sed 's/\t/,/g' > t_fp.out");
     assertEquals("sqoop export did not write expected data",
         0, sh.exec("diff -u $DATA_DIR/sqoop-t_fp.out t_fp.out").getRet());
@@ -144,8 +239,10 @@ class TestSqoopExport {
 
   @Test
   public void testDateTimeExport() {
-    sh.exec("sqoop export $SQOOP_CONNECTION --table t_date --export-dir $INPUT/t_date");
-    assertTrue("Sqoop job failed!", sh.getRet() == 0);
+    String tableName = "t_date";
+
+    runSqoopClientExport(tableName);
+
     sh.exec("echo 'use mysqltestdb;select * from t_date' | $MYSQL_COMMAND --skip-column-names | sed 's/\t/,/g' > t_date.out");
     assertEquals("sqoop export did not write expected data",
         0, sh.exec("diff -u $DATA_DIR/sqoop-t_date.out t_date.out").getRet());
@@ -153,12 +250,13 @@ class TestSqoopExport {
 
   @Test
   public void testStringExport() {
-    sh.exec("sqoop export $SQOOP_CONNECTION --table t_string --export-dir $INPUT/t_string");
-    assertTrue("Sqoop job failed!", sh.getRet() == 0);
+    String tableName = "t_string";
+
+    runSqoopClientExport(tableName);
+
     sh.exec("echo 'use mysqltestdb;select * from t_string' | $MYSQL_COMMAND --skip-column-names | sed 's/\t/,/g' > t_string.out");
     assertEquals("sqoop export did not write expected data",
-        0, sh.exec("diff -u $DATA_DIR/sqoop-t_string.out t_string.out").getRet());
+            0, sh.exec("diff -u $DATA_DIR/sqoop-t_string.out t_string.out").getRet());
   }
 
 }
-
