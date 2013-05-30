@@ -80,3 +80,15 @@ fi
 if ls /usr/lib/pig/{lib/,}*.jar &> /dev/null; then
   su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -put /usr/lib/pig/{lib/,}*.jar /user/oozie/share/lib/pig'
 fi
+
+# Create home directory for the current user if it does not exist
+if [ "$1" = "-u" ] ; then
+  USER="$2"
+  USER=${USER:-$(id -un)}
+  su -s /bin/bash hdfs -c "/usr/bin/hadoop fs -ls /user/${USER}"
+  if [ ! $? -eq 0 ]; then
+    su -s /bin/bash hdfs -c "/usr/bin/hadoop fs -mkdir /user/${USER}"
+    su -s /bin/bash hdfs -c "/usr/bin/hadoop fs -chmod -R 755 /user/${USER}"
+    su -s /bin/bash hdfs -c "/usr/bin/hadoop fs -chown ${USER} /user/${USER}"
+  fi
+fi
