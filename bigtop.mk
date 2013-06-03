@@ -26,7 +26,7 @@ HADOOP_TARBALL_SRC=$(HADOOP_NAME)-$(HADOOP_BASE_VERSION)-src.tar.gz
 HADOOP_DOWNLOAD_PATH=/hadoop/common/$(HADOOP_NAME)-$(HADOOP_BASE_VERSION)
 #HADOOP_SITE=$(APACHE_MIRROR)$(HADOOP_DOWNLOAD_PATH)
 #HADOOP_ARCHIVE=$(APACHE_ARCHIVE)$(HADOOP_DOWNLOAD_PATH)
-HADOOP_SITE=https://builds.apache.org/job/Hadoop-branch-2.0.5/lastSuccessfulBuild/artifact/branch-2.0.5/hadoop-dist/target/
+HADOOP_SITE=http://people.apache.org/~cos/hadoop-2.0.5-alpha-rc1/
 HADOOP_ARCHIVE=$(HADOOP_SITE)
 $(eval $(call PACKAGE,hadoop,HADOOP))
 
