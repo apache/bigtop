@@ -218,7 +218,7 @@ EOF
     exec { "aquire $title keytab":
         path    => $kerberos::site::exec_path,
         user    => $title,
-        command => "kinit -kt $keytab ${title}/$::fqdn",
+        command => "bash -c 'kinit -kt $keytab ${title}/$::fqdn ; kinit -R'",
         require => Exec["ktinject.$title"],
     }
   }
