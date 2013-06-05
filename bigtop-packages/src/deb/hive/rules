@@ -46,6 +46,10 @@ override_dh_auto_install: metastore server
 	# We need to get rid of jars that happen to be shipped in other packages
 	rm -f debian/${hive_pkg_name}/usr/lib/hive/lib/hbase-*.jar debian/${hive_pkg_name}/usr/lib/hive/lib/zookeeper-*.jar
 	mkdir -p debian/${hive_pkg_name}-hbase/usr/lib/hive/lib
+	mkdir -p debian/${hive_pkg_name}-jdbc/usr/lib/hive/lib
+	for lib in hive-jdbc hive-metastore hive-serde hive-exec libthrift hive-service libfb303 slf4j log4j commons-logging; do \
+	  mv debian/${hive_pkg_name}/usr/lib/hive/lib/$${lib}-*.jar debian/${hive_pkg_name}-jdbc/usr/lib/hive/lib/; \
+	done
 	ln -s  /usr/lib/hbase/hbase.jar debian/${hive_pkg_name}-hbase/usr/lib/hive/lib
 	ln -s  /usr/lib/zookeeper/zookeeper.jar debian/${hive_pkg_name}/usr/lib/hive/lib
 	# Workaround for BIGTOP-583

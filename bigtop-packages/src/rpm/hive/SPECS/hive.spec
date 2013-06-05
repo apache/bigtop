@@ -71,7 +71,7 @@ Source7: hive.1
 Source8: hive-site.xml
 Source9: hive-server.svc
 Source10: hive-metastore.svc
-Requires: hadoop-client, bigtop-utils >= 0.6, hbase, zookeeper
+Requires: hadoop-client, bigtop-utils >= 0.6, hbase, zookeeper, hive-jdbc
 Obsoletes: %{name}-webinterface
 
 %description 
@@ -123,7 +123,13 @@ Requires: hbase
 %description hbase
 This optional package provides integration between Apache HBase and Apache Hive
 
+%package jdbc
+Summary: Provides libraries necessary to connect to Apache Hive via JDBC
+Group: Development/Libraries
+Requires: hadoop-client
 
+%description jdbc
+This package provides libraries necessary to connect to Apache Hive via JDBC
 
 %prep
 %setup -n %{name}-%{hive_base_version}
@@ -205,11 +211,33 @@ fi
 %doc %{doc_hive}
 %{man_dir}/man1/hive.1.*
 %exclude %{usr_lib_hive}/lib/hbase.jar
+%exclude %{usr_lib_hive}/lib/hive-jdbc-*.jar
+%exclude %{usr_lib_hive}/lib/hive-metastore-*.jar
+%exclude %{usr_lib_hive}/lib/hive-serde-*.jar
+%exclude %{usr_lib_hive}/lib/hive-exec-*.jar
+%exclude %{usr_lib_hive}/lib/libthrift-*.jar
+%exclude %{usr_lib_hive}/lib/hive-service-*.jar
+%exclude %{usr_lib_hive}/lib/libfb303-*.jar
+%exclude %{usr_lib_hive}/lib/slf4j-*.jar
+%exclude %{usr_lib_hive}/lib/log4j-*.jar
+%exclude %{usr_lib_hive}/lib/commons-logging-*.jar
 
 %files hbase
 %defattr(-,root,root,755)
 %{usr_lib_hive}/lib/hbase.jar
 
+%files jdbc
+%defattr(-,root,root,755)
+%{usr_lib_hive}/lib/hive-jdbc-*.jar
+%{usr_lib_hive}/lib/hive-metastore-*.jar
+%{usr_lib_hive}/lib/hive-serde-*.jar
+%{usr_lib_hive}/lib/hive-exec-*.jar
+%{usr_lib_hive}/lib/libthrift-*.jar
+%{usr_lib_hive}/lib/hive-service-*.jar
+%{usr_lib_hive}/lib/libfb303-*.jar
+%{usr_lib_hive}/lib/slf4j-*.jar
+%{usr_lib_hive}/lib/log4j-*.jar
+%{usr_lib_hive}/lib/commons-logging-*.jar
 
 %define service_macro() \
 %files %1 \
