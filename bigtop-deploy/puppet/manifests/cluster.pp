@@ -273,6 +273,8 @@ class hadoop_head_node inherits hadoop_worker_node {
   Exec<| title == "init hdfs" |> -> Hadoop::Httpfs<||>
   Exec<| title == "init hdfs" |> -> Hadoop::Rsync_hdfs<||>
   Exec<| title == "init hdfs" |> -> Hadoop-oozie::Server<||>
+
+  Hadoop::Mapred-app<||> -> Hadoop-oozie::Server<||>
 }
 
 class standby_head_node inherits hadoop_cluster_node {
