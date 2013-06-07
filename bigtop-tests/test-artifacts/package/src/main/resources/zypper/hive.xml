@@ -7,7 +7,6 @@
     <config name='/etc/hive/conf.dist/hive-log4j.properties.template' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <config name='/etc/hive/conf.dist/hive-site.xml' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/bin/hive' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
-    <file name='/usr/lib/hive' owners='1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib/hive/bin' owners='1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib/hive/bin/ext' owners='1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib/hive/bin/ext/cli.sh' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
@@ -24,7 +23,6 @@
     <file name='/usr/lib/hive/bin/hive' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib/hive/bin/hive-config.sh' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib/hive/conf' owners='1' perm='lrwxrwxrwx' user='root' group='root' target='/etc/hive/conf' />
-    <file name='/usr/lib/hive/lib' owners='1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib/hive/lib/ant-contrib-1.0b3.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/hive/lib/antlr-2.7.7.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/hive/lib/antlr-3.0.1.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />

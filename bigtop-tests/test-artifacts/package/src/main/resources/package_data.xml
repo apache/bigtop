@@ -462,6 +462,16 @@ This includes:
       <pig/>
     </deps>
   </pig-udf-datafu>
+  <hive-jdbc>
+    <metadata>
+      <summary>Provides libraries necessary to connect to Apache Hive via JDBC</summary>
+      <description>This package provides libraries necessary to connect to Apache Hive via JDBC</description>
+      <url>http://hive.apache.org/</url>
+    </metadata>
+    <deps>
+      <hadoop-client/>
+    </deps>
+  </hive-jdbc>
   <hive>
     <metadata>
       <summary>Hive is a data warehouse infrastructure built on top of Hadoop</summary>
@@ -480,6 +490,7 @@ This includes:
     <deps>
       <hadoop/>
       <bigtop-utils/>
+      <hive-jdbc>/self</hive-jdbc>
     </deps>
     <alternatives>
       <hive-conf>

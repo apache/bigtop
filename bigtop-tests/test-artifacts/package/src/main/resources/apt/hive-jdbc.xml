@@ -1,0 +1,15 @@
+<hive-jdbc>
+  <content>
+    <file name='/.' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/hive' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/hive/lib' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/hive/lib/commons-logging-1.0.4.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
+    <file name='/usr/share' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/share/doc' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/share/doc/hive-jdbc' owners='1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/share/doc/hive-jdbc/changelog.Debian.gz' owners='1' perm='-rw-r--r--' user='root' group='root' />
+    <file name='/usr/share/doc/hive-jdbc/copyright' owners='1' perm='-rw-r--r--' user='root' group='root' />
+  </content>
+</hive-jdbc>

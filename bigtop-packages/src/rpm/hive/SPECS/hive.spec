@@ -228,6 +228,7 @@ fi
 
 %files jdbc
 %defattr(-,root,root,755)
+%dir %{usr_lib_hive}
 %{usr_lib_hive}/lib/hive-jdbc-*.jar
 %{usr_lib_hive}/lib/hive-metastore-*.jar
 %{usr_lib_hive}/lib/hive-serde-*.jar
