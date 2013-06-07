@@ -24,7 +24,6 @@ import org.apache.sqoop.validation.Status
 import org.junit.Ignore
 
 import static org.junit.Assert.assertEquals
-import static org.junit.Assert.assertNotNull
 import static org.junit.Assert.assertNotSame
 import static org.junit.Assert.assertTrue
 import org.junit.AfterClass
@@ -157,7 +156,7 @@ class TestSqoopImport {
     assertNotSame(MPersistableEntity.PERSISTANCE_ID_DEFAULT, job.getPersistenceId());
   }
 
-  protected void runSqoopClient(String tableName, String partitionColumn) {
+  protected void runSqoopClient(String tableName=null, String partitionColumn=null, String tableColumns=null, String tableSQL=null, String outputSubdir=null, int extractors=0, int loaders=0) {
     // Connection creation
     MConnection connection = getClient().newConnection(1L);
     fillConnectionForm(connection);
@@ -167,11 +166,43 @@ class TestSqoopImport {
     MJob job = getClient().newJob(connection.getPersistenceId(), MJob.Type.IMPORT);
 
     // Connector values
-    MFormList forms = job.getConnectorPart();
-    forms.getStringInput("table.tableName").setValue(tableName);
-    forms.getStringInput("table.partitionColumn").setValue(partitionColumn);
+    MFormList connectorForms = job.getConnectorPart();
+
+    if(tableName != null) {
+      connectorForms.getStringInput("table.tableName").setValue(tableName);
+    }
+
+    if(partitionColumn != null) {
+      connectorForms.getStringInput("table.partitionColumn").setValue(partitionColumn);
+    }
+
+    if(tableColumns != null) {
+      connectorForms.getStringInput("table.columns").setValue(tableColumns);
+    }
+
+    if(tableSQL != null) {
+      connectorForms.getStringInput("table.sql").setValue(tableSQL);
+    }
+
     // Framework values
-    fillOutputForm(job, StorageType.HDFS, OutputFormat.TEXT_FILE, "$OUTPUT".toString() + "/" + tableName);
+    MFormList frameworkForms = job.getFrameworkPart();
+
+    if(extractors > 0) {
+      frameworkForms.getIntegerInput("throttling.extractors").setValue(extractors);
+    }
+
+    if(loaders > 0) {
+      frameworkForms.getIntegerInput("throttling.loaders").setValue(loaders);
+    }
+
+    String outSubdir;
+    if(outputSubdir == null) {
+      outSubdir = tableName;
+    } else {
+      outSubdir = outputSubdir;
+    }
+
+    fillOutputForm(job, StorageType.HDFS, OutputFormat.TEXT_FILE, "$OUTPUT".toString() + "/" + outSubdir);
     createJob(job);
 
     MSubmission submission = getClient().startSubmission(job.getPersistenceId());
@@ -187,11 +218,10 @@ class TestSqoopImport {
     }
   }
 
-
   @Test
   public void testBooleanImport() {
     String tableName = "t_bool";
-    String partitionColumn = "pri";
+    String partitionColumn = null;
 
     runSqoopClient(tableName, partitionColumn);
 
@@ -200,11 +230,10 @@ class TestSqoopImport {
         0, sh.exec("diff -u $DATA_DIR/sqoop-t_bool.out t_bool.out").getRet());
   }
 
-
   @Test
   public void testIntegerImport() {
     String tableName = "t_int";
-    String partitionColumn = "pri";
+    String partitionColumn = null;
 
     runSqoopClient(tableName, partitionColumn);
 
@@ -216,7 +245,7 @@ class TestSqoopImport {
   @Test
   public void testFixedPointFloatingPointImport() {
     String tableName = "t_fp";
-    String partitionColumn = "pri";
+    String partitionColumn = null;
 
     runSqoopClient(tableName, partitionColumn);
 
@@ -228,7 +257,7 @@ class TestSqoopImport {
   @Test
   public void testDateTimeImport() {
     String tableName = "t_date";
-    String partitionColumn = "pri";
+    String partitionColumn = null;
 
     runSqoopClient(tableName, partitionColumn);
 
@@ -240,14 +269,93 @@ class TestSqoopImport {
   @Test
   public void testStringImport() {
     String tableName = "t_string";
-    String partitionColumn = "pri";
+    String partitionColumn = null;
 
     runSqoopClient(tableName, partitionColumn);
 
     sh.exec("hadoop fs -cat $OUTPUT/t_string/part-* > t_string.out");
     assertEquals("sqoop import did not write expected data",
         0, sh.exec("diff -u $DATA_DIR/sqoop-t_string.out t_string.out").getRet());
-    }
+  }
+
+  @Test
+  public void testColumnsImport() {
+    String tableName = "testtable";
+    String partitionColumn = null;
+    String tableColumns = "id,fname";
+
+    runSqoopClient(tableName, partitionColumn, tableColumns);
+
+    sh.exec("hadoop fs -cat $OUTPUT/testtable/part-* > columns.out");
+    assertEquals("sqoop import did not write expected data",
+        0, sh.exec("diff -u $DATA_DIR/sqoop-columns.out columns.out").getRet());
+  }
+
+  @Test
+  public void testNumMappersImport() {
+    String tableName = "testtable";
+    String partitionColumn = null;
+    String tableColumns = null;
+    String tableSQL = null;
+    String outputSubdir = "testtable-nummappers";
+    int extractors = 1;
+    int loaders = 1;
+
+    runSqoopClient(tableName, partitionColumn, tableColumns, tableSQL, outputSubdir, extractors, loaders);
+
+    sh.exec("hadoop fs -cat $OUTPUT/$outputSubdir/part-*0 > num-mappers.out");
+    assertEquals("sqoop import did not write expected data",
+        0, sh.exec("diff -u $DATA_DIR/sqoop-testtable.out num-mappers.out").getRet());
+  }
+
+  @Test
+  public void testQueryImport() {
+    String tableName = null;
+    String partitionColumn = "t1.id";
+    String tableColumns = null;
+    String tableSQL = 'select t1.id as id, t2.fname as fname from testtable as t1 join testtable2 as t2 on (t1.id = t2.id ) where t1.id < 3 AND \${CONDITIONS}';
+    String outputSubdir = "testtable-query";
+
+    runSqoopClient(tableName, partitionColumn, tableColumns, tableSQL, outputSubdir);
+
+    sh.exec("hadoop fs -cat $OUTPUT/$outputSubdir/part-* > query.out");
+    assertEquals("sqoop import did not write expected data",
+        0, sh.exec("diff -u $DATA_DIR/sqoop-query.out query.out").getRet());
+  }
+
+  @Test
+  public void testSplitByImport() {
+    String tableName = "testtable";
+    String partitionColumn = "id";
+    String tableColumns = null;
+    String tableSQL = null;
+    String outputSubdir = "testtable-split";
+
+    runSqoopClient(tableName, partitionColumn, tableColumns, tableSQL, outputSubdir);
+
+    sh.exec("hadoop fs -cat $OUTPUT/$outputSubdir/part-* > split-by.out");
+    assertEquals("sqoop import did not write expected data",
+        0, sh.exec("diff -u $DATA_DIR/sqoop-testtable.out split-by.out").getRet());
+  }
+
+
+  //----------------------------------------@Ignore("Backward Compatibility")------------------------------------------//
+  // The functionality of the tests below is not currently supported by Sqoop 2.
+
+  //database name is hardcoded here
+  @Ignore("Backward Compatibility")
+  @Test
+  public void testImportAllTables() {
+    String SQOOP_CONNECTION_IMPORT_ALL =
+    "--connect jdbc:mysql://$MYSQL_HOST/mysqltestdb2 --username=$MYSQL_USER" +
+    (("".equals(MYSQL_PASSWORD)) ? "" : " --password=$MYSQL_PASSWORD");
+
+    sh.exec("sqoop import-all-tables $SQOOP_CONNECTION_IMPORT_ALL --warehouse-dir $OUTPUT/alltables");
+    assertTrue("Sqoop job failed!", sh.getRet() == 0);
+    sh.exec("hadoop fs -cat $OUTPUT/alltables/testtable*/part-* > all-tables.out");
+    assertEquals("sqoop import did not write expected data",
+        0, sh.exec("diff -u $DATA_DIR/sqoop-all-tables.out all-tables.out").getRet());
+  }
 
   @Ignore("Backward Compatibility")
   @Test
@@ -264,52 +372,12 @@ class TestSqoopImport {
 
   @Ignore("Backward Compatibility")
   @Test
-  public void testColumnsImport() {
-    sh.exec("sqoop import $SQOOP_CONNECTION --table testtable --columns id,fname --target-dir $OUTPUT/columns");
-    assertTrue("Sqoop job failed!", sh.getRet() == 0);
-    sh.exec("hadoop fs -cat $OUTPUT/columns/part-* > columns.out");
-    assertEquals("sqoop import did not write expected data",
-        0, sh.exec("diff -u $DATA_DIR/sqoop-columns.out columns.out").getRet());
-  }
-
-  @Ignore("Backward Compatibility")
-  @Test
   public void testDirectImport() {
     sh.exec("sqoop import $SQOOP_CONNECTION --table testtable --direct --target-dir $OUTPUT/direct");
     assertTrue("Sqoop job failed!", sh.getRet() == 0);
     sh.exec("hadoop fs -cat $OUTPUT/direct/part-* > direct.out");
     assertEquals("sqoop import did not write expected data",
         0, sh.exec("diff -u $DATA_DIR/sqoop-testtable.out direct.out").getRet());
-  }
-
-  @Ignore("Backward Compatibility")
-  @Test
-  public void testNumMappersImport() {
-    sh.exec("sqoop import $SQOOP_CONNECTION --table testtable --num-mappers 1 --target-dir $OUTPUT/num-mappers");
-    assertTrue("Sqoop job failed!", sh.getRet() == 0);
-    sh.exec("hadoop fs -cat $OUTPUT/num-mappers/part-*0 > num-mappers.out");
-    assertEquals("sqoop import did not write expected data",
-        0, sh.exec("diff -u $DATA_DIR/sqoop-testtable.out num-mappers.out").getRet());
-  }
-
-  @Ignore("Backward Compatibility")
-  @Test
-  public void testQueryImport() {
-    sh.exec("sqoop import $SQOOP_CONNECTION --query 'select t1.id as id, t2.fname as fname from testtable as t1 join testtable2 as t2 on (t1.id = t2.id        ) where t1.id < 3 AND \$CONDITIONS' --split-by t1.id --target-dir $OUTPUT/query");
-    assertTrue("Sqoop job failed!", sh.getRet() == 0);
-    sh.exec("hadoop fs -cat $OUTPUT/query/part-* > query.out");
-    assertEquals("sqoop import did not write expected data",
-        0, sh.exec("diff -u $DATA_DIR/sqoop-query.out query.out").getRet());
-  }
-
-  @Ignore("Backward Compatibility")
-  @Test
-  public void testSplityByImport() {
-    sh.exec("sqoop import $SQOOP_CONNECTION --table testtable --split-by fname --target-dir $OUTPUT/split-by");
-    assertTrue("Sqoop job failed!", sh.getRet() == 0);
-    sh.exec("hadoop fs -cat $OUTPUT/split-by/part-* > split-by.out");
-    assertEquals("sqoop import did not write expected data",
-        0, sh.exec("diff -u $DATA_DIR/sqoop-testtable.out split-by.out").getRet());
   }
 
   @Ignore("Backward Compatibility")
@@ -352,18 +420,4 @@ class TestSqoopImport {
         0, sh.exec("diff -u $DATA_DIR/sqoop-null-non-string.out non-null-string.out").getRet());
   }
 
-  //database name is hardcoded here
-  @Ignore("Backward Compatibility")
-  @Test
-  public void testImportAllTables() {
-    String SQOOP_CONNECTION_IMPORT_ALL =
-    "--connect jdbc:mysql://$MYSQL_HOST/mysqltestdb2 --username=$MYSQL_USER" +
-    (("".equals(MYSQL_PASSWORD)) ? "" : " --password=$MYSQL_PASSWORD");
-
-    sh.exec("sqoop import-all-tables $SQOOP_CONNECTION_IMPORT_ALL --warehouse-dir $OUTPUT/alltables");
-    assertTrue("Sqoop job failed!", sh.getRet() == 0);
-    sh.exec("hadoop fs -cat $OUTPUT/alltables/testtable*/part-* > all-tables.out");
-    assertEquals("sqoop import did not write expected data",
-        0, sh.exec("diff -u $DATA_DIR/sqoop-all-tables.out all-tables.out").getRet());
-  }
 }
