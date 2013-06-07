@@ -85,9 +85,8 @@ mvn verify
 
 * Putting it all together
 
-  As you can see in the {{{https://svn.apache.org/repos/asf/incubator/bigtop/trunk/test/suites/}suites}}
-  we are using Maven failsafe plugin to execute tests in the integration testing
-  phase of a maven project lifecycle.
+  We are using the Maven failsafe plugin to execute tests in the integration
+  testing phase of a maven project lifecycle.
 
   One of the issues with this plugin is that it requires a presence of a physical
   files somewhere on the disk in order to run appropriate tests (which might
@@ -96,9 +95,8 @@ mvn verify
   class files in the location where failsafe will be looking for them, however
   ones from jars found in the classpath will be executed.
 
-  You can see this step being done in the toplevel
-  {{{https://svn.apache.org/repos/asf/incubator/bigtop/trunk/test/suites/common/pom.xml}pom.xml}}
-  file in the configuration section of <<<org.codehaus.groovy.maven>>> plugin
+  This step is done in the toplevel pom.xml file in the configuration section
+  of <<<org.codehaus.groovy.maven>>> plugin
 
   iTest provides a convenient method of unpacking data files included
   into test artifacts (if needed). It is can be done from the code of the tests

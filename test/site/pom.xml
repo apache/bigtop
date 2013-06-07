@@ -47,7 +47,7 @@
     <url>https://issues.apache.org/jira/browse/BIGTOP</url>
   </issueManagement>
   <scm>
-    <url>https://svn.apache.org/repos/asf/incubator/bigtop/</url>
+    <url>http://git-wip-us.apache.org/repos/asf/bigtop.git</url>
   </scm>
   <distributionManagement>
     <site>

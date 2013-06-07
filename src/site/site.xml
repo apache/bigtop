@@ -18,13 +18,9 @@
 <project name="Bigtop">
   <bannerLeft>
     <name>Bigtop</name>
-    <src>http://incubator.apache.org/bigtop/images/bigtop-logo.png</src>
-    <href>http://incubator.apache.org/bigtop/</href>
+    <src>http://bigtop.apache.org/images/bigtop-logo.png</src>
+    <href>http://bigtop.apache.org/</href>
   </bannerLeft>
-  <bannerRight>
-    <src>http://incubator.apache.org/bigtop/images/apache-incubator-logo.png</src>
-    <href>http://incubator.apache.org/</href>
-  </bannerRight>
 
   <publishDate position="right"/>
   <version position="right"/>
@@ -39,18 +35,17 @@
     <links position="left">
       <item name="Wiki" href="https://cwiki.apache.org/confluence/display/BIGTOP" />
       <item name="JIRA" href="https://issues.apache.org/jira/browse/BIGTOP" />
-      <item name="SVN" href="https://svn.apache.org/repos/asf/incubator/bigtop/" />
+      <item name="GIT" href="https://git-wip-us.apache.org/repos/asf/bigtop.git" />
     </links>
 
     <breadcrumbs position="left">
       <item name="Apache" href="http://www.apache.org/" />
-      <item name="Apache Incubator" href="http://incubator.apache.org/" />
-      <item name="Bigtop" href="http://incubator.apache.org/bigtop/"/>
+      <item name="Bigtop" href="http://bigtop.apache.org//"/>
     </breadcrumbs>
 
     <menu name="Bigtop">
       <item name="Overview" href="index.html"/>
-      <item name="Download" href="http://www.apache.org/dyn/closer.cgi/incubator/bigtop/" />
+      <item name="Download" href="http://www.apache.org/dyn/closer.cgi/bigtop/" />
       <item name="Release Notes" href="release-notes.html"/>
       <item name="Who We Are" href="team-list.html" />
     </menu>

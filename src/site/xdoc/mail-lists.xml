@@ -27,24 +27,24 @@ xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd
     <p>
     If you use Bigtop, please subscribe to the Bigtop user mailing list.<br /> 
     The Bigtop user mailing list is : 
-    <a href="mailto:bigtop-user@incubator.apache.org">bigtop-user@incubator.apache.org</a>.
+    <a href="mailto:user@bigtop.apache.org">user@bigtop.apache.org</a>.
     </p>
     <ul>
-    <li><a href="mailto:bigtop-user-subscribe@incubator.apache.org">Subscribe to List</a></li>
-    <li><a href="mailto:bigtop-user-unsubscribe@incubator.apache.org">Unsubscribe from List</a></li>
-    <li><a href="http://mail-archives.apache.org/mod_mbox/incubator-bigtop-user/">Browse archives</a></li>
+    <li><a href="mailto:user-subscribe@bigtop.apache.org">Subscribe to List</a></li>
+    <li><a href="mailto:user-unsubscribe@bigtop.apache.org">Unsubscribe from List</a></li>
+    <li><a href="http://mail-archives.apache.org/mod_mbox/bigtop-user/">Browse archives</a></li>
     </ul>
     
     <subsection name="Bigtop Developer List"></subsection>
     <p>
     If you'd like to contribute to Bigtop, please subscribe to the Bigtop developer mailing list.<br /> 
     The Bigtop developer mailing list is : 
-    <a href="mailto:bigtop-dev@incubator.apache.org">bigtop-dev@incubator.apache.org</a>.
+    <a href="mailto:dev@bigtop.apache.org">dev@bigtop.apache.org</a>.
     </p>
     <ul>
-    <li><a href="mailto:bigtop-dev-subscribe@incubator.apache.org">Subscribe to List</a></li>
-    <li><a href="mailto:bigtop-dev-unsubscribe@incubator.apache.org">Unsubscribe from List</a></li>
-    <li><a href="http://mail-archives.apache.org/mod_mbox/incubator-bigtop-dev/">Browse archives</a></li>
+    <li><a href="mailto:dev-subscribe@bigtop.apache.org">Subscribe to List</a></li>
+    <li><a href="mailto:dev-unsubscribe@bigtop.apache.org">Unsubscribe from List</a></li>
+    <li><a href="http://mail-archives.apache.org/mod_mbox/bigtop-dev/">Browse archives</a></li>
     </ul>
     
     <subsection name="Bigtop Commit List"></subsection>
@@ -52,12 +52,12 @@ xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd
     If you'd like to see changes made in Bigtop's version control system  then subscribe 
     to the Bigtop commit mailing list.<br />
     The Bigtop commit mailing list is : 
-    <a href="mailto:bigtop-commits@incubator.apache.org">bigtop-commits@incubator.apache.org</a>.
+    <a href="mailto:commits@bigtop.apache.org">commits@bigtop.apache.org</a>.
     </p>
     <ul>
-    <li><a href="mailto:bigtop-commits-subscribe@incubator.apache.org">Subscribe to List</a></li>
-    <li><a href="mailto:bigtop-commits-unsubscribe@incubator.apache.org">Unsubscribe from List</a></li>
-    <li><a href="http://mail-archives.apache.org/mod_mbox/incubator-bigtop-commits/">Browse archives</a></li>
+    <li><a href="mailto:commits-subscribe@bigtop.apache.org">Subscribe to List</a></li>
+    <li><a href="mailto:commits-unsubscribe@bigtop.apache.org">Unsubscribe from List</a></li>
+    <li><a href="http://mail-archives.apache.org/mod_mbox/bigtop-commits/">Browse archives</a></li>
     </ul>
     
   </body>

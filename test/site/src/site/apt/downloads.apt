@@ -47,5 +47,5 @@ repository http://mvnrepository.com/artifact/org.apache.bigtop.itest/itest-commo
 </dependency>
 +--------------------------------------+
 
-  Or you can fetch iTest workspace from https://svn.apache.org/repos/asf/incubator/bigtop/
+  Or you can fetch iTest workspace from https://git-wip-us.apache.org/repos/asf?p=bigtop.git
 

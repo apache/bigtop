@@ -27,7 +27,6 @@ xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd
      The primary goal of Bigtop is to build a community around the packaging and interoperability testing 
      of Hadoop-related projects. This includes testing at various levels (packaging, platform, runtime, upgrade, etc...) 
      developed by a community with a focus on the system as a whole, rather than individual projects.</p>
-     <p>Bigtop is currently being incubated in the <a class="externalLink" href="http://incubator.apache.org/">Apache Incubator</a></p>
      <br/><br/>
     <subsection name="Building Bigtop"></subsection>
     <p>Packages have been built for CentOS/RHEL 5 and 6, Fedora 17, SuSE Linux Enterprise 11,        
@@ -120,13 +119,5 @@ xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd
       <li><a href="http://bigtop01.cloudera.org:8080/view/Bigtop-trunk/job/Bigtop-0.4.0/">Bigtop-0.4.0</a>: Builds the 0.4.0 release.</li>
       <li><a href="http://bigtop01.cloudera.org:8080/job/Bigtop-VM-matrix/">Bigtop-VM-matrix</a>: Builds virtual machines of branches trunk and 0.3 for KVM, VMWare and VirtualBox.</li>
     </ul>
-    <subsection name="Disclaimer"></subsection>
-    <p>
-       Apache Bigtop is an effort undergoing incubation at The Apache Software Foundation (ASF), 
-      sponsored by the Apache Incubator. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, 
-      communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. 
-      While incubation status is not necessarily a reflection of the completeness or stability of the code, 
-      it does indicate that the project has yet to be fully endorsed by the ASF.
-    </p>
   </body>
 </document>

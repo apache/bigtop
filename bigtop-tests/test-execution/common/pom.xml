@@ -103,7 +103,7 @@
   </properties>
 
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/incubator/bigtop/</connection>
+    <connection>scm:git:https://git-wip-us.apache.org/repos/asf/bigtop.git</connection>
   </scm>
 
   <dependencies>
