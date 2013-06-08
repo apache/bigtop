@@ -210,6 +210,8 @@ fi
 %attr(0755,hive,hive) %dir %{_localstatedir}/run/%{name}
 %doc %{doc_hive}
 %{man_dir}/man1/hive.1.*
+%exclude %dir %{usr_lib_hive}
+%exclude %dir %{usr_lib_hive}/lib
 %exclude %{usr_lib_hive}/lib/hbase.jar
 %exclude %{usr_lib_hive}/lib/hive-jdbc-*.jar
 %exclude %{usr_lib_hive}/lib/hive-metastore-*.jar
@@ -229,6 +231,7 @@ fi
 %files jdbc
 %defattr(-,root,root,755)
 %dir %{usr_lib_hive}
+%dir %{usr_lib_hive}/lib
 %{usr_lib_hive}/lib/hive-jdbc-*.jar
 %{usr_lib_hive}/lib/hive-metastore-*.jar
 %{usr_lib_hive}/lib/hive-serde-*.jar
