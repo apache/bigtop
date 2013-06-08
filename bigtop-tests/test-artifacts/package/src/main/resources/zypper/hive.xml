@@ -3,8 +3,6 @@
     <file name='/etc/hive/conf.dist' owners='1' perm='drwxr-xr-x' user='root' group='root' />
     <config name='/etc/hive/conf.dist/hive-default.xml.template' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <config name='/etc/hive/conf.dist/hive-env.sh.template' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <config name='/etc/hive/conf.dist/hive-exec-log4j.properties.template' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <config name='/etc/hive/conf.dist/hive-log4j.properties.template' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <config name='/etc/hive/conf.dist/hive-site.xml' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/bin/hive' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib/hive/bin' owners='1' perm='drwxr-xr-x' user='root' group='root' />
@@ -33,8 +31,6 @@
     <file name='/usr/lib/hive/lib/commons-collections-3.2.1.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/hive/lib/commons-dbcp-1.4.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/hive/lib/commons-lang-2.4.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/lib/hive/lib/commons-logging-1.0.4.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/lib/hive/lib/commons-logging-api-1.0.4.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/hive/lib/commons-pool-1.5.4.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/hive/lib/datanucleus-connectionpool-2.0.3.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/hive/lib/datanucleus-core-2.0.3.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
@@ -47,15 +43,10 @@
     <file name='/usr/lib/hive/lib/hive-cli-0.8.1.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/hive/lib/hive-common-0.8.1.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/hive/lib/hive-contrib-0.8.1.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/lib/hive/lib/hive-exec-0.8.1.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/hive/lib/hive-hbase-handler-0.8.1.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/hive/lib/hive-hwi-0.8.1.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/hive/lib/hive-hwi-0.8.1.war' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/lib/hive/lib/hive-jdbc-0.8.1.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/lib/hive/lib/hive-metastore-0.8.1.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/hive/lib/hive-pdk-0.8.1.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/lib/hive/lib/hive-serde-0.8.1.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/lib/hive/lib/hive-service-0.8.1.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/hive/lib/hive-shims-0.8.1.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/hive/lib/hive_contrib.jar' owners='1' perm='lrwxrwxrwx' user='root' group='root' target='hive-contrib-0.8.1.jar' />
     <file name='/usr/lib/hive/lib/javaewah-0.3.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
@@ -63,12 +54,6 @@
     <file name='/usr/lib/hive/lib/jline-0.9.94.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/hive/lib/json-20090211.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/hive/lib/junit-4.10.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/lib/hive/lib/libfb303-0.7.0.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/lib/hive/lib/libfb303.jar' owners='1' perm='lrwxrwxrwx' user='root' group='root' target='libfb303-0.7.0.jar' />
-    <file name='/usr/lib/hive/lib/libthrift-0.7.0.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/lib/hive/lib/libthrift.jar' owners='1' perm='lrwxrwxrwx' user='root' group='root' target='libthrift-0.7.0.jar' />
-    <file name='/usr/lib/hive/lib/log4j-1.2.15.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/lib/hive/lib/log4j-1.2.16.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/hive/lib/mockito-all-1.8.2.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/hive/lib/php' owners='1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib/hive/lib/php/Thrift.php' owners='1' perm='-rw-r--r--' user='root' group='root' />
@@ -163,8 +148,6 @@
     <file name='/usr/lib/hive/lib/py/thrift/transport/TTransport.py' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/hive/lib/py/thrift/transport/TTwisted.py' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/hive/lib/py/thrift/transport/__init__.py' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/lib/hive/lib/slf4j-api-1.6.1.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/lib/hive/lib/slf4j-log4j12-1.6.1.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/hive/lib/stringtemplate-3.1-b1.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/hive/lib/velocity-1.5.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/hive/scripts' owners='1' perm='drwxr-xr-x' user='root' group='root' />
