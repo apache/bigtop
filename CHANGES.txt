@@ -16,6 +16,7 @@
 Bigtop Changelog
 
 * Release 0.6.0 (unreleased)
+  XXX update this stuff
 
 * Release 0.5.0 (2012-12-25)
 
