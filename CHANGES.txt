@@ -15,7 +15,188 @@
 
 Bigtop Changelog
 
-* Release 0.6.0 (unreleased)
+* Release 0.7.0 (unreleased)
+
+* Release 0.6.0 (2013-06-10)
+
+- SUB-TASK
+  - [BIGTOP-239] - HBase init scripts are shut down in the wrong order
+  - [BIGTOP-812] - HttpFS is using Tomcat 6.0.32 which has numerous vulnerabilities
+  - [BIGTOP-813] - add integration test for HCatlog
+  - [BIGTOP-814] - add packaging test for HCatlog
+  - [BIGTOP-822] - Bump version of Hadoop to 2.0.5
+  - [BIGTOP-824] - Bump version of Hive to 0.10
+  - [BIGTOP-832] - Bump version of Hue to 2.3.0
+  - [BIGTOP-833] - Update HCatalog packaging for Bigtop 0.6.0 integration
+  - [BIGTOP-839] - add packaging test for Sqoop 2
+  - [BIGTOP-852] - Improve HDFS helper script
+  - [BIGTOP-854] - add package testing manifest for HCatalog
+  - [BIGTOP-855] - add integration tests for HCatalog
+  - [BIGTOP-861] - init-hdfs.sh does not work from init scripts
+  - [BIGTOP-862] - All the Apache Hadoop services ought to start nicely and in order
+  - [BIGTOP-863] - verify the existence of the initscripts with typo
+  - [BIGTOP-864] -  update the appliance for the location of the init-hdfs.sh script
+  - [BIGTOP-880] - Bump version of Datafu to 0.0.6
+  - [BIGTOP-891] - TestPigTest doesn't run against YARN cluster
+  - [BIGTOP-915] - bump version of Oozie to 3.3.2
+  - [BIGTOP-916] - Bump version of Pig to 0.11.1
+  - [BIGTOP-917] - Bump version of Solr to 4.2.1
+  - [BIGTOP-926] - Bump version of Giraph to 1.0
+  - [BIGTOP-933] - Need to add ASF license text to bigtop-toolchain files
+  - [BIGTOP-962] - Bump Sqoop version to 1.99.2
+  - [BIGTOP-963] - bump version of Whirr to 0.8.2
+  - [BIGTOP-980] - bigtop-toolchaing user module can't create 'jenkins' user
+
+- BUG FIXES
+  - [BIGTOP-275] - scoping of variable in puppet code is incorrect
+  - [BIGTOP-379] - Package testing for Bigtop 0.5.0 release
+  - [BIGTOP-445] - yarn default file has the wrong name
+  - [BIGTOP-463] - should we reconsider /usr/lib vs. /usr/libexec decision?
+  - [BIGTOP-483] - Smoke test of Hadoop fails with clitest missing testConf.xml file
+  - [BIGTOP-489] - TestCLI with two test cases fails ID - 146 and 147 related to refreshServiceAcl
+  - [BIGTOP-504] - provide a functionality for detecting libjvm.so in bigtop-utils
+  - [BIGTOP-545] - package testing manifest in trunk needs to be updated
+  - [BIGTOP-553] - Metadata for packages needs to be harmonized between RPM and Debain
+  - [BIGTOP-584] - Fix hive smoke test failures in trunk
+  - [BIGTOP-624] - running start on a service already running should return success
+  - [BIGTOP-637] - Update boxgrinder appliance for the coming release
+  - [BIGTOP-786] - Not able to find wiki link on Bigtop homepage
+  - [BIGTOP-804] - org.apache.bigtop.itest.pmanager.PackageManagerTest.testLookupGcc fails on some systems
+  - [BIGTOP-808] - hadoop-conf-pseudo package breaks hadoop-conf alternatives during upgrades
+  - [BIGTOP-809] - Remove harmless scary message from solr build
+  - [BIGTOP-815] - Move the trunk forward now that 0.5.0 is released
+  - [BIGTOP-818] - Updated list of supported platforms on Bigtop's homepage and readme file
+  - [BIGTOP-823] - Remove obsolete slf4j removal in hive packaging
+  - [BIGTOP-826] - Wrong return code returned when stopping Hue on RHEL/SUSE
+  - [BIGTOP-827] - Ubuntu Install Instructutions Fail with a 404
+  - [BIGTOP-829] - Hue status returned wrong information on SLES
+  - [BIGTOP-830] - Add $(APACHE_MIRROR) for bigtop-tomcat
+  - [BIGTOP-834] - Remove workaround for MAPREDUCE-4814 in historyserver
+  - [BIGTOP-835] - The shell exec method must have variants which have timeout and can run in background
+  - [BIGTOP-836] - Hue status on SuSE doesn't work when run from outside of /usr/bin
+  - [BIGTOP-837] - Oozie 3.3.0 can't be build against Hadoop 2.0.3 or later
+  - [BIGTOP-841] - hadoop-conf-pseudo missed configuration for capacity scheduler and historyserver
+  - [BIGTOP-842] - hadoop-mapreduce-historyserver service dumps some output to the console instead of its .out file 
+  - [BIGTOP-844] - hadoop rpm upgrade sequence is broken
+  - [BIGTOP-846] - The helper script introduced in BIGTOP-547 doesn't create /user/$USER directories on HDFS
+  - [BIGTOP-850] - Remove non-ASF repositories and infrastructure references from the project files
+  - [BIGTOP-851] - Typo breaks detection of multiple libraries in bigtop-utils in some JVMs
+  - [BIGTOP-853] - HBase test, TestLoadAndVerify does not work on secure clusters
+  - [BIGTOP-857] - Inconsistent group ownership of /var/run/hadoop-hdfs between .deb and .rpm installs
+  - [BIGTOP-858] - HBase tests are no longer compile with HBase 0.94
+  - [BIGTOP-859] - fix the Bigtop trunk package test
+  - [BIGTOP-869] - hadoop preun should not stop services itself on behalf of its subpackages
+  - [BIGTOP-870] - Bump version of Pig to 0.11
+  - [BIGTOP-873] - Hive needs Ivy cache cleared
+  - [BIGTOP-874] - make test contracts show up in javadoc
+  - [BIGTOP-875] - hadoop-smoke is broken because of missed dependency
+  - [BIGTOP-876] - TestDFSAdmin in hadoop-smoke is outdated and still relies on presence of -upgradeProgress
+  - [BIGTOP-877] - TestDFSAdmin in hadoop-smoke has to ensure its own environment, e.g. create HDFS paths, etc.
+  - [BIGTOP-878] - Bump version of Oozie to 3.3.1
+  - [BIGTOP-879] - Bump version of Solr to 4.2.0
+  - [BIGTOP-883] - Add support for Oracle RPM Java 1.7
+  - [BIGTOP-884] - hive smoke tests can't be executed as a jar file isn't present anymore
+  - [BIGTOP-885] - TestHiveSmokeBulk fails on Hive 0.9
+  - [BIGTOP-886] - Non-fatal errors when starting Hive daemons in EL5
+  - [BIGTOP-887] - Sqoop 2 should be consistent with Oozie / Bigtop for server plugins directory
+  - [BIGTOP-888] - Oozie losing value of JAVA_HOME when spawning sub-shell
+  - [BIGTOP-889] - pig smoke tests are no longer running
+  - [BIGTOP-890] - Remove workaround for distributed cache problem from Oozie package
+  - [BIGTOP-892] - hadoop packages misses capacity-scheduler configuration
+  - [BIGTOP-894] - Pig compilation fails on RPM systems on Bigtop trunk
+  - [BIGTOP-895] - A number of testcases in TestCLI are failing with (at least) Hadoop 2.0.3 and later
+  - [BIGTOP-896] - Solr rpm requires redhat-lsb to run
+  - [BIGTOP-899] - enabled deployment topology with 3 nodes
+  - [BIGTOP-900] - update deployment configs for Kerberized installations
+  - [BIGTOP-901] - Oozie smoke tests mightn't be able to obtain the jobtracker or namenode hostnames, using old config. names 
+  - [BIGTOP-902] - Hive uses same file for log4j and standard output
+  - [BIGTOP-903] - crunch integration tests need to clean up output directory before each individual subtask is run
+  - [BIGTOP-904] - mahout tests should default to /tmp as a temp location
+  - [BIGTOP-905] - bump versions of test execution poms to match the BOM
+  - [BIGTOP-906] - a few tests need artifacts compiled against Hadoop 2.X
+  - [BIGTOP-907] -  hadoop-mapreduce-historyserver should require hadoop-hdfs
+  - [BIGTOP-910] - datanode init script cannot stop the process bcause it cannot find the pid file
+  - [BIGTOP-912] - update HBase tests for 0.6.0
+  - [BIGTOP-914] - puppet needs to provision test users
+  - [BIGTOP-918] - Move BOM version info to the root pom file
+  - [BIGTOP-920] - Add HCatalog tests
+  - [BIGTOP-923] - Packages that depend on bigtop-utils needs to specify >= 0.6
+  - [BIGTOP-928] - Hive can't be build against non-published Hadoop artifacts
+  - [BIGTOP-929] - Pig component build needs to use internal resolvers
+  - [BIGTOP-930] - init-hdfs.sh fails on execution
+  - [BIGTOP-934] - Hidden cookie is being set by wiki.cloudera.org via http://blogs.apache.org/bigtop top page
+  - [BIGTOP-935] - Use init script templates for hive
+  - [BIGTOP-936] - Use init script templates for hbase
+  - [BIGTOP-937] - Hive does not restart on Ubuntu
+  - [BIGTOP-940] - fix issues with Hive package
+  - [BIGTOP-945] - Service lock files need to match init script name
+  - [BIGTOP-946] - solr-server runlevels are wrong in debian
+  - [BIGTOP-947] - oozie init script does not use JAVA_HOME in /etc/default/bigtop-utils
+  - [BIGTOP-948] - TestFileAppend and TestHDFSQuota tests need to be updated
+  - [BIGTOP-949] - Add Sqoop tests
+  - [BIGTOP-950] - race condition for output consumption in Shell code
+  - [BIGTOP-951] - Hive Smoke's TestJdbcDriver fails
+  - [BIGTOP-953] - Revert BIGTOP-835 and BIGTOP-950
+  - [BIGTOP-954] - metadada and user data for sqoop and hcatalog packages are wrong
+  - [BIGTOP-956] - fix small issues with mahout, hue and oozie tests
+  - [BIGTOP-957] - update deployment code for Sqoop2
+  - [BIGTOP-958] - update deployment code for HCatalog
+  - [BIGTOP-959] - get rid of hadoop specific init.d.tmpl
+  - [BIGTOP-960] - Remove workaround for HBASE-6263 in hbase-thrift start
+  - [BIGTOP-968] - oozie is now part of the core hue
+  - [BIGTOP-969] - a few files belong to more than one package
+  - [BIGTOP-970] - update package test manifest and fix small issues in package metadata for Bigtop 0.6.0
+  - [BIGTOP-971] - take care of the rat licensing complaints
+  - [BIGTOP-974] - Crunch download location is no longer /incubator
+  - [BIGTOP-975] - HBase regionserver init script does not implement "condrestart" command
+  - [BIGTOP-981] - Provide minimal documentation for puppet deploy config file
+  - [BIGTOP-982] - hcatalog needs to be given HCAT_HOME and HIVE_HOME
+  - [BIGTOP-983] - Oozie-client package ships its docs twice
+  - [BIGTOP-984] - bigtop-utils doesn't detect JAVA_HOME for Oracle JDK 7 when package by Debian's tool
+  - [BIGTOP-985] - Create Hive JDBC package
+  - [BIGTOP-988] - HCatalog does not launch daemon process in a known directory
+  - [BIGTOP-991] - crunch archive is incorrect
+  - [BIGTOP-994] - hdfs-init missed a few permissions on the sub-directories
+  - [BIGTOP-997] - TestCLI fails test id 5:  comparator fails
+  - [BIGTOP-1001] - need package tests for hive-jdbc package
+  - [BIGTOP-1002] - Complete porting Sqoop import tests to Sqoop 2
+
+- IMPROVEMENT
+  - [BIGTOP-12] - Add HCatalog to Bigtop
+  - [BIGTOP-547] - create an HDFS setup helper script
+  - [BIGTOP-712] - Bigtop 0.5.0 release
+  - [BIGTOP-713] - use newer debhelper and source format 3.0 (quilt) for Debian and Ubuntu packaging
+  - [BIGTOP-756] - Provide the thrift API interface file in the HBase packages
+  - [BIGTOP-763] - Add hdfs-journalnode to hadoop.spec
+  - [BIGTOP-817] - Wiki breadcrumb still shows Bigtop(incubating)
+  - [BIGTOP-821] - Puppet README's Usage section cuts off because of angle bracket delimiter
+  - [BIGTOP-838] - Both conf.empty and conf.pseudo packages don't seem to include a sample hadoop-env.sh file
+  - [BIGTOP-843] - It would be really cool if bigtop-detect-javahome were smarter and didn't pick a 32-bit JVM, or a 1.7 JVM set with default
+  - [BIGTOP-882] - Upload content of Oozie sharelib to HDFS
+  - [BIGTOP-893] - migrate puppet code to use init-hdfs.sh
+  - [BIGTOP-931] - a few improvements to secure puppet deployment code
+  - [BIGTOP-961] - hcatalog should be re-using hive user when running
+  - [BIGTOP-967] - package removal is currently missing from our package tests
+  - [BIGTOP-973] - Improve error diagnostics when sed'ing Hadoop version in Oozie package
+  - [BIGTOP-995] - JDK bug 6979329 requires a redundant kinit -R
+  - [BIGTOP-1000] - Remove remaining references to the Incubator
+
+- NEW FEATURE
+  - [BIGTOP-732] - Support running multiple HBase region servers
+  - [BIGTOP-881] - Add support for Oozie to be configured with SSL (HTTPS)
+
+- TASK
+  - [BIGTOP-118] - Check to ensure our build system requirements are actually declared properly in the packaging.
+  - [BIGTOP-681] - Package tests needed for new DataFu package
+  - [BIGTOP-720] - Build environment automation
+  - [BIGTOP-760] - Push artifacts from non-Maven projects into local Maven cache
+  - [BIGTOP-805] - Add Sqoop 2 to bigtop
+
+- TEST
+  - [BIGTOP-621] - Add test for distcp - intra cluster
+  - [BIGTOP-625] - Add HDFS Append Test
+  - [BIGTOP-693] - Add hadoop-fuse-dfs test
+  - [BIGTOP-728] - add datafu integration test
 
 * Release 0.5.0 (2012-12-25)
 
