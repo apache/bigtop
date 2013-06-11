@@ -378,7 +378,10 @@ done
 install -d -m 0755 ${CLIENT_DIR}
 for file in `cat ${BUILD_DIR}/hadoop-client.list` ; do
   for dir in ${HADOOP_DIR}/{lib,} ${HDFS_DIR}/{lib,} ${YARN_DIR}/{lib,} ${MAPREDUCE_DIR}/{lib,} ; do
-    [ -e $dir/$file ] && ln -fs ${dir#$PREFIX}/$file ${CLIENT_DIR}/$file && continue 2
+    [ -e $dir/$file ] && \
+    ln -fs ${dir#$PREFIX}/$file ${CLIENT_DIR}/${file} && \
+    ln -fs ${dir#$PREFIX}/$file ${CLIENT_DIR}/${file/-[[:digit:]]*/.jar} && \
+    continue 2
   done
   exit 1
 done
