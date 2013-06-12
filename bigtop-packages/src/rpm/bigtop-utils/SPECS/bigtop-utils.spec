@@ -70,8 +70,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc LICENSE
 %config(noreplace) /etc/default/bigtop-utils
 
-%{lib_dir}/bigtop-detect-javahome
-%{lib_dir}/bigtop-detect-javalibs
+%{lib_dir}
 
 %changelog
 
