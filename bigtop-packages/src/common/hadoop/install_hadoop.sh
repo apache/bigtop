@@ -250,7 +250,7 @@ install -d -m 0755 ${SYSTEM_INCLUDE_DIR}
 cp ${BUILD_DIR}/include/hdfs.h ${SYSTEM_INCLUDE_DIR}/
 
 cp ${BUILD_DIR}/lib/native/*.a ${HADOOP_NATIVE_LIB_DIR}/
-for library in `cd ${BUILD_DIR}/lib ; ls libsnappy.so.1.* 2>/dev/null` libhadoop.so.1.0.0; do
+for library in `cd ${BUILD_DIR}/lib/native ; ls libsnappy.so.1.* 2>/dev/null` libhadoop.so.1.0.0; do
   cp ${BUILD_DIR}/lib/native/${library} ${HADOOP_NATIVE_LIB_DIR}/
   ldconfig -vlN ${HADOOP_NATIVE_LIB_DIR}/${library}
   ln -s ${library} ${HADOOP_NATIVE_LIB_DIR}/${library/.so.*/}.so
