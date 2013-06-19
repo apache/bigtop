@@ -93,6 +93,17 @@ but here's 2 steps to get started:
 
         cd test/suites/package/ && mvn clean verify -Dbigtop.repo.file.url.CentOS=XXX  -D'org.apache.maven-failsafe-plugin.testInclude=**/TestPackagesReadiness.*'
 
+* to run all smoke tests on the cluster export 
+    HADOOP_HOME; HADOOP_CONF_DIR; HADOOP_MAPRED_HOME; HBASE_HOME; HIVE_HOME;
+    HUE_URL; OOZIE_URL; SOLR_URL; SQOOP_URL
+
+  then run
+    mvn -fae clean verify -Dorg.apache.bigtop.itest.log4j.level=TRACE -f bigtop-tests/test-execution/smokes/pom.xml
+
+  -fae - will allow all non-impacted builds to continue, so you can run all
+         the tests and deal with the error reports later
+  -Dorg.apache.bigtop.itest.log4j.level can be set to your liking.
+
 ##  Contact us!
 
 You can get in touch with us on the Bigtop mailing lists (http://bigtop.apache.org/mail-lists.html).
