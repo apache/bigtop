@@ -332,7 +332,7 @@ and import and export data.
 %package -n %{name}-pig
 Summary: A UI for Pig on Hue
 Group: Applications/Engineering
-Requires: make, pig
+Requires: make
 Requires: %{name}-common = %{version}-%{release}
 
 %description -n %{name}-pig
