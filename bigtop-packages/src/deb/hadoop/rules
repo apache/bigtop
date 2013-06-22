@@ -52,6 +52,7 @@ $(hadoop_svcs): debian/init.d.tmpl
 	sed -i -e "s|@HADOOP_DAEMON@|$@|" debian/hadoop-$@.postinst
 
 override_dh_auto_install:
+	env HADOOP_VERSION=${hadoop_version} \
 	bash debian/install_hadoop.sh \
 	  --prefix=debian/tmp/ \
 	  --distro-dir=debian \

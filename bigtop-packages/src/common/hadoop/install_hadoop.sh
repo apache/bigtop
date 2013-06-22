@@ -158,8 +158,6 @@ BASH_COMPLETION_DIR=${BASH_COMPLETION_DIR:-$PREFIX/etc/bash_completion.d}
 INSTALLED_HADOOP_DIR=${INSTALLED_HADOOP_DIR:-/usr/lib/hadoop}
 HADOOP_NATIVE_LIB_DIR=${HADOOP_DIR}/lib/native
 
-HADOOP_VERSION=0.23.1
-
 ##Needed for some distros to find ldconfig
 export PATH="/sbin/:$PATH"
 

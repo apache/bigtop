@@ -455,7 +455,7 @@ env HADOOP_VERSION=%{hadoop_base_version} HADOOP_ARCH=%{hadoop_arch} bash %{SOUR
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{lib_hadoop}
 
-bash %{SOURCE2} \
+env HADOOP_VERSION=%{hadoop_base_version} bash %{SOURCE2} \
   --distro-dir=$RPM_SOURCE_DIR \
   --build-dir=$PWD/build \
   --httpfs-dir=$RPM_BUILD_ROOT%{lib_httpfs} \
