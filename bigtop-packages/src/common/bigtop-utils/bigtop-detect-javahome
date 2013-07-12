@@ -21,11 +21,11 @@
 
 # attempt to find java
 if [ -z "$JAVA_HOME" ]; then
-  for candidate in \
+  for candidate_regex in \
     /usr/lib/j2sdk1.6-sun \
     /usr/lib/jvm/java-6-sun \
     /usr/lib/jvm/java-1.6.0-sun-1.6.0.* \
-    /usr/lib/jvm/java-1.6.0-sun-1.6.0.*/jre/ \
+    /usr/lib/jvm/java-1.6.0-sun-1.6.0.*/jre \
     /usr/lib/jvm/j2sdk1.6-oracle \
     /usr/lib/jvm/j2sdk1.6-oracle/jre \
     /usr/java/jdk1.6* \
@@ -45,10 +45,12 @@ if [ -z "$JAVA_HOME" ]; then
     /usr/lib/jvm/java-1.6.0-openjdk \
     /usr/lib/jvm/java-1.6.0-openjdk-* \
     /usr/lib/jvm/jre-1.6.0-openjdk* ; do
-    if [ -e $candidate/bin/java ]; then
-      export JAVA_HOME=$candidate
-      break
-    fi
+      for candidate in `ls -rd $candidate_regex 2>/dev/null`; do
+        if [ -e $candidate/bin/java ]; then
+          export JAVA_HOME=$candidate
+          break
+        fi
+      done
   done
 fi
 
