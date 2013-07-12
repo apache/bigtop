@@ -14,6 +14,7 @@
 # limitations under the License.
 
 %define lib_dir /usr/lib/bigtop-utils
+%define plugins_dir /var/lib/bigtop
 
 Name: bigtop-utils
 Version: %{bigtop_utils_version}
@@ -29,6 +30,7 @@ Source0:    bigtop-detect-javahome
 Source1:    LICENSE
 Source2:    bigtop-utils.default
 Source3:    bigtop-detect-javalibs
+Source4:    bigtop-detect-classpath
 
 Requires:   bash
 
@@ -50,15 +52,18 @@ install -p -m 644 %{SOURCE0} .
 install -p -m 644 %{SOURCE1} .
 install -p -m 644 %{SOURCE2} .
 install -p -m 644 %{SOURCE3} .
+install -p -m 644 %{SOURCE4} .
 
 %build
 
 
 %install
+install -d -p -m 755 $RPM_BUILD_ROOT%{plugins_dir}/
 install -d -p -m 755 $RPM_BUILD_ROOT%{lib_dir}/
 install -d -p -m 755 $RPM_BUILD_ROOT/etc/default
 install -p -m 755 %{SOURCE0} $RPM_BUILD_ROOT%{lib_dir}/
 install -p -m 755 %{SOURCE3} $RPM_BUILD_ROOT%{lib_dir}/
+install -p -m 755 %{SOURCE4} $RPM_BUILD_ROOT%{lib_dir}/
 install -p -m 644 %{SOURCE2} $RPM_BUILD_ROOT/etc/default/bigtop-utils
 
 %clean
@@ -71,6 +76,7 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/default/bigtop-utils
 
 %{lib_dir}
+%{plugins_dir}
 
 %changelog
 

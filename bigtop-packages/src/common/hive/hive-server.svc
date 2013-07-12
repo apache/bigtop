@@ -40,6 +40,10 @@ start() {
 
     exec_env="HADOOP_OPTS=\"-Dhive.log.dir=`dirname $LOG_FILE` -Dhive.log.file=${DAEMON}.log -Dhive.log.threshold=INFO\""
 
+    # Autodetect JDBC drivers for metastore
+    . /usr/lib/bigtop-utils/bigtop-detect-classpath
+    exec_env="HADOOP_CLASSPATH=${HADOOP_CLASSPATH}:${BIGTOP_CLASSPATH} $exec_env"
+
     su -s /bin/sh $SVC_USER -c "$exec_env nohup nice -n 0 \
         $EXEC_PATH --service hiveserver $PORT \
             > $LOG_FILE 2>&1 < /dev/null & "'echo $! '"> $PIDFILE"

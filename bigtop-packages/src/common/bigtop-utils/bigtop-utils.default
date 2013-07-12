@@ -18,3 +18,6 @@
 
 # Provide a colon-delimited list of directories to search for native Java libraries (e.g. libjvm.so)
 # export JAVA_NATIVE_PATH
+
+# Add common dependencies to the classpath (/var/lib/bigtop will already be included)
+# export BIGTOP_CLASSPATH
