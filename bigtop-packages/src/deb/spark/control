@@ -13,13 +13,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-1. Debian
-  1.0. apt-get install -y git subversion build-essential dh-make debhelper devscripts ant ant-optional autoconf automake subversion liblzo2-dev libzip-dev sharutils libfuse-dev reprepro libssl-dev
+Source: spark
+Section: misc
+Priority: extra
+Maintainer: Bigtop <bigtop-dev@incubator.apache.org>
+Build-Depends: debhelper (>= 6)
+Standards-Version: 3.8.0
+Homepage: http://www.spark-project.org/
 
-  FIXME?: You also need to have Scala 2.9.3  installed and SCALA_HOME
-  env. var pointed properly. Otherwise, Spark project won't be build as it
-  requires scala. Only older version of the language environment is available
-  on Ubuntu at the moment.
+Package: spark 
+Architecture: all
+Depends: bigtop-utils
+Description: Lightning-Fast Cluster Computing
+ Spark is a MapReduce-like cluster computing framework designed to support
+ low-latency iterative jobs and interactive use from an interpreter. It is
+ written in Scala, a high-level language for the JVM, and exposes a clean 
+ language-integrated syntax that makes it easy to write parallel jobs. 
+ Spark runs on top of the Apache Mesos cluster manager.
 
-2. RedHat
-  2.0 yum install -y git subversion fuse-devel fuse fuse-libs
