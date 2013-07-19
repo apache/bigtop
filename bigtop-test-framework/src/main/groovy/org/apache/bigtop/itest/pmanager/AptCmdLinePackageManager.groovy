@@ -81,7 +81,7 @@ class AptCmdLinePackageManager extends PackageManager {
   }
 
   public int install(PackageInstance pkg) {
-    shRoot.exec("env DEBIAN_FRONTEND=noninteractive apt-get -y install ${pkg.name}");
+    shRoot.exec("env DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold install ${pkg.name}");
     pkg.installMessages = shRoot.getOut().join('\n');
     return shRoot.getRet();
   }
