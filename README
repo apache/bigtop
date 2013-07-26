@@ -1,11 +1,11 @@
 # Licensed to the Apache Software Foundation (ASF) under one or more
-# contributor license agreements.  See the NOTICE file distributed with
+# contributor license agreements. See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
 # The ASF licenses this file to You under the Apache License, Version 2.0
 # (the "License"); you may not use this file except in compliance with
-# the License.  You may obtain a copy of the License at
+# the License. You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+# http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,27 +13,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # Welcome to Bigtop!
-
+ 
 Bigtop (http://bigtop.apache.org/) is a project for the development of
 packaging and tests of the Apache Hadoop (http://hadoop.apache.org/)
 ecosystem.
-
+ 
 The primary goal of Bigtop is to build a community around the
 packaging and interoperability testing of Hadoop-related
 projects. This includes testing at various levels (packaging,
 platform, runtime, upgrade, etc...) developed by a community with a
 focus on the system as a whole, rather than individual projects.
-
+ 
 ## Building Bigtop
-
+ 
 Packages have been built for CentOS/RHEL 5 and 6, Fedora 17,
 SuSE Linux Enterprise 11, OpenSUSE12.2, Ubuntu LTS Lucid and Precise,
 and Ubuntu Quantal. They can probably be built for other platforms as
 well.Some of the binary artifacts might be compatible with other closely
 related distributions.
-
-Building Bigtop requires the following tools:
-
+ 
+Building all of Bigtop requires the following tools:
+ 
 * Java JDK 1.6
 * Apache Forrest 0.8 (requires 32bit version of Java JDK 1.5)
 * Apache Ant
@@ -46,16 +46,16 @@ Building Bigtop requires the following tools:
 * libz-dev
 * sharutils
 * libfuse-dev
-* libssl-dev 
-
+* libssl-dev
+ 
 On Debian-based systems one also needs
-
+ 
 * build-essential dh-make debhelper devscripts
 * reprepro
-
+ 
 On openSUSE 11.4+, in addition, one also needs to ensure the following is installed:
-
-
+ 
+ 
 relaxngDatatype
 docbook-utils docbook-simple
 asciidoc
@@ -67,43 +67,53 @@ xmlformat
 xmlto
 libxslt
 libopenssl-devel
-
+ 
 ## Building packages
-
-    $ make [component-name]-[rpm|deb]
-
+ 
+$ make [component-name]-[rpm|deb]
+ 
 ## Building local YUM/APT repositories
-
-    $ make [component-name]-[yum|apt]
-
-##  Running the tests
-
+ 
+$ make [component-name]-[yum|apt]
+ 
+## Running the tests
+ 
 WARNING: since testing packages requires installing them on a live
 system it is highly recommended to use VMs for that.
-
-Testing Bigtop is done using iTest framework. For more documentation
-on iTest and testing visit Bigtop wiki http://bigtop.apache.org/,
+ 
+Testing Bigtop is done using iTest framework. The tests are organized in maven submodules, with
+one submodule per bigtop component.
+ 
+The bigtop-tests/test-execution/smokes/pom.xml defines all submodules to be tested, and
+each submodule is in its own directory under smokes/, for example:
+ 
+smokes/hadoop/pom.xml
+smokes/hive/pom.xml
+... and so on.
+ 
+For more documentation on iTest and testing visit Bigtop wiki http://bigtop.apache.org/,
 but here's 2 steps to get started:
-
-* install package testing iTest artifacts locally:
-
-        cd test/src/smokes/package/ && mvn install -DskipTests -DskipITs -DperformRelease
-
-* use those locally installed iTest package testing artifacts to run a suite:
-
-        cd test/suites/package/ && mvn clean verify -Dbigtop.repo.file.url.CentOS=XXX  -D'org.apache.maven-failsafe-plugin.testInclude=**/TestPackagesReadiness.*'
-
-* to run all smoke tests on the cluster export 
-    HADOOP_HOME; HADOOP_CONF_DIR; HADOOP_MAPRED_HOME; HBASE_HOME; HIVE_HOME;
-    HUE_URL; OOZIE_URL; SOLR_URL; SQOOP_URL
-
-  then run
-    mvn -fae clean verify -Dorg.apache.bigtop.itest.log4j.level=TRACE -f bigtop-tests/test-execution/smokes/pom.xml
-
-  -fae - will allow all non-impacted builds to continue, so you can run all
-         the tests and deal with the error reports later
-  -Dorg.apache.bigtop.itest.log4j.level can be set to your liking.
-
-##  Contact us!
-
+ 
+## Running the tests: Installing smoke tests
+* To install your iTest test jars locally (i.e. package/hadoop/flume/sqoop/...)
+ 
+#Note: the --offline option should be used, after you have all dependencies, so that you don't
+#overwrite your built snapshots with remote snapshots.
+mvn install -DskipTests -DskipITs -DperformRelease -f bigtop-tests/test-execution/smokes/package/pom.xml
+ 
+## Running the tests: Running the installed smoke test jars on your cluster
+ 
+* Example 1: To run the iTest testing suite for the "packaging" submodule (i.e. package/hadoop/flume/sqoop/...)
+ 
+mvn clean verify -Dbigtop.repo.file.url.CentOS=XXX -D'org.apache.maven-failsafe-plugin.testInclude=**/TestPackagesReadiness.*' -f bigtop-tests/test-execution/smokes/package/pom.xml
+ 
+ 
+* Example 2: Running the mapreduce standard smokes - for the "hadoop" submodule, further specifying only those in the hadoop examples jar (like WordCount, Calculate PI, and so on):
+ 
+mvn clean verify -Dbigtop.repo.file.url.CentOS=XXX -D'org.apache.maven-failsafe-plugin.testInclude=**/*TestHadoopExamples*' -f bigtop-tests/test-execution/smokes/package/pom.xml
+ 
+Note: A minor bug/issue is that you need the testInclude regular expression above is needed even if you want to run all tests, because iTest names don't follow the maven integration test naming convention of IT*, but instead, follow the surefire (unit test) convention of Test*.
+ 
+## Contact us!
+ 
 You can get in touch with us on the Bigtop mailing lists (http://bigtop.apache.org/mail-lists.html).
