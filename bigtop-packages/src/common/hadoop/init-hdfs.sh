@@ -88,8 +88,8 @@ fi
 if [ "$1" = "-u" ] ; then
   USER="$2"
   USER=${USER:-$(id -un)}
-  su -s /bin/bash hdfs -c "/usr/bin/hadoop fs -ls /user/${USER}"
-  if [ ! $? -eq 0 ]; then
+  EXIST=$(su -s /bin/bash hdfs -c "/usr/bin/hadoop fs -ls /user/${USER}" &> /dev/null; echo $?)
+  if [ ! $EXIST -eq 0 ]; then
     su -s /bin/bash hdfs -c "/usr/bin/hadoop fs -mkdir /user/${USER}"
     su -s /bin/bash hdfs -c "/usr/bin/hadoop fs -chmod -R 755 /user/${USER}"
     su -s /bin/bash hdfs -c "/usr/bin/hadoop fs -chown ${USER} /user/${USER}"
