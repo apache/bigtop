@@ -134,10 +134,8 @@ cat > $PREFIX/$BIN_DIR/pig <<EOF
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
 
-# look for HBase
-if [ -f /etc/default/hbase ] ; then
-  . /etc/default/hbase
-fi
+BIGTOP_DEFAULTS_DIR=${BIGTOP_DEFAULTS_DIR-/etc/default}
+[ -n "${BIGTOP_DEFAULTS_DIR}" -a -r ${BIGTOP_DEFAULTS_DIR}/hbase ] && . ${BIGTOP_DEFAULTS_DIR}/hbase
 
 exec $INSTALLED_LIB_DIR/bin/pig "\$@"
 EOF

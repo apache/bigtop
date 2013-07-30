@@ -27,7 +27,8 @@ cat <<'__EOT__'
 
 hbase_env() {
     export HBASE_HOME=/usr/lib/hbase
-    . /etc/default/hbase
+    BIGTOP_DEFAULTS_DIR=${BIGTOP_DEFAULTS_DIR-/etc/default}
+    [ -n "${BIGTOP_DEFAULTS_DIR}" -a -r ${BIGTOP_DEFAULTS_DIR}/hbase ] && . ${BIGTOP_DEFAULTS_DIR}/hbase
 }
 
 __EOT__

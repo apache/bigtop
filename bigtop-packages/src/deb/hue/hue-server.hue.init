@@ -63,9 +63,8 @@ DAEMONUSER=hue     # Users to run the daemons as. If this value
                         # is set start-stop-daemon will chuid the server
 
 # Include defaults if available
-if [ -f /etc/default/$NAME ] ; then
-    . /etc/default/$NAME
-fi
+BIGTOP_DEFAULTS_DIR=${BIGTOP_DEFAULTS_DIR-/etc/default}
+[ -n "${BIGTOP_DEFAULTS_DIR}" -a -r ${BIGTOP_DEFAULTS_DIR}/$NAME ] && . ${BIGTOP_DEFAULTS_DIR}/$NAME
 
 # Use this if you want the user to explicitly set 'RUN' in
 # /etc/default/

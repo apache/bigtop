@@ -17,7 +17,8 @@
 
 # Override JAVA_NATIVE_PATH in the file below if you want to disable
 # automatic library detection
-[ -r /etc/default/bigtop-utils ] && . /etc/default/bigtop-utils
+BIGTOP_DEFAULTS_DIR=${BIGTOP_DEFAULTS_DIR-/etc/default}
+[ -n "${BIGTOP_DEFAULTS_DIR}" -a -r ${BIGTOP_DEFAULTS_DIR}/bigtop-utils ] && . ${BIGTOP_DEFAULTS_DIR}/bigtop-utils
 
 # ensure that java has already been found
 if [ -z "$JAVA_HOME" ]; then

@@ -114,13 +114,11 @@ done
 
 wrapper=${PREFIX}/$BIN_DIR/hcat
 cat >>$wrapper <<EOF
-#!/bin/sh
-. /etc/default/hadoop
+#!/bin/bash
 
-# look for HBase
-if [ -f /etc/default/hbase ] ; then
-  . /etc/default/hbase
-fi
+BIGTOP_DEFAULTS_DIR=${BIGTOP_DEFAULTS_DIR-/etc/default}
+[ -n "${BIGTOP_DEFAULTS_DIR}" -a -r ${BIGTOP_DEFAULTS_DIR}/hadoop ] && . ${BIGTOP_DEFAULTS_DIR}/hadoop
+[ -n "${BIGTOP_DEFAULTS_DIR}" -a -r ${BIGTOP_DEFAULTS_DIR}/hbase ] && . ${BIGTOP_DEFAULTS_DIR}/hbase
 
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome

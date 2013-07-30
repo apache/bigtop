@@ -180,11 +180,9 @@ cat <<__EOT__
 ### END INIT INFO
 
 . /lib/lsb/init-functions
-. /etc/default/hadoop
-
-if [ -f /etc/default/$DAEMON ] ; then
-  . /etc/default/$DAEMON
-fi
+BIGTOP_DEFAULTS_DIR=\${BIGTOP_DEFAULTS_DIR-/etc/default}
+[ -n "\${BIGTOP_DEFAULTS_DIR}" -a -r \${BIGTOP_DEFAULTS_DIR}/hadoop ] && . \${BIGTOP_DEFAULTS_DIR}/hadoop
+[ -n "\${BIGTOP_DEFAULTS_DIR}" -a -r \${BIGTOP_DEFAULTS_DIR}/$DAEMON ] && . \${BIGTOP_DEFAULTS_DIR}/$DAEMON
 
 # Autodetect JAVA_HOME if not defined
 if [ -e /usr/libexec/bigtop-detect-javahome ]; then

@@ -148,9 +148,10 @@ cp -ra ${BUILD_DIR}/example/solr/* $PREFIX/${CONF_DIR}.dist
 
 # Copy in the wrapper
 cat > $PREFIX/$LIB_DIR/bin/solrd <<EOF
-#!/bin/sh
+#!/bin/bash
 
-[ -f /etc/default/solr ] && . /etc/default/solr
+BIGTOP_DEFAULTS_DIR=${BIGTOP_DEFAULTS_DIR-/etc/default}
+[ -n "${BIGTOP_DEFAULTS_DIR}" -a -r ${BIGTOP_DEFAULTS_DIR}/solr ] && . ${BIGTOP_DEFAULTS_DIR}/solr
 
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
