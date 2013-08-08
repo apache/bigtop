@@ -71,7 +71,7 @@ Source7: hive.1
 Source8: hive-site.xml
 Source9: hive-server.svc
 Source10: hive-metastore.svc
-Requires: hadoop-client, bigtop-utils >= 0.6, hbase, zookeeper, hive-jdbc
+Requires: hadoop-client, bigtop-utils >= 0.7, hbase, zookeeper, hive-jdbc = %{version}-%{release}
 Obsoletes: %{name}-webinterface
 
 %description 

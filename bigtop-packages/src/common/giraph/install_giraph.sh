@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -139,7 +139,7 @@ for i in giraph ; do
 	wrapper=$PREFIX/usr/bin/$i
 	mkdir -p `dirname $wrapper`
 	cat > $wrapper <<EOF
-#!/bin/sh
+#!/bin/bash
 
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome

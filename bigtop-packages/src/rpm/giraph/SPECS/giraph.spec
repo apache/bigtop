@@ -59,7 +59,7 @@ Source1: do-component-build
 Source2: install_%{name}.sh
 Source3: giraph-site.xml
 Buildarch: noarch
-Requires: zookeeper, hadoop-client, bigtop-utils >= 0.6
+Requires: zookeeper, hadoop-client, bigtop-utils >= 0.7
 
 %description 
 Giraph implements a graph processing platform to run large scale algorithms (such as page rank, shared connections, personalization-based popularity, etc.) on top of Hadoop infrastructure. Giraph builds upon the graph-oriented nature of Pregel but additionally adds fault-tolerance to the coordinator process with the use of ZooKeeper as its centralized coordination service.

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -ex
 
 # Licensed to the Apache Software Foundation (ASF) under one or more
@@ -120,7 +120,7 @@ gzip -c ${EXTRA_DIR}/oozie.1 > ${MAN_DIR}/oozie.1.gz
 # Create the /usr/bin/oozie wrapper
 install -d -m 0755 $BIN_DIR
 cat > ${BIN_DIR}/oozie <<EOF
-#!/bin/sh
+#!/bin/bash
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with

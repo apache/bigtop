@@ -63,7 +63,7 @@ Source5: webhcat-server.svc
 Source6: hcatalog-server.default
 Source7: webhcat-server.default
 Source8: init.d.tmpl
-Requires: hadoop, hive, bigtop-utils
+Requires: hadoop, hive, bigtop-utils >= 0.7
 
 %description 
 Apache HCatalog (incubating) is a table and storage management service for data created using Apache Hadoop.

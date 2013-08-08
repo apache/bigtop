@@ -100,7 +100,7 @@ install -d -m 0755 $PREFIX/$LIB_DIR
 # Copy in the /usr/bin/whirr wrapper
 install -d -m 0755 $PREFIX/$BIN_DIR
 cat > $PREFIX/$BIN_DIR/whirr <<EOF
-#!/bin/sh
+#!/bin/bash
 
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome

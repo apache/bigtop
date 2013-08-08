@@ -167,7 +167,7 @@ mkdir -p $BIN_DIR
 for component in $HADOOP_DIR/bin/hadoop $HDFS_DIR/bin/hdfs $YARN_DIR/bin/yarn $MAPREDUCE_DIR/bin/mapred ; do
   wrapper=$BIN_DIR/${component#*/bin/}
   cat > $wrapper <<EOF
-#!/bin/sh
+#!/bin/bash
 
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome

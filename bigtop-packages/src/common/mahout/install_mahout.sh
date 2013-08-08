@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -121,7 +121,7 @@ cp -a ${BUILD_DIR}/examples/ $PREFIX/$DOC_DIR/
 # Copy in the /usr/bin/mahout wrapper
 install -d -m 0755 $PREFIX/$BIN_DIR
 cat > $PREFIX/$BIN_DIR/mahout <<EOF
-#!/bin/sh
+#!/bin/bash
 
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome

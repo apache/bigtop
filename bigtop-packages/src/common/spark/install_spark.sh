@@ -149,7 +149,7 @@ chmod 755 $PREFIX/$SPARK_BIN_DIR/compute-classpath.sh
 install -d -m 0755 $PREFIX/$BIN_DIR
 for wrap in spark-executor spark-shell ; do
   cat > $PREFIX/$BIN_DIR/$wrap <<EOF
-#!/bin/sh 
+#!/bin/bash 
 
 # Autodetect JAVA_HOME if not defined
 if [ -e /usr/libexec/bigtop-detect-javahome ]; then

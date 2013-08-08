@@ -316,7 +316,7 @@ start() {
       exit 1
     fi
     echo -n "Starting $DESC: "
-    su -s /bin/sh hbase -c "$DAEMON_SCRIPT start @HBASE_DAEMON@"
+    su -s /bin/bash hbase -c "$DAEMON_SCRIPT start @HBASE_DAEMON@"
     if hbase_check_pidfile $PID_FILE ; then
         echo "$NAME."
     else
@@ -330,7 +330,7 @@ stop() {
     fi
 
     echo -n "Stopping $DESC: "
-    su -s /bin/sh hbase -c "$DAEMON_SCRIPT stop @HBASE_DAEMON@"
+    su -s /bin/bash hbase -c "$DAEMON_SCRIPT stop @HBASE_DAEMON@"
     if hbase_check_pidfile $PID_FILE ; then
         echo "ERROR."
     else

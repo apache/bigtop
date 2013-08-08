@@ -164,7 +164,7 @@ Source23: hadoop-hdfs-zkfc.svc
 Source24: hadoop-hdfs-journalnode.svc
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
 BuildRequires: fuse-devel, fuse, cmake
-Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils >= 0.6, zookeeper >= 3.4.0
+Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils >= 0.7, zookeeper >= 3.4.0
 Requires: psmisc, %{netcat_package}
 # Sadly, Sun/Oracle JDK in RPM form doesn't provide libjvm.so, which means we have
 # to set AutoReq to no in order to minimize confusion. Not ideal, but seems to work.

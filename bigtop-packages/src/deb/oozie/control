@@ -23,7 +23,7 @@ Homepage: http://incubator.apache.org/oozie/
 
 Package: oozie-client
 Architecture: all
-Depends: bigtop-utils (>= 0.6)
+Depends: bigtop-utils (>= 0.7)
 Description: Client for Oozie Workflow Engine
  Oozie client is a command line client utility that allows remote
  administration and monitoring of worflows. Using this client utility

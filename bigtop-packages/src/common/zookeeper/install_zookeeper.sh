@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -126,7 +126,7 @@ done
 wrapper=$PREFIX/usr/bin/zookeeper-client
 install -d -m 0755 `dirname $wrapper`
 cat > $wrapper <<EOF
-#!/bin/sh
+#!/bin/bash
 
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
@@ -143,7 +143,7 @@ for pairs in zkServer.sh/zookeeper-server zkServer-initialize.sh/zookeeper-serve
   wrapper=$PREFIX/usr/bin/`basename $pairs`
   upstream_script=`dirname $pairs`
   cat > $wrapper <<EOF
-#!/bin/sh
+#!/bin/bash
 
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -129,7 +129,7 @@ ln -s /etc/pig/conf $PREFIX/$LIB_DIR/conf
 # Copy in the /usr/bin/pig wrapper
 install -d -m 0755 $PREFIX/$BIN_DIR
 cat > $PREFIX/$BIN_DIR/pig <<EOF
-#!/bin/sh
+#!/bin/bash
 
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome

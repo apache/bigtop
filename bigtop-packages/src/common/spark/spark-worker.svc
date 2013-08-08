@@ -43,7 +43,7 @@ start() {
         . $CONF_DIR/spark-env.sh
     fi
 
-    su -s /bin/sh $SVC_USER -c "nohup nice -n 0 \
+    su -s /bin/bash $SVC_USER -c "nohup nice -n 0 \
         ${EXEC_PATH} spark.deploy.worker.Worker spark://$STANDALONE_SPARK_MASTER_HOST:$SPARK_MASTER_PORT $DAEMON_FLAGS \
         > $LOG_FILE 2>&1 & "'echo $!' > "$PIDFILE"
 

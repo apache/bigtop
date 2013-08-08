@@ -79,7 +79,7 @@ BuildRequires: autoconf, automake
 Requires(pre): coreutils, /usr/sbin/groupadd, /usr/sbin/useradd
 Requires(post): %{alternatives_dep}
 Requires(preun): %{alternatives_dep}
-Requires: bigtop-utils >= 0.6
+Requires: bigtop-utils >= 0.7
 
 %description 
 ZooKeeper is a centralized service for maintaining configuration information, 
