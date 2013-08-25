@@ -16,6 +16,8 @@
 %define spark_name spark
 %define lib_spark /usr/lib/%{spark_name}
 %define var_lib_spark /var/lib/%{spark_name}
+%define var_run_spark /var/run/%{spark_name}
+%define var_log_spark /var/log/%{spark_name}
 %define bin_spark /usr/lib/%{spark_name}/bin
 %define etc_spark /etc/%{spark_name}
 %define config_spark %{etc_spark}/conf
@@ -83,15 +85,18 @@ bash $RPM_SOURCE_DIR/do-component-build
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
+%__install -d -m 0755 $RPM_BUILD_ROOT/%{bin_spark}/
+%__install -d -m 0755 $RPM_BUILD_ROOT/%{_localstatedir}/lib/%{name}/
+%__install -d -m 0755 $RPM_BUILD_ROOT/%{_localstatedir}/log/%{name}/
+%__install -d -m 0755 $RPM_BUILD_ROOT/%{_localstatedir}/run/%{name}/
+%__install -d -m 0755 $RPM_BUILD_ROOT/%{_localstatedir}/run/%{name}/work/
+%__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
+
 sh $RPM_SOURCE_DIR/install_spark.sh \
           --build-dir=`pwd`         \
           --source-dir=$RPM_SOURCE_DIR \
           --prefix=$RPM_BUILD_ROOT  \
           --doc-dir=%{doc_spark} 
-
-%__install -d -m 0755 $RPM_BUILD_ROOT/%{_localstatedir}/log/%{name}
-%__install -d -m 0755 $RPM_BUILD_ROOT/%{_localstatedir}/run/%{name}
-%__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
 
 for service in %{spark_services}
 do
@@ -127,8 +132,12 @@ done
 %config(noreplace) %{config_spark}.dist
 %doc %{doc_spark}
 %{lib_spark}
+%{etc_spark}
+%attr(0755,spark,spark) %{var_lib_spark}
+%attr(0755,spark,spark) %{var_run_spark}
+%attr(0755,spark,spark) %{var_log_spark}
 %attr(0755,root,root) %{initd_dir}/spark-master
 %attr(0755,root,root) %{initd_dir}/spark-worker
-#%attr(0755,root,root) %{bin_spark}
+%attr(0755,root,root) %{bin_spark}
 %{bin}/spark-shell
 %{bin}/spark-executor

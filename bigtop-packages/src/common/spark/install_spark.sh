@@ -105,7 +105,7 @@ fi
 MAN_DIR=${MAN_DIR:-/usr/share/man/man1}
 DOC_DIR=${DOC_DIR:-/usr/share/doc/spark}
 LIB_DIR=${LIB_DIR:-/usr/lib/spark}
-SPARK_BIN_DIR=${LIB_DIR:-/usr/lib/spark/bin}
+SPARK_BIN_DIR=${BIN_DIR:-/usr/lib/spark/bin}
 INSTALLED_LIB_DIR=${INSTALLED_LIB_DIR:-/usr/lib/spark}
 EXAMPLES_DIR=${EXAMPLES_DIR:-$DOC_DIR/examples}
 BIN_DIR=${BIN_DIR:-/usr/bin}
@@ -182,7 +182,4 @@ export STANDALONE_SPARK_MASTER_HOST=\`hostname\`
 
 EOF
 
-install -d -m 1755 $PREFIX/log/spark
-install -d -m 1755 $PREFIX/run/spark
-install -d -m 1755 $PREFIX/run/spark/work
 ln -s /var/run/spark/work $PREFIX/$LIB_DIR/work
