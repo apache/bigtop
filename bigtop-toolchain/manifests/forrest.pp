@@ -13,25 +13,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class bigtop-toolchain::forrest{
+class bigtop-toolchain::forrest {
 
-  file{ '/tmp/apache-forrest-0.9.tar.gz':
-    source => 'puppet:///modules/bigtop-toolchain/apache-forrest-0.9.tar.gz',
-    ensure => present,
-    owner  => root,
-    group  => root,
-    mode   => 755
-  }
+  include bigtop-toolchain::deps
 
-  exec{'/bin/tar xvzf /tmp/apache-forrest-0.9.tar.gz':
+  exec{'/bin/tar xvzf /usr/src/apache-forrest-0.9.tar.gz':
     cwd         => '/usr/local',
+    require     => Exec["/usr/bin/wget http://archive.apache.org/dist/forrest/0.9/apache-forrest-0.9.tar.gz"],
     refreshonly => true,
-    subscribe   => File["/tmp/apache-forrest-0.9.tar.gz"],
+    subscribe   => Exec["/usr/bin/wget http://archive.apache.org/dist/forrest/0.9/apache-forrest-0.9.tar.gz"],
   }
 
   file { '/usr/local/apache-forrest':
     ensure  => link,
     target  => '/usr/local/apache-forrest-0.9',
-    require => Exec['/bin/tar xvzf /tmp/apache-forrest-0.9.tar.gz'],
+    require => Exec['/bin/tar xvzf /usr/src/apache-forrest-0.9.tar.gz'],
   }
 }

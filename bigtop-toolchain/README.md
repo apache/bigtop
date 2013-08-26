@@ -22,7 +22,7 @@ Ian Mordey <ian.mordey@wandisco.com>
 
 Puppet module for configuring a CentOS host for building BigTop. It installs:
 
-**Apache Ant 1.9.0**
+**Apache Ant 1.9.2**
 
 **Apache Forrest 0.9**
 
@@ -74,16 +74,9 @@ where <path_to_bigtop> is the cloned git repo.
 
 Due to redistribution restrictions the Oracle JDK must be downloaded seperately. 
 
-Download the JDK 64bit rpm.bin file, run it with the -x switch to extract the rpm file and copy jdk-6u43-linux-amd64.rpm to files/.
+Download the JDK 64bit rpm.bin file, run it with the -x switch to extract the rpm file and copy jdk-6u45-linux-amd64.rpm to files/.
 
-The following files must also be downloaded from their respective mirrors and copied into files/
-
-[apache-ant-1.9.0-bin.tar.gz](http://mirrors.ibiblio.org/apache//ant/binaries/apache-ant-1.9.0-bin.tar.gz)
-
-[apache-forrest-0.9.tar.gz](http://archive.apache.org/dist/forrest/0.9/apache-forrest-0.9.tar.gz)
-
-[apache-maven-3.0.5-bin.tar.gz](ftp://mirror.reverse.net/pub/apache/maven/maven-3/3.0.5/binaries/apache-maven-3.0.5-bin.tar.gz)
-
+The Ant/Maven/Forrest sources will be downloaded automatically. If you already have them and do not want to download them again please copy the source .tar.gz files into /usr/src.
 
 ## Support
 

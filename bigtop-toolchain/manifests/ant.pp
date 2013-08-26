@@ -14,23 +14,19 @@
 # limitations under the License.
 
 class bigtop-toolchain::ant {
-  file { '/tmp/apache-ant-1.9.0-bin.tar.gz':
-    source => 'puppet:///modules/bigtop-toolchain/apache-ant-1.9.0-bin.tar.gz',
-    ensure => present,
-    owner  => root,
-    group  => root,
-    mode   => 755
-  }
-  
-  exec {'/bin/tar xvzf /tmp/apache-ant-1.9.0-bin.tar.gz':
+
+  include bigtop-toolchain::deps
+
+  exec {'/bin/tar xvzf /usr/src/apache-ant-1.9.2-bin.tar.gz':
     cwd         => '/usr/local',
     refreshonly => true,
-    subscribe   => File["/tmp/apache-ant-1.9.0-bin.tar.gz"],
+    subscribe   => Exec["/usr/bin/wget http://mirrors.ibiblio.org/apache//ant/binaries/apache-ant-1.9.2-bin.tar.gz"],
+    require     => Exec["/usr/bin/wget http://mirrors.ibiblio.org/apache//ant/binaries/apache-ant-1.9.2-bin.tar.gz"],
   }
 
   file {'/usr/local/ant':
     ensure  => link,
-    target  => '/usr/local/apache-ant-1.9.0',
-    require => Exec['/bin/tar xvzf /tmp/apache-ant-1.9.0-bin.tar.gz'],
+    target  => '/usr/local/apache-ant-1.9.2',
+    require => Exec['/bin/tar xvzf /usr/src/apache-ant-1.9.2-bin.tar.gz'],
   }
 }

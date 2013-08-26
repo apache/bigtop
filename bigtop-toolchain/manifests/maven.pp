@@ -13,24 +13,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class bigtop-toolchain::maven  {
-  file { '/tmp/apache-maven-3.0.5-bin.tar.gz':
-    source => 'puppet:///modules/bigtop-toolchain/apache-maven-3.0.5-bin.tar.gz',
-    ensure => present,
-    owner  => root,
-    group  => root,
-    mode   => 755
-  }
-  
-  exec {'/bin/tar xvzf /tmp/apache-maven-3.0.5-bin.tar.gz':
+class bigtop-toolchain::maven {
+
+  include bigtop-toolchain::deps
+
+  exec {'/bin/tar xvzf /usr/src/apache-maven-3.0.5-bin.tar.gz':
     cwd         => '/usr/local',
     refreshonly => true,
-    subscribe   => File["/tmp/apache-maven-3.0.5-bin.tar.gz"],
+    subscribe   => Exec["/usr/bin/wget ftp://mirror.reverse.net/pub/apache/maven/maven-3/3.0.5/binaries/apache-maven-3.0.5-bin.tar.gz"],
+    require     => Exec["/usr/bin/wget ftp://mirror.reverse.net/pub/apache/maven/maven-3/3.0.5/binaries/apache-maven-3.0.5-bin.tar.gz"],
   }
   
   file {'/usr/local/maven':
     ensure  => link,
     target  => '/usr/local/apache-maven-3.0.5',
-    require => Exec['/bin/tar xvzf /tmp/apache-maven-3.0.5-bin.tar.gz'],
+    require => Exec['/bin/tar xvzf /usr/src/apache-maven-3.0.5-bin.tar.gz'],
   }
 }
