@@ -35,7 +35,8 @@
 
   <properties>
     <org.codehaus.groovy.maven.jar>${project.build.directory}/pigsmoke-${pig-smoke.version}.jar</org.codehaus.groovy.maven.jar>
-
+    <!-- Override this with path to your pig install path -->
+    <pigjar>/usr/lib/pig/pig.jar</pigjar>
     <org.apache.maven-dependency-plugin.groupId>org.apache.pig</org.apache.maven-dependency-plugin.groupId>
     <org.apache.maven-dependency-plugin.artifactId>pigsmoke</org.apache.maven-dependency-plugin.artifactId>
     <org.apache.maven-dependency-plugin.version>${pig-smoke.version}</org.apache.maven-dependency-plugin.version>
@@ -45,6 +46,7 @@
   </properties>
 
   <dependencies>
+    <!--  This smoke is implemented by the externally curated org.apache.pig pigsmoke project -->
     <dependency>
       <groupId>org.apache.pig</groupId>
       <artifactId>pigsmoke</artifactId>
@@ -78,7 +80,7 @@
         </execution>
         </executions>
         <configuration>
-          <file>/usr/lib/pig/pig.jar</file>
+          <file>${pigjar}</file>
           <groupId>org.apache.pig</groupId>
           <artifactId>pig</artifactId>
           <version>${pig.version}</version>
@@ -100,6 +102,8 @@
           </additionalClasspathElements>
         </configuration>
       </plugin>
+
+      
 
     </plugins>
   </build>
