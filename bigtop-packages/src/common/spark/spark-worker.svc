@@ -16,7 +16,7 @@
 TYPE="worker"
 DAEMON="spark-${TYPE}"
 DESC="Spark ${TYPE}"
-EXEC_PATH="/usr/lib/spark/run"
+EXEC_PATH="/usr/lib/spark/spark-class"
 SVC_USER="spark"
 WORKING_DIR="/var/lib/spark"
 DAEMON_FLAGS=""
@@ -44,7 +44,7 @@ start() {
     fi
 
     su -s /bin/bash $SVC_USER -c "nohup nice -n 0 \
-        ${EXEC_PATH} spark.deploy.worker.Worker spark://$STANDALONE_SPARK_MASTER_HOST:$SPARK_MASTER_PORT $DAEMON_FLAGS \
+        ${EXEC_PATH} org.apache.spark.deploy.worker.Worker spark://$STANDALONE_SPARK_MASTER_HOST:$SPARK_MASTER_PORT $DAEMON_FLAGS \
         > $LOG_FILE 2>&1 & "'echo $!' > "$PIDFILE"
 
     sleep 3

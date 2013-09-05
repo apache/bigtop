@@ -101,6 +101,9 @@ if [ -z "${SCALA_HOME}" ]; then
     echo Missing env. var SCALA_HOME
     usage
 fi
+if [ -f "$SOURCE_DIR/bigtop.bom" ]; then
+  . $SOURCE_DIR/bigtop.bom
+fi
 
 MAN_DIR=${MAN_DIR:-/usr/share/man/man1}
 DOC_DIR=${DOC_DIR:-/usr/share/doc/spark}
@@ -123,12 +126,16 @@ for comp in core repl bagel mllib streaming; do
   install -d -m 0755 $PREFIX/$LIB_DIR/$comp/lib
   tar --wildcards -C $PREFIX/$LIB_DIR/$comp/lib -zxf ${BUILD_DIR}/assembly/target/spark-assembly-*-dist.tar.gz spark-$comp\*
 done
+## FIXME: Spark maven assembly needs to include examples into it.
+install -d -m 0755 $PREFIX/$LIB_DIR/examples/lib
+cp ${BUILD_DIR}/examples/target/spark-examples-${SPARK_VERSION}.jar $PREFIX/$LIB_DIR/examples/lib
 
 # FIXME: executor scripts need to reside in bin
-cp -a ${SOURCE_DIR}/run $PREFIX/$LIB_DIR
-cp -a ${SOURCE_DIR}/spark-executor $PREFIX/$LIB_DIR
+cp -a $BUILD_DIR/spark-class $PREFIX/$LIB_DIR
+cp -a $BUILD_DIR/spark-executor $PREFIX/$LIB_DIR
 cp -a ${SOURCE_DIR}/compute-classpath.sh $PREFIX/$SPARK_BIN_DIR
 cp -a ${BUILD_DIR}/spark-shell $PREFIX/$LIB_DIR
+touch $PREFIX/$LIB_DIR/RELEASE
 
 # Copy in the configuration files
 install -d -m 0755 $PREFIX/$CONF_DIR
@@ -140,7 +147,7 @@ ln -s /etc/spark/conf $PREFIX/$LIB_DIR/conf
 tar --wildcards --transform 's,ui-resources/spark,spark,' -C $PREFIX/$LIB_DIR -zxf ${BUILD_DIR}/assembly/target/spark-assembly-*-dist.tar.gz ui-resources/\*
 
 # set correct permissions for exec. files
-for execfile in run spark-shell spark-executor ; do
+for execfile in spark-class spark-shell spark-executor ; do
   chmod 755 $PREFIX/$LIB_DIR/$execfile
 done
 chmod 755 $PREFIX/$SPARK_BIN_DIR/compute-classpath.sh

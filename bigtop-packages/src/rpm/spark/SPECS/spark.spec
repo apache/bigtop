@@ -78,7 +78,7 @@ Spark runs on top of the Apache Mesos cluster manager.
     
 %prep
 #%setup -n %{name}-%{spark_base_version}
-%setup -n spark-master
+%setup -n spark-branch-0.8
 
 %build
 bash $RPM_SOURCE_DIR/do-component-build
