@@ -57,7 +57,8 @@ class TestHadoopExamples {
   private static Configuration conf;
 
   private static String mr_version = System.getProperty("mr.version", "mr2");
-  static final String RANDOMTEXTWRITER_TOTALBYTES = (mr_version == "mr1") ?
+  
+    static final String RANDOMTEXTWRITER_TOTALBYTES = (mr_version == "mr1") ?
       "test.randomtextwrite.total_bytes" : "mapreduce.randomtextwriter.totalbytes";
 
   @BeforeClass
@@ -66,15 +67,23 @@ class TestHadoopExamples {
     TestUtils.unpackTestResources(TestHadoopExamples.class, EXAMPLES, null, EXAMPLES_OUT);
   }
 
+  static long terasortid = System.currentTimeMillis();
+
+  //Number of rows for terasort ~ number of splits 
+  public static String terasort_rows = System.getProperty("terasort_rows", "1000");
+  
   static Map examples =
     [
         pi                :'2 1000',
         wordcount         :"$EXAMPLES/text $EXAMPLES_OUT/wordcount",
+        teragen           :"${terasort_rows} teragen${terasortid}",
+        terasort          :"teragen${terasortid} terasort${terasortid}",
+        teravalidate      :"terasort${terasortid} tervalidate${terasortid}",
         multifilewc       :"$EXAMPLES/text $EXAMPLES_OUT/multifilewc",
         aggregatewordcount:"$EXAMPLES/text $EXAMPLES_OUT/aggregatewordcount 2 textinputformat",
         aggregatewordhist :"$EXAMPLES/text $EXAMPLES_OUT/aggregatewordhist 2 textinputformat",
         grep              :"$EXAMPLES/text $EXAMPLES_OUT/grep '[Cc]uriouser'",
-//        sleep             :"-m 10 -r 10",
+        sleep             :"-m 10 -r 10",
         secondarysort     :"$EXAMPLES/ints $EXAMPLES_OUT/secondarysort",
         randomtextwriter  :"-D $RANDOMTEXTWRITER_TOTALBYTES=1073741824 $EXAMPLES_OUT/randomtextwriter"
     ];
@@ -99,8 +108,7 @@ class TestHadoopExamples {
   @Test
   void testMRExample() {
     sh.exec("hadoop jar $testJar $testName $testArgs");
-
-    assertTrue("Example $testName failed", 
-               sh.getRet() == 0);
+    assertTrue("Example $testName $testJar $testName $testArgs failed", sh.getRet() == 0);
   }
 }
+
