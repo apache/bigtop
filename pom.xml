@@ -44,6 +44,7 @@
     <zookeeper.version>3.4.5</zookeeper.version>
     <giraph.version>0.2-SNAPSHOT</giraph.version>
     <solr.version>4.2.1</solr.version>
+    <spark-smoke.version>${project.version}</spark-smoke.version>
 
     <itest-common.version>${project.version}</itest-common.version>
 

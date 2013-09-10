@@ -48,6 +48,7 @@
     <module>datafu</module>
     <module>fatjar</module>
     <module>hcatalog</module>
+    <module>spark</module>
   </modules>
 
   <dependencies>
