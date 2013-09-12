@@ -13,33 +13,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class bigtop-toolchain::user {
-
-  user { 'jenkins':
-    ensure => present,
-    home => '/var/lib/jenkins',
-    managehome => true,
-    gid        => 'jenkins',
-    require    => Group['jenkins'],
-  }
-
-  group { 'jenkins':
-    ensure => present,
-  }
-
-  file {"/var/lib/jenkins/.m2":
-    ensure => directory,
-    owner => 'jenkins',
-    group => 'jenkins',
-    mode => 755,
-    require => User['jenkins'],
-  }
-
-  file {"/var/lib/jenkins/.ssh":
-    ensure => directory,
-    owner => 'jenkins',
-    group => 'jenkins',
-    mode => 600,
-    require => User['jenkins'],
+class bigtop_toolchain::env {
+  case $operatingsystem{
+    Ubuntu: {
+      file { '/etc/profile.d/bigtop.sh':
+        source => 'puppet:///modules/bigtop_toolchain/jenkins.sh.ubu',
+        ensure => present,
+        owner  => root,
+        group  => root,
+        mode   => 644,
+      }
+    }
+    default: {
+      file {'/etc/profile.d/bigtop.sh':
+        source => 'puppet:///modules/bigtop_toolchain/jenkins.sh.centos',
+        ensure => present,
+        owner  => root,
+        group  => root,
+        mode   => 644,
+      }
+    }
   }
 }
+

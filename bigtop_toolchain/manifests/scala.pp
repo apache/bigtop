@@ -12,21 +12,25 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+class bigtop_toolchain::scala {
 
-class bigtop-toolchain::maven {
+  include bigtop_toolchain::deps
 
-  include bigtop-toolchain::deps
-
-  exec {'/bin/tar xvzf /usr/src/apache-maven-3.0.5-bin.tar.gz':
-    cwd         => '/usr/local',
-    refreshonly => true,
-    subscribe   => Exec["/usr/bin/wget ftp://mirror.reverse.net/pub/apache/maven/maven-3/3.0.5/binaries/apache-maven-3.0.5-bin.tar.gz"],
-    require     => Exec["/usr/bin/wget ftp://mirror.reverse.net/pub/apache/maven/maven-3/3.0.5/binaries/apache-maven-3.0.5-bin.tar.gz"],
+  case $operatingsystem{
+    Ubuntu: { 
+    $pm = '/usr/bin/dpkg -i'
+    $requires = [ Exec["/usr/bin/wget http://www.scala-lang.org/files/archive/$bigtop_toolchain::deps::scala_file"], Package ['oracle-java6-installer'] ]
+    }
+    default: { 
+    $pm = '/bin/rpm -Uvh'
+    $requires = Exec["/usr/bin/wget http://www.scala-lang.org/files/archive/$bigtop_toolchain::deps::scala_file"]
+    }
   }
   
-  file {'/usr/local/maven':
-    ensure  => link,
-    target  => '/usr/local/apache-maven-3.0.5',
-    require => Exec['/bin/tar xvzf /usr/src/apache-maven-3.0.5-bin.tar.gz'],
+  exec {"$pm /usr/src/$bigtop_toolchain::deps::scala_file":
+    unless   => "/usr/bin/test -f /usr/bin/scala",
+    #require => Exec["/usr/bin/wget http://www.scala-lang.org/files/archive/$bigtop_toolchain::deps::scala_file"],
+    require  => $requires
   }
+
 }

@@ -13,20 +13,33 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class bigtop-toolchain::forrest {
+class bigtop_toolchain::user {
 
-  include bigtop-toolchain::deps
-
-  exec{'/bin/tar xvzf /usr/src/apache-forrest-0.9.tar.gz':
-    cwd         => '/usr/local',
-    require     => Exec["/usr/bin/wget http://archive.apache.org/dist/forrest/0.9/apache-forrest-0.9.tar.gz"],
-    refreshonly => true,
-    subscribe   => Exec["/usr/bin/wget http://archive.apache.org/dist/forrest/0.9/apache-forrest-0.9.tar.gz"],
+  user { 'jenkins':
+    ensure => present,
+    home => '/var/lib/jenkins',
+    managehome => true,
+    gid        => 'jenkins',
+    require    => Group['jenkins'],
   }
 
-  file { '/usr/local/apache-forrest':
-    ensure  => link,
-    target  => '/usr/local/apache-forrest-0.9',
-    require => Exec['/bin/tar xvzf /usr/src/apache-forrest-0.9.tar.gz'],
+  group { 'jenkins':
+    ensure => present,
+  }
+
+  file {"/var/lib/jenkins/.m2":
+    ensure => directory,
+    owner => 'jenkins',
+    group => 'jenkins',
+    mode => 755,
+    require => User['jenkins'],
+  }
+
+  file {"/var/lib/jenkins/.ssh":
+    ensure => directory,
+    owner => 'jenkins',
+    group => 'jenkins',
+    mode => 600,
+    require => User['jenkins'],
   }
 }

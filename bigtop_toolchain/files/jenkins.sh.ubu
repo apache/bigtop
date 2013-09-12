@@ -13,26 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class bigtop-toolchain::env {
-  case $operatingsystem{
-    Ubuntu: {
-      file { '/etc/profile.d/bigtop.sh':
-        source => 'puppet:///modules/bigtop-toolchain/jenkins.sh.ubu',
-        ensure => present,
-        owner  => root,
-        group  => root,
-        mode   => 644,
-      }
-    }
-    default: {
-      file {'/etc/profile.d/bigtop.sh':
-        source => 'puppet:///modules/bigtop-toolchain/jenkins.sh.ubu',
-        ensure => present,
-        owner  => root,
-        group  => root,
-        mode   => 644,
-      }
-    }
-  }
-}
-
+export MAVEN_HOME=/usr/local/maven
+export PATH=$PATH:$MAVEN_HOME/bin
+export JAVA_HOME=/usr/lib/jvm/java-6-oracle
+export ANT_HOME=/usr/local/ant
+export PATH=$PATH:$ANT_HOME/bin
+export FORREST_HOME=/usr/local/apache-forrest
+export SCALA_HOME=/usr/share/java
+export PATH=$PATH:$FORREST_HOME/bin

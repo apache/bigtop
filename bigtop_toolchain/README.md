@@ -26,7 +26,7 @@ Puppet module for configuring a CentOS host for building BigTop. It installs:
 
 **Apache Forrest 0.9**
 
-**Oracle JDK 1.6u43**
+**Oracle JDK 1.6u45**
 
 **Apache Maven 3.0.5**
 
@@ -38,23 +38,24 @@ These can be indivdually applied using:
 
 
 	node "node1.example.com" {
-	  include bigtop-toolchain::jdk
-	  include bigtop-toolchain::maven
-	  include bigtop-toolchain::forrest
-	  include bigtop-toolchain::ant
-	  include bigtop-toolchain::protobuf
-	  include bigtop-toolchain::packages
-	  include bigtop-toolchain::env
-	  include bigtop-toolchain::user
+	  include bigtop_toolchain::jdk
+	  include bigtop_toolchain::maven
+	  include bigtop_toolchain::forrest
+	  include bigtop_toolchain::ant
+	  include bigtop_toolchain::protobuf
+	  include bigtop_toolchain::packages
+	  include bigtop_toolchain::env
+	  include bigtop_toolchain::user
 	}
 
 Or installed as a whole with:
 
 	node "node2.example.com" {
-	  include bigtop-toolchain::installer
+	  include bigtop_toolchain::installer
 	}
 
-It will create a user jenkins with the required  environment variables set for building BigTop:
+It will create a user jenkins with the required  environment variables set for
+building BigTop:
 
 	MAVEN_HOME=/usr/local/maven
 	PATH=$PATH:$MAVEN_HOME/bin
@@ -64,9 +65,10 @@ It will create a user jenkins with the required  environment variables set for b
 	FORREST_HOME=/usr/local/apache-forrest
 	PATH=$PATH:$FORREST_HOME/bin
 	
-If you do not want to use a puppet master this module can be applied standalone with a command such as:
+If you do not want to use a puppet master this module can be applied
+standalone with a command such as:
 
-	puppet apply --modulepath=<path_to_bigtop> -e "include bigtop-toolchain::installer"
+	puppet apply --modulepath=<path_to_bigtop> -e "include bigtop_toolchain::installer"
 	
 where <path_to_bigtop> is the cloned git repo.
 
@@ -74,9 +76,12 @@ where <path_to_bigtop> is the cloned git repo.
 
 Due to redistribution restrictions the Oracle JDK must be downloaded seperately. 
 
-Download the JDK 64bit rpm.bin file, run it with the -x switch to extract the rpm file and copy jdk-6u45-linux-amd64.rpm to files/.
+Download the JDK 64bit rpm.bin file, run it with the -x switch to extract the
+rpm file and copy jdk-6u45-linux-amd64.rpm to files/.
 
-The Ant/Maven/Forrest sources will be downloaded automatically. If you already have them and do not want to download them again please copy the source .tar.gz files into /usr/src.
+The Ant/Maven/Forrest sources will be downloaded automatically. If you already
+have them and do not want to download them again please copy the source
+.tar.gz files into /usr/src.
 
 ## Support
 

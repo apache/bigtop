@@ -13,10 +13,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-export MAVEN_HOME=/usr/local/maven
-export PATH=$PATH:$MAVEN_HOME/bin
-export JAVA_HOME=/usr/java/latest
-export ANT_HOME=/usr/local/ant
-export PATH=$PATH:$ANT_HOME/bin
-export FORREST_HOME=/usr/local/apache-forrest
-export PATH=$PATH:$FORREST_HOME/bin
+class bigtop_toolchain::maven {
+
+  include bigtop_toolchain::deps
+
+  exec {'/bin/tar xvzf /usr/src/apache-maven-3.0.5-bin.tar.gz':
+    cwd         => '/usr/local',
+    refreshonly => true,
+    subscribe   => Exec["/usr/bin/wget ftp://mirror.reverse.net/pub/apache/maven/maven-3/3.0.5/binaries/apache-maven-3.0.5-bin.tar.gz"],
+    require     => Exec["/usr/bin/wget ftp://mirror.reverse.net/pub/apache/maven/maven-3/3.0.5/binaries/apache-maven-3.0.5-bin.tar.gz"],
+  }
+  
+  file {'/usr/local/maven':
+    ensure  => link,
+    target  => '/usr/local/apache-maven-3.0.5',
+    require => Exec['/bin/tar xvzf /usr/src/apache-maven-3.0.5-bin.tar.gz'],
+  }
+}

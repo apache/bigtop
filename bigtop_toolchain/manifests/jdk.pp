@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class bigtop-toolchain::jdk {
+class bigtop_toolchain::jdk {
   case $::lsbdistcodename{
     precise: {
       package {'python-software-properties':
@@ -54,7 +54,7 @@ class bigtop-toolchain::jdk {
     }
     default: {
       file { '/tmp/jdk-6u45-linux-amd64.rpm':
-        source => 'puppet:///modules/bigtop-toolchain/jdk-6u45-linux-amd64.rpm',
+        source => 'puppet:///modules/bigtop_toolchain/jdk-6u45-linux-amd64.rpm',
         ensure => present,
         owner  => root,
         group  => root,

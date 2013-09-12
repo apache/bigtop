@@ -13,13 +13,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class bigtop-toolchain::packages {
-  case $operatingsystem{
-  centos: { $pkgs = [ "wget", "git", "make" , "cmake" , "rpm-build" , "lzo-devel", "redhat-rpm-config", "openssl-devel", "fuse-libs", "fuse-devel", "fuse", "gcc", "gcc-c++", "autoconf", "automake", "libtool"] }
-  SLES: { $pkgs = [ "wget", "git", "make" , "cmake" , "rpm-devel" , "lzo-devel", "libopenssl-devel", "fuse-devel", "fuse", "gcc", "gcc-c++", "autoconf", "automake", "libtool", "pkg-config"] }
-  Ubuntu: { $pkgs = [ "liblzo2-dev", "libzip-dev", "sharutils", "libfuse-dev", "cmake", "pkg-config", "debhelper", "devscripts", "protobuf-compiler", "build-essential", "dh-make", "reprepro", "automake", "autoconf", "libfuse2", "libssh-dev", "asciidoc" ] }
-}
-  package { $pkgs:
-    ensure => installed,
+class bigtop_toolchain::forrest {
+
+  include bigtop_toolchain::deps
+
+  exec{'/bin/tar xvzf /usr/src/apache-forrest-0.9.tar.gz':
+    cwd         => '/usr/local',
+    require     => Exec["/usr/bin/wget http://archive.apache.org/dist/forrest/0.9/apache-forrest-0.9.tar.gz"],
+    refreshonly => true,
+    subscribe   => Exec["/usr/bin/wget http://archive.apache.org/dist/forrest/0.9/apache-forrest-0.9.tar.gz"],
+  }
+
+  file { '/usr/local/apache-forrest':
+    ensure  => link,
+    target  => '/usr/local/apache-forrest-0.9',
+    require => Exec['/bin/tar xvzf /usr/src/apache-forrest-0.9.tar.gz'],
   }
 }

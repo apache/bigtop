@@ -13,20 +13,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class bigtop-toolchain::ant {
-
-  include bigtop-toolchain::deps
-
-  exec {'/bin/tar xvzf /usr/src/apache-ant-1.9.2-bin.tar.gz':
-    cwd         => '/usr/local',
-    refreshonly => true,
-    subscribe   => Exec["/usr/bin/wget http://mirrors.ibiblio.org/apache//ant/binaries/apache-ant-1.9.2-bin.tar.gz"],
-    require     => Exec["/usr/bin/wget http://mirrors.ibiblio.org/apache//ant/binaries/apache-ant-1.9.2-bin.tar.gz"],
-  }
-
-  file {'/usr/local/ant':
-    ensure  => link,
-    target  => '/usr/local/apache-ant-1.9.2',
-    require => Exec['/bin/tar xvzf /usr/src/apache-ant-1.9.2-bin.tar.gz'],
+class bigtop_toolchain::protobuf {
+  case $operatingsystem{
+    Ubuntu: {
+      notify {"Ubuntu provides protobuf in repo":}
+    }
+    default:{
+      file { '/etc/yum.repos.d/mrdocs-protobuf-rpm.repo':
+        source => 'puppet:///modules/bigtop_toolchain/mrdocs-protobuf-rpm.repo',
+        ensure => present,
+        owner  => root,
+        group  => root,
+        mode   => 755,
+      }
+  
+      package { 'protobuf-devel':
+        ensure => present,
+        require => File['/etc/yum.repos.d/mrdocs-protobuf-rpm.repo'],
+      }
+    }
   }
 }
