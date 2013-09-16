@@ -35,7 +35,7 @@ related distributions.
 Building all of Bigtop requires the following tools:
  
 * Java JDK 1.6
-* Apache Forrest 0.8 (requires 32bit version of Java JDK 1.5)
+* Apache Forrest 0.8
 * Apache Ant
 * Apache Maven
 * git

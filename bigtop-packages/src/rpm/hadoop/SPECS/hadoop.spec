@@ -440,7 +440,6 @@ These projects (enumerated below) allow HDFS to be mounted (on most flavors of U
 
 %build
 # This assumes that you installed Java JDK 6 and set JAVA_HOME
-# This assumes that you installed Java JDK 5 and set JAVA5_HOME
 # This assumes that you installed Forrest and set FORREST_HOME
 
 env HADOOP_VERSION=%{hadoop_base_version} HADOOP_ARCH=%{hadoop_arch} bash %{SOURCE1}

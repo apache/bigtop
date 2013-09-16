@@ -21,11 +21,6 @@ if [ -z "$JAVA_HOME" ]; then
   exit 1
 fi
 
-if [ -z "$JAVA5_HOME" ]; then
-  echo JAVA5_HOME is not set
-  exit 1
-fi
-
 if [ -z "$FORREST_HOME" ]; then
   echo FORREST_HOME is not set
   exit 1

@@ -127,7 +127,6 @@ $(BUILD_DIR)/%/.deb:
 				--preserve-envvar PATH \
 				--preserve-envvar JAVA32_HOME \
 				--preserve-envvar JAVA64_HOME \
-				--preserve-envvar JAVA5_HOME \
 				--preserve-envvar FORREST_HOME \
 				--preserve-envvar MAVEN3_HOME \
 				--preserve-envvar MAVEN_OPTS \
