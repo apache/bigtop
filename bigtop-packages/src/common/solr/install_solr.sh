@@ -115,18 +115,25 @@ cp -ra ${BUILD_DIR}/dist/solrj-lib $PREFIX/$LIB_DIR/lib
 install -d -m 0755 $PREFIX/$LIB_DIR/contrib
 cp -ra ${BUILD_DIR}/contrib/velocity $PREFIX/$LIB_DIR/contrib
 
-install -d -m 0755 $PREFIX/$LIB_DIR/server/webapps/solr
-(cd $PREFIX/$LIB_DIR/server/webapps/solr ; jar xf ../../../*.war)
+# Copy in the configuration files
+install -d -m 0755 $PREFIX/$DEFAULT_DIR
+cp $DISTRO_DIR/solr.default $PREFIX/$DEFAULT_DIR/solr
 
-install -d -m 0755 $PREFIX/$LIB_DIR/server/webapps/ROOT
-cat > $PREFIX/$LIB_DIR/server/webapps/ROOT/index.html <<__EOT__
+install -d -m 0755 $PREFIX/${CONF_DIR}.dist
+cp -ra ${BUILD_DIR}/example/solr/* $PREFIX/${CONF_DIR}.dist
+
+install -d -m 0755 $PREFIX/$LIB_DIR/webapps/solr
+(cd $PREFIX/$LIB_DIR/webapps/solr ; jar xf ../../*.war)
+
+install -d -m 0755 $PREFIX/$LIB_DIR/webapps/ROOT
+cat > $PREFIX/$LIB_DIR/webapps/ROOT/index.html <<__EOT__
 <html><head><meta http-equiv="refresh" content="0;url=./solr"></head><body><a href="/solr">Solr Console</a></body></html>
 __EOT__
 
-install -d -m 0755 $PREFIX/$LIB_DIR/server/conf
-cp $DISTRO_DIR/web.xml $PREFIX/$LIB_DIR/server/conf
-cp $DISTRO_DIR/server.xml $PREFIX/$LIB_DIR/server/conf
-cp $DISTRO_DIR/logging.properties $PREFIX/$LIB_DIR/server/conf
+install -d -m 0755 $PREFIX/${CONF_DIR}.dist/tomcat-deployment/conf
+cp $DISTRO_DIR/web.xml $PREFIX/${CONF_DIR}.dist/tomcat-deployment/conf
+cp $DISTRO_DIR/server.xml $PREFIX/${CONF_DIR}.dist/tomcat-deployment/conf
+cp $DISTRO_DIR/logging.properties $PREFIX/${CONF_DIR}.dist/tomcat-deployment/conf
 
 cp -ra ${BUILD_DIR}/dist/*.*ar $PREFIX/$LIB_DIR
 cp -ra ${BUILD_DIR}/dist/solrj-lib $PREFIX/$LIB_DIR/lib
@@ -139,13 +146,6 @@ cp -a  ${BUILD_DIR}/*.txt $PREFIX/$DOC_DIR
 cp -ra ${BUILD_DIR}/docs/* $PREFIX/$DOC_DIR
 cp -ra ${BUILD_DIR}/example/ $PREFIX/$DOC_DIR/
 
-# Copy in the configuration files
-install -d -m 0755 $PREFIX/$DEFAULT_DIR
-cp $DISTRO_DIR/solr.default $PREFIX/$DEFAULT_DIR/solr
-
-install -d -m 0755 $PREFIX/${CONF_DIR}.dist
-cp -ra ${BUILD_DIR}/example/solr/* $PREFIX/${CONF_DIR}.dist
-
 # Copy in the wrapper
 cat > $PREFIX/$LIB_DIR/bin/solrd <<EOF
 #!/bin/bash
@@ -157,7 +157,7 @@ BIGTOP_DEFAULTS_DIR=${BIGTOP_DEFAULTS_DIR-/etc/default}
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
 
 export CATALINA_HOME=$LIB_DIR/../bigtop-tomcat
-export CATALINA_BASE=$LIB_DIR/server
+export CATALINA_BASE=/var/lib/solr/tomcat-deployment
 
 export CATALINA_TMPDIR=\${SOLR_DATA:-/var/lib/solr/}temp
 export CATALINA_PID=\${SOLR_RUN:-/var/run/solr/}solr.pid

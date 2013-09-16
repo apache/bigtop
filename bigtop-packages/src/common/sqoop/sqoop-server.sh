@@ -15,6 +15,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+tomcat_deployment() {
+  DEPLOYMENT_SOURCE=/etc/sqoop/conf/tomcat-deployment
+  DEPLOYMENT_TARGET=/var/lib/sqoop/tomcat-deployment
+
+  rm -rf ${DEPLOYMENT_TARGET}
+  cp -r ${DEPLOYMENT_SOURCE} ${DEPLOYMENT_TARGET}
+  ln -s ${SQOOP_HOME}/webapps ${DEPLOYMENT_TARGET}/
+  ln -s ${SQOOP_HOME}/bin ${DEPLOYMENT_TARGET}/
+}
+
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
 
@@ -23,8 +33,10 @@ LIB_DIR=${LIB_DIR:-/usr/lib}
 SQOOP_HOME=${LIB_DIR}/sqoop
 TOMCAT_HOME=${LIB_DIR}/bigtop-tomcat
 
+tomcat_deployment
+
 export CATALINA_BIN=${CATALINA_BIN:-${TOMCAT_HOME}/bin}
-export CATALINA_BASE=${CATALINA_BASE:-${SQOOP_HOME}/sqoop-server}
+export CATALINA_BASE=${CATALINA_BASE:-${DEPLOYMENT_TARGET}}
 export CATALINA_OPTS=${CATALINA_OPTS:--Xmx1024m}
 export CATALINA_OUT=${CATALINE_OUT:-/var/log/sqoop/sqoop-tomcat.log}
 

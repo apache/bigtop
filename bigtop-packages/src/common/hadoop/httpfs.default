@@ -18,7 +18,7 @@ export HTTPFS_LOG=/var/log/hadoop-httpfs/
 export HTTPFS_TEMP=/var/run/hadoop-httpfs/
 export HTTPFS_CATALINA_HOME=/usr/lib/bigtop-tomcat
 export CATALINA_PID=/var/run/hadoop-httpfs/hadoop-httpfs-httpfs.pid
-export CATALINA_BASE=/usr/lib/hadoop-httpfs
+export CATALINA_BASE=/var/lib/hadoop-httpfs/tomcat-deployment
 export CATALINA_TMPDIR=/var/run/hadoop-httpfs/
 # HTTPFS_HTTP_PORT
 # HTTPFS_ADMIN_PORT

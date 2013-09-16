@@ -59,6 +59,15 @@ done
 
 SOLR_SHUTDOWN_TIMEOUT=${SOLR_SHUTDOWN_TIMEOUT:-60}
 
+tomcat_deployment() {
+  DEPLOYMENT_SOURCE=/etc/solr/conf/tomcat-deployment
+  DEPLOYMENT_TARGET=/var/lib/solr/tomcat-deployment
+
+  rm -r ${DEPLOYMENT_TARGET}
+  cp -r ${DEPLOYMENT_SOURCE} ${DEPLOYMENT_TARGET}
+  ln -s ${SOLR_HOME}/webapps ${DEPLOYMENT_TARGET}/
+}
+
 start() {
   [ -x $exec ] || exit $ERROR_PROGRAM_NOT_INSTALLED
 
@@ -69,6 +78,7 @@ start() {
   fi
 
   log_success_msg "Starting $desc: "
+  tomcat_deployment
   /bin/su -s /bin/bash -c "${EXEC_PATH} start" $SOLR_USER
   RETVAL=$?
   [ $RETVAL -eq 0 ] && touch $LOCKFILE

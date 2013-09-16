@@ -169,7 +169,6 @@ fi
 /usr/bin/sqoop-server
 %config(noreplace) /etc/sqoop/conf.dist
 %config(noreplace) /etc/default/sqoop-server
-%{lib_sqoop}/sqoop-server
 %{lib_sqoop}/webapps
 %{lib_sqoop}/bin/setenv.sh
 %defattr(0755,sqoop,sqoop)

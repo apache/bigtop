@@ -311,10 +311,12 @@ chmod 644 $MAN_DIR/man1/hadoop.1.gz
 # HTTPFS
 install -d -m 0755 ${HTTPFS_DIR}/sbin
 cp ${BUILD_DIR}/sbin/httpfs.sh ${HTTPFS_DIR}/sbin/
-cp -r ${BUILD_DIR}/share/hadoop/httpfs/tomcat/webapps ${HTTPFS_DIR}/
-cp -r ${BUILD_DIR}/share/hadoop/httpfs/tomcat/conf ${HTTPFS_DIR}/
-chmod 644 ${HTTPFS_DIR}/conf/*
+cp -r ${BUILD_DIR}/share/hadoop/httpfs/tomcat/webapps ${HTTPFS_DIR}/webapps
+install -d -m 0755 ${PREFIX}/var/lib/hadoop-httpfs
 install -d -m 0755 $HTTPFS_ETC_DIR/conf.empty
+install -d -m 0755 $HTTPFS_ETC_DIR/conf.empty/tomcat-deployment
+cp -r ${BUILD_DIR}/share/hadoop/httpfs/tomcat/conf $HTTPFS_ETC_DIR/conf.empty/tomcat-deployment/
+chmod 644 $HTTPFS_ETC_DIR/conf.empty/tomcat-deployment/conf/*
 mv $HADOOP_ETC_DIR/conf.empty/httpfs* $HTTPFS_ETC_DIR/conf.empty
 sed -i -e '/<\/configuration>/i\
   <!-- HUE proxy user setting -->\

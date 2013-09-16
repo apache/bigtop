@@ -118,7 +118,6 @@ BIN_DIR=${BIN_DIR:-/usr/lib/sqoop/bin}
 ETC_DIR=${ETC_DIR:-/etc/sqoop}
 MAN_DIR=${MAN_DIR:-/usr/share/man/man1}
 CONF_DIR=${CONF_DIR:-${ETC_DIR}/conf.dist}
-WEB_DIR=${WEB_DIR:-/usr/lib/sqoop/sqoop-server}
 INITD_DIR=${INITD_DIR:-/etc/init.d}
 DIST_DIR=${DIST_DIR:-dist/target/sqoop-*}
 
@@ -147,16 +146,15 @@ cp -r ${DIST_DIR}/server/webapps $SQOOP_WEBAPPS
 unzip -d $SQOOP_WEBAPPS/sqoop $SQOOP_WEBAPPS/sqoop.war
 
 # Create MR2 configuration
-install -d -m 0755 ${PREFIX}/${LIB_DIR}/sqoop-server/conf
+DEPLOYMENT_DIR=/etc/sqoop/conf.dist/tomcat-deployment
+install -d -m 0755 ${PREFIX}/${DEPLOYMENT_DIR}/conf
 for conf in web.xml tomcat-users.xml server.xml logging.properties context.xml catalina.policy
 do
-    install -m 0644 ${DIST_DIR}/server/conf/$conf ${PREFIX}/${LIB_DIR}/sqoop-server/conf/
+    install -m 0644 ${DIST_DIR}/server/conf/$conf ${PREFIX}/${DEPLOYMENT_DIR}/conf/
 done
-sed -i -e "s|<Host |<Host workDir=\"/var/tmp/sqoop\" |" ${PREFIX}/${LIB_DIR}/sqoop-server/conf/server.xml
-sed -i -e "s|\${catalina\.base}/logs|/var/log/sqoop|"   ${PREFIX}/${LIB_DIR}/sqoop-server/conf/logging.properties
-cp -f ${EXTRA_DIR}/catalina.properties ${PREFIX}/${LIB_DIR}/sqoop-server/conf/catalina.properties
-ln -s ../webapps ${PREFIX}/${LIB_DIR}/sqoop-server/webapps
-ln -s ../bin ${PREFIX}/${LIB_DIR}/sqoop-server/bin
+sed -i -e "s|<Host |<Host workDir=\"/var/tmp/sqoop\" |" ${PREFIX}/${DEPLOYMENT_DIR}/conf/server.xml
+sed -i -e "s|\${catalina\.base}/logs|/var/log/sqoop|"   ${PREFIX}/${DEPLOYMENT_DIR}/conf/logging.properties
+cp -f ${EXTRA_DIR}/catalina.properties ${PREFIX}/${DEPLOYMENT_DIR}/conf/catalina.properties
 
 # Create wrapper scripts for the client and server
 client_wrapper=$PREFIX/usr/bin/sqoop

@@ -51,6 +51,7 @@
 %define state_yarn %{state_hadoop_dirname}/%{name}-yarn
 %define state_hdfs %{state_hadoop_dirname}/%{name}-hdfs
 %define state_mapreduce %{state_hadoop_dirname}/%{name}-mapreduce
+%define state_httpfs %{state_hadoop_dirname}/%{name}-httpfs
 %define bin_hadoop %{_bindir}
 %define man_hadoop %{_mandir}
 %define doc_hadoop %{_docdir}/%{name}-%{hadoop_version}
@@ -648,6 +649,7 @@ fi
 %{lib_httpfs}
 %attr(0775,httpfs,httpfs) %{run_httpfs}
 %attr(0775,httpfs,httpfs) %{log_httpfs}
+%attr(0775,httpfs,httpfs) %{state_httpfs}
 
 # Service file management RPMs
 %define service_macro() \

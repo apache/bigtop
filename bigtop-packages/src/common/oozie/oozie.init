@@ -47,7 +47,16 @@ is_oozie_alive() {
   fi
 }
 
+tomcat_deployment() {
+  DEPLOYMENT_SOURCE=/etc/oozie/conf/tomcat-deployment
+  DEPLOYMENT_TARGET=/var/lib/oozie/tomcat-deployment
+
+  rm -rf ${DEPLOYMENT_TARGET}
+  cp -r ${DEPLOYMENT_SOURCE} ${DEPLOYMENT_TARGET}
+}
+
 start_oozie() {
+  tomcat_deployment
   install -d -o oozie -g oozie /var/run/oozie
   install -d -o oozie -g oozie /var/log/oozie
   install -d -o oozie -g oozie /var/tmp/oozie

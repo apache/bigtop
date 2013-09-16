@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-CATALINA_BASE=/usr/lib/sqoop/sqoop-server
+CATALINA_BASE=/var/lib/sqoop/tomcat-deployment
 SQOOP_USER=sqoop
 SQOOP_CONFIG=/etc/sqoop/conf
 SQOOP_LOG=/var/log/sqoop
@@ -23,3 +23,4 @@ CATALINA_BIN=/usr/lib/bigtop-tomcat/bin
 CATALINA_TMPDIR=/var/tmp/sqoop
 CATALINA_OPTS=-Xmx1024m
 CATALINA_OUT=/var/log/sqoop/sqoop-tomcat.log
+#AUX_CLASSPATH=

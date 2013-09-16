@@ -170,8 +170,9 @@ if [ "${INITD_DIR}" != "" ]; then
   chmod 755 ${INITD_DIR}/oozie
 fi
 cp -R ${BUILD_DIR}/oozie-sharelib*.tar.gz ${SERVER_LIB_DIR}/oozie-sharelib.tar.gz
-cp -R ${BUILD_DIR}/oozie-server/webapps ${SERVER_LIB_DIR}/webapps
 ln -s -f /etc/oozie/conf/oozie-env.sh ${SERVER_LIB_DIR}/bin
+
+cp -R ${BUILD_DIR}/oozie-server/webapps ${SERVER_LIB_DIR}/webapps
 
 # Unpack oozie.war some place reasonable
 WEBAPP_DIR=${SERVER_LIB_DIR}/webapps/oozie
@@ -179,6 +180,18 @@ mkdir ${WEBAPP_DIR}
 (cd ${WEBAPP_DIR} ; jar xf ${BUILD_DIR}/oozie.war)
 mv -f ${WEBAPP_DIR}/WEB-INF/lib ${SERVER_LIB_DIR}/libserver
 touch ${SERVER_LIB_DIR}/webapps/oozie.war
+
+DEFAULT_DIRECTORY=${CONF_DIR}/tomcat-deployment.default
+install -d -m 0755 ${DEFAULT_DIRECTORY}
+cp -R ${BUILD_DIR}/oozie-server/conf ${DEFAULT_DIRECTORY}/conf
+cp ${EXTRA_DIR}/context.xml ${DEFAULT_DIRECTORY}/conf/
+cp ${EXTRA_DIR}/catalina.properties ${DEFAULT_DIRECTORY}/conf/
+mv ${SERVER_LIB_DIR}/webapps/oozie/WEB-INF ${DEFAULT_DIRECTORY}/WEB-INF
+
+SECURE_DIRECTORY=${CONF_DIR}/tomcat-deployment.secure
+cp -r ${DEFAULT_DIRECTORY} ${SECURE_DIRECTORY}
+cp ${SECURE_DIRECTORY}/conf/ssl/ssl-server.xml ${SECURE_DIRECTORY}/conf/server.xml
+cp ${BUILD_DIR}/oozie-server/conf/ssl/ssl-web.xml ${SECURE_DIRECTORY}/WEB-INF/web.xml
 
 # Create all the jars needed for tools execution
 install -d -m 0755 ${SERVER_LIB_DIR}/libtools
@@ -190,21 +203,6 @@ for i in `cd ${BUILD_DIR}/libtools ; ls *` ; do
   fi
 done
 
-# Create an exploded-war oozie deployment in /usr/lib/oozie
-install -d -m 0755 ${SERVER_LIB_DIR}/oozie-server
-cp -R ${BUILD_DIR}/oozie-server/conf ${SERVER_LIB_DIR}/oozie-server/conf
-cp ${EXTRA_DIR}/context.xml ${SERVER_LIB_DIR}/oozie-server/conf/
-cp ${EXTRA_DIR}/catalina.properties ${SERVER_LIB_DIR}/oozie-server/conf/
-ln -s ../webapps ${SERVER_LIB_DIR}/oozie-server/webapps
-
 # Provide a convenience symlink to be more consistent with tarball deployment
 ln -s ${DATA_DIR#${SERVER_PREFIX}} ${SERVER_LIB_DIR}/libext
-
-# Create an exploded-war oozie deployment in /usr/lib/oozie/oozie-server-ssl for SSL
-cp -r ${SERVER_LIB_DIR}/oozie-server ${SERVER_LIB_DIR}/oozie-server-ssl
-cp -r ${SERVER_LIB_DIR}/webapps ${SERVER_LIB_DIR}/webapps-ssl
-rm -r ${SERVER_LIB_DIR}/oozie-server-ssl/webapps
-ln -s ../webapps-ssl ${SERVER_LIB_DIR}/oozie-server-ssl/webapps
-cp ${BUILD_DIR}/oozie-server/conf/ssl/ssl-server.xml ${SERVER_LIB_DIR}/oozie-server-ssl/conf/server.xml
-cp ${BUILD_DIR}/oozie-server/conf/ssl/ssl-web.xml ${SERVER_LIB_DIR}/webapps-ssl/oozie/WEB-INF/web.xml
 
