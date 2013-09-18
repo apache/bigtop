@@ -31,7 +31,7 @@ Description: A browser-based desktop interface for Hadoop
 
 Package: hue
 Architecture: all
-Depends: hue-common (= ${source:Version}), hue-server (= ${source:Version}), hue-beeswax (= ${source:Version}), hue-pig (= ${source:Version})
+Depends: hue-common (= ${source:Version}), hue-server (= ${source:Version}), hue-beeswax (= ${source:Version}), hue-pig (= ${source:Version}), hue-hbase (= ${source:Version}), hue-search (= ${source:Version}), hue-sqoop (= ${source:Version})
 Description: The hue metapackage
  Hue is a browser-based desktop interface for interacting with Hadoop.
  It supports a file browser, job tracker interface, cluster health monitor, and more.
@@ -58,4 +58,26 @@ Description: A UI for Pig on Hue
  A web interface for Pig.
  .
  It allows users to construct and run Pig jobs.
+
+Package: hue-hbase
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.4), python (<< 3), make (>= 3.8), hue-common (= ${source:Version})
+Description: A UI for HBase on Hue
+ A web interface for HBase.
+ .
+ It allows users to run HBase queries
+
+Package: hue-sqoop
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.4), python (<< 3), make (>= 3.8), hue-common (= ${source:Version})
+Description: A UI for Sqoop on Hue
+ A web interface to Sqoop.
+
+Package: hue-search
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.4), python (<< 3), make (>= 3.8), hue-common (= ${source:Version})
+Description: A UI for Search on Hue
+ A web interface to Search.
+ .
+ It allows users to interact with Solr
 

@@ -99,7 +99,7 @@ HADOOP_DIR=${HADOOP_DIR:-/usr/lib/hadoop/lib}
 BUNDLED_BUILD_DIR=$PREFIX/$LIB_DIR/build
 
 # Install all the files 
-(cd $BUILD_DIR ; PREFIX=`dirname $PREFIX/$LIB_DIR` make install)
+(cd $BUILD_DIR ; PREFIX=`dirname $PREFIX/$LIB_DIR` MAVEN_OPTIONS="-Dmaven.repo.local=${PWD}/.m2/repository" make install MAVEN_VERSION='$(DESKTOP_VERSION)')
 
 # Install plugins
 install -d -m 0755 $PREFIX/$HADOOP_DIR
@@ -129,7 +129,7 @@ mv $PREFIX/$LIB_DIR/desktop/desktop.db $PREFIX/$VAR_DIR
 
 # Install conf files
 install -d -m 0755 $PREFIX/$CONF_DIR
-mv -f $PREFIX/$LIB_DIR/desktop/conf $PREFIX/${CONF_DIR}/conf.empty
+cp -r ${BUILD_DIR}/desktop/conf.dist $PREFIX/${CONF_DIR}/conf.empty
 ln -fs $CONF_DIR/conf $PREFIX/$LIB_DIR/desktop/conf
 sed -i -e '/\[\[database\]\]/a\
     engine=sqlite3\

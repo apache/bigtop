@@ -16,7 +16,10 @@
 
 set -ex
 
-make apps
+#FIXME: this needs to be fixed upstream
+sed -i -e 's#2.5.0-SNAPSHOT#'${HUE_VERSION}'#g' `grep -lR 2.5.0-SNAPSHOT .`
+
+make MAVEN_VERSION='$(DESKTOP_VERSION)' apps
 
 # Make the entire tree relocatable
 bash tools/relocatable.sh

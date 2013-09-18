@@ -23,7 +23,7 @@
 # Implicit targets
 SHELL := /bin/bash
 
-APPS=beeswax pig
+APPS=beeswax pig hbase sqoop search
 
 $(APPS:%=debian/hue-%.postinst): debian/hue-app.postinst.tpl
 	sed -e 's#@APP@#$(patsubst debian/hue-%.postinst,%,$@)#'  < $< > $@

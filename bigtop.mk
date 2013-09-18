@@ -187,12 +187,12 @@ $(eval $(call PACKAGE,giraph,GIRAPH))
 HUE_NAME=hue
 HUE_RELNOTES_NAME=Hadoop User Experience
 HUE_PKG_NAME=hue
-HUE_BASE_VERSION=2.3.0
-HUE_PKG_VERSION=2.3.0
+HUE_BASE_VERSION=2.5.1
+HUE_PKG_VERSION=2.5.1
 HUE_RELEASE_VERSION=1
 HUE_TARBALL_DST=hue-$(HUE_BASE_VERSION).tar.gz
-HUE_TARBALL_SRC=hue-$(HUE_BASE_VERSION).tgz
-HUE_SITE=http://cloudera.github.com/hue/releases/$(HUE_BASE_VERSION)
+HUE_TARBALL_SRC=branch-2.5.1.tar.gz
+HUE_SITE=https://github.com/cloudera/hue/archive
 HUE_ARCHIVE=$(HUE_SITE)
 $(eval $(call PACKAGE,hue,HUE))
 

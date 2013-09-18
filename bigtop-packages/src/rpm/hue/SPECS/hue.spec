@@ -31,6 +31,10 @@ Requires: %{name}-common = %{version}-%{release}
 Requires: %{name}-server = %{version}-%{release}
 Requires: %{name}-beeswax = %{version}-%{release}
 Requires: %{name}-pig = %{version}-%{release}
+Requires: %{name}-hbase = %{version}-%{release}
+Requires: %{name}-sqoop = %{version}-%{release}
+Requires: %{name}-search = %{version}-%{release}
+
 
 ################ RPM CUSTOMIZATION ##############################
 # Disable automatic Provides generation - otherwise we will claim to provide all of the
@@ -77,7 +81,7 @@ AutoReqProv: no
 %define beeswax_app_dir %{hue_dir}/apps/beeswax
 %define oozie_app_dir %{hue_dir}/apps/oozie
 %define pig_app_dir %{hue_dir}/apps/pig
-%define catalog_app_dir %{hue_dir}/apps/catalog
+%define metastore_app_dir %{hue_dir}/apps/metastore
 %define filebrowser_app_dir %{hue_dir}/apps/filebrowser
 %define help_app_dir %{hue_dir}/apps/help
 %define jobbrowser_app_dir %{hue_dir}/apps/jobbrowser
@@ -86,6 +90,10 @@ AutoReqProv: no
 %define shell_app_dir %{hue_dir}/apps/shell
 %define useradmin_app_dir %{hue_dir}/apps/useradmin
 %define etc_hue /etc/hue/conf 
+%define hbase_app_dir %{hue_dir}/apps/hbase
+%define sqoop_app_dir %{hue_dir}/apps/sqoop
+%define search_app_dir %{hue_dir}/apps/search
+
 
 # Path to the HADOOP_HOME to build against - these
 # are not substituted into the build products anywhere!
@@ -243,7 +251,7 @@ fi
 %{hue_dir}/Makefile.sdk
 %{hue_dir}/Makefile.vars
 %{hue_dir}/Makefile.vars.priv
-%{hue_dir}/README
+%{hue_dir}/README.rst
 %{hue_dir}/tools
 %{hue_dir}/VERSION
 %{hue_dir}/build/env/bin/*
@@ -262,7 +270,7 @@ fi
 %{proxy_app_dir}
 %{useradmin_app_dir}
 %{shell_app_dir}
-%{catalog_app_dir}
+%{metastore_app_dir}
 %{oozie_app_dir}
 %attr(4750,root,hue) %{shell_app_dir}/src/shell/build/setuid
 %attr(0755,%{username},%{username}) /var/log/hue
@@ -271,6 +279,10 @@ fi
 # beeswax and pig are packaged as a plugin app
 %exclude %{beeswax_app_dir}
 %exclude %{pig_app_dir}
+%exclude %{hbase_app_dir}
+%exclude %{sqoop_app_dir}
+%exclude %{search_app_dir}
+
 
 ############################################################
 # No-arch packages - plugins and conf
@@ -345,3 +357,55 @@ It allows users to construct and run Pig jobs.
 
 %files -n %{name}-pig
 %{pig_app_dir}
+
+#### HUE-HBASE PLUGIN ######
+%package -n %{name}-hbase
+Summary: A UI for HBase on Hue
+Group: Applications/Engineering
+Requires: %{name}-common = %{version}-%{release}
+
+%description -n %{name}-hbase
+A web interface for HBase.
+
+It allows users to construct and run HBase queries.
+
+%app_post_macro hbase
+%app_preun_macro hbase
+
+%files -n %{name}-hbase
+%defattr(-, %{username}, %{username})
+%{hbase_app_dir}
+
+#### HUE-SQOOP PLUGIN ######
+%package -n %{name}-sqoop
+Summary: A UI for Sqoop on Hue
+Group: Applications/Engineering
+Requires: %{name}-common = %{version}-%{release}
+
+%description -n %{name}-sqoop
+A web interface for Sqoop.
+
+%app_post_macro sqoop
+%app_preun_macro sqoop
+
+%files -n %{name}-sqoop
+%defattr(-, %{username}, %{username})
+%{sqoop_app_dir}
+
+#### HUE-SEARCH PLUGIN ######
+%package -n %{name}-search
+Summary: A UI for Search on Hue
+Group: Applications/Engineering
+Requires: %{name}-common = %{version}-%{release}
+
+%description -n %{name}-search
+A web interface for Search.
+
+It allows users to interact with Solr
+
+%app_post_macro search
+%app_preun_macro search
+
+%files -n %{name}-search
+%defattr(-, %{username}, %{username})
+%{search_app_dir}
