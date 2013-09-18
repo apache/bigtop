@@ -144,7 +144,7 @@ It supports a file browser, job tracker interface, cluster health monitor, and m
 # Build
 ########################################
 %build
-bash -x %{SOURCE3}  
+env FULL_VERSION=%{hue_base_version} bash -x %{SOURCE3}  
 
 ########################################
 # Install

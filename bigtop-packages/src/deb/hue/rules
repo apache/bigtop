@@ -35,7 +35,7 @@ $(APPS:%=debian/hue-%.prerm): debian/hue-app.prerm.tpl
 	dh $@
 
 override_dh_auto_build:
-	bash -x debian/do-component-build -Dmaven.repo.local=${HOME}/.m2/repository
+	env FULL_VERSION=${HUE_BASE_VERSION} bash -x debian/do-component-build -Dmaven.repo.local=${HOME}/.m2/repository
 
 override_dh_auto_install: build $(APPS:%=debian/hue-%.postinst) $(APPS:%=debian/hue-%.prerm)
 	bash -x debian/install_hue.sh --build-dir=${PWD} --prefix=${PWD}/debian/tmp
