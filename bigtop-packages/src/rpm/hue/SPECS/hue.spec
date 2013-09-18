@@ -138,7 +138,7 @@ It supports a file browser, job tracker interface, cluster health monitor, and m
 %__rm -rf $RPM_BUILD_ROOT
 
 %prep
-%setup -n %{name}-%{hue_base_version}
+%setup -n %{name}-branch-%{hue_base_version}
 
 ########################################
 # Build
