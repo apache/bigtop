@@ -19,18 +19,18 @@ Priority: extra
 Maintainer: Bigtop <dev@bigtop.apache.org>
 Build-Depends: debhelper (>= 7.0.50~)
 Standards-Version: 3.8.0
-Homepage: http://incubator.apache.org/crunch/
+Homepage: http://crunch.apache.org/
 
 Package: crunch
 Architecture: all
 Description: Simple and Efficient MapReduce Pipelines.
- Apache Crunch (incubating) is a Java library for writing, testing, and running
+ Apache Crunch is a Java library for writing, testing, and running
  MapReduce pipelines, based on Google's FlumeJava. Its goal is to make 
  pipelines that are composed of many user-defined functions simple to write, 
  easy to test, and efficient to run.
 
 Package: crunch-doc
 Architecture: all
-Description: Apache Crunch (incubating) documentation
- Apache Crunch (incubating) documentation
+Description: Apache Crunch documentation
+ Apache Crunch documentation
 
