@@ -186,6 +186,7 @@ fi
 %attr(0755,root,root) %{bin_flume}/flume-ng
 %attr(0755,root,root) %{lib_flume}/bin/flume-ng
 %{lib_flume}/lib/*.jar
+%{lib_flume}/tools/*.jar
 %{lib_flume}/conf
 
 %files agent
