@@ -109,6 +109,15 @@ ln -fs $LIB_DIR/desktop/libs/hadoop/java-lib/*plugin*jar $PREFIX/$HADOOP_DIR
 install -d -m 0755 $PREFIX/$LIB_DIR/apps/shell/src/shell/build/
 cp -f $BUILD_DIR/apps/shell/src/shell/build/setuid $PREFIX/$LIB_DIR/apps/shell/src/shell/build
 
+# Making the resulting tree relocatable
+# WARNING: We HAVE to run this twice, before and after the apps get registered.
+#          we have to run it one time before so that the path to the interpreter
+#          inside of $PREFIX/$LIB_DIR/build/env/bin/hue gets relativized. If we
+#          don't relativize it we run into a risk of breaking the build when the
+#          length of the path to the interpreter ends up being longer than 80
+#          character (which is the limit for #!)
+(cd $PREFIX/$LIB_DIR ; bash tools/relocatable.sh)
+
 # Remove Hue database and then recreate it, but with just the "right" apps
 rm -f $PREFIX/$LIB_DIR/desktop/desktop.db $PREFIX/$LIB_DIR/app.reg
 APPS="about filebrowser help proxy useradmin shell oozie jobbrowser jobsub"
@@ -120,7 +129,7 @@ for app in $APPS ; do
 done
 find $PREFIX/$LIB_DIR -iname \*.py[co]  -exec rm -f {} \;
 
-# Making the resulting tree relocatable
+# Making the resulting tree relocatable for the second time
 (cd $PREFIX/$LIB_DIR ; bash tools/relocatable.sh)
 
 # Move desktop.db to a var location
