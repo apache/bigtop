@@ -120,15 +120,15 @@ install -d -m 0755 $PREFIX/$LIB_DIR/lib
 install -d -m 0755 $PREFIX/$SPARK_BIN_DIR
 install -d -m 0755 $PREFIX/$DOC_DIR
 
-tar --wildcards -C $PREFIX/$LIB_DIR -zxf ${BUILD_DIR}/assembly/target/spark-assembly-*-dist.tar.gz 'lib/*'
+tar --wildcards -C $PREFIX/$LIB_DIR -zxf ${BUILD_DIR}/assembly/target/spark-assembly*-dist.tar.gz 'lib/*'
 
 for comp in core repl bagel mllib streaming; do
   install -d -m 0755 $PREFIX/$LIB_DIR/$comp/lib
-  tar --wildcards -C $PREFIX/$LIB_DIR/$comp/lib -zxf ${BUILD_DIR}/assembly/target/spark-assembly-*-dist.tar.gz spark-$comp\*
+  tar --wildcards -C $PREFIX/$LIB_DIR/$comp/lib -zxf ${BUILD_DIR}/assembly/target/spark-assembly*-dist.tar.gz spark-$comp\*
 done
 ## FIXME: Spark maven assembly needs to include examples into it.
 install -d -m 0755 $PREFIX/$LIB_DIR/examples/lib
-cp ${BUILD_DIR}/examples/target/spark-examples-${SPARK_VERSION}.jar $PREFIX/$LIB_DIR/examples/lib
+cp ${BUILD_DIR}/examples/target/spark-examples*${SPARK_VERSION}.jar $PREFIX/$LIB_DIR/examples/lib
 
 # FIXME: executor scripts need to reside in bin
 cp -a $BUILD_DIR/spark-class $PREFIX/$LIB_DIR
@@ -144,7 +144,7 @@ cp  $PREFIX/$CONF_DIR/spark-env.sh.template $PREFIX/$CONF_DIR/spark-env.sh
 ln -s /etc/spark/conf $PREFIX/$LIB_DIR/conf
 
 # Unpack static UI resources into install_dir/spark where it is expected to be
-tar --wildcards --transform 's,ui-resources/spark,spark,' -C $PREFIX/$LIB_DIR -zxf ${BUILD_DIR}/assembly/target/spark-assembly-*-dist.tar.gz ui-resources/\*
+tar --wildcards --transform 's,ui-resources/spark,spark,' -C $PREFIX/$LIB_DIR -zxf ${BUILD_DIR}/assembly/target/spark-assembly*-dist.tar.gz ui-resources/\*
 
 # set correct permissions for exec. files
 for execfile in spark-class spark-shell spark-executor ; do
