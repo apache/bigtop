@@ -48,6 +48,7 @@ install-indep:
 	sh -x debian/install_spark.sh \
 	  --build-dir=`pwd` \
           --doc-dir=/usr/share/doc/spark \
+          --source-dir=debian \
 	  --prefix=debian/spark
 	dh_install -i
 	(dh_lintian) || /bin/true
