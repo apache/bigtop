@@ -144,7 +144,7 @@ cp  $PREFIX/$CONF_DIR/spark-env.sh.template $PREFIX/$CONF_DIR/spark-env.sh
 ln -s /etc/spark/conf $PREFIX/$LIB_DIR/conf
 
 # Unpack static UI resources into install_dir/spark where it is expected to be
-tar --wildcards --transform 's,ui-resources/spark,spark,' -C $PREFIX/$LIB_DIR -zxf ${BUILD_DIR}/assembly/target/spark-assembly*-dist.tar.gz ui-resources/\*
+tar --wildcards -C $PREFIX/$LIB_DIR -zxf ${BUILD_DIR}/assembly/target/spark-assembly*-dist.tar.gz ui-resources/\*
 
 # set correct permissions for exec. files
 for execfile in spark-class spark-shell spark-executor ; do
