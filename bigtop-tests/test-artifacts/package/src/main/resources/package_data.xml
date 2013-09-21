@@ -90,6 +90,28 @@ Java Servlet and JavaServer Pages technologies.</description>
       </giraph-conf>
     </alternatives>
   </giraph>
+  <spark>
+    <metadata>
+      <summary>Lightning-Fast Cluster Computing</summary>
+      <description>Spark is a MapReduce-like cluster computing framework designed to support
+low-latency iterative jobs and interactive use from an interpreter. It is
+written in Scala, a high-level language for the JVM, and exposes a clean
+language-integrated syntax that makes it easy to write parallel jobs.
+Spark runs on top of the Apache Mesos cluster manager.</description>
+      <url>http://incubator.apache.org/spark/</url>
+    </metadata>
+    <deps>
+      <bigtop-utils/>
+    </deps>
+    <alternatives>
+      <spark-conf>
+        <status>auto</status>
+        <link>/etc/spark/conf</link>
+        <value>/etc/spark/conf.dist</value>
+        <alt>/etc/spark/conf.dist</alt>
+      </spark-conf>
+    </alternatives>
+  </spark>
   <whirr>
     <metadata>
       <summary>Scripts and libraries for running software services on cloud infrastructure.</summary>
