@@ -1,12 +1,12 @@
 # Spark
 
-Lightning-Fast Cluster Computing - <http://www.spark-project.org/>
+Lightning-Fast Cluster Computing - <http://spark.incubator.apache.org/>
 
 
 ## Online Documentation
 
 You can find the latest Spark documentation, including a programming
-guide, on the project webpage at <http://spark-project.org/documentation.html>.
+guide, on the project webpage at <http://spark.incubator.apache.org/documentation.html>.
 This README file only contains basic setup instructions.
 
 
@@ -19,7 +19,7 @@ Spark and its example programs, run:
     sbt/sbt package
 
 Spark also supports building using Maven. If you would like to build using Maven,
-see the [instructions for building Spark with Maven](http://spark-project.org/docs/latest/building-with-maven.html)
+see the [instructions for building Spark with Maven](http://spark.incubator.apache.org/docs/latest/building-with-maven.html)
 in the spark documentation..
 
 To run Spark, you will need to have Scala's bin directory in your `PATH`, or

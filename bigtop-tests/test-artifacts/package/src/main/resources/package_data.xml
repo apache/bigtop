@@ -98,7 +98,7 @@ low-latency iterative jobs and interactive use from an interpreter. It is
 written in Scala, a high-level language for the JVM, and exposes a clean
 language-integrated syntax that makes it easy to write parallel jobs.
 Spark runs on top of the Apache Mesos cluster manager.</description>
-      <url>http://incubator.apache.org/spark/</url>
+      <url>http://spark.incubator.apache.org/</url>
     </metadata>
     <deps>
       <bigtop-utils/>
@@ -377,18 +377,18 @@ server.</description>
   <crunch>
     <metadata>
       <summary>Simple and Efficient MapReduce Pipelines.</summary>
-      <description>Apache Crunch (incubating) is a Java library for writing, testing, and running
+      <description>Apache Crunch is a Java library for writing, testing, and running
 MapReduce pipelines, based on Google's FlumeJava. Its goal is to make 
 pipelines that are composed of many user-defined functions simple to write, 
 easy to test, and efficient to run.</description>
-      <url>http://incubator.apache.org/crunch/</url>
+      <url>http://crunch.apache.org/</url>
     </metadata>
   </crunch>
   <crunch-doc>
     <metadata>
-      <summary>Apache Crunch (incubating) documentation</summary>
-      <description>Apache Crunch (incubating) documentation</description>
-      <url>http://incubator.apache.org/crunch/</url>
+      <summary>Apache Crunch documentation</summary>
+      <description>Apache Crunch documentation</description>
+      <url>http://crunch.apache.org/</url>
     </metadata>
   </crunch-doc>
   <hcatalog>

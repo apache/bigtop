@@ -40,7 +40,7 @@ Name: spark
 Version: %{spark_version}
 Release: %{spark_release}
 Summary: Lightning-Fast Cluster Computing
-URL: http://www.spark-project.org/
+URL: http://spark.incubator.apache.org/
 Group: Development/Libraries
 BuildArch: noarch
 Buildroot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
