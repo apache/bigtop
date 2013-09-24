@@ -42,11 +42,8 @@ case "$1" in
         update-alternatives --install /etc/oozie/conf oozie-conf /etc/oozie/conf.dist 30
 
         conf_tomcat=/etc/oozie/conf/tomcat-deployment
-        ln -s /usr/lib/oozie/webapps ${conf_tomcat}.default/
-        ln -s /usr/lib/oozie/webapps ${conf_tomcat}.secure/
         update-alternatives --install ${conf_tomcat} oozie-tomcat-conf ${conf_tomcat}.default 30
         update-alternatives --install ${conf_tomcat} oozie-tomcat-conf ${conf_tomcat}.secure 20
-        ln -s /var/lib/oozie/tomcat-deployment/WEB-INF /usr/lib/oozie/webapps/oozie/WEB-INF
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

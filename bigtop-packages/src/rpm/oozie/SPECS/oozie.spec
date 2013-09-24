@@ -18,6 +18,7 @@
 %define conf_oozie %{_sysconfdir}/%{name}/conf
 %define conf_oozie_dist %{conf_oozie}.dist
 %define conf_tomcat %{conf_oozie}/tomcat-deployment
+%define conf_tomcat_dist %{conf_oozie_dist}/tomcat-deployment
 %define data_oozie /var/lib/oozie
 
 %if  %{!?suse_version:1}0
@@ -149,18 +150,18 @@ Requires: bigtop-utils >= 0.7
 %__install -d  -m 0755  %{buildroot}/%{_localstatedir}/log/oozie
 %__install -d  -m 0755  %{buildroot}/%{_localstatedir}/run/oozie
 
+%__ln_s -f %{lib_oozie}/webapps $RPM_BUILD_ROOT/%{conf_tomcat_dist}.default/webapps
+%__ln_s -f %{lib_oozie}/webapps $RPM_BUILD_ROOT/%{conf_tomcat_dist}.secure/webapps
+%__ln_s -f %{data_oozie}/tomcat-deployment/WEB-INF $RPM_BUILD_ROOT/%{lib_oozie}/webapps/oozie/WEB-INF
+
 %pre
 getent group oozie >/dev/null || /usr/sbin/groupadd -r oozie >/dev/null
 getent passwd oozie >/dev/null || /usr/sbin/useradd --comment "Oozie User" --shell /bin/false -M -r -g oozie --home %{data_oozie} oozie >/dev/null
 
 %post 
 %{alternatives_cmd} --install %{conf_oozie} %{name}-conf %{conf_oozie_dist} 30
-
-ln -s /usr/lib/oozie/webapps %{conf_tomcat}.default/
-ln -s /usr/lib/oozie/webapps %{conf_tomcat}.secure/
 %{alternatives_cmd} --install %{conf_tomcat} %{name}-tomcat-conf %{conf_tomcat}.default 30
 %{alternatives_cmd} --install %{conf_tomcat} %{name}-tomcat-conf %{conf_tomcat}.secure 20
-ln -s /var/lib/oozie/tomcat-deployment/WEB-INF %{lib_oozie}/webapps/oozie/WEB-INF
 
 /sbin/chkconfig --add oozie 
 
