@@ -132,13 +132,10 @@ find $PREFIX/$LIB_DIR -iname \*.py[co]  -exec rm -f {} \;
 # Making the resulting tree relocatable for the second time
 (cd $PREFIX/$LIB_DIR ; bash tools/relocatable.sh)
 
-# Move desktop.db to a var location
-install -d -m 0755 $PREFIX/$VAR_DIR
-mv $PREFIX/$LIB_DIR/desktop/desktop.db $PREFIX/$VAR_DIR
-
 # Install conf files
 install -d -m 0755 $PREFIX/$CONF_DIR
 cp -r ${BUILD_DIR}/desktop/conf.dist $PREFIX/${CONF_DIR}/conf.empty
+rm -rf $PREFIX/$LIB_DIR/desktop/conf
 ln -fs $CONF_DIR/conf $PREFIX/$LIB_DIR/desktop/conf
 sed -i -e '/\[\[database\]\]/a\
     engine=sqlite3\
@@ -184,3 +181,19 @@ done
 
 # Remove bogus files
 rm -fv `find $PREFIX -iname "build_log.txt"`
+
+# FXIME: for Hue 3.0 the following section would need to go away (hence it is kept at the bottom)
+
+# Move desktop.db to a var location
+install -d -m 0755 $PREFIX/$VAR_DIR
+mv $PREFIX/$LIB_DIR/desktop/desktop.db $PREFIX/$VAR_DIR
+
+# Move hue.pth to a var location
+mv $PREFIX/$LIB_DIR/build/env/lib/python*/site-packages/hue.pth $PREFIX/$VAR_DIR
+ln -s $VAR_DIR/hue.pth `ls -d $PREFIX/$LIB_DIR/build/env/lib/python*/site-packages/`/hue.pth
+rm $PREFIX/$LIB_DIR/build/env/lib/python*/site-packages/hue.link.pth
+
+# Move app.reg to a var location
+mv $PREFIX/$LIB_DIR/app.reg $PREFIX/$VAR_DIR
+ln -s $VAR_DIR/app.reg $PREFIX/$LIB_DIR/app.reg
+sed -i -e '/HUE_APP_REG_DIR/s#INSTALL_ROOT#"/var/lib/hue/"#' $PREFIX/$LIB_DIR/tools/app_reg/common.py
