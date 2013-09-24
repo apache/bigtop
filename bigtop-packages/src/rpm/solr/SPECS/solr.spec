@@ -57,6 +57,9 @@ Source4: web.xml
 Source5: logging.properties
 Source6: solr.default
 Source7: solr-server.init
+Source8: schema.xml
+Source9: solrconfig.xml
+Source10: solrctl.sh
 Requires: bigtop-utils >= 0.7, bigtop-tomcat
 
 # CentOS 5 does not have any dist macro
@@ -156,7 +159,7 @@ fi
 %config(noreplace) %{config_solr}.dist
 %config(noreplace) /etc/default/solr 
 %{lib_solr}
-# %{bin_solr}/solr
+%{bin_solr}/solrctl
 %defattr(-,solr,solr,755)
 /var/lib/solr
 /var/run/solr

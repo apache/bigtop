@@ -2,4 +2,4 @@
 /etc/default
 /usr/lib/solr
 /var
-# /usr/bin/solr
+/usr/bin/solrctl

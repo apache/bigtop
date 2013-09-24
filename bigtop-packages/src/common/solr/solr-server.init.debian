@@ -48,7 +48,12 @@ SOLR_LOCK_DIR="/var/lock/subsys/"
 LOCKFILE="${SOLR_LOCK_DIR}/solr"
 desc="Solr server daemon"
 
-EXEC_PATH=$SOLR_HOME/bin/solrd
+EXEC_PATH=". $SOLR_HOME/bin/solrd"
+
+BIGTOP_DEFAULTS_DIR=${BIGTOP_DEFAULTS_DIR-/etc/default}
+[ -n "${BIGTOP_DEFAULTS_DIR}" -a -r ${BIGTOP_DEFAULTS_DIR}/solr ] && \
+    EXEC_PATH=". ${BIGTOP_DEFAULTS_DIR}/solr ; ${EXEC_PATH}"
+
 SOLR_PID_FILE=${SOLR_RUN_DIR}/solr.pid
 
 # These directories may be tmpfs and may or may not exist
@@ -71,7 +76,7 @@ tomcat_deployment() {
 start() {
   [ -x $exec ] || exit $ERROR_PROGRAM_NOT_INSTALLED
 
-  checkstatus
+  checkstatus > /dev/null 2>&1
   status=$?
   if [ "$status" -eq "$STATUS_RUNNING" ]; then
     exit 0
@@ -87,8 +92,8 @@ start() {
 
 stop() {
   if [ ! -e $SOLR_PID_FILE ]; then
-    log_failure_msg "$desc is not running"
-    exit 0
+    log_success_msg "$desc is not running"
+    return 0
   fi
 
   log_success_msg "Stopping ${desc}: "
@@ -131,6 +136,10 @@ condrestart(){
   [ -e ${LOCKFILE} ] && restart || :
 }
 
+init(){
+  rm -rf /var/lib/solr/*
+}
+
 case "$1" in
   start)
     start
@@ -147,8 +156,11 @@ case "$1" in
   condrestart|try-restart)
     condrestart
     ;;
+  init)
+    init
+    ;;
   *)
-    echo $"Usage: $0 {start|stop|status|restart|try-restart|condrestart}"
+    echo $"Usage: $0 {start|stop|status|restart|try-restart|condrestart|init}"
     exit 1
 esac
 

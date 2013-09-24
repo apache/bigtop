@@ -19,10 +19,14 @@ set -ex
 . `dirname $0`/bigtop.bom
 
 IVY_MIRROR_PROP=${IVY_MIRROR_PROP:-http://repo1.maven.org/maven2/}
-BUILD_OPTS="-Dversion=${FULL_VERSION}                                  \
+BUILD_OPTS="-Dversion=${FULL_VERSION} -Dhadoop.version=${HADOOP_VERSION} \
+            -Dslf4j.binding=slf4j-log4j12 -Dexclude.from.war=nothing   \
             -Divy.home=${HOME}/.ivy2 -Drepo.maven.org=$IVY_MIRROR_PROP \
             -Divy_install_path=${HOME}/.ant/lib -lib ${HOME}/.ant/lib  \
             -Dreactor.repo=file://${HOME}/.m2/repository"
+
+# FIXME: the following really needs to be made flexible at the product level
+sed -i -e '/ENTITY.*hadoop.version/s#"[^"]*"#"'${HADOOP_VERSION}'"#' ./solr/test-framework/ivy.xml ./solr/core/ivy.xml
 
 # FIXME: this needs to be fixed at the product level
 ant $BUILD_OPTS ivy-bootstrap

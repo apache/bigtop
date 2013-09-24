@@ -12,8 +12,18 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-SOLR_PORT=1978
-SOLR_ADMIN_PORT=1979
+SOLR_PORT=8983
+SOLR_ADMIN_PORT=8984
 SOLR_LOG=/var/log/solr
-SOLR_DATA_DIR=/var/lib/solr/index
 # SOLR_ZK_ENSEMBLE=localhost:2181/solr
+# SOLR_HDFS_HOME=hdfs://localhost:8020/solr
+# SOLR_HDFS_CONFIG=/etc/hadoop/conf
+# SOLR_KERBEROS_ENABLED=true
+# SOLR_KERBEROS_KEYTAB=/etc/solr/conf/solr.keytab
+# SOLR_KERBEROS_PRINCIPAL=solr/localhost@LOCALHOST
+SOLR_AUTHENTICATION_TYPE=simple
+SOLR_AUTHENTICATION_SIMPLE_ALLOW_ANON=true
+# SOLR_AUTHENTICATION_KERBEROS_KEYTAB=/etc/solr/conf/solr.keytab
+# SOLR_AUTHENTICATION_KERBEROS_PRINCIPAL=HTTP/localhost@LOCALHOST
+# SOLR_AUTHENTICATION_KERBEROS_NAME_RULES=DEFAULT
+# SOLR_AUTHENTICATION_JAAS_CONF=/etc/solr/conf/jaas.conf
