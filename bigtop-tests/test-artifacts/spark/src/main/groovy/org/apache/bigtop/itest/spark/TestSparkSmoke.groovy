@@ -29,8 +29,8 @@ import static org.junit.Assert.assertEquals
 
 import static org.apache.bigtop.itest.LogErrorsUtils.logError
 
-import spark.api.java.*
-import spark.api.java.function.Function
+import org.apache.spark.api.java.*
+import org.apache.spark.api.java.function.Function
 
 public class TestSparkSmoke implements Serializable {
 

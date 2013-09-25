@@ -44,6 +44,7 @@
     <zookeeper.version>3.4.5</zookeeper.version>
     <giraph.version>0.2-SNAPSHOT</giraph.version>
     <solr.version>4.2.1</solr.version>
+    <spark.version>0.8.0-incubating</spark.version>
     <spark-smoke.version>${project.version}</spark-smoke.version>
 
     <itest-common.version>${project.version}</itest-common.version>
@@ -215,6 +216,11 @@
         <groupId>org.apache.sqoop</groupId>
         <artifactId>sqoop-client</artifactId>
         <version>${sqoop.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.spark</groupId>
+        <artifactId>spark-core_2.9.3</artifactId>
+        <version>${spark.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
