@@ -170,6 +170,8 @@ if [ "$1" = 0 ]; then
   rm /etc/oozie/conf/tomcat-deployment
   /sbin/service oozie stop > /dev/null
   /sbin/chkconfig --del oozie
+  %{alternatives_cmd} --remove %{name}-tomcat-conf %{conf_tomcat}.default || :
+  %{alternatives_cmd} --remove %{name}-tomcat-conf %{conf_tomcat}.secure || :
   %{alternatives_cmd} --remove %{name}-conf %{conf_oozie_dist} || :
 fi
 
@@ -192,6 +194,7 @@ fi
 %{lib_oozie}/libext
 %{initd_dir}/oozie
 %defattr(-, oozie, oozie)
+%dir %{_sysconfdir}/%{name}
 %dir %{_localstatedir}/log/oozie
 %dir %{_localstatedir}/run/oozie
 %attr(0755,oozie,oozie) %{data_oozie}

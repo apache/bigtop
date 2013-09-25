@@ -39,6 +39,8 @@ set -e
 
 case "$1" in
     remove|upgrade|deconfigure)
+      update-alternatives --remove oozie-tomcat-conf /etc/oozie/conf/tomcat-deployment.default || :
+      update-alternatives --remove oozie-tomcat-conf /etc/oozie/conf/tomcat-deployment.secure || :
       update-alternatives --remove oozie-conf /etc/oozie/conf.dist || :
     ;;
 
