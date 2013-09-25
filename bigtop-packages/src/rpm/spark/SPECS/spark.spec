@@ -58,7 +58,6 @@ Requires(preun): /sbin/service
 %if  %{?suse_version:1}0
 # Required for init scripts
 Requires: insserv
-%define alternatives_cmd alternatives
 %global initd_dir %{_sysconfdir}/rc.d
 
 %else
