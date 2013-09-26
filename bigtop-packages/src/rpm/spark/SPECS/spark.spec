@@ -76,8 +76,7 @@ language-integrated syntax that makes it easy to write parallel jobs.
 Spark runs on top of the Apache Mesos cluster manager.
     
 %prep
-#%setup -n %{name}-%{spark_base_version}
-%setup -n spark-branch-0.8
+%setup -n %{name}-%{spark_base_version}
 
 %build
 bash $RPM_SOURCE_DIR/do-component-build
