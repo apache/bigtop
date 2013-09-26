@@ -32,7 +32,7 @@ tomcat_deployment() {
   DEPLOYMENT_SOURCE=/etc/hadoop-httpfs/conf/tomcat-deployment
   DEPLOYMENT_TARGET=/var/lib/hadoop-httpfs/tomcat-deployment
 
-  rm -r ${DEPLOYMENT_TARGET}
+  rm -rf ${DEPLOYMENT_TARGET}
   cp -r ${DEPLOYMENT_SOURCE} ${DEPLOYMENT_TARGET}
   ln -s /usr/lib/hadoop-httpfs/webapps ${DEPLOYMENT_TARGET}/
   chown -R ${SVC_USER}:${SVC_USER} ${DEPLOYMENT_TARGET}

@@ -23,6 +23,7 @@ tomcat_deployment() {
   cp -r ${DEPLOYMENT_SOURCE} ${DEPLOYMENT_TARGET}
   ln -s ${SQOOP_HOME}/webapps ${DEPLOYMENT_TARGET}/
   ln -s ${SQOOP_HOME}/bin ${DEPLOYMENT_TARGET}/
+  chown -R sqoop:sqoop ${DEPLOYMENT_TARGET}
 }
 
 # Autodetect JAVA_HOME if not defined

@@ -68,9 +68,10 @@ tomcat_deployment() {
   DEPLOYMENT_SOURCE=/etc/solr/conf/tomcat-deployment
   DEPLOYMENT_TARGET=/var/lib/solr/tomcat-deployment
 
-  rm -r ${DEPLOYMENT_TARGET}
+  rm -rf ${DEPLOYMENT_TARGET}
   cp -r ${DEPLOYMENT_SOURCE} ${DEPLOYMENT_TARGET}
   ln -s ${SOLR_HOME}/server/webapps ${DEPLOYMENT_TARGET}/
+  chown -R ${SOLR_USER}:${SOLR_USER} ${DEPLOYMENT_TARGET}
 }
 
 start() {

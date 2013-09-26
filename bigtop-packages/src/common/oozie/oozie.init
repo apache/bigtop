@@ -53,6 +53,7 @@ tomcat_deployment() {
 
   rm -rf ${DEPLOYMENT_TARGET}
   cp -r ${DEPLOYMENT_SOURCE} ${DEPLOYMENT_TARGET}
+  chown -R oozie:oozie ${DEPLOYMENT_TARGET}
 }
 
 start_oozie() {
