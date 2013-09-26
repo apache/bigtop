@@ -70,7 +70,7 @@ tomcat_deployment() {
 
   rm -r ${DEPLOYMENT_TARGET}
   cp -r ${DEPLOYMENT_SOURCE} ${DEPLOYMENT_TARGET}
-  ln -s ${SOLR_HOME}/webapps ${DEPLOYMENT_TARGET}/
+  ln -s ${SOLR_HOME}/server/webapps ${DEPLOYMENT_TARGET}/
 }
 
 start() {

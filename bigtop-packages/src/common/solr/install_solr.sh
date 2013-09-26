@@ -185,12 +185,13 @@ SOLR_LOG=${SOLR_LOG:-/var/log/solr}
 SOLR_HOME=${SOLR_HOME:-/var/lib/solr}
 SOLR_LOG4J_CONFIG=${SOLR_LOG4J_CONFIG:-/etc/solr/conf/log4j.properties}
 
-export CATALINA_HOME=${CATALINA_HOME:-$BASEDIR/../bigtop-tomcat}
-export CATALINA_BASE=${CATALINA_BASE:-$BASEDIR/server}
-
 export CATALINA_TMPDIR=${SOLR_DATA:-/var/lib/solr/}
 export CATALINA_PID=${SOLR_RUN:-/var/run/solr}/solr.pid
 export CATALINA_OUT=${SOLR_LOG:-/var/log/solr}/solr.out
+
+export CATALINA_HOME=${CATALINA_HOME:-$BASEDIR/../bigtop-tomcat}
+export CATALINA_BASE=${CATALINA_BASE:-$CATALINA_TMPDIR/tomcat-deployment}
+
 
 die() {
   echo "$@" >&2
