@@ -136,6 +136,12 @@ xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd
           <td align="center">committer</td>
         </tr>
        <tr valign="top">
+          <td align="center">apurtell</td>
+          <td align="center">Andrew Purtell</td>
+          <td align="center">Intel</td>
+          <td align="center">committer</td>
+        </tr>
+       <tr valign="top">
           <td align="center">ptr</td>
           <td align="center">Patrick Taylor Ramsey</td>
           <td align="center">Cloudera</td>
