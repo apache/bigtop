@@ -20,7 +20,7 @@ class hadoop-hbase {
     } 
   }
 
-  class common-server-config {
+  class common-config {
     include client-package
     if ($kerberos_realm) {
       require kerberos::client
@@ -45,12 +45,27 @@ class hadoop-hbase {
     }
   }
 
-  define client {
-    include client-package
+  define client($thrift = false, $kerberos_realm = "") {
+    include common-config
+
+    if ($thrift) {
+      package { "hbase-thrift":
+        ensure => latest,
+      }
+
+      service { "hbase-thrift":
+        ensure => running,
+        require => Package["hbase-thrift"],
+        subscribe => File["/etc/hbase/conf/hbase-site.xml", "/etc/hbase/conf/hbase-env.sh"],
+        hasrestart => true,
+        hasstatus => true,
+      }
+      Kerberos::Host_keytab <| title == "hbase" |> -> Service["hbase-thrift"]
+    }
   }
 
   define server($rootdir, $zookeeper_quorum, $kerberos_realm = "", $heap_size="1024") {
-    include common-server-config
+    include common-config
 
     package { "hbase-regionserver":
       ensure => latest,
@@ -67,7 +82,7 @@ class hadoop-hbase {
   }
 
   define master($rootdir, $zookeeper_quorum, $kerberos_realm = "", $heap_size="1024") {
-    include common-server-config
+    include common-config
 
     package { "hbase-master":
       ensure => latest,

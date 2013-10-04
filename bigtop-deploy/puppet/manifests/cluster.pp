@@ -59,35 +59,43 @@ class hadoop_cluster_node {
   $hadoop_jobtracker_thrift_port     = extlookup("hadoop_jobtracker_thrift_port", "9290")
   $hadoop_mapred_jobtracker_plugins  = extlookup("hadoop_mapred_jobtracker_plugins", "")
   $hadoop_mapred_tasktracker_plugins = extlookup("hadoop_mapred_tasktracker_plugins", "")
-  $hadoop_ha_zookeeper_quorum        = "${hadoop_head_node}:2181"
-  # $hadoop_mapred_jobtracker_plugins="org.apache.hadoop.thriftfs.ThriftJobTrackerPlugin"
-  # $hadoop_mapred_tasktracker_plugins="org.apache.hadoop.mapred.TaskTrackerCmonInst"
+
+  $hadoop_zookeeper_port             = extlookup("hadoop_zookeeper_port", "2181")
+  $solrcloud_port                    = extlookup("solrcloud_port", "1978")
+  $solrcloud_admin_port              = extlookup("solrcloud_admin_port", "1979")
+  $hadoop_oozie_port                 = extlookup("hadoop_oozie_port", "11000")
+  $hadoop_httpfs_port                = extlookup("hadoop_httpfs_port", "14000")
+  $hadoop_rm_http_port               = extlookup("hadoop_rm_http_port", "8088")
+  $hadoop_rm_proxy_port              = extlookup("hadoop_rm_proxy_port", "8088")
+  $hadoop_history_server_port        = extlookup("hadoop_history_server_port", "19888")
+  $hbase_thrift_port                 = extlookup("hbase_thrift_port", "9090")
+
+  $hadoop_ha_zookeeper_quorum        = "${hadoop_head_node}:${hadoop_zookeeper_port}"
+  $solrcloud_zk                      = "${hadoop_head_node}:${hadoop_zookeeper_port}"
+  $hbase_thrift_address              = "${hadoop_head_node}:${hbase_thrift_port}"
+  $hadoop_oozie_url                  = "http://${hadoop_head_node}:${hadoop_oozie_port}/oozie"
+  $hadoop_httpfs_url                 = "http://${hadoop_head_node}:${hadoop_httpfs_port}/webhdfs/v1"
+  $sqoop_server_url                  = "http://${hadoop_head_node}:${sqoop_server_port}/sqoop"
+  $solrcloud_url                     = "http://${hadoop_head_node}:${solrcloud_port}/solr/"
+  $hadoop_rm_url                     = "http://${hadoop_head_node}:${hadoop_rm_http_port}"
+  $hadoop_rm_proxy_url               = "http://${hadoop_head_node}:${hadoop_rm_proxy_port}"
+  $hadoop_history_server_url         = "http://${hadoop_head_node}:${hadoop_history_server_port}"
 
   $bigtop_real_users = [ 'jenkins', 'testuser', 'hudson' ]
 
-  $hadoop_core_proxyusers = { oozie => { groups => 'hudson,testuser,root,hadoop,jenkins,oozie,httpfs,hue,users', hosts => "${hadoop_head_node},localhost,127.0.0.1" },
-                                hue => { groups => 'hudson,testuser,root,hadoop,jenkins,oozie,httpfs,hue,users', hosts => "${hadoop_head_node},localhost,127.0.0.1" },
-                             httpfs => { groups => 'hudson,testuser,root,hadoop,jenkins,oozie,httpfs,hue,users', hosts => "${hadoop_head_node},localhost,127.0.0.1" } }
+  $hadoop_core_proxyusers = { oozie => { groups => 'hudson,testuser,root,hadoop,jenkins,oozie,httpfs,hue,users', hosts => "*" },
+                                hue => { groups => 'hudson,testuser,root,hadoop,jenkins,oozie,httpfs,hue,users', hosts => "*" },
+                             httpfs => { groups => 'hudson,testuser,root,hadoop,jenkins,oozie,httpfs,hue,users', hosts => "*" } }
 
   $hbase_relative_rootdir        = extlookup("hadoop_hbase_rootdir", "/hbase")
   $hadoop_hbase_rootdir = "$hadoop_namenode_uri$hbase_relative_rootdir"
   $hadoop_hbase_zookeeper_quorum = $hadoop_head_node
   $hbase_heap_size               = extlookup("hbase_heap_size", "1024")
+  $hbase_thrift_server           = $hadoop_head_node
 
   $giraph_zookeeper_quorum       = $hadoop_head_node
 
   $hadoop_zookeeper_ensemble = ["$hadoop_head_node:2888:3888"]
-
-  $hadoop_oozie_url  = "http://${hadoop_head_node}:11000/oozie"
-  $hadoop_httpfs_url = "http://${hadoop_head_node}:14000/webhdfs/v1"
-  $hadoop_rm_url             = "http://${hadoop_head_node}:8088"
-  $hadoop_rm_proxy_url       = "http://${hadoop_head_node}:8088"
-  $hadoop_history_server_url = "http://${hadoop_head_node}:19888"
-
-  $solrcloud_collections = ["collection1"]
-  $solrcloud_port        = "1978"
-  $solrcloud_port_admin  = "1979"
-  $solrcloud_zk          = "${hadoop_head_node}:2181"
 
   # Set from facter if available
   $roots              = extlookup("hadoop_storage_dirs",       split($hadoop_storage_dirs, ";"))
@@ -157,10 +165,11 @@ class hadoop_worker_node inherits hadoop_cluster_node {
   }
 
   solr::server { "solrcloud server":
-       collections => $solrcloud_collections,
        port        => $solrcloud_port,
-       port_admin  => $solrcloud_port_admin,
+       port_admin  => $solrcloud_admin_port,
        zk          => $solrcloud_zk,
+       root_url    => $hadoop_namenode_uri,
+       kerberos_realm => $kerberos_realm,
   }
 }
 
@@ -212,12 +221,6 @@ class hadoop_head_node inherits hadoop_worker_node {
         auth => $hadoop_security_authentication,
   }
 
-  hadoop::httpfs { "httpfs":
-        namenode_host => $hadoop_namenode_host,
-        namenode_port => $hadoop_namenode_port,
-        auth => $hadoop_security_authentication,
-  }
-
   hadoop-hbase::master { "hbase master":
         rootdir => $hadoop_hbase_rootdir,
         heap_size => $hbase_heap_size,
@@ -229,31 +232,12 @@ class hadoop_head_node inherits hadoop_worker_node {
         kerberos_realm => $kerberos_realm, 
   }
 
-  hadoop-sqoop::server { "sqoop server":
-  }
-  hadoop-sqoop::client { "sqoop client":
-  }
-
   hcatalog::server { "hcatalog server":
         kerberos_realm => $kerberos_realm,
   }
   hcatalog::webhcat::server { "webhcat server":
         kerberos_realm => $kerberos_realm,
   }
-
-  hue::server { "hue server":
-        rm_url      => $hadoop_rm_url,
-        rm_proxy_url => $hadoop_rm_proxy_url,
-        history_server_url => $hadoop_history_server_url,
-        webhdfs_url => $hadoop_httpfs_url,
-        rm_host     => $hadoop_rm_host,
-        rm_port     => $hadoop_rm_port,
-        oozie_url   => $hadoop_oozie_url,
-        default_fs  => $hadoop_namenode_uri,
-        kerberos_realm => $kerberos_realm,
-  }
-  Hadoop::Httpfs<||> -> Hue::Server<||>
-  Hadoop-sqoop::Client<||> -> Hue::Server<||>
 
   hadoop-zookeeper::server { "zookeeper":
         myid => "0",
@@ -270,7 +254,6 @@ class hadoop_head_node inherits hadoop_worker_node {
   Exec<| title == "init hdfs" |> -> Hadoop-hbase::Master<||>
   Exec<| title == "init hdfs" |> -> Hadoop::Resourcemanager<||>
   Exec<| title == "init hdfs" |> -> Hadoop::Historyserver<||>
-  Exec<| title == "init hdfs" |> -> Hadoop::Httpfs<||>
   Exec<| title == "init hdfs" |> -> Hadoop::Rsync_hdfs<||>
   Exec<| title == "init hdfs" |> -> Hadoop-oozie::Server<||>
 
@@ -290,6 +273,37 @@ class standby_head_node inherits hadoop_cluster_node {
 }
 
 class hadoop_gateway_node inherits hadoop_cluster_node {
+  $hbase_thrift_address              = "${fqdn}:${hbase_thrift_port}"
+  $hadoop_httpfs_url                 = "http://${fqdn}:${hadoop_httpfs_port}/webhdfs/v1"
+  $sqoop_server_url                  = "http://${fqdn}:${sqoop_server_port}/sqoop"
+  $solrcloud_url                     = "http://${fqdn}:${solrcloud_port}/solr/"
+
+  hadoop-sqoop::server { "sqoop server":
+  }
+
+  hadoop::httpfs { "httpfs":
+        namenode_host => $hadoop_namenode_host,
+        namenode_port => $hadoop_namenode_port,
+        auth => $hadoop_security_authentication,
+  }
+
+  hue::server { "hue server":
+        rm_url      => $hadoop_rm_url,
+        rm_proxy_url => $hadoop_rm_proxy_url,
+        history_server_url => $hadoop_history_server_url,
+        webhdfs_url => $hadoop_httpfs_url,
+        sqoop_url   => $sqoop_server_url,
+        solr_url    => $solrcloud_url,
+        hbase_thrift_url => $hbase_thrift_address, 
+        rm_host     => $hadoop_rm_host,
+        rm_port     => $hadoop_rm_port,
+        oozie_url   => $hadoop_oozie_url,
+        default_fs  => $hadoop_namenode_uri,
+        kerberos_realm => $kerberos_realm,
+  }
+  Hadoop::Httpfs<||> -> Hue::Server<||>
+  Hadoop-hbase::Client<||> -> Hue::Server<||>
+
   hadoop::client { "hadoop client":
     namenode_host => $hadoop_namenode_host,
     namenode_port => $hadoop_namenode_port,
@@ -313,7 +327,9 @@ class hadoop_gateway_node inherits hadoop_cluster_node {
   }
   hadoop-oozie::client { "oozie client":
   }
-  hadoop-hbase::client { "hbase client":
+  hadoop-hbase::client { "hbase thrift client":
+    thrift => true,
+    kerberos_realm => $kerberos_realm,
   }
   hadoop-zookeeper::client { "zookeeper client":
   }

@@ -13,7 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-hadoop-hbase::client { "hbase shell": } 
+hadoop-hbase::client { "hbase thrift client":
+  thrift => true,
+  kerberos_realm => "KRB.YOU.ORG",
+}
 hadoop-hbase::master { "test-hbase-master": 
   rootdir => "hdfs://localhost:17020/hbase",
   zookeeper_quorum => "localhost",
