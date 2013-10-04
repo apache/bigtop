@@ -14,15 +14,7 @@
 # limitations under the License.
 
 class solr {
-  define solrcloud_config($confdir, $zk) {
-    exec { "ZK $title config upload":
-      command => "/bin/bash -c \"java -classpath '/usr/lib/solr/server/webapps/solr/WEB-INF/lib/*' org.apache.solr.cloud.ZkCLI -cmd makepath /solr -zkhost ${zk} ; java -classpath '/usr/lib/solr/server/webapps/solr/WEB-INF/lib/*' org.apache.solr.cloud.ZkCLI -cmd upconfig  -confdir ${confdir}/${title}/conf -confname $title -zkhost ${zk}/solr\"",
-      logoutput => true,
-    }
-  }
-  
-
-  define server($collections = ["solrcloud"], $port = "1978", $port_admin = "1979", $zk = "localhost:2181") {
+  define server($port = "1978", $port_admin = "1979", $zk = "localhost:2181", $root_url = "hdfs://localhost:8020/solr", $kerberos_realm = "") {
     package { "solr-server":
       ensure => latest,
     }
@@ -33,25 +25,34 @@ class solr {
         require => [Package["solr-server"]],
     }
 
-    file {
-      "/etc/solr/conf/solr.xml":
-        content => template("solr/solr.xml"),
-        require => [Package["solr-server"]],
-    }
-
-    # FIXME: perhap we have to provide a way to manage collection configs
-    solrcloud_config { $collections:
-      zk      => $zk,
-      confdir => "/etc/solr/conf",
-      require => [Package["solr-server"]],
+    exec { "solr init":
+      command => "/bin/bash -c '/usr/bin/solrctl debug-dump | grep -q solr.xml || /usr/bin/solrctl init'",
+      require => [ Package["solr-server"], File["/etc/default/solr"] ],
+      logoutput => true,
     }
 
     service { "solr-server":
       ensure => running,
-      require => [ Package["solr-server"], File["/etc/default/solr"], File["/etc/solr/conf/solr.xml"], Solrcloud_config[$collections] ],
-      subscribe => [Package["solr-server"], File["/etc/default/solr"], File["/etc/solr/conf/solr.xml"] ],
+      require => [ Package["solr-server"], File["/etc/default/solr"], Exec["solr init"] ],
+      subscribe => [Package["solr-server"], File["/etc/default/solr"] ],
       hasrestart => true,
       hasstatus => true,
     } 
+
+    if ($kerberos_realm) {
+      require kerberos::client
+
+      kerberos::host_keytab { "solr":
+        spnego => true,
+        require => Package["solr-server"],
+      }
+
+      file { "/etc/solr/conf/jaas.conf":
+          content => template("solr/jaas.conf"),
+          require => [Package["solr-server"]],
+      }
+
+      Kerberos::Host_keytab <| title == "solr" |> -> Service["solr-server"]
+    }
   }
 }

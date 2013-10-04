@@ -34,6 +34,8 @@ su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chmod -R 1777 /var/log/hadoop-yarn/
 su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chown yarn:mapred /var/log/hadoop-yarn/apps'
 su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /hbase'
 su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chown hbase:hbase /hbase'
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /solr'
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chown solr:solr /solr'
 su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /benchmarks'
 su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chmod -R 777 /benchmarks'
 su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /user'

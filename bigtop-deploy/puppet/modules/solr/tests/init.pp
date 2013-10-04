@@ -14,8 +14,9 @@
 # limitations under the License.
 
 solr::server { "test-solr-server": 
-  collections => ["collection1", "solrcloud", "a", "b", "c"],
   port        => "1978",
   port_admin  => "1979",
   zk          => "localhost:2181",
+  root_url    => "hdfs://localhost:8020/solr",
+  kerberos_realm => "KRB.YOU.ORG",
 }
