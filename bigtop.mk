@@ -191,7 +191,7 @@ HUE_BASE_VERSION=2.5.1
 HUE_PKG_VERSION=2.5.1
 HUE_RELEASE_VERSION=1
 HUE_TARBALL_DST=hue-$(HUE_BASE_VERSION).tar.gz
-HUE_TARBALL_SRC=branch-2.5.1.tar.gz
+HUE_TARBALL_SRC=release-$(HUE_BASE_VERSION).tar.gz
 HUE_SITE=https://github.com/cloudera/hue/archive
 HUE_ARCHIVE=$(HUE_SITE)
 $(eval $(call PACKAGE,hue,HUE))

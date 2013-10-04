@@ -14,6 +14,9 @@
 # limitations under the License.
 
 hue::server { "test-hue-server": 
+  sqoop_url   => "http://localhost:12000/sqoop",
+  solr_url    => "http://localhost:8983/solr/",
+  hbase_thrift_url => "localhost:9090",
   webhdfs_url => "http://localhost:14000/webhdfs/v1",
   rm_host     => "localhost",
   rm_port     => "8032",

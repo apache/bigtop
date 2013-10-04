@@ -17,7 +17,7 @@
 set -ex
 
 #FIXME: this needs to be fixed upstream
-sed -i -e 's#2.5.0-SNAPSHOT#'${FULL_VERSION}'#g' `grep -lR 2.5.0-SNAPSHOT .`
+sed -i -e "s#${FULL_VERSION}-SNAPSHOT#${FULL_VERSION}#g" `grep -lR ${FULL_VERSION}-SNAPSHOT .`
 
 make MAVEN_VERSION='$(DESKTOP_VERSION)' apps
 
