@@ -69,6 +69,8 @@ class hadoop_cluster_node {
   $hadoop_rm_proxy_port              = extlookup("hadoop_rm_proxy_port", "8088")
   $hadoop_history_server_port        = extlookup("hadoop_history_server_port", "19888")
   $hbase_thrift_port                 = extlookup("hbase_thrift_port", "9090")
+  $spark_master_port                 = extlookup("spark_master_port", "7077")
+  $spark_master_ui_port              = extlookup("spark_master_ui_port", "18080")
 
   $hadoop_ha_zookeeper_quorum        = "${hadoop_head_node}:${hadoop_zookeeper_port}"
   $solrcloud_zk                      = "${hadoop_head_node}:${hadoop_zookeeper_port}"
@@ -94,6 +96,8 @@ class hadoop_cluster_node {
   $hbase_thrift_server           = $hadoop_head_node
 
   $giraph_zookeeper_quorum       = $hadoop_head_node
+
+  $spark_master_host             = $hadoop_head_node
 
   $hadoop_zookeeper_ensemble = ["$hadoop_head_node:2888:3888"]
 
@@ -171,6 +175,12 @@ class hadoop_worker_node inherits hadoop_cluster_node {
        root_url    => $hadoop_namenode_uri,
        kerberos_realm => $kerberos_realm,
   }
+
+  spark::worker { "spark worker":
+       master_host    => $spark_master_host,
+       master_port    => $spark_master_port,
+       master_ui_port => $spark_master_ui_port,
+  }
 }
 
 class hadoop_head_node inherits hadoop_worker_node {
@@ -237,6 +247,12 @@ class hadoop_head_node inherits hadoop_worker_node {
   }
   hcatalog::webhcat::server { "webhcat server":
         kerberos_realm => $kerberos_realm,
+  }
+
+  spark::master { "spark master":
+       master_host    => $spark_master_host,
+       master_port    => $spark_master_port,
+       master_ui_port => $spark_master_ui_port,
   }
 
   hadoop-zookeeper::server { "zookeeper":
