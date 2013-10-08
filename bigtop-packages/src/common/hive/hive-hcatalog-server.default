@@ -1,0 +1,25 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+export METASTORE_PORT=9083
+
+export HADOOP_PREFIX=/usr
+export HCAT_LOG_DIR=/var/log/hive-hcatalog
+export HCAT_PID_DIR=/var/lib/hive-hcatalog
+export HCAT_HOME=/usr/lib/hive-hcatalog
+# FIXME: HCATALOG-636 (and also HIVE-2757)
+export HADOOP_HOME=${HADOOP_HOME:-/usr/lib/hadoop}
+export HIVE_HOME=/usr/lib/hive
+export HIVE_CONF_DIR=/etc/hive/conf

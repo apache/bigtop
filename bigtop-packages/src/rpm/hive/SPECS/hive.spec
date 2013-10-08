@@ -15,12 +15,17 @@
 %define hadoop_username hadoop
 %define etc_hive /etc/%{name}
 %define config_hive %{etc_hive}/conf
+%define conf_hcatalog %{_sysconfdir}/hive-hcatalog/conf
+%define conf_webhcat  %{_sysconfdir}/hive-webhcat/conf
 %define usr_lib_hive /usr/lib/%{name}
+%define usr_lib_hcatalog /usr/lib/hive-hcatalog
 %define var_lib_hive /var/lib/%{name}
-%define bin_hive /usr/bin
+%define var_lib_hcatalog /var/lib/%{name}-hcatalog
+%define var_log_hcatalog /var/log/%{name}-hcatalog
+%define usr_bin /usr/bin
 %define hive_config_virtual hive_active_configuration
 %define man_dir %{_mandir}
-%define hive_services server metastore
+%define hive_services hive-server hive-metastore hive-server2 hive-hcatalog-server hive-webhcat-server
 # After we run "ant package" we'll find the distribution here
 %define hive_dist src/build/dist
 
@@ -71,7 +76,15 @@ Source7: hive.1
 Source8: hive-site.xml
 Source9: hive-server.svc
 Source10: hive-metastore.svc
-Requires: hadoop-client, bigtop-utils >= 0.7, hbase, zookeeper, hive-jdbc = %{version}-%{release}
+Source11: hive-server2.default
+Source12: hive-server2.svc
+Source13: hive-hcatalog.1
+Source14: hive-hcatalog-server.svc
+Source15: hive-webhcat-server.svc
+Source16: hive-hcatalog-server.default
+Source17: hive-webhcat-server.default
+Requires: hadoop-client, bigtop-utils >= 0.7, zookeeper, hive-jdbc = %{version}-%{release}
+Conflicts: hadoop-hive
 Obsoletes: %{name}-webinterface
 
 %description 
@@ -91,10 +104,26 @@ Requires: insserv
 Requires: redhat-lsb
 %endif
 
+%package server2
+Summary: Provides a Hive Thrift service with improved concurrency support.
+Group: System/Daemons
+Requires: %{name} = %{version}-%{release}
+Requires(pre): %{name} = %{version}-%{release}
+
+%if  %{?suse_version:1}0
+# Required for init scripts
+Requires: insserv
+%else
+# Required for init scripts
+Requires: redhat-lsb
+%endif
+
 
 %description server
 This optional package hosts a Thrift server for Hive clients across a network to use.
 
+%description server2
+This optional package hosts a Thrift server for Hive clients across a network to use with improved concurrency support.
 %package metastore
 Summary: Shared metadata repository for Hive.
 Group: System/Daemons
@@ -131,6 +160,79 @@ Requires: hadoop-client
 %description jdbc
 This package provides libraries necessary to connect to Apache Hive via JDBC
 
+%package hcatalog
+Summary: Apache Hcatalog is a data warehouse infrastructure built on top of Hadoop
+Group: Development/Libraries
+Requires: hadoop, hive, bigtop-utils >= 0.6
+
+%description hcatalog
+Apache HCatalog is a table and storage management service for data created using Apache Hadoop.
+This includes:
+    * Providing a shared schema and data type mechanism.
+    * Providing a table abstraction so that users need not be concerned with where or how their data is stored.
+    * Providing interoperability across data processing tools such as Pig, Map Reduce, Streaming, and Hive.
+
+
+%package webhcat
+Summary: WebHcat provides a REST-like web API for HCatalog and related Hadoop components.
+Group: Development/Libraries
+Requires: %{name}-hcatalog = %{version}-%{release}
+
+%description webhcat
+WebHcat provides a REST-like web API for HCatalog and related Hadoop components.
+
+
+%package hcatalog-server
+Summary: Init scripts for HCatalog server
+Group: System/Daemons
+Requires: %{name}-hcatalog = %{version}-%{release}
+
+%if  %{?suse_version:1}0
+# Required for init scripts
+Requires: insserv
+%endif
+
+%if  0%{?mgaversion}
+# Required for init scripts
+Requires: initscripts
+%endif
+
+# CentOS 5 does not have any dist macro
+# So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
+%if %{!?suse_version:1}0 && %{!?mgaversion:1}0
+# Required for init scripts
+Requires: redhat-lsb
+%endif
+
+%description hcatalog-server
+Init scripts for HCatalog server
+
+
+%package webhcat-server
+Summary: Init scripts for WebHcat server
+Group: System/Daemons
+Requires: %{name}-webhcat = %{version}-%{release}
+
+%if  %{?suse_version:1}0
+# Required for init scripts
+Requires: insserv
+%endif
+
+%if  0%{?mgaversion}
+# Required for init scripts
+Requires: initscripts
+%endif
+
+# CentOS 5 does not have any dist macro
+# So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
+%if %{!?suse_version:1}0 && %{!?mgaversion:1}0
+# Required for init scripts
+Requires: redhat-lsb
+%endif
+
+%description webhcat-server
+Init scripts for WebHcat server.
+
 %prep
 %setup -n %{name}-%{hive_base_version}
 
@@ -144,31 +246,36 @@ bash %{SOURCE1}
 %__rm -rf $RPM_BUILD_ROOT
 
 cp $RPM_SOURCE_DIR/hive.1 .
+cp $RPM_SOURCE_DIR/hive-hcatalog.1 .
 cp $RPM_SOURCE_DIR/hive-site.xml .
 /bin/bash %{SOURCE2} \
   --prefix=$RPM_BUILD_ROOT \
   --build-dir=%{hive_dist} \
-  --doc-dir=%{doc_hive}
+  --doc-dir=$RPM_BUILD_ROOT/%{doc_hive}
 
+%__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
 %__install -d -m 0755 $RPM_BUILD_ROOT/etc/default/
-%__install -m 0644 %{SOURCE6} $RPM_BUILD_ROOT/etc/default/%{name}-metastore
-%__install -m 0644 %{SOURCE5} $RPM_BUILD_ROOT/etc/default/%{name}-server
+%__install -m 0644 $RPM_SOURCE_DIR/hive-metastore.default $RPM_BUILD_ROOT/etc/default/%{name}-metastore
+%__install -m 0644 $RPM_SOURCE_DIR/hive-server.default $RPM_BUILD_ROOT/etc/default/%{name}-server
+%__install -m 0644 $RPM_SOURCE_DIR/hive-server2.default $RPM_BUILD_ROOT/etc/default/%{name}-server2
+%__install -m 0644 $RPM_SOURCE_DIR/hive-hcatalog-server.default $RPM_BUILD_ROOT/etc/default/%{name}-hcatalog-server
+%__install -m 0644 $RPM_SOURCE_DIR/hive-webhcat-server.default $RPM_BUILD_ROOT/etc/default/%{name}-webhcat-server
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{_localstatedir}/log/%{name}
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{_localstatedir}/run/%{name}
-
-# Workaround for BIGTOP-583
-%__rm -f $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/slf4j-log4j12-*.jar
 
 # We need to get rid of jars that happen to be shipped in other Bigtop packages
 %__rm -f $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/hbase-*.jar $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/zookeeper-*.jar
 %__ln_s  /usr/lib/hbase/hbase.jar /usr/lib/zookeeper/zookeeper.jar  $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/
 
+# Workaround for BIGTOP-583
+%__rm -f $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/slf4j-log4j12-*.jar
+
 for service in %{hive_services}
 do
     # Install init script
-    init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{name}-${service}
-    bash $RPM_SOURCE_DIR/init.d.tmpl $RPM_SOURCE_DIR/hive-${service}.svc rpm $init_file
+    init_file=$RPM_BUILD_ROOT/%{initd_dir}/${service}
+    bash $RPM_SOURCE_DIR/init.d.tmpl $RPM_SOURCE_DIR/${service}.svc rpm $init_file
 done
 
 %pre
@@ -196,6 +303,23 @@ if [ "$1" = 0 ]; then
   %{alternatives_cmd} --remove %{name}-conf %{etc_hive}/conf.dist || :
 fi
 
+
+%post hcatalog
+%{alternatives_cmd} --install %{conf_hcatalog} hive-hcatalog-conf %{conf_hcatalog}.dist 30
+
+%preun hcatalog
+if [ "$1" = 0 ]; then
+        %{alternatives_cmd} --remove hive-hcatalog-conf %{conf_hcatalog}.dist || :
+fi
+
+%post webhcat
+%{alternatives_cmd} --install %{conf_webhcat} hive-webhcat-conf %{conf_webhcat}.dist 30
+
+%preun webhcat
+if [ "$1" = 0 ]; then
+        %{alternatives_cmd} --remove hive-webhcat-conf %{conf_webhcat}.dist || :
+fi
+
 #######################
 #### FILES SECTION ####
 #######################
@@ -204,7 +328,9 @@ fi
 %defattr(-,root,root,755)
 %config(noreplace) %{etc_hive}/conf.dist
 %{usr_lib_hive}
-%{bin_hive}/hive
+%{usr_bin}/hive
+%{usr_bin}/beeline
+%{usr_bin}/hiveserver2
 %attr(0755,hive,hive) %dir %{var_lib_hive}
 %attr(0755,hive,hive) %dir %{_localstatedir}/log/%{name}
 %attr(0755,hive,hive) %dir %{_localstatedir}/run/%{name}
@@ -243,6 +369,29 @@ fi
 %{usr_lib_hive}/lib/log4j-*.jar
 %{usr_lib_hive}/lib/commons-logging-*.jar
 
+%files hcatalog
+%defattr(-,root,root,755)
+%config(noreplace) %attr(755,root,root) %{conf_hcatalog}.dist
+%attr(0775,hive,hive) %{var_lib_hcatalog}
+%attr(0775,hive,hive) %{var_log_hcatalog}
+%{usr_lib_hcatalog}
+%{usr_lib_hcatalog}/bin
+%{usr_lib_hcatalog}/etc/hcatalog
+%{usr_lib_hcatalog}/libexec
+%{usr_lib_hcatalog}/share/hcatalog
+%{usr_lib_hcatalog}/sbin/hcat_server.sh
+%{usr_lib_hcatalog}/sbin/update-hcatalog-env.sh
+%{usr_bin}/hcat
+%{man_dir}/man1/hive-hcatalog.1.*
+
+%files webhcat
+%defattr(-,root,root,755)
+%config(noreplace) %attr(755,root,root) %{conf_webhcat}.dist
+%{usr_lib_hcatalog}/share/webhcat
+%{usr_lib_hcatalog}/etc/webhcat
+%{usr_lib_hcatalog}/sbin/webhcat_config.sh
+%{usr_lib_hcatalog}/sbin/webhcat_server.sh
+
 %define service_macro() \
 %files %1 \
 %attr(0755,root,root)/%{initd_dir}/%{name}-%1 \
@@ -260,4 +409,7 @@ if [ $1 -ge 1 ]; then \
 	service %{name}-%1 condrestart >/dev/null 2>&1 || : \
 fi
 %service_macro server
+%service_macro server2
 %service_macro metastore
+%service_macro hcatalog-server
+%service_macro webhcat-server

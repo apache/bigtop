@@ -33,25 +33,21 @@ override_dh_auto_build:
 	bash debian/do-component-build  -Divy.home=${HOME}/.ivy2
 	touch $@
 
-server metastore:
+server server2 metastore hcatalog-server webhcat-server:
 	bash debian/init.d.tmpl debian/hive-$@.svc deb debian/${hive_pkg_name}-$@.init
 
-override_dh_auto_install: metastore server
+override_dh_auto_install: metastore server server2 hcatalog-server webhcat-server
 	cp debian/hive-site.xml .
 	cp debian/hive.1 .
-	sh debian/install_hive.sh \
-	  --prefix=debian/${hive_pkg_name} \
+	cp debian/hive-hcatalog.1 .
+	bash debian/install_hive.sh \
+	  --prefix=debian/tmp \
 	  --build-dir=src/build/dist \
-	  --doc-dir=/usr/share/doc/${hive_pkg_name}
-	# We need to get rid of jars that happen to be shipped in other packages
-	rm -f debian/${hive_pkg_name}/usr/lib/hive/lib/hbase-*.jar debian/${hive_pkg_name}/usr/lib/hive/lib/zookeeper-*.jar
-	mkdir -p debian/${hive_pkg_name}-hbase/usr/lib/hive/lib
-	mkdir -p debian/${hive_pkg_name}-jdbc/usr/lib/hive/lib
-	for lib in hive-jdbc hive-metastore hive-serde hive-exec libthrift hive-service libfb303 slf4j log4j commons-logging; do \
-	  mv debian/${hive_pkg_name}/usr/lib/hive/lib/$${lib}-*.jar debian/${hive_pkg_name}-jdbc/usr/lib/hive/lib/; \
-	done
-	ln -s  /usr/lib/hbase/hbase.jar debian/${hive_pkg_name}-hbase/usr/lib/hive/lib
-	ln -s  /usr/lib/zookeeper/zookeeper.jar debian/${hive_pkg_name}/usr/lib/hive/lib
+	  --doc-dir=debian/tmp/usr/share/doc/${hive_pkg_name}
+	# We need to get rid of jars that happen to be shipped in other CDH packages
+	rm -f debian/tmp/usr/lib/hive/lib/hbase-*.jar debian/tmp/usr/lib/hive/lib/zookeeper-*.jar
+	ln -s /usr/lib/hbase/hbase.jar debian/tmp/usr/lib/hive/lib
+	ln -s  /usr/lib/zookeeper/zookeeper.jar debian/tmp/usr/lib/hive/lib
 	# Workaround for BIGTOP-583
-	rm -f debian/${hive_pkg_name}/usr/lib/hive/lib/slf4j-log4j12-*.jar
+	rm -f debian/tmp/usr/lib/hive/lib/slf4j-log4j12-*.jar
 
