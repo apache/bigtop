@@ -48,6 +48,7 @@
     <package-smoke.version>${project.version}</package-smoke.version>
     <solr-smoke.version>${project.version}</solr-smoke.version>
     <hcatalog-smoke.version>${project.version}</hcatalog-smoke.version>
+    <phoenix-smoke.version>${project.version}</phoenix-smoke.version>
   </properties>
 
   <!--
@@ -69,6 +70,7 @@
     <module>sqoop</module>
     -->
     <module>hcatalog</module>
+    <module>phoenix</module>
   </modules>
 
   <dependencyManagement>
@@ -144,6 +146,12 @@
         <groupId>org.apache.bigtop.itest</groupId>
         <artifactId>hcatalog-smoke</artifactId>
         <version>${hcatalog-smoke.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.bigtop.itest</groupId>
+        <artifactId>phoenix-smoke</artifactId>
+        <version>${phoenix-smoke.version}</version>
         <scope>test</scope>
       </dependency>
     </dependencies>

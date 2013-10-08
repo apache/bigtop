@@ -49,6 +49,7 @@
     <module>fatjar</module>
     <module>hcatalog</module>
     <module>spark</module>
+    <module>phoenix</module>
   </modules>
 
   <dependencies>
