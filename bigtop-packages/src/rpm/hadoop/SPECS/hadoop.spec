@@ -572,7 +572,7 @@ fi
 %config(noreplace) /etc/security/limits.d/yarn.conf
 %{lib_hadoop}/libexec/yarn-config.sh
 %{lib_yarn}
-%attr(4754,root,yarn) %{lib_yarn}/bin/container-executor
+%attr(6050,root,yarn) %{lib_yarn}/bin/container-executor
 %{bin_hadoop}/yarn
 %attr(0775,yarn,hadoop) %{run_yarn}
 %attr(0775,yarn,hadoop) %{log_yarn}
