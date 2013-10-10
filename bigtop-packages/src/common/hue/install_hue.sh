@@ -120,7 +120,7 @@ cp -f $BUILD_DIR/apps/shell/src/shell/build/setuid $PREFIX/$LIB_DIR/apps/shell/s
 
 # Remove Hue database and then recreate it, but with just the "right" apps
 rm -f $PREFIX/$LIB_DIR/desktop/desktop.db $PREFIX/$LIB_DIR/app.reg
-APPS="about filebrowser help proxy useradmin shell oozie jobbrowser jobsub"
+APPS="about filebrowser help proxy useradmin shell oozie jobbrowser jobsub metastore"
 export DESKTOP_LOG_DIR=$BUILD_DIR
 export DESKTOP_LOGLEVEL=WARN
 export ROOT=$PREFIX/$LIB_DIR

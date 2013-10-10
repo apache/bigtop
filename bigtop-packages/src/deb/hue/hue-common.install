@@ -25,5 +25,6 @@
 /usr/lib/hue/apps/shell
 /usr/lib/hue/apps/useradmin
 /usr/lib/hue/apps/oozie
+/usr/lib/hue/app/metastore
 /var/log/hue
 /var/lib/hue
