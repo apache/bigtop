@@ -75,6 +75,7 @@ Sqoop is a tool that provides the ability to import and export data sets between
 %package client
 Summary: Client for Sqoop.
 URL: http://sqoop.apache.org
+Requires: bigtop-utils >= 0.7
 Group: System/Daemons
 
 %package server

@@ -28,6 +28,7 @@ Description: Tool for easy imports and exports of data sets between databases an
 
 Package: sqoop-client
 Architecture: all
+Depends: bigtop-utils (>= 0.7)
 Description: Client for Sqoop.
  Lightweight client for Sqoop.
 
