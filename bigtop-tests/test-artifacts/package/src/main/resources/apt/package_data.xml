@@ -82,30 +82,30 @@
       </solr-server>
     </services>
   </solr-server>
-  <hcatalog-server>
+  <hive-hcatalog-server>
     <services>
-      <hcatalog-server>
+      <hive-hcatalog-server>
         <runlevel>2</runlevel>
         <runlevel>3</runlevel>
         <runlevel>4</runlevel>
         <runlevel>5</runlevel>
         <oninstall>start</oninstall>
         <configured>true</configured>
-      </hcatalog-server>
+      </hive-hcatalog-server>
     </services>
-  </hcatalog-server>
-  <webhcat-server>
+  </hive-hcatalog-server>
+  <hive-webhcat-server>
     <services>
-      <webhcat-server>
+      <hive-webhcat-server>
         <runlevel>2</runlevel>
         <runlevel>3</runlevel>
         <runlevel>4</runlevel>
         <runlevel>5</runlevel>
         <oninstall>start</oninstall>
         <configured>true</configured>
-      </webhcat-server>
+      </hive-webhcat-server>
     </services>
-  </webhcat-server>
+  </hive-webhcat-server>
   <sqoop>
     <users>
       <sqoop>

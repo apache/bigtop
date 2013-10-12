@@ -391,7 +391,7 @@ easy to test, and efficient to run.</description>
       <url>http://crunch.apache.org/</url>
     </metadata>
   </crunch-doc>
-  <hcatalog>
+  <hive-hcatalog>
     <metadata>
       <summary>Apache Hcatalog (incubating) is a data warehouse infrastructure built on top of Hadoop</summary>
       <description>
@@ -416,17 +416,17 @@ This includes:
         <alt>/etc/hcatalog/conf.dist</alt>
       </hcatalog-conf>
     </alternatives>
-  </hcatalog>
-  <hcatalog-server>
+  </hive-hcatalog>
+  <hive-hcatalog-server>
     <metadata>
       <summary>Server for HCatalog.</summary>
       <description>Server for HCatalog.</description>
       <url>http://incubator.apache.org/hcatalog</url>
     </metadata>
     <deps>
-      <hcatalog>/self</hcatalog>
+      <hive-hcatalog>/self</hive-hcatalog>
     </deps>
-  </hcatalog-server>
+  </hive-hcatalog-server>
   <pig>
     <metadata>
       <summary>Pig is a platform for analyzing large data sets</summary>
@@ -564,7 +564,7 @@ This includes:
       <hbase/>
     </deps>
   </hive-hbase>
-  <webhcat>
+  <hive-webhcat>
     <metadata>
       <summary>WEBHcat provides a REST-like web API for HCatalog and related Hadoop components.</summary>
       <description>
@@ -573,7 +573,7 @@ WEBHcat provides a REST-like web API for HCatalog and related Hadoop components.
       <url>http://incubator.apache.org/hcatalog</url>
     </metadata>
     <deps>
-      <hcatalog>/self</hcatalog>
+      <hive-hcatalog>/self</hive-hcatalog>
     </deps>
     <alternatives>
       <webhcat-conf>
@@ -583,17 +583,17 @@ WEBHcat provides a REST-like web API for HCatalog and related Hadoop components.
         <alt>/etc/webhcat/conf.dist</alt>
       </webhcat-conf>
     </alternatives>
-  </webhcat>
-  <webhcat-server>
+  </hive-webhcat>
+  <hive-webhcat-server>
     <metadata>
       <summary>Server for WEBHcat.</summary>
       <description>Server for WEBHcat.</description>
       <url>http://incubator.apache.org/hcatalog</url>
     </metadata>
     <deps>
-      <webhcat>/self</webhcat>
+      <hive-webhcat>/self</hive-webhcat>
     </deps>
-  </webhcat-server>
+  </hive-webhcat-server>
   <hbase>
     <metadata>
       <summary>HBase is the Hadoop database. Use it when you need random, realtime read/write access to your Big Data. This project's goal is the hosting of very large tables -- billions of rows X millions of columns -- atop clusters of commodity hardware.</summary>
@@ -676,6 +676,34 @@ WEBHcat provides a REST-like web API for HCatalog and related Hadoop components.
       <hbase>/self</hbase>
     </deps>
   </hbase-rest>
+  <phoenix>
+    <metadata>
+      <summary>Phoenix is a SQL skin over HBase and client-embedded JDBC driver.</summary>
+      <description>Phoenix is a SQL skin over HBase, delivered as a client-embedded JDBC driver.
+The Phoenix query engine transforms an SQL query into one or more HBase scans,
+and orchestrates their execution to produce standard JDBC result sets. Direct
+use of the HBase API, along with coprocessors and custom filters, results in
+performance on the order of milliseconds for small queries, or seconds for
+tens of millions of rows. Applications interact with Phoenix through a
+standard JDBC interface; all the usual interfaces are supported.</description>
+      <url>https://github.com/forcedotcom/phoenix</url>
+    </metadata>
+    <deps>
+      <zookeeper/>
+      <hadoop/>
+      <hadoop-mapreduce/>
+      <hadoop-yarn/>
+      <hbase/>
+    </deps>
+    <alternatives>
+      <phoenix-conf>
+        <status>auto</status>
+        <value>/etc/phoenix/conf.dist</value>
+        <link>/etc/phoenix/conf</link>
+        <alt>/etc/phoenix/conf.dist</alt>
+      </phoenix-conf>
+    </alternatives>
+  </phoenix>
   <hadoop>
     <metadata>
       <summary>Hadoop is a software platform for processing vast amounts of data</summary>
