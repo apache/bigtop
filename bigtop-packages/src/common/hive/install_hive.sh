@@ -197,6 +197,7 @@ rm -rf ${HIVE_DIR}/hcatalog
 
 # Workaround for HIVE-5534
 find ${HCATALOG_DIR} -name *.sh | xargs chmod 755
+chmod 755 ${HCATALOG_DIR}/bin/hcat
 
 install -d -m 0755 ${PREFIX}/etc/default
 for conf in `cd ${HCATALOG_DIR}/etc ; ls -d *` ; do
