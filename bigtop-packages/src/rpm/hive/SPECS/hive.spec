@@ -146,7 +146,7 @@ This optional package hosts a metadata server for Hive clients across a network 
 %package hbase
 Summary: Provides integration between Apache HBase and Apache Hive
 Group: Development/Libraries
-Requires: hbase
+Requires: hive = %{version}-%{release}, hbase
 
 
 %description hbase
@@ -374,13 +374,13 @@ fi
 %config(noreplace) %attr(755,root,root) %{conf_hcatalog}.dist
 %attr(0775,hive,hive) %{var_lib_hcatalog}
 %attr(0775,hive,hive) %{var_log_hcatalog}
-%{usr_lib_hcatalog}
+%dir %{usr_lib_hcatalog}
 %{usr_lib_hcatalog}/bin
 %{usr_lib_hcatalog}/etc/hcatalog
 %{usr_lib_hcatalog}/libexec
 %{usr_lib_hcatalog}/share/hcatalog
-%{usr_lib_hcatalog}/sbin/hcat_server.sh
 %{usr_lib_hcatalog}/sbin/update-hcatalog-env.sh
+%{usr_lib_hcatalog}/sbin/hcat*
 %{usr_bin}/hcat
 %{man_dir}/man1/hive-hcatalog.1.*
 
@@ -389,8 +389,7 @@ fi
 %config(noreplace) %attr(755,root,root) %{conf_webhcat}.dist
 %{usr_lib_hcatalog}/share/webhcat
 %{usr_lib_hcatalog}/etc/webhcat
-%{usr_lib_hcatalog}/sbin/webhcat_config.sh
-%{usr_lib_hcatalog}/sbin/webhcat_server.sh
+%{usr_lib_hcatalog}/sbin/webhcat*
 
 %define service_macro() \
 %files %1 \
