@@ -24,7 +24,7 @@ Homepage: https://github.com/forcedotcom/phoenix
 Package: phoenix
 Architecture: all
 Depends: zookeeper, hadoop, hadoop-mapreduce, hadoop-yarn, hbase, bigtop-utils (>= 0.7)
-Description: Phoenix is a SQL skin over HBase
+Description: Phoenix is a SQL skin over HBase and client-embedded JDBC driver.
  Phoenix is a SQL skin over HBase delivered as a client-embedded JDBC driver.
  The Phoenix query engine transforms an SQL query into one or more HBase scans,
  and orchestrates their execution to produce standard JDBC result sets. Direct
