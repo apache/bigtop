@@ -67,13 +67,17 @@ Description: Provides libraries necessary to connect to Apache Hive via JDBC
 Package: hive-hcatalog
 Architecture: all
 Depends: hadoop, hive, bigtop-utils (>= 0.6)
-Description: Apache HCatalog is a table and storage management service.
+Description: Apache Hcatalog is a data warehouse infrastructure built on top of Hadoop.
  Apache HCatalog is a table and storage management service for data created using Apache Hadoop.
+ This includes:
+   * Providing a shared schema and data type mechanism.
+   * Providing a table abstraction so that users need not be concerned with where or how their data is stored.
+   * Providing interoperability across data processing tools such as Pig, Map Reduce, Streaming, and Hive.
 
 Package: hive-hcatalog-server
 Architecture: all
 Depends: hive-hcatalog (= ${source:Version})
-Description: Server for HCatalog.
+Description: Init scripts for HCatalog server.
  Init scripts for HCatalog server
 
 Package: hive-webhcat
@@ -85,5 +89,5 @@ Description: WebHcat provides a REST-like web API for HCatalog and related Hadoo
 Package: hive-webhcat-server
 Architecture: all
 Depends: hive-webhcat (= ${source:Version})
-Description: Server for WebHcat.
+Description: Init scripts for WebHcat server.
  Init scripts for WebHcat server

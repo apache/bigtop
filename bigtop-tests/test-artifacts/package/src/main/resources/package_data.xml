@@ -393,15 +393,10 @@ easy to test, and efficient to run.</description>
   </crunch-doc>
   <hive-hcatalog>
     <metadata>
-      <summary>Apache Hcatalog (incubating) is a data warehouse infrastructure built on top of Hadoop</summary>
-      <description>
-Apache HCatalog (incubating) is a table and storage management service for data created using Apache Hadoop.
-This includes:
-    * Providing a shared schema and data type mechanism.
-    * Providing a table abstraction so that users need not be concerned with where or how their data is stored.
-    * Providing interoperability across data processing tools such as Pig, Map Reduce, Streaming, and Hive.
+      <summary>Apache Hcatalog is a data warehouse infrastructure built on top of Hadoop</summary>
+      <description>Apache HCatalog is a table and storage management service for data created using Apache Hadoop. This includes: * Providing a shared schema and data type mechanism. * Providing a table abstraction so that users need not be concerned with where or how their data is stored. * Providing interoperability across data processing tools such as Pig, Map Reduce, Streaming, and Hive.
       </description>
-      <url>http://incubator.apache.org/hcatalog</url>
+      <url>http://hive.apache.org/</url>
     </metadata>
     <deps>
       <hadoop/>
@@ -409,19 +404,19 @@ This includes:
       <hive/>
     </deps>
     <alternatives>
-      <hcatalog-conf>
+      <hive-hcatalog-conf>
         <status>auto</status>
-        <value>/etc/hcatalog/conf.dist</value>
-        <link>/etc/hcatalog/conf</link>
-        <alt>/etc/hcatalog/conf.dist</alt>
-      </hcatalog-conf>
+        <value>/etc/hive-hcatalog/conf.dist</value>
+        <link>/etc/hive-hcatalog/conf</link>
+        <alt>/etc/hive-hcatalog/conf.dist</alt>
+      </hive-hcatalog-conf>
     </alternatives>
   </hive-hcatalog>
   <hive-hcatalog-server>
     <metadata>
-      <summary>Server for HCatalog.</summary>
-      <description>Server for HCatalog.</description>
-      <url>http://incubator.apache.org/hcatalog</url>
+      <summary>Init scripts for HCatalog server</summary>
+      <description>Init scripts for HCatalog server</description>
+      <url>http://hive.apache.org/</url>
     </metadata>
     <deps>
       <hive-hcatalog>/self</hive-hcatalog>
@@ -566,29 +561,27 @@ This includes:
   </hive-hbase>
   <hive-webhcat>
     <metadata>
-      <summary>WEBHcat provides a REST-like web API for HCatalog and related Hadoop components.</summary>
-      <description>
-WEBHcat provides a REST-like web API for HCatalog and related Hadoop components.
-      </description>
-      <url>http://incubator.apache.org/hcatalog</url>
+      <summary>WebHcat provides a REST-like web API for HCatalog and related Hadoop components.</summary>
+      <description>WebHcat provides a REST-like web API for HCatalog and related Hadoop components.</description>
+      <url>http://hive.apache.org/</url>
     </metadata>
     <deps>
       <hive-hcatalog>/self</hive-hcatalog>
     </deps>
     <alternatives>
-      <webhcat-conf>
+      <hive-webhcat-conf>
         <status>auto</status>
-        <value>/etc/webhcat/conf.dist</value>
-        <link>/etc/webhcat/conf</link>
-        <alt>/etc/webhcat/conf.dist</alt>
-      </webhcat-conf>
+        <value>/etc/hive-webhcat/conf.dist</value>
+        <link>/etc/hive-webhcat/conf</link>
+        <alt>/etc/hive-webhcat/conf.dist</alt>
+      </hive-webhcat-conf>
     </alternatives>
   </hive-webhcat>
   <hive-webhcat-server>
     <metadata>
-      <summary>Server for WEBHcat.</summary>
-      <description>Server for WEBHcat.</description>
-      <url>http://incubator.apache.org/hcatalog</url>
+      <summary>Init scripts for WebHcat server</summary>
+      <description>Init scripts for WebHcat server.</description>
+      <url>http://hive.apache.org/</url>
     </metadata>
     <deps>
       <hive-webhcat>/self</hive-webhcat>
