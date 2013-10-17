@@ -42,8 +42,8 @@ case "$1" in
         update-alternatives --install /etc/oozie/conf oozie-conf /etc/oozie/conf.dist 30
 
         conf_tomcat=/etc/oozie/conf/tomcat-deployment
-        update-alternatives --install ${conf_tomcat} oozie-tomcat-conf ${conf_tomcat}.default 30
-        update-alternatives --install ${conf_tomcat} oozie-tomcat-conf ${conf_tomcat}.secure 20
+        update-alternatives --install ${conf_tomcat} oozie-tomcat-conf ${conf_tomcat}.http 30
+        update-alternatives --install ${conf_tomcat} oozie-tomcat-conf ${conf_tomcat}.https 20
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

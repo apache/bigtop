@@ -150,8 +150,8 @@ Requires: bigtop-utils >= 0.7
 %__install -d  -m 0755  %{buildroot}/%{_localstatedir}/log/oozie
 %__install -d  -m 0755  %{buildroot}/%{_localstatedir}/run/oozie
 
-%__ln_s -f %{lib_oozie}/webapps $RPM_BUILD_ROOT/%{conf_tomcat_dist}.default/webapps
-%__ln_s -f %{lib_oozie}/webapps $RPM_BUILD_ROOT/%{conf_tomcat_dist}.secure/webapps
+%__ln_s -f %{lib_oozie}/webapps $RPM_BUILD_ROOT/%{conf_tomcat_dist}.http/webapps
+%__ln_s -f %{lib_oozie}/webapps $RPM_BUILD_ROOT/%{conf_tomcat_dist}.https/webapps
 %__ln_s -f %{data_oozie}/tomcat-deployment/WEB-INF $RPM_BUILD_ROOT/%{lib_oozie}/webapps/oozie/WEB-INF
 
 %pre
@@ -160,18 +160,18 @@ getent passwd oozie >/dev/null || /usr/sbin/useradd --comment "Oozie User" --she
 
 %post 
 %{alternatives_cmd} --install %{conf_oozie} %{name}-conf %{conf_oozie_dist} 30
-%{alternatives_cmd} --install %{conf_tomcat} %{name}-tomcat-conf %{conf_tomcat}.default 30
-%{alternatives_cmd} --install %{conf_tomcat} %{name}-tomcat-conf %{conf_tomcat}.secure 20
+%{alternatives_cmd} --install %{conf_tomcat} %{name}-tomcat-conf %{conf_tomcat}.http 30
+%{alternatives_cmd} --install %{conf_tomcat} %{name}-tomcat-conf %{conf_tomcat}.https 20
 
 /sbin/chkconfig --add oozie 
 
 %preun
 if [ "$1" = 0 ]; then
-  rm /etc/oozie/conf/tomcat-deployment
+  rm -r /etc/oozie/conf/tomcat-deployment
   /sbin/service oozie stop > /dev/null
   /sbin/chkconfig --del oozie
-  %{alternatives_cmd} --remove %{name}-tomcat-conf %{conf_tomcat}.default || :
-  %{alternatives_cmd} --remove %{name}-tomcat-conf %{conf_tomcat}.secure || :
+  %{alternatives_cmd} --remove %{name}-tomcat-conf %{conf_tomcat}.http || :
+  %{alternatives_cmd} --remove %{name}-tomcat-conf %{conf_tomcat}.https || :
   %{alternatives_cmd} --remove %{name}-conf %{conf_oozie_dist} || :
 fi
 

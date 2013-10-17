@@ -181,17 +181,21 @@ mkdir ${WEBAPP_DIR}
 mv -f ${WEBAPP_DIR}/WEB-INF/lib ${SERVER_LIB_DIR}/libserver
 touch ${SERVER_LIB_DIR}/webapps/oozie.war
 
-DEFAULT_DIRECTORY=${CONF_DIR}/tomcat-deployment.default
-install -d -m 0755 ${DEFAULT_DIRECTORY}
-cp -R ${BUILD_DIR}/oozie-server/conf ${DEFAULT_DIRECTORY}/conf
-cp ${EXTRA_DIR}/context.xml ${DEFAULT_DIRECTORY}/conf/
-cp ${EXTRA_DIR}/catalina.properties ${DEFAULT_DIRECTORY}/conf/
-mv ${SERVER_LIB_DIR}/webapps/oozie/WEB-INF ${DEFAULT_DIRECTORY}/WEB-INF
+HTTP_DIRECTORY=${CONF_DIR}/tomcat-deployment.http
+install -d -m 0755 ${HTTP_DIRECTORY}
+cp -R ${BUILD_DIR}/oozie-server/conf ${HTTP_DIRECTORY}/conf
+cp ${EXTRA_DIR}/context.xml ${HTTP_DIRECTORY}/conf/
+cp ${EXTRA_DIR}/catalina.properties ${HTTP_DIRECTORY}/conf/
+mv ${SERVER_LIB_DIR}/webapps/oozie/WEB-INF ${HTTP_DIRECTORY}/WEB-INF
 
-SECURE_DIRECTORY=${CONF_DIR}/tomcat-deployment.secure
-cp -r ${DEFAULT_DIRECTORY} ${SECURE_DIRECTORY}
-cp ${SECURE_DIRECTORY}/conf/ssl/ssl-server.xml ${SECURE_DIRECTORY}/conf/server.xml
-cp ${BUILD_DIR}/oozie-server/conf/ssl/ssl-web.xml ${SECURE_DIRECTORY}/WEB-INF/web.xml
+HTTPS_DIRECTORY=${CONF_DIR}/tomcat-deployment.https
+cp -r ${HTTP_DIRECTORY} ${HTTPS_DIRECTORY}
+cp ${HTTPS_DIRECTORY}/conf/ssl/ssl-server.xml ${HTTPS_DIRECTORY}/conf/server.xml
+cp ${BUILD_DIR}/oozie-server/conf/ssl/ssl-web.xml ${HTTPS_DIRECTORY}/WEB-INF/web.xml
+
+ln -s /usr/lib/oozie/webapps ${CONF_DIR}/tomcat-deployment.http/
+ln -s /usr/lib/oozie/webapps ${CONF_DIR}/tomcat-deployment.https/
+ln -s /var/lib/oozie/tomcat-deployment/WEB-INF ${SERVER_LIB_DIR}/webapps/oozie/
 
 # Create all the jars needed for tools execution
 install -d -m 0755 ${SERVER_LIB_DIR}/libtools

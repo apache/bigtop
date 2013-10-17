@@ -23,11 +23,17 @@ tomcat_deployment() {
   cp -r ${DEPLOYMENT_SOURCE} ${DEPLOYMENT_TARGET}
   ln -s ${SQOOP_HOME}/webapps ${DEPLOYMENT_TARGET}/
   ln -s ${SQOOP_HOME}/bin ${DEPLOYMENT_TARGET}/
+
+  if [ -n "${BIGTOP_CLASSPATH}" ] ; then
+    sed -i -e "s#^\(common.loader=.*\)\$#\1,${BIGTOP_CLASSPATH/:/,}#" ${DEPLOYMENT_TARGET}/conf/catalina.properties
+  fi
+
   chown -R sqoop:sqoop ${DEPLOYMENT_TARGET}
 }
 
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
+. /usr/lib/bigtop-utils/bigtop-detect-classpath
 
 LIB_DIR=${LIB_DIR:-/usr/lib}
 

@@ -40,6 +40,6 @@ override_dh_auto_install:
 	ln -s -f /var/lib/oozie/ext-2.2 debian/oozie/usr/lib/oozie/webapps/oozie/ext-2.2
 	rm -rf                        debian/oozie/usr/lib/oozie/webapps/oozie/docs
 	ln -s -f /usr/share/doc/oozie debian/oozie/usr/lib/oozie/webapps/oozie/docs
-	ln -s /usr/lib/oozie/webapps debian/oozie/etc/oozie/conf.dist/tomcat-deployment.default
-	ln -s /usr/lib/oozie/webapps debian/oozie/etc/oozie/conf.dist/tomcat-deployment.secure
+	ln -s /usr/lib/oozie/webapps debian/oozie/etc/oozie/conf.dist/tomcat-deployment.http
+	ln -s /usr/lib/oozie/webapps debian/oozie/etc/oozie/conf.dist/tomcat-deployment.https
 	ln -s /var/lib/oozie/tomcat-deployment/WEB-INF debian/oozie/usr/lib/oozie/webapps/oozie/WEB-INF

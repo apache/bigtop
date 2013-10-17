@@ -39,9 +39,11 @@ set -e
 
 case "$1" in
     remove|upgrade|deconfigure)
-      update-alternatives --remove oozie-tomcat-conf /etc/oozie/conf/tomcat-deployment.default || :
-      update-alternatives --remove oozie-tomcat-conf /etc/oozie/conf/tomcat-deployment.secure || :
+      conf_tomcat=/etc/oozie/conf/tomcat-deployment
+
       update-alternatives --remove oozie-conf /etc/oozie/conf.dist || :
+      update-alternatives --remove oozie-tomcat-conf ${conf_tomcat}.http || :
+      update-alternatives --remove oozie-tomcat-conf ${conf_tomcat}.https || :
     ;;
 
     failed-upgrade)
