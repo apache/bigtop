@@ -78,7 +78,7 @@ Package: hive-hcatalog-server
 Architecture: all
 Depends: hive-hcatalog (= ${source:Version})
 Description: Init scripts for HCatalog server
- Init scripts for HCatalog server.
+ Init scripts for HCatalog server
 
 Package: hive-webhcat
 Architecture: all
