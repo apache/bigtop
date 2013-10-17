@@ -16,7 +16,7 @@
 # limitations under the License.
 
 tomcat_deployment() {
-  DEPLOYMENT_SOURCE=/etc/sqoop/conf/tomcat-deployment
+  DEPLOYMENT_SOURCE=`readlink -e /etc/sqoop/tomcat-deployment`
   DEPLOYMENT_TARGET=/var/lib/sqoop/tomcat-deployment
 
   rm -rf ${DEPLOYMENT_TARGET}

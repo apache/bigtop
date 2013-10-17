@@ -29,7 +29,7 @@ generate_functions() {
 
 cat <<'__EOT__'
 tomcat_deployment() {
-  DEPLOYMENT_SOURCE=/etc/hadoop-httpfs/conf/tomcat-deployment
+  DEPLOYMENT_SOURCE=`readlink -e /etc/hadoop-httpfs/tomcat-deployment`
   DEPLOYMENT_TARGET=/var/lib/hadoop-httpfs/tomcat-deployment
 
   rm -rf ${DEPLOYMENT_TARGET}

@@ -49,7 +49,7 @@ is_oozie_alive() {
 }
 
 tomcat_deployment() {
-  DEPLOYMENT_SOURCE=/etc/oozie/conf/tomcat-deployment
+  DEPLOYMENT_SOURCE=`readlink -e /etc/oozie/tomcat-deployment`
   DEPLOYMENT_TARGET=/var/lib/oozie/tomcat-deployment
 
   rm -rf ${DEPLOYMENT_TARGET}

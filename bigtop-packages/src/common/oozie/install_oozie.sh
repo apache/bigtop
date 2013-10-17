@@ -148,6 +148,7 @@ chmod 755 ${BIN_DIR}/oozie
 ## Install server image
 SERVER_LIB_DIR=${SERVER_PREFIX}/usr/lib/oozie
 CONF_DIR=${CONF_DIR:-"${SERVER_PREFIX}/etc/oozie/conf.dist"}
+ETC_DIR=${SERVER_PREFIX}/etc/oozie
 DATA_DIR=${SERVER_PREFIX}/var/lib/oozie
 
 install -d -m 0755 ${SERVER_LIB_DIR}
@@ -181,20 +182,20 @@ mkdir ${WEBAPP_DIR}
 mv -f ${WEBAPP_DIR}/WEB-INF/lib ${SERVER_LIB_DIR}/libserver
 touch ${SERVER_LIB_DIR}/webapps/oozie.war
 
-HTTP_DIRECTORY=${CONF_DIR}/tomcat-deployment.http
+HTTP_DIRECTORY=${ETC_DIR}/tomcat-deployment.http
 install -d -m 0755 ${HTTP_DIRECTORY}
 cp -R ${BUILD_DIR}/oozie-server/conf ${HTTP_DIRECTORY}/conf
 cp ${EXTRA_DIR}/context.xml ${HTTP_DIRECTORY}/conf/
 cp ${EXTRA_DIR}/catalina.properties ${HTTP_DIRECTORY}/conf/
 mv ${SERVER_LIB_DIR}/webapps/oozie/WEB-INF ${HTTP_DIRECTORY}/WEB-INF
 
-HTTPS_DIRECTORY=${CONF_DIR}/tomcat-deployment.https
+HTTPS_DIRECTORY=${ETC_DIR}/tomcat-deployment.https
 cp -r ${HTTP_DIRECTORY} ${HTTPS_DIRECTORY}
 cp ${HTTPS_DIRECTORY}/conf/ssl/ssl-server.xml ${HTTPS_DIRECTORY}/conf/server.xml
 cp ${BUILD_DIR}/oozie-server/conf/ssl/ssl-web.xml ${HTTPS_DIRECTORY}/WEB-INF/web.xml
 
-ln -s /usr/lib/oozie/webapps ${CONF_DIR}/tomcat-deployment.http/
-ln -s /usr/lib/oozie/webapps ${CONF_DIR}/tomcat-deployment.https/
+ln -s /usr/lib/oozie/webapps ${ETC_DIR}/tomcat-deployment.http/
+ln -s /usr/lib/oozie/webapps ${ETC_DIR}/tomcat-deployment.https/
 ln -s /var/lib/oozie/tomcat-deployment/WEB-INF ${SERVER_LIB_DIR}/webapps/oozie/
 
 # Create all the jars needed for tools execution

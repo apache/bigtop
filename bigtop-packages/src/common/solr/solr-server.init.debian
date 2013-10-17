@@ -65,7 +65,7 @@ done
 SOLR_SHUTDOWN_TIMEOUT=${SOLR_SHUTDOWN_TIMEOUT:-60}
 
 tomcat_deployment() {
-  DEPLOYMENT_SOURCE=/etc/solr/conf/tomcat-deployment
+  DEPLOYMENT_SOURCE=`readlink -e /etc/solr/tomcat-deployment`
   DEPLOYMENT_TARGET=/var/lib/solr/tomcat-deployment
 
   rm -rf ${DEPLOYMENT_TARGET}

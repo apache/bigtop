@@ -1,5 +1,6 @@
 /usr/bin/sqoop-server
 /etc/sqoop/conf.dist
+/etc/sqoop/tomcat-deployment.dist
 /etc/default/sqoop-server
 /usr/lib/sqoop/bin/setenv.sh
 /usr/lib/sqoop/webapps
