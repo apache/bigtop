@@ -15,7 +15,94 @@
 
 Bigtop Changelog
 
-* Release 0.7.0 (unreleased)
+* Release 0.7.0 (2013-10-28)
+
+- SUB-TASK
+  - [BIGTOP-932] - Allow puppet recipes to automatically pull in needed files from web
+  - [BIGTOP-964] - Bump hive version to 0.11
+  - [BIGTOP-993] - Add packaging for Phoenix
+  - [BIGTOP-1053] - Bump version of Hadoop to 2.0.6-alpha
+  - [BIGTOP-1073] - Bump version of HBase to 0.94.11
+  - [BIGTOP-1074] - Bump version of Hue to 2.5.0
+  - [BIGTOP-1075] - bump version of Flume to 1.4.0
+  - [BIGTOP-1076] - bump version of Crunch to 0.7.0
+  - [BIGTOP-1077] - Bump version of Hive to 0.11.0
+  - [BIGTOP-1078] - bump version of Datafu to 1.0.0
+  - [BIGTOP-1079] - bump version of Solr to 4.5.0
+  - [BIGTOP-1083] - Spark version was changed with incubating process.
+  - [BIGTOP-1101] - Bump version of HBase to 0.94.12
+
+- BUG
+  - [BIGTOP-990] - /usr/lib/bigtop-utils/ should be owned by bigtop-utils package
+  - [BIGTOP-998] - Consolidate Hue packages
+  - [BIGTOP-1005] - Create versionless symlinks in hadoop client directory
+  - [BIGTOP-1006] - Explicitly state the working directory to be used in init scripts instead of relying on user's home directories
+  - [BIGTOP-1008] - /usr/lib/bigtop-utils directory is not owned by bigtop-utils package in RPMs
+  - [BIGTOP-1010] - libsnappy not included in the final hadoop RPM
+  - [BIGTOP-1011] - bigtop-detect-javahome has a quirky search order
+  - [BIGTOP-1017] - Revert a commit that introduces some unneeded dependencies
+  - [BIGTOP-1027] - 'bigtop-detect-classpath' helper script missing from bigtop-utils
+  - [BIGTOP-1033] - itest-common: fix debian install to avoid conffile prompt
+  - [BIGTOP-1034] - Custom user's home directory's creation fails in init-hdfs.sh
+  - [BIGTOP-1036] - Hue's oozie app package should depend on hue jobsub package
+  - [BIGTOP-1037] - Provide a mechanism to control the sourcing of defaults files
+  - [BIGTOP-1044] - hive and hive-jdbc versions should be kept in sync
+  - [BIGTOP-1045] - Be consistent with shells, bigtop-detect-javahome, and bigtop-utils versions
+  - [BIGTOP-1046] - Pig's use of BIGTOP_DEFAULTS_DIR is evaluated at the wrong time
+  - [BIGTOP-1051] - Spark archive should come in tar.gz format
+  - [BIGTOP-1052] - Increase environment configurability/debugging of Mahout Tests
+  - [BIGTOP-1055] - Spark package doesn't create PREFIX/bin directory and sets wrong permissions
+  - [BIGTOP-1059] - Add path option for pig.jar to pig smoke pom.xml
+  - [BIGTOP-1070] - Add BIGTOP_CLASSPATH functionality to tomcat deployment
+  - [BIGTOP-1071] - bigtop-detect-javahome should select the first possible candidate in the list
+  - [BIGTOP-1081] - deb spark packing needs to set SOURCE_DIR
+  - [BIGTOP-1082] - spark package tests are missing
+  - [BIGTOP-1084] - spark build on CentOS 5 and SLES11 is broken
+  - [BIGTOP-1086] - fix miscellaneous failures in package tests
+  - [BIGTOP-1087] - flume rpm package needs to own /usr/lib/flume/tools
+  - [BIGTOP-1088] - oozie packages need to own /etc/oozie/conf.dist/tomcat-deployment.{default,secure}
+  - [BIGTOP-1090] - hue packaging needs to handle mutable bits (app.reg and hue.pth)
+  - [BIGTOP-1094] - spark SPEC mistakenly re-defines alternatives command on SLES/OpenSUSE 
+  - [BIGTOP-1095] - oozie  packaging doesn't remove tomcat alternatives
+  - [BIGTOP-1096] - alternatives within the alternatives-managed sub-directory could be harmful
+  - [BIGTOP-1098] - now that Spark has had its first incubator release we have to adjust bigtop accordingly
+  - [BIGTOP-1099] - sync up the versions used for smoke tests with the BOM versions
+  - [BIGTOP-1100] - the new Tomcat deployment style would benefit from a few usability tweaks
+  - [BIGTOP-1103] - Remaining fixes of BIGTOP_DEFAULTS_DIR evaluation
+  - [BIGTOP-1107] - Update to the official Hue 2.5.1 release
+  - [BIGTOP-1108] - Solr 4.5.0 has been formally released and we should start using the official release bits
+  - [BIGTOP-1112] - sqoop-client should require bigtop-utils
+  - [BIGTOP-1114] - Hue metastore app is missing from core registration and Debian packages
+  - [BIGTOP-1115] - update package test manifest for Bigtop 0.7.0
+  - [BIGTOP-1117] - hive-hcatalog integration has a few issues
+  - [BIGTOP-1119] - phoenix DEB packages differ in a few ways from RPM counterparts
+
+- IMPROVEMENT
+  - [BIGTOP-927] - Update puppet recipes to support Ubuntu
+  - [BIGTOP-938] - Upgrade to Junit 4.11
+  - [BIGTOP-955] - HBase installation should advertise its location and configuration
+  - [BIGTOP-1004] - Hadoop packages do not include version independent symlinks
+  - [BIGTOP-1021] - Update HBase version to 0.94.9
+  - [BIGTOP-1031] - README has outdated/ambiguous information
+  - [BIGTOP-1041] - Add Puppet support for Spark cluster deployment
+  - [BIGTOP-1056] - some changes are introduced into Spark build: needs to be updated here
+  - [BIGTOP-1063] - Add Scala 2.9.3 to bigtop-toolchain
+  - [BIGTOP-1069] - Remove descriptions about JDK5 dependency
+  - [BIGTOP-1080] - Change /usr/bin scripts to be alternatives instead of flat files
+  - [BIGTOP-1106] - update our puppet deployment topology
+
+- NEW FEATURE
+  - [BIGTOP-811] - Add /var/lib/bigtop as a location to install SQL connectors and other plug-ins
+  - [BIGTOP-1023] - Define BOM for 0.7.0 release of Bigtop
+
+- TASK
+  - [BIGTOP-715] - Add Spark packaging
+  - [BIGTOP-939] - Make usage of bigtop-tomcat more dynamic
+
+- TEST
+  - [BIGTOP-719] - Add TestTextSnappy to test hadoop fs -text with snappy compressed files
+  - [BIGTOP-1030] - Develop integration tests for new Spark component
+  - [BIGTOP-1057] - Add TeraGen / TeraSort Benchmakring
 
 * Release 0.6.0 (2013-06-10)
 

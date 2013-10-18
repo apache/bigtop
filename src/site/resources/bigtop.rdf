@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl"?>
+<rdf:RDF xml:lang="en"
+         xmlns="http://usefulinc.com/ns/doap#" 
+         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+         xmlns:asfext="http://projects.apache.org/ns/asfext#"
+         xmlns:foaf="http://xmlns.com/foaf/0.1/">
+<!--
+  =======================================================================
+
+   Copyright (c) 2006 The Apache Software Foundation.  
+   All rights reserved.
+
+  =======================================================================
+-->
+  <Project rdf:about="http://bigtop.apache.org/">
+    <created>2012-09-19</created>
+    <license rdf:resource="http://usefulinc.com/doap/licenses/asl20" />
+    <name>Apache Bigtop</name>
+    <homepage rdf:resource="http://bigtop.apache.org/" />
+    <asfext:pmc rdf:resource="http://bigtop.apache.org" />
+    <shortdesc>A 100% community-driven Bigdata management platform.</shortdesc>
+    <description>Bigtop is a project for the development of packaging and tests of the Apache Hadoop ecosystem. 
+                 The primary goal of Bigtop is to build a community around the packaging and interoperability 
+                 testing of Hadoop-related projects. This includes testing at various levels (packaging, platform, 
+                 runtime, upgrade, etc...) developed by a community with a focus on the system as a whole, rather 
+                 than individual projects. In short we strive to be for Hadoop what Debian is to Linux.</description>
+    <bug-database rdf:resource="http://issues.apache.org/jira/browse/BIGTOP" />
+    <mailing-list rdf:resource="http://bigtop.apache.org/mail-lists.html" />
+    <download-page rdf:resource="http://www.apache.org/dyn/closer.cgi/bigtop/" />
+    <programming-language>Java</programming-language>
+    <category rdf:resource="http://projects.apache.org/category/big-data" />
+    <repository>
+      <SVNRepository>
+        <location rdf:resource="https://git-wip-us.apache.org/repos/asf/bigtop.git"/>
+        <browse rdf:resource="https://git-wip-us.apache.org/repos/asf?p=bigtop.git"/>
+      </SVNRepository>
+    </repository>
+  </Project>
+</rdf:RDF>
