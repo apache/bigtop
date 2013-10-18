@@ -23,6 +23,555 @@
     </properties>
     <body>
     <!-- Paste release notes from https://issues.apache.org/jira/browse/BIGTOP here. -->
+
+        <h1>Release Notes - Bigtop - Version 0.7.0</h1>
+<h2>        Sub-task
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-932'>BIGTOP-932</a>] -         Allow puppet recipes to automatically pull in needed files from web
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-964'>BIGTOP-964</a>] -         Bump hive version to 0.11
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-993'>BIGTOP-993</a>] -         Add packaging for Phoenix
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1053'>BIGTOP-1053</a>] -         Bump version of Hadoop to 2.0.6-alpha
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1073'>BIGTOP-1073</a>] -         Bump version of HBase to 0.94.11
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1074'>BIGTOP-1074</a>] -         Bump version of Hue to 2.5.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1075'>BIGTOP-1075</a>] -         bump version of Flume to 1.4.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1076'>BIGTOP-1076</a>] -         bump version of Crunch to 0.7.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1077'>BIGTOP-1077</a>] -         Bump version of Hive to 0.11.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1078'>BIGTOP-1078</a>] -         bump version of Datafu to 1.0.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1079'>BIGTOP-1079</a>] -         bump version of Solr to 4.5.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1083'>BIGTOP-1083</a>] -         Spark version was changed with incubating process.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1101'>BIGTOP-1101</a>] -         Bump version of HBase to 0.94.12
+</li>
+</ul>
+            
+<h2>        Bug
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-990'>BIGTOP-990</a>] -         /usr/lib/bigtop-utils/ should be owned by bigtop-utils package
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-998'>BIGTOP-998</a>] -         Consolidate Hue packages
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1005'>BIGTOP-1005</a>] -         Create versionless symlinks in hadoop client directory
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1006'>BIGTOP-1006</a>] -         Explicitly state the working directory to be used in init scripts instead of relying on user&#39;s home directories
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1008'>BIGTOP-1008</a>] -         /usr/lib/bigtop-utils directory is not owned by bigtop-utils package in RPMs
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1010'>BIGTOP-1010</a>] -         libsnappy not included in the final hadoop RPM
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1011'>BIGTOP-1011</a>] -         bigtop-detect-javahome has a quirky search order
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1017'>BIGTOP-1017</a>] -         Revert a commit that introduces some unneeded dependencies
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1027'>BIGTOP-1027</a>] -         &#39;bigtop-detect-classpath&#39; helper script missing from bigtop-utils
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1033'>BIGTOP-1033</a>] -         itest-common: fix debian install to avoid conffile prompt
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1034'>BIGTOP-1034</a>] -         Custom user&#39;s home directory&#39;s creation fails in init-hdfs.sh
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1036'>BIGTOP-1036</a>] -         Hue&#39;s oozie app package should depend on hue jobsub package
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1037'>BIGTOP-1037</a>] -         Provide a mechanism to control the sourcing of defaults files
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1044'>BIGTOP-1044</a>] -         hive and hive-jdbc versions should be kept in sync
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1045'>BIGTOP-1045</a>] -         Be consistent with shells, bigtop-detect-javahome, and bigtop-utils versions
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1046'>BIGTOP-1046</a>] -         Pig&#39;s use of BIGTOP_DEFAULTS_DIR is evaluated at the wrong time
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1051'>BIGTOP-1051</a>] -         Spark archive should come in tar.gz format
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1052'>BIGTOP-1052</a>] -         Increase environment configurability/debugging of Mahout Tests
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1055'>BIGTOP-1055</a>] -         Spark package doesn&#39;t create PREFIX/bin directory and sets wrong permissions
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1059'>BIGTOP-1059</a>] -         Add path option for pig.jar to pig smoke pom.xml
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1070'>BIGTOP-1070</a>] -         Add BIGTOP_CLASSPATH functionality to tomcat deployment
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1071'>BIGTOP-1071</a>] -         bigtop-detect-javahome should select the first possible candidate in the list
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1081'>BIGTOP-1081</a>] -         deb spark packing needs to set SOURCE_DIR
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1082'>BIGTOP-1082</a>] -         spark package tests are missing
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1084'>BIGTOP-1084</a>] -         spark build on CentOS 5 and SLES11 is broken
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1086'>BIGTOP-1086</a>] -         fix miscellaneous failures in package tests
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1087'>BIGTOP-1087</a>] -         flume rpm package needs to own /usr/lib/flume/tools
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1088'>BIGTOP-1088</a>] -         oozie packages need to own /etc/oozie/conf.dist/tomcat-deployment.{default,secure}
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1090'>BIGTOP-1090</a>] -         hue packaging needs to handle mutable bits (app.reg and hue.pth)
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1094'>BIGTOP-1094</a>] -         spark SPEC mistakenly re-defines alternatives command on SLES/OpenSUSE 
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1095'>BIGTOP-1095</a>] -         oozie  packaging doesn&#39;t remove tomcat alternatives
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1096'>BIGTOP-1096</a>] -         alternatives within the alternatives-managed sub-directory could be harmful
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1098'>BIGTOP-1098</a>] -         now that Spark has had its first incubator release we have to adjust bigtop accordingly
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1099'>BIGTOP-1099</a>] -         sync up the versions used for smoke tests with the BOM versions
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1100'>BIGTOP-1100</a>] -         the new Tomcat deployment style would benefit from a few usability tweaks
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1103'>BIGTOP-1103</a>] -         Remaining fixes of BIGTOP_DEFAULTS_DIR evaluation
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1107'>BIGTOP-1107</a>] -         Update to the official Hue 2.5.1 release
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1108'>BIGTOP-1108</a>] -         Solr 4.5.0 has been formally released and we should start using the official release bits
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1112'>BIGTOP-1112</a>] -         sqoop-client should require bigtop-utils
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1114'>BIGTOP-1114</a>] -         Hue metastore app is missing from core registration and Debian packages
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1115'>BIGTOP-1115</a>] -         update package test manifest for Bigtop 0.7.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1117'>BIGTOP-1117</a>] -         hive-hcatalog integration has a few issues
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1119'>BIGTOP-1119</a>] -         phoenix DEB packages differ in a few ways from RPM counterparts
+</li>
+</ul>
+                
+<h2>        Improvement
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-927'>BIGTOP-927</a>] -         Update puppet recipes to support Ubuntu
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-938'>BIGTOP-938</a>] -         Upgrade to Junit 4.11
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-955'>BIGTOP-955</a>] -         HBase installation should advertise its location and configuration
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1004'>BIGTOP-1004</a>] -         Hadoop packages do not include version independent symlinks
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1021'>BIGTOP-1021</a>] -         Update HBase version to 0.94.9
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1031'>BIGTOP-1031</a>] -         README has outdated/ambiguous information
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1041'>BIGTOP-1041</a>] -         Add Puppet support for Spark cluster deployment
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1056'>BIGTOP-1056</a>] -         some changes are introduced into Spark build: needs to be updated here
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1063'>BIGTOP-1063</a>] -         Add Scala 2.9.3 to bigtop-toolchain
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1069'>BIGTOP-1069</a>] -         Remove descriptions about JDK5 dependency
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1080'>BIGTOP-1080</a>] -         Change /usr/bin scripts to be alternatives instead of flat files
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1106'>BIGTOP-1106</a>] -         update our puppet deployment topology
+</li>
+</ul>
+    
+<h2>        New Feature
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-811'>BIGTOP-811</a>] -         Add /var/lib/bigtop as a location to install SQL connectors and other plug-ins
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1023'>BIGTOP-1023</a>] -         Define BOM for 0.7.0 release of Bigtop
+</li>
+</ul>
+                        
+<h2>        Task
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-715'>BIGTOP-715</a>] -         Add Spark packaging
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-939'>BIGTOP-939</a>] -         Make usage of bigtop-tomcat more dynamic
+</li>
+</ul>
+            
+<h2>        Test
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-719'>BIGTOP-719</a>] -         Add TestTextSnappy to test hadoop fs -text with snappy compressed files
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1030'>BIGTOP-1030</a>] -         Develop integration tests for new Spark component
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1057'>BIGTOP-1057</a>] -         Add TeraGen / TeraSort Benchmakring
+</li>
+</ul>
+
+        <h1>Release Notes - Bigtop - Version 0.6.0</h1>
+    
+<h2>        Sub-task
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-239'>BIGTOP-239</a>] -         HBase init scripts are shut down in the wrong order
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-812'>BIGTOP-812</a>] -         HttpFS is using Tomcat 6.0.32 which has numerous vulnerabilities
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-813'>BIGTOP-813</a>] -         add integration test for HCatlog
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-814'>BIGTOP-814</a>] -         add packaging test for HCatlog
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-822'>BIGTOP-822</a>] -         Bump version of Hadoop to 2.0.5
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-824'>BIGTOP-824</a>] -         Bump version of Hive to 0.10
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-832'>BIGTOP-832</a>] -         Bump version of Hue to 2.3.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-833'>BIGTOP-833</a>] -         Update HCatalog packaging for Bigtop 0.6.0 integration
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-839'>BIGTOP-839</a>] -         add packaging test for Sqoop 2
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-852'>BIGTOP-852</a>] -         Improve HDFS helper script
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-854'>BIGTOP-854</a>] -         add package testing manifest for HCatalog
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-855'>BIGTOP-855</a>] -         add integration tests for HCatalog
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-861'>BIGTOP-861</a>] -         init-hdfs.sh does not work from init scripts
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-862'>BIGTOP-862</a>] -         All the Apache Hadoop services ought to start nicely and in order
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-863'>BIGTOP-863</a>] -         verify the existence of the initscripts with typo
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-864'>BIGTOP-864</a>] -          update the appliance for the location of the init-hdfs.sh script
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-880'>BIGTOP-880</a>] -         Bump version of Datafu to 0.0.6
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-891'>BIGTOP-891</a>] -         TestPigTest doesn&#39;t run against YARN cluster
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-915'>BIGTOP-915</a>] -         bump version of Oozie to 3.3.2
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-916'>BIGTOP-916</a>] -         Bump version of Pig to 0.11.1
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-917'>BIGTOP-917</a>] -         Bump version of Solr to 4.2.1
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-926'>BIGTOP-926</a>] -         Bump version of Giraph to 1.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-933'>BIGTOP-933</a>] -         Need to add ASF license text to bigtop-toolchain files
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-962'>BIGTOP-962</a>] -         Bump Sqoop version to 1.99.2
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-963'>BIGTOP-963</a>] -         bump version of Whirr to 0.8.2
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-980'>BIGTOP-980</a>] -         bigtop-toolchaing user module can&#39;t create &#39;jenkins&#39; user
+</li>
+</ul>
+            
+<h2>        Bug
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-275'>BIGTOP-275</a>] -         scoping of variable in puppet code is incorrect
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-379'>BIGTOP-379</a>] -         Package testing for Bigtop 0.5.0 release
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-445'>BIGTOP-445</a>] -         yarn default file has the wrong name
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-463'>BIGTOP-463</a>] -         should we reconsider /usr/lib vs. /usr/libexec decision?
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-483'>BIGTOP-483</a>] -         Smoke test of Hadoop fails with clitest missing testConf.xml file
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-489'>BIGTOP-489</a>] -         TestCLI with two test cases fails ID - 146 and 147 related to refreshServiceAcl
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-504'>BIGTOP-504</a>] -         provide a functionality for detecting libjvm.so in bigtop-utils
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-545'>BIGTOP-545</a>] -         package testing manifest in trunk needs to be updated
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-553'>BIGTOP-553</a>] -         Metadata for packages needs to be harmonized between RPM and Debain
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-584'>BIGTOP-584</a>] -         Fix hive smoke test failures in trunk
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-624'>BIGTOP-624</a>] -         running start on a service already running should return success
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-637'>BIGTOP-637</a>] -         Update boxgrinder appliance for the coming release
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-786'>BIGTOP-786</a>] -         Not able to find wiki link on Bigtop homepage
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-804'>BIGTOP-804</a>] -         org.apache.bigtop.itest.pmanager.PackageManagerTest.testLookupGcc fails on some systems
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-808'>BIGTOP-808</a>] -         hadoop-conf-pseudo package breaks hadoop-conf alternatives during upgrades
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-809'>BIGTOP-809</a>] -         Remove harmless scary message from solr build
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-815'>BIGTOP-815</a>] -         Move the trunk forward now that 0.5.0 is released
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-818'>BIGTOP-818</a>] -         Updated list of supported platforms on Bigtop&#39;s homepage and readme file
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-823'>BIGTOP-823</a>] -         Remove obsolete slf4j removal in hive packaging
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-826'>BIGTOP-826</a>] -         Wrong return code returned when stopping Hue on RHEL/SUSE
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-827'>BIGTOP-827</a>] -         Ubuntu Install Instructutions Fail with a 404
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-829'>BIGTOP-829</a>] -         Hue status returned wrong information on SLES
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-830'>BIGTOP-830</a>] -         Add $(APACHE_MIRROR) for bigtop-tomcat
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-834'>BIGTOP-834</a>] -         Remove workaround for MAPREDUCE-4814 in historyserver
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-835'>BIGTOP-835</a>] -         The shell exec method must have variants which have timeout and can run in background
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-836'>BIGTOP-836</a>] -         Hue status on SuSE doesn&#39;t work when run from outside of /usr/bin
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-837'>BIGTOP-837</a>] -         Oozie 3.3.0 can&#39;t be build against Hadoop 2.0.3 or later
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-841'>BIGTOP-841</a>] -         hadoop-conf-pseudo missed configuration for capacity scheduler and historyserver
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-842'>BIGTOP-842</a>] -         hadoop-mapreduce-historyserver service dumps some output to the console instead of its .out file 
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-844'>BIGTOP-844</a>] -         hadoop rpm upgrade sequence is broken
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-846'>BIGTOP-846</a>] -         The helper script introduced in BIGTOP-547 doesn&#39;t create /user/$USER directories on HDFS
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-850'>BIGTOP-850</a>] -         Remove non-ASF repositories and infrastructure references from the project files
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-851'>BIGTOP-851</a>] -         Typo breaks detection of multiple libraries in bigtop-utils in some JVMs
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-853'>BIGTOP-853</a>] -         HBase test, TestLoadAndVerify does not work on secure clusters
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-857'>BIGTOP-857</a>] -         Inconsistent group ownership of /var/run/hadoop-hdfs between .deb and .rpm installs
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-858'>BIGTOP-858</a>] -         HBase tests are no longer compile with HBase 0.94
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-859'>BIGTOP-859</a>] -         fix the Bigtop trunk package test
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-869'>BIGTOP-869</a>] -         hadoop preun should not stop services itself on behalf of its subpackages
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-870'>BIGTOP-870</a>] -         Bump version of Pig to 0.11
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-873'>BIGTOP-873</a>] -         Hive needs Ivy cache cleared
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-874'>BIGTOP-874</a>] -         make test contracts show up in javadoc
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-875'>BIGTOP-875</a>] -         hadoop-smoke is broken because of missed dependency
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-876'>BIGTOP-876</a>] -         TestDFSAdmin in hadoop-smoke is outdated and still relies on presence of -upgradeProgress
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-877'>BIGTOP-877</a>] -         TestDFSAdmin in hadoop-smoke has to ensure its own environment, e.g. create HDFS paths, etc.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-878'>BIGTOP-878</a>] -         Bump version of Oozie to 3.3.1
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-879'>BIGTOP-879</a>] -         Bump version of Solr to 4.2.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-883'>BIGTOP-883</a>] -         Add support for Oracle RPM Java 1.7
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-884'>BIGTOP-884</a>] -         hive smoke tests can&#39;t be executed as a jar file isn&#39;t present anymore
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-885'>BIGTOP-885</a>] -         TestHiveSmokeBulk fails on Hive 0.9
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-886'>BIGTOP-886</a>] -         Non-fatal errors when starting Hive daemons in EL5
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-887'>BIGTOP-887</a>] -         Sqoop 2 should be consistent with Oozie / Bigtop for server plugins directory
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-888'>BIGTOP-888</a>] -         Oozie losing value of JAVA_HOME when spawning sub-shell
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-889'>BIGTOP-889</a>] -         pig smoke tests are no longer running
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-890'>BIGTOP-890</a>] -         Remove workaround for distributed cache problem from Oozie package
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-892'>BIGTOP-892</a>] -         hadoop packages misses capacity-scheduler configuration
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-894'>BIGTOP-894</a>] -         Pig compilation fails on RPM systems on Bigtop trunk
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-895'>BIGTOP-895</a>] -         A number of testcases in TestCLI are failing with (at least) Hadoop 2.0.3 and later
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-896'>BIGTOP-896</a>] -         Solr rpm requires redhat-lsb to run
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-899'>BIGTOP-899</a>] -         enabled deployment topology with 3 nodes
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-900'>BIGTOP-900</a>] -         update deployment configs for Kerberized installations
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-901'>BIGTOP-901</a>] -         Oozie smoke tests mightn&#39;t be able to obtain the jobtracker or namenode hostnames, using old config. names 
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-902'>BIGTOP-902</a>] -         Hive uses same file for log4j and standard output
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-903'>BIGTOP-903</a>] -         crunch integration tests need to clean up output directory before each individual subtask is run
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-904'>BIGTOP-904</a>] -         mahout tests should default to /tmp as a temp location
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-905'>BIGTOP-905</a>] -         bump versions of test execution poms to match the BOM
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-906'>BIGTOP-906</a>] -         a few tests need artifacts compiled against Hadoop 2.X
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-907'>BIGTOP-907</a>] -          hadoop-mapreduce-historyserver should require hadoop-hdfs
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-910'>BIGTOP-910</a>] -         datanode init script cannot stop the process bcause it cannot find the pid file
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-912'>BIGTOP-912</a>] -         update HBase tests for 0.6.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-914'>BIGTOP-914</a>] -         puppet needs to provision test users
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-918'>BIGTOP-918</a>] -         Move BOM version info to the root pom file
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-920'>BIGTOP-920</a>] -         Add HCatalog tests
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-923'>BIGTOP-923</a>] -         Packages that depend on bigtop-utils needs to specify &gt;= 0.6
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-928'>BIGTOP-928</a>] -         Hive can&#39;t be build against non-published Hadoop artifacts
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-929'>BIGTOP-929</a>] -         Pig component build needs to use internal resolvers
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-930'>BIGTOP-930</a>] -         init-hdfs.sh fails on execution
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-934'>BIGTOP-934</a>] -         Hidden cookie is being set by wiki.cloudera.org via http://blogs.apache.org/bigtop top page
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-935'>BIGTOP-935</a>] -         Use init script templates for hive
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-936'>BIGTOP-936</a>] -         Use init script templates for hbase
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-937'>BIGTOP-937</a>] -         Hive does not restart on Ubuntu
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-940'>BIGTOP-940</a>] -         fix issues with Hive package
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-945'>BIGTOP-945</a>] -         Service lock files need to match init script name
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-946'>BIGTOP-946</a>] -         solr-server runlevels are wrong in debian
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-947'>BIGTOP-947</a>] -         oozie init script does not use JAVA_HOME in /etc/default/bigtop-utils
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-948'>BIGTOP-948</a>] -         TestFileAppend and TestHDFSQuota tests need to be updated
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-949'>BIGTOP-949</a>] -         Add Sqoop tests
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-950'>BIGTOP-950</a>] -         race condition for output consumption in Shell code
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-951'>BIGTOP-951</a>] -         Hive Smoke&#39;s TestJdbcDriver fails
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-953'>BIGTOP-953</a>] -         Revert BIGTOP-835 and BIGTOP-950
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-954'>BIGTOP-954</a>] -         metadada and user data for sqoop and hcatalog packages are wrong
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-956'>BIGTOP-956</a>] -         fix small issues with mahout, hue and oozie tests
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-957'>BIGTOP-957</a>] -         update deployment code for Sqoop2
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-958'>BIGTOP-958</a>] -         update deployment code for HCatalog
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-959'>BIGTOP-959</a>] -         get rid of hadoop specific init.d.tmpl
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-960'>BIGTOP-960</a>] -         Remove workaround for HBASE-6263 in hbase-thrift start
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-968'>BIGTOP-968</a>] -         oozie is now part of the core hue
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-969'>BIGTOP-969</a>] -         a few files belong to more than one package
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-970'>BIGTOP-970</a>] -         update package test manifest and fix small issues in package metadata for Bigtop 0.6.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-971'>BIGTOP-971</a>] -         take care of the rat licensing complaints
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-974'>BIGTOP-974</a>] -         Crunch download location is no longer /incubator
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-975'>BIGTOP-975</a>] -         HBase regionserver init script does not implement &quot;condrestart&quot; command
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-981'>BIGTOP-981</a>] -         Provide minimal documentation for puppet deploy config file
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-982'>BIGTOP-982</a>] -         hcatalog needs to be given HCAT_HOME and HIVE_HOME
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-983'>BIGTOP-983</a>] -         Oozie-client package ships its docs twice
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-984'>BIGTOP-984</a>] -         bigtop-utils doesn&#39;t detect JAVA_HOME for Oracle JDK 7 when package by Debian&#39;s tool
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-985'>BIGTOP-985</a>] -         Create Hive JDBC package
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-988'>BIGTOP-988</a>] -         HCatalog does not launch daemon process in a known directory
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-991'>BIGTOP-991</a>] -         crunch archive is incorrect
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-994'>BIGTOP-994</a>] -         hdfs-init missed a few permissions on the sub-directories
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-997'>BIGTOP-997</a>] -         TestCLI fails test id 5:  comparator fails
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1001'>BIGTOP-1001</a>] -         need package tests for hive-jdbc package
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1002'>BIGTOP-1002</a>] -         Complete porting Sqoop import tests to Sqoop 2
+</li>
+</ul>
+                
+<h2>        Improvement
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-12'>BIGTOP-12</a>] -         Add HCatalog to Bigtop
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-547'>BIGTOP-547</a>] -         create an HDFS setup helper script
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-712'>BIGTOP-712</a>] -         Bigtop 0.5.0 release
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-713'>BIGTOP-713</a>] -         use newer debhelper and source format 3.0 (quilt) for Debian and Ubuntu packaging
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-756'>BIGTOP-756</a>] -         Provide the thrift API interface file in the HBase packages
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-763'>BIGTOP-763</a>] -         Add hdfs-journalnode to hadoop.spec
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-817'>BIGTOP-817</a>] -         Wiki breadcrumb still shows Bigtop(incubating)
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-821'>BIGTOP-821</a>] -         Puppet README&#39;s Usage section cuts off because of angle bracket delimiter
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-838'>BIGTOP-838</a>] -         Both conf.empty and conf.pseudo packages don&#39;t seem to include a sample hadoop-env.sh file
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-843'>BIGTOP-843</a>] -         It would be really cool if bigtop-detect-javahome were smarter and didn&#39;t pick a 32-bit JVM, or a 1.7 JVM set with default
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-882'>BIGTOP-882</a>] -         Upload content of Oozie sharelib to HDFS
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-893'>BIGTOP-893</a>] -         migrate puppet code to use init-hdfs.sh
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-931'>BIGTOP-931</a>] -         a few improvements to secure puppet deployment code
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-961'>BIGTOP-961</a>] -         hcatalog should be re-using hive user when running
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-967'>BIGTOP-967</a>] -         package removal is currently missing from our package tests
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-973'>BIGTOP-973</a>] -         Improve error diagnostics when sed&#39;ing Hadoop version in Oozie package
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-995'>BIGTOP-995</a>] -         JDK bug 6979329 requires a redundant kinit -R
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1000'>BIGTOP-1000</a>] -         Remove remaining references to the Incubator
+</li>
+</ul>
+    
+<h2>        New Feature
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-732'>BIGTOP-732</a>] -         Support running multiple HBase region servers
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-881'>BIGTOP-881</a>] -         Add support for Oozie to be configured with SSL (HTTPS)
+</li>
+</ul>
+                        
+<h2>        Task
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-118'>BIGTOP-118</a>] -         Check to ensure our build system requirements are actually declared properly in the packaging.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-681'>BIGTOP-681</a>] -         Package tests needed for new DataFu package
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-720'>BIGTOP-720</a>] -         Build environment automation
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-760'>BIGTOP-760</a>] -         Push artifacts from non-Maven projects into local Maven cache
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-805'>BIGTOP-805</a>] -         Add Sqoop 2 to bigtop
+</li>
+</ul>
+            
+<h2>        Test
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-621'>BIGTOP-621</a>] -         Add test for distcp - intra cluster
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-625'>BIGTOP-625</a>] -         Add HDFS Append Test
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-693'>BIGTOP-693</a>] -         Add hadoop-fuse-dfs test
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-728'>BIGTOP-728</a>] -         add datafu integration test
+</li>
+</ul>
+        
+
     <h1>Release Notes - Bigtop - Version 0.5.0</h1>
 <h2>        Sub-task
 </h2>
