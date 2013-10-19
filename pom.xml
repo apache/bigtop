@@ -258,6 +258,7 @@
               <exclude>bigtop-packages/src/deb/*/shlibs.local</exclude>
               <exclude>bigtop-repos/apt/distributions</exclude>
               <!-- Miscelaneous individual files -->
+              <exclude>src/site/resources/bigtop.rdf</exclude>
               <exclude>src/site/resources/images/bigtop-logo.ai</exclude>
               <exclude>test/MANIFEST.txt</exclude>
               <exclude>bigtop-deploy/puppet/modules/hadoop/templates/taskcontroller.cfg</exclude>
