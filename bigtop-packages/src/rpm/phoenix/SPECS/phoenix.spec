@@ -111,15 +111,6 @@ bash %{SOURCE2} \
 	--build-dir=build \
         --doc-dir=%{doc_phoenix} \
 	--prefix=$RPM_BUILD_ROOT
-
-%post
-%{alternatives_cmd} --install %{etc_phoenix_conf} %{name}-conf %{etc_phoenix_conf_dist} 30
-
-%preun
-if [ "$1" = 0 ]; then
-  %{alternatives_cmd} --remove %{name}-conf %{etc_phoenix_conf_dist} || :
-fi
-
 # Pull zookeeper, hadoop, hadoop-mapreduce, hadoop-yarn, and hbase deps from their packages
 rm -f $RPM_BUILD_ROOT/%{lib_phoenix}/zookeeper*.jar
 ln -f -s %{zookeeper_home}/zookeeper.jar $RPM_BUILD_ROOT/%{lib_phoenix}
@@ -130,9 +121,18 @@ ln -f -s %{hadoop_home}/hadoop-common.jar $RPM_BUILD_ROOT/%{lib_phoenix}
 ln -f -s %{hadoop_mapreduce_home}/hadoop-mapreduce-client-core.jar $RPM_BUILD_ROOT/%{lib_phoenix}
 ln -f -s %{hadoop_yarn_home}/hadoop-yarn-api.jar $RPM_BUILD_ROOT/%{lib_phoenix}
 ln -f -s %{hadoop_yarn_home}/hadoop-yarn-common.jar $RPM_BUILD_ROOT/%{lib_phoenix}
-
 rm -f $RPM_BUILD_ROOT/%{lib_phoenix}/hbase*.jar
 ln -f -s %{hbase_home}/hbase.jar $RPM_BUILD_ROOT/%{lib_phoenix}
+
+
+%post
+%{alternatives_cmd} --install %{etc_phoenix_conf} %{name}-conf %{etc_phoenix_conf_dist} 30
+
+
+%preun
+if [ "$1" = 0 ]; then
+  %{alternatives_cmd} --remove %{name}-conf %{etc_phoenix_conf_dist} || :
+fi
 
 
 #######################
