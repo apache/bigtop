@@ -297,6 +297,10 @@ install -m 0644 \
 # conf
 install -d -m 0755 $HADOOP_ETC_DIR/conf.empty
 cp ${DISTRO_DIR}/conf.empty/mapred-site.xml $HADOOP_ETC_DIR/conf.empty
+# disable everything that's definied in hadoop-env.sh
+# so that it can still be used as example, but doesn't affect anything
+# by default
+sed -i -e '/^[^#]/s,^,#,' ${BUILD_DIR}/etc/hadoop/hadoop-env.sh
 cp ${BUILD_DIR}/etc/hadoop/* $HADOOP_ETC_DIR/conf.empty
 
 # docs
