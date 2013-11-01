@@ -42,6 +42,11 @@ Depends: ${shlibs:Depends}, ${misc:Depends}, hue-common (= ${source:Version})
 Description: Service Scripts for Hue
  This package provides the service scripts for Hue server.
 
+Package: hue-doc
+Architecture: all
+Description: Documentation for Hue
+ This package provides the installation manual, user guide, SDK documentation, and release notes.
+
 Package: hue-beeswax
 Architecture: all
 Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.4), python (<< 3), make (>= 3.8), hue-common (= ${source:Version}), hive

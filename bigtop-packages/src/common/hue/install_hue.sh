@@ -90,6 +90,7 @@ done
 PREFIX=`echo $PREFIX | sed -e 's#/*$##'`
 BUILD_DIR=`echo $BUILD_DIR | sed -e 's#/*$##'`
 
+DOC_DIR=${DOC_DIR:-/usr/share/doc/hue}
 CONF_DIR=${CONF_DIR:-/etc/hue}
 LIB_DIR=${LIB_DIR:-/usr/lib/hue}
 VAR_DIR=${VAR_DIR:-/var/lib/hue}
@@ -181,6 +182,9 @@ done
 
 # Remove bogus files
 rm -fv `find $PREFIX -iname "build_log.txt"`
+
+install -d ${PREFIX}/${DOC_DIR}
+cp -r ${BUILD_DIR}/build/docs/* ${PREFIX}/${DOC_DIR}/
 
 # FXIME: for Hue 3.0 the following section would need to go away (hence it is kept at the bottom)
 

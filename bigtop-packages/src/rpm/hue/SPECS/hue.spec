@@ -307,6 +307,17 @@ This package provides the service scripts for Hue server.
 %post -n %{name}-server 
 /sbin/chkconfig --add hue
 
+# Documentation
+%package -n %{name}-doc
+Summary: Documentation for Hue
+Group: Documentation
+
+%description -n %{name}-doc
+This package provides the installation manual, user guide, SDK documentation, and release notes.
+
+%files -n %{name}-doc
+%attr(0755,root,root) /usr/share/doc/hue
+
 ########################################
 # Pre-uninstall
 ########################################

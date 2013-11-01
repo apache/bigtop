@@ -998,6 +998,17 @@ It supports a file browser, job tracker interface, cluster health monitor, and m
       <hue-common>/self</hue-common>
     </deps>
   </hue-server>
+  <hue-doc>
+    <metadata>
+      <summary>Documentation for Hue</summary>
+      <description>This package provides the installation manual, user guide, SDK documentation, and release notes.</description>
+      <url>http://github.com/cloudera/hue</url>
+    </metadata>
+    <deps>
+    </deps>
+    <alternatives>
+    </alternatives>
+  </hue-doc>
   <hue-beeswax>
     <metadata>
       <summary>A UI for Hive on Hue</summary>
