@@ -34,6 +34,7 @@ Source0: commons-daemon-%{bigtop_jsvc_base_version}.tar.gz
 Source1: do-component-build
 Source2: install_jsvc.sh
 BuildRequires: autoconf, automake, gcc
+Requires: bigtop-utils >= 0.7
 
 %description 
 jsvc executes classfile that implements a Daemon interface.

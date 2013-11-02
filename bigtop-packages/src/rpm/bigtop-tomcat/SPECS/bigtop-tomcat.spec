@@ -32,6 +32,7 @@ License: ASL 2.0
 Source0: apache-tomcat-%{bigtop_tomcat_base_version}.tar.gz
 Source1: do-component-build
 Source2: install_tomcat.sh
+Requires: bigtop-utils >= 0.7
 
 %description 
 Apache Tomcat is an open source software implementation of the

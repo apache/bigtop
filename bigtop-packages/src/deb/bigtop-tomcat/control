@@ -22,6 +22,7 @@ Homepage: http://tomcat.apache.org/
 
 Package: bigtop-tomcat
 Architecture: all
+Depends: bigtop-utils (>= 0.7)
 Description: Apache Tomcat 
  Apache Tomcat is an open source software implementation of the
  Java Servlet and JavaServer Pages technologies. 
