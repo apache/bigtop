@@ -15,10 +15,56 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-export OOZIE_CONFIG=/etc/oozie/conf
 export OOZIE_DATA=/var/lib/oozie
-export OOZIE_LOG=/var/log/oozie
 export OOZIE_CATALINA_HOME=/usr/lib/bigtop-tomcat
 export CATALINA_TMPDIR=/var/lib/oozie
 export CATALINA_PID=/var/run/oozie/oozie.pid
 export CATALINA_BASE=/var/lib/oozie/tomcat-deployment
+
+# Set Oozie specific environment variables here.
+
+# Settings for the Embedded Tomcat that runs Oozie
+# Java System properties for Oozie should be specified in this variable
+#
+export CATALINA_OPTS="$CATALINA_OPTS -Xmx1024m"
+
+# Oozie configuration file to load from Oozie configuration directory
+#
+# export OOZIE_CONFIG_FILE=oozie-site.xml
+export OOZIE_CONFIG=/etc/oozie/conf
+
+# Oozie logs directory
+#
+export OOZIE_LOG=/var/log/oozie
+
+# Oozie Log4J configuration file to load from Oozie configuration directory
+#
+# export OOZIE_LOG4J_FILE=oozie-log4j.properties
+
+# Reload interval of the Log4J configuration file, in seconds
+#
+# export OOZIE_LOG4J_RELOAD=10
+
+# The port Oozie server runs
+#
+# export OOZIE_HTTP_PORT=11000
+
+# The port Oozie server runs if using SSL (HTTPS)
+#
+# export OOZIE_HTTPS_PORT=11443
+
+# The host name Oozie server runs on
+#
+# export OOZIE_HTTP_HOSTNAME=`hostname -f`
+
+# The base URL for callback URLs to Oozie
+#
+# export OOZIE_BASE_URL="http://${OOZIE_HTTP_HOSTNAME}:${OOZIE_HTTP_PORT}/oozie"
+
+# The location of the keystore for the Oozie server if using SSL (HTTPS)
+#
+# export OOZIE_HTTPS_KEYSTORE_FILE=${HOME}/.keystore
+
+# The password of the keystore for the Oozie server if using SSL (HTTPS)
+#
+# export OOZIE_HTTPS_KEYSTORE_PASS=password
