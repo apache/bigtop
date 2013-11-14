@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 package org.apache.bigtop.itest.mahout.smoke;
-
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import org.junit.AfterClass;
@@ -44,48 +44,75 @@ public class TestMahoutExamples {
 
     private static Shell sh = new Shell("/bin/bash -s");
     public static String download_dir = System.getProperty("mahout.examples.resources.download.path") ?: "/tmp" ;
+    
 
+    /**
+    *  Mahout smokes rely on a lot of external files.  So we
+    *  modularize the downloads into a single function, so that 
+    *  the setup is easier to debug.  If any download results in a 
+    *  small file (i.e. due to 404 or 500 error), assertion will fail
+    *  before the smokes actually start. 
+    */
+    public static void download(){
+
+		//key value pairs : data file -> url that file resides on.  
+        def urlmap = [ 
+                        "20news-bydate.tar.gz":
+							"http://people.csail.mit.edu/jrennie/20Newsgroups/20news-bydate.tar.gz" ,
+                        
+						"reuters21578.tar.gz":
+							"http://kdd.ics.uci.edu/databases/reuters21578/reuters21578.tar.gz",
+                        
+						"synthetic_control.data":
+							"http://archive.ics.uci.edu/ml/databases/synthetic_control/synthetic_control.data",
+                        
+						"ml-1m.zip":
+							"http://files.grouplens.org/papers/ml-1m.zip"  
+                        ];
+        //For each url above, download it. 
+        urlmap.each() {
+                f_name,loc -> 
+                        sh.exec("if [ ! -f ${download_dir}/${f_name} ]; then " +
+                                "curl ${loc} -o ${download_dir}/${f_name}; " +
+                                "fi");
+                File file = new File("${download_dir}/${f_name}");
+                
+                assertTrue("file "+ f_name + " at  "+loc + " len=" + file.length() + " is > 5k bytes", file.length() > 5000 );
+        }
+
+    }
+
+	/**
+	 * Individual tests (i.e. movie lens factorizer) will selectively copy this directory into the 
+	 * distributed file system & then run tests against it (i.e. movie lens factorizer uses "fs -put" after
+	 * formatting a csv file in the tmp dir).
+	 */
     @BeforeClass
     public static void setUp() {
-        // download resources
-        sh.exec(
-                "if [ ! -f ${download_dir}/20news-bydate.tar.gz ]; then " +
-                "curl http://people.csail.mit.edu/jrennie/20Newsgroups/20news-bydate.tar.gz -o ${download_dir}/20news-bydate.tar.gz; " +
-                "fi");
-        sh.exec(
-                "if [ ! -f ${download_dir}/reuters21578.tar.gz ]; then " +
-                "curl http://kdd.ics.uci.edu/databases/reuters21578/reuters21578.tar.gz -o ${download_dir}/reuters21578.tar.gz; " +
-                "fi");
-        sh.exec(
-                "if [ ! -f ${download_dir}/synthetic_control.data ]; then " +
-                "curl http://archive.ics.uci.edu/ml/databases/synthetic_control/synthetic_control.data -o ${download_dir}/synthetic_control.data; " +
-                "fi");
-        sh.exec(
-                "if [ ! -f ${download_dir}/ml-1m.zip ]; then " +
-                "curl http://www.grouplens.org/system/files/ml-1m.zip -o ${download_dir}/ml-1m.zip; " +
-                "fi");
+        download(); 
+        
         // uncompress archives
-        // 20news-bydate.tar.gz
-        // reuters21578.tar.gz
-        // ml-1m.zip
         sh.exec("mkdir ${TEMP_DIR}",
                 "cd ${TEMP_DIR}",
-                "mkdir 20news-bydate",
+        //Create news-date data dir :: input for classifier test
+		"mkdir 20news-bydate",
                 "cd 20news-bydate",
-                "tar xzf ${download_dir}/20news-bydate.tar.gz",
+	        "tar xzf ${download_dir}/20news-bydate.tar.gz",
                 "cd ..",
+		//Create news-all data directory :: input for LDA test
                 "mkdir 20news-all",
                 "cp -R 20news-bydate/*/* 20news-all",
                 "mkdir reuters-sgm",
                 "cd reuters-sgm",
                 "tar xzf ${download_dir}/reuters21578.tar.gz",
                 "cd ..",
+		//Create movie lens data directory :: input data for movie recommender test
                 "mkdir movielens",
                 "cd movielens",
                 "unzip ${download_dir}/ml-1m.zip");
         assertEquals("Failed to uncompress archives", 0, sh.getRet());
         sh.exec("hadoop fs -mkdir ${WORK_DIR}");
-        assertEquals("Unable to create work dir in hdfs", 0, sh.getRet());
+        assertEquals("Unable to create work dir in HCFS", 0, sh.getRet());
         rmr("temp");
     }
 
@@ -94,14 +121,18 @@ public class TestMahoutExamples {
      */
     public void assertRun(String mahoutJob){
         final String cmd = MAHOUT+" "+mahoutJob;
-        sh.exec(cmd);
-        assertEquals("Failed to run: "+cmd, 0, sh.getRet());
+
+		//Cat the commands to a central file thats easy to tail.  
+		//TODO a simpler 
+		sh.exec("echo \""+cmd+"\" >> /var/log/mahout.smoke");
+		sh.exec(cmd);
+        assertEquals("non-zero return! :::: "+cmd + " :::: out= " + sh.out + " :::: err= "+sh.err, 0, sh.getRet());
     }
 
     @AfterClass
     public static void tearDown() {
-        sh.exec("rm -rf ${TEMP_DIR}",
-                "hadoop fs -rmr ${WORK_DIR}");
+		sh.exec("rm -rf ${TEMP_DIR}",
+				"hadoop fs -rmr ${WORK_DIR}");
     }
 
     private static void rmr(String path) {
@@ -122,6 +153,16 @@ public class TestMahoutExamples {
         }
     }
 
+	//iterations for factorizer, original value was "10",
+	//on a small 4 node cluster, 2 iterations 
+	//should complete in about 5 minutes or so.
+    static final int ITERATIONS=2;  
+	
+	/**
+	 * This is the full workflow for creating recommendations based on movie
+	 * ratings including creating training/test data, ALS for training, evaluating
+	 * the ALS, and then outputting final movie recommendations for users.
+	 */
     @Test(timeout=12000000L)
     public void factorizeMovieLensRatings() {
         // convert ratings
@@ -137,21 +178,26 @@ public class TestMahoutExamples {
         assertRun("splitDataset --input ${WORK_DIR}/movielens/ratings.csv --output ${WORK_DIR}/dataset " +
                 "--trainingPercentage 0.9 --probePercentage 0.1 --tempDir ${WORK_DIR}/dataset/tmp");
 
-        //run distributed ALS-WR to factorize the rating matrix based on the training set
+	//Default iterations was 10, but for simple smokes that most might run,
+	//2 iterations will confirm enough to move on. 
+        
+	//run distributed ALS-WR to factorize the rating matrix based on the training set
+         
         assertRun("parallelALS --input ${WORK_DIR}/dataset/trainingSet/ --output ${WORK_DIR}/als/out " +
-                "--tempDir ${WORK_DIR}/als/tmp --numFeatures 20 --numIterations 10 --lambda 0.065");
+                "--tempDir ${WORK_DIR}/als/tmp --numFeatures 20 --numIterations ${ITERATIONS} --lambda 0.065");
 
+	//remove this
+        sh.exec("hadoop fs -ls ${WORK_DIR}/als/out >> /tmp/mahoutdebug");
         //compute predictions against the probe set, measure the error
         assertRun("evaluateFactorization --output ${WORK_DIR}/als/rmse --input ${WORK_DIR}/dataset/probeSet/ " +
                 "--userFeatures ${WORK_DIR}/als/out/U/ --itemFeatures ${WORK_DIR}/als/out/M/ --tempDir ${WORK_DIR}/als/tmp");
-
+	
         //compute recommendations
         assertRun("recommendfactorized --input ${WORK_DIR}/als/out/userRatings/ --output ${WORK_DIR}/recommendations " +
                 "--userFeatures ${WORK_DIR}/als/out/U/ --itemFeatures ${WORK_DIR}/als/out/M/ " +
                 "--numRecommendations 6 --maxRating 5");
 
         // check that error has been calculated
-        sh.exec("hadoop fs -test -e ${WORK_DIR}/als/rmse/rmse.txt");
         assertEquals("${WORK_DIR}/als/rmse/rmse.txt does not exist", 0, sh.getRet());
         // print the error
         sh.exec("hadoop fs -cat ${WORK_DIR}/als/rmse/rmse.txt");
@@ -162,8 +208,18 @@ public class TestMahoutExamples {
         assertEquals("${WORK_DIR}/recommendations/part-m-00000 does not exist", 0, sh.getRet());
     }
 
-    // it's too much of a pain to use junit parameterized tests, so do it
-    // the simple way
+	/**
+	 * Alternative to parameterized test: this is a test that is implemented by each 
+	 * individual clustering test.
+	 * 
+	 * Explanation of clustering tests:
+	 * 
+	 * Each of the below tests runs a different clustering algorithm against the same
+	 * input data set, against synthesize "control" data.  "Control data" is data that shows
+	 * the time series performance of a process.  For example, a cellphone company
+	 * might want to run this to find which regions have decreasing performance over time (i.e. due to increased population), 
+	 * versus places which have cyclic performance (i.e. due to weather).
+	 */
     private void _clusterSyntheticControlData(String algorithm) {
         rmr("testdata");
         sh.exec("hadoop fs -mkdir testdata",
@@ -198,6 +254,9 @@ public class TestMahoutExamples {
         _clusterSyntheticControlData("meanshift");
     }
 
+	/**
+	 * Test the creation of topical clusters from raw lists words using LDA.
+	 */
     @Test(timeout=7200000L)
     public void testReutersLDA() {
         // where does lda.algorithm come in?
@@ -233,7 +292,10 @@ mahout ldatopics \
 -dt sequencefile""");
     }
 
-    @Test(timeout=9000000L)
+	/**
+	 * Note that this test doesnt work on some older mahout versions.  
+	 */
+	@Test(timeout=9000000L)
     public void testBayesNewsgroupClassifier() {
         // put bayes-train-input and bayes-test-input in hdfs
         sh.exec("hadoop fs -mkdir ${WORK_DIR}/20news-vectors");
