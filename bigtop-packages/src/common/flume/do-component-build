@@ -20,6 +20,9 @@ set -ex
 
 export MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m"
 
+sed -i -e \
+'s#<artifactId>asynchbase</artifactId>#<artifactId>asynchbase</artifactId>\n<exclusions>\n<exclusion>\n<groupId>org.apache.zookeeper</groupId>\n<artifactId>zookeeper</artifactId>\n</exclusion>\n</exclusions>#' flume-ng-sinks/flume-ng-hbase-sink/pom.xml
+
 mvn -DskipTests -Dhadoop.profile=2  \
   -Dhadoop.version=$HADOOP_VERSION  \
   -Dhbase.version=$HBASE_VERSION    \
