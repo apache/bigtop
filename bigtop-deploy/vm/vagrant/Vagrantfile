@@ -1,0 +1,39 @@
+VAGRANTFILE_API_VERSION = "2"
+Vagrant.configure("2") do |config|
+  vmbox = "vagrant-fedora19B"
+
+  # Virtual Box implementation
+  vmboxurl = "http://rhbd.s3-us-west-1.amazonaws.com/vagrant/fedora19B.box"
+
+  #First node in the cluster.
+  #HMaster
+  config.vm.define :bigtop1 do |bigtop1|
+  
+  		# cachier plugin for faster install,
+  		# see https://github.com/fgrehm/vagrant-cachier
+        # bigtop1.cache.enable :yum
+        
+        bigtop1.vm.box = vmbox
+        bigtop1.vm.box_url = vmboxurl
+                
+        bigtop1.vm.network :private_network, ip: "10.10.10.11"
+        
+        # bigtop1.vm.synced_folder "./config", "/vagrant"
+        
+        bigtop1.vm.hostname = "rs1"
+        bigtop1.vm.provision :shell, :path => "provision.sh"
+  end
+
+  # Master node
+  # config.vm.define :bigtop2 do |bigtop2|
+  #       bigtop2.cache.enable :yum
+  #       bigtop2.cache.auto_detect = true
+  #       bigtop2.vm.box = vmbox
+  #       bigtop2.vm.box_url = vmboxurl
+  #       bigtop2.vm.host_name = "master"
+  #       bigtop2.vm.network "private_network", ip: "10.10.10.12"
+  #       bigtop2.vm.synced_folder "./config", "/vagrant"
+  #       bigtop2.vm.provision "shell", path: "provision.sh"
+  # end
+ 
+end
