@@ -15,60 +15,63 @@
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-Bigtop (http://bigtop.apache.org/)
+Apache Bigtop (http://bigtop.apache.org/)
 ======
 
 ...is a project for the development of packaging and tests of the Apache Hadoop (http://hadoop.apache.org/) ecosystem.
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
  
-The primary goal of Bigtop is to build a community around the packaging and interoperability testing of Hadoop-related projects. This includes testing at various levels (packaging, platform, runtime, upgrade, etc...) developed by a community with a focus on the system as a whole, rather than individual projects.
+The primary goal of Apache Bigtop is to build a community around the packaging and interoperability testing of Apache Hadoop-related projects. This includes testing at various levels (packaging, platform, runtime, upgrade, etc...) developed by a community with a focus on the system as a whole, rather than individual projects.
 
-Quick overview of source code for bigtop.
+Quick overview of source code for Apache Bigtop.
 =========================================
 
-* __bigtop-deploy__ : deployment scripts, puppet stuff, VM utilities for bigtop based hadoop development.
-    * __bigtop-packages__ : RPM specifications for bigtop subcomponents
+* __bigtop-deploy__ : deployment scripts, puppet stuff, VM utilities for Apache Bigtop.
+    * __bigtop-packages__ : RPM/DEB specifications for Apache Bigtop subcomponents
 * __bigtop-test-framework__ : The source code for the iTest utilities (framework used by smoke tests).
 * __bigtop-tests__ : 
-* __test-artifacts__ :source for tests.
-* __test-execution__ :maven pom drivers for running the integration tests found in test-artifacts.
-* __bigtop-toolchain__ : puppet scripts for setting up a machine which can build bigtop, sets up utils like jdk/maven/protobufs/...
+* __test-artifacts__ : source for tests.
+* __test-execution__ : maven pom drivers for running the integration tests found in test-artifacts.
+* __bigtop-toolchain__ : puppet scripts for setting up an instance which can build Apache Bigtop, sets up utils like jdk/maven/protobufs/...
 
-Also, there is a new project underway, bigtop blueprints, which aims to create templates/examples that demonstrate/compare various hadoop ecosystem components with one another.  See 
+Also, there is a new project underway, Apache Bigtop blueprints, which aims to create templates/examples that demonstrate/compare various Apache Hadoop ecosystem components with one another.
 
 Contributing 
 ============
 
     There are lots of ways to contribute, people with different expertise can help with various subprojects:
     
-* __puppet__ : Much of the bigtop deploy and pacakging tools use puppet to bootstrap and setup a cluster.
-* __groovy__ : Primary language used to write the bigtop smokes and itest framework. 
-* __maven__ : Used to build bigtop smokes and also to define the high level bigtop project. 
-* __RPM__ : Used to package apache hadoop ecosystem related projects into linux installable packages.
-* __hadoop__ : Hadoop users can also contribute by using the bigtop smokes, improving them, and evaluating their breadth.
+* __puppet__ : Much of the Apache Bigtop deploy and pacakging tools use puppet to bootstrap and setup a cluster. But recipes for other tools are also welcome (ie. Chef, Ansible, etc.)
+* __groovy__ : Primary language used to write the Apache Bigtop smokes and itest framework. 
+* __maven__ : Used to build Apache Bigtop smokes and also to define the high level Apache Bigtop project. 
+* __RPM/DEB__ : Used to package Apache Hadoop ecosystem related projects into GNU/Linux installable packages for most popular GNU/Linux distributions. So one could add a new project or improve existing packages.
+* __hadoop__ : Apache Hadoop users can also contribute by using the Apache Bigtop smokes, improving them, and evaluating their breadth.
+* __contributing your worloads__ : Contributing your workloads enable us to tests projects against real use cases and enable you to have people verifying the use cases you care about are always working
+* __documentation__ : We are always in need of a better documentation!
+* __giving feedback__ : Tell us how you use Apache Bigtop, what was great and what was not so great. Also what are you expecting from it and what would you like to see in the future?
  
     Also opening JIRA's https://issues.apache.org/jira/browse/BIGTOP and getting started by posting on the mailing list is helpful.
 
-What to people use bigtop for? 
+What to people use Apache Bigtop for? 
 ==============================
 
-You can go to the bigtop website : http://bigtop.apache.org/ for notes on how to do "common" tasks like
+You can go to the Apache Bigtop website : http://bigtop.apache.org/ for notes on how to do "common" tasks like
 
-  * Hadoop App developers: Download a bigtop built hadoop 2.0 VM from the website, so you can have a running psuedodistributed hadoop cluster to test your code on.
-  * Cluster administers or deployment gurus: Run the bigtop smoke tests to ensure that your cluster is working.
-  * Vendors: Build your own hadoop distribution, customized from bigtop bits.
+  * Apache Hadoop App developers: Download an Apache Bigtop built Apache Hadoop 2.0 VM from the website, so you can have a running psuedodistributed Apache Hadoop cluster to test your code on.
+  * Cluster administers or deployment gurus: Run the Apache Bigtop smoke tests to ensure that your cluster is working.
+  * Vendors: Build your own Apache Hadoop distribution, customized from Apache Bigtop bits.
 
 Getting Started
 ===============
 
-Below are some recipes for getting started with using bigtop.  As bigtop has different subprojects, these recipes will continue to evolve.  
-For specific questions its always a good idea to ping the mailing list at dev-subscribe@bigtop.apache.org to get some immediate feedback, or open a JIRA : 
+Below are some recipes for getting started with using Apache Bigtop. As Apache Bigtop has different subprojects, these recipes will continue to evolve.  
+For specific questions its always a good idea to ping the mailing list at dev-subscribe@bigtop.apache.org to get some immediate feedback, or open a JIRA : https://issues.apache.org/jira/browse/BIGTOP
 
 For Users: Running the tests 
 ----------------------------
 
-WARNING: since testing packages requires installing them on a live system it is highly recommended to use VMs for that.  Testing Bigtop is done using iTest framework. The tests are organized in maven submodules, with one submodule per bigtop component.  The bigtop-tests/test-execution/smokes/pom.xml defines all submodules to be tested, and each submodule is in its own directory under smokes/, for example:
+WARNING: since testing packages requires installing them on a live system it is highly recommended to use VMs for that. Testing Apache Bigtop is done using iTest framework. The tests are organized in maven submodules, with one submodule per Apache Bigtop component.  The bigtop-tests/test-execution/smokes/pom.xml defines all submodules to be tested, and each submodule is in its own directory under smokes/, for example:
  
 *smokes/hadoop/pom.xml*
 *smokes/hive/pom.xml*
@@ -90,10 +93,10 @@ WARNING: since testing packages requires installing them on a live system it is 
     Note: A minor bug/issue: you need the "testInclude" regular expression above, even if you don't want to customize the tests, 
     since existing test names don't follow the maven integration test naming convention of IT*, but instead, follow the surefire (unit test) convention of Test*.
 
-For Users: Creating Your Own Hadoop Environment 
+For Users: Creating Your Own Apache Hadoop Environment 
 -----------------------------------------------
 
-    Another common use case for bigtop is creating / setting up your own hadoop distribution.  
+    Another common use case for Apache Bigtop is creating / setting up your own Apache Hadoop distribution.  
     For details on this, check out the bigtop-deploy/README.md file, which describes how to use the puppet repos
     to create and setup your VMs.  
     There is a current effort underway to create vagrant/docker recipes as well, which will be contained in the 
@@ -103,9 +106,9 @@ For Users: Creating Your Own Hadoop Environment
 For Developers: Building the entire distribution from scratch
 -------------------------------------------------------------
  
-Packages have been built for CentOS/RHEL 5 and 6, Fedora 17, SuSE Linux Enterprise 11, OpenSUSE12.2, Ubuntu LTS Lucid and Precise, and Ubuntu Quantal. They can probably be built for other platforms as well.Some of the binary artifacts might be compatible with other closely related distributions.
+Packages have been built for CentOS/RHEL 5 and 6, Fedora 18, SuSE Linux Enterprise 11, OpenSUSE12.2, Ubuntu LTS Lucid and Precise, and Ubuntu Quantal. They can probably be built for other platforms as well. Some of the binary artifacts might be compatible with other closely related distributions.
  
-__On all systems, Building BigTop requires the following tools__
+__On all systems, Building Apache Bigtop requires the following tools__
 
 * All systems need these tools installed to build bigtop:
 
@@ -124,5 +127,5 @@ Contact us
 
 ----------------------
 
-    You can get in touch with us on the Bigtop mailing lists (http://bigtop.apache.org/mail-lists.html).
+    You can get in touch with us on the Apache Bigtop mailing lists (http://bigtop.apache.org/mail-lists.html).
 
