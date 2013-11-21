@@ -16,12 +16,12 @@
 Source: spark
 Section: misc
 Priority: extra
-Maintainer: Bigtop <bigtop-dev@incubator.apache.org>
+Maintainer: Bigtop <dev@bigtop.apache.org>
 Build-Depends: debhelper (>= 6)
 Standards-Version: 3.8.0
 Homepage: http://spark.incubator.apache.org/
 
-Package: spark 
+Package: spark
 Architecture: all
 Depends: bigtop-utils
 Description: Lightning-Fast Cluster Computing
@@ -31,3 +31,14 @@ Description: Lightning-Fast Cluster Computing
  language-integrated syntax that makes it easy to write parallel jobs. 
  Spark runs on top of the Apache Mesos cluster manager.
 
+Package: spark-master
+Architecture: all
+Depends: spark (= ${source:Version})
+Description: Server for Spark master
+ Server for Spark master
+
+Package: spark-worker
+Architecture: all
+Depends: spark (= ${source:Version})
+Description: Server for Spark worker
+ Server for Spark worker

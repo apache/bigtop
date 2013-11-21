@@ -112,6 +112,26 @@ Spark runs on top of the Apache Mesos cluster manager.</description>
       </spark-conf>
     </alternatives>
   </spark>
+  <spark-master>
+    <metadata>
+      <summary>Server for Spark master</summary>
+      <description>Server for Spark master</description>
+      <url>http://spark.incubator.apache.org/</url>
+    </metadata>
+    <deps>
+      <spark>/self</spark>
+    </deps>
+  </spark-master>
+  <spark-worker>
+    <metadata>
+      <summary>Server for Spark worker</summary>
+      <description>Server for Spark worker</description>
+      <url>http://spark.incubator.apache.org/</url>
+    </metadata>
+    <deps>
+      <spark>/self</spark>
+    </deps>
+  </spark-worker>
   <whirr>
     <metadata>
       <summary>Scripts and libraries for running software services on cloud infrastructure.</summary>

@@ -74,6 +74,22 @@ low-latency iterative jobs and interactive use from an interpreter. It is
 written in Scala, a high-level language for the JVM, and exposes a clean
 language-integrated syntax that makes it easy to write parallel jobs.
 Spark runs on top of the Apache Mesos cluster manager.
+
+%package master
+Summary: Server for Spark master
+Group: Development/Libraries
+Requires: spark = %{version}-%{release}
+
+%description master 
+Server for Spark master
+
+%package worker
+Summary: Server for Spark worker
+Group: Development/Libraries
+Requires: spark = %{version}-%{release}
+
+%description worker 
+Server for Spark worker
     
 %prep
 %setup -n %{name}-%{spark_base_version}
@@ -134,8 +150,24 @@ done
 %attr(0755,spark,spark) %{var_lib_spark}
 %attr(0755,spark,spark) %{var_run_spark}
 %attr(0755,spark,spark) %{var_log_spark}
-%attr(0755,root,root) %{initd_dir}/spark-master
-%attr(0755,root,root) %{initd_dir}/spark-worker
 %attr(0755,root,root) %{bin_spark}
 %{bin}/spark-shell
 %{bin}/spark-executor
+
+%define service_macro() \
+%files %1 \
+%attr(0755,root,root)/%{initd_dir}/%{name}-%1 \
+%post %1 \
+chkconfig --add %{name}-%1 \
+\
+%preun %1 \
+if [ $1 = 0 ] ; then \
+        service %{name}-%1 stop > /dev/null 2>&1 \
+        chkconfig --del %{name}-%1 \
+fi \
+%postun %1 \
+if [ $1 -ge 1 ]; then \
+        service %{name}-%1 condrestart >/dev/null 2>&1 \
+fi
+%service_macro master
+%service_macro worker

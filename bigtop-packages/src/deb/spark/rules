@@ -29,7 +29,13 @@ override_dh_auto_build:
 	# we'll just use the build from the tarball.
 	env FULL_VERSION=${SPARK_PATCHED_VERSION} bash debian/do-component-build -Divy.home=${HOME}/.ivy2
 
-override_dh_auto_install:
+svcs=spark-master spark-worker
+
+$(svcs): debian/init.d.tmpl
+	bash $< debian/$@.svc deb debian/$@.init
+	touch $@
+
+override_dh_auto_install: $(svcs)
 	bash -x debian/install_spark.sh \
 	  --build-dir=`pwd` \
           --doc-dir=/usr/share/doc/spark \
