@@ -15,11 +15,7 @@
 # limitations under the License.
 
 set -ex
-mv debian d
-tar xzvf ~/src/q.tgz 
-rm -rf debian
-mv d debian
-exit 0
+
 . `dirname $0`/bigtop.bom
 
 if [ "x$SCALA_HOME" = "x" ]; then
