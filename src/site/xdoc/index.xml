@@ -1,120 +1,149 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<!--
- Licensed to the Apache Software Foundation (ASF) under one or more
- contributor license agreements.  See the NOTICE file distributed with
- this work for additional information regarding copyright ownership.
- The ASF licenses this file to You under the Apache License, Version 2.0
- (the "License"); you may not use this file except in compliance with
- the License.  You may obtain a copy of the License at
+<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file 
+	distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to You under 
+	the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may 
+	obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to 
+	in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF 
+	ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under 
+	the License. -->
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+	<properties>
+		<title>Apache Bigtop</title>
+	</properties>
+	<body>
 
-     http://www.apache.org/licenses/LICENSE-2.0
-
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
--->
-<document xmlns="http://maven.apache.org/XDOC/2.0"
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
-  <properties></properties>
-  <body>
-
-    <section name="Apache Bigtop"></section>
-    <p>Bigtop is a project for the development of packaging and tests of the Apache Hadoop ecosystem.
-    <br/><br/>
-     The primary goal of Bigtop is to build a community around the packaging and interoperability testing 
-     of Hadoop-related projects. This includes testing at various levels (packaging, platform, runtime, upgrade, etc...) 
-     developed by a community with a focus on the system as a whole, rather than individual projects.</p>
-     <br/><br/>
-    <subsection name="Building Bigtop"></subsection>
-    <p>Packages have been built on Ubuntu 10.10, CentOS 5/6, Fedora 18, Mageia 1 and openSUSE 12.2
-    They can probably be built on other platforms as well.<br/><br/>
-    Building Bigtop requires the following tools:</p>
-    <ul>
-      <li>Java JDK 1.6</li>
-      <li>Apache Ant</li>
-      <li>Apache Maven</li>
-      <li>wget</li>
-      <li>tar</li>
-      <li>git</li>
-      <li>subversion</li>
-      <li>gcc</li>
-      <li>gcc-c++</li>
-      <li>make</li>
-      <li>fuse</li>
-      <li>protobuf-compiler</li>
-      <li>autoconf</li>
-      <li>automake</li>
-      <li>libtool</li>
-      <li>sharutils</li>
-      <li>asciidoc</li>
-      <li>xmlto</li>
-    </ul>
-    <p>On RPM-based systems one also needs</p>
-    <ul>
-      <li>lzo-devel</li>
-      <li>zlib-devel</li>
-      <li>fuse-devel</li>
-      <li>openssl-devel</li>
-      <li>python-devel</li>
-      <li>libxml2-devel</li>
-      <li>libxslt-devel</li>
-      <li>cyrus-sasl-devel</li>
-      <li>sqlite-devel</li>
-      <li>mysql-devel</li>
-      <li>openldap-devel</li>
-      <li>rpm-build</li>
-      <li>createrepo</li>
-      <li>redhat-rpm-config (RedHat/CentOS only)</li>
-    </ul>
-    <p>On DEB-based systems one also needs</p>
-    <ul>
-      <li>libxslt1-dev</li>
-      <li>libkrb5-dev</li>
-      <li>libldap2-dev</li>
-      <li>libmysqlclient-dev</li>
-      <li>libsasl2-dev</li>
-      <li>libsqlite3-dev</li>
-      <li>libxml2-dev</li>
-      <li>python-dev</li>
-      <li>python-setuptools</li>
-      <li>liblzo2-dev</li>
-      <li>libzip-dev</li>
-      <li>libfuse-dev</li>
-      <li>libssl-dev</li>
-      <li>build-essential</li>
-      <li>dh-make</li>
-      <li>debhelper</li> 
-      <li>devscripts</li>
-      <li>reprepro</li>
-    </ul>
-    <subsection name="Continuous Integration"></subsection>
-    <p>
-      Apache Bigtop uses Jenkins for continuous integration testing (you can learn more about Jenkins <a href="http://jenkins-ci.org/">here</a>).
-      There are 2 Jenkins servers currently running for the project:
-    </p>
-    <ul>
-      <li><a href="https://builds.apache.org/view/A-F/view/Bigtop/">https://builds.apache.org/view/A-F/view/Bigtop/</a></li>
-      <li><a href="http://bigtop01.cloudera.org:8080/">http://bigtop01.cloudera.org:8080/</a></li>
-    </ul>
-    <p>
-      The Apache Jenkins server runs the "Bigtop-trunk" job whenever code is committed to the trunk branch, which in turn runs several test jobs.
-    </p>
-    <p>
-      The Bigtop Jenkins server runs daily jobs for the 0.3 and trunk branches, and each job has a configuration for each supported operating system.
-      In each branch there is a job to build each component, a job to run package tests and a job to build package repositories.
-      There are also jobs for building virtual machine images as well as the 2 most recent releases and other miscellaneous tasks for various RCs and tests.
-      For example:
-    </p>
-    <ul>
-      <li><a href="http://bigtop01.cloudera.org:8080/view/Bigtop-trunk/job/Bigtop-trunk-All/">Bigtop-trunk-All</a>: Runs all of the jobs for the trunk branch.</li>
-      <li><a href="http://bigtop01.cloudera.org:8080/view/Bigtop-trunk/job/Bigtop-trunk-HBase/">Bigtop-trunk-HBase</a>: Builds the HBase packages only.</li>
-      <li><a href="http://bigtop01.cloudera.org:8080/view/Bigtop-trunk/job/Bigtop-trunk-packagetest/">Bigtop-trunk-packagetest</a>: Runs the package tests.</li>
-      <li><a href="http://bigtop01.cloudera.org:8080/view/Bigtop-trunk/job/Bigtop-trunk-repository/">Bigtop-trunk-repository</a>: Builds an APT or YUM package repository.</li>
-      <li><a href="http://bigtop01.cloudera.org:8080/view/Bigtop-trunk/job/Bigtop-0.5.0/">Bigtop-0.5.0</a>: Builds the 0.5.0 release.</li>
-      <li><a href="http://bigtop01.cloudera.org:8080/job/Bigtop-VM-matrix/">Bigtop-VM-matrix</a>: Builds virtual machines of branches trunk and 0.3 for KVM, VMWare and VirtualBox.</li>
-    </ul>
-  </body>
+		<section name="Apache Bigtop">
+			<p>
+				Bigtop is a project for the development of packaging and tests of the Apache Hadoop ecosystem.
+				<br />
+				<br />
+				The primary goal of Bigtop is to build a community around the packaging and interoperability testing
+				of Hadoop-related projects. This includes testing at various levels (packaging, platform, runtime, upgrade, etc...)
+				developed by a community with a focus on the system as a whole, rather than individual projects.
+			</p>
+			<br />
+			<br />
+			<subsection name="Building Bigtop"></subsection>
+			<p>
+				Packages have been built on Ubuntu 10.10, CentOS 5/6, Fedora 18, Mageia 1 and openSUSE 12.2
+				They can probably be built on other platforms as well.
+				<br />
+				<br />
+				Building Bigtop requires the following tools:
+			</p>
+			<ul>
+				<li>Java JDK 1.6</li>
+				<li>Apache Ant</li>
+				<li>Apache Maven</li>
+				<li>wget</li>
+				<li>tar</li>
+				<li>git</li>
+				<li>subversion</li>
+				<li>gcc</li>
+				<li>gcc-c++</li>
+				<li>make</li>
+				<li>fuse</li>
+				<li>protobuf-compiler</li>
+				<li>autoconf</li>
+				<li>automake</li>
+				<li>libtool</li>
+				<li>sharutils</li>
+				<li>asciidoc</li>
+				<li>xmlto</li>
+			</ul>
+			<p>On RPM-based systems one also needs</p>
+			<ul>
+				<li>lzo-devel</li>
+				<li>zlib-devel</li>
+				<li>fuse-devel</li>
+				<li>openssl-devel</li>
+				<li>python-devel</li>
+				<li>libxml2-devel</li>
+				<li>libxslt-devel</li>
+				<li>cyrus-sasl-devel</li>
+				<li>sqlite-devel</li>
+				<li>mysql-devel</li>
+				<li>openldap-devel</li>
+				<li>rpm-build</li>
+				<li>createrepo</li>
+				<li>redhat-rpm-config (RedHat/CentOS only)</li>
+			</ul>
+			<p>On DEB-based systems one also needs</p>
+			<ul>
+				<li>libxslt1-dev</li>
+				<li>libkrb5-dev</li>
+				<li>libldap2-dev</li>
+				<li>libmysqlclient-dev</li>
+				<li>libsasl2-dev</li>
+				<li>libsqlite3-dev</li>
+				<li>libxml2-dev</li>
+				<li>python-dev</li>
+				<li>python-setuptools</li>
+				<li>liblzo2-dev</li>
+				<li>libzip-dev</li>
+				<li>libfuse-dev</li>
+				<li>libssl-dev</li>
+				<li>build-essential</li>
+				<li>dh-make</li>
+				<li>debhelper</li>
+				<li>devscripts</li>
+				<li>reprepro</li>
+			</ul>
+			<subsection name="Continuous Integration"></subsection>
+			<p>
+				Apache Bigtop uses Jenkins for continuous integration testing (you can learn more about Jenkins
+				<a href="http://jenkins-ci.org/">here</a>
+				).
+				There are 2 Jenkins servers currently running for the project:
+			</p>
+			<ul>
+				<li>
+					<a href="https://builds.apache.org/view/A-F/view/Bigtop/">https://builds.apache.org/view/A-F/view/Bigtop/</a>
+				</li>
+				<li>
+					<a href="http://bigtop01.cloudera.org:8080/">http://bigtop01.cloudera.org:8080/</a>
+				</li>
+			</ul>
+			<p>
+				The Apache Jenkins server runs the "Bigtop-trunk" job whenever code is committed to the trunk branch, which in turn
+				runs several test jobs.
+			</p>
+			<p>
+				The Bigtop Jenkins server runs daily jobs for the 0.3 and trunk branches, and each job has a configuration for each
+				supported operating system.
+				In each branch there is a job to build each component, a job to run package tests and a job to build package
+				repositories.
+				There are also jobs for building virtual machine images as well as the 2 most recent releases and other miscellaneous
+				tasks for various RCs and tests.
+				For example:
+			</p>
+			<ul>
+				<li>
+					<a href="http://bigtop01.cloudera.org:8080/view/Bigtop-trunk/job/Bigtop-trunk-All/">Bigtop-trunk-All</a>
+					: Runs all of the jobs for the trunk branch.
+				</li>
+				<li>
+					<a href="http://bigtop01.cloudera.org:8080/view/Bigtop-trunk/job/Bigtop-trunk-HBase/">Bigtop-trunk-HBase</a>
+					: Builds the HBase packages only.
+				</li>
+				<li>
+					<a href="http://bigtop01.cloudera.org:8080/view/Bigtop-trunk/job/Bigtop-trunk-packagetest/">Bigtop-trunk-packagetest</a>
+					: Runs the package tests.
+				</li>
+				<li>
+					<a href="http://bigtop01.cloudera.org:8080/view/Bigtop-trunk/job/Bigtop-trunk-repository/">Bigtop-trunk-repository</a>
+					: Builds an APT or YUM package repository.
+				</li>
+				<li>
+					<a href="http://bigtop01.cloudera.org:8080/view/Bigtop-trunk/job/Bigtop-0.5.0/">Bigtop-0.5.0</a>
+					: Builds the 0.5.0 release.
+				</li>
+				<li>
+					<a href="http://bigtop01.cloudera.org:8080/job/Bigtop-VM-matrix/">Bigtop-VM-matrix</a>
+					: Builds virtual machines of branches trunk and 0.3 for KVM, VMWare and VirtualBox.
+				</li>
+			</ul>
+		</section>
+	</body>
 </document>
