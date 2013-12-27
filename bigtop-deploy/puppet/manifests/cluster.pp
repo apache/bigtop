@@ -72,6 +72,8 @@ class hadoop_cluster_node {
   $spark_master_port                 = extlookup("spark_master_port", "7077")
   $spark_master_ui_port              = extlookup("spark_master_ui_port", "18080")
 
+  $components                        = extlookup("components",    split($components, ","))
+
   $hadoop_ha_zookeeper_quorum        = "${hadoop_head_node}:${hadoop_zookeeper_port}"
   $solrcloud_zk                      = "${hadoop_head_node}:${hadoop_zookeeper_port}"
   $hbase_thrift_address              = "${hadoop_head_node}:${hbase_thrift_port}"
@@ -118,7 +120,9 @@ class hadoop_cluster_node {
   }
 
   # Flume agent is the only component that goes on EVERY node in the cluster
-  hadoop-flume::agent { "flume agent":
+  if ($components[0] == undef or "flume" in $components) {
+    hadoop-flume::agent { "flume agent":
+    }
   }
 }
 
@@ -144,48 +148,63 @@ class hadoop_worker_node inherits hadoop_cluster_node {
         ha   => $hadoop_ha,
   }
 
-  hadoop::nodemanager { "nodemanager":
-        rm_host => $hadoop_rm_host,
-        rm_port => $hadoop_rm_port,
-        rt_port => $hadoop_rt_port,
-        dirs => $yarn_data_dirs,
-        auth => $hadoop_security_authentication,
+  if ($components[0] == undef or "yarn" in $components) {
+    hadoop::nodemanager { "nodemanager":
+          rm_host => $hadoop_rm_host,
+          rm_port => $hadoop_rm_port,
+          rt_port => $hadoop_rt_port,
+          dirs => $yarn_data_dirs,
+          auth => $hadoop_security_authentication,
+    }
+  }
+  if ($components[0] == undef or "hbase" in $components) {
+    hadoop-hbase::server { "hbase region server":
+          rootdir => $hadoop_hbase_rootdir,
+          heap_size => $hbase_heap_size,
+          zookeeper_quorum => $hadoop_hbase_zookeeper_quorum,
+          kerberos_realm => $kerberos_realm,
+    }
   }
 
-  hadoop-hbase::server { "hbase region server":
-        rootdir => $hadoop_hbase_rootdir,
-        heap_size => $hbase_heap_size,
-        zookeeper_quorum => $hadoop_hbase_zookeeper_quorum,
-        kerberos_realm => $kerberos_realm, 
+  if ($components[0] == undef or "mapred-app" in $components) {
+    hadoop::mapred-app { "mapred-app":
+          namenode_host => $hadoop_namenode_host,
+          namenode_port => $hadoop_namenode_port,
+          jobtracker_host => $hadoop_jobtracker_host,
+          jobtracker_port => $hadoop_jobtracker_port,
+          auth => $hadoop_security_authentication,
+          dirs => $mapred_data_dirs,
+    }
   }
 
-  hadoop::mapred-app { "mapred-app":
-        namenode_host => $hadoop_namenode_host,
-        namenode_port => $hadoop_namenode_port,
-        jobtracker_host => $hadoop_jobtracker_host,
-        jobtracker_port => $hadoop_jobtracker_port,
-        auth => $hadoop_security_authentication,
-        dirs => $mapred_data_dirs,
+  if ($components[0] == undef or "solrcloud" in $components) {
+    solr::server { "solrcloud server":
+         port        => $solrcloud_port,
+         port_admin  => $solrcloud_admin_port,
+         zk          => $solrcloud_zk,
+         root_url    => $hadoop_namenode_uri,
+         kerberos_realm => $kerberos_realm,
+    }
   }
 
-  solr::server { "solrcloud server":
-       port        => $solrcloud_port,
-       port_admin  => $solrcloud_admin_port,
-       zk          => $solrcloud_zk,
-       root_url    => $hadoop_namenode_uri,
-       kerberos_realm => $kerberos_realm,
-  }
-
-  spark::worker { "spark worker":
-       master_host    => $spark_master_host,
-       master_port    => $spark_master_port,
-       master_ui_port => $spark_master_ui_port,
+  if ($components[0] == undef or "spark" in $components) {
+    spark::worker { "spark worker":
+         master_host    => $spark_master_host,
+         master_port    => $spark_master_port,
+         master_ui_port => $spark_master_ui_port,
+    }
   }
 }
 
 class hadoop_head_node inherits hadoop_worker_node {
 
-  if ($hadoop_security_authentication == "kerberos") {
+  exec { "init hdfs":
+    path    => ['/bin','/sbin','/usr/bin','/usr/sbin'],
+    command => 'bash -x /usr/lib/hadoop/libexec/init-hdfs.sh',
+    require => Package['hadoop-hdfs']
+  }
+
+if ($hadoop_security_authentication == "kerberos") {
     include kerberos::server
     include kerberos::kdc
     include kerberos::kdc::admin_server
@@ -209,71 +228,77 @@ class hadoop_head_node inherits hadoop_worker_node {
     }
   }
 
-  hadoop::resourcemanager { "resourcemanager":
-        host => $hadoop_rm_host,
-        port => $hadoop_rm_port,
-        rt_port => $hadoop_rt_port,
-        sc_port => $hadoop_sc_port,
-        # thrift_port => $hadoop_jobtracker_thrift_port,
-        auth => $hadoop_security_authentication,
+  if ($components[0] == undef or "yarn" in $components) {
+    hadoop::resourcemanager { "resourcemanager":
+          host => $hadoop_rm_host,
+          port => $hadoop_rm_port,
+          rt_port => $hadoop_rt_port,
+          sc_port => $hadoop_sc_port,
+          # thrift_port => $hadoop_jobtracker_thrift_port,
+          auth => $hadoop_security_authentication,
+    }
+
+    hadoop::historyserver { "historyserver":
+          host => $hadoop_hs_host,
+          port => $hadoop_hs_port,
+          webapp_port => $hadoop_hs_webapp_port,
+          auth => $hadoop_security_authentication,
+    }
+
+    hadoop::proxyserver { "proxyserver":
+          host => $hadoop_ps_host,
+          port => $hadoop_ps_port,
+          auth => $hadoop_security_authentication,
+    }
+    Exec<| title == "init hdfs" |> -> Hadoop::Resourcemanager<||>
+    Exec<| title == "init hdfs" |> -> Hadoop::Historyserver<||>
   }
 
-  hadoop::historyserver { "historyserver":
-        host => $hadoop_hs_host,
-        port => $hadoop_hs_port,
-        webapp_port => $hadoop_hs_webapp_port,
-        auth => $hadoop_security_authentication,
+  if ($components[0] == undef or "hbase" in $components) {
+    hadoop-hbase::master { "hbase master":
+          rootdir => $hadoop_hbase_rootdir,
+          heap_size => $hbase_heap_size,
+          zookeeper_quorum => $hadoop_hbase_zookeeper_quorum,
+          kerberos_realm => $kerberos_realm,
+    }
+    Exec<| title == "init hdfs" |> -> Hadoop-hbase::Master<||>
   }
 
-  hadoop::proxyserver { "proxyserver":
-        host => $hadoop_ps_host,
-        port => $hadoop_ps_port,
-        auth => $hadoop_security_authentication,
+  if ($components[0] == undef or "oozie" in $components) {
+    hadoop-oozie::server { "oozie server":
+          kerberos_realm => $kerberos_realm,
+    }
+    Hadoop::Mapred-app<||> -> Hadoop-oozie::Server<||>
+    Exec<| title == "init hdfs" |> -> Hadoop-oozie::Server<||>
   }
 
-  hadoop-hbase::master { "hbase master":
-        rootdir => $hadoop_hbase_rootdir,
-        heap_size => $hbase_heap_size,
-        zookeeper_quorum => $hadoop_hbase_zookeeper_quorum,
-        kerberos_realm => $kerberos_realm, 
-  }
-
-  hadoop-oozie::server { "oozie server":
-        kerberos_realm => $kerberos_realm, 
-  }
-
+  if ($components[0] == undef or "hcat" in $components) {
   hcatalog::server { "hcatalog server":
         kerberos_realm => $kerberos_realm,
   }
   hcatalog::webhcat::server { "webhcat server":
         kerberos_realm => $kerberos_realm,
   }
+  }
 
+  if ($components[0] == undef or "spark" in $components) {
   spark::master { "spark master":
        master_host    => $spark_master_host,
        master_port    => $spark_master_port,
        master_ui_port => $spark_master_ui_port,
   }
-
-  hadoop-zookeeper::server { "zookeeper":
-        myid => "0",
-        ensemble => $hadoop_zookeeper_ensemble,
-        kerberos_realm => $kerberos_realm, 
   }
 
-  exec { "init hdfs":
-        path    => ['/bin','/sbin','/usr/bin','/usr/sbin'],
-        command => 'bash -x /usr/lib/hadoop/libexec/init-hdfs.sh',
-        require => Package['hadoop-hdfs']
+  if ($components[0] == undef or "hbase" in $components) {
+    hadoop-zookeeper::server { "zookeeper":
+          myid => "0",
+          ensemble => $hadoop_zookeeper_ensemble,
+          kerberos_realm => $kerberos_realm,
+    }
   }
 
-  Exec<| title == "init hdfs" |> -> Hadoop-hbase::Master<||>
-  Exec<| title == "init hdfs" |> -> Hadoop::Resourcemanager<||>
-  Exec<| title == "init hdfs" |> -> Hadoop::Historyserver<||>
   Exec<| title == "init hdfs" |> -> Hadoop::Rsync_hdfs<||>
-  Exec<| title == "init hdfs" |> -> Hadoop-oozie::Server<||>
 
-  Hadoop::Mapred-app<||> -> Hadoop-oozie::Server<||>
 }
 
 class standby_head_node inherits hadoop_cluster_node {
@@ -294,30 +319,36 @@ class hadoop_gateway_node inherits hadoop_cluster_node {
   $sqoop_server_url                  = "http://${fqdn}:${sqoop_server_port}/sqoop"
   $solrcloud_url                     = "http://${fqdn}:${solrcloud_port}/solr/"
 
-  hadoop-sqoop::server { "sqoop server":
+  if ($components[0] == undef or "sqoop" in $components) {
+    hadoop-sqoop::server { "sqoop server":
+    }
   }
 
-  hadoop::httpfs { "httpfs":
-        namenode_host => $hadoop_namenode_host,
-        namenode_port => $hadoop_namenode_port,
-        auth => $hadoop_security_authentication,
+  if ($components[0] == undef or "httpfs" in $components) {
+    hadoop::httpfs { "httpfs":
+          namenode_host => $hadoop_namenode_host,
+          namenode_port => $hadoop_namenode_port,
+          auth => $hadoop_security_authentication,
+    }
+    Hadoop::Httpfs<||> -> Hue::Server<||>
   }
 
-  hue::server { "hue server":
-        rm_url      => $hadoop_rm_url,
-        rm_proxy_url => $hadoop_rm_proxy_url,
-        history_server_url => $hadoop_history_server_url,
-        webhdfs_url => $hadoop_httpfs_url,
-        sqoop_url   => $sqoop_server_url,
-        solr_url    => $solrcloud_url,
-        hbase_thrift_url => $hbase_thrift_address, 
-        rm_host     => $hadoop_rm_host,
-        rm_port     => $hadoop_rm_port,
-        oozie_url   => $hadoop_oozie_url,
-        default_fs  => $hadoop_namenode_uri,
-        kerberos_realm => $kerberos_realm,
+  if ($components[0] == undef or "hue" in $components) {
+    hue::server { "hue server":
+          rm_url      => $hadoop_rm_url,
+          rm_proxy_url => $hadoop_rm_proxy_url,
+          history_server_url => $hadoop_history_server_url,
+          webhdfs_url => $hadoop_httpfs_url,
+          sqoop_url   => $sqoop_server_url,
+          solr_url    => $solrcloud_url,
+          hbase_thrift_url => $hbase_thrift_address,
+          rm_host     => $hadoop_rm_host,
+          rm_port     => $hadoop_rm_port,
+          oozie_url   => $hadoop_oozie_url,
+          default_fs  => $hadoop_namenode_uri,
+          kerberos_realm => $kerberos_realm,
+    }
   }
-  Hadoop::Httpfs<||> -> Hue::Server<||>
   Hadoop-hbase::Client<||> -> Hue::Server<||>
 
   hadoop::client { "hadoop client":
@@ -327,26 +358,44 @@ class hadoop_gateway_node inherits hadoop_cluster_node {
     jobtracker_port => $hadoop_jobtracker_port,
     # auth => $hadoop_security_authentication,
   }
-  mahout::client { "mahout client":
+  if ($components[0] == undef or "mahout" in $components) {
+    mahout::client { "mahout client":
+    }
   }
-  giraph::client { "giraph client":
-     zookeeper_quorum => $giraph_zookeeper_quorum,
+  if ($components[0] == undef or "giraph" in $components) {
+    giraph::client { "giraph client":
+       zookeeper_quorum => $giraph_zookeeper_quorum,
+    }
   }
-  crunch::client { "crunch client":
+  if ($components[0] == undef or "crunch" in $components) {
+    crunch::client { "crunch client":
+    }
   }
-  hadoop-pig::client { "pig client":
+  if ($components[0] == undef or "pig" in $components) {
+    hadoop-pig::client { "pig client":
+    }
   }
-  hadoop-hive::client { "hive client":
-     hbase_zookeeper_quorum => $hadoop_hbase_zookeeper_quorum,
+  if ($components[0] == undef or "hive" in $components) {
+    hadoop-hive::client { "hive client":
+       hbase_zookeeper_quorum => $hadoop_hbase_zookeeper_quorum,
+    }
   }
-  hadoop-sqoop::client { "sqoop client":
+  if ($components[0] == undef or "sqoop" in $components) {
+    hadoop-sqoop::client { "sqoop client":
+    }
   }
-  hadoop-oozie::client { "oozie client":
+  if ($components[0] == undef or "oozie" in $components) {
+    hadoop-oozie::client { "oozie client":
+    }
   }
-  hadoop-hbase::client { "hbase thrift client":
-    thrift => true,
-    kerberos_realm => $kerberos_realm,
+  if ($components[0] == undef or "hbase" in $components) {
+    hadoop-hbase::client { "hbase thrift client":
+      thrift => true,
+      kerberos_realm => $kerberos_realm,
+    }
   }
-  hadoop-zookeeper::client { "zookeeper client":
+  if ($components[0] == undef or "zookeeper" in $components) {
+    hadoop-zookeeper::client { "zookeeper client":
+    }
   }
 }

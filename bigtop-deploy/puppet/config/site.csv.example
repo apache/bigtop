@@ -10,3 +10,12 @@ hadoop_head_node,hadoopmaster.example.com
 # Storage directories (will be created if doesn't exist)
 hadoop_storage_dirs,/data/1,/data/2,/data/3,/data/4
 bigtop_yumrepo_uri,http://mirror.example.com/path/to/mirror/
+# A list of stack' components to be deployed can be specified via special
+# "$components" list. If $components isn't set then everything in the stack will
+# be installed as usual. Otherwise only a specified list will be set
+# Possible elements:
+# hadoop,yarn,hbase,mapred-app,flume,solrcloud,spark,oozie,hcat,sqoop,httpfs,
+# hue,mahout,giraph,crunch,pig,hive,zookeeper
+# Example (to deploy only HDFS and YARN server and gateway parts)
+#components,hadoop,yarn
+
