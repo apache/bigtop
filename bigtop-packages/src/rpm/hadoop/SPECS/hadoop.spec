@@ -414,6 +414,13 @@ AutoReq: no
 %description libhdfs
 Hadoop Filesystem Library
 
+%package libhdfs-devel
+Summary: Development support for libhdfs
+Group: Development/Libraries
+Requires: hadoop = %{version}-%{release}, hadoop-libhdfs = %{version}-%{release}
+
+%description libhdfs-devel
+Includes examples and header files for accessing HDFS from C
 
 %package hdfs-fuse
 Summary: Mountable HDFS
@@ -703,8 +710,9 @@ fi
 %files libhdfs
 %defattr(-,root,root)
 %{_libdir}/libhdfs*
+
+%files libhdfs-devel
 %{_includedir}/hdfs.h
-# -devel should be its own package
 #%doc %{_docdir}/libhdfs-%{hadoop_version}
 
 %files hdfs-fuse
