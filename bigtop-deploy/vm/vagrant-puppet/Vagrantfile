@@ -1,0 +1,47 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = "2"
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  vmbox = "puppetlab-centos-64-nocm"
+
+  # Virtual Box implementation
+  vmboxurl = "http://puppet-vagrant-boxes.puppetlabs.com/centos-64-x64-vbox4210-nocm.box"
+
+  hostname = "vagrant.bigtop1"
+
+  # The bigtop puppet recipes
+  bigtop_puppet = "../../puppet"
+
+  # First node in the cluster
+  config.vm.define :bigtop1 do |bigtop1|
+
+    bigtop1.vm.box = vmbox
+    bigtop1.vm.box_url = vmboxurl
+
+    bigtop1.vm.provider :virtualbox do |vb|
+      vb.customize ["modifyvm", :id, "--memory", "1024"]
+    end
+
+    bigtop1.vm.network :private_network, ip: "10.10.10.12"
+    bigtop1.vm.hostname = hostname
+
+    bigtop1.vm.synced_folder bigtop_puppet, "/bigtop-puppet"
+
+    # Shell provisioner to setup basic vm environment
+    bigtop1.vm.provision :shell do |shell|
+      shell.path = "provision.sh"
+      shell.args = hostname
+    end
+
+    # Deploy hadoop and it's ecosystem
+    bigtop1.vm.provision :puppet do |puppet|
+      puppet.module_path = bigtop_puppet + "/modules"
+      puppet.manifests_path = bigtop_puppet + "/manifests"
+      puppet.manifest_file  = "site.pp"
+      puppet.options = "--debug --confdir=/bigtop-puppet"
+    end
+
+  end
+
+end
