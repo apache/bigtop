@@ -203,6 +203,7 @@ class hadoop_head_node inherits hadoop_worker_node {
     command => 'bash -x /usr/lib/hadoop/libexec/init-hdfs.sh',
     require => Package['hadoop-hdfs']
   }
+  Hadoop::Namenode<||> -> Hadoop::Datanode<||> -> Exec<| title == "init hdfs" |>
 
 if ($hadoop_security_authentication == "kerberos") {
     include kerberos::server
