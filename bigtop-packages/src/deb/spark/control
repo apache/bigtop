@@ -42,3 +42,9 @@ Architecture: all
 Depends: spark-core (= ${source:Version})
 Description: Server for Spark worker
  Server for Spark worker
+
+Package: spark-python
+Architecture: all
+Depends: spark (= ${source:Version}), python
+Description: Python client for Spark
+ Includes PySpark, an interactive Python shell for Spark, and related libraries

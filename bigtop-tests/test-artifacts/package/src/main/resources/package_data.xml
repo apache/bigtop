@@ -132,6 +132,16 @@ Spark runs on top of the Apache Mesos cluster manager.</description>
       <spark>/self</spark>
     </deps>
   </spark-worker>
+  <spark-python>
+    <metadata>
+      <summary>Python client for Spark</summary>
+      <description>Includes PySpark, an interactive Python shell for Spark, and related libraries</description>
+      <url>http://spark.incubator.apache.org/</url>
+    </metadata>
+    <deps>
+      <spark>/self</spark>
+    </deps>
+  </spark-python>
   <whirr>
     <metadata>
       <summary>Scripts and libraries for running software services on cloud infrastructure.</summary>

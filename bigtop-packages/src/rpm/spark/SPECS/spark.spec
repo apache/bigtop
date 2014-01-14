@@ -33,6 +33,9 @@
 %define alternatives_cmd alternatives
 %endif
 
+%define pyspark_python python
+
+
 # disable repacking jars
 %define __os_install_post %{nil}
 
@@ -90,7 +93,15 @@ Requires: spark-core = %{version}-%{release}
 
 %description worker 
 Server for Spark worker
-    
+
+%package python
+Summary: Python client for Spark
+Group: Development/Libraries
+Requires: spark = %{version}-%{release}, %{pyspark_python}
+
+%description python
+Includes PySpark, an interactive Python shell for Spark, and related libraries
+
 %prep
 %setup -n %{spark_name}-%{spark_base_version}
 
@@ -110,7 +121,8 @@ sh $RPM_SOURCE_DIR/install_spark.sh \
           --build-dir=`pwd`         \
           --source-dir=$RPM_SOURCE_DIR \
           --prefix=$RPM_BUILD_ROOT  \
-          --doc-dir=%{doc_spark} 
+          --doc-dir=%{doc_spark} \
+          --pyspark-python=%{pyspark_python}
 
 for service in %{spark_services}
 do
@@ -146,6 +158,8 @@ done
 %config(noreplace) %{config_spark}.dist
 %doc %{doc_spark}
 %{lib_spark}
+%exclude %{lib_spark}/pyspark
+%exclude %{lib_spark}/python
 %{etc_spark}
 %attr(0755,spark,spark) %{var_lib_spark}
 %attr(0755,spark,spark) %{var_run_spark}
@@ -153,6 +167,12 @@ done
 %attr(0755,root,root) %{bin_spark}
 %{bin}/spark-shell
 %{bin}/spark-executor
+
+%files python
+%defattr(-,root,root,755)
+%attr(0755,root,root) %{bin}/pyspark
+%attr(0755,root,root) %{lib_spark}/pyspark
+%{lib_spark}/python
 
 %define service_macro() \
 %files %1 \

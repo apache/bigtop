@@ -31,6 +31,7 @@ usage: $0 <options>
      --installed-lib-dir=DIR     path where lib-dir will end up on target system
      --bin-dir=DIR               path to install bins [/usr/bin]
      --examples-dir=DIR          path to install examples [doc-dir/examples]
+     --pyspark-python            executable to use for Python interpreter [python]
      ... [ see source for more similar options ]
   "
   exit 1
@@ -46,6 +47,7 @@ OPTS=$(getopt \
   -l 'bin-dir:' \
   -l 'source-dir:' \
   -l 'examples-dir:' \
+  -l 'pyspark-python:' \
   -l 'build-dir:' -- "$@")
 
 if [ $? != 0 ] ; then
@@ -78,6 +80,9 @@ while true ; do
         ;;
         --examples-dir)
         EXAMPLES_DIR=$2 ; shift 2
+        ;;
+        --pyspark-python)
+        PYSPARK_PYTHON=$2 ; shift 2
         ;;
         --)
         shift ; break
@@ -114,6 +119,7 @@ EXAMPLES_DIR=${EXAMPLES_DIR:-$DOC_DIR/examples}
 BIN_DIR=${BIN_DIR:-/usr/bin}
 CONF_DIR=${CONF_DIR:-/etc/spark/conf.dist}
 SCALA_HOME=${SCALA_HOME:-/usr/share/scala}
+PYSPARK_PYTHON=${PYSPARK_PYTHON:-python}
 
 install -d -m 0755 $PREFIX/$LIB_DIR
 install -d -m 0755 $PREFIX/$LIB_DIR/lib
@@ -190,3 +196,18 @@ export STANDALONE_SPARK_MASTER_HOST=\`hostname\`
 EOF
 
 ln -s /var/run/spark/work $PREFIX/$LIB_DIR/work
+
+cp -r ${BUILD_DIR}/python ${PREFIX}/${INSTALLED_LIB_DIR}/
+cp ${BUILD_DIR}/pyspark ${PREFIX}/${INSTALLED_LIB_DIR}/
+cat > $PREFIX/$BIN_DIR/pyspark <<EOF
+#!/bin/bash
+
+# Autodetect JAVA_HOME if not defined
+. /usr/lib/bigtop-utils/bigtop-detect-javahome
+
+export PYSPARK_PYTHON=${PYSPARK_PYTHON}
+
+exec $INSTALLED_LIB_DIR/pyspark "\$@"
+EOF
+chmod 755 $PREFIX/$BIN_DIR/pyspark
+
