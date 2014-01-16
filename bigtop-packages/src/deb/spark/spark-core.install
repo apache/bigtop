@@ -15,4 +15,7 @@
 /usr/lib/spark/spark-class
 /usr/lib/spark/spark-executor
 /usr/lib/spark/spark-shell
-
+/var/lib/spark/
+/var/log/spark/
+/var/run/spark/
+/var/run/spark/work/

@@ -35,7 +35,6 @@
 
 %define pyspark_python python
 
-
 # disable repacking jars
 %define __os_install_post %{nil}
 
@@ -110,11 +109,6 @@ bash $RPM_SOURCE_DIR/do-component-build
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
-%__install -d -m 0755 $RPM_BUILD_ROOT/%{bin_spark}/
-%__install -d -m 0755 $RPM_BUILD_ROOT/%{_localstatedir}/lib/%{spark_name}/
-%__install -d -m 0755 $RPM_BUILD_ROOT/%{_localstatedir}/log/%{spark_name}/
-%__install -d -m 0755 $RPM_BUILD_ROOT/%{_localstatedir}/run/%{spark_name}/
-%__install -d -m 0755 $RPM_BUILD_ROOT/%{_localstatedir}/run/%{spark_name}/work/
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
 
 sh $RPM_SOURCE_DIR/install_spark.sh \

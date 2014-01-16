@@ -20,6 +20,7 @@ case "$1" in
     configure)
         # Install config alternatives
         update-alternatives  --install /etc/spark/conf spark-conf /etc/spark/conf.dist 30
+        chown -R spark:spark /var/log/spark /var/lib/spark /var/run/spark
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
