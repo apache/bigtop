@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-Source: spark
+Source: spark-core
 Section: misc
 Priority: extra
 Maintainer: Bigtop <dev@bigtop.apache.org>
@@ -21,7 +21,7 @@ Build-Depends: debhelper (>= 6)
 Standards-Version: 3.8.0
 Homepage: http://spark.incubator.apache.org/
 
-Package: spark
+Package: spark-core
 Architecture: all
 Depends: bigtop-utils
 Description: Lightning-Fast Cluster Computing
@@ -33,12 +33,12 @@ Description: Lightning-Fast Cluster Computing
 
 Package: spark-master
 Architecture: all
-Depends: spark (= ${source:Version})
+Depends: spark-core (= ${source:Version})
 Description: Server for Spark master
  Server for Spark master
 
 Package: spark-worker
 Architecture: all
-Depends: spark (= ${source:Version})
+Depends: spark-core (= ${source:Version})
 Description: Server for Spark worker
  Server for Spark worker

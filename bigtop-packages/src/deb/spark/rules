@@ -40,4 +40,4 @@ override_dh_auto_install: $(svcs)
 	  --build-dir=`pwd` \
           --doc-dir=/usr/share/doc/spark \
           --source-dir=debian \
-	  --prefix=debian/spark
+	  --prefix=debian/spark-core

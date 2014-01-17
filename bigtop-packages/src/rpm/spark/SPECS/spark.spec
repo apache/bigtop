@@ -36,7 +36,7 @@
 # disable repacking jars
 %define __os_install_post %{nil}
 
-Name: spark
+Name: spark-core
 Version: %{spark_version}
 Release: %{spark_release}
 Summary: Lightning-Fast Cluster Computing
@@ -45,9 +45,9 @@ Group: Development/Libraries
 BuildArch: noarch
 Buildroot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 License: ASL 2.0 
-Source0: %{name}-%{spark_base_version}.tar.gz
+Source0: %{spark_name}-%{spark_base_version}.tar.gz
 Source1: do-component-build 
-Source2: install_%{name}.sh
+Source2: install_%{spark_name}.sh
 Source3: spark-master.svc
 Source4: spark-worker.svc
 Requires: bigtop-utils
@@ -78,7 +78,7 @@ Spark runs on top of the Apache Mesos cluster manager.
 %package master
 Summary: Server for Spark master
 Group: Development/Libraries
-Requires: spark = %{version}-%{release}
+Requires: spark-core = %{version}-%{release}
 
 %description master 
 Server for Spark master
@@ -86,13 +86,13 @@ Server for Spark master
 %package worker
 Summary: Server for Spark worker
 Group: Development/Libraries
-Requires: spark = %{version}-%{release}
+Requires: spark-core = %{version}-%{release}
 
 %description worker 
 Server for Spark worker
     
 %prep
-%setup -n %{name}-%{spark_base_version}
+%setup -n %{spark_name}-%{spark_base_version}
 
 %build
 bash $RPM_SOURCE_DIR/do-component-build
@@ -100,10 +100,10 @@ bash $RPM_SOURCE_DIR/do-component-build
 %install
 %__rm -rf $RPM_BUILD_ROOT
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{bin_spark}/
-%__install -d -m 0755 $RPM_BUILD_ROOT/%{_localstatedir}/lib/%{name}/
-%__install -d -m 0755 $RPM_BUILD_ROOT/%{_localstatedir}/log/%{name}/
-%__install -d -m 0755 $RPM_BUILD_ROOT/%{_localstatedir}/run/%{name}/
-%__install -d -m 0755 $RPM_BUILD_ROOT/%{_localstatedir}/run/%{name}/work/
+%__install -d -m 0755 $RPM_BUILD_ROOT/%{_localstatedir}/lib/%{spark_name}/
+%__install -d -m 0755 $RPM_BUILD_ROOT/%{_localstatedir}/log/%{spark_name}/
+%__install -d -m 0755 $RPM_BUILD_ROOT/%{_localstatedir}/run/%{spark_name}/
+%__install -d -m 0755 $RPM_BUILD_ROOT/%{_localstatedir}/run/%{spark_name}/work/
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
 
 sh $RPM_SOURCE_DIR/install_spark.sh \
@@ -115,7 +115,7 @@ sh $RPM_SOURCE_DIR/install_spark.sh \
 for service in %{spark_services}
 do
     # Install init script
-    init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{name}-${service}
+    init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{spark_name}-${service}
     bash $RPM_SOURCE_DIR/init.d.tmpl $RPM_SOURCE_DIR/spark-${service}.svc rpm $init_file
 done
 
@@ -132,9 +132,9 @@ if [ "$1" = 0 ]; then
 fi
 
 for service in %{spark_services}; do
-  /sbin/service %{name}-${service} status > /dev/null 2>&1
+  /sbin/service %{spark_name}-${service} status > /dev/null 2>&1
   if [ $? -eq 0 ]; then
-    /sbin/service %{name}-${service} stop > /dev/null 2>&1
+    /sbin/service %{spark_name}-${service} stop > /dev/null 2>&1
   fi
 done
 
@@ -156,18 +156,18 @@ done
 
 %define service_macro() \
 %files %1 \
-%attr(0755,root,root)/%{initd_dir}/%{name}-%1 \
+%attr(0755,root,root)/%{initd_dir}/%{spark_name}-%1 \
 %post %1 \
-chkconfig --add %{name}-%1 \
+chkconfig --add %{spark_name}-%1 \
 \
 %preun %1 \
 if [ $1 = 0 ] ; then \
-        service %{name}-%1 stop > /dev/null 2>&1 \
-        chkconfig --del %{name}-%1 \
+        service %{spark_name}-%1 stop > /dev/null 2>&1 \
+        chkconfig --del %{spark_name}-%1 \
 fi \
 %postun %1 \
 if [ $1 -ge 1 ]; then \
-        service %{name}-%1 condrestart >/dev/null 2>&1 \
+        service %{spark_name}-%1 condrestart >/dev/null 2>&1 \
 fi
 %service_macro master
 %service_macro worker
