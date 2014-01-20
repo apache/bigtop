@@ -65,8 +65,8 @@
     <module>giraph</module>
     <module>hue</module>
     <module>crunch</module>
-    <module>httpfs</module>
     <!--
+    <module>httpfs</module>
     <module>flume</module>
     <module>sqoop</module>
     -->
