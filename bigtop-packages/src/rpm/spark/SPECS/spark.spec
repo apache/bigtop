@@ -77,28 +77,28 @@ written in Scala, a high-level language for the JVM, and exposes a clean
 language-integrated syntax that makes it easy to write parallel jobs.
 Spark runs on top of the Apache Mesos cluster manager.
 
-%package master
+%package -n spark-master
 Summary: Server for Spark master
 Group: Development/Libraries
 Requires: spark-core = %{version}-%{release}
 
-%description master 
+%description -n spark-master
 Server for Spark master
 
-%package worker
+%package -n spark-worker
 Summary: Server for Spark worker
 Group: Development/Libraries
 Requires: spark-core = %{version}-%{release}
 
-%description worker 
+%description -n spark-worker
 Server for Spark worker
 
-%package python
+%package -n spark-python
 Summary: Python client for Spark
 Group: Development/Libraries
 Requires: spark = %{version}-%{release}, %{pyspark_python}
 
-%description python
+%description -n spark-python
 Includes PySpark, an interactive Python shell for Spark, and related libraries
 
 %prep
@@ -147,7 +147,7 @@ done
 #######################
 #### FILES SECTION ####
 #######################
-%files 
+%files
 %defattr(-,root,root,755)
 %config(noreplace) %{config_spark}.dist
 %doc %{doc_spark}
@@ -162,26 +162,26 @@ done
 %{bin}/spark-shell
 %{bin}/spark-executor
 
-%files python
+%files -n spark-python
 %defattr(-,root,root,755)
 %attr(0755,root,root) %{bin}/pyspark
 %attr(0755,root,root) %{lib_spark}/pyspark
 %{lib_spark}/python
 
 %define service_macro() \
-%files %1 \
-%attr(0755,root,root)/%{initd_dir}/%{spark_name}-%1 \
-%post %1 \
-chkconfig --add %{spark_name}-%1 \
+%files -n %1 \
+%attr(0755,root,root)/%{initd_dir}/%1 \
+%post -n %1 \
+chkconfig --add %1 \
 \
-%preun %1 \
+%preun -n %1 \
 if [ $1 = 0 ] ; then \
-        service %{spark_name}-%1 stop > /dev/null 2>&1 \
-        chkconfig --del %{spark_name}-%1 \
+        service %1 stop > /dev/null 2>&1 \
+        chkconfig --del %1 \
 fi \
-%postun %1 \
+%postun -n %1 \
 if [ $1 -ge 1 ]; then \
-        service %{spark_name}-%1 condrestart >/dev/null 2>&1 \
+        service %1 condrestart >/dev/null 2>&1 \
 fi
-%service_macro master
-%service_macro worker
+%service_macro spark-master
+%service_macro spark-worker
