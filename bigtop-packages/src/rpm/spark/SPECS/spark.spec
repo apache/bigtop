@@ -96,7 +96,7 @@ Server for Spark worker
 %package -n spark-python
 Summary: Python client for Spark
 Group: Development/Libraries
-Requires: spark = %{version}-%{release}, %{pyspark_python}
+Requires: spark-core = %{version}-%{release}, %{pyspark_python}
 
 %description -n spark-python
 Includes PySpark, an interactive Python shell for Spark, and related libraries
