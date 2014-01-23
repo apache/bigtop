@@ -30,6 +30,18 @@
       <url>http://commons.apache.org/daemon/</url>
     </metadata>
   </bigtop-jsvc>
+
+  <bigtop-jsvc>
+    <metadata>
+      <summary>An agile and dynamic language for the Java Virtual Machine</summary>
+      <description>Groovy provides a JVM based runtime environment for function programming and scripting.</description>
+      <url>http://groovy.codehaus.org/</url>
+    </metadata>
+    <deps>
+      <bigtop-utils/>
+    </deps>
+  </bigtop-jsvc>
+
   <bigtop-tomcat>
     <metadata>
       <summary>Apache Tomcat</summary>
