@@ -23,7 +23,7 @@ Homepage: http://spark.incubator.apache.org/
 
 Package: spark-core
 Architecture: all
-Depends: bigtop-utils
+Depends: bigtop-utils (>= 0.7)
 Description: Lightning-Fast Cluster Computing
  Spark is a MapReduce-like cluster computing framework designed to support
  low-latency iterative jobs and interactive use from an interpreter. It is

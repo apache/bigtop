@@ -52,7 +52,7 @@ Source1: do-component-build
 Source2: install_%{spark_name}.sh
 Source3: spark-master.svc
 Source4: spark-worker.svc
-Requires: bigtop-utils
+Requires: bigtop-utils >= 0.7
 Requires(preun): /sbin/service
 
 %global initd_dir %{_sysconfdir}/init.d
@@ -111,7 +111,7 @@ bash $RPM_SOURCE_DIR/do-component-build
 %__rm -rf $RPM_BUILD_ROOT
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
 
-sh $RPM_SOURCE_DIR/install_spark.sh \
+bash $RPM_SOURCE_DIR/install_spark.sh \
           --build-dir=`pwd`         \
           --source-dir=$RPM_SOURCE_DIR \
           --prefix=$RPM_BUILD_ROOT  \
