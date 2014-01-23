@@ -37,6 +37,7 @@
     <itest-conf.version>${project.version}</itest-conf.version>
     <itest-common.version>${project.version}</itest-common.version>
     <hadoop-smoke.version>${project.version}</hadoop-smoke.version>
+    <httpfs-smoke.version>${project.version}</httpfs-smoke.version>
     <flume-smoke.version>${project.version}</flume-smoke.version>
     <hbase-smoke.version>${project.version}</hbase-smoke.version>
     <hive-smoke.version>${project.version}</hive-smoke.version>
@@ -64,8 +65,8 @@
     <module>giraph</module>
     <module>hue</module>
     <module>crunch</module>
-
     <!--
+    <module>httpfs</module>
     <module>flume</module>
     <module>sqoop</module>
     -->
@@ -152,6 +153,12 @@
         <groupId>org.apache.bigtop.itest</groupId>
         <artifactId>phoenix-smoke</artifactId>
         <version>${phoenix-smoke.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.bigtop.itest</groupId>
+        <artifactId>httpfs-smoke</artifactId>
+        <version>${httpfs-smoke.version}</version>
         <scope>test</scope>
       </dependency>
     </dependencies>

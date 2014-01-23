@@ -35,6 +35,7 @@
   <modules>
     <module>hadoop</module>
     <module>package</module>
+    <module>httpfs</module>
     <module>oozie</module>
     <module>hive</module>
     <module>hbase</module>
