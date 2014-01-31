@@ -93,8 +93,20 @@ Description: %{DESCRIPTION}
 
   public Map<String, Service> getServices() {
     Map res = [:];
-    String transform = (mgr.getType() == "zypper") ? "sed -ne '/^.etc.rc.d./s#^.etc.rc.d.##p'" :
-                                                "sed -ne '/^.etc.rc.d.init.d./s#^.etc.rc.d.init.d.##p'";
+    String transform;
+
+    switch (mgr.getType()) {
+      case "zypper":
+        transform = "sed -ne '/^.etc.rc.d./s#^.etc.rc.d.##p'"
+        break
+      case "yum":
+        transform = "sed -ne '/^.usr.sbin./s#^.usr.sbin.##p'"
+        break
+      default:
+        transform = "sed -ne '/^.etc.rc.d.init.d./s#^.etc.rc.d.init.d.##p'"
+        break
+    }
+
     shUser.exec("rpm -ql $name | $transform").out.collect {
       res[it] = new Service(it);
     }
