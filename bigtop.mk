@@ -249,19 +249,6 @@ PHOENIX_SITE=https://github.com/forcedotcom/phoenix/archive
 PHOENIX_ARCHIVE=$(PHOENIX_SITE)
 $(eval $(call PACKAGE,phoenix,PHOENIX))
 
-# Groovy
-BIGTOP_GROOVY_NAME=bigtop-groovy
-BIGTOP_GROOVY_RELNOTES_NAME=Grovvy: a dynamic language for the Java platform
-BIGTOP_GROOVY_PKG_NAME=bigtop-groovy
-BIGTOP_GROOVY_BASE_VERSION=2.2.1
-BIGTOP_GROOVY_PKG_VERSION=2.2.1
-BIGTOP_GROOVY_RELEASE_VERSION=1
-BIGTOP_GROOVY_TARBALL_DST=groovy-binary-$(BIGTOP_GROOVY_BASE_VERSION).zip
-BIGTOP_GROOVY_TARBALL_SRC=$(BIGTOP_GROOVY_TARBALL_DST)
-BIGTOP_GROOVY_SITE=http://dist.groovy.codehaus.org/distributions/
-BIGTOP_GROOVY_ARCHIVE=$(BIGTOP_GROOVY_SITE)
-$(eval $(call PACKAGE,bigtop-groovy,BIGTOP_GROOVY))
-
 # Bigtop-utils
 BIGTOP_UTILS_NAME=bigtop-utils
 BIGTOP_UTILS__RELNOTES_NAME=Bigtop-utils
