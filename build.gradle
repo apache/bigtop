@@ -1,0 +1,45 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+group = 'org.apache.bigtop'
+version = '0.8.0-SNAPSHOT'
+
+description = """Bigtop"""
+
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
+task installTopLevel(type:Exec) {
+  workingDir "."
+  commandLine 'mvn clean install -f pom.xml'.split(" ")
+}
+
+task installiTest(type:Exec) {
+  workingDir "."
+  commandLine 'mvn clean install -f bigtop-test-framework/pom.xml -DskipTests'.split(" ")
+}
+task installTestArtifacts(type:Exec) {
+  workingDir "."
+  commandLine 'mvn clean install -f bigtop-tests/test-artifacts/pom.xml'.split(" ")
+}
+task installConf(type:Exec) {
+  workingDir "."
+  commandLine 'mvn clean install -f bigtop-tests/test-execution/conf/pom.xml'.split(" ")
+}
+task installCommon(type:Exec) {
+  workingDir "."
+  commandLine 'mvn clean install -f bigtop-tests/test-execution/common/pom.xml'.split(" ")
+}
+task installAllLocalArtifacts() {
+
+}
+
+installAllLocalArtifacts.dependsOn installCommon, installConf, installTestArtifacts, installiTest, installTopLevel
+
+repositories {
+     maven { url "http://mvn01.shef.wandisco.com:8081/artifactory/libs-snapshot-local" }
+     maven { url "http://mvn01.shef.wandisco.com:8081/artifactory/ext-snapshot-local" }
+     maven { url "http://mvn01.shef.wandisco.com:8081/artifactory/libs-release-local" }
+     maven { url "http://repository.apache.org/snapshots" }
+     maven { url "http://repo.maven.apache.org/maven2" }
+}
