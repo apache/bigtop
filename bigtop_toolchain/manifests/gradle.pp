@@ -13,14 +13,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-export MAVEN_HOME=/usr/local/maven
-export PATH=$PATH:$MAVEN_HOME/bin
-export JAVA_HOME=/usr/java/latest
-export ANT_HOME=/usr/local/ant
-export PATH=$PATH:$ANT_HOME/bin
-export FORREST_HOME=/usr/local/apache-forrest
-export SCALA_HOME=/usr/share/java
-export GRADLE_HOME=/usr/local/gradle
-export PATH=$PATH:$FORREST_HOME/bin:$GRADLE_HOME/bin
+class bigtop_toolchain::gradle {
 
-export GRADLE_OPTS="-Dorg.gradle.daemon=true
+  include bigtop_toolchain::deps
+
+  exec {'/usr/bin/unzip -x /usr/src/gradle-1.10-bin.zip':
+    cwd         => '/usr/local',
+    refreshonly => true,
+    subscribe   => Exec["/usr/bin/wget http://services.gradle.org/distributions/gradle-1.10-bin.zip"],
+    require     => Exec["/usr/bin/wget http://services.gradle.org/distributions/gradle-1.10-bin.zip"],
+  }
+
+  file {'/usr/local/gradle':
+    ensure  => link,
+    target  => '/usr/local/gradle-1.10',
+    require => Exec['/usr/bin/unzip -x /usr/src/gradle-1.10-bin.zip'],
+  }
+}

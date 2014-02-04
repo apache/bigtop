@@ -20,4 +20,7 @@ export ANT_HOME=/usr/local/ant
 export PATH=$PATH:$ANT_HOME/bin
 export FORREST_HOME=/usr/local/apache-forrest
 export SCALA_HOME=/usr/share/java
-export PATH=$PATH:$FORREST_HOME/bin
+export GRADLE_HOME=/usr/local/gradle
+export PATH=$PATH:$FORREST_HOME/bin:$GRADLE_HOME/bin
+
+export GRADLE_OPTS="-Dorg.gradle.daemon=true

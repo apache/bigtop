@@ -28,6 +28,8 @@ Puppet module for configuring a CentOS host for building BigTop. It installs:
 
 **Apache Maven 3.0.5**
 
+**Gradle 1.10**
+
 **Protobuf 2.4.1**
 
 ##Usage
@@ -40,6 +42,7 @@ These can be indivdually applied using:
 	  include bigtop_toolchain::maven
 	  include bigtop_toolchain::forrest
 	  include bigtop_toolchain::ant
+	  include bigtop_toolchain::gradle
 	  include bigtop_toolchain::protobuf
 	  include bigtop_toolchain::packages
 	  include bigtop_toolchain::env
@@ -61,8 +64,9 @@ building BigTop:
 	ANT_HOME=/usr/local/ant
 	PATH=$PATH:$ANT_HOME/bin
 	FORREST_HOME=/usr/local/apache-forrest
-	PATH=$PATH:$FORREST_HOME/bin
-	
+  GRADLE_HOME=/usr/local/gradle
+  PATH=$PATH:$FORREST_HOME/bin:$GRADLE_HOME/bin
+
 If you do not want to use a puppet master this module can be applied
 standalone with a command such as:
 
