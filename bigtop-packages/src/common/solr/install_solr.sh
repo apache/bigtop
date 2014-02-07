@@ -138,7 +138,7 @@ cp -ra ${BUILD_DIR}/dist/solrj-lib $PREFIX/$LIB_DIR/lib
 
 install -d -m 0755 $PREFIX/$LIB_DIR/bin
 cp -a ${BUILD_DIR}/example/cloud-scripts/*.sh $PREFIX/$LIB_DIR/bin
-sed -i -e 's#/../solr-webapp/webapp/WEB-INF/lib/#/../server/webapps/solr/WEB-INF/lib/#' $PREFIX/$LIB_DIR/bin/zkcli.sh
+sed -i -e 's#/../solr-webapp/webapp/WEB-INF/lib/#/../webapps/solr/WEB-INF/lib/#' $PREFIX/$LIB_DIR/bin/zkcli.sh
 chmod 755 $PREFIX/$LIB_DIR/bin/*
 
 install -d -m 0755 $PREFIX/$DOC_DIR
