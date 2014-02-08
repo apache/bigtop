@@ -23,4 +23,4 @@ export SCALA_HOME=/usr/share/java
 export GRADLE_HOME=/usr/local/gradle
 export PATH=$PATH:$FORREST_HOME/bin:$GRADLE_HOME/bin
 
-export GRADLE_OPTS="-Dorg.gradle.daemon=true
+export GRADLE_OPTS="-Dorg.gradle.daemon=true"
