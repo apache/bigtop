@@ -20,28 +20,39 @@ SHELL := /bin/bash
 $(BUILD_DIR)/%/.download:
 	mkdir -p $(@D)
 	mkdir -p $(DL_DIR)
-	[ -z "$($(PKG)_TARBALL_SRC)" -o -f $($(PKG)_DOWNLOAD_DST) ] || (cd $(DL_DIR) && curl --retry 5 -# -L -k -o $($(PKG)_TARBALL_DST) $($(PKG)_DOWNLOAD_URL))
+	[ -z "$($(PKG)_TARBALL_SRC)" -o -f $($(PKG)_DOWNLOAD_DST) ] || curl --retry 5 -# -L -k -o $($(PKG)_DOWNLOAD_DST) $($(PKG)_DOWNLOAD_URL)
 	touch $@
 
 # Untar and patch
 $(BUILD_DIR)/%/.tar:
-	-rm -rf $(PKG_BUILD_DIR)/tar/
-	mkdir -p $(PKG_BUILD_DIR)/tar/$($(PKG)_NAME)-$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP)
-	if [ -n "$($(PKG)_TARBALL_SRC)" ]; then \
-	  cp $($(PKG)_DOWNLOAD_DST) $(PKG_BUILD_DIR)/tar/$($(PKG)_PKG_NAME)_$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP).orig.tar.gz ;\
-	  tar -C $(PKG_BUILD_DIR)/tar/$($(PKG)_NAME)-$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP) \
-              --strip-components 1 -xzvf $(PKG_BUILD_DIR)/tar/$($(PKG)_PKG_NAME)_$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP).orig.tar.gz; \
-	fi
+	PATCHES="" ; UNPACK="tar -xzf"                                                 ;\
+	[ -z "$($(PKG)_TARBALL_SRC)" ] && PATCHES="/dev/null"                          ;\
+	if [[ "$($(PKG)_TARBALL_SRC)" =~ \.zip$$ ]]; then                               \
+	  PATCHES="/dev/null"                                                          ;\
+	  UNPACK="unzip"                                                               ;\
+	fi                                                                             ;\
 	if [ -f $(BASE_DIR)/bigtop-packages/src/common/$($(PKG)_NAME)/series ]; then    \
 	  PATCHES="`cat $(BASE_DIR)/bigtop-packages/src/common/$($(PKG)_NAME)/series`" ;\
 	elif [ -f $(BASE_DIR)/bigtop-packages/src/common/$($(PKG)_NAME)/patch ]; then   \
 	  PATCHES="patch"                                                              ;\
+	fi                                                                             ;\
+	rm -rf `dirname $($(PKG)_TAR_DIR)` ; mkdir -p $($(PKG)_TAR_DIR)                ;\
+	if [ -n "$$PATCHES" ]; then                                                     \
+	  if [ -n "$($(PKG)_TARBALL_SRC)" ]; then                                       \
+	    (cd $($(PKG)_TAR_DIR) ; $$UNPACK $($(PKG)_DOWNLOAD_DST))                   ;\
+	    if [ `ls $($(PKG)_TAR_DIR) | wc -l` -eq 1 ]; then                           \
+	      TOP_LEVEL_DIR=`ls -d $($(PKG)_TAR_DIR)/*`                                ;\
+	      mv $($(PKG)_TAR_DIR)/*/* $($(PKG)_TAR_DIR)                               ;\
+	      rmdir $$TOP_LEVEL_DIR                                                    ;\
+            fi                                                                         ;\
+	  else                                                                          \
+	    cp LICENSE $($(PKG)_TAR_DIR)                                               ;\
+	  fi                                                                           ;\
+          (cd $(BASE_DIR)/bigtop-packages/src/common/$($(PKG)_NAME); cat $$PATCHES)|    \
+            (cd $($(PKG)_TAR_DIR) ; patch -p0 ; cd .. ; tar czf $($(PKG)_SEED_TAR) *)  ;\
 	else                                                                            \
-	  PATCHES="/dev/null"                                                          ;\
-	fi ; (cd $(BASE_DIR)/bigtop-packages/src/common/$($(PKG)_NAME); cat $$PATCHES)| \
-             (cd $(PKG_BUILD_DIR)/tar/$($(PKG)_NAME)-$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP) ; patch -p0)
-	tar -C $(PKG_BUILD_DIR)/tar -czf $(PKG_BUILD_DIR)/tar/$($(PKG)_PKG_NAME)_$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP).patched.tar.gz \
-               $($(PKG)_NAME)-$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP)
+	  cp $($(PKG)_DOWNLOAD_DST) $($(PKG)_SEED_TAR)                                 ;\
+	fi
 	touch $@
 
 # Make source RPMs
@@ -50,7 +61,7 @@ $(BUILD_DIR)/%/.srpm:
 	mkdir -p $(PKG_BUILD_DIR)/rpm/
 	cp -r $(BASE_DIR)/bigtop-packages/src/rpm/$($(PKG)_NAME)/* $(PKG_BUILD_DIR)/rpm/
 	mkdir -p $(PKG_BUILD_DIR)/rpm/{INSTALL,SOURCES,BUILD,SRPMS}
-	[ -z "$($(PKG)_TARBALL_SRC)" ] || cp $($(PKG)_DOWNLOAD_DST) $(PKG_BUILD_DIR)/rpm/SOURCES
+	cp $($(PKG)_SEED_TAR) $(PKG_BUILD_DIR)/rpm/SOURCES
 	cp $(BASE_DIR)/bigtop-packages/src/templates/init.d.tmpl $(PKG_BUILD_DIR)/rpm/SOURCES
 	[ -d $(BASE_DIR)/bigtop-packages/src/common/$($(PKG)_NAME) ] && cp -r $(BASE_DIR)/bigtop-packages/src/common/$($(PKG)_NAME)/* $(PKG_BUILD_DIR)/rpm/SOURCES
 	echo -e "$(BIGTOP_BOM)" | tr ' ' '\012' >> $(PKG_BUILD_DIR)/rpm/SOURCES/bigtop.bom
@@ -90,15 +101,9 @@ $(BUILD_DIR)/%/.yum: $(BUILD_DIR)/%/.rpm
 $(BUILD_DIR)/%/.sdeb:
 	-rm -rf $(PKG_BUILD_DIR)/deb/
 	mkdir -p $(PKG_BUILD_DIR)/deb/$($(PKG)_NAME)-$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP)
-	# Only expands the tar if there is a source artifact
-	if [ -n "$($(PKG)_TARBALL_SRC)" ]; then \
-	  cp $($(PKG)_DOWNLOAD_DST) $(PKG_BUILD_DIR)/deb/$($(PKG)_PKG_NAME)_$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP).orig.tar.gz ;\
-	  cd $(PKG_BUILD_DIR)/deb/$($(PKG)_NAME)-$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP) && \
-	    tar --strip-components 1 -xvf ../$($(PKG)_PKG_NAME)_$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP).orig.tar.gz;\
-	else \
-		 tar -czf $(PKG_BUILD_DIR)/deb/$($(PKG)_PKG_NAME)_$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP).orig.tar.gz LICENSE ;\
-	fi
+	cp $($(PKG)_SEED_TAR) $(PKG_BUILD_DIR)/deb/$($(PKG)_PKG_NAME)_$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP).orig.tar.gz ;\
 	cd $(PKG_BUILD_DIR)/deb/$($(PKG)_NAME)-$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP) && \
+	tar --strip-components 1 -xvf ../$($(PKG)_PKG_NAME)_$(PKG_PKG_VERSION)$(BIGTOP_BUILD_STAMP).orig.tar.gz;\
           cp -r $(BASE_DIR)/bigtop-packages/src/deb/$($(PKG)_NAME) debian && \
 	  cp $(BASE_DIR)/bigtop-packages/src/templates/init.d.tmpl debian && \
 	  cp -r $(BASE_DIR)/bigtop-packages/src/common/$($(PKG)_NAME)/* debian && \
@@ -162,10 +167,12 @@ $(2)_RELEASE        ?= 1
 $(2)_BUILD_DIR      = $(BUILD_DIR)/$(1)/
 $(2)_OUTPUT_DIR      = $(OUTPUT_DIR)/$(1)
 $(2)_SOURCE_DIR       = $$($(2)_BUILD_DIR)/source
+$(2)_TAR_DIR          = $(BUILD_DIR)/$(1)/tar/$(1)-$($(2)_BASE_VERSION)
+$(2)_SEED_TAR         = $(BUILD_DIR)/$(1)/tar/$($(2)_TARBALL_DST)
 
 # Download source URL and destination path
 $(2)_DOWNLOAD_URL = $($(2)_SITE)/$($(2)_TARBALL_SRC)
-$(2)_DOWNLOAD_DST = $(DL_DIR)/$($(2)_TARBALL_DST)
+$(2)_DOWNLOAD_DST = $(DL_DIR)/$($(2)_TARBALL_SRC)
 
 # test that the download url will return http 200.  If it does not, use the ARCHIVE url instead of the MIRROR SITE url
 ifneq ($$(shell curl -o /dev/null --silent --head --write-out '%{http_code}' $$($(2)_DOWNLOAD_URL)),200)
@@ -189,7 +196,7 @@ $(1)-download: $$($(2)_TARGET_DL)
 $(1)-tar: $(1)-download $$($(2)_TARGET_TAR)
 
 # To make srpms, we need to build the package
-$(1)-srpm: $(1)-download $$($(2)_TARGET_SRPM)
+$(1)-srpm: $(1)-tar $$($(2)_TARGET_SRPM)
 
 # To make binary rpms, we need to build source RPMs
 $(1)-rpm: $(1)-srpm $$($(2)_TARGET_RPM)
@@ -198,7 +205,7 @@ $(1)-rpm: $(1)-srpm $$($(2)_TARGET_RPM)
 $(1)-yum: $(1)-rpm $$($(2)_TARGET_YUM)
 
 # To make sdebs, we need to build the package
-$(1)-sdeb: $(1)-download $$($(2)_TARGET_SDEB)
+$(1)-sdeb: $(1)-tar $$($(2)_TARGET_SDEB)
 
 # To make debs, we need to make source packages
 $(1)-deb: $(1)-sdeb $$($(2)_TARGET_DEB)
@@ -224,6 +231,7 @@ $(1)-info:
 	@echo "  Will download from URL: $$($(2)_DOWNLOAD_URL)"
 	@echo "  To destination file: $$($(2)_DOWNLOAD_DST)"
 	@echo "  Then unpack into $$($(2)_SOURCE_DIR)"
+	@echo "  And create a seed tarball $$($(2)_SEED_TAR)"
 	@echo
 	@echo "Patches:"
 	@echo "  BASE_REF: $$($(2)_BASE_REF)"
