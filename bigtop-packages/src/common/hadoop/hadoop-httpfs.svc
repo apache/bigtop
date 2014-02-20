@@ -25,23 +25,6 @@ PIDFILE="/var/run/$DAEMON/hadoop-$SVC_USER-$HADOOP_NAME.pid"
 CHKCONFIG=${CHKCONFIG:-"2345 90 10"}
 CHKCONFIG="${CHKCONFIG%% *} 90 10"
 
-generate_functions() {
-
-cat <<'__EOT__'
-tomcat_deployment() {
-  DEPLOYMENT_SOURCE=`readlink -e /etc/hadoop-httpfs/tomcat-deployment`
-  DEPLOYMENT_TARGET=/var/lib/hadoop-httpfs/tomcat-deployment
-
-  rm -rf ${DEPLOYMENT_TARGET}
-  cp -r ${DEPLOYMENT_SOURCE} ${DEPLOYMENT_TARGET}
-  ln -s /usr/lib/hadoop-httpfs/webapps ${DEPLOYMENT_TARGET}/
-  chown -R ${SVC_USER}:${SVC_USER} ${DEPLOYMENT_TARGET}
-  chmod -R 755 ${DEPLOYMENT_TARGET}
-}
-__EOT__
-
-}
-
 generate_start() {
 
 cat <<'__EOT__'
@@ -59,7 +42,7 @@ start() {
   export CATALINA_PID="$PIDFILE"
   export CATALINA_TMPDIR="$HTTPFS_TEMP"
 
-  tomcat_deployment
+  . /usr/lib/hadoop-httpfs/tomcat-deployment.sh
 
   su -s /bin/bash -c "${EXEC_PATH} start $DAEMON_FLAGS" $HTTPFS_USER
 

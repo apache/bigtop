@@ -1,5 +1,5 @@
 #!/bin/bash
-#
+
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -15,24 +15,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# postinst script for hadoop
+# This script must be sourced so that it can set CATALINA_BASE for the parent process
 
-set -e
+TOMCAT_CONF=${TOMCAT_CONF:-`readlink -e /etc/oozie/tomcat-conf`}
+TOMCAT_DEPLOYMENT=${TOMCAT_DEPLOYMENT:-/var/lib/oozie/tomcat-deployment}
+OOZIE_HOME=${OOZIE_HOME:-/usr/lib/oozie}
 
-case "$1" in
-    configure)
-        chown httpfs:httpfs /var/run/hadoop-httpfs /var/log/hadoop-httpfs
-        update-alternatives --install /etc/hadoop-httpfs/conf hadoop-httpfs-conf /etc/hadoop-httpfs/conf.empty 10
-        update-alternatives --install /etc/hadoop-httpfs/tomcat-conf hadoop-httpfs-tomcat-conf /etc/hadoop-httpfs/tomcat-conf.dist 10
-    ;;
+rm -rf ${TOMCAT_DEPLOYMENT}
+mkdir ${TOMCAT_DEPLOYMENT}
+cp -r ${TOMCAT_CONF}/conf ${TOMCAT_DEPLOYMENT}
+cp -r ${OOZIE_HOME}/webapps ${TOMCAT_DEPLOYMENT}/webapps
+cp -r ${TOMCAT_CONF}/WEB-INF/* ${TOMCAT_DEPLOYMENT}/webapps/oozie/WEB-INF/
 
-    abort-upgrade|abort-remove|abort-deconfigure)
-    ;;
+if [ -n "${BIGTOP_CLASSPATH}" ] ; then
+  sed -i -e "s#^\(common.loader=.*\)\$#\1,${BIGTOP_CLASSPATH/:/,}#" ${TOMCAT_DEPLOYMENT}/conf/catalina.properties
+fi
 
-    *)
-        echo "postinst called with unknown argument \`$1'" >&2
-        exit 1
-    ;;
-esac
+chown -R oozie:oozie ${TOMCAT_DEPLOYMENT}
 
-#DEBHELPER#
+export CATALINA_BASE=${TOMCAT_DEPLOYMENT}
+

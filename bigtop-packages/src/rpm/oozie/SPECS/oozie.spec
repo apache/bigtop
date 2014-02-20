@@ -17,7 +17,7 @@
 %define man_dir /usr/share/man
 %define conf_oozie %{_sysconfdir}/%{name}/conf
 %define conf_oozie_dist %{conf_oozie}.dist
-%define tomcat_deployment_oozie %{_sysconfdir}/%{name}/tomcat-deployment
+%define tomcat_conf_oozie %{_sysconfdir}/%{name}/tomcat-conf
 %define data_oozie /var/lib/oozie
 
 %if  %{!?suse_version:1}0
@@ -63,6 +63,7 @@ Source5: oozie.init
 Source6: catalina.properties
 Source7: context.xml
 Source8: hive.xml
+Source9: tomcat-deployment.sh
 Requires(pre): /usr/sbin/groupadd, /usr/sbin/useradd
 Requires(post): /sbin/chkconfig
 Requires(preun): /sbin/chkconfig, /sbin/service
@@ -149,28 +150,24 @@ Requires: bigtop-utils >= 0.7
 %__install -d  -m 0755  %{buildroot}/%{_localstatedir}/log/oozie
 %__install -d  -m 0755  %{buildroot}/%{_localstatedir}/run/oozie
 
-%__ln_s -f %{lib_oozie}/webapps $RPM_BUILD_ROOT/%{tomcat_deployment_oozie}.http/webapps
-%__ln_s -f %{lib_oozie}/webapps $RPM_BUILD_ROOT/%{tomcat_deployment_oozie}.https/webapps
-%__ln_s -f %{data_oozie}/tomcat-deployment/WEB-INF $RPM_BUILD_ROOT/%{lib_oozie}/webapps/oozie/WEB-INF
-
 %pre
 getent group oozie >/dev/null || /usr/sbin/groupadd -r oozie >/dev/null
 getent passwd oozie >/dev/null || /usr/sbin/useradd --comment "Oozie User" --shell /bin/false -M -r -g oozie --home %{data_oozie} oozie >/dev/null
 
 %post 
 %{alternatives_cmd} --install %{conf_oozie} %{name}-conf %{conf_oozie_dist} 30
-%{alternatives_cmd} --install %{tomcat_deployment_oozie} %{name}-tomcat-conf %{tomcat_deployment_oozie}.http 30
-%{alternatives_cmd} --install %{tomcat_deployment_oozie} %{name}-tomcat-conf %{tomcat_deployment_oozie}.https 20
+%{alternatives_cmd} --install %{tomcat_conf_oozie} %{name}-tomcat-conf %{tomcat_conf_oozie}.http 30
+%{alternatives_cmd} --install %{tomcat_conf_oozie} %{name}-tomcat-conf %{tomcat_conf_oozie}.https 20
 
 /sbin/chkconfig --add oozie 
 
 %preun
 if [ "$1" = 0 ]; then
-  rm -r /etc/oozie/conf/tomcat-deployment
+  rm -r /etc/oozie/conf/tomcat-conf
   /sbin/service oozie stop > /dev/null
   /sbin/chkconfig --del oozie
-  %{alternatives_cmd} --remove %{name}-tomcat-conf %{tomcat_deployment_oozie}.http || :
-  %{alternatives_cmd} --remove %{name}-tomcat-conf %{tomcat_deployment_oozie}.https || :
+  %{alternatives_cmd} --remove %{name}-tomcat-conf %{tomcat_conf_oozie}.http || :
+  %{alternatives_cmd} --remove %{name}-tomcat-conf %{tomcat_conf_oozie}.https || :
   %{alternatives_cmd} --remove %{name}-conf %{conf_oozie_dist} || :
 fi
 
@@ -182,7 +179,7 @@ fi
 %files 
 %defattr(-,root,root)
 %config(noreplace) %{conf_oozie_dist}
-%config(noreplace) %{tomcat_deployment_oozie}.*
+%config(noreplace) %{tomcat_conf_oozie}.*
 %{usr_bin}/oozie-setup
 %{lib_oozie}/bin/oozie-sys.sh
 %{lib_oozie}/bin/oozie-env.sh
@@ -194,6 +191,7 @@ fi
 %{lib_oozie}/libserver
 %{lib_oozie}/oozie-sharelib.tar.gz
 %{lib_oozie}/libext
+%{lib_oozie}/tomcat-deployment.sh
 %{initd_dir}/oozie
 %defattr(-, oozie, oozie)
 %dir %{_sysconfdir}/%{name}

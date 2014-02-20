@@ -28,7 +28,7 @@
 %define config_hadoop %{etc_hadoop}/conf
 %define config_yarn %{etc_yarn}/conf
 %define config_httpfs %{etc_httpfs}/conf
-%define tomcat_deployment_httpfs %{etc_httpfs}/tomcat-deployment
+%define tomcat_deployment_httpfs %{etc_httpfs}/tomcat-conf
 %define lib_hadoop_dirname /usr/lib
 %define lib_hadoop %{lib_hadoop_dirname}/%{name}
 %define lib_httpfs %{lib_hadoop_dirname}/%{name}-httpfs
@@ -164,6 +164,7 @@ Source21: yarn.default
 Source22: hadoop-layout.sh
 Source23: hadoop-hdfs-zkfc.svc
 Source24: hadoop-hdfs-journalnode.svc
+Source25: httpfs-tomcat-deployment.sh
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
 BuildRequires: fuse-devel, fuse, cmake
 Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils >= 0.7, zookeeper >= 3.4.0
@@ -551,7 +552,7 @@ getent passwd mapred >/dev/null || /usr/sbin/useradd --comment "Hadoop MapReduce
 
 %post httpfs
 %{alternatives_cmd} --install %{config_httpfs} %{name}-httpfs-conf %{etc_httpfs}/conf.empty 10
-%{alternatives_cmd} --install %{tomcat_deployment_httpfs} %{name}-tomcat-deployment %{etc_httpfs}/tomcat-deployment.dist 10
+%{alternatives_cmd} --install %{tomcat_deployment_httpfs} %{name}-tomcat-conf %{etc_httpfs}/tomcat-conf.dist 10
 chkconfig --add %{name}-httpfs
 
 %preun
@@ -564,7 +565,7 @@ if [ $1 = 0 ]; then
   service %{name}-httpfs stop > /dev/null 2>&1
   chkconfig --del %{name}-httpfs
   %{alternatives_cmd} --remove %{name}-httpfs-conf %{etc_httpfs}/conf.empty || :
-  %{alternatives_cmd} --remove %{name}-tomcat-deployment %{etc_httpfs}/tomcat-deployment.dist || :
+  %{alternatives_cmd} --remove %{name}-tomcat-conf %{etc_httpfs}/tomcat-conf.dist || :
 fi
 
 %postun httpfs
@@ -651,8 +652,7 @@ fi
 
 %files httpfs
 %defattr(-,root,root)
-%config(noreplace) %{etc_httpfs}/conf.empty
-%config(noreplace) %{etc_httpfs}/tomcat-deployment.dist
+%config(noreplace) %{etc_httpfs}
 %config(noreplace) /etc/default/%{name}-httpfs
 %{lib_hadoop}/libexec/httpfs-config.sh
 %{initd_dir}/%{name}-httpfs

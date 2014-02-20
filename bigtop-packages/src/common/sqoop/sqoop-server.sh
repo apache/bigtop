@@ -15,22 +15,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-tomcat_deployment() {
-  DEPLOYMENT_SOURCE=`readlink -e /etc/sqoop/tomcat-deployment`
-  DEPLOYMENT_TARGET=/var/lib/sqoop/tomcat-deployment
-
-  rm -rf ${DEPLOYMENT_TARGET}
-  cp -r ${DEPLOYMENT_SOURCE} ${DEPLOYMENT_TARGET}
-  ln -s ${SQOOP_HOME}/webapps ${DEPLOYMENT_TARGET}/
-  ln -s ${SQOOP_HOME}/bin ${DEPLOYMENT_TARGET}/
-
-  if [ -n "${BIGTOP_CLASSPATH}" ] ; then
-    sed -i -e "s#^\(common.loader=.*\)\$#\1,${BIGTOP_CLASSPATH/:/,}#" ${DEPLOYMENT_TARGET}/conf/catalina.properties
-  fi
-
-  chown -R sqoop:sqoop ${DEPLOYMENT_TARGET}
-}
-
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
 . /usr/lib/bigtop-utils/bigtop-detect-classpath
@@ -40,7 +24,7 @@ LIB_DIR=${LIB_DIR:-/usr/lib}
 SQOOP_HOME=${LIB_DIR}/sqoop
 TOMCAT_HOME=${LIB_DIR}/bigtop-tomcat
 
-tomcat_deployment
+. /usr/lib/sqoop/tomcat-deployment.sh
 
 export CATALINA_BIN=${CATALINA_BIN:-${TOMCAT_HOME}/bin}
 export CATALINA_BASE=${CATALINA_BASE:-${DEPLOYMENT_TARGET}}

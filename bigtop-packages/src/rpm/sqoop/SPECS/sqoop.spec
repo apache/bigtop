@@ -16,7 +16,7 @@
 %define lib_sqoop /usr/lib/sqoop
 %define conf_sqoop %{_sysconfdir}/sqoop/conf
 %define conf_sqoop_dist %{conf_sqoop}.dist
-%define tomcat_deployment_sqoop %{_sysconfdir}/sqoop/tomcat-deployment
+%define tomcat_deployment_sqoop %{_sysconfdir}/sqoop/tomcat-conf
 %define tomcat_deployment_sqoop_dist %{tomcat_deployment_sqoop}.dist
 %define run_sqoop /var/run/sqoop
 
@@ -67,6 +67,7 @@ Source7: sqoop.default
 Source8: init.d.tmpl
 Source9: sqoop-server.svc
 Source10: sqoop-server.sh
+Source11: tomcat-deployment.sh
 Buildarch: noarch
 BuildRequires: asciidoc
 Requires: hadoop-client, bigtop-utils >= 0.7, bigtop-tomcat, %{name}-client = %{version}-%{release}
@@ -147,7 +148,7 @@ getent passwd sqoop >/dev/null || useradd -c "Sqoop User" -s /sbin/nologin -g sq
 
 %post
 %{alternatives_cmd} --install %{conf_sqoop} sqoop-conf %{conf_sqoop_dist} 30
-%{alternatives_cmd} --install %{tomcat_deployment_sqoop} sqoop-tomcat-deployment %{tomcat_deployment_sqoop_dist} 30
+%{alternatives_cmd} --install %{tomcat_deployment_sqoop} sqoop-tomcat-conf %{tomcat_deployment_sqoop_dist} 30
 
 %post server
 chkconfig --add sqoop-server
@@ -155,7 +156,7 @@ chkconfig --add sqoop-server
 %preun
 if [ "$1" = "0" ] ; then
   %{alternatives_cmd} --remove sqoop-conf %{conf_sqoop_dist} || :
-  %{alternatives_cmd} --remove sqoop-tomcat-deployment %{tomcat_deployment_sqoop_dist} || :
+  %{alternatives_cmd} --remove sqoop-tomcat-conf %{tomcat_deployment_sqoop_dist} || :
 fi
 
 %preun server
@@ -173,10 +174,11 @@ fi
 %defattr(0755,root,root)
 /usr/bin/sqoop-server
 %config(noreplace) /etc/sqoop/conf.dist
-%config(noreplace) /etc/sqoop/tomcat-deployment.dist
+%config(noreplace) /etc/sqoop/tomcat-conf.dist
 %config(noreplace) /etc/default/sqoop-server
 %{lib_sqoop}/webapps
 %{lib_sqoop}/bin/setenv.sh
+%{lib_sqoop}/tomcat-deployment.sh
 %defattr(0755,sqoop,sqoop)
 /var/lib/sqoop
 
