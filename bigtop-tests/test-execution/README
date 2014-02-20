@@ -16,3 +16,7 @@
 Repository contains the collection of starter test suites for different kinds
 of Hadoop stack validations using iTest framework
 
+To run the DFSIO longevity test, you can parametrize the number of files (-nrFiles),
+size of files (-fileSize), and number of cycles using system properties
+numFiles, sizeFile, and numOfIterations, respectively.
+User must make sure that the user home directory exists prior to running the test.
