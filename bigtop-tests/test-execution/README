@@ -20,3 +20,8 @@ To run the DFSIO longevity test, you can parametrize the number of files (-nrFil
 size of files (-fileSize), and number of cycles using system properties
 numFiles, sizeFile, and numOfIterations, respectively.
 User must make sure that the user home directory exists prior to running the test.
+
+SLive longevity test:
+User must create /test directory in hdfs with the necessary permissions
+Default parameters: blockSize 10240,10240 appendSize 20480,20480 writeSize 20480,20480 readSize 20480,20480 files 100 numOfIterations 0
+System parameter names: blockSize, appendSize, writeSize, readSize, numSliveFiles, numOfIterations
