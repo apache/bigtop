@@ -32,6 +32,20 @@
   <version>0.8.0-SNAPSHOT</version>
   <name>sparksmoke</name>
 
+  <repositories>
+    <repository>
+      <id>akka-repo</id>
+      <name>Akka Repository</name>
+      <url>http://repo.akka.io/releases/</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.spark</groupId>
