@@ -71,10 +71,14 @@ class TestHadoopExamples {
 
   //Number of rows for terasort ~ number of splits 
   public static String terasort_rows = System.getProperty("terasort_rows", "1000");
-  
-  static Map examples =
+
+  //Number of maps and samples for pi
+  public static String pi_maps = System.getProperty("pi_maps", "2");
+  public static String pi_samples = System.getProperty("pi_samples", "1000");
+
+  static LinkedHashMap examples =
     [
-        pi                :'2 1000',
+        pi                :"${pi_maps} ${pi_samples}",
         wordcount         :"$EXAMPLES/text $EXAMPLES_OUT/wordcount",
         teragen           :"${terasort_rows} teragen${terasortid}",
         terasort          :"teragen${terasortid} terasort${terasortid}",
@@ -83,7 +87,6 @@ class TestHadoopExamples {
         aggregatewordcount:"$EXAMPLES/text $EXAMPLES_OUT/aggregatewordcount 2 textinputformat",
         aggregatewordhist :"$EXAMPLES/text $EXAMPLES_OUT/aggregatewordhist 2 textinputformat",
         grep              :"$EXAMPLES/text $EXAMPLES_OUT/grep '[Cc]uriouser'",
-        sleep             :"-m 10 -r 10",
         secondarysort     :"$EXAMPLES/ints $EXAMPLES_OUT/secondarysort",
         randomtextwriter  :"-D $RANDOMTEXTWRITER_TOTALBYTES=1073741824 $EXAMPLES_OUT/randomtextwriter"
     ];
@@ -93,8 +96,8 @@ class TestHadoopExamples {
   private String testArgs;
 
   @Parameters
-  public static Map<String, Object[]> generateTests() {
-    Map<String, Object[]> res = [:];
+  public static LinkedHashMap<String, Object[]> generateTests() {
+    LinkedHashMap<String, Object[]> res = [:];
     examples.each { k, v -> res[k] = [k.toString(), v.toString()] as Object[]; }
     return res;
   }
