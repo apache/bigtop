@@ -20,7 +20,6 @@ package org.apache.bigtop.itest.iolongevity
 
 import org.apache.bigtop.itest.JarContent
 import org.apache.bigtop.itest.shell.Shell
-import org.junit.Before
 import org.junit.BeforeClass
 import org.junit.Test
 import static org.apache.bigtop.itest.LogErrorsUtils.logError
@@ -85,9 +84,9 @@ public class TestSLive {
     ]
   }
 
-  @Before
-  public void tearDown() {
+  public void setUp() {
     sh.exec("hadoop fs -rm -r " + SLIVE_ROOT_FILE)
+    sh.exec("hadoop fs -mkdir " + SLIVE_ROOT_FILE)
     Thread.sleep(SLEEP_TIMEOUT)
   }
 
@@ -100,7 +99,7 @@ public class TestSLive {
   public void testSlive() {
     String suffix = ""
     for (int counter = 0; counter < numOfIterations; counter++) {
-      sh.exec("hadoop fs -mkdir " + SLIVE_ROOT_FILE)
+      setUp()
       sliveCmds.each { cmd ->
         sh.exec(cmd + suffix)
         logError(sh)
