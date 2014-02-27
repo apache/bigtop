@@ -65,6 +65,7 @@ class TestHadoopExamples {
   static void setUp() {
     conf = new Configuration();
     TestUtils.unpackTestResources(TestHadoopExamples.class, EXAMPLES, null, EXAMPLES_OUT);
+    assertTrue("Failed to copy TestHadoopExamples.class to FS", sh.getRet() == 0);
   }
 
   static long terasortid = System.currentTimeMillis();
