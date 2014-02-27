@@ -84,7 +84,7 @@ public class TestSLive {
     ]
   }
 
-  public void setUp() {
+  public void setpDir() {
     sh.exec("hadoop fs -rm -r " + SLIVE_ROOT_FILE)
     sh.exec("hadoop fs -mkdir " + SLIVE_ROOT_FILE)
     Thread.sleep(SLEEP_TIMEOUT)
@@ -99,7 +99,7 @@ public class TestSLive {
   public void testSlive() {
     String suffix = ""
     for (int counter = 0; counter < numOfIterations; counter++) {
-      setUp()
+      setupDir()
       sliveCmds.each { cmd ->
         sh.exec(cmd + suffix)
         logError(sh)
