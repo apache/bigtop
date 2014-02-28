@@ -17,11 +17,9 @@
  */
 package org.apache.bigtop.itest.hadoop.hdfs
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertEquals;
+import org.junit.After
+import org.junit.Before
 import static org.junit.Assert.assertTrue;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.apache.bigtop.itest.shell.Shell;
 
@@ -37,8 +35,8 @@ public class TestHDFSQuota {
   private static String testQuotaFolder2 = testQuotaFolder + "2";
   private static String testQuotaFolder3 = testQuotaFolder + "3";
   
-  @BeforeClass
-  public static void setUp() {
+  @Before
+  public void setUp() {
     // creating test folders
     shHDFS.exec("hadoop fs -mkdir $testQuotaFolder1");
     assertTrue("Could not create input directory", shHDFS.getRet() == 0);
@@ -47,8 +45,8 @@ public class TestHDFSQuota {
     assertTrue("Could not create input directory", sh.getRet() == 0);
   }
 
-  @AfterClass
-  public static void tearDown() {
+  @After
+  public void tearDown() {
     // clean up of existing folders
     shHDFS.exec("hadoop fs -test -e $testQuotaFolder1");
     if (shHDFS.getRet() == 0) {
@@ -174,10 +172,7 @@ public class TestHDFSQuota {
     assertTrue("setQuota should have worked", shHDFS.getRet() == 0);
     shHDFS.exec("hadoop dfsadmin -setSpaceQuota 1 $testQuotaFolder1");
     assertTrue("setSpaceQuota should have worked", shHDFS.getRet() == 0);
-  }
-
-  @Test
-  public void testQuotas() {
+    //testQuotas
     // dir creation should fail - name quota
     shHDFS.exec("hadoop dfsadmin -setSpaceQuota 10000000000 $testQuotaFolder1");
     assertTrue("Could not setSpaceQuota", shHDFS.getRet() == 0);
