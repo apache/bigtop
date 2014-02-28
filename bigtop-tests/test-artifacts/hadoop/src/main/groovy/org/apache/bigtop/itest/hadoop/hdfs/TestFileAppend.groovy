@@ -17,8 +17,6 @@
  */
 package org.apache.bigtop.itest.hadoop.hdfs;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -27,8 +25,6 @@ import org.apache.bigtop.itest.shell.Shell;
 import org.apache.hadoop.fs.*;
 import org.apache.hadoop.io.*;
 import org.apache.hadoop.conf.Configuration;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class TestFileAppend {
  
@@ -204,7 +200,11 @@ public class TestFileAppend {
 
   @Test
   public void testMultipleOutputStreamFailure() {
+    // create 2 separate clients
+    conf.setBoolean("fs.hdfs.impl.disable.cache", true);
     FileSystem fs = FileSystem.get(conf);
+    FileSystem fs2 = FileSystem.get(conf);
+    conf.setBoolean("fs.hdfs.impl.disable.cache", false);
 
     // test file creation
     sh.exec("dd if=/dev/zero of=test3.file$date count=1 bs=1048576");
@@ -230,7 +230,7 @@ public class TestFileAppend {
 
     // attempting second output stream
     try {
-      FSDataOutputStream output2 = fs.append(outFile);
+      FSDataOutputStream output2 = fs2.append(outFile);
       assertTrue("Should not have been able to open second output stream", false);
       IOUtils.closeStream(output2); 
     }
