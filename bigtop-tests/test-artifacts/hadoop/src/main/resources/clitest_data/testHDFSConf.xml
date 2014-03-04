@@ -446,7 +446,7 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^ls: `hdfs://\w+[-.a-z0-9]*:[0-9]+TEST_DIR_ABSOLUTE/file1': No such file or directory</expected-output>
+          <expected-output>^ls: `hdfs://\w+[-.a-z0-9]*(:[0-9]+)?TEST_DIR_ABSOLUTE/file1': No such file or directory</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -897,7 +897,7 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^ls: `hdfs://\w+[-.a-z0-9]*:[0-9]+TEST_DIR_ABSOLUTE/file1': No such file or directory</expected-output>
+          <expected-output>^ls: `hdfs://\w+[-.a-z0-9]*(:[0-9]+)?TEST_DIR_ABSOLUTE/file1': No such file or directory</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -1968,7 +1968,7 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^ls: `hdfs://\w+[-.a-z0-9]*:[0-9]+TEST_DIR_ABSOLUTE/file1': No such file or directory</expected-output>
+          <expected-output>^ls: `hdfs://\w+[-.a-z0-9]*(:[0-9]+)?TEST_DIR_ABSOLUTE/file1': No such file or directory</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -1983,7 +1983,7 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^mv: `hdfs://\w+[-.a-z0-9]*:[0-9]+TEST_DIR_ABSOLUTE/file1': No such file or directory</expected-output>
+          <expected-output>^mv: `hdfs://\w+[-.a-z0-9]*(:[0-9]+)?TEST_DIR_ABSOLUTE/file1': No such file or directory</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -2061,7 +2061,7 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^ls: `hdfs://\w+[-.a-z0-9]*:[0-9]+TEST_DIR_ABSOLUTE/file\*': No such file or directory</expected-output>
+          <expected-output>^ls: `hdfs://\w+[-.a-z0-9]*(:[0-9]+)?TEST_DIR_ABSOLUTE/file\*': No such file or directory</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -3000,7 +3000,7 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^cp: `hdfs://\w+[-.a-z0-9]*:[0-9]+TEST_DIR_ABSOLUTE/file': No such file or directory</expected-output>
+          <expected-output>^cp: `hdfs://\w+[-.a-z0-9]*(:[0-9]+)?TEST_DIR_ABSOLUTE/file': No such file or directory</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -3021,7 +3021,7 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^cp: `hdfs://\w+[-.a-z0-9]*:[0-9]+TEST_DIR_ABSOLUTE/file5': Is not a directory</expected-output>
+          <expected-output>^cp: `hdfs://\w+[-.a-z0-9]*(:[0-9]+)?TEST_DIR_ABSOLUTE/file5': Is not a directory</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -3042,7 +3042,7 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^cp: `hdfs://\w+[-.a-z0-9]*:[0-9]+TEST_DIR_ABSOLUTE/file5': Is not a directory</expected-output>
+          <expected-output>^cp: `hdfs://\w+[-.a-z0-9]*(:[0-9]+)?TEST_DIR_ABSOLUTE/file5': Is not a directory</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -3062,7 +3062,7 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^cp: `hdfs://\w+[-.a-z0-9]*:[0-9]+TEST_DIR_ABSOLUTE/dir': No such file or directory</expected-output>
+          <expected-output>^cp: `hdfs://\w+[-.a-z0-9]*(:[0-9]+)?TEST_DIR_ABSOLUTE/dir': No such file or directory</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -3082,7 +3082,7 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^cp: `hdfs://\w+[-.a-z0-9]*:[0-9]+TEST_DIR_ABSOLUTE/dir': No such file or directory</expected-output>
+          <expected-output>^cp: `hdfs://\w+[-.a-z0-9]*(:[0-9]+)?TEST_DIR_ABSOLUTE/dir': No such file or directory</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -4443,7 +4443,7 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^put: `hdfs://\w+[-.a-z0-9]*:[0-9]+TEST_DIR_ABSOLUTE/file0': Is not a directory</expected-output>
+          <expected-output>^put: `hdfs://\w+[-.a-z0-9]*(:[0-9]+)?+TEST_DIR_ABSOLUTE/file0': Is not a directory</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -4459,7 +4459,7 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^put: `hdfs://\w+[-.a-z0-9]*:[0-9]+TEST_DIR_ABSOLUTE/wrongdir': No such file or directory</expected-output>
+          <expected-output>^put: `hdfs://\w+[-.a-z0-9]*(:[0-9]+)?TEST_DIR_ABSOLUTE/wrongdir': No such file or directory</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -4926,7 +4926,7 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>copyFromLocal: `hdfs://\w+[-.a-z0-9]*:[0-9]+TEST_DIR_ABSOLUTE/user/file0': File exists</expected-output>
+          <expected-output>copyFromLocal: `hdfs://\w+[-.a-z0-9]*(:[0-9]+)?+TEST_DIR_ABSOLUTE/user/file0': File exists</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -4943,7 +4943,7 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^copyFromLocal: `hdfs://\w+[-.a-z0-9]*:[0-9]+TEST_DIR_ABSOLUTE/file0': Is not a directory</expected-output>
+          <expected-output>^copyFromLocal: `hdfs://\w+[-.a-z0-9]*(:[0-9]+)?TEST_DIR_ABSOLUTE/file0': Is not a directory</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -4959,7 +4959,7 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^copyFromLocal: `hdfs://\w+[-.a-z0-9]*:[0-9]+TEST_DIR_ABSOLUTE/wrongdir': No such file or directory</expected-output>
+          <expected-output>^copyFromLocal: `hdfs://\w+[-.a-z0-9]*(:[0-9]+)?TEST_DIR_ABSOLUTE/wrongdir': No such file or directory</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -5792,7 +5792,7 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>mkdir: `hdfs://\w+[-.a-z0-9]*:[0-9]+TEST_DIR_ABSOLUTE/dir0': File exists</expected-output>
+          <expected-output>mkdir: `hdfs://\w+[-.a-z0-9]*(:[0-9]+)?TEST_DIR_ABSOLUTE/dir0': File exists</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -5809,7 +5809,7 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>mkdir: `hdfs://\w+[-.a-z0-9]*:[0-9]+TEST_DIR_ABSOLUTE/data15bytes': Is not a directory</expected-output>
+          <expected-output>mkdir: `hdfs://\w+[-.a-z0-9]*(:[0-9]+)?TEST_DIR_ABSOLUTE/data15bytes': Is not a directory</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -6092,7 +6092,7 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^setrep: `hdfs://\w+[-.a-z0-9]*:[0-9]+TEST_DIR_ABSOLUTE/dir0/file': No such file or directory</expected-output>
+          <expected-output>^setrep: `hdfs://\w+[-.a-z0-9]*(:[0-9]+)?TEST_DIR_ABSOLUTE/dir0/file': No such file or directory</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -6270,9 +6270,9 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^0\s+hdfs://\w+[-.a-z0-9]*:[0-9]+TEST_DIR_ABSOLUTE/file0</expected-output>
-          <expected-output>^0\s+hdfs://\w+[-.a-z0-9]*:[0-9]+TEST_DIR_ABSOLUTE/file1</expected-output>
-          <expected-output>^0\s+hdfs://\w+[-.a-z0-9]*:[0-9]+TEST_DIR_ABSOLUTE/file2</expected-output>
+          <expected-output>^0\s+hdfs://\w+[-.a-z0-9]*(:[0-9]+)?TEST_DIR_ABSOLUTE/file0</expected-output>
+          <expected-output>^0\s+hdfs://\w+[-.a-z0-9]*(:[0-9]+)?TEST_DIR_ABSOLUTE/file1</expected-output>
+          <expected-output>^0\s+hdfs://\w+[-.a-z0-9]*(:[0-9]+)?TEST_DIR_ABSOLUTE/file2</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -6289,7 +6289,7 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>touchz: `hdfs://\w+[-.a-z0-9]*:[0-9]+TEST_DIR_ABSOLUTE/data15bytes': Not a zero-length file</expected-output>
+          <expected-output>touchz: `hdfs://\w+[-.a-z0-9]*(:[0-9]+)?TEST_DIR_ABSOLUTE/data15bytes': Not a zero-length file</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -6770,7 +6770,7 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^stat: `hdfs://\w+[-.a-z0-9]*:[0-9]+TEST_DIR_ABSOLUTE/file': No such file or directory</expected-output>
+          <expected-output>^stat: `hdfs://\w+[-.a-z0-9]*(:[0-9]+)?TEST_DIR_ABSOLUTE/file': No such file or directory</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -7017,7 +7017,7 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^tail: `hdfs://\w+[-.a-z0-9]*:[0-9]+TEST_DIR_ABSOLUTE/file\*': No such file or directory</expected-output>
+          <expected-output>^tail: `hdfs://\w+[-.a-z0-9]*(:[0-9]+)?TEST_DIR_ABSOLUTE/file\*': No such file or directory</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -7032,7 +7032,7 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^tail: `hdfs://\w+[-.a-z0-9]*:[0-9]+TEST_DIR_ABSOLUTE/file': No such file or directory</expected-output>
+          <expected-output>^tail: `hdfs://\w+[-.a-z0-9]*(:[0-9]+)?TEST_DIR_ABSOLUTE/file': No such file or directory</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -7049,7 +7049,7 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^tail: `hdfs://\w+[-.a-z0-9]*:[0-9]+TEST_DIR_ABSOLUTE/dir1': Is a directory</expected-output>
+          <expected-output>^tail: `hdfs://\w+[-.a-z0-9]*(:[0-9]+)?TEST_DIR_ABSOLUTE/dir1': Is a directory</expected-output>
         </comparator>
       </comparators>
     </test>
