@@ -2723,7 +2723,7 @@
         <command>-fs NAMENODE -cp hdfs://TEST_DIR_ABSOLUTE/dir0 hdfs://TEST_DIR_ABSOLUTE/dir1</command>
       </test-commands>
       <cleanup-commands>
-        <command>-fs NAMNEODE -rm -r hdfs://TEST_DIR_ABSOLUTE/dir1</command>
+        <command>-fs NAMENODE -rm -r hdfs://TEST_DIR_ABSOLUTE/dir1</command>
       </cleanup-commands>
       <comparators>
         <comparator>
@@ -2791,7 +2791,7 @@
         <command>-fs NAMENODE -ls -R hdfs://TEST_DIR_ABSOLUTE/d*</command>
       </test-commands>
       <cleanup-commands>
-        <command>-fs NAMNEODE -rm -r hdfs://TEST_DIR_ABSOLUTE/d*</command>
+        <command>-fs NAMENODE -rm -r hdfs://TEST_DIR_ABSOLUTE/d*</command>
       </cleanup-commands>
       <comparators>
         <comparator>
@@ -2820,7 +2820,7 @@
         <command>-fs NAMENODE -ls -R hdfs://TEST_DIR_ABSOLUTE/d*</command>
       </test-commands>
       <cleanup-commands>
-        <command>-fs NAMNEODE -rm -r hdfs://TEST_DIR_ABSOLUTE/*</command>
+        <command>-fs NAMENODE -rm -r hdfs://TEST_DIR_ABSOLUTE/*</command>
       </cleanup-commands>
       <comparators>
         <comparator>
@@ -3126,7 +3126,7 @@
         <command>-fs NAMENODE -ls -R NAMENODETEST_DIR_ABSOLUTE/d*</command>
       </test-commands>
       <cleanup-commands>
-        <command>-fs NAMNEODE -rm -r NAMENODETEST_DIR_ABSOLUTE/d*</command>
+        <command>-fs NAMENODE -rm -r NAMENODETEST_DIR_ABSOLUTE/d*</command>
       </cleanup-commands>
       <comparators>
         <comparator>
@@ -3155,7 +3155,7 @@
         <command>-fs NAMENODE -ls -R NAMENODETEST_DIR_ABSOLUTE/d*</command>
       </test-commands>
       <cleanup-commands>
-        <command>-fs NAMNEODE -rm -r NAMENODETEST_DIR_ABSOLUTE/*</command>
+        <command>-fs NAMENODE -rm -r NAMENODETEST_DIR_ABSOLUTE/*</command>
       </cleanup-commands>
       <comparators>
         <comparator>
