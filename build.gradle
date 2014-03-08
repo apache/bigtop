@@ -34,7 +34,9 @@ task installAllLocalArtifacts() {
 
 }
 
-installAllLocalArtifacts.dependsOn installCommon, installConf, installTestArtifacts, installiTest, installTopLevel
+installTestArtifacts.mustRunAfter installiTest
+installiTest.mustRunAfter installTopLevel
+installAllLocalArtifacts.dependsOn installTopLevel, installCommon, installConf, installiTest, installTestArtifacts
 
 repositories {
      maven { url "http://mvn01.shef.wandisco.com:8081/artifactory/libs-snapshot-local" }
