@@ -8169,7 +8169,7 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/file1</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -8398,11 +8398,11 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir0/dir1/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir0/dir1/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir0/dir1/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir0/dir1/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
@@ -8432,11 +8432,11 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir0/dir1/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir0/dir1/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir0/dir1/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir0/dir1/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
@@ -8466,11 +8466,11 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir0/dir1/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir0/dir1/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir0/dir1/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir0/dir1/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
@@ -8500,11 +8500,11 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir0/dir1/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir0/dir1/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir0/dir1/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir0/dir1/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
@@ -8593,19 +8593,19 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/file3</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/file3</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/file4</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/file4</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -8626,19 +8626,19 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*file3</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*file3</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*file4</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*file4</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -8769,19 +8769,19 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/file3</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/file3</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/file4</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/file4</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -8802,19 +8802,19 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*file3</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*file3</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*file4</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*file4</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -9307,15 +9307,15 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir0/dir1/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir0/dir1/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir0/dir1/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir0/dir1/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir0/file0</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir0/file0</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
@@ -9323,15 +9323,15 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir2/dir1/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir2/dir1/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir2/dir1/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir2/dir1/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir2/file0</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir2/file0</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -9362,15 +9362,15 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir0/dir1/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir0/dir1/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir0/dir1/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir0/dir1/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir0/file0</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir0/file0</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
@@ -9378,15 +9378,15 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir2/dir1/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir2/dir1/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir2/dir1/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir2/dir1/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir2/file0</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir2/file0</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -9417,15 +9417,15 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir0/dir1/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir0/dir1/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir0/dir1/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir0/dir1/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir0/file0</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir0/file0</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
@@ -9433,15 +9433,15 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir2/dir1/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir2/dir1/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir2/dir1/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir2/dir1/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir2/file0</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir2/file0</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -9472,15 +9472,15 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir0/dir1/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir0/dir1/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir0/dir1/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir0/dir1/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir0/file0</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir0/file0</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
@@ -9488,15 +9488,15 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir2/dir1/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir2/dir1/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir2/dir1/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir2/dir1/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir2/file0</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir2/file0</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -9527,15 +9527,15 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir0/dir1/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir0/dir1/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir0/dir1/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir0/dir1/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir0/file0</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir0/file0</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
@@ -9543,15 +9543,15 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir2/dir1/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir2/dir1/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir2/dir1/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir2/dir1/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir2/file0</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir2/file0</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -9582,15 +9582,15 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir0/dir1/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir0/dir1/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir0/dir1/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir0/dir1/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir0/file0</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir0/file0</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
@@ -9598,15 +9598,15 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir2/dir1/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir2/dir1/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir2/dir1/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir2/dir1/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir2/file0</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir2/file0</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -9637,15 +9637,15 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir0/dir1/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir0/dir1/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir0/dir1/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir0/dir1/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir0/file0</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir0/file0</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
@@ -9653,15 +9653,15 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir2/dir1/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir2/dir1/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir2/dir1/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir2/dir1/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir2/file0</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir2/file0</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -9692,15 +9692,15 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir0/dir1/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir0/dir1/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir0/dir1/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir0/dir1/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir0/file0</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir0/file0</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
@@ -9708,15 +9708,15 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir2/dir1/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir2/dir1/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir2/dir1/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir2/dir1/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir2/file0</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir2/file0</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -9806,7 +9806,7 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/file1</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -9922,11 +9922,11 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir0/dir1/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir0/dir1/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir0/dir1/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir0/dir1/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
@@ -9956,11 +9956,11 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir0/dir1/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir0/dir1/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir0/dir1/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir0/dir1/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
@@ -10017,19 +10017,19 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/file3</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/file3</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/file4</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/file4</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -10105,19 +10105,19 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/file3</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/file3</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/file4</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/file4</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -10379,15 +10379,15 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir0/dir1/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir0/dir1/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir0/dir1/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir0/dir1/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir0/file0</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir0/file0</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
@@ -10395,15 +10395,15 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir2/dir1/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir2/dir1/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir2/dir1/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir2/dir1/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir2/file0</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir2/file0</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -10434,15 +10434,15 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir0/dir1/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir0/dir1/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir0/dir1/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir0/dir1/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir0/file0</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir0/file0</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
@@ -10450,15 +10450,15 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir2/dir1/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir2/dir1/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir2/dir1/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir2/dir1/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir2/file0</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir2/file0</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -10489,15 +10489,15 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir0/dir1/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir0/dir1/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir0/dir1/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir0/dir1/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir0/file0</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir0/file0</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
@@ -10505,15 +10505,15 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir2/dir1/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir2/dir1/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir2/dir1/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir2/dir1/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir2/file0</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir2/file0</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -10544,15 +10544,15 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir0/dir1/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir0/dir1/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir0/dir1/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir0/dir1/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir0/file0</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir0/file0</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
@@ -10560,15 +10560,15 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir2/dir1/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir2/dir1/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir2/dir1/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir2/dir1/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir2/file0</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*hdfs://TEST_DIR_ABSOLUTE/dir2/file0</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -10625,7 +10625,7 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/file1</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -10741,11 +10741,11 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir0/dir1/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir0/dir1/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir0/dir1/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir0/dir1/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
@@ -10775,11 +10775,11 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir0/dir1/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir0/dir1/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir0/dir1/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir0/dir1/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
@@ -10836,19 +10836,19 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/file3</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/file3</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/file4</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/file4</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -10924,19 +10924,19 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/file3</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/file3</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/file4</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/file4</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -11198,15 +11198,15 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir0/dir1/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir0/dir1/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir0/dir1/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir0/dir1/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir0/file0</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir0/file0</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
@@ -11214,15 +11214,15 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir2/dir1/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir2/dir1/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir2/dir1/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir2/dir1/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir2/file0</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir2/file0</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -11253,15 +11253,15 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir0/dir1/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir0/dir1/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir0/dir1/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir0/dir1/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir0/file0</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir0/file0</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
@@ -11269,15 +11269,15 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir2/dir1/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir2/dir1/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir2/dir1/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir2/dir1/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir2/file0</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir2/file0</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -11308,15 +11308,15 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir0/dir1/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir0/dir1/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir0/dir1/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir0/dir1/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir0/file0</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir0/file0</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
@@ -11324,15 +11324,15 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir2/dir1/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir2/dir1/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir2/dir1/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir2/dir1/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir2/file0</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir2/file0</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -11363,15 +11363,15 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir0/dir1/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir0/dir1/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir0/dir1/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir0/dir1/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir0/file0</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir0/file0</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
@@ -11379,15 +11379,15 @@
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir2/dir1/file1</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir2/dir1/file1</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir2/dir1/file2</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir2/dir1/file2</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir2/file0</expected-output>
+          <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/dir2/file0</expected-output>
         </comparator>
       </comparators>
     </test>
