@@ -9,3 +9,5 @@ target
 *.classpath
 *.iml
 .idea
+.gradle
+gradle*
