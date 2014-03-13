@@ -84,7 +84,7 @@ public class TestSLive {
     ]
   }
 
-  public void setpDir() {
+  public void setupDir() {
     sh.exec("hadoop fs -rm -r " + SLIVE_ROOT_FILE)
     sh.exec("hadoop fs -mkdir " + SLIVE_ROOT_FILE)
     Thread.sleep(SLEEP_TIMEOUT)
