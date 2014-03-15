@@ -24,9 +24,10 @@
       "this would be 'root'.",
       "*********************************************************************",
       "dir : The directories to create with permissions.",
-      "Each director is a tuple (path,perm,user,group).",
+      "Each directory is a tuple (path,perm,user,group).",
       "According to the FileSystem API, null user/group args have no effect.",
       "In many cases these are just null, for example /tmp.",
+      "Note that PERMs are STRINGS, not numbers.  JSON doesnt support octals.",
       "*********************************************************************",
       "user : These are the users which we create to use the system.",
       "In this file, we use the archetypal 'tom' and 'alice' users.",
@@ -58,21 +59,21 @@
 
   "root_user":"hdfs",
   "dir": [
-    ["/tmp",1777,null,null],
-    ["/var/log",1775,"yarn","mapred"],
-    ["/tmp/hadoop-yarn",777,"mapred","mapred"],
-    ["/var/log/hadoop-yarn/apps",1777,"yarn","mapred"],
+    ["/tmp","1777",null,null],
+    ["/var/log","1775","yarn","mapred"],
+    ["/tmp/hadoop-yarn","777","mapred","mapred"],
+    ["/var/log/hadoop-yarn/apps","1777","yarn","mapred"],
     ["/hbase",null,"hbase","hbase"],
     ["/solr",null,"solr","solr"],
-    ["/benchmarks",777,null,null],
-    ["/user",755,"HCFS_SUPER_USER",null],
-    ["/user/history",755,"mapred","mapred"],
-    ["/user/jenkins",777,"jenkins",null],
-    ["/user/hive",777,null,null],
-    ["/user/root",777,"root",null],
-    ["/user/hue",777,"hue",null],
-    ["/user/sqoop",777,"sqoop",null],
-    ["/user/oozie",777,"oozie"],
+    ["/benchmarks","777",null,null],
+    ["/user","755","HCFS_SUPER_USER",null],
+    ["/user/history","755","mapred","mapred"],
+    ["/user/jenkins","777","jenkins",null],
+    ["/user/hive","777",null,null],
+    ["/user/root","777","root",null],
+    ["/user/hue","777","hue",null],
+    ["/user/sqoop","777","sqoop",null],
+    ["/user/oozie","777","oozie"],
     ["/user/oozie/share",null,null,null],
     ["/user/oozie/share/lib",null,null,null],
     ["/user/oozie/share/lib/hive",null,null,null],
@@ -88,8 +89,8 @@
     ["/user/oozie/share/lib/pig", null, null, null]
  ],
   "user": [
-    ["tom", 0755, null],
-    ["alice", 0755, null],
-    ["bigtop", 0755, null]
+    ["tom", "0755", null],
+    ["alice", "0755", null],
+    ["bigtop", "0755", null]
  ]
 }
