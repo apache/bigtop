@@ -28,18 +28,22 @@ class spark {
   define master($master_host = $fqdn, $master_port = "7077", $master_ui_port = "18080") {
     include common   
 
-    service { "spark-master":
-      ensure => running,
-      require => [ Package["spark"], File["/etc/spark/conf/spark-env.sh"], ],
-      subscribe => [Package["spark"], File["/etc/spark/conf/spark-env.sh"] ],
-      hasrestart => true,
-      hasstatus => true,
-    } 
+    if ( $fqdn == $master_host ) {
+      service { "spark-master":
+        ensure => running,
+        require => [ Package["spark"], File["/etc/spark/conf/spark-env.sh"], ],
+        subscribe => [Package["spark"], File["/etc/spark/conf/spark-env.sh"] ],
+        hasrestart => true,
+        hasstatus => true,
+      }
+    }
   }
 
   define worker($master_host = $fqdn, $master_port = "7077", $master_ui_port = "18080") {
     include common
-
+    if ( $fqdn == $master_host ) {
+      Service["spark-master"] ~> Service["spark-worker"]
+    }
     service { "spark-worker":
       ensure => running,
       require => [ Package["spark"], File["/etc/spark/conf/spark-env.sh"], ],
