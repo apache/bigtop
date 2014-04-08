@@ -15,10 +15,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-vagrant ssh bigtop1 -c "hbase shell <<EOF
-create 't1','cf1'
-put 't1', 'row1', 'cf1:q1', 'value1'
-scan 't1'
-disable 't1'
-drop 't1'
-EOF"
+usage() {
+    echo "usage: `basename $0` [options]"
+    echo "       -s, --standalone        deploy a standalone hadoop VM"
+    echo "       -c, --cluster           deploy a 3 node hadoop cluster"
+    echo "       -h, --help"
+    exit 1
+}
+
+case "$1" in
+-s|--standalone)
+    vagrant up bigtop1
+    shift;;
+-c|--cluster)
+    vagrant up --provision-with shell && vagrant provision --provision-with hostmanager,puppet
+    shift;;
+-h|--help)
+    usage
+    shift;;
+"")
+    usage
+    shift
+    break;;
+esac
