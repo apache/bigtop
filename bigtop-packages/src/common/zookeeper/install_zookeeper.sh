@@ -167,6 +167,9 @@ install -d -m 0755 $PREFIX/$DOC_DIR
 cp -a $BUILD_DIR/docs/* $PREFIX/$DOC_DIR
 cp $BUILD_DIR/*.txt $PREFIX/$DOC_DIR/
 
+install -d -m 0755 ${PREFIX}/etc/default
+cp zookeeper.default ${PREFIX}/etc/default/zookeeper
+
 install -d -m 0755 $PREFIX/$MAN_DIR
 gzip -c zookeeper.1 > $PREFIX/$MAN_DIR/zookeeper.1.gz
 

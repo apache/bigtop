@@ -74,6 +74,7 @@ Source3: zookeeper-server.sh
 Source4: zookeeper-server.sh.suse
 Source5: zookeeper.1
 Source6: zoo.cfg
+Source7: zookeeper.default
 BuildArch: noarch
 BuildRequires: autoconf, automake
 Requires(pre): coreutils, /usr/sbin/groupadd, /usr/sbin/useradd
@@ -129,12 +130,11 @@ bash %{SOURCE1}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
-cp $RPM_SOURCE_DIR/zookeeper.1 $RPM_SOURCE_DIR/zoo.cfg .
-sh %{SOURCE2} \
+cp $RPM_SOURCE_DIR/zookeeper.1 $RPM_SOURCE_DIR/zoo.cfg $RPM_SOURCE_DIR/zookeeper.default .
+bash %{SOURCE2} \
           --build-dir=build/%{name}-%{zookeeper_base_version} \
           --doc-dir=%{doc_zookeeper} \
           --prefix=$RPM_BUILD_ROOT
-
 
 %if  %{?suse_version:1}0
 orig_init_file=%{SOURCE4}
@@ -188,6 +188,7 @@ fi
 %files
 %defattr(-,root,root)
 %config(noreplace) %{etc_zookeeper}/conf.dist
+%config(noreplace) /etc/default/zookeeper
 %{lib_zookeeper}
 %{bin_zookeeper}/zookeeper-server
 %{bin_zookeeper}/zookeeper-server-initialize

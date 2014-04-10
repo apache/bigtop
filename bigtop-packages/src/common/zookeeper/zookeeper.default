@@ -1,5 +1,3 @@
-#!/usr/bin/make -f
-#
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -14,28 +12,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# 
-# -*- makefile -*-
 
-# Uncomment this to turn on verbose mode.
-export DH_VERBOSE=1
-
-# This has to be exported to make some magic below work.
-export DH_OPTIONS
-
-zookeeper_pkg_name=zookeeper
-
-%:
-	dh $@
-
-override_dh_auto_build:
-	bash debian/do-component-build -Divy.home=${HOME}/.ivy2
-	mkdir -p debian/tmp
-	tar cf - --exclude=debian/\* . | (cd debian/tmp && tar xf -)
-
-override_dh_auto_install:
-	cp debian/zookeeper.1 debian/zoo.cfg debian/zookeeper.default .
-	bash -x debian/install_zookeeper.sh \
-	  --build-dir=build/zookeeper-${ZOOKEEPER_BASE_VERSION} \
-	  --prefix=debian/$(zookeeper_pkg_name)
-	dh_install -i
+# Command-line parameters to pass to the JVM
+# export SERVER_JVMFLAGS=""
