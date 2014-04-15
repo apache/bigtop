@@ -1,0 +1,44 @@
+/**
+* Licensed to the Apache Software Foundation (ASF) under one or more
+* contributor license agreements.  See the NOTICE file distributed with
+* this work for additional information regarding copyright ownership.
+* The ASF licenses this file to You under the Apache License, Version 2.0
+* (the "License"); you may not use this file except in compliance with
+* the License.  You may obtain a copy of the License at
+* http://www.apache.org/licenses/LICENSE-2.0
+* 
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+digraph bigpetstore {
+
+   node [shape=record];
+
+   PIG_ANALYTICS [label="PIG_ANALYTICS|Unstructured-unsupported-pigscripts| pig_ad_hoc(0-n)"];
+
+   CUSTOMER_PAGE [label="CUSTOMER_PAGE|json|CUSTOMER_PAGE/part*"];
+   DIRTY_CSV [label="DIRTY_CSV|fname   lname -prod , price ,prod,..|generated/part*"];
+   CSV [label="CSV|fname,lname,prod,price,date,xcoord,ycoord,...|cleaned/part*"];
+   MAHOUT_VIEW_INPUT [label="MAHOUT_VIEW  |  (hashed name) 10001, (hashed purchases) 203 |  <hive_warehouse>/mahout_cf_in/part*" ];
+   MAHOUT_CF [label="MAHOUT_CF  | (hashed name) 10001, (hashed product) 201, .6 | mahout_cf_out/part*" ];
+
+   Generate -> DIRTY_CSV [label="hadoop jar bigpetstore.jar org.bigtop.bigpetstore.generator.BPSGenerator 100 bps/generated/"] ;
+   DIRTY_CSV -> pig [label=""];
+
+   pig -> CSV [label="hadoop jar bigpetstore.jar org.bigtop.bigpetstore.etl.PigCSVCleaner bps/generated/ bps/cleaned/"];
+   pig -> PIG_ANALYTICS [label="same as CSV job, but add your scripts to end... p1.pig p2.pig ..."];
+   PIG_ANALYTICS -> CSV;
+   PROD_HASH -> hive [label="hive hash udf"];
+   USER_HASH -> hive  [label="hive hash udf"];
+
+   CSV -> hive ;
+   hive -> MAHOUT_VIEW_INPUT [label="hadoop jar bigpetstore.jar org.bigtop.bigpetstore.etl.HiveViewCreator bps/pig_out mahout_cf_in"];
+   MAHOUT_VIEW_INPUT -> mahout_collab_filter_recomender  -> MAHOUT_CF;
+   MAHOUT_CF  -> crunch ;
+   CSV -> crunch ;
+   crunch -> CUSTOMER_PAGE [label="high performance joining"];
+
+}
