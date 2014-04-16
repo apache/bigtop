@@ -251,7 +251,7 @@ if ($hadoop_security_authentication == "kerberos") {
           port => $hadoop_ps_port,
           auth => $hadoop_security_authentication,
     }
-    Exec<| title == "init hdfs" |> -> Hadoop::Resourcemanager<||>
+    Exec<| title == "init hdfs" |> -> Hadoop::Resourcemanager<||> -> Hadoop::Nodemanager<||>
     Exec<| title == "init hdfs" |> -> Hadoop::Historyserver<||>
   }
 
