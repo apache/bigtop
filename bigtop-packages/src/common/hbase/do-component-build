@@ -18,11 +18,10 @@ set -ex
 
 . `dirname $0`/bigtop.bom
 
-mvn -DskipTests -Dhadoop.profile=23           \
-    -Dslf4j.version=1.6.1                     \
+mvn -DskipTests -Dslf4j.version=1.6.1         \
     -Dhadoop.version=$HADOOP_VERSION          \
     -Dzookeeper.version=$ZOOKEEPER_VERSION    \
-    clean install site assembly:assembly "$@"
+    clean install site assembly:single "$@"
 rm -rf build
 mkdir build
-tar -C build --strip-components=1 -xzf target/hbase*.tar.gz
+tar -C build --strip-components=1 -xzf hbase-assembly/target/hbase*.tar.gz
