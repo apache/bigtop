@@ -33,6 +33,9 @@ __EOT__
 sed -i -e "s/org.apache.hadoop.hive.serde.Constants/org.apache.hadoop.hive.serde.serdeConstants/g" \
 -e "s/Constants\./serdeConstants\./g" contrib/piggybank/java/src/main/java/org/apache/pig/piggybank/storage/HiveColumnarLoader.java
 
+# FIXME PIG-3905
+sed -i -e '/.*<dependency.*/ {N; s/.*<dependency.*\n.*hadoop20.*//g}' ivy.xml
+
 BUILD_OPTS="-Djavac.version=1.6 -Dforrest.home=${FORREST_HOME} -Dversion=${PIG_VERSION} -Dhadoopversion=23"
 
 # FIXME: BIGTOP-894. Please get rid of the line below when Bigtop integrates a version of Pig that includes the fix for PIG-3262
