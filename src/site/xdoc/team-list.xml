@@ -178,7 +178,13 @@
 					<td align="center">Facebook</td>
 					<td align="center">committer</td>
 				</tr>
-			</table>
+				<tr valign="top">
+					<td align="center">jay</td>
+					<td align="center">Jay Vyas</td>		
+					<td align="center">Red Hat</td>  							
+					<td align="center">committer</td> 			
+				</tr>
+			    </table>
 
 			<subsection name="Contributors"></subsection>
 		</section>
