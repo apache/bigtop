@@ -21,7 +21,11 @@ set -ex
 mvn -DskipTests -Dslf4j.version=1.6.1         \
     -Dhadoop.version=$HADOOP_VERSION          \
     -Dzookeeper.version=$ZOOKEEPER_VERSION    \
-    clean install site assembly:single "$@"
+    clean install "$@" &&     \
+mvn -DskipTests -Dslf4j.version=1.6.1         \
+    -Dhadoop.version=$HADOOP_VERSION          \
+    -Dzookeeper.version=$ZOOKEEPER_VERSION    \
+    install site assembly:single "$@"
 rm -rf build
 mkdir build
 tar -C build --strip-components=1 -xzf hbase-assembly/target/hbase*.tar.gz
