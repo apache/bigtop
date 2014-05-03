@@ -60,7 +60,7 @@ $(BUILD_DIR)/%/.srpm:
 	-rm -rf $(PKG_BUILD_DIR)/rpm/
 	mkdir -p $(PKG_BUILD_DIR)/rpm/
 	cp -r $(BASE_DIR)/bigtop-packages/src/rpm/$($(PKG)_NAME)/* $(PKG_BUILD_DIR)/rpm/
-	mkdir -p $(PKG_BUILD_DIR)/rpm/{INSTALL,SOURCES,BUILD,SRPMS}
+	mkdir -p $(PKG_BUILD_DIR)/rpm/{INSTALL,SOURCES,BUILD,SRPMS,RPMS}
 	cp $($(PKG)_SEED_TAR) $(PKG_BUILD_DIR)/rpm/SOURCES
 	cp $(BASE_DIR)/bigtop-packages/src/templates/init.d.tmpl $(PKG_BUILD_DIR)/rpm/SOURCES
 	[ -d $(BASE_DIR)/bigtop-packages/src/common/$($(PKG)_NAME) ] && cp -r $(BASE_DIR)/bigtop-packages/src/common/$($(PKG)_NAME)/* $(PKG_BUILD_DIR)/rpm/SOURCES
