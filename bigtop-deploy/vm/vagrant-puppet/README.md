@@ -15,38 +15,57 @@
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-#Deploy Apache Hadoop VM(s) on top of vagrant boxes using puppet
+#BigTop VM provisioner
 
-##Preparation
-* You need to install [vagrant-hostmanager plugin](https://github.com/smdahlen/vagrant-hostmanager) to better manage `/etc/hosts`
-<pre>
-$ vagrant plugin install vagrant-hostmanager
-</pre>
+## Overview
 
-##Usage
+The startup.sh script runs one of 3 vagrant templates, and creates a bigtop virtual hadoop cluster for you, by
+pulling from existing publishing bigtop repositories.  This cluster can be used:
 
-* To provision a 3 node Apache Hadoop cluster on top of vagrant boxes
-<pre>
-$ ./startup.sh --cluster
-</pre>
+- to test bigtop smoke tests
+- to test bigtop puppet recipes
 
-* See options with -h specified
-<pre>
+Eventually, we may also add ability to build AND provision bigtop in a vagrant recipe, which would essentially
+give full validation of the BigTop stack.
+
+## USAGE
+
+1) Install [vagrant-hostmanager plugin](https://github.com/smdahlen/vagrant-hostmanager) to better manage `/etc/hosts`
+
+```
+vagrant plugin install vagrant-hostmanager
+```
+
+2) To provision a 3 node Apache Hadoop cluster on top of vagrant boxes
+
+```
+./startup.sh --cluster
+```
+
+3) See options with -h specified
+
+```
 $ ./startup.sh -h
-usage: startup.sh [options]
-       -s, --standalone        deploy a standalone hadoop vm
-       -c, --cluster           deploy a 3 node hadoop cluster
-       -h, --help
-</pre>
 
-* Run hbase-test.sh to evaluate the deployment.
+     usage: startup.sh [options]
+
+       -s, --standalone        deploy a standalone hadoop vm
+
+       -c, --cluster           deploy a 3 node hadoop cluster
+
+       -h, --help
+```
+
+##Example:
+
+4) Run hbase-test.sh to evaluate the deployment.
 
 ##Configure Apache Hadoop ecosystem components
-* Choose the ecosystem you want to be deployed by modify components in provision.sh:
+* Choose the ecosystem you want to be deployed by modify components in provision.sh.
 
-<pre>
+```
      components,hadoop,hbase,...
-</pre>
+```
 
-   By default, Apache Hadoop and Apache HBase will be installed.
-   See `bigtop-deploy/puppet/config/site.csv.example` for more details.
+By default, Apache Hadoop and Apache HBase will be installed.
+See `bigtop-deploy/puppet/config/site.csv.example` for more details.
