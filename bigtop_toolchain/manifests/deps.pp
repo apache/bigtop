@@ -18,8 +18,8 @@ class bigtop_toolchain::deps {
   include bigtop_toolchain::jdk
 
   case $operatingsystem{
-    Ubuntu: { $scala_file = 'scala-2.9.3.deb' }
-    default: { $scala_file = 'scala-2.9.3.rpm'}
+    Ubuntu: { $scala_file = 'scala-2.10.3.deb' }
+    default: { $scala_file = 'scala-2.10.3.rpm'}
   }
 
   exec {"/usr/bin/wget http://www.scala-lang.org/files/archive/$scala_file":
