@@ -21,6 +21,7 @@ Build-Depends: debhelper (>= 7.0.50~)
 Standards-Version: 3.8.0
 Homepage: http://hive.apache.org/
 
+
 Package: hive
 Architecture: all
 Depends: adduser, hadoop-client, bigtop-utils (>= 0.7), zookeeper, hive-jdbc (= ${source:Version})

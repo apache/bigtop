@@ -113,6 +113,7 @@ BIN_DIR=${BIN_DIR:-$PREFIX/usr/bin}
 PYTHON_DIR=${PYTHON_DIR:-$HIVE_DIR/lib/py}
 HCATALOG_DIR=${HCATALOG_DIR:-$PREFIX/usr/lib/hive-hcatalog}
 HCATALOG_SHARE_DIR=${HCATALOG_DIR}/share/hcatalog
+HBASE_STORAGE_HANDLER_DIR=${HCATALOG_SHARE_DIR}/storage-handlers/hbase/lib
 INSTALLED_HCATALOG_DIR=${INSTALLED_HCATALOG_DIR:-/usr/lib/hive-hcatalog}
 CONF_DIR=/etc/hive
 CONF_DIST_DIR=/etc/hive/conf.dist
@@ -120,7 +121,7 @@ CONF_DIST_DIR=/etc/hive/conf.dist
 # First we'll move everything into lib
 install -d -m 0755 ${HIVE_DIR}
 (cd ${BUILD_DIR} && tar -cf - .)|(cd ${HIVE_DIR} && tar -xf -)
-
+rm -f ${HIVE_DIR}/lib/hive-shims-0.2*.jar
 for jar in `ls ${HIVE_DIR}/lib/hive-*.jar`; do
     base=`basename $jar`
     (cd ${HIVE_DIR}/lib && ln -s $base ${base/-[0-9].*/.jar})
@@ -139,7 +140,9 @@ do
 #!/bin/bash
 
 # Autodetect JAVA_HOME if not defined
-. /usr/lib/bigtop-utils/bigtop-detect-javahome
+if [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
+  . /usr/lib/bigtop-utils/bigtop-detect-javahome
+fi
 
 BIGTOP_DEFAULTS_DIR=\${BIGTOP_DEFAULTS_DIR-/etc/default}
 [ -n "\${BIGTOP_DEFAULTS_DIR}" -a -r \${BIGTOP_DEFAULTS_DIR}/hbase ] && . \${BIGTOP_DEFAULTS_DIR}/hbase
@@ -215,7 +218,9 @@ BIGTOP_DEFAULTS_DIR=${BIGTOP_DEFAULTS_DIR-/etc/default}
 [ -n "${BIGTOP_DEFAULTS_DIR}" -a -r ${BIGTOP_DEFAULTS_DIR}/hadoop ] && . ${BIGTOP_DEFAULTS_DIR}/hadoop
 
 # Autodetect JAVA_HOME if not defined
-. /usr/lib/bigtop-utils/bigtop-detect-javahome
+if [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
+  . /usr/lib/bigtop-utils/bigtop-detect-javahome
+fi
 
 # FIXME: HCATALOG-636 (and also HIVE-2757)
 export HIVE_HOME=/usr/lib/hive
@@ -241,3 +246,12 @@ install -d -m 0755 $PREFIX/var/log/hive
 
 install -d -m 0755 $PREFIX/var/lib/hive-hcatalog
 install -d -m 0755 $PREFIX/var/log/hive-hcatalog
+for DIR in ${HBASE_STORAGE_HANDLER_DIR} ${HCATALOG_SHARE_DIR} ; do
+    (cd $DIR &&
+     for j in hive-hcatalog-*.jar; do
+       if [[ $j =~ hive-hcatalog-(.*)-${HIVE_VERSION}.jar ]]; then
+         name=${BASH_REMATCH[1]}
+         ln -s $j hive-hcatalog-$name.jar
+       fi
+    done)
+done

@@ -27,7 +27,7 @@
 %define man_dir %{_mandir}
 %define hive_services hive-server hive-metastore hive-server2 hive-hcatalog-server hive-webhcat-server
 # After we run "ant package" we'll find the distribution here
-%define hive_dist src/build/dist
+%define hive_dist build/dist
 
 %if  %{!?suse_version:1}0
 
@@ -65,7 +65,7 @@ URL: http://hive.apache.org/
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 BuildArch: noarch
-Source0: %{name}-%{hive_base_version}.tar.gz
+Source0: apache-%{name}-%{hive_base_version}-src.tar.gz
 Source1: do-component-build
 Source2: install_hive.sh
 Source3: init.d.tmpl
@@ -143,15 +143,6 @@ Requires: redhat-lsb
 This optional package hosts a metadata server for Hive clients across a network to use.
 
 
-%package hbase
-Summary: Provides integration between Apache HBase and Apache Hive
-Group: Development/Libraries
-Requires: hive = %{version}-%{release}, hbase
-
-
-%description hbase
-This optional package provides integration between Apache HBase and Apache Hive
-
 %package jdbc
 Summary: Provides libraries necessary to connect to Apache Hive via JDBC
 Group: Development/Libraries
@@ -163,7 +154,7 @@ This package provides libraries necessary to connect to Apache Hive via JDBC
 %package hcatalog
 Summary: Apache Hcatalog is a data warehouse infrastructure built on top of Hadoop
 Group: Development/Libraries
-Requires: hadoop, hive, bigtop-utils >= 0.6
+Requires: hadoop, hive, bigtop-utils >= 0.7
 
 %description hcatalog
 Apache HCatalog is a table and storage management service for data created using Apache Hadoop.
@@ -226,6 +217,12 @@ Requires: initscripts
 # CentOS 5 does not have any dist macro
 # So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
 %if %{!?suse_version:1}0 && %{!?mgaversion:1}0
+%define __os_install_post \
+    /usr/lib/rpm/redhat/brp-compress ; \
+    /usr/lib/rpm/redhat/brp-strip-static-archive %{__strip} ; \
+    /usr/lib/rpm/redhat/brp-strip-comment-note %{__strip} %{__objdump} ; \
+    /usr/lib/rpm/brp-python-bytecompile ; \
+    %{nil}
 # Required for init scripts
 Requires: redhat-lsb
 %endif
@@ -234,7 +231,7 @@ Requires: redhat-lsb
 Init scripts for WebHcat server.
 
 %prep
-%setup -n %{name}-%{hive_base_version}
+%setup -q -n apache-%{name}-%{hive_base_version}-src
 
 %build
 bash %{SOURCE1}
@@ -338,7 +335,6 @@ fi
 %{man_dir}/man1/hive.1.*
 %exclude %dir %{usr_lib_hive}
 %exclude %dir %{usr_lib_hive}/lib
-%exclude %{usr_lib_hive}/lib/hbase.jar
 %exclude %{usr_lib_hive}/lib/hive-jdbc-*.jar
 %exclude %{usr_lib_hive}/lib/hive-metastore-*.jar
 %exclude %{usr_lib_hive}/lib/hive-serde-*.jar
@@ -346,13 +342,8 @@ fi
 %exclude %{usr_lib_hive}/lib/libthrift-*.jar
 %exclude %{usr_lib_hive}/lib/hive-service-*.jar
 %exclude %{usr_lib_hive}/lib/libfb303-*.jar
-%exclude %{usr_lib_hive}/lib/slf4j-*.jar
 %exclude %{usr_lib_hive}/lib/log4j-*.jar
 %exclude %{usr_lib_hive}/lib/commons-logging-*.jar
-
-%files hbase
-%defattr(-,root,root,755)
-%{usr_lib_hive}/lib/hbase.jar
 
 %files jdbc
 %defattr(-,root,root,755)
@@ -365,7 +356,6 @@ fi
 %{usr_lib_hive}/lib/libthrift-*.jar
 %{usr_lib_hive}/lib/hive-service-*.jar
 %{usr_lib_hive}/lib/libfb303-*.jar
-%{usr_lib_hive}/lib/slf4j-*.jar
 %{usr_lib_hive}/lib/log4j-*.jar
 %{usr_lib_hive}/lib/commons-logging-*.jar
 
@@ -405,7 +395,7 @@ if [ "$1" = 0 ] ; then \
 fi \
 %postun %1 \
 if [ $1 -ge 1 ]; then \
-	service %{name}-%1 condrestart >/dev/null 2>&1 || : \
+   service %{name}-%1 condrestart >/dev/null 2>&1 || : \
 fi
 %service_macro server
 %service_macro server2

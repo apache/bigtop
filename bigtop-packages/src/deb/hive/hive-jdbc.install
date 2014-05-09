@@ -7,4 +7,3 @@
 /usr/lib/hive/lib/libfb303-*.jar
 /usr/lib/hive/lib/libthrift-*.jar
 /usr/lib/hive/lib/log4j-*.jar
-/usr/lib/hive/lib/slf4j-*.jar

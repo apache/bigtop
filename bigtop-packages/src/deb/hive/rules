@@ -30,7 +30,7 @@ hive_pkg_name=hive
 
 override_dh_auto_build:
 	mkdir -p /tmp/debian-hive/.ivy
-	bash debian/do-component-build  -Divy.home=${HOME}/.ivy2
+	bash debian/do-component-build
 	touch $@
 
 server server2 metastore hcatalog-server webhcat-server:
@@ -42,7 +42,7 @@ override_dh_auto_install: metastore server server2 hcatalog-server webhcat-serve
 	cp debian/hive-hcatalog.1 .
 	bash debian/install_hive.sh \
 	  --prefix=debian/tmp \
-	  --build-dir=src/build/dist \
+	  --build-dir=build/dist \
 	  --doc-dir=debian/tmp/usr/share/doc/${hive_pkg_name}
 	# We need to get rid of jars that happen to be shipped in other CDH packages
 	rm -f debian/tmp/usr/lib/hive/lib/hbase-*.jar debian/tmp/usr/lib/hive/lib/zookeeper-*.jar

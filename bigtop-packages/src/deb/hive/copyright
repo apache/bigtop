@@ -3,11 +3,11 @@ Source: http://hive.apache.org/
 Upstream-Name: Apache Hive
 
 Files: *
-Copyright: 2008-2011, The Apache Software Foundation
+Copyright: 2008-2014, The Apache Software Foundation
 License: Apache-2.0
 
 Files debian/*
-Copyright: 2011, The Apache Software Foundation
+Copyright: 2014, The Apache Software Foundation
 License: Apache-2.0
 
 License: Apache-2.0

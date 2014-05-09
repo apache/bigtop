@@ -28,23 +28,19 @@ hadoop-0.23.version=$HADOOP_VERSION
 __EOT__
 }
 
-bom2props >> src/ivy/libraries.properties
-bom2props >> src/build.properties 
+HIVE_MAVEN_OPTS=" -Dhbase.version=$HBASE_VERSION \
+-Dzookeeper.version=$ZOOKEEPER_VERSION \
+-Dhadoop.mr.rev=23 \
+-Dhadoop.security.version=$HADOOP_VERSION \
+-Dhadoop-23.version=$HADOOP_VERSION \
+-Dhbase.hadoop2.version=$HBASE_VERSION \
+-Dmvn.hadoop.profile=hadoop23 \
+-Dmaven.test.skip=true \
+-Dhbase.version.with.hadoop.version=$HBASE_VERSION \
+"
 
-# The following is a workaround for Hadoop 0.23 layout
-cat >> src/build.properties << __EOT__
-hadoop.mapreduce.jar=\${hadoop.root}/share/hadoop/mapreduce/hadoop-mapreduce-client-core-\${hadoop.version.ant-internal}.jar
-hadoop.mapreduce.test.jar=\${hadoop.root}/share/hadoop/mapreduce/hadoop-mapreduce-test-\${hadoop.version.ant-internal}.jar
-hadoop.mapreduce.tools.jar=\${hadoop.root}/share/hadoop/mapreduce/hadoop-mapreduce-tools-\${hadoop.version.ant-internal}.jar
-__EOT__
+export MAVEN_OPTS="-Xmx1500m -Xms1500m -XX:MaxPermSize=256m"
+mvn ${HIVE_MAVEN_OPTS} clean install -Phadoop-2,dist "$@"
 
-sed -i.orig -e 's#<module organisation="org.apache.hadoop" name="hadoop-\*".*#<module organisation="org.apache.hadoop" name=".*" resolver="internal"/>#' src/ivy/ivysettings.xml
-
-ant -f src/build.xml `bom2props | sed -e 's#^#-D#'` -Dhadoop.security.version.prefix=0.23 \
-    -Dversion=$HIVE_VERSION -Dinclude.postgres=true package "$@"
-
-# Install Hive artifacts needed by other components into the local Maven cache
-mvn install:install-file -DgroupId=org.apache.hive -DartifactId=hive-builtins -Dversion=$HIVE_VERSION -Dpackaging=jar -Dfile=src/build/builtins/hive-builtins-$HIVE_VERSION.jar
-mvn install:install-file -DgroupId=org.apache.hive -DartifactId=hive-cli -Dversion=$HIVE_VERSION -Dpackaging=jar -Dfile=src/build/cli/hive-cli-$HIVE_VERSION.jar
-mvn install:install-file -DgroupId=org.apache.hive -DartifactId=hive-contrib -Dversion=$HIVE_VERSION -Dpackaging=jar -Dfile=src/build/contrib/hive-contrib-$HIVE_VERSION.jar
-mvn install:install-file -DgroupId=org.apache.hive -DartifactId=hive-exec -Dversion=$HIVE_VERSION -Dpackaging=jar -Dfile=src/build/ql/hive-exec-$HIVE_VERSION.jar
+mkdir -p build/dist
+tar -C build/dist --strip-components=1 -xzf packaging/target/apache-hive-${HIVE_VERSION}-bin.tar.gz
