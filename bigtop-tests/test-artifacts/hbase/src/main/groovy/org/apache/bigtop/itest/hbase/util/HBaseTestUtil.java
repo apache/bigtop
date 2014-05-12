@@ -35,8 +35,9 @@ import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.ResultScanner;
 import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.io.hfile.CacheConfig;
-import org.apache.hadoop.hbase.io.hfile.Compression;
+import org.apache.hadoop.hbase.io.compress.Compression;
 import org.apache.hadoop.hbase.io.hfile.HFile;
+import org.apache.hadoop.hbase.io.hfile.HFileContext;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.hbase.util.ChecksumType;
 
@@ -64,7 +65,13 @@ public class HBaseTestUtil {
 
   public static HBaseAdmin getAdmin()
       throws MasterNotRunningException, ZooKeeperConnectionException {
-    return new HBaseAdmin(HBaseConfiguration.create());
+    HBaseAdmin hAdmin = null;
+    try {
+      hAdmin = new HBaseAdmin(HBaseConfiguration.create());
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return hAdmin;
   }
 
   public static FileSystem getClusterFileSystem() throws IOException {
@@ -87,10 +94,9 @@ public class HBaseTestUtil {
       byte[] startKey, byte[] endKey, int numRows) throws IOException
   {
       HFile.WriterFactory wf = HFile.getWriterFactory(conf, new CacheConfig(conf));
-      wf.withChecksumType(ChecksumType.CRC32);
-      wf.withBlockSize(BLOCKSIZE);
-      wf.withCompression(COMPRESSION);
-      wf.withComparator(KeyValue.KEY_COMPARATOR);
+      HFileContext hFileContext = new HFileContext();
+      wf.withFileContext(hFileContext);
+      wf.withComparator(KeyValue.COMPARATOR);
       wf.withPath(fs, path);
     HFile.Writer writer = wf.create();
     long now = System.currentTimeMillis();

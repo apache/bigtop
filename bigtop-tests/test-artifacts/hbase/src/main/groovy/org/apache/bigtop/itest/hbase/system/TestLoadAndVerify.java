@@ -18,6 +18,7 @@
 package org.apache.bigtop.itest.hbase.system;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -300,6 +301,7 @@ public class TestLoadAndVerify  extends Configured implements Tool {
     HTableDescriptor htd =
       HBaseTestUtil.createTestTableDescriptor(TEST_NAME, TEST_FAMILY);
     HBaseAdmin admin = HBaseTestUtil.getAdmin();
+    assertNotNull("HBaseAdmin shouldn't be null", admin);
     int numPreCreate = 40;
     admin.createTable(htd, Bytes.toBytes(0L), Bytes.toBytes(-1L), numPreCreate);
 

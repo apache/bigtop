@@ -106,7 +106,7 @@ public class TestHFileOutputFormat {
     Random random = new Random();
     byte[][] ret = new byte[numKeys][];
     for (int i = 0; i < numKeys; i++) {
-      ret[i] = PerformanceEvaluation.generateValue(random);
+      ret[i] = PerformanceEvaluation.generateData(random, 10);
     }
     return ret;
   }

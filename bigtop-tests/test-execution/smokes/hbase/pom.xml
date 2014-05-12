@@ -52,6 +52,11 @@
       <groupId>org.apache.hadoop</groupId>
       <artifactId>hadoop-client</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.apache.hbase</groupId>
+      <artifactId>hbase-client</artifactId>
+      <version>${hbase.version}</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -69,7 +74,7 @@
             <configuration>
               <file>${HBASE_HOME}/${hbase.jar}</file>
               <groupId>org.apache.hbase</groupId>
-              <artifactId>hbase</artifactId>
+              <artifactId>hbase-client</artifactId>
               <version>${hbase.version}</version>
               <packaging>jar</packaging>
             </configuration>
@@ -83,7 +88,7 @@
             <configuration>
               <file>${HBASE_HOME}/${hbase.tests.jar}</file>
               <groupId>org.apache.hbase</groupId>
-              <artifactId>hbase</artifactId>
+              <artifactId>hbase-client</artifactId>
               <version>${hbase.version}</version>
               <packaging>jar</packaging>
               <classifier>tests</classifier>
@@ -135,7 +140,7 @@
         <configuration>
           <systemPropertyVariables>
             <org.apache.bigtop.itest.hbasesmoke.TestHbasePigSmoke.extra_jars>
-            ${ZOOKEEPER_HOME}/${zookeeper.jar}:${HBASE_HOME}/${hbase.jar}:${HBASE_HOME}/lib/guava-r06.jar
+            ${ZOOKEEPER_HOME}/${zookeeper.jar}:${HBASE_HOME}/${hbase.jar}:${HBASE_HOME}/lib/guava-12.0.1.jar
             </org.apache.bigtop.itest.hbasesmoke.TestHbasePigSmoke.extra_jars>
             <loadmapper.num_to_write>
             10
@@ -169,16 +174,17 @@
                   }
                   project.properties['hbase.jar'] =
                     org.apache.bigtop.itest.JarContent.getJarName(
-                        "${HBASE_HOME}", 'hbase-[0-9.-]*.jar');
+                        "${HBASE_HOME}", 'hbase-client.*.jar');
+                  println ("HBASE JAR: ${project.properties['hbase.jar']}");
                   if ( project.properties['hbase.jar'] == null ) {
-                    throw new IOException ("hbase*.jar isn't found");
+                    throw new IOException ("hbase-client.jar isn't found");
                   }
 
                   project.properties['hbase.tests.jar'] =
                     org.apache.bigtop.itest.JarContent.getJarName(
-                        "${HBASE_HOME}", 'hbase-.*tests.jar');
+                        "${HBASE_HOME}", 'hbase-common.*tests.jar');
                   if ( project.properties['hbase.tests.jar'] == null ) {
-                    throw new IOException ("hbase*tests.jar isn't found");
+                    throw new IOException ("hbase-common*tests.jar isn't found");
                   }
                 }
               </source>
