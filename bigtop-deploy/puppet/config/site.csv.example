@@ -1,3 +1,7 @@
+### WARNING:
+### actual site.csv file shouldn't contain lines starting with '#'
+### It will cause the parse to choke.
+### End of WARNING
 ### This file needs to be customized to reflect the configuration of your cluster
 ### Store it as $BIGTOP_DEPLOY_PATH/config/site.csv
 ### use --confdir=$BIGTOP_DEPLOY_PATH (see README for more info)
