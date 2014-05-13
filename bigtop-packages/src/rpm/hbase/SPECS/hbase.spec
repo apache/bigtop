@@ -82,7 +82,7 @@ Summary: HBase is the Hadoop database. Use it when you need random, realtime rea
 URL: http://hbase.apache.org/
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
-License: APL2
+License: ASL 2.0
 Source0: %{name}-%{hbase_base_version}.tar.gz
 Source1: do-component-build
 Source2: install_hbase.sh

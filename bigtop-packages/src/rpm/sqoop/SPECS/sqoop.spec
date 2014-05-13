@@ -56,7 +56,7 @@ Summary:  Tool for easy imports and exports of data sets between databases and t
 URL: http://sqoop.apache.org
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
-License: APL2
+License: ASL 2.0
 Source0: %{name}-%{sqoop_base_version}.tar.gz
 Source1: do-component-build
 Source2: install_%{name}.sh

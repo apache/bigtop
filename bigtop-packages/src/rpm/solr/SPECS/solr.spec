@@ -49,7 +49,7 @@ URL: http://lucene.apache.org/solr
 Group: Development/Libraries
 BuildArch: noarch
 Buildroot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
-License: ASL 2.0 
+License: ASL 2.0
 Source0: solr-%{solr_base_version}-src.tgz
 Source1: do-component-build 
 Source2: install_%{name}.sh

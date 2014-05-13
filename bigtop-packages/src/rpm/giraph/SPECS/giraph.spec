@@ -53,7 +53,7 @@ Summary: Giraph is a BSP inspired graph processing platform that runs on Hadoop
 URL: http://incubator.apache.org/giraph/
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
-License: APL2
+License: ASL 2.0
 Source0: %{name}-%{giraph_base_version}.tar.gz
 Source1: do-component-build
 Source2: install_%{name}.sh

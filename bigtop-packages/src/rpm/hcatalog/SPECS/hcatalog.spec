@@ -49,7 +49,7 @@ Name: hcatalog
 Version: %{hcatalog_version}
 Release: %{hcatalog_release}
 Summary: Apache Hcatalog (incubating) is a data warehouse infrastructure built on top of Hadoop
-License: Apache License v2.0
+License: ASL 2.0
 URL: http://incubator.apache.org/hcatalog
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}

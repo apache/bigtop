@@ -53,7 +53,7 @@ Summary:  Oozie is a system that runs workflows of Hadoop jobs.
 URL: http://incubator.apache.org/oozie/
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
-License: APL2
+License: ASL 2.0
 Source0: %{name}-%{oozie_base_version}.tar.gz
 Source1: do-component-build
 Source2: install_oozie.sh
@@ -115,7 +115,7 @@ Release: %{release}
 Summary:  Client for Oozie Workflow Engine
 URL: http://incubator.apache.org/oozie/
 Group: Development/Libraries
-License: APL2
+License: ASL 2.0
 BuildArch: noarch
 Requires: bigtop-utils >= 0.7
 

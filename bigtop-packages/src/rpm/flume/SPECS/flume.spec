@@ -61,7 +61,7 @@ URL: http://incubator.apache.org/projects/flume.html
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 BuildArch: noarch
-License: APL2
+License: ASL 2.0
 Source0: %{flume_folder}.tar.gz
 Source1: do-component-build
 Source2: install_%{name}.sh

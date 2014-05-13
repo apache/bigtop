@@ -22,7 +22,7 @@ Release: %{bigtop_utils_release}
 Summary: Collection of useful tools for Bigtop
 
 Group:      Applications/Engineering
-License:    APL2
+License:    ASL 2.0
 URL:        http://bigtop.apache.org/
 BuildRoot:  %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 BuildArch:  noarch

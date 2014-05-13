@@ -32,7 +32,7 @@ URL: http://whirr.apache.org/
 Group: Development/Libraries
 BuildArch: noarch
 Buildroot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
-License: ASL 2.0 
+License: ASL 2.0
 Source0: %{name}-%{whirr_base_version}-src.tar.gz
 Source1: do-component-build
 Source2: install_%{name}.sh

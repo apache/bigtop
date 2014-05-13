@@ -60,7 +60,7 @@ Name: hive
 Version: %{hive_version}
 Release: %{hive_release}
 Summary: Hive is a data warehouse infrastructure built on top of Hadoop
-License: Apache License v2.0
+License: ASL 2.0
 URL: http://hive.apache.org/
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}

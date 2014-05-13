@@ -33,7 +33,7 @@ URL: https://github.com/linkedin/datafu
 Group: Development/Libraries
 BuildArch: noarch
 Buildroot: %(mktemp -ud %{_tmppath}/%{datafu_name}-%{version}-%{release}-XXXXXX)
-License: ASL 2.0 
+License: ASL 2.0
 Source0: %{datafu_name}-%{datafu_base_version}.tar.gz
 Source1: do-component-build 
 Source2: install_%{datafu_name}.sh

@@ -76,7 +76,7 @@ Summary: Phoenix is a SQL skin over HBase and client-embedded JDBC driver.
 URL: https://github.com/forcedotcom/phoenix
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
-License: APL2
+License: BSD with advertising
 Source0: %{name}-%{phoenix_base_version}.tar.gz
 Source1: do-component-build
 Source2: install_phoenix.sh

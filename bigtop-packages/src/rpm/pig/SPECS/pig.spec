@@ -70,7 +70,7 @@ Name: pig
 Version: %{pig_version}
 Release: %{pig_release}
 Summary: Pig is a platform for analyzing large data sets
-License: Apache License v2.0
+License: ASL 2.0
 URL: http://pig.apache.org/
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}

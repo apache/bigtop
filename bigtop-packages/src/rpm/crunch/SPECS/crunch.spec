@@ -34,7 +34,7 @@ URL: http://crunch.apache.org/
 Group: Development/Libraries
 BuildArch: noarch
 Buildroot: %(mktemp -ud %{_tmppath}/%{crunch_name}-%{version}-%{release}-XXXXXX)
-License: ASL 2.0 
+License: ASL 2.0
 Source0: %{crunch_folder}.tar.gz
 Source1: do-component-build 
 Source2: install_%{crunch_name}.sh
