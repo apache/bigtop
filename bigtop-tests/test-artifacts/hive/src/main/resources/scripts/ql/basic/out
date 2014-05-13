@@ -11,12 +11,6 @@ FIELDS TERMINATED BY '\t'
 STORED AS TEXTFILE
 
 
-LOAD DATA LOCAL INPATH 'seed_data_files/ml-data/u.data'
-OVERWRITE INTO TABLE u_data
-Copying file: file:/root/bigtop/bigtop-tests/test-execution/smokes/hive/target/seed_data_files/ml-data/u.data
-Deleted /user/hive/warehouse/u_data
-
-
 INSERT OVERWRITE DIRECTORY '/tmp/count'
 SELECT COUNT(1) FROM u_data
 dfs -cat /tmp/count/*
