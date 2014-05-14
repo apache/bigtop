@@ -113,7 +113,6 @@ fi
 MAN_DIR=${MAN_DIR:-/usr/share/man/man1}
 DOC_DIR=${DOC_DIR:-/usr/share/doc/spark}
 LIB_DIR=${LIB_DIR:-/usr/lib/spark}
-SPARK_BIN_DIR=${BIN_DIR:-/usr/lib/spark/bin}
 INSTALLED_LIB_DIR=${INSTALLED_LIB_DIR:-/usr/lib/spark}
 EXAMPLES_DIR=${EXAMPLES_DIR:-$DOC_DIR/examples}
 BIN_DIR=${BIN_DIR:-/usr/bin}
@@ -123,7 +122,8 @@ PYSPARK_PYTHON=${PYSPARK_PYTHON:-python}
 
 install -d -m 0755 $PREFIX/$LIB_DIR
 install -d -m 0755 $PREFIX/$LIB_DIR/lib
-install -d -m 0755 $PREFIX/$SPARK_BIN_DIR
+install -d -m 0755 $PREFIX/$LIB_DIR/bin
+install -d -m 0755 $PREFIX/$LIB_DIR/sbin
 install -d -m 0755 $PREFIX/$DOC_DIR
 
 install -d -m 0755 $PREFIX/var/lib/spark/
@@ -133,7 +133,7 @@ install -d -m 0755 $PREFIX/var/run/spark/work/
 
 tar --wildcards -C $PREFIX/$LIB_DIR -zxf ${BUILD_DIR}/assembly/target/spark-assembly*-dist.tar.gz 'lib/*'
 
-for comp in core repl bagel mllib streaming; do
+for comp in core repl bagel mllib streaming assembly; do
   install -d -m 0755 $PREFIX/$LIB_DIR/$comp/lib
   tar --wildcards -C $PREFIX/$LIB_DIR/$comp/lib -zxf ${BUILD_DIR}/assembly/target/spark-assembly*-dist.tar.gz spark-$comp\*
 done
@@ -141,11 +141,16 @@ done
 install -d -m 0755 $PREFIX/$LIB_DIR/examples/lib
 cp ${BUILD_DIR}/examples/target/spark-examples*${SPARK_VERSION}.jar $PREFIX/$LIB_DIR/examples/lib
 
+cp -a ${BUILD_DIR}/bin/*.sh $PREFIX/$LIB_DIR/bin/
+cp -a ${BUILD_DIR}/sbin/*.sh $PREFIX/$LIB_DIR/sbin/
+chmod 755 $PREFIX/$LIB_DIR/bin/*
+chmod 755 $PREFIX/$LIB_DIR/sbin/*
+
 # FIXME: executor scripts need to reside in bin
-cp -a $BUILD_DIR/spark-class $PREFIX/$LIB_DIR
-cp -a $BUILD_DIR/spark-executor $PREFIX/$LIB_DIR
-cp -a ${SOURCE_DIR}/compute-classpath.sh $PREFIX/$SPARK_BIN_DIR
-cp -a ${BUILD_DIR}/spark-shell $PREFIX/$LIB_DIR
+cp -a $BUILD_DIR/bin/spark-class $PREFIX/$LIB_DIR/bin/
+cp -a $BUILD_DIR/sbin/spark-executor $PREFIX/$LIB_DIR/sbin/
+cp -a ${SOURCE_DIR}/compute-classpath.sh $PREFIX/$LIB_DIR/bin/
+cp -a ${BUILD_DIR}/bin/spark-shell $PREFIX/$LIB_DIR/bin/
 touch $PREFIX/$LIB_DIR/RELEASE
 
 # Copy in the configuration files
@@ -158,15 +163,15 @@ ln -s /etc/spark/conf $PREFIX/$LIB_DIR/conf
 tar --wildcards -C $PREFIX/$LIB_DIR -zxf ${BUILD_DIR}/assembly/target/spark-assembly*-dist.tar.gz ui-resources/\*
 
 # set correct permissions for exec. files
-for execfile in spark-class spark-shell spark-executor ; do
+for execfile in bin/spark-class bin/spark-shell sbin/spark-executor ; do
   chmod 755 $PREFIX/$LIB_DIR/$execfile
 done
-chmod 755 $PREFIX/$SPARK_BIN_DIR/compute-classpath.sh
+chmod 755 $PREFIX/$LIB_DIR/bin/compute-classpath.sh
 
 # Copy in the wrappers
 install -d -m 0755 $PREFIX/$BIN_DIR
-for wrap in spark-executor spark-shell ; do
-  cat > $PREFIX/$BIN_DIR/$wrap <<EOF
+for wrap in sbin/spark-executor bin/spark-shell ; do
+  cat > $PREFIX/$BIN_DIR/`basename $wrap` <<EOF
 #!/bin/bash 
 
 # Autodetect JAVA_HOME if not defined
@@ -174,7 +179,7 @@ for wrap in spark-executor spark-shell ; do
 
 exec $INSTALLED_LIB_DIR/$wrap "\$@"
 EOF
-  chmod 755 $PREFIX/$BIN_DIR/$wrap
+  chmod 755 $PREFIX/$BIN_DIR/`basename $wrap`
 done
 
 cat >> $PREFIX/$CONF_DIR/spark-env.sh <<EOF
@@ -185,12 +190,19 @@ export SPARK_LIBRARY_PATH=\${SPARK_HOME}/lib
 export SCALA_LIBRARY_PATH=\${SPARK_HOME}/lib
 export SPARK_MASTER_WEBUI_PORT=18080
 export SPARK_MASTER_PORT=7077
+export SPARK_WORKER_PORT=7078
+export SPARK_WORKER_WEBUI_PORT=18081
+export SPARK_WORKER_DIR=/var/run/spark/work
+export SPARK_LOG_DIR=/var/log/spark
+
+if [ -n "\$HADOOP_HOME" ]; then
+  export SPARK_LIBRARY_PATH=\$SPARK_LIBRARY_PATH:\${HADOOP_HOME}/lib/native
+fi
 
 ### Comment above 2 lines and uncomment the following if
 ### you want to run with scala version, that is included with the package
 #export SCALA_HOME=\${SCALA_HOME:-$LIB_DIR/scala}
 #export PATH=\$PATH:\$SCALA_HOME/bin
-
 ### change the following to specify a real cluster's Master host
 export STANDALONE_SPARK_MASTER_HOST=\`hostname\`
 
@@ -199,7 +211,7 @@ EOF
 ln -s /var/run/spark/work $PREFIX/$LIB_DIR/work
 
 cp -r ${BUILD_DIR}/python ${PREFIX}/${INSTALLED_LIB_DIR}/
-cp ${BUILD_DIR}/pyspark ${PREFIX}/${INSTALLED_LIB_DIR}/
+cp ${BUILD_DIR}/bin/pyspark ${PREFIX}/${INSTALLED_LIB_DIR}/bin/
 cat > $PREFIX/$BIN_DIR/pyspark <<EOF
 #!/bin/bash
 
@@ -208,7 +220,8 @@ cat > $PREFIX/$BIN_DIR/pyspark <<EOF
 
 export PYSPARK_PYTHON=${PYSPARK_PYTHON}
 
-exec $INSTALLED_LIB_DIR/pyspark "\$@"
+exec $INSTALLED_LIB_DIR/bin/pyspark "\$@"
 EOF
 chmod 755 $PREFIX/$BIN_DIR/pyspark
 
+cp ${BUILD_DIR}/{LICENSE,NOTICE} ${PREFIX}/${LIB_DIR}/

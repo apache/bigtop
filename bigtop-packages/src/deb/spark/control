@@ -19,11 +19,11 @@ Priority: extra
 Maintainer: Bigtop <dev@bigtop.apache.org>
 Build-Depends: debhelper (>= 6)
 Standards-Version: 3.8.0
-Homepage: http://spark.incubator.apache.org/
+Homepage: http://spark.apache.org/
 
 Package: spark-core
 Architecture: all
-Depends: bigtop-utils (>= 0.7)
+Depends: bigtop-utils (>= 0.7), hadoop-client
 Description: Lightning-Fast Cluster Computing
  Spark is a MapReduce-like cluster computing framework designed to support
  low-latency iterative jobs and interactive use from an interpreter. It is

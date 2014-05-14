@@ -33,8 +33,6 @@
 %define alternatives_cmd alternatives
 %endif
 
-%define pyspark_python python
-
 # disable repacking jars
 %define __os_install_post %{nil}
 
@@ -42,7 +40,7 @@ Name: spark-core
 Version: %{spark_version}
 Release: %{spark_release}
 Summary: Lightning-Fast Cluster Computing
-URL: http://spark.incubator.apache.org/
+URL: http://spark.apache.org/
 Group: Development/Libraries
 BuildArch: noarch
 Buildroot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
@@ -52,7 +50,9 @@ Source1: do-component-build
 Source2: install_%{spark_name}.sh
 Source3: spark-master.svc
 Source4: spark-worker.svc
-Requires: bigtop-utils >= 0.7
+Source5: compute-classpath.sh
+Source6: init.d.tmpl
+Requires: bigtop-utils >= 0.7, hadoop-client
 Requires(preun): /sbin/service
 
 %global initd_dir %{_sysconfdir}/init.d
@@ -96,7 +96,7 @@ Server for Spark worker
 %package -n spark-python
 Summary: Python client for Spark
 Group: Development/Libraries
-Requires: spark-core = %{version}-%{release}, %{pyspark_python}
+Requires: spark-core = %{version}-%{release}, python
 
 %description -n spark-python
 Includes PySpark, an interactive Python shell for Spark, and related libraries
@@ -116,7 +116,7 @@ bash $RPM_SOURCE_DIR/install_spark.sh \
           --source-dir=$RPM_SOURCE_DIR \
           --prefix=$RPM_BUILD_ROOT  \
           --doc-dir=%{doc_spark} \
-          --pyspark-python=%{pyspark_python}
+          --pyspark-python=python
 
 for service in %{spark_services}
 do
@@ -152,7 +152,7 @@ done
 %config(noreplace) %{config_spark}.dist
 %doc %{doc_spark}
 %{lib_spark}
-%exclude %{lib_spark}/pyspark
+%exclude %{lib_spark}/bin/pyspark
 %exclude %{lib_spark}/python
 %{etc_spark}
 %attr(0755,spark,spark) %{var_lib_spark}
@@ -165,7 +165,7 @@ done
 %files -n spark-python
 %defattr(-,root,root,755)
 %attr(0755,root,root) %{bin}/pyspark
-%attr(0755,root,root) %{lib_spark}/pyspark
+%attr(0755,root,root) %{lib_spark}/bin/pyspark
 %{lib_spark}/python
 
 %define service_macro() \

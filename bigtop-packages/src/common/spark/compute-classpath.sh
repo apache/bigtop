@@ -17,7 +17,7 @@
 # This script computes Spark's classpath and prints it to stdout; it's used by both the "run"
 # script and the ExecutorRunner in standalone cluster mode.
 
-SCALA_VERSION=2.9.3
+SCALA_VERSION=2.10
 
 # Figure out where Spark is installed
 FWDIR="$(cd `dirname $0`/..; pwd)"
@@ -28,25 +28,15 @@ if [ -e $FWDIR/conf/spark-env.sh ] ; then
 fi
 
 CORE_DIR="$FWDIR/core"
-REPL_DIR="$FWDIR/repl"
-REPL_BIN_DIR="$FWDIR/repl-bin"
+ASSEMBLY_DIR="$FWDIR/assembly"
 EXAMPLES_DIR="$FWDIR/examples"
-BAGEL_DIR="$FWDIR/bagel"
-MLLIB_DIR="$FWDIR/mllib"
-STREAMING_DIR="$FWDIR/streaming"
 PYSPARK_DIR="$FWDIR/python"
 
 # Build up classpath
 CLASSPATH="$SPARK_CLASSPATH"
 CLASSPATH="$CLASSPATH:$FWDIR/conf"
-CLASSPATH="$CLASSPATH:$CORE_DIR/lib/*"
-CLASSPATH="$CLASSPATH:$REPL_DIR/lib/*"
+CLASSPATH="$CLASSPATH:$ASSEMBLY_DIR/lib/*"
 CLASSPATH="$CLASSPATH:$EXAMPLES_DIR/lib/*"
-CLASSPATH="$CLASSPATH:$BAGEL_DIR/lib/*"
-CLASSPATH="$CLASSPATH:$MLLIB_DIR/lib/*"
-CLASSPATH="$CLASSPATH:$STREAMING_DIR/lib/*"
-CLASSPATH="$CLASSPATH:$FWDIR/lib/*"
-#CLASSPATH="$CLASSPATH:$CORE_DIR/src/main/resources"
 if [ -e "$PYSPARK_DIR" ]; then
   for jar in `find $PYSPARK_DIR/lib -name '*jar'`; do
     CLASSPATH="$CLASSPATH:$jar"
@@ -60,6 +50,9 @@ fi
 export DEFAULT_HADOOP=/usr/lib/hadoop
 export DEFAULT_HADOOP_CONF=/etc/hadoop/conf
 export HADOOP_HOME=${HADOOP_HOME:-$DEFAULT_HADOOP}
+export HADOOP_HDFS_HOME=${HADOOP_HDFS_HOME:-${HADOOP_HOME}/../hadoop-hdfs}
+export HADOOP_MAPRED_HOME=${HADOOP_MAPRED_HOME:-${HADOOP_HOME}/../hadoop-mapreduce}
+export HADOOP_YARN_HOME=${HADOOP_YARN_HOME:-${HADOOP_HOME}/../hadoop-yarn}
 export HADOOP_CONF_DIR=${HADOOP_CONF_DIR:-$DEFAULT_HADOOP_CONF}
 
 CLASSPATH="$CLASSPATH:$HADOOP_CONF_DIR"
@@ -67,7 +60,7 @@ if [ "x" != "x$YARN_CONF_DIR" ]; then
   CLASSPATH="$CLASSPATH:$YARN_CONF_DIR"
 fi
 # Let's make sure that all needed hadoop libs are added properly
-CLASSPATH="$CLASSPATH:$HADOOP_HOME/lib/*:$HADOOP_HOME/*:${HADOOP_HOME}-hdfs/lib/*:${HADOOP_HOME}-hdfs/*:${HADOOP_HOME}-yarn/*:/usr/lib/hadoop-mapreduce/*"
+CLASSPATH="$CLASSPATH:$HADOOP_HOME/*:$HADOOP_HDFS_HOME/*:$HADOOP_YARN_HOME/*:$HADOOP_MAPRED_HOME/*"
 # Add Scala standard library
 if [ -z "$SCALA_LIBRARY_PATH" ]; then
   if [ -z "$SCALA_HOME" ]; then

@@ -16,7 +16,7 @@
 TYPE="master"
 DAEMON="spark-${TYPE}"
 DESC="Spark ${TYPE}"
-EXEC_PATH="/usr/lib/spark/spark-class"
+EXEC_PATH="/usr/lib/spark/bin/spark-class"
 SVC_USER="spark"
 WORKING_DIR="/var/lib/spark"
 DAEMON_FLAGS=""

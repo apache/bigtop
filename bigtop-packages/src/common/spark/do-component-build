@@ -26,10 +26,12 @@ fi
 BUILD_OPTS="-Divy.home=${HOME}/.ivy2 -Dsbt.ivy.home=${HOME}/.ivy2 -Duser.home=${HOME} \
             -Drepo.maven.org=$IVY_MIRROR_PROP \
             -Dreactor.repo=file://${HOME}/.m2/repository \
-            -Dhadoop.version=$HADOOP_VERSION
-            -DskipTests"
+            -Dhadoop.version=$HADOOP_VERSION \
+            -Dyarn.version=$HADOOP_VERSION \
+            -Dprotobuf.version=2.5.0 \
+            -DskipTests -DrecompileMode=all"
 ## this might be an issue at times
 #        http://maven.40175.n5.nabble.com/Not-finding-artifact-in-local-repo-td3727753.html
 export MAVEN_OPTS="-Xmx2g -XX:ReservedCodeCacheSize=512m -XX:PermSize=1024m -XX:MaxPermSize=1024m"
 
-mvn -Pbigtop-dist $BUILD_OPTS package
+mvn -Pbigtop-dist -Pyarn $BUILD_OPTS install
