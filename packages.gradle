@@ -1,0 +1,521 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'download-task'
+
+final String VERBOSE = "verbose"
+final String BOM = "bigtop.mk"
+
+//HashMap <String, String>
+def BOM_map = [
+    APACHE_MIRROR:  "http://apache.osuosl.org",
+    APACHE_ARCHIVE: "http://archive.apache.org/dist",
+    BASE_DIR:       projectDir.absolutePath,
+    BUILD_DIR:      projectDir.absolutePath + "/build",
+    OUTPUT_DIR:     projectDir.absolutePath + "/output",
+    DIST_DIR:       projectDir.absolutePath + "/dist",
+    DL_DIR:         projectDir.absolutePath + "/dl",
+    BIGTOP_BOM:     '',
+    BIGTOP_BUILD_STAMP: ''
+]
+
+def final BIGTOP_BOM = 'BIGTOP_BOM'
+
+def final BASE_DIR = BOM_map['BASE_DIR']
+def final REPO_DIR = "${BOM_map['BASE_DIR']}/bigtop-repos"
+def final BUILD_DIR = BOM_map['BUILD_DIR']
+def final OUTPUT_DIR = BOM_map['OUTPUT_DIR']
+def final DIST_DIR = BOM_map['DIST_DIR']
+def final DL_DIR = BOM_map['DL_DIR']
+def final BIGTOP_BUILD_STAMP = System.getenv('BIGTOP_BUILD_STAMP') ?: BOM_map['BIGTOP_BUILD_STAMP']
+
+def targets = []
+def components = []
+
+// Package building and logic around it
+
+def touchTargetFile = { fileName ->
+  // to comply with make build
+  GFileUtils.touch new File(fileName)
+}
+def ifExists = { url ->
+  if (url == null) return
+  URLConnection uCon = new URL(url).openConnection()
+  return (uCon as HttpURLConnection).responseCode == 200
+}
+def getDate() {
+  new Date().format('E, dd MMM yyyy HH:mm:ss Z')
+}
+
+task showHelp << {
+  targets.each { target ->
+    println (target + "\n\t[" + tasks.findAll { alltask -> alltask.name.startsWith(target)}*.name.join(", ") + "]")
+  }
+}
+
+def genTasks = { target, variable ->
+  task "${target}-download" (dependsOn: "${target}_vardefines") << {
+    description "Download $target artifacts"
+
+    def final TARBALL_SRC = BOM_map[variable + '_TARBALL_SRC']
+    def final DOWNLOAD_DST = BOM_map[variable + '_DOWNLOAD_DST']
+    def final DOWNLOAD_URL = BOM_map[variable + '_DOWNLOAD_URL']
+
+    if (!DOWNLOAD_DST)
+      return
+
+    mkdir(DL_DIR)
+    if (TARBALL_SRC?.isEmpty() || new File(DOWNLOAD_DST)?.exists() || new File(BOM_map[variable + '_TARGET_DL'])?.exists()) {
+      println "\tFile $DOWNLOAD_DST appears to be already downloaded. Exiting..."
+      return
+    }
+    download {
+      src DOWNLOAD_URL
+      dest DOWNLOAD_DST
+    }
+    touchTargetFile(BOM_map[variable + '_TARGET_DL'])
+  }
+  task "${target}-tar" (dependsOn: ["${target}_vardefines", "${target}-download"]) << {
+    if (new File(BOM_map[variable + '_TARGET_TAR'])?.exists()) {
+      println "\tNothing to do. Exiting..."
+      return
+    }
+    description "Preparing a tarball for $target artifacts"
+    def final TAR_DIR = BOM_map[variable + '_TAR_DIR']
+    def final TARBALL_SRC = BOM_map[variable + '_TARBALL_SRC'] ?: ""
+    def final DOWNLOAD_DST = BOM_map[variable + '_DOWNLOAD_DST'] ?: ""
+    def final SEED_TAR = BOM_map[variable + '_SEED_TAR']
+    def UNPACK = "tar -xzf"
+    def PATCHES = ""
+
+    if (TARBALL_SRC.empty)
+      PATCHES="/dev/null"
+    if (TARBALL_SRC.endsWith('.zip')) {
+      PATCHES="/dev/null"
+      UNPACK = "unzip"
+    }
+    delete(TAR_DIR); mkdir(TAR_DIR)
+    println "PATCHES are $PATCHES"
+    if (!PATCHES.empty) {
+      println "Non-empty patches"
+      if (!TARBALL_SRC.empty) {
+        exec {
+          workingDir TAR_DIR
+          commandLine "$UNPACK $DOWNLOAD_DST".split(' ')
+        }
+        def unpacked = new File(TAR_DIR)
+        if (unpacked.list().size() == 1) {
+          def TOP_LEVEL_DIR = unpacked.list()[0]
+          fileTree ("$TAR_DIR/$TOP_LEVEL_DIR") {
+            include '**/*'
+          }.copy { into TAR_DIR }
+          delete(TOP_LEVEL_DIR)
+        }
+      } else {
+        copy {
+          from 'LICENSE'
+          into TAR_DIR
+        }
+      }
+/*
+      // TODO fix the patching
+      (cd $(BASE_DIR)/bigtop-packages/src/common/$($(PKG)_NAME); cat $$PATCHES)|    \
+            (cd $($(PKG)_TAR_DIR) ; patch -p0 ; cd .. ; tar czf $($(PKG)_SEED_TAR) *)  ;\
+*/
+      def command = [
+          '-c', 'tar', '"',
+          '-czf',
+          SEED_TAR,
+          '*', '"'
+      ]
+      exec {
+        workingDir "$TAR_DIR/.."
+        commandLine "tar -czf $SEED_TAR ${new File("$TAR_DIR/..").list().join(' ')}".split(' ')
+      }
+    } else {
+      println "Copy $DOWNLOAD_DST to $SEED_TAR"
+      copy {
+        from DOWNLOAD_DST
+        into BOM_map['BUILD_DIR'] + "/$target/tar/"
+        rename TARBALL_SRC, SEED_TAR
+      }
+    }
+    touchTargetFile(BOM_map[variable + '_TARGET_TAR'])
+  }
+
+  // Keeping the reference to deb task to be used later for correct sequencing
+  Task tdeb =   task "$target-deb" (dependsOn: "${target}-sdeb") << {
+    if (new File(BOM_map[variable + '_TARGET_DEB'])?.exists()) {
+      println "\tNothing to do. Exiting..."
+      return
+    }
+    description "Buildind DEB for $target artifacts"
+    def final PKG_NAME = BOM_map[variable + '_NAME']
+    def final PKG_RELEASE = BOM_map[variable + '_PKG_RELEASE']
+    def final PKG_VERSION = BOM_map[variable + '_PKG_VERSION']
+    def final PKG_OUTPUT_DIR = BOM_map[variable + '_OUTPUT_DIR']
+    def final BASE_VERSION = BOM_map[variable + '_BASE_VERSION']
+    def final RELEASE_VERSION = BOM_map[variable + '_RELEASE_VERSION']
+    def final SRCDEB = "${PKG_NAME}_$PKG_VERSION${BIGTOP_BUILD_STAMP}-${PKG_RELEASE}.dsc"
+
+    exec {
+      workingDir PKG_OUTPUT_DIR
+      commandLine "dpkg-source -x $SRCDEB".split(' ')
+    }
+// Order of debuild parameters is important; hence specifying explicitely rather
+// than in an array of args
+    def command = """debuild \
+--preserve-envvar PATH \
+--preserve-envvar JAVA32_HOME \
+--preserve-envvar JAVA64_HOME \
+--preserve-envvar FORREST_HOME \
+--preserve-envvar MAVEN3_HOME \
+--preserve-envvar MAVEN_OPTS \
+--preserve-envvar JAVA_HOME \
+--preserve-envvar SCALA_HOME \
+--set-envvar=${variable}_BASE_VERSION=$BASE_VERSION \
+--set-envvar=${variable}_VERSION=$PKG_VERSION$BIGTOP_BUILD_STAMP \
+--set-envvar=${variable}_RELEASE=$RELEASE_VERSION \
+-uc -us -b
+"""
+    exec {
+      workingDir "$PKG_OUTPUT_DIR/$PKG_NAME-$PKG_VERSION$BIGTOP_BUILD_STAMP"
+      commandLine command.split(' ')
+    }
+    delete ("$PKG_OUTPUT_DIR/$PKG_NAME-$PKG_VERSION$BIGTOP_BUILD_STAMP")
+    touchTargetFile(BOM_map[variable + '_TARGET_DEB'])
+  }
+  // Guarantee that tasks are ran in the order set by BOM file
+  if (targets.size() > 0)
+    tdeb.mustRunAfter "${targets.get(targets.size() - 1)}-deb"
+  task "$target-sdeb" (dependsOn: ["${target}_vardefines",  "${target}-tar"]) << {
+    if (new File(BOM_map[variable + '_TARGET_SDEB'])?.exists()) {
+      println "\tNothing to do. Exiting..."
+      return
+    }
+    description "Buildind SDEB for $target artifacts"
+    def final PKG_BUILD_DIR = BOM_map[variable + '_BUILD_DIR']
+    def final PKG_NAME = BOM_map[variable + '_NAME']
+    def final SEED_TAR = BOM_map[variable + '_SEED_TAR']
+    def final PKG_VERSION = BOM_map[variable + '_PKG_VERSION']
+    def final RELEASE_VERSION = BOM_map[variable + '_RELEASE_VERSION']
+    def final PKG_OUTPUT_DIR = BOM_map[variable + '_OUTPUT_DIR']
+    delete ("$PKG_BUILD_DIR/deb")
+    def final DEB_BLD_DIR = "$PKG_BUILD_DIR/deb/$PKG_NAME-${PKG_VERSION}${BIGTOP_BUILD_STAMP}"
+    mkdir (DEB_BLD_DIR)
+    copy {
+      from SEED_TAR
+      into "$PKG_BUILD_DIR/deb/"
+      rename BOM_map[variable + '_TARBALL_DST'], "${PKG_NAME}_${PKG_VERSION}${BIGTOP_BUILD_STAMP}.orig.tar.gz"
+    }
+    exec {
+      workingDir DEB_BLD_DIR
+      commandLine "tar --strip-components 1 -xvf $DEB_BLD_DIR/../${PKG_NAME}_${PKG_VERSION}${BIGTOP_BUILD_STAMP}.orig.tar.gz".split(' ')
+    }
+    fileTree ("${BASE_DIR}/bigtop-packages/src/deb/$PKG_NAME") {
+      include '**/*'
+    }.copy { into "$DEB_BLD_DIR/debian" }
+    copy {
+      from "${BASE_DIR}/bigtop-packages/src/templates/init.d.tmpl"
+      into "$DEB_BLD_DIR/debian"
+    }
+    fileTree ("$BASE_DIR/bigtop-packages/src/common/$PKG_NAME") {
+      include '**/*'
+    }.copy { into "$DEB_BLD_DIR/debian" }
+    // Prepeare bom file with all the versions
+    def bomWriter = new File("$DEB_BLD_DIR/debian/bigtop.bom").newWriter()
+    BOM_map[BIGTOP_BOM].split(" ").each { bomWriter << "$it\n"}
+    bomWriter.close()
+    // Create changelog
+    def changelog = new File("$DEB_BLD_DIR/debian/changelog").newWriter()
+    changelog << "$PKG_NAME ($PKG_VERSION$BIGTOP_BUILD_STAMP-$RELEASE_VERSION) stable; urgency=low\n"
+    changelog << "  Clean build\n"
+    changelog << " -- Bigtop <dev@bigtop.apache.org>  ${getDate()}\n"
+    changelog.close()
+    // Deleting obsolete files
+    delete fileTree (dir: "$DEB_BLD_DIR/debian", includes: ['*.ex', '*.EX', '*.~'])
+    // Creating source package
+    exec {
+      workingDir DEB_BLD_DIR
+      commandLine "dpkg-buildpackage -uc -us -sa -S".split(' ')
+    }
+    mkdir(PKG_OUTPUT_DIR)
+    fileTree (dir: "$DEB_BLD_DIR/..", includes: ['*.dsc', '*.diff.gz', '*.debian.tar.gz', "*_source.changes", "*.orig.tar.gz"]).copy {
+      into PKG_OUTPUT_DIR
+    }
+    touchTargetFile(BOM_map[variable + '_TARGET_SDEB'])
+  }
+  task "$target-apt" (dependsOn: "$target-deb") << {
+    if (new File(BOM_map[variable + '_TARGET_APT'])?.exists()) {
+      println "\tNothing to do. Exiting..."
+      return
+    }
+    description "Creating APT repository for $target packages"
+    def final PKG_NAME = BOM_map[variable + '_NAME']
+    def final PKG_RELEASE = BOM_map[variable + '_PKG_RELEASE']
+    def final PKG_VERSION = BOM_map[variable + '_PKG_VERSION']
+    def final PKG_OUTPUT_DIR = BOM_map[variable + '_OUTPUT_DIR']
+    mkdir("$OUTPUT_DIR/apt/conf")
+    copy {
+      from "$REPO_DIR/apt/distributions"
+      into "$OUTPUT_DIR/apt/conf"
+    }
+    fileTree (PKG_OUTPUT_DIR) {
+      include "*.changes"
+    }.each  { changeFile ->
+      exec {
+        workingDir BUILD_DIR
+        commandLine "reprepro -Vb $OUTPUT_DIR/apt include bigtop $changeFile".split(' ')
+      }
+    }
+    touchTargetFile(BOM_map["${variable}_TARGET_APT"])
+  }
+
+  // Keeping the reference to task to be used later for correct sequencing
+  Task trpm = task "$target-rpm" (dependsOn: ["${target}-srpm"]) << {
+    if (new File(BOM_map[variable + '_TARGET_RPM'])?.exists()) {
+      println "\tNothing to do. Exiting..."
+      return
+    }
+    description "Buildind RPM for $target artifacts"
+    def final PKG_BUILD_DIR = BOM_map[variable + '_BUILD_DIR']
+    def final PKG_NAME = BOM_map[variable + '_NAME']
+    def final PKG_NAME_FOR_PKG = PKG_NAME.replaceAll("-", "_")
+    def final PKG_OUTPUT_DIR = BOM_map[variable + '_OUTPUT_DIR']
+    def final PKG_VERSION = BOM_map[variable + '_PKG_VERSION']
+    def final BASE_VERSION = BOM_map[variable + '_BASE_VERSION']
+    def final RELEASE_VERSION = BOM_map[variable + '_RELEASE_VERSION']
+    def RELEASE_DIST = "rpmbuild --eval '%{?dist}' 2>/dev/null".execute().text.trim().replaceAll("'",'')
+    def SRCRPM="$PKG_OUTPUT_DIR/$PKG_NAME-${PKG_VERSION}$BIGTOP_BUILD_STAMP-${RELEASE_VERSION}${RELEASE_DIST}.src.rpm"
+
+    def command = [
+        '--define', "_topdir $PKG_BUILD_DIR/rpm/",
+        '--define', "${PKG_NAME_FOR_PKG}_base_version $BASE_VERSION",
+        '--define', "${PKG_NAME_FOR_PKG}_version ${PKG_VERSION}${BIGTOP_BUILD_STAMP}",
+        '--define', "${PKG_NAME_FOR_PKG}_release $RELEASE_VERSION%{?dist}",
+        '--rebuild', SRCRPM,
+    ]
+    exec {
+      workingDir BASE_DIR
+      executable 'rpmbuild'
+      args command
+    }
+    fileTree ("$PKG_BUILD_DIR/rpm/RPMS") {
+      include '**/*'
+    }.copy { into PKG_OUTPUT_DIR }
+    touchTargetFile(BOM_map[variable + '_TARGET_RPM'])
+  }
+  // Guarantee that tasks are ran in the order set by BOM file
+  if (targets.size() > 0)
+    trpm.mustRunAfter "${targets.get(targets.size() - 1)}-rpm"
+  task "$target-srpm" (dependsOn: ["${target}_vardefines" , "${target}-tar"]) << {
+    if (new File(BOM_map[variable + '_TARGET_SRPM'])?.exists()) {
+      println "\tNothing to do. Exiting..."
+      return
+    }
+    description "Buildind SRPM for $target artifacts"
+    def final PKG_BUILD_DIR = BOM_map[variable + '_BUILD_DIR']
+    def final PKG_NAME = BOM_map[variable + '_NAME']
+    def final SEED_TAR = BOM_map[variable + '_SEED_TAR']
+    def final PKG_VERSION = BOM_map[variable + '_PKG_VERSION']
+    def final RELEASE_VERSION = BOM_map[variable + '_RELEASE_VERSION']
+    def final PKG_NAME_FOR_PKG = PKG_NAME.replaceAll("-", "_")
+    def final BASE_VERSION = BOM_map[variable + '_BASE_VERSION']
+    def final PKG_OUTPUT_DIR = BOM_map[variable + '_OUTPUT_DIR']
+    delete ("$PKG_BUILD_DIR/rpm")
+    fileTree ("${BASE_DIR}/bigtop-packages/src/rpm/$PKG_NAME") {
+      include '**/*'
+    }.copy { into "$PKG_BUILD_DIR/rpm" }
+    copy {
+      from SEED_TAR
+      into "$PKG_BUILD_DIR/rpm/SOURCES"
+    }
+    copy {
+      from "${BASE_DIR}/bigtop-packages/src/templates/init.d.tmpl"
+      into "$PKG_BUILD_DIR/rpm/SOURCES"
+    }
+    fileTree ("$BASE_DIR/bigtop-packages/src/common/$PKG_NAME") {
+      include '**/*'
+    }.copy { into "$PKG_BUILD_DIR/rpm/SOURCES" }
+    // Writing bigtop.bom files with all the versions
+    def bomWriter = new File("$PKG_BUILD_DIR/rpm/SOURCES/bigtop.bom").newWriter()
+    BOM_map[BIGTOP_BOM].split(" ").each { bomWriter << "$it\n"}
+    bomWriter.close()
+    def command = [
+        '--define', "_topdir $PKG_BUILD_DIR/rpm/",
+        '--define', "${PKG_NAME_FOR_PKG}_base_version $BASE_VERSION",
+        '--define', "${PKG_NAME_FOR_PKG}_version ${PKG_VERSION}${BIGTOP_BUILD_STAMP}",
+        '--define', "${PKG_NAME_FOR_PKG}_release $RELEASE_VERSION%{?dist}",
+        '-bs', '--nodeps', "--buildroot=${PKG_BUILD_DIR}/rpm/INSTALL",
+        "${PKG_BUILD_DIR}/rpm/SPECS/${PKG_NAME}.spec",
+    ]
+    exec {
+      workingDir BASE_DIR
+      executable 'rpmbuild'
+      args command
+    }
+    mkdir(PKG_OUTPUT_DIR)
+    def RELEASE_DIST = "rpmbuild --eval '%{?dist}' 2>/dev/null".execute().text.trim().replaceAll("'",'')
+    copy {
+      from "$PKG_BUILD_DIR/rpm/SRPMS/${PKG_NAME}-${PKG_VERSION}${BIGTOP_BUILD_STAMP}-${RELEASE_VERSION}${RELEASE_DIST}.src.rpm"
+      into PKG_OUTPUT_DIR
+    }
+    touchTargetFile(BOM_map[variable + '_TARGET_SRPM'])
+  }
+  task "$target-yum" (dependsOn: "$target-rpm") << {
+    if (new File(BOM_map[variable + '_TARGET_YUM'])?.exists()) {
+      println "\tNothing to do. Exiting..."
+      return
+    }
+    description "Creating YUM repository for $target packages"
+    exec {
+      workingDir BUILD_DIR
+      commandLine "createrepo -o $OUTPUT_DIR $OUTPUT_DIR".split(' ')
+    }
+    touchTargetFile(BOM_map["${variable}_TARGET_YUM"])
+  }
+  task "$target-version" << {
+    println "Base: ${BOM_map[variable + '_BASE_VERSION']}"
+  }
+  task "${target}_vardefines" << {
+    BOM_map[variable + '_NAME'] = target
+    BOM_map[variable + '_PKG_NAME'] = "${variable}_NAME"
+    BOM_map[variable + '_PKG_RELEASE'] = '1'
+
+    BOM_map[variable + '_BUILD_DIR'] = BOM_map['BUILD_DIR'] + "/$target"
+    BOM_map[variable + '_OUTPUT_DIR'] = BOM_map['OUTPUT_DIR'] + "/$target"
+    BOM_map[variable + '_SOURCE_DIR'] = BOM_map['BUILD_DIR'] + "/source"
+    BOM_map[variable + '_TAR_DIR'] = BOM_map['BUILD_DIR'] + "/$target/tar/${target}-${BOM_map[variable + '_BASE_VERSION']}"
+    BOM_map[variable + '_SEED_TAR'] = BOM_map['BUILD_DIR'] + "/$target/tar/" + BOM_map[variable + '_TARBALL_DST']
+
+    BOM_map[variable + '_DOWNLOAD_URL'] =
+        (BOM_map[variable + '_SITE'] != null && BOM_map[variable + '_TARBALL_SRC'] != null) ?
+            BOM_map[variable + '_SITE'] + '/' + BOM_map[variable + '_TARBALL_SRC'] : null
+    BOM_map[variable + '_DOWNLOAD_DST'] = (BOM_map[variable + '_TARBALL_SRC'] != null) ?
+        DL_DIR + '/' + BOM_map[variable + '_TARBALL_SRC'] : null
+
+    // test that the download url will return http 200.  If it does not, use the ARCHIVE url instead of the MIRROR SITE url
+    if (!ifExists(BOM_map[variable + '_DOWNLOAD_URL'])) {
+      BOM_map[variable + '_DOWNLOAD_URL'] = BOM_map[variable + '_ARCHIVE'] + '/' + BOM_map[variable + '_TARBALL_SRC']
+    }
+
+    BOM_map[variable + '_TARGET_DL']  = BOM_map[variable + '_BUILD_DIR'] + '/.download'
+    BOM_map[variable + '_TARGET_TAR']  = BOM_map[variable + '_BUILD_DIR'] + '/.tar'
+    BOM_map[variable + '_TARGET_SRPM']  = BOM_map[variable + '_BUILD_DIR'] + '/.srpm'
+    BOM_map[variable + '_TARGET_RPM']  = BOM_map[variable + '_BUILD_DIR'] + '/.rpm'
+    BOM_map[variable + '_TARGET_YUM']  = BOM_map[variable + '_BUILD_DIR'] + '/.yum'
+    BOM_map[variable + '_TARGET_SDEB']  = BOM_map[variable + '_BUILD_DIR'] + '/.sdeb'
+    BOM_map[variable + '_TARGET_DEB']  = BOM_map[variable + '_BUILD_DIR'] + '/.deb'
+    BOM_map[variable + '_TARGET_APT']  = BOM_map[variable + '_BUILD_DIR'] + '/.apt'
+    BOM_map[variable + '_TARGET_RELNOTES']  = BOM_map[variable + '_BUILD_DIR'] + '/.relnotes'
+
+    if (System.getProperty(VERBOSE)) {
+      BOM_map.keySet().findAll{ it.startsWith (variable) }. each { k ->
+        println "$k ${BOM_map.get(k)}"
+      }
+    }
+  }
+
+  task "$target-info" (dependsOn: "${target}_vardefines") << {
+    println "Info for package $target"
+    println "  Will download from URL: ${BOM_map[variable + '_DOWNLOAD_URL']}"
+    println "  To destination file: ${BOM_map[variable + '_DOWNLOAD_DST']}"
+    println "  Then unpack into ${BOM_map[variable + '_SOURCE_DIR']}"
+    println "  And create a seed tarball ${BOM_map[variable + '_SEED_TAR']}"
+
+    //TODO more about patches
+    println "Version: " + BOM_map[variable + '_BASE_VERSION']
+    //TODO more about stamping
+  }
+  task "$target-relnotes" << {
+    description "Preparing release notes for $target. No yet implemented!!!"
+  }
+  task "$target-clean" (dependsOn: "${target}_vardefines") << {
+    def blDir = BOM_map[variable + '_BUILD_DIR']
+    def outDir = BOM_map[variable + '_OUTPUT_DIR']
+    description "Removing $target component $blDir and $outDir"
+    delete(blDir)
+    delete(BOM_map[variable + '_OUTPUT_DIR'])
+  }
+  task "$target-help" << {
+    println (target + "\n\t[" + tasks.findAll { alltask -> alltask.name.startsWith(target)}*.name.join(", ") + "]")
+  }
+}
+
+def readBOM = {
+
+  def buildUtils = new org.apache.bigtop.BuildUtils()
+  def bomfile = new File(BOM)
+  def envs = []
+
+  bomfile.eachLine {
+    if (!it.startsWith("#") && !it.isEmpty()) {
+      if (it.startsWith("\$(eval")) {
+        def pattern = ~/.*call PACKAGE,(\w+[-]?\w+?),(\w+)/
+        def m = it =~ pattern
+        assert m.size() == 1
+        def target = m[0][1]
+        def variable = m[0][2]
+        genTasks(target, variable)
+        targets.add(target)
+        // Store the component name in the list
+        components.add(variable)
+        return
+      }
+      envs = it?.split("=")
+      BOM_map.put(envs[0], buildUtils.evaluateBOM(BOM_map, envs[1]))
+    }
+  }
+}
+
+// We need to make sure that all dynamic tasks are available for invocation
+project.afterEvaluate {
+  readBOM()
+  def bomVersions = ""
+  components.each { component ->
+    bomVersions += "${component + '_VERSION'}=${BOM_map[component + '_BASE_VERSION']} "
+  }
+  BOM_map[BIGTOP_BOM] = bomVersions
+  if (System.getProperty(VERBOSE))println "BIGTOP_BOM:\n${BOM_map[BIGTOP_BOM]}"
+  // Putting all targets of different types into one common target
+  task "srpm" (dependsOn: tasks.findAll { alltask -> alltask.name.endsWith("-srpm")}*.name) << { }
+  task "rpm" (dependsOn: tasks.findAll { alltask -> alltask.name.endsWith("-rpm")}*.name) << { }
+  task "yum" (dependsOn: tasks.findAll { alltask -> alltask.name.endsWith("-yum")}*.name) << { }
+  task "sdeb" (dependsOn: tasks.findAll { alltask -> alltask.name.endsWith("-sdeb")}*.name) << { }
+  task "deb" (dependsOn: tasks.findAll { alltask -> alltask.name.endsWith("-deb")}*.name) << { }
+  task "apt" (dependsOn: tasks.findAll { alltask -> alltask.name.endsWith("-apt")}*.name) << { }
+
+  task clean (overwrite: true, dependsOn: tasks.findAll { alltask -> alltask.name.endsWith("-clean")}*.name) << {
+    description "Cleaning all components' build and output directories. Overwrites standard clean task"
+  }
+  task allclean (dependsOn: clean ) << {
+    description "Removing $BUILD_DIR, $OUTPUT_DIR, and $DIST_DIR"
+    delete (BUILD_DIR)
+    delete (OUTPUT_DIR)
+    delete (DIST_DIR)
+  }
+  task realclean (dependsOn: allclean) << {
+    description "Removing $BUILD_DIR, $OUTPUT_DIR, $DIST_DIR, and $DL_DIR"
+    delete (DL_DIR)
+  }
+
+  task "all" (dependsOn: [srpm, sdeb])
+}
+
+defaultTasks 'showHelp'
