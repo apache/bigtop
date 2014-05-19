@@ -23,7 +23,8 @@ Homepage: http://hbase.apache.org/
 Package: hbase
 Architecture: all
 Depends: adduser, zookeeper (>= 3.3.1), hadoop-hdfs, bigtop-utils (>= 0.7)
-Recommends: ntp
+# Any system that can prevent clock skew is recommended, but if it conflicts with one of these, apt-get will remove it by default
+Recommends: ntp | chrony
 Description: HBase is the Hadoop database. Use it when you need random, realtime read/write access to your Big Data. This project's goal is the hosting of very large tables -- billions of rows X millions of columns -- atop clusters of commodity hardware.
  HBase is an open-source, distributed, column-oriented store modeled after
  Google' Bigtable: A Distributed Storage System for Structured Data by 
