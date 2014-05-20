@@ -43,6 +43,7 @@ class hadoop-oozie {
       cwd     => "/var/lib/oozie",
       creates => "/var/lib/oozie/derby.log",
       require => Package["oozie"],
+      unless => "/etc/init.d/oozie status",
     }
 
     service { "oozie":
