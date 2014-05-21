@@ -15,15 +15,14 @@
  */
 package org.apache.bigtop.bigpetstore.generator;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.InputStreamReader;
-import java.lang.management.ManagementFactory;
 import java.util.Date;
 
-import junit.framework.Assert;
-
-import org.apache.bigtop.bigpetstore.generator.BPSGenerator;
 import org.apache.bigtop.bigpetstore.generator.BPSGenerator.props;
 import org.apache.bigtop.bigpetstore.generator.TransactionIteratorFactory.STATE;
 import org.apache.hadoop.conf.Configuration;
@@ -45,7 +44,6 @@ public class TestPetStoreTransactionGeneratorJob {
 
     @Test
     public void test() throws Exception {
-
         System.out.println("memory : " + Runtime.getRuntime().freeMemory()
                 / 1000000);
         if (Runtime.getRuntime().freeMemory() / 1000000 < 75) {
@@ -94,11 +92,11 @@ public class TestPetStoreTransactionGeneratorJob {
         }
 
         // records seen should = 20
-        Assert.assertEquals(records, recordsSeen);
+        assertEquals(records, recordsSeen);
         // Assert that a couple of the states are seen (todo make it
         // comprehensive for all states).
-        Assert.assertTrue(CTseen);
-        Assert.assertTrue(AZseen);
+        assertTrue(CTseen);
+        assertTrue(AZseen);
         log.info("Created " + records + " , file was "
                 + fs.getFileStatus(new Path(output, "part-r-00000")).getLen()
                 + " bytes.");

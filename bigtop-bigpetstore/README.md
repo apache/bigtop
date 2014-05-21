@@ -3,8 +3,6 @@
 BigPetStore
 ============
 
-test mvn deploy1
-
 Apache Bigtop/Hadoop Ecosystem Demo
 -----------------------------------
 This software is created to demonstrate Apache Bigtop for processing
@@ -15,42 +13,41 @@ Architecture
 The application consists of the following modules
 
 * generator: generates raw data on the dfs
-* clustering: Apache Mahout demo code for processing the data using Itembased Collaborative Filtering
+* clustering: Apache Mahout demo code for processing the data using Item based Collaborative Filtering. This feature is not supported yet. You can track its progress using this [`JIRA` issue](https://issues.apache.org/jira/browse/BIGTOP-1272)
 * Pig: demo code for processing the data using Apache Pig
-* Hive: demo code for processing the data using Apache Hive demo code
+* Hive: demo code for processing the data using Apache Hive. This part is not complete yet. We are working on it. You can track it using this [`JIRA` issue](https://issues.apache.org/jira/browse/BIGTOP-1270)
 * Crunch: demo code for processing the data using Apache Crunch
 
 Build Instructions
 ------------------
 
-* BUILD THE JAR
+You'll need to have [`gradle`](http://www.gradle.org/downloads) installed and set-up correctly in order to follow along these instructions.
+We could have used the [`gradle-wrapper`](http://www.gradle.org/docs/current/userguide/gradle_wrapper.html) to avoid having to install `gradle`, but the `bigtop` project includes all `gradle*` directories in `.gitignore`. So, that's not going to work.
 
-  "mvn clean package" will build the bigpetstore jar
+### Build the JAR
 
-* Run Intergration tests with
+  `gradle clean build` will build the bigpetstore `jar`. The `jar` will be located in the `build\libs` directory.
 
-  * Pig profile: mvn clean verify -P pig
-  * Crunch profile: mvn clean verify -P crunch
-  * Hive provile:
-     * First, see and run the setuphive.sh script.  Read it and try to under
-     stand what it does.
+### Run Intergration Tests With
+  * Pig profile: `gradle clean integrationTest -P ITProfile=pig`
+  * Crunch profile: `gradle clean integrationTest -P ITProfile=crunch`
+  * Hive profile: Not implemented yet.
+  * Mahout profile: Not implemented yet.
 
-     * mvn clean verify -P pig
+If you don't specify any profile-name, or if you specify an invalid-name for the `integrationTest` task, no integration tests will be run.
+
+*Note:* At this stage, only the `Pig` profile is working. Will continue to update this area as further work is completed.
 
 For Eclipse Users
 -----------------
 
-1) run "mvn eclipse:eclipse" to create an IDE loadable project.
+1. Run `gradle eclipse` to create an eclipse project.
+2. Import the project into eclipse.
 
-2) open .classpath and add
-    `<classpathentry kind="src" path="src/integration/java" including="**/*.java"/>`
-
-3) import the project into eclipse
-
+*Note* whenever you modify the dependencies, you will need to run the `gradle eclipse` again. Refresh the project after doing so. You'd also need to have the `scala` plugin installed. Also, having a `gradle` plugin would be quite useful as well, for ex. when you want to update dependencies.
 
 High level summary
 ------------------
-
 
 The bigpetstore project exemplifies the hadoop ecosystem for newcomers, and also for benchmarking and
 comparing functional space of tools.
@@ -63,7 +60,7 @@ using a common framework and easily understood use case
 How it works (To Do)
 --------------------
 
-* Phase 1: Generating pet store data:
+### Phase 1: Generating pet store data:
 
 The first step is to generate a raw data set.  This is done by the "GeneratePetStoreTransactionsInputFormat":
 
@@ -72,22 +69,21 @@ its output.  The result is a list of "transactions".  Each transaction is a tupl
 
   *{state,name,date,price,product}.*
 
-* Phase 2: Processing the data
+### Phase 2: Processing the data
 
-The next phase of the application processes the data to create basic aggregations.
-For example with both pig and hive these could easily include
+The next phase of the application processes the data to create basic aggregations. For example with both pig and hive these could easily include
 
-  *Number of transactions by state* or
-  *Most valuable customer by state* or
-  *Most popular items by state*
+- *Number of transactions by state* or
+- *Most valuable customer by state* or
+- *Most popular items by state*
 
 
-* Phase 3: Clustering the states by all fields
+### Phase 3: Clustering the states by all fields
 
   Now, say we want to cluster the states, so as to put different states into different buying categories
   for our marketing team to deal with differently.
 
-* Phase 4: Visualizing the Data in D3.
+### Phase 4: Visualizing the Data in D3.
 
  - try it [on the gh-pages branch](http://jayunit100.github.io/bigpetstore/)
 

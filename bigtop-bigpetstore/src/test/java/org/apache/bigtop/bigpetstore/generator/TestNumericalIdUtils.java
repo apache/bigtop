@@ -15,11 +15,10 @@
  */
 package org.apache.bigtop.bigpetstore.generator;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertFalse;
 
 import org.apache.bigtop.bigpetstore.generator.TransactionIteratorFactory.STATE;
 import org.apache.bigtop.bigpetstore.util.NumericalIdUtils;
-import org.apache.hadoop.conf.Configuration;
 import org.junit.Test;
 
 public class TestNumericalIdUtils {
@@ -31,6 +30,6 @@ public class TestNumericalIdUtils {
         String strId2= STATE.CO.name()+"_"+ "jay vyas";
         long id2 = NumericalIdUtils.toId(strId2);
         System.out.println(id + " " + id2);
-        Assert.assertFalse(id==id2);
+        assertFalse(id==id2);
     }
 }

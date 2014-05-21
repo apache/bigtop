@@ -15,32 +15,23 @@
  */
 package org.apache.bigtop.bigpetstore.docs;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 
-import junit.framework.Assert;
-
-import org.apache.bigtop.bigpetstore.util.BigPetStoreConstants;
 import org.apache.bigtop.bigpetstore.util.BigPetStoreConstants.OUTPUTS;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 
 public class TestDocs {
 
-    @Test
-    public void testGraphViz() throws Exception{
-        //test the graphviz file
-        //by grepping out the constants.
-        String graphviz=FileUtils.readFileToString(new File("arch.dot"));
-        System.out.println(graphviz);
+	@Test
+	public void testGraphViz() throws Exception {
+		// test the graphviz file by grepping out the constants.
+		String graphviz = FileUtils.readFileToString(new File("arch.dot"));
+		System.out.println(graphviz);
 
-        org.junit.Assert.assertTrue(
-                graphviz.contains(
-                        OUTPUTS.generated.name()));
-
-        org.junit.Assert.assertTrue(
-                graphviz.contains(
-                        OUTPUTS.cleaned.name()));
-
-
-    }
+		assertTrue(graphviz.contains(OUTPUTS.generated.name()));
+		assertTrue(graphviz.contains(OUTPUTS.cleaned.name()));
+	}
 }
