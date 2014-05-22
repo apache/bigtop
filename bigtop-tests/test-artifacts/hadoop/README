@@ -13,4 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-This is a project to develop and build Hadoop (HDFS and MAPREDUCE) smoke and system tests.
+This is a project to develop and build Hadoop (HDFS and MAPREDUCE) smoke and
+system tests.
+
+System property "tests" can be set to select individual tests from the
+available MapReduce jobs. To set the property, include the following
+option in the command line (with your chosen jobs): -Dtests="teragen,terasort"
+
+The default number of terasort rows (1000) can be changed with the system
+property "terasort_rows": -Dterasort_rows=50
