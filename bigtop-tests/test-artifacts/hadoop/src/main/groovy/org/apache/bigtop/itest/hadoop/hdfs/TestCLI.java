@@ -41,28 +41,30 @@ import org.apache.commons.lang.StringUtils;
  */
 public class TestCLI extends CLITestHelper {
   public static final String TEST_DIR_ABSOLUTE = "/tmp/testcli_" + Long.valueOf(System.currentTimeMillis());
-  private String nn;
-  private String sug;
-  protected String namenode;
+  private String supergroup;
+  private String namenode;
   private static Shell shHDFS = new Shell("/bin/bash");
 
   @Before
   @Override
   public void setUp() throws Exception {
     readTestConfigFile();
+
+    // Configuration of real Hadoop cluster
     conf = new HdfsConfiguration();
-    conf.setBoolean(CommonConfigurationKeys.HADOOP_SECURITY_AUTHORIZATION, 
-                    true);
-    clitestDataDir =
-      new File(TEST_CACHE_DATA_DIR).toURI().toString().replace(' ', '+');
-    nn = conf.get(CommonConfigurationKeys.FS_DEFAULT_NAME_KEY);
-    sug = conf.get(DFSConfigKeys.DFS_PERMISSIONS_SUPERUSERGROUP_KEY);
-    namenode = conf.get(DFSConfigKeys.FS_DEFAULT_NAME_KEY, "file:///");
+    supergroup = conf.get(DFSConfigKeys.DFS_PERMISSIONS_SUPERUSERGROUP_KEY);
+    namenode = conf.get(CommonConfigurationKeys.FS_DEFAULT_NAME_KEY);
+
+    conf.setBoolean(CommonConfigurationKeys.HADOOP_SECURITY_AUTHORIZATION, true);
     // Many of the tests expect a replication value of 1 in the output
     conf.setInt("dfs.replication", 1);
 
-    String[] createTestcliDirCmds = {"hadoop fs -mkdir -p " + TEST_DIR_ABSOLUTE,
-      "hadoop fs -chmod 777 " + TEST_DIR_ABSOLUTE};
+    clitestDataDir = new File(TEST_CACHE_DATA_DIR).toURI().toString().replace(' ', '+');
+
+    String[] createTestcliDirCmds = {
+        "hadoop fs -mkdir -p "  + TEST_DIR_ABSOLUTE,
+        "hadoop fs -chmod 777 " + TEST_DIR_ABSOLUTE
+    };
     shHDFS.exec(createTestcliDirCmds);
 
     // Check assumptions which would make some cases fail if not met
@@ -99,21 +101,32 @@ public class TestCLI extends CLITestHelper {
     super.testAll();
   }
 
+  /**
+   * Expand commands from the test config file.
+   * This method is used in displayResults() and compareTestOutput() only,
+   * so it doesn't have any effect on the test execution itself.
+   *
+   * @param cmd
+   * @return String expanded command
+   */
   @Override
   protected String expandCommand(final String cmd) {
     String expCmd = super.expandCommand(cmd);
-    String testcliDir = TEST_DIR_ABSOLUTE;
-    expCmd = expCmd.replaceAll("TEST_DIR_ABSOLUTE", testcliDir);
-    expCmd = expCmd.replaceAll("supergroup", sug);
+    // note: super.expandCommand() expands CLITEST_DATA and USERNAME
+    expCmd = expCmd.replaceAll("TEST_DIR_ABSOLUTE", TEST_DIR_ABSOLUTE);
+    expCmd = expCmd.replaceAll("supergroup", supergroup);
     expCmd = expCmd.replaceAll("NAMENODE", namenode);
     expCmd = expCmd.replaceAll("USER_NAME", System.getProperty("user.name"));
     return expCmd;
   }
 
+  /**
+   * Execute given hadoop FsShell command (via Toolrunner).
+   */
   @Override
   protected CommandExecutor.Result execute(CLICommand cmd) throws Exception {
     if (cmd.getType() instanceof CLICommandFS) {
-      CommandExecutor cmdExecutor = new FSCmdExecutor(nn, new FsShell(conf));
+      CommandExecutor cmdExecutor = new FSCmdExecutor(namenode, new FsShell(conf));
       return cmdExecutor.executeCommand(cmd.getCmd());
     } else {
       throw new IllegalArgumentException("Unknown type of test command: " + cmd.getType());

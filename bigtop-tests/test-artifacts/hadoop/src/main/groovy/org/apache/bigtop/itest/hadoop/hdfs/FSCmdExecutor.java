@@ -34,11 +34,18 @@ public class FSCmdExecutor extends CommandExecutor {
     this.shell = shell;
   }
 
+  /**
+   * Execute given hadoop FsShell command.
+   */
   protected void execute(final String cmd) throws Exception{
     String[] args = getCommandAsArgs(cmd, "NAMENODE", this.namenode);
     ToolRunner.run(shell, args);
   }
 
+  /**
+   * Prapare given FsShell command for execution by ToolRunner.
+   * This method also expands all variables used in the command.
+   */
   @Override
   protected String[] getCommandAsArgs(final String cmd, final String masterKey,
                                       final String master) {
@@ -49,9 +56,10 @@ public class FSCmdExecutor extends CommandExecutor {
       args[i] = tokenizer.nextToken();
       args[i] = args[i].replaceAll(masterKey, master);
       args[i] = args[i].replaceAll("CLITEST_DATA", 
-        new File(CLITestHelper.TEST_CACHE_DATA_DIR).toURI().toString().replace(' ', '+'));
-      args[i] = args[i].replaceAll("TEST_DIR_ABSOLUTE", TestCLI.TEST_DIR_ABSOLUTE);
+          new File(CLITestHelper.TEST_CACHE_DATA_DIR).
+          toURI().toString().replace(' ', '+'));
       args[i] = args[i].replaceAll("USER_NAME", System.getProperty("user.name"));
+      args[i] = args[i].replaceAll("TEST_DIR_ABSOLUTE", TestCLI.TEST_DIR_ABSOLUTE);
 
       i++;
     }
