@@ -166,7 +166,7 @@
         <command>-fs NAMENODE -ls </command>
       </test-commands>
       <cleanup-commands>
-        <command>-fs NAMENODE -rm -r /user/USERNAME/*</command>
+        <command>-fs NAMENODE -rm -r /user/USER_NAME/*</command>
       </cleanup-commands>
       <comparators>
         <comparator>
