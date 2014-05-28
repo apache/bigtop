@@ -239,7 +239,7 @@ env HBASE_VERSION=%{version} bash %{SOURCE1}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
-sh %{SOURCE2} \
+bash %{SOURCE2} \
 	--build-dir=build \
         --doc-dir=%{doc_hbase} \
         --conf-dir=%{etc_hbase_conf_dist} \
