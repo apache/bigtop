@@ -6,7 +6,7 @@
 * (the "License"); you may not use this file except in compliance with
 * the License.  You may obtain a copy of the License at
 * http://www.apache.org/licenses/LICENSE-2.0
-* 
+*
 * Unless required by applicable law or agreed to in writing, software
 * distributed under the License is distributed on an "AS IS" BASIS,
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,25 +18,24 @@ digraph bigpetstore {
    node [shape=record];
 
 
-   PROD_And_USER_HASH_FUNC [label="python or datafu udf" ,style="rounded,filled", shape=diamond];
+   BPSAnalytics [label="BPSAnalytics.pig" ,style="rounded, filled", shape=diamond];
    CUSTOMER_PAGE [label="CUSTOMER_PAGE|json|CUSTOMER_PAGE/part*"];
    DIRTY_CSV [label="DIRTY_CSV|fname   lname -prod , price ,prod,..|generated/part*"];
    CSV [label="CSV|fname,lname,prod,price,date,xcoord,ycoord,...|cleaned/part*"];
-   MAHOUT_VIEW_INPUT [label="MAHOUT_VIEW  |  (hashed name) 10001, (hashed purchases) 203 |  <hive_warehouse>/mahout_cf_in/part*" ];
-   MAHOUT_CF [label="MAHOUT collaborative filter output  | (hashed name) 10001, (hashed product) 201, .6 | mahout_cf_out/part*" ];
+   MAHOUT_VIEW_INPUT [label="MAHOUT_VIEW  |  (user-id) 10001  (product-id) 203  (implicit-rating) 1 |  cleaned/Mahout/part*" ];
+   MAHOUT_ALS [label="Parallel ALS Recommender output  | (user-id) 10001  [(product-id) 201: (recommendation-strength 0-1)0.546] | Mahout/AlsRecommendations/part*" ];
 
    Generate -> DIRTY_CSV [label="hadoop jar bigpetstore.jar org.bigtop.bigpetstore.generator.BPSGenerator 100 bps/generated/"] ;
-   DIRTY_CSV -> pig [label=""];
+   DIRTY_CSV -> pig [label="hadoop jar bigpetstore.jar org.bigtop.bigpetstore.etl.PigCSVCleaner bps/generated/ bps/cleaned/ "];
 
-   pig -> CSV [label="hadoop jar bigpetstore.jar org.bigtop.bigpetstore.etl.PigCSVCleaner bps/generated/ bps/cleaned/ "];
-   CSV -> MAHOUT_VIEW_INPUT [label="BPS_Mahout_Viewbuilder.pig"]; 
-   PROD_And_USER_HASH_FUNC -> MAHOUT_VIEW_INPUT [label="used in BPS_MAHOUT_Viewbuilder.pig script"] ;
+   pig -> CSV [label="pig query to clean up generated transaction records"];
+   pig -> MAHOUT_VIEW_INPUT [label="pig query to produce mahout input format"];
 
-   MAHOUT_VIEW_INPUT -> mahout;
-   mahout -> MAHOUT_CF [label="hadoop jar bigpetstore.jar org.bigtop.bigpetstore.analytics.BPSRecommender bps/mahout_cf_in/part* bps/mahout_cf_out/"];
+   MAHOUT_VIEW_INPUT -> ParallelALSFactorizationJob [label="hadoop jar bigpetstore.jar org.apache.bigtop.bigpetstore.recommend.ItemRecommender cleaned/Mahout Mahout/AlsFactorization Mahout/AlsRecommendations"];
+   ParallelALSFactorizationJob -> "Mahout RecommenderJob"
+   "Mahout RecommenderJob" -> MAHOUT_ALS
 
-   CSV -> pig_job2;   
-   MAHOUT_CF  -> pig_job2 ;
-   PROD_And_USER_HASH_FUNC -> pig_job2;
-   pig_job2  -> CUSTOMER_PAGE [label="hadoop jar bigpetstore.jar org.bigtop.bigpetstore.analytics.BPSRecommender bpg/cleaned/ bps/mahout_cf_out/"];
+   CSV -> BPSAnalytics;
+   BPSAnalytics  -> pig_job2;
+   pig_job2  -> CUSTOMER_PAGE [label=""];
 }

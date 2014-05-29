@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,7 +24,7 @@ import java.io.InputStreamReader;
 import java.util.Date;
 
 import org.apache.bigtop.bigpetstore.generator.BPSGenerator.props;
-import org.apache.bigtop.bigpetstore.generator.TransactionIteratorFactory.STATE;
+import org.apache.bigtop.bigpetstore.generator.util.State;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -61,7 +61,7 @@ public class TestPetStoreTransactionGeneratorJob {
          * Run the job
          */
         Path output = new Path("petstoredata/" + (new Date()).toString());
-        Job createInput = BPSGenerator.createJob(output, c);
+        Job createInput = BPSGenerator.getCreateTransactionRecordsJob(output, c);
         createInput.submit();
         System.out.println(createInput);
         createInput.waitForCompletion(true);
@@ -83,10 +83,10 @@ public class TestPetStoreTransactionGeneratorJob {
             s = br.readLine();
             System.out.println("===>" + s);
             recordsSeen++;
-            if (s.contains(STATE.CT.name())) {
+            if (s.contains(State.CT.name())) {
                 CTseen = true;
             }
-            if (s.contains(STATE.AZ.name())) {
+            if (s.contains(State.AZ.name())) {
                 AZseen = true;
             }
         }

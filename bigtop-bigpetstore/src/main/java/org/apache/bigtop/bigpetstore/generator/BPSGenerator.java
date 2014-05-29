@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,6 +33,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import static org.apache.bigtop.bigpetstore.generator.PetStoreTransactionsInputFormat.props;
 
 /**
  * This is a mapreduce implementation of a generator of a large sentiment
@@ -46,71 +47,62 @@ import org.slf4j.LoggerFactory;
  */
 public class BPSGenerator {
 
-    final static Logger log = LoggerFactory.getLogger(BPSGenerator.class);
+  public static final int DEFAULT_NUM_RECORDS = 100;
 
-    public enum props {
-        // bigpetstore_splits,
-        bigpetstore_records
+  final static Logger log = LoggerFactory.getLogger(BPSGenerator.class);
+
+  public enum props {
+    bigpetstore_records
+  }
+
+  public static Job createJob(Path output, int records) throws IOException {
+    Configuration c = new Configuration();
+    c.setInt(props.bigpetstore_records.name(), DEFAULT_NUM_RECORDS);
+    return getCreateTransactionRecordsJob(output, c);
+  }
+
+  public static Job getCreateTransactionRecordsJob(Path outputDir, Configuration conf)
+          throws IOException {
+    Job job = new Job(conf, "PetStoreTransaction_ETL_" + System.currentTimeMillis());
+    // recursively delete the data set if it exists.
+    FileSystem.get(outputDir.toUri(), conf).delete(outputDir, true);
+    job.setJarByClass(BPSGenerator.class);
+    job.setMapperClass(MyMapper.class);
+    // use the default reducer
+    // job.setReducerClass(PetStoreTransactionGeneratorJob.Red.class);
+    job.setOutputKeyClass(Text.class);
+    job.setOutputValueClass(Text.class);
+    job.setMapOutputKeyClass(Text.class);
+    job.setMapOutputValueClass(Text.class);
+    job.setInputFormatClass(PetStoreTransactionsInputFormat.class);
+    job.setOutputFormatClass(TextOutputFormat.class);
+    FileOutputFormat.setOutputPath(job, outputDir);
+    return job;
+  }
+
+  public static class MyMapper extends Mapper<Text, Text, Text, Text> {
+    @Override
+    protected void setup(Context context) throws IOException,
+    InterruptedException {
+      super.setup(context);
     }
 
-    public static Job createJob(Path output, int records) throws IOException {
-        Configuration c = new Configuration();
-        c.setInt(props.bigpetstore_records.name(), 10);
-        return createJob(output, c);
+    protected void map(Text key, Text value, Context context)
+            throws java.io.IOException, InterruptedException {
+      context.write(key, value);
     }
+  }
 
-    public static Job createJob(Path output, Configuration conf)
-            throws IOException {
-        Job job = new Job(conf, "PetStoreTransaction_ETL_"
-                + System.currentTimeMillis());
-        // recursively delete the data set if it exists.
-        FileSystem.get(output.toUri(),conf).delete(output, true);
-        job.setJarByClass(BPSGenerator.class);
-        job.setMapperClass(MyMapper.class);
-        // use the default reducer
-        // job.setReducerClass(PetStoreTransactionGeneratorJob.Red.class);
-        job.setOutputKeyClass(Text.class);
-        job.setOutputValueClass(Text.class);
-        job.setMapOutputKeyClass(Text.class);
-        job.setMapOutputValueClass(Text.class);
-        job.setInputFormatClass(GeneratePetStoreTransactionsInputFormat.class);
-        job.setOutputFormatClass(TextOutputFormat.class);
-        FileOutputFormat.setOutputPath(job, output);
-        return job;
+  public static void main(String args[]) throws Exception {
+    if (args.length != 2) {
+      System.err.println("USAGE : [number of records] [output path]");
+      System.exit(0);
+    } else {
+      Configuration conf = new Configuration();
+      DeveloperTools.validate(args, "# of records", "output path");
+      conf.setInt(PetStoreTransactionsInputFormat.props.bigpetstore_records.name(),
+              Integer.parseInt(args[0]));
+      getCreateTransactionRecordsJob(new Path(args[1]), conf).waitForCompletion(true);
     }
-
-    public static class MyMapper extends Mapper<Text, Text, Text, Text> {
-
-        @Override
-        protected void setup(Context context) throws IOException,
-                InterruptedException {
-            super.setup(context);
-        }
-
-        protected void map(Text key, Text value, Context context)
-                throws java.io.IOException, InterruptedException {
-            context.write(key, value);
-            // TODO: Add multiple outputs here which writes mock addresses for
-            // generated users
-            // to a corresponding data file.
-        };
-    }
-
-    public static void main(String args[]) throws Exception {
-        if (args.length != 2) {
-            System.err.println("USAGE : [number of records] [output path]");
-            System.exit(0);
-        } else {
-            Configuration conf = new Configuration();
-            DeveloperTools.validate(
-                    args,
-                    "# of records",
-                    "output path");
-
-            conf.setInt(
-                    GeneratePetStoreTransactionsInputFormat.props.bigpetstore_records.name(),
-                    Integer.parseInt(args[0]));
-            createJob(new Path(args[1]), conf).waitForCompletion(true);
-        }
-    }
+  }
 }

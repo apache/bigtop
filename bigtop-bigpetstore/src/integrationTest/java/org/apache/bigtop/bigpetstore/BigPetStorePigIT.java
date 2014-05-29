@@ -19,26 +19,22 @@ import static org.apache.bigtop.bigpetstore.ITUtils.BPS_TEST_GENERATED;
 import static org.apache.bigtop.bigpetstore.ITUtils.BPS_TEST_PIG_CLEANED;
 import static org.apache.bigtop.bigpetstore.ITUtils.fs;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.bigtop.bigpetstore.etl.PigCSVCleaner;
 import org.apache.bigtop.bigpetstore.util.BigPetStoreConstants;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.pig.ExecType;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Function;
+import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableMap;
 
 /**
@@ -76,68 +72,24 @@ public class BigPetStorePigIT {
 			FileSystem.get(new Configuration()).delete(BPS_TEST_PIG_CLEANED, true);
 			FileSystem.get(new Configuration()).delete(BPS_TEST_PIG_COUNT_PRODUCTS, true);
 		} catch (Exception e) {
-			System.out.println("didnt need to delete pig output.");
-			// not necessarily an error
+			throw new RuntimeException(e);
 		}
 	}
 
-	static Map<Path, Function<String, Boolean>> TESTS = ImmutableMap.of(
+	static Map<Path, Predicate<String>> TESTS = ImmutableMap.of(
 		/** Test of the main output */
-		BPS_TEST_PIG_CLEANED, new Function<String, Boolean>() {
-			public Boolean apply(String x) {
-				// System.out.println("Verified...");
-				return true;
-			}
-		},
-		// Example of how to count products
-		// after doing basic pig data cleanup
-		BPS_TEST_PIG_COUNT_PRODUCTS, new Function<String, Boolean>() {
-			// Jeff'
-			public Boolean apply(String x) {
-				return true;
-			}
-		}
+		BPS_TEST_PIG_CLEANED, ITUtils.VERIFICATION_PERDICATE,
+		// Example of how to count products after doing basic pig data cleanup
+		BPS_TEST_PIG_COUNT_PRODUCTS, ITUtils.VERIFICATION_PERDICATE,
+		// Test the output that is to be used as an input for Mahout.
+		BigPetStoreMahoutIT.INPUT_DIR_PATH, ITUtils.VERIFICATION_PERDICATE
 	);
 
-	/**
-	 * The "core" task reformats data to TSV. lets test that first.
-	 */
 	@Test
 	public void testPetStoreCorePipeline() throws Exception {
 		runPig(BPS_TEST_GENERATED, BPS_TEST_PIG_CLEANED, PIG_SCRIPT);
-		for (Entry<Path, Function<String, Boolean>> e : TESTS.entrySet()) {
-			assertOutput(e.getKey(), e.getValue());
-		}
-	}
-
-	public static void assertOutput(Path base,
-			Function<String, Boolean> validator) throws Exception {
-		FileSystem fs = FileSystem.getLocal(new Configuration());
-
-		FileStatus[] files = fs.listStatus(base);
-		// print out all the files.
-		for (FileStatus stat : files) {
-			System.out.println(stat.getPath() + "  " + stat.getLen());
-		}
-
-		/**
-		 * Support map OR reduce outputs
-		 */
-		Path partm = new Path(base, "part-m-00000");
-		Path partr = new Path(base, "part-r-00000");
-		Path p = fs.exists(partm) ? partm : partr;
-
-		/**
-		 * Now we read through the file and validate its contents.
-		 */
-		BufferedReader r = new BufferedReader(new InputStreamReader(fs.open(p)));
-
-		// line:{"product":"big chew toy","count":3}
-		while (r.ready()) {
-			String line = r.readLine();
-			log.info("line:" + line);
-			// System.out.println("line:"+line);
-			Assert.assertTrue("validationg line : " + line, validator.apply(line));
+		for (Entry<Path, Predicate<String>> e : TESTS.entrySet()) {
+			ITUtils.assertOutput(e.getKey(), e.getValue());
 		}
 	}
 

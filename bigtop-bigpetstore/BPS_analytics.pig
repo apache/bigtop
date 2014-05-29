@@ -38,14 +38,16 @@ csvdata =
           dump:chararray,
           state:chararray,
           transaction:int,
+          custId:long,
           fname:chararray,
           lname:chararray,
-          date:chararray,
+          productId:int,
+          product:chararray,
           price:float,
-          product:chararray);
+          date:chararray);
 
 -- RESULT:
--- (BigPetStore,storeCode_AK,1,jay,guy,Thu Dec 18 12:17:10 EST 1969,10.5,dog-food)
+-- (BigPetStore,storeCode_AK,1,11,jay,guy,3,dog-food,10.5,Thu Dec 18 12:17:10 EST 1969)
 -- ...
 
 -- Okay! Now lets group our data so we can do some stats.
@@ -55,7 +57,7 @@ csvdata =
 state_product = group csvdata by ( state, product ) ;
 
 -- RESULT
--- ((storeCode_AK,dog-food) , {(BigPetStore,storeCode_AK,1,jay,guy,Thu Dec 18 12:17:10 EST 1969,10.5,dog-food)}) --
+-- ((storeCode_AK,dog-food) , {(BigPetStore,storeCode_AK,1,11,jay,guy,3,dog-food,10.5,Thu Dec 18 12:17:10 EST 1969)}) --
 -- ...
 
 

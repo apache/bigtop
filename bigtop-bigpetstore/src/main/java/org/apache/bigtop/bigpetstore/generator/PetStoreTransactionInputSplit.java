@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,7 +19,8 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import org.apache.bigtop.bigpetstore.generator.TransactionIteratorFactory.STATE;
+import org.apache.bigtop.bigpetstore.generator.util.State;
+import org.apache.commons.lang3.Range;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapreduce.InputSplit;
 
@@ -38,21 +39,26 @@ public class PetStoreTransactionInputSplit extends InputSplit implements
     }
 
     public int records;
-    public STATE state;
+    public State state;
+    public Range<Long> customerIdRange;
 
-    public PetStoreTransactionInputSplit(int records, STATE state) {
+    public PetStoreTransactionInputSplit(int records, Range<Long> customerIdRange, State state) {
         this.records = records;
         this.state = state;
+        this.customerIdRange = customerIdRange;
     }
 
-    public void readFields(DataInput arg0) throws IOException {
-        records = arg0.readInt();
-        state = STATE.valueOf(arg0.readUTF());
+    public void readFields(DataInput dataInputStream) throws IOException {
+        records = dataInputStream.readInt();
+        state = State.valueOf(dataInputStream.readUTF());
+        customerIdRange = Range.between(dataInputStream.readLong(), dataInputStream.readLong());
     }
 
-    public void write(DataOutput arg0) throws IOException {
-        arg0.writeInt(records);
-        arg0.writeUTF(state.name());
+    public void write(DataOutput dataOutputStream) throws IOException {
+        dataOutputStream.writeInt(records);
+        dataOutputStream.writeUTF(state.name());
+        dataOutputStream.writeLong(customerIdRange.getMinimum());
+        dataOutputStream.writeLong(customerIdRange.getMaximum());
     }
 
     @Override
@@ -62,6 +68,6 @@ public class PetStoreTransactionInputSplit extends InputSplit implements
 
     @Override
     public long getLength() throws IOException, InterruptedException {
-        return 100;
+        return records;
     }
 }

@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,16 +16,14 @@
 
 package org.apache.bigtop.bigpetstore.util;
 
-import java.math.BigInteger;
-
-import org.apache.bigtop.bigpetstore.generator.TransactionIteratorFactory.STATE;
+import org.apache.bigtop.bigpetstore.generator.util.State;
 
 /**
  * User and Product IDs need numerical
  * identifiers for recommender algorithms
  * which attempt to interpolate new
  * products.
- * 
+ *
  * TODO: Delete this class. Its not necessarily required: We might just use HIVE HASH() as our
  * standard for this.
  */
@@ -34,7 +32,7 @@ public class NumericalIdUtils {
     /**
      * People: Leading with ordinal code for state.
      */
-    public static long toId(STATE state, String name){
+    public static long toId(State state, String name){
         String fromRawData =
                 state==null?
                         name:
