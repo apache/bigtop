@@ -17,28 +17,26 @@ digraph bigpetstore {
 
    node [shape=record];
 
-   PIG_ANALYTICS [label="PIG_ANALYTICS|Unstructured-unsupported-pigscripts| pig_ad_hoc(0-n)"];
 
+   PROD_And_USER_HASH_FUNC [label="python or datafu udf" ,style="rounded,filled", shape=diamond];
    CUSTOMER_PAGE [label="CUSTOMER_PAGE|json|CUSTOMER_PAGE/part*"];
    DIRTY_CSV [label="DIRTY_CSV|fname   lname -prod , price ,prod,..|generated/part*"];
    CSV [label="CSV|fname,lname,prod,price,date,xcoord,ycoord,...|cleaned/part*"];
    MAHOUT_VIEW_INPUT [label="MAHOUT_VIEW  |  (hashed name) 10001, (hashed purchases) 203 |  <hive_warehouse>/mahout_cf_in/part*" ];
-   MAHOUT_CF [label="MAHOUT_CF  | (hashed name) 10001, (hashed product) 201, .6 | mahout_cf_out/part*" ];
+   MAHOUT_CF [label="MAHOUT collaborative filter output  | (hashed name) 10001, (hashed product) 201, .6 | mahout_cf_out/part*" ];
 
    Generate -> DIRTY_CSV [label="hadoop jar bigpetstore.jar org.bigtop.bigpetstore.generator.BPSGenerator 100 bps/generated/"] ;
    DIRTY_CSV -> pig [label=""];
 
-   pig -> CSV [label="hadoop jar bigpetstore.jar org.bigtop.bigpetstore.etl.PigCSVCleaner bps/generated/ bps/cleaned/"];
-   pig -> PIG_ANALYTICS [label="same as CSV job, but add your scripts to end... p1.pig p2.pig ..."];
-   PIG_ANALYTICS -> CSV;
-   PROD_HASH -> hive [label="hive hash udf"];
-   USER_HASH -> hive  [label="hive hash udf"];
+   pig -> CSV [label="hadoop jar bigpetstore.jar org.bigtop.bigpetstore.etl.PigCSVCleaner bps/generated/ bps/cleaned/ "];
+   CSV -> MAHOUT_VIEW_INPUT [label="BPS_Mahout_Viewbuilder.pig"]; 
+   PROD_And_USER_HASH_FUNC -> MAHOUT_VIEW_INPUT [label="used in BPS_MAHOUT_Viewbuilder.pig script"] ;
 
-   CSV -> hive ;
-   hive -> MAHOUT_VIEW_INPUT [label="hadoop jar bigpetstore.jar org.bigtop.bigpetstore.etl.HiveViewCreator bps/pig_out mahout_cf_in"];
-   MAHOUT_VIEW_INPUT -> mahout_collab_filter_recomender  -> MAHOUT_CF;
-   MAHOUT_CF  -> crunch ;
-   CSV -> crunch ;
-   crunch -> CUSTOMER_PAGE [label="high performance joining"];
+   MAHOUT_VIEW_INPUT -> mahout;
+   mahout -> MAHOUT_CF [label="hadoop jar bigpetstore.jar org.bigtop.bigpetstore.analytics.BPSRecommender bps/mahout_cf_in/part* bps/mahout_cf_out/"];
 
+   CSV -> pig_job2;   
+   MAHOUT_CF  -> pig_job2 ;
+   PROD_And_USER_HASH_FUNC -> pig_job2;
+   pig_job2  -> CUSTOMER_PAGE [label="hadoop jar bigpetstore.jar org.bigtop.bigpetstore.analytics.BPSRecommender bpg/cleaned/ bps/mahout_cf_out/"];
 }
