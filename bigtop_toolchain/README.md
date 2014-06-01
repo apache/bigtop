@@ -20,7 +20,7 @@ bigtop-toolchain
 
 Puppet module for configuring a CentOS host for building BigTop. It installs:
 
-**Apache Ant 1.9.2**
+**Apache Ant 1.9.4**
 
 **Apache Forrest 0.9**
 
