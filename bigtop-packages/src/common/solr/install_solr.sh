@@ -165,6 +165,48 @@ cat > $PREFIX/$LIB_DIR/bin/solrd <<'EOF'
 BIGTOP_DEFAULTS_DIR=${BIGTOP_DEFAULTS_DIR-/etc/default}
 [ -n "${BIGTOP_DEFAULTS_DIR}" -a -r ${BIGTOP_DEFAULTS_DIR}/solr ] && . ${BIGTOP_DEFAULTS_DIR}/solr
 
+function info() {
+  echo "INFO:" "$@"
+}
+
+function tomcat_watchdog() {
+   local LOCAL_SOLR_URL="http://127.0.0.1:$SOLR_PORT/solr"
+
+   eval exec {3..255}\>\&-
+   cd /
+   info "Starting a watchdog process monitoring $$"
+   while true ; do
+     sleep $SOLRD_WATCHDOG_TIMEOUT
+     info  "Sending a heartbeat request to $LOCAL_SOLR_URL"
+
+     HTTP_CODE=`curl -m$SOLRD_WATCHDOG_TIMEOUT --retry 5 -L -k -s --negotiate -u : -o /dev/null -w "%{http_code}" "$LOCAL_SOLR_URL"`
+     HTTP_CODE=${HTTP_CODE:-600}
+
+     # If we're getting 5xx+ (server side error) kill the service and exit
+     # Because curl is weird (it tries to proxy HTTP exit codes to be its
+     # UNIX exit codes times 10 AND at the same time prints 000 as HTTP exit
+     # code) we should also treat exit code of 0 as a failure. 
+     if [ $HTTP_CODE -ge 500 -o $HTTP_CODE -eq 0 ] ; then
+       info "Got $HTTP_CODE HTTP code from the Solr server. Watchdog is now killing it: $$"
+       kill -9 $$
+       exit 0
+     fi
+
+     # If we're getting 4xx (client side error) we better exit silently
+     # 401 (Unauthorized) is a special case of when we should keep running
+     if [ $HTTP_CODE -ge 400 -a $HTTP_CODE -lt 500 -a $HTTP_CODE -ne 401 ] ; then
+       info "Got $HTTP_CODE HTTP code. This is confusing. Watchdog is now exiting..."
+       exit 0
+     fi
+
+     # Finally check that the monitored process is still running (a bit of belt'n'suspenders)
+     if ! kill -0 $$ ; then
+       info "Looks like the Solr server exited. Watchdog is now exiting..."
+       exit 0
+     fi
+   done
+}
+
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
 
@@ -268,6 +310,10 @@ export CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.host=$HOSTNAME
 # FIXME: for some reason catalina doesn't use CATALINA_OPTS for stop action
 #        and thus doesn't know the admin port
 export JAVA_OPTS="$CATALINA_OPTS"
+
+if [ "$1" = "run" -a -n "$SOLRD_WATCHDOG_TIMEOUT" ] ; then
+  tomcat_watchdog &
+fi
 
 exec ${CATALINA_HOME}/bin/catalina.sh "$@"
 EOF
