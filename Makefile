@@ -20,6 +20,15 @@ OUTPUT_DIR?=$(BASE_DIR)/output
 REPO_DIR  ?=$(BASE_DIR)/bigtop-repos
 DIST_DIR  ?=$(BASE_DIR)/dist
 
+deprecate:
+	@echo "    WARNING!!!"
+	@echo "      make based packages build system is DEPRECATED"
+	@echo "      and will be removed in the future releases."
+	@echo "      New system based on Gradle has been introduced"
+	@echo "      and will be actively supported in the next releases."
+	@echo "      Please run 'gradle' for future references."
+	@echo ""
+
 REQUIRED_DIRS = $(BUILD_DIR) $(DL_DIR) $(OUTPUT_DIR)
 _MKDIRS :=$(shell for d in $(REQUIRED_DIRS); \
   do                               \
@@ -39,12 +48,12 @@ APACHE_ARCHIVE ?= http://archive.apache.org/dist
 include package.mk
 include bigtop.mk
 
-help: package-help
+help: deprecate package-help
 
-all: srpm sdeb
+all: deprecate srpm sdeb
 world: all
 
-packages: $(TARGETS)
+packages: deprecate $(TARGETS)
 
 help-header:
 	@echo "    Bigtop BOM: $(BIGTOP_BOM)"
@@ -59,7 +68,7 @@ help-header:
 
 package-help: help-header $(TARGETS_HELP)
 
-clean: $(TARGETS_CLEAN)
+clean: deprecate $(TARGETS_CLEAN)
 	-rm -rf $(BUILD_DIR)
 	-rm -rf $(OUTPUT_DIR)
 	-rm -rf $(DIST_DIR)
@@ -84,7 +93,7 @@ relnotes: $(TARGETS_RELNOTES)
 checkenv:
 	./check-env.sh
 
-dist: realclean
+dist: deprecate realclean
 	mkdir -p $(DIST_DIR)
 	rsync -avz --exclude=.svn --exclude=.git --exclude=.gitignore --exclude=dist "$(BASE_DIR)/" "$(DIST_DIR)/bigtop-$(BIGTOP_VERSION)"
 	cd $(DIST_DIR) && tar -cvzf "$(DIST_DIR)/bigtop-$(BIGTOP_VERSION).tar.gz" "bigtop-$(BIGTOP_VERSION)"

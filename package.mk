@@ -199,7 +199,7 @@ $(1)-tar: $(1)-download $$($(2)_TARGET_TAR)
 $(1)-srpm: $(1)-tar $$($(2)_TARGET_SRPM)
 
 # To make binary rpms, we need to build source RPMs
-$(1)-rpm: $(1)-srpm $$($(2)_TARGET_RPM)
+$(1)-rpm: deprecate $(1)-srpm $$($(2)_TARGET_RPM)
 
 # To make a yum/zypper repo, we need to build binary RPMs
 $(1)-yum: $(1)-rpm $$($(2)_TARGET_YUM)
@@ -208,17 +208,17 @@ $(1)-yum: $(1)-rpm $$($(2)_TARGET_YUM)
 $(1)-sdeb: $(1)-tar $$($(2)_TARGET_SDEB)
 
 # To make debs, we need to make source packages
-$(1)-deb: $(1)-sdeb $$($(2)_TARGET_DEB)
+$(1)-deb: deprecate $(1)-sdeb $$($(2)_TARGET_DEB)
 
 # To make an apt repo, we need to build binary DEBs
 $(1)-apt: $(1)-deb $$($(2)_TARGET_APT)
 
 ####
 # Helper targets -version -help etc
-$(1)-version:
+$(1)-version: deprecate
 	@echo "Base: $$($(2)_BASE_VERSION)"
 
-$(1)-help:
+$(1)-help: deprecate
 	@echo "    $(1)  [$(1)-version, $(1)-info, $(1)-relnotes,"
 	@echo "           $(1)-srpm, $(1)-rpm]"
 	@echo "           $(1)-sdeb, $(1)-deb]"
@@ -226,7 +226,7 @@ $(1)-help:
 $(1)-clean:
 	rm -rf $(BUILD_DIR)/$(1)
 
-$(1)-info:
+$(1)-info: deprecate
 	@echo "Info for package $(1)"
 	@echo "  Will download from URL: $$($(2)_DOWNLOAD_URL)"
 	@echo "  To destination file: $$($(2)_DOWNLOAD_DST)"
