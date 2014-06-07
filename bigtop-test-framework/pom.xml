@@ -70,7 +70,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.3.2</version>
+        <version>${maven-compiler-plugin.version}</version>
         <configuration>
           <compilerId>groovy-eclipse-compiler</compilerId>
           <source>1.6</source>

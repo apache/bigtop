@@ -39,21 +39,22 @@
   <inceptionYear>2011</inceptionYear>
 
   <properties>
-    <hadoop.version>2.0.6-alpha</hadoop.version>
-    <hbase.version>0.94.11</hbase.version>
-    <pig.version>0.11.1</pig.version>
-    <pig-smoke.version>0.11.1</pig-smoke.version>
+    <hadoop.version>2.3.0</hadoop.version>
+    <hbase.version>0.98.2</hbase.version>
+    <pig.version>0.12.1</pig.version>
+    <pig-smoke.version>0.12.1</pig-smoke.version>
     <sqoop.version>1.99.2</sqoop.version>
     <zookeeper.version>3.4.5</zookeeper.version>
     <giraph.version>1.0.0</giraph.version>
-    <solr.version>4.4.0</solr.version>
-    <spark.version>0.8.0-incubating</spark.version>
+    <solr.version>4.6.0</solr.version>
+    <spark.version>0.9.1</spark.version>
     <spark-smoke.version>${project.version}</spark-smoke.version>
 
     <itest-common.version>${project.version}</itest-common.version>
 
-    <groovy.version>1.8.6</groovy.version>
-    <groovy-eclipse-compiler.version>2.7.0-01</groovy-eclipse-compiler.version>
+    <groovy.version>2.1.8</groovy.version>
+    <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
+    <groovy-eclipse-compiler.version>2.8.0-01</groovy-eclipse-compiler.version>
     <gmaven.version>1.0</gmaven.version>
     <ant.version>1.8.2</ant.version>
     <commons.logging.version>1.1</commons.logging.version>

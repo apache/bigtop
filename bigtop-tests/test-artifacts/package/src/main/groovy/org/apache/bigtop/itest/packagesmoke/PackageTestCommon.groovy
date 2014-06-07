@@ -66,7 +66,7 @@ class PackageTestCommon {
     return ((summary ?: "") + ' ' + description).replaceAll(/\s+/,' ').replaceAll(/\s\.\s/,' ').replaceAll(/\s\.$/,' ').trim();
   }
 
-  private void checkMetadata(PackageInstance pkg, Map expected_metadata) {
+  private void checkMetadataInternal(PackageInstance pkg, Map expected_metadata) {
     boolean noSummary = (pm.type == "apt");
 
     expected_metadata.each { key, expected ->
@@ -91,7 +91,7 @@ class PackageTestCommon {
   }
 
   public void checkMetadata(Map expected_metadata) {
-    checkMetadata(pkg, expected_metadata);
+    checkMetadataInternal(pkg, expected_metadata);
   }
 
   public void checkRemoteMetadata(Map expected_metadata, boolean unique) {
@@ -106,7 +106,7 @@ class PackageTestCommon {
     } else if (pl.size() == 0) {
       recordFailure("can not find $name in the repository");
     } else {
-      checkMetadata(pl.get(0), expected_metadata);
+      checkMetadataInternal(pl.get(0), expected_metadata);
     }
   }
 
