@@ -14,9 +14,29 @@
 # limitations under the License.
 
 class bigtop_toolchain::protobuf {
+
+  include bigtop_toolchain::deps
+
   case $operatingsystem{
     Ubuntu: {
-      notify {"Ubuntu provides protobuf in repo":}
+      exec {'/usr/bin/dpkg -i protobuf-compiler_2.5.0-9ubuntu1_amd64.deb':
+        unless  => "/usr/bin/test -f /usr/bin/protoc",
+        cwd     => "/usr/src",
+        require => [ EXEC["/usr/bin/dpkg -i libprotoc8_2.5.0-9ubuntu1_amd64.deb"],EXEC["/usr/bin/wget https://launchpad.net/ubuntu/+archive/primary/+files/protobuf-compiler_2.5.0-9ubuntu1_amd64.deb"] ]
+      }
+
+      exec {'/usr/bin/dpkg -i libprotoc8_2.5.0-9ubuntu1_amd64.deb':
+        unless  => "/usr/bin/test -f /usr/bin/protoc",
+        cwd     => "/usr/src",
+        require => [ EXEC["/usr/bin/dpkg -i libprotobuf8_2.5.0-9ubuntu1_amd64.deb"],EXEC["/usr/bin/wget https://launchpad.net/ubuntu/+archive/primary/+files/libprotoc8_2.5.0-9ubuntu1_amd64.deb"] ]
+      }
+
+      exec {'/usr/bin/dpkg -i libprotobuf8_2.5.0-9ubuntu1_amd64.deb':
+        unless  => "/usr/bin/test -f /usr/bin/protoc",
+        cwd     => "/usr/src",
+        require => EXEC["/usr/bin/wget https://launchpad.net/ubuntu/+archive/primary/+files/libprotobuf8_2.5.0-9ubuntu1_amd64.deb"],
+      }
+
     }
     default:{
       file { '/etc/yum.repos.d/mrdocs-protobuf-rpm.repo':

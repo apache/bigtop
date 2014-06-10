@@ -30,7 +30,7 @@ Puppet module for configuring a CentOS host for building BigTop. It installs:
 
 **Gradle 1.10**
 
-**Protobuf 2.4.1**
+**Protobuf 2.5.0**
 
 ##Usage
 
