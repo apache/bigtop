@@ -153,9 +153,9 @@ class hadoop {
       ensure => running,
       hasstatus => true,
       subscribe => [Package["hadoop-hdfs-datanode"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
-      require => [ Package["hadoop-hdfs-datanode"], File[$dirs] ],
+      require => [ Package["hadoop-hdfs-datanode"], File["/etc/default/hadoop-hdfs-datanode"], File[$dirs] ],
     }
-    Kerberos::Host_keytab <| title == "hdfs" |> -> Service["hadoop-hdfs-datanode"]
+    Kerberos::Host_keytab <| title == "hdfs" |> -> Exec <| tag == "namenode-format" |> -> Service["hadoop-hdfs-datanode"]
 
     file { $dirs:
       ensure => directory,
@@ -333,8 +333,7 @@ class hadoop {
       subscribe => [Package["hadoop-hdfs-namenode"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
       require => [Package["hadoop-hdfs-namenode"]],
     } 
-    Exec <| tag == "namenode-format" |>         -> Service["hadoop-hdfs-namenode"]
-    Kerberos::Host_keytab <| title == "hdfs" |> -> Service["hadoop-hdfs-namenode"]
+    Kerberos::Host_keytab <| title == "hdfs" |> -> Exec <| tag == "namenode-format" |> -> Service["hadoop-hdfs-namenode"]
 
     if ($ha == "auto") {
       package { "hadoop-hdfs-zkfc":
