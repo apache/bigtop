@@ -153,7 +153,7 @@ for x in CHANGELOG \
           NOTICE \
           README \
           RELEASE-NOTES ; do
-  if [ -x $x ] ; then
+  if [ -e $x ] ; then
     cp -r $x $PREFIX/${DOC_DIR}
   fi
 done
