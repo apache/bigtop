@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.bigtop.itest.hadoop.hdfs;
+package org.apache.bigtop.itest.hadoop.hcfs;
 
 import java.io.File;
 import java.util.StringTokenizer;
@@ -54,12 +54,17 @@ public class FSCmdExecutor extends CommandExecutor {
     int i = 0;
     while (tokenizer.hasMoreTokens()) {
       args[i] = tokenizer.nextToken();
+      // HCFS fs.default.name Hack (see TestCLI.java)
+      args[i] = args[i].replaceAll("NAMENODETEST_DIR_ABSOLUTE", TestCLI.NAMENODE_TESTDIR_HACK);
       args[i] = args[i].replaceAll(masterKey, master);
-      args[i] = args[i].replaceAll("CLITEST_DATA", 
+      args[i] = args[i].replaceAll("CLITEST_DATA",
           new File(CLITestHelper.TEST_CACHE_DATA_DIR).
           toURI().toString().replace(' ', '+'));
       args[i] = args[i].replaceAll("USER_NAME", System.getProperty("user.name"));
       args[i] = args[i].replaceAll("TEST_DIR_ABSOLUTE", TestCLI.TEST_DIR_ABSOLUTE);
+      args[i] = args[i].replaceAll("HCFS_SCHEME", TestCLI.HCFS_SCHEME);
+      args[i] = args[i].replaceAll("HCFS_DIRSIZE", TestCLI.HCFS_DIRSIZE);
+      args[i] = args[i].replaceAll("HCFS_NNMATCH", TestCLI.HCFS_NNMATCH);
 
       i++;
     }

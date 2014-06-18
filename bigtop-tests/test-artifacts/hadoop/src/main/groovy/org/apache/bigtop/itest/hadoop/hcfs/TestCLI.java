@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.bigtop.itest.hadoop.hdfs;
+package org.apache.bigtop.itest.hadoop.hcfs;
 
 import java.io.File;
 
@@ -41,6 +41,10 @@ import org.apache.commons.lang.StringUtils;
  */
 public class TestCLI extends CLITestHelper {
   public static final String TEST_DIR_ABSOLUTE = "/tmp/testcli_" + Long.valueOf(System.currentTimeMillis());
+  public static String HCFS_SCHEME;
+  public static String HCFS_DIRSIZE;
+  public static String HCFS_NNMATCH;
+  public static String NAMENODE_TESTDIR_HACK;
   private String supergroup;
   private String namenode;
   private static Shell shHDFS = new Shell("/bin/bash");
@@ -52,7 +56,8 @@ public class TestCLI extends CLITestHelper {
 
     // Configuration of real Hadoop cluster
     conf = new HdfsConfiguration();
-    supergroup = conf.get(DFSConfigKeys.DFS_PERMISSIONS_SUPERUSERGROUP_KEY);
+    supergroup = System.getProperty("hcfs.root.groupname",
+        conf.get(DFSConfigKeys.DFS_PERMISSIONS_SUPERUSERGROUP_KEY));
     namenode = conf.get(CommonConfigurationKeys.FS_DEFAULT_NAME_KEY);
 
     conf.setBoolean(CommonConfigurationKeys.HADOOP_SECURITY_AUTHORIZATION, true);
@@ -79,6 +84,22 @@ public class TestCLI extends CLITestHelper {
     Assert.assertEquals("This test needs to be run under root user of hcfs",
         System.getProperty("hcfs.root.username", "hdfs"),
         System.getProperty("user.name"));
+
+    // Initialize variables from test config file
+    HCFS_SCHEME = System.getProperty("hcfs.scheme", "hdfs:");
+    HCFS_DIRSIZE = System.getProperty("hcfs.dirsize.pattern", "0");
+    HCFS_NNMATCH = System.getProperty("hcfs.namenode.pattern", "\\\\w+[-.a-z0-9]*(:[0-9]+)?");
+
+    // HCFS fs.default.name Hack
+    // Hadoop property 'fs.default.name' usually has value like this one:
+    // "hdfs://namenode_hostname:port". But for other hadoop filesystems, the
+    // value may just end with 3 slashes in a row (eg. 'glusterfs:///' or
+    // 'maprfs:///'). This leads to file paths with 4 slashes in it (eg.
+    // 'glusterfs:////tmp/testcli_sth') which are shortened back to
+    // 'glusterfs:///tmp/...' if the file actually exists. To fix this we just
+    // replace 4 slashes with 3 to prevent this from happening.
+    String namenode_testdir = namenode + TEST_DIR_ABSOLUTE;
+    NAMENODE_TESTDIR_HACK = namenode_testdir.replace(":////", ":///");
   }
 
   @After
@@ -92,7 +113,7 @@ public class TestCLI extends CLITestHelper {
 
   @Override
   protected String getTestFile() {
-    return "testHDFSConf.xml";
+    return "testHCFSConf.xml";
   }
 
   @Test
@@ -113,10 +134,14 @@ public class TestCLI extends CLITestHelper {
   protected String expandCommand(final String cmd) {
     String expCmd = super.expandCommand(cmd);
     // note: super.expandCommand() expands CLITEST_DATA and USERNAME
+    expCmd = expCmd.replaceAll("NAMENODETEST_DIR_ABSOLUTE", NAMENODE_TESTDIR_HACK);
     expCmd = expCmd.replaceAll("TEST_DIR_ABSOLUTE", TEST_DIR_ABSOLUTE);
     expCmd = expCmd.replaceAll("supergroup", supergroup);
     expCmd = expCmd.replaceAll("NAMENODE", namenode);
     expCmd = expCmd.replaceAll("USER_NAME", System.getProperty("user.name"));
+    expCmd = expCmd.replaceAll("HCFS_SCHEME", HCFS_SCHEME);
+    expCmd = expCmd.replaceAll("HCFS_DIRSIZE", HCFS_DIRSIZE);
+    expCmd = expCmd.replaceAll("HCFS_NNMATCH", HCFS_NNMATCH);
     return expCmd;
   }
 
