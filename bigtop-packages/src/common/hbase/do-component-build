@@ -19,11 +19,11 @@ set -ex
 . `dirname $0`/bigtop.bom
 
 mvn -DskipTests -Dslf4j.version=1.6.1         \
-    -Dhadoop.version=$HADOOP_VERSION          \
+    -Dhadoop-two.version=$HADOOP_VERSION      \
     -Dzookeeper.version=$ZOOKEEPER_VERSION    \
     clean install "$@" &&     \
 mvn -DskipTests -Dslf4j.version=1.6.1         \
-    -Dhadoop.version=$HADOOP_VERSION          \
+    -Dhadoop-two.version=$HADOOP_VERSION      \
     -Dzookeeper.version=$ZOOKEEPER_VERSION    \
     install site assembly:single "$@"
 rm -rf build
