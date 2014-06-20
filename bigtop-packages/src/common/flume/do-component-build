@@ -26,4 +26,5 @@ sed -i -e \
 mvn -DskipTests -Dhadoop.profile=2  \
   -Dhadoop.version=$HADOOP_VERSION  \
   -Dhbase.version=$HBASE_VERSION    \
+  -Dhadoop.profile=hbase-98         \
   clean install "$@"
