@@ -113,18 +113,14 @@ install -d -m 0755 $PREFIX/$CONF_DIR
 
 cp -ra $BUILD_DIR/lib/* $PREFIX/$LIB_DIR/lib
 cp -a $BUILD_DIR/phoenix*.jar $PREFIX/$LIB_DIR
-cp -a $BUILD_DIR/docs/* $PREFIX/$DOC_DIR
 cp -a $BUILD_DIR/examples $PREFIX/$DOC_DIR
-cp -a $BUILD_DIR/*.txt $PREFIX/$DOC_DIR
+cp -a  $BUILD_DIR/bin/*.txt $PREFIX/$DOC_DIR
 
-cp -a $BUILD_DIR/bin/sqlline.sh $PREFIX/$BIN_DIR
-# needed for sqlline.sh
-cp -a $BUILD_DIR/bin/log4j.properties $PREFIX/$CONF_DIR
-# Fix up sqlline.sh for Bigtop install layout
-sed -i -e s#target## -e s#\$current_dir/log4j.properties#$ETC_DIR/conf/log4j.properties# $PREFIX/$BIN_DIR/sqlline.sh
+cp -a $BUILD_DIR/bin/*.py $PREFIX/$BIN_DIR
+cp -a $BUILD_DIR/bin/log4j.properties $PREFIX/$BIN_DIR
 
 # Remove sources jar
-rm $PREFIX/$LIB_DIR/phoenix-*-sources.jar
+rm $PREFIX/$LIB_DIR/lib/phoenix-*-sources.jar
 
 # Remove the executable bit from jars to avoid lintian warnings
 find $PREFIX/$LIB_DIR -name '*.jar' -exec chmod a-x {} \;

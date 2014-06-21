@@ -22,6 +22,7 @@
 %define hadoop_home /usr/lib/hadoop
 %define hadoop_mapreduce_home /usr/lib/hadoop-mapreduce
 %define hadoop_yarn_home /usr/lib/hadoop-yarn
+%define hadoop_hdfs_home /usr/lib/hadoop-hdfs
 %define hbase_home /usr/lib/hbase
 
 %if  %{?suse_version:1}0
@@ -73,11 +74,11 @@ Name: phoenix
 Version: %{phoenix_version}
 Release: %{phoenix_release}
 Summary: Phoenix is a SQL skin over HBase and client-embedded JDBC driver.
-URL: https://github.com/forcedotcom/phoenix
+URL: http://phoenix.apache.org
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
-License: BSD with advertising
-Source0: %{name}-%{phoenix_base_version}.tar.gz
+License: ASL 2.0
+Source0: %{name}-%{phoenix_base_version}-src.tar.gz
 Source1: do-component-build
 Source2: install_phoenix.sh
 BuildArch: noarch
@@ -100,7 +101,7 @@ standard JDBC interface; all the usual interfaces are supported.
 
 
 %prep
-%setup -n %{name}-%{phoenix_base_version}
+%setup -n %{name}-%{phoenix_base_version}-src
 
 %build
 bash %{SOURCE1}
@@ -119,11 +120,15 @@ ln -f -s %{hadoop_home}/hadoop-annotations.jar $RPM_BUILD_ROOT/%{lib_phoenix}
 ln -f -s %{hadoop_home}/hadoop-auth.jar $RPM_BUILD_ROOT/%{lib_phoenix}
 ln -f -s %{hadoop_home}/hadoop-common.jar $RPM_BUILD_ROOT/%{lib_phoenix}
 ln -f -s %{hadoop_mapreduce_home}/hadoop-mapreduce-client-core.jar $RPM_BUILD_ROOT/%{lib_phoenix}
+ln -f -s %{hadoop_hdfs_home}/hadoop-hdfs.jar $RPM_BUILD_ROOT/%{lib_phoenix}
 ln -f -s %{hadoop_yarn_home}/hadoop-yarn-api.jar $RPM_BUILD_ROOT/%{lib_phoenix}
 ln -f -s %{hadoop_yarn_home}/hadoop-yarn-common.jar $RPM_BUILD_ROOT/%{lib_phoenix}
 rm -f $RPM_BUILD_ROOT/%{lib_phoenix}/hbase*.jar
-ln -f -s %{hbase_home}/hbase.jar $RPM_BUILD_ROOT/%{lib_phoenix}
-
+ln -f -s %{hbase_home}/hbase-testing-util.jar $RPM_BUILD_ROOT/%{lib_phoenix}
+ln -f -s %{hbase_home}/hbase-it.jar $RPM_BUILD_ROOT/%{lib_phoenix}
+ln -f -s %{hbase_home}/hbase-common.jar $RPM_BUILD_ROOT/%{lib_phoenix}
+ln -f -s %{hbase_home}/hbase-protocol.jar $RPM_BUILD_ROOT/%{lib_phoenix}
+ln -f -s %{hbase_home}/hbase-client.jar $RPM_BUILD_ROOT/%{lib_phoenix}
 
 %post
 %{alternatives_cmd} --install %{etc_phoenix_conf} %{name}-conf %{etc_phoenix_conf_dist} 30

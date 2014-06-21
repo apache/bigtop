@@ -27,6 +27,7 @@ phoenix_pkg_name=phoenix
 zookeeper_home=/usr/lib/zookeeper
 hadoop_home=/usr/lib/hadoop
 hadoop_mapreduce_home=/usr/lib/hadoop-mapreduce
+hadoop_hdfs_home=/usr/lib/hadoop-hdfs
 hadoop_yarn_home=/usr/lib/hadoop-yarn
 hbase_home=/usr/lib/hbase
 
@@ -52,5 +53,10 @@ override_dh_auto_install:
 	ln -f -s ${hadoop_mapreduce_home}/hadoop-mapreduce-client-core.jar debian/tmp/usr/lib/${phoenix_pkg_name}/lib/
 	ln -f -s ${hadoop_yarn_home}/hadoop-yarn-api.jar debian/tmp/usr/lib/${phoenix_pkg_name}/lib/
 	ln -f -s ${hadoop_yarn_home}/hadoop-yarn-common.jar debian/tmp/usr/lib/${phoenix_pkg_name}/lib/
+        ln -f -s ${hadoop_hdfs_home}/hadoop-hdfs.jar debian/tmp/usr/lib/${phoenix_pkg_name}/lib/
 	rm -f debian/tmp/usr/lib/${phoenix_pkg_name}/lib/hbase*.jar
-	ln -f -s ${hbase_home}/hbase.jar debian/tmp/usr/lib/${phoenix_pkg_name}/lib/
+	ln -f -s ${hbase_home}/hbase-testing-util.jar debian/tmp/usr/lib/${phoenix_pkg_name}/lib/
+        ln -f -s ${hbase_home}/hbase-it.jar debian/tmp/usr/lib/${phoenix_pkg_name}/lib/
+        ln -f -s ${hbase_home}/hbase-common.jar debian/tmp/usr/lib/${phoenix_pkg_name}/lib/
+        ln -f -s ${hbase_home}/hbase-protocol.jar debian/tmp/usr/lib/${phoenix_pkg_name}/lib/
+        ln -f -s ${hbase_home}/hbase-client.jar debian/tmp/usr/lib/${phoenix_pkg_name}/lib/

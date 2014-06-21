@@ -34,8 +34,10 @@ public class TestPhoenixSmoke {
   }
   static String phoenixClientJar = PHOENIX_HOME + "/" +
     JarContent.getJarName(PHOENIX_HOME, "phoenix-.*client.jar");
-  static String phoenixTestsJar = PHOENIX_HOME + "/" +
-    JarContent.getJarName(PHOENIX_HOME, "phoenix-.*tests.jar");
+  static String phoenixCoreJar = PHOENIX_HOME + "/lib/" +
+    JarContent.getJarName(PHOENIX_HOME + "/lib/", "phoenix-core.*.jar");
+  static String phoenixCoreTestsJar = PHOENIX_HOME + "/lib/" +
+    JarContent.getJarName(PHOENIX_HOME + "/lib/", "phoenix-core.*tests.jar");
 
   // Run a Phoenix end to end unit test using the hbase exec script.
   // This really simplifies the testing setup we would otherwise need
@@ -44,253 +46,377 @@ public class TestPhoenixSmoke {
   // running cluster as well.
 
   static void runTest(String testName) {
-    sh.exec("HBASE_CLASSPATH=" + phoenixClientJar + ":" + phoenixTestsJar + 
+    sh.exec("HBASE_CLASSPATH=" + phoenixClientJar + ":" + phoenixCoreJar + ":" + phoenixCoreTestsJar + 
       " hbase org.junit.runner.JUnitCore " + testName);
     assertTrue(testName + " failed", sh.getRet() == 0);
   }
-
+ 
   @Test
   public void testAlterTable() {
-    runTest("com.salesforce.phoenix.end2end.AlterTableTest")
+    runTest("org.apache.phoenix.end2end.AlterTableIT")
   }
 
   @Test
   public void testArithmeticQuery() {
-    runTest("com.salesforce.phoenix.end2end.ArithmeticQueryTest")
+    runTest("org.apache.phoenix.end2end.ArithmeticQueryIT")
+  }
+  
+  @Test
+  public void testArray() {
+    runTest("org.apache.phoenix.end2end.ArrayIT")
   }
 
   @Test
   public void testAutoCommit() {
-    runTest("com.salesforce.phoenix.end2end.AutoCommitTest")
+    runTest("org.apache.phoenix.end2end.AutoCommitIT")
   }
 
   @Test
   public void testBinaryRowKey() {
-    runTest("com.salesforce.phoenix.end2end.BinaryRowKeyTest")
+    runTest("org.apache.phoenix.end2end.BinaryRowKeyIT")
   }
 
   @Test
   public void testCoalesceFunction() {
-    runTest("com.salesforce.phoenix.end2end.CoalesceFunctionTest")
+    runTest("org.apache.phoenix.end2end.CoalesceFunctionIT")
+  }
+
+  @Test
+  public void testColumnProjectionOptimization() {
+    runTest("org.apache.phoenix.end2end.ColumnProjectionOptimizationIT")
   }
 
   @Test
   public void testCompareDecimalToLong() {
-    runTest("com.salesforce.phoenix.end2end.CompareDecimalToLongTest")
+    runTest("org.apache.phoenix.end2end.CompareDecimalToLongIT")
   }
 
   @Test
   public void testCreateTable() {
-    runTest("com.salesforce.phoenix.end2end.CreateTableTest")
+    runTest("org.apache.phoenix.end2end.CreateTableIT")
   }
 
   @Test
-  public void testCSVLoader() {
-    runTest("com.salesforce.phoenix.end2end.CSVLoaderTest")
+  public void testCSVCommonsLoader() {
+    runTest("org.apache.phoenix.end2end.CSVCommonsLoaderIT")
   }
 
   @Test
   public void testCustomEntityData() {
-    runTest("com.salesforce.phoenix.end2end.CustomEntityDataTest")
+    runTest("org.apache.phoenix.end2end.CustomEntityDataIT")
   }
 
   @Test
   public void testDefaultParallelIteratorsRegionSplitter() {
-    runTest("com.salesforce.phoenix.end2end.DefaultParallelIteratorsRegionSplitterTest")
+    runTest("org.apache.phoenix.end2end.DefaultParallelIteratorsRegionSplitterIT")
   }
 
   @Test
-  public void testDeleteRange() {
-    runTest("com.salesforce.phoenix.end2end.DeleteRangeTest")
-  }
-
-  @Test
-  public void testDescColumnSortOrder() {
-    runTest("com.salesforce.phoenix.end2end.DescColumnSortOrderTest")
+  public void testDelete() {
+    runTest("org.apache.phoenix.end2end.DeleteIT")
   }
 
   @Test
   public void testDistinctCount() {
-    runTest("com.salesforce.phoenix.end2end.DistinctCountTest")
+    runTest("org.apache.phoenix.end2end.DistinctCountIT")
   }
 
   @Test
   public void testDynamicColumn() {
-    runTest("com.salesforce.phoenix.end2end.DynamicColumnTest")
+    runTest("org.apache.phoenix.end2end.DynamicColumnIT")
   }
 
   @Test
   public void testDynamicFamily() {
-    runTest("com.salesforce.phoenix.end2end.DynamicFamilyTest")
+    runTest("org.apache.phoenix.end2end.DynamicFamilyIT")
   }
 
   @Test
   public void testDynamicUpsert() {
-    runTest("com.salesforce.phoenix.end2end.DynamicUpsertTest")
+    runTest("org.apache.phoenix.end2end.DynamicUpsertIT")
   }
 
   @Test
   public void testExecuteStatements() {
-    runTest("com.salesforce.phoenix.end2end.ExecuteStatementsTest")
+    runTest("org.apache.phoenix.end2end.ExecuteStatementsIT")
   }
 
   @Test
   public void testExtendedQueryExec() {
-    runTest("com.salesforce.phoenix.end2end.ExtendedQueryExecTest")
+    runTest("org.apache.phoenix.end2end.ExtendedQueryExecIT")
   }
 
   @Test
   public void testFunkyNames() {
-    runTest("com.salesforce.phoenix.end2end.FunkyNamesTest")
+    runTest("org.apache.phoenix.end2end.FunkyNamesIT")
   }
 
   @Test
   public void testGroupByCase() {
-    runTest("com.salesforce.phoenix.end2end.GroupByCaseTest")
+    runTest("org.apache.phoenix.end2end.GroupByCaseIT")
+  }
+
+  @Test
+  public void testHashJoin() {
+    runTest("org.apache.phoenix.end2end.HashJoinIT")
+  }
+  
+  @Test
+  public void testInMemoryOrderBy() {
+    runTest("org.apache.phoenix.end2end.InMemoryOrderByIT")
   }
 
   @Test
   public void testIsNull() {
-    runTest("com.salesforce.phoenix.end2end.IsNullTest")
+    runTest("org.apache.phoenix.end2end.IsNullIT")
   }
 
   @Test
   public void testKeyOnly() {
-    runTest("com.salesforce.phoenix.end2end.KeyOnlyTest")
+    runTest("org.apache.phoenix.end2end.KeyOnlyIT")
+  }
+
+  @Test
+  public void testMD5Function() {
+    runTest("org.apache.phoenix.end2end.MD5FunctionIT")
   }
 
   @Test
   public void testMultiCfQueryExec() {
-    runTest("com.salesforce.phoenix.end2end.MultiCfQueryExecTest")
+    runTest("org.apache.phoenix.end2end.MultiCfQueryExecIT")
   }
 
   @Test
   public void testNativeHBaseTypes() {
-    runTest("com.salesforce.phoenix.end2end.NativeHBaseTypesTest")
+    runTest("org.apache.phoenix.end2end.NativeHBaseTypesIT")
+  }
+
+  @Test
+  public void testOrderBy() {
+    runTest("org.apache.phoenix.end2end.OrderByIT")
   }
 
   @Test
   public void testPercentile() {
-    runTest("com.salesforce.phoenix.end2end.PercentileTest")
+    runTest("org.apache.phoenix.end2end.PercentileIT")
   }
 
   @Test
   public void testProductMetrics() {
-    runTest("com.salesforce.phoenix.end2end.ProductMetricsTest")
+    runTest("org.apache.phoenix.end2end.ProductMetricsIT")
   }
 
   @Test
   public void testQueryDatabaseMetaData() {
-    runTest("com.salesforce.phoenix.end2end.QueryDatabaseMetaDataTest")
-  }
-
-  @Test
-  public void testQueryExec() {
-    runTest("com.salesforce.phoenix.end2end.QueryExecTest")
+    runTest("org.apache.phoenix.end2end.QueryDatabaseMetaDataIT")
   }
 
   @Test
   public void testQueryExecWithoutSCN() {
-    runTest("com.salesforce.phoenix.end2end.QueryExecWithoutSCNTest")
+    runTest("org.apache.phoenix.end2end.QueryExecWithoutSCNIT")
+  }
+  @Test
+  public void testQuery() {
+    runTest("org.apache.phoenix.end2end.QueryIT")
   }
 
   @Test
   public void testQueryPlan() {
-    runTest("com.salesforce.phoenix.end2end.QueryPlanTest")
+    runTest("org.apache.phoenix.end2end.QueryPlanIT")
   }
 
   @Test
   public void testReadIsolationLevel() {
-    runTest("com.salesforce.phoenix.end2end.ReadIsolationLevelTest")
+    runTest("org.apache.phoenix.end2end.ReadIsolationLevelIT")
   }
 
   @Test
   public void testReverseFunction() {
-    runTest("com.salesforce.phoenix.end2end.ReverseFunctionTest")
+    runTest("org.apache.phoenix.end2end.ReverseFunctionIT")
+  }
+
+  @Test
+  public void testRoundFloorCeilFunctionsEnd2End() {
+    runTest("org.apache.phoenix.end2end.RoundFloorCeilFunctionsEnd2EndIT")
+  }
+
+  @Test
+  public void testRowValueConstructor() {
+    runTest("org.apache.phoenix.end2end.RowValueConstructorIT")
+  }
+
+  @Test
+  public void testSaltedView() {
+    runTest("org.apache.phoenix.end2end.SaltedViewIT")
+  }
+
+  @Test
+  public void testSequence() {
+    runTest("org.apache.phoenix.end2end.SequenceIT")
   }
 
   @Test
   public void testServerException() {
-    runTest("com.salesforce.phoenix.end2end.ServerExceptionTest")
+    runTest("org.apache.phoenix.end2end.ServerExceptionIT")
   }
 
   @Test
   public void testSkipRangeParallelIteratorRegionSplitter() {
-    runTest("com.salesforce.phoenix.end2end.SkipRangeParallelIteratorRegionSplitterTest")
+    runTest("org.apache.phoenix.end2end.SkipRangeParallelIteratorRegionSplitterIT")
   }
 
   @Test
   public void testSkipScanQuery() {
-    runTest("com.salesforce.phoenix.end2end.SkipScanQueryTest")
+    runTest("org.apache.phoenix.end2end.SkipScanQueryIT")
+  }
+
+  @Test
+  public void testSortOrderF() {
+    runTest("org.apache.phoenix.end2end.SortOrderFIT")
+  }
+
+  @Test
+  public void testSpillableGroupBy() {
+    runTest("org.apache.phoenix.end2end.SpillableGroupByIT")
   }
 
   @Test
   public void testSpooledOrderBy() {
-    runTest("com.salesforce.phoenix.end2end.SpooledOrderByTest")
+    runTest("org.apache.phoenix.end2end.SpooledOrderByIT")
   }
 
   @Test
   public void testStatementHints() {
-    runTest("com.salesforce.phoenix.end2end.StatementHintsTest")
+    runTest("org.apache.phoenix.end2end.StatementHintsIT")
+  }
+
+  @Test
+  public void testStatsManager() {
+    runTest("org.apache.phoenix.end2end.StatsManagerIT")
   }
 
   @Test
   public void testStddev() {
-    runTest("com.salesforce.phoenix.end2end.StddevTest")
+    runTest("org.apache.phoenix.end2end.StddevIT")
+  }
+
+  @Test
+  public void testTenantSpecificTablesDDL() {
+    runTest("org.apache.phoenix.end2end.TenantSpecificTablesDDLIT")
+  }
+  
+  @Test
+  public void testTenantSpecificTablesDML() {
+    runTest("org.apache.phoenix.end2end.TenantSpecificTablesDMLIT")
+  }
+  
+  @Test
+  public void testTenantSpecificViewIndex() {
+    runTest("org.apache.phoenix.end2end.TenantSpecificViewIndexIT")
+  }
+
+  @Test
+  public void testTenantSpecificViewIndexSalted() {
+    runTest("org.apache.phoenix.end2end.TenantSpecificViewIndexSaltedIT")
+  }
+
+  @Test
+  public void testToCharFunction() {
+    runTest("org.apache.phoenix.end2end.ToCharFunctionIT")
+  }
+
+  @Test
+  public void testToNumberFunction() {
+    runTest("org.apache.phoenix.end2end.ToNumberFunctionIT")
   }
 
   @Test
   public void testTopN() {
-    runTest("com.salesforce.phoenix.end2end.TopNTest")
+    runTest("org.apache.phoenix.end2end.TopNIT")
+  }
+
+  @Test
+  public void testTruncateFunction() {
+    runTest("org.apache.phoenix.end2end.TruncateFunctionIT")
   }
 
   @Test
   public void testUpsertBigValues() {
-    runTest("com.salesforce.phoenix.end2end.UpsertBigValuesTest")
+    runTest("org.apache.phoenix.end2end.UpsertBigValuesIT")
+  }
+
+  @Test
+  public void testUpsertSelectAutoCommit() {
+    runTest("org.apache.phoenix.end2end.UpsertSelectAutoCommitIT")
   }
 
   @Test
   public void testUpsertSelect() {
-    runTest("com.salesforce.phoenix.end2end.UpsertSelectTest")
+    runTest("org.apache.phoenix.end2end.UpsertSelectIT")
   }
 
   @Test
   public void testUpsertValues() {
-    runTest("com.salesforce.phoenix.end2end.UpsertValuesTest")
+    runTest("org.apache.phoenix.end2end.UpsertValuesIT")
   }
 
   @Test
   public void testVariableLengthPK() {
-    runTest("com.salesforce.phoenix.end2end.VariableLengthPKTest")
+    runTest("org.apache.phoenix.end2end.VariableLengthPKIT")
+  }
+
+  @Test
+  public void testView() {
+    runTest("org.apache.phoenix.end2end.ViewIT")
   }
 
   // INDEX
 
   @Test
-  public void testIndex() {
-    runTest("com.salesforce.phoenix.end2end.index.IndexTest")
+  public void testDropView() {
+    runTest("org.apache.phoenix.end2end.index.DropViewIT")
+  }
+
+  @Test
+  public void testImmutableIndex() {
+    runTest("org.apache.phoenix.end2end.index.ImmutableIndexIT")
   }
 
   @Test
   public void testIndexMetadata() {
-    runTest("com.salesforce.phoenix.end2end.index.IndexMetadataTest")
+    runTest("org.apache.phoenix.end2end.index.IndexMetadataIT")
+  }
+
+  @Test
+  public void testMutableIndexFailure() {
+    runTest("org.apache.phoenix.end2end.index.MutableIndexFailureIT")
+  }
+
+  @Test
+  public void testMutableIndex() {
+    runTest("org.apache.phoenix.end2end.index.MutableIndexIT")
+  }
+
+  @Test
+  public void testSaltedIndex() {
+    runTest("org.apache.phoenix.end2end.index.SaltedIndexIT")
   }
 
   // SALTED
 
   @Test
   public void testSaltedTable() {
-    runTest("com.salesforce.phoenix.end2end.salted.SaltedTableTest")
+    runTest("org.apache.phoenix.end2end.salted.SaltedTableIT")
   }
 
   @Test
   public void testSaltedTableUpsertSelect() {
-    runTest("com.salesforce.phoenix.end2end.salted.SaltedTableUpsertSelectTest")
+    runTest("org.apache.phoenix.end2end.salted.SaltedTableUpsertSelectIT")
   }
 
   @Test
   public void testSaltedTableVarLengthRowKey() {
-    runTest("com.salesforce.phoenix.end2end.salted.SaltedTableVarLengthRowKeyTest")
+    runTest("org.apache.phoenix.end2end.salted.SaltedTableVarLengthRowKeyIT")
   }
 
 }
