@@ -25,9 +25,15 @@ import org.apache.bigtop.itest.shell.Shell
 import org.apache.bigtop.itest.junit.OrderedParameterized
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized.Parameters
+import org.apache.commons.logging.LogFactory
+import org.apache.commons.logging.Log
+import static org.junit.Assert.assertTrue
 
 @RunWith(OrderedParameterized.class)
 public class TestHiveSmokeBulk {
+
+  static private Log LOG = LogFactory.getLog(Object.class);
+
   private static String test_include =
     System.getProperty("org.apache.bigtop.itest.hivesmoke.TestHiveSmokeBulk.test_include");
   private static String test_exclude =
@@ -61,6 +67,9 @@ public class TestHiveSmokeBulk {
   @BeforeClass
   public static void setUp() {
     sh.exec("hive -f ./seed.hql");
+    LOG.info(sh.getOut())
+    LOG.info(sh.getErr())
+    assertTrue("FAILED.. "+sh.getOut()+" "+sh.getErr(),sh.getRet()==0);
   }
 
   @AfterClass
@@ -71,6 +80,7 @@ public class TestHiveSmokeBulk {
 
   @Parameters
   public static Map<String, Object[]> readTestCases() {
+    LOG.info("hive includes = " + test_include);
     List<String> tests;
     if (test_include != null) {
       tests = scripts.getScripts().intersect(Arrays.asList(test_include.split(",")));
@@ -79,6 +89,7 @@ public class TestHiveSmokeBulk {
     } else {
       tests = scripts.getScripts();
     }
+    LOG.info("HIVE TESTS = " + tests);
     Map res = [:];
     tests.each {
       res[it] = ([it] as String[]);

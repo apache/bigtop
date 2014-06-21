@@ -47,21 +47,21 @@ public class TestUtils {
       sh.exec("hadoop fs -test -e ${inputDir}");
       if (sh.getRet() == 0) {
         sh.exec("hadoop fs -rmr -skipTrash ${inputDir}");
-        assertTrue("Deletion of previous $inputDir from HDFS failed",
+        assertTrue("Deletion of previous $inputDir from the DFS failed",
             sh.getRet() == 0);
       }
       if (inputFiles != null) {
         sh.exec("hadoop fs -mkdir -p ${inputDir}");
-        assertTrue("Could not create input directory to HDFS", sh.getRet() == 0);
+        assertTrue("Could not create input directory to the DFS", sh.getRet() == 0);
         // copy additional files into HDFS input folder
         inputFiles.each {
           sh.exec("hadoop fs -put ${it} ${inputDir}");
-          assertTrue("Could not copy input files into input folder in HDFS", sh.getRet() == 0);
+          assertTrue("Could not copy input files into input folder in the DFS", sh.getRet() == 0);
         }
       } else {
         // copy the entire resource folder into HDFS
         sh.exec("hadoop fs -put ${inputDir} ${inputDir}");
-        assertTrue("Could not copy input directory to HDFS", sh.getRet() == 0);
+        assertTrue("Could not copy input directory to the DFS", sh.getRet() == 0);
       }
     }
 
@@ -70,11 +70,11 @@ public class TestUtils {
       sh.exec("hadoop fs -test -e ${outputDir}");
       if (sh.getRet() == 0) {
         sh.exec("hadoop fs -rmr -skipTrash ${outputDir}");
-        assertTrue("Deletion of previous examples output from HDFS failed",
+        assertTrue("Deletion of previous examples output from the DFS failed",
             sh.getRet() == 0);
       }
       sh.exec("hadoop fs -mkdir -p ${outputDir}");
-      assertTrue("Could not create output directory in HDFS", sh.getRet() == 0);
+      assertTrue("Could not create output directory in DFS", sh.getRet() == 0);
     }
   }
 }

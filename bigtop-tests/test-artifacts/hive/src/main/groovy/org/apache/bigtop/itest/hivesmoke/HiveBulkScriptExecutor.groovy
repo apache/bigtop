@@ -17,23 +17,39 @@
  */
 package org.apache.bigtop.itest.hivesmoke
 
+import org.apache.commons.logging.LogFactory
+import org.apache.commons.logging.Log
 import org.apache.bigtop.itest.JarContent
 import org.apache.bigtop.itest.shell.Shell
 import static junit.framework.Assert.assertEquals
 
 public class HiveBulkScriptExecutor {
+  static private Log LOG = LogFactory.getLog(Object.class);
+
   static Shell sh = new Shell("/bin/bash -s");
 
   private File scripts;
   private String location;
+
+  public static final String RESOURCES ="bigtop-tests/test-artifacts/hive/src/main/resources/"
 
   public HiveBulkScriptExecutor(String l) {
     location = l;
     scripts = new File(location);
 
     if (!scripts.exists()) {
-      JarContent.unpackJarContainer(HiveBulkScriptExecutor.class, '.' , null);
-    }
+      try{
+        JarContent.unpackJarContainer(HiveBulkScriptExecutor.class, '.' , null);
+      }
+      //BIGTOP-1222 : Support script execution.
+      catch(Throwable t){
+        LOG.info("Didnt find jar resource, copying resources locally...");
+        def resources = System.getenv("BIGTOP_HOME")+"/"+RESOURCES ;
+        sh.exec("cp -r ${resources}/* .");
+        sh.exec("ls ${l}");
+
+      }
+   }
   }
 
   public List<String> getScripts() {
@@ -47,14 +63,16 @@ public class HiveBulkScriptExecutor {
 
   public void runScript(String test, String extraArgs) {
     String l = "${location}/${test}";
+    String test_command="""diff -u <(\$F < ${l}/actual) <(\$F < ${l}/out)""" ;
     sh.exec("""
     F=cat
     if [ -f ${l}/filter ]; then
       chmod 777 ${l}/filter
       F=${l}/filter
     fi
-    hive ${extraArgs} -v -f ${l}/in > ${l}/actual && diff -u <(\$F < ${l}/actual) <(\$F < ${l}/out)
-    """);
+    hive ${extraArgs} -v -f ${l}/in > ${l}/actual && ${test_command}"""
+    ) ;
+
     assertEquals("Got unexpected output from test script ${test}",
                   0, sh.ret);
   }

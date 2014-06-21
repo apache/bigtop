@@ -19,6 +19,7 @@
 package org.apache.bigtop.itest.hadoop.mapreduce
 
 import org.junit.BeforeClass
+import org.junit.AfterClass
 import static org.junit.Assert.assertNotNull
 import org.apache.bigtop.itest.shell.Shell
 import static org.junit.Assert.assertTrue
@@ -35,7 +36,7 @@ import org.junit.runner.RunWith
 
 @RunWith(OrderedParameterized.class)
 class TestHadoopExamples {
-  static private Log LOG = LogFactory.getLog(TestHadoopExamples.class);
+  static private Log LOG = LogFactory.getLog(Object.class);
 
   private static final String HADOOP_MAPRED_HOME = System.getenv('HADOOP_MAPRED_HOME');
   private static final String HADOOP_CONF_DIR = System.getenv('HADOOP_CONF_DIR');
@@ -52,20 +53,54 @@ class TestHadoopExamples {
     HADOOP_MAPRED_HOME + "/" + hadoopExamplesJar;
 
   static Shell sh = new Shell("/bin/bash -s");
+
+  /**
+  * Public so that we can run these tests as scripts
+  * and the scripts can manually copy resoruces into DFS
+  * See BIGTOP-1222 for example.
+  */
+  public static final String SOURCE ="bigtop-tests/test-artifacts/hadoop/src/main/resources/"
   private static final String EXAMPLES = "examples";
   private static final String EXAMPLES_OUT = "examples-output";
   private static Configuration conf;
 
   private static String mr_version = System.getProperty("mr.version", "mr2");
   
-    static final String RANDOMTEXTWRITER_TOTALBYTES = (mr_version == "mr1") ?
+  static final String RANDOMTEXTWRITER_TOTALBYTES = (mr_version == "mr1") ?
       "test.randomtextwrite.total_bytes" : "mapreduce.randomtextwriter.totalbytes";
+
+  @AfterClass
+  public static void tearDown() {
+    sh.exec("hadoop fs -rmr -skipTrash ${EXAMPLES}",
+            "hadoop fs -rmr -skipTrash ${EXAMPLES_OUT}");
+  }
+
 
   @BeforeClass
   static void setUp() {
     conf = new Configuration();
-    TestUtils.unpackTestResources(TestHadoopExamples.class, EXAMPLES, null, EXAMPLES_OUT);
-    assertTrue("Failed to copy TestHadoopExamples.class to FS", sh.getRet() == 0);
+    try{
+       //copy examples/ int /user/root/ and
+       //then create examples-output directory
+       TestUtils.unpackTestResources(TestHadoopExamples.class, EXAMPLES, null, EXAMPLES_OUT);
+    }
+    catch(java.lang.Throwable t){
+        LOG.info("Failed to unpack jar resources.  Attemting to use bigtop sources");
+        def source = System.getenv("BIGTOP_HOME")+"/"+SOURCE;
+
+        assertNotNull("Can't copy test input files from bigtop source dir,"+
+                      "and jar specific attempt failed also", examples);
+
+        LOG.info("MAKING DIRECTORIES ..................... ${EXAMPLES} ${EXAMPLES_OUT}");
+
+        //add the files in resources/
+        sh.exec("hadoop fs -put ${source}/*.* .");
+        //add the directories under resources (like examples/)
+        sh.exec("hadoop fs -put ${source}/${EXAMPLES} ${EXAMPLES}");
+        sh.exec("hadoop fs -mkdir -p ${EXAMPLES_OUT}");
+   }
+   sh.exec("hadoop fs -ls ${EXAMPLES}");
+   assertTrue("Failed asserting that 'examples' were created in the DFS", sh.getRet()==0);
   }
 
   static long terasortid = System.currentTimeMillis();
@@ -76,7 +111,6 @@ class TestHadoopExamples {
   //Number of maps and samples for pi
   public static String pi_maps = System.getProperty("pi_maps", "2");
   public static String pi_samples = System.getProperty("pi_samples", "1000");
-
   static LinkedHashMap examples =
     [
         pi                :"${pi_maps} ${pi_samples}",
