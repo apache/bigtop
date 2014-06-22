@@ -33,3 +33,9 @@ components,hadoop,hbase
 EOF
 
 mkdir -p /data/{1,2}
+
+# Setup rng-tools to improve virtual machine entropy performance.
+# The poor entropy performance will cause kerberos provisioning failed.
+yum -y install rng-tools
+sed -i.bak 's/EXTRAOPTIONS=\"\"/EXTRAOPTIONS=\"-r \/dev\/urandom\"/' /etc/sysconfig/rngd
+service rngd start
