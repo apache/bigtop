@@ -37,6 +37,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # manage /etc/hosts by hostmanager plugin(https://github.com/smdahlen/vagrant-hostmanager)
   config.hostmanager.enabled = true
 
+  # use vagrant-cachier to cache packages at local(https://github.com/fgrehm/vagrant-cachier)
+  if Vagrant.has_plugin?("vagrant-cachier")
+    config.cache.scope = :box
+  end
 
   # First node in the cluster
   config.vm.define :bigtop1 do |bigtop1|

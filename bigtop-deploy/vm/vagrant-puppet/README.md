@@ -36,13 +36,19 @@ give full validation of the BigTop stack.
 vagrant plugin install vagrant-hostmanager
 ```
 
-2) To provision a 3 node Apache Hadoop cluster on top of vagrant boxes
+2) Install [vagrant-cachier plugin](https://github.com/fgrehm/vagrant-cachier) to cache packages at local
+
+```
+vagrant plugin install vagrant-cachier
+```
+
+3) To provision a 3 node Apache Hadoop cluster on top of vagrant boxes
 
 ```
 ./startup.sh --cluster
 ```
 
-3) See options with -h specified
+4) See options with -h specified
 
 ```
 $ ./startup.sh -h
@@ -58,7 +64,7 @@ $ ./startup.sh -h
 
 ##Example:
 
-4) Run hbase-test.sh to evaluate the deployment.
+5) Run hbase-test.sh to evaluate the deployment.
 
 ##Configure Apache Hadoop ecosystem components
 * Choose the ecosystem you want to be deployed by modify components in provision.sh.
