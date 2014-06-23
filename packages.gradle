@@ -467,7 +467,7 @@ def readBOM = {
   bomfile.eachLine {
     if (!it.startsWith("#") && !it.isEmpty()) {
       if (it.startsWith("\$(eval")) {
-        def pattern = ~/.*call PACKAGE,(\w+[-]?\w+?),(\w+)/
+        def pattern = ~/.*call PACKAGE,(\w+[-\w+]*),(\w+)/
         def m = it =~ pattern
         assert m.size() == 1
         def target = m[0][1]
