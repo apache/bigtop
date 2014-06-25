@@ -51,6 +51,12 @@ class bigtop_toolchain::jdk {
         ensure  => present,
         require => Exec["accept-license2"],
       }
+
+      package {'oracle-java7-installer':
+        ensure  => present,
+        require => Exec["accept-license2"],
+      }
+
     }
     default: {
       file { '/tmp/jdk-6u45-linux-amd64.rpm':
@@ -66,6 +72,21 @@ class bigtop_toolchain::jdk {
         refreshonly => true,
         subscribe   => File["/tmp/jdk-6u45-linux-amd64.rpm"],
       }
+
+      file { '/tmp/jdk-7u60-linux-x64.gz':
+        source => 'puppet:///modules/bigtop_toolchain/jdk-7u60-linux-x64.gz',
+        ensure => present,
+        owner  => root,
+        group  => root,
+        mode   => 755
+      }
+
+      exec {'/bin/tar -xzvf /tmp/jdk-7u60-linux-x64.gz; ln -s jdk1.7.0_60 jdk7-latest':
+        cwd         => '/usr/lib',
+        refreshonly => true,
+        subscribe   => File["/tmp/jdk-7u60-linux-x64.gz"],
+      }
+
     }
   }
 }

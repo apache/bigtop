@@ -76,10 +76,12 @@ where <path_to_bigtop> is the cloned git repo.
 
 ## Requirements
 
-Due to redistribution restrictions the Oracle JDK must be downloaded seperately. 
+For RedHat/Centos, due to redistribution restrictions the Oracle JDK must be downloaded seperately. 
 
 Download the JDK 64bit rpm.bin file, run it with the -x switch to extract the
 rpm file and copy jdk-6u45-linux-amd64.rpm to files/.
+
+Download the JDK 64 bit jdk-7u60-linux-x64.gz file into files/
 
 The Ant/Maven/Forrest sources will be downloaded automatically. If you already
 have them and do not want to download them again please copy the source
