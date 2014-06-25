@@ -73,6 +73,8 @@
     ["/user/root","777","root",null],
     ["/user/hue","777","hue",null],
     ["/user/sqoop","777","sqoop",null],
+    ["/accumulo",null,"accumulo","accumulo"],
+    ["/user/accumulo",null,"accumulo","accumulo"],
     ["/user/oozie","777","oozie"],
     ["/user/oozie/share",null,null,null],
     ["/user/oozie/share/lib",null,null,null],

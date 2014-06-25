@@ -1,0 +1,96 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+Source: accumulo
+Section: misc
+Priority: extra
+Maintainer: Apache Bigtop <dev@bigtop.apache.org>
+Build-Depends: debhelper (>= 7.0.50~)
+Standards-Version: 3.8.0
+Homepage: http://accumulo.apache.org/
+
+Package: accumulo
+Architecture: any
+Depends: zookeeper, hadoop-client, bigtop-utils (>= 0.6)
+Replaces: accumulo-logger
+Obsoletes: accumulo-logger
+Conflicts: accumulo-logger
+Description: Apache Accumulo is a highly scalable structured store based on Google’s BigTable.
+ Accumulo is written in Java and operates over the Hadoop Distributed File
+ System (HDFS), which is part of the popular Apache Hadoop project. Accumulo
+ supports efficient storage and retrieval of structured data, including queries
+ for ranges, and provides support for using Accumulo tables as input and output
+ for MapReduce jobs. Accumulo features automatic load-balancing and
+ partitioning, data compression and fine-grained security labels.
+
+Package: accumulo-doc
+Architecture: all
+Section: doc
+Description: The Accumulo Documentation
+
+Package: accumulo-master
+Architecture: all
+Depends: accumulo (= ${source:Version})
+Description: The Accumulo Master server.
+ The Accumulo Master is responsible for detecting and responding to TabletServer
+ failure. It tries to balance the load across TabletServer by assigning tablets
+ carefully and instructing TabletServers to unload tablets when necessary. The
+ Master ensures all tablets are assigned to one TabletServer each, and handles
+ table creation, alteration, and deletion requests from clients. The Master also
+ coordinates startup, graceful shutdown and recovery of changes in write-ahead
+ logs when Tablet servers fail. Multiple masters may be run. The masters will
+ choose among themselves a single master, and the others will become backups if
+ the master should fail.
+
+Package: accumulo-tserver
+Architecture: all
+Depends: accumulo (= ${source:Version})
+Description: The Accumulo TabletServer daemon
+ The TabletServer manages some subset of all the tablets (partitions of tables).
+ This includes receiving writes from clients, persisting writes to a write-ahead
+ log, sorting new key-value pairs in memory, periodically flushing sorted key-
+ value pairs to new files in HDFS, and responding to reads from clients, forming
+ a merge-sorted view of all keys and values from all the files it has created
+ and the sorted in-memory store. TabletServers also perform recovery of a tablet
+ that was previously on a server that failed, reapplying any writes found in the
+ write-ahead log to the tablet.
+
+Package: accumulo-gc
+Architecture: all
+Depends: accumulo (= ${source:Version})
+Description: The Accumulo Garbage Collector daemon
+ Accumulo processes will share files stored in HDFS. Periodically, the Garbage
+ Collector will identify files that are no longer needed by any process, and
+ delete them.
+
+Package: accumulo-monitor
+Architecture: all
+Depends: accumulo (= ${source:Version})
+Description: The Accumulo Monitor daemon
+ The Monitor serves as a log aggregation point for the other servers and
+ provides a web UI for basic monitoring.
+
+Package: accumulo-tracer
+Architecture: all
+Depends: accumulo (= ${source:Version})
+Description: The Accumulo Tracer daemon
+ The Tracer does distributed profiling of runtime performance. profiling of
+ low-level internal operations always happens, and users may optionally turn
+ on more comprehensive profiling on a per-table basis.
+
+Package: accumulo-dbg
+Architecture: any
+Section: debug
+Depends: ${misc:Depends}, accumulo (= ${binary:Version}),
+Description: Debugging symbols for Accumulo native binaries

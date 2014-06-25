@@ -1,0 +1,7 @@
+/usr/lib/accumulo
+/usr/bin/accumulo
+/etc/default/accumulo
+/etc/accumulo/conf.dist
+/var/log/accumulo
+/var/lib/accumulo
+

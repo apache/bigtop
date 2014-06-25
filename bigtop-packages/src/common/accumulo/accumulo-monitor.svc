@@ -1,0 +1,71 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+DAEMON="accumulo-monitor"
+DESC="Accumulo Monitor"
+EXEC_PATH="/usr/bin/accumulo"
+SVC_USER="accumulo"
+WORKING_DIR="/var/run/accumulo"
+DAEMON_FLAGS="monitor"
+CONF_DIR="/etc/accumulo/conf"
+PIDFILE="${WORKING_DIR}/${DAEMON}.pid"
+PRIORITY=90
+
+generate_start() {
+
+cat <<'__EOT__'
+
+LOGFILE="/var/log/accumulo/${DAEMON}.out"
+
+start() {
+  [ -x $EXEC_PATH ] || exit $ERROR_PROGRAM_NOT_INSTALLED
+  [ -d $CONF_DIR ] || exit $ERROR_PROGRAM_NOT_CONFIGURED
+  log_success_msg "Starting ${DESC}: "
+
+  checkstatusofproc
+  status=$?
+  if [ "$status" -eq "$STATUS_RUNNING" ]; then
+    log_success_msg "${DESC} is running"
+    exit 0
+  fi
+
+  cd ${WORKING_DIR}
+  su -s /bin/bash $SVC_USER -c "${EXEC_PATH} $DAEMON_FLAGS > ${LOGFILE} 2>&1 &"'echo $! '"> ${PIDFILE}"
+
+  [ $RETVAL -eq $RETVAL_SUCCESS ] && touch $LOCKFILE
+  return $RETVAL
+}
+__EOT__
+
+}
+
+generate_stop() {
+
+cat <<'__EOT__'
+stop() {
+  log_success_msg "Stopping ${DESC}: "
+  checkstatusofproc
+  if [ "$?" = "$STATUS_RUNNING" ] ; then
+    kill -9 `cat ${PIDFILE}`
+    RETVAL=$?
+  else
+    RETVAL=$RETVAL_SUCCESS
+  fi
+
+  [ $RETVAL -eq $RETVAL_SUCCESS ] && rm -f $LOCKFILE $PIDFILE
+}
+__EOT__
+
+}

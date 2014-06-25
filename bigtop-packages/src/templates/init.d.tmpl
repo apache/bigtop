@@ -58,10 +58,11 @@ fi
 case "$2" in
   "deb" )
     # The defaults will work well on Debian-based systems
+    INIT_DEFAULT_START="2 3 4 5"
+    INIT_DEFAULT_STOP="0 1 6"
     ;;
   "rpm" )
     # On RedHat, SuSE and Mageia run-level 2 is networkless, hence excluding it
-    CHKCONFIG="345 85 15"
     INIT_DEFAULT_START="3 4 5"
     INIT_DEFAULT_STOP="0 1 2 6"
     ;;
@@ -130,20 +131,28 @@ __EOT__
 }
 
 ###################################################################
-# Some reasonable defaults for the run-level settings, these are
-# tweaked on a per-OS basis from the SPEC/rules files that call us
-# and can be further tweaked inside of individual .svc templates
-CHKCONFIG=${CHKCONFIG:-"2345 85 15"}
-INIT_DEFAULT_START=${INIT_DEFAULT_START:-"2 3 4 5"}
-INIT_DEFAULT_STOP=${INIT_DEFAULT_STOP:-"0 1 6"}
-
-###################################################################
 # NOTE how we are sourcing the argument here so that a user-defined
 # settings have a chance to override the default values for 
 # generate_start, generate_stop, generate_functions and generate_extra_commands. If you
 # ever want to make this template even more flexible -- define the
 # default values above this line
 . $1
+
+DEFAULTS_FILE=${DEFAULTS_FILE:-${DAEMON}}
+
+if [ -n "${PRIORITY}" ]; then
+    START_PRIORITY=$PRIORITY
+    STOP_PRIORITY=$((100-${PRIORITY}))
+fi
+
+START_PRIORITY=${START_PRIORITY:-85}
+STOP_PRIORITY=${STOP_PRIORITY:-15}
+
+###################################################################
+# Some reasonable defaults for the run-level settings, these are
+# tweaked on a per-OS basis from the SPEC/rules files that call us
+# and can be further tweaked inside of individual .svc templates
+CHKCONFIG="${INIT_DEFAULT_START//[[:space:]]/} ${START_PRIORITY} ${STOP_PRIORITY}"
 
 cat <<__EOT__
 #!/bin/bash
@@ -182,7 +191,7 @@ cat <<__EOT__
 . /lib/lsb/init-functions
 BIGTOP_DEFAULTS_DIR=\${BIGTOP_DEFAULTS_DIR-/etc/default}
 [ -n "\${BIGTOP_DEFAULTS_DIR}" -a -r \${BIGTOP_DEFAULTS_DIR}/hadoop ] && . \${BIGTOP_DEFAULTS_DIR}/hadoop
-[ -n "\${BIGTOP_DEFAULTS_DIR}" -a -r \${BIGTOP_DEFAULTS_DIR}/$DAEMON ] && . \${BIGTOP_DEFAULTS_DIR}/$DAEMON
+[ -n "\${BIGTOP_DEFAULTS_DIR}" -a -r \${BIGTOP_DEFAULTS_DIR}/$DEFAULTS_FILE ] && . \${BIGTOP_DEFAULTS_DIR}/$DEFAULTS_FILE
 
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
@@ -292,6 +301,17 @@ service() {
       condrestart
       ;;
 __EOT__
+
+if [ -n "${EXTRA_FUNCTIONS}" ] ; then
+    for EXTRA_FUNCTION in ${EXTRA_FUNCTIONS}; do
+        cat <<__EOT__
+    ${EXTRA_FUNCTION})
+      check_for_root
+      ${EXTRA_FUNCTION}_function
+      ;;
+__EOT__
+    done
+fi
 
 generate_extra_commands
 
