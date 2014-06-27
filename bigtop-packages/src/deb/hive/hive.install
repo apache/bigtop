@@ -56,7 +56,6 @@ usr/lib/hive/lib/jsr305-*.jar
 usr/lib/hive/lib/jta-*.jar
 usr/lib/hive/lib/junit-*.jar
 usr/lib/hive/lib/mail-*.jar
-usr/lib/hive/lib/netty-*.jar
 usr/lib/hive/lib/oro-*.jar
 usr/lib/hive/lib/paranamer-*.jar
 usr/lib/hive/lib/php
