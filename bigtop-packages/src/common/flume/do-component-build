@@ -23,8 +23,11 @@ export MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m"
 sed -i -e \
 's#<artifactId>asynchbase</artifactId>#<artifactId>asynchbase</artifactId>\n<exclusions>\n<exclusion>\n<groupId>org.apache.zookeeper</groupId>\n<artifactId>zookeeper</artifactId>\n</exclusion>\n</exclusions>#' flume-ng-sinks/flume-ng-hbase-sink/pom.xml
 
-mvn -DskipTests -Dhadoop.profile=2  \
-  -Dhadoop.version=$HADOOP_VERSION  \
-  -Dhbase.version=$HBASE_VERSION    \
-  -Dhadoop.profile=hbase-98         \
+
+# The following is weird, but true: yes *hadoop*.profile is hbase-98
+# This profile will activate hadoop2.version as the relevant property
+# and will also make us specify hbase version with -hadoop2 prefix
+mvn -DskipTests -Dhadoop.profile=hbase-98  \
+  -Dhadoop2.version=$HADOOP_VERSION        \
+  -Dhbase.version=${HBASE_VERSION}-hadoop2 \
   clean install "$@"
