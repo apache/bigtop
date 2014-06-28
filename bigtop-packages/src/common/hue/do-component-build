@@ -20,8 +20,6 @@ set -ex
 sed -i -e "s#${FULL_VERSION}-SNAPSHOT#${FULL_VERSION}#g" `grep -lR ${FULL_VERSION}-SNAPSHOT .`
 
 make MAVEN_VERSION='$(DESKTOP_VERSION)' apps docs
-# Workaround for https://issues.cloudera.org/browse/HUE-1603
-(cd build/docs/user-guide/; for file in *.md; do mv ${file} ${file/\.md/.html}; done)
 
 # Make the entire tree relocatable
 bash tools/relocatable.sh
