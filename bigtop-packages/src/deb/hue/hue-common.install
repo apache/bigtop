@@ -22,7 +22,6 @@
 /usr/lib/hue/apps/jobbrowser
 /usr/lib/hue/apps/jobsub
 /usr/lib/hue/apps/proxy
-/usr/lib/hue/apps/shell
 /usr/lib/hue/apps/useradmin
 /usr/lib/hue/apps/oozie
 /usr/lib/hue/apps/metastore

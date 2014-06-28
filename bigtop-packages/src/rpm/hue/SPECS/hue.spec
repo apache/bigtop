@@ -34,6 +34,9 @@ Requires: %{name}-pig = %{version}-%{release}
 Requires: %{name}-hbase = %{version}-%{release}
 Requires: %{name}-sqoop = %{version}-%{release}
 Requires: %{name}-search = %{version}-%{release}
+Requires: %{name}-rdbms = %{version}-%{release}
+Requires: %{name}-spark = %{version}-%{release}
+Requires: %{name}-zookeeper = %{version}-%{release}
 
 
 ################ RPM CUSTOMIZATION ##############################
@@ -87,12 +90,14 @@ AutoReqProv: no
 %define jobbrowser_app_dir %{hue_dir}/apps/jobbrowser
 %define jobsub_app_dir %{hue_dir}/apps/jobsub
 %define proxy_app_dir %{hue_dir}/apps/proxy
-%define shell_app_dir %{hue_dir}/apps/shell
 %define useradmin_app_dir %{hue_dir}/apps/useradmin
 %define etc_hue /etc/hue/conf 
 %define hbase_app_dir %{hue_dir}/apps/hbase
 %define sqoop_app_dir %{hue_dir}/apps/sqoop
 %define search_app_dir %{hue_dir}/apps/search
+%define rdbms_app_dir %{hue_dir}/apps/rdbms
+%define spark_app_dir %{hue_dir}/apps/spark
+%define zookeeper_app_dir %{hue_dir}/apps/zookeeper
 
 
 # Path to the HADOOP_HOME to build against - these
@@ -269,10 +274,8 @@ fi
 %{jobsub_app_dir}
 %{proxy_app_dir}
 %{useradmin_app_dir}
-%{shell_app_dir}
 %{metastore_app_dir}
 %{oozie_app_dir}
-%attr(4750,root,hue) %{shell_app_dir}/src/shell/build/setuid
 %attr(0755,%{username},%{username}) /var/log/hue
 %attr(0755,%{username},%{username}) /var/lib/hue
 
@@ -282,6 +285,9 @@ fi
 %exclude %{hbase_app_dir}
 %exclude %{sqoop_app_dir}
 %exclude %{search_app_dir}
+%exclude %{rdbms_app_dir}
+%exclude %{spark_app_dir}
+%exclude %{zookeeper_app_dir}
 
 
 ############################################################
@@ -420,3 +426,57 @@ It allows users to interact with Solr
 %files -n %{name}-search
 %defattr(-, %{username}, %{username})
 %{search_app_dir}
+
+#### HUE-RDBMS PLUGIN ######
+%package -n %{name}-rdbms
+Summary: A UI for RDBMS on Hue
+Group: Applications/Engineering
+Requires: %{name}-common = %{version}-%{release}
+
+%description -n %{name}-rdbms
+A web interface for RDBMS.
+
+It allows users to interact with RDBMS
+
+%app_post_macro rdbms
+%app_preun_macro rdbms
+
+%files -n %{name}-rdbms
+%defattr(-, %{username}, %{username})
+%{rdbms_app_dir}
+
+#### HUE-SPARK PLUGIN ######
+%package -n %{name}-spark
+Summary: A UI for Spark on Hue
+Group: Applications/Engineering
+Requires: %{name}-common = %{version}-%{release}
+
+%description -n %{name}-spark
+A web interface for Spark.
+
+It allows users to interact with Spark
+
+%app_post_macro spark
+%app_preun_macro spark
+
+%files -n %{name}-spark
+%defattr(-, %{username}, %{username})
+%{spark_app_dir}
+
+#### HUE-ZOOKEEPER PLUGIN ######
+%package -n %{name}-zookeeper
+Summary: A UI for Zookeeper on Hue
+Group: Applications/Engineering
+Requires: %{name}-common = %{version}-%{release}
+
+%description -n %{name}-zookeeper
+A web interface for Zookeeper.
+
+It allows users to interact with Zookeeper
+
+%app_post_macro zookeeper
+%app_preun_macro zookeeper
+
+%files -n %{name}-zookeeper
+%defattr(-, %{username}, %{username})
+%{zookeeper_app_dir}

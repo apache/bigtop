@@ -106,10 +106,6 @@ BUNDLED_BUILD_DIR=$PREFIX/$LIB_DIR/build
 install -d -m 0755 $PREFIX/$HADOOP_DIR
 ln -fs $LIB_DIR/desktop/libs/hadoop/java-lib/*plugin*jar $PREFIX/$HADOOP_DIR
 
-# Hue Shell specific
-install -d -m 0755 $PREFIX/$LIB_DIR/apps/shell/src/shell/build/
-cp -f $BUILD_DIR/apps/shell/src/shell/build/setuid $PREFIX/$LIB_DIR/apps/shell/src/shell/build
-
 # Making the resulting tree relocatable
 # WARNING: We HAVE to run this twice, before and after the apps get registered.
 #          we have to run it one time before so that the path to the interpreter
@@ -121,7 +117,7 @@ cp -f $BUILD_DIR/apps/shell/src/shell/build/setuid $PREFIX/$LIB_DIR/apps/shell/s
 
 # Remove Hue database and then recreate it, but with just the "right" apps
 rm -f $PREFIX/$LIB_DIR/desktop/desktop.db $PREFIX/$LIB_DIR/app.reg
-APPS="about filebrowser help proxy useradmin shell oozie jobbrowser jobsub metastore"
+APPS="about filebrowser help proxy useradmin oozie jobbrowser jobsub metastore"
 export DESKTOP_LOG_DIR=$BUILD_DIR
 export DESKTOP_LOGLEVEL=WARN
 export ROOT=$PREFIX/$LIB_DIR
@@ -195,7 +191,6 @@ mv $PREFIX/$LIB_DIR/desktop/desktop.db $PREFIX/$VAR_DIR
 # Move hue.pth to a var location
 mv $PREFIX/$LIB_DIR/build/env/lib/python*/site-packages/hue.pth $PREFIX/$VAR_DIR
 ln -s $VAR_DIR/hue.pth `ls -d $PREFIX/$LIB_DIR/build/env/lib/python*/site-packages/`/hue.pth
-rm $PREFIX/$LIB_DIR/build/env/lib/python*/site-packages/hue.link.pth
 
 # Move app.reg to a var location
 mv $PREFIX/$LIB_DIR/app.reg $PREFIX/$VAR_DIR

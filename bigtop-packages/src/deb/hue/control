@@ -31,7 +31,7 @@ Description: A browser-based desktop interface for Hadoop
 
 Package: hue
 Architecture: all
-Depends: hue-common (= ${source:Version}), hue-server (= ${source:Version}), hue-beeswax (= ${source:Version}), hue-pig (= ${source:Version}), hue-hbase (= ${source:Version}), hue-search (= ${source:Version}), hue-sqoop (= ${source:Version})
+Depends: hue-common (= ${source:Version}), hue-server (= ${source:Version}), hue-beeswax (= ${source:Version}), hue-pig (= ${source:Version}), hue-hbase (= ${source:Version}), hue-search (= ${source:Version}), hue-sqoop (= ${source:Version}), hue-rdbms (= ${source:Version}), hue-spark (= ${source:Version}), hue-zookeeper (= ${source:Version})
 Description: The hue metapackage
  Hue is a browser-based desktop interface for interacting with Hadoop.
  It supports a file browser, job tracker interface, cluster health monitor, and more.
@@ -85,4 +85,28 @@ Description: A UI for Search on Hue
  A web interface to Search.
  .
  It allows users to interact with Solr
+
+Package: hue-rdbms
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.4), python (<< 3), make (>= 3.8), hue-common (= ${source:Version})
+Description: A UI for RDBMS on Hue
+ A web interface to RDBMS.
+ .
+ It allows users to interact with RDBMS
+
+Package: hue-spark
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.4), python (<< 3), make (>= 3.8), hue-common (= ${source:Version})
+Description: A UI for Spark on Hue
+ A web interface to Spark.
+ .
+ It allows users to interact with Spark
+
+Package: hue-zookeeper
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.4), python (<< 3), make (>= 3.8), hue-common (= ${source:Version})
+Description: A UI for Zookeeper on Hue
+ A web interface to Zookeeper.
+ .
+ It allows users to interact with Zookeeper
 

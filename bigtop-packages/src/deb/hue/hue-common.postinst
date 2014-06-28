@@ -50,11 +50,6 @@ case "$1" in
                         cp $OLD_DB /usr/share/hue/desktop/desktop.db
                 fi
         fi
-
-        # Take care of hue-shell setuid binary
-        SETUID=/usr/lib/hue/apps/shell/src/shell/build/setuid
-        chown root:hue $SETUID
-        chmod 4750 $SETUID
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
