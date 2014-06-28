@@ -117,6 +117,9 @@ cp -fa $DISTRO_DIR/schema.xml $PREFIX/$LIB_DIR/coreconfig-template
 
 install -d -m 0755 $PREFIX/$LIB_DIR/contrib
 cp -ra ${BUILD_DIR}/contrib/velocity $PREFIX/$LIB_DIR/contrib
+cp -ra ${BUILD_DIR}/contrib/map-reduce $PREFIX/$LIB_DIR/contrib
+cp -ra ${BUILD_DIR}/example/scripts/map-reduce $PREFIX/$LIB_DIR/contrib
+cp -ra ${BUILD_DIR}/contrib/morphlines* $PREFIX/$LIB_DIR/contrib
 
 install -d -m 0755 $PREFIX/$LIB_DIR/server/webapps/solr
 (cd $PREFIX/$LIB_DIR/server/webapps/solr ; jar xf ../../../*.war)
@@ -142,7 +145,7 @@ cp -ra ${BUILD_DIR}/dist/*.*ar $PREFIX/$LIB_DIR
 cp -ra ${BUILD_DIR}/dist/solrj-lib $PREFIX/$LIB_DIR/lib
 
 install -d -m 0755 $PREFIX/$LIB_DIR/bin
-cp -a ${BUILD_DIR}/example/cloud-scripts/*.sh $PREFIX/$LIB_DIR/bin
+cp -a ${BUILD_DIR}/example/scripts/cloud-scripts/*.sh $PREFIX/$LIB_DIR/bin
 sed -i -e 's#/../solr-webapp/webapp/WEB-INF/lib/#/../webapps/solr/WEB-INF/lib/#' $PREFIX/$LIB_DIR/bin/zkcli.sh
 chmod 755 $PREFIX/$LIB_DIR/bin/*
 
