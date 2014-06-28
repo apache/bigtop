@@ -109,28 +109,15 @@ install -d -m 0755 ${PREFIX}/${LIB_DIR}
 
 # Installing Giraph core
 install -d -m 0755 ${PREFIX}/${LIB_DIR}
-cp $BUILD_DIR/giraph-core/target/*.jar ${PREFIX}/${LIB_DIR}
-
-install -d -m 0755 ${PREFIX}/${LIB_DIR}/lib
-cp $BUILD_DIR/giraph-core/target/lib/*.jar ${PREFIX}/${LIB_DIR}/lib
-
-# Installing various Giraph modules
-cp $BUILD_DIR/giraph-hive/target/*.jar ${PREFIX}/${LIB_DIR}
-# FIXME: cp $BUILD_DIR/giraph-hbase/target/*.jar ${PREFIX}/${LIB_DIR}
-# FIXME: cp $BUILD_DIR/giraph-hcatalog/target/*.jar ${PREFIX}/${LIB_DIR}
-
-# Remove things we don't need
-rm -f ${PREFIX}/${LIB_DIR}/*tests.jar ${PREFIX}/${LIB_DIR}/*javadoc.jar ${PREFIX}/${LIB_DIR}/*sources.jar
+cp -r $BUILD_DIR/giraph-dist/target/giraph*-bin/*/* ${PREFIX}/${LIB_DIR}
 
 # Installing docs and examples
 install -d -m 0755 $PREFIX/${DOC_DIR}
-cp -r $BUILD_DIR/giraph-core/target/site/apidocs/*  $PREFIX/${DOC_DIR}
-cp $BUILD_DIR/giraph-examples/target/*.jar $PREFIX/${DOC_DIR}
+cp -r $BUILD_DIR/target/staging/*  $PREFIX/${DOC_DIR}
+mv ${PREFIX}/${LIB_DIR}/giraph-examples*.jar $PREFIX/${DOC_DIR}
 
 # Install executable wrappers
 install -d -m 0755 $PREFIX/usr/bin
-install -d -m 0755 $PREFIX/${BIN_DIR}
-cp $BUILD_DIR/bin/* $PREFIX/${BIN_DIR}
 
 for i in giraph ; do
 	#echo "Copying manpage $i"
@@ -161,11 +148,9 @@ unlink $PREFIX/$LIB_DIR/conf || /bin/true
 ln -s $ETC_DIR/conf $PREFIX/$LIB_DIR/conf
 
 # Create version independent symlinks
-ln -s `cd $PREFIX/$LIB_DIR ; ls giraph*jar | grep -v jar-with-dependencies.jar | grep -v giraph-hive` $PREFIX/$LIB_DIR/giraph.jar
-ln -s `cd $PREFIX/$LIB_DIR ; ls giraph*jar | grep jar-with-dependencies.jar    | grep -v giraph-hive` $PREFIX/$LIB_DIR/giraph-jar-with-dependencies.jar
-
-# Workaround for GIRAPH-205
-ln -s ../giraph.jar $PREFIX/$LIB_DIR/lib
+for i in accumulo core gora hbase hcatalog hive kibble rexster ; do
+  (cd $PREFIX/$LIB_DIR ; ln -s `ls giraph-$i-*jar` giraph-$i.jar)
+done
 
 # Enforcing dependency on the Bigtop's version of Zookeeper
 ln -fs /usr/lib/zookeeper/zookeeper.jar $PREFIX/$LIB_DIR/lib/zookeeper*.jar

@@ -31,3 +31,9 @@ Description: Giraph is a BSP inspired graph processing platform that runs on Had
  of Pregel but additionally adds fault-tolerance to the coordinator process with 
  the use of ZooKeeper as its centralized coordination service.
 
+Package: giraph-doc
+Architecture: all
+Section: doc
+Description: Documentation for Apache Giraph
+ Documentation for Apache Giraph
+
