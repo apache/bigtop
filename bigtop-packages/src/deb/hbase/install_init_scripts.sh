@@ -16,7 +16,7 @@
 # limitations under the License.
 
 SRC_PKG=hbase
-for node in master regionserver rest thrift ; do
+for node in master regionserver rest thrift thrift2; do
     service_pkgdir=debian/$SRC_PKG-$node
     debdir=$service_pkgdir/DEBIAN
     mkdir -p $service_pkgdir/etc/init.d/ $debdir

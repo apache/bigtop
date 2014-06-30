@@ -23,7 +23,7 @@
 %define webapps_hbase %{hbase_home}/hbase-webapps
 %define man_dir %{_mandir}
 %define hbase_username hbase
-%define hbase_services master regionserver thrift rest
+%define hbase_services master regionserver thrift thrift2 rest
 %define hadoop_home /usr/lib/hadoop
 %define zookeeper_home /usr/lib/zookeeper
 
@@ -194,6 +194,34 @@ Requires: redhat-lsb
 %description thrift
 ThriftServer - this class starts up a Thrift server which implements the Hbase API specified in the Hbase.thrift IDL file.
 "Thrift is a software framework for scalable cross-language services development. It combines a powerful software stack with a code generation engine to build services that work efficiently and seamlessly between C++, Java, Python, PHP, and Ruby. Thrift was developed at Facebook, and we are now releasing it as open source." For additional information, see http://developers.facebook.com/thrift/. Facebook has announced their intent to migrate Thrift into Apache Incubator.
+
+%package thrift2
+Summary: The Hadoop HBase Thrift2 Interface
+Group: System/Daemons
+Requires: %{name} = %{version}-%{release}
+Requires(pre): %{name} = %{version}-%{release}
+
+%if  %{?suse_version:1}0
+# Required for init scripts
+Requires: insserv
+%endif
+
+%if  0%{?mgaversion}
+# Required for init scripts
+Requires: initscripts
+%endif
+
+# CentOS 5 does not have any dist macro
+# So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
+%if %{!?suse_version:1}0 && %{!?mgaversion:1}0
+# Required for init scripts
+Requires: redhat-lsb
+%endif
+
+
+%description thrift2
+Thrift2 Server to supersede original Thrift Server.
+Still under development. https://issues.apache.org/jira/browse/HBASE-8818
 
 %package doc
 Summary: Hbase Documentation
