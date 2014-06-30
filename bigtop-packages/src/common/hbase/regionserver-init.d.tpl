@@ -396,33 +396,42 @@ condrestart(){
     fi
 }
 
+RETVAL=0
+
 case "$1" in
   start)
         start
+        RETVAL=$?
   ;;
   stop)
         stop
+        RETVAL=$?
   ;;
   force-stop)
         force_stop
+        RETVAL=$?
   ;;
   force-reload)
         force_reload
+        RETVAL=$?
   ;;
   restart)
         restart
+        RETVAL=$?
     ;;
   condrestart)
         condrestart
+        RETVAL=$?
   ;;
   status)
         status
+        RETVAL=$?
     ;;
   *)
   N=/etc/init.d/$NAME
   echo "Usage: $N {start|stop|restart|force-reload|status|force-stop|condrestart}" >&2
-  exit 1
+  RETVAL=1
   ;;
 esac
 
-exit $?
+exit ${RETVAL}
