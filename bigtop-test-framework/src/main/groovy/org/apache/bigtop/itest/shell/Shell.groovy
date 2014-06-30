@@ -108,4 +108,37 @@ class Shell {
 
     return this
   }
+
+  /**
+   * Fix up the return code so that a value of 255 is mapped back to -1
+   * @return twos complement return code from an unsigned byte
+   */
+  int signCorrectedReturnCode() {
+    return (ret << 24) >> 24
+  }
+
+  /**
+   * String operation returns the exit code and any script built up
+   * @return a description of the contents of the instance.
+   */
+  @Override
+  String toString() {
+    return signCorrectedReturnCode() + " =>\"" + (script ?: "(no script)") +"\""
+  }
+
+  /**
+   * Dump the command, return code and outputs to the log.
+   * stdout is logged at info; stderr at error.
+   */
+  void dumpOutput() {
+    LOG.error(toString())
+    LOG.error("return code = ${signCorrectedReturnCode()}")
+    if (out.size() != 0) {
+      LOG.info("\n<stdout>\n${out.join('\n')}\n</stdout>");
+    }
+    if (err.size() != 0) {
+      LOG.error("\n<stderr>\n${err.join('\n')}\n</stderr>");
+    }
+  }
+
 }
