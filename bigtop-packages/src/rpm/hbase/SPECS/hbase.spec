@@ -366,5 +366,6 @@ if [ $1 -ge 1 ]; then \
 fi
 %service_macro master
 %service_macro thrift
+%service_macro thrift2
 %service_macro regionserver
 %service_macro rest
