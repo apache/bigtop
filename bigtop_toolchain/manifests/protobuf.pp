@@ -38,18 +38,30 @@ class bigtop_toolchain::protobuf {
       }
 
     }
-    default:{
-      file { '/etc/yum.repos.d/mrdocs-protobuf-rpm.repo':
-        source => 'puppet:///modules/bigtop_toolchain/mrdocs-protobuf-rpm.repo',
-        ensure => present,
-        owner  => root,
-        group  => root,
-        mode   => 755,
+    default: {
+      case $operatingsystem {
+         /(?i:(centos|fedora))/: {
+           yumrepo { "protobuf":
+             baseurl => "http://download.opensuse.org/repositories/home:/mrdocs:/protobuf-rpm/CentOS_CentOS-6/",
+             descr => "Bigtop protobuf repo",
+             enabled => 1,
+             gpgcheck => 0
+           }
+           exec { 'install_mrdocs_repo':
+             command => '/bin/true',
+             require => Yumrepo['protobuf'],
+           }
+         }
+         /(?i:(SLES|opensuse))/:{
+           exec { 'install_mrdocs_repo':
+              command => '/usr/bin/zypper ar http://download.opensuse.org/repositories/home:/mrdocs:/protobuf-rpm/openSUSE_12.3/ protobuf',
+              unless => "/usr/bin/zypper lr | grep -q protobuf",
+           }
+         }
       }
-  
       package { 'protobuf-devel':
         ensure => present,
-        require => File['/etc/yum.repos.d/mrdocs-protobuf-rpm.repo'],
+        require => Exec['install_mrdocs_repo'],
       }
     }
   }

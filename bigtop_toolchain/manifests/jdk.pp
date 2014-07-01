@@ -15,24 +15,33 @@
 
 class bigtop_toolchain::jdk {
   case $::lsbdistcodename{
-    precise: {
-      package {'python-software-properties':
+    /(precise|trusty|lucid)/: {
+      $apt_add_repo_name = $::lsbdistcodename ? {
+        'trusty'          => 'software-properties-common',
+        default           => 'python-software-properties',
+      }
+
+      package {$apt_add_repo_name:
         ensure => present,
       }
 
-      exec {'/usr/bin/apt-add-repository -y ppa:webupd8team/java':
+      exec {'add_webupd8team_ppa':
+        command => $::lsbdistcodename ? { 
+                      'lucid' => '/usr/bin/apt-add-repository    ppa:webupd8team/java',
+                      default => '/usr/bin/apt-add-repository -y ppa:webupd8team/java'
+                   },
         unless  => '/usr/bin/test -f /etc/apt/sources.list.d/webupd8team-java-precise.list',
-        require => Package['python-software-properties'],
+        require => Package[$apt_add_repo_name],
       }
 
       exec {'/usr/bin/apt-get update':
         refreshonly => true,
-        subscribe   => Exec['/usr/bin/apt-add-repository -y ppa:webupd8team/java'],
-        require     => Exec['/usr/bin/apt-add-repository -y ppa:webupd8team/java'],
+        subscribe   => Exec['add_webupd8team_ppa'],
+        require     => Exec['add_webupd8team_ppa'],
       }
 
       exec {"accept-license1":
-        command     => "echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections",
+        command     => "echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections",
         path        => ["/bin", "/usr/bin"],
         require     => Exec['/usr/bin/apt-get update'],
         refreshonly => true,
@@ -40,7 +49,7 @@ class bigtop_toolchain::jdk {
       }
 
       exec {"accept-license2":
-        command     => "echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections",
+        command     => "echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections",
         path        => ["/bin", "/usr/bin"],
         require     => Exec["accept-license1"],
         refreshonly => true,
