@@ -60,7 +60,7 @@ bash $RPM_SOURCE_DIR/do-component-build
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
-sh $RPM_SOURCE_DIR/install_crunch.sh \
+bash $RPM_SOURCE_DIR/install_crunch.sh \
           --build-dir=${PWD}/build   \
           --doc-dir=%{doc_crunch}    \
           --prefix=$RPM_BUILD_ROOT
