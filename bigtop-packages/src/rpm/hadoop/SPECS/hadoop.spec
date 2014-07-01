@@ -552,7 +552,9 @@ getent passwd mapred >/dev/null || /usr/sbin/useradd --comment "Hadoop MapReduce
 
 %post httpfs
 %{alternatives_cmd} --install %{config_httpfs} %{name}-httpfs-conf %{etc_httpfs}/conf.empty 10
-%{alternatives_cmd} --install %{tomcat_deployment_httpfs} %{name}-tomcat-conf %{etc_httpfs}/tomcat-conf.dist 10
+%{alternatives_cmd} --install %{tomcat_deployment_httpfs} %{name}-httpfs-tomcat-conf %{etc_httpfs}/tomcat-conf.dist 10
+%{alternatives_cmd} --install %{tomcat_deployment_httpfs} %{name}-httpfs-tomcat-conf %{etc_httpfs}/tomcat-conf.https 5
+
 chkconfig --add %{name}-httpfs
 
 %preun
@@ -565,7 +567,8 @@ if [ $1 = 0 ]; then
   service %{name}-httpfs stop > /dev/null 2>&1
   chkconfig --del %{name}-httpfs
   %{alternatives_cmd} --remove %{name}-httpfs-conf %{etc_httpfs}/conf.empty || :
-  %{alternatives_cmd} --remove %{name}-tomcat-conf %{etc_httpfs}/tomcat-conf.dist || :
+  %{alternatives_cmd} --remove %{name}-httpfs-tomcat-conf %{etc_httpfs}/tomcat-conf.dist || :
+  %{alternatives_cmd} --remove %{name}-httpfs-tomcat-conf %{etc_httpfs}/tomcat-conf.https || :
 fi
 
 %postun httpfs

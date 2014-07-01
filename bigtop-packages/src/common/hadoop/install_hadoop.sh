@@ -320,11 +320,19 @@ install -d -m 0755 ${PREFIX}/var/lib/hadoop-httpfs
 install -d -m 0755 $HTTPFS_ETC_DIR/conf.empty
 
 install -m 0755 ${DISTRO_DIR}/httpfs-tomcat-deployment.sh ${HTTPFS_DIR}/tomcat-deployment.sh
-install -d -m 0755 $HTTPFS_ETC_DIR/tomcat-conf.dist
-cp -r ${BUILD_DIR}/share/hadoop/httpfs/tomcat/conf $HTTPFS_ETC_DIR/tomcat-conf.dist/
-chmod 644 $HTTPFS_ETC_DIR/tomcat-conf.dist/conf/*
-install -d -m 0755 $HTTPFS_ETC_DIR/tomcat-conf.dist/WEB-INF
-mv ${HTTPFS_DIR}/webapps/webhdfs/WEB-INF/*.xml $HTTPFS_ETC_DIR/tomcat-conf.dist/WEB-INF/
+
+HTTP_DIRECTORY=$HTTPFS_ETC_DIR/tomcat-conf.dist
+HTTPS_DIRECTORY=$HTTPFS_ETC_DIR/tomcat-conf.https
+
+install -d -m 0755 ${HTTP_DIRECTORY}
+cp -r ${BUILD_DIR}/share/hadoop/httpfs/tomcat/conf ${HTTP_DIRECTORY}
+chmod 644 ${HTTP_DIRECTORY}/conf/*
+install -d -m 0755 ${HTTP_DIRECTORY}/WEB-INF
+mv ${HTTPFS_DIR}/webapps/webhdfs/WEB-INF/*.xml ${HTTP_DIRECTORY}/WEB-INF/
+
+cp -r ${HTTP_DIRECTORY} ${HTTPS_DIRECTORY}
+mv ${HTTPS_DIRECTORY}/conf/ssl-server.xml ${HTTPS_DIRECTORY}/conf/server.xml
+rm ${HTTP_DIRECTORY}/conf/ssl-server.xml
 
 mv $HADOOP_ETC_DIR/conf.empty/httpfs* $HTTPFS_ETC_DIR/conf.empty
 sed -i -e '/<\/configuration>/i\
