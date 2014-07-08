@@ -38,7 +38,7 @@ License: ASL 2.0
 Source0: %{crunch_folder}.tar.gz
 Source1: do-component-build 
 Source2: install_%{crunch_name}.sh
-
+Requires: hadoop-client, bigtop-utils >= 0.7
 
 %description 
 Apache Crunch is a Java library for writing, testing, and running
