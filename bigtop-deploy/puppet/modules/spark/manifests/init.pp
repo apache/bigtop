@@ -15,24 +15,28 @@
 
 class spark {
   class common {
-    package { "spark":
+    package { "spark-core":
       ensure => latest,
     }
 
     file { "/etc/spark/conf/spark-env.sh":
         content => template("spark/spark-env.sh"),
-        require => [Package["spark"]],
+        require => [Package["spark-core"]],
     }
   }
 
   define master($master_host = $fqdn, $master_port = "7077", $master_ui_port = "18080") {
     include common   
 
+    package { "spark-master":
+      ensure => latest,
+    }
+
     if ( $fqdn == $master_host ) {
       service { "spark-master":
         ensure => running,
-        require => [ Package["spark"], File["/etc/spark/conf/spark-env.sh"], ],
-        subscribe => [Package["spark"], File["/etc/spark/conf/spark-env.sh"] ],
+        require => [ Package["spark-master"], File["/etc/spark/conf/spark-env.sh"], ],
+        subscribe => [Package["spark-master"], File["/etc/spark/conf/spark-env.sh"] ],
         hasrestart => true,
         hasstatus => true,
       }
@@ -41,13 +45,18 @@ class spark {
 
   define worker($master_host = $fqdn, $master_port = "7077", $master_ui_port = "18080") {
     include common
+
+    package { "spark-worker":
+      ensure => latest,
+    }
+
     if ( $fqdn == $master_host ) {
       Service["spark-master"] ~> Service["spark-worker"]
     }
     service { "spark-worker":
       ensure => running,
-      require => [ Package["spark"], File["/etc/spark/conf/spark-env.sh"], ],
-      subscribe => [Package["spark"], File["/etc/spark/conf/spark-env.sh"] ],
+      require => [ Package["spark-worker"], File["/etc/spark/conf/spark-env.sh"], ],
+      subscribe => [Package["spark-worker"], File["/etc/spark/conf/spark-env.sh"] ],
       hasrestart => true,
       hasstatus => true,
     } 
