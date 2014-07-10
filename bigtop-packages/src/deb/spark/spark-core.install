@@ -18,6 +18,7 @@
 /usr/lib/spark/LICENSE
 /usr/lib/spark/NOTICE
 /usr/lib/spark/RELEASE
+/usr/lib/spark/work
 /var/lib/spark/
 /var/log/spark/
 /var/run/spark/
