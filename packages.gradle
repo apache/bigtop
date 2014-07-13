@@ -479,7 +479,9 @@ def readBOM = {
         return
       }
       envs = it?.split("=")
-      BOM_map.put(envs[0], buildUtils.evaluateBOM(BOM_map, envs[1]))
+      def value = buildUtils.evaluateBOM(BOM_map, envs[1])
+      value = System.getProperty(envs[0]) ?: value
+      BOM_map.put(envs[0], value)
     }
   }
 }

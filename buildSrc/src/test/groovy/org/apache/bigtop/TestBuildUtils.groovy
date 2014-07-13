@@ -17,7 +17,7 @@
  */
 package org.apache.bigtop
 
-import junit.framework.Assert
+import org.junit.Assert
 import org.junit.Test
 
 class TestBuildUtils {
@@ -31,7 +31,8 @@ class TestBuildUtils {
       'BIGTOP_UTILS_BASE_VERSION=$(subst -,.,$(BIGTOP_VERSION))',
       'BIGTOP_UTILS_PKG_VERSION=$(BIGTOP_UTILS_BASE_VERSION)',
       'BIGTOP_UTILS_RELEASE_VERSION=1',
-      'HADOOP_SITE=$(APACHE_MIRROR)/$(BIGTOP_UTILS_RELEASE_VERSION)/hadoop-2.0.6-alpha-src.tar.gz'
+      'HADOOP_SITE=$(APACHE_MIRROR)/$(BIGTOP_UTILS_RELEASE_VERSION)/hadoop-2.0.6-alpha-src.tar.gz',
+      'BIGTOP_BUILD_STAMP=1'
   ]
   Map map = [
       APACHE_MIRROR:  "http://apache.osuosl.org",
@@ -50,5 +51,27 @@ class TestBuildUtils {
     Assert.assertEquals("0.9.0.3", map.get("BIGTOP_UTILS_BASE_VERSION"))
     Assert.assertEquals("0.9.0.3", map.get("BIGTOP_UTILS_PKG_VERSION"))
     Assert.assertEquals("http://apache.osuosl.org/1/hadoop-2.0.6-alpha-src.tar.gz", map.get("HADOOP_SITE"))
+  }
+
+  @Test
+  void testOverrideBOM () {
+    System.setProperty("BIGTOP_UTILS_BASE_VERSION", "10.1.0")
+    System.setProperty("BIGTOP_BUILD_STAMP", "12")
+    System.setProperty("HADOOP_SITE", "http://www.apache.org")
+    BuildUtils buildUtils = new BuildUtils()
+    def envs = []
+    input.each { line ->
+      envs = line?.split("=")
+      def value = buildUtils.evaluateBOM(map, envs[1])
+      value = System.getProperty(envs[0]) ?: value
+      map.put(envs[0], value)
+    }
+
+    Assert.assertEquals("10.1.0", map.get("BIGTOP_UTILS_BASE_VERSION"))
+    Assert.assertEquals("12", map.get("BIGTOP_BUILD_STAMP"))
+    Assert.assertEquals("http://www.apache.org", map.get("HADOOP_SITE"))
+    System.clearProperty("HADOOP_SITE")
+    System.clearProperty("BIGTOP_BUILD_STAMP")
+    System.clearProperty("BIGTOP_UTILS_BASE_VERSION")
   }
 }
