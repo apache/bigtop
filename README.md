@@ -121,6 +121,16 @@ __On all systems, Building Apache Bigtop requires the following tools__
 * __Building packages__ : make [component-name]-[rpm|deb]
 * __Building local YUM/APT repositories__ : make [component-name]-[yum|apt]
 
+
+For Developers: Building and modifying the web site
+---------------------------------------------------
+
+The website can be built by running `mvn site:site` from the root directory of the
+project.  The main page can be accessed from "project_root/target/site/index.html".
+
+The source for the website is located in "project_root/src/site/".
+
+
 ---------------------- 
 
 Contact us

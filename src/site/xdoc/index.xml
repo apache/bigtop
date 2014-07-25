@@ -16,80 +16,114 @@
 		<section name="Apache Bigtop">
 			<p>
 				Bigtop is a project for the development of packaging and tests of the Apache Hadoop ecosystem.
-				<br />
-				<br />
-				The primary goal of Bigtop is to build a community around the packaging and interoperability testing
-				of Hadoop-related projects. This includes testing at various levels (packaging, platform, runtime, upgrade, etc...)
-				developed by a community with a focus on the system as a whole, rather than individual projects.
 			</p>
 			<br />
+			<table>
+				<tr>
+					<th>Packaging</th>
+					<th>Smoke testing</th>
+					<th>Virtualization</th>
+				</tr>
+				<tr>
+					<td>
+						Bigtop packages Hadoop RPMs and DEBs, so that you can manage and maintain your Hadoop cluster.
+					</td>
+					<td>
+						Bigtop provides an integrated smoke testing framework, alongside a suite of over 50 test files.
+					</td>
+					<td>
+						Bigtop provides vagrant recipes, raw images, and (work-in-progress) docker recipes for deploying 
+						Hadoop from zero.
+					</td>
+				</tr>
+			</table>
 			<br />
-			<subsection name="Building Bigtop"></subsection>
 			<p>
-				Packages have been built on Ubuntu 10.10, CentOS 5/6, Fedora 18, Mageia 1 and openSUSE 12.2
+				<b>
+					The primary goal of Bigtop is to build a community around the packaging and interoperability testing
+					of Hadoop-related projects.
+				</b> 
+				This includes testing at various levels (packaging, platform, runtime, upgrade, etc...)
+				developed by a community with a focus on the system as a whole, rather than individual projects.
+				Packages have been built on Ubuntu 10.10, CentOS 5/6, Fedora 18, Mageia 1, openSUSE 12.2.
 				They can probably be built on other platforms as well.
-				<br />
-				<br />
-				Building Bigtop requires the following tools:
 			</p>
-			<ul>
-				<li>Java JDK 1.6</li>
-				<li>Apache Ant</li>
-				<li>Apache Maven</li>
-				<li>wget</li>
-				<li>tar</li>
-				<li>git</li>
-				<li>subversion</li>
-				<li>gcc</li>
-				<li>gcc-c++</li>
-				<li>make</li>
-				<li>fuse</li>
-				<li>protobuf-compiler</li>
-				<li>autoconf</li>
-				<li>automake</li>
-				<li>libtool</li>
-				<li>sharutils</li>
-				<li>asciidoc</li>
-				<li>xmlto</li>
-			</ul>
-			<p>On RPM-based systems one also needs</p>
-			<ul>
-				<li>lzo-devel</li>
-				<li>zlib-devel</li>
-				<li>fuse-devel</li>
-				<li>openssl-devel</li>
-				<li>python-devel</li>
-				<li>libxml2-devel</li>
-				<li>libxslt-devel</li>
-				<li>cyrus-sasl-devel</li>
-				<li>sqlite-devel</li>
-				<li>mysql-devel</li>
-				<li>openldap-devel</li>
-				<li>rpm-build</li>
-				<li>createrepo</li>
-				<li>redhat-rpm-config (RedHat/CentOS only)</li>
-			</ul>
-			<p>On DEB-based systems one also needs</p>
-			<ul>
-				<li>libxslt1-dev</li>
-				<li>libkrb5-dev</li>
-				<li>libldap2-dev</li>
-				<li>libmysqlclient-dev</li>
-				<li>libsasl2-dev</li>
-				<li>libsqlite3-dev</li>
-				<li>libxml2-dev</li>
-				<li>python-dev</li>
-				<li>python-setuptools</li>
-				<li>liblzo2-dev</li>
-				<li>libzip-dev</li>
-				<li>libfuse-dev</li>
-				<li>libssl-dev</li>
-				<li>build-essential</li>
-				<li>dh-make</li>
-				<li>debhelper</li>
-				<li>devscripts</li>
-				<li>reprepro</li>
-			</ul>
+			<br />
+			<br />
+
+			<subsection name="Tool requirements for building Bigtop"></subsection>
+			<table>
+				<tr>
+					<th>On all systems</th>
+					<th>Also on RPM-based systems</th>
+					<th>Also on DEB-based systems</th>
+				</tr>
+				<tr>
+					<td>
+						<ul>
+							<li>Java JDK 1.6</li>
+							<li>Apache Ant</li>
+							<li>Apache Maven</li>
+							<li>wget</li>
+							<li>tar</li>
+							<li>git</li>
+							<li>subversion</li>
+							<li>gcc</li>
+							<li>gcc-c++</li>
+							<li>make</li>
+							<li>fuse</li>
+							<li>protobuf-compiler</li>
+							<li>autoconf</li>
+							<li>automake</li>
+							<li>libtool</li>
+							<li>sharutils</li>
+							<li>asciidoc</li>
+							<li>xmlto</li>
+						</ul>
+					</td>
+					<td>
+						<ul>
+							<li>lzo-devel</li>
+							<li>zlib-devel</li>
+							<li>fuse-devel</li>
+							<li>openssl-devel</li>
+							<li>python-devel</li>
+							<li>libxml2-devel</li>
+							<li>libxslt-devel</li>
+							<li>cyrus-sasl-devel</li>
+							<li>sqlite-devel</li>
+							<li>mysql-devel</li>
+							<li>openldap-devel</li>
+							<li>rpm-build</li>
+							<li>createrepo</li>
+							<li>redhat-rpm-config (RedHat/CentOS only)</li>
+						</ul>
+					</td>
+					<td>
+						<ul>
+							<li>libxslt1-dev</li>
+							<li>libkrb5-dev</li>
+							<li>libldap2-dev</li>
+							<li>libmysqlclient-dev</li>
+							<li>libsasl2-dev</li>
+							<li>libsqlite3-dev</li>
+							<li>libxml2-dev</li>
+							<li>python-dev</li>
+							<li>python-setuptools</li>
+							<li>liblzo2-dev</li>
+							<li>libzip-dev</li>
+							<li>libfuse-dev</li>
+							<li>libssl-dev</li>
+							<li>build-essential</li>
+							<li>dh-make</li>
+							<li>debhelper</li>
+							<li>devscripts</li>
+							<li>reprepro</li>
+						</ul>
+					</td>
+				</tr>
+			</table>
+
 			<subsection name="Continuous Integration"></subsection>
 			<p>
 				Apache Bigtop uses Jenkins for continuous integration testing (you can learn more about Jenkins
