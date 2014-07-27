@@ -22,7 +22,7 @@ set -e
 case "$1" in
 	configure)
                 update-alternatives --install /etc/hbase/conf hbase-conf /etc/hbase/conf.dist 30
-		chown hbase:hbase -R /var/run/hbase /var/log/hbase
+		chown hbase:hbase -R /var/run/hbase /var/log/hbase /var/lib/hbase
 	;;
 
 	abort-upgrade|abort-remove|abort-deconfigure)

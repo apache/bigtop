@@ -287,6 +287,8 @@ ln -s %{_localstatedir}/log/%{name} %{buildroot}/%{logs_hbase}
 %__install -d  -m 0755  %{buildroot}/%{_localstatedir}/run/%{name}
 ln -s %{_localstatedir}/run/%{name} %{buildroot}/%{pids_hbase}
 
+%__install -d  -m 0755  %{buildroot}/%{_localstatedir}/lib/%{name}
+
 for service in %{hbase_services}
 do
     init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{name}-${service}
@@ -314,7 +316,7 @@ ln -f -s %{zookeeper_home}/zookeeper.jar $RPM_BUILD_ROOT/%{lib_hbase}
 
 %pre
 getent group hbase 2>/dev/null >/dev/null || /usr/sbin/groupadd -r hbase
-getent passwd hbase 2>&1 > /dev/null || /usr/sbin/useradd -c "HBase" -s /sbin/nologin -g hbase -r -d /var/run/hbase hbase 2> /dev/null || :
+getent passwd hbase 2>&1 > /dev/null || /usr/sbin/useradd -c "HBase" -s /sbin/nologin -g hbase -r -d /var/lib/hbase hbase 2> /dev/null || :
 
 %post
 %{alternatives_cmd} --install %{etc_hbase_conf} %{name}-conf %{etc_hbase_conf_dist} 30
@@ -334,6 +336,7 @@ fi
 %{pids_hbase}
 %dir %{_localstatedir}/log/hbase
 %dir %{_localstatedir}/run/hbase
+%dir %{_localstatedir}/lib/hbase
 
 %defattr(-,root,root)
 %config(noreplace) %{_sysconfdir}/default/hbase
