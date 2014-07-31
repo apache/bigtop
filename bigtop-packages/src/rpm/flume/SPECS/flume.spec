@@ -181,6 +181,7 @@ fi
 %dir %{lib_flume}
 %dir %{lib_flume}/bin
 %dir %{lib_flume}/lib
+%dir %{lib_flume}/plugins.d
 %dir %{lib_flume}/tools
 
 %config(noreplace) %{etc_flume}.empty/*

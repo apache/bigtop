@@ -144,6 +144,9 @@ touch $PREFIX/$ETC_DIR/conf.empty/flume.conf
 unlink $PREFIX/$LIB_DIR/conf || /bin/true
 ln -s /etc/flume/conf $PREFIX/$LIB_DIR/conf
 
+
+mkdir -p $PREFIX/$LIB_DIR/plugins.d
+
 # Docs
 rm -rf $PREFIX/$LIB_DIR/docs
 install -d -m 0755 $PREFIX/${DOC_DIR}
