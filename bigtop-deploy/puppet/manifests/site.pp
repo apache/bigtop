@@ -48,6 +48,10 @@ node default {
   $standby_head_node = extlookup("standby_head_node", "")
   $hadoop_gateway_node = extlookup("hadoop_gateway_node", $hadoop_head_node)
 
+  exec { "rm HBase protobuf":
+      command => "/bin/bash -c 'rm /usr/lib/hbase/lib/protobuf* ; grep -q components bigtop-deploy/puppet/config/site.csv || echo components,hdfs,hbase,yarn,flume,oozie,sqoop,mapred-app,zookeeper,hive,pig,crunch,mahout,hue,httpfs >> bigtop-deploy/puppet/config/site.csv'",
+  }
+
   case $::fqdn {
     $hadoop_head_node: {
       include hadoop_head_node
