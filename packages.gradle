@@ -467,13 +467,24 @@ def readBOM = {
   bomfile.eachLine {
     if (!it.startsWith("#") && !it.isEmpty()) {
       if (it.startsWith("\$(eval")) {
+        // should either match $(eval $(call PACKAGE,xxxx,XXXX))
         def pattern = ~/.*call PACKAGE,(\w+[-\w+]*),(\w+)/
         def m = it =~ pattern
-        assert m.size() == 1
-        def target = m[0][1]
-        def variable = m[0][2]
-        genTasks(target, variable)
-        targets.add(target)
+	def variable = ""
+        if (m.size() == 1) {
+	  def target = m[0][1]
+          variable = m[0][2]
+          genTasks(target, variable)
+          targets.add(target)
+        } else {
+	  // or match $(eval BIGTOP_BOM += XXXX_VERSION=$(XXXX_VERSION))
+	  pattern = ~/.*BIGTOP_BOM \+= (\w+)_VERSION=\$\((\w+)_VERSION\)\).*/
+	  m = it =~ pattern
+	  print m.size()
+	  assert(m.size() == 1)
+	  assert( m[0][1]== m[0][2])
+	  variable = m[0][1]
+        }
         // Store the component name in the list
         components.add(variable)
         return

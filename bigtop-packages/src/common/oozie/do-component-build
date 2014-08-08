@@ -90,8 +90,9 @@ for pom in $POM_FILES; do
   fi
 done
 
+export MAVEN_OPTS="-Xmx512m -XX:MaxPermSize=128m"
 # Invoke Oozie build script
-${WORKDIR}/bin/mkdistro.sh -DskipTests -Dhadoop.version=${HADOOP_VERSION} ${EXTRA_GOALS} -Dmaven.repo.local=${HOME}/.m2/repository "$@"
+${WORKDIR}/bin/mkdistro.sh -DjavaVersion=${JDK_VERSION} -DskipTests -Dhadoop.version=${HADOOP_VERSION} ${EXTRA_GOALS} -Dmaven.repo.local=${HOME}/.m2/repository "$@"
 MKDISTRO_RESULT=$?
 if [ "${MKDISTRO_RESULT}" != "0" ]; then
   echo "ERROR: mkdistro.sh failed with error ${MKDISTRO_RESULT}"
