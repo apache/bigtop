@@ -18,8 +18,6 @@ BIGTOP_VERSION=0.8.0
 # JDK Version
 JDK_VERSION=1.7
 JDK_BASE_VERSION=$(JDK_VERSION)
-$(eval BIGTOP_BOM += JDK_VERSION=$(JDK_VERSION))
-
 
 # Hadoop 0.20.0-based hadoop package
 HADOOP_NAME=hadoop
