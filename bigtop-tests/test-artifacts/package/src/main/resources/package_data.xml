@@ -31,7 +31,7 @@
     </metadata>
   </bigtop-jsvc>
 
-  <bigtop-jsvc>
+  <bigtop-groovy>
     <metadata>
       <summary>An agile and dynamic language for the Java Virtual Machine</summary>
       <description>Groovy provides a JVM based runtime environment for function programming and scripting.</description>
@@ -40,7 +40,7 @@
     <deps>
       <bigtop-utils/>
     </deps>
-  </bigtop-jsvc>
+  </bigtop-groovy>
 
   <bigtop-tomcat>
     <metadata>
@@ -110,7 +110,7 @@ low-latency iterative jobs and interactive use from an interpreter. It is
 written in Scala, a high-level language for the JVM, and exposes a clean
 language-integrated syntax that makes it easy to write parallel jobs.
 Spark runs on top of the Apache Mesos cluster manager.</description>
-      <url>http://spark.incubator.apache.org/</url>
+      <url>http://spark.apache.org/</url>
     </metadata>
     <deps>
       <bigtop-utils/>
@@ -128,7 +128,7 @@ Spark runs on top of the Apache Mesos cluster manager.</description>
     <metadata>
       <summary>Server for Spark master</summary>
       <description>Server for Spark master</description>
-      <url>http://spark.incubator.apache.org/</url>
+      <url>http://spark.apache.org/</url>
     </metadata>
     <deps>
       <spark>/self</spark>
@@ -138,7 +138,7 @@ Spark runs on top of the Apache Mesos cluster manager.</description>
     <metadata>
       <summary>Server for Spark worker</summary>
       <description>Server for Spark worker</description>
-      <url>http://spark.incubator.apache.org/</url>
+      <url>http://spark.apache.org/</url>
     </metadata>
     <deps>
       <spark>/self</spark>
@@ -148,7 +148,7 @@ Spark runs on top of the Apache Mesos cluster manager.</description>
     <metadata>
       <summary>Python client for Spark</summary>
       <description>Includes PySpark, an interactive Python shell for Spark, and related libraries</description>
-      <url>http://spark.incubator.apache.org/</url>
+      <url>http://spark.apache.org/</url>
     </metadata>
     <deps>
       <spark>/self</spark>
@@ -721,7 +721,7 @@ use of the HBase API, along with coprocessors and custom filters, results in
 performance on the order of milliseconds for small queries, or seconds for
 tens of millions of rows. Applications interact with Phoenix through a
 standard JDBC interface; all the usual interfaces are supported.</description>
-      <url>https://github.com/forcedotcom/phoenix</url>
+      <url>http://phoenix.apache.org</url>
     </metadata>
     <deps>
       <zookeeper/>
