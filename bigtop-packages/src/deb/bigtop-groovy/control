@@ -23,5 +23,5 @@ Homepage: http://groovy.codehaus.org/
 Package: bigtop-groovy
 Architecture: any
 Depends: bigtop-utils (>= 0.7)
-Description: Groovy provides a JVM based runtime environment
- for function programming and scripting.Application to launch java daemon
+Description: An agile and dynamic language for the Java Virtual Machine
+ Groovy provides a JVM based runtime environment for function programming and scripting.
