@@ -37,7 +37,7 @@ class Alternative {
    */
   static private String listCmd;
   static {
-    int i = (new Shell()).exec("""update-alternatives 2>/dev/null | grep -q -- "--query" """).getRet();
+    int i = (new Shell()).exec("""update-alternatives --help 2>/dev/null | grep -q -- "--query" """).getRet();
     listCmd = (i == 0) ? "query" : "display";
   }
 
