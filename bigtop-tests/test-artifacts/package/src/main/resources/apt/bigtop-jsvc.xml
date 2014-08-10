@@ -3,7 +3,7 @@
     <file name='/.' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/lib/bigtop-utils' owners='1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/bigtop-utils' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib/bigtop-utils/jsvc' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
     <file name='/usr/share' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/share/doc' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
