@@ -142,6 +142,13 @@ Requires: redhat-lsb
 %description metastore
 This optional package hosts a metadata server for Hive clients across a network to use.
 
+%package hbase
+Summary: Provides integration between Apache HBase and Apache Hive
+Group: Development/Libraries
+Requires: hive = %{version}-%{release}, hbase
+
+%description hbase
+This optional package provides integration between Apache HBase and Apache Hive
 
 %package jdbc
 Summary: Provides libraries necessary to connect to Apache Hive via JDBC
@@ -344,6 +351,10 @@ fi
 %exclude %{usr_lib_hive}/lib/libfb303-*.jar
 %exclude %{usr_lib_hive}/lib/log4j-*.jar
 %exclude %{usr_lib_hive}/lib/commons-logging-*.jar
+
+%files hbase
+%defattr(-,root,root,755)
+%{usr_lib_hive}/lib/hbase.jar
 
 %files jdbc
 %defattr(-,root,root,755)
