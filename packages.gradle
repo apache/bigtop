@@ -467,15 +467,25 @@ def readBOM = {
   bomfile.eachLine {
     if (!it.startsWith("#") && !it.isEmpty()) {
       if (it.startsWith("\$(eval")) {
+        // should either match $(eval $(call PACKAGE,xxxx,XXXX))
         def pattern = ~/.*call PACKAGE,(\w+[-\w+]*),(\w+)/
         def m = it =~ pattern
-        assert m.size() == 1
-        def target = m[0][1]
-        def variable = m[0][2]
-        genTasks(target, variable)
-        targets.add(target)
+	def variable = ""
+        if (m.size() == 1) {
+	  def target = m[0][1]
+          variable = m[0][2]
+          genTasks(target, variable)
+          targets.add(target)
+        } else {
+	  // or match $(eval BIGTOP_BOM += XXXX_VERSION=$(XXXX_VERSION))
+	  pattern = ~/.*BIGTOP_BOM \+= (\w+)_VERSION=\$\((\w+)_VERSION\)\).*/
+	  m = it =~ pattern
+	  print m.size()
+	  assert(m.size() == 1)
+	  assert( m[0][1]== m[0][2])
+	  variable = m[0][1]
+        }
         // Store the component name in the list
-        // TODO - we might not need them components anymore: version are calculated differently now
         components.add(variable)
         return
       }
@@ -491,11 +501,8 @@ def readBOM = {
 project.afterEvaluate {
   readBOM()
   def bomVersions = ""
-  // Versions need to be preserved for more than just component:
-  //  - there are JDK version requirement
-  //  - possibly more in the future
-  BOM_map.keySet().findAll { it ==~ /.*_BASE_VERSION/ }.each { base_version ->
-    bomVersions += "${base_version.replaceAll('_BASE', '')}=${BOM_map[base_version]} "
+  components.each { component ->
+    bomVersions += "${component + '_VERSION'}=${BOM_map[component + '_BASE_VERSION']} "
   }
   BOM_map[BIGTOP_BOM] = bomVersions
   if (System.getProperty(VERBOSE))println "BIGTOP_BOM:\n${BOM_map[BIGTOP_BOM]}"
