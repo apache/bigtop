@@ -82,18 +82,18 @@ class bigtop_toolchain::jdk {
         subscribe   => File["/tmp/jdk-6u45-linux-amd64.rpm"],
       }
 
-      file { '/tmp/jdk-7u60-linux-x64.gz':
-        source => 'puppet:///modules/bigtop_toolchain/jdk-7u60-linux-x64.gz',
+      file { '/tmp/jdk-7u60-linux-x64.tar.gz':
+        source => 'puppet:///modules/bigtop_toolchain/jdk-7u60-linux-x64.tar.gz',
         ensure => present,
         owner  => root,
         group  => root,
         mode   => 755
       }
 
-      exec {'/bin/tar -xzvf /tmp/jdk-7u60-linux-x64.gz; ln -s jdk1.7.0_60 jdk7-latest':
+      exec {'/bin/tar -xzvf /tmp/jdk-7u60-linux-x64.tar.gz; ln -s jdk1.7.0_60 jdk7-latest':
         cwd         => '/usr/lib',
         refreshonly => true,
-        subscribe   => File["/tmp/jdk-7u60-linux-x64.gz"],
+        subscribe   => File["/tmp/jdk-7u60-linux-x64.tar.gz"],
       }
 
     }
