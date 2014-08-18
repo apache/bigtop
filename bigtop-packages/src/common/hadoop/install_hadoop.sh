@@ -309,8 +309,10 @@ cp -r ${BUILD_DIR}/share/doc/* ${DOC_DIR}/
 
 # man pages
 mkdir -p $MAN_DIR/man1
-gzip -c < $DISTRO_DIR/hadoop.1 > $MAN_DIR/man1/hadoop.1.gz
-chmod 644 $MAN_DIR/man1/hadoop.1.gz
+for manpage in hadoop hdfs yarn mapred; do
+	gzip -c < $DISTRO_DIR/$manpage.1 > $MAN_DIR/man1/$manpage.1.gz
+	chmod 644 $MAN_DIR/man1/$manpage.1.gz
+done
 
 # HTTPFS
 install -d -m 0755 ${HTTPFS_DIR}/sbin

@@ -19,3 +19,6 @@
 /usr/lib/hadoop/bin
 /usr/bin/hadoop
 /usr/share/man/man1/hadoop.1.*
+/usr/share/man/man1/hdfs.1.*
+/usr/share/man/man1/yarn.1.*
+/usr/share/man/man1/mapred.1.*

@@ -165,6 +165,9 @@ Source22: hadoop-layout.sh
 Source23: hadoop-hdfs-zkfc.svc
 Source24: hadoop-hdfs-journalnode.svc
 Source25: httpfs-tomcat-deployment.sh
+Source26: yarn.1
+Source27: hdfs.1
+Source28: mapred.1
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
 BuildRequires: fuse-devel, fuse, cmake
 Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils >= 0.7, zookeeper >= 3.4.0
@@ -645,6 +648,9 @@ fi
 %{lib_hadoop}/libexec/hadoop-layout.sh
 %{bin_hadoop}/hadoop
 %{man_hadoop}/man1/hadoop.1.*
+%{man_hadoop}/man1/yarn.1.*
+%{man_hadoop}/man1/hdfs.1.*
+%{man_hadoop}/man1/mapred.1.*
 
 # Shouldn't the following be moved to hadoop-hdfs?
 %exclude %{lib_hadoop}/bin/fuse_dfs
