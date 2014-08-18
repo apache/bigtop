@@ -82,7 +82,6 @@ cat <<'__EOT__'
 start() {
   [ -x $EXEC_PATH ] || exit $ERROR_PROGRAM_NOT_INSTALLED
   [ -d $CONF_DIR ] || exit $ERROR_PROGRAM_NOT_CONFIGURED
-  log_success_msg "Starting ${DESC}: "
 
   su -s /bin/bash $SVC_USER -c "cd $WORKING_DIR && $EXEC_PATH --config '$CONF_DIR' start $DAEMON_FLAGS"
 
@@ -91,7 +90,12 @@ start() {
   checkstatusofproc
   RETVAL=$?
 
-  [ $RETVAL -eq $RETVAL_SUCCESS ] && touch $LOCKFILE
+  if [ $RETVAL -eq $STATUS_RUNNING ]; then
+    touch $LOCKFILE
+    log_success_msg "Started ${DESC}: "
+  else
+	log_failure_msg "Failed to start ${DESC}. Return value: $RETVAL"
+  fi
   return $RETVAL
 }
 
@@ -104,11 +108,15 @@ generate_stop() {
 cat <<'__EOT__'
 
 stop() {
-  log_success_msg "Stopping ${DESC}: "
   start_daemon $EXEC_PATH --config "$CONF_DIR" stop $DAEMON_FLAGS
   RETVAL=$?
 
-  [ $RETVAL -eq $RETVAL_SUCCESS ] && rm -f $LOCKFILE $PIDFILE
+  if [ $RETVAL -eq $RETVAL_SUCCESS ]; then
+	 log_success_msg "Stopped ${DESC}: "
+	 rm -f $LOCKFILE $PIDFILE
+ else
+	 log_failure_msg "Failed to stop ${DESC}. Return value: $RETVAL."
+ fi
 }
 
 __EOT__

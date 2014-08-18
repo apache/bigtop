@@ -28,7 +28,6 @@ cat <<'__EOT__'
 start() {
   [ -x $EXEC_PATH ] || exit $ERROR_PROGRAM_NOT_INSTALLED
   [ -d $CONF_DIR ] || exit $ERROR_PROGRAM_NOT_CONFIGURED
-  log_success_msg "Starting ${DESC}: "
 
   if [ -n "$HADOOP_SECURE_DN_USER" ]; then
     TARGET_USER=root
@@ -44,7 +43,13 @@ start() {
   checkstatusofproc
   RETVAL=$?
 
-  [ $RETVAL -eq $RETVAL_SUCCESS ] && touch $LOCKFILE
+  if [ $RETVAL -eq $STATUS_RUNNING ]; then
+    touch $LOCKFILE
+    log_success_msg "Started ${DESC} (${DAEMON}): "
+  else
+    log_failure_msg "Failed to start ${DESC}. Return value: $RETVAL"
+  fi
+
   return $RETVAL
 }
 __EOT__
