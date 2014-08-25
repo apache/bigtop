@@ -20,127 +20,66 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   vmbox = "puppetlab-centos-64-nocm"
 
-  # Virtual Box implementation
+  # Virtual box implementation
   vmboxurl = "http://puppet-vagrant-boxes.puppetlabs.com/centos-64-x64-vbox4210-nocm.box"
 
-  # Network environment settings
-  bigtop1_hostname = "bigtop1.vagrant"
-  bigtop1_ip = "10.10.10.12"
-  bigtop2_hostname = "bigtop2.vagrant"
-  bigtop2_ip = "10.10.10.13"
-  bigtop3_hostname = "bigtop3.vagrant"
-  bigtop3_ip = "10.10.10.14"
+  # number of instances
+  num_instances = 3
 
-  # The bigtop puppet recipes
+  # the bigtop puppet recipes
   bigtop_puppet = "../../puppet"
 
   # manage /etc/hosts by hostmanager plugin(https://github.com/smdahlen/vagrant-hostmanager)
-  config.hostmanager.enabled = true
+  # use vagrant-cachier to cache packages at local(https://github.com/fgrehm/vagrant-cachier)
+  if Vagrant.has_plugin?("vagrant-hostmanager")
+    config.hostmanager.enabled = true
+  end
 
   # use vagrant-cachier to cache packages at local(https://github.com/fgrehm/vagrant-cachier)
   if Vagrant.has_plugin?("vagrant-cachier")
     config.cache.scope = :box
   end
 
-  # First node in the cluster
-  config.vm.define :bigtop1 do |bigtop1|
+  # declare the variable first, will be override in following loop
+  bigtop_master = ""
 
-    bigtop1.vm.box = vmbox
-    bigtop1.vm.box_url = vmboxurl
+  # nodes definition
+  (1..num_instances).each do |i|
+    config.vm.define "bigtop#{i}" do |bigtop|
 
-    bigtop1.vm.provider :virtualbox do |vb|
-      vb.customize ["modifyvm", :id, "--memory", "1024"]
+      bigtop.vm.box = vmbox
+      bigtop.vm.box_url = vmboxurl
+      bigtop_hostname="bigtop#{i}.vagrant"
+      bigtop_ip="10.10.10.1#{i}"
+      if "#{i}" == "1"
+        bigtop_master = bigtop_hostname
+      end
+
+      bigtop.vm.provider :virtualbox do |vb|
+        vb.customize ["modifyvm", :id, "--memory", "1024"]
+      end
+
+      bigtop.vm.network :private_network, ip: bigtop_ip
+      bigtop.vm.hostname = bigtop_hostname
+
+      bigtop.vm.synced_folder bigtop_puppet, "/bigtop-puppet"
+
+      # shell provisioner to setup basic vm environment
+      bigtop.vm.provision :shell do |shell|
+        shell.path = "provision.sh"
+        shell.args = bigtop_master
+      end
+
+      bigtop.vm.provision :hostmanager
+
+      # deploy Apache Hadoop and it's ecosystem
+      bigtop.vm.provision :puppet do |puppet|
+        puppet.module_path = bigtop_puppet + "/modules"
+        puppet.manifests_path = bigtop_puppet + "/manifests"
+        puppet.manifest_file  = "site.pp"
+        puppet.options = "--debug --confdir=/bigtop-puppet"
+      end
     end
-
-    bigtop1.vm.network :private_network, ip: bigtop1_ip
-    bigtop1.vm.hostname = bigtop1_hostname
-
-    bigtop1.vm.synced_folder bigtop_puppet, "/bigtop-puppet"
-
-    # Shell provisioner to setup basic vm environment
-    bigtop1.vm.provision :shell do |shell|
-      shell.path = "provision.sh"
-      shell.args = bigtop1_hostname + " " + bigtop1_ip + " " + bigtop1_hostname + " " + bigtop1_ip
-    end
-
-    bigtop1.vm.provision :hostmanager
-
-    # Deploy Apache Hadoop and it's ecosystem
-    bigtop1.vm.provision :puppet do |puppet|
-      puppet.module_path = bigtop_puppet + "/modules"
-      puppet.manifests_path = bigtop_puppet + "/manifests"
-      puppet.manifest_file  = "site.pp"
-      puppet.options = "--debug --confdir=/bigtop-puppet"
-    end
-
-  end
-
-
-  # Second node in the cluster
-  config.vm.define :bigtop2 do |bigtop2|
-
-    bigtop2.vm.box = vmbox
-    bigtop2.vm.box_url = vmboxurl
-
-    bigtop2.vm.provider :virtualbox do |vb|
-      vb.customize ["modifyvm", :id, "--memory", "1024"]
-    end
-
-    bigtop2.vm.network :private_network, ip: bigtop2_ip
-    bigtop2.vm.hostname = bigtop2_hostname
-
-    bigtop2.vm.synced_folder bigtop_puppet, "/bigtop-puppet"
-
-    # Shell provisioner to setup basic vm environment
-    bigtop2.vm.provision :shell do |shell|
-      shell.path = "provision.sh"
-      shell.args = bigtop1_hostname + " " + bigtop1_ip + " " + bigtop2_hostname + " " + bigtop2_ip
-    end
-
-    bigtop2.vm.provision :hostmanager
-
-    # Deploy Apache Hadoop and it's ecosystem
-    bigtop2.vm.provision :puppet do |puppet|
-      puppet.module_path = bigtop_puppet + "/modules"
-      puppet.manifests_path = bigtop_puppet + "/manifests"
-      puppet.manifest_file  = "site.pp"
-      puppet.options = "--debug --confdir=/bigtop-puppet"
-    end
-
-  end
-
-
-  # Third node in the cluster
-  config.vm.define :bigtop3 do |bigtop3|
-
-    bigtop3.vm.box = vmbox
-    bigtop3.vm.box_url = vmboxurl
-
-    bigtop3.vm.provider :virtualbox do |vb|
-      vb.customize ["modifyvm", :id, "--memory", "1024"]
-    end
-
-    bigtop3.vm.network :private_network, ip: bigtop3_ip
-    bigtop3.vm.hostname = bigtop3_hostname
-
-    bigtop3.vm.synced_folder bigtop_puppet, "/bigtop-puppet"
-
-    # Shell provisioner to setup basic vm environment
-    bigtop3.vm.provision :shell do |shell|
-      shell.path = "provision.sh"
-      shell.args = bigtop1_hostname + " " + bigtop1_ip + " " + bigtop3_hostname + " " + bigtop3_ip
-    end
-
-    bigtop3.vm.provision :hostmanager
-
-    # Deploy Apache Hadoop and it's ecosystem
-    bigtop3.vm.provision :puppet do |puppet|
-      puppet.module_path = bigtop_puppet + "/modules"
-      puppet.manifests_path = bigtop_puppet + "/manifests"
-      puppet.manifest_file  = "site.pp"
-      puppet.options = "--debug --confdir=/bigtop-puppet"
-    end
-
   end
 
 end

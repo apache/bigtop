@@ -19,8 +19,8 @@
 
 ## Overview
 
-The startup.sh script runs one of 3 vagrant templates, and creates a bigtop virtual hadoop cluster for you, by
-pulling from existing publishing bigtop repositories.  This cluster can be used:
+The Vagrantfile definition creates a bigtop virtual hadoop cluster for you, by pulling from existing publishing bigtop repositories.
+This cluster can be used:
 
 - to test bigtop smoke tests
 - to test bigtop puppet recipes
@@ -45,21 +45,13 @@ vagrant plugin install vagrant-cachier
 3) To provision a 3 node Apache Hadoop cluster on top of vagrant boxes
 
 ```
-./startup.sh --cluster
+vagrant up
 ```
 
-4) See options with -h specified
+4) You can specify number of nodes you'd like to provision by modifying `num_instances` in Vagrantfile
 
 ```
-$ ./startup.sh -h
-
-     usage: startup.sh [options]
-
-       -s, --standalone        deploy a standalone hadoop vm
-
-       -c, --cluster           deploy a 3 node hadoop cluster
-
-       -h, --help
+num_instances = 5
 ```
 
 ##Example:
@@ -67,11 +59,15 @@ $ ./startup.sh -h
 5) Run hbase-test.sh to evaluate the deployment.
 
 ##Configure Apache Hadoop ecosystem components
-* Choose the ecosystem you want to be deployed by modify components in provision.sh.
+* Choose the ecosystem you want to be deployed by modifying components in provision.sh.
 
 ```
-     components,hadoop,hbase,...
+     components,hadoop,hbase,yarn,mapred-app,...
 ```
 
-By default, Apache Hadoop and Apache HBase will be installed.
+By default, Apache Hadoop, YARN, and Apache HBase will be installed.
 See `bigtop-deploy/puppet/config/site.csv.example` for more details.
+
+##Note:
+
+For bigtop 0.7.0 code base, you must change the value of the [yarn-site.xml](https://github.com/apache/bigtop/blob/master/bigtop-deploy/puppet/modules/hadoop/templates/yarn-site.xml) yarn.nodemanager.aux.services from "mapreduce_shuffle" to "mapreduce.shuffle" before `vagrant up`
