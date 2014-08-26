@@ -144,6 +144,8 @@ sed -i -e '/\[\[yarn_clusters\]\]/,+20s@## submit_to=False@submit_to=True@' \
 install -d -m 0755 $PREFIX/$LOG_DIR
 rm -rf $PREFIX/$LIB_DIR/desktop/logs
 ln -s $LOG_DIR $PREFIX/$LIB_DIR/desktop/logs
+# remove the logs in build progress
+rm -rf $PREFIX/$LIB_DIR/apps/logs/*
 
 # Make binary scripts executables
 chmod 755 $BUNDLED_BUILD_DIR/env/bin/*
