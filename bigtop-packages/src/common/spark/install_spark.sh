@@ -121,7 +121,6 @@ SCALA_HOME=${SCALA_HOME:-/usr/share/scala}
 PYSPARK_PYTHON=${PYSPARK_PYTHON:-python}
 
 install -d -m 0755 $PREFIX/$LIB_DIR
-install -d -m 0755 $PREFIX/$LIB_DIR/lib
 install -d -m 0755 $PREFIX/$LIB_DIR/bin
 install -d -m 0755 $PREFIX/$LIB_DIR/sbin
 install -d -m 0755 $PREFIX/$DOC_DIR
@@ -131,12 +130,11 @@ install -d -m 0755 $PREFIX/var/log/spark/
 install -d -m 0755 $PREFIX/var/run/spark/
 install -d -m 0755 $PREFIX/var/run/spark/work/
 
-tar --wildcards -C $PREFIX/$LIB_DIR -zxf ${BUILD_DIR}/assembly/target/spark-assembly*-dist.tar.gz 'lib/*'
-
-for comp in core repl bagel mllib streaming assembly; do
+for comp in assembly; do
   install -d -m 0755 $PREFIX/$LIB_DIR/$comp/lib
   tar --wildcards -C $PREFIX/$LIB_DIR/$comp/lib -zxf ${BUILD_DIR}/assembly/target/spark-assembly*-dist.tar.gz spark-$comp\*
 done
+
 ## FIXME: Spark maven assembly needs to include examples into it.
 install -d -m 0755 $PREFIX/$LIB_DIR/examples/lib
 cp ${BUILD_DIR}/examples/target/spark-examples*${SPARK_VERSION}.jar $PREFIX/$LIB_DIR/examples/lib
