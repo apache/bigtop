@@ -226,7 +226,7 @@
   <hbase>
     <users>
       <hbase>
-        <home>/var/run/hbase</home>
+        <home>/var/lib/hbase</home>
         <descr>HBase User</descr>
         <shell>/bin/bash</shell>
       </hbase>

@@ -6708,7 +6708,7 @@
 <hbase>
   <users>
     <hbase>
-      <home>/var/run/hbase</home>
+      <home>/var/lib/hbase</home>
       <descr>HBase</descr>
       <shell>/sbin/nologin</shell>
     </hbase>
