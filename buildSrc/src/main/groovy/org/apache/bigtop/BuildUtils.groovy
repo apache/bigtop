@@ -43,6 +43,7 @@ class BuildUtils {
         eval = eval.replaceAll(/\$\(/, "").replaceAll(/\)/,"")
         (1..m.groupCount()).each { i ->
           def token = m[counter++][i]
+          assert map.get(token) != null
           eval = eval.replaceAll(token, map.get(token))
         }
       }
