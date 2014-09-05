@@ -16,7 +16,7 @@
 
 set -ex
 
-export MAVEN_OPT="-XX:MaxPermSize=256m"
+export MAVEN_OPT="-XX:MaxPermSize=512m"
 mvn -Pjavadoc -DskipTests clean install -DskipTests "$@" 
 mvn -Pjavadoc site source:jar package assembly:assembly -DskipTests "$@"
 
