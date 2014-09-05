@@ -78,7 +78,7 @@ fi
 
 ## Update hardcoded version of the Hadoop base to the current HADOOP VERSION
 ## This approach might need to be reconsidered once OOZIE-1201 is fixed
-OLD_VERSION="2.0.2-alpha"
+OLD_VERSION="2.3.0"
 echo "Replacing old target Hadoop version ${OLD_VERSION} with ${HADOOP_VERSION}"
 POM_FILES="${WORKDIR}/hadooplibs/hadoop-2/pom.xml ${WORKDIR}/hadooplibs/hadoop-distcp-2/pom.xml ${WORKDIR}/hadooplibs/hadoop-test-2/pom.xml ${WORKDIR}/pom.xml"
 for pom in $POM_FILES; do
