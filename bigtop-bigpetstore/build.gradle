@@ -235,7 +235,7 @@ dependencies {
 }
 
 configurations {
-    /* hadoopClusterRuntime */ runtime {
+    hadoopClusterRuntime {
 	    // extendsFrom integrationTestRuntime
 	    if(project.hasProperty('for-cluster')) {
 		    excludeRules += [getGroup: { 'org.apache.crunch' }, getModule: { 'crunch-core' } ] as ExcludeRule
