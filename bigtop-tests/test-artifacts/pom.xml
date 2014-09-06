@@ -47,11 +47,11 @@
     <module>solr</module>
     <module>crunch</module>
     <module>datafu</module>
-    <module>fatjar</module>
     <module>longevity</module>
     <module>hcatalog</module>
     <module>spark</module>
     <module>phoenix</module>
+    <module>fatjar</module>
   </modules>
 
   <dependencies>

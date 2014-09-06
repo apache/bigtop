@@ -97,6 +97,30 @@
       <version>${project.version}</version>
       <optional>true</optional>
     </dependency>
+    <dependency>
+      <groupId>org.apache.bigtop.itest</groupId>
+      <artifactId>io-longevity</artifactId>
+      <version>${project.version}</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.bigtop.itest</groupId>
+      <artifactId>hcatalog-smoke</artifactId>
+      <version>${project.version}</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.bigtop.itest</groupId>
+      <artifactId>spark-smoke</artifactId>
+      <version>${project.version}</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.bigtop.itest</groupId>
+      <artifactId>phoenix-smoke</artifactId>
+      <version>${project.version}</version>
+      <optional>true</optional>
+    </dependency>
 
     <dependency>
       <groupId>org.apache.bigtop.itest</groupId>
