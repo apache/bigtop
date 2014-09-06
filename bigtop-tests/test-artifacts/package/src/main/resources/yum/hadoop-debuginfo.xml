@@ -1,8 +1,8 @@
 <hadoop-debuginfo>
   <content>
-    <file name='/usr/lib/debug' owners='1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/lib/debug/usr' owners='1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/lib/debug/usr/lib' owners='1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/debug' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/debug/usr' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
+    <file name='/usr/lib/debug/usr/lib' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib/debug/usr/lib/hadoop' owners='1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib/debug/usr/lib/hadoop-yarn' owners='1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib/debug/usr/lib/hadoop-yarn/bin' owners='1' perm='drwxr-xr-x' user='root' group='root' />
