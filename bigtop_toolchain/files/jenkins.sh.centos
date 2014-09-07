@@ -14,15 +14,13 @@
 # limitations under the License.
 
 export MAVEN_HOME=/usr/local/maven
-export PATH=$PATH:$MAVEN_HOME/bin
 export JAVA6_HOME=/usr/java/latest
 export JAVA7_HOME=/usr/lib/jdk7-latest
 export JAVA_HOME=$JAVA7_HOME
 export ANT_HOME=/usr/local/ant
-export PATH=$PATH:$ANT_HOME/bin
 export FORREST_HOME=/usr/local/apache-forrest
 export SCALA_HOME=/usr/share/java
 export GRADLE_HOME=/usr/local/gradle
-export PATH=$PATH:$FORREST_HOME/bin:$GRADLE_HOME/bin
+export PATH=$JAVA7_HOME/bin:$MAVEN_HOME/bin:$ANT_HOME/bin:$FORREST_HOME/bin:$GRADLE_HOME/bin:$PATH
 
 export GRADLE_OPTS="-Dorg.gradle.daemon=true"
