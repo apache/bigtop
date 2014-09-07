@@ -33,10 +33,10 @@ HIVE_MAVEN_OPTS=" -Dhbase.version=$HBASE_VERSION \
 -Dhadoop.mr.rev=23 \
 -Dhadoop.security.version=$HADOOP_VERSION \
 -Dhadoop-23.version=$HADOOP_VERSION \
--Dhbase.hadoop2.version=$HBASE_VERSION \
+-Dhbase.hadoop2.version=$HBASE_VERSION-hadoop2 \
 -Dmvn.hadoop.profile=hadoop23 \
 -Dmaven.test.skip=true \
--Dhbase.version.with.hadoop.version=$HBASE_VERSION \
+-Dhbase.version.with.hadoop.version=$HBASE_VERSION-hadoop2 \
 "
 
 export MAVEN_OPTS="-Xmx1500m -Xms1500m -XX:MaxPermSize=256m"
