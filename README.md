@@ -119,7 +119,7 @@ __On all systems, Building Apache Bigtop requires the following tools__
 
 * Additionally, some details for specific linux versions :
   * __Debian__ based distros need these packages : build-essential dh-make debhelper devscripts, reprepro
-  * __openSUSE 11.4__ needs these packages : relaxngDatatypedocbook-utils docbook-simple, asciidoc, fuse-devel, docbook5, docbook5-xsl-stylesheets, libxml2-devel, xmlformat, xmlto, libxslt, libopenssl-devel
+  * __openSUSE 11.4__ needs these packages : relaxngDatatypedocbook-utils docbook-simple, fuse-devel, docbook5, docbook5-xsl-stylesheets, libxml2-devel, xmlformat, xmlto, libxslt, libopenssl-devel
 
 * __Building packages__ : `make [component-name]-[rpm|deb]`
 * __Building local YUM/APT repositories__ : `make [component-name]-[yum|apt]`
