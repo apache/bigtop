@@ -21,7 +21,7 @@ set -ex
 mvn -DskipTests -Dcrunch.platform=2           \
     -Dslf4j.version=1.6.1                     \
     -Dhadoop.version=$HADOOP_VERSION          \
-    -Dhbase.version=$HBASE_VERSION            \
+    -Dhbase.version=$HBASE_VERSION-hadoop2    \
     -Papache-release clean site:site package "$@"
 
 rm -rf build
