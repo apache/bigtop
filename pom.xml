@@ -41,7 +41,7 @@
   <properties>
     <hadoop.version>2.3.0</hadoop.version>
     <!--An awful hack for BIGTOP-1429-->
-    <hbase.version>0.98.2-hadoop2</hbase.version>
+    <hbase.version>0.98.5-hadoop2</hbase.version>
     <pig.version>0.12.1</pig.version>
     <pig-smoke.version>0.12.1</pig-smoke.version>
     <sqoop.version>1.99.2</sqoop.version>
