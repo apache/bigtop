@@ -15,18 +15,6 @@
 class bigtop_toolchain::deps {
 
   include bigtop_toolchain::packages
-  include bigtop_toolchain::jdk
-
-  case $operatingsystem{
-    Ubuntu: { $scala_file = 'scala-2.10.3.deb' }
-    default: { $scala_file = 'scala-2.10.3.rpm'}
-  }
-
-  exec {"/usr/bin/wget http://www.scala-lang.org/files/archive/$scala_file":
-    cwd     => "/usr/src",
-    require => Package[$packages::pkgs],
-    unless  => "/usr/bin/test -f /usr/src/$scala_file",
-  }
 
   exec {"/usr/bin/wget http://mirrors.ibiblio.org/apache//ant/binaries/apache-ant-1.9.4-bin.tar.gz":
     cwd     => "/usr/src",

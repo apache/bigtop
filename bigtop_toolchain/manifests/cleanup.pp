@@ -12,17 +12,22 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-class bigtop_toolchain::scala {
+
+class bigtop_toolchain::cleanup {
+  $packager_cleanup = $operatingsystem ? {
+    /(?i:(centos|fedora))/ => 'yum clean all',
+    /(?i:(SLES|opensuse))/ => 'zypper clean -a',
+    Ubuntu                 => 'apt-get clean',
+  } 
   
-  $install_scala_cmd = $operatingsystem ? {
-    'Ubuntu' => '/bin/bash -c "wget http://www.scala-lang.org/files/archive/scala-2.10.3.deb ; dpkg -x ./scala-2.10.3.deb /"', 
-    default  => '/bin/rpm -Uvh http://www.scala-lang.org/files/archive/scala-2.10.3.rpm'
+  exec { 'remove archives':
+    cwd         => '/tmp',
+    command     => '/bin/bash -c "rm -rf /tmp/* ; rm -f /usr/src/* ; exit 0"'
   }
-  
-  exec { "install scala":
-    cwd      => '/tmp',
-    command  => $install_scala_cmd,
-    unless   => "/usr/bin/test -f /usr/bin/scala",
-    require  => $requires
+
+  exec { 'clean packages':
+    cwd         => '/tmp',
+    command     => $packager_cleanup,
+    path        => ['/bin', '/sbin', '/usr/bin', '/usr/sbin'],
   }
 }
