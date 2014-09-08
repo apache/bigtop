@@ -17,7 +17,13 @@ class bigtop_toolchain::packages {
   case $operatingsystem{
   /(?i:(centos|fedora))/: { $pkgs = [ "wget", "git", "make" , "cmake" , "rpm-build" , "lzo-devel", "redhat-rpm-config", "openssl-devel", "fuse-libs", "fuse-devel", "fuse", "gcc", "gcc-c++", "autoconf", "automake", "libtool", "createrepo", "cppunit-devel"] }
   /(?i:(SLES|opensuse))/: { $pkgs = [ "unzip", "wget", "git", "make" , "cmake" , "rpm-devel" , "lzo-devel", "libopenssl-devel", "fuse-devel", "fuse", "gcc", "gcc-c++", "autoconf", "automake", "libtool", "pkg-config", "createrepo", "libcppunit-devel"] }
-  Ubuntu: { $pkgs = [ "liblzo2-dev", "libzip-dev", "sharutils", "libfuse-dev", "cmake", "pkg-config", "debhelper", "devscripts", "protobuf-compiler", "build-essential", "dh-make", "reprepro", "automake", "autoconf", "libfuse2", "libssh-dev", "libjansi-java", "libcppunit-dev" ] }
+  Ubuntu: { $pkgs = [ "liblzo2-dev", "libzip-dev", "sharutils", "libfuse-dev", "cmake", "pkg-config", "debhelper", "devscripts", "protobuf-compiler", "build-essential", "dh-make", "reprepro", "automake", "autoconf", "libfuse2", "libssh-dev", "libjansi-java", "libcppunit-dev" ] 
+      
+    exec { "apt-update":
+      command => "/usr/bin/apt-get update"
+    }
+    Exec["apt-update"] -> Package <| |>      
+  }
 }
   package { $pkgs:
     ensure => installed,

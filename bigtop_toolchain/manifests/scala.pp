@@ -19,7 +19,7 @@ class bigtop_toolchain::scala {
   case $operatingsystem{
     Ubuntu: { 
     $pm = '/usr/bin/dpkg -i'
-    $requires = [ Exec["/usr/bin/wget http://www.scala-lang.org/files/archive/$bigtop_toolchain::deps::scala_file"], Package ['oracle-java6-installer'] ]
+    $requires = [ Exec["/usr/bin/wget http://www.scala-lang.org/files/archive/$bigtop_toolchain::deps::scala_file"] ]
     }
     default: { 
     $pm = '/bin/rpm -Uvh'
