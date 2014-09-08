@@ -49,6 +49,7 @@
     <giraph.version>1.0.0</giraph.version>
     <solr.version>4.6.0</solr.version>
     <spark.version>0.9.1</spark.version>
+    <phoenix.version>4.1.0</phoenix.version>
     <spark-smoke.version>${project.version}</spark-smoke.version>
 
     <itest-common.version>${project.version}</itest-common.version>
@@ -242,6 +243,21 @@
         <groupId>org.apache.spark</groupId>
         <artifactId>spark-core_2.10</artifactId>
         <version>${spark.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.phoenix</groupId>
+        <artifactId>phoenix-core</artifactId>
+        <version>${phoenix.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.phoenix</groupId>
+        <artifactId>phoenix-flume</artifactId>
+        <version>${phoenix.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.phoenix</groupId>
+        <artifactId>phoenix-pig</artifactId>
+        <version>${phoenix.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
