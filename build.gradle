@@ -21,7 +21,7 @@ apply plugin: 'maven'
 apply from: 'packages.gradle'
 
 group = 'org.apache.bigtop'
-version = '0.8.0'
+version = '0.9.0-SNAPSHOT'
 
 description = """Bigtop"""
 
