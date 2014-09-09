@@ -81,6 +81,7 @@ License: ASL 2.0
 Source0: %{name}-%{phoenix_base_version}-src.tar.gz
 Source1: do-component-build
 Source2: install_phoenix.sh
+Source3: phoenix.default
 BuildArch: noarch
 Requires: hadoop, hadoop-mapreduce, hadoop-yarn, hbase, zookeeper
 
@@ -112,6 +113,10 @@ bash %{SOURCE2} \
 	--build-dir=build \
         --doc-dir=%{doc_phoenix} \
 	--prefix=$RPM_BUILD_ROOT
+
+%__install -d -m 0755 $RPM_BUILD_ROOT/etc/default/
+%__install -m 0644 %{SOURCE5} $RPM_BUILD_ROOT/etc/default/%{name}
+
 # Pull zookeeper, hadoop, hadoop-mapreduce, hadoop-yarn, and hbase deps from their packages
 rm -f $RPM_BUILD_ROOT/%{lib_phoenix}/zookeeper*.jar
 ln -f -s %{zookeeper_home}/zookeeper.jar $RPM_BUILD_ROOT/%{lib_phoenix}
@@ -150,3 +155,4 @@ fi
 %{lib_phoenix}
 %{bin_phoenix}
 %config(noreplace) %{etc_phoenix_conf_dist}
+%config(noreplace) %{_sysconfdir}/default/phoenix
