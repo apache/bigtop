@@ -115,7 +115,7 @@ bash %{SOURCE2} \
 	--prefix=$RPM_BUILD_ROOT
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/etc/default/
-%__install -m 0644 %{SOURCE5} $RPM_BUILD_ROOT/etc/default/%{name}
+%__install -m 0644 %{SOURCE3} $RPM_BUILD_ROOT/etc/default/%{name}
 
 # Pull zookeeper, hadoop, hadoop-mapreduce, hadoop-yarn, and hbase deps from their packages
 rm -f $RPM_BUILD_ROOT/%{lib_phoenix}/zookeeper*.jar
