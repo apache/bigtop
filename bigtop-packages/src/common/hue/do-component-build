@@ -15,11 +15,12 @@
 # limitations under the License.
 
 set -ex
+. `dirname $0`/bigtop.bom
 
 #FIXME: this needs to be fixed upstream
 sed -i -e "s#${FULL_VERSION}-SNAPSHOT#${FULL_VERSION}#g" `grep -lR ${FULL_VERSION}-SNAPSHOT .`
 
-make MAVEN_VERSION='$(DESKTOP_VERSION)' apps docs
+make MAVEN_VERSION='$(HUE_BASE_VERSION)' apps docs
 
 # Make the entire tree relocatable
 bash tools/relocatable.sh
