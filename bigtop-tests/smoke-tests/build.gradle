@@ -47,8 +47,8 @@ subprojects {
   println("Now testing...");
   test {
 
-    systemProperties['org.apache.bigtop.itest.hivesmoke.TestHiveSmokeBulk.test_include'] = 'basic'
-       testLogging {
+    //todo, add back in 'basic' after BIGTOP-1392 .
+    testLogging {
       events "passed", "skipped", "failed"
     }
   }
@@ -66,6 +66,10 @@ subprojects {
     }
   }
 
+  /**
+  * In general, java_home should be declared in all cases.
+  */
+  checkEnv(["JAVA_HOME"])
 test.dependsOn compileGroovy
 compileGroovy.dependsOn clean
 }

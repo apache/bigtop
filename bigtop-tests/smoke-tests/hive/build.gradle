@@ -32,6 +32,7 @@ dependencies {
 
 def tests_to_include() {
   return [
+      "TestHiveSimple.groovy",
       "TestHiveSmokeBulk.groovy",
       "HiveBulkScriptExecutor.groovy"
   ];
@@ -45,14 +46,20 @@ sourceSets {
       ]
     }
     groovy {
-      srcDirs = ["$System.env.BIGTOP_HOME"+"/bigtop-tests/test-artifacts/hive/"]
+      srcDirs = ["$System.env.BIGTOP_HOME"+"/bigtop-tests/test-artifacts/hive/",
+                 "$System.env.BIGTOP_HOME"+"/bigtop-tests/smoke-tests/hive/"]
       exclude { FileTreeElement elem -> (doExclude(elem.getName())) }
     }
   }
 }
 
+test {
+ //TODO : Resurrect this line after BIGTOP-1392 is done.
+ systemProperties["org.apache.bigtop.itest.hivesmoke.TestHiveSmokeBulk.test_include"]="xxx"
+}
+
 test.doFirst {
   // BIGTOP_HOME is necessary here, since we use it to read in from
   // test-artifacts.
-  checkEnv(["HIVE_HOME", "HIVE_CONF_DIR", "BIGTOP_HOME"])
+  checkEnv(["BIGTOP_HOME", "HIVE_HOME", "HIVE_CONF_DIR", "BIGTOP_HOME"])
 }
