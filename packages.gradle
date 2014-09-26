@@ -166,7 +166,7 @@ def genTasks = { target, variable ->
       return
     }
     description "Buildind DEB for $target artifacts"
-    def final PKG_NAME = BOM_map[variable + '_NAME']
+    def final PKG_NAME = BOM_map[variable + '_PKG_NAME']
     def final PKG_RELEASE = BOM_map[variable + '_PKG_RELEASE']
     def final PKG_VERSION = BOM_map[variable + '_PKG_VERSION']
     def final PKG_OUTPUT_DIR = BOM_map[variable + '_OUTPUT_DIR']
@@ -211,13 +211,15 @@ def genTasks = { target, variable ->
     }
     description "Buildind SDEB for $target artifacts"
     def final PKG_BUILD_DIR = BOM_map[variable + '_BUILD_DIR']
-    def final PKG_NAME = BOM_map[variable + '_NAME']
+    def final NAME = BOM_map[variable + '_NAME']
+    def final PKG_NAME = BOM_map[variable + '_PKG_NAME']
     def final SEED_TAR = BOM_map[variable + '_SEED_TAR']
     def final PKG_VERSION = BOM_map[variable + '_PKG_VERSION']
     def final RELEASE_VERSION = BOM_map[variable + '_RELEASE_VERSION']
     def final PKG_OUTPUT_DIR = BOM_map[variable + '_OUTPUT_DIR']
     delete ("$PKG_BUILD_DIR/deb")
-    def final DEB_BLD_DIR = "$PKG_BUILD_DIR/deb/$PKG_NAME-${PKG_VERSION}${BIGTOP_BUILD_STAMP}"
+    def final DEB_BLD_DIR = "$PKG_BUILD_DIR/deb/$NAME-${PKG_VERSION}${BIGTOP_BUILD_STAMP}"
+    def final DEB_PKG_DIR = "$PKG_BUILD_DIR/deb/$PKG_NAME-${PKG_VERSION}${BIGTOP_BUILD_STAMP}-${PKG_VERSION}"
     mkdir (DEB_BLD_DIR)
     copy {
       from SEED_TAR
@@ -228,14 +230,14 @@ def genTasks = { target, variable ->
       workingDir DEB_BLD_DIR
       commandLine "tar --strip-components 1 -xvf $DEB_BLD_DIR/../${PKG_NAME}_${PKG_VERSION}${BIGTOP_BUILD_STAMP}.orig.tar.gz".split(' ')
     }
-    fileTree ("${BASE_DIR}/bigtop-packages/src/deb/$PKG_NAME") {
+    fileTree ("${BASE_DIR}/bigtop-packages/src/deb/$NAME") {
       include '**/*'
     }.copy { into "$DEB_BLD_DIR/debian" }
     copy {
       from "${BASE_DIR}/bigtop-packages/src/templates/init.d.tmpl"
       into "$DEB_BLD_DIR/debian"
     }
-    fileTree ("$BASE_DIR/bigtop-packages/src/common/$PKG_NAME") {
+    fileTree ("$BASE_DIR/bigtop-packages/src/common/$NAME") {
       include '**/*'
     }.copy { into "$DEB_BLD_DIR/debian" }
     // Prepeare bom file with all the versions
@@ -256,7 +258,7 @@ def genTasks = { target, variable ->
       commandLine "dpkg-buildpackage -uc -us -sa -S".split(' ')
     }
     mkdir(PKG_OUTPUT_DIR)
-    fileTree (dir: "$DEB_BLD_DIR/..", includes: ['*.dsc', '*.diff.gz', '*.debian.tar.gz', "*_source.changes", "*.orig.tar.gz"]).copy {
+    fileTree (dir: "$DEB_PKG_DIR/..", includes: ['*.dsc', '*.diff.gz', '*.debian.tar.gz', "*_source.changes", "*.orig.tar.gz"]).copy {
       into PKG_OUTPUT_DIR
     }
     touchTargetFile(BOM_map[variable + '_TARGET_SDEB'])
@@ -295,8 +297,8 @@ def genTasks = { target, variable ->
     }
     description "Buildind RPM for $target artifacts"
     def final PKG_BUILD_DIR = BOM_map[variable + '_BUILD_DIR']
-    def final PKG_NAME = BOM_map[variable + '_NAME']
-    def final PKG_NAME_FOR_PKG = PKG_NAME.replaceAll("-", "_")
+    def final NAME = BOM_map[variable + '_NAME']
+    def final PKG_NAME = BOM_map[variable + '_PKG_NAME']
     def final PKG_OUTPUT_DIR = BOM_map[variable + '_OUTPUT_DIR']
     def final PKG_VERSION = BOM_map[variable + '_PKG_VERSION']
     def final BASE_VERSION = BOM_map[variable + '_BASE_VERSION']
@@ -306,9 +308,9 @@ def genTasks = { target, variable ->
 
     def command = [
         '--define', "_topdir $PKG_BUILD_DIR/rpm/",
-        '--define', "${PKG_NAME_FOR_PKG}_base_version $BASE_VERSION",
-        '--define', "${PKG_NAME_FOR_PKG}_version ${PKG_VERSION}${BIGTOP_BUILD_STAMP}",
-        '--define', "${PKG_NAME_FOR_PKG}_release $RELEASE_VERSION%{?dist}",
+        '--define', "${NAME}_base_version $BASE_VERSION",
+        '--define', "${NAME}_version ${PKG_VERSION}${BIGTOP_BUILD_STAMP}",
+        '--define', "${NAME}_release $RELEASE_VERSION%{?dist}",
         '--rebuild', SRCRPM,
     ]
     exec {
@@ -330,16 +332,17 @@ def genTasks = { target, variable ->
       return
     }
     description "Buildind SRPM for $target artifacts"
+    def final NAME = BOM_map[variable + '_NAME']
+    def final PKG_NAME = BOM_map[variable + '_PKG_NAME']
+    def final PKG_NAME_FOR_PKG = BOM_map[variable + '_NAME'].replaceAll("-", "_")
     def final PKG_BUILD_DIR = BOM_map[variable + '_BUILD_DIR']
-    def final PKG_NAME = BOM_map[variable + '_NAME']
     def final SEED_TAR = BOM_map[variable + '_SEED_TAR']
     def final PKG_VERSION = BOM_map[variable + '_PKG_VERSION']
     def final RELEASE_VERSION = BOM_map[variable + '_RELEASE_VERSION']
-    def final PKG_NAME_FOR_PKG = PKG_NAME.replaceAll("-", "_")
     def final BASE_VERSION = BOM_map[variable + '_BASE_VERSION']
     def final PKG_OUTPUT_DIR = BOM_map[variable + '_OUTPUT_DIR']
     delete ("$PKG_BUILD_DIR/rpm")
-    fileTree ("${BASE_DIR}/bigtop-packages/src/rpm/$PKG_NAME") {
+    fileTree ("${BASE_DIR}/bigtop-packages/src/rpm/$NAME") {
       include '**/*'
     }.copy { into "$PKG_BUILD_DIR/rpm" }
     copy {
@@ -350,7 +353,7 @@ def genTasks = { target, variable ->
       from "${BASE_DIR}/bigtop-packages/src/templates/init.d.tmpl"
       into "$PKG_BUILD_DIR/rpm/SOURCES"
     }
-    fileTree ("$BASE_DIR/bigtop-packages/src/common/$PKG_NAME") {
+    fileTree ("$BASE_DIR/bigtop-packages/src/common/$NAME") {
       include '**/*'
     }.copy { into "$PKG_BUILD_DIR/rpm/SOURCES" }
     // Writing bigtop.bom files with all the versions
@@ -363,7 +366,7 @@ def genTasks = { target, variable ->
         '--define', "${PKG_NAME_FOR_PKG}_version ${PKG_VERSION}${BIGTOP_BUILD_STAMP}",
         '--define', "${PKG_NAME_FOR_PKG}_release $RELEASE_VERSION%{?dist}",
         '-bs', '--nodeps', "--buildroot=${PKG_BUILD_DIR}/rpm/INSTALL",
-        "${PKG_BUILD_DIR}/rpm/SPECS/${PKG_NAME}.spec",
+        "${PKG_BUILD_DIR}/rpm/SPECS/${NAME}.spec",
     ]
     exec {
       workingDir BASE_DIR
@@ -395,7 +398,6 @@ def genTasks = { target, variable ->
   }
   task "${target}_vardefines" << {
     BOM_map[variable + '_NAME'] = target
-    BOM_map[variable + '_PKG_NAME'] = "${variable}_NAME"
     BOM_map[variable + '_PKG_RELEASE'] = '1'
 
     BOM_map[variable + '_BUILD_DIR'] = BOM_map['BUILD_DIR'] + "/$target"
