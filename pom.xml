@@ -39,7 +39,7 @@
   <inceptionYear>2011</inceptionYear>
 
   <properties>
-    <hadoop.version>2.3.0</hadoop.version>
+    <hadoop.version>2.4.1</hadoop.version>
     <!--An awful hack for BIGTOP-1429-->
     <hbase.version>0.98.5-hadoop2</hbase.version>
     <pig.version>0.12.1</pig.version>
