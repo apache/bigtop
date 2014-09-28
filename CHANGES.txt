@@ -17,6 +17,210 @@ Bigtop Changelog
 
 * Release 0.8.0 (2014-09-06)
 
+
+Release Notes - Bigtop - Version 0.8.0
+
+- SUB-TASK
+    - [BIGTOP-1111] - Bump version of Hadoop to 2.2.0
+    - [BIGTOP-1165] - Ivy config for hive metastore looks incorrect, which breaks build on JDK 7
+    - [BIGTOP-1166] - Hive-jdbc doesn't compile on JDK 7, which breaks build
+    - [BIGTOP-1183] - Rename spark package to spark-core
+    - [BIGTOP-1184] - bump hadoop version to 2.3.0
+    - [BIGTOP-1202] - One-button-click way for installing all needed bits of testing framework
+    - [BIGTOP-1203] - Update toolchaing to automatically install Gradle into dev env.
+    - [BIGTOP-1208] - Add DFSIO test into longevity suite
+    - [BIGTOP-1209] - Add SLive test into longevity suite
+    - [BIGTOP-1242] - bump jsvc to 1.0.15
+    - [BIGTOP-1244] - bump flume to 1.5.0.1
+    - [BIGTOP-1278] - bump pig version to 0.12.1
+    - [BIGTOP-1279] - bump hive version to 0.12.0
+    - [BIGTOP-1280] - bump Oozie version to 4.0.1
+    - [BIGTOP-1281] - bump hbase version to 0.98.2
+    - [BIGTOP-1282] - bump Mahout version to 0.9
+    - [BIGTOP-1283] - bump Solr version to 4.6.0
+    - [BIGTOP-1284] - bump Spark version to 0.9.1
+    - [BIGTOP-1285] - Bump version of Phoenix to 4.0
+    - [BIGTOP-1291] - On a clean ~/.m2 hbase mvn install site will fail as install is executed first
+    - [BIGTOP-1293] - Include Hive 0.13 into the stack
+    - [BIGTOP-1302] - Update hbase smoke tests to escape Hbase's "event horizon"
+    - [BIGTOP-1330] - bump Giraph version to 1.1.0
+    - [BIGTOP-1331] - bump Hue version to 3.6.0
+    - [BIGTOP-1340] - Hbase build has to use hadoop-two.version sys. prop
+    - [BIGTOP-1350] - Bump version of Crunch to 0.10.0
+    - [BIGTOP-1354] - bump version of Solr to 4.9.0
+    - [BIGTOP-1426] - Bump version of Hadoop to 2.4.1
+    - [BIGTOP-1432] - Update HBase version to 0.98.5 in the BOM
+    - [BIGTOP-1433] - Fix Hive build after BIGTOP-1429 
+    - [BIGTOP-1434] - Maven build failing with NoClassDefFoundError at maven-site-plugin:3.0-beta-3:site (packaging-documentation) @ sqoop-docs 
+    - [BIGTOP-1435] - Fix Crunch build after BIGTOP-1429 
+
+- BUG
+    - [BIGTOP-282] - the licensing status of the MovieLens data files needs to be cleared up
+    - [BIGTOP-831] - Hadoop branch-2 (and trunk?) are failing when built with JDK7u11
+    - [BIGTOP-922] - Existing Puppet recipes are failing to initialize HDFS dictories on the first run
+    - [BIGTOP-986] - install-flume.sh uses -x instead of -e
+    - [BIGTOP-996] - Document steps needed to run BT tests on a fresh host
+    - [BIGTOP-997] - TestCLI fails test id 5:  comparator fails
+    - [BIGTOP-1042] - Add support for Hadoop 2.1.x-beta
+    - [BIGTOP-1048] - ZooKeeper installation use "zookeeper-server.pid" as default while ZooKeeper expects zookeeper_server.pid
+    - [BIGTOP-1072] - Vagrant scripts for spinning up and "hydrating" bigtop vms 
+    - [BIGTOP-1092] - Add Hue documentation package
+    - [BIGTOP-1097] - introduce bigtop-groovy package
+    - [BIGTOP-1124] - solrctl should be able to auto-detect JAVA_HOME
+    - [BIGTOP-1125] - Return value does not reflect status checks
+    - [BIGTOP-1128] - FIX and modularize mahout sample data sets
+    - [BIGTOP-1132] - Phoenix RPM specfile does not create symlinks
+    - [BIGTOP-1141] - Add TestYarnNode to test yarn node 
+    - [BIGTOP-1143] - Oozie configuration file is incomplete
+    - [BIGTOP-1146] - Flume NG package is broken because of org.hbase.asynchbase deps. mismanagement
+    - [BIGTOP-1150] - update Spark debian packaging to the latest format
+    - [BIGTOP-1153] - Crunch package doesn't depend on anything
+    - [BIGTOP-1164] - Get whole Bigtop stack building on JDK 7
+    - [BIGTOP-1167] - got "Permission denied" when creating vagrant home folder in provision.sh
+    - [BIGTOP-1168] - hue build fails (unresolvable maven dependencies)
+    - [BIGTOP-1169] - Hue rpm build fails
+    - [BIGTOP-1174] - missing dependency setting on init-hdfs.sh in puppet recipes
+    - [BIGTOP-1181] - Add pyspark to spark package
+    - [BIGTOP-1187] - Spark service packages have extraneous core in the name
+    - [BIGTOP-1191] - master pom.xml file formatting is out of whack
+    - [BIGTOP-1197] - iTest PackageManagerTests are failing
+    - [BIGTOP-1199] - Makefile for deb packing needs to support zip archives
+    - [BIGTOP-1205] - GRADLE_OPTS missing closing " in toolchain jenkins.sh.*
+    - [BIGTOP-1217] - Spark test-artifact missing repository for install
+    - [BIGTOP-1218] - Add JDK7 to Bigtop toolchain
+    - [BIGTOP-1220] - Gradle task order isn't enforced properly with dependsOn
+    - [BIGTOP-1221] - Expand and updated FUSE tests
+    - [BIGTOP-1223] - TestSlive does not fully remove root directory after an iteration
+    - [BIGTOP-1225] - TestHDFSQuota can fail if tests are run out of order
+    - [BIGTOP-1226] - TestSLive setup() already being used, need to rename
+    - [BIGTOP-1232] - test artifact build fails in io-longevity
+    - [BIGTOP-1234] - TestFileAppend shouldn't reuse client during testMultipleOutputStreamFailure()
+    - [BIGTOP-1236] - TestCLI expecting permissions incorrectly 
+    - [BIGTOP-1238] - TestCLI has misspelled 'NAMNEODE' that is used without protocol name
+    - [BIGTOP-1239] - TestCLI: make ports optional in regex comparators
+    - [BIGTOP-1246] - Fix the shell-object bug in HttpFs smoke tests
+    - [BIGTOP-1250] - TestTextSnappy fails
+    - [BIGTOP-1252] - Update ant from 1.9.2 to 1.9.3
+    - [BIGTOP-1253] - TestSLive calling setpDir() instead of setupDir()
+    - [BIGTOP-1254] - add gradle specific files to .gitignore
+    - [BIGTOP-1255] - init-hcfs.json needs to encode privileges as strings, not numbers.
+    - [BIGTOP-1256] - Spark package deployment should reflect BIGTOP-1183
+    - [BIGTOP-1258] - Spark puppet deploy might fail as /etc/spark can not be created
+    - [BIGTOP-1259] - spark-worker service should be started after spark-master if ran on the same node
+    - [BIGTOP-1260] - Puppet deployment should reflect on the new name of spark package
+    - [BIGTOP-1268] - Jenkins Job Bigtop-trunk-Hadoop failed from 3/15/2014 due to protoc version
+    - [BIGTOP-1274] - yarn ResourceManager should be started before starting NodeManagers
+    - [BIGTOP-1290] - Zookeeper build is failing on Ant 1.9.3
+    - [BIGTOP-1294] - asciidoc is missed from centos and sles environments of bigtop_toolchain
+    - [BIGTOP-1295] - package.mk misteriously missing mkdir for RPMS that leads to SUSE build to fail
+    - [BIGTOP-1300] - need to bump ant version to 1.9.4 in bigtop_toolchain
+    - [BIGTOP-1303] - Pig 0.12.1 build is broken at the site target. Stack build can't proceed
+    - [BIGTOP-1304] - bigtop_toolchain needs to install Scala 2.10 to support Spark build
+    - [BIGTOP-1306] - RPM licensing metadata is inconsistent and wrong
+    - [BIGTOP-1313] - Ant 1.9.4 update is missed from ant.pp recipe.
+    - [BIGTOP-1319] - hive-rpm target is broken
+    - [BIGTOP-1322] - hbase_install.sh shall be called with bash
+    - [BIGTOP-1324] - Fix typo in testHDFSConf.xml of TestCLI
+    - [BIGTOP-1336] - Puppet recipes failed to deploy kerberos enabled hadoop cluster
+    - [BIGTOP-1337] - Logging success messages in service startup and shutdown only after verification.
+    - [BIGTOP-1345] - remove bigtop-packages/src/root@mgrover-centos6-2.ent.cloudera.com
+    - [BIGTOP-1346] - Generalize evaluation regexp in packages.gradle
+    - [BIGTOP-1355] - Hive 0.13 deb build is broken
+    - [BIGTOP-1358] - adjust toolchain to use JDK7 by default
+    - [BIGTOP-1359] - fix a few issues with our puppet_toolchain code
+    - [BIGTOP-1371] - Spark-master service fails to start due to missing /usr/lib/spark/work
+    - [BIGTOP-1380] - Pig might run out of memory during site construction
+    - [BIGTOP-1382] - Hadoop site.csv components additions: yarn & mapred-app
+    - [BIGTOP-1390] - JDK Woes
+    - [BIGTOP-1394] - package test manifest got out of date
+    - [BIGTOP-1396] - update metadata for bigtop-groovy and phoenix
+    - [BIGTOP-1397] - hive-hbase package is missing after move to the latest Hive
+    - [BIGTOP-1398] - hadoop-hdfs-fuse can't be installed on Ubuntu 14.04
+    - [BIGTOP-1399] - add --help to alternative invocation to support newer Ubuntus
+    - [BIGTOP-1400] - Whirr is failing with PermGen error: needs to be bumped up
+    - [BIGTOP-1401] - Create man pages for YARN, HDFS and MAPRED. 
+    - [BIGTOP-1402] - Update bigtop gradle to 2.x
+    - [BIGTOP-1405] - Gradle 2.0 installation from toolchain is broken
+    - [BIGTOP-1415] - Remove redundant jars from spark package.
+    - [BIGTOP-1418] - [BigPetStore] build.gradle - wrong variable name (hadoopClusterRuntime instead of runtime)
+    - [BIGTOP-1420] - Update Phoenix version to 4.1.0 in the BOM
+    - [BIGTOP-1421] - Phoenix build is missing some variables
+    - [BIGTOP-1425] - gradle build can fail with NPE in an obscure way
+    - [BIGTOP-1427] - HBase build should build hbase-***-hadoop2 by default
+    - [BIGTOP-1428] - update tests to reflect new home for hbase user
+    - [BIGTOP-1429] - Apache build of Bigtop test artifacts fails to find correct Hbase jars
+    - [BIGTOP-1430] - incorrect version of spark-core prevents test artifacts from compiling
+    - [BIGTOP-1438] - asciidoc is no longer needed by Sqoop
+    - [BIGTOP-1439] - split jdk7 and jdk6 in Bigtop toolchain
+    - [BIGTOP-1440] - a few usability updates to bigtop_toolchain
+    - [BIGTOP-1441] - bigtop_toolchain fails on Ubuntu
+    - [BIGTOP-1442] - need to add proper clean up for the toolchain puppet code
+    - [BIGTOP-1444] - Phoenix RPM build is broken after BIGTOP-1421
+
+- IMPROVEMENT
+    - [BIGTOP-840] - Refactor Bigtop puppet code for better integration with newer Puppet and Whirr
+    - [BIGTOP-848] - Allow to build stack on top of an arbitrary Hadoop SHA
+    - [BIGTOP-952] - init-hdfs.sh is dog slow. Let's replace it with a direct HDFS API calls and better layout management
+    - [BIGTOP-992] - Create HowToContribute wiki page
+    - [BIGTOP-1019] - Remove mysql requirement constraint from sqoop tests
+    - [BIGTOP-1026] - Big Top Mapred/Itest assertions should report specific commands which fail
+    - [BIGTOP-1029] - Add support for HBase 0.96+
+    - [BIGTOP-1085] - spark packages needs to be split
+    - [BIGTOP-1110] - Define BOM for 0.8.0 release of Bigtop
+    - [BIGTOP-1130] - Update Build Requirements on our web pages
+    - [BIGTOP-1137] - provide a way to request a major version of JDK
+    - [BIGTOP-1138] - hadoop-conf-pseudo package uses the deprecated fs.default.name parameter
+    - [BIGTOP-1139] - bigtop-tomcat and bigtop-jsvc don't depend on bigtop-utils
+    - [BIGTOP-1144] - Need to update command 'puppet apply' in file bigtop-deploy/puppet/README.md
+    - [BIGTOP-1147] - README.md improvments
+    - [BIGTOP-1152] - speed up spark build
+    - [BIGTOP-1155] - New logo ! 
+    - [BIGTOP-1161] - Have a way to dynamically select components to be deployed by Puppet recipes.
+    - [BIGTOP-1163] - puppet apply shows db init error if the oozie server is already running
+    - [BIGTOP-1171] - Puppetize the Vagrant deployer
+    - [BIGTOP-1178] - Clusterize the puppetized vagrant deployer.
+    - [BIGTOP-1195] - Higher level interface to smokes.
+    - [BIGTOP-1200] - Implement Generic Text File to define HCFS filesystem semantics
+    - [BIGTOP-1201] - Enhance (gradleize) the build to ease development, deployment; abstract implementation
+    - [BIGTOP-1207] - Create a foundation layer to build longevity and performance tests for the stack
+    - [BIGTOP-1210] - integrate BIGTOP-952 with plain text HCFS FS definition from  BIGTOP-1200
+    - [BIGTOP-1213] - TestHadoopExamples smokes: orderering of tests; other improvements
+    - [BIGTOP-1222] - Simplify and gradleize a subset of the bigtop smokes
+    - [BIGTOP-1224] - Provide a simple order for tests
+    - [BIGTOP-1241] - BIGTOP should update protobuf to 2.5 from 2.4.x 
+    - [BIGTOP-1257] - Make TestHadoopExamples modular enough to support longevity tests.
+    - [BIGTOP-1269] - BigPetStore: Create build w/ gradle
+    - [BIGTOP-1289] - Update component versions in the pom.xml (including hadoop)
+    - [BIGTOP-1296] - Fix permission and Update README for vagrant-puppet recipe
+    - [BIGTOP-1311] - allow easy site publishing
+    - [BIGTOP-1312] - Add dynamic menus, update, links, modern CSS to bigtop site.
+    - [BIGTOP-1314] - Deprecate make build
+    - [BIGTOP-1316] - enhance Shell for better checking of return code & output logging
+    - [BIGTOP-1321] - TestCLI: check assumptions before the test run
+    - [BIGTOP-1342] - Make TestCLI usable for both HDFS and HCFS
+    - [BIGTOP-1347] - Support better entropy performance on vagrant VMs
+    - [BIGTOP-1348] - vagrant-puppet provisioning is too slow on installing packages
+    - [BIGTOP-1372] - Bigtop needs feature that takes in multiple arguments to build specific components at command line
+    - [BIGTOP-1374] - Add dynamic override of BOM variables into Gradle build
+    - [BIGTOP-1391] - Improve README.md so that the markdown rendering is pretty and easy to read
+
+- NEW FEATURE
+    - [BIGTOP-1039] - Add packaging for Shark analytics 
+    - [BIGTOP-1089] - BigPetStore: A polyglot big data processing blueprint
+    - [BIGTOP-1188] - Smoke tests for HttpFs
+    - [BIGTOP-1192] - Add utilities to facilitate cluster failure testing into bigtop-test-framework
+    - [BIGTOP-1212] - Pick or build a framework for building fake data sets
+    - [BIGTOP-1272] - BigPetStore: Productionize the Mahout recommender
+    - [BIGTOP-1351] - Init script for HBase Thrift2 server is missing
+
+- TASK
+    - [BIGTOP-236] - The user installed by hbase gets an incorrect home directory
+    - [BIGTOP-1240] - Formatting Guidelines
+
+- TEST
+    - [BIGTOP-1040] - Add integration tests for Shark component
+
+
 * Release 0.7.0 (2013-10-28)
 
 - SUB-TASK
