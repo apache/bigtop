@@ -398,6 +398,9 @@ def genTasks = { target, variable ->
   }
   task "${target}_vardefines" << {
     BOM_map[variable + '_NAME'] = target
+    if (!BOM_map[variable + '_PKG_NAME']) {
+      BOM_map[variable + '_PKG_NAME'] = BOM_map[variable + '_NAME']
+    }
     BOM_map[variable + '_PKG_RELEASE'] = '1'
 
     BOM_map[variable + '_BUILD_DIR'] = BOM_map['BUILD_DIR'] + "/$target"
