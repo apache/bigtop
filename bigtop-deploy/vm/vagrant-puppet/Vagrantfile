@@ -20,14 +20,16 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   vmbox = "puppetlab-centos-64-nocm"
 
+  # Repository
+  # Example for testing a Release candidate.
+  repo = "http://bigtop01.cloudera.org:8080/view/Releases/job/Bigtop-0.8.0/label=centos6/6/artifact/output/"
+  # repo = "http://bigtop.s3.amazonaws.com/releases/0.7.0/redhat/6/x86_64"
+
   # Virtual box implementation
   vmboxurl = "http://puppet-vagrant-boxes.puppetlabs.com/centos-64-x64-vbox4210-nocm.box"
 
   # number of instances
-  num_instances = 3
-
-  # the bigtop puppet recipes
-  bigtop_puppet = "../../puppet"
+  num_instances = 1
 
   # manage /etc/hosts by hostmanager plugin(https://github.com/smdahlen/vagrant-hostmanager)
   # use vagrant-cachier to cache packages at local(https://github.com/fgrehm/vagrant-cachier)
@@ -56,29 +58,39 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       end
 
       bigtop.vm.provider :virtualbox do |vb|
-        vb.customize ["modifyvm", :id, "--memory", "1024"]
+        vb.customize ["modifyvm", :id, "--memory", "10024"]
       end
 
       bigtop.vm.network :private_network, ip: bigtop_ip
       bigtop.vm.hostname = bigtop_hostname
 
-      bigtop.vm.synced_folder bigtop_puppet, "/bigtop-puppet"
+      # three levels up is the bigtop "home" directory.
+      # the current directory has puppet recipes which we need for provisioning.
+      bigtop.vm.synced_folder "../../../", "/bigtop-home"
 
       # shell provisioner to setup basic vm environment
       bigtop.vm.provision :shell do |shell|
         shell.path = "provision.sh"
-        shell.args = bigtop_master
+        shell.args = [ bigtop_master , repo ]
       end
 
       bigtop.vm.provision :hostmanager
 
       # deploy Apache Hadoop and it's ecosystem
       bigtop.vm.provision :puppet do |puppet|
-        puppet.module_path = bigtop_puppet + "/modules"
-        puppet.manifests_path = bigtop_puppet + "/manifests"
+        puppet.module_path = "../../puppet/modules/"
+        puppet.manifests_path =  "../../puppet/manifests/"
         puppet.manifest_file  = "site.pp"
-        puppet.options = "--debug --confdir=/bigtop-puppet"
+	puppet.options = "--debug --confdir=/bigtop-home/bigtop-deploy/puppet/"
       end
+
+      if i==num_instances then
+	puts "creating provisioner directive for running tests"
+        bigtop.vm.provision "shell", path: "smoke-tests.sh"
+      else
+        puts "Not creating provisioner directive for tests yet... only on vm #{i} of #{num_instances}"
+      end
+
     end
   end
 

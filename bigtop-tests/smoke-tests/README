@@ -16,14 +16,28 @@ So overall, this framework makes testing with apache bigtop easy as well as fun!
 
 ## Running
 
+You need to export several environment variables.   For example,
+```
+export HADOOP_CONF_DIR=/etc/hadoop/conf/
+export BIGTOP_HOME=/bigtop-home/
+export HADOOP_MAPRED_HOME=/usr/lib/hadoop-mapred/
+export HIVE_HOME=/usr/lib/hive/
+export HIVE_CONF_DIR=/etc/hive/conf/
+export JAVA_HOME="/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.65.x86_64/"
+export MAHOUT_HOME="/usr/lib/mahout"
+export ITEST="0.7.0"
+```
+
+Then, simply invoke the tests including the smoke.tests you want to run, as described below.
+
 Each directory is a gradle "subproject" mapping to an ecosystem component.
 If you specify, for example, "flume", then the flume test runs.  To test hive as well,
 you would specify "flume,hive", and so on.   An example is below:
 ```
-    gradle compileGroovy test -Dsmoke-tests=flume,hive --info
+    gradle compileGroovy test -Dsmoke.tests=flume,hive --info
 ```
 
-The --info option is a critical feature here:  You can easily debug your tests this way,
+The --info option is a nice feature to have here:  You can easily debug your tests this way,
 just make sure you have log4j.properties in your conf/ directory locally.
 
 ## Adding more tests

@@ -23,11 +23,13 @@ service iptables stop
 chkconfig iptables off
 cat /dev/null > /etc/hosts
 
+echo "Bigtop yum repo = $2"
+
 # Prepare puppet configuration file
-cat > /bigtop-puppet/config/site.csv << EOF
+cat > /bigtop-home/bigtop-deploy/puppet/config/site.csv << EOF
 hadoop_head_node,$1
 hadoop_storage_dirs,/data/1,/data/2
-bigtop_yumrepo_uri,http://bigtop.s3.amazonaws.com/releases/0.7.0/redhat/6/x86_64
+bigtop_yumrepo_uri,$2
 jdk_package_name,java-1.7.0-openjdk-devel.x86_64
 components,hadoop,hbase,yarn,mapred-app
 EOF
@@ -39,3 +41,6 @@ mkdir -p /data/{1,2}
 yum -y install rng-tools
 sed -i.bak 's/EXTRAOPTIONS=\"\"/EXTRAOPTIONS=\"-r \/dev\/urandom\"/' /etc/sysconfig/rngd
 service rngd start
+
+echo "Now installing gradle"
+cd /bigtop-home && puppet apply --modulepath=./ -e "include bigtop_toolchain::gradle" # alias gradle=/usr/local/gradle/bin/gradle

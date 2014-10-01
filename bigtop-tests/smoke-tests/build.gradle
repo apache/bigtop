@@ -27,8 +27,6 @@ subprojects {
 
   ext.hadoopVersion = '2.3.0'
   //Note you need a snapshot itest to run this.
-  //if you dont have it, change to 0.7.0.
-  ext.itestVersion = '0.8.0-SNAPSHOT'
   ext.doExclude = { String filename ->
     //print("Exclude? ${filename} ... ")
     def keep_this_test = true;
@@ -67,9 +65,13 @@ subprojects {
   }
 
   /**
-  * In general, java_home should be declared in all cases.
+  * Two important environment variables.
+  *  java_home should be declared in all cases.
+  * itest can equal = 0.7.0, 0.8.0-SNAPSHOT,
   */
-  checkEnv(["JAVA_HOME"])
-test.dependsOn compileGroovy
-compileGroovy.dependsOn clean
+  checkEnv(["JAVA_HOME","ITEST"])
+  ext.itestVersion = System.getenv("ITEST")
+
+  test.dependsOn compileGroovy
+  compileGroovy.dependsOn clean
 }
