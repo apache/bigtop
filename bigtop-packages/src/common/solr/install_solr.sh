@@ -314,7 +314,7 @@ export CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.host=$HOSTNAME
 #        and thus doesn't know the admin port
 export JAVA_OPTS="$CATALINA_OPTS"
 
-if [ "$1" = "run" -a -n "$SOLRD_WATCHDOG_TIMEOUT" ] ; then
+if ([ "$1" = "start" -o "$1" = "run" ]) && [ -n "$SOLRD_WATCHDOG_TIMEOUT" ] ; then
   tomcat_watchdog &
 fi
 
