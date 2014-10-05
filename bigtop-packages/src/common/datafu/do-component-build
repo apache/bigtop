@@ -23,5 +23,5 @@ sed -i -e '/<dependency org="org.apache.pig"/s# rev=[^ >][^ >]*# rev="'$PIG_VERS
 ant jar -Dversion=$DATAFU_VERSION "$@"
 
 # Install artifacts into the local Maven cache
-mvn install:install-file -DgroupId=com.linkedin.datafu -DartifactId=datafu -Dversion=$DATAFU_VERSION -Dpackaging=jar -Dfile=dist/datafu-$DATAFU_VERSION.jar
+mvn install:install-file -DcreateChecksum=true -DgroupId=com.linkedin.datafu -DartifactId=datafu -Dversion=$DATAFU_VERSION -Dpackaging=jar -Dfile=dist/datafu-$DATAFU_VERSION.jar
 

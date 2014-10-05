@@ -21,5 +21,5 @@ set -ex
 sed -i.orig -e 's#test-jar,api-report#test-jar#g' build.xml
 ant -Dversion=$ZOOKEEPER_VERSION -f build.xml package "$@"
 
-mvn install:install-file -DgroupId=org.apache.zookeeper -DartifactId=zookeeper -Dversion=$ZOOKEEPER_VERSION -Dpackaging=jar -Dfile=build/zookeeper-$ZOOKEEPER_VERSION.jar
-mvn install:install-file -DgroupId=org.apache.zookeeper -DartifactId=zookeeper -Dversion=$ZOOKEEPER_VERSION -Dclassifier=tests -Dpackaging=jar -Dfile=build/zookeeper-$ZOOKEEPER_VERSION-test.jar
+mvn install:install-file -DcreateChecksum=true -DgroupId=org.apache.zookeeper -DartifactId=zookeeper -Dversion=$ZOOKEEPER_VERSION -Dpackaging=jar -Dfile=build/zookeeper-$ZOOKEEPER_VERSION.jar
+mvn install:install-file -DcreateChecksum=true -DgroupId=org.apache.zookeeper -DartifactId=zookeeper -Dversion=$ZOOKEEPER_VERSION -Dclassifier=tests -Dpackaging=jar -Dfile=build/zookeeper-$ZOOKEEPER_VERSION-test.jar

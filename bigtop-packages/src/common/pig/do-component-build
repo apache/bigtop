@@ -62,4 +62,4 @@ done
 ant $BUILD_OPTS tar "$@"
 
 # install the Pig jar into the local Maven cache
-mvn install:install-file -DgroupId=org.apache.pig -DartifactId=pig -Dversion=${PIG_VERSION} -Dpackaging=jar -Dfile=pig.jar
+mvn install:install-file -DcreateChecksum=true -DgroupId=org.apache.pig -DartifactId=pig -Dversion=${PIG_VERSION} -Dpackaging=jar -Dfile=pig.jar
