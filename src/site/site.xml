@@ -67,7 +67,7 @@
     <menu name="Releases">
       <item name="Release Notes" href="release-notes.html"/>
       <item name="0.3.0-incubating" href="http://archive.apache.org/dist/incubator/bigtop/bigtop-0.3.0-incubating/"/>
-      <item name="0.7.0" href="http://www.apache.org/dyn/closer.cgi/bigtop/bigtop-0.7.0/"/>
+      <item name="0.8.0" href="http://www.apache.org/dyn/closer.cgi/bigtop/bigtop-0.8.0/"/>
     </menu>
 
     <menu name="Project Information">
