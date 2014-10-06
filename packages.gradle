@@ -228,7 +228,7 @@ def genTasks = { target, variable ->
     }
     exec {
       workingDir DEB_BLD_DIR
-      commandLine "tar --strip-components 1 -xvf $DEB_BLD_DIR/../${PKG_NAME}_${PKG_VERSION}${BIGTOP_BUILD_STAMP}.orig.tar.gz".split(' ')
+      commandLine "tar --strip-components 1 -xf $DEB_BLD_DIR/../${PKG_NAME}_${PKG_VERSION}${BIGTOP_BUILD_STAMP}.orig.tar.gz".split(' ')
     }
     fileTree ("${BASE_DIR}/bigtop-packages/src/deb/$NAME") {
       include '**/*'
