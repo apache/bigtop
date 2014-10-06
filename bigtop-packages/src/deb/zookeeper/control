@@ -38,3 +38,8 @@ Depends: zookeeper (= ${source:Version})
 Description: The Zookeeper REST server
  This package starts the zookeeper REST server on startup
 
+Package: zookeeper-native
+Architecture: any
+Description: C bindings for ZooKeeper clients
+ Provides native libraries and development headers for C / C++ ZooKeeper clients. Consists of both single-threaded and multi-threaded implementations.
+

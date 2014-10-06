@@ -29,6 +29,8 @@ usage: $0 <options>
      --lib-dir=DIR               path to install zookeeper home [/usr/lib/zookeeper]
      --bin-dir=DIR               path to install bins [/usr/bin]
      --examples-dir=DIR          path to install examples [doc-dir/examples]
+     --system-include-dir=DIR    path to install development headers [/usr/include]
+     --system-lib-dir=DIR        path to install native libraries [/usr/lib]
      ... [ see source for more similar options ]
   "
   exit 1
@@ -42,6 +44,8 @@ OPTS=$(getopt \
   -l 'lib-dir:' \
   -l 'bin-dir:' \
   -l 'examples-dir:' \
+  -l 'system-include-dir:' \
+  -l 'system-lib-dir:' \
   -l 'build-dir:' -- "$@")
 
 if [ $? != 0 ] ; then
@@ -69,6 +73,12 @@ while true ; do
         --examples-dir)
         EXAMPLES_DIR=$2 ; shift 2
         ;;
+        --system-include-dir)
+        SYSTEM_INCLUDE_DIR=$2 ; shift 2
+        ;;
+        --system-lib-dir)
+        SYSTEM_LIB_DIR=$2 ; shift 2
+        ;;
         --)
         shift ; break
         ;;
@@ -93,6 +103,8 @@ LIB_DIR=${LIB_DIR:-/usr/lib/zookeeper}
 BIN_DIR=${BIN_DIR:-/usr/bin}
 CONF_DIR=/etc/zookeeper/conf
 CONF_DIST_DIR=/etc/zookeeper/conf.dist/
+SYSTEM_INCLUDE_DIR=${SYSTEM_INCLUDE_DIR:-/usr/include}
+SYSTEM_LIB_DIR=${SYSTEM_LIB_DIR:-/usr/lib}
 
 install -d -m 0755 $PREFIX/$LIB_DIR/
 rm -f $BUILD_DIR/zookeeper-*-javadoc.jar $BUILD_DIR/zookeeper-*-bin.jar $BUILD_DIR/zookeeper-*-sources.jar $BUILD_DIR/zookeeper-*-test.jar
@@ -107,7 +119,6 @@ for x in $PREFIX/$LIB_DIR/zookeeper*jar ; do
   x=$(basename $x)
   ln -s $x $PREFIX/$LIB_DIR/zookeeper.jar
 done
-  
 
 install -d -m 0755 $PREFIX/$LIB_DIR/lib
 cp $BUILD_DIR/lib/*.jar $PREFIX/$LIB_DIR/lib
@@ -186,3 +197,25 @@ gzip -c zookeeper.1 > $PREFIX/$MAN_DIR/zookeeper.1.gz
 # Zookeeper log and tx log directory
 install -d -m 1766 $PREFIX/var/log/zookeeper
 install -d -m 1766 $PREFIX/var/log/zookeeper/txlog
+
+# ZooKeeper native libraries
+install -d ${PREFIX}/$SYSTEM_INCLUDE_DIR
+install -d ${PREFIX}/$SYSTEM_LIB_DIR
+install -d ${PREFIX}/${LIB_DIR}-native
+
+(cd ${BUILD_DIR}/.. && tar xzf zookeeper-*-lib.tar.gz)
+cp -R ${BUILD_DIR}/../usr/include/* ${PREFIX}/${SYSTEM_INCLUDE_DIR}/
+cp -R ${BUILD_DIR}/../usr/lib*/* ${PREFIX}/${SYSTEM_LIB_DIR}/
+cp -R ${BUILD_DIR}/../usr/bin/* ${PREFIX}/${LIB_DIR}-native/
+for binary in ${PREFIX}/${LIB_DIR}-native/*; do
+  cat > ${PREFIX}/${BIN_DIR}/`basename ${binary}` <<EOF
+#!/bin/bash
+
+PREFIX=\$(dirname \$(readlink -f \$0))
+export LD_LIBRARY_PATH=\${LD_LIBRARY_PATH}:\${PREFIX}/../lib:\${PREFIX}/../lib64
+/usr/lib/zookeeper-native/`basename ${binary}` \$@
+
+EOF
+done
+chmod 755 ${PREFIX}/${BIN_DIR}/* ${PREFIX}/${LIB_DIR}-native/*
+

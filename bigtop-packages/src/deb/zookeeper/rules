@@ -39,5 +39,12 @@ override_dh_auto_install:
 	bash -x debian/install_zookeeper.sh \
 	  --build-dir=build/zookeeper-${ZOOKEEPER_BASE_VERSION} \
 	  --prefix=debian/$(zookeeper_pkg_name)
+	   # Move native files to a dedicated package
+	   mkdir -p debian/zookeeper-native/usr/bin
+	   mkdir -p debian/zookeeper-native/usr/lib
+	   mv debian/zookeeper/usr/bin/cli_* debian/zookeeper/usr/bin/load_gen debian/zookeeper-native/usr/bin/
+	   mv debian/zookeeper/usr/lib/libzookeeper* debian/zookeeper-native/usr/lib/
+	   mv debian/zookeeper/usr/lib/zookeeper-native debian/zookeeper-native/usr/lib/
+	   mv debian/zookeeper/usr/include debian/zookeeper-native/usr/include
 	bash debian/init.d.tmpl debian/zookeeper-rest.svc deb debian/zookeeper-rest/etc/init.d/zookeeper-rest
 	dh_install -i
