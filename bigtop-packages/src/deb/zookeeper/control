@@ -31,3 +31,10 @@ Architecture: all
 Depends: zookeeper (= ${source:Version})
 Description: The Hadoop Zookeeper server
  This package starts the zookeeper server on startup
+
+Package: zookeeper-rest
+Architecture: all
+Depends: zookeeper (= ${source:Version})
+Description: The Zookeeper REST server
+ This package starts the zookeeper REST server on startup
+

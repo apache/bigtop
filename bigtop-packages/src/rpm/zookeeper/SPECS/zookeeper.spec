@@ -19,6 +19,7 @@
 %define run_zookeeper /var/run/%{name}
 %define vlb_zookeeper /var/lib/%{name}
 %define svc_zookeeper %{name}-server
+%define svc_zookeeper_rest %{name}-rest
 %define man_dir %{_mandir}
 
 %if  %{?suse_version:1}0
@@ -75,6 +76,9 @@ Source4: zookeeper-server.sh.suse
 Source5: zookeeper.1
 Source6: zoo.cfg
 Source7: zookeeper.default
+Source8: init.d.tmpl
+Source9: zookeeper-rest.svc
+Source10: ZOOKEEPER-1911.patch
 BuildArch: noarch
 BuildRequires: autoconf, automake
 Requires(pre): coreutils, /usr/sbin/groupadd, /usr/sbin/useradd
@@ -122,10 +126,22 @@ Requires: redhat-lsb
 %description server
 This package starts the zookeeper server on startup
 
+%package rest
+Summary: ZooKeeper REST Server
+Group: System/Daemons
+Requires: %{name} = %{version}-%{release}
+Requires(pre): %{name} = %{version}-%{release}
+Requires(post): %{chkconfig_dep}
+Requires(preun): %{service_dep}, %{chkconfig_dep}
+
+%description rest
+This package starts the zookeeper REST server on startup
+
 %prep
 %setup -n %{name}-%{zookeeper_base_version}
 
 %build
+cp $RPM_SOURCE_DIR/ZOOKEEPER-1911.patch ./
 bash %{SOURCE1}
 
 %install
@@ -147,6 +163,9 @@ init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{svc_zookeeper}
 %__cp $orig_init_file $init_file
 chmod 755 $init_file
 
+# Install Zookeeper REST server init script
+init_file=$RPM_BUILD_ROOT/%{initd_dir}/zookeeper-rest
+bash $RPM_SOURCE_DIR/init.d.tmpl $RPM_SOURCE_DIR/zookeeper-rest.svc rpm $init_file
 
 %pre
 getent group zookeeper >/dev/null || groupadd -r zookeeper
@@ -179,8 +198,19 @@ if [ $1 -ge 1 ]; then
         service %{svc_zookeeper} condrestart > /dev/null 2>&1
 fi
 
-%files server
-	%attr(0755,root,root) %{initd_dir}/%{svc_zookeeper}
+%post rest
+	chkconfig --add %{svc_zookeeper_rest}
+
+%preun rest
+if [ $1 = 0 ] ; then
+	service %{svc_zookeeper_rest} stop > /dev/null 2>&1
+	chkconfig --del %{svc_zookeeper_rest}
+fi
+
+%postun rest
+if [ $1 -ge 1 ]; then
+        service %{svc_zookeeper_rest} condrestart > /dev/null 2>&1
+fi
 
 #######################
 #### FILES SECTION ####
@@ -196,3 +226,10 @@ fi
 %{bin_zookeeper}/zookeeper-server-cleanup
 %doc %{doc_zookeeper}
 %{man_dir}/man1/zookeeper.1.*
+
+%files server
+%attr(0755,root,root) %{initd_dir}/%{svc_zookeeper}
+
+%files rest
+%attr(0755,root,root) %{initd_dir}/%{svc_zookeeper_rest}
+
