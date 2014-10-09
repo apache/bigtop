@@ -18,6 +18,7 @@
 
 package org.apache.bigtop.itest.hadoop.mapreduce
 
+import org.apache.bigtop.itest.failures.FailureVars
 import org.junit.BeforeClass
 import org.junit.AfterClass
 import static org.junit.Assert.assertNotNull
@@ -145,8 +146,20 @@ class TestHadoopExamples {
 
   @Test
   void testMRExample() {
+    if(FailureVars.instance.getRunFailures().equals("true")
+        || FailureVars.instance.getServiceRestart().equals("true")
+        || FailureVars.instance.getServiceKill().equals("true")
+        || FailureVars.instance.getNetworkShutdown().equals("true")) {
+      runFailureThread();
+    }
     sh.exec("hadoop jar $testJar $testName $testArgs");
     assertTrue("Example $testName $testJar $testName $testArgs failed", sh.getRet() == 0);
+  }
+
+  private void runFailureThread() {
+    FailureExecutor failureExecutor = new FailureExecutor();
+    Thread failureThread = new Thread(failureExecutor, "TestHadoopExamples");
+    failureThread.start();
   }
 }
 

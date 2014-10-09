@@ -65,3 +65,20 @@ on the machine with Bigtop workspace:
   - run following sample commands from your local machine to verify your setup:
       * ssh -i /test_bigtop_ssh_key bigtop@<some cluster node> sudo service crond stop
       * ssh -i /test_bigtop_ssh_key bigtop@<some cluster node> sudo service crond start
+
+The user can now run a series of cluster failures while running hadoop and mapreduce tests. This can be achieved by
+modifying the vars.properties file found in src/main/resources. To enable the properties file, use -DuseProperties=true
+when running tests (ex: mvn verify -f bigtop-tests/test-execution/longevity/pom.xml -DuseProperties=true
+-Dorg.apache.maven-failsafe-plugin.testInclude=**/TestDFSIO*/).
+
+For vars.properties:
+-Use testhost=name to specify host being tested on.
+-Use testremotehost=name to specify remote host name being tested on.
+-Use runall=true to run all cluster failures.
+-Use servicerestart=true to perform a cron or crond service restart.
+-Use servicekill=true to perform a service kill.
+-Use networkshutdown=true to perform network shutdown and restart.
+-Use service=name to specify which service being used for restart/kill. (default is crond).
+-Use failuredelay=time to specify time (in seconds) in between each failure function.
+-Use startdelay=time to specify time (in seconds) before first failure.
+-Use killduration=time to specify the duration (in seconds) a service is down for.

@@ -19,15 +19,19 @@
 package org.apache.bigtop.itest.failures
 
 import org.apache.bigtop.itest.shell.OS
+import org.junit.Before
 import org.junit.Test
 import org.apache.bigtop.itest.shell.Shell
 
 public class ClusterFailuresTest {
   private Shell rootShell = new Shell("/bin/bash", "root")
   private final int SLEEP_TIME = 100
-  private final String TEST_HOST = "localhost"
-  private final String TEST_REMOTE_HOST = "apache.org"
   private final String CRON_SERVICE
+  private String testHost;
+  private String testRemoteHost;
+  private String serviceRestart;
+  private String serviceKill;
+  private String networkShutdown;
 
   {
     switch (OS.linux_flavor) {
@@ -39,12 +43,22 @@ public class ClusterFailuresTest {
     }
   }
 
+  @Before
+  void configureVars() {
+    def f = new FailureVars();
+    testHost = f.getTestHost();
+    testRemoteHost = f.getTestRemoteHost();
+    serviceRestart = f.getServiceRestart();
+    serviceKill = f.getServiceKill();
+    networkShutdown = f.getNetworkShutdown();
+  }
+
   @Test
   void testServiceRestart() {
     startCron()
     assert isCronRunning(), "$CRON_SERVICE service isn't running before the test:"
 
-    def cronKilled = new ServiceRestartFailure([TEST_HOST], "$CRON_SERVICE")
+    def cronKilled = new ServiceRestartFailure([testHost], "$CRON_SERVICE")
     Thread t = new Thread(cronKilled)
     t.start()
 
@@ -81,7 +95,7 @@ public class ClusterFailuresTest {
     startCron()
     assert isCronRunning(), "$CRON_SERVICE service isn't running before the test:"
 
-    def cronKilled = new ServiceKilledFailure([TEST_HOST], "$CRON_SERVICE")
+    def cronKilled = new ServiceKilledFailure([testHost], "$CRON_SERVICE")
     Thread t = new Thread(cronKilled)
     t.start()
 
@@ -109,34 +123,34 @@ public class ClusterFailuresTest {
   @Test
   void testNetworkShutdown() {
     //make sure there are no blocking rules
-    rootShell.exec("iptables -D INPUT -s $TEST_REMOTE_HOST -j DROP")
-    rootShell.exec("iptables -D OUTPUT -d $TEST_REMOTE_HOST -j DROP")
+    rootShell.exec("iptables -D INPUT -s $testRemoteHost -j DROP")
+    rootShell.exec("iptables -D OUTPUT -d $testRemoteHost -j DROP")
 
-    assert isRemoteHostReachable(), "No ping to $TEST_REMOTE_HOST, which is used for network failures test:"
+    assert isRemoteHostReachable(), "No ping to $testRemoteHost, which is used for network failures test:"
 
-    def networkShutdown = new NetworkShutdownFailure(TEST_HOST, [TEST_REMOTE_HOST])
+    def networkShutdown = new NetworkShutdownFailure(testHost, [testRemoteHost])
     Thread t = new Thread(networkShutdown)
     t.start()
 
     while (isRemoteHostReachable()) {
-      println "$TEST_REMOTE_HOST is still reachable..."
+      println "$testRemoteHost is still reachable..."
       Thread.sleep(SLEEP_TIME)
     }
 
     try{
-      assert !isRemoteHostReachable(), "Connection to $TEST_REMOTE_HOST hasn't been killed as expected:"
-      println "$TEST_REMOTE_HOST isn't reachable. Good."
+      assert !isRemoteHostReachable(), "Connection to $testRemoteHost hasn't been killed as expected:"
+      println "$testRemoteHost isn't reachable. Good."
     } finally {
       t.interrupt()
     }
 
     while (!isRemoteHostReachable()) {
-      println "$TEST_REMOTE_HOST isn't reachable..."
+      println "$testRemoteHost isn't reachable..."
       Thread.sleep(SLEEP_TIME)
     }
 
-    assert isRemoteHostReachable(), "Connection to $TEST_REMOTE_HOST hasn't been restored after the test:"
-    println "$TEST_REMOTE_HOST is reachable again. Good."
+    assert isRemoteHostReachable(), "Connection to $testRemoteHost hasn't been restored after the test:"
+    println "$testRemoteHost is reachable again. Good."
   }
 
   private boolean isCronRunning() {
@@ -148,6 +162,6 @@ public class ClusterFailuresTest {
   }
 
   private boolean isRemoteHostReachable() {
-    return rootShell.exec("ping -qc 1 $TEST_REMOTE_HOST").ret == 0 ? true : false
+    return rootShell.exec("ping -qc 1 $testRemoteHost").ret == 0 ? true : false
   }
 }

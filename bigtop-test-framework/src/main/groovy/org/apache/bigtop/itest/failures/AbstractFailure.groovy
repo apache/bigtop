@@ -69,7 +69,7 @@ public abstract class AbstractFailure implements Runnable {
   /**
    * How long (in milliseconds) shall we wait before executing first failure.
    */
-  protected long startDelay = 0
+  protected long failureDelay = 0
 
   /**
    * How long failure thread waits before next check if failure is over and it should call restore commands.
@@ -88,11 +88,11 @@ public abstract class AbstractFailure implements Runnable {
    * Constructor allowing to set all params.
    *
    * @param hosts list of hosts the failure will be running against
-   * @param startDelay how long (in millisecs) failure will wait before starting
+   * @param failureDelay how long (in millisecs) failure will wait before starting
    */
-  public AbstractFailure(List<String> hosts, long startDelay) {
+  public AbstractFailure(List<String> hosts, long failureDelay) {
     this.hosts = hosts
-    this.startDelay = startDelay
+    this.failureDelay = failureDelay
   }
 
   /**
@@ -101,22 +101,36 @@ public abstract class AbstractFailure implements Runnable {
   @Override
   public void run() {
     try {
-      if (startDelay > 0) {
+      if(failureDelay > 0) {
         try {
-          Thread.sleep(startDelay)
+          Thread.sleep(failureDelay)
         } catch (InterruptedException e) {
-          Thread.currentThread().interrupt()
           return
         }
       }
+      if(FailureVars.instance.getServiceRestart().equals("true")
+        || FailureVars.instance.getServiceKill().equals("true")
+        || FailureVars.instance.getNetworkShutdown().equals("true")) {
+        runFailCommands()
+        Thread.sleep(FailureVars.instance.getKillDuration())
+      }
+      else {
+        if (failureDelay > 0) {
+          try {
+            Thread.sleep(failureDelay)
+          } catch (InterruptedException e) {
+            Thread.currentThread().interrupt()
+            return
+          }
+        }
+        runFailCommands()
 
-      runFailCommands()
-
-      while (!Thread.currentThread().isInterrupted()) {
-        try {
-          Thread.sleep(SLEEP_TIME)
-        } catch (InterruptedException e) {
-          return
+        while (!Thread.currentThread().isInterrupted()) {
+          try {
+            Thread.sleep(SLEEP_TIME)
+          } catch (InterruptedException e) {
+            return
+          }
         }
       }
     } finally {

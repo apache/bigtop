@@ -19,7 +19,10 @@
 package org.apache.bigtop.itest.iolongevity
 
 import org.apache.bigtop.itest.JarContent
+import org.apache.bigtop.itest.failures.FailureExecutor
+import org.apache.bigtop.itest.failures.FailureVars
 import org.apache.bigtop.itest.shell.Shell
+import org.junit.Before
 import org.junit.BeforeClass
 import org.junit.Test
 import static org.apache.bigtop.itest.LogErrorsUtils.logError
@@ -45,6 +48,11 @@ public class TestSLive {
   private static final String SLIVE_ROOT_FILE = "/test/slive"
   private final int numOfIterations = Integer.getInteger("numOfIterations", 1);
   static String[] sliveCmds
+
+  @Before
+  void configureVars() {
+    def failureVars = new FailureVars();
+  }
 
   @BeforeClass
   static void setUp() throws IOException {
@@ -97,6 +105,13 @@ public class TestSLive {
 
   @Test
   public void testSlive() {
+    if(FailureVars.instance.getRunFailures().equals("true")
+        || FailureVars.instance.getServiceRestart().equals("true")
+        || FailureVars.instance.getServiceKill().equals("true")
+        || FailureVars.instance.getNetworkShutdown().equals("true")) {
+      runFailureThread();
+    }
+
     String suffix = ""
     for (int counter = 0; counter < numOfIterations; counter++) {
       setupDir()
@@ -117,5 +132,11 @@ public class TestSLive {
       }
       suffix = "." + counter
     }
+  }
+
+  private void runFailureThread() {
+    FailureExecutor failureExecutor = new FailureExecutor();
+    Thread failureThread = new Thread(failureExecutor, "SLive");
+    failureThread.start();
   }
 }
