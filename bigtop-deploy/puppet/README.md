@@ -1,9 +1,60 @@
 # Puppet classes for deploying Hadoop
 
+## Intro
+
+BigTop currently uses puppet 2.7 (not 3.0).  For updates on 3.0 progress, track the 
+BIGTOP-1365 JIRA.
+
+Installing and starting hadoop services is non-trivial, and for this reason bigtop 
+
+packages puppet instrumentation for the various ecosystem components, which works
+
+synergistically with bigtop produced software packages.
+
+The puppet classes for bigtop deployment setup and deploy hadoop services.
+
+This includes tasks such as:
+
+- service installation
+- pointing slaves to masters (i.e. regionservers, nodemanagers to their respective master)
+- starting the services
+
+The mode of puppet is masterless : there is no fancy coordination happening behind the scenes.
+
+Puppet has a notion of a configuration directory, called config.  
+
+When running puppet apply, note that puppet's confdir is *underneath* the --confdir value.
+
+For example: 
+
+If you have site.csv in /etc/puppet/config, 
+
+Then you should use --confdir=/etc/puppet , and puppet finds the config dir underneath.
+
+As an end to end example, you can follow the vagrant-puppet recipes to see how to set up 
+
+a puppet managed bigtop hadoop installation.  Those examples are gauranteed to work and 
+
+serve as a pedagogical round trip to the way bigtop integrates packaging, deployment, and 
+
+testing all into one package.
+
+## Debugging
+
+If in any case, you need to debug these recipes, you can add notify("...") statements into 
+the puppet scripts.  
+
+In time, we will add more logging and debugging to these recipes.  Feel free to submit 
+
+a patch for this !
+
 ## Configuration
 
-manifests/init.pp expects configuration to live in CSV at $confdir/config/site.csv, 
-which takes the form
+As above, we defined a confdir (i.e. /etc/puppet/) which has a config/ directory in it.
+
+The heart of puppet is the manifests file.  This file ( manifests/init.pp ) 
+
+expects configuration to live in CSV at $confdir/config/site.csv, which takes the form
 
 <pre>
 key,value[,value2,value3]
