@@ -31,6 +31,7 @@ Source1:    LICENSE
 Source2:    bigtop-utils.default
 Source3:    bigtop-detect-javalibs
 Source4:    bigtop-detect-classpath
+Source5:    bigtop-monitor-service
 
 Requires:   bash
 
@@ -53,6 +54,7 @@ install -p -m 644 %{SOURCE1} .
 install -p -m 644 %{SOURCE2} .
 install -p -m 644 %{SOURCE3} .
 install -p -m 644 %{SOURCE4} .
+install -p -m 644 %{SOURCE5} .
 
 %build
 
@@ -64,6 +66,7 @@ install -d -p -m 755 $RPM_BUILD_ROOT/etc/default
 install -p -m 755 %{SOURCE0} $RPM_BUILD_ROOT%{lib_dir}/
 install -p -m 755 %{SOURCE3} $RPM_BUILD_ROOT%{lib_dir}/
 install -p -m 755 %{SOURCE4} $RPM_BUILD_ROOT%{lib_dir}/
+install -p -m 755 %{SOURCE5} $RPM_BUILD_ROOT%{lib_dir}/
 install -p -m 644 %{SOURCE2} $RPM_BUILD_ROOT/etc/default/bigtop-utils
 
 %clean
