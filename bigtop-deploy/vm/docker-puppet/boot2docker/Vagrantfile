@@ -1,0 +1,18 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+  config.vm.define "boot2docker" do |node|
+    node.vm.box = "yungsang/boot2docker"
+    node.vm.provider "virtualbox" do |vb|
+      vb.customize ["modifyvm", :id, "--memory", "4196"]
+    end
+    node.vm.network "forwarded_port", host: 50070, guest: 50070
+    node.vm.network "forwarded_port", host: 8088, guest: 8088
+    node.vm.network "forwarded_port", host: 60010, guest: 60010
+  end
+
+end

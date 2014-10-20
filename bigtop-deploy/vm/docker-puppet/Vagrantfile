@@ -1,0 +1,69 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+require 'fileutils'
+
+# number of instances
+$num_instances = 3
+# the bigtop puppet recipes
+$bigtop_puppet = "../../puppet"
+
+# load configuration from config.rb
+CONFIG = File.join(File.dirname(__FILE__), "config.rb")
+if File.exist?(CONFIG)
+  require CONFIG
+end
+
+ENV['VAGRANT_DEFAULT_PROVIDER'] ||= 'docker'
+
+VAGRANTFILE_API_VERSION = "2"
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+  # image definition
+  config.vm.define "image", autostart: false do |image|
+    image.vm.provider "docker" do |d|
+      d.build_dir = "."
+      d.build_args = ["-t","bigtop/ssh:centos-6.4"]
+      d.vagrant_machine = "boot2docker"
+      d.vagrant_vagrantfile = "./boot2docker/Vagrantfile"
+    end
+    image.ssh.username = "root"
+    image.ssh.port = 22
+  end
+
+  # nodes definition
+  (1..$num_instances).each do |i|
+    config.vm.define "bigtop#{i}" do |bigtop|
+      # docker container settings
+      bigtop.vm.provider "docker" do |d|
+        d.image = "bigtop/ssh:centos-6.4"
+	d.create_args = ["--privileged=true"]
+        if "#{i}" == "1"
+	  d.ports = ["50070:50070","8088:8088","60010:60010"]
+        end
+        d.vagrant_machine = "boot2docker"
+        d.vagrant_vagrantfile = "./boot2docker/Vagrantfile"
+      end
+      bigtop.ssh.username = "root"
+      bigtop.ssh.port = 22
+      bigtop.vm.hostname = "bigtop#{i}.docker"
+      bigtop.vm.synced_folder $bigtop_puppet, "/bigtop-puppet"
+    end
+  end
+
+end
