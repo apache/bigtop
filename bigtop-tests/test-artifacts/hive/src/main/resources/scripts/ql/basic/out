@@ -1,17 +1,19 @@
-DROP TABLE u_data
+DROP TABLE text_kv1
 
 
-CREATE TABLE u_data (
-  userid INT,
-  movieid INT,
-  rating INT,
-  unixtime STRING)
+CREATE TABLE text_kv1 (
+  value INT,
+  valueString STRING)
 ROW FORMAT DELIMITED
-FIELDS TERMINATED BY '\t'
+FIELDS TERMINATED BY '\001'
 STORED AS TEXTFILE
 
 
+LOAD DATA LOCAL INPATH 'seed_data_files/kv1.txt'
+OVERWRITE INTO TABLE text_kv1
+
+
 INSERT OVERWRITE DIRECTORY '/tmp/count'
-SELECT COUNT(1) FROM u_data
+SELECT COUNT(1) FROM text_kv1
 dfs -cat /tmp/count/*
-100000
+500

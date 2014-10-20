@@ -55,7 +55,7 @@ public class TestHiveSmokeBulk {
      "dest1","hbase_part","hbase_pushdown","merge_dynamic_part",
      "mp","myinput1","nzhang_part14","src_multi1","src_multi2",
      "srcbucket_mapjoin","srcpart_merge_dp","stats_src","t1",
-     "triples","u_data","union_out", "T1", "T2", "T3", "smb_input1",
+     "triples","text_kv1","union_out", "T1", "T2", "T3", "smb_input1",
      "smb_input2", "srcbucket_mapjoin_part", "bucketmapjoin_hash_result_1",
      "bucketmapjoin_hash_result_2", "bucketmapjoin_tmp_result",
      "srcbucket_mapjoin_part_2"].each { 
