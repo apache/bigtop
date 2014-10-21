@@ -25,6 +25,10 @@ This cluster can be used:
 - to test bigtop smoke tests
 - to test bigtop puppet recipes
 
+These containers start sshd daemons, which vagrant uses to provision and install the hadoop cluster.
+
+This has been verified on docker client 1.2.0, with api version 1.15, and vagrant 1.6.5 on Fedora 20 as well as Centos 6.
+
 ## Prerequisites
 
 ### OS X and Windows
@@ -45,10 +49,24 @@ This cluster can be used:
 
 * Create a 3 node Bigtop Hadoop cluster from scratch
 
+NOTE : SELinux can PREVENT you from ssh'ing into your docker container.
+As a brute force way to disable it  - remove it from vi /etc/sysconfig/docker arguments
+(fedora and centos may by default launch docker daemon with the --selinux-enabled option)!
+In the future, lets update this README with the RIGHT way to allow selinux without breaking 
+ssh into a docker container!
+
+```
+service docker restart
+docker pull bigtop/seed
+```
+
+No, you can start your cluster:
+
 ```
 cd bigtop/bigtop-deploy/vm/docker-puppet
 ./docker-hadoop.sh --build-image --create 3
 ```
+In case of errors you can attempt running as root, or else, ping the mailing list.
 
 ## USAGE
 
