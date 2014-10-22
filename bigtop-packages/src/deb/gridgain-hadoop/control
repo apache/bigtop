@@ -12,5 +12,23 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+Source: gridgain-hadoop
+Section: misc
+Priority: extra
+Maintainer: Bigtop <dev@bigtop.apache.org>
+Build-Depends: debhelper (>= 7.0.50~)
+Standards-Version: 3.8.0
+Homepage: http://github.com/gridgain/
 
-hadoop-hive::client { "test-hive": }
+Package: gridgain-hadoop
+Architecture: all
+Depends: adduser, hadoop-hdfs, hadoop-mapreduce, bigtop-utils (>= 0.7)
+Description: GridGain is an open-source, distributed, in-memory computation platform
+ .
+  * HDFS caching and MR performance booster
+
+Package: gridgain-hadoop-doc
+Architecture: all
+Section: doc
+Description: Gridgain Documentation
+ Documentation for Gridgain Hadoop Accelerator

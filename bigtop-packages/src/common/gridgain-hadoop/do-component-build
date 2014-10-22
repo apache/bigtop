@@ -1,3 +1,4 @@
+#!/bin/bash
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -13,4 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-hadoop-hive::client { "test-hive": }
+set -ex
+
+. `dirname $0`/bigtop.bom
+
+export MAVEN_OPTS="-Xmx512M -XX:MaxPermSize=512M"
+mvn clean package -DskipTests -DskipClientDocs -Dhadoop.version=$HADOOP_VERSION -Dgridgain.edition=hadoop

@@ -13,4 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-hadoop-hive::client { "test-hive": }
+export GRIDGAIN_HOME="/usr/lib/gridgain-hadoop"
+export GRIDGAIN_CONF_DIR="/etc/gridgain-hadoop/conf"
+
+export GRIDGAIN_PID_DIR="/var/run/gridgain-hadoop"
+export GRIDGAIN_LOG_DIR="/var/log/gridgain-hadoop"
+export GRIDGAIN_WORK_DIR="/var/run/gridgain-hadoop/work"
+export GRIDGAIN_IDENT_STRING=gridgain

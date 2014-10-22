@@ -13,4 +13,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-hadoop-hive::client { "test-hive": }
+class gridgain-hadoop {
+  define server() {
+    package { "gridgain-hadoop":
+      ensure => latest,
+    }
+
+    package { "gridgain-hadoop-service":
+      ensure => latest,
+    }
+
+    file { "/etc/default/gridgain-hadoop":
+      content => template("gridgain-hadoop/gridgain-hadoop"),
+      require => Package["gridgain-hadoop"],
+    }
+
+    service { "gridgain-hadoop":
+      ensure  => running,
+      require => [ Package["gridgain-hadoop", "gridgain-hadoop-service"], File["/etc/default/gridgain-hadoop"] ],
+    }
+  }
+}

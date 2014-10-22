@@ -629,7 +629,48 @@ easy to test, and efficient to run.</description>
       <hive-webhcat>/self</hive-webhcat>
     </deps>
   </hive-webhcat-server>
-  <hbase>
+  <gridgain-hadoop>
+    <metadata>
+      <summary>gridgain Hadoop accelerator. The system provides for in-memory caching of HDFS data and MR performance improvements</summary>
+      <description>GridGain is an open-source, distributed, in-memory computation platform
+
+        * HDFS caching and MR performance booster
+
+      </description>
+      <url>http://gridgain.org/</url>
+    </metadata>
+    <deps>
+      <hadoop-hdfs/>
+      <hadoop-mapreduce/>
+      <bigtop-utils/>
+    </deps>
+    <alternatives>
+      <gridgain-hadoop-conf>
+        <status>auto</status>
+        <link>/etc/gridgain-hadoop/conf</link>
+        <value>/etc/gridgain-hadoop/conf.dist</value>
+        <alt>/etc/gridgain-hadoop/conf.dist</alt>
+      </gridgain-hadoop-conf>
+    </alternatives>
+  </gridgain-hadoop>
+    <gridgain-hadoop-service>
+      <metadata>
+        <summary>Hadoop Accelerator platform</summary>
+        <description>GridGain is an open-source, distributed, in-memory computation platform</description>
+        <url>http://gridgain.org/</url>
+      </metadata>
+      <deps>
+        <gridgain-hadoop/>
+      </deps>
+    </gridgain-hadoop-service>
+    <gridgain-hadoop-doc>
+      <metadata>
+        <summary>Gridgain Documentation</summary>
+        <description>Documentation for GridGain platform</description>
+        <url>http://gridgain.org/</url>
+      </metadata>
+    </gridgain-hadoop-doc>
+    <hbase>
     <metadata>
       <summary>HBase is the Hadoop database. Use it when you need random, realtime read/write access to your Big Data. This project's goal is the hosting of very large tables -- billions of rows X millions of columns -- atop clusters of commodity hardware.</summary>
       <description>HBase is an open-source, distributed, column-oriented store modeled after Google' Bigtable: A Distributed Storage System for Structured Data by Chang et al. Just as Bigtable leverages the distributed data storage provided by the Google File System, HBase provides Bigtable-like capabilities on top of Hadoop. HBase includes:

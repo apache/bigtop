@@ -1,3 +1,5 @@
+#!/bin/bash
+#
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -13,4 +15,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-hadoop-hive::client { "test-hive": }
+SRC_PKG=gridgain-hadoop
+
+service_pkgdir=debian/$SRC_PKG
+debdir=$service_pkgdir/DEBIAN
+mkdir -p $service_pkgdir/etc/init.d/ $debdir
+sed -i -e "s|@GRIDGAIN_DAEMON@|gridgain-hadoop|" debian/gridgain-hadoop.svc
+echo bash debian/init.d.tmpl debian/gridgain-hadoop.svc deb $service_pkgdir/etc/init.d/$SRC_PKG
+bash debian/init.d.tmpl debian/gridgain-hadoop.svc deb $service_pkgdir/etc/init.d/$SRC_PKG
+
+sed -e "s|@GRIDGAIN_DAEMON@|gridgain-hadoop|" debian/service-postinst.tpl > $debdir/postinst
+sed -e "s|@GRIDGAIN_DAEMON@|gridgain-hadoop|" debian/service-postrm.tpl > $debdir/postrm
+echo /etc/init.d/$SRC_PKG > $debdir/conffiles
+chmod 755 $debdir/postinst $debdir/postrm $service_pkgdir/etc/init.d*
