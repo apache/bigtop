@@ -1,4 +1,0 @@
-sed -e 's#hdfs://[^/]*/#HDFS_URL/#' \
-    -e '/^CreateTime:/d'            \
-    -e '/transient_lastDdlTime/d'   \
-    -e 's#^Owner:.*$#Owner: USER#'
