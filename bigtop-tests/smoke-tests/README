@@ -9,8 +9,7 @@ customize and test Apache BigTop's hadoop distribution.
  - Debug tests easily and make logging extremely transparent.
  - Geneate easy to read test reports.
  - Run bigtop tests without needing a jar file.
- - (todo) Run bigtop tests easily, ideally without gradle/maven
-   (this can be done with gradle wrapper)
+ - Run bigtop tests easily, ideally without gradle/maven
 
 So overall, this framework makes testing with apache bigtop easy as well as fun!
 
@@ -34,7 +33,7 @@ Each directory is a gradle "subproject" mapping to an ecosystem component.
 If you specify, for example, "flume", then the flume test runs.  To test hive as well,
 you would specify "flume,hive", and so on.   An example is below:
 ```
-    gradle compileGroovy test -Dsmoke.tests=flume,hive --info
+    ./gradlew compileGroovy test -Dsmoke.tests=flume,hive --info
 ```
 
 The --info option is a nice feature to have here:  You can easily debug your tests this way,

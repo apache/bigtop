@@ -14,7 +14,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */apply plugin: 'groovy'
+ */
+apply plugin: 'groovy'
 
 repositories {
   mavenCentral()
@@ -67,7 +68,7 @@ subprojects {
   /**
   * Two important environment variables.
   *  java_home should be declared in all cases.
-  * itest can equal = 0.7.0, 0.8.0-SNAPSHOT,
+  * itest can be greater than or equal to = 0.7.0, 0.8.0
   */
   checkEnv(["JAVA_HOME","ITEST"])
   ext.itestVersion = System.getenv("ITEST")

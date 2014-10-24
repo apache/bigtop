@@ -41,6 +41,3 @@ mkdir -p /data/{1,2}
 yum -y install rng-tools
 sed -i.bak 's/EXTRAOPTIONS=\"\"/EXTRAOPTIONS=\"-r \/dev\/urandom\"/' /etc/sysconfig/rngd
 service rngd start
-
-echo "Now installing gradle"
-cd /bigtop-home && puppet apply --modulepath=./ -e "include bigtop_toolchain::gradle" # alias gradle=/usr/local/gradle/bin/gradle
