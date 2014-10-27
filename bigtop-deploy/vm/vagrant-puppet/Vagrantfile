@@ -86,7 +86,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
       if i==num_instances then
 	puts "creating provisioner directive for running tests"
-        bigtop.vm.provision "shell", path: "smoke-tests.sh"
+        bigtop.vm.provision "shell", path: "../smoke-tests.sh"
       else
         puts "Not creating provisioner directive for tests yet... only on vm #{i} of #{num_instances}"
       end

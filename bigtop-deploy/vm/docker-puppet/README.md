@@ -94,10 +94,16 @@ In case of errors you can attempt running as root, or else, ping the mailing lis
 ./docker-hadoop.sh --provision
 ```
 
-5) Chain your operations with-in one command.
+5) Run Bigtop smoke tests
 
 ```
-./docker-hadoop.sh --build-image --create 5 --destroy
+./docker-hadoop.sh --smoke-tests
+```
+
+6) Chain your operations with-in one command.
+
+```
+./docker-hadoop.sh --build-image --create 5 --smoke-tests --destroy
 ```
 
 Commands will be executed by following order:
@@ -106,23 +112,25 @@ Commands will be executed by following order:
 build-image => create 5 node cluster => destroy the cluster
 ```
 
-6) Run hbase-test.sh to evaluate the deployment.
+7) Run hbase-test.sh to evaluate the deployment.
 
 ```
 ../vagrant-puppet/hbase-test.sh
 ```
 
-7) See helper message:
+8) See helper message:
 
 ```
 ./docker-hadoop.sh -h
 usage: docker-hadoop.sh [options]
        -b, --build-image                         Build base Docker image for Bigtop Hadoop
                                                  (must be exectued at least once before creating cluster)
-       -c NUM_INSTANCES, --create NUM_INSTANCES  Create a docker based Bigtop Hadoop cluster
+       -c NUM_INSTANCES, --create=NUM_INSTANCES  Create a docker based Bigtop Hadoop cluster
        -p, --provision                           Deploy configuration changes
+       -s, --smoke-tests                         Run Bigtop smoke tests
        -d, --destroy                             Destroy the cluster
        -h, --help
+
 ```
 
 ##Configure Apache Hadoop ecosystem components

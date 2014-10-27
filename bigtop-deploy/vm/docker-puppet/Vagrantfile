@@ -20,8 +20,6 @@ require 'fileutils'
 
 # number of instances
 $num_instances = 3
-# the bigtop puppet recipes
-$bigtop_puppet = "../../puppet"
 
 # load configuration from config.rb
 CONFIG = File.join(File.dirname(__FILE__), "config.rb")
@@ -30,6 +28,8 @@ if File.exist?(CONFIG)
 end
 
 ENV['VAGRANT_DEFAULT_PROVIDER'] ||= 'docker'
+
+Vagrant.require_version ">= 1.6.0"
 
 VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
@@ -62,7 +62,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       bigtop.ssh.username = "root"
       bigtop.ssh.port = 22
       bigtop.vm.hostname = "bigtop#{i}.docker"
-      bigtop.vm.synced_folder $bigtop_puppet, "/bigtop-puppet"
+      bigtop.vm.synced_folder "../../../", "/bigtop-home"
     end
   end
 

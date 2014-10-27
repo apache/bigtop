@@ -4,8 +4,9 @@ usage() {
     echo "usage: $PROG [options]"
     echo "       -b, --build-image                         Build base Docker image for Bigtop Hadoop"
     echo "                                                 (must be exectued at least once before creating cluster)"
-    echo "       -c NUM_INSTANCES, --create=NUM_INSTANCES  Create a docker based Bigtop Hadoop cluster"
+    echo "       -c NUM_INSTANCES, --create=NUM_INSTANCES  Create a Docker based Bigtop Hadoop cluster"
     echo "       -p, --provision                           Deploy configuration changes"
+    echo "       -s, --smoke-tests                         Run Bigtop smoke tests"
     echo "       -d, --destroy                             Destroy the cluster"
     echo "       -h, --help"
     exit 1
@@ -46,17 +47,23 @@ provision() {
     wait
 }
 
+smoke-tests() {
+    nodes=(`vagrant status |grep running |awk '{print $1}'`)
+    echo "/bigtop-home/bigtop-deploy/vm/smoke-tests.sh" |vagrant ssh ${nodes[0]}
+}
+
+
 destroy() {
     vagrant destroy -f
-    rm -f ./hosts
+    rm -rf ./hosts ./config
 }
 
 bigtop-puppet() {
-    echo "puppet apply -d --confdir=/bigtop-puppet --modulepath=/bigtop-puppet/modules /bigtop-puppet/manifests/site.pp" |vagrant ssh $1
+    echo "puppet apply -d --confdir=/vagrant --modulepath=/bigtop-home/bigtop-deploy/puppet/modules /bigtop-home/bigtop-deploy/puppet/manifests/site.pp" |vagrant ssh $1
 }
 
 PROG=`basename $0`
-ARGS=`getopt -o "bc:pdh" -l "build-image,create:,provision,destroy,help" -n $PROG -- "$@"`
+ARGS=`getopt -o "bc:psdh" -l "build-image,create:,provision,smoke-tests,destroy,help" -n $PROG -- "$@"`
 
 if [ $? -ne 0 ]; then
     usage
@@ -74,6 +81,9 @@ while true; do
         shift 2;;
     -p|--provision)
         provision
+        shift;;
+    -s|--smoke-tests)
+        smoke-tests
         shift;;
     -d|--destroy)
 	destroy

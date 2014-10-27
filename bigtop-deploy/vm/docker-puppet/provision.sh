@@ -28,7 +28,8 @@ mv /etc/hosts /etc/hosts.bak
 ln -s /vagrant/hosts /etc/hosts
 
 # Prepare puppet configuration file
-cat > /bigtop-puppet/config/site.csv << EOF
+mkdir /vagrant/config
+cat > /vagrant/config/site.csv << EOF
 hadoop_head_node,$1
 hadoop_storage_dirs,/data/1,/data/2
 bigtop_yumrepo_uri,http://bigtop01.cloudera.org:8080/view/Releases/job/Bigtop-0.8.0/label=centos6/6/artifact/output/
@@ -43,3 +44,6 @@ mkdir -p /data/{1,2}
 yum -y install rng-tools
 sed -i.bak 's/EXTRAOPTIONS=\"\"/EXTRAOPTIONS=\"-r \/dev\/urandom\"/' /etc/sysconfig/rngd
 service rngd start
+
+echo "Now installing gradle"
+cd /bigtop-home && puppet apply --modulepath=./ -e "include bigtop_toolchain::gradle" # alias gradle=/usr/local/gradle/bin/gradle
