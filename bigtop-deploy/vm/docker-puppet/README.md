@@ -35,7 +35,7 @@ This has been verified on docker client 1.2.0, with api version 1.15, and vagran
 
 * Install [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 
-* Install [Vagrant](http://www.vagrantup.com/downloads.html)
+* Install [Vagrant](http://www.vagrantup.com/downloads.html). Need version 1.6.5 or higher.
 
 ### Linux
 
@@ -57,10 +57,10 @@ ssh into a docker container!
 
 ```
 service docker restart
-docker pull bigtop/seed
+docker pull bigtop/seed:centos-6.4
 ```
 
-No, you can start your cluster:
+Now, you can start your cluster:
 
 ```
 cd bigtop/bigtop-deploy/vm/docker-puppet

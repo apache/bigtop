@@ -63,20 +63,21 @@ bigtop-puppet() {
 }
 
 PROG=`basename $0`
-ARGS=`getopt -o "bc:psdh" -l "build-image,create:,provision,smoke-tests,destroy,help" -n $PROG -- "$@"`
 
-if [ $? -ne 0 ]; then
+if [ $# -eq 0 ]; then
     usage
 fi
 
-eval set -- "$ARGS"
-
-while true; do
+while [ $# -gt 0 ]; do
     case "$1" in
     -b|--build-image)
-	build-image
+        build-image
         shift;;
     -c|--create)
+        if [ $# -lt 2 ]; then
+          echo "Create requires a number" 1>&2
+          usage
+        fi
         create $2
         shift 2;;
     -p|--provision)
@@ -86,13 +87,13 @@ while true; do
         smoke-tests
         shift;;
     -d|--destroy)
-	destroy
+        destroy
         shift;;
     -h|--help)
         usage
         shift;;
-    --)
-        shift
-        break;;
+    *)
+        echo "Unknown argument: '$1'" 1>&2
+        usage;;
     esac
 done
