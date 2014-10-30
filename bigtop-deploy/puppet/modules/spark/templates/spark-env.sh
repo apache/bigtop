@@ -38,8 +38,8 @@
 export SPARK_LAUNCH_WITH_SCALA=0
 export SPARK_LIBRARY_PATH=${SPARK_HOME}/lib
 export SCALA_LIBRARY_PATH=${SPARK_HOME}/lib
-export SPARK_MASTER_WEBUI_PORT=<%= master_ui_port %>
-export SPARK_MASTER_PORT=<%= master_port %>
+export SPARK_MASTER_WEBUI_PORT=<%= @master_ui_port %>
+export SPARK_MASTER_PORT=<%= @master_port %>
 
 ### Comment above 2 lines and uncomment the following if
 ### you want to run with scala version, that is included with the package
@@ -47,6 +47,6 @@ export SPARK_MASTER_PORT=<%= master_port %>
 #export PATH=$PATH:$SCALA_HOME/bin
 
 ### change the following to specify a real cluster's Master host
-export STANDALONE_SPARK_MASTER_HOST=<%= master_host %>
+export STANDALONE_SPARK_MASTER_HOST=<%= @master_host %>
 
 

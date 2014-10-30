@@ -42,7 +42,7 @@
     <value>true</value>
   </property>
 
-<% if has_variable?("hdfs_shortcut_reader_user") %>
+<% if @hdfs_shortcut_reader_user %>
   <property>
     <name>dfs.client.read.shortcircuit</name>
     <value>true</value>

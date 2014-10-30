@@ -29,7 +29,7 @@ under the License.
 
   <property>
     <name>giraph.zkList</name>
-    <value><%= zookeeper_quorum %></value>
+    <value><%= @zookeeper_quorum %></value>
     <description>Prefer external Zookeeper over the embedded one</description>
   </property>
 </configuration>

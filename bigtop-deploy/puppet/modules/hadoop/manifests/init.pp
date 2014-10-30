@@ -196,7 +196,7 @@ class hadoop {
     }
 
     file { "/etc/hadoop-httpfs/conf/httpfs-signature.secret":
-      content => inline_template("<%= secret %>"),
+      content => inline_template("<%= @secret %>"),
       require => [Package["hadoop-httpfs"]],
     }
 
@@ -254,7 +254,7 @@ class hadoop {
 
   define namenode ($host = $fqdn , $port = "8020", $thrift_port= "10090", $auth = "simple", $dirs = ["/tmp/nn"], $ha = 'disabled', $zk = '') {
 
-    $first_namenode = inline_template("<%= Array(host)[0] %>")
+    $first_namenode = inline_template("<%= Array(@host)[0] %>")
     $hadoop_namenode_host = $host
     $hadoop_namenode_port = $port
     $hadoop_namenode_thrift_port = $thrift_port
@@ -354,7 +354,7 @@ class hadoop {
       exec { "namenode format":
         user => "hdfs",
         command => "/bin/bash -c 'yes Y | hdfs namenode -format >> /var/lib/hadoop-hdfs/nn.format.log 2>&1'",
-        creates => "${namenode_data_dirs[0]}/current/VERSION",
+        creates => "${dirs[0]}/current/VERSION",
         require => [ Package["hadoop-hdfs-namenode"], File[$dirs], File["/etc/hadoop/conf/hdfs-site.xml"] ],
         tag     => "namenode-format",
       } 

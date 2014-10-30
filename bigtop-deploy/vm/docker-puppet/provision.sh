@@ -17,7 +17,7 @@
 
 # Install puppet agent
 yum -y install http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm
-yum -y install puppet-2.7.24-1.el6.noarch
+yum -y install puppet
 
 sysctl kernel.hostname=`hostname -f`
 

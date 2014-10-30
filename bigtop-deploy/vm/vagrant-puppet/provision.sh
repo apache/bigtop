@@ -17,7 +17,7 @@
 
 # Install puppet agent
 yum -y install http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm
-yum -y install puppet-2.7.23-1.el6.noarch
+yum -y install puppet
 
 service iptables stop
 chkconfig iptables off

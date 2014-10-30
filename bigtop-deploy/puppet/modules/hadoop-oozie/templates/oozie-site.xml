@@ -176,7 +176,7 @@
 
     <property>
         <name>oozie.service.HadoopAccessorService.kerberos.enabled</name>
-        <value><%= if (kerberos_realm != "") ; "true" else "false" end %></value>
+        <value><%= if (@kerberos_realm != "") ; "true" else "false" end %></value>
         <description>
             Indicates if Oozie is configured to use Kerberos.
         </description>
@@ -184,7 +184,7 @@
 
     <property>
         <name>local.realm</name>
-        <value><%= kerberos_realm %></value>
+        <value><%= @kerberos_realm %></value>
         <description>
             Kerberos Realm used by Oozie and Hadoop. Using 'local.realm' to be aligned with Hadoop configuration
         </description>
@@ -200,7 +200,7 @@
 
     <property>
         <name>oozie.service.HadoopAccessorService.kerberos.principal</name>
-        <value>${user.name}/<%= fqdn %>@${local.realm}</value>
+        <value>${user.name}/<%= @fqdn %>@${local.realm}</value>
         <description>
             Kerberos principal for Oozie service.
         </description>
@@ -258,7 +258,7 @@
 
     <property>
         <name>oozie.authentication.type</name>
-        <value><%= kerberos_realm.empty? ? "simple" : "kerberos" %></value>
+        <value><%= @kerberos_realm.empty? ? "simple" : "kerberos" %></value>
         <description>
             Defines authentication used for Oozie HTTP endpoint.
             Supported values are: simple | kerberos | #AUTHENTICATION_HANDLER_CLASSNAME#
@@ -306,7 +306,7 @@
 
     <property>
         <name>oozie.authentication.kerberos.principal</name>
-        <value>HTTP/<%= fqdn %>@${local.realm}</value>
+        <value>HTTP/<%= @fqdn %>@${local.realm}</value>
         <description>
             Indicates the Kerberos principal to be used for HTTP endpoint.
             The principal MUST start with 'HTTP/' as per Kerberos HTTP SPNEGO specification.

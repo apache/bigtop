@@ -16,41 +16,41 @@
 <!-- See the License for the specific language governing permissions and      -->
 <!-- limitations under the License.                                           -->
 
-<% namenode_hosts = Array(hadoop_namenode_host) -%>
+<% namenode_hosts = Array(@hadoop_namenode_host) -%>
 <configuration>
 
   <property>
     <!-- URI of NN. Fully qualified. No IP.-->
     <name>fs.defaultFS</name>
 <% if @ha != "disabled" -%>
-    <value>hdfs://<%= nameservice_id %></value>
+    <value>hdfs://<%= @nameservice_id %></value>
 <% else -%>
-    <value>hdfs://<%= namenode_hosts[0] %>:<%= hadoop_namenode_port%></value>
+    <value>hdfs://<%= namenode_hosts[0] %>:<%= @hadoop_namenode_port %></value>
 <% end -%>
   </property>
 
 
   <property>
     <name>hadoop.security.authentication</name>
-    <value><%= hadoop_security_authentication %></value>
+    <value><%= @hadoop_security_authentication %></value>
   </property>
 
-<% if hadoop_security_authentication == "kerberos" %>
+<% if @hadoop_security_authentication == "kerberos" %>
   <property>
     <name>hadoop.security.authorization</name>
     <value>true</value>
   </property>
 <% end %>
 
-<% if has_variable?("hadoop_security_group_mapping") %>
+<% if @hadoop_security_group_mapping %>
   <property>
     <name>hadoop.security.group.mapping</name>
-    <value><%= hadoop_security_group_mapping %></value>
+    <value><%= @hadoop_security_group_mapping %></value>
   </property>
 <% end %>
 
-<% if has_variable?("hadoop_core_proxyusers") %>
-<% hadoop_core_proxyusers.sort.each do |superuser, data| %>
+<% if @hadoop_core_proxyusers %>
+<% @hadoop_core_proxyusers.sort.each do |superuser, data| %>
   <property>
     <name>hadoop.proxyuser.<%= superuser %>.hosts</name>
     <value><%= data['hosts'] %></value>
@@ -62,7 +62,7 @@
 <% end %>
 
 <% end %>
-<% if has_variable?("hadoop_snappy_codec") %>
+<% if @hadoop_snappy_codec %>
   <property>
     <name>io.compression.codecs</name>
     <value>org.apache.hadoop.io.compress.GzipCodec,org.apache.hadoop.io.compress.DefaultCodec,org.apache.hadoop.io.compress.BZip2Codec,org.apache.hadoop.io.compress.SnappyCodec</value>
@@ -73,17 +73,17 @@
   </property-->
 <% end %>
 
-<% if has_variable?("hadoop_config_fs_inmemory_size_mb") %>
+<% if @hadoop_config_fs_inmemory_size_mb %>
   <property>
     <name>fs.inmemory.size.mb</name>
-    <value><%= hadoop_config_fs_inmemory_size_mb %></value>
+    <value><%= @hadoop_config_fs_inmemory_size_mb %></value>
   </property>
 <% end %>
 
-<% if has_variable?("hadoop_config_io_file_buffer_size") %>
+<% if @hadoop_config_io_file_buffer_size %>
   <property>
     <name>io.file.buffer.size</name>
-    <value><%= hadoop_config_io_file_buffer_size %></value>
+    <value><%= @hadoop_config_io_file_buffer_size %></value>
   </property>
 <% end %>
 

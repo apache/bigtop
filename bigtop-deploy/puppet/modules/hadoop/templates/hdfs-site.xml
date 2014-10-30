@@ -16,7 +16,7 @@
 <!-- See the License for the specific language governing permissions and      -->
 <!-- limitations under the License.                                           -->
 
-<% namenode_hosts = Array(hadoop_namenode_host) -%>
+<% namenode_hosts = Array(@hadoop_namenode_host) -%>
 <configuration>
 
 <% if @ha != "disabled" -%>
@@ -27,57 +27,57 @@
     <name>dfs.ha.automatic-failover.enabled</name>
     <value>true</value>
   </property>
-<%   if has_variable?("zk") -%>
+<%   if @zk -%>
   <property>
     <name>ha.zookeeper.quorum</name>
-    <value><%= zk %></value>
+    <value><%= @zk %></value>
   </property>
 <%   end -%>
 <%   end -%>
 
   <property> 
     <name>dfs.federation.nameservices</name>
-    <value><%= nameservice_id %></value>
+    <value><%= @nameservice_id %></value>
   </property>
 
   <property>
-    <name>dfs.ha.namenodes.<%= nameservice_id %></name>
+    <name>dfs.ha.namenodes.<%= @nameservice_id %></name>
     <value><%= (1..namenode_hosts.length).map { |n| "nn#{n}" }.join(",") %></value>
   </property>
 
 <%   namenode_hosts.each_with_index do |host,idx| -%>
   <property>
-    <name>dfs.namenode.rpc-address.<%= nameservice_id %>.nn<%= idx+1 %></name>
-    <value><%= host %>:<%= hadoop_namenode_port %></value>
+    <name>dfs.namenode.rpc-address.<%= @nameservice_id %>.nn<%= idx+1 %></name>
+    <value><%= host %>:<%= @hadoop_namenode_port %></value>
   </property>
  
   <property>
-    <name>dfs.namenode.http-address.<%= nameservice_id %>.nn<%= idx+1 %></name>
+    <name>dfs.namenode.http-address.<%= @nameservice_id %>.nn<%= idx+1 %></name>
     <value><%= host %>:50070</value>
   </property>
 
 <%   end -%>
-<%   if has_variable?("shared_edits_dir") -%>
+<%   if @shared_edits_dir -%>
   <property>
     <name>dfs.namenode.shared.edits.dir</name>
-    <value><%= shared_edits_dir %></value>
+    <value><%= @shared_edits_dir %></value>
   </property>
 
 <%   end -%>
   <property>
-    <name>dfs.client.failover.proxy.provider.<%= nameservice_id %></name>
+    <name>dfs.client.failover.proxy.provider.<%= @nameservice_id %></name>
     <value>org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider</value>
   </property>
 
-<%   if has_variable?("sshfence_privkey") -%>
+<%   if @sshfence_privkey -%>
   <property>
     <name>dfs.ha.fencing.methods</name>
-    <value>sshfence(<%= sshfence_user %>)</value>
+    <value>sshfence(<%= @sshfence_user %>)</value>
   </property>
 
   <property>
     <name>dfs.ha.fencing.ssh.private-key-files</name>
-    <value><%= sshfence_keypath %></value>
+    <value><%= @sshfence_keypath %></value>
   </property>
 
 <%   else -%>
@@ -87,7 +87,7 @@
   </property>
 
 <%   end -%>
-<% elsif hadoop_security_authentication == "kerberos" -%>
+<% elsif @hadoop_security_authentication == "kerberos" -%>
   <property>
     <name>dfs.block.access.token.enable</name>
     <value>true</value>
@@ -108,11 +108,11 @@
   </property>
   <property>
     <name>dfs.namenode.kerberos.principal</name>
-    <value>hdfs/_HOST@<%= kerberos_realm %></value>
+    <value>hdfs/_HOST@<%= @kerberos_realm %></value>
   </property>
   <property>
     <name>dfs.namenode.kerberos.https.principal</name>
-    <value>host/_HOST@<%= kerberos_realm %></value>
+    <value>host/_HOST@<%= @kerberos_realm %></value>
   </property>
   <property>
     <name>dfs.web.authentication.kerberos.keytab</name>
@@ -120,7 +120,7 @@
   </property>
   <property>
     <name>dfs.web.authentication.kerberos.principal</name>
-    <value>HTTP/_HOST@<%= kerberos_realm %></value>
+    <value>HTTP/_HOST@<%= @kerberos_realm %></value>
   </property>
 
   
@@ -143,11 +143,11 @@
   </property>
   <property>
     <name>dfs.secondary.namenode.kerberos.principal</name>
-    <value>hdfs/_HOST@<%= kerberos_realm %></value>
+    <value>hdfs/_HOST@<%= @kerberos_realm %></value>
   </property>
   <property>
     <name>dfs.secondary.namenode.kerberos.https.principal</name>
-    <value>host/_HOST@<%= kerberos_realm %></value>
+    <value>host/_HOST@<%= @kerberos_realm %></value>
   </property>
   
   <!-- DataNode security config -->
@@ -169,28 +169,28 @@
   </property>
   <property>
     <name>dfs.datanode.kerberos.principal</name>
-    <value>hdfs/_HOST@<%= kerberos_realm %></value>
+    <value>hdfs/_HOST@<%= @kerberos_realm %></value>
   </property>
   <property>
     <name>dfs.datanode.kerberos.https.principal</name>
-    <value>host/_HOST@<%= kerberos_realm %></value>
+    <value>host/_HOST@<%= @kerberos_realm %></value>
   </property>
 
 <% end -%>
   <!-- name node -->
   <property>
     <name>dfs.data.dir</name>
-    <value><%= hdfs_data_dirs.join(",") %></value>
+    <value><%= @hdfs_data_dirs.join(",") %></value>
   </property>
 
-<% if has_variable?("hdfs_support_append") %>
+<% if @hdfs_support_append %>
   <property>
     <name>dfs.support.append</name>
-    <value><%= hdfs_support_append %></value>
+    <value><%= @hdfs_support_append %></value>
   </property>
 <% end %>
 
-<% if has_variable?("hdfs_shortcut_reader_user") %>
+<% if @hdfs_shortcut_reader_user %>
   <property>
     <name>dfs.client.read.shortcircuit</name>
     <value>true</value>
@@ -198,13 +198,13 @@
 
   <property>
     <name>dfs.block.local-path-access.user</name>
-    <value><%= hdfs_shortcut_reader_user %></value>
+    <value><%= @hdfs_shortcut_reader_user %></value>
   </property>
 <% end %>
  
   <property>
     <name>dfs.name.dir</name>
-    <value><%= namenode_data_dirs.join(",") %></value>
+    <value><%= @namenode_data_dirs.join(",") %></value>
   </property>
 
   <property>
@@ -214,28 +214,28 @@
   </property>
 
   <!-- Enable Hue plugins -->
-<% if has_variable?("hadoop_dfs_namenode_plugins") -%>
+<% if @hadoop_dfs_namenode_plugins -%>
   <property>
     <name>dfs.namenode.plugins</name>
-    <value><%= hadoop_dfs_namenode_plugins %></value>
+    <value><%= @hadoop_dfs_namenode_plugins %></value>
     <description>Comma-separated list of namenode plug-ins to be activated.
     </description>
   </property>
 
 <% end -%>
-<% if has_variable?("hadoop_dfs_datanode_plugins") -%>
+<% if @hadoop_dfs_datanode_plugins -%>
   <property>
     <name>dfs.datanode.plugins</name>
-    <value><%= hadoop_dfs_datanode_plugins %></value>
+    <value><%= @hadoop_dfs_datanode_plugins %></value>
     <description>Comma-separated list of datanode plug-ins to be activated.
     </description>
   </property>
 
 <% end -%>
-<% if has_variable?("hadoop_namenode_thrift_port") -%>
+<% if @hadoop_namenode_thrift_port -%>
   <property>
     <name>dfs.thrift.address</name>
-    <value>0.0.0.0:<%= hadoop_namenode_thrift_port %></value>
+    <value>0.0.0.0:<%= @hadoop_namenode_thrift_port %></value>
   </property>
 
 <% end -%>
@@ -247,17 +247,17 @@
   </property>
 
   <!-- Configurations for large cluster -->
-<% if has_variable?("hadoop_config_dfs_block_size") -%>
+<% if @hadoop_config_dfs_block_size -%>
   <property>
     <name>dfs.block.size</name>
-    <value><%= hadoop_config_dfs_block_size %></value>
+    <value><%= @hadoop_config_dfs_block_size %></value>
   </property>
 
 <% end -%>
-<% if has_variable?("hadoop_config_namenode_handler_count") -%>
+<% if @hadoop_config_namenode_handler_count -%>
   <property>
     <name>dfs.namenode.handler.count</name>
-    <value><%= hadoop_config_namenode_handler_count %></value>
+    <value><%= @hadoop_config_namenode_handler_count %></value>
   </property>
 
 <% end -%>

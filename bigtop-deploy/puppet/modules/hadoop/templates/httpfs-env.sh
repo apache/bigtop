@@ -30,7 +30,7 @@
 
 # The HTTP port used by HttpFS
 #
-export HTTPFS_HTTP_PORT=<%= hadoop_httpfs_port %>
+export HTTPFS_HTTP_PORT=<%= @hadoop_httpfs_port %>
 
 # The Admin port used by HttpFS
 #

@@ -18,11 +18,11 @@
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 
 <configuration>
-<% if hadoop_security_authentication == "kerberos" %>
+<% if @hadoop_security_authentication == "kerberos" %>
   <!-- JobTracker security configs -->
   <property>
     <name>yarn.resourcemanager.principal</name>
-    <value>yarn/_HOST@<%= kerberos_realm %></value>
+    <value>yarn/_HOST@<%= @kerberos_realm %></value>
   </property>
   <property>
     <name>yarn.resourcemanager.keytab</name>
@@ -31,7 +31,7 @@
 
   <property>
     <name>yarn.web-proxy.principal</name>
-    <value>yarn/_HOST@<%= kerberos_realm %></value>
+    <value>yarn/_HOST@<%= @kerberos_realm %></value>
   </property>
   <property>
     <name>yarn.web-proxy.keytab</name>
@@ -40,7 +40,7 @@
 
   <property>
     <name>yarn.nodemanager.principal</name>
-    <value>yarn/_HOST@<%= kerberos_realm %></value>
+    <value>yarn/_HOST@<%= @kerberos_realm %></value>
   </property>
   <property>
     <name>yarn.nodemanager.keytab</name>
@@ -58,22 +58,22 @@
 
   <property>
     <name>yarn.web-proxy.address</name>
-    <value><%= hadoop_ps_host %>:<%= hadoop_ps_port %></value>
+    <value><%= @hadoop_ps_host %>:<%= @hadoop_ps_port %></value>
   </property> 
 
   <property>
     <name>yarn.resourcemanager.resource-tracker.address</name>
-    <value><%= hadoop_rm_host %>:<%= hadoop_rt_port %></value>
+    <value><%= @hadoop_rm_host %>:<%= @hadoop_rt_port %></value>
   </property>
 
   <property>
     <name>yarn.resourcemanager.address</name>
-    <value><%= hadoop_rm_host %>:<%= hadoop_rm_port %></value>
+    <value><%= @hadoop_rm_host %>:<%= @hadoop_rm_port %></value>
   </property>
 
   <property>
     <name>yarn.resourcemanager.scheduler.address</name>
-    <value><%= hadoop_rm_host %>:<%= hadoop_sc_port %></value>
+    <value><%= @hadoop_rm_host %>:<%= @hadoop_sc_port %></value>
   </property>
 
   <property>
@@ -98,7 +98,7 @@
 
   <property>
     <name>yarn.nodemanager.local-dirs</name>
-    <value><%= yarn_data_dirs.join(",") %></value>
+    <value><%= @yarn_data_dirs.join(",") %></value>
     <final>true</final>
   </property>
 

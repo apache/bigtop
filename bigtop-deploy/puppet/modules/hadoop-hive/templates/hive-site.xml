@@ -26,18 +26,18 @@
 
 <!-- Hive Execution Parameters -->
 
-<% if hbase_master != "" %>
+<% if @hbase_master != "" %>
 <property>
   <name>hbase.master</name>
-  <value><%= hbase_master %></value>
+  <value><%= @hbase_master %></value>
   <description>http://wiki.apache.org/hadoop/Hive/HBaseIntegration</description>
 </property>
 <% end %>
 
-<% if hbase_zookeeper_quorum != "" %>
+<% if @hbase_zookeeper_quorum != "" %>
 <property>
   <name>hbase.zookeeper.quorum</name>
-  <value><%= hbase_zookeeper_quorum %></value>
+  <value><%= @hbase_zookeeper_quorum %></value>
   <description>http://wiki.apache.org/hadoop/Hive/HBaseIntegration</description>
 </property>
 <% end %>

@@ -9,7 +9,7 @@ export HIVE_HOME=/usr/lib/hive/
 export PIG_HOME=/usr/lib/pig/
 export FLUME_HOME=/usr/lib/flume/
 export HIVE_CONF_DIR=/etc/hive/conf/
-export JAVA_HOME="/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.65.x86_64/"
+export JAVA_HOME="/usr/lib/jvm/java-openjdk/"
 export MAHOUT_HOME="/usr/lib/mahout"
 export ITEST="0.7.0"
 
