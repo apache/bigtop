@@ -40,7 +40,8 @@ JAVA7_HOME_CANDIDATES='\
     /usr/java/jre1.7* \
     /usr/lib/jvm/j2sdk1.7-oracle \
     /usr/lib/jvm/j2sdk1.7-oracle/jre \
-    /usr/lib/jvm/java-7-oracle*'
+    /usr/lib/jvm/java-7-oracle* \
+    /usr/lib/jdk7-latest'
 
 OPENJAVA7_HOME_CANDIDATES='\
     /usr/lib/jvm/java-1.7.0-openjdk* \
