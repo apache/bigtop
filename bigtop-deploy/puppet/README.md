@@ -2,8 +2,7 @@
 
 ## Intro
 
-BigTop currently uses puppet 2.7 (not 3.0).  For updates on 3.0 progress, track the 
-BIGTOP-1365 JIRA.
+BigTop is now using Puppet 3.x (BIGTOP-1047)!
 
 Installing and starting hadoop services is non-trivial, and for this reason bigtop 
 
