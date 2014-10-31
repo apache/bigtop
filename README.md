@@ -21,6 +21,11 @@ limitations under the License.
  
 The primary goal of Apache Bigtop is to build a community around the packaging and interoperability testing of Apache Hadoop-related projects. This includes testing at various levels (packaging, platform, runtime, upgrade, etc...) developed by a community with a focus on the system as a whole, rather than individual projects.
 
+Immediately Get Started with Deployment and Smoke Testing of BigTop
+===================================================================
+
+The simplest way to get a feel for how bigtop works, is to just cd into `bigtop-deploy/vm` and try out the recipes under vagrant-puppet, docker-puppet, and so on.  Each one rapidly spins up, and runs the bigtop smoke tests on, a local bigtop based big data distribution.  Once you get the gist, you can hack around with the recipes to learn how the puppet/rpm/smoke-tests all work together, going deeper into the components you are interested in as described below.
+
 Quick overview of source code directories
 =========================================
 
