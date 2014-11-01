@@ -188,7 +188,7 @@ Requires: insserv, python-xml
 %else
 BuildRequires: /sbin/runuser, sqlite-devel, openldap-devel, mysql-devel, openssl-devel
 # Required for init scripts
-Requires: redhat-lsb
+Requires: /lib/lsb/init-functions
 %endif
 
 # Disable automatic Provides generation - otherwise we will claim to provide all of the

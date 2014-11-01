@@ -64,7 +64,7 @@ Requires: insserv
 
 %else
 # Required for init scripts
-Requires: redhat-lsb
+Requires: /lib/lsb/init-functions
 
 %global initd_dir %{_sysconfdir}/rc.d/init.d
 
