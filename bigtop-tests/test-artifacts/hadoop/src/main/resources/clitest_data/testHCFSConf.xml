@@ -49,10 +49,6 @@
       </cleanup-commands>
       <comparators>
         <comparator>
-          <type>TokenComparator</type>
-          <expected-output>Found 1 items</expected-output>
-        </comparator>
-        <comparator>
           <type>RegexpComparator</type>
           <expected-output>^-rw-r--r--( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/file1</expected-output>
         </comparator>
@@ -70,10 +66,6 @@
         <command>-fs NAMENODE -rm file1</command>
       </cleanup-commands>
       <comparators>
-        <comparator>
-          <type>TokenComparator</type>
-          <expected-output>Found 1 items</expected-output>
-        </comparator>
         <comparator>
           <type>RegexpComparator</type>
           <expected-output>^-rw-r--r--( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*file1</expected-output>
@@ -125,10 +117,6 @@
       </cleanup-commands>
       <comparators>
         <comparator>
-          <type>TokenComparator</type>
-          <expected-output>Found 1 items</expected-output>
-        </comparator>
-        <comparator>
           <type>RegexpComparator</type>
           <expected-output>^drwxr-xr-x( )*-( )*[a-z]*( )*supergroup( )*HCFS_DIRSIZE( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/dir1</expected-output>
         </comparator>
@@ -145,10 +133,6 @@
         <command>-fs NAMENODE -rm -r /user/USER_NAME/dir1</command>
       </cleanup-commands>
       <comparators>
-        <comparator>
-          <type>TokenComparator</type>
-          <expected-output>Found 1 items</expected-output>
-        </comparator>
         <comparator>
           <type>RegexpComparator</type>
           <expected-output>^drwxr-xr-x( )*-( )*[a-z]*( )*supergroup( )*HCFS_DIRSIZE( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*dir1</expected-output>
@@ -230,10 +214,6 @@
       </cleanup-commands>
       <comparators>
         <comparator>
-          <type>TokenComparator</type>
-          <expected-output>Found 1 items</expected-output>
-        </comparator>
-        <comparator>
           <type>RegexpComparator</type>
           <expected-output>^-rw-r--r--( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/file1</expected-output>
         </comparator>
@@ -250,10 +230,6 @@
         <command>-fs NAMENODE -rm HCFS_SCHEME//TEST_DIR_ABSOLUTE/file1</command>
       </cleanup-commands>
       <comparators>
-        <comparator>
-          <type>TokenComparator</type>
-          <expected-output>Found 1 items</expected-output>
-        </comparator>
         <comparator>
           <type>RegexpComparator</type>
           <expected-output>^-rw-r--r--( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*HCFS_SCHEME//TEST_DIR_ABSOLUTE/file1</expected-output>
@@ -1585,10 +1561,6 @@
       </cleanup-commands>:
       <comparators>
         <comparator>
-          <type>TokenComparator</type>
-          <expected-output>Found 1 items</expected-output>
-        </comparator>
-        <comparator>
           <type>RegexpComparator</type>
           <expected-output>^-rw-r--r--( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/file2</expected-output>
         </comparator>
@@ -1746,10 +1718,6 @@
       </cleanup-commands>
       <comparators>
         <comparator>
-          <type>TokenComparator</type>
-          <expected-output>Found 1 items</expected-output>
-        </comparator>
-        <comparator>
           <type>RegexpComparator</type>
           <expected-output>^-rw-r--r--( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*file2</expected-output>
         </comparator>
@@ -1771,10 +1739,6 @@
         <command>-fs NAMENODE -rm HCFS_SCHEME//TEST_DIR_ABSOLUTE/file2</command>
       </cleanup-commands>:
       <comparators>
-        <comparator>
-          <type>TokenComparator</type>
-          <expected-output>Found 1 items</expected-output>
-        </comparator>
         <comparator>
           <type>RegexpComparator</type>
           <expected-output>^-rw-r--r--( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*HCFS_SCHEME//TEST_DIR_ABSOLUTE/file2</expected-output>
@@ -1924,10 +1888,6 @@
         <command>-fs NAMENODE -rm NAMENODETEST_DIR_ABSOLUTE/file2</command>
       </cleanup-commands>:
       <comparators>
-        <comparator>
-          <type>TokenComparator</type>
-          <expected-output>Found 1 items</expected-output>
-        </comparator>
         <comparator>
           <type>RegexpComparator</type>
           <expected-output>^-rw-r--r--( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/file2</expected-output>
@@ -8183,10 +8143,6 @@
       </cleanup-commands>
       <comparators>
         <comparator>
-          <type>TokenComparator</type>
-          <expected-output>Found 1 items</expected-output>
-        </comparator>
-        <comparator>
           <type>RegexpComparator</type>
           <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/file1</expected-output>
         </comparator>
@@ -8205,10 +8161,6 @@
         <command>-fs NAMENODE -rm file1</command>
       </cleanup-commands>
       <comparators>
-        <comparator>
-          <type>TokenComparator</type>
-          <expected-output>Found 1 items</expected-output>
-        </comparator>
         <comparator>
           <type>RegexpComparator</type>
           <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*file1</expected-output>
@@ -8296,10 +8248,6 @@
       </cleanup-commands>
       <comparators>
         <comparator>
-          <type>TokenComparator</type>
-          <expected-output>Found 1 items</expected-output>
-        </comparator>
-        <comparator>
           <type>RegexpComparator</type>
           <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*TEST_DIR_ABSOLUTE/file1</expected-output>
         </comparator>
@@ -8317,10 +8265,6 @@
         <command>-fs NAMENODE -rm file1</command>
       </cleanup-commands>
       <comparators>
-        <comparator>
-          <type>TokenComparator</type>
-          <expected-output>Found 1 items</expected-output>
-        </comparator>
         <comparator>
           <type>RegexpComparator</type>
           <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*file1</expected-output>
@@ -9820,10 +9764,6 @@
       </cleanup-commands>
       <comparators>
         <comparator>
-          <type>TokenComparator</type>
-          <expected-output>Found 1 items</expected-output>
-        </comparator>
-        <comparator>
           <type>RegexpComparator</type>
           <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*HCFS_SCHEME//TEST_DIR_ABSOLUTE/file1</expected-output>
         </comparator>
@@ -9875,10 +9815,6 @@
         <command>-fs NAMENODE -rm HCFS_SCHEME//TEST_DIR_ABSOLUTE/file1</command>
       </cleanup-commands>
       <comparators>
-        <comparator>
-          <type>TokenComparator</type>
-          <expected-output>Found 1 items</expected-output>
-        </comparator>
         <comparator>
           <type>RegexpComparator</type>
           <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*HCFS_SCHEME//TEST_DIR_ABSOLUTE/file1</expected-output>
@@ -10639,10 +10575,6 @@
       </cleanup-commands>
       <comparators>
         <comparator>
-          <type>TokenComparator</type>
-          <expected-output>Found 1 items</expected-output>
-        </comparator>
-        <comparator>
           <type>RegexpComparator</type>
           <expected-output>^-rwxrwxrwx( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/file1</expected-output>
         </comparator>
@@ -10694,10 +10626,6 @@
         <command>-fs NAMENODE -rm NAMENODETEST_DIR_ABSOLUTE/file1</command>
       </cleanup-commands>
       <comparators>
-        <comparator>
-          <type>TokenComparator</type>
-          <expected-output>Found 1 items</expected-output>
-        </comparator>
         <comparator>
           <type>RegexpComparator</type>
           <expected-output>^-rw-rw-rw-( )*1( )*[a-z]*( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*NAMENODETEST_DIR_ABSOLUTE/file1</expected-output>
