@@ -37,7 +37,6 @@
     <module>package</module>
     <module>httpfs</module>
     <module>oozie</module>
-    <module>hive</module>
     <module>hbase</module>
     <module>flume</module>
     <module>sqoop</module>
