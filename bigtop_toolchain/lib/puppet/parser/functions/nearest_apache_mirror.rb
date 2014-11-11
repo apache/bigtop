@@ -13,19 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class bigtop_toolchain::maven {
-
-  include bigtop_toolchain::deps
-  exec {'/bin/tar xvzf /usr/src/apache-maven-3.0.5-bin.tar.gz':
-    cwd         => '/usr/local',
-    refreshonly => true,
-    subscribe   => Exec["/usr/bin/wget $bigtop_toolchain::deps::apache_prefix/maven/maven-3/3.0.5/binaries/apache-maven-3.0.5-bin.tar.gz"],
-    require     => Exec["/usr/bin/wget $bigtop_toolchain::deps::apache_prefix/maven/maven-3/3.0.5/binaries/apache-maven-3.0.5-bin.tar.gz"],
-  }
-  
-  file {'/usr/local/maven':
-    ensure  => link,
-    target  => '/usr/local/apache-maven-3.0.5',
-    require => Exec['/bin/tar xvzf /usr/src/apache-maven-3.0.5-bin.tar.gz'],
-  }
-}
+module Puppet::Parser::Functions
+    newfunction(:nearest_apache_mirror, :type => :rvalue) do |args|
+        %x( curl --stderr /dev/null https://www.apache.org/dyn/closer.cgi?as_json=1 | grep preferred |cut -d '"' -f 4 | tr -d '\r').chomp
+    end
+end

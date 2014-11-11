@@ -20,8 +20,8 @@ class bigtop_toolchain::ant {
   exec {'/bin/tar xvzf /usr/src/apache-ant-1.9.4-bin.tar.gz':
     cwd         => '/usr/local',
     refreshonly => true,
-    subscribe   => Exec["/usr/bin/wget http://mirrors.ibiblio.org/apache//ant/binaries/apache-ant-1.9.4-bin.tar.gz"],
-    require     => Exec["/usr/bin/wget http://mirrors.ibiblio.org/apache//ant/binaries/apache-ant-1.9.4-bin.tar.gz"],
+    subscribe   => Exec["/usr/bin/wget $bigtop_toolchain::deps::apache_prefix/ant/binaries/apache-ant-1.9.4-bin.tar.gz"],
+    require     => Exec["/usr/bin/wget $bigtop_toolchain::deps::apache_prefix/ant/binaries/apache-ant-1.9.4-bin.tar.gz"],
   }
 
   file {'/usr/local/ant':
