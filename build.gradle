@@ -76,10 +76,6 @@ def artifactToInstall = {
       description 'Installs ${artifact} artifact with Maven'
       def final PATH = "${ARTIFACT_DIR}/$artifact/pom.xml"
       def final WRAPPER = "mvn clean install -f " + PATH
-      installTopLevel
-      installCommon
-      installConf
-      installiTest
       exec {
         workingDir '.'
         commandLine WRAPPER.split(" ")
@@ -89,7 +85,7 @@ def artifactToInstall = {
 }
 
 project.afterEvaluate{
-  artifactToInstall()
+  artifactToInstall(dependsOn: [installTopLevel, installCommon, installConf, installiTest])
 }
 
 installTestArtifacts.mustRunAfter installiTest
