@@ -14,8 +14,8 @@ public class FailureVars {
   private final String CRON_SERVICE;
   private final int SLEEP_TIME = 100;
   private static FailureVars instance = null;
-  private String propertyFile = "/vars.properties"
-  private Boolean useProperties = System.getProperty("useProperties", Boolean.FALSE.toString());
+  private String propertyFile = "/failureVars.properties"
+  private Boolean useProperties = Boolean.parseBoolean(System.getProperty("useFailureProperties", "false"));
   private String testHost;
   private String testRemoteHost;
   private String runFailures;

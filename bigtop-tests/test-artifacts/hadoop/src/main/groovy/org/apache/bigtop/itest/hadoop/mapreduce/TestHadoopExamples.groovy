@@ -19,6 +19,7 @@
 package org.apache.bigtop.itest.hadoop.mapreduce
 
 import org.apache.bigtop.itest.failures.FailureExecutor
+import org.apache.bigtop.itest.failures.FailureVars
 import org.junit.BeforeClass
 import org.junit.AfterClass
 import static org.junit.Assert.assertNotNull

@@ -17,4 +17,4 @@ su -s /bin/bash $HCFS_USER -c 'hadoop fs -chmod 777 /user/vagrant'
 su -s /bin/bash $HCFS_USER -c 'hadoop fs -chmod 777 /user/root'
 
 yum install -y pig hive flume mahout
-cd /bigtop-home/bigtop-tests/smoke-tests && ./gradlew compileGroovy test -Dsmoke.tests=pig --info
+cd /bigtop-home/bigtop-tests/smoke-tests && ./gradlew clean compileGroovy test -Dsmoke.tests=mapreduce,pig --info
