@@ -17,6 +17,7 @@ class bigtop_toolchain::packages {
   case $operatingsystem{
   /(?i:(centos|fedora))/: { $pkgs = [ "unzip", "curl", "wget", "git",      "make", "cmake", "autoconf", "automake", "libtool", "gcc", "gcc-c++", "fuse", "createrepo", "lzo-devel",   "fuse-devel",  "cppunit-devel",    "openssl-devel",         "rpm-build" , "redhat-rpm-config", "fuse-libs" ] }
   /(?i:(SLES|opensuse))/: { $pkgs = [ "unzip", "curl", "wget", "git",      "make", "cmake", "autoconf", "automake", "libtool", "gcc", "gcc-c++", "fuse", "createrepo", "lzo-devel",   "fuse-devel",  "libcppunit-devel", "libopenssl-devel",      "rpm-devel", "pkg-config" ] }
+  Amazon: { $pkgs = [ "unzip", "curl", "wget", "git",      "make", "cmake", "autoconf", "automake", "libtool", "gcc", "gcc-c++", "fuse", "createrepo", "lzo-devel",   "fuse-devel",    "openssl-devel",         "rpm-build" , "system-rpm-config", "fuse-libs" ] }
   Ubuntu: {                 $pkgs = [ "unzip", "curl", "wget", "git-core", "make", "cmake", "autoconf", "automake", "libtool", "gcc", "g++",     "fuse", "reprepro",   "liblzo2-dev", "libfuse-dev", "libcppunit-dev",   "libssl-dev",            "libzip-dev", "sharutils", "pkg-config", "debhelper", "devscripts", "protobuf-compiler", "build-essential", "dh-make", "libfuse2", "libssh-dev", "libjansi-java" ] 
       
     exec { "apt-update":
@@ -27,5 +28,14 @@ class bigtop_toolchain::packages {
 }
   package { $pkgs:
     ensure => installed,
+  }
+
+  # Some bigtop packages use `/usr/lib/rpm/redhat` tools
+  # from `redhat-rpm-config` package that doesn't exist on AmazonLinux.
+  if $operatingsystem == 'Amazon' {
+    file { '/usr/lib/rpm/redhat':
+      ensure => 'link',
+      target => '/usr/lib/rpm/amazon',
+    }
   }
 }

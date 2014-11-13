@@ -40,11 +40,12 @@ class bigtop_toolchain::protobuf {
     }
     default: {
       case $operatingsystem {
-         /(?i:(centos|fedora))/: {
+         /(?i:(centos|fedora|amazon))/: {
            yumrepo { "protobuf":
              baseurl => "http://download.opensuse.org/repositories/home:/mrdocs:/protobuf-rpm/CentOS_CentOS-6/",
              descr => "Bigtop protobuf repo",
              enabled => 1,
+             priority => 1,
              gpgcheck => 0
            }
            exec { 'install_mrdocs_repo':
