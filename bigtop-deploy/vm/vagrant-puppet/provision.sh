@@ -15,10 +15,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Install puppet agent
-yum -y install http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm
-yum -y install puppet
-
 service iptables stop
 chkconfig iptables off
 cat /dev/null > /etc/hosts
@@ -26,18 +22,11 @@ cat /dev/null > /etc/hosts
 echo "Bigtop yum repo = $2"
 
 # Prepare puppet configuration file
-cat > /bigtop-home/bigtop-deploy/puppet/config/site.csv << EOF
+mkdir /vagrant/config
+cat > /vagrant/config/site.csv << EOF
 hadoop_head_node,$1
 hadoop_storage_dirs,/data/1,/data/2
 bigtop_yumrepo_uri,$2
 jdk_package_name,java-1.7.0-openjdk-devel.x86_64
-components,hadoop,hbase,yarn,mapred-app
+components,$3
 EOF
-
-mkdir -p /data/{1,2}
-
-# Setup rng-tools to improve virtual machine entropy performance.
-# The poor entropy performance will cause kerberos provisioning failed.
-yum -y install rng-tools
-sed -i.bak 's/EXTRAOPTIONS=\"\"/EXTRAOPTIONS=\"-r \/dev\/urandom\"/' /etc/sysconfig/rngd
-service rngd start

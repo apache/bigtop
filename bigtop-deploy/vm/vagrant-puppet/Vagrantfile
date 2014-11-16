@@ -16,26 +16,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+require "yaml"
+
+_config = YAML.load(File.open(File.join(File.dirname(__FILE__), "vagrantconfig.yaml"), File::RDONLY).read)
+CONF = _config
+
 VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  vmbox = "puppetlab-centos-64-nocm"
-
   # Repository
   # Example for testing a Release candidate.
-  repo = "http://bigtop01.cloudera.org:8080/view/Releases/job/Bigtop-0.8.0/label=centos6/6/artifact/output/"
+  repo = CONF['repo']
   # repo = "http://bigtop.s3.amazonaws.com/releases/0.7.0/redhat/6/x86_64"
 
-  # Virtual box implementation
-  vmboxurl = "http://puppet-vagrant-boxes.puppetlabs.com/centos-64-x64-vbox4210-nocm.box"
-
   # number of instances
-  num_instances = 1
+  num_instances = CONF['num_instances']
 
   # manage /etc/hosts by hostmanager plugin(https://github.com/smdahlen/vagrant-hostmanager)
   # use vagrant-cachier to cache packages at local(https://github.com/fgrehm/vagrant-cachier)
-  if Vagrant.has_plugin?("vagrant-hostmanager")
-    config.hostmanager.enabled = true
-  end
+  config.hostmanager.enabled = true
 
   # use vagrant-cachier to cache packages at local(https://github.com/fgrehm/vagrant-cachier)
   if Vagrant.has_plugin?("vagrant-cachier")
@@ -49,8 +47,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   (1..num_instances).each do |i|
     config.vm.define "bigtop#{i}" do |bigtop|
 
-      bigtop.vm.box = vmbox
-      bigtop.vm.box_url = vmboxurl
+      bigtop.vm.box = CONF['box']
       bigtop_hostname="bigtop#{i}.vagrant"
       bigtop_ip="10.10.10.1#{i}"
       if "#{i}" == "1"
@@ -58,7 +55,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       end
 
       bigtop.vm.provider :virtualbox do |vb|
-        vb.customize ["modifyvm", :id, "--memory", "10024"]
+        vb.customize ["modifyvm", :id, "--memory", CONF['memory_size']]
+	vb.customize ['modifyvm', :id, '--cpus', CONF['number_cpus']]
       end
 
       bigtop.vm.network :private_network, ip: bigtop_ip
@@ -68,10 +66,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       # the current directory has puppet recipes which we need for provisioning.
       bigtop.vm.synced_folder "../../../", "/bigtop-home"
 
+      bigtop.vm.provision "shell", path: "../utils/setup-env.sh"
+
       # shell provisioner to setup basic vm environment
       bigtop.vm.provision :shell do |shell|
-        shell.path = "provision.sh"
-        shell.args = [ bigtop_master , repo ]
+	shell.path = "provision.sh"
+        shell.args = [ bigtop_master , repo, CONF["components"]]
       end
 
       bigtop.vm.provision :hostmanager
@@ -81,12 +81,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         puppet.module_path = "../../puppet/modules/"
         puppet.manifests_path =  "../../puppet/manifests/"
         puppet.manifest_file  = "site.pp"
-	puppet.options = "--debug --confdir=/bigtop-home/bigtop-deploy/puppet/"
+        puppet.options = "--debug --confdir=/vagrant"
       end
 
       if i==num_instances then
-	puts "creating provisioner directive for running tests"
-        bigtop.vm.provision "shell", path: "../smoke-tests.sh"
+        puts "creating provisioner directive for running tests"
+        bigtop.vm.provision "shell", path: "../utils/smoke-tests.sh"
       else
         puts "Not creating provisioner directive for tests yet... only on vm #{i} of #{num_instances}"
       end

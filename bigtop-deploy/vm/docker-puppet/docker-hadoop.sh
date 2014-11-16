@@ -28,10 +28,12 @@ create() {
     vagrant up --no-parallel
     nodes=(`vagrant status |grep running |awk '{print $1}'`)
     hadoop_head_node=(`echo "hostname -f" |vagrant ssh ${nodes[0]} |tail -n 1`)
+    echo "/bigtop-home/bigtop-deploy/vm/utils/setup-env.sh" |vagrant ssh ${nodes[0]}
     echo "/vagrant/provision.sh $hadoop_head_node" |vagrant ssh ${nodes[0]}
     bigtop-puppet ${nodes[0]}
     for ((i=1 ; i<${#nodes[*]} ; i++)); do
         (
+        echo "/bigtop-home/bigtop-deploy/vm/utils/setup-env.sh" |vagrant ssh ${nodes[$i]}
         echo "/vagrant/provision.sh $hadoop_head_node" |vagrant ssh ${nodes[$i]}
         bigtop-puppet ${nodes[$i]}
         ) &
@@ -49,7 +51,7 @@ provision() {
 
 smoke-tests() {
     nodes=(`vagrant status |grep running |awk '{print $1}'`)
-    echo "/bigtop-home/bigtop-deploy/vm/smoke-tests.sh" |vagrant ssh ${nodes[0]}
+    echo "/bigtop-home/bigtop-deploy/vm/utils/smoke-tests.sh" |vagrant ssh ${nodes[0]}
 }
 
 

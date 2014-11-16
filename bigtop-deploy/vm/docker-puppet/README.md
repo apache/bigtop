@@ -15,7 +15,7 @@
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-#BigTop docker provisioner
+#BigTop Docker provisioner
 
 ## Overview
 
@@ -115,7 +115,7 @@ build-image => create 5 node cluster => destroy the cluster
 7) Run hbase-test.sh to evaluate the deployment.
 
 ```
-../vagrant-puppet/hbase-test.sh
+../utils/hbase-test.sh
 ```
 
 8) See helper message:
@@ -132,6 +132,37 @@ usage: docker-hadoop.sh [options]
        -h, --help
 
 ```
+
+##Configurations
+
+* There are several parameters can be configured in the vagrantconfig.yaml:
+
+1) Modify memory limit for Docker containers
+
+```
+docker:
+        memory_size: "2048"
+
+```
+
+2)  If you're running Docker provisioner on OS X or Windows, you can customize the boot2docker VM settings
+
+```
+boot2docker:
+        memory_size: "4196"
+        number_cpus: "2"
+```
+
+3) Use different host ports mapping for web UIs
+
+```
+namenode_ui_port: "50070"
+yarn_ui_port: "8088"
+hbase_ui_port: "60010"
+
+```
+Note: If running on OS X or Windows, the boot2docker VM should be reloaded after ports changed
+
 
 ##Configure Apache Hadoop ecosystem components
 
