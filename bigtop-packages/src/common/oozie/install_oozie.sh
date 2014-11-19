@@ -238,6 +238,7 @@ for i in `cd ${BUILD_DIR}/libtools ; ls *` ; do
     cp ${BUILD_DIR}/libtools/$i ${SERVER_LIB_DIR}/libtools/$i
   fi
 done
+rm -rf ${SERVER_LIB_DIR}/libtools/hadoop-client-*.jar
 
 # Provide a convenience symlink to be more consistent with tarball deployment
 ln -s ${DATA_DIR#${SERVER_PREFIX}} ${SERVER_LIB_DIR}/libext
