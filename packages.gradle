@@ -258,7 +258,7 @@ def genTasks = { target, variable ->
       commandLine "dpkg-buildpackage -uc -us -sa -S".split(' ')
     }
     mkdir(PKG_OUTPUT_DIR)
-    fileTree (dir: "$DEB_PKG_DIR/..", includes: ['*.dsc', '*.diff.gz', '*.debian.tar.gz', "*_source.changes", "*.orig.tar.gz"]).copy {
+    fileTree (dir: "$DEB_PKG_DIR/..", includes: ['*.dsc', '*.diff.gz', '*.debian.tar.gz', '*.debian.tar.xz', "*_source.changes", "*.orig.tar.gz" ]).copy {
       into PKG_OUTPUT_DIR
     }
     touchTargetFile(BOM_map[variable + '_TARGET_SDEB'])
