@@ -116,7 +116,7 @@ def updateDependencyVersion(dependencyDetails, dependencyString) {
 
 dependencies {
     compile "org.apache.spark:spark-assembly_2.10:${sparkVersion}"
-    compile "com.github.rnowling.bigpetstore:bigpetstore-data-generator:0.2"
+    compile "com.github.rnowling.bigpetstore:bigpetstore-data-generator:0.2.1"
 
     testCompile "junit:junit:4.11"
     testCompile "org.hamcrest:hamcrest-all:1.3"
