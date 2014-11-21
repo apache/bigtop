@@ -26,7 +26,28 @@ Source0:       %{name}-%{tachyon_version}.tar.gz
 Source1:       do-component-build 
 Source2:       install_tachyon.sh
 Source3:       init.d.tmpl
+Source4:       tachyon-master.svc
+Source5:       tachyon-worker.svc
 %define        tachyon_home /usr/lib/%{name}
+%define        tachyon_services master worker
+%define        var_lib /var/lib/%{name}
+%define        var_run /var/run/%{name}
+%define        var_log /var/log/%{name}
+
+%global        initd_dir %{_sysconfdir}/init.d
+
+%if  %{?suse_version:1}0
+# Required for init scripts
+Requires: insserv
+%global        initd_dir %{_sysconfdir}/rc.d
+
+%else
+# Required for init scripts
+Requires: /lib/lsb/init-functions
+
+%global        initd_dir %{_sysconfdir}/rc.d/init.d
+
+%endif
 
 # disable repacking jars
 %define __arch_install_post %{nil}
@@ -62,6 +83,21 @@ bash %{SOURCE2} \
     --var-dir=%{_var}  \
     --prefix="${RPM_BUILD_ROOT}"
 
+for service in %{tachyon_services}
+do
+    # Install init script
+    init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{name}-${service}
+    bash $RPM_SOURCE_DIR/init.d.tmpl $RPM_SOURCE_DIR/tachyon-${service}.svc rpm $init_file
+done
+
+%preun
+for service in %{tachyon_services}; do
+  /sbin/service %{name}-${service} status > /dev/null 2>&1
+  if [ $? -eq 0 ]; then
+    /sbin/service %{tachyon_name}-${service} stop > /dev/null 2>&1
+  fi
+done
+
 
 %files  
 %defattr(-,root,root,-)
@@ -69,8 +105,13 @@ bash %{SOURCE2} \
 %dir %{_sysconfdir}/%{name}
 %config(noreplace) %{_sysconfdir}/%{name}/log4j.properties
 %config(noreplace) %{_sysconfdir}/%{name}/slaves
+%config(noreplace) %{initd_dir}/%{name}-master
+%config(noreplace) %{initd_dir}/%{name}-worker
 %config(noreplace) %{_sysconfdir}/%{name}/tachyon-env.sh
 %config(noreplace) %{tachyon_home}/libexec/tachyon-layout.sh
+%attr(0755,root,root) %{var_lib}
+%attr(0755,root,root) %{var_run}
+%attr(0755,root,root) %{var_log}
 %{tachyon_home}/tachyon*
 %{tachyon_home}/bin/tachyon*
 %{tachyon_home}/libexec/tachyon*

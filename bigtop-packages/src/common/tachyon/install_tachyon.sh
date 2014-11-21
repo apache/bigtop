@@ -104,9 +104,10 @@ install -d -m 0755 $PREFIX/etc
 install -d -m 0755 $PREFIX/etc/tachyon
 install -d -m 0755 $PREFIX/$VAR_DIR/log/tachyon
 install -d -m 0755 $PREFIX/$VAR_DIR/lib/tachyon/journal
+install -d -m 0755 $PREFIX/$VAR_DIR/run/tachyon
 
 #cp -ra ${BUILD_DIR}/lib/* $PREFIX/${LIB_DIR}/lib/
-cp core/target/tachyon*.jar $PREFIX/$LIB_DIR
+cp client/target/tachyon-client*.jar core/target/tachyon*.jar $PREFIX/$LIB_DIR
 cp -a bin/* $PREFIX/${LIB_DIR}/bin
 cp -a libexec/* $PREFIX/${LIB_DIR}/libexec
 cp -rf core/src/main/webapp $PREFIX/$DATA_DIR/tachyon/web
@@ -117,6 +118,7 @@ cp conf/tachyon-env.sh.template  $PREFIX/etc/tachyon/tachyon-env.sh
 
 # Copy in the /usr/bin/tachyon wrapper
 install -d -m 0755 $PREFIX/$BIN_DIR
+
 # Prefix is correct at time of install, 
 # but we dont want to escape it before that point.
 cat > $PREFIX/$BIN_DIR/tachyon <<EOF
@@ -135,11 +137,11 @@ cat >$PREFIX/$LIB_DIR/libexec/tachyon-layout.sh <<EOF
 
 export TACHYON_SYSTEM_INSTALLATION="TRUE"
 export TACHYON_PREFIX="$LIB_DIR"
-export TACHYON_HOME=\${TACHYON_PREFIX}
+export TACHYON_HOME="/var/lib/tachyon"
 export TACHYON_CONF_DIR="/etc/tachyon"
-export TACHYON_LOGS_DIR="$LIB_DIR/log"
-export TACHYON_DATA_DIR="$LIB_DIR/run"
-export TACHYON_JAR="\`find $LIB_DIR/ -name tachyon*dependencies.jar\`"
+export TACHYON_LOGS_DIR="/var/log/tachyon"
+export TACHYON_DATA_DIR="/var/run/tachyon"
+export TACHYON_JAR="\`find $LIB_DIR/ -name tachyon*dependencies.jar|grep -v client\`"
 
 # find JAVA_HOME
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
