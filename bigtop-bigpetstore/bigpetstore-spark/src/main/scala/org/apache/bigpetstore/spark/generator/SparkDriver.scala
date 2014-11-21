@@ -35,7 +35,7 @@ object SparkDriver {
   private var nCustomers: Int = -1
   private var simulationLength: Double = -1.0
   private var seed: Long = -1
-  private var outputDir: File = new File(".")
+  private var outputDir: String = ""
 
   private val NPARAMS = 5
 
@@ -61,18 +61,7 @@ object SparkDriver {
 
     var i = 0
 
-    outputDir = new File(args(i))
-    if(! outputDir.exists()) {
-      System.err.println("Given path (" + args(i) + ") does not exist.\n")
-      printUsage()
-      System.exit(1)
-    }
-
-    if(! outputDir.isDirectory()) {
-      System.err.println("Given path (" + args(i) + ") is not a directory.\n")
-      printUsage()
-      System.exit(1)
-    }
+    outputDir = args(i)
 
     i += 1
     try {
