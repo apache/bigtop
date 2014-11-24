@@ -290,6 +290,13 @@ if ($hadoop_security_authentication == "kerberos") {
   }
   }
 
+  if ($components[0] == undef or "tachyon" in $components) {
+   tachyon::master { "tachyon master":
+       master_host    => $tachyon_master_host,
+       master_port    => $tachyon_master_port
+   }
+  }
+
   if ($components[0] == undef or "hbase" in $components) {
     hadoop-zookeeper::server { "zookeeper":
           myid => "0",
