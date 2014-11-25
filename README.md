@@ -149,6 +149,29 @@ project.  The main page can be accessed from "project_root/target/site/index.htm
 The source for the website is located in "project_root/src/site/".
 
 
+For Developers: Building a component from Git repository
+--------------------------------------------------------
+
+To fetch source from a Git repository you need to modify `bigtop.mk` and add the
+following fields to your package:
+
+* `_GIT_REPO` - SSH, HTTP or local path to Git repo.
+* `_GIT_REF` - branch, tag or commit hash to check out.
+
+Some packages have different names for source directory and source tarball
+(`hbase-0.98.5-src.tar.gz` contains `hbase-0.98.5` directory).
+By default source will be fetched in a directory named `_TARBALL_SRC`
+without `.t*` extension.
+To explicitly set directory name use the `_GIT_DIR` option.
+
+Example for HBase:
+
+
+```make
+HBASE_GIT_REPO=https://github.com/apache/hbase.git
+HBASE_GIT_REF=$(HBASE_PKG_VERSION)
+HBASE_GIT_DIR=hbase-$(HBASE_PKG_VERSION)
+```
 
 
 Contact us

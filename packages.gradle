@@ -15,6 +15,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import org.ajoberstar.grgit.*
+
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath 'org.ajoberstar:grgit:0.2.2'
+  }
+}
+
 apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'download-task'
@@ -77,6 +88,10 @@ def genTasks = { target, variable ->
     def final DOWNLOAD_DST = BOM_map[variable + '_DOWNLOAD_DST']
     def final DOWNLOAD_URL = BOM_map[variable + '_DOWNLOAD_URL']
 
+    def final GIT_REPO = BOM_map[variable + '_GIT_REPO']
+    def final GIT_REF = BOM_map[variable + '_GIT_REF']
+    def final GIT_DIR = BOM_map[variable + '_GIT_DIR']
+
     if (!DOWNLOAD_DST)
       return
 
@@ -85,9 +100,29 @@ def genTasks = { target, variable ->
       println "\tFile $DOWNLOAD_DST appears to be already downloaded. Exiting..."
       return
     }
-    download {
-      src DOWNLOAD_URL
-      dest DOWNLOAD_DST
+    if (GIT_REPO && GIT_REF) {
+      def dir = GIT_DIR
+      if (dir == null || dir.isEmpty()) {
+        dir = TARBALL_SRC.substring(0, TARBALL_SRC.lastIndexOf(".t"))
+      }
+      delete("${DL_DIR}/${dir}")
+      Grgit.clone(
+        uri: GIT_REPO,
+        refToCheckout: GIT_REF,
+        dir: new File("${DL_DIR}/${dir}")
+      )
+      delete("${DL_DIR}/${dir}/.git")
+      exec {
+        workingDir DL_DIR
+        commandLine "tar -czf ${TARBALL_SRC} ${dir}".split()
+      }
+      delete("${DL_DIR}/${dir}")
+    }
+    else {
+      download {
+        src DOWNLOAD_URL
+        dest DOWNLOAD_DST
+      }
     }
     touchTargetFile(BOM_map[variable + '_TARGET_DL'])
   }
