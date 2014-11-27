@@ -1,0 +1,110 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+%define tez_home /usr/lib/%{name}
+%define lib_tez %{tez_home}/lib
+%define man_dir %{_mandir}
+
+
+%if %{!?suse_version:1}0 && %{!?mgaversion:1}0
+
+%define __os_install_post \
+    /usr/lib/rpm/redhat/brp-compress ; \
+    /usr/lib/rpm/redhat/brp-strip-static-archive %{__strip} ; \
+    /usr/lib/rpm/redhat/brp-strip-comment-note %{__strip} %{__objdump} ; \
+    /usr/lib/rpm/brp-python-bytecompile ; \
+    %{nil}
+
+%define doc_tez %{_docdir}/tez-%{tez_version}
+
+%endif
+
+
+%if  %{?suse_version:1}0
+
+# Only tested on openSUSE 11.4. le'ts update it for previous
+#release when confirmed
+%if 0%{suse_version} > 1130
+# Define an empty suse_check for compatibility with older sles
+%define suse_check \
+%endif
+
+%define doc_tez %{_docdir}/tez
+%define alternatives_cmd update-alternatives
+%define __os_install_post \
+    %{suse_check} ; \
+    /usr/lib/rpm/brp-compress ; \
+    %{nil}
+
+%endif
+
+Name: tez
+Version: %{tez_version}
+Release: %{tez_release}
+Summary:Apache Tez is the Hadoop enhanced Map/Reduce module.
+URL: http://tez.apache.org
+Group: Development/Libraries
+Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
+License: Apache License v2.0
+Source0: apache-%{name}-%{tez_base_version}-src.tar.gz
+Source1: do-component-build
+Source2: install_tez.sh
+Source3: tez.1
+Source4: tez-site.xml
+BuildArch: noarch
+Requires: hadoop hadoop-hdfs hadoop-yarn hadoop-mapreduce
+
+%if  0%{?mgaversion}
+Requires: bsh-utils
+%else
+Requires: sh-utils
+%endif
+
+
+%description
+The Apache Tez project is aimed at building an application framework
+which allows for a complex directed-acyclic-graph of tasks for
+processing data. It is currently built atop Apache Hadoop YARN
+
+%prep
+%setup -q -n %{name}-%{tez_base_version}
+
+%build
+env TEZ_VERSION=%{version} bash %{SOURCE1}
+
+%install
+%__rm -rf $RPM_BUILD_ROOT
+
+cp %{SOURCE3} %{SOURCE4} .
+sh %{SOURCE2} \
+	--build-dir=. \
+        --doc-dir=%{doc_tez} \
+        --libexec-dir=%{libexec_tez} \
+	--prefix=$RPM_BUILD_ROOT
+
+%pre
+
+%post
+
+%preun
+
+#######################
+#### FILES SECTION ####
+#######################
+%files
+%defattr(-,root,root)
+%{tez_home}
+%doc %{doc_tez}
+%{man_dir}/man1/tez.1.*
+%{tez_home}/tez-*.jar
