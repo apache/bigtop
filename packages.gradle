@@ -233,7 +233,10 @@ def genTasks = { target, variable ->
       workingDir "$PKG_OUTPUT_DIR/$PKG_NAME-$PKG_VERSION$BIGTOP_BUILD_STAMP"
       commandLine command.split(' ')
     }
-    delete ("$PKG_OUTPUT_DIR/$PKG_NAME-$PKG_VERSION$BIGTOP_BUILD_STAMP")
+    exec {
+      workingDir "$PKG_OUTPUT_DIR"
+      commandLine 'rm','-rf',"$PKG_NAME-$PKG_VERSION$BIGTOP_BUILD_STAMP"
+    }
     touchTargetFile(BOM_map[variable + '_TARGET_DEB'])
   }
   // Guarantee that tasks are ran in the order set by BOM file
