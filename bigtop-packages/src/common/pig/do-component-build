@@ -39,7 +39,7 @@ sed -i -e '/.*<dependency.*/ {N; s/.*<dependency.*\n.*hadoop20.*//g}' ivy.xml
 BUILD_OPTS="-Djavac.version=1.6 -Dforrest.home=${FORREST_HOME} -Dversion=${PIG_VERSION} -Dhadoopversion=23"
 
 # FIXME: BIGTOP-894. Please get rid of the line below when Bigtop integrates a version of Pig that includes the fix for PIG-3262
-export LC_ALL=en_US.UTF-8
+export LC_ALL=C.UTF-8
 
 # FIXME: there's a weird synchronization issue between ivy and Maven caches wrt. jetty
 # If we don't do the following the build fails with (note zip instead of jar):
