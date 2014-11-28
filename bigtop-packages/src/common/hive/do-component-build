@@ -18,6 +18,10 @@ set -ex
 
 . `dirname ${0}`/bigtop.bom
 
+
+#fix SNAPSHOT dependencies
+sed -i -e 's@-SNAPSHOT@@' pom.xml ql/pom.xml
+
 bom2props() {
 cat <<__EOT__ 
 hbase.version=$HBASE_VERSION
