@@ -166,7 +166,7 @@ class hadoop_worker_node inherits hadoop_cluster_node {
     }
   }
 
-  if ($components[0] == undef or "mapred-app" in $components) {
+  if ($components[0] == undef or "mapred-app" or "yarn" in $components) {
     hadoop::mapred-app { "mapred-app":
           namenode_host => $hadoop_namenode_host,
           namenode_port => $hadoop_namenode_port,
