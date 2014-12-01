@@ -41,22 +41,4 @@ class bigtop_toolchain::deps {
     require => Package[$packages::pkgs],
     unless  => "/usr/bin/test -f /usr/src/gradle-2.0-bin.zip",
   }
-
-  exec { '/usr/bin/wget https://launchpad.net/ubuntu/+archive/primary/+files/libprotobuf8_2.5.0-9ubuntu1_amd64.deb':
-    cwd     => "/usr/src",
-    require => Package[$packages::pkgs],
-    unless  => "/usr/bin/test -f /usr/src/libprotobuf8_2.5.0-9ubuntu1_amd64.deb",
-  }
-
-  exec { '/usr/bin/wget https://launchpad.net/ubuntu/+archive/primary/+files/libprotoc8_2.5.0-9ubuntu1_amd64.deb':
-    cwd     => "/usr/src",
-    require => Package[$packages::pkgs],
-    unless  => "/usr/bin/test -f /usr/src/libprotoc8_2.5.0-9ubuntu1_amd64.deb",
-  }
-
-  exec { '/usr/bin/wget https://launchpad.net/ubuntu/+archive/primary/+files/protobuf-compiler_2.5.0-9ubuntu1_amd64.deb':
-    cwd     => "/usr/src",
-    require => Package[$packages::pkgs],
-    unless  => "/usr/bin/test -f /usr/src/protobuf-compiler_2.5.0-9ubuntu1_amd64.deb",
-  }
 }

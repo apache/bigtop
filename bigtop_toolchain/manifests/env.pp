@@ -15,9 +15,18 @@
 
 class bigtop_toolchain::env {
   case $operatingsystem{
-    Ubuntu: {
+    /Ubuntu/: {
       file { '/etc/profile.d/bigtop.sh':
         source => 'puppet:///modules/bigtop_toolchain/jenkins.sh.ubu',
+        ensure => present,
+        owner  => root,
+        group  => root,
+        mode   => 644,
+      }
+    }
+    /Debian/: {
+      file { '/etc/profile.d/bigtop.sh':
+        source => 'puppet:///modules/bigtop_toolchain/jenkins.sh.debian',
         ensure => present,
         owner  => root,
         group  => root,

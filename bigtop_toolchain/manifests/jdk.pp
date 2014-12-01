@@ -14,6 +14,14 @@
 # limitations under the License.
 
 class bigtop_toolchain::jdk {
+
+  case $operatingsystem{
+    Debian: {
+      package { 'openjdk-7-jdk' :
+        ensure => present
+      }
+    }
+    default : {
       file { '/tmp/jdk-7u60-linux-x64.gz':
         source => 'puppet:///modules/bigtop_toolchain/jdk-7u60-linux-x64.gz',
         ensure => present,
@@ -27,4 +35,6 @@ class bigtop_toolchain::jdk {
         refreshonly => true,
         subscribe   => File["/tmp/jdk-7u60-linux-x64.gz"],
       }
+    }
+  }
 }

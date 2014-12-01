@@ -13,17 +13,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 class bigtop_toolchain::scala {
-  
-  $install_scala_cmd = $operatingsystem ? {
-    'Ubuntu'               => '/bin/bash -c "wget http://www.scala-lang.org/files/archive/scala-2.10.3.deb ; dpkg -x ./scala-2.10.3.deb /"', 
-    /(?i:(SLES|opensuse))/ => '/usr/bin/zypper install -y http://www.scala-lang.org/files/archive/scala-2.10.3.rpm',
-    default                => '/bin/rpm -U http://www.scala-lang.org/files/archive/scala-2.10.3.rpm'
-  }
-  
-  exec { "install scala":
-    cwd      => '/tmp',
-    command  => $install_scala_cmd,
-    unless   => "/usr/bin/test -f /usr/bin/scala",
-    require  => $requires
+
+  case $operatingsystem{
+    Debian: {
+      package { 'scala' :
+        ensure => present
+      }
+    }
+    default: {
+      $install_scala_cmd = $operatingsystem ? {
+        'Ubuntu'               => '/bin/bash -c "wget http://www.scala-lang.org/files/archive/scala-2.10.3.deb ; dpkg -x ./scala-2.10.3.deb /"',
+        /(?i:(SLES|opensuse))/ => '/usr/bin/zypper install -y http://www.scala-lang.org/files/archive/scala-2.10.3.rpm',
+        default                => '/bin/rpm -U http://www.scala-lang.org/files/archive/scala-2.10.3.rpm'
+      }
+      exec { "install scala":
+        cwd      => '/tmp',
+        command  => $install_scala_cmd,
+        unless   => "/usr/bin/test -f /usr/bin/scala",
+        require  => $requires
+      }
+    }
   }
 }
