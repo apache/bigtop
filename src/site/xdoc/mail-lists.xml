@@ -73,6 +73,48 @@
 					<a href="http://mail-archives.apache.org/mod_mbox/bigtop-commits/">Browse archives</a>
 				</li>
 			</ul>
+
+			<subsection name="Bigtop CI List"></subsection>
+			<p>
+				If you'd like to see notifications from Bigtop build system (CI) then subscribe
+				to the Bigtop CI mailing list.
+				<br />
+				The Bigtop CI mailing list is :
+				<a href="mailto:ci@bigtop.apache.org">ci@bigtop.apache.org</a>
+				.
+			</p>
+			<ul>
+				<li>
+					<a href="mailto:ci-subscribe@bigtop.apache.org">Subscribe to List</a>
+				</li>
+				<li>
+					<a href="mailto:ci-unsubscribe@bigtop.apache.org">Unsubscribe from List</a>
+				</li>
+				<li>
+					<a href="http://mail-archives.apache.org/mod_mbox/bigtop-ci/">Browse archives</a>
+				</li>
+			</ul>
+
+			<subsection name="Bigtop Announcements List"></subsection>
+			<p>
+				If you'd like to receive important announcement (e.g. releases, etc.) notifications from Bigtop
+				community then subscribe to the Bigtop Announcements mailing list. Low traffic.
+				<br />
+				The Bigtop CI mailing list is :
+				<a href="mailto:announce@bigtop.apache.org">announce@bigtop.apache.org</a>
+				.
+			</p>
+			<ul>
+				<li>
+					<a href="mailto:announce-subscribe@bigtop.apache.org">Subscribe to List</a>
+				</li>
+				<li>
+					<a href="mailto:announce-unsubscribe@bigtop.apache.org">Unsubscribe from List</a>
+				</li>
+				<li>
+					<a href="http://mail-archives.apache.org/mod_mbox/bigtop-announce/">Browse archives</a>
+				</li>
+			</ul>
 		</section>
 	</body>
 </document>
