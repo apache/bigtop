@@ -88,18 +88,32 @@ WARNING: since testing packages requires installing them on a live system it is 
 *smokes/hadoop/pom.xml*
 *smokes/hive/pom.xml*
 *... and so on.*
- 
-* Step 1: Build the smokes with snapshots.  This ensures that all transitive dependencies etc.. are in your repo
+
+* New way (with Gradle build in place)
+  * Step 1: install smoke tests for one or more components
+    * Example 1:
+
+        gradle installTestArtifacts
+
+    * Example 2: Installing just Hadoop-specific smoke tests
+
+        gradle install-hadoop
+
+  * Step 2: Run the the smoke tests on your cluster (see Step 3 and/or Step 4 below)
+
+
+* Old Way
+  * Step 1: Build the smokes with snapshots.  This ensures that all transitive dependencies etc.. are in your repo
 
         mvn clean install -DskipTests -DskipITs -DperformRelease -f ./bigtop-test-framework/pom.xml
         mvn clean install -DskipTests -DskipITs -DperformRelease -f ./test-artifacts/pom.xml
 
-* Step 2: Now, rebuild in "offline" mode.  This will make sure that your local changes to bigtop are embeded in the changes.
+  * Step 2: Now, rebuild in "offline" mode.  This will make sure that your local changes to bigtop are embeded in the changes.
     
         mvn clean install -DskipTests -DskipITs -DperformRelease -o -nsu -f ./bigtop-test-framework/pom.xml
         mvn clean install -DskipTests -DskipITs -DperformRelease -o -nsu -f ./bigtop-tests/test-artifacts/pom.xml
  
-* Step 3: Now, you can run the smoke tests on your cluster.
+  * Step 3: Now, you can run the smoke tests on your cluster.
     * Example 1: Running all the smoke tests with TRACE level logging (shows std out from each mr job). 
       
             mvn clean verify -Dorg.apache.bigtop.itest.log4j.level=TRACE -f ./bigtop/bigtop-tests/test-execution/smokes/pom.xml 
@@ -130,14 +144,18 @@ __On all systems, Building Apache Bigtop requires the following tools__
 
 * All systems need these tools installed to build bigtop:
 
-  Java JDK 1.6, Apache Forrest 0.8, Apache Ant, Apache Maven, git, subversion, autoconf, automake, liblzo2-dev, libz-dev, sharutils, libfuse-dev, libssl-dev
+  Java JDK/OpenJDK7, Apache Forrest 0.8, Apache Ant, Apache Maven, git, subversion, autoconf, automake, liblzo2-dev, libz-dev, sharutils, libfuse-dev, libssl-dev
 
 * Additionally, some details for specific linux versions :
   * __Debian__ based distros need these packages : build-essential dh-make debhelper devscripts, reprepro
   * __openSUSE 11.4__ needs these packages : relaxngDatatypedocbook-utils docbook-simple, fuse-devel, docbook5, docbook5-xsl-stylesheets, libxml2-devel, xmlformat, xmlto, libxslt, libopenssl-devel
 
-* __Building packages__ : `make [component-name]-[rpm|deb]`
-* __Building local YUM/APT repositories__ : `make [component-name]-[yum|apt]`
+  Preferred way of setting up needed dependencies: the list in this README file might be outdated.
+  The best source of data are bigtop_toolchain recipes that would configure all your development
+  environment from a single Puppet run.
+
+* __Building packages__ : `gradle [component-name]-[rpm|deb]`
+* __Building local YUM/APT repositories__ : `gradle [component-name]-[yum|apt]`
 
 
 For Developers: Building and modifying the web site
