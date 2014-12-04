@@ -30,6 +30,8 @@ apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'download-task'
 
+def PACKAGES_GROUP = 'package'
+
 final String VERBOSE = "verbose"
 final String BOM = "bigtop.mk"
 
@@ -74,15 +76,16 @@ def getDate() {
   new Date().format('E, dd MMM yyyy HH:mm:ss Z')
 }
 
-task showHelp << {
+task "packages-help" (description: "All package build related tasks information", group: PACKAGES_GROUP) << {
   targets.each { target ->
     println (target + "\n\t[" + tasks.findAll { alltask -> alltask.name.startsWith(target)}*.name.join(", ") + "]")
   }
 }
 
 def genTasks = { target, variable ->
-  task "${target}-download" (dependsOn: "${target}_vardefines") << {
-    description "Download $target artifacts"
+  Task t = task "${target}-download" (dependsOn: "${target}_vardefines",
+      description: "Download $target artifacts",
+      group: PACKAGES_GROUP) << {
 
     def final TARBALL_SRC = BOM_map[variable + '_TARBALL_SRC']
     def final DOWNLOAD_DST = BOM_map[variable + '_DOWNLOAD_DST']
@@ -126,12 +129,13 @@ def genTasks = { target, variable ->
     }
     touchTargetFile(BOM_map[variable + '_TARGET_DL'])
   }
-  task "${target}-tar" (dependsOn: ["${target}_vardefines", "${target}-download"]) << {
+  task "${target}-tar" (dependsOn: ["${target}_vardefines", "${target}-download"],
+      description: "Preparing a tarball for $target artifacts",
+      group: PACKAGES_GROUP) << {
     if (new File(BOM_map[variable + '_TARGET_TAR'])?.exists()) {
       println "\tNothing to do. Exiting..."
       return
     }
-    description "Preparing a tarball for $target artifacts"
     def final TAR_DIR = BOM_map[variable + '_TAR_DIR']
     def final TARBALL_SRC = BOM_map[variable + '_TARBALL_SRC'] ?: ""
     def final DOWNLOAD_DST = BOM_map[variable + '_DOWNLOAD_DST'] ?: ""
@@ -195,12 +199,13 @@ def genTasks = { target, variable ->
   }
 
   // Keeping the reference to deb task to be used later for correct sequencing
-  Task tdeb =   task "$target-deb" (dependsOn: "${target}-sdeb") << {
+  Task tdeb = task "$target-deb"(dependsOn: "${target}-sdeb",
+      description: "Buildind DEB for $target artifacts",
+      group: PACKAGES_GROUP) << {
     if (new File(BOM_map[variable + '_TARGET_DEB'])?.exists()) {
       println "\tNothing to do. Exiting..."
       return
     }
-    description "Buildind DEB for $target artifacts"
     def final PKG_NAME = BOM_map[variable + '_PKG_NAME']
     def final PKG_RELEASE = BOM_map[variable + '_PKG_RELEASE']
     def final PKG_VERSION = BOM_map[variable + '_PKG_VERSION']
@@ -242,12 +247,14 @@ def genTasks = { target, variable ->
   // Guarantee that tasks are ran in the order set by BOM file
   if (targets.size() > 0)
     tdeb.mustRunAfter "${targets.get(targets.size() - 1)}-deb"
-  task "$target-sdeb" (dependsOn: ["${target}_vardefines",  "${target}-tar"]) << {
+   task "$target-sdeb" (dependsOn: ["${target}_vardefines",  "${target}-tar"],
+      description: "Buildind SDEB for $target artifacts",
+      group: PACKAGES_GROUP
+  ) << {
     if (new File(BOM_map[variable + '_TARGET_SDEB'])?.exists()) {
       println "\tNothing to do. Exiting..."
       return
     }
-    description "Buildind SDEB for $target artifacts"
     def final PKG_BUILD_DIR = BOM_map[variable + '_BUILD_DIR']
     def final NAME = BOM_map[variable + '_NAME']
     def final PKG_NAME = BOM_map[variable + '_PKG_NAME']
@@ -301,12 +308,13 @@ def genTasks = { target, variable ->
     }
     touchTargetFile(BOM_map[variable + '_TARGET_SDEB'])
   }
-  task "$target-apt" (dependsOn: "$target-deb") << {
+  task "$target-apt" (dependsOn: "$target-deb",
+      description: "Creating APT repository for $target packages",
+      group: PACKAGES_GROUP) << {
     if (new File(BOM_map[variable + '_TARGET_APT'])?.exists()) {
       println "\tNothing to do. Exiting..."
       return
     }
-    description "Creating APT repository for $target packages"
     def final PKG_NAME = BOM_map[variable + '_NAME']
     def final PKG_RELEASE = BOM_map[variable + '_PKG_RELEASE']
     def final PKG_VERSION = BOM_map[variable + '_PKG_VERSION']
@@ -328,12 +336,13 @@ def genTasks = { target, variable ->
   }
 
   // Keeping the reference to task to be used later for correct sequencing
-  Task trpm = task "$target-rpm" (dependsOn: ["${target}-srpm"]) << {
+  Task trpm = task "$target-rpm" (dependsOn: ["${target}-srpm"],
+      description: "Buildind RPM for $target artifacts",
+      group: PACKAGES_GROUP) << {
     if (new File(BOM_map[variable + '_TARGET_RPM'])?.exists()) {
       println "\tNothing to do. Exiting..."
       return
     }
-    description "Buildind RPM for $target artifacts"
     def final PKG_BUILD_DIR = BOM_map[variable + '_BUILD_DIR']
     def final NAME = BOM_map[variable + '_NAME']
     def final PKG_NAME = BOM_map[variable + '_PKG_NAME']
@@ -364,12 +373,13 @@ def genTasks = { target, variable ->
   // Guarantee that tasks are ran in the order set by BOM file
   if (targets.size() > 0)
     trpm.mustRunAfter "${targets.get(targets.size() - 1)}-rpm"
-  task "$target-srpm" (dependsOn: ["${target}_vardefines" , "${target}-tar"]) << {
+  task "$target-srpm" (dependsOn: ["${target}_vardefines" , "${target}-tar"],
+      description: "Buildind SRPM for $target artifacts",
+      group: PACKAGES_GROUP) << {
     if (new File(BOM_map[variable + '_TARGET_SRPM'])?.exists()) {
       println "\tNothing to do. Exiting..."
       return
     }
-    description "Buildind SRPM for $target artifacts"
     def final NAME = BOM_map[variable + '_NAME']
     def final PKG_NAME = BOM_map[variable + '_PKG_NAME']
     def final PKG_NAME_FOR_PKG = BOM_map[variable + '_NAME'].replaceAll("-", "_")
@@ -419,19 +429,20 @@ def genTasks = { target, variable ->
     }
     touchTargetFile(BOM_map[variable + '_TARGET_SRPM'])
   }
-  task "$target-yum" (dependsOn: "$target-rpm") << {
+  task "$target-yum" (dependsOn: "$target-rpm",
+      description: "Creating YUM repository for $target packages",
+      group: PACKAGES_GROUP) << {
     if (new File(BOM_map[variable + '_TARGET_YUM'])?.exists()) {
       println "\tNothing to do. Exiting..."
       return
     }
-    description "Creating YUM repository for $target packages"
     exec {
       workingDir BUILD_DIR
       commandLine "createrepo -o $OUTPUT_DIR $OUTPUT_DIR".split(' ')
     }
     touchTargetFile(BOM_map["${variable}_TARGET_YUM"])
   }
-  task "$target-version" << {
+  task "$target-version" (description: "Show version of $target component", group: PACKAGES_GROUP) << {
     println "Base: ${BOM_map[variable + '_BASE_VERSION']}"
   }
   task "${target}_vardefines" << {
@@ -475,7 +486,9 @@ def genTasks = { target, variable ->
     }
   }
 
-  task "$target-info" (dependsOn: "${target}_vardefines") << {
+  task "$target-info" (dependsOn: "${target}_vardefines",
+      description: "Info about $target component build",
+      group: PACKAGES_GROUP) << {
     println "Info for package $target"
     println "  Will download from URL: ${BOM_map[variable + '_DOWNLOAD_URL']}"
     println "  To destination file: ${BOM_map[variable + '_DOWNLOAD_DST']}"
@@ -486,17 +499,15 @@ def genTasks = { target, variable ->
     println "Version: " + BOM_map[variable + '_BASE_VERSION']
     //TODO more about stamping
   }
-  task "$target-relnotes" << {
-    description "Preparing release notes for $target. No yet implemented!!!"
+  task "$target-relnotes" (description: "Preparing release notes for $target. No yet implemented!!!", group: PACKAGES_GROUP)<< {
   }
-  task "$target-clean" (dependsOn: "${target}_vardefines") << {
-    def blDir = BOM_map[variable + '_BUILD_DIR']
-    def outDir = BOM_map[variable + '_OUTPUT_DIR']
-    description "Removing $target component $blDir and $outDir"
-    delete(blDir)
+  task "$target-clean" (dependsOn: "${target}_vardefines",
+      description: "Removing $target component ${BOM_map[variable + '_BUILD_DIR']} and ${BOM_map[variable + '_OUTPUT_DIR']}",
+      group: PACKAGES_GROUP) << {
+    delete(BOM_map[variable + '_BUILD_DIR'])
     delete(BOM_map[variable + '_OUTPUT_DIR'])
   }
-  task "$target-help" << {
+  task "$target-help" (description: "List of available tasks for $target", group: PACKAGES_GROUP) << {
     println (target + "\n\t[" + tasks.findAll { alltask -> alltask.name.startsWith(target)}*.name.join(", ") + "]")
   }
 }
@@ -543,28 +554,45 @@ project.afterEvaluate {
   BOM_map[BIGTOP_BOM] = bomVersions
   if (System.getProperty(VERBOSE))println "BIGTOP_BOM:\n${BOM_map[BIGTOP_BOM]}"
   // Putting all targets of different types into one common target
-  task "srpm" (dependsOn: tasks.findAll { alltask -> alltask.name.endsWith("-srpm")}*.name) << { }
-  task "rpm" (dependsOn: tasks.findAll { alltask -> alltask.name.endsWith("-rpm")}*.name) << { }
-  task "yum" (dependsOn: tasks.findAll { alltask -> alltask.name.endsWith("-yum")}*.name) << { }
-  task "sdeb" (dependsOn: tasks.findAll { alltask -> alltask.name.endsWith("-sdeb")}*.name) << { }
-  task "deb" (dependsOn: tasks.findAll { alltask -> alltask.name.endsWith("-deb")}*.name) << { }
-  task "apt" (dependsOn: tasks.findAll { alltask -> alltask.name.endsWith("-apt")}*.name) << { }
+  task "srpm" (dependsOn: tasks.findAll { alltask -> alltask.name.endsWith("-srpm")}*.name,
+      description: "Build all SRPM packages for the stack components",
+      group: PACKAGES_GROUP
+  ) << { }
+  task "rpm" (dependsOn: tasks.findAll { alltask -> alltask.name.endsWith("-rpm")}*.name,
+      description: "Build all RPM packages for the stack",
+      group: PACKAGES_GROUP
+  ) << { }
+  task "yum" (dependsOn: tasks.findAll { alltask -> alltask.name.endsWith("-yum")}*.name,
+      description: "Create YUM repository for all pre-built RPM packages",
+      group: PACKAGES_GROUP
+  ) << { }
+  task "sdeb" (dependsOn: tasks.findAll { alltask -> alltask.name.endsWith("-sdeb")}*.name,
+      description: "Build all SDEB packages for the stack components",
+      group: PACKAGES_GROUP
+  ) << { }
+  task "deb" (dependsOn: tasks.findAll { alltask -> alltask.name.endsWith("-deb")}*.name,
+      description: "Build all DEB packages for the stack components",
+      group: PACKAGES_GROUP
+  ) << { }
+  task "apt" (dependsOn: tasks.findAll { alltask -> alltask.name.endsWith("-apt")}*.name,
+      description: "Create APT repository for all pre-built DEB packages",
+      group: PACKAGES_GROUP
+  ) << { }
 
-  task clean (overwrite: true, dependsOn: tasks.findAll { alltask -> alltask.name.endsWith("-clean")}*.name) << {
-    description "Cleaning all components' build and output directories. Overwrites standard clean task"
+  task clean (overwrite: true, dependsOn: tasks.findAll { alltask -> alltask.name.endsWith("-clean")}*.name,
+      description: "Cleaning all components' build and output directories. Overwrites standard clean task",
+      group: PACKAGES_GROUP) << {
   }
-  task allclean (dependsOn: clean ) << {
-    description "Removing $BUILD_DIR, $OUTPUT_DIR, and $DIST_DIR"
+  task allclean (dependsOn: clean,
+      description: "Removing $BUILD_DIR, $OUTPUT_DIR, and $DIST_DIR",
+      group: PACKAGES_GROUP) << {
     delete (BUILD_DIR)
     delete (OUTPUT_DIR)
     delete (DIST_DIR)
   }
-  task realclean (dependsOn: allclean) << {
-    description "Removing $BUILD_DIR, $OUTPUT_DIR, $DIST_DIR, and $DL_DIR"
+  task realclean (dependsOn: allclean,
+      description: "Removing $BUILD_DIR, $OUTPUT_DIR, $DIST_DIR, and $DL_DIR",
+      group: PACKAGES_GROUP) << {
     delete (DL_DIR)
   }
-
-  task "all" (dependsOn: [srpm, sdeb])
 }
-
-defaultTasks 'showHelp'

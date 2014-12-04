@@ -25,6 +25,8 @@ version = '0.9.0-SNAPSHOT'
 
 description = """Bigtop"""
 
+def TESTARTIFACTS_GROUP = 'test artifacts'
+
 sourceCompatibility = 1.6
 targetCompatibility = 1.6
 
@@ -49,11 +51,9 @@ task installCommon(type:Exec) {
   workingDir "."
   commandLine 'mvn clean install -f bigtop-tests/test-execution/common/pom.xml'.split(" ")
 }
-task installAllLocalArtifacts() {
-
-}
-task installArtifact() {
-
+task installAllLocalArtifacts (
+    description: "Prepare and locally install all test artifacts",
+    group: TESTARTIFACTS_GROUP) {
 }
 
 /**
@@ -72,8 +72,7 @@ def artifactToInstall = {
     artifactCollection.add(file.name)
   }
   artifactCollection.each { artifact ->
-    task "install-${artifact}" << {
-      description 'Installs ${artifact} artifact with Maven'
+    task "install-${artifact}" (description: "Installs ${artifact} artifact with Maven", group: TESTARTIFACTS_GROUP) << {
       def final PATH = "${ARTIFACT_DIR}/$artifact/pom.xml"
       def final WRAPPER = "mvn clean install -f " + PATH
       exec {
