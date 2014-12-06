@@ -66,6 +66,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       # the current directory has puppet recipes which we need for provisioning.
       bigtop.vm.synced_folder "../../../", "/bigtop-home"
 
+      # We also add the bigtop-home output/ dir, so that locally built rpms will be available.
+      puts "Adding rpms from /output/ for local testing."
+
+      # This is a update to allow dev packages
+      # Force success - not worried if this step fails, since we generally only use it for development.
+      bigtop.vm.provision "shell", inline: "sudo echo \"gpgcheck=0\" >> /etc/yum.conf"
+      bigtop.vm.provision "shell", inline: "sudo yum-config-manager --add-repo file:///bigtop-home/output ; true"
+
+      # carry on w/ installation
       bigtop.vm.provision "shell", path: "../utils/setup-env.sh"
 
       # shell provisioner to setup basic vm environment

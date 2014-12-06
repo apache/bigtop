@@ -100,6 +100,7 @@ class hadoop_cluster_node {
   $giraph_zookeeper_quorum       = $hadoop_head_node
 
   $spark_master_host             = $hadoop_head_node
+  $tachyon_master_host            = $hadoop_head_node
 
   $hadoop_zookeeper_ensemble = ["$hadoop_head_node:2888:3888"]
 
@@ -194,6 +195,13 @@ class hadoop_worker_node inherits hadoop_cluster_node {
          master_ui_port => $spark_master_ui_port,
     }
   }
+
+  if ($components[0] == undef or "tachyon" in $components) {
+    tachyon::worker { "tachyon worker":
+         master_host => $tachyon_master_host
+    }
+  }
+
 }
 
 class hadoop_head_node inherits hadoop_worker_node {
@@ -291,9 +299,8 @@ if ($hadoop_security_authentication == "kerberos") {
   }
 
   if ($components[0] == undef or "tachyon" in $components) {
-   tachyon::master { "tachyon master":
-       master_host    => $tachyon_master_host,
-       master_port    => $tachyon_master_port
+   tachyon::master { "tachyon-master":
+       master_host => $tachyon_master_host
    }
   }
 

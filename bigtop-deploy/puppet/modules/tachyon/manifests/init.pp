@@ -14,10 +14,29 @@ class tachyon {
     package { "tachyon":
       ensure => latest,
     }
+
+    # add logging into /var/log/..
+    file {
+        "/etc/tachyon/log4j.properties":
+        content => template("tachyon/log4j.properties"),
+        require => [Package["tachyon"]]
+    }
+
+    # add tachyon-env.sh to point to tachyon master
+    file { "/etc/tachyon/tachyon-env.sh":
+        content => template("tachyon/tachyon-env.sh"),
+        require => [Package["tachyon"]]
+    }
   }
 
-  define master($master_host, $master_port) {
+  define master($master_host) {
     include common
+
+   exec {
+        "tachyon formatting":
+           command => "/usr/lib/tachyon/bin/tachyon format",
+           require => [ Package["tachyon"]]
+    }
 
     if ( $fqdn == $master_host ) {
       service { "tachyon-master":
@@ -27,17 +46,21 @@ class tachyon {
         hasstatus => true,
       }
     }
+
   }
 
-  define worker($master_host, $master_port) {
+  define worker($master_host) {
     include common
 
    if ( $fqdn == $master_host ) {
+      notice("tachyon ---> master host")
       # We want master to run first in all cases
       Service["tachyon-master"] ~> Service["tachyon-worker"]
-    }
+   }
+
     service { "tachyon-worker":
       ensure => running,
+      require => [Package["tachyon"]],
       hasrestart => true,
       hasstatus => true,
     }
