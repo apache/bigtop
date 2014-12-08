@@ -79,8 +79,10 @@ to use.
 
 ## Usage
 
-Make sure that the bigtop-deploy directory is available on every node of your cluster, and then 
-run the following on those nodes:
+- Make sure that the bigtop-deploy directory is available on every node of your cluster, and then
+- Make sure you've installed puppet's stdlib "puppet module install puppetlabs/stdlib".
+
+And run the following on those nodes:
 
 <pre>
 # mkdir /etc/puppet/config

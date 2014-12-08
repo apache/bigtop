@@ -24,6 +24,8 @@ mv /etc/hosts /etc/hosts.bak
 ln -s /vagrant/hosts /etc/hosts
 
 # Prepare puppet configuration file
+cd /etc/puppet/modules && puppet module install puppetlabs/stdlib
+
 mkdir /vagrant/config
 cat > /vagrant/config/site.csv << EOF
 hadoop_head_node,$1

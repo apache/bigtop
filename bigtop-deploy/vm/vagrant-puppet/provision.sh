@@ -22,6 +22,8 @@ cat /dev/null > /etc/hosts
 echo "Bigtop yum repo = $2"
 
 # Prepare puppet configuration file
+cd /etc/puppet/modules && puppet module install puppetlabs/stdlib
+
 mkdir /vagrant/config
 cat > /vagrant/config/site.csv << EOF
 hadoop_head_node,$1

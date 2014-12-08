@@ -44,6 +44,7 @@ package { $jdk_package_name:
 import "cluster.pp"
 
 node default {
+  include stdlib
   $hadoop_head_node = extlookup("hadoop_head_node") 
   $standby_head_node = extlookup("standby_head_node", "")
   $hadoop_gateway_node = extlookup("hadoop_gateway_node", $hadoop_head_node)
