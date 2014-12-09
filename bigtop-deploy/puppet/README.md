@@ -73,6 +73,10 @@ $confdir is the directory that puppet will look into for its configuration.  On 
 this will be either /etc/puppet/ or /etc/puppetlabs/puppet/.  You may override this value by 
 specifying --confdir=path/to/config/dir on the puppet command line.
 
+You can instruct the recipes to install ssh-keys for user hdfs to enable passwordless login
+across the cluster. This is for test purposes only, so by default the option is turned off.
+Refer to bigtop-deploy/puppet/config/site.csv.example for more details.
+
 For other options that may be set here, look for calls to extlookup() in manifests/cluster.pp.
 Note that if hadoop\_storage\_dirs is left unset, puppet will attempt to guess which directories 
 to use.

@@ -22,4 +22,7 @@ bigtop_yumrepo_uri,http://mirror.example.com/path/to/mirror/
 # hue,mahout,giraph,crunch,pig,hive,zookeeper
 # Example (to deploy only HDFS and YARN server and gateway parts)
 #components,hadoop,yarn
+# Test-only variable controls if user hdfs' sshkeys should be installed to allow
+# for passwordless login across the cluster. Required by some integration tests
+#testonly_hdfs_sshkeys=no
 

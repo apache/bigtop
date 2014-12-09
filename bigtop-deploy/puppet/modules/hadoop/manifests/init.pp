@@ -77,6 +77,42 @@ class hadoop {
   }
 
   class common-hdfs inherits common {
+  # Check if test mode is enforced, so we can install hdfs ssh-keys for passwordless
+    $testonly   = extlookup("testonly_hdfs_sshkeys", 'no')
+    if ($testonly == "yes") {
+      notify{"WARNING: provided hdfs ssh keys are for testing purposes only.\n
+        They shouldn't be used in production cluster": }
+      $ssh_user        = "hdfs"
+      $ssh_user_home   = "/var/lib/hadoop-hdfs"
+      $ssh_user_keydir = "$ssh_user_home/.ssh"
+      $ssh_keypath     = "$ssh_user_keydir/id_hdfsuser"
+      $ssh_privkey     = "$extlookup_datadir/hdfs/id_hdfsuser"
+      $ssh_pubkey      = "$extlookup_datadir/hdfs/id_hdfsuser.pub"
+
+      file { $ssh_user_keydir:
+        ensure  => directory,
+        owner   => 'hdfs',
+        group   => 'hdfs',
+        mode    => '0700',
+        require => Package["hadoop-hdfs"],
+      }
+
+      file { $ssh_keypath:
+        source  => $ssh_privkey,
+        owner   => 'hdfs',
+        group   => 'hdfs',
+        mode    => '0600',
+        require => File[$ssh_user_keydir],
+      }
+
+      file { "$ssh_user_keydir/authorized_keys":
+        source  => $ssh_pubkey,
+        owner   => 'hdfs',
+        group   => 'hdfs',
+        mode    => '0600',
+        require => File[$ssh_user_keydir],
+      }
+    }
     if ($auth == "kerberos" and $ha != "disabled") {
       fail("High-availability secure clusters are not currently supported")
     }
