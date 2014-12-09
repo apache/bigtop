@@ -95,5 +95,5 @@ And run the following on those nodes:
 # hadoop_storage_dirs,/data/1,/data/2
 # bigtop_yumrepo_uri,http://mirror.example.com/path/to/mirror/
 # EOF
-# puppet apply -d --modulepath=bigtop-deploy/puppet/modules bigtop-deploy/puppet/manifests/site.pp
+# puppet apply -d --modulepath="bigtop-deploy/puppet/modules:/etc/puppet/modules" bigtop-deploy/puppet/manifests/site.pp
 </pre>
