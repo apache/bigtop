@@ -74,9 +74,14 @@ class hadoop_cluster_node {
   $spark_master_ui_port              = extlookup("spark_master_ui_port", "18080")
 
   # Lookup comma separated components (i.e. hadoop,spark,hbase ).
-  $components_str                    = extlookup("components")
+  $components_tmp                        = extlookup("components",    split($components, ","))
   # Ensure (even if a single value) that the type is an array.
-  $components                        = any2array($components_str,",")
+  if is_array($components_tmp) {
+    $components = $components_tmp
+  }
+  else {
+    $components = any2array($components_tmp,",")
+  }
 
   $all = ($components[0] == undef)
 
