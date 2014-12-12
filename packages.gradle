@@ -76,6 +76,21 @@ def getDate() {
   new Date().format('E, dd MMM yyyy HH:mm:ss Z')
 }
 
+def nativePackaging = {
+  def devNull = new org.apache.bigtop.NullOutputStream()
+  def result = exec {
+    commandLine "/bin/bash", "-c",
+    """dpkg-query -S /bin/sh && exit 1
+       rpm -qf /bin/sh && exit 2
+       exit 0
+    """
+    ignoreExitValue true
+    errorOutput devNull
+    standardOutput devNull
+  }
+  [false, "deb", "rpm"][result.getExitValue()]
+}.call()
+
 task "packages-help" (description: "All package build related tasks information", group: PACKAGES_GROUP) << {
   targets.each { target ->
     println (target + "\n\t[" + tasks.findAll { alltask -> alltask.name.startsWith(target)}*.name.join(", ") + "]")
@@ -428,6 +443,16 @@ def genTasks = { target, variable ->
       into PKG_OUTPUT_DIR
     }
     touchTargetFile(BOM_map[variable + '_TARGET_SRPM'])
+  }
+  if (nativePackaging) {
+    task "$target-pkg" (dependsOn: "$target-$nativePackaging",
+        description: "Invoking a native binary packaging target $nativePackaging",
+        group: PACKAGES_GROUP) << {
+    }
+    task "$target-spkg" (dependsOn: "$target-s$nativePackaging",
+        description: "Invoking a native binary packaging target s$nativePackaging",
+        group: PACKAGES_GROUP) << {
+    }
   }
   task "$target-yum" (dependsOn: "$target-rpm",
       description: "Creating YUM repository for $target packages",
