@@ -71,8 +71,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
       # This is a update to allow dev packages
       # Force success - not worried if this step fails, since we generally only use it for development.
-      bigtop.vm.provision "shell", inline: "sudo echo \"gpgcheck=0\" >> /etc/yum.conf"
-      bigtop.vm.provision "shell", inline: "sudo yum-config-manager --add-repo file:///bigtop-home/output ; true"
+      if CONF['enable_local_yum'] then
+        bigtop.vm.provision "shell", inline: "sudo echo \"gpgcheck=0\" >> /etc/yum.conf"
+        bigtop.vm.provision "shell", inline: "sudo yum-config-manager --add-repo file:///bigtop-home/output ; true"
+      end
 
       # carry on w/ installation
       bigtop.vm.provision "shell", path: "../utils/setup-env.sh"

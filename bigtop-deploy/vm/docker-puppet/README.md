@@ -169,7 +169,7 @@ Note: If running on OS X or Windows, the boot2docker VM should be reloaded after
 * Choose the ecosystem you want to be deployed by modifying components in provision.sh.
 
 ```
-     components,hadoop,hbase,yarn,mapred-app,...
+     components,hadoop,hbase,yarn,...
 ```
 
 By default, Apache Hadoop, YARN, and Apache HBase will be installed.

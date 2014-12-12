@@ -54,11 +54,30 @@ vagrant up
 num_instances: 5
 ```
 
+5) Test on local built packages is available by:
+
+first, build up local yum repo
+
+```
+cd bigtop; ./gradlew tachyon-yum
+```
+
+and then enable local yum in vagrantconfig.yaml
+
+```
+enable_local_yum: true
+```
+
+finally, spin up the cluster
+```
+vagrant up
+```
+
 ##Configure Apache Hadoop ecosystem components
 * Choose the ecosystem you want to be deployed by modifying components in vagrantconfig.yaml
 
 ```
-components: "hadoop,hbase,yarn,mapred-app,..."
+components: "hadoop,hbase,yarn,..."
 ```
 
 By default, Apache Hadoop, YARN, and Apache HBase will be installed.

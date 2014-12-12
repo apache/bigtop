@@ -18,7 +18,7 @@ bigtop_yumrepo_uri,http://mirror.example.com/path/to/mirror/
 # "$components" list. If $components isn't set then everything in the stack will
 # be installed as usual. Otherwise only a specified list will be set
 # Possible elements:
-# hadoop,yarn,hbase,mapred-app,flume,solrcloud,spark,oozie,hcat,sqoop,httpfs,
+# hadoop,yarn,hbase,tachyon,flume,solrcloud,spark,oozie,hcat,sqoop,httpfs,
 # hue,mahout,giraph,crunch,pig,hive,zookeeper
 # Example (to deploy only HDFS and YARN server and gateway parts)
 #components,hadoop,yarn
