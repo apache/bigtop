@@ -161,6 +161,7 @@ done
 %attr(0755,root,root) %{bin_spark}
 %{bin}/spark-shell
 %{bin}/spark-executor
+%{bin}/spark-submit
 
 %files -n spark-python
 %defattr(-,root,root,755)

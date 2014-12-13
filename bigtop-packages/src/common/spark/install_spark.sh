@@ -149,6 +149,8 @@ cp -a $BUILD_DIR/bin/spark-class $PREFIX/$LIB_DIR/bin/
 cp -a $BUILD_DIR/sbin/spark-executor $PREFIX/$LIB_DIR/sbin/
 cp -a ${SOURCE_DIR}/compute-classpath.sh $PREFIX/$LIB_DIR/bin/
 cp -a ${BUILD_DIR}/bin/spark-shell $PREFIX/$LIB_DIR/bin/
+cp -a ${BUILD_DIR}/bin/spark-submit $PREFIX/$LIB_DIR/bin/
+
 touch $PREFIX/$LIB_DIR/RELEASE
 
 # Copy in the configuration files
@@ -161,14 +163,14 @@ ln -s /etc/spark/conf $PREFIX/$LIB_DIR/conf
 tar --wildcards -C $PREFIX/$LIB_DIR -zxf ${BUILD_DIR}/assembly/target/spark-assembly*-dist.tar.gz ui-resources/\*
 
 # set correct permissions for exec. files
-for execfile in bin/spark-class bin/spark-shell sbin/spark-executor ; do
+for execfile in bin/spark-class bin/spark-shell sbin/spark-executor bin/spark-submit; do
   chmod 755 $PREFIX/$LIB_DIR/$execfile
 done
 chmod 755 $PREFIX/$LIB_DIR/bin/compute-classpath.sh
 
 # Copy in the wrappers
 install -d -m 0755 $PREFIX/$BIN_DIR
-for wrap in sbin/spark-executor bin/spark-shell ; do
+for wrap in sbin/spark-executor bin/spark-shell bin/spark-submit; do
   cat > $PREFIX/$BIN_DIR/`basename $wrap` <<EOF
 #!/bin/bash 
 

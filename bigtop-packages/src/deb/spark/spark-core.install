@@ -1,5 +1,6 @@
 /etc/spark
 /usr/bin/spark-executor
+/usr/bin/spark-submit
 /usr/bin/spark-shell
 /usr/lib/spark/assembly
 /usr/lib/spark/bin/compute-classpath.sh
