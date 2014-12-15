@@ -44,6 +44,12 @@
       <groupId>org.apache.hadoop</groupId>
       <artifactId>hadoop-hdfs</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-hdfs</artifactId>
+      <version>2.4.1</version>
+      <type>test-jar</type>
+    </dependency>
   </dependencies>
 
 </project>
