@@ -1,0 +1,31 @@
+Bigtop's approach to running CI off of Jenkins is simple: we use
+Groovy DSL Job plugin extensively so that Jenkins configuration
+can be as stateless as possible. All we require from a Jenkins
+admin is that the following plugins are installed:
+   * Amazon EC2 Plugin
+   * Credentials Plugin
+   * Disk Usage Plugin
+   * DynamicAxis Plugin
+   * Git Plugin
+   * Gradle plugin
+   * Hudson Extended Read Permission Plugin
+   * Job DSL Plugin
+   * Mailer
+   * Matrix Authorization Strategy Plugin
+   * Matrix Project Plugin
+   * Matrix Reloaded Plugin
+   * Parameterized Trigger Plugin
+   * SSH Credentials Plugin
+   * SSH Slaves plugin
+   * Timestamper
+
+Once you have all the above plugins installed, all you have to do in
+order to start Bigtop CI is to create one Bootstrap job. Pick a type
+of 'Build a free-style software project' when asked by Jenkins and 
+hook it up to Bigtop's Git repo. Then select 'Process Job DSLs' as 
+one and only build step, pointing it at 
+   bigtop-ci/jenkins/jobsCreator.groovy
+as a DSL script that needs to be looked up in the filesystem.
+
+That is it! You only need to run it now in order to have all
+the required Jenkins jobs.
