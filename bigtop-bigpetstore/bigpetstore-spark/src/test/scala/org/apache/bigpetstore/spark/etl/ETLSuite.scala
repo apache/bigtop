@@ -40,34 +40,31 @@ class IOUtilsSuite extends FunSuite with BeforeAndAfterAll {
   var transactions: Option[Array[Transaction]] = None
 
   val stores = Array(Store(5L, "11553"), Store(1L, "98110"), Store(6L, "66067"))
-  val locations = Array(Location("11553", "Uniondale", "NY"),
-    Location("98110", "Bainbridge Islan", "WA"),
-    Location("66067", "Ottawa", "KS"),
-    Location("20152", "Chantilly", "VA"))
+  val locations =
+    Array(
+      Location("11553", "Uniondale", "NY"),
+      Location("98110", "Bainbridge Islan", "WA"),
+      Location("66067", "Ottawa", "KS"),
+      Location("20152", "Chantilly", "VA"))
   val customers = Array(Customer(999L, "Cesareo", "Lamplough", "20152"))
-  val products = Array(
-    Product(1L, "dry dog food", Map("category" -> "dry dog food", "brand" -> "Happy Pup", "flavor" -> "Fish & Potato", "size" -> "30.0", "per_unit_cost" -> "2.67")),
-    Product(0L, "poop bags", Map("category" -> "poop bags", "brand" -> "Dog Days", "color" -> "Blue", "size" -> "60.0", "per_unit_cost" -> "0.21")),
-    Product(2L, "dry cat food", Map("category" -> "dry cat food", "brand" -> "Feisty Feline", "flavor" -> "Chicken & Rice", "size" -> "14.0", "per_unit_cost" -> "2.14")))
+  val products =
+    Array(
+      Product(1L, "dry dog food", Map("category" -> "dry dog food", "brand" -> "Happy Pup", "flavor" -> "Fish & Potato", "size" -> "30.0", "per_unit_cost" -> "2.67")),
+      Product(0L, "poop bags", Map("category" -> "poop bags", "brand" -> "Dog Days", "color" -> "Blue", "size" -> "60.0", "per_unit_cost" -> "0.21")),
+      Product(2L, "dry cat food", Map("category" -> "dry cat food", "brand" -> "Feisty Feline", "flavor" -> "Chicken & Rice", "size" -> "14.0", "per_unit_cost" -> "2.14")))
 
   val rawLines = Array(
     "5,11553,Uniondale,NY,999,Cesareo,Lamplough,20152,Chantilly,VA,32,Tue Nov 03 01:08:11 EST 2015,category=dry dog food;brand=Happy Pup;flavor=Fish & Potato;size=30.0;per_unit_cost=2.67;",
-
     "1,98110,Bainbridge Islan,WA,999,Cesareo,Lamplough,20152,Chantilly,VA,31,Mon Nov 02 17:51:37 EST 2015,category=poop bags;brand=Dog Days;color=Blue;size=60.0;per_unit_cost=0.21;",
-
     "6,66067,Ottawa,KS,999,Cesareo,Lamplough,20152,Chantilly,VA,30,Mon Oct 12 04:29:46 EDT 2015,category=dry cat food;brand=Feisty Feline;flavor=Chicken & Rice;size=14.0;per_unit_cost=2.14;")
-
 
   override def beforeAll() {
     val conf = new SparkConf().setAppName("BPS Data Generator Test Suite").setMaster("local[2]")
     sc = Some(new SparkContext(conf))
 
-    val cal1 = Calendar.getInstance(TimeZone.getTimeZone("America/New_York"),
-      Locale.US)
-    val cal2 = Calendar.getInstance(TimeZone.getTimeZone("America/New_York"),
-      Locale.US)
-    val cal3 = Calendar.getInstance(TimeZone.getTimeZone("America/New_York"),
-      Locale.US)
+    val cal1 = Calendar.getInstance(TimeZone.getTimeZone("America/New_York"), Locale.US)
+    val cal2 = Calendar.getInstance(TimeZone.getTimeZone("America/New_York"), Locale.US)
+    val cal3 = Calendar.getInstance(TimeZone.getTimeZone("America/New_York"), Locale.US)
 
     // Calendar seems to interpet months as 0-11
     // ms are not in output we parse.
