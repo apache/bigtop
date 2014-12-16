@@ -74,6 +74,15 @@ standalone with a command such as:
 	
 where <path_to_bigtop> is the cloned git repo.
 
+## Installation of Tools for Bigtop Deployment
+
+This is a separated set of manifests that helps to setup tools for Bigtop deployment.
+The usage is as below:
+
+	puppet apply --modulepath=<path_to_bigtop> -e "include bigtop_toolchain::deployment-tools"
+
+By applying the snippet, Vagrant will be installed(the Docker installation will be added soon).
+
 ## Requirements
 
 For RedHat/Centos, due to redistribution restrictions the Oracle JDK must be downloaded seperately. 
