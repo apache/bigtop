@@ -21,16 +21,41 @@ require "yaml"
 _config = YAML.load(File.open(File.join(File.dirname(__FILE__), "vagrantconfig.yaml"), File::RDONLY).read)
 CONF = _config
 
+# Repository
+# Example for testing a Release candidate.
+repo = CONF['repo']
+# repo = "http://bigtop.s3.amazonaws.com/releases/0.7.0/redhat/6/x86_64"
+
+# number of instances
+num_instances = CONF['num_instances']
+
+# hadoop ecosystem components
+components = CONF['components']
+
+# Whether to run smoke tests
+run_smoke_tests = CONF['run_smoke_tests']
+
+# master node hostname
+bigtop_master = "bigtop1.vagrant"
+
+$script = <<SCRIPT
+service iptables stop
+chkconfig iptables off
+cat /dev/null > /etc/hosts
+echo "Bigtop yum repo = #{repo}"
+# Prepare puppet configuration file
+mkdir /vagrant/config
+cat > /vagrant/config/site.csv << EOF
+hadoop_head_node,#{bigtop_master}
+hadoop_storage_dirs,/data/1,/data/2
+bigtop_yumrepo_uri,#{repo}
+jdk_package_name,java-1.7.0-openjdk-devel.x86_64
+components,#{components}
+EOF
+SCRIPT
+
 VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  # Repository
-  # Example for testing a Release candidate.
-  repo = CONF['repo']
-  # repo = "http://bigtop.s3.amazonaws.com/releases/0.7.0/redhat/6/x86_64"
-
-  # number of instances
-  num_instances = CONF['num_instances']
-
   # manage /etc/hosts by hostmanager plugin(https://github.com/smdahlen/vagrant-hostmanager)
   # use vagrant-cachier to cache packages at local(https://github.com/fgrehm/vagrant-cachier)
   config.hostmanager.enabled = true
@@ -40,9 +65,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.cache.scope = :box
   end
 
-  # declare the variable first, will be override in following loop
-  bigtop_master = ""
-
   # nodes definition
   (1..num_instances).each do |i|
     config.vm.define "bigtop#{i}" do |bigtop|
@@ -50,9 +72,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       bigtop.vm.box = CONF['box']
       bigtop_hostname="bigtop#{i}.vagrant"
       bigtop_ip="10.10.10.1#{i}"
-      if "#{i}" == "1"
-        bigtop_master = bigtop_hostname
-      end
 
       bigtop.vm.provider :virtualbox do |vb|
         vb.customize ["modifyvm", :id, "--memory", CONF['memory_size']]
@@ -78,13 +97,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
       # carry on w/ installation
       bigtop.vm.provision "shell", path: "../utils/setup-env.sh"
-
-      # shell provisioner to setup basic vm environment
-      bigtop.vm.provision :shell do |shell|
-	shell.path = "provision.sh"
-        shell.args = [ bigtop_master , repo, CONF["components"]]
-      end
-
+      bigtop.vm.provision "shell", inline: $script
       bigtop.vm.provision :hostmanager
 
       # deploy Apache Hadoop and it's ecosystem
@@ -95,11 +108,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         puppet.options = "--debug --confdir=/vagrant"
       end
 
-      if i==num_instances then
-        puts "creating provisioner directive for running tests"
-        bigtop.vm.provision "shell", path: "../utils/smoke-tests.sh"
-      else
-        puts "Not creating provisioner directive for tests yet... only on vm #{i} of #{num_instances}"
+      if run_smoke_tests then
+        if i==num_instances then
+          puts "creating provisioner directive for running tests"
+          bigtop.vm.provision "shell", path: "../utils/smoke-tests.sh"
+        else
+          puts "Not creating provisioner directive for tests yet... only on vm #{i} of #{num_instances}"
+        end
       end
 
     end

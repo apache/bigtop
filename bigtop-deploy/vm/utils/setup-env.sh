@@ -18,6 +18,7 @@
 # Install puppet agent
 yum -y install http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm
 yum -y install puppet
+cd /etc/puppet/modules && puppet module install puppetlabs/stdlib
 
 mkdir -p /data/{1,2}
 

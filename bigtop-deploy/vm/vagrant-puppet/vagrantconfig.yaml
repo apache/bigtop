@@ -5,3 +5,4 @@ repo: "http://bigtop01.cloudera.org:8080/view/Releases/job/Bigtop-0.8.0/label=ce
 num_instances: 1
 components: "hadoop,yarn"
 enable_local_yum: false
+run_smoke_tests: false
