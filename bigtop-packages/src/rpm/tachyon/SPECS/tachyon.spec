@@ -22,7 +22,7 @@ URL:           http://tachyon-project.org/
 Group:         Development/Libraries
 BuildArch:     noarch
 
-Source0:       %{name}-%{tachyon_version}.tar.gz
+Source0:       %{name}-%{tachyon_base_version}.tar.gz
 Source1:       do-component-build
 Source2:       install_tachyon.sh
 Source3:       init.d.tmpl
