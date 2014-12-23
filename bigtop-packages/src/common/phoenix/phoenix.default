@@ -17,4 +17,4 @@ export PHOENIX_HOME="/usr/lib/phoenix"
 export PHOENIX_LIB_DIR="$PHOENIX_HOME"
 
 # Add the Phoenix server side jar to the HBase classpath
-export HBASE_CLASSPATH="$HBASE_CLASSPATH $PHOENIX_HOME/phoenix-core.jar"
+export HBASE_CLASSPATH="$HBASE_CLASSPATH $PHOENIX_HOME/phoenix-server.jar"

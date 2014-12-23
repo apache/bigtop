@@ -49,7 +49,7 @@
     <giraph.version>1.0.0</giraph.version>
     <solr.version>4.6.0</solr.version>
     <spark.version>0.9.1</spark.version>
-    <phoenix.version>4.1.0</phoenix.version>
+    <phoenix.version>4.2.2</phoenix.version>
     <spark-smoke.version>${project.version}</spark-smoke.version>
 
     <itest-common.version>${project.version}</itest-common.version>

@@ -130,7 +130,5 @@ find $PREFIX/$LIB_DIR -name '*.jar' -exec chmod a-x {} \;
 # phoenix-client for clients like sqlline
 ln -s `cd $PREFIX/$LIB_DIR ; ls phoenix*-client.jar` $PREFIX/$LIB_DIR/phoenix-client.jar
 
-# phoenix-core for placing on the HBase regionserver classpath
-cp -af $PREFIX/$LIB_DIR/lib/phoenix-core-*.jar $PREFIX/$LIB_DIR/
-rm $PREFIX/$LIB_DIR/phoenix*-tests.jar
-ln -s `cd $PREFIX/$LIB_DIR ; ls phoenix-core-*.jar` $PREFIX/$LIB_DIR/phoenix-core.jar
+# phoenix-server for placing on the HBase regionserver classpath
+ln -s `cd $PREFIX/$LIB_DIR ; ls phoenix*-server.jar` $PREFIX/$LIB_DIR/phoenix-server.jar

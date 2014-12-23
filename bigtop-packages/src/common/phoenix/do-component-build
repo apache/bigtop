@@ -18,13 +18,14 @@ set -ex
 
 . `dirname $0`/bigtop.bom
 
-mvn -DskipTests -Dhadoop.profile=2    \
-    -Dhadoop-two.version=$HADOOP_VERSION  \
-    -Dhbase-hadoop2.version=$HBASE_VERSION-hadoop2  \
+mvn -DskipTests \
+    -Dhadoop.version=$HADOOP_VERSION  \
+    -Dhbase.version=$HBASE_VERSION-hadoop2  \
     -Dpig.version=$PIG_VERSION  \
     -Dflume.version=$FLUME_VERSION  \
-    -Dsnappy.version=1.0.4.1  \
-    clean package "$@"
+    clean install package "$@"
 rm -rf build
 mkdir build
 tar -C build --strip-components=1 -xzf phoenix-assembly/target/phoenix-$PHOENIX_VERSION.tar.gz
+# workaround for PHOENIX-1532
+cp -a phoenix-assembly/target/phoenix-$PHOENIX_VERSION-server.jar build/
