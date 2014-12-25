@@ -23,6 +23,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import static org.apache.bigtop.itest.LogErrorsUtils.logError;
 import org.apache.bigtop.itest.JarContent;
 import org.apache.bigtop.itest.shell.Shell;
 
@@ -36,6 +37,8 @@ public class TestDFSAdmin {
     // unpack resource
     JarContent.unpackJarContainer(TestDFSAdmin.class, "." , null);
     System.out.println("Running DFSAdmin commands:");
+    //shHDFS.exec("export JAVA_HOME=/usr/java/default");
+    logError(shHDFS);
   }
 
   @AfterClass
@@ -46,7 +49,7 @@ public class TestDFSAdmin {
   public void testDFSbasic() { 
     // report
     System.out.println("-report"); 
-    shHDFS.exec("hdfs dfsadmin -report");    
+    shHDFS.exec("hdfs dfsadmin -report");
     assertTrue("-report failed", shHDFS.getRet() == 0);
 
     // help
@@ -100,6 +103,7 @@ public class TestDFSAdmin {
     // refreshNodes
     System.out.println("-refreshNodes"); 
     shHDFS.exec("hdfs dfsadmin -refreshNodes");
+    logError(shHDFS);
     assertTrue("-refreshNodes failed", shHDFS.getRet() == 0);
 
     /*// refreshServiceAcl - does not work - shHDFS.getRet() = 255

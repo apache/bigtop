@@ -49,6 +49,7 @@
     <solr-smoke.version>${project.version}</solr-smoke.version>
     <hcatalog-smoke.version>${project.version}</hcatalog-smoke.version>
     <phoenix-smoke.version>${project.version}</phoenix-smoke.version>
+    <extendedrubytest-smoke.version>${project.version}</extendedrubytest-smoke.version>
   </properties>
 
   <!--
@@ -64,13 +65,14 @@
     <module>giraph</module>
     <module>hue</module>
     <module>crunch</module>
+    <module>flume</module>
 
     <!--
-    <module>flume</module>
     <module>sqoop</module>
     -->
     <module>hcatalog</module>
     <module>phoenix</module>
+    <module>extendedrubytest</module>
   </modules>
 
   <dependencyManagement>
@@ -152,6 +154,18 @@
         <groupId>org.apache.bigtop.itest</groupId>
         <artifactId>phoenix-smoke</artifactId>
         <version>${phoenix-smoke.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+	<groupId>org.apache.bigtop.itest</groupId>
+	<artifactId>flume-smoke</artifactId>
+	<version>${flume-smoke.version}</version>
+	<scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.bigtop.itest</groupId>
+        <artifactId>extendedrubytest-smoke</artifactId>
+        <version>${extendedrubytest-smoke.version}</version>
         <scope>test</scope>
       </dependency>
     </dependencies>

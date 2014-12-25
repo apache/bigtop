@@ -25,13 +25,18 @@ import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertTrue
 import static org.apache.bigtop.itest.LogErrorsUtils.logError
 import org.apache.bigtop.itest.shell.Shell
+import org.junit.runners.MethodSorters
+import org.junit.FixMethodOrder
+
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 
 public class TestFuseDFS {
   private static String username = System.properties["user.name"];
   private static Configuration conf;
   private static Shell sh = new Shell("/bin/bash -s");
-  private static Shell shRoot = new Shell("/bin/bash -s", "root");
-  private static String mount_point = System.getProperty("fuse.dfs.mountpoint", "/tmp/hdfs-test");
+  private static Shell shRoot = new Shell("/bin/bash -s");
+ private static String mount_point = "/tmp/hdfs";
+//  private static String mount_point = System.getProperty("fuse.dfs.mountpoint", "/tmp/hdfs-test");
   private static String userdir = "${mount_point}/user/${username}";
   private static String testdir = "${userdir}/TestFuseDFS-testDir";
   private static String testfile = "${testdir}/TestFuseDFS-testFile";
@@ -39,24 +44,26 @@ public class TestFuseDFS {
   @BeforeClass
   public static void setUp() {
     conf = new Configuration();
-    String fs_default_name = conf.get("fs.defaultFS");
-    String uri = fs_default_name.substring(1);
+//    String fs_default_name = conf.get("fs.defaultFS");
+//    String uri = fs_default_name.substring(1);
     shRoot.exec("umount ${mount_point}");
     shRoot.exec("mkdir -p ${mount_point}");
-    shRoot.exec("hadoop-fuse-dfs ${uri} ${mount_point}");
+  //  shRoot.exec("hadoop-fuse-dfs ${uri} ${mount_point}");
     logError(shRoot);
     assertEquals("hadoop-fuse-dfs failed", 0, shRoot.getRet());
   }
 
   @AfterClass
   public static void tearDown() {
+/*
+
     shRoot.exec("umount ${mount_point}");
     logError(shRoot);
     assertEquals("FUSE-DFS mount not cleaned up", 0, shRoot.getRet());
+*/
   }
-
   @Test
-  public void testCd() {
+  public void t1_testCd() {
     System.out.println("Test cd");
     sh.exec("cd ${mount_point}");
     logError(sh);
@@ -64,7 +71,7 @@ public class TestFuseDFS {
   }
 
   @Test
-  public void testLs() {
+  public void t2_testLs() {
     System.out.println("Test ls");
     sh.exec("ls ${mount_point}");
     logError(sh);
@@ -72,15 +79,15 @@ public class TestFuseDFS {
   }
 
   @Test
-  public void testMkDir() {
+  public void t3_testMkDir() {
     System.out.println("Test mkdir");
-    sh.exec("mkdir ${testdir}");
+    sh.exec("mkdir -p ${testdir}");
     logError(sh);
     assertEquals("mkdir failed", 0, sh.getRet());
   }
 
   @Test
-  public void testTouch() {
+  public void t4_testTouch() {
     System.out.println("Test touch");
     sh.exec("touch ${testfile}");
     logError(sh);
@@ -88,7 +95,7 @@ public class TestFuseDFS {
   }
 
   @Test
-  public void cat() {
+  public void t5_cat() {
     System.out.println("Test cat");
     sh.exec("cat ${testfile}");
     logError(sh);
@@ -96,7 +103,7 @@ public class TestFuseDFS {
   }
 
   @Test
-  public void testCp() {
+  public void t6_testCp() {
     System.out.println("Test cp");
     sh.exec("cp ${testfile} ${testfile}2");
     logError(sh);
@@ -107,7 +114,7 @@ public class TestFuseDFS {
   }
 
   @Test
-  public void testMv() {
+  public void t7_testMv() {
     System.out.println("Test mv");
     sh.exec("mv ${testdir} ${testdir}3");
     logError(sh);
@@ -115,7 +122,7 @@ public class TestFuseDFS {
   }
 
   @Test
-  public void testRm() {
+  public void t8_testRm() {
     System.out.println("Test rm -r");
     sh.exec("rm -r ${testdir}*");
     logError(sh);

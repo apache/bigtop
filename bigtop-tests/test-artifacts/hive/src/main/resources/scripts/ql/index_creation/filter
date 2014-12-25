@@ -4,5 +4,15 @@ sed -e  's#hdfs://[^/]*/#hdfs://HADOOP/#' \
     -e  's#createTime:[0-9]*,#createTime:JUSTNOW#' \
     -e  's#location:hdfs://[^/]*/#location:hdfs://HADOOP/#' \
     -e  's#transient_lastDdlTime=[0-9]*}#transient_lastDdlTime=JUSTNOW}#' \
-    -e '/.*jobconf.xml:an attempt to override final parameter: mapreduce.job.end-notification.*;  Ignoring\./ d'
-
+    -e '/.*jobconf.xml:an attempt to override final parameter: mapreduce.job.end-notification.*;  Ignoring\./ d' \
+    -e 's/key.*string/key string/' \
+    -e 's/_bucketname.*string/_bucketname string/' \
+    -e 's/_offsets.*array<bigint>/_offsets array<bigint>/' \
+    -e 's/ owner:.*retention/ retention/' \
+    -e 's/ location:.*inputFormat/ inputFormat/' \
+    -e 's/transient_lastDdlTime.*viewOriginalText/ viewOriginalText/' \
+    -e 's/serializationLib.*parameters/parameters/' \
+    -e 's/to trash.*//' \
+    -e "s/Moved:.*\///" \
+    -e "s/Deleted .*\///" \
+    -e "s/'//"

@@ -1,1 +1,2 @@
-sed -e '/.*jobconf.xml:an attempt to override final parameter: mapreduce.job.end-notification.*;  Ignoring\./ d'
+sed -e '/.*jobconf.xml:an attempt to override final parameter: mapreduce.job.end-notification.*;  Ignoring\./ d' \
+    -e '/^EXPLAIN/,/Stage: Stage-0/d' -e '/^$/d'

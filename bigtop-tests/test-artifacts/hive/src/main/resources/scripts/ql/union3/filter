@@ -1,4 +1,5 @@
 sed -re 's#hdfs://.*/-(ext|mr)-1000#hdfs://HADOOP/-\1-1000#' \
      -e '/^Deleted hdfs/d' \
      -e 's#file:/.*/-(ext|mr)-1000#file:/HADOOP/-\1-1000#' \
-     -e '/.*jobconf.xml:an attempt to override final parameter: mapreduce.job.end-notification.*;  Ignoring\./ d'
+     -e '/.*jobconf.xml:an attempt to override final parameter: mapreduce.job.end-notification.*;  Ignoring\./ d' \
+     -e '/explain/,/limit: -1/d' -e '/^Moved:/d' -e '/^Deleted/d' -e '/^$/d' -e '/^Copying file/d'

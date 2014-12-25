@@ -15,58 +15,53 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
     <groupId>org.apache.bigtop.itest</groupId>
     <artifactId>smoke-tests</artifactId>
     <version>0.7.0</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
-
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>oozie-smoke-test</artifactId>
   <version>0.7.0</version>
   <name>Oozie smoke test execution</name>
-
   <properties>
     <OOZIE_URL>${env.OOZIE_URL}</OOZIE_URL>
-
+    <OOZIE_TAR_HOME>${env.OOZIE_TAR_HOME}</OOZIE_TAR_HOME>
     <org.apache.maven-dependency-plugin.groupId>org.apache.bigtop.itest</org.apache.maven-dependency-plugin.groupId>
     <org.apache.maven-dependency-plugin.artifactId>oozie-smoke</org.apache.maven-dependency-plugin.artifactId>
     <org.apache.maven-dependency-plugin.version>${oozie-smoke.version}</org.apache.maven-dependency-plugin.version>
     <org.apache.maven-dependency-plugin.type>jar</org.apache.maven-dependency-plugin.type>
   </properties>
-
   <dependencies>
     <dependency>
       <groupId>org.apache.bigtop.itest</groupId>
       <artifactId>oozie-smoke</artifactId>
     </dependency>
   </dependencies>
-
   <build>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
       </plugin>
-
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
         <version>2.11</version>
         <configuration>
+<excludes>
+<!--Commented test cases-->
+</excludes>
           <systemPropertyVariables>
             <org.apache.bigtop.itest.oozie_url>${OOZIE_URL}</org.apache.bigtop.itest.oozie_url>
+	    <org.apache.bigtop.itest.oozie_tar_home>${OOZIE_TAR_HOME}</org.apache.bigtop.itest.oozie_tar_home>
           </systemPropertyVariables>
           <forkMode>always</forkMode>
         </configuration>
       </plugin>
-
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
@@ -89,7 +84,6 @@
           </execution>
         </executions>
       </plugin>
-
     </plugins>
   </build>
 </project>

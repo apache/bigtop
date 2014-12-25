@@ -26,12 +26,13 @@ import org.junit.AfterClass
 import org.junit.BeforeClass
 import static junit.framework.Assert.assertEquals
 import org.apache.hadoop.conf.Configuration
+import static org.apache.bigtop.itest.LogErrorsUtils.logError
 
 class TestOozieSmoke {
   private static final int WAIT_TIMEOUT = 60000;
   private static Shell sh = new Shell("/bin/bash -s");
   private static String tmp_dir = "oozie.${(new Date().getTime())}";
-
+  
   private static String oozie_url;
   private static String resourcemanager;
   private static String namenode;
@@ -73,6 +74,7 @@ class TestOozieSmoke {
   void testOozieExamplesCommon(String testname) {
     sh.exec("oozie job -oozie ${oozie_url} -run -DjobTracker=${resourcemanager} -DnameNode=${namenode} " +
             "-DexamplesRoot=${tmp_dir}/examples -config /tmp/${tmp_dir}/examples/apps/${testname}/job.properties");
+            logError(sh);  
     assertEquals("Oozie job submition ${testname} failed",
                  0, sh.ret);
 

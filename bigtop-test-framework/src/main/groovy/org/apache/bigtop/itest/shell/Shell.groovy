@@ -66,7 +66,7 @@ class Shell {
    * @return Shell object for chaining
    */
   Shell exec(Object... args) {
-    def proc = user ? "sudo -u $user PATH=${System.getenv('PATH')} $shell".execute() :
+    def proc = user ? "sudo -u $user  HADOOP_CONF_DIR=${System.getenv('HADOOP_CONF_DIR')} JAVA_HOME=${System.getenv('JAVA_HOME')} HADOOP_HOME=${System.getenv('HADOOP_HOME')} PATH=${System.getenv('PATH')} $shell".execute() :
                                     "$shell".execute()
     script = args.join("\n")
     if (LOG.isTraceEnabled()) {

@@ -29,6 +29,7 @@ import org.junit.BeforeClass
 import org.junit.Test
 import static org.junit.Assert.assertTrue
 import static org.junit.Assert.assertEquals
+import static org.junit.Assert.assertNotNull
 
 import org.apache.bigtop.itest.junit.OrderedParameterized
 import org.junit.runner.RunWith
@@ -37,11 +38,16 @@ import org.apache.bigtop.itest.Contract
 import org.apache.bigtop.itest.ParameterSetter
 import org.apache.bigtop.itest.Property
 import org.apache.bigtop.itest.shell.Shell
+import org.apache.bigtop.itest.JarContent
 
 @RunWith(OrderedParameterized.class)
 public class TestHcatalogBasic {
 
   public static Shell sh = new Shell("/bin/bash -sx")
+  private static final String HIVE_HOME = System.getenv('HIVE_HOME');
+  static{
+	assertNotNull("HIVE_HOME has to be set to run this test", HIVE_HOME);
+       }
 
   public TestHcatalogBasic() {
   }
@@ -53,9 +59,11 @@ public class TestHcatalogBasic {
 
   @AfterClass
   public static void tearDown() {
+
     sh.exec("rm -f *.actual")
     sh.exec("hive -e \"DROP TABLE IF EXISTS hcat_basic\"")
     sh.exec("hadoop fs -rmr -skipTrash /user/hive/warehouse")
+
   }
 
 
@@ -64,6 +72,7 @@ public class TestHcatalogBasic {
    */
   @Test
   public void testBasic() {
+    JarContent.unpackJarContainer(TestHcatalogBasic.class, ".", null);
     sh.exec("""
     hcat -e "CREATE TABLE hcat_basic(key string, value string) \
     PARTITIONED BY (dt STRING) \
@@ -119,8 +128,8 @@ public class TestHcatalogBasic {
     // Test Pig's integration with HCatalog
     sh.exec("""
     pig -useHCatalog -e "\
-    REGISTER /usr/lib/hcatalog/share/hcatalog/*.jar; \
-    REGISTER /usr/lib/hive/lib/*.jar; \
+    REGISTER $HIVE_HOME/hcatalog/share/hcatalog/*.jar;
+    REGISTER $HIVE_HOME/lib/*.jar; \
     DATA= LOAD 'hcat_basic' USING org.apache.hcatalog.pig.HCatLoader(); \
     DATA_GROUPS= GROUP DATA ALL; \
     DATA_COUNT= FOREACH DATA_GROUPS GENERATE COUNT(DATA); \

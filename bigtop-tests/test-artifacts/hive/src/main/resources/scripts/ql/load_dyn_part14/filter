@@ -4,4 +4,5 @@ sed -e  's#owner:[^,]*,#owner:BORG,#' \
     -e  's#createTime:[0-9]*,#createTime:JUSTNOW#' \
     -e  's#location:hdfs://[^/]*/#location:hdfs://HADOOP/#' \
     -e  's#{transient_lastDdlTime=[0-9]*}#{transient_lastDdlTime=JUSTNOW}#' \
-    -e '/.*jobconf.xml:an attempt to override final parameter: mapreduce.job.end-notification.*;  Ignoring\./ d'
+    -e '/.*jobconf.xml:an attempt to override final parameter: mapreduce.job.end-notification.*;  Ignoring\./ d' \
+    -ne '/show partitions/,$p'

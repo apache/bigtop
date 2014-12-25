@@ -34,7 +34,8 @@
 
   <properties>
     <HUE_URL>${env.HUE_URL}</HUE_URL>
-
+    <HUE_USERNAME>${env.HUE_USERNAME}</HUE_USERNAME>
+    <HUE_PASSWORD>${env.HUE_PASSWORD}</HUE_PASSWORD>
     <org.apache.maven-dependency-plugin.groupId>org.apache.bigtop.itest</org.apache.maven-dependency-plugin.groupId>
     <org.apache.maven-dependency-plugin.artifactId>hue-smoke</org.apache.maven-dependency-plugin.artifactId>
     <org.apache.maven-dependency-plugin.version>${hue-smoke.version}</org.apache.maven-dependency-plugin.version>
@@ -60,6 +61,8 @@
         <configuration>
           <systemPropertyVariables>
             <org.apache.bigtop.itest.hue_url>${HUE_URL}</org.apache.bigtop.itest.hue_url>
+            <org.apache.bigtop.itest.hue_username>${HUE_USERNAME}</org.apache.bigtop.itest.hue_username>
+            <org.apache.bigtop.itest.hue_password>${HUE_PASSWORD}</org.apache.bigtop.itest.hue_password>
           </systemPropertyVariables>
           <forkMode>always</forkMode>
         </configuration>
@@ -80,6 +83,14 @@
                 <requireProperty>
                   <property>HUE_URL</property>
                   <message>HUE_URL env. variable has to be set</message>
+                </requireProperty>
+		<requireProperty>
+                  <property>HUE_USERNAME</property>
+                  <message>HUE_USERNAME env. variable has to be set</message>
+		</requireProperty>
+                <requireProperty>
+  		  <property>HUE_PASSWORD</property>
+		  <message>HUE_PASSWORD env. variable has to be set</message>
                 </requireProperty>
               </rules>
               <fail>true</fail>

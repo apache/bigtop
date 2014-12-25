@@ -29,11 +29,13 @@ import org.apache.hadoop.io.*;
 import org.apache.hadoop.conf.Configuration;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+import org.junit.runners.MethodSorters;
+import org.junit.FixMethodOrder;
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestFileAppend {
  
   private static Shell sh = new Shell("/bin/bash -s");
-  private static Shell shHDFS = new Shell("/bin/bash", "hdfs");
+  private static Shell shHDFS = new Shell("/bin/bash");
   private static final String HADOOP_HOME = System.getenv('HADOOP_HOME');
   private static final String HADOOP_CONF_DIR = System.getenv('HADOOP_CONF_DIR');
   private static final String USERNAME = System.getProperty("user.name");
@@ -77,9 +79,9 @@ public class TestFileAppend {
   }
 
   @Test
-  public void testAppendOnPreExistingFile() { 
+  public void t1_testAppendOnPreExistingFile() { 
+   System.out.println("testAppendOnPreExistingFile"); 
     FileSystem fs = FileSystem.get(conf);
-    
     // setting paths for I/O stream creation
     String myInputPath = namenode + "/user/$USERNAME/$testAppendInput/appendinput2.txt$date";
     Path inFile = new Path(myInputPath);
@@ -102,9 +104,9 @@ public class TestFileAppend {
   }
 
   @Test
-  public void testAppendOnCreatedFile() {
+  public void t2_testAppendOnCreatedFile() {
+    System.out.println("testAppendOnCreatedFile");
     FileSystem fs = FileSystem.get(conf);
-    
     // setting paths for I/O stream creation
     String myOutputCreate = namenode + "/user/$USERNAME/$testAppendInput/appendinput3.txt$date";
     Path outCreate = new Path(myOutputCreate);
@@ -136,9 +138,9 @@ public class TestFileAppend {
 
 
   @Test
-  public void testAppendFilesGreaterThanBlockSize() {
+  public void t3_testAppendFilesGreaterThanBlockSize() {
+    System.out.println("testAppendFilesGreaterThanBlockSize");
     FileSystem fs = FileSystem.get(conf);
-
     // creating test files that exceed block size; putting them on hdfs
     sh.exec("dd if=/dev/urandom of=3mboutput.file$date count=3 bs=1048576");
     assertTrue("File creation error", sh.getRet() == 0);
@@ -169,9 +171,9 @@ public class TestFileAppend {
   }
 
   @Test
-  public void testFsckSanity() {
+  public void t4_testFsckSanity() {
+    System.out.println("testFsckSanity");
     FileSystem fs = FileSystem.get(conf);
-
     // test file creation
     sh.exec("dd if=/dev/zero of=test1.file$date count=1 bs=1048576");
     assertTrue("File creation error", sh.getRet() == 0);
@@ -203,9 +205,9 @@ public class TestFileAppend {
   }
 
   @Test
-  public void testMultipleOutputStreamFailure() {
+  public void t5_testMultipleOutputStreamFailure() {
+  System.out.println("testMultipleOutputStreamFailure"); 
     FileSystem fs = FileSystem.get(conf);
-
     // test file creation
     sh.exec("dd if=/dev/zero of=test3.file$date count=1 bs=1048576");
     assertTrue("File creation error", sh.getRet() == 0);

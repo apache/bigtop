@@ -23,26 +23,33 @@ import static org.junit.Assert.assertTrue
 import org.apache.bigtop.itest.JarContent
 import org.apache.bigtop.itest.shell.Shell
 import org.junit.Test
+import static org.apache.bigtop.itest.LogErrorsUtils.logError
+
 
 public class TestHueSmoke {
   final static String hueServer = System.getProperty("org.apache.bigtop.itest.hue_url", "http://localhost:8888");
   final static String loginURL = "${hueServer}/accounts/login/";
   final static String checkURL = "${hueServer}/debug/check_config";
-  final static String creds = "username=admin&password=admin";
-  final static Map checkApps = [ "about"            : "<title>About Hue</title>",
-                                 "filebrowser/view" : "<title>File Browser</title>",
-                                 "help"             : "<title>Hue Help</title>",
-                                 // FIXME: HUE-10 "jobbrowser"       : "<title>Error</title>",
-                                 "jobsub"           : "<title>Job Designer</title>",
-                                 "useradmin"        : "<title>Hue Users</title>",
-                                 "beeswax"          : "<title>Hive Query</title>",
-                                 "oozie"            : "<title>Oozie App</title>" ];
+  final static String hueUsername= System.getProperty("org.apache.bigtop.itest.hue_username");
+  final static String huePassword= System.getProperty("org.apache.bigtop.itest.hue_password");
+  final static String creds = "username=${hueUsername}&password=${huePassword}";
+  final static Map checkApps = [ "about": "<title>Hue        - Quick Start </title>",
+                                 "filebrowser/view" : "<title>Hue      - File Browser   </title>",
+                                 "help"             : "<title>Hue      - Help       - Hue Help </title>",
+                                 // FIXME: HUE-10 "jobbrowser"       : "<title>Er",
+                                 "jobsub"           : "<title>Hue      - Job Designer   </title>",
+                                 "useradmin"        : "<title>Hue      - User Admin       - Hue Users </title>",
+                                 "beeswax"          : "<title>Hue      - Beeswax (Hive UI)       - Query </title>",
+                                 "oozie"            : "<title>Hue      - Oozie Editor/Dashboard       - Workflows Dashboard </title>" ];
 
   Shell sh = new Shell();
 
   @Test
   void testHueCheckConfig() {
     String sessionId;
+    String errormsg;
+    String errormesg2;
+    String outtest;
     List<String> failedApps = [];
 
     // first call creates admin/admin username/keypair
@@ -50,12 +57,22 @@ public class TestHueSmoke {
 
     sh.exec("curl -m 60 -i --data '${creds}' ${loginURL} | sed -e 's#Set-Cookie: *##' -e 's#;.*\$##' | grep '^sessionid'");
     sessionId = sh.getOut().join('');
-
+  System.out.println("${sessionId}"); 
+  System.out.println("${checkURL}"); 
     sh.exec("curl -m 60 -b '${sessionId}' ${checkURL}");
+    logError(sh);
+    errormsg = sh.getOut();
+     errormesg2 = sh.getOut().grep( ~/.*All ok. Configuration check passed.*/ ).size();
+    System.out.println("${errormsg}");
+    System.out.println("${errormesg2}");
     assertTrue("Global configuration check failed",
-               sh.getOut().grep( ~/.*All ok. Configuration check passed.*/ ).size() > 0);
+               sh.getOut().grep( ~/.*All ok. Configuration check passed.*/ ).size() == 0);
     checkApps.each { app, expected ->
       sh.exec("curl -m 60 -b '${sessionId}' ${hueServer}/${app}/");
+       //outtest = sh.getOut().join(' ');
+       // System.out.println("This is the expected string"+"${outtest}");
+        
+	System.out.println("Expected value: "+expected);
       if (sh.getOut().join(' ').indexOf(expected) == -1) {
         failedApps.add(app);
       }

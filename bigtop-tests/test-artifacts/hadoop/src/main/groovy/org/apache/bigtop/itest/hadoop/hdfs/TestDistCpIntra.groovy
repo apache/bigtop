@@ -23,7 +23,7 @@ import org.junit.*;
 import org.junit.Test;
 import org.apache.bigtop.itest.shell.Shell;
 import org.apache.hadoop.conf.Configuration;
-
+import static org.apache.bigtop.itest.LogErrorsUtils.logError
 
 public class TestDistCpIntra {
  
@@ -117,6 +117,7 @@ public class TestDistCpIntra {
       String dcpfile_i = "$dcpfile" + "$i" + ".txt";
       // running distcp from namenode/src to namenode/dest
       sh.exec("hadoop distcp $namenode/user/$USERNAME/$testDistcpInputs/$dcpfile_i $namenode/user/$USERNAME/$testDistcpOutputs");
+      logError(sh);
       assertTrue("Distcp $i failed", sh.getRet() == 0);
       
       // confirm that copied file is the same as original file

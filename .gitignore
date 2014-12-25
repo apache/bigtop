@@ -9,3 +9,6 @@ target
 *.classpath
 *.iml
 .idea
+backup/
+*.log
+component.list

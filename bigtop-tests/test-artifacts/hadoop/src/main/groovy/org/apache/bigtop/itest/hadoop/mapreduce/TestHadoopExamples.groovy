@@ -28,6 +28,7 @@ import org.apache.bigtop.itest.JarContent
 import org.apache.bigtop.itest.TestUtils
 import org.apache.commons.logging.LogFactory
 import org.apache.commons.logging.Log
+import static org.apache.bigtop.itest.LogErrorsUtils.logError
 
 import org.apache.bigtop.itest.junit.OrderedParameterized
 import org.junit.runners.Parameterized.Parameters
@@ -37,19 +38,19 @@ import org.junit.runner.RunWith
 class TestHadoopExamples {
   static private Log LOG = LogFactory.getLog(TestHadoopExamples.class);
 
-  private static final String HADOOP_MAPRED_HOME = System.getenv('HADOOP_MAPRED_HOME');
+  private static final String YARN_EXAMPLES = System.getenv('YARN_EXAMPLES');  
   private static final String HADOOP_CONF_DIR = System.getenv('HADOOP_CONF_DIR');
   private static String hadoopExamplesJar =
-    JarContent.getJarName(HADOOP_MAPRED_HOME, 'hadoop.*examples.*.jar');
+    JarContent.getJarName(YARN_EXAMPLES, 'hadoop-mapreduce-examples-.*.jar');
   static {
-    assertNotNull("HADOOP_MAPRED_HOME has to be set to run this test",
-        HADOOP_MAPRED_HOME);
+    assertNotNull("YARN_EXAMPLES has to be set to run this test",
+        YARN_EXAMPLES);
     assertNotNull("HADOOP_CONF_DIR has to be set to run this test",
         HADOOP_CONF_DIR);
     assertNotNull("Can't find hadoop-examples.jar file", hadoopExamplesJar);
   }
   static final String HADOOP_EXAMPLES_JAR =
-    HADOOP_MAPRED_HOME + "/" + hadoopExamplesJar;
+    YARN_EXAMPLES + "/" + hadoopExamplesJar;
 
   static Shell sh = new Shell("/bin/bash -s");
   private static final String EXAMPLES = "examples";
@@ -70,7 +71,7 @@ class TestHadoopExamples {
   static long terasortid = System.currentTimeMillis();
 
   //Number of rows for terasort ~ number of splits 
-  public static String terasort_rows = System.getProperty("terasort_rows", "1000");
+  public static String terasort_rows = System.getProperty("terasort_rows", "10");
   
   static Map examples =
     [
@@ -83,7 +84,6 @@ class TestHadoopExamples {
         aggregatewordcount:"$EXAMPLES/text $EXAMPLES_OUT/aggregatewordcount 2 textinputformat",
         aggregatewordhist :"$EXAMPLES/text $EXAMPLES_OUT/aggregatewordhist 2 textinputformat",
         grep              :"$EXAMPLES/text $EXAMPLES_OUT/grep '[Cc]uriouser'",
-        sleep             :"-m 10 -r 10",
         secondarysort     :"$EXAMPLES/ints $EXAMPLES_OUT/secondarysort",
         randomtextwriter  :"-D $RANDOMTEXTWRITER_TOTALBYTES=1073741824 $EXAMPLES_OUT/randomtextwriter"
     ];
@@ -107,7 +107,16 @@ class TestHadoopExamples {
 
   @Test
   void testMRExample() {
+   if(this.testName =="terasort")
+   {
+   sh.exec("hadoop jar $testJar $testName -Dmapreduce.terasort.output.replication=2 -Dmapreduce.terasort.simplepartitioner=true $testArgs"); 
+   }
+   else
+  { 
     sh.exec("hadoop jar $testJar $testName $testArgs");
+  }
+    logError(sh);
+   
     assertTrue("Example $testName $testJar $testName $testArgs failed", sh.getRet() == 0);
   }
 }

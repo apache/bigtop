@@ -1,0 +1,2 @@
+sed -e '/explain/,/table: mp/d' \
+    -e '/^$/d'

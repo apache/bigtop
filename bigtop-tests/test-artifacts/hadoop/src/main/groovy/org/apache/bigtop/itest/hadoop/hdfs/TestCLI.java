@@ -41,7 +41,7 @@ public class TestCLI extends CLITestHelper {
   private String nn;
   private String sug;
   protected String namenode;
-  private static Shell shHDFS = new Shell("/bin/bash", "hdfs");
+  private static Shell shHDFS = new Shell("/bin/bash");
 
   @Before
   @Override

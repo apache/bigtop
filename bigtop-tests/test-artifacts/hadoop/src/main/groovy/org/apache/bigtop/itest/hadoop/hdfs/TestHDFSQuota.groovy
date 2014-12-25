@@ -24,6 +24,10 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.apache.bigtop.itest.shell.Shell;
+import static org.apache.bigtop.itest.LogErrorsUtils.logError;
+import org.junit.runners.MethodSorters;
+import org.junit.FixMethodOrder;
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 
 public class TestHDFSQuota {
  
@@ -70,8 +74,9 @@ public class TestHDFSQuota {
     }
   }
 
+
   @Test
-  public void testNewlyCreatedDir() { 
+  public void t1_testNewlyCreatedDir() { 
     // newly created dir should have no name quota, no space quota   
     shHDFS.exec("hadoop fs -count -q $testQuotaFolder1");
     assertTrue("Could not use count command", shHDFS.getRet() == 0);
@@ -83,7 +88,7 @@ public class TestHDFSQuota {
   } 
 
   @Test
-  public void testAdminPermissions() { 
+  public void t2_testAdminPermissions() { 
     // admin setting quotas should succeed
     shHDFS.exec("hadoop dfsadmin -setQuota 10 $testQuotaFolder1");
     assertTrue("setQuota failed", shHDFS.getRet() == 0);
@@ -108,7 +113,7 @@ public class TestHDFSQuota {
   } 
 
   @Test
-  public void testRename() { 
+  public void t3_testRename() { 
     // name and space quotas stick after rename
     shHDFS.exec("hadoop fs -count -q $testQuotaFolder1");
     assertTrue("Could not use count command", shHDFS.getRet() == 0);
@@ -126,7 +131,7 @@ public class TestHDFSQuota {
   }
 
   @Test
-  public void testInputValues() { 
+  public void t4_testInputValues() { 
     // the largest allowable quota size is Long.Max_Value and must be greater than zero
     shHDFS.exec("hadoop dfsadmin -setQuota -1 $testQuotaFolder1");
     assertTrue("setQuota should not have worked", shHDFS.getRet() != 0);
@@ -151,7 +156,7 @@ public class TestHDFSQuota {
   }
 
   @Test
-  public void testForceDirEmpty() {
+  public void t5_testForceDirEmpty() {
     // setting the name quota to 1 for an empty dir will cause the dir to remain empty
     shHDFS.exec("hadoop dfsadmin -setQuota 1 $testQuotaFolder1");
     assertTrue("Could not setQuota", shHDFS.getRet() == 0);
@@ -160,7 +165,7 @@ public class TestHDFSQuota {
   }
 
   @Test
-  public void testQuotasPostViolation() {  
+  public void t6_testQuotasPostViolation() {  
     // quota can be set even if it violates
     shHDFS.exec("hadoop dfsadmin -setQuota $LARGE $testQuotaFolder1");
     assertTrue("Could not setQuota", shHDFS.getRet() == 0);
@@ -177,7 +182,7 @@ public class TestHDFSQuota {
   }
 
   @Test
-  public void testQuotas() {
+  public void t7_testQuotas() {
     // dir creation should fail - name quota
     shHDFS.exec("hadoop dfsadmin -setSpaceQuota 10000000000 $testQuotaFolder1");
     assertTrue("Could not setSpaceQuota", shHDFS.getRet() == 0);
@@ -241,7 +246,7 @@ public class TestHDFSQuota {
   }
 
   @Test
-  public void testQuotasShouldFail() {
+  public void t8_testQuotasShouldFail() {
     String date = "/tmp/failTest" + quotaDate;
     shHDFS.exec("hadoop fs -mkdir $date");
     assertTrue("Could not use mkdir command", shHDFS.getRet() == 0);
@@ -273,8 +278,8 @@ public class TestHDFSQuota {
   }
 
   @Test
-  public void testReplicationFactor() {
-    // increasing/decreasing replication factor of a file should debit/credit quota
+  public void t9_testReplicationFactor() {
+  // increasing/decreasing replication factor of a file should debit/credit quota
     String repFolder = "/tmp/repFactorTest" + quotaDate;
     shHDFS.exec("hadoop fs -mkdir $repFolder");
     assertTrue("Could not use mkdir command", shHDFS.getRet() == 0);    
@@ -282,25 +287,25 @@ public class TestHDFSQuota {
     assertTrue("Could not use put command", shHDFS.getRet() == 0);
     shHDFS.exec("hadoop dfsadmin -setSpaceQuota 1000 $repFolder");
     assertTrue("Could not setQuota", shHDFS.getRet() == 0); 
-    shHDFS.exec("hadoop fs -setrep 1 $repFolder/testString1");
+    shHDFS.exec("hadoop fs -setrep 2 $repFolder/testString1");
     shHDFS.exec("hadoop fs -count -q $repFolder");
     assertTrue("Could not use count command", shHDFS.getRet() == 0);
     String[] output = shHDFS.getOut().get(0).trim().split();   
-    int size_of_one = Integer.parseInt(output[2]) - Integer.parseInt(output[3]);
-    shHDFS.exec("hadoop fs -setrep 5 $repFolder/testString1");
-    shHDFS.exec("hadoop fs -count -q $repFolder");
-    assertTrue("Could not use count command", shHDFS.getRet() == 0);
-    output = shHDFS.getOut().get(0).trim().split();   
-    int size_of_five = Integer.parseInt(output[2]) - Integer.parseInt(output[3]);
-    assertTrue("Quota not debited correctly", size_of_one * 5 == size_of_five);
+    int size_of_two = Integer.parseInt(output[2]) - Integer.parseInt(output[3]);
     shHDFS.exec("hadoop fs -setrep 3 $repFolder/testString1");
     shHDFS.exec("hadoop fs -count -q $repFolder");
     assertTrue("Could not use count command", shHDFS.getRet() == 0);
     output = shHDFS.getOut().get(0).trim().split();   
     int size_of_three = Integer.parseInt(output[2]) - Integer.parseInt(output[3]);
-    assertTrue("Quota not credited correctly", size_of_one * 3 == size_of_three);
+    assertTrue("Quota not debited correctly", size_of_two * 3 == size_of_three * 2);
+   // shHDFS.exec("hadoop fs -setrep 6 $repFolder/testString1");
+    //shHDFS.exec("hadoop fs -count -q $repFolder");
+    //assertTrue("Could not use count command", shHDFS.getRet() == 0);
+   // output = shHDFS.getOut().get(0).trim().split();   
+   // int size_of_three = Integer.parseInt(output[2]) - Integer.parseInt(output[3]);
+   // assertTrue("Quota not credited correctly", size_of_one * 3 == size_of_three);
     shHDFS.exec("hadoop fs -rmr $repFolder"); 
-  }
+}
 
 }
 

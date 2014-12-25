@@ -24,45 +24,70 @@ import org.apache.bigtop.itest.shell.Shell
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import static junit.framework.Assert.assertEquals
+import static org.apache.bigtop.itest.LogErrorsUtils.logError
 import org.apache.hadoop.conf.Configuration
 import org.apache.bigtop.itest.JarContent
 
 // TODO: we have to stub it for 0.20.2 release, once we move to 0.21+ this can go
 // import org.apache.hadoop.hdfs.DFSConfigKeys
 class DFSConfigKeys {
-  static public final FS_DEFAULT_NAME_KEY = "fs.default.name";
+  static public final FS_DEFAULT_NAME_KEY = "fs.defaultFS";
 }
 
 class TestFlumeSmoke {
-  private static String tmp = "TestFlumeSmoke-${(new Date().getTime())}";
-  private static String nn = (new Configuration()).get(DFSConfigKeys.FS_DEFAULT_NAME_KEY);
-  private static String hdfs_sink_dir = "${nn}/user/${System.properties['user.name']}/$tmp";
-
-  private static Shell sh = new Shell('/bin/bash -s');
-
+ //private static String tmp = "TestFlumeSmoke-${(new Date().getTime())}";
+  //private static String nn = (new Configuration()).get(DFSConfigKeys.FS_DEFAULT_NAME_KEY);
+  private static String hdfs_sink_dir = "/tmp/flumetest";
+  private static String flumeServiceUrl= System.getProperty("org.apache.bigtop.itest.flume_service_url");
+  private static String flumedatalocation = System.getProperty("user.dir");
+  private static String flumedata= "${flumedatalocation}/final_reduced.json";
+  private static Shell sh = new Shell('/bin/bash');
+  private static Shell shdel = new Shell('/bin/bash',"hdfs");
   @BeforeClass
   static void setUp() {
     JarContent.unpackJarContainer(TestFlumeSmoke.class, '.' , null);
+    sh.exec("sed -i \"s%FLUME_URL%${flumeServiceUrl}%g\" ${flumedata}");
+    shdel.exec("hadoop fs -rm /tmp/flumetest/FlumeData.*");
   }
 
   @AfterClass
-  static void tearDown() {
-    sh.exec("hadoop fs -rmr $hdfs_sink_dir");
+  static void tearDown()
+ {
+    
+
   }
 
+/*
   private void compressionCommonTest(String id, String decompress, String glob) {
     String node_config = "node:text(\"events.txt\")|collectorSink(\"${hdfs_sink_dir}\",\"data\");";
+    System.out.println("${node_config}");
 
-    sh.exec("export FLUME_CONF_DIR=./${id}",
+    
+sh.exec("export FLUME_CONF_DIR=./${id}",
             "flume node_nowatch -s -1 -n node -c '${node_config}'");
     assertEquals("Flume failed to accept events",
                  0, sh.ret);
-
-    sh.exec("hadoop fs -cat ${hdfs_sink_dir}/${glob} | ${decompress} | wc -l");
+    //sh.exec("hadoop fs -cat ${hdfs_sink_dir}/${glob} | ${decompress} | wc -l");
+      sh.exec("hadoop fs -cat ${hdfs_sink_dir}/FlumeData* |  wc -l");
     assertEquals("Wrong # of lines in output found at ${hdfs_sink_dir}",
-                 "10000", sh.out[0]);
+                 "10", sh.out[0]);
   }
+*/
 
+@Test
+public void testcat() {
+//System.out.println("curl -v -X POST ${flumeServiceUrl} -d @${flumedata} -H \"Content-type: application/json\"");
+sh.exec("curl -v -X POST ${flumeServiceUrl} -d @${flumedata} -H \"Content-type: application/json\"");
+sh.exec("hadoop fs -cat ${hdfs_sink_dir}/FlumeData.* | wc -l");
+    assertEquals("Wrong # of lines in output found at ${hdfs_sink_dir}",
+                 "10", sh.out[0]);
+shdel.exec("hadoop fs -rm /tmp/flumetest/FlumeData.*"); 
+}
+
+
+
+
+/*
   @Test(timeout=300000L)
   public void testBzip2() {
     compressionCommonTest("FlumeSmokeBzip2", "bzip2 -d", "*.bz2");
@@ -78,4 +103,5 @@ class TestFlumeSmoke {
   public void testGzip() {
     compressionCommonTest("FlumeSmokeGzip", "gzip -d", "*.gz");
   }
+*/
 }

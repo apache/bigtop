@@ -49,7 +49,10 @@ import org.apache.bigtop.itest.shell.Shell;
 public class TestJdbcDriver {
 
   public static String driverName = "org.apache.hadoop.hive.jdbc.HiveDriver";
-  public static String hiveserver_url = "jdbc:hive://localhost:10000/default";
+  public static String HIVE_SERVER_HOST=System.getenv("HIVE_SERVER_HOST")==null?"localhost":System.getenv("HIVE_SERVER_HOST");
+  public static String HIVE_SERVER_DB_PORT=System.getenv("HIVE_SERVER_DB_PORT")==null?"10002":System.getenv("HIVE_SERVER_DB_PORT");
+  public static String HIVE_SERVER_DB_NAME=System.getenv("HIVE_SERVER_DB_NAME")==null?"default":System.getenv("HIVE_SERVER_DB_NAME");
+  public static String hiveserver_url = "jdbc:hive://"+HIVE_SERVER_HOST+":"+HIVE_SERVER_DB_PORT+"/"+HIVE_SERVER_DB_NAME;
   public static Shell sh = new Shell("/bin/bash -s");
   public static String testDir = "/tmp/hive-jdbc." + (new Date().getTime());
   public static String hiveserver_pid;
@@ -58,6 +61,7 @@ public class TestJdbcDriver {
 
   @BeforeClass
   public static void setUp() throws ClassNotFoundException, InterruptedException, NoSuchFieldException, IllegalAccessException {
+    
     ParameterSetter.setProperties(TestJdbcDriver.class, new String[] {"hiveserver_startup_wait"});
     System.out.println("hiveserver_startup_wait: " + hiveserver_startup_wait);
     Class.forName(driverName);
@@ -66,7 +70,7 @@ public class TestJdbcDriver {
     sh.exec("hadoop fs -copyFromLocal a.txt " + testDir + "/a.txt");
     assertTrue("Could not copy local file to test directory", sh.getRet() == 0);
     // start hiveserver in background and remember the pid
-    sh.exec("(HIVE_PORT=10000 hive --service hiveserver > /dev/null 2>&1 & echo $! ) 2> /dev/null");
+    sh.exec("(HIVE_PORT="+HIVE_SERVER_DB_PORT+" hive --service hiveserver > /dev/null 2>&1 & echo $! ) 2> /dev/null");
     hiveserver_pid = sh.getOut().get(0);
     Thread.sleep(hiveserver_startup_wait); // allow time for hiveserver to be up
   }
@@ -118,8 +122,8 @@ public class TestJdbcDriver {
     List<String> colNames = new ArrayList<String>();
     List<String> dataTypes = new ArrayList<String>();
     while (res.next()) {
-      String col_name = res.getString(1);
-      String data_type = res.getString(2);
+      String col_name = res.getString(1).trim();
+      String data_type = res.getString(2).trim();
       colNames.add(col_name);
       dataTypes.add(data_type);
       //System.out.println(col_name + "\t" + data_type);

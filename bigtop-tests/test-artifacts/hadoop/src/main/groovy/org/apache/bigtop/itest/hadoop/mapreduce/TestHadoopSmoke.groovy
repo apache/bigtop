@@ -35,7 +35,7 @@ class TestHadoopSmoke {
 
   static String hadoopHome = System.getProperty('HADOOP_HOME', '/usr/lib/hadoop')
   static String streamingHome = System.getenv('STREAMING_HOME')
-  static String hadoopMapReduceHome = System.getProperty('HADOOP_MAPRED_HOME', '/usr/lib/hadoop-mapreduce')
+  static String hadoopMapReduceHome = System.getProperty('YARN_EXAMPLES', '/opt/hadoop/share/hadoop/mapreduce')
   static final String STREAMING_HOME =
     (streamingHome == null) ? hadoopMapReduceHome : streamingHome;
   static String streaming_jar =
