@@ -15,7 +15,7 @@
 
 require bigtop_util
 $puppet_confdir = get_setting("confdir")
-$default_yumrepo = "http://bigtop01.cloudera.org:8080/view/Hadoop%200.23/job/Bigtop-23-matrix/label=centos5/lastSuccessfulBuild/artifact/output/"
+$default_yumrepo = "http://bigtop01.cloudera.org:8080/view/Releases/job/Bigtop-0.8.0/label=centos6/6/artifact/output/"
 $extlookup_datadir="$puppet_confdir/config"
 $extlookup_precedence = ["site", "default"]
 $jdk_package_name = extlookup("jdk_package_name", "jdk")
