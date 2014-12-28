@@ -165,11 +165,10 @@ Note: If running on OS X or Windows, the boot2docker VM should be reloaded after
 
 
 ##Configure Apache Hadoop ecosystem components
-
-* Choose the ecosystem you want to be deployed by modifying components in provision.sh.
+* Choose the ecosystem you want to be deployed by modifying components in vagrantconfig.yaml
 
 ```
-     components,hadoop,hbase,yarn,...
+components: "hadoop,hbase,yarn,..."
 ```
 
 By default, Apache Hadoop, YARN, and Apache HBase will be installed.

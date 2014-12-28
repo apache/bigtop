@@ -20,21 +20,22 @@ build-image() {
         >&2 echo -e "\nBUILD IMAGE FAILED!\n"
 	exit 2
     }
-    vagrant destroy image -f
 }
 
 create() {
     echo "\$num_instances = $1" > config.rb
     vagrant up --no-parallel
-    nodes=(`vagrant status |grep running |awk '{print $1}'`)
+    nodes=(`vagrant status |grep running |grep -v image |awk '{print $1}'`)
     hadoop_head_node=(`echo "hostname -f" |vagrant ssh ${nodes[0]} |tail -n 1`)
+    repo=$(get-yaml-config repo)
+    components=$(get-yaml-config components)
     echo "/bigtop-home/bigtop-deploy/vm/utils/setup-env.sh" |vagrant ssh ${nodes[0]}
-    echo "/vagrant/provision.sh $hadoop_head_node" |vagrant ssh ${nodes[0]}
+    echo "/vagrant/provision.sh $hadoop_head_node $repo $components" |vagrant ssh ${nodes[0]}
     bigtop-puppet ${nodes[0]}
     for ((i=1 ; i<${#nodes[*]} ; i++)); do
         (
         echo "/bigtop-home/bigtop-deploy/vm/utils/setup-env.sh" |vagrant ssh ${nodes[$i]}
-        echo "/vagrant/provision.sh $hadoop_head_node" |vagrant ssh ${nodes[$i]}
+        echo "/vagrant/provision.sh $hadoop_head_node $repo $components" |vagrant ssh ${nodes[$i]}
         bigtop-puppet ${nodes[$i]}
         ) &
     done
@@ -42,7 +43,7 @@ create() {
 }
 
 provision() {
-    nodes=(`vagrant status |grep running |awk '{print $1}'`)
+    nodes=(`vagrant status |grep running |grep -v image |awk '{print $1}'`)
     for node in $nodes; do
         bigtop-puppet $node &
     done
@@ -50,18 +51,33 @@ provision() {
 }
 
 smoke-tests() {
-    nodes=(`vagrant status |grep running |awk '{print $1}'`)
+    nodes=(`vagrant status |grep running |grep -v image |awk '{print $1}'`)
     echo "/bigtop-home/bigtop-deploy/vm/utils/smoke-tests.sh" |vagrant ssh ${nodes[0]}
 }
 
 
 destroy() {
-    vagrant destroy -f
-    rm -rf ./hosts ./config
+    rm -rf ./hosts ./config ./config.rb
+    nodes=(`vagrant status |grep running |grep -v image |awk '{print $1}'`)
+    for node in $nodes; do
+        vagrant destroy -f $node
+    done
+    wait
 }
 
 bigtop-puppet() {
     echo "puppet apply -d --confdir=/vagrant --modulepath=/bigtop-home/bigtop-deploy/puppet/modules:/etc/puppet/modules /bigtop-home/bigtop-deploy/puppet/manifests/site.pp" |vagrant ssh $1
+}
+
+get-yaml-config() {
+    RUBY_EXE=ruby
+    which ruby > /dev/null 2>&1
+    if [ $? -ne 0 ]; then
+	# use vagrant embedded ruby on Windows
+        RUBY_EXE=$(dirname $(which vagrant))/../embedded/bin/ruby
+    fi
+    RUBY_SCRIPT="data = YAML::load(STDIN.read); puts data['$1'];"
+    cat vagrantconfig.yaml | $RUBY_EXE -ryaml -e "$RUBY_SCRIPT" | tr -d '\r'
 }
 
 PROG=`basename $0`

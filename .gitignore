@@ -11,3 +11,4 @@ target
 .idea
 .gradle
 gradle*
+.vagrant

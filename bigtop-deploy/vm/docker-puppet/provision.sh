@@ -30,7 +30,7 @@ mkdir /vagrant/config
 cat > /vagrant/config/site.csv << EOF
 hadoop_head_node,$1
 hadoop_storage_dirs,/data/1,/data/2
-bigtop_yumrepo_uri,http://bigtop01.cloudera.org:8080/view/Releases/job/Bigtop-0.8.0/label=centos6/6/artifact/output/
+bigtop_yumrepo_uri,$2
 jdk_package_name,java-1.7.0-openjdk-devel.x86_64
-components,hadoop,hbase,yarn
+components,$3
 EOF
