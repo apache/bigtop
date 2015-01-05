@@ -64,14 +64,8 @@ def artifactToInstall = {
   def final TEST_DIR = "bigtop-tests/test-artifacts"
   def final ARTIFACT_DIR = "${BASE_DIR}/${TEST_DIR}"
 
-  File srcDir
-  srcDir = file("${TEST_DIR}")
-  def artifactFiles = files {srcDir.listFiles()}
-  def artifactCollection = []
-  artifactFiles.each { File file ->
-    artifactCollection.add(file.name)
-  }
-  artifactCollection.each { artifact ->
+  def project = new XmlSlurper().parse("$TEST_DIR/pom.xml")
+  project.modules.module.each { artifact ->
     task "install-${artifact}" (description: "Installs ${artifact} artifact with Maven", group: TESTARTIFACTS_GROUP) << {
       def final PATH = "${ARTIFACT_DIR}/$artifact/pom.xml"
       def final WRAPPER = "mvn clean install -f " + PATH
