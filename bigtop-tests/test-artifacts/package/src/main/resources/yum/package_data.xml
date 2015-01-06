@@ -18,14 +18,6 @@
 <packages>
   <mahout>
   </mahout>
-  <whirr>
-    <deps>
-      <tag name="/bin/bash"/>
-      <tag name="/bin/sh"/>
-      <tag name="/usr/bin/env"/>
-      <jre>&gt;=1.6</jre>
-    </deps>
-  </whirr>
   <flume>
     <users>
       <flume>

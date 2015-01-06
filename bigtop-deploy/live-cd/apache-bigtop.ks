@@ -84,7 +84,6 @@ mahout
 pig
 oozie
 oozie-client
-whirr
 zookeeper
 zookeeper-server
 %end

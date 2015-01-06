@@ -154,24 +154,6 @@ Spark runs on top of the Apache Mesos cluster manager.</description>
       <spark>/self</spark>
     </deps>
   </spark-python>
-  <whirr>
-    <metadata>
-      <summary>Scripts and libraries for running software services on cloud infrastructure.</summary>
-      <description>Whirr provides
- .
-  * A cloud-neutral way to run services. You don't have to worry about the
-    idiosyncrasies of each provider.
-  * A common service API. The details of provisioning are particular to the
-    service.
-  * Smart defaults for services. You can get a properly configured system
-    running quickly, while still being able to override settings as needed.
-    </description>
-      <url>http://whirr.apache.org/</url>
-    </metadata>
-    <deps>
-      <bigtop-utils/>
-    </deps>
-  </whirr>
   <flume>
     <metadata>
       <summary>Flume is a reliable, scalable, and manageable distributed log collection application for collecting data such as logs and delivering it to data stores such as Hadoop's HDFS.</summary>

@@ -49,7 +49,7 @@ class DeployCDH {
      "hadoop-hbase-master", "hadoop-hbase-regionserver", "hadoop-hbase-thrift", "hadoop-hive", "hadoop-pig",
      "hadoop-zookeeper", "hadoop-zookeeper-server", "hue", "hue-about", "hue-beeswax", "hue-common",
      "hue-filebrowser", "hue-help", "hue-jobbrowser", "hue-jobsub", "hue-plugins", "hue-proxy",
-     "hue-useradmin", "oozie", "oozie-client", "sqoop", "sqoop-metastore", "whirr" ];
+     "hue-useradmin", "oozie", "oozie-client", "sqoop", "sqoop-metastore" ];
 
     List<String> aptPkg = [ "hadoop-0.20-doc", "libhdfs0", "libhdfs0-dev", "python-hive" ];
     List<String> yumPkg = [ "hadoop-0.20-debuginfo", "hadoop-0.20-libhdfs" ];
