@@ -19,13 +19,13 @@
   <parent>
     <groupId>org.apache.bigtop.itest</groupId>
     <artifactId>smoke-tests</artifactId>
-    <version>0.7.0-altiscale-1</version>
+    <version>0.7.0-altiscale-2</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>oozie-smoke-test</artifactId>
-  <version>0.7.0-altiscale-1</version>
+  <version>0.7.0-altiscale-2</version>
   <name>Oozie smoke test execution</name>
   <properties>
     <OOZIE_URL>${env.OOZIE_URL}</OOZIE_URL>

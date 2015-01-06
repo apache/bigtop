@@ -24,14 +24,14 @@
   <parent>
     <groupId>org.apache.bigtop</groupId>
     <artifactId>bigtop</artifactId>
-    <version>0.7.0-altiscale-1</version>
+    <version>0.7.0-altiscale-2</version>
     <relativePath>../../../pom.xml</relativePath>
   </parent>
 
   <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>stacks-common</artifactId>
   <packaging>pom</packaging>
-  <version>0.7.0-altiscale-1</version>
+  <version>0.7.0-altiscale-2</version>
   <name>stacks-validation-common</name>
 
   <properties>

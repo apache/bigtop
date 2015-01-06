@@ -20,14 +20,14 @@
   <parent>
     <groupId>org.apache.bigtop.itest</groupId>
     <artifactId>bigtop-smokes</artifactId>
-    <version>0.7.0-altiscale-1</version>
+    <version>0.7.0-altiscale-2</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>datafu-smoke</artifactId>
-  <version>0.7.0-altiscale-1</version>
+  <version>0.7.0-altiscale-2</version>
   <name>datafusmoke</name>
 
   <dependencies>

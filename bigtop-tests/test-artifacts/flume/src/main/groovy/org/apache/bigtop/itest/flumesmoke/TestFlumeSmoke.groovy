@@ -40,7 +40,7 @@ class TestFlumeSmoke {
   private static String hdfs_sink_dir = "/tmp/flumetest";
   private static String flumeServiceUrl= System.getProperty("org.apache.bigtop.itest.flume_service_url");
   private static String flumedatalocation = System.getProperty("user.dir");
-  private static String flumedata= "${flumedatalocation}/final_reduced.json";
+  private static String flumedata= "${flumedatalocation}/target/work/final_reduced.json";
   private static Shell sh = new Shell('/bin/bash');
   private static Shell shdel = new Shell('/bin/bash',"hdfs");
   @BeforeClass
