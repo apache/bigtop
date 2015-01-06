@@ -21,12 +21,12 @@ usage() {
   echo "
 usage: $0 <options>
   Required not-so-options:
-     --build-dir=DIR             path to Whirr dist.dir
+     --build-dir=DIR             path to Tomcat dist.dir
      --prefix=PREFIX             path to install into
 
   Optional options:
-     --doc-dir=DIR               path to install docs into [/usr/share/doc/whirr]
-     --lib-dir=DIR               path to install Whirr home [/usr/lib/whirr]
+     --doc-dir=DIR               path to install docs into [/usr/share/doc/bigtop-tomcat]
+     --lib-dir=DIR               path to install Tomcat home [/usr/lib/bigtop-tomcat]
   "
   exit 1
 }
