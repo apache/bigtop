@@ -50,7 +50,6 @@
     <module>hcatalog</module>
     <module>spark</module>
     <module>phoenix</module>
-   <module>extendedrubytest</module>
   </modules>
 
   <dependencies>
