@@ -155,49 +155,35 @@ def genTasks = { target, variable ->
     def final TARBALL_SRC = BOM_map[variable + '_TARBALL_SRC'] ?: ""
     def final DOWNLOAD_DST = BOM_map[variable + '_DOWNLOAD_DST'] ?: ""
     def final SEED_TAR = BOM_map[variable + '_SEED_TAR']
-    def UNPACK = "tar -xzf"
-    def PATCHES = ""
 
-    if (TARBALL_SRC.empty)
-      PATCHES="/dev/null"
-    if (TARBALL_SRC.endsWith('.zip')) {
-      PATCHES="/dev/null"
-      UNPACK = "unzip"
-    }
     delete(TAR_DIR); mkdir(TAR_DIR)
-    println "PATCHES are $PATCHES"
-    if (!PATCHES.empty) {
-      println "Non-empty patches"
-      if (!TARBALL_SRC.empty) {
-        exec {
-          workingDir TAR_DIR
-          commandLine "$UNPACK $DOWNLOAD_DST".split(' ')
-        }
-        def unpacked = new File(TAR_DIR)
-        if (unpacked.list().size() == 1) {
-          def TOP_LEVEL_DIR = unpacked.list()[0]
-          fileTree ("$TAR_DIR/$TOP_LEVEL_DIR") {
-            include '**/*'
-          }.copy { into TAR_DIR }
-          delete(TOP_LEVEL_DIR)
-        }
-      } else {
+
+    if (TARBALL_SRC.empty || TARBALL_SRC.endsWith('.zip')) {
+      if (TARBALL_SRC.empty) {
+        // if no tar file needed (i.e. bigtop-utils)
+        // create some contents to pack later
         copy {
           from 'LICENSE'
           into TAR_DIR
         }
+      } else {
+        // i.e. a ZIP file
+        exec {
+          workingDir TAR_DIR
+          commandLine "unzip $DOWNLOAD_DST".split(' ')
+        }
+        def unpacked = new File(TAR_DIR)
+        // check wether we have to move contents one level up
+        if (unpacked.list().size() == 1) {
+          def TOP_LEVEL_DIR = unpacked.list()[0]
+          new File("$TAR_DIR/$TOP_LEVEL_DIR").list({ d, f ->
+            (f != "." && f != "..")}).each { f ->
+              new File("$TAR_DIR/$TOP_LEVEL_DIR/$f").renameTo("$TAR_DIR/$f")
+          }
+          delete(TOP_LEVEL_DIR)
+        }
       }
-/*
-      // TODO fix the patching
-      (cd $(BASE_DIR)/bigtop-packages/src/common/$($(PKG)_NAME); cat $$PATCHES)|    \
-            (cd $($(PKG)_TAR_DIR) ; patch -p0 ; cd .. ; tar czf $($(PKG)_SEED_TAR) *)  ;\
-*/
-      def command = [
-          '-c', 'tar', '"',
-          '-czf',
-          SEED_TAR,
-          '*', '"'
-      ]
+      // create SEED_TAR
       exec {
         workingDir "$TAR_DIR/.."
         commandLine "tar -czf $SEED_TAR ${new File("$TAR_DIR/..").list().join(' ')}".split(' ')
@@ -310,6 +296,18 @@ def genTasks = { target, variable ->
     changelog << "  Clean build\n"
     changelog << " -- Bigtop <dev@bigtop.apache.org>  ${getDate()}\n"
     changelog.close()
+
+    // Move patches and create "series"
+    def patches = new File( "$DEB_BLD_DIR/debian").list({ d, f -> f ==~ /patch.*diff/}).sort()
+    if (patches.size() > 0) {
+      mkdir("$DEB_BLD_DIR/debian/patches")
+      def seriesWriter = new File("$DEB_BLD_DIR/debian/patches/series").newWriter()
+      patches.each { f ->
+        def res = new File("$DEB_BLD_DIR/debian/$f").renameTo( "$DEB_BLD_DIR/debian/patches/$f")
+        seriesWriter << "$f\n"
+      }
+      seriesWriter.close()
+    }
     // Deleting obsolete files
     delete fileTree (dir: "$DEB_BLD_DIR/debian", includes: ['*.ex', '*.EX', '*.~'])
     // Creating source package
@@ -423,13 +421,42 @@ def genTasks = { target, variable ->
     def bomWriter = new File("$PKG_BUILD_DIR/rpm/SOURCES/bigtop.bom").newWriter()
     BOM_map[BIGTOP_BOM].split(" ").each { bomWriter << "$it\n"}
     bomWriter.close()
+
+    def specFileName = "${PKG_BUILD_DIR}/rpm/SPECS/${NAME}.spec"
+    def specTmpFileName = "${PKG_BUILD_DIR}/rpm/SPECS/tmp_${NAME}.spec"
+    def specFile = new File(specFileName)
+    def specWriter = new File(specTmpFileName).newWriter()
+    def patches = new File("${PKG_BUILD_DIR}/rpm/SOURCES").list({ d, f -> f ==~ /patch.*diff/}).sort()
+    specFile.eachLine { line ->
+      if (line.startsWith("#BIGTOP_PATCH_FILES")) {
+        def patchNum = 0
+        patches.each { p ->
+          specWriter << "Patch$patchNum: $p\n"
+          patchNum++
+        }
+      } else {
+        if (line.startsWith("#BIGTOP_PATCH_COMMANDS")) {
+          def patchNum = 0
+          patches.each { p ->
+            specWriter << "%patch$patchNum -p1\n"
+            patchNum++
+          }
+        } else {
+          specWriter << "$line\n"
+        }
+      }
+    }
+    specWriter.close()
+    specFile.delete()
+    new File(specTmpFileName).renameTo(specFileName)
+
     def command = [
         '--define', "_topdir $PKG_BUILD_DIR/rpm/",
         '--define', "${PKG_NAME_FOR_PKG}_base_version $BASE_VERSION",
         '--define', "${PKG_NAME_FOR_PKG}_version ${PKG_VERSION}${BIGTOP_BUILD_STAMP}",
         '--define', "${PKG_NAME_FOR_PKG}_release $RELEASE_VERSION%{?dist}",
         '-bs', '--nodeps', "--buildroot=${PKG_BUILD_DIR}/rpm/INSTALL",
-        "${PKG_BUILD_DIR}/rpm/SPECS/${NAME}.spec",
+        specFileName,
     ]
     exec {
       workingDir BASE_DIR
@@ -520,7 +547,6 @@ def genTasks = { target, variable ->
     println "  Then unpack into ${BOM_map[variable + '_SOURCE_DIR']}"
     println "  And create a seed tarball ${BOM_map[variable + '_SEED_TAR']}"
 
-    //TODO more about patches
     println "Version: " + BOM_map[variable + '_BASE_VERSION']
     //TODO more about stamping
   }
