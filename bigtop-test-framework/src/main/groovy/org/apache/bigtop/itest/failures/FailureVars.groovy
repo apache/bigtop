@@ -8,14 +8,26 @@ import java.io.IOException;
 /**
  * This class manages objects, variables, and command line parameter values for cluster failure testing.
  * By default, all parameters are off or set to false.
+ *
+ * The system property "failurePropertiesFile" represents the path to the file containing test parameters
+ * and must be set in order to parametrize a test. Failure scenario parameters are:
+ * testhost
+ * testremotehost
+ * runall
+ * servicerestart
+ * servicekill
+ * networkshutdown
+ * service
+ * failuredelay
+ * startdelay
+ * killduration
  */
 public class FailureVars {
 
   private final String CRON_SERVICE;
   private final int SLEEP_TIME = 100;
   private static FailureVars instance = null;
-  private String propertyFile = "/failureVars.properties"
-  private Boolean useProperties = Boolean.parseBoolean(System.getProperty("useFailureProperties", "false"));
+  private String propertyFile = System.getProperty("failurePropertiesFile");
   private String testHost;
   private String testRemoteHost;
   private String runFailures;
@@ -38,7 +50,7 @@ public class FailureVars {
   }
 
   protected FailureVars() {
-    if(useProperties) {
+    if(propertyFile != null) {
       loadProps();
     }
   }
@@ -52,7 +64,9 @@ public class FailureVars {
 
   private void loadProps() {
     try {
-      BufferedReader is = new BufferedReader (new InputStreamReader(getClass().getResourceAsStream(propertyFile)));
+      File pFile = new File(propertyFile);
+      assert(pFile.exists()) : "Failure properties file cannot be read";
+      BufferedReader is = new BufferedReader (new InputStreamReader(getClass(pFile)));
       System.out.println("Input Stream Location: " + is);
       Properties props = new Properties();
       props.load(is);
@@ -69,7 +83,7 @@ public class FailureVars {
       killDuration = props.getProperty("killduration", Integer.toString(0));
     }
     catch(IOException ioe) {
-      System.out.println(ioe);
+      System.out.println(ioe.getMessage());
     }
   }
 
