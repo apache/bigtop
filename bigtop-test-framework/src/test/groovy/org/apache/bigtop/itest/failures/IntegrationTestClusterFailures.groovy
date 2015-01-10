@@ -23,7 +23,7 @@ import org.junit.Before
 import org.junit.Test
 import org.apache.bigtop.itest.shell.Shell
 
-public class ClusterFailuresTest {
+public class IntegrationTestClusterFailures {
   private Shell rootShell = new Shell("/bin/bash", "root")
   private final int SLEEP_TIME = 100
   private final String CRON_SERVICE
