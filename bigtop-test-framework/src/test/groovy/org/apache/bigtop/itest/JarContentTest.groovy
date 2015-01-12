@@ -36,8 +36,8 @@ class JarContentTest {
       JarContent.listContent(env['JAVA_HOME'] + '/lib/nofilelikethat.jar').each {
         println it;
       }
+      assert("IOException should have been thrown");
     } catch (IOException e) {
-      assert e.getMessage().startsWith('Could not open')
       throw e;
     };
   }
