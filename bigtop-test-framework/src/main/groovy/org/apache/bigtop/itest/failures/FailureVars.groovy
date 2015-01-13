@@ -28,16 +28,16 @@ public class FailureVars {
   private final int SLEEP_TIME = 100;
   private static FailureVars instance = null;
   private String propertyFile = System.getProperty("failurePropertiesFile");
-  private String testHost;
-  private String testRemoteHost;
-  private String runFailures;
-  private String serviceRestart;
-  private String serviceKill;
-  private String networkShutdown;
-  private String service;
-  private String failureDelay;
-  private String startDelay;
-  private String killDuration;
+  private String testHost = "localhost";
+  private String testRemoteHost = "apache.org";
+  private String runFailures = "false";
+  private String serviceRestart = "false";
+  private String serviceKill = "false";
+  private String networkShutdown = "false";
+  private String service = "crond";
+  private String failureDelay = "0";
+  private String startDelay = "0";
+  private String killDuration = "0";
 
   {
     switch (OS.linux_flavor) {
@@ -71,16 +71,16 @@ public class FailureVars {
       Properties props = new Properties();
       props.load(is);
       is.close();
-      testHost = props.getProperty("testhost", "localhost");
-      testRemoteHost = props.getProperty("testremotehost", "apache.org");
-      runFailures = props.getProperty("runall", Boolean.FALSE.toString());
-      serviceRestart = props.getProperty("servicerestart", Boolean.FALSE.toString());
-      serviceKill = props.getProperty("servicekill", Boolean.FALSE.toString());
-      networkShutdown = props.getProperty("networkshutdown", Boolean.FALSE.toString());
-      service = props.getProperty("service", "crond");
-      failureDelay = props.getProperty("failuredelay", Integer.toString(0));
-      startDelay = props.getProperty("startdelay", Integer.toString(0));
-      killDuration = props.getProperty("killduration", Integer.toString(0));
+      testHost = props.getProperty("testhost");
+      testRemoteHost = props.getProperty("testremotehost");
+      runFailures = props.getProperty("runall");
+      serviceRestart = props.getProperty("servicerestart");
+      serviceKill = props.getProperty("servicekill");
+      networkShutdown = props.getProperty("networkshutdown");
+      service = props.getProperty("service");
+      failureDelay = props.getProperty("failuredelay");
+      startDelay = props.getProperty("startdelay");
+      killDuration = props.getProperty("killduration");
     }
     catch(IOException ioe) {
       System.out.println(ioe.getMessage());

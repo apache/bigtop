@@ -45,7 +45,7 @@ public class IntegrationTestClusterFailures {
 
   @Before
   void configureVars() {
-    def f = new FailureVars();
+    def f = FailureVars.getInstance();
     testHost = f.getTestHost();
     testRemoteHost = f.getTestRemoteHost();
     serviceRestart = f.getServiceRestart();
