@@ -15,9 +15,9 @@ import org.apache.bigtop.itest.shell.Shell
  */
 public class FailureExecutor implements Runnable {
 
-  private String restart = FailureVars.instance.getServiceRestart();
-  private String kill = FailureVars.instance.getServiceKill();
-  private String shutdown = FailureVars.instance.getNetworkShutdown();
+  private boolean restart = FailureVars.instance.getServiceRestart();
+  private boolean kill = FailureVars.instance.getServiceKill();
+  private boolean shutdown = FailureVars.instance.getNetworkShutdown();
   private String testHost = FailureVars.instance.getTestHost();
   private String testRemoteHost = FailureVars.instance.getTestRemoteHost();
   private long failureDelay = FailureVars.instance.getFailureDelay();

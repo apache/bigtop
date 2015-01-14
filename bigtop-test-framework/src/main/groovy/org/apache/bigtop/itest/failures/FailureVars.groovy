@@ -30,14 +30,14 @@ public class FailureVars {
   private String propertyFile = System.getProperty("failurePropertiesFile");
   private String testHost = "localhost";
   private String testRemoteHost = "apache.org";
-  private String runFailures = "false";
-  private String serviceRestart = "false";
-  private String serviceKill = "false";
-  private String networkShutdown = "false";
+  private boolean runFailures = false;
+  private boolean serviceRestart = false;
+  private boolean serviceKill = false;
+  private boolean networkShutdown = false;
   private String service = "crond";
-  private String failureDelay = "0";
-  private String startDelay = "0";
-  private String killDuration = "0";
+  private long failureDelay = 0;
+  private long startDelay = 0;
+  private long killDuration = 0;
 
   {
     switch (OS.linux_flavor) {
@@ -73,22 +73,22 @@ public class FailureVars {
       is.close();
       testHost = props.getProperty("testhost");
       testRemoteHost = props.getProperty("testremotehost");
-      runFailures = props.getProperty("runall");
-      serviceRestart = props.getProperty("servicerestart");
-      serviceKill = props.getProperty("servicekill");
-      networkShutdown = props.getProperty("networkshutdown");
+      runFailures = Boolean.parseBoolean(props.getProperty("runall"));
+      serviceRestart = Boolean.parseBoolean(props.getProperty("servicerestart"));
+      serviceKill = Boolean.parseBoolean(props.getPropery("servicekill"));
+      networkShutdown = Boolean.parseBoolean(props.getProperty("networkshutdown"));
       service = props.getProperty("service");
-      failureDelay = props.getProperty("failuredelay");
-      startDelay = props.getProperty("startdelay");
-      killDuration = props.getProperty("killduration");
+      failureDelay = Long.parseLong(props.getProperty("failuredelay"));
+      startDelay = Long.parseLong(props.getProperty("startdelay"));
+      killDuration = Long.parseLong(props.getProperty("killduration"));
     }
     catch(IOException ioe) {
       System.out.println(ioe.getMessage());
     }
   }
 
-  public void setKillDuration(String killDuration) {
-    this.killDuration = Long.toString(killDuration);
+  public void setKillDuration(long killDuration) {
+    this.killDuration = killDuration;
   }
 
   public void setTestHost(String testHost) {
@@ -99,24 +99,24 @@ public class FailureVars {
     this.testRemoteHost = testRemoteHost;
   }
 
-  public void setRunAll(String runFailures) {
+  public void setRunAll(boolean runFailures) {
     this.runFailures = runFailures;
   }
 
-  public void setRestart(String serviceRestart) {
+  public void setRestart(boolean serviceRestart) {
     this.serviceRestart = serviceRestart;
   }
 
-  public void setKill(String serviceKill) {
+  public void setKill(boolean serviceKill) {
     this.serviceKill = serviceKill;
   }
 
-  public void setShutdown(String networkShutdown) {
+  public void setShutdown(boolean networkShutdown) {
     this.networkShutdown = networkShutdown;
   }
 
   public void setFailureDelay(long failureDelay) {
-    this.failureDelay = Long.toString(failureDelay);
+    this.failureDelay = failureDelay;
   }
 
   public void setService(String service) {
@@ -124,7 +124,7 @@ public class FailureVars {
   }
 
   public long getKillDuration() {
-    return Long.parseLong(killDuration)*1000;
+    return killDuration*1000;
   }
   public String getTestHost() {
     return testHost;
@@ -139,28 +139,28 @@ public class FailureVars {
   }
 
   public long getStartDelay() {
-    return Long.parseLong(startDelay)*1000;
+    return startDelay*1000;
   }
 
 
-  public String getRunFailures() {
+  public boolean getRunFailures() {
     return runFailures;
   }
 
-  public String getServiceRestart() {
+  public boolean getServiceRestart() {
     return serviceRestart;
   }
 
-  public  String getServiceKill() {
+  public boolean getServiceKill() {
     return serviceKill;
   }
 
-  public String getNetworkShutdown() {
+  public boolean getNetworkShutdown() {
     return networkShutdown;
   }
 
   public long getFailureDelay() {
-    return Long.parseLong(failureDelay)*1000;
+    return failureDelay*1000;
   }
 
   int getSleepTime() {

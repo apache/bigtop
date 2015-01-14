@@ -72,10 +72,10 @@ public class TestDFSIO {
 
   @Test
   public void testDFSIO() {
-    if(FailureVars.instance.getRunFailures().equals("true")
-    || FailureVars.instance.getServiceRestart().equals("true")
-    || FailureVars.instance.getServiceKill().equals("true")
-    || FailureVars.instance.getNetworkShutdown().equals("true")) {
+    if(FailureVars.instance.getRunFailures()
+    || FailureVars.instance.getServiceRestart()
+    || FailureVars.instance.getServiceKill()
+    || FailureVars.instance.getNetworkShutdown()) {
       runFailureThread();
     }
 
