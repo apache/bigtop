@@ -23,6 +23,9 @@
 # This has to be exported to make some magic below work.
 export DH_OPTIONS
 
+hive_home=/usr/lib/hive
+zookeeper_home=/usr/lib/zookeeper
+hbase_home=/usr/lib/hbase
 pig_pkg_name=pig
 
 %:
@@ -32,10 +35,24 @@ override_dh_auto_build:
 	bash debian/do-component-build -Divy.home=${HOME}/.ivy2
 
 override_dh_auto_install:
-	cp debian/*.properties .
 	cp debian/pig.1 .
 	sh -x debian/install_pig.sh \
 	  --build-dir=build \
 	  --prefix=debian/${pig_pkg_name} \
           --doc-dir=/usr/share/doc/${pig_pkg_name} \
           --examples-dir=/usr/share/doc/${pig_pkg_name}/examples
+
+	rm -f debian/pig/usr/lib/${pig_pkg_name}/lib/{hive,zookeeper}*.jar
+	ln -f -s ${zookeeper_home}/zookeeper.jar debian/pig/usr/lib/${pig_pkg_name}/lib/
+	ln -f -s ${hive_home}/lib/hive-common.jar debian/pig/usr/lib/${pig_pkg_name}/lib/
+	ln -f -s ${hive_home}/lib/hive-exec.jar debian/pig/usr/lib/${pig_pkg_name}/lib/
+	ln -f -s ${hive_home}/lib/hive-serde.jar debian/pig/usr/lib/${pig_pkg_name}/lib/
+	ln -f -s ${hive_home}/lib/hive-shims-common.jar debian/pig/usr/lib/${pig_pkg_name}/lib/
+	ln -f -s ${hive_home}/lib/hive-shims-common-secure.jar debian/pig/usr/lib/${pig_pkg_name}/lib/
+	rm -f debian/pig/usr/lib/${pig_pkg_name}/lib/h2/hbase-*.jar
+	ln -f -s ${hbase_home}/hbase-client.jar debian/pig/usr/lib/${pig_pkg_name}/lib/h2/
+	ln -f -s ${hbase_home}/hbase-common.jar debian/pig/usr/lib/${pig_pkg_name}/lib/h2/
+	ln -f -s ${hbase_home}/hbase-hadoop2-compat.jar debian/pig/usr/lib/${pig_pkg_name}/lib/h2/
+	ln -f -s ${hbase_home}/hbase-hadoop-compat.jar debian/pig/usr/lib/${pig_pkg_name}/lib/h2/
+	ln -f -s ${hbase_home}/hbase-protocol.jar debian/pig/usr/lib/${pig_pkg_name}/lib/h2/
+	ln -f -s ${hbase_home}/hbase-server.jar debian/pig/usr/lib/${pig_pkg_name}/lib/h2/

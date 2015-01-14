@@ -109,21 +109,14 @@ find $PREFIX/$LIB_DIR/contrib -name \*.jar -exec cp {} $PREFIX/$LIB_DIR \;
 cp $BUILD_DIR/pig-*-smoketests.jar $PREFIX/$LIB_DIR/
 
 # Remove directories that are going elsewhere
-for dir in shims conf src lib-src docs tutorial test build.xml contrib ivy pig-*.stage.jar ivy.xml build.properties
+for dir in shims src lib-src docs tutorial test build.xml contrib ivy pig-*.stage.jar ivy.xml build.properties legacy scripts conf
 do
    rm -rf $PREFIX/$LIB_DIR/$dir
 done
 
-# Remove a fat JAR that contains system Hadoop dependencies
-for jar in $PREFIX/$LIB_DIR/pig*.jar ; do
-  if jar tvf $jar | fgrep -q ' org/apache/hadoop/hdfs' ; then
-    rm -f $jar
-  fi
-done
-
 # Copy in the configuration files
 install -d -m 0755 $PREFIX/$CONF_DIST_DIR
-cp *.properties $PREFIX/$CONF_DIST_DIR
+cp $BUILD_DIR/tar/pig*/conf/* $PREFIX/$CONF_DIST_DIR
 ln -s /etc/pig/conf $PREFIX/$LIB_DIR/conf
 
 # Copy in the /usr/bin/pig wrapper
@@ -134,8 +127,13 @@ cat > $PREFIX/$BIN_DIR/pig <<EOF
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
 
-BIGTOP_DEFAULTS_DIR=\${BIGTOP_DEFAULTS_DIR-/etc/default}
-[ -n "\${BIGTOP_DEFAULTS_DIR}" -a -r \${BIGTOP_DEFAULTS_DIR}/hbase ] && . \${BIGTOP_DEFAULTS_DIR}/hbase
+export HADOOP_PREFIX=\${HADOOP_PREFIX:-/usr/lib/hadoop}
+export HADOOP_CONF_DIR=\${HADOOP_CONF_DIR:-/etc/hadoop/conf}
+export HBASE_HOME=\${HBASE_HOME:-/usr/lib/hbase}
+export HBASE_CONF_DIR=\${HBASE_HOME}/conf
+export ZOOKEEPER_HOME=\${ZOOKEEPER_HOME:-/usr/lib/zookeeper}
+export HIVE_HOME=\${HIVE_HOME:-/usr/lib/hive}
+export HCAT_HOME=\${HCAT_HOME:-/usr/lib/hive-hcatalog}
 
 exec $INSTALLED_LIB_DIR/bin/pig "\$@"
 EOF
@@ -149,14 +147,12 @@ install -d -m 0755 $PREFIX/$DOC_DIR
 (cd $BUILD_DIR/tar/pig*/docs && tar -cf - .)|(cd $PREFIX/$DOC_DIR && tar -xf -)
 mv $PREFIX/$LIB_DIR/license $PREFIX/$DOC_DIR
 
+# Tutorial
 install -d -m 0755 $PREFIX/$EXAMPLES_DIR
-(cd $PREFIX/$LIB_DIR ; ln -s pig*withouthadoop.jar pig.jar)
 (cd $BUILD_DIR/tar/pig*/tutorial && tar -cf - .)|(cd $PREFIX/$EXAMPLES_DIR && tar -xf -)
-sed -i -e "s|../pig.jar|/usr/lib/pig/pig.jar|" $PREFIX/$EXAMPLES_DIR/build.xml
-
-# It's somewhat silly that the hadoop jars are included in the pig lib
-# dir, since we depend on hadoop in our packages. We can rm them
-rm -f $PREFIX/$LIB_DIR/lib/hadoop*jar
+sed -i -e "s|../build/ivy/lib/Pig|/usr/lib/pig/lib/|" $PREFIX/$EXAMPLES_DIR/build.xml
+sed -i -e "s|<fileset dir=\"..\">|<fileset dir=\"/usr/lib/pig/\">|" $PREFIX/$EXAMPLES_DIR/build.xml
+sed -i -e "s|<path id=\"tutorial.classpath\">|<path id=\"tutorial.classpath\"> <fileset dir=\"/usr/lib/hadoop\"> <include name=\"*.jar\"/> </fileset>|" $PREFIX/$EXAMPLES_DIR/build.xml
 
 # Pig log directory
 install -d -m 1777 $PREFIX/var/log/pig

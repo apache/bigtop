@@ -20,6 +20,9 @@
 %define bin_pig /usr/bin
 %define pig_config_virtual pig_active_configuration
 %define man_dir %{_mandir}
+%define hive_home /usr/lib/hive
+%define zookeeper_home /usr/lib/zookeeper
+%define hbase_home /usr/lib/hbase
 
 # CentOS 5 does not have any dist macro
 # So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
@@ -75,14 +78,12 @@ URL: http://pig.apache.org/
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 BuildArch: noarch
-Source0: pig-%{pig_base_version}.tar.gz
+Source0: pig-%{pig_base_version}-src.tar.gz
 Source1: do-component-build
 Source2: install_pig.sh
-Source3: log4j.properties
-Source4: pig.1
-Source5: pig.properties
-Source6: bigtop.bom
-Requires: hadoop-client, bigtop-utils >= 0.7
+Source3: pig.1
+Source4: bigtop.bom
+Requires: hadoop-client, hbase, hive, zookeeper, bigtop-utils >= 0.7
 
 %description 
 Pig is a platform for analyzing large data sets that consists of a high-level language 
@@ -108,7 +109,7 @@ language called Pig Latin, which has the following key properties:
 
 
 %prep
-%setup -n %{name}-%{pig_base_version}
+%setup -n %{name}-%{pig_base_version}-src
 
 %build
 env PIG_BASE_VERSION=%{pig_base_version} bash %{SOURCE1}
@@ -120,13 +121,26 @@ env PIG_BASE_VERSION=%{pig_base_version} bash %{SOURCE1}
 %install
 %__rm -rf $RPM_BUILD_ROOT
 
-cp $RPM_SOURCE_DIR/log4j.properties .
 cp $RPM_SOURCE_DIR/pig.1 .
-cp $RPM_SOURCE_DIR/pig.properties .
 sh -x %{SOURCE2} \
           --build-dir=build \
           --doc-dir=%{doc_pig} \
           --prefix=$RPM_BUILD_ROOT
+
+rm -f $RPM_BUILD_ROOT/%{lib_pig}/lib/{hive,zookeeper}*.jar
+ln -f -s %{zookeeper_home}/zookeeper.jar $RPM_BUILD_ROOT/%{lib_pig}/lib/
+ln -f -s %{hive_home}/lib/hive-common.jar $RPM_BUILD_ROOT/%{lib_pig}/lib/
+ln -f -s %{hive_home}/lib/hive-exec.jar $RPM_BUILD_ROOT/%{lib_pig}/lib/
+ln -f -s %{hive_home}/lib/hive-serde.jar $RPM_BUILD_ROOT/%{lib_pig}/lib/
+ln -f -s %{hive_home}/lib/hive-shims-common.jar $RPM_BUILD_ROOT/%{lib_pig}/lib/
+ln -f -s %{hive_home}/lib/hive-shims-common-secure.jar $RPM_BUILD_ROOT/%{lib_pig}/lib/
+rm -f $RPM_BUILD_ROOT/%{lib_pig}/lib/h2/hbase-*.jar
+ln -f -s %{hbase_home}/hbase-client.jar $RPM_BUILD_ROOT/%{lib_pig}/lib/h2/
+ln -f -s %{hbase_home}/hbase-common.jar $RPM_BUILD_ROOT/%{lib_pig}/lib/h2/
+ln -f -s %{hbase_home}/hbase-hadoop2-compat.jar $RPM_BUILD_ROOT/%{lib_pig}/lib/h2/
+ln -f -s %{hbase_home}/hbase-hadoop-compat.jar $RPM_BUILD_ROOT/%{lib_pig}/lib/h2/
+ln -f -s %{hbase_home}/hbase-protocol.jar $RPM_BUILD_ROOT/%{lib_pig}/lib/h2/
+ln -f -s %{hbase_home}/hbase-server.jar $RPM_BUILD_ROOT/%{lib_pig}/lib/h2/
 
 %pre
 # workaround for old style Pig conf dir  

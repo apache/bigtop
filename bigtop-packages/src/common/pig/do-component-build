@@ -20,7 +20,7 @@ set -ex
 
 cat <<__EOT__ >> ivy/libraries.properties
 
-hbase.version=$HBASE_VERSION
+hbase95.version=$HBASE_VERSION-hadoop2
 hive.version=$HIVE_VERSION
 zookeeper.version=$ZOOKEEPER_VERSION
 hadoop-common.version=$HADOOP_VERSION
@@ -28,38 +28,13 @@ hadoop-hdfs.version=$HADOOP_VERSION
 hadoop-mapreduce.version=$HADOOP_VERSION
 __EOT__
 
-# Workaround because renamed o.a.h.h.serde.Constants to o.a.h.h.serde.serdeConstants in a non-backwards compatible way in 0.10.0
-# This is being fixed via HIVE-4001. Please remove this workaround once that gets into a release (Hive 0.11?)
-sed -i -e "s/org.apache.hadoop.hive.serde.Constants/org.apache.hadoop.hive.serde.serdeConstants/g" \
--e "s/Constants\./serdeConstants\./g" contrib/piggybank/java/src/main/java/org/apache/pig/piggybank/storage/HiveColumnarLoader.java
-
-# FIXME PIG-3905
-sed -i -e '/.*<dependency.*/ {N; s/.*<dependency.*\n.*hadoop20.*//g}' ivy.xml
-
-BUILD_OPTS="-Djavac.version=1.6 -Dforrest.home=${FORREST_HOME} -Dversion=${PIG_VERSION} -Dhadoopversion=23"
-
-# FIXME: BIGTOP-894. Please get rid of the line below when Bigtop integrates a version of Pig that includes the fix for PIG-3262
-export LC_ALL=C.UTF-8
-
-# FIXME: there's a weird synchronization issue between ivy and Maven caches wrt. jetty
-# If we don't do the following the build fails with (note zip instead of jar):
-# [ivy:resolve] 		::::::::::::::::::::::::::::::::::::::::::::::
-# [ivy:resolve] 		::              FAILED DOWNLOADS            ::
-# [ivy:resolve] 		:: ^ see resolution messages for details  ^ ::
-# [ivy:resolve] 		::::::::::::::::::::::::::::::::::::::::::::::
-# [ivy:resolve] 		:: org.mortbay.jetty#jetty;6.1.26!jetty.zip
-# [ivy:resolve] 		::::::::::::::::::::::::::::::::::::::::::::::
-for h in ${HOME} `mvn help:system | grep '^user.home=' | cut -f2 -d=` ; do
-  rm -rf ${h}/.ivy2/cache/*jetty ${h}/.m2/repository/org/mortbay ${h}/.m2/repository/org/eclipse/jetty
-done
+BUILD_OPTS="-Djavac.version=${JDK_VERSION} -Dforrest.home=${FORREST_HOME} -Dversion=${PIG_VERSION} -Dhadoopversion=23"
 
 echo "forrest.maxmemory=256m" >> src/docs/forrest.properties
 
-ant $BUILD_OPTS clean jar jar-withouthadoop pigunit-jar smoketests-jar "$@"
-for build_file in contrib/piggybank/java/build.xml contrib/zebra/build.xml ; do
+export ANT_OPTS="-Xmx4096m"
+ant $BUILD_OPTS clean jar pigunit-jar smoketests-jar javadoc "$@"
+for build_file in contrib/piggybank/java/build.xml ; do
   ant $BUILD_OPTS -buildfile $build_file clean jar "$@"
 done
 ant $BUILD_OPTS tar "$@"
-
-# install the Pig jar into the local Maven cache
-mvn install:install-file -DcreateChecksum=true -DgroupId=org.apache.pig -DartifactId=pig -Dversion=${PIG_VERSION} -Dpackaging=jar -Dfile=pig.jar
