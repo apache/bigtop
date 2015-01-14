@@ -23,7 +23,7 @@
 %define man_dir %{_mandir}
 %define gridgain_username gridgain
 %define gridgain_services gridgain-hadoop
-%define vcs_tag release-6.5.2
+%define vcs_tag release-%{gridgain_hadoop_version}
 
 %if  %{?suse_version:1}0
 
