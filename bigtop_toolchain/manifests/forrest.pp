@@ -29,4 +29,20 @@ class bigtop_toolchain::forrest {
     target  => '/usr/local/apache-forrest-0.9',
     require => Exec['/bin/tar xvzf /usr/src/apache-forrest-0.9.tar.gz'],
   }
+  # BIGTOP-1596
+  file { '/usr/local/apache-forrest/build':
+    ensure => 'directory',
+    mode   => '0777',
+    recurse => true,
+  }
+  file { '/usr/local/apache-forrest/main':
+    ensure => 'directory',
+    mode   => '0777',
+    recurse => true,
+  }
+  file { '/usr/local/apache-forrest/plugins':
+     ensure => 'directory',
+    mode   => '0777',
+    recurse => true,
+  }
 }
