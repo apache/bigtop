@@ -201,7 +201,7 @@ def genTasks = { target, variable ->
 
   // Keeping the reference to deb task to be used later for correct sequencing
   Task tdeb = task "$target-deb"(dependsOn: "${target}-sdeb",
-      description: "Buildind DEB for $target artifacts",
+      description: "Building DEB for $target artifacts",
       group: PACKAGES_GROUP) << {
     if (new File(BOM_map[variable + '_TARGET_DEB'])?.exists()) {
       println "\tNothing to do. Exiting..."
@@ -249,7 +249,7 @@ def genTasks = { target, variable ->
   if (targets.size() > 0)
     tdeb.mustRunAfter "${targets.get(targets.size() - 1)}-deb"
    task "$target-sdeb" (dependsOn: ["${target}_vardefines",  "${target}-tar"],
-      description: "Buildind SDEB for $target artifacts",
+      description: "Building SDEB for $target artifacts",
       group: PACKAGES_GROUP
   ) << {
     if (new File(BOM_map[variable + '_TARGET_SDEB'])?.exists()) {
@@ -350,7 +350,7 @@ def genTasks = { target, variable ->
 
   // Keeping the reference to task to be used later for correct sequencing
   Task trpm = task "$target-rpm" (dependsOn: ["${target}-srpm"],
-      description: "Buildind RPM for $target artifacts",
+      description: "Building RPM for $target artifacts",
       group: PACKAGES_GROUP) << {
     if (new File(BOM_map[variable + '_TARGET_RPM'])?.exists()) {
       println "\tNothing to do. Exiting..."
@@ -387,7 +387,7 @@ def genTasks = { target, variable ->
   if (targets.size() > 0)
     trpm.mustRunAfter "${targets.get(targets.size() - 1)}-rpm"
   task "$target-srpm" (dependsOn: ["${target}_vardefines" , "${target}-tar"],
-      description: "Buildind SRPM for $target artifacts",
+      description: "Building SRPM for $target artifacts",
       group: PACKAGES_GROUP) << {
     if (new File(BOM_map[variable + '_TARGET_SRPM'])?.exists()) {
       println "\tNothing to do. Exiting..."
