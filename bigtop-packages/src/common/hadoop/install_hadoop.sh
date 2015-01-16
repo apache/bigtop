@@ -302,6 +302,7 @@ cp ${DISTRO_DIR}/conf.empty/mapred-site.xml $HADOOP_ETC_DIR/conf.empty
 # by default
 sed -i -e '/^[^#]/s,^,#,' ${BUILD_DIR}/etc/hadoop/hadoop-env.sh
 cp ${BUILD_DIR}/etc/hadoop/* $HADOOP_ETC_DIR/conf.empty
+rm -rf $HADOOP_ETC_DIR/conf.empty/*.cmd
 
 # docs
 install -d -m 0755 ${DOC_DIR}
@@ -360,6 +361,7 @@ for conf in conf.pseudo ; do
   cp ${BUILD_DIR}/etc/hadoop/* $HADOOP_ETC_DIR/$conf
   # Remove the ones that shouldn't be installed
   rm -rf $HADOOP_ETC_DIR/$conf/httpfs*
+  rm -rf $HADOOP_ETC_DIR/$conf/*.cmd
   # Overlay the -site files
   (cd $DISTRO_DIR/$conf && tar -cf - .) | (cd $HADOOP_ETC_DIR/$conf && tar -xf -)
   chmod -R 0644 $HADOOP_ETC_DIR/$conf/*
