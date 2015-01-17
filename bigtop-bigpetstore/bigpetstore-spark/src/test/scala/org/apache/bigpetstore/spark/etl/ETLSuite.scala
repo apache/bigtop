@@ -24,17 +24,30 @@ import java.util.Locale
 import java.util.TimeZone
 
 import org.apache.spark.{SparkContext, SparkConf}
-
 import org.scalatest._
 import org.scalatest.junit.JUnitRunner
 import org.junit.runner.RunWith
 
 import org.apache.bigtop.bigpetstore.spark.datamodel._
 
-// hack for running tests with Gradle
+/**
+ * This class tests that, when we read records from the generator, the
+ * data model classes are populated with correct information.
+ *
+ * This is a critical test, since all subsequent phases of BigPetStore will use the
+ * datamodel objects (i.e. Transaction, Customer, and so on) for the analytics which
+ * we do.
+ *
+ * Other BigPetStore unit tests may not need to mock / test data with this granular of precision.
+ * RunWith annotation is just a hack for running tests with Gradle
+ */
 @RunWith(classOf[JUnitRunner])
 class IOUtilsSuite extends FunSuite with BeforeAndAfterAll {
 
+  /**
+   * TODO : We are using Option monads as a replacement for nulls.
+   * Lets move towards immutable spark context instead, if possible ?
+   */
   var sc: Option[SparkContext] = None
   var rawRecords: Option[Array[(Store, Location, Customer, Location, TransactionProduct)]] = None
   var transactions: Option[Array[Transaction]] = None
@@ -66,28 +79,21 @@ class IOUtilsSuite extends FunSuite with BeforeAndAfterAll {
     val cal2 = Calendar.getInstance(TimeZone.getTimeZone("America/New_York"), Locale.US)
     val cal3 = Calendar.getInstance(TimeZone.getTimeZone("America/New_York"), Locale.US)
 
-    // Calendar seems to interpet months as 0-11
-    // ms are not in output we parse.
-    // have to set ms to 0, otherwise calendar will
-    // use current system's ms.
     cal1.set(2015, 10, 3, 1, 8, 11)
-    cal1.set(Calendar.MILLISECOND, 0)
 
     cal2.set(2015, 10, 2, 17, 51, 37)
-    cal2.set(Calendar.MILLISECOND, 0)
 
     cal3.set(2015, 9, 12, 4, 29, 46)
-    cal3.set(Calendar.MILLISECOND, 0)
 
     rawRecords = Some(Array(
       (stores(0), locations(0), customers(0), locations(3),
         TransactionProduct(999L, 32L, 5L, cal1, "category=dry dog food;brand=Happy Pup;flavor=Fish & Potato;size=30.0;per_unit_cost=2.67;")),
 
       (stores(1), locations(1), customers(0), locations(3),
-      TransactionProduct(999L, 31L, 1L, cal2, "category=poop bags;brand=Dog Days;color=Blue;size=60.0;per_unit_cost=0.21;")),
+        TransactionProduct(999L, 31L, 1L, cal2, "category=poop bags;brand=Dog Days;color=Blue;size=60.0;per_unit_cost=0.21;")),
 
       (stores(2), locations(2), customers(0), locations(3),
-      TransactionProduct(999L, 30L, 6L, cal3, "category=dry cat food;brand=Feisty Feline;flavor=Chicken & Rice;size=14.0;per_unit_cost=2.14;"))))
+        TransactionProduct(999L, 30L, 6L, cal3, "category=dry cat food;brand=Feisty Feline;flavor=Chicken & Rice;size=14.0;per_unit_cost=2.14;"))))
 
     transactions = Some(Array(
       Transaction(999L, 31L, 1L, cal2, 0L),
@@ -99,17 +105,47 @@ class IOUtilsSuite extends FunSuite with BeforeAndAfterAll {
     sc.get.stop()
   }
 
-  test("Parse Raw Data") {
+  test("Parsing Generated Strings into Transaction Objects") {
     val rawRDD = sc.get.parallelize(rawLines)
-    val rdds = SparkETL.parseRawData(rawRDD)
+    val expectedRecords = rawRecords.get
 
-    assert(rdds.collect().toSet === rawRecords.get.toSet)
+    //Goal: Confirm that these RDD's are identical to the expected ones.
+    val rdd = SparkETL.parseRawData(rawRDD).collect
+
+    /**
+     * Assumption: Order of RDD elements will be same as the mock records.
+     * This assumption seems to hold, but probably would break down if input size was large
+     * or running this test on distributed cluster.
+     */
+    for(i <- 0 to expectedRecords.length-1) {
+      val rawRecord = rdd(i)
+      val expectedRecord = expectedRecords(i)
+
+      //Store, Location, Customer, TransactionProduct
+      assert(rawRecord._1===expectedRecord._1)
+      assert(rawRecord._2===expectedRecord._2)
+      assert(rawRecord._3===expectedRecord._3)
+      assert(rawRecord._4===expectedRecord._4)
+
+      //Transaction
+      assert(rawRecord._5.customerId === expectedRecord._5.customerId)
+      assert(rawRecord._5.product === expectedRecord._5.product)
+      assert(rawRecord._5.storeId === expectedRecord._5.storeId)
+
+      //BIGTOP-1586 : We want granular assertions, and we don't care to compare millisecond timestamps.
+      assert(rawRecord._5.dateTime.getTime.getYear === expectedRecord._5.dateTime.getTime.getYear)
+      assert(rawRecord._5.dateTime.getTime.getMonth === expectedRecord._5.dateTime.getTime.getMonth)
+      assert(rawRecord._5.dateTime.getTime.getDay === expectedRecord._5.dateTime.getTime.getDay)
+      assert(rawRecord._5.dateTime.getTime.getHours === expectedRecord._5.dateTime.getTime.getHours)
+      assert(rawRecord._5.dateTime.getTime.getMinutes === expectedRecord._5.dateTime.getTime.getMinutes)
+      assert(rawRecord._5.dateTime.getTime.getSeconds=== expectedRecord._5.dateTime.getTime.getSeconds)
+    }
+
   }
 
-  test("Normalize Data") {
+  test("Generation of unique sets of transaction attributes") {
     val rawRDD = sc.get.parallelize(rawRecords.get)
     val rdds = SparkETL.normalizeData(rawRDD)
-
     val locationRDD = rdds._1
     val storeRDD = rdds._2
     val customerRDD = rdds._3
