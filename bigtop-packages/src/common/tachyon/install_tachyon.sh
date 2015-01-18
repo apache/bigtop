@@ -26,7 +26,7 @@ usage: $0 <options>
 
   Optional options:
      --bin-dir=DIR               path to install bin
-     --data-dir=DIR              path to install Tachyon webapp
+     --data-dir=DIR              path to install local Tachyon data
      ... [ see source for more similar options ]
   "
   exit 1
@@ -99,18 +99,18 @@ install -d -m 0755 $PREFIX/$LIB_DIR/libexec
 install -d -m 0755 $PREFIX/$LIB_DIR/lib
 install -d -m 0755 $PREFIX/$DATA_DIR
 install -d -m 0755 $PREFIX/$DATA_DIR/tachyon
-install -d -m 0755 $PREFIX/$DATA_DIR/tachyon/web
 install -d -m 0755 $PREFIX/etc
 install -d -m 0755 $PREFIX/etc/tachyon
 install -d -m 0755 $PREFIX/$VAR_DIR/log/tachyon
 install -d -m 0755 $PREFIX/$VAR_DIR/lib/tachyon/journal
+install -d -m 0755 $PREFIX/$VAR_DIR/lib/tachyon/core/src/main/webapp
 install -d -m 0755 $PREFIX/$VAR_DIR/run/tachyon
 
 #cp -ra ${BUILD_DIR}/lib/* $PREFIX/${LIB_DIR}/lib/
 cp client/target/tachyon-client*.jar core/target/tachyon*.jar $PREFIX/$LIB_DIR
 cp -a bin/* $PREFIX/${LIB_DIR}/bin
 cp -a libexec/* $PREFIX/${LIB_DIR}/libexec
-cp -rf core/src/main/webapp $PREFIX/$DATA_DIR/tachyon/web
+cp -rf core/src/main/webapp $PREFIX/$VAR_DIR/lib/tachyon/core/src/main
 
 # Copy in the configuration files
 install -m 0644 conf/log4j.properties conf/slaves  $PREFIX/etc/tachyon
