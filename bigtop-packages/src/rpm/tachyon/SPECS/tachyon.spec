@@ -49,6 +49,8 @@ Requires: /lib/lsb/init-functions
 
 %endif
 
+Requires: bigtop-utils
+
 # disable repacking jars
 %define __arch_install_post %{nil}
 
