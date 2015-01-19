@@ -21,6 +21,12 @@ class bigtop_toolchain::jdk {
         ensure => present
       }
     }
+    CentOS: {
+      package { 'java-1.7.0-openjdk-devel' :
+        ensure => present
+      }
+    }
+
     default : {
       file { '/tmp/jdk-7u60-linux-x64.gz':
         source => 'puppet:///modules/bigtop_toolchain/jdk-7u60-linux-x64.gz',
