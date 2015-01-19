@@ -288,12 +288,11 @@ class hadoop {
     Exec <| title == "activate nn1" |>  -> Exec["HDFS rsync $title"]
   }
 
-  define namenode ($host = $fqdn , $port = "8020", $thrift_port= "10090", $auth = "simple", $dirs = ["/tmp/nn"], $ha = 'disabled', $zk = '') {
+  define namenode ($host = $fqdn , $port = "8020", $auth = "simple", $dirs = ["/tmp/nn"], $ha = 'disabled', $zk = '') {
 
     $first_namenode = inline_template("<%= Array(@host)[0] %>")
     $hadoop_namenode_host = $host
     $hadoop_namenode_port = $port
-    $hadoop_namenode_thrift_port = $thrift_port
     $hadoop_security_authentication = $auth
 
     if ($ha != 'disabled') {
@@ -474,7 +473,7 @@ class hadoop {
   }
 
 
-  define resourcemanager ($host = $fqdn, $port = "8032", $rt_port = "8025", $sc_port = "8030", $thrift_port = "9290", $auth = "simple") {
+  define resourcemanager ($host = $fqdn, $port = "8032", $rt_port = "8025", $sc_port = "8030", $auth = "simple") {
     $hadoop_rm_host = $host
     $hadoop_rm_port = $port
     $hadoop_rt_port = $rt_port

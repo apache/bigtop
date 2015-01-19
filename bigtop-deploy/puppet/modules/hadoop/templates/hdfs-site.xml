@@ -22,17 +22,11 @@
 <% if @ha != "disabled" -%>
   <!-- HA -->
 
-<% if @ha == "auto" -%>
+<%   if @ha == "auto" -%>
   <property>
     <name>dfs.ha.automatic-failover.enabled</name>
     <value>true</value>
   </property>
-<%   if @zk -%>
-  <property>
-    <name>ha.zookeeper.quorum</name>
-    <value><%= @zk %></value>
-  </property>
-<%   end -%>
 <%   end -%>
 
   <property> 
@@ -177,10 +171,9 @@
   </property>
 
 <% end -%>
-  <!-- name node -->
   <property>
-    <name>dfs.data.dir</name>
-    <value><%= @hdfs_data_dirs.join(",") %></value>
+    <name>dfs.datanode.data.dir</name>
+    <value><%= @hdfs_data_dirs.map { |dir| "file://#{dir}" }.join(",") %></value>
   </property>
 
 <% if @hdfs_support_append %>
@@ -203,8 +196,8 @@
 <% end %>
  
   <property>
-    <name>dfs.name.dir</name>
-    <value><%= @namenode_data_dirs.join(",") %></value>
+    <name>dfs.namenode.name.dir</name>
+    <value><%= @namenode_data_dirs.map { |dir| "file://#{dir}" }.join(",") %></value>
   </property>
 
   <property>
@@ -229,13 +222,6 @@
     <value><%= @hadoop_dfs_datanode_plugins %></value>
     <description>Comma-separated list of datanode plug-ins to be activated.
     </description>
-  </property>
-
-<% end -%>
-<% if @hadoop_namenode_thrift_port -%>
-  <property>
-    <name>dfs.thrift.address</name>
-    <value>0.0.0.0:<%= @hadoop_namenode_thrift_port %></value>
   </property>
 
 <% end -%>

@@ -29,6 +29,12 @@
 <% end -%>
   </property>
 
+<% if @ha == "auto" and @zk -%>
+  <property>
+    <name>ha.zookeeper.quorum</name>
+    <value><%= @zk %></value>
+  </property>
+<% end -%>
 
   <property>
     <name>hadoop.security.authentication</name>

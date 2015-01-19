@@ -31,7 +31,6 @@ class hadoop_cluster_node {
     default    => [ $hadoop_head_node, $standby_head_node ],
   }
   $hadoop_namenode_port        = extlookup("hadoop_namenode_port", "17020")
-  $hadoop_namenode_thrift_port = extlookup("hadoop_namenode_thrift_port", "10090")
   $hadoop_dfs_namenode_plugins = extlookup("hadoop_dfs_namenode_plugins", "")
   $hadoop_dfs_datanode_plugins = extlookup("hadoop_dfs_datanode_plugins", "")
   # $hadoop_dfs_namenode_plugins="org.apache.hadoop.thriftfs.NamenodePlugin"
@@ -46,7 +45,6 @@ class hadoop_cluster_node {
   $hadoop_rt_port        = extlookup("hadoop_rt_port", "8025")
   $hadoop_rm_port        = extlookup("hadoop_rm_port", "8032")
   $hadoop_sc_port        = extlookup("hadoop_sc_port", "8030")
-  $hadoop_rt_thrift_port = extlookup("hadoop_rt_thrift_port", "9290")
 
   $hadoop_hs_host        = $hadoop_head_node
   $hadoop_hs_port        = extlookup("hadoop_hs_port", "10020")
@@ -57,7 +55,6 @@ class hadoop_cluster_node {
 
   $hadoop_jobtracker_host            = $hadoop_head_node
   $hadoop_jobtracker_port            = extlookup("hadoop_jobtracker_port", "8021")
-  $hadoop_jobtracker_thrift_port     = extlookup("hadoop_jobtracker_thrift_port", "9290")
   $hadoop_mapred_jobtracker_plugins  = extlookup("hadoop_mapred_jobtracker_plugins", "")
   $hadoop_mapred_tasktracker_plugins = extlookup("hadoop_mapred_tasktracker_plugins", "")
 
@@ -238,7 +235,6 @@ if ($hadoop_security_authentication == "kerberos") {
         host => $hadoop_namenode_host,
         port => $hadoop_namenode_port,
         dirs => $namenode_data_dirs,
-        # thrift_port => $hadoop_namenode_thrift_port,
         auth => $hadoop_security_authentication,
         ha   => $hadoop_ha,
         zk   => $hadoop_ha_zookeeper_quorum,
@@ -258,7 +254,6 @@ if ($hadoop_security_authentication == "kerberos") {
           port => $hadoop_rm_port,
           rt_port => $hadoop_rt_port,
           sc_port => $hadoop_sc_port,
-          # thrift_port => $hadoop_jobtracker_thrift_port,
           auth => $hadoop_security_authentication,
     }
 
@@ -336,7 +331,6 @@ class standby_head_node inherits hadoop_cluster_node {
         host => $hadoop_namenode_host,
         port => $hadoop_namenode_port,
         dirs => $namenode_data_dirs,
-        # thrift_port => $hadoop_namenode_thrift_port,
         auth => $hadoop_security_authentication,
         ha   => $hadoop_ha,
         zk   => $hadoop_ha_zookeeper_quorum,

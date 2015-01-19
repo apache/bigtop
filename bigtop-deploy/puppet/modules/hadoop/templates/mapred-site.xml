@@ -302,13 +302,6 @@
   </property>
 <% end %>
 
-<% if @hadoop_jobtracker_thrift_port %>
-  <!-- Enable Hue plugins -->
-  <property>
-    <name>jobtracker.thrift.address</name>
-    <value>0.0.0.0:<%= @hadoop_jobtracker_thrift_port %></value>
-  </property>
-<% end %>
 <% if @hadoop_mapred_jobtracker_plugins %>
   <property>
     <name>mapred.jobtracker.plugins</name>
