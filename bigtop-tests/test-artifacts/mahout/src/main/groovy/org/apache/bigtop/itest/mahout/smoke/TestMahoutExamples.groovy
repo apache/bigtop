@@ -55,7 +55,7 @@ public class TestMahoutExamples {
     */
     public static void download(){
 
-        //key value pairs : data file -&gt; url that file resides on.
+        //key value pairs : data file > url that file resides on.
         def urlmap = [
         "20news-bydate.tar.gz":
         "http://people.csail.mit.edu/jrennie/20Newsgroups/20news-bydate.tar.gz" ,
@@ -71,13 +71,13 @@ public class TestMahoutExamples {
         ];
         //For each url above, download it.
         urlmap.each() {
-            f_name,loc -&gt;
+            f_name,loc ->
             sh.exec("if [ ! -f ${download_dir}/${f_name} ]; then " +
             "curl ${loc} -o ${download_dir}/${f_name}; " +
             "fi");
             File file = new File("${download_dir}/${f_name}");
 
-            assertTrue("file "+ f_name + " at  "+loc + " len=" + file.length() + " is &gt; 5k bytes", file.length() &gt; 5000 );
+            assertTrue("file "+ f_name + " at  "+loc + " len=" + file.length() + " is > 5k bytes", file.length() > 5000 );
         }
 
     }
@@ -124,7 +124,7 @@ public class TestMahoutExamples {
 
         //Cat the commands to a central file thats easy to tail.
         //TODO a simpler
-        sh.exec("echo \""+cmd+"\" &gt;&gt; /var/log/mahout.smoke");
+        sh.exec("echo \""+cmd+"\" >> /var/log/mahout.smoke");
         sh.exec(cmd);
         assertEquals("non-zero return! :::: "+cmd + " :::: out= " + sh.out + " :::: err= "+sh.err, 0, sh.getRet());
     }
@@ -166,7 +166,7 @@ public class TestMahoutExamples {
     @Test(timeout=12000000L)
     public void factorizeMovieLensRatings() {
         // convert ratings
-        sh.exec("cat ${TEMP_DIR}/movielens/ml-1m/ratings.dat |sed -e s/::/,/g| cut -d, -f1,2,3 &gt; ${TEMP_DIR}/movielens/ratings.csv");
+        sh.exec("cat ${TEMP_DIR}/movielens/ml-1m/ratings.dat |sed -e s/::/,/g| cut -d, -f1,2,3 > ${TEMP_DIR}/movielens/ratings.csv");
         assertEquals("Unexpected error from converting ratings", 0, sh.getRet());
 
         // put ratings in hdfs
@@ -187,7 +187,7 @@ public class TestMahoutExamples {
         "--tempDir ${WORK_DIR}/als/tmp --numFeatures 20 --numIterations ${ITERATIONS} --lambda 0.065");
 
         //remove this
-        sh.exec("hadoop fs -ls ${WORK_DIR}/als/out &gt;&gt; /tmp/mahoutdebug");
+        sh.exec("hadoop fs -ls ${WORK_DIR}/als/out >> /tmp/mahoutdebug");
         //compute predictions against the probe set, measure the error
         assertRun("evaluateFactorization --output ${WORK_DIR}/als/rmse --input ${WORK_DIR}/dataset/probeSet/ " +
         "--userFeatures ${WORK_DIR}/als/out/U/ --itemFeatures ${WORK_DIR}/als/out/M/ --tempDir ${WORK_DIR}/als/tmp");
