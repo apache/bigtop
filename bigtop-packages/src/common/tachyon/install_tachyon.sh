@@ -104,6 +104,7 @@ install -d -m 0755 $PREFIX/etc/tachyon
 install -d -m 0755 $PREFIX/$VAR_DIR/log/tachyon
 install -d -m 0755 $PREFIX/$VAR_DIR/lib/tachyon/journal
 install -d -m 0755 $PREFIX/$VAR_DIR/lib/tachyon/core/src/main/webapp
+ln -s $VAR_DIR/log/tachyon $PREFIX/$VAR_DIR/lib/tachyon/logs
 install -d -m 0755 $PREFIX/$VAR_DIR/run/tachyon
 
 #cp -ra ${BUILD_DIR}/lib/* $PREFIX/${LIB_DIR}/lib/
