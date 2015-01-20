@@ -52,7 +52,7 @@ This has been verified on docker client 1.2.0, with api version 1.15, and vagran
 NOTE : SELinux can PREVENT you from ssh'ing into your docker container.
 As a brute force way to disable it  - remove it from vi /etc/sysconfig/docker arguments
 (fedora and centos may by default launch docker daemon with the --selinux-enabled option)!
-In the future, lets update this README with the RIGHT way to allow selinux without breaking 
+In the future, lets update this README with the RIGHT way to allow selinux without breaking
 ssh into a docker container!
 
 ```
@@ -63,7 +63,7 @@ docker pull bigtop/seed:centos-6.4
 Now, you can start your cluster:
 
 ```
-cd bigtop/bigtop-deploy/vm/docker-puppet
+cd bigtop/bigtop-deploy/vm/vagrant-puppet-docker
 ./docker-hadoop.sh --build-image --create 3
 ```
 In case of errors you can attempt running as root, or else, ping the mailing list.
