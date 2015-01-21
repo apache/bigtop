@@ -76,7 +76,7 @@ sh.exec("export FLUME_CONF_DIR=./${id}",
 
 @Test
 public void testcat() {
-//System.out.println("curl -v -X POST ${flumeServiceUrl} -d @${flumedata} -H \"Content-type: application/json\"");
+System.out.println("curl -v -X POST ${flumeServiceUrl} -d @${flumedata} -H \"Content-type: application/json\"");
 sh.exec("curl -v -X POST ${flumeServiceUrl} -d @${flumedata} -H \"Content-type: application/json\"");
 sh.exec("hadoop fs -cat ${hdfs_sink_dir}/FlumeData.* | wc -l");
     assertEquals("Wrong # of lines in output found at ${hdfs_sink_dir}",

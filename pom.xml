@@ -27,7 +27,7 @@
 
   <groupId>org.apache.bigtop</groupId>
   <artifactId>bigtop</artifactId>
-  <version>0.7.0-altiscale-2</version>
+  <version>0.7.0-altiscale-3</version>
   <packaging>pom</packaging>
   
   <name>Bigtop</name>

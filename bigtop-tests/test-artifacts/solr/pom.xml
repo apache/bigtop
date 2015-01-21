@@ -21,12 +21,12 @@
   <parent>
     <groupId>org.apache.bigtop.itest</groupId>
     <artifactId>bigtop-smokes</artifactId>
-    <version>0.7.0-altiscale-2</version>
+    <version>0.7.0-altiscale-3</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>solr-smoke</artifactId>
-  <version>0.7.0-altiscale-2</version>
+  <version>0.7.0-altiscale-3</version>
 
   <name>solrsmoke</name>
 
