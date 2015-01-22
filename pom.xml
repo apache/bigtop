@@ -27,7 +27,7 @@
 
   <groupId>org.apache.bigtop</groupId>
   <artifactId>bigtop</artifactId>
-  <version>0.7.0-altiscale-3</version>
+  <version>0.7.0-altiscale-SNAPSHOT</version>
   <packaging>pom</packaging>
   
   <name>Bigtop</name>
@@ -235,6 +235,21 @@
     </extensions>
     <pluginManagement>
       <plugins>
+        <plugin>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>2.3.2</version>
+          <configuration>
+            <tag>release-0.2.${env.BUILD_NUMBER}</tag>
+            <releaseVersion>0.7.0-altiscale-${env.BUILD_NUMBER}</releaseVersion>
+            <developmentVersion>0.7.0-altiscale-SNAPSHOT</developmentVersion>
+            <preparationGoals>deploy</preparationGoals>
+            <autoVersionSubmodules>true</autoVersionSubmodules>
+            <suppressCommitBeforeTag>true</suppressCommitBeforeTag>
+            <remoteTagging>false</remoteTagging>
+            <pushChanges>false</pushChanges>
+            <resume>false</resume>
+          </configuration>
+        </plugin>
         <plugin>
           <groupId>org.apache.rat</groupId>
           <artifactId>apache-rat-plugin</artifactId>

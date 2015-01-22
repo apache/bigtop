@@ -21,12 +21,12 @@
   <parent>
     <groupId>org.apache.bigtop.itest</groupId>
     <artifactId>bigtop-smokes</artifactId>
-    <version>0.7.0-altiscale-3</version>
+    <version>0.7.0-altiscale-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>hive-smoke</artifactId>
-  <version>0.7.0-altiscale-3</version>
+  <version>0.7.0-altiscale-SNAPSHOT</version>
   <name>hivesmoke</name>
 </project>

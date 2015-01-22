@@ -22,14 +22,14 @@
   <parent>
     <groupId>org.apache.bigtop.itest</groupId>
     <artifactId>integration-tests</artifactId>
-    <version>0.7.0-altiscale-3</version>
+    <version>0.7.0-altiscale-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>sqoop-integration-execution</artifactId>
-  <version>0.7.0-altiscale-3</version>
+  <version>0.7.0-altiscale-SNAPSHOT</version>
   <name>sqoop-integration-execution</name>
 
   <properties>
