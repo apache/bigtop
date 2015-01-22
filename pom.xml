@@ -365,9 +365,11 @@
       <archive>http://mail-archives.apache.org/mod_mbox/bigtop-commits/</archive>
     </mailingList>
   </mailingLists>
-  <scm>
+ <scm>
     <connection>scm:git:git@github.com:Altiscale/bigtop</connection>
-    <tag>release-0.7.0.altiscale-SNAPSHOT</tag>
+    <developerConnection></developerConnection>
+    <tag>release-0.7.0.altiscale-${env.BUILD_NUMBER}</tag>
+    <url></url>
   </scm>
 
   <profiles>
