@@ -2,6 +2,9 @@
 /etc/sqoop
 /etc/default/sqoop-server
 /usr/lib/sqoop/bin/setenv.sh
+/usr/lib/sqoop/bin/sqoop-sys.sh
 /usr/lib/sqoop/webapps
 /usr/lib/sqoop/tomcat-deployment.sh
 /var/lib/sqoop
+/usr/lib/bigtop-tomcat/lib/sqoop-tomcat*.jar
+

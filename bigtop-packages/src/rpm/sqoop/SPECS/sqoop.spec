@@ -61,13 +61,13 @@ Source0: %{name}-%{sqoop_base_version}.tar.gz
 Source1: do-component-build
 Source2: install_%{name}.sh
 Source3: sqoop.sh
-Source4: sqoop.properties
-Source5: catalina.properties
-Source7: sqoop.default
-Source8: init.d.tmpl
-Source9: sqoop-server.svc
-Source10: sqoop-server.sh
-Source11: tomcat-deployment.sh
+Source4: catalina.properties
+Source5: sqoop.default
+Source6: init.d.tmpl
+Source7: sqoop-server.svc
+Source8: sqoop-server.sh
+Source9: tomcat-deployment.sh
+Source10: sqoop-tool.sh
 Buildarch: noarch
 Requires: hadoop-client, bigtop-utils >= 0.7, bigtop-tomcat, %{name}-client = %{version}-%{release}
 
@@ -177,15 +177,20 @@ fi
 %config(noreplace) /etc/default/sqoop-server
 %{lib_sqoop}/webapps
 %{lib_sqoop}/bin/setenv.sh
+%{lib_sqoop}/bin/sqoop-sys.sh
 %{lib_sqoop}/tomcat-deployment.sh
+/usr/lib/bigtop-tomcat/lib/sqoop-tomcat-*.jar
 %defattr(0755,sqoop,sqoop)
 /var/lib/sqoop
 
 %files client
 %attr(0755,root,root)
 /usr/bin/sqoop
+/usr/bin/sqoop-tool
 %{lib_sqoop}/bin/sqoop.sh
 %{lib_sqoop}/client-lib
+%{lib_sqoop}/LICENSE.txt
+%{lib_sqoop}/NOTICE.txt
 
 %files server
 %attr(0755,root,root) %{initd_dir}/sqoop-server

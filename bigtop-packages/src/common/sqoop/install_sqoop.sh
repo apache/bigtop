@@ -129,11 +129,15 @@ install -d -m 0755 ${PREFIX}/${CONF_DIR}
 install -d -m 0755 ${PREFIX}/etc/default
 install -d -m 0755 ${PREFIX}/var/lib/sqoop
 
-install -m 0644 ${DIST_DIR}/client/lib/*.jar ${PREFIX}/${LIB_DIR}/client-lib/
+install -m 0644 ${DIST_DIR}/shell/lib/*.jar ${PREFIX}/${LIB_DIR}/client-lib/
 install -m 0755 ${DIST_DIR}/bin/sqoop.sh ${PREFIX}/${BIN_DIR}/
+install -m 0755 ${DIST_DIR}/bin/sqoop-sys.sh ${PREFIX}/${BIN_DIR}/
+
+install -m 0644 ${DIST_DIR}/server/conf/sqoop.properties ${PREFIX}/${CONF_DIR}/sqoop.properties
+sed -i 's#@LOGDIR@#/var/log/sqoop#' ${PREFIX}/${CONF_DIR}/sqoop.properties
+sed -i 's#@BASEDIR@#/var/lib/sqoop#' ${PREFIX}/${CONF_DIR}/sqoop.properties
 
 install -m 0644 ${DIST_DIR}/server/conf/sqoop_bootstrap.properties ${PREFIX}/${CONF_DIR}
-install -m 0644 ${EXTRA_DIR}/sqoop.properties ${PREFIX}/${CONF_DIR}
 install -m 0644 ${EXTRA_DIR}/sqoop.default ${PREFIX}/etc/default/sqoop-server
 rm ${EXTRA_DIR}/sqoop.default # Otherwise debhelper will re-install this
 
@@ -148,7 +152,6 @@ unzip -d $SQOOP_WEBAPPS/sqoop $SQOOP_WEBAPPS/sqoop.war
 
 install -m 0755 ${EXTRA_DIR}/tomcat-deployment.sh ${PREFIX}/${LIB_DIR}/tomcat-deployment.sh
 
-# Create MR2 configuration
 install -d -m 0755 ${PREFIX}/${TOMCAT_CONF_DIR}.dist/conf
 for conf in web.xml tomcat-users.xml server.xml logging.properties context.xml catalina.policy
 do
@@ -158,12 +161,20 @@ sed -i -e "s|<Host |<Host workDir=\"/var/tmp/sqoop\" |" ${PREFIX}/${TOMCAT_CONF_
 sed -i -e "s|\${catalina\.base}/logs|/var/log/sqoop|"   ${PREFIX}/${TOMCAT_CONF_DIR}.dist/conf/logging.properties
 cp -f ${EXTRA_DIR}/catalina.properties ${PREFIX}/${TOMCAT_CONF_DIR}.dist/conf/catalina.properties
 install -d -m 0755 ${PREFIX}/${TOMCAT_CONF_DIR}.dist/WEB-INF
-mv ${SQOOP_WEBAPPS}/sqoop/WEB-INF/*.xml ${PREFIX}/${TOMCAT_CONF_DIR}.dist/WEB-INF
+mv $SQOOP_WEBAPPS/sqoop/WEB-INF/*.xml ${PREFIX}/${TOMCAT_CONF_DIR}.dist/WEB-INF
 
 # Create wrapper scripts for the client and server
 client_wrapper=$PREFIX/usr/bin/sqoop
 server_wrapper=$PREFIX/usr/bin/sqoop-server
+tool_wrapper=$PREFIX/usr/bin/sqoop-tool
 mkdir -p $PREFIX/usr/bin
 install -m 0755 $EXTRA_DIR/sqoop.sh $client_wrapper
 install -m 0755 $EXTRA_DIR/sqoop-server.sh $server_wrapper
+install -m 0755 $EXTRA_DIR/sqoop-tool.sh $tool_wrapper
+
+CATALINA_HOME=/usr/lib/bigtop-tomcat
+install -d ${PREFIX}/${CATALINA_HOME}/lib
+install -m 0644 ${DIST_DIR}/server/lib/sqoop-tomcat*.jar ${PREFIX}/${CATALINA_HOME}/lib/
+
+cp ${DIST_DIR}/{LICENSE,NOTICE}.txt ${PREFIX}/${LIB_DIR}/
 
