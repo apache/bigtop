@@ -374,3 +374,16 @@ YCSB_TARBALL_SRC=$(YCSB_BASE_VERSION).tar.gz
 YCSB_SITE=https://github.com/brianfrankcooper/YCSB/archive
 YCSB_ARCHIVE=$(YCSB_SITE)
 $(eval $(call PACKAGE,ycsb,YCSB))
+
+# Kite
+KITE_NAME=kite
+KITE_RELNOTES_NAME=Kite Software Development Kit
+KITE_PKG_NAME=kite
+KITE_BASE_VERSION=1.1.0
+KITE_PKG_VERSION=$(KITE_BASE_VERSION)
+KITE_RELEASE_VERSION=1
+KITE_TARBALL_SRC=release-$(KITE_BASE_VERSION).tar.gz
+KITE_TARBALL_DST=kite-$(KITE_BASE_VERSION).tar.gz
+KITE_SITE=https://github.com/kite-sdk/kite/archive
+KITE_ARCHIVE=$(KITE_SITE)
+$(eval $(call PACKAGE,kite,KITE))

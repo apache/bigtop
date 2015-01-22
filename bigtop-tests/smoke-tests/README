@@ -26,6 +26,7 @@ export FLUME_HOME=/usr/lib/flume/
 export HIVE_CONF_DIR=/etc/hive/conf/
 export JAVA_HOME="/usr/lib/jvm/java-openjdk/"
 export MAHOUT_HOME="/usr/lib/mahout"
+export KITE_HOME="/usr/lib/kite"
 export ITEST="0.7.0"
 ```
 
