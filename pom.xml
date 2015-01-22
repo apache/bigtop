@@ -60,6 +60,23 @@
     <antlr.version>3.4</antlr.version>
     <cxf.version>2.5.0</cxf.version>
   </properties>
+  
+  <distributionManagement>
+    <repository>
+      <id>internal</id>
+      <name>Apache Release Distribution Repository</name>
+      <url>https://archiva.service.verticloud.com/archiva/repository/internal/</url>
+    </repository>
+    <snapshotRepository>
+      <id>internal</id>
+      <name>Apache Development Snapshot Repository</name>
+      <url>https://archiva.service.verticloud.com/archiva/repository/snapshots/</url>
+    </snapshotRepository>
+    <site>
+      <id>apache.website</id>
+      <url>scpexe://people.apache.org/www/bigtop.apache.org/</url>
+    </site>
+  </distributionManagement>
 
   <dependencyManagement>
     <dependencies>
@@ -353,13 +370,6 @@
     <connection>scm:git:https://git-wip-us.apache.org/repos/asf/bigtop.git</connection>
     <url>https://git-wip-us.apache.org/repos/asf?p=bigtop.git</url>
   </scm>
-
-  <distributionManagement>
-    <site>
-      <id>apache.website</id>
-      <url>scpexe://people.apache.org/www/bigtop.apache.org/</url>
-    </site>
-  </distributionManagement>
 
   <profiles>
     <profile>
