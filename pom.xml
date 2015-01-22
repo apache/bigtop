@@ -367,7 +367,7 @@
   </mailingLists>
  <scm>
     <connection>scm:git:git@github.com:Altiscale/bigtop</connection>
-    <developerConnection></developerConnection>
+    <developerConnection>scm:git:git@github.com:Altiscale/bigtop</developerConnection>
     <tag>release-0.7.0.altiscale-${env.BUILD_NUMBER}</tag>
     <url></url>
   </scm>
