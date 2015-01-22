@@ -256,6 +256,7 @@
           <artifactId>maven-release-plugin</artifactId>
           <version>2.3.2</version>
           <configuration>
+            <tag>release-0.7.0.altiscale-${env.BUILD_NUMBER}</tag>
             <releaseVersion>0.7.0-altiscale-${env.BUILD_NUMBER}</releaseVersion>
             <developmentVersion>0.7.0-altiscale-SNAPSHOT</developmentVersion>
             <preparationGoals>deploy</preparationGoals>
