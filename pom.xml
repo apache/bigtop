@@ -372,6 +372,9 @@
     <tag>release-0.7.0.altiscale-${env.BUILD_NUMBER}</tag>
     <url></url>
   </scm>
+  <modules>
+    <module>bigtop-test-framework</module>
+  </modules>
 
   <profiles>
     <profile>

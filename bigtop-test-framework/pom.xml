@@ -21,7 +21,7 @@
   <parent>
     <groupId>org.apache.bigtop</groupId>
     <artifactId>bigtop</artifactId>
-    <version>0.7.0-altiscale-${env.BUILD_NUMBER}</version>
+    <version>0.7.0-altiscale-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
     
