@@ -45,9 +45,9 @@
     <giraph.version>1.0.0</giraph.version>
     <solr.version>4.4.0</solr.version>
     <spark.version>0.8.0-incubating</spark.version>
-    <spark-smoke.version>${project.version}</spark-smoke.version>
+    <spark-smoke.version>0.7.0-altiscale-SNAPSHOT</spark-smoke.version>
 
-    <itest-common.version>${project.version}</itest-common.version>
+    <itest-common.version>0.7.0-altiscale-SNAPSHOT</itest-common.version>
 
     <groovy.version>1.8.6</groovy.version>
     <groovy-eclipse-compiler.version>2.7.0-01</groovy-eclipse-compiler.version>
