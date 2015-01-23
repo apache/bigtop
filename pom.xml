@@ -373,6 +373,7 @@
     <url></url>
   </scm>
   <modules>
+    <module>bigtop-tests</module>
     <module>bigtop-test-framework</module>
   </modules>
 
