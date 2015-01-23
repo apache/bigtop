@@ -46,9 +46,9 @@
     <module>solr</module>
     <module>crunch</module>
     <module>datafu</module>
-    <module>fatjar</module>
+    <!-- <module>fatjar</module> -->
     <module>hcatalog</module>
-    <module>spark</module>
+    <!-- <module>spark</module>  -->
     <module>phoenix</module>
   </modules>
 
