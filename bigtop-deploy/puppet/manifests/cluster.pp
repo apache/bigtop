@@ -30,7 +30,7 @@ class hadoop_cluster_node {
     "disabled" => $hadoop_head_node,
     default    => [ $hadoop_head_node, $standby_head_node ],
   }
-  $hadoop_namenode_port        = extlookup("hadoop_namenode_port", "17020")
+  $hadoop_namenode_port        = extlookup("hadoop_namenode_port", "8020")
   $hadoop_dfs_namenode_plugins = extlookup("hadoop_dfs_namenode_plugins", "")
   $hadoop_dfs_datanode_plugins = extlookup("hadoop_dfs_datanode_plugins", "")
   # $hadoop_dfs_namenode_plugins="org.apache.hadoop.thriftfs.NamenodePlugin"
