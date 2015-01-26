@@ -20,10 +20,7 @@ set -ex
 #FIXME: this needs to be fixed upstream
 sed -i -e "s#${FULL_VERSION}-SNAPSHOT#${FULL_VERSION}#g" `grep -lR ${FULL_VERSION}-SNAPSHOT .`
 
-# FIXME: this needs to be fixed upstream
-sed -i -e 's#2.2.0-mr1-cdh5.0.0-SNAPSHOT#2.3.0-mr1-cdh5.1.4#' maven/pom.xml
-
-make MAVEN_VERSION='$(HUE_BASE_VERSION)' apps docs
+make MAVEN_VERSION=${HUE_VERSION} apps docs
 
 # Make the entire tree relocatable
 bash tools/relocatable.sh

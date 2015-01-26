@@ -26,15 +26,18 @@ Source1: %{name}.init
 Source2: %{name}.init.suse
 Source3: do-component-build
 Source4: install_hue.sh
+#BIGTOP_PATCH_FILES
 URL: http://github.com/cloudera/hue
 Requires: %{name}-common = %{version}-%{release}
 Requires: %{name}-server = %{version}-%{release}
+Requires: %{name}-impala = %{version}-%{release}
 Requires: %{name}-beeswax = %{version}-%{release}
 Requires: %{name}-pig = %{version}-%{release}
 Requires: %{name}-hbase = %{version}-%{release}
 Requires: %{name}-sqoop = %{version}-%{release}
 Requires: %{name}-search = %{version}-%{release}
 Requires: %{name}-rdbms = %{version}-%{release}
+Requires: %{name}-security = %{version}-%{release}
 Requires: %{name}-spark = %{version}-%{release}
 Requires: %{name}-zookeeper = %{version}-%{release}
 
@@ -81,6 +84,8 @@ AutoReqProv: no
 
 %define apps_dir %{hue_dir}/apps
 %define about_app_dir %{hue_dir}/apps/about
+%define impala_app_dir %{hue_dir}/apps/impala
+%define security_app_dir %{hue_dir}/apps/security
 %define beeswax_app_dir %{hue_dir}/apps/beeswax
 %define oozie_app_dir %{hue_dir}/apps/oozie
 %define pig_app_dir %{hue_dir}/apps/pig
@@ -145,6 +150,7 @@ It supports a file browser, job tracker interface, cluster health monitor, and m
 %prep
 %setup -n %{name}-release-%{hue_base_version}
 
+#BIGTOP_PATCH_COMMANDS
 ########################################
 # Build
 ########################################
@@ -176,6 +182,7 @@ BuildRequires: libxml2-devel, libxslt-devel, zlib-devel
 BuildRequires: cyrus-sasl-devel
 BuildRequires: openssl
 BuildRequires: krb5-devel
+BuildRequires: asciidoc
 Group: Applications/Engineering
 Requires: cyrus-sasl-gssapi, libxml2, libxslt, zlib, python, sqlite
 # The only reason we need the following is because we also have AutoProv: no
@@ -279,8 +286,10 @@ fi
 %attr(0755,%{username},%{username}) /var/log/hue
 %attr(0755,%{username},%{username}) /var/lib/hue
 
-# beeswax and pig are packaged as a plugin app
+# these apps are packaged as a plugin app
 %exclude %{beeswax_app_dir}
+%exclude %{impala_app_dir}
+%exclude %{security_app_dir}
 %exclude %{pig_app_dir}
 %exclude %{hbase_app_dir}
 %exclude %{sqoop_app_dir}
@@ -337,6 +346,25 @@ fi
 if [ $1 -ge 1 ]; then 
         service %{name} condrestart >/dev/null 2>&1 
 fi
+#### HUE-IMPALA PLUGIN ######
+%package -n %{name}-impala
+Summary: A UI for Impala on Hue
+Group: Applications/Engineering
+Requires: %{name}-common = %{version}-%{release}, make
+
+%description -n %{name}-impala
+Beeswax is a web interface for Impala.
+
+It allows users to construct and run queries on Imapala, manage tables,
+and import and export data.
+
+%app_post_macro impala
+%app_preun_macro impala
+
+%files -n %{name}-impala
+%defattr(-, %{username}, %{username})
+%{impala_app_dir}
+
 
 #### HUE-BEESWAX PLUGIN ######
 %package -n %{name}-beeswax
@@ -444,6 +472,24 @@ It allows users to interact with RDBMS
 %files -n %{name}-rdbms
 %defattr(-, %{username}, %{username})
 %{rdbms_app_dir}
+
+#### HUE-SECURITY PLUGIN ######
+%package -n %{name}-security
+Summary: A UI for Security and Roles on Hue
+Group: Applications/Engineering
+Requires: %{name}-common = %{version}-%{release}
+
+%description -n %{name}-security
+A web interface for Roles and Security.
+
+It allows users to interact with Roles and Security
+
+%app_post_macro security
+%app_preun_macro security
+
+%files -n %{name}-security
+%defattr(-, %{username}, %{username})
+%{security_app_dir}
 
 #### HUE-SPARK PLUGIN ######
 %package -n %{name}-spark
