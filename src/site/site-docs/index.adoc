@@ -1,0 +1,130 @@
+//
+//  Licensed to the Apache Software Foundation (ASF) under one or more
+//  contributor license agreements.  See the NOTICE file distributed with
+//  this work for additional information regarding copyright ownership.
+//  The ASF licenses this file to You under the Apache License, Version 2.0
+//  (the "License"); you may not use this file except in compliance with
+//  the License.  You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//
+= Apache Bigtop
+
+*Bigtop is an Apache Foundation project for Infrastructure Engineers and Data Scientists looking for
+comprehensive packaging, testing, and configuration of the leading open source big data components.*
+Bigtop supports a wide range of components/projects, including, but not limited to, Hadoop, HBase and Spark.
+
+[cols="3*", options="header"]
+|===
+  | Packaging
+  | Smoke testing
+  | Virtualization
+
+  | Bigtop supports a wide range of components/projects, including, but not limited to, Hadoop, HBase and Spark.
+  | Bigtop provides an integrated smoke testing framework, alongside a suite of over 50 test files.
+  | Bigtop provides vagrant recipes, raw images, and (work-in-progress) docker recipes for deploying Hadoop from zero.
+|===
+
+Bigtop components power the leading Hadoop distros and support many Operating Systems, including Debian/Ubuntu,
+CentOS, Fedora, SUSE and many others.
+
+Bigtop includes tools and a framework for testing at various levels (packaging, platform, runtime, etc.) for both
+initial deployments as well as upgrade scenarios for the entire data platform, not just the individual components.
+
+== Tool requirements for building Bigtop
+[cols="a,a,a", options="header"]
+|===
+  | On all systems
+  | Also on RPM-based systems
+  | Also on DEB-based systems
+
+  | * Java JDK 1.6
+		* Apache Ant
+		* Apache Maven
+		* wget
+		* tar
+		* git
+		* subversion
+		* gcc
+		* gcc-c++
+		* make
+		* fuse
+		* protobuf-compiler
+		* autoconf
+		* automake
+		* libtool
+		* sharutils
+		* xmlto
+
+  | * lzo-devel
+    * zlib-devel
+    * fuse-devel
+    * openssl-devel
+    * python-devel
+    * libxml2-devel
+    * libxslt-devel
+    * cyrus-sasl-devel
+    * sqlite-devel
+    * mysql-devel
+    * openldap-devel
+    * rpm-build
+    * createrepo
+    * redhat-rpm-config (RedHat/CentOS only)
+
+  | * libxslt1-dev
+    * libkrb5-dev
+    * libldap2-dev
+    * libmysqlclient-dev
+    * libsasl2-dev
+    * libsqlite3-dev
+    * libxml2-dev
+    * python-dev
+    * python-setuptools
+    * liblzo2-dev
+    * libzip-dev
+    * libfuse-dev
+    * libssl-dev
+    * build-essential
+    * dh-make
+    * debhelper
+    * devscripts
+    * reprepro
+|===
+
+== Continuous Integration
+
+Apache Bigtop uses Jenkins for continuous integration testing (you can learn more about Jenkins
+http://jenkins-ci.org/[here]). There are 2 Jenkins servers currently running for the
+project:
+
+ * https://builds.apache.org/view/A-D/view/Bigtop/
+ * http://bigtop01.cloudera.org:8080/
+
+The Apache Jenkins server runs the "Bigtop-trunk" job whenever code is committed to the trunk branch,
+which in turn runs several test jobs.
+
+The Bigtop Jenkins server runs daily jobs for the 0.3 and trunk branches, and each job has a configuration
+for each supported operating system. In each branch there is a job to build each component, a job to run
+package tests and a job to build package repositories. There are also jobs for building virtual machine
+images as well as the 2 most recent releases and other miscellaneous tasks for various RCs and tests.
+For example:
+
+[horizontal]
+ * http://bigtop01.cloudera.org:8080/view/Bigtop-trunk/job/Bigtop-trunk-All/[Bigtop-trunk-All]
+   Runs all of the jobs for the trunk branch.
+ * http://bigtop01.cloudera.org:8080/view/Bigtop-trunk/job/Bigtop-trunk-HBase/[Bigtop-trunk-HBase]
+   Builds the HBase packages only.
+ * http://bigtop01.cloudera.org:8080/view/Bigtop-trunk/job/Bigtop-trunk-packagetest/[Bigtop-trunk-packagetest]
+   Runs the package tests.
+ * http://bigtop01.cloudera.org:8080/view/Bigtop-trunk/job/Bigtop-trunk-repository/[Bigtop-trunk-repository]
+ 	 Builds an APT or YUM package repository.
+ * http://bigtop01.cloudera.org:8080/view/Bigtop-trunk/job/Bigtop-0.5.0/[Bigtop-0.5.0]
+   Builds the 0.5.0 release.
+ * http://bigtop01.cloudera.org:8080/job/Bigtop-VM-matrix/[Bigtop-VM-matrix]
+ 	 Builds virtual machines of branches trunk and 0.3 for KVM, VMWare and VirtualBox.

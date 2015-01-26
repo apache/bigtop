@@ -1,0 +1,25 @@
+apply plugin: 'org.asciidoctor.gradle.asciidoctor'
+
+buildscript {
+  repositories {
+    jcenter()
+  }
+  dependencies {
+    classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.0'
+  }
+}
+
+asciidoctor {
+  sourceDir = new File("site-docs")
+  outputDir = new File("site-build")
+  options = [
+      doctype: 'book',
+      attributes: [
+          'source-highlighter': 'coderay',
+          toc                 : '',
+          idprefix            : '',
+          idseparator         : '-'
+      ]
+  ]
+}
+
