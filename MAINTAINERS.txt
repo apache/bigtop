@@ -1,16 +1,16 @@
-CI infra: ?
-gradle / build system: cos
+CI infra: rvs
+gradle / build system: cos, rvs
 gridgain-hadoop: cos
-hadoop: mark grover, cos
-hbase: andrew purtell
+hadoop: mark grover, cos, rvs
+hbase: andrew purtell, rvs
 hive: mark grover
 hue: oflebbe
-itest: cos
-mvn publishing/packaging: ?
-oozie evans ye
+itest: cos, rvs
+mvn publishing/packaging: rvs
+oozie evans ye, rvs
 phoenix: andrew purtell
 pig: evans ye, daniel dai
-puppet recipes: jay vyas, cos, evans ye
+puppet recipes: jay vyas, cos, evans ye, rvs
 smoke-tests: jay vyas, david capwell
 spark: jay vyas,
 sqoop: sean mackrory
@@ -18,4 +18,4 @@ tachyon: david capwell, jay vyas
 test-artifacts and test-execution repos:
 tez: evans ye
 vagrant recipes: jay vyas, evans ye
-zookeeper: sean mackrory
+zookeeper: sean mackrory, rvs
