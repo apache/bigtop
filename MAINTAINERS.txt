@@ -1,4 +1,5 @@
 CI infra: rvs
+flume: bmahe
 gradle / build system: cos, rvs
 gridgain-hadoop: cos
 hadoop: mark grover, cos, rvs
