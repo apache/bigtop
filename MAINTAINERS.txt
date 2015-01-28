@@ -1,7 +1,7 @@
 CI infra: rvs
 flume: bmahe
 gradle / build system: cos, rvs
-gridgain-hadoop: cos
+gridgain-hadoop: cos, Sergey Vladykin <sergi.vladykin@gmail.com>
 hadoop: mark grover, cos, rvs
 hbase: andrew purtell, rvs
 hive: mark grover
