@@ -17,6 +17,6 @@ spark: jay vyas,
 sqoop: sean mackrory
 tachyon: david capwell, jay vyas
 test-artifacts and test-execution repos:
-tez: evans ye
+tez: evans ye, oflebbe
 vagrant recipes: jay vyas, evans ye
 zookeeper: sean mackrory, rvs
