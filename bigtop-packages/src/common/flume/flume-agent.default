@@ -13,6 +13,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+#
+# Naming convention for flume agent config file is flume-${FLUME_AGENT_NAME}.conf
+# For e.g. the FLUME_AGENT_NAME in this default config file is "agent" and  hence
+# the config file is named flume-agent.conf. Multiple flume agents can be deployed 
+# on a single node by creating config files with this naming convention and storing 
+# it in /etc/flume/conf directory. Refer BIGTOP-1581 for details.
+#
+# To start|start|restart... a Flume agenti, user can issue the command
+# service flume-agent start|stop|... FLUME_AGENT_NAME
+#
+# If FLUME_AGENT_NAME is not passed, action will be taken on all Flume agents for 
+# which config file is stored in /etc/flume/conf directory
+#
+
 # Set name of flume agent (default: agent)
 # FLUME_AGENT_NAME=agent
 

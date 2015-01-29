@@ -66,10 +66,22 @@ for dir in "$FLUME_RUN_DIR" "$FLUME_LOCK_DIR"; do
   [ -d "${dir}" ] || install -d -m 0755 -o $FLUME_USER -g $FLUME_USER ${dir}
 done
 
-
 DEFAULT_FLUME_AGENT_NAME="agent"
 FLUME_AGENT_NAME=${FLUME_AGENT_NAME:-${DEFAULT_FLUME_AGENT_NAME}}
 FLUME_SHUTDOWN_TIMEOUT=${FLUME_SHUTDOWN_TIMEOUT:-60}
+
+# Update variables if service request is followed by a service name
+# e.g. service flume-agent start|stop|status|restart service-name
+# Starts a flume agent with the name flume-service-name
+# Expects flume-service-name.conf file in FLUME_CONF_DIR
+setvariables() {
+  AGENT_NAME=$1
+  LOCKFILE="${FLUME_LOCK_DIR}/flume-${AGENT_NAME}"
+  FLUME_CONF_FILE=${FLUME_CONF_DIR}/flume-${AGENT_NAME}.conf
+  FLUME_PID_FILE=${FLUME_RUN_DIR}/flume-${AGENT_NAME}.pid
+  DEFAULT_FLUME_AGENT_NAME=${AGENT_NAME}
+  FLUME_AGENT_NAME=${DEFAULT_FLUME_AGENT_NAME}
+}
 
 start() {
   [ -x $exec ] || exit $ERROR_PROGRAM_NOT_INSTALLED
@@ -77,11 +89,11 @@ start() {
   checkstatus
   status=$?
   if [ "$status" -eq "$STATUS_RUNNING" ]; then
-    exit 0
+    return 0
   fi
 
-  log_success_msg "Starting $desc (flume-agent): "
-  /bin/su -s /bin/bash -c "/bin/bash -c 'echo \$\$ >${FLUME_PID_FILE} && exec ${EXEC_PATH} agent --conf $FLUME_CONF_DIR --conf-file $FLUME_CONF_FILE --name $FLUME_AGENT_NAME >>${FLUME_LOG_DIR}/flume-agent.out 2>&1' &" $FLUME_USER
+  log_success_msg "Starting $desc $FLUME_AGENT_NAME: "
+  /bin/su -s /bin/bash -c "/bin/bash -c 'echo \$\$ >${FLUME_PID_FILE} && exec ${EXEC_PATH} agent --conf $FLUME_CONF_DIR --conf-file $FLUME_CONF_FILE --name $FLUME_AGENT_NAME >>${FLUME_LOG_DIR}/flume-${FLUME_AGENT_NAME}.out 2>&1' &" $FLUME_USER
   RETVAL=$?
   [ $RETVAL -eq 0 ] && touch $LOCKFILE
   return $RETVAL
@@ -89,11 +101,11 @@ start() {
 
 stop() {
   if [ ! -e $FLUME_PID_FILE ]; then
-    log_failure_msg "Flume agent is not running"
-    exit 0
+    log_failure_msg "Flume agent $FLUME_AGENT_NAME is not running"
+    return 0
   fi
 
-  log_success_msg "Stopping $desc (flume-agent): "
+  log_success_msg "Stopping $desc $FLUME_AGENT_NAME: "
 
   FLUME_PID=`cat $FLUME_PID_FILE`
   if [ -n $FLUME_PID ]; then
@@ -119,19 +131,19 @@ checkstatus(){
 
   case "$status" in
     $STATUS_RUNNING)
-      log_success_msg "Flume NG agent is running"
+      log_success_msg "Flume NG agent $FLUME_AGENT_NAME is running"
       ;;
     $STATUS_DEAD)
-      log_failure_msg "Flume NG agent is dead and pid file exists"
+      log_failure_msg "Flume NG agent $FLUME_AGENT_NAME is dead and pid file exists"
       ;;
     $STATUS_DEAD_AND_LOCK)
-      log_failure_msg "Flume NG agent is dead and lock file exists"
+      log_failure_msg "Flume NG agent $FLUME_AGENT_NAME is dead and lock file exists"
       ;;
     $STATUS_NOT_RUNNING)
-      log_failure_msg "Flume NG agent is not running"
+      log_failure_msg "Flume NG agent $FLUME_AGENT_NAME is not running"
       ;;
     *)
-      log_failure_msg "Flume NG agent status is unknown"
+      log_failure_msg "Flume NG agent $FLUME_AGENT_NAME status is unknown"
       ;;
   esac
   return $status
@@ -141,25 +153,110 @@ condrestart(){
   [ -e ${LOCKFILE} ] && restart || :
 }
 
+#
+# If user doesn't provide a flume agent name to start,
+# will attempt to start all agents based on conf files in ${FLUME_CONF_DIR} 
+#
+startall() {
+  run_functions_on_conf start
+}
+
+#
+# If user doesn't provide a flume agent name to stop,
+# will attempt to stop all agents based on conf files in ${FLUME_CONF_DIR} 
+#
+stopall() {
+  run_functions_on_conf stop
+}
+
+#
+# If user doesn't provide a flume agent name to restart,
+# will attempt to restart all agents based on conf files in ${FLUME_CONF_DIR} 
+#
+restartall() {
+  run_functions_on_conf restart
+}
+
+#
+# If user doesn't provide a flume agent name to perform cond restart,
+# will attempt to do condrestart all agents based on conf files in ${FLUME_CONF_DIR} 
+#
+condrestartall() {
+  run_functions_on_conf condrestart
+}
+
+#
+# If user doesn't provide a flume agent name to check the status,
+# status of all agents based on conf files in ${FLUME_CONF_DIR} is checked
+#
+checkallstatus() {
+  run_functions_on_conf checkstatus
+}
+
+#
+# Common function to perform user action on all flume conf files
+#
+run_functions_on_conf() {
+  for f in ${FLUME_CONF_DIR}/*
+  do
+    file_ext=${f##*.}
+    if [ "$file_ext" = "conf" ]; then
+      conf_file=${f%.*}
+      file_name=${conf_file##*/}
+      agent_name=${file_name#*-}
+      echo $agent_name
+      setvariables $agent_name
+      $1
+    fi
+  done
+}
+
+#
+# Logic to update variables if service start|stop|... is made with a flume agent name
+#
+if [ "$#" -eq 2 ]; then
+  setvariables $2
+fi
+
 case "$1" in
   start)
-    start
+    if [ "$#" -eq 2 ];then
+      start
+    else
+      startall
+    fi
     ;;
   stop)
-    stop
+    if [ "$#" -eq 2 ]; then
+      stop
+    else
+      stopall
+    fi
     ;;
   status)
-    checkstatus
+    if [ "$#" -eq 2 ]; then
+      checkstatus
+    else
+      checkallstatus
+    fi
     ;;
   restart)
-    restart
+    if [ "$#" -eq 2 ]; then
+      restart
+    else
+      restartall
+    fi
     ;;
   condrestart|try-restart)
-    condrestart
+    if [ "$#" -eq 2 ]; then
+      condrestart
+    else
+      condrestartall
+    fi
     ;;
   *)
     echo $"Usage: $0 {start|stop|status|restart|try-restart|condrestart}"
-    exit 1
+    RETVAL=1
 esac
 
 exit $RETVAL
