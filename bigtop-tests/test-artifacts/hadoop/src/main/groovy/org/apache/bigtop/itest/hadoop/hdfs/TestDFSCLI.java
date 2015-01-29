@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.apache.bigtop.itest.hadoop.hcfs;
+package org.apache.bigtop.itest.hadoop.hdfs;
 
 import org.apache.bigtop.itest.shell.Shell;
 import org.apache.commons.lang.StringUtils;
