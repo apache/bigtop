@@ -30,6 +30,19 @@ __EOT__
 
 BUILD_OPTS="-Djavac.version=${JDK_VERSION} -Dforrest.home=${FORREST_HOME} -Dversion=${PIG_VERSION} -Dhadoopversion=23"
 
+# FIXME: there's a weird synchronization issue between ivy and Maven caches wrt. jetty
+# If we don't do the following the build fails with (note zip instead of jar):
+# [ivy:resolve]                ::::::::::::::::::::::::::::::::::::::::::::::
+# [ivy:resolve]                ::              FAILED DOWNLOADS            ::
+# [ivy:resolve]                :: ^ see resolution messages for details  ^ ::
+# [ivy:resolve]                ::::::::::::::::::::::::::::::::::::::::::::::
+# [ivy:resolve]                :: org.mortbay.jetty#jetty;6.1.26!jetty.zip
+# [ivy:resolve]                ::::::::::::::::::::::::::::::::::::::::::::::
+for h in ${HOME} `mvn help:system | grep '^user.home=' | cut -f2 -d=` ; do
+  rm -rf ${h}/.ivy2/cache/*jetty ${h}/.m2/repository/org/mortbay ${h}/.m2/repository/org/eclipse/jetty
+done
+
+
 echo "forrest.maxmemory=256m" >> src/docs/forrest.properties
 
 export ANT_OPTS="-Xmx4096m"
