@@ -49,7 +49,7 @@
         <command>-fs NAMENODE -checksum dir0/data*</command>
       </test-commands>
       <cleanup-commands>
-        <command>-fs NAMENODE -rm -r /user/USER_NAME/*</command>
+        <command>-fs NAMENODE -rm -r /user/USER_NAME/dir0</command>
       </cleanup-commands>
       <comparators>
         <comparator>
@@ -95,7 +95,7 @@
         <command>-fs NAMENODE -stat "%n-%b-%o" dirtest</command>
       </test-commands>
       <cleanup-commands>
-        <command>-fs NAMENODE -rm -r /user/USER_NAME/*</command>
+        <command>-fs NAMENODE -rm -r /user/USER_NAME/dirtest</command>
       </cleanup-commands>
       <comparators>
         <comparator>
@@ -156,7 +156,8 @@
         <command>-fs NAMENODE -stat "%n-%b" data*</command>
       </test-commands>
       <cleanup-commands>
-        <command>-fs NAMENODE -rm -r /user/USER_NAME/*</command>
+        <command>-fs NAMENODE -rm -r /user/USER_NAME/dir</command>
+        <command>-fs NAMENODE -rm -r /user/USER_NAME/dirtest</command>
       </cleanup-commands>
       <comparators>
         <comparator>

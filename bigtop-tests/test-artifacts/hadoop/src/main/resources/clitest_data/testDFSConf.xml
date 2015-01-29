@@ -33,7 +33,7 @@
     </test-commands>
     <cleanup-commands>
       <dfs-admin-command>-fs NAMENODE -disallowSnapshot /user/USERNAME/dir1</dfs-admin-command>
-      <command>-fs NAMENODE -rm -r /user/USERNAME</command>
+      <command>-fs NAMENODE -rm -r /user/USERNAME/dir1</command>
     </cleanup-commands>
     <comparators>
       <comparator>
@@ -51,7 +51,7 @@
       <dfs-admin-command>-fs NAMENODE -disallowSnapshot /user/USERNAME/dir1</dfs-admin-command>
     </test-commands>
     <cleanup-commands>
-      <command>-fs NAMENODE -rm -r /user/USERNAME</command>
+      <command>-fs NAMENODE -rm -r /user/USERNAME/dir1</command>
     </cleanup-commands>
     <comparators>
       <comparator>
@@ -71,7 +71,7 @@
     <cleanup-commands>
       <command>-fs NAMENODE -deleteSnapshot /user/USERNAME/dir1 snapshot1</command>
       <dfs-admin-command>-fs NAMENODE -disallowSnapshot /user/USERNAME/dir1</dfs-admin-command>
-      <command>-fs NAMENODE -rm -r /user/USERNAME</command>
+      <command>-fs NAMENODE -rm -r /user/USERNAME/dir1</command>
     </cleanup-commands>
     <comparators>
       <comparator>
@@ -93,7 +93,7 @@
     <cleanup-commands>
       <command>-fs NAMENODE -deleteSnapshot /user/USERNAME/dir1 snapshot2</command>
       <dfs-admin-command>-fs NAMENODE -disallowSnapshot /user/USERNAME/dir1</dfs-admin-command>
-      <command>-fs NAMENODE -rm -r /user/USERNAME</command>
+      <command>-fs NAMENODE -rm -r /user/USERNAME/dir1</command>
     </cleanup-commands>
     <comparators>
       <comparator>
@@ -118,7 +118,7 @@
     </test-commands>
     <cleanup-commands>
       <dfs-admin-command>-fs NAMENODE -disallowSnapshot /user/USERNAME/dir1</dfs-admin-command>
-      <command>-fs NAMENODE -rm -r /user/USERNAME</command>
+      <command>-fs NAMENODE -rm -r /user/USERNAME/dir1</command>
     </cleanup-commands>
     <comparators>
       <comparator>
@@ -169,7 +169,7 @@
       <command>-fs NAMENODE -count -q /user/USERNAME/dir1</command>
     </test-commands>
     <cleanup-commands>
-      <command>-fs NAMENODE -rm -r /user/USERNAME</command>
+      <command>-fs NAMENODE -rm -r /user/USERNAME/dir1</command>
     </cleanup-commands>
     <comparators>
       <comparator>
@@ -188,7 +188,7 @@
       <command>-fs NAMENODE -count -q /user/USERNAME/dir1</command>
     </test-commands>
     <cleanup-commands>
-      <command>-fs NAMENODE -rm -r /user/USERNAME</command>
+      <command>-fs NAMENODE -rm -r /user/USERNAME/dir1</command>
     </cleanup-commands>
     <comparators>
       <comparator>
