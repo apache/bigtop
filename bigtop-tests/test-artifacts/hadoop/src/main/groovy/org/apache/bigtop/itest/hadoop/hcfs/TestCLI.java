@@ -59,6 +59,7 @@ public class TestCLI extends CLITestHelper {
     supergroup = System.getProperty("hcfs.root.groupname",
         conf.get(DFSConfigKeys.DFS_PERMISSIONS_SUPERUSERGROUP_KEY));
     namenode = conf.get(CommonConfigurationKeys.FS_DEFAULT_NAME_KEY);
+    username = System.getProperty("user.name");
 
     conf.setBoolean(CommonConfigurationKeys.HADOOP_SECURITY_AUTHORIZATION, true);
     // Many of the tests expect a replication value of 1 in the output
@@ -138,7 +139,7 @@ public class TestCLI extends CLITestHelper {
     expCmd = expCmd.replaceAll("TEST_DIR_ABSOLUTE", TEST_DIR_ABSOLUTE);
     expCmd = expCmd.replaceAll("supergroup", supergroup);
     expCmd = expCmd.replaceAll("NAMENODE", namenode);
-    expCmd = expCmd.replaceAll("USER_NAME", System.getProperty("user.name"));
+    expCmd = expCmd.replaceAll("USER_NAME", username);
     expCmd = expCmd.replaceAll("HCFS_SCHEME", HCFS_SCHEME);
     expCmd = expCmd.replaceAll("HCFS_DIRSIZE", HCFS_DIRSIZE);
     expCmd = expCmd.replaceAll("HCFS_NNMATCH", HCFS_NNMATCH);

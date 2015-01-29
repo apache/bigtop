@@ -293,5 +293,138 @@
       </comparators>
     </test>
 
+    <test>
+      <description>appendToFile</description>
+      <test-commands>
+        <command>-fs NAMENODE -mkdir -p /user/USER_NAME/dir1</command>
+        <command>-fs NAMENODE -touchz /user/USER_NAME/dir1/file0</command>
+        <command>-fs NAMENODE -appendToFile CLITEST_DATA/data15bytes /user/USER_NAME/dir1/file0</command>
+        <command>-fs NAMENODE -cat /user/USER_NAME/dir1/file0</command>
+      </test-commands>
+      <cleanup-commands>
+        <command>-fs NAMENODE -rm -r /user/USER_NAME/dir1</command>
+      </cleanup-commands>
+      <comparators>
+        <comparator>
+          <type>RegexpComparator</type>
+          <expected-output>12345678901234</expected-output>
+        </comparator>
+      </comparators>
+    </test>
+
+    <test>
+      <description>text</description>
+      <test-commands>
+        <command>-fs NAMENODE -mkdir -p /user/USER_NAME/dir1</command>
+        <command>-fs NAMENODE -put CLITEST_DATA/data15bytes /user/USER_NAME/dir1/file0</command>
+        <command>-fs NAMENODE -text /user/USER_NAME/dir1/file0</command>
+      </test-commands>
+      <cleanup-commands>
+        <command>-fs NAMENODE -rm -r /user/USER_NAME/dir1</command>
+      </cleanup-commands>
+      <comparators>
+        <comparator>
+          <type>RegexpComparator</type>
+          <expected-output>12345678901234</expected-output>
+        </comparator>
+      </comparators>
+    </test>
+
+    <test>
+      <description>rmdir</description>
+      <test-commands>
+        <command>-fs NAMENODE -mkdir -p /user/USER_NAME/dir1/dir2</command>
+        <command>-fs NAMENODE -rmdir /user/USER_NAME/dir1/dir2</command>
+        <command>-fs NAMENODE -ls /user/USER_NAME/dir1</command>
+      </test-commands>
+      <cleanup-commands>
+        <command>-fs NAMENODE -rm -r /user/USER_NAME/dir1</command>
+      </cleanup-commands>
+      <comparators>
+        <comparator>
+          <type>ExactComparator</type>
+          <expected-output></expected-output>
+        </comparator>
+      </comparators>
+    </test>
+
+    <test>
+      <description>rmdir with ignore-fail-on-non-empty</description>
+      <test-commands>
+        <command>-fs NAMENODE -mkdir -p /user/USER_NAME/dir1/dir2</command>
+        <command>-fs NAMENODE -put CLITEST_DATA/data15bytes /user/USER_NAME/dir1/dir2/file0</command>
+        <command>-fs NAMENODE -rmdir --ignore-fail-on-non-empty /user/USER_NAME/dir1/dir2</command>
+        <command>-fs NAMENODE -ls /user/USER_NAME/dir1</command>
+      </test-commands>
+      <cleanup-commands>
+        <command>-fs NAMENODE -rm -r /user/USER_NAME/dir1</command>
+      </cleanup-commands>
+      <comparators>
+        <comparator>
+          <type>RegexpComparator</type>
+          <expected-output>Found 1 items</expected-output>
+        </comparator>
+        <comparator>
+          <type>RegexpComparator</type>
+          <expected-output>^drwxr-xr-x( )*-( )*USER_NAME( )*supergroup( )*0( )*[0-9]{4,}-[0-9]{2,}-[0-9]{2,} [0-9]{2,}:[0-9]{2,}( )*/user/USER_NAME/dir1/dir2</expected-output>
+        </comparator>
+      </comparators>
+    </test>
+
+    <test>
+      <description>df</description>
+      <test-commands>
+        <command>-fs NAMENODE -mkdir -p /user/USER_NAME/dir1</command>
+        <command>-fs NAMENODE -put CLITEST_DATA/data15bytes  /user/USER_NAME/dir1/file0</command>
+        <command>-fs NAMENODE -df /user/USER_NAME</command>
+      </test-commands>
+      <cleanup-commands>
+        <command>-fs NAMENODE -rm -r /user/USER_NAME/dir1</command>
+      </cleanup-commands>
+      <comparators>
+        <comparator>
+          <type>RegexpComparator</type>
+          <expected-output>Filesystem( )*Size( )*Used( )*Available( )*Use%.*</expected-output>
+        </comparator>
+      </comparators>
+    </test>
+
+    <test>
+      <description>expunge</description>
+      <test-commands>
+        <command>-fs NAMENODE -expunge</command>
+      </test-commands>
+      <cleanup-commands>
+        <command></command>
+      </cleanup-commands>
+      <comparators>
+        <comparator>
+          <type>ExactComparator</type>
+          <expected-output></expected-output>
+        </comparator>
+      </comparators>
+    </test>
+
+    <test>
+      <description>getmerge</description>
+      <test-commands>
+        <command>-fs NAMENODE -mkdir -p /user/USER_NAME/dir1</command>
+        <command>-fs NAMENODE -copyFromLocal CLITEST_DATA/data15bytes /user/USER_NAME/dir1</command>
+        <command>-fs NAMENODE -copyFromLocal CLITEST_DATA/data30bytes /user/USER_NAME/dir1</command>
+        <command>-fs NAMENODE -getmerge /user/USER_NAME/dir1 data</command>
+        <command>-fs NAMENODE -copyFromLocal data /user/USER_NAME/dir1</command>
+        <command>-fs NAMENODE -cat /user/USER_NAME/dir1/data</command>
+      </test-commands>
+      <cleanup-commands>
+        <command>-fs NAMENODE -rm -r /user/USER_NAME/dir1</command>
+      </cleanup-commands>
+      <comparators>
+        <comparator>
+          <type>RegexpComparator</type>
+          <expected-output>12345678901234.*</expected-output>
+        </comparator>
+      </comparators>
+    </test>
+
   </tests>
 </configuration>
