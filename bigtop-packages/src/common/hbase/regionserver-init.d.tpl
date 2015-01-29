@@ -201,8 +201,11 @@ multi_hbase_daemon() {
         export HBASE_IDENT_STRING="hbase-${OFFSET}"
         LOG_FILE="$HBASE_LOG_DIR/hbase-$HBASE_IDENT_STRING-@HBASE_DAEMON@-$HOSTNAME.pid"
         PID_FILE="$HBASE_PID_DIR/hbase-$HBASE_IDENT_STRING-@HBASE_DAEMON@.pid"
-        HBASE_MULTI_ARGS="-D hbase.@HBASE_DAEMON@.port=`expr ${FIRST_PORT} + $OFFSET` \
-                          -D hbase.@HBASE_DAEMON@.info.port=`expr ${FIRST_INFO_PORT} + ${OFFSET}`"
+        HBASE_MULTI_ARGS="-D hbase.regionserver.port=`expr ${FIRST_PORT} + $OFFSET` \
+                          -D hbase.regionserver.info.port=`expr ${FIRST_INFO_PORT} + ${OFFSET}`"
+        if [ "x$JMXPORT" != "x" ] ; then
+            HBASE_MULTI_ARGS="${HBASE_MULTI_ARGS} -Dcom.sun.management.jmxremote.port=`expr ${JMXPORT} + ${OFFSET}`"
+        fi
         hbase_check_pidfile $PID_FILE
         STATUS=$?
         if [[ "$STATUS" == "0" && "$COMMAND" == "start" ]] ; then

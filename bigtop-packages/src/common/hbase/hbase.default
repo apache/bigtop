@@ -26,3 +26,10 @@ export HBASE_IDENT_STRING=hbase
 # will have have its own log and pid files.
 #
 # REGIONSERVER_OFFSETS="1 2 3"
+
+#
+# Set the starting port to be assigned for HBASE RS JMX monitoring when  
+# running multiple region servers on a node. Each RS will be assigned a JMX port
+# which will be equal to starting JMX port + offset
+# 
+# export JMXPORT=10103
