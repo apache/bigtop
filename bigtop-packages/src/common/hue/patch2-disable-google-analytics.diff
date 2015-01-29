@@ -1,0 +1,13 @@
+--- hue-3.7.1/desktop/conf.dist/hue.ini~	2015-01-29 21:23:06.000000000 +0100
++++ hue-3.7.1/desktop/conf.dist/hue.ini	2015-01-29 21:25:47.497503619 +0100
+@@ -79,8 +79,8 @@
+ 
+   # Help improve Hue with anonymous usage analytics.
+   # Use Google Analytics to see how many times an application or specific section of an application is used, nothing more.
+-  ## collect_usage=true
+-  
++  collect_usage=false
++
+   # Support for HTTPS termination at the load-balancer level with SECURE_PROXY_SSL_HEADER.
+   ## secure_proxy_ssl_header=false
+ 
