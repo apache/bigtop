@@ -152,6 +152,9 @@ done
 %config(noreplace) %{config_spark}.dist
 %doc %{doc_spark}
 %{lib_spark}
+%{lib_spark}/bin
+%{lib_spark}/sbin
+%{lib_spark}/lib
 %exclude %{lib_spark}/bin/pyspark
 %exclude %{lib_spark}/python
 %{etc_spark}

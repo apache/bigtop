@@ -28,15 +28,13 @@ if [ -e $FWDIR/conf/spark-env.sh ] ; then
 fi
 
 CORE_DIR="$FWDIR/core"
-ASSEMBLY_DIR="$FWDIR/assembly"
-EXAMPLES_DIR="$FWDIR/examples"
+ASSEMBLY_DIR="$FWDIR/lib"
 PYSPARK_DIR="$FWDIR/python"
 
 # Build up classpath
 CLASSPATH="$SPARK_CLASSPATH"
 CLASSPATH="$CLASSPATH:$FWDIR/conf"
-CLASSPATH="$CLASSPATH:$ASSEMBLY_DIR/lib/*"
-CLASSPATH="$CLASSPATH:$EXAMPLES_DIR/lib/*"
+CLASSPATH="$CLASSPATH:$ASSEMBLY_DIR/*"
 if [ -e "$PYSPARK_DIR" ]; then
   for jar in `find $PYSPARK_DIR/lib -name '*jar'`; do
     CLASSPATH="$CLASSPATH:$jar"

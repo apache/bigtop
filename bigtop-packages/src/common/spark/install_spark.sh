@@ -121,6 +121,7 @@ SCALA_HOME=${SCALA_HOME:-/usr/share/scala}
 PYSPARK_PYTHON=${PYSPARK_PYTHON:-python}
 
 install -d -m 0755 $PREFIX/$LIB_DIR
+install -d -m 0755 $PREFIX/$LIB_DIR/lib
 install -d -m 0755 $PREFIX/$LIB_DIR/bin
 install -d -m 0755 $PREFIX/$LIB_DIR/sbin
 install -d -m 0755 $PREFIX/$DOC_DIR
@@ -130,43 +131,32 @@ install -d -m 0755 $PREFIX/var/log/spark/
 install -d -m 0755 $PREFIX/var/run/spark/
 install -d -m 0755 $PREFIX/var/run/spark/work/
 
-for comp in assembly; do
-  install -d -m 0755 $PREFIX/$LIB_DIR/$comp/lib
-  tar --wildcards -C $PREFIX/$LIB_DIR/$comp/lib -zxf ${BUILD_DIR}/assembly/target/spark-assembly*-dist.tar.gz spark-$comp\*
-done
+tar --wildcards -C $PREFIX/$LIB_DIR/lib -zxf ${BUILD_DIR}/assembly/target/spark-assembly*-dist.tar.gz spark-assembly\*
+tar --wildcards --strip-components=1 -C $PREFIX/$LIB_DIR/lib -zxf ${BUILD_DIR}/assembly/target/spark-assembly*-dist.tar.gz \*datanucleus\*
+tar --wildcards -C $PREFIX/$LIB_DIR/ -zxf ${BUILD_DIR}/assembly/target/spark-assembly*-dist.tar.gz bin\*
+tar --wildcards -C $PREFIX/$LIB_DIR/ -zxf ${BUILD_DIR}/assembly/target/spark-assembly*-dist.tar.gz sbin\*
 
-## FIXME: Spark maven assembly needs to include examples into it.
-install -d -m 0755 $PREFIX/$LIB_DIR/examples/lib
-cp ${BUILD_DIR}/examples/target/spark-examples*${SPARK_VERSION}.jar $PREFIX/$LIB_DIR/examples/lib
+rm -rf $PREFIX/$LIB_DIR/bin/*.cmd
 
-cp -a ${BUILD_DIR}/bin/*.sh $PREFIX/$LIB_DIR/bin/
-cp -a ${BUILD_DIR}/sbin/*.sh $PREFIX/$LIB_DIR/sbin/
+# Examples jar
+cp ${BUILD_DIR}/examples/target/spark-examples*${SPARK_VERSION}.jar $PREFIX/$LIB_DIR/lib
+sed -i -e "s|lib/spark-examples-\*hadoop\*.jar|lib/spark-examples_\*.jar|" $PREFIX/$LIB_DIR/bin/run-example
+
+# Examples src
+install -d -m 0755 $PREFIX/$EXAMPLES_DIR
+cp -ra ${BUILD_DIR}/examples/src $PREFIX/$EXAMPLES_DIR/
+
 chmod 755 $PREFIX/$LIB_DIR/bin/*
 chmod 755 $PREFIX/$LIB_DIR/sbin/*
 
-# FIXME: executor scripts need to reside in bin
-cp -a $BUILD_DIR/bin/spark-class $PREFIX/$LIB_DIR/bin/
-cp -a $BUILD_DIR/sbin/spark-executor $PREFIX/$LIB_DIR/sbin/
 cp -a ${SOURCE_DIR}/compute-classpath.sh $PREFIX/$LIB_DIR/bin/
-cp -a ${BUILD_DIR}/bin/spark-shell $PREFIX/$LIB_DIR/bin/
-cp -a ${BUILD_DIR}/bin/spark-submit $PREFIX/$LIB_DIR/bin/
-
-touch $PREFIX/$LIB_DIR/RELEASE
+chmod 755 $PREFIX/$LIB_DIR/bin/compute-classpath.sh
 
 # Copy in the configuration files
 install -d -m 0755 $PREFIX/$CONF_DIR
 cp -a ${BUILD_DIR}/conf/* $PREFIX/$CONF_DIR
 cp  $PREFIX/$CONF_DIR/spark-env.sh.template $PREFIX/$CONF_DIR/spark-env.sh
 ln -s /etc/spark/conf $PREFIX/$LIB_DIR/conf
-
-# Unpack static UI resources into install_dir/spark where it is expected to be
-tar --wildcards -C $PREFIX/$LIB_DIR -zxf ${BUILD_DIR}/assembly/target/spark-assembly*-dist.tar.gz ui-resources/\*
-
-# set correct permissions for exec. files
-for execfile in bin/spark-class bin/spark-shell sbin/spark-executor bin/spark-submit; do
-  chmod 755 $PREFIX/$LIB_DIR/$execfile
-done
-chmod 755 $PREFIX/$LIB_DIR/bin/compute-classpath.sh
 
 # Copy in the wrappers
 install -d -m 0755 $PREFIX/$BIN_DIR
@@ -211,7 +201,6 @@ EOF
 ln -s /var/run/spark/work $PREFIX/$LIB_DIR/work
 
 cp -r ${BUILD_DIR}/python ${PREFIX}/${INSTALLED_LIB_DIR}/
-cp ${BUILD_DIR}/bin/pyspark ${PREFIX}/${INSTALLED_LIB_DIR}/bin/
 cat > $PREFIX/$BIN_DIR/pyspark <<EOF
 #!/bin/bash
 
@@ -223,5 +212,7 @@ export PYSPARK_PYTHON=${PYSPARK_PYTHON}
 exec $INSTALLED_LIB_DIR/bin/pyspark "\$@"
 EOF
 chmod 755 $PREFIX/$BIN_DIR/pyspark
+
+touch $PREFIX/$LIB_DIR/RELEASE
 
 cp ${BUILD_DIR}/{LICENSE,NOTICE} ${PREFIX}/${LIB_DIR}/
