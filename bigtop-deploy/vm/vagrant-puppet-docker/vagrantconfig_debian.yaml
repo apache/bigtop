@@ -1,13 +1,13 @@
 docker:
         memory_size: "2048"
-        image: "bigtop/ssh:centos-6.4"
+        image:  "debian:jessie"
 
 boot2docker:
         memory_size: "4196"
         number_cpus: "2"
 
-repo: "http://bigtop01.cloudera.org:8080/view/Releases/job/Bigtop-0.8.0/label=centos6/6/artifact/output/"
-distro: centos
+repo: "http://to.do/notyet"
+distro: debian
 components: "hadoop,yarn"
 namenode_ui_port: "50070"
 yarn_ui_port: "8088"

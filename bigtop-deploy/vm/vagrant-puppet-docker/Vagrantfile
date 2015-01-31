@@ -20,6 +20,7 @@ require 'fileutils'
 
 # number of instances
 $num_instances = 3
+#$vagrantyamlconf = "vagrantconfig.yaml"
 
 # load configuration from config.rb
 CONFIG = File.join(File.dirname(__FILE__), "config.rb")
@@ -29,7 +30,7 @@ end
 
 require "yaml"
 
-_config = YAML.load(File.open(File.join(File.dirname(__FILE__), "vagrantconfig.yaml"), File::RDONLY).read)
+_config = YAML.load(File.open(File.join(File.dirname(__FILE__), $vagrantyamlconf), File::RDONLY).read)
 CONF = _config
 
 ENV['VAGRANT_DEFAULT_PROVIDER'] ||= 'docker'
@@ -42,10 +43,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # image definition
   config.vm.define "image", autostart: false do |image|
     image.vm.provider "docker" do |d|
-      d.build_dir = "."
+      d.build_dir = CONF["distro"]
       d.build_args = ["-t",CONF["docker"]["image"]]
       d.vagrant_machine = "boot2docker"
       d.vagrant_vagrantfile = "./boot2docker/Vagrantfile"
+      d.has_ssh = true
     end
     image.ssh.username = "root"
     image.ssh.port = 22
@@ -63,6 +65,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         end
         d.vagrant_machine = "boot2docker"
         d.vagrant_vagrantfile = "./boot2docker/Vagrantfile"
+        d.has_ssh = true
       end
       bigtop.ssh.username = "root"
       bigtop.ssh.port = 22

@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -13,21 +15,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM bigtop/seed:centos-6.4
+apt-get update
+# Install puppet agent
+apt-get -y install puppet puppet-module-puppetlabs-stdlib curl
 
-# enable ssh
-RUN yum -y install openssh-server openssh-clients sudo
-RUN sed -i.bak s/UsePAM\ yes/UsePAM\ no/ /etc/ssh/sshd_config
-RUN ssh-keygen -q -N "" -t dsa -f /etc/ssh/ssh_host_dsa_key
-RUN ssh-keygen -q -N "" -t rsa -f /etc/ssh/ssh_host_rsa_key
+mkdir -p /data/{1,2}
 
-# requiretty off
-RUN sed -i.bak 's/requiretty/!requiretty/' /etc/sudoers
+# Setup rng-tools to improve virtual machine entropy performance.
+# The poor entropy performance will cause kerberos provisioning failed.
+apt-get -y install rng-tools
+sed -i.bak 's@#HRNGDEVICE=/dev/null@HRNGDEVICE=/dev/urandom@' /etc/default/rng-tools
+service rng-tools start
 
-# setup vagrant account
-RUN mkdir /root/.ssh/
-RUN chmod 0755 /root/.ssh
-RUN wget http://github.com/mitchellh/vagrant/raw/master/keys/vagrant.pub --no-check-certificate -O /root/.ssh/authorized_keys
-RUN chmod 0644 /root/.ssh/authorized_keys
-
-CMD /usr/sbin/sshd -D
+echo "Now installing gradle"
+cd /bigtop-home && puppet apply --modulepath=./ -e "include bigtop_toolchain::gradle" # alias gradle=/usr/local/gradle/bin/gradle

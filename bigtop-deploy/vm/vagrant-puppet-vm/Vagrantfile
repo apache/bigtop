@@ -26,6 +26,9 @@ CONF = _config
 repo = CONF['repo']
 # repo = "http://bigtop.s3.amazonaws.com/releases/0.7.0/redhat/6/x86_64"
 
+# Which Linux Distribution to use. Right now only centos is tested
+distro = CONF['distro']
+
 # number of instances
 num_instances = CONF['num_instances']
 
@@ -96,7 +99,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       end
 
       # carry on w/ installation
-      bigtop.vm.provision "shell", path: "../utils/setup-env.sh"
+      bigtop.vm.provision "shell", path: "../utils/setup-env-" + distro + ".sh"
       bigtop.vm.provision "shell", inline: $script
       bigtop.vm.provision :hostmanager
 

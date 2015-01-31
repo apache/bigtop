@@ -6,3 +6,4 @@ num_instances: 1
 components: "hadoop,yarn"
 enable_local_yum: false
 run_smoke_tests: false
+distro: centos

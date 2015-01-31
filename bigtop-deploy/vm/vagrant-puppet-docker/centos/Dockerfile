@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -15,28 +13,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-sysctl kernel.hostname=`hostname -f`
+FROM bigtop/seed:centos-6.4
 
-# Unmount device /etc/hosts and replace it by a shared hosts file
-echo -e "`hostname -i`\t`hostname -f`" >> /vagrant/hosts
-umount /etc/hosts
-mv /etc/hosts /etc/hosts.bak
-ln -s /vagrant/hosts /etc/hosts
+# enable ssh
+RUN yum -y install openssh-server openssh-clients sudo
+RUN sed -i.bak s/UsePAM\ yes/UsePAM\ no/ /etc/ssh/sshd_config
+RUN ssh-keygen -q -N "" -t dsa -f /etc/ssh/ssh_host_dsa_key
+RUN ssh-keygen -q -N "" -t rsa -f /etc/ssh/ssh_host_rsa_key
 
-# Prepare puppet configuration file
-if [ -f /etc/debian_version ] ; then
-    apt-get -y install puppet-module-puppetlabs-stdlib
-    jdk="openjdk-7-jdk"
-else
-    cd /etc/puppet/modules && puppet module install puppetlabs/stdlib
-    jdk="java-1.7.0-openjdk-devel.x86_64"
-fi
+# requiretty off
+RUN sed -i.bak 's/requiretty/!requiretty/' /etc/sudoers
 
-mkdir /vagrant/config
-cat > /vagrant/config/site.csv << EOF
-hadoop_head_node,$1
-hadoop_storage_dirs,/data/1,/data/2
-bigtop_yumrepo_uri,$2
-jdk_package_name,$jdk
-components,$3
-EOF
+# setup vagrant account
+RUN mkdir /root/.ssh/
+RUN chmod 0750 /root/.ssh
+RUN wget http://github.com/mitchellh/vagrant/raw/master/keys/vagrant.pub --no-check-certificate -O /root/.ssh/authorized_keys
+RUN chmod 0640 /root/.ssh/authorized_keys
+
+CMD /usr/sbin/sshd -D

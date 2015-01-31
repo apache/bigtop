@@ -16,5 +16,9 @@ su -s /bin/bash $HCFS_USER -c '/usr/bin/hadoop fs -mkdir /user/vagrant /user/roo
 su -s /bin/bash $HCFS_USER -c 'hadoop fs -chmod 777 /user/vagrant'
 su -s /bin/bash $HCFS_USER -c 'hadoop fs -chmod 777 /user/root'
 
-yum install -y pig hive flume mahout
+if [ -f /etc/debian_version ] ; then
+    apt-get -y install pig hive flume mahout
+else
+    yum install -y pig hive flume mahout
+fi
 cd /bigtop-home/bigtop-tests/smoke-tests && ./gradlew clean compileGroovy test -Dsmoke.tests=mapreduce,pig --info

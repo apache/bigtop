@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -15,28 +13,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-sysctl kernel.hostname=`hostname -f`
+FROM debian:jessie
 
-# Unmount device /etc/hosts and replace it by a shared hosts file
-echo -e "`hostname -i`\t`hostname -f`" >> /vagrant/hosts
-umount /etc/hosts
-mv /etc/hosts /etc/hosts.bak
-ln -s /vagrant/hosts /etc/hosts
+# enable ssh
 
-# Prepare puppet configuration file
-if [ -f /etc/debian_version ] ; then
-    apt-get -y install puppet-module-puppetlabs-stdlib
-    jdk="openjdk-7-jdk"
-else
-    cd /etc/puppet/modules && puppet module install puppetlabs/stdlib
-    jdk="java-1.7.0-openjdk-devel.x86_64"
-fi
+RUN apt-get update
+RUN apt-get install -y openssh-server sudo wget
 
-mkdir /vagrant/config
-cat > /vagrant/config/site.csv << EOF
-hadoop_head_node,$1
-hadoop_storage_dirs,/data/1,/data/2
-bigtop_yumrepo_uri,$2
-jdk_package_name,$jdk
-components,$3
-EOF
+# requiretty off
+RUN sed -i.bak 's/requiretty/!requiretty/' /etc/sudoers
+
+# setup vagrant account
+RUN mkdir -p /root/.ssh
+RUN chmod 0750 /root/.ssh
+RUN wget http://github.com/mitchellh/vagrant/raw/master/keys/vagrant.pub --no-check-certificate -O /root/.ssh/authorized_keys
+RUN chmod 0640 /root/.ssh/authorized_keys
+
+RUN mkdir -p /var/run/sshd
+CMD /usr/sbin/sshd -D

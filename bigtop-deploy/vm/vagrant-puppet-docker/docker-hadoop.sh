@@ -1,7 +1,9 @@
 #!/bin/bash
 
 usage() {
-    echo "usage: $PROG [options]"
+    echo "usage: $PROG [-C file ] args"
+    echo "       -C file                                   Use alternate file for vagrantconfig.yaml"
+    echo "  commands:"
     echo "       -b, --build-image                         Build base Docker image for Bigtop Hadoop"
     echo "                                                 (must be exectued at least once before creating cluster)"
     echo "       -c NUM_INSTANCES, --create=NUM_INSTANCES  Create a Docker based Bigtop Hadoop cluster"
@@ -13,6 +15,7 @@ usage() {
 }
 
 build-image() {
+    echo "\$vagrantyamlconf = \"$vagrantyamlconf\"" > config.rb
     vagrant up image --provider docker
     {
         echo "echo -e '\nBUILD IMAGE SUCCESS.\n'" |vagrant ssh image
@@ -24,17 +27,19 @@ build-image() {
 
 create() {
     echo "\$num_instances = $1" > config.rb
+    echo "\$vagrantyamlconf = \"$vagrantyamlconf\"" >> config.rb
     vagrant up --no-parallel
     nodes=(`vagrant status |grep running |grep -v image |awk '{print $1}'`)
     hadoop_head_node=(`echo "hostname -f" |vagrant ssh ${nodes[0]} |tail -n 1`)
     repo=$(get-yaml-config repo)
     components=$(get-yaml-config components)
-    echo "/bigtop-home/bigtop-deploy/vm/utils/setup-env.sh" |vagrant ssh ${nodes[0]}
+    distro=$(get-yaml-config distro)
+    echo "/bigtop-home/bigtop-deploy/vm/utils/setup-env-$distro.sh" |vagrant ssh ${nodes[0]}
     echo "/vagrant/provision.sh $hadoop_head_node $repo $components" |vagrant ssh ${nodes[0]}
     bigtop-puppet ${nodes[0]}
     for ((i=1 ; i<${#nodes[*]} ; i++)); do
         (
-        echo "/bigtop-home/bigtop-deploy/vm/utils/setup-env.sh" |vagrant ssh ${nodes[$i]}
+        echo "/bigtop-home/bigtop-deploy/vm/utils/setup-env-$distro.sh" |vagrant ssh ${nodes[$i]}
         echo "/vagrant/provision.sh $hadoop_head_node $repo $components" |vagrant ssh ${nodes[$i]}
         bigtop-puppet ${nodes[$i]}
         ) &
@@ -66,7 +71,7 @@ destroy() {
 }
 
 bigtop-puppet() {
-    echo "puppet apply -d --confdir=/vagrant --modulepath=/bigtop-home/bigtop-deploy/puppet/modules:/etc/puppet/modules /bigtop-home/bigtop-deploy/puppet/manifests/site.pp" |vagrant ssh $1
+    echo "puppet apply -d --confdir=/vagrant --modulepath=/bigtop-home/bigtop-deploy/puppet/modules:/etc/puppet/modules:/usr/share/puppet/modules /bigtop-home/bigtop-deploy/puppet/manifests/site.pp" |vagrant ssh $1
 }
 
 get-yaml-config() {
@@ -77,7 +82,7 @@ get-yaml-config() {
         RUBY_EXE=$(dirname $(which vagrant))/../embedded/bin/ruby
     fi
     RUBY_SCRIPT="data = YAML::load(STDIN.read); puts data['$1'];"
-    cat vagrantconfig.yaml | $RUBY_EXE -ryaml -e "$RUBY_SCRIPT" | tr -d '\r'
+    cat ${vagrantyamlconf} | $RUBY_EXE -ryaml -e "$RUBY_SCRIPT" | tr -d '\r'
 }
 
 PROG=`basename $0`
@@ -86,6 +91,7 @@ if [ $# -eq 0 ]; then
     usage
 fi
 
+vagrantyamlconf="vagrantconfig.yaml"
 while [ $# -gt 0 ]; do
     case "$1" in
     -b|--build-image)
@@ -97,6 +103,13 @@ while [ $# -gt 0 ]; do
           usage
         fi
         create $2
+        shift 2;;
+    -C|--conf)
+        if [ $# -lt 2 ]; then
+          echo "Alternative config file for vagrantconfig.yaml" 1>&2
+          usage
+        fi
+	vagrantyamlconf=$2
         shift 2;;
     -p|--provision)
         provision
