@@ -16,24 +16,10 @@
  * limitations under the License.
  */
 
-drop database if exists mysqltestdb;
+GRANT USAGE ON *.* TO 'mytestuser'@'MYSQLHOST';
+DROP USER 'mytestuser'@'MYSQLHOST';
+create user 'mytestuser'@'MYSQLHOST' identified by 'password';
+GRANT ALL PRIVILEGES ON *.* TO mytestuser@'%' IDENTIFIED BY "password";
+GRANT ALL PRIVILEGES ON *.* TO mytestuser@'localhost' IDENTIFIED BY "password";
+GRANT ALL PRIVILEGES ON *.* TO mytestuser@'MYSQLHOST' IDENTIFIED BY "password";
 
-create database mysqltestdb;
-
-use mysqltestdb;
-
-grant all privileges on mysqltestdb.* to 't1'@'%';
-
-flush privileges;
-
-/* create database2 for import-all */
-
-drop database if exists mysqltestdb2;
-
-create database mysqltestdb2;
-
-use mysqltestdb2;
-
-grant all privileges on mysqltestdb2.* to 'root'@'%';
-
-flush privileges;

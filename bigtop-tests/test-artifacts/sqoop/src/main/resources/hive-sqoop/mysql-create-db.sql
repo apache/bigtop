@@ -22,7 +22,7 @@
 # Drop old databases
 #
 drop database if exists testhive;
-
+#drop user 'testhiveuser'@'$MYSQL';
 #
 # Create new database
 #
@@ -30,9 +30,10 @@ create database testhive;
 
 #
 # Grant permissions to the testhiveuser
-#
-use mysql;
-grant all privileges on testhive.* to 'testhiveuser'@'localhost';
-grant all privileges on testhive.* to 'testhiveuser'@'%';
-grant all privileges on testhive.* to 'root'@'%';
-flush privileges;
+#use mysql;
+GRANT USAGE ON *.* TO 'mytestnew'@'MYSQLHOST';
+DROP USER 'mytestnew'@'MYSQLHOST';
+create user 'mytestnew'@'MYSQLHOST' identified by 'password';
+GRANT ALL PRIVILEGES ON *.* TO mytestnew@'%' IDENTIFIED BY "password";
+GRANT ALL PRIVILEGES ON *.* TO mytestnew@'localhost' IDENTIFIED BY "password";
+GRANT ALL PRIVILEGES ON *.* TO mytestnew@'MYSQLHOST' IDENTIFIED BY "password";

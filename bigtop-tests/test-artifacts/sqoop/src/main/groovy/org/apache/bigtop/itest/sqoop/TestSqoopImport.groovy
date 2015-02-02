@@ -46,9 +46,9 @@ class TestSqoopImport {
   private static String mysql_password =
     System.getenv("MYSQL_PASSWORD");
   private static final String MYSQL_USER =
-    (mysql_user == null) ? "root" : mysql_user;
+    (mysql_user == null) ? "mytestuser" : mysql_user;
   private static final String MYSQL_PASSWORD =
-    (mysql_password == null) ? "" : mysql_password;
+    (mysql_password == null) ? "password" : mysql_password;
   private static final String MYSQL_HOST = System.getProperty("mysql.host", "localhost");
 
   private static final String MYSQL_COMMAND =
@@ -67,6 +67,7 @@ class TestSqoopImport {
   private static final String OUTPUT = System.getProperty("output.dir", "/tmp/output-dir");
   private static final String SQOOP_SERVER_URL = System.getProperty("sqoop.server.url", "http://localhost:12000/sqoop/");
   private static Shell sh = new Shell("/bin/bash -s");
+  private static Shell my = new Shell("/bin/bash","root");
 
   @BeforeClass
   static void setUp() {
@@ -80,6 +81,8 @@ class TestSqoopImport {
     JarContent.unpackJarContainer(TestSqoopImport.class, '.' , null)
 
     // create the database
+    sh.exec("sed -i s/MYSQLHOST/$MYSQL_HOST/g $DATA_DIR/mysql-create-user.sql");
+    my.exec("mysql test < $DATA_DIR/mysql-create-user.sql");
     sh.exec("cat $DATA_DIR/mysql-create-db.sql | $MYSQL_COMMAND");
     //create tables
     sh.exec("cat $DATA_DIR/mysql-create-tables.sql | $MYSQL_COMMAND");
@@ -230,6 +233,8 @@ class TestSqoopImport {
         0, sh.exec("diff -u $DATA_DIR/sqoop-t_bool.out t_bool.out").getRet());
   }
 
+
+
   @Test
   public void testIntegerImport() {
     String tableName = "t_int";
@@ -335,8 +340,10 @@ class TestSqoopImport {
 
     sh.exec("hadoop fs -cat $OUTPUT/$outputSubdir/part-* > split-by.out");
     assertEquals("sqoop import did not write expected data",
-        0, sh.exec("diff -u $DATA_DIR/sqoop-testtable.out split-by.out").getRet());
+        0, sh.exec("diff -u $DATA_DIR/sqoop-testtable2.out split-by.out").getRet());
   }
+
+
 
 
   //----------------------------------------@Ignore("Backward Compatibility")------------------------------------------//
@@ -419,5 +426,4 @@ class TestSqoopImport {
     assertEquals("sqoop import did not write expected data",
         0, sh.exec("diff -u $DATA_DIR/sqoop-null-non-string.out non-null-string.out").getRet());
   }
-
 }
