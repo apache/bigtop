@@ -49,7 +49,7 @@ class TestSqoopImport {
     (mysql_user == null) ? "mytestuser" : mysql_user;
   private static final String MYSQL_PASSWORD =
     (mysql_password == null) ? "password" : mysql_password;
-  private static final String MYSQL_HOST = System.getProperty("mysql.host", "localhost");
+  private static final String MYSQL_HOST = System.getenv("MYSQL_HOST");
 
   private static final String MYSQL_COMMAND =
     "mysql -h $MYSQL_HOST --user=$MYSQL_USER" +
@@ -65,7 +65,7 @@ class TestSqoopImport {
   }
   private static final String DATA_DIR = System.getProperty("data.dir", "mysql-files");
   private static final String OUTPUT = System.getProperty("output.dir", "/tmp/output-dir");
-  private static final String SQOOP_SERVER_URL = System.getProperty("sqoop.server.url", "http://localhost:12000/sqoop/");
+  private static final String SQOOP_SERVER_URL = System.getenv("SQOOP_URL");
   private static Shell sh = new Shell("/bin/bash -s");
   private static Shell my = new Shell("/bin/bash","root");
 
