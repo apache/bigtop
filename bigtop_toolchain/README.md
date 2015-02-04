@@ -83,6 +83,18 @@ The usage is as below:
 
 By applying the snippet, Vagrant will be installed(the Docker installation will be added soon).
 
+## Optional development tools
+
+This isn't a part of fundamental toolchain recipes as we are trying to contain the size of CI and dev-
+images of docker containers.
+As Groovy isn't required (yet!) for creation of a Bigtop stack, this environment is separated for now
+In case you system doesn't have already installed version of Bigtop recommended Groovy environment,
+you should be able to so easily by running
+
+	puppet apply --modulepath=<path_to_bigtop> -e "include bigtop_toolchain::development-tools"
+
+Potentially, we'll be adding more development tools in this manifest.
+
 ## Requirements
 
 For RedHat/Centos, due to redistribution restrictions the Oracle JDK must be downloaded seperately. 

@@ -80,7 +80,6 @@ task toolchain(type:Exec,
   workingDir '.'
   commandLine command
 }
-
 task "toolchain-puppetmodules"(type:Exec,
     description: 'Setup puppet modules via toolchain; Requires: Puppet, sudo',
     group: DEVENV_GROUP) {
@@ -88,6 +87,17 @@ task "toolchain-puppetmodules"(type:Exec,
       'sudo', 'puppet', 'apply', '-d',
       "--modulepath=${projectDir.absolutePath}", '-e',
       'include bigtop_toolchain::puppet-modules'
+  ]
+  workingDir '.'
+  commandLine command
+}
+task "toolchain-devtools"(type:Exec,
+    description: 'Setup additional dev. tools like Groovy SDK via toolchain; Requires: Puppet, sudo',
+    group: DEVENV_GROUP) {
+  def command = [
+      'sudo', 'puppet', 'apply', '-d',
+      "--modulepath=${projectDir.absolutePath}", '-e',
+      'include bigtop_toolchain::development-tools'
   ]
   workingDir '.'
   commandLine command
