@@ -17,6 +17,8 @@
 
 package org.apache.bigtop.bigpetstore.spark.etl
 
+import org.apache.spark.rdd.RDD
+
 import Array._
 
 import java.util.Calendar
@@ -42,13 +44,15 @@ import org.apache.bigtop.bigpetstore.spark.datamodel._
  * RunWith annotation is just a hack for running tests with Gradle
  */
 @RunWith(classOf[JUnitRunner])
-class IOUtilsSuite extends FunSuite with BeforeAndAfterAll {
+class ETLSuite extends FunSuite with BeforeAndAfterAll {
 
   /**
    * TODO : We are using Option monads as a replacement for nulls.
    * Lets move towards immutable spark context instead, if possible ?
    */
-  var sc: Option[SparkContext] = None
+  val conf = new SparkConf().setAppName("BPS Data Generator Test Suite").setMaster("local[2]")
+  val sc = new SparkContext(conf)
+
   var rawRecords: Option[Array[(Store, Location, Customer, Location, TransactionProduct)]] = None
   var transactions: Option[Array[Transaction]] = None
 
@@ -72,8 +76,6 @@ class IOUtilsSuite extends FunSuite with BeforeAndAfterAll {
     "6,66067,Ottawa,KS,999,Cesareo,Lamplough,20152,Chantilly,VA,30,Mon Oct 12 04:29:46 EDT 2015,category=dry cat food;brand=Feisty Feline;flavor=Chicken & Rice;size=14.0;per_unit_cost=2.14;")
 
   override def beforeAll() {
-    val conf = new SparkConf().setAppName("BPS Data Generator Test Suite").setMaster("local[2]")
-    sc = Some(new SparkContext(conf))
 
     val cal1 = Calendar.getInstance(TimeZone.getTimeZone("America/New_York"), Locale.US)
     val cal2 = Calendar.getInstance(TimeZone.getTimeZone("America/New_York"), Locale.US)
@@ -101,12 +103,13 @@ class IOUtilsSuite extends FunSuite with BeforeAndAfterAll {
       Transaction(999L, 32L, 5L, cal1, 1L)))
   }
 
+
   override def afterAll() {
-    sc.get.stop()
+    sc.stop()
   }
 
   test("Parsing Generated Strings into Transaction Objects") {
-    val rawRDD = sc.get.parallelize(rawLines)
+    val rawRDD = sc.parallelize(rawLines)
     val expectedRecords = rawRecords.get
 
     //Goal: Confirm that these RDD's are identical to the expected ones.
@@ -144,7 +147,7 @@ class IOUtilsSuite extends FunSuite with BeforeAndAfterAll {
   }
 
   test("Generation of unique sets of transaction attributes") {
-    val rawRDD = sc.get.parallelize(rawRecords.get)
+    val rawRDD = sc.parallelize(rawRecords.get)
     val rdds = SparkETL.normalizeData(rawRDD)
     val locationRDD = rdds._1
     val storeRDD = rdds._2

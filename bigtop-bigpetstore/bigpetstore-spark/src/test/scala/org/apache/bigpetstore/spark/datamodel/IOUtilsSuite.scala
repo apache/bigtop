@@ -26,7 +26,7 @@ import java.util.Locale
 
 import org.apache.spark.{SparkContext, SparkConf}
 
-import org.scalatest.FunSuite
+import org.scalatest.{BeforeAndAfterAll, FunSuite}
 import org.scalatest.junit.JUnitRunner
 import org.junit.runner.RunWith
 
@@ -34,14 +34,18 @@ import org.apache.bigtop.bigpetstore.spark.datamodel._
 
 // hack for running tests with Gradle
 @RunWith(classOf[JUnitRunner])
-class IOUtilsSuite extends FunSuite {
+class IOUtilsSuite extends FunSuite with BeforeAndAfterAll {
+
+  val conf = new SparkConf().setAppName("BPS Data Generator Test Suite").setMaster("local[2]")
+  val sc = new SparkContext(conf)
+
+  override def afterAll() {
+    sc.stop();
+  }
 
   test("Saving & Loading data") {
 
     val tmpDir = Files.createTempDirectory("ioUtilsSuite").toFile().toString()
-
-    val conf = new SparkConf().setAppName("BPS Data Generator Test Suite").setMaster("local[2]")
-    val sc = new SparkContext(conf)
 
     val locations = Array(Location("11111", "Sunnyvale", "CA"),
       Location("22222", "Margate", "FL"))
@@ -89,6 +93,5 @@ class IOUtilsSuite extends FunSuite {
     assert(productRDD.collect().toSet === readProductRDD.collect().toSet)
     assert(transactionRDD.collect().toSet === readTransactionRDD.collect().toSet)
 
-    sc.stop()
   }
 }

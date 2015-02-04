@@ -31,7 +31,7 @@ import java.util._
 case class TransactionProduct(customerId: Long, transactionId: Long,
   storeId: Long, dateTime: Calendar, product: String)
 
-case class Parameters(inputDir: String, outputDir: String)
+case class ETLParameters(inputDir: String, outputDir: String)
 
 object SparkETL {
 
@@ -48,13 +48,13 @@ object SparkETL {
     println(usage)
   }
 
-  def parseArgs(args: Array[String]): Parameters = {
+  def parseArgs(args: Array[String]): ETLParameters = {
     if(args.length != NPARAMS) {
       printUsage()
       System.exit(1)
     }
 
-    Parameters(args(0), args(1))
+    ETLParameters(args(0), args(1))
   }
 
   def readRawData(sc: SparkContext, inputDir: String): RDD[String] = {
@@ -179,16 +179,10 @@ object SparkETL {
     (locationRDD, storeRDD, customerRDD, productRDD, transactionRDD)
   }
 
-
-  def main(args: Array[String]) {
-    val parameters = parseArgs(args)
-
-    println("Creating SparkConf")
-    val conf = new SparkConf().setAppName("BPS Data Generator")
-
-    println("Creating SparkContext")
-    val sc = new SparkContext(conf)
-
+  /**
+   * Runs the ETL and returns the total number of locations,stores,customers,products,transactions.
+   */
+  def run(sc:SparkContext, parameters:ETLParameters) : (Long,Long,Long,Long,Long) = {
     val rawStringRDD = readRawData(sc, parameters.inputDir)
     val rawRecordRDD = parseRawData(rawStringRDD)
     val normalizedRDDs = normalizeData(rawRecordRDD)
@@ -201,6 +195,27 @@ object SparkETL {
 
     IOUtils.save(parameters.outputDir, locationRDD, storeRDD,
       customerRDD, productRDD, transactionRDD)
+
+    return (locationRDD.count(),
+        storeRDD.count(),
+        customerRDD.count(),
+        productRDD.count(),
+        transactionRDD.count()
+        );
+  }
+
+  def main(args: Array[String]) {
+    val parameters = parseArgs(args)
+
+    println("Creating SparkConf")
+
+    val conf = new SparkConf().setAppName("BPS Data Generator")
+
+    println("Creating SparkContext")
+
+    val sc = new SparkContext(conf)
+
+    run(sc, parameters)
 
     sc.stop()
   }

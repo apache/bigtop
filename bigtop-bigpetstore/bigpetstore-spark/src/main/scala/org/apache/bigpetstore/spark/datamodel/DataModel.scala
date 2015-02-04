@@ -28,5 +28,9 @@ case class Product(productId: Long, category: String, attributes: Map[String, St
 
 case class Store(storeId: Long, zipcode: String)
 
-case class Transaction(customerId: Long, transactionId: Long,
-  storeId: Long, dateTime: Calendar, productId: Long)
+case class Transaction(customerId: Long, transactionId: Long, storeId: Long, dateTime: Calendar, productId: Long)
+
+/**
+ * Statistics phase.  To be expanded...
+ * */
+case class Statistics(transactions:Long)

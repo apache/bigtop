@@ -17,6 +17,8 @@
 
 package org.apache.bigtop.bigpetstore.spark.generator
 
+import org.apache.bigtop.bigpetstore.spark.etl.{ETLParameters, SparkETL}
+
 import Array._
 
 import java.io.File
@@ -24,37 +26,47 @@ import java.nio.file.Files
 
 import org.apache.spark.{SparkContext, SparkConf}
 
-import org.scalatest.FunSuite
+import org.scalatest.{BeforeAndAfterAll, FunSuite}
 import org.scalatest.junit.JUnitRunner
 import org.junit.runner.RunWith
 
 
 // hack for running tests with Gradle
 @RunWith(classOf[JUnitRunner])
-class SparkDriverSuite extends FunSuite {
+class SparkDriverSuite extends FunSuite  with BeforeAndAfterAll {
 
-  test("Generating data") {
+  val conf = new SparkConf().setAppName("BPS Data Generator Test Suite").setMaster("local[2]")
+  val sc = new SparkContext(conf);
 
+  override def afterAll() {
+      sc.stop();
+  }
+
+  /**
+   * Run the test, return outputdir of the raw data.
+   */
+  def runGenerator(sc:SparkContext) : File = {
     val tmpDir:File = Files.createTempDirectory("sparkDriverSuiteGeneratedData").toFile()
     // 10 stores, 1000 customers, 365.0 days
     val parameters:Array[String] = Array(tmpDir.toString(), "10", "1000", "365.0")
 
     SparkDriver.parseArgs(parameters)
 
-    val conf = new SparkConf().setAppName("BPS Data Generator Test Suite").setMaster("local[2]")
-    val sc = new SparkContext(conf)
-
     val transactionRDD = SparkDriver.generateData(sc)
     val transactionCount = transactionRDD.count()
     assert(transactionCount > 0)
 
     SparkDriver.writeData(transactionRDD)
+    tmpDir;
 
-    // check that generator wrote out the  data
+  }
+
+  test("Generating data") {
+
+    val tmpDir:File =runGenerator(sc);
     val transactionDir:File = new File(tmpDir, "transactions")
     assert(transactionDir.exists())
     assert(transactionDir.isDirectory())
-
-    sc.stop()
+    //TODO : Assert format is TextFile
   }
 }
