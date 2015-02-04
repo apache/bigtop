@@ -196,11 +196,11 @@ object SparkDriver {
 
   def lineItem(t: Transaction, date:Date, p:Product): String = {
       t.getStore.getId + "," +
-      t.getStore.getLocation+ "," +
+      t.getStore.getLocation.getZipcode + "," +
       t.getStore.getLocation.getCity + "," +
       t.getStore.getLocation.getState + "," +
       t.getCustomer.getId + "," +
-      t.getCustomer.getName.getFirst + " " +t.getCustomer.getName.getSecond + "," +
+      t.getCustomer.getName.getFirst + "," +t.getCustomer.getName.getSecond + "," +
       t.getCustomer.getLocation.getZipcode + "," +
       t.getCustomer.getLocation.getCity + "," +
       t.getCustomer.getLocation.getState + "," +
@@ -210,7 +210,7 @@ object SparkDriver {
   def writeData(transactionRDD : RDD[Transaction]) {
     val initialDate : Long = new Date().getTime()
 
-    val transactionStringsRDD = transactionRDD.map {
+    val transactionStringsRDD = transactionRDD.flatMap {
       transaction =>
         val products = transaction.getProducts()
 
