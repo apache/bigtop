@@ -43,10 +43,10 @@ class TestSqoopExport {
   private static String mysql_password =
     System.getenv("MYSQL_PASSWORD");
   private static final String MYSQL_USER =
-    (mysql_user == null) ? "root" : mysql_user;
+    (mysql_user == null) ? "mytestuser" : mysql_user;
   private static final String MYSQL_PASSWORD =
-    (mysql_password == null) ? "" : mysql_password;
-  private static final String MYSQL_HOST = System.getProperty("mysql.host", "localhost");
+    (mysql_password == null) ? "password" : mysql_password;
+  private static final String MYSQL_HOST = System.getenv("MYSQL_HOST");
 
   private static final String MYSQL_COMMAND =
     "mysql -h $MYSQL_HOST --user=$MYSQL_USER" +
@@ -62,8 +62,9 @@ class TestSqoopExport {
   }
   private static final String DATA_DIR = System.getProperty("data.dir", "mysql-files");
   private static final String INPUT = System.getProperty("input.dir", "/tmp/input-dir");
-  private static final String SQOOP_SERVER_URL = System.getProperty("sqoop.server.url", "http://localhost:12000/sqoop/");
+  private static final String SQOOP_SERVER_URL = System.getenv("SQOOP_URL");
   private static Shell sh = new Shell("/bin/bash -s");
+  private static Shell my = new Shell("/bin/bash","root");
 
   @BeforeClass
   static void setUp() {
@@ -73,6 +74,8 @@ class TestSqoopExport {
       assertTrue("Deletion of previous $INPUT from HDFS failed",
           sh.getRet() == 0);
     }
+    sh.exec("sed -i s/MYSQLHOST/$MYSQL_HOST/g $DATA_DIR/mysql-create-user.sql");
+    my.exec("mysql test < $DATA_DIR/mysql-create-user.sql");
     sh.exec("hadoop fs -mkdir $INPUT");
     assertTrue("Could not create $INPUT directory", sh.getRet() == 0);
 
@@ -95,8 +98,8 @@ class TestSqoopExport {
     // upload data to HDFS 
     sh.exec("hadoop fs -put $DATA_DIR/sqoop-testtable.out $INPUT/testtable/part-m-00000");
     sh.exec("hadoop fs -put $DATA_DIR/sqoop-t_bool.out $INPUT/t_bool/part-m-00000");
-    sh.exec("hadoop fs -put $DATA_DIR/sqoop-t_date-export.out $INPUT/t_date/part-m-00000");
-    sh.exec("hadoop fs -put $DATA_DIR/sqoop-t_string.out $INPUT/t_string/part-m-00000");
+    sh.exec("hadoop fs -copyFromLocal $DATA_DIR/sqoop-t_date-export.out $INPUT/t_date/part-m-00000");
+    sh.exec("hadoop fs -copyFromLocal $DATA_DIR/sqoop-t_string.out $INPUT/t_string/part-m-00000");
     sh.exec("hadoop fs -put $DATA_DIR/sqoop-t_fp.out $INPUT/t_fp/part-m-00000");
     sh.exec("hadoop fs -put $DATA_DIR/sqoop-t_int.out $INPUT/t_int/part-m-00000"); 
     
@@ -108,6 +111,7 @@ class TestSqoopExport {
 
   @AfterClass
   static void tearDown() {
+
     if ('YES'.equals(System.getProperty('delete.testdata','no').toUpperCase())) {
       sh.exec("hadoop fs -test -e $INPUT");
       if (sh.getRet() == 0) {
@@ -116,6 +120,7 @@ class TestSqoopExport {
             sh.getRet() == 0);
       }
     }
+
   }
 
   protected SqoopClient getClient() {
@@ -205,6 +210,29 @@ class TestSqoopExport {
 
 
   @Test
+  public void testDateTimeExport() {
+    String tableName = "t_date";
+
+    runSqoopClientExport(tableName);
+
+    sh.exec("echo 'use mysqltestdb;select * from t_date' | $MYSQL_COMMAND --skip-column-names | sed 's/\t/,/g' > t_date.out");
+    assertEquals("sqoop export did not match with  expected data",
+        0, sh.exec("diff -u $DATA_DIR/sqoop-t_date-export-com.out t_date.out").getRet());
+  }
+
+  @Test
+  public void testStringExport() {
+    String tableName = "t_string";
+
+    runSqoopClientExport(tableName);
+
+    sh.exec("echo 'use mysqltestdb;select * from t_string' | $MYSQL_COMMAND --skip-column-names | sed 's/\t/,/g' > t_string.out");
+    assertEquals("sqoop export did not write expected data",
+            0, sh.exec("diff -u $DATA_DIR/sqoop-t_string_export.out t_string.out").getRet());
+  }
+
+
+  @Test
   public void testBooleanExport() {
     String tableName = "t_bool";
 
@@ -236,27 +264,4 @@ class TestSqoopExport {
     assertEquals("sqoop export did not write expected data",
         0, sh.exec("diff -u $DATA_DIR/sqoop-t_fp.out t_fp.out").getRet());
   }
-
-  @Test
-  public void testDateTimeExport() {
-    String tableName = "t_date";
-
-    runSqoopClientExport(tableName);
-
-    sh.exec("echo 'use mysqltestdb;select * from t_date' | $MYSQL_COMMAND --skip-column-names | sed 's/\t/,/g' > t_date.out");
-    assertEquals("sqoop export did not write expected data",
-        0, sh.exec("diff -u $DATA_DIR/sqoop-t_date.out t_date.out").getRet());
-  }
-
-  @Test
-  public void testStringExport() {
-    String tableName = "t_string";
-
-    runSqoopClientExport(tableName);
-
-    sh.exec("echo 'use mysqltestdb;select * from t_string' | $MYSQL_COMMAND --skip-column-names | sed 's/\t/,/g' > t_string.out");
-    assertEquals("sqoop export did not write expected data",
-            0, sh.exec("diff -u $DATA_DIR/sqoop-t_string.out t_string.out").getRet());
-  }
-
 }
