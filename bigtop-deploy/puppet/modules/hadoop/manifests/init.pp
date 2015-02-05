@@ -288,7 +288,10 @@ class hadoop {
     Exec <| title == "activate nn1" |>  -> Exec["HDFS rsync $title"]
   }
 
-  define namenode ($host = $fqdn , $port = "8020", $auth = "simple", $dirs = ["/tmp/nn"], $ha = 'disabled', $zk = '') {
+  define namenode ($host = $fqdn , $port = "8020", $auth = "simple", $dirs = ["/tmp/nn"], $ha = 'disabled', $zk = '',
+      $standby_bootstrap_retries = 10,
+      # milliseconds
+      $standby_bootstrap_retry_interval = 30000) {
 
     $first_namenode = inline_template("<%= Array(@host)[0] %>")
     $hadoop_namenode_host = $host
@@ -412,6 +415,18 @@ class hadoop {
             require => Service["hadoop-hdfs-namenode"],
           }
         }
+      }
+    } elsif ($ha == "auto") {
+      $retry_params = "-Dipc.client.connect.max.retries=$standby_bootstrap_retries \
+        -Dipc.client.connect.retry.interval=$standby_bootstrap_retry_interval"
+
+      exec { "namenode bootstrap standby":
+        user => "hdfs",
+        # first namenode might be rebooting just now so try for some time
+        command => "/bin/bash -c 'hdfs namenode -bootstrapStandby $retry_params >> /var/lib/hadoop-hdfs/nn.bootstrap-standby.log 2>&1'",
+        creates => "${dirs[0]}/current/VERSION",
+        require => [ Package["hadoop-hdfs-namenode"], File[$dirs], File["/etc/hadoop/conf/hdfs-site.xml"] ],
+        tag     => "namenode-format",
       }
     } elsif ($ha != "disabled") {
       hadoop::namedir_copy { $namenode_data_dirs: 
