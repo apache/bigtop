@@ -53,47 +53,74 @@ As above, we defined a confdir (i.e. /etc/puppet/) which has a config/ directory
 
 The heart of puppet is the manifests file.  This file ( manifests/init.pp ) 
 
-expects configuration to live in CSV at $confdir/config/site.csv, which takes the form
+expects configuration to live in hiera as specified by $confdir/hiera.yaml. An example
+hiera.yaml as well as hiera configuration yaml files are provided with the bigtop classes. They
+basically take the form:
 
 <pre>
-key,value[,value2,value3]
+key: value
 </pre>
 
-An example is provided at config/site.csv.example.  These values are loaded using 
-puppet's extlookup() mechanism.
+with syntactic variations for hashes and arrays. Please consult the excellent puppet and hiera
+documentation for details.
 
-Any options not defined there will revert to a default value defined in 
-manifests/cluster.pp, with the following exceptions (which are required):
+All configuration is done via such key value assignments in hierdata/site.yaml.  Any options
+not defined there will revert to a default value defined in hieradata/cluster.yaml, with the
+following exceptions (which are required):
 
-* hadoop\_head\_node: must be set to the FQDN of the name node of your cluster (which will also
-                    become its job tracker and gateway)
-* bigtop\_yumrepo\_uri: uri of a repository containing packages for hadoop as built by Bigtop.
- 
+* bigtop::hadoop\_head\_node: must be set to the FQDN of the name node of your
+	cluster (which will also become its job tracker and gateway)
+
+* bigtop::bigtop\_yumrepo\_uri: uri of a repository containing packages for
+	hadoop as built by Bigtop.
+
 $confdir is the directory that puppet will look into for its configuration.  On most systems, 
 this will be either /etc/puppet/ or /etc/puppetlabs/puppet/.  You may override this value by 
 specifying --confdir=path/to/config/dir on the puppet command line.
 
+cluster.yaml also serves as an example what parameters can be set and how they usually interact
+between modules.
+
 You can instruct the recipes to install ssh-keys for user hdfs to enable passwordless login
 across the cluster. This is for test purposes only, so by default the option is turned off.
-Refer to bigtop-deploy/puppet/config/site.csv.example for more details.
 
-For other options that may be set here, look for calls to extlookup() in manifests/cluster.pp.
-Note that if hadoop\_storage\_dirs is left unset, puppet will attempt to guess which directories 
-to use.
+Files such as ssh-keys are imported from the master using the puppet:/// URL scheme. For this
+to work, fileserver has to be enabled on the puppet master, the files module enabled and access
+allowed in auth.conf. fileserver.conf should therefore contain e.g.:
+
+<pre>
+[files]
+  path /etc/puppet/files
+  allow *
+</pre>
+
+No changes are required to the default puppet 3 auth.conf.
+
+For other options that may be set here, look for class parameters in the modules'
+manifests/init.pp files. Any class parameter can be used as a hiera key if prefixed with the
+module and class namespace. Module hue's server class will look for its parameter rm_host as
+hue::server::rm_host in hiera.
+Note that if hadoop::hadoop\_storage\_dirs is left unset, puppet will attempt to guess which
+directories to use.
 
 ## Usage
 
 - Make sure that the bigtop-deploy directory is available on every node of your cluster, and then
-- Make sure you've installed puppet's stdlib "puppet module install puppetlabs/stdlib".
+- Make sure you've installed puppet's stdlib "puppet module install puppetlabs/stdlib" version
+  4.0.0 or newer.
 
 And run the following on those nodes:
 
 <pre>
-# mkdir /etc/puppet/config
-# cat > /etc/puppet/config/site.csv &lt;&lt; EOF
-# hadoop_head_node,hadoopmaster.example.com
-# hadoop_storage_dirs,/data/1,/data/2
-# bigtop_yumrepo_uri,http://mirror.example.com/path/to/mirror/
+# cp bigtop-deploy/puppet/hiera.yaml /etc/puppet
+# mkdir -p /etc/puppet/hieradata
+# rsync -a --delete bigtop-deploy/puppet/hieradata/bigtop/ /etc/puppet/hieradata/bigtop/
+# cat > /etc/puppet/hieradata/site.yaml &lt;&lt; EOF
+# bigtop::hadoop_head_node: "hadoopmaster.example.com"
+# hadoop::hadoop_storage_dirs:
+#   - "/data/1"
+#   - "/data/2"
+# bigtop::bigtop_yumrepo_uri: "http://mirror.example.com/path/to/mirror/"
 # EOF
 # puppet apply -d --modulepath="bigtop-deploy/puppet/modules:/etc/puppet/modules" bigtop-deploy/puppet/manifests/site.pp
 </pre>

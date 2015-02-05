@@ -13,7 +13,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class hadoop {
+class hadoop ($hadoop_security_authentication = "simple",
+  $zk = "",
+  # Set from facter if available
+  $hadoop_storage_dirs = split($::hadoop_storage_dirs, ";"),
+  $proxyusers = {
+    oozie => { groups => 'hudson,testuser,root,hadoop,jenkins,oozie,httpfs,hue,users', hosts => "*" },
+                  hue => { groups => 'hudson,testuser,root,hadoop,jenkins,oozie,httpfs,hue,users', hosts => "*" },
+               httpfs => { groups => 'hudson,testuser,root,hadoop,jenkins,oozie,httpfs,hue,users', hosts => "*" } } ) {
+
+  include stdlib
 
   /**
    * Common definitions for hadoop nodes.
@@ -36,8 +45,28 @@ class hadoop {
     }
   }
 
-  class common {
-    if ($auth == "kerberos") {
+  class common ($hadoop_java_home = undef,
+      $hadoop_classpath = undef,
+      $hadoop_heapsize = undef,
+      $hadoop_opts = undef,
+      $hadoop_namenode_opts = undef,
+      $hadoop_secondarynamenode_opts = undef,
+      $hadoop_datanode_opts = undef,
+      $hadoop_balancer_opts = undef,
+      $hadoop_jobtracker_opts = undef,
+      $hadoop_tasktracker_opts = undef,
+      $hadoop_client_opts = undef,
+      $hadoop_ssh_opts = undef,
+      $hadoop_log_dir = undef,
+      $hadoop_slaves = undef,
+      $hadoop_master = undef,
+      $hadoop_slave_sleep = undef,
+      $hadoop_pid_dir = undef,
+      $hadoop_ident_string = undef,
+      $hadoop_niceness = undef,
+      $hadoop_security_authentication = $hadoop::hadoop_security_authentication ) inherits hadoop {
+
+    if ($hadoop_security_authentication == "kerberos") {
       include hadoop::kerberos
     }
 
@@ -58,7 +87,27 @@ class hadoop {
     #}
   }
 
-  class common-yarn inherits common {
+  class common_yarn (
+      $yarn_data_dirs = suffix($hadoop::hadoop_storage_dirs, "/yarn"),
+      $kerberos_realm = undef,
+      $hadoop_ps_host,
+      $hadoop_ps_port = "20888",
+      $hadoop_rm_host,
+      $hadoop_rm_port = "8032",
+      $hadoop_rm_admin_port = "8033",
+      $hadoop_rm_webapp_port = "8088",
+      $hadoop_rt_port = "8025",
+      $hadoop_sc_port = "8030",
+      $yarn_nodemanager_resource_memory_mb = undef,
+      $yarn_scheduler_maximum_allocation_mb = undef,
+      $yarn_scheduler_minimum_allocation_mb = undef,
+      $yarn_resourcemanager_scheduler_class = undef,
+      $yarn_resourcemanager_ha_enabled = undef,
+      $yarn_resourcemanager_cluster_id = "ha-rm-uri",
+      $yarn_resourcemanager_zk_address = $hadoop::zk) inherits hadoop {
+
+    include common
+
     package { "hadoop-yarn":
       ensure => latest,
       require => [Package["jdk"], Package["hadoop"]],
@@ -76,18 +125,56 @@ class hadoop {
     }
   }
 
-  class common-hdfs inherits common {
+  class common_hdfs ($ha = "disabled",
+      $hadoop_config_dfs_block_size = undef,
+      $hadoop_config_namenode_handler_count = undef,
+      $hadoop_dfs_datanode_plugins = "",
+      $hadoop_dfs_namenode_plugins = "",
+      $hadoop_namenode_host = $fqdn,
+      $hadoop_namenode_port = "8020",
+      $hadoop_namenode_http_port = "50070",
+      $hadoop_namenode_https_port = "50470",
+      $hdfs_data_dirs = suffix($hadoop::hadoop_storage_dirs, "/hdfs"),
+      $hdfs_shortcut_reader_user = undef,
+      $hdfs_support_append = undef,
+      $hdfs_webhdfs_enabled = "true",
+      $hdfs_replication = undef,
+      $hdfs_datanode_fsdataset_volume_choosing_policy = undef,
+      $namenode_data_dirs = suffix($hadoop::hadoop_storage_dirs, "/namenode"),
+      $nameservice_id = "ha-nn-uri",
+      $journalnode_host = "0.0.0.0",
+      $journalnode_port = "8485",
+      $journalnode_http_port = "8480",
+      $journalnode_https_port = "8481",
+      $journalnode_edits_dir = "${hadoop::hadoop_storage_dirs[0]}/journalnode",
+      $shared_edits_dir = "/hdfs_shared",
+      $testonly_hdfs_sshkeys  = "no",
+      $hadoop_ha_sshfence_user_home = "/var/lib/hadoop-hdfs",
+      $sshfence_user = "hdfs",
+      $zk = $hadoop::zk,
+      $hadoop_config_fs_inmemory_size_mb = undef,
+      $hadoop_security_group_mapping = undef,
+      $hadoop_core_proxyusers = $hadoop::proxyusers,
+      $hadoop_snappy_codec = undef,
+      $hadoop_security_authentication = $hadoop::hadoop_security_authentication ) inherits hadoop {
+
+    $sshfence_keydir  = "$hadoop_ha_sshfence_user_home/.ssh"
+    $sshfence_keypath = "$sshfence_keydir/id_sshfence"
+    $sshfence_privkey = hiera("hadoop::common_hdfs::sshfence_privkey", "hadoop/id_sshfence")
+    $sshfence_pubkey  = hiera("hadoop::common_hdfs::sshfence_pubkey", "hadoop/id_sshfence.pub")
+
+    include common
+
   # Check if test mode is enforced, so we can install hdfs ssh-keys for passwordless
-    $testonly   = extlookup("testonly_hdfs_sshkeys", 'no')
-    if ($testonly == "yes") {
+    if ($testonly_hdfs_sshkeys == "yes") {
       notify{"WARNING: provided hdfs ssh keys are for testing purposes only.\n
         They shouldn't be used in production cluster": }
       $ssh_user        = "hdfs"
       $ssh_user_home   = "/var/lib/hadoop-hdfs"
       $ssh_user_keydir = "$ssh_user_home/.ssh"
       $ssh_keypath     = "$ssh_user_keydir/id_hdfsuser"
-      $ssh_privkey     = "$extlookup_datadir/hdfs/id_hdfsuser"
-      $ssh_pubkey      = "$extlookup_datadir/hdfs/id_hdfsuser.pub"
+      $ssh_privkey     = "hdfs/id_hdfsuser"
+      $ssh_pubkey      = "hdfs/id_hdfsuser.pub"
 
       file { $ssh_user_keydir:
         ensure  => directory,
@@ -98,7 +185,7 @@ class hadoop {
       }
 
       file { $ssh_keypath:
-        source  => $ssh_privkey,
+        source  => "puppet:///files/$ssh_privkey",
         owner   => 'hdfs',
         group   => 'hdfs',
         mode    => '0600',
@@ -106,19 +193,15 @@ class hadoop {
       }
 
       file { "$ssh_user_keydir/authorized_keys":
-        source  => $ssh_pubkey,
+        source  => "puppet:///files/$ssh_pubkey",
         owner   => 'hdfs',
         group   => 'hdfs',
         mode    => '0600',
         require => File[$ssh_user_keydir],
       }
     }
-    if ($auth == "kerberos" and $ha != "disabled") {
+    if ($hadoop_security_authentication == "kerberos" and $ha != "disabled") {
       fail("High-availability secure clusters are not currently supported")
-    }
-
-    if ($ha != 'disabled') {
-      $nameservice_id = extlookup("hadoop_ha_nameservice_id", "ha-nn-uri")
     }
 
     package { "hadoop-hdfs":
@@ -139,7 +222,32 @@ class hadoop {
     }
   }
 
-  class common-mapred-app inherits common-hdfs {
+  class common_mapred_app (
+      $hadoop_config_io_sort_factor = undef,
+      $hadoop_config_io_sort_mb = undef,
+      $hadoop_config_mapred_child_ulimit = undef,
+      $hadoop_config_mapred_fairscheduler_assignmultiple = undef,
+      $hadoop_config_mapred_fairscheduler_sizebasedweight = undef,
+      $hadoop_config_mapred_job_tracker_handler_count = undef,
+      $hadoop_config_mapred_reduce_parallel_copies = undef,
+      $hadoop_config_mapred_reduce_slowstart_completed_maps = undef,
+      $hadoop_config_mapred_reduce_tasks_speculative_execution = undef,
+      $hadoop_config_tasktracker_http_threads = undef,
+      $hadoop_config_use_compression = undef,
+      $hadoop_hs_host = undef,
+      $hadoop_hs_port = "10020",
+      $hadoop_hs_webapp_port = "19888",
+      $hadoop_jobtracker_fairscheduler_weightadjuster = undef,
+      $hadoop_jobtracker_host,
+      $hadoop_jobtracker_port = "8021",
+      $hadoop_jobtracker_taskscheduler = undef,
+      $hadoop_mapred_jobtracker_plugins = "",
+      $hadoop_mapred_tasktracker_plugins = "",
+      $mapred_acls_enabled = undef,
+      $mapred_data_dirs = suffix($hadoop::hadoop_storage_dirs, "/mapred")) {
+
+    include common_hdfs
+
     package { "hadoop-mapreduce":
       ensure => latest,
       require => [Package["jdk"], Package["hadoop"]],
@@ -157,22 +265,8 @@ class hadoop {
     }
   }
 
-  define datanode ($namenode_host, $namenode_port, $port = "50075", $auth = "simple", $dirs = ["/tmp/data"], $ha = 'disabled') {
-
-    $hadoop_namenode_host           = $namenode_host
-    $hadoop_namenode_port           = $namenode_port
-    $hadoop_datanode_port           = $port
-    $hadoop_security_authentication = $auth
-
-    if ($ha != 'disabled') {
-      # Needed by hdfs-site.xml
-      $sshfence_keydir  = "/usr/lib/hadoop/.ssh"
-      $sshfence_keypath = "$sshfence_keydir/id_sshfence"
-      $sshfence_user    = extlookup("hadoop_ha_sshfence_user",    "hdfs") 
-      $shared_edits_dir = extlookup("hadoop_ha_shared_edits_dir", "/hdfs_shared")
-    }
-
-    include common-hdfs
+  class datanode {
+    include common_hdfs
 
     package { "hadoop-hdfs-datanode":
       ensure => latest,
@@ -189,11 +283,11 @@ class hadoop {
       ensure => running,
       hasstatus => true,
       subscribe => [Package["hadoop-hdfs-datanode"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
-      require => [ Package["hadoop-hdfs-datanode"], File["/etc/default/hadoop-hdfs-datanode"], File[$dirs] ],
+      require => [ Package["hadoop-hdfs-datanode"], File["/etc/default/hadoop-hdfs-datanode"], File[$hadoop::common_hdfs::hdfs_data_dirs] ],
     }
     Kerberos::Host_keytab <| title == "hdfs" |> -> Exec <| tag == "namenode-format" |> -> Service["hadoop-hdfs-datanode"]
 
-    file { $dirs:
+    file { $hadoop::common_hdfs::hdfs_data_dirs:
       ensure => directory,
       owner => hdfs,
       group => hdfs,
@@ -202,14 +296,12 @@ class hadoop {
     }
   }
 
-  define httpfs ($namenode_host, $namenode_port, $port = "14000", $auth = "simple", $secret = "hadoop httpfs secret") {
+  class httpfs ($hadoop_httpfs_port = "14000",
+      $secret = "hadoop httpfs secret",
+      $hadoop_core_proxyusers = $hadoop::proxyusers,
+      $hadoop_security_authentcation = $hadoop::hadoop_security_authentication ) inherits hadoop {
 
-    $hadoop_namenode_host = $namenode_host
-    $hadoop_namenode_port = $namenode_port
-    $hadoop_httpfs_port = $port
-    $hadoop_security_authentication = $auth
-
-    if ($auth == "kerberos") {
+    if ($hadoop_security_authentication == "kerberos") {
       kerberos::host_keytab { "httpfs":
         spnego => true,
         require => Package["hadoop-httpfs"],
@@ -255,11 +347,12 @@ class hadoop {
     }
   }
 
-  define create_hdfs_dirs($hdfs_dirs_meta, $auth="simple") {
+  class create_hdfs_dirs($hdfs_dirs_meta,
+      $hadoop_security_authentcation = $hadoop::hadoop_security_authentication ) inherits hadoop {
     $user = $hdfs_dirs_meta[$title][user]
     $perm = $hdfs_dirs_meta[$title][perm]
 
-    if ($auth == "kerberos") {
+    if ($hadoop_security_authentication == "kerberos") {
       require hadoop::kinit
       Exec["HDFS kinit"] -> Exec["HDFS init $title"]
     }
@@ -272,10 +365,11 @@ class hadoop {
     Exec <| title == "activate nn1" |>  -> Exec["HDFS init $title"]
   }
 
-  define rsync_hdfs($files, $auth="simple") {
+  class rsync_hdfs($files,
+      $hadoop_security_authentcation = $hadoop::hadoop_security_authentication ) inherits hadoop {
     $src = $files[$title]
 
-    if ($auth == "kerberos") {
+    if ($hadoop_security_authentication == "kerberos") {
       require hadoop::kinit
       Exec["HDFS kinit"] -> Exec["HDFS init $title"]
     }
@@ -288,28 +382,14 @@ class hadoop {
     Exec <| title == "activate nn1" |>  -> Exec["HDFS rsync $title"]
   }
 
-  define namenode ($host = $fqdn , $port = "8020", $auth = "simple", $dirs = ["/tmp/nn"], $ha = 'disabled', $zk = '',
+  class namenode ( $nfs_server = "", $nfs_path = "",
       $standby_bootstrap_retries = 10,
       # milliseconds
       $standby_bootstrap_retry_interval = 30000) {
+    include common_hdfs
 
-    $first_namenode = inline_template("<%= Array(@host)[0] %>")
-    $hadoop_namenode_host = $host
-    $hadoop_namenode_port = $port
-    $hadoop_security_authentication = $auth
-
-    if ($ha != 'disabled') {
-      $sshfence_user      = extlookup("hadoop_ha_sshfence_user",      "hdfs") 
-      $sshfence_user_home = extlookup("hadoop_ha_sshfence_user_home", "/var/lib/hadoop-hdfs")
-      $sshfence_keydir    = "$sshfence_user_home/.ssh"
-      $sshfence_keypath   = "$sshfence_keydir/id_sshfence"
-      $sshfence_privkey   = extlookup("hadoop_ha_sshfence_privkey",   "$extlookup_datadir/hadoop/id_sshfence")
-      $sshfence_pubkey    = extlookup("hadoop_ha_sshfence_pubkey",    "$extlookup_datadir/hadoop/id_sshfence.pub")
-      $shared_edits_dir   = extlookup("hadoop_ha_shared_edits_dir",   "/hdfs_shared")
-      $nfs_server         = extlookup("hadoop_ha_nfs_server",         "")
-      $nfs_path           = extlookup("hadoop_ha_nfs_path",           "")
-
-      file { $sshfence_keydir:
+    if ($hadoop::common_hdfs::ha != 'disabled') {
+      file { $hadoop::common_hdfs::sshfence_keydir:
         ensure  => directory,
         owner   => 'hdfs',
         group   => 'hdfs',
@@ -317,48 +397,48 @@ class hadoop {
         require => Package["hadoop-hdfs"],
       }
 
-      file { $sshfence_keypath:
-        source  => $sshfence_privkey,
+      file { $hadoop::common_hdfs::sshfence_keypath:
+        source  => "puppet:///files/$hadoop::common_hdfs::sshfence_privkey",
         owner   => 'hdfs',
         group   => 'hdfs',
         mode    => '0600',
         before  => Service["hadoop-hdfs-namenode"],
-        require => File[$sshfence_keydir],
+        require => File[$hadoop::common_hdfs::sshfence_keydir],
       }
 
-      file { "$sshfence_keydir/authorized_keys":
-        source  => $sshfence_pubkey,
+      file { "$hadoop::common_hdfs::sshfence_keydir/authorized_keys":
+        source  => "puppet:///files/$hadoop::common_hdfs::sshfence_pubkey",
         owner   => 'hdfs',
         group   => 'hdfs',
         mode    => '0600',
         before  => Service["hadoop-hdfs-namenode"],
-        require => File[$sshfence_keydir],
+        require => File[$hadoop::common_hdfs::sshfence_keydir],
       }
 
-      file { $shared_edits_dir:
-        ensure => directory,
-      }
-
-      if ($nfs_server) {
-        if (!$nfs_path) {
-          fail("No nfs share specified for shared edits dir")
+      if (! ('qjournal://' in $hadoop::common_hdfs::shared_edits_dir)) {
+        file { $hadoop::common_hdfs::shared_edits_dir:
+          ensure => directory,
         }
 
-        require nfs::client
+        if ($nfs_server) {
+          if (!$nfs_path) {
+            fail("No nfs share specified for shared edits dir")
+          }
 
-        mount { $shared_edits_dir:
-          ensure  => "mounted",
-          atboot  => true,
-          device  => "${nfs_server}:${nfs_path}",
-          fstype  => "nfs",
-          options => "tcp,soft,timeo=10,intr,rsize=32768,wsize=32768",
-          require => File[$shared_edits_dir],
-          before  => Service["hadoop-hdfs-namenode"],
+          require nfs::client
+
+          mount { $hadoop::common_hdfs::shared_edits_dir:
+            ensure  => "mounted",
+            atboot  => true,
+            device  => "${nfs_server}:${nfs_path}",
+            fstype  => "nfs",
+            options => "tcp,soft,timeo=10,intr,rsize=32768,wsize=32768",
+            require => File[$hadoop::common::hdfs::shared_edits_dir],
+            before  => Service["hadoop-hdfs-namenode"],
+          }
         }
       }
     }
-
-    include common-hdfs
 
     package { "hadoop-hdfs-namenode":
       ensure => latest,
@@ -373,7 +453,7 @@ class hadoop {
     } 
     Kerberos::Host_keytab <| title == "hdfs" |> -> Exec <| tag == "namenode-format" |> -> Service["hadoop-hdfs-namenode"]
 
-    if ($ha == "auto") {
+    if ($hadoop::common_hdfs::ha == "auto") {
       package { "hadoop-hdfs-zkfc":
         ensure => latest,
         require => Package["jdk"],
@@ -388,18 +468,20 @@ class hadoop {
       Service <| title == "hadoop-hdfs-zkfc" |> -> Service <| title == "hadoop-hdfs-namenode" |>
     }
 
+    $namenode_array = any2array($hadoop::common_hdfs::hadoop_namenode_host)
+    $first_namenode = $namenode_array[0]
     if ($::fqdn == $first_namenode) {
       exec { "namenode format":
         user => "hdfs",
         command => "/bin/bash -c 'hdfs namenode -format -nonInteractive >> /var/lib/hadoop-hdfs/nn.format.log 2>&1'",
         returns => [ 0, 1],
-        creates => "${dirs[0]}/current/VERSION",
-        require => [ Package["hadoop-hdfs-namenode"], File[$dirs], File["/etc/hadoop/conf/hdfs-site.xml"] ],
+        creates => "${hadoop::common_hdfs::namenode_data_dirs[0]}/current/VERSION",
+        require => [ Package["hadoop-hdfs-namenode"], File[$hadoop::common_hdfs::namenode_data_dirs], File["/etc/hadoop/conf/hdfs-site.xml"] ],
         tag     => "namenode-format",
       }
 
-      if ($ha != "disabled") {
-        if ($ha == "auto") {
+      if ($hadoop::common_hdfs::ha != "disabled") {
+        if ($hadoop::common_hdfs::ha == "auto") {
           exec { "namenode zk format":
             user => "hdfs",
             command => "/bin/bash -c 'hdfs zkfc -formatZK -nonInteractive >> /var/lib/hadoop-hdfs/zk.format.log 2>&1'",
@@ -418,7 +500,7 @@ class hadoop {
           }
         }
       }
-    } elsif ($ha == "auto") {
+    } elsif ($hadoop::common_hdfs::ha == "auto") {
       $retry_params = "-Dipc.client.connect.max.retries=$standby_bootstrap_retries \
         -Dipc.client.connect.retry.interval=$standby_bootstrap_retry_interval"
 
@@ -426,15 +508,15 @@ class hadoop {
         user => "hdfs",
         # first namenode might be rebooting just now so try for some time
         command => "/bin/bash -c 'hdfs namenode -bootstrapStandby $retry_params >> /var/lib/hadoop-hdfs/nn.bootstrap-standby.log 2>&1'",
-        creates => "${dirs[0]}/current/VERSION",
-        require => [ Package["hadoop-hdfs-namenode"], File[$dirs], File["/etc/hadoop/conf/hdfs-site.xml"] ],
+        creates => "${hadoop::common_hdfs::namenode_data_dirs[0]}/current/VERSION",
+        require => [ Package["hadoop-hdfs-namenode"], File[$hadoop::common_hdfs::namenode_data_dirs], File["/etc/hadoop/conf/hdfs-site.xml"] ],
         tag     => "namenode-format",
       }
-    } elsif ($ha != "disabled") {
-      hadoop::namedir_copy { $namenode_data_dirs: 
+    } elsif ($hadoop::common_hdfs::ha != "disabled") {
+      hadoop::namedir_copy { $hadoop::common_hdfs::namenode_data_dirs:
         source       => $first_namenode,
-        ssh_identity => $sshfence_keypath,
-        require      => File[$sshfence_keypath],
+        ssh_identity => $hadoop::common_hdfs::sshfence_keypath,
+        require      => File[$hadoop::common_hdfs::sshfence_keypath],
       }
     }
 
@@ -444,7 +526,7 @@ class hadoop {
         require => [Package["hadoop-hdfs-namenode"]],
     }
     
-    file { $dirs:
+    file { $hadoop::common_hdfs::namenode_data_dirs:
       ensure => directory,
       owner => hdfs,
       group => hdfs,
@@ -462,12 +544,8 @@ class hadoop {
     }
   }
       
-  define secondarynamenode ($namenode_host, $namenode_port, $port = "50090", $auth = "simple") {
-
-    $hadoop_secondarynamenode_port = $port
-    $hadoop_security_authentication = $auth
-
-    include common-hdfs
+  class secondarynamenode {
+    include common_hdfs
 
     package { "hadoop-hdfs-secondarynamenode":
       ensure => latest,
@@ -489,15 +567,36 @@ class hadoop {
     Kerberos::Host_keytab <| title == "hdfs" |> -> Service["hadoop-hdfs-secondarynamenode"]
   }
 
+  class journalnode {
+    include common_hdfs
 
-  define resourcemanager ($host = $fqdn, $port = "8032", $rt_port = "8025", $sc_port = "8030", $auth = "simple") {
-    $hadoop_rm_host = $host
-    $hadoop_rm_port = $port
-    $hadoop_rt_port = $rt_port
-    $hadoop_sc_port = $sc_port
-    $hadoop_security_authentication = $auth
+    package { "hadoop-hdfs-journalnode":
+      ensure => latest,
+      require => Package["jdk"],
+    }
 
-    include common-yarn
+    $journalnode_cluster_journal_dir = "${hadoop::common_hdfs::journalnode_edits_dir}/${hadoop::common_hdfs::nameservice_id}"
+
+    service { "hadoop-hdfs-journalnode":
+      ensure => running,
+      hasstatus => true,
+      subscribe => [Package["hadoop-hdfs-journalnode"], File["/etc/hadoop/conf/hadoop-env.sh"],
+                    File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/core-site.xml"]],
+      require => [ Package["hadoop-hdfs-journalnode"], File[$journalnode_cluster_journal_dir] ],
+    }
+
+    file { [ "${hadoop::common_hdfs::journalnode_edits_dir}", "$journalnode_cluster_journal_dir" ]:
+      ensure => directory,
+      owner => 'hdfs',
+      group => 'hdfs',
+      mode => 755,
+      require => [Package["hadoop-hdfs"]],
+    }
+  }
+
+
+  class resourcemanager {
+    include common_yarn
 
     package { "hadoop-yarn-resourcemanager":
       ensure => latest,
@@ -514,12 +613,8 @@ class hadoop {
     Kerberos::Host_keytab <| tag == "mapreduce" |> -> Service["hadoop-yarn-resourcemanager"]
   }
 
-  define proxyserver ($host = $fqdn, $port = "8088", $auth = "simple") {
-    $hadoop_ps_host = $host
-    $hadoop_ps_port = $port
-    $hadoop_security_authentication = $auth
-
-    include common-yarn
+  class proxyserver {
+    include common_yarn
 
     package { "hadoop-yarn-proxyserver":
       ensure => latest,
@@ -536,13 +631,8 @@ class hadoop {
     Kerberos::Host_keytab <| tag == "mapreduce" |> -> Service["hadoop-yarn-proxyserver"]
   }
 
-  define historyserver ($host = $fqdn, $port = "10020", $webapp_port = "19888", $auth = "simple") {
-    $hadoop_hs_host = $host
-    $hadoop_hs_port = $port
-    $hadoop_hs_webapp_port = $app_port
-    $hadoop_security_authentication = $auth
-
-    include common-mapred-app
+  class historyserver {
+    include common_mapred_app
 
     package { "hadoop-mapreduce-historyserver":
       ensure => latest,
@@ -560,12 +650,8 @@ class hadoop {
   }
 
 
-  define nodemanager ($rm_host, $rm_port, $rt_port, $auth = "simple", $dirs = ["/tmp/yarn"]){
-    $hadoop_rm_host = $rm_host
-    $hadoop_rm_port = $rm_port
-    $hadoop_rt_port = $rt_port
-
-    include common-yarn
+  class nodemanager {
+    include common_yarn
 
     package { "hadoop-yarn-nodemanager":
       ensure => latest,
@@ -577,11 +663,11 @@ class hadoop {
       hasstatus => true,
       subscribe => [Package["hadoop-yarn-nodemanager"], File["/etc/hadoop/conf/hadoop-env.sh"], 
                     File["/etc/hadoop/conf/yarn-site.xml"], File["/etc/hadoop/conf/core-site.xml"]],
-      require => [ Package["hadoop-yarn-nodemanager"], File[$dirs] ],
+      require => [ Package["hadoop-yarn-nodemanager"], File[$hadoop::common_yarn::yarn_data_dirs] ],
     }
     Kerberos::Host_keytab <| tag == "mapreduce" |> -> Service["hadoop-yarn-nodemanager"]
 
-    file { $dirs:
+    file { $hadoop::common_yarn::yarn_data_dirs:
       ensure => directory,
       owner => yarn,
       group => yarn,
@@ -590,21 +676,10 @@ class hadoop {
     }
   }
 
-  define mapred-app ($namenode_host, $namenode_port, $jobtracker_host, $jobtracker_port, $auth = "simple", $jobhistory_host = "", $jobhistory_port="10020", $dirs = ["/tmp/mr"]){
-    $hadoop_namenode_host = $namenode_host
-    $hadoop_namenode_port = $namenode_port
-    $hadoop_jobtracker_host = $jobtracker_host
-    $hadoop_jobtracker_port = $jobtracker_port
-    $hadoop_security_authentication = $auth
+  class mapred-app {
+    include common_mapred_app
 
-    include common-mapred-app
-
-    if ($jobhistory_host != "") {
-      $hadoop_hs_host = $jobhistory_host
-      $hadoop_hs_port = $jobhistory_port
-    }
-
-    file { $dirs:
+    file { $hadoop::common_mapred_app::mapred_data_dirs:
       ensure => directory,
       owner => yarn,
       group => yarn,
@@ -613,12 +688,9 @@ class hadoop {
     }
   }
 
-  define client ($namenode_host, $namenode_port, $jobtracker_host, $jobtracker_port, $auth = "simple") {
-      $hadoop_namenode_host = $namenode_host
-      $hadoop_namenode_port = $namenode_port
-      $hadoop_jobtracker_host = $jobtracker_host
-      $hadoop_jobtracker_port = $jobtracker_port
-      $hadoop_security_authentication = $auth
+  class client {
+      include common_mapred_app
+
       $hadoop_client_packages = $operatingsystem ? {
         /(OracleLinux|CentOS|RedHat|Fedora)/  => [ "hadoop-doc", "hadoop-hdfs-fuse", "hadoop-client", "hadoop-libhdfs", "hadoop-debuginfo" ],
         /(SLES|OpenSuSE)/                     => [ "hadoop-doc", "hadoop-hdfs-fuse", "hadoop-client", "hadoop-libhdfs" ],
@@ -626,8 +698,6 @@ class hadoop {
         default                               => [ "hadoop-doc", "hadoop-hdfs-fuse", "hadoop-client" ],
       }
 
-      include common-mapred-app
-  
       package { $hadoop_client_packages:
         ensure => latest,
         require => [Package["jdk"], Package["hadoop"], Package["hadoop-hdfs"], Package["hadoop-mapreduce"]],  

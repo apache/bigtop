@@ -14,7 +14,7 @@
 # limitations under the License.
 
 class crunch {
-  define client {
+  class client {
     package { ["crunch", "crunch-doc"]:
       ensure => latest,
     } 

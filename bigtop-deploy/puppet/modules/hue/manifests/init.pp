@@ -14,7 +14,7 @@
 # limitations under the License.
 
 class hue {
-  define server($sqoop_url, $solr_url, $hbase_thrift_url,
+  class server($sqoop_url, $solr_url, $hbase_thrift_url,
                 $webhdfs_url, $rm_host, $rm_port, $oozie_url, $rm_url, $rm_proxy_url, $history_server_url,
                 $hue_host = "0.0.0.0", $hue_port = "8888", $default_fs = "hdfs://localhost:8020",
                 $kerberos_realm = "") {

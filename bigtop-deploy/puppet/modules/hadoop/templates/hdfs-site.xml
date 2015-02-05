@@ -30,7 +30,7 @@
 <%   end -%>
 
   <property> 
-    <name>dfs.federation.nameservices</name>
+    <name>dfs.nameservices</name>
     <value><%= @nameservice_id %></value>
   </property>
 
@@ -47,7 +47,12 @@
  
   <property>
     <name>dfs.namenode.http-address.<%= @nameservice_id %>.nn<%= idx+1 %></name>
-    <value><%= host %>:50070</value>
+    <value><%= host %>:<%= @hadoop_namenode_http_port %></value>
+  </property>
+
+  <property>
+    <name>dfs.namenode.https-address.<%= @nameservice_id %>.nn<%= idx+1 %></name>
+    <value><%= host %>:<%= @hadoop_namenode_https_port %></value>
   </property>
 
 <%   end -%>
@@ -249,7 +254,47 @@
 <% end -%>
   <property>
     <name>dfs.webhdfs.enabled</name>
-    <value>true</value>
+    <value><%= @hdfs_webhdfs_enabled %></value>
   </property>
 
+<% if @hdfs_datanode_fsdataset_volume_choosing_policy -%>
+  <property>
+    <name>dfs.datanode.fsdataset.volume.choosing.policy</name>
+    <value><%= @hdfs_datanode_fsdataset_volume_choosing_policy %></value>
+  </property>
+
+<% end -%>
+<% if @hdfs_replication -%>
+  <property>
+    <name>dfs.replication</name>
+    <value><%= @hdfs_replication %></value>
+  </property>
+
+<% end -%>
+<% if @shared_edits_dir.start_with?("qjournal://") -%>
+<%   if @journalnode_edits_dir -%>
+  <property>
+    <name>dfs.journalnode.edits.dir</name>
+    <value><%= @journalnode_edits_dir %></value>
+  </property>
+
+<%   end -%>
+<%   if @journalnode_host -%>
+  <property>
+    <name>dfs.journalnode.rpc-address</name>
+    <value><%= @journalnode_host %>:<%= @journalnode_port %></value>
+  </property>
+
+  <property>
+    <name>dfs.journalnode.http-address</name>
+    <value><%= @journalnode_host %>:<%= @journalnode_http_port %></value>
+  </property>
+
+  <property>
+    <name>dfs.journalnode.https-address</name>
+    <value><%= @journalnode_host %>:<%= @journalnode_https_port %></value>
+  </property>
+
+<%   end -%>
+<% end -%>
 </configuration>

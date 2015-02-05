@@ -14,7 +14,7 @@
 # limitations under the License.
 
 class spark {
-  class common {
+  class common ($master_host = $fqdn, $master_port = "7077", $master_ui_port = "18080") {
     package { "spark-core":
       ensure => latest,
     }
@@ -25,7 +25,7 @@ class spark {
     }
   }
 
-  define master($master_host = $fqdn, $master_port = "7077", $master_ui_port = "18080") {
+  class master {
     include common   
 
     package { "spark-master":
@@ -43,7 +43,7 @@ class spark {
     }
   }
 
-  define worker($master_host = $fqdn, $master_port = "7077", $master_ui_port = "18080") {
+  class worker {
     include common
 
     package { "spark-worker":

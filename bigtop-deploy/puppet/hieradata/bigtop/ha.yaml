@@ -1,0 +1,7 @@
+---
+hadoop::common_hdfs::ha: "manual"
+hadoop::common_hdfs::hadoop_namenode_host:
+  - "%{hiera('bigtop::hadoop_head_node')}"
+  - "%{hiera('bigtop::standby_head_node')}"
+hadoop::common_hdfs::hadoop_ha_nameservice_id: "ha-nn-uri"
+hadoop_cluster_node::hadoop_namenode_uri: "hdfs://%{hiera('hadoop_ha_nameservice_id')}:8020"

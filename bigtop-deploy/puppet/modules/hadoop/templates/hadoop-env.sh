@@ -15,7 +15,7 @@
 
 <% def shell_config(shell_var, *puppet_var)
      puppet_var = puppet_var[0] || shell_var.downcase
-     if has_variable? puppet_var
+     if @puppet_var
         return "export #{shell_var}=#{scope.lookupvar(puppet_var)}"
      else
         return "#export #{shell_var}="

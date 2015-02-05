@@ -14,7 +14,7 @@
 # limitations under the License.
 
 class hadoop-hive {
-  define client($hbase_master = "", $hbase_zookeeper_quorum = "") {
+  class client($hbase_master = "", $hbase_zookeeper_quorum = "") {
     package { "hive":
       ensure => latest,
     } 

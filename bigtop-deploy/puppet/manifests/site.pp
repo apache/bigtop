@@ -13,19 +13,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-require bigtop_util
-$puppet_confdir = get_setting("confdir")
 $default_yumrepo = "http://bigtop01.cloudera.org:8080/view/Releases/job/Bigtop-0.8.0/label=centos6/6/artifact/output/"
-$extlookup_datadir="$puppet_confdir/config"
-$extlookup_precedence = ["site", "default"]
-$jdk_package_name = extlookup("jdk_package_name", "jdk")
+$jdk_package_name = hiera("bigtop::jdk_package_name", "jdk")
 
 stage {"pre": before => Stage["main"]}
 
 case $operatingsystem {
     /(OracleLinux|Amazon|CentOS|Fedora|RedHat)/: {
        yumrepo { "Bigtop":
-          baseurl => extlookup("bigtop_yumrepo_uri", $default_yumrepo),
+          baseurl => hiera("hiera::bigtop_yumrepo_uri", $default_yumrepo),
           descr => "Bigtop packages",
           enabled => 1,
           gpgcheck => 0,
@@ -44,10 +40,16 @@ package { $jdk_package_name:
 import "cluster.pp"
 
 node default {
-  include stdlib
-  $hadoop_head_node = extlookup("hadoop_head_node") 
-  $standby_head_node = extlookup("standby_head_node", "")
-  $hadoop_gateway_node = extlookup("hadoop_gateway_node", $hadoop_head_node)
+  $hadoop_head_node = hiera("bigtop::hadoop_head_node")
+  $standby_head_node = hiera("bigtop::standby_head_node", "")
+  $hadoop_gateway_node = hiera("bigtop::hadoop_gateway_node", $hadoop_head_node)
+
+  # look into alternate hiera datasources configured using this path in
+  # hiera.yaml
+  $hadoop_hiera_ha_path = $standby_head_node ? {
+    ""      => "noha",
+    default => "ha",
+  }
 
   case $::fqdn {
     $hadoop_head_node: {
@@ -69,7 +71,7 @@ node default {
 Yumrepo<||> -> Package<||>
 
 if versioncmp($::puppetversion,'3.6.1') >= 0 {
-  $allow_virtual_packages = hiera('allow_virtual_packages',false)
+  $allow_virtual_packages = hiera('bigtop::allow_virtual_packages',false)
   Package {
     allow_virtual => $allow_virtual_packages,
   }

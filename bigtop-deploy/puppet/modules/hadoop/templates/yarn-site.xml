@@ -17,6 +17,7 @@
 -->
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 
+<% resourcemanager_hosts = Array(@hadoop_rm_host) -%>
 <configuration>
 <% if @hadoop_security_authentication == "kerberos" %>
   <!-- JobTracker security configs -->
@@ -61,6 +62,57 @@
     <value><%= @hadoop_ps_host %>:<%= @hadoop_ps_port %></value>
   </property> 
 
+<% if @yarn_resourcemanager_ha_enabled -%>
+
+  <property>
+    <name>yarn.resourcemanager.ha.enabled</name>
+    <value><%= @yarn_resourcemanager_ha_enabled %></value>
+  </property>
+
+  <property>
+    <name>yarn.resourcemanager.cluster-id</name>
+    <value><%= @yarn_resourcemanager_cluster_id %></value>
+  </property>
+
+  <property>
+    <name>yarn.resourcemanager.ha.rm-ids</name>
+    <value><%= (1..resourcemanager_hosts.length).map { |n| "rm#{n}" }.join(",") %></value>
+  </property>
+
+<%   resourcemanager_hosts.each_with_index do |host,idx| -%>
+  <property>
+    <name>yarn.resourcemanager.resource-tracker.address.rm<%= idx+1 %></name>
+    <value><%= host %>:<%= @hadoop_rt_port %></value>
+  </property>
+
+  <property>
+    <name>yarn.resourcemanager.address.rm<%= idx+1 %></name>
+    <value><%= host %>:<%= @hadoop_rm_port %></value>
+  </property>
+
+  <property>
+    <name>yarn.resourcemanager.scheduler.address.rm<%= idx+1 %></name>
+    <value><%= host %>:<%= @hadoop_sc_port %></value>
+  </property>
+
+  <property>
+    <name>yarn.resourcemanager.admin.address.rm<%= idx+1 %></name>
+    <value><%= host %>:<%= @hadoop_rm_admin_port %></value>
+  </property>
+
+  <property>
+    <name>yarn.resourcemanager.webapp.address.rm<%= idx+1 %></name>
+    <value><%= host %>:<%= @hadoop_rm_webapp_port %></value>
+  </property>
+<%   end -%>
+<% if @yarn_resourcemanager_zk_address -%>
+
+  <property>
+    <name>yarn.resourcemanager.zk-address</name>
+    <value><%= @yarn_resourcemanager_zk_address %></value>
+  </property>
+<% end -%>
+<% else -%>
   <property>
     <name>yarn.resourcemanager.resource-tracker.address</name>
     <value><%= @hadoop_rm_host %>:<%= @hadoop_rt_port %></value>
@@ -75,6 +127,7 @@
     <name>yarn.resourcemanager.scheduler.address</name>
     <value><%= @hadoop_rm_host %>:<%= @hadoop_sc_port %></value>
   </property>
+<% end -%>
 
   <property>
     <name>yarn.nodemanager.aux-services</name>
@@ -125,4 +178,32 @@
         $HADOOP_YARN_HOME/*,$HADOOP_YARN_HOME/lib/*
      </value>
   </property>
+<% if @yarn_scheduler_minimum_allocation_mb -%>
+
+  <property>
+    <name>yarn.scheduler.minimum-allocation-mb</name>
+    <value><%= @yarn_scheduler_minimum_allocation_mb %></value>
+  </property>
+<% end -%>
+<% if @yarn_scheduler_maximum_allocation_mb -%>
+
+  <property>
+    <name>yarn.scheduler.maximum-allocation-mb</name>
+    <value><%= @yarn_scheduler_maximum_allocation_mb %></value>
+  </property>
+<% end -%>
+<% if @yarn_nodemanager_resource_memory_mb -%>
+
+  <property>
+    <name>yarn.nodemanager.resource.memory-mb</name>
+    <value><%= @yarn_nodemanager_resource_memory_mb %></value>
+  </property>
+<% end -%>
+<% if @yarn_resourcemanager_scheduler_class -%>
+
+  <property>
+    <name>yarn.resourcemanager.scheduler.class</name>
+    <value><%= @yarn_resourcemanager_scheduler_class %></value>
+  </property>
+<% end -%>
 </configuration>

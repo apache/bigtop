@@ -14,23 +14,12 @@
 # limitations under the License.
 
 class kerberos {
-  class site {
-    # The following is our interface to the world. This is what we allow
-    # users to tweak from the outside (see tests/init.pp for a complete
-    # example) before instantiating target classes.
-    # Once we migrate to Puppet 2.6 we can potentially start using 
-    # parametrized classes instead.
-    $domain     = $kerberos_domain     ? { '' => inline_template('<%= domain %>'),
-                                           default => $kerberos_domain }
-    $realm      = $kerberos_realm      ? { '' => inline_template('<%= domain.upcase %>'),
-                                           default => $kerberos_realm } 
-    $kdc_server = $kerberos_kdc_server ? { '' => 'localhost',
-                                           default => $kerberos_kdc_server }
-    $kdc_port   = $kerberos_kdc_port   ? { '' => '88', 
-                                           default => $kerberos_kdc_port } 
-    $admin_port = 749 /* BUG: linux daemon packaging doesn't let us tweak this */
-
-    $keytab_export_dir = "/var/lib/bigtop_keytabs"
+  class site ($domain = inline_template('<%= domain %>'),
+      $realm = inline_template('<%= domain.upcase %>'),
+      $kdc_server = 'localhost',
+      $kdc_port = '88',
+      $admin_port = 749,
+      $keytab_export_dir = "/var/lib/bigtop_keytabs") {
 
     case $operatingsystem {
         'ubuntu': {

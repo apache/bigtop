@@ -14,7 +14,7 @@
 # limitations under the License.
 
 class hadoop-pig {
-  define client {
+  class client {
     package { "pig":
       ensure => latest,
       require => Package["hadoop"],

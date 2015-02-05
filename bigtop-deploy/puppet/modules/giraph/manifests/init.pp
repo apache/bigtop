@@ -14,7 +14,7 @@
 # limitations under the License.
 
 class giraph {
-  define client($zookeeper_quorum = 'localhost') {
+  class client($zookeeper_quorum = 'localhost') {
     package { "giraph":
       ensure => latest,
     } 

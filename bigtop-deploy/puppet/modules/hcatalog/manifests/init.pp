@@ -14,7 +14,7 @@
 # limitations under the License.
 
 class hcatalog {
-  define server($port = "9083", $kerberos_realm = "") {
+  class server($port = "9083", $kerberos_realm = "") {
     package { "hcatalog-server":
       ensure => latest,
     }
@@ -33,7 +33,7 @@ class hcatalog {
   }
 
   class webhcat {
-    define server($port = "50111", $kerberos_realm = "") {
+    class server($port = "50111", $kerberos_realm = "") {
       package { "webhcat-server":
         ensure => latest,
       }

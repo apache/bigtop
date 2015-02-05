@@ -1,0 +1,32 @@
+---
+bigtop::hadoop_head_node: "head.node.fqdn"
+#bigtop::standby_head_node: "standby.head.node.fqdn"
+
+hadoop::hadoop_storage_dirs:
+  - /data/1
+  - /data/2
+  - /data/3
+  - /data/4
+
+#hadoop_cluster_node::cluster_components:
+#  - crunch
+#  - flume
+#  - giraph
+#  - hbase
+#  - hcat
+#  - hive
+#  - httpfs
+#  - hue
+#  - mahout
+#  - mapred-app
+#  - oozie
+#  - pig
+#  - solrcloud
+#  - spark
+#  - sqoop
+#  - tachyon
+#  - yarn
+#  - zookeeper
+
+# Debian:
+#bigtop::jdk_package_name: "openjdk-7-jre-headless"

@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 class tachyon {
-  class common {
+  class common ($master_host){
     package { "tachyon":
       ensure => latest,
     }
@@ -29,7 +29,7 @@ class tachyon {
     }
   }
 
-  define master($master_host) {
+  class master {
     include common
 
    exec {
@@ -38,7 +38,7 @@ class tachyon {
            require => [ Package["tachyon"]]
     }
 
-    if ( $fqdn == $master_host ) {
+    if ( $fqdn == $tachyon::common::master_host ) {
       service { "tachyon-master":
         ensure => running,
         require => [ Package["tachyon"] ],
@@ -49,10 +49,10 @@ class tachyon {
 
   }
 
-  define worker($master_host) {
+  class worker {
     include common
 
-   if ( $fqdn == $master_host ) {
+   if ( $fqdn == $tachyon::common::master_host ) {
       notice("tachyon ---> master host")
       # We want master to run first in all cases
       Service["tachyon-master"] ~> Service["tachyon-worker"]

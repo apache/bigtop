@@ -14,7 +14,7 @@
 # limitations under the License.
 
 class hadoop-flume {
-  define agent($sources = [], $sinks = [], $channels = []) {
+  class agent($sources = [], $sinks = [], $channels = []) {
     package { "flume-agent":
       ensure => latest,
     } 

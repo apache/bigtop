@@ -14,7 +14,7 @@
 # limitations under the License.
 
 class mahout {
-  define client {
+  class client {
     package { "mahout":
       ensure => latest,
       require => Package["hadoop"],

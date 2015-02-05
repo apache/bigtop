@@ -14,13 +14,13 @@
 # limitations under the License.
 
 class hadoop-sqoop {
-  define client {
+  class client {
     package { "sqoop-client":
       ensure => latest,
     } 
   }
 
-  define server {
+  class server {
     package { "sqoop-server":
       ensure => latest,
     } 

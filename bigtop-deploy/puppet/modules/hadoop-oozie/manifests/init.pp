@@ -14,13 +14,13 @@
 # limitations under the License.
 
 class hadoop-oozie {
-  define client($kerberos_realm = "") {
+  class client {
     package { "oozie-client":
       ensure => latest,
     } 
   }
 
-  define server($kerberos_realm = "") {
+  class server($kerberos_realm = "") {
     if ($kerberos_realm) {
       require kerberos::client
       kerberos::host_keytab { "oozie":
