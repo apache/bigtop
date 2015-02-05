@@ -391,17 +391,19 @@ class hadoop {
     if ($::fqdn == $first_namenode) {
       exec { "namenode format":
         user => "hdfs",
-        command => "/bin/bash -c 'yes Y | hdfs namenode -format >> /var/lib/hadoop-hdfs/nn.format.log 2>&1'",
+        command => "/bin/bash -c 'hdfs namenode -format -nonInteractive >> /var/lib/hadoop-hdfs/nn.format.log 2>&1'",
+        returns => [ 0, 1],
         creates => "${dirs[0]}/current/VERSION",
         require => [ Package["hadoop-hdfs-namenode"], File[$dirs], File["/etc/hadoop/conf/hdfs-site.xml"] ],
         tag     => "namenode-format",
-      } 
+      }
 
       if ($ha != "disabled") {
         if ($ha == "auto") {
           exec { "namenode zk format":
             user => "hdfs",
-            command => "/bin/bash -c 'yes N | hdfs zkfc -formatZK >> /var/lib/hadoop-hdfs/zk.format.log 2>&1 || :'",
+            command => "/bin/bash -c 'hdfs zkfc -formatZK -nonInteractive >> /var/lib/hadoop-hdfs/zk.format.log 2>&1'",
+            returns => [ 0, 2],
             require => [ Package["hadoop-hdfs-zkfc"], File["/etc/hadoop/conf/hdfs-site.xml"] ],
             tag     => "namenode-format",
           }
