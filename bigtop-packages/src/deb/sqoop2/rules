@@ -14,7 +14,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+#
 # -*- makefile -*-
 
 # Uncomment this to turn on verbose mode.
@@ -27,13 +27,18 @@ export DH_OPTIONS
 	dh $@
 
 override_dh_auto_build:
-	bash debian/do-component-build
+	# There's no good way to get the RAT plugin to ignore the debian/ directory, so bigtop-empty is used as a decoy
+	rm -rf bigtop-empty
+	mkdir -p bigtop-empty
+	bash debian/do-component-build \
+		-Drat.basedir=$${PWD}/bigtop-empty
 
 override_dh_auto_install:
-	bash -x debian/install_sqoop.sh \
-	  --build-dir=build/sqoop-* \
-	  --doc-dir=usr/share/doc/sqoop \
-	  --conf-dir=/etc/sqoop/conf.dist \
-	  --prefix=debian/sqoop \
-	  --extra-dir=debian/
-	cp debian/sqoop-metastore.sh debian/sqoop-metastore.init
+	bash -x debian/install_sqoop2.sh \
+	  --build-dir=build/sqoop2-* \
+	  --doc-dir=/usr/share/doc/sqoop2 \
+	  --prefix=debian/tmp \
+	  --extra-dir=debian \
+	  --dist-dir=dist/target/sqoop2-*
+	bash debian/init.d.tmpl debian/sqoop-server.svc deb debian/tmp/etc/init.d/sqoop2-server
+	dh_install --sourcedir=debian/tmp

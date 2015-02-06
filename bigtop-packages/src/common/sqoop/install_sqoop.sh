@@ -32,7 +32,6 @@ usage: $0 <options>
      --bin-dir=DIR               path to install bins [/usr/bin]
      --conf-dir=DIR              path to configuration files provided by the package [/etc/sqoop/conf.dist]
      --examples-dir=DIR          path to install examples [doc-dir/examples]
-     --initd-dir=DIR             path to install init scripts [/etc/init.d]
      ... [ see source for more similar options ]
   "
   exit 1
@@ -48,10 +47,8 @@ OPTS=$(getopt \
   -l 'installed-lib-dir:' \
   -l 'bin-dir:' \
   -l 'examples-dir:' \
-  -l 'build-dir:' \
   -l 'extra-dir:' \
-  -l 'initd-dir:' \
-  -l 'dist-dir:' -- "$@")
+  -l 'build-dir:' -- "$@")
 
 if [ $? != 0 ] ; then
     usage
@@ -88,12 +85,6 @@ while true ; do
         --extra-dir)
         EXTRA_DIR=$2 ; shift 2
         ;;
-        --initd-dir)
-        INITD_DIR=$2 ; shift 2
-        ;;
-        --dist-dir)
-        DIST_DIR=$2 ; shift 2
-        ;;
         --)
         shift ; break
         ;;
@@ -118,63 +109,61 @@ BIN_DIR=${BIN_DIR:-/usr/lib/sqoop/bin}
 ETC_DIR=${ETC_DIR:-/etc/sqoop}
 MAN_DIR=${MAN_DIR:-/usr/share/man/man1}
 CONF_DIR=${CONF_DIR:-${ETC_DIR}/conf.dist}
-INITD_DIR=${INITD_DIR:-/etc/init.d}
-DIST_DIR=${DIST_DIR:-dist/target/sqoop-*}
-TOMCAT_CONF_DIR=${ETC_DIR}/tomcat-conf
 
 install -d -m 0755 ${PREFIX}/${LIB_DIR}
-install -d -m 0755 ${PREFIX}/${LIB_DIR}/client-lib
-install -d -m 0755 ${PREFIX}/${BIN_DIR}
-install -d -m 0755 ${PREFIX}/${CONF_DIR}
-install -d -m 0755 ${PREFIX}/etc/default
+
+install -d -m 0755 ${PREFIX}/${LIB_DIR}
+cp ${BUILD_DIR}/sqoop*.jar ${PREFIX}/${LIB_DIR}
+
+install -d -m 0755 ${PREFIX}/${LIB_DIR}/lib
+cp -a ${BUILD_DIR}/lib/*.jar ${PREFIX}/${LIB_DIR}/lib
+
+#install -d -m 0755 ${PREFIX}/${LIB_DIR}/shims
+#cp -a shims/*.jar ${PREFIX}/${LIB_DIR}/shims
+
+install -d -m 0755 $PREFIX/usr/bin
+
+install -d -m 0755 $PREFIX/${BIN_DIR}
+cp ${BUILD_DIR}/bin/* $PREFIX/${BIN_DIR}
+
+install -d -m 0755 $PREFIX/${DOC_DIR}
+cp ${BUILD_DIR}/docs/*.html  $PREFIX/${DOC_DIR}
+cp ${BUILD_DIR}/docs/*.css $PREFIX/${DOC_DIR}
+cp -r ${BUILD_DIR}/docs/api $PREFIX/${DOC_DIR}
+cp -r ${BUILD_DIR}/docs/images $PREFIX/${DOC_DIR}
+
+
+install -d -m 0755 $PREFIX/$MAN_DIR
+for i in sqoop sqoop-codegen sqoop-export sqoop-import-all-tables sqoop-version sqoop-create-hive-table sqoop-help sqoop-list-databases sqoop-eval sqoop-import sqoop-list-tables sqoop-job sqoop-metastore sqoop-merge
+    do echo "Copying manpage $i"
+    cp ${BUILD_DIR}/docs/man/$i* $PREFIX/$MAN_DIR
+    echo "Creating wrapper for $i"
+    wrapper=$PREFIX/usr/bin/$i
+    mkdir -p `dirname $wrapper`
+    cat > $wrapper <<EOF
+#!/bin/bash
+
+# Autodetect JAVA_HOME if not defined
+. /usr/lib/bigtop-utils/bigtop-detect-javahome
+
+SQOOP_JARS=\`ls /var/lib/sqoop/*.jar /usr/share/java/*.jar 2>/dev/null\`
+if [ -n "\${SQOOP_JARS}" ]; then
+    export HADOOP_CLASSPATH=\$(JARS=(\${SQOOP_JARS}); IFS=:; echo "\${HADOOP_CLASSPATH}:\${JARS[*]}")
+fi
+
+export SQOOP_HOME=$LIB_DIR
+exec $BIN_DIR/$i "\$@"
+EOF
+   chmod 0755 $wrapper
+done
+
+install -d -m 0755 $PREFIX/$CONF_DIR
+(cd ${BUILD_DIR}/conf && tar cf - .) | (cd $PREFIX/$CONF_DIR && tar xf -)
+
+unlink $PREFIX/$LIB_DIR/conf || /bin/true
+ln -s $ETC_DIR/conf $PREFIX/$LIB_DIR/conf
+
 install -d -m 0755 ${PREFIX}/var/lib/sqoop
 
-install -m 0644 ${DIST_DIR}/shell/lib/*.jar ${PREFIX}/${LIB_DIR}/client-lib/
-install -m 0755 ${DIST_DIR}/bin/sqoop.sh ${PREFIX}/${BIN_DIR}/
-install -m 0755 ${DIST_DIR}/bin/sqoop-sys.sh ${PREFIX}/${BIN_DIR}/
-
-install -m 0644 ${DIST_DIR}/server/conf/sqoop.properties ${PREFIX}/${CONF_DIR}/sqoop.properties
-sed -i 's#@LOGDIR@#/var/log/sqoop#' ${PREFIX}/${CONF_DIR}/sqoop.properties
-sed -i 's#@BASEDIR@#/var/lib/sqoop#' ${PREFIX}/${CONF_DIR}/sqoop.properties
-
-install -m 0644 ${DIST_DIR}/server/conf/sqoop_bootstrap.properties ${PREFIX}/${CONF_DIR}
-install -m 0644 ${EXTRA_DIR}/sqoop.default ${PREFIX}/etc/default/sqoop-server
-rm ${EXTRA_DIR}/sqoop.default # Otherwise debhelper will re-install this
-
-install -m 0755 ${DIST_DIR}/server/bin/setenv.sh ${PREFIX}/${CONF_DIR}/
-sed -i -e 's#-Dsqoop.config.dir=.*conf#-Dsqoop.config.dir=/etc/sqoop/conf#' ${PREFIX}/${CONF_DIR}/setenv.sh
-ln -s ${CONF_DIR}/setenv.sh ${PREFIX}/${BIN_DIR}/
-
-# Explode the WAR
-SQOOP_WEBAPPS=${PREFIX}/${LIB_DIR}/webapps
-cp -r ${DIST_DIR}/server/webapps $SQOOP_WEBAPPS
-unzip -d $SQOOP_WEBAPPS/sqoop $SQOOP_WEBAPPS/sqoop.war
-
-install -m 0755 ${EXTRA_DIR}/tomcat-deployment.sh ${PREFIX}/${LIB_DIR}/tomcat-deployment.sh
-
-install -d -m 0755 ${PREFIX}/${TOMCAT_CONF_DIR}.dist/conf
-for conf in web.xml tomcat-users.xml server.xml logging.properties context.xml catalina.policy
-do
-    install -m 0644 ${DIST_DIR}/server/conf/$conf ${PREFIX}/${TOMCAT_CONF_DIR}.dist/conf/
-done
-sed -i -e "s|<Host |<Host workDir=\"/var/tmp/sqoop\" |" ${PREFIX}/${TOMCAT_CONF_DIR}.dist/conf/server.xml
-sed -i -e "s|\${catalina\.base}/logs|/var/log/sqoop|"   ${PREFIX}/${TOMCAT_CONF_DIR}.dist/conf/logging.properties
-cp -f ${EXTRA_DIR}/catalina.properties ${PREFIX}/${TOMCAT_CONF_DIR}.dist/conf/catalina.properties
-install -d -m 0755 ${PREFIX}/${TOMCAT_CONF_DIR}.dist/WEB-INF
-mv $SQOOP_WEBAPPS/sqoop/WEB-INF/*.xml ${PREFIX}/${TOMCAT_CONF_DIR}.dist/WEB-INF
-
-# Create wrapper scripts for the client and server
-client_wrapper=$PREFIX/usr/bin/sqoop
-server_wrapper=$PREFIX/usr/bin/sqoop-server
-tool_wrapper=$PREFIX/usr/bin/sqoop-tool
-mkdir -p $PREFIX/usr/bin
-install -m 0755 $EXTRA_DIR/sqoop.sh $client_wrapper
-install -m 0755 $EXTRA_DIR/sqoop-server.sh $server_wrapper
-install -m 0755 $EXTRA_DIR/sqoop-tool.sh $tool_wrapper
-
-CATALINA_HOME=/usr/lib/bigtop-tomcat
-install -d ${PREFIX}/${CATALINA_HOME}/lib
-install -m 0644 ${DIST_DIR}/server/lib/sqoop-tomcat*.jar ${PREFIX}/${CATALINA_HOME}/lib/
-
-cp ${DIST_DIR}/{LICENSE,NOTICE}.txt ${PREFIX}/${LIB_DIR}/
+cp ${BUILD_DIR}/{LICENSE,NOTICE}.txt ${PREFIX}/${LIB_DIR}/
 

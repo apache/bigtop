@@ -1,5 +1,4 @@
-#!/bin/sh
-#
+#!/bin/bash
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -14,8 +13,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-# preinst script for sqoop
+#
+# preinst script for sqoop2-server
 #
 # see: dh_installdeb(1)
 
@@ -32,18 +31,21 @@ set -e
 
 case "$1" in
     install|upgrade)
-        if ! getent passwd sqoop >/dev/null; then
-                # Adding system user: sqoop .
+        getent group sqoop >/dev/null || groupadd -r sqoop
+        if ! getent passwd sqoop2 >/dev/null; then
+                # Adding system user: sqoop2 .
                 adduser \
                   --system \
-                  --group \
-                  --home /var/lib/sqoop \
-                  --gecos "Sqoop User" \
+                  --ingroup sqoop \
+                  --home /var/lib/sqoop2 \
+                  --gecos "Sqoop 2 User" \
                   --shell /bin/false \
-                  sqoop >/dev/null
+                  sqoop2 >/dev/null
         fi
-	install -d -m 0755 -o sqoop -g sqoop /var/lib/sqoop
-	install -d -m 0755 -o sqoop -g sqoop /var/log/sqoop
+        install -d -m 0755 -o sqoop2 -g sqoop /var/log/sqoop2
+        install -d -m 0755 -o sqoop2 -g sqoop /var/lib/sqoop2
+        install -d -m 0755 -o sqoop2 -g sqoop /var/tmp/sqoop2
+        install -d -m 0755 -o sqoop2 -g sqoop /var/run/sqoop2
     ;;
 
     abort-upgrade)

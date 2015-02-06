@@ -1,5 +1,4 @@
-#!/usr/bin/make -f
-#
+#!/bin/sh
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -15,25 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# -*- makefile -*-
+set -e
 
-# Uncomment this to turn on verbose mode.
-export DH_VERBOSE=1
+update-alternatives --install /etc/sqoop2/conf sqoop2-conf /etc/sqoop2/conf.dist 30
+update-alternatives --install /etc/sqoop2/tomcat-conf sqoop2-tomcat-conf /etc/sqoop2/tomcat-conf.dist 30
 
-# This has to be exported to make some magic below work.
-export DH_OPTIONS
-
-%:
-	dh $@
-
-override_dh_auto_build:
-	bash debian/do-component-build
-
-override_dh_auto_install:
-	bash -x debian/install_sqoop.sh \
-	  --build-dir=build/sqoop-* \
-	  --doc-dir=usr/share/doc/sqoop \
-	  --conf-dir=/etc/sqoop/conf.dist \
-	  --prefix=debian/sqoop \
-	  --extra-dir=debian/
-	cp debian/sqoop-metastore.sh debian/sqoop-metastore.init

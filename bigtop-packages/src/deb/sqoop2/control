@@ -12,24 +12,28 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-Source: sqoop
+Source: sqoop2
 Section: misc
 Priority: extra
 Maintainer: Bigtop <dev@bigtop.apache.org>
-Build-Depends: debhelper (>= 7.0.50~), asciidoc, xmlto
 Standards-Version: 3.8.0
-Homepage: http://sqoop.apache.org/
+Homepage: http://sqoop.apache.org
 
-Package:  sqoop
+Package:  sqoop2
 Architecture: all
-Depends: bigtop-utils (>= 0.7), hadoop-client, adduser
-Description: Tool for easy imports and exports of data sets between databases and HDFS
+Depends: bigtop-utils (>= 0.7), hadoop-client, bigtop-tomcat (>= 0.7), sqoop2-client (= ${source:Version})
+Description: Tool for easy imports and exports of data sets between databases and the Hadoop ecosystem
  Sqoop is a tool that provides the ability to import and export data sets between
- the Hadoop Distributed File System (HDFS) and relational databases.
+ the Hadoop Distributed File System (HDFS) and relational databases. In Sqoop 2, the tool
+ consists of a server that is configured to interface with the Hadoop cluster, and a
+ lightweight client for executing imports and exports on the server.
 
-Package: sqoop-metastore
+Package: sqoop2-client
 Architecture: all
-Depends: sqoop (= ${source:Version})
-Description: Shared metadata repository for Sqoop.
- This optional package hosts a metadata server for Sqoop clients across a network to use.
+Depends: bigtop-utils (>= 0.7)
+Description: Lightweight client for Sqoop 2.
 
+Package: sqoop2-server
+Architecture: all
+Depends: sqoop2 (= ${source:Version})
+Description: Server for Sqoop 2.

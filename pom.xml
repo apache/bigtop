@@ -44,7 +44,8 @@
     <hbase.version>0.98.5-hadoop2</hbase.version>
     <pig.version>0.12.1</pig.version>
     <pig-smoke.version>0.12.1</pig-smoke.version>
-    <sqoop.version>1.99.2</sqoop.version>
+    <sqoop.version>1.4.5</sqoop.version>
+    <sqoop2.version>1.99.4</sqoop2.version>
     <zookeeper.version>3.4.5</zookeeper.version>
     <giraph.version>1.0.0</giraph.version>
     <solr.version>4.6.0</solr.version>

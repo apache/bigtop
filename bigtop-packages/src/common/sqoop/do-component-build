@@ -15,19 +15,11 @@
 # limitations under the License.
 
 set -ex
-
 . `dirname ${0}`/bigtop.bom
 
-export MAVEN_OPTS='-Xmx512m -XX:MaxPermSize=512m'
-mvn -DskipTests=true -Dhadoop.profile=200 -Dhadoop.2.version=$HADOOP_VERSION install package -P=binary $@
+# Use of StringUtils.repeat in src/test/org/apache/sqoop/TestExportUsingProcedure
+# is incompatible with Apache Commons Lang 2.4
+sed -i -e 's/sql.append(StringUtils.repeat("?", ",  ",/sql.append(StringUtils.repeat("?",/' src/test/org/apache/sqoop/TestExportUsingProcedure.java
 
-cd dist/target
-for file in `find ./ -name 'sqoop-*-bin-hadoop*' -type d`; do
-    mv $file sqoop-$SQOOP_VERSION
-done
-tar czf sqoop-$SQOOP_VERSION.tar.gz sqoop-$SQOOP_VERSION
-cd ../..
-
-mkdir build
-mv dist/target/sqoop-$SQOOP_VERSION.tar.gz build/
+ant -f build.xml -Dhadoopversion=210 -Dhadoop.version.full=$HADOOP_VERSION -Dhadoop.version=$HADOOP_VERSION -Dhbase.version=$HBASE_VERSION -Dzookeeper.version=$ZOOKEEPER_VERSION package jar "$@"
 

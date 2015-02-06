@@ -1,5 +1,3 @@
-#!/usr/bin/make -f
-#
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -15,25 +13,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# -*- makefile -*-
+CATALINA_BASE=/var/lib/sqoop2/tomcat-deployment
+SQOOP_USER=sqoop2
+SQOOP_CONFIG=/etc/sqoop2/conf
+SQOOP_LOG=/var/log/sqoop2
+SQOOP_TEMP=/var/run/sqoop2
+SQOOP_PID=/var/run/sqoop2/sqoop-server-sqoop2.pid
+CATALINA_BIN=/usr/lib/bigtop-tomcat/bin
+CATALINA_TMPDIR=/var/tmp/sqoop2
+CATALINA_OPTS=-Xmx1024m
+CATALINA_OUT=/var/log/sqoop2/sqoop-tomcat.log
+#AUX_CLASSPATH=
 
-# Uncomment this to turn on verbose mode.
-export DH_VERBOSE=1
-
-# This has to be exported to make some magic below work.
-export DH_OPTIONS
-
-%:
-	dh $@
-
-override_dh_auto_build:
-	bash debian/do-component-build
-
-override_dh_auto_install:
-	bash -x debian/install_sqoop.sh \
-	  --build-dir=build/sqoop-* \
-	  --doc-dir=usr/share/doc/sqoop \
-	  --conf-dir=/etc/sqoop/conf.dist \
-	  --prefix=debian/sqoop \
-	  --extra-dir=debian/
-	cp debian/sqoop-metastore.sh debian/sqoop-metastore.init

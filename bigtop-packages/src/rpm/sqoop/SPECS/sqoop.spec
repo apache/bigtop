@@ -12,17 +12,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 %define lib_sqoop /usr/lib/sqoop
-%define conf_sqoop %{_sysconfdir}/sqoop/conf
+%define conf_sqoop %{_sysconfdir}/%{name}/conf
 %define conf_sqoop_dist %{conf_sqoop}.dist
-%define tomcat_deployment_sqoop %{_sysconfdir}/sqoop/tomcat-conf
-%define tomcat_deployment_sqoop_dist %{tomcat_deployment_sqoop}.dist
-%define run_sqoop /var/run/sqoop
+
 
 %if  %{?suse_version:1}0
 
-# Only tested on openSUSE 11.4. let's update it for previous release when confirmed
+# Only tested on openSUSE 11.4. le'ts update it for previous release when confirmed
 %if 0%{suse_version} > 1130
 %define suse_check \# Define an empty suse_check for compatibility with older sles
 %endif
@@ -38,53 +35,44 @@
     %{nil}
 
 %define doc_sqoop %{_docdir}/sqoop
-%define initd_dir %{_sysconfdir}/rc.d
+%global initd_dir %{_sysconfdir}/rc.d
 %define alternatives_cmd update-alternatives
 
 %else
 
 %define doc_sqoop %{_docdir}/sqoop-%{sqoop_version}
-%define initd_dir %{_sysconfdir}/rc.d/init.d
+%global initd_dir %{_sysconfdir}/rc.d/init.d
 %define alternatives_cmd alternatives
 
 %endif
 
+
 Name: sqoop
 Version: %{sqoop_version}
 Release: %{sqoop_release}
-Summary:  Tool for easy imports and exports of data sets between databases and the Hadoop ecosystem
-URL: http://sqoop.apache.org
+Summary:   Sqoop allows easy imports and exports of data sets between databases and the Hadoop Distributed File System (HDFS).
+URL: http://sqoop.apache.org/
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 License: ASL 2.0
 Source0: %{name}-%{sqoop_base_version}.tar.gz
 Source1: do-component-build
 Source2: install_%{name}.sh
-Source3: sqoop.sh
-Source4: catalina.properties
-Source5: sqoop.default
-Source6: init.d.tmpl
-Source7: sqoop-server.svc
-Source8: sqoop-server.sh
-Source9: tomcat-deployment.sh
-Source10: sqoop-tool.sh
+Source3: sqoop-metastore.sh
+Source4: sqoop-metastore.sh.suse
 Buildarch: noarch
-Requires: hadoop-client, bigtop-utils >= 0.7, bigtop-tomcat, %{name}-client = %{version}-%{release}
+BuildRequires: asciidoc, xmlto
+Requires: hadoop-client, bigtop-utils >= 0.7
 
-%description
-Sqoop is a tool that provides the ability to import and export data sets between the Hadoop Distributed File System (HDFS) and relational databases.
+%description 
+Sqoop allows easy imports and exports of data sets between databases and the Hadoop Distributed File System (HDFS).
 
-%package client
-Summary: Client for Sqoop.
-URL: http://sqoop.apache.org
-Requires: bigtop-utils >= 0.7
+%package metastore
+Summary: Shared metadata repository for Sqoop.
+URL: http://sqoop.apache.org/
 Group: System/Daemons
-
-%package server
-Summary: Server for Sqoop.
-URL: http://sqoop.apache.org
-Group: System/Daemons
-Requires: sqoop = %{version}-%{release}
+Provides: sqoop-metastore
+Requires: sqoop = %{version}-%{release} 
 
 %if  %{?suse_version:1}0
 # Required for init scripts
@@ -100,98 +88,99 @@ Requires: initscripts
 # So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
 %if %{!?suse_version:1}0 && %{!?mgaversion:1}0
 # Required for init scripts
-Requires: /lib/lsb/init-functions
+Requires: redhat-lsb
 %endif
 
-%description client
-Lightweight client for Sqoop.
 
-%description server
-Centralized server for Sqoop.
+%description metastore
+Shared metadata repository for Sqoop. This optional package hosts a metadata
+server for Sqoop clients across a network to use.
 
 %prep
-%setup -n sqoop-%{sqoop_base_version}
+%setup -n %{name}-%{sqoop_base_version}
 
 %build
-# No easy way to disable the default RAT run which fails the build because of some fails in the debian/ directory
-rm -rf bigtop-empty
-mkdir -p bigtop-empty
-# I could not find a way to add debian/ to RAT exclude list through cmd line
-# or to unbind rat:check goal
-# So I am redirecting its attention with a decoy
-env FULL_VERSION=%{sqoop_base_version} bash %{SOURCE1} -Drat.basedir=${PWD}/bigtop-empty
+bash %{SOURCE1} -Dversion=%{sqoop_base_version}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
-sh %{SOURCE2} \
-          --build-dir=build/sqoop-%{sqoop_version} \
+bash %{SOURCE2} \
+          --build-dir=build/sqoop-%{sqoop_base_version}.bin__hadoop-* \
           --conf-dir=%{conf_sqoop_dist} \
           --doc-dir=%{doc_sqoop} \
-          --prefix=$RPM_BUILD_ROOT \
-          --extra-dir=$RPM_SOURCE_DIR \
-          --initd-dir=%{initd_dir}
-
-# Install init script
-init_file=$RPM_BUILD_ROOT/%{initd_dir}/sqoop-server
-bash $RPM_SOURCE_DIR/init.d.tmpl $RPM_SOURCE_DIR/sqoop-server.svc rpm $init_file
+          --prefix=$RPM_BUILD_ROOT
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/usr/bin
+%__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
+
+%__rm -f $RPM_BUILD_ROOT/%{lib_sqoop}/lib/hadoop-mrunit*.jar
+
+%if  %{?suse_version:1}0
+orig_init_file=$RPM_SOURCE_DIR/sqoop-metastore.sh.suse
+%else
+orig_init_file=$RPM_SOURCE_DIR/sqoop-metastore.sh
+%endif
+
+init_file=$RPM_BUILD_ROOT/%{initd_dir}/sqoop-metastore
+%__cp $orig_init_file $init_file
+chmod 0755 $init_file
+
+%__install -d  -m 0755 $RPM_BUILD_ROOT/var/log/sqoop
 
 %pre
 getent group sqoop >/dev/null || groupadd -r sqoop
-getent passwd sqoop >/dev/null || useradd -c "Sqoop User" -s /sbin/nologin -g sqoop -r -d %{run_sqoop} sqoop 2> /dev/null || :
-%__install -d -o sqoop -g sqoop -m 0755 /var/lib/sqoop
-%__install -d -o sqoop -g sqoop -m 0755 /var/log/sqoop
-%__install -d -o sqoop -g sqoop -m 0755 /var/tmp/sqoop
-%__install -d -o sqoop -g sqoop -m 0755 /var/run/sqoop
+getent passwd sqoop > /dev/null || useradd -c "Sqoop" -s /sbin/nologin \
+	-g sqoop -r -d /var/lib/sqoop sqoop 2> /dev/null || :
 
 %post
-%{alternatives_cmd} --install %{conf_sqoop} sqoop-conf %{conf_sqoop_dist} 30
-%{alternatives_cmd} --install %{tomcat_deployment_sqoop} sqoop-tomcat-conf %{tomcat_deployment_sqoop_dist} 30
-
-%post server
-chkconfig --add sqoop-server
+%{alternatives_cmd} --install %{conf_sqoop} %{name}-conf %{conf_sqoop_dist} 30
 
 %preun
-if [ "$1" = "0" ] ; then
-  %{alternatives_cmd} --remove sqoop-conf %{conf_sqoop_dist} || :
-  %{alternatives_cmd} --remove sqoop-tomcat-conf %{tomcat_deployment_sqoop_dist} || :
+if [ "$1" = 0 ]; then
+  %{alternatives_cmd} --remove %{name}-conf %{conf_sqoop_dist} || :
 fi
 
-%preun server
-if [ "$1" = "0" ] ; then
-  service sqoop-server stop > /dev/null 2>&1
-  chkconfig --del sqoop-server
+%post metastore
+chkconfig --add sqoop-metastore
+
+%preun metastore
+if [ $1 = 0 ] ; then
+  service sqoop-metastore stop > /dev/null 2>&1
+  chkconfig --del sqoop-metastore
 fi
 
-%postun server
+%postun metastore
 if [ $1 -ge 1 ]; then
-  service sqoop-server condrestart > /dev/null 2>&1
+  service sqoop-metastore condrestart > /dev/null 2>&1
 fi
 
-%files
+%files metastore
+%attr(0755,root,root) %{initd_dir}/sqoop-metastore
+%attr(0755,sqoop,sqoop) /var/lib/sqoop
+%attr(0755,sqoop,sqoop) /var/log/sqoop
+
+# Files for main package
+%files 
 %defattr(0755,root,root)
-/usr/bin/sqoop-server
-%config(noreplace) /etc/sqoop/conf.dist
-%config(noreplace) /etc/sqoop/tomcat-conf.dist
-%config(noreplace) /etc/default/sqoop-server
-%{lib_sqoop}/webapps
-%{lib_sqoop}/bin/setenv.sh
-%{lib_sqoop}/bin/sqoop-sys.sh
-%{lib_sqoop}/tomcat-deployment.sh
-/usr/lib/bigtop-tomcat/lib/sqoop-tomcat-*.jar
-%defattr(0755,sqoop,sqoop)
-/var/lib/sqoop
+%{lib_sqoop}
+%attr(0644,root,root) %{lib_sqoop}/*.jar
+%config(noreplace) %{conf_sqoop_dist}
+%{_bindir}/sqoop
+%{_bindir}/sqoop-codegen
+%{_bindir}/sqoop-create-hive-table
+%{_bindir}/sqoop-eval
+%{_bindir}/sqoop-export
+%{_bindir}/sqoop-help
+%{_bindir}/sqoop-import
+%{_bindir}/sqoop-import-all-tables
+%{_bindir}/sqoop-job
+%{_bindir}/sqoop-list-databases
+%{_bindir}/sqoop-list-tables
+%{_bindir}/sqoop-metastore
+%{_bindir}/sqoop-version
+%{_bindir}/sqoop-merge
 
-%files client
-%attr(0755,root,root)
-/usr/bin/sqoop
-/usr/bin/sqoop-tool
-%{lib_sqoop}/bin/sqoop.sh
-%{lib_sqoop}/client-lib
-%{lib_sqoop}/LICENSE.txt
-%{lib_sqoop}/NOTICE.txt
-
-%files server
-%attr(0755,root,root) %{initd_dir}/sqoop-server
+%defattr(0644,root,root,0755)
+%{_mandir}/man1/*
+%doc %{doc_sqoop}
 

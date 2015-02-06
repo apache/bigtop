@@ -1,5 +1,5 @@
 #!/bin/bash
-
+#
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -15,13 +15,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Autodetect JAVA_HOME if not defined
-. /usr/lib/bigtop-utils/bigtop-detect-javahome
+# postinst script for sqoop
 
-LIB_DIR=/usr/lib/sqoop
-BIN_DIR=${LIB_DIR}/bin
+set -e
 
-CLASSPATH=$CLASSPATH:$(echo "$LIB_DIR"/client-lib/*.jar | tr ' ' ':')
+case "$1" in
+    configure)
+    ;;
 
-env CLASSPATH=$CLASSPATH $BIN_DIR/sqoop.sh client $@
+    abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
 
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+#DEBHELPER#
