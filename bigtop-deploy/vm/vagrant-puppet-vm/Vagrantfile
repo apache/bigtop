@@ -47,13 +47,15 @@ chkconfig iptables off
 cat /dev/null > /etc/hosts
 echo "Bigtop yum repo = #{repo}"
 # Prepare puppet configuration file
-mkdir /vagrant/config
-cat > /vagrant/config/site.csv << EOF
-hadoop_head_node,#{bigtop_master}
-hadoop_storage_dirs,/data/1,/data/2
-bigtop_yumrepo_uri,#{repo}
-jdk_package_name,java-1.7.0-openjdk-devel.x86_64
-components,#{components}
+mkdir -p /etc/puppet/hieradata
+cp /bigtop-home/bigtop-deploy/puppet/hiera.yaml /etc/puppet
+cp -r /bigtop-home/bigtop-deploy/puppet/hieradata/bigtop/ /etc/puppet/hieradata/
+cat > /etc/puppet/hieradata/site.yaml << EOF
+bigtop::hadoop_head_node: #{bigtop_master}
+hadoop::hadoop_storage_dirs: [/data/1, /data/2]
+Bigtop::bigtop_yumrepo_uri: #{repo}
+bigtop::jdk_package_name: java-1.7.0-openjdk-devel.x86_64
+hadoop_cluster_node::cluster_components: #{components}
 EOF
 SCRIPT
 
@@ -108,7 +110,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         puppet.module_path = "../../puppet/modules/"
         puppet.manifests_path =  "../../puppet/manifests/"
         puppet.manifest_file  = "site.pp"
-        puppet.options = "--debug --confdir=/vagrant"
+        puppet.options = "--debug"
       end
 
       if run_smoke_tests then

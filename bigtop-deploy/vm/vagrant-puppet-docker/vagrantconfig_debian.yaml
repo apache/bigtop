@@ -8,7 +8,7 @@ boot2docker:
 
 repo: "http://to.do/notyet"
 distro: debian
-components: "hadoop,yarn"
+components: [hadoop, yarn]
 namenode_ui_port: "50070"
 yarn_ui_port: "8088"
 hbase_ui_port: "60010"

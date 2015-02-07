@@ -3,7 +3,7 @@ number_cpus: 1
 box: "puppetlabs/centos-6.5-64-nocm"
 repo: "http://bigtop01.cloudera.org:8080/view/Releases/job/Bigtop-0.8.0/label=centos6/6/artifact/output/"
 num_instances: 1
-components: "hadoop,yarn"
+components: [hadoop, yarn]
 enable_local_yum: false
 run_smoke_tests: false
 distro: centos

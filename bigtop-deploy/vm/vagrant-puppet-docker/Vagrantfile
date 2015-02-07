@@ -20,7 +20,7 @@ require 'fileutils'
 
 # number of instances
 $num_instances = 3
-#$vagrantyamlconf = "vagrantconfig.yaml"
+$vagrantyamlconf = "vagrantconfig.yaml"
 
 # load configuration from config.rb
 CONFIG = File.join(File.dirname(__FILE__), "config.rb")

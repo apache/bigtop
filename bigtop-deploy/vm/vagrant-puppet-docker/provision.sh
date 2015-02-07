@@ -32,11 +32,13 @@ else
     jdk="java-1.7.0-openjdk-devel.x86_64"
 fi
 
-mkdir /vagrant/config
-cat > /vagrant/config/site.csv << EOF
-hadoop_head_node,$1
-hadoop_storage_dirs,/data/1,/data/2
-bigtop_yumrepo_uri,$2
-jdk_package_name,$jdk
-components,$3
+mkdir -p /etc/puppet/hieradata
+cp /bigtop-home/bigtop-deploy/puppet/hiera.yaml /etc/puppet
+cp -r /bigtop-home/bigtop-deploy/puppet/hieradata/bigtop/ /etc/puppet/hieradata/
+cat > /etc/puppet/hieradata/site.yaml << EOF
+bigtop::hadoop_head_node: $1
+hadoop::hadoop_storage_dirs: [/data/1, /data/2]
+Bigtop::bigtop_yumrepo_uri: $2
+bigtop::jdk_package_name: $jdk
+hadoop_cluster_node::cluster_components: $3
 EOF
