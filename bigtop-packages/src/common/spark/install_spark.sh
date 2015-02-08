@@ -125,6 +125,7 @@ install -d -m 0755 $PREFIX/$LIB_DIR/lib
 install -d -m 0755 $PREFIX/$LIB_DIR/bin
 install -d -m 0755 $PREFIX/$LIB_DIR/sbin
 install -d -m 0755 $PREFIX/$DOC_DIR
+install -d -m 0755 $PREFIX/$EXAMPLES_DIR
 
 install -d -m 0755 $PREFIX/var/lib/spark/
 install -d -m 0755 $PREFIX/var/log/spark/
@@ -139,18 +140,17 @@ tar --wildcards -C $PREFIX/$LIB_DIR/ -zxf ${BUILD_DIR}/assembly/target/spark-ass
 rm -rf $PREFIX/$LIB_DIR/bin/*.cmd
 
 # Examples jar
-cp ${BUILD_DIR}/examples/target/spark-examples*${SPARK_VERSION}.jar $PREFIX/$LIB_DIR/lib
-sed -i -e "s|lib/spark-examples-\*hadoop\*.jar|lib/spark-examples_\*.jar|" $PREFIX/$LIB_DIR/bin/run-example
+cp ${BUILD_DIR}/examples/target/spark-examples*${SPARK_VERSION}.jar $PREFIX/$LIB_DIR/lib/spark-examples-${SPARK_VERSION}-hadoop${HADOOP_VERSION}.jar
 
 # Examples src
-install -d -m 0755 $PREFIX/$EXAMPLES_DIR
 cp -ra ${BUILD_DIR}/examples/src $PREFIX/$EXAMPLES_DIR/
+ln -s $EXAMPLES_DIR $PREFIX/$LIB_DIR/examples
+
+# Data
+cp -ra ${BUILD_DIR}/data $PREFIX/$LIB_DIR/
 
 chmod 755 $PREFIX/$LIB_DIR/bin/*
 chmod 755 $PREFIX/$LIB_DIR/sbin/*
-
-cp -a ${SOURCE_DIR}/compute-classpath.sh $PREFIX/$LIB_DIR/bin/
-chmod 755 $PREFIX/$LIB_DIR/bin/compute-classpath.sh
 
 # Copy in the configuration files
 install -d -m 0755 $PREFIX/$CONF_DIR
@@ -162,7 +162,7 @@ ln -s /etc/spark/conf $PREFIX/$LIB_DIR/conf
 install -d -m 0755 $PREFIX/$BIN_DIR
 for wrap in sbin/spark-executor bin/spark-shell bin/spark-submit; do
   cat > $PREFIX/$BIN_DIR/`basename $wrap` <<EOF
-#!/bin/bash 
+#!/bin/bash
 
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
@@ -173,6 +173,7 @@ EOF
 done
 
 cat >> $PREFIX/$CONF_DIR/spark-env.sh <<EOF
+export SPARK_SCALA_VERSION=2.10
 
 ### Let's run everything with JVM runtime, instead of Scala
 export SPARK_LAUNCH_WITH_SCALA=0
@@ -184,6 +185,16 @@ export SPARK_WORKER_PORT=7078
 export SPARK_WORKER_WEBUI_PORT=18081
 export SPARK_WORKER_DIR=/var/run/spark/work
 export SPARK_LOG_DIR=/var/log/spark
+export SPARK_HISTORY_OPTS="\$SPARK_HISTORY_OPTS -Dspark.history.fs.logDirectory=hdfs:///var/log/spark/apps -Dspark.history.ui.port=18082"
+
+export HADOOP_HOME=\${HADOOP_HOME:-/usr/lib/hadoop}
+export HADOOP_HDFS_HOME=\${HADOOP_HDFS_HOME:-\${HADOOP_HOME}/../hadoop-hdfs}
+export HADOOP_MAPRED_HOME=\${HADOOP_MAPRED_HOME:-\${HADOOP_HOME}/../hadoop-mapreduce}
+export HADOOP_YARN_HOME=\${HADOOP_YARN_HOME:-\${HADOOP_HOME}/../hadoop-yarn}
+export HADOOP_CONF_DIR=\${HADOOP_CONF_DIR:-/etc/hadoop/conf}
+
+# Let's make sure that all needed hadoop libs are added properly
+CLASSPATH="\$CLASSPATH:\$HADOOP_HOME/*:\$HADOOP_HDFS_HOME/*:\$HADOOP_YARN_HOME/*:\$HADOOP_MAPRED_HOME/*"
 
 if [ -n "\$HADOOP_HOME" ]; then
   export SPARK_LIBRARY_PATH=\$SPARK_LIBRARY_PATH:\${HADOOP_HOME}/lib/native
@@ -201,6 +212,7 @@ EOF
 ln -s /var/run/spark/work $PREFIX/$LIB_DIR/work
 
 cp -r ${BUILD_DIR}/python ${PREFIX}/${INSTALLED_LIB_DIR}/
+rm -f ${PREFIX}/${INSTALLED_LIB_DIR}/python/.gitignore
 cat > $PREFIX/$BIN_DIR/pyspark <<EOF
 #!/bin/bash
 
@@ -214,5 +226,7 @@ EOF
 chmod 755 $PREFIX/$BIN_DIR/pyspark
 
 touch $PREFIX/$LIB_DIR/RELEASE
-
 cp ${BUILD_DIR}/{LICENSE,NOTICE} ${PREFIX}/${LIB_DIR}/
+
+# Version-less symlinks
+(cd $PREFIX/$LIB_DIR/lib; ln -s spark-assembly*.jar spark-assembly.jar; ln -s spark-examples*.jar spark-examples.jar)

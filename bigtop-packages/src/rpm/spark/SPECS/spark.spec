@@ -23,7 +23,7 @@
 %define config_spark %{etc_spark}/conf
 %define bin /usr/bin
 %define man_dir /usr/share/man
-%define spark_services master worker
+%define spark_services master worker history-server thriftserver
 
 %if  %{?suse_version:1}0
 %define doc_spark %{_docdir}/spark
@@ -50,8 +50,10 @@ Source1: do-component-build
 Source2: install_%{spark_name}.sh
 Source3: spark-master.svc
 Source4: spark-worker.svc
-Source5: compute-classpath.sh
 Source6: init.d.tmpl
+Source7: spark-history-server.svc
+Source8: spark-thriftserver.svc
+Source9: bigtop.bom
 Requires: bigtop-utils >= 0.7, hadoop-client
 Requires(preun): /sbin/service
 
@@ -100,6 +102,22 @@ Requires: spark-core = %{version}-%{release}, python
 
 %description -n spark-python
 Includes PySpark, an interactive Python shell for Spark, and related libraries
+
+%package -n spark-history-server
+Summary: History server for Apache Spark
+Group: Development/Libraries
+Requires: spark-core = %{version}-%{release}
+
+%description -n spark-history-server
+History server for Apache Spark
+
+%package -n spark-thriftserver
+Summary: Thrift server for Spark SQL
+Group: Development/Libraries
+Requires: spark-core = %{version}-%{release}
+
+%description -n spark-thriftserver
+Thrift server for Spark SQL
 
 %prep
 %setup -n %{spark_name}-%{spark_base_version}
@@ -151,17 +169,22 @@ done
 %defattr(-,root,root,755)
 %config(noreplace) %{config_spark}.dist
 %doc %{doc_spark}
-%{lib_spark}
+%{lib_spark}/conf
+%{lib_spark}/LICENSE
+%{lib_spark}/RELEASE
+%{lib_spark}/NOTICE
 %{lib_spark}/bin
-%{lib_spark}/sbin
 %{lib_spark}/lib
-%exclude %{lib_spark}/bin/pyspark
+%{lib_spark}/sbin
+%{lib_spark}/data
+%{lib_spark}/examples
+%{lib_spark}/work
+%exclude %{bin_spark}/pyspark
 %exclude %{lib_spark}/python
 %{etc_spark}
 %attr(0755,spark,spark) %{var_lib_spark}
 %attr(0755,spark,spark) %{var_run_spark}
 %attr(0755,spark,spark) %{var_log_spark}
-%attr(0755,root,root) %{bin_spark}
 %{bin}/spark-shell
 %{bin}/spark-executor
 %{bin}/spark-submit
@@ -189,3 +212,5 @@ if [ $1 -ge 1 ]; then \
 fi
 %service_macro spark-master
 %service_macro spark-worker
+%service_macro spark-history-server
+%service_macro spark-thriftserver

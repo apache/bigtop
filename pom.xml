@@ -48,7 +48,7 @@
     <zookeeper.version>3.4.5</zookeeper.version>
     <giraph.version>1.0.0</giraph.version>
     <solr.version>4.6.0</solr.version>
-    <spark.version>0.9.1</spark.version>
+    <spark.version>1.2.1</spark.version>
     <kafka.version>0.8.1.1</kafka.version>
     <phoenix.version>4.2.2</phoenix.version>
     <spark-smoke.version>${project.version}</spark-smoke.version>

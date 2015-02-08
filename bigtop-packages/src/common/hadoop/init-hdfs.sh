@@ -69,6 +69,11 @@ su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /user/oozie/share/lib/hive'
 su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /user/oozie/share/lib/mapreduce-streaming'
 su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /user/oozie/share/lib/distcp'
 su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /user/oozie/share/lib/pig'
+# Event log directory for Apache Spark
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir -p /var/log/spark/apps'
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chmod -R 1777 /var/log/spark/apps'
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chown spark:spark /var/log/spark/apps'
+
 # Copy over files from local filesystem to HDFS that oozie might need
 if ls /usr/lib/hive/lib/*.jar &> /dev/null; then
   su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -put /usr/lib/hive/lib/*.jar /user/oozie/share/lib/hive'

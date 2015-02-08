@@ -28,7 +28,7 @@ export DH_OPTIONS
 override_dh_auto_build:
 	bash debian/do-component-build
 
-svcs=spark-master spark-worker
+svcs=spark-master spark-worker spark-history-server spark-thriftserver
 
 $(svcs): debian/init.d.tmpl
 	bash $< debian/$@.svc deb debian/$@.init
@@ -36,7 +36,7 @@ $(svcs): debian/init.d.tmpl
 
 override_dh_auto_install: $(svcs)
 	bash -x debian/install_spark.sh \
-	  --build-dir=`pwd` \
-          --doc-dir=/usr/share/doc/spark \
-          --source-dir=debian \
-	  --prefix=debian/tmp
+	--build-dir=`pwd` \
+	--doc-dir=/usr/share/doc/spark \
+	--source-dir=debian \
+	--prefix=debian/tmp

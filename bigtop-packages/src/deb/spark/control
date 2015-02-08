@@ -23,7 +23,7 @@ Homepage: http://spark.apache.org/
 
 Package: spark-core
 Architecture: all
-Depends: bigtop-utils (>= 0.7), hadoop-client
+Depends: adduser, bigtop-utils (>= 0.7), hadoop-client
 Description: Lightning-Fast Cluster Computing
  Spark is a MapReduce-like cluster computing framework designed to support
  low-latency iterative jobs and interactive use from an interpreter. It is
@@ -48,3 +48,15 @@ Architecture: all
 Depends: spark-core (= ${source:Version}), python
 Description: Python client for Spark
  Includes PySpark, an interactive Python shell for Spark, and related libraries
+
+Package: spark-history-server
+Architecture: all
+Depends: spark-core (= ${source:Version})
+Description: History server for Apache Spark
+ History server for Apache Spark
+
+Package: spark-thriftserver
+Architecture: all
+Depends: spark-core (= ${source:Version})
+Description: Thrift server for Spark SQL
+ Thrift server for Spark SQL
