@@ -65,7 +65,7 @@ cd bigtop; ./gradlew tachyon-yum
 and then enable local yum in vagrantconfig.yaml
 
 ```
-enable_local_yum: true
+enable_local_repo: true
 ```
 
 finally, spin up the cluster

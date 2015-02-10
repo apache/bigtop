@@ -15,6 +15,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+enable_local_repo=${1:-false}
+
 apt-get update
 # Install puppet agent
 apt-get -y install puppet puppet-module-puppetlabs-stdlib puppet-module-puppetlabs-apt curl
@@ -27,5 +29,7 @@ apt-get -y install rng-tools
 sed -i.bak 's@#HRNGDEVICE=/dev/null@HRNGDEVICE=/dev/urandom@' /etc/default/rng-tools
 service rng-tools start
 
-echo "Now installing gradle"
-cd /bigtop-home && puppet apply --modulepath=./ -e "include bigtop_toolchain::gradle" # alias gradle=/usr/local/gradle/bin/gradle
+if [ $enable_local_repo == "true" ]; then
+    echo "deb file:///bigtop-home/output/apt bigtop contrib" > /etc/apt/sources.list.d/bigtop-home_output.list
+    apt-get update
+fi

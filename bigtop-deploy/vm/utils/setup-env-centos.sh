@@ -15,6 +15,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+enable_local_repo=${1:-false}
+
 # Install puppet agent
 yum -y install http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm
 yum -y install puppet
@@ -28,5 +30,11 @@ yum -y install rng-tools
 sed -i.bak 's/EXTRAOPTIONS=\"\"/EXTRAOPTIONS=\"-r \/dev\/urandom\"/' /etc/sysconfig/rngd
 service rngd start
 
-echo "Now installing gradle"
-cd /bigtop-home && puppet apply --modulepath=./ -e "include bigtop_toolchain::gradle" # alias gradle=/usr/local/gradle/bin/gradle
+# Install packages for smoke-tests
+yum -y install unzip
+
+if [ $enable_local_repo == "true" ]; then
+    yum -y install yum-utils
+    sudo echo "gpgcheck=0" >> /etc/yum.conf
+    sudo yum-config-manager --add-repo file:///bigtop-home/output
+fi

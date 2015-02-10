@@ -34,11 +34,12 @@ create() {
     repo=$(get-yaml-config repo)
     components="[`echo $(get-yaml-config components) | sed 's/ /, /g'`]"
     distro=$(get-yaml-config distro)
+    enable_local_repo=$(get-yaml-config enable_local_repo)
 
     # setup environment before running bigtop puppet deployment
     for node in ${nodes[*]}; do
         (
-        echo "/bigtop-home/bigtop-deploy/vm/utils/setup-env-$distro.sh" |vagrant ssh $node
+        echo "/bigtop-home/bigtop-deploy/vm/utils/setup-env-$distro.sh $enable_local_repo" |vagrant ssh $node
         echo "/vagrant/provision.sh $hadoop_head_node $repo \"$components\"" |vagrant ssh $node
         ) &
     done
