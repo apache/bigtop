@@ -28,6 +28,34 @@ class gridgain-hadoop {
       require => Package["gridgain-hadoop"],
     }
 
+    file { "/etc/hadoop/gridgain.client.conf":
+      ensure  => directory,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0755',
+      require => Package["gridgain-hadoop-service"],
+    }
+    file { "/etc/hadoop/gridgain.client.conf/core-site.xml":
+        content => template('gridgain-hadoop/core-site.xml'),
+        require => [File["/etc/hadoop/gridgain.client.conf"]],
+    }
+    file {
+      "/etc/hadoop/gridgain.client.conf/mapred-site.xml":
+        content => template('gridgain-hadoop/mapred-site.xml'),
+        require => [File["/etc/hadoop/gridgain.client.conf"]],
+    }
+## let's make sure that gridgain-hadoop libs are linked properly
+    file {'/usr/lib/hadoop/lib/gridgain-core.jar':
+      ensure  => link,
+      target  => '/usr/lib/gridgain-hadoop/libs/gridgain-core.jar',
+      require => [Package["gridgain-hadoop-service"]],
+    }
+    file {'/usr/lib/hadoop/lib/gridgain-hadoop.jar':
+      ensure  => link,
+      target  => '/usr/lib/gridgain-hadoop/libs/gridgain-hadoop/gridgain-hadoop.jar',
+      require => [Package["gridgain-hadoop-service"]],
+    }
+
     service { "gridgain-hadoop":
       ensure  => running,
       require => [ Package["gridgain-hadoop", "gridgain-hadoop-service"], File["/etc/default/gridgain-hadoop"] ],
