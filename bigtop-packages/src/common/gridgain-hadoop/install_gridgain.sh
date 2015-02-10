@@ -122,6 +122,16 @@ cp -a $UNZIP_DIR/config/* $PREFIX/$CONF_DIR
 cp -ra $UNZIP_DIR/bin/* $PREFIX/$BIN_DIR
 
 ln -s $ETC_DIR/conf $PREFIX/$LIB_DIR/config
+# Create unversion softlinks to the main libraries
+for dir in $PREFIX/$LIB_DIR/libs $PREFIX/$LIB_DIR/libs/gridgain-hadoop ; do
+  (cd $dir &&
+  for j in gridgain-*.jar; do
+     if [[ $j =~ gridgain-(.*)-${GRIDGAIN_HADOOP_VERSION}.jar ]]; then
+       name=${BASH_REMATCH[1]}
+       ln -s $j gridgain-$name.jar
+     fi
+  done)
+done
 
 wrapper=$PREFIX/usr/bin/gridgain-hadoop
 mkdir -p `dirname $wrapper`

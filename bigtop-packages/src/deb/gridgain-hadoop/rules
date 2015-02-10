@@ -35,6 +35,7 @@ override_dh_auto_build:
 
 override_dh_auto_install:
 	cp debian/gridgain-hadoop.default debian/${gridgain-hadoop_pkg_name}/etc/default/${gridgain-hadoop_pkg_name}
+	env HADOOP_VERSION=${GRIDGAIN_HADOOP_BASE_VERSION} \
 	bash -x debian/install_gridgain.sh \
 		--build-dir=target \
 		--conf-dir=/etc/${gridgain-hadoop_pkg_name}/conf.dist \

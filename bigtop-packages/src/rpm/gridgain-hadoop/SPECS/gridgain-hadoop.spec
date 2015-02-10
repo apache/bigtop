@@ -139,11 +139,11 @@ Documentation for GridGain platform
 %setup -n gridgain-%{vcs_tag}
 
 %build
-env gridgain_hadoop_VERSION=%{version} bash %{SOURCE1}
+bash %{SOURCE1}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
-bash %{SOURCE2} \
+env GRIDGAIN_HADOOP_VERSION=%{version} bash %{SOURCE2} \
 	--build-dir=target \
   --doc-dir=%{doc_gridgain} \
   --conf-dir=%{etc_gridgain_conf_dist} \
