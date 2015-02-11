@@ -22,7 +22,10 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath 'org.ajoberstar:grgit:0.2.2'
+    classpath 'org.ajoberstar:grgit:0.4.1'
+    // To handle symbolic links when cloning git repos, the jgit.java7 jar
+    // must be added to the classpath.
+    classpath 'org.eclipse.jgit:org.eclipse.jgit.java7:3.6.2.201501210735-r'
   }
 }
 
