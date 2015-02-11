@@ -49,6 +49,9 @@
 #kerberos::site::admin_port: "749"
 #kerberos::site::keytab_export_dir: "/var/lib/bigtop_keytabs"
 
+# applies to hdfs, yarn, mapred and httpfs
+hadoop::kerberos_realm: "%{hiera('kerberos::site::realm')}"
+
 hadoop::common_hdfs::hadoop_namenode_host: "%{hiera('bigtop::hadoop_head_node')}"
 # actually default but needed for hadoop_namenode_uri here
 hadoop::common_hdfs::hadoop_namenode_port: "8020"
@@ -57,7 +60,6 @@ hadoop::common_yarn::hadoop_ps_host: "%{hiera('bigtop::hadoop_head_node')}"
 hadoop::common_yarn::hadoop_rm_host: "%{hiera('bigtop::hadoop_head_node')}"
 # actually default but needed for hue::server::rm_port here
 hadoop::common_yarn::hadoop_rm_port: "8032"
-hadoop::common_yarn::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 
 hadoop::common_mapred_app::hadoop_hs_host: "%{hiera('bigtop::hadoop_head_node')}"
 hadoop::common_mapred_app::hadoop_jobtracker_host: "%{hiera('bigtop::hadoop_head_node')}"

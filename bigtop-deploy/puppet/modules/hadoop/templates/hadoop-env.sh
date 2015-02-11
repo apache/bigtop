@@ -15,11 +15,11 @@
 
 <% def shell_config(shell_var, *puppet_var)
      puppet_var = puppet_var[0] || shell_var.downcase
-     if @puppet_var
-        return "export #{shell_var}=#{scope.lookupvar(puppet_var)}"
-     else
-        return "#export #{shell_var}="
+     puppet_vars = scope.to_hash
+     if puppet_vars[puppet_var]
+        return "export #{shell_var}=#{puppet_vars[puppet_var]}"
      end
+     return "#export #{shell_var}="
    end %>
 # WARNING: Heavy puppet machinery is involved managing this file,
 #          your edits stand no chance

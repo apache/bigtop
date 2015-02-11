@@ -14,6 +14,7 @@
 # limitations under the License.
 
 class hadoop ($hadoop_security_authentication = "simple",
+  $kerberos_realm = undef,
   $zk = "",
   # Set from facter if available
   $hadoop_storage_dirs = split($::hadoop_storage_dirs, ";"),
@@ -89,7 +90,7 @@ class hadoop ($hadoop_security_authentication = "simple",
 
   class common_yarn (
       $yarn_data_dirs = suffix($hadoop::hadoop_storage_dirs, "/yarn"),
-      $kerberos_realm = undef,
+      $kerberos_realm = $hadoop::kerberos_realm,
       $hadoop_ps_host,
       $hadoop_ps_port = "20888",
       $hadoop_rm_host,
@@ -156,7 +157,9 @@ class hadoop ($hadoop_security_authentication = "simple",
       $hadoop_security_group_mapping = undef,
       $hadoop_core_proxyusers = $hadoop::proxyusers,
       $hadoop_snappy_codec = undef,
-      $hadoop_security_authentication = $hadoop::hadoop_security_authentication ) inherits hadoop {
+      $hadoop_security_authentication = $hadoop::hadoop_security_authentication,
+      $kerberos_realm = $hadoop::kerberos_realm,
+  ) inherits hadoop {
 
     $sshfence_keydir  = "$hadoop_ha_sshfence_user_home/.ssh"
     $sshfence_keypath = "$sshfence_keydir/id_sshfence"
@@ -244,8 +247,10 @@ class hadoop ($hadoop_security_authentication = "simple",
       $hadoop_mapred_jobtracker_plugins = "",
       $hadoop_mapred_tasktracker_plugins = "",
       $mapred_acls_enabled = undef,
-      $mapred_data_dirs = suffix($hadoop::hadoop_storage_dirs, "/mapred")) {
-
+      $mapred_data_dirs = suffix($hadoop::hadoop_storage_dirs, "/mapred"),
+      $hadoop_security_authentication = $hadoop::hadoop_security_authentication,
+      $kerberos_realm = $hadoop::kerberos_realm,
+  ) inherits hadoop {
     include common_hdfs
 
     package { "hadoop-mapreduce":
@@ -265,7 +270,9 @@ class hadoop ($hadoop_security_authentication = "simple",
     }
   }
 
-  class datanode {
+  class datanode (
+    $hadoop_security_authentication = $hadoop::hadoop_security_authentication,
+  ) inherits hadoop {
     include common_hdfs
 
     package { "hadoop-hdfs-datanode":
@@ -299,7 +306,9 @@ class hadoop ($hadoop_security_authentication = "simple",
   class httpfs ($hadoop_httpfs_port = "14000",
       $secret = "hadoop httpfs secret",
       $hadoop_core_proxyusers = $hadoop::proxyusers,
-      $hadoop_security_authentcation = $hadoop::hadoop_security_authentication ) inherits hadoop {
+      $hadoop_security_authentcation = $hadoop::hadoop_security_authentication,
+      $kerberos_realm = $hadoop::kerberos_realm,
+  ) inherits hadoop {
 
     if ($hadoop_security_authentication == "kerberos") {
       kerberos::host_keytab { "httpfs":
