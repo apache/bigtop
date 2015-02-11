@@ -56,7 +56,7 @@ class TestHadoopSmoke {
   @BeforeClass
   static void  setUp() throws IOException {
     String[] inputFiles = ["cachedir.jar", "input.txt"];
-    //TestUtils.unpackTestResources(TestHadoopSmoke.class, "${testDir}/cachefile", inputFiles, null);
+    TestUtils.unpackTestResources(TestHadoopSmoke.class, "${testDir}/cachefile", inputFiles, null);
   }
 
   @AfterClass
