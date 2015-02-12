@@ -26,7 +26,7 @@ class Alternative {
   String value;
   String status;
 
-  Map    alts;
+  Map alts;
 
   Shell shUser = new Shell();
   Shell shRoot = new Shell("/bin/bash -s", "root");
@@ -47,23 +47,23 @@ class Alternative {
       def m = (it =~ /([^:]+):(.*)/);
       if (m.size()) {
         String val = (m[0][2]).trim();
-        switch(m[0][1]) {
-          case "Best"  :   best = val;
-                           break;
-          case "Value" :   value = val;
-                           break;
-          case "Status":   status = val;
-                           break;
+        switch (m[0][1]) {
+          case "Best": best = val;
+            break;
+          case "Value": value = val;
+            break;
+          case "Status": status = val;
+            break;
           case "Priority": curAlt["priority"] = val;
-                           break;
-          case "Slaves":   curAlt["slaves"] = [:];
-                           break;
+            break;
+          case "Slaves": curAlt["slaves"] = [:];
+            break;
           case "Alternative": alts[val] = [:];
-                              curAlt = alts[val];
-                              break;
+            curAlt = alts[val];
+            break;
         }
       } else if ((it =~ /^ /).find()) {
-        curAlt["slaves"][it.trim().replaceAll(/ .*$/,"")] = it.replaceAll(/ \S+ /, "");
+        curAlt["slaves"][it.trim().replaceAll(/ .*$/, "")] = it.replaceAll(/ \S+ /, "");
       }
     }
   }
@@ -79,33 +79,34 @@ class Alternative {
    *   Current `best' version is /bin/ksh93.
    * #
    */
+
   private void parse_display(List<String> metadata) {
     Map curAlt = [:];
     String val;
     metadata.each {
-      switch(it) {
-        case ~/^Current.*version is.*/ :
-                         best = it.replaceAll(/^Current.*version is\s+/, "").
-                                   replaceAll(/\s*\.$/, "");
-                         break;
-        case ~/.*link currently points to.*/ :
-                         value = it.replaceAll(/^.*link currently points to\s+/, "");
-                         break;
-        case ~/.* status is .*/ :
-                         status = it.replaceAll(/^.* status is\s+/, "").
-                                     replaceAll(/\s*\.$/, "");
-                         break;
-        case ~/^ slave .*/ :
-                         val = it.replaceAll(/^ slave /, "").replaceAll(/:.*$/, "");
-                         curAlt["slaves"][val] = it.replaceAll(/^.*: /, "").trim();
-                         break;
-        case ~/.*priority.*/ :
-                         val = it.replaceAll(/ - priority .*$/,"");
-                         alts[val] = [:];
-                         curAlt = alts[val];
-                         curAlt["priority"] = it.replaceAll(/^.* - priority /, "").trim();
-                         curAlt["slaves"] = [:];
-                         break;
+      switch (it) {
+        case ~/^Current.*version is.*/:
+          best = it.replaceAll(/^Current.*version is\s+/, "").
+            replaceAll(/\s*\.$/, "");
+          break;
+        case ~/.*link currently points to.*/:
+          value = it.replaceAll(/^.*link currently points to\s+/, "");
+          break;
+        case ~/.* status is .*/:
+          status = it.replaceAll(/^.* status is\s+/, "").
+            replaceAll(/\s*\.$/, "");
+          break;
+        case ~/^ slave .*/:
+          val = it.replaceAll(/^ slave /, "").replaceAll(/:.*$/, "");
+          curAlt["slaves"][val] = it.replaceAll(/^.*: /, "").trim();
+          break;
+        case ~/.*priority.*/:
+          val = it.replaceAll(/ - priority .*$/, "");
+          alts[val] = [:];
+          curAlt = alts[val];
+          curAlt["priority"] = it.replaceAll(/^.* - priority /, "").trim();
+          curAlt["slaves"] = [:];
+          break;
       }
     }
   }

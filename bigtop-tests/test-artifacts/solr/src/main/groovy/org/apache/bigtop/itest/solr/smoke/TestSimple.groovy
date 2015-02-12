@@ -31,8 +31,8 @@ class TestSimple extends SolrTestBase {
     //doReq(_updatePathJSON + builder.toString())
     StringBuilder sb = new StringBuilder()
     sb.append("<add><doc><field name=\"id\">doc1</field><field name=\"name\">first test document").
-       append("</field></doc><doc><field name=\"id\">doc2</field><field name=\"name\">second test document").
-       append("</field></doc></add>")
+      append("</field></doc><doc><field name=\"id\">doc2</field><field name=\"name\">second test document").
+      append("</field></doc></add>")
     doReq(_updatePathXML + URLEncoder.encode(sb.toString()))
     testEquals(doReq("/select?q=*:*"), "response.numFound", "2")
     testEquals(doReq("/select?q=name:\"first+test+document\""), "response.numFound", "1")

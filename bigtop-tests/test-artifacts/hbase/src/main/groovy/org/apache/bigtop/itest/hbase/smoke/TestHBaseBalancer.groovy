@@ -56,7 +56,7 @@ class TestHBaseBalancer {
     logError(sh)
     assertTrue(sh.getRet() == 0)
     assertTrue("balance_switch failed switching to true",
-               sh.getOut().toString().indexOf("true") != -1)
+      sh.getOut().toString().indexOf("true") != -1)
 
     // Return balancer switch to original state, and verify its
     // previous state to be false.
@@ -64,6 +64,6 @@ class TestHBaseBalancer {
     logError(sh)
     assertTrue(sh.getRet() == 0)
     assertTrue("balance_switch failed switching to false",
-               sh.getOut().toString().indexOf("false") != -1)
+      sh.getOut().toString().indexOf("false") != -1)
   }
 }

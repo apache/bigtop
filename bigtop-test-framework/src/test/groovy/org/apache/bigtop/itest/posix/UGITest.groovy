@@ -27,12 +27,12 @@ class UGITest {
   @Test
   void testUsers() {
     assertEquals("expect root uid to be 0",
-                 "0", ugi.getUsers()["root"]["uid"]);
+      "0", ugi.getUsers()["root"]["uid"]);
   }
 
   @Test
   void testGroups() {
     assertEquals("expect root gid to be 0",
-                 "0", ugi.getGroups()["root"]["gid"]);
+      "0", ugi.getGroups()["root"]["gid"]);
   }
 }

@@ -43,9 +43,9 @@ import org.apache.hadoop.hbase.util.ChecksumType;
 
 public class HBaseTestUtil {
 
-  public static int BLOCKSIZE = 64*1024;
+  public static int BLOCKSIZE = 64 * 1024;
   public static String COMPRESSION =
-    Compression.Algorithm.NONE.getName();
+      Compression.Algorithm.NONE.getName();
 
   private static String getTestPrefix() {
     return String.valueOf(System.currentTimeMillis());
@@ -56,7 +56,7 @@ public class HBaseTestUtil {
   }
 
   public static HTableDescriptor createTestTableDescriptor(String testName,
-      byte[] familyName) {
+                                                           byte[] familyName) {
     byte[] tableName = getTestTableName(testName);
     HTableDescriptor htd = new HTableDescriptor(tableName);
     htd.addFamily(new HColumnDescriptor(familyName));
@@ -91,18 +91,17 @@ public class HBaseTestUtil {
       Configuration conf,
       FileSystem fs, Path path,
       byte[] family, byte[] qualifier,
-      byte[] startKey, byte[] endKey, int numRows) throws IOException
-  {
-      HFile.WriterFactory wf = HFile.getWriterFactory(conf, new CacheConfig(conf));
-      HFileContext hFileContext = new HFileContext();
-      wf.withFileContext(hFileContext);
-      wf.withComparator(KeyValue.COMPARATOR);
-      wf.withPath(fs, path);
+      byte[] startKey, byte[] endKey, int numRows) throws IOException {
+    HFile.WriterFactory wf = HFile.getWriterFactory(conf, new CacheConfig(conf));
+    HFileContext hFileContext = new HFileContext();
+    wf.withFileContext(hFileContext);
+    wf.withComparator(KeyValue.COMPARATOR);
+    wf.withPath(fs, path);
     HFile.Writer writer = wf.create();
     long now = System.currentTimeMillis();
     try {
       // subtract 2 since iterateOnSplits doesn't include boundary keys
-      for (byte[] key : Bytes.iterateOnSplits(startKey, endKey, numRows-2)) {
+      for (byte[] key : Bytes.iterateOnSplits(startKey, endKey, numRows - 2)) {
         KeyValue kv = new KeyValue(key, family, qualifier, now, key);
         writer.append(kv);
       }

@@ -35,5 +35,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface Contract {
   Variable[] env();
+
   Property[] properties();
 }

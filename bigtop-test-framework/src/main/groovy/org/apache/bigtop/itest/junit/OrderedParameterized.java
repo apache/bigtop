@@ -36,15 +36,15 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 
 /**
- * This is a modification of a Parameterized JUnit runner (which has been relicensed 
+ * This is a modification of a Parameterized JUnit runner (which has been relicensed
  * under APL for this very hack BIGTOP-18) that takes care of two things:
- *   1. it lets arrange individual tests into ordered sequence of run stages via adding a
- *      a &#064;RunStage(level=X) annotation to the desired testcases (default run stage
- *      is 0). Later on run stages are executed according to the order of their levels
- *      and testcases within the same run stage have no guaranteed order of execution.
- *   2. it lets give names to the parameterized testcases via making the factory method
- *      &#064;Parameters return a Map (mapping names to testcases) instead of a List.
- *
+ * 1. it lets arrange individual tests into ordered sequence of run stages via adding a
+ * a &#064;RunStage(level=X) annotation to the desired testcases (default run stage
+ * is 0). Later on run stages are executed according to the order of their levels
+ * and testcases within the same run stage have no guaranteed order of execution.
+ * 2. it lets give names to the parameterized testcases via making the factory method
+ * &#064;Parameters return a Map (mapping names to testcases) instead of a List.
+ * <p/>
  * Here's how to use it:
  * <pre>
  * public class Example {
@@ -67,120 +67,121 @@ import java.util.*;
  *    public static Map<String, Object[]> generateTests() {
  *      HashMap<String, Object[]> res = new HashMap();
  *      res.put("test name", new Object[] {1, 2});
-        return res;
+ * return res;
  *    }
  * }
  * </pre>
- *
  */
 public class OrderedParameterized extends Suite {
-	/**
-	 * Annotation for a method which provides parameters to be injected into the
-	 * test class constructor by <code>Parameterized</code>
-	 */
-    @Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.METHOD)
-    public @interface RunStage {
-      int level() default 0;
-    };
+  /**
+   * Annotation for a method which provides parameters to be injected into the
+   * test class constructor by <code>Parameterized</code>
+   */
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target(ElementType.METHOD)
+  public @interface RunStage {
+    int level() default 0;
+  }
 
-    private class TestClassRunnerForParameters extends
-            BlockJUnit4ClassRunner {
-        private final String fParameterSetNumber;
+  ;
 
-        private final Map<String, Object[]> fParameterList;
+  private class TestClassRunnerForParameters extends
+      BlockJUnit4ClassRunner {
+    private final String fParameterSetNumber;
 
-        TestClassRunnerForParameters(Class<?> type,
-                Map<String, Object[]> parameterList, String i) throws InitializationError {
-            super(type);
-            fParameterList= parameterList;
-            fParameterSetNumber= i;
-        }
+    private final Map<String, Object[]> fParameterList;
 
-        @Override
-        public Object createTest() throws Exception {
-            return getTestClass().getOnlyConstructor().newInstance(
-                    computeParams());
-        }
-
-        private Object[] computeParams() throws Exception {
-            try {
-                return fParameterList.get(fParameterSetNumber);
-            } catch (ClassCastException e) {
-                throw new Exception(String.format(
-                        "%s.%s() must return a Map from Strings to arrays.",
-                        getTestClass().getName(), getParametersMethod(
-                                getTestClass()).getName()));
-            }
-        }
-
-        @Override
-        protected List<FrameworkMethod> getChildren() {
-            List<FrameworkMethod> c = super.getChildren();
-            Collections.sort(c, new Comparator<FrameworkMethod>() {
-              public int compare(FrameworkMethod m1, FrameworkMethod m2) {
-                RunStage r1 = m1.getAnnotation(RunStage.class);
-                RunStage r2 = m2.getAnnotation(RunStage.class);
-                return ((r1 != null) ? r1.level() : 0) -
-                       ((r2 != null) ? r2.level() : 0);
-              }
-            });
-            return c;
-        }
-
-        @Override
-        protected String getName() {
-            return String.format("[%s]", fParameterSetNumber);
-        }
-
-        @Override
-        protected String testName(final FrameworkMethod method) {
-            return String.format("%s[%s]", method.getName(),
-                    fParameterSetNumber);
-        }
-
-        @Override
-        protected void validateConstructor(List<Throwable> errors) {
-            validateOnlyOneConstructor(errors);
-        }
-
-        @Override
-        protected Statement classBlock(RunNotifier notifier) {
-            return childrenInvoker(notifier);
-        }
+    TestClassRunnerForParameters(Class<?> type,
+                                 Map<String, Object[]> parameterList, String i) throws InitializationError {
+      super(type);
+      fParameterList = parameterList;
+      fParameterSetNumber = i;
     }
-
-    private FrameworkMethod getParametersMethod(TestClass testClass)
-            throws Exception {
-        List<FrameworkMethod> methods= testClass
-                .getAnnotatedMethods(Parameterized.Parameters.class);
-        for (FrameworkMethod each : methods) {
-            int modifiers= each.getMethod().getModifiers();
-            if (Modifier.isStatic(modifiers) && Modifier.isPublic(modifiers))
-                return each;
-        }
-
-        throw new Exception("No public static parameters method on class "
-                + testClass.getName());
-    }
-
-    private final ArrayList<Runner> runners= new ArrayList<Runner>();
 
     @Override
-    protected List<Runner> getChildren() {
-        return runners;
+    public Object createTest() throws Exception {
+      return getTestClass().getOnlyConstructor().newInstance(
+          computeParams());
     }
 
-    @SuppressWarnings("unchecked")
-    private Map<String, Object[]> getParametersList(TestClass klass) throws Throwable {
-        return (Map<String, Object[]>) getParametersMethod(klass).invokeExplosively(null);
+    private Object[] computeParams() throws Exception {
+      try {
+        return fParameterList.get(fParameterSetNumber);
+      } catch (ClassCastException e) {
+        throw new Exception(String.format(
+            "%s.%s() must return a Map from Strings to arrays.",
+            getTestClass().getName(), getParametersMethod(
+            getTestClass()).getName()));
+      }
     }
 
-    public OrderedParameterized(Class<?> klass) throws Throwable {
-        super(klass, Collections.<Runner>emptyList());
-        Map<String, Object[]> parametersMap= getParametersList(getTestClass());
-        for (Map.Entry<String, Object[]> entry : parametersMap.entrySet())
-            runners.add(new TestClassRunnerForParameters(getTestClass().getJavaClass(),
-                    parametersMap, entry.getKey()));
+    @Override
+    protected List<FrameworkMethod> getChildren() {
+      List<FrameworkMethod> c = super.getChildren();
+      Collections.sort(c, new Comparator<FrameworkMethod>() {
+        public int compare(FrameworkMethod m1, FrameworkMethod m2) {
+          RunStage r1 = m1.getAnnotation(RunStage.class);
+          RunStage r2 = m2.getAnnotation(RunStage.class);
+          return ((r1 != null) ? r1.level() : 0) -
+              ((r2 != null) ? r2.level() : 0);
+        }
+      });
+      return c;
     }
+
+    @Override
+    protected String getName() {
+      return String.format("[%s]", fParameterSetNumber);
+    }
+
+    @Override
+    protected String testName(final FrameworkMethod method) {
+      return String.format("%s[%s]", method.getName(),
+          fParameterSetNumber);
+    }
+
+    @Override
+    protected void validateConstructor(List<Throwable> errors) {
+      validateOnlyOneConstructor(errors);
+    }
+
+    @Override
+    protected Statement classBlock(RunNotifier notifier) {
+      return childrenInvoker(notifier);
+    }
+  }
+
+  private FrameworkMethod getParametersMethod(TestClass testClass)
+      throws Exception {
+    List<FrameworkMethod> methods = testClass
+        .getAnnotatedMethods(Parameterized.Parameters.class);
+    for (FrameworkMethod each : methods) {
+      int modifiers = each.getMethod().getModifiers();
+      if (Modifier.isStatic(modifiers) && Modifier.isPublic(modifiers))
+        return each;
+    }
+
+    throw new Exception("No public static parameters method on class "
+        + testClass.getName());
+  }
+
+  private final ArrayList<Runner> runners = new ArrayList<Runner>();
+
+  @Override
+  protected List<Runner> getChildren() {
+    return runners;
+  }
+
+  @SuppressWarnings("unchecked")
+  private Map<String, Object[]> getParametersList(TestClass klass) throws Throwable {
+    return (Map<String, Object[]>) getParametersMethod(klass).invokeExplosively(null);
+  }
+
+  public OrderedParameterized(Class<?> klass) throws Throwable {
+    super(klass, Collections.<Runner>emptyList());
+    Map<String, Object[]> parametersMap = getParametersList(getTestClass());
+    for (Map.Entry<String, Object[]> entry : parametersMap.entrySet())
+      runners.add(new TestClassRunnerForParameters(getTestClass().getJavaClass(),
+          parametersMap, entry.getKey()));
+  }
 }

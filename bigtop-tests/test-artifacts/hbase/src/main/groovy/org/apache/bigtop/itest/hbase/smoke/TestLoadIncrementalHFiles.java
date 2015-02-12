@@ -28,16 +28,18 @@ import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.mapreduce.LoadIncrementalHFiles;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
+
 import org.apache.bigtop.itest.hbase.util.HBaseTestUtil;
 import org.apache.bigtop.itest.shell.Shell;
 
 public class TestLoadIncrementalHFiles {
   private static final byte[] FAMILY = Bytes.toBytes("f1");
   private static final byte[] QUALIFIER = Bytes.toBytes("q1");
-  private static final byte[][] SPLIT_KEYS = new byte[][] {
-    Bytes.toBytes("ddd"),
-    Bytes.toBytes("ppp")
+  private static final byte[][] SPLIT_KEYS = new byte[][]{
+      Bytes.toBytes("ddd"),
+      Bytes.toBytes("ppp")
   };
   private static Shell sh = new Shell("/bin/bash -s");
 
@@ -48,10 +50,10 @@ public class TestLoadIncrementalHFiles {
   @Test
   public void testSimpleLoad() throws Exception {
     runTest("testSimpleLoad",
-        new byte[][][] {
-          new byte[][]{ Bytes.toBytes("aaaa"), Bytes.toBytes("cccc") },
-          new byte[][]{ Bytes.toBytes("ddd"), Bytes.toBytes("ooo") },
-    });
+        new byte[][][]{
+            new byte[][]{Bytes.toBytes("aaaa"), Bytes.toBytes("cccc")},
+            new byte[][]{Bytes.toBytes("ddd"), Bytes.toBytes("ooo")},
+        });
   }
 
   /**
@@ -61,10 +63,10 @@ public class TestLoadIncrementalHFiles {
   @Test
   public void testRegionCrossingLoad() throws Exception {
     runTest("testRegionCrossingLoad",
-        new byte[][][] {
-          new byte[][]{ Bytes.toBytes("aaaa"), Bytes.toBytes("eee") },
-          new byte[][]{ Bytes.toBytes("fff"), Bytes.toBytes("zzz") },
-    });
+        new byte[][][]{
+            new byte[][]{Bytes.toBytes("aaaa"), Bytes.toBytes("eee")},
+            new byte[][]{Bytes.toBytes("fff"), Bytes.toBytes("zzz")},
+        });
   }
 
   private void chmod(String uri) {

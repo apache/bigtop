@@ -119,7 +119,7 @@ public class TestBlockRecovery {
     blockToTest = sh.exec("grep -o 'blk_[0-9]*' $outputFile").getOut()[0];
     assertTrue("Could not obtain block number", sh.getRet() == 0);
 
-    for (int i=0; i < dataDirs.length; i++) {
+    for (int i = 0; i < dataDirs.length; i++) {
       def dataDir = dataDirs[i]
       blockLocation = sh.exec("find $dataDir -name $blockToTest | grep $dataDir").getOut()[0];
       if (blockLocation != null) break;
@@ -137,7 +137,7 @@ public class TestBlockRecovery {
     assertTrue("Could not delete file $fsFilePath", sh.getRet() == 0);
     sh.exec("rm -rf $localTestDir");
     assertTrue("Could not delete test directory $localTestDir", sh.getRet() == 0);
-    }
+  }
 
   @Test
   public void testBlockRecovery() {
@@ -153,14 +153,14 @@ public class TestBlockRecovery {
     sh.exec("hadoop fs -cat $fsFilePath");
 
     // make sure checksum changes back to original, indicating block recovery
-    for (int j=0; j<3; j++) {
+    for (int j = 0; j < 3; j++) {
       // wait a bit to let the block recover
       sleep(sleepTime);
       // see if checksum has changed
       cksumError = sh.exec("hadoop fs -cat $fsFilePath | grep -o 'Checksum error'").getErr();
       if (cksumError != "Checksum error") break;
     }
-    assertNotNull ("Block has not been successfully triggered for recovery.", cksumError);
+    assertNotNull("Block has not been successfully triggered for recovery.", cksumError);
 
     nodesAfterRecovery = sh.exec("hdfs fsck $fsFilePath -blocks -locations -files | $grepIP").getOut();
     assertTrue("Could not obtain datanode addresses", sh.getRet() == 0);
@@ -174,7 +174,7 @@ public class TestBlockRecovery {
       assertTrue("Could not obtain datanode addresses", sh.getRet() == 0);
 
       blockRecoveryNode = (nodesBeforeRecovery.intersect(nodesAfterRecovery))[0];
-      assert (blockRecoveryNode.size() != 0) : "Block has not been successfully triggered for recovery."
+      assert (blockRecoveryNode.size() != 0): "Block has not been successfully triggered for recovery."
     }
 
     int cksumAttempt;

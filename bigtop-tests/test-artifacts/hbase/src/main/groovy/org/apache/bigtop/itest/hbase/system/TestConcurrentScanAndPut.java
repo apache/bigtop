@@ -49,11 +49,11 @@ import org.apache.bigtop.itest.hbase.util.HBaseTestUtil;
  * multiple column families sometimes get split into two rows.
  */
 public class TestConcurrentScanAndPut {
-  public static Shell scanSh = new Shell( "/bin/bash -s" );
-  public static Shell putSh = new Shell( "/bin/bash -s" );
+  public static Shell scanSh = new Shell("/bin/bash -s");
+  public static Shell putSh = new Shell("/bin/bash -s");
 
   public static HBaseAdmin admin;
-  public static byte [] tableName;
+  public static byte[] tableName;
   public static String putter_pid;
 
   public static int scannerLoops;
@@ -61,10 +61,10 @@ public class TestConcurrentScanAndPut {
 
   @BeforeClass
   public static void setUp() throws ClassNotFoundException,
-                                    InterruptedException, IOException {
+      InterruptedException, IOException {
     System.out.println("Unpacking resources");
-    JarContent.unpackJarContainer(Scanner.class, "." , null);
-    JarContent.unpackJarContainer(Putter.class, "." , null);
+    JarContent.unpackJarContainer(Scanner.class, ".", null);
+    JarContent.unpackJarContainer(Putter.class, ".", null);
 
     Configuration conf = HBaseConfiguration.create();
     try {
@@ -73,9 +73,9 @@ public class TestConcurrentScanAndPut {
       System.err.println("Hbase is not up. Bailing out.");
       System.exit(1);
     }
-    
+
     tableName =
-      Bytes.toBytes(new String(HBaseTestUtil.getTestTableName("concurrentScanAndPut")));
+        Bytes.toBytes(new String(HBaseTestUtil.getTestTableName("concurrentScanAndPut")));
     HTableDescriptor htd = new HTableDescriptor(tableName);
     for (int i = 0; i < 10; i++) {
       htd.addFamily(new HColumnDescriptor("f" + i));
@@ -97,14 +97,14 @@ public class TestConcurrentScanAndPut {
       for (int j = 0; j < 10; j++) {
         String value = String.format("%010d", rnd.nextInt(500));
         p.add(Bytes.toBytes("f" + j),
-              Bytes.toBytes("qual"),
-              Bytes.toBytes(value));
+            Bytes.toBytes("qual"),
+            Bytes.toBytes(value));
         String bigvalue = String.format("%0100d%0100d%0100d%0100d%0100d" +
-                                        "%0100d%0100d%0100d%0100d%0100d",
-                                        i, i, i, i, i, i, i, i, i, i);
+            "%0100d%0100d%0100d%0100d%0100d",
+            i, i, i, i, i, i, i, i, i, i);
         p.add(Bytes.toBytes("f" + j),
-              Bytes.toBytes("data"),
-              Bytes.toBytes(bigvalue));
+            Bytes.toBytes("data"),
+            Bytes.toBytes(bigvalue));
       }
       puts.add(p);
       if (i % batch == (batch - 1)) {
@@ -119,14 +119,14 @@ public class TestConcurrentScanAndPut {
 
     try {
       scannerLoops = Integer.parseInt(System.getProperty(
-                                      "concurrentScanAndPut.scanner.loops"));
+          "concurrentScanAndPut.scanner.loops"));
     } catch (NumberFormatException e) {
       scannerLoops = 100;
     }
 
     try {
       putterLoops = Integer.parseInt(System.getProperty(
-                                     "concurrentScanAndPut.putter.loops"));
+          "concurrentScanAndPut.putter.loops"));
     } catch (NumberFormatException e) {
       putterLoops = 100;
     }
@@ -147,20 +147,20 @@ public class TestConcurrentScanAndPut {
     String tableNameStr = Bytes.toString(tableName);
     System.out.println("Starting puts to test table " + tableNameStr);
     putSh.exec("(HBASE_CLASSPATH=. " +
-               "hbase org.apache.bigtop.itest.hbase.system.Putter " +
-               tableNameStr + " 13 -l " + putterLoops +
-               " > /dev/null 2>&1 & echo $! ) 2> /dev/null");
+        "hbase org.apache.bigtop.itest.hbase.system.Putter " +
+        tableNameStr + " 13 -l " + putterLoops +
+        " > /dev/null 2>&1 & echo $! ) 2> /dev/null");
     putter_pid = putSh.getOut().get(0);
 
     System.out.println("Starting concurrent scans of test table " +
-                       tableNameStr);
+        tableNameStr);
     scanSh.exec("HBASE_CLASSPATH=. hbase " +
-                "org.apache.bigtop.itest.hbase.system.Scanner " +
-                tableNameStr + " 13 -l " + scannerLoops + " 2>/dev/null");
+        "org.apache.bigtop.itest.hbase.system.Scanner " +
+        tableNameStr + " 13 -l " + scannerLoops + " 2>/dev/null");
 
     int splitRows = scanSh.getRet();
     System.out.println("Split rows: " + splitRows);
     assertTrue("Rows were split when scanning table with concurrent writes",
-               splitRows == 0);
+        splitRows == 0);
   }
 }

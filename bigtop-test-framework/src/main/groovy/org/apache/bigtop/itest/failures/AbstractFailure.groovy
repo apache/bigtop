@@ -101,20 +101,19 @@ public abstract class AbstractFailure implements Runnable {
   @Override
   public void run() {
     try {
-      if(failureDelay > 0) {
+      if (failureDelay > 0) {
         try {
           Thread.sleep(failureDelay)
         } catch (InterruptedException e) {
           return
         }
       }
-      if(FailureVars.instance.getServiceRestart().equals("true")
+      if (FailureVars.instance.getServiceRestart().equals("true")
         || FailureVars.instance.getServiceKill().equals("true")
         || FailureVars.instance.getNetworkShutdown().equals("true")) {
         runFailCommands()
         Thread.sleep(FailureVars.instance.getKillDuration())
-      }
-      else {
+      } else {
         if (failureDelay > 0) {
           try {
             Thread.sleep(failureDelay)

@@ -39,14 +39,14 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
 /**
- * This program scans a table a configurable number of times. Uses 
+ * This program scans a table a configurable number of times. Uses
  * the table record reader.
  */
 public class Scanner {
   public static final Log LOG = LogFactory.getLog(Scanner.class);
 
   public static int doScan(HTable table, int val) throws IOException,
-    InterruptedException {
+      InterruptedException {
     Scan s = new Scan();
     byte[] start = {};
     byte[] stop = {};
@@ -54,7 +54,7 @@ public class Scanner {
     s.setStartRow(start);
     s.setStopRow(stop);
     SingleColumnValueFilter filter = new SingleColumnValueFilter(
-      Bytes.toBytes("f1"), Bytes.toBytes("qual"), CompareOp.EQUAL, value);
+        Bytes.toBytes("f1"), Bytes.toBytes("qual"), CompareOp.EQUAL, value);
     s.setFilter(filter);
 
     // Keep track of gathered elements.
@@ -70,7 +70,7 @@ public class Scanner {
       }
 
       NavigableMap<byte[], NavigableMap<byte[], NavigableMap<Long,
-        byte[]>>> columnFamilyMap = r.getMap();
+          byte[]>>> columnFamilyMap = r.getMap();
 
       // Output time to show if flush related.
       String k = Bytes.toStringBinary(r.getRow());
@@ -85,7 +85,7 @@ public class Scanner {
     }
 
     System.out.println("scan items counted: " + cnt + " for scan " +
-      s.toString() + " with filter f1:qual == " + Bytes.toString(value));
+        s.toString() + " with filter f1:qual == " + Bytes.toString(value));
 
     // Print out dupes.
     int dupes = 0;
@@ -104,13 +104,13 @@ public class Scanner {
   public static void main(String argv[]) throws IOException {
     if (argv.length < 2) {
       System.err.println("usage: " + Scanner.class.getSimpleName() +
-        " <table> <value>");
+          " <table> <value>");
       System.err.println(" <value>: a numeric value [0,500)");
       System.exit(1);
     }
     Configuration conf = HBaseConfiguration.create();
 
-    byte [] tableName = Bytes.toBytes(argv[0]);
+    byte[] tableName = Bytes.toBytes(argv[0]);
     int val = Integer.parseInt(argv[1]);
     int loops = 1;
     for (int i = 1; i < argv.length; i++) {

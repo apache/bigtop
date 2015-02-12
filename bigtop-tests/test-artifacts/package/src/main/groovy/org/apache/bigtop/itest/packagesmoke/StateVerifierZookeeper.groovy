@@ -25,12 +25,12 @@ class StateVerifierZookeeper extends StateVerifier {
 
   public void createState() {
     shZK.exec("create /bar bar123",
-              "quit\n");
+      "quit\n");
   }
 
   public boolean verifyState() {
     shZK.exec("get /bar",
-              "quit\n");
+      "quit\n");
     return (shZK.getOut().join(' ') =~ /bar123.*zk:.*CONNECTED/).find();
   }
 }

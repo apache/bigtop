@@ -45,7 +45,9 @@ class PackageManagerTest {
   void searchForGcc() {
     List<PackageInstance> pkgs = pmgr.search("gcc")
 
-    assertFalse("gcc not found in repository", pkgs.findAll({return it.name =~ /^gcc.*/}).size() == 0)
+    assertFalse("gcc not found in repository", pkgs.findAll({
+      return it.name =~ /^gcc.*/
+    }).size() == 0)
   }
 
   @Test
@@ -83,7 +85,7 @@ class PackageManagerTest {
   void testGetContentList() {
     PackageInstance cron = PackageInstance.getPackageInstance(pmgr, CRON_RPM);
     List<String> list = pmgr.getContentList(cron);
-    list.each { println it};
+    list.each { println it };
 
     assertTrue("cron package is expected to contain at least ten files", list.size() > 10);
   }
@@ -92,10 +94,10 @@ class PackageManagerTest {
   void testGetDocs() {
     PackageInstance cron = PackageInstance.getPackageInstance(pmgr, CRON_RPM);
     List<String> list = pmgr.getDocs(cron);
-    list.each { println it};
+    list.each { println it };
 
     assertTrue("checking for docs in cron package",
-               list.size() > ((pmgr.getType() == "apt") ? -1 : 0));
+      list.size() > ((pmgr.getType() == "apt") ? -1 : 0));
   }
 
   @Test
@@ -104,14 +106,14 @@ class PackageManagerTest {
     Map<String, String> deps = bash.getDeps();
 
     assertTrue("package bash has 0 dependencies. weird.",
-               deps.size() > 0);
+      deps.size() > 0);
   }
 
   @Test
   void testGetConfigs() {
     PackageInstance cron = PackageInstance.getPackageInstance(pmgr, CRON_RPM);
     List<String> list = pmgr.getConfigs(cron);
-    list.each { println it};
+    list.each { println it };
 
     assertTrue("cron package is expected to contain at least a few config files", list.size() > 0);
   }
@@ -121,9 +123,9 @@ class PackageManagerTest {
   void testRepoManagement() {
     String repo_id = "test-repo";
     assertEquals("Can not add repo",
-                 0, pmgr.addBinRepo(repo_id, "http://127.0.0.1", null, "random strings here"));
+      0, pmgr.addBinRepo(repo_id, "http://127.0.0.1", null, "random strings here"));
     assertEquals("Can not remove repo",
-                 0, pmgr.removeBinRepo(repo_id));
+      0, pmgr.removeBinRepo(repo_id));
   }
 
   @Ignore("required sudo")
@@ -131,8 +133,8 @@ class PackageManagerTest {
   void testRepoFileManagement() {
     String repo_id = "test-repo";
     assertEquals("Can not add repo",
-                 0, pmgr.addBinRepo(repo_id, "random strings here"));
+      0, pmgr.addBinRepo(repo_id, "random strings here"));
     assertEquals("Can not remove repo",
-                 0, pmgr.removeBinRepo(repo_id));
+      0, pmgr.removeBinRepo(repo_id));
   }
 }

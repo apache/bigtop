@@ -21,21 +21,26 @@ package org.apache.bigtop.itest;
 import java.lang.annotation.Documented;
 
 /**
-   Specifies a parameter to be passed into a test via a system property.
-   The parameter may be a String, an int, a long, or a boolean. If the type
-   of the parameter is not specified, it defaults to String.
-   A default value (String value, int value, long value) may be specified
-   for the parameter if its type is not boolean; the default value of a
-   boolean parameter is false.
-*/
+ * Specifies a parameter to be passed into a test via a system property.
+ * The parameter may be a String, an int, a long, or a boolean. If the type
+ * of the parameter is not specified, it defaults to String.
+ * A default value (String value, int value, long value) may be specified
+ * for the parameter if its type is not boolean; the default value of a
+ * boolean parameter is false.
+ */
 @Documented
 public @interface Property {
   public static enum Type {
     STRING, INT, LONG, BOOLEAN;
   }
+
   String name();
+
   Type type() default Type.STRING;
+
   String defaultValue() default "";
+
   int intValue() default 0;
+
   long longValue() default 0L;
 }

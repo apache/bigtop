@@ -33,12 +33,13 @@ class TestPackagesPseudoDistributedWithRM extends TestPackagesPseudoDistributed 
     super(pkgName, pkgGolden);
   }
 
-  @RunStage(level=1)
+  @RunStage(level = 1)
   @Test
   void testPackageRemove() {
     checkComplimentary32bitInstall();
     checkDaemonStart();
-    sleep(3001); // TODO FIXME: CDH-2816 should address the timing of daemons start.
+    sleep(3001);
+    // TODO FIXME: CDH-2816 should address the timing of daemons start.
     checkRemoval();
   }
 }

@@ -23,6 +23,7 @@ public class StateVerifier {
   }
 
   public void createState() {};
+
   public boolean verifyState() {
     return true;
   }

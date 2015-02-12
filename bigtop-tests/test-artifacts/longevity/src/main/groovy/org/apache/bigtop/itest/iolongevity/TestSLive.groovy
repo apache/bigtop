@@ -37,12 +37,12 @@ import static org.junit.Assert.assertTrue
 public class TestSLive {
   static Shell sh = new Shell("/bin/bash -s")
   private static final String hadoopMapReduceHome =
-      System.getProperty('HADOOP_MAPRED_HOME', '/usr/lib/hadoop-mapreduce')
+    System.getProperty('HADOOP_MAPRED_HOME', '/usr/lib/hadoop-mapreduce')
   private static final String Slive_jar =
     JarContent.getJarName(hadoopMapReduceHome,
-            'hadoop.mapreduce.client.jobclient.*.tests.jar')
+      'hadoop.mapreduce.client.jobclient.*.tests.jar')
   private static final String SLIVE_JAR =
-    hadoopMapReduceHome  + "/" + Slive_jar
+    hadoopMapReduceHome + "/" + Slive_jar
   private static final int SLEEP_TIMEOUT = 5000
   private static final String SLIVE_OUTPUT_FILE = "/test/slive/slive/output"
   private static final String SLIVE_ROOT_FILE = "/test/slive"
@@ -57,7 +57,7 @@ public class TestSLive {
   @BeforeClass
   static void setUp() throws IOException {
     assertNotNull("Can't find hadoop.mapreduce.client.jobclient.tests.jar",
-            Slive_jar)
+      Slive_jar)
     final String numSliveFiles = System.getProperty("numSliveFiles", "100")
     final String writeSize = System.getProperty("writeSize", "20480,20480")
     final String readSize = System.getProperty("readSize", "20480,20480")
@@ -65,30 +65,30 @@ public class TestSLive {
     final String blockSize = System.getProperty("blockSize", "10240,10240")
 
     String SLIVE_TEMPLATE = "hadoop jar %s SliveTest -create %s -delete %s " +
-            "-rename %s -read %s -append %s -ls %s -mkdir %s -files %s " +
-            "-writeSize %s -readSize %s -appendSize %s -blockSize %s -resFile %s"
+      "-rename %s -read %s -append %s -ls %s -mkdir %s -files %s " +
+      "-writeSize %s -readSize %s -appendSize %s -blockSize %s -resFile %s"
     sliveCmds = [
       String.format(SLIVE_TEMPLATE, SLIVE_JAR, 100, 0, 0, 0, 0, 0, 0,
-              numSliveFiles, writeSize, readSize, appendSize, blockSize,
-              "sliveOutputcreate.txt"), //create
+        numSliveFiles, writeSize, readSize, appendSize, blockSize,
+        "sliveOutputcreate.txt"), //create
       String.format(SLIVE_TEMPLATE, SLIVE_JAR, 0, 0, 100, 0, 0, 0, 0,
-              numSliveFiles, writeSize, readSize, appendSize, blockSize,
-              "sliveOutputrename.txt"), //rename
+        numSliveFiles, writeSize, readSize, appendSize, blockSize,
+        "sliveOutputrename.txt"), //rename
       String.format(SLIVE_TEMPLATE, SLIVE_JAR, 0, 0, 0, 100, 0, 0, 0,
-              numSliveFiles, writeSize, readSize, appendSize, blockSize,
-              "sliveOutputread.txt"), //read
+        numSliveFiles, writeSize, readSize, appendSize, blockSize,
+        "sliveOutputread.txt"), //read
       String.format(SLIVE_TEMPLATE, SLIVE_JAR, 0, 0, 0, 0, 100, 0, 0,
-              numSliveFiles, writeSize, readSize, appendSize, blockSize,
-              "sliveOutputappend.txt"), //append
+        numSliveFiles, writeSize, readSize, appendSize, blockSize,
+        "sliveOutputappend.txt"), //append
       String.format(SLIVE_TEMPLATE, SLIVE_JAR, 0, 0, 0, 0, 0, 100, 0,
-              numSliveFiles, writeSize, readSize, appendSize, blockSize,
-              "sliveOutputls.txt"), //ls
+        numSliveFiles, writeSize, readSize, appendSize, blockSize,
+        "sliveOutputls.txt"), //ls
       String.format(SLIVE_TEMPLATE, SLIVE_JAR, 0, 100, 0, 0, 0, 0, 0,
-              numSliveFiles, writeSize, readSize, appendSize, blockSize,
-              "sliveOutputdelete.txt"), //delete
+        numSliveFiles, writeSize, readSize, appendSize, blockSize,
+        "sliveOutputdelete.txt"), //delete
       String.format(SLIVE_TEMPLATE, SLIVE_JAR, 20, 0, 0, 20, 20, 20, 20,
-              numSliveFiles, writeSize, readSize, appendSize, blockSize,
-              "sliveOutputmix.txt") //mix
+        numSliveFiles, writeSize, readSize, appendSize, blockSize,
+        "sliveOutputmix.txt") //mix
     ]
   }
 
@@ -105,10 +105,10 @@ public class TestSLive {
 
   @Test
   public void testSlive() {
-    if(FailureVars.instance.getRunFailures()
-        || FailureVars.instance.getServiceRestart()
-        || FailureVars.instance.getServiceKill()
-        || FailureVars.instance.getNetworkShutdown()) {
+    if (FailureVars.instance.getRunFailures()
+      || FailureVars.instance.getServiceRestart()
+      || FailureVars.instance.getServiceKill()
+      || FailureVars.instance.getNetworkShutdown()) {
       runFailureThread();
     }
 

@@ -52,16 +52,16 @@ class PackageTestRepoMgr {
     btRepoHost = System.getProperty("${prefix}.host", "www.apache.org/dist/bigtop/stable/repos");
     btRepoVersion = System.getProperty("${prefix}.version", "bigtop");
 
-    Map btKeys  = [ yum    : "http://${btRepoHost}/GPG-KEY-bigtop",
-                     zypper : null,
-                     apt    : "http://${btRepoHost}/GPG-KEY-bigtop" ];
-    Map btRepos = [ yum    : "http://${btRepoHost}/centos6",
-                     zypper : "http://${btRepoHost}/sles11",
-                     apt    : "http://${btRepoHost}/precise/" ];
+    Map btKeys = [yum: "http://${btRepoHost}/GPG-KEY-bigtop",
+      zypper: null,
+      apt: "http://${btRepoHost}/GPG-KEY-bigtop"];
+    Map btRepos = [yum: "http://${btRepoHost}/centos6",
+      zypper: "http://${btRepoHost}/sles11",
+      apt: "http://${btRepoHost}/precise/"];
 
-    btRepoFileURL = System.getProperty("${prefix}.file.url.${linux_flavor.replaceAll(/\s/,'_')}",
-                       System.getProperty("${prefix}.file.url",
-                         "http://does.not.exist"));
+    btRepoFileURL = System.getProperty("${prefix}.file.url.${linux_flavor.replaceAll(/\s/, '_')}",
+      System.getProperty("${prefix}.file.url",
+        "http://does.not.exist"));
 
     btRepoURL = System.getProperty("${prefix}.url", btRepos[pm.getType()]);
     btKeyURL = System.getProperty("${prefix}.key.url", btKeys[pm.getType()]);

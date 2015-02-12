@@ -33,25 +33,25 @@ import org.apache.bigtop.itest.shell.Shell;
  * This program unloads and reloads region servers and checks that
  * regions do not get stuck in transition for too long. The region
  * servers are specified by hostname.
- * 
+ * <p/>
  * Required arguments:
  * -Dregionservers=<regionserver1>,<regionserver2>,...
- *
+ * <p/>
  * Optional arguments:
  * -Dload.iterations=<number of times to unload and load the region servers>
  * -Dtimeout.intervals=<number of times to wait for no regions in transition>
  * -Dtimeout.ms=<milliseconds to wait before checking for regions in transition>
  */
 public class TestRegionMover {
-  private static Shell sh = new Shell( "/bin/bash -s" );
+  private static Shell sh = new Shell("/bin/bash -s");
 
   // Commands to execute the region mover and get the detailed HBase status.
   private static String load_regionserver =
-    "$HBASE_HOME/bin/hbase org.jruby.Main $HBASE_HOME/bin/region_mover.rb load ";
+      "$HBASE_HOME/bin/hbase org.jruby.Main $HBASE_HOME/bin/region_mover.rb load ";
   private static String unload_regionserver =
-    "$HBASE_HOME/bin/hbase org.jruby.Main $HBASE_HOME/bin/region_mover.rb unload ";
+      "$HBASE_HOME/bin/hbase org.jruby.Main $HBASE_HOME/bin/region_mover.rb unload ";
   private static String hbase_status_detailed =
-    "echo \"status \'detailed\'\" | $HBASE_HOME/bin/hbase shell";
+      "echo \"status \'detailed\'\" | $HBASE_HOME/bin/hbase shell";
 
   // Number of times we unload/load the region servers.
   private static int load_iterations;
@@ -63,6 +63,7 @@ public class TestRegionMover {
   private static ArrayList<String> regionservers = new ArrayList<String>();
 
   private static final String HBASE_HOME = System.getenv("HBASE_HOME");
+
   static {
     assertNotNull("HBASE_HOME has to be set to run this test", HBASE_HOME);
   }
@@ -71,7 +72,7 @@ public class TestRegionMover {
   public static void setUp() throws InterruptedException {
     String region_servers = System.getProperty("regionservers", null);
     assertNotNull("Region server(s) must be specified to run this test",
-                  region_servers);
+        region_servers);
     StringTokenizer st = new StringTokenizer(region_servers, ",");
     while (st.hasMoreTokens()) {
       regionservers.add(st.nextToken());
@@ -79,8 +80,8 @@ public class TestRegionMover {
     System.out.println("Region servers to load/unload:\n" + regionservers);
 
     load_iterations = Integer.parseInt(System.getProperty("load.iterations", "10"));
-    timeout_intervals = Integer.parseInt(System.getProperty("timeout.intervals","20"));
-    timeout_ms = Integer.parseInt(System.getProperty("timeout.ms","20000"));
+    timeout_intervals = Integer.parseInt(System.getProperty("timeout.intervals", "20"));
+    timeout_ms = Integer.parseInt(System.getProperty("timeout.ms", "20000"));
   }
 
   @AfterClass
@@ -94,7 +95,7 @@ public class TestRegionMover {
       System.out.println("Wait interval: " + i);
       sh.exec(hbase_status_detailed);
       String status = sh.getOut().toString();
-      if(status.indexOf(" 0 regionsInTransition") != -1) {
+      if (status.indexOf(" 0 regionsInTransition") != -1) {
         System.out.println(" 0 regionsInTransition.");
         return;
       } else {
@@ -107,7 +108,7 @@ public class TestRegionMover {
   @Test
   public void testRegionMover() throws InterruptedException {
     System.out.println("Beginning unloading and loading of region servers " +
-                       load_iterations + " times each");
+        load_iterations + " times each");
     String cmd;
     for (int i = 0; i < load_iterations; i++) {
       for (String rs : regionservers) {

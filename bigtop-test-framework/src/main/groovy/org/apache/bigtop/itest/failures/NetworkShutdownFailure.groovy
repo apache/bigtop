@@ -48,8 +48,8 @@ public class NetworkShutdownFailure extends AbstractFailure {
    * @param startDelay time in milliseconds) the failures will wait before start
    */
   public NetworkShutdownFailure(String srcHost,
-                               List<String> dstHosts,
-                               long startDelay) {
+                                List<String> dstHosts,
+                                long startDelay) {
 
     super(new ArrayList<String>(), startDelay)
     populateCommandsList(srcHost, dstHosts)
@@ -58,7 +58,8 @@ public class NetworkShutdownFailure extends AbstractFailure {
   /*
    * Populate commands list, making choice between local execution and remote one.
    */
-  private void populateCommandsList(String host, List<String> dstHosts){
+
+  private void populateCommandsList(String host, List<String> dstHosts) {
     if ("localhost".equalsIgnoreCase(host)) {
       dstHosts.each { dstHost ->
         failCommands.add(String.format(DROP_INPUT_CONNECTIONS, dstHost))

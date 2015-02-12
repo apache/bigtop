@@ -20,13 +20,13 @@ package org.apache.bigtop.itest.pmanager
 
 class AptCmdLinePackageManager extends PackageManager {
   // FIXME: NB export DEBIAN_FRONTEND=noninteractive
-  String type  = "apt";
+  String type = "apt";
   String repository_registry = "/etc/apt/sources.list.d/%s.list";
 
   private static final ROOT_URL = "http://us.archive.ubuntu.com/ubuntu/";
 
   public void setDefaults(String defaults) {
-     shRoot.exec("debconf-set-selections <<__EOT__\n${defaults}\n__EOT__");
+    shRoot.exec("debconf-set-selections <<__EOT__\n${defaults}\n__EOT__");
   }
 
   // FIXME: Debian doesn't have a way ot passing a full description
@@ -47,11 +47,11 @@ class AptCmdLinePackageManager extends PackageManager {
       url = ROOT_URL;
 
     if (key) {
-        def text = key.toURL().text;
-        shRoot.exec("apt-key add - <<__EOT__\n${text}\n__EOT__");
-        if (shRoot.getRet()) {
-          return shRoot.getRet();
-        }
+      def text = key.toURL().text;
+      shRoot.exec("apt-key add - <<__EOT__\n${text}\n__EOT__");
+      if (shRoot.getRet()) {
+        return shRoot.getRet();
+      }
     }
 
     return addBinRepo(record, "deb ${url} ${cookie}\ndeb-src ${url} ${cookie}");
@@ -70,7 +70,7 @@ class AptCmdLinePackageManager extends PackageManager {
   public List<PackageInstance> search(String name) {
     def packages = new ArrayList<PackageInstance>();
     shUser.exec("apt-cache search --names-only $name").out.each {
-      packages.add(PackageInstance.getPackageInstance (this, ((it =~ /^(.*)( - .*)$/)[0][1])))
+      packages.add(PackageInstance.getPackageInstance(this, ((it =~ /^(.*)( - .*)$/)[0][1])))
     }
     return packages
   }

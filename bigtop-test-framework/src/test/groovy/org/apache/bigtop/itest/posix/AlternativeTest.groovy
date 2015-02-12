@@ -33,10 +33,10 @@ class AlternativeTest {
 
     Map groups = Alternative.getAlternatives();
     assertTrue("not a single alternative group found. weird.",
-               groups.size() >0);
+      groups.size() > 0);
     assertTrue("there is no alternative for editor. weird.",
-               groups["editor"] != null);
+      groups["editor"] != null);
     assertTrue("in the editor alternative there are no actuall alternatives",
-               groups["editor"].getAlts().size() > 0);
+      groups["editor"].getAlts().size() > 0);
   }
 }

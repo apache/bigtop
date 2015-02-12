@@ -25,14 +25,14 @@ class StateVerifierHBase extends StateVerifier {
 
   public static void createStaticState() {
     shHBase.exec("create 't1', 'f1'",
-                 "put 't1', 'r1', 'f1:q', 'val'",
-                 "flush 't1'",
-                 "quit\n");
+      "put 't1', 'r1', 'f1:q', 'val'",
+      "flush 't1'",
+      "quit\n");
   }
 
   public static boolean verifyStaticState() {
     shHBase.exec("scan 't1'",
-                 "quit\n");
+      "quit\n");
 
     return (shHBase.getOut().join(' ') =~ /r1.*column=f1:q.*value=val/).find();
   }

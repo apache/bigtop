@@ -46,11 +46,11 @@ public class TestPhoenixSmoke {
   // running cluster as well.
 
   static void runTest(String testName) {
-    sh.exec("HBASE_CLASSPATH=" + phoenixClientJar + ":" + phoenixCoreJar + ":" + phoenixCoreTestsJar + 
+    sh.exec("HBASE_CLASSPATH=" + phoenixClientJar + ":" + phoenixCoreJar + ":" + phoenixCoreTestsJar +
       " hbase org.junit.runner.JUnitCore " + testName);
     assertTrue(testName + " failed", sh.getRet() == 0);
   }
- 
+
   @Test
   public void testAlterTable() {
     runTest("org.apache.phoenix.end2end.AlterTableIT")
@@ -60,7 +60,7 @@ public class TestPhoenixSmoke {
   public void testArithmeticQuery() {
     runTest("org.apache.phoenix.end2end.ArithmeticQueryIT")
   }
-  
+
   @Test
   public void testArray() {
     runTest("org.apache.phoenix.end2end.ArrayIT")
@@ -160,7 +160,7 @@ public class TestPhoenixSmoke {
   public void testHashJoin() {
     runTest("org.apache.phoenix.end2end.HashJoinIT")
   }
-  
+
   @Test
   public void testInMemoryOrderBy() {
     runTest("org.apache.phoenix.end2end.InMemoryOrderByIT")
@@ -215,6 +215,7 @@ public class TestPhoenixSmoke {
   public void testQueryExecWithoutSCN() {
     runTest("org.apache.phoenix.end2end.QueryExecWithoutSCNIT")
   }
+
   @Test
   public void testQuery() {
     runTest("org.apache.phoenix.end2end.QueryIT")
@@ -304,12 +305,12 @@ public class TestPhoenixSmoke {
   public void testTenantSpecificTablesDDL() {
     runTest("org.apache.phoenix.end2end.TenantSpecificTablesDDLIT")
   }
-  
+
   @Test
   public void testTenantSpecificTablesDML() {
     runTest("org.apache.phoenix.end2end.TenantSpecificTablesDMLIT")
   }
-  
+
   @Test
   public void testTenantSpecificViewIndex() {
     runTest("org.apache.phoenix.end2end.TenantSpecificViewIndexIT")

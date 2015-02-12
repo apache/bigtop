@@ -41,7 +41,7 @@ class StateVerifierOozie extends StateVerifier {
     sleep(5001);
 
     return (sh.exec("oozie job -oozie http://localhost:11000/oozie -info $jobID | grep -q 'Status *: SUCCEEDED'")
-              .getRet() == 0);
+      .getRet() == 0);
   }
 
   void createState() {

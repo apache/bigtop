@@ -26,7 +26,7 @@ class TestIndexing extends SolrTestBase {
     // Index a couple of documents
     def builder = new groovy.json.JsonBuilder()
     builder([["id": "doc1", "name": URLEncoder.encode("first test document")],
-            ["id": "doc2", "name": URLEncoder.encode("second test document")]])
+      ["id": "doc2", "name": URLEncoder.encode("second test document")]])
     doReq(_updatePathJSON + builder.toString() + "&commit=true")
   }
 

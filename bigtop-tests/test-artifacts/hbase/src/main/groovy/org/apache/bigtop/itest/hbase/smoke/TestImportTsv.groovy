@@ -53,7 +53,7 @@ public class TestImportTsv {
   private static final String HBASE_HOME = System.getenv("HBASE_HOME");
   static {
     assertNotNull("HBASE_HOME has to be set to run this test",
-        HBASE_HOME);
+      HBASE_HOME);
   }
   private static String hbase_jar =
     JarContent.getJarName(HBASE_HOME, "hbase-.*(?<!tests).jar");
@@ -70,17 +70,17 @@ public class TestImportTsv {
     if (sh.getRet() != 0) {
       sh.exec("hadoop fs -mkdir $DATADIR1");
       assertTrue("Unable to create directory $DATADIR1",
-          sh.getRet() == 0);
+        sh.getRet() == 0);
     }
     sh.exec("hadoop fs -test -e $DATADIR2");
     if (sh.getRet() != 0) {
       sh.exec("hadoop fs -mkdir $DATADIR2");
       assertTrue("Unable to create directory $DATADIR2",
-          sh.getRet() == 0);
+        sh.getRet() == 0);
     }
     // load data into HDFS
     sh.exec("hadoop fs -put movies.tsv $DATADIR1/items",
-            "hadoop fs -put movies.psv $DATADIR2/items");
+      "hadoop fs -put movies.psv $DATADIR2/items");
     assertTrue("setup failed", sh.getRet() == 0);
   }
 
@@ -88,8 +88,8 @@ public class TestImportTsv {
   public static void cleanUp() {
     // delete data and junk from HDFS
     sh.exec("hadoop fs -rmr -skipTrash $DATADIR1",
-            "hadoop fs -rmr -skipTrash $DATADIR2",
-            "hadoop fs -rmr -skipTrash /user/$USER/partitions_*");
+      "hadoop fs -rmr -skipTrash $DATADIR2",
+      "hadoop fs -rmr -skipTrash /user/$USER/partitions_*");
     assertTrue("teardown failed", sh.getRet() == 0);
   }
 
@@ -126,7 +126,7 @@ public class TestImportTsv {
     if (sh.getRet() == 0) {
       sh.exec("hadoop fs -rmr -skipTrash $OUTDIR");
       assertTrue("Deletion of $OUTDIR from HDFS failed",
-          sh.getRet() == 0);
+        sh.getRet() == 0);
     }
   }
 

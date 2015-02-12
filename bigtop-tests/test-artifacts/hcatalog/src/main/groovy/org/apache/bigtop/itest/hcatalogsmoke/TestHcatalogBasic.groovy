@@ -58,7 +58,6 @@ public class TestHcatalogBasic {
     sh.exec("hadoop fs -rmr -skipTrash /user/hive/warehouse")
   }
 
-
   /**
    * Validate that the table created via hcat exists from Hive's world view
    */
@@ -76,14 +75,14 @@ public class TestHcatalogBasic {
     diff -u hcat_basic_describe.expected hive_hcat_basic_verify.actual
     """)
     assertEquals("hive couldn't detect the table created via hcat, return code: " + sh.ret,
-        0, sh.ret);
+      0, sh.ret);
 
     sh.exec("""
     hcat -e "DESCRIBE hcat_basic" > hcat_hcat_basic_verify.actual
     diff -u hcat_basic_describe.expected hcat_hcat_basic_verify.actual
     """)
     assertEquals("hcat couldn't detect the table created via hcat, return code: " + sh.ret,
-        0, sh.ret);
+      0, sh.ret);
 
     // Add a partition via hive
     sh.exec("hive -e \"ALTER TABLE hcat_basic ADD PARTITION (dt='2013-01-01')\"")

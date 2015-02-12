@@ -22,8 +22,8 @@ import org.junit.runner.RunWith
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses([
-  TestPackagesPseudoDistributed.class,
-  TestServices.class,
+TestPackagesPseudoDistributed.class,
+TestServices.class,
 ])
 class TestPackagesPseudoDistributedState {
 }

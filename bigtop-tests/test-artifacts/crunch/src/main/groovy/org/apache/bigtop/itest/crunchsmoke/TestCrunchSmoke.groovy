@@ -29,7 +29,7 @@ public class TestCrunchSmoke {
   static String runnerScript = "hadoop jar"
 
   static String crunchJar = System.getProperty(
-    "org.apache.bigtop.itest.crunch.smoke.crunch.jar", 
+    "org.apache.bigtop.itest.crunch.smoke.crunch.jar",
     "/usr/share/doc/crunch*/crunch-examples-*job.jar");
 
   static Shell sh = new Shell("/bin/bash -s");
@@ -43,37 +43,37 @@ public class TestCrunchSmoke {
 
   static Map examples =
     [
-        WordCount             : "${EXAMPLES}/text/pg11.txt $EXAMPLES_OUT",
-        SecondarySortExample  : "${EXAMPLES}/text/secondary_sort_input.txt ${EXAMPLES_OUT}",
-        AverageBytesByIP      : "${EXAMPLES}/access_log/000000 ${EXAMPLES_OUT}",
-        TotalBytesByIP        : "${EXAMPLES}/access_log/000000 ${EXAMPLES_OUT}"
+      WordCount: "${EXAMPLES}/text/pg11.txt $EXAMPLES_OUT",
+      SecondarySortExample: "${EXAMPLES}/text/secondary_sort_input.txt ${EXAMPLES_OUT}",
+      AverageBytesByIP: "${EXAMPLES}/access_log/000000 ${EXAMPLES_OUT}",
+      TotalBytesByIP: "${EXAMPLES}/access_log/000000 ${EXAMPLES_OUT}"
     ];
 
   private void _runExampleJobs(String algorithm) {
     sh.exec("hadoop fs -rmr ${EXAMPLES_OUT}");
-    sh.exec("${runnerScript} ${crunchJar}" 
+    sh.exec("${runnerScript} ${crunchJar}"
       + " org.apache.crunch.examples.${algorithm}"
       + " ${examples.get(algorithm)}"
-      );
+    );
     assertEquals("running Crunch example failed", sh.getRet(), 0);
   }
 
-  @Test(timeout=300000L)
+  @Test(timeout = 300000L)
   public void testWordCount() {
     _runExampleJobs("WordCount");
   }
 
-  @Test(timeout=300000L)
+  @Test(timeout = 300000L)
   public void testSecondarySort() {
     _runExampleJobs("SecondarySortExample");
   }
 
-  @Test(timeout=300000L)
+  @Test(timeout = 300000L)
   public void testAverageBytesByIP() {
     _runExampleJobs("AverageBytesByIP");
   }
 
-  @Test(timeout=300000L)
+  @Test(timeout = 300000L)
   public void testTotalBytesByIP() {
     _runExampleJobs("TotalBytesByIP");
   }

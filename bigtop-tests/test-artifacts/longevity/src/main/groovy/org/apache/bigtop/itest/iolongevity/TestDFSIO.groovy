@@ -72,10 +72,10 @@ public class TestDFSIO {
 
   @Test
   public void testDFSIO() {
-    if(FailureVars.instance.getRunFailures()
-    || FailureVars.instance.getServiceRestart()
-    || FailureVars.instance.getServiceKill()
-    || FailureVars.instance.getNetworkShutdown()) {
+    if (FailureVars.instance.getRunFailures()
+      || FailureVars.instance.getServiceRestart()
+      || FailureVars.instance.getServiceKill()
+      || FailureVars.instance.getNetworkShutdown()) {
       runFailureThread();
     }
 
@@ -95,7 +95,7 @@ public class TestDFSIO {
     }
   }
 
-  private void executeCmd(String cmd, String expectedFile){
+  private void executeCmd(String cmd, String expectedFile) {
     sh.exec(cmd);
     logError(sh);
     assertTrue("Command " + cmd + " is unsuccessful", sh.getRet() == 0);

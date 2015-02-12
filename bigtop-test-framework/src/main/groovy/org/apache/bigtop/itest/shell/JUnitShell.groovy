@@ -78,8 +78,8 @@ class JUnitShell extends Shell {
     if (result != expectedExitCode) {
       dumpOutput()
       Assert.assertEquals(
-          "Wrong exit code of script ${script}" as String,
-          expectedExitCode, result)
+        "Wrong exit code of script ${script}" as String,
+        expectedExitCode, result)
     }
   }
 

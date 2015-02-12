@@ -34,7 +34,7 @@ public class TestListUtilsTest {
 
     TestListUtils.touchTestFiles(prefix, "${fileName}.xml");
     assertTrue("only .class files are expected to be created",
-               expectedFile.getParentFile().listFiles().size() == 0);
+      expectedFile.getParentFile().listFiles().size() == 0);
 
     File p = new File(prefix);
     p.deleteDir();

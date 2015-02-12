@@ -47,16 +47,16 @@ public class IncrementalPELoad extends Configured implements Tool {
 
     private static final int ROWSPERSPLIT = 1024;
     private static final byte[][] FAMILIES
-      = { Bytes.add(PerformanceEvaluation.FAMILY_NAME, Bytes.toBytes("-A")),
-	  Bytes.add(PerformanceEvaluation.FAMILY_NAME, Bytes.toBytes("-B"))};
+        = {Bytes.add(PerformanceEvaluation.FAMILY_NAME, Bytes.toBytes("-A")),
+        Bytes.add(PerformanceEvaluation.FAMILY_NAME, Bytes.toBytes("-B"))};
 
     private int keyLength;
-    private static final int KEYLEN_DEFAULT=10;
-    private static final String KEYLEN_CONF="randomkv.key.length";
+    private static final int KEYLEN_DEFAULT = 10;
+    private static final String KEYLEN_CONF = "randomkv.key.length";
 
     private int valLength;
-    private static final int VALLEN_DEFAULT=10;
-    private static final String VALLEN_CONF="randomkv.val.length";
+    private static final int VALLEN_DEFAULT = 10;
+    private static final String VALLEN_CONF = "randomkv.val.length";
 
     @Override
     protected void setup(Context context)
@@ -69,10 +69,9 @@ public class IncrementalPELoad extends Configured implements Tool {
     }
 
     protected void map(NullWritable n1, NullWritable n2,
-        Mapper<NullWritable, NullWritable,
-               ImmutableBytesWritable,KeyValue>.Context context)
-        throws java.io.IOException ,InterruptedException
-    {
+                       Mapper<NullWritable, NullWritable,
+                           ImmutableBytesWritable, KeyValue>.Context context)
+        throws java.io.IOException, InterruptedException {
 
       byte keyBytes[] = new byte[keyLength];
       byte valBytes[] = new byte[valLength];
@@ -85,7 +84,7 @@ public class IncrementalPELoad extends Configured implements Tool {
 
         random.nextBytes(keyBytes);
         // Ensure that unique tasks generate unique keys
-        keyBytes[keyLength - 1] = (byte)(taskId & 0xFF);
+        keyBytes[keyLength - 1] = (byte) (taskId & 0xFF);
         random.nextBytes(valBytes);
         ImmutableBytesWritable key = new ImmutableBytesWritable(keyBytes);
 

@@ -42,7 +42,7 @@ class TestFlumeSmoke {
 
   @BeforeClass
   static void setUp() {
-    JarContent.unpackJarContainer(TestFlumeSmoke.class, '.' , null);
+    JarContent.unpackJarContainer(TestFlumeSmoke.class, '.', null);
   }
 
   @AfterClass
@@ -54,27 +54,27 @@ class TestFlumeSmoke {
     String node_config = "node:text(\"events.txt\")|collectorSink(\"${hdfs_sink_dir}\",\"data\");";
 
     sh.exec("export FLUME_CONF_DIR=./${id}",
-            "flume node_nowatch -s -1 -n node -c '${node_config}'");
+      "flume node_nowatch -s -1 -n node -c '${node_config}'");
     assertEquals("Flume failed to accept events",
-                 0, sh.ret);
+      0, sh.ret);
 
     sh.exec("hadoop fs -cat ${hdfs_sink_dir}/${glob} | ${decompress} | wc -l");
     assertEquals("Wrong # of lines in output found at ${hdfs_sink_dir}",
-                 "10000", sh.out[0]);
+      "10000", sh.out[0]);
   }
 
-  @Test(timeout=300000L)
+  @Test(timeout = 300000L)
   public void testBzip2() {
     compressionCommonTest("FlumeSmokeBzip2", "bzip2 -d", "*.bz2");
   }
 
   @Ignore("BIGTOP-218")
-  @Test(timeout=300000L)
+  @Test(timeout = 300000L)
   public void testDeflate() {
     compressionCommonTest("FlumeSmokeDeflate", "perl -MCompress::Zlib -e 'undef \$/; print uncompress(<>)'", "*.deflate");
   }
 
-  @Test(timeout=300000L)
+  @Test(timeout = 300000L)
   public void testGzip() {
     compressionCommonTest("FlumeSmokeGzip", "gzip -d", "*.gz");
   }

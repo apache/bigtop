@@ -42,7 +42,7 @@ class RPMPackage extends ManagedPackage {
     text.each {
       // theoretically RPM can generate multiline output for any field, but we are only allowing description & summary
       if (curMetaKey == "description" || ((it =~ /^\s+: /).find() && curMetaKey == "summary")) {
-        pkg.meta[curMetaKey] <<= "\n${it.replaceAll(/^\s+:/,'')}";
+        pkg.meta[curMetaKey] <<= "\n${it.replaceAll(/^\s+:/, '')}";
       } else {
         def m = (it =~ /(\S+)\s*:\s*(.*)/);
         if (m.size()) {
@@ -115,17 +115,17 @@ Description: %{DESCRIPTION}
 
   List<String> getFiles() {
     shUser.exec("rpm -ql $name | grep -v '^(contains no files)\$'");
-    return shUser.out.collect({"$it"});
+    return shUser.out.collect({ "$it" });
   }
 
   List<String> getConfigs() {
     shUser.exec("rpm -qc $name | grep -v '^(contains no files)\$'");
-    return shUser.out.collect({"$it"});
+    return shUser.out.collect({ "$it" });
   }
 
   List<String> getDocs() {
     shUser.exec("rpm -qd $name | grep -v '^(contains no files)\$'");
-    return shUser.out.collect({"$it"});
+    return shUser.out.collect({ "$it" });
   }
 
   Map<String, String> getDeps() {

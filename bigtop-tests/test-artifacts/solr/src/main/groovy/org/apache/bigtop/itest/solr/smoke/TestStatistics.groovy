@@ -24,11 +24,12 @@ import org.junit.Test
  */
 class TestStatistics extends SolrTestBase {
   @Test
-  public void testCache()  {
+  public void testCache() {
     Object res = doReq(_adminPath + "/mbeans?stats=true")
     ArrayList<Object> beans = res."solr-mbeans"
     for (int idx = 0; idx < beans.size(); idx++) {
-      if (beans[idx] instanceof String && "CACHE".equals(beans[idx])) { // Next object is the stats data for caches.
+      if (beans[idx] instanceof String && "CACHE".equals(beans[idx])) {
+        // Next object is the stats data for caches.
         Object hits = beans[idx + 1].filterCache.stats.hits
         break;
       }

@@ -60,14 +60,14 @@ import org.junit.Test;
 
 import com.google.common.collect.Lists;
 
-public class TestLoadAndVerify  extends Configured implements Tool {
+public class TestLoadAndVerify extends Configured implements Tool {
   private static final String TEST_NAME = "TestLoadAndVerify";
   private static final byte[] TEST_FAMILY = Bytes.toBytes("f1");
   private static final byte[] TEST_QUALIFIER = Bytes.toBytes("q1");
 
   private static final String NUM_TO_WRITE_KEY =
-    "loadmapper.num_to_write";
-  private static final long NUM_TO_WRITE_DEFAULT = 100*1000;
+      "loadmapper.num_to_write";
+  private static final long NUM_TO_WRITE_DEFAULT = 100 * 1000;
 
   private static final String TABLE_NAME_KEY = "loadmapper.table";
   private static final String TABLE_NAME_DEFAULT = "table";
@@ -89,25 +89,24 @@ public class TestLoadAndVerify  extends Configured implements Tool {
   /**
    * Converts a "long" value between endian systems.
    * Borrowed from Apache Commons IO
+   *
    * @param value value to convert
    * @return the converted value
    */
-  public static long swapLong(long value)
-  {
+  public static long swapLong(long value) {
     return
-      ( ( ( value >> 0 ) & 0xff ) << 56 ) +
-      ( ( ( value >> 8 ) & 0xff ) << 48 ) +
-      ( ( ( value >> 16 ) & 0xff ) << 40 ) +
-      ( ( ( value >> 24 ) & 0xff ) << 32 ) +
-      ( ( ( value >> 32 ) & 0xff ) << 24 ) +
-      ( ( ( value >> 40 ) & 0xff ) << 16 ) +
-      ( ( ( value >> 48 ) & 0xff ) << 8 ) +
-      ( ( ( value >> 56 ) & 0xff ) << 0 );
+        (((value >> 0) & 0xff) << 56) +
+            (((value >> 8) & 0xff) << 48) +
+            (((value >> 16) & 0xff) << 40) +
+            (((value >> 24) & 0xff) << 32) +
+            (((value >> 32) & 0xff) << 24) +
+            (((value >> 40) & 0xff) << 16) +
+            (((value >> 48) & 0xff) << 8) +
+            (((value >> 56) & 0xff) << 0);
   }
 
   public static class LoadMapper
-      extends Mapper<NullWritable, NullWritable, NullWritable, NullWritable>
-  {
+      extends Mapper<NullWritable, NullWritable, NullWritable, NullWritable> {
     private long recordsToWrite;
     private HTable table;
     private Configuration conf;
@@ -122,10 +121,10 @@ public class TestLoadAndVerify  extends Configured implements Tool {
     public void setup(Context context) throws IOException {
       conf = context.getConfiguration();
       recordsToWrite = conf.getLong(NUM_TO_WRITE_KEY, NUM_TO_WRITE_DEFAULT);
-      byte [] tableName = Bytes.toBytes(conf.get(TABLE_NAME_KEY, TABLE_NAME_DEFAULT));
+      byte[] tableName = Bytes.toBytes(conf.get(TABLE_NAME_KEY, TABLE_NAME_DEFAULT));
       numBackReferencesPerRow = conf.getInt(NUM_BACKREFS_KEY, NUM_BACKREFS_DEFAULT);
       table = new HTable(conf, tableName);
-      table.setWriteBufferSize(4*1024*1024);
+      table.setWriteBufferSize(4 * 1024 * 1024);
       table.setAutoFlush(false);
 
       String taskId = conf.get("mapred.task.id");
@@ -146,15 +145,15 @@ public class TestLoadAndVerify  extends Configured implements Tool {
     }
 
     @Override
-    protected void map(NullWritable key, NullWritable value, 
-        Context context) throws IOException, InterruptedException {
+    protected void map(NullWritable key, NullWritable value,
+                       Context context) throws IOException, InterruptedException {
 
       String suffix = "/" + shortTaskId;
       byte[] row = Bytes.add(new byte[8], Bytes.toBytes(suffix));
 
-      int BLOCK_SIZE = (int)(recordsToWrite / 100);
+      int BLOCK_SIZE = (int) (recordsToWrite / 100);
 
-      for (long i = 0; i < recordsToWrite;) {
+      for (long i = 0; i < recordsToWrite; ) {
         long blockStart = i;
         for (long idxInBlock = 0;
              idxInBlock < BLOCK_SIZE && i < recordsToWrite;
@@ -198,8 +197,8 @@ public class TestLoadAndVerify  extends Configured implements Tool {
       BytesWritable bwVal = new BytesWritable();
       for (KeyValue kv : value.list()) {
         if (Bytes.compareTo(TEST_QUALIFIER, 0, TEST_QUALIFIER.length,
-                            kv.getBuffer(), kv.getQualifierOffset(), kv.getQualifierLength()) == 0) {
-          context.write(bwKey, EMPTY);          
+            kv.getBuffer(), kv.getQualifierOffset(), kv.getQualifierLength()) == 0) {
+          context.write(bwKey, EMPTY);
         } else {
           bwVal.set(kv.getBuffer(), kv.getQualifierOffset(), kv.getQualifierLength());
           context.write(bwVal, bwKey);
@@ -218,7 +217,7 @@ public class TestLoadAndVerify  extends Configured implements Tool {
 
     @Override
     protected void reduce(BytesWritable referredRow, Iterable<BytesWritable> referrers,
-        VerifyReducer.Context ctx) throws IOException, InterruptedException {
+                          VerifyReducer.Context ctx) throws IOException, InterruptedException {
       boolean gotOriginalRow = false;
       int refCount = 0;
 
@@ -234,7 +233,7 @@ public class TestLoadAndVerify  extends Configured implements Tool {
 
       if (!gotOriginalRow) {
         String parsedRow = makeRowReadable(referredRow.getBytes(), referredRow.getLength());
-        String binRow = Bytes.toStringBinary(referredRow.getBytes(), 0, referredRow.getLength()); 
+        String binRow = Bytes.toStringBinary(referredRow.getBytes(), 0, referredRow.getLength());
         ctx.write(new Text(binRow), new Text(parsedRow));
       }
     }
@@ -248,9 +247,9 @@ public class TestLoadAndVerify  extends Configured implements Tool {
   }
 
   private void doLoad(Configuration conf, HTableDescriptor htd) throws Exception {
-    Path outputDir = 
-      new Path(HBaseTestUtil.getMROutputDir(TEST_NAME),
-          "load-output");
+    Path outputDir =
+        new Path(HBaseTestUtil.getMROutputDir(TEST_NAME),
+            "load-output");
 
     NMapInputFormat.setNumMapTasks(conf, NUM_TASKS);
     conf.set(TABLE_NAME_KEY, htd.getNameAsString());
@@ -271,9 +270,9 @@ public class TestLoadAndVerify  extends Configured implements Tool {
   }
 
   private void doVerify(Configuration conf, HTableDescriptor htd) throws Exception {
-    Path outputDir = 
-      new Path(HBaseTestUtil.getMROutputDir(TEST_NAME),
-          "verify-output");
+    Path outputDir =
+        new Path(HBaseTestUtil.getMROutputDir(TEST_NAME),
+            "verify-output");
 
     Job job = new Job(conf);
     job.setJarByClass(this.getClass());
@@ -299,7 +298,7 @@ public class TestLoadAndVerify  extends Configured implements Tool {
   @Test
   public void testLoadAndVerify() throws Exception {
     HTableDescriptor htd =
-      HBaseTestUtil.createTestTableDescriptor(TEST_NAME, TEST_FAMILY);
+        HBaseTestUtil.createTestTableDescriptor(TEST_NAME, TEST_FAMILY);
     HBaseAdmin admin = HBaseTestUtil.getAdmin();
     assertNotNull("HBaseAdmin shouldn't be null", admin);
     int numPreCreate = 40;
@@ -315,12 +314,12 @@ public class TestLoadAndVerify  extends Configured implements Tool {
     deleteTable(admin, htd);
   }
 
-  private void deleteTable(HBaseAdmin admin, HTableDescriptor htd) 
-    throws IOException, InterruptedException {
+  private void deleteTable(HBaseAdmin admin, HTableDescriptor htd)
+      throws IOException, InterruptedException {
     // Use disableTestAsync because disable can take a long time to complete
-    System.out.print("Disabling table " + htd.getNameAsString() +" ");
+    System.out.print("Disabling table " + htd.getNameAsString() + " ");
     admin.disableTableAsync(htd.getName());
-    
+
     long start = System.currentTimeMillis();
     // NOTE tables can be both admin.isTableEnabled=false and 
     // isTableDisabled=false, when disabling must use isTableDisabled!
@@ -329,11 +328,11 @@ public class TestLoadAndVerify  extends Configured implements Tool {
       Thread.sleep(1000);
     }
     long delta = System.currentTimeMillis() - start;
-    System.out.println(" " + delta +" ms");
-    System.out.println("Deleting table " + htd.getNameAsString() +" ");
+    System.out.println(" " + delta + " ms");
+    System.out.println("Deleting table " + htd.getNameAsString() + " ");
     admin.deleteTable(htd.getName());
   }
-  
+
   public void usage() {
     System.err.println(this.getClass().getSimpleName() + " [-Doptions] <load|verify|loadAndVerify>");
     System.err.println("  Loads a table with row dependencies and verifies the dependency chains");
@@ -345,7 +344,7 @@ public class TestLoadAndVerify  extends Configured implements Tool {
     System.err.println("  -Dloadmapper.numPresplits=<n>    Number of presplit regions to start with (default 40)");
     System.err.println("  -Dverify.scannercaching=<n>      Number hbase scanner caching rows to read (default 50)");
   }
-  
+
   public int run(String argv[]) throws Exception {
     if (argv.length < 1 || argv.length > 1) {
       usage();
@@ -354,16 +353,16 @@ public class TestLoadAndVerify  extends Configured implements Tool {
 
     boolean doLoad = false;
     boolean doVerify = false;
-    boolean doDelete = getConf().getBoolean("loadmapper.deleteAfter",true);
+    boolean doDelete = getConf().getBoolean("loadmapper.deleteAfter", true);
     int numPresplits = getConf().getInt("loadmapper.numPresplits", 40);
 
     if (argv[0].equals("load")) {
       doLoad = true;
     } else if (argv[0].equals("verify")) {
-      doVerify= true;
+      doVerify = true;
     } else if (argv[0].equals("loadAndVerify")) {
-      doLoad=true;
-      doVerify= true;
+      doLoad = true;
+      doVerify = true;
     } else {
       System.err.println("Invalid argument " + argv[0]);
       usage();
@@ -372,7 +371,7 @@ public class TestLoadAndVerify  extends Configured implements Tool {
 
     // create HTableDescriptor for specified table
     String table = getConf().get(TABLE_NAME_KEY, "");
-    HTableDescriptor htd ;
+    HTableDescriptor htd;
     if ("".equals(table)) {
       // Just like the unit test.
       htd = HBaseTestUtil.createTestTableDescriptor(TEST_NAME, TEST_FAMILY);

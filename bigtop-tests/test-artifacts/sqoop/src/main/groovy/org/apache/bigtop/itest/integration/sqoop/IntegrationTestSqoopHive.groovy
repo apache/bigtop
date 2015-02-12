@@ -60,7 +60,7 @@ class IntegrationTestSqoopHive {
   }
 
   @Before
-  public void setUp () {
+  public void setUp() {
     JarContent.unpackJarContainer(IntegrationTestSqoopHive.class, '.', DATA_DIR);
 
     // MySQL preparations
@@ -85,7 +85,7 @@ class IntegrationTestSqoopHive {
   }
 
   @Test
-  public void hiveSqoop () {
+  public void hiveSqoop() {
     def hostname = shell.exec('hostname').out.get(0);
     def dbURL = "jdbc:mysql://$hostname/testhive";
     //Run Sqoop Hive import now
@@ -95,6 +95,6 @@ class IntegrationTestSqoopHive {
     shell.exec("${HIVE_HOME}/bin/hive -f $DATA_DIR/hive-select-table.hql > $OUTFILE");
     assertEquals("Unable to run hive-select-table.hql script", 0, shell.ret);
     assertEquals("Hive output did not match expected output. File: $OUTFILE",
-        0, shell.exec("diff -u $OUTFILE $DATA_DIR/expected-hive-output.txt").getRet() );
+      0, shell.exec("diff -u $OUTFILE $DATA_DIR/expected-hive-output.txt").getRet());
   }
 }

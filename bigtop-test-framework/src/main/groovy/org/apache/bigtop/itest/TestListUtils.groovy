@@ -33,7 +33,7 @@ public class TestListUtils {
     }
 
     List<String> pathArray = pathName.split(FS).toList();
-    def prefix =  "";
+    def prefix = "";
     if (dirPrefix != null)
       prefix = dirPrefix;
 

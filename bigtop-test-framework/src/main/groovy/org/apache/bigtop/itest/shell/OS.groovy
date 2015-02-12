@@ -34,9 +34,9 @@ class OS {
     isLinux = (System.getProperty('os.name') =~ /(?i)linux/).matches();
 
     if (isLinux) {
-        linux_flavor = "lsb_release -i -s".execute().text.trim();
-        linux_codename = "lsb_release -c -s".execute().text.trim();
-        linux_release = "lsb_release -r -s".execute().text.trim();
+      linux_flavor = "lsb_release -i -s".execute().text.trim();
+      linux_codename = "lsb_release -c -s".execute().text.trim();
+      linux_release = "lsb_release -r -s".execute().text.trim();
     }
   }
 }

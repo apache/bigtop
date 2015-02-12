@@ -27,13 +27,13 @@ import org.apache.hadoop.io.*;
 import org.apache.hadoop.conf.Configuration;
 
 public class TestFileAppend {
- 
+
   private static Shell sh = new Shell("/bin/bash -s");
   private static Shell shHDFS = new Shell("/bin/bash", "hdfs");
   private static final String HADOOP_HOME = System.getenv('HADOOP_HOME');
   private static final String HADOOP_CONF_DIR = System.getenv('HADOOP_CONF_DIR');
   private static final String USERNAME = System.getProperty("user.name");
-  private static String date = sh.exec("date").getOut().get(0).replaceAll("\\s","").replaceAll(":","");
+  private static String date = sh.exec("date").getOut().get(0).replaceAll("\\s", "").replaceAll(":", "");
   private static String testAppendInput = "testAppendInput$date";
   private static String testAppendOutput = "testAppendOutput$date";
   private static String namenode;
@@ -67,15 +67,15 @@ public class TestFileAppend {
     if (sh.getRet() == 0) {
       sh.exec("hadoop fs -rmr -skipTrash $testAppendInput");
       assertTrue("Deletion of previous testAppendInputs from HDFS failed",
-          sh.getRet() == 0);
+        sh.getRet() == 0);
     }
 
   }
 
   @Test
-  public void testAppendOnPreExistingFile() { 
+  public void testAppendOnPreExistingFile() {
     FileSystem fs = FileSystem.get(conf);
-    
+
     // setting paths for I/O stream creation
     String myInputPath = namenode + "/user/$USERNAME/$testAppendInput/appendinput2.txt$date";
     Path inFile = new Path(myInputPath);
@@ -83,7 +83,7 @@ public class TestFileAppend {
     String myOutputPath = namenode + "/user/$USERNAME/$testAppendInput/appendinput1.txt$date";
     Path outFile = new Path(myOutputPath);
     assertTrue("Output file not found", fs.exists(outFile));
-    
+
     FSDataInputStream input1 = fs.open(inFile);
     FSDataOutputStream output1 = fs.append(outFile);
 
@@ -100,7 +100,7 @@ public class TestFileAppend {
   @Test
   public void testAppendOnCreatedFile() {
     FileSystem fs = FileSystem.get(conf);
-    
+
     // setting paths for I/O stream creation
     String myOutputCreate = namenode + "/user/$USERNAME/$testAppendInput/appendinput3.txt$date";
     Path outCreate = new Path(myOutputCreate);
@@ -108,7 +108,7 @@ public class TestFileAppend {
     String myString = "-----TEST INPUT1-----\n";
     InputStream is = new ByteArrayInputStream(myString.getBytes());
     IOUtils.copyBytes(is, outputTemp, 4096, true);
- 
+
     String myInputPath = namenode + "/user/$USERNAME/$testAppendInput/appendinput2.txt$date";
     Path inFile = new Path(myInputPath);
     assertTrue("Input file not found", fs.exists(inFile));
@@ -127,8 +127,8 @@ public class TestFileAppend {
     assertTrue("Append did not work", sh.getRet() == 0);
     sh.exec("rm -rf $testAppendOutput", "rm -rf appendinput1.txt$date", "rm -rf appendinput2.txt$date");
     sh.exec("rm -rf appendCorrect.txt$date");
-    sh.exec("rm -rf appendinput3.txt$date"); 
- }
+    sh.exec("rm -rf appendinput3.txt$date");
+  }
 
 
   @Test
@@ -150,11 +150,11 @@ public class TestFileAppend {
     assertTrue("Input file not found", fs.exists(inFile));
     String myOutputPath = namenode + "/user/$USERNAME/$testAppendInput/3mboutput.file$date";
     Path outFile = new Path(myOutputPath);
-    assertTrue("Output file not found", fs.exists(outFile));  
+    assertTrue("Output file not found", fs.exists(outFile));
 
     FSDataInputStream input1 = fs.open(inFile);
     FSDataOutputStream output1 = fs.append(outFile);
-    
+
     // append
     IOUtils.copyBytes(input1, output1, 4096, true);
 
@@ -182,17 +182,17 @@ public class TestFileAppend {
     assertTrue("Input file not found", fs.exists(inFile));
     String myOutputPath = namenode + "/user/$USERNAME/$testAppendInput/test2.file$date";
     Path outFile = new Path(myOutputPath);
-    assertTrue("Output file not found", fs.exists(outFile));  
+    assertTrue("Output file not found", fs.exists(outFile));
 
     FSDataInputStream input1 = fs.open(inFile);
     FSDataOutputStream output1 = fs.append(outFile);
-    
+
     // append
-    IOUtils.copyBytes(input1, output1, 4096, true); 
-  
+    IOUtils.copyBytes(input1, output1, 4096, true);
+
     // running fsck
     shHDFS.exec("hadoop fsck /user/$USERNAME/$testAppendInput/test2.file$date");
-    Boolean success = shHDFS.getOut().get(shHDFS.getOut().size() - 1).contains("is HEALTHY");;
+    Boolean success = shHDFS.getOut().get(shHDFS.getOut().size() - 1).contains("is HEALTHY"); ;
     assertTrue("Append made file unhealthy", success == true);
 
     sh.exec("rm -rf test1.file$date", "rm -rf test2.file$date");
@@ -220,7 +220,7 @@ public class TestFileAppend {
     assertTrue("Input file not found", fs.exists(inFile));
     String myOutputPath = namenode + "/user/$USERNAME/$testAppendInput/test4.file$date";
     Path outFile = new Path(myOutputPath);
-    assertTrue("Output file not found", fs.exists(outFile));  
+    assertTrue("Output file not found", fs.exists(outFile));
 
     FSDataInputStream input1 = fs.open(inFile);
     FSDataOutputStream output1 = fs.append(outFile);
@@ -232,7 +232,7 @@ public class TestFileAppend {
     try {
       FSDataOutputStream output2 = fs2.append(outFile);
       assertTrue("Should not have been able to open second output stream", false);
-      IOUtils.closeStream(output2); 
+      IOUtils.closeStream(output2);
     }
     catch (Exception e) {
     }

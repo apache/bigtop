@@ -62,7 +62,7 @@ public class SolrTestBase {
     String fullUrl = _baseURL + url + ((url.indexOf("?") >= 0) ? "&" : "?") + "wt=json"
     URLConnection conn = new URL(fullUrl).openConnection()
     BufferedReader res = new BufferedReader(new InputStreamReader(
-            conn.getInputStream()))
+      conn.getInputStream()))
     String inputLine;
     StringBuilder sb = new StringBuilder()
     while ((inputLine = res.readLine()) != null) {

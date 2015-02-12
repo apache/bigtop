@@ -96,7 +96,8 @@ public abstract class JarContent {
    * @param filters list of patterns
    * @return filtered-out list of entries
    */
-  def static List<String> applyExcludeFilter(final List<String> list, final List<String> filters) {
+  def static List<String> applyExcludeFilter(
+    final List<String> list, final List<String> filters) {
     List<String> filtered = list.asList();
     ArrayList<String> toRemove = new ArrayList<String>();
 
@@ -155,10 +156,10 @@ public abstract class JarContent {
   public static String getJarName(String baseDir, String namePattern) {
     try {
       return new File(baseDir).list(
-          [accept: {d, f -> f ==~ /$namePattern/ }] as FilenameFilter
+        [accept: { d, f -> f ==~ /$namePattern/ }] as FilenameFilter
       ).toList().get(0);
     } catch (java.lang.IndexOutOfBoundsException ioob) {
-      LOG.error ("No $namePattern has been found under $baseDir. Check your installation.");
+      LOG.error("No $namePattern has been found under $baseDir. Check your installation.");
     } catch (java.lang.NullPointerException npe) {
       LOG.error("No $baseDir exists. Check your installation.");
     }
@@ -173,23 +174,23 @@ public abstract class JarContent {
    * @param includes
    * @throws IOException if can't find class' jar file in the classpath
    */
-  public static void unpackJarContainer (Class ref,
-    String destination, String includes) throws IOException {
+  public static void unpackJarContainer(Class ref,
+                                        String destination, String includes) throws IOException {
     URL connection = JarContent.getJarURL(ref);
     if (connection == null) {
       throw new IOException("Class " + ref.getSimpleName() +
-          " doesn't belong to any jar file in the classpath");
+        " doesn't belong to any jar file in the classpath");
     }
     ZipInputStream fis =
       new ZipInputStream(connection.openConnection().getInputStream());
-    fis.unzip (destination, includes);
+    fis.unzip(destination, includes);
 
   }
 
-  public static unpackJarContainer (String className,
-    String destination, String includes) throws IOException {
+  public static unpackJarContainer(String className,
+                                   String destination, String includes) throws IOException {
     Class cl = Class.forName(className)
-    unpackJarContainer (cl, destination, includes)
+    unpackJarContainer(cl, destination, includes)
   }
 
   private static void bootstrapPlugins() {
@@ -217,7 +218,7 @@ public abstract class JarContent {
           if (!entry.isDirectory()) {
             new File(dest + File.separator + entry.name).parentFile?.mkdirs()
             def output = new FileOutputStream(dest + File.separator
-                + entry.name)
+              + entry.name)
             output.withStream {
               int len;
               byte[] buffer = new byte[4096]
@@ -225,8 +226,7 @@ public abstract class JarContent {
                 output.write(buffer, 0, len);
               }
             }
-          }
-          else {
+          } else {
             new File(dest + File.separator + entry.name).mkdir()
           }
         }

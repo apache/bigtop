@@ -25,14 +25,14 @@ class TestServicesCreateState extends TestServices {
   @Parameters
   static Map<String, Object[]> generateTests() {
     return selectServices(System.getProperty("bigtop.prev.repo.version",
-                                      System.getProperty("bigtop.repo.version", "0.6.0")));
+      System.getProperty("bigtop.repo.version", "0.6.0")));
   }
 
   TestServicesCreateState(Map.Entry ent) {
     super(ent);
   }
 
-  @RunStage(level=1)
+  @RunStage(level = 1)
   @Test
   void verifyState() {
   }

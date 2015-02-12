@@ -41,7 +41,7 @@ public class Putter {
     Put put = null;
     if (result != null) {
       NavigableMap<byte[], NavigableMap<byte[], byte[]>> cfmap =
-        result.getNoVersionMap();
+          result.getNoVersionMap();
 
       if (result.getRow() != null && cfmap != null) {
         put = new Put(result.getRow());
@@ -70,7 +70,7 @@ public class Putter {
   }
 
   public static int doScanAndPut(HTable table, int val, boolean autoflush)
-    throws IOException {
+      throws IOException {
     Scan s = new Scan();
     byte[] start = {};
     byte[] stop = {};
@@ -78,7 +78,7 @@ public class Putter {
     s.setStartRow(start);
     s.setStopRow(stop);
     SingleColumnValueFilter filter = new SingleColumnValueFilter(
-      Bytes.toBytes("f1"), Bytes.toBytes("qual"), CompareOp.EQUAL, value);
+        Bytes.toBytes("f1"), Bytes.toBytes("qual"), CompareOp.EQUAL, value);
     s.setFilter(filter);
 
     table.setAutoFlush(autoflush);
@@ -95,7 +95,7 @@ public class Putter {
   public static void main(String argv[]) throws IOException {
     if (argv.length < 2) {
       System.err.println("usage: " + Putter.class.getSimpleName() +
-                         " <table> <value>");
+          " <table> <value>");
       System.err.println(" <value>: a numeric value [0,500)");
       System.exit(1);
     }
@@ -112,7 +112,7 @@ public class Putter {
     }
     Configuration conf = HBaseConfiguration.create();
 
-    byte [] tableName = Bytes.toBytes(argv[0]);
+    byte[] tableName = Bytes.toBytes(argv[0]);
     int val = Integer.parseInt(argv[1]);
     HTable table = new HTable(conf, tableName);
     for (int i = 0; i < loops; i++) {

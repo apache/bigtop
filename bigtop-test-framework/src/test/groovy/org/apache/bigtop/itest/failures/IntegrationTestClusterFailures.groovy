@@ -67,7 +67,7 @@ public class IntegrationTestClusterFailures {
       Thread.sleep(SLEEP_TIME)
     }
 
-    try{
+    try {
       assert !isCronRunning(), "$CRON_SERVICE hasn't been stopped as expected:"
       println "$CRON_SERVICE stopped. Good."
     } finally {
@@ -104,7 +104,7 @@ public class IntegrationTestClusterFailures {
       Thread.sleep(SLEEP_TIME)
     }
 
-    try{
+    try {
       assert !isCronRunning(), "$CRON_SERVICE hasn't been killed as expected:"
       println "$CRON_SERVICE killed. Good."
     } finally {
@@ -137,7 +137,7 @@ public class IntegrationTestClusterFailures {
       Thread.sleep(SLEEP_TIME)
     }
 
-    try{
+    try {
       assert !isRemoteHostReachable(), "Connection to $testRemoteHost hasn't been killed as expected:"
       println "$testRemoteHost isn't reachable. Good."
     } finally {

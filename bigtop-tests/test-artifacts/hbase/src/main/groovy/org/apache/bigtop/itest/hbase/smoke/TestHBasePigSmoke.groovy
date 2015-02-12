@@ -30,12 +30,12 @@ class TestHBasePigSmoke {
 
   private static String extra_jars =
     System.getProperty("org.apache.bigtop.itest.hbase.smoke.TestHBasePigSmoke.extra_jars",
-                       "");
+      "");
   private static String register_clause = "";
   private static String tmp = "TestHBasePigSmoke-${(new Date().getTime())}";
-  private static String TABLE="smoke-${tmp}";
-  private static String FAM1='family1';
-  private static String FAM2='family2';
+  private static String TABLE = "smoke-${tmp}";
+  private static String FAM1 = 'family1';
+  private static String FAM2 = 'family2';
 
   private static Shell shHBase = new Shell('hbase shell');
   private static Shell shPig = new Shell('pig');
@@ -50,32 +50,34 @@ class TestHBasePigSmoke {
   @BeforeClass
   static void setUp() {
     shHBase.exec("create '$TABLE', '$FAM1', '$FAM2'",
-                 "describe '$TABLE'",
-                 "quit\n");
+      "describe '$TABLE'",
+      "quit\n");
     assertEquals("Creating of the ${TABLE} failed",
-                 0, shHBase.ret);
+      0, shHBase.ret);
   }
 
   @AfterClass
   static void tearDown() {
     shHBase.exec("disable '$TABLE'",
-                 "drop '$TABLE'",
-                 "quit\n");
+      "drop '$TABLE'",
+      "quit\n");
 
     sh.exec("hadoop fs -rmr $TABLE");
   }
 
   @Ignore("BIGTOP-219")
-  @Test(timeout=300000L)
+  @Test(timeout = 300000L)
   public void Pig2HBase() {
     def script = "\n";
 
-    (1..ROW_CNT).each { script <<= String.format('%020d %d %s\n', it, it, 'localhost') }
+    (1..ROW_CNT).each {
+      script <<= String.format('%020d %d %s\n', it, it, 'localhost')
+    }
 
     sh.exec("hadoop dfs -mkdir $TABLE",
-            "hadoop dfs -put <(cat << __EOT__${script}__EOT__) ${TABLE}/data");
+      "hadoop dfs -put <(cat << __EOT__${script}__EOT__) ${TABLE}/data");
     assertEquals("Can't copy data to HDFS",
-                 0, sh.ret);
+      0, sh.ret);
 
     shPig.exec("""
       ${register_clause}
@@ -85,15 +87,15 @@ class TestHBasePigSmoke {
       quit
       """);
     assertEquals("Failed loading data via PIG",
-                 0, shPig.ret);
+      0, shPig.ret);
 
     shHBase.exec("scan '$TABLE'",
-                 "quit\n");
+      "quit\n");
     assertTrue("Scanning the table returned wrong # of rows",
-               (shHBase.out.get(shHBase.out.size() - 3) =~ "^$ROW_CNT row.s. in .* seconds").find());
+      (shHBase.out.get(shHBase.out.size() - 3) =~ "^$ROW_CNT row.s. in .* seconds").find());
   }
 
-  @Test(timeout=300000L)
+  @Test(timeout = 300000L)
   @Ignore("BIGTOP-219")
   public void HBase2Pig() {
     def script = "\n";
@@ -116,6 +118,6 @@ class TestHBasePigSmoke {
 
     sh.exec("hadoop fs -cat $TABLE/pig/part* | wc -l");
     assertEquals("Scanning the PIG output returned wrong # of rows",
-                 ROW_CNT, sh.out.get(0).toInteger());
+      ROW_CNT, sh.out.get(0).toInteger());
   }
 }

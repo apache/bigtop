@@ -34,11 +34,11 @@ class ServiceTest {
     assertEquals("wrong service name", name, svc.getName());
   }
 
-  @Ignore("requires chkconfig") 
+  @Ignore("requires chkconfig")
   @Test
   void testRunLevels() {
     List<String> l = svc.getRunLevels();
     assertTrue("Expected a non-zero size list of registered run levels for ssh service",
-               0 != l.size());
+      0 != l.size());
   }
 }

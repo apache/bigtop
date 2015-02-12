@@ -41,6 +41,7 @@ public class ParameterSetter {
    * with a digit.)
    * If an environment variable is required and it is not set, an
    * AssertionError is thrown.
+   *
    * @param target the test class
    * @throws NoSuchFieldException
    * @throws IllegalAccessException
@@ -68,10 +69,11 @@ public class ParameterSetter {
    * names.
    * If an environment variable is required and it is not set, an
    * AssertionError is thrown.
-   * @param target the test class
+   *
+   * @param target     the test class
    * @param fieldNames the names of the static fields corresponding to the
-   * environment variables; the number of names must match the number of
-   * environment variables
+   *                   environment variables; the number of names must match the number of
+   *                   environment variables
    * @throws NoSuchFieldException
    * @throws IllegalAccessException
    */
@@ -103,6 +105,7 @@ public class ParameterSetter {
    * If a system property is not set, the parameter is set to a default value.
    * Therefore usable default values must be provided in the annotation or else
    * test logic must be written to handle the lack thereof.
+   *
    * @param target the test class
    * @throws NoSuchFieldException
    * @throws IllegalAccessException
@@ -117,17 +120,17 @@ public class ParameterSetter {
       Field field = target.getDeclaredField(name.replace('.', '_'));
       Object value = null;
       switch (prop.type()) {
-      case STRING:
-        value = System.getProperty(name, prop.defaultValue());
-        break;
-      case INT:
-        value = Integer.getInteger(name, prop.intValue());
-        break;
-      case LONG:
-        value = Long.getLong(name, prop.longValue());
-        break;
-      case BOOLEAN:
-        value = Boolean.getBoolean(name);
+        case STRING:
+          value = System.getProperty(name, prop.defaultValue());
+          break;
+        case INT:
+          value = Integer.getInteger(name, prop.intValue());
+          break;
+        case LONG:
+          value = Long.getLong(name, prop.longValue());
+          break;
+        case BOOLEAN:
+          value = Boolean.getBoolean(name);
       }
       field.setAccessible(true);
       field.set(target, value);
@@ -141,10 +144,11 @@ public class ParameterSetter {
    * If a system property is not set, the parameter is set to a default value.
    * Therefore usable default values must be provided in the annotation or else
    * test logic must be written to handle the lack thereof.
-   * @param target the test class
+   *
+   * @param target     the test class
    * @param fieldNames the names of the static fields corresponding to the
-   * system properties; the number of names must match the number of
-   * system properties
+   *                   system properties; the number of names must match the number of
+   *                   system properties
    * @throws NoSuchFieldException
    * @throws IllegalAccessException
    */
@@ -159,17 +163,17 @@ public class ParameterSetter {
       Field field = target.getDeclaredField(fieldNames[i]);
       Object value = null;
       switch (prop.type()) {
-      case STRING:
-        value = System.getProperty(name, prop.defaultValue());
-        break;
-      case INT:
-        value = Integer.getInteger(name, prop.intValue());
-        break;
-      case LONG:
-        value = Long.getLong(name, prop.longValue());
-        break;
-      case BOOLEAN:
-        value = Boolean.getBoolean(name);
+        case STRING:
+          value = System.getProperty(name, prop.defaultValue());
+          break;
+        case INT:
+          value = Integer.getInteger(name, prop.intValue());
+          break;
+        case LONG:
+          value = Long.getLong(name, prop.longValue());
+          break;
+        case BOOLEAN:
+          value = Boolean.getBoolean(name);
       }
       field.setAccessible(true);
       field.set(target, value);

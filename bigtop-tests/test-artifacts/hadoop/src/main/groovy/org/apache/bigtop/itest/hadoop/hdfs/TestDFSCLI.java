@@ -55,7 +55,7 @@ public class TestDFSCLI extends TestHDFSCLI {
     clitestDataDir = new File(TEST_CACHE_DATA_DIR).toURI().toString().replace(' ', '+');
 
     String[] createTestcliDirCmds = {
-        "hadoop fs -mkdir -p "  + TEST_DIR_ABSOLUTE,
+        "hadoop fs -mkdir -p " + TEST_DIR_ABSOLUTE,
         "hadoop fs -chmod 777 " + TEST_DIR_ABSOLUTE
     };
     shHDFS.exec(createTestcliDirCmds);

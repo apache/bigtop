@@ -31,9 +31,12 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.AfterClass;
 import org.junit.Test;
+
 import static org.junit.Assert.assertTrue;
+
 import org.apache.bigtop.itest.shell.Shell;
 import org.apache.bigtop.itest.hbase.util.HBaseTestUtil;
+
 import static org.apache.bigtop.itest.LogErrorsUtils.logError;
 
 public class TestCopyTable {
@@ -48,7 +51,7 @@ public class TestCopyTable {
   private static HTable origTable;
   private static HTable copyTable;
   private static String copyTableCmd =
-    "hbase org.apache.hadoop.hbase.mapreduce.CopyTable";
+      "hbase org.apache.hadoop.hbase.mapreduce.CopyTable";
 
   private static int NUM_ROWS = 5000;
   private static Configuration conf;
@@ -60,12 +63,12 @@ public class TestCopyTable {
     admin = new HBaseAdmin(conf);
 
     HTableDescriptor htd_orig =
-      HBaseTestUtil.createTestTableDescriptor("orig", TEST_FAMILY);
+        HBaseTestUtil.createTestTableDescriptor("orig", TEST_FAMILY);
     admin.createTable(htd_orig);
     orig = htd_orig.getName();
 
     HTableDescriptor htd_copy =
-      HBaseTestUtil.createTestTableDescriptor("copy", TEST_FAMILY);
+        HBaseTestUtil.createTestTableDescriptor("copy", TEST_FAMILY);
     admin.createTable(htd_copy);
     copy = htd_copy.getName();
 
@@ -97,13 +100,13 @@ public class TestCopyTable {
   @Test
   public void testCopyTable() throws Exception {
     sh.exec(copyTableCmd + " --new.name=" + new String(copy) +
-      " " + new String(orig));
+        " " + new String(orig));
     logError(sh);
     assertTrue(sh.getRet() == 0);
 
     String origDigest = HBaseTestUtil.checksumRows(origTable);
     String copyDigest = HBaseTestUtil.checksumRows(copyTable);
     assertTrue("Original and copy tables contain different data",
-               origDigest.equals(copyDigest));
+        origDigest.equals(copyDigest));
   }
 }

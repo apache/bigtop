@@ -49,7 +49,7 @@ public class TestHBaseSmoke {
     HBaseAdmin admin = new HBaseAdmin(conf);
 
     HTableDescriptor htd =
-      HBaseTestUtil.createTestTableDescriptor("testSimplePutGet", TEST_FAMILY);
+        HBaseTestUtil.createTestTableDescriptor("testSimplePutGet", TEST_FAMILY);
     admin.createTable(htd);
 
     byte[] tableName = htd.getName();

@@ -32,7 +32,7 @@ public class TestGiraphSmoke {
 
   static Shell sh = new Shell("/bin/bash -s")
 
-  @Test(timeout=300000L)
+  @Test(timeout = 300000L)
   public void testPageRankBenchmark() {
     sh.exec("${runnerScript} ${giraphJar}"
       + " org.apache.giraph.benchmark.PageRankBenchmark"
@@ -41,11 +41,11 @@ public class TestGiraphSmoke {
       + " -s 3"        // number of supersteps
       + " -V 100000"   // aggregate vertices
       + " -w 3"        // workers
-      )
+    )
     assertEquals("running PageRankBenchmark failed", sh.getRet(), 0);
   }
 
-  @Test(timeout=300000L)
+  @Test(timeout = 300000L)
   public void testRandomMessageBenchmark() {
     sh.exec("${runnerScript} ${giraphJar}"
       + " org.apache.giraph.benchmark.RandomMessageBenchmark"
@@ -56,11 +56,11 @@ public class TestGiraphSmoke {
       + " -w 3"        // workers
       + " -n 10"       // Number of messages per edge
       + " -b 100"      // size of each message in bytes
-      )
+    )
     assertEquals("running RandomMessageBenchmark failed", sh.getRet(), 0);
   }
 
-  @Test(timeout=300000L)
+  @Test(timeout = 300000L)
   public void testSimpleCheckpointVertex() {
     sh.exec("hadoop fs -rmr ${testDir}");
     sh.exec("${runnerScript} ${giraphJar}"
@@ -69,37 +69,37 @@ public class TestGiraphSmoke {
       + " -s 3"        // number of supersteps
       + " -w 3"        // workers
       + " -o ${testDir}"
-      )
+    )
     assertEquals("running SimpleCheckpointVertex failed", sh.getRet(), 0);
   }
 
-  @Test(timeout=300000L)
+  @Test(timeout = 300000L)
   public void testSimpleVertexWithWorkerContext() {
     sh.exec("hadoop fs -rmr ${testDir}");
     sh.exec("${runnerScript} ${giraphJar}"
       + " org.apache.giraph.examples.SimpleVertexWithWorkerContext"
       + " ${testDir} 3"
-      )
+    )
     assertEquals("running SimpleCheckpointVertex failed", sh.getRet(), 0);
   }
 
-  @Test(timeout=300000L)
+  @Test(timeout = 300000L)
   public void testSimpleShortestPathsVertex() {
     // A graph definition: 
     //   [vertex id, vertex value, [[edge1, value1], .. [edgeN, valueN]]] 
-    List graphDescription=[[0, 0, [[1,1], [2,2]]],
-                           [1, 1, [[2,2], [3,3]]],
-                           [2, 2, [[3,3], [4,4]]],
-                           [3, 3, [[4,4], [5,5]]],
-                           [4, 4, [[5,5], [0,0]]],
-                           [5, 5, [[0,0], [1,1]]]];
-    int partitionSize=2;
+    List graphDescription = [[0, 0, [[1, 1], [2, 2]]],
+      [1, 1, [[2, 2], [3, 3]]],
+      [2, 2, [[3, 3], [4, 4]]],
+      [3, 3, [[4, 4], [5, 5]]],
+      [4, 4, [[5, 5], [0, 0]]],
+      [5, 5, [[0, 0], [1, 1]]]];
+    int partitionSize = 2;
 
     sh.exec("hadoop fs -rmr ${testDir}",
-            "hadoop fs -mkdir ${testDir}/input");
+      "hadoop fs -mkdir ${testDir}/input");
 
-    for (int i=0; i<graphDescription.size(); i+=partitionSize)  {
-      String part = graphDescription[i..(i+partitionSize-1)].join("\n");
+    for (int i = 0; i < graphDescription.size(); i += partitionSize) {
+      String part = graphDescription[i..(i + partitionSize - 1)].join("\n");
       int partId = i / partitionSize;
       sh.exec("hadoop fs -put <(echo '${part}') ${testDir}/input/part-m-${partId}");
     }
@@ -109,7 +109,7 @@ public class TestGiraphSmoke {
       + " ${testDir}/input"
       + " ${testDir}/output"
       + " 0 ${graphDescription.size() / partitionSize}"
-      )
+    )
     assertEquals("running SimpleShortestPathsVertex failed", sh.getRet(), 0);
   }
 }

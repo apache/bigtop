@@ -67,10 +67,10 @@ class Shell {
    */
   Shell exec(Object... args) {
     def proc = user ? "sudo -u $user PATH=${System.getenv('PATH')} $shell".execute() :
-                                    "$shell".execute()
+      "$shell".execute()
     script = args.join("\n")
     if (LOG.isTraceEnabled()) {
-        LOG.trace("${shell} << __EOT__\n${script}\n__EOT__");
+      LOG.trace("${shell} << __EOT__\n${script}\n__EOT__");
     }
 
     Thread.start {
@@ -86,8 +86,7 @@ class Shell {
     // empty String
     if (baosErr.size() != 0) {
       err = baosErr.toString().split('\n');
-    }
-    else {
+    } else {
       err = new ArrayList<String>();
     }
 
@@ -95,15 +94,15 @@ class Shell {
     ret = proc.exitValue()
 
     if (LOG.isTraceEnabled()) {
-        if (ret != 0) {
-           LOG.trace("return: $ret");
-        }
-        if (out.size() != 0) {
-           LOG.trace("\n<stdout>\n${out.join('\n')}\n</stdout>");
-        }
-        if (err.size() != 0) {
-           LOG.trace("\n<stderr>\n${err.join('\n')}\n</stderr>");
-        }
+      if (ret != 0) {
+        LOG.trace("return: $ret");
+      }
+      if (out.size() != 0) {
+        LOG.trace("\n<stdout>\n${out.join('\n')}\n</stdout>");
+      }
+      if (err.size() != 0) {
+        LOG.trace("\n<stderr>\n${err.join('\n')}\n</stderr>");
+      }
     }
 
     return this
@@ -123,7 +122,7 @@ class Shell {
    */
   @Override
   String toString() {
-    return signCorrectedReturnCode() + " =>\"" + (script ?: "(no script)") +"\""
+    return signCorrectedReturnCode() + " =>\"" + (script ?: "(no script)") + "\""
   }
 
   /**

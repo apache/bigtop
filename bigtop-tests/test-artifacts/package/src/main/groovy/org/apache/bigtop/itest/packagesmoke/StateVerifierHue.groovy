@@ -25,7 +25,7 @@ class StateVerifierHue extends StateVerifier {
   final static String loginURL = "${hueServer}/accounts/login/";
   final static String checkURL = "${hueServer}/debug/check_config";
   final static String creds = "username=admin&password=admin";
-  final static List<String> checkApps = [ "about", "beeswax", "filebrowser", "help", "jobbrowser", "jobsub", "useradmin" ];
+  final static List<String> checkApps = ["about", "beeswax", "filebrowser", "help", "jobbrowser", "jobsub", "useradmin"];
 
   Shell sh = new Shell();
 
@@ -47,10 +47,10 @@ class StateVerifierHue extends StateVerifier {
     sessionId = sh.getOut().join('');
 
     sh.exec("curl -m 60 -b '${sessionId}' ${checkURL}");
-    res = (sh.getOut().grep( ~/.*All ok. Configuration check passed.*/ ).size() != 0)
+    res = (sh.getOut().grep(~/.*All ok. Configuration check passed.*/).size() != 0)
     checkApps.each {
       sh.exec("curl -m 60 -b '${sessionId}' ${hueServer}/${it}/");
-      res = res && (sh.getOut().grep( ~/.*Page Not Found.*/ ).size() == 0);
+      res = res && (sh.getOut().grep(~/.*Page Not Found.*/).size() == 0);
     }
     return res;
   }

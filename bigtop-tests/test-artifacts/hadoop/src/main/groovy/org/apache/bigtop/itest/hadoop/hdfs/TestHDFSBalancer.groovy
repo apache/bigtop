@@ -27,7 +27,7 @@ import org.apache.bigtop.itest.JarContent;
 import org.apache.bigtop.itest.shell.Shell;
 
 public class TestHDFSBalancer {
- 
+
   private static Shell shHDFS = new Shell("/bin/bash", "hdfs");
   // set with -Dthreshold
   private static String thresh = "10";
@@ -35,10 +35,10 @@ public class TestHDFSBalancer {
   @BeforeClass
   public static void setUp() {
     // unpack resource
-    JarContent.unpackJarContainer(TestHDFSBalancer.class, "." , null);
+    JarContent.unpackJarContainer(TestHDFSBalancer.class, ".", null);
     if (System.getProperty("threshold") != null) {
       thresh = System.getProperty("threshold");
-    }  
+    }
   }
 
   @AfterClass
@@ -46,13 +46,13 @@ public class TestHDFSBalancer {
   }
 
   @Test
-  public void testBalancer() { 
+  public void testBalancer() {
     System.out.println("Running Balancer:");
-    System.out.println("Threshold is set to " + thresh +". Toggle by adding -Dthreshold=#");
+    System.out.println("Threshold is set to " + thresh + ". Toggle by adding -Dthreshold=#");
 
     // must run balancer as hdfs user   
     shHDFS.exec("hdfs balancer -threshold $thresh");
-  
+
     boolean success = false;
     // success_string message signifies balancing worked correctly
     String success_string1 = "The cluster is balanced. Exiting..."
@@ -64,7 +64,7 @@ public class TestHDFSBalancer {
       String next_val = out_iter.next();
       if (next_val.equals(success_string1) || next_val.contains(success_string2) || next_val.contains(success_string3)) {
         success = true;
-       }
+      }
     }
 
     String failure_string1 = "namenodes = []"

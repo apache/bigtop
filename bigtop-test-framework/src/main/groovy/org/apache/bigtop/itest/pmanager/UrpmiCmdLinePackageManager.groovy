@@ -21,8 +21,8 @@ package org.apache.bigtop.itest.pmanager
 import org.apache.bigtop.itest.posix.Service
 
 class UrpmiCmdLinePackageManager extends PackageManager {
-  String type  = "urpmi";
-  
+  String type = "urpmi";
+
   public void setDefaults(String defaults) {}
 
   public int addBinRepo(String record, String url, String key, String cookie) {
@@ -48,7 +48,7 @@ class UrpmiCmdLinePackageManager extends PackageManager {
   public List<PackageInstance> search(String name) {
     def packages = new ArrayList<PackageInstance>();
     shUser.exec("urpmq ${name} | sed -e 's/|/\\n/g' | uniq").out.each {
-      packages.add(PackageInstance.getPackageInstance (this, it))
+      packages.add(PackageInstance.getPackageInstance(this, it))
     }
     return packages
   }

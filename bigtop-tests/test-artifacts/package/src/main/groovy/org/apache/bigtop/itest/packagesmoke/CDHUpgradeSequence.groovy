@@ -44,11 +44,11 @@ class CDHUpgradeSequence {
                      service hadoop-0.20-datanode start                              &&
                      sleep 61
                   """).getRet() +
-      shHDFS.exec("""hadoop dfsadmin -finalizeUpgrade &&
+        shHDFS.exec("""hadoop dfsadmin -finalizeUpgrade &&
                      hadoop fs -chown mapred /mapred/system || /bin/true
                   """).getRet() +
-      shRoot.exec("service hadoop-0.20-datanode stop").getRet() +
-      shRoot.exec("service hadoop-0.20-namenode stop").getRet();
+        shRoot.exec("service hadoop-0.20-datanode stop").getRet() +
+        shRoot.exec("service hadoop-0.20-namenode stop").getRet();
     }
     return 0;
   }

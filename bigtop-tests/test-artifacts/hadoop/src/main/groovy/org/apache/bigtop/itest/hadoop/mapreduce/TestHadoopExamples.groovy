@@ -46,9 +46,9 @@ class TestHadoopExamples {
     JarContent.getJarName(HADOOP_MAPRED_HOME, 'hadoop.*examples.*.jar');
   static {
     assertNotNull("HADOOP_MAPRED_HOME has to be set to run this test",
-        HADOOP_MAPRED_HOME);
+      HADOOP_MAPRED_HOME);
     assertNotNull("HADOOP_CONF_DIR has to be set to run this test",
-        HADOOP_CONF_DIR);
+      HADOOP_CONF_DIR);
     assertNotNull("Can't find hadoop-examples.jar file", hadoopExamplesJar);
   }
   static final String HADOOP_EXAMPLES_JAR =
@@ -57,52 +57,52 @@ class TestHadoopExamples {
   static Shell sh = new Shell("/bin/bash -s");
 
   /**
-  * Public so that we can run these tests as scripts
-  * and the scripts can manually copy resoruces into DFS
-  * See BIGTOP-1222 for example.
-  */
-  public static final String SOURCE ="bigtop-tests/test-artifacts/hadoop/src/main/resources/"
+   * Public so that we can run these tests as scripts
+   * and the scripts can manually copy resoruces into DFS
+   * See BIGTOP-1222 for example.
+   */
+  public static final String SOURCE = "bigtop-tests/test-artifacts/hadoop/src/main/resources/"
   private static final String EXAMPLES = "examples";
   private static final String EXAMPLES_OUT = "examples-output";
   private static Configuration conf;
 
   private static String mr_version = System.getProperty("mr.version", "mr2");
-  
+
   static final String RANDOMTEXTWRITER_TOTALBYTES = (mr_version == "mr1") ?
-      "test.randomtextwrite.total_bytes" : "mapreduce.randomtextwriter.totalbytes";
+    "test.randomtextwrite.total_bytes" : "mapreduce.randomtextwriter.totalbytes";
 
   @AfterClass
   public static void tearDown() {
     sh.exec("hadoop fs -rmr -skipTrash ${EXAMPLES}",
-            "hadoop fs -rmr -skipTrash ${EXAMPLES_OUT}");
+      "hadoop fs -rmr -skipTrash ${EXAMPLES_OUT}");
   }
 
 
   @BeforeClass
   static void setUp() {
     conf = new Configuration();
-    try{
-       //copy examples/ int /user/root/ and
-       //then create examples-output directory
-       TestUtils.unpackTestResources(TestHadoopExamples.class, EXAMPLES, null, EXAMPLES_OUT);
+    try {
+      //copy examples/ int /user/root/ and
+      //then create examples-output directory
+      TestUtils.unpackTestResources(TestHadoopExamples.class, EXAMPLES, null, EXAMPLES_OUT);
     }
-    catch(java.lang.Throwable t){
-        LOG.info("Failed to unpack jar resources.  Attemting to use bigtop sources");
-        def source = System.getenv("BIGTOP_HOME")+"/"+SOURCE;
+    catch (java.lang.Throwable t) {
+      LOG.info("Failed to unpack jar resources.  Attemting to use bigtop sources");
+      def source = System.getenv("BIGTOP_HOME") + "/" + SOURCE;
 
-        assertNotNull("Can't copy test input files from bigtop source dir,"+
-                      "and jar specific attempt failed also", examples);
+      assertNotNull("Can't copy test input files from bigtop source dir," +
+        "and jar specific attempt failed also", examples);
 
-        LOG.info("MAKING DIRECTORIES ..................... ${EXAMPLES} ${EXAMPLES_OUT}");
+      LOG.info("MAKING DIRECTORIES ..................... ${EXAMPLES} ${EXAMPLES_OUT}");
 
-        //add the files in resources/
-        sh.exec("hadoop fs -put ${source}/*.* .");
-        //add the directories under resources (like examples/)
-        sh.exec("hadoop fs -put ${source}/${EXAMPLES} ${EXAMPLES}");
-        sh.exec("hadoop fs -mkdir -p ${EXAMPLES_OUT}");
-   }
-   sh.exec("hadoop fs -ls ${EXAMPLES}");
-   assertTrue("Failed asserting that 'examples' were created in the DFS", sh.getRet()==0);
+      //add the files in resources/
+      sh.exec("hadoop fs -put ${source}/*.* .");
+      //add the directories under resources (like examples/)
+      sh.exec("hadoop fs -put ${source}/${EXAMPLES} ${EXAMPLES}");
+      sh.exec("hadoop fs -mkdir -p ${EXAMPLES_OUT}");
+    }
+    sh.exec("hadoop fs -ls ${EXAMPLES}");
+    assertTrue("Failed asserting that 'examples' were created in the DFS", sh.getRet() == 0);
   }
 
   static long terasortid = System.currentTimeMillis();
@@ -115,17 +115,17 @@ class TestHadoopExamples {
   public static String pi_samples = System.getProperty("pi_samples", "1000");
   static LinkedHashMap examples =
     [
-        pi                :"${pi_maps} ${pi_samples}",
-        wordcount         :"$EXAMPLES/text $EXAMPLES_OUT/wordcount",
-        teragen           :"${terasort_rows} teragen${terasortid}",
-        terasort          :"teragen${terasortid} terasort${terasortid}",
-        teravalidate      :"terasort${terasortid} tervalidate${terasortid}",
-        multifilewc       :"$EXAMPLES/text $EXAMPLES_OUT/multifilewc",
-        aggregatewordcount:"$EXAMPLES/text $EXAMPLES_OUT/aggregatewordcount 2 textinputformat",
-        aggregatewordhist :"$EXAMPLES/text $EXAMPLES_OUT/aggregatewordhist 2 textinputformat",
-        grep              :"$EXAMPLES/text $EXAMPLES_OUT/grep '[Cc]uriouser'",
-        secondarysort     :"$EXAMPLES/ints $EXAMPLES_OUT/secondarysort",
-        randomtextwriter  :"-D $RANDOMTEXTWRITER_TOTALBYTES=1073741824 $EXAMPLES_OUT/randomtextwriter"
+      pi: "${pi_maps} ${pi_samples}",
+      wordcount: "$EXAMPLES/text $EXAMPLES_OUT/wordcount",
+      teragen: "${terasort_rows} teragen${terasortid}",
+      terasort: "teragen${terasortid} terasort${terasortid}",
+      teravalidate: "terasort${terasortid} tervalidate${terasortid}",
+      multifilewc: "$EXAMPLES/text $EXAMPLES_OUT/multifilewc",
+      aggregatewordcount: "$EXAMPLES/text $EXAMPLES_OUT/aggregatewordcount 2 textinputformat",
+      aggregatewordhist: "$EXAMPLES/text $EXAMPLES_OUT/aggregatewordhist 2 textinputformat",
+      grep: "$EXAMPLES/text $EXAMPLES_OUT/grep '[Cc]uriouser'",
+      secondarysort: "$EXAMPLES/ints $EXAMPLES_OUT/secondarysort",
+      randomtextwriter: "-D $RANDOMTEXTWRITER_TOTALBYTES=1073741824 $EXAMPLES_OUT/randomtextwriter"
     ];
 
   private String testName;
@@ -147,10 +147,10 @@ class TestHadoopExamples {
 
   @Test
   void testMRExample() {
-    if(FailureVars.instance.getRunFailures()
-        || FailureVars.instance.getServiceRestart()
-        || FailureVars.instance.getServiceKill()
-        || FailureVars.instance.getNetworkShutdown()) {
+    if (FailureVars.instance.getRunFailures()
+      || FailureVars.instance.getServiceRestart()
+      || FailureVars.instance.getServiceKill()
+      || FailureVars.instance.getNetworkShutdown()) {
       runFailureThread();
     }
     sh.exec("hadoop jar $testJar $testName $testArgs");

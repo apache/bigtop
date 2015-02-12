@@ -29,6 +29,7 @@ class JarContentTest {
     def list = JarContent.listContent(env['JAVA_HOME'] + '/lib/tools.jar');
     assertTrue("Jar content should be greater than 10", list.size() > 10);
   }
+
   @Test(expected = IOException.class)
   void testJarContentNeg() {
     def env = System.getenv();
@@ -36,7 +37,7 @@ class JarContentTest {
       JarContent.listContent(env['JAVA_HOME'] + '/lib/nofilelikethat.jar').each {
         println it;
       }
-      assert("IOException should have been thrown");
+      assert ("IOException should have been thrown");
     } catch (IOException e) {
       throw e;
     };
@@ -61,10 +62,10 @@ class JarContentTest {
   @Test
   void testGetJarName() {
     assertEquals("Should've find tools.jar file",
-        'tools.jar',
-        JarContent.getJarName(System.getenv()['JAVA_HOME'] + '/lib/', 't.*.jar'));
+      'tools.jar',
+      JarContent.getJarName(System.getenv()['JAVA_HOME'] + '/lib/', 't.*.jar'));
     assertEquals("Should not have found tools.jar file", null,
-        JarContent.getJarName(System.getenv()['JAVA_HOME'] + '/lib/', 'nosuch-file.*.jar'));
+      JarContent.getJarName(System.getenv()['JAVA_HOME'] + '/lib/', 'nosuch-file.*.jar'));
   }
 
   // ClassNotException is expected to be thrown in case of non-existing class

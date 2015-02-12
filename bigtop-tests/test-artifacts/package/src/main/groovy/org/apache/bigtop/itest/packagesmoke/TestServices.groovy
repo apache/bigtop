@@ -73,21 +73,21 @@ class TestServices {
     }
   }
 
-  @RunStage(level=-1)
+  @RunStage(level = -1)
   @Test
   void createState() {
     checkThat("failed to configure service ${svcs.get(0).getName()}",
-              verifier.config(), equalTo(true));
+      verifier.config(), equalTo(true));
 
     svcs.each {
       checkThat("service ${it.getName()} failed to start",
-                it.start(), equalTo(0));
+        it.start(), equalTo(0));
     }
 
     sleep(60001);
     verifier.createState();
     checkThat("initial state verification failed",
-              verifier.verifyState(), equalTo(true));
+      verifier.verifyState(), equalTo(true));
 
     svcs.reverseEach {
       // TODO: we're only trying the best we can here
@@ -103,21 +103,21 @@ class TestServices {
     }
   }
 
-  @RunStage(level=1)
+  @RunStage(level = 1)
   @Test
   void verifyState() {
     svcs.each {
       checkThat("failed to configure service ${it.getName()}",
-                verifier.config(), equalTo(true));
+        verifier.config(), equalTo(true));
     }
 
     svcs.each {
       checkThat("service ${it.getName()} failed to start",
-                it.start(), equalTo(0));
+        it.start(), equalTo(0));
     }
     sleep(60001);
     checkThat("state verification failed after daemons got restarted",
-              verifier.verifyState(), equalTo(true));
+      verifier.verifyState(), equalTo(true));
 
     svcs.reverseEach { it.stop(); }
     sleep(5001);
@@ -127,7 +127,7 @@ class TestServices {
       if (!shRoot.getRet()) {
         shRoot.exec("kill -9 `ps -U${it} -opid=`");
         checkThat("service running under the name of $it is supposed to be stopped, but it is not",
-                  true, equalTo(false));
+          true, equalTo(false));
       }
     }
   }

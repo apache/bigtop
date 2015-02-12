@@ -29,14 +29,14 @@ public class TestHueSmoke {
   final static String loginURL = "${hueServer}/accounts/login/";
   final static String checkURL = "${hueServer}/debug/check_config";
   final static String creds = "username=admin&password=admin";
-  final static Map checkApps = [ "about"            : "<title>About Hue</title>",
-                                 "filebrowser/view" : "<title>File Browser</title>",
-                                 "help"             : "<title>Hue Help</title>",
-                                 // FIXME: HUE-10 "jobbrowser"       : "<title>Error</title>",
-                                 "jobsub"           : "<title>Job Designer</title>",
-                                 "useradmin"        : "<title>Hue Users</title>",
-                                 "beeswax"          : "<title>Hive Query</title>",
-                                 "oozie"            : "<title>Oozie App</title>" ];
+  final static Map checkApps = ["about": "<title>About Hue</title>",
+    "filebrowser/view": "<title>File Browser</title>",
+    "help": "<title>Hue Help</title>",
+    // FIXME: HUE-10 "jobbrowser"       : "<title>Error</title>",
+    "jobsub": "<title>Job Designer</title>",
+    "useradmin": "<title>Hue Users</title>",
+    "beeswax": "<title>Hive Query</title>",
+    "oozie": "<title>Oozie App</title>"];
 
   Shell sh = new Shell();
 
@@ -53,7 +53,7 @@ public class TestHueSmoke {
 
     sh.exec("curl -m 60 -b '${sessionId}' ${checkURL}");
     assertTrue("Global configuration check failed",
-               sh.getOut().grep( ~/.*All ok. Configuration check passed.*/ ).size() > 0);
+      sh.getOut().grep(~/.*All ok. Configuration check passed.*/).size() > 0);
     checkApps.each { app, expected ->
       sh.exec("curl -m 60 -b '${sessionId}' ${hueServer}/${app}/");
       if (sh.getOut().join(' ').indexOf(expected) == -1) {
@@ -61,6 +61,6 @@ public class TestHueSmoke {
       }
     }
     assertEquals("Application(s) ${failedApps} failed to respond",
-                 failedApps.size(), 0);
+      failedApps.size(), 0);
   }
 }

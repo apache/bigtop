@@ -32,23 +32,23 @@ public class JUnitUtils {
    */
   static boolean executeTests(Class... testClasses) {
     def ant = new AntBuilder()
-    def res = ant.junit (printsummary:'yes', fork:'yes', forkmode:'once', 
-                         errorproperty: DETECT_ERRORS, failureproperty: DETECT_FAILS) {
-          System.getProperties().each { k, v ->
-            sysproperty(key: k, value: v)
-          }
-          classpath {
-             System.getProperty('java.class.path').
-                    split(System.getProperty('path.separator',':')).each {
-               pathelement(location: it);
-             }
-          }
-          testClasses.each {
-            test(name: it.getName(), todir: System.getProperty(RESULTS_DIR, '.'));
-          }
-          formatter(type:'xml');
+    def res = ant.junit(printsummary: 'yes', fork: 'yes', forkmode: 'once',
+      errorproperty: DETECT_ERRORS, failureproperty: DETECT_FAILS) {
+      System.getProperties().each { k, v ->
+        sysproperty(key: k, value: v)
+      }
+      classpath {
+        System.getProperty('java.class.path').
+          split(System.getProperty('path.separator', ':')).each {
+          pathelement(location: it);
+        }
+      }
+      testClasses.each {
+        test(name: it.getName(), todir: System.getProperty(RESULTS_DIR, '.'));
+      }
+      formatter(type: 'xml');
     }
     return !(ant.project.getProperty(DETECT_FAILS) == "true" ||
-             ant.project.getProperty(DETECT_ERRORS) == "true");
+      ant.project.getProperty(DETECT_ERRORS) == "true");
   }
 }

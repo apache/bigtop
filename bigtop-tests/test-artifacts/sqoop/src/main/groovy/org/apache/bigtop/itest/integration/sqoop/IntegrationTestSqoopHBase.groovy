@@ -59,6 +59,7 @@ public class IntegrationTestSqoopHBase {
     test.exec("hadoop fs -mkdir $path");
     return test.getRet();
   }
+
   public static int rmr(String path) {
     Shell rmr = new Shell("/bin/bash -s");
     rmr.exec("hadoop fs -rmr -skipTrash $path");
@@ -66,11 +67,11 @@ public class IntegrationTestSqoopHBase {
   }
 
   public static String mktemps() {
-     mkdir("IntegrationTestSqoopHBase-${(new Date().getTime())}");
+    mkdir("IntegrationTestSqoopHBase-${(new Date().getTime())}");
   }
 
   @Before
-  public void setUp () {
+  public void setUp() {
     JarContent.unpackJarContainer(IntegrationTestSqoopHBase.class, '.', DATA_DIR);
 
     rmr('test_table');
@@ -85,7 +86,7 @@ public class IntegrationTestSqoopHBase {
     def out = shell.out.join('\n');
 
     assertFalse("Unable to create HBase table by script create-table.hxt",
-        (out =~ /ERROR/).find());
+      (out =~ /ERROR/).find());
   }
 
   @After
@@ -95,7 +96,7 @@ public class IntegrationTestSqoopHBase {
   }
 
   @Test
-  public void hBaseSqoop () {
+  public void hBaseSqoop() {
     def hostname = shell.exec('hostname').out.get(0);
     def dbURL = "jdbc:mysql://$hostname/testhbase";
     def OUTFILE = 'outfile.txt';
@@ -108,6 +109,6 @@ public class IntegrationTestSqoopHBase {
     // TODO need to conver shell callouts to power tools with Java parsing of
     // ' 10                                    column=data:b, timestamp=1301075559859, value=ten'
     assertEquals("HBase scan output did not match expected output. File: $OUTFILE",
-        0, shell.exec("diff -u $OUTFILE expected-hbase-output.txt.resorted").getRet() );
+      0, shell.exec("diff -u $OUTFILE expected-hbase-output.txt.resorted").getRet());
   }
 }

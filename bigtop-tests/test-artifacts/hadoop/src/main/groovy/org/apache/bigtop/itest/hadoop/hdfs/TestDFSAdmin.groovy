@@ -27,14 +27,14 @@ import org.apache.bigtop.itest.JarContent;
 import org.apache.bigtop.itest.shell.Shell;
 
 public class TestDFSAdmin {
- 
+
   // set debugging variable to true if you want error messages sent to stdout
   private static Shell shHDFS = new Shell("/bin/bash", "hdfs");
 
   @BeforeClass
   public static void setUp() {
     // unpack resource
-    JarContent.unpackJarContainer(TestDFSAdmin.class, "." , null);
+    JarContent.unpackJarContainer(TestDFSAdmin.class, ".", null);
     System.out.println("Running DFSAdmin commands:");
   }
 
@@ -43,32 +43,32 @@ public class TestDFSAdmin {
   }
 
   @Test
-  public void testDFSbasic() { 
+  public void testDFSbasic() {
     // report
-    System.out.println("-report"); 
-    shHDFS.exec("hdfs dfsadmin -report");    
+    System.out.println("-report");
+    shHDFS.exec("hdfs dfsadmin -report");
     assertTrue("-report failed", shHDFS.getRet() == 0);
 
     // help
-    System.out.println("-help"); 
+    System.out.println("-help");
     shHDFS.exec("hdfs dfsadmin -help");
     assertTrue("-help failed", shHDFS.getRet() == 0);
 
     // printTopology
-    System.out.println("-printTopology"); 
+    System.out.println("-printTopology");
     shHDFS.exec("hdfs dfsadmin -printTopology");
     assertTrue("-printTopology failed", shHDFS.getRet() == 0);
 
     // metasave
     System.out.println("-metasave");
     shHDFS.exec("hdfs dfsadmin -metasave metasave_test");
-    assertTrue("-metasave failed", shHDFS.getRet() == 0); 
+    assertTrue("-metasave failed", shHDFS.getRet() == 0);
   }
 
   @Test
   public void testDFSsafemode() {
     // safemode
-    System.out.println("-safemode"); 
+    System.out.println("-safemode");
     shHDFS.exec("hdfs dfsadmin -safemode leave");
     assertTrue("-safemode leave failed", shHDFS.getRet() == 0);
     shHDFS.exec("hdfs dfsadmin -safemode get");
@@ -80,25 +80,25 @@ public class TestDFSAdmin {
     assertTrue("-safemode get failed", shHDFS.getOut().get(0) == "Safe mode is ON");
     assertTrue("-safemode get failed", shHDFS.getRet() == 0);
     shHDFS.exec("hdfs dfsadmin -safemode leave");
-    assertTrue("-safemode leave failed", shHDFS.getRet() == 0); 
+    assertTrue("-safemode leave failed", shHDFS.getRet() == 0);
   }
 
   @Test
   public void testDFSnamespace() {
     // saveNamespace
     System.out.println("-saveNamespace");
-    shHDFS.exec("hdfs dfsadmin -safemode enter"); 
+    shHDFS.exec("hdfs dfsadmin -safemode enter");
     shHDFS.exec("hdfs dfsadmin -saveNamespace");
     assertTrue("-saveNamespace failed", shHDFS.getRet() == 0);
     shHDFS.exec("hdfs dfsadmin -safemode leave");
-    shHDFS.exec("hdfs dfsadmin -saveNamespace"); 
+    shHDFS.exec("hdfs dfsadmin -saveNamespace");
     assertTrue("-saveNamespace worked in non safemode", shHDFS.getRet() != 0);
   }
 
   @Test
   public void testDFSrefreshcommands() {
     // refreshNodes
-    System.out.println("-refreshNodes"); 
+    System.out.println("-refreshNodes");
     shHDFS.exec("hdfs dfsadmin -refreshNodes");
     assertTrue("-refreshNodes failed", shHDFS.getRet() == 0);
 
@@ -107,7 +107,7 @@ public class TestDFSAdmin {
     shHDFS.exec("hdfs dfsadmin -refreshServiceAcl");
     System.out.println(shHDFS.getRet());
     assertTrue("-refreshServiceAcl failed", shHDFS.getRet() == 0); */
-   
+
     // refreshUserToGroupsMappings
     System.out.println("-refreshUserToGroupsMappings");
     shHDFS.exec("hdfs dfsadmin -refreshUserToGroupsMappings");
@@ -116,13 +116,13 @@ public class TestDFSAdmin {
     // refreshSuperUserGroupsConfiguration
     System.out.println("-refreshSuperUserGroupsConfiguration");
     shHDFS.exec("hdfs dfsadmin -refreshSuperUserGroupsConfiguration");
-    assertTrue("-refreshSuperUserGroupsConfiguration failed", shHDFS.getRet() == 0); 
+    assertTrue("-refreshSuperUserGroupsConfiguration failed", shHDFS.getRet() == 0);
   }
 
   @Test
-  public void testDFSstorage() {  
+  public void testDFSstorage() {
     // restoreFailedStorage
-    System.out.println("-restoreFailedStorage"); 
+    System.out.println("-restoreFailedStorage");
     shHDFS.exec("hdfs dfsadmin -restoreFailedStorage false");
     assertTrue("-restoreFailedStorage false failed", shHDFS.getRet() == 0);
     shHDFS.exec("hdfs dfsadmin -restoreFailedStorage check");
@@ -134,7 +134,7 @@ public class TestDFSAdmin {
     assertTrue("-restoreFailedStorage check", shHDFS.getOut().get(0) == "restoreFailedStorage is set to true");
     assertTrue("-restoreFailedStorage check", shHDFS.getRet() == 0);
     shHDFS.exec("hdfs dfsadmin -restoreFailedStorage false");
-    assertTrue("-restoreFailedStorage false failed", shHDFS.getRet() == 0); 
+    assertTrue("-restoreFailedStorage false failed", shHDFS.getRet() == 0);
   }
 
   @Test
@@ -142,18 +142,18 @@ public class TestDFSAdmin {
     // setQuota, clrQuota
     System.out.println("-setQuota, -clrQuota");
     shHDFS.exec("date");
-    String quota_test = "quota_test" + shHDFS.getOut().get(0).replaceAll("\\s","").replaceAll(":","");
+    String quota_test = "quota_test" + shHDFS.getOut().get(0).replaceAll("\\s", "").replaceAll(":", "");
     shHDFS.exec("hadoop fs -test -e $quota_test");
     if (shHDFS.getRet() == 0) {
       shHDFS.exec("hadoop fs -rmr -skipTrash $quota_test");
       assertTrue("Deletion of previous testDistcpInputs from HDFS failed",
-          shHDFS.getRet() == 0);
+        shHDFS.getRet() == 0);
     }
     shHDFS.exec("hadoop fs -mkdir -p $quota_test");
     shHDFS.exec("hdfs dfsadmin -setQuota 1000 $quota_test");
     assertTrue("-setQuota failed", shHDFS.getRet() == 0);
     shHDFS.exec("hdfs dfsadmin -clrQuota $quota_test");
-    assertTrue("-clrQuota failed", shHDFS.getRet() == 0); 
+    assertTrue("-clrQuota failed", shHDFS.getRet() == 0);
 
     // setSpaceQuota, clrSpaceQuota
     System.out.println("-setSpaceQuota, -clrSpaceQuota");
@@ -161,7 +161,7 @@ public class TestDFSAdmin {
     assertTrue("-setSpaceQuota failed", shHDFS.getRet() == 0);
     shHDFS.exec("hdfs dfsadmin -clrSpaceQuota $quota_test");
     assertTrue("-clrSpaceQuota failed", shHDFS.getRet() == 0);
-    shHDFS.exec("hadoop fs -rmr $quota_test"); 
+    shHDFS.exec("hadoop fs -rmr $quota_test");
   }
 
 }

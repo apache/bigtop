@@ -26,7 +26,7 @@ class TestServicesVerifyState extends TestServices {
     super(ent);
   }
 
-  @RunStage(level=-1)
+  @RunStage(level = -1)
   @Test
   void createState() {
   }

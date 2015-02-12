@@ -22,12 +22,12 @@ import org.apache.bigtop.itest.shell.Shell
 
 public class LogErrorsUtils {
 
-  static void logError (final Shell sh) {
+  static void logError(final Shell sh) {
     if (sh.getRet()) {
-      println ('Failed command: ' + sh.script);
-      println ('\terror code: ' + sh.getRet());
-      println ('\tstdout: ' + sh.getOut());
-      println ('\tstderr: ' + sh.getErr());
+      println('Failed command: ' + sh.script);
+      println('\terror code: ' + sh.getRet());
+      println('\tstdout: ' + sh.getOut());
+      println('\tstderr: ' + sh.getErr());
     }
   }
 

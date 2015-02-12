@@ -29,13 +29,13 @@ import static org.junit.Assert.assertEquals
 class OrderedTest {
   static List order = [];
 
-  @RunStage(level=1)
+  @RunStage(level = 1)
   @Test
   public void lateTest() {
     order.add(1);
   }
 
-  @RunStage(level=-1)
+  @RunStage(level = -1)
   @Test
   public void earlyTest() {
     order.add(-1);
@@ -49,6 +49,6 @@ class OrderedTest {
   @AfterClass
   static void verifyOrder() {
     assertEquals("tests were NOT executed in the desired order",
-                 [-1, 0, 1], order);
+      [-1, 0, 1], order);
   }
 }

@@ -27,14 +27,14 @@ import org.apache.bigtop.itest.JarContent;
 import org.apache.bigtop.itest.shell.Shell;
 
 public class TestRmAdmin {
- 
+
   // set debugging variable to true if you want error messages sent to stdout
   private static Shell sh = new Shell("/bin/bash");
 
   @BeforeClass
   public static void setUp() {
     // unpack resource
-    JarContent.unpackJarContainer(TestRmAdmin.class, "." , null);
+    JarContent.unpackJarContainer(TestRmAdmin.class, ".", null);
     System.out.println("Running RmAdmin commands:");
   }
 
@@ -43,10 +43,10 @@ public class TestRmAdmin {
   }
 
   @Test
-  public void testRmAdminBasic() { 
+  public void testRmAdminBasic() {
     // help
-    System.out.println("-help"); 
-    sh.exec("YARN_ROOT_LOGGER=WARN,console yarn rmadmin -help");    
+    System.out.println("-help");
+    sh.exec("YARN_ROOT_LOGGER=WARN,console yarn rmadmin -help");
     assertTrue("-help failed", sh.getRet() == 0);
 
     // getGroups
@@ -54,7 +54,7 @@ public class TestRmAdmin {
     sh.exec("YARN_ROOT_LOGGER=WARN,console yarn rmadmin -getGroups");
     assertTrue("-getGroups failed", sh.getRet() == 0);
   }
-  
+
   @Test
   public void testRmAdminRefreshcommands() {
     // refreshQueues

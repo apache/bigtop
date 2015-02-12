@@ -28,7 +28,7 @@ class TestPackagesBasicsWithRM extends TestPackagesBasics {
     super(pkgName, pkgGolden);
   }
 
-  @RunStage(level=10)
+  @RunStage(level = 10)
   @Test
   void testPackageRemove() {
     checkRemoval();

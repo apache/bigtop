@@ -108,8 +108,8 @@ abstract class PackageInstance {
    * @param name package manager dependent name of a package
    */
   static public PackageInstance getPackageInstance(PackageManager mgr, String name) {
-    PackageInstance pkg = (mgr.type == "apt" ) ? new DEBPackage() :
-                                                 new RPMPackage();
+    PackageInstance pkg = (mgr.type == "apt") ? new DEBPackage() :
+      new RPMPackage();
     pkg.mgr = mgr;
     pkg.name = name;
     return pkg;

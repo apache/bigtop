@@ -40,7 +40,7 @@ public class TestUtils {
    */
   public static void unpackTestResources(Class ref, String inputDir, String[] inputFiles, String outputDir) {
     // Unpack resource
-    JarContent.unpackJarContainer(ref, '.' , null);
+    JarContent.unpackJarContainer(ref, '.', null);
 
     // create input dir in HDFS
     if (inputDir != null) {
@@ -48,7 +48,7 @@ public class TestUtils {
       if (sh.getRet() == 0) {
         sh.exec("hadoop fs -rmr -skipTrash ${inputDir}");
         assertTrue("Deletion of previous $inputDir from the DFS failed",
-            sh.getRet() == 0);
+          sh.getRet() == 0);
       }
       if (inputFiles != null) {
         sh.exec("hadoop fs -mkdir -p ${inputDir}");
@@ -71,7 +71,7 @@ public class TestUtils {
       if (sh.getRet() == 0) {
         sh.exec("hadoop fs -rmr -skipTrash ${outputDir}");
         assertTrue("Deletion of previous examples output from the DFS failed",
-            sh.getRet() == 0);
+          sh.getRet() == 0);
       }
       sh.exec("hadoop fs -mkdir -p ${outputDir}");
       assertTrue("Could not create output directory in DFS", sh.getRet() == 0);

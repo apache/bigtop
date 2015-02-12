@@ -30,10 +30,10 @@ class TestTextSnappy {
   static String snappyFile = "part-00001.snappy"
 
   @BeforeClass
-  static void  setUp() throws IOException {
+  static void setUp() throws IOException {
     sh.exec(
-    "hadoop fs  -mkdir ${testDir}",
-    "hadoop fs -put ${snappyFile} ${testDir}/${snappyFile}",
+      "hadoop fs  -mkdir ${testDir}",
+      "hadoop fs -put ${snappyFile} ${testDir}/${snappyFile}",
     )
     logError(sh)
   }

@@ -27,65 +27,65 @@ import org.junit.rules.ErrorCollector
 import static org.hamcrest.CoreMatchers.equalTo
 
 class DeployCDH {
-    List<String> cdh2 = [
-     "hadoop-0.20", "hadoop-0.20-conf-pseudo", "hadoop-0.20-datanode",
-     "hadoop-0.20-fuse", "hadoop-0.20-jobtracker", "hadoop-0.20-namenode", "hadoop-0.20-native",
-     "hadoop-0.20-pipes", "hadoop-0.20-secondarynamenode", "hadoop-0.20-source",
-     "hadoop-0.20-tasktracker", "hadoop-hive", "hadoop-pig" ];
-    List<String> cdh3b2 = [
-     "flume", "flume-master", "flume-agent", "hadoop-0.20", "hadoop-0.20-conf-pseudo", "hadoop-0.20-conf-pseudo-hue",
-     "hadoop-0.20-datanode", "hadoop-0.20-fuse", "hadoop-0.20-jobtracker", "hadoop-0.20-namenode", "hadoop-0.20-native",
-     "hadoop-0.20-pipes", "hadoop-0.20-secondarynamenode", "hadoop-0.20-source",
-     "hadoop-0.20-tasktracker", "hadoop-hbase",
-     "hadoop-hbase-master", "hadoop-hbase-regionserver", "hadoop-hbase-thrift", "hadoop-hive", "hadoop-pig",
-     "hadoop-zookeeper", "hadoop-zookeeper-server", "hue", "hue-about", "hue-beeswax", "hue-common",
-     "hue-filebrowser", "hue-help", "hue-jobbrowser", "hue-jobsub", "hue-plugins", "hue-proxy",
-     "hue-useradmin", "oozie", "sqoop" ];
-    List<String> cdh3b3 = [
-     "flume", "flume-master", "flume-agent", "hadoop-0.20", "hadoop-0.20-conf-pseudo",
-     "hadoop-0.20-datanode", "hadoop-0.20-fuse", "hadoop-0.20-jobtracker", "hadoop-0.20-namenode", "hadoop-0.20-native",
-     "hadoop-0.20-pipes", "hadoop-0.20-sbin", "hadoop-0.20-secondarynamenode", "hadoop-0.20-source",
-     "hadoop-0.20-tasktracker", "hadoop-hbase", "hadoop-hbase-doc",
-     "hadoop-hbase-master", "hadoop-hbase-regionserver", "hadoop-hbase-thrift", "hadoop-hive", "hadoop-pig",
-     "hadoop-zookeeper", "hadoop-zookeeper-server", "hue", "hue-about", "hue-beeswax", "hue-common",
-     "hue-filebrowser", "hue-help", "hue-jobbrowser", "hue-jobsub", "hue-plugins", "hue-proxy",
-     "hue-useradmin", "oozie", "oozie-client", "sqoop", "sqoop-metastore" ];
+  List<String> cdh2 = [
+    "hadoop-0.20", "hadoop-0.20-conf-pseudo", "hadoop-0.20-datanode",
+    "hadoop-0.20-fuse", "hadoop-0.20-jobtracker", "hadoop-0.20-namenode", "hadoop-0.20-native",
+    "hadoop-0.20-pipes", "hadoop-0.20-secondarynamenode", "hadoop-0.20-source",
+    "hadoop-0.20-tasktracker", "hadoop-hive", "hadoop-pig"];
+  List<String> cdh3b2 = [
+    "flume", "flume-master", "flume-agent", "hadoop-0.20", "hadoop-0.20-conf-pseudo", "hadoop-0.20-conf-pseudo-hue",
+    "hadoop-0.20-datanode", "hadoop-0.20-fuse", "hadoop-0.20-jobtracker", "hadoop-0.20-namenode", "hadoop-0.20-native",
+    "hadoop-0.20-pipes", "hadoop-0.20-secondarynamenode", "hadoop-0.20-source",
+    "hadoop-0.20-tasktracker", "hadoop-hbase",
+    "hadoop-hbase-master", "hadoop-hbase-regionserver", "hadoop-hbase-thrift", "hadoop-hive", "hadoop-pig",
+    "hadoop-zookeeper", "hadoop-zookeeper-server", "hue", "hue-about", "hue-beeswax", "hue-common",
+    "hue-filebrowser", "hue-help", "hue-jobbrowser", "hue-jobsub", "hue-plugins", "hue-proxy",
+    "hue-useradmin", "oozie", "sqoop"];
+  List<String> cdh3b3 = [
+    "flume", "flume-master", "flume-agent", "hadoop-0.20", "hadoop-0.20-conf-pseudo",
+    "hadoop-0.20-datanode", "hadoop-0.20-fuse", "hadoop-0.20-jobtracker", "hadoop-0.20-namenode", "hadoop-0.20-native",
+    "hadoop-0.20-pipes", "hadoop-0.20-sbin", "hadoop-0.20-secondarynamenode", "hadoop-0.20-source",
+    "hadoop-0.20-tasktracker", "hadoop-hbase", "hadoop-hbase-doc",
+    "hadoop-hbase-master", "hadoop-hbase-regionserver", "hadoop-hbase-thrift", "hadoop-hive", "hadoop-pig",
+    "hadoop-zookeeper", "hadoop-zookeeper-server", "hue", "hue-about", "hue-beeswax", "hue-common",
+    "hue-filebrowser", "hue-help", "hue-jobbrowser", "hue-jobsub", "hue-plugins", "hue-proxy",
+    "hue-useradmin", "oozie", "oozie-client", "sqoop", "sqoop-metastore"];
 
-    List<String> aptPkg = [ "hadoop-0.20-doc", "libhdfs0", "libhdfs0-dev", "python-hive" ];
-    List<String> yumPkg = [ "hadoop-0.20-debuginfo", "hadoop-0.20-libhdfs" ];
-    List<String> zypperPkg = [ "hadoop-0.20-libhdfs", "hadoop-0.20-doc" ];
+  List<String> aptPkg = ["hadoop-0.20-doc", "libhdfs0", "libhdfs0-dev", "python-hive"];
+  List<String> yumPkg = ["hadoop-0.20-debuginfo", "hadoop-0.20-libhdfs"];
+  List<String> zypperPkg = ["hadoop-0.20-libhdfs", "hadoop-0.20-doc"];
 
-    Map<String, LinkedHashMap<String, Collection>> distPackages = [
-      "2" : [ "apt" : cdh2 + aptPkg,
-              "yum" : cdh2 + yumPkg + [ "hadoop-0.20-docs", "hadoop-hive-webinterface" ],
-               "zypper" : [],
-              // "cloudera-desktop", "cloudera-desktop-plugins",
-            ],
-    "3b2" : [ "apt" : cdh3b2 + aptPkg,
-              "yum" : cdh3b2 + yumPkg + [ "hadoop-0.20-docs", "hadoop-hive-webinterface" ],
-              "zypper" : [],
-            ],
-    "3b3" : [ "apt" : cdh3b3 + aptPkg + [ "hadoop-hbase-doc",  ],
-              "yum" : cdh3b3 + yumPkg + [ "hadoop-0.20-docs", "hadoop-hive-webinterface" ],
-              "zypper" : [],
-            ],
-    "3b4" : [ "apt" : cdh3b3 + aptPkg + [ "hadoop-hbase-doc",  ],
-              "yum" : cdh3b3 + yumPkg + [ "hadoop-0.20-doc",  "hadoop-hive-webinterface" ],
-              "zypper" : cdh3b3 + zypperPkg,
-            ],
-    "3"   : [ "apt" : cdh3b3 + aptPkg + [ "hadoop-hbase-doc",  ],
-              "yum" : cdh3b3 + yumPkg + [ "hadoop-0.20-doc" ],
-              "zypper" : cdh3b3 + zypperPkg,
-            ],
-    "3u0" : [ "apt" : cdh3b3 + aptPkg + [ "hadoop-hbase-doc",  ],
-              "yum" : cdh3b3 + yumPkg + [ "hadoop-0.20-doc" ],
-              "zypper" : cdh3b3 + zypperPkg,
-            ],
-    "3u1" : [ "apt" : cdh3b3 + aptPkg + [ "hadoop-hbase-doc",  ],
-              "yum" : cdh3b3 + yumPkg + [ "hadoop-0.20-doc" ],
-              "zypper" : cdh3b3 + zypperPkg,
-            ],
-    ];
+  Map<String, LinkedHashMap<String, Collection>> distPackages = [
+    "2": ["apt": cdh2 + aptPkg,
+      "yum": cdh2 + yumPkg + ["hadoop-0.20-docs", "hadoop-hive-webinterface"],
+      "zypper": [],
+      // "cloudera-desktop", "cloudera-desktop-plugins",
+    ],
+    "3b2": ["apt": cdh3b2 + aptPkg,
+      "yum": cdh3b2 + yumPkg + ["hadoop-0.20-docs", "hadoop-hive-webinterface"],
+      "zypper": [],
+    ],
+    "3b3": ["apt": cdh3b3 + aptPkg + ["hadoop-hbase-doc",],
+      "yum": cdh3b3 + yumPkg + ["hadoop-0.20-docs", "hadoop-hive-webinterface"],
+      "zypper": [],
+    ],
+    "3b4": ["apt": cdh3b3 + aptPkg + ["hadoop-hbase-doc",],
+      "yum": cdh3b3 + yumPkg + ["hadoop-0.20-doc", "hadoop-hive-webinterface"],
+      "zypper": cdh3b3 + zypperPkg,
+    ],
+    "3": ["apt": cdh3b3 + aptPkg + ["hadoop-hbase-doc",],
+      "yum": cdh3b3 + yumPkg + ["hadoop-0.20-doc"],
+      "zypper": cdh3b3 + zypperPkg,
+    ],
+    "3u0": ["apt": cdh3b3 + aptPkg + ["hadoop-hbase-doc",],
+      "yum": cdh3b3 + yumPkg + ["hadoop-0.20-doc"],
+      "zypper": cdh3b3 + zypperPkg,
+    ],
+    "3u1": ["apt": cdh3b3 + aptPkg + ["hadoop-hbase-doc",],
+      "yum": cdh3b3 + yumPkg + ["hadoop-0.20-doc"],
+      "zypper": cdh3b3 + zypperPkg,
+    ],
+  ];
 
   @Rule
   public ErrorCollector errors = new ErrorCollector();
@@ -99,7 +99,7 @@ class DeployCDH {
 
     oldRepo.addRepo();
     checkThat("failed to add repository for pre-upgrade CDH deployment",
-              oldRepo.getPm().refresh(), equalTo(0));
+      oldRepo.getPm().refresh(), equalTo(0));
 
     // Lets try to remove existing packages -- just in case
     List stalePkgs = [];
@@ -115,7 +115,7 @@ class DeployCDH {
       // We don't want to install them for a second time.
       if (!pkg.isInstalled()) {
         checkThat("failed to install required package ${pkg.getName()}",
-                  pkg.install(), equalTo(0));
+          pkg.install(), equalTo(0));
       }
       pkg.getServices().each { it.value.stop(); }
     }

@@ -26,7 +26,7 @@ import static org.apache.bigtop.itest.LogErrorsUtils.logError
  * Tests the HDFS fsck command.
  */
 public class TestFsck {
-  static Shell shHDFS = new Shell("/bin/bash", "hdfs" )
+  static Shell shHDFS = new Shell("/bin/bash", "hdfs")
   String[] fsckCmds = [
     "hdfs fsck /",
     "hdfs fsck -move /",

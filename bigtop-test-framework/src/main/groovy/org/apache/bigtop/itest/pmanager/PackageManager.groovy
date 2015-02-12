@@ -40,17 +40,18 @@ public abstract class PackageManager {
    * @param cookie an optional, package manager specific opaque string
    * @return int return code of the operation: o in case of success, non-zero otherwise
    */
-  abstract public int addBinRepo(String record, String url, String key, String cookie)
+  abstract
+  public int addBinRepo(String record, String url, String key, String cookie)
   /**
-  * Register a binary package repository so that packages can be accessed from it.
-  * NOTE: repository management is assumed to follow a KVP API with unique implementation
-  * specific keys (records) referencing tuples of information describing a repository
-  *
-  * @param record a package manager specific KEY portion of the repository registration (null is default)
-  * @param url a URL containing the packages constituting the repository (null is default)
-  * @param key an optional (can be null) cryptographic key for authenticating the content of the repository
-  * @return int return code of the operation: o in case of success, non-zero otherwise
-  */
+   * Register a binary package repository so that packages can be accessed from it.
+   * NOTE: repository management is assumed to follow a KVP API with unique implementation
+   * specific keys (records) referencing tuples of information describing a repository
+   *
+   * @param record a package manager specific KEY portion of the repository registration (null is default)
+   * @param url a URL containing the packages constituting the repository (null is default)
+   * @param key an optional (can be null) cryptographic key for authenticating the content of the repository
+   * @return int return code of the operation: o in case of success, non-zero otherwise
+   */
   public int addBinRepo(String record, String url, String key) {
     addBinRepo(record, url);
   }
@@ -79,7 +80,6 @@ public abstract class PackageManager {
    * @return int return code of the operation: o in case of success, non-zero otherwise
    */
   abstract public int refresh()
-
 
   /**
    * De-register a binary package repository.
@@ -133,9 +133,9 @@ public abstract class PackageManager {
    * @param pkg a package that is expected to provide 0, 1 or multiple services
    * @return list of Service instances
    */
-   public Map<String, Service> getServices(PackageInstance pkg) {
-     return pkg.getServices();
-   }
+  public Map<String, Service> getServices(PackageInstance pkg) {
+    return pkg.getServices();
+  }
 
   /**
    * List a content of a given package
@@ -143,9 +143,9 @@ public abstract class PackageManager {
    * @param pkg a package that is expected to provide >1 entry in its content
    * @return list file and directory names belong to the package.
    */
-   public List<String> getContentList(PackageInstance pkg) {
-     return pkg.getFiles();
-   }
+  public List<String> getContentList(PackageInstance pkg) {
+    return pkg.getFiles();
+  }
 
   /**
    * List config files in a given package
@@ -153,9 +153,9 @@ public abstract class PackageManager {
    * @param pkg a package in question
    * @return list config file names that belong to the package.
    */
-   public List<String> getConfigs(PackageInstance pkg) {
-     return pkg.getConfigs();
-   }
+  public List<String> getConfigs(PackageInstance pkg) {
+    return pkg.getConfigs();
+  }
 
   /**
    * List documentation files in a given package
@@ -163,15 +163,15 @@ public abstract class PackageManager {
    * @param pkg a package in question
    * @return list documentation file names that belong to the package.
    */
-   public List<String> getDocs(PackageInstance pkg) {
-     return pkg.getDocs();
-   }
+  public List<String> getDocs(PackageInstance pkg) {
+    return pkg.getDocs();
+  }
 
   /**
    * type of a package manager. expected to be overwritten by concrete subclasses implementing
    * particular package managers (yum, apt, zypper, etc.)
    */
-  String type  = "abstract"
+  String type = "abstract"
 
   /**
    * A registry location for repositories to be added to. Currently all the package managers
@@ -204,11 +204,11 @@ public abstract class PackageManager {
    * @deprecated it is now recommended to use getServices() instead
    */
   @Deprecated
-   public void svc_do(PackageInstance pkg, String action) {
-     pkg.getServices().each {
-       it."$action"()
-     }
-   }
+  public void svc_do(PackageInstance pkg, String action) {
+    pkg.getServices().each {
+      it."$action"()
+    }
+  }
 
   /**
    * Returns a concrete implementation of PackageManager specific for a given linux

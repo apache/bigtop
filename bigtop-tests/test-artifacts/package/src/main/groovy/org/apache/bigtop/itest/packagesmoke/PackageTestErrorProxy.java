@@ -19,16 +19,18 @@ package org.apache.bigtop.itest.packagesmoke;
 
 import org.hamcrest.Matcher;
 import org.junit.rules.ErrorCollector;
+
 import java.util.concurrent.Callable;
+
 import static org.junit.Assert.assertThat;
 
 public class PackageTestErrorProxy {
   static public void checkThat(ErrorCollector ec, final String msg, final Object value, final Matcher<Object> matcher) {
     ec.checkSucceeds(new Callable<Object>() {
-        public Object call() throws Exception {
-            assertThat(msg, value, matcher);
-            return value;
-        }
+      public Object call() throws Exception {
+        assertThat(msg, value, matcher);
+        return value;
+      }
     });
   }
 

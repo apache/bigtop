@@ -113,7 +113,7 @@ class TestHBaseImportExport {
     String origDigest = HBaseTestUtil.checksumRows(origTable)
     String exportDigest = HBaseTestUtil.checksumRows(exportTable)
     assertTrue("Original and exported tables contain different data",
-               origDigest.equals(exportDigest))
+      origDigest.equals(exportDigest))
   }
 
 }

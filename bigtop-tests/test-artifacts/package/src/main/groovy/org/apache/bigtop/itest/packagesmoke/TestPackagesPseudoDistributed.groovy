@@ -28,17 +28,17 @@ class TestPackagesPseudoDistributed extends TestPackagesBasics {
     super(pkgName, pkgGolden);
   }
 
-  @RunStage(level=-3)
+  @RunStage(level = -3)
   @Test
   synchronized void testRemoteMetadata() {
   }
 
-  @RunStage(level=-1)
+  @RunStage(level = -1)
   @Test
   void testPackageUpgrade() {
     if (isUpgrade()) {
       checkThat("upgrade sequence on a package $name failed to be executed",
-                BTUpgradeSequence.execute(name, System.getProperty("bigtop.prev.repo.version"), "0.5.0"), equalTo(0));
+        BTUpgradeSequence.execute(name, System.getProperty("bigtop.prev.repo.version"), "0.5.0"), equalTo(0));
     }
   }
 

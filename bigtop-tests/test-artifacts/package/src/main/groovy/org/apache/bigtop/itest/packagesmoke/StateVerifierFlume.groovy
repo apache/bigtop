@@ -30,14 +30,14 @@ class StateVerifierFlume extends StateVerifier {
     String node;
     sleep(120001);
     shFlume.exec("connect localhost",
-                 "getnodestatus",
-                 "quit\n");
-    node = shFlume.getOut().join(' ').replaceAll(/ --> IDLE.*$/,'')
-                                     .replaceAll(/^.*Master knows about [0-9]* nodes /,'')
-                                     .trim();
+      "getnodestatus",
+      "quit\n");
+    node = shFlume.getOut().join(' ').replaceAll(/ --> IDLE.*$/, '')
+      .replaceAll(/^.*Master knows about [0-9]* nodes /, '')
+      .trim();
     shFlume.exec("connect localhost",
-                 "exec config $node 'text(\"/etc/group\")' 'collectorSink(\"hdfs://localhost/flume\",\"test\")'",
-                 "quit\n");
+      "exec config $node 'text(\"/etc/group\")' 'collectorSink(\"hdfs://localhost/flume\",\"test\")'",
+      "quit\n");
     sleep(5001);
   }
 

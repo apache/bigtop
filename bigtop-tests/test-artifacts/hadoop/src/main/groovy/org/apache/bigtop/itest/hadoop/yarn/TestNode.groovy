@@ -27,14 +27,14 @@ import org.apache.bigtop.itest.JarContent;
 import org.apache.bigtop.itest.shell.Shell;
 
 public class TestNode {
- 
+
   // set debugging variable to true if you want error messages sent to stdout
   private static Shell sh = new Shell("/bin/bash");
 
   @BeforeClass
   public static void setUp() {
     // unpack resource
-    JarContent.unpackJarContainer(TestNode.class, "." , null);
+    JarContent.unpackJarContainer(TestNode.class, ".", null);
     System.out.println("Running Node commands:");
   }
 
@@ -43,10 +43,10 @@ public class TestNode {
   }
 
   @Test
-  public void testNodeBasic() { 
+  public void testNodeBasic() {
     // list
-    System.out.println("-list"); 
-    sh.exec("YARN_ROOT_LOGGER=WARN,console yarn node -list");    
+    System.out.println("-list");
+    sh.exec("YARN_ROOT_LOGGER=WARN,console yarn node -list");
     assertTrue("-list failed", sh.getRet() == 0);
 
     // status

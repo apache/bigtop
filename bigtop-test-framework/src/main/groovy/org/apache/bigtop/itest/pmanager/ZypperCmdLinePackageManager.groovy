@@ -21,9 +21,9 @@ package org.apache.bigtop.itest.pmanager
 import org.apache.bigtop.itest.posix.Service
 
 class ZypperCmdLinePackageManager extends PackageManager {
-  String type  = "zypper";
+  String type = "zypper";
   String repository_registry = "/etc/zypp/repos.d/%s.repo";
-  
+
   private String key_opts = "--gpg-auto-import-keys";
 
   public void setDefaults(String defaults) {}
@@ -51,7 +51,7 @@ class ZypperCmdLinePackageManager extends PackageManager {
   public List<PackageInstance> search(String name) {
     def packages = new ArrayList<PackageInstance>();
     shUser.exec("zypper search $name").out.each {
-      packages.add(PackageInstance.getPackageInstance (this, ((it =~ /^(.*|)(.*)(|.*)$/)[0][2])))
+      packages.add(PackageInstance.getPackageInstance(this, ((it =~ /^(.*|)(.*)(|.*)$/)[0][2])))
     }
     return packages
   }

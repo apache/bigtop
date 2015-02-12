@@ -50,13 +50,13 @@ public class FailureVars {
   }
 
   protected FailureVars() {
-    if(propertyFile != null) {
+    if (propertyFile != null) {
       loadProps();
     }
   }
 
   public static FailureVars getInstance() {
-    if(instance == null) {
+    if (instance == null) {
       instance = new FailureVars();
     }
     return instance;
@@ -65,8 +65,8 @@ public class FailureVars {
   private void loadProps() {
     try {
       File pFile = new File(propertyFile);
-      assert(pFile.exists()) : "Failure properties file cannot be read";
-      BufferedReader is = new BufferedReader (new InputStreamReader(getClass(pFile)));
+      assert (pFile.exists()): "Failure properties file cannot be read";
+      BufferedReader is = new BufferedReader(new InputStreamReader(getClass(pFile)));
       System.out.println("Input Stream Location: " + is);
       Properties props = new Properties();
       props.load(is);
@@ -82,7 +82,7 @@ public class FailureVars {
       startDelay = Long.parseLong(props.getProperty("startdelay"));
       killDuration = Long.parseLong(props.getProperty("killduration"));
     }
-    catch(IOException ioe) {
+    catch (IOException ioe) {
       System.out.println(ioe.getMessage());
     }
   }
@@ -124,8 +124,9 @@ public class FailureVars {
   }
 
   public long getKillDuration() {
-    return killDuration*1000;
+    return killDuration * 1000;
   }
+
   public String getTestHost() {
     return testHost;
   }
@@ -139,7 +140,7 @@ public class FailureVars {
   }
 
   public long getStartDelay() {
-    return startDelay*1000;
+    return startDelay * 1000;
   }
 
 
@@ -160,7 +161,7 @@ public class FailureVars {
   }
 
   public long getFailureDelay() {
-    return failureDelay*1000;
+    return failureDelay * 1000;
   }
 
   int getSleepTime() {

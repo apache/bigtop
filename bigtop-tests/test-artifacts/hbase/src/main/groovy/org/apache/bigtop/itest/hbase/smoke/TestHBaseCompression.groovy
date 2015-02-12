@@ -42,7 +42,7 @@ class TestHBaseCompression {
   static void setUp() {
     conf = new Configuration();
     conf.addResource('mapred-site.xml');
-    HADOOP_OPTIONS = 
+    HADOOP_OPTIONS =
       "-fs ${conf.get('fs.default.name')} -jt ${conf.get('mapred.job.tracker')}";
     sh.exec("whoami");
     String user = sh.out[0];
@@ -51,7 +51,7 @@ class TestHBaseCompression {
     if (sh.getRet() == 0) {
       sh.exec("hadoop fs $HADOOP_OPTIONS -rmr -skipTrash $OUTPUT");
       assertTrue("Deletion of previous $OUTPUT from HDFS failed",
-          sh.getRet() == 0);
+        sh.getRet() == 0);
     }
     sh.exec("hadoop fs $HADOOP_OPTIONS -mkdir $OUTPUT");
     assertTrue("Could not create $OUTPUT directory", sh.getRet() == 0);
@@ -63,14 +63,14 @@ class TestHBaseCompression {
     if (sh.getRet() == 0) {
       sh.exec("hadoop fs $HADOOP_OPTIONS -rmr -skipTrash $OUTPUT");
       assertTrue("Deletion of $OUTPUT from HDFS failed",
-          sh.getRet() == 0);
+        sh.getRet() == 0);
     }
   }
 
   void _testCompression(String codec) {
     // workaround for hbase; set HBASE_LIBRARY_PATH
     sh.exec("export HBASE_LIBRARY_PATH=$JAVA_LIBRARY_PATH",
-            "hbase $TEST $HDFS_PATH/testfile.$codec $codec");
+      "hbase $TEST $HDFS_PATH/testfile.$codec $codec");
     assertTrue("test failed with codec: $codec", sh.getRet() == 0);
   }
 

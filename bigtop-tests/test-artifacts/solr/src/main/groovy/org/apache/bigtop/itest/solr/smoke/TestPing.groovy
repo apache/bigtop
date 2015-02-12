@@ -17,6 +17,7 @@
 package org.apache.bigtop.itest.solr.smoke
 
 import org.junit.Test
+
 /**
  * Utterly trivial test to see if the server is running
  */

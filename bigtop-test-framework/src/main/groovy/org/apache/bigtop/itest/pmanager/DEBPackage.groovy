@@ -89,7 +89,7 @@ class DEBPackage extends ManagedPackage {
 
   public List<String> getFiles() {
     shUser.exec("env DEBIAN_FRONTEND=noninteractive dpkg -L $name");
-    return shUser.out.collect({"$it"});
+    return shUser.out.collect({ "$it" });
   }
 
   public List<String> getConfigs() {

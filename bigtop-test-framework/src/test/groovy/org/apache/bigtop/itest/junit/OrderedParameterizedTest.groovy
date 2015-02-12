@@ -30,13 +30,13 @@ class OrderedParameterizedTest {
   int parameter;
   static List order = [];
 
-  @RunStage(level=1)
+  @RunStage(level = 1)
   @Test
   public void lateTest() {
     order.add(1);
   }
 
-  @RunStage(level=-1)
+  @RunStage(level = -1)
   @Test
   public void earlyTest() {
     order.add(-1);
@@ -61,6 +61,6 @@ class OrderedParameterizedTest {
   @AfterClass
   static void verifyOrder() {
     assertEquals("tests were NOT executed in the desired order",
-                 [-1, 0, 1], order);
+      [-1, 0, 1], order);
   }
 }

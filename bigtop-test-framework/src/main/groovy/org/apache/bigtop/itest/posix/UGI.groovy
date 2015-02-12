@@ -49,22 +49,22 @@ class UGI {
     (new File("/etc/passwd")).eachLine {
       // NOTE: the :x bit is a workaround for split to work on strings like +::::::
       def chunks = "${it}:x".split(':');
-      users[chunks[0]] = [ passwd : chunks[1],
-                           uid    : chunks[2],
-                           gid    : chunks[3],
-                           descr  : chunks[4],
-                           home   : chunks[5],
-                           shell  : chunks[6],
-                         ];
+      users[chunks[0]] = [passwd: chunks[1],
+        uid: chunks[2],
+        gid: chunks[3],
+        descr: chunks[4],
+        home: chunks[5],
+        shell: chunks[6],
+      ];
       tmp_groups[chunks[3]] = chunks[0];
     }
     (new File("/etc/group")).eachLine {
       def chunks = it.split(':');
 
-      groups[chunks[0]] = [ passwd : chunks[1],
-                            gid    : chunks[2],
-                            users  : ((chunks.size() == 4) ? chunks[3].split(',').toList() : []),
-                          ];
+      groups[chunks[0]] = [passwd: chunks[1],
+        gid: chunks[2],
+        users: ((chunks.size() == 4) ? chunks[3].split(',').toList() : []),
+      ];
 
       if (tmp_groups[chunks[2]] != null) {
         groups[chunks[0]].users.add(tmp_groups[chunks[2]]);

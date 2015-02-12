@@ -31,15 +31,16 @@ public class FailureExecutor implements Runnable {
     if (startDelay > 0) {
       try {
         Thread.sleep(startDelay)
-      } catch (InterruptedException e) {}
+      } catch (InterruptedException e) {
+      }
     }
-    if(restart != null && restart.equals("true")) {
+    if (restart != null && restart.equals("true")) {
       serviceRestartExec();
     }
-    if(kill != null && kill.equals("true")) {
+    if (kill != null && kill.equals("true")) {
       serviceKillExec();
     }
-    if(shutdown != null && shutdown.equals("true")) {
+    if (shutdown != null && shutdown.equals("true")) {
       networkShutdownExec();
     }
   }

@@ -58,8 +58,10 @@ class TestPackagesBasics extends PackageTestCommon {
 
   @BeforeClass
   public static void setUp() {
-    tryOrFail({repo.addRepo()}, 2, "adding repository failed");
-    tryOrFail({(repo.getPm().refresh() == 0)}, 1, "refreshing repository failed");
+    tryOrFail({ repo.addRepo() }, 2, "adding repository failed");
+    tryOrFail({
+      (repo.getPm().refresh() == 0)
+    }, 1, "refreshing repository failed");
   }
 
   @AfterClass
@@ -71,36 +73,38 @@ class TestPackagesBasics extends PackageTestCommon {
   private static void mergeTreeIntoForrest(NodeList forrest, Node tree) {
     for (it in forrest) {
       if (it instanceof Node && it.name() == tree.name()) {
-        tree.value().groupBy({(it instanceof Node)?it.name():"-$it"}).each { k,v -> 
+        tree.value().groupBy({
+          (it instanceof Node) ? it.name() : "-$it"
+        }).each { k, v ->
           if (v.size() == 1 && v.get(0) instanceof Node) {
             mergeTreeIntoForrest(it.value(), v.get(0));
           } else if (v.size() != 1) {
             it.value().addAll(v);
           }
         }
-      return;
-     }
-   }
-   forrest.add(tree);
+        return;
+      }
+    }
+    forrest.add(tree);
   }
-    
+
   private static Node mergeTrees(Node n1, Node n2) {
-     Node merge = new Node(null, "merge");
-     merge.append(n1);
-     mergeTreeIntoForrest(merge.value(), n2);
-     return (merge.children().size() == 1) ? merge.children().get(0) :
-                                             merge;
-  } 
+    Node merge = new Node(null, "merge");
+    merge.append(n1);
+    mergeTreeIntoForrest(merge.value(), n2);
+    return (merge.children().size() == 1) ? merge.children().get(0) :
+      merge;
+  }
 
   @Parameters
   public static Map<String, Object[]> generateTests() {
     String type = TestPackagesBasics.pm.getType();
-    String arch = (new Shell()).exec("uname -m").getOut().get(0).replaceAll(/i.86/,"i386").replaceAll(/x86_64/,"amd64");
+    String arch = (new Shell()).exec("uname -m").getOut().get(0).replaceAll(/i.86/, "i386").replaceAll(/x86_64/, "amd64");
     String archTranslated = (type == "apt") ? "" : ((arch == "amd64") ? ".x86_64" : ".${arch}");
     def config = mergeTrees(new XmlParser().parse(TestPackagesBasics.class.getClassLoader().
-                                            getResourceAsStream("package_data.xml")),
-                            new XmlParser().parse(TestPackagesBasics.class.getClassLoader().
-                                            getResourceAsStream("${type}/package_data.xml")));
+      getResourceAsStream("package_data.xml")),
+      new XmlParser().parse(TestPackagesBasics.class.getClassLoader().
+        getResourceAsStream("${type}/package_data.xml")));
 
     Map<String, Object[]> res = [:];
 
@@ -135,35 +139,37 @@ class TestPackagesBasics extends PackageTestCommon {
     name = pkgName;
     golden = pkgGolden;
     // hopefully the following line will go away soon, once PackageInstance becomes more sophisticated
-    synchronized (pkgs) { pkgs[name] = pkgs[name] ?: PackageInstance.getPackageInstance(pm, name); }
+    synchronized (pkgs) {
+      pkgs[name] = pkgs[name] ?: PackageInstance.getPackageInstance(pm, name);
+    }
     pkg = pkgs[name];
   }
 
-  @RunStage(level=-3)
+  @RunStage(level = -3)
   @Test
-  synchronized void testRemoteMetadata() { 
+  synchronized void testRemoteMetadata() {
     if (!isUpgrade()) {
       if (pkg.isInstalled()) {
         checkThat("package $name is already installed and could not be removed",
-                  pkg.remove(), equalTo(0));
+          pkg.remove(), equalTo(0));
       }
 
       checkRemoteMetadata(getMap(golden.metadata), false);
     }
   }
 
-  @RunStage(level=-2)
+  @RunStage(level = -2)
   @Test
   synchronized void testPackageInstall() {
     // WARNING: sometimes packages do not install because the server is busy
-    for (int i=3; pkg.install() && i>0; i--) {
+    for (int i = 3; pkg.install() && i > 0; i--) {
       recordFailure("can not install package $name will retry $i times");
     }
 
     // TODO: we need to come up with a way to abort any further execution to avoid spurious failures
 
     checkThat("package $name is expected to be installed",
-              pm.isInstalled(pkg), equalTo(true));
+      pm.isInstalled(pkg), equalTo(true));
 
     pkg.refresh();
   }
@@ -212,19 +218,22 @@ class TestPackagesBasics extends PackageTestCommon {
   Map getMapN(Node node) {
     String packagerType = pm.getType();
     Map res = [:];
-                                 node.attributes()
+    node.attributes()
     node.children().each {
       String key = it.name().toString();
-      if (key == "tag" && it.attributes()["name"] != null) { // <tag name="foo"/> -> <foo/>
+      if (key == "tag" && it.attributes()["name"] != null) {
+        // <tag name="foo"/> -> <foo/>
         key = it.attributes()["name"];
       }
       def value = null;
       if (it.children().size() == 0) {  // empty tags <foo/>
         Map attr = it.attributes();
         value = (attr.size() > 0) ? attr : key;
-      } else if (it.children().size() == 1 && it.children().get(0) instanceof java.lang.String) { // text tags <foo>bar</foo>
+      } else if (it.children().size() == 1 && it.children().get(0) instanceof java.lang.String) {
+        // text tags <foo>bar</foo>
         value = it.text();
-      } else if (["apt", "yum", "zypper"].contains(key)) { // poor man's XML filtering
+      } else if (["apt", "yum", "zypper"].contains(key)) {
+        // poor man's XML filtering
         res.putAll((packagerType == key) ? getMapN(it) : [:]);
       } else {
         value = getMapN(it);
@@ -244,10 +253,10 @@ class TestPackagesBasics extends PackageTestCommon {
           if (res[key] instanceof Map && value instanceof Map) {
             res[key].putAll(value);
           } else {
-          if (!(res[key] instanceof List)) {
-            res[key] = [res[key]];
-          }
-          res[key].add(value);
+            if (!(res[key] instanceof List)) {
+              res[key] = [res[key]];
+            }
+            res[key].add(value);
           }
         }
       }
@@ -258,9 +267,9 @@ class TestPackagesBasics extends PackageTestCommon {
 
   public void checkRemoval() {
     checkThat("package $name failed to be removed",
-              pkg.remove(), equalTo(0));
+      pkg.remove(), equalTo(0));
     checkThat("package $name is NOT expected to remain installed after removal",
-              pm.isInstalled(pkg), equalTo(false));
+      pm.isInstalled(pkg), equalTo(false));
 
     checkPackageFilesGotRemoved(getMap(golden.content));
   }

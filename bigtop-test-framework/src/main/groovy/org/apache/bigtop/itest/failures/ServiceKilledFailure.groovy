@@ -55,7 +55,8 @@ public class ServiceKilledFailure extends AbstractFailure {
   /*
    * Populate commands list, making choice between local execution and remote one.
    */
-  private void populateCommandsList(List<String> hosts, String serviceName){
+
+  private void populateCommandsList(List<String> hosts, String serviceName) {
     if (hosts.size() == 1 && "localhost".equalsIgnoreCase(hosts[0])) {
       failCommands.add(String.format(KILL_SERVICE_TEMPLATE, serviceName))
       restoreCommands.add(String.format(START_SERVICE_TEMPLATE, serviceName))

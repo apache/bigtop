@@ -21,7 +21,7 @@ package org.apache.bigtop.itest.pmanager
 import org.apache.bigtop.itest.posix.Service
 
 class YumCmdLinePackageManager extends PackageManager {
-  String type  = "yum";
+  String type = "yum";
   String repository_registry = "/etc/yum.repos.d/%s.repo";
 
   public void setDefaults(String defaults) {}
@@ -31,7 +31,7 @@ class YumCmdLinePackageManager extends PackageManager {
 name="${cookie}"
 baseurl=${url}
 gpgkey=${key}
-gpgcheck=${(key!=null)?1:0}""";
+gpgcheck=${(key != null) ? 1 : 0}""";
 
     return addBinRepo(record, descr);
   }
@@ -41,7 +41,7 @@ gpgcheck=${(key!=null)?1:0}""";
     return 0;
   }
 
-   public int cleanup() {
+  public int cleanup() {
     shRoot.exec("yum clean all");
     return shRoot.getRet();
   }
@@ -50,7 +50,7 @@ gpgcheck=${(key!=null)?1:0}""";
     def packages = new ArrayList<PackageInstance>();
     shUser.exec("yum --color=never -d 0 search $name").out.each {
       if (!(it =~ /^(===================| +: )/)) {
-        packages.add(PackageInstance.getPackageInstance (this, it.replaceAll(/\.(noarch|i386|x86_64).*$/, '')))
+        packages.add(PackageInstance.getPackageInstance(this, it.replaceAll(/\.(noarch|i386|x86_64).*$/, '')))
       }
     }
     return packages

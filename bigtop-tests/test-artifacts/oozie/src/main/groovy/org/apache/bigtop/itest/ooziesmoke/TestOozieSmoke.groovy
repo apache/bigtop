@@ -51,90 +51,90 @@ class TestOozieSmoke {
     assertNotNull("namenode hostname isn't set", namenode)
 
     oozie_tar_home = System.getProperty("org.apache.bigtop.itest.oozie_tar_home",
-                                        (new File("/usr/share/doc/packages/oozie/")).exists() ?
-                                           "/usr/share/doc/packages/oozie/" :
-                                           "/usr/share/doc/oozie*/");
+      (new File("/usr/share/doc/packages/oozie/")).exists() ?
+        "/usr/share/doc/packages/oozie/" :
+        "/usr/share/doc/oozie*/");
 
     sh.exec("mkdir /tmp/${tmp_dir}",
-            "cd /tmp/${tmp_dir}",
-            "tar xzf ${oozie_tar_home}/oozie-examples.tar.gz",
-            "hadoop fs -mkdir ${tmp_dir}",
-            "hadoop fs -put examples ${tmp_dir}");
+      "cd /tmp/${tmp_dir}",
+      "tar xzf ${oozie_tar_home}/oozie-examples.tar.gz",
+      "hadoop fs -mkdir ${tmp_dir}",
+      "hadoop fs -put examples ${tmp_dir}");
     assertEquals("Failed to put examples onto HDFS",
-                 0, sh.ret);
+      0, sh.ret);
   }
 
   @AfterClass
   static void tearDown() {
     sh.exec("rm -rf /tmp/${tmp_dir}",
-            "hadoop fs -rmr ${tmp_dir}");
+      "hadoop fs -rmr ${tmp_dir}");
   }
 
   void testOozieExamplesCommon(String testname) {
     sh.exec("oozie job -oozie ${oozie_url} -run -DjobTracker=${resourcemanager} -DnameNode=${namenode} " +
-            "-DexamplesRoot=${tmp_dir}/examples -config /tmp/${tmp_dir}/examples/apps/${testname}/job.properties");
+      "-DexamplesRoot=${tmp_dir}/examples -config /tmp/${tmp_dir}/examples/apps/${testname}/job.properties");
     assertEquals("Oozie job submition ${testname} failed",
-                 0, sh.ret);
+      0, sh.ret);
 
-    String jobId = sh.out[0].replaceAll(/job: /,"");
+    String jobId = sh.out[0].replaceAll(/job: /, "");
     while (sh.exec("oozie job -oozie ${oozie_url} -info ${jobId}").out.join(' ') =~ /Status\s*:\s*RUNNING/) {
       sleep(WAIT_TIMEOUT);
     }
     assertTrue("Oozie job ${testname} returned ${sh.out.join(' ')} instead of SUCCEEDED",
-               (sh.out.join(' ') =~ /Status\s*:\s*SUCCEEDED/).find());
+      (sh.out.join(' ') =~ /Status\s*:\s*SUCCEEDED/).find());
   }
 
-  @Test(timeout=300000L)
+  @Test(timeout = 300000L)
   public void testNoOp() {
     testOozieExamplesCommon("no-op");
   }
 
-  @Test(timeout=300000L)
+  @Test(timeout = 300000L)
   public void testJavaMain() {
     testOozieExamplesCommon("java-main");
   }
 
-  @Test(timeout=300000L)
+  @Test(timeout = 300000L)
   public void testMapReduce() {
     testOozieExamplesCommon("map-reduce");
   }
 
-  @Test(timeout=300000L)
+  @Test(timeout = 300000L)
   public void testCustomMain() {
     testOozieExamplesCommon("custom-main");
   }
 
-  @Test(timeout=300000L)
+  @Test(timeout = 300000L)
   public void testHadoopEl() {
     testOozieExamplesCommon("hadoop-el");
   }
 
-  @Test(timeout=300000L)
+  @Test(timeout = 300000L)
   public void testStreaming() {
     testOozieExamplesCommon("streaming");
   }
 
-  @Test(timeout=300000L)
+  @Test(timeout = 300000L)
   public void testPig() {
     testOozieExamplesCommon("pig");
   }
 
-  @Test(timeout=300000L)
+  @Test(timeout = 300000L)
   public void testHive() {
     testOozieExamplesCommon("hive");
   }
 
-  @Test(timeout=300000L)
+  @Test(timeout = 300000L)
   public void testSubwf() {
     testOozieExamplesCommon("subwf");
   }
 
-  @Test(timeout=300000L)
+  @Test(timeout = 300000L)
   public void testSsh() {
     // testOozieExamplesCommon("ssh");
   }
 
-  @Test(timeout=300000L)
+  @Test(timeout = 300000L)
   public void testDemo() {
     // testOozieExamplesCommon("demo");
   }

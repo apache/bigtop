@@ -41,6 +41,7 @@ import org.apache.hadoop.hbase.util.Bytes;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
 import org.junit.AfterClass;
 import org.junit.Test;
 import org.junit.Ignore;
@@ -53,28 +54,32 @@ public class TestHFileOutputFormat {
   private static final int ROWSPERSPLIT = 1024;
 
   private static final byte[][] FAMILIES =
-    { Bytes.add(PerformanceEvaluation.FAMILY_NAME, Bytes.toBytes("-A")),
-      Bytes.add(PerformanceEvaluation.FAMILY_NAME, Bytes.toBytes("-B"))};
+      {Bytes.add(PerformanceEvaluation.FAMILY_NAME, Bytes.toBytes("-A")),
+          Bytes.add(PerformanceEvaluation.FAMILY_NAME, Bytes.toBytes("-B"))};
 
   private static final String HBASE_HOME = System.getenv("HBASE_HOME");
   private static final String HBASE_CONF_DIR = System.getenv("HBASE_CONF_DIR");
+
   static {
     assertNotNull("HBASE_HOME has to be set to run this test",
         HBASE_HOME);
     assertNotNull("HBASE_CONF_DIR has to be set to run this test",
         HBASE_CONF_DIR);
   }
+
   private static String hbase_jar =
-    JarContent.getJarName(HBASE_HOME, "hbase-.*(?<!tests).jar");
+      JarContent.getJarName(HBASE_HOME, "hbase-.*(?<!tests).jar");
   private static String hbase_tests_jar =
-    JarContent.getJarName(HBASE_HOME, "hbase-.*tests.jar");
+      JarContent.getJarName(HBASE_HOME, "hbase-.*tests.jar");
   private static URL incrload_jar_url =
-    JarContent.getJarURL(org.apache.bigtop.itest.hbase.smoke.IncrementalPELoad.class);
+      JarContent.getJarURL(org.apache.bigtop.itest.hbase.smoke.IncrementalPELoad.class);
+
   static {
     assertNotNull("Can't find hbase.jar", hbase_jar);
     assertNotNull("Can't find hbase-tests.jar", hbase_tests_jar);
     assertNotNull("Can't find jar containing IncrementalPELoad class", incrload_jar_url);
   }
+
   private static final String HBASE_JAR = HBASE_HOME + "/" + hbase_jar;
   private static final String HBASE_TESTS_JAR = HBASE_HOME + "/" + hbase_tests_jar;
   private static final String ZOOKEEPER_JAR = HBASE_HOME + "/lib/zookeeper.jar";
@@ -102,7 +107,7 @@ public class TestHFileOutputFormat {
     doIncrementalLoadTest("testMRIncrementalLoadWithSplit", true);
   }
 
-  private byte [][] generateRandomSplitKeys(int numKeys) {
+  private byte[][] generateRandomSplitKeys(int numKeys) {
     Random random = new Random();
     byte[][] ret = new byte[numKeys][];
     for (int i = 0; i < numKeys; i++) {
@@ -114,7 +119,7 @@ public class TestHFileOutputFormat {
   private void doIncrementalLoadTest(String testName, boolean shouldChangeRegions)
       throws Exception {
     FileSystem fs = HBaseTestUtil.getClusterFileSystem();
-    Path testDir =  HBaseTestUtil.getMROutputDir(testName);
+    Path testDir = HBaseTestUtil.getMROutputDir(testName);
     byte[][] splitKeys = generateRandomSplitKeys(4);
 
     Configuration conf = HBaseConfiguration.create();
@@ -165,7 +170,7 @@ public class TestHFileOutputFormat {
     // Ensure data shows up
     int expectedRows = NMapInputFormat.getNumMapTasks(conf) * ROWSPERSPLIT;
     assertEquals("LoadIncrementalHFiles should put expected data in table",
-                 expectedRows, HBaseTestUtil.countRows(table));
+        expectedRows, HBaseTestUtil.countRows(table));
     Scan scan = new Scan();
     ResultScanner results = table.getScanner(scan);
     int count = 0;
@@ -180,12 +185,12 @@ public class TestHFileOutputFormat {
     }
     results.close();
     String tableDigestBefore = HBaseTestUtil.checksumRows(table);
-            
+
     // Cause regions to reopen
     admin.disableTable(TABLE_NAME);
     admin.enableTable(TABLE_NAME);
     assertEquals("Data should remain after reopening of regions",
-                 tableDigestBefore, HBaseTestUtil.checksumRows(table));
+        tableDigestBefore, HBaseTestUtil.checksumRows(table));
 
     // cleanup
     // - disable and drop table
@@ -202,7 +207,7 @@ public class TestHFileOutputFormat {
 
   private void runIncrementalPELoad(String table, String outDir) {
     sh.exec("export HADOOP_CLASSPATH=" + HBASE_CONF_DIR + ":" + HBASE_JAR + ":" + HBASE_TESTS_JAR + ":" + ZOOKEEPER_JAR,
-            "hadoop jar " + INCRLOAD_JAR + " " + INCRLOAD +
+        "hadoop jar " + INCRLOAD_JAR + " " + INCRLOAD +
             " -libjars " + HBASE_JAR + "," + HBASE_TESTS_JAR +
             " " + table + " " + outDir);
     assertEquals("MR job failed", 0, sh.getRet());

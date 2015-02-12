@@ -44,10 +44,10 @@ public class TestSparkSmoke implements Serializable {
 
   @BeforeClass
   static void setUp() {
-   sh.exec("pwd")
-   pwd = sh.out
-   int lastIndex = pwd.length() - 1
-   pwd = pwd.substring(1, lastIndex)
+    sh.exec("pwd")
+    pwd = sh.out
+    int lastIndex = pwd.length() - 1
+    pwd = pwd.substring(1, lastIndex)
   }
 
   @Test
@@ -79,7 +79,7 @@ public class TestSparkSmoke implements Serializable {
     String[] jars = [System.getProperty("sparkJar"), org.apache.bigtop.itest.JarContent.getJarURL("groovy.lang.GroovyObject")];
 
     JavaSparkContext sc = new JavaSparkContext("local", "Simple Job",
-        SPARK_HOME, jars);
+      SPARK_HOME, jars);
 
     JavaRDD<String> logData = sc.textFile(logFile).cache();
 
