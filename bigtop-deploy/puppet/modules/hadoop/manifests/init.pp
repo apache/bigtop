@@ -25,27 +25,6 @@ class hadoop ($hadoop_security_authentication = "simple",
 
   include stdlib
 
-  /**
-   * Common definitions for hadoop nodes.
-   * They all need these files so we can access hdfs/jobs from any node
-   */
-   
-  class kerberos {
-    require kerberos::client
-
-    kerberos::host_keytab { "hdfs":
-      princs => [ "host", "hdfs" ],
-      spnego => true,
-      require => Package["hadoop-hdfs"],
-    }
-   
-    kerberos::host_keytab { [ "yarn", "mapred" ]:
-      tag    => "mapreduce",
-      spnego => true,
-      require => Package["hadoop-yarn"],
-    }
-  }
-
   class common ($hadoop_java_home = undef,
       $hadoop_classpath = undef,
       $hadoop_heapsize = undef,
@@ -65,11 +44,7 @@ class hadoop ($hadoop_security_authentication = "simple",
       $hadoop_pid_dir = undef,
       $hadoop_ident_string = undef,
       $hadoop_niceness = undef,
-      $hadoop_security_authentication = $hadoop::hadoop_security_authentication ) inherits hadoop {
-
-    if ($hadoop_security_authentication == "kerberos") {
-      include hadoop::kerberos
-    }
+  ) inherits hadoop {
 
     file {
       "/etc/hadoop/conf/hadoop-env.sh":
@@ -90,7 +65,6 @@ class hadoop ($hadoop_security_authentication = "simple",
 
   class common_yarn (
       $yarn_data_dirs = suffix($hadoop::hadoop_storage_dirs, "/yarn"),
-      $kerberos_realm = $hadoop::kerberos_realm,
       $hadoop_ps_host,
       $hadoop_ps_port = "20888",
       $hadoop_rm_host,
@@ -105,7 +79,10 @@ class hadoop ($hadoop_security_authentication = "simple",
       $yarn_resourcemanager_scheduler_class = undef,
       $yarn_resourcemanager_ha_enabled = undef,
       $yarn_resourcemanager_cluster_id = "ha-rm-uri",
-      $yarn_resourcemanager_zk_address = $hadoop::zk) inherits hadoop {
+      $yarn_resourcemanager_zk_address = $hadoop::zk,
+      $hadoop_security_authentication = $hadoop::hadoop_security_authentication,
+      $kerberos_realm = $hadoop::kerberos_realm,
+  ) inherits hadoop {
 
     include common
 
@@ -113,7 +90,19 @@ class hadoop ($hadoop_security_authentication = "simple",
       ensure => latest,
       require => [Package["jdk"], Package["hadoop"]],
     }
- 
+
+    if ($hadoop_security_authentication == "kerberos") {
+      require kerberos::client
+      kerberos::host_keytab { "yarn":
+        tag    => "mapreduce",
+        spnego => true,
+        # we don't actually need this package as long as we don't put the
+        # keytab in a directory managed by it. But it creates user mapred whom we
+        # wan't to give the keytab to.
+        require => Package["hadoop-yarn"],
+      }
+    }
+
     file {
       "/etc/hadoop/conf/yarn-site.xml":
         content => template('hadoop/yarn-site.xml'),
@@ -211,7 +200,19 @@ class hadoop ($hadoop_security_authentication = "simple",
       ensure => latest,
       require => [Package["jdk"], Package["hadoop"]],
     }
- 
+
+    if ($hadoop_security_authentication == "kerberos") {
+      require kerberos::client
+      kerberos::host_keytab { "hdfs":
+        princs => [ "hdfs", "host" ],
+        spnego => true,
+        # we don't actually need this package as long as we don't put the
+        # keytab in a directory managed by it. But it creates user hdfs whom we
+        # wan't to give the keytab to.
+        require => Package["hadoop-hdfs"],
+      }
+    }
+
     file {
       "/etc/hadoop/conf/core-site.xml":
         content => template('hadoop/core-site.xml'),
@@ -258,6 +259,19 @@ class hadoop ($hadoop_security_authentication = "simple",
       require => [Package["jdk"], Package["hadoop"]],
     }
 
+    if ($hadoop_security_authentication == "kerberos") {
+      require kerberos::client
+
+      kerberos::host_keytab { "mapred":
+        tag    => "mapreduce",
+        spnego => true,
+        # we don't actually need this package as long as we don't put the
+        # keytab in a directory managed by it. But it creates user yarn whom we
+        # wan't to give the keytab to.
+        require => Package["hadoop-mapreduce"],
+      }
+    }
+
     file {
       "/etc/hadoop/conf/mapred-site.xml":
         content => template('hadoop/mapred-site.xml'),
@@ -292,7 +306,8 @@ class hadoop ($hadoop_security_authentication = "simple",
       subscribe => [Package["hadoop-hdfs-datanode"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
       require => [ Package["hadoop-hdfs-datanode"], File["/etc/default/hadoop-hdfs-datanode"], File[$hadoop::common_hdfs::hdfs_data_dirs] ],
     }
-    Kerberos::Host_keytab <| title == "hdfs" |> -> Exec <| tag == "namenode-format" |> -> Service["hadoop-hdfs-datanode"]
+    Kerberos::Host_keytab <| title == "hdfs" |> -> Service["hadoop-hdfs-datanode"]
+    Service<| title == 'hadoop-hdfs-namenode' |> -> Service['hadoop-hdfs-datanode']
 
     file { $hadoop::common_hdfs::hdfs_data_dirs:
       ensure => directory,
@@ -347,7 +362,7 @@ class hadoop ($hadoop_security_authentication = "simple",
   }
 
   class kinit {
-    include hadoop::kerberos
+    include common_hdfs
 
     exec { "HDFS kinit":
       command => "/usr/bin/kinit -kt /etc/hdfs.keytab hdfs/$fqdn && /usr/bin/kinit -R",
