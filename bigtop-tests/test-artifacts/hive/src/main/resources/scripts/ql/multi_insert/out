@@ -813,12 +813,6 @@ Deleted /user/hive/warehouse/src_multi2
 
 select * from src_multi1 order by key, value
 0	val_0
-11	val_11
-12	val_12
-15	val_15
-17	val_17
-18	val_18
-19	val_19
 2	val_2
 4	val_4
 5	val_5
@@ -826,18 +820,12 @@ select * from src_multi1 order by key, value
 9	val_9
 
 select * from src_multi2 order by key, value
-0	val_0
 11	val_11
 12	val_12
 15	val_15
 17	val_17
 18	val_18
 19	val_19
-2	val_2
-4	val_4
-5	val_5
-8	val_8
-9	val_9
 set hive.merge.mapfiles=false
 set hive.merge.mapredfiles=true
 
@@ -1068,12 +1056,6 @@ Deleted /user/hive/warehouse/src_multi2
 
 select * from src_multi1 order by key, value
 0	val_0
-11	val_11
-12	val_12
-15	val_15
-17	val_17
-18	val_18
-19	val_19
 2	val_2
 4	val_4
 5	val_5
@@ -1081,18 +1063,13 @@ select * from src_multi1 order by key, value
 9	val_9
 
 select * from src_multi2 order by key, value
-0	val_0
+
 11	val_11
 12	val_12
 15	val_15
 17	val_17
 18	val_18
 19	val_19
-2	val_2
-4	val_4
-5	val_5
-8	val_8
-9	val_9
 set hive.merge.mapfiles=true
 set hive.merge.mapredfiles=false
 
@@ -1231,12 +1208,6 @@ Deleted /user/hive/warehouse/src_multi2
 
 select * from src_multi1 order by key, value
 0	val_0
-11	val_11
-12	val_12
-15	val_15
-17	val_17
-18	val_18
-19	val_19
 2	val_2
 4	val_4
 5	val_5
@@ -1244,18 +1215,12 @@ select * from src_multi1 order by key, value
 9	val_9
 
 select * from src_multi2 order by key, value
-0	val_0
 11	val_11
 12	val_12
 15	val_15
 17	val_17
 18	val_18
 19	val_19
-2	val_2
-4	val_4
-5	val_5
-8	val_8
-9	val_9
 set hive.merge.mapfiles=true
 set hive.merge.mapredfiles=true
 
@@ -1486,12 +1451,6 @@ Deleted /user/hive/warehouse/src_multi2
 
 select * from src_multi1 order by key, value
 0	val_0
-11	val_11
-12	val_12
-15	val_15
-17	val_17
-18	val_18
-19	val_19
 2	val_2
 4	val_4
 5	val_5
@@ -1499,18 +1458,12 @@ select * from src_multi1 order by key, value
 9	val_9
 
 select * from src_multi2 order by key, value
-0	val_0
 11	val_11
 12	val_12
 15	val_15
 17	val_17
 18	val_18
 19	val_19
-2	val_2
-4	val_4
-5	val_5
-8	val_8
-9	val_9
 set hive.merge.mapfiles=false
 set hive.merge.mapredfiles=false
 
