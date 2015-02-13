@@ -35,7 +35,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
-
+import org.apache.bigtop.itest.JarContent;
+import java.io.IOException;
 import org.apache.bigtop.itest.Contract;
 import org.apache.bigtop.itest.ParameterSetter;
 import org.apache.bigtop.itest.Property;
@@ -60,8 +61,8 @@ public class TestJdbcDriver {
   private Connection con;
 
   @BeforeClass
-  public static void setUp() throws ClassNotFoundException, InterruptedException, NoSuchFieldException, IllegalAccessException {
-    
+  public static void setUp() throws ClassNotFoundException, InterruptedException, NoSuchFieldException, IllegalAccessException, IOException {
+    JarContent.unpackJarContainer(TestJdbcDriver.class, "." , null);
     ParameterSetter.setProperties(TestJdbcDriver.class, new String[] {"hiveserver_startup_wait"});
     System.out.println("hiveserver_startup_wait: " + hiveserver_startup_wait);
     Class.forName(driverName);
