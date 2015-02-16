@@ -23,7 +23,7 @@ Homepage: http://incubator.apache.org/projects/flume.html
 
 Package: flume
 Architecture: all
-Depends: adduser, hadoop-hdfs, bigtop-utils (>= 0.7)
+Depends: adduser, hadoop, hadoop-hdfs, bigtop-utils (>= 0.7)
 Description: Flume is a reliable, scalable, and manageable distributed log collection application for collecting data such as logs and delivering it to data stores such as Hadoop's HDFS.
  Flume is a reliable, scalable, and manageable distributed data 
  collection application for collecting data such as logs and delivering it 

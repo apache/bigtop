@@ -69,7 +69,7 @@ Source3: %{name}-agent.init
 Source4: flume-agent.default
 Requires: /usr/sbin/useradd
 Requires: coreutils
-Requires: hadoop-hdfs
+Requires: hadoop, hadoop-hdfs 
 Requires: bigtop-utils >= 0.7
 
 %if  0%{?mgaversion}
@@ -136,11 +136,6 @@ chmod 755 $init_file
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/etc/default
 %__cp %{SOURCE4} $RPM_BUILD_ROOT/etc/default/%{name}-agent
-
-# Get rid of hadoop jar, and instead link to installed hadoop
-rm $RPM_BUILD_ROOT/usr/lib/flume/lib/hadoop-* || true
-ln -s /usr/lib/hadoop/hadoop-common.jar $RPM_BUILD_ROOT/usr/lib/flume/lib/hadoop-common.jar
-ln -s /usr/lib/hadoop/hadoop-auth.jar $RPM_BUILD_ROOT/usr/lib/flume/lib/hadoop-auth.jar
 
 %pre
 getent group flume >/dev/null || groupadd -r flume
