@@ -17,7 +17,22 @@
 
 package org.apache.bigtop.bigpetstore.spark.datamodel
 
+import java.sql.Timestamp
 import java.util.Calendar
+
+import org.apache.spark.sql
+import org.joda.time.DateTime
+import org.json4s.CustomSerializer
+import org.json4s.JsonAST.{JString, JField, JInt, JObject}
+
+/**
+ * Statistics phase.  Represents A JSON for a front end.
+ * Currently, transactionByZip schema = count, productId, zip
+ * */
+
+case class StatisticsTrByZip(count:Long, productId:Long, zipcode:String)
+
+case class Statistics(totalTransaction: Long, transactionsByZip: Array[StatisticsTrByZip], productDetails:Array[Product])
 
 case class Customer(customerId: Long, firstName: String,
   lastName: String, zipcode: String)
@@ -28,9 +43,24 @@ case class Product(productId: Long, category: String, attributes: Map[String, St
 
 case class Store(storeId: Long, zipcode: String)
 
-case class Transaction(customerId: Long, transactionId: Long, storeId: Long, dateTime: Calendar, productId: Long)
+case class Transaction(customerId: Long, transactionId: Long, storeId: Long, dateTime: Calendar, productId: Long){
+  /**
+   * Convert to TransactionSQL.
+   * There possibly could be a conversion.
+   */
+  def toSQL(): TransactionSQL = {
+    val dt = new DateTime(dateTime);
+    val ts = new Timestamp(dt.getMillis);
+    return TransactionSQL(customerId,transactionId,storeId,
+      new Timestamp(
+        new DateTime(dateTime).getMillis),
+        productId,
+        dt.getYearOfEra,dt.getMonthOfYear,dt.getDayOfMonth,dt.getHourOfDay,dt.getMinuteOfHour)
+  }
+}
 
 /**
- * Statistics phase.  To be expanded...
- * */
-case class Statistics(transactions:Long)
+ * A Transaction which we can create from the natively stored transactions.
+ */
+case class TransactionSQL(customerId: Long, transactionId: Long, storeId: Long, timestamp:Timestamp, productId: Long,
+                          year:Int, month:Int, day:Int, hour:Int, minute:Int )

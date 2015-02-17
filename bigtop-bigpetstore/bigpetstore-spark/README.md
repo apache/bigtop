@@ -97,3 +97,45 @@ After building the jar (see above), you can run the ETL component like so:
 ```
 spark-submit --master local[2] --class org.apache.bigtop.bigpetstore.spark.etl.SparkETL bigpetstore-spark-X.jar generated\_data transformed\_data
 ```
+
+Running the SparkSQL component
+-------------------------------
+
+Once ETL'd we can now process the data and do analytics on it.  The DataModel.scala class itself is used to read/write classes
+from files.  To run the analytics job, which outputs a JSON file at the end, you now will run the following:
+
+```
+spark-submit --master local[2] --class org.apache.bigtop.bigpetstore.spark.analytics.PetStoreStatistics bigpetstore-spark-X.jar transformed\_data PetStoreStats.json
+```
+
+This will output a JSON file to the /tmp directory, which has formatting (approximately) like this.
+
+```
+{
+   "totalTransaction":12,
+   "transactionsByZip":[
+  {"count":64,"productId":54,"zipcode":"94583"},{"count":38,"productId":18,"zipcode":"34761"},
+   {"count":158,"productId":14,"zipcode":"11368"},{"count":66,"productId":46,"zipcode":"33027"},
+   {"count":52,"productId":27,"zipcode":"94583"},{"count":84,"productId":19,"zipcode":"33027"},
+   {"count":143,"productId":0,"zipcode":"94583"},{"count":58,"productId":41,"zipcode":"72715"},
+   {"count":76,"productId":54,"zipcode":"15014"},{"count":118,"productId":52,"zipcode":"45439"}},
+     ..... (several more) ....
+   "productDetails":[
+      {
+         "productId":0,
+         "category":"kitty litter",
+         "attributes":{
+            "category":"kitty litter",
+            "brand":"Pretty Cat",
+            "size":"7.0",
+            "per_unit_cost":"1.43"
+         }
+      },
+      {
+         "productId":2,
+         "category":"dry cat food",
+         "attributes":{
+```
+
+Of course, the above data is for a front end web app which will display charts/summary stats of the transactions.
+Keep tracking Apache BigTop for updates on this front !

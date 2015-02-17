@@ -17,13 +17,24 @@
 
 package org.apache.bigtop.bigpetstore.spark.datamodel
 
+import java.io.File
 import java.util.Date
+import java.nio.file.{Path, Paths, Files}
+import java.nio.charset.StandardCharsets
 
 import org.apache.spark.{SparkContext, SparkConf}
 import org.apache.spark.SparkContext._
 import org.apache.spark.rdd._
 
 import org.apache.bigtop.bigpetstore.spark.datamodel._
+import org.json4s.JsonDSL._
+import org.json4s.JsonDSL.WithDouble._
+import org.json4s.JsonDSL.WithBigDecimal._
+import org.json4s.jackson.Serialization
+import org.json4s._
+import org.json4s.JsonDSL._
+import org.json4s.jackson.JsonMethods._
+import org.json4s.jackson.Serialization.{read, write}
 
 /**
   * Utility functions for loading and saving data model RDDs.
@@ -34,6 +45,8 @@ object IOUtils {
   private val CUSTOMER_DIR = "customers"
   private val PRODUCT_DIR = "products"
   private val TRANSACTION_DIR = "transactions"
+
+  private val ANALYTICS_STATS_DIR = "analytics_stats"
 
   /**
     * Save RDDs of the data model as Sequence files.
@@ -56,11 +69,28 @@ object IOUtils {
     transactionRDD.saveAsObjectFile(outputDir + "/" + TRANSACTION_DIR)
   }
 
+  def saveLocalAsJSON(outputDir: File, statistics: Statistics) {
+    //load the write/read methods.
+    implicit val formats = Serialization.formats(NoTypeHints)
+    val json:String = write(statistics)
+    Files.write(outputDir.toPath, json.getBytes(StandardCharsets.UTF_8))
+  }
+
+  def readLocalAsStatistics(jsonFile: File):Statistics = {
+    //load the write/read methods.
+    implicit val formats = Serialization.formats(NoTypeHints)
+    //Read file as String, and serialize it into Stats object.
+    //See http://json4s.org/ examples.
+    read[Statistics](scala.io.Source.fromFile(jsonFile).getLines.reduceLeft(_+_));
+  }
+
   /**
     * Load RDDs of the data model from Sequence files.
     *
     * @param sc SparkContext
     * @param inputDir Directory containing Sequence files
+    *
+    * TODO Should take path, not string, this makes input validation complex.
     */
   def load(sc: SparkContext, inputDir: String): (RDD[Location], RDD[Store],
     RDD[Customer], RDD[Product], RDD[Transaction]) = {

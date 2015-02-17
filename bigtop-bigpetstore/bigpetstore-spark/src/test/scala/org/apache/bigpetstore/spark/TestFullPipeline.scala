@@ -1,9 +1,10 @@
 package org.apache.bigpetstore.spark
 
+import org.apache.bigtop.bigpetstore.spark.analytics.PetStoreStatistics
+import org.apache.bigtop.bigpetstore.spark.datamodel.{Statistics, IOUtils}
 import org.apache.bigtop.bigpetstore.spark.etl.ETLParameters
 import org.apache.bigtop.bigpetstore.spark.etl.SparkETL
 import org.apache.bigtop.bigpetstore.spark.etl.{ETLParameters, SparkETL}
-import org.apache.bigtop.bigpetstore.spark.generator.PetStoreStatistics
 import org.apache.bigtop.bigpetstore.spark.generator.SparkDriver
 import org.apache.spark.SparkConf
 import org.apache.spark.SparkContext
@@ -55,9 +56,25 @@ class TestFullPipeline extends FunSuite with BeforeAndAfterAll {
     assert(customers==1000L)
     assert(products==55L)
     //assert(transactions==45349L)
-
+    val analyticsJson = new File(tmpDir,"analytics.json")
     //Now do the analytics.
-    PetStoreStatistics.run(etlDir.getAbsolutePath, sc);
+
+    PetStoreStatistics.main(
+      Array(
+        etlDir.getAbsolutePath,
+        analyticsJson.getAbsolutePath),
+      sc);
+
+    val stats:Statistics = IOUtils.readLocalAsStatistics(analyticsJson);
+
+    /**
+     * Assert some very generic features.  We will refine this later once
+     * consistency is implemented.
+     * See https://github.com/rnowling/bigpetstore-data-generator/issues/38
+     */
+    assert(stats.totalTransaction > 5);
+    //TODO : Will add more assertions here, see comment above
+    assert(stats.productDetails.length > 10);
 
     sc.stop()
   }
