@@ -48,6 +48,7 @@ object SparkDriver {
   private var seed: Long = -1
   private var outputDir: String = ""
   private val NPARAMS = 5
+  private val BURNIN_TIME = 7.0 // days
 
   private def printUsage() {
     val usage: String =
@@ -158,17 +159,19 @@ object SparkDriver {
         val seedFactory = new SeedFactory(nextSeed ^ index)
         val transactionIter = custIter.map{
         customer =>
-	        val products = productBC.value
+	  val products = productBC.value
           //Create a new purchasing profile.
           val profileGen = new PurchasingProfileGenerator(products, seedFactory)
           val profile = profileGen.generate()
           val transGen = new TransactionGenerator(customer, profile, storesBC.value, products, seedFactory)
           var transactions : List[Transaction] = List()
-	        var transaction = transGen.generate()
+	  var transaction = transGen.generate()
 
           //Create a list of this customer's transactions for the time period
           while(transaction.getDateTime() < simulationLength) {
-            transactions = transaction :: transactions
+            if (transaction.getDateTime > BURNIN_TIME) {
+              transactions = transaction :: transactions
+            }
             transaction = transGen.generate()
           }
           //The final result, we return the list of transactions produced above.
