@@ -17,7 +17,7 @@
 
 apt-get update
 # Install puppet agent
-apt-get -y install puppet puppet-module-puppetlabs-stdlib curl
+apt-get -y install puppet puppet-module-puppetlabs-stdlib puppet-module-puppetlabs-apt curl
 
 mkdir -p /data/{1,2}
 

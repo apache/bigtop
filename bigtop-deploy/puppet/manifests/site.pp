@@ -14,6 +14,7 @@
 # limitations under the License.
 
 $default_yumrepo = "http://bigtop01.cloudera.org:8080/view/Releases/job/Bigtop-0.8.0/label=centos6/6/artifact/output/"
+$default_debrepo = "http://bigtop01.cloudera.org:8080/view/Releases/job/Bigtop-0.8.0/label=trusty/5/artifact/output/apt/"
 $jdk_package_name = hiera("bigtop::jdk_package_name", "jdk")
 
 stage {"pre": before => Stage["main"]}
@@ -21,14 +22,26 @@ stage {"pre": before => Stage["main"]}
 case $operatingsystem {
     /(OracleLinux|Amazon|CentOS|Fedora|RedHat)/: {
        yumrepo { "Bigtop":
-          baseurl => hiera("hiera::bigtop_yumrepo_uri", $default_yumrepo),
+          baseurl => hiera("hiera::bigtop_repo_uri", $default_yumrepo),
           descr => "Bigtop packages",
           enabled => 1,
           gpgcheck => 0,
        }
+       Yumrepo<||> -> Package<||>
+    }
+    /(Ubuntu|Debian)/: {
+       class { "apt": disable_keys => true }
+       apt::source { "Bigtop":
+          location => hiera("hiera::bigtop_repo_uri", $default_debrepo),
+          release => "bigtop",
+          repos => "contrib",
+          ensure => present,
+	  include_src => false,
+       }
+       Apt::Source<||> -> Package<||>
     }
     default: {
-      notify{"WARNING: running on a non-yum platform -- make sure Bigtop repo is setup": }
+      notify{"WARNING: running on a neither yum nor apt platform -- make sure Bigtop repo is setup": }
     }
 }
 
@@ -67,8 +80,6 @@ node default {
     include hadoop_gateway_node
   }
 }
-
-Yumrepo<||> -> Package<||>
 
 if versioncmp($::puppetversion,'3.6.1') >= 0 {
   $allow_virtual_packages = hiera('bigtop::allow_virtual_packages',false)
