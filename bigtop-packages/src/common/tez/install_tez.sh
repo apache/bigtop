@@ -99,7 +99,6 @@ MAN_DIR=${MAN_DIR:-/usr/share/man/man1}
 DOC_DIR=${DOC_DIR:-/usr/share/doc/tez}
 LIB_DIR=${LIB_DIR:-/usr/lib/tez}
 CONF_DIR=${CONF_DIR:-/etc/tez/conf}
-LIBEXEC_DIR=${LIBEXEC_DIR:-${LIB_DIR}/tez}
 
 install -d -m 0755 $PREFIX/$MAN_DIR
 gzip -c tez.1 > $PREFIX/$MAN_DIR/tez.1.gz
@@ -109,14 +108,8 @@ install -d -m 0755 $PREFIX/$LIB_DIR/lib
 install -d -m 0755 $PREFIX/$DOC_DIR
 install -d -m 0755 $PREFIX/$CONF_DIR
 install -d -m 0755 $PREFIX/$MAN_DIR
-install -d -m 0755 $PREFIX/$LIBEXEC_DIR
 
 cp tez-site.xml  $PREFIX/$CONF_DIR
 
 tar -C  $PREFIX/$LIB_DIR -xzf  $BUILD_DIR/tez-dist/target/tez*-minimal.tar.gz
-
-#test ! -d $BUILD_DIR/lib || cp -ra $BUILD_DIR/lib/* ${PREFIX}/${LIB_DIR}/lib/
-#test ! -d $BUILD_DIR || cp $BUILD_DIR/tez*.jar $PREFIX/$LIB_DIR
-#test ! -d $BUILD_DIR/docs || cp -a $BUILD_DIR/docs/* $PREFIX/$DOC_DIR
-#test ! -d $BUILD_DIR/libexec || cp -a $BUILD_DIR/libexec/* $PREFIX/$LIBEXEC_DIR
 

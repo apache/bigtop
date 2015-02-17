@@ -62,6 +62,8 @@ Source1: do-component-build
 Source2: install_tez.sh
 Source3: tez.1
 Source4: tez-site.xml
+Source5: bigtop.bom
+Source6: init.d.tmpl
 BuildArch: noarch
 Requires: hadoop hadoop-hdfs hadoop-yarn hadoop-mapreduce
 
@@ -78,7 +80,7 @@ which allows for a complex directed-acyclic-graph of tasks for
 processing data. It is currently built atop Apache Hadoop YARN
 
 %prep
-%setup -q -n %{name}-%{tez_base_version}
+%setup -q -n apache-%{name}-%{tez_base_version}-src
 
 %build
 env TEZ_VERSION=%{version} bash %{SOURCE1}
@@ -107,4 +109,4 @@ sh %{SOURCE2} \
 %{tez_home}
 %doc %{doc_tez}
 %{man_dir}/man1/tez.1.*
-%{tez_home}/tez-*.jar
+/etc/tez/conf/tez-site.xml
