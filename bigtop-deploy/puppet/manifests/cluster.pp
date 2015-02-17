@@ -48,7 +48,6 @@ class hadoop_worker_node (
     ensure     => present,
     system     => false,
     managehome => true,
-    groups     => 'wheel',
   }
 
   if ($hadoop_security_authentication == "kerberos") {
