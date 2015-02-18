@@ -21,7 +21,7 @@ class bigtop_toolchain::jdk {
         ensure => present
       }
     }
-    CentOS: {
+    /(CentOS|Amazon)/: {
       package { 'java-1.7.0-openjdk-devel' :
         ensure => present
       }
