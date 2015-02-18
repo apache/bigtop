@@ -81,7 +81,7 @@ object IOUtils {
     implicit val formats = Serialization.formats(NoTypeHints)
     //Read file as String, and serialize it into Stats object.
     //See http://json4s.org/ examples.
-    read[Statistics](scala.io.Source.fromFile(jsonFile).getLines.reduceLeft(_+_));
+    read[Statistics](scala.io.Source.fromFile(jsonFile).getLines.reduceLeft(_+_))
   }
 
   /**

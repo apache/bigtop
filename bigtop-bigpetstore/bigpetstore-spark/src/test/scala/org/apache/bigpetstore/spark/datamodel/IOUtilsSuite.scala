@@ -40,7 +40,7 @@ class IOUtilsSuite extends FunSuite with BeforeAndAfterAll {
   val sc = new SparkContext(conf)
 
   override def afterAll() {
-    sc.stop();
+    sc.stop()
   }
 
   test("Saving & Loading data") {

@@ -26,13 +26,20 @@ import org.json4s.CustomSerializer
 import org.json4s.JsonAST.{JString, JField, JInt, JObject}
 
 /**
- * Statistics phase.  Represents A JSON for a front end.
- * Currently, transactionByZip schema = count, productId, zip
- * */
+ * Statistics phase.  Represents JSON for a front end.
+ */
 
-case class StatisticsTrByZip(count:Long, productId:Long, zipcode:String)
+case class StatisticsTxByMonth(month: Int, count: Long)
 
-case class Statistics(totalTransaction: Long, transactionsByZip: Array[StatisticsTrByZip], productDetails:Array[Product])
+case class StatisticsTxByProductZip(productId:Long, zipcode:String, count:Long)
+
+case class StatisticsTxByProduct(count: Long, productId: Long)
+
+case class Statistics(totalTransactions: Long,
+  transactionsByMonth: Array[StatisticsTxByMonth],
+  transactionsByProduct: Array[StatisticsTxByProduct],
+  transactionsByProductZip: Array[StatisticsTxByProductZip],
+  productDetails:Array[Product])
 
 case class Customer(customerId: Long, firstName: String,
   lastName: String, zipcode: String)
@@ -44,13 +51,14 @@ case class Product(productId: Long, category: String, attributes: Map[String, St
 case class Store(storeId: Long, zipcode: String)
 
 case class Transaction(customerId: Long, transactionId: Long, storeId: Long, dateTime: Calendar, productId: Long){
+
   /**
    * Convert to TransactionSQL.
    * There possibly could be a conversion.
    */
   def toSQL(): TransactionSQL = {
-    val dt = new DateTime(dateTime);
-    val ts = new Timestamp(dt.getMillis);
+    val dt = new DateTime(dateTime)
+    val ts = new Timestamp(dt.getMillis)
     return TransactionSQL(customerId,transactionId,storeId,
       new Timestamp(
         new DateTime(dateTime).getMillis),

@@ -17,32 +17,29 @@
 
 package org.apache.bigtop.bigpetstore.spark.analytics
 
-
+import java.io.File
 import java.sql.Timestamp
 
-import org.joda.time.DateTime
+import scala.Nothing
 
-import _root_.org.apache.spark.SparkConf
-import org.apache.bigtop.bigpetstore.spark.datamodel._
-import org.apache.spark.sql._;
-import scala.Nothing;
-import org.apache.hadoop.fs.Path
-import scala.collection.JavaConversions._
+import org.apache.spark.sql._
 import org.apache.spark.{SparkContext, SparkConf}
 import org.apache.spark.SparkContext._
 import org.apache.spark.rdd._
 
-import java.util.{Calendar, ArrayList, Date}
-import scala.util.Random
-import java.io.File
+import org.joda.time.DateTime
 import org.json4s.JsonDSL.WithBigDecimal._
+
+import org.apache.bigtop.bigpetstore.spark.datamodel._
 
 object PetStoreStatistics {
 
     private def printUsage() {
-      val usage: String =
-        "BigPetStore Analytics Module. Usage: inputDir, outputDir.\n " +
-        "Ouptut is a JSON file in outputDir.  For schema, see the code." ;
+      val usage: String = "BigPetStore Analytics Module." +
+      "\n" +
+      "Usage: spark-submit ... inputDir outputFile\n " +
+      "inputDir - (string) Path to ETL'd data\n" +
+      "outputFile - (string) is a JSON file.  For schema, see the code.\n"
 
       System.err.println(usage)
     }
@@ -54,95 +51,131 @@ object PetStoreStatistics {
    * @param args
    * @return
    */
-    def parseArgs(args: Array[String]):(Option[Path],Option[File]) = {
-      (if(args.length < 1) { System.err.println("ERROR AT ARG 1: Missing INPUT path"); None } else Some(new Path(args(0))),
-       if(args.length < 2) { System.err.println("ERROR AT ARG 2: Missing OUTPUT path");; None } else Some(new File(args(1))))
+    def parseArgs(args: Array[String]):(Option[String],Option[String]) = {
+      if(args.length < 1) {
+        (None, None)
+      } else if (args.length == 1) {
+        (Some(args(0)), None)
+      } else {
+        (Some(args(0)), Some(args(1)))
+      }
     }
 
   def productMap(r:Array[Product]) : Map[Long,Product] = {
     r map (prod => prod.productId -> prod) toMap
   }
 
-    def totalTransactions(r:(RDD[Location], RDD[Store], RDD[Customer], RDD[Product], RDD[Transaction]),
-                          sc: SparkContext): Statistics = {
-      val sqlContext = new org.apache.spark.sql.SQLContext(sc);
+  def queryTxByMonth(sqlContext: SQLContext): Array[StatisticsTxByMonth] = {
+    import sqlContext._
 
-      import sqlContext._;
+    val results: SchemaRDD = sql("SELECT count(*), month FROM Transactions GROUP BY month")
+    val transactionsByMonth = results.collect()
+    for(x<-transactionsByMonth){
+      println(x)
+    }
 
-      /**
-       * Transform the non-sparksql mappable calendar
-       * into a spark sql freindly field.
-       */
-      val mappableTransactions:RDD[TransactionSQL] =
-        /**
-        * Map the RDD[Transaction] -> RDD[TransactionSQL] so that we can run SparkSQL against it.
-        */
-        r._5.map(trans => trans.toSQL())
+    transactionsByMonth.map { r =>
+      StatisticsTxByMonth(r.getInt(1), r.getLong(0))
+    }
+  }
 
-        mappableTransactions.registerTempTable("transactions");
+  def queryTxByProductZip(sqlContext: SQLContext): Array[StatisticsTxByProductZip] = {
+    import sqlContext._
 
-        r._2.registerTempTable("Stores")
-
-      val results: SchemaRDD = sql("SELECT month,count(*) FROM transactions group by month")
-      val transactionsByMonth = results.collect();
-      for(x<-transactionsByMonth){
-        println(x);
-      }
-
-      val results2: SchemaRDD = sql(
-        """SELECT count(*) c, productId , zipcode
-FROM transactions t
+    val results: SchemaRDD = sql(
+      """SELECT count(*) c, productId, zipcode
+FROM Transactions t
 JOIN Stores s ON t.storeId = s.storeId
 GROUP BY productId, zipcode""")
-      val groupedProductZips = results2.collect();
 
-      //get list of all transactionsData
-      for(x<-groupedProductZips){
-        println("grouped product:zip " + x);
-      }
+    val groupedProductZips = results.collect()
 
-      return Statistics(
-        results.count(), // Total number of transaction
-        results2.collect().map(r => {
-          //Map JDBC Row into a Serializable case class.
-          StatisticsTrByZip(r.getLong(0),r.getLong(1),r.getString(2))
-        }),
-        r._4.collect()); // Product details.
+    //get list of all transactionsData
+    for(x<-groupedProductZips){
+      println("grouped product:zip " + x)
     }
+
+    //Map JDBC Row into a Serializable case class.
+    groupedProductZips.map { r =>
+      StatisticsTxByProductZip(r.getLong(1),r.getString(2),r.getLong(0))
+    }
+  }
+
+  def queryTxByProduct(sqlContext: SQLContext): Array[StatisticsTxByProduct] = {
+    import sqlContext._
+
+    val results: SchemaRDD = sql(
+      """SELECT count(*) c, productId FROM Transactions GROUP BY productId""")
+
+    val groupedProducts = results.collect()
+
+    //Map JDBC Row into a Serializable case class.
+    groupedProducts.map { r =>
+      StatisticsTxByProduct(r.getLong(1),r.getLong(0))
+    }
+  }
+
+
+  def runQueries(r:(RDD[Location], RDD[Store], RDD[Customer], RDD[Product],
+    RDD[Transaction]), sc: SparkContext): Statistics = {
+
+    val sqlContext = new org.apache.spark.sql.SQLContext(sc)
+    import sqlContext._
+
+    // Transform the Non-SparkSQL Calendar into a SparkSQL-friendly field.
+    val mappableTransactions:RDD[TransactionSQL] =
+      r._5.map { trans => trans.toSQL() }
+
+    r._1.registerTempTable("Locations")
+    r._2.registerTempTable("Stores")
+    r._3.registerTempTable("Customers")
+    r._4.registerTempTable("Product")
+    mappableTransactions.registerTempTable("Transactions")
+
+
+    val txByMonth = queryTxByMonth(sqlContext)
+    val txByProduct = queryTxByProduct(sqlContext)
+    val txByProductZip = queryTxByProductZip(sqlContext)
+
+    return Statistics(
+      txByMonth.map { s => s.count }.reduce(_+_),  // Total number of transactions
+      txByMonth,
+      txByProduct,
+      txByProductZip,
+      r._4.collect()) // Product details
+  }
 
     /**
     * We keep a "run" method which can be called easily from tests and also is used by main.
     */
-    def run(transactionsInputDir:String, sc:SparkContext): Statistics = {
-      System.out.println("input : " + transactionsInputDir);
-      val stats = totalTransactions(IOUtils.load(sc,transactionsInputDir), sc);
-      sc.stop()
-      stats
+    def run(txInputDir:String, statsOutputFile:String,
+      sc:SparkContext) {
+
+      System.out.println("Running w/ input = " + txInputDir)
+
+      System.out.println("input : " + txInputDir)
+      val etlData = IOUtils.load(sc, txInputDir)
+
+      val stats = runQueries(etlData, sc)
+
+      IOUtils.saveLocalAsJSON(new File(statsOutputFile), stats)
+
+      System.out.println("Output JSON Stats stored : " + statsOutputFile)
     }
 
   def main(args: Array[String]) {
-      main(
-        args,
-        new SparkContext(new SparkConf().setAppName("PetStoreStatistics")));
-  }
+    // Get or else : On failure (else) we exit.
+    val (inputPath,outputPath) = parseArgs(args)
 
-  def main(args: Array[String], context:SparkContext) = {
-      // Get or else : On failure (else) we exit.
-      val (inputPath,outputPath)= parseArgs(args);
-
-      if(! (inputPath.isDefined && outputPath.isDefined)) {
-        printUsage()
-        System.exit(1)
-      }
-
-      System.out.println("Running w/ input = " + inputPath);
-
-      val stats:Statistics = run(inputPath.get.toUri.getPath, context);
-
-      IOUtils.saveLocalAsJSON(outputPath.get, stats)
-
-      System.out.println("Output JSON Stats stored : " + outputPath.get);
-
+    if(! (inputPath.isDefined && outputPath.isDefined)) {
+      printUsage()
+      System.exit(1)
     }
 
+    val sc = new SparkContext(new SparkConf().setAppName("PetStoreStatistics"))
+
+    run(inputPath.get, outputPath.get, sc)
+
+    sc.stop()
+  }
 }

@@ -108,11 +108,18 @@ from files.  To run the analytics job, which outputs a JSON file at the end, you
 spark-submit --master local[2] --class org.apache.bigtop.bigpetstore.spark.analytics.PetStoreStatistics bigpetstore-spark-X.jar transformed\_data PetStoreStats.json
 ```
 
+Current queries include:
+
+1. Total Transactions
+2. Transaction Counts by Month
+3. Transaction Counts by Product
+4. Transaction Counts by Product and Store Zipcode
+
 This will output a JSON file to the /tmp directory, which has formatting (approximately) like this.
 
 ```
 {
-   "totalTransaction":12,
+   "totalTransaction":34586,
    "transactionsByZip":[
   {"count":64,"productId":54,"zipcode":"94583"},{"count":38,"productId":18,"zipcode":"34761"},
    {"count":158,"productId":14,"zipcode":"11368"},{"count":66,"productId":46,"zipcode":"33027"},

@@ -38,6 +38,6 @@ class AnalyticsSuite extends FunSuite with BeforeAndAfterAll {
 
   test("product mapper") {
     val p = Product(1L, "cat1", Map(("a","a1"), ("b","b1")))
-    assert(PetStoreStatistics.productMap(Array(p)).get(1L).get === p);
+    assert(PetStoreStatistics.productMap(Array(p)).get(1L).get === p)
   }
 }
