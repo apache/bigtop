@@ -324,6 +324,7 @@ class hadoop ($hadoop_security_authentication = "simple",
       $hadoop_security_authentcation = $hadoop::hadoop_security_authentication,
       $kerberos_realm = $hadoop::kerberos_realm,
   ) inherits hadoop {
+    include common_hdfs
 
     if ($hadoop_security_authentication == "kerberos") {
       kerberos::host_keytab { "httpfs":
@@ -355,7 +356,8 @@ class hadoop ($hadoop_security_authentication = "simple",
     service { "hadoop-httpfs":
       ensure => running,
       hasstatus => true,
-      subscribe => [Package["hadoop-httpfs"], File["/etc/hadoop-httpfs/conf/httpfs-site.xml"], File["/etc/hadoop-httpfs/conf/httpfs-env.sh"], File["/etc/hadoop-httpfs/conf/httpfs-signature.secret"]],
+      subscribe => [Package["hadoop-httpfs"], File["/etc/hadoop-httpfs/conf/httpfs-site.xml"], File["/etc/hadoop-httpfs/conf/httpfs-env.sh"], File["/etc/hadoop-httpfs/conf/httpfs-signature.secret"],
+        File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"]],
       require => [ Package["hadoop-httpfs"] ],
     }
     Kerberos::Host_keytab <| title == "httpfs" |> -> Service["hadoop-httpfs"]
