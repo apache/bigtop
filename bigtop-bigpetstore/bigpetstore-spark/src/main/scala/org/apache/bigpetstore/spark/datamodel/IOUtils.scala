@@ -84,6 +84,22 @@ object IOUtils {
     read[Statistics](scala.io.Source.fromFile(jsonFile).getLines.reduceLeft(_+_))
   }
 
+  def saveLocalAsJSON(outputDir: File, recommendations:ProductRecommendations) {
+    //load the write/read methods.
+    implicit val formats = Serialization.formats(NoTypeHints)
+    val json:String = write(recommendations)
+    Files.write(outputDir.toPath, json.getBytes(StandardCharsets.UTF_8))
+  }
+
+  def readLocalAsProductRecommendations(jsonFile: File):ProductRecommendations = {
+    //load the write/read methods.
+    implicit val formats = Serialization.formats(NoTypeHints)
+    //Read file as String, and serialize it into Stats object.
+    //See http://json4s.org/ examples.
+    read[ProductRecommendations](scala.io.Source.fromFile(jsonFile).getLines.reduceLeft(_+_))
+  }
+
+
   /**
     * Load RDDs of the data model from Sequence files.
     *

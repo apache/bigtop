@@ -72,3 +72,7 @@ case class Transaction(customerId: Long, transactionId: Long, storeId: Long, dat
  */
 case class TransactionSQL(customerId: Long, transactionId: Long, storeId: Long, timestamp:Timestamp, productId: Long,
                           year:Int, month:Int, day:Int, hour:Int, minute:Int )
+
+case class UserProductRecommendations(customerId: Long, productIds: Array[Long])
+
+case class ProductRecommendations(customers: Array[Customer], products: Array[Product], recommendations: Array[UserProductRecommendations])

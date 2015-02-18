@@ -146,3 +146,14 @@ This will output a JSON file to the /tmp directory, which has formatting (approx
 
 Of course, the above data is for a front end web app which will display charts/summary stats of the transactions.
 Keep tracking Apache BigTop for updates on this front !
+
+Running the Product Recommendation Component
+--------------------------------------------
+
+BigPetStore can recommend products to customers using the alternating least squares (ALS) algorithm. The recommender can be run as follows:
+
+```
+spark-submit --master local[2] --class org.apache.bigtop.bigpetstore.spark.analytics.RecommendProducts bigpetstore-spark-X.jar transformed\_data recommendations.json
+```
+
+The resulting json file will contain lists of customers, products, and products recommended to each customer.

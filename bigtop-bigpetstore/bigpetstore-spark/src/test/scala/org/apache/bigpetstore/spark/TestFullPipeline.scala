@@ -1,6 +1,7 @@
 package org.apache.bigpetstore.spark
 
 import org.apache.bigtop.bigpetstore.spark.analytics.PetStoreStatistics
+import org.apache.bigtop.bigpetstore.spark.analytics.RecommendProducts
 import org.apache.bigtop.bigpetstore.spark.datamodel.{Statistics, IOUtils}
 import org.apache.bigtop.bigpetstore.spark.etl.ETLParameters
 import org.apache.bigtop.bigpetstore.spark.etl.SparkETL
@@ -73,6 +74,12 @@ class TestFullPipeline extends FunSuite with BeforeAndAfterAll {
     assert(stats.totalTransactions === transactions)
     assert(stats.productDetails.length === products)
     assert(stats.transactionsByMonth.length === 12)
+
+    val recommJson = new File(tmpDir,"recommendations.json")
+    RecommendProducts.run(etlDir.getAbsolutePath,
+      recommJson.getAbsolutePath,
+      sc, nIterations=5)
+
 
     sc.stop()
   }
