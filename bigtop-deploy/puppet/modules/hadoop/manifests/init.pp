@@ -227,28 +227,30 @@ class hadoop ($hadoop_security_authentication = "simple",
   }
 
   class common_mapred_app (
-      $hadoop_config_io_sort_factor = undef,
-      $hadoop_config_io_sort_mb = undef,
-      $hadoop_config_mapred_child_ulimit = undef,
-      $hadoop_config_mapred_fairscheduler_assignmultiple = undef,
-      $hadoop_config_mapred_fairscheduler_sizebasedweight = undef,
-      $hadoop_config_mapred_job_tracker_handler_count = undef,
-      $hadoop_config_mapred_reduce_parallel_copies = undef,
-      $hadoop_config_mapred_reduce_slowstart_completed_maps = undef,
-      $hadoop_config_mapred_reduce_tasks_speculative_execution = undef,
-      $hadoop_config_tasktracker_http_threads = undef,
-      $hadoop_config_use_compression = undef,
-      $hadoop_hs_host = undef,
-      $hadoop_hs_port = "10020",
-      $hadoop_hs_webapp_port = "19888",
-      $hadoop_jobtracker_fairscheduler_weightadjuster = undef,
-      $hadoop_jobtracker_host,
-      $hadoop_jobtracker_port = "8021",
-      $hadoop_jobtracker_taskscheduler = undef,
-      $hadoop_mapred_jobtracker_plugins = "",
-      $hadoop_mapred_tasktracker_plugins = "",
-      $mapred_acls_enabled = undef,
+      $mapreduce_cluster_acls_enabled = undef,
+      $mapreduce_jobtracker_taskscheduler = undef,
+      $mapreduce_jobhistory_host = undef,
+      $mapreduce_jobhistory_port = "10020",
+      $mapreduce_jobhistory_webapp_port = "19888",
+      $mapreduce_framework_name = "yarn",
+      $jobtracker_host,
+      $jobtracker_port = "8021",
       $mapred_data_dirs = suffix($hadoop::hadoop_storage_dirs, "/mapred"),
+      $mapreduce_cluster_temp_dir = "/mapred/system",
+      $mapreduce_jobtracker_system_dir = "/mapred/system",
+      $mapreduce_jobtracker_staging_root_dir = "/user",
+      $yarn_app_mapreduce_am_staging_dir = "/user",
+      $mapreduce_task_io_sort_factor = 64,              # 10 default
+      $mapreduce_task_io_sort_mb = 256,                 # 100 default
+      $mapreduce_reduce_shuffle_parallelcopies = undef, # 5 is default
+      # processorcount == facter fact
+      $mapreduce_tasktracker_map_tasks_maximum = inline_template("<%= [1, @processorcount.to_i * 0.20].max.round %>"),
+      $mapreduce_tasktracker_reduce_tasks_maximum = inline_template("<%= [1, @processorcount.to_i * 0.20].max.round %>"),
+      $mapreduce_tasktracker_http_threads = 60,         # 40 default
+      $mapreduce_output_fileoutputformat_compress_type = "BLOCK", # "RECORD" default
+      $mapreduce_map_output_compress = undef,
+      $mapreduce_job_reduce_slowstart_completedmaps = undef,
+      $mapred_jobtracker_plugins = "",
       $hadoop_security_authentication = $hadoop::hadoop_security_authentication,
       $kerberos_realm = $hadoop::kerberos_realm,
   ) inherits hadoop {
