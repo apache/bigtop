@@ -94,7 +94,7 @@ tachyon::common::master_host: "%{hiera('bigtop::hadoop_head_node')}"
 
 hadoop-zookeeper::server::myid: "0"
 hadoop-zookeeper::server::ensemble:
-  - ["%{hiera('bigtop::hadoop_head_node')}:2888:3888"]
+  - "%{hiera('bigtop::hadoop_head_node')}:2888:3888"
 hadoop-zookeeper::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 
 # those are only here because they were present as extlookup keys previously
