@@ -34,6 +34,10 @@
 # The java implementation to use.  Required.
 <%= shell_config("JAVA_HOME", "hadoop_java_home") %>
 
+# tez environment, needed to enable tez
+<%= shell_config("TEZ_CONF_DIR") %>
+<%= shell_config("TEZ_JARS") %>
+
 # Extra Java CLASSPATH elements.  Optional.
 <%= shell_config("HADOOP_CLASSPATH") %>
 

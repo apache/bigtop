@@ -44,6 +44,8 @@ class hadoop ($hadoop_security_authentication = "simple",
       $hadoop_pid_dir = undef,
       $hadoop_ident_string = undef,
       $hadoop_niceness = undef,
+      $tez_conf_dir = undef,
+      $tez_jars = undef,
   ) inherits hadoop {
 
     file {
