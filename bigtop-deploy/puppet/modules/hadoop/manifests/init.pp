@@ -80,6 +80,9 @@ class hadoop ($hadoop_security_authentication = "simple",
       $yarn_resourcemanager_ha_enabled = undef,
       $yarn_resourcemanager_cluster_id = "ha-rm-uri",
       $yarn_resourcemanager_zk_address = $hadoop::zk,
+      # work around https://issues.apache.org/jira/browse/YARN-2847 by default
+      $container_executor_banned_users = "doesnotexist",
+      $container_executor_min_user_id = "499",
       $hadoop_security_authentication = $hadoop::hadoop_security_authentication,
       $kerberos_realm = $hadoop::kerberos_realm,
   ) inherits hadoop {

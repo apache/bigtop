@@ -53,7 +53,7 @@
   </property>
   <property>
     <name>yarn.nodemanager.linux-container-executor.group</name>
-    <value>hadoop</value>
+    <value>yarn</value>
   </property>
 <% end %>
 
