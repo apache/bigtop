@@ -140,6 +140,8 @@ class hadoop ($hadoop_security_authentication = "simple",
       $shared_edits_dir = "/hdfs_shared",
       $testonly_hdfs_sshkeys  = "no",
       $hadoop_ha_sshfence_user_home = "/var/lib/hadoop-hdfs",
+      $sshfence_privkey = "hadoop/id_sshfence",
+      $sshfence_pubkey = "hadoop/id_sshfence.pub",
       $sshfence_user = "hdfs",
       $zk = $hadoop::zk,
       $hadoop_config_fs_inmemory_size_mb = undef,
@@ -152,8 +154,6 @@ class hadoop ($hadoop_security_authentication = "simple",
 
     $sshfence_keydir  = "$hadoop_ha_sshfence_user_home/.ssh"
     $sshfence_keypath = "$sshfence_keydir/id_sshfence"
-    $sshfence_privkey = hiera("hadoop::common_hdfs::sshfence_privkey", "hadoop/id_sshfence")
-    $sshfence_pubkey  = hiera("hadoop::common_hdfs::sshfence_pubkey", "hadoop/id_sshfence.pub")
 
     include common
 
