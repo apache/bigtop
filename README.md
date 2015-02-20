@@ -148,19 +148,14 @@ For Developers: Building the entire distribution from scratch
  
 Packages have been built for CentOS/RHEL 5 and 6, Fedora 18, SuSE Linux Enterprise 11, OpenSUSE12.2, Ubuntu LTS Lucid and Precise, and Ubuntu Quantal. They can probably be built for other platforms as well. Some of the binary artifacts might be compatible with other closely related distributions.
  
-__On all systems, Building Apache Bigtop requires the following tools__
+__On all systems, Building Apache Bigtop requires certain set of tools__
 
-* All systems need these tools installed to build bigtop:
+  To bootstrap the development environment from scratch execute
 
-  Java JDK/OpenJDK7, Apache Forrest 0.8, Apache Ant, Apache Maven, git, subversion, autoconf, automake, liblzo2-dev, libz-dev, sharutils, libfuse-dev, libssl-dev
+    ./gradlew toolchain
 
-* Additionally, some details for specific linux versions :
-  * __Debian__ based distros need these packages : build-essential dh-make debhelper devscripts, reprepro
-  * __openSUSE 11.4__ needs these packages : relaxngDatatypedocbook-utils docbook-simple, fuse-devel, docbook5, docbook5-xsl-stylesheets, libxml2-devel, xmlformat, xmlto, libxslt, libopenssl-devel
-
-  Preferred way of setting up needed dependencies: the list in this README file might be outdated.
-  The best source of data are bigtop_toolchain recipes that would configure all your development
-  environment from a single Puppet run.
+  This build task expected Puppet 3.x to be installed; user has to have sudo permissions. The task will pull down and install
+  all development dependencies, frameworks and SDKs, required to build the stack on your platform.
 
 * __Building packages__ : `gradle [component-name]-[rpm|deb]`
 * __Building local YUM/APT repositories__ : `gradle [component-name]-[yum|apt]`
