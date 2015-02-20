@@ -97,6 +97,13 @@ task "packages-help" (description: "All package build related tasks information"
   }
 }
 
+task "all-components" (description: "List the components of the stack") << {
+  println "${project.name} ${BOM_map['BIGTOP_VERSION']} stack includes the following components"
+  components.sort().each { comp ->
+    println sprintf ('\t%1$s %2$s', comp.toLowerCase().padRight(20), BOM_map[comp + "_BASE_VERSION"].padLeft(10))
+  }
+}
+
 def genTasks = { target, variable ->
   Task t = task "${target}-download" (dependsOn: "${target}_vardefines",
       description: "Download $target artifacts",
