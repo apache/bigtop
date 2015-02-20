@@ -33,7 +33,7 @@ apply plugin: 'download-task'
 def PACKAGES_GROUP = 'package'
 
 final String VERBOSE = "verbose"
-final String BOM = "bigtop.mk"
+final String BOM = "$rootDir/bigtop.mk"
 
 //HashMap <String, String>
 def BOM_map = [

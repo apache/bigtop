@@ -16,3 +16,7 @@
  * limitations under the License.
  */
 rootProject.name = 'bigtop'
+
+include 'bigtop-test-framework', 'bigtop-tests:smoke-tests'
+
+project(":bigtop-test-framework").name = 'itest-common'

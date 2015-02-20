@@ -15,20 +15,58 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-apply plugin: 'java'
-apply plugin: 'maven'
+def final langLevel = "1.7"
+
+allprojects {
+  apply plugin: 'java'
+  apply plugin: 'maven'
+
+  group = 'org.apache.bigtop'
+  version = '0.9.0-SNAPSHOT'
+
+  description = """Bigtop"""
+
+  sourceCompatibility = langLevel
+  targetCompatibility = langLevel
+
+  repositories {
+    maven { url "http://repository.apache.org/snapshots" }
+    maven { url "http://repo.maven.apache.org/maven2" }
+    mavenCentral()
+  }
+}
+
+subprojects {
+  apply plugin: 'groovy'
+}
+
+project(':itest-common') {
+  description = """iTest: system and integration testing in the cloud"""
+
+  dependencies {
+    compile group: 'org.codehaus.groovy', name: 'groovy-all', version:'2.1.8'
+    compile group: 'junit', name: 'junit', version:'4.11'
+    compile group: 'commons-logging', name: 'commons-logging', version:'1.1'
+    compile group: 'org.apache.ant', name: 'ant', version:'1.8.2'
+    compile group: 'org.apache.ant', name: 'ant-junit', version:'1.8.2'
+  }
+
+  task packageITest(type: Jar) {
+    from sourceSets.main.output
+    //classifier = 'tests'
+  }
+
+  artifacts.archives packageITest
+
+  test {
+    exclude '**/Dummy*'
+  }
+}
+
 // All packaging logic is separated into its own build module
 apply from: 'packages.gradle'
 
-group = 'org.apache.bigtop'
-version = '0.9.0-SNAPSHOT'
-
-description = """Bigtop"""
-
 def TESTARTIFACTS_GROUP = 'test artifacts'
-
-sourceCompatibility = 1.6
-targetCompatibility = 1.6
 
 task installTopLevel(type:Exec) {
   workingDir "."
@@ -61,13 +99,12 @@ task installAllLocalArtifacts (
  */
 def artifactToInstall = {
   def final BASE_DIR = projectDir.absolutePath
-  def final TEST_DIR = "bigtop-tests/test-artifacts"
-  def final ARTIFACT_DIR = "${BASE_DIR}/${TEST_DIR}"
+  def final TEST_DIR = "$BASE_DIR/bigtop-tests/test-artifacts"
 
   def project = new XmlSlurper().parse("$TEST_DIR/pom.xml")
   project.modules.module.each { artifact ->
     task "install-${artifact}" (description: "Installs ${artifact} artifact with Maven", group: TESTARTIFACTS_GROUP) << {
-      def final PATH = "${ARTIFACT_DIR}/$artifact/pom.xml"
+      def final PATH = "${TEST_DIR}/$artifact/pom.xml"
       def final WRAPPER = "mvn clean install -f " + PATH
       exec {
         workingDir '.'

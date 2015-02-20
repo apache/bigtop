@@ -101,6 +101,14 @@ WARNING: since testing packages requires installing them on a live system it is 
 
   * Step 2: Run the the smoke tests on your cluster (see Step 3 and/or Step 4 below)
 
+  We are on the route of migrating subprojects under top-level gradle build. Currently
+  converted projects could be listed by running
+
+        gradle projects
+
+  To see the list of tasks in a subproject, ie itest-common, you can run
+
+        gradle itest-common:tasks
 
 * Old Way
   * Step 1: Build the smokes with snapshots.  This ensures that all transitive dependencies etc.. are in your repo
