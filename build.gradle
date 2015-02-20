@@ -63,10 +63,23 @@ project(':itest-common') {
   }
 }
 
+def TESTARTIFACTS_GROUP = 'test artifacts'
+def DEVENV_GROUP = 'development tools'
+
 // All packaging logic is separated into its own build module
 apply from: 'packages.gradle'
 
-def TESTARTIFACTS_GROUP = 'test artifacts'
+task toolchain(type:Exec,
+    description: 'Setup dev. env via toolchain; Requires: Puppet, sudo',
+    group: DEVENV_GROUP) {
+  def command = [
+      'sudo', 'puppet', 'apply', '-d',
+      "--modulepath=${projectDir.absolutePath}", '-e',
+      'include bigtop_toolchain::installer'
+  ]
+  workingDir '.'
+  commandLine command
+}
 
 task installTopLevel(type:Exec) {
   workingDir "."
