@@ -17,28 +17,35 @@ class hue {
   class server($sqoop_url, $solr_url, $hbase_thrift_url,
                 $webhdfs_url, $rm_host, $rm_port, $oozie_url, $rm_url, $rm_proxy_url, $history_server_url,
                 $hue_host = "0.0.0.0", $hue_port = "8888", $default_fs = "hdfs://localhost:8020",
-                $kerberos_realm = "") {
+                $kerberos_realm = "", $hue_apps = "all") {
+
+    $hue_packages = $hue_apps ? {
+      "all"     => [ "hue" ], # The hue metapackage requires all apps
+      "none"    => [ "hue-server" ],
+      default   => concat(prefix($hue_apps, "hue-"), [ "hue-server" ])
+    }
+
     if ($kerberos_realm) {
       require kerberos::client
       kerberos::host_keytab { "hue":
         spnego => false,
-        require => Package["hue"],
+        require => Package[$hue_packages],
       }
     }
 
-    package { "hue":
+    package { $hue_packages:
       ensure => latest,
     }
 
     file { "/etc/hue/conf/hue.ini":
       content => template("hue/hue.ini"),
-      require => Package["hue"],
+      require => Package[$hue_packages],
     }
 
     service { "hue":
       ensure => running,
-      require => [ Package["hue"], File["/etc/hue/conf/hue.ini"] ],
-      subscribe => [Package["hue"], File["/etc/hue/conf/hue.ini"] ],
+      require => [ Package[$hue_packages], File["/etc/hue/conf/hue.ini"] ],
+      subscribe => [ Package[$hue_packages], File["/etc/hue/conf/hue.ini"] ],
       hasrestart => true,
       hasstatus => true,
     } 
