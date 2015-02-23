@@ -42,7 +42,7 @@ public class TestRmAdmin {
   public static void tearDown() {
   }
 
-  @Test
+  @Test (timeout = 0x45000l)
   public void testRmAdminBasic() {
     // help
     System.out.println("-help");
@@ -55,7 +55,7 @@ public class TestRmAdmin {
     assertTrue("-getGroups failed", sh.getRet() == 0);
   }
 
-  @Test
+  @Test (timeout = 0x45000l)
   public void testRmAdminRefreshcommands() {
     // refreshQueues
     System.out.println("-refreshQueues");

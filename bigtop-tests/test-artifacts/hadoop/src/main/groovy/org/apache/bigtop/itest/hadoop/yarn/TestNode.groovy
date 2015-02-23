@@ -42,7 +42,7 @@ public class TestNode {
   public static void tearDown() {
   }
 
-  @Test
+  @Test (timeout = 0x15000l)
   public void testNodeBasic() {
     // list
     System.out.println("-list");

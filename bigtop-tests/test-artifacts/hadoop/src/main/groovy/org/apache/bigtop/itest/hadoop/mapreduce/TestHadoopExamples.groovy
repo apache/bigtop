@@ -145,7 +145,7 @@ class TestHadoopExamples {
     testJar = HADOOP_EXAMPLES_JAR;
   }
 
-  @Test
+  @Test (timeout = 0x1620000l)
   void testMRExample() {
     if (FailureVars.instance.getRunFailures()
       || FailureVars.instance.getServiceRestart()

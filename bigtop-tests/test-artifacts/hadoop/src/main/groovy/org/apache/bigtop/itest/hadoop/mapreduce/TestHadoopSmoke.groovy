@@ -68,7 +68,7 @@ class TestHadoopSmoke {
     sh.exec("hadoop fs -rmr -skipTrash ${testDir}")
   }
 
-  @Test
+  @Test (timeout = 0x810000l)
   void testCacheArchive() {
     sh.exec("hadoop fs -rmr ${testDir}/cachefile/out",
       cmd + ' -cacheArchive ' + arg + cmd2)
@@ -79,7 +79,7 @@ class TestHadoopSmoke {
     assertEquals("cache1\t\ncache2\t", sh.out.join('\n'))
   }
 
-  @Test
+  @Test (timeout = 0x810000l)
   void testArchives() {
     sh.exec("hadoop fs -rmr ${testDir}/cachefile/out",
       cmd + ' -archives ' + arg + cmd2)
