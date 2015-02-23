@@ -59,7 +59,7 @@
 %define httpfs_services httpfs
 %define mapreduce_services mapreduce-historyserver
 %define hdfs_services hdfs-namenode hdfs-secondarynamenode hdfs-datanode hdfs-zkfc hdfs-journalnode
-%define yarn_services yarn-resourcemanager yarn-nodemanager yarn-proxyserver
+%define yarn_services yarn-resourcemanager yarn-nodemanager yarn-proxyserver yarn-timelineserver
 %define hadoop_services %{hdfs_services} %{mapreduce_services} %{yarn_services} %{httpfs_services}
 # Hadoop outputs built binaries into %{hadoop_build}
 %define hadoop_build_path build
@@ -150,7 +150,7 @@ Source7: hadoop-fuse-dfs.1
 Source8: hdfs.conf
 Source9: yarn.conf
 Source10: mapreduce.conf
-Source11: init.d.tmpl 
+Source11: init.d.tmpl
 Source12: hadoop-hdfs-namenode.svc
 Source13: hadoop-hdfs-datanode.svc
 Source14: hadoop-hdfs-secondarynamenode.svc
@@ -168,6 +168,7 @@ Source25: httpfs-tomcat-deployment.sh
 Source26: yarn.1
 Source27: hdfs.1
 Source28: mapred.1
+Source29: hadoop-yarn-timelineserver.svc
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
 BuildRequires: fuse-devel, fuse, cmake
 Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils >= 0.7, zookeeper >= 3.4.0
@@ -224,9 +225,9 @@ Group: System/Daemons
 Requires: %{name} = %{version}-%{release}, bigtop-jsvc
 
 %description hdfs
-Hadoop Distributed File System (HDFS) is the primary storage system used by 
-Hadoop applications. HDFS creates multiple replicas of data blocks and distributes 
-them on compute nodes throughout a cluster to enable reliable, extremely rapid 
+Hadoop Distributed File System (HDFS) is the primary storage system used by
+Hadoop applications. HDFS creates multiple replicas of data blocks and distributes
+them on compute nodes throughout a cluster to enable reliable, extremely rapid
 computations.
 
 %package yarn
@@ -236,18 +237,18 @@ Requires: %{name} = %{version}-%{release}
 
 %description yarn
 YARN (Hadoop NextGen MapReduce) is a general purpose data-computation framework.
-The fundamental idea of YARN is to split up the two major functionalities of the 
+The fundamental idea of YARN is to split up the two major functionalities of the
 JobTracker, resource management and job scheduling/monitoring, into separate daemons:
 ResourceManager and NodeManager.
 
-The ResourceManager is the ultimate authority that arbitrates resources among all 
+The ResourceManager is the ultimate authority that arbitrates resources among all
 the applications in the system. The NodeManager is a per-node slave managing allocation
-of computational resources on a single node. Both work in support of per-application 
+of computational resources on a single node. Both work in support of per-application
 ApplicationMaster (AM).
 
-An ApplicationMaster is, in effect, a framework specific library and is tasked with 
-negotiating resources from the ResourceManager and working with the NodeManager(s) to 
-execute and monitor the tasks. 
+An ApplicationMaster is, in effect, a framework specific library and is tasked with
+negotiating resources from the ResourceManager and working with the NodeManager(s) to
+execute and monitor the tasks.
 
 
 %package mapreduce
@@ -256,7 +257,7 @@ Group: System/Daemons
 Requires: %{name}-yarn = %{version}-%{release}
 
 %description mapreduce
-Hadoop MapReduce is a programming model and software framework for writing applications 
+Hadoop MapReduce is a programming model and software framework for writing applications
 that rapidly process vast amounts of data in parallel on large clusters of compute nodes.
 
 
@@ -305,8 +306,8 @@ Requires: %{name}-hdfs = %{version}-%{release}
 Requires(pre): %{name} = %{version}-%{release}
 
 %description hdfs-journalnode
-The HDFS JournalNode is responsible for persisting NameNode edit logs. 
-In a typical deployment the JournalNode daemon runs on at least three 
+The HDFS JournalNode is responsible for persisting NameNode edit logs.
+In a typical deployment the JournalNode daemon runs on at least three
 separate machines in the cluster.
 
 %package hdfs-datanode
@@ -363,6 +364,16 @@ Requires(pre): %{name}-yarn = %{version}-%{release}
 
 %description yarn-proxyserver
 The web proxy server sits in front of the YARN application master web UI.
+
+%package yarn-timelineserver
+Summary: YARN Timeline Server
+Group: System/Daemons
+Requires: %{name}-yarn = %{version}-%{release}
+Requires(pre): %{name} = %{version}-%{release}
+Requires(pre): %{name}-yarn = %{version}-%{release}
+
+%description yarn-timelineserver
+Storage and retrieval of applications' current as well as historic information in a generic fashion is solved in YARN through the Timeline Server.
 
 %package mapreduce-historyserver
 Summary: MapReduce History Server
@@ -538,7 +549,7 @@ getent group hadoop >/dev/null || groupadd -r hadoop
 getent group hdfs >/dev/null   || groupadd -r hdfs
 getent passwd hdfs >/dev/null || /usr/sbin/useradd --comment "Hadoop HDFS" --shell /bin/bash -M -r -g hdfs -G hadoop --home %{state_hdfs} hdfs
 
-%pre httpfs 
+%pre httpfs
 getent group httpfs >/dev/null   || groupadd -r httpfs
 getent passwd httpfs >/dev/null || /usr/sbin/useradd --comment "Hadoop HTTPFS" --shell /bin/bash -M -r -g httpfs -G httpfs --home %{run_httpfs} httpfs
 
@@ -697,6 +708,7 @@ fi
 %service_macro yarn-resourcemanager
 %service_macro yarn-nodemanager
 %service_macro yarn-proxyserver
+%service_macro yarn-timelineserver
 %service_macro mapreduce-historyserver
 
 # Pseudo-distributed Hadoop installation

@@ -129,6 +129,14 @@ Depends: hadoop-yarn (= ${binary:Version})
 Description: YARN Web Proxy
  The web proxy server sits in front of the YARN application master web UI.
 
+Package: hadoop-yarn-timelineserver
+Architecture: any
+Depends: hadoop-yarn (= ${binary:Version})
+Description: YARN Timeline Server
+ Storage and retrieval of applications' current as well as historic 
+ information in a generic fashion is solved in YARN through the 
+ Timeline Server.
+ 
 Package: hadoop-hdfs-namenode
 Architecture: any
 Depends: hadoop-hdfs (= ${binary:Version})
