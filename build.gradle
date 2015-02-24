@@ -81,6 +81,18 @@ task toolchain(type:Exec,
   commandLine command
 }
 
+task "toolchain-puppetmodules"(type:Exec,
+    description: 'Setup puppet modules via toolchain; Requires: Puppet, sudo',
+    group: DEVENV_GROUP) {
+  def command = [
+      'sudo', 'puppet', 'apply', '-d',
+      "--modulepath=${projectDir.absolutePath}", '-e',
+      'include bigtop_toolchain::puppet-modules'
+  ]
+  workingDir '.'
+  commandLine command
+}
+
 task installTopLevel(type:Exec) {
   workingDir "."
   commandLine 'mvn clean install -f pom.xml'.split(" ")
