@@ -1,4 +1,7 @@
 ---
+### This is very important to make sure this file doesn't contain any TAB
+### symbols instead of spaces: the hiera YAML parser will choke to death with
+### uncomprehensive error message and you'll waste a lot of time debugging it.
 bigtop::hadoop_head_node: "head.node.fqdn"
 #bigtop::standby_head_node: "standby.head.node.fqdn"
 
@@ -28,5 +31,5 @@ hadoop::hadoop_storage_dirs:
 #  - yarn
 #  - zookeeper
 
-# Debian:
 #bigtop::jdk_package_name: "openjdk-7-jre-headless"
+#bigtop::bigtop_yumrepo_uri: "http://mirror.example.com/path/to/mirror/"
