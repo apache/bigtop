@@ -15,6 +15,7 @@ hadoop::hadoop_storage_dirs:
 #  - crunch
 #  - flume
 #  - giraph
+#  - gridgain-hadoop
 #  - hbase
 #  - hcat
 #  - hive
