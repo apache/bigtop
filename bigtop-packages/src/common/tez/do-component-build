@@ -20,7 +20,7 @@ set -xe
 
 BUILD_TEZ_OPTS="clean package \
 -Dtar -Dhadoop.version=${HADOOP_VERSION} \
--Phadoop24 -P!hadoop26
+-Phadoop26 \
 -DskipTests"
 
 #mvn versions:set -DnewVersion=${TEZ_VERSION}
