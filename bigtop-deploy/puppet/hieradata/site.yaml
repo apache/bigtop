@@ -33,4 +33,4 @@ hadoop::hadoop_storage_dirs:
 #  - zookeeper
 
 #bigtop::jdk_package_name: "openjdk-7-jre-headless"
-#bigtop::bigtop_yumrepo_uri: "http://mirror.example.com/path/to/mirror/"
+#bigtop::bigtop_repo_uri: "http://mirror.example.com/path/to/mirror/"
