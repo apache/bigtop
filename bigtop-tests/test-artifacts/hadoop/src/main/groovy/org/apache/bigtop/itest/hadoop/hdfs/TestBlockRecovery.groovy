@@ -37,23 +37,22 @@ import org.apache.hadoop.hdfs.DFSTestUtil;
  This test checks block recovery after a block is corrupted.
  The test must be performed on a cluster with at least
  three datanodes to allow block recovery.
- The test must be run under user hdfs.
  Block replication must be set to a minimum value of 2
  for this test to work properly.
  */
 public class TestBlockRecovery {
 
-  private static Shell sh = new Shell("/bin/bash");
+  private static Shell shHDFS = new Shell("/bin/bash", "hdfs");
 
   private static Configuration conf;
 
   private static final String corruptContent = "0123456789";
-  private static final String fsFilePath = USER_DIR + "/file0";
+  private static final String HDFS_TEST_DIR = "/tmp/TestBlockRecovery$corruptContent";
+  private static final String fsFilePath = HDFS_TEST_DIR + "/file0";
   private static final String grepIP = "grep -o '\\[[^]]*\\]' | " +
     "grep -o '[0-9]*\\.[0-9]*\\.[0-9]*\\.[0-9]*'";
   private static final String localTestDir = "/tmp/test";
   private static final String outputFile = localTestDir + "/fsckOutput.txt";
-  private static final String USER_DIR = "/user/hdfs";
 
   private static final int sleepTime = 60 * 1000;
   private static final int TIMEOUT = 5000;
@@ -64,7 +63,6 @@ public class TestBlockRecovery {
   private static String cksumError;
   private static String initialBlockChecksum;
   private static String fileContent;
-  private static String USERNAME;
 
   private static def dataDirs = [];
   private static def nodesBeforeRecovery = [];
@@ -90,88 +88,87 @@ public class TestBlockRecovery {
     if (dataDirs == null)
       dataDirs = conf.get("dfs.datanode.data.dir").split(",");
 
-    USERNAME = System.getProperty("user.name");
-    Assume.assumeTrue(USERNAME == "hdfs");
-
-    numberOfDataNodes = sh.exec("hdfs dfsadmin -report | grep ^Name | wc -l").getOut()[0] as short;
+    numberOfDataNodes = shHDFS.exec("hdfs dfsadmin -report | grep ^Name | wc -l").getOut()[0] as short;
     Assume.assumeTrue(numberOfDataNodes >= 3);
 
-    sh.exec("rm -rf $localTestDir");
-    sh.exec("mkdir $localTestDir");
-    sh.exec("hadoop fs -rm -r $fsFilePath");
+    shHDFS.exec("rm -rf $localTestDir");
+    shHDFS.exec("mkdir $localTestDir");
+    shHDFS.exec("hadoop fs -rm -r $fsFilePath");
     Thread.sleep(TIMEOUT);
-    sh.exec("hadoop fs -mkdir -p $USER_DIR");
-    assertTrue("Failed to create input directory", sh.getRet() == 0);
+    shHDFS.exec("hadoop fs -mkdir -p $HDFS_TEST_DIR && hadoop fs -chmod 777 $HDFS_TEST_DIR");
+    assertTrue("Failed to create input directory", shHDFS.getRet() == 0);
 
     repFactor = (numberOfDataNodes - 1);
+    try {
+    	DFSTestUtil.createFile(fileSys, new Path(fsFilePath), fileLen, repFactor, SEED);
+    } catch (Exception e) {
+	assert "Exception should not be thrown"
+    }
+    fileContent = shHDFS.exec("hadoop fs -cat $fsFilePath").getOut()[0];
 
-    DFSTestUtil.createFile(fileSys, new Path(fsFilePath), fileLen, repFactor, SEED);
+    shHDFS.exec("hdfs fsck $fsFilePath -blocks -locations -files > $outputFile");
+    assertTrue("Could not write output to file", shHDFS.getRet() == 0);
 
-    fileContent = sh.exec("hadoop fs -cat $fsFilePath").getOut()[0];
-
-    sh.exec("hdfs fsck $fsFilePath -blocks -locations -files > $outputFile");
-    assertTrue("Could not write output to file", sh.getRet() == 0);
-
-    nodesBeforeRecovery = sh.exec("grep -o '\\[[^]]*\\]' $outputFile | " +
+    nodesBeforeRecovery = shHDFS.exec("grep -o '\\[[^]]*\\]' $outputFile | " +
       "grep -o '[0-9]*\\.[0-9]*\\.[0-9]*\\.[0-9]*'").getOut();
-    assertTrue("Could not obtain datanode addresses", sh.getRet() == 0);
+    assertTrue("Could not obtain datanode addresses", shHDFS.getRet() == 0);
 
-    blockToTest = sh.exec("grep -o 'blk_[0-9]*' $outputFile").getOut()[0];
-    assertTrue("Could not obtain block number", sh.getRet() == 0);
+    blockToTest = shHDFS.exec("grep -o 'blk_[0-9]*' $outputFile").getOut()[0];
+    assertTrue("Could not obtain block number", shHDFS.getRet() == 0);
 
     for (int i = 0; i < dataDirs.length; i++) {
       def dataDir = dataDirs[i]
-      blockLocation = sh.exec("find $dataDir -name $blockToTest | grep $dataDir").getOut()[0];
+      blockLocation = shHDFS.exec("find $dataDir -name $blockToTest | grep $dataDir").getOut()[0];
       if (blockLocation != null) break;
     }
     assertNotNull("Could not find specified block", blockLocation);
 
-    initialBlockChecksum = sh.exec("cksum $blockLocation").getOut()[0].split(" ")[0];
-    assertTrue("Could not obtain checksum for block $blockToTest", sh.getRet() == 0);
+    initialBlockChecksum = shHDFS.exec("cksum $blockLocation").getOut()[0].split(" ")[0];
+    assertTrue("Could not obtain checksum for block $blockToTest", shHDFS.getRet() == 0);
   }
 
   @AfterClass
   public static void tearDown() {
     // deletion of test files
-    sh.exec("hadoop fs -rm -r -skipTrash $fsFilePath");
-    assertTrue("Could not delete file $fsFilePath", sh.getRet() == 0);
-    sh.exec("rm -rf $localTestDir");
-    assertTrue("Could not delete test directory $localTestDir", sh.getRet() == 0);
+    shHDFS.exec("hadoop fs -rm -r -skipTrash $fsFilePath");
+    assertTrue("Could not delete file $fsFilePath", shHDFS.getRet() == 0);
+    shHDFS.exec("rm -rf $localTestDir");
+    assertTrue("Could not delete test directory $localTestDir", shHDFS.getRet() == 0);
   }
 
   @Test
   public void testBlockRecovery() {
     // corrupt block
-    sh.exec("echo $corruptContent > $blockLocation");
-    assertTrue("Could not write to file", sh.getRet() == 0);
+    shHDFS.exec("echo $corruptContent > $blockLocation");
+    assertTrue("Could not write to file", shHDFS.getRet() == 0);
 
     // perform checksum after block corruption
-    String corruptBlockChecksum = sh.exec("cksum $blockLocation").getOut()[0].split(" ")[0];
-    assertTrue("Could not obtain checksum for block $blockToTest", sh.getRet() == 0);
+    String corruptBlockChecksum = shHDFS.exec("cksum $blockLocation").getOut()[0].split(" ")[0];
+    assertTrue("Could not obtain checksum for block $blockToTest", shHDFS.getRet() == 0);
 
     // trigger block recovery by trying to access the file
-    sh.exec("hadoop fs -cat $fsFilePath");
+    shHDFS.exec("hadoop fs -cat $fsFilePath");
 
     // make sure checksum changes back to original, indicating block recovery
     for (int j = 0; j < 3; j++) {
       // wait a bit to let the block recover
       sleep(sleepTime);
       // see if checksum has changed
-      cksumError = sh.exec("hadoop fs -cat $fsFilePath | grep -o 'Checksum error'").getErr();
+      cksumError = shHDFS.exec("hadoop fs -cat $fsFilePath | grep -o 'Checksum error'").getErr();
       if (cksumError != "Checksum error") break;
     }
     assertNotNull("Block has not been successfully triggered for recovery.", cksumError);
 
-    nodesAfterRecovery = sh.exec("hdfs fsck $fsFilePath -blocks -locations -files | $grepIP").getOut();
-    assertTrue("Could not obtain datanode addresses", sh.getRet() == 0);
+    nodesAfterRecovery = shHDFS.exec("hdfs fsck $fsFilePath -blocks -locations -files | $grepIP").getOut();
+    assertTrue("Could not obtain datanode addresses", shHDFS.getRet() == 0);
 
     blockRecoveryNode = (nodesBeforeRecovery.intersect(nodesAfterRecovery))[0];
 
     if (blockRecoveryNode == null) {
       sleep(sleepTime);
 
-      nodesAfterRecovery = sh.exec("hdfs fsck $fsFilePath -blocks -locations -files | $grepIP").getOut();
-      assertTrue("Could not obtain datanode addresses", sh.getRet() == 0);
+      nodesAfterRecovery = shHDFS.exec("hdfs fsck $fsFilePath -blocks -locations -files | $grepIP").getOut();
+      assertTrue("Could not obtain datanode addresses", shHDFS.getRet() == 0);
 
       blockRecoveryNode = (nodesBeforeRecovery.intersect(nodesAfterRecovery))[0];
       assert (blockRecoveryNode.size() != 0): "Block has not been successfully triggered for recovery."
@@ -185,14 +182,14 @@ public class TestBlockRecovery {
     while (cksumAttempt < 3) {
       if (corruptBlockChecksum != initialBlockChecksum) {
         sleep(sleepTime);
-        corruptBlockChecksum = sh.exec("ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_hdfsuser " +
+        corruptBlockChecksum = shHDFS.exec("ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_hdfsuser " +
           "$blockRecoveryNode 'cksum `find ${dataDirs.join(' ')}" +
           " -name $blockToTest 2>/dev/null | grep $blockToTest` '").getOut()[0].split(" ")[0];
         ++cksumAttempt;
       } else {
         // If block recovers, verify file content is the same as before corruption
-        if (sh.exec("hadoop fs -cat $fsFilePath").getOut()[0] == fileContent) {
-          assertTrue("Could not read file $fsFilePath", sh.getRet() == 0);
+        if (shHDFS.exec("hadoop fs -cat $fsFilePath").getOut()[0] == fileContent) {
+          assertTrue("Could not read file $fsFilePath", shHDFS.getRet() == 0);
           success = true;
           break;
         }
