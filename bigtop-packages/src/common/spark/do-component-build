@@ -23,12 +23,16 @@ if [ "x$SCALA_HOME" = "x" ]; then
     exit 2
 fi
 
+SCALA_BINARY_VERSION=`echo $SCALA_VERSION | grep -oP "\d.\d{2}"`
+
 BUILD_OPTS="-Divy.home=${HOME}/.ivy2 -Dsbt.ivy.home=${HOME}/.ivy2 -Duser.home=${HOME} \
             -Drepo.maven.org=$IVY_MIRROR_PROP \
             -Dreactor.repo=file://${HOME}/.m2/repository \
             -Dhadoop.version=$HADOOP_VERSION \
             -Dyarn.version=$HADOOP_VERSION \
             -Dprotobuf.version=2.5.0 \
+            -Dscala.version=$SCALA_VERSION \
+            -Dscala.binary.version=$SCALA_BINARY_VERSION \
             -DskipTests -DrecompileMode=all"
 ## this might be an issue at times
 #        http://maven.40175.n5.nabble.com/Not-finding-artifact-in-local-repo-td3727753.html

@@ -16,6 +16,8 @@
 
 set -ex
 
+. `dirname ${0}`/bigtop.bom
+
 if [ "x$SCALA_HOME" = "x" ]; then
     echo "SCALA_HOME has to be set before the build can run"
     exit 2
@@ -29,8 +31,6 @@ BUILD_OPTS="-Divy.home=${HOME}/.ivy2 -Dsbt.ivy.home=${HOME}/.ivy2 -Duser.home=${
 ## this might be an issue at times
 #        http://maven.40175.n5.nabble.com/Not-finding-artifact-in-local-repo-td3727753.html
 export MAVEN_OPTS="-Xmx2g -XX:ReservedCodeCacheSize=512m -XX:PermSize=1024m -XX:MaxPermSize=1024m"
-
-SCALA_VERSION=2.10.0
 
 ./gradlew -PscalaVersion=${SCALA_VERSION} clean releaseTarGz -x signArchives
 

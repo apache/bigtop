@@ -173,8 +173,6 @@ EOF
 done
 
 cat >> $PREFIX/$CONF_DIR/spark-env.sh <<EOF
-export SPARK_SCALA_VERSION=2.10
-
 ### Let's run everything with JVM runtime, instead of Scala
 export SPARK_LAUNCH_WITH_SCALA=0
 export SPARK_LIBRARY_PATH=\${SPARK_HOME}/lib
