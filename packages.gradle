@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 import org.ajoberstar.grgit.*
+import groovy.json.JsonOutput
 
 buildscript {
   repositories {
@@ -98,6 +99,42 @@ task "packages-help" (description: "All package build related tasks information"
   targets.each { target ->
     println (target + "\n\t[" + tasks.findAll { alltask -> alltask.name.startsWith(target)}*.name.join(", ") + "]")
   }
+}
+
+task "bom-json" (description: "List the components of the stack in json format") << {
+  def componentObjects = components.sort().collect {
+    [
+      name: [
+        project: BOM_map[it + '_NAME'],
+        pkg: BOM_map[it + '_PKG_NAME'],
+        relNotes: BOM_map[it + '_RELNOTES_NAME'],
+      ],
+      tarball: [
+        destination: BOM_map[it + '_TARBALL_DST'],
+        source: BOM_map[it + '_TARBALL_SRC'],
+      ],
+      url: [
+        site: BOM_map[it + '_SITE'],
+        archive: BOM_map[it + '_ARCHIVE'],
+      ],
+      version: [
+        base: BOM_map[it + '_BASE_VERSION'],
+        pkg: BOM_map[it + '_PKG_VERSION'],
+        release: BOM_map[it + '_RELEASE_VERSION'],
+      ],
+      git: [
+         repo: BOM_map[it + '_GIT_REPO'],
+         ref: BOM_map[it + '_GIT_REF'],
+         dir: BOM_map[it + '_GIT_DIR'],
+      ]
+    ]
+  }
+  def fullDefinition = [
+    version: BOM_map['BIGTOP_VERSION'],
+    components: componentObjects
+  ]
+  def json = JsonOutput.toJson(fullDefinition)
+  println JsonOutput.prettyPrint(json)
 }
 
 task "all-components" (description: "List the components of the stack") << {
