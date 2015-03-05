@@ -96,7 +96,7 @@ done
 for service in %{tachyon_services}; do
   /sbin/service %{name}-${service} status > /dev/null 2>&1
   if [ $? -eq 0 ]; then
-    /sbin/service %{tachyon_name}-${service} stop > /dev/null 2>&1
+    /sbin/service %{name}-${service} stop > /dev/null 2>&1
   fi
 done
 
@@ -119,8 +119,12 @@ done
 %{tachyon_home}/libexec/tachyon*
 %{_datadir}/%{name}
 /usr/bin/tachyon
+%{tachyon_home}/share
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Thu Mar 05 2015 Huamin Chen
+- upgrade to Tachyon 0.6.0

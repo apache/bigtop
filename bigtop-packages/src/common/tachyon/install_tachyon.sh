@@ -97,6 +97,7 @@ install -d -m 0755 $PREFIX/$LIB_DIR
 install -d -m 0755 $PREFIX/$LIB_DIR/bin
 install -d -m 0755 $PREFIX/$LIB_DIR/libexec
 install -d -m 0755 $PREFIX/$LIB_DIR/lib
+install -d -m 0755 $PREFIX/$LIB_DIR/share
 install -d -m 0755 $PREFIX/$DATA_DIR
 install -d -m 0755 $PREFIX/$DATA_DIR/tachyon
 install -d -m 0755 $PREFIX/etc
@@ -119,6 +120,9 @@ cp conf/tachyon-env.sh.template  $PREFIX/etc/tachyon/tachyon-env.sh
 
 # Copy in the /usr/bin/tachyon wrapper
 install -d -m 0755 $PREFIX/$BIN_DIR
+
+# Copy in tachyon deploy scripts
+cp -rf deploy $PREFIX/$LIB_DIR/share
 
 # Prefix is correct at time of install,
 # but we dont want to escape it before that point.
