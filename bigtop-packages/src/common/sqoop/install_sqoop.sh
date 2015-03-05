@@ -124,7 +124,10 @@ cp -a ${BUILD_DIR}/lib/*.jar ${PREFIX}/${LIB_DIR}/lib
 install -d -m 0755 $PREFIX/usr/bin
 
 install -d -m 0755 $PREFIX/${BIN_DIR}
-cp ${BUILD_DIR}/bin/* $PREFIX/${BIN_DIR}
+for f in `ls ${BUILD_DIR}/bin/ | grep -v .cmd`; do
+    cp ${BUILD_DIR}/bin/$f $PREFIX/${BIN_DIR}
+done
+
 
 install -d -m 0755 $PREFIX/${DOC_DIR}
 cp ${BUILD_DIR}/docs/*.html  $PREFIX/${DOC_DIR}
@@ -158,7 +161,7 @@ EOF
 done
 
 install -d -m 0755 $PREFIX/$CONF_DIR
-(cd ${BUILD_DIR}/conf && tar cf - .) | (cd $PREFIX/$CONF_DIR && tar xf -)
+(cd ${BUILD_DIR}/conf && tar cf - .) | (cd $PREFIX/$CONF_DIR && tar xf - && rm -rf *.cmd .gitignore)
 
 unlink $PREFIX/$LIB_DIR/conf || /bin/true
 ln -s $ETC_DIR/conf $PREFIX/$LIB_DIR/conf
