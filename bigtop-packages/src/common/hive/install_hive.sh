@@ -81,10 +81,10 @@ while true ; do
         PYTHON_DIR=$2 ; shift 2
         ;;
         --hcatalog-dir)
-        HCATALOG__DIR=$2 ; shift 2
+        HCATALOG_DIR=$2 ; shift 2
         ;;
         --installed-hcatalog-dir)
-        INSTALLED_HCATALOG__DIR=$2 ; shift 2
+        INSTALLED_HCATALOG_DIR=$2 ; shift 2
         ;;
         --)
         shift ; break
