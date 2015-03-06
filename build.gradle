@@ -108,11 +108,11 @@ task installTopLevel(type:Exec) {
   commandLine 'mvn clean install -f pom.xml'.split(" ")
 }
 
-task installiTest(type:Exec) {
+task installiTest(dependsOn: installTopLevel, type:Exec) {
   workingDir "."
   commandLine 'mvn clean install -f bigtop-test-framework/pom.xml -DskipTests'.split(" ")
 }
-task installTestArtifacts(type:Exec) {
+task installTestArtifacts(dependsOn: installiTest, type:Exec) {
   workingDir "."
   commandLine 'mvn clean install -f bigtop-tests/test-artifacts/pom.xml'.split(" ")
 }
@@ -138,7 +138,10 @@ def artifactToInstall = {
 
   def project = new XmlSlurper().parse("$TEST_DIR/pom.xml")
   project.modules.module.each { artifact ->
-    task "install-${artifact}" (description: "Installs ${artifact} artifact with Maven", group: TESTARTIFACTS_GROUP) << {
+    task "install-${artifact}" (description: "Installs ${artifact} artifact with Maven",
+        group: TESTARTIFACTS_GROUP,
+        dependsOn: installiTest
+    ) << {
       def final PATH = "${TEST_DIR}/$artifact/pom.xml"
       def final WRAPPER = "mvn clean install -f " + PATH
       exec {
@@ -153,8 +156,6 @@ project.afterEvaluate{
   artifactToInstall(dependsOn: [installTopLevel, installCommon, installConf, installiTest])
 }
 
-installTestArtifacts.mustRunAfter installiTest
-installiTest.mustRunAfter installTopLevel
 installAllLocalArtifacts.dependsOn installTopLevel, installCommon, installConf, installiTest, installTestArtifacts
 
 repositories {
