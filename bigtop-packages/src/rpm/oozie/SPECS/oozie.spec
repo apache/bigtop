@@ -50,7 +50,7 @@ Name: oozie
 Version: %{oozie_version}
 Release: %{oozie_release}
 Summary:  Oozie is a system that runs workflows of Hadoop jobs.
-URL: http://incubator.apache.org/oozie/
+URL: http://oozie.apache.org/
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 License: ASL 2.0
@@ -70,50 +70,50 @@ Requires(preun): /sbin/chkconfig, /sbin/service
 Requires: oozie-client = %{version}, hadoop-client, bigtop-tomcat
 BuildArch: noarch
 
-%description 
+%description
  Oozie is a system that runs workflows of Hadoop jobs.
  Oozie workflows are actions arranged in a control dependency DAG (Direct
  Acyclic Graph).
 
  Oozie coordinator functionality allows to start workflows at regular
  frequencies and when data becomes available in HDFS.
- 
+
  An Oozie workflow may contain the following types of actions nodes:
  map-reduce, map-reduce streaming, map-reduce pipes, pig, file-system,
  sub-workflows, java, hive, sqoop and ssh (deprecated).
- 
+
  Flow control operations within the workflow can be done using decision,
  fork and join nodes. Cycles in workflows are not supported.
- 
+
  Actions and decisions can be parameterized with job properties, actions
  output (i.e. Hadoop counters) and HDFS  file information (file exists,
  file size, etc). Formal parameters are expressed in the workflow definition
  as ${VARIABLE NAME} variables.
- 
+
  A Workflow application is an HDFS directory that contains the workflow
  definition (an XML file), all the necessary files to run all the actions:
  JAR files for Map/Reduce jobs, shells for streaming Map/Reduce jobs, native
  libraries, Pig scripts, and other resource files.
- 
- Running workflow jobs is done via command line tools, a WebServices API 
+
+ Running workflow jobs is done via command line tools, a WebServices API
  or a Java API.
- 
+
  Monitoring the system and workflow jobs can be done via a web console, the
  command line tools, the WebServices API and the Java API.
- 
+
  Oozie is a transactional system and it has built in automatic and manual
  retry capabilities.
- 
+
  In case of workflow job failure, the workflow job can be rerun skipping
  previously completed actions, the workflow application can be patched before
  being rerun.
 
- 
+
 %package client
 Version: %{version}
-Release: %{release} 
+Release: %{release}
 Summary:  Client for Oozie Workflow Engine
-URL: http://incubator.apache.org/oozie/
+URL: http://oozie.apache.org/
 Group: Development/Libraries
 License: ASL 2.0
 BuildArch: noarch
@@ -154,12 +154,12 @@ Requires: bigtop-utils >= 0.7
 getent group oozie >/dev/null || /usr/sbin/groupadd -r oozie >/dev/null
 getent passwd oozie >/dev/null || /usr/sbin/useradd --comment "Oozie User" --shell /bin/false -M -r -g oozie --home %{data_oozie} oozie >/dev/null
 
-%post 
+%post
 %{alternatives_cmd} --install %{conf_oozie} %{name}-conf %{conf_oozie_dist} 30
 %{alternatives_cmd} --install %{tomcat_conf_oozie} %{name}-tomcat-conf %{tomcat_conf_oozie}.http 30
 %{alternatives_cmd} --install %{tomcat_conf_oozie} %{name}-tomcat-conf %{tomcat_conf_oozie}.https 20
 
-/sbin/chkconfig --add oozie 
+/sbin/chkconfig --add oozie
 
 %preun
 if [ "$1" = 0 ]; then
@@ -176,7 +176,7 @@ if [ $1 -ge 1 ]; then
   /sbin/service oozie condrestart > /dev/null
 fi
 
-%files 
+%files
 %defattr(-,root,root)
 %config(noreplace) %{conf_oozie_dist}
 %config(noreplace) %{tomcat_conf_oozie}.*

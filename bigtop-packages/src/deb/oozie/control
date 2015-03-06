@@ -19,7 +19,7 @@ Maintainer: Bigtop <dev@bigtop.apache.org>
 Build-Depends: debhelper (>= 7.0.50~)
 Depends: zip, unzip
 Standards-Version: 3.8.0
-Homepage: http://incubator.apache.org/oozie/
+Homepage: http://oozie.apache.org/
 
 Package: oozie-client
 Architecture: all
@@ -73,4 +73,3 @@ Description: Oozie is a system that runs workflows of Hadoop jobs.
  In case of workflow job failure, the workflow job can be rerun skipping
  previously completed actions, the workflow application can be patched before
  being rerun.
-

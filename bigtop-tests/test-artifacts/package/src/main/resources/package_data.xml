@@ -327,7 +327,7 @@ when more advanced customization is required.</description>
  In case of workflow job failure, the workflow job can be rerun skipping
  previously completed actions, the workflow application can be patched before
  being rerun.</description>
-      <url>http://incubator.apache.org/oozie/</url>
+      <url>http://oozie.apache.org/</url>
     </metadata>
     <deps>
       <oozie-client>/self</oozie-client>
@@ -357,7 +357,7 @@ such operations, you can also change the status of the entire
 system, get vesion information. This client utility also allows
 you to validate any worflows before they are deployed to the Oozie
 server.</description>
-      <url>http://incubator.apache.org/oozie/</url>
+      <url>http://oozie.apache.org/</url>
     </metadata>
     <deps>
       <hadoop/>
@@ -402,8 +402,8 @@ server.</description>
     <metadata>
       <summary>Simple and Efficient MapReduce Pipelines.</summary>
       <description>Apache Crunch is a Java library for writing, testing, and running
-MapReduce pipelines, based on Google's FlumeJava. Its goal is to make 
-pipelines that are composed of many user-defined functions simple to write, 
+MapReduce pipelines, based on Google's FlumeJava. Its goal is to make
+pipelines that are composed of many user-defined functions simple to write,
 easy to test, and efficient to run.</description>
       <url>http://crunch.apache.org/</url>
     </metadata>
