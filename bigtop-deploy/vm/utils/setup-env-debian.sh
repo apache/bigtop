@@ -32,4 +32,6 @@ service rng-tools start
 if [ $enable_local_repo == "true" ]; then
     echo "deb file:///bigtop-home/output/apt bigtop contrib" > /etc/apt/sources.list.d/bigtop-home_output.list
     apt-get update
+else 
+    echo "local yum = $enable_local_repo ; NOT Enabling local yum.  Packages will be pulled from remote..."
 fi
