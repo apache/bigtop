@@ -17,7 +17,7 @@ Section: misc
 Priority: extra
 Maintainer: Bigtop <dev@bigtop.apache.org>
 Build-Depends: debhelper (>= 7.0.50~)
-Standards-Version: 3.8.0
+Standards-Version: 3.9.4
 Homepage: http://hbase.apache.org/
 
 Package: hbase

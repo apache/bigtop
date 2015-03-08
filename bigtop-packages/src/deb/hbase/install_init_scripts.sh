@@ -18,23 +18,17 @@
 SRC_PKG=hbase
 for node in master regionserver rest thrift thrift2; do
     service_pkgdir=debian/$SRC_PKG-$node
-    debdir=$service_pkgdir/DEBIAN
-    mkdir -p $service_pkgdir/etc/init.d/ $debdir
     if [ "$node" == "regionserver" ] ; then
         # Region servers start from a different template that allows
         # them to run multiple concurrent instances of the daemon
         template=debian/regionserver-init.d.tpl
         sed -i -e "s|@INIT_DEFAULT_START@|2 3 4 5|" $template
         sed -i -e "s|@INIT_DEFAULT_STOP@|0 1 6|" $template
-        sed -e "s|@HBASE_DAEMON@|$node|" -e "s|@CHKCONFIG@|2345 87 13|" $template > $service_pkgdir/etc/init.d/$SRC_PKG-$node
+        sed -e "s|@HBASE_DAEMON@|$node|" -e "s|@CHKCONFIG@|2345 87 13|" $template > debian/hbase-$node.init
     else
         sed -e "s|@HBASE_DAEMON@|$node|" debian/hbase.svc > debian/hbase-$node.svc
-        bash debian/init.d.tmpl debian/hbase-$node.svc deb $service_pkgdir/etc/init.d/$SRC_PKG-$node
+	bash debian/init.d.tmpl debian/hbase-$node.svc deb debian/hbase-$node.init 
     fi
-    sed -e "s|@HBASE_DAEMON@|$node|" debian/service-postinst.tpl > $debdir/postinst
-    sed -e "s|@HBASE_DAEMON@|$node|" debian/service-postrm.tpl > $debdir/postrm
-    echo /etc/init.d/$SRC_PKG-$node > $debdir/conffiles
-    chmod 755 $debdir/postinst $debdir/postrm $service_pkgdir/etc/init.d*
 
     mkdir -p $service_pkgdir/usr/share/lintian/overrides
     echo "$SRC_PKG-$node: new-package-should-close-itp-bug" > $service_pkgdir/usr/share/lintian/overrides/$SRC_PKG-$node
