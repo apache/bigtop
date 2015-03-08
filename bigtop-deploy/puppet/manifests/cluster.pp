@@ -74,7 +74,9 @@ class hadoop_worker_node (
     include hadoop::mapred-app
   }
 
-  if ($all or "solrcloud" in $components) {
+  ## Tolerate solr or solrcloud as the component name, since build
+  ## bom uses solr but solrcloud has been used for some time.
+  if ($all or "solr" in $components or "solrcloud" in $components) {
     include solr::server
   }
 
