@@ -202,12 +202,18 @@
                                         <td align="center">science+computing ag</td>
                                         <td align="center">committer</td>
                                 </tr>
-                <tr valign="top">
+				<tr valign="top">
 					<td align="center">ywkim</td>
 					<td align="center">YoungWoo Kim</td>
 					<td align="center">KT NexR</td>
-                    <td align="center">committer</td>
-                </tr>
+					<td align="center">committer</td>
+				</tr>
+				<tr valign="top">
+					<td align="center">rnowling</td>
+					<td align="center">RJ Nowling</td>
+					<td align="center">Red Hat</td>
+					<td align="center">committer</td>
+				</tr>
 			</table>
 
 			<subsection name="Contributors"></subsection>
