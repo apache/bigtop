@@ -4,17 +4,17 @@ gradle / build system: cos, rvs
 gridgain-hadoop: cos, Sergey Vladykin <sergi.vladykin@gmail.com>
 hadoop: mark grover, cos, rvs
 hbase: andrew purtell, rvs
-hive: mark grover
+hive: mark grover, youngwoo kim
 hue: oflebbe
 itest: cos, rvs
 mvn publishing/packaging: rvs
 oozie evans ye, rvs
-phoenix: andrew purtell
+phoenix: andrew purtell, youngwoo kim
 pig: evans ye, daniel dai
 puppet recipes: jay vyas, cos, evans ye, rvs
 smoke-tests: jay vyas, david capwell
-spark: jay vyas,
-sqoop: sean mackrory
+spark: jay vyas, youngwoo kim
+sqoop: sean mackrory, youngwoo kim
 tachyon: david capwell, jay vyas, huamin chen
 test-artifacts and test-execution repos:
 tez: evans ye, oflebbe
