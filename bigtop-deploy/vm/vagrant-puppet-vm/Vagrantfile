@@ -41,7 +41,7 @@ run_smoke_tests = CONF['run_smoke_tests']
 # This is a update to allow dev packages
 # Force success - not worried if this step fails, since we generally only use it for development.
 enable_local_repo = CONF['enable_local_repo']
-
+puts "vagrant conf local repo enabled:  #{enable_local_repo}"
 # master node hostname
 bigtop_master = "bigtop1.vagrant"
 
@@ -95,12 +95,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       bigtop.vm.synced_folder "../../../", "/bigtop-home"
 
       # We also add the bigtop-home output/ dir, so that locally built rpms will be available.
-      puts "Adding rpms from /output/ for local testing."
-
+      
+      puts "Adding output/ repo ? #{enable_local_repo}"
+     
       # carry on w/ installation
       bigtop.vm.provision :shell do |shell|
         shell.path = "../utils/setup-env-" + distro + ".sh"
-        shell.args = ["$enable_local_repo"]
+        shell.args = ["#{enable_local_repo}"]
       end
       bigtop.vm.provision "shell", inline: $script
       bigtop.vm.provision :hostmanager

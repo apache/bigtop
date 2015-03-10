@@ -16,6 +16,7 @@
 # limitations under the License.
 
 enable_local_repo=${1:-false}
+echo "$enable_local_repo"
 
 # Install puppet agent
 yum -y install http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm
@@ -34,7 +35,10 @@ service rngd start
 yum -y install unzip
 
 if [ $enable_local_repo == "true" ]; then
+    echo "Enabling local yum."
     yum -y install yum-utils
     sudo echo "gpgcheck=0" >> /etc/yum.conf
     sudo yum-config-manager --add-repo file:///bigtop-home/output
+else 
+    echo "local yum = $enable_local_repo ; NOT Enabling local yum.  Packages will be pulled from remote..."
 fi
