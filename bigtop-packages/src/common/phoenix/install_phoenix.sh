@@ -117,7 +117,7 @@ cp -a $BUILD_DIR/examples $PREFIX/$DOC_DIR
 cp -a  $BUILD_DIR/bin/*.txt $PREFIX/$DOC_DIR
 
 cp -a $BUILD_DIR/bin/*.py $PREFIX/$BIN_DIR
-cp -a $BUILD_DIR/bin/log4j.properties $PREFIX/$BIN_DIR
+cp -a $BUILD_DIR/bin/*.properties $PREFIX/$BIN_DIR
 
 # Remove sources jar
 rm $PREFIX/$LIB_DIR/lib/phoenix-*-sources.jar

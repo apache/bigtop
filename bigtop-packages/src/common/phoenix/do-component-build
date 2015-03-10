@@ -27,5 +27,3 @@ mvn -DskipTests \
 rm -rf build
 mkdir build
 tar -C build --strip-components=1 -xzf phoenix-assembly/target/phoenix-$PHOENIX_VERSION.tar.gz
-# workaround for PHOENIX-1532
-cp -a phoenix-assembly/target/phoenix-$PHOENIX_VERSION-server.jar build/
