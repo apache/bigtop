@@ -268,9 +268,11 @@ export CATALINA_OPTS="${CATALINA_OPTS} -Dsolr.host=$HOSTNAME
                                         -Dsolr.admin.port=$SOLR_ADMIN_PORT
                                         -Dsolr.solr.home=$SOLR_HOME"
 
-# FIXME: for some reason catalina doesn't use CATALINA_OPTS for stop action
-#        and thus doesn't know the admin port
-export JAVA_OPTS="$CATALINA_OPTS"
+#  catalina doesn't use CATALINA_OPTS for stop action so we need to 
+# set JAVA_OPTS to include the admin port
+if [ $1 = "stop" ] ; then
+    export JAVA_OPTS="$CATALINA_OPTS"
+fi
 
 if [ -x /usr/lib/bigtop-utils/bigtop-monitor-service ]; then
 if ([ "$1" = "start" -o "$1" = "run" ]) && [ -n "$SOLRD_WATCHDOG_TIMEOUT" ] ; then
