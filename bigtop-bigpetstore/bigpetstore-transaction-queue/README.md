@@ -77,7 +77,7 @@ docker run -t -i jayunit100/bigpetstore-load-generator /opt/bigpetstore-transact
 Or from java
 ```
 gradle clean fatJar
-java -cp ./build/libs/bigpetstore-transaction-queue-all-1.0.jar org.apache.bigtop.qstream.LoadGen http://localhost:3000/rpush/guestbook/ 4 4 1000 123
+java -jar ./build/libs/bigpetstore-transaction-queue-all-1.0.jar http://localhost:3000/rpush/guestbook/ 4 4 1000 123
 
 ```
 
