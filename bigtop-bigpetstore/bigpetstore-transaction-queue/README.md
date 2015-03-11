@@ -57,12 +57,12 @@ The command line arguments are:
 From docker
 
 ```
-docker run -t -i jayunit100/bigpetstore-load-generator /opt/bigpetstore-transaction-queue /tmp/ 1 1 3.0
+docker run -t -i jayunit100/bigpetstore-load-generator  /opt/bigpetstore-transaction-queue-1.0/bin/bigpetstore-transaction-queue /tmp/ 1 1 3.0
 ```
 or Java
 ```
  gradle clean fatJar
- java -jar ./build/libs/bigpetstore-transaction-queue-1.0.jar /tmp 1 5 10000 123
+ java -jar ./build/libs/bigpetstore-transaction-queue-all-1.0.jar /tmp 1 5 10000 123
 ```
 
 ## Generating REST load ## 
@@ -71,12 +71,13 @@ OR Replace the file path with a REST API root (it will jsonify the transactions,
 From docker
 
 ```
-docker run -t -i jayunit100/bigpetstore-load-generator /opt/bigpetstore-transaction-queue http://localhost:3000/restapi/rpush/ 1 5 10000 123
+docker run -t -i jayunit100/bigpetstore-load-generator /opt/bigpetstore-transaction-queue-1.0/bin/bigpetstore-transaction-queue
+ http://localhost:3000/restapi/rpush/ 1 5 10000 123
 ```
 Or from java
 ```
 gradle clean fatJar
-java -cp ./build/libs/bigpetstore-transaction-queue-1.0.jar org.apache.bigtop.qstream.LoadGen http://localhost:3000/rpush/guestbook/ 4 4 1000 123
+java -cp ./build/libs/bigpetstore-transaction-queue-all-1.0.jar org.apache.bigtop.qstream.LoadGen http://localhost:3000/rpush/guestbook/ 4 4 1000 123
 
 ```
 
