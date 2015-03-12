@@ -109,6 +109,7 @@ cp -ra ${BUILD_DIR}/lib/* $PREFIX/${LIB_DIR}/lib/
 cp ${BUILD_DIR}/mahout*.jar $PREFIX/$LIB_DIR
 cp -a ${BUILD_DIR}/*.txt $PREFIX/$DOC_DIR
 cp -a ${BUILD_DIR}/bin/* $PREFIX/${LIB_DIR}/bin
+rm -rf $PREFIX/${LIB_DIR}/bin/*.cmd
 
 # Copy in the configuration files
 install -d -m 0755 $PREFIX/$CONF_DIR
@@ -137,4 +138,7 @@ export HADOOP_CLASSPATH="`echo /usr/lib/mahout/mahout-examples-*-job.jar`":\$HAD
 exec $INSTALLED_LIB_DIR/bin/mahout "\$@"
 EOF
 chmod 755 $PREFIX/$BIN_DIR/mahout
+
+rm -f ${PREFIX}/${LIB_DIR}/lib/zookeeper-*.jar
+ln -sf /usr/lib/zookeeper/zookeeper.jar ${PREFIX}/${LIB_DIR}/lib/
 
