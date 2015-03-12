@@ -27,6 +27,8 @@ import org.junit.BeforeClass
 import static junit.framework.Assert.assertEquals
 import org.apache.hadoop.conf.Configuration
 import static org.apache.bigtop.itest.LogErrorsUtils.logError
+import org.junit.experimental.categories.Category;
+import st.ata.vcc.bigtop.itest.interfaces.EssentialTests;
 
 class TestOozieSmoke {
   private static final int WAIT_TIMEOUT = 60000;
@@ -86,21 +88,25 @@ class TestOozieSmoke {
                (sh.out.join(' ') =~ /Status\s*:\s*SUCCEEDED/).find());
   }
 
+@Category ( EssentialTests.class )
   @Test(timeout=300000L)
   public void testNoOp() {
     testOozieExamplesCommon("no-op");
   }
 
+@Category ( EssentialTests.class )
   @Test(timeout=300000L)
   public void testJavaMain() {
     testOozieExamplesCommon("java-main");
   }
 
+@Category ( EssentialTests.class )
   @Test(timeout=300000L)
   public void testMapReduce() {
     testOozieExamplesCommon("map-reduce");
   }
 
+@Category ( EssentialTests.class )
   @Test(timeout=300000L)
   public void testCustomMain() {
     testOozieExamplesCommon("custom-main");
@@ -111,6 +117,7 @@ class TestOozieSmoke {
     testOozieExamplesCommon("hadoop-el");
   }
 
+@Category ( EssentialTests.class )
   @Test(timeout=300000L)
   public void testStreaming() {
     testOozieExamplesCommon("streaming");

@@ -26,6 +26,8 @@ import org.junit.Test;
 import static org.apache.bigtop.itest.LogErrorsUtils.logError;
 import org.apache.bigtop.itest.JarContent;
 import org.apache.bigtop.itest.shell.Shell;
+import org.junit.experimental.categories.Category;
+import st.ata.vcc.bigtop.itest.interfaces.EssentialTests;
 
 public class TestDFSAdmin {
  
@@ -45,6 +47,7 @@ public class TestDFSAdmin {
   public static void tearDown() {
   }
 
+@Category ( EssentialTests.class )
   @Test
   public void testDFSbasic() { 
     // report
@@ -68,6 +71,7 @@ public class TestDFSAdmin {
     assertTrue("-metasave failed", shHDFS.getRet() == 0); 
   }
 
+@Category ( EssentialTests.class )
   @Test
   public void testDFSsafemode() {
     // safemode
@@ -98,6 +102,7 @@ public class TestDFSAdmin {
     assertTrue("-saveNamespace worked in non safemode", shHDFS.getRet() != 0);
   }
 
+@Category ( EssentialTests.class )
   @Test
   public void testDFSrefreshcommands() {
     // refreshNodes

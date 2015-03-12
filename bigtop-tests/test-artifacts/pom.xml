@@ -57,6 +57,11 @@
       <groupId>org.apache.bigtop.itest</groupId>
       <artifactId>itest-common</artifactId>
     </dependency>
+    <dependency>
+       <groupId>st.ata.vcc.bigtop.itest</groupId>
+       <artifactId>interfaces</artifactId>
+       <version>0.7.0-altiscale-SNAPSHOT</version>
+     </dependency>
   </dependencies>
 
   <build>

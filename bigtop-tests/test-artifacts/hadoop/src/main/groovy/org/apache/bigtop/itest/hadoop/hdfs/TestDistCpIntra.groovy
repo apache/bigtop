@@ -24,6 +24,8 @@ import org.junit.Test;
 import org.apache.bigtop.itest.shell.Shell;
 import org.apache.hadoop.conf.Configuration;
 import static org.apache.bigtop.itest.LogErrorsUtils.logError
+import org.junit.experimental.categories.Category;
+import st.ata.vcc.bigtop.itest.interfaces.EssentialTests;
 
 public class TestDistCpIntra {
  
@@ -111,6 +113,7 @@ public class TestDistCpIntra {
 
   }
 
+@Category ( EssentialTests.class )
   @Test
   public void testDistcpIntra() { 
     for (int i = 1; i <= 2; i++) {
