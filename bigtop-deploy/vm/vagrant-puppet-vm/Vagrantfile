@@ -57,7 +57,7 @@ cp -r /bigtop-home/bigtop-deploy/puppet/hieradata/bigtop/ /etc/puppet/hieradata/
 cat > /etc/puppet/hieradata/site.yaml << EOF
 bigtop::hadoop_head_node: #{bigtop_master}
 hadoop::hadoop_storage_dirs: [/data/1, /data/2]
-Bigtop::bigtop_yumrepo_uri: #{repo}
+bigtop::bigtop_repo_uri: #{repo}
 bigtop::jdk_package_name: java-1.7.0-openjdk-devel.x86_64
 hadoop_cluster_node::cluster_components: #{components}
 EOF

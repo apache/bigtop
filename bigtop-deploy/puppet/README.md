@@ -71,7 +71,7 @@ following exceptions (which are required):
 * bigtop::hadoop\_head\_node: must be set to the FQDN of the name node of your
 	cluster (which will also become its job tracker and gateway)
 
-* bigtop::bigtop\_yumrepo\_uri: uri of a repository containing packages for
+* bigtop::bigtop\_repo\_uri: uri of a repository containing packages for
 	hadoop as built by Bigtop.
 
 $confdir is the directory that puppet will look into for its configuration.  On most systems, 

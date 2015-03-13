@@ -22,7 +22,7 @@ stage {"pre": before => Stage["main"]}
 case $operatingsystem {
     /(OracleLinux|Amazon|CentOS|Fedora|RedHat)/: {
        yumrepo { "Bigtop":
-          baseurl => hiera("hiera::bigtop_repo_uri", $default_yumrepo),
+          baseurl => hiera("bigtop::bigtop_repo_uri", $default_yumrepo),
           descr => "Bigtop packages",
           enabled => 1,
           gpgcheck => 0,
@@ -32,7 +32,7 @@ case $operatingsystem {
     /(Ubuntu|Debian)/: {
        class { "apt": disable_keys => true }
        apt::source { "Bigtop":
-          location => hiera("hiera::bigtop_repo_uri", $default_debrepo),
+          location => hiera("bigtop::bigtop_repo_uri", $default_debrepo),
           release => "bigtop",
           repos => "contrib",
           ensure => present,
