@@ -40,6 +40,8 @@
     <org.apache.maven-dependency-plugin.type>jar</org.apache.maven-dependency-plugin.type>
     <org.apache.maven-failsafe-plugin.testInclude>**/*Tests*</org.apache.maven-failsafe-plugin.testInclude>
 
+    <HADOOP_MAPRED_HOME>${env.HADOOP_MAPRED_HOME}</HADOOP_MAPRED_HOME>
+    <HADOOP_CONF_DIR>${env.HADOOP_CONF_DIR}</HADOOP_CONF_DIR>
     <PIG_HOME>${env.PIG_HOME}</PIG_HOME>
   </properties>
 
@@ -94,6 +96,10 @@
                 <requireProperty>
                   <property>HADOOP_MAPRED_HOME</property>
                   <message>HADOOP_MAPRED_HOME env. variable has to be set</message>
+                </requireProperty>
+                <requireProperty>
+                  <property>HADOOP_CONF_DIR</property>
+                  <message>HADOOP_CONF_DIR env. variable has to be set</message>
                 </requireProperty>
                 <requireProperty>
                   <property>PIG_HOME</property>
