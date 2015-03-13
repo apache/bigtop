@@ -45,6 +45,7 @@
       These settings should be enforced at the top level
     -->
     <HADOOP_HOME>${env.HADOOP_HOME}</HADOOP_HOME>
+    <HADOOP_MAPRED_DIR>${env.HADOOP_MAPRED_DIR}</HADOOP_MAPRED_DIR>
     <HADOOP_CONF_DIR>${env.HADOOP_CONF_DIR}</HADOOP_CONF_DIR>
     <!--
       Default exclude mask for failsafe plugin. OPTIONAL
