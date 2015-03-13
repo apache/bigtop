@@ -113,7 +113,6 @@ BIN_DIR=${BIN_DIR:-$PREFIX/usr/bin}
 PYTHON_DIR=${PYTHON_DIR:-$HIVE_DIR/lib/py}
 HCATALOG_DIR=${HCATALOG_DIR:-$PREFIX/usr/lib/hive-hcatalog}
 HCATALOG_SHARE_DIR=${HCATALOG_DIR}/share/hcatalog
-HBASE_STORAGE_HANDLER_DIR=${HCATALOG_SHARE_DIR}/storage-handlers/hbase/lib
 INSTALLED_HCATALOG_DIR=${INSTALLED_HCATALOG_DIR:-/usr/lib/hive-hcatalog}
 CONF_DIR=/etc/hive
 CONF_DIST_DIR=/etc/hive/conf.dist
@@ -122,7 +121,7 @@ CONF_DIST_DIR=/etc/hive/conf.dist
 install -d -m 0755 ${HIVE_DIR}
 (cd ${BUILD_DIR} && tar -cf - .)|(cd ${HIVE_DIR} && tar -xf -)
 rm -f ${HIVE_DIR}/lib/hive-shims-0.2*.jar
-for jar in `ls ${HIVE_DIR}/lib/hive-*.jar`; do
+for jar in `ls ${HIVE_DIR}/lib/hive-*.jar | grep -v 'standalone.jar'`; do
     base=`basename $jar`
     (cd ${HIVE_DIR}/lib && ln -s $base ${base/-[0-9].*/.jar})
 done
@@ -246,7 +245,7 @@ install -d -m 0755 $PREFIX/var/log/hive
 
 install -d -m 0755 $PREFIX/var/lib/hive-hcatalog
 install -d -m 0755 $PREFIX/var/log/hive-hcatalog
-for DIR in ${HBASE_STORAGE_HANDLER_DIR} ${HCATALOG_SHARE_DIR} ; do
+for DIR in ${HCATALOG_SHARE_DIR} ; do
     (cd $DIR &&
      for j in hive-hcatalog-*.jar; do
        if [[ $j =~ hive-hcatalog-(.*)-${HIVE_VERSION}.jar ]]; then
@@ -255,3 +254,7 @@ for DIR in ${HBASE_STORAGE_HANDLER_DIR} ${HCATALOG_SHARE_DIR} ; do
        fi
     done)
 done
+
+# Remove Windows files
+find ${HIVE_DIR}/bin -name '*.cmd' | xargs rm -f
+find ${HCATALOG_DIR}/bin -name '*.cmd' | xargs rm -f

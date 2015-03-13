@@ -18,20 +18,6 @@ set -ex
 
 . `dirname ${0}`/bigtop.bom
 
-
-#fix SNAPSHOT dependencies
-sed -i -e 's@-SNAPSHOT@@' pom.xml ql/pom.xml
-
-bom2props() {
-cat <<__EOT__ 
-hbase.version=$HBASE_VERSION
-zookeeper.version=$ZOOKEEPER_VERSION
-hadoop.version=$HADOOP_VERSION
-hadoop.security.version=$HADOOP_VERSION
-hadoop-0.23.version=$HADOOP_VERSION
-__EOT__
-}
-
 HIVE_MAVEN_OPTS=" -Dhbase.version=$HBASE_VERSION \
 -Dzookeeper.version=$ZOOKEEPER_VERSION \
 -Dhadoop.mr.rev=23 \
@@ -39,8 +25,10 @@ HIVE_MAVEN_OPTS=" -Dhbase.version=$HBASE_VERSION \
 -Dhadoop-23.version=$HADOOP_VERSION \
 -Dhbase.hadoop2.version=$HBASE_VERSION-hadoop2 \
 -Dmvn.hadoop.profile=hadoop23 \
--Dmaven.test.skip=true \
+-DskipTests \
 -Dhbase.version.with.hadoop.version=$HBASE_VERSION-hadoop2 \
+-Dtez.version=${TEZ_VERSION} \
+-Dspark.version=${SPARK_VERSION}
 "
 
 export MAVEN_OPTS="-Xmx1500m -Xms1500m -XX:MaxPermSize=256m"

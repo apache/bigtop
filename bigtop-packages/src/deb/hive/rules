@@ -33,15 +33,14 @@ override_dh_auto_build:
 	bash debian/do-component-build
 	touch $@
 
-.PHONY: server
 .PHONY: server2
 .PHONY: metastore
 .PHONY: hcatalog-server
 .PHONY: webhcat-server
-server server2 metastore hcatalog-server webhcat-server:
+server2 metastore hcatalog-server webhcat-server:
 	bash debian/init.d.tmpl debian/hive-$@.svc deb debian/${hive_pkg_name}-$@.init
 
-override_dh_auto_install: server server2 metastore hcatalog-server webhcat-server
+override_dh_auto_install: server2 metastore hcatalog-server webhcat-server
 	cp debian/hive-site.xml .
 	cp debian/hive.1 .
 	cp debian/hive-hcatalog.1 .

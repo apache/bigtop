@@ -25,7 +25,7 @@
 %define usr_bin /usr/bin
 %define hive_config_virtual hive_active_configuration
 %define man_dir %{_mandir}
-%define hive_services hive-server hive-metastore hive-server2 hive-hcatalog-server hive-webhcat-server
+%define hive_services hive-metastore hive-server2 hive-hcatalog-server hive-webhcat-server
 # After we run "ant package" we'll find the distribution here
 %define hive_dist build/dist
 
@@ -70,11 +70,9 @@ Source1: do-component-build
 Source2: install_hive.sh
 Source3: init.d.tmpl
 Source4: hive-site.xml
-Source5: hive-server.default
 Source6: hive-metastore.default
 Source7: hive.1
 Source8: hive-site.xml
-Source9: hive-server.svc
 Source10: hive-metastore.svc
 Source11: hive-server2.default
 Source12: hive-server2.svc
@@ -83,18 +81,13 @@ Source14: hive-hcatalog-server.svc
 Source15: hive-webhcat-server.svc
 Source16: hive-hcatalog-server.default
 Source17: hive-webhcat-server.default
+Source18: bigtop.bom
 Requires: hadoop-client, bigtop-utils >= 0.7, zookeeper, hive-jdbc = %{version}-%{release}
 Conflicts: hadoop-hive
 Obsoletes: %{name}-webinterface
 
 %description 
-Hive is a data warehouse infrastructure built on top of Hadoop that provides tools to enable easy data summarization, adhoc querying and analysis of large datasets data stored in Hadoop files. It provides a mechanism to put structure on this data and it also provides a simple query language called Hive QL which is based on SQL and which enables users familiar with SQL to query this data. At the same time, this language also allows traditional map/reduce programmers to be able to plug in their custom mappers and reducers to do more sophisticated analysis which may not be supported by the built-in capabilities of the language. 
-
-%package server
-Summary: Provides a Hive Thrift service.
-Group: System/Daemons
-Requires: %{name} = %{version}-%{release}
-Requires(pre): %{name} = %{version}-%{release}
+Hive is a data warehouse infrastructure built on top of Hadoop that provides tools to enable easy data summarization, adhoc querying and analysis of large datasets data stored in Hadoop files. It provides a mechanism to put structure on this data and it also provides a simple query language called Hive QL which is based on SQL and which enables users familiar with SQL to query this data. At the same time, this language also allows traditional map/reduce programmers to be able to plug in their custom mappers and reducers to do more sophisticated analysis which may not be supported by the built-in capabilities of the language.
 
 %if  %{?suse_version:1}0
 # Required for init scripts
@@ -117,10 +110,6 @@ Requires: insserv
 # Required for init scripts
 Requires: /lib/lsb/init-functions
 %endif
-
-
-%description server
-This optional package hosts a Thrift server for Hive clients across a network to use.
 
 %description server2
 This optional package hosts a Thrift server for Hive clients across a network to use with improved concurrency support.
@@ -260,7 +249,6 @@ cp $RPM_SOURCE_DIR/hive-site.xml .
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
 %__install -d -m 0755 $RPM_BUILD_ROOT/etc/default/
 %__install -m 0644 $RPM_SOURCE_DIR/hive-metastore.default $RPM_BUILD_ROOT/etc/default/%{name}-metastore
-%__install -m 0644 $RPM_SOURCE_DIR/hive-server.default $RPM_BUILD_ROOT/etc/default/%{name}-server
 %__install -m 0644 $RPM_SOURCE_DIR/hive-server2.default $RPM_BUILD_ROOT/etc/default/%{name}-server2
 %__install -m 0644 $RPM_SOURCE_DIR/hive-hcatalog-server.default $RPM_BUILD_ROOT/etc/default/%{name}-hcatalog-server
 %__install -m 0644 $RPM_SOURCE_DIR/hive-webhcat-server.default $RPM_BUILD_ROOT/etc/default/%{name}-webhcat-server
@@ -408,7 +396,6 @@ fi \
 if [ $1 -ge 1 ]; then \
    service %{name}-%1 condrestart >/dev/null 2>&1 || : \
 fi
-%service_macro server
 %service_macro server2
 %service_macro metastore
 %service_macro hcatalog-server
