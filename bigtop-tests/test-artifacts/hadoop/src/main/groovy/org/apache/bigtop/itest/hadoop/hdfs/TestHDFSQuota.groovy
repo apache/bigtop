@@ -28,6 +28,8 @@ import static org.apache.bigtop.itest.LogErrorsUtils.logError;
 import org.junit.runners.MethodSorters;
 import org.junit.FixMethodOrder;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+import org.junit.experimental.categories.Category;
+import st.ata.vcc.bigtop.itest.interfaces.EssentialTests;
 
 public class TestHDFSQuota {
  
@@ -75,6 +77,7 @@ public class TestHDFSQuota {
   }
 
 
+@Category ( EssentialTests.class )
   @Test
   public void t1_testNewlyCreatedDir() { 
     // newly created dir should have no name quota, no space quota   
@@ -87,6 +90,7 @@ public class TestHDFSQuota {
     assertTrue("Newly created directory had a set space quota left", output[3].equals("inf"));
   } 
 
+@Category ( EssentialTests.class )
   @Test
   public void t2_testAdminPermissions() { 
     // admin setting quotas should succeed
@@ -112,6 +116,7 @@ public class TestHDFSQuota {
     assertTrue("clrSpaceQuota failed", shHDFS.getRet() == 0);
   } 
 
+@Category ( EssentialTests.class )
   @Test
   public void t3_testRename() { 
     // name and space quotas stick after rename

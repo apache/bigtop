@@ -41,12 +41,16 @@ import org.apache.bigtop.itest.Contract;
 import org.apache.bigtop.itest.ParameterSetter;
 import org.apache.bigtop.itest.Property;
 import org.apache.bigtop.itest.shell.Shell;
+import org.junit.experimental.categories.Category;
+import st.ata.vcc.bigtop.itest.interfaces.EssentialTests;
 
 @Contract(
   properties = {
     @Property(name="hiveserver.startup.wait", type=Property.Type.INT, longValue=3000, intValue=3000, defaultValue="3000")
   },
   env = {})
+
+@Category ( EssentialTests.class )
 public class TestJdbcDriver {
 
   public static String driverName = "org.apache.hadoop.hive.jdbc.HiveDriver";

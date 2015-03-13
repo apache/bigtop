@@ -36,6 +36,8 @@ import org.junit.Test
 
 import org.apache.bigtop.itest.JarContent
 import org.apache.bigtop.itest.shell.Shell
+import org.junit.experimental.categories.Category;
+import st.ata.vcc.bigtop.itest.interfaces.EssentialTests;
 
 class TestSqoopExport {
   private static String mysql_user =
@@ -209,6 +211,7 @@ class TestSqoopExport {
   }
 
 
+@Category ( EssentialTests.class )
   @Test
   public void testDateTimeExport() {
     String tableName = "t_date";
@@ -220,6 +223,7 @@ class TestSqoopExport {
         0, sh.exec("diff -u $DATA_DIR/sqoop-t_date-export-com.out t_date.out").getRet());
   }
 
+@Category ( EssentialTests.class )
   @Test
   public void testStringExport() {
     String tableName = "t_string";

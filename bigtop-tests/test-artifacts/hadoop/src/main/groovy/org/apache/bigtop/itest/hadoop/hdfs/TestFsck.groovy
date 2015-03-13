@@ -25,6 +25,10 @@ import static org.apache.bigtop.itest.LogErrorsUtils.logError
 /**
  * Tests the HDFS fsck command.
  */
+import org.junit.experimental.categories.Category;
+import st.ata.vcc.bigtop.itest.interfaces.EssentialTests;
+
+@Category ( EssentialTests.class )
 public class TestFsck {
   static Shell shHDFS = new Shell("/bin/bash", "hdfs" )
   String[] fsckCmds = [
