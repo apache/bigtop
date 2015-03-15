@@ -71,6 +71,36 @@
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>1.0</version>
+        <executions>
+          <execution>
+            <id>enforce-property</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireProperty>
+                  <property>HADOOP_MAPRED_HOME</property>
+                  <message>HADOOP_MAPRED_HOME env. variable has to be set</message>
+                </requireProperty>
+                <requireProperty>
+                  <property>HADOOP_HOME</property>
+                  <message>HADOOP_HOME env. variable has to be set</message>
+                </requireProperty>
+                <requireProperty>
+                  <property>HADOOP_CONF_DIR</property>
+                  <message>HADOOP_CONF_DIR env. variable has to be set</message>
+                </requireProperty>
+              </rules>
+              <fail>true</fail>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
       </plugin>
 
