@@ -63,7 +63,7 @@ def final USAGE = """\
     HOW TO INVOKE:
 
     1) Simple groovy based method:  Just manually construct a hadoop classpath:
-    
+
     groovy -classpath /usr/lib/hadoop/hadoop-common-2.0.6-alpha.jar
     :/usr/lib/hadoop/lib/guava-11.0.2.jar
     :/etc/hadoop/conf/:/usr/lib/hadoop/hadoop-common-2.0.6-alpha.jar
@@ -71,7 +71,7 @@ def final USAGE = """\
     :/usr/lib/hadoop/lib/commons-lang-2.5.jar:/usr/lib/hadoop/hadoop-auth.jar
     :/usr/lib/hadoop/lib/slf4j-api-1.6.1.jar
     :/usr/lib/hadoop-hdfs/hadoop-hdfs.jar
-    :/usr/lib/hadoop/lib/protobuf-java-2.4.0a.jar /vagrant/provision.groovy 
+    :/usr/lib/hadoop/lib/protobuf-java-2.4.0a.jar /vagrant/init-hcfs.groovy
     /vagrant/init-hcfs.json
 
     2) Another method: Follow the instructions on groovy.codehaus.org/Running
@@ -79,8 +79,8 @@ def final USAGE = """\
     CLASSPATH and/or append those libraries to the shebang command as
     necessary, and then simply do:
 
-    chmod +x provision.groovy
-    ./provision.groovy init-hcfs.json
+    chmod +x init-hcfs.groovy
+    ./init-hcfs.groovy init-hcfs.json
 
     *********************************************************************
 """
@@ -149,20 +149,19 @@ LOG.info("PROVISIONING WITH FILE SYSTEM : " + fs.getClass());
  * @param user can be null.
  * @param group can be null,
  */
-public void mkdir(FileSystem fs, Path dname, FsPermission mode, String user,
-                  String group) {
-  fs.mkdirs(dname);
+def mkdir = { FileSystem fsys, Path dname, FsPermission mode, String user, String group ->
+  fsys.mkdirs(dname);
   if (user != null) {
-    fs.setOwner(dname, user, group);
+    fsys.setOwner(dname, user, group);
   }
   if (mode != null) {
-    fs.setPermission(dname, mode);
-    FsPermission result = fs.getFileStatus(dname).getPermission();
+    fsys.setPermission(dname, mode);
+    FsPermission result = fsys.getFileStatus(dname).getPermission();
     /** Confirm that permission took properly.
      * important to do this since while we work on better
      * docs for modifying and maintaining this new approach
      * to HCFS provisioning.*/
-    if (!fs.getFileStatus(dname).getPermission().equals(mode)) {
+    if (!fsys.getFileStatus(dname).getPermission().equals(mode)) {
       throw new RuntimeException("Failed at setting permission to " + mode +
           "... target directory permission is incorrect: " + result);
     }
@@ -173,7 +172,7 @@ public void mkdir(FileSystem fs, Path dname, FsPermission mode, String user,
  * Create a perm from raw string representing an octal perm.
  * @param mode The stringified octal mode (i.e. "1777")
  * */
-public FsPermission readPerm(String mode) {
+private FsPermission readPerm(String mode) {
   Short permValue = Short.decode("0" + mode);
   //This constructor will decode the octal perm bits
   //out of the short.
@@ -248,7 +247,7 @@ users.each() {
  *
  * @return The total number of jars copied into the DFS.
  */
-public int copyJars(FileSystem fs, File input, String jarstr, Path target) {
+def copyJars = { FileSystem fsys, File input, String jarstr, Path target ->
   int copied = 0;
   input.listFiles(new FilenameFilter() {
     public boolean accept(File f, String filename) {
@@ -256,7 +255,7 @@ public int copyJars(FileSystem fs, File input, String jarstr, Path target) {
     }
   }).each({ jar_file ->
     copied++;
-    fs.copyFromLocalFile(new Path(jar_file.getAbsolutePath()), target)
+    fsys.copyFromLocalFile(new Path(jar_file.getAbsolutePath()), target)
   });
   return copied;
 }

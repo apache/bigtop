@@ -15,90 +15,32 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Use this script to initialize HDFS directory structure for various components to run. This script can be run from any node in the Hadoop cluster but should only be run once by one node only. If you are planning on using oozie, we recommend that you run this script from a node that has hive, pig, sqoop, etc. installed. Unless you are using psuedo distributed cluster, this node is most likely NOT your namenode
+### Script requires package bigtop-groovy to be installed
+# Use this script to initialize HDFS directory structure for various components
+# to run. This script can be run from any node in the Hadoop cluster but should
+# only be run once by one node only. If you are planning on using oozie, we
+# recommend that you run this script from a node that has hive, pig, sqoop, etc.
+# installed. Unless you are using psuedo distributed cluster, this node is most
+# likely NOT your namenode
 # Steps to be performed before running this script:
 # 1. Stop the namenode and datanode services if running.
 # 2. Format namenode (su -s /bin/bash hdfs hdfs namenode -format).
 # 3. Start the namenode and datanode services on appropriate nodes.
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /tmp'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chmod -R 1777 /tmp'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /var'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /var/log'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chmod -R 1775 /var/log'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chown yarn:mapred /var/log'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /tmp/hadoop-yarn'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chown -R mapred:mapred /tmp/hadoop-yarn'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chmod -R 777 /tmp/hadoop-yarn'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir -p /var/log/hadoop-yarn/apps'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chmod -R 1777 /var/log/hadoop-yarn/apps'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chown yarn:mapred /var/log/hadoop-yarn/apps'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /hbase'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chown hbase:hbase /hbase'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /solr'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chown solr:solr /solr'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /benchmarks'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chmod -R 777 /benchmarks'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /user'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chmod 755 /user'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chown hdfs  /user'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /user/history'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chown mapred:mapred /user/history'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chmod 755 /user/history'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /user/jenkins'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chmod -R 777 /user/jenkins'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chown jenkins /user/jenkins'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /user/hive'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chmod -R 777 /user/hive'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chown hive /user/hive'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /user/root'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chmod -R 777 /user/root'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chown root /user/root'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /user/hue'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chmod -R 777 /user/hue'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chown hue /user/hue'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /user/sqoop'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chmod -R 777 /user/sqoop'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chown sqoop /user/sqoop'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /user/oozie'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chmod -R 777 /user/oozie'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chown -R oozie /user/oozie'
-# Do more setup for oozie
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /user/oozie/share'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /user/oozie/share/lib'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /user/oozie/share/lib/hive'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /user/oozie/share/lib/mapreduce-streaming'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /user/oozie/share/lib/distcp'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /user/oozie/share/lib/pig'
-# Event log directory for Apache Spark
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir -p /var/log/spark/apps'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chmod -R 1777 /var/log/spark/apps'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chown spark:spark /var/log/spark/apps'
 
-# Copy over files from local filesystem to HDFS that oozie might need
-if ls /usr/lib/hive/lib/*.jar &> /dev/null; then
-  su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -put /usr/lib/hive/lib/*.jar /user/oozie/share/lib/hive'
+# Autodetect JAVA_HOME if not defined
+if [ -f /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
+  . /usr/lib/bigtop-utils/bigtop-detect-javahome
 fi
 
-if ls /usr/lib/hadoop-mapreduce/hadoop-streaming*.jar &> /dev/null; then
-  su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -put /usr/lib/hadoop-mapreduce/hadoop-streaming*.jar /user/oozie/share/lib/mapreduce-streaming'
-fi
-
-if ls /usr/lib/hadoop-mapreduce/hadoop-distcp*.jar &> /dev/null; then
-  su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -put /usr/lib/hadoop-mapreduce/hadoop-distcp*.jar /user/oozie/share/lib/distcp'
-fi
-
-if ls /usr/lib/pig/{lib/,}*.jar &> /dev/null; then
-  su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -put /usr/lib/pig/{lib/,}*.jar /user/oozie/share/lib/pig'
-fi
-
-# Create home directory for the current user if it does not exist
-if [ "$1" = "-u" ] ; then
-  USER="$2"
-  USER=${USER:-$(id -un)}
-  EXIST=$(su -s /bin/bash hdfs -c "/usr/bin/hadoop fs -ls /user/${USER}" &> /dev/null; echo $?)
-  if [ ! $EXIST -eq 0 ]; then
-    su -s /bin/bash hdfs -c "/usr/bin/hadoop fs -mkdir /user/${USER}"
-    su -s /bin/bash hdfs -c "/usr/bin/hadoop fs -chmod -R 755 /user/${USER}"
-    su -s /bin/bash hdfs -c "/usr/bin/hadoop fs -chown ${USER} /user/${USER}"
-  fi
-fi
+HADOOP_LIB_DIR=/usr/lib/hadoop/lib
+HDFS_LIB_DIR=/usr/lib/hadoop-hdfs/lib
+HADOOP_DEPENDENCIES="commons-logging*.jar guava*.jar commons-configuration*.jar commons-collections*.jar slf4j-api*.jar protobuf-java*.jar commons-lang*.jar"
+HDFS_DEPENDENCIES="htrace-core*.jar"
+for i in /usr/lib/hadoop/*.jar; do CLASSPATH=$CLASSPATH:$i; done
+CLASSPATH=/etc/hadoop/conf:$CLASSPATH:/usr/lib/hadoop-hdfs/hadoop-hdfs.jar
+pushd .
+cd $HADOOP_LIB_DIR
+for d in $HADOOP_DEPENDENCIES; do CLASSPATH=$CLASSPATH:$HADOOP_LIB_DIR/$d; done
+for d in $HDFS_DEPENDENCIES;   do CLASSPATH=$CLASSPATH:$HDFS_LIB_DIR/$d; done
+popd
+su -s /bin/bash hdfs -c "/usr/lib/bigtop-groovy/bin/groovy -classpath $CLASSPATH /usr/lib/bigtop-utils/init-hcfs.groovy /usr/lib/hadoop/libexec/init-hcfs.json"
