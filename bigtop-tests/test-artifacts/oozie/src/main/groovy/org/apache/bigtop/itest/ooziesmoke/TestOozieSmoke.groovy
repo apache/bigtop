@@ -28,7 +28,7 @@ import static junit.framework.Assert.assertEquals
 import org.apache.hadoop.conf.Configuration
 import static org.apache.bigtop.itest.LogErrorsUtils.logError
 import org.junit.experimental.categories.Category;
-import st.ata.vcc.bigtop.itest.interfaces.EssentialTests;
+import org.apache.bigtop.itest.interfaces.EssentialTests;
 
 class TestOozieSmoke {
   private static final int WAIT_TIMEOUT = 60000;

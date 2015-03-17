@@ -42,7 +42,7 @@ import org.apache.bigtop.itest.ParameterSetter;
 import org.apache.bigtop.itest.Property;
 import org.apache.bigtop.itest.shell.Shell;
 import org.junit.experimental.categories.Category;
-import st.ata.vcc.bigtop.itest.interfaces.EssentialTests;
+import org.apache.bigtop.itest.interfaces.EssentialTests;
 
 @Contract(
   properties = {

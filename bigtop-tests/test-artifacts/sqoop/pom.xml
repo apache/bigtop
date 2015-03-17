@@ -41,6 +41,11 @@
           <groupId>org.apache.sqoop</groupId>
           <artifactId>sqoop-client</artifactId>
       </dependency>
+    <dependency>
+       <groupId>org.apache.bigtop.itest</groupId>
+       <artifactId>interfaces</artifactId>
+       <version>0.7.0-altiscale-SNAPSHOT</version>
+     </dependency>
   </dependencies>
 
 </project>

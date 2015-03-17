@@ -34,7 +34,7 @@ import org.apache.bigtop.itest.junit.OrderedParameterized
 import org.junit.runners.Parameterized.Parameters
 import org.junit.runner.RunWith
 import org.junit.experimental.categories.Category
-import st.ata.vcc.bigtop.itest.interfaces.EssentialTests
+import org.apache.bigtop.itest.interfaces.EssentialTests
 
 @Category ( EssentialTests.class )
 @RunWith(OrderedParameterized.class)
