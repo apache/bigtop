@@ -132,7 +132,7 @@ LOG.info("Provisioning file system for file system from Configuration: " +
 
 /**
  * We create a single FileSystem instance to use for all the file system calls.
- * This script makes anywhere from 20-100 file system operations so its
+ * This script makes anywhere from 20-100 file system operations so it's
  * important to cache and create this only once.
  * */
 def final FileSystem fs = FileSystem.get(conf);
@@ -232,14 +232,14 @@ users.each() {
  * Copys jar files from a destination into the distributed FS.
  * Build specifically for the common task of getting jars into
  * oozies classpath so that oozie can run pig/hive/etc based
- * applications.
+ * applications. Directories and broken symlinks will be skipped.
  *
  * @param fs An instance of an HCFS FileSystem .
  *
  * @param input The LOCAL DIRECTORY containing jar files.
  *
  * @param jarstr A jar file name filter used to reject/accept jar names.
- * See the script below for example of how its used.  jars matching this
+ * See the script below for example of how it's used. Jars matching this
  * string will be copied into the specified path on the "target" directory.
  *
  * @param target The path on the DISTRIBUTED FS where jars should be copied
@@ -249,9 +249,11 @@ users.each() {
  */
 def copyJars = { FileSystem fsys, File input, String jarstr, Path target ->
   int copied = 0;
-  input.listFiles(new FilenameFilter() {
-    public boolean accept(File f, String filename) {
-      return filename.contains(jarstr) && filename.endsWith("jar")
+  input.listFiles(new FileFilter() {
+    public boolean accept(File f) {
+      String filename = f.getName();
+      boolean validJar = filename.endsWith("jar") && f.isFile();
+      return validJar && filename.contains(jarstr)
     }
   }).each({ jar_file ->
     copied++;
