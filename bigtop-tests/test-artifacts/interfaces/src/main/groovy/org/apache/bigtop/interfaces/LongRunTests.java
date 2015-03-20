@@ -5,7 +5,7 @@
 package org.apache.bigtop.itest.interfaces;
 
 
-public interface  Level1Tests {}
+public interface  LongRunTests {}
 
 
 
