@@ -281,11 +281,11 @@ total_jars += copyJars(fs,
     new Path(OOZIE_SHARE, "hive/"))
 
 total_jars += copyJars(fs,
-    new File(MAPREDUCE), "hadoop-streaming/",
-    new Path(OOZIE_SHARE, "lib/mapreduce-streaming/"))
+    new File(MAPREDUCE), "hadoop-streaming",
+    new Path(OOZIE_SHARE, "mapreduce-streaming/"))
 
 total_jars += copyJars(fs,
-    new File(MAPREDUCE), "hadoop-distcp/",
+    new File(MAPREDUCE), "hadoop-distcp",
     new Path(OOZIE_SHARE, "distcp"))
 
 total_jars += copyJars(fs,
