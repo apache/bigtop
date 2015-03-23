@@ -33,6 +33,7 @@ create() {
     hadoop_head_node=(`echo "hostname -f" |vagrant ssh ${nodes[0]} |tail -n 1`)
     repo=$(get-yaml-config repo)
     components="[`echo $(get-yaml-config components) | sed 's/ /, /g'`]"
+    jdk=$(get-yaml-config jdk)
     distro=$(get-yaml-config distro)
     enable_local_repo=$(get-yaml-config enable_local_repo)
 
@@ -40,7 +41,7 @@ create() {
     for node in ${nodes[*]}; do
         (
         echo "/bigtop-home/bigtop-deploy/vm/utils/setup-env-$distro.sh $enable_local_repo" |vagrant ssh $node
-        echo "/vagrant/provision.sh $hadoop_head_node $repo \"$components\"" |vagrant ssh $node
+        echo "/vagrant/provision.sh $hadoop_head_node $repo \"$components\" $jdk" |vagrant ssh $node
         ) &
     done
     wait

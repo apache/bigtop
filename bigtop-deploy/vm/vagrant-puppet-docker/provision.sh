@@ -26,10 +26,8 @@ ln -s /vagrant/hosts /etc/hosts
 # Prepare puppet configuration file
 if [ -f /etc/debian_version ] ; then
     apt-get -y install puppet-module-puppetlabs-stdlib
-    jdk="openjdk-7-jdk"
 else
     cd /etc/puppet/modules && puppet module install puppetlabs/stdlib
-    jdk="java-1.7.0-openjdk-devel.x86_64"
 fi
 
 mkdir -p /etc/puppet/hieradata
@@ -39,6 +37,6 @@ cat > /etc/puppet/hieradata/site.yaml << EOF
 bigtop::hadoop_head_node: $1
 hadoop::hadoop_storage_dirs: [/data/1, /data/2]
 bigtop::bigtop_repo_uri: $2
-bigtop::jdk_package_name: $jdk
 hadoop_cluster_node::cluster_components: $3
+bigtop::jdk_package_name: $4
 EOF

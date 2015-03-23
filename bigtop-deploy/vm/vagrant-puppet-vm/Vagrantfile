@@ -42,6 +42,10 @@ run_smoke_tests = CONF['run_smoke_tests']
 # Force success - not worried if this step fails, since we generally only use it for development.
 enable_local_repo = CONF['enable_local_repo']
 puts "vagrant conf local repo enabled:  #{enable_local_repo}"
+
+# JDK package name
+jdk = CONF['jdk']
+
 # master node hostname
 bigtop_master = "bigtop1.vagrant"
 
@@ -58,8 +62,8 @@ cat > /etc/puppet/hieradata/site.yaml << EOF
 bigtop::hadoop_head_node: #{bigtop_master}
 hadoop::hadoop_storage_dirs: [/data/1, /data/2]
 bigtop::bigtop_repo_uri: #{repo}
-bigtop::jdk_package_name: java-1.7.0-openjdk-devel.x86_64
 hadoop_cluster_node::cluster_components: #{components}
+bigtop::jdk_package_name: #{jdk}
 EOF
 SCRIPT
 

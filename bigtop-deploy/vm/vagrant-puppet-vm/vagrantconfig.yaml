@@ -7,3 +7,4 @@ components: [hadoop, yarn]
 enable_local_repo: false
 run_smoke_tests: false
 distro: centos
+jdk: "java-1.7.0-openjdk-devel.x86_64"
