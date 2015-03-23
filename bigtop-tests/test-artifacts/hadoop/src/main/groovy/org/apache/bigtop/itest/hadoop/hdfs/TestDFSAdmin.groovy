@@ -27,7 +27,7 @@ import static org.apache.bigtop.itest.LogErrorsUtils.logError;
 import org.apache.bigtop.itest.JarContent;
 import org.apache.bigtop.itest.shell.Shell;
 import org.junit.experimental.categories.Category;
-import st.ata.vcc.bigtop.itest.interfaces.EssentialTests;
+import org.apache.bigtop.itest.interfaces.EssentialTests;
 
 public class TestDFSAdmin {
  

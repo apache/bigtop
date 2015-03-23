@@ -26,7 +26,7 @@ import static org.apache.bigtop.itest.LogErrorsUtils.logError
  * Tests the HDFS fsck command.
  */
 import org.junit.experimental.categories.Category;
-import st.ata.vcc.bigtop.itest.interfaces.EssentialTests;
+import org.apache.bigtop.itest.interfaces.EssentialTests;
 
 @Category ( EssentialTests.class )
 public class TestFsck {

@@ -29,7 +29,7 @@ import org.junit.runners.MethodSorters;
 import org.junit.FixMethodOrder;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 import org.junit.experimental.categories.Category;
-import st.ata.vcc.bigtop.itest.interfaces.EssentialTests;
+import org.apache.bigtop.itest.interfaces.EssentialTests;
 
 public class TestHDFSQuota {
  
