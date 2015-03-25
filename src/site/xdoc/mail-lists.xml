@@ -115,6 +115,24 @@
 					<a href="http://mail-archives.apache.org/mod_mbox/bigtop-announce/">Browse archives</a>
 				</li>
 			</ul>
+
+      <subsection name="Bigtop Issues List"></subsection>
+      <p>
+        If you'd like to keep track of Bigtop issue updates, please subscribe to the issues list: 
+        <a href="mailto:issues@bigtop.apache.org">issues@bigtop.apache.org</a>
+        .
+      </p>
+      <ul>
+        <li>
+          <a href="mailto:issues-subscribe@bigtop.apache.org">Subscribe to List</a>
+        </li>
+        <li>
+          <a href="mailto:issues-unsubscribe@bigtop.apache.org">Unsubscribe from List</a>
+        </li>
+        <li>
+          <a href="http://mail-archives.apache.org/mod_mbox/bigtop-issues/">Browse archives</a>
+        </li>
+      </ul>
 		</section>
 	</body>
 </document>
