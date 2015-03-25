@@ -41,7 +41,9 @@ import org.apache.sqoop.model.MJob
 import org.apache.sqoop.model.MSubmission;
 import org.junit.experimental.categories.Category;
 import org.apache.bigtop.itest.interfaces.EssentialTests;
+import org.apache.bigtop.itest.interfaces.NormalTests;
 
+@Category ( NormalTests.class )
 class TestSqoopImport {
   private static String mysql_user =
     System.getenv("MYSQL_USER");

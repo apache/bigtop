@@ -27,7 +27,10 @@ import static org.apache.bigtop.itest.LogErrorsUtils.logError
 import org.apache.bigtop.itest.shell.Shell
 import org.junit.runners.MethodSorters
 import org.junit.FixMethodOrder
+import org.junit.experimental.categories.Category;
+import org.apache.bigtop.itest.interfaces.NormalTests;
 
+@Category ( NormalTests.class )
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 
 public class TestFuseDFS {

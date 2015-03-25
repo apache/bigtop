@@ -29,6 +29,7 @@ import org.apache.hadoop.conf.Configuration
 import static org.apache.bigtop.itest.LogErrorsUtils.logError
 import org.junit.experimental.categories.Category;
 import org.apache.bigtop.itest.interfaces.EssentialTests;
+import org.apache.bigtop.itest.interfaces.NormalTests;
 
 class TestOozieSmoke {
   private static final int WAIT_TIMEOUT = 60000;
@@ -112,6 +113,7 @@ class TestOozieSmoke {
     testOozieExamplesCommon("custom-main");
   }
 
+@Category ( NormalTests.class )
   @Test(timeout=300000L)
   public void testHadoopEl() {
     testOozieExamplesCommon("hadoop-el");
@@ -123,26 +125,31 @@ class TestOozieSmoke {
     testOozieExamplesCommon("streaming");
   }
 
+@Category ( NormalTests.class )
   @Test(timeout=300000L)
   public void testPig() {
     testOozieExamplesCommon("pig");
   }
 
+@Category ( NormalTests.class )
   @Test(timeout=300000L)
   public void testHive() {
     testOozieExamplesCommon("hive");
   }
 
+@Category ( NormalTests.class )
   @Test(timeout=300000L)
   public void testSubwf() {
     testOozieExamplesCommon("subwf");
   }
 
+@Category ( NormalTests.class )
   @Test(timeout=300000L)
   public void testSsh() {
     // testOozieExamplesCommon("ssh");
   }
 
+@Category ( NormalTests.class )
   @Test(timeout=300000L)
   public void testDemo() {
     // testOozieExamplesCommon("demo");

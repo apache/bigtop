@@ -33,7 +33,10 @@ import static org.apache.bigtop.itest.LogErrorsUtils.logError
 import org.apache.bigtop.itest.junit.OrderedParameterized
 import org.junit.runners.Parameterized.Parameters
 import org.junit.runner.RunWith
+import org.junit.experimental.categories.Category;
+import org.apache.bigtop.itest.interfaces.NormalTests;
 
+@Category ( NormalTests.class )
 @RunWith(OrderedParameterized.class)
 class TestHadoopExamples {
   static private Log LOG = LogFactory.getLog(TestHadoopExamples.class);
@@ -75,8 +78,6 @@ class TestHadoopExamples {
   
   static Map examples =
     [
-        pi                :'2 1000',
-        wordcount         :"$EXAMPLES/text $EXAMPLES_OUT/wordcount",
         teragen           :"${terasort_rows} teragen${terasortid}",
         terasort          :"teragen${terasortid} terasort${terasortid}",
         teravalidate      :"terasort${terasortid} tervalidate${terasortid}",
