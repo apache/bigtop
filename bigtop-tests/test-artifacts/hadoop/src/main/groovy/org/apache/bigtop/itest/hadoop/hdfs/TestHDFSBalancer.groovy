@@ -25,7 +25,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.apache.bigtop.itest.JarContent;
 import org.apache.bigtop.itest.shell.Shell;
+import org.junit.experimental.categories.Category;
+import org.apache.bigtop.itest.interfaces.NormalTests;
 
+@Category ( NormalTests.class )
 public class TestHDFSBalancer {
  
   private static Shell shHDFS = new Shell("/bin/bash", "hdfs");

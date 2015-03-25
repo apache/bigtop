@@ -27,10 +27,13 @@ import org.apache.bigtop.itest.shell.Shell;
 import static org.apache.bigtop.itest.LogErrorsUtils.logError;
 import org.junit.runners.MethodSorters;
 import org.junit.FixMethodOrder;
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 import org.junit.experimental.categories.Category;
 import org.apache.bigtop.itest.interfaces.EssentialTests;
+import org.junit.experimental.categories.Category;
+import org.apache.bigtop.itest.interfaces.NormalTests;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@Category ( NormalTests.class )
 public class TestHDFSQuota {
  
   private static Shell shHDFS = new Shell("/bin/bash", "hdfs");

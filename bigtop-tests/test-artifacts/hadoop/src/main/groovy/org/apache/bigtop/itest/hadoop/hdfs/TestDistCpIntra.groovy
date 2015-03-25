@@ -26,6 +26,7 @@ import org.apache.hadoop.conf.Configuration;
 import static org.apache.bigtop.itest.LogErrorsUtils.logError
 import org.junit.experimental.categories.Category;
 import org.apache.bigtop.itest.interfaces.EssentialTests;
+import org.apache.bigtop.itest.interfaces.NormalTests;
 
 public class TestDistCpIntra {
  
@@ -134,6 +135,7 @@ public class TestDistCpIntra {
     }
   } 
 
+@Category ( NormalTests.class )
   @Test
   public void testDistcpIntra_MultipleSources() { 
     String distcp_sources = "distcp_sources" + date;

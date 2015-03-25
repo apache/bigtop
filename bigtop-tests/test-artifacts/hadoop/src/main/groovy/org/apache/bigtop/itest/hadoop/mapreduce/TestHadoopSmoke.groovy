@@ -29,7 +29,10 @@ import org.apache.hadoop.hdfs.DFSConfigKeys
 import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertNotNull
 import static org.apache.bigtop.itest.LogErrorsUtils.logError
+import org.junit.experimental.categories.Category;
+import org.apache.bigtop.itest.interfaces.NormalTests;
 
+@Category ( NormalTests.class )
 class TestHadoopSmoke {
   static Shell sh = new Shell("/bin/bash -s")
 

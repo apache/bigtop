@@ -25,7 +25,10 @@ import org.apache.bigtop.itest.shell.Shell
 import org.apache.bigtop.itest.junit.OrderedParameterized
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized.Parameters
+import org.junit.experimental.categories.Category;
+import org.apache.bigtop.itest.interfaces.NormalTests;
 
+@Category ( NormalTests.class )
 @RunWith(OrderedParameterized.class)
 public class TestHiveSmokeBulk {
   private static String test_include =

@@ -28,6 +28,7 @@ import org.apache.bigtop.itest.JarContent;
 import org.apache.bigtop.itest.shell.Shell;
 import org.junit.experimental.categories.Category;
 import org.apache.bigtop.itest.interfaces.EssentialTests;
+import org.apache.bigtop.itest.interfaces.NormalTests;
 
 public class TestDFSAdmin {
  
@@ -90,6 +91,7 @@ public class TestDFSAdmin {
     assertTrue("-safemode leave failed", shHDFS.getRet() == 0); 
   }
 
+@Category ( NormalTests.class )
   @Test
   public void testDFSnamespace() {
     // saveNamespace
@@ -128,6 +130,7 @@ public class TestDFSAdmin {
     assertTrue("-refreshSuperUserGroupsConfiguration failed", shHDFS.getRet() == 0); 
   }
 
+@Category ( NormalTests.class )
   @Test
   public void testDFSstorage() {  
     // restoreFailedStorage
@@ -146,6 +149,7 @@ public class TestDFSAdmin {
     assertTrue("-restoreFailedStorage false failed", shHDFS.getRet() == 0); 
   }
 
+@Category ( NormalTests.class )
   @Test
   public void testDFSquotas() {
     // setQuota, clrQuota

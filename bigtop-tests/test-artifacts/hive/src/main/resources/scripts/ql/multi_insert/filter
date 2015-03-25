@@ -1,5 +1,0 @@
-sed -e '/^ /d' \
--e '/^$/d' \
--e '/explain/,/STAGE PLANS:/d' \
--e '/^Moved/d' \
--e '/^Deleted/d'
