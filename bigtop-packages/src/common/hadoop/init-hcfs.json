@@ -71,7 +71,7 @@
     ["/user/jenkins","777","jenkins",null],
     ["/user/hive","777",null,null],
     ["/user/root","777","root",null],
-    ["/user/hue","777","hue",null],
+    ["/user/hue","777","hue","hue"],
     ["/user/sqoop","777","sqoop",null],
     ["/user/oozie","777","oozie"],
     ["/user/oozie/share",null,null,null],
