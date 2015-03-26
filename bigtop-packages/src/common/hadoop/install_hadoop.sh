@@ -185,6 +185,7 @@ cp ${BUILD_DIR}/libexec/* ${SYSTEM_LIBEXEC_DIR}/
 cp ${DISTRO_DIR}/hadoop-layout.sh ${SYSTEM_LIBEXEC_DIR}/
 install -m 0755 ${DISTRO_DIR}/init-hdfs.sh ${SYSTEM_LIBEXEC_DIR}/
 install -m 0755 ${DISTRO_DIR}/init-hcfs.json ${SYSTEM_LIBEXEC_DIR}/
+rm -rf ${SYSTEM_LIBEXEC_DIR}/*.cmd
 
 # hadoop jar
 install -d -m 0755 ${HADOOP_DIR}
