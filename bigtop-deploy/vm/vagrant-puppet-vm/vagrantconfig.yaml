@@ -3,8 +3,9 @@ number_cpus: 1
 box: "puppetlabs/centos-6.6-64-nocm"
 repo: "http://bigtop01.cloudera.org:8080/view/Releases/job/Bigtop-0.8.0/label=centos6/6/artifact/output/"
 num_instances: 1
+distro: centos
 components: [hadoop, yarn]
 enable_local_repo: false
 run_smoke_tests: false
-distro: centos
+smoke_test_components: [mapredcue, pig]
 jdk: "java-1.7.0-openjdk-devel.x86_64"
