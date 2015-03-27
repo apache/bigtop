@@ -14,9 +14,7 @@
 # limitations under the License.
 
 export MAVEN_HOME=/usr/local/maven
-export JAVA6_HOME=/usr/java/latest
-export JAVA7_HOME=/usr/lib/jvm/java-1.7.0-openjdk
-export JAVA_HOME=$JAVA7_HOME
+export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk.x86_64
 export ANT_HOME=/usr/local/ant
 export FORREST_HOME=/usr/local/apache-forrest
 export SCALA_HOME=/usr/share/java
