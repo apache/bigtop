@@ -1,0 +1,123 @@
+GEO.id,Id
+GEO.id2,Id2
+GEO.display-label,Geography
+HC01_EST_VC02,Total; Estimate; Households
+HC01_MOE_VC02,Total; Margin of Error; Households
+HC02_EST_VC02,Median income (dollars); Estimate; Households
+HC02_MOE_VC02,Median income (dollars); Margin of Error; Households
+HC01_EST_VC04,Total; Estimate; One race-- - White
+HC01_MOE_VC04,Total; Margin of Error; One race-- - White
+HC02_EST_VC04,Median income (dollars); Estimate; One race-- - White
+HC02_MOE_VC04,Median income (dollars); Margin of Error; One race-- - White
+HC01_EST_VC05,Total; Estimate; One race-- - Black or African American
+HC01_MOE_VC05,Total; Margin of Error; One race-- - Black or African American
+HC02_EST_VC05,Median income (dollars); Estimate; One race-- - Black or African American
+HC02_MOE_VC05,Median income (dollars); Margin of Error; One race-- - Black or African American
+HC01_EST_VC06,Total; Estimate; One race-- - American Indian and Alaska Native
+HC01_MOE_VC06,Total; Margin of Error; One race-- - American Indian and Alaska Native
+HC02_EST_VC06,Median income (dollars); Estimate; One race-- - American Indian and Alaska Native
+HC02_MOE_VC06,Median income (dollars); Margin of Error; One race-- - American Indian and Alaska Native
+HC01_EST_VC07,Total; Estimate; One race-- - Asian
+HC01_MOE_VC07,Total; Margin of Error; One race-- - Asian
+HC02_EST_VC07,Median income (dollars); Estimate; One race-- - Asian
+HC02_MOE_VC07,Median income (dollars); Margin of Error; One race-- - Asian
+HC01_EST_VC08,Total; Estimate; One race-- - Native Hawaiian and Other Pacific Islander
+HC01_MOE_VC08,Total; Margin of Error; One race-- - Native Hawaiian and Other Pacific Islander
+HC02_EST_VC08,Median income (dollars); Estimate; One race-- - Native Hawaiian and Other Pacific Islander
+HC02_MOE_VC08,Median income (dollars); Margin of Error; One race-- - Native Hawaiian and Other Pacific Islander
+HC01_EST_VC09,Total; Estimate; One race-- - Some other race
+HC01_MOE_VC09,Total; Margin of Error; One race-- - Some other race
+HC02_EST_VC09,Median income (dollars); Estimate; One race-- - Some other race
+HC02_MOE_VC09,Median income (dollars); Margin of Error; One race-- - Some other race
+HC01_EST_VC10,Total; Estimate; Two or more races
+HC01_MOE_VC10,Total; Margin of Error; Two or more races
+HC02_EST_VC10,Median income (dollars); Estimate; Two or more races
+HC02_MOE_VC10,Median income (dollars); Margin of Error; Two or more races
+HC01_EST_VC12,Total; Estimate; Hispanic or Latino origin (of any race)
+HC01_MOE_VC12,Total; Margin of Error; Hispanic or Latino origin (of any race)
+HC02_EST_VC12,Median income (dollars); Estimate; Hispanic or Latino origin (of any race)
+HC02_MOE_VC12,Median income (dollars); Margin of Error; Hispanic or Latino origin (of any race)
+HC01_EST_VC13,"Total; Estimate; White alone, not Hispanic or Latino"
+HC01_MOE_VC13,"Total; Margin of Error; White alone, not Hispanic or Latino"
+HC02_EST_VC13,"Median income (dollars); Estimate; White alone, not Hispanic or Latino"
+HC02_MOE_VC13,"Median income (dollars); Margin of Error; White alone, not Hispanic or Latino"
+HC01_EST_VC16,Total; Estimate; HOUSEHOLD INCOME BY AGE OF HOUSEHOLDER - 15 to 24 years
+HC01_MOE_VC16,Total; Margin of Error; HOUSEHOLD INCOME BY AGE OF HOUSEHOLDER - 15 to 24 years
+HC02_EST_VC16,Median income (dollars); Estimate; HOUSEHOLD INCOME BY AGE OF HOUSEHOLDER - 15 to 24 years
+HC02_MOE_VC16,Median income (dollars); Margin of Error; HOUSEHOLD INCOME BY AGE OF HOUSEHOLDER - 15 to 24 years
+HC01_EST_VC17,Total; Estimate; HOUSEHOLD INCOME BY AGE OF HOUSEHOLDER - 25 to 44 years
+HC01_MOE_VC17,Total; Margin of Error; HOUSEHOLD INCOME BY AGE OF HOUSEHOLDER - 25 to 44 years
+HC02_EST_VC17,Median income (dollars); Estimate; HOUSEHOLD INCOME BY AGE OF HOUSEHOLDER - 25 to 44 years
+HC02_MOE_VC17,Median income (dollars); Margin of Error; HOUSEHOLD INCOME BY AGE OF HOUSEHOLDER - 25 to 44 years
+HC01_EST_VC18,Total; Estimate; HOUSEHOLD INCOME BY AGE OF HOUSEHOLDER - 45 to 64 years
+HC01_MOE_VC18,Total; Margin of Error; HOUSEHOLD INCOME BY AGE OF HOUSEHOLDER - 45 to 64 years
+HC02_EST_VC18,Median income (dollars); Estimate; HOUSEHOLD INCOME BY AGE OF HOUSEHOLDER - 45 to 64 years
+HC02_MOE_VC18,Median income (dollars); Margin of Error; HOUSEHOLD INCOME BY AGE OF HOUSEHOLDER - 45 to 64 years
+HC01_EST_VC19,Total; Estimate; HOUSEHOLD INCOME BY AGE OF HOUSEHOLDER - 65 years and over
+HC01_MOE_VC19,Total; Margin of Error; HOUSEHOLD INCOME BY AGE OF HOUSEHOLDER - 65 years and over
+HC02_EST_VC19,Median income (dollars); Estimate; HOUSEHOLD INCOME BY AGE OF HOUSEHOLDER - 65 years and over
+HC02_MOE_VC19,Median income (dollars); Margin of Error; HOUSEHOLD INCOME BY AGE OF HOUSEHOLDER - 65 years and over
+HC01_EST_VC23,Total; Estimate; FAMILIES - Families
+HC01_MOE_VC23,Total; Margin of Error; FAMILIES - Families
+HC02_EST_VC23,Median income (dollars); Estimate; FAMILIES - Families
+HC02_MOE_VC23,Median income (dollars); Margin of Error; FAMILIES - Families
+HC01_EST_VC24,Total; Estimate; FAMILIES - Families - With own children under 18 years
+HC01_MOE_VC24,Total; Margin of Error; FAMILIES - Families - With own children under 18 years
+HC02_EST_VC24,Median income (dollars); Estimate; FAMILIES - Families - With own children under 18 years
+HC02_MOE_VC24,Median income (dollars); Margin of Error; FAMILIES - Families - With own children under 18 years
+HC01_EST_VC25,Total; Estimate; FAMILIES - Families - With no own children under 18 years
+HC01_MOE_VC25,Total; Margin of Error; FAMILIES - Families - With no own children under 18 years
+HC02_EST_VC25,Median income (dollars); Estimate; FAMILIES - Families - With no own children under 18 years
+HC02_MOE_VC25,Median income (dollars); Margin of Error; FAMILIES - Families - With no own children under 18 years
+HC01_EST_VC26,Total; Estimate; FAMILIES - Married-couple families
+HC01_MOE_VC26,Total; Margin of Error; FAMILIES - Married-couple families
+HC02_EST_VC26,Median income (dollars); Estimate; FAMILIES - Married-couple families
+HC02_MOE_VC26,Median income (dollars); Margin of Error; FAMILIES - Married-couple families
+HC01_EST_VC27,"Total; Estimate; FAMILIES - Female householder, no husband present"
+HC01_MOE_VC27,"Total; Margin of Error; FAMILIES - Female householder, no husband present"
+HC02_EST_VC27,"Median income (dollars); Estimate; FAMILIES - Female householder, no husband present"
+HC02_MOE_VC27,"Median income (dollars); Margin of Error; FAMILIES - Female householder, no husband present"
+HC01_EST_VC28,"Total; Estimate; FAMILIES - Male householder, no wife present"
+HC01_MOE_VC28,"Total; Margin of Error; FAMILIES - Male householder, no wife present"
+HC02_EST_VC28,"Median income (dollars); Estimate; FAMILIES - Male householder, no wife present"
+HC02_MOE_VC28,"Median income (dollars); Margin of Error; FAMILIES - Male householder, no wife present"
+HC01_EST_VC32,Total; Estimate; NONFAMILY HOUSEHOLDS - Nonfamily households
+HC01_MOE_VC32,Total; Margin of Error; NONFAMILY HOUSEHOLDS - Nonfamily households
+HC02_EST_VC32,Median income (dollars); Estimate; NONFAMILY HOUSEHOLDS - Nonfamily households
+HC02_MOE_VC32,Median income (dollars); Margin of Error; NONFAMILY HOUSEHOLDS - Nonfamily households
+HC01_EST_VC33,Total; Estimate; NONFAMILY HOUSEHOLDS - Female householder
+HC01_MOE_VC33,Total; Margin of Error; NONFAMILY HOUSEHOLDS - Female householder
+HC02_EST_VC33,Median income (dollars); Estimate; NONFAMILY HOUSEHOLDS - Female householder
+HC02_MOE_VC33,Median income (dollars); Margin of Error; NONFAMILY HOUSEHOLDS - Female householder
+HC01_EST_VC34,Total; Estimate; NONFAMILY HOUSEHOLDS - Female householder - Living alone
+HC01_MOE_VC34,Total; Margin of Error; NONFAMILY HOUSEHOLDS - Female householder - Living alone
+HC02_EST_VC34,Median income (dollars); Estimate; NONFAMILY HOUSEHOLDS - Female householder - Living alone
+HC02_MOE_VC34,Median income (dollars); Margin of Error; NONFAMILY HOUSEHOLDS - Female householder - Living alone
+HC01_EST_VC35,Total; Estimate; NONFAMILY HOUSEHOLDS - Female householder - Not living alone
+HC01_MOE_VC35,Total; Margin of Error; NONFAMILY HOUSEHOLDS - Female householder - Not living alone
+HC02_EST_VC35,Median income (dollars); Estimate; NONFAMILY HOUSEHOLDS - Female householder - Not living alone
+HC02_MOE_VC35,Median income (dollars); Margin of Error; NONFAMILY HOUSEHOLDS - Female householder - Not living alone
+HC01_EST_VC36,Total; Estimate; NONFAMILY HOUSEHOLDS - Male householder
+HC01_MOE_VC36,Total; Margin of Error; NONFAMILY HOUSEHOLDS - Male householder
+HC02_EST_VC36,Median income (dollars); Estimate; NONFAMILY HOUSEHOLDS - Male householder
+HC02_MOE_VC36,Median income (dollars); Margin of Error; NONFAMILY HOUSEHOLDS - Male householder
+HC01_EST_VC37,Total; Estimate; NONFAMILY HOUSEHOLDS - Male householder - Living alone
+HC01_MOE_VC37,Total; Margin of Error; NONFAMILY HOUSEHOLDS - Male householder - Living alone
+HC02_EST_VC37,Median income (dollars); Estimate; NONFAMILY HOUSEHOLDS - Male householder - Living alone
+HC02_MOE_VC37,Median income (dollars); Margin of Error; NONFAMILY HOUSEHOLDS - Male householder - Living alone
+HC01_EST_VC38,Total; Estimate; NONFAMILY HOUSEHOLDS - Male householder - Not living alone
+HC01_MOE_VC38,Total; Margin of Error; NONFAMILY HOUSEHOLDS - Male householder - Not living alone
+HC02_EST_VC38,Median income (dollars); Estimate; NONFAMILY HOUSEHOLDS - Male householder - Not living alone
+HC02_MOE_VC38,Median income (dollars); Margin of Error; NONFAMILY HOUSEHOLDS - Male householder - Not living alone
+HC01_EST_VC41,Total; Estimate; PERCENT IMPUTED - Household income in the past 12 months
+HC01_MOE_VC41,Total; Margin of Error; PERCENT IMPUTED - Household income in the past 12 months
+HC02_EST_VC41,Median income (dollars); Estimate; PERCENT IMPUTED - Household income in the past 12 months
+HC02_MOE_VC41,Median income (dollars); Margin of Error; PERCENT IMPUTED - Household income in the past 12 months
+HC01_EST_VC42,Total; Estimate; PERCENT IMPUTED - Family income in the past 12 months
+HC01_MOE_VC42,Total; Margin of Error; PERCENT IMPUTED - Family income in the past 12 months
+HC02_EST_VC42,Median income (dollars); Estimate; PERCENT IMPUTED - Family income in the past 12 months
+HC02_MOE_VC42,Median income (dollars); Margin of Error; PERCENT IMPUTED - Family income in the past 12 months
+HC01_EST_VC43,Total; Estimate; PERCENT IMPUTED - Nonfamily income in the past 12 months
+HC01_MOE_VC43,Total; Margin of Error; PERCENT IMPUTED - Nonfamily income in the past 12 months
+HC02_EST_VC43,Median income (dollars); Estimate; PERCENT IMPUTED - Nonfamily income in the past 12 months
+HC02_MOE_VC43,Median income (dollars); Margin of Error; PERCENT IMPUTED - Nonfamily income in the past 12 months
