@@ -26,6 +26,7 @@ Source1: %{name}.init
 Source2: %{name}.init.suse
 Source3: do-component-build
 Source4: install_hue.sh
+Source5: hue-virtualenv.tgz
 #BIGTOP_PATCH_FILES
 URL: http://github.com/cloudera/hue
 Requires: %{name}-common = %{version}-%{release}
@@ -151,6 +152,13 @@ It supports a file browser, job tracker interface, cluster health monitor, and m
 %setup -n %{name}-release-%{hue_base_version}
 
 #BIGTOP_PATCH_COMMANDS
+
+#apply https://github.com/cloudera/hue/commit/2bbdd91e27cac9ab79e193dc4ad18d0647ae0048
+# see BIGTOP-1635
+rm -rf tools/virtual-bootstrap
+rm -rf desktop/core/ext-py/ctypes-1.0.2/ctypes 
+tar -xvf %{SOURCE5}
+#end of workaround
 ########################################
 # Build
 ########################################

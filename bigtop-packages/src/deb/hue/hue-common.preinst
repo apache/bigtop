@@ -45,7 +45,7 @@ case "$1" in
         # In upgrade, make a copy of the database, if it's there.
         if [ "$1" == "upgrade" ] ; then
                 echo "... stopping any running Hue"
-                /etc/init.d/hue stop || :
+                service hue stop || :
                 OLD_DESKTOP_DB=/usr/share/hue/desktop/desktop.db
                 if [ -e $OLD_DESKTOP_DB ]; then
                         echo ... backing up $OLD_DESKTOP_DB as ${OLD_DESKTOP_DB}.bak.$2
