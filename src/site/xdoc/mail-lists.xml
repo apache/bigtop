@@ -17,7 +17,7 @@
 			<p>
 				If you use Bigtop, please subscribe to the Bigtop user mailing list.
 				<br />
-				The Bigtop user mailing list is :
+				The Bigtop user mailing list is:
 				<a href="mailto:user@bigtop.apache.org">user@bigtop.apache.org</a>
 				.
 			</p>
@@ -37,7 +37,7 @@
 			<p>
 				If you'd like to contribute to Bigtop, please subscribe to the Bigtop developer mailing list.
 				<br />
-				The Bigtop developer mailing list is :
+				The Bigtop developer mailing list is:
 				<a href="mailto:dev@bigtop.apache.org">dev@bigtop.apache.org</a>
 				.
 			</p>
@@ -55,10 +55,10 @@
 
 			<subsection name="Bigtop Commit List"></subsection>
 			<p>
-				If you'd like to see changes made in Bigtop's version control system then subscribe
+				If you'd like to see changes made in Bigtop's version control system, please subscribe
 				to the Bigtop commit mailing list.
 				<br />
-				The Bigtop commit mailing list is :
+				The Bigtop commit mailing list is:
 				<a href="mailto:commits@bigtop.apache.org">commits@bigtop.apache.org</a>
 				.
 			</p>
@@ -76,10 +76,10 @@
 
 			<subsection name="Bigtop CI List"></subsection>
 			<p>
-				If you'd like to see notifications from Bigtop build system (CI) then subscribe
+				If you'd like to see notifications from the Bigtop build system (CI), please subscribe
 				to the Bigtop CI mailing list.
 				<br />
-				The Bigtop CI mailing list is :
+				The Bigtop CI mailing list is:
 				<a href="mailto:ci@bigtop.apache.org">ci@bigtop.apache.org</a>
 				.
 			</p>
@@ -97,10 +97,10 @@
 
 			<subsection name="Bigtop Announcements List"></subsection>
 			<p>
-				If you'd like to receive important announcement (e.g. releases, etc.) notifications from Bigtop
-				community then subscribe to the Bigtop Announcements mailing list. Low traffic.
+				If you'd like to receive important announcement notifications (e.g. releases, etc.) from the Bigtop
+				community, please subscribe to the Bigtop Announcements mailing list. Low traffic.
 				<br />
-				The Bigtop CI mailing list is :
+				The Bigtop announcements mailing list is:
 				<a href="mailto:announce@bigtop.apache.org">announce@bigtop.apache.org</a>
 				.
 			</p>
@@ -118,7 +118,9 @@
 
       <subsection name="Bigtop Issues List"></subsection>
       <p>
-        If you'd like to keep track of Bigtop issue updates, please subscribe to the issues list: 
+        If you'd like to keep track of Bigtop issue updates, please subscribe to the issues list.
+        <br />
+        The Bigtop issues mailing list is:
         <a href="mailto:issues@bigtop.apache.org">issues@bigtop.apache.org</a>
         .
       </p>
