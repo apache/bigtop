@@ -24,7 +24,7 @@ Puppet module for configuring a host for building BigTop. It installs:
 
 **OpenJDK 1.7**
 
-**Apache Maven 3.0.5**
+**Apache Maven 3.2.5**
 
 **Gradle 2.4**
 

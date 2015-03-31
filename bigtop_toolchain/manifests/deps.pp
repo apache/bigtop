@@ -24,10 +24,10 @@ class bigtop_toolchain::deps {
     unless  => "/usr/bin/test -f /usr/src/apache-ant-1.9.5-bin.tar.gz",
   }
 
-  exec {"/usr/bin/wget $apache_prefix/maven/maven-3/3.0.5/binaries/apache-maven-3.0.5-bin.tar.gz":
+  exec {"/usr/bin/wget $apache_prefix/maven/maven-3/3.2.5/binaries/apache-maven-3.2.5-bin.tar.gz":
     cwd     => "/usr/src",
     require => Package[$packages::pkgs],
-    unless  => "/usr/bin/test -f /usr/src/apache-maven-3.0.5-bin.tar.gz",
+    unless  => "/usr/bin/test -f /usr/src/apache-maven-3.2.5-bin.tar.gz",
   }
 
   exec {"/usr/bin/wget http://services.gradle.org/distributions/gradle-2.4-bin.zip":
