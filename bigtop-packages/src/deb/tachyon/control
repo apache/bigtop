@@ -18,7 +18,7 @@ Section: misc
 Priority: extra
 Maintainer: Huamin Chen <hchen@redhat.com>
 Build-Depends: debhelper (>= 7.0.50~)
-Standards-Version: 0.5.0
+Standards-Version: 3.9.4
 Homepage: http://tachyon-project.org
 
 Package:  tachyon
