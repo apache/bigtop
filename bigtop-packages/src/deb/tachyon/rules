@@ -28,10 +28,11 @@ export DH_OPTIONS
 
 override_dh_auto_build:
 	# we'll just use the build from the tarball.
+	mv debian/install_tachyon.sh debian/../../install_tachyon.sh
 	bash debian/do-component-build -Dmaven.repo.local=${HOME}/.m2/repository
 
 override_dh_auto_install:
-	bash -x debian/install_tachyon.sh \
+	bash -x debian/../../install_tachyon.sh \
     --build-dir=build \
     --bin-dir=/usr/bin \
     --data-dir=/usr/share \
