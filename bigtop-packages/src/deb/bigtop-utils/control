@@ -17,11 +17,11 @@ Section: misc
 Priority: extra
 Maintainer: Bigtop <dev@bigtop.apache.org>
 Build-Depends: debhelper (>= 7.0.50~)
-Standards-Version: 3.8.0
+Standards-Version: 3.9.4
 Homepage: http://bigtop.apache.org/
 
 Package: bigtop-utils
 Architecture: all
-Depends: ${misc:Depends}, debianutils, bash
+Depends: ${misc:Depends}, bigtop-groovy
 Description: Collection of useful tools for Bigtop
  This includes a collection of useful tools and files for Bigtop
