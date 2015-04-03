@@ -58,7 +58,7 @@ class TestSqoopImport {
   private static final String MYSQL_COMMAND =
     "mysql -h $MYSQL_HOST --user=$MYSQL_USER" +
     (("".equals(MYSQL_PASSWORD)) ? "" : " --password=$MYSQL_PASSWORD");
-  private static final String MYSQL_DBNAME = System.getProperty("mysql.dbname", "mysqltestdb");
+  private static final String MYSQL_DBNAME = System.getProperty("mysql.dbname", "mysqltestdb_import");
   private static final String SQOOP_CONNECTION_STRING =
     "jdbc:mysql://$MYSQL_HOST/$MYSQL_DBNAME";
   private static final String SQOOP_CONNECTION =
@@ -87,9 +87,9 @@ class TestSqoopImport {
     // create the database
     sh.exec("sed -i s/MYSQLHOST/$MYSQL_HOST/g $DATA_DIR/mysql-create-user.sql");
     my.exec("mysql test < $DATA_DIR/mysql-create-user.sql");
-    sh.exec("cat $DATA_DIR/mysql-create-db.sql | $MYSQL_COMMAND");
+    sh.exec("cat $DATA_DIR/mysql-create-db_import.sql | $MYSQL_COMMAND");
     //create tables
-    sh.exec("cat $DATA_DIR/mysql-create-tables.sql | $MYSQL_COMMAND");
+    sh.exec("cat $DATA_DIR/mysql-create-tables_import.sql | $MYSQL_COMMAND");
     //populate data
     sh.exec("cat $DATA_DIR/mysql-insert-data.sql | $MYSQL_COMMAND");
   }
@@ -361,7 +361,7 @@ class TestSqoopImport {
   @Test
   public void testImportAllTables() {
     String SQOOP_CONNECTION_IMPORT_ALL =
-    "--connect jdbc:mysql://$MYSQL_HOST/mysqltestdb2 --username=$MYSQL_USER" +
+    "--connect jdbc:mysql://$MYSQL_HOST/mysqltestdb2_import --username=$MYSQL_USER" +
     (("".equals(MYSQL_PASSWORD)) ? "" : " --password=$MYSQL_PASSWORD");
 
     sh.exec("sqoop import-all-tables $SQOOP_CONNECTION_IMPORT_ALL --warehouse-dir $OUTPUT/alltables");

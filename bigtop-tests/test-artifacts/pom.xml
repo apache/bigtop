@@ -58,6 +58,11 @@
       <groupId>org.apache.bigtop.itest</groupId>
       <artifactId>itest-common</artifactId>
     </dependency>
+    <dependency>
+	<groupId>net.jcip</groupId>
+	<artifactId>jcip-annotations</artifactId>
+	<version>1.0</version>
+    </dependency>
   </dependencies>
 
   <build>

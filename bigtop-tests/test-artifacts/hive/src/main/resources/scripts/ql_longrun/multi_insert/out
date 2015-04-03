@@ -1,3 +1,4 @@
+USE  TEST_HIVE_LONGRUN
 
 
 create table src_multi1 like src

@@ -46,7 +46,7 @@ import org.apache.bigtop.itest.interfaces.EssentialTests;
 
 @Contract(
   properties = {
-    @Property(name="hiveserver.startup.wait", type=Property.Type.INT, longValue=3000, intValue=3000, defaultValue="3000")
+    @Property(name="hiveserver.startup.wait", type=Property.Type.INT, longValue=5000, intValue=5000, defaultValue="5000")
   },
   env = {})
 
@@ -76,16 +76,27 @@ public class TestJdbcDriver {
     assertTrue("Could not copy local file to test directory", sh.getRet() == 0);
     // start hiveserver in background and remember the pid
     sh.exec("(HIVE_PORT="+HIVE_SERVER_DB_PORT+" hive --service hiveserver > /dev/null 2>&1 & echo $! ) 2> /dev/null");
+    assertTrue("Hive server is not getting started at port:"+HIVE_SERVER_DB_PORT, sh.getRet() == 0);
     hiveserver_pid = sh.getOut().get(0);
     Thread.sleep(hiveserver_startup_wait); // allow time for hiveserver to be up
   }
 
   @Before
-  public void getConnection() throws SQLException {
-    //System.out.println(hiveserver_url);
-    con = DriverManager.getConnection(hiveserver_url, "", "");
-    //System.out.println("JDBC connection is " +
-    //    (con == null ? "not instantiated." : "instantiated."));
+  public void getConnection() throws SQLException,InterruptedException {
+    System.out.println("Hive server URL:"+hiveserver_url);
+    int noOfTry=0;
+    boolean isConnected=false;
+    while(noOfTry<5 && false==isConnected){
+    	noOfTry++;
+    	try{
+    		con = DriverManager.getConnection(hiveserver_url, "", "");
+		isConnected=true;
+	    }catch(SQLException exception){
+		System.out.println("Not able to connect to Hive server, will retry after "+hiveserver_startup_wait+" ms");
+		Thread.sleep(hiveserver_startup_wait);
+	    }
+	}   
+    assertTrue("Not able to connect to Hive server:"+hiveserver_url, isConnected); 
   }
 
   @After

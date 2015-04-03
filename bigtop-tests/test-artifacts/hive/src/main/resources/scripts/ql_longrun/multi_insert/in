@@ -13,6 +13,7 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 
+USE  TEST_HIVE_LONGRUN;
 
 create table src_multi1 like src;
 create table src_multi2 like src;
