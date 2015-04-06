@@ -25,7 +25,7 @@ class BuildUtils {
       if (eval.contains("\$(subst")) {
         // Extracting name of the var from something like
         // $(subst -,.,$(BIGTOP_VERSION))
-        def pattern = ~ /.*\$\(subst (-.*),(.*),\$\((\w+[-]?\w+?)\)\)/
+        def pattern = ~ /.*\$\(subst (.*),(.*),\$\((\w+[-]?\w+?)\)\)/
         def m = eval =~ pattern
         def token = ""
         if (m.matches()) {
