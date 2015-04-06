@@ -28,7 +28,8 @@ public class HiveBulkScriptExecutor {
   private File scripts;
   private String location;
 
-  public HiveBulkScriptExecutor(String l) {
+  public HiveBulkScriptExecutor(Shell sh1,String l) {
+    this.sh=sh1;
     location = l;
     scripts = new File(location);
 

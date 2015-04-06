@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-use mysqltestdb;
+use mysqltestdb_import;
 
 insert into t_int (a,b,c,d,e,f) values (127,32767,8388607,2147483647,-2147483648,9223372036854775807);
 
@@ -51,7 +51,7 @@ insert into testnullvalues (id,b) values (3,'aaa');
 
 /* data for import-all test */
 
-use mysqltestdb2;
+use mysqltestdb2_import;
 
 insert into testtable values (1,'aaa','aaa');
 insert into testtable2 values (1,'aaa','aaa');

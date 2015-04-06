@@ -27,16 +27,18 @@ import org.junit.runner.RunWith
 import org.junit.runners.Parameterized.Parameters
 import org.junit.experimental.categories.Category;
 import org.apache.bigtop.itest.interfaces.LongRunTests;
+import net.jcip.annotations.NotThreadSafe
 
 @RunWith(OrderedParameterized.class)
+@NotThreadSafe
 @Category ( LongRunTests.class )
 public class TestHiveSmokeBulkLongRunning {
   private static String test_include =
     System.getProperty("org.apache.bigtop.itest.hivesmoke.TestHiveSmokeBulkLongRunning.test_include");
   private static String test_exclude =
     System.getProperty("org.apache.bigtop.itest.hivesmoke.TestHiveSmokeBulkLongRunning.test_exclude");
-  static Shell sh = new Shell("/bin/bash -s");
-  static HiveBulkScriptExecutor scripts = new HiveBulkScriptExecutor("scripts/ql_longrun");
+  private static Shell sh = new Shell("/bin/bash -s");
+  static HiveBulkScriptExecutor scripts = new HiveBulkScriptExecutor(sh,"scripts/ql_longrun");
 
   private String test;
 
@@ -56,14 +58,14 @@ public class TestHiveSmokeBulkLongRunning {
      "smb_input2", "srcbucket_mapjoin_part", "bucketmapjoin_hash_result_1",
      "bucketmapjoin_hash_result_2", "bucketmapjoin_tmp_result",
      "srcbucket_mapjoin_part_2"].each { 
-     hive_script <<= "drop table ${it};\n"; 
+     hive_script <<= "drop table TEST_HIVE_LONGRUN.${it};\n"; 
     }
     shHive.exec("${hive_script} quit; \n"); 
   }
 
   @BeforeClass
   public static void setUp() {
-    sh.exec("hive -f ./seed.hql");
+    sh.exec("hive -f ./seed_LONGRUN.hql");
   }
 
   @AfterClass

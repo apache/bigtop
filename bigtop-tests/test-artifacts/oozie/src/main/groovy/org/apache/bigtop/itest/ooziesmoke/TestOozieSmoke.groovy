@@ -26,23 +26,25 @@ import org.junit.AfterClass
 import org.junit.BeforeClass
 import static junit.framework.Assert.assertEquals
 import org.apache.hadoop.conf.Configuration
+import org.apache.bigtop.itest.JarContent
 import static org.apache.bigtop.itest.LogErrorsUtils.logError
 import org.junit.experimental.categories.Category;
 import org.apache.bigtop.itest.interfaces.EssentialTests;
 import org.apache.bigtop.itest.interfaces.NormalTests;
 
 class TestOozieSmoke {
-  private static final int WAIT_TIMEOUT = 60000;
+  private static final int WAIT_TIMEOUT = 90000;
   private static Shell sh = new Shell("/bin/bash -s");
-  private static String tmp_dir = "oozie.${(new Date().getTime())}";
-  
+  private static String tmp_dir = "oozie.TestOozieSmoke.${(new Date().getTime())}";
+  private static final String USERDIR = System.getProperty("user.dir"); 
   private static String oozie_url;
   private static String resourcemanager;
   private static String namenode;
-  private static String oozie_tar_home;
 
   @BeforeClass
   static void setUp() {
+         // unpack resource
+        JarContent.unpackJarContainer(TestOozieSmoke.class, "." , null);
     Configuration conf = new Configuration();
     conf.addResource('yarn-site.xml');
 
@@ -54,14 +56,9 @@ class TestOozieSmoke {
     assertNotNull("resourcemanager hostname isn't set", resourcemanager)
     assertNotNull("namenode hostname isn't set", namenode)
 
-    oozie_tar_home = System.getProperty("org.apache.bigtop.itest.oozie_tar_home",
-                                        (new File("/usr/share/doc/packages/oozie/")).exists() ?
-                                           "/usr/share/doc/packages/oozie/" :
-                                           "/usr/share/doc/oozie*/");
-
     sh.exec("mkdir /tmp/${tmp_dir}",
             "cd /tmp/${tmp_dir}",
-            "tar xzf ${oozie_tar_home}/oozie-examples.tar.gz",
+            "tar xzf ${USERDIR}/oozie-examples.level0.tar.gz",
             "hadoop fs -mkdir ${tmp_dir}",
             "hadoop fs -put examples ${tmp_dir}");
     assertEquals("Failed to put examples onto HDFS",
@@ -90,67 +87,67 @@ class TestOozieSmoke {
   }
 
 @Category ( EssentialTests.class )
-  @Test(timeout=300000L)
+  @Test(timeout=1000000L)
   public void testNoOp() {
     testOozieExamplesCommon("no-op");
   }
 
 @Category ( EssentialTests.class )
-  @Test(timeout=300000L)
+  @Test(timeout=1000000L)
   public void testJavaMain() {
     testOozieExamplesCommon("java-main");
   }
 
 @Category ( EssentialTests.class )
-  @Test(timeout=300000L)
+  @Test(timeout=1000000L)
   public void testMapReduce() {
     testOozieExamplesCommon("map-reduce");
   }
 
 @Category ( EssentialTests.class )
-  @Test(timeout=300000L)
+  @Test(timeout=1000000L)
   public void testCustomMain() {
     testOozieExamplesCommon("custom-main");
   }
 
 @Category ( NormalTests.class )
-  @Test(timeout=300000L)
+  @Test(timeout=1000000L)
   public void testHadoopEl() {
     testOozieExamplesCommon("hadoop-el");
   }
 
 @Category ( EssentialTests.class )
-  @Test(timeout=300000L)
+  @Test(timeout=1000000L)
   public void testStreaming() {
     testOozieExamplesCommon("streaming");
   }
 
 @Category ( NormalTests.class )
-  @Test(timeout=300000L)
+  @Test(timeout=1000000L)
   public void testPig() {
     testOozieExamplesCommon("pig");
   }
 
 @Category ( NormalTests.class )
-  @Test(timeout=300000L)
+  @Test(timeout=1000000L)
   public void testHive() {
     testOozieExamplesCommon("hive");
   }
 
 @Category ( NormalTests.class )
-  @Test(timeout=300000L)
+  @Test(timeout=1000000L)
   public void testSubwf() {
     testOozieExamplesCommon("subwf");
   }
 
 @Category ( NormalTests.class )
-  @Test(timeout=300000L)
+  @Test(timeout=1000000L)
   public void testSsh() {
     // testOozieExamplesCommon("ssh");
   }
 
 @Category ( NormalTests.class )
-  @Test(timeout=300000L)
+  @Test(timeout=1000000L)
   public void testDemo() {
     // testOozieExamplesCommon("demo");
   }

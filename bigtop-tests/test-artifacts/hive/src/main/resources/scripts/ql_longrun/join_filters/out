@@ -1,3 +1,6 @@
+USE  TEST_HIVE_LONGRUN
+
+
 CREATE TABLE myinput1(key int, value int)
 
 LOAD DATA LOCAL INPATH 'seed_data_files/in3.txt' INTO TABLE myinput1

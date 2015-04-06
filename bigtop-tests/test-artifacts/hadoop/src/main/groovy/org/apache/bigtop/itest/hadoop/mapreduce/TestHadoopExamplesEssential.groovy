@@ -35,8 +35,10 @@ import org.junit.runners.Parameterized.Parameters
 import org.junit.runner.RunWith
 import org.junit.experimental.categories.Category
 import org.apache.bigtop.itest.interfaces.EssentialTests
+import net.jcip.annotations.NotThreadSafe
 
 @Category ( EssentialTests.class )
+@NotThreadSafe
 @RunWith(OrderedParameterized.class)
 class TestHadoopExamplesEssential {
   static private Log LOG = LogFactory.getLog(TestHadoopExamplesEssential.class);
@@ -101,16 +103,8 @@ class TestHadoopExamplesEssential {
 
   @Test
   void testMRExample() {
-   if(this.testName =="terasort")
-   {
-   sh.exec("hadoop jar $testJar $testName -Dmapreduce.terasort.output.replication=2 -Dmapreduce.terasort.simplepartitioner=true $testArgs"); 
-   }
-   else
-  { 
     sh.exec("hadoop jar $testJar $testName $testArgs");
-  }
     logError(sh);
-   
     assertTrue("Example $testName $testJar $testName $testArgs failed", sh.getRet() == 0);
   }
 }
