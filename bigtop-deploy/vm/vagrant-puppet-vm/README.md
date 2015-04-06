@@ -73,6 +73,19 @@ finally, spin up the cluster
 vagrant up
 ```
 
+## Override Vagrant configurations
+You can override vagrant configurations from environment variables:
+```
+$ export REPO=http://repo.example.com/path/to
+$ vagrant up
+```
+
+or
+
+```
+$ MEMORY_SIZE=8000 vagrant up
+```
+ 
 ##Configure Apache Hadoop ecosystem components
 * Choose the ecosystem you want to be deployed by modifying components in vagrantconfig.yaml
 

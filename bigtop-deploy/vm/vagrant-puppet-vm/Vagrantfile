@@ -21,6 +21,19 @@ require "yaml"
 _config = YAML.load(File.open(File.join(File.dirname(__FILE__), "vagrantconfig.yaml"), File::RDONLY).read)
 CONF = _config
 
+# Override vagrant configurations using environment variables
+keys = CONF.keys
+keys.each do |k|
+  if ENV[k.upcase] != nil then
+    puts "Overide from environment variable: " + k.upcase + " = " + ENV[k.upcase]
+    if /^\d+/.match(ENV[k.upcase])
+      CONF[k] = Integer(ENV[k.upcase])
+    else
+      CONF[k] = ENV[k.upcase]
+    end
+  end
+end
+
 # Repository
 # Example for testing a Release candidate.
 repo = CONF['repo']
