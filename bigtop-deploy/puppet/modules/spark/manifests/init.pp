@@ -32,7 +32,7 @@ class spark {
       ensure => latest,
     }
 
-    if ( $fqdn == $master_host ) {
+    if ( $fqdn == $common::master_host ) {
       service { "spark-master":
         ensure => running,
         require => [ Package["spark-master"], File["/etc/spark/conf/spark-env.sh"], ],
@@ -50,7 +50,7 @@ class spark {
       ensure => latest,
     }
 
-    if ( $fqdn == $master_host ) {
+    if ( $fqdn == $common::master_host ) {
       Service["spark-master"] ~> Service["spark-worker"]
     }
     service { "spark-worker":
