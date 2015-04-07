@@ -1,0 +1,4 @@
+/usr/bin
+/var/log/ignite-hadoop
+/var/run/ignite-hadoop
+/etc/default
