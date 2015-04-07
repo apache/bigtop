@@ -450,6 +450,9 @@ def genTasks = { target, variable ->
     def final BASE_VERSION = BOM_map[variable + '_BASE_VERSION']
     def final PKG_OUTPUT_DIR = BOM_map[variable + '_OUTPUT_DIR']
     delete ("$PKG_BUILD_DIR/rpm")
+    ['INSTALL','SOURCES','BUILD','SRPMS','RPMS'].each { rpmdir ->
+      mkdir("$PKG_BUILD_DIR/rpm/$rpmdir")
+    }
     fileTree ("${BASE_DIR}/bigtop-packages/src/rpm/$NAME") {
       include '**/*'
     }.copy { into "$PKG_BUILD_DIR/rpm" }
