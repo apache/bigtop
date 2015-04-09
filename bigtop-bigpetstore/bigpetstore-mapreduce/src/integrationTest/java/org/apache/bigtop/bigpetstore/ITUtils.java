@@ -67,9 +67,10 @@ public class ITUtils {
 
 	public static final Path BPS_TEST_GENERATED =
 	        createTestOutputPath(BigPetStoreConstants.OUTPUTS.generated.name());
-	public static final Path BPS_TEST_PIG_CLEANED =
-	        createTestOutputPath (BigPetStoreConstants.OUTPUTS.cleaned.name());
 
+	//there will be a tsv file under here...
+	public static final Path BPS_TEST_PIG_CLEANED_ROOT =
+	        createTestOutputPath (BigPetStoreConstants.OUTPUTS.cleaned.name());
 	public static Path createTestOutputPath(String... pathParts) {
 	  Path path = TEST_OUTPUT_DIR;
 	  for(String pathPart: pathParts) {
