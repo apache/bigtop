@@ -32,8 +32,9 @@ import com.google.common.base.Predicate;
 
 public class BigPetStoreMahoutIT {
 
+  //the cleaned path has subdirs, one for tsv, one for mahout numerical format, and so on.
   public static final Path INPUT_DIR_PATH =
-          new Path(ITUtils.BPS_TEST_PIG_CLEANED, MahoutPaths.Mahout.name());
+          new Path(ITUtils.BPS_TEST_PIG_CLEANED_ROOT, MahoutPaths.Mahout.name());
   public static final String INPUT_DIR_PATH_STR = INPUT_DIR_PATH.toString();
   private static final Path MAHOUT_OUTPUT_DIR = createTestOutputPath(MahoutPaths.Mahout.name());
   private static final Path ALS_FACTORIZATION_OUTPUT_DIR =

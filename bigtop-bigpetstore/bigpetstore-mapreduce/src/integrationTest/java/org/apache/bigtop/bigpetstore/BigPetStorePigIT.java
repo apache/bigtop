@@ -16,7 +16,7 @@
 package org.apache.bigtop.bigpetstore;
 
 import static org.apache.bigtop.bigpetstore.ITUtils.BPS_TEST_GENERATED;
-import static org.apache.bigtop.bigpetstore.ITUtils.BPS_TEST_PIG_CLEANED;
+import static org.apache.bigtop.bigpetstore.ITUtils.BPS_TEST_PIG_CLEANED_ROOT;
 import static org.apache.bigtop.bigpetstore.ITUtils.fs;
 
 import java.io.File;
@@ -69,7 +69,7 @@ public class BigPetStorePigIT {
 	public void setupTest() throws Throwable {
 		ITUtils.setup();
 		try {
-			FileSystem.get(new Configuration()).delete(BPS_TEST_PIG_CLEANED, true);
+			FileSystem.get(new Configuration()).delete(BPS_TEST_PIG_CLEANED_ROOT, true);
 			FileSystem.get(new Configuration()).delete(BPS_TEST_PIG_COUNT_PRODUCTS, true);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -78,7 +78,7 @@ public class BigPetStorePigIT {
 
 	static Map<Path, Predicate<String>> TESTS = ImmutableMap.of(
 		/** Test of the main output */
-		BPS_TEST_PIG_CLEANED, ITUtils.VERIFICATION_PERDICATE,
+		new Path(BPS_TEST_PIG_CLEANED_ROOT,"tsv"), ITUtils.VERIFICATION_PERDICATE,
 		// Example of how to count products after doing basic pig data cleanup
 		BPS_TEST_PIG_COUNT_PRODUCTS, ITUtils.VERIFICATION_PERDICATE,
 		// Test the output that is to be used as an input for Mahout.
@@ -87,7 +87,8 @@ public class BigPetStorePigIT {
 
 	@Test
 	public void testPetStoreCorePipeline() throws Exception {
-		runPig(BPS_TEST_GENERATED, BPS_TEST_PIG_CLEANED, PIG_SCRIPT);
+		//outputs multiple data sets, Mahout, tsv, ...	under BPS_TEST_PIG_CLEANED_ROOT
+		runPig(BPS_TEST_GENERATED, BPS_TEST_PIG_CLEANED_ROOT, PIG_SCRIPT);
 		for (Entry<Path, Predicate<String>> e : TESTS.entrySet()) {
 			ITUtils.assertOutput(e.getKey(), e.getValue());
 		}
