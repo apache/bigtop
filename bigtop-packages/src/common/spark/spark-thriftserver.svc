@@ -16,7 +16,7 @@
 TYPE="thriftserver"
 DAEMON="spark-${TYPE}"
 DESC="Spark ${TYPE}"
-EXEC_PATH="/usr/lib/spark/sbin/spark-daemon.sh"
+EXEC_PATH="/usr/lib/spark/bin/spark-submit"
 SVC_USER="spark"
 WORKING_DIR="/var/lib/spark"
 DAEMON_FLAGS=""
@@ -42,10 +42,13 @@ start() {
     }
     export SUBMIT_USAGE_FUNCTION=usage
 
-    su -s /bin/bash $SVC_USER -c " \
-        ${EXEC_PATH} spark-submit org.apache.spark.sql.hive.thriftserver.HiveThriftServer2 1 $DAEMON_FLAGS"
+    LOG_FILE=/var/log/spark/${DAEMON}.out
 
-    sleep 3
+    su -s /bin/bash $SVC_USER -c "nohup nice -n 0 \
+        ${EXEC_PATH} --class org.apache.spark.sql.hive.thriftserver.HiveThriftServer2 1 $DAEMON_FLAGS \
+        > $LOG_FILE 2>&1 & "'echo $!' > "$PIDFILE"
+
+    sleep 7
 
     checkstatusofproc
     RETVAL=$?
@@ -60,8 +63,8 @@ generate_stop() {
 
 cat <<'__EOT__'
 stop() {
-    su -s /bin/bash $SVC_USER -c " \
-        ${EXEC_PATH} stop org.apache.spark.sql.hive.thriftserver.HiveThriftServer2 1"
+    log_success_msg "Stopping $DESC (${DAEMON}): "
+    killproc -p $PIDFILE java
     RETVAL=$?
 
     [ $RETVAL -eq $RETVAL_SUCCESS ] && rm -f $LOCKFILE $PIDFILE
