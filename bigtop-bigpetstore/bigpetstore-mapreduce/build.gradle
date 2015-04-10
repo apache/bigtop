@@ -185,6 +185,13 @@ task integrationTest(type: Test, dependsOn: test) {
         case "pig":
             patternsToInclude = "*PigIT*"
             dependencyConfigClosure = { setupPigIntegrationTestDependencyVersions(it) }
+
+            //In pig integration tests, the custom pig script seems to have high
+            //memory requirements.
+            minHeapSize = "1000m"
+            maxHeapSize = "4000m"
+            // set JVM arguments for the test JVM(s)
+            jvmArgs '-XX:MaxPermSize=256m'
             break
         case "crunch":
             patternsToInclude = "*CrunchIT*"
