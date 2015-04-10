@@ -21,4 +21,15 @@ class bigtop_toolchain::puppet-modules {
     onlyif => "test `facter puppetversion |cut -d'.' -f 1` -ge 3",
     creates => '/etc/puppet/modules/stdlib',
   }
+
+  case $operatingsystem{
+    /Ubuntu|Debian/: {
+      exec { 'install-puppet-apt':
+        path    => '/usr/bin:/bin',
+        command => 'puppet module install puppetlabs-apt',
+        onlyif => "test `facter puppetversion |cut -d'.' -f 1` -ge 3",
+        creates => '/etc/puppet/modules/apt',
+      }
+    }
+  }
 }
