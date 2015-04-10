@@ -87,7 +87,8 @@
     ["/user/oozie/share/lib/mapreduce-streaming", null, null, null],
     ["/user/oozie/share/lib/distcp", null, null, null],
     ["/user/oozie/share/lib/pig", null, null, null],
-    ["/var/log/spark/apps","1777","spark","spark"]
+    ["/var/log/spark/apps","1777","spark","spark"],
+    ["/user/hbase","755","hbase",null]
  ],
   "user": [
     ["tom", "0755", null],
