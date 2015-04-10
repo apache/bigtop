@@ -17,15 +17,20 @@ Section: misc
 Priority: extra
 Maintainer: Bigtop <dev@bigtop.apache.org>
 Build-Depends: debhelper (>= 7.0.50~)
-Standards-Version: 3.8.0
+Standards-Version: 3.9.4
 Homepage: http://ignite.incubator.apache.org/
 
 Package: ignite-hadoop
 Architecture: all
-Depends: adduser, hadoop-hdfs, hadoop-mapreduce, bigtop-utils (>= 0.7)
+Depends: adduser, hadoop-hdfs, hadoop-mapreduce, bigtop-utils (>= 0.8)
 Description: Ignite is an open-source, distributed, in-memory computation platform
  .
   * HDFS caching and MR performance booster
+
+Package: ignite-hadoop-service
+Architecture: all
+Depends: ignite-hadoop
+Description: Linux services for Apache Ignite (incubating)
 
 Package: ignite-hadoop-doc
 Architecture: all
