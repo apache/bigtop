@@ -63,8 +63,8 @@ class hadoop_worker_node (
     include hadoop-hbase::server
   }
 
-  if ($all or "gridgain-hadoop" in $components) {
-    gridgain-hadoop::server { "gridgain-hadoop-node": }
+  if ($all or "ignite-hadoop" in $components) {
+    ignite-hadoop::server { "ignite-hadoop-node": }
   }
 
   ### If mapred is not installed, yarn can fail.

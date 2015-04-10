@@ -134,6 +134,6 @@ And run the following on those nodes:
 # puppet apply -d --modulepath="bigtop-deploy/puppet/modules:/etc/puppet/modules" bigtop-deploy/puppet/manifests/site.pp
 </pre>
 
-When gridgain-hadoop accelerator is deployed the client configs are placed under
-/etc/hadoop/gridgain.client.conf. All one needs to do to run Mapreduce jobs on gridgain-hadoop grid
-is to set HADOOP_CONF_DIR=/etc/hadoop/gridgain.client.conf in the client session.
+When ignite-hadoop accelerator is deployed the client configs are placed under
+/etc/hadoop/ignite.client.conf. All one needs to do to run Mapreduce jobs on ignite-hadoop grid
+is to set HADOOP_CONF_DIR=/etc/hadoop/ignite.client.conf in the client session.

@@ -13,4 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-gridgain-hadoop::server { "test-gridgain-hadoop-server": }
+export HADOOP_PREFIX=/usr
+export IGNITE_HOME=/usr/lib/ignite-hadoop
+export IGNITE_LOG_DIR=/var/log/ignite-hadoop
+export IGNITE_PID_DIR=/var/run/ignite-hadoop
+export IGNITE_WORK_DIR="/var/run/ignite-hadoop/work"
+export HADOOP_HOME=${HADOOP_HOME:-/usr/lib/hadoop}
