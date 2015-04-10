@@ -23,7 +23,7 @@ import static junit.framework.Assert.assertEquals
 import static org.apache.bigtop.itest.LogErrorsUtils.logError
 
 public class HiveBulkScriptExecutor {
-  static Shell sh = new Shell("/bin/bash -s");
+  private Shell sh;
 
   private File scripts;
   private String location;
@@ -55,11 +55,8 @@ public class HiveBulkScriptExecutor {
       chmod 777 ${l}/filter
       F=${l}/filter
     fi
-    """)
-    logError(sh)
-    sh.exec("hive ${extraArgs} -v -f ${l}/in > ${l}/actual")
-    logError(sh)
-    sh.exec("diff -B -w -b -u <(\$F < ${l}/actual) <(\$F < ${l}/out)")
+    hive ${extraArgs} -v -f ${l}/in > ${l}/actual && diff -u -b -B -w <(\$F < ${l}/actual) <(\$F < ${l}/out)
+    """);
     logError(sh)
     assertEquals("Got unexpected output from test script ${test}",
                   0, sh.ret);
