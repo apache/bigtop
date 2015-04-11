@@ -114,6 +114,10 @@ directories to use.
 
   puppet apply --modulepath=<path_to_bigtop> -e "include bigtop_toolchain::puppet-modules"
 
+  This will install the following module(s) for you:
+  * [puppet stdlib module](https://forge.puppetlabs.com/puppetlabs/stdlib)
+  * [puppet apt module](https://forge.puppetlabs.com/puppetlabs/apt) on Ubuntu, Debian only
+
 And run the following on those nodes:
 
 <pre>
