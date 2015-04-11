@@ -19,6 +19,7 @@ DESC="Tachyon ${TYPE}"
 EXEC_PATH="/usr/lib/tachyon/bin/tachyon-start.sh"
 WORKING_DIR="/var/lib/tachyon"
 DAEMON_FLAGS="worker Mount"
+KEYWORD="tachyon.worker.TachyonWorker"
 CONF_DIR="/etc/tachyon/conf"
 PIDFILE="/var/run/tachyon/${DAEMON}.pid"
 
@@ -44,9 +45,11 @@ start() {
 
     /bin/bash -c "nohup nice -n 0 \
         ${EXEC_PATH} ${DAEMON_FLAGS} \
-        > $LOG_FILE 2>&1 & "'echo $!' > "$PIDFILE"
+        > $LOG_FILE 2>&1 & "
 
     sleep 3
+
+    echo `ps -A -o pid,command | grep -i "[j]ava" | grep $KEYWORD | awk '{print $1}'` > $PIDFILE
 
     checkstatusofproc
     RETVAL=$?
@@ -62,7 +65,7 @@ generate_stop() {
 cat <<'__EOT__'
 stop() {
     log_success_msg "Stopping $DESC (${DAEMON}): "
-    killproc -p $PIDFILE java
+    /usr/lib/tachyon/bin/tachyon-stop.sh worker 2>&1 > /dev/null
     RETVAL=$?
 
     [ $RETVAL -eq $RETVAL_SUCCESS ] && rm -f $LOCKFILE $PIDFILE

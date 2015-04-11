@@ -106,7 +106,7 @@ done
 %doc LICENSE README.md
 %dir %{_sysconfdir}/%{name}
 %config(noreplace) %{_sysconfdir}/%{name}/log4j.properties
-%config(noreplace) %{_sysconfdir}/%{name}/slaves
+%config(noreplace) %{_sysconfdir}/%{name}/workers
 %config(noreplace) %{initd_dir}/%{name}-master
 %config(noreplace) %{initd_dir}/%{name}-worker
 %config(noreplace) %{_sysconfdir}/%{name}/tachyon-env.sh

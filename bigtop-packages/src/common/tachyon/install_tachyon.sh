@@ -115,7 +115,7 @@ cp -a libexec/* $PREFIX/${LIB_DIR}/libexec
 cp -rf core/src/main/webapp $PREFIX/$VAR_DIR/lib/tachyon/core/src/main
 
 # Copy in the configuration files
-install -m 0644 conf/log4j.properties conf/slaves  $PREFIX/etc/tachyon
+install -m 0644 conf/log4j.properties conf/workers $PREFIX/etc/tachyon
 cp conf/tachyon-env.sh.template  $PREFIX/etc/tachyon/tachyon-env.sh
 
 # Copy in the /usr/bin/tachyon wrapper
