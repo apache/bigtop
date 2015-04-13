@@ -1,6 +1,7 @@
-sed -re 's#hdfs://.*/-(ext|mr)-1000#hdfs://HADOOP/-\1-1000#' \
-     -e 's#Copying file:.*/kv..txt#Copying file:kvX.txt#' \
-     -e '/^Deleted hdfs:/d' \
-     -e 's#file:/.*/-(ext|mr)-1000#file:/HADOOP/-\1-1000#' \
-     -e '/.*jobconf.xml:an attempt to override final parameter: mapreduce.job.end-notification.*;  Ignoring\./ d' \
-     -ne '/^SELECT COUNT/I,+1p'
+sed -e '/^EXPLAIN/,/Stage: Stage-0/d' \
+                -e '/Move Operator/,/name: test_hive_normal.t2/d' \
+                -e '/Fetch Operator/,/limit: -1/d' \
+                -e '/Stage: Stage-4/,/Stats-Aggr Operator/d' \
+                -e '/^Moved/d' \
+                -e '/^Deleted/d' |
+sed -e '/^Copying file\:/d'

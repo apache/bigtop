@@ -86,7 +86,7 @@ public class TestJdbcDriver {
     System.out.println("Hive server URL:"+hiveserver_url);
     int noOfTry=0;
     boolean isConnected=false;
-    while(noOfTry<5 && false==isConnected){
+    while(noOfTry<20 && false==isConnected){
     	noOfTry++;
     	try{
     		con = DriverManager.getConnection(hiveserver_url, "", "");
