@@ -17,13 +17,13 @@ class tachyon {
 
     # add logging into /var/log/..
     file {
-        "/etc/tachyon/log4j.properties":
+        "/etc/tachyon/conf/log4j.properties":
         content => template("tachyon/log4j.properties"),
         require => [Package["tachyon"]]
     }
 
     # add tachyon-env.sh to point to tachyon master
-    file { "/etc/tachyon/tachyon-env.sh":
+    file { "/etc/tachyon/conf/tachyon-env.sh":
         content => template("tachyon/tachyon-env.sh"),
         require => [Package["tachyon"]]
     }

@@ -102,6 +102,7 @@ install -d -m 0755 $PREFIX/$DATA_DIR
 install -d -m 0755 $PREFIX/$DATA_DIR/tachyon
 install -d -m 0755 $PREFIX/etc
 install -d -m 0755 $PREFIX/etc/tachyon
+install -d -m 0755 $PREFIX/etc/tachyon/conf
 install -d -m 0755 $PREFIX/$VAR_DIR/log/tachyon
 install -d -m 0755 $PREFIX/$VAR_DIR/lib/tachyon/journal
 install -d -m 0755 $PREFIX/$VAR_DIR/lib/tachyon/core/src/main/webapp
@@ -115,8 +116,8 @@ cp -a libexec/* $PREFIX/${LIB_DIR}/libexec
 cp -rf core/src/main/webapp $PREFIX/$VAR_DIR/lib/tachyon/core/src/main
 
 # Copy in the configuration files
-install -m 0644 conf/log4j.properties conf/workers $PREFIX/etc/tachyon
-cp conf/tachyon-env.sh.template  $PREFIX/etc/tachyon/tachyon-env.sh
+install -m 0644 conf/log4j.properties conf/workers $PREFIX/etc/tachyon/conf
+cp conf/tachyon-env.sh.template $PREFIX/etc/tachyon/conf/tachyon-env.sh
 
 # Copy in the /usr/bin/tachyon wrapper
 install -d -m 0755 $PREFIX/$BIN_DIR
@@ -143,7 +144,7 @@ cat >$PREFIX/$LIB_DIR/libexec/tachyon-layout.sh <<EOF
 export TACHYON_SYSTEM_INSTALLATION="TRUE"
 export TACHYON_PREFIX="$LIB_DIR"
 export TACHYON_HOME="/var/lib/tachyon"
-export TACHYON_CONF_DIR="/etc/tachyon"
+export TACHYON_CONF_DIR="/etc/tachyon/conf"
 export TACHYON_LOGS_DIR="/var/log/tachyon"
 export TACHYON_DATA_DIR="/var/run/tachyon"
 export TACHYON_JAR="\`find $LIB_DIR/ -name tachyon*dependencies.jar|grep -v client\`"

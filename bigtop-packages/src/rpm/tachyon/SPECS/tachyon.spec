@@ -105,11 +105,11 @@ done
 %defattr(-,root,root,-)
 %doc LICENSE README.md
 %dir %{_sysconfdir}/%{name}
-%config(noreplace) %{_sysconfdir}/%{name}/log4j.properties
-%config(noreplace) %{_sysconfdir}/%{name}/workers
+%config(noreplace) %{_sysconfdir}/%{name}/conf/log4j.properties
+%config(noreplace) %{_sysconfdir}/%{name}/conf/workers
 %config(noreplace) %{initd_dir}/%{name}-master
 %config(noreplace) %{initd_dir}/%{name}-worker
-%config(noreplace) %{_sysconfdir}/%{name}/tachyon-env.sh
+%config(noreplace) %{_sysconfdir}/%{name}/conf/tachyon-env.sh
 %config(noreplace) %{tachyon_home}/libexec/tachyon-layout.sh
 %attr(0755,root,root) %{var_lib}
 %attr(0755,root,root) %{var_run}
