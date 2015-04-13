@@ -35,13 +35,13 @@ class tachyon {
    exec {
         "tachyon formatting":
            command => "/usr/lib/tachyon/bin/tachyon format",
-           require => [ Package["tachyon"]]
+           require => [ Package["tachyon"], File["/etc/tachyon/conf/log4j.properties"], File["/etc/tachyon/conf/tachyon-env.sh"] ]
     }
 
     if ( $fqdn == $tachyon::common::master_host ) {
       service { "tachyon-master":
         ensure => running,
-        require => [ Package["tachyon"] ],
+        require => [ Package["tachyon"], Exec["tachyon formatting"] ],
         hasrestart => true,
         hasstatus => true,
       }
@@ -60,7 +60,7 @@ class tachyon {
 
     service { "tachyon-worker":
       ensure => running,
-      require => [Package["tachyon"]],
+      require => [ Package["tachyon"], File["/etc/tachyon/conf/log4j.properties"], File["/etc/tachyon/conf/tachyon-env.sh"] ],
       hasrestart => true,
       hasstatus => true,
     }

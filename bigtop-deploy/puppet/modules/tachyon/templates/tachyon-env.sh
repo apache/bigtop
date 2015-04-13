@@ -31,7 +31,7 @@ export JAVA="$JAVA_HOME/bin/java"
 
 echo "Starting tachyon w/ java = $JAVA "
 
-export TACHYON_MASTER_ADDRESS=<%= @tachyon_master_address %>
+export TACHYON_MASTER_ADDRESS=<%= @master_host %>
 export TACHYON_UNDERFS_ADDRESS=$TACHYON_HOME/underfs
 #export TACHYON_UNDERFS_ADDRESS=hdfs://localhost:9000
 export TACHYON_WORKER_MEMORY_SIZE=1GB
