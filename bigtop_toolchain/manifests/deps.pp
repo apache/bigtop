@@ -24,12 +24,6 @@ class bigtop_toolchain::deps {
     unless  => "/usr/bin/test -f /usr/src/apache-ant-1.9.4-bin.tar.gz",
   }
 
-  exec {"/usr/bin/wget http://archive.apache.org/dist/forrest/0.9/apache-forrest-0.9.tar.gz":
-    cwd     => "/usr/src",
-    require => Package[$packages::pkgs],
-    unless  => "/usr/bin/test -f /usr/src/apache-forrest-0.9.tar.gz",
-  }
-
   exec {"/usr/bin/wget $apache_prefix/maven/maven-3/3.0.5/binaries/apache-maven-3.0.5-bin.tar.gz":
     cwd     => "/usr/src",
     require => Package[$packages::pkgs],

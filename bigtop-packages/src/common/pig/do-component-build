@@ -28,6 +28,19 @@ hadoop-hdfs.version=$HADOOP_VERSION
 hadoop-mapreduce.version=$HADOOP_VERSION
 __EOT__
 
+# use .m2/repository/apache-forrest as store for apache forrest depency download store
+# since -O and -N cannot be used together, work around this issue
+( mkdir -p $HOME/.m2/repository/apache-forrest ;
+  cd $HOME/.m2/repository/apache-forrest  ;
+  /usr/bin/wget -N https://archive.apache.org/dist/forrest/0.9/apache-forrest-0.9.tar.gz
+  echo "ea58a078e3861d4dfc8bf3296a53a5f8  apache-forrest-0.9.tar.gz" >apache-forrest-0.9.tar.md5
+  if ! md5sum  -c --quiet apache-forrest-0.9.tar.md5 ; then
+    exit 1
+  fi
+)
+tar xf  $HOME/.m2/repository/apache-forrest/apache-forrest-0.9.tar.gz
+export FORREST_HOME=`pwd`/apache-forrest-0.9
+
 BUILD_OPTS="-Djavac.version=${JDK_VERSION} -Dforrest.home=${FORREST_HOME} -Dversion=${PIG_VERSION} -Dhadoopversion=23"
 
 # FIXME: there's a weird synchronization issue between ivy and Maven caches wrt. jetty

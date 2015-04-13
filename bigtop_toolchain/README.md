@@ -22,8 +22,6 @@ Puppet module for configuring a host for building BigTop. It installs:
 
 **Apache Ant 1.9.4**
 
-**Apache Forrest 0.9**
-
 **OpenJDK 1.7**
 
 **Apache Maven 3.0.5**
@@ -42,7 +40,6 @@ These can be indivdually applied using:
 	node "node1.example.com" {
 	  include bigtop_toolchain::jdk
 	  include bigtop_toolchain::maven
-	  include bigtop_toolchain::forrest
 	  include bigtop_toolchain::ant
 	  include bigtop_toolchain::gradle
 	  include bigtop_toolchain::protobuf
@@ -63,7 +60,6 @@ building BigTop:
 MAVEN_HOME=/usr/local/maven
 JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk.x86_64
 ANT_HOME=/usr/local/ant
-FORREST_HOME=/usr/local/apache-forrest
 SCALA_HOME=/usr/share/java
 GRADLE_HOME=/usr/local/gradle
 PATH=$MAVEN_HOME/bin:$ANT_HOME/bin:$FORREST_HOME/bin:$GRADLE_HOME/bin:$PATH
