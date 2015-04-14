@@ -36,7 +36,7 @@ public class TestFsck {
     "hdfs fsck -move /",
     "hdfs fsck -delete /",
     "hdfs fsck / -files",
-    "hdfs fsck -openforwrite /",
+//    "hdfs fsck -openforwrite /",
     "hdfs fsck -list-corruptfileblocks /",
     "hdfs fsck -blocks /",
     "hdfs fsck -locations /",
@@ -46,6 +46,7 @@ public class TestFsck {
   @Test
   public void testFsckBasic() {
     for (cmd in fsckCmds) {
+      System.out.println(cmd);
       shHDFS.exec(cmd)
       logError(shHDFS)
       assertTrue(shHDFS.getRet() == 0)
