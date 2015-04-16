@@ -188,15 +188,15 @@
   </property>
 <% end %>
 
-<% if @hdfs_shortcut_reader_user %>
+<% if @hdfs_shortcut_reader %>
   <property>
     <name>dfs.client.read.shortcircuit</name>
     <value>true</value>
   </property>
 
   <property>
-    <name>dfs.block.local-path-access.user</name>
-    <value><%= @hdfs_shortcut_reader_user %></value>
+    <name>dfs.domain.socket.path</name>
+    <value>/var/lib/hadoop-hdfs/dn_socket</value>
   </property>
 <% end %>
  
