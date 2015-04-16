@@ -78,7 +78,7 @@ Source6: zoo.cfg
 Source7: zookeeper.default
 Source8: init.d.tmpl
 Source9: zookeeper-rest.svc
-Source10: ZOOKEEPER-1911.patch
+#BIGTOP_PATCH_FILES
 BuildRequires: autoconf, automake, cppunit-devel
 Requires(pre): coreutils, /usr/sbin/groupadd, /usr/sbin/useradd
 Requires(post): %{alternatives_dep}
@@ -144,6 +144,8 @@ This package starts the zookeeper REST server on startup
 
 %prep
 %setup -n %{name}-%{zookeeper_base_version}
+
+#BIGTOP_PATCH_COMMANDS
 
 %build
 cp $RPM_SOURCE_DIR/ZOOKEEPER-1911.patch ./

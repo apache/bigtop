@@ -1,7 +1,5 @@
-diff --git src/contrib/rest/build.xml src/contrib/rest/build.xml
-index 649dff7..fb628bc 100644
---- src/contrib/rest/build.xml
-+++ src/contrib/rest/build.xml
+--- zookeeper-3.4.6/src/contrib/rest/build.xml.orig	2015-04-14 22:04:16.060000000 +0200
++++ zookeeper-3.4.6/src/contrib/rest/build.xml	2015-04-14 22:04:20.268000000 +0200
 @@ -48,6 +48,22 @@
        </sequential>
      </macrodef>
