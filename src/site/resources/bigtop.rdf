@@ -28,7 +28,7 @@
     <bug-database rdf:resource="http://issues.apache.org/jira/browse/BIGTOP" />
     <mailing-list rdf:resource="http://bigtop.apache.org/mail-lists.html" />
     <download-page rdf:resource="http://www.apache.org/dyn/closer.cgi/bigtop/" />
-    <programming-language>Java</programming-language>
+    <programming-language>Groovy</programming-language>
     <category rdf:resource="http://projects.apache.org/category/big-data" />
     <repository>
       <SVNRepository>
