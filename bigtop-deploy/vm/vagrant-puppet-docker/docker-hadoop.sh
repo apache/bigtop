@@ -29,6 +29,10 @@ create() {
     echo "\$num_instances = $1" > config.rb
     echo "\$vagrantyamlconf = \"$vagrantyamlconf\"" >> config.rb
     vagrant up --no-parallel
+    if [ $? -ne 0 ]; then
+        echo "Docker container(s) startup failed!";
+	exit 1;
+    fi
     nodes=(`vagrant status |grep running |grep -v image |awk '{print $1}'`)
     hadoop_head_node=(`echo "hostname -f" |vagrant ssh ${nodes[0]} |tail -n 1`)
     repo=$(get-yaml-config repo)

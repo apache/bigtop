@@ -65,6 +65,7 @@ project(':itest-common') {
 
 def TESTARTIFACTS_GROUP = 'test artifacts'
 def DEVENV_GROUP = 'development tools'
+def DEPLOY_GROUP = 'deployment'
 
 // All packaging logic is separated into its own build module
 apply from: 'packages.gradle'
@@ -100,6 +101,54 @@ task "toolchain-devtools"(type:Exec,
       'include bigtop_toolchain::development-tools'
   ]
   workingDir '.'
+  commandLine command
+}
+
+task "docker-provisioner"(type:Exec,
+    description: 'Provision a Bigtop cluster on Docker container(s). Default to CentOS and 1 node.\nCreate a 3 node cluster:\n  $ ./gradlew -Pnum_instances=3 docker-provisioner\nRun smoke tests on 3 node cluster:\n  $ ./gradlew -Pnum_instances=3 -Prun_smoke_tests=true docker-provisioner\nSpecify configuration file (located in bigtop-deploy/vm/vagrant-puppet-docker/):\n  $ ./gradlew -Pconfig=vagrantconfig_debian.yaml docker-provisioner',
+    group: DEPLOY_GROUP) {
+  def _config = project.hasProperty("config") ? config : "vagrantconfig.yaml"
+  def _num_instances = project.hasProperty("num_instances") ? num_instances : 1
+  def command = [
+      './docker-hadoop.sh',
+      '-C', _config,
+      '--create', _num_instances,
+  ]
+  if ( project.hasProperty("run_smoke_tests") && run_smoke_tests ) {
+    command.add("--smoke-tests")
+  }
+  workingDir 'bigtop-deploy/vm/vagrant-puppet-docker'
+  commandLine command
+}
+task "docker-provisioner-ssh"(type:Exec,
+    description: 'Show ssh command to get in to the provisioned container',
+    group: DEPLOY_GROUP) {
+  workingDir 'bigtop-deploy/vm/vagrant-puppet-docker'
+  def message = "To ssh in to the container, do: \n(cd " + workingDir + " && vagrant ssh <CONTAIER_NAME>)"
+  def command = [
+      '/bin/echo',
+      message
+  ]
+  commandLine command
+}
+task "docker-provisioner-status"(type:Exec,
+    description: 'Show status of Bigtop Docker cluster',
+    group: DEPLOY_GROUP) {
+  def command = [
+      'vagrant',
+      'status',
+  ]
+  workingDir 'bigtop-deploy/vm/vagrant-puppet-docker'
+  commandLine command
+}
+task "docker-provisioner-destroy"(type:Exec,
+    description: 'Destroy provisioned Bigtop Docker cluster',
+    group: DEPLOY_GROUP) {
+  def command = [
+      './docker-hadoop.sh',
+      '--destroy'
+  ]
+  workingDir 'bigtop-deploy/vm/vagrant-puppet-docker'
   commandLine command
 }
 
