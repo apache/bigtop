@@ -148,7 +148,6 @@ This package starts the zookeeper REST server on startup
 #BIGTOP_PATCH_COMMANDS
 
 %build
-cp $RPM_SOURCE_DIR/ZOOKEEPER-1911.patch ./
 bash %{SOURCE1}
 
 %install
