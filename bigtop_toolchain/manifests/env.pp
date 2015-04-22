@@ -32,6 +32,7 @@ class bigtop_toolchain::env {
         group  => root,
         mode   => 644,
       }
+    }
     default: {
       file {'/etc/profile.d/bigtop.sh':
         source => 'puppet:///modules/bigtop_toolchain/jenkins.sh.centos',
