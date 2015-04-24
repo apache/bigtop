@@ -17,6 +17,7 @@
 /usr/lib/spark/conf
 /usr/lib/spark/sbin
 /usr/lib/spark/work
+/usr/lib/spark/lib
 /usr/lib/spark/examples
 /usr/lib/spark/data
 /usr/share/doc/spark
