@@ -33,6 +33,25 @@ class bigtop_toolchain::env {
         mode   => 644,
       }
     }
+    CentOS: {
+      if $operatingsystemmajrelease >=7 {
+        file {'/etc/profile.d/bigtop.sh':
+          source => 'puppet:///modules/bigtop_toolchain/jenkins.sh.fedora',
+          ensure => present,
+          owner  => root,
+          group  => root,
+          mode   => 644,
+        }
+      } else {
+        file {'/etc/profile.d/bigtop.sh':
+          source => 'puppet:///modules/bigtop_toolchain/jenkins.sh.centos',
+          ensure => present,
+          owner  => root,
+          group  => root,
+          mode   => 644,
+        }
+      }
+    }
     default: {
       file {'/etc/profile.d/bigtop.sh':
         source => 'puppet:///modules/bigtop_toolchain/jenkins.sh.centos',
