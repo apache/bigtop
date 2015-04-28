@@ -19,7 +19,7 @@ set -ex
 . `dirname $0`/bigtop.bom
 
 mvn -DskipTests \
-    -Dhadoop.version=$HADOOP_VERSION  \
+    -Dhadoop-two.version=$HADOOP_VERSION  \
     -Dhbase.version=$HBASE_VERSION-hadoop2  \
     -Dpig.version=$PIG_VERSION  \
     -Dflume.version=$FLUME_VERSION  \
