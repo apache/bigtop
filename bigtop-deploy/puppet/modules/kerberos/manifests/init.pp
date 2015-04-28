@@ -171,13 +171,10 @@ class kerberos {
     }
   }
 
-  define host_keytab($princs = undef, $spnego = disabled) {
+  define host_keytab($princs = [ $title ], $spnego = disabled,
+    $owner = $title, $group = "", $mode = "0400",
+  ) {
     $keytab = "/etc/$title.keytab"
-
-    $requested_princs = $princs ? { 
-      undef   => [ $title ],
-      default => $princs,
-    }
 
     $internal_princs = $spnego ? {
       /(true|enabled)/ => [ 'HTTP' ],
@@ -186,12 +183,12 @@ class kerberos {
     realize(Kerberos::Principal[$internal_princs])
 
     $includes = inline_template("<%=
-      [requested_princs, internal_princs].flatten.map { |x|
+      [@princs, @internal_princs].flatten.map { |x|
         \"rkt $kerberos::site::keytab_export_dir/#{x}.keytab\"
       }.join(\"\n\")
     %>")
 
-    kerberos::principal { $requested_princs:
+    kerberos::principal { $princs:
     }
 
     exec { "ktinject.$title":
@@ -200,15 +197,16 @@ class kerberos {
         $includes
         wkt $keytab
 EOF
-        chown $title $keytab",
+        chown ${owner}:${group} ${keytab}
+        chmod ${mode} ${keytab}",
       creates => $keytab,
-      require => [ Kerberos::Principal[$requested_princs],
+      require => [ Kerberos::Principal[$princs],
                    Kerberos::Principal[$internal_princs] ],
     }
 
     exec { "aquire $title keytab":
         path    => $kerberos::site::exec_path,
-        user    => $title,
+        user    => $owner,
         command => "bash -c 'kinit -kt $keytab ${title}/$::fqdn ; kinit -R'",
         require => Exec["ktinject.$title"],
     }

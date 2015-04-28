@@ -137,3 +137,71 @@ And run the following on those nodes:
 When ignite-hadoop accelerator is deployed the client configs are placed under
 /etc/hadoop/ignite.client.conf. All one needs to do to run Mapreduce jobs on ignite-hadoop grid
 is to set HADOOP_CONF_DIR=/etc/hadoop/ignite.client.conf in the client session.
+
+# Passwords
+
+These classes are mostly used for regression testing. For ease of use they
+contain insecure default passwords in a number of places. If you intend to use
+them in production environments, make sure to track down all those places and
+set proper passwords. This can be done using the corresponding hiera settings.
+Some of these (but almost certainly not all!) are:
+
+<pre>
+hadoop::common_hdfs::hadoop_http_authentication_signature_secret
+hadoop::httpfs::secret
+</pre>
+
+## Automatic password generation
+
+Instead of explicitly setting passwords in hiera, they can be automatically
+generated using a program called trocla. However, there are a number of caveats
+with this approach at the moment:
+
+* currently this only works for the HTTP and HTTPFS authentication signature
+  secrets.
+* trocla has to be installed beforehand as explained below.
+* Installation from ruby gems needs Internet connectivity and for some
+  dependency gems development packages such as a compiler. This can be avoided
+  by using binary packages from the distribution if available.
+* Puppet has to be used in a master/agent setup. With puppet apply it will not
+  work for the HTTP signature secrets because they needs to be the same across
+  hosts which trocla can only achieve if running on the master.
+* The functionality is disabled by default and needs to be enabled explicitly.
+  Without it, default passwords from the code or hiera are still used.
+
+trocla needs to be installed on the master only. To do so, run the following:
+
+<pre>
+# gem install trocla
+# puppet module install duritong/trocla
+# puppet apply -e "class { 'trocla::config': manage_dependencies => false }"
+</pre>
+
+The trocla ruby gem pulls in highline, moneta and bcrypt. The bcrypt gem needs
+ruby development packages (ruby.h) and a compiler.
+
+Alternatively you can install your distributions' binary packages *before*
+running gem install. On Debian those packages can be installed as follows:
+
+<pre>
+apt-get install ruby-highline ruby-moneta ruby-bcrypt
+</pre>
+
+This installation process is expected to get easier once operation system
+packages have been created. This is actively underway for Debian. See Debian
+bugs #777761 and #777906 for progress.
+
+After installing the trocla gem as outlined above, the following test should
+work:
+
+<pre>
+# puppet apply -e "file { '/tmp/test': content => trocla("test", "plain") }"
+# cat /tmp/test
+puGNOX-G%zYDKHet
+</pre>
+
+Now, automatic password generation can be activated in site.yaml using
+
+<pre>
+hadoop::generate_secrets: true
+</pre>

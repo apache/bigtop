@@ -93,4 +93,47 @@
   </property>
 <% end %>
 
+<% if @hadoop_http_authentication_type == "kerberos" -%>
+  <!-- enable proper authentication instead of static mock authentication as
+       Dr. Who -->
+  <property>
+    <name>hadoop.http.filter.initializers</name>
+    <value>org.apache.hadoop.security.AuthenticationFilterInitializer</value>
+  </property>
+
+  <!-- disable anonymous access -->
+  <property>
+    <name>hadoop.http.authentication.simple.anonymous.allowed</name>
+    <value>false</value>
+  </property>
+
+  <!-- enable kerberos authentication -->
+  <property>
+    <name>hadoop.http.authentication.type</name>
+    <value>kerberos</value>
+  </property>
+
+  <property>
+    <name>hadoop.http.authentication.kerberos.principal</name>
+    <value>HTTP/_HOST@<%= @kerberos_realm %></value>
+  </property>
+
+  <property>
+    <name>hadoop.http.authentication.kerberos.keytab</name>
+    <value>/etc/HTTP.keytab</value>
+  </property>
+
+  <!-- provide secret for cross-service-cross-machine cookie -->
+  <property>
+    <name>hadoop.http.authentication.signature.secret.file</name>
+    <value><%= @hadoop_http_authentication_signature_secret_file %></value>
+  </property>
+
+  <!-- make all services on all hosts use the same cookie domain -->
+  <property>
+    <name>hadoop.http.authentication.cookie.domain</name>
+    <value><%= @hadoop_http_authentication_cookie_domain %></value>
+  </property>
+
+<% end -%>
 </configuration>

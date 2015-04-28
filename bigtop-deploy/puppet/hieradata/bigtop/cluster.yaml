@@ -56,6 +56,20 @@ hadoop::common_hdfs::hadoop_namenode_host: "%{hiera('bigtop::hadoop_head_node')}
 # actually default but needed for hadoop_namenode_uri here
 hadoop::common_hdfs::hadoop_namenode_port: "8020"
 
+# Set as shown below in site.yaml to also enable Kerberos authentication
+# on the web GUIs of journalnode, namenode, datanode, resourcemanager and
+# nodemanager when you enable Kerberos for Hadoop API communication. This
+# intentionally is not the default right now.
+#hadoop::common_hdfs::hadoop_http_authentication_type: "%{hiera('hadoop::hadoop_security_authentication')}"
+#
+# A secret is necessary for the cross-service-cross-node session cookie.
+# Provide this by setting the following to something long and secret:
+#hadoop::common_hdfs::hadoop_http_authentication_signature_secret:
+
+# ... or have trocla generate secrets for Hadoop components automatically. For
+# this to work, the trocla puppet module must be installed.
+#hadoop::generate_secrets: true
+
 hadoop::common_yarn::hadoop_ps_host: "%{hiera('bigtop::hadoop_head_node')}"
 hadoop::common_yarn::hadoop_rm_host: "%{hiera('bigtop::hadoop_head_node')}"
 # actually default but needed for hue::server::rm_port here
