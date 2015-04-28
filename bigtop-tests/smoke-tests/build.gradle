@@ -26,7 +26,7 @@ dependencies {
 
 subprojects {
 
-  ext.hadoopVersion = '2.3.0'
+  ext.hadoopVersion = '2.6.0'
   //Note you need a snapshot itest to run this.
   ext.doExclude = { String filename ->
     //print("Exclude? ${filename} ... ")
