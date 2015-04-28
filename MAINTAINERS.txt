@@ -15,7 +15,7 @@ puppet recipes: jay vyas, cos, evans ye, rvs
 smoke-tests: jay vyas, david capwell
 spark: jay vyas, youngwoo kim
 sqoop: sean mackrory, youngwoo kim
-tachyon: david capwell, jay vyas, huamin chen
+tachyon: jay vyas, huamin chen
 test-artifacts and test-execution repos:
 tez: evans ye, oflebbe
 vagrant recipes: jay vyas, evans ye
