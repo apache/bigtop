@@ -291,17 +291,12 @@ class hadoop ($hadoop_security_authentication = "simple",
 
   class common_mapred_app (
       $mapreduce_cluster_acls_enabled = undef,
-      $mapreduce_jobtracker_taskscheduler = undef,
       $mapreduce_jobhistory_host = undef,
       $mapreduce_jobhistory_port = "10020",
       $mapreduce_jobhistory_webapp_port = "19888",
       $mapreduce_framework_name = "yarn",
-      $jobtracker_host,
-      $jobtracker_port = "8021",
       $mapred_data_dirs = suffix($hadoop::hadoop_storage_dirs, "/mapred"),
       $mapreduce_cluster_temp_dir = "/mapred/system",
-      $mapreduce_jobtracker_system_dir = "/mapred/system",
-      $mapreduce_jobtracker_staging_root_dir = "/user",
       $yarn_app_mapreduce_am_staging_dir = "/user",
       $mapreduce_task_io_sort_factor = 64,              # 10 default
       $mapreduce_task_io_sort_mb = 256,                 # 100 default
@@ -313,7 +308,6 @@ class hadoop ($hadoop_security_authentication = "simple",
       $mapreduce_output_fileoutputformat_compress_type = "BLOCK", # "RECORD" default
       $mapreduce_map_output_compress = undef,
       $mapreduce_job_reduce_slowstart_completedmaps = undef,
-      $mapred_jobtracker_plugins = "",
       $hadoop_security_authentication = $hadoop::hadoop_security_authentication,
       $kerberos_realm = $hadoop::kerberos_realm,
   ) inherits hadoop {
