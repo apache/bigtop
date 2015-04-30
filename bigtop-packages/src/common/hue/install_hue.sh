@@ -116,7 +116,8 @@ ln -fs $LIB_DIR/desktop/libs/hadoop/java-lib/*plugin*jar $PREFIX/$HADOOP_DIR
 (cd $PREFIX/$LIB_DIR ; bash tools/relocatable.sh)
 
 # remove RECORD files since it contains "real" paths confusing rpmbuild
-(cd $PREFIX/$LIB_DIR ; rm build/env/lib/python*/site-packages/*.dist-info/RECORD)
+(cd $PREFIX/$LIB_DIR ; rm -f build/env/lib/python*/site-packages/*.dist-info/RECORD)
+(cd $PREFIX/$LIB_DIR ; rm -f build/env/lib/python*/dist-packages/*.dist-info/RECORD)
 
 # Remove Hue database and then recreate it, but with just the "right" apps
 rm -f $PREFIX/$LIB_DIR/desktop/desktop.db $PREFIX/$LIB_DIR/app.reg
