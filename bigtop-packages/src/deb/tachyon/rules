@@ -38,3 +38,6 @@ override_dh_auto_install:
     --libexec-dir=/usr/lib/tachyon/libexec \
     --var-dir= /var/ \
     --prefix=debian/tmp
+	mkdir -p debian/tachyon-tfs/etc/init.d/
+	bash debian/init.d.tmpl debian/tachyon-master.svc deb debian/tachyon-tfs/etc/init.d/tachyon-master
+	bash debian/init.d.tmpl debian/tachyon-worker.svc deb debian/tachyon-tfs/etc/init.d/tachyon-worker

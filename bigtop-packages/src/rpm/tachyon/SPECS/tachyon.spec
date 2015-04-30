@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-Name:           tachyon
+Name:           tachyon-tfs
 Version:        %{tachyon_version}
 Release:        %{tachyon_release}
 Summary:       Reliable file sharing at memory speed across cluster frameworks
@@ -22,17 +22,18 @@ URL:           http://tachyon-project.org/
 Group:         Development/Libraries
 BuildArch:     noarch
 
-Source0:       %{name}-%{tachyon_base_version}.tar.gz
+Source0:       %{tachyon_name}-%{tachyon_base_version}.tar.gz
 Source1:       do-component-build
 Source2:       install_tachyon.sh
 Source3:       init.d.tmpl
 Source4:       tachyon-master.svc
 Source5:       tachyon-worker.svc
-%define        tachyon_home /usr/lib/%{name}
+%define        tachyon_name tachyon
+%define        tachyon_home /usr/lib/%{tachyon_name}
 %define        tachyon_services master worker
-%define        var_lib /var/lib/%{name}
-%define        var_run /var/run/%{name}
-%define        var_log /var/log/%{name}
+%define        var_lib /var/lib/%{tachyon_name}
+%define        var_run /var/run/%{tachyon_name}
+%define        var_log /var/log/%{tachyon_name}
 
 %global        initd_dir %{_sysconfdir}/init.d
 
@@ -67,7 +68,7 @@ avoids going to disk to load data-sets that
 are frequently read.
 
 %prep
-%setup -n %{name}-%{tachyon_base_version}
+%setup -n %{tachyon_name}-%{tachyon_base_version}
 
 %build
 bash $RPM_SOURCE_DIR/do-component-build
@@ -88,15 +89,15 @@ bash %{SOURCE2} \
 for service in %{tachyon_services}
 do
     # Install init script
-    init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{name}-${service}
+    init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{tachyon_name}-${service}
     bash $RPM_SOURCE_DIR/init.d.tmpl $RPM_SOURCE_DIR/tachyon-${service}.svc rpm $init_file
 done
 
 %preun
 for service in %{tachyon_services}; do
-  /sbin/service %{name}-${service} status > /dev/null 2>&1
+  /sbin/service %{tachyon_name}-${service} status > /dev/null 2>&1
   if [ $? -eq 0 ]; then
-    /sbin/service %{name}-${service} stop > /dev/null 2>&1
+    /sbin/service %{tachyon_name}-${service} stop > /dev/null 2>&1
   fi
 done
 
@@ -104,12 +105,12 @@ done
 %files
 %defattr(-,root,root,-)
 %doc LICENSE README.md
-%dir %{_sysconfdir}/%{name}
-%config(noreplace) %{_sysconfdir}/%{name}/conf/log4j.properties
-%config(noreplace) %{_sysconfdir}/%{name}/conf/workers
-%config(noreplace) %{initd_dir}/%{name}-master
-%config(noreplace) %{initd_dir}/%{name}-worker
-%config(noreplace) %{_sysconfdir}/%{name}/conf/tachyon-env.sh
+%dir %{_sysconfdir}/%{tachyon_name}
+%config(noreplace) %{_sysconfdir}/%{tachyon_name}/conf/log4j.properties
+%config(noreplace) %{_sysconfdir}/%{tachyon_name}/conf/workers
+%config(noreplace) %{initd_dir}/%{tachyon_name}-master
+%config(noreplace) %{initd_dir}/%{tachyon_name}-worker
+%config(noreplace) %{_sysconfdir}/%{tachyon_name}/conf/tachyon-env.sh
 %config(noreplace) %{tachyon_home}/libexec/tachyon-layout.sh
 %attr(0755,root,root) %{var_lib}
 %attr(0755,root,root) %{var_run}
@@ -117,7 +118,7 @@ done
 %{tachyon_home}/tachyon*
 %{tachyon_home}/bin/tachyon*
 %{tachyon_home}/libexec/tachyon*
-%{_datadir}/%{name}
+%{_datadir}/%{tachyon_name}
 /usr/bin/tachyon
 %{tachyon_home}/share
 

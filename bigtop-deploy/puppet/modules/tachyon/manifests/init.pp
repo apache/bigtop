@@ -11,7 +11,7 @@
 # limitations under the License.
 class tachyon {
   class common ($master_host){
-    package { "tachyon":
+    package { "tachyon-tfs":
       ensure => latest,
     }
 
@@ -19,13 +19,13 @@ class tachyon {
     file {
         "/etc/tachyon/conf/log4j.properties":
         content => template("tachyon/log4j.properties"),
-        require => [Package["tachyon"]]
+        require => [Package["tachyon-tfs"]]
     }
 
     # add tachyon-env.sh to point to tachyon master
     file { "/etc/tachyon/conf/tachyon-env.sh":
         content => template("tachyon/tachyon-env.sh"),
-        require => [Package["tachyon"]]
+        require => [Package["tachyon-tfs"]]
     }
   }
 
@@ -35,13 +35,13 @@ class tachyon {
    exec {
         "tachyon formatting":
            command => "/usr/lib/tachyon/bin/tachyon format",
-           require => [ Package["tachyon"], File["/etc/tachyon/conf/log4j.properties"], File["/etc/tachyon/conf/tachyon-env.sh"] ]
+           require => [ Package["tachyon-tfs"], File["/etc/tachyon/conf/log4j.properties"], File["/etc/tachyon/conf/tachyon-env.sh"] ]
     }
 
     if ( $fqdn == $tachyon::common::master_host ) {
       service { "tachyon-master":
         ensure => running,
-        require => [ Package["tachyon"], Exec["tachyon formatting"] ],
+        require => [ Package["tachyon-tfs"], Exec["tachyon formatting"] ],
         hasrestart => true,
         hasstatus => true,
       }
@@ -60,7 +60,7 @@ class tachyon {
 
     service { "tachyon-worker":
       ensure => running,
-      require => [ Package["tachyon"], File["/etc/tachyon/conf/log4j.properties"], File["/etc/tachyon/conf/tachyon-env.sh"] ],
+      require => [ Package["tachyon-tfs"], File["/etc/tachyon/conf/log4j.properties"], File["/etc/tachyon/conf/tachyon-env.sh"] ],
       hasrestart => true,
       hasstatus => true,
     }

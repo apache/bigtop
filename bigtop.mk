@@ -336,9 +336,9 @@ BIGTOP_TOMCAT_ARCHIVE=$(APACHE_ARCHIVE)/tomcat/tomcat-6/v$(BIGTOP_TOMCAT_BASE_VE
 $(eval $(call PACKAGE,bigtop-tomcat,BIGTOP_TOMCAT))
 
 # Tachyon
-TACHYON_NAME=tachyon
+TACHYON_NAME=tachyon-tfs
 TACHYON_RELNOTES_NAME=Tachyon: a memory-centric distributed file system
-TACHYON_PKG_NAME=tachyon
+TACHYON_PKG_NAME=tachyon-tfs
 TACHYON_BASE_VERSION=0.6.0
 TACHYON_PKG_VERSION=0.6.0
 TACHYON_RELEASE_VERSION=1

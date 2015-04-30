@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-Source: tachyon
+Source: tachyon-tfs
 Section: misc
 Priority: extra
 Maintainer: Huamin Chen <hchen@redhat.com>
@@ -21,7 +21,7 @@ Build-Depends: debhelper (>= 7.0.50~)
 Standards-Version: 3.9.4
 Homepage: http://tachyon-project.org
 
-Package:  tachyon
+Package:  tachyon-tfs
 Architecture: all
 Depends: bigtop-utils (>= 0.7)
 Description: Reliable file sharing at memory speed across cluster frameworks
