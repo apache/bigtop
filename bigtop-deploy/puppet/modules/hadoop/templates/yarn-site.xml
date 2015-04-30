@@ -57,10 +57,12 @@
   </property>
 <% end %>
 
+<% if @hadoop_ps_host %>
   <property>
     <name>yarn.web-proxy.address</name>
     <value><%= @hadoop_ps_host %>:<%= @hadoop_ps_port %></value>
   </property> 
+<% end %>
 
 <% if @yarn_resourcemanager_ha_enabled -%>
 
