@@ -49,7 +49,7 @@ def BOM_map = [
     DIST_DIR:       projectDir.absolutePath + "/dist",
     DL_DIR:         projectDir.absolutePath + "/dl",
     BIGTOP_BOM:     '',
-    BIGTOP_BUILD_STAMP: ''
+    BIGTOP_BUILD_STAMP: 1
 ]
 
 def final BIGTOP_BOM = 'BIGTOP_BOM'
@@ -259,8 +259,7 @@ def genTasks = { target, variable ->
     def final PKG_VERSION = BOM_map[variable + '_PKG_VERSION']
     def final PKG_OUTPUT_DIR = BOM_map[variable + '_OUTPUT_DIR']
     def final BASE_VERSION = BOM_map[variable + '_BASE_VERSION']
-    def final RELEASE_VERSION = BOM_map[variable + '_RELEASE_VERSION']
-    def final SRCDEB = "${PKG_NAME}_$PKG_VERSION${BIGTOP_BUILD_STAMP}-${PKG_RELEASE}.dsc"
+    def final SRCDEB = "${PKG_NAME}_$PKG_VERSION-${BIGTOP_BUILD_STAMP}.dsc"
 
     exec {
       workingDir PKG_OUTPUT_DIR
@@ -278,17 +277,17 @@ def genTasks = { target, variable ->
 --preserve-envvar JAVA_HOME \
 --preserve-envvar SCALA_HOME \
 --set-envvar=${variable}_BASE_VERSION=$BASE_VERSION \
---set-envvar=${variable}_VERSION=$PKG_VERSION$BIGTOP_BUILD_STAMP \
---set-envvar=${variable}_RELEASE=$RELEASE_VERSION \
+--set-envvar=${variable}_VERSION=$PKG_VERSION \
+--set-envvar=${variable}_RELEASE=$BIGTOP_BUILD_STAMP \
 -uc -us -b
 """
     exec {
-      workingDir "$PKG_OUTPUT_DIR/$PKG_NAME-$PKG_VERSION$BIGTOP_BUILD_STAMP"
+      workingDir "$PKG_OUTPUT_DIR/$PKG_NAME-$PKG_VERSION"
       commandLine command.split(' ')
     }
     exec {
       workingDir "$PKG_OUTPUT_DIR"
-      commandLine 'rm','-rf',"$PKG_NAME-$PKG_VERSION$BIGTOP_BUILD_STAMP"
+      commandLine 'rm','-rf',"$PKG_NAME-$PKG_VERSION"
     }
     touchTargetFile(BOM_map[variable + '_TARGET_DEB'])
   }
@@ -308,20 +307,19 @@ def genTasks = { target, variable ->
     def final PKG_NAME = BOM_map[variable + '_PKG_NAME']
     def final SEED_TAR = BOM_map[variable + '_SEED_TAR']
     def final PKG_VERSION = BOM_map[variable + '_PKG_VERSION']
-    def final RELEASE_VERSION = BOM_map[variable + '_RELEASE_VERSION']
     def final PKG_OUTPUT_DIR = BOM_map[variable + '_OUTPUT_DIR']
     delete ("$PKG_BUILD_DIR/deb")
-    def final DEB_BLD_DIR = "$PKG_BUILD_DIR/deb/$NAME-${PKG_VERSION}${BIGTOP_BUILD_STAMP}"
-    def final DEB_PKG_DIR = "$PKG_BUILD_DIR/deb/$PKG_NAME-${PKG_VERSION}${BIGTOP_BUILD_STAMP}-${PKG_VERSION}"
+    def final DEB_BLD_DIR = "$PKG_BUILD_DIR/deb/$NAME-${PKG_VERSION}"
+    def final DEB_PKG_DIR = "$PKG_BUILD_DIR/deb/$PKG_NAME-${PKG_VERSION}-${BIGTOP_BUILD_STAMP}"
     mkdir (DEB_BLD_DIR)
     copy {
       from SEED_TAR
       into "$PKG_BUILD_DIR/deb/"
-      rename BOM_map[variable + '_TARBALL_DST'], "${PKG_NAME}_${PKG_VERSION}${BIGTOP_BUILD_STAMP}.orig.tar.gz"
+      rename BOM_map[variable + '_TARBALL_DST'], "${PKG_NAME}_${PKG_VERSION}.orig.tar.gz"
     }
     exec {
       workingDir DEB_BLD_DIR
-      commandLine "tar --strip-components 1 -xf $DEB_BLD_DIR/../${PKG_NAME}_${PKG_VERSION}${BIGTOP_BUILD_STAMP}.orig.tar.gz".split(' ')
+      commandLine "tar --strip-components 1 -xf $DEB_BLD_DIR/../${PKG_NAME}_${PKG_VERSION}.orig.tar.gz".split(' ')
     }
     fileTree ("${BASE_DIR}/bigtop-packages/src/deb/$NAME") {
       include '**/*'
@@ -339,7 +337,7 @@ def genTasks = { target, variable ->
     bomWriter.close()
     // Create changelog
     def changelog = new File("$DEB_BLD_DIR/debian/changelog").newWriter()
-    changelog << "$PKG_NAME ($PKG_VERSION$BIGTOP_BUILD_STAMP-$RELEASE_VERSION) stable; urgency=low\n"
+    changelog << "$PKG_NAME ($PKG_VERSION-$BIGTOP_BUILD_STAMP) stable; urgency=low\n"
     changelog << "  Clean build\n"
     changelog << " -- Bigtop <dev@bigtop.apache.org>  ${getDate()}\n"
     changelog.close()
@@ -409,15 +407,14 @@ def genTasks = { target, variable ->
     def final PKG_OUTPUT_DIR = BOM_map[variable + '_OUTPUT_DIR']
     def final PKG_VERSION = BOM_map[variable + '_PKG_VERSION']
     def final BASE_VERSION = BOM_map[variable + '_BASE_VERSION']
-    def final RELEASE_VERSION = BOM_map[variable + '_RELEASE_VERSION']
     def RELEASE_DIST = "rpmbuild --eval '%{?dist}' 2>/dev/null".execute().text.trim().replaceAll("'",'')
-    def SRCRPM="$PKG_OUTPUT_DIR/$PKG_NAME-${PKG_VERSION}$BIGTOP_BUILD_STAMP-${RELEASE_VERSION}${RELEASE_DIST}.src.rpm"
+    def SRCRPM="$PKG_OUTPUT_DIR/$PKG_NAME-${PKG_VERSION}-$BIGTOP_BUILD_STAMP${RELEASE_DIST}.src.rpm"
 
     def command = [
         '--define', "_topdir $PKG_BUILD_DIR/rpm/",
         '--define', "${NAME}_base_version $BASE_VERSION",
-        '--define', "${NAME}_version ${PKG_VERSION}${BIGTOP_BUILD_STAMP}",
-        '--define', "${NAME}_release $RELEASE_VERSION%{?dist}",
+        '--define', "${NAME}_version ${PKG_VERSION}",
+        '--define', "${NAME}_release ${BIGTOP_BUILD_STAMP}%{?dist}",
         '--rebuild', SRCRPM,
     ]
     exec {
@@ -446,7 +443,6 @@ def genTasks = { target, variable ->
     def final PKG_BUILD_DIR = BOM_map[variable + '_BUILD_DIR']
     def final SEED_TAR = BOM_map[variable + '_SEED_TAR']
     def final PKG_VERSION = BOM_map[variable + '_PKG_VERSION']
-    def final RELEASE_VERSION = BOM_map[variable + '_RELEASE_VERSION']
     def final BASE_VERSION = BOM_map[variable + '_BASE_VERSION']
     def final PKG_OUTPUT_DIR = BOM_map[variable + '_OUTPUT_DIR']
     delete ("$PKG_BUILD_DIR/rpm")
@@ -503,8 +499,8 @@ def genTasks = { target, variable ->
     def command = [
         '--define', "_topdir $PKG_BUILD_DIR/rpm/",
         '--define', "${PKG_NAME_FOR_PKG}_base_version $BASE_VERSION",
-        '--define', "${PKG_NAME_FOR_PKG}_version ${PKG_VERSION}${BIGTOP_BUILD_STAMP}",
-        '--define', "${PKG_NAME_FOR_PKG}_release $RELEASE_VERSION%{?dist}",
+        '--define', "${PKG_NAME_FOR_PKG}_version ${PKG_VERSION}",
+        '--define', "${PKG_NAME_FOR_PKG}_release ${BIGTOP_BUILD_STAMP}%{?dist}",
         '-bs', '--nodeps', "--buildroot=${PKG_BUILD_DIR}/rpm/INSTALL",
         specFileName,
     ]
@@ -516,7 +512,7 @@ def genTasks = { target, variable ->
     mkdir(PKG_OUTPUT_DIR)
     def RELEASE_DIST = "rpmbuild --eval '%{?dist}' 2>/dev/null".execute().text.trim().replaceAll("'",'')
     copy {
-      from "$PKG_BUILD_DIR/rpm/SRPMS/${PKG_NAME}-${PKG_VERSION}${BIGTOP_BUILD_STAMP}-${RELEASE_VERSION}${RELEASE_DIST}.src.rpm"
+      from "$PKG_BUILD_DIR/rpm/SRPMS/${PKG_NAME}-${PKG_VERSION}-${BIGTOP_BUILD_STAMP}${RELEASE_DIST}.src.rpm"
       into PKG_OUTPUT_DIR
     }
     touchTargetFile(BOM_map[variable + '_TARGET_SRPM'])
