@@ -52,6 +52,9 @@
 			<br />
 			<br />
 
+			<subsection name="Download latest release of Bigtop"></subsection>
+			<p><a href="http://www.apache.org/dist/bigtop/bigtop-0.8.0/">Bigtop-0.8.0</a> </p>
+
 			<subsection name="Tool requirements for building Bigtop"></subsection>
 			<table>
 				<tr>
