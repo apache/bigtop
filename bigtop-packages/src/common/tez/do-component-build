@@ -18,6 +18,8 @@ set -xe
 
 . `dirname $0`/bigtop.bom
 
+sed -i '/--remove-unnecessary-resolutions=false/a\\t\t<argument>--allow-root</argument>' tez-ui/pom.xml
+
 BUILD_TEZ_OPTS="clean package \
 -Dtar -Dhadoop.version=${HADOOP_VERSION} \
 -Phadoop26 \
@@ -26,6 +28,3 @@ BUILD_TEZ_OPTS="clean package \
 #mvn versions:set -DnewVersion=${TEZ_VERSION}
 
 mvn ${BUILD_TEZ_OPTS} "$@"
-
-
-
