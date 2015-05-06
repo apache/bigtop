@@ -34,10 +34,6 @@
 # The java implementation to use.  Required.
 <%= shell_config("JAVA_HOME", "hadoop_java_home") %>
 
-# tez environment, needed to enable tez
-<%= shell_config("TEZ_CONF_DIR") %>
-<%= shell_config("TEZ_JARS") %>
-
 # Extra Java CLASSPATH elements.  Optional.
 <%= shell_config("HADOOP_CLASSPATH") %>
 
@@ -83,6 +79,14 @@
 
 # The scheduling priority for daemon processes.  See 'man nice'.
 <%= shell_config("HADOOP_NICENESS") %>
+
+# tez environment, needed to enable tez
+<% if (@all or @components.include? "tez") -%>
+<%= shell_config("TEZ_CONF_DIR") %>
+<%= shell_config("TEZ_JARS") %>
+# Add tez into HADOOP_CLASSPATH
+export HADOOP_CLASSPATH=$HADOOP_CLASSPATH:${TEZ_CONF_DIR}:${TEZ_JARS}/*:${TEZ_JARS}/lib/*
+<% end -%>
 
 ### WARNING: the following is NOT really optional. It is a shame that stock Hadoop
 ### hadoop_env.sh doesn't make it clear -- you can NOT turn  com.sun.management.jmxremote off

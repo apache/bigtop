@@ -42,6 +42,13 @@
 </property>
 <% end %>
 
+<% if @all or @components.include? "tez" -%>
+<property>
+  <name>hive.execution.engine</name>
+  <value>tez</value>
+</property>
+<% end %>
+
 <property>
   <name>javax.jdo.option.ConnectionURL</name>
   <value>jdbc:derby:;databaseName=/var/lib/hive/metastore/metastore_db;create=true</value>
