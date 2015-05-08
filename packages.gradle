@@ -676,12 +676,9 @@ project.afterEvaluate {
       group: PACKAGES_GROUP
   ) << { }
 
-  task clean (overwrite: true, dependsOn: tasks.findAll { alltask -> alltask.name.endsWith("-clean")}*.name,
-      description: "Cleaning all components' build and output directories. Overwrites standard clean task",
-      group: PACKAGES_GROUP) << {
-  }
-  task allclean (dependsOn: clean,
-      description: "Removing $BUILD_DIR, $OUTPUT_DIR, and $DIST_DIR",
+  task allclean (dependsOn: [clean, tasks.findAll { alltask -> alltask.name.endsWith("-clean")}*.name],
+      description: "Removing $BUILD_DIR, $OUTPUT_DIR, and $DIST_DIR.\n\t\t" +
+        "Cleaning all components' build and output directories.",
       group: PACKAGES_GROUP) << {
     delete (BUILD_DIR)
     delete (OUTPUT_DIR)
