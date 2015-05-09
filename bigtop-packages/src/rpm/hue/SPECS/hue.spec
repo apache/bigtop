@@ -26,6 +26,7 @@ Source1: %{name}.init
 Source2: %{name}.init.suse
 Source3: do-component-build
 Source4: install_hue.sh
+Source5: bigtop.bom
 #BIGTOP_PATCH_FILES
 URL: http://github.com/cloudera/hue
 Requires: %{name}-common = %{version}-%{release}
@@ -40,6 +41,7 @@ Requires: %{name}-rdbms = %{version}-%{release}
 Requires: %{name}-security = %{version}-%{release}
 Requires: %{name}-spark = %{version}-%{release}
 Requires: %{name}-zookeeper = %{version}-%{release}
+Requires: %{name}-useradmin = %{version}-%{release}
 
 
 ################ RPM CUSTOMIZATION ##############################
@@ -101,6 +103,7 @@ AutoReqProv: no
 %define sqoop_app_dir %{hue_dir}/apps/sqoop
 %define search_app_dir %{hue_dir}/apps/search
 %define rdbms_app_dir %{hue_dir}/apps/rdbms
+%define useradmin_app_dir %{hue_dir}/apps/useradmin
 %define spark_app_dir %{hue_dir}/apps/spark
 %define zookeeper_app_dir %{hue_dir}/apps/zookeeper
 
@@ -179,13 +182,13 @@ cp $orig_init_file $RPM_BUILD_ROOT/%{initd_dir}/hue
 %package -n %{name}-common
 Summary: A browser-based desktop interface for Hadoop
 BuildRequires: python-devel, python-setuptools, gcc, gcc-c++
-BuildRequires: libxml2-devel, libxslt-devel, zlib-devel
+BuildRequires: libxml2-devel, libxslt-devel, zlib-devel, libyaml-devel
 BuildRequires: cyrus-sasl-devel
 BuildRequires: openssl-devel
 BuildRequires: krb5-devel
 BuildRequires: asciidoc
 Group: Applications/Engineering
-Requires: cyrus-sasl-gssapi, libxml2, libxslt, zlib, python, sqlite
+Requires: cyrus-sasl-gssapi, libxml2, libxslt, zlib, python, sqlite, libyaml
 # The only reason we need the following is because we also have AutoProv: no
 Provides: config(%{name}-common) = %{version}
 
@@ -269,7 +272,8 @@ fi
 %{hue_dir}/VERSION
 %{hue_dir}/build/env/bin/*
 %{hue_dir}/build/env/include/
-%{hue_dir}/build/env/lib*/
+%{hue_dir}/build/env/lib/
+%{hue_dir}/build/env/lib64
 %{hue_dir}/build/env/stamp
 %{hue_dir}/app.reg
 %{hue_dir}/apps/Makefile
@@ -298,6 +302,7 @@ fi
 %exclude %{rdbms_app_dir}
 %exclude %{spark_app_dir}
 %exclude %{zookeeper_app_dir}
+%exclude %{useradmin_app_dir}
 
 
 ############################################################
@@ -491,6 +496,24 @@ It allows users to interact with Roles and Security
 %files -n %{name}-security
 %defattr(-, %{username}, %{username})
 %{security_app_dir}
+
+#### HUE-USERADMIN PLUGIN ######
+%package -n %{name}-useradmin
+Summary: A UI for Hue user administration
+Group: Applications/Engineering
+Requires: %{name}-common = %{version}-%{release}
+
+%description -n %{name}-useradmin
+A web interface for Hue user administration
+
+It allows for Hue user administration
+
+%app_post_macro useradmin
+%app_preun_macro useradmin
+
+%files -n %{name}-useradmin
+%defattr(-, %{username}, %{username})
+%{useradmin_app_dir}
 
 #### HUE-SPARK PLUGIN ######
 %package -n %{name}-spark

@@ -18,12 +18,12 @@ Section: misc
 Priority: extra
 Maintainer: Apache Bigtopr <dev@bigtop.apache.org>
 Build-Depends: debhelper (>= 7.0.50~), python2.6-dev | python2.7-dev, libxml2-dev, libxslt1-dev, zlib1g-dev, libsqlite3-dev, libldap2-dev, libsasl2-dev, libmysqlclient-dev, make, python-setuptools, libkrb5-dev
-Standards-Version: 3.8.0
+Standards-Version: 3.9.4
 Homepage: http://github.com/cloudera/hue
 
 Package: hue-common
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, ${build:SYS-PYTHON}, libsasl2-modules-gssapi-mit, libxslt1.1, make
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${build:SYS-PYTHON}, libsasl2-modules-gssapi-mit, libxslt1.1, make, python (>= 2.6)
 Description: A browser-based desktop interface for Hadoop
  Hue is a browser-based desktop interface for interacting with Hadoop.
  It supports a file browser, job tracker interface, cluster health monitor, and more.
@@ -37,7 +37,7 @@ Description: The hue metapackage
 
 Package: hue-server
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, hue-common (= ${source:Version})
+Depends: ${misc:Depends}, hue-common (= ${source:Version})
 Description: Service Scripts for Hue
  This package provides the service scripts for Hue server.
 
@@ -48,7 +48,7 @@ Description: Documentation for Hue
 
 Package: hue-beeswax
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.6), python (<< 3), make (>= 3.8), hue-common (= ${source:Version}), hive (>= 0.13)
+Depends: ${misc:Depends}, python (>= 2.6), python (<< 3), make (>= 3.8), hue-common (= ${source:Version}), hive (>= 0.13)
 Description: A UI for Hive on Hue
  Beeswax is a web interface for Hive.
  .
@@ -57,7 +57,7 @@ Description: A UI for Hive on Hue
 
 Package: hue-impala
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.6), python (<< 3), make (>= 3.8), hue-common (= ${source:Version})
+Depends: ${misc:Depends}, python (>= 2.6), python (<< 3), make (>= 3.8), hue-common (= ${source:Version})
 Description: A UI for Impala
  A web interface for Impala.
  .
@@ -66,7 +66,7 @@ Description: A UI for Impala
 
 Package: hue-pig
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.6), python (<< 3), make (>= 3.8), hue-common (= ${source:Version}) 
+Depends: ${misc:Depends}, python (>= 2.6), python (<< 3), make (>= 3.8), hue-common (= ${source:Version}) 
 Description: A UI for Pig on Hue
  A web interface for Pig.
  .
@@ -74,7 +74,7 @@ Description: A UI for Pig on Hue
 
 Package: hue-hbase
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.6), python (<< 3), make (>= 3.8), hue-common (= ${source:Version})
+Depends: ${misc:Depends}, python (>= 2.6), python (<< 3), make (>= 3.8), hue-common (= ${source:Version})
 Description: A UI for HBase on Hue
  A web interface for HBase.
  .
@@ -82,13 +82,13 @@ Description: A UI for HBase on Hue
 
 Package: hue-sqoop
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.6), python (<< 3), make (>= 3.8), hue-common (= ${source:Version})
+Depends: ${misc:Depends}, python (>= 2.6), python (<< 3), make (>= 3.8), hue-common (= ${source:Version})
 Description: A UI for Sqoop on Hue
  A web interface to Sqoop.
 
 Package: hue-search
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.6), python (<< 3), make (>= 3.8), hue-common (= ${source:Version})
+Depends: ${misc:Depends}, python (>= 2.6), python (<< 3), make (>= 3.8), hue-common (= ${source:Version})
 Description: A UI for Search on Hue
  A web interface to Search.
  .
@@ -96,7 +96,7 @@ Description: A UI for Search on Hue
 
 Package: hue-rdbms
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.6), python (<< 3), make (>= 3.8), hue-common (= ${source:Version})
+Depends: ${misc:Depends}, python (>= 2.6), python (<< 3), make (>= 3.8), hue-common (= ${source:Version})
 Description: A UI for RDBMS on Hue
  A web interface to RDBMS.
  .
@@ -104,7 +104,7 @@ Description: A UI for RDBMS on Hue
 
 Package: hue-security
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.6), python (<< 3), make (>= 3.8), hue-common (= ${source:Version})
+Depends: ${misc:Depends}, python (>= 2.6), python (<< 3), make (>= 3.8), hue-common (= ${source:Version})
 Description: A UI for Spark on Hue
  A web interface to roles and security.
  .
@@ -112,15 +112,23 @@ Description: A UI for Spark on Hue
 
 Package: hue-spark
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.6), python (<< 3), make (>= 3.8), hue-common (= ${source:Version})
+Depends: ${misc:Depends}, python (>= 2.6), python (<< 3), make (>= 3.8), hue-common (= ${source:Version})
 Description: A UI for Spark on Hue
  A web interface to Spark.
  .
  It allows users to interact with Spark
 
+Package: hue-useradmin
+Architecture: all
+Depends: ${misc:Depends}, python (>= 2.6), python (<< 3), make (>= 3.8), hue-common (= ${source:Version})
+Description: A UI for user administration 
+ A web interface for user administration
+ .
+ It allows users to administration of users
+
 Package: hue-zookeeper
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.6), python (<< 3), make (>= 3.8), hue-common (= ${source:Version})
+Depends: ${misc:Depends}, python (>= 2.6), python (<< 3), make (>= 3.8), hue-common (= ${source:Version})
 Description: A UI for Zookeeper on Hue
  A web interface to Zookeeper.
  .
