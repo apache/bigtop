@@ -29,6 +29,7 @@ hadoop::hadoop_storage_dirs:
 #  - spark
 #  - sqoop
 #  - tachyon
+#  - tez
 #  - yarn
 #  - zookeeper
 

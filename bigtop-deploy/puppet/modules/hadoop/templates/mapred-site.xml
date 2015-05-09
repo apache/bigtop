@@ -86,11 +86,28 @@
   </property>
 
 <% end %>
+<% if defined? @mapreduce_framework_name -%>
   <property>
     <name>mapreduce.framework.name</name>
     <value><%= @mapreduce_framework_name %></value>
   </property>
 
+<!-- If not specified, we automatically choose the best framework for users -->
+<% else -%>
+<% if @all or @components.include? "tez" -%>
+  <property>
+    <name>mapreduce.framework.name</name>
+    <value>yarn-tez</value>
+  </property>
+
+<% else -%>
+  <property>
+    <name>mapreduce.framework.name</name>
+    <value>yarn</value>
+  </property>
+
+<% end -%>
+<% end -%>
   <property>
     <name>mapreduce.cluster.local.dir</name>
     <value><%= @mapred_data_dirs.join(",") %></value>

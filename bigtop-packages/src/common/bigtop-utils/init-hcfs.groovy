@@ -139,6 +139,9 @@ def final FileSystem fs = FileSystem.get(conf);
 
 LOG.info("PROVISIONING WITH FILE SYSTEM : " + fs.getClass());
 
+// Longest back off time to check whether the file system is ready for write
+def final int maxBackOff = 64;
+
 /**
  * Make a  directory.  Note when providing input to this functino that if
  * nulls are given, the commands will work but behaviour varies depending on
@@ -150,7 +153,19 @@ LOG.info("PROVISIONING WITH FILE SYSTEM : " + fs.getClass());
  * @param group can be null,
  */
 def mkdir = { FileSystem fsys, Path dname, FsPermission mode, String user, String group ->
-  fsys.mkdirs(dname);
+  boolean success = false;
+  for(i = 1; i <= maxBackOff; i*=2) {
+    try {
+      success = fsys.mkdirs(dname)
+      break;
+    } catch(Exception e) {
+      LOG.info("Failed to create directory " + dname + "... Retry after " + i + " second(s)");
+      Thread.sleep(i*1000);
+    }
+  }
+  if (!success) {
+    LOG.info("Can not create directory " + dname + " on " + fsys.getClass());
+  }
   if (user != null) {
     fsys.setOwner(dname, user, group);
   }
@@ -256,8 +271,21 @@ def copyJars = { FileSystem fsys, File input, String jarstr, Path target ->
       return validJar && filename.contains(jarstr)
     }
   }).each({ jar_file ->
-    copied++;
-    fsys.copyFromLocalFile(new Path(jar_file.getAbsolutePath()), target)
+    boolean success = false;
+    for(i = 1; i <= maxBackOff; i*=2) {
+      try {
+        fsys.copyFromLocalFile(new Path(jar_file.getAbsolutePath()), target)
+        copied++;
+        success = true;
+        break;
+      } catch(Exception e) {
+        LOG.info("Failed to upload " + jar_file.getAbsolutePath() + " to " + target + "... Retry after " + i + " second(s)");
+        Thread.sleep(i*1000);
+      }
+      if (!success) {
+        LOG.info("Can not upload " + jar_file.getAbsolutePath() + " to " + target + " on " + fsys.getClass());
+      }
+    }
   });
   return copied;
 }
@@ -297,5 +325,19 @@ total_jars += copyJars(fs,
 total_jars += copyJars(fs,
     new File(PIG_HOME), "",
     new Path(OOZIE_SHARE, "pig"))
+
+LOG.info("Now copying Jars into the DFS for tez ");
+LOG.info("This might take a few seconds...");
+
+def final TEZ_APPS = "/apps";
+def final TEZ_HOME = "/usr/lib/tez/";
+
+total_jars += copyJars(fs,
+    new File(TEZ_HOME, "lib/"), "",
+    new Path(TEZ_APPS, "tez/lib"))
+
+total_jars += copyJars(fs,
+    new File(TEZ_HOME), "",
+    new Path(TEZ_APPS, "tez"))
 
 LOG.info("Total jars copied into the DFS : " + total_jars);

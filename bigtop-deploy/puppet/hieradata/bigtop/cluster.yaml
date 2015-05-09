@@ -137,3 +137,7 @@ hue::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 giraph::client::zookeeper_quorum: "%{hiera('bigtop::hadoop_head_node')}"
 
 hadoop-hive::client::hbase_zookeeper_quorum: "%{hiera('hadoop-hbase::common_config::zookeeper_quorum')}"
+
+# tez
+hadoop::common::tez_conf_dir: "/etc/tez/conf"
+hadoop::common::tez_jars: "/usr/lib/tez"

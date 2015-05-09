@@ -147,6 +147,11 @@ if ($hadoop_security_authentication == "kerberos") {
     include hadoop-zookeeper::server
   }
 
+  if ($all or "tez" in $components) {
+    include tez::client
+    Class['tez::client'] -> Exec<| title == "init hdfs" |>
+  }
+
   # class hadoop::rsync_hdfs isn't used anywhere
   #Exec<| title == "init hdfs" |> -> Class['Hadoop::Rsync_hdfs']
 }
@@ -202,5 +207,8 @@ class hadoop_gateway_node inherits hadoop_cluster_node {
   }
   if ($all or "zookeeper" in $components) {
     include hadoop-zookeeper::client
+  }
+  if ($all or "tez" in $components) {
+    include tez::client
   }
 }

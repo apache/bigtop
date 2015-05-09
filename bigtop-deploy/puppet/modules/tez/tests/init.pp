@@ -13,20 +13,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class bigtop_toolchain::gradle {
-
-  include bigtop_toolchain::deps
-
-  exec {'/usr/bin/unzip -x -o /usr/src/gradle-2.4-bin.zip':
-    cwd         => '/usr/local',
-    refreshonly => true,
-    subscribe   => Exec["/usr/bin/wget http://services.gradle.org/distributions/gradle-2.4-bin.zip"],
-    require     => Exec["/usr/bin/wget http://services.gradle.org/distributions/gradle-2.4-bin.zip"],
-  }
-
-  file {'/usr/local/gradle':
-    ensure  => link,
-    target  => '/usr/local/gradle-2.4',
-    require => Exec['/usr/bin/unzip -x -o /usr/src/gradle-2.4-bin.zip'],
-  }
-}
+include tez
+tez::client { "test-tez": }
