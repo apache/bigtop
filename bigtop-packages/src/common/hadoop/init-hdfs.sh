@@ -43,4 +43,4 @@ cd $HADOOP_LIB_DIR
 for d in $HADOOP_DEPENDENCIES; do CLASSPATH=$CLASSPATH:$HADOOP_LIB_DIR/$d; done
 for d in $HDFS_DEPENDENCIES;   do CLASSPATH=$CLASSPATH:$HDFS_LIB_DIR/$d; done
 popd
-su -s /bin/bash hdfs -c "/usr/lib/bigtop-groovy/bin/groovy -classpath $CLASSPATH /usr/lib/bigtop-utils/init-hcfs.groovy /usr/lib/hadoop/libexec/init-hcfs.json"
+su -s /bin/bash hdfs -c "/usr/lib/bigtop-groovy/bin/groovy -classpath $CLASSPATH /usr/lib/hadoop/libexec/init-hcfs.groovy /usr/lib/hadoop/libexec/init-hcfs.json"

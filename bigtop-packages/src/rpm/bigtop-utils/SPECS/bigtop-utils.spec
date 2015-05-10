@@ -32,8 +32,7 @@ Source2:    bigtop-utils.default
 Source3:    bigtop-detect-javalibs
 Source4:    bigtop-detect-classpath
 Source5:    bigtop-monitor-service
-Source6:    init-hcfs.groovy
-Requires:   bash, bigtop-groovy
+Requires:   bash
 
 # "which" command is needed for a lot of projects.
 # It is part of the package "util-linux" on suse and "which" everywhere else
@@ -55,7 +54,6 @@ install -p -m 644 %{SOURCE2} .
 install -p -m 644 %{SOURCE3} .
 install -p -m 644 %{SOURCE4} .
 install -p -m 644 %{SOURCE5} .
-install -p -m 755 %{SOURCE6} .
 
 %build
 
@@ -69,7 +67,6 @@ install -p -m 755 %{SOURCE3} $RPM_BUILD_ROOT%{lib_dir}/
 install -p -m 755 %{SOURCE4} $RPM_BUILD_ROOT%{lib_dir}/
 install -p -m 755 %{SOURCE5} $RPM_BUILD_ROOT%{lib_dir}/
 install -p -m 644 %{SOURCE2} $RPM_BUILD_ROOT/etc/default/bigtop-utils
-install -p -m 644 %{SOURCE6} $RPM_BUILD_ROOT%{lib_dir}/
 
 %clean
 rm -rf $RPM_BUILD_ROOT

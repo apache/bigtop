@@ -32,7 +32,6 @@ override_dh_auto_install:
 	# Copy repo file
 	install -d -p -m 755 debian/bigtop-utils/var/lib/bigtop/
 	install -d -p -m 755 debian/bigtop-utils/usr/lib/bigtop-utils/
-	install -p -m 755 debian/init-hcfs.groovy debian/bigtop-utils/usr/lib/bigtop-utils/
 	install -p -m 755 debian/bigtop-detect-javahome debian/bigtop-utils/usr/lib/bigtop-utils/
 	install -p -m 755 debian/bigtop-detect-javalibs debian/bigtop-utils/usr/lib/bigtop-utils/
 	install -p -m 755 debian/bigtop-detect-classpath debian/bigtop-utils/usr/lib/bigtop-utils/

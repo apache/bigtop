@@ -22,6 +22,6 @@ Homepage: http://bigtop.apache.org/
 
 Package: bigtop-utils
 Architecture: all
-Depends: ${misc:Depends}, bigtop-groovy
+Depends: ${misc:Depends}
 Description: Collection of useful tools for Bigtop
  This includes a collection of useful tools and files for Bigtop
