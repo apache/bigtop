@@ -14,13 +14,22 @@
 # limitations under the License.
 
 class hue {
-  class server($sqoop_url, $solr_url, $hbase_thrift_url,
-                $webhdfs_url, $rm_host, $rm_port, $oozie_url, $rm_url, $rm_proxy_url, $history_server_url,
-                $hue_host = "0.0.0.0", $hue_port = "8888", $default_fs = "hdfs://localhost:8020",
-                $kerberos_realm = "", $hue_apps = "all") {
+  class server($sqoop_url = "http://localhost:12000/sqoop", $solr_url = "http://localhost:8983/solr/", $hbase_thrift_url = "",
+               $webhdfs_url, $rm_host, $rm_port, $oozie_url, $rm_proxy_url, $history_server_url,
+               $hive_host = "", $hive_port = "10000",
+               $rm_logical_name = undef, $rm_api_port = "8088", $app_blacklist = "impala, security",
+               $hue_host = "0.0.0.0", $hue_port = "8888", $hue_timezone = "America/Los_Angeles",
+               $default_fs = "hdfs://localhost:8020",
+               $kerberos_realm = "", $kerberos_principal = "", $huecert = undef, $huekey = undef,
+               $auth_backend = "desktop.auth.backend.AllowFirstUserDjangoBackend",
+               $ldap_url = undef, $ldap_cert = undef, $use_start_tls = "true",
+               $base_dn = undef , $bind_dn = undef, $bind_password = undef,
+               $user_name_attr = undef, $user_filter = undef,
+               $group_member_attr = undef, $group_filter = undef,
+               $hue_apps = "all" ) {
 
     $hue_packages = $hue_apps ? {
-      "all"     => [ "hue" ], # The hue metapackage requires all apps
+      "all"     => [ "hue", "hue-server" ], # The hue metapackage requires all apps
       "none"    => [ "hue-server" ],
       default   => concat(prefix($hue_apps, "hue-"), [ "hue-server" ])
     }
@@ -29,7 +38,7 @@ class hue {
       require kerberos::client
       kerberos::host_keytab { "hue":
         spnego => false,
-        require => Package[$hue_packages],
+        require => Package["hue-server"],
       }
     }
 
@@ -44,12 +53,11 @@ class hue {
 
     service { "hue":
       ensure => running,
-      require => [ Package[$hue_packages], File["/etc/hue/conf/hue.ini"] ],
-      subscribe => [ Package[$hue_packages], File["/etc/hue/conf/hue.ini"] ],
+      require => [ Package[$hue_packages], File["/etc/hue/conf/hue.ini"]],
+      subscribe => [ Package[$hue_packages], File["/etc/hue/conf/hue.ini"]],
       hasrestart => true,
       hasstatus => true,
-    } 
+    }
     Kerberos::Host_keytab <| title == "hue" |> -> Service["hue"]
-
   }
 }
