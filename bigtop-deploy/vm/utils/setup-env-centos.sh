@@ -20,19 +20,13 @@ echo "$enable_local_repo"
 
 # Install puppet agent
 yum -y install http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm
-yum -y install puppet
-cd /etc/puppet/modules && puppet module install puppetlabs/stdlib
-
-mkdir -p /data/{1,2}
+yum -y install puppet curl sudo unzip
 
 # Setup rng-tools to improve virtual machine entropy performance.
 # The poor entropy performance will cause kerberos provisioning failed.
 yum -y install rng-tools
 sed -i.bak 's/EXTRAOPTIONS=\"\"/EXTRAOPTIONS=\"-r \/dev\/urandom\"/' /etc/sysconfig/rngd
 service rngd start
-
-# Install packages for smoke-tests
-yum -y install unzip
 
 if [ $enable_local_repo == "true" ]; then
     echo "Enabling local yum."

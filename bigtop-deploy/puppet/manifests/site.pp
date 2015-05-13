@@ -30,15 +30,18 @@ case $operatingsystem {
        Yumrepo<||> -> Package<||>
     }
     /(Ubuntu|Debian)/: {
-       class { "apt": disable_keys => true }
+       include apt
+       apt::conf { "disable_keys":
+          content => "APT::Get::AllowUnauthenticated 1;",
+	  ensure => present
+       }
        apt::source { "Bigtop":
           location => hiera("bigtop::bigtop_repo_uri", $default_debrepo),
           release => "bigtop",
           repos => "contrib",
           ensure => present,
-	  include_src => false,
-       }
-       Apt::Source<||> -> Package<||>
+        }
+       Apt::Source<||> -> Exec['apt_update'] -> Package<||>
     }
     default: {
       notify{"WARNING: running on a neither yum nor apt platform -- make sure Bigtop repo is setup": }

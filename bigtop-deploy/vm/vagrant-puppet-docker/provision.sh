@@ -23,13 +23,12 @@ umount /etc/hosts
 mv /etc/hosts /etc/hosts.bak
 ln -s /vagrant/hosts /etc/hosts
 
-# Prepare puppet configuration file
-if [ -f /etc/debian_version ] ; then
-    apt-get -y install puppet-module-puppetlabs-stdlib
-else
-    cd /etc/puppet/modules && puppet module install puppetlabs/stdlib
-fi
+# Install puppet modules
+puppet apply --modulepath=/bigtop-home -e "include bigtop_toolchain::puppet-modules"
 
+mkdir -p /data/{1,2}
+
+# Prepare puppet configuration file
 mkdir -p /etc/puppet/hieradata
 cp /bigtop-home/bigtop-deploy/puppet/hiera.yaml /etc/puppet
 cp -r /bigtop-home/bigtop-deploy/puppet/hieradata/bigtop/ /etc/puppet/hieradata/

@@ -17,11 +17,9 @@
 
 enable_local_repo=${1:-false}
 
-apt-get update
 # Install puppet agent
-apt-get -y install puppet puppet-module-puppetlabs-stdlib puppet-module-puppetlabs-apt curl
-
-mkdir -p /data/{1,2}
+apt-get update
+apt-get -y install puppet curl sudo unzip
 
 # Setup rng-tools to improve virtual machine entropy performance.
 # The poor entropy performance will cause kerberos provisioning failed.
