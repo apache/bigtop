@@ -56,10 +56,6 @@ FLUME_LOCK_DIR="/var/lock/subsys/"
 LOCKFILE="${FLUME_LOCK_DIR}/flume-agent"
 desc="Flume NG agent daemon"
 
-FLUME_CONF_FILE=${FLUME_CONF_FILE:-${FLUME_CONF_DIR}/flume.conf}
-EXEC_PATH=/usr/bin/flume-ng
-FLUME_PID_FILE=${FLUME_RUN_DIR}/flume-agent.pid
-
 # These directories may be tmpfs and may or may not exist
 # depending on the OS (ex: /var/lock/subsys does not exist on debian/ubuntu)
 for dir in "$FLUME_RUN_DIR" "$FLUME_LOCK_DIR"; do
@@ -71,6 +67,12 @@ DEFAULT_FLUME_AGENT_NAME="agent"
 FLUME_AGENT_NAME=${FLUME_AGENT_NAME:-${DEFAULT_FLUME_AGENT_NAME}}
 FLUME_SHUTDOWN_TIMEOUT=${FLUME_SHUTDOWN_TIMEOUT:-60}
 
+
+FLUME_CONF_FILE=${FLUME_CONF_FILE:-${FLUME_CONF_DIR}/flume.conf}
+EXEC_PATH=/usr/bin/flume-ng
+FLUME_PID_FILE=${FLUME_RUN_DIR}/flume-${FLUME_AGENT_NAME}.pid
+
+
 start() {
   [ -x $exec ] || exit $ERROR_PROGRAM_NOT_INSTALLED
 
@@ -81,7 +83,7 @@ start() {
   fi
 
   log_success_msg "Starting $desc (flume-agent): "
-  /bin/su -s /bin/bash -c "/bin/bash -c 'echo \$\$ >${FLUME_PID_FILE} && exec ${EXEC_PATH} agent --conf $FLUME_CONF_DIR --conf-file $FLUME_CONF_FILE --name $FLUME_AGENT_NAME >>${FLUME_LOG_DIR}/flume-agent.out 2>&1' &" $FLUME_USER
+  /bin/su -s /bin/bash -c "/bin/bash -c 'echo \$\$ >${FLUME_PID_FILE} && exec ${EXEC_PATH} agent --conf $FLUME_CONF_DIR --conf-file $FLUME_CONF_FILE --name $FLUME_AGENT_NAME >>${FLUME_LOG_DIR}/flume-${FLUME_AGENT_NAME}.out 2>&1' &" $FLUME_USER
   RETVAL=$?
   [ $RETVAL -eq 0 ] && touch $LOCKFILE
   return $RETVAL
