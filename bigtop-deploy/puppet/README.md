@@ -105,18 +105,22 @@ directories to use.
 
 ## Usage
 
-- Make sure that the bigtop-deploy directory is available on every node of your cluster, and then
-- Make sure all required puppet's modules are installed:
+- Make sure that the bigtop-deploy directory is available on every node of your cluster
+- Make sure puppet is installed
+- Make sure all the required puppet modules are installed:
 
-  gradle toolchain-puppetmodules
+<pre>
+gradle toolchain-puppetmodules (if you already have JAVA installed)
+or
+puppet apply --modulepath=<path_to_bigtop> -e "include bigtop_toolchain::puppet-modules"
+</pre>
 
-  or
-
-  puppet apply --modulepath=<path_to_bigtop> -e "include bigtop_toolchain::puppet-modules"
-
-  This will install the following module(s) for you:
+This will install the following module(s) for you:
   * [puppet stdlib module](https://forge.puppetlabs.com/puppetlabs/stdlib)
   * [puppet apt module](https://forge.puppetlabs.com/puppetlabs/apt) on Ubuntu, Debian only
+
+Note that, the puppet apt module version must be equal to or higher than 2.0.1 after BIGTOP-1870.
+Bigtop toolchan can take care of that for you, so just be aware of it.
 
 And run the following on those nodes:
 
