@@ -90,6 +90,12 @@ for pom in $POM_FILES; do
   fi
 done
 
+# Disable Codehaus repository since it's out of service
+sed -i.bak "/http:\/\/repository.codehaus.org/a\\
+            <releases>\\
+                <enabled>false</enabled>\\
+            </releases>" ${WORKDIR}/pom.xml
+
 export MAVEN_OPTS="-Xmx512m -XX:MaxPermSize=128m"
 # Invoke Oozie build script
 ${WORKDIR}/bin/mkdistro.sh -DjavaVersion=${JDK_VERSION} -DskipTests -Dhadoop.version=${HADOOP_VERSION} -Dhadoop.auth.version=${HADOOP_VERSION} ${EXTRA_GOALS} -Dmaven.repo.local=${HOME}/.m2/repository "$@"
