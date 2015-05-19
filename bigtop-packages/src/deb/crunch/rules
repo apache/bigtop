@@ -23,6 +23,10 @@ export DH_VERBOSE=1
 # This has to be exported to make some magic below work.
 export DH_OPTIONS
 
+lib_crunch=/usr/lib/crunch
+zookeeper_home=/usr/lib/zookeeper
+hadoop_home=/usr/lib/hadoop
+
 
 %:
 	dh $@
@@ -39,3 +43,12 @@ override_dh_auto_install:
 	bash -x debian/install_crunch.sh \
 	  --build-dir=$${PWD}/build     \
 	  --prefix=debian/tmp
+	
+	ln -fs ${zookeeper_home}/zookeeper.jar debian/tmp/${lib_crunch}/lib/
+	
+	ln -fs ${hadoop_home}/client/hadoop-annotations.jar debian/tmp/${lib_crunch}/lib/
+	ln -fs ${hadoop_home}/client/hadoop-auth.jar debian/tmp/${lib_crunch}/lib/
+	ln -fs ${hadoop_home}/client/hadoop-common.jar debian/tmp/${lib_crunch}/lib/
+	ln -fs ${hadoop_home}/client/hadoop-mapreduce-client-core.jar debian/tmp/${lib_crunch}/lib/
+	ln -fs ${hadoop_home}/client/hadoop-yarn-api.jar debian/tmp/${lib_crunch}/lib/
+	ln -fs ${hadoop_home}/client/hadoop-yarn-common.jar debian/tmp/${lib_crunch}/lib/

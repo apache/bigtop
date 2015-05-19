@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -e
+set -ex
 
 usage() {
   echo "
@@ -96,3 +96,7 @@ cp -r $BUILD_DIR/site/* $PREFIX/$DOC_DIR
 # Finally move some file from lib to docs
 mv $PREFIX/$LIB_DIR/crunch-examples-*.jar $PREFIX/$DOC_DIR
 mv $PREFIX/$LIB_DIR/crunch-test-*.jar $PREFIX/$DOC_DIR
+
+rm -f $PREFIX/$LIB_DIR/lib/zookeeper-*.jar
+rm -f $PREFIX/$LIB_DIR/lib/hadoop-*.jar
+
