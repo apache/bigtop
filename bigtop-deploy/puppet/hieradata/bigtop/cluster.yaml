@@ -16,7 +16,7 @@
 # "$components" list. If $components isn't set then everything in the stack will
 # be installed as usual. Otherwise only a specified list will be set
 # Possible elements:
-# hadoop,yarn,hbase,tachyon,flume,solrcloud,spark,oozie,hcat,sqoop,httpfs,
+# hadoop,yarn,hbase,tachyon,flume,solrcloud,spark,oozie,hcat,sqoop,sqoop2,httpfs,
 # hue,mahout,giraph,crunch,pig,hive,zookeeper
 # Example (to deploy only HDFS and YARN server and gateway parts)
 # This can be a comma-separated list or an array.
@@ -115,7 +115,7 @@ hadoop-zookeeper::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 bigtop::hadoop_rm_http_port: "8088"
 bigtop::hadoop_rm_proxy_port: "8088"
 bigtop::hadoop_history_server_port: "19888"
-bigtop::sqoop_server_port: "<never defined correctly>"
+bigtop::sqoop2_server_port: "12000"
 bigtop::hbase_thrift_port: "9090"
 bigtop::hadoop_oozie_port: "11000"
 
@@ -127,7 +127,7 @@ hue::server::history_server_url: "http://%{hiera('bigtop::hadoop_head_node')}:%{
 # those use fqdn instead of hadoop_head_node because it's only ever activated
 # on the gatewaynode
 hue::server::webhdfs_url: "http://%{fqdn}:%{hiera('hadoop::httpfs::hadoop_httpfs_port')}/webhdfs/v1"
-hue::server::sqoop_url: "http://%{fqdn}:%{hiera('bigtop::sqoop_server_port')}/sqoop"
+hue::server::sqoop2_url: "http://%{fqdn}:%{hiera('bigtop::sqoop2_server_port')}/sqoop"
 hue::server::solr_url: "http://%{fqdn}:%{hiera('solr::server::port')}/solr/"
 hue::server::hbase_thrift_url: "%{fqdn}:%{hiera('bigtop::hbase_thrift_port')}"
 hue::server::oozie_url: "http://%{hiera('bigtop::hadoop_head_node')}:%{hiera('bigtop::hadoop_oozie_port')}/oozie"

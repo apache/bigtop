@@ -28,6 +28,7 @@ hadoop::hadoop_storage_dirs:
 #  - solrcloud
 #  - spark
 #  - sqoop
+#  - sqoop2
 #  - tachyon
 #  - tez
 #  - yarn

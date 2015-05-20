@@ -14,7 +14,7 @@
 # limitations under the License.
 
 class hue {
-  class server($sqoop_url = "http://localhost:12000/sqoop", $solr_url = "http://localhost:8983/solr/", $hbase_thrift_url = "",
+  class server($sqoop2_url = "http://localhost:12000/sqoop", $solr_url = "http://localhost:8983/solr/", $hbase_thrift_url = "",
                $webhdfs_url, $rm_host, $rm_port, $oozie_url, $rm_proxy_url, $history_server_url,
                $hive_host = "", $hive_port = "10000",
                $rm_logical_name = undef, $rm_api_port = "8088", $app_blacklist = "impala, security",

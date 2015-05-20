@@ -161,8 +161,8 @@ class standby_head_node inherits hadoop_cluster_node {
 }
 
 class hadoop_gateway_node inherits hadoop_cluster_node {
-  if ($all or "sqoop" in $components) {
-    include hadoop-sqoop::server
+  if ($all or "sqoop2" in $components) {
+    include sqoop2::server
   }
 
   if ($all or "httpfs" in $components) {
@@ -196,8 +196,11 @@ class hadoop_gateway_node inherits hadoop_cluster_node {
   if ($all or "hive" in $components) {
     include hadoop-hive::client
   }
+  if ($all or "sqoop2" in $components) {
+    include sqoop2::client
+  }
   if ($all or "sqoop" in $components) {
-    include hadoop-sqoop::client
+    include sqoop::client
   }
   if ($all or "oozie" in $components) {
     include hadoop-oozie::client

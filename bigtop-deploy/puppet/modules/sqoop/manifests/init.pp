@@ -13,12 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-hue::server { "test-hue-server": 
-  sqoop2_url   => "http://localhost:12000/sqoop",
-  solr_url    => "http://localhost:8983/solr/",
-  hbase_thrift_url => "localhost:9090",
-  webhdfs_url => "http://localhost:14000/webhdfs/v1",
-  rm_host     => "localhost",
-  rm_port     => "8032",
-  oozie_url   => "http://localhost:11000/oozie",
+class sqoop {
+  class client {
+    package { "sqoop":
+      ensure => latest,
+    } 
+  }
 }

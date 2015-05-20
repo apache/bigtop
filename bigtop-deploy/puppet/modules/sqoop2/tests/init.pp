@@ -13,23 +13,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class hadoop-sqoop {
-  class client {
-    package { "sqoop-client":
-      ensure => latest,
-    } 
-  }
-
-  class server {
-    package { "sqoop-server":
-      ensure => latest,
-    } 
-
-    service { "sqoop-server":
-      ensure => running,
-      require => Package["sqoop-server"],
-      hasstatus => true,
-      hasrestart => true,
-    }
-  }
-}
+sqoop2::client { "test-sqoop2-client": } 
+sqoop2::server { "test-sqoop2-server": } 
