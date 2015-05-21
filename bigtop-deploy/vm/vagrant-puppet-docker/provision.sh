@@ -23,11 +23,6 @@ umount /etc/hosts
 mv /etc/hosts /etc/hosts.bak
 ln -s /vagrant/hosts /etc/hosts
 
-# Install puppet modules
-puppet apply --modulepath=/bigtop-home -e "include bigtop_toolchain::puppet-modules"
-
-mkdir -p /data/{1,2}
-
 # Prepare puppet configuration file
 mkdir -p /etc/puppet/hieradata
 cp /bigtop-home/bigtop-deploy/puppet/hiera.yaml /etc/puppet

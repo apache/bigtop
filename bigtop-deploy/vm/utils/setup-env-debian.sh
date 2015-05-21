@@ -33,3 +33,8 @@ if [ $enable_local_repo == "true" ]; then
 else
     echo "local yum = $enable_local_repo ; NOT Enabling local yum.  Packages will be pulled from remote..."
 fi
+
+# Install puppet modules
+puppet apply --modulepath=/bigtop-home -e "include bigtop_toolchain::puppet-modules"
+
+mkdir -p /data/{1,2}
