@@ -1,3 +1,6 @@
+USE  TEST_HIVE_NORMAL
+
+
 CREATE TABLE triples (foo string, subject string, predicate string, object string, foo2 string)
 
 

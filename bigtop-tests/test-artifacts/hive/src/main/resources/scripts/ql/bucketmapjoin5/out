@@ -1,3 +1,6 @@
+USE  TEST_HIVE_NORMAL
+
+
 CREATE TABLE srcbucket_mapjoin(key int, value string) CLUSTERED BY (key) INTO 2 BUCKETS STORED AS TEXTFILE
 
 load data local inpath 'seed_data_files/srcbucket20.txt' INTO TABLE srcbucket_mapjoin

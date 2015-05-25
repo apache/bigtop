@@ -12,6 +12,8 @@
 -- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
+USE  TEST_HIVE_NORMAL;
+
 CREATE TABLE srcbucket_mapjoin(key int, value string) CLUSTERED BY (key) INTO 2 BUCKETS STORED AS TEXTFILE;
 load data local inpath 'seed_data_files/srcbucket20.txt' INTO TABLE srcbucket_mapjoin;
 load data local inpath 'seed_data_files/srcbucket21.txt' INTO TABLE srcbucket_mapjoin;

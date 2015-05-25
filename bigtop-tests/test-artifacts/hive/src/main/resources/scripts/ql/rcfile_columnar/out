@@ -1,3 +1,5 @@
+USE  TEST_HIVE_NORMAL
+
 
 CREATE table columnTable (key STRING, value STRING)
 ROW FORMAT SERDE

@@ -12,6 +12,9 @@
 -- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
+DROP DATABASE IF EXISTS TEST_HIVE_NORMAL CASCADE;
+CREATE DATABASE TEST_HIVE_NORMAL COMMENT 'Its a test database';
+USE  TEST_HIVE_NORMAL;
 DROP TABLE srcpart;
 CREATE TABLE srcpart(key string, value string) PARTITIONED BY (ds string, hr string) STORED AS TEXTFILE;
 LOAD DATA LOCAL INPATH 'seed_data_files/kv1.txt' OVERWRITE INTO TABLE srcpart PARTITION (ds='2008-04-08',hr='11');
