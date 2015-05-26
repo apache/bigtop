@@ -144,7 +144,7 @@ bash %{SOURCE1}
 %install
 %__rm -rf $RPM_BUILD_ROOT
 env IGNITE_HADOOP_VERSION=%{version} bash %{SOURCE2} \
-	--build-dir=target \
+  --build-dir=target/bin \
   --doc-dir=%{doc_ignite} \
   --conf-dir=%{etc_ignite_conf_dist} \
 	--prefix=$RPM_BUILD_ROOT

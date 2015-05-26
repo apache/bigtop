@@ -37,7 +37,7 @@ override_dh_auto_install:
 	cp debian/ignite-hadoop.default debian/${ignite-hadoop_pkg_name}/etc/default/${ignite-hadoop_pkg_name}
 	env HADOOP_VERSION=${IGNITE_HADOOP_BASE_VERSION} \
 	bash -x debian/install_ignite.sh \
-		--build-dir=target \
+		--build-dir=target/bin \
 		--conf-dir=/etc/${ignite-hadoop_pkg_name}/conf.dist \
 		--doc-dir=usr/share/doc/${ignite-hadoop_pkg_name}-doc \
 		--prefix=debian/tmp
