@@ -146,6 +146,8 @@ done
 # Copy in the configuration files
 install -d -m 0755 $PREFIX/$CONF_DIR
 cp -a ${BUILD_DIR}/config/{tools-log4j.properties,server.properties,log4j.properties} $PREFIX/$CONF_DIR/
+# BIGTOP-1886
+sed -i -e "s|=log-cleaner.log|=$\{kafka.logs.dir\}/log-cleaner.log|" $PREFIX/$CONF_DIR/log4j.properties
 ln -s ${ETC_KAFKA_DIR}/conf $PREFIX/$LIB_DIR/config
 
 # Creating symlink to /var/log/kafka
