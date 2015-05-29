@@ -17,6 +17,333 @@ Bigtop Changelog
 
 * Release 1.0.0 (2015-05-29)
 
+Release Notes - Bigtop - Version 1.0.0
+
+** Sub-task
+    * [BIGTOP-1105] - Fix lintian errors in the hadoop package
+    * [BIGTOP-1334] - Add DFS tests to TestCLI
+    * [BIGTOP-1392] - Hive basic smoke test fails
+    * [BIGTOP-1461] - Add a simple Hive validation to smoke-tests.
+    * [BIGTOP-1465] - Include Sqoop1 in bigtop 0.9
+    * [BIGTOP-1468] - Include zookeeper 3.4.6
+    * [BIGTOP-1486] - Upgrade Hue to 3.7
+    * [BIGTOP-1535] - Add Spark ETL script to BigPetStore
+    * [BIGTOP-1537] - [BigPetStore] Add  Spark Product Recommender example
+    * [BIGTOP-1543] - hive-0.14 in bigtop
+    * [BIGTOP-1550] - Spark update to 1.1.0
+    * [BIGTOP-1563] - Puppet deployment needs to setup user hdfs keys for password-less logins
+    * [BIGTOP-1571] - Remove Whirr from the BOM
+    * [BIGTOP-1594] - Upgrade Pig to 0.14.0
+    * [BIGTOP-1609] - Use openjdk7 for CentOS
+    * [BIGTOP-1615] - Tests dependencies are on old Hadoop versions (2.3.0, 2.4.1)
+    * [BIGTOP-1632] - Support JMX monitoring when multiple HBase RS is brought up in a node
+    * [BIGTOP-1649] - Upgrade Apache Flume to 1.5.2
+    * [BIGTOP-1707] - Upgrade Hadoop to 2.6.0
+    * [BIGTOP-1727] - Fix a build failure for Spark 1.2.1
+    * [BIGTOP-1728] - jackson dependency management for Spark 1.2.1 and  Hadoop 2.6.0
+    * [BIGTOP-1738] - Update HBase because javadoc broken
+    * [BIGTOP-1765] - Bump the stack version to 1.0
+    * [BIGTOP-1768] - Use openjdk in ubuntu14, Remove references to jdk6 
+    * [BIGTOP-1842] - Remove gridgain-hadoop from BOM
+
+** Bug
+    * [BIGTOP-894] - Pig compilation fails on RPM systems on Bigtop trunk
+    * [BIGTOP-965] - IntegrationTestHiveSmokeBulk not being run
+    * [BIGTOP-972] - fix packagetest package remove logic
+    * [BIGTOP-977] - hive smoke tests are full of internal infrastructure details irrelevant to Bigtop
+    * [BIGTOP-1050] - Permissions on YARN LCE should be 4754
+    * [BIGTOP-1104] - Fix lintian errors
+    * [BIGTOP-1121] - implement tests for HDFS snapshots
+    * [BIGTOP-1135] - Hue has google analytics enabled by default
+    * [BIGTOP-1194] - redhat-lsb-core is sufficient in spec files
+    * [BIGTOP-1277] - Remove Windows files from unix packaging
+    * [BIGTOP-1287] - Mahout smokes : Remove dirchlet/meanshift clustering
+    * [BIGTOP-1327] - bigpetstore.arch is out of date
+    * [BIGTOP-1356] - Generate hive.install on the fly
+    * [BIGTOP-1357] - Get rid of HCatalog packaging code
+    * [BIGTOP-1381] - Datafu and Spark .deb build is broken 
+    * [BIGTOP-1384] - Implement Gradle Wrapper for smoke tests and cleanup.
+    * [BIGTOP-1395] - Simplifying non-component versions evaluation
+    * [BIGTOP-1445] - Pig fails with clean .ivy and .m2
+    * [BIGTOP-1446] - Spark fails with clean .m2
+    * [BIGTOP-1451] - smoke-tests (gradle based) Mahout need to run a real smoke test.
+    * [BIGTOP-1457] - Hue do-component-build does not set version properly
+    * [BIGTOP-1458] - Maven build severly broken 
+    * [BIGTOP-1459] - Remove hadoop-client jar from packages that bundle it
+    * [BIGTOP-1460] - maven dependencies broken
+    * [BIGTOP-1462] - Failed to build spark by gradle
+    * [BIGTOP-1467] - version of hadoop-auth in oozie is wrong 
+    * [BIGTOP-1472] - Hadoop RPM build is broken after BIGTOP-1462
+    * [BIGTOP-1487] - Documentation for use case and deployment models for failure tests.
+    * [BIGTOP-1488] - bigtop_toolchain hardcode the apache mirror sites for downloading maven
+    * [BIGTOP-1490] - Adding GridGain to BigTop
+    * [BIGTOP-1491] - Update docker-puppet README 
+    * [BIGTOP-1497] - Add tachyon to bigtop 
+    * [BIGTOP-1502] - Improve puppet deployment for new gridgain component
+    * [BIGTOP-1504] - Bigtop docker provision does not work on mac
+    * [BIGTOP-1506] - bigtop-utils won't detect JAVA_HOME in some cases
+    * [BIGTOP-1508] - fix Puppet warnings under Puppet 3 
+    * [BIGTOP-1509] - Update deployment README after BIGTOP-1047
+    * [BIGTOP-1511] - TestCLI: make TestCLI compatible with Hadoop 2.4 (HADOOP-8691)
+    * [BIGTOP-1513] - FailureExecutor.groovy is in the wrong module, causing compiler errors.
+    * [BIGTOP-1521] - Bigtop smoke-tests hierarchy and fast failure
+    * [BIGTOP-1522] - nodemanager deployment needs to include hadoop-mapreduce package
+    * [BIGTOP-1523] - Gradle install for test artifacts uses wrong sequence of the targets
+    * [BIGTOP-1524] - FailureExecutor  breaks smoke tests : Smoke tests should run from source
+    * [BIGTOP-1526] - property file for FailureVars can not be placed to {{/}}
+    * [BIGTOP-1534] - Update README.md to reflect new build system and other changes
+    * [BIGTOP-1541] - Support Debian jessie in Bigtop_toolchain; cleanup of pp files
+    * [BIGTOP-1542] - Debian Packages will not build
+    * [BIGTOP-1544] - [BigPetStore] Use of java.io.File and check for directory existence will fail with non-POSIX DFSs (HDFS, S3, etc.)
+    * [BIGTOP-1548] - hue uses snapshot dependency to removed snapshot
+    * [BIGTOP-1549] - spark compile broken
+    * [BIGTOP-1551] - build stops because gradle does not handle symlinks well
+    * [BIGTOP-1553] - puppet installation fails when components value is a single item instead of a list
+    * [BIGTOP-1554] - bigtop-deploy/puppet/config/site.csv was wrongfully committed.
+    * [BIGTOP-1562] - Critical tachyon pupet improvements.
+    * [BIGTOP-1564] - docker-puppet doesn't use vagrantconfg.yaml for configuration parameters
+    * [BIGTOP-1566] - Puppet README file needs to reflect multiple modules directoty requirement
+    * [BIGTOP-1567] - puppet cannot install components whatever given to it
+    * [BIGTOP-1568] - bigtop01 needs gradle
+    * [BIGTOP-1570] - docker-puppet fails to deploy due to stdlib can not be found
+    * [BIGTOP-1574] - Phoenix packaging requires build and classpath changes after PHOENIX-1455
+    * [BIGTOP-1579] - Implement patching for Bigtop
+    * [BIGTOP-1580] - Improve Bigtop Toolchain: Versioning of Packages
+    * [BIGTOP-1585] - test artifacts tasks include extra tasks for nonexisting components
+    * [BIGTOP-1586] - BigPetStore-Spark only works on the East Coast .
+    * [BIGTOP-1587] - Fix typos in install-tomcat.sh
+    * [BIGTOP-1588] - Current Bigtop Pig does not build because of API Change in Hive
+    * [BIGTOP-1589] - Prioritization is broken in bigtop-detect-javahome
+    * [BIGTOP-1592] - Integration test IntegrationTestClusterFailures is failing
+    * [BIGTOP-1596] - bigtop build fails because it tries to write to forrest installation
+    * [BIGTOP-1604] - Create a MAINTAINERS.txt File
+    * [BIGTOP-1605] - Tachyon RPM does not depend on bigtop utils
+    * [BIGTOP-1606] - Tachyon webapp directory not located where expected
+    * [BIGTOP-1610] - Fix /etc/profile.d/bigtop.sh scripts 
+    * [BIGTOP-1611] - mahoutsmokes aren't compiling
+    * [BIGTOP-1618] - iTest integration tests need only to be bound to verify goal
+    * [BIGTOP-1620] - Hadoop deb Packages for architecture "all" containing binaries
+    * [BIGTOP-1626] - Add bmahe as a maintainer for Apache Flume
+    * [BIGTOP-1633] - Pig compile fails again 
+    * [BIGTOP-1635] - hue compile on vanilla debian
+    * [BIGTOP-1636] - Missing patches and files for hue
+    * [BIGTOP-1639] - Add Olaf Flebbe to dev list
+    * [BIGTOP-1642] - Restructure and enhance toolchain
+    * [BIGTOP-1652] - Fix BigPetStore-Spark Data format regression
+    * [BIGTOP-1654] - change some hadoop puppet variables from local to node scope
+    * [BIGTOP-1656] - add tez variables to hadoop-env.sh
+    * [BIGTOP-1657] - bigtop-deploy puppets to support tez
+    * [BIGTOP-1660] - Upgrade to Hive-1.0
+    * [BIGTOP-1662] - puppet: Fix hadoop configuration file incompleteness due to hiera conversion
+    * [BIGTOP-1663] - TestHadoopSmoke is failing because of improper set-up
+    * [BIGTOP-1665] - Update Wiki pages on how to develop and build Bigtop
+    * [BIGTOP-1668] - puppet: Adjust kerberos module for current Debian
+    * [BIGTOP-1669] - puppet: Hadoop: Separate dependencies on Kerberos keytabs
+    * [BIGTOP-1677] - Tez packaging is still failing
+    * [BIGTOP-1678] - Use openjdk7 for AmazonLinux
+    * [BIGTOP-1687] - Puppet: fix wrong array representation for hadoop-zookeeper::server::ensemble
+    * [BIGTOP-1694] - puppet: Make httpfs subscribe to core-site and hdfs-site
+    * [BIGTOP-1699] - sqoop does not build on debian
+    * [BIGTOP-1703] - Limt override of JAVA_OPTS in install_solr.sh to cause minimal side-effects
+    * [BIGTOP-1706] - Make TestBlockRecovery runnable under all users
+    * [BIGTOP-1710] - Spark 1.1.0 does not build for DEB
+    * [BIGTOP-1711] - add packages to compile hue
+    * [BIGTOP-1712] - Specification for Docker images.
+    * [BIGTOP-1722] - upgrade tachyon to 0.6.0
+    * [BIGTOP-1723] - update Tachyon Maintainers
+    * [BIGTOP-1724] - Update centos vagrant box 
+    * [BIGTOP-1729] - Install Hive has typo in HCATALOG option
+    * [BIGTOP-1731] - Gradle mustRunAfter doesn't work is expected
+    * [BIGTOP-1732] - remove has_ssh in Docker provisioner
+    * [BIGTOP-1733] - fix local_yum implementation
+    * [BIGTOP-1745] - Add Mark Grover as committer on the website
+    * [BIGTOP-1748] - Remove assert on fs.trash.interval from TestCLI and TestDFSCLI
+    * [BIGTOP-1751] - Puppet deployment ignores bigtop_repo_uri variable
+    * [BIGTOP-1756] - Add HADOOP_MAPRED_HOME property to common
+    * [BIGTOP-1757] - bigtop_toolchain has to differentiate between centos6 and centos7
+    * [BIGTOP-1758] - Remove redundant property checks from TestHadoopExamples
+    * [BIGTOP-1761] - Delete testConf.xml from hadoop-smoke resources 
+    * [BIGTOP-1763] - Handle broken symlinks when copying jars
+    * [BIGTOP-1764] - Fix copying mapreduce jars to HDFS for Oozie
+    * [BIGTOP-1774] - Update mailing list page
+    * [BIGTOP-1775] - Fix typos and mistakes on mailing list page
+    * [BIGTOP-1776] - Resolve an warning on packaging Hadoop RPM
+    * [BIGTOP-1778] - spark-1.3.0 broke hive
+    * [BIGTOP-1779] - giraph compile broken
+    * [BIGTOP-1780] - bigtop_toolchain: JAVA_HOME incorrect, remove JAVA6_HOME
+    * [BIGTOP-1781] - tachyon fails to build
+    * [BIGTOP-1790] - Top level menu says 'Power By' - needs to be fixed
+    * [BIGTOP-1793] - bigtop_toolchain: remove JAVA_HOME/bin from PATH
+    * [BIGTOP-1798] - init-hdfs.sh uses groovy but no dependency in package description given
+    * [BIGTOP-1804] - Not again: srpm target fails on SUSE
+    * [BIGTOP-1808] - hive 1.0.0 : kerberos does not work correctly
+    * [BIGTOP-1810] - Spark thriftserver service does not indicate success
+    * [BIGTOP-1812] - fix bps pig integration test
+    * [BIGTOP-1813] - Create /user/hbase HDFS directory
+    * [BIGTOP-1814] - Puppet deployment code needs to work with ignite-hadoop component
+    * [BIGTOP-1815] - Tez build is broken in the container
+    * [BIGTOP-1816] - Puppet deploy is broken on Ubuntu
+    * [BIGTOP-1817] - bigtop-utils deb is missing  init-hcfs.groovy file
+    * [BIGTOP-1818] - ignite-hadoop-service debian is missed; causing Puppet deploy to fail
+    * [BIGTOP-1824] - Tachyon master and worker daemon script does not work propertly
+    * [BIGTOP-1827] - Tachyon package name conflict on Debian/Ubuntu
+    * [BIGTOP-1828] - Puppet: Tachyon does not get formatted before tachyon daemons are started up
+    * [BIGTOP-1830] - Move apache-forrest installation from  bigtop_toolchain to pig compile
+    * [BIGTOP-1832] - hdfs-site.xml: update shortcut reader and remove obsolete shortcut reader users
+    * [BIGTOP-1833] - Bump Ignite to 1.1.0
+    * [BIGTOP-1835] - Update project RDF file
+    * [BIGTOP-1839] - Building RPM for Zookeeper 3.4.6 is broken
+    * [BIGTOP-1840] - datafu does not pick up pig dependency from local repository
+    * [BIGTOP-1841] - toolchain can not set java correctly in fedora
+    * [BIGTOP-1845] - toolchain can not drop bigtop.sh in fedora because of puppet syntax error
+    * [BIGTOP-1848] - spark deb packages broken
+    * [BIGTOP-1849] - toolchain can not set java home correctly in CentOS 7
+    * [BIGTOP-1850] - Update Hue to 3.8
+    * [BIGTOP-1853] - Phoenix build does not properly override Hadoop version property
+    * [BIGTOP-1855] - Remove Obsolete Jobtracker settings from mapred-site.xml
+    * [BIGTOP-1857] - Support yarn-built-in proxy
+    * [BIGTOP-1859] - Unable to build Hue packages on Amazon Linux
+    * [BIGTOP-1860] - ignite-hadoop release URL should point to apache dist server, not a mirror
+    * [BIGTOP-1861] - giraph does not build
+    * [BIGTOP-1865] - circular dependency between bigtop-groovy and bigtop-utils
+    * [BIGTOP-1866] - openssl-devel is required by hue RPM package
+    * [BIGTOP-1867] - Upgrade Gradle version to 2.4
+    * [BIGTOP-1868] - Address the custom 'clean' warning 
+    * [BIGTOP-1869] - Hue 3.8.1 refinements
+    * [BIGTOP-1870] - Latest version of Puppet::Apt doesn't work for our deployment recipes
+    * [BIGTOP-1872] - Improve HUE puppet recipies
+    * [BIGTOP-1874] - HBase build failed due to Codehaus repository is out of service
+    * [BIGTOP-1875] - Oozie build failed due to Codehaus repository is out of service
+    * [BIGTOP-1876] - Update puppet recipes for Sqoop2
+    * [BIGTOP-1879] - vagrant-puppet-vm is broken
+
+** Improvement
+    * [BIGTOP-1047] - Support Puppet 3.x
+    * [BIGTOP-1204] - Add support for AmazonLinux
+    * [BIGTOP-1235] - Speed-up init-hdfs.sh for complete HCFS compliant provisioning
+    * [BIGTOP-1275] - BigPetStore: Add all 50 states
+    * [BIGTOP-1301] - Groovy 2.3.0 is out! Let's bundle it into the stack
+    * [BIGTOP-1325] - Update TestHDFSCLI to include tests from upstream
+    * [BIGTOP-1366] - Updated, Richer Model for Generating Data for BigPetStore 
+    * [BIGTOP-1388] - Use cluster failure tests during other tests with command line parametrization
+    * [BIGTOP-1414] - Add Apache Spark implementation to BigPetStore
+    * [BIGTOP-1423] - Add Groovy installation to the bigtop_toolchain
+    * [BIGTOP-1449] - Add RC Testing support to vagrant recipe
+    * [BIGTOP-1450] - Eliminate broken hive test artifacts in favor of smoke-tests.
+    * [BIGTOP-1478] - Start tomcat watchdog as part of solr init scripts
+    * [BIGTOP-1481] - Log files are cluttered with messages from tar
+    * [BIGTOP-1484] - Include python in toolchain
+    * [BIGTOP-1489] - move the tomcat_watchdog code out of install_solr.sh into a separate file in bigtop-utils in order to facilitate reusability
+    * [BIGTOP-1495] - Remove make build system
+    * [BIGTOP-1498] - Add RC Testing to Docker based Bigtop provisioner
+    * [BIGTOP-1501] - come up with a way to use Jenkins plugins/Groovy console to create jobs
+    * [BIGTOP-1510] - Minor README update aboud bigtop-deploy
+    * [BIGTOP-1517] - refactor vagrant provisioners to be configurable by yaml file
+    * [BIGTOP-1527] - Allow to fetch package's source code from Git
+    * [BIGTOP-1545] - [BigPetStore] Bump version of BPS data generator library to 0.2.1
+    * [BIGTOP-1547] - Confirm tachyon functioning in vagrant recipes.
+    * [BIGTOP-1555] - remove mapred-app from docs or code snippet (post-BIGTOP-1522), cleanup vagrant-puppet to core components.
+    * [BIGTOP-1557] - website misses ci and announce mailing lists info
+    * [BIGTOP-1558] - Make gradle easier to navigate
+    * [BIGTOP-1559] - Tests are failing in Apache CI build
+    * [BIGTOP-1569] - provide alias targets for building packages native to the OS
+    * [BIGTOP-1576] - Add Vagrant installation to bigtop_toolchain
+    * [BIGTOP-1578] - Refactor vagrant-puppet provisioner to have its configurations all come from yaml
+    * [BIGTOP-1581] - Allow multiple Flume agents to be executed as a service using Bigtop init.d script
+    * [BIGTOP-1583] - update the default yum repo in puppet site.pp
+    * [BIGTOP-1590] - Add a functionality to run integration tests for itest
+    * [BIGTOP-1591] - JarContentTest is failing on JDK7
+    * [BIGTOP-1593] - Fix types in FailureVars 
+    * [BIGTOP-1600] - Improve front page content of website
+    * [BIGTOP-1601] - cleanup whitespaces across test-artifacts 
+    * [BIGTOP-1603] - Rename docker-puppet and vagrant-puppet to better indicate its function and difference
+    * [BIGTOP-1612] - Update README for smoke-tests
+    * [BIGTOP-1613] - Add .gitignore for vagrant-puppet
+    * [BIGTOP-1614] - Add .gitignore file for docker-puppet
+    * [BIGTOP-1621] - Migrate itest to gradle
+    * [BIGTOP-1627] - Move enable_local_yum implementation to bigtop-deploy/utils/setup-env.sh to share with Docker provisioner
+    * [BIGTOP-1634] - Puppet class parameter and hiera conversion
+    * [BIGTOP-1640] - Add missing files for Apache Spark
+    * [BIGTOP-1645] - Add subpackages for spark history server and thrift server 
+    * [BIGTOP-1651] - puppet: Format namenode and zkfc in noninteractive mode
+    * [BIGTOP-1653] - Add queries for customer, state, and product statistics w/ d3 friendly JSON output to analytics phase. 
+    * [BIGTOP-1659] - gridgain-hadoop packages need to provide unversioned softlinks for accelerator jar files
+    * [BIGTOP-1667] - Clean up and simplify the install phase for Apache Spark
+    * [BIGTOP-1670] - puppet: Support Kerberos authentication on Hadoop component web GUIs
+    * [BIGTOP-1674] - Account for BPS simulation "burn-in" time 
+    * [BIGTOP-1675] - Puppet: remove wheel group setting for bigtop_real_users
+    * [BIGTOP-1676] - Puppet: add deb repo auto deploy
+    * [BIGTOP-1681] - [BigPetStore] Clean up BPS SparkSQL analytics module, add new queries
+    * [BIGTOP-1683] - puppet hadoop-env.sh: Add option to configure tez environment
+    * [BIGTOP-1684] - puppet hadoop/yarn: Make container executor configurable
+    * [BIGTOP-1685] - puppet hadoop: Remove useless use of explicit hiera lookup
+    * [BIGTOP-1686] - puppet hadoop/mapred: Update and clean mapred template and namespace
+    * [BIGTOP-1691] - Heira site.yaml template needs to have repo uri 
+    * [BIGTOP-1692] - hieradata/site.yaml is missing gridgain-hadoop component
+    * [BIGTOP-1693] - Puppet stdlib should be automatically installed by toolchain
+    * [BIGTOP-1696] - Provide build command to show BOM list
+    * [BIGTOP-1697] - Bootstrap: hook up toolchain into gradle build
+    * [BIGTOP-1698] - Following BIGTOP-1697 improve README entry on toolchain setup
+    * [BIGTOP-1700] - Package YARN Timeline Server service for Apache Hadoop 
+    * [BIGTOP-1705] - puppet: Allow configuring which hue apps to install
+    * [BIGTOP-1709] - Enable "hadoop26" profile for Apache Tez
+    * [BIGTOP-1718] - add facility for printing out BOM in json format
+    * [BIGTOP-1721] - Remove unnecessary files from Sqoop package
+    * [BIGTOP-1725] - Exclude null values from BOM json output added in BIGTOP-1718
+    * [BIGTOP-1741] - Upgrade to Apache Phoenix 4.3.1
+    * [BIGTOP-1742] - Add ywkim as a maintainer for Apache Hive, Spark, Sqoop* and Phoenix
+    * [BIGTOP-1743] - Add RJ Nowling as committer to website
+    * [BIGTOP-1770] - Let the user specify which JDK package to be installed in vagrantconfig.yaml
+    * [BIGTOP-1771] - Let the user specify what components to be tested when running smoke-tests by Docker/VM provisioner
+    * [BIGTOP-1783] - Import BigPetStore Data Generator into BigTop
+    * [BIGTOP-1787] - puppet: Update hue.ini to match Hue 3.7.1 template
+    * [BIGTOP-1791] - Set group of /user/hue to "hue" in HDFS
+    * [BIGTOP-1794] - Update README for bigtop_toolchain
+    * [BIGTOP-1801] - Generalize subst pattern matching for BOM file
+    * [BIGTOP-1803] - Overide Vagrant configurations from environment variables
+    * [BIGTOP-1829] - Tachyon configuration files should reside in /etc/tachyon/conf instead of /etc/tachyon
+    * [BIGTOP-1836] - Better UX for Docker provisioner by integrating it into gradle 
+    * [BIGTOP-1851] - Upgrade to HBase 0.98.12
+    * [BIGTOP-1862] - Add release download link to the front page of the website
+
+** New Feature
+    * [BIGTOP-989] - Add Apache Kafka  to Apache Bigtop
+    * [BIGTOP-1417] - Dockerize the puppetized vagrant deployer
+    * [BIGTOP-1448] - Include zookeeper C library in bigtop
+    * [BIGTOP-1480] - Define BOM for 1.0 release of Bigtop
+    * [BIGTOP-1552] - Add support for AmazonLinux to bigtop-deploy/puppet
+    * [BIGTOP-1716] - Define SCALA_VERSION in bigtop.bom
+    * [BIGTOP-1744] - Add BigPigPetstore File and REST Load Generation.
+    * [BIGTOP-1806] - Integrate Apache Ignite (incubating) with BigTop
+
+** Task
+    * [BIGTOP-1393] - Retire the make build system
+    * [BIGTOP-1525] - FailureExecutor : Is it going to be maintained/used?
+    * [BIGTOP-1556] - Cleanup some unused minor stuff.
+    * [BIGTOP-1595] - kill list
+    * [BIGTOP-1597] - Design flyers for upcoming SCALE conference
+    * [BIGTOP-1638] - Add Dasha Boudnik to dev list
+    * [BIGTOP-1648] - Update to Spark 1x to Spark 1.2.1
+    * [BIGTOP-1655] - Update VM and Docker provisioner to work with hiera converted puppet recipes
+    * [BIGTOP-1726] - Confirm that Spark 1.2.1 runs properly in BigTop, and run the BPS integration test.
+    * [BIGTOP-1755] - Upgrade to Spark 1.3.0
+    * [BIGTOP-1777] - Add cool ASCII-art logo of Bigtop to the build.gradle
+    * [BIGTOP-1822] - Puppet apt module should be automatically installed by toolchain
+    * [BIGTOP-1831] - Upgrade Mahout to 0.10
+    * [BIGTOP-1834] - Upgrade to Spark 1.3.1
+    * [BIGTOP-1854] - Trim Tachyon maintainers' list
+    * [BIGTOP-1873] - Puppet apt module version must be 2.0.1 or above after BIGTOP-1870
+
+** Test
+    * [BIGTOP-1377] - Add a test case for performing block corruption recovery
+    * [BIGTOP-1560] - Add a test case for performing block corruption recovery
+    * [BIGTOP-1617] - Make clean-up commands in TestCLI more specific
+    * [BIGTOP-1629] - Move testDFSCLI from hcfs to hdfs directory
+    * [BIGTOP-1664] - make test unpack resources optional
+
+** Wish
+    * [BIGTOP-1619] - change hadoop namenode port to 8020 (apache default port) in puppet script
+
 
 * Release 0.8.0 (2014-09-06)
 
