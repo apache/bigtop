@@ -15,7 +15,7 @@
 
 Bigtop Changelog
 
-* Release 0.9.0 (unreleased)
+* Release 1.0.0 (2015-05-29)
 
 
 * Release 0.8.0 (2014-09-06)
