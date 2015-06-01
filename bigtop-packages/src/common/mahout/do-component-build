@@ -22,9 +22,8 @@ mvn clean install -DskipTests -Dmahout.skip.distribution=false \
   -Phadoop2 \
   -Dhadoop.version=$HADOOP_VERSION \
   -Dhbase.version=$HBASE_VERSION-hadoop2 \
+  -Dspark.version=${SPARK_VERSION} \
   "$@"
 
 mkdir build
-for i in distribution/target/mahout*.tar.gz ; do
-  tar -C build --strip-components=1 -xzf $i
-done
+tar -C build --strip-components=1 -xzf distribution/target/apache-mahout-distribution-$MAHOUT_VERSION.tar.gz 
