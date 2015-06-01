@@ -41,7 +41,7 @@ Group: Development/Libraries
 BuildArch: noarch
 Buildroot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 License: ASL 2.0
-Source0: %{name}-distribution-%{mahout_base_version}-src.tar.gz
+Source0: apache-%{name}-distribution-%{mahout_base_version}-src.tar.gz
 Source1: do-component-build 
 Source2: install_%{name}.sh
 Source3: bigtop.bom
@@ -74,7 +74,7 @@ Documentation for Apache Mahout
 
 
 %prep
-%setup -n %{name}-distribution-%{mahout_base_version}
+%setup -n apache-%{name}-distribution-%{mahout_base_version}
 
 %build
 bash $RPM_SOURCE_DIR/do-component-build
