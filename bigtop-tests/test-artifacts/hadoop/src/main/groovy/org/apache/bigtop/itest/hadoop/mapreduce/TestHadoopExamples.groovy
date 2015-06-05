@@ -35,8 +35,10 @@ import org.junit.runners.Parameterized.Parameters
 import org.junit.runner.RunWith
 import org.junit.experimental.categories.Category;
 import org.apache.bigtop.itest.interfaces.NormalTests;
+import net.jcip.annotations.NotThreadSafe
 
 @Category ( NormalTests.class )
+@NotThreadSafe
 @RunWith(OrderedParameterized.class)
 class TestHadoopExamples {
   static private Log LOG = LogFactory.getLog(TestHadoopExamples.class);

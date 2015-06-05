@@ -12,6 +12,8 @@
 -- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
+USE  TEST_HIVE_NORMAL;
+
 CREATE TABLE T1(key STRING, val STRING) STORED AS TEXTFILE;
 CREATE TABLE T2(key STRING, val STRING) STORED AS TEXTFILE;
 CREATE TABLE T3(key STRING, val STRING) STORED AS TEXTFILE;

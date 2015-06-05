@@ -1,3 +1,6 @@
+USE  TEST_HIVE_NORMAL
+
+
 create table mp (a string) partitioned by (b string, c string)
 
 

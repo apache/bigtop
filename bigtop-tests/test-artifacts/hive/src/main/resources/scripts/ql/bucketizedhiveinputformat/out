@@ -1,3 +1,6 @@
+USE  TEST_HIVE_NORMAL
+
+
 set hive.input.format=org.apache.hadoop.hive.ql.io.BucketizedHiveInputFormat
 set mapred.min.split.size = 64
 
@@ -164,7 +167,7 @@ STAGE PLANS:
                   input format: org.apache.hadoop.mapred.SequenceFileInputFormat
                   output format: org.apache.hadoop.hive.ql.io.HiveSequenceFileOutputFormat
                   serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
-                  name: default.t2
+                  name: test_hive_normal.t2
 
   Stage: Stage-0
     Move Operator
@@ -174,7 +177,7 @@ STAGE PLANS:
               input format: org.apache.hadoop.mapred.SequenceFileInputFormat
               output format: org.apache.hadoop.hive.ql.io.HiveSequenceFileOutputFormat
               serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
-              name: default.t2
+              name: test_hive_normal.t2
 
   Stage: Stage-4
     Stats-Aggr Operator

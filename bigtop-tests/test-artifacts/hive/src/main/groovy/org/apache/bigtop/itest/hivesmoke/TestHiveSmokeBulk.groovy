@@ -27,8 +27,11 @@ import org.junit.runner.RunWith
 import org.junit.runners.Parameterized.Parameters
 import org.junit.experimental.categories.Category;
 import org.apache.bigtop.itest.interfaces.NormalTests;
+import org.apache.bigtop.itest.JarContent
+import net.jcip.annotations.NotThreadSafe
 
 @Category ( NormalTests.class )
+@NotThreadSafe
 @RunWith(OrderedParameterized.class)
 public class TestHiveSmokeBulk {
   private static String test_include =
@@ -46,6 +49,7 @@ public class TestHiveSmokeBulk {
 
   @Before
   public void cleanUp() {
+    JarContent.unpackJarContainer(TestHiveSmokeBulk.class, '.' , null);
     def hive_script = "";
     Shell shHive = new Shell("hive");
     ["analyze_srcpart","authorization_part","columntable",
@@ -56,7 +60,7 @@ public class TestHiveSmokeBulk {
      "smb_input2", "srcbucket_mapjoin_part", "bucketmapjoin_hash_result_1",
      "bucketmapjoin_hash_result_2", "bucketmapjoin_tmp_result",
      "srcbucket_mapjoin_part_2"].each { 
-     hive_script <<= "drop table ${it};\n"; 
+     hive_script <<= "drop table TEST_HIVE_NORMAL.${it};\n"; 
     }
     shHive.exec("${hive_script} quit; \n"); 
   }
