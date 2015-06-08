@@ -36,7 +36,7 @@ The application consists of the following modules
 Build Instructions
 ------------------
 
-You'll need to have version 2.0 of  [`gradle`](http://www.gradle.org/downloads) installed and set-up correctly in order to follow along these instructions.
+You'll need to have version 2.4 of  [`gradle`](http://www.gradle.org/downloads) installed and set-up correctly in order to follow along these instructions.
 We could have used the [`gradle-wrapper`](http://www.gradle.org/docs/current/userguide/gradle_wrapper.html) to avoid having to install `gradle`, but the `bigtop` project includes all `gradle*` directories in `.gitignore`. So, that's not going to work.
 
 ### Build the JAR
