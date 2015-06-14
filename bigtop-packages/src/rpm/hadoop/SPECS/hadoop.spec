@@ -169,6 +169,7 @@ Source26: yarn.1
 Source27: hdfs.1
 Source28: mapred.1
 Source29: hadoop-yarn-timelineserver.svc
+#BIGTOP_PATCH_FILES
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
 BuildRequires: fuse-devel, fuse, cmake
 Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils >= 0.7, zookeeper >= 3.4.0
@@ -460,7 +461,7 @@ These projects (enumerated below) allow HDFS to be mounted (on most flavors of U
 %prep
 %setup -n %{name}-%{hadoop_base_version}-src
 
-
+#BIGTOP_PATCH_COMMANDS
 %build
 # This assumes that you installed Java JDK 6 and set JAVA_HOME
 # This assumes that you installed Forrest and set FORREST_HOME
