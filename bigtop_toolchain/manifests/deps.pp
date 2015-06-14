@@ -18,10 +18,10 @@ class bigtop_toolchain::deps {
 
   $apache_prefix = nearest_apache_mirror()
   include bigtop_toolchain::packages
-  exec {"/usr/bin/wget $apache_prefix/ant/binaries/apache-ant-1.9.4-bin.tar.gz":
+  exec {"/usr/bin/wget $apache_prefix/ant/binaries/apache-ant-1.9.5-bin.tar.gz":
     cwd     => "/usr/src",
     require => Package[$packages::pkgs],
-    unless  => "/usr/bin/test -f /usr/src/apache-ant-1.9.4-bin.tar.gz",
+    unless  => "/usr/bin/test -f /usr/src/apache-ant-1.9.5-bin.tar.gz",
   }
 
   exec {"/usr/bin/wget $apache_prefix/maven/maven-3/3.0.5/binaries/apache-maven-3.0.5-bin.tar.gz":

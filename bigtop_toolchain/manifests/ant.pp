@@ -17,16 +17,16 @@ class bigtop_toolchain::ant {
 
   include bigtop_toolchain::deps
 
-  exec {'/bin/tar xvzf /usr/src/apache-ant-1.9.4-bin.tar.gz':
+  exec {'/bin/tar xvzf /usr/src/apache-ant-1.9.5-bin.tar.gz':
     cwd         => '/usr/local',
     refreshonly => true,
-    subscribe   => Exec["/usr/bin/wget $bigtop_toolchain::deps::apache_prefix/ant/binaries/apache-ant-1.9.4-bin.tar.gz"],
-    require     => Exec["/usr/bin/wget $bigtop_toolchain::deps::apache_prefix/ant/binaries/apache-ant-1.9.4-bin.tar.gz"],
+    subscribe   => Exec["/usr/bin/wget $bigtop_toolchain::deps::apache_prefix/ant/binaries/apache-ant-1.9.5-bin.tar.gz"],
+    require     => Exec["/usr/bin/wget $bigtop_toolchain::deps::apache_prefix/ant/binaries/apache-ant-1.9.5-bin.tar.gz"],
   }
 
   file {'/usr/local/ant':
     ensure  => link,
-    target  => '/usr/local/apache-ant-1.9.4',
-    require => Exec['/bin/tar xvzf /usr/src/apache-ant-1.9.4-bin.tar.gz'],
+    target  => '/usr/local/apache-ant-1.9.5',
+    require => Exec['/bin/tar xvzf /usr/src/apache-ant-1.9.5-bin.tar.gz'],
   }
 }
