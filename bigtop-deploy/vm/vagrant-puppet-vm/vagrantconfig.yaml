@@ -7,5 +7,5 @@ distro: centos
 components: [hadoop, yarn]
 enable_local_repo: false
 run_smoke_tests: false
-smoke_test_components: [mapredcue, pig]
+smoke_test_components: [mapreduce, pig]
 jdk: "java-1.7.0-openjdk-devel.x86_64"
