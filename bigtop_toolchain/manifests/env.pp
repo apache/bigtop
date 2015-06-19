@@ -52,6 +52,15 @@ class bigtop_toolchain::env {
         }
       }
     }
+    OpenSuSE: {
+      file {'/etc/profile.d/bigtop.sh':
+        source => 'puppet:///modules/bigtop_toolchain/jenkins.sh.opensuse',
+        ensure => present,
+        owner  => root,
+        group  => root,
+        mode   => 644,
+      }
+    }
     default: {
       file {'/etc/profile.d/bigtop.sh':
         source => 'puppet:///modules/bigtop_toolchain/jenkins.sh.centos',
