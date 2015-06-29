@@ -48,7 +48,7 @@ Description: Documentation for Hue
 
 Package: hue-beeswax
 Architecture: all
-Depends: ${misc:Depends}, python (>= 2.6), python (<< 3), make (>= 3.8), hue-common (= ${source:Version}), hive (>= 0.13)
+Depends: ${misc:Depends}, python (>= 2.6), python (<< 3), make (>= 3.8), hue-common (= ${source:Version})
 Description: A UI for Hive on Hue
  Beeswax is a web interface for Hive.
  .

@@ -376,7 +376,7 @@ and import and export data.
 %package -n %{name}-beeswax
 Summary: A UI for Hive on Hue
 Group: Applications/Engineering
-Requires: %{name}-common = %{version}-%{release}, hive, make
+Requires: %{name}-common = %{version}-%{release}, make
 
 %description -n %{name}-beeswax
 Beeswax is a web interface for Hive.
