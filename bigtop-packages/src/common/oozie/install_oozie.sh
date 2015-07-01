@@ -102,16 +102,10 @@ DOC_DIR=${DOC_DIR:-$CLIENT_PREFIX/usr/share/doc/oozie}
 BIN_DIR=${CLIENT_PREFIX}/usr/bin
 
 install -d -m 0755 ${CLIENT_LIB_DIR}
-install -d -m 0755 ${CLIENT_LIB_DIR}/bin
-cp -R ${BUILD_DIR}/bin/oozie ${CLIENT_LIB_DIR}/bin
-cp -R ${BUILD_DIR}/lib ${CLIENT_LIB_DIR}
+tar --strip-components=1 -zxf ${BUILD_DIR}/oozie-client-*.tar.gz -C ${CLIENT_LIB_DIR}/
 install -d -m 0755 ${DOC_DIR}
-cp -R ${BUILD_DIR}/LICENSE.txt ${DOC_DIR}
-cp -R ${BUILD_DIR}/NOTICE.txt ${DOC_DIR}
+mv ${CLIENT_LIB_DIR}/*.txt ${DOC_DIR}/
 cp -R ${BUILD_DIR}/oozie-examples.tar.gz ${DOC_DIR}
-cp -R ${BUILD_DIR}/README.txt ${DOC_DIR}
-cp -R ${BUILD_DIR}/release-log.txt ${DOC_DIR}
-[ -f ${BUILD_DIR}/PATCH.txt ] && cp ${BUILD_DIR}/PATCH.txt ${DOC_DIR}
 cp -R ${BUILD_DIR}/docs/* ${DOC_DIR}
 rm -rf ${DOC_DIR}/target
 install -d -m 0755 ${MAN_DIR}
@@ -184,6 +178,7 @@ DATA_DIR=${SERVER_PREFIX}/var/lib/oozie
 
 install -d -m 0755 ${SERVER_LIB_DIR}
 install -d -m 0755 ${SERVER_LIB_DIR}/bin
+install -d -m 0755 ${SERVER_LIB_DIR}/lib
 install -d -m 0755 ${DATA_DIR}
 for file in ooziedb.sh oozied.sh oozie-sys.sh oozie-setup.sh ; do
   cp ${BUILD_DIR}/bin/$file ${SERVER_LIB_DIR}/bin
@@ -191,8 +186,10 @@ done
 
 install -d -m 0755 ${CONF_DIR}
 cp -r ${BUILD_DIR}/conf/* ${CONF_DIR}
-sed -i -e '/oozie.service.HadoopAccessorService.hadoop.configurations/,/<\/property>/s#<value>\*=hadoop-conf</value>#<value>*=/etc/hadoop/conf</value>#g' \
-          ${CONF_DIR}/oozie-site.xml
+# Remove Windows files
+rm -f ${CONF_DIR}/*.cmd
+
+cp ${EXTRA_DIR}/oozie-site.xml ${CONF_DIR}
 cp ${EXTRA_DIR}/oozie-env.sh ${CONF_DIR}
 install -d -m 0755 ${CONF_DIR}/action-conf
 cp ${EXTRA_DIR}/hive.xml ${CONF_DIR}/action-conf
@@ -210,7 +207,8 @@ cp -R ${BUILD_DIR}/oozie-server/webapps ${SERVER_LIB_DIR}/webapps
 WEBAPP_DIR=${SERVER_LIB_DIR}/webapps/oozie
 mkdir ${WEBAPP_DIR}
 (cd ${WEBAPP_DIR} ; jar xf ${BUILD_DIR}/oozie.war)
-mv -f ${WEBAPP_DIR}/WEB-INF/lib ${SERVER_LIB_DIR}/libserver
+# OOZIE_HOME/lib
+mv -f ${WEBAPP_DIR}/WEB-INF/lib/* ${SERVER_LIB_DIR}/lib/
 touch ${SERVER_LIB_DIR}/webapps/oozie.war
 
 install -m 0755 ${EXTRA_DIR}/tomcat-deployment.sh ${SERVER_LIB_DIR}/tomcat-deployment.sh
@@ -229,16 +227,7 @@ mv ${HTTPS_DIRECTORY}/conf/ssl/ssl-server.xml ${HTTPS_DIRECTORY}/conf/server.xml
 mv ${HTTPS_DIRECTORY}/conf/ssl/ssl-web.xml ${HTTPS_DIRECTORY}/WEB-INF/web.xml
 rm -r ${HTTP_DIRECTORY}/conf/ssl
 
-# Create all the jars needed for tools execution
-install -d -m 0755 ${SERVER_LIB_DIR}/libtools
-for i in `cd ${BUILD_DIR}/libtools ; ls *` ; do
-  if [ -e ${SERVER_LIB_DIR}/libserver/$i ] ; then
-    ln -s ../libserver/$i ${SERVER_LIB_DIR}/libtools/$i
-  else
-    cp ${BUILD_DIR}/libtools/$i ${SERVER_LIB_DIR}/libtools/$i
-  fi
-done
-rm -rf ${SERVER_LIB_DIR}/libtools/hadoop-client-*.jar
+cp -R ${BUILD_DIR}/libtools ${SERVER_LIB_DIR}/
 
 # Provide a convenience symlink to be more consistent with tarball deployment
 ln -s ${DATA_DIR#${SERVER_PREFIX}} ${SERVER_LIB_DIR}/libext
