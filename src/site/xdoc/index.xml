@@ -43,7 +43,7 @@
 			</table>
 			<br />
 			<p>
-					Bigtop components power the leading Hadoop distros and support many Operating Systems, including Debian/Ubuntu, CentOS, Fedora, SUSE and many others.
+					Bigtop support many Operating Systems, including Debian, Ubuntu, CentOS, Fedora, openSUSE and many others.
 
 			</p>
 			<p>
@@ -53,79 +53,11 @@
 			<br />
 
 			<subsection name="Download latest release of Bigtop"></subsection>
-			<p><a href="http://www.apache.org/dist/bigtop/bigtop-0.8.0/">Bigtop-0.8.0</a> </p>
+			<p><a href="http://www.apache.org/dist/bigtop/bigtop-1.0.0/">Bigtop-1.0.0</a> </p>
 
-			<subsection name="Tool requirements for building Bigtop"></subsection>
-			<table>
-				<tr>
-					<th>On all systems</th>
-					<th>Also on RPM-based systems</th>
-					<th>Also on DEB-based systems</th>
-				</tr>
-				<tr>
-					<td>
-						<ul>
-							<li>Java JDK 1.6</li>
-							<li>Apache Ant</li>
-							<li>Apache Maven</li>
-							<li>wget</li>
-							<li>tar</li>
-							<li>git</li>
-							<li>subversion</li>
-							<li>gcc</li>
-							<li>gcc-c++</li>
-							<li>make</li>
-							<li>fuse</li>
-							<li>protobuf-compiler</li>
-							<li>autoconf</li>
-							<li>automake</li>
-							<li>libtool</li>
-							<li>sharutils</li>
-							<li>xmlto</li>
-						</ul>
-					</td>
-					<td>
-						<ul>
-							<li>lzo-devel</li>
-							<li>zlib-devel</li>
-							<li>fuse-devel</li>
-							<li>openssl-devel</li>
-							<li>python-devel</li>
-							<li>libxml2-devel</li>
-							<li>libxslt-devel</li>
-							<li>cyrus-sasl-devel</li>
-							<li>sqlite-devel</li>
-							<li>mysql-devel</li>
-							<li>openldap-devel</li>
-							<li>rpm-build</li>
-							<li>createrepo</li>
-							<li>redhat-rpm-config (RedHat/CentOS only)</li>
-						</ul>
-					</td>
-					<td>
-						<ul>
-							<li>libxslt1-dev</li>
-							<li>libkrb5-dev</li>
-							<li>libldap2-dev</li>
-							<li>libmysqlclient-dev</li>
-							<li>libsasl2-dev</li>
-							<li>libsqlite3-dev</li>
-							<li>libxml2-dev</li>
-							<li>python-dev</li>
-							<li>python-setuptools</li>
-							<li>liblzo2-dev</li>
-							<li>libzip-dev</li>
-							<li>libfuse-dev</li>
-							<li>libssl-dev</li>
-							<li>build-essential</li>
-							<li>dh-make</li>
-							<li>debhelper</li>
-							<li>devscripts</li>
-							<li>reprepro</li>
-						</ul>
-					</td>
-				</tr>
-			</table>
+			<subsection name="All required tools will be installed by ./gradlew toolchain"></subsection>
+			<p>However place supply a suitable JRE (for instance openjdk7) first</p>
+
 
 			<subsection name="Continuous Integration"></subsection>
 			<p>
@@ -136,9 +68,6 @@
 			</p>
 			<ul>
 				<li>
-					<a href="https://builds.apache.org/view/A-F/view/Bigtop/">https://builds.apache.org/view/A-F/view/Bigtop/</a>
-				</li>
-				<li>
 					<a href="http://bigtop01.cloudera.org:8080/">http://bigtop01.cloudera.org:8080/</a>
 				</li>
 			</ul>
@@ -147,39 +76,8 @@
 				runs several test jobs.
 			</p>
 			<p>
-				The Bigtop Jenkins server runs daily jobs for the 0.3 and trunk branches, and each job has a configuration for each
-				supported operating system.
 				In each branch there is a job to build each component, a job to run package tests and a job to build package
 				repositories.
-				There are also jobs for building virtual machine images as well as the 2 most recent releases and other miscellaneous
-				tasks for various RCs and tests.
-				For example:
-			</p>
-			<ul>
-				<li>
-					<a href="http://bigtop01.cloudera.org:8080/view/Bigtop-trunk/job/Bigtop-trunk-All/">Bigtop-trunk-All</a>
-					: Runs all of the jobs for the trunk branch.
-				</li>
-				<li>
-					<a href="http://bigtop01.cloudera.org:8080/view/Bigtop-trunk/job/Bigtop-trunk-HBase/">Bigtop-trunk-HBase</a>
-					: Builds the HBase packages only.
-				</li>
-				<li>
-					<a href="http://bigtop01.cloudera.org:8080/view/Bigtop-trunk/job/Bigtop-trunk-packagetest/">Bigtop-trunk-packagetest</a>
-					: Runs the package tests.
-				</li>
-				<li>
-					<a href="http://bigtop01.cloudera.org:8080/view/Bigtop-trunk/job/Bigtop-trunk-repository/">Bigtop-trunk-repository</a>
-					: Builds an APT or YUM package repository.
-				</li>
-				<li>
-					<a href="http://bigtop01.cloudera.org:8080/view/Bigtop-trunk/job/Bigtop-0.5.0/">Bigtop-0.5.0</a>
-					: Builds the 0.5.0 release.
-				</li>
-				<li>
-					<a href="http://bigtop01.cloudera.org:8080/job/Bigtop-VM-matrix/">Bigtop-VM-matrix</a>
-					: Builds virtual machines of branches trunk and 0.3 for KVM, VMWare and VirtualBox.
-				</li>
 			</ul>
 		</section>
 	</body>
