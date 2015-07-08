@@ -1,0 +1,39 @@
+diff --git a/hbase/pom.xml b/hbase/pom.xml
+index 55d243c..bcfe015 100644
+--- a/hbase/pom.xml
++++ b/hbase/pom.xml
+@@ -11,10 +11,20 @@
+   <name>HBase DB Binding</name>
+ 
+   <dependencies>
+-    <dependency>
++    <!-- <dependency>
+       <groupId>org.apache.hbase</groupId>
+       <artifactId>hbase</artifactId>
+       <version>${hbase.version}</version>
++    </dependency> -->
++    <dependency>
++      <groupId>org.apache.hbase</groupId>
++      <artifactId>hbase-client</artifactId>
++      <version>${hbase.version}</version>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.hbase</groupId>
++      <artifactId>hbase-common</artifactId>
++      <version>${hbase.version}</version>
+     </dependency>
+     <dependency>
+       <groupId>com.yahoo.ycsb</groupId>
+diff --git a/pom.xml b/pom.xml
+index bc181f5..f85055a 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -63,7 +63,7 @@
+     <module>gemfire</module>
+     <module>infinispan</module>
+     <module>jdbc</module>
+-    <module>mapkeeper</module>
++    <!-- <module>mapkeeper</module> -->
+     <module>mongodb</module>
+     <!--module>nosqldb</module-->
+     <module>redis</module>
