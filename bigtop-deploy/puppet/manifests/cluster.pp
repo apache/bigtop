@@ -214,4 +214,7 @@ class hadoop_gateway_node inherits hadoop_cluster_node {
   if ($all or "tez" in $components) {
     include tez::client
   }
+  if ($all or "ycsb" in $components) {
+    include ycsb::client
+  }
 }
