@@ -36,10 +36,4 @@ public class PurchasingProcesses implements ConditionalSampler<Product, String>
 	{
 		return this.processes.get(productCategory).sample();
 	}
-	
-	public Sampler<Product> fixConditional(String productCategory) throws Exception
-	{
-		return this.processes.get(productCategory);
-	}
-
 }

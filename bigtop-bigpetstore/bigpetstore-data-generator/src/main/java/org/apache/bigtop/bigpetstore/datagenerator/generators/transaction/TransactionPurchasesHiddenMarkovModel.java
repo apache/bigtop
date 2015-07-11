@@ -105,17 +105,4 @@ public class TransactionPurchasesHiddenMarkovModel implements ConditionalSampler
 		
 		return purchasedProducts;
 	}
-	
-	public Sampler<List<Product>> fixConditional(final Double transactionTime)
-	{
-		final ConditionalSampler<List<Product>, Double> sampler = this;
-		return new Sampler<List<Product>>()
-		{
-			public List<Product> sample() throws Exception
-			{
-				return sampler.sample(transactionTime);
-			}
-		};
-	}
-	
 }

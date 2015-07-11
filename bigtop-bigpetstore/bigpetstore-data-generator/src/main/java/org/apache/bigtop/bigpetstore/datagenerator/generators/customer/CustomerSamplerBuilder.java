@@ -62,11 +62,6 @@ public class CustomerSamplerBuilder
 					{
 						return locationSamplers.get(store).sample();
 					}
-					
-					public Sampler<ZipcodeRecord> fixConditional(Store store)
-					{
-						return locationSamplers.get(store);
-					}
 				};
 	}
 	
