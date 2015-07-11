@@ -13,36 +13,48 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.bigtop.bigpetstore.datagenerator.datamodels.inputs;
+package org.apache.bigtop.bigpetstore.datagenerator.generators.products;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.Vector;
 
+import org.apache.bigtop.bigpetstore.datagenerator.Constants;
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.PetSpecies;
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Product;
+import org.apache.bigtop.bigpetstore.datagenerator.datamodels.inputs.ProductCategory;
+import org.apache.bigtop.bigpetstore.datagenerator.generators.products.rules.AlwaysTrueRule;
+import org.apache.bigtop.bigpetstore.datagenerator.generators.products.rules.NotRule;
+import org.apache.bigtop.bigpetstore.datagenerator.generators.products.rules.OrRule;
+import org.apache.bigtop.bigpetstore.datagenerator.generators.products.rules.Rule;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 public class ProductCategoryBuilder
 {
 	String categoryLabel;
 	Set<PetSpecies> applicableSpecies;
-	Set<String> fieldNames;
 	Boolean triggerTransaction;
 	Double dailyUsageRate;
 	Double amountUsedPerPetAverage;
 	Double amountUsedPerPetVariance;
 	Double triggerTransactionRate;
 	Double triggerPurchaseRate;
+	List<Rule> exclusionRules;
+	Map<String, Collection<ProductFieldValue>> productFieldValues;
+	Double basePrice;
 	List<Product> products;
-	
+
 	public ProductCategoryBuilder()
 	{
 		applicableSpecies = Sets.newHashSet();
-		fieldNames = Sets.newHashSet();
-		products = Lists.newArrayList();
-		
+
 		dailyUsageRate = 0.0;
 		amountUsedPerPetAverage = 0.0;
 		amountUsedPerPetVariance = 0.0;
@@ -50,82 +62,132 @@ public class ProductCategoryBuilder
 		triggerPurchaseRate = 0.0;
 		triggerTransaction = false;
 		categoryLabel = null;
+		exclusionRules = new Vector<Rule>();
+		productFieldValues = Maps.newHashMap();
+		basePrice = 1.0;
+		products = Lists.newArrayList();
 	}
-	
+
 	public void setCategory(String category)
 	{
 		this.categoryLabel = category;
 	}
-	
+
 	public void setTriggerTransaction(Boolean triggerTransaction)
 	{
 		this.triggerTransaction = triggerTransaction;
 	}
-	
+
 	public void setDailyUsageRate(Double dailyUsageRate)
 	{
 		this.dailyUsageRate = dailyUsageRate;
 	}
-	
+
 	public void setAmountUsedPetPetAverage(Double baseAmountUsedAverage)
 	{
 		this.amountUsedPerPetAverage = baseAmountUsedAverage;
 	}
-	
+
 	public void setAmountUsedPetPetVariance(Double baseAmountUsedVariance)
 	{
 		this.amountUsedPerPetVariance = baseAmountUsedVariance;
 	}
-	
+
 	public void setTriggerTransactionRate(Double triggerTransactionRate)
 	{
 		this.triggerTransactionRate = triggerTransactionRate;
 	}
-	
+
 	public void setTriggerPurchaseRate(Double triggerPurchaseRate)
 	{
 		this.triggerPurchaseRate = triggerPurchaseRate;
 	}
-	
+
 	public void addApplicableSpecies(PetSpecies species)
 	{
 		this.applicableSpecies.add(species);
 	}
-	
-	public void addFieldName(String fieldName)
-	{
-		this.fieldNames.add(fieldName);
-	}
-	
+
 	public void addProduct(Product product)
 	{
-		this.products.add(product);
+		products.add(product);
 	}
-	
-	protected boolean validateProducts()
+
+	public void addExclusionRule(Rule rule)
+	{
+		this.exclusionRules.add(rule);
+	}
+
+	public void addPropertyValues(String fieldName, ProductFieldValue ... values)
+	{
+		this.productFieldValues.put(fieldName,  Arrays.asList(values));
+	}
+
+	public void setBasePrice(double basePrice)
+	{
+		this.basePrice = basePrice;
+	}
+
+
+	protected List<Product> generateProducts()
+	{
+		Rule combinedRules = new NotRule(new AlwaysTrueRule());
+		if(exclusionRules.size() == 1)
+		{
+			combinedRules = exclusionRules.get(0);
+		}
+		else if(exclusionRules.size() > 1)
+		{
+			 combinedRules = new OrRule(exclusionRules.toArray(new Rule[] {}));
+		}
+
+		Iterator<Product> productIterator = new ProductIterator(productFieldValues, combinedRules,
+				basePrice, categoryLabel);
+
+		while(productIterator.hasNext())
+		{
+			products.add(productIterator.next());
+		}
+
+		return products;
+	}
+
+	public void validateProducts()
 	{
 		for(Product product : products)
 		{
-			for(String fieldName : product.getFieldNames())
+			if(!product.getFieldNames().contains(Constants.PRODUCT_CATEGORY))
 			{
-				if(!fieldNames.contains(fieldName))
-					return false;
+				throw new IllegalStateException("Product must have field " + Constants.PRODUCT_CATEGORY);
 			}
-			
-			for(String fieldName : fieldNames)
+
+			if(!product.getFieldNames().contains(Constants.PRODUCT_QUANTITY))
 			{
-				if(!product.getFieldNames().contains(fieldName))
-					return false;
+				throw new IllegalStateException("Product must have field " + Constants.PRODUCT_QUANTITY);
+			}
+
+			if(!product.getFieldNames().contains(Constants.PRODUCT_PRICE))
+			{
+				throw new IllegalStateException("Product must have field " + Constants.PRODUCT_PRICE);
+			}
+
+			if(!product.getFieldNames().contains(Constants.PRODUCT_UNIT_PRICE))
+			{
+				throw new IllegalStateException("Product must have field " + Constants.PRODUCT_UNIT_PRICE);
 			}
 		}
-		
-		return true;
 	}
-	
+
 	public ProductCategory build()
 	{
-		validateProducts();
-		
+		List<Product> products = generateProducts();
+
+		Set<String> fieldNames = Sets.newHashSet();
+		for(Product product : products)
+		{
+			fieldNames.addAll(product.getFieldNames());
+		}
+
 		return new ProductCategory(categoryLabel, applicableSpecies, fieldNames, triggerTransaction,
 				dailyUsageRate, amountUsedPerPetAverage, amountUsedPerPetVariance, triggerTransactionRate,
 					triggerPurchaseRate, products);

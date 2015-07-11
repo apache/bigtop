@@ -13,33 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.bigtop.bigpetstore.datagenerator.datamodels.inputs;
+package org.apache.bigtop.bigpetstore.datagenerator.generators.products;
 
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.List;
-
-public class InputData implements Serializable
+public class ProductFieldValue
 {
-	private static final long serialVersionUID = 9078989799806707788L;
-	
-	List<ZipcodeRecord> zipcodeTable;
-	Names names;
-	
-	public InputData(List<ZipcodeRecord> zipcodeTable,
-			Names names)
+	Object value;
+	double add;
+	double multiply;
+
+	public ProductFieldValue(Object value, double add, double multiply)
 	{
-		this.zipcodeTable = Collections.unmodifiableList(zipcodeTable);
-		this.names = names;
+		this.value = value;
+		this.add = add;
+		this.multiply = multiply;
 	}
-	
-	public List<ZipcodeRecord> getZipcodeTable()
+
+	public Object getValue()
 	{
-		return zipcodeTable;
+		return value;
 	}
-	
-	public Names getNames()
+
+	public double getAdd()
 	{
-		return names;
+		return add;
+	}
+
+	public double getMultiply()
+	{
+		return multiply;
 	}
 }

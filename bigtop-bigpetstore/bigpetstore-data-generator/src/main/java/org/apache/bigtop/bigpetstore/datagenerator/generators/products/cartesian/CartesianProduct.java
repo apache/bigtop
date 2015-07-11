@@ -13,33 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.bigtop.bigpetstore.datagenerator.datamodels.inputs;
+package org.apache.bigtop.bigpetstore.datagenerator.generators.products.cartesian;
 
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.List;
+import java.util.Iterator;
+import java.util.Map;
 
-public class InputData implements Serializable
+public interface CartesianProduct<T> extends Iterator<Map<String, T>>
 {
-	private static final long serialVersionUID = 9078989799806707788L;
-	
-	List<ZipcodeRecord> zipcodeTable;
-	Names names;
-	
-	public InputData(List<ZipcodeRecord> zipcodeTable,
-			Names names)
-	{
-		this.zipcodeTable = Collections.unmodifiableList(zipcodeTable);
-		this.names = names;
-	}
-	
-	public List<ZipcodeRecord> getZipcodeTable()
-	{
-		return zipcodeTable;
-	}
-	
-	public Names getNames()
-	{
-		return names;
-	}
+
 }

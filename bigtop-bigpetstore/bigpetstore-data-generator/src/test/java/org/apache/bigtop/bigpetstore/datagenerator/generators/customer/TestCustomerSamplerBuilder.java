@@ -18,7 +18,6 @@ package org.apache.bigtop.bigpetstore.datagenerator.generators.customer;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -28,11 +27,9 @@ import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Pair;
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Store;
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.inputs.InputData;
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.inputs.Names;
-import org.apache.bigtop.bigpetstore.datagenerator.datamodels.inputs.ProductCategory;
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.inputs.ZipcodeRecord;
 import org.apache.bigtop.bigpetstore.datagenerator.framework.SeedFactory;
 import org.apache.bigtop.bigpetstore.datagenerator.framework.samplers.Sampler;
-import org.apache.bigtop.bigpetstore.datagenerator.generators.customer.CustomerSamplerBuilder;
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableMap;
@@ -53,7 +50,7 @@ public class TestCustomerSamplerBuilder
 		Names names = new Names(nameList, nameList);
 		
 		// don't need product categories for building customers
-		InputData inputData = new InputData(zipcodes, names, new ArrayList<ProductCategory>());
+		InputData inputData = new InputData(zipcodes, names);
 		
 		List<Store> stores = Arrays.asList(new Store(0, "Store_0", zipcodes.get(0)),
 				new Store(1, "Store_1", zipcodes.get(1)),

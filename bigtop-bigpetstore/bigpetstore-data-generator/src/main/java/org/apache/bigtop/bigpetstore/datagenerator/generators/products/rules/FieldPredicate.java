@@ -13,33 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.bigtop.bigpetstore.datagenerator.datamodels.inputs;
+package org.apache.bigtop.bigpetstore.datagenerator.generators.products.rules;
 
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.List;
+import java.util.Arrays;
+import java.util.Collection;
 
-public class InputData implements Serializable
+import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Product;
+
+public class FieldPredicate implements Rule
 {
-	private static final long serialVersionUID = 9078989799806707788L;
-	
-	List<ZipcodeRecord> zipcodeTable;
-	Names names;
-	
-	public InputData(List<ZipcodeRecord> zipcodeTable,
-			Names names)
+	String fieldName;
+	Collection<String> allowedValues;
+
+	public FieldPredicate(String fieldName, String ... allowedValues)
 	{
-		this.zipcodeTable = Collections.unmodifiableList(zipcodeTable);
-		this.names = names;
+		this.fieldName = fieldName;
+		this.allowedValues = Arrays.asList(allowedValues);
 	}
-	
-	public List<ZipcodeRecord> getZipcodeTable()
+
+	@Override
+	public boolean ruleMatches(Product product)
 	{
-		return zipcodeTable;
+		if(! product.getFieldNames().contains(fieldName))
+		{
+			throw new IllegalArgumentException("Product (" + product.toString() +
+					") does not contain field name (" + fieldName + ")");
+		}
+
+		Object seenValue = product.getFieldValue(fieldName);
+
+		return allowedValues.contains(seenValue);
 	}
-	
-	public Names getNames()
-	{
-		return names;
-	}
+
 }

@@ -25,11 +25,11 @@ import org.apache.bigtop.bigpetstore.datagenerator.Constants;
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.PetSpecies;
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Product;
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.inputs.ProductCategory;
-import org.apache.bigtop.bigpetstore.datagenerator.datamodels.inputs.ProductCategoryBuilder;
 import org.apache.bigtop.bigpetstore.datagenerator.framework.SeedFactory;
 import org.apache.bigtop.bigpetstore.datagenerator.framework.markovmodels.MarkovModel;
 import org.apache.bigtop.bigpetstore.datagenerator.framework.samplers.Sampler;
 import org.apache.bigtop.bigpetstore.datagenerator.framework.samplers.UniformSampler;
+import org.apache.bigtop.bigpetstore.datagenerator.generators.products.ProductCategoryBuilder;
 import org.apache.bigtop.bigpetstore.datagenerator.generators.purchase.ProductCategoryMarkovModelSampler;
 import org.junit.Test;
 
@@ -49,9 +49,6 @@ public class TestProductCategoryMarkovModelSampler
 		foodBuilder.setAmountUsedPetPetAverage(1.0);
 		foodBuilder.setAmountUsedPetPetVariance(1.0);
 		foodBuilder.setDailyUsageRate(2.0);
-		foodBuilder.addFieldName(Constants.PRODUCT_CATEGORY);
-		foodBuilder.addFieldName(Constants.PRODUCT_QUANTITY);
-		foodBuilder.addFieldName("Flavor");
 		foodBuilder.setCategory("dogFood");
 		foodBuilder.addProduct(new Product(ImmutableMap.of(Constants.PRODUCT_CATEGORY, (Object) "dogFood",
 				Constants.PRODUCT_QUANTITY, (Object) 60.0, "Flavor", "Fish & Potato")));
@@ -66,9 +63,6 @@ public class TestProductCategoryMarkovModelSampler
 		bagBuilder.setAmountUsedPetPetAverage(1.0);
 		bagBuilder.setAmountUsedPetPetVariance(1.0);
 		bagBuilder.setDailyUsageRate(2.0);
-		bagBuilder.addFieldName(Constants.PRODUCT_CATEGORY);
-		bagBuilder.addFieldName(Constants.PRODUCT_QUANTITY);
-		bagBuilder.addFieldName("Color");
 		bagBuilder.setCategory("Poop Bags");
 		bagBuilder.addProduct(new Product(ImmutableMap.of(Constants.PRODUCT_CATEGORY, (Object) "Poop Bags",
 				Constants.PRODUCT_QUANTITY, (Object) 60.0, "Color", "Blue")));

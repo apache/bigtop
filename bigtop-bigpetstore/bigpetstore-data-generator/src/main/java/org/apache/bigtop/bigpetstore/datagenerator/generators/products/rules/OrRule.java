@@ -13,33 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.bigtop.bigpetstore.datagenerator.datamodels.inputs;
+package org.apache.bigtop.bigpetstore.datagenerator.generators.products.rules;
 
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.List;
+import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Product;
 
-public class InputData implements Serializable
+public class OrRule implements Rule
 {
-	private static final long serialVersionUID = 9078989799806707788L;
-	
-	List<ZipcodeRecord> zipcodeTable;
-	Names names;
-	
-	public InputData(List<ZipcodeRecord> zipcodeTable,
-			Names names)
+	Rule[] rules;
+
+	public OrRule(Rule ... rules)
 	{
-		this.zipcodeTable = Collections.unmodifiableList(zipcodeTable);
-		this.names = names;
+		this.rules = rules;
 	}
-	
-	public List<ZipcodeRecord> getZipcodeTable()
+
+	@Override
+	public boolean ruleMatches(Product product) throws IllegalArgumentException
 	{
-		return zipcodeTable;
+		for(Rule rule : rules)
+		{
+			if(rule.ruleMatches(product))
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
-	
-	public Names getNames()
-	{
-		return names;
-	}
+
 }

@@ -20,7 +20,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
+import org.apache.bigtop.bigpetstore.datagenerator.Constants;
 import org.apache.bigtop.bigpetstore.datagenerator.CustomerGenerator;
+import org.apache.bigtop.bigpetstore.datagenerator.ProductGenerator;
 import org.apache.bigtop.bigpetstore.datagenerator.PurchasingModelGenerator;
 import org.apache.bigtop.bigpetstore.datagenerator.StoreGenerator;
 import org.apache.bigtop.bigpetstore.datagenerator.TransactionGenerator;
@@ -28,6 +30,7 @@ import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Customer;
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Store;
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Transaction;
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.inputs.InputData;
+import org.apache.bigtop.bigpetstore.datagenerator.datamodels.inputs.ProductCategory;
 import org.apache.bigtop.bigpetstore.datagenerator.framework.SeedFactory;
 import org.apache.bigtop.bigpetstore.datagenerator.framework.samplers.RouletteWheelSampler;
 import org.apache.bigtop.bigpetstore.datagenerator.framework.samplers.Sampler;
@@ -48,6 +51,7 @@ public class Simulation
 	List<Customer> customers;
 	Sampler<PurchasingModel> purchasingModelSampler;
 	List<Transaction> transactions;
+	List<ProductCategory> productCategories;
 	
 	public Simulation(InputData inputData, int nStores, int nCustomers, int nPurchasingModels, double simulationTime, long seed)
 	{
@@ -93,10 +97,17 @@ public class Simulation
 		System.out.println("Generated " + customers.size() + " customers");
 	}
 	
+	public void generateProducts()
+	{
+		System.out.println("Generating products");
+		ProductGenerator generator = new ProductGenerator(Constants.PRODUCTS_COLLECTION);
+		productCategories = generator.generate();
+	}
+
 	public void generatePurchasingProfiles() throws Exception
 	{
 		System.out.println("Generating purchasing profiles");
-		PurchasingModelGenerator generator = new PurchasingModelGenerator(inputData.getProductCategories(), seedFactory);
+		PurchasingModelGenerator generator = new PurchasingModelGenerator(productCategories, seedFactory);
 		
 		Collection<PurchasingModel> purchasingProfiles = new Vector<PurchasingModel>();
 		for(int i = 0; i < nPurchasingModels; i++)
@@ -121,7 +132,7 @@ public class Simulation
 			PurchasingModel profile = purchasingModelSampler.sample();
 			
 			TransactionGenerator generator = new TransactionGenerator(customer,
-					profile, inputData.getProductCategories(), seedFactory);
+					profile, productCategories, seedFactory);
 			
 			while(true)
 			{
@@ -140,6 +151,7 @@ public class Simulation
 	{
 		generateStores();
 		generateCustomers();
+		generateProducts();
 		generatePurchasingProfiles();
 		generateTransactions();
 	}

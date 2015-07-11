@@ -42,7 +42,7 @@ public class Constants
 	
 	public static final File NAMEDB_FILE = new File("namedb/data/data.dat");
 	
-	public static final File PRODUCTS_FILE = new File("product_categories.json");
+	public static final String PRODUCTS_COLLECTION = "small";
 	
 	public static final double INCOME_SCALING_FACTOR = 100.0;
 	
@@ -89,8 +89,10 @@ public class Constants
 	public static final double STATIC_FIELD_VALUE_WEIGHT_EXPONENTIAL = 2.0;
 	
 	
-	public static final String PRODUCT_QUANTITY = "size";
+	public static final String PRODUCT_QUANTITY = "quantity";
 	public static final String PRODUCT_CATEGORY = "category";
+	public static final String PRODUCT_UNIT_PRICE = "unitPrice";
+	public static final String PRODUCT_PRICE = "price";
 	
 	public static final double STOP_CATEGORY_WEIGHT = 0.01;
 }

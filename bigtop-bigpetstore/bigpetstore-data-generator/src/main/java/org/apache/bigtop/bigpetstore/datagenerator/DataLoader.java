@@ -18,15 +18,12 @@ package org.apache.bigtop.bigpetstore.datagenerator;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.InputStream;
-import java.util.Collection;
 import java.util.List;
 
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.inputs.InputData;
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.inputs.Names;
-import org.apache.bigtop.bigpetstore.datagenerator.datamodels.inputs.ProductCategory;
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.inputs.ZipcodeRecord;
 import org.apache.bigtop.bigpetstore.datagenerator.datareaders.NameReader;
-import org.apache.bigtop.bigpetstore.datagenerator.datareaders.ProductsReader;
 import org.apache.bigtop.bigpetstore.datagenerator.datareaders.ZipcodeReader;
 
 public class DataLoader
@@ -53,12 +50,7 @@ public class DataLoader
 		Names names = nameReader.readData();
 		System.out.println("Read " + names.getFirstNames().size() + " first names and " + names.getLastNames().size() + " last names");
 		
-		System.out.println("Reading product data");
-		ProductsReader reader = new ProductsReader(getResource(Constants.PRODUCTS_FILE));
-		Collection<ProductCategory> productCategories = reader.readData();
-		System.out.println("Read " + productCategories.size() + " product categories");
-		
-		InputData inputData = new InputData(zipcodeTable, names, productCategories);
+		InputData inputData = new InputData(zipcodeTable, names);
 		
 		return inputData;
 	}

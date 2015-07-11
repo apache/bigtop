@@ -13,33 +13,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.bigtop.bigpetstore.datagenerator.datamodels.inputs;
+package org.apache.bigtop.bigpetstore.datagenerator.generators.products.cartesian;
 
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
-public class InputData implements Serializable
+
+public class CartesianProductBase<T> implements CartesianProduct<T>
 {
-	private static final long serialVersionUID = 9078989799806707788L;
-	
-	List<ZipcodeRecord> zipcodeTable;
-	Names names;
-	
-	public InputData(List<ZipcodeRecord> zipcodeTable,
-			Names names)
+	String fieldName;
+	Iterator<T> fieldValues;
+
+	public CartesianProductBase(String fieldName, Collection<T> fieldValues)
 	{
-		this.zipcodeTable = Collections.unmodifiableList(zipcodeTable);
-		this.names = names;
+		this.fieldName = fieldName;
+		this.fieldValues = fieldValues.iterator();
 	}
-	
-	public List<ZipcodeRecord> getZipcodeTable()
+
+
+	@Override
+	public boolean hasNext()
 	{
-		return zipcodeTable;
+		return fieldValues.hasNext();
 	}
-	
-	public Names getNames()
+
+	@Override
+	public Map<String, T> next()
 	{
-		return names;
+		Map<String, T> map = new HashMap<String, T>();
+		map.put(fieldName, fieldValues.next());
+
+		return map;
+	}
+
+	@Override
+	public void remove()
+	{
+		throw new UnsupportedOperationException("CartesianProductBase does not support remove()");
 	}
 }

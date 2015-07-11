@@ -105,8 +105,4 @@ public class ProductCategory implements Serializable
 	{
 		return products;
 	}
-	
-	
-	
-	
 }
