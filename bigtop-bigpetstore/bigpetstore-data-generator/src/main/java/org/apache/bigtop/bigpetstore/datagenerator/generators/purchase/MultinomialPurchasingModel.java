@@ -18,32 +18,50 @@ package org.apache.bigtop.bigpetstore.datagenerator.generators.purchase;
 import java.util.Map;
 
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Product;
-import org.apache.bigtop.bigpetstore.datagenerator.datamodels.inputs.ProductCategory;
+import org.apache.bigtop.bigpetstore.datagenerator.framework.SeedFactory;
 import org.apache.bigtop.bigpetstore.datagenerator.framework.pdfs.DiscretePDF;
+import org.apache.bigtop.bigpetstore.datagenerator.framework.samplers.RouletteWheelSampler;
 import org.apache.bigtop.bigpetstore.datagenerator.framework.samplers.Sampler;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 
-public class StaticPurchasingModelSampler implements Sampler<StaticPurchasingModel>
+public class MultinomialPurchasingModel implements PurchasingModel<DiscretePDF<Product>>
 {
-	final ImmutableMap<ProductCategory, Sampler<DiscretePDF<Product>>> categorySamplers;
-	
-	public StaticPurchasingModelSampler(Map<ProductCategory, Sampler<DiscretePDF<Product>>> categorySamplers)
-	{
-		this.categorySamplers = ImmutableMap.copyOf(categorySamplers);
-	}
-	
-	public StaticPurchasingModel sample() throws Exception
-	{
-		Map<String, DiscretePDF<Product>> pdfs = Maps.newHashMap();
-		for(ProductCategory productCategory : categorySamplers.keySet())
-		{
-			Sampler<DiscretePDF<Product>> sampler = categorySamplers.get(productCategory);
-			pdfs.put(productCategory.getCategoryLabel(), sampler.sample());
-		}
-		
-		return new StaticPurchasingModel(pdfs);
-	}
-}
 
+	private static final long serialVersionUID = 5863830733003282570L;
+
+	private final ImmutableMap<String, DiscretePDF<Product>> productPDFs;
+
+	public MultinomialPurchasingModel(Map<String, DiscretePDF<Product>> productPDFs)
+	{
+		this.productPDFs = ImmutableMap.copyOf(productPDFs);
+	}
+
+	@Override
+	public ImmutableSet<String> getProductCategories()
+	{
+		return productPDFs.keySet();
+	}
+
+	@Override
+	public DiscretePDF<Product> getProfile(String category)
+	{
+		return productPDFs.get(category);
+	}
+
+	@Override
+	public PurchasingProcesses buildProcesses(SeedFactory seedFactory)
+	{
+		Map<String, Sampler<Product>> processes = Maps.newHashMap();
+		for(String category : getProductCategories())
+		{
+			DiscretePDF<Product> pdf = productPDFs.get(category);
+			processes.put(category, RouletteWheelSampler.create(pdf, seedFactory));
+		}
+
+		return new PurchasingProcesses(processes);
+	}
+
+}

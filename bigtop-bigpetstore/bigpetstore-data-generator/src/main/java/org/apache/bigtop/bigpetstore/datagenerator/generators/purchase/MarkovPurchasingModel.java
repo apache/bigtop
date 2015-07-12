@@ -27,7 +27,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 
-public class MarkovPurchasingModel implements PurchasingModel
+public class MarkovPurchasingModel implements PurchasingModel<MarkovModel<Product>>
 {
 
 	private static final long serialVersionUID = 3098355461347511619L;
@@ -44,6 +44,7 @@ public class MarkovPurchasingModel implements PurchasingModel
 		return productCategoryProfiles.keySet();
 	}
 
+	@Override
 	public MarkovModel<Product> getProfile(String productCategory)
 	{
 		return productCategoryProfiles.get(productCategory);

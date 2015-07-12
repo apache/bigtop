@@ -20,6 +20,8 @@ import java.util.Map;
 
 public class MarkovModel<T> implements Serializable
 {
+	private static final long serialVersionUID = 8378109656005603192L;
+
 	final Map<T, Map<T, Double>> transitionWeights;
 	final Map<T, Double> startWeights;
 	
@@ -38,4 +40,11 @@ public class MarkovModel<T> implements Serializable
 	{
 		return startWeights;
 	}
+
+	@Override
+	public String toString()
+	{
+		return "MarkModel(" + startWeights + "," + transitionWeights + ")";
+	}
+
 }

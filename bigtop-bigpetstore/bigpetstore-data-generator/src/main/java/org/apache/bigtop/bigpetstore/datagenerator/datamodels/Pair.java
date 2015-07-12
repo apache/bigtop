@@ -57,6 +57,26 @@ public class Pair<A, B> implements Serializable
 		return list;
 	}
 	
+	@Override
+	public boolean equals(Object o)
+	{
+		if(!this.getClass().isInstance(o))
+		{
+			return false;
+		}
+
+		Pair other = (Pair) o;
+
+		return other.getFirst().equals(first) &&
+				other.getSecond().equals(second);
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return toString().hashCode();
+	}
+
 	public String toString()
 	{
 		return "Pair(" + first + ", " + second + ")";

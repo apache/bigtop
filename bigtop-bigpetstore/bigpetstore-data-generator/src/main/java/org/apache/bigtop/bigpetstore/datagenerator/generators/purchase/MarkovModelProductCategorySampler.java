@@ -25,46 +25,46 @@ import org.apache.bigtop.bigpetstore.datagenerator.framework.samplers.Sampler;
 
 import com.google.common.collect.Maps;
 
-public class ProductCategoryMarkovModelSampler implements Sampler<MarkovModel<Product>>
+public class MarkovModelProductCategorySampler implements Sampler<MarkovModel<Product>>
 {
 	final ProductCategory productCategory;
 	final Sampler<Double> fieldSimilarityWeightSampler;
 	final Sampler<Double> loopbackWeightSampler;
-	
+
 	final Map<String, Double> fieldWeights;
 	Map<String, Double> fieldSimilarityWeights;
 	double loopbackWeight;
-	
-	public ProductCategoryMarkovModelSampler(ProductCategory productCategory, 
+
+	public MarkovModelProductCategorySampler(ProductCategory productCategory,
 			Map<String, Double> fieldWeights, Sampler<Double> fieldSimilarityWeightSampler,
 			Sampler<Double> loopbackWeightSampler)
 	{
 		this.productCategory = productCategory;
-		
+
 		this.fieldSimilarityWeightSampler = fieldSimilarityWeightSampler;
 		this.fieldWeights = fieldWeights;
 		this.loopbackWeightSampler = loopbackWeightSampler;
 	}
-	
+
 	protected void generateWeights() throws Exception
 	{
 		fieldSimilarityWeights = Maps.newHashMap();
-		
+
 		for(String fieldName : productCategory.getFieldNames())
 		{
 			fieldSimilarityWeights.put(fieldName,fieldSimilarityWeightSampler.sample());
 		}
-		
+
 		loopbackWeight = loopbackWeightSampler.sample();
 	}
-	
+
 	protected double productPairWeight(Product product1, Product product2)
 	{
 		double weightSum = 0.0;
 		for(String fieldName : productCategory.getFieldNames())
 		{
 			double fieldWeight = this.fieldWeights.get(fieldName);
-			
+
 			if(product1.getFieldValue(fieldName).equals(product2.getFieldValue(fieldName)))
 			{
 				fieldWeight *= this.fieldSimilarityWeights.get(fieldName);
@@ -73,22 +73,22 @@ public class ProductCategoryMarkovModelSampler implements Sampler<MarkovModel<Pr
 			{
 				fieldWeight *= (1.0 - this.fieldSimilarityWeights.get(fieldName));
 			}
-			
+
 			weightSum += fieldWeight;
 		}
 		return weightSum;
 	}
-	
+
 	public MarkovModel<Product> sample() throws Exception
 	{
 		generateWeights();
-		
+
 		MarkovModelBuilder<Product> builder = new MarkovModelBuilder<Product>();
-		
+
 		for(Product product1 : productCategory.getProducts())
 		{
 			builder.addStartState(product1, 1.0);
-			
+
 			double weightSum = 0.0;
 			for(Product product2 : productCategory.getProducts())
 			{
@@ -97,7 +97,7 @@ public class ProductCategoryMarkovModelSampler implements Sampler<MarkovModel<Pr
 					weightSum += productPairWeight(product1, product2);
 				}
 			}
-			
+
 			for(Product product2 : productCategory.getProducts())
 			{
 				double weight = 0.0;
@@ -107,13 +107,13 @@ public class ProductCategoryMarkovModelSampler implements Sampler<MarkovModel<Pr
 				}
 				else
 				{	weight = loopbackWeight;
-					
+
 				}
-				
+
 				builder.addTransition(product1, product2, weight);
 			}
 		}
-		
+
 		return builder.build();
 	}
 }

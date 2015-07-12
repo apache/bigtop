@@ -22,7 +22,6 @@ import org.apache.bigtop.bigpetstore.datagenerator.framework.samplers.RouletteWh
 import org.apache.bigtop.bigpetstore.datagenerator.framework.samplers.Sampler;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableTable;
 
 public class MarkovProcess<T> implements Sampler<T>
 {

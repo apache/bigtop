@@ -15,7 +15,6 @@
  */
 package org.apache.bigtop.bigpetstore.datagenerator.cli;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
@@ -50,6 +49,7 @@ public class Simulation
 	List<Store> stores;
 	List<Customer> customers;
 	Sampler<PurchasingModel> purchasingModelSampler;
+	List<PurchasingModel> purchasingProfiles;
 	List<Transaction> transactions;
 	List<ProductCategory> productCategories;
 	
@@ -109,7 +109,7 @@ public class Simulation
 		System.out.println("Generating purchasing profiles");
 		PurchasingModelGenerator generator = new PurchasingModelGenerator(productCategories, seedFactory);
 		
-		Collection<PurchasingModel> purchasingProfiles = new Vector<PurchasingModel>();
+		purchasingProfiles = new Vector<PurchasingModel>();
 		for(int i = 0; i < nPurchasingModels; i++)
 		{
 			PurchasingModel profile = generator.generate();
@@ -174,5 +174,15 @@ public class Simulation
 	public InputData getInputData()
 	{
 		return inputData;
+	}
+
+	public List<ProductCategory> getProductCategories()
+	{
+		return this.productCategories;
+	}
+
+	public List<PurchasingModel> getPurchasingProfiles()
+	{
+		return this.purchasingProfiles;
 	}
 }

@@ -43,4 +43,10 @@ public class DiscretePDF<T> implements ProbabilityDensityFunction<T>
 		
 		return 0.0;
 	}
+
+	@Override
+	public String toString()
+	{
+		return "DiscretePDF(" + probabilities.toString() +")";
+	}
 }

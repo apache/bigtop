@@ -26,14 +26,8 @@ public class Constants
 {
 	public static enum PurchasingModelType
 	{
-		STATIC,
-		DYNAMIC;
-	}
-	
-	public static enum DistributionType
-	{
-		BOUNDED_MULTIMODAL_GAUSSIAN,
-		EXPONENTIAL;
+		MULTINOMIAL,
+		MARKOV;
 	}
 	
 	public static final File COORDINATES_FILE = new File("zips.csv");
@@ -60,7 +54,7 @@ public class Constants
 	
 	public static final double AVERAGE_CUSTOMER_STORE_DISTANCE = 5.0; // miles
 	
-	public static final PurchasingModelType PURCHASING_MODEL_TYPE = PurchasingModelType.DYNAMIC;
+	public static final PurchasingModelType PURCHASING_MODEL_TYPE = PurchasingModelType.MULTINOMIAL;
 	
 	public static final List<Pair<Double, Double>> PRODUCT_MSM_FIELD_WEIGHT_GAUSSIANS = ImmutableList.of(Pair.create(0.15, 0.1), Pair.create(0.85, 0.1));
 	public static final double PRODUCT_MSM_FIELD_WEIGHT_LOWERBOUND = 0.05;
@@ -74,20 +68,12 @@ public class Constants
 	public static final double PRODUCT_MSM_LOOPBACK_WEIGHT_LOWERBOUND = 0.05;
 	public static final double PRODUCT_MSM_LOOPBACK_WEIGHT_UPPERBOUND = 0.95;
 	
-	public static final DistributionType STATIC_PURCHASING_MODEL_FIELD_WEIGHT_DISTRIBUTION_TYPE = DistributionType.BOUNDED_MULTIMODAL_GAUSSIAN;
-	public static final DistributionType STATIC_PURCHASING_MODEL_FIELD_VALUE_WEIGHT_DISTRIBUTION_TYPE = DistributionType.EXPONENTIAL;
-	
-	public static final List<Pair<Double, Double>> STATIC_FIELD_WEIGHT_GAUSSIANS = ImmutableList.of(Pair.create(0.15, 0.1), Pair.create(0.85, 0.1));
-	public static final double STATIC_FIELD_WEIGHT_LOWERBOUND = 0.05;
-	public static final double STATIC_FIELD_WEIGHT_UPPERBOUND = 0.95;
-	
-	public static final List<Pair<Double, Double>> STATIC_FIELD_VALUE_WEIGHT_GAUSSIANS = ImmutableList.of(Pair.create(0.15, 0.1), Pair.create(0.85, 0.1));
-	public static final double STATIC_FIELD_VALUE_WEIGHT_LOWERBOUND = 0.05;
-	public static final double STATIC_FIELD_VALUE_WEIGHT_UPPERBOUND = 0.95;
-	
-	public static final double STATIC_FIELD_WEIGHT_EXPONENTIAL = 0.25;
-	public static final double STATIC_FIELD_VALUE_WEIGHT_EXPONENTIAL = 2.0;
-	
+	public static final double PRODUCT_MULTINOMIAL_HIGH_WEIGHT = 10.0;
+	public static final double PRODUCT_MULTINOMIAL_NEUTRAL_WEIGHT = 1.0;
+	public static final double PRODUCT_MULTINOMIAL_LOW_WEIGHT = 0.1;
+	public static final double PRODUCT_MULTINOMIAL_MIN_PERCENT = 0.01; // 1%
+	public static final int PRODUCT_MULTINOMIAL_MIN_COUNT = 2;
+	public static final double PRODUCT_MULTINOMIAL_MAX_PERCENT = 0.1; // 10%
 	
 	public static final String PRODUCT_QUANTITY = "quantity";
 	public static final String PRODUCT_CATEGORY = "category";

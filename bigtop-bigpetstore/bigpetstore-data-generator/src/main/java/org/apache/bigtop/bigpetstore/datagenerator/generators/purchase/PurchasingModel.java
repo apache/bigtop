@@ -21,9 +21,11 @@ import org.apache.bigtop.bigpetstore.datagenerator.framework.SeedFactory;
 
 import com.google.common.collect.ImmutableSet;
 
-public interface PurchasingModel extends Serializable
+public interface PurchasingModel<T> extends Serializable
 {
 	public ImmutableSet<String> getProductCategories();
 	
+	public T getProfile(String category);
+
 	public PurchasingProcesses buildProcesses(SeedFactory seedFactory);
 }

@@ -20,13 +20,17 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.Collection;
-import java.util.Random;
+import java.util.List;
 
 import org.apache.bigtop.bigpetstore.datagenerator.DataLoader;
+import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Customer;
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Pair;
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Product;
+import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Store;
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Transaction;
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.inputs.InputData;
+import org.apache.bigtop.bigpetstore.datagenerator.datamodels.inputs.ProductCategory;
+import org.apache.bigtop.bigpetstore.datagenerator.generators.purchase.PurchasingModel;
 
 
 public class Driver
@@ -44,7 +48,7 @@ public class Driver
 	{
 		String usage = "BigPetStore Data Generator\n" +
 				"\n" +
-				"Usage: java -jar bps-data-generator-v0.2.java outputDir nStores nCustomers nPurchasingModels simulationLength [seed]\n" +
+				"Usage: java -jar bps-data-generator-v0.2.java outputDir nStores nCustomers nPurchasingModels simulationLength seed\n" +
 				"\n" + 
 				"outputDir - (string) directory to write files\n" +
 				"nStores - (int) number of stores to generate\n" +
@@ -125,22 +129,15 @@ public class Driver
 			System.exit(1);
 		}
 		
-		if(args.length == NPARAMS)
+		try
 		{
-			try
-			{
-				seed = Long.parseLong(args[++i]);
-			}
-			catch(Exception e)
-			{
-				System.err.println("Unable to parse '" + args[i] + "' as a long for the seed.\n");
-				printUsage();
-				System.exit(1);
-			}
+			seed = Long.parseLong(args[++i]);
 		}
-		else
+		catch(Exception e)
 		{
-			seed = (new Random()).nextLong();
+			System.err.println("Unable to parse '" + args[i] + "' as a long for the seed.\n");
+			printUsage();
+			System.exit(1);
 		}
 	}
 	
@@ -175,6 +172,92 @@ public class Driver
 		outputStream.close();
 	}
 	
+	private void writeCustomers(Collection<Customer> customers) throws Exception
+	{
+		File outputFile = new File(outputDir.toString() + File.separator + "customers.txt");
+		System.out.println(outputFile.toString());
+		OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(outputFile));
+
+		for(Customer customer : customers)
+		{
+			String record = customer.getId() + ",";
+			Pair<String, String> name = customer.getName();
+			record += name.getFirst() + "," + name.getSecond() + ",";
+			record += customer.getLocation().getZipcode() + ",";
+			record += customer.getLocation().getCity() + ",";
+			record += customer.getLocation().getState() + "\n";
+
+			outputStream.write(record.getBytes());
+		}
+
+		outputStream.close();
+	}
+
+	private void writeStores(Collection<Store> stores) throws Exception
+	{
+		File outputFile = new File(outputDir.toString() + File.separator + "stores.txt");
+		System.out.println(outputFile.toString());
+		OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(outputFile));
+
+		for(Store store : stores)
+		{
+			String record = store.getId() + ",";
+			record += store.getLocation().getZipcode() + ",";
+			record += store.getLocation().getCity() + ",";
+			record += store.getLocation().getState() + "\n";
+
+			outputStream.write(record.getBytes());
+		}
+
+		outputStream.close();
+	}
+
+	private void writeProducts(Collection<ProductCategory> productCategories) throws Exception
+	{
+		File outputFile = new File(outputDir.toString() + File.separator + "products.txt");
+		System.out.println(outputFile.toString());
+		OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(outputFile));
+
+		for(ProductCategory category : productCategories)
+		{
+
+			for(Product product : category.getProducts())
+			{
+				String record = category.getCategoryLabel() + ",";
+				record += product.toString() + "\n";
+
+				outputStream.write(record.getBytes());
+			}
+		}
+
+		outputStream.close();
+	}
+
+	private void writePurchasingProfiles(List<ProductCategory> productCategories, List<PurchasingModel> profiles) throws Exception
+	{
+		File outputFile = new File(outputDir.toString() + File.separator + "purchasing_profiles.txt");
+		System.out.println(outputFile.toString());
+		OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(outputFile));
+
+		for(ProductCategory category : productCategories)
+		{
+			int i = 0;
+			for(PurchasingModel model : profiles)
+			{
+				Object productModel = model.getProfile(category.getCategoryLabel());
+				String record = category.getCategoryLabel() + ",";
+				record += i + ",";
+				record += productModel.toString() + "\n";
+
+				outputStream.write(record.getBytes());
+
+				i += 1;
+			}
+		}
+
+		outputStream.close();
+	}
+
 	public Simulation buildSimulation(InputData inputData)
 	{
 		return new Simulation(inputData, nStores, nCustomers, nPurchasingModels, simulationTime, seed);
@@ -186,6 +269,10 @@ public class Driver
 		
 		simulation.simulate();
 		
+		writeStores(simulation.getStores());
+		writeCustomers(simulation.getCustomers());
+		writeProducts(simulation.getProductCategories());
+		writePurchasingProfiles(simulation.getProductCategories(), simulation.getPurchasingProfiles());
 		writeTransactions(simulation.getTransactions());
 	}	
 	public void run(String[] args) throws Exception

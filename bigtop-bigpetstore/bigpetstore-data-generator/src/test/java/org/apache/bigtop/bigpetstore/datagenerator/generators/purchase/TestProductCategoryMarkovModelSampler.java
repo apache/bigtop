@@ -30,7 +30,7 @@ import org.apache.bigtop.bigpetstore.datagenerator.framework.markovmodels.Markov
 import org.apache.bigtop.bigpetstore.datagenerator.framework.samplers.Sampler;
 import org.apache.bigtop.bigpetstore.datagenerator.framework.samplers.UniformSampler;
 import org.apache.bigtop.bigpetstore.datagenerator.generators.products.ProductCategoryBuilder;
-import org.apache.bigtop.bigpetstore.datagenerator.generators.purchase.ProductCategoryMarkovModelSampler;
+import org.apache.bigtop.bigpetstore.datagenerator.generators.purchase.MarkovModelProductCategorySampler;
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableMap;
@@ -92,7 +92,7 @@ public class TestProductCategoryMarkovModelSampler
 			fieldWeights.put(fieldName, fieldWeightSampler.sample());
 		}
 		
-		ProductCategoryMarkovModelSampler generator = new ProductCategoryMarkovModelSampler(productCategory, 
+		MarkovModelProductCategorySampler generator = new MarkovModelProductCategorySampler(productCategory,
 				fieldWeights, new UniformSampler(seedFactory), new UniformSampler(seedFactory)
 				);
 		

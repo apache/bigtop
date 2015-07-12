@@ -25,9 +25,7 @@ import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Product;
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.inputs.ProductCategory;
 import org.apache.bigtop.bigpetstore.datagenerator.framework.SeedFactory;
 import org.apache.bigtop.bigpetstore.datagenerator.framework.markovmodels.MarkovModel;
-import org.apache.bigtop.bigpetstore.datagenerator.framework.pdfs.DiscretePDF;
 import org.apache.bigtop.bigpetstore.datagenerator.framework.samplers.BoundedMultiModalGaussianSampler;
-import org.apache.bigtop.bigpetstore.datagenerator.framework.samplers.ExponentialSampler;
 import org.apache.bigtop.bigpetstore.datagenerator.framework.samplers.Sampler;
 
 import com.google.common.collect.ImmutableList;
@@ -65,48 +63,6 @@ public class PurchasingModelSamplerBuilder
 		return fieldWeights;
 	}
 	
-	public Sampler<StaticPurchasingModel> buildStaticPurchasingModel() throws Exception
-	{
-		Sampler<Double> fieldWeightSampler;
-		Sampler<Double> fieldValueWeightSampler;
-		
-		if(Constants.STATIC_PURCHASING_MODEL_FIELD_WEIGHT_DISTRIBUTION_TYPE.equals(Constants.DistributionType.BOUNDED_MULTIMODAL_GAUSSIAN))
-		{
-			fieldWeightSampler = new BoundedMultiModalGaussianSampler(Constants.STATIC_FIELD_WEIGHT_GAUSSIANS, 
-					Constants.STATIC_FIELD_WEIGHT_LOWERBOUND, 
-					Constants.STATIC_FIELD_WEIGHT_UPPERBOUND,
-					seedFactory);
-		}
-		else
-		{
-			fieldWeightSampler = new ExponentialSampler(Constants.STATIC_FIELD_WEIGHT_EXPONENTIAL, seedFactory);
-		}
-		
-		if(Constants.STATIC_PURCHASING_MODEL_FIELD_VALUE_WEIGHT_DISTRIBUTION_TYPE.equals(Constants.DistributionType.BOUNDED_MULTIMODAL_GAUSSIAN))
-		{
-			fieldValueWeightSampler = new BoundedMultiModalGaussianSampler(Constants.STATIC_FIELD_VALUE_WEIGHT_GAUSSIANS, 
-					Constants.STATIC_FIELD_VALUE_WEIGHT_LOWERBOUND, 
-					Constants.STATIC_FIELD_VALUE_WEIGHT_UPPERBOUND,
-					seedFactory);
-		}
-		else
-		{
-			fieldValueWeightSampler = new ExponentialSampler(Constants.STATIC_FIELD_VALUE_WEIGHT_EXPONENTIAL, seedFactory);
-		}
-		
-		Map<String, Double> fieldWeights = generateFieldWeights(fieldWeightSampler);
-		
-		Map<ProductCategory, Sampler<DiscretePDF<Product>>> categorySamplers = Maps.newHashMap();
-		for(ProductCategory productCategory : productCategories)
-		{
-			Sampler<DiscretePDF<Product>> sampler = new ProductCategoryPDFSampler(productCategory,
-					fieldWeights, fieldValueWeightSampler);
-			categorySamplers.put(productCategory, sampler);
-		}
-		
-		return new StaticPurchasingModelSampler(categorySamplers);
-	}
-	
 	public Sampler<MarkovPurchasingModel> buildMarkovPurchasingModel() throws Exception
 	{
 		
@@ -130,7 +86,7 @@ public class PurchasingModelSamplerBuilder
 		Map<ProductCategory, Sampler<MarkovModel<Product>>> categorySamplers = Maps.newHashMap();
 		for(ProductCategory productCategory : productCategories)
 		{
-			ProductCategoryMarkovModelSampler sampler = new ProductCategoryMarkovModelSampler(productCategory, 
+			MarkovModelProductCategorySampler sampler = new MarkovModelProductCategorySampler(productCategory,
 					fieldWeights, fieldSimilarityWeightSampler, loopbackWeightSampler);
 			categorySamplers.put(productCategory, sampler);
 		}
@@ -140,13 +96,13 @@ public class PurchasingModelSamplerBuilder
 	
 	public Sampler<? extends PurchasingModel> build() throws Exception
 	{
-		if(Constants.PURCHASING_MODEL_TYPE.equals(Constants.PurchasingModelType.DYNAMIC))
+		if(Constants.PURCHASING_MODEL_TYPE.equals(Constants.PurchasingModelType.MARKOV))
 		{
 			return buildMarkovPurchasingModel();
 		}
 		else
 		{
-			return buildStaticPurchasingModel();
+			return new MultinomialPurchasingModelSampler(productCategories, seedFactory);
 		}
 	}
 }
