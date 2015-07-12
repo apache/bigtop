@@ -16,7 +16,7 @@
 apply plugin: 'eclipse'
 apply plugin: 'groovy'
 apply plugin: 'java' 
-
+apply plugin: 'maven'
 group = 'org.apache.bigtop'
 version = '0.9.0-SNAPSHOT'
 
