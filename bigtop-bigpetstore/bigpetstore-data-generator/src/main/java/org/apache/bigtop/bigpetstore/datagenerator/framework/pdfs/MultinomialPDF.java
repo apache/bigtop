@@ -20,11 +20,11 @@ import java.util.Set;
 
 import com.google.common.collect.ImmutableMap;
 
-public class DiscretePDF<T> implements ProbabilityDensityFunction<T>
+public class MultinomialPDF<T> implements ProbabilityDensityFunction<T>
 {
 	private final ImmutableMap<T, Double> probabilities;
 	
-	public DiscretePDF(Map<T, Double> probabilities)
+	public MultinomialPDF(Map<T, Double> probabilities)
 	{
 		this.probabilities = ImmutableMap.copyOf(probabilities);
 	}
@@ -47,6 +47,11 @@ public class DiscretePDF<T> implements ProbabilityDensityFunction<T>
 	@Override
 	public String toString()
 	{
-		return "DiscretePDF(" + probabilities.toString() +")";
+		String str = "";
+		for(Map.Entry<T, Double> entry: probabilities.entrySet())
+		{
+			str += entry.getValue() + "," + entry.getKey() + "\n";
+		}
+		return str;
 	}
 }

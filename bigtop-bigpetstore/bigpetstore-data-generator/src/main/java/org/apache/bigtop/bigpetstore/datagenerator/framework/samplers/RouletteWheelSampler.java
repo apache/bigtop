@@ -21,7 +21,7 @@ import java.util.Random;
 
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Pair;
 import org.apache.bigtop.bigpetstore.datagenerator.framework.SeedFactory;
-import org.apache.bigtop.bigpetstore.datagenerator.framework.pdfs.DiscretePDF;
+import org.apache.bigtop.bigpetstore.datagenerator.framework.pdfs.MultinomialPDF;
 import org.apache.bigtop.bigpetstore.datagenerator.framework.pdfs.ProbabilityDensityFunction;
 
 import com.google.common.collect.ImmutableList;
@@ -37,7 +37,7 @@ public class RouletteWheelSampler<T> implements Sampler<T>
 		return new RouletteWheelSampler<T>(domainWeights, factory);
 	}
 	
-	public static <T> RouletteWheelSampler<T> create(DiscretePDF<T> pdf, SeedFactory factory)
+	public static <T> RouletteWheelSampler<T> create(MultinomialPDF<T> pdf, SeedFactory factory)
 	{
 		return new RouletteWheelSampler<T>(pdf.getData(), pdf, factory);
 	}

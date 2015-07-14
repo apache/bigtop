@@ -245,9 +245,7 @@ public class Driver
 			for(PurchasingModel model : profiles)
 			{
 				Object productModel = model.getProfile(category.getCategoryLabel());
-				String record = category.getCategoryLabel() + ",";
-				record += i + ",";
-				record += productModel.toString() + "\n";
+				String record = productModel.toString();
 
 				outputStream.write(record.getBytes());
 

@@ -17,10 +17,12 @@ package org.apache.bigtop.bigpetstore.datagenerator;
 
 import java.io.File;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Pair;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
 public class Constants
 {
@@ -30,13 +32,19 @@ public class Constants
 		MARKOV;
 	}
 	
+	public static enum ProductsCollectionSize
+	{
+		SMALL,
+		MEDIUM;
+	}
+	
 	public static final File COORDINATES_FILE = new File("zips.csv");
 	public static final File INCOMES_FILE = new File("ACS_12_5YR_S1903/ACS_12_5YR_S1903_with_ann.csv");
 	public static final File POPULATION_FILE = new File("population_data.csv");
 	
 	public static final File NAMEDB_FILE = new File("namedb/data/data.dat");
 	
-	public static final String PRODUCTS_COLLECTION = "small";
+	public static final ProductsCollectionSize PRODUCTS_COLLECTION = ProductsCollectionSize.MEDIUM;
 	
 	public static final double INCOME_SCALING_FACTOR = 100.0;
 	
@@ -68,17 +76,24 @@ public class Constants
 	public static final double PRODUCT_MSM_LOOPBACK_WEIGHT_LOWERBOUND = 0.05;
 	public static final double PRODUCT_MSM_LOOPBACK_WEIGHT_UPPERBOUND = 0.95;
 	
-	public static final double PRODUCT_MULTINOMIAL_HIGH_WEIGHT = 10.0;
+	public static final double PRODUCT_MULTINOMIAL_POSITIVE_WEIGHT = 10.0;
 	public static final double PRODUCT_MULTINOMIAL_NEUTRAL_WEIGHT = 1.0;
-	public static final double PRODUCT_MULTINOMIAL_LOW_WEIGHT = 0.1;
-	public static final double PRODUCT_MULTINOMIAL_MIN_PERCENT = 0.01; // 1%
-	public static final int PRODUCT_MULTINOMIAL_MIN_COUNT = 2;
-	public static final double PRODUCT_MULTINOMIAL_MAX_PERCENT = 0.1; // 10%
+	public static final double PRODUCT_MULTINOMIAL_NEGATIVE_WEIGHT = 0.1;
+	public static final int PRODUCT_MULTINOMIAL_POSITIVE_COUNT_MIN = 1;
+	public static final double PRODUCT_MULTINOMIAL_POSITIVE_FREQUENCY = 0.1; // 10%
 	
 	public static final String PRODUCT_QUANTITY = "quantity";
 	public static final String PRODUCT_CATEGORY = "category";
 	public static final String PRODUCT_UNIT_PRICE = "unitPrice";
 	public static final String PRODUCT_PRICE = "price";
+	
+	/*
+	 *  Until we have a more intelligent way (e.g., based on range) of dealing with prices,
+	 *  let's exclude them.
+	 */
+	public static final Set<String> PRODUCT_MODEL_EXCLUDED_FIELDS = ImmutableSet.of(PRODUCT_CATEGORY,
+			PRODUCT_UNIT_PRICE,
+			PRODUCT_PRICE);
 	
 	public static final double STOP_CATEGORY_WEIGHT = 0.01;
 }

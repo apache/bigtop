@@ -16,8 +16,8 @@
 package org.apache.bigtop.bigpetstore.datagenerator.generators.purchase;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Vector;
 
 import org.apache.bigtop.bigpetstore.datagenerator.Constants;
@@ -25,12 +25,15 @@ import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Pair;
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Product;
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.inputs.ProductCategory;
 import org.apache.bigtop.bigpetstore.datagenerator.framework.SeedFactory;
-import org.apache.bigtop.bigpetstore.datagenerator.framework.pdfs.DiscretePDF;
+import org.apache.bigtop.bigpetstore.datagenerator.framework.pdfs.MultinomialPDF;
 import org.apache.bigtop.bigpetstore.datagenerator.framework.samplers.Sampler;
 import org.apache.bigtop.bigpetstore.datagenerator.framework.samplers.UniformIntSampler;
+import org.apache.bigtop.bigpetstore.datagenerator.framework.samplers.UniformSampler;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
+import com.google.common.collect.Multimap;
 
 public class MultinomialPurchasingModelSampler implements Sampler<MultinomialPurchasingModel>
 {
@@ -43,59 +46,64 @@ public class MultinomialPurchasingModelSampler implements Sampler<MultinomialPur
 		this.productCategories = productCategories;
 	}
 
-	protected void shuffle(Vector<Pair<String, Object>> input) throws Exception
+	protected <T> List<T> shuffle(Collection<T> input) throws Exception
 	{
+		Vector<T> shuffled = new Vector<>(input);
 		for(int i = 0; i < input.size() - 1; i++)
 		{
 			int swapIdx = new UniformIntSampler(i, input.size() - 1, seedFactory).sample();
-			Pair<String, Object> tmp = input.get(i);
-			input.set(i, input.get(swapIdx));
-			input.set(swapIdx, tmp);
+			T tmp = shuffled.get(i);
+			shuffled.set(i, shuffled.get(swapIdx));
+			shuffled.set(swapIdx, tmp);
 		}
+		
+		return shuffled;
 	}
 
 	protected Map<Pair<String, Object>, Double> generateFieldValueWeights(ProductCategory productCategory) throws Exception
 	{
-		Set<Pair<String, Object>> fieldValuesSet = Sets.newHashSet();
+		// Get all values for each field by iterating over all products
+		Multimap<String, Object> allFieldValues = HashMultimap.create();
 		for(String fieldName : productCategory.getFieldNames())
 		{
-			for(Product p : productCategory.getProducts())
+			if(!Constants.PRODUCT_MODEL_EXCLUDED_FIELDS.contains(fieldName))
 			{
-				Object fieldValue = p.getFieldValue(fieldName);
-				fieldValuesSet.add(Pair.create(fieldName, fieldValue));
+				for(Product p : productCategory.getProducts())
+				{
+					Object fieldValue = p.getFieldValue(fieldName);
+					allFieldValues.put(fieldName, fieldValue);
+				}
 			}
 		}
-
-		Vector<Pair<String, Object>> fieldValues = new Vector<Pair<String, Object>>(fieldValuesSet);
-		shuffle(fieldValues);
-
-		int lowerbound = Math.max(Constants.PRODUCT_MULTINOMIAL_MIN_COUNT,
-				(int) Math.ceil(fieldValues.size() * Constants.PRODUCT_MULTINOMIAL_MIN_PERCENT));
-		int upperbound = Math.max(Constants.PRODUCT_MULTINOMIAL_MIN_COUNT + 1,
-				(int) Math.floor(fieldValues.size() * Constants.PRODUCT_MULTINOMIAL_MAX_PERCENT));
-
-		Sampler<Integer> countSampler = new UniformIntSampler(lowerbound, upperbound, seedFactory);
-		int highWeightCount = countSampler.sample();
-		int lowWeightCount = countSampler.sample();
-
+		
+		Sampler<Double> sampler = new UniformSampler(seedFactory);
+		
+		// shuffle field values
 		Map<Pair<String, Object>, Double> fieldValueWeights = Maps.newHashMap();
-		for(int i = 0; i < fieldValues.size(); i++)
+		for(Map.Entry<String, Collection<Object>> entry : allFieldValues.asMap().entrySet())
 		{
-			if(i < highWeightCount)
+			String fieldName = entry.getKey();
+			List<Object> shuffled = shuffle(entry.getValue());
+			
+			for(int i = 0; i < shuffled.size(); i++)
 			{
-				fieldValueWeights.put(fieldValues.get(i), Constants.PRODUCT_MULTINOMIAL_HIGH_WEIGHT);
-			}
-			else if(i >= highWeightCount && i < (lowWeightCount + highWeightCount))
-			{
-				fieldValueWeights.put(fieldValues.get(i), Constants.PRODUCT_MULTINOMIAL_LOW_WEIGHT);
-			}
-			else
-			{
-				fieldValueWeights.put(fieldValues.get(i), Constants.PRODUCT_MULTINOMIAL_NEUTRAL_WEIGHT);
+				double weight = Constants.PRODUCT_MULTINOMIAL_POSITIVE_WEIGHT;
+				if ((i + 1) > Constants.PRODUCT_MULTINOMIAL_POSITIVE_COUNT_MIN)
+				{
+					double r = sampler.sample();
+					if (r >= Constants.PRODUCT_MULTINOMIAL_POSITIVE_FREQUENCY)
+					{
+						weight = Constants.PRODUCT_MULTINOMIAL_NEGATIVE_WEIGHT;
+					}
+				}
+				
+				Object fieldValue = shuffled.get(i);
+				fieldValueWeights.put(new Pair<String,Object>(fieldName, fieldValue), weight);
 			}
 		}
+		
 
-		return fieldValueWeights;
+		return ImmutableMap.copyOf(fieldValueWeights);
 	}
 
 	protected Map<Product, Double> generateProductWeights(Map<Pair<String, Object>, Double> fieldValueWeights,
@@ -107,9 +115,12 @@ public class MultinomialPurchasingModelSampler implements Sampler<MultinomialPur
 			double weight = 1.0;
 			for(String fieldName : productCategory.getFieldNames())
 			{
-				Object fieldValue = p.getFieldValue(fieldName);
-				Pair<String, Object> key = Pair.create(fieldName, fieldValue);
-				weight *= fieldValueWeights.get(key);
+				if(!Constants.PRODUCT_MODEL_EXCLUDED_FIELDS.contains(fieldName))
+				{
+					Object fieldValue = p.getFieldValue(fieldName);
+					Pair<String, Object> key = Pair.create(fieldName, fieldValue);
+					weight *= fieldValueWeights.get(key);
+				}
 			}
 			productWeights.put(p, weight);
 		}
@@ -119,12 +130,12 @@ public class MultinomialPurchasingModelSampler implements Sampler<MultinomialPur
 
 	public MultinomialPurchasingModel sample() throws Exception
 	{
-		Map<String, DiscretePDF<Product>> pdfs = Maps.newHashMap();
+		Map<String, MultinomialPDF<Product>> pdfs = Maps.newHashMap();
 		for(ProductCategory productCategory : productCategories)
 		{
 			Map<Pair<String, Object>, Double> fieldWeights = this.generateFieldValueWeights(productCategory);
 			Map<Product, Double> productWeights = this.generateProductWeights(fieldWeights, productCategory);
-			pdfs.put(productCategory.getCategoryLabel(), new DiscretePDF<Product>(productWeights));
+			pdfs.put(productCategory.getCategoryLabel(), new MultinomialPDF<Product>(productWeights));
 		}
 
 		return new MultinomialPurchasingModel(pdfs);

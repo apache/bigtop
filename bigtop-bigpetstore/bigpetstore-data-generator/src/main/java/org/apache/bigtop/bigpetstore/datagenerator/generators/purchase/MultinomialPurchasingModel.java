@@ -19,7 +19,7 @@ import java.util.Map;
 
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Product;
 import org.apache.bigtop.bigpetstore.datagenerator.framework.SeedFactory;
-import org.apache.bigtop.bigpetstore.datagenerator.framework.pdfs.DiscretePDF;
+import org.apache.bigtop.bigpetstore.datagenerator.framework.pdfs.MultinomialPDF;
 import org.apache.bigtop.bigpetstore.datagenerator.framework.samplers.RouletteWheelSampler;
 import org.apache.bigtop.bigpetstore.datagenerator.framework.samplers.Sampler;
 
@@ -27,14 +27,14 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 
-public class MultinomialPurchasingModel implements PurchasingModel<DiscretePDF<Product>>
+public class MultinomialPurchasingModel implements PurchasingModel<MultinomialPDF<Product>>
 {
 
 	private static final long serialVersionUID = 5863830733003282570L;
 
-	private final ImmutableMap<String, DiscretePDF<Product>> productPDFs;
+	private final ImmutableMap<String, MultinomialPDF<Product>> productPDFs;
 
-	public MultinomialPurchasingModel(Map<String, DiscretePDF<Product>> productPDFs)
+	public MultinomialPurchasingModel(Map<String, MultinomialPDF<Product>> productPDFs)
 	{
 		this.productPDFs = ImmutableMap.copyOf(productPDFs);
 	}
@@ -46,7 +46,7 @@ public class MultinomialPurchasingModel implements PurchasingModel<DiscretePDF<P
 	}
 
 	@Override
-	public DiscretePDF<Product> getProfile(String category)
+	public MultinomialPDF<Product> getProfile(String category)
 	{
 		return productPDFs.get(category);
 	}
@@ -57,7 +57,7 @@ public class MultinomialPurchasingModel implements PurchasingModel<DiscretePDF<P
 		Map<String, Sampler<Product>> processes = Maps.newHashMap();
 		for(String category : getProductCategories())
 		{
-			DiscretePDF<Product> pdf = productPDFs.get(category);
+			MultinomialPDF<Product> pdf = productPDFs.get(category);
 			processes.put(category, RouletteWheelSampler.create(pdf, seedFactory));
 		}
 

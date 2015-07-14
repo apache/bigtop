@@ -17,22 +17,33 @@ package org.apache.bigtop.bigpetstore.datagenerator;
 
 import java.util.List;
 
+import org.apache.bigtop.bigpetstore.datagenerator.Constants.ProductsCollectionSize;
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.inputs.ProductCategory;
+import org.apache.bigtop.bigpetstore.datagenerator.generators.products.collections.MediumProductCollection;
 import org.apache.bigtop.bigpetstore.datagenerator.generators.products.collections.SmallProductCollection;
 
 public class ProductGenerator
 {
-	String collection;
+	ProductsCollectionSize collection;
 
-	public ProductGenerator(String collection)
+	public ProductGenerator(ProductsCollectionSize collection)
 	{
 		this.collection = collection;
 	}
 
 	public List<ProductCategory> generate()
 	{
-		SmallProductCollection collection = new SmallProductCollection();
-		List<ProductCategory> categories = collection.generateProductCategory();
+		List<ProductCategory> categories;
+		
+		if(collection.equals(ProductsCollectionSize.SMALL))
+		{
+			SmallProductCollection collection = new SmallProductCollection();
+			categories = collection.generateProductCategory();
+		} else
+		{
+			MediumProductCollection collection = new MediumProductCollection();
+			categories = collection.generateProductCategory();
+		}
 
 		return categories;
 	}
