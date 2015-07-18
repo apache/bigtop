@@ -160,7 +160,7 @@ fi
 
 %files
 %defattr(-,root,root,755)
-%{bin}
+%{bin}/*
 %config(noreplace) %{config_kafka}.dist
 %config(noreplace) /etc/default/kafka
 %attr(0755,kafka,kafka) %{lib_kafka}
