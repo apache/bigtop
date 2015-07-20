@@ -29,6 +29,28 @@
 <% end -%>
   </property>
 
+<% if @hdfs_nfs_bridge == "enabled" -%>
+<property>
+  <name>hadoop.proxyuser.<%= @hdfs_nfs_bridge_user %>.groups</name>
+  <value><%= @hdfs_nfs_proxy_groups %></value>
+  <description>
+         The '<%= @hdfs_nfs_bridge_user %>' user is allowed to proxy all members of the groups. Note that in most cases you will need to include the
+         group "root" because the user "root" (which usually belonges to "root" group) will
+         generally be the user that initially executes the mount on the NFS client system.
+         Set this to '*' to allow nfsserver user to proxy any group.
+  </description>
+</property>
+
+<property>
+  <name>hadoop.proxyuser.<%= @hdfs_nfs_bridge_user %>.hosts</name>
+  <value><%= @hdfs_nfs_gw_host %></value>
+  <description>
+         This is the host where the nfs gateway is running. Set this to '*' to allow
+         requests from any hosts to be proxied.
+  </description>
+</property>
+<% end -%>
+
 <% if @ha == "auto" and @zk -%>
   <property>
     <name>ha.zookeeper.quorum</name>
