@@ -18,7 +18,8 @@
 
 package org.apache.bigtop.itest.shell
 
-import org.junit.Ignore
+import org.apache.bigtop.itest.TestUtils
+import org.junit.Assume
 import org.junit.Test
 
 import static org.junit.Assert.assertEquals
@@ -36,9 +37,9 @@ class ShellTest {
     assertEquals("got extra stderr ${sh.err}", 0, sh.err.size())
   }
 
-  @Ignore("requires sudo")
   @Test
   void superUserShell() {
+    Assume.assumeTrue("Password-less sudo should be enabled", TestUtils.noPassSudo())
     Shell sh = new Shell("/bin/bash -s")
 
     sh.setUser('root')
