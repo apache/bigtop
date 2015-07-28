@@ -39,11 +39,16 @@ override_dh_auto_build:
 	mkdir -p debian/tmp/bigtop-empty
 	bash debian/do-component-build -Dmaven.repo.local=${HOME}/.m2/repository
 
-override_dh_auto_install:
+.PHONY: queryserver
+	bash debian/init.d.tmpl debian/${phoenix_pkg_name}-queryserver.svc deb debian/${phoenix_pkg_name}-queryserver.init
+	
+override_dh_auto_install: queryserver
 	cp debian/phoenix.default debian/${phoenix_pkg_name}/etc/default/${phoenix_pkg_name}
+	cp debian/phoenix-queryserver.default debian/${phoenix_pkg_name}/etc/default/${phoenix_pkg_name}-queryserver
 	bash -x debian/install_phoenix.sh \
 	  --build-dir=$${PWD}/build     \
 	  --prefix=debian/tmp
+
 	# Symlink in the dependency jars from their packages.
 	rm -f debian/tmp/usr/lib/${phoenix_pkg_name}/lib/zookeeper*.jar
 	ln -f -s ${zookeeper_home}/zookeeper.jar debian/tmp/usr/lib/${phoenix_pkg_name}/lib/
