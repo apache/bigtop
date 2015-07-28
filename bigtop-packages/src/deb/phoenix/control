@@ -17,8 +17,8 @@ Source: phoenix
 Section: misc
 Priority: extra
 Maintainer: Bigtop <dev@bigtop.apache.org>
-Build-Depends: debhelper (>= 7.0.50~)
-Standards-Version: 3.8.0
+Build-Depends: debhelper (>= 9)
+Standards-Version: 3.9.4
 Homepage: http://phoenix.apache.org
 
 Package: phoenix
@@ -32,3 +32,10 @@ Description: Phoenix is a SQL skin over HBase and client-embedded JDBC driver.
  performance on the order of milliseconds for small queries, or seconds for
  tens of millions of rows. Applications interact with Phoenix through a
  standard JDBC interface; all the usual interfaces are supported.
+
+Package: phoenix-queryserver
+Architecture: all
+Depends: phoenix (= ${source:Version})
+Description: The Phoenix Query Server provides an alternative means for 
+ interaction with Phoenix and HBase. Soon this will enable access from 
+ environments other than the JVM.
