@@ -29,4 +29,20 @@
   <artifactId>hcatalog-smoke</artifactId>
   <version>1.0.0</version>
   <name>hcatalogsmoke</name>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.rat</groupId>
+        <artifactId>apache-rat-plugin</artifactId>
+        <configuration>
+          <excludes>
+            <exclude>**/resources/data/*</exclude>
+            <exclude>**/resources/*.expected</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
 </project>

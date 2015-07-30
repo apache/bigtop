@@ -52,4 +52,23 @@
     </dependency>
   </dependencies>
 
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.rat</groupId>
+        <artifactId>apache-rat-plugin</artifactId>
+        <configuration>
+          <excludes>
+            <exclude>**/clitest_data/**</exclude>
+            <exclude>**/ints/file*.txt</exclude>
+            <exclude>**/text/file*.txt</exclude>
+            <exclude>**/resources/input.txt</exclude>
+            <exclude>**/resources/examples/text/*.txt</exclude>
+            <exclude>**/resources/part-00001.snappy</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
 </project>
