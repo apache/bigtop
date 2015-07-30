@@ -45,6 +45,9 @@ Release Notes - Bigtop - Version 1.0.0
     * [BIGTOP-1765] - Bump the stack version to 1.0
     * [BIGTOP-1768] - Use openjdk in ubuntu14, Remove references to jdk6 
     * [BIGTOP-1842] - Remove gridgain-hadoop from BOM
+    * [BIGTOP-1899] - Migrate CI master to EC2 instance donated by Amazon EMR team
+    * [BIGTOP-1900] - Upgrade bigtop/slaves images on bigtop's dockerhub
+    * [BIGTOP-1901] - Provide bigtop/deploy images on dockerhub for CI and users to consume docker provisioner
 
 ** Bug
     * [BIGTOP-894] - Pig compilation fails on RPM systems on Bigtop trunk
@@ -216,6 +219,15 @@ Release Notes - Bigtop - Version 1.0.0
     * [BIGTOP-1875] - Oozie build failed due to Codehaus repository is out of service
     * [BIGTOP-1876] - Update puppet recipes for Sqoop2
     * [BIGTOP-1879] - vagrant-puppet-vm is broken
+    * [BIGTOP-1886] - Kafka server can not create a log-cleaner.log file
+    * [BIGTOP-1893] - Compilation of hadoop-yarn-client failed
+    * [BIGTOP-1894] - Snappy development packages are missing from bigtop_toolchain
+    * [BIGTOP-1896] - bigtop_toolchain broken bei ant update
+    * [BIGTOP-1902] - typo in bigtop-deploy/vm/vagrant-puppet-vm/vagrantconfig.yaml
+    * [BIGTOP-1916] - Update Website for 1.0
+    * [BIGTOP-1937] - redhat-lsb is required by kafka daemon
+    * [BIGTOP-1938] - kafka packages /usr/bin on RPM
+    * [BIGTOP-1946] - Missing ASL header in some of iTest files
 
 ** Improvement
     * [BIGTOP-1047] - Support Puppet 3.x
@@ -305,6 +317,10 @@ Release Notes - Bigtop - Version 1.0.0
     * [BIGTOP-1836] - Better UX for Docker provisioner by integrating it into gradle 
     * [BIGTOP-1851] - Upgrade to HBase 0.98.12
     * [BIGTOP-1862] - Add release download link to the front page of the website
+    * [BIGTOP-1919] - Remove fixConditional methods in BPS data generator
+    * [BIGTOP-1923] - Bump Ignite to 1.2 with major fixes
+    * [BIGTOP-1932] - [BigPetStore] Add larger product collection
+    * [BIGTOP-1939] - Enable basic hdfs-nfs gateway configuration
 
 ** New Feature
     * [BIGTOP-989] - Add Apache Kafka  to Apache Bigtop
@@ -315,6 +331,8 @@ Release Notes - Bigtop - Version 1.0.0
     * [BIGTOP-1716] - Define SCALA_VERSION in bigtop.bom
     * [BIGTOP-1744] - Add BigPigPetstore File and REST Load Generation.
     * [BIGTOP-1806] - Integrate Apache Ignite (incubating) with BigTop
+    * [BIGTOP-1918] - Add product enumeration to BPS data generator
+    * [BIGTOP-1931] - Add multinomial product purchasing model to BPS Data Generator
 
 ** Task
     * [BIGTOP-1393] - Retire the make build system
@@ -333,6 +351,7 @@ Release Notes - Bigtop - Version 1.0.0
     * [BIGTOP-1834] - Upgrade to Spark 1.3.1
     * [BIGTOP-1854] - Trim Tachyon maintainers' list
     * [BIGTOP-1873] - Puppet apt module version must be 2.0.1 or above after BIGTOP-1870
+    * [BIGTOP-1897] - Umbrella JIRA for CI overhaul
 
 ** Test
     * [BIGTOP-1377] - Add a test case for performing block corruption recovery
