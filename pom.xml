@@ -299,11 +299,25 @@
               <exclude>**/.gitignore</exclude>
               <!-- Test data with rigid structure and/or binary -->
               <exclude>bigtop-tests/test-artifacts/**/resources/**</exclude>
+              <exclude>bigtop-tests/smoke-tests/tachyon/datafile</exclude>
+              <exclude>bigtop-tests/smoke-tests/hive/passwd.ql</exclude>
+              <exclude>bigtop-tests/smoke-tests/kite/sandwiches.csv</exclude>
+              <exclude>**/target/**</exclude>
+              <exclude>**/build/**</exclude>
+              <exclude>**/.gradle/**</exclude>
+              <exclude>**/*.iml</exclude>
+              <exclude>.gradle</exclude>
+              <exclude>buildSrc/build/**</exclude>
+              <exclude>bigtop-bigpetstore/bigpetstore-data-generator/**/input_data/**</exclude>
+              <exclude>bigtop-deploy/puppet/**/*.yaml</exclude>
+              <exclude>bigtop-deploy/puppet/config/*/id_hdfsuser*</exclude>
               <!-- Debian package files that have a rigid structure (* matches package name) -->
               <exclude>bigtop-packages/src/deb/*/*.dirs</exclude>
               <exclude>bigtop-packages/src/deb/*/dirs</exclude>
               <exclude>bigtop-packages/src/deb/*/*.install</exclude>
               <exclude>bigtop-packages/src/deb/*/*.include</exclude>
+              <exclude>bigtop-packages/src/deb/**/include-binaries</exclude>
+              <exclude>bigtop-packages/src/deb/**/format</exclude>
               <exclude>bigtop-packages/src/deb/*/*.manpages</exclude>
               <exclude>bigtop-packages/src/deb/*/*.docs</exclude>
               <exclude>bigtop-packages/src/deb/*/docs</exclude>
@@ -311,13 +325,15 @@
               <exclude>bigtop-packages/src/deb/*/source/format</exclude>
               <exclude>bigtop-packages/src/deb/*/*.lintian-overrides</exclude>
               <exclude>bigtop-packages/src/deb/*/shlibs.local</exclude>
+              <exclude>bigtop-packages/src/**/*.diff</exclude>
+              <exclude>bigtop-packages/src/common/*/*.json</exclude>
+              <exclude>bigtop-packages/src/common/**/*.default</exclude>
               <exclude>bigtop-repos/apt/distributions</exclude>
               <!-- Miscelaneous individual files -->
               <exclude>src/site/resources/bigtop.rdf</exclude>
               <exclude>src/site/resources/images/bigtop-logo.ai</exclude>
                 <!--Excluding a file with FreeBSD Documentation License-->
               <exclude>src/site/resources/css/freebsd_docbook.css</exclude>
-              <exclude>bigtop-packages/src/common/*/*.json</exclude>
               <exclude>test/MANIFEST.txt</exclude>
               <exclude>
                 bigtop-deploy/puppet/modules/hadoop/templates/taskcontroller.cfg
