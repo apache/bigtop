@@ -133,6 +133,11 @@ for ((i=1; i<=$NUM_INSTANCE; i++)); do
 name_of_your_vm$i
 EOF
 ```
+* If you are also running smoke tests, you will have to change the machine name in line 74 
+
+```
+    vagrant ssh name_of_your_vm$NUM_INSTANCE -c "sudo su <<HERE 
+```
 
 * In `Vagrantfile` the run smoke test part is currently commented out, in order to run smoke test after **all** the machines are done provisioning. The smoke tests are currently being handled by `para-provision.sh`. 
 

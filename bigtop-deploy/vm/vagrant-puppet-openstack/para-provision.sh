@@ -71,7 +71,7 @@ done | parallel_provision
 echo "preparing for smoke tests..."
 if [ "$RUN_SMOKE_TESTS" = "true" ]; then
     echo "running smoke tests..."
-    vagrant ssh hadoop-bigtop-para$NUM_INSTANCE -c "sudo su <<HERE
+    vagrant ssh hadoop-bigtop$NUM_INSTANCE -c "sudo su <<HERE
     cd /bigtop-home/bigtop-tests/smoke-tests 
     export HADOOP_CONF_DIR=/etc/hadoop/conf/ 
     export BIGTOP_HOME=/bigtop-home/ 
