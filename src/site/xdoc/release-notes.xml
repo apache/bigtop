@@ -439,6 +439,10 @@
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1946'>BIGTOP-1946</a>] -         Missing ASL header in some of iTest files
 </li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1949'>BIGTOP-1949</a>] -         Sqoop 1.4.5 artifacts aren&#39;t getting resolved in the release...
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1950'>BIGTOP-1950</a>] -         Upgrade maven-assembly plugin: StackOverFlowException is thrown
+</li>
 </ul>
                     
 <h2>        Improvement
