@@ -35,11 +35,8 @@
   <dependencies>
       <dependency>
           <groupId>org.apache.sqoop</groupId>
-          <artifactId>sqoop-core</artifactId>
-      </dependency>
-      <dependency>
-          <groupId>org.apache.sqoop</groupId>
-          <artifactId>sqoop-client</artifactId>
+          <artifactId>sqoop</artifactId>
+          <classifier>hadoop200</classifier>
       </dependency>
   </dependencies>
 
