@@ -228,6 +228,8 @@ Release Notes - Bigtop - Version 1.0.0
     * [BIGTOP-1937] - redhat-lsb is required by kafka daemon
     * [BIGTOP-1938] - kafka packages /usr/bin on RPM
     * [BIGTOP-1946] - Missing ASL header in some of iTest files
+    * [BIGTOP-1949] - Sqoop 1.4.5 artifacts aren't getting resolved in the release...
+    * [BIGTOP-1950] - Upgrade maven-assembly plugin: StackOverFlowException is thrown
 
 ** Improvement
     * [BIGTOP-1047] - Support Puppet 3.x
