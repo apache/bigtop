@@ -304,6 +304,7 @@
               <exclude>bigtop-tests/smoke-tests/kite/sandwiches.csv</exclude>
               <exclude>bigtop-tests/smoke-tests/phoenix/*.csv</exclude>
               <exclude>bigtop-tests/smoke-tests/phoenix/*.sql</exclude>
+              <exclude>bigtop-tests/smoke-tests/ignite-hadoop/*.data</exclude>
               <exclude>**/target/**</exclude>
               <exclude>**/build/**</exclude>
               <exclude>**/.gradle/**</exclude>
