@@ -30,4 +30,6 @@ sed -i -e \
 mvn -DskipTests -Dhadoop.profile=hbase-98  \
   -Dhadoop2.version=$HADOOP_VERSION        \
   -Dhbase.version=${HBASE_VERSION}-hadoop2 \
+  -Dkite.version=${KITE_VERSION} \
+  -Dhive.version=${HIVE_VERSION} \
   clean install "$@"
