@@ -1,12 +1,12 @@
 docker:
-        memory_size: "2048"
-        image:  "debian:jessie"
+        memory_size: "4096"
+        image:  "bigtop/deploy:debian-8"
 
 boot2docker:
-        memory_size: "4196"
-        number_cpus: "2"
+        memory_size: "4096"
+        number_cpus: "1"
 
-repo: "http://bigtop01.cloudera.org:8080/view/Releases/job/Bigtop-0.8.0/label=trusty/5/artifact/output/apt/"
+repo: "http://bigtop01.cloudera.org:8080/view/Releases/job/Bigtop-1.0.0-deb/BUILD_ENVIRONMENTS=debian-8%2clabel=docker-slave-07/lastSuccessfulBuild/artifact/output/apt/"
 distro: debian
 components: [hadoop, yarn]
 namenode_ui_port: "50070"
