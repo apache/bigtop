@@ -1,0 +1,4 @@
+etc/default
+etc/hama/conf.dist
+usr/bin
+usr/lib/hama
