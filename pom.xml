@@ -306,6 +306,8 @@
               <exclude>**/.gradle/**</exclude>
               <exclude>**/*.iml</exclude>
               <exclude>.gradle</exclude>
+              <exclude>output/**</exclude>
+              <exclude>MAINTAINERS.txt</exclude>
               <exclude>buildSrc/build/**</exclude>
               <exclude>bigtop-bigpetstore/bigpetstore-data-generator/**/input_data/**</exclude>
               <exclude>bigtop-deploy/puppet/**/*.yaml</exclude>
