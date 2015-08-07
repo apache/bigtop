@@ -32,7 +32,7 @@
 
 <configuration>
     <!--
-        Set default file system to IGFS instance named "igfs" configured in GridGain.
+        Set default file system to IGFS instance named "igfs" configured in Ignite.
     -->
     <property>
         <name>fs.defaultFS</name>
