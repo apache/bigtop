@@ -48,6 +48,7 @@ Release Notes - Bigtop - Version 1.0.0
     * [BIGTOP-1899] - Migrate CI master to EC2 instance donated by Amazon EMR team
     * [BIGTOP-1900] - Upgrade bigtop/slaves images on bigtop's dockerhub
     * [BIGTOP-1901] - Provide bigtop/deploy images on dockerhub for CI and users to consume docker provisioner
+    * [BIGTOP-1947] - Fix RAT plugin configuration to be able to RAT-validate all published artifacts
 
 ** Bug
     * [BIGTOP-894] - Pig compilation fails on RPM systems on Bigtop trunk
@@ -230,6 +231,8 @@ Release Notes - Bigtop - Version 1.0.0
     * [BIGTOP-1946] - Missing ASL header in some of iTest files
     * [BIGTOP-1949] - Sqoop 1.4.5 artifacts aren't getting resolved in the release...
     * [BIGTOP-1950] - Upgrade maven-assembly plugin: StackOverFlowException is thrown
+    * [BIGTOP-1951] - Fix licenses in the source files
+    * [BIGTOP-1958] - Upgrade default repositories and docker images to 1.0
 
 ** Improvement
     * [BIGTOP-1047] - Support Puppet 3.x
@@ -315,6 +318,7 @@ Release Notes - Bigtop - Version 1.0.0
     * [BIGTOP-1794] - Update README for bigtop_toolchain
     * [BIGTOP-1801] - Generalize subst pattern matching for BOM file
     * [BIGTOP-1803] - Overide Vagrant configurations from environment variables
+    * [BIGTOP-1809] - Remove gridgain-hadoop component once ignite-hadoop gets added
     * [BIGTOP-1829] - Tachyon configuration files should reside in /etc/tachyon/conf instead of /etc/tachyon
     * [BIGTOP-1836] - Better UX for Docker provisioner by integrating it into gradle 
     * [BIGTOP-1851] - Upgrade to HBase 0.98.12

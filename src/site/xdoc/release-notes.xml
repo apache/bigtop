@@ -78,6 +78,8 @@
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1901'>BIGTOP-1901</a>] -         Provide bigtop/deploy images on dockerhub for CI and users to consume docker provisioner
 </li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1947'>BIGTOP-1947</a>] -         Fix RAT plugin configuration to be able to RAT-validate all published artifacts
+</li>
 </ul>
                         
 <h2>        Bug
@@ -443,6 +445,8 @@
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1950'>BIGTOP-1950</a>] -         Upgrade maven-assembly plugin: StackOverFlowException is thrown
 </li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1958'>BIGTOP-1958</a>] -         Upgrade default repositories and docker images to 1.0
+</li>
 </ul>
                     
 <h2>        Improvement
@@ -613,6 +617,8 @@
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1801'>BIGTOP-1801</a>] -         Generalize subst pattern matching for BOM file
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1803'>BIGTOP-1803</a>] -         Overide Vagrant configurations from environment variables
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1809'>BIGTOP-1809</a>] -         Remove gridgain-hadoop component once ignite-hadoop gets added
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1829'>BIGTOP-1829</a>] -         Tachyon configuration files should reside in /etc/tachyon/conf instead of /etc/tachyon
 </li>
