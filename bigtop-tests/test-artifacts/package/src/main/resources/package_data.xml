@@ -611,15 +611,15 @@ easy to test, and efficient to run.</description>
       <hive-webhcat>/self</hive-webhcat>
     </deps>
   </hive-webhcat-server>
-  <gridgain-hadoop>
+  <ignite-hadoop>
     <metadata>
-      <summary>gridgain Hadoop accelerator. The system provides for in-memory caching of HDFS data and MR performance improvements</summary>
-      <description>GridGain is an open-source, distributed, in-memory computation platform
+      <summary>Apache Ignite Hadoop accelerator. The system provides for in-memory caching of HDFS data and MR performance improvements</summary>
+      <description>Apache Ignite is an open-source, distributed, in-memory computation platform
 
         * HDFS caching and MR performance booster
 
       </description>
-      <url>http://gridgain.org/</url>
+      <url>https://ignite.incubator.apache.org/</url>
     </metadata>
     <deps>
       <hadoop-hdfs/>
@@ -627,31 +627,31 @@ easy to test, and efficient to run.</description>
       <bigtop-utils/>
     </deps>
     <alternatives>
-      <gridgain-hadoop-conf>
+      <ignite-hadoop-conf>
         <status>auto</status>
-        <link>/etc/gridgain-hadoop/conf</link>
-        <value>/etc/gridgain-hadoop/conf.dist</value>
-        <alt>/etc/gridgain-hadoop/conf.dist</alt>
-      </gridgain-hadoop-conf>
+        <link>/etc/ignite-hadoop/conf</link>
+        <value>/etc/ignite-hadoop/conf.dist</value>
+        <alt>/etc/ignite-hadoop/conf.dist</alt>
+      </ignite-hadoop-conf>
     </alternatives>
-  </gridgain-hadoop>
-    <gridgain-hadoop-service>
+  </ignite-hadoop>
+    <ignite-hadoop-service>
       <metadata>
-        <summary>Hadoop Accelerator platform</summary>
-        <description>GridGain is an open-source, distributed, in-memory computation platform</description>
-        <url>http://gridgain.org/</url>
+        <summary>Apache Ignite Hadoop Accelerator platform</summary>
+        <description>Ignite is an open-source, distributed, in-memory computation platform</description>
+        <url>https://ignite.incubator.apache.org/</url>
       </metadata>
       <deps>
-        <gridgain-hadoop/>
+        <ignite-hadoop/>
       </deps>
-    </gridgain-hadoop-service>
-    <gridgain-hadoop-doc>
+    </ignite-hadoop-service>
+    <ignite-hadoop-doc>
       <metadata>
-        <summary>Gridgain Documentation</summary>
-        <description>Documentation for GridGain platform</description>
-        <url>http://gridgain.org/</url>
+        <summary>Ignite Documentation</summary>
+        <description>Documentation for Apache Ignite platform</description>
+        <url>https://ignite.incubator.apache.org/</url>
       </metadata>
-    </gridgain-hadoop-doc>
+    </ignite-hadoop-doc>
     <hbase>
     <metadata>
       <summary>HBase is the Hadoop database. Use it when you need random, realtime read/write access to your Big Data. This project's goal is the hosting of very large tables -- billions of rows X millions of columns -- atop clusters of commodity hardware.</summary>
