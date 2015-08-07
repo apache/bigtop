@@ -302,11 +302,15 @@
               <exclude>bigtop-tests/smoke-tests/tachyon/datafile</exclude>
               <exclude>bigtop-tests/smoke-tests/hive/passwd.ql</exclude>
               <exclude>bigtop-tests/smoke-tests/kite/sandwiches.csv</exclude>
+              <exclude>bigtop-tests/smoke-tests/phoenix/*.csv</exclude>
+              <exclude>bigtop-tests/smoke-tests/phoenix/*.sql</exclude>
               <exclude>**/target/**</exclude>
               <exclude>**/build/**</exclude>
               <exclude>**/.gradle/**</exclude>
               <exclude>**/*.iml</exclude>
               <exclude>.gradle</exclude>
+              <exclude>output/**</exclude>
+              <exclude>MAINTAINERS.txt</exclude>
               <exclude>buildSrc/build/**</exclude>
               <exclude>bigtop-bigpetstore/bigpetstore-data-generator/**/input_data/**</exclude>
               <exclude>bigtop-deploy/puppet/**/*.yaml</exclude>
