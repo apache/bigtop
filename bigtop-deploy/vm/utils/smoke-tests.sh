@@ -17,6 +17,16 @@
 HCFS_USER="hdfs"
 SMOKE_TESTS=${1:-mapreduce,pig}
 
+# Autodetect JAVA_HOME
+if [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
+  . /usr/lib/bigtop-utils/bigtop-detect-javahome
+else
+  >&2 echo -e "\nUNABLE TO DETECT JAVAHOME SINCE bigtop-utils NEEDS TO BE INSTALLED!\n"
+  exit 2
+fi
+
+echo -e "\n===== START TO RUN SMOKE TESTS: $SMOKE_TESTS =====\n"
+
 export HADOOP_CONF_DIR=/etc/hadoop/conf/
 export BIGTOP_HOME=/bigtop-home/
 export HADOOP_MAPRED_HOME=/usr/lib/hadoop-mapreduce/
@@ -25,7 +35,6 @@ export PIG_HOME=/usr/lib/pig/
 export FLUME_HOME=/usr/lib/flume/
 export SQOOP_HOME=/usr/lib/sqoop/
 export HIVE_CONF_DIR=/etc/hive/conf/
-export JAVA_HOME="/usr/lib/jvm/java-openjdk/"
 export MAHOUT_HOME="/usr/lib/mahout"
 export ITEST="0.7.0"
 
