@@ -52,6 +52,7 @@
     <spark.version>1.3.1</spark.version>
     <kafka.version>0.8.1.1</kafka.version>
     <phoenix.version>4.3.1</phoenix.version>
+    <kite.version>1.1.0</kite.version>
     <spark-smoke.version>${project.version}</spark-smoke.version>
 
     <itest-common.version>${project.version}</itest-common.version>
@@ -226,20 +227,28 @@
         <artifactId>solr-solrj</artifactId>
         <version>${solr.version}</version>
       </dependency>
+      <!-- Sqoop -->
       <dependency>
         <groupId>org.apache.sqoop</groupId>
         <artifactId>sqoop</artifactId>
+        <classifier>hadoop200</classifier>
         <version>${sqoop.version}</version>
       </dependency>
+      <!-- Sqoop2 -->
       <dependency>
         <groupId>org.apache.sqoop</groupId>
         <artifactId>sqoop-core</artifactId>
-        <version>${sqoop.version}</version>
+        <version>${sqoop2.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.sqoop</groupId>
         <artifactId>sqoop-client</artifactId>
-        <version>${sqoop.version}</version>
+        <version>${sqoop2.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.sqoop</groupId>
+        <artifactId>sqoop-common</artifactId>
+        <version>${sqoop2.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.spark</groupId>
@@ -290,11 +299,30 @@
               <exclude>**/.gitignore</exclude>
               <!-- Test data with rigid structure and/or binary -->
               <exclude>bigtop-tests/test-artifacts/**/resources/**</exclude>
+              <exclude>bigtop-tests/smoke-tests/tachyon/datafile</exclude>
+              <exclude>bigtop-tests/smoke-tests/hive/passwd.ql</exclude>
+              <exclude>bigtop-tests/smoke-tests/kite/sandwiches.csv</exclude>
+              <exclude>bigtop-tests/smoke-tests/phoenix/*.csv</exclude>
+              <exclude>bigtop-tests/smoke-tests/phoenix/*.sql</exclude>
+              <exclude>bigtop-tests/smoke-tests/ignite-hadoop/*.data</exclude>
+              <exclude>**/target/**</exclude>
+              <exclude>**/build/**</exclude>
+              <exclude>**/.gradle/**</exclude>
+              <exclude>**/*.iml</exclude>
+              <exclude>.gradle</exclude>
+              <exclude>output/**</exclude>
+              <exclude>MAINTAINERS.txt</exclude>
+              <exclude>buildSrc/build/**</exclude>
+              <exclude>bigtop-bigpetstore/bigpetstore-data-generator/**/input_data/**</exclude>
+              <exclude>bigtop-deploy/puppet/**/*.yaml</exclude>
+              <exclude>bigtop-deploy/puppet/config/*/id_hdfsuser*</exclude>
               <!-- Debian package files that have a rigid structure (* matches package name) -->
               <exclude>bigtop-packages/src/deb/*/*.dirs</exclude>
               <exclude>bigtop-packages/src/deb/*/dirs</exclude>
               <exclude>bigtop-packages/src/deb/*/*.install</exclude>
               <exclude>bigtop-packages/src/deb/*/*.include</exclude>
+              <exclude>bigtop-packages/src/deb/**/include-binaries</exclude>
+              <exclude>bigtop-packages/src/deb/**/format</exclude>
               <exclude>bigtop-packages/src/deb/*/*.manpages</exclude>
               <exclude>bigtop-packages/src/deb/*/*.docs</exclude>
               <exclude>bigtop-packages/src/deb/*/docs</exclude>
@@ -302,13 +330,15 @@
               <exclude>bigtop-packages/src/deb/*/source/format</exclude>
               <exclude>bigtop-packages/src/deb/*/*.lintian-overrides</exclude>
               <exclude>bigtop-packages/src/deb/*/shlibs.local</exclude>
+              <exclude>bigtop-packages/src/**/*.diff</exclude>
+              <exclude>bigtop-packages/src/common/*/*.json</exclude>
+              <exclude>bigtop-packages/src/common/**/*.default</exclude>
               <exclude>bigtop-repos/apt/distributions</exclude>
               <!-- Miscelaneous individual files -->
               <exclude>src/site/resources/bigtop.rdf</exclude>
               <exclude>src/site/resources/images/bigtop-logo.ai</exclude>
                 <!--Excluding a file with FreeBSD Documentation License-->
               <exclude>src/site/resources/css/freebsd_docbook.css</exclude>
-              <exclude>bigtop-packages/src/common/*/*.json</exclude>
               <exclude>test/MANIFEST.txt</exclude>
               <exclude>
                 bigtop-deploy/puppet/modules/hadoop/templates/taskcontroller.cfg
@@ -344,7 +374,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-assembly-plugin</artifactId>
-          <version>2.3</version>
+          <version>2.5.5</version>
           <configuration>
             <descriptorRefs>
               <descriptorRef>project</descriptorRef>

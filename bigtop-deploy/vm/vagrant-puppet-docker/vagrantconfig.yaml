@@ -1,12 +1,27 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 docker:
-        memory_size: "2048"
-        image: "bigtop/ssh:centos-6.4"
+        memory_size: "4096"
+        image: "bigtop/deploy:centos-6"
 
 boot2docker:
-        memory_size: "4196"
-        number_cpus: "2"
+        memory_size: "4096"
+        number_cpus: "1"
 
-repo: "http://bigtop01.cloudera.org:8080/view/Releases/job/Bigtop-0.8.0/label=centos6/6/artifact/output/"
+repo: "http://bigtop01.cloudera.org:8080/view/Releases/job/Bigtop-1.0.0-rpm/BUILD_ENVIRONMENTS=centos-6%2clabel=docker-slave-06/lastSuccessfulBuild/artifact/output/"
 distro: centos
 components: [hadoop, yarn]
 namenode_ui_port: "50070"

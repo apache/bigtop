@@ -35,12 +35,25 @@
   <dependencies>
       <dependency>
           <groupId>org.apache.sqoop</groupId>
-          <artifactId>sqoop-core</artifactId>
-      </dependency>
-      <dependency>
-          <groupId>org.apache.sqoop</groupId>
-          <artifactId>sqoop-client</artifactId>
+          <artifactId>sqoop</artifactId>
+          <classifier>hadoop200</classifier>
       </dependency>
   </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.rat</groupId>
+        <artifactId>apache-rat-plugin</artifactId>
+        <configuration>
+          <excludes>
+            <exclude>**/resources/**/*.hxt</exclude>
+            <exclude>**/resources/**/*.txt</exclude>
+            <exclude>**/resources/**/*.out</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>

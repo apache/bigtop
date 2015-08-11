@@ -167,3 +167,7 @@ for x in CHANGELOG \
     cp -r $x $PREFIX/${DOC_DIR}
   fi
 done
+
+# Remove Windows files
+rm -rf ${PREFIX}/${BIN_DIR}/*.cmd
+rm -rf ${PREFIX}/${BIN_DIR}/*.ps1

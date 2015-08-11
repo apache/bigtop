@@ -72,6 +72,14 @@
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1842'>BIGTOP-1842</a>] -         Remove gridgain-hadoop from BOM
 </li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1899'>BIGTOP-1899</a>] -         Migrate CI master to EC2 instance donated by Amazon EMR team
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1900'>BIGTOP-1900</a>] -         Upgrade bigtop/slaves images on bigtop&#39;s dockerhub
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1901'>BIGTOP-1901</a>] -         Provide bigtop/deploy images on dockerhub for CI and users to consume docker provisioner
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1947'>BIGTOP-1947</a>] -         Fix RAT plugin configuration to be able to RAT-validate all published artifacts
+</li>
 </ul>
                         
 <h2>        Bug
@@ -415,6 +423,30 @@
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1879'>BIGTOP-1879</a>] -         vagrant-puppet-vm is broken
 </li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1886'>BIGTOP-1886</a>] -         Kafka server can not create a log-cleaner.log file
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1893'>BIGTOP-1893</a>] -         Compilation of hadoop-yarn-client failed 
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1894'>BIGTOP-1894</a>] -         Snappy development packages are missing from bigtop_toolchain
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1896'>BIGTOP-1896</a>] -         bigtop_toolchain broken bei ant update
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1902'>BIGTOP-1902</a>] -         typo in bigtop-deploy/vm/vagrant-puppet-vm/vagrantconfig.yaml
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1916'>BIGTOP-1916</a>] -         Update Website for 1.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1937'>BIGTOP-1937</a>] -         redhat-lsb is required by kafka daemon
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1938'>BIGTOP-1938</a>] -         kafka packages /usr/bin on RPM
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1946'>BIGTOP-1946</a>] -         Missing ASL header in some of iTest files
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1949'>BIGTOP-1949</a>] -         Sqoop 1.4.5 artifacts aren&#39;t getting resolved in the release...
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1950'>BIGTOP-1950</a>] -         Upgrade maven-assembly plugin: StackOverFlowException is thrown
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1958'>BIGTOP-1958</a>] -         Upgrade default repositories and docker images to 1.0
+</li>
 </ul>
                     
 <h2>        Improvement
@@ -586,6 +618,8 @@
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1803'>BIGTOP-1803</a>] -         Overide Vagrant configurations from environment variables
 </li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1809'>BIGTOP-1809</a>] -         Remove gridgain-hadoop component once ignite-hadoop gets added
+</li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1829'>BIGTOP-1829</a>] -         Tachyon configuration files should reside in /etc/tachyon/conf instead of /etc/tachyon
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1836'>BIGTOP-1836</a>] -         Better UX for Docker provisioner by integrating it into gradle 
@@ -593,6 +627,14 @@
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1851'>BIGTOP-1851</a>] -         Upgrade to HBase 0.98.12
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1862'>BIGTOP-1862</a>] -         Add release download link to the front page of the website
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1919'>BIGTOP-1919</a>] -         Remove fixConditional methods in BPS data generator
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1923'>BIGTOP-1923</a>] -         Bump Ignite to 1.2 with major fixes
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1932'>BIGTOP-1932</a>] -         [BigPetStore] Add larger product collection
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1939'>BIGTOP-1939</a>] -         Enable basic hdfs-nfs gateway configuration
 </li>
 </ul>
             
@@ -614,6 +656,10 @@
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1744'>BIGTOP-1744</a>] -         Add BigPigPetstore File and REST Load Generation.
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1806'>BIGTOP-1806</a>] -         Integrate Apache Ignite (incubating) with BigTop
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1918'>BIGTOP-1918</a>] -         Add product enumeration to BPS data generator
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1931'>BIGTOP-1931</a>] -         Add multinomial product purchasing model to BPS Data Generator
 </li>
 </ul>
                                                     
@@ -651,6 +697,8 @@
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1854'>BIGTOP-1854</a>] -         Trim Tachyon maintainers&#39; list
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1873'>BIGTOP-1873</a>] -         Puppet apt module version must be 2.0.1 or above after BIGTOP-1870
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1897'>BIGTOP-1897</a>] -         Umbrella JIRA for CI overhaul
 </li>
 </ul>
         

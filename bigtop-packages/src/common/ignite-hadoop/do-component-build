@@ -19,4 +19,6 @@ set -ex
 . `dirname $0`/bigtop.bom
 
 export MAVEN_OPTS="-Xmx512M -XX:MaxPermSize=512M"
-mvn clean package -DskipTests -Dhadoop.version=$HADOOP_VERSION -Dignite.edition=hadoop
+
+# Workaroud: ignore "ignite-yarn" module due to bug https://issues.apache.org/jira/browse/IGNITE-1195.
+mvn clean package -DskipTests -pl \!modules/yarn -Dhadoop.version=$HADOOP_VERSION -Dignite.edition=hadoop

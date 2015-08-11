@@ -18,12 +18,15 @@ set -ex
 
 . `dirname $0`/bigtop.bom
 
+PHOENIX_HBASE_VERSION=HBase-0.98
+
 mvn -DskipTests \
     -Dhadoop-two.version=$HADOOP_VERSION  \
     -Dhbase.version=$HBASE_VERSION-hadoop2  \
     -Dpig.version=$PIG_VERSION  \
     -Dflume.version=$FLUME_VERSION  \
+    -Dspark.version=${SPARK_VERSION} \
     clean install package "$@"
 rm -rf build
 mkdir build
-tar -C build --strip-components=1 -xzf phoenix-assembly/target/phoenix-$PHOENIX_VERSION.tar.gz
+tar -C build --strip-components=1 -xzf phoenix-assembly/target/phoenix-$PHOENIX_VERSION-${PHOENIX_HBASE_VERSION}.tar.gz

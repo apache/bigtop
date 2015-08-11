@@ -33,6 +33,7 @@ hadoop::hadoop_storage_dirs:
 #  - tez
 #  - yarn
 #  - zookeeper
+#  - ycsb
 
 #bigtop::jdk_package_name: "openjdk-7-jre-headless"
 #bigtop::bigtop_repo_uri: "http://mirror.example.com/path/to/mirror/"
