@@ -1,0 +1,103 @@
+#!/usr/bin/make -f
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# -*- makefile -*-
+
+# Uncomment this to turn on verbose mode.
+export DH_VERBOSE=1
+
+# This has to be exported to make some magic below work.
+export DH_OPTIONS
+
+patch: patch-stamp
+patch-stamp:
+		touch $@
+
+clean:
+		dh_testdir
+		dh_testroot
+		rm -f *-stamp
+		dh_clean
+		rm -Rf debian/tmp
+		find debian -name .\*swp -exec rm -f {} \;
+
+build-indep: build-indep-stamp
+build-indep-stamp: patch-stamp
+        # we'll just use the build from the tarball.
+		rm -rf bigtop-empty
+		mkdir -p bigtop-empty
+		sh debian/do-component-build -Drat.basedir=${PWD}/bigtop-empty -Dmaven.repo.local=${HOME}/.m2/repository
+		mkdir -p debian/tmp
+		(cd dist/target/hama-${HAMA_BASE_VERSION}/hama-${HAMA_BASE_VERSION} && tar cf - --exclude=debian/\* .) | (cd debian/tmp && tar xf -)
+		touch $@
+
+install: install-indep
+install-indep:
+		dh_testdir
+		dh_testroot
+		dh_installdirs
+		sh -x debian/install_hama.sh \
+			--distro-dir=debian \
+			--build-dir=debian/tmp \
+			--doc-dir=/usr/share/doc/hama-doc \
+			--prefix=debian/tmp/hama
+		rm debian/tmp/hama/usr/lib/hama/lib/hadoop-*.jar
+		ln -s /usr/lib/hadoop/hadoop-core.jar debian/tmp/hama/usr/lib/hama/lib/hadoop-core.jar
+		rm debian/tmp/hama/usr/lib/hama/lib/zookeeper-*.jar
+		ln -s /usr/lib/zookeeper/zookeeper.jar debian/tmp/hama/usr/lib/hama/lib/zookeeper.jar
+		mkdir -p debian/tmp/hama/etc/default
+		cp debian/hama.default debian/tmp/hama/etc/default/hama
+		dh_install --sourcedir=debian/tmp/hama
+		(dh_lintian) || /bin/true
+
+binary-common:
+		dh_testdir
+		dh_testroot
+		dh_installchangelogs
+		dh_installdocs
+#       dh_installexamples
+#       dh_installmenu
+#       dh_installdebconf
+#       dh_installlogrotate
+#       dh_installemacsen
+#       dh_installpam
+#       dh_installmime
+#       dh_python
+		dh_installinit
+#       dh_installcron
+#       dh_installinfo
+		dh_installman
+		dh_link
+		dh_strip
+		dh_compress
+		dh_fixperms
+#       dh_perl
+		dh_makeshlibs
+		dh_installdeb
+		dh_shlibdeps
+		dh_gencontrol
+		dh_md5sums
+		dh_builddeb
+
+binary-indep: build-indep install-indep
+		$(MAKE) -f debian/rules DH_OPTIONS=-i binary-common
+
+binary-arch:
+
+
+binary: binary-indep
+.PHONY: build clean binary-indep binary install-indep binary-arch
