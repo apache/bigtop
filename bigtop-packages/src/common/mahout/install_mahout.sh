@@ -118,7 +118,8 @@ ln -s /etc/mahout/conf $PREFIX/$LIB_DIR/conf
 
 # Copy in the example files
 cp -a ${BUILD_DIR}/examples/ $PREFIX/$DOC_DIR/
-
+cp -a ${BUILD_DIR}/h2o/ $PREFIX/$DOC_DIR/
+ 
 # Copy in the /usr/bin/mahout wrapper
 install -d -m 0755 $PREFIX/$BIN_DIR
 cat > $PREFIX/$BIN_DIR/mahout <<EOF
@@ -141,4 +142,3 @@ chmod 755 $PREFIX/$BIN_DIR/mahout
 
 rm -f ${PREFIX}/${LIB_DIR}/lib/zookeeper-*.jar
 ln -sf /usr/lib/zookeeper/zookeeper.jar ${PREFIX}/${LIB_DIR}/lib/
-
