@@ -78,7 +78,7 @@
 			<p>
 				In each branch there is a job to build each component, a job to run package tests and a job to build package
 				repositories.
-			</ul>
+			</p>
 		</section>
 	</body>
 </document>
