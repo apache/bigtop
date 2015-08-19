@@ -194,18 +194,27 @@ multi_hbase_daemon() {
         exit 1
     fi
 
-    export HBASE_${UPPERCASE_HBASE_DAEMON}_OPTS=" "
-
     for OFFSET in ${OFFSETS} ; do
+
+        export HBASE_${UPPERCASE_HBASE_DAEMON}_OPTS=" "
+
         echo -n "$ACTION @HBASE_DAEMON@ daemon $OFFSET: "
         export HBASE_IDENT_STRING="hbase-${OFFSET}"
         LOG_FILE="$HBASE_LOG_DIR/hbase-$HBASE_IDENT_STRING-@HBASE_DAEMON@-$HOSTNAME.pid"
         PID_FILE="$HBASE_PID_DIR/hbase-$HBASE_IDENT_STRING-@HBASE_DAEMON@.pid"
         HBASE_MULTI_ARGS="-D hbase.regionserver.port=`expr ${FIRST_PORT} + $OFFSET` \
                           -D hbase.regionserver.info.port=`expr ${FIRST_INFO_PORT} + ${OFFSET}`"
-        if [ "x$JMXPORT" != "x" ] ; then
-            HBASE_MULTI_ARGS="${HBASE_MULTI_ARGS} -Dcom.sun.management.jmxremote.port=`expr ${JMXPORT} + ${OFFSET}`"
+
+        if [ "x$JAVA_TMP_DIR" == "x" ] ; then
+            JAVA_TMP_DIR="/tmp/java_tmp_dir"
         fi
+        HBASE_TMP_DIR=" -Djava.io.tmpdir=${JAVA_TMP_DIR}/${OFFSET}"
+
+        if [ "x$JMXPORT" != "x" ] ; then
+            HBASE_JMX_PORT=" -Dcom.sun.management.jmxremote.port=`expr ${JMXPORT} + ${OFFSET}`"
+        fi
+        export HBASE_${UPPERCASE_HBASE_DAEMON}_OPTS="`eval '$'HBASE_${UPPERCASE_HBASE_DAEMON}_OPTS`$HBASE_TMP_DIR$HBASE_JMX_PORT"
+
         hbase_check_pidfile $PID_FILE
         STATUS=$?
         if [[ "$STATUS" == "0" && "$COMMAND" == "start" ]] ; then

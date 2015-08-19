@@ -33,3 +33,9 @@ export HBASE_IDENT_STRING=hbase
 # which will be equal to starting JMX port + offset
 # 
 # export JMXPORT=10103
+
+#
+# Set a directory which will be used for Java temp directory. For multi RS the
+# directory will be appended with offset to make it unique for each JVM process
+#
+# export JAVA_TMP_DIR="/tmp/java_tmp_dir"
