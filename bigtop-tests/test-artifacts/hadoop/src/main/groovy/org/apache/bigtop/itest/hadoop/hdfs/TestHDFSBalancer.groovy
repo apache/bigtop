@@ -25,6 +25,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.apache.bigtop.itest.JarContent;
 import org.apache.bigtop.itest.shell.Shell;
+import org.apache.commons.lang.StringUtils;
 
 public class TestHDFSBalancer {
 
@@ -34,6 +35,7 @@ public class TestHDFSBalancer {
 
   @BeforeClass
   public static void setUp() {
+
     // unpack resource
     JarContent.unpackJarContainer(TestHDFSBalancer.class, ".", null);
     if (System.getProperty("threshold") != null) {
@@ -45,40 +47,130 @@ public class TestHDFSBalancer {
   public static void tearDown() {
   }
 
-  @Test
-  public void testBalancer() {
-    System.out.println("Running Balancer:");
-    System.out.println("Threshold is set to " + thresh + ". Toggle by adding -Dthreshold=#");
+  /*
+   * This function executes the hdfs balancer -threshold command with
+   * the specified thresholdValue. If the command is expected to fail
+   * then it will gracefully handle it according to the flag
+   * isExpectedFail and will check the error output for the expectedMsg
+   * specfied in the input.
+   */
 
-    // must run balancer as hdfs user   
-    shHDFS.exec("hdfs balancer -threshold $thresh");
+  public void testBalancerWithThreshold (String thresholdValue,
+          boolean isExpectedFail, String expectedMsg) {
+    println("Running Balancer with threshold value:" + thresholdValue);
 
-    boolean success = false;
-    // success_string message signifies balancing worked correctly
-    String success_string1 = "The cluster is balanced. Exiting..."
-    String success_string2 = "No block can be moved"
-    String success_string3 = "No block has been moved for 3 iterations"
-    List out_msgs = shHDFS.getOut();
-    Iterator out_iter = out_msgs.iterator();
-    while (out_iter.hasNext()) {
-      String next_val = out_iter.next();
-      if (next_val.equals(success_string1) || next_val.contains(success_string2) || next_val.contains(success_string3)) {
-        success = true;
+    String success_string1 = "The cluster is balanced. Exiting...";
+    String success_string2 = "No block can be moved";
+    String success_string3 = "No block has been moved for 3 iterations";
+    String success_string4 = "No block has been moved for 5 iterations";
+    String failure_string1 = "Expecting a number in the range of [1.0, 100.0]:";
+    String failure_string2 = "ERROR balancer.Balancer: Exiting balancer due an exception";
+    String balancerRunningString = "Another balancer is running.";
+    boolean success_balancer = false;
+    int attemptsForBalancing = 10;
+    List out_msgs_balancer = null;
+    String out_msgs = "";
+    boolean another_balancer_running = false;
+
+    /*
+     * If another balancer is already running when we submit the command
+     * then it might return without balancing it. So we have to gracefully
+     * wait for some time to finish the previous balancing to complete.
+     */
+    while(attemptsForBalancing>0) {
+      attemptsForBalancing--;
+      // set the threshold to the specified threshold value */
+      shHDFS.exec("hdfs balancer -threshold " + thresholdValue);
+      out_msgs_balancer = shHDFS.getOut();
+      out_msgs = StringUtils.join(out_msgs_balancer.iterator(), ',');
+      if (out_msgs.toLowerCase().contains(balancerRunningString.toLowerCase())) {
+        another_balancer_running = true;
+        println("another balancer is running so waiting for 1 min to retry..");
+        sleep(60000);
+        continue;
+      } else {
+        another_balancer_running=false;
+	break;
       }
     }
 
-    String failure_string1 = "namenodes = []"
-    List err_msgs = shHDFS.getErr();
-    Iterator err = err_msgs.iterator();
-
-    while (err.hasNext()) {
-      String err_next = err.next()
-      assertTrue("Balancer could not find namenode", !err_next.contains(failure_string1));
+    /*
+     * if previous balancing task is still active even after 10 minutes
+     * then fail the test
+     */
+    if (another_balancer_running) {
+	assertTrue("When Run with threshold value:" + thresholdValue +
+                   ", It seems another balancer is still running even after waiting for 10 mins",
+                   false);
     }
 
-    // could not just check if shHDFS.getRet() = 0 because balancer prints out INFO messages that the shell thinks are error messages 
-    assertTrue("Balancer failed", success == true);
+    // check if the command outout is containing expected messages
+    if (out_msgs.contains(success_string1) || out_msgs.contains(success_string2) ||
+        out_msgs.contains(success_string3) || out_msgs.contains(success_string4)) {
+      success_balancer = true;
+      println("command output is having expected messages");
+    } else {
+      println("command output is not having expected messages");
+    }
+
+    // Check if the err outpur of command is containing unexpected messages
+    List err_msgs_balancer = shHDFS.getErr();
+    String err_msgs = StringUtils.join(err_msgs_balancer.iterator(), ',');
+    if (isExpectedFail) {
+      if (err_msgs.contains(expectedMsg)) {
+        success_balancer = false;
+      } else {
+        success_balancer = true;
+      }
+    } else {
+      if (err_msgs.contains(failure_string1) || err_msgs.contains(failure_string2)) {
+	assertTrue("When Run with threshold value:" + thresholdValue +
+                   ", Found some problem with the submitted command. " +
+                   "Command did not get completed successfully", false);
+      }
+    }
+
+
+    if (isExpectedFail == false) {
+      assertTrue("When Run with threshold value:" + thresholdValue +
+                 ", Balancer failed", success_balancer == true);
+    } else {
+      println("balancer is expected to fail so it got failed");
+      assertTrue("When Run with threshold value:" + thresholdValue +
+                 ", Balancer failed", success_balancer == false);
+    }
+  }
+
+  @Test
+  public void testBalancerWithFloatValue() {
+    testBalancerWithThreshold("1.234", false, "");
+  }
+
+  @Test
+  public void testBalancerWithMaximumThresholdValue() {
+    testBalancerWithThreshold("100.0", false, "");
+  }
+
+  @Test
+  public void testBalancerWithMinimumThresholdValue() {
+    testBalancerWithThreshold("1.0", false, "");
+  }
+
+  @Test
+  public void testBalancerWithZeroThresholdValue() {
+    testBalancerWithThreshold("0.0", true,
+            "Expecting a number in the range of [1.0, 100.0]");
+  }
+
+  @Test
+  public void testBalancerWithProperThresholdValue() {
+    testBalancerWithThreshold(thresh, false, "");
+  }
+
+  @Test
+  public void testBalancerWithInvalidThresholdValue() {
+    testBalancerWithThreshold("1000.0", true,
+            "Expecting a number in the range of [1.0, 100.0]");
   }
 
 }
-
