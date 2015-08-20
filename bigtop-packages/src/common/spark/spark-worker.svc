@@ -44,7 +44,7 @@ start() {
     fi
 
     su -s /bin/bash $SVC_USER -c "nohup nice -n 0 \
-        ${EXEC_PATH} org.apache.spark.deploy.worker.Worker spark://$STANDALONE_SPARK_MASTER_HOST:$SPARK_MASTER_PORT $DAEMON_FLAGS \
+        ${EXEC_PATH} org.apache.spark.deploy.worker.Worker spark://$SPARK_MASTER_IP:$SPARK_MASTER_PORT $DAEMON_FLAGS \
         > $LOG_FILE 2>&1 & "'echo $!' > "$PIDFILE"
 
     sleep 3

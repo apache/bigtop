@@ -173,38 +173,20 @@ EOF
 done
 
 cat >> $PREFIX/$CONF_DIR/spark-env.sh <<EOF
-### Let's run everything with JVM runtime, instead of Scala
-export SPARK_LAUNCH_WITH_SCALA=0
-export SPARK_LIBRARY_PATH=\${SPARK_HOME}/lib
-export SCALA_LIBRARY_PATH=\${SPARK_HOME}/lib
-export SPARK_MASTER_WEBUI_PORT=18080
+export HADOOP_HOME=\${HADOOP_HOME:-/usr/lib/hadoop}
+export HADOOP_CONF_DIR=\${HADOOP_CONF_DIR:-/etc/hadoop/conf}
+
+export SPARK_MASTER_IP=\`hostname\`
 export SPARK_MASTER_PORT=7077
+export SPARK_MASTER_WEBUI_PORT=18080
 export SPARK_WORKER_PORT=7078
 export SPARK_WORKER_WEBUI_PORT=18081
 export SPARK_WORKER_DIR=/var/run/spark/work
-export SPARK_LOG_DIR=/var/log/spark
 export SPARK_HISTORY_OPTS="\$SPARK_HISTORY_OPTS -Dspark.history.fs.logDirectory=hdfs:///var/log/spark/apps -Dspark.history.ui.port=18082"
 
-export HADOOP_HOME=\${HADOOP_HOME:-/usr/lib/hadoop}
-export HADOOP_HDFS_HOME=\${HADOOP_HDFS_HOME:-\${HADOOP_HOME}/../hadoop-hdfs}
-export HADOOP_MAPRED_HOME=\${HADOOP_MAPRED_HOME:-\${HADOOP_HOME}/../hadoop-mapreduce}
-export HADOOP_YARN_HOME=\${HADOOP_YARN_HOME:-\${HADOOP_HOME}/../hadoop-yarn}
-export HADOOP_CONF_DIR=\${HADOOP_CONF_DIR:-/etc/hadoop/conf}
+export SPARK_LOG_DIR=/var/log/spark
 
-# Let's make sure that all needed hadoop libs are added properly
-CLASSPATH="\$CLASSPATH:\$HADOOP_HOME/*:\$HADOOP_HDFS_HOME/*:\$HADOOP_YARN_HOME/*:\$HADOOP_MAPRED_HOME/*"
-
-if [ -n "\$HADOOP_HOME" ]; then
-  export SPARK_LIBRARY_PATH=\$SPARK_LIBRARY_PATH:\${HADOOP_HOME}/lib/native
-fi
-
-### Comment above 2 lines and uncomment the following if
-### you want to run with scala version, that is included with the package
-#export SCALA_HOME=\${SCALA_HOME:-$LIB_DIR/scala}
-#export PATH=\$PATH:\$SCALA_HOME/bin
-### change the following to specify a real cluster's Master host
-export STANDALONE_SPARK_MASTER_HOST=\`hostname\`
-
+export LD_LIBRARY_PATH=\${LD_LIBRARY_PATH}:\${HADOOP_HOME}/lib/native
 EOF
 
 cat >> $PREFIX/$CONF_DIR/hive-site.xml <<EOF
