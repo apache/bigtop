@@ -24,13 +24,13 @@ import java.util.List;
 
 import org.apache.bigtop.bigpetstore.datagenerator.DataLoader;
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Customer;
-import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Pair;
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Product;
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Store;
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Transaction;
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.inputs.InputData;
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.inputs.ProductCategory;
 import org.apache.bigtop.bigpetstore.datagenerator.generators.purchase.PurchasingModel;
+import org.apache.commons.lang3.tuple.Pair;
 
 
 public class Driver
@@ -159,7 +159,7 @@ public class Driver
 				record += transaction.getStore().getLocation().getState() + ",";
 				record += transaction.getCustomer().getId() + ",";
 				Pair<String, String> name = transaction.getCustomer().getName();
-				record += name.getFirst() + " " + name.getSecond() + ",";
+				record += name.getLeft() + " " + name.getRight() + ",";
 				record += transaction.getCustomer().getLocation().getZipcode() + ",";
 				record += transaction.getCustomer().getLocation().getCity() + ",";
 				record += transaction.getCustomer().getLocation().getState() + ",";
@@ -182,7 +182,7 @@ public class Driver
 		{
 			String record = customer.getId() + ",";
 			Pair<String, String> name = customer.getName();
-			record += name.getFirst() + "," + name.getSecond() + ",";
+			record += name.getLeft() + "," + name.getRight() + ",";
 			record += customer.getLocation().getZipcode() + ",";
 			record += customer.getLocation().getCity() + ",";
 			record += customer.getLocation().getState() + "\n";

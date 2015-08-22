@@ -19,10 +19,10 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Random;
 
-import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Pair;
 import org.apache.bigtop.bigpetstore.datagenerator.framework.SeedFactory;
 import org.apache.bigtop.bigpetstore.datagenerator.framework.pdfs.MultinomialPDF;
 import org.apache.bigtop.bigpetstore.datagenerator.framework.pdfs.ProbabilityDensityFunction;
+import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
@@ -93,7 +93,7 @@ public class RouletteWheelSampler<T> implements Sampler<T>
 			double prob = entry.getValue() / weightSum;
 			cumProb += prob;
 			
-			builder.add(Pair.create(entry.getKey(), cumProb));
+			builder.add(Pair.of(entry.getKey(), cumProb));
 		}
 		
 		return builder.build();
@@ -103,8 +103,8 @@ public class RouletteWheelSampler<T> implements Sampler<T>
 	{
 		double r = rng.nextDouble();
 		for(Pair<T, Double> cumProbPair : wheel)
-			if(r < cumProbPair.getSecond())
-				return cumProbPair.getFirst();
+			if(r < cumProbPair.getValue())
+				return cumProbPair.getKey();
 		
 		throw new IllegalStateException("Invalid state -- RouletteWheelSampler should never fail to sample!");
 	}

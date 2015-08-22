@@ -24,8 +24,8 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.Vector;
 
-import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Pair;
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.inputs.ZipcodeRecord;
+import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -154,7 +154,7 @@ public class ZipcodeReader
 			Double longitude = Double.parseDouble(cols[3].substring(1, cols[3].length() - 1));
 			String city = cols[4].substring(1, cols[4].length() - 1);
 			
-			Pair<Double, Double> coords = new Pair<Double, Double>(latitude, longitude);
+			Pair<Double, Double> coords = Pair.of(latitude, longitude);
 
 			ZipcodeLocationRecord record = new ZipcodeLocationRecord(coords, city, state);
 			

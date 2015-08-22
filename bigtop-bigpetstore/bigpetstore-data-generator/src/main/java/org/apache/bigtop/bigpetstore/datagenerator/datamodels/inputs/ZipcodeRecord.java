@@ -17,7 +17,7 @@ package org.apache.bigtop.bigpetstore.datagenerator.datamodels.inputs;
 
 import java.io.Serializable;
 
-import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Pair;
+import org.apache.commons.lang3.tuple.Pair;
 
 public class ZipcodeRecord implements Serializable
 {
@@ -68,11 +68,11 @@ public class ZipcodeRecord implements Serializable
 		
 		Pair<Double, Double> otherCoords = other.getCoordinates();
 		
-		double dist = Math.sin(Math.toRadians(coordinates.getFirst())) *
-				Math.sin(Math.toRadians(otherCoords.getFirst())) +
-				Math.cos(Math.toRadians(coordinates.getFirst())) *
-				Math.cos(Math.toRadians(otherCoords.getFirst())) *
-				Math.cos(Math.toRadians(coordinates.getSecond() - otherCoords.getSecond()));
+		double dist = Math.sin(Math.toRadians(coordinates.getLeft())) *
+				Math.sin(Math.toRadians(otherCoords.getLeft())) +
+				Math.cos(Math.toRadians(coordinates.getLeft())) *
+				Math.cos(Math.toRadians(otherCoords.getLeft())) *
+				Math.cos(Math.toRadians(coordinates.getRight() - otherCoords.getRight()));
 		dist = Math.toDegrees(Math.acos(dist)) * 69.09;
 		
 		return dist;		

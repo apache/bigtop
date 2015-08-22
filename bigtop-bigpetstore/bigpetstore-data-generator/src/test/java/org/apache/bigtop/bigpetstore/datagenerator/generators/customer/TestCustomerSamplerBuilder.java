@@ -23,13 +23,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Customer;
-import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Pair;
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Store;
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.inputs.InputData;
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.inputs.Names;
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.inputs.ZipcodeRecord;
 import org.apache.bigtop.bigpetstore.datagenerator.framework.SeedFactory;
 import org.apache.bigtop.bigpetstore.datagenerator.framework.samplers.Sampler;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableMap;
@@ -42,9 +42,9 @@ public class TestCustomerSamplerBuilder
 	{	
 		Map<String, Double> nameList = ImmutableMap.of("Fred", 1.0, "George", 1.0, "Gary", 1.0, "Fiona", 1.0);
 		List<ZipcodeRecord> zipcodes = Arrays.asList(new ZipcodeRecord[] {				
-				new ZipcodeRecord("11111", Pair.create(1.0, 1.0), "AZ", "Tempte", 30000.0, 100),
-				new ZipcodeRecord("22222", Pair.create(2.0, 2.0), "AZ", "Phoenix", 45000.0, 200),
-				new ZipcodeRecord("33333", Pair.create(3.0, 3.0), "AZ", "Flagstaff", 60000.0, 300)
+				new ZipcodeRecord("11111", Pair.of(1.0, 1.0), "AZ", "Tempte", 30000.0, 100),
+				new ZipcodeRecord("22222", Pair.of(2.0, 2.0), "AZ", "Phoenix", 45000.0, 200),
+				new ZipcodeRecord("33333", Pair.of(3.0, 3.0), "AZ", "Flagstaff", 60000.0, 300)
 				});
 		
 		Names names = new Names(nameList, nameList);
@@ -67,8 +67,8 @@ public class TestCustomerSamplerBuilder
 		assertNotNull(customer);
 		assertTrue(customer.getId() >= 0);
 		assertNotNull(customer.getName());
-		assertNotNull(customer.getName().getFirst());
-		assertNotNull(customer.getName().getSecond());
+		assertNotNull(customer.getName().getLeft());
+		assertNotNull(customer.getName().getRight());
 		assertNotNull(customer.getLocation());
 		
 	}

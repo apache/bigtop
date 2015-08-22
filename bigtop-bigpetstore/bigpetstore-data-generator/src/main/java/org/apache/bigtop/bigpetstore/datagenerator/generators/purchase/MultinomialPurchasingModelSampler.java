@@ -21,7 +21,6 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.apache.bigtop.bigpetstore.datagenerator.Constants;
-import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Pair;
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Product;
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.inputs.ProductCategory;
 import org.apache.bigtop.bigpetstore.datagenerator.framework.SeedFactory;
@@ -29,6 +28,7 @@ import org.apache.bigtop.bigpetstore.datagenerator.framework.pdfs.MultinomialPDF
 import org.apache.bigtop.bigpetstore.datagenerator.framework.samplers.Sampler;
 import org.apache.bigtop.bigpetstore.datagenerator.framework.samplers.UniformIntSampler;
 import org.apache.bigtop.bigpetstore.datagenerator.framework.samplers.UniformSampler;
+import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableMap;
@@ -98,7 +98,7 @@ public class MultinomialPurchasingModelSampler implements Sampler<MultinomialPur
 				}
 				
 				Object fieldValue = shuffled.get(i);
-				fieldValueWeights.put(new Pair<String,Object>(fieldName, fieldValue), weight);
+				fieldValueWeights.put(Pair.of(fieldName, fieldValue), weight);
 			}
 		}
 		
@@ -118,7 +118,7 @@ public class MultinomialPurchasingModelSampler implements Sampler<MultinomialPur
 				if(!Constants.PRODUCT_MODEL_EXCLUDED_FIELDS.contains(fieldName))
 				{
 					Object fieldValue = p.getFieldValue(fieldName);
-					Pair<String, Object> key = Pair.create(fieldName, fieldValue);
+					Pair<String, Object> key = Pair.of(fieldName, fieldValue);
 					weight *= fieldValueWeights.get(key);
 				}
 			}

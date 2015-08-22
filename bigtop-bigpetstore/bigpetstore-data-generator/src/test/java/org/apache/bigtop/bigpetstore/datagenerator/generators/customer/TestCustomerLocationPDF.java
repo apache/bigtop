@@ -22,10 +22,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.bigtop.bigpetstore.datagenerator.Constants;
-import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Pair;
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Store;
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.inputs.ZipcodeRecord;
-import org.apache.bigtop.bigpetstore.datagenerator.generators.customer.CustomerLocationPDF;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
 
 public class TestCustomerLocationPDF
@@ -35,9 +34,9 @@ public class TestCustomerLocationPDF
 	public void testProbability() throws Exception
 	{
 		List<ZipcodeRecord> zipcodes = Arrays.asList(new ZipcodeRecord[] {				
-				new ZipcodeRecord("11111", Pair.create(1.0, 1.0), "AZ", "Tempte", 30000.0, 100),
-				new ZipcodeRecord("22222", Pair.create(2.0, 2.0), "AZ", "Phoenix", 45000.0, 200),
-				new ZipcodeRecord("33333", Pair.create(3.0, 3.0), "AZ", "Flagstaff", 60000.0, 300)
+				new ZipcodeRecord("11111", Pair.of(1.0, 1.0), "AZ", "Tempte", 30000.0, 100),
+				new ZipcodeRecord("22222", Pair.of(2.0, 2.0), "AZ", "Phoenix", 45000.0, 200),
+				new ZipcodeRecord("33333", Pair.of(3.0, 3.0), "AZ", "Flagstaff", 60000.0, 300)
 				});
 		
 		List<Store> stores = new ArrayList<Store>();

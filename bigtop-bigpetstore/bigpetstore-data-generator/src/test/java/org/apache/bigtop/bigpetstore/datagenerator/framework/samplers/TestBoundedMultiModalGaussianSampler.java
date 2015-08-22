@@ -19,10 +19,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Pair;
 import org.apache.bigtop.bigpetstore.datagenerator.framework.SeedFactory;
-import org.apache.bigtop.bigpetstore.datagenerator.framework.samplers.BoundedMultiModalGaussianSampler;
-import org.apache.bigtop.bigpetstore.datagenerator.framework.samplers.Sampler;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
 
 import com.google.common.collect.Lists;
@@ -36,7 +34,7 @@ public class TestBoundedMultiModalGaussianSampler
 		double upperbound = 10.0;
 		double lowerbound = 1.0;
 		
-		List<Pair<Double, Double>> distributions = Lists.newArrayList(Pair.create(2.0, 2.0), Pair.create(7.5, 2.0));
+		List<Pair<Double, Double>> distributions = Lists.newArrayList(Pair.of(2.0, 2.0), Pair.of(7.5, 2.0));
 		
 		SeedFactory seedFactory = new SeedFactory(1234);
 		

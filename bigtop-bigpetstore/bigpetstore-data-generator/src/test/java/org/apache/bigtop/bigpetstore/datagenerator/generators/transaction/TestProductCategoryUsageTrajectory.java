@@ -17,8 +17,7 @@ package org.apache.bigtop.bigpetstore.datagenerator.generators.transaction;
 
 import static org.junit.Assert.assertEquals;
 
-import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Pair;
-import org.apache.bigtop.bigpetstore.datagenerator.generators.transaction.ProductCategoryUsageTrajectory;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
 
 public class TestProductCategoryUsageTrajectory
@@ -35,16 +34,16 @@ public class TestProductCategoryUsageTrajectory
 		assertEquals(trajectory.size(), 1);
 		
 		Pair<Double, Double> entry = trajectory.getStep(0);
-		assertEquals(initialTime, entry.getFirst(), 0.0001);
-		assertEquals(initialAmount, entry.getSecond(), 0.0001);
+		assertEquals(initialTime, entry.getLeft(), 0.0001);
+		assertEquals(initialAmount, entry.getRight(), 0.0001);
 		
 		trajectory.append(1.0, 25.0);
 		
 		assertEquals(2, trajectory.size());
 		
 		entry = trajectory.getStep(1);
-		assertEquals(1.0, entry.getFirst(), 0.0001);
-		assertEquals(25.0, entry.getSecond(), 0.0001);
+		assertEquals(1.0, entry.getLeft(), 0.0001);
+		assertEquals(25.0, entry.getRight(), 0.0001);
 		
 		assertEquals(1.0, trajectory.getLastTime(), 0.0001);
 		assertEquals(25.0, trajectory.getLastAmount(), 0.0001);

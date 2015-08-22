@@ -16,11 +16,11 @@
 package org.apache.bigtop.bigpetstore.datagenerator.generators.customer;
 
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Customer;
-import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Pair;
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Store;
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.inputs.ZipcodeRecord;
 import org.apache.bigtop.bigpetstore.datagenerator.framework.samplers.ConditionalSampler;
 import org.apache.bigtop.bigpetstore.datagenerator.framework.samplers.Sampler;
+import org.apache.commons.lang3.tuple.Pair;
 
 public class CustomerSampler implements Sampler<Customer>
 {
@@ -45,7 +45,7 @@ public class CustomerSampler implements Sampler<Customer>
 	public Customer sample() throws Exception
 	{
 		Integer id = idSampler.sample();
-		Pair<String, String> name = Pair.create(firstNameSampler.sample(),
+		Pair<String, String> name = Pair.of(firstNameSampler.sample(),
 				lastNameSampler.sample());
 		Store store = storeSampler.sample();
 		ZipcodeRecord location = locationSampler.sample(store);

@@ -26,7 +26,6 @@ import java.util.Map;
 
 import org.apache.bigtop.bigpetstore.datagenerator.Constants;
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Customer;
-import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Pair;
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Store;
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.inputs.ZipcodeRecord;
 import org.apache.bigtop.bigpetstore.datagenerator.framework.SeedFactory;
@@ -35,8 +34,7 @@ import org.apache.bigtop.bigpetstore.datagenerator.framework.samplers.Conditiona
 import org.apache.bigtop.bigpetstore.datagenerator.framework.samplers.RouletteWheelSampler;
 import org.apache.bigtop.bigpetstore.datagenerator.framework.samplers.Sampler;
 import org.apache.bigtop.bigpetstore.datagenerator.framework.samplers.SequenceSampler;
-import org.apache.bigtop.bigpetstore.datagenerator.generators.customer.CustomerLocationPDF;
-import org.apache.bigtop.bigpetstore.datagenerator.generators.customer.CustomerSampler;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
 
 import com.google.common.collect.Maps;
@@ -71,9 +69,9 @@ public class TestCustomerSampler
 		
 		Collection<String> nameList = Arrays.asList(new String[] {"Fred", "Gary", "George", "Fiona"});
 		List<ZipcodeRecord> zipcodes = Arrays.asList(new ZipcodeRecord[] {				
-				new ZipcodeRecord("11111", Pair.create(1.0, 1.0), "AZ", "Tempte", 30000.0, 100),
-				new ZipcodeRecord("22222", Pair.create(2.0, 2.0), "AZ", "Phoenix", 45000.0, 200),
-				new ZipcodeRecord("33333", Pair.create(3.0, 3.0), "AZ", "Flagstaff", 60000.0, 300)
+				new ZipcodeRecord("11111", Pair.of(1.0, 1.0), "AZ", "Tempte", 30000.0, 100),
+				new ZipcodeRecord("22222", Pair.of(2.0, 2.0), "AZ", "Phoenix", 45000.0, 200),
+				new ZipcodeRecord("33333", Pair.of(3.0, 3.0), "AZ", "Flagstaff", 60000.0, 300)
 				});
 		
 		List<Store> stores = new ArrayList<Store>();
@@ -96,10 +94,10 @@ public class TestCustomerSampler
 		assertNotNull(customer);
 		assertTrue(customer.getId() >= 0);
 		assertNotNull(customer.getName());
-		assertNotNull(customer.getName().getFirst());
-		assertTrue(nameList.contains(customer.getName().getFirst()));
-		assertNotNull(customer.getName().getSecond());
-		assertTrue(nameList.contains(customer.getName().getSecond()));
+		assertNotNull(customer.getName().getLeft());
+		assertTrue(nameList.contains(customer.getName().getLeft()));
+		assertNotNull(customer.getName().getRight());
+		assertTrue(nameList.contains(customer.getName().getRight()));
 		assertNotNull(customer.getLocation());
 		assertTrue(zipcodes.contains(customer.getLocation()));
 		

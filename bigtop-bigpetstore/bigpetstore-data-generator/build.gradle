@@ -58,6 +58,7 @@ test {
 dependencies {
     compile 'com.google.guava:guava:18.0'
     compile 'com.google.code.gson:gson:2.3'
+    compile 'org.apache.commons:commons-lang3:3.4'
 
     testCompile 'junit:junit:4.+'
 }

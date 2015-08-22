@@ -18,10 +18,8 @@ package org.apache.bigtop.bigpetstore.datagenerator.generators.transaction;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Pair;
 import org.apache.bigtop.bigpetstore.datagenerator.framework.SeedFactory;
-import org.apache.bigtop.bigpetstore.datagenerator.generators.transaction.ProductCategoryUsageSimulator;
-import org.apache.bigtop.bigpetstore.datagenerator.generators.transaction.ProductCategoryUsageTrajectory;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
 
 public class TestProductCategoryUsageSimulator
@@ -43,9 +41,9 @@ public class TestProductCategoryUsageSimulator
 		{
 			Pair<Double, Double> entry = trajectory.getStep(i);
 			// time should move forward
-			assertTrue(previousEntry.getFirst() <= entry.getFirst());
+			assertTrue(previousEntry.getLeft() <= entry.getLeft());
 			// remaining amounts should go down
-			assertTrue(previousEntry.getSecond() >= entry.getSecond());
+			assertTrue(previousEntry.getRight() >= entry.getRight());
 			previousEntry = entry;
 		}
 	}

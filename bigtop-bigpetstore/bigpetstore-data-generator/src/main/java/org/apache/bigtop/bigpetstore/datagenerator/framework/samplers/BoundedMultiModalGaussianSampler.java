@@ -18,8 +18,8 @@ package org.apache.bigtop.bigpetstore.datagenerator.framework.samplers;
 import java.util.List;
 import java.util.Random;
 
-import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Pair;
 import org.apache.bigtop.bigpetstore.datagenerator.framework.SeedFactory;
+import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.ImmutableList;
 
@@ -46,8 +46,8 @@ public class BoundedMultiModalGaussianSampler implements Sampler<Double>
 		{
 			int idx = rng.nextInt(distributions.size());
 			
-			double mean = distributions.get(idx).getFirst();
-			double std = distributions.get(idx).getSecond();
+			double mean = distributions.get(idx).getLeft();
+			double std = distributions.get(idx).getRight();
 			
 			double value = mean + rng.nextGaussian() * std;
 			

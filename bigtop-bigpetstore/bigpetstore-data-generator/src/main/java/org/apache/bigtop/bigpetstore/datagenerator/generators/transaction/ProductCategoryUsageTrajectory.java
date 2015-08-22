@@ -17,7 +17,7 @@ package org.apache.bigtop.bigpetstore.datagenerator.generators.transaction;
 
 import java.util.List;
 
-import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Pair;
+import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.Lists;
 
@@ -33,17 +33,17 @@ public class ProductCategoryUsageTrajectory
 	
 	public void append(double time, double amount)
 	{
-		trajectory.add(Pair.create(time, amount));
+		trajectory.add(Pair.of(time, amount));
 	}
 	
 	public double getLastAmount()
 	{
-		return trajectory.get(trajectory.size() - 1).getSecond();
+		return trajectory.get(trajectory.size() - 1).getValue();
 	}
 	
 	public double getLastTime()
 	{
-		return trajectory.get(trajectory.size() - 1).getFirst();
+		return trajectory.get(trajectory.size() - 1).getKey();
 	}
 	
 	public double amountAtTime(double time)
@@ -51,7 +51,7 @@ public class ProductCategoryUsageTrajectory
 		Pair<Double, Double> previous = null;
 		for(Pair<Double, Double> entry : trajectory)
 		{
-			if(entry.getFirst() > time)
+			if(entry.getKey() > time)
 				break;
 			previous = entry;
 		}
@@ -59,7 +59,7 @@ public class ProductCategoryUsageTrajectory
 		if(previous == null)
 			return 0.0;
 		
-		return previous.getSecond();
+		return previous.getValue();
 	}
 	
 	public Pair<Double, Double> getStep(int idx)

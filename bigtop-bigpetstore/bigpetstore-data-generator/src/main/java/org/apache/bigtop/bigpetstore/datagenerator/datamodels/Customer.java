@@ -18,6 +18,7 @@ package org.apache.bigtop.bigpetstore.datagenerator.datamodels;
 import java.io.Serializable;
 
 import org.apache.bigtop.bigpetstore.datagenerator.datamodels.inputs.ZipcodeRecord;
+import org.apache.commons.lang3.tuple.Pair;
 
 public class Customer implements Serializable
 {

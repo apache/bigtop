@@ -19,7 +19,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.bigtop.bigpetstore.datagenerator.datamodels.Pair;
+import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -51,8 +51,8 @@ public class Constants
 	public static final int MIN_PETS = 1;
 	public static final int MAX_PETS = 10;
 	
-	public static final List<Pair<Double, Double>> TRANSACTION_TRIGGER_TIME_GAUSSIANS = ImmutableList.of(Pair.create(5.0, 2.0));
-	public static final List<Pair<Double, Double>> PURCHASE_TRIGGER_TIME_GAUSSIANS = ImmutableList.of(Pair.create(10.0, 4.0));
+	public static final List<Pair<Double, Double>> TRANSACTION_TRIGGER_TIME_GAUSSIANS = ImmutableList.of(Pair.of(5.0, 2.0));
+	public static final List<Pair<Double, Double>> PURCHASE_TRIGGER_TIME_GAUSSIANS = ImmutableList.of(Pair.of(10.0, 4.0));
 	
 	public static final double TRANSACTION_TRIGGER_TIME_MAX = 10.0;
 	public static final double TRANSACTION_TRIGGER_TIME_MIN = 1.0;
@@ -64,15 +64,15 @@ public class Constants
 	
 	public static final PurchasingModelType PURCHASING_MODEL_TYPE = PurchasingModelType.MULTINOMIAL;
 	
-	public static final List<Pair<Double, Double>> PRODUCT_MSM_FIELD_WEIGHT_GAUSSIANS = ImmutableList.of(Pair.create(0.15, 0.1), Pair.create(0.85, 0.1));
+	public static final List<Pair<Double, Double>> PRODUCT_MSM_FIELD_WEIGHT_GAUSSIANS = ImmutableList.of(Pair.of(0.15, 0.1), Pair.of(0.85, 0.1));
 	public static final double PRODUCT_MSM_FIELD_WEIGHT_LOWERBOUND = 0.05;
 	public static final double PRODUCT_MSM_FIELD_WEIGHT_UPPERBOUND = 0.95;
 	
-	public static final List<Pair<Double, Double>> PRODUCT_MSM_FIELD_SIMILARITY_WEIGHT_GAUSSIANS = ImmutableList.of(Pair.create(0.15, 0.1), Pair.create(0.85, 0.1));
+	public static final List<Pair<Double, Double>> PRODUCT_MSM_FIELD_SIMILARITY_WEIGHT_GAUSSIANS = ImmutableList.of(Pair.of(0.15, 0.1), Pair.of(0.85, 0.1));
 	public static final double PRODUCT_MSM_FIELD_SIMILARITY_WEIGHT_LOWERBOUND = 0.05;
 	public static final double PRODUCT_MSM_FIELD_SIMILARITY_WEIGHT_UPPERBOUND = 0.95;
 	
-	public static final List<Pair<Double, Double>> PRODUCT_MSM_LOOPBACK_WEIGHT_GAUSSIANS = ImmutableList.of(Pair.create(0.25, 0.1), Pair.create(0.75, 0.1));
+	public static final List<Pair<Double, Double>> PRODUCT_MSM_LOOPBACK_WEIGHT_GAUSSIANS = ImmutableList.of(Pair.of(0.25, 0.1), Pair.of(0.75, 0.1));
 	public static final double PRODUCT_MSM_LOOPBACK_WEIGHT_LOWERBOUND = 0.05;
 	public static final double PRODUCT_MSM_LOOPBACK_WEIGHT_UPPERBOUND = 0.95;
 	
