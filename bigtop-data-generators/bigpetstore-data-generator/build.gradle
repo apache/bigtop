@@ -1,0 +1,66 @@
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+apply plugin: 'eclipse'
+apply plugin: 'groovy'
+apply plugin: 'java' 
+apply plugin: 'maven'
+group = 'org.apache.bigtop'
+version = '1.1.0-SNAPSHOT'
+
+jar {
+    
+    from {
+        configurations.runtime.collect { 
+            it.isDirectory() ? it : zipTree(it)
+        }
+    } 
+
+    manifest {
+	attributes 'Title': 'BigPetStore Data Generator', 'Version': version
+	attributes 'Main-Class': 'org.apache.bigtop.datagenerators.bigpetstore.cli.Driver'
+    }
+}
+
+repositories {
+	mavenLocal()
+	mavenCentral()
+}
+
+test {
+     // show standard out and error on console
+     testLogging.showStandardStreams = true
+
+     // listen to events in the test execution lifecycle
+     beforeTest { descriptor ->
+       logger.lifecycle("Running test: " + descriptor)
+     }
+
+     // listen to standard out and standard error of the test JVM(s)
+     onOutput { descriptor, event ->
+       logger.lifecycle("Test: " + descriptor + " produced standard out/err: " + event.message )
+     }
+
+}
+
+dependencies {
+    compile 'com.google.guava:guava:18.0'
+    compile 'com.google.code.gson:gson:2.3'
+    compile 'org.apache.commons:commons-lang3:3.4'
+    compile 'org.apache.bigtop:bigtop-samplers:1.1.0-SNAPSHOT'
+    compile 'org.apache.bigtop:bigtop-name-generator:1.1.0-SNAPSHOT'
+
+    testCompile 'junit:junit:4.+'
+}
