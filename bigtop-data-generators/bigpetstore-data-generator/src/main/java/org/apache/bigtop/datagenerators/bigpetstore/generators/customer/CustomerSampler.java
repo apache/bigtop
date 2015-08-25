@@ -25,19 +25,18 @@ import org.apache.commons.lang3.tuple.Pair;
 public class CustomerSampler implements Sampler<Customer>
 {
 	private final Sampler<Integer> idSampler;
-	private final Sampler<String> firstNameSampler;
-	private final Sampler<String> lastNameSampler;
+	private final Sampler<Pair<String, String>> nameSampler;
 	private final Sampler<Store> storeSampler;
 	private final ConditionalSampler<ZipcodeRecord, Store> locationSampler;
 
 
-	public CustomerSampler(Sampler<Integer> idSampler, Sampler<String> firstNameSampler,
-			Sampler<String> lastNameSampler, Sampler<Store> storeSampler,
+	public CustomerSampler(Sampler<Integer> idSampler,
+			Sampler<Pair<String, String>> nameSampler,
+			Sampler<Store> storeSampler,
 			ConditionalSampler<ZipcodeRecord, Store> locationSampler)
 	{
 		this.idSampler = idSampler;
-		this.firstNameSampler = firstNameSampler;
-		this.lastNameSampler = lastNameSampler;
+		this.nameSampler = nameSampler;
 		this.storeSampler = storeSampler;
 		this.locationSampler = locationSampler;
 	}
@@ -45,8 +44,7 @@ public class CustomerSampler implements Sampler<Customer>
 	public Customer sample() throws Exception
 	{
 		Integer id = idSampler.sample();
-		Pair<String, String> name = Pair.of(firstNameSampler.sample(),
-				lastNameSampler.sample());
+		Pair<String, String> name = nameSampler.sample();
 		Store store = storeSampler.sample();
 		ZipcodeRecord location = locationSampler.sample(store);
 

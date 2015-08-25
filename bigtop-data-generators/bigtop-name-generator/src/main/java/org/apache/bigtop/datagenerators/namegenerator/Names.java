@@ -13,25 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.bigtop.datagenerators.bigpetstore.datamodels.inputs;
+package org.apache.bigtop.datagenerators.namegenerator;
 
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.List;
+import java.util.Map;
 
-public class InputData implements Serializable
+import com.google.common.collect.ImmutableMap;
+
+public class Names implements Serializable
 {
-	private static final long serialVersionUID = 9078989799806707788L;
+	private static final long serialVersionUID = 2731634747628534453L;
 
-	List<ZipcodeRecord> zipcodeTable;
+	final ImmutableMap<String, Double> firstNames;
+	final ImmutableMap<String, Double> lastNames;
 
-	public InputData(List<ZipcodeRecord> zipcodeTable)
+	public Names(Map<String, Double> firstNames,
+			Map<String, Double> lastNames)
 	{
-		this.zipcodeTable = Collections.unmodifiableList(zipcodeTable);
+		this.firstNames = ImmutableMap.copyOf(firstNames);
+		this.lastNames = ImmutableMap.copyOf(lastNames);
 	}
 
-	public List<ZipcodeRecord> getZipcodeTable()
+	public ImmutableMap<String, Double> getFirstNames()
 	{
-		return zipcodeTable;
+		return firstNames;
+	}
+
+	public ImmutableMap<String, Double> getLastNames()
+	{
+		return lastNames;
 	}
 }

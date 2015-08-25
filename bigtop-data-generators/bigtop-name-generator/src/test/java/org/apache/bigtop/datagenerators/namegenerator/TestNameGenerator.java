@@ -13,34 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.bigtop.datagenerators.bigpetstore.datamodels.inputs;
+package org.apache.bigtop.datagenerators.namegenerator;
 
-import java.io.Serializable;
-import java.util.Map;
+import org.apache.bigtop.datagenerators.samplers.SeedFactory;
+import org.apache.commons.lang3.tuple.Pair;
+import org.junit.Assert;
+import org.junit.Test;
 
-import com.google.common.collect.ImmutableMap;
-
-public class Names implements Serializable
+public class TestNameGenerator
 {
-	private static final long serialVersionUID = 2731634747628534453L;
-
-	final ImmutableMap<String, Double> firstNames;
-	final ImmutableMap<String, Double> lastNames;
-
-	public Names(Map<String, Double> firstNames,
-			Map<String, Double> lastNames)
+	@Test
+	public void testBuild() throws Exception
 	{
-		this.firstNames = ImmutableMap.copyOf(firstNames);
-		this.lastNames = ImmutableMap.copyOf(lastNames);
-	}
+		SeedFactory factory = new SeedFactory(1234);
 
-	public ImmutableMap<String, Double> getFirstNames()
-	{
-		return firstNames;
-	}
+		NameGenerator sampler = new NameGenerator(factory);
 
-	public ImmutableMap<String, Double> getLastNames()
-	{
-		return lastNames;
+		Pair<String, String> name = sampler.sample();
+
+		Assert.assertNotNull(name);
+		Assert.assertNotNull(name.getLeft());
+		Assert.assertNotNull(name.getRight());
+
 	}
 }

@@ -15,22 +15,21 @@
  */
 apply plugin: 'eclipse'
 apply plugin: 'groovy'
-apply plugin: 'java' 
+apply plugin: 'java'
 apply plugin: 'maven'
 group = 'org.apache.bigtop'
 version = '1.1.0-SNAPSHOT'
 
 jar {
-    
+
     from {
-        configurations.runtime.collect { 
+        configurations.runtime.collect {
             it.isDirectory() ? it : zipTree(it)
         }
-    } 
+    }
 
     manifest {
-	attributes 'Title': 'BigPetStore Data Generator', 'Version': version
-	attributes 'Main-Class': 'org.apache.bigtop.datagenerators.bigpetstore.cli.Driver'
+	attributes 'Title': 'BigTop Name Generator', 'Version': version
     }
 }
 
@@ -57,10 +56,8 @@ test {
 
 dependencies {
     compile 'com.google.guava:guava:18.0'
-    compile 'com.google.code.gson:gson:2.3'
     compile 'org.apache.commons:commons-lang3:3.4'
     compile 'org.apache.bigtop:bigtop-samplers:1.1.0-SNAPSHOT'
-    compile 'org.apache.bigtop:bigtop-name-generator:1.1.0-SNAPSHOT'
 
     testCompile 'junit:junit:4.+'
 }

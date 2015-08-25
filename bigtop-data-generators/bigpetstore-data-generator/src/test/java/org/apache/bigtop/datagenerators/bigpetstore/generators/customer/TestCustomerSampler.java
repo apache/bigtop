@@ -20,7 +20,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -28,8 +27,6 @@ import org.apache.bigtop.datagenerators.bigpetstore.Constants;
 import org.apache.bigtop.datagenerators.bigpetstore.datamodels.Customer;
 import org.apache.bigtop.datagenerators.bigpetstore.datamodels.Store;
 import org.apache.bigtop.datagenerators.bigpetstore.datamodels.inputs.ZipcodeRecord;
-import org.apache.bigtop.datagenerators.bigpetstore.generators.customer.CustomerLocationPDF;
-import org.apache.bigtop.datagenerators.bigpetstore.generators.customer.CustomerSampler;
 import org.apache.bigtop.datagenerators.samplers.SeedFactory;
 import org.apache.bigtop.datagenerators.samplers.pdfs.ProbabilityDensityFunction;
 import org.apache.bigtop.datagenerators.samplers.samplers.ConditionalSampler;
@@ -39,6 +36,7 @@ import org.apache.bigtop.datagenerators.samplers.samplers.SequenceSampler;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 public class TestCustomerSampler
@@ -69,7 +67,12 @@ public class TestCustomerSampler
 	{
 		SeedFactory factory = new SeedFactory(1234);
 
-		Collection<String> nameList = Arrays.asList(new String[] {"Fred", "Gary", "George", "Fiona"});
+		List<Pair<String, String>> nameList = Lists.newArrayList();
+		nameList.add(Pair.of("Fred", "Fred"));
+		nameList.add(Pair.of("Gary", "Gary"));
+		nameList.add(Pair.of("George", "George"));
+		nameList.add(Pair.of("Fiona", "Fiona"));
+
 		List<ZipcodeRecord> zipcodes = Arrays.asList(new ZipcodeRecord[] {
 				new ZipcodeRecord("11111", Pair.of(1.0, 1.0), "AZ", "Tempte", 30000.0, 100),
 				new ZipcodeRecord("22222", Pair.of(2.0, 2.0), "AZ", "Phoenix", 45000.0, 200),
@@ -85,21 +88,18 @@ public class TestCustomerSampler
 
 
 		Sampler<Integer> idSampler = new SequenceSampler();
-		Sampler<String> nameSampler = RouletteWheelSampler.createUniform(nameList, factory);
+		Sampler<Pair<String, String>> nameSampler = RouletteWheelSampler.createUniform(nameList, factory);
 		Sampler<Store> storeSampler = RouletteWheelSampler.createUniform(stores, factory);
 		ConditionalSampler<ZipcodeRecord, Store> zipcodeSampler = buildLocationSampler(stores, zipcodes, factory);
 
-		Sampler<Customer> sampler = new CustomerSampler(idSampler, nameSampler, nameSampler, storeSampler, zipcodeSampler);
+		Sampler<Customer> sampler = new CustomerSampler(idSampler, nameSampler, storeSampler, zipcodeSampler);
 
 		Customer customer = sampler.sample();
 
 		assertNotNull(customer);
 		assertTrue(customer.getId() >= 0);
 		assertNotNull(customer.getName());
-		assertNotNull(customer.getName().getLeft());
-		assertTrue(nameList.contains(customer.getName().getLeft()));
-		assertNotNull(customer.getName().getRight());
-		assertTrue(nameList.contains(customer.getName().getRight()));
+		assertTrue(nameList.contains(customer.getName()));
 		assertNotNull(customer.getLocation());
 		assertTrue(zipcodes.contains(customer.getLocation()));
 

@@ -13,25 +13,4 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.bigtop.datagenerators.bigpetstore.datamodels.inputs;
-
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.List;
-
-public class InputData implements Serializable
-{
-	private static final long serialVersionUID = 9078989799806707788L;
-
-	List<ZipcodeRecord> zipcodeTable;
-
-	public InputData(List<ZipcodeRecord> zipcodeTable)
-	{
-		this.zipcodeTable = Collections.unmodifiableList(zipcodeTable);
-	}
-
-	public List<ZipcodeRecord> getZipcodeTable()
-	{
-		return zipcodeTable;
-	}
-}
+rootProject.name = "bigtop-name-generator"

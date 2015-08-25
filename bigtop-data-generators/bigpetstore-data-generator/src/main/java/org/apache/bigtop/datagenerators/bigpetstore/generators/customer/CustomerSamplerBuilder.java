@@ -23,12 +23,14 @@ import org.apache.bigtop.datagenerators.bigpetstore.datamodels.Customer;
 import org.apache.bigtop.datagenerators.bigpetstore.datamodels.Store;
 import org.apache.bigtop.datagenerators.bigpetstore.datamodels.inputs.InputData;
 import org.apache.bigtop.datagenerators.bigpetstore.datamodels.inputs.ZipcodeRecord;
+import org.apache.bigtop.datagenerators.namegenerator.NameGenerator;
 import org.apache.bigtop.datagenerators.samplers.SeedFactory;
 import org.apache.bigtop.datagenerators.samplers.pdfs.ProbabilityDensityFunction;
 import org.apache.bigtop.datagenerators.samplers.samplers.ConditionalSampler;
 import org.apache.bigtop.datagenerators.samplers.samplers.RouletteWheelSampler;
 import org.apache.bigtop.datagenerators.samplers.samplers.Sampler;
 import org.apache.bigtop.datagenerators.samplers.samplers.SequenceSampler;
+import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.Maps;
 
@@ -65,16 +67,15 @@ public class CustomerSamplerBuilder
 				};
 	}
 
-	public Sampler<Customer> build()
+	public Sampler<Customer> build() throws Exception
 	{
 		ProbabilityDensityFunction<Store> storePDF = new CustomerStorePDF(stores);
 
 		Sampler<Integer> idSampler = new SequenceSampler();
-		Sampler<String> firstNameSampler = RouletteWheelSampler.create(inputData.getNames().getFirstNames(), seedFactory);
-		Sampler<String> lastNameSampler = RouletteWheelSampler.create(inputData.getNames().getLastNames(), seedFactory);
+		Sampler<Pair<String, String>> nameSampler = new NameGenerator(seedFactory);
 		Sampler<Store> storeSampler = RouletteWheelSampler.create(stores, storePDF, seedFactory);
 
-		return new CustomerSampler(idSampler, firstNameSampler, lastNameSampler, storeSampler, buildLocationSampler());
+		return new CustomerSampler(idSampler, nameSampler, storeSampler, buildLocationSampler());
 	}
 
 }
