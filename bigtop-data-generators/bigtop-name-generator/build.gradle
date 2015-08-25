@@ -57,7 +57,7 @@ test {
 dependencies {
     compile 'com.google.guava:guava:18.0'
     compile 'org.apache.commons:commons-lang3:3.4'
-    compile 'org.apache.bigtop:bigtop-samplers:1.1.0-SNAPSHOT'
+    compile project(":bigtop-samplers")
 
     testCompile 'junit:junit:4.+'
 }
