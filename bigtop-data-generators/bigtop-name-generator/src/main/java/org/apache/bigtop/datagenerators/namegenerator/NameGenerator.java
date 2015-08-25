@@ -13,29 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.bigtop.datagenerators.bigpetstore;
+package org.apache.bigtop.datagenerators.namegenerator;
 
-import java.util.List;
-
-import org.apache.bigtop.datagenerators.bigpetstore.datamodels.Customer;
-import org.apache.bigtop.datagenerators.bigpetstore.datamodels.Store;
-import org.apache.bigtop.datagenerators.bigpetstore.datamodels.inputs.InputData;
-import org.apache.bigtop.datagenerators.bigpetstore.generators.customer.CustomerSamplerBuilder;
 import org.apache.bigtop.datagenerators.samplers.SeedFactory;
+import org.apache.bigtop.datagenerators.samplers.samplers.RouletteWheelSampler;
 import org.apache.bigtop.datagenerators.samplers.samplers.Sampler;
+import org.apache.commons.lang3.tuple.Pair;
 
-public class CustomerGenerator
+public class NameGenerator implements Sampler<Pair<String, String>>
 {
-	final Sampler<Customer> sampler;
+	private final Sampler<String> firstNameSampler;
+	private final Sampler<String> lastNameSampler;
 	
-	public CustomerGenerator(InputData inputData, List<Store> stores, SeedFactory seedFactory) throws Exception
+	public NameGenerator(SeedFactory seedFactory) throws Exception
 	{
-		CustomerSamplerBuilder builder = new CustomerSamplerBuilder(stores, inputData, seedFactory);
-		sampler = builder.build();
+		Names names = new NameReader().readData();
+		
+		firstNameSampler = RouletteWheelSampler.create(names.getFirstNames(), seedFactory);
+		lastNameSampler = RouletteWheelSampler.create(names.getLastNames(), seedFactory);
 	}
 	
-	public Customer generate() throws Exception
+	public Pair<String, String> sample() throws Exception
 	{
-		return sampler.sample();
+		return Pair.of(firstNameSampler.sample(), lastNameSampler.sample());
 	}
 }

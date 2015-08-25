@@ -21,9 +21,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import org.apache.bigtop.datagenerators.bigpetstore.datamodels.inputs.InputData;
-import org.apache.bigtop.datagenerators.bigpetstore.datamodels.inputs.Names;
 import org.apache.bigtop.datagenerators.bigpetstore.datamodels.inputs.ZipcodeRecord;
-import org.apache.bigtop.datagenerators.bigpetstore.datareaders.NameReader;
 import org.apache.bigtop.datagenerators.bigpetstore.datareaders.ZipcodeReader;
 
 public class DataLoader
@@ -44,13 +42,8 @@ public class DataLoader
 		zipcodeReader.setPopulationFile(getResource(Constants.POPULATION_FILE));
 		List<ZipcodeRecord> zipcodeTable = zipcodeReader.readData();
 		System.out.println("Read " + zipcodeTable.size() + " zipcode entries");
-		
-		System.out.println("Reading name data");
-		NameReader nameReader = new NameReader(getResource(Constants.NAMEDB_FILE));
-		Names names = nameReader.readData();
-		System.out.println("Read " + names.getFirstNames().size() + " first names and " + names.getLastNames().size() + " last names");
-		
-		InputData inputData = new InputData(zipcodeTable, names);
+				
+		InputData inputData = new InputData(zipcodeTable);
 		
 		return inputData;
 	}

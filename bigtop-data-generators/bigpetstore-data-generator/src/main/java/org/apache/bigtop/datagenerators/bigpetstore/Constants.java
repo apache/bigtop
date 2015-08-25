@@ -42,8 +42,6 @@ public class Constants
 	public static final File INCOMES_FILE = new File("ACS_12_5YR_S1903/ACS_12_5YR_S1903_with_ann.csv");
 	public static final File POPULATION_FILE = new File("population_data.csv");
 	
-	public static final File NAMEDB_FILE = new File("namedb/data/data.dat");
-	
 	public static final ProductsCollectionSize PRODUCTS_COLLECTION = ProductsCollectionSize.MEDIUM;
 	
 	public static final double INCOME_SCALING_FACTOR = 100.0;

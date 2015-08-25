@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.bigtop.datagenerators.bigpetstore.datareaders;
+package org.apache.bigtop.datagenerators.namegenerator;
 
+import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.Scanner;
-
-import org.apache.bigtop.datagenerators.bigpetstore.datamodels.inputs.Names;
 
 import com.google.common.collect.Maps;
 
@@ -28,9 +28,15 @@ public class NameReader
 {
 	InputStream path;
 	
-	public NameReader(InputStream path)
+	public NameReader() throws Exception
 	{
-		this.path = path;
+		this.path = getResource(new File("namedb/data/data.dat"));
+	}
+	
+	private InputStream getResource(File filename) throws Exception
+	{
+		InputStream stream = getClass().getResourceAsStream("/input_data/" + filename);
+		return new BufferedInputStream(stream);
 	}
 	
 	public Names readData() throws FileNotFoundException

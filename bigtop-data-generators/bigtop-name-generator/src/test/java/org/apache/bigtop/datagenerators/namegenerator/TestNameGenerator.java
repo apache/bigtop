@@ -13,25 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.bigtop.datagenerators.bigpetstore.datamodels.inputs;
+package org.apache.bigtop.datagenerators.namegenerator;
 
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.List;
+import org.apache.bigtop.datagenerators.samplers.SeedFactory;
+import org.apache.commons.lang3.tuple.Pair;
+import org.junit.Assert;
+import org.junit.Test;
 
-public class InputData implements Serializable
+public class TestNameGenerator
 {
-	private static final long serialVersionUID = 9078989799806707788L;
-	
-	List<ZipcodeRecord> zipcodeTable;
-	
-	public InputData(List<ZipcodeRecord> zipcodeTable)
-	{
-		this.zipcodeTable = Collections.unmodifiableList(zipcodeTable);
-	}
-	
-	public List<ZipcodeRecord> getZipcodeTable()
-	{
-		return zipcodeTable;
+	@Test
+	public void testBuild() throws Exception
+	{	
+		SeedFactory factory = new SeedFactory(1234);
+		
+		NameGenerator sampler = new NameGenerator(factory);
+		
+		Pair<String, String> name = sampler.sample();
+		
+		Assert.assertNotNull(name);
+		Assert.assertNotNull(name.getLeft());
+		Assert.assertNotNull(name.getRight());
+		
 	}
 }
