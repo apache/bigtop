@@ -313,7 +313,7 @@
               <exclude>output/**</exclude>
               <exclude>MAINTAINERS.txt</exclude>
               <exclude>buildSrc/build/**</exclude>
-              <exclude>bigtop-bigpetstore/bigpetstore-data-generator/**/input_data/**</exclude>
+              <exclude>bigtop-data-generators/**/input_data/**</exclude>
               <exclude>bigtop-deploy/puppet/**/*.yaml</exclude>
               <exclude>bigtop-deploy/puppet/config/*/id_hdfsuser*</exclude>
               <!-- Debian package files that have a rigid structure (* matches package name) -->
