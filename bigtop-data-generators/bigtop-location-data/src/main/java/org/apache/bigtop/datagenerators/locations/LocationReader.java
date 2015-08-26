@@ -13,8 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.bigtop.datagenerators.bigpetstore.datareaders;
+package org.apache.bigtop.datagenerators.locations;
 
+import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.HashSet;
@@ -24,14 +26,13 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.Vector;
 
-import org.apache.bigtop.datagenerators.bigpetstore.datamodels.inputs.ZipcodeRecord;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 
-public class ZipcodeReader
+public class LocationReader
 {
 	private static class ZipcodeLocationRecord
 	{
@@ -47,24 +48,11 @@ public class ZipcodeReader
 			this.state = state;
 		}
 	}
-
-	InputStream zipcodeIncomesFile = null;
-	InputStream zipcodePopulationFile = null;
-	InputStream zipcodeCoordinatesFile = null;
-
-	public void setIncomesFile(InputStream path)
+	
+	private InputStream getResource(File filename)
 	{
-		this.zipcodeIncomesFile = path;
-	}
-
-	public void setPopulationFile(InputStream path)
-	{
-		this.zipcodePopulationFile = path;
-	}
-
-	public void setCoordinatesFile(InputStream path)
-	{
-		this.zipcodeCoordinatesFile = path;
+		InputStream stream = getClass().getResourceAsStream("/input_data/" + filename);
+		return new BufferedInputStream(stream);
 	}
 
 	private ImmutableMap<String, Double> readIncomeData(InputStream path) throws FileNotFoundException
@@ -166,20 +154,21 @@ public class ZipcodeReader
 		return ImmutableMap.copyOf(entries);
 	}
 
-	public ImmutableList<ZipcodeRecord> readData() throws FileNotFoundException
+	public ImmutableList<Location> readData() throws FileNotFoundException
 	{
-		ImmutableMap<String, Double> incomes = readIncomeData(this.zipcodeIncomesFile);
-		ImmutableMap<String, Long> populations = readPopulationData(this.zipcodePopulationFile);
-		ImmutableMap<String, ZipcodeLocationRecord> coordinates = readCoordinates(this.zipcodeCoordinatesFile);
+		
+		ImmutableMap<String, Double> incomes = readIncomeData(getResource(LocationConstants.INCOMES_FILE));
+		ImmutableMap<String, Long> populations = readPopulationData(getResource(LocationConstants.POPULATION_FILE));
+		ImmutableMap<String, ZipcodeLocationRecord> coordinates = readCoordinates(getResource(LocationConstants.COORDINATES_FILE));
 
 		Set<String> zipcodeSubset = new HashSet<String>(incomes.keySet());
 		zipcodeSubset.retainAll(populations.keySet());
 		zipcodeSubset.retainAll(coordinates.keySet());
 
-		List<ZipcodeRecord> table = new Vector<ZipcodeRecord>();
+		List<Location> table = new Vector<Location>();
 		for(String zipcode : zipcodeSubset)
 		{
-			ZipcodeRecord record = new ZipcodeRecord(zipcode,
+			Location record = new Location(zipcode,
 					coordinates.get(zipcode).coordinates,
 					coordinates.get(zipcode).city,
 					coordinates.get(zipcode).state,

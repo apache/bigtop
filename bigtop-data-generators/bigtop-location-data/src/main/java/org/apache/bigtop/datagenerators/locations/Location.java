@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.bigtop.datagenerators.bigpetstore.datamodels.inputs;
+package org.apache.bigtop.datagenerators.locations;
 
 import java.io.Serializable;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-public class ZipcodeRecord implements Serializable
+public class Location implements Serializable
 {
 	private static final long serialVersionUID = 1769986686070108470L;
 
@@ -30,7 +30,7 @@ public class ZipcodeRecord implements Serializable
 	final double medianHouseholdIncome;
 	final long population;
 
-	public ZipcodeRecord(String zipcode, Pair<Double, Double> coordinates,
+	public Location(String zipcode, Pair<Double, Double> coordinates,
 			String city, String state, double medianHouseholdIncome, long population)
 	{
 		this.city = city;
@@ -61,7 +61,7 @@ public class ZipcodeRecord implements Serializable
 		return population;
 	}
 
-	public double distance(ZipcodeRecord other)
+	public double distance(Location other)
 	{
 		if(other.getZipcode().equals(zipcode))
 			return 0.0;
