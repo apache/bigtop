@@ -17,22 +17,22 @@ class bigtop_toolchain::groovy {
 
   include bigtop_toolchain::packages
 
-  exec {"/usr/bin/wget http://dl.bintray.com/groovy/maven/groovy-binary-2.4.0.zip":
+  exec {"/usr/bin/wget http://dl.bintray.com/groovy/maven/apache-groovy-binary-2.4.4.zip":
     cwd     => "/usr/src",
     require => Package[$packages::pkgs],
-    unless  => "/usr/bin/test -f /usr/src/groovy-binary-2.4.0.zip",
+    unless  => "/usr/bin/test -f /usr/src/apache-groovy-binary-2.4.4.zip",
   }
 
-  exec {'/usr/bin/unzip -x -o /usr/src/groovy-binary-2.4.0.zip':
+  exec {'/usr/bin/unzip -x -o /usr/src/apache-groovy-binary-2.4.4.zip':
     cwd         => '/usr/local',
     refreshonly => true,
-    subscribe   => Exec["/usr/bin/wget http://dl.bintray.com/groovy/maven/groovy-binary-2.4.0.zip"],
-    require     => Exec["/usr/bin/wget http://dl.bintray.com/groovy/maven/groovy-binary-2.4.0.zip"],
+    subscribe   => Exec["/usr/bin/wget http://dl.bintray.com/groovy/maven/apache-groovy-binary-2.4.4.zip"],
+    require     => Exec["/usr/bin/wget http://dl.bintray.com/groovy/maven/apache-groovy-binary-2.4.4.zip"],
   }
 
   file {'/usr/local/groovy':
     ensure  => link,
-    target  => '/usr/local/groovy-2.4.0',
-    require => Exec['/usr/bin/unzip -x -o /usr/src/groovy-binary-2.4.0.zip'],
+    target  => '/usr/local/groovy-2.4.4',
+    require => Exec['/usr/bin/unzip -x -o /usr/src/apache-groovy-binary-2.4.4.zip'],
   }
 }
