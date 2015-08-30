@@ -24,7 +24,7 @@ import java.util.List;
 import org.apache.bigtop.datagenerators.bigpetstore.datamodels.Customer;
 import org.apache.bigtop.datagenerators.bigpetstore.datamodels.Store;
 import org.apache.bigtop.datagenerators.bigpetstore.datamodels.inputs.InputData;
-import org.apache.bigtop.datagenerators.bigpetstore.datamodels.inputs.ZipcodeRecord;
+import org.apache.bigtop.datagenerators.locations.Location;
 import org.apache.bigtop.datagenerators.samplers.SeedFactory;
 import org.apache.bigtop.datagenerators.samplers.samplers.Sampler;
 import org.apache.commons.lang3.tuple.Pair;
@@ -36,10 +36,10 @@ public class TestCustomerSamplerBuilder
 	@Test
 	public void testSample() throws Exception
 	{
-		List<ZipcodeRecord> zipcodes = Arrays.asList(new ZipcodeRecord[] {
-				new ZipcodeRecord("11111", Pair.of(1.0, 1.0), "AZ", "Tempte", 30000.0, 100),
-				new ZipcodeRecord("22222", Pair.of(2.0, 2.0), "AZ", "Phoenix", 45000.0, 200),
-				new ZipcodeRecord("33333", Pair.of(3.0, 3.0), "AZ", "Flagstaff", 60000.0, 300)
+		List<Location> zipcodes = Arrays.asList(new Location[] {
+				new Location("11111", Pair.of(1.0, 1.0), "AZ", "Tempte", 30000.0, 100),
+				new Location("22222", Pair.of(2.0, 2.0), "AZ", "Phoenix", 45000.0, 200),
+				new Location("33333", Pair.of(3.0, 3.0), "AZ", "Flagstaff", 60000.0, 300)
 				});
 
 		// don't need product categories for building customers

@@ -13,27 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.bigtop.datagenerators.bigpetstore.datamodels.inputs;
+package org.apache.bigtop.datagenerators.samplers.wfs;
 
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.List;
+import java.util.Set;
 
-import org.apache.bigtop.datagenerators.locations.Location;
+import org.apache.bigtop.datagenerators.samplers.pdfs.ProbabilityDensityFunction;
 
-public class InputData implements Serializable
+public interface DiscreteWeightFunction<T> extends WeightFunction<T>
 {
-	private static final long serialVersionUID = 9078989799806707788L;
-
-	List<Location> zipcodeTable;
-
-	public InputData(List<Location> zipcodeTable)
-	{
-		this.zipcodeTable = Collections.unmodifiableList(zipcodeTable);
-	}
-
-	public List<Location> getZipcodeTable()
-	{
-		return zipcodeTable;
-	}
+	public ProbabilityDensityFunction<T> normalize();
+	
+	public Set<T> getData();
 }

@@ -17,17 +17,17 @@ package org.apache.bigtop.datagenerators.bigpetstore.generators.store;
 
 import java.util.List;
 
-import org.apache.bigtop.datagenerators.bigpetstore.datamodels.inputs.ZipcodeRecord;
+import org.apache.bigtop.datagenerators.locations.Location;
 import org.apache.bigtop.datagenerators.samplers.pdfs.ProbabilityDensityFunction;
 
-public class StoreLocationPopulationPDF implements ProbabilityDensityFunction<ZipcodeRecord>
+public class StoreLocationPopulationPDF implements ProbabilityDensityFunction<Location>
 {
 	double populationSum = 0.0;
 
-	public StoreLocationPopulationPDF(List<ZipcodeRecord> zipcodeTable)
+	public StoreLocationPopulationPDF(List<Location> zipcodeTable)
 	{
 		long populationSum = 0L;
-		for(ZipcodeRecord record : zipcodeTable)
+		for(Location record : zipcodeTable)
 		{
 			populationSum += record.getPopulation();
 		}
@@ -35,7 +35,7 @@ public class StoreLocationPopulationPDF implements ProbabilityDensityFunction<Zi
 		this.populationSum = ((double) populationSum);
 	}
 
-	public double probability(ZipcodeRecord record)
+	public double probability(Location record)
 	{
 		return ((double) record.getPopulation()) / populationSum;
 	}

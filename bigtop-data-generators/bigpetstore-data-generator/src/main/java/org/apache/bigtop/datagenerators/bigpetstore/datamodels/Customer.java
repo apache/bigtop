@@ -17,7 +17,7 @@ package org.apache.bigtop.datagenerators.bigpetstore.datamodels;
 
 import java.io.Serializable;
 
-import org.apache.bigtop.datagenerators.bigpetstore.datamodels.inputs.ZipcodeRecord;
+import org.apache.bigtop.datagenerators.locations.Location;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class Customer implements Serializable
@@ -26,10 +26,10 @@ public class Customer implements Serializable
 
 	int id;
 	Pair<String, String> name;
-	ZipcodeRecord location;
+	Location location;
 	Store store;
 
-	public Customer(int id, Pair<String, String> name, Store store, ZipcodeRecord location)
+	public Customer(int id, Pair<String, String> name, Store store, Location location)
 	{
 		this.id = id;
 		this.name = name;
@@ -47,7 +47,7 @@ public class Customer implements Serializable
 		return name;
 	}
 
-	public ZipcodeRecord getLocation()
+	public Location getLocation()
 	{
 		return location;
 	}

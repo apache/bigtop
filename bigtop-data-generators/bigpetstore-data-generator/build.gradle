@@ -59,7 +59,9 @@ dependencies {
     compile 'com.google.guava:guava:18.0'
     compile 'com.google.code.gson:gson:2.3'
     compile 'org.apache.commons:commons-lang3:3.4'
-    compile project(":bigtop-samplers"), project(":bigtop-name-generator")
+    compile project(":bigtop-samplers")
+    compile project(":bigtop-name-generator")
+    compile project(":bigtop-location-data")
 
     testCompile 'junit:junit:4.+'
 }

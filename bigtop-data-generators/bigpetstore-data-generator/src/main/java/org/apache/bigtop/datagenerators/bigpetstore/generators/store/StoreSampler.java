@@ -16,16 +16,16 @@
 package org.apache.bigtop.datagenerators.bigpetstore.generators.store;
 
 import org.apache.bigtop.datagenerators.bigpetstore.datamodels.Store;
-import org.apache.bigtop.datagenerators.bigpetstore.datamodels.inputs.ZipcodeRecord;
+import org.apache.bigtop.datagenerators.locations.Location;
 import org.apache.bigtop.datagenerators.samplers.samplers.Sampler;
 
 public class StoreSampler implements Sampler<Store>
 {
 
-	private final Sampler<ZipcodeRecord> locationSampler;
+	private final Sampler<Location> locationSampler;
 	private final Sampler<Integer> idSampler;
 
-	public StoreSampler(Sampler<Integer> idSampler, Sampler<ZipcodeRecord> locationSampler)
+	public StoreSampler(Sampler<Integer> idSampler, Sampler<Location> locationSampler)
 	{
 		this.locationSampler = locationSampler;
 		this.idSampler = idSampler;
@@ -35,7 +35,7 @@ public class StoreSampler implements Sampler<Store>
 	{
 		Integer id = idSampler.sample();
 		String name = "Store_" + id;
-		ZipcodeRecord location = locationSampler.sample();
+		Location location = locationSampler.sample();
 
 		Store store = new Store(id, name, location);
 

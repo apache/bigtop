@@ -19,7 +19,7 @@ import java.util.List;
 
 import org.apache.bigtop.datagenerators.bigpetstore.Constants;
 import org.apache.bigtop.datagenerators.bigpetstore.datamodels.Store;
-import org.apache.bigtop.datagenerators.bigpetstore.datamodels.inputs.ZipcodeRecord;
+import org.apache.bigtop.datagenerators.locations.Location;
 import org.apache.bigtop.datagenerators.samplers.SeedFactory;
 import org.apache.bigtop.datagenerators.samplers.pdfs.JointPDF;
 import org.apache.bigtop.datagenerators.samplers.pdfs.ProbabilityDensityFunction;
@@ -29,10 +29,10 @@ import org.apache.bigtop.datagenerators.samplers.samplers.SequenceSampler;
 
 public class StoreSamplerBuilder
 {
-	private final List<ZipcodeRecord> zipcodeTable;
+	private final List<Location> zipcodeTable;
 	private final SeedFactory seedFactory;
 
-	public StoreSamplerBuilder(List<ZipcodeRecord> zipcodeTable, SeedFactory seedFactory)
+	public StoreSamplerBuilder(List<Location> zipcodeTable, SeedFactory seedFactory)
 	{
 		this.zipcodeTable = zipcodeTable;
 		this.seedFactory = seedFactory;
@@ -42,14 +42,14 @@ public class StoreSamplerBuilder
 	{
 		Sampler<Integer> idSampler = new SequenceSampler();
 
-		ProbabilityDensityFunction<ZipcodeRecord> locationPopulationPDF =
+		ProbabilityDensityFunction<Location> locationPopulationPDF =
 				new StoreLocationPopulationPDF(zipcodeTable);
-		ProbabilityDensityFunction<ZipcodeRecord> locationIncomePDF =
+		ProbabilityDensityFunction<Location> locationIncomePDF =
 				new StoreLocationIncomePDF(zipcodeTable, Constants.INCOME_SCALING_FACTOR);
-		ProbabilityDensityFunction<ZipcodeRecord> locationJointPDF =
-				new JointPDF<ZipcodeRecord>(zipcodeTable, locationPopulationPDF, locationIncomePDF);
+		ProbabilityDensityFunction<Location> locationJointPDF =
+				new JointPDF<Location>(zipcodeTable, locationPopulationPDF, locationIncomePDF);
 
-		Sampler<ZipcodeRecord> locationSampler = RouletteWheelSampler.create(zipcodeTable, locationJointPDF, seedFactory);
+		Sampler<Location> locationSampler = RouletteWheelSampler.create(zipcodeTable, locationJointPDF, seedFactory);
 
 		return new StoreSampler(idSampler, locationSampler);
 	}

@@ -18,6 +18,7 @@ package org.apache.bigtop.datagenerators.namegenerator;
 import org.apache.bigtop.datagenerators.samplers.SeedFactory;
 import org.apache.bigtop.datagenerators.samplers.samplers.RouletteWheelSampler;
 import org.apache.bigtop.datagenerators.samplers.samplers.Sampler;
+import org.apache.bigtop.datagenerators.samplers.wfs.MultinomialWF;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class NameGenerator implements Sampler<Pair<String, String>>
@@ -29,8 +30,8 @@ public class NameGenerator implements Sampler<Pair<String, String>>
 	{
 		Names names = new NameReader().readData();
 
-		firstNameSampler = RouletteWheelSampler.create(names.getFirstNames(), seedFactory);
-		lastNameSampler = RouletteWheelSampler.create(names.getLastNames(), seedFactory);
+		firstNameSampler = RouletteWheelSampler.create(new MultinomialWF<String>(names.getFirstNames()).normalize(), seedFactory);
+		lastNameSampler = RouletteWheelSampler.create(new MultinomialWF<String>(names.getLastNames()).normalize(), seedFactory);
 	}
 
 	public Pair<String, String> sample() throws Exception

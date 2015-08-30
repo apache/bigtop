@@ -52,7 +52,7 @@ public class NameReader
 			String[] cols = line.trim().split(",");
 
 			String name = cols[0];
-			double weight = Double.parseDouble(cols[5]);
+			double weight = 1.0 / (Double.parseDouble(cols[5]) + 1.0);
 
 			if(cols[4].equals("1"))
 				firstNames.put(name, weight);

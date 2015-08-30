@@ -19,29 +19,29 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.bigtop.datagenerators.bigpetstore.datamodels.Store;
-import org.apache.bigtop.datagenerators.bigpetstore.datamodels.inputs.ZipcodeRecord;
+import org.apache.bigtop.datagenerators.locations.Location;
 import org.apache.bigtop.datagenerators.samplers.pdfs.ProbabilityDensityFunction;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 
-public class CustomerLocationPDF implements ProbabilityDensityFunction<ZipcodeRecord>
+public class CustomerLocationPDF implements ProbabilityDensityFunction<Location>
 {
-	private final Map<ZipcodeRecord, Double> pdf;
+	private final Map<Location, Double> pdf;
 
-	public CustomerLocationPDF(List<ZipcodeRecord> zipcodes, Store store, double averageDistance)
+	public CustomerLocationPDF(List<Location> zipcodes, Store store, double averageDistance)
 	{
 		this.pdf = build(zipcodes, store, averageDistance);
 	}
 
-	protected ImmutableMap<ZipcodeRecord, Double> build(List<ZipcodeRecord> zipcodeTable,
+	protected ImmutableMap<Location, Double> build(List<Location> zipcodeTable,
 			Store store, double averageDistance)
 	{
 		double lambda = 1.0 / averageDistance;
 
-		Map<ZipcodeRecord, Double> zipcodeWeights = Maps.newHashMap();
+		Map<Location, Double> zipcodeWeights = Maps.newHashMap();
 		double totalWeight = 0.0;
-		for(ZipcodeRecord record : zipcodeTable)
+		for(Location record : zipcodeTable)
 		{
 			double dist = record.distance(store.getLocation());
 
@@ -50,8 +50,8 @@ public class CustomerLocationPDF implements ProbabilityDensityFunction<ZipcodeRe
 			zipcodeWeights.put(record, weight);
 		}
 
-		Map<ZipcodeRecord, Double> pdf = Maps.newHashMap();
-		for(ZipcodeRecord record : zipcodeTable)
+		Map<Location, Double> pdf = Maps.newHashMap();
+		for(Location record : zipcodeTable)
 		{
 			pdf.put(record, zipcodeWeights.get(record) / totalWeight);
 		}
@@ -59,7 +59,7 @@ public class CustomerLocationPDF implements ProbabilityDensityFunction<ZipcodeRe
 		return ImmutableMap.copyOf(pdf);
 	}
 
-	public double probability(ZipcodeRecord record)
+	public double probability(Location record)
 	{
 		if(!this.pdf.containsKey(record))
 			return 0.0;

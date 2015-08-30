@@ -22,7 +22,7 @@ import org.apache.bigtop.datagenerators.bigpetstore.Constants;
 import org.apache.bigtop.datagenerators.bigpetstore.datamodels.Customer;
 import org.apache.bigtop.datagenerators.bigpetstore.datamodels.Store;
 import org.apache.bigtop.datagenerators.bigpetstore.datamodels.inputs.InputData;
-import org.apache.bigtop.datagenerators.bigpetstore.datamodels.inputs.ZipcodeRecord;
+import org.apache.bigtop.datagenerators.locations.Location;
 import org.apache.bigtop.datagenerators.namegenerator.NameGenerator;
 import org.apache.bigtop.datagenerators.samplers.SeedFactory;
 import org.apache.bigtop.datagenerators.samplers.pdfs.ProbabilityDensityFunction;
@@ -47,20 +47,20 @@ public class CustomerSamplerBuilder
 		this.inputData = inputData;
 	}
 
-	protected ConditionalSampler<ZipcodeRecord, Store> buildLocationSampler()
+	protected ConditionalSampler<Location, Store> buildLocationSampler()
 	{
-		final Map<Store, Sampler<ZipcodeRecord>> locationSamplers = Maps.newHashMap();
+		final Map<Store, Sampler<Location>> locationSamplers = Maps.newHashMap();
 		for(Store store : stores)
 		{
-			ProbabilityDensityFunction<ZipcodeRecord> locationPDF = new CustomerLocationPDF(inputData.getZipcodeTable(),
+			ProbabilityDensityFunction<Location> locationPDF = new CustomerLocationPDF(inputData.getZipcodeTable(),
 					store, Constants.AVERAGE_CUSTOMER_STORE_DISTANCE);
-			Sampler<ZipcodeRecord> locationSampler = RouletteWheelSampler.create(inputData.getZipcodeTable(), locationPDF, seedFactory);
+			Sampler<Location> locationSampler = RouletteWheelSampler.create(inputData.getZipcodeTable(), locationPDF, seedFactory);
 			locationSamplers.put(store, locationSampler);
 		}
 
-		return new ConditionalSampler<ZipcodeRecord, Store>()
+		return new ConditionalSampler<Location, Store>()
 				{
-					public ZipcodeRecord sample(Store store) throws Exception
+					public Location sample(Store store) throws Exception
 					{
 						return locationSamplers.get(store).sample();
 					}

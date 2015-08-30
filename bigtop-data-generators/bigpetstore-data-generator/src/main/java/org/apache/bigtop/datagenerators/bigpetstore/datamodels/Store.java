@@ -17,7 +17,7 @@ package org.apache.bigtop.datagenerators.bigpetstore.datamodels;
 
 import java.io.Serializable;
 
-import org.apache.bigtop.datagenerators.bigpetstore.datamodels.inputs.ZipcodeRecord;
+import org.apache.bigtop.datagenerators.locations.Location;
 
 public class Store implements Serializable
 {
@@ -25,9 +25,9 @@ public class Store implements Serializable
 
 	int id;
 	String name;
-	ZipcodeRecord location;
+	Location location;
 
-	public Store(int id, String name, ZipcodeRecord location)
+	public Store(int id, String name, Location location)
 	{
 		this.id = id;
 		this.name = name;
@@ -44,7 +44,7 @@ public class Store implements Serializable
 		return name;
 	}
 
-	public ZipcodeRecord getLocation()
+	public Location getLocation()
 	{
 		return location;
 	}

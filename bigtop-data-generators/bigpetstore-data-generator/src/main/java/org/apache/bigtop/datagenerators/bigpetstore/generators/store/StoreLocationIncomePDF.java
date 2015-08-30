@@ -17,22 +17,22 @@ package org.apache.bigtop.datagenerators.bigpetstore.generators.store;
 
 import java.util.List;
 
-import org.apache.bigtop.datagenerators.bigpetstore.datamodels.inputs.ZipcodeRecord;
+import org.apache.bigtop.datagenerators.locations.Location;
 import org.apache.bigtop.datagenerators.samplers.pdfs.ProbabilityDensityFunction;
 
-public class StoreLocationIncomePDF implements ProbabilityDensityFunction<ZipcodeRecord>
+public class StoreLocationIncomePDF implements ProbabilityDensityFunction<Location>
 {
 	double incomeNormalizationFactor;
 	double minIncome;
 	double k;
 
-	public StoreLocationIncomePDF(List<ZipcodeRecord> zipcodeTable, double incomeScalingFactor)
+	public StoreLocationIncomePDF(List<Location> zipcodeTable, double incomeScalingFactor)
 	{
 
 		double maxIncome = 0.0;
 		minIncome = Double.MAX_VALUE;
 
-		for(ZipcodeRecord record : zipcodeTable)
+		for(Location record : zipcodeTable)
 		{
 			maxIncome = Math.max(maxIncome, record.getMedianHouseholdIncome());
 			minIncome = Math.min(minIncome, record.getMedianHouseholdIncome());
@@ -41,21 +41,21 @@ public class StoreLocationIncomePDF implements ProbabilityDensityFunction<Zipcod
 		k = Math.log(incomeScalingFactor) / (maxIncome - minIncome);
 
 		incomeNormalizationFactor = 0.0d;
-		for(ZipcodeRecord record : zipcodeTable)
+		for(Location record : zipcodeTable)
 		{
 			double weight = incomeWeight(record);
 			incomeNormalizationFactor += weight;
 		}
 	}
 
-	private double incomeWeight(ZipcodeRecord record)
+	private double incomeWeight(Location record)
 	{
 		return Math.exp(k * (record.getMedianHouseholdIncome() - minIncome));
 	}
 
 
 	@Override
-	public double probability(ZipcodeRecord datum)
+	public double probability(Location datum)
 	{
 		double weight = incomeWeight(datum);
 

@@ -17,7 +17,7 @@ package org.apache.bigtop.datagenerators.bigpetstore.generators.customer;
 
 import org.apache.bigtop.datagenerators.bigpetstore.datamodels.Customer;
 import org.apache.bigtop.datagenerators.bigpetstore.datamodels.Store;
-import org.apache.bigtop.datagenerators.bigpetstore.datamodels.inputs.ZipcodeRecord;
+import org.apache.bigtop.datagenerators.locations.Location;
 import org.apache.bigtop.datagenerators.samplers.samplers.ConditionalSampler;
 import org.apache.bigtop.datagenerators.samplers.samplers.Sampler;
 import org.apache.commons.lang3.tuple.Pair;
@@ -27,13 +27,13 @@ public class CustomerSampler implements Sampler<Customer>
 	private final Sampler<Integer> idSampler;
 	private final Sampler<Pair<String, String>> nameSampler;
 	private final Sampler<Store> storeSampler;
-	private final ConditionalSampler<ZipcodeRecord, Store> locationSampler;
+	private final ConditionalSampler<Location, Store> locationSampler;
 
 
 	public CustomerSampler(Sampler<Integer> idSampler,
 			Sampler<Pair<String, String>> nameSampler,
 			Sampler<Store> storeSampler,
-			ConditionalSampler<ZipcodeRecord, Store> locationSampler)
+			ConditionalSampler<Location, Store> locationSampler)
 	{
 		this.idSampler = idSampler;
 		this.nameSampler = nameSampler;
@@ -46,7 +46,7 @@ public class CustomerSampler implements Sampler<Customer>
 		Integer id = idSampler.sample();
 		Pair<String, String> name = nameSampler.sample();
 		Store store = storeSampler.sample();
-		ZipcodeRecord location = locationSampler.sample(store);
+		Location location = locationSampler.sample(store);
 
 		return new Customer(id, name, store, location);
 	}
