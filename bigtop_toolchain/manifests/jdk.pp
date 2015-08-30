@@ -16,18 +16,50 @@
 class bigtop_toolchain::jdk {
 
   case $operatingsystem{
-    Debian,Ubuntu: {
+    Debian: {
+      include apt
+      include apt::backports
+
       package { 'openjdk-7-jdk' :
         ensure => present
       }
+      package { 'openjdk-8-jdk' :
+        ensure => present,
+      }
+
+      Apt::Source['backports'] -> Exec['apt-update']
     }
-    /(CentOS|Fedora|Amazon)/: {
+    Ubuntu: {
+      include apt
+      
+      package { 'openjdk-7-jdk' :
+        ensure => present
+      }
+      package { 'openjdk-8-jdk' :
+        ensure => present,
+      }
+
+      apt::key { 'openjdk-ppa':
+        id => 'eb9b1d8886f44e2a',
+	server  => 'keyserver.ubuntu.com'
+      }  ->
+      apt::ppa { 'http://ppa.launchpad.net/openjdk-r/ppa/ubuntu':  }
+      
+      Apt::Ppa['http://ppa.launchpad.net/openjdk-r/ppa/ubuntu'] -> Exec['apt-update']
+    }
+    /(CentOS|Fedora|Amazon|OpenSuSE)/: {
       package { 'java-1.7.0-openjdk-devel' :
+        ensure => present
+      }
+      package { 'java-1.8.0-openjdk-devel' :
         ensure => present
       }
     }
     /(OpenSuSE)/: {
       package { 'java-1_7_0-openjdk-devel' :
+        ensure => present
+      }
+      package { 'java-1_8_0-openjdk-devel' :
         ensure => present
       }
     }
