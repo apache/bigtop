@@ -14,6 +14,13 @@
 # limitations under the License.
 
 class hadoop-flume {
+
+  class deploy ($roles) {
+    if ("flume-agent" in $roles) {
+      include hadoop-flume::agent
+    }
+  }
+
   class agent($sources = [], $sinks = [], $channels = []) {
     package { "flume-agent":
       ensure => latest,

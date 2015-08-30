@@ -14,6 +14,12 @@
 # limitations under the License.
 
 class ignite-hadoop {
+  class deploy ($roles) {
+    if ("ignite-server" in $roles) {
+      ignite-hadoop::server { "ignite-hadoop-node": }
+    }
+  }
+
   define server() {
     package { "ignite-hadoop":
       ensure => latest,

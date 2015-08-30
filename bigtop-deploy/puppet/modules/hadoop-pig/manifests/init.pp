@@ -14,6 +14,13 @@
 # limitations under the License.
 
 class hadoop-pig {
+
+  class deploy ($roles) {
+    if ("pig-client" in $roles) {
+      include hadoop-pig::client
+    }
+  }
+
   class client {
     package { "pig":
       ensure => latest,

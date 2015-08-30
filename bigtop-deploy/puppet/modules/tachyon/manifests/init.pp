@@ -10,6 +10,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 class tachyon {
+
+  class deploy ($roles) {
+    if ("tachyon-master" in $roles) {
+      include tachyon::master
+    }
+
+    if ("tachyon-worker" in $roles) {
+      include tachyon::worker
+    }
+  }
+
   class common ($master_host){
     package { "tachyon-tfs":
       ensure => latest,

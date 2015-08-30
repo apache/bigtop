@@ -14,6 +14,13 @@
 # limitations under the License.
 
 class ycsb {
+
+  class deploy ($roles) {
+    if ("ycsb-client" in $roles) {
+      include ycsb::client
+    }
+  }
+
   class client {
     package { ["ycsb"]:
       ensure => latest,

@@ -14,6 +14,13 @@
 # limitations under the License.
 
 class mahout {
+
+  class deploy ($roles) {
+    if ("mahout-client" in $roles) {
+      include mahout::client
+    }
+  }
+
   class client {
     package { "mahout":
       ensure => latest,

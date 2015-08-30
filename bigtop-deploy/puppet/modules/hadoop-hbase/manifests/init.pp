@@ -14,6 +14,24 @@
 # limitations under the License.
 
 class hadoop-hbase {
+
+  class deploy ($roles) {
+    if ("hbase-server" in $roles) {
+      include hadoop-hbase::server
+    }
+
+    if ("hbase-master" in $roles) {
+      include hadoop::init_hdfs
+      include hadoop-hbase::master
+      include hadoop-zookeeper::server
+      Class['Hadoop::Init_hdfs'] -> Class['Hadoop-hbase::Master']
+    }
+
+    if ("hbase-client" in $roles) {
+      include hadoop-hbase::client
+    }
+  }
+
   class client-package  {
     package { "hbase":
       ensure => latest,

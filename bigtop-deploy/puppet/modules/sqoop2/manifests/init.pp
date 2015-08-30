@@ -14,6 +14,17 @@
 # limitations under the License.
 
 class sqoop2 {
+
+  class deploy ($roles) {
+    if ("sqoop-client" in $roles) {
+      include sqoop2::client
+    }
+
+    if ("sqoop-server" in $roles) {
+      include sqoop2::server
+    }
+  }
+
   class client {
     package { "sqoop2-client":
       ensure => latest,

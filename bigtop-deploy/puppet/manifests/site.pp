@@ -56,31 +56,17 @@ package { $jdk_package_name:
 import "cluster.pp"
 
 node default {
-  $hadoop_head_node = hiera("bigtop::hadoop_head_node")
-  $standby_head_node = hiera("bigtop::standby_head_node", "")
-  $hadoop_gateway_node = hiera("bigtop::hadoop_gateway_node", $hadoop_head_node)
 
-  # look into alternate hiera datasources configured using this path in
-  # hiera.yaml
-  $hadoop_hiera_ha_path = $standby_head_node ? {
-    ""      => "noha",
-    default => "ha",
+  $roles_enabled = hiera("bigtop::roles_enabled", false)
+
+  if (!is_bool($roles_enabled)) {
+    fail("bigtop::roles hiera conf is not of type boolean. It should be set to either true or false")
   }
 
-  case $::fqdn {
-    $hadoop_head_node: {
-      include hadoop_head_node
-    }
-    $standby_head_node: {
-      include standby_head_node
-    }
-    default: {
-      include hadoop_worker_node
-    }
-  }
-
-  if ($hadoop_gateway_node == $::fqdn) {
-    include hadoop_gateway_node
+  if ($roles_enabled) {
+    include node_with_roles
+  } else {
+    include node_with_components
   }
 }
 

@@ -14,6 +14,13 @@
 # limitations under the License.
 
 class crunch {
+
+  class deploy ($roles) {
+    if ("crunch-client" in $roles) {
+      include crunch::client
+    }
+  }
+
   class client {
     package { ["crunch", "crunch-doc"]:
       ensure => latest,

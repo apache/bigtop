@@ -14,6 +14,17 @@
 # limitations under the License.
 
 class hcatalog {
+
+  class deploy ($roles) {
+    if ("hcatalog-server" in $roles) {
+      include hcatalog::server
+    }
+
+    if ("webhcat-server" in $roles) {
+      include hcatalog::webhcat::server
+    }
+  }
+
   class server($port = "9083", $kerberos_realm = "") {
     package { "hcatalog-server":
       ensure => latest,

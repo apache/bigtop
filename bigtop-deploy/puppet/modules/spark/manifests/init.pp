@@ -14,6 +14,17 @@
 # limitations under the License.
 
 class spark {
+
+  class deploy ($roles) {
+    if ("spark-master" in $roles) {
+      include spark::master
+    }
+
+    if ("spark-worker" in $roles) {
+      include spark::worker
+    }
+  }
+
   class common ($master_host = $fqdn, $master_port = "7077", $master_ui_port = "18080") {
     package { "spark-core":
       ensure => latest,

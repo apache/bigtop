@@ -14,6 +14,14 @@
 # limitations under the License.
 
 class tez {
+  class deploy ($roles) {
+    if ("tez-client" in $roles) {
+      include hadoop::init_hdfs
+      include tez::client
+      Class['Tez::Client'] -> Class['Hadoop::Init_hdfs']
+    }
+  }
+
   class client {
     package { "tez":
       ensure => latest,

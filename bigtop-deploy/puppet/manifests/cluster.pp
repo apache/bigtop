@@ -13,37 +13,103 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class hadoop_cluster_node (
-  $hadoop_security_authentication = hiera("hadoop::hadoop_security_authentication", "simple"),
-
-  # Lookup component array or comma separated components (i.e.
-  # hadoop,spark,hbase ) as a default via facter.
-  $cluster_components = "$::components"
-  ) {
-  # Ensure (even if a single value) that the type is an array.
-  if is_array($cluster_components) {
-    $components = $cluster_components
-  } else {
-    $components = any2array($cluster_components, ",")
-  }
-
-  $all = ($components[0] == undef)
-
-  if ($hadoop_security_authentication == "kerberos") {
-    include kerberos::client
-  }
-
-  # Flume agent is the only component that goes on EVERY node in the cluster
-  if ($all or "flume" in $components) {
-    include hadoop-flume::agent
-  }
+$roles_map = {
+  hdfs-non-ha => {
+    master => ["namenode"],
+    worker => ["datanode"],
+    standby => ["secondarynamenode"],
+  },
+  hdfs-ha => {
+    master => ["namenode"],
+    worker => ["datanode"],
+    standby => ["standby-namenode"],
+  },
+  yarn => {
+    master => ["resourcemanager"],
+    worker => ["nodemanager"],
+    client => ["hadoop-client"],
+    # mapred is the default app which runs on yarn.
+    library => ["mapred-app"],
+  },
+  mapred => {
+    library => ["mapred-app"],
+  },
+  hbase => {
+    master => ["hbase-master"],
+    worker => ["hbase-server"],
+    client => ["hbase-client"],
+  },
+  ignite-hadoop => {
+    worker => ["ignite-server"],
+  },
+  solrcloud => {
+    worker => ["solr-server"],
+  },
+  spark => {
+    master => ["spark-master"],
+    worker => ["spark-worker"],
+  },
+  tachyon => {
+    master => ["tachyon-master"],
+    worker => ["tachyon-worker"],
+  },
+  flume => {
+    worker => ["flume-agent"],
+  },
+  kerberos => {
+    master => ["kerberos-server"],
+  },
+  oozie => {
+    master => ["oozie-server"],
+    client => ["oozie-client"],
+  },
+  hcat => {
+    master => ["hcatalog-server"],
+    gateway_server => ["webhcat-server"],
+  },
+  sqoop => {
+    gateway_server => ["sqoop-server"],
+    client => ["sqoop-client"],
+  },
+  httpfs => {
+    gateway_server => ["httpfs-server"],
+  },
+  hue => {
+    gateway_server => ["hue-server"],
+  },
+  mahout => {
+    client => ["mahout-client"],
+  },
+  giraph => {
+    client => ["giraph-client"],
+  },
+  crunch => {
+    client => ["crunch-client"],
+  },
+  pig => {
+    client => ["pig-client"],
+  },
+  hive => {
+    client => ["hive-client"],
+  },
+  tez => {
+    client => ["tez-client"],
+  },
+  zookeeper => {
+    worker => ["zookeeper-server"],
+    client => ["zookeeper-client"],
+  },
+  ycsb => {
+    client => ["ycsb-client"],
+  },
 }
 
+class hadoop_cluster_node (
+  $hadoop_security_authentication = hiera("hadoop::hadoop_security_authentication", "simple"),
+  $bigtop_real_users = [ 'jenkins', 'testuser', 'hudson' ],
+  $cluster_components = ["all"]
+  ) {
 
-
-class hadoop_worker_node (
-  $bigtop_real_users = [ 'jenkins', 'testuser', 'hudson' ]
-  ) inherits hadoop_cluster_node {
   user { $bigtop_real_users:
     ensure     => present,
     system     => false,
@@ -53,168 +119,106 @@ class hadoop_worker_node (
   if ($hadoop_security_authentication == "kerberos") {
     kerberos::host_keytab { $bigtop_real_users: }
     User<||> -> Kerberos::Host_keytab<||>
+    include kerberos::client
   }
 
-  include hadoop::datanode
-  if ($all or "yarn" in $components) {
-    include hadoop::nodemanager
-  }
-  if ($all or "hbase" in $components) {
-    include hadoop-hbase::server
+  $hadoop_head_node = hiera("bigtop::hadoop_head_node")
+  $standby_head_node = hiera("bigtop::standby_head_node", "")
+  $hadoop_gateway_node = hiera("bigtop::hadoop_gateway_node", $hadoop_head_node)
+
+  $ha_enabled = $standby_head_node ? {
+    ""      => false,
+    default => true,
   }
 
-  if ($all or "ignite-hadoop" in $components) {
-    ignite-hadoop::server { "ignite-hadoop-node": }
+  # look into alternate hiera datasources configured using this path in
+  # hiera.yaml
+  $hadoop_hiera_ha_path = $ha_enabled ? {
+    false => "noha",
+    true  => "ha",
   }
-
-  ### If mapred is not installed, yarn can fail.
-  ### So, when we install yarn, we also need mapred for now.
-  ### This dependency should be cleaned up eventually.
-  if ($all or "mapred-app" or "yarn" in $components) {
-    include hadoop::mapred-app
-  }
-
-  if ($all or "solrcloud" in $components) {
-    include solr::server
-  }
-
-  if ($all or "spark" in $components) {
-    include spark::worker
-  }
-
-  if ($all or "tachyon" in $components) {
-    include tachyon::worker
-  }
-
 }
 
-class hadoop_head_node inherits hadoop_worker_node {
-  exec { "init hdfs":
-    path    => ['/bin','/sbin','/usr/bin','/usr/sbin'],
-    command => 'bash -x /usr/lib/hadoop/libexec/init-hdfs.sh',
-    require => Package['hadoop-hdfs'],
-    timeout => 0
-  }
-  Class['Hadoop::Namenode'] -> Class['Hadoop::Datanode'] -> Exec<| title == "init hdfs" |>
-
-if ($hadoop_security_authentication == "kerberos") {
-    include kerberos::server
-    include kerberos::kdc
-    include kerberos::kdc::admin_server
-  }
-
-  include hadoop::namenode
-
-  if ($hadoop::common_hdfs::ha == "disabled") {
-    include hadoop::secondarynamenode
-  }
-
-  if ($all or "yarn" in $components) {
-    include hadoop::resourcemanager
-    include hadoop::historyserver
-    include hadoop::proxyserver
-    Exec<| title == "init hdfs" |> -> Class['Hadoop::Resourcemanager'] -> Class['Hadoop::Nodemanager']
-    Exec<| title == "init hdfs" |> -> Class['Hadoop::Historyserver']
-  }
-
-  if ($all or "hbase" in $components) {
-    include hadoop-hbase::master
-    Exec<| title == "init hdfs" |> -> Class['Hadoop-hbase::Master']
-  }
-
-  if ($all or "oozie" in $components) {
-    include hadoop-oozie::server
-    if ($all or "mapred-app" in $components) {
-      Class['Hadoop::Mapred-app'] -> Class['Hadoop-oozie::Server']
-    }
-    Exec<| title == "init hdfs" |> -> Class['Hadoop-oozie::Server']
-  }
-
-  if ($all or "hcat" in $components) {
-    include hcatalog::server
-    include hcatalog::webhcat::server
-  }
-
-  if ($all or "spark" in $components) {
-    include spark::master
-  }
-
-  if ($all or "tachyon" in $components) {
-   include tachyon::master
-  }
-
-  if ($all or "hbase" in $components) {
-    include hadoop-zookeeper::server
-  }
-
-  if ($all or "tez" in $components) {
-    include tez::client
-    Class['tez::client'] -> Exec<| title == "init hdfs" |>
-  }
-
-  # class hadoop::rsync_hdfs isn't used anywhere
-  #Exec<| title == "init hdfs" |> -> Class['Hadoop::Rsync_hdfs']
-}
-
-class standby_head_node inherits hadoop_cluster_node {
-  include hadoop::namenode
-}
-
-class hadoop_gateway_node inherits hadoop_cluster_node {
-  if ($all or "sqoop2" in $components) {
-    include sqoop2::server
-  }
-
-  if ($all or "httpfs" in $components) {
-    include hadoop::httpfs
-    if ($all or "hue" in $components) {
-      Class['Hadoop::Httpfs'] -> Class['Hue::Server']
+class node_with_roles ($roles = hiera("bigtop::roles")) inherits hadoop_cluster_node {
+  define deploy_module($roles) {
+    class { "${name}::deploy":
+    roles => $roles,
     }
   }
 
-  if ($all or "hue" in $components) {
-    include hue::server
-    if ($all or "hbase" in $components) {
-      Class['Hadoop-hbase::Client'] -> Class['Hue::Server']
+  $modules = [
+    "crunch",
+    "giraph",
+    "hadoop",
+    "hadoop-hbase",
+    "ignite-hadoop",
+    "hadoop-flume",
+    "hadoop-hive",
+    "hadoop-oozie",
+    "hadoop-pig",
+    "sqoop2",
+    "hadoop-zookeeper",
+    "hcatalog",
+    "hue",
+    "mahout",
+    "solr",
+    "spark",
+    "tachyon",
+    "tez",
+    "ycsb",
+    "kerberos"
+  ]
+
+  deploy_module { $modules:
+    roles => $roles,
+  }
+}
+
+class node_with_components inherits hadoop_cluster_node {
+
+  # Ensure (even if a single value) that the type is an array.
+  if (is_array($cluster_components)) {
+    $components_array = $cluster_components
+  } else {
+    if ($cluster_components == undef) {
+      $components_array = ["all"]
+    } else {
+      $components_array = [$cluster_components]
     }
   }
 
-  include hadoop::client
+  $given_components = $components_array[0] ? {
+    "all"   => delete(keys($roles_map), ["hdfs-non-ha", "hdfs-ha"]),
+    default => $components_array,
+  }
+  $ha_dependent_components = $ha_enabled ? {
+    true    => ["hdfs-ha"],
+    default => ["hdfs-non-ha"],
+  }
+  $components = concat($given_components, $ha_dependent_components)
 
-  if ($all or "mahout" in $components) {
-    include mahout::client
+  $master_role_types = ["master", "worker", "library"]
+  $standby_role_types = ["standby", "library"]
+  $worker_role_types = ["worker", "library"]
+  $gateway_role_types = ["client", "gateway_server"]
+
+  if ($::fqdn == $hadoop_head_node or $::fqdn == $hadoop_gateway_node) {
+    if ($hadoop_gateway_node == $hadoop_head_node) {
+      $role_types = concat($master_role_types, $gateway_role_types)
+    } elsif ($::fqdn == $hadoop_head_node) {
+      $role_types = $master_role_types
+    } else {
+      $role_types = $gateway_role_types
+    }
+  } elsif ($::fqdn == $standby_head_node) {
+    $role_types = $standby_role_types
+  } else {
+    $role_types = $worker_role_types
   }
-  if ($all or "giraph" in $components) {
-    include giraph::client
-  }
-  if ($all or "crunch" in $components) {
-    include crunch::client
-  }
-  if ($all or "pig" in $components) {
-    include hadoop-pig::client
-  }
-  if ($all or "hive" in $components) {
-    include hadoop-hive::client
-  }
-  if ($all or "sqoop2" in $components) {
-    include sqoop2::client
-  }
-  if ($all or "sqoop" in $components) {
-    include sqoop::client
-  }
-  if ($all or "oozie" in $components) {
-    include hadoop-oozie::client
-  }
-  if ($all or "hbase" in $components) {
-    include hadoop-hbase::client
-  }
-  if ($all or "zookeeper" in $components) {
-    include hadoop-zookeeper::client
-  }
-  if ($all or "tez" in $components) {
-    include tez::client
-  }
-  if ($all or "ycsb" in $components) {
-    include ycsb::client
+
+  $roles = get_roles($components, $role_types, $roles_map)
+
+  class { 'node_with_roles':
+    roles => $roles,
   }
 }

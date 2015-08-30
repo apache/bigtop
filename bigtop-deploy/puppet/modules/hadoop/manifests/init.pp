@@ -27,6 +27,67 @@ class hadoop ($hadoop_security_authentication = "simple",
 
   include stdlib
 
+  class deploy ($roles) {
+    if ("datanode" in $roles) {
+      include hadoop::datanode
+    }
+
+    if ("namenode" in $roles) {
+      include hadoop::init_hdfs
+      include hadoop::namenode
+
+      if ("datanode" in $roles) {
+        Class['Hadoop::Namenode'] -> Class['Hadoop::Datanode'] -> Class['Hadoop::Init_hdfs']
+      } else {
+        Class['Hadoop::Namenode'] -> Class['Hadoop::Init_hdfs']
+      }
+    }
+
+    if ($hadoop::common_hdfs::ha != "disabled" and "standby-namenode" in $roles) {
+      include hadoop::namenode
+    }
+
+    if ("mapred-app" in $roles) {
+      include hadoop::mapred-app
+    }
+
+    if ("nodemanager" in $roles) {
+      include hadoop::nodemanager
+    }
+
+    if ("resourcemanager" in $roles) {
+      include hadoop::resourcemanager
+      include hadoop::historyserver
+      include hadoop::proxyserver
+
+      Class['Hadoop::Init_hdfs'] -> Class['Hadoop::Resourcemanager']
+      if ("nodemanager" in $roles) {
+        Class['Hadoop::Resourcemanager'] -> Class['Hadoop::Nodemanager']
+      }
+      Class['Hadoop::Init_hdfs'] -> Class['Hadoop::Historyserver']
+    }
+
+    if ($hadoop::common_hdfs::ha == "disabled" and "secondarynamenode" in $roles) {
+      include hadoop::secondarynamenode
+    }
+
+    if ("httpfs-server" in $roles) {
+      include hadoop::httpfs
+    }
+
+    if ("hadoop-client" in $roles) {
+      include hadoop::client
+    }
+  }
+
+  class init_hdfs {
+    exec { "init hdfs":
+      path    => ['/bin','/sbin','/usr/bin','/usr/sbin'],
+      command => 'bash -x /usr/lib/hadoop/libexec/init-hdfs.sh',
+      require => Package['hadoop-hdfs']
+    }
+  }
+
   class common ($hadoop_java_home = undef,
       $hadoop_classpath = undef,
       $hadoop_heapsize = undef,
@@ -46,6 +107,7 @@ class hadoop ($hadoop_security_authentication = "simple",
       $hadoop_pid_dir = undef,
       $hadoop_ident_string = undef,
       $hadoop_niceness = undef,
+      $use_tez = false,
       $tez_conf_dir = undef,
       $tez_jars = undef,
   ) inherits hadoop {
@@ -298,7 +360,7 @@ class hadoop ($hadoop_security_authentication = "simple",
       $mapreduce_jobhistory_host = undef,
       $mapreduce_jobhistory_port = "10020",
       $mapreduce_jobhistory_webapp_port = "19888",
-      $mapreduce_framework_name = undef,
+      $mapreduce_framework_name = "yarn",
       $mapred_data_dirs = suffix($hadoop::hadoop_storage_dirs, "/mapred"),
       $mapreduce_cluster_temp_dir = "/mapred/system",
       $yarn_app_mapreduce_am_staging_dir = "/user",

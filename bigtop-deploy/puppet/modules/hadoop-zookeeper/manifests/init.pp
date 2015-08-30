@@ -14,6 +14,17 @@
 # limitations under the License.
 
 class hadoop-zookeeper {
+
+  class deploy ($roles) {
+    if ("zookeeper-client" in $roles) {
+      include hadoop-zookeeper::client
+    }
+
+    if ("zookeeper-server" in $roles) {
+      include hadoop-zookeeper::server
+    }
+  }
+
   class client {
     package { "zookeeper":
       ensure => latest,

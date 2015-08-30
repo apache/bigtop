@@ -24,6 +24,27 @@
 #  - hadoop
 #  - yarn
 
+# A list of roles can be assigned to each node in a cluster via "bigtop::roles"
+# hiera conf. This is useful if you want to run specific daemons/processes of a component
+# (lets say hadoop) on specific nodes. To enable roles, you need to explicitly set
+# "bigtop::roles_enabled" conf to true. By default, it is not enabled. If not enabled,
+# bigtop will honour the hadoop_cluster_node::cluster_components parameter and assume
+# respective roles to each node based on hadoop_head_node, hadoop_gateway_node
+# and other nodes (worker nodes) classification. For full list of roles
+# supported by each component, refer to $roles_map datastructure in cluster.pp file
+# for example:
+
+#bigtop::roles
+# - namenode
+# - resourcemanager
+
+# By specifying above roles, you instruct a node to run only namenode and resourcemanager.
+# When roles are disabled, all worker daemons for each component assume hadoop_head_node as
+# their master. With roles enabled, this assumption may no longer be valid and its upto the user
+# to specify the FQDN for each master daemons to all nodes so that worker daemons can communicate
+# with master. FQDN and port for master daemons of each component can be specified using below
+# configurations.
+
 # Storage directories (will be created if doesn't exist)
 #hadoop::hadoop_storage_dirs:
 #  - /data/1
@@ -141,3 +162,10 @@ hadoop-hive::client::hbase_zookeeper_quorum: "%{hiera('hadoop-hbase::common_conf
 # tez
 hadoop::common::tez_conf_dir: "/etc/tez/conf"
 hadoop::common::tez_jars: "/usr/lib/tez"
+
+# to enable tez in hadoop, uncomment the lines below
+# hadoop::common::use_tez: true
+# hadoop::common_mapred_app::mapreduce_framework_name: "yarn-tez"
+
+# to enable tez in hive, uncomment the lines below
+# hadoop-hive::client::hive_execution_engine: "tez"

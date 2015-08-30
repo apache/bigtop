@@ -14,6 +14,15 @@
 # limitations under the License.
 
 class kerberos {
+
+  class deploy ($roles) {
+    if ("kerberos-server" in $roles) {
+      include kerberos::server
+      include kerberos::kdc
+      include kerberos::kdc::admin_server
+    }
+  }
+
   class site ($domain = inline_template('<%= domain %>'),
       $realm = inline_template('<%= domain.upcase %>'),
       $kdc_server = 'localhost',

@@ -14,6 +14,22 @@
 # limitations under the License.
 
 class hadoop-oozie {
+
+  class deploy ($roles) {
+    if ("oozie-client" in $roles) {
+      include hadoop-oozie::client
+    }
+
+    if ("oozie-server" in $roles) {
+      include hadoop::init_hdfs
+      include hadoop-oozie::server
+      Class['Hadoop::Init_hdfs'] -> Class['Hadoop-oozie::Server']
+      if ("mapred-app" in $roles) {
+        Class['Hadoop::Mapred-app'] -> Class['Hadoop-oozie::Server']
+      }
+    }
+  }
+
   class client {
     package { "oozie-client":
       ensure => latest,

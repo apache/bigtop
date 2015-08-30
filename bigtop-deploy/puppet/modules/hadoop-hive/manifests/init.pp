@@ -14,7 +14,17 @@
 # limitations under the License.
 
 class hadoop-hive {
-  class client($hbase_master = "", $hbase_zookeeper_quorum = "") {
+
+  class deploy ($roles) {
+    if ("hive-client" in $roles) {
+      include hadoop-hive::client
+    }
+  }
+
+  class client($hbase_master = "",
+      $hbase_zookeeper_quorum = "",
+      $hive_execution_engine = "mr") {
+
     package { "hive":
       ensure => latest,
     } 

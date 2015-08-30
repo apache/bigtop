@@ -42,12 +42,10 @@
 </property>
 <% end %>
 
-<% if @all or @components.include? "tez" -%>
 <property>
   <name>hive.execution.engine</name>
-  <value>tez</value>
+  <value><%= @hive_execution_engine %></value>
 </property>
-<% end %>
 
 <property>
   <name>javax.jdo.option.ConnectionURL</name>

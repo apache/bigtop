@@ -14,6 +14,13 @@
 # limitations under the License.
 
 class giraph {
+
+  class deploy ($roles) {
+    if ("giraph-client" in $roles) {
+      include giraph::client
+    }
+  }
+
   class client($zookeeper_quorum = 'localhost') {
     package { "giraph":
       ensure => latest,
