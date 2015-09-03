@@ -32,7 +32,6 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: 'groovy'
-apply plugin: 'download-task'
 
 def PACKAGES_GROUP = 'package'
 
