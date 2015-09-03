@@ -17,6 +17,15 @@
 
 enable_local_repo=${1:-false}
 
+# BIGTOP-2003. A workaround to install newer hiera to get rid of hiera 1.3.0 bug.
+# This hack should be removed when newer hiera is available natively in Ubuntu.
+cat /etc/*release |grep Ubuntu >/dev/null
+if [ $? == 0 ]; then
+    wget https://apt.puppetlabs.com/puppetlabs-release-trusty.deb
+    sudo dpkg -i puppetlabs-release-trusty.deb
+    sudo apt-get update
+fi
+
 # Install puppet agent
 apt-get update
 apt-get -y install puppet curl sudo unzip
