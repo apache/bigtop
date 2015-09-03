@@ -102,10 +102,6 @@ for var in PREFIX BUILD_DIR SOURCE_DIR; do
   fi
 done
 
-if [ -z "${SCALA_HOME}" ]; then
-    echo Missing env. var SCALA_HOME
-    usage
-fi
 if [ -f "$SOURCE_DIR/bigtop.bom" ]; then
   . $SOURCE_DIR/bigtop.bom
 fi
@@ -117,7 +113,6 @@ INSTALLED_LIB_DIR=${INSTALLED_LIB_DIR:-/usr/lib/spark}
 EXAMPLES_DIR=${EXAMPLES_DIR:-$DOC_DIR/examples}
 BIN_DIR=${BIN_DIR:-/usr/bin}
 CONF_DIR=${CONF_DIR:-/etc/spark/conf.dist}
-SCALA_HOME=${SCALA_HOME:-/usr/share/scala}
 PYSPARK_PYTHON=${PYSPARK_PYTHON:-python}
 
 install -d -m 0755 $PREFIX/$LIB_DIR

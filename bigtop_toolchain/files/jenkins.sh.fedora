@@ -16,7 +16,6 @@
 export MAVEN_HOME=/usr/local/maven
 export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk
 export ANT_HOME=/usr/local/ant
-export SCALA_HOME=/usr/share/java
 export GRADLE_HOME=/usr/local/gradle
 export PATH=$MAVEN_HOME/bin:$ANT_HOME/bin:$FORREST_HOME/bin:$GRADLE_HOME/bin:$PATH
 
