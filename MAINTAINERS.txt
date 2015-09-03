@@ -1,4 +1,6 @@
+bigpetstore: jay vyas, rj nowling
 CI infra: rvs
+data generators: rj nowling, jay vyas
 flume: bmahe
 gradle / build system: cos, rvs
 ignite-hadoop: cos, Sergey Vladykin <sergi.vladykin@gmail.com>
