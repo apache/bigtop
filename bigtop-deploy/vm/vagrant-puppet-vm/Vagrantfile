@@ -68,7 +68,9 @@ bigtop_master = "bigtop1.vagrant"
 $script = <<SCRIPT
 service iptables stop
 chkconfig iptables off
-cat /dev/null > /etc/hosts
+# Remove 127.0.0.1 entry since vagrant's hostname setting will map it to FQDN,
+# which miss leads some daemons to bind on 127.0.0.1 instead of public or private IP
+sed -i "/127.0.0.1/d" /etc/hosts
 echo "Bigtop yum repo = #{repo}"
 # Prepare puppet configuration file
 mkdir -p /etc/puppet/hieradata
@@ -99,7 +101,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.define "bigtop#{i}" do |bigtop|
 
       bigtop.vm.box = CONF['box']
-      bigtop_hostname="bigtop#{i}.vagrant"
+      bigtop_hostname="bigtop#{i}"
+      bigtop_fqdn="#{bigtop_hostname}.vagrant"
       bigtop_ip="10.10.10.1#{i}"
 
       bigtop.vm.provider :virtualbox do |vb|
@@ -108,7 +111,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       end
 
       bigtop.vm.network :private_network, ip: bigtop_ip
-      bigtop.vm.hostname = bigtop_hostname
+      bigtop.vm.hostname = bigtop_fqdn
 
       # three levels up is the bigtop "home" directory.
       # the current directory has puppet recipes which we need for provisioning.
@@ -123,7 +126,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         shell.args = ["#{enable_local_repo}"]
       end
       bigtop.vm.provision "shell", inline: $script
-      bigtop.vm.provision :hostmanager
+      # Add the ip to FQDN and hostname mapping in /etc/hosts
+      bigtop.hostmanager.aliases = "#{bigtop_fqdn} #{bigtop_hostname}"
 
       # deploy Apache Hadoop and it's ecosystem
       bigtop.vm.provision :puppet do |puppet|
