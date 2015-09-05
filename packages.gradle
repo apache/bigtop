@@ -36,12 +36,11 @@ apply plugin: 'groovy'
 def PACKAGES_GROUP = 'package'
 
 final String VERBOSE = "verbose"
-final String BOM = "$rootDir/bigtop.mk"
+final String BOM = "$rootDir/bigtop.bom"
+def final config
 
 //HashMap <String, String>
 def BOM_map = [
-    APACHE_MIRROR:  "http://apache.osuosl.org",
-    APACHE_ARCHIVE: "http://archive.apache.org/dist",
     BASE_DIR:       projectDir.absolutePath,
     BUILD_DIR:      projectDir.absolutePath + "/build",
     OUTPUT_DIR:     projectDir.absolutePath + "/output",
@@ -51,7 +50,8 @@ def BOM_map = [
     BIGTOP_BUILD_STAMP: 1
 ]
 
-def final BIGTOP_BOM = 'BIGTOP_BOM'
+def final BIGTOP_VERSION = 'BIGTOP_VERSION'
+def final BIGTOP_BOM_VERSIONS = 'BIGTOP_BOM'
 
 def final BASE_DIR = BOM_map['BASE_DIR']
 def final REPO_DIR = "${BOM_map['BASE_DIR']}/bigtop-repos"
@@ -105,21 +105,21 @@ task "bom-json" (description: "List the components of the stack in json format")
     [
       name: [
         project: BOM_map[it + '_NAME'],
-        pkg: BOM_map[it + '_PKG_NAME'],
-        relNotes: BOM_map[it + '_RELNOTES_NAME'],
+        pkg: BOM_map[it + '_PKG'],
+        relNotes: BOM_map[it + '_RELNOTES'],
       ],
       tarball: [
-        destination: BOM_map[it + '_TARBALL_DST'],
-        source: BOM_map[it + '_TARBALL_SRC'],
+        destination: BOM_map[it + '_TARBALL_DESTINATION'],
+        source: BOM_map[it + '_TARBALL_SOURCE'],
       ],
       url: [
-        site: BOM_map[it + '_SITE'],
-        archive: BOM_map[it + '_ARCHIVE'],
+        site: BOM_map[it + '_URL_SITE'],
+        archive: BOM_map[it + '_URL_ARCHIVE'],
       ],
       version: [
-        base: BOM_map[it + '_BASE_VERSION'],
-        pkg: BOM_map[it + '_PKG_VERSION'],
-        release: BOM_map[it + '_RELEASE_VERSION'],
+        base: BOM_map[it + '_VERSION_BASE'],
+        pkg: BOM_map[it + '_VERSION_PKG'],
+        release: BOM_map[it + '_VERSION_RELEASE'],
       ],
       git: [
          repo: BOM_map[it + '_GIT_REPO'],
@@ -129,7 +129,7 @@ task "bom-json" (description: "List the components of the stack in json format")
     ]
   }
   def fullDefinition = [
-    version: BOM_map['BIGTOP_VERSION'],
+    version: BOM_map[BIGTOP_VERSION],
     components: componentObjects
   ]
   def json = JsonOutput.toJson(fullDefinition)
@@ -137,9 +137,9 @@ task "bom-json" (description: "List the components of the stack in json format")
 }
 
 task "all-components" (description: "List the components of the stack") << {
-  println "${project.name} ${BOM_map['BIGTOP_VERSION']} stack includes the following components"
+  println "${project.name} ${BOM_map[BIGTOP_VERSION]} stack includes the following components"
   components.sort().each { comp ->
-    println sprintf ('\t%1$s %2$s', comp.toLowerCase().padRight(20), BOM_map[comp + "_BASE_VERSION"].padLeft(10))
+    println sprintf ('\t%1$s %2$s', comp.toLowerCase().padRight(20), BOM_map[comp + "_VERSION_BASE"].padLeft(15))
   }
 }
 
@@ -148,7 +148,7 @@ def genTasks = { target, variable ->
       description: "Download $target artifacts",
       group: PACKAGES_GROUP) << {
 
-    def final TARBALL_SRC = BOM_map[variable + '_TARBALL_SRC']
+    def final TARBALL_SRC = BOM_map[variable + '_TARBALL_SOURCE']
     def final DOWNLOAD_DST = BOM_map[variable + '_DOWNLOAD_DST']
     def final DOWNLOAD_URL = BOM_map[variable + '_DOWNLOAD_URL']
 
@@ -198,7 +198,7 @@ def genTasks = { target, variable ->
       return
     }
     def final TAR_DIR = BOM_map[variable + '_TAR_DIR']
-    def final TARBALL_SRC = BOM_map[variable + '_TARBALL_SRC'] ?: ""
+    def final TARBALL_SRC = BOM_map[variable + '_TARBALL_SOURCE'] ?: ""
     def final DOWNLOAD_DST = BOM_map[variable + '_DOWNLOAD_DST'] ?: ""
     def final SEED_TAR = BOM_map[variable + '_SEED_TAR']
 
@@ -253,11 +253,11 @@ def genTasks = { target, variable ->
       println "\tNothing to do. Exiting..."
       return
     }
-    def final PKG_NAME = BOM_map[variable + '_PKG_NAME']
+    def final PKG_NAME = BOM_map[variable + '_PKG']
     def final PKG_RELEASE = BOM_map[variable + '_PKG_RELEASE']
-    def final PKG_VERSION = BOM_map[variable + '_PKG_VERSION']
+    def final PKG_VERSION = BOM_map[variable + '_VERSION_PKG']
     def final PKG_OUTPUT_DIR = BOM_map[variable + '_OUTPUT_DIR']
-    def final BASE_VERSION = BOM_map[variable + '_BASE_VERSION']
+    def final BASE_VERSION = BOM_map[variable + '_VERSION_BASE']
     def final SRCDEB = "${PKG_NAME}_$PKG_VERSION-${BIGTOP_BUILD_STAMP}.dsc"
 
     exec {
@@ -302,18 +302,20 @@ def genTasks = { target, variable ->
     }
     def final PKG_BUILD_DIR = BOM_map[variable + '_BUILD_DIR']
     def final NAME = BOM_map[variable + '_NAME']
-    def final PKG_NAME = BOM_map[variable + '_PKG_NAME']
+    def final PKG_NAME = BOM_map[variable + '_PKG']
     def final SEED_TAR = BOM_map[variable + '_SEED_TAR']
-    def final PKG_VERSION = BOM_map[variable + '_PKG_VERSION']
+    def final PKG_VERSION = BOM_map[variable + '_VERSION_PKG']
     def final PKG_OUTPUT_DIR = BOM_map[variable + '_OUTPUT_DIR']
     delete ("$PKG_BUILD_DIR/deb")
     def final DEB_BLD_DIR = "$PKG_BUILD_DIR/deb/$NAME-${PKG_VERSION}"
     def final DEB_PKG_DIR = "$PKG_BUILD_DIR/deb/$PKG_NAME-${PKG_VERSION}-${BIGTOP_BUILD_STAMP}"
     mkdir (DEB_BLD_DIR)
-    copy {
+     println BOM_map[variable + '_TARBALL_DESTINATION'] + " " + "${PKG_NAME}_${PKG_VERSION}.orig.tar.gz"
+
+     copy {
       from SEED_TAR
       into "$PKG_BUILD_DIR/deb/"
-      rename BOM_map[variable + '_TARBALL_DST'], "${PKG_NAME}_${PKG_VERSION}.orig.tar.gz"
+      rename BOM_map[variable + '_TARBALL_DESTINATION'], "${PKG_NAME}_${PKG_VERSION}.orig.tar.gz"
     }
     exec {
       workingDir DEB_BLD_DIR
@@ -331,7 +333,7 @@ def genTasks = { target, variable ->
     }.copy { into "$DEB_BLD_DIR/debian" }
     // Prepeare bom file with all the versions
     def bomWriter = new File("$DEB_BLD_DIR/debian/bigtop.bom").newWriter()
-    BOM_map[BIGTOP_BOM].split(" ").each { bomWriter << "$it\n"}
+    BOM_map[BIGTOP_BOM_VERSIONS].split(" ").each { bomWriter << "$it\n"}
     bomWriter.close()
     // Create changelog
     def changelog = new File("$DEB_BLD_DIR/debian/changelog").newWriter()
@@ -375,10 +377,10 @@ def genTasks = { target, variable ->
     }
     def final PKG_BUILD_DIR = BOM_map[variable + '_BUILD_DIR']
     def final NAME = BOM_map[variable + '_NAME']
-    def final PKG_NAME = BOM_map[variable + '_PKG_NAME']
+    def final PKG_NAME = BOM_map[variable + '_PKG']
     def final PKG_OUTPUT_DIR = BOM_map[variable + '_OUTPUT_DIR']
-    def final PKG_VERSION = BOM_map[variable + '_PKG_VERSION']
-    def final BASE_VERSION = BOM_map[variable + '_BASE_VERSION']
+    def final PKG_VERSION = BOM_map[variable + '_VERSION_PKG']
+    def final BASE_VERSION = BOM_map[variable + '_VERSION_BASE']
     def RELEASE_DIST = "rpmbuild --eval '%{?dist}' 2>/dev/null".execute().text.trim().replaceAll("'",'')
     def SRCRPM="$PKG_OUTPUT_DIR/$PKG_NAME-${PKG_VERSION}-$BIGTOP_BUILD_STAMP${RELEASE_DIST}.src.rpm"
 
@@ -410,12 +412,12 @@ def genTasks = { target, variable ->
       return
     }
     def final NAME = BOM_map[variable + '_NAME']
-    def final PKG_NAME = BOM_map[variable + '_PKG_NAME']
+    def final PKG_NAME = BOM_map[variable + '_PKG']
     def final PKG_NAME_FOR_PKG = BOM_map[variable + '_NAME'].replaceAll("-", "_")
     def final PKG_BUILD_DIR = BOM_map[variable + '_BUILD_DIR']
     def final SEED_TAR = BOM_map[variable + '_SEED_TAR']
-    def final PKG_VERSION = BOM_map[variable + '_PKG_VERSION']
-    def final BASE_VERSION = BOM_map[variable + '_BASE_VERSION']
+    def final PKG_VERSION = BOM_map[variable + '_VERSION_PKG']
+    def final BASE_VERSION = BOM_map[variable + '_VERSION_BASE']
     def final PKG_OUTPUT_DIR = BOM_map[variable + '_OUTPUT_DIR']
     delete ("$PKG_BUILD_DIR/rpm")
     ['INSTALL','SOURCES','BUILD','SRPMS','RPMS'].each { rpmdir ->
@@ -437,7 +439,7 @@ def genTasks = { target, variable ->
     }.copy { into "$PKG_BUILD_DIR/rpm/SOURCES" }
     // Writing bigtop.bom files with all the versions
     def bomWriter = new File("$PKG_BUILD_DIR/rpm/SOURCES/bigtop.bom").newWriter()
-    BOM_map[BIGTOP_BOM].split(" ").each { bomWriter << "$it\n"}
+    BOM_map[BIGTOP_BOM_VERSIONS].split(" ").each { bomWriter << "$it\n"}
     bomWriter.close()
 
     def specFileName = "${PKG_BUILD_DIR}/rpm/SPECS/${NAME}.spec"
@@ -500,30 +502,33 @@ def genTasks = { target, variable ->
     }
   }
   task "$target-version" (description: "Show version of $target component", group: PACKAGES_GROUP) << {
-    println "Base: ${BOM_map[variable + '_BASE_VERSION']}"
+    println "Base: ${BOM_map[variable + '_VERSION_BASE']}"
   }
   task "${target}_vardefines" << {
     BOM_map[variable + '_NAME'] = target
-    if (!BOM_map[variable + '_PKG_NAME']) {
-      BOM_map[variable + '_PKG_NAME'] = BOM_map[variable + '_NAME']
+    if (!BOM_map[variable + '_PKG']) {
+      BOM_map[variable + '_PKG'] = BOM_map[variable + '_NAME']
+    }
+    if (!BOM_map[variable + '_VERSION_PKG']) {
+      BOM_map[variable + '_VERSION_PKG'] = BOM_map[variable + '_VERSION_BASE']
     }
     BOM_map[variable + '_PKG_RELEASE'] = '1'
 
     BOM_map[variable + '_BUILD_DIR'] = BOM_map['BUILD_DIR'] + "/$target"
     BOM_map[variable + '_OUTPUT_DIR'] = BOM_map['OUTPUT_DIR'] + "/$target"
     BOM_map[variable + '_SOURCE_DIR'] = BOM_map['BUILD_DIR'] + "/source"
-    BOM_map[variable + '_TAR_DIR'] = BOM_map['BUILD_DIR'] + "/$target/tar/${target}-${BOM_map[variable + '_BASE_VERSION']}"
-    BOM_map[variable + '_SEED_TAR'] = BOM_map['BUILD_DIR'] + "/$target/tar/" + BOM_map[variable + '_TARBALL_DST']
+    BOM_map[variable + '_TAR_DIR'] = BOM_map['BUILD_DIR'] + "/$target/tar/${target}-${BOM_map[variable + '_VERSION_BASE']}"
+    BOM_map[variable + '_SEED_TAR'] = BOM_map['BUILD_DIR'] + "/$target/tar/" + BOM_map[variable + '_TARBALL_DESTINATION']
 
     BOM_map[variable + '_DOWNLOAD_URL'] =
-        (BOM_map[variable + '_SITE'] != null && BOM_map[variable + '_TARBALL_SRC'] != null) ?
-            BOM_map[variable + '_SITE'] + '/' + BOM_map[variable + '_TARBALL_SRC'] : null
-    BOM_map[variable + '_DOWNLOAD_DST'] = (BOM_map[variable + '_TARBALL_SRC'] != null) ?
-        DL_DIR + '/' + BOM_map[variable + '_TARBALL_SRC'] : null
+        (BOM_map[variable + '_URL_SITE'] != null && BOM_map[variable + '_TARBALL_SOURCE'] != null) ?
+            BOM_map[variable + '_URL_SITE'] + '/' + BOM_map[variable + '_TARBALL_SOURCE'] : null
+    BOM_map[variable + '_DOWNLOAD_DST'] = (BOM_map[variable + '_TARBALL_SOURCE'] != null) ?
+        DL_DIR + '/' + BOM_map[variable + '_TARBALL_SOURCE'] : null
 
     // test that the download url will return http 200.  If it does not, use the ARCHIVE url instead of the MIRROR SITE url
     if (!ifExists(BOM_map[variable + '_DOWNLOAD_URL'])) {
-      BOM_map[variable + '_DOWNLOAD_URL'] = BOM_map[variable + '_ARCHIVE'] + '/' + BOM_map[variable + '_TARBALL_SRC']
+      BOM_map[variable + '_DOWNLOAD_URL'] = BOM_map[variable + '_URL_ARCHIVE'] + '/' + BOM_map[variable + '_TARBALL_SOURCE']
     }
 
     BOM_map[variable + '_TARGET_DL']  = BOM_map[variable + '_BUILD_DIR'] + '/.download'
@@ -550,7 +555,7 @@ def genTasks = { target, variable ->
     println "  Then unpack into ${BOM_map[variable + '_SOURCE_DIR']}"
     println "  And create a seed tarball ${BOM_map[variable + '_SEED_TAR']}"
 
-    println "Version: " + BOM_map[variable + '_BASE_VERSION']
+    println "Version: " + BOM_map[variable + '_VERSION_BASE']
     //TODO more about stamping
   }
   task "$target-relnotes" (description: "Preparing release notes for $target. No yet implemented!!!", group: PACKAGES_GROUP)<< {
@@ -567,32 +572,35 @@ def genTasks = { target, variable ->
 }
 
 def readBOM = {
-
-  def buildUtils = new org.apache.bigtop.BuildUtils()
-  def bomfile = new File(BOM)
-  def envs = []
-
-  bomfile.eachLine {
-    if (!it.startsWith("#") && !it.isEmpty()) {
-      if (it.startsWith("\$(eval")) {
-        def pattern = ~/.*call PACKAGE,(\w+[-\w+]*),(\w+)/
-        def m = it =~ pattern
-        assert m.size() == 1
-        def target = m[0][1]
-        def variable = m[0][2]
-        genTasks(target, variable)
-        targets.add(target)
-        // Store the component name in the list
-        // TODO - we might not need them components anymore: version are calculated differently now
-        components.add(variable)
-        return
-      }
-      envs = it?.split("=")
-      def value = buildUtils.evaluateBOM(BOM_map, envs[1])
-      value = System.getProperty(envs[0]) ?: value
-      BOM_map.put(envs[0], value)
+  config = new ConfigSlurper().parse(new URL("file:$BOM"))
+  doValidateBOM(config)
+  BOM_map[BIGTOP_VERSION] = config.bigtop.version
+  config.bigtop.apache.each { name, value ->
+      BOM_map[name] = value
+  }
+  config.bigtop.stack.each { name, comp ->
+    comp.toProperties(name).each {k, v ->
+      BOM_map[(k.replaceAll("\\.", "_").toUpperCase())] = v
     }
   }
+  config.bigtop.components.each { label, comp ->
+    // while closure name in the component's config could include '-'; the prefix in the BOM_map shouldn't
+    def prefix = comp.name.replaceAll("\\-", "_").toUpperCase()
+//  TODO?: To avoid changing every bit of the builds logic, let's stick to the old naming format
+    comp.toProperties(prefix).each {comp_config_key, comp_config_value ->
+      BOM_map[(comp_config_key.replaceAll("\\.", "_").toUpperCase())] = comp_config_value
+    }
+    genTasks(comp.name, prefix)
+    components.add(prefix)
+  }
+}
+
+// Let's enforce some of the configuration requirements
+private void doValidateBOM(config) {
+  assert config.bigtop.version
+  assert config.bigtop.stack.jdk
+  assert config.bigtop.stack.scala
+  assert config.bigtop.apache.size() != 0
 }
 
 // We need to make sure that all dynamic tasks are available for invocation
@@ -602,11 +610,12 @@ project.afterEvaluate {
   // Versions need to be preserved for more than just component:
   //  - there are JDK version requirement
   //  - possibly more in the future
-  BOM_map.keySet().findAll { it ==~ /.*_BASE_VERSION/ }.each { base_version ->
-    bomVersions += "${base_version.replaceAll('_BASE', '')}=${BOM_map[base_version]} "
+  BOM_map.keySet().findAll { it ==~ /.*VERSION_BASE/ }.each { version_base ->
+    bomVersions += "${version_base.replaceAll('_BASE', '')}=${BOM_map[version_base]} "
   }
-  BOM_map[BIGTOP_BOM] = bomVersions
-  if (System.getProperty(VERBOSE))println "BIGTOP_BOM:\n${BOM_map[BIGTOP_BOM]}"
+  BOM_map[BIGTOP_BOM_VERSIONS] = bomVersions
+  if (System.getProperty(VERBOSE))println "BIGTOP_BOM_VERSIONS:\n${BOM_map[BIGTOP_BOM_VERSIONS]}"
+  if (System.getProperty(VERBOSE))println "Full content:\n${BOM_map}"
   // Putting all targets of different types into one common target
   task "srpm" (dependsOn: tasks.findAll { alltask -> alltask.name.endsWith("-srpm")}*.name,
       description: "Build all SRPM packages for the stack components",
