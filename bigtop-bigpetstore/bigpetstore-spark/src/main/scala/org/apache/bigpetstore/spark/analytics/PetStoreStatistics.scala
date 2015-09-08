@@ -68,7 +68,7 @@ object PetStoreStatistics {
   def queryTxByMonth(sqlContext: SQLContext): Array[StatisticsTxByMonth] = {
     import sqlContext._
 
-    val results: SchemaRDD = sql("SELECT count(*), month FROM Transactions GROUP BY month")
+    val results: DataFrame = sql("SELECT count(*), month FROM Transactions GROUP BY month")
     val transactionsByMonth = results.collect()
     for(x<-transactionsByMonth){
       println(x)
@@ -82,7 +82,7 @@ object PetStoreStatistics {
   def queryTxByProductZip(sqlContext: SQLContext): Array[StatisticsTxByProductZip] = {
     import sqlContext._
 
-    val results: SchemaRDD = sql(
+    val results: DataFrame = sql(
       """SELECT count(*) c, productId, zipcode
 FROM Transactions t
 JOIN Stores s ON t.storeId = s.storeId
@@ -104,7 +104,7 @@ GROUP BY productId, zipcode""")
   def queryTxByProduct(sqlContext: SQLContext): Array[StatisticsTxByProduct] = {
     import sqlContext._
 
-    val results: SchemaRDD = sql(
+    val results: DataFrame = sql(
       """SELECT count(*) c, productId FROM Transactions GROUP BY productId""")
 
     val groupedProducts = results.collect()
@@ -121,16 +121,17 @@ GROUP BY productId, zipcode""")
 
     val sqlContext = new org.apache.spark.sql.SQLContext(sc)
     import sqlContext._
+    import sqlContext.implicits._
 
     // Transform the Non-SparkSQL Calendar into a SparkSQL-friendly field.
     val mappableTransactions:RDD[TransactionSQL] =
       r._5.map { trans => trans.toSQL() }
 
-    r._1.registerTempTable("Locations")
-    r._2.registerTempTable("Stores")
-    r._3.registerTempTable("Customers")
-    r._4.registerTempTable("Product")
-    mappableTransactions.registerTempTable("Transactions")
+    r._1.toDF().registerTempTable("Locations")
+    r._2.toDF().registerTempTable("Stores")
+    r._3.toDF().registerTempTable("Customers")
+    r._4.toDF().registerTempTable("Product")
+    mappableTransactions.toDF().registerTempTable("Transactions")
 
 
     val txByMonth = queryTxByMonth(sqlContext)
