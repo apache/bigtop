@@ -12,12 +12,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-FROM centos:6
+FROM bigtop/puppet:centos-6
 MAINTAINER oflebbe@apache.org
 
 COPY bigtop_toolchain /etc/puppet/modules/bigtop_toolchain
 
-RUN rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm; \
-    yum -y install curl sudo unzip wget puppet tar ; \
-    puppet apply -e "include bigtop_toolchain::puppet-modules" ; \
+RUN puppet apply -e "include bigtop_toolchain::puppet-modules" ; \
     puppet apply -e "include bigtop_toolchain::installer"

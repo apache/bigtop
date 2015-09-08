@@ -12,11 +12,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-FROM opensuse:13.2
+FROM bigtop/puppet:opensuse-13.2
 MAINTAINER evansye@apache.org
 
 COPY bigtop_toolchain /etc/puppet/modules/bigtop_toolchain
 
-RUN zypper --gpg-auto-import-keys install -y curl sudo unzip wget puppet suse-release ca-certificates-mozilla net-tools tar ; \
-    puppet apply -e "include bigtop_toolchain::puppet-modules" ; \
+RUN puppet apply -e "include bigtop_toolchain::puppet-modules" ; \
     puppet apply -e "include bigtop_toolchain::installer"

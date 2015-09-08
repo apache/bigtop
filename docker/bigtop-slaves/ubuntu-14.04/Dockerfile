@@ -12,12 +12,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-FROM ubuntu:14.04
+FROM bigtop/puppet:ubuntu-14.04
 MAINTAINER oflebbe@apache.org
 
 COPY bigtop_toolchain /etc/puppet/modules/bigtop_toolchain
 
-RUN apt-get update; \
-    apt-get -y install curl sudo unzip wget puppet software-properties-common ;\
-    puppet apply -e "include bigtop_toolchain::puppet-modules" ; \
+RUN puppet apply -e "include bigtop_toolchain::puppet-modules" ; \
     puppet apply -e "include bigtop_toolchain::installer"

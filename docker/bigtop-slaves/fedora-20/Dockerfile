@@ -12,14 +12,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-FROM fedora:20
+FROM bigtop/puppet:fedora-20
 MAINTAINER oflebbe@apache.org
 
 COPY bigtop_toolchain /etc/puppet/modules/bigtop_toolchain
 
-RUN yum -y install yum-utils;  yum-config-manager --enable updates-testing ; \
-    rpm -ivh https://yum.puppetlabs.com/puppetlabs-release-fedora-20.noarch.rpm;  \
-    yum update; \
-    yum -y install hostname curl sudo unzip wget puppet ; \
-    puppet apply -e "include bigtop_toolchain::puppet-modules" ; \
+RUN puppet apply -e "include bigtop_toolchain::puppet-modules" ; \
     puppet apply -e "include bigtop_toolchain::installer"
