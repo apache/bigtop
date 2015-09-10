@@ -26,7 +26,6 @@
 %define hadoop_yarn_home /usr/lib/hadoop-yarn
 %define hadoop_hdfs_home /usr/lib/hadoop-hdfs
 %define hbase_home /usr/lib/hbase
-%define phoenix_hbase_version HBase-0.98
 
 %if  %{?suse_version:1}0
 
@@ -83,7 +82,7 @@ URL: http://phoenix.apache.org
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 License: ASL 2.0
-Source0: %{name}-%{phoenix_base_version}-%{phoenix_hbase_version}-src.tar.gz
+Source0: %{name}-%{phoenix_base_version}-src.tar.gz
 Source1: do-component-build
 Source2: install_phoenix.sh
 Source3: phoenix.default
@@ -119,7 +118,7 @@ with Phoenix and HBase. Soon this will enable access from environments
 other than the JVM.
 
 %prep
-%setup -n %{name}-%{phoenix_base_version}-%{phoenix_hbase_version}-src
+%setup -n %{name}-%{phoenix_base_version}-src
 
 %build
 bash %{SOURCE1}
