@@ -591,6 +591,7 @@ def readBOM = {
       BOM_map[(comp_config_key.replaceAll("\\.", "_").toUpperCase())] = comp_config_value
     }
     genTasks(comp.name, prefix)
+    targets.add(comp.name)
     components.add(prefix)
   }
 }
