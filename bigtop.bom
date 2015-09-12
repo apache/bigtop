@@ -134,8 +134,8 @@ bigtop {
       pkg     = 'pig'
       relNotes = 'Apache Pig'
       version { base = '0.14.0'; pkg = base; release = 1 }
-      tarball { destination = "${name}-${version.base}.tar.gz"
-                source      = "${name}-${version.base}-src.tar.gz" }
+      tarball { destination = "${name}-${version.base}-src.tar.gz"
+                source      = destination }
       url     { download_path = "/$name/$name-${version.base}/"
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
