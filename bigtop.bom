@@ -324,7 +324,7 @@ bigtop {
     }
     'tachyon' {
       name    = "tachyon"
-      name    = "tachyon-tfs"
+      pkg     = "tachyon-tfs"
       relNotes = "Tachyon: a memory-centric distributed file system"
       version { base = '0.6.0'; pkg = base; release = 1 }
       tarball { destination = "$name-${version.base}.tar.gz"
