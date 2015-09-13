@@ -243,9 +243,9 @@ bigtop {
       name    = 'solr'
       relNotes = 'Apache Solr'
       version { base = '4.9.0'; pkg = base; release = 1 }
-      tarball { destination = "$name-${version.base}-src.tar.gz"
+      tarball { destination = "$name-${version.base}-src.tgz"
                 source      = destination }
-      url     { download_path = "/lucene/$name/${version.base}/"
+      url     { download_path = "lucene/$name/${version.base}"
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }
