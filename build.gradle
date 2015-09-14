@@ -182,7 +182,7 @@ task toolchain(type:Exec,
     group: DEVENV_GROUP) {
   def command = [
       'sudo', 'puppet', 'apply', '-d',
-      "--modulepath=${projectDir.absolutePath}", '-e',
+      "--modulepath=${projectDir.absolutePath}:/etc/puppet/modules", '-e',
       'include bigtop_toolchain::installer'
   ]
   workingDir '.'
