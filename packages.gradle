@@ -310,9 +310,7 @@ def genTasks = { target, variable ->
     def final DEB_BLD_DIR = "$PKG_BUILD_DIR/deb/$NAME-${PKG_VERSION}"
     def final DEB_PKG_DIR = "$PKG_BUILD_DIR/deb/$PKG_NAME-${PKG_VERSION}-${BIGTOP_BUILD_STAMP}"
     mkdir (DEB_BLD_DIR)
-     println BOM_map[variable + '_TARBALL_DESTINATION'] + " " + "${PKG_NAME}_${PKG_VERSION}.orig.tar.gz"
-
-     copy {
+    copy {
       from SEED_TAR
       into "$PKG_BUILD_DIR/deb/"
       rename BOM_map[variable + '_TARBALL_DESTINATION'], "${PKG_NAME}_${PKG_VERSION}.orig.tar.gz"
