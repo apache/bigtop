@@ -29,10 +29,4 @@ class bigtop_toolchain::deps {
     require => Package[$packages::pkgs],
     unless  => "/usr/bin/test -f /usr/src/apache-maven-3.3.3-bin.tar.gz",
   }
-
-  exec {"/usr/bin/wget http://services.gradle.org/distributions/gradle-2.4-bin.zip":
-    cwd     => "/usr/src",
-    require => Package[$packages::pkgs],
-    unless  => "/usr/bin/test -f /usr/src/gradle-2.4-bin.zip",
-  }
 }

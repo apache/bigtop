@@ -17,16 +17,22 @@ class bigtop_toolchain::gradle {
 
   include bigtop_toolchain::deps
 
-  exec {'/usr/bin/unzip -x -o /usr/src/gradle-2.4-bin.zip':
+  exec {"/usr/bin/wget http://services.gradle.org/distributions/gradle-2.7-bin.zip":
+    cwd     => "/usr/src",
+    require => Package[$packages::pkgs],
+    unless  => "/usr/bin/test -f /usr/src/gradle-2.7-bin.zip",
+  }
+
+  exec {'/usr/bin/unzip -x -o /usr/src/gradle-2.7-bin.zip':
     cwd         => '/usr/local',
     refreshonly => true,
-    subscribe   => Exec["/usr/bin/wget http://services.gradle.org/distributions/gradle-2.4-bin.zip"],
-    require     => Exec["/usr/bin/wget http://services.gradle.org/distributions/gradle-2.4-bin.zip"],
+    subscribe   => Exec["/usr/bin/wget http://services.gradle.org/distributions/gradle-2.7-bin.zip"],
+    require     => Exec["/usr/bin/wget http://services.gradle.org/distributions/gradle-2.7-bin.zip"],
   }
 
   file {'/usr/local/gradle':
     ensure  => link,
-    target  => '/usr/local/gradle-2.4',
-    require => Exec['/usr/bin/unzip -x -o /usr/src/gradle-2.4-bin.zip'],
+    target  => '/usr/local/gradle-2.7',
+    require => Exec['/usr/bin/unzip -x -o /usr/src/gradle-2.7-bin.zip'],
   }
 }

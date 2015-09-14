@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-## 
+##
 ## Tries to recreate Gradle's gradlew command in pure bash.
 ## This way you don't have to worry about binaries in your build.
 ##
@@ -26,9 +26,11 @@
 set -e
 set -o pipefail
 
-
 APP_NAME="Gradle"
 APP_BASE_NAME=`basename "$0"`
+
+# Use the maximum available, or set MAX_FD != -1 to use that value.
+    MAX_FD="maximum"
 
 # Add default JVM options here. You can also use JAVA_OPTS and GRADLE_OPTS to pass JVM options to this script.
 DEFAULT_JVM_OPTS="-Dorg.gradle.appname=$APP_BASE_NAME"
@@ -68,22 +70,42 @@ case "`uname`" in
     ;;
 esac
 
+# Attempt to set APP_HOME
+# Resolve links: $0 may be a link
+PRG="$0"
+# Need this for relative symlinks.
+while [ -h "$PRG" ] ; do
+    ls=`ls -ld "$PRG"`
+    link=`expr "$ls" : '.*-> \(.*\)$'`
+    if expr "$link" : '/.*' > /dev/null; then
+        PRG="$link"
+    else
+        PRG=`dirname "$PRG"`"/$link"
+    fi
+done
+SAVED="`pwd`"
+cd "`dirname \"$PRG\"`/" >&-
+APP_HOME="`pwd -P`"
+cd "$SAVED" >&-
+
+CLASSPATH=$APP_HOME/gradle/wrapper/gradle-wrapper.jar
+
 # Determine the Java command to use to start the JVM.
 if [ -n "$JAVA_HOME" ] ; then
     if [ -x "$JAVA_HOME/jre/sh/java" ] ; then
         # IBM's JDK on AIX uses strange locations for the executables
-        JAVA="$JAVA_HOME/jre/sh/java"
+        JAVACMD="$JAVA_HOME/jre/sh/java"
     else
-        JAVA="$JAVA_HOME/bin/java"
+        JAVACMD="$JAVA_HOME/bin/java"
     fi
-    if [ ! -x "$JAVA" ] ; then
+    if [ ! -x "$JAVACMD" ] ; then
         die "ERROR: JAVA_HOME is set to an invalid directory: $JAVA_HOME
 
 Please set the JAVA_HOME variable in your environment to match the
 location of your Java installation."
     fi
 else
-    JAVA="java"
+    JAVACMD="java"
     which java >/dev/null 2>&1 || die "ERROR: JAVA_HOME is not set and no 'java' command could be found in your PATH.
 
 Please set the JAVA_HOME variable in your environment to match the
@@ -108,7 +130,7 @@ fi
 
 # For Darwin, add options to specify how the application appears in the dock
 if $darwin; then
-    GRADLE_OPTS="$GRADLE_OPTS \"-Xdock:name=$APP_NAME\" \"-Xdock:icon=$bin/media/gradle.icns\""
+    GRADLE_OPTS="$GRADLE_OPTS \"-Xdock:name=$APP_NAME\" \"-Xdock:icon=$APP_HOME/media/gradle.icns\""
 fi
 
 # does not match gradle's hash
@@ -180,8 +202,8 @@ classpath() {
 }
 
 # Split up the JVM_OPTS And GRADLE_OPTS values into an array, following the shell quoting and substitution rules
-splitJvmOpts() {
-  JVM_OPTS=("$@")
+function splitJvmOpts() {
+    JVM_OPTS=("$@")
 }
 
 main() {
@@ -190,8 +212,9 @@ main() {
   fi
 
   eval splitJvmOpts $DEFAULT_JVM_OPTS $JAVA_OPTS $GRADLE_OPTS
+  JVM_OPTS[${#JVM_OPTS[*]}]="-Dorg.gradle.appname=$APP_BASE_NAME"
 
-  $JAVA "${JVM_OPTS[@]}" -cp $(classpath) org.gradle.launcher.GradleMain "$@"
+  $JAVACMD "${JVM_OPTS[@]}" -cp $(classpath) org.gradle.launcher.GradleMain "$@"
 }
 
 main "$@"
