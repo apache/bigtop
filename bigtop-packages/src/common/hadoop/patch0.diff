@@ -1,0 +1,15 @@
+diff -uNr hadoop-2.7.1-src/hadoop-common-project/hadoop-common/pom.xml hadoop-2.7.1-srcp/hadoop-common-project/hadoop-common/pom.xml
+--- hadoop-2.7.1-src/hadoop-common-project/hadoop-common/pom.xml	2015-09-15 15:48:18.410962019 -0700
++++ hadoop-2.7.1-srcp/hadoop-common-project/hadoop-common/pom.xml	2015-09-15 15:50:52.059389201 -0700
+@@ -238,6 +238,11 @@
+       <artifactId>jsr305</artifactId>
+       <scope>compile</scope>
+     </dependency>
++    <dependency>
++      <groupId>io.netty</groupId>
++      <artifactId>netty</artifactId>
++      <scope>compile</scope>
++    </dependency>
+ 
+     <dependency>
+       <groupId>org.apache.htrace</groupId>
