@@ -13,23 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.apache.bigtop.datagenerators.samplers.samplers;
 
-jar {
-  from {
-    configurations.runtime.collect {
-      it.isDirectory() ? it : zipTree(it)
-    }
+import org.apache.bigtop.datagenerators.samplers.SeedFactory;
+import org.apache.commons.math3.distribution.GammaDistribution;
+
+public class GammaSampler implements Sampler<Double> {
+  private final GammaDistribution gamma;
+
+  public GammaSampler(double k, double theta, SeedFactory seedFactory) {
+    gamma = new GammaDistribution(k, theta);
+    gamma.reseedRandomGenerator(seedFactory.getNextSeed());
   }
 
-  manifest {
-    attributes 'Title': 'BigTop Name Generator', 'Version': version
+  @Override
+  public Double sample() throws Exception {
+    return gamma.sample();
   }
-}
 
-dependencies {
-  compile 'com.google.guava:guava:18.0'
-  compile 'org.apache.commons:commons-lang3:3.4'
-  compile project(":bigtop-samplers")
-
-  testCompile 'junit:junit:4.+'
 }

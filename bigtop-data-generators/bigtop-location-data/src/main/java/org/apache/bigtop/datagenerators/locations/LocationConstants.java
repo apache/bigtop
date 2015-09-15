@@ -17,9 +17,9 @@ package org.apache.bigtop.datagenerators.locations;
 
 import java.io.File;
 
-public class LocationConstants
-{
-	public static final File COORDINATES_FILE = new File("zips.csv");
-	public static final File INCOMES_FILE = new File("ACS_12_5YR_S1903/ACS_12_5YR_S1903_with_ann.csv");
-	public static final File POPULATION_FILE = new File("population_data.csv");
+public class LocationConstants {
+  public static final File COORDINATES_FILE = new File("zips.csv");
+  public static final File INCOMES_FILE = new File(
+          "ACS_12_5YR_S1903/ACS_12_5YR_S1903_with_ann.csv");
+  public static final File POPULATION_FILE = new File("population_data.csv");
 }

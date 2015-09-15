@@ -13,52 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-apply plugin: 'eclipse'
-apply plugin: 'groovy'
-apply plugin: 'java'
-apply plugin: 'maven'
-group = 'org.apache.bigtop'
-version = '1.1.0-SNAPSHOT'
 
 jar {
-
-    from {
-        configurations.runtime.collect {
-            it.isDirectory() ? it : zipTree(it)
-        }
+  from {
+    configurations.runtime.collect {
+      it.isDirectory() ? it : zipTree(it)
     }
+  }
 
-    manifest {
-	attributes 'Title': 'BigTop Samplers', 'Version': version
-    }
-}
-
-repositories {
-	mavenLocal()
-	mavenCentral()
-}
-
-test {
-     // show standard out and error on console
-     testLogging.showStandardStreams = true
-
-     // listen to events in the test execution lifecycle
-     beforeTest { descriptor ->
-       logger.lifecycle("Running test: " + descriptor)
-     }
-
-     // listen to standard out and standard error of the test JVM(s)
-     onOutput { descriptor, event ->
-       logger.lifecycle("Test: " + descriptor + " produced standard out/err: " + event.message )
-     }
-
+  manifest {
+    attributes 'Title': 'BigTop Samplers', 'Version': version
+  }
 }
 
 dependencies {
-    compile 'com.google.guava:guava:18.0'
+  compile 'com.google.guava:guava:18.0'
+  compile 'org.apache.commons:commons-lang3:3.4'
+  compile 'org.apache.commons:commons-math3:3.5'
 
-    compile 'org.apache.commons:commons-lang3:3.4'
-    compile 'org.apache.commons:commons-math3:3.5'
-
-    testCompile 'junit:junit:4.+'
+  testCompile 'junit:junit:4.+'
 }

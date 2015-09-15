@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 jar {
   from {
     configurations.runtime.collect {
@@ -22,14 +21,17 @@ jar {
   }
 
   manifest {
-    attributes 'Title': 'BigTop Name Generator', 'Version': version
+    attributes 'Title': 'BigTop Weatherman', 'Version': version
+    attributes 'Main-Class': 'org.apache.bigtop.datagenerators.weatherman.internal.Driver'
   }
 }
 
 dependencies {
   compile 'com.google.guava:guava:18.0'
   compile 'org.apache.commons:commons-lang3:3.4'
-  compile project(":bigtop-samplers")
+  compile 'joda-time:joda-time:2.8.2'
+  compile project(':bigtop-samplers')
+  compile project(':bigtop-location-data')
 
   testCompile 'junit:junit:4.+'
 }

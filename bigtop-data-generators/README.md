@@ -24,6 +24,7 @@ The following data generators are included so far:
 
 * BigPetStore -- generates customers, stores, products, and transactions for a fictional chain of pet stores
 * BigTop Name Generator -- generates names by sampling from U.S. Census data
+* BigTop Weatherman -- weather simulator
 
 We have the following libraries:
 
@@ -45,3 +46,7 @@ Jar files can be installed to a local Maven cache to simplify integration by ext
     $ gradle install
 
 You can then define the dependencies via Maven.
+
+Running
+-------
+Please see READMEs in individual project directories.

@@ -13,23 +13,4 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-jar {
-  from {
-    configurations.runtime.collect {
-      it.isDirectory() ? it : zipTree(it)
-    }
-  }
-
-  manifest {
-    attributes 'Title': 'BigTop Name Generator', 'Version': version
-  }
-}
-
-dependencies {
-  compile 'com.google.guava:guava:18.0'
-  compile 'org.apache.commons:commons-lang3:3.4'
-  compile project(":bigtop-samplers")
-
-  testCompile 'junit:junit:4.+'
-}
+rootProject.name = "bigtop-weatherman"

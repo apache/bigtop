@@ -14,22 +14,31 @@
  * limitations under the License.
  */
 
-jar {
-  from {
-    configurations.runtime.collect {
-      it.isDirectory() ? it : zipTree(it)
+subprojects {
+  apply plugin: 'eclipse'
+  apply plugin: 'java'
+
+  Node xml = new XmlParser().parse("../pom.xml")
+  group = xml.groupId.first().value().first()
+  version = xml.version.first().value().first()
+
+  repositories {
+    mavenLocal()
+    mavenCentral()
+  }
+
+  test {
+    // show standard out and error on console
+    testLogging.showStandardStreams = true
+
+    // listen to events in the test execution lifecycle
+    beforeTest { descriptor ->
+      logger.lifecycle("Running test: " + descriptor)
+    }
+
+    // listen to standard out and standard error of the test JVM(s)
+    onOutput { descriptor, event ->
+      logger.lifecycle("Test: " + descriptor + " produced standard out/err: " + event.message )
     }
   }
-
-  manifest {
-    attributes 'Title': 'BigTop Name Generator', 'Version': version
-  }
-}
-
-dependencies {
-  compile 'com.google.guava:guava:18.0'
-  compile 'org.apache.commons:commons-lang3:3.4'
-  compile project(":bigtop-samplers")
-
-  testCompile 'junit:junit:4.+'
 }

@@ -19,72 +19,72 @@ import java.io.Serializable;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-public class Location implements Serializable
-{
-	private static final long serialVersionUID = 1769986686070108470L;
+public class Location implements Serializable {
+  private static final long serialVersionUID = 1769986686070108470L;
 
-	final String zipcode;
-	final Pair<Double, Double> coordinates;
-	final String city;
-	final String state;
-	final double medianHouseholdIncome;
-	final long population;
+  final String zipcode;
+  final Pair<Double, Double> coordinates;
+  final String city;
+  final String state;
+  final double medianHouseholdIncome;
+  final long population;
 
-	public Location(String zipcode, Pair<Double, Double> coordinates,
-			String city, String state, double medianHouseholdIncome, long population)
-	{
-		this.city = city;
-		this.state = state;
-		this.zipcode = zipcode;
-		this.coordinates = coordinates;
-		this.medianHouseholdIncome = medianHouseholdIncome;
-		this.population = population;
-	}
+  public Location(String zipcode, Pair<Double, Double> coordinates, String city,
+          String state, double medianHouseholdIncome, long population) {
+    this.city = city;
+    this.state = state;
+    this.zipcode = zipcode;
+    this.coordinates = coordinates;
+    this.medianHouseholdIncome = medianHouseholdIncome;
+    this.population = population;
+  }
 
-	public String getZipcode()
-	{
-		return zipcode;
-	}
+  public String getZipcode() {
+    return zipcode;
+  }
 
-	public Pair<Double, Double> getCoordinates()
-	{
-		return coordinates;
-	}
+  public Pair<Double, Double> getCoordinates() {
+    return coordinates;
+  }
 
-	public double getMedianHouseholdIncome()
-	{
-		return medianHouseholdIncome;
-	}
+  public double getMedianHouseholdIncome() {
+    return medianHouseholdIncome;
+  }
 
-	public long getPopulation()
-	{
-		return population;
-	}
+  public long getPopulation() {
+    return population;
+  }
 
-	public double distance(Location other)
-	{
-		if(other.getZipcode().equals(zipcode))
-			return 0.0;
+  public double distance(Pair<Double, Double> otherCoords) {
+    if (Math.abs(coordinates.getLeft() - otherCoords.getLeft()) < 1e-5
+            || Math.abs(coordinates.getRight() - otherCoords.getRight()) < 1e-5)
+      return 0.0;
 
-		Pair<Double, Double> otherCoords = other.getCoordinates();
+    double dist = Math.sin(Math.toRadians(coordinates.getLeft()))
+            * Math.sin(Math.toRadians(otherCoords.getLeft()))
+            + Math.cos(Math.toRadians(coordinates.getLeft()))
+                    * Math.cos(Math.toRadians(otherCoords.getLeft()))
+                    * Math.cos(Math.toRadians(
+                            coordinates.getRight() - otherCoords.getRight()));
+    dist = Math.toDegrees(Math.acos(dist)) * 69.09;
 
-		double dist = Math.sin(Math.toRadians(coordinates.getLeft())) *
-				Math.sin(Math.toRadians(otherCoords.getLeft())) +
-				Math.cos(Math.toRadians(coordinates.getLeft())) *
-				Math.cos(Math.toRadians(otherCoords.getLeft())) *
-				Math.cos(Math.toRadians(coordinates.getRight() - otherCoords.getRight()));
-		dist = Math.toDegrees(Math.acos(dist)) * 69.09;
+    return dist;
+  }
 
-		return dist;
-	}
+  public double distance(Location other) {
+    if (other.getZipcode().equals(zipcode))
+      return 0.0;
 
-	public String getCity()
-	{
-		return city;
-	}
+    Pair<Double, Double> otherCoords = other.getCoordinates();
 
-	public String getState()
-	{
-		return state;
-	}
+    return distance(otherCoords);
+  }
+
+  public String getCity() {
+    return city;
+  }
+
+  public String getState() {
+    return state;
+  }
 }

@@ -13,4 +13,4 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-include ":bigpetstore-data-generator", ":bigtop-name-generator", ":bigtop-samplers", ":bigtop-location-data"
+include ":bigpetstore-data-generator", ":bigtop-name-generator", ":bigtop-samplers", ":bigtop-location-data", ":bigtop-weatherman"
