@@ -559,7 +559,7 @@ def genTasks = { target, variable ->
   task "$target-relnotes" (description: "Preparing release notes for $target. No yet implemented!!!", group: PACKAGES_GROUP)<< {
   }
   task "$target-clean" (dependsOn: "${target}_vardefines",
-      description: "Removing $target component ${BOM_map[variable + '_BUILD_DIR']} and ${BOM_map[variable + '_OUTPUT_DIR']}",
+      description: "Removing $target component build and output directories",
       group: PACKAGES_GROUP) << {
     delete(BOM_map[variable + '_BUILD_DIR'])
     delete(BOM_map[variable + '_OUTPUT_DIR'])
