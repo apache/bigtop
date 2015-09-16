@@ -45,7 +45,7 @@
      APACHE_ARCHIVE = "http://archive.apache.org/dist"
    }
    components { *required; preserve the name* if empty, nothing will be built
-     'label' { // label could be anything; it's a good practice to make it same as the name
+     'label' { // label *SHOULD* be the same as the name; otherwise some tasks will fail
        name    = 'component1' // *required* the name of the component
        // 'pkg' value is optional and will be set to that of 'name' i.e. [pkg := name]
        pkg     = name // *optional* and will be set to the 'name' value
@@ -107,7 +107,7 @@ bigtop {
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }
-    'ignite' {
+    'ignite-hadoop' {
       name    = 'ignite-hadoop'
       relNotes = 'Apache Ignite in-memory data fabric'
       version { base = '1.3.0'; pkg = base; release = 1 }
