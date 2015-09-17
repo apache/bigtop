@@ -316,6 +316,7 @@
               <exclude>bigtop-data-generators/**/input_data/**</exclude>
               <exclude>bigtop-deploy/puppet/**/*.yaml</exclude>
               <exclude>bigtop-deploy/puppet/config/*/id_hdfsuser*</exclude>
+              <exclude>bigtop-deploy/puppet/modules/bigtop-util/Gemfile.lock</exclude>
               <!-- Debian package files that have a rigid structure (* matches package name) -->
               <exclude>bigtop-packages/src/deb/*/*.dirs</exclude>
               <exclude>bigtop-packages/src/deb/*/dirs</exclude>
