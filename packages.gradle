@@ -36,6 +36,8 @@ apply plugin: 'groovy'
 def PACKAGES_GROUP = 'package'
 
 final String VERBOSE = "verbose"
+final String DEPS_BUILD = "buildnodeps"
+final boolean buildDependencies = true && System.getProperty(DEPS_BUILD) == null
 final String BOM = "$rootDir/bigtop.bom"
 def final config  = new ConfigSlurper().parse(new URL("file:$BOM"))
 
@@ -55,7 +57,6 @@ def final DIST_DIR = config.bigtop.distdir
 def final DL_DIR = config.bigtop.dldir
 def final BIGTOP_BUILD_STAMP = System.getenv('BIGTOP_BUILD_STAMP') ?: config.bigtop.buildstamp
 
-def targets = []
 def components = []
 
 // Package building and logic around it
@@ -103,8 +104,8 @@ def nativePackaging = {
 }.call()
 
 task "packages-help" (description: "All package build related tasks information", group: PACKAGES_GROUP) << {
-  targets.each { target ->
-    println (target + "\n\t[" + tasks.findAll { alltask -> alltask.name.startsWith(target)}*.name.join(", ") + "]")
+  components.each { target ->
+    println (target + "\n\t[" + tasks.findAll { alltask -> alltask.name.startsWith(target.toLowerCase())}*.name.join(", ") + "]")
   }
 }
 
@@ -298,9 +299,15 @@ def genTasks = { target ->
     }
     touchTargetFile(config.bigtop.components[target].targetdeb)
   }
-  // Guarantee that tasks are ran in the order set by BOM file
-  if (targets.size() > 0)
-    tdeb.mustRunAfter "${targets.get(targets.size() - 1)}-deb"
+  // Guarantee that tasks are ran in the order set by BOM file dependencies section
+  if (buildDependencies)
+    config.bigtop.dependencies.each { dependsOn, dependees ->
+      if (dependees.contains(tdeb.name-"-deb")) tdeb.dependsOn "$dependsOn-deb"
+    }
+  // If dependencies aren't explicitly set, the default build order is defined
+  // by the sequence of the components in the BOM file
+  if (!config.bigtop.dependencies && components.size() > 0)
+    tdeb.mustRunAfter "${components.get(components.size() - 1)}-deb".toLowerCase()
    task "$target-sdeb" (dependsOn: ["${target}_vardefines",  "${target}-tar"],
       description: "Building SDEB for $target artifacts",
       group: PACKAGES_GROUP
@@ -408,9 +415,15 @@ def genTasks = { target ->
     }.copy { into PKG_OUTPUT_DIR }
     touchTargetFile(config.bigtop.components[target].targetrpm)
   }
-  // Guarantee that tasks are ran in the order set by BOM file
-  if (targets.size() > 0)
-    trpm.mustRunAfter "${targets.get(targets.size() - 1)}-rpm"
+  // Guarantee that tasks are ran in the order set by BOM file dependencies section
+  if (buildDependencies)
+    config.bigtop.dependencies.each { dependsOn, dependees ->
+      if (dependees.contains(trpm.name - "-rpm")) trpm.dependsOn "$dependsOn-rpm"
+    }
+  // If dependencies aren't explicitly set, the default build order is defined
+  // by the sequence of the components in the BOM file
+  if (!config.bigtop.dependencies && components.size() > 0)
+    trpm.mustRunAfter "${components.get(components.size() - 1)}-rpm".toLowerCase()
   task "$target-srpm" (dependsOn: ["${target}_vardefines" , "${target}-tar"],
       description: "Building SRPM for $target artifacts",
       group: PACKAGES_GROUP) << {
@@ -586,7 +599,6 @@ def readBOM = {
   config.bigtop.components.each { component_label, comp ->
     assert component_label == comp.name
     genTasks(comp.name)
-    targets.add(comp.name)
     components.add(comp.name)
   }
 }

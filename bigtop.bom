@@ -78,6 +78,25 @@ bigtop {
   }
 /** End of Base Configuration */
 
+  /** Dependencies section defines the order in which packages should be built.
+      The syntax is as follows:
+           dependsOn := [list of dependents]
+      So, below phoenix and giraph ought to be build after the hbase has been built
+
+      To build a component without its dependencies, simply comment out
+      dependencies section or run build with -Dbuildnodeps=true
+  */
+  dependencies = [
+    zookeeper:['hadoop', 'hbase'],
+    hadoop:['ignite', 'hbase', 'crunch', 'pig', 'hive', 'tez', 'sqoop', 'sqoop2',
+      'oozie', 'mahout', 'flume', 'giraph', 'solr', 'crunch', 'spark',
+      'phoenix', 'tachyon', 'kafka', 'ycsb', 'kite', 'hama'
+    ],
+    hbase:['phoenix','giraph','ycsb'],
+    pig:['datafu', 'oozie'],
+    hive:['oozie', 'pig']
+  ]
+
   components {
     'zookeeper' {
       name    = 'zookeeper'
