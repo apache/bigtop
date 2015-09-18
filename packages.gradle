@@ -57,7 +57,8 @@ def final DIST_DIR = config.bigtop.distdir
 def final DL_DIR = config.bigtop.dldir
 def final BIGTOP_BUILD_STAMP = System.getenv('BIGTOP_BUILD_STAMP') ?: config.bigtop.buildstamp
 
-def components = []
+// List of tasks derived from the BOM file is used to preserve the natural order
+def bomTasks = []
 
 // Package building and logic around it
 
@@ -80,12 +81,12 @@ def toOldStyleName = { newname ->
   newname.toUpperCase().replaceAll("\\-", "_")
 }
 def setDefaults = { comp ->
-  // The closure parameer is a component in the config.bigtop.components
-  if (!comp.value.pkg) {
-    comp.value.pkg = comp.value.name
+  // The closure parameter is a component in the config.bigtop.components
+  if (!comp.pkg) {
+    comp.pkg = comp.name
   }
-  if (!comp.value.version.pkg) {
-    comp.value.version.pkg = comp.value.version.base
+  if (!comp.version.pkg) {
+    comp.version.pkg = comp.version.base
   }
 }
 def nativePackaging = {
@@ -104,14 +105,14 @@ def nativePackaging = {
 }.call()
 
 task "packages-help" (description: "All package build related tasks information", group: PACKAGES_GROUP) << {
-  components.each { target ->
-    println (target + "\n\t[" + tasks.findAll { alltask -> alltask.name.startsWith(target.toLowerCase())}*.name.join(", ") + "]")
+  config.bigtop.components.each { label, comp ->
+    println (comp.name + "\n\t[" + tasks.findAll { alltask -> alltask.name.startsWith(comp.name)}*.name.join(", ") + "]")
   }
 }
 
 task "bom-json" (description: "List the components of the stack in json format") << {
   def componentObjects = config.bigtop.components.sort().collect {
-    setDefaults(it)
+    setDefaults(it.value)
     [
       name: [
         project: it.value.name,
@@ -148,9 +149,8 @@ task "bom-json" (description: "List the components of the stack in json format")
 
 task "all-components" (description: "List the components of the stack") << {
   println "${project.name} ${config.bigtop.version} stack includes the following components"
-  components.sort().each { comp ->
-    def bVersion = config.bigtop.components[comp].version.base as String
-    println sprintf ('\t%1$s %2$s', comp.padRight(20), bVersion.padLeft(15))
+  config.bigtop.components.sort().each { label, comp ->
+    println sprintf ('\t%1$s %2$s', comp.name.padRight(20), comp.version.base.padLeft(15))
   }
 }
 
@@ -306,8 +306,8 @@ def genTasks = { target ->
     }
   // If dependencies aren't explicitly set, the default build order is defined
   // by the sequence of the components in the BOM file
-  if (!config.bigtop.dependencies && components.size() > 0)
-    tdeb.mustRunAfter "${components.get(components.size() - 1)}-deb".toLowerCase()
+  if (!config.bigtop.dependencies && bomTasks.size() > 0)
+    tdeb.mustRunAfter "${bomTasks.get(bomTasks.size() - 1)}-deb".toLowerCase()
    task "$target-sdeb" (dependsOn: ["${target}_vardefines",  "${target}-tar"],
       description: "Building SDEB for $target artifacts",
       group: PACKAGES_GROUP
@@ -422,8 +422,8 @@ def genTasks = { target ->
     }
   // If dependencies aren't explicitly set, the default build order is defined
   // by the sequence of the components in the BOM file
-  if (!config.bigtop.dependencies && components.size() > 0)
-    trpm.mustRunAfter "${components.get(components.size() - 1)}-rpm".toLowerCase()
+  if (!config.bigtop.dependencies && bomTasks.size() > 0)
+    trpm.mustRunAfter "${bomTasks.get(bomTasks.size() - 1)}-rpm".toLowerCase()
   task "$target-srpm" (dependsOn: ["${target}_vardefines" , "${target}-tar"],
       description: "Building SRPM for $target artifacts",
       group: PACKAGES_GROUP) << {
@@ -525,14 +525,7 @@ def genTasks = { target ->
     println "Base: ${config.bigtop.components[target].version.base}"
   }
   task "${target}_vardefines" << {
-    //TODO need to find out a way to set defaults in the same way for bom-json and here
-//    setDefaults(config.bigtop.components.target.value)
-    if (!config.bigtop.components[target].pkg) {
-      config.bigtop.components[target].pkg = config.bigtop.components[target].name
-    }
-    if (!config.bigtop.components[target].version.pkg) {
-      config.bigtop.components[target].version.pkg = config.bigtop.components[target].version.base
-    }
+    setDefaults(config.bigtop.components[target])
 
     config.bigtop.components[target].package.release = '1'
 
@@ -594,15 +587,8 @@ def genTasks = { target ->
   task "$target-help" (description: "List of available tasks for $target", group: PACKAGES_GROUP) << {
     println (target + "\n\t[" + tasks.findAll { alltask -> alltask.name.startsWith(target)}*.name.join(", ") + "]")
   }
-}
 
-def readBOM = {
-  doValidateBOM(config)
-  config.bigtop.components.each { component_label, comp ->
-    assert component_label == comp.name
-    genTasks(comp.name)
-    components.add(comp.name)
-  }
+  bomTasks.add(target)
 }
 
 // Let's enforce some of the configuration requirements
@@ -615,7 +601,11 @@ private void doValidateBOM(config) {
 
 // We need to make sure that all dynamic tasks are available for invocation
 project.afterEvaluate {
-  readBOM()
+  doValidateBOM(config)
+  config.bigtop.components.each { component_label, comp ->
+    assert component_label == comp.name
+    genTasks(comp.name)
+  }
   // Versions need to be preserved for more than just component:
   //  - there are JDK version requirement
   //  - possibly more in the future
