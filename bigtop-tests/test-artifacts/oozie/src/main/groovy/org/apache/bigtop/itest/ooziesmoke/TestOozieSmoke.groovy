@@ -87,67 +87,67 @@ class TestOozieSmoke {
   }
 
 @Category ( EssentialTests.class )
-  @Test(timeout=1000000L)
+  @Test(timeout=3000000L)
   public void testNoOp() {
     testOozieExamplesCommon("no-op");
   }
 
 @Category ( EssentialTests.class )
-  @Test(timeout=1000000L)
+  @Test(timeout=3000000L)
   public void testJavaMain() {
     testOozieExamplesCommon("java-main");
   }
 
 @Category ( EssentialTests.class )
-  @Test(timeout=1000000L)
+  @Test(timeout=3000000L)
   public void testMapReduce() {
     testOozieExamplesCommon("map-reduce");
   }
 
 @Category ( EssentialTests.class )
-  @Test(timeout=1000000L)
+  @Test(timeout=3000000L)
   public void testCustomMain() {
     testOozieExamplesCommon("custom-main");
   }
 
 @Category ( NormalTests.class )
-  @Test(timeout=1000000L)
+  @Test(timeout=3000000L)
   public void testHadoopEl() {
     testOozieExamplesCommon("hadoop-el");
   }
 
 @Category ( EssentialTests.class )
-  @Test(timeout=1000000L)
+  @Test(timeout=3000000L)
   public void testStreaming() {
     testOozieExamplesCommon("streaming");
   }
 
 @Category ( NormalTests.class )
-  @Test(timeout=1000000L)
+  @Test(timeout=3000000L)
   public void testPig() {
     testOozieExamplesCommon("pig");
   }
 
 @Category ( NormalTests.class )
-  @Test(timeout=1000000L)
+  @Test(timeout=3000000L)
   public void testHive() {
     testOozieExamplesCommon("hive");
   }
 
 @Category ( NormalTests.class )
-  @Test(timeout=1000000L)
+  @Test(timeout=3000000L)
   public void testSubwf() {
     testOozieExamplesCommon("subwf");
   }
 
 @Category ( NormalTests.class )
-  @Test(timeout=1000000L)
+  @Test(timeout=3000000L)
   public void testSsh() {
     // testOozieExamplesCommon("ssh");
   }
 
 @Category ( NormalTests.class )
-  @Test(timeout=1000000L)
+  @Test(timeout=3000000L)
   public void testDemo() {
     // testOozieExamplesCommon("demo");
   }
