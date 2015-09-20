@@ -23,6 +23,7 @@
 %define hive_home /usr/lib/hive
 %define zookeeper_home /usr/lib/zookeeper
 %define hbase_home /usr/lib/hbase
+#BIGTOP_PATCH_FILES
 
 # CentOS 5 does not have any dist macro
 # So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
@@ -110,7 +111,7 @@ language called Pig Latin, which has the following key properties:
 
 %prep
 %setup -n %{name}-%{pig_base_version}-src
-
+#BIGTOP_PATCH_COMMAND
 %build
 env PIG_BASE_VERSION=%{pig_base_version} bash %{SOURCE1}
 
