@@ -57,6 +57,11 @@ class ignite-hadoop {
         content => template('ignite-hadoop/mapred-site.xml'),
         require => [File["/etc/hadoop/ignite.client.conf"]],
     }
+    file {
+      "/etc/hadoop/ignite.client.conf/hive-site.xml":
+        content => template('ignite-hadoop/hive-site.xml'),
+        require => [File["/etc/hadoop/ignite.client.conf"]],
+    }
 ## let's make sure that ignite-hadoop libs are linked properly
     file {'/usr/lib/hadoop/lib/ignite-core.jar':
       ensure  => link,
