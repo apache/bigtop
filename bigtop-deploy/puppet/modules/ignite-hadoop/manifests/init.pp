@@ -21,6 +21,9 @@ class ignite-hadoop {
   }
 
   define server() {
+    $hadoop_head_node = hiera("bigtop::hadoop_head_node")
+    $hadoop_namenode_port = hiera("hadoop::common_hdfs::hadoop_namenode_port", "8020")
+
     package { "ignite-hadoop":
       ensure => latest,
     }
@@ -40,6 +43,10 @@ class ignite-hadoop {
       group   => 'root',
       mode    => '0755',
       require => Package["ignite-hadoop-service"],
+    }
+    file { "/etc/ignite-hadoop/conf/default-config.xml":
+        content => template('ignite-hadoop/default-config.xml'),
+        require => [Package["ignite-hadoop"]],
     }
     file { "/etc/hadoop/ignite.client.conf/core-site.xml":
         content => template('ignite-hadoop/core-site.xml'),
