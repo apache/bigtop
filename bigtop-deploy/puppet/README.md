@@ -117,19 +117,33 @@ Bigtop toolchan can take care of that for you, so just be aware of it.
 And run the following on those nodes:
 
 ```
-# cp bigtop-deploy/puppet/hiera.yaml /etc/puppet
-# mkdir -p /etc/puppet/hieradata
-# rsync -a --delete bigtop-deploy/puppet/hieradata/bigtop/ /etc/puppet/hieradata/bigtop/
-# cat > /etc/puppet/hieradata/site.yaml <<EOF
-# bigtop::hadoop_head_node: "hadoopmaster.example.com"
-# hadoop::hadoop_storage_dirs:
-#   - "/data/1"
-#   - "/data/2"
-# bigtop::bigtop_repo_uri: "http://mirror.example.com/path/to/mirror/"
-# EOF
-# puppet apply -d --modulepath="bigtop-deploy/puppet/modules:/etc/puppet/modules" bigtop-deploy/puppet/manifests/site.pp
+cp bigtop-deploy/puppet/hiera.yaml /etc/puppet
+mkdir -p /etc/puppet/hieradata
+rsync -a --delete bigtop-deploy/puppet/hieradata/site.yaml bigtop-deploy/puppet/hieradata/bigtop /etc/puppet/hieradata/
+```
+Edit /etc/puppet/hieradata/site.yaml to your liking, setting up the hostname for
+hadoop head node, path to storage directories and their number, list of the components
+you wish to install, and repo URL. At the end, the file will look something like this
+
+```
+bigtop::hadoop_head_node: "hadoopmaster.example.com"
+hadoop::hadoop_storage_dirs:
+  - "/data/1"
+  - "/data/2"
+hadoop_cluster_node::cluster_components:
+  - ignite-hadoop
+  - hive
+  - spark
+  - yarn
+  - zookeeper
+bigtop::jdk_package_name: "openjdk-7-jre-headless"
+bigtop::bigtop_repo_uri: "http://bigtop.s3.amazonaws.com/releases/1.0.0/ubuntu/trusty/x86_64"
 ```
 
+And finally execute
+```
+puppet apply -d --modulepath="bigtop-deploy/puppet/modules:/etc/puppet/modules" bigtop-deploy/puppet/manifests/site.pp
+```
 When ignite-hadoop accelerator is deployed the client configs are placed under
 `/etc/hadoop/ignite.client.conf`. All one needs to do to run Mapreduce jobs on ignite-hadoop grid
 is to set `HADOOP_CONF_DIR=/etc/hadoop/ignite.client.conf` in the client session.
