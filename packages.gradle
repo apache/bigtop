@@ -209,7 +209,7 @@ def genTasks = { target ->
       return
     }
     def final TAR_DIR = config.bigtop.components[target].tardir
-    def final TARBALL_SRC = config.bigtop.components[target].tarball.source as String ?: ""
+    def final TARBALL_SRC = config.bigtop.components[target].tarball.source ?: ""
     def final DOWNLOAD_DST = config.bigtop.components[target].downloaddst ?: ""
     def final SEED_TAR = config.bigtop.components[target].seedtar
 
