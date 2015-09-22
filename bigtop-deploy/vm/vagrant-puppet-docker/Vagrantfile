@@ -40,19 +40,6 @@ Vagrant.require_version ">= 1.6.0"
 VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
-  # image definition
-  config.vm.define "image", autostart: false do |image|
-    image.vm.provider "docker" do |d|
-      d.build_dir = CONF["distro"]
-      d.build_args = ["-t",CONF["docker"]["image"]]
-      d.vagrant_machine = "boot2docker"
-      d.vagrant_vagrantfile = "./boot2docker/Vagrantfile"
-      d.has_ssh = false # We have decided to pipe commands to docker instead of ssh, due to ssh hang issue in vagrant.
-    end
-    image.ssh.username = "root"
-    image.ssh.port = 22
-  end
-
   # nodes definition
   (1..$num_instances).each do |i|
     config.vm.define "bigtop#{i}" do |bigtop|

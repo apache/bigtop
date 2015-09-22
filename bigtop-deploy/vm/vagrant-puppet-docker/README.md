@@ -57,74 +57,55 @@ ssh into a docker container!
 
 ```
 service docker restart
-docker pull bigtop/seed:centos-6.4
+docker pull bigtop/deploy:centos-6
 ```
-
 Now, you can start your cluster:
 
-```
-cd bigtop/bigtop-deploy/vm/vagrant-puppet-docker
-./docker-hadoop.sh --build-image --create 3
-```
 In case of errors you can attempt running as root, or else, ping the mailing list.
 
 ## USAGE
 
-1) Build up the base Docker image that supports Vagrant.
-
-```
-./docker-hadoop.sh --build-image
-```
-
-2) Create a Bigtop Hadoop cluster by given # of node. (will place a file called config.rb)
+1) Create a Bigtop Hadoop cluster by given # of node. (will place a file called config.rb)
 
 ```
 ./docker-hadoop.sh --create 3
 ```
 
-3) Destroy the cluster.
+2) Destroy the cluster.
 
 ```
 ./docker-hadoop.sh --destroy
 ```
 
-4) Update your cluster after doing configuration changes. (re-run puppet apply)
+3) Update your cluster after doing configuration changes. (re-run puppet apply)
 
 ```
 ./docker-hadoop.sh --provision
 ```
 
-5) Run Bigtop smoke tests
+4) Run Bigtop smoke tests
 
 ```
 ./docker-hadoop.sh --smoke-tests
 ```
 
-6) Chain your operations with-in one command.
+5) Chain your operations with-in one command.
 
 ```
-./docker-hadoop.sh --build-image --create 5 --smoke-tests --destroy
+./docker-hadoop.sh --create 5 --smoke-tests --destroy
 ```
 
 Commands will be executed by following order:
 
 ```
-build-image => create 5 node cluster => destroy the cluster
+create 5 node cluster => run smoke tests => destroy the cluster
 ```
 
-7) Run hbase-test.sh to evaluate the deployment.
-
-```
-../utils/hbase-test.sh
-```
-
-8) See helper message:
+6) See helper message:
 
 ```
 ./docker-hadoop.sh -h
 usage: docker-hadoop.sh [options]
-       -b, --build-image                         Build base Docker image for Bigtop Hadoop
-                                                 (must be exectued at least once before creating cluster)
        -c NUM_INSTANCES, --create=NUM_INSTANCES  Create a docker based Bigtop Hadoop cluster
        -p, --provision                           Deploy configuration changes
        -s, --smoke-tests                         Run Bigtop smoke tests
@@ -149,7 +130,7 @@ docker:
 
 ```
 boot2docker:
-        memory_size: "4196"
+        memory_size: "4096"
         number_cpus: "2"
 ```
 

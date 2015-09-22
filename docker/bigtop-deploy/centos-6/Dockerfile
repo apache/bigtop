@@ -13,21 +13,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM debian:jessie
+FROM bigtop/puppet:centos-6
+
+COPY bigtop_toolchain /etc/puppet/modules/bigtop_toolchain
 
 # enable ssh
+RUN yum -y install openssh-server openssh-clients vim && \
+    ssh-keygen -q -N "" -t dsa -f /etc/ssh/ssh_host_dsa_key && \
+    ssh-keygen -q -N "" -t rsa -f /etc/ssh/ssh_host_rsa_key && \
+    # requiretty off
+    sed -i.bak 's/requiretty/!requiretty/' /etc/sudoers && \
+    # setup vagrant account
+    mkdir /root/.ssh && \
+    chmod 0700 /root/.ssh && \
+    wget http://github.com/mitchellh/vagrant/raw/master/keys/vagrant.pub --no-check-certificate -O /root/.ssh/authorized_keys && \
+    chmod 0600 /root/.ssh/authorized_keys && \
+    # Install required Puppet modules
+    puppet apply -e "include bigtop_toolchain::puppet-modules"
 
-RUN apt-get update
-RUN apt-get install -y openssh-server sudo wget
-
-# requiretty off
-RUN sed -i.bak 's/requiretty/!requiretty/' /etc/sudoers
-
-# setup vagrant account
-RUN mkdir -p /root/.ssh
-RUN chmod 0750 /root/.ssh
-RUN wget http://github.com/mitchellh/vagrant/raw/master/keys/vagrant.pub --no-check-certificate -O /root/.ssh/authorized_keys
-RUN chmod 0640 /root/.ssh/authorized_keys
-
-RUN mkdir -p /var/run/sshd
 CMD /usr/sbin/sshd -D
