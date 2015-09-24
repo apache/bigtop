@@ -215,8 +215,8 @@ def genTasks = { target ->
 
     delete(TAR_DIR); mkdir(TAR_DIR)
 
-    if (TARBALL_SRC.empty || TARBALL_SRC.endsWith('.zip')) {
-      if (TARBALL_SRC.empty) {
+    if (TARBALL_SRC.isEmpty() || TARBALL_SRC.endsWith('.zip')) {
+      if (TARBALL_SRC.isEmpty()) {
         // if no tar file needed (i.e. bigtop-utils)
         // create some contents to pack later
         copy {
