@@ -111,7 +111,7 @@ language called Pig Latin, which has the following key properties:
 
 %prep
 %setup -n %{name}-%{pig_base_version}-src
-#BIGTOP_PATCH_COMMAND
+#BIGTOP_PATCH_COMMANDS
 %build
 env PIG_BASE_VERSION=%{pig_base_version} bash %{SOURCE1}
 
