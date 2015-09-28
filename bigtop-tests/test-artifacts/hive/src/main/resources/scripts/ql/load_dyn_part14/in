@@ -25,20 +25,20 @@ set hive.exec.dynamic.partition.mode=nonstrict;
 explain
 insert overwrite table nzhang_part14 partition(value) 
 select key, value from (
-  select 'k1' as key, cast(null as string) as value from src limit 2
+  select 'k1' as key, cast(null as string) as value from src 
   union all
-  select 'k2' as key, '' as value from src limit 2
+  select 'k2' as key, '' as value from src 
   union all 
-  select 'k3' as key, ' ' as value from src limit 2
+  select 'k3' as key, ' ' as value from src 
 ) T;
 
 insert overwrite table nzhang_part14 partition(value) 
 select key, value from (
-  select 'k1' as key, cast(null as string) as value from src limit 2
+  select 'k1' as key, cast(null as string) as value from src 
   union all
-  select 'k2' as key, '' as value from src limit 2
+  select 'k2' as key, '' as value from src 
   union all 
-  select 'k3' as key, ' ' as value from src limit 2
+  select 'k3' as key, ' ' as value from src 
 ) T;
 
 
