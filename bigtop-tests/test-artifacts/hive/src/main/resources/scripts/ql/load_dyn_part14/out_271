@@ -14,7 +14,7 @@ value               	string
 	 	 
 value               	string              	                    
 	 	 
-Detailed Table Information	Table(tableName:nzhang_part14, dbName:test_hive_normal, owner:alti-test-01, createTime:1443419730, lastAccessTime:0, retention:0, sd:StorageDescriptor(cols:[FieldSchema(name:key, type:string, comment:null), FieldSchema(name:value, type:string, comment:null)], location:hdfs://nn-hadooptest3.test.altiscale.com:8020/hive/test_hive_normal.db/nzhang_part14, inputFormat:org.apache.hadoop.mapred.TextInputFormat, outputFormat:org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat, compressed:false, numBuckets:-1, serdeInfo:SerDeInfo(name:null, serializationLib:org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe, parameters:{serialization.format=1}), bucketCols:[], sortCols:[], parameters:{}, skewedInfo:SkewedInfo(skewedColNames:[], skewedColValues:[], skewedColValueLocationMaps:{}), storedAsSubDirectories:false), partitionKeys:[FieldSchema(name:value, type:string, comment:null)], parameters:{transient_lastDdlTime=1443419730}, viewOriginalText:null, viewExpandedText:null, tableType:MANAGED_TABLE)	
+Detailed Table Information	Table(tableName:nzhang_part14, dbName:test_hive_normal, owner:USER, createTime:1443529009, lastAccessTime:0, retention:0, sd:StorageDescriptor(cols:[FieldSchema(name:key, type:string, comment:null), FieldSchema(name:value, type:string, comment:null)], location:hdfs://HADOOP/hive/test_hive_normal.db/nzhang_part14, inputFormat:org.apache.hadoop.mapred.TextInputFormat, outputFormat:org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat, compressed:false, numBuckets:-1, serdeInfo:SerDeInfo(name:null, serializationLib:org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe, parameters:{serialization.format=1}), bucketCols:[], sortCols:[], parameters:{}, skewedInfo:SkewedInfo(skewedColNames:[], skewedColValues:[], skewedColValueLocationMaps:{}), storedAsSubDirectories:false), partitionKeys:[FieldSchema(name:value, type:string, comment:null)], parameters:{transient_lastDdlTime=1443529009}, viewOriginalText:null, viewExpandedText:null, tableType:MANAGED_TABLE)	
 set hive.exec.dynamic.partition=true
 set hive.exec.dynamic.partition.mode=nonstrict
 
@@ -100,7 +100,7 @@ STAGE PLANS:
     Move Operator
       files:
           hdfs directory: true
-          destination: hdfs://nn-hadooptest3.test.altiscale.com:8020/hive/test_hive_normal.db/nzhang_part14/.hive-staging_hive_2015-09-28_05-59-56_969_7431691556850246139-1/-ext-10000
+          destination: hdfs://HADOOP/hive/test_hive_normal.db/nzhang_part14/.hive-staging_hive_2015-09-29_12-16-49_942_4717499190720935336-1/-ext-10000
 
   Stage: Stage-0
     Move Operator
@@ -142,7 +142,7 @@ STAGE PLANS:
     Move Operator
       files:
           hdfs directory: true
-          destination: hdfs://nn-hadooptest3.test.altiscale.com:8020/hive/test_hive_normal.db/nzhang_part14/.hive-staging_hive_2015-09-28_05-59-56_969_7431691556850246139-1/-ext-10000
+          destination: hdfs://HADOOP/hive/test_hive_normal.db/nzhang_part14/.hive-staging_hive_2015-09-29_12-16-49_942_4717499190720935336-1/-ext-10000
 
 
 
@@ -154,8 +154,6 @@ select key, value from (
   union all 
   select 'k3' as key, ' ' as value from src 
 ) T
-Moved: 'hdfs://nn-hadooptest3.test.altiscale.com:8020/hive/test_hive_normal.db/nzhang_part14/value=__HIVE_DEFAULT_PARTITION__/000000_0' to trash at: hdfs://nn-hadooptest3.test.altiscale.com:8020/user/alti-test-01/.Trash/Current
-Moved: 'hdfs://nn-hadooptest3.test.altiscale.com:8020/hive/test_hive_normal.db/nzhang_part14/value= /000000_0' to trash at: hdfs://nn-hadooptest3.test.altiscale.com:8020/user/alti-test-01/.Trash/Current
 
 
 
