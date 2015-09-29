@@ -123,8 +123,6 @@ hadoop-oozie::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 hcatalog::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 hcatalog::webhcat::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 
-spark::common::spark_master_host: "%{hiera('bigtop::hadoop_head_node')}"
-
 tachyon::common::master_host: "%{hiera('bigtop::hadoop_head_node')}"
 
 hadoop-zookeeper::server::myid: "0"
@@ -169,3 +167,13 @@ hadoop::common::tez_jars: "/usr/lib/tez"
 
 # to enable tez in hive, uncomment the lines below
 # hadoop-hive::client::hive_execution_engine: "tez"
+
+bigtop::spark_master_url: "yarn"
+
+spark::common::master_host: "%{hiera('bigtop::hadoop_head_node')}"
+spark::common::master_url: "%{hiera('bigtop::spark_master_url')}"
+
+zeppelin::server::spark_master_url: "yarn-client"
+zeppelin::server::hiveserver2_url: "jdbc:hive2://%{hiera('hadoop-hive::common::hiveserver2_host')}:%{hiera('hadoop-hive::common::hiveserver2_port')}"
+zeppelin::server::hiveserver2_user: "%{hiera('bigtop::hiveserver2_user')}"
+zeppelin::server::hiveserver2_password: "%{hiera('bigtop::hiveserver2_password')}"
