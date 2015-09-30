@@ -22,7 +22,6 @@ class bigtop_toolchain::installer {
   include bigtop_toolchain::packages
   include bigtop_toolchain::env
   include bigtop_toolchain::user
-  include bigtop_toolchain::scala
 
   stage { 'last':
     require => Stage['main'],

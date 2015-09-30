@@ -30,8 +30,6 @@ Puppet module for configuring a host for building BigTop. It installs:
 
 **Protobuf 2.5.0**
 
-**Scala 2.10.3**
-
 ##Usage
 
 These can be indivdually applied using:
