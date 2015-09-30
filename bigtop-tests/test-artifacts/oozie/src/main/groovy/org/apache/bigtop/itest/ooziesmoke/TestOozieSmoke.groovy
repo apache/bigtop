@@ -123,7 +123,7 @@ class TestOozieSmoke {
   }
 
 @Category ( NormalTests.class )
-  @Test(timeout=3000000L)
+  @Test(timeout=6000000L)
   public void testPig() {
     testOozieExamplesCommon("pig");
   }
