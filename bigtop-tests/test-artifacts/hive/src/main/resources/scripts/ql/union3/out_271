@@ -1,0 +1,226 @@
+USE  TEST_HIVE_NORMAL
+
+
+explain
+SELECT *
+FROM (
+  SELECT 1 AS id
+  FROM (SELECT * FROM src LIMIT 1) s1
+  UNION ALL
+  SELECT 2 AS id
+  FROM (SELECT * FROM src LIMIT 1) s1
+  UNION ALL
+  SELECT 3 AS id
+  FROM (SELECT * FROM src LIMIT 1) s2
+  UNION ALL
+  SELECT 4 AS id
+  FROM (SELECT * FROM src LIMIT 1) s2
+) a CLUSTER BY id
+STAGE DEPENDENCIES:
+  Stage-1 is a root stage
+  Stage-2 depends on stages: Stage-1, Stage-3, Stage-4, Stage-5
+  Stage-3 is a root stage
+  Stage-4 is a root stage
+  Stage-5 is a root stage
+  Stage-0 depends on stages: Stage-2
+
+STAGE PLANS:
+  Stage: Stage-1
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            alias: src
+            Statistics: Num rows: 0 Data size: 5812 Basic stats: PARTIAL Column stats: COMPLETE
+            Select Operator
+              Statistics: Num rows: 0 Data size: 5812 Basic stats: PARTIAL Column stats: COMPLETE
+              Limit
+                Number of rows: 1
+                Statistics: Num rows: 0 Data size: 5812 Basic stats: PARTIAL Column stats: COMPLETE
+                Reduce Output Operator
+                  sort order: 
+                  Statistics: Num rows: 0 Data size: 5812 Basic stats: PARTIAL Column stats: COMPLETE
+      Reduce Operator Tree:
+        Limit
+          Number of rows: 1
+          Statistics: Num rows: 0 Data size: 5812 Basic stats: PARTIAL Column stats: COMPLETE
+          Select Operator
+            expressions: 1 (type: int)
+            outputColumnNames: _col0
+            Statistics: Num rows: 0 Data size: 5812 Basic stats: PARTIAL Column stats: COMPLETE
+            File Output Operator
+              compressed: false
+              table:
+                  input format: org.apache.hadoop.mapred.SequenceFileInputFormat
+                  output format: org.apache.hadoop.hive.ql.io.HiveSequenceFileOutputFormat
+                  serde: org.apache.hadoop.hive.serde2.lazybinary.LazyBinarySerDe
+
+  Stage: Stage-2
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            Union
+              Statistics: Num rows: 0 Data size: 23248 Basic stats: PARTIAL Column stats: COMPLETE
+              Reduce Output Operator
+                key expressions: _col0 (type: int)
+                sort order: +
+                Map-reduce partition columns: _col0 (type: int)
+                Statistics: Num rows: 0 Data size: 23248 Basic stats: PARTIAL Column stats: COMPLETE
+          TableScan
+            Union
+              Statistics: Num rows: 0 Data size: 23248 Basic stats: PARTIAL Column stats: COMPLETE
+              Reduce Output Operator
+                key expressions: _col0 (type: int)
+                sort order: +
+                Map-reduce partition columns: _col0 (type: int)
+                Statistics: Num rows: 0 Data size: 23248 Basic stats: PARTIAL Column stats: COMPLETE
+          TableScan
+            Union
+              Statistics: Num rows: 0 Data size: 23248 Basic stats: PARTIAL Column stats: COMPLETE
+              Reduce Output Operator
+                key expressions: _col0 (type: int)
+                sort order: +
+                Map-reduce partition columns: _col0 (type: int)
+                Statistics: Num rows: 0 Data size: 23248 Basic stats: PARTIAL Column stats: COMPLETE
+          TableScan
+            Union
+              Statistics: Num rows: 0 Data size: 23248 Basic stats: PARTIAL Column stats: COMPLETE
+              Reduce Output Operator
+                key expressions: _col0 (type: int)
+                sort order: +
+                Map-reduce partition columns: _col0 (type: int)
+                Statistics: Num rows: 0 Data size: 23248 Basic stats: PARTIAL Column stats: COMPLETE
+      Reduce Operator Tree:
+        Select Operator
+          expressions: KEY.reducesinkkey0 (type: int)
+          outputColumnNames: _col0
+          Statistics: Num rows: 0 Data size: 23248 Basic stats: PARTIAL Column stats: COMPLETE
+          File Output Operator
+            compressed: false
+            Statistics: Num rows: 0 Data size: 23248 Basic stats: PARTIAL Column stats: COMPLETE
+            table:
+                input format: org.apache.hadoop.mapred.TextInputFormat
+                output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+
+  Stage: Stage-3
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            alias: src
+            Statistics: Num rows: 0 Data size: 5812 Basic stats: PARTIAL Column stats: COMPLETE
+            Select Operator
+              Statistics: Num rows: 0 Data size: 5812 Basic stats: PARTIAL Column stats: COMPLETE
+              Limit
+                Number of rows: 1
+                Statistics: Num rows: 0 Data size: 5812 Basic stats: PARTIAL Column stats: COMPLETE
+                Reduce Output Operator
+                  sort order: 
+                  Statistics: Num rows: 0 Data size: 5812 Basic stats: PARTIAL Column stats: COMPLETE
+      Reduce Operator Tree:
+        Limit
+          Number of rows: 1
+          Statistics: Num rows: 0 Data size: 5812 Basic stats: PARTIAL Column stats: COMPLETE
+          Select Operator
+            expressions: 2 (type: int)
+            outputColumnNames: _col0
+            Statistics: Num rows: 0 Data size: 5812 Basic stats: PARTIAL Column stats: COMPLETE
+            File Output Operator
+              compressed: false
+              table:
+                  input format: org.apache.hadoop.mapred.SequenceFileInputFormat
+                  output format: org.apache.hadoop.hive.ql.io.HiveSequenceFileOutputFormat
+                  serde: org.apache.hadoop.hive.serde2.lazybinary.LazyBinarySerDe
+
+  Stage: Stage-4
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            alias: src
+            Statistics: Num rows: 0 Data size: 5812 Basic stats: PARTIAL Column stats: COMPLETE
+            Select Operator
+              Statistics: Num rows: 0 Data size: 5812 Basic stats: PARTIAL Column stats: COMPLETE
+              Limit
+                Number of rows: 1
+                Statistics: Num rows: 0 Data size: 5812 Basic stats: PARTIAL Column stats: COMPLETE
+                Reduce Output Operator
+                  sort order: 
+                  Statistics: Num rows: 0 Data size: 5812 Basic stats: PARTIAL Column stats: COMPLETE
+      Reduce Operator Tree:
+        Limit
+          Number of rows: 1
+          Statistics: Num rows: 0 Data size: 5812 Basic stats: PARTIAL Column stats: COMPLETE
+          Select Operator
+            expressions: 3 (type: int)
+            outputColumnNames: _col0
+            Statistics: Num rows: 0 Data size: 5812 Basic stats: PARTIAL Column stats: COMPLETE
+            File Output Operator
+              compressed: false
+              table:
+                  input format: org.apache.hadoop.mapred.SequenceFileInputFormat
+                  output format: org.apache.hadoop.hive.ql.io.HiveSequenceFileOutputFormat
+                  serde: org.apache.hadoop.hive.serde2.lazybinary.LazyBinarySerDe
+
+  Stage: Stage-5
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            alias: src
+            Statistics: Num rows: 0 Data size: 5812 Basic stats: PARTIAL Column stats: COMPLETE
+            Select Operator
+              Statistics: Num rows: 0 Data size: 5812 Basic stats: PARTIAL Column stats: COMPLETE
+              Limit
+                Number of rows: 1
+                Statistics: Num rows: 0 Data size: 5812 Basic stats: PARTIAL Column stats: COMPLETE
+                Reduce Output Operator
+                  sort order: 
+                  Statistics: Num rows: 0 Data size: 5812 Basic stats: PARTIAL Column stats: COMPLETE
+      Reduce Operator Tree:
+        Limit
+          Number of rows: 1
+          Statistics: Num rows: 0 Data size: 5812 Basic stats: PARTIAL Column stats: COMPLETE
+          Select Operator
+            expressions: 4 (type: int)
+            outputColumnNames: _col0
+            Statistics: Num rows: 0 Data size: 5812 Basic stats: PARTIAL Column stats: COMPLETE
+            File Output Operator
+              compressed: false
+              table:
+                  input format: org.apache.hadoop.mapred.SequenceFileInputFormat
+                  output format: org.apache.hadoop.hive.ql.io.HiveSequenceFileOutputFormat
+                  serde: org.apache.hadoop.hive.serde2.lazybinary.LazyBinarySerDe
+
+  Stage: Stage-0
+    Fetch Operator
+      limit: -1
+      Processor Tree:
+        ListSink
+
+
+
+
+
+CREATE TABLE union_out (id int)
+
+
+insert overwrite table union_out 
+SELECT *
+FROM (
+  SELECT 1 AS id
+  FROM (SELECT * FROM src LIMIT 1) s1
+  UNION ALL
+  SELECT 2 AS id
+  FROM (SELECT * FROM src LIMIT 1) s1
+  UNION ALL
+  SELECT 3 AS id
+  FROM (SELECT * FROM src LIMIT 1) s2
+  UNION ALL
+  SELECT 4 AS id
+  FROM (SELECT * FROM src LIMIT 1) s2
+) a CLUSTER BY id
+
+
+select * from union_out cluster by id
+1
+2
+3
+4

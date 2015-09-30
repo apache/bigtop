@@ -49,13 +49,14 @@ public class HiveBulkScriptExecutor {
 
   public void runScript(String test, String extraArgs) {
     String l = "${location}/${test}";
+    String out = getOutFileName();
     sh.exec("""
     F=cat
     if [ -f ${l}/filter ]; then
       chmod 777 ${l}/filter
       F=${l}/filter
     fi
-    hive ${extraArgs} -v -f ${l}/in > ${l}/actual && diff -u -b -B -w <(\$F < ${l}/actual) <(\$F < ${l}/out)
+    hive ${extraArgs} -v -f ${l}/in > ${l}/actual && diff -u -b -B -w <(\$F < ${l}/actual) <(\$F < ${l}/$out)
     """);
     logError(sh)
     assertEquals("Got unexpected output from test script ${test}",
@@ -64,5 +65,9 @@ public class HiveBulkScriptExecutor {
 
   public void runScript(String test) {
     runScript(test, "");
+  }
+  
+  public static String getOutFileName() {
+        return (System.getenv("HADOOP_VERSION") != null && System.getenv("HADOOP_VERSION").trim().equals("2.7.1")) ? "out_271" : "out";
   }
 }

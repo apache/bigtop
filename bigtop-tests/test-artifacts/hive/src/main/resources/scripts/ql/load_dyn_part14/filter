@@ -1,4 +1,5 @@
 sed -e '/^explain/,/Stage: Stage-4/d' \
+		-e 's,.*destination:.*,,g' \
                 -e '/# Partition Information/,/^value/d' \
                 -e '/Stage: Stage-6/,/Stage: Stage-10/d' \
                 -e '/Map Reduce/,/output format: /d' \

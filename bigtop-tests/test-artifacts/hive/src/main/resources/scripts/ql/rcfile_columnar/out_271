@@ -1,0 +1,30 @@
+USE  TEST_HIVE_NORMAL
+
+
+CREATE table columnTable (key STRING, value STRING)
+ROW FORMAT SERDE
+  'org.apache.hadoop.hive.serde2.columnar.ColumnarSerDe'
+STORED AS
+  INPUTFORMAT 'org.apache.hadoop.hive.ql.io.RCFileInputFormat'
+  OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.RCFileOutputFormat'
+
+
+FROM src
+INSERT OVERWRITE TABLE columnTable SELECT src.key, src.value LIMIT 10
+
+describe columnTable
+key                 	string              	                    
+value               	string              	                    
+
+
+SELECT columnTable.* FROM columnTable ORDER BY columnTable.key
+165	val_165
+238	val_238
+255	val_255
+27	val_27
+278	val_278
+311	val_311
+409	val_409
+484	val_484
+86	val_86
+98	val_98

@@ -1,0 +1,227 @@
+USE  TEST_HIVE_NORMAL
+set hive.input.format=org.apache.hadoop.hive.ql.io.BucketizedHiveInputFormat
+set mapred.min.split.size = 64
+
+
+CREATE TABLE T1(name STRING) STORED AS TEXTFILE
+
+
+LOAD DATA LOCAL INPATH 'seed_data_files/kv1.txt' INTO TABLE T1
+
+
+CREATE TABLE T2(name STRING) STORED AS SEQUENCEFILE
+
+
+EXPLAIN INSERT OVERWRITE TABLE T2 SELECT * FROM (
+SELECT tmp1.name as name FROM (
+  SELECT name, 'MMM' AS n FROM T1) tmp1 
+  JOIN (SELECT 'MMM' AS n FROM T1) tmp2
+  JOIN (SELECT 'MMM' AS n FROM T1) tmp3
+  ON tmp1.n = tmp2.n AND tmp1.n = tmp3.n) ttt LIMIT 5000000
+STAGE DEPENDENCIES:
+  Stage-6 is a root stage
+  Stage-2 depends on stages: Stage-6
+  Stage-0 depends on stages: Stage-2
+
+STAGE PLANS:
+  Stage: Stage-6
+    Map Reduce Local Work
+      Alias -> Map Local Tables:
+        ttt:tmp1:t1 
+          Fetch Operator
+            limit: -1
+        ttt:tmp2:t1 
+          Fetch Operator
+            limit: -1
+      Alias -> Map Local Operator Tree:
+        ttt:tmp1:t1 
+          TableScan
+            alias: t1
+            Statistics: Num rows: 58 Data size: 5812 Basic stats: COMPLETE Column stats: NONE
+            Select Operator
+              expressions: name (type: string)
+              outputColumnNames: _col0
+              Statistics: Num rows: 58 Data size: 5812 Basic stats: COMPLETE Column stats: NONE
+              HashTable Sink Operator
+                keys:
+                  0 'MMM' (type: string)
+                  1 'MMM' (type: string)
+                  2 'MMM' (type: string)
+        ttt:tmp2:t1 
+          TableScan
+            alias: t1
+            Statistics: Num rows: 0 Data size: 5812 Basic stats: PARTIAL Column stats: COMPLETE
+            Select Operator
+              Statistics: Num rows: 0 Data size: 5812 Basic stats: PARTIAL Column stats: COMPLETE
+              HashTable Sink Operator
+                keys:
+                  0 'MMM' (type: string)
+                  1 'MMM' (type: string)
+                  2 'MMM' (type: string)
+
+  Stage: Stage-2
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            alias: t1
+            Statistics: Num rows: 0 Data size: 5812 Basic stats: PARTIAL Column stats: COMPLETE
+            Select Operator
+              Statistics: Num rows: 0 Data size: 5812 Basic stats: PARTIAL Column stats: COMPLETE
+              Map Join Operator
+                condition map:
+                     Inner Join 0 to 1
+                     Inner Join 0 to 2
+                keys:
+                  0 'MMM' (type: string)
+                  1 'MMM' (type: string)
+                  2 'MMM' (type: string)
+                outputColumnNames: _col0
+                Statistics: Num rows: 127 Data size: 12786 Basic stats: COMPLETE Column stats: NONE
+                Limit
+                  Number of rows: 5000000
+                  Statistics: Num rows: 127 Data size: 12786 Basic stats: COMPLETE Column stats: NONE
+                  Reduce Output Operator
+                    sort order: 
+                    Statistics: Num rows: 127 Data size: 12786 Basic stats: COMPLETE Column stats: NONE
+                    value expressions: _col0 (type: string)
+      Local Work:
+        Map Reduce Local Work
+      Reduce Operator Tree:
+        Select Operator
+          expressions: VALUE._col0 (type: string)
+          outputColumnNames: _col0
+          Statistics: Num rows: 127 Data size: 12786 Basic stats: COMPLETE Column stats: NONE
+          Limit
+            Number of rows: 5000000
+            Statistics: Num rows: 127 Data size: 12786 Basic stats: COMPLETE Column stats: NONE
+            File Output Operator
+              compressed: false
+              Statistics: Num rows: 127 Data size: 12786 Basic stats: COMPLETE Column stats: NONE
+              table:
+                  input format: org.apache.hadoop.mapred.SequenceFileInputFormat
+                  output format: org.apache.hadoop.hive.ql.io.HiveSequenceFileOutputFormat
+                  serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                  name: test_hive_normal.t2
+
+  Stage: Stage-0
+    Move Operator
+      tables:
+          replace: true
+          table:
+              input format: org.apache.hadoop.mapred.SequenceFileInputFormat
+              output format: org.apache.hadoop.hive.ql.io.HiveSequenceFileOutputFormat
+              serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+              name: test_hive_normal.t2
+
+
+
+
+INSERT OVERWRITE TABLE T2 SELECT * FROM (
+SELECT tmp1.name as name FROM (
+  SELECT name, 'MMM' AS n FROM T1) tmp1 
+  JOIN (SELECT 'MMM' AS n FROM T1) tmp2
+  JOIN (SELECT 'MMM' AS n FROM T1) tmp3
+  ON tmp1.n = tmp2.n AND tmp1.n = tmp3.n) ttt LIMIT 5000000
+
+
+EXPLAIN SELECT COUNT(1) FROM T2
+STAGE DEPENDENCIES:
+  Stage-1 is a root stage
+  Stage-0 depends on stages: Stage-1
+
+STAGE PLANS:
+  Stage: Stage-1
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            alias: t2
+            Statistics: Num rows: -1 Data size: 79850048 Basic stats: PARTIAL Column stats: COMPLETE
+            Select Operator
+              Statistics: Num rows: -1 Data size: 79850048 Basic stats: PARTIAL Column stats: COMPLETE
+              Group By Operator
+                aggregations: count(1)
+                mode: hash
+                outputColumnNames: _col0
+                Statistics: Num rows: 1 Data size: 8 Basic stats: COMPLETE Column stats: COMPLETE
+                Reduce Output Operator
+                  sort order: 
+                  Statistics: Num rows: 1 Data size: 8 Basic stats: COMPLETE Column stats: COMPLETE
+                  value expressions: _col0 (type: bigint)
+      Reduce Operator Tree:
+        Group By Operator
+          aggregations: count(VALUE._col0)
+          mode: mergepartial
+          outputColumnNames: _col0
+          Statistics: Num rows: 1 Data size: 8 Basic stats: COMPLETE Column stats: COMPLETE
+          File Output Operator
+            compressed: false
+            Statistics: Num rows: 1 Data size: 8 Basic stats: COMPLETE Column stats: COMPLETE
+            table:
+                input format: org.apache.hadoop.mapred.TextInputFormat
+                output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+
+  Stage: Stage-0
+    Fetch Operator
+      limit: -1
+      Processor Tree:
+        ListSink
+
+
+SELECT COUNT(1) FROM T2
+5000000
+
+
+CREATE TABLE T3(name STRING) STORED AS TEXTFILE
+
+LOAD DATA LOCAL INPATH 'seed_data_files/kv1.txt' INTO TABLE T3
+
+LOAD DATA LOCAL INPATH 'seed_data_files/kv2.txt' INTO TABLE T3
+
+
+EXPLAIN SELECT COUNT(1) FROM T3
+STAGE DEPENDENCIES:
+  Stage-1 is a root stage
+  Stage-0 depends on stages: Stage-1
+
+STAGE PLANS:
+  Stage: Stage-1
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            alias: t3
+            Statistics: Num rows: 0 Data size: 11603 Basic stats: PARTIAL Column stats: COMPLETE
+            Select Operator
+              Statistics: Num rows: 0 Data size: 11603 Basic stats: PARTIAL Column stats: COMPLETE
+              Group By Operator
+                aggregations: count(1)
+                mode: hash
+                outputColumnNames: _col0
+                Statistics: Num rows: 1 Data size: 8 Basic stats: COMPLETE Column stats: COMPLETE
+                Reduce Output Operator
+                  sort order: 
+                  Statistics: Num rows: 1 Data size: 8 Basic stats: COMPLETE Column stats: COMPLETE
+                  value expressions: _col0 (type: bigint)
+      Reduce Operator Tree:
+        Group By Operator
+          aggregations: count(VALUE._col0)
+          mode: mergepartial
+          outputColumnNames: _col0
+          Statistics: Num rows: 1 Data size: 8 Basic stats: COMPLETE Column stats: COMPLETE
+          File Output Operator
+            compressed: false
+            Statistics: Num rows: 1 Data size: 8 Basic stats: COMPLETE Column stats: COMPLETE
+            table:
+                input format: org.apache.hadoop.mapred.TextInputFormat
+                output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+
+  Stage: Stage-0
+    Fetch Operator
+      limit: -1
+      Processor Tree:
+        ListSink
+
+
+SELECT COUNT(1) FROM T3
+1000
