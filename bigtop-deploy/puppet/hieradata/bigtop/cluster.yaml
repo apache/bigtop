@@ -123,7 +123,7 @@ hadoop-oozie::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 hcatalog::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 hcatalog::webhcat::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 
-spark::common::spark_master_host: "%{hiera('bigtop::hadoop_head_node')}"
+spark::common::master_host: "%{hiera('bigtop::hadoop_head_node')}"
 
 tachyon::common::master_host: "%{hiera('bigtop::hadoop_head_node')}"
 
