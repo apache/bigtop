@@ -1,11 +1,11 @@
 /etc/spark
 /usr/bin/spark-class
-/usr/bin/spark-submit
 /usr/bin/spark-shell
 /usr/bin/spark-sql
+/usr/bin/spark-submit
 /usr/lib/spark/LICENSE
-/usr/lib/spark/RELEASE
 /usr/lib/spark/NOTICE
+/usr/lib/spark/RELEASE
 /usr/lib/spark/bin/beeline
 /usr/lib/spark/bin/load-spark-env.sh
 /usr/lib/spark/bin/run-example

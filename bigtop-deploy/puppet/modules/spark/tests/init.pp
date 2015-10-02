@@ -13,13 +13,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-spark::master { "spark master": 
-  master_port        => "1978",
-  master_ui_port     => "1979",
+spark::master { 'spark master':
+  master_port    => '1978',
+  master_ui_port => '1979',
 }
 
-spark::worker { "spark worker": 
-  master_host        => "somewhere.com",
-  master_port        => "1978",
-  master_ui_port     => "1979",
+spark::worker { 'spark worker':
+  master_host    => 'somewhere.com',
+  master_port    => '1978',
+  master_ui_port => '1979',
 }

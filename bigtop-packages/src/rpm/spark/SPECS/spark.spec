@@ -46,14 +46,15 @@ BuildArch: noarch
 Buildroot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 License: ASL 2.0
 Source0: %{spark_name}-%{spark_base_version}.tar.gz
-Source1: do-component-build 
-Source2: install_%{spark_name}.sh
-Source3: spark-master.svc
-Source4: spark-worker.svc
-Source6: init.d.tmpl
-Source7: spark-history-server.svc
+Source1: bigtop.bom
+Source2: do-component-build
+Source3: init.d.tmpl
+Source4: install_%{spark_name}.sh
+Source5: spark-env.sh
+Source6: spark-history-server.svc
+Source7: spark-master.svc
 Source8: spark-thriftserver.svc
-Source9: bigtop.bom
+Source9: spark-worker.svc
 Requires: bigtop-utils >= 0.7, hadoop-client
 Requires(preun): /sbin/service
 

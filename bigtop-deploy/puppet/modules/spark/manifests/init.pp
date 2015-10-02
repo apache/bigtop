@@ -56,9 +56,9 @@ class spark {
   }
 
   class master {
-    include common   
+    include common
 
-    package { "spark-master":
+    package { 'spark-master':
       ensure => latest,
     }
 
@@ -77,7 +77,7 @@ class spark {
   class worker {
     include common
 
-    package { "spark-worker":
+    package { 'spark-worker':
       ensure => latest,
     }
 
@@ -108,8 +108,8 @@ class spark {
         File['/etc/spark/conf/spark-defaults.conf'],
       ],
       hasrestart => true,
-      hasstatus => true,
-    } 
+      hasstatus  => true,
+    }
   }
 
   class yarn {
