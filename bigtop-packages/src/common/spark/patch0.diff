@@ -1,0 +1,11 @@
+--- spark-1.5.1-patched/pom.xml	2015-09-23 22:50:32.000000000 -0700
++++ spark-1.5.1/pom.xml	2015-10-30 13:46:54.326426316 -0700
+@@ -2366,7 +2366,7 @@
+     <profile>
+       <id>hadoop-2.6</id>
+       <properties>
+-        <hadoop.version>2.6.0</hadoop.version>
++        <hadoop.version>${hadoop.version}</hadoop.version>
+         <jets3t.version>0.9.3</jets3t.version>
+         <zookeeper.version>3.4.6</zookeeper.version>
+         <curator.version>2.6.0</curator.version>

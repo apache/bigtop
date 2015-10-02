@@ -119,6 +119,28 @@ Requires: spark-core = %{version}-%{release}
 %description -n spark-thriftserver
 Thrift server for Spark SQL
 
+%package -n spark-datanucleus
+Summary: DataNucleus libraries for Apache Spark
+Group: Development/Libraries
+
+%description -n spark-datanucleus
+DataNucleus libraries used by Spark SQL with Hive Support
+
+%package -n spark-extras
+Summary: External/extra libraries for Apache Spark
+Group: Development/Libraries
+
+%description -n spark-extras
+External/extra libraries built for Apache Spark but not included in the main
+assembly JAR (e.g., external streaming libraries)
+
+%package -n spark-yarn-shuffle
+Summary: Spark YARN Shuffle Service
+Group: Development/Libraries
+
+%description -n spark-yarn-shuffle
+Spark YARN Shuffle Service
+
 %prep
 %setup -n %{spark_name}-%{spark_base_version}
 
@@ -175,6 +197,8 @@ done
 %{lib_spark}/NOTICE
 %{lib_spark}/bin
 %{lib_spark}/lib
+%exclude %{lib_spark}/lib/datanucleus-*.jar
+%exclude %{lib_spark}/lib/spark-*-yarn-shuffle.jar
 %{lib_spark}/sbin
 %{lib_spark}/data
 %{lib_spark}/examples
@@ -185,8 +209,9 @@ done
 %attr(0755,spark,spark) %{var_lib_spark}
 %attr(0755,spark,spark) %{var_run_spark}
 %attr(0755,spark,spark) %{var_log_spark}
+%{bin}/spark-class
 %{bin}/spark-shell
-%{bin}/spark-executor
+%{bin}/spark-sql
 %{bin}/spark-submit
 
 %files -n spark-python
@@ -194,6 +219,20 @@ done
 %attr(0755,root,root) %{bin}/pyspark
 %attr(0755,root,root) %{lib_spark}/bin/pyspark
 %{lib_spark}/python
+
+%files -n spark-datanucleus
+%defattr(-,root,root,755)
+%{lib_spark}/lib/datanucleus-*.jar
+%{lib_spark}/yarn/lib/datanucleus-*.jar
+
+%files -n spark-extras
+%defattr(-,root,root,755)
+%{lib_spark}/extras
+
+%files -n spark-yarn-shuffle
+%defattr(-,root,root,755)
+%{lib_spark}/lib/spark-*-yarn-shuffle.jar
+%{lib_spark}/yarn/lib/spark-yarn-shuffle.jar
 
 %define service_macro() \
 %files -n %1 \
