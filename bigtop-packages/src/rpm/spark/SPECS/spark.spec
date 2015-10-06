@@ -104,6 +104,19 @@ Requires: spark-core = %{version}-%{release}, python
 %description -n spark-python
 Includes PySpark, an interactive Python shell for Spark, and related libraries
 
+%package -n spark-R
+Summary: R client for Spark
+Group: Development/Libraries
+Requires: spark-core = %{version}-%{release}
+%if %{?suse_version:1}0
+Requires: R-patched
+%else
+Requires: R-core
+%endif
+
+%description -n spark-R
+Includes SparkR, an interactive R shell for Spark, and related libraries
+
 %package -n spark-history-server
 Summary: History server for Apache Spark
 Group: Development/Libraries
@@ -206,6 +219,7 @@ done
 %{lib_spark}/work
 %exclude %{bin_spark}/pyspark
 %exclude %{lib_spark}/python
+%exclude %{bin_spark}/sparkR
 %{etc_spark}
 %attr(0755,spark,spark) %{var_lib_spark}
 %attr(0755,spark,spark) %{var_run_spark}
@@ -220,6 +234,14 @@ done
 %attr(0755,root,root) %{bin}/pyspark
 %attr(0755,root,root) %{lib_spark}/bin/pyspark
 %{lib_spark}/python
+
+%files -n spark-R
+%defattr(-,root,root,755)
+%attr(0755,root,root) %{bin}/sparkR
+%attr(0755,root,root) %{lib_spark}/bin/sparkR
+%attr(0755,root,root) %{lib_spark}/R
+# temporary workaround for https://issues.apache.org/jira/browse/SPARK-10500
+%attr(0777,root,root) %{lib_spark}/R/lib
 
 %files -n spark-datanucleus
 %defattr(-,root,root,755)

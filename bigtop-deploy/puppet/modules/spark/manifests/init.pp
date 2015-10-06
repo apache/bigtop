@@ -49,6 +49,11 @@ class spark {
       require => Package['spark-core'],
     }
 
+    package { 'spark-R':
+      ensure  => latest,
+      require => Package['spark-core'],
+    }
+
     package { 'spark-extras':
       ensure  => latest,
       require => Package['spark-core'],

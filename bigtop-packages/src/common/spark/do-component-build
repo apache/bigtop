@@ -28,6 +28,7 @@ BUILD_OPTS="-Divy.home=${HOME}/.ivy2 -Dsbt.ivy.home=${HOME}/.ivy2 -Duser.home=${
             -Pbigtop-dist \
             -Pyarn -Phadoop-2.6 \
             -Phive -Phive-thriftserver \
+            -Psparkr \
             $SPARK_BUILD_OPTS"
 
 ## this might be an issue at times

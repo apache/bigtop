@@ -49,6 +49,12 @@ Depends: spark-core (= ${source:Version}), python
 Description: Python client for Spark
  Includes PySpark, an interactive Python shell for Spark, and related libraries
 
+Package: spark-R
+Architecture: all
+Depends: spark-core (= ${source:Version}), r-base
+Description: R client for Spark
+ Includes SparkR, an interactive Python shell for R, and related libraries
+
 Package: spark-history-server
 Architecture: all
 Depends: spark-core (= ${source:Version})

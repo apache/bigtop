@@ -123,6 +123,7 @@ install -d -m 0755 $PREFIX/$LIB_DIR/extras
 install -d -m 0755 $PREFIX/$LIB_DIR/extras/lib
 install -d -m 0755 $PREFIX/$LIB_DIR/yarn
 install -d -m 0755 $PREFIX/$LIB_DIR/yarn/lib
+install -d -m 0755 $PREFIX/$LIB_DIR/R
 install -d -m 0755 $PREFIX/$DOC_DIR
 install -d -m 0755 $PREFIX/$EXAMPLES_DIR
 
@@ -143,6 +144,9 @@ ls ${BUILD_DIR}/{external,extras}/*/target/*${SPARK_VERSION}.jar | grep -v 'orig
 
 # Examples jar
 cp ${BUILD_DIR}/examples/target/spark-examples*${SPARK_VERSION}.jar $PREFIX/$LIB_DIR/lib/spark-examples-${SPARK_VERSION}-hadoop${HADOOP_VERSION}.jar
+
+# SparkR libraries
+cp -ra ${BUILD_DIR}/R/lib $PREFIX/$LIB_DIR/R
 
 # Spark YARN Shuffle jar
 cp ${BUILD_DIR}/network/yarn/target/*/spark-${SPARK_VERSION}-yarn-shuffle.jar $PREFIX/$LIB_DIR/lib/
@@ -165,7 +169,7 @@ ln -s /etc/spark/conf $PREFIX/$LIB_DIR/conf
 
 # Copy in the wrappers
 install -d -m 0755 $PREFIX/$BIN_DIR
-for wrap in bin/spark-class bin/spark-shell bin/spark-sql bin/spark-submit; do
+for wrap in bin/spark-class bin/spark-shell bin/spark-sql bin/spark-submit bin/sparkR; do
   cat > $PREFIX/$BIN_DIR/`basename $wrap` <<EOF
 #!/bin/bash
 
