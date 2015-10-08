@@ -21,7 +21,7 @@ class hue {
         Class['Hadoop::Httpfs'] -> Class['Hue::Server']
       }
       if ("hbase-client" in $roles) {
-        Class['Hadoop-hbase::Client'] -> Class['Hue::Server']
+        Class['Hadoop_hbase::Client'] -> Class['Hue::Server']
       }
     }
   }

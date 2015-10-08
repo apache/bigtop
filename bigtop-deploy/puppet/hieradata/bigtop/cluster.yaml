@@ -106,11 +106,11 @@ bigtop::hadoop_zookeeper_port: "2181"
 hadoop::zk: "%{hiera('bigtop::hadoop_head_node')}:%{hiera('bigtop::hadoop_zookeeper_port')}"
 
 bigtop::hadoop_namenode_uri: "hdfs://%{hiera('hadoop::common_hdfs::hadoop_namenode_host')}:%{hiera('hadoop::common_hdfs::hadoop_namenode_port')}"
-hadoop-hbase::base_relative_rootdir: "/hbase"
-hadoop-hbase::common_config::rootdir: "%{hiera('bigtop::hadoop_namenode_uri')}%{hiera('hadoop-hbase::base_relative_rootdir')}"
-hadoop-hbase::common_config::zookeeper_quorum: "%{hiera('bigtop::hadoop_head_node')}"
-hadoop-hbase::common_config::kerberos_realm: "%{hiera('kerberos::site::realm')}"
-hadoop-hbase::client::thrift: true
+hadoop_hbase::base_relative_rootdir: "/hbase"
+hadoop_hbase::common_config::rootdir: "%{hiera('bigtop::hadoop_namenode_uri')}%{hiera('hadoop_hbase::base_relative_rootdir')}"
+hadoop_hbase::common_config::zookeeper_quorum: "%{hiera('bigtop::hadoop_head_node')}"
+hadoop_hbase::common_config::kerberos_realm: "%{hiera('kerberos::site::realm')}"
+hadoop_hbase::client::thrift: true
 
 solr::server::root_url: "%{hiera('bigtop::hadoop_namenode_uri')}"
 solr::server::zk: "%{hiera('hadoop::zk')}"
@@ -118,7 +118,7 @@ solr::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 # Default but needed here to make sure, hue uses the same port
 solr::server::port: "1978"
 
-hadoop-oozie::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
+hadoop_oozie::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 
 hcatalog::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 hcatalog::webhcat::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
@@ -127,10 +127,10 @@ spark::common::spark_master_host: "%{hiera('bigtop::hadoop_head_node')}"
 
 tachyon::common::master_host: "%{hiera('bigtop::hadoop_head_node')}"
 
-hadoop-zookeeper::server::myid: "0"
-hadoop-zookeeper::server::ensemble:
+hadoop_zookeeper::server::myid: "0"
+hadoop_zookeeper::server::ensemble:
   - "%{hiera('bigtop::hadoop_head_node')}:2888:3888"
-hadoop-zookeeper::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
+hadoop_zookeeper::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 
 # those are only here because they were present as extlookup keys previously
 bigtop::hadoop_rm_http_port: "8088"
@@ -157,7 +157,7 @@ hue::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 
 giraph::client::zookeeper_quorum: "%{hiera('bigtop::hadoop_head_node')}"
 
-hadoop-hive::client::hbase_zookeeper_quorum: "%{hiera('hadoop-hbase::common_config::zookeeper_quorum')}"
+hadoop_hive::client::hbase_zookeeper_quorum: "%{hiera('hadoop_hbase::common_config::zookeeper_quorum')}"
 
 # tez
 hadoop::common::tez_conf_dir: "/etc/tez/conf"
@@ -168,4 +168,4 @@ hadoop::common::tez_jars: "/usr/lib/tez"
 # hadoop::common_mapred_app::mapreduce_framework_name: "yarn-tez"
 
 # to enable tez in hive, uncomment the lines below
-# hadoop-hive::client::hive_execution_engine: "tez"
+# hadoop_hive::client::hive_execution_engine: "tez"

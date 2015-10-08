@@ -131,7 +131,7 @@ hadoop::hadoop_storage_dirs:
   - "/data/1"
   - "/data/2"
 hadoop_cluster_node::cluster_components:
-  - ignite-hadoop
+  - ignite_hadoop
   - hive
   - spark
   - yarn
