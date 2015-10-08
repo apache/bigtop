@@ -13,7 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class hadoop_zookeeper {
+class hadoop_zookeeper (
+  $kerberos_realm = "",
+) {
 
   class deploy ($roles) {
     if ("zookeeper-client" in $roles) {
@@ -25,19 +27,45 @@ class hadoop_zookeeper {
     }
   }
 
-  class client {
+  class common (
+    $kerberos_realm = $hadoop_zookeeper::kerberos_realm,
+  ) inherits hadoop_zookeeper {
+    if ($kerberos_realm) {
+      file { '/etc/zookeeper/conf/java.env':
+        source => 'puppet:///modules/hadoop_zookeeper/java.env',
+      }
+      Package<| title == 'zookeeper' |> -> File['/etc/zookeeper/conf/java.env']
+      Package<| title == 'zookeeper-server' |> -> File['/etc/zookeeper/conf/java.env']
+      File['/etc/zookeeper/conf/java.env'] ~> Service<| title == 'zookeeper-server' |>
+    }
+  }
+
+  class client (
+    $kerberos_realm = $hadoop_zookeeper::kerberos_realm,
+  ) inherits hadoop_zookeeper {
+    include common
+
     package { "zookeeper":
       ensure => latest,
       require => Package["jdk"],
-    } 
+    }
+
+    if ($kerberos_realm) {
+      file { '/etc/zookeeper/conf/client-jaas.conf':
+        content => template('hadoop_zookeeper/client-jaas.conf'),
+        require => Package['zookeeper'],
+      }
+    }
   }
 
   class server($myid,
                 $port = "2181",
                 $datadir = "/var/lib/zookeeper",
                 $ensemble = ["localhost:2888:3888"],
-                $kerberos_realm = "") 
-  {
+                $kerberos_realm = $hadoop_zookeeper::kerberos_realm,
+  ) inherits hadoop_zookeeper {
+    include common
+
     package { "zookeeper-server":
       ensure => latest,
       require => Package["jdk"],
@@ -45,13 +73,13 @@ class hadoop_zookeeper {
 
     service { "zookeeper-server":
       ensure => running,
-      require => [ Package["zookeeper-server"], 
+      require => [ Package["zookeeper-server"],
                    Exec["zookeeper-server-initialize"] ],
       subscribe => [ File["/etc/zookeeper/conf/zoo.cfg"],
                      File["/var/lib/zookeeper/myid"] ],
       hasrestart => true,
       hasstatus => true,
-    } 
+    }
 
     file { "/etc/zookeeper/conf/zoo.cfg":
       content => template("hadoop_zookeeper/zoo.cfg"),
@@ -62,7 +90,7 @@ class hadoop_zookeeper {
       content => inline_template("<%= @myid %>"),
       require => Package["zookeeper-server"],
     }
-    
+
     exec { "zookeeper-server-initialize":
       command => "/usr/bin/zookeeper-server-initialize",
       user    => "zookeeper",
@@ -74,19 +102,13 @@ class hadoop_zookeeper {
       require kerberos::client
 
       kerberos::host_keytab { "zookeeper":
-        spnego => true,
-        notify => Service["zookeeper-server"],
+        spnego  => true,
         require => Package["zookeeper-server"],
+        before  => Service["zookeeper-server"],
       }
 
-      file { "/etc/zookeeper/conf/java.env":
-        source  => "puppet:///modules/hadoop_zookeeper/java.env",
-        require => Package["zookeeper-server"],
-        notify  => Service["zookeeper-server"],
-      }
-
-      file { "/etc/zookeeper/conf/jaas.conf":
-        content => template("hadoop_zookeeper/jaas.conf"),
+      file { "/etc/zookeeper/conf/server-jaas.conf":
+        content => template("hadoop_zookeeper/server-jaas.conf"),
         require => Package["zookeeper-server"],
         notify  => Service["zookeeper-server"],
       }
