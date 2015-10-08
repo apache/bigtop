@@ -26,38 +26,74 @@
 
 <!-- Hive Execution Parameters -->
 
-<% if @hbase_master != "" %>
+<% if @hbase_master -%>
 <property>
   <name>hbase.master</name>
   <value><%= @hbase_master %></value>
   <description>http://wiki.apache.org/hadoop/Hive/HBaseIntegration</description>
 </property>
-<% end %>
+<% end -%>
 
-<% if @hbase_zookeeper_quorum != "" %>
+<% if @hbase_zookeeper_quorum -%>
 <property>
   <name>hbase.zookeeper.quorum</name>
   <value><%= @hbase_zookeeper_quorum %></value>
   <description>http://wiki.apache.org/hadoop/Hive/HBaseIntegration</description>
 </property>
-<% end %>
+<% end -%>
 
 <property>
   <name>hive.execution.engine</name>
   <value><%= @hive_execution_engine %></value>
 </property>
 
+<% end %>
+<% if @hdfs_uri -%>
+  <property>
+    <name>fs.defaultFS</name>
+    <value><%= @hdfs_uri %></value>
+  </property>
+<% end -%>
+
+<% if @metastore_server_uris[0] -%>
 <property>
-  <name>javax.jdo.option.ConnectionURL</name>
-  <value>jdbc:derby:;databaseName=/var/lib/hive/metastore/metastore_db;create=true</value>
+  <name>hive.metastore.uris</name>
+  <value><%= @metastore_server_uris.join(",") %></value>
   <description>JDBC connect string for a JDBC metastore</description>
 </property>
+<% end -%>
 
+<% if @metastore_database_url -%>
 <property>
-  <name>javax.jdo.option.ConnectionDriverName</name>
-  <value>org.apache.derby.jdbc.EmbeddedDriver</value>
-  <description>Driver class name for a JDBC metastore</description>
+    <name>javax.jdo.option.ConnectionURL</name>
+    <value><%= @metastore_database_url %></value>
+    <description>username to use against metastore database</description>
 </property>
+<% end -%>
+
+<% if @metastore_database_driver_class -%>
+<property>
+    <name>javax.jdo.option.ConnectionDriverName</name>
+    <value><%= @metastore_database_driver_class %></value>
+    <description>username to use against metastore database</description>
+</property>
+<% end -%>
+
+<% if @metastore_database_user -%>
+<property>
+  <name>javax.jdo.option.ConnectionUserName</name>
+  <value><%= @metastore_database_user %></value>
+  <description>username to use against metastore database</description>
+</property>
+<% end -%>
+
+<% if @metastore_database_password -%>
+<property>
+  <name>javax.jdo.option.ConnectionPassword</name>
+  <value><%= @metastore_database_password %></value>
+  <description>password to use against metastore database</description>
+</property>
+<% end -%>
 
 <property>
   <name>hive.hwi.war.file</name>

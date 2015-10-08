@@ -10,7 +10,7 @@
 # FQDN of standby node (enables HA if set)
 #bigtop::hadoop_standby_head_node: "standbyNN.example.com"
 # FQDN of gateway node (if separate from NN)
-#bigtop::hadoop_gateway_node: "gateway.example.com"
+bigtop::hadoop_gateway_node: "%{hiera('bigtop::hadoop_head_node')}"
 
 # A list of stack' components to be deployed can be specified via special
 # "$components" list. If $components isn't set then everything in the stack will
@@ -157,7 +157,37 @@ hue::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 
 giraph::client::zookeeper_quorum: "%{hiera('bigtop::hadoop_head_node')}"
 
-hadoop-hive::client::hbase_zookeeper_quorum: "%{hiera('hadoop-hbase::common_config::zookeeper_quorum')}"
+hadoop-hive::common::hbase_zookeeper_quorum: "%{hiera('hadoop-hbase::common_config::zookeeper_quorum')}"
+
+hadoop-hive::common::metastore_server_host: "%{hiera('bigtop::hadoop_gateway_node')}"
+hadoop-hive::common::metastore_server_port: "9083"
+hadoop-hive::common::metastore_server_uris:
+ - "thrift://%{hiera('hadoop-hive::common::metastore_server_host')}:%{hiera('hadoop-hive::common::metastore_server_port')}"
+
+hadoop-hive::common::hdfs_uri: "%{hiera('bigtop::hadoop_namenode_uri')}"
+hadoop-hive::common::metastore_database_host: "%{hiera('bigtop-mysql::server::host')}"
+hadoop-hive::common::metastore_database_port: "%{hiera('bigtop-mysql::server::port')}"
+
+# Bigtop supports multiple databases as metastore database.
+# Possible values for metastore database type: derby, mysql (default)
+hadoop-hive::common::metastore_database_type: "mysql"
+hadoop-hive::common::metastore_database_name: "hive"
+hadoop-hive::common::metastore_database_user: "hive"
+hadoop-hive::common::metastore_database_password: "hive"
+
+bigtop-mysql::server::host: "%{hiera('bigtop::hadoop_gateway_node')}"
+bigtop-mysql::server::port: "3306"
+bigtop-mysql::server::users:
+  "%{hiera('hadoop-hive::common::metastore_database_user')}@%":
+    password_hash: "*4DF1D66463C18D44E3B001A8FB1BBFBEA13E27FC"
+bigtop-mysql::server::grants:
+  "%{hiera('hadoop-hive::common::metastore_database_user')}@%/*.*":
+    options:
+     - "GRANT"
+    privileges:
+     - "ALL"
+    table: "*.*"
+    user: "%{hiera('hadoop-hive::common::metastore_database_user')}@%"
 
 # tez
 hadoop::common::tez_conf_dir: "/etc/tez/conf"

@@ -91,6 +91,7 @@ $roles_map = {
   },
   hive => {
     client => ["hive-client"],
+    gateway_server => ["hive-server", "hive-metastore-server"],
   },
   tez => {
     client => ["tez-client"],
@@ -101,6 +102,10 @@ $roles_map = {
   },
   ycsb => {
     client => ["ycsb-client"],
+  },
+  bigtop-mysql => {
+    master => ["mysql-server"],
+    client => ["mysql-client"],
   },
 }
 
@@ -140,13 +145,15 @@ class hadoop_cluster_node (
 }
 
 class node_with_roles ($roles = hiera("bigtop::roles")) inherits hadoop_cluster_node {
+
   define deploy_module($roles) {
     class { "${name}::deploy":
-    roles => $roles,
+      roles => $roles,
     }
   }
 
   $modules = [
+    "bigtop-mysql",
     "crunch",
     "giraph",
     "hadoop",
