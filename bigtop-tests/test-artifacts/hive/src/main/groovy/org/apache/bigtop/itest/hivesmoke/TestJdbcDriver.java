@@ -30,6 +30,7 @@ import java.util.Date;
 
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -53,11 +54,11 @@ import org.apache.bigtop.itest.interfaces.EssentialTests;
 @Category ( EssentialTests.class )
 public class TestJdbcDriver {
 
-  public static String driverName = "org.apache.hadoop.hive.jdbc.HiveDriver";
+  public static String driverName = "org.apache.hive.jdbc.HiveDriver";
   public static String HIVE_SERVER_HOST=System.getenv("HIVE_SERVER_HOST")==null?"localhost":System.getenv("HIVE_SERVER_HOST");
   public static String HIVE_SERVER_DB_PORT=System.getenv("HIVE_SERVER_DB_PORT")==null?"10002":System.getenv("HIVE_SERVER_DB_PORT");
   public static String HIVE_SERVER_DB_NAME=System.getenv("HIVE_SERVER_DB_NAME")==null?"default":System.getenv("HIVE_SERVER_DB_NAME");
-  public static String hiveserver_url = "jdbc:hive://"+HIVE_SERVER_HOST+":"+HIVE_SERVER_DB_PORT+"/"+HIVE_SERVER_DB_NAME;
+  public static String hiveserver_url = "jdbc:hive2://"+HIVE_SERVER_HOST+":"+HIVE_SERVER_DB_PORT+"/"+HIVE_SERVER_DB_NAME;
   public static Shell sh = new Shell("/bin/bash -s");
   public static String testDir = "/tmp/hive-jdbc." + (new Date().getTime());
   public static String hiveserver_pid;
@@ -66,6 +67,10 @@ public class TestJdbcDriver {
 
   @BeforeClass
   public static void setUp() throws ClassNotFoundException, InterruptedException, NoSuchFieldException, IllegalAccessException, IOException {
+    Assume.assumeTrue("HiveServer2 process is not running on WorkBench",
+       System.getenv("HS2_ON_WB") != null
+      && System.getenv("HS2_ON_WB").toLowerCase().trim().equals("running") );
+
     JarContent.unpackJarContainer(TestJdbcDriver.class, "." , null);
     ParameterSetter.setProperties(TestJdbcDriver.class, new String[] {"hiveserver_startup_wait"});
     System.out.println("hiveserver_startup_wait: " + hiveserver_startup_wait);
@@ -87,15 +92,15 @@ public class TestJdbcDriver {
     int noOfTry=0;
     boolean isConnected=false;
     while(noOfTry<20 && false==isConnected){
-    	noOfTry++;
-    	try{
-    		con = DriverManager.getConnection(hiveserver_url, "", "");
-		isConnected=true;
-	    }catch(SQLException exception){
-		System.out.println("Not able to connect to Hive server, will retry after "+hiveserver_startup_wait+" ms");
-		Thread.sleep(hiveserver_startup_wait);
-	    }
-	}   
+        noOfTry++;
+        try{
+            con = DriverManager.getConnection(hiveserver_url, "", "");
+            isConnected=true;
+        }catch(SQLException exception){
+            System.out.println("Not able to connect to Hive server, will retry after "+hiveserver_startup_wait+" ms");
+            Thread.sleep(hiveserver_startup_wait);
+        }
+    }   
     assertTrue("Not able to connect to Hive server:"+hiveserver_url, isConnected); 
   }
 
