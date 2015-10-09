@@ -58,7 +58,7 @@ public class TestJdbcDriver {
   public static String HIVE_SERVER_HOST=System.getenv("HIVE_SERVER_HOST")==null?"localhost":System.getenv("HIVE_SERVER_HOST");
   public static String HIVE_SERVER_DB_PORT=System.getenv("HIVE_SERVER_DB_PORT")==null?"10002":System.getenv("HIVE_SERVER_DB_PORT");
   public static String HIVE_SERVER_DB_NAME=System.getenv("HIVE_SERVER_DB_NAME")==null?"default":System.getenv("HIVE_SERVER_DB_NAME");
-  public static String hiveserver_url = "jdbc:hive://"+HIVE_SERVER_HOST+":"+HIVE_SERVER_DB_PORT+"/"+HIVE_SERVER_DB_NAME;
+  public static String hiveserver_url = "jdbc:hive2://"+HIVE_SERVER_HOST+":"+HIVE_SERVER_DB_PORT+"/"+HIVE_SERVER_DB_NAME;
   public static Shell sh = new Shell("/bin/bash -s");
   public static String testDir = "/tmp/hive-jdbc." + (new Date().getTime());
   public static String hiveserver_pid;

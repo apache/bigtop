@@ -62,19 +62,14 @@ class Shell {
    * stdout as getOut() and stderr as getErr(). The script itself can be accessed
    * as getScript()
    * WARNING: it isn't thread safe
-   * @param timeout timeout in milliseconds to wait before killing the script.
+   * @param timeout timeout in seconds to wait before killing the script.
    * If timeout lesser than 0, then this method will wait until the script completes
    * and will not be killed.
    * @param args shell script split into multiple Strings
    * @return Shell object for chaining
    */
   Shell execWithTimeout(int timeout, Object... args) {
-    def proc = user ? "sudo -u $user  " +
-                      "HADOOP_CONF_DIR=${System.getenv('HADOOP_CONF_DIR')} " +
-                      "JAVA_HOME=${System.getenv('JAVA_HOME')} " +
-                      "HADOOP_HOME=${System.getenv('HADOOP_HOME')} " +
-                      "PATH=${System.getenv('PATH')} $shell".execute() :
-                      "$shell".execute()
+    def proc = user ? "sudo -u $user  HADOOP_CONF_DIR=${System.getenv('HADOOP_CONF_DIR')} JAVA_HOME=${System.getenv('JAVA_HOME')} HADOOP_HOME=${System.getenv('HADOOP_HOME')} PATH=${System.getenv('PATH')} $shell".execute() : "$shell".execute()
 
     script = args.join("\n")
     if (LOG.isTraceEnabled()) {
@@ -89,14 +84,13 @@ class Shell {
 
     ByteArrayOutputStream outStream = new ByteArrayOutputStream(4096)
     ByteArrayOutputStream errStream = new ByteArrayOutputStream(4096)
-    Thread.start {
+    Thread.start { 
       proc.consumeProcessOutput(outStream, errStream)
-    }
+    }   
     if (timeout >= 0) {
-      proc.waitForOrKill(timeout)
-    } else {
-      proc.waitFor()
+      proc.waitForOrKill(timeout * 1000)
     }
+    proc.waitFor()
 
     // Possibly a bug in String.split as it generates a 1-element array on an
     // empty String
@@ -142,11 +136,11 @@ class Shell {
    * stdout as getOut() and stderr as getErr(). The script itself can be accessed
    * as getScript()
    * WARNING: it isn't thread safe
-   * Setting default timeout of 2hrs.
+   * Setting default timeout of 2hrs(7200 s).
    * @param args shell script split into multiple Strings
    * @return Shell object for chaining
    */
   Shell exec(Object... args) {
-    return execWithTimeout(7200000, args)
+    return execWithTimeout(7200, args)
   }
 }
