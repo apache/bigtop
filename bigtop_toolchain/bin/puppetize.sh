@@ -69,3 +69,10 @@ case ${ID}-${VERSION_ID} in
 	echo "Unsupported OS ${ID}-${VERSION_ID}."
 	exit 1
 esac
+
+puppet module install puppetlabs-stdlib
+
+case ${ID} in
+   debian|ubuntu)
+      puppet module install puppetlabs-apt;;
+esac

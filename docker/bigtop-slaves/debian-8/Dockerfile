@@ -17,5 +17,4 @@ MAINTAINER oflebbe@apache.org
 
 COPY bigtop_toolchain /etc/puppet/modules/bigtop_toolchain
 
-RUN puppet apply -e "include bigtop_toolchain::puppet-modules" ; \
-    puppet apply -e "include bigtop_toolchain::installer"
+RUN puppet apply -e "include bigtop_toolchain::installer"
