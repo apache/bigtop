@@ -18,12 +18,13 @@ class bigtop_toolchain::vagrant {
   case $operatingsystem{
     /Ubuntu|Debian/: {
       exec {'download-vagrant':
-       command => '/usr/bin/wget https://dl.bintray.com/mitchellh/vagrant/vagrant_1.7.1_x86_64.deb --output-document /tmp/vagrant_1.7.1_x86_64.deb',
-       creates => '/tmp/vagrant_1.7.1_x86_64.deb'
+       command => '/usr/bin/wget https://dl.bintray.com/mitchellh/vagrant/vagrant_1.7.1_x86_64.deb',
+       cwd => '/usr/src',
+       creates => '/usr/src/vagrant_1.7.1_x86_64.deb'
       }
       package { 'vagrant':
         ensure => 'latest',
-        source   => '/tmp/vagrant_1.7.1_x86_64.deb',
+        source   => '/usr/src/vagrant_1.7.1_x86_64.deb',
         provider => 'dpkg',
         require => Exec['download-vagrant']
       }

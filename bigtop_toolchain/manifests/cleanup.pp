@@ -21,8 +21,8 @@ class bigtop_toolchain::cleanup {
   } 
   
   exec { 'remove archives':
-    cwd         => '/tmp',
-    command     => '/bin/bash -c "rm -rf /tmp/* ; rm -f /usr/src/* ; exit 0"'
+    cwd         => '/usr/src',
+    command     => '/bin/rm -f *.deb *.zip *.tar.gz'
   }
 
   exec { 'clean packages':
