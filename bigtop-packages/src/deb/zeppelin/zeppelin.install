@@ -1,0 +1,14 @@
+/etc/zeppelin
+/usr/lib/zeppelin/LICENSE
+/usr/lib/zeppelin/README.md
+/usr/lib/zeppelin/*.jar
+/usr/lib/zeppelin/*.war
+/usr/lib/zeppelin/bin/
+/usr/lib/zeppelin/conf/
+/usr/lib/zeppelin/interpreter/
+/usr/lib/zeppelin/lib/
+/usr/share/doc/zeppelin
+/var/lib/zeppelin/
+/var/lib/zeppelin/notebook/
+/var/log/zeppelin/
+/var/run/zeppelin/
