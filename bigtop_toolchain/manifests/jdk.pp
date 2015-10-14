@@ -47,7 +47,7 @@ class bigtop_toolchain::jdk {
       
       Apt::Ppa['http://ppa.launchpad.net/openjdk-r/ppa/ubuntu'] -> Exec['apt-update']
     }
-    /(CentOS|Fedora|Amazon|OpenSuSE)/: {
+    /(CentOS|Fedora|Amazon)/: {
       package { 'java-1.7.0-openjdk-devel' :
         ensure => present
       }

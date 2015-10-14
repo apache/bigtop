@@ -14,62 +14,27 @@
 # limitations under the License.
 
 class bigtop_toolchain::env {
-  case $operatingsystem{
-    Ubuntu,Debian: {
-      file { '/etc/profile.d/bigtop.sh':
-        source => 'puppet:///modules/bigtop_toolchain/jenkins.sh.debian',
-        ensure => present,
-        owner  => root,
-        group  => root,
-        mode   => 644,
-      }
+  case $architecture {
+    'amd64' : { $arch= "amd64" }
+    'ppc64le' : { $arch= "ppc64el" }
+  }
+  case $operatingsystem {
+    'Ubuntu','Debian': {
+      $javahome = "/usr/lib/jvm/java-1.7.0-openjdk-$arch"
     }
-    Fedora: {
-      file {'/etc/profile.d/bigtop.sh':
-        source => 'puppet:///modules/bigtop_toolchain/jenkins.sh.fedora',
-        ensure => present,
-        owner  => root,
-        group  => root,
-        mode   => 644,
-      }
+    'Fedora','Centos', 'Amazon': {
+      $javahome = "/usr/lib/jvm/java-1.7.0"
     }
-    CentOS: {
-      if $operatingsystemmajrelease >=7 {
-        file {'/etc/profile.d/bigtop.sh':
-          source => 'puppet:///modules/bigtop_toolchain/jenkins.sh.fedora',
-          ensure => present,
-          owner  => root,
-          group  => root,
-          mode   => 644,
-        }
-      } else {
-        file {'/etc/profile.d/bigtop.sh':
-          source => 'puppet:///modules/bigtop_toolchain/jenkins.sh.centos',
-          ensure => present,
-          owner  => root,
-          group  => root,
-          mode   => 644,
-        }
-      }
+    'OpenSuSE' : {
+      $javahome = "/usr/lib64/jvm/java-1.7.0-openjdk-1.7.0"
     }
-    OpenSuSE: {
-      file {'/etc/profile.d/bigtop.sh':
-        source => 'puppet:///modules/bigtop_toolchain/jenkins.sh.opensuse',
-        ensure => present,
-        owner  => root,
-        group  => root,
-        mode   => 644,
-      }
-    }
-    default: {
-      file {'/etc/profile.d/bigtop.sh':
-        source => 'puppet:///modules/bigtop_toolchain/jenkins.sh.centos',
-        ensure => present,
-        owner  => root,
-        group  => root,
-        mode   => 644,
-      }
-    }
+  }
+  file { '/etc/profile.d/bigtop.sh':
+    content => template('bigtop_toolchain/jenkins.sh'),
+    ensure => present,
+    owner  => root,
+    group  => root,
+    mode   => 644,
   }
 }
 

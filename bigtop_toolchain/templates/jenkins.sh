@@ -14,9 +14,9 @@
 # limitations under the License.
 
 export MAVEN_HOME=/usr/local/maven
-export JAVA_HOME=/usr/lib64/jvm/java-1.7.0-openjdk
+export JAVA_HOME=<%= @javahome %>
 export ANT_HOME=/usr/local/ant
 export GRADLE_HOME=/usr/local/gradle
-export PATH=$MAVEN_HOME/bin:$ANT_HOME/bin:$FORREST_HOME/bin:$GRADLE_HOME/bin:$PATH
+export PATH=$MAVEN_HOME/bin:$ANT_HOME/bin:$GRADLE_HOME/bin:$PATH
 
 export GRADLE_OPTS="-Dorg.gradle.daemon=true"
