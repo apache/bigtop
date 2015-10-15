@@ -20,5 +20,4 @@ set -ex
 
 export MAVEN_OPTS="-Xmx512M -XX:MaxPermSize=512M"
 
-# Workaroud: ignore "ignite-yarn" module due to bug https://issues.apache.org/jira/browse/IGNITE-1195.
 mvn clean package -DskipTests -Dhadoop.version=$HADOOP_VERSION -Dignite.edition=hadoop
