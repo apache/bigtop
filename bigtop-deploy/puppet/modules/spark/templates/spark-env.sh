@@ -66,7 +66,8 @@
 export HADOOP_HOME=${HADOOP_HOME:-/usr/lib/hadoop}
 export HADOOP_CONF_DIR=${HADOOP_CONF_DIR:-/etc/hadoop/conf}
 
-export SPARK_MASTER_IP=<%= @master_port %>
+export STANDALONE_SPARK_MASTER_HOST=<%= @master_host %>
+export SPARK_MASTER_IP=$STANDALONE_SPARK_MASTER_HOST
 export SPARK_MASTER_WEBUI_PORT=<%= @master_ui_port %>
 export SPARK_MASTER_PORT=7077
 export SPARK_WORKER_PORT=7078
