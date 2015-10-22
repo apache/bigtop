@@ -46,14 +46,15 @@ BuildArch: noarch
 Buildroot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 License: ASL 2.0
 Source0: %{spark_name}-%{spark_base_version}.tar.gz
-Source1: do-component-build 
-Source2: install_%{spark_name}.sh
-Source3: spark-master.svc
-Source4: spark-worker.svc
-Source6: init.d.tmpl
-Source7: spark-history-server.svc
+Source1: bigtop.bom
+Source2: do-component-build
+Source3: init.d.tmpl
+Source4: install_%{spark_name}.sh
+Source5: spark-env.sh
+Source6: spark-history-server.svc
+Source7: spark-master.svc
 Source8: spark-thriftserver.svc
-Source9: bigtop.bom
+Source9: spark-worker.svc
 Requires: bigtop-utils >= 0.7, hadoop-client
 Requires(preun): /sbin/service
 
@@ -103,6 +104,19 @@ Requires: spark-core = %{version}-%{release}, python
 %description -n spark-python
 Includes PySpark, an interactive Python shell for Spark, and related libraries
 
+%package -n spark-R
+Summary: R client for Spark
+Group: Development/Libraries
+Requires: spark-core = %{version}-%{release}
+%if %{?suse_version:1}0
+Requires: R-patched
+%else
+Requires: R-core
+%endif
+
+%description -n spark-R
+Includes SparkR, an interactive R shell for Spark, and related libraries
+
 %package -n spark-history-server
 Summary: History server for Apache Spark
 Group: Development/Libraries
@@ -118,6 +132,28 @@ Requires: spark-core = %{version}-%{release}
 
 %description -n spark-thriftserver
 Thrift server for Spark SQL
+
+%package -n spark-datanucleus
+Summary: DataNucleus libraries for Apache Spark
+Group: Development/Libraries
+
+%description -n spark-datanucleus
+DataNucleus libraries used by Spark SQL with Hive Support
+
+%package -n spark-extras
+Summary: External/extra libraries for Apache Spark
+Group: Development/Libraries
+
+%description -n spark-extras
+External/extra libraries built for Apache Spark but not included in the main
+assembly JAR (e.g., external streaming libraries)
+
+%package -n spark-yarn-shuffle
+Summary: Spark YARN Shuffle Service
+Group: Development/Libraries
+
+%description -n spark-yarn-shuffle
+Spark YARN Shuffle Service
 
 %prep
 %setup -n %{spark_name}-%{spark_base_version}
@@ -175,18 +211,22 @@ done
 %{lib_spark}/NOTICE
 %{lib_spark}/bin
 %{lib_spark}/lib
+%exclude %{lib_spark}/lib/datanucleus-*.jar
+%exclude %{lib_spark}/lib/spark-*-yarn-shuffle.jar
 %{lib_spark}/sbin
 %{lib_spark}/data
 %{lib_spark}/examples
 %{lib_spark}/work
 %exclude %{bin_spark}/pyspark
 %exclude %{lib_spark}/python
+%exclude %{bin_spark}/sparkR
 %{etc_spark}
 %attr(0755,spark,spark) %{var_lib_spark}
 %attr(0755,spark,spark) %{var_run_spark}
 %attr(0755,spark,spark) %{var_log_spark}
+%{bin}/spark-class
 %{bin}/spark-shell
-%{bin}/spark-executor
+%{bin}/spark-sql
 %{bin}/spark-submit
 
 %files -n spark-python
@@ -194,6 +234,28 @@ done
 %attr(0755,root,root) %{bin}/pyspark
 %attr(0755,root,root) %{lib_spark}/bin/pyspark
 %{lib_spark}/python
+
+%files -n spark-R
+%defattr(-,root,root,755)
+%attr(0755,root,root) %{bin}/sparkR
+%attr(0755,root,root) %{lib_spark}/bin/sparkR
+%attr(0755,root,root) %{lib_spark}/R
+# temporary workaround for https://issues.apache.org/jira/browse/SPARK-10500
+%attr(0777,root,root) %{lib_spark}/R/lib
+
+%files -n spark-datanucleus
+%defattr(-,root,root,755)
+%{lib_spark}/lib/datanucleus-*.jar
+%{lib_spark}/yarn/lib/datanucleus-*.jar
+
+%files -n spark-extras
+%defattr(-,root,root,755)
+%{lib_spark}/extras
+
+%files -n spark-yarn-shuffle
+%defattr(-,root,root,755)
+%{lib_spark}/lib/spark-*-yarn-shuffle.jar
+%{lib_spark}/yarn/lib/spark-yarn-shuffle.jar
 
 %define service_macro() \
 %files -n %1 \

@@ -119,6 +119,11 @@ install -d -m 0755 $PREFIX/$LIB_DIR
 install -d -m 0755 $PREFIX/$LIB_DIR/lib
 install -d -m 0755 $PREFIX/$LIB_DIR/bin
 install -d -m 0755 $PREFIX/$LIB_DIR/sbin
+install -d -m 0755 $PREFIX/$LIB_DIR/extras
+install -d -m 0755 $PREFIX/$LIB_DIR/extras/lib
+install -d -m 0755 $PREFIX/$LIB_DIR/yarn
+install -d -m 0755 $PREFIX/$LIB_DIR/yarn/lib
+install -d -m 0755 $PREFIX/$LIB_DIR/R
 install -d -m 0755 $PREFIX/$DOC_DIR
 install -d -m 0755 $PREFIX/$EXAMPLES_DIR
 
@@ -134,8 +139,17 @@ tar --wildcards -C $PREFIX/$LIB_DIR/ -zxf ${BUILD_DIR}/assembly/target/spark-ass
 
 rm -rf $PREFIX/$LIB_DIR/bin/*.cmd
 
+# External/extra jars
+ls ${BUILD_DIR}/{external,extras}/*/target/*${SPARK_VERSION}.jar | grep -v 'original-\|assembly' | xargs -IJARS cp JARS $PREFIX/$LIB_DIR/extras/lib
+
 # Examples jar
 cp ${BUILD_DIR}/examples/target/spark-examples*${SPARK_VERSION}.jar $PREFIX/$LIB_DIR/lib/spark-examples-${SPARK_VERSION}-hadoop${HADOOP_VERSION}.jar
+
+# SparkR libraries
+cp -ra ${BUILD_DIR}/R/lib $PREFIX/$LIB_DIR/R
+
+# Spark YARN Shuffle jar
+cp ${BUILD_DIR}/network/yarn/target/*/spark-${SPARK_VERSION}-yarn-shuffle.jar $PREFIX/$LIB_DIR/lib/
 
 # Examples src
 cp -ra ${BUILD_DIR}/examples/src $PREFIX/$EXAMPLES_DIR/
@@ -150,12 +164,12 @@ chmod 755 $PREFIX/$LIB_DIR/sbin/*
 # Copy in the configuration files
 install -d -m 0755 $PREFIX/$CONF_DIR
 cp -a ${BUILD_DIR}/conf/* $PREFIX/$CONF_DIR
-cp  $PREFIX/$CONF_DIR/spark-env.sh.template $PREFIX/$CONF_DIR/spark-env.sh
+cp $SOURCE_DIR/spark-env.sh $PREFIX/$CONF_DIR
 ln -s /etc/spark/conf $PREFIX/$LIB_DIR/conf
 
 # Copy in the wrappers
 install -d -m 0755 $PREFIX/$BIN_DIR
-for wrap in sbin/spark-executor bin/spark-shell bin/spark-submit; do
+for wrap in bin/spark-class bin/spark-shell bin/spark-sql bin/spark-submit bin/sparkR; do
   cat > $PREFIX/$BIN_DIR/`basename $wrap` <<EOF
 #!/bin/bash
 
@@ -166,60 +180,6 @@ exec $INSTALLED_LIB_DIR/$wrap "\$@"
 EOF
   chmod 755 $PREFIX/$BIN_DIR/`basename $wrap`
 done
-
-cat >> $PREFIX/$CONF_DIR/spark-env.sh <<EOF
-export HADOOP_HOME=\${HADOOP_HOME:-/usr/lib/hadoop}
-export HADOOP_CONF_DIR=\${HADOOP_CONF_DIR:-/etc/hadoop/conf}
-
-export SPARK_MASTER_IP=\`hostname\`
-export SPARK_MASTER_PORT=7077
-export SPARK_MASTER_WEBUI_PORT=18080
-export SPARK_WORKER_PORT=7078
-export SPARK_WORKER_WEBUI_PORT=18081
-export SPARK_WORKER_DIR=/var/run/spark/work
-export SPARK_HISTORY_OPTS="\$SPARK_HISTORY_OPTS -Dspark.history.fs.logDirectory=hdfs:///var/log/spark/apps -Dspark.history.ui.port=18082"
-
-export SPARK_LOG_DIR=/var/log/spark
-
-export LD_LIBRARY_PATH=\${LD_LIBRARY_PATH}:\${HADOOP_HOME}/lib/native
-EOF
-
-cat >> $PREFIX/$CONF_DIR/hive-site.xml <<EOF
-<?xml version="1.0"?>
-<!--
-  Licensed to the Apache Software Foundation (ASF) under one or more
-  contributor license agreements.  See the NOTICE file distributed with
-  this work for additional information regarding copyright ownership.
-  The ASF licenses this file to You under the Apache License, Version 2.0
-  (the "License"); you may not use this file except in compliance with
-  the License.  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
--->
-<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
-<configuration>
-
-<property>
-  <name>javax.jdo.option.ConnectionURL</name>
-  <value>jdbc:derby:;databaseName=/tmp/spark-\${user.name}/metastore_db;create=true</value>
-  <description>JDBC connect string for a JDBC metastore</description>
-</property>
-
-<property>
-  <name>javax.jdo.option.ConnectionDriverName</name>
-  <value>org.apache.derby.jdbc.EmbeddedDriver</value>
-  <description>Driver class name for a JDBC metastore</description>
-</property>
-
-</configuration>
-
-EOF
 
 ln -s /var/run/spark/work $PREFIX/$LIB_DIR/work
 
@@ -242,3 +202,14 @@ cp ${BUILD_DIR}/{LICENSE,NOTICE} ${PREFIX}/${LIB_DIR}/
 
 # Version-less symlinks
 (cd $PREFIX/$LIB_DIR/lib; ln -s spark-assembly*.jar spark-assembly.jar; ln -s spark-examples*.jar spark-examples.jar)
+pushd $PREFIX/$LIB_DIR/yarn/lib
+ln -s ../../lib/spark-*-yarn-shuffle.jar spark-yarn-shuffle.jar
+ln -s ../../lib/datanucleus-api-jdo*.jar datanucleus-api-jdo.jar
+ln -s ../../lib/datanucleus-core*.jar datanucleus-core.jar
+ln -s ../../lib/datanucleus-rdbms*.jar datanucleus-rdbms.jar
+popd
+pushd $PREFIX/$LIB_DIR/extras/lib
+for j in $(ls *.jar); do
+  ln -s $j $(echo $j | sed -n 's/\(.*\)\(_[0-9.]\+-[0-9.]\+\)\(.jar\)/\1\3/p')
+done
+popd
