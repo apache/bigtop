@@ -77,6 +77,7 @@ class ignite_hadoop {
     service { "ignite-hadoop":
       ensure  => running,
       require => [ Package["ignite-hadoop", "ignite-hadoop-service"], File["/etc/default/ignite-hadoop"] ],
+      subscribe => [ Package["ignite-hadoop"], File["/etc/default/ignite-hadoop", "/etc/ignite-hadoop/conf/default-config.xml"] ]
     }
   }
 }
