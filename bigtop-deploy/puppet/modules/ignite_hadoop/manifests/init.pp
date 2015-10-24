@@ -33,7 +33,7 @@ class ignite_hadoop {
     }
 
     file { "/etc/default/ignite-hadoop":
-      content => template("ignite-hadoop/ignite-hadoop"),
+      content => template("ignite_hadoop/ignite-hadoop"),
       require => Package["ignite-hadoop"],
     }
 
@@ -45,11 +45,11 @@ class ignite_hadoop {
       require => Package["ignite-hadoop-service"],
     }
     file { "/etc/ignite-hadoop/conf/default-config.xml":
-        content => template('ignite-hadoop/default-config.xml'),
+        content => template('ignite_hadoop/default-config.xml'),
         require => [Package["ignite-hadoop"]],
     }
     file { "/etc/hadoop/ignite.client.conf/core-site.xml":
-        content => template('ignite-hadoop/core-site.xml'),
+        content => template('ignite_hadoop/core-site.xml'),
         require => [File["/etc/hadoop/ignite.client.conf"]],
     }
     file {
