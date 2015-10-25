@@ -16,11 +16,8 @@
 # limitations under the License.
 
 enable_local_repo=${1:-false}
-echo "$enable_local_repo"
 
-# Install puppet agent
-yum -y install http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm
-yum -y install puppet curl sudo unzip
+bash /bigtop-home/bigtop_toolchain/bin/puppetize.sh
 
 # Setup rng-tools to improve virtual machine entropy performance.
 # The poor entropy performance will cause kerberos provisioning failed.
@@ -36,8 +33,5 @@ if [ $enable_local_repo == "true" ]; then
 else
     echo "local yum = $enable_local_repo ; NOT Enabling local yum.  Packages will be pulled from remote..."
 fi
-
-# Install puppet modules
-puppet apply --modulepath=/bigtop-home -e "include bigtop_toolchain::puppet-modules"
 
 mkdir -p /data/{1,2}
