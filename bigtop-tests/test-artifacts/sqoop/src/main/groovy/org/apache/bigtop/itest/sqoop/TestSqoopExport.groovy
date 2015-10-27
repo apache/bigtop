@@ -203,7 +203,13 @@ class TestSqoopExport {
 
     // Wait until the job finish - this active waiting will be removed once
     // Sqoop client API will get blocking support.
+    int timeoutCount = 720;
     while (true) {
+      timeoutCount--;
+      if(timeoutCount <=0) {
+        println("hadoop job did not get completed in an hour");
+        break;
+      }
       Thread.sleep(5000);
       submission = getClient().getSubmissionStatus(job.getPersistenceId());
       if (!submission.getStatus().isRunning())

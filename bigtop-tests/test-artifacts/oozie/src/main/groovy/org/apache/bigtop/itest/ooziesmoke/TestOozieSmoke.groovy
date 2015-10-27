@@ -79,7 +79,13 @@ class TestOozieSmoke {
                  0, sh.ret);
 
     String jobId = sh.out[0].replaceAll(/job: /,"");
+    int timeoutCount = 60;
     while (sh.exec("oozie job -oozie ${oozie_url} -info ${jobId}").out.join(' ') =~ /Status\s*:\s*RUNNING/) {
+      timeoutCount--;
+      if(timeoutCount <= 0) {
+        println("job did not get completed in an hour")
+        break;
+      }
       sleep(WAIT_TIMEOUT);
     }
     assertTrue("Oozie job ${testname} returned ${sh.out.join(' ')} instead of SUCCEEDED",
