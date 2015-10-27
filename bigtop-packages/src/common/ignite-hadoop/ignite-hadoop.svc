@@ -13,8 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-DAEMON="@IGNITE_DAEMON@"
-DESC="@IGNITE_DAEMON@ daemon"
+DAEMON="ignite-hadoop"
+DESC="ignite-hadoop daemon"
 EXEC_PATH="\${IGNITE_HOME}/bin/include/service.sh"
 SVC_USER="ignite"
 PIDFILE="\${IGNITE_PID_DIR}/${DAEMON}.pid"

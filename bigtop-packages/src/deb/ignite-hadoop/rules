@@ -43,5 +43,4 @@ override_dh_auto_install:
 		--prefix=debian/tmp
 	ln -s /var/log/${ignite-hadoop_pkg_name} debian/tmp/usr/lib/${ignite-hadoop_pkg_name}/logs
 	ln -s /var/run/${ignite-hadoop_pkg_name} debian/tmp/usr/lib/${ignite-hadoop_pkg_name}/pids
-
-	bash debian/install_init_scripts.sh
+	bash debian/init.d.tmpl debian/ignite-hadoop.svc deb debian/${ignite-hadoop_pkg_name}-service.init
