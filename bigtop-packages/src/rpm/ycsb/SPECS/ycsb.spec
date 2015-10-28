@@ -32,7 +32,6 @@ Source0: %{ycsb_name}-%{ycsb_base_version}.tar.gz
 Source1: do-component-build 
 Source2: install_%{ycsb_name}.sh
 Source3: bigtop.bom
-#BIGTOP_PATCH_FILES
 Requires: python
 
 %description 
@@ -43,8 +42,6 @@ performance of NoSQL database management systems.
 
 %prep
 %setup -n YCSB-%{ycsb_base_version}
-
-#BIGTOP_PATCH_COMMANDS
 
 %build
 bash $RPM_SOURCE_DIR/do-component-build
