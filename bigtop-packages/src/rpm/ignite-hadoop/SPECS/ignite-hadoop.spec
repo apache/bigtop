@@ -76,7 +76,7 @@ Name: ignite-hadoop
 Version: %{ignite_hadoop_version}
 Release: %{ignite_hadoop_release}
 Summary: Ignite Hadoop accelerator. The system provides for in-memory caching of HDFS data and MR performance improvements
-URL: http://ignite.incubator.apache.org/
+URL: http://ignite.apache.org/
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 License: APL2
