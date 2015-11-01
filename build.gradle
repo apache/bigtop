@@ -174,6 +174,7 @@ project(':itest-common') {
 def TESTARTIFACTS_GROUP = 'test artifacts'
 def DEVENV_GROUP = 'development tools'
 def DEPLOY_GROUP = 'deployment'
+def DOCKERBUILD_GROUP = 'docker build'
 
 // All packaging logic is separated into its own build module
 apply from: 'packages.gradle'
@@ -307,6 +308,24 @@ def artifactToInstall = {
       }
     }
   }
+}
+
+task "bigtop-slaves"(type:Exec,
+    description: 'Build bigtop/slaves images.\n' +
+      'Usage:\n  $ ./gradlew -POS=[centos-6|centos-7|fedora-20|debian-8|ubuntu-14.04|opensuse-13.2] -Pprefix=STRING_TO_PREFIX bigtop-slaves\n' +
+      'Example:\n  $ ./gradlew -POS=debian-8 -Pprefix=1.0.0 bigtop-slaves\n' +
+      'The built image name: bigtop/slaves:1.0.0-debian-8',
+    group: DOCKERBUILD_GROUP) {
+  def _prefix = project.hasProperty("prefix") ? prefix : "trunk"
+  def _OS = project.hasProperty("OS") ? OS : "centos-7"
+  def command = [
+      'docker', 'build',
+      '-t', 'bigtop/slaves:' + _prefix + '-' + _OS,
+      '-f', "docker/bigtop-slaves/" + _OS + "/Dockerfile",
+      '.'
+  ]
+  workingDir '.'
+  commandLine command
 }
 
 project.afterEvaluate{
