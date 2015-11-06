@@ -72,6 +72,9 @@ class TestOozieSmoke {
   }
 
   void testOozieExamplesCommon(String testname) {
+
+
+    sh.exec("hdfs dfs -ls ${tmp_dir}/examples/apps/*/lib/*");
     sh.exec("oozie job -oozie ${oozie_url} -run -DjobTracker=${resourcemanager} -DnameNode=${namenode} " +
             "-DexamplesRoot=${tmp_dir}/examples -config /tmp/${tmp_dir}/examples/apps/${testname}/job.properties");
             logError(sh);  
