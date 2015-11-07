@@ -27,9 +27,9 @@ sed -i -e \
 # The following is weird, but true: yes *hadoop*.profile is hbase-98
 # This profile will activate hadoop2.version as the relevant property
 # and will also make us specify hbase version with -hadoop2 prefix
-mvn -DskipTests -Dhadoop.profile=hbase-98  \
+mvn -DskipTests  \
   -Dhadoop2.version=$HADOOP_VERSION        \
-  -Dhbase.version=${HBASE_VERSION}-hadoop2 \
+  -Dhbase.version=${HBASE_VERSION} \
   -Dkite.version=${KITE_VERSION} \
   -Dhive.version=${HIVE_VERSION} \
   clean install "$@"

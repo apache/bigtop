@@ -20,7 +20,7 @@ set -ex
 
 mvn -DskipTests \
     -Dhadoop-two.version=$HADOOP_VERSION  \
-    -Dhbase.version=$HBASE_VERSION-hadoop2  \
+    -Dhbase.version=$HBASE_VERSION  \
     -Dpig.version=$PIG_VERSION  \
     -Dflume.version=$FLUME_VERSION  \
     -Dspark.version=${SPARK_VERSION} \

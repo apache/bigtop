@@ -23,10 +23,10 @@ HIVE_MAVEN_OPTS=" -Dhbase.version=$HBASE_VERSION \
 -Dhadoop.mr.rev=23 \
 -Dhadoop.security.version=$HADOOP_VERSION \
 -Dhadoop-23.version=$HADOOP_VERSION \
--Dhbase.hadoop2.version=$HBASE_VERSION-hadoop2 \
+-Dhbase.hadoop2.version=$HBASE_VERSION \
 -Dmvn.hadoop.profile=hadoop23 \
 -DskipTests \
--Dhbase.version.with.hadoop.version=$HBASE_VERSION-hadoop2 \
+-Dhbase.version.with.hadoop.version=$HBASE_VERSION \
 -Dtez.version=${TEZ_VERSION} \
 -Dspark.version=${SPARK_VERSION}
 "

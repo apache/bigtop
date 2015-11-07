@@ -99,6 +99,7 @@ done
 MAN_DIR=${MAN_DIR:-/usr/share/man/man1}
 DOC_DIR=${DOC_DIR:-/usr/share/doc/hbase}
 LIB_DIR=${LIB_DIR:-/usr/lib/hbase}
+
 BIN_DIR=${BIN_DIR:-/usr/lib/hbase/bin}
 ETC_DIR=${ETC_DIR:-/etc/hbase}
 CONF_DIR=${CONF_DIR:-${ETC_DIR}/conf.dist}
@@ -161,3 +162,7 @@ EOF
 chmod 755 $wrapper
 
 install -d -m 0755 $PREFIX/usr/bin
+
+rm -f $PREFIX/$CONF_DIR/*.cmd
+rm -f $PREFIX/$BIN_DIR/*.cmd
+
