@@ -1,9 +1,1 @@
-/usr/lib/hive/lib/commons-logging-*.jar
-/usr/lib/hive/lib/hive-exec*.jar
-/usr/lib/hive/lib/hive-jdbc*.jar
-/usr/lib/hive/lib/hive-metastore*.jar
-/usr/lib/hive/lib/hive-serde*.jar
-/usr/lib/hive/lib/hive-service*.jar
-/usr/lib/hive/lib/libfb303-*.jar
-/usr/lib/hive/lib/libthrift-*.jar
-/usr/lib/hive/lib/log4j-*.jar
+/usr/lib/hive/jdbc/hive-jdbc*.jar
