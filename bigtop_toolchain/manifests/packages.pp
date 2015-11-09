@@ -24,7 +24,10 @@ class bigtop_toolchain::packages {
        }
        $pkgs = [ "unzip", "curl", "wget", "git", "make", "cmake", "autoconf", "automake", "libtool", "gcc", "gcc-c++", "fuse", "createrepo", "lzo-devel", "fuse-devel", "cppunit-devel", "openssl-devel", "python-devel", "python-setuptools", "libxml2-devel", "libxslt-devel", "cyrus-sasl-devel", "sqlite-devel", "openldap-devel", $mysql_devel, "rpm-build", "redhat-rpm-config", "fuse-libs", "asciidoc", "xmlto", "libyaml-devel", "gmp-devel", "snappy-devel" ]
      }
-    /(?i:(SLES|opensuse))/: { $pkgs = [ "unzip", "curl", "wget", "git", "make", "cmake", "autoconf", "automake", "libtool", "gcc", "gcc-c++", "fuse", "createrepo", "lzo-devel", "fuse-devel", "cppunit-devel", "libopenssl-devel", "rpm-devel", "pkg-config", "gmp-devel", "snappy-devel" ] }
+    /(?i:(SLES|opensuse))/: { $pkgs = [ "unzip", "curl", "wget", "git", "make", "cmake", "autoconf", "automake", "libtool", "gcc", "gcc-c++", "fuse", "createrepo", "lzo-devel", "fuse-devel", "cppunit-devel", "libopenssl-devel", "rpm-devel", "pkg-config", "gmp-devel", "python-devel", "python-setuptools", "libxml2-devel", "libxslt-devel", "cyrus-sasl-devel", "sqlite3-devel", "openldap2-devel", "libyaml-devel", "krb5-devel", "asciidoc", "libmysqlclient-devel",  "snappy-devel" ]
+      exec { '/usr/bin/zypper remove -y krb5-mini':
+      } -> Package <| |>
+    }
     Amazon: {                 $pkgs = [ "unzip", "curl", "wget", "git", "make", "cmake", "autoconf", "automake", "libtool", "gcc", "gcc-c++", "fuse", "createrepo", "lzo-devel", "fuse-devel", "openssl-devel", "rpm-build", "system-rpm-config", "fuse-libs","gmp-devel", "snappy-devel" ] }
     /(Ubuntu|Debian)/: {      $pkgs = [ "unzip", "curl", "wget", "git-core", "make", "cmake", "autoconf", "automake", "libtool", "gcc", "g++", "fuse", "reprepro", "liblzo2-dev", "libfuse-dev", "libcppunit-dev", "libssl-dev", "libzip-dev", "sharutils", "pkg-config", "debhelper", "devscripts", "build-essential", "dh-make", "libfuse2", "libssh-dev", "libjansi-java", "python2.7-dev", "libxml2-dev", "libxslt1-dev", "zlib1g-dev", "libsqlite3-dev", "libldap2-dev", "libsasl2-dev", "libmysqlclient-dev", "python-setuptools", "libkrb5-dev", "asciidoc", "libyaml-dev", "libgmp-dev", "libsnappy-dev" ]
 
