@@ -92,7 +92,7 @@ bigtop {
       'oozie', 'mahout', 'flume', 'giraph', 'solr', 'crunch', 'spark',
       'phoenix', 'tachyon', 'kafka', 'ycsb', 'kite', 'hama'
     ],
-    hbase:['phoenix','giraph','ycsb'],
+    hbase:['phoenix','giraph','ycsb','hive'],
     pig:['datafu', 'oozie'],
     hive:['oozie', 'pig']
   ]
@@ -140,7 +140,7 @@ bigtop {
     'hbase' {
       name    = 'hbase'
       relNotes = 'Apache HBase'
-      version { base = '0.98.12'; pkg = base; release = 1 }
+      version { base = '1.1.2'; pkg = base; release = 1 }
       tarball { destination = "${name}-${version.base}.tar.gz"
                 source      = "${name}-${version.base}-src.tar.gz" }
       url     { download_path = "/$name/$name-${version.base}/"
@@ -271,7 +271,7 @@ bigtop {
     'crunch' {
       name    = 'crunch'
       relNotes = 'Apache Crunch'
-      version { base = '0.12.0'; pkg = base; release = 1 }
+      version { base = '0.13.0'; pkg = base; release = 1 }
       tarball { destination = "apache-$name-${version.base}-src.tar.gz"
                 source      = destination }
       url     { download_path = "/$name/$name-${version.base}/"
@@ -297,7 +297,7 @@ bigtop {
        * to the base HBase version. Update as needed whenever changing the
        * HBase version in the BOM.
        */
-      phoenix.hbase ='HBase-0.98'
+      phoenix.hbase ='HBase-1.1'
       version { base = "4.6.0-${phoenix.hbase}"; pkg = '4.6.0'; release = 1 }
       tarball { destination = "$name-${version.base}-src.tar.gz"
                 source      = destination }

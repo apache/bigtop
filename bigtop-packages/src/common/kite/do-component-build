@@ -21,7 +21,7 @@ set -ex
 mvn clean install \
   -DjavaVersion=${JDK_VERSION} \
   -Dvers.hadoop2=${HADOOP_VERSION} \
-  -Dvers.hbase2=${HBASE_VERSION}-hadoop2 \
+  -Dvers.hbase2=${HBASE_VERSION} \
   -Dvers.flume=${FLUME_VERSION} \
   -Dvers.spark=${SPARK_VERSION} \
   -Dvers.crunch=${CRUNCH_VERSION} \
