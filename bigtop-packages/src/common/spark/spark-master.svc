@@ -39,8 +39,18 @@ start() {
 
     LOG_FILE=/var/log/spark/${DAEMON}.out
 
+    if [ -f $CONF_DIR/spark-env.sh ]; then
+        . $CONF_DIR/spark-env.sh
+    fi
+
+    if [ "$SPARK_MASTER_IP" = "" ]; then
+        SPARK_MASTER_IP=`hostname`
+    fi
+
+
     su -s /bin/bash $SVC_USER -c "nohup nice -n 0 \
-        ${EXEC_PATH} org.apache.spark.deploy.master.Master $DAEMON_FLAGS \
+        ${EXEC_PATH} org.apache.spark.deploy.master.Master \
+        --ip $SPARK_MASTER_IP $DAEMON_FLAGS \
         > $LOG_FILE 2>&1 & "'echo $!' > "$PIDFILE"
 
     sleep 3
