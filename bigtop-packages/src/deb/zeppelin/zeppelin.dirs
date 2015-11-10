@@ -1,0 +1,4 @@
+/usr/bin
+/var/log/zeppelin
+/var/run/zeppelin
+/etc/default
