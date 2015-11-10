@@ -13,8 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-$default_yumrepo = "http://bigtop01.cloudera.org:8080/view/Releases/job/Bigtop-1.0.0-rpm/BUILD_ENVIRONMENTS=centos-6%2clabel=docker-slave-06/lastSuccessfulBuild/artifact/output/"
-$default_debrepo = "http://bigtop01.cloudera.org:8080/view/Releases/job/Bigtop-1.0.0-deb/BUILD_ENVIRONMENTS=debian-8%2clabel=docker-slave-07/lastSuccessfulBuild/artifact/output/apt/"
+$default_yumrepo = "http://bigtop-repos.s3.amazonaws.com/releases/1.0.0/centos/7/x86_64"
+$default_debrepo = "http://bigtop-repos.s3.amazonaws.com/releases/1.0.0/ubuntu/trusty/x86_64"
 $jdk_package_name = hiera("bigtop::jdk_package_name", "jdk")
 
 stage {"pre": before => Stage["main"]}
