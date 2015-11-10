@@ -34,7 +34,7 @@
 # supported by each component, refer to $roles_map datastructure in cluster.pp file
 # for example:
 
-#bigtop::roles
+#bigtop::roles:
 # - namenode
 # - resourcemanager
 
