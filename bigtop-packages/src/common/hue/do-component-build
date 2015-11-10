@@ -19,6 +19,7 @@ set -ex
 
 #FIXME: this needs to be fixed upstream
 sed -i -e "s#${FULL_VERSION}-SNAPSHOT#${FULL_VERSION}#g" `grep -lR ${FULL_VERSION}-SNAPSHOT .`
+export PATH=$PATH:/usr/lib/mit/bin
 
 make MAVEN_VERSION=${HUE_VERSION} apps docs locales
 
