@@ -25,8 +25,8 @@ digraph bigpetstore {
    MAHOUT_VIEW_INPUT [label="MAHOUT_VIEW  |  (user-id) 10001  (product-id) 203  (implicit-rating) 1 |  cleaned/Mahout/part*" ];
    MAHOUT_ALS [label="Parallel ALS Recommender output  | (user-id) 10001  [(product-id) 201: (recommendation-strength 0-1)0.546] | Mahout/AlsRecommendations/part*" ];
 
-   Generate -> DIRTY_CSV [label="hadoop jar bigpetstore.jar org.bigtop.bigpetstore.generator.BPSGenerator 100 bps/generated/"] ;
-   DIRTY_CSV -> pig [label="hadoop jar bigpetstore.jar org.bigtop.bigpetstore.etl.PigCSVCleaner bps/generated/ bps/cleaned/ "];
+   Generate -> DIRTY_CSV [label="hadoop jar bigpetstore.jar org.apache.bigtop.bigpetstore.generator.BPSGenerator 100 bps/generated/"] ;
+   DIRTY_CSV -> pig [label="hadoop jar bigpetstore.jar org.apache.bigtop.bigpetstore.etl.PigCSVCleaner bps/generated/ bps/cleaned/ "];
 
    pig -> CSV [label="pig query to clean up generated transaction records"];
    pig -> MAHOUT_VIEW_INPUT [label="pig query to produce mahout input format"];
