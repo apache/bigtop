@@ -21,6 +21,8 @@ set -ex
 #A hack to disable Codehaus repository since it's out of service
 sed --in-place -e '/http:\/\/repository.codehaus.org/,/<\/repository>/s/true/false/' pom.xml
 
+export MAVEN_OPTS="-Xmx512m -XX:MaxPermSize=128m"
+
 #An awful hack for BIGTOP-1429 to satisfy ASF CI build deps. resolution
 bash -x ./dev-support/generate-hadoopX-poms.sh $HBASE_VERSION $HBASE_VERSION-hadoop2
 
