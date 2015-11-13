@@ -236,6 +236,7 @@ dependencies {
     compile "org.apache.solr:solr-commons-csv:3.5.0"
 
     compile group: "org.apache.pig", name: "pig", version: "0.12.0", classifier:"h2"
+    compile "dk.brics.automaton:automaton:1.11-8"
     compile "org.slf4j:slf4j-api:${project.slf4jVersion}"
     compile "log4j:log4j:1.2.12"
     compile "org.slf4j:slf4j-log4j12:${project.slf4jVersion}"
