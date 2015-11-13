@@ -94,6 +94,7 @@ echo ${BIGTOP_GROOVY_BASE_VERSION}
 install -d -m 0755 ${PREFIX}/${BIN_DIR}
 cp ${BUILD_DIR}/bin/startGroovy ${PREFIX}/${BIN_DIR}
 cp ${BUILD_DIR}/bin/groovy ${PREFIX}/${BIN_DIR}
+chmod 755 ${PREFIX}/${BIN_DIR}/*
 
 # lib
 install -d -m 0755 ${PREFIX}/${LIB_DIR}

@@ -21,7 +21,7 @@ Standards-Version: 3.8.0
 Homepage: http://groovy.codehaus.org/
 
 Package: bigtop-groovy
-Architecture: any
+Architecture: all
 Depends: bigtop-utils (>= 0.7)
 Description: An agile and dynamic language for the Java Virtual Machine
  Groovy provides a JVM based runtime environment for function programming and scripting.
