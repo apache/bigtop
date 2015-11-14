@@ -322,6 +322,7 @@ task "bigtop-slaves"(type:Exec,
       'docker', 'build',
       '-t', 'bigtop/slaves:' + _prefix + '-' + _OS,
       '-f', "docker/bigtop-slaves/" + _OS + "/Dockerfile",
+      '--force-rm', '--no-cache', '--pull', '--rm',
       '.'
   ]
   workingDir '.'
