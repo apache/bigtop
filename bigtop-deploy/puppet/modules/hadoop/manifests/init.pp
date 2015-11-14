@@ -28,6 +28,12 @@ class hadoop ($hadoop_security_authentication = "simple",
   include stdlib
 
   class deploy ($roles) {
+
+    if (!empty(intersection($roles , ["datanode","namenode","nodemanager", "mapred-app"]))) {
+      include hadoop
+      hadoop::create_storage_dir { $hadoop::hadoop_storage_dirs: }
+    }
+
     if ("datanode" in $roles) {
       include hadoop::datanode
     }
@@ -695,6 +701,14 @@ class hadoop ($hadoop_security_authentication = "simple",
       group => hdfs,
       mode => 700,
       require => [Package["hadoop-hdfs"]], 
+    }
+  }
+
+  define create_storage_dir {
+    exec { "mkdir $name":
+      command => "/bin/mkdir -p $name",
+      creates => $name,
+      user =>"root",
     }
   }
 
