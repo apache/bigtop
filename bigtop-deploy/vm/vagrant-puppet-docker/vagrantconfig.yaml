@@ -21,7 +21,7 @@ boot2docker:
         memory_size: "4096"
         number_cpus: "1"
 
-repo: "http://bigtop01.cloudera.org:8080/view/Releases/job/Bigtop-1.0.0-rpm/BUILD_ENVIRONMENTS=centos-6%2clabel=docker-slave-06/lastSuccessfulBuild/artifact/output/"
+repo: "http://bigtop-repos.s3.amazonaws.com/releases/1.0.0/centos/6/x86_64"
 distro: centos
 components: [hadoop, yarn]
 namenode_ui_port: "50070"
