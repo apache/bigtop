@@ -23,7 +23,7 @@ providing generators for synthetic transaction data and pipelines for
 processing that data.  Each ecosystems has its own version of the
 application.
 
-The Spark application currently builds against Spark 1.1.0.
+The Spark application currently builds against Spark 1.3.0.
 
 Architecture
 ------------
@@ -111,7 +111,7 @@ The ETL component:
 After building the jar (see above), you can run the ETL component like so:
 
 ```
-spark-submit --master local[2] --class org.apache.bigtop.bigpetstore.spark.etl.SparkETL bigpetstore-spark-X.jar generated\_data transformed\_data
+spark-submit --master local[2] --class org.apache.bigtop.bigpetstore.spark.etl.SparkETL bigpetstore-spark-X.jar generated_data transformed_data
 ```
 
 Running the SparkSQL component
@@ -121,7 +121,7 @@ Once ETL'd we can now process the data and do analytics on it.  The DataModel.sc
 from files.  To run the analytics job, which outputs a JSON file at the end, you now will run the following:
 
 ```
-spark-submit --master local[2] --class org.apache.bigtop.bigpetstore.spark.analytics.PetStoreStatistics bigpetstore-spark-X.jar transformed\_data PetStoreStats.json
+spark-submit --master local[2] --class org.apache.bigtop.bigpetstore.spark.analytics.PetStoreStatistics bigpetstore-spark-X.jar transformed_data PetStoreStats.json
 ```
 
 Current queries include:
@@ -131,7 +131,7 @@ Current queries include:
 3. Transaction Counts by Product
 4. Transaction Counts by Product and Store Zipcode
 
-This will output a JSON file to the /tmp directory, which has formatting (approximately) like this.
+This will output a JSON file to the current directory, which has formatting (approximately) like this.
 
 ```
 {
@@ -169,7 +169,7 @@ Running the Product Recommendation Component
 BigPetStore can recommend products to customers using the alternating least squares (ALS) algorithm. The recommender can be run as follows:
 
 ```
-spark-submit --master local[2] --class org.apache.bigtop.bigpetstore.spark.analytics.RecommendProducts bigpetstore-spark-X.jar transformed\_data recommendations.json
+spark-submit --master local[2] --class org.apache.bigtop.bigpetstore.spark.analytics.RecommendProducts bigpetstore-spark-X.jar transformed_data recommendations.json
 ```
 
 The resulting json file will contain lists of customers, products, and products recommended to each customer.
