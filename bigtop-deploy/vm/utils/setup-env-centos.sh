@@ -34,4 +34,3 @@ else
     echo "local yum = $enable_local_repo ; NOT Enabling local yum.  Packages will be pulled from remote..."
 fi
 
-mkdir -p /data/{1,2}
