@@ -298,3 +298,10 @@ eclipse {
         downloadJavadoc = false
     }
 }
+
+// shadowJar can merge files which have the same path but it differs only in case into a single jar,
+// but it causes a problem on some case-insensitive platforms such as Mac OS X.
+// The following function removes either of the duplicated path.
+shadowJar {
+    exclude 'META-INF/LICENSE'
+}
