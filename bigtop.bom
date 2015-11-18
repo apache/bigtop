@@ -394,11 +394,11 @@ bigtop {
       name    = 'zeppelin'
       relNotes = 'Apache Zeppelin (incubating)'
       version { base = '0.5.5'; pkg = base; release = 1 }
-      tarball { source      = "branch-${version.base}.zip"
+      tarball { source      = "$name-${version.base}-incubating.tgz"
                 destination = "$name-${version.base}.tar.gz" }
-      url     { download_path = "apache/incubator-zeppelin/archive"
-                site = "https://github.com/${download_path}"
-                archive = site }
+      url     { download_path = "/incubator/$name/${version.base}-incubating/"
+                site = "${apache.APACHE_MIRROR}/${download_path}"
+                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }
   }
 }
