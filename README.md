@@ -184,8 +184,8 @@ __On all systems, Building Apache Bigtop requires certain set of tools__
 
 * __Building packages__ : `gradle [component-name]-[rpm|deb]`
 
-  Gradle will follow the order of the build specified by the "dependencies" section of bigtop.bom file.
-  To build just a single component, e.g. hadoop without zookeeper please use -Dbuildnodeps=true.
+  If -Dbuildwithdeps=true is set, the Gradle will follow the order of the build specified in
+  the "dependencies" section of bigtop.bom file. Otherwise just a single component will get build (original behavior).
 
   You can visualize all tasks dependencies by running `gradle tasks --all`
 * __Building local YUM/APT repositories__ : `gradle [component-name]-[yum|apt]`

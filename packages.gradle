@@ -36,8 +36,8 @@ apply plugin: 'groovy'
 def PACKAGES_GROUP = 'package'
 
 final String VERBOSE = "verbose"
-final String DEPS_BUILD = "buildnodeps"
-final boolean buildDependencies = true && System.getProperty(DEPS_BUILD) == null
+final String DEPS_BUILD = "buildwithdeps"
+final boolean buildDependencies = false || System.getProperty(DEPS_BUILD) == 'true'
 final String BOM = "$rootDir/bigtop.bom"
 def final config  = new ConfigSlurper().parse(new URL("file:$BOM"))
 
