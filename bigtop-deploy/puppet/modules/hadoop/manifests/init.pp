@@ -29,11 +29,6 @@ class hadoop ($hadoop_security_authentication = "simple",
 
   class deploy ($roles) {
 
-    if (!empty(intersection($roles , ["datanode","namenode","nodemanager", "mapred-app"]))) {
-      include hadoop
-      hadoop::create_storage_dir { $hadoop::hadoop_storage_dirs: }
-    }
-
     if ("datanode" in $roles) {
       include hadoop::datanode
     }
@@ -440,6 +435,7 @@ class hadoop ($hadoop_security_authentication = "simple",
     Kerberos::Host_keytab <| title == "hdfs" |> -> Service["hadoop-hdfs-datanode"]
     Service<| title == 'hadoop-hdfs-namenode' |> -> Service['hadoop-hdfs-datanode']
 
+    hadoop::create_storage_dir { $hadoop::common_hdfs::hdfs_data_dirs: } ->
     file { $hadoop::common_hdfs::hdfs_data_dirs:
       ensure => directory,
       owner => hdfs,
@@ -585,6 +581,7 @@ class hadoop ($hadoop_security_authentication = "simple",
       }
 
       if (! ('qjournal://' in $hadoop::common_hdfs::shared_edits_dir)) {
+        hadoop::create_storage_dir { $hadoop::common_hdfs::shared_edits_dir: } ->
         file { $hadoop::common_hdfs::shared_edits_dir:
           ensure => directory,
         }
@@ -694,7 +691,8 @@ class hadoop ($hadoop_security_authentication = "simple",
         content => template('hadoop/hadoop-hdfs'),
         require => [Package["hadoop-hdfs-namenode"]],
     }
-    
+
+    hadoop::create_storage_dir { $hadoop::common_hdfs::namenode_data_dirs: } ->
     file { $hadoop::common_hdfs::namenode_data_dirs:
       ensure => directory,
       owner => hdfs,
@@ -762,6 +760,7 @@ class hadoop ($hadoop_security_authentication = "simple",
       require => [ Package["hadoop-hdfs-journalnode"], File[$journalnode_cluster_journal_dir] ],
     }
 
+    hadoop::create_storage_dir { [$hadoop::common_hdfs::journalnode_edits_dir, $journalnode_cluster_journal_dir]: } ->
     file { [ "${hadoop::common_hdfs::journalnode_edits_dir}", "$journalnode_cluster_journal_dir" ]:
       ensure => directory,
       owner => 'hdfs',
@@ -844,6 +843,7 @@ class hadoop ($hadoop_security_authentication = "simple",
     }
     Kerberos::Host_keytab <| tag == "mapreduce" |> -> Service["hadoop-yarn-nodemanager"]
 
+    hadoop::create_storage_dir { $hadoop::common_yarn::yarn_data_dirs: } ->
     file { $hadoop::common_yarn::yarn_data_dirs:
       ensure => directory,
       owner => yarn,
@@ -856,6 +856,7 @@ class hadoop ($hadoop_security_authentication = "simple",
   class mapred-app {
     include common_mapred_app
 
+    hadoop::create_storage_dir { $hadoop::common_mapred_app::mapred_data_dirs: } ->
     file { $hadoop::common_mapred_app::mapred_data_dirs:
       ensure => directory,
       owner => yarn,
