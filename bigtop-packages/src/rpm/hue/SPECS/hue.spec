@@ -201,14 +201,8 @@ Requires: insserv, python-xml
 BuildRequires: /sbin/runuser, sqlite-devel, openldap-devel, mysql-devel, openssl-devel
 # Required for init scripts
 Requires: /lib/lsb/init-functions
-%if 0%{?rhel:%{rhel}} < 6
-# Python 2.5+ is required, but RHEL 5's `python` is 2.4
-BuildRequires: python26-devel, python26-distribute
-Requires: python26
-%else
 BuildRequires: python-devel, python-setuptools
 Requires: python
-%endif
 %endif
 
 # Disable automatic Provides generation - otherwise we will claim to provide all of the
