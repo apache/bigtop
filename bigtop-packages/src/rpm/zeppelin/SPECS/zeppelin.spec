@@ -73,7 +73,7 @@ Zeppelin is a web-based notebook that enables interactive data analytics with Ap
 You can make beautiful data-driven, interactive and collaborative documents with SQL, Scala and more.
 
 %prep
-%setup -n %{name}-%{zeppelin_base_version}
+%setup -n %{name}-%{zeppelin_base_version}-incubating
 
 %build
 bash $RPM_SOURCE_DIR/do-component-build
