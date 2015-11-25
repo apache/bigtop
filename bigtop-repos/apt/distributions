@@ -1,8 +1,0 @@
-Origin: Bigtop
-Label: Bigtop
-Suite: stable
-Codename: bigtop
-Version: 0.1
-Architectures: i386 amd64 source
-Components: contrib 
-Description: Bigtop

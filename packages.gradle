@@ -104,6 +104,19 @@ def nativePackaging = {
   [false, "deb", "rpm"][result.getExitValue()]
 }.call()
 
+def generateDistributionsFile = { file ->
+  def writer = new File(file);
+  writer.text ="""Origin: Bigtop
+Label: Bigtop
+Suite: stable
+Codename: bigtop
+Version: ${config.bigtop.version}
+Architectures: i386 amd64 source
+Components: contrib
+Description: Bigtop
+""";
+}
+
 task "packages-help" (description: "All package build related tasks information", group: PACKAGES_GROUP) << {
   config.bigtop.components.each { label, comp ->
     println (comp.name + "\n\t[" + tasks.findAll { alltask -> alltask.name.startsWith(comp.name)}*.name.join(", ") + "]")
@@ -653,10 +666,8 @@ task "apt" (
   delete ( "$OUTPUT_DIR/apt")
   mkdir ("$OUTPUT_DIR/apt/conf")
 
-  copy {
-    from "$REPO_DIR/apt/distributions"
-    into "$OUTPUT_DIR/apt/conf"
-  }
+  generateDistributionsFile("$OUTPUT_DIR/apt/conf/distributions");
+
   fileTree (OUTPUT_DIR) {
     include "*/*.changes"
   }.each  { changeFile ->
