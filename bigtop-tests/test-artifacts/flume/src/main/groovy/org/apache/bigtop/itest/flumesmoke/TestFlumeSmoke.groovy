@@ -41,7 +41,7 @@ class DFSConfigKeys {
 class TestFlumeSmoke {
  //private static String tmp = "TestFlumeSmoke-${(new Date().getTime())}";
   //private static String nn = (new Configuration()).get(DFSConfigKeys.FS_DEFAULT_NAME_KEY);
-  private static String hdfs_sink_dir = "/tmp/flumetest";
+  private static String hdfs_sink_dir = "/user/alti-test-01/flumetest";
   private static String flumeServiceUrl= System.getProperty("org.apache.bigtop.itest.flume_service_url");
   private static String flumedatalocation = System.getProperty("user.dir");
   private static String flumedata= "${flumedatalocation}/final_reduced.json";
@@ -51,7 +51,9 @@ class TestFlumeSmoke {
   static void setUp() {
     JarContent.unpackJarContainer(TestFlumeSmoke.class, '.' , null);
     sh.exec("sed -i \"s%FLUME_URL%${flumeServiceUrl}%g\" ${flumedata}");
-    shdel.exec("hadoop fs -rm /tmp/flumetest/FlumeData.*");
+    sh.exec("hdfs dfs -mkdir -p $hdfs_sink_dir")
+    sh.exec("hdfs dfs -chmod -R 777 $hdfs_sink_dir")
+    sh.exec("hdfs dfs -rm -r -skipTrash $hdfs_sink_dir/FlumeData.*");
   }
 
   @AfterClass
@@ -86,7 +88,7 @@ Thread.sleep(20000);
 sh.exec("hadoop fs -cat ${hdfs_sink_dir}/FlumeData.* | wc -l");
     assertEquals("Wrong # of lines in output found at ${hdfs_sink_dir}",
                  "10", sh.out[0]);
-shdel.exec("hadoop fs -rm /tmp/flumetest/FlumeData.*"); 
+shdel.exec("hdfs dfs -rm -r -skipTrash ${hdfs_sink_dir}/FlumeData.*"); 
 }
 
 
