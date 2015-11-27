@@ -102,6 +102,11 @@ class Shell {
     }
 
     ret = proc.exitValue()
+    println("comd: " + script);
+    println("output: " + out);
+    println("err: " + err);
+    println("ret:" + ret);
+    
     if (LOG.isTraceEnabled()) {
         if (ret != 0) {
            LOG.trace("return: $ret");
