@@ -40,3 +40,19 @@ override_dh_auto_install:
 	ln -s -f /var/lib/oozie/ext-2.2 debian/oozie/usr/lib/oozie/webapps/oozie/ext-2.2
 	rm -rf                        debian/oozie/usr/lib/oozie/webapps/oozie/docs
 	ln -s -f /usr/share/doc/oozie debian/oozie/usr/lib/oozie/webapps/oozie/docs
+
+	# Oozie server
+	rm -rf  debian/oozie/usr/lib/oozie/lib/hadoop-*.jar
+	ln -sf /usr/lib/hadoop/client/hadoop-annotations.jar debian/oozie/usr/lib/oozie/lib/
+	ln -sf /usr/lib/hadoop/client/hadoop-auth.jar debian/oozie/usr/lib/oozie/lib/
+	ln -sf /usr/lib/hadoop/client/hadoop-common.jar debian/oozie/usr/lib/oozie/lib/
+	ln -sf /usr/lib/hadoop/client/hadoop-hdfs.jar debian/oozie/usr/lib/oozie/lib/
+	ln -sf /usr/lib/hadoop/client/hadoop-mapreduce-client-app.jar debian/oozie/usr/lib/oozie/lib/
+	ln -sf /usr/lib/hadoop/client/hadoop-mapreduce-client-common.jar debian/oozie/usr/lib/oozie/lib/
+	ln -sf /usr/lib/hadoop/client/hadoop-mapreduce-client-core.jar debian/oozie/usr/lib/oozie/lib/
+	ln -sf /usr/lib/hadoop/client/hadoop-mapreduce-client-jobclient.jar debian/oozie/usr/lib/oozie/lib/
+	ln -sf /usr/lib/hadoop/client/hadoop-mapreduce-client-shuffle.jar debian/oozie/usr/lib/oozie/lib/
+	ln -sf /usr/lib/hadoop/client/hadoop-yarn-api.jar debian/oozie/usr/lib/oozie/lib/
+	ln -sf /usr/lib/hadoop/client/hadoop-yarn-client.jar debian/oozie/usr/lib/oozie/lib/
+	ln -sf /usr/lib/hadoop/client/hadoop-yarn-common.jar debian/oozie/usr/lib/oozie/lib/
+	ln -sf /usr/lib/hadoop/client/hadoop-yarn-server-common.jar debian/oozie/usr/lib/oozie/lib/

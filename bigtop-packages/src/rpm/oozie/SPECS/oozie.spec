@@ -19,6 +19,7 @@
 %define conf_oozie_dist %{conf_oozie}.dist
 %define tomcat_conf_oozie %{_sysconfdir}/%{name}/tomcat-conf
 %define data_oozie /var/lib/oozie
+%define lib_hadoop /usr/lib/hadoop
 
 %if  %{!?suse_version:1}0
   %define doc_oozie %{_docdir}/oozie-%{oozie_version}
@@ -64,6 +65,9 @@ Source6: catalina.properties
 Source7: context.xml
 Source8: hive.xml
 Source9: tomcat-deployment.sh
+Source10: oozie-site.xml
+Source11: bigtop.bom
+#BIGTOP_PATCH_FILES
 Requires(pre): /usr/sbin/groupadd, /usr/sbin/useradd
 Requires(post): /sbin/chkconfig
 Requires(preun): /sbin/chkconfig, /sbin/service
@@ -133,6 +137,8 @@ Requires: bigtop-utils >= 0.7
 %prep
 %setup -n oozie-%{oozie_base_version}
 
+#BIGTOP_PATCH_COMMANDS
+
 %build
     mkdir -p distro/downloads
     env DO_MAVEN_DEPLOY="" FULL_VERSION=%{oozie_base_version} bash -x %{SOURCE1}
@@ -144,6 +150,22 @@ Requires: bigtop-utils >= 0.7
 %__ln_s -f %{data_oozie}/ext-2.2 $RPM_BUILD_ROOT/%{lib_oozie}/webapps/oozie/ext-2.2
 %__rm  -rf              $RPM_BUILD_ROOT/%{lib_oozie}/webapps/oozie/docs
 %__ln_s -f %{doc_oozie} $RPM_BUILD_ROOT/%{lib_oozie}/webapps/oozie/docs
+
+# Oozie server
+%__rm  -rf $RPM_BUILD_ROOT/%{lib_oozie}/lib/hadoop-*.jar
+%__ln_s -f %{lib_hadoop}/client/hadoop-annotations.jar $RPM_BUILD_ROOT/%{lib_oozie}/lib/
+%__ln_s -f %{lib_hadoop}/client/hadoop-auth.jar $RPM_BUILD_ROOT/%{lib_oozie}/lib/
+%__ln_s -f %{lib_hadoop}/client/hadoop-common.jar $RPM_BUILD_ROOT/%{lib_oozie}/lib/
+%__ln_s -f %{lib_hadoop}/client/hadoop-hdfs.jar $RPM_BUILD_ROOT/%{lib_oozie}/lib/
+%__ln_s -f %{lib_hadoop}/client/hadoop-mapreduce-client-app.jar $RPM_BUILD_ROOT/%{lib_oozie}/lib/
+%__ln_s -f %{lib_hadoop}/client/hadoop-mapreduce-client-common.jar $RPM_BUILD_ROOT/%{lib_oozie}/lib/
+%__ln_s -f %{lib_hadoop}/client/hadoop-mapreduce-client-core.jar $RPM_BUILD_ROOT/%{lib_oozie}/lib/
+%__ln_s -f %{lib_hadoop}/client/hadoop-mapreduce-client-jobclient.jar $RPM_BUILD_ROOT/%{lib_oozie}/lib/
+%__ln_s -f %{lib_hadoop}/client/hadoop-mapreduce-client-shuffle.jar $RPM_BUILD_ROOT/%{lib_oozie}/lib/
+%__ln_s -f %{lib_hadoop}/client/hadoop-yarn-api.jar $RPM_BUILD_ROOT/%{lib_oozie}/lib/
+%__ln_s -f %{lib_hadoop}/client/hadoop-yarn-client.jar $RPM_BUILD_ROOT/%{lib_oozie}/lib/
+%__ln_s -f %{lib_hadoop}/client/hadoop-yarn-common.jar $RPM_BUILD_ROOT/%{lib_oozie}/lib/
+%__ln_s -f %{lib_hadoop}/client/hadoop-yarn-server-common.jar $RPM_BUILD_ROOT/%{lib_oozie}/lib/
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/usr/bin
 
@@ -188,7 +210,7 @@ fi
 %{lib_oozie}/bin/oozie-setup.sh
 %{lib_oozie}/webapps
 %{lib_oozie}/libtools
-%{lib_oozie}/libserver
+%{lib_oozie}/lib
 %{lib_oozie}/oozie-sharelib.tar.gz
 %{lib_oozie}/libext
 %{lib_oozie}/tomcat-deployment.sh
@@ -202,7 +224,7 @@ fi
 %files client
 %defattr(-,root,root)
 %{usr_bin}/oozie
-%dir %{lib_oozie}/bin
+%dir %{lib_oozie}
 %{lib_oozie}/bin/oozie
 %{lib_oozie}/lib
 %doc %{doc_oozie}
