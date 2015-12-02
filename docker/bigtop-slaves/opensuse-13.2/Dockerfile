@@ -16,5 +16,6 @@ FROM bigtop/puppet:opensuse-13.2
 MAINTAINER evansye@apache.org
 
 COPY bigtop_toolchain /etc/puppet/modules/bigtop_toolchain
+COPY gradle.home /usr/share/gradle.home
 
 RUN puppet apply -e "include bigtop_toolchain::installer"
