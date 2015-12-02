@@ -310,7 +310,18 @@ def artifactToInstall = {
   }
 }
 
-task "bigtop-slaves"(type:Exec,
+task "gen-gradle-home"(type:Exec,
+    description: 'Pre-load gradle home as cache for bigtop/slaves images',
+    group: DOCKERBUILD_GROUP) {
+  def dir = System.getProperty("user.dir")
+  def command = [
+      './gradlew', '-g', dir + '/gradle.home'
+  ]
+  workingDir '.'
+  commandLine command
+}
+
+task "bigtop-slaves"(dependsOn: 'gen-gradle-home', type:Exec,
     description: 'Build bigtop/slaves images.\n' +
       'Usage:\n  $ ./gradlew -POS=[centos-6|centos-7|fedora-20|debian-8|ubuntu-14.04|opensuse-13.2] -Pprefix=STRING_TO_PREFIX bigtop-slaves\n' +
       'Example:\n  $ ./gradlew -POS=debian-8 -Pprefix=1.0.0 bigtop-slaves\n' +
