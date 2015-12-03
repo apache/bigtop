@@ -14,3 +14,4 @@
 # limitations under the License.
 
 export HBASE_CONF_DIR=/etc/hbase/conf/
+export PHOENIX_QUERYSERVER_OPTS="-Dpsql.log.dir=/var/log/phoenix -Dpsql.log.file=phoenix-queryserver.log"
