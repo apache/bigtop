@@ -115,18 +115,18 @@ install -d -m 0755 $PREFIX/var/lib/phoenix
 install -d -m 0755 $PREFIX/var/log/phoenix
 
 cp -ra $BUILD_DIR/{bin,lib} $PREFIX/$LIB_DIR/
+rm $PREFIX/$LIB_DIR/lib/phoenix-*.jar
 chmod 755 $PREFIX/$BIN_DIR/*.py
 cp -a $BUILD_DIR/*.jar $PREFIX/$LIB_DIR/
-cp -a $BUILD_DIR/examples $PREFIX/$DOC_DIR
-
+cp -a $BUILD_DIR/lib/phoenix-*.jar $PREFIX/$LIB_DIR/
 # Remove sources jar
-rm $PREFIX/$LIB_DIR/lib/phoenix-*-sources.jar
+rm $PREFIX/$LIB_DIR/phoenix-*-sources.jar
+cp -a $BUILD_DIR/examples $PREFIX/$DOC_DIR
 
 # Remove the executable bit from jars to avoid lintian warnings
 find $PREFIX/$LIB_DIR -name '*.jar' -exec chmod a-x {} \;
 
 # Create version independent symlinks
-
 # phoenix-client for clients like sqlline
 ln -s `cd $PREFIX/$LIB_DIR ; ls phoenix*-client.jar | grep -v thin` $PREFIX/$LIB_DIR/phoenix-client.jar
 
