@@ -310,6 +310,52 @@ def artifactToInstall = {
   }
 }
 
+def generate_nexus_tasks = { name, url, snapshot ->
+  task "configure-nexus-${name}"(type: Exec) {
+    def req = [ data : [ id: name, name: name, repoType: "proxy", repoPolicy : snapshot, browseable: true, "indexable": true, "notFoundCacheTTL": 1440,
+			  "artifactMaxAge": 1440, "metadataMaxAge": 1440, "itemMaxAge": 1440, "provider": "maven2",
+			  "providerRole": "org.sonatype.nexus.proxy.repository.Repository", "downloadRemoteIndexes": true,
+			  "autoBlockActive": true, "fileTypeValidation": true, "exposed": true, "checksumPolicy": "WARN",
+			  "remoteStorage": ["remoteStorageUrl": url, "authentication": null,
+					    "connectionSettings": null]]]
+    def root = new groovy.json.JsonBuilder(req)
+    def p = root.toString()
+    File.createTempFile("temp",".tmp").with {
+      deleteOnExit()
+
+      write root.toString()
+
+      workingDir '.'
+      commandLine  "curl", "-o", "/dev/null", "-X", "POST", "-d",  "@$absolutePath",  "--header", "Content-Type: application/json", "-u", "admin:admin123", "http://localhost:8081/service/local/repositories"
+    }
+  }
+}
+
+def repos = [ [ "name": "conjars", "url" : "http://conjars.org", 'snapshot':'RELEASE'],
+          [ "name": "repository.jboss.org", "url": "http://repository.jboss.org/nexus/content/groups/public/", 'snapshot': 'RELEASE'],
+          [ "name": "apache.snapshots.https", "url": "https://repository.apache.org/content/repositories/snapshots", "snapshot": "SNAPSHOT"],
+          [ "name": "apache.snapshots", "url": "https://repository.apache.org/content/repositories/snapshots", "snapshot": "SNAPSHOT"]]
+
+repos.each { r->
+  generate_nexus_tasks( r.name, r.url, r.snapshot)
+}
+
+task "configure-nexus"(dependsOn: tasks.findAll { alltask -> alltask.name.startsWith("configure-nexus-")}*.name,
+      description: "configure all repos") {
+   def m2Dir = System.getProperty("user.home") + "/.m2"
+   mkdir(m2Dir)
+   def writer = new File(m2Dir + "/settings.xml")
+   def writeMirrorLine = { name ->
+     writer.append("<mirror><name>$name</name><url>http://localhost:8081/content/repositories/$name/</url><mirrorOf>$name</mirrorOf></mirror>")
+   }
+   writer.text = "<settings><mirrors>"
+   writeMirrorLine( "central")
+   repos.each{ r->
+     writeMirrorLine( r.name)
+   }
+   writer.append("</mirrors></settings>")
+}
+
 task "gen-gradle-home"(type:Exec,
     description: 'Pre-load gradle home as cache for bigtop/slaves images',
     group: DOCKERBUILD_GROUP) {
