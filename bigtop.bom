@@ -94,7 +94,8 @@ bigtop {
     ],
     hbase:['phoenix','giraph','ycsb'],
     pig:['datafu', 'oozie'],
-    hive:['oozie', 'pig'],
+    hive:['oozie', 'pig','zeppelin'],
+    ignite:['zeppelin'],
     spark:['zeppelin']
   ]
 
