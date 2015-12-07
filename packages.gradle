@@ -38,7 +38,7 @@ def PACKAGES_GROUP = 'package'
 final String VERBOSE = "verbose"
 final String DEPS_BUILD = "buildwithdeps"
 final boolean buildDependencies = false || System.getProperty(DEPS_BUILD) == 'true'
-final String BOM = "$rootDir/bigtop.bom"
+final String BOM = System.getProperty('bomfile') ?: "$rootDir/bigtop.bom"
 def final config  = new ConfigSlurper().parse(new URL("file:$BOM"))
 
 config.bigtop.builddir = projectDir.absolutePath + "/build"

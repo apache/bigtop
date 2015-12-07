@@ -186,6 +186,9 @@ __On all systems, Building Apache Bigtop requires certain set of tools__
   If -Dbuildwithdeps=true is set, the Gradle will follow the order of the build specified in
   the "dependencies" section of bigtop.bom file. Otherwise just a single component will get build (original behavior).
 
+  To use an alternative definition of a stack composition (aka BOM), specify its
+  name with -Dbomfile=<filename> system property in the build time.
+
   You can visualize all tasks dependencies by running `gradle tasks --all`
 * __Building local YUM/APT repositories__ : `gradle [component-name]-[yum|apt]`
 
