@@ -1,0 +1,174 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/** DSL documentation
+ The structure of this configuration DSL is pretty self-explanatory. The main
+ section is 'components' that contains the description of all things included
+ into the stack. The following words are considered terminals and shouldn't be
+ modified as it will affect the parsing behavior:
+   - bigtop
+   - version
+   - stack
+   - version_base
+   - apache
+   - pkg
+   - tarball, source, destinations
+   - url, download_path, site, archive
+ Also, the following are base constants and if renamed will affect the some of
+ the stack's definitions
+   - APACHE_MIRROR
+   - APACHE_ARCHIVE
+
+ bigtop { // *the name should be change: the parsing code depends on it*
+   version = "STACK-VERSION" // *required*
+   stack { // *required* Fundamental properties of the Stack: JDK, SDK, GDK, etc
+     'jdk' { version = '1.7'; version_base = version }
+     'scala' { version = '2.10.4'; version_base = version }
+   }
+   apache { // *required* These shoudn't be modified unless ASF Infra demands changes
+     APACHE_MIRROR = "http://apache.osuosl.org"
+     APACHE_ARCHIVE = "http://archive.apache.org/dist"
+   }
+   components { *required; preserve the name* if empty, nothing will be built
+     'label' { // label *SHOULD* be the same as the name; otherwise some tasks will fail
+       name    = 'component1' // *required* the name of the component
+       // 'pkg' value is optional and will be set to that of 'name' i.e. [pkg := name]
+       pkg     = name // *optional* and will be set to the 'name' value
+       // 'base' is required; [pkg := base ]; [release := 1 ]
+       version { base  = 'x.y.z'; pkg   = base; release = 1 }
+       tarball {
+         source      = "apache-component1-${version.base}.tar.gz" // *optional*
+         destination = source
+       }
+       url { // *optional*
+         download_path = "/component1/component1-${version.base}"
+         site          = "${apache.APACHE_MIRROR}/${download_path}"
+         archive       = "${apache.APACHE_ARCHIVE}/${download_path}"
+       }
+     }
+   }
+ }
+ End of DSL Documentation */
+
+bigtop {
+/** Base Configuration of the mirror and archives */
+  version = "1.0-SNAPSHOT"
+  stack {
+    'jdk' { version = '1.7'; version_base = version }
+    'scala' { version = '2.10.4'; version_base = version }
+  }
+  apache {
+    APACHE_MIRROR = "http://apache.osuosl.org"
+    APACHE_ARCHIVE = "http://archive.apache.org/dist"
+  }
+/** End of Base Configuration */
+
+  /** Dependencies section defines the order in which packages should be built.
+      The syntax is as follows:
+           dependsOn := [list of dependents]
+      So, below phoenix and giraph ought to be build after the hbase has been built
+
+      To build a component without its dependencies, simply comment out
+      dependencies section or run build with -Dbuildnodeps=true
+  */
+  dependencies = [
+    zookeeper:['hadoop', 'hbase'],
+    hadoop:['ignite', 'hbase', 'crunch', 'pig', 'hive', 'tez', 'sqoop', 'sqoop2',
+      'oozie', 'mahout', 'flume', 'giraph', 'solr', 'crunch', 'spark',
+      'phoenix', 'tachyon', 'kafka', 'ycsb', 'kite', 'hama', 'zeppelin'
+    ],
+    hbase:['phoenix','giraph','ycsb'],
+    pig:['datafu', 'oozie'],
+    hive:['oozie', 'pig'],
+    spark:['zeppelin']
+  ]
+
+  components {
+    'zookeeper' {
+      name    = 'zookeeper'
+      pkg     = name
+      version {
+        base  = '3.4.6'
+        pkg   = base+'+odpi'
+        release = 1
+      }
+      tarball {
+        source      = "zookeeper-${version.base}.tar.gz"
+        destination = source
+      }
+      url {
+        download_path = "/zookeeper/zookeeper-${version.base}"
+        site          = "${apache.APACHE_MIRROR}/${download_path}"
+        archive       = "${apache.APACHE_ARCHIVE}/${download_path}"
+      }
+    }
+    'hadoop' {
+      name    = 'hadoop'
+      relNotes = 'Apache Hadoop'
+      version { base = '2.7.1-odpi'; pkg = '2.7.1+odpi'; release = 1 }
+      tarball { destination = "${name}-${version.base}.tar.gz"
+                source      = "odpi-branch-2.7.1.zip" }
+      url     { download_path = "odpi/hadoop/archive"
+                site = "https://github.com/${download_path}"
+                archive = site }
+/*** In case there's a need to build directly from the git (which might be useful,
+     but takes a lot of even shallow cloning time
+      git     { repo = 'https://github.com/odpi/hadoop.git';
+                ref = 'branch-2.7-ODP'; dir = 'branch-2.7-ODP'}
+***/
+    }
+
+    'bigtop-groovy' {
+      name    = 'bigtop-groovy'
+      version { base = '2.4.4'; pkg = base+'+odpi'; release = 1}
+      relNotes = "Groovy: a dynamic language for the Java platform"
+      tarball { destination = "$name-${version.base}.tar.gz";
+                source      = "apache-groovy-binary-${version.base}.zip"}
+      url     { site = "http://dl.bintray.com/groovy/maven/"; archive = site }
+      // Optional, as only null values are specified
+      git     { repo = null; ref = null; dir = null}
+    }
+    'bigtop-utils' {
+      name    = "bigtop-utils"
+      relNotes = "Service package for Apache Bigtop runtime"
+      version { base = bigtop.version; pkg = base-"-SNAPSHOT"+'+odpi'; release = 1 }
+      tarball { destination = "bigtop-utils-${version.base}.tar.gz" }
+    }
+    'bigtop-jsvc' {
+      name    = "bigtop-jsvc"
+      relNotes = "Apache Common Daemon (jsvc) service package"
+      version { base = '1.0.15'; pkg = base+'+odpi'; release = 1 }
+      tarball { source      = "commons-daemon-${version.base}-native-src.tar.gz"
+                destination = "commons-daemon-${version.base}.tar.gz" }
+      url     { download_path = "/commons/daemon/source"
+                site = "${apache.APACHE_MIRROR}/${download_path}"
+                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+    }
+    'bigtop-tomcat' {
+      name    = "bigtop-tomcat"
+      relNotes = "Apache Tomcat"
+      version { base = '6.0.36'; pkg = base+'+odpi'; release = 1 }
+      tarball { source      = "apache-tomcat-${version.base}-src.tar.gz"
+                destination = "apache-tomcat-${version.base}.tar.gz" }
+      url     { download_path = "/tomcat/tomcat-6/v${version.base}/src"
+                site = "${apache.APACHE_MIRROR}/${download_path}"
+                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+    }
+
+  }
+}
