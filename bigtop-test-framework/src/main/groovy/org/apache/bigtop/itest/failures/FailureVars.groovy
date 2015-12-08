@@ -85,7 +85,7 @@ public class FailureVars {
     try {
       File pFile = new File(propertyFile);
       assert (pFile.exists()): "Failure properties file cannot be read";
-      BufferedReader is = new BufferedReader(new InputStreamReader(new FileInputStream(pFile)));
+      BufferedReader is = new BufferedReader(new InputStreamReader(getClass(pFile)));
       System.out.println("Input Stream Location: " + is);
       Properties props = new Properties();
       props.load(is);
