@@ -73,6 +73,10 @@ subprojects {
   checkEnv(["JAVA_HOME","ITEST"])
   ext.itestVersion = System.getenv("ITEST")
 
+  // Let's make sure all system Properties are passed into the forked test JVM
+  tasks.withType(Test) {
+    systemProperties = System.getProperties()
+  }
   test.dependsOn compileGroovy
   compileGroovy.dependsOn clean
 }
