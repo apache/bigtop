@@ -1,0 +1,5 @@
+# Force line endings to be LR even if it's in Windows,
+# so that shell script can be run as expected after 
+# folders syncing from windows host machine to linux
+# guests.
+*.sh eol=lf
