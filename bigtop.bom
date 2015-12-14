@@ -130,10 +130,10 @@ bigtop {
     'ignite-hadoop' {
       name    = 'ignite-hadoop'
       relNotes = 'Apache Ignite in-memory data fabric'
-      version { base = '1.5.0-b1'; pkg = base; release = 1 }
+      version { base = '1.5.0.b1'; pkg = base; release = 1 }
       tarball { destination = "${name}-${version.base}.tar.gz"
-                source      = "apache-ignite-${version.base}-src.zip" }
-      url     { download_path = "/ignite/${version.base}/"
+                source      = "apache-ignite-1.5.0-b1-src.zip" }
+      url     { download_path = "/ignite/1.5.0-b1/"
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }
