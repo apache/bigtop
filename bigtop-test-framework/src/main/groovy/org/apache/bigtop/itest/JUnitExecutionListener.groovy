@@ -13,30 +13,30 @@ public class JUnitExecutionListener extends RunListener {
     private Log LOGGER = LogFactory.getLog(JUnitExecutionListener.class);
 
     public void testRunStarted(Description description) throws Exception {
-        LOGGER.info("Number of tests to execute: " + description.testCount());
+        LOGGER.info("NUMBER OF TESTS TO EXECUTE : " + description.testCount());
     }
 
     public void testRunFinished(Result result) throws Exception {
-        LOGGER.info("Number of tests executed: " + result.getRunCount());
+        LOGGER.info("NUMBER OF TESTS EXECUTED : " + result.getRunCount());
     }
 
     public void testStarted(Description description) throws Exception {
-        LOGGER.info("Starting ${description.getTestClass().getSimpleName()} # ${description.getMethodName()}");
+        LOGGER.info("STARTING TEST ${description.getTestClass().getSimpleName()} # ${description.getMethodName()}");
     }
 
     public void testFinished(Description description) throws Exception {
-        LOGGER.info("Ending: ${description.getTestClass().getSimpleName()} # ${description.getMethodName()}");
+        LOGGER.info("ENDING TEST ${description.getTestClass().getSimpleName()} # ${description.getMethodName()}");
     }
 
     public void testFailure(Failure failure) throws Exception {
-        LOGGER.error("Failed: ${failure.getDescription().getClass().getSimpleName()} # ${failure.getDescription().getMethodName()}");
+        LOGGER.error("FAILED TEST ${failure.getDescription().getClass().getSimpleName()} # ${failure.getDescription().getMethodName()}");
     }
 
     public void testAssumptionFailure(Failure failure) {
-        LOGGER.error("Assumption Failed: ${failure.getDescription().getClass().getSimpleName()} # ${failure.getDescription().getMethodName()}");
+        LOGGER.error("ASSUMPTION FAILED TEST ${failure.getDescription().getClass().getSimpleName()} # ${failure.getDescription().getMethodName()}");
     }
 
     public void testIgnored(Description description) throws Exception {
-        LOGGER.info("Ignored ${description.getTestClass().getSimpleName()} # ${description.getMethodName()}");
+        LOGGER.info("IGNORED TEST ${description.getTestClass().getSimpleName()} # ${description.getMethodName()}");
     }
 }
