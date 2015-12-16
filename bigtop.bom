@@ -90,7 +90,8 @@ bigtop {
     zookeeper:['hadoop', 'hbase'],
     hadoop:['ignite', 'hbase', 'crunch', 'pig', 'hive', 'tez', 'sqoop', 'sqoop2',
       'oozie', 'mahout', 'flume', 'giraph', 'solr', 'crunch', 'spark',
-      'phoenix', 'tachyon', 'kafka', 'ycsb', 'kite', 'hama', 'zeppelin'
+      'phoenix', 'tachyon', 'kafka', 'ycsb', 'kite', 'hama', 'zeppelin',
+      'tajo'
     ],
     hbase:['phoenix','giraph','ycsb'],
     pig:['datafu', 'oozie'],
@@ -397,6 +398,16 @@ bigtop {
       tarball { source      = "$name-${version.base}-incubating.tgz"
                 destination = "$name-${version.base}.tar.gz" }
       url     { download_path = "/incubator/$name/${version.base}-incubating/"
+                site = "${apache.APACHE_MIRROR}/${download_path}"
+                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+    }
+    'tajo' {
+      name    = 'tajo'
+      relNotes = 'Apache Tajo'
+      version { base = '0.11.0'; pkg = base; release = 1 }
+      tarball { source      = "$name-${version.base}-src.tar.gz"
+                destination = "$name-${version.base}.tar.gz" }
+      url     { download_path = "/$name/$name-${version.base}"
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }
