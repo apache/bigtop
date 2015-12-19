@@ -88,14 +88,14 @@ bigtop {
   */
   dependencies = [
     zookeeper:['hadoop', 'hbase'],
-    hadoop:['ignite', 'hbase', 'crunch', 'pig', 'hive', 'tez', 'sqoop', 'sqoop2',
+    hadoop:['ignite-hadoop', 'hbase', 'crunch', 'pig', 'hive', 'tez', 'sqoop', 'sqoop2',
       'oozie', 'mahout', 'flume', 'giraph', 'solr', 'crunch', 'spark',
       'phoenix', 'tachyon', 'kafka', 'ycsb', 'kite', 'hama', 'zeppelin'
     ],
     hbase:['phoenix','giraph','ycsb'],
     pig:['datafu', 'oozie'],
     hive:['oozie', 'pig','zeppelin'],
-    ignite:['zeppelin'],
+    'ignite-hadoop':['zeppelin'],
     spark:['zeppelin']
   ]
 
