@@ -20,6 +20,7 @@ package org.apache.bigtop.itest.hadoop.hdfs
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeFalse;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -35,11 +36,11 @@ import org.apache.bigtop.itest.interfaces.NormalTests;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Category ( NormalTests.class )
 public class TestHDFSQuota {
- 
   private static Shell shHDFS = new Shell("/bin/bash", "hdfs");
   private static Shell sh = new Shell("/bin/bash");
   private static final long LARGE = Long.MAX_VALUE - 1;
   private static final String USERNAME = System.getProperty("user.name");
+  private static final String KERBEROS = System.getenv("KERBEROS"); 
   private static String quotaDate = shHDFS.exec("date").getOut().get(0).replaceAll("\\s","").replaceAll(":","");
   private static String testQuotaFolder = "/tmp/testQuotaFolder" + quotaDate;
   private static String testQuotaFolder1 = testQuotaFolder + "1";
@@ -49,6 +50,9 @@ public class TestHDFSQuota {
   @BeforeClass
   public static void setUp() {
     // creating test folders
+    if(KERBEROS == "on") {
+      shHDFS = sh;
+    } 
     shHDFS.exec("hadoop fs -mkdir $testQuotaFolder1");
     assertTrue("Could not create input directory", shHDFS.getRet() == 0);
 
@@ -79,8 +83,7 @@ public class TestHDFSQuota {
     }
   }
 
-
-@Category ( EssentialTests.class )
+  @Category ( EssentialTests.class )
   @Test
   public void t1_testNewlyCreatedDir() { 
     // newly created dir should have no name quota, no space quota   
@@ -93,9 +96,10 @@ public class TestHDFSQuota {
     assertTrue("Newly created directory had a set space quota left", output[3].equals("inf"));
   } 
 
-@Category ( EssentialTests.class )
+  @Category ( EssentialTests.class )
   @Test
   public void t2_testAdminPermissions() { 
+    assumeFalse(KERBEROS == 'on')
     // admin setting quotas should succeed
     shHDFS.exec("hadoop dfsadmin -setQuota 10 $testQuotaFolder1");
     assertTrue("setQuota failed", shHDFS.getRet() == 0);
@@ -119,7 +123,7 @@ public class TestHDFSQuota {
     assertTrue("clrSpaceQuota failed", shHDFS.getRet() == 0);
   } 
 
-@Category ( EssentialTests.class )
+  @Category ( EssentialTests.class )
   @Test
   public void t3_testRename() { 
     // name and space quotas stick after rename
@@ -140,6 +144,7 @@ public class TestHDFSQuota {
 
   @Test
   public void t4_testInputValues() { 
+    assumeFalse(KERBEROS == 'on')
     // the largest allowable quota size is Long.Max_Value and must be greater than zero
     shHDFS.exec("hadoop dfsadmin -setQuota -1 $testQuotaFolder1");
     assertTrue("setQuota should not have worked", shHDFS.getRet() != 0);
@@ -165,6 +170,7 @@ public class TestHDFSQuota {
 
   @Test
   public void t5_testForceDirEmpty() {
+    assumeFalse(KERBEROS == 'on')
     // setting the name quota to 1 for an empty dir will cause the dir to remain empty
     shHDFS.exec("hadoop dfsadmin -setQuota 1 $testQuotaFolder1");
     assertTrue("Could not setQuota", shHDFS.getRet() == 0);
@@ -174,6 +180,7 @@ public class TestHDFSQuota {
 
   @Test
   public void t6_testQuotasPostViolation() {  
+    assumeFalse(KERBEROS == 'on')
     // quota can be set even if it violates
     shHDFS.exec("hadoop dfsadmin -setQuota $LARGE $testQuotaFolder1");
     assertTrue("Could not setQuota", shHDFS.getRet() == 0);
@@ -191,6 +198,7 @@ public class TestHDFSQuota {
 
   @Test
   public void t7_testQuotas() {
+    assumeFalse(KERBEROS == 'on')
     // dir creation should fail - name quota
     shHDFS.exec("hadoop dfsadmin -setSpaceQuota 10000000000 $testQuotaFolder1");
     assertTrue("Could not setSpaceQuota", shHDFS.getRet() == 0);
@@ -213,6 +221,7 @@ public class TestHDFSQuota {
 
   //@Test - can be reinstated upon resolution of BIGTOP-635 due to restarting of hdfs service
   public void testLogEntries() {
+    assumeFalse(KERBEROS == 'on')
     // Log entry created when nodes are started with both quota violations
     String date = "logTest" + quotaDate;
     shHDFS.exec("hadoop fs -mkdir $date");
@@ -234,15 +243,13 @@ public class TestHDFSQuota {
     shHDFS.exec("grep \"Quota violation in image for //user/hdfs/$date\" /var/log/hadoop-hdfs/hadoop-hdfs-namenode*.log");
     if (shHDFS.getOut().isEmpty()) {
       assertTrue("Log was not written", 1 == 0);
-    }
-    else {
+    } else {
       assertTrue(shHDFS.getOut().get(0).contains(date));
     }
     shHDFS.exec("grep \"Quota violation in image for //user/hdfs/$date1\" /var/log/hadoop-hdfs/hadoop-hdfs-namenode*.log");
     if (shHDFS.getOut().isEmpty()) {
       assertTrue("Log was not written", 1 == 0);
-    }
-    else {
+    } else {
       assertTrue(shHDFS.getOut().get(0).contains(date1));
     }
     
