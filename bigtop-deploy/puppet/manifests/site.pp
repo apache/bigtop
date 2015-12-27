@@ -52,9 +52,9 @@ if ($provision_repo) {
           content => "APT::Get::AllowUnauthenticated 1;",
 	  ensure => present
        }
-       apt::source { "Bigtop":
+       apt::source { "ODPI":
           location => hiera("bigtop::bigtop_repo_uri", $default_repo),
-          release => "bigtop",
+          release => "odpi",
           repos => "contrib",
           ensure => present,
         }
