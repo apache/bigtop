@@ -17,9 +17,13 @@ docker:
         memory_limit: "4g"
         image:  "bigtop/puppet:ubuntu-14.04"
 
-repo: "http://bigtop-repos.s3.amazonaws.com/releases/1.1.0/ubuntu/trusty/x86_64"
+boot2docker:
+        memory_size: "4096"
+        number_cpus: "1"
+
+repo: "http://build.odpi.org:8080/job/ODPi-v1.0-collect/lastSuccessfulBuild/artifact/1.0/ubuntu-14.04/apt"
 distro: debian
 components: [hadoop, yarn]
 enable_local_repo: false
-smoke_test_components: [mapreduce, pig]
+smoke_test_components: [mapreduce]
 jdk: "openjdk-7-jdk"
