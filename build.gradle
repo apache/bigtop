@@ -91,6 +91,7 @@ rat {
        "bigtop-deploy/puppet/**/*.yaml",
        "bigtop-deploy/puppet/config/*/id_hdfsuser*",
        "bigtop-deploy/puppet/modules/bigtop-util/Gemfile.lock",
+       "bigtop-deploy/puppet/modules/zeppelin/templates/interpreter.json",
        /* Debian package files that have a rigid structure
           (* matches package name) */
        "bigtop-packages/src/deb/*/*.dirs",

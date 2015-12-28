@@ -12,36 +12,5 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-class bigtop_toolchain::user {
-
-  user { 'jenkins':
-    ensure => present,
-    home => '/var/lib/jenkins',
-    managehome => true,
-    uid        => 1000,
-    gid        => 'jenkins',
-    require    => Group['jenkins'],
-  }
-
-  group { 'jenkins':
-    ensure => present,
-    gid    => 1000,
-  }
-
-  file {"/var/lib/jenkins/.m2":
-    ensure => directory,
-    owner => 'jenkins',
-    group => 'jenkins',
-    mode => 755,
-    require => User['jenkins'],
-  }
-
-  file {"/var/lib/jenkins/.ssh":
-    ensure => directory,
-    owner => 'jenkins',
-    group => 'jenkins',
-    mode => 600,
-    require => User['jenkins'],
-  }
-}
+cp ../../../bigtop_toolchain/bin/puppetize.sh .
+docker build -t bigtop/puppet:ubuntu-14.04-ppc64le .

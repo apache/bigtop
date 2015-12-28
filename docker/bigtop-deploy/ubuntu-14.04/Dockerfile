@@ -13,35 +13,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class bigtop_toolchain::user {
+FROM bigtop/puppet:ubuntu-14.04
 
-  user { 'jenkins':
-    ensure => present,
-    home => '/var/lib/jenkins',
-    managehome => true,
-    uid        => 1000,
-    gid        => 'jenkins',
-    require    => Group['jenkins'],
-  }
+COPY bigtop_toolchain /etc/puppet/modules/bigtop_toolchain
 
-  group { 'jenkins':
-    ensure => present,
-    gid    => 1000,
-  }
+# enable ssh
+RUN apt-get update && \
+    apt-get install -y openssh-server vim && \
+    mkdir -p /var/run/sshd && \
+    # requiretty off
+    sed -i.bak 's/requiretty/!requiretty/' /etc/sudoers && \
+    # setup vagrant account
+    mkdir -p /root/.ssh && \
+    chmod 0700 /root/.ssh && \
+    wget http://github.com/mitchellh/vagrant/raw/master/keys/vagrant.pub --no-check-certificate -O /root/.ssh/authorized_keys && \
+    chmod 0600 /root/.ssh/authorized_keys && \
+    # Install required Puppet modules
+    puppet apply -e "include bigtop_toolchain::puppet-modules"
 
-  file {"/var/lib/jenkins/.m2":
-    ensure => directory,
-    owner => 'jenkins',
-    group => 'jenkins',
-    mode => 755,
-    require => User['jenkins'],
-  }
-
-  file {"/var/lib/jenkins/.ssh":
-    ensure => directory,
-    owner => 'jenkins',
-    group => 'jenkins',
-    mode => 600,
-    require => User['jenkins'],
-  }
-}
+CMD /usr/sbin/sshd -D

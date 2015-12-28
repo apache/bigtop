@@ -102,6 +102,9 @@ $roles_map = {
   ycsb => {
     client => ["ycsb-client"],
   },
+  zeppelin => {
+    master => ["zeppelin-server"],
+  },
 }
 
 class hadoop_cluster_node (
@@ -166,7 +169,8 @@ class node_with_roles ($roles = hiera("bigtop::roles")) inherits hadoop_cluster_
     "tachyon",
     "tez",
     "ycsb",
-    "kerberos"
+    "kerberos",
+    "zeppelin"
   ]
 
   deploy_module { $modules:

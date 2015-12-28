@@ -13,35 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class bigtop_toolchain::user {
-
-  user { 'jenkins':
-    ensure => present,
-    home => '/var/lib/jenkins',
-    managehome => true,
-    uid        => 1000,
-    gid        => 'jenkins',
-    require    => Group['jenkins'],
-  }
-
-  group { 'jenkins':
-    ensure => present,
-    gid    => 1000,
-  }
-
-  file {"/var/lib/jenkins/.m2":
-    ensure => directory,
-    owner => 'jenkins',
-    group => 'jenkins',
-    mode => 755,
-    require => User['jenkins'],
-  }
-
-  file {"/var/lib/jenkins/.ssh":
-    ensure => directory,
-    owner => 'jenkins',
-    group => 'jenkins',
-    mode => 600,
-    require => User['jenkins'],
-  }
-}
+export ZEPPELIN_PORT=<%= @server_port %>
+export ZEPPELIN_WEBSOCKET_PORT=<%= @web_socket_port %>
+export ZEPPELIN_CONF_DIR=/etc/zeppelin/conf
+export ZEPPELIN_LOG_DIR=/var/log/zeppelin
+export ZEPPELIN_PID_DIR=/var/run/zeppelin
+export ZEPPELIN_NOTEBOOK_DIR=/var/lib/zeppelin/notebook
+export MASTER=<%= @spark_master_url %>
+export SPARK_HOME=/usr/lib/spark
+export HADOOP_CONF_DIR=/etc/hadoop/conf
