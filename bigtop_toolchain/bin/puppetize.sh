@@ -39,11 +39,13 @@ case ${ID}-${VERSION_ID} in
 	yum -y install hostname curl sudo unzip wget puppet
 	;;
     ubuntu-14.04)
-	# BIGTOP-2003. A workaround to install newer hiera to get rid of hiera 1.3.0 bug.
 	apt-get -y install wget
-	wget -O /tmp/puppetlabs-release-trusty.deb https://apt.puppetlabs.com/puppetlabs-release-trusty.deb && dpkg -i /tmp/puppetlabs-release-trusty.deb
-	rm -f /tmp/puppetlabs-release-trusty.deb
-	apt-get update
+	if [ $HOSTTYPE = "x86_64" ] ; then
+	  # BIGTOP-2003. A workaround to install newer hiera to get rid of hiera 1.3.0 bug.
+	  wget -O /tmp/puppetlabs-release-trusty.deb https://apt.puppetlabs.com/puppetlabs-release-trusty.deb && dpkg -i /tmp/puppetlabs-release-trusty.deb
+	  rm -f /tmp/puppetlabs-release-trusty.deb
+	  apt-get update
+        fi
 	apt-get -y install curl sudo unzip puppet software-properties-common
 	;;
     ubuntu-15*)
