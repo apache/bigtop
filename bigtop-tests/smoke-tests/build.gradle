@@ -70,7 +70,7 @@ subprojects {
   *  java_home should be declared in all cases.
   * itest can be greater than or equal to = 0.7.0, 0.8.0
   */
-  checkEnv(["JAVA_HOME","ITEST"])
+  checkEnv(["JAVA_HOME","ITEST","BIGTOP_HOME"])
   ext.itestVersion = System.getenv("ITEST")
 
   // Let's make sure all system Properties are passed into the forked test JVM
