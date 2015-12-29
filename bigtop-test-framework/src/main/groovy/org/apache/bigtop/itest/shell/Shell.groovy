@@ -62,19 +62,15 @@ class Shell {
    * stdout as getOut() and stderr as getErr(). The script itself can be accessed
    * as getScript()
    * WARNING: it isn't thread safe
-   * @param timeout timeout in seconds to wait before killing the script.
-   * If timeout lesser than 0, then this method will wait until the script completes
-   * and will not be killed.
    * @param args shell script split into multiple Strings
    * @return Shell object for chaining
    */
-  Shell execWithTimeout(int timeout, Object... args) {
+  Shell exec(Object... args) {
     def proc = user ? "sudo -u $user HADOOP_CONF_DIR=${System.getenv('HADOOP_CONF_DIR')} JAVA_HOME=${System.getenv('JAVA_HOME')} HADOOP_HOME=${System.getenv('HADOOP_HOME')} PATH=${System.getenv('PATH')} $shell".execute() :
                               "$shell".execute()
-
     script = args.join("\n")
     if (LOG.isTraceEnabled()) {
-        LOG.trace("${shell} << __EOT__\n${script}\n__EOT__");
+      LOG.trace("${shell} << __EOT__\n${script}\n__EOT__");
     }
 
     Thread.start {
@@ -82,7 +78,6 @@ class Shell {
       writer.println(script)
       writer.close()
     }
-
     ByteArrayOutputStream baosErr = new ByteArrayOutputStream(4096);
     proc.consumeProcessErrorStream(baosErr);
     out = proc.in.readLines()
@@ -95,48 +90,26 @@ class Shell {
       err = new ArrayList<String>();
     }
 
-    if (timeout >= 0) {
-      proc.waitForOrKill(timeout * 1000)
-    } else {
-      proc.waitFor()
+    proc.waitFor()
+    ret = proc.exitValue()
+    println("cmd: " + script);
+    println("out: " + out);
+    println("err: " + err);
+    println("ret: " + ret);
+
+    if (LOG.isTraceEnabled()) {
+      if (ret != 0) {
+        LOG.trace("return: $ret");
+      }
+      if (out.size() != 0) {
+        LOG.trace("\n<stdout>\n${out.join('\n')}\n</stdout>");
+      }
+      if (err.size() != 0) {
+        LOG.trace("\n<stderr>\n${err.join('\n')}\n</stderr>");
+      }
     }
 
-    ret = proc.exitValue()
-    println("comd: " + script);
-    println("output: " + out);
-    println("err: " + err);
-    println("ret:" + ret);
-    
-    if (LOG.isTraceEnabled()) {
-        if (ret != 0) {
-           LOG.trace("return: $ret");
-        }
-        if (out.size() != 0) {
-           LOG.trace("\n<stdout>\n${out.join('\n')}\n</stdout>");
-        }
-        if (err.size() != 0) {
-           LOG.trace("\n<stderr>\n${err.join('\n')}\n</stderr>");
-        }
-    }
     return this
   }
 
-  /**
-   * Execute shell script consisting of as many Strings as we have arguments,
-   * possibly under an explicit username (requires sudoers privileges).
-   * NOTE: individual strings are concatenated into a single script as though
-   * they were delimited with new line character. All quoting rules are exactly
-   * what one would expect in standalone shell script.
-   *
-   * After executing the script its return code can be accessed as getRet(),
-   * stdout as getOut() and stderr as getErr(). The script itself can be accessed
-   * as getScript()
-   * WARNING: it isn't thread safe
-   * Setting default timeout of 2hrs(7200 s).
-   * @param args shell script split into multiple Strings
-   * @return Shell object for chaining
-   */
-  Shell exec(Object... args) {
-    return execWithTimeout(7200, args)
-  }
 }
