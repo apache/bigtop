@@ -22,7 +22,7 @@ class bigtop_toolchain::protobuf {
       case $architecture {
         'amd64' : { $url = "https://launchpad.net/ubuntu/+archive/primary/+files"
                     $arch= "amd64" }
-        'ppc64le' : { $url = "https://bintray.com/artifact/download/oflebbe/bigtop-protobuf"
+        'ppc64le' : { $url = "https://dl.bintray.com/oflebbe/bigtop-protobuf"
                     $arch= "ppc64el" }
       }
     }
