@@ -30,29 +30,19 @@ class bigtop_toolchain::protobuf {
  
   case $operatingsystem{
     /Ubuntu|Debian/: {
-      exec { "/usr/bin/wget $url/libprotobuf8_2.5.0-9ubuntu1_$arch.deb":
+      $libprotobuf8 = "libprotobuf8_2.5.0-9ubuntu1_$arch.deb"
+      $libprotoc8 = "libprotoc8_2.5.0-9ubuntu1_$arch.deb"
+      $protobuf_compiler = "protobuf-compiler_2.5.0-9ubuntu1_$arch.deb"
+
+      exec { "download protobuf":
         cwd     => "/usr/src",
-        creates  => "/usr/src/libprotobuf8_2.5.0-9ubuntu1_$arch.deb",
+        command => "/usr/bin/curl -L $url/$libprotobuf8 -o $libprotobuf8; /usr/bin/curl -L $url/$libprotoc8 -o $libprotoc8; /usr/bin/curl -L $url/$protobuf_compiler -o $protobuf_compiler",
+        creates  => [ "/usr/src/$libprotobuf8", "/usr/src/$libprotoc8", "/usr/src/$protobuf_compiler" ]
       }
-      exec { "/usr/bin/wget $url/libprotoc8_2.5.0-9ubuntu1_$arch.deb":
+      exec { "install protobuf":
         cwd     => "/usr/src",
-        creates  => "/usr/src/libprotoc8_2.5.0-9ubuntu1_$arch.deb",
-      }
-      exec { "/usr/bin/wget $url/protobuf-compiler_2.5.0-9ubuntu1_$arch.deb":
-        cwd     => "/usr/src",
-        creates  => "/usr/src/protobuf-compiler_2.5.0-9ubuntu1_$arch.deb",
-      }
-      exec {"/usr/bin/dpkg -i protobuf-compiler_2.5.0-9ubuntu1_$arch.deb":
-        cwd     => "/usr/src",
-        require => [ EXEC["/usr/bin/dpkg -i libprotoc8_2.5.0-9ubuntu1_$arch.deb"],EXEC["/usr/bin/wget $url/protobuf-compiler_2.5.0-9ubuntu1_$arch.deb"] ]
-      }
-      exec {"/usr/bin/dpkg -i libprotoc8_2.5.0-9ubuntu1_$arch.deb":
-        cwd     => "/usr/src",
-        require => [ EXEC["/usr/bin/dpkg -i libprotobuf8_2.5.0-9ubuntu1_$arch.deb"],EXEC["/usr/bin/wget $url/libprotoc8_2.5.0-9ubuntu1_$arch.deb"] ]
-      }
-      exec {"/usr/bin/dpkg -i libprotobuf8_2.5.0-9ubuntu1_$arch.deb":
-        cwd     => "/usr/src",
-        require => EXEC["/usr/bin/wget $url/libprotobuf8_2.5.0-9ubuntu1_$arch.deb"],
+        command => "/usr/bin/dpkg -i $libprotobuf8 $libprotoc8 $protobuf_compiler",
+        require => EXEC["download protobuf"],
       }
     }
     default: {
