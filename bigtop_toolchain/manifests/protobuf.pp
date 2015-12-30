@@ -20,9 +20,9 @@ class bigtop_toolchain::protobuf {
   case $operatingsystem{
     /Ubuntu|Debian/: {
       case $architecture {
-        'amd64' : { $url = "https://launchpad.net/ubuntu/+archive/primary/+files"
+        'amd64' : { $url = "https://launchpad.net/ubuntu/+source/protobuf/2.5.0-9ubuntu1/+build/5585371/+files/"
                     $arch= "amd64" }
-        'ppc64le' : { $url = "https://dl.bintray.com/oflebbe/bigtop-protobuf"
+        'ppc64le' : { $url = "https://launchpad.net/ubuntu/+source/protobuf/2.5.0-9ubuntu1/+build/5604345/+files"
                     $arch= "ppc64el" }
       }
     }
