@@ -93,8 +93,8 @@ class Shell {
     proc.waitFor()
     ret = proc.exitValue()
     println("cmd: " + script);
-    println("out: " + out);
-    println("err: " + err);
+    println("out: " + toString(out));
+    println("err: " + toString(err));
     println("ret: " + ret);
 
     if (LOG.isTraceEnabled()) {
@@ -112,4 +112,18 @@ class Shell {
     return this
   }
 
+  private String toString(List<?> list) {
+    if(list == null || list.size() == 0) {
+      return "[]"
+    } else {
+        StringBuilder builder = new StringBuilder('[');
+	Iterator<?> iterator = list.iterator();
+	while(iterator.hasNext()) {
+	  builder.append(iterator.next())
+          if(iterator.hasNext()) 
+            builder.append(System.lineSeparator);
+	}
+	return builder.append(']').toString();
+    }
+  }
 }
