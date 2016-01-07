@@ -62,7 +62,7 @@ class bigtop_toolchain::protobuf {
          }
          /(?i:(SLES|opensuse))/:{
            exec { 'install_mrdocs_repo':
-              command => '/usr/bin/zypper ar --no-gpgcheck http://download.opensuse.org/repositories/home:/mrdocs:/protobuf-rpm/openSUSE_12.3/ protobuf',
+              command => '/usr/bin/zypper ar --no-gpgcheck http://download.opensuse.org/repositories/home:/mrdocs:/protobuf-rpm/openSUSE_13.2/ protobuf',
               unless => "/usr/bin/zypper lr | grep -q protobuf",
            }
          }
