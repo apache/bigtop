@@ -24,7 +24,7 @@ class bigtop_toolchain::packages {
        }
        $pkgs = [ "unzip", "curl", "wget", "git", "make", "cmake", "autoconf", "automake", "libtool", "gcc", "gcc-c++", "fuse", "createrepo", "lzo-devel", "fuse-devel", "cppunit-devel", "openssl-devel", "python-devel", "python-setuptools", "libxml2-devel", "libxslt-devel", "cyrus-sasl-devel", "sqlite-devel", "openldap-devel", $mysql_devel, "rpm-build", "redhat-rpm-config", "fuse-libs", "asciidoc", "xmlto", "libyaml-devel", "gmp-devel", "snappy-devel" ]
      }
-    /(?i:(SLES|opensuse))/: { $pkgs = [ "unzip", "curl", "wget", "git", "make", "cmake", "autoconf", "automake", "libtool", "gcc", "gcc-c++", "fuse", "createrepo", "lzo-devel", "fuse-devel", "cppunit-devel", "libopenssl-devel", "rpm-devel", "pkg-config", "gmp-devel", "python-devel", "python-setuptools", "libxml2-devel", "libxslt-devel", "cyrus-sasl-devel", "sqlite3-devel", "openldap2-devel", "libyaml-devel", "krb5-devel", "asciidoc", "xmlto", "libmysqlclient-devel", "snappy-devel" ]
+    /(?i:(SLES|opensuse))/: { $pkgs = [ "unzip", "curl", "wget", "git", "make", "cmake", "autoconf", "automake", "libtool", "gcc", "gcc-c++", "fuse", "createrepo", "lzo-devel", "fuse-devel", "cppunit-devel", "libopenssl-devel", "rpm-devel", "rpm-build", "pkg-config", "gmp-devel", "python-devel", "python-setuptools", "libxml2-devel", "libxslt-devel", "cyrus-sasl-devel", "sqlite3-devel", "openldap2-devel", "libyaml-devel", "krb5-devel", "asciidoc", "xmlto", "libmysqlclient-devel", "snappy-devel" ]
       # fix package dependencies: BIGTOP-2120 and BIGTOP-2152
       exec { '/usr/bin/zypper remove -y krb5-mini':
       } -> exec {'/usr/bin/zypper install -y libopenssl-devel':
