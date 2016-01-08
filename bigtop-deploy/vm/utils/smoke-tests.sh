@@ -36,7 +36,7 @@ export FLUME_HOME=/usr/lib/flume/
 export SQOOP_HOME=/usr/lib/sqoop/
 export HIVE_CONF_DIR=/etc/hive/conf/
 export MAHOUT_HOME="/usr/lib/mahout"
-export ITEST="0.7.0"
+export ITEST="1.0.0"
 
 su -s /bin/bash $HCFS_USER -c '/usr/bin/hadoop fs -mkdir /user/vagrant /user/root'
 su -s /bin/bash $HCFS_USER -c 'hadoop fs -chmod 777 /user/vagrant'
@@ -47,4 +47,4 @@ if [ -f /etc/debian_version ] ; then
 else
     yum install -y pig hive flume mahout sqoop
 fi
-cd /bigtop-home/bigtop-tests/smoke-tests && ./gradlew clean compileGroovy test -Dsmoke.tests=$SMOKE_TESTS --info
+cd /bigtop-home && ./gradlew -b bigtop-tests/smoke-tests/build.gradle clean test -Dsmoke.tests=$SMOKE_TESTS --info

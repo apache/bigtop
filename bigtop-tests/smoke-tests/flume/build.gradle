@@ -15,21 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-apply plugin: 'groovy'
-
-repositories {
-  mavenCentral()
-}
-
-dependencies {
-  //needed to avoid groovy not on classpath error.
-  testCompile module('org.codehaus.groovy:groovy:1.8.0')
-  testCompile group: 'org.apache.bigtop.itest', name: 'itest-common', version: itestVersion, transitive: 'true'
-  testCompile group: 'org.apache.hadoop', name: 'hadoop-common', version: hadoopVersion, transitive: 'true'
-  testCompile group: 'org.apache.hadoop', name: 'hadoop-hdfs', version: hadoopVersion, transitive: 'true'
-}
-
-
 def tests_to_include() {
   return [
       "TestFlumeNG.groovy"
@@ -38,11 +23,6 @@ def tests_to_include() {
 
 sourceSets {
   test {
-    resources {
-      srcDirs = [
-          'conf/'
-      ]
-    }
     groovy {
       srcDirs = ["./"]
       exclude { FileTreeElement elem -> (doExclude(elem.getName())) }

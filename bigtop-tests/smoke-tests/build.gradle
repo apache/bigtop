@@ -15,18 +15,56 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-apply plugin: 'groovy'
+allprojects {
+  apply plugin: 'groovy'
 
-repositories {
-  mavenCentral()
-}
-
-dependencies {
+  repositories {
+    mavenCentral()
+  }
 }
 
 subprojects {
+  /**
+   *  Utility function for tests to use to confirm EVN Variables.
+   */
+  ext.checkEnv = { env_vars ->
+    env_vars.each() {
+      def value = System.getenv("${it}")
+      if (value == null || value == "null")
+        throw new GradleException("undeclared env variable: ${it}")
+      else
+        println("ENV VARIABLE: ${it} = $value");
+    }
+  }
 
+  /**
+  * Two important environment variables.
+  *  java_home should be declared in all cases.
+  * itest can be greater than or equal to = 0.7.0, 0.8.0
+  */
+  checkEnv(["JAVA_HOME","ITEST","BIGTOP_HOME"])
+
+  ext.itestVersion = System.getenv("ITEST")
+  ext.groovyVersion = '1.8.0'
   ext.hadoopVersion = '2.6.0'
+
+  dependencies {
+    //needed to avoid groovy not on classpath error.
+    testCompile group: 'org.codehaus.groovy', name: 'groovy', version: groovyVersion
+    testCompile group: 'org.apache.bigtop.itest', name: 'itest-common', version: itestVersion, transitive: 'true'
+    testCompile group: 'org.apache.hadoop', name: 'hadoop-common', version: hadoopVersion, transitive: 'true'
+    testCompile group: 'org.apache.hadoop', name: 'hadoop-hdfs', version: hadoopVersion, transitive: 'true'
+  }
+
+  sourceSets {
+    test {
+      resources {
+        srcDirs = [
+            'conf/',
+        ]
+      }
+    }
+  }
   //Note you need a snapshot itest to run this.
   ext.doExclude = { String filename ->
     //print("Exclude? ${filename} ... ")
@@ -51,27 +89,6 @@ subprojects {
       events "passed", "skipped", "failed"
     }
   }
-
-  /**
-   *  Utility function for tests to use to confirm EVN Variables.
-   */
-  ext.checkEnv = { env_vars ->
-    env_vars.each() {
-      def value = System.getenv("${it}")
-      if (value == null || value == "null")
-        throw new GradleException("undeclared env variable: ${it}")
-      else
-        println("ENV VARIABLE: ${it} = $value");
-    }
-  }
-
-  /**
-  * Two important environment variables.
-  *  java_home should be declared in all cases.
-  * itest can be greater than or equal to = 0.7.0, 0.8.0
-  */
-  checkEnv(["JAVA_HOME","ITEST","BIGTOP_HOME"])
-  ext.itestVersion = System.getenv("ITEST")
 
   // Let's make sure all system Properties are passed into the forked test JVM
   tasks.withType(Test) {
