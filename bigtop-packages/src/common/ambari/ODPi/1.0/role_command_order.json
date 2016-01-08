@@ -1,0 +1,41 @@
+{
+  "_comment" : "Record format:",
+  "_comment" : "blockedRole-blockedCommand: [blockerRole1-blockerCommand1, blockerRole2-blockerCommand2, ...]",
+  "general_deps" : {
+    "_comment" : "dependencies for all cases",
+    "MAPREDUCE_SERVICE_CHECK-SERVICE_CHECK": ["NODEMANAGER-START", "RESOURCEMANAGER-START"],
+    "ZOOKEEPER_SERVICE_CHECK-SERVICE_CHECK": ["ZOOKEEPER_SERVER-START"],
+    "ZOOKEEPER_QUORUM_SERVICE_CHECK-SERVICE_CHECK": ["ZOOKEEPER_SERVER-START"]
+  },
+  "_comment" : "GLUSTERFS-specific dependencies",
+  "optional_glusterfs": {
+    "GLUSTERFS_SERVICE_CHECK-SERVICE_CHECK": ["PEERSTATUS-START"]
+  },
+  "_comment" : "Dependencies that are used when GLUSTERFS is not present in cluster",
+  "optional_no_glusterfs": {
+    "SECONDARY_NAMENODE-START": ["NAMENODE-START"],
+    "RESOURCEMANAGER-START": ["NAMENODE-START", "DATANODE-START"],
+    "NODEMANAGER-START": ["NAMENODE-START", "DATANODE-START", "RESOURCEMANAGER-START"],
+    "HISTORYSERVER-START": ["NAMENODE-START", "DATANODE-START"],
+    "HDFS_SERVICE_CHECK-SERVICE_CHECK": ["NAMENODE-START", "DATANODE-START",
+        "SECONDARY_NAMENODE-START"],
+    "MAPREDUCE2_SERVICE_CHECK-SERVICE_CHECK": ["NODEMANAGER-START",
+        "RESOURCEMANAGER-START", "HISTORYSERVER-START", "YARN_SERVICE_CHECK-SERVICE_CHECK"],
+    "YARN_SERVICE_CHECK-SERVICE_CHECK": ["NODEMANAGER-START", "RESOURCEMANAGER-START"],
+    "RESOURCEMANAGER_SERVICE_CHECK-SERVICE_CHECK": ["RESOURCEMANAGER-START"],
+    "NAMENODE-STOP": ["RESOURCEMANAGER-STOP", "NODEMANAGER-STOP",
+        "HISTORYSERVER-STOP"],
+    "DATANODE-STOP": ["RESOURCEMANAGER-STOP", "NODEMANAGER-STOP",
+        "HISTORYSERVER-STOP"]
+  },
+  "_comment" : "Dependencies that are used in HA NameNode cluster",
+  "namenode_optional_ha": {
+    "NAMENODE-START": ["ZKFC-START", "JOURNALNODE-START", "ZOOKEEPER_SERVER-START"],
+    "ZKFC-START": ["ZOOKEEPER_SERVER-START"]
+  },
+  "_comment" : "Dependencies that are used in ResourceManager HA cluster",
+  "resourcemanager_optional_ha" : {
+    "RESOURCEMANAGER-START": ["ZOOKEEPER_SERVER-START"]
+  }
+}
+
