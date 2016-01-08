@@ -16,6 +16,8 @@
 
 set -ex
 
+. `dirname $0`/bigtop.bom
+
 if [ -z "$BUNDLE_SNAPPY" ] ; then
   [ -f /usr/lib/libsnappy.so ] && BUNDLE_SNAPPY="-Dsnappy.prefix=x -Dbundle.snappy=true -Dsnappy.lib=/usr/lib"
   [ -f /usr/lib64/libsnappy.so ] && BUNDLE_SNAPPY="-Dsnappy.prefix=x -Dbundle.snappy=true -Dsnappy.lib=/usr/lib64"
@@ -25,9 +27,10 @@ mkdir build
 mkdir build/src
 
 # Build artifacts
-MAVEN_SKIP_TESTS="-DskipTests -DskipTest -DskipITs"
-mvn $ANT_OPTS $BUNDLE_SNAPPY -Pdist -Pnative -Psrc -Dtar ${MAVEN_SKIP_TESTS} install "$@"
-mvn site site:stage ${MAVEN_SKIP_TESTS} $@
+MAVEN_OPTS="-Dzookeeper.version=$ZOOKEEPER_VERSION"
+MAVEN_OPTS="$MAVEN_OPTS -DskipTests -DskipTest -DskipITs"
+mvn $ANT_OPTS $BUNDLE_SNAPPY -Pdist -Pnative -Psrc -Dtar ${MAVEN_OPTS} install "$@"
+mvn site site:stage ${MAVEN_OPTS} $@
 
 (cd build ; tar --strip-components=1 -xzvf  ../hadoop-dist/target/hadoop-${HADOOP_VERSION}.tar.gz)
 (cd build/src ; tar --strip-components=1 -xzvf  ../../hadoop-dist/target/hadoop-${HADOOP_VERSION}-src.tar.gz)
