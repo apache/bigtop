@@ -132,6 +132,16 @@ bigtop {
                 ref = 'branch-2.7-ODP'; dir = 'branch-2.7-ODP'}
 ***/
     }
+    'ambari' {
+      name    = 'ambari'
+      relNotes = 'Apache Ambari'
+      version { base = '2.4.0'; pkg = base; release = 1 }
+      tarball { destination = "apache-$name-${version.base}-src.tar.gz"
+                source      = destination }
+      url     { download_path = "/$name/$name-${version.base}/"
+                site = "${apache.APACHE_MIRROR}/${download_path}"
+                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+    }
 
     'bigtop-groovy' {
       name    = 'bigtop-groovy'
