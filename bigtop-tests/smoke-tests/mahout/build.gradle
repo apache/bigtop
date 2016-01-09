@@ -24,12 +24,12 @@ def tests_to_include() {
 sourceSets {
   test {
     groovy {
-      srcDirs = ["${System.env.BIGTOP_HOME}/bigtop-tests/test-artifacts/mahout/"]
+      srcDirs = ["${BIGTOP_HOME}/bigtop-tests/test-artifacts/mahout/"]
       exclude { FileTreeElement elem -> (doExclude(elem.getName())) }
     }
   }
 }
 
 test.doFirst {
-  checkEnv(["BIGTOP_HOME", "MAHOUT_HOME"])
+  checkEnv(["MAHOUT_HOME"])
 }

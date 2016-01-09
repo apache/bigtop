@@ -26,7 +26,7 @@ def tests_to_include() {
 sourceSets {
   test {
     groovy {
-      srcDirs = ["./"]
+      srcDirs = [projectDir]
       exclude 'src/main/groovy/org/apache/bigtop/itest/hadoop/hdfs/**'
       exclude { FileTreeElement elem -> (doExclude(elem.getName())) }
     }

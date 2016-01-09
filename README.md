@@ -97,10 +97,7 @@ For specific questions it's always a good idea to ping the mailing list at dev-s
 For Users: Running the smoke tests.
 -----------------------------------
 
-The simplest way to test bigtop is to:
-
-* Step 1: cd bigtop-tests/smoke-tests/
-* Step 2: Follow the instructions in the smoke-tests/README file.
+The simplest way to test bigtop is described in bigtop-tests/smoke-tests/README file
 
 For integration (API level) testing with maven, read on. 
 

@@ -18,7 +18,6 @@ So overall, this framework makes testing with apache bigtop easy as well as fun!
 You need to export several environment variables.   For example,
 ```
 export HADOOP_CONF_DIR=/etc/hadoop/conf/
-export BIGTOP_HOME=/bigtop-home/
 export HADOOP_MAPRED_HOME=/usr/lib/hadoop-mapreduce/
 export HIVE_HOME=/usr/lib/hive/
 export PIG_HOME=/usr/lib/pig/
@@ -28,19 +27,33 @@ export JAVA_HOME="/usr/lib/jvm/java-openjdk/"
 export MAHOUT_HOME="/usr/lib/mahout"
 export KITE_HOME="/usr/lib/kite"
 export SPARK_HOME="/usr/lib/spark"
-export ITEST="1.0.0"
 ```
 
-Then, simply invoke the tests including the smoke.tests you want to run, as described below.
+Then, simply invoke the tests you want to run, as described below.
 
 Each directory is a gradle "subproject" mapping to an ecosystem component.
-If you specify, for example, "flume", then the flume test runs.  To test hive as well,
-you would specify "flume,hive", and so on. To run the tests from the top-level
+Invoking test task of flume subproject will execute flume tests. To test hive as well,
+you would add the invocation of hive:test, and so on. To run the tests from the top-level
 Bigtop folder, follow the example below:
 ```
-    ./gradlew -b bigtop-tests/smoke-tests/build.gradle clean test -Dsmoke.tests=flume,hive --info
+    ./gradlew bigtop-tests:smoke-tests:flume:test bigtop-tests:smoke-tests:hive:test -Psmoke.tests --info
 ```
+You also can run smoke tests from bigtop-tests/smoke-tests directory,
+or from any subproject of it. E.g.
+```
+    cd bigtop-tests/smoke-tests
+    ../../gradlew hive:test -Psmoke.tests
+```
+or
+```
+    cd bigtop-tests/smoke-tests/hive
+    ../../../gradlew test -Psmoke.tests
+```
+Instead of using top-level Gradle wrapper one can also use system-wide
+Gradle, if installed and available.
 
+Setting up project property smoke.tests is important, cause this is
+required to to enable test tasks for smoke projects.
 The --info option is a nice feature to have here:  You can easily debug your tests this way,
 just make sure you have log4j.properties in your conf/ directory locally.
 

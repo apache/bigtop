@@ -24,11 +24,11 @@ def tests_to_include() {
 sourceSets {
   test {
     groovy {
-        srcDirs = ["${System.env.BIGTOP_HOME}/bigtop-tests/smoke-tests/ignite-hadoop/"]
+        srcDirs = ["${BIGTOP_HOME}/bigtop-tests/smoke-tests/ignite-hadoop/"]
     }
   }
 }
 
 test.doFirst {
-  checkEnv(["BIGTOP_HOME", "HADOOP_MAPRED_HOME"])
+  checkEnv(["HADOOP_MAPRED_HOME"])
 }

@@ -172,6 +172,24 @@ project(':itest-common') {
   }
 }
 
+/**
+ * checkSmokeTestProjects() configures smoke-tests:<component>:test task only
+ * in if the project has smoke.tests properties set.
+ * This is done to avoid running cluster smoke tests during the normal life-cycle
+ * of the project development
+ */
+def checkSmokeTestProjects = {
+  FileTree fTree = fileTree(dir: 'bigtop-tests/smoke-tests', include: '*/build.gradle')
+  fTree.each() { smokeProject ->
+    def parent = smokeProject.getParentFile().name
+    project (":bigtop-tests:smoke-tests:$parent") {
+      test {
+        onlyIf {project.hasProperty('smoke.tests')}
+      }
+    }
+  }
+}
+
 def TESTARTIFACTS_GROUP = 'test artifacts'
 def DEVENV_GROUP = 'development tools'
 def DEPLOY_GROUP = 'deployment'
@@ -389,7 +407,8 @@ task "bigtop-slaves"(dependsOn: 'gen-gradle-home', type:Exec,
   commandLine command
 }
 
-project.afterEvaluate{
+project.afterEvaluate {
+  checkSmokeTestProjects()
   artifactToInstall(dependsOn: [installTopLevel, installCommon, installConf, installiTest])
 }
 

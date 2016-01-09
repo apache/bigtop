@@ -26,8 +26,8 @@ def tests_to_include() {
 sourceSets {
   test {
     groovy {
-      srcDirs = ["${System.env.BIGTOP_HOME}/bigtop-tests/test-artifacts/hive/",
-                 "${System.env.BIGTOP_HOME}/bigtop-tests/smoke-tests/hive/"]
+      srcDirs = ["${BIGTOP_HOME}/bigtop-tests/test-artifacts/hive/",
+                 "${BIGTOP_HOME}/bigtop-tests/smoke-tests/hive/"]
       exclude { FileTreeElement elem -> (doExclude(elem.getName())) }
     }
   }
@@ -39,7 +39,5 @@ test {
 }
 
 test.doFirst {
-  // BIGTOP_HOME is necessary here, since we use it to read in from
-  // test-artifacts.
-  checkEnv(["BIGTOP_HOME", "HIVE_HOME", "HIVE_CONF_DIR", "BIGTOP_HOME"])
+  checkEnv(["HIVE_HOME", "HIVE_CONF_DIR"])
 }
