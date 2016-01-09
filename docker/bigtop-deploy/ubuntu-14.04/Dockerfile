@@ -31,4 +31,10 @@ RUN apt-get update && \
     # Install required Puppet modules
     puppet apply -e "include bigtop_toolchain::puppet-modules"
 
+#Add Tini
+ENV TINI_VERSION v0.8.4
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
+RUN chmod +x /tini
+ENTRYPOINT ["/tini", "--"]
+
 CMD /usr/sbin/sshd -D
