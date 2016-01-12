@@ -1,0 +1,2342 @@
+
+USE  TEST_HIVE_LONGRUN
+
+
+create table src_multi1 like src
+
+create table src_multi2 like src
+set hive.merge.mapfiles=false
+set hive.merge.mapredfiles=false
+
+
+explain
+from src
+insert overwrite table src_multi1 select * where key < 10
+insert overwrite table src_multi2 select * where key > 10 and key < 20
+STAGE DEPENDENCIES:
+  Stage-2 is a root stage
+  Stage-0 depends on stages: Stage-2
+  Stage-1 depends on stages: Stage-2
+
+STAGE PLANS:
+  Stage: Stage-2
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            alias: src
+            Statistics: Num rows: 29 Data size: 5812 Basic stats: COMPLETE Column stats: NONE
+            Filter Operator
+              predicate: (key < 10) (type: boolean)
+              Statistics: Num rows: 9 Data size: 1803 Basic stats: COMPLETE Column stats: NONE
+              Select Operator
+                expressions: key (type: string), value (type: string)
+                outputColumnNames: _col0, _col1
+                Statistics: Num rows: 9 Data size: 1803 Basic stats: COMPLETE Column stats: NONE
+                File Output Operator
+                  compressed: false
+                  Statistics: Num rows: 9 Data size: 1803 Basic stats: COMPLETE Column stats: NONE
+                  table:
+                      input format: org.apache.hadoop.mapred.TextInputFormat
+                      output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                      serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                      name: test_hive_longrun.src_multi1
+            Filter Operator
+              predicate: ((key > 10) and (key < 20)) (type: boolean)
+              Statistics: Num rows: 3 Data size: 601 Basic stats: COMPLETE Column stats: NONE
+              Select Operator
+                expressions: key (type: string), value (type: string)
+                outputColumnNames: _col0, _col1
+                Statistics: Num rows: 3 Data size: 601 Basic stats: COMPLETE Column stats: NONE
+                File Output Operator
+                  compressed: false
+                  Statistics: Num rows: 3 Data size: 601 Basic stats: COMPLETE Column stats: NONE
+                  table:
+                      input format: org.apache.hadoop.mapred.TextInputFormat
+                      output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                      serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                      name: test_hive_longrun.src_multi2
+
+  Stage: Stage-0
+    Move Operator
+      tables:
+          replace: true
+          table:
+              input format: org.apache.hadoop.mapred.TextInputFormat
+              output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+              serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+              name: test_hive_longrun.src_multi1
+
+  Stage: Stage-1
+    Move Operator
+      tables:
+          replace: true
+          table:
+              input format: org.apache.hadoop.mapred.TextInputFormat
+              output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+              serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+              name: test_hive_longrun.src_multi2
+
+
+
+from src
+insert overwrite table src_multi1 select * where key < 10
+insert overwrite table src_multi2 select * where key > 10 and key < 20
+
+
+select * from src_multi1 order by key, value
+0	val_0
+0	val_0
+0	val_0
+2	val_2
+4	val_4
+5	val_5
+5	val_5
+5	val_5
+8	val_8
+9	val_9
+
+select * from src_multi2 order by key, value
+11	val_11
+12	val_12
+12	val_12
+15	val_15
+15	val_15
+17	val_17
+18	val_18
+18	val_18
+19	val_19
+set hive.merge.mapfiles=true
+set hive.merge.mapredfiles=false
+
+
+explain
+from src
+insert overwrite table src_multi1 select * where key < 10
+insert overwrite table src_multi2 select * where key > 10 and key < 20
+STAGE DEPENDENCIES:
+  Stage-2 is a root stage
+  Stage-7 depends on stages: Stage-2 , consists of Stage-4, Stage-3, Stage-5
+  Stage-4
+  Stage-0 depends on stages: Stage-4, Stage-3, Stage-6
+  Stage-3
+  Stage-5
+  Stage-6 depends on stages: Stage-5
+  Stage-12 depends on stages: Stage-2 , consists of Stage-9, Stage-8, Stage-10
+  Stage-9
+  Stage-1 depends on stages: Stage-9, Stage-8, Stage-11
+  Stage-8
+  Stage-10
+  Stage-11 depends on stages: Stage-10
+
+STAGE PLANS:
+  Stage: Stage-2
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            alias: src
+            Statistics: Num rows: 29 Data size: 5812 Basic stats: COMPLETE Column stats: NONE
+            Filter Operator
+              predicate: (key < 10) (type: boolean)
+              Statistics: Num rows: 9 Data size: 1803 Basic stats: COMPLETE Column stats: NONE
+              Select Operator
+                expressions: key (type: string), value (type: string)
+                outputColumnNames: _col0, _col1
+                Statistics: Num rows: 9 Data size: 1803 Basic stats: COMPLETE Column stats: NONE
+                File Output Operator
+                  compressed: false
+                  Statistics: Num rows: 9 Data size: 1803 Basic stats: COMPLETE Column stats: NONE
+                  table:
+                      input format: org.apache.hadoop.mapred.TextInputFormat
+                      output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                      serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                      name: test_hive_longrun.src_multi1
+            Filter Operator
+              predicate: ((key > 10) and (key < 20)) (type: boolean)
+              Statistics: Num rows: 3 Data size: 601 Basic stats: COMPLETE Column stats: NONE
+              Select Operator
+                expressions: key (type: string), value (type: string)
+                outputColumnNames: _col0, _col1
+                Statistics: Num rows: 3 Data size: 601 Basic stats: COMPLETE Column stats: NONE
+                File Output Operator
+                  compressed: false
+                  Statistics: Num rows: 3 Data size: 601 Basic stats: COMPLETE Column stats: NONE
+                  table:
+                      input format: org.apache.hadoop.mapred.TextInputFormat
+                      output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                      serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                      name: test_hive_longrun.src_multi2
+
+  Stage: Stage-7
+    Conditional Operator
+
+  Stage: Stage-4
+    Move Operator
+      files:
+          hdfs directory: true
+          destination: hdfs://HADOOP/hive/test_hive_longrun.db/src_multi1/.hive-staging_hive_2016-01-12_11-19-45_866_4598331561148609477-1/-ext-10000
+
+  Stage: Stage-0
+    Move Operator
+      tables:
+          replace: true
+          table:
+              input format: org.apache.hadoop.mapred.TextInputFormat
+              output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+              serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+              name: test_hive_longrun.src_multi1
+
+  Stage: Stage-3
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            File Output Operator
+              compressed: false
+              table:
+                  input format: org.apache.hadoop.mapred.TextInputFormat
+                  output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                  serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                  name: test_hive_longrun.src_multi1
+
+  Stage: Stage-5
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            File Output Operator
+              compressed: false
+              table:
+                  input format: org.apache.hadoop.mapred.TextInputFormat
+                  output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                  serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                  name: test_hive_longrun.src_multi1
+
+  Stage: Stage-6
+    Move Operator
+      files:
+          hdfs directory: true
+          destination: hdfs://HADOOP/hive/test_hive_longrun.db/src_multi1/.hive-staging_hive_2016-01-12_11-19-45_866_4598331561148609477-1/-ext-10000
+
+  Stage: Stage-12
+    Conditional Operator
+
+  Stage: Stage-9
+    Move Operator
+      files:
+          hdfs directory: true
+          destination: hdfs://HADOOP/hive/test_hive_longrun.db/src_multi2/.hive-staging_hive_2016-01-12_11-19-45_866_4598331561148609477-1/-ext-10002
+
+  Stage: Stage-1
+    Move Operator
+      tables:
+          replace: true
+          table:
+              input format: org.apache.hadoop.mapred.TextInputFormat
+              output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+              serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+              name: test_hive_longrun.src_multi2
+
+  Stage: Stage-8
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            File Output Operator
+              compressed: false
+              table:
+                  input format: org.apache.hadoop.mapred.TextInputFormat
+                  output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                  serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                  name: test_hive_longrun.src_multi2
+
+  Stage: Stage-10
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            File Output Operator
+              compressed: false
+              table:
+                  input format: org.apache.hadoop.mapred.TextInputFormat
+                  output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                  serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                  name: test_hive_longrun.src_multi2
+
+  Stage: Stage-11
+    Move Operator
+      files:
+          hdfs directory: true
+          destination: hdfs://HADOOP/hive/test_hive_longrun.db/src_multi2/.hive-staging_hive_2016-01-12_11-19-45_866_4598331561148609477-1/-ext-10002
+
+
+
+from src
+insert overwrite table src_multi1 select * where key < 10
+insert overwrite table src_multi2 select * where key > 10 and key < 20
+Moved: 'hdfs://HADOOP/hive/test_hive_longrun.db/src_multi1/000000_0' to trash at: hdfs://HADOOP/user/USER/.Trash/Current
+Moved: 'hdfs://HADOOP/hive/test_hive_longrun.db/src_multi2/000000_0' to trash at: hdfs://HADOOP/user/USER/.Trash/Current
+
+
+select * from src_multi1 order by key, value
+0	val_0
+0	val_0
+0	val_0
+2	val_2
+4	val_4
+5	val_5
+5	val_5
+5	val_5
+8	val_8
+9	val_9
+
+select * from src_multi2 order by key, value
+11	val_11
+12	val_12
+12	val_12
+15	val_15
+15	val_15
+17	val_17
+18	val_18
+18	val_18
+19	val_19
+set hive.merge.mapfiles=false
+set hive.merge.mapredfiles=true
+
+
+explain
+from src
+insert overwrite table src_multi1 select * where key < 10
+insert overwrite table src_multi2 select * where key > 10 and key < 20
+STAGE DEPENDENCIES:
+  Stage-2 is a root stage
+  Stage-0 depends on stages: Stage-2
+  Stage-1 depends on stages: Stage-2
+
+STAGE PLANS:
+  Stage: Stage-2
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            alias: src
+            Statistics: Num rows: 29 Data size: 5812 Basic stats: COMPLETE Column stats: NONE
+            Filter Operator
+              predicate: (key < 10) (type: boolean)
+              Statistics: Num rows: 9 Data size: 1803 Basic stats: COMPLETE Column stats: NONE
+              Select Operator
+                expressions: key (type: string), value (type: string)
+                outputColumnNames: _col0, _col1
+                Statistics: Num rows: 9 Data size: 1803 Basic stats: COMPLETE Column stats: NONE
+                File Output Operator
+                  compressed: false
+                  Statistics: Num rows: 9 Data size: 1803 Basic stats: COMPLETE Column stats: NONE
+                  table:
+                      input format: org.apache.hadoop.mapred.TextInputFormat
+                      output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                      serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                      name: test_hive_longrun.src_multi1
+            Filter Operator
+              predicate: ((key > 10) and (key < 20)) (type: boolean)
+              Statistics: Num rows: 3 Data size: 601 Basic stats: COMPLETE Column stats: NONE
+              Select Operator
+                expressions: key (type: string), value (type: string)
+                outputColumnNames: _col0, _col1
+                Statistics: Num rows: 3 Data size: 601 Basic stats: COMPLETE Column stats: NONE
+                File Output Operator
+                  compressed: false
+                  Statistics: Num rows: 3 Data size: 601 Basic stats: COMPLETE Column stats: NONE
+                  table:
+                      input format: org.apache.hadoop.mapred.TextInputFormat
+                      output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                      serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                      name: test_hive_longrun.src_multi2
+
+  Stage: Stage-0
+    Move Operator
+      tables:
+          replace: true
+          table:
+              input format: org.apache.hadoop.mapred.TextInputFormat
+              output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+              serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+              name: test_hive_longrun.src_multi1
+
+  Stage: Stage-1
+    Move Operator
+      tables:
+          replace: true
+          table:
+              input format: org.apache.hadoop.mapred.TextInputFormat
+              output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+              serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+              name: test_hive_longrun.src_multi2
+
+
+
+from src
+insert overwrite table src_multi1 select * where key < 10
+insert overwrite table src_multi2 select * where key > 10 and key < 20
+Moved: 'hdfs://HADOOP/hive/test_hive_longrun.db/src_multi1/000000_0' to trash at: hdfs://HADOOP/user/USER/.Trash/Current
+Moved: 'hdfs://HADOOP/hive/test_hive_longrun.db/src_multi2/000000_0' to trash at: hdfs://HADOOP/user/USER/.Trash/Current
+
+
+select * from src_multi1 order by key, value
+0	val_0
+0	val_0
+0	val_0
+2	val_2
+4	val_4
+5	val_5
+5	val_5
+5	val_5
+8	val_8
+9	val_9
+
+select * from src_multi2 order by key, value
+11	val_11
+12	val_12
+12	val_12
+15	val_15
+15	val_15
+17	val_17
+18	val_18
+18	val_18
+19	val_19
+set hive.merge.mapfiles=true
+set hive.merge.mapredfiles=true
+
+
+explain
+from src
+insert overwrite table src_multi1 select * where key < 10
+insert overwrite table src_multi2 select * where key > 10 and key < 20
+STAGE DEPENDENCIES:
+  Stage-2 is a root stage
+  Stage-7 depends on stages: Stage-2 , consists of Stage-4, Stage-3, Stage-5
+  Stage-4
+  Stage-0 depends on stages: Stage-4, Stage-3, Stage-6
+  Stage-3
+  Stage-5
+  Stage-6 depends on stages: Stage-5
+  Stage-12 depends on stages: Stage-2 , consists of Stage-9, Stage-8, Stage-10
+  Stage-9
+  Stage-1 depends on stages: Stage-9, Stage-8, Stage-11
+  Stage-8
+  Stage-10
+  Stage-11 depends on stages: Stage-10
+
+STAGE PLANS:
+  Stage: Stage-2
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            alias: src
+            Statistics: Num rows: 29 Data size: 5812 Basic stats: COMPLETE Column stats: NONE
+            Filter Operator
+              predicate: (key < 10) (type: boolean)
+              Statistics: Num rows: 9 Data size: 1803 Basic stats: COMPLETE Column stats: NONE
+              Select Operator
+                expressions: key (type: string), value (type: string)
+                outputColumnNames: _col0, _col1
+                Statistics: Num rows: 9 Data size: 1803 Basic stats: COMPLETE Column stats: NONE
+                File Output Operator
+                  compressed: false
+                  Statistics: Num rows: 9 Data size: 1803 Basic stats: COMPLETE Column stats: NONE
+                  table:
+                      input format: org.apache.hadoop.mapred.TextInputFormat
+                      output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                      serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                      name: test_hive_longrun.src_multi1
+            Filter Operator
+              predicate: ((key > 10) and (key < 20)) (type: boolean)
+              Statistics: Num rows: 3 Data size: 601 Basic stats: COMPLETE Column stats: NONE
+              Select Operator
+                expressions: key (type: string), value (type: string)
+                outputColumnNames: _col0, _col1
+                Statistics: Num rows: 3 Data size: 601 Basic stats: COMPLETE Column stats: NONE
+                File Output Operator
+                  compressed: false
+                  Statistics: Num rows: 3 Data size: 601 Basic stats: COMPLETE Column stats: NONE
+                  table:
+                      input format: org.apache.hadoop.mapred.TextInputFormat
+                      output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                      serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                      name: test_hive_longrun.src_multi2
+
+  Stage: Stage-7
+    Conditional Operator
+
+  Stage: Stage-4
+    Move Operator
+      files:
+          hdfs directory: true
+          destination: hdfs://HADOOP/hive/test_hive_longrun.db/src_multi1/.hive-staging_hive_2016-01-12_11-22-33_790_1703492660221085022-1/-ext-10000
+
+  Stage: Stage-0
+    Move Operator
+      tables:
+          replace: true
+          table:
+              input format: org.apache.hadoop.mapred.TextInputFormat
+              output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+              serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+              name: test_hive_longrun.src_multi1
+
+  Stage: Stage-3
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            File Output Operator
+              compressed: false
+              table:
+                  input format: org.apache.hadoop.mapred.TextInputFormat
+                  output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                  serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                  name: test_hive_longrun.src_multi1
+
+  Stage: Stage-5
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            File Output Operator
+              compressed: false
+              table:
+                  input format: org.apache.hadoop.mapred.TextInputFormat
+                  output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                  serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                  name: test_hive_longrun.src_multi1
+
+  Stage: Stage-6
+    Move Operator
+      files:
+          hdfs directory: true
+          destination: hdfs://HADOOP/hive/test_hive_longrun.db/src_multi1/.hive-staging_hive_2016-01-12_11-22-33_790_1703492660221085022-1/-ext-10000
+
+  Stage: Stage-12
+    Conditional Operator
+
+  Stage: Stage-9
+    Move Operator
+      files:
+          hdfs directory: true
+          destination: hdfs://HADOOP/hive/test_hive_longrun.db/src_multi2/.hive-staging_hive_2016-01-12_11-22-33_790_1703492660221085022-1/-ext-10002
+
+  Stage: Stage-1
+    Move Operator
+      tables:
+          replace: true
+          table:
+              input format: org.apache.hadoop.mapred.TextInputFormat
+              output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+              serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+              name: test_hive_longrun.src_multi2
+
+  Stage: Stage-8
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            File Output Operator
+              compressed: false
+              table:
+                  input format: org.apache.hadoop.mapred.TextInputFormat
+                  output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                  serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                  name: test_hive_longrun.src_multi2
+
+  Stage: Stage-10
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            File Output Operator
+              compressed: false
+              table:
+                  input format: org.apache.hadoop.mapred.TextInputFormat
+                  output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                  serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                  name: test_hive_longrun.src_multi2
+
+  Stage: Stage-11
+    Move Operator
+      files:
+          hdfs directory: true
+          destination: hdfs://HADOOP/hive/test_hive_longrun.db/src_multi2/.hive-staging_hive_2016-01-12_11-22-33_790_1703492660221085022-1/-ext-10002
+
+
+
+from src
+insert overwrite table src_multi1 select * where key < 10
+insert overwrite table src_multi2 select * where key > 10 and key < 20
+Moved: 'hdfs://HADOOP/hive/test_hive_longrun.db/src_multi1/000000_0' to trash at: hdfs://HADOOP/user/USER/.Trash/Current
+Moved: 'hdfs://HADOOP/hive/test_hive_longrun.db/src_multi2/000000_0' to trash at: hdfs://HADOOP/user/USER/.Trash/Current
+
+
+select * from src_multi1 order by key, value
+0	val_0
+0	val_0
+0	val_0
+2	val_2
+4	val_4
+5	val_5
+5	val_5
+5	val_5
+8	val_8
+9	val_9
+
+select * from src_multi2 order by key, value
+11	val_11
+12	val_12
+12	val_12
+15	val_15
+15	val_15
+17	val_17
+18	val_18
+18	val_18
+19	val_19
+set hive.merge.mapfiles=false
+set hive.merge.mapredfiles=false
+
+
+explain
+from src
+insert overwrite table src_multi1 select * where key < 10 group by key, value
+insert overwrite table src_multi2 select * where key > 10 and key < 20 group by key, value
+STAGE DEPENDENCIES:
+  Stage-2 is a root stage
+  Stage-0 depends on stages: Stage-2
+  Stage-1 depends on stages: Stage-2
+
+STAGE PLANS:
+  Stage: Stage-2
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            alias: src
+            Statistics: Num rows: 29 Data size: 5812 Basic stats: COMPLETE Column stats: NONE
+            Filter Operator
+              predicate: ((key < 10) or ((key > 10) and (key < 20))) (type: boolean)
+              Statistics: Num rows: 12 Data size: 2404 Basic stats: COMPLETE Column stats: NONE
+              Reduce Output Operator
+                key expressions: key (type: string), value (type: string)
+                sort order: ++
+                Map-reduce partition columns: key (type: string), value (type: string)
+                Statistics: Num rows: 12 Data size: 2404 Basic stats: COMPLETE Column stats: NONE
+      Reduce Operator Tree:
+        Forward
+          Statistics: Num rows: 12 Data size: 2404 Basic stats: COMPLETE Column stats: NONE
+          Filter Operator
+            predicate: (KEY._col0 < 10) (type: boolean)
+            Statistics: Num rows: 4 Data size: 801 Basic stats: COMPLETE Column stats: NONE
+            Group By Operator
+              keys: KEY._col0 (type: string), KEY._col1 (type: string)
+              mode: complete
+              outputColumnNames: _col0, _col1
+              Statistics: Num rows: 2 Data size: 400 Basic stats: COMPLETE Column stats: NONE
+              File Output Operator
+                compressed: false
+                Statistics: Num rows: 2 Data size: 400 Basic stats: COMPLETE Column stats: NONE
+                table:
+                    input format: org.apache.hadoop.mapred.TextInputFormat
+                    output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                    serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                    name: test_hive_longrun.src_multi1
+          Filter Operator
+            predicate: ((KEY._col0 > 10) and (KEY._col0 < 20)) (type: boolean)
+            Statistics: Num rows: 1 Data size: 200 Basic stats: COMPLETE Column stats: NONE
+            Group By Operator
+              keys: KEY._col0 (type: string), KEY._col1 (type: string)
+              mode: complete
+              outputColumnNames: _col0, _col1
+              Statistics: Num rows: 0 Data size: 0 Basic stats: NONE Column stats: NONE
+              File Output Operator
+                compressed: false
+                Statistics: Num rows: 0 Data size: 0 Basic stats: NONE Column stats: NONE
+                table:
+                    input format: org.apache.hadoop.mapred.TextInputFormat
+                    output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                    serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                    name: test_hive_longrun.src_multi2
+
+  Stage: Stage-0
+    Move Operator
+      tables:
+          replace: true
+          table:
+              input format: org.apache.hadoop.mapred.TextInputFormat
+              output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+              serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+              name: test_hive_longrun.src_multi1
+
+  Stage: Stage-1
+    Move Operator
+      tables:
+          replace: true
+          table:
+              input format: org.apache.hadoop.mapred.TextInputFormat
+              output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+              serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+              name: test_hive_longrun.src_multi2
+
+
+
+from src
+insert overwrite table src_multi1 select * where key < 10 group by key, value
+insert overwrite table src_multi2 select * where key > 10 and key < 20 group by key, value
+Moved: 'hdfs://HADOOP/hive/test_hive_longrun.db/src_multi1/000000_0' to trash at: hdfs://HADOOP/user/USER/.Trash/Current
+Moved: 'hdfs://HADOOP/hive/test_hive_longrun.db/src_multi2/000000_0' to trash at: hdfs://HADOOP/user/USER/.Trash/Current
+
+
+select * from src_multi1 order by key, value
+0	val_0
+2	val_2
+4	val_4
+5	val_5
+8	val_8
+9	val_9
+
+select * from src_multi2 order by key, value
+11	val_11
+12	val_12
+15	val_15
+17	val_17
+18	val_18
+19	val_19
+set hive.merge.mapfiles=false
+set hive.merge.mapredfiles=true
+
+
+explain
+from src
+insert overwrite table src_multi1 select * where key < 10 group by key, value
+insert overwrite table src_multi2 select * where key > 10 and key < 20 group by key, value
+STAGE DEPENDENCIES:
+  Stage-2 is a root stage
+  Stage-7 depends on stages: Stage-2 , consists of Stage-4, Stage-3, Stage-5
+  Stage-4
+  Stage-0 depends on stages: Stage-4, Stage-3, Stage-6
+  Stage-3
+  Stage-5
+  Stage-6 depends on stages: Stage-5
+  Stage-12 depends on stages: Stage-2 , consists of Stage-9, Stage-8, Stage-10
+  Stage-9
+  Stage-1 depends on stages: Stage-9, Stage-8, Stage-11
+  Stage-8
+  Stage-10
+  Stage-11 depends on stages: Stage-10
+
+STAGE PLANS:
+  Stage: Stage-2
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            alias: src
+            Statistics: Num rows: 29 Data size: 5812 Basic stats: COMPLETE Column stats: NONE
+            Filter Operator
+              predicate: ((key < 10) or ((key > 10) and (key < 20))) (type: boolean)
+              Statistics: Num rows: 12 Data size: 2404 Basic stats: COMPLETE Column stats: NONE
+              Reduce Output Operator
+                key expressions: key (type: string), value (type: string)
+                sort order: ++
+                Map-reduce partition columns: key (type: string), value (type: string)
+                Statistics: Num rows: 12 Data size: 2404 Basic stats: COMPLETE Column stats: NONE
+      Reduce Operator Tree:
+        Forward
+          Statistics: Num rows: 12 Data size: 2404 Basic stats: COMPLETE Column stats: NONE
+          Filter Operator
+            predicate: (KEY._col0 < 10) (type: boolean)
+            Statistics: Num rows: 4 Data size: 801 Basic stats: COMPLETE Column stats: NONE
+            Group By Operator
+              keys: KEY._col0 (type: string), KEY._col1 (type: string)
+              mode: complete
+              outputColumnNames: _col0, _col1
+              Statistics: Num rows: 2 Data size: 400 Basic stats: COMPLETE Column stats: NONE
+              File Output Operator
+                compressed: false
+                Statistics: Num rows: 2 Data size: 400 Basic stats: COMPLETE Column stats: NONE
+                table:
+                    input format: org.apache.hadoop.mapred.TextInputFormat
+                    output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                    serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                    name: test_hive_longrun.src_multi1
+          Filter Operator
+            predicate: ((KEY._col0 > 10) and (KEY._col0 < 20)) (type: boolean)
+            Statistics: Num rows: 1 Data size: 200 Basic stats: COMPLETE Column stats: NONE
+            Group By Operator
+              keys: KEY._col0 (type: string), KEY._col1 (type: string)
+              mode: complete
+              outputColumnNames: _col0, _col1
+              Statistics: Num rows: 0 Data size: 0 Basic stats: NONE Column stats: NONE
+              File Output Operator
+                compressed: false
+                Statistics: Num rows: 0 Data size: 0 Basic stats: NONE Column stats: NONE
+                table:
+                    input format: org.apache.hadoop.mapred.TextInputFormat
+                    output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                    serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                    name: test_hive_longrun.src_multi2
+
+  Stage: Stage-7
+    Conditional Operator
+
+  Stage: Stage-4
+    Move Operator
+      files:
+          hdfs directory: true
+          destination: hdfs://HADOOP/hive/test_hive_longrun.db/src_multi1/.hive-staging_hive_2016-01-12_11-25-27_578_2788154235006321068-1/-ext-10000
+
+  Stage: Stage-0
+    Move Operator
+      tables:
+          replace: true
+          table:
+              input format: org.apache.hadoop.mapred.TextInputFormat
+              output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+              serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+              name: test_hive_longrun.src_multi1
+
+  Stage: Stage-3
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            File Output Operator
+              compressed: false
+              table:
+                  input format: org.apache.hadoop.mapred.TextInputFormat
+                  output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                  serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                  name: test_hive_longrun.src_multi1
+
+  Stage: Stage-5
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            File Output Operator
+              compressed: false
+              table:
+                  input format: org.apache.hadoop.mapred.TextInputFormat
+                  output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                  serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                  name: test_hive_longrun.src_multi1
+
+  Stage: Stage-6
+    Move Operator
+      files:
+          hdfs directory: true
+          destination: hdfs://HADOOP/hive/test_hive_longrun.db/src_multi1/.hive-staging_hive_2016-01-12_11-25-27_578_2788154235006321068-1/-ext-10000
+
+  Stage: Stage-12
+    Conditional Operator
+
+  Stage: Stage-9
+    Move Operator
+      files:
+          hdfs directory: true
+          destination: hdfs://HADOOP/hive/test_hive_longrun.db/src_multi2/.hive-staging_hive_2016-01-12_11-25-27_578_2788154235006321068-1/-ext-10002
+
+  Stage: Stage-1
+    Move Operator
+      tables:
+          replace: true
+          table:
+              input format: org.apache.hadoop.mapred.TextInputFormat
+              output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+              serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+              name: test_hive_longrun.src_multi2
+
+  Stage: Stage-8
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            File Output Operator
+              compressed: false
+              table:
+                  input format: org.apache.hadoop.mapred.TextInputFormat
+                  output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                  serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                  name: test_hive_longrun.src_multi2
+
+  Stage: Stage-10
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            File Output Operator
+              compressed: false
+              table:
+                  input format: org.apache.hadoop.mapred.TextInputFormat
+                  output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                  serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                  name: test_hive_longrun.src_multi2
+
+  Stage: Stage-11
+    Move Operator
+      files:
+          hdfs directory: true
+          destination: hdfs://HADOOP/hive/test_hive_longrun.db/src_multi2/.hive-staging_hive_2016-01-12_11-25-27_578_2788154235006321068-1/-ext-10002
+
+
+
+from src
+insert overwrite table src_multi1 select * where key < 10 group by key, value
+insert overwrite table src_multi2 select * where key > 10 and key < 20 group by key, value
+Moved: 'hdfs://HADOOP/hive/test_hive_longrun.db/src_multi1/000000_0' to trash at: hdfs://HADOOP/user/USER/.Trash/Current
+Moved: 'hdfs://HADOOP/hive/test_hive_longrun.db/src_multi2/000000_0' to trash at: hdfs://HADOOP/user/USER/.Trash/Current
+
+
+select * from src_multi1 order by key, value
+0	val_0
+2	val_2
+4	val_4
+5	val_5
+8	val_8
+9	val_9
+
+select * from src_multi2 order by key, value
+11	val_11
+12	val_12
+15	val_15
+17	val_17
+18	val_18
+19	val_19
+set hive.merge.mapfiles=true
+set hive.merge.mapredfiles=false
+
+
+explain
+from src
+insert overwrite table src_multi1 select * where key < 10 group by key, value
+insert overwrite table src_multi2 select * where key > 10 and key < 20 group by key, value
+STAGE DEPENDENCIES:
+  Stage-2 is a root stage
+  Stage-0 depends on stages: Stage-2
+  Stage-1 depends on stages: Stage-2
+
+STAGE PLANS:
+  Stage: Stage-2
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            alias: src
+            Statistics: Num rows: 29 Data size: 5812 Basic stats: COMPLETE Column stats: NONE
+            Filter Operator
+              predicate: ((key < 10) or ((key > 10) and (key < 20))) (type: boolean)
+              Statistics: Num rows: 12 Data size: 2404 Basic stats: COMPLETE Column stats: NONE
+              Reduce Output Operator
+                key expressions: key (type: string), value (type: string)
+                sort order: ++
+                Map-reduce partition columns: key (type: string), value (type: string)
+                Statistics: Num rows: 12 Data size: 2404 Basic stats: COMPLETE Column stats: NONE
+      Reduce Operator Tree:
+        Forward
+          Statistics: Num rows: 12 Data size: 2404 Basic stats: COMPLETE Column stats: NONE
+          Filter Operator
+            predicate: (KEY._col0 < 10) (type: boolean)
+            Statistics: Num rows: 4 Data size: 801 Basic stats: COMPLETE Column stats: NONE
+            Group By Operator
+              keys: KEY._col0 (type: string), KEY._col1 (type: string)
+              mode: complete
+              outputColumnNames: _col0, _col1
+              Statistics: Num rows: 2 Data size: 400 Basic stats: COMPLETE Column stats: NONE
+              File Output Operator
+                compressed: false
+                Statistics: Num rows: 2 Data size: 400 Basic stats: COMPLETE Column stats: NONE
+                table:
+                    input format: org.apache.hadoop.mapred.TextInputFormat
+                    output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                    serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                    name: test_hive_longrun.src_multi1
+          Filter Operator
+            predicate: ((KEY._col0 > 10) and (KEY._col0 < 20)) (type: boolean)
+            Statistics: Num rows: 1 Data size: 200 Basic stats: COMPLETE Column stats: NONE
+            Group By Operator
+              keys: KEY._col0 (type: string), KEY._col1 (type: string)
+              mode: complete
+              outputColumnNames: _col0, _col1
+              Statistics: Num rows: 0 Data size: 0 Basic stats: NONE Column stats: NONE
+              File Output Operator
+                compressed: false
+                Statistics: Num rows: 0 Data size: 0 Basic stats: NONE Column stats: NONE
+                table:
+                    input format: org.apache.hadoop.mapred.TextInputFormat
+                    output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                    serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                    name: test_hive_longrun.src_multi2
+
+  Stage: Stage-0
+    Move Operator
+      tables:
+          replace: true
+          table:
+              input format: org.apache.hadoop.mapred.TextInputFormat
+              output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+              serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+              name: test_hive_longrun.src_multi1
+
+  Stage: Stage-1
+    Move Operator
+      tables:
+          replace: true
+          table:
+              input format: org.apache.hadoop.mapred.TextInputFormat
+              output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+              serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+              name: test_hive_longrun.src_multi2
+
+
+
+from src
+insert overwrite table src_multi1 select * where key < 10 group by key, value
+insert overwrite table src_multi2 select * where key > 10 and key < 20 group by key, value
+Moved: 'hdfs://HADOOP/hive/test_hive_longrun.db/src_multi1/000000_0' to trash at: hdfs://HADOOP/user/USER/.Trash/Current
+Moved: 'hdfs://HADOOP/hive/test_hive_longrun.db/src_multi2/000000_0' to trash at: hdfs://HADOOP/user/USER/.Trash/Current
+
+
+select * from src_multi1 order by key, value
+0	val_0
+2	val_2
+4	val_4
+5	val_5
+8	val_8
+9	val_9
+
+select * from src_multi2 order by key, value
+11	val_11
+12	val_12
+15	val_15
+17	val_17
+18	val_18
+19	val_19
+set hive.merge.mapfiles=true
+set hive.merge.mapredfiles=true
+
+
+explain
+from src
+insert overwrite table src_multi1 select * where key < 10 group by key, value
+insert overwrite table src_multi2 select * where key > 10 and key < 20 group by key, value
+STAGE DEPENDENCIES:
+  Stage-2 is a root stage
+  Stage-7 depends on stages: Stage-2 , consists of Stage-4, Stage-3, Stage-5
+  Stage-4
+  Stage-0 depends on stages: Stage-4, Stage-3, Stage-6
+  Stage-3
+  Stage-5
+  Stage-6 depends on stages: Stage-5
+  Stage-12 depends on stages: Stage-2 , consists of Stage-9, Stage-8, Stage-10
+  Stage-9
+  Stage-1 depends on stages: Stage-9, Stage-8, Stage-11
+  Stage-8
+  Stage-10
+  Stage-11 depends on stages: Stage-10
+
+STAGE PLANS:
+  Stage: Stage-2
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            alias: src
+            Statistics: Num rows: 29 Data size: 5812 Basic stats: COMPLETE Column stats: NONE
+            Filter Operator
+              predicate: ((key < 10) or ((key > 10) and (key < 20))) (type: boolean)
+              Statistics: Num rows: 12 Data size: 2404 Basic stats: COMPLETE Column stats: NONE
+              Reduce Output Operator
+                key expressions: key (type: string), value (type: string)
+                sort order: ++
+                Map-reduce partition columns: key (type: string), value (type: string)
+                Statistics: Num rows: 12 Data size: 2404 Basic stats: COMPLETE Column stats: NONE
+      Reduce Operator Tree:
+        Forward
+          Statistics: Num rows: 12 Data size: 2404 Basic stats: COMPLETE Column stats: NONE
+          Filter Operator
+            predicate: (KEY._col0 < 10) (type: boolean)
+            Statistics: Num rows: 4 Data size: 801 Basic stats: COMPLETE Column stats: NONE
+            Group By Operator
+              keys: KEY._col0 (type: string), KEY._col1 (type: string)
+              mode: complete
+              outputColumnNames: _col0, _col1
+              Statistics: Num rows: 2 Data size: 400 Basic stats: COMPLETE Column stats: NONE
+              File Output Operator
+                compressed: false
+                Statistics: Num rows: 2 Data size: 400 Basic stats: COMPLETE Column stats: NONE
+                table:
+                    input format: org.apache.hadoop.mapred.TextInputFormat
+                    output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                    serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                    name: test_hive_longrun.src_multi1
+          Filter Operator
+            predicate: ((KEY._col0 > 10) and (KEY._col0 < 20)) (type: boolean)
+            Statistics: Num rows: 1 Data size: 200 Basic stats: COMPLETE Column stats: NONE
+            Group By Operator
+              keys: KEY._col0 (type: string), KEY._col1 (type: string)
+              mode: complete
+              outputColumnNames: _col0, _col1
+              Statistics: Num rows: 0 Data size: 0 Basic stats: NONE Column stats: NONE
+              File Output Operator
+                compressed: false
+                Statistics: Num rows: 0 Data size: 0 Basic stats: NONE Column stats: NONE
+                table:
+                    input format: org.apache.hadoop.mapred.TextInputFormat
+                    output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                    serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                    name: test_hive_longrun.src_multi2
+
+  Stage: Stage-7
+    Conditional Operator
+
+  Stage: Stage-4
+    Move Operator
+      files:
+          hdfs directory: true
+          destination: hdfs://HADOOP/hive/test_hive_longrun.db/src_multi1/.hive-staging_hive_2016-01-12_11-28-42_967_47226410153137069-1/-ext-10000
+
+  Stage: Stage-0
+    Move Operator
+      tables:
+          replace: true
+          table:
+              input format: org.apache.hadoop.mapred.TextInputFormat
+              output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+              serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+              name: test_hive_longrun.src_multi1
+
+  Stage: Stage-3
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            File Output Operator
+              compressed: false
+              table:
+                  input format: org.apache.hadoop.mapred.TextInputFormat
+                  output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                  serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                  name: test_hive_longrun.src_multi1
+
+  Stage: Stage-5
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            File Output Operator
+              compressed: false
+              table:
+                  input format: org.apache.hadoop.mapred.TextInputFormat
+                  output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                  serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                  name: test_hive_longrun.src_multi1
+
+  Stage: Stage-6
+    Move Operator
+      files:
+          hdfs directory: true
+          destination: hdfs://HADOOP/hive/test_hive_longrun.db/src_multi1/.hive-staging_hive_2016-01-12_11-28-42_967_47226410153137069-1/-ext-10000
+
+  Stage: Stage-12
+    Conditional Operator
+
+  Stage: Stage-9
+    Move Operator
+      files:
+          hdfs directory: true
+          destination: hdfs://HADOOP/hive/test_hive_longrun.db/src_multi2/.hive-staging_hive_2016-01-12_11-28-42_967_47226410153137069-1/-ext-10002
+
+  Stage: Stage-1
+    Move Operator
+      tables:
+          replace: true
+          table:
+              input format: org.apache.hadoop.mapred.TextInputFormat
+              output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+              serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+              name: test_hive_longrun.src_multi2
+
+  Stage: Stage-8
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            File Output Operator
+              compressed: false
+              table:
+                  input format: org.apache.hadoop.mapred.TextInputFormat
+                  output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                  serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                  name: test_hive_longrun.src_multi2
+
+  Stage: Stage-10
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            File Output Operator
+              compressed: false
+              table:
+                  input format: org.apache.hadoop.mapred.TextInputFormat
+                  output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                  serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                  name: test_hive_longrun.src_multi2
+
+  Stage: Stage-11
+    Move Operator
+      files:
+          hdfs directory: true
+          destination: hdfs://HADOOP/hive/test_hive_longrun.db/src_multi2/.hive-staging_hive_2016-01-12_11-28-42_967_47226410153137069-1/-ext-10002
+
+
+
+from src
+insert overwrite table src_multi1 select * where key < 10 group by key, value
+insert overwrite table src_multi2 select * where key > 10 and key < 20 group by key, value
+Moved: 'hdfs://HADOOP/hive/test_hive_longrun.db/src_multi1/000000_0' to trash at: hdfs://HADOOP/user/USER/.Trash/Current
+Moved: 'hdfs://HADOOP/hive/test_hive_longrun.db/src_multi2/000000_0' to trash at: hdfs://HADOOP/user/USER/.Trash/Current
+
+
+select * from src_multi1 order by key, value
+0	val_0
+2	val_2
+4	val_4
+5	val_5
+8	val_8
+9	val_9
+
+select * from src_multi2 order by key, value
+11	val_11
+12	val_12
+15	val_15
+17	val_17
+18	val_18
+19	val_19
+set hive.merge.mapfiles=false
+set hive.merge.mapredfiles=false
+
+
+explain
+from (select * from src  union all select * from src) s
+insert overwrite table src_multi1 select * where key < 10
+insert overwrite table src_multi2 select * where key > 10 and key < 20
+STAGE DEPENDENCIES:
+  Stage-2 is a root stage
+  Stage-0 depends on stages: Stage-2
+  Stage-1 depends on stages: Stage-2
+
+STAGE PLANS:
+  Stage: Stage-2
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            alias: src
+            Statistics: Num rows: 29 Data size: 5812 Basic stats: COMPLETE Column stats: NONE
+            Select Operator
+              expressions: key (type: string), value (type: string)
+              outputColumnNames: _col0, _col1
+              Statistics: Num rows: 29 Data size: 5812 Basic stats: COMPLETE Column stats: NONE
+              Union
+                Statistics: Num rows: 58 Data size: 11624 Basic stats: COMPLETE Column stats: NONE
+                Filter Operator
+                  predicate: (_col0 < 10) (type: boolean)
+                  Statistics: Num rows: 19 Data size: 3807 Basic stats: COMPLETE Column stats: NONE
+                  File Output Operator
+                    compressed: false
+                    Statistics: Num rows: 19 Data size: 3807 Basic stats: COMPLETE Column stats: NONE
+                    table:
+                        input format: org.apache.hadoop.mapred.TextInputFormat
+                        output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                        serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                        name: test_hive_longrun.src_multi1
+                Filter Operator
+                  predicate: ((_col0 > 10) and (_col0 < 20)) (type: boolean)
+                  Statistics: Num rows: 6 Data size: 1202 Basic stats: COMPLETE Column stats: NONE
+                  File Output Operator
+                    compressed: false
+                    Statistics: Num rows: 6 Data size: 1202 Basic stats: COMPLETE Column stats: NONE
+                    table:
+                        input format: org.apache.hadoop.mapred.TextInputFormat
+                        output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                        serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                        name: test_hive_longrun.src_multi2
+          TableScan
+            alias: src
+            Statistics: Num rows: 29 Data size: 5812 Basic stats: COMPLETE Column stats: NONE
+            Select Operator
+              expressions: key (type: string), value (type: string)
+              outputColumnNames: _col0, _col1
+              Statistics: Num rows: 29 Data size: 5812 Basic stats: COMPLETE Column stats: NONE
+              Union
+                Statistics: Num rows: 58 Data size: 11624 Basic stats: COMPLETE Column stats: NONE
+                Filter Operator
+                  predicate: (_col0 < 10) (type: boolean)
+                  Statistics: Num rows: 19 Data size: 3807 Basic stats: COMPLETE Column stats: NONE
+                  File Output Operator
+                    compressed: false
+                    Statistics: Num rows: 19 Data size: 3807 Basic stats: COMPLETE Column stats: NONE
+                    table:
+                        input format: org.apache.hadoop.mapred.TextInputFormat
+                        output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                        serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                        name: test_hive_longrun.src_multi1
+                Filter Operator
+                  predicate: ((_col0 > 10) and (_col0 < 20)) (type: boolean)
+                  Statistics: Num rows: 6 Data size: 1202 Basic stats: COMPLETE Column stats: NONE
+                  File Output Operator
+                    compressed: false
+                    Statistics: Num rows: 6 Data size: 1202 Basic stats: COMPLETE Column stats: NONE
+                    table:
+                        input format: org.apache.hadoop.mapred.TextInputFormat
+                        output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                        serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                        name: test_hive_longrun.src_multi2
+
+  Stage: Stage-0
+    Move Operator
+      tables:
+          replace: true
+          table:
+              input format: org.apache.hadoop.mapred.TextInputFormat
+              output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+              serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+              name: test_hive_longrun.src_multi1
+
+  Stage: Stage-1
+    Move Operator
+      tables:
+          replace: true
+          table:
+              input format: org.apache.hadoop.mapred.TextInputFormat
+              output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+              serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+              name: test_hive_longrun.src_multi2
+
+
+
+from (select * from src  union all select * from src) s
+insert overwrite table src_multi1 select * where key < 10
+insert overwrite table src_multi2 select * where key > 10 and key < 20
+Moved: 'hdfs://HADOOP/hive/test_hive_longrun.db/src_multi1/000000_0' to trash at: hdfs://HADOOP/user/USER/.Trash/Current
+Moved: 'hdfs://HADOOP/hive/test_hive_longrun.db/src_multi2/000000_0' to trash at: hdfs://HADOOP/user/USER/.Trash/Current
+
+
+select * from src_multi1 order by key, value
+0	val_0
+0	val_0
+0	val_0
+0	val_0
+0	val_0
+0	val_0
+2	val_2
+2	val_2
+4	val_4
+4	val_4
+5	val_5
+5	val_5
+5	val_5
+5	val_5
+5	val_5
+5	val_5
+8	val_8
+8	val_8
+9	val_9
+9	val_9
+
+select * from src_multi2 order by key, value
+11	val_11
+11	val_11
+12	val_12
+12	val_12
+12	val_12
+12	val_12
+15	val_15
+15	val_15
+15	val_15
+15	val_15
+17	val_17
+17	val_17
+18	val_18
+18	val_18
+18	val_18
+18	val_18
+19	val_19
+19	val_19
+set hive.merge.mapfiles=true
+set hive.merge.mapredfiles=false
+
+
+explain
+from (select * from src  union all select * from src) s
+insert overwrite table src_multi1 select * where key < 10
+insert overwrite table src_multi2 select * where key > 10 and key < 20
+STAGE DEPENDENCIES:
+  Stage-2 is a root stage
+  Stage-7 depends on stages: Stage-2 , consists of Stage-4, Stage-3, Stage-5
+  Stage-4
+  Stage-0 depends on stages: Stage-4, Stage-3, Stage-6
+  Stage-3
+  Stage-5
+  Stage-6 depends on stages: Stage-5
+  Stage-12 depends on stages: Stage-2 , consists of Stage-9, Stage-8, Stage-10
+  Stage-9
+  Stage-1 depends on stages: Stage-9, Stage-8, Stage-11
+  Stage-8
+  Stage-10
+  Stage-11 depends on stages: Stage-10
+
+STAGE PLANS:
+  Stage: Stage-2
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            alias: src
+            Statistics: Num rows: 29 Data size: 5812 Basic stats: COMPLETE Column stats: NONE
+            Select Operator
+              expressions: key (type: string), value (type: string)
+              outputColumnNames: _col0, _col1
+              Statistics: Num rows: 29 Data size: 5812 Basic stats: COMPLETE Column stats: NONE
+              Union
+                Statistics: Num rows: 58 Data size: 11624 Basic stats: COMPLETE Column stats: NONE
+                Filter Operator
+                  predicate: (_col0 < 10) (type: boolean)
+                  Statistics: Num rows: 19 Data size: 3807 Basic stats: COMPLETE Column stats: NONE
+                  File Output Operator
+                    compressed: false
+                    Statistics: Num rows: 19 Data size: 3807 Basic stats: COMPLETE Column stats: NONE
+                    table:
+                        input format: org.apache.hadoop.mapred.TextInputFormat
+                        output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                        serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                        name: test_hive_longrun.src_multi1
+                Filter Operator
+                  predicate: ((_col0 > 10) and (_col0 < 20)) (type: boolean)
+                  Statistics: Num rows: 6 Data size: 1202 Basic stats: COMPLETE Column stats: NONE
+                  File Output Operator
+                    compressed: false
+                    Statistics: Num rows: 6 Data size: 1202 Basic stats: COMPLETE Column stats: NONE
+                    table:
+                        input format: org.apache.hadoop.mapred.TextInputFormat
+                        output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                        serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                        name: test_hive_longrun.src_multi2
+          TableScan
+            alias: src
+            Statistics: Num rows: 29 Data size: 5812 Basic stats: COMPLETE Column stats: NONE
+            Select Operator
+              expressions: key (type: string), value (type: string)
+              outputColumnNames: _col0, _col1
+              Statistics: Num rows: 29 Data size: 5812 Basic stats: COMPLETE Column stats: NONE
+              Union
+                Statistics: Num rows: 58 Data size: 11624 Basic stats: COMPLETE Column stats: NONE
+                Filter Operator
+                  predicate: (_col0 < 10) (type: boolean)
+                  Statistics: Num rows: 19 Data size: 3807 Basic stats: COMPLETE Column stats: NONE
+                  File Output Operator
+                    compressed: false
+                    Statistics: Num rows: 19 Data size: 3807 Basic stats: COMPLETE Column stats: NONE
+                    table:
+                        input format: org.apache.hadoop.mapred.TextInputFormat
+                        output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                        serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                        name: test_hive_longrun.src_multi1
+                Filter Operator
+                  predicate: ((_col0 > 10) and (_col0 < 20)) (type: boolean)
+                  Statistics: Num rows: 6 Data size: 1202 Basic stats: COMPLETE Column stats: NONE
+                  File Output Operator
+                    compressed: false
+                    Statistics: Num rows: 6 Data size: 1202 Basic stats: COMPLETE Column stats: NONE
+                    table:
+                        input format: org.apache.hadoop.mapred.TextInputFormat
+                        output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                        serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                        name: test_hive_longrun.src_multi2
+
+  Stage: Stage-7
+    Conditional Operator
+
+  Stage: Stage-4
+    Move Operator
+      files:
+          hdfs directory: true
+          destination: hdfs://HADOOP/hive/test_hive_longrun.db/src_multi1/.hive-staging_hive_2016-01-12_11-31-40_893_1264215917822883888-1/-ext-10000
+
+  Stage: Stage-0
+    Move Operator
+      tables:
+          replace: true
+          table:
+              input format: org.apache.hadoop.mapred.TextInputFormat
+              output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+              serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+              name: test_hive_longrun.src_multi1
+
+  Stage: Stage-3
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            File Output Operator
+              compressed: false
+              table:
+                  input format: org.apache.hadoop.mapred.TextInputFormat
+                  output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                  serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                  name: test_hive_longrun.src_multi1
+
+  Stage: Stage-5
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            File Output Operator
+              compressed: false
+              table:
+                  input format: org.apache.hadoop.mapred.TextInputFormat
+                  output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                  serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                  name: test_hive_longrun.src_multi1
+
+  Stage: Stage-6
+    Move Operator
+      files:
+          hdfs directory: true
+          destination: hdfs://HADOOP/hive/test_hive_longrun.db/src_multi1/.hive-staging_hive_2016-01-12_11-31-40_893_1264215917822883888-1/-ext-10000
+
+  Stage: Stage-12
+    Conditional Operator
+
+  Stage: Stage-9
+    Move Operator
+      files:
+          hdfs directory: true
+          destination: hdfs://HADOOP/hive/test_hive_longrun.db/src_multi2/.hive-staging_hive_2016-01-12_11-31-40_893_1264215917822883888-1/-ext-10002
+
+  Stage: Stage-1
+    Move Operator
+      tables:
+          replace: true
+          table:
+              input format: org.apache.hadoop.mapred.TextInputFormat
+              output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+              serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+              name: test_hive_longrun.src_multi2
+
+  Stage: Stage-8
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            File Output Operator
+              compressed: false
+              table:
+                  input format: org.apache.hadoop.mapred.TextInputFormat
+                  output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                  serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                  name: test_hive_longrun.src_multi2
+
+  Stage: Stage-10
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            File Output Operator
+              compressed: false
+              table:
+                  input format: org.apache.hadoop.mapred.TextInputFormat
+                  output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                  serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                  name: test_hive_longrun.src_multi2
+
+  Stage: Stage-11
+    Move Operator
+      files:
+          hdfs directory: true
+          destination: hdfs://HADOOP/hive/test_hive_longrun.db/src_multi2/.hive-staging_hive_2016-01-12_11-31-40_893_1264215917822883888-1/-ext-10002
+
+
+
+from (select * from src  union all select * from src) s
+insert overwrite table src_multi1 select * where key < 10
+insert overwrite table src_multi2 select * where key > 10 and key < 20
+Moved: 'hdfs://HADOOP/hive/test_hive_longrun.db/src_multi1/000000_0' to trash at: hdfs://HADOOP/user/USER/.Trash/Current
+Moved: 'hdfs://HADOOP/hive/test_hive_longrun.db/src_multi2/000000_0' to trash at: hdfs://HADOOP/user/USER/.Trash/Current
+
+
+select * from src_multi1 order by key, value
+0	val_0
+0	val_0
+0	val_0
+0	val_0
+0	val_0
+0	val_0
+2	val_2
+2	val_2
+4	val_4
+4	val_4
+5	val_5
+5	val_5
+5	val_5
+5	val_5
+5	val_5
+5	val_5
+8	val_8
+8	val_8
+9	val_9
+9	val_9
+
+select * from src_multi2 order by key, value
+11	val_11
+11	val_11
+12	val_12
+12	val_12
+12	val_12
+12	val_12
+15	val_15
+15	val_15
+15	val_15
+15	val_15
+17	val_17
+17	val_17
+18	val_18
+18	val_18
+18	val_18
+18	val_18
+19	val_19
+19	val_19
+set hive.merge.mapfiles=false
+set hive.merge.mapredfiles=true
+
+
+explain
+from (select * from src  union all select * from src) s
+insert overwrite table src_multi1 select * where key < 10
+insert overwrite table src_multi2 select * where key > 10 and key < 20
+STAGE DEPENDENCIES:
+  Stage-2 is a root stage
+  Stage-0 depends on stages: Stage-2
+  Stage-1 depends on stages: Stage-2
+
+STAGE PLANS:
+  Stage: Stage-2
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            alias: src
+            Statistics: Num rows: 29 Data size: 5812 Basic stats: COMPLETE Column stats: NONE
+            Select Operator
+              expressions: key (type: string), value (type: string)
+              outputColumnNames: _col0, _col1
+              Statistics: Num rows: 29 Data size: 5812 Basic stats: COMPLETE Column stats: NONE
+              Union
+                Statistics: Num rows: 58 Data size: 11624 Basic stats: COMPLETE Column stats: NONE
+                Filter Operator
+                  predicate: (_col0 < 10) (type: boolean)
+                  Statistics: Num rows: 19 Data size: 3807 Basic stats: COMPLETE Column stats: NONE
+                  File Output Operator
+                    compressed: false
+                    Statistics: Num rows: 19 Data size: 3807 Basic stats: COMPLETE Column stats: NONE
+                    table:
+                        input format: org.apache.hadoop.mapred.TextInputFormat
+                        output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                        serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                        name: test_hive_longrun.src_multi1
+                Filter Operator
+                  predicate: ((_col0 > 10) and (_col0 < 20)) (type: boolean)
+                  Statistics: Num rows: 6 Data size: 1202 Basic stats: COMPLETE Column stats: NONE
+                  File Output Operator
+                    compressed: false
+                    Statistics: Num rows: 6 Data size: 1202 Basic stats: COMPLETE Column stats: NONE
+                    table:
+                        input format: org.apache.hadoop.mapred.TextInputFormat
+                        output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                        serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                        name: test_hive_longrun.src_multi2
+          TableScan
+            alias: src
+            Statistics: Num rows: 29 Data size: 5812 Basic stats: COMPLETE Column stats: NONE
+            Select Operator
+              expressions: key (type: string), value (type: string)
+              outputColumnNames: _col0, _col1
+              Statistics: Num rows: 29 Data size: 5812 Basic stats: COMPLETE Column stats: NONE
+              Union
+                Statistics: Num rows: 58 Data size: 11624 Basic stats: COMPLETE Column stats: NONE
+                Filter Operator
+                  predicate: (_col0 < 10) (type: boolean)
+                  Statistics: Num rows: 19 Data size: 3807 Basic stats: COMPLETE Column stats: NONE
+                  File Output Operator
+                    compressed: false
+                    Statistics: Num rows: 19 Data size: 3807 Basic stats: COMPLETE Column stats: NONE
+                    table:
+                        input format: org.apache.hadoop.mapred.TextInputFormat
+                        output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                        serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                        name: test_hive_longrun.src_multi1
+                Filter Operator
+                  predicate: ((_col0 > 10) and (_col0 < 20)) (type: boolean)
+                  Statistics: Num rows: 6 Data size: 1202 Basic stats: COMPLETE Column stats: NONE
+                  File Output Operator
+                    compressed: false
+                    Statistics: Num rows: 6 Data size: 1202 Basic stats: COMPLETE Column stats: NONE
+                    table:
+                        input format: org.apache.hadoop.mapred.TextInputFormat
+                        output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                        serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                        name: test_hive_longrun.src_multi2
+
+  Stage: Stage-0
+    Move Operator
+      tables:
+          replace: true
+          table:
+              input format: org.apache.hadoop.mapred.TextInputFormat
+              output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+              serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+              name: test_hive_longrun.src_multi1
+
+  Stage: Stage-1
+    Move Operator
+      tables:
+          replace: true
+          table:
+              input format: org.apache.hadoop.mapred.TextInputFormat
+              output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+              serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+              name: test_hive_longrun.src_multi2
+
+
+
+from (select * from src  union all select * from src) s
+insert overwrite table src_multi1 select * where key < 10
+insert overwrite table src_multi2 select * where key > 10 and key < 20
+Moved: 'hdfs://HADOOP/hive/test_hive_longrun.db/src_multi1/000000_0' to trash at: hdfs://HADOOP/user/USER/.Trash/Current
+Moved: 'hdfs://HADOOP/hive/test_hive_longrun.db/src_multi2/000000_0' to trash at: hdfs://HADOOP/user/USER/.Trash/Current
+
+
+select * from src_multi1 order by key, value
+0	val_0
+0	val_0
+0	val_0
+0	val_0
+0	val_0
+0	val_0
+2	val_2
+2	val_2
+4	val_4
+4	val_4
+5	val_5
+5	val_5
+5	val_5
+5	val_5
+5	val_5
+5	val_5
+8	val_8
+8	val_8
+9	val_9
+9	val_9
+
+select * from src_multi2 order by key, value
+11	val_11
+11	val_11
+12	val_12
+12	val_12
+12	val_12
+12	val_12
+15	val_15
+15	val_15
+15	val_15
+15	val_15
+17	val_17
+17	val_17
+18	val_18
+18	val_18
+18	val_18
+18	val_18
+19	val_19
+19	val_19
+set hive.merge.mapfiles=true
+set hive.merge.mapredfiles=true
+
+
+explain
+from (select * from src  union all select * from src) s
+insert overwrite table src_multi1 select * where key < 10
+insert overwrite table src_multi2 select * where key > 10 and key < 20
+STAGE DEPENDENCIES:
+  Stage-2 is a root stage
+  Stage-7 depends on stages: Stage-2 , consists of Stage-4, Stage-3, Stage-5
+  Stage-4
+  Stage-0 depends on stages: Stage-4, Stage-3, Stage-6
+  Stage-3
+  Stage-5
+  Stage-6 depends on stages: Stage-5
+  Stage-12 depends on stages: Stage-2 , consists of Stage-9, Stage-8, Stage-10
+  Stage-9
+  Stage-1 depends on stages: Stage-9, Stage-8, Stage-11
+  Stage-8
+  Stage-10
+  Stage-11 depends on stages: Stage-10
+
+STAGE PLANS:
+  Stage: Stage-2
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            alias: src
+            Statistics: Num rows: 29 Data size: 5812 Basic stats: COMPLETE Column stats: NONE
+            Select Operator
+              expressions: key (type: string), value (type: string)
+              outputColumnNames: _col0, _col1
+              Statistics: Num rows: 29 Data size: 5812 Basic stats: COMPLETE Column stats: NONE
+              Union
+                Statistics: Num rows: 58 Data size: 11624 Basic stats: COMPLETE Column stats: NONE
+                Filter Operator
+                  predicate: (_col0 < 10) (type: boolean)
+                  Statistics: Num rows: 19 Data size: 3807 Basic stats: COMPLETE Column stats: NONE
+                  File Output Operator
+                    compressed: false
+                    Statistics: Num rows: 19 Data size: 3807 Basic stats: COMPLETE Column stats: NONE
+                    table:
+                        input format: org.apache.hadoop.mapred.TextInputFormat
+                        output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                        serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                        name: test_hive_longrun.src_multi1
+                Filter Operator
+                  predicate: ((_col0 > 10) and (_col0 < 20)) (type: boolean)
+                  Statistics: Num rows: 6 Data size: 1202 Basic stats: COMPLETE Column stats: NONE
+                  File Output Operator
+                    compressed: false
+                    Statistics: Num rows: 6 Data size: 1202 Basic stats: COMPLETE Column stats: NONE
+                    table:
+                        input format: org.apache.hadoop.mapred.TextInputFormat
+                        output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                        serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                        name: test_hive_longrun.src_multi2
+          TableScan
+            alias: src
+            Statistics: Num rows: 29 Data size: 5812 Basic stats: COMPLETE Column stats: NONE
+            Select Operator
+              expressions: key (type: string), value (type: string)
+              outputColumnNames: _col0, _col1
+              Statistics: Num rows: 29 Data size: 5812 Basic stats: COMPLETE Column stats: NONE
+              Union
+                Statistics: Num rows: 58 Data size: 11624 Basic stats: COMPLETE Column stats: NONE
+                Filter Operator
+                  predicate: (_col0 < 10) (type: boolean)
+                  Statistics: Num rows: 19 Data size: 3807 Basic stats: COMPLETE Column stats: NONE
+                  File Output Operator
+                    compressed: false
+                    Statistics: Num rows: 19 Data size: 3807 Basic stats: COMPLETE Column stats: NONE
+                    table:
+                        input format: org.apache.hadoop.mapred.TextInputFormat
+                        output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                        serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                        name: test_hive_longrun.src_multi1
+                Filter Operator
+                  predicate: ((_col0 > 10) and (_col0 < 20)) (type: boolean)
+                  Statistics: Num rows: 6 Data size: 1202 Basic stats: COMPLETE Column stats: NONE
+                  File Output Operator
+                    compressed: false
+                    Statistics: Num rows: 6 Data size: 1202 Basic stats: COMPLETE Column stats: NONE
+                    table:
+                        input format: org.apache.hadoop.mapred.TextInputFormat
+                        output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                        serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                        name: test_hive_longrun.src_multi2
+
+  Stage: Stage-7
+    Conditional Operator
+
+  Stage: Stage-4
+    Move Operator
+      files:
+          hdfs directory: true
+          destination: hdfs://HADOOP/hive/test_hive_longrun.db/src_multi1/.hive-staging_hive_2016-01-12_11-34-30_814_1247185417727382440-1/-ext-10000
+
+  Stage: Stage-0
+    Move Operator
+      tables:
+          replace: true
+          table:
+              input format: org.apache.hadoop.mapred.TextInputFormat
+              output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+              serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+              name: test_hive_longrun.src_multi1
+
+  Stage: Stage-3
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            File Output Operator
+              compressed: false
+              table:
+                  input format: org.apache.hadoop.mapred.TextInputFormat
+                  output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                  serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                  name: test_hive_longrun.src_multi1
+
+  Stage: Stage-5
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            File Output Operator
+              compressed: false
+              table:
+                  input format: org.apache.hadoop.mapred.TextInputFormat
+                  output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                  serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                  name: test_hive_longrun.src_multi1
+
+  Stage: Stage-6
+    Move Operator
+      files:
+          hdfs directory: true
+          destination: hdfs://HADOOP/hive/test_hive_longrun.db/src_multi1/.hive-staging_hive_2016-01-12_11-34-30_814_1247185417727382440-1/-ext-10000
+
+  Stage: Stage-12
+    Conditional Operator
+
+  Stage: Stage-9
+    Move Operator
+      files:
+          hdfs directory: true
+          destination: hdfs://HADOOP/hive/test_hive_longrun.db/src_multi2/.hive-staging_hive_2016-01-12_11-34-30_814_1247185417727382440-1/-ext-10002
+
+  Stage: Stage-1
+    Move Operator
+      tables:
+          replace: true
+          table:
+              input format: org.apache.hadoop.mapred.TextInputFormat
+              output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+              serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+              name: test_hive_longrun.src_multi2
+
+  Stage: Stage-8
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            File Output Operator
+              compressed: false
+              table:
+                  input format: org.apache.hadoop.mapred.TextInputFormat
+                  output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                  serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                  name: test_hive_longrun.src_multi2
+
+  Stage: Stage-10
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            File Output Operator
+              compressed: false
+              table:
+                  input format: org.apache.hadoop.mapred.TextInputFormat
+                  output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                  serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                  name: test_hive_longrun.src_multi2
+
+  Stage: Stage-11
+    Move Operator
+      files:
+          hdfs directory: true
+          destination: hdfs://HADOOP/hive/test_hive_longrun.db/src_multi2/.hive-staging_hive_2016-01-12_11-34-30_814_1247185417727382440-1/-ext-10002
+
+
+
+from (select * from src  union all select * from src) s
+insert overwrite table src_multi1 select * where key < 10
+insert overwrite table src_multi2 select * where key > 10 and key < 20
+Moved: 'hdfs://HADOOP/hive/test_hive_longrun.db/src_multi1/000000_0' to trash at: hdfs://HADOOP/user/USER/.Trash/Current
+Moved: 'hdfs://HADOOP/hive/test_hive_longrun.db/src_multi2/000000_0' to trash at: hdfs://HADOOP/user/USER/.Trash/Current
+
+
+select * from src_multi1 order by key, value
+0	val_0
+0	val_0
+0	val_0
+0	val_0
+0	val_0
+0	val_0
+2	val_2
+2	val_2
+4	val_4
+4	val_4
+5	val_5
+5	val_5
+5	val_5
+5	val_5
+5	val_5
+5	val_5
+8	val_8
+8	val_8
+9	val_9
+9	val_9
+
+select * from src_multi2 order by key, value
+11	val_11
+11	val_11
+12	val_12
+12	val_12
+12	val_12
+12	val_12
+15	val_15
+15	val_15
+15	val_15
+15	val_15
+17	val_17
+17	val_17
+18	val_18
+18	val_18
+18	val_18
+18	val_18
+19	val_19
+19	val_19
+set hive.merge.mapfiles=false
+set hive.merge.mapredfiles=false
+
+
+explain
+from src 
+insert overwrite local directory '/tmp/hive_test/multiins_local/0' select * where key = 0
+insert overwrite local directory '/tmp/hive_test/multiins_local/2' select * where key = 2
+insert overwrite local directory '/tmp/hive_test/multiins_local/4' select * where key = 4
+STAGE DEPENDENCIES:
+  Stage-3 is a root stage
+  Stage-0 depends on stages: Stage-3
+  Stage-1 depends on stages: Stage-3
+  Stage-2 depends on stages: Stage-3
+
+STAGE PLANS:
+  Stage: Stage-3
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            alias: src
+            Statistics: Num rows: 57 Data size: 5812 Basic stats: COMPLETE Column stats: NONE
+            Filter Operator
+              predicate: (key = 0) (type: boolean)
+              Statistics: Num rows: 28 Data size: 2855 Basic stats: COMPLETE Column stats: NONE
+              Select Operator
+                expressions: '0' (type: string), value (type: string)
+                outputColumnNames: _col0, _col1
+                Statistics: Num rows: 28 Data size: 2855 Basic stats: COMPLETE Column stats: NONE
+                File Output Operator
+                  compressed: false
+                  Statistics: Num rows: 28 Data size: 2855 Basic stats: COMPLETE Column stats: NONE
+                  table:
+                      input format: org.apache.hadoop.mapred.TextInputFormat
+                      output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                      serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+            Filter Operator
+              predicate: (key = 2) (type: boolean)
+              Statistics: Num rows: 28 Data size: 2855 Basic stats: COMPLETE Column stats: NONE
+              Select Operator
+                expressions: '2' (type: string), value (type: string)
+                outputColumnNames: _col0, _col1
+                Statistics: Num rows: 28 Data size: 2855 Basic stats: COMPLETE Column stats: NONE
+                File Output Operator
+                  compressed: false
+                  Statistics: Num rows: 28 Data size: 2855 Basic stats: COMPLETE Column stats: NONE
+                  table:
+                      input format: org.apache.hadoop.mapred.TextInputFormat
+                      output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                      serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+            Filter Operator
+              predicate: (key = 4) (type: boolean)
+              Statistics: Num rows: 28 Data size: 2855 Basic stats: COMPLETE Column stats: NONE
+              Select Operator
+                expressions: '4' (type: string), value (type: string)
+                outputColumnNames: _col0, _col1
+                Statistics: Num rows: 28 Data size: 2855 Basic stats: COMPLETE Column stats: NONE
+                File Output Operator
+                  compressed: false
+                  Statistics: Num rows: 28 Data size: 2855 Basic stats: COMPLETE Column stats: NONE
+                  table:
+                      input format: org.apache.hadoop.mapred.TextInputFormat
+                      output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                      serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+
+  Stage: Stage-0
+    Move Operator
+      files:
+          hdfs directory: false
+          destination: /tmp/hive_test/multiins_local/0
+
+  Stage: Stage-1
+    Move Operator
+      files:
+          hdfs directory: false
+          destination: /tmp/hive_test/multiins_local/2
+
+  Stage: Stage-2
+    Move Operator
+      files:
+          hdfs directory: false
+          destination: /tmp/hive_test/multiins_local/4
+
+
+
+from src 
+insert overwrite local directory '/tmp/hive_test/multiins_local/0' select * where key = 0
+insert overwrite local directory '/tmp/hive_test/multiins_local/2' select * where key = 2
+insert overwrite local directory '/tmp/hive_test/multiins_local/4' select * where key = 4
+0
+2
+4
+set hive.merge.mapfiles=true
+set hive.merge.mapredfiles=false
+
+
+explain
+from src 
+insert overwrite local directory '/tmp/hive_test/multiins_local/0' select * where key = 0
+insert overwrite local directory '/tmp/hive_test/multiins_local/2' select * where key = 2
+insert overwrite local directory '/tmp/hive_test/multiins_local/4' select * where key = 4
+STAGE DEPENDENCIES:
+  Stage-3 is a root stage
+  Stage-0 depends on stages: Stage-3
+  Stage-1 depends on stages: Stage-3
+  Stage-2 depends on stages: Stage-3
+
+STAGE PLANS:
+  Stage: Stage-3
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            alias: src
+            Statistics: Num rows: 57 Data size: 5812 Basic stats: COMPLETE Column stats: NONE
+            Filter Operator
+              predicate: (key = 0) (type: boolean)
+              Statistics: Num rows: 28 Data size: 2855 Basic stats: COMPLETE Column stats: NONE
+              Select Operator
+                expressions: '0' (type: string), value (type: string)
+                outputColumnNames: _col0, _col1
+                Statistics: Num rows: 28 Data size: 2855 Basic stats: COMPLETE Column stats: NONE
+                File Output Operator
+                  compressed: false
+                  Statistics: Num rows: 28 Data size: 2855 Basic stats: COMPLETE Column stats: NONE
+                  table:
+                      input format: org.apache.hadoop.mapred.TextInputFormat
+                      output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                      serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+            Filter Operator
+              predicate: (key = 2) (type: boolean)
+              Statistics: Num rows: 28 Data size: 2855 Basic stats: COMPLETE Column stats: NONE
+              Select Operator
+                expressions: '2' (type: string), value (type: string)
+                outputColumnNames: _col0, _col1
+                Statistics: Num rows: 28 Data size: 2855 Basic stats: COMPLETE Column stats: NONE
+                File Output Operator
+                  compressed: false
+                  Statistics: Num rows: 28 Data size: 2855 Basic stats: COMPLETE Column stats: NONE
+                  table:
+                      input format: org.apache.hadoop.mapred.TextInputFormat
+                      output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                      serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+            Filter Operator
+              predicate: (key = 4) (type: boolean)
+              Statistics: Num rows: 28 Data size: 2855 Basic stats: COMPLETE Column stats: NONE
+              Select Operator
+                expressions: '4' (type: string), value (type: string)
+                outputColumnNames: _col0, _col1
+                Statistics: Num rows: 28 Data size: 2855 Basic stats: COMPLETE Column stats: NONE
+                File Output Operator
+                  compressed: false
+                  Statistics: Num rows: 28 Data size: 2855 Basic stats: COMPLETE Column stats: NONE
+                  table:
+                      input format: org.apache.hadoop.mapred.TextInputFormat
+                      output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                      serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+
+  Stage: Stage-0
+    Move Operator
+      files:
+          hdfs directory: false
+          destination: /tmp/hive_test/multiins_local/0
+
+  Stage: Stage-1
+    Move Operator
+      files:
+          hdfs directory: false
+          destination: /tmp/hive_test/multiins_local/2
+
+  Stage: Stage-2
+    Move Operator
+      files:
+          hdfs directory: false
+          destination: /tmp/hive_test/multiins_local/4
+
+
+
+from src 
+insert overwrite local directory '/tmp/hive_test/multiins_local/0' select * where key = 0
+insert overwrite local directory '/tmp/hive_test/multiins_local/2' select * where key = 2
+insert overwrite local directory '/tmp/hive_test/multiins_local/4' select * where key = 4
+0
+2
+4
+set hive.merge.mapfiles=false
+set hive.merge.mapredfiles=true
+
+
+
+explain
+from src 
+insert overwrite local directory '/tmp/hive_test/multiins_local/0' select * where key = 0
+insert overwrite local directory '/tmp/hive_test/multiins_local/2' select * where key = 2
+insert overwrite local directory '/tmp/hive_test/multiins_local/4' select * where key = 4
+STAGE DEPENDENCIES:
+  Stage-3 is a root stage
+  Stage-0 depends on stages: Stage-3
+  Stage-1 depends on stages: Stage-3
+  Stage-2 depends on stages: Stage-3
+
+STAGE PLANS:
+  Stage: Stage-3
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            alias: src
+            Statistics: Num rows: 57 Data size: 5812 Basic stats: COMPLETE Column stats: NONE
+            Filter Operator
+              predicate: (key = 0) (type: boolean)
+              Statistics: Num rows: 28 Data size: 2855 Basic stats: COMPLETE Column stats: NONE
+              Select Operator
+                expressions: '0' (type: string), value (type: string)
+                outputColumnNames: _col0, _col1
+                Statistics: Num rows: 28 Data size: 2855 Basic stats: COMPLETE Column stats: NONE
+                File Output Operator
+                  compressed: false
+                  Statistics: Num rows: 28 Data size: 2855 Basic stats: COMPLETE Column stats: NONE
+                  table:
+                      input format: org.apache.hadoop.mapred.TextInputFormat
+                      output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                      serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+            Filter Operator
+              predicate: (key = 2) (type: boolean)
+              Statistics: Num rows: 28 Data size: 2855 Basic stats: COMPLETE Column stats: NONE
+              Select Operator
+                expressions: '2' (type: string), value (type: string)
+                outputColumnNames: _col0, _col1
+                Statistics: Num rows: 28 Data size: 2855 Basic stats: COMPLETE Column stats: NONE
+                File Output Operator
+                  compressed: false
+                  Statistics: Num rows: 28 Data size: 2855 Basic stats: COMPLETE Column stats: NONE
+                  table:
+                      input format: org.apache.hadoop.mapred.TextInputFormat
+                      output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                      serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+            Filter Operator
+              predicate: (key = 4) (type: boolean)
+              Statistics: Num rows: 28 Data size: 2855 Basic stats: COMPLETE Column stats: NONE
+              Select Operator
+                expressions: '4' (type: string), value (type: string)
+                outputColumnNames: _col0, _col1
+                Statistics: Num rows: 28 Data size: 2855 Basic stats: COMPLETE Column stats: NONE
+                File Output Operator
+                  compressed: false
+                  Statistics: Num rows: 28 Data size: 2855 Basic stats: COMPLETE Column stats: NONE
+                  table:
+                      input format: org.apache.hadoop.mapred.TextInputFormat
+                      output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                      serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+
+  Stage: Stage-0
+    Move Operator
+      files:
+          hdfs directory: false
+          destination: /tmp/hive_test/multiins_local/0
+
+  Stage: Stage-1
+    Move Operator
+      files:
+          hdfs directory: false
+          destination: /tmp/hive_test/multiins_local/2
+
+  Stage: Stage-2
+    Move Operator
+      files:
+          hdfs directory: false
+          destination: /tmp/hive_test/multiins_local/4
+
+
+
+from src 
+insert overwrite local directory '/tmp/hive_test/multiins_local/0' select * where key = 0
+insert overwrite local directory '/tmp/hive_test/multiins_local/2' select * where key = 2
+insert overwrite local directory '/tmp/hive_test/multiins_local/4' select * where key = 4
+0
+2
+4
+set hive.merge.mapfiles=true
+set hive.merge.mapredfiles=true
+
+
+explain
+from src 
+insert overwrite local directory '/tmp/hive_test/multiins_local/0' select * where key = 0
+insert overwrite local directory '/tmp/hive_test/multiins_local/2' select * where key = 2
+insert overwrite local directory '/tmp/hive_test/multiins_local/4' select * where key = 4
+STAGE DEPENDENCIES:
+  Stage-3 is a root stage
+  Stage-0 depends on stages: Stage-3
+  Stage-1 depends on stages: Stage-3
+  Stage-2 depends on stages: Stage-3
+
+STAGE PLANS:
+  Stage: Stage-3
+    Map Reduce
+      Map Operator Tree:
+          TableScan
+            alias: src
+            Statistics: Num rows: 57 Data size: 5812 Basic stats: COMPLETE Column stats: NONE
+            Filter Operator
+              predicate: (key = 0) (type: boolean)
+              Statistics: Num rows: 28 Data size: 2855 Basic stats: COMPLETE Column stats: NONE
+              Select Operator
+                expressions: '0' (type: string), value (type: string)
+                outputColumnNames: _col0, _col1
+                Statistics: Num rows: 28 Data size: 2855 Basic stats: COMPLETE Column stats: NONE
+                File Output Operator
+                  compressed: false
+                  Statistics: Num rows: 28 Data size: 2855 Basic stats: COMPLETE Column stats: NONE
+                  table:
+                      input format: org.apache.hadoop.mapred.TextInputFormat
+                      output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                      serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+            Filter Operator
+              predicate: (key = 2) (type: boolean)
+              Statistics: Num rows: 28 Data size: 2855 Basic stats: COMPLETE Column stats: NONE
+              Select Operator
+                expressions: '2' (type: string), value (type: string)
+                outputColumnNames: _col0, _col1
+                Statistics: Num rows: 28 Data size: 2855 Basic stats: COMPLETE Column stats: NONE
+                File Output Operator
+                  compressed: false
+                  Statistics: Num rows: 28 Data size: 2855 Basic stats: COMPLETE Column stats: NONE
+                  table:
+                      input format: org.apache.hadoop.mapred.TextInputFormat
+                      output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                      serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+            Filter Operator
+              predicate: (key = 4) (type: boolean)
+              Statistics: Num rows: 28 Data size: 2855 Basic stats: COMPLETE Column stats: NONE
+              Select Operator
+                expressions: '4' (type: string), value (type: string)
+                outputColumnNames: _col0, _col1
+                Statistics: Num rows: 28 Data size: 2855 Basic stats: COMPLETE Column stats: NONE
+                File Output Operator
+                  compressed: false
+                  Statistics: Num rows: 28 Data size: 2855 Basic stats: COMPLETE Column stats: NONE
+                  table:
+                      input format: org.apache.hadoop.mapred.TextInputFormat
+                      output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+                      serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+
+  Stage: Stage-0
+    Move Operator
+      files:
+          hdfs directory: false
+          destination: /tmp/hive_test/multiins_local/0
+
+  Stage: Stage-1
+    Move Operator
+      files:
+          hdfs directory: false
+          destination: /tmp/hive_test/multiins_local/2
+
+  Stage: Stage-2
+    Move Operator
+      files:
+          hdfs directory: false
+          destination: /tmp/hive_test/multiins_local/4
+
+
+
+from src 
+insert overwrite local directory '/tmp/hive_test/multiins_local/0' select * where key = 0
+insert overwrite local directory '/tmp/hive_test/multiins_local/2' select * where key = 2
+insert overwrite local directory '/tmp/hive_test/multiins_local/4' select * where key = 4
+0
+2
+4
