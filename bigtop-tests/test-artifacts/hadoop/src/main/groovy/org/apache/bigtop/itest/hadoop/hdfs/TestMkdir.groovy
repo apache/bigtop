@@ -44,7 +44,6 @@ public class TestMkdir {
   static List<String> TestMkdir_output = new ArrayList<String>();
   static List<String> TestMkdir_error = new ArrayList<String>();
   private static String TESTDIR  = "/user/$USERNAME/$testMkdirInputDir";
-  private CommonFunctions scripts = new CommonFunctions();
   static boolean result = false;
 
   @BeforeClass
@@ -115,8 +114,7 @@ public class TestMkdir {
     assertTrue("directory not found on HDFS", sh.getRet() == 0);
 
     assertTrue("Does $TESTDIR/test1/test2 folder got created with -p option?",
-               scripts.lookForGivenString(sh.getOut(),
-                                          "$TESTDIR/test1/test2") == true);
+        sh.getOut().grep(~/.*${TESTDIR}\/test1\/test2.*/).size() > 0);
   }
 
   @Test
@@ -131,7 +129,7 @@ public class TestMkdir {
 
     String errMsg = "mkdir: `$TESTDIR/test2/test2': No such file or directory";
     assertTrue("Does $TESTDIR/test2/test2 folder created without -p option?",
-               scripts.lookForGivenString(sh.getErr(), errMsg) == true);
+        sh.getErr().grep(~/.*${errMsg}.*/).size() > 0);
   }
 
   @Test
@@ -143,7 +141,7 @@ public class TestMkdir {
 
     String errMsg = "mkdir: `$TESTDIR': File exists";
     assertTrue("Does $TESTDIR folder created",
-               scripts.lookForGivenString(sh.getErr(), errMsg) == true);
+        sh.getErr().grep(~/.*${errMsg}.*/).size() > 0);
   }
 
   @Test
@@ -157,14 +155,12 @@ public class TestMkdir {
     assertTrue("ls command failed on HDFS", sh.getRet() == 0);
 
     assertTrue("Does $TESTDIR/test2 folder created?",
-               scripts.lookForGivenString(sh.getOut(),
-                                          "$TESTDIR/test2") == true);
+        sh.getOut().grep(~/.*${TESTDIR}\/test2.*/).size() > 0);
 
     sh.exec("hdfs dfs -ls -d $TESTDIR/test3");
     assertTrue("ls command failed on HDFS", sh.getRet() == 0);
 
     assertTrue("Does $TESTDIR/test3 folder created?",
-               scripts.lookForGivenString(sh.getOut(),
-                                          "$TESTDIR/test3") == true);
+        sh.getOut().grep(~/.*${TESTDIR}\/test3.*/).size() > 0);
   }
 }

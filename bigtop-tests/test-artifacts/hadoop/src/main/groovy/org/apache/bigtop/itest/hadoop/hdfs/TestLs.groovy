@@ -25,8 +25,6 @@ import org.apache.bigtop.itest.shell.Shell;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.bigtop.itest.JarContent;
 import static org.apache.bigtop.itest.LogErrorsUtils.logError
-import java.util.ArrayList;
-import java.util.List;
 
 public class TestLs {
 
@@ -42,7 +40,6 @@ public class TestLs {
                                              testLsInputs;
   static List<String> TestLs_output = new ArrayList<String>();
   static boolean result = false;
-  private CommonFunctions scripts = new CommonFunctions();
 
   @BeforeClass
   public static void setUp() {
@@ -103,14 +100,13 @@ public class TestLs {
     // test whether root listing of ls command works
     sh.exec("hdfs dfs -ls / ");
     assertTrue("Able to list /user contents?",
-               scripts.lookForGivenString(sh.getOut(), "/user") == true);
+        sh.getOut().grep(~/.*\/user/).size() > 0);
 
     // test whether a directory exists with the user name under '/user'
     sh.exec("hdfs dfs -ls /user/$USERNAME ");
     assertTrue("ls command on HDFS failed", sh.getRet() == 0);
     assertTrue("Able to list /user contents?",
-                scripts.lookForGivenString(sh.getOut(),
-                                          "/user/"+USERNAME) == true);
+        sh.getOut().grep(~/.*\/user\/${USERNAME}.*/).size() > 0);
   }
 
   @Test
@@ -120,8 +116,7 @@ public class TestLs {
     sh.exec("hdfs dfs -ls /user/$USERNAME/$testLsInputDir/*");
     assertTrue("ls command on HDFS failed", sh.getRet() == 0);
     assertTrue("Able to list contents with regular expressions?",
-               scripts.lookForGivenString(sh.getOut(),
-                                          "/user/"+user_testinputdir) == true);
+        sh.getOut().grep(~/.*\/user\/${user_testinputdir}.*/).size() > 0);
   }
 
   @Test
@@ -135,8 +130,7 @@ public class TestLs {
 
     // verify that default permissions are listed in ls output for directory
     assertTrue("Does ls outputs directory permissons properly?",
-               scripts.lookForGivenString(TestLs_output,
-               "drwxr-xr-x") == true);
+        TestLs_output.grep(~/.*drwxr-xr-x.*/).size() > 0);
 
     result = false;
     String searchDir = "/user/"+USERNAME+"/"+testLsInputDir;
@@ -197,7 +191,7 @@ public class TestLs {
     assertTrue("Does output Contains only One Line?",
                TestLs_output.size() == 1);
     assertTrue("Does output Contains only directory Name?",
-               scripts.lookForGivenString(TestLs_output, dirName) == true);
+        TestLs_output.grep(~/.*${dirName}.*/).size() > 0);
   }
 
   @Test
@@ -211,15 +205,15 @@ public class TestLs {
     TestLs_output = sh.getOut();
     String fileName = "/user/"+user_testinputdir+"/test_1.txt";
     assertTrue("Does ls output contains file " + fileName + "?",
-               scripts.lookForGivenString(TestLs_output, fileName) == true);
+        TestLs_output.grep(~/.*${fileName}.*/).size() > 0);
 
     fileName = "/user/"+user_testinputdir+"/test_2.txt";
     assertTrue("Does ls output contains file " + fileName + "?",
-               scripts.lookForGivenString(TestLs_output, fileName) == true);
+        TestLs_output.grep(~/.*${fileName}.*/).size() > 0);
 
     fileName = "/user/"+user_testinputdir+"/test.zip";
     assertTrue("Does ls output contains file " + fileName + "?",
-                scripts.lookForGivenString(TestLs_output, fileName) == true);
+        TestLs_output.grep(~/.*${fileName}.*/).size() > 0);
   }
 
   @Test
@@ -234,7 +228,7 @@ public class TestLs {
 
     String fileName = "/user/$USERNAME/$testLsInputDir/$testLsInputs/test_3";
     assertTrue("Does output contains proper size value for " + fileName + "?",
-               scripts.lookForGivenString(sh.getOut(), "131.8 K") == true);
+        sh.getOut().grep(~/.*131.8 K.*/).size() > 0);
   }
 }
 

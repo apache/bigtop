@@ -38,7 +38,6 @@ public class TestGet {
   private static String testGetInputDir = "testGetInputDir" + date;
   private static String testGetInputs = "test_data_TestGet"
   private static String TESTDIR  = "/user/$USERNAME/$testGetInputDir";
-  private CommonFunctions scripts = new CommonFunctions();
 
   @BeforeClass
   public static void setUp() {
@@ -165,7 +164,7 @@ public class TestGet {
     String failure_msg = "get: `temp_testget/$testGetInputs/test_2.txt': " +
                          "File exists";
     assertTrue("Does get command properly failed to download an existing file?",
-               scripts.lookForGivenString(sh.getErr(),failure_msg) == true);
+        sh.getErr().grep(~/${failure_msg}.*/).size() > 0);
   }
 
   @Test
@@ -178,7 +177,7 @@ public class TestGet {
     String failure_msg = "get: `$TESTDIR/$testGetInputs/test_4.txt': " +
                          "No such file or directory";
     assertTrue("Does get command failed to download non existing file?",
-               scripts.lookForGivenString(sh.getErr(),failure_msg) == true);
+        sh.getErr().grep(~/${failure_msg}.*/).size() > 0);
   }
 
   @Test
@@ -213,8 +212,7 @@ public class TestGet {
     assertTrue("listing files/directories failed on HDFS", sh.getRet() == 0);
 
     assertTrue("Does get command download file with crc?",
-                scripts.lookForGivenString(sh.getOut(),
-                                          ".test_4.txt.crc") == true);
+        sh.getOut().grep(~/.*.test_4.txt.crc.*/).size() > 0);
     // now compare the contents
     sh.exec("diff temp_testget/test_optionscrc/test_4.txt $testGetInputs/test_2.txt");
     logError(sh);
@@ -234,8 +232,7 @@ public class TestGet {
     assertTrue("listing files/directories failed on HDFS", sh.getRet() == 0);
 
     assertTrue("Does get command skipped crc file properly?",
-               scripts.lookForGivenString(sh.getOut(),
-                                          ".test_5.txt.crc") == false);
+        sh.getOut().grep(~/.*.test_5.txt.crc.*/).size() == 0);
     // now compare the contents
     sh.exec("diff $testGetInputs/test_1.txt temp_testget/test_5.txt");
     logError(sh);

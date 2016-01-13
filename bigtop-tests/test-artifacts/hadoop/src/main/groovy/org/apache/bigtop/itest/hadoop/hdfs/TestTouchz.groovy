@@ -44,7 +44,6 @@ public class TestTouchz {
   private static String TESTDIR  = "/user/$USERNAME/$testTouchzInputDir";
   private static String user_testinputdir = USERNAME+"/"+testTouchzInputDir+
                                             "/"+testTouchzInputs;
-  private CommonFunctions scripts = new CommonFunctions();
   static List<String> TestTouchz_output = new ArrayList<String>();
   static List<String> TestTouchz_error = new ArrayList<String>();
   static boolean result = false;
@@ -143,7 +142,7 @@ public class TestTouchz {
 
     String errMsg = "touchz: `/user/"+user_testinputdir+"': Is a directory";
     assertTrue("Does touch failed to create zero length directory?",
-               scripts.lookForGivenString(sh.getErr(), errMsg) == true);
+        sh.getErr().grep(~/.*${errMsg}.*/).size() > 0);
   }
 
   @Test
@@ -155,7 +154,7 @@ public class TestTouchz {
     String errMsg = "touchz: `/user/"+USERNAME+"/"+testTouchzInputDir+
                     "/test_dir2/test_6.txt': No such file or directory";
     assertTrue("Does touchz able to create files in non-existent directory?",
-               scripts.lookForGivenString(sh.getErr(), errMsg) == true);
+        sh.getErr().grep(~/.*${errMsg}.*/).size() > 0);
   }
 
   @Test
@@ -167,7 +166,7 @@ public class TestTouchz {
     String errMsg = "touchz: `/user/"+user_testinputdir+
                     "/test_1.txt': Not a zero-length file";
     assertTrue("Does touch able to make existing file as zero size file?",
-               scripts.lookForGivenString(sh.getErr(), errMsg) == true);
+        sh.getErr().grep(~/.*${errMsg}.*/).size() > 0);
   }
 }
 
