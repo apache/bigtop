@@ -64,7 +64,7 @@ subprojects {
         filename.contains(".java")) {
       keep_this_test =
           tests_to_include().find({
-            it.contains(filename)
+            filename ==~ it
           }) != null;
     }
 
