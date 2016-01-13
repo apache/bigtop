@@ -72,6 +72,12 @@ subprojects {
     return !keep_this_test;
   }
 
+  test {
+    // TestHadoopExamples and other tests rely on BIGTOP_HOME environment
+    // variable to find some resources. Let's set it up, using ext.BIGTOP_HOME
+    environment ("BIGTOP_HOME", BIGTOP_HOME)
+  }
+
   test << {
     println("Now testing...");
     //todo, add back in 'basic' after BIGTOP-1392 .
