@@ -1,0 +1,4 @@
+qfs-python binary: new-package-should-close-itp-bug
+qfs-python binary: dir-in-usr-local
+qfs-python binary: file-in-usr-local
+qfs-python binary: file-in-unusual-dir
