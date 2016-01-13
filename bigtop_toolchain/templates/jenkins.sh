@@ -20,4 +20,3 @@ export GRADLE_HOME=/usr/local/gradle
 export PATH=$MAVEN_HOME/bin:$ANT_HOME/bin:$GRADLE_HOME/bin:$PATH
 
 export GRADLE_OPTS="-Dorg.gradle.daemon=true"
-export GRADLE_USER_HOME="/usr/share/gradle.home"
