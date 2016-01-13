@@ -40,9 +40,9 @@ subprojects {
   ext.BIGTOP_HOME   = rootDir
 
   dependencies {
+    compile group: 'org.apache.bigtop.itest', name: 'itest-common', version: itestVersion, transitive: 'true'
     //needed to avoid groovy not on classpath error.
     testCompile group: 'org.codehaus.groovy', name: 'groovy', version: groovyVersion
-    testCompile group: 'org.apache.bigtop.itest', name: 'itest-common', version: itestVersion, transitive: 'true'
     testCompile group: 'org.apache.hadoop', name: 'hadoop-common', version: hadoopVersion, transitive: 'true'
     testCompile group: 'org.apache.hadoop', name: 'hadoop-hdfs', version: hadoopVersion, transitive: 'true'
   }
