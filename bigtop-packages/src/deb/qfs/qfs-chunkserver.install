@@ -1,0 +1,3 @@
+/usr/bin/chunkserver
+/usr/bin/chunkscrubber
+/etc/qfs/logrotate.d/qfs-chunkserver

@@ -1,0 +1,3 @@
+qfs-client binary: new-package-should-close-itp-bug
+qfs-client binary: binary-or-shlib-defines-rpath
+qfs-client binary: binary-without-manpage
