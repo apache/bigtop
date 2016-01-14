@@ -21,7 +21,7 @@ set -ex
 BUILD_OPTS="-Divy.home=${HOME}/.ivy2 -Dsbt.ivy.home=${HOME}/.ivy2 -Duser.home=${HOME} \
             -Drepo.maven.org=$IVY_MIRROR_PROP \
             -Dreactor.repo=file://${HOME}/.m2/repository \
-            -Dignite.version=1.5.0-b1 \
+            -Dignite.version=$IGNITE_HADOOP_VERSION \
             -Pspark-1.5 -Dspark.version=$SPARK_VERSION \
             -Phadoop-2.6 -Dhadoop.version=$HADOOP_VERSION \
             -Pyarn \
@@ -32,5 +32,7 @@ if [ "$ZEPPELIN_RUN_TESTS" = "true" ]; then
 else
   BUILD_OPTS="$BUILD_OPTS -DskipTests"
 fi
+
+export MAVEN_OPTS="-Xmx1500m -Xms1500m -XX:MaxPermSize=256m"
 
 mvn $BUILD_OPTS clean package

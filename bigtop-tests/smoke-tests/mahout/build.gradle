@@ -15,22 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-apply plugin: 'groovy'
-
-repositories {
-  mavenCentral()
-}
-
-dependencies {
-  //needed to avoid groovy not on classpath error.
-  testCompile module('org.codehaus.groovy:groovy:1.8.0')
-  testCompile group: 'org.apache.bigtop.itest', name: 'itest-common', version: itestVersion, transitive: 'true'
-  testCompile group: 'org.apache.hadoop', name: 'hadoop-common', version: hadoopVersion, transitive: 'true'
-  testCompile group: 'org.apache.hadoop', name: 'hadoop-hdfs', version: hadoopVersion, transitive: 'true'
-}
-
-
 def tests_to_include() {
   return [
       "TestMahoutExamples.groovy"
@@ -39,18 +23,13 @@ def tests_to_include() {
 
 sourceSets {
   test {
-    resources {
-      srcDirs = [
-          'conf/'
-      ]
-    }
     groovy {
-      srcDirs = ["$System.env.BIGTOP_HOME"+"/bigtop-tests/test-artifacts/mahout/"]
+      srcDirs = ["${BIGTOP_HOME}/bigtop-tests/test-artifacts/mahout/"]
       exclude { FileTreeElement elem -> (doExclude(elem.getName())) }
     }
   }
 }
 
 test.doFirst {
-  checkEnv(["BIGTOP_HOME", "MAHOUT_HOME"])
+  checkEnv(["MAHOUT_HOME"])
 }

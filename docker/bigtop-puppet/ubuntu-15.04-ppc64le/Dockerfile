@@ -12,7 +12,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+FROM ppc64le/ubuntu:15.04
+MAINTAINER Amir Sanjar
 
-distributionPath=wrapper/dists
-zipStorePath=wrapper/dists
-distributionUrl=https\://services.gradle.org/distributions/gradle-2.4-bin.zip
+COPY puppetize.sh /tmp/puppetize.sh
+
+RUN bash /tmp/puppetize.sh

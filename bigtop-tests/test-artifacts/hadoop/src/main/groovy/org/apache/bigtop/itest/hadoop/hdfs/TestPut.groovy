@@ -46,7 +46,6 @@ public class TestPut {
   static List<String> TestPut_error = new ArrayList<String>();
   private static String TESTDIR  = "/user/$USERNAME/$testPutInputDir";
   static boolean result = false;
-  private CommonFunctions scripts = new CommonFunctions();
 
   @BeforeClass
   public static void setUp() {
@@ -113,7 +112,7 @@ public class TestPut {
                sh.getRet() == 0);
 
     assertTrue("Able to find uploaded files on hdfs?",
-               scripts.lookForGivenString(sh.getOut(),"test_3") == true);
+        sh.getOut().grep(~/.*test_3.*/).size() > 0);
     result = false;
   }
 
@@ -149,13 +148,13 @@ public class TestPut {
                sh.getRet() == 0);
 
     assertTrue("Does test_2.txt uploaded properly?",
-               scripts.lookForGivenString(sh.getOut(),"test_2.txt") == true);
+        sh.getOut().grep(~/.*test_2.txt.*/).size() > 0);
 
     assertTrue("Does test.zip uploaded properly?",
-               scripts.lookForGivenString(sh.getOut(),"test.zip") == true);
+        sh.getOut().grep(~/.*test.zip.*/).size() > 0);
 
     assertTrue("Does test_3 uploaded properly?",
-               scripts.lookForGivenString(sh.getOut(),"test_3") == true);
+        sh.getOut().grep(~/.*test_3.*/).size() > 0);
   }
 
   @Test
@@ -168,7 +167,7 @@ public class TestPut {
                          "No such file or directory";
     println(searchToken);
     assertTrue("Able to Upload non-existing file?",
-               scripts.lookForGivenString(sh.getErr(), searchToken) == true);
+        sh.getErr().grep(~/.*${searchToken}.*/).size() > 0);
   }
 
   @Test
@@ -187,6 +186,6 @@ public class TestPut {
     String searchToken = "put: `/user/"+USERNAME+"/"+
                           testPutInputDir+"/test_1.txt': File exists";
     assertTrue("Able to Upload non-existing file?",
-               scripts.lookForGivenString(sh.getErr(), searchToken) == true);
+        sh.getErr().grep(~/.*${searchToken}.*/).size() > 0);
   }
 }

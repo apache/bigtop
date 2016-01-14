@@ -18,8 +18,8 @@ set -ex
 
 . `dirname $0`/bigtop.bom
 
-BULK_MVN_OPTS="-Phadoop_2 -DskipTests -Dhadoop.version=$HADOOP_VERSION $@"
+BULK_MVN_OPTS="-Phadoop_2 -DskipTests -Dhadoop.version=$HADOOP_VERSION -Dzookeeper.version=$ZOOKEEPER_VERSION -Dhbase.version=$HBASE_VERSION -Dhive.version=$HIVE_VERSION $@"
 
 mvn $BULK_MVN_OPTS clean install
-mvn $BULK_MVN_OPTS -Ddependency.locations.enabled=false site:site
-mvn $BULK_MVN_OPTS -Ddependency.locations.enabled=false site:stage
+# mvn $BULK_MVN_OPTS -Ddependency.locations.enabled=false site:site
+# mvn $BULK_MVN_OPTS -Ddependency.locations.enabled=false site:stage

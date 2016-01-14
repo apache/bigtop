@@ -15,43 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-apply plugin: 'groovy'
-
-repositories {
-  mavenCentral()
-}
-
-dependencies {
-}
-
 subprojects {
-
-  ext.hadoopVersion = '2.6.0'
-  //Note you need a snapshot itest to run this.
-  ext.doExclude = { String filename ->
-    //print("Exclude? ${filename} ... ")
-    def keep_this_test = true;
-    if (filename.contains(".groovy") ||
-        filename.contains(".java")) {
-      keep_this_test =
-          tests_to_include().find({
-            it.contains(filename)
-          }) != null;
-    }
-
-    //println("Keep = ${keep_this_test} "+filename);
-    return !keep_this_test;
-  }
-
-  println("Now testing...");
-  test {
-
-    //todo, add back in 'basic' after BIGTOP-1392 .
-    testLogging {
-      events "passed", "skipped", "failed"
-    }
-  }
-
   /**
    *  Utility function for tests to use to confirm EVN Variables.
    */
@@ -60,18 +24,67 @@ subprojects {
       def value = System.getenv("${it}")
       if (value == null || value == "null")
         throw new GradleException("undeclared env variable: ${it}")
-      else
-        println("ENV VARIABLE: ${it} = $value");
     }
   }
 
   /**
   * Two important environment variables.
   *  java_home should be declared in all cases.
-  * itest can be greater than or equal to = 0.7.0, 0.8.0
   */
-  checkEnv(["JAVA_HOME","ITEST"])
-  ext.itestVersion = System.getenv("ITEST")
+  checkEnv(["JAVA_HOME"])
+
+  ext.groovyVersion = '1.8.0'
+  ext.hadoopVersion = '2.6.0'
+  // itest needs be greater than or equal to = 1.0.0
+  ext.itestVersion = '1.0.0' // Might need to be able to read an input for alternate version?
+  ext.BIGTOP_HOME   = rootDir
+
+  dependencies {
+    compile group: 'org.apache.bigtop.itest', name: 'itest-common', version: itestVersion, transitive: 'true'
+    //needed to avoid groovy not on classpath error.
+    testCompile group: 'org.codehaus.groovy', name: 'groovy', version: groovyVersion
+    testCompile group: 'org.apache.hadoop', name: 'hadoop-common', version: hadoopVersion, transitive: 'true'
+    testCompile group: 'org.apache.hadoop', name: 'hadoop-hdfs', version: hadoopVersion, transitive: 'true'
+  }
+
+  sourceSets {
+    test {
+      resources {
+        srcDirs = [
+            'conf/',
+        ]
+      }
+    }
+  }
+  //Note you need a snapshot itest to run this.
+  ext.doExclude = { String filename ->
+    //print("Exclude? ${filename} ... ")
+    def keep_this_test = true;
+    if (filename.contains(".groovy") ||
+        filename.contains(".java")) {
+      keep_this_test =
+          tests_to_include().find({
+            filename ==~ it
+          }) != null;
+    }
+
+    //println("Keep = ${keep_this_test} "+filename);
+    return !keep_this_test;
+  }
+
+  test {
+    // TestHadoopExamples and other tests rely on BIGTOP_HOME environment
+    // variable to find some resources. Let's set it up, using ext.BIGTOP_HOME
+    environment ("BIGTOP_HOME", BIGTOP_HOME)
+  }
+
+  test << {
+    println("Now testing...");
+    //todo, add back in 'basic' after BIGTOP-1392 .
+    testLogging {
+      events "passed", "skipped", "failed"
+    }
+  }
 
   // Let's make sure all system Properties are passed into the forked test JVM
   tasks.withType(Test) {

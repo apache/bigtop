@@ -18,5 +18,17 @@
 rootProject.name = 'bigtop'
 
 include 'bigtop-test-framework', 'bigtop-tests:smoke-tests'
-
 project(":bigtop-test-framework").name = 'itest-common'
+
+/**
+ * The following code will does include all subprojects of smoke-tests
+ * so they are lined-up properly in the structure of the Bigtop project.
+ * The inclusion is done dynamically, so when new smoke test projects
+ * there's no extra effort to get it running.
+ */
+FileTree fTree = fileTree(dir: 'bigtop-tests/smoke-tests', include: '*/build.gradle')
+fTree.each() { buildFile ->
+  def parent = buildFile.getParentFile().name
+  include("bigtop-tests:smoke-tests:$parent")
+}
+

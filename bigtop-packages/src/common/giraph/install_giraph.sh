@@ -113,7 +113,7 @@ cp -r $BUILD_DIR/giraph-dist/target/giraph*-bin/*/* ${PREFIX}/${LIB_DIR}
 
 # Installing docs and examples
 install -d -m 0755 $PREFIX/${DOC_DIR}
-cp -r $BUILD_DIR/target/staging/*  $PREFIX/${DOC_DIR}
+# cp -r $BUILD_DIR/target/staging/*  $PREFIX/${DOC_DIR}
 mv ${PREFIX}/${LIB_DIR}/giraph-examples*.jar $PREFIX/${DOC_DIR}
 
 # Install executable wrappers

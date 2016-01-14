@@ -15,23 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-apply plugin: 'groovy'
-
-repositories {
-  mavenCentral()
-}
-
-dependencies {
-  //needed to avoid groovy not on classpath error.
-  testCompile module('org.codehaus.groovy:groovy:1.8.0')
-  compile group: 'junit', name: 'junit', version: '4.11', transitive: 'true'
-  testCompile group: 'org.apache.hadoop', name: 'hadoop-common', version: hadoopVersion, transitive: 'true'
-  compile group: 'org.apache.hadoop', name: 'hadoop-hdfs', version: hadoopVersion, transitive: 'true'
-  compile "org.codehaus.groovy:groovy:1.8.0"
-}
-
-
 def tests_to_include() {
   return [
       "TestHadoopExamples.groovy"
@@ -39,26 +22,10 @@ def tests_to_include() {
 }
 
 sourceSets {
-  main {
-     groovy {
-       srcDirs = [
-         "$System.env.BIGTOP_HOME"+"/bigtop-test-framework/src/main/groovy/org/apache/bigtop/itest/",
-         "$System.env.BIGTOP_HOME"+"/bigtop-test-framework/src/test/groovy/org/apache/bigtop/itest/"
-	]
-   }
-  }
   test {
-    resources {
-      srcDirs = [
-          'conf/',
-      ]
-    }
-
     groovy {
       srcDirs = [
-        "$System.env.BIGTOP_HOME"+"/bigtop-tests/test-artifacts/hadoop/src/main/groovy/org/apache/bigtop/itest/hadoop/mapreduce",
-        "$System.env.BIGTOP_HOME"+"/bigtop-test-framework/src/main/groovy/org/apache/bigtop/itest/",
-        "$System.env.BIGTOP_HOME"+"/bigtop-test-framework/src/test/groovy/org/apache/bigtop/itest/"
+        "${BIGTOP_HOME}/bigtop-tests/test-artifacts/hadoop/src/main/groovy/org/apache/bigtop/itest/hadoop/mapreduce"
       ]
       exclude {
         FileTreeElement elem -> (doExclude(elem.getName()))
@@ -68,5 +35,5 @@ sourceSets {
 }
 
 test.doFirst {
-  checkEnv(["HADOOP_CONF_DIR"])
+  checkEnv(["HADOOP_CONF_DIR", "HADOOP_MAPRED_HOME"])
 }

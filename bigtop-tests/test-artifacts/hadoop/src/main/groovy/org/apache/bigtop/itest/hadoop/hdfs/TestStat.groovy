@@ -42,7 +42,6 @@ public class TestStat {
   private static String testStatOutCmp= "testStatOutCmp" + date;
   private static int repfactor = 2;
   private static String TESTDIR  = "/user/$USERNAME/$testStatInputDir";
-  private CommonFunctions scripts = new CommonFunctions();
   static boolean result = false;
 
   @BeforeClass
@@ -217,6 +216,6 @@ public class TestStat {
     String errMsg = "stat: `$TESTDIR/$testStatInputs': " +
                     "No such file or directory";
     assertTrue("Does stat provides correct message for non-existent fodler?",
-               scripts.lookForGivenString(sh.getErr(), errMsg) == true);
+        sh.getErr().grep(~/.*${errMsg}.*/).size() > 0);
   }
 }

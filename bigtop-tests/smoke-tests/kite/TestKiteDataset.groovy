@@ -27,6 +27,7 @@ import org.junit.AfterClass
 import org.junit.Test
 import org.apache.bigtop.itest.JarContent
 import org.apache.bigtop.itest.TestUtils
+import org.apache.bigtop.itest.shell.Shell
 import org.apache.commons.logging.LogFactory
 import org.apache.commons.logging.Log
 import java.lang.reflect.Constructor;

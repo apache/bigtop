@@ -144,6 +144,7 @@ object SparkDriver {
     val storesBC = sc.broadcast(stores)
     val productBC = sc.broadcast(inputData.getProductCategories())
     val customerRDD = sc.parallelize(customers)
+    val simLen = simulationLength
     val nextSeed = seedFactory.getNextSeed()
     println("...Done broadcasting stores and products.")
 
@@ -168,7 +169,7 @@ object SparkDriver {
 	  var transaction = transGen.generate()
 
           //Create a list of this customer's transactions for the time period
-          while(transaction.getDateTime() < simulationLength) {
+          while(transaction.getDateTime() < simLen) {
             if (transaction.getDateTime > BURNIN_TIME) {
               transactions = transaction :: transactions
             }

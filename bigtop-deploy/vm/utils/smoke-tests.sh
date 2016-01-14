@@ -28,7 +28,6 @@ fi
 echo -e "\n===== START TO RUN SMOKE TESTS: $SMOKE_TESTS =====\n"
 
 export HADOOP_CONF_DIR=/etc/hadoop/conf/
-export BIGTOP_HOME=/bigtop-home/
 export HADOOP_MAPRED_HOME=/usr/lib/hadoop-mapreduce/
 export HIVE_HOME=/usr/lib/hive/
 export PIG_HOME=/usr/lib/pig/
@@ -36,7 +35,6 @@ export FLUME_HOME=/usr/lib/flume/
 export SQOOP_HOME=/usr/lib/sqoop/
 export HIVE_CONF_DIR=/etc/hive/conf/
 export MAHOUT_HOME="/usr/lib/mahout"
-export ITEST="0.7.0"
 
 su -s /bin/bash $HCFS_USER -c '/usr/bin/hadoop fs -mkdir /user/vagrant /user/root'
 su -s /bin/bash $HCFS_USER -c 'hadoop fs -chmod 777 /user/vagrant'
@@ -47,4 +45,8 @@ if [ -f /etc/debian_version ] ; then
 else
     yum install -y pig hive flume mahout sqoop
 fi
-cd /bigtop-home/bigtop-tests/smoke-tests && ./gradlew clean compileGroovy test -Dsmoke.tests=$SMOKE_TESTS --info
+ALL_SMOKE_TASKS=""
+for s in `echo $SMOKE_TESTS | sed -e 's#,# #g'`; do
+  ALL_SMOKE_TASKS="$ALL_SMOKE_TASKS bigtop-tests:smoke-tests:$s:test"
+done
+cd /bigtop-home && ./gradlew clean $ALL_SMOKE_TASKS -Psmoke.tests --info
