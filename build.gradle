@@ -382,7 +382,7 @@ task "gen-gradle-home"(type:Exec,
     group: DOCKERBUILD_GROUP) {
   def dir = System.getProperty("user.dir")
   def command = [
-      './gradlew', '-g', dir + '/gradle.home > /dev/null'
+      './gradlew', '-g', dir + '/gradle.home'
   ]
   workingDir '.'
   commandLine command
