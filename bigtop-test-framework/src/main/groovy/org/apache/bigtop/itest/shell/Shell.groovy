@@ -73,6 +73,8 @@ class Shell {
       LOG.trace("${shell} << __EOT__\n${script}\n__EOT__");
     }
 
+    LOG.info("cmd: " + script);
+
     Thread.start {
       def writer = new PrintWriter(new BufferedOutputStream(proc.out))
       writer.println(script)
@@ -92,10 +94,9 @@ class Shell {
 
     proc.waitFor()
     ret = proc.exitValue()
-    println("cmd: " + script);
-    println("out: " + toString(out));
-    println("err: " + toString(err));
-    println("ret: " + ret);
+    LOG.info("out: " + toString(out));
+    LOG.info("err: " + toString(err));
+    LOG.info("ret: " + ret);
 
     if (LOG.isTraceEnabled()) {
       if (ret != 0) {
@@ -116,14 +117,15 @@ class Shell {
     if(list == null || list.size() == 0) {
       return "[]"
     } else {
-        StringBuilder builder = new StringBuilder('[');
+        StringBuilder builder = new StringBuilder();
 	Iterator<?> iterator = list.iterator();
+        builder.append(System.lineSeparator);
 	while(iterator.hasNext()) {
 	  builder.append(iterator.next())
           if(iterator.hasNext()) 
             builder.append(System.lineSeparator);
 	}
-	return builder.append(']').toString();
+	return builder.append(System.lineSeparator).toString();
     }
   }
 }
