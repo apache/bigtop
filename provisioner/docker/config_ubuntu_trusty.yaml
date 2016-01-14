@@ -25,5 +25,5 @@ repo: "http://build.odpi.org:8080/job/ODPi-v1.0-collect/lastSuccessfulBuild/arti
 distro: debian
 components: [hadoop, yarn]
 enable_local_repo: false
-smoke_test_components: [mapreduce]
+smoke_test_components: [mapreduce,hdfs]
 jdk: "openjdk-7-jdk"
