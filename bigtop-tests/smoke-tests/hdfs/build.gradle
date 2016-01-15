@@ -22,16 +22,13 @@ def tests_to_include() {
       "TestFileAppend.groovy",
       "TestFsck.groovy",
       "TestHDFSQuota.groovy",
-      /* TODO need to figure out how to unpack the resources
-      "TestCmdTest.groovy",
-      "TestCmdText.groovy",
-      "TestCount.groovy",
+      "TestHDFSCLI.java",
+      "TestTextSnappy.groovy",
       "TestDFSAdmin.groovy",
       "TestHDFSBalancer.groovy",
-
-      "TestDFSCLI.java",
-      "TestHDFSCLI.java",
-      "TestTextSnappy.groovy"
+      /*
+      "TestDFSCLI.java",        // Can't run until we learn how to change
+                                // effective user in the runtime
       */
   ];
 }
@@ -62,7 +59,6 @@ sourceSets {
       resources {
         srcDirs = [
             "${BIGTOP_HOME}/bigtop-tests/test-artifacts/hadoop/src/main/resources",
-            'conf/',
         ]
       }
       srcDirs = [
@@ -77,4 +73,15 @@ sourceSets {
 
 test.doFirst {
   checkEnv(["HADOOP_CONF_DIR"])
+}
+
+test {
+  // Change the default location where configuration file is picked up
+  systemProperty 'test.cache.data', "${buildDir}/resources/test/clitest_data/"
+  // Change the default location where test data is picked up
+  systemProperty 'test.resources.dir', "${buildDir}/resources/test/"
+  // default user for HCFS CLI test is file-system superuser. Default is 'hdfs'
+  // However, running that test in provisioned is done under root, hence the
+  // change to avoid test assert of the effective user
+  systemProperty 'hcfs.root.username', System.properties['user.name']
 }
