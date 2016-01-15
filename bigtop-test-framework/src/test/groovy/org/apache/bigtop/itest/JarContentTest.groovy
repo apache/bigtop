@@ -45,7 +45,7 @@ class JarContentTest {
 
   @Test
   void testUnpackJarContainer() {
-    def destination = 'target/local.unpack.dir';
+    def destination = System.properties['buildDir'] ?: 'target/local.unpack.dir';
     JarContent.unpackJarContainer('java.lang.String', destination, 'visitor');
     // expect to find a number of sun/reflect/generics/visitor
     // under destination folder
