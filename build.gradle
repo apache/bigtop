@@ -167,6 +167,10 @@ project(':itest-common') {
 
   artifacts.archives packageITest
 
+  test.doFirst {
+    if (System.getenv('JAVA_HOME') == null)
+      throw new GradleException("JAVA_HOME is required to test ${project.name}")
+  }
   test {
     exclude '**/Dummy*'
   }
