@@ -20,8 +20,6 @@ package org.apache.bigtop.itest.hadoop.hdfs;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.apache.bigtop.itest.JarContent;
 import org.apache.bigtop.itest.shell.Shell;
@@ -30,17 +28,6 @@ public class TestDFSAdmin {
 
   // set debugging variable to true if you want error messages sent to stdout
   private static Shell shHDFS = new Shell("/bin/bash", "hdfs");
-
-  @BeforeClass
-  public static void setUp() {
-    // unpack resource
-    JarContent.unpackJarContainer(TestDFSAdmin.class, ".", null);
-    System.out.println("Running DFSAdmin commands:");
-  }
-
-  @AfterClass
-  public static void tearDown() {
-  }
 
   @Test
   public void testDFSbasic() {

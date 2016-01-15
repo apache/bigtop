@@ -20,8 +20,6 @@ package org.apache.bigtop.itest.hadoop.hdfs;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.apache.bigtop.itest.JarContent;
 import org.apache.bigtop.itest.shell.Shell;
@@ -31,21 +29,7 @@ public class TestHDFSBalancer {
 
   private static Shell shHDFS = new Shell("/bin/bash", "hdfs");
   // set with -Dthreshold
-  private static String thresh = "10";
-
-  @BeforeClass
-  public static void setUp() {
-
-    // unpack resource
-    JarContent.unpackJarContainer(TestHDFSBalancer.class, ".", null);
-    if (System.getProperty("threshold") != null) {
-      thresh = System.getProperty("threshold");
-    }
-  }
-
-  @AfterClass
-  public static void tearDown() {
-  }
+  private static String thresh = System.getProperty("threshold") ?: "10";
 
   /*
    * This function executes the hdfs balancer -threshold command with

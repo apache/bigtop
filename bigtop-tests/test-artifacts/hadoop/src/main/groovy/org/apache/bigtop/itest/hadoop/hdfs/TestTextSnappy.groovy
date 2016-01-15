@@ -27,13 +27,16 @@ import static org.apache.bigtop.itest.LogErrorsUtils.logError
 class TestTextSnappy {
   static Shell sh = new Shell("/bin/bash -s")
   static String testDir = "testtextsnappy." + (new Date().getTime())
-  static String snappyFile = "part-00001.snappy"
+  static String testCacheDir = System.properties['test.resources.dir'] ?
+    "${System.properties['test.resources.dir']}/": ""
+  static String snappyFileName = "part-00001.snappy"
+  static String snappyFile = "${testCacheDir}${snappyFileName}"
 
   @BeforeClass
   static void setUp() throws IOException {
     sh.exec(
       "hadoop fs  -mkdir ${testDir}",
-      "hadoop fs -put ${snappyFile} ${testDir}/${snappyFile}",
+      "hadoop fs -put ${snappyFile} ${testDir}/${snappyFileName}",
     )
     logError(sh)
   }
@@ -45,7 +48,7 @@ class TestTextSnappy {
 
   @Test
   void testTextSnappy() {
-    String cmd = "hadoop fs -text ${testDir}/${snappyFile}"
+    String cmd = "hadoop fs -text ${testDir}/${snappyFileName}"
     System.out.println(cmd)
     sh.exec(cmd)
     String output = sh.getOut().join("\n")

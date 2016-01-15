@@ -39,17 +39,9 @@ subprojects {
     testCompile group: 'org.codehaus.groovy', name: 'groovy', version: groovyVersion
     testCompile group: 'org.apache.hadoop', name: 'hadoop-common', version: hadoopVersion, transitive: 'true'
     testCompile group: 'org.apache.hadoop', name: 'hadoop-hdfs', version: hadoopVersion, transitive: 'true'
+    testRuntime project(':bigtop-tests:smoke-tests:logger-test-config')
   }
 
-  sourceSets {
-    test {
-      resources {
-        srcDirs = [
-            'conf/',
-        ]
-      }
-    }
-  }
   //Note you need a snapshot itest to run this.
   ext.doExclude = { String filename ->
     //print("Exclude? ${filename} ... ")
