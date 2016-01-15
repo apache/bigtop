@@ -20,27 +20,13 @@ package org.apache.bigtop.itest.hadoop.yarn;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.apache.bigtop.itest.JarContent;
 import org.apache.bigtop.itest.shell.Shell;
 
 public class TestNode {
 
   // set debugging variable to true if you want error messages sent to stdout
   private static Shell sh = new Shell("/bin/bash");
-
-  @BeforeClass
-  public static void setUp() {
-    // unpack resource
-    JarContent.unpackJarContainer(TestNode.class, ".", null);
-    System.out.println("Running Node commands:");
-  }
-
-  @AfterClass
-  public static void tearDown() {
-  }
 
   @Test (timeout = 0x15000l)
   public void testNodeBasic() {
