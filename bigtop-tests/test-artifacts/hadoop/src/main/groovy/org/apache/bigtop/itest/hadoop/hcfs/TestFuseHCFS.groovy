@@ -281,7 +281,7 @@ public class TestFuseDFS {
           sh.exec("diff " + "${testdir}/${it} "
             + "${testdir}/targetdir/${it}");
           assertTrue("Failed: Detected a difference between ${it} in " +
-            "${testdir} vs " + "the ${testdir}/targetdir diff=" + sh.out,
+            "${testdir} vs " + "the ${testdir}/targetdir diff=" + sh.out.join("\n"),
             sh.getRet().equals(0));
         }
       }//validator
