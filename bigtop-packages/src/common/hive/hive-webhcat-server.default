@@ -13,8 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-export HCAT_PREFIX=/usr
-export HADOOP_PREFIX=/usr
+export HCAT_PREFIX=/usr/lib/hive-hcatalog
 export WEBHCAT_LOG_DIR=/var/log/hive-hcatalog
 export WEBHCAT_PID_DIR=/var/lib/hive-hcatalog
 # FIXME: HCATALOG-636
