@@ -15,4 +15,6 @@
 
 cp -r ../../../bigtop_toolchain .
 docker build -t bigtop/deploy:debian-8 .
+ret=$?
 rm -rf bigtop_toolchain
+exit $ret
