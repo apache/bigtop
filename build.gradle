@@ -182,13 +182,14 @@ project(':itest-common') {
  * This is done to avoid running cluster smoke tests during the normal life-cycle
  * of the project development
  */
-def checkSmokeTestProjects = {
-  FileTree fTree = fileTree(dir: 'bigtop-tests/smoke-tests', include: '*/build.gradle')
+def checkClusterTestProjects = { property ->
+  def suiteName = property.replaceAll('.', '-')
+  FileTree fTree = fileTree(dir: "bigtop-tests/$suiteName", include: '*/build.gradle')
   fTree.each() { smokeProject ->
     def parent = smokeProject.getParentFile().name
-    project (":bigtop-tests:smoke-tests:$parent") {
+    project (":bigtop-tests:$suiteName:$parent") {
       test {
-        onlyIf {project.hasProperty('smoke.tests')}
+        onlyIf {project.hasProperty(suiteName)}
       }
     }
   }
@@ -412,7 +413,7 @@ task "bigtop-slaves"(dependsOn: 'gen-gradle-home', type:Exec,
 }
 
 project.afterEvaluate {
-  checkSmokeTestProjects()
+  checkClusterTestProjects("smoke.tests")
   artifactToInstall(dependsOn: [installTopLevel, installCommon, installConf, installiTest])
 }
 
