@@ -427,6 +427,7 @@ task "bigtop-slaves"(type:Exec,
 
 project.afterEvaluate {
   checkClusterTestProjects("smoke.tests")
+  checkClusterTestProjects("spec.tests")
   artifactToInstall(dependsOn: [installTopLevel, installCommon, installConf, installiTest])
 }
 
