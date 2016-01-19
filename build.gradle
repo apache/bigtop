@@ -414,6 +414,7 @@ task "bigtop-slaves"(dependsOn: 'gen-gradle-home', type:Exec,
 
 project.afterEvaluate {
   checkClusterTestProjects("smoke.tests")
+  checkClusterTestProjects("spec.tests")
   artifactToInstall(dependsOn: [installTopLevel, installCommon, installConf, installiTest])
 }
 

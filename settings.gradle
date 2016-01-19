@@ -31,4 +31,9 @@ fTree.each() { buildFile ->
   def parent = buildFile.getParentFile().name
   include("bigtop-tests:smoke-tests:$parent")
 }
+fTree = fileTree(dir: 'bigtop-tests/spec-tests', include: '*/build.gradle')
+fTree.each() { buildFile ->
+  def parent = buildFile.getParentFile().name
+  include("bigtop-tests:spec-tests:$parent")
+}
 
