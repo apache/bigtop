@@ -21,10 +21,6 @@ dependencies {
   if (System.env.HADOOP_CONF_DIR) testRuntime files(System.env.HADOOP_CONF_DIR)
 }
 
-test.doFirst {
-  checkEnv(["HADOOP_CONF_DIR"])
-}
-
 test {
   // Change the default location where test data is picked up
   systemProperty 'test.resources.dir', "${buildDir}/resources/test/"
