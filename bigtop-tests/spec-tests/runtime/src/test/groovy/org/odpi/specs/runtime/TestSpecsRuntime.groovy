@@ -36,24 +36,24 @@ import org.junit.runners.Parameterized.Parameters
 public class TestSpecsRuntime {
   private String testName
   private String type
-  private String command
-  private String pattern
+  private Map arguments
 
-  @Parameters
+  private static ENV = System.getenv()
+
+  @Parameters(name="{0}")
   public static Collection<Object[]> allTests() {
     List<Object[]> specs = [];
 
     config.specs.tests.each { test ->
-      specs.add([test.value.name, test.value.type, test.value.command, test.value.pattern] as Object[])
+      specs.add([test.value.name, test.value.type, test.value.arguments] as Object[])
     }
     return specs
   }
 
-  public TestSpecsRuntime (String testName, String type, String cmd, String ptrn) {
+  public TestSpecsRuntime (String testName, String type, Map arguments) {
     this.testName = testName
     this.type = type
-    this.command = cmd
-    this.pattern = ptrn
+    this.arguments = arguments
   }
 
   public static final String testsList = System.properties['test.resources.dir'] ?:
@@ -69,10 +69,31 @@ public class TestSpecsRuntime {
     switch (type) {
       case 'shell':
         Shell sh = new Shell()
-        def output = sh.exec(command).getOut().join("\n")
+        def output = sh.exec(arguments['command']).getOut().join("\n")
         Assert.assertTrue("${testName} fail: $output doesn't contain expected pattern",
-            output ==~ /${pattern}/)
+            output ==~ /${arguments['pattern']}/)
         break
+
+      case 'envdir':
+        def var = arguments['variable']
+        def isPathRelative = arguments['relative']
+        def pathString = ENV[var]
+        Assert.assertTrue("${testName} fail: environment variable ${var} does not exist", pathString != null )
+
+        if ( arguments['pattern'] ) {
+            Assert.assertTrue("${testName} fail: $pathString doesn't contain expected pattern",
+                pathString ==~ /${arguments['pattern']}/)
+       }
+
+       def pathFile = new File(pathString)
+        if ( isPathRelative ) {
+            Assert.assertFalse("${testName} fail: ${pathString} is not relative", pathFile.isAbsolute() )
+        } else {
+            Assert.assertTrue("${testName} fail: ${pathString} does not exist", pathFile.exists() )
+            Assert.assertTrue("${testName} fail: ${pathString} is not directory", pathFile.isDirectory() )
+       }
+       break
+
       default:
         break
     }
