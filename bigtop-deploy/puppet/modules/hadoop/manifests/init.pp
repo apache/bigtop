@@ -244,8 +244,8 @@ class hadoop ($hadoop_security_authentication = "simple",
       $ssh_user_home   = "/var/lib/hadoop-hdfs"
       $ssh_user_keydir = "$ssh_user_home/.ssh"
       $ssh_keypath     = "$ssh_user_keydir/id_hdfsuser"
-      $ssh_privkey     = "hdfs/id_hdfsuser"
-      $ssh_pubkey      = "hdfs/id_hdfsuser.pub"
+      $ssh_privkey     = "hadoop/hdfs/id_hdfsuser"
+      $ssh_pubkey      = "hadoop/hdfs/id_hdfsuser.pub"
 
       file { $ssh_user_keydir:
         ensure  => directory,
@@ -256,7 +256,7 @@ class hadoop ($hadoop_security_authentication = "simple",
       }
 
       file { $ssh_keypath:
-        source  => "puppet:///files/$ssh_privkey",
+        source  => "puppet:///modules/$ssh_privkey",
         owner   => 'hdfs',
         group   => 'hdfs',
         mode    => '0600',
@@ -264,7 +264,7 @@ class hadoop ($hadoop_security_authentication = "simple",
       }
 
       file { "$ssh_user_keydir/authorized_keys":
-        source  => "puppet:///files/$ssh_pubkey",
+        source  => "puppet:///modules/$ssh_pubkey",
         owner   => 'hdfs',
         group   => 'hdfs',
         mode    => '0600',

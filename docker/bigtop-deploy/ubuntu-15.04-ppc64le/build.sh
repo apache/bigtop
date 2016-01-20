@@ -14,7 +14,5 @@
 # limitations under the License.
 
 cp -r ../../../bigtop_toolchain .
-docker build -t bigtop/deploy:centos-6  .
-ret=$?
+docker build -t bigtop/deploy:ubuntu-15.04-ppc64le .
 rm -rf bigtop_toolchain
-exit $ret

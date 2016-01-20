@@ -15,4 +15,6 @@
 
 cp -r ../../../bigtop_toolchain .
 docker build -t bigtop/deploy:ubuntu-14.04 .
+ret=$?
 rm -rf bigtop_toolchain
+exit $ret

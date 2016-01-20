@@ -13,8 +13,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-cp -r ../../../bigtop_toolchain .
-docker build -t bigtop/deploy:centos-6  .
-ret=$?
-rm -rf bigtop_toolchain
-exit $ret
+FROM bigtop/puppet:ubuntu-15.04-ppc64le
+MAINTAINER Amir Sanjar
+
+COPY bigtop_toolchain /etc/puppet/modules/bigtop_toolchain
+
+# enable ssh
+RUN apt-get update && \
+    apt-get install -y openssh-server vim && \
+    mkdir -p /var/run/sshd && \
+    # requiretty off
+    sed -i.bak 's/requiretty/!requiretty/' /etc/sudoers && \
+    # setup vagrant account
+    mkdir -p /root/.ssh && \
+    chmod 0700 /root/.ssh && \
+    wget http://github.com/mitchellh/vagrant/raw/master/keys/vagrant.pub --no-check-certificate -O /root/.ssh/authorized_keys && \
+    chmod 0600 /root/.ssh/authorized_keys && \
+    # Install required Puppet modules
+    puppet apply -e "include bigtop_toolchain::puppet-modules"
+
+CMD /usr/sbin/sshd -D
