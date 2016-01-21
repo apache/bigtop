@@ -8,6 +8,13 @@ specs {
         pattern = /.*\/usr\/.*/
       }
     }
+    'HADOOP_EC1' {
+      name = 'HADOOP_EC1'
+      type = 'envdir'
+      arguments {
+        variable = 'HADOOP_TOOLS_PATH'
+      }
+    }
     'HADOOP_EC2' {
       name = 'HADOOP_EC2'
       type = 'envdir'

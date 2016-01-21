@@ -70,8 +70,10 @@ public class TestSpecsRuntime {
       case 'shell':
         Shell sh = new Shell()
         def output = sh.exec(arguments['command']).getOut().join("\n")
-        Assert.assertTrue("${testName} fail: $output doesn't contain expected pattern",
-            output ==~ /${arguments['pattern']}/)
+        int actualResult = sh.getRet()
+        int expectedResult = arguments['expectedResult'] ? arguments['expectedResult'] : 0 // use 0 as default success code
+        Assert.assertTrue("${testName} fail: shell command '${arguments['command']}' returned ${actualResult} instead of ${expectedResult}",
+            actualResult == expectedResult)
         break
 
       case 'envdir':
