@@ -89,7 +89,7 @@ rat {
        "buildSrc/build/**",
        "bigtop-data-generators/**/input_data/**",
        "bigtop-deploy/puppet/**/*.yaml",
-       "bigtop-deploy/puppet/config/*/id_hdfsuser*",
+       "bigtop-deploy/puppet/modules/hadoop/files/*/id_hdfsuser*",
        "bigtop-deploy/puppet/modules/bigtop-util/Gemfile.lock",
        "bigtop-deploy/puppet/modules/zeppelin/templates/interpreter.json",
        /* Debian package files that have a rigid structure
@@ -391,6 +391,8 @@ task "gen-gradle-home"(type:Exec,
   ]
   workingDir '.'
   commandLine command
+  //store the output instead of printing to the console:
+  standardOutput = new ByteArrayOutputStream()
 }
 
 task "bigtop-slaves"(dependsOn: 'gen-gradle-home', type:Exec,

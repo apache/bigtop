@@ -18,6 +18,8 @@
 
 package org.apache.bigtop.itest
 
+import org.junit.Assume
+
 import static org.junit.Assert.assertTrue
 
 import org.apache.bigtop.itest.shell.Shell
@@ -76,5 +78,14 @@ public class TestUtils {
       sh.exec("hadoop fs -mkdir -p ${outputDir}");
       assertTrue("Could not create output directory in DFS", sh.getRet() == 0);
     }
+  }
+
+  /**
+   * Method makes a quick check to validate if password-less sudo is configured
+   * @return <code>false</code> if password-less sudo is disabled;
+   * <code>true</code> otherwise
+   */
+  public static boolean noPassSudo () {
+    return new Shell().exec("sudo -n true").ret == 0
   }
 }

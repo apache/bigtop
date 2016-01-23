@@ -33,4 +33,5 @@ hadoop::hadoop_storage_dirs: [/data/1, /data/2]
 bigtop::bigtop_repo_uri: $2
 hadoop_cluster_node::cluster_components: $3
 bigtop::jdk_package_name: $4
+hadoop::common_hdfs::testonly_hdfs_sshkeys: "yes"
 EOF

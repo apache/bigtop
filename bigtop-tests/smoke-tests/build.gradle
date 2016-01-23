@@ -28,7 +28,7 @@ subprojects {
   }
 
   ext.groovyVersion = '1.8.0'
-  ext.hadoopVersion = '2.6.0'
+  ext.hadoopVersion = '2.7.1'
   // itest needs be greater than or equal to = 1.0.0
   ext.itestVersion = '1.0.0' // Might need to be able to read an input for alternate version?
   ext.BIGTOP_HOME   = rootDir
