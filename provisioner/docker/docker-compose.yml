@@ -1,0 +1,10 @@
+bigtop:
+    image: ${DOCKER_IMAGE}
+    command: sleep infinity
+    domainname: bigtop.apache.org
+    privileged: true
+    volumes:
+    - ../../:/bigtop-home
+    - ./config/hiera.yaml:/etc/puppet/hiera.yaml
+    - ./config/hieradata:/etc/puppet/hieradata
+    - ./config/hosts:/etc/hosts
