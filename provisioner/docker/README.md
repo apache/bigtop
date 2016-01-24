@@ -19,53 +19,36 @@
 
 ## Overview
 
-The Vagrantfile definition and wrapper script that creates Bigtop virtual Hadoop cluster on top of Docker containers for you, by pulling from existing publishing bigtop repositories.
+The Docker Compose definition and wrapper script that creates Bigtop virtual Hadoop cluster on top of Docker containers for you, by pulling from existing publishing bigtop repositories.
 This cluster can be used:
 
 - to test bigtop smoke tests
 - to test bigtop puppet recipes
+- to run integration test with your application
 
-These containers start sshd daemons, which vagrant uses to provision and install the hadoop cluster.
-
-This has been verified on docker client 1.2.0, with api version 1.15, and vagrant 1.6.5 on Fedora 20 as well as Centos 6.
+This has been verified on Docker Engine 1.9.1, with api version 1.15, and Docker Compose 1.5.2 on Amazon Linux 2015.09 release.
 
 ## Prerequisites
 
 ### OS X and Windows
 
-* Install [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
-
-* Install [Vagrant](http://www.vagrantup.com/downloads.html). Need version 1.6.5 or higher.
+* Install [Docker Toolbox](https://www.docker.com/docker-toolbox)
 
 ### Linux
 
-* [Kernel Requirements](http://docker.readthedocs.org/en/v0.5.3/installation/kernel/)
-
 * Install [Docker](https://docs.docker.com/installation/)
 
-* Install [Vagrant](http://www.vagrantup.com/downloads.html)
+* Install [Docker Compose](https://docs.docker.com/compose/install/)
 
-## Getting Started
-
-* Create a 3 node Bigtop Hadoop cluster from scratch
-
-NOTE : SELinux can PREVENT you from ssh'ing into your docker container.
-As a brute force way to disable it  - remove it from vi /etc/sysconfig/docker arguments
-(fedora and centos may by default launch docker daemon with the --selinux-enabled option)!
-In the future, lets update this README with the RIGHT way to allow selinux without breaking
-ssh into a docker container!
+* Start the Docker daemon
 
 ```
-service docker restart
-docker pull bigtop/deploy:centos-6
+service docker start
 ```
-Now, you can start your cluster:
-
-In case of errors you can attempt running as root, or else, ping the mailing list.
 
 ## USAGE
 
-1) Create a Bigtop Hadoop cluster by given # of node. (will place a file called config.rb)
+1) Create a Bigtop Hadoop cluster by given # of node.
 
 ```
 ./docker-hadoop.sh --create 3
@@ -77,7 +60,7 @@ In case of errors you can attempt running as root, or else, ping the mailing lis
 ./docker-hadoop.sh --destroy
 ```
 
-3) Update your cluster after doing configuration changes. (re-run puppet apply)
+3) Update your cluster after doing configuration changes on ./config. (re-run puppet apply)
 
 ```
 ./docker-hadoop.sh --provision
@@ -105,18 +88,19 @@ create 5 node cluster => run smoke tests => destroy the cluster
 
 ```
 ./docker-hadoop.sh -h
-usage: docker-hadoop.sh [options]
-       -c NUM_INSTANCES, --create=NUM_INSTANCES  Create a docker based Bigtop Hadoop cluster
+usage: docker-hadoop.sh [-C file ] args
+       -C file                                   Use alternate file for config.yaml
+  commands:
+       -c NUM_INSTANCES, --create=NUM_INSTANCES  Create a Docker based Bigtop Hadoop cluster
        -p, --provision                           Deploy configuration changes
        -s, --smoke-tests                         Run Bigtop smoke tests
        -d, --destroy                             Destroy the cluster
        -h, --help
-
 ```
 
 ##Configurations
 
-* There are several parameters can be configured in the vagrantconfig.yaml:
+* There are several parameters can be configured in config.yaml:
 
 1) Modify memory limit for Docker containers
 
@@ -126,15 +110,7 @@ docker:
 
 ```
 
-2)  If you're running Docker provisioner on OS X or Windows, you can customize the boot2docker VM settings
-
-```
-boot2docker:
-        memory_size: "4096"
-        number_cpus: "2"
-```
-
-3) Use different host ports mapping for web UIs
+2) Use different host ports mapping for web UIs
 
 ```
 namenode_ui_port: "50070"
@@ -146,15 +122,10 @@ Note: If running on OS X or Windows, the boot2docker VM should be reloaded after
 
 
 ##Configure Apache Hadoop ecosystem components
-* Choose the ecosystem you want to be deployed by modifying components in vagrantconfig.yaml
+* Choose the ecosystem you want to be deployed by modifying components in config.yaml
 
 ```
-components: "hadoop,hbase,yarn,..."
+components: "hadoop, hbase, yarn,..."
 ```
 
-By default, Apache Hadoop, YARN, and Apache HBase will be installed.
-See `bigtop-deploy/puppet/config/site.csv.example` for more details.
-
-##Notes
-
-* Users currently using vagrant 1.6+ is strongly recommanded to upgrade to 1.6.4+, otherwise you will encounter the [issue](https://github.com/mitchellh/vagrant/issues/3769) when installing plguins
+By default, Apache Hadoop and YARN will be installed.

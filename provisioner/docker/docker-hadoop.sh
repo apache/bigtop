@@ -19,7 +19,7 @@ BIGTOP_PUPPET_DIR=../../bigtop-deploy/puppet
 
 usage() {
     echo "usage: $PROG [-C file ] args"
-    echo "       -C file                                   Use alternate file for vagrantconfig.yaml"
+    echo "       -C file                                   Use alternate file for config.yaml"
     echo "  commands:"
     echo "       -c NUM_INSTANCES, --create=NUM_INSTANCES  Create a Docker based Bigtop Hadoop cluster"
     echo "       -p, --provision                           Deploy configuration changes"
@@ -134,7 +134,7 @@ get-yaml-config() {
         echo "The yaml config retrieval function can only take 1 or 2 parameters.";
         exit 1;
     fi
-    cat ${vagrantyamlconf} | $RUBY_EXE -ryaml -e "$RUBY_SCRIPT" | tr -d '\r'
+    cat ${yamlconf} | $RUBY_EXE -ryaml -e "$RUBY_SCRIPT" | tr -d '\r'
 }
 
 PROG=`basename $0`
@@ -143,7 +143,7 @@ if [ $# -eq 0 ]; then
     usage
 fi
 
-vagrantyamlconf="vagrantconfig.yaml"
+yamlconf="config.yaml"
 while [ $# -gt 0 ]; do
     case "$1" in
     -c|--create)
@@ -155,10 +155,10 @@ while [ $# -gt 0 ]; do
         shift 2;;
     -C|--conf)
         if [ $# -lt 2 ]; then
-          echo "Alternative config file for vagrantconfig.yaml" 1>&2
+          echo "Alternative config file for config.yaml" 1>&2
           usage
         fi
-	vagrantyamlconf=$2
+	yamlconf=$2
         shift 2;;
     -p|--provision)
         provision
