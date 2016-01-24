@@ -17,6 +17,7 @@
  */
 package org.odpi.specs.runtime
 
+import groovy.io.FileType
 import org.junit.Assert
 import org.apache.bigtop.itest.shell.*
 import org.junit.Test
@@ -72,7 +73,7 @@ public class TestSpecsRuntime {
         def output = sh.exec(arguments['command']).getOut().join("\n")
         int actualResult = sh.getRet()
         int expectedResult = arguments['expectedResult'] ? arguments['expectedResult'] : 0 // use 0 as default success code
-        Assert.assertTrue("${testName} fail: shell command '${arguments['command']}' returned ${actualResult} instead of ${expectedResult}",
+        Assert.assertTrue("${testName} fail: ${arguments['message']} - '${arguments['command']}' returned ${actualResult} instead of ${expectedResult}",
             actualResult == expectedResult)
         break
 
@@ -85,17 +86,37 @@ public class TestSpecsRuntime {
         if ( arguments['pattern'] ) {
             Assert.assertTrue("${testName} fail: $pathString doesn't contain expected pattern",
                 pathString ==~ /${arguments['pattern']}/)
-       }
+        }
 
-       def pathFile = new File(pathString)
+        def pathFile = new File(pathString)
         if ( isPathRelative ) {
             Assert.assertFalse("${testName} fail: ${pathString} is not relative", pathFile.isAbsolute() )
         } else {
             Assert.assertTrue("${testName} fail: ${pathString} does not exist", pathFile.exists() )
             Assert.assertTrue("${testName} fail: ${pathString} is not directory", pathFile.isDirectory() )
-       }
-       break
+        }
+        break
 
+      case 'dirstruct':
+        def expectedFiles = []
+        new File("${testsList}", "${arguments['referenceList']}").eachLine { line ->
+           expectedFiles << line
+        }
+
+
+        def root = new File(ENV["${arguments['baseDirEnv']}"])
+        def actualFiles = []
+        if ( root.exists() ) {
+          root.eachFileRecurse(FileType.ANY) { file ->
+            def relPath = new File( root.toURI().relativize( file.toURI() ).toString() ).path
+            actualFiles << relPath
+          }
+        }
+        def missingFiles = (expectedFiles - actualFiles)
+        Assert.assertTrue("${testName} fail: Directory structure for ${arguments['baseDirEnv']} does not match reference. Missing files: ${missingFiles} ",
+          missingFiles.size() == 0)
+        break
+      
       default:
         break
     }
