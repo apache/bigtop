@@ -131,5 +131,6 @@ chkconfig --del %{name}
 %attr(0755,zeppelin,zeppelin) %{etc_zeppelin}
 %attr(0755,zeppelin,zeppelin) %{var_lib_zeppelin}
 %attr(0755,zeppelin,zeppelin) %{var_run_zeppelin}
+%attr(0755,zeppelin,zeppelin) %{var_run_zeppelin}/webapps
 %attr(0755,zeppelin,zeppelin) %{var_log_zeppelin}
 %attr(0755,root,root)/%{initd_dir}/%{name}

@@ -113,6 +113,7 @@ install -d -m 0755 $PREFIX/var/lib/zeppelin/
 install -d -m 0755 $PREFIX/var/lib/zeppelin/notebook/
 install -d -m 0755 $PREFIX/var/log/zeppelin/
 install -d -m 0755 $PREFIX/var/run/zeppelin/
+install -d -m 0755 $PREFIX/var/run/zeppelin/webapps
 
 tar --wildcards --strip-components=1 -C $PREFIX/$LIB_DIR -zxf ${BUILD_DIR}/zeppelin-distribution/target/zeppelin-*.tar.gz \*/bin/\*
 tar --wildcards --strip-components=1 -C $PREFIX/$LIB_DIR -zxf ${BUILD_DIR}/zeppelin-distribution/target/zeppelin-*.tar.gz \*/interpreter/\*
