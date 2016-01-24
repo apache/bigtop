@@ -203,6 +203,9 @@ def DOCKERBUILD_GROUP = 'docker build'
 // All packaging logic is separated into its own build module
 apply from: 'packages.gradle'
 
+// Wrapping all release logic to simplify the release process
+apply from: 'release.gradle'
+
 task toolchain(type:Exec,
     description: 'Setup dev. env via toolchain; Requires: Puppet, sudo',
     group: DEVENV_GROUP) {
