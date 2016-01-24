@@ -22,9 +22,12 @@ usage() {
     echo "       -C file                                   Use alternate file for config.yaml"
     echo "  commands:"
     echo "       -c NUM_INSTANCES, --create=NUM_INSTANCES  Create a Docker based Bigtop Hadoop cluster"
+    echo "       -d, --destroy                             Destroy the cluster"
+    echo "       -e, --exec INSTANCE_NO|INSTANCE_NAME      Execute command on a specific instance. Instance can be specified by name or number."
+    echo "                                                 For example: $PROG --exec 1 bash"
+    echo "                                                              $PROG --exec docker_bigtop_1 bash"
     echo "       -p, --provision                           Deploy configuration changes"
     echo "       -s, --smoke-tests                         Run Bigtop smoke tests"
-    echo "       -d, --destroy                             Destroy the cluster"
     echo "       -h, --help"
     exit 1
 }
@@ -137,6 +140,20 @@ get-yaml-config() {
     cat ${yamlconf} | $RUBY_EXE -ryaml -e "$RUBY_SCRIPT" | tr -d '\r'
 }
 
+execute() {
+    re='^[0-9]+$'
+    if [[ $1 =~ $re ]] ; then
+        no=$1
+        shift
+        nodes=(`docker-compose ps -q`)
+        docker exec -ti ${nodes[$((no-1))]} $@
+    else
+        name=$1
+        shift
+        docker exec -ti $name $@
+    fi
+}
+
 PROG=`basename $0`
 
 if [ $# -eq 0 ]; then
@@ -160,14 +177,22 @@ while [ $# -gt 0 ]; do
         fi
 	yamlconf=$2
         shift 2;;
+    -d|--destroy)
+        destroy
+        shift;;
+    -e|--exec)
+        if [ $# -lt 3 ]; then
+          echo "exec command takes 2 parameters: 1) instance no 2) command to be executed" 1>&2
+          usage
+        fi
+        shift
+        execute $@
+        shift $#;;
     -p|--provision)
         provision
         shift;;
     -s|--smoke-tests)
         smoke-tests
-        shift;;
-    -d|--destroy)
-        destroy
         shift;;
     -h|--help)
         usage

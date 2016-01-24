@@ -60,19 +60,31 @@ service docker start
 ./docker-hadoop.sh --destroy
 ```
 
-3) Update your cluster after doing configuration changes on ./config. (re-run puppet apply)
+3) Get into the first container (the master)
+
+```
+./docker-hadoop.sh --exec 1 bash
+```
+
+4) Execute a command on the second container
+
+```
+./docker-hadoop.sh --exec 2 hadoop fs -ls /
+```
+
+5) Update your cluster after doing configuration changes on ./config. (re-run puppet apply)
 
 ```
 ./docker-hadoop.sh --provision
 ```
 
-4) Run Bigtop smoke tests
+6) Run Bigtop smoke tests
 
 ```
 ./docker-hadoop.sh --smoke-tests
 ```
 
-5) Chain your operations with-in one command.
+7) Chain your operations with-in one command.
 
 ```
 ./docker-hadoop.sh --create 5 --smoke-tests --destroy
@@ -84,7 +96,7 @@ Commands will be executed by following order:
 create 5 node cluster => run smoke tests => destroy the cluster
 ```
 
-6) See helper message:
+8) See helper message:
 
 ```
 ./docker-hadoop.sh -h
@@ -92,9 +104,12 @@ usage: docker-hadoop.sh [-C file ] args
        -C file                                   Use alternate file for config.yaml
   commands:
        -c NUM_INSTANCES, --create=NUM_INSTANCES  Create a Docker based Bigtop Hadoop cluster
+       -d, --destroy                             Destroy the cluster
+       -e, --exec INSTANCE_NO|INSTANCE_NAME      Execute command on a specific instance. Instance can be specified by name or number.
+                                                 For example: docker-hadoop.sh --exec 1 bash
+                                                              docker-hadoop.sh --exec docker_bigtop_1 bash
        -p, --provision                           Deploy configuration changes
        -s, --smoke-tests                         Run Bigtop smoke tests
-       -d, --destroy                             Destroy the cluster
        -h, --help
 ```
 
