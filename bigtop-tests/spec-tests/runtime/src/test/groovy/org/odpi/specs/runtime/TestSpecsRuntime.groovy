@@ -103,7 +103,8 @@ public class TestSpecsRuntime {
            expectedFiles << line
         }
 
-
+        assertNotNull("${arguments['baseDirEnv']} has to be set for the test to continue",
+          ENV["${arguments['baseDirEnv']}"])
         def root = new File(ENV["${arguments['baseDirEnv']}"])
         def actualFiles = []
         if ( root.exists() ) {
