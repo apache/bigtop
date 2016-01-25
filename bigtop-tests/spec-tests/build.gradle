@@ -41,8 +41,6 @@ subprojects {
   }
 
   test.doFirst {
-    //  java_home should be declared in all cases.
-    checkEnv(["JAVA_HOME"])
     // TestHadoopExamples and other tests rely on BIGTOP_HOME environment
     // variable to find some resources. Let's set it up, using ext.BIGTOP_HOME
     environment ("BIGTOP_HOME", BIGTOP_HOME)
