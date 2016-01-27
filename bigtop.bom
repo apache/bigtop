@@ -214,7 +214,7 @@ bigtop {
     'mahout' {
       name    = 'mahout'
       relNotes = 'Apache Mahout'
-      version { base = '0.11.0'; pkg = base; release = 1 }
+      version { base = '0.11.1'; pkg = base; release = 1 }
       tarball { destination = "apache-$name-distribution-${version.base}-src.tar.gz"
                 source      = destination }
       url     { download_path = "/$name/${version.base}/"
