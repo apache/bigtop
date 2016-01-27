@@ -119,16 +119,16 @@ specs {
         relative = true
       }
     }
-    'HADOOP_EJH2_1' {
-      name = 'HADOOP_EJH2'
+    'HADOOP_EJH2_HADOOP' {
+      name = 'HADOOP_EJH2_HADOOP'
       type = 'shell'
       arguments {
         command = '[ "${JAVA_HOME}xxx" != "xxx" ] || grep -E "^\\s*export\\s+JAVA_HOME=[\\w/]+" $HADOOP_CONF_DIR/hadoop-env.sh'
         message = 'JAVA_HOME is not set'
       }
     }
-    'HADOOP_EJH2_2' {
-      name = 'HADOOP_EJH2'
+    'HADOOP_EJH2_YARN' {
+      name = 'HADOOP_EJH2_YARN'
       type = 'shell'
       arguments {
         command = '[ "${JAVA_HOME}xxx" != "xxx" ] || grep -E "^\\s*export\\s+JAVA_HOME=[\\w/]+" $HADOOP_CONF_DIR/yarn-env.sh'
@@ -184,6 +184,14 @@ specs {
         referenceList = 'hadoop-yarn.list'
       }
     }
+    'HADOOP_GETCONF' {
+      name = 'HADOOP_GETCONF'
+      type = 'shell'
+      arguments {
+        command = '[ `${HADOOP_HDFS_HOME}/bin/hdfs getconf -confKey dfs.permissions.superusergroup` == "hadoop" ]'
+        message = 'It\' not possible to to determine key Hadoop configuration values by using ${HADOOP_HDFS_HOME}/bin/hdfs getconf'
+      }
+    }
     'HADOOP_CNATIVE1' {
       name = 'HADOOP_CNATIVE1'
       type = 'shell'
@@ -229,7 +237,7 @@ specs {
       type = 'shell'
       arguments {
         command = 'hadoop checknative -a 2>/dev/null | grep snappy | grep true'
-	message = 'hadoop-mapreduce-project must be build with Prequire.snappy'
+        message = 'hadoop-mapreduce-project must be build with Prequire.snappy'
       }
     }
   }
