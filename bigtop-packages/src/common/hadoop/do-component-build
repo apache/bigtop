@@ -26,11 +26,32 @@ fi
 mkdir build
 mkdir build/src
 
+# Variable to define install/deploy the artifacts.
+deployarg=${deploy_arg}
+[[ $deployarg = "" ]] && deployarg="no"
+
+# Nexus Proxy Urls.
+nexus_url="http://nexus.odpi.org:8081/nexus"
+nexus_base_url="${nexus_url}/content"
+nexus_proxy_url="${nexus_base_url}/groups/public"
+
+# Nexus URL's for artifact deploy.
+nexus_repo_url="http://nexus.odpi.org:8081/nexus/content/repositories/ODP/"
+repo_id="ODP"
+
 # Build artifacts
-MAVEN_OPTS="-Dzookeeper.version=$ZOOKEEPER_VERSION"
+MAVEN_OPTS="-Dzookeeper.version=$ZOOKEEPER_VERSION -DdistMgmtStagingId=${repo_id} -DdistMgmtStagingUrl=${nexus_repo_url}"
 MAVEN_OPTS="$MAVEN_OPTS -DskipTests -DskipTest -DskipITs"
-mvn $ANT_OPTS $BUNDLE_SNAPPY -Pdist -Pnative -Psrc -Dtar ${MAVEN_OPTS} install "$@"
-mvn site site:stage ${MAVEN_OPTS} $@
+
+# Defining Install and Deploy OPTS for hadoop
+HADOOP_INSTALL_OPTS="${MAVEN_OPTS} install"
+HADOOP_DEPLOY_OPTS="${MAVEN_OPTS} deploy"
+
+# Based on Environment Flag, setting the right HADOOP_OPTS with install/deploy.
+[[ $deployarg = "yes" ]] && HADOOP_OPTS="${HADOOP_DEPLOY_OPTS}" || HADOOP_OPTS="${HADOOP_INSTALL_OPTS}"
+
+mvn $ANT_OPTS $BUNDLE_SNAPPY -Pdist -Pnative -Psrc -Dtar ${HADOOP_OPTS} "$@"
+mvn site site:stage ${HADOOP_OPTS} $@
 
 (cd build ; tar --strip-components=1 -xzvf  ../hadoop-dist/target/hadoop-${HADOOP_VERSION}.tar.gz)
 (cd build/src ; tar --strip-components=1 -xzvf  ../../hadoop-dist/target/hadoop-${HADOOP_VERSION}-src.tar.gz)
