@@ -314,6 +314,7 @@
               <exclude>MAINTAINERS.txt</exclude>
               <exclude>buildSrc/build/**</exclude>
               <exclude>bigtop-data-generators/**/input_data/**</exclude>
+              <exclude>docker/**/*.yaml</exclude>
               <exclude>bigtop-deploy/puppet/**/*.yaml</exclude>
               <exclude>bigtop-deploy/puppet/modules/hadoop/**/id_hdfsuser*</exclude>
               <exclude>bigtop-deploy/puppet/modules/bigtop-util/Gemfile.lock</exclude>
