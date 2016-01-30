@@ -18,7 +18,278 @@ Bigtop Changelog
 * Release 1.2.0 (unreleased)
 
 
-* Release 1.1.0 (unreleased)
+* Release 1.1.0 (2016-01-30)
+
+Release Notes - Bigtop - Version 1.1.0
+
+** Sub-task
+    * [BIGTOP-1494] - Introduce Groovy DSL to replace bigtop.mk
+    * [BIGTOP-1499] - released source code  is not same with source code in branch
+    * [BIGTOP-1898] - Dockerfiles to build bigtop/puppet docker images for 1.0 release
+    * [BIGTOP-1899] - Migrate CI master to EC2 instance donated by Amazon EMR team
+    * [BIGTOP-1901] - Provide bigtop/deploy images on dockerhub for CI and users to consume docker provisioner
+    * [BIGTOP-1947] - Fix RAT plugin configuration to be able to RAT-validate all published artifacts
+    * [BIGTOP-1959] - Avoid running top-level assembly while doing deploy for subprojects
+    * [BIGTOP-1965] - Remove the link to 0.8.0 from the website
+    * [BIGTOP-1973] - Add new tests for HDFS Balancer functionality
+    * [BIGTOP-1975] - Smoke tests for Spark SQL
+    * [BIGTOP-1981] - Add new tests for test, text, count commands
+    * [BIGTOP-1983] - Move BigPetStore data generator to bigtop-data-generators
+    * [BIGTOP-1984] - Extract samplers library from BigPetStore data generator
+    * [BIGTOP-1985] - Extract name generator from BigPetStore data generator
+    * [BIGTOP-1986] - Extract location dataset from BigPetStore data generator
+    * [BIGTOP-1990] - Add gradle multi-project build files for bigtop-data-generators
+    * [BIGTOP-1991] - Add BigTop Weatherman
+    * [BIGTOP-1992] - Fix RAT check errors resulting from BPS data generator move
+    * [BIGTOP-1995] - Update BigPetStore to use external locations  data
+    * [BIGTOP-2000] - Add BigTop Data Generators to maintainers file
+    * [BIGTOP-2009] - Add new tests for chgrp, cp, ls, mv, du, put, get, mkdir, stat and touchz
+    * [BIGTOP-2025] - Make BOM to be a directional graph
+    * [BIGTOP-2033] - Build order of the stack is broken 
+    * [BIGTOP-2051] - Get rid of hair-brain environment vars left after make-based build
+    * [BIGTOP-2055] - Refactor packages.gradle to get rid of excessive data containers; make code cleaner
+    * [BIGTOP-2087] - The 1.0 release package artifacts on Bigtop jenkins is broken due to CI transition
+    * [BIGTOP-2096] - ignite-hadoop service should restart upon changes in the package or configs
+    * [BIGTOP-2097] - cleaning up the ignite-service
+    * [BIGTOP-2104] - Packages upgrade to Spark 1.5.1
+    * [BIGTOP-2105] - Puppet recipes improvements after Spark is bumped to 1.5.1
+    * [BIGTOP-2107] - Ignite package still shows website at the incubator
+    * [BIGTOP-2113] - Spark master doesn&#39;t bind to the host: ignores SPARK_MASTER_IP
+    * [BIGTOP-2122] - Add zeppelin packages
+    * [BIGTOP-2123] - Add zeppelin Puppet recipes
+    * [BIGTOP-2149] - Zeppeling 0.5.5 has been officially released. Change the source ref
+    * [BIGTOP-2154] - spark-shell doesn&#39;t start anymore without Hive libs in the classpath
+    * [BIGTOP-2166] - Zeppelin shouldn&#39;t be build against constant version of Ignite
+    * [BIGTOP-2167] - Zeppelin interpreter list doesn&#39;t include Ignite
+    * [BIGTOP-2169] - Zeppeling has more upstream dependencies
+    * [BIGTOP-2174] - Bump up ignite-hadoop version to the latest 1.5.0-b1
+    * [BIGTOP-2185] - Exclude Zeppelin interpreter.json from RAT check
+    * [BIGTOP-2219] - Comb the smoke-tests to make code base easier for refactoring
+    * [BIGTOP-2226] - Remove gradle wrapper folder in smoke-tests
+    * [BIGTOP-2234] - TestBlockRecovery incorrectly fails on a single node cluster
+    * [BIGTOP-2235] - Allow smoke-tests to use filename regexps instead of explicite listings
+    * [BIGTOP-2245] - TestFuseHCFS might fall on &#39;+&#39; op. involving String and GString; class name is wrong
+    * [BIGTOP-2267] - Zeppeling 0.5.6 is out; let&#39;s bump it in our stack
+    * [BIGTOP-2271] - Update maven rat config to match one from gradle
+    * [BIGTOP-2277] - release assembly needs to include bigtop_toolchain
+    * [BIGTOP-2278] - Wrap separate maven release steps into convenient gradle task
+
+** Bug
+    * [BIGTOP-1022] - Giraph build script should also specify ZooKeeper, HBase, and Hive versions
+    * [BIGTOP-1318] - Consider not forking compute-classpath.sh for spark
+    * [BIGTOP-1344] - spec files assume RPMs being built on Red Hat
+    * [BIGTOP-1352] - Refactor puppet code for installing JDK7
+    * [BIGTOP-1658] - puppet recipe updates for latest spark (1.3+ )
+    * [BIGTOP-1690] - Puppet should automatically create data directories
+    * [BIGTOP-1789] - Spark 1.3.0 incompatible with Hive 1.1.0
+    * [BIGTOP-1805] - Upgrade Hadoop to 2.7 if released
+    * [BIGTOP-1838] - Pig build does not publish artifacts of build
+    * [BIGTOP-1877] - Upgrade Crunch to 0.12.0
+    * [BIGTOP-1886] - Kafka server can not create a log-cleaner.log file
+    * [BIGTOP-1892] - Current required version of gradle 2.4 is not used everywhere
+    * [BIGTOP-1893] - Compilation of hadoop-yarn-client failed 
+    * [BIGTOP-1894] - Snappy development packages are missing from bigtop_toolchain
+    * [BIGTOP-1896] - bigtop_toolchain broken bei ant update
+    * [BIGTOP-1902] - typo in bigtop-deploy/vm/vagrant-puppet-vm/vagrantconfig.yaml
+    * [BIGTOP-1905] - Update Hue build for the upcoming 3.9 release
+    * [BIGTOP-1909] - Include compiled .mo files for HUE i18n
+    * [BIGTOP-1913] - Update hive to 1.2.1
+    * [BIGTOP-1916] - Update Website for 1.0
+    * [BIGTOP-1917] - Simplify gradle creating apt/yum repositories for better CI 
+    * [BIGTOP-1936] - Provide JDK8 for Bigtop
+    * [BIGTOP-1937] - redhat-lsb is required by kafka daemon
+    * [BIGTOP-1938] - kafka packages /usr/bin on RPM 
+    * [BIGTOP-1940] - Consider removing tests expecting &#39;sudo&#39; from skip-list
+    * [BIGTOP-1946] - Missing ASL header in some of iTest files
+    * [BIGTOP-1948] - Need to upgrade groovy-eclipse-batch as it keeps pulling from non-existing repo
+    * [BIGTOP-1949] - Sqoop 1.4.5 artifacts aren&#39;t getting resolved in the release...
+    * [BIGTOP-1950] - Upgrade maven-assembly plugin: StackOverFlowException is thrown
+    * [BIGTOP-1951] - Fix licenses in the source files
+    * [BIGTOP-1954] - Change the component name in the MAINTAINERS.txt
+    * [BIGTOP-1956] - Multi RS HBase requires unique hbase.tmp.dir to be set for each RS on a node
+    * [BIGTOP-1958] - Upgrade default repositories and docker images to 1.0
+    * [BIGTOP-1960] - The smoke-test wrapper in bigtop-deploy can only be used in redhat series of Linux
+    * [BIGTOP-1963] - Upgrade Mahout to 0.11.0
+    * [BIGTOP-1966] - site&#39;s index.xml is malformatted
+    * [BIGTOP-1967] - Update the front-page of the website with new CI hostname
+    * [BIGTOP-1987] - Recover resources/kmeans_data.txt for Spark smokes
+    * [BIGTOP-1996] - Dockerfiles for bigtop-slaves
+    * [BIGTOP-1999] - website link to the release bits is broken and points to the top-level mirror&#39;s directory
+    * [BIGTOP-2003] - Bigtop puppet fails to deploy on Ubuntu due to a hiera 1.3.0 bug
+    * [BIGTOP-2004] - Download task fails with Gradle 2.6
+    * [BIGTOP-2007] - bigtop.mk version of the stack needs to be bumped to 1.1.0-SNAPSHOT
+    * [BIGTOP-2008] - build.gradle has out-of-date version
+    * [BIGTOP-2014] - [VM provisioner] Missing FQDN on Ubuntu causes puppet deployment malfunction
+    * [BIGTOP-2016] - tez does not build on opensuse
+    * [BIGTOP-2017] - Rebase bigtop-slaves on bigtop-puppet
+    * [BIGTOP-2019] - BigPetStore Spark isn&#39;t compiling due to changes in SQL API
+    * [BIGTOP-2026] - Phoenix build defines HBASE_VERSION in two different places.
+    * [BIGTOP-2027] - Bump gradle version, the wrapper to 2.7
+    * [BIGTOP-2028] - Enhance puppet config of zookeeper to support kerberized clients
+    * [BIGTOP-2032] - Tez install does not set up tez jars on hdfs causing Pig to fail
+    * [BIGTOP-2037] - BIGTOP-1746 Added Files Without Apache License Headers
+    * [BIGTOP-2038] - Pig destination name incorrect
+    * [BIGTOP-2039] - Solr download URL is incorrect
+    * [BIGTOP-2040] - Mahout can not be build with Maven 3.0.5 - build containers need to be upgraded
+    * [BIGTOP-2041] - Spark pkg name is incorrect
+    * [BIGTOP-2042] - Tachyon name is incorrect
+    * [BIGTOP-2043] - Kafka source incorrect
+    * [BIGTOP-2044] - Unnecessary printout has been introduced by BIGTOP-1494
+    * [BIGTOP-2046] - puppet module search path
+    * [BIGTOP-2050] - Description of clean tasks have null entries
+    * [BIGTOP-2052] - Remove obsolete environment variables
+    * [BIGTOP-2053] - After rebasing on Hadoop 2.7.1 yarn module should be returned to ignite-hadoop build
+    * [BIGTOP-2054] - Update Pig
+    * [BIGTOP-2056] - Remove top-level check-env.sh
+    * [BIGTOP-2057] - null check doesn&#39;t safeguard against non-existing values in the BOM config
+    * [BIGTOP-2059] - Bump Ignite to 1.4
+    * [BIGTOP-2061] - toolchain is failing because add-apt-repository command isn&#39;t available off-hand
+    * [BIGTOP-2062] - cluster.yaml declares undefined vars; apply is broken
+    * [BIGTOP-2066] - init-hdfs.sh is broken by recent hadoop update
+    * [BIGTOP-2068] - Cannot Build Bigtop-Utils packages
+    * [BIGTOP-2071] - Gstring.empty doesn&#39;t exist
+    * [BIGTOP-2074] - spark-worker doesn&#39;t start during deploy from master
+    * [BIGTOP-2082] - Remove x86 Assembler Code from zookeeper
+    * [BIGTOP-2083] - smoke-tests are still on hadoop 2.6.0
+    * [BIGTOP-2084] - rename all puppet modules to have an underscore rather a dash 
+    * [BIGTOP-2085] - gradle toolchain should install necessary puppet modules
+    * [BIGTOP-2086] - Install essential puppet modules along with puppet itself
+    * [BIGTOP-2088] - Support protobuf installation for OPENPOWER
+    * [BIGTOP-2089] - Fix bigtop.sh generation
+    * [BIGTOP-2090] - Remove left-over junk after BIGTOP-2053
+    * [BIGTOP-2094] - ignite-hadoop fails to deploy after BIGTOP-2084
+    * [BIGTOP-2098] - Update bigtop_deploy to current state of puppetize.sh
+    * [BIGTOP-2114] - hive is broken after BIGTOP-2104
+    * [BIGTOP-2115] - phoenix is broken after BIGTOP-2104
+    * [BIGTOP-2120] - opensuse: Hue packages are broken after BIGTOP-1905
+    * [BIGTOP-2121] - Missing &#39;:&#39; in bigtop::roles description
+    * [BIGTOP-2126] - Fix default repo locations in the deployment site.pp
+    * [BIGTOP-2127] - opensuse: fix kerberos python module
+    * [BIGTOP-2128] - ignite-hadoop man page still refers to the Incubator
+    * [BIGTOP-2131] - [Docker] bigtop slaves images should be built without cache
+    * [BIGTOP-2139] - crunch compile fails with Insufficient memory on POWER
+    * [BIGTOP-2140] - hbase compile fails with Insufficient memory on POWER
+    * [BIGTOP-2144] - Update default repos in Bigtop Provisioner
+    * [BIGTOP-2147] - Minor nits in bigpetstore-spark/README.md
+    * [BIGTOP-2148] - generator.SparkDriver outputs empty data in cluster mode
+    * [BIGTOP-2150] - Reversing directional build behavior 
+    * [BIGTOP-2152] - Fix conflict with libressl-devel from mysql-devel
+    * [BIGTOP-2155] - Fix Hue 3.9.0 build failed on Fedora
+    * [BIGTOP-2156] - Fix Sqoop 1.4.5 build failed on OpenSuSE
+    * [BIGTOP-2159] - unable to build RPM for zeppelin
+    * [BIGTOP-2162] - phoenix-core-*-tests.jar should be located at $PHOENIX_HOME
+    * [BIGTOP-2168] - A erroneous typo in FailureVars#loadProps method
+    * [BIGTOP-2171] - shared gradle directory on slave containers should be writable for non-root users
+    * [BIGTOP-2172] - get rid of gradlew inside of subprojects
+    * [BIGTOP-2173] - smoke-tests need to pass-through system properties
+    * [BIGTOP-2175] - BIGTOP_HOME should be either asserter or replaced with setup logic
+    * [BIGTOP-2176] - Package version of ignite-hadoop has illegal &quot;-&quot; character
+    * [BIGTOP-2177] - Build dependecies list has wrong component name for ignite
+    * [BIGTOP-2181] - Setting Ignite version to use &#39;.&#39; broke Zeppelin build.
+    * [BIGTOP-2187] - toolchain creates user with different ids on different systems
+    * [BIGTOP-2188] - bigtop/puppet:ubuntu-14.04 image does not support ppc64le 
+    * [BIGTOP-2189] - bigtop/slave:ubuntu-14.04 image does not support ppc64le 
+    * [BIGTOP-2190] - libprotobuf8 2.5.0 installation fails on ubuntu 14.04 for ppc64le
+    * [BIGTOP-2191] - openjdk-7 is missing in bigtop/slave:ubuntu-14.04-ppc64le docker image 
+    * [BIGTOP-2196] - Docker configuration for ubuntu-15.04-ppc64le
+    * [BIGTOP-2198] - adding bigtop/slaves:ubuntu-15.04 support for ppc64le
+    * [BIGTOP-2199] - Add change introduced by BIGTOP-2171
+    * [BIGTOP-2200] - Fix download path for protobuf ubuntu-15.04 on ppc64le
+    * [BIGTOP-2201] - Fix BIGTOP-2200 again
+    * [BIGTOP-2215] - Enable autopurge in zookeeper
+    * [BIGTOP-2221] - rpmbuild is missing in bigtop/slaves:trunk-opensuse-13.2 docker image
+    * [BIGTOP-2222] - Hadoop do-component-build should pull in and use BOM
+    * [BIGTOP-2223] - .dockerignore doesn&#39;t have ASL header
+    * [BIGTOP-2236] - GRADLE_USER_HOME should be set for bigtop/slaves images only
+    * [BIGTOP-2237] - Nullify the standard output when generating gradle cache 
+    * [BIGTOP-2238] - Provisioner should propagate hdfs ssh keys for testing
+    * [BIGTOP-2240] - add -XX:PermSize=1024m -XX:MaxPermSize=1024m to build environment
+    * [BIGTOP-2242] - Running ./gradlew should only require JAVA_HOME for test task
+    * [BIGTOP-2243] - :itest-common:test is broken without JAVA_HOME being set
+    * [BIGTOP-2244] - CI provisioner tests are failing after BIGTOP-2227 change
+    * [BIGTOP-2246] - Add smoke tests for HCFS
+    * [BIGTOP-2247] - Expand HDFS smoke test suite
+    * [BIGTOP-2252] - provisional hdfs ssh keys couldn&#39;t be found during deployment
+    * [BIGTOP-2255] - bigtop/deploy:ubuntu-15.04 image does not support ppc64le
+    * [BIGTOP-2256] - Promote return codes from docker to the CI while building images
+    * [BIGTOP-2272] - moved hdfs ssh key are failing rat check
+    * [BIGTOP-2275] - Update configuration files for jsvc
+    * [BIGTOP-2276] - Zeppeling added war_tempdir location, which needs to be set
+    * [BIGTOP-2281] - Add HIVE-12875 to Bigtop
+    * [BIGTOP-2288] - Hadoop time-server fails to start 
+
+** Improvement
+    * [BIGTOP-1126] - Add Hama to Bigtop
+    * [BIGTOP-1131] - Update Build Requirements on our web pages
+    * [BIGTOP-1309] - Gradle environment overhaul
+    * [BIGTOP-1443] - Update front page of website
+    * [BIGTOP-1809] - Remove gridgain-hadoop component once ignite-hadoop gets added
+    * [BIGTOP-1888] - Upgrade Flume to 1.6.0
+    * [BIGTOP-1908] - Move bigtop-deploy&#39;s dockerfiles into a centralized docker place
+    * [BIGTOP-1910] - Adjust the dependency for hue-beeswax
+    * [BIGTOP-1914] - improve puppet README.md file
+    * [BIGTOP-1915] - Upgrade Oozie to 4.2.0
+    * [BIGTOP-1920] - Include YCSB in Bigtop
+    * [BIGTOP-1921] - Puppet recipe for YCSB
+    * [BIGTOP-1923] - Bump Ignite to 1.2 with major fixes
+    * [BIGTOP-1941] - Upgrade Phoenix to 4.4.0
+    * [BIGTOP-1942] - Upgrade Phoenix to 4.6.0
+    * [BIGTOP-1943] - Upgrade SCALA version to 2.10.4
+    * [BIGTOP-1944] - Upgrade Spark version to 1.5.1
+    * [BIGTOP-1955] - Upgrade Ignite Hadoop component version from 1.2.0 to 1.3.0
+    * [BIGTOP-1964] - Upgrade Tez version to 0.6.2
+    * [BIGTOP-1970] - Ignite IGFS now fully supports mutiltenancy: deployment should configure it with HDFS backing
+    * [BIGTOP-1971] - Support Spark SQL CLI with Apache Hive out of the box
+    * [BIGTOP-1974] - Revise SPARK_HOME/conf/spark-env.sh
+    * [BIGTOP-1993] - Bump groovy to 2.4.4 in the development toolchain
+    * [BIGTOP-1997] - Bump bigtop-groovy runtime to 2.4.4
+    * [BIGTOP-1998] - Toolchain installer needs to switch from CGI to Lua mirror selection
+    * [BIGTOP-2005] - Remove SCALA_HOME requirement
+    * [BIGTOP-2018] - Create a puppetizing script
+    * [BIGTOP-2020] - Add Gradle RAT plugin to the top-level project
+    * [BIGTOP-2063] - Provide default config to deploy hive on top of Ignite
+    * [BIGTOP-2065] - Update deployment README.md to reflect on better deployment experience
+    * [BIGTOP-2080] - Investigate removing Scala from the toolchain
+    * [BIGTOP-2081] - implement a nexus docker container for CI
+    * [BIGTOP-2091] - Build ignite-hadoop assembly with specific version of Spark
+    * [BIGTOP-2102] - Upgrade YCSB to 0.4.0
+    * [BIGTOP-2103] - [Docker] Move bigtop/slaves image build to gradle
+    * [BIGTOP-2110] - [Docker] Cache packages required by gradle to execute into bigtop/slaves images
+    * [BIGTOP-2119] - Bump Mahout version to 0.11.1
+    * [BIGTOP-2141] - Have a way to specify alternative BOM file in the build time
+    * [BIGTOP-2142] - Source cleanup: bigtop-repos shouldn&#39;t be top-level.
+    * [BIGTOP-2143] - [Puppet] Automatically generate default repo
+    * [BIGTOP-2153] - Simplify and complete storage dir creation
+    * [BIGTOP-2163] - Add a phoenix-pherf sub-package for Phoenix
+    * [BIGTOP-2164] - Phoenix Queryserver should write it&#39;s logs into /var/log/phoenix/
+    * [BIGTOP-2192] - Start generating ubuntu-14.04 deployment image
+    * [BIGTOP-2194] - Add Ubuntu configuration to the docker provisioner
+    * [BIGTOP-2239] - Smoke tests should have a single location for logger configuration
+    * [BIGTOP-2259] - Check for smoke-test projects should be generalized 
+
+** New Feature
+    * [BIGTOP-1149] - Package Kite
+    * [BIGTOP-1746] - Introduce the concept of roles in bigtop cluster deployment
+    * [BIGTOP-1769] - Zeppelin Integration
+    * [BIGTOP-1976] - Replace Pair type with Apache Commons Lang Pair type
+
+** Task
+    * [BIGTOP-1701] - Upgrade to Hive 1.1.0
+    * [BIGTOP-1795] - Upgrade bigtop_toolchain to Maven 3.2.5
+    * [BIGTOP-1821] - Add smoke tests for Ignite Hadoop Bigtop module
+    * [BIGTOP-1897] - Umbrella JIRA for CI overhaul
+    * [BIGTOP-1925] - Add ywkim as a maintainer for YCSB
+    * [BIGTOP-1953] - Upgrade bigtop_toolchain to Maven 3.3.3
+    * [BIGTOP-2069] - Update README.md to reflect CTR trial
+    * [BIGTOP-2078] - Define Bigtop 1.1 release BOM
+    * [BIGTOP-2146] - Upgrade bigtop toolchain ant version to 1.9.6
+    * [BIGTOP-2214] - Bump up ignite-hadoop version to the latest stable 1.5.0.final
+    * [BIGTOP-2297] - Update provisioner pointers to (future) 1.1 release repos
+
+** Test
+    * [BIGTOP-2158] - Update README.md to reflect the acceptance of CTR model
+    * [BIGTOP-2232] - Add smoke tests for HDFS
+    * [BIGTOP-2249] - Add YARN smoke tests
 
 
 * Release 1.0.0 (2015-05-29)
