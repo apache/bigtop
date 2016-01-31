@@ -217,6 +217,7 @@ Release Notes - Bigtop - Version 1.1.0
     * [BIGTOP-2276] - Zeppeling added war_tempdir location, which needs to be set
     * [BIGTOP-2281] - Add HIVE-12875 to Bigtop
     * [BIGTOP-2288] - Hadoop time-server fails to start 
+    * [BIGTOP-2299] - test resources are breaking rat
 
 ** Improvement
     * [BIGTOP-1126] - Add Hama to Bigtop
