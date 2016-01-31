@@ -216,7 +216,9 @@
   <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2276'>BIGTOP-2276</a>] - Zeppeling added war_tempdir location, which needs to be set</li>
   <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2281'>BIGTOP-2281</a>] - Add HIVE-12875 to Bigtop</li>
   <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2288'>BIGTOP-2288</a>] - Hadoop time-server fails to start </li>
+  <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2299'>BIGTOP-2299</a>] - test resources are breaking rat</li>
 </ul>
+
           <h2>Improvement</h2>
 <ul>
   <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1126'>BIGTOP-1126</a>] - Add Hama to Bigtop</li>
