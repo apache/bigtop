@@ -62,9 +62,7 @@
             <exclude>**/clitest_data/**</exclude>
             <exclude>**/ints/file*.txt</exclude>
             <exclude>**/text/file*.txt</exclude>
-            <exclude>**/resources/input.txt</exclude>
-            <exclude>**/resources/examples/text/*.txt</exclude>
-            <exclude>**/resources/part-00001.snappy</exclude>
+            <exclude>**/resources/**</exclude>
           </excludes>
         </configuration>
       </plugin>
