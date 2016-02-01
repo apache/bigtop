@@ -22,6 +22,7 @@ usage() {
     echo "       -C file                                   Use alternate file for config.yaml"
     echo "  commands:"
     echo "       -c NUM_INSTANCES, --create=NUM_INSTANCES  Create a Docker based Bigtop Hadoop cluster"
+    echo "       -E, --env-check                           Check whether required tools has been installed"
     echo "       -p, --provision                           Deploy configuration changes"
     echo "       -s, --smoke-tests                         Run Bigtop smoke tests"
     echo "       -d, --destroy                             Destroy the cluster"
@@ -137,6 +138,16 @@ get-yaml-config() {
     cat ${yamlconf} | $RUBY_EXE -ryaml -e "$RUBY_SCRIPT" | tr -d '\r'
 }
 
+env-check() {
+echo "Environment check..."
+echo "Check docker:"
+docker -v || exit 1
+echo "Check docker-compose:"
+docker-compose -v || exit 1
+echo "Check ruby:"
+ruby -v || exit 1
+}
+
 PROG=`basename $0`
 
 if [ $# -eq 0 ]; then
@@ -151,6 +162,7 @@ while [ $# -gt 0 ]; do
           echo "Create requires a number" 1>&2
           usage
         fi
+        env-check
         create $2
         shift 2;;
     -C|--conf)
@@ -160,6 +172,9 @@ while [ $# -gt 0 ]; do
         fi
 	yamlconf=$2
         shift 2;;
+    -E|--env-check)
+        env-check
+        shift;;
     -p|--provision)
         provision
         shift;;
