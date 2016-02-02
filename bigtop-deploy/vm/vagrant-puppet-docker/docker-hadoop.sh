@@ -33,7 +33,7 @@ create() {
     vagrant up --no-parallel
     if [ $? -ne 0 ]; then
         echo "Docker container(s) startup failed!";
-	exit 1;
+        exit 1;
     fi
     nodes=(`vagrant status |grep bigtop |awk '{print $1}'`)
     hadoop_head_node=(`echo "hostname -f" |vagrant ssh ${nodes[0]} |tail -n 1`)
@@ -88,7 +88,7 @@ get-yaml-config() {
     RUBY_EXE=ruby
     which ruby > /dev/null 2>&1
     if [ $? -ne 0 ]; then
-	# use vagrant embedded ruby on Windows
+        # use vagrant embedded ruby on Windows
         RUBY_EXE=$(dirname $(which vagrant))/../embedded/bin/ruby
     fi
     RUBY_SCRIPT="data = YAML::load(STDIN.read); puts data['$1'];"
@@ -106,17 +106,17 @@ while [ $# -gt 0 ]; do
     case "$1" in
     -c|--create)
         if [ $# -lt 2 ]; then
-          echo "Create requires a number" 1>&2
-          usage
+            echo "Create requires a number" 1>&2
+            usage
         fi
         create $2
         shift 2;;
     -C|--conf)
         if [ $# -lt 2 ]; then
-          echo "Alternative config file for vagrantconfig.yaml" 1>&2
-          usage
+            echo "Alternative config file for vagrantconfig.yaml" 1>&2
+            usage
         fi
-	vagrantyamlconf=$2
+        vagrantyamlconf=$2
         shift 2;;
     -p|--provision)
         provision
