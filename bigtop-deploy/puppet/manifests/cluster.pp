@@ -105,6 +105,11 @@ $roles_map = {
   zeppelin => {
     master => ["zeppelin-server"],
   },
+  qfs => {
+    master => ["qfs-metaserver"],
+    worker => ["qfs-chunkserver"],
+    client => ["qfs-client"],
+  },
 }
 
 class hadoop_cluster_node (
@@ -167,6 +172,7 @@ class node_with_roles ($roles = hiera("bigtop::roles")) inherits hadoop_cluster_
     "solr",
     "spark",
     "tachyon",
+    "qfs",
     "tez",
     "ycsb",
     "kerberos",

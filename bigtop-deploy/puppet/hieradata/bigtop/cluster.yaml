@@ -17,7 +17,7 @@
 # be installed as usual. Otherwise only a specified list will be set
 # Possible elements:
 # hadoop,yarn,hbase,tachyon,flume,solrcloud,spark,oozie,hcat,sqoop,sqoop2,httpfs,
-# hue,mahout,giraph,crunch,pig,hive,zookeeper, ycsb
+# hue,mahout,giraph,crunch,pig,hive,zookeeper,ycsb,qfs
 # Example (to deploy only HDFS and YARN server and gateway parts)
 # This can be a comma-separated list or an array.
 #hadoop_cluster_node::cluster_components:
@@ -126,6 +126,13 @@ hcatalog::webhcat::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 spark::common::master_host: "%{hiera('bigtop::hadoop_head_node')}"
 
 tachyon::common::master_host: "%{hiera('bigtop::hadoop_head_node')}"
+
+# qfs
+qfs::common::metaserver_host: "%{hiera('bigtop::hadoop_head_node')}"
+qfs::common::metaserver_port: "30000"
+qfs::common::chunkserver_port: "30000"
+qfs::common::metaserver_client_port: "20000"
+qfs::common::chunkserver_client_port: "22000"
 
 hadoop_zookeeper::server::myid: "0"
 hadoop_zookeeper::server::ensemble:
