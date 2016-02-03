@@ -2,7 +2,7 @@
  * Marker interface for fast-running tests.
  *
  * Priority of Test Categories is in the following order 
- * EssentialTests > NormalTests > LongRunTests  > MarathonTests
+ * EssentialTests > NormalTests > LongRunTests  > PerformanceTests
  * Tests are categorized at both method and class level. A category when defined
  * at class level means all the test methods in that test class fall under that
  * category. To avoid rerunning a test method which falls under a category at 
