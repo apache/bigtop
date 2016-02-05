@@ -233,6 +233,12 @@ def genTasks = { target ->
         errorOutput devNull
         standardOutput devNull
       }
+      exec {
+        workingDir "$DL_DIR/${dir}"
+        commandLine "git submodule update --init".split()
+        errorOutput devNull
+        standardOutput devNull
+      }
       delete("${DL_DIR}/${dir}/.git")
       exec {
         workingDir DL_DIR
