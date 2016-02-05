@@ -32,6 +32,7 @@
         <include>bigtop-packages/**</include>
         <include>bigtop-tests/**</include>
         <include>bigtop-test-framework/**</include>
+        <include>bigtop_toolchain/**</include>
         <include>buildSrc/**</include>
         <include>gradle/**</include>
         <include>gradle*</include>
