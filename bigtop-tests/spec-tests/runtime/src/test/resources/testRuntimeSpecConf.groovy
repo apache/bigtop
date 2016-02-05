@@ -192,6 +192,7 @@ specs {
         message = 'It\' not possible to to determine key Hadoop configuration values by using ${HADOOP_HDFS_HOME}/bin/hdfs getconf'
       }
     }
+<<<<<<< 2e99966b88a77967b6b72e707b57063d919d8eb5
     'HADOOP_CNATIVE1' {
       name = 'HADOOP_CNATIVE1'
       type = 'shell'
@@ -238,6 +239,10 @@ specs {
       arguments {
         command = 'hadoop checknative -a 2>/dev/null | grep snappy | grep true'
         message = 'hadoop-mapreduce-project must be build with Prequire.snappy'
+    'HADOOP_TOOLS' {
+      name = 'HADOOP_TOOLS'
+      type = 'hadoop_tools'
+      arguments {
       }
     }
   }
