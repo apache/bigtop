@@ -396,7 +396,7 @@ task "gen-gradle-home"(type:Exec,
   workingDir '.'
   commandLine command
   //store the output instead of printing to the console:
-  standardOutput = new ByteArrayOutputStream()
+  standardOutput = new org.apache.bigtop.NullOutputStream()
 }
 
 task "bigtop-slaves"(dependsOn: 'gen-gradle-home', type:Exec,
