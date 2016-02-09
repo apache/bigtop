@@ -431,5 +431,15 @@ bigtop {
       url     { site = "https://github.com/quantcast/qfs/archive"
                 archive = site }
     }
+    'hawq' {
+      name     = 'hawq'
+      relNotes = 'Apache HAWQ (incubating)'
+      version { base = '2.0.0'; pkg = base; release = 1 }
+      tarball { source      = "HAWQ-307.tar.gz"
+                destination = "incubator-${name}-HAWQ-307.tar.gz" }
+      url     { download_path = "/apache/incubator-$name/archive"
+                site = "https://github.com/${download_path}"
+                archive = site }
+    }
   }
 }

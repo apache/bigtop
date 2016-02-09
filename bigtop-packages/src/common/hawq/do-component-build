@@ -1,0 +1,73 @@
+#!/bin/bash
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+set -ex
+
+. `dirname $0`/bigtop.bom
+CWD=`pwd`
+
+# Why? A single script with ksh, which isn't even ksh specific?
+sed -i -e 's#/bin/ksh#/bin/bash#' tools/bin/diskqual.ksh
+
+## build libyarn first
+cd depends/libyarn
+mkdir -p build
+cd build
+../bootstrap --prefix=${CWD}/libyarn
+make -j8
+make install
+cd ${CWD}
+ldconfig $CWD/libyarn/lib
+## libyarn should be available in the system at this point
+
+## build libhdfs3
+#wget https://github.com/PivotalRD/libhdfs3/archive/v2.2.31.tar.gz
+#tar zxf v2.2.31.tar.gz
+#cd libhdfs3-2.2.31
+#mkdir -p build
+#cd build
+#../bootstrap
+#make rpm-package
+## need to run diff target for deb and rpm. Figure out how
+
+cd ${CWD}
+# now something like
+# rpm -ivh rpms/RPMS/`uname -p`/*rpm
+## libhdfs3 libhdfs3-devel should be available now
+
+echo "Running the native build"
+date;
+./configure --prefix=${CWD}/hawq \
+    --with-libs=$CWD/libyarn/lib \
+    --with-includes=$CWD/libyarn/include
+if [ $? != 0 ]; then
+    echo HAWQ configure failed.
+    exit 1
+fi
+make -j8
+if [ $? != 0 ]; then
+    echo HAWQ compile failed.
+    exit 1
+fi
+make install
+if [ $? != 0 ]; then
+    echo HAWQ make install failed.
+    exit 1
+fi
+
+cd pxf
+./gradlew distTar --no-daemon
+
