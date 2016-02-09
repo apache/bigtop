@@ -1,0 +1,3 @@
+qfs-metaserver binary: new-package-should-close-itp-bug
+qfs-metaserver binary: non-standard-dir-in-var
+qfs-metaserver binary: dir-or-file-in-var-run

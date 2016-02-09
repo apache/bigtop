@@ -1,0 +1,2 @@
+qfs-hadoop binary: new-package-should-close-itp-bug
+qfs-hadoop binary: jar-not-in-usr-share

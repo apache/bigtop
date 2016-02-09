@@ -1,0 +1,2 @@
+/usr/share/qfs/webui
+/etc/qfs/logrotate.d/qfs-webui

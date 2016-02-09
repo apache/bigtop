@@ -401,5 +401,14 @@ bigtop {
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }
+    'qfs' {
+      name    = 'qfs'
+      relNotes = 'Quantcast Filesystem'
+      version { base = '1.1.4'; pkg = base; release = 1 }
+      tarball { destination = "$name-${version.base}.tar.gz"
+                source      = "${version.base}.tar.gz" }
+      url     { site = "https://github.com/quantcast/qfs/archive"
+                archive = site }
+    }
   }
 }
