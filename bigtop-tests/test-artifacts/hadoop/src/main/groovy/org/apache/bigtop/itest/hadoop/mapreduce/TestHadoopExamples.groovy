@@ -42,6 +42,11 @@ class TestHadoopExamples {
 
   private static final String HADOOP_MAPRED_HOME = System.getenv('HADOOP_MAPRED_HOME');
   private static final String HADOOP_CONF_DIR = System.getenv('HADOOP_CONF_DIR');
+
+  // The hadoop command is dynamic in order to support both hadoop over hdfs
+  // and hadoop over qfs easily.
+  private static final String HADOOP_COMMAND = System.getProperty('HADOOP_COMMAND', 'hadoop');
+
   private static String hadoopExamplesJar =
     JarContent.getJarName(HADOOP_MAPRED_HOME, 'hadoop.*examples.*.jar');
   static {
@@ -73,8 +78,8 @@ class TestHadoopExamples {
 
   @AfterClass
   public static void tearDown() {
-    sh.exec("hadoop fs -rmr -skipTrash ${EXAMPLES}",
-      "hadoop fs -rmr -skipTrash ${EXAMPLES_OUT}");
+    sh.exec("${HADOOP_COMMAND} fs -rmr -skipTrash ${EXAMPLES}",
+      "${HADOOP_COMMAND} fs -rmr -skipTrash ${EXAMPLES_OUT}");
   }
 
 
@@ -96,12 +101,12 @@ class TestHadoopExamples {
       LOG.info("MAKING DIRECTORIES ..................... ${EXAMPLES} ${EXAMPLES_OUT}");
 
       //add the files in resources/
-      sh.exec("hadoop fs -put ${source}/*.* .");
+      sh.exec("${HADOOP_COMMAND} fs -put ${source}/*.* .");
       //add the directories under resources (like examples/)
-      sh.exec("hadoop fs -put ${source}/${EXAMPLES} ${EXAMPLES}");
-      sh.exec("hadoop fs -mkdir -p ${EXAMPLES_OUT}");
+      sh.exec("${HADOOP_COMMAND} fs -put ${source}/${EXAMPLES} ${EXAMPLES}");
+      sh.exec("${HADOOP_COMMAND} fs -mkdir -p ${EXAMPLES_OUT}");
     }
-    sh.exec("hadoop fs -ls ${EXAMPLES}");
+    sh.exec("${HADOOP_COMMAND} fs -ls ${EXAMPLES}");
     assertTrue("Failed asserting that 'examples' were created in the DFS", sh.getRet() == 0);
   }
 
@@ -153,7 +158,7 @@ class TestHadoopExamples {
       || FailureVars.instance.getNetworkShutdown()) {
       runFailureThread();
     }
-    sh.exec("hadoop jar $testJar $testName $testArgs");
+    sh.exec("${HADOOP_COMMAND} jar $testJar $testName $testArgs");
     assertTrue("Example $testName $testJar $testName $testArgs failed", sh.getRet() == 0);
   }
 

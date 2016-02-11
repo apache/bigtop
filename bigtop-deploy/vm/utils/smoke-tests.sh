@@ -36,9 +36,17 @@ export SQOOP_HOME=/usr/lib/sqoop/
 export HIVE_CONF_DIR=/etc/hive/conf/
 export MAHOUT_HOME="/usr/lib/mahout"
 
-su -s /bin/bash $HCFS_USER -c '/usr/bin/hadoop fs -mkdir /user/vagrant /user/root'
-su -s /bin/bash $HCFS_USER -c 'hadoop fs -chmod 777 /user/vagrant'
-su -s /bin/bash $HCFS_USER -c 'hadoop fs -chmod 777 /user/root'
+prep() {
+    HADOOP_COMMAND=$1
+    su -s /bin/bash $HCFS_USER -c "JAVA_LIBRARY_PATH=/usr/lib/qfs $HADOOP_COMMAND fs -mkdir /user/vagrant /user/root"
+    su -s /bin/bash $HCFS_USER -c "JAVA_LIBRARY_PATH=/usr/lib/qfs $HADOOP_COMMAND fs -chmod 777 /user/vagrant"
+    su -s /bin/bash $HCFS_USER -c "JAVA_LIBRARY_PATH=/usr/lib/qfs $HADOOP_COMMAND fs -chmod 777 /user/root"
+}
+
+prep hadoop
+if [[ $SMOKE_TESTS == *"qfs"* ]]; then
+    prep hadoop-qfs
+fi
 
 if [ -f /etc/debian_version ] ; then
     apt-get -y install pig hive flume mahout sqoop
