@@ -117,17 +117,9 @@ The Phoenix Query Server provides an alternative means for interaction
 with Phoenix and HBase. Soon this will enable access from environments 
 other than the JVM.
 
-%package pherf
-Summary: Phoenix and HBase SQL Performance Test Framework
-Group: Development/Libraries
-Requires: phoenix = %{version}-%{release}
-
-%description pherf
-Pherf is a standalone tool that can perform performance and functional testing 
-through Phoenix
-
 %prep
-%setup -n %{name}-%{phoenix_base_version}-src
+#%setup -n %{name}-%{phoenix_base_version}-src
+%setup -n %{name}-master
 
 %build
 bash %{SOURCE1}
@@ -151,15 +143,24 @@ ln -f -s %{hadoop_home}/hadoop-annotations.jar $RPM_BUILD_ROOT/%{lib_phoenix}
 ln -f -s %{hadoop_home}/hadoop-auth.jar $RPM_BUILD_ROOT/%{lib_phoenix}
 ln -f -s %{hadoop_home}/hadoop-common.jar $RPM_BUILD_ROOT/%{lib_phoenix}
 ln -f -s %{hadoop_mapreduce_home}/hadoop-mapreduce-client-core.jar $RPM_BUILD_ROOT/%{lib_phoenix}
+ln -f -s %{hadoop_mapreduce_home}/hadoop-mapreduce-client-app.jar $RPM_BUILD_ROOT/%{lib_phoenix}
+ln -f -s %{hadoop_mapreduce_home}/hadoop-mapreduce-client-common.jar $RPM_BUILD_ROOT/%{lib_phoenix}
+ln -f -s %{hadoop_mapreduce_home}/hadoop-mapreduce-client-jobclient.jar $RPM_BUILD_ROOT/%{lib_phoenix}
+ln -f -s %{hadoop_mapreduce_home}/hadoop-mapreduce-client-shuffle.jar $RPM_BUILD_ROOT/%{lib_phoenix}
 ln -f -s %{hadoop_hdfs_home}/hadoop-hdfs.jar $RPM_BUILD_ROOT/%{lib_phoenix}
 ln -f -s %{hadoop_yarn_home}/hadoop-yarn-api.jar $RPM_BUILD_ROOT/%{lib_phoenix}
 ln -f -s %{hadoop_yarn_home}/hadoop-yarn-common.jar $RPM_BUILD_ROOT/%{lib_phoenix}
+ln -f -s %{hadoop_yarn_home}/hadoop-yarn-client.jar $RPM_BUILD_ROOT/%{lib_phoenix}
+ln -f -s %{hadoop_yarn_home}/hadoop-yarn-server-common.jar $RPM_BUILD_ROOT/%{lib_phoenix}
 rm -f $RPM_BUILD_ROOT/%{lib_phoenix}/hbase*.jar
-ln -f -s %{hbase_home}/hbase-testing-util.jar $RPM_BUILD_ROOT/%{lib_phoenix}
+ln -f -s %{hbase_home}/hbase-annotations.jar $RPM_BUILD_ROOT/%{lib_phoenix}
 ln -f -s %{hbase_home}/hbase-it.jar $RPM_BUILD_ROOT/%{lib_phoenix}
 ln -f -s %{hbase_home}/hbase-common.jar $RPM_BUILD_ROOT/%{lib_phoenix}
 ln -f -s %{hbase_home}/hbase-protocol.jar $RPM_BUILD_ROOT/%{lib_phoenix}
 ln -f -s %{hbase_home}/hbase-client.jar $RPM_BUILD_ROOT/%{lib_phoenix}
+ln -f -s %{hbase_home}/hbase-server.jar $RPM_BUILD_ROOT/%{lib_phoenix}
+ln -f -s %{hbase_home}/hbase-hadoop-compat.jar $RPM_BUILD_ROOT/%{lib_phoenix}
+ln -f -s %{hbase_home}/hbase-procedure.jar $RPM_BUILD_ROOT/%{lib_phoenix}
 
 # Install init script
 init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{name}-queryserver
@@ -190,9 +191,6 @@ fi
 %{bin_phoenix}
 %config(noreplace) %{etc_phoenix_conf_dist}
 %config(noreplace) %{_sysconfdir}/default/phoenix
-
-%files pherf
-%{phoenix_home}/pherf
 
 %define service_macro() \
 %files %1 \
