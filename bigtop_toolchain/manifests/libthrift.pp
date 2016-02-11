@@ -10,24 +10,28 @@
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
+# eee the License for the specific language governing permissions and
 # limitations under the License.
 
-class bigtop_toolchain::installer {
-  include bigtop_toolchain::jdk
-  include bigtop_toolchain::maven
-  include bigtop_toolchain::ant
-  include bigtop_toolchain::gradle
-  include bigtop_toolchain::protobuf
-  include bigtop_toolchain::packages
-## The hack workaround until such times when the lib is embedded into Hawq
-  include bigtop_toolchain::libhdfs
-  include bigtop_toolchain::libthrift
-  include bigtop_toolchain::env
-  include bigtop_toolchain::user
+class bigtop_toolchain::libthrift {
 
-  stage { 'last':
-    require => Stage['main'],
-  }
-  class { 'bigtop_toolchain::cleanup': stage => 'last' }
+  include bigtop_toolchain::packages
+
+  case $operatingsystem {
+    /Ubuntu|Debian/: {
+       include apt
+       apt::conf { "disable_keys":
+          content => "APT::Get::AllowUnauthenticated 1;",
+          ensure => present
+       }
+       apt::source { "libthrift":
+          location => "http://dl.bintray.com/c0s/deb",
+          release => "trusty",
+          repos => "contrib",
+          ensure => present,
+        }
+       Apt::Source<||> -> Exec['apt_update'] -> Package<||>
+
+      }
+    }
 }

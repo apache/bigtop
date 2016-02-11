@@ -21,13 +21,15 @@ class bigtop_toolchain::protobuf {
     /Ubuntu|Debian/: {
       case $architecture {
         'amd64' : { $url = "https://launchpad.net/ubuntu/+source/protobuf/2.5.0-9ubuntu1/+build/5585371/+files/"
+                    $url1= "http://launchpadlibrarian.net/166035876/libprotobuf-lite8_2.5.0-9ubuntu1_amd64.deb"
+                    $url2= "http://launchpadlibrarian.net/166035877/libprotobuf-dev_2.5.0-9ubuntu1_amd64.deb"
                     $arch= "amd64" }
         'ppc64le' : { $url = "https://launchpad.net/ubuntu/+source/protobuf/2.5.0-9ubuntu1/+build/5604345/+files"
                     $arch= "ppc64el" }
       }
     }
   }
- 
+
   case $operatingsystem{
     /Ubuntu|Debian/: {
       $libprotobuf8 = "libprotobuf8_2.5.0-9ubuntu1_$arch.deb"
@@ -35,13 +37,14 @@ class bigtop_toolchain::protobuf {
       $protobuf_compiler = "protobuf-compiler_2.5.0-9ubuntu1_$arch.deb"
 
       exec { "download protobuf":
+        path    => "/usr/bin",
         cwd     => "/usr/src",
-        command => "/usr/bin/curl -L $url/$libprotobuf8 -o $libprotobuf8; /usr/bin/curl -L $url/$libprotoc8 -o $libprotoc8; /usr/bin/curl -L $url/$protobuf_compiler -o $protobuf_compiler",
-        creates  => [ "/usr/src/$libprotobuf8", "/usr/src/$libprotoc8", "/usr/src/$protobuf_compiler" ]
+        command => "/usr/bin/curl -L $url/$libprotobuf8 -o $libprotobuf8; /usr/bin/curl -L $url/$libprotoc8 -o $libprotoc8; /usr/bin/curl -L $url/$protobuf_compiler -o $protobuf_compiler; curl -L $url1 -o libprotobuf-lite8_2.5.0-9ubuntu1_amd64.deb; curl -L $url2 -o libprotobuf-dev_2.5.0-9ubuntu1_amd64.deb",
+        creates  => [ "/usr/src/$libprotobuf8", "/usr/src/$libprotoc8", "/usr/src/$protobuf_compiler", "/usr/src/libprotobuf-lite8_2.5.0-9ubuntu1_amd64.deb", "/usr/src/libprotobuf-dev_2.5.0-9ubuntu1_amd64.deb" ]
       }
       exec { "install protobuf":
         cwd     => "/usr/src",
-        command => "/usr/bin/dpkg -i $libprotobuf8 $libprotoc8 $protobuf_compiler",
+        command => "/usr/bin/dpkg -i $libprotobuf8 $libprotoc8 $protobuf_compiler libprotobuf-lite8_2.5.0-9ubuntu1_amd64.deb libprotobuf-dev_2.5.0-9ubuntu1_amd64.deb",
         require => EXEC["download protobuf"],
       }
     }
