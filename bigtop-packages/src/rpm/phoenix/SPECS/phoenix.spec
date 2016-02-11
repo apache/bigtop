@@ -16,7 +16,6 @@
 %define bin_phoenix %{phoenix_home}/bin
 %define etc_phoenix_conf %{_sysconfdir}/%{name}/conf
 %define etc_phoenix_conf_dist %{etc_phoenix_conf}.dist
-%define lib_phoenix %{phoenix_home}/lib
 %define var_lib_phoenix /var/lib/%{name}
 %define var_log_phoenix /var/log/%{name}
 %define man_dir %{_mandir}
@@ -133,24 +132,6 @@ bash %{SOURCE2} \
 %__install -m 0644 %{SOURCE3} $RPM_BUILD_ROOT/etc/default/%{name}
 %__install -m 0644 %{SOURCE6} $RPM_BUILD_ROOT/etc/default/%{name}-queryserver
 
-# Pull zookeeper, hadoop, hadoop-mapreduce, hadoop-yarn, and hbase deps from their packages
-rm -f $RPM_BUILD_ROOT/%{lib_phoenix}/zookeeper*.jar
-ln -f -s %{zookeeper_home}/zookeeper.jar $RPM_BUILD_ROOT/%{lib_phoenix}
-rm -f $RPM_BUILD_ROOT/%{lib_phoenix}/hadoop*.jar
-ln -f -s %{hadoop_home}/hadoop-annotations.jar $RPM_BUILD_ROOT/%{lib_phoenix}
-ln -f -s %{hadoop_home}/hadoop-auth.jar $RPM_BUILD_ROOT/%{lib_phoenix}
-ln -f -s %{hadoop_home}/hadoop-common.jar $RPM_BUILD_ROOT/%{lib_phoenix}
-ln -f -s %{hadoop_mapreduce_home}/hadoop-mapreduce-client-core.jar $RPM_BUILD_ROOT/%{lib_phoenix}
-ln -f -s %{hadoop_hdfs_home}/hadoop-hdfs.jar $RPM_BUILD_ROOT/%{lib_phoenix}
-ln -f -s %{hadoop_yarn_home}/hadoop-yarn-api.jar $RPM_BUILD_ROOT/%{lib_phoenix}
-ln -f -s %{hadoop_yarn_home}/hadoop-yarn-common.jar $RPM_BUILD_ROOT/%{lib_phoenix}
-rm -f $RPM_BUILD_ROOT/%{lib_phoenix}/hbase*.jar
-ln -f -s %{hbase_home}/hbase-testing-util.jar $RPM_BUILD_ROOT/%{lib_phoenix}
-ln -f -s %{hbase_home}/hbase-it.jar $RPM_BUILD_ROOT/%{lib_phoenix}
-ln -f -s %{hbase_home}/hbase-common.jar $RPM_BUILD_ROOT/%{lib_phoenix}
-ln -f -s %{hbase_home}/hbase-protocol.jar $RPM_BUILD_ROOT/%{lib_phoenix}
-ln -f -s %{hbase_home}/hbase-client.jar $RPM_BUILD_ROOT/%{lib_phoenix}
-
 # Install init script
 init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{name}-queryserver
 bash $RPM_SOURCE_DIR/init.d.tmpl $RPM_SOURCE_DIR/%{name}-queryserver.svc rpm $init_file
@@ -176,7 +157,6 @@ fi
 %defattr(-,root,root,755)
 %doc %{doc_phoenix}
 %{phoenix_home}/phoenix-*.jar
-%{lib_phoenix}
 %{bin_phoenix}
 %config(noreplace) %{etc_phoenix_conf_dist}
 %config(noreplace) %{_sysconfdir}/default/phoenix

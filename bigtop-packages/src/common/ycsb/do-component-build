@@ -18,7 +18,7 @@ set -ex
 
 . `dirname $0`/bigtop.bom
 
-mvn clean package -DskipTests -Dhbase098.version=$HBASE_VERSION-hadoop2 "$@"
+mvn clean package -DskipTests -Dhbase10.version=$HBASE_VERSION "$@"
 
 rm -rf build/dist
 mkdir -p build/dist

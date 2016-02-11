@@ -113,11 +113,8 @@ install -d -m 0755 $PREFIX/$CONF_DIR
 install -d -m 0755 $PREFIX/var/lib/phoenix
 install -d -m 0755 $PREFIX/var/log/phoenix
 
-cp -ra $BUILD_DIR/{bin,lib} $PREFIX/$LIB_DIR/
-rm $PREFIX/$LIB_DIR/lib/phoenix-*.jar
-cp -a $BUILD_DIR/*.jar $PREFIX/$LIB_DIR/
-cp -a $BUILD_DIR/lib/phoenix-*.jar $PREFIX/$LIB_DIR/
-
+cp $BUILD_DIR/*.jar $PREFIX/$LIB_DIR/
+cp -r $BUILD_DIR/bin $PREFIX/$LIB_DIR/
 chmod 755 $PREFIX/$BIN_DIR/*.py
 chmod 755 $PREFIX/$BIN_DIR/*.sh
 

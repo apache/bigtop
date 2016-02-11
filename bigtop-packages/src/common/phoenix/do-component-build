@@ -19,14 +19,26 @@ set -ex
 . `dirname $0`/bigtop.bom
 
 mvn -DskipTests \
+    -Dhadoop.version=$HADOOP_VERSION  \
     -Dhadoop-two.version=$HADOOP_VERSION  \
-    -Dhbase.version=$HBASE_VERSION-hadoop2  \
+    -Dhbase.version=$HBASE_VERSION  \
     -Dpig.version=$PIG_VERSION  \
     -Dflume.version=$FLUME_VERSION  \
     -Dspark.version=${SPARK_VERSION} \
     clean install "$@"
 rm -rf build
 mkdir build
-tar -C build --strip-components=1 -xzf phoenix-assembly/target/phoenix-$PHOENIX_VERSION.tar.gz
-cp -ra dev/release_files/* build/
-cp -ra phoenix-pherf/config build/bin/
+
+# Make binary tar
+rm -rf $(find . -type d -name archive-tmp);
+
+phoenix_jars=$(find -iname phoenix-*.jar)
+cp $phoenix_jars build/;
+
+cp -R bin build/;
+
+cp -R phoenix-pherf/config build/bin/
+
+cp -R examples build/
+
+cp dev/release_files/* build/
