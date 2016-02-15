@@ -48,6 +48,7 @@
         <include>NOTICE</include>
         <include>README*</include>
         <include>*.gradle</include>
+        <include>.dockerignore</include>
         <include>pom.xml</include>
       </includes>
       <excludes>
@@ -56,6 +57,7 @@
         <exclude>**/.gradle/**</exclude>
         <exclude>**/*.iml</exclude>
         <exclude>.gradle</exclude>
+        <exclude>gradle.properties</exclude>
         <exclude>output/**</exclude>
         <exclude>buildSrc/build/**</exclude>
         <exclude>**/.idea/**</exclude>
