@@ -53,13 +53,13 @@ stage"
 # Based on Environment Flag, setting the right HADOOP_OPTS with install/deploy.
 [[ $deployarg = "yes" ]] && ZOOKEEPER_OPTS="${ZOOKEEPER_DEPLOY_OPTS}" || ZOOKEEPER_OPTS="${ZOOKEEPER_INSTALL_OPTS}"
 
+ANT_OPTS="-Dversion=$ZOOKEEPER_VERSION -f build.xml $@"
 sed -i.orig -e 's#test-jar,api-report#test-jar#g' build.xml
 ant ${ZOOKEEPER_OPTS} $@
-(cd src/contrib/rest && ant jar ${ZOOKEEPER_OPTS})
-ant -f build.xml ${ZOOKEEPER_OPTS} tar "$@"
+(cd src/contrib/rest && ant jar ${ANT_OPTS})
+ant -f build.xml ${ZOOKEEPER_OPTS} package package-native tar "$@"
 
 
-#ANT_OPTS="-Dversion=$ZOOKEEPER_VERSION -f build.xml $@"
 #sed -i.orig -e 's#test-jar,api-report#test-jar#g' build.xml
 #ant compile ${ANT_OPTS}
 #(cd src/contrib/rest && ant jar ${ANT_OPTS})
