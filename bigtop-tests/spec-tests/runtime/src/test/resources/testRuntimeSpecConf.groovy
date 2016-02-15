@@ -238,6 +238,8 @@ specs {
       arguments {
         command = 'hadoop checknative -a 2>/dev/null | grep snappy | grep true'
         message = 'hadoop-mapreduce-project must be build with Prequire.snappy'
+      }
+    }
     'HADOOP_TOOLS' {
       name = 'HADOOP_TOOLS'
       type = 'hadoop_tools'
