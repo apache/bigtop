@@ -70,6 +70,36 @@ set_hadoop_vars() {
 }
 
 
+print_cluster_info() {
+
+  # ODPI-87
+
+  echo "######################################################"
+  echo "#               CLUSTER INFORMATION                  #"
+  echo "######################################################"
+
+  which facter >/dev/null 2>&1
+  RC=$?
+  if [[ $RC == 0 ]]; then
+    echo "# OS: $(facter lsbdistdescription)"
+    echo "# ARCH: $(facter architecture)"
+    echo "# KERNEL: $(facter kernelrelease)"
+    echo "# MEMORY: $(facter memorysize)"
+  else
+    echo "# OS: $(cat /etc/issue | tr '\n' ' ')"
+    echo "# ARCH: $(uname -i)"
+    echo "# KERNEL: $(uname -a)"
+    echo "# MEMORY: $(head -n1 /proc/meminfo)"
+  fi
+
+  YARN_NODES=$(yarn node -list 2>/dev/null | egrep ^Total | sed 's/Total Nodes/Total Yarn Nodes/g')
+  echo "# $YARN_NODES"
+
+  HADOOP_VERSION=$(hadoop version 2>/dev/null | head -n1)
+  echo "# HADOOP_VERSION: $HADOOP_VERSION"
+
+}
+
 print_tests() {
   echo "######################################################"
   echo "#                     RESULTS                        #"
@@ -99,6 +129,9 @@ set_java_home
 
 # SET HADOOP SERVICE HOMES
 set_hadoop_vars
+
+# ODPI-87
+print_cluster_info
 
 echo "######################################################"
 echo "#                 STARTING ITEST                     #"
