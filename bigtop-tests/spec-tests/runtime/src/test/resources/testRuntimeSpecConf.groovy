@@ -240,6 +240,14 @@ specs {
         message = 'hadoop-mapreduce-project must be build with Prequire.snappy'
       }
     }
+    'HADOOP_COMPRESSION' {
+      name = 'HADOOP_COMPRESSION'
+      type = 'shell'
+      arguments {
+        command = '[[ "$(hadoop checknative -a 2>/dev/null | egrep -e ^zlib -e ^snappy | sort -u | grep true | wc -l)" == 2 ]]'
+        message = 'hadoop must be built with -Dcompile.native=true'
+      }
+    }
     'HADOOP_TOOLS' {
       name = 'HADOOP_TOOLS'
       type = 'hadoop_tools'
