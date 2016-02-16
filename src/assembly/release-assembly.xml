@@ -32,6 +32,7 @@
         <include>bigtop-packages/**</include>
         <include>bigtop-tests/**</include>
         <include>bigtop-test-framework/**</include>
+        <include>bigtop_toolchain/**</include>
         <include>buildSrc/**</include>
         <include>gradle/**</include>
         <include>gradle*</include>
@@ -47,6 +48,7 @@
         <include>NOTICE</include>
         <include>README*</include>
         <include>*.gradle</include>
+        <include>.dockerignore</include>
         <include>pom.xml</include>
       </includes>
       <excludes>
@@ -55,6 +57,7 @@
         <exclude>**/.gradle/**</exclude>
         <exclude>**/*.iml</exclude>
         <exclude>.gradle</exclude>
+        <exclude>gradle.properties</exclude>
         <exclude>output/**</exclude>
         <exclude>buildSrc/build/**</exclude>
         <exclude>**/.idea/**</exclude>

@@ -21,7 +21,7 @@
 -- corresponding web app to consume this scripts output is
 -- in jayunit100.github.io/bigpetstore).
 
--- invoke with two arguments, the input file , and the output file. -input /bps/gen -output /bps/analytics
+-- invoke with two arguments, the input file, and the output file. -param input=bps/cleaned -param output=bps/analytics
 
 -- FYI...
 -- If you run into errors, you can see them in

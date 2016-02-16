@@ -1,0 +1,31 @@
+<project name="nexus-deploy" default="stage" basedir="."
+	xmlns:artifact="antlib:org.apache.maven.artifact.ant"
+	xmlns:maven="antlib:org.apache.maven.artifact.ant">
+  <property file="${basedir}/build.properties" />
+  <import file="${basedir}/build.xml" as="apache"/>
+
+  <macrodef name="nexus-plugin" description="macro definition for publishing artifacts to nexus">
+    <attribute name="maven-jar"/>
+    <attribute name="attachas" default=""/>
+    <sequential>
+      <artifact:mvn mavenHome="${env.MAVEN_HOME}" fork="true">
+        <arg value="org.apache.maven.plugins:maven-gpg-plugin:1.4:sign-and-deploy-file"/>
+        <arg value="-Durl=${staging_repo_url}"/>
+        <arg value="-DrepositoryId=${staging_repo_id}"/>
+        <arg value="-Dfile=@{maven-jar}"/>
+        <arg value="-Dpackaging=jar"/>
+        <arg value="-DpomFile=${dist.maven.dir}/${name}.pom"/>
+        <arg value="-Dclassifier=@{attachas}"/>
+        <arg value="-Dtype=jar"/>
+        <arg value="-Pgpg"/>
+      </artifact:mvn>
+    </sequential>
+  </macrodef>
+
+  <target name="stage" depends="apache.mvn-taskdef, apache.bin-package"  description="deploy artifact to a nexus repository">
+    <nexus-plugin maven-jar="${dist.maven.dir}/${final.name}.jar"/>
+    <nexus-plugin maven-jar="${dist.maven.dir}/${final.name}-tests.jar" attachas="tests"/>
+    <nexus-plugin maven-jar="${dist.maven.dir}/${final.name}-sources.jar" attachas="sources"/>
+    <nexus-plugin maven-jar="${dist.maven.dir}/${final.name}-tests.jar" attachas="javadoc"/>
+  </target>
+</project>

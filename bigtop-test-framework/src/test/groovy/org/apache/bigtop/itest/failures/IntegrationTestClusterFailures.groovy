@@ -18,7 +18,9 @@
 
 package org.apache.bigtop.itest.failures
 
+import org.apache.bigtop.itest.TestUtils
 import org.apache.bigtop.itest.shell.OS
+import org.junit.Assume
 import org.junit.Before
 import org.junit.Test
 import org.apache.bigtop.itest.shell.Shell
@@ -45,6 +47,7 @@ public class IntegrationTestClusterFailures {
 
   @Before
   void configureVars() {
+    Assume.assumeTrue("Password-less sudo should be enabled", TestUtils.noPassSudo())
     def f = FailureVars.getInstance();
     testHost = f.getTestHost();
     testRemoteHost = f.getTestRemoteHost();

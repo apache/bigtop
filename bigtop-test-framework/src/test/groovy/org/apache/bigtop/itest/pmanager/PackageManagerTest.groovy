@@ -18,9 +18,10 @@
 
 package org.apache.bigtop.itest.pmanager
 
+import org.apache.bigtop.itest.TestUtils
 import org.apache.bigtop.itest.shell.OS
+import org.junit.Assume
 import org.junit.Test
-import org.junit.Ignore
 import static org.junit.Assert.assertTrue
 import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertFalse
@@ -58,9 +59,9 @@ class PackageManagerTest {
     assertFalse("can not get size for the gcc package", pkgs.get(0).getMeta()["size"]?.size() == 0);
   }
 
-  @Ignore("required sudo")
   @Test
   void installBash() {
+    Assume.assumeTrue("Password-less sudo should be enabled", TestUtils.noPassSudo())
     PackageInstance bash_pkg = PackageInstance.getPackageInstance(pmgr, "bash");
 
     assertTrue("can not install pacakge bash", (bash_pkg.install() == 0));
@@ -118,9 +119,9 @@ class PackageManagerTest {
     assertTrue("cron package is expected to contain at least a few config files", list.size() > 0);
   }
 
-  @Ignore("required sudo")
   @Test
   void testRepoManagement() {
+    Assume.assumeTrue("Password-less sudo should be enabled", TestUtils.noPassSudo())
     String repo_id = "test-repo";
     assertEquals("Can not add repo",
       0, pmgr.addBinRepo(repo_id, "http://127.0.0.1", null, "random strings here"));
@@ -128,9 +129,9 @@ class PackageManagerTest {
       0, pmgr.removeBinRepo(repo_id));
   }
 
-  @Ignore("required sudo")
   @Test
   void testRepoFileManagement() {
+    Assume.assumeTrue("Password-less sudo should be enabled", TestUtils.noPassSudo())
     String repo_id = "test-repo";
     assertEquals("Can not add repo",
       0, pmgr.addBinRepo(repo_id, "random strings here"));

@@ -101,7 +101,7 @@ fi
 #######################
 %files 
 %defattr(-,root,root,755)
-%doc LICENSE.txt README.txt NOTICE.txt
+%doc LICENSE.txt README.md NOTICE.txt
 %config(noreplace) %{config_mahout}.dist
 %{lib_mahout}
 %{bin_mahout}/mahout
