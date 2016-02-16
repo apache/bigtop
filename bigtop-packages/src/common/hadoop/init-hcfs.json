@@ -64,6 +64,7 @@
     ["/tmp/hadoop-yarn","777","mapred","mapred"],
     ["/var/log/hadoop-yarn/apps","1777","yarn","mapred"],
     ["/hbase",null,"hbase","hbase"],
+    ["/hawq_default","755","hawq","hawq"],
     ["/solr",null,"solr","solr"],
     ["/benchmarks","777",null,null],
     ["/user","755","HCFS_SUPER_USER",null],

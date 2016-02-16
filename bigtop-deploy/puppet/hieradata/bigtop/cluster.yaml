@@ -174,3 +174,9 @@ zeppelin::server::spark_master_url: "yarn-client"
 zeppelin::server::hiveserver2_url: "jdbc:hive2://%{hiera('hadoop-hive::common::hiveserver2_host')}:%{hiera('hadoop-hive::common::hiveserver2_port')}"
 zeppelin::server::hiveserver2_user: "%{hiera('bigtop::hiveserver2_user')}"
 zeppelin::server::hiveserver2_password: "%{hiera('bigtop::hiveserver2_password')}"
+
+# hawq
+bigtop::hawq_master_node: "%{hiera('bigtop::hawq_master_node')}"
+bigtop::hawq_master_port: "5432"
+bigtop::hawq_master_datadir: "/var/run/hawq/work/masterdd"
+bigtop::hawq_segment_datadir: "/var/run/hawq/work/segmendd"

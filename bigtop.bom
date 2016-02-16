@@ -90,7 +90,7 @@ bigtop {
     zookeeper:['hadoop', 'hbase'],
     hadoop:['ignite-hadoop', 'hbase', 'crunch', 'pig', 'hive', 'tez', 'sqoop', 'sqoop2',
       'oozie', 'mahout', 'flume', 'giraph', 'solr', 'crunch', 'spark',
-      'phoenix', 'tachyon', 'kafka', 'ycsb', 'kite', 'hama', 'zeppelin',
+      'phoenix', 'tachyon', 'kafka', 'ycsb', 'kite', 'hama', 'zeppelin', 'hawq',
       'tajo', 'apex'
     ],
     hbase:['phoenix','giraph','ycsb'],

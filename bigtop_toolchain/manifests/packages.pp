@@ -14,7 +14,7 @@
 # limitations under the License.
 
 class bigtop_toolchain::packages {
-   case $operatingsystem{
+   case $operatingsystem {
      /(?i:(centos|fedora))/: {
        # Fedora 20 and CentOS 7 or above are using mariadb, while CentOS 6 is still mysql
        if ($operatingsystem == "CentOS") and ($operatingsystemmajrelease <=6) {

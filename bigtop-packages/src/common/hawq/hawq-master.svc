@@ -34,7 +34,7 @@ start() {
         exit 0
     fi
 
-    su -s /bin/bash ${SVC_USER} -c "${EXEC_PATH} start $SVC_OPTS"
+    su -s /bin/bash ${SVC_USER} -c "${EXEC_PATH} start master $SVC_OPTS"
 
     checkstatusofproc
     RETVAL=$?
@@ -51,7 +51,7 @@ cat <<'__EOT__'
 stop() {
     log_success_msg "Stopping $DESC (${DAEMON}): "
 
-    su -s /bin/bash ${SVC_USER} -c "${EXEC_PATH} stop $SVC_OPTS"
+    su -s /bin/bash ${SVC_USER} -c "${EXEC_PATH} stop master $SVC_OPTS"
 
     sleep 3
     RETVAL=$?

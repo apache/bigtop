@@ -30,7 +30,7 @@ hawq_pkg_name=hawq
 	dh $@
 
 override_dh_auto_build:
-	bash debian/do-component-build 
+	bash debian/do-component-build
 
 
 override_dh_auto_install:
@@ -46,7 +46,7 @@ override_dh_auto_install:
 	bash debian/init.d.tmpl debian/hawq-master.svc deb debian/${hawq_pkg_name}-master-service.init
 	bash debian/init.d.tmpl debian/hawq-segment.svc deb debian/${hawq_pkg_name}-segment-service.init
 
-## Let's override the auto_configure and auto_clean to make sure existing 
+## Let's override the auto_configure and auto_clean to make sure existing
 ## top-level Makefile doesn't interfere with the package creation
 override_dh_auto_configure:
 

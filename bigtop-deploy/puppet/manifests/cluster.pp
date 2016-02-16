@@ -105,6 +105,9 @@ $roles_map = {
   zeppelin => {
     master => ["zeppelin-server"],
   },
+  hawq => {
+    master => ["hawq"],
+  },
 }
 
 class hadoop_cluster_node (
@@ -159,6 +162,7 @@ class node_with_roles ($roles = hiera("bigtop::roles")) inherits hadoop_cluster_
     "hadoop_hive",
     "hadoop_oozie",
     "hadoop_pig",
+    "hawq",
     "sqoop2",
     "hadoop_zookeeper",
     "hcatalog",

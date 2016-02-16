@@ -14,14 +14,14 @@
 # limitations under the License.
 
 export HAWQ_HOME="/usr/lib/hawq"
+## Due to some weird scripting, hawq doesn't work without GPHOME
+export GPHOME=$HAWQ_HOME
 export HAWQ_CONF_DIR="/etc/hawq/conf"
 
 export HAWQ_PID_DIR="/var/run/hawq"
 export HAWQ_LOG_DIR="/var/log/hawq"
 export HAWQ_WORK_DIR="/var/run/hawq/work"
 export HAWQ_IDENT_STRING=hawq
-
-export HAWQ_DATA_DIR=$HAWQ_WORK_DIR/hawq-data-directory
 
 export PATH=$HAWQ_HOME/bin:$HAWQ_HOME/ext/python/bin:$PATH
 export LD_LIBRARY_PATH=$HAWQ_HOME/lib:$HAWQ_HOME/ext/python/lib:$LD_LIBRARY_PATH
@@ -33,8 +33,8 @@ export HAWQSITE_CONF=$HAWQ_CONF_DIR/hawq-site.xml
 
 export HAWQ_MASTER_PORT=5432
 export HAWQ_SEGMENT_PORT=40000
-export HAWQ_MASTERDATA_DIR=$HAWQ_DATA_DIR/masterdd
-export HAWQ_SEGMENTDATA_DIR=$HAWQ_DATA_DIR/segmentdd
+export HAWQ_MASTERDATA_DIR=<%= @hawq_masterdata_dir %>
+export HAWQ_SEGMENTDATA_DIR=<%= @hawq_segmentdata_dir %>
 
 export HAWQ_TIMEOUT=30
 export HAWQ_SHUTDOWN_MODE=smart
