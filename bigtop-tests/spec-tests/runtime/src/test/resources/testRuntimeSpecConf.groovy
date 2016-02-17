@@ -184,6 +184,14 @@ specs {
         referenceList = 'hadoop-yarn.list'
       }
     }
+    'HADOOP_SUBPROJS' {
+      name = 'HADOOP_SUBPROJS'
+      type = 'dirstruct'
+      arguments {
+        baseDirEnv = 'HADOOP_COMMON_HOME'
+        referenceList = 'hadoop-subprojs.list'
+      }
+    }
     'HADOOP_GETCONF' {
       name = 'HADOOP_GETCONF'
       type = 'shell'
