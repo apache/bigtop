@@ -184,11 +184,19 @@ specs {
         referenceList = 'hadoop-yarn.list'
       }
     }
+    'HADOOP_SUBPROJS' {
+      name = 'HADOOP_SUBPROJS'
+      type = 'dirstruct'
+      arguments {
+        baseDirEnv = 'HADOOP_COMMON_HOME'
+        referenceList = 'hadoop-subprojs.list'
+      }
+    }
     'HADOOP_GETCONF' {
       name = 'HADOOP_GETCONF'
       type = 'shell'
       arguments {
-        command = '[ `${HADOOP_HDFS_HOME}/bin/hdfs getconf -confKey dfs.permissions.superusergroup` == "hadoop" ]'
+        command = '[ `hdfs getconf -confKey dfs.permissions.superusergroup` == "hadoop" ]'
         message = 'It\' not possible to to determine key Hadoop configuration values by using ${HADOOP_HDFS_HOME}/bin/hdfs getconf'
       }
     }
@@ -238,6 +246,20 @@ specs {
       arguments {
         command = 'hadoop checknative -a 2>/dev/null | grep snappy | grep true'
         message = 'hadoop-mapreduce-project must be build with Prequire.snappy'
+      }
+    }
+    'HADOOP_COMPRESSION' {
+      name = 'HADOOP_COMPRESSION'
+      type = 'shell'
+      arguments {
+        command = '[[ "$(hadoop checknative -a 2>/dev/null | egrep -e ^zlib -e ^snappy | sort -u | grep true | wc -l)" == 2 ]]'
+        message = 'hadoop must be built with -Dcompile.native=true'
+      }
+    }
+    'HADOOP_TOOLS' {
+      name = 'HADOOP_TOOLS'
+      type = 'hadoop_tools'
+      arguments {
       }
     }
   }

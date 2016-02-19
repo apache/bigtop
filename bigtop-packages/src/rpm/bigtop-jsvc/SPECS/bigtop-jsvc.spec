@@ -33,6 +33,7 @@ License: ASL 2.0
 Source0: commons-daemon-%{bigtop_jsvc_base_version}.tar.gz
 Source1: do-component-build
 Source2: install_jsvc.sh
+#BIGTOP_PATCH_FILES
 BuildRequires: autoconf, automake, gcc
 Requires: bigtop-utils >= 0.7
 
@@ -42,8 +43,7 @@ jsvc executes classfile that implements a Daemon interface.
 %prep
 %setup -n commons-daemon-%{bigtop_jsvc_base_version}-native-src
 
-%clean
-rm -rf $RPM_BUILD_ROOT
+#BIGTOP_PATCH_COMMANDS
 
 %build
 bash %{SOURCE1}

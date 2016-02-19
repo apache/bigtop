@@ -18,11 +18,52 @@ set -ex
 
 . `dirname ${0}`/bigtop.bom
 
+# Variable to define install/deploy the artifacts.
+deployarg=${deploy_arg}
+[[ $deployarg = "" ]] && deployarg="no"
+
+# Nexus Proxy Urls.
+nexus_url="http://nexus.odpi.org:8081/nexus"
+nexus_base_url="${nexus_url}/content"
+nexus_proxy_url="${nexus_base_url}/groups/public"
+
+# Nexus URL's for artifact deploy.
+nexus_repo_url="http://nexus.odpi.org:8081/nexus/content/repositories/ODP/"
+repo_id="ODP"
+
+
+ZOOKEEPER_OPTS="-Djavac.args=\"-Xlint -Xmaxwarns 1000\" \
+-Dversion=$ZOOKEEPER_VERSION \
+-Dcppunit.m4=/usr/share/aclocal \
+-Dtest.junit.output.format=xml \
+-DAM_PATH_CPPUNIT=/usr/lib64 \
+-Drepo.maven.org=${nexus_proxy_url} \
+-Drepo.jboss.org=${nexus_proxy_url} \
+-Divy.url=\"http://central.maven.org/maven2/org/apache/ivy/ivy\" \
+-Dmvnrepo=${nexus_proxy_url}"
+
+ZOOKEEPER_INSTALL_OPTS="${ZOOKEEPER_OPTS} mvn-install -f build.xml"
+
+ZOOKEEPER_DEPLOY_OPTS="${ZOOKEEPER_OPTS} \
+-f zookeeper-nexus-deploy-build.xml \
+-Dstaging_repo_id=${repo_id} \
+-Dstaging_repo_url=${nexus_repo_url} \
+stage"
+
+# Based on Environment Flag, setting the right HADOOP_OPTS with install/deploy.
+[[ $deployarg = "yes" ]] && ZOOKEEPER_OPTS="${ZOOKEEPER_DEPLOY_OPTS}" || ZOOKEEPER_OPTS="${ZOOKEEPER_INSTALL_OPTS}"
+
 ANT_OPTS="-Dversion=$ZOOKEEPER_VERSION -f build.xml $@"
 sed -i.orig -e 's#test-jar,api-report#test-jar#g' build.xml
-ant compile ${ANT_OPTS}
+ant ${ZOOKEEPER_OPTS} $@
 (cd src/contrib/rest && ant jar ${ANT_OPTS})
-ant package package-native tar ${ANT_OPTS}
+ant -f build.xml ${ZOOKEEPER_OPTS} package package-native tar "$@"
 
-mvn install:install-file -DcreateChecksum=true -DgroupId=org.apache.zookeeper -DartifactId=zookeeper -Dversion=$ZOOKEEPER_VERSION -Dpackaging=jar -Dfile=build/zookeeper-$ZOOKEEPER_VERSION.jar
-mvn install:install-file -DcreateChecksum=true -DgroupId=org.apache.zookeeper -DartifactId=zookeeper -Dversion=$ZOOKEEPER_VERSION -Dclassifier=tests -Dpackaging=jar -Dfile=build/zookeeper-$ZOOKEEPER_VERSION-test.jar
+
+#sed -i.orig -e 's#test-jar,api-report#test-jar#g' build.xml
+#ant compile ${ANT_OPTS}
+#(cd src/contrib/rest && ant jar ${ANT_OPTS})
+#ant package package-native tar ${ANT_OPTS}
+
+#mvn install:install-file -DcreateChecksum=true -DgroupId=org.apache.zookeeper -DartifactId=zookeeper -Dversion=$ZOOKEEPER_VERSION -Dpackaging=jar -Dfile=build/zookeeper-$ZOOKEEPER_VERSION.jar
+#mvn install:install-file -DcreateChecksum=true -DgroupId=org.apache.zookeeper -DartifactId=zookeeper -Dversion=$ZOOKEEPER_VERSION -Dclassifier=tests -Dpackaging=jar -Dfile=build/zookeeper-$ZOOKEEPER_VERSION-test.jar

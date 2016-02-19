@@ -79,6 +79,7 @@ rat {
        "bigtop-tests/smoke-tests/phoenix/*.csv",
        "bigtop-tests/smoke-tests/phoenix/*.sql",
        "bigtop-tests/smoke-tests/ignite-hadoop/*.data",
+       "bigtop-tests/smoke-tests/tajo/table1/*.csv",
        "**/target/**",
        "**/build/**",
        "**/.gradle/**",
@@ -89,7 +90,7 @@ rat {
        "buildSrc/build/**",
        "bigtop-data-generators/**/input_data/**",
        "bigtop-deploy/puppet/**/*.yaml",
-       "bigtop-deploy/puppet/config/*/id_hdfsuser*",
+       "bigtop-deploy/puppet/modules/hadoop/files/*/id_hdfsuser*",
        "bigtop-deploy/puppet/modules/bigtop-util/Gemfile.lock",
        "bigtop-deploy/puppet/modules/zeppelin/templates/interpreter.json",
        /* Debian package files that have a rigid structure
@@ -131,7 +132,7 @@ allprojects {
   apply plugin: 'maven'
 
   group = 'org.apache.bigtop'
-  version = '1.1.0-SNAPSHOT'
+  version = '1.2.0-SNAPSHOT'
 
   description = """Bigtop"""
 
@@ -202,6 +203,9 @@ def DOCKERBUILD_GROUP = 'docker build'
 
 // All packaging logic is separated into its own build module
 apply from: 'packages.gradle'
+
+// Wrapping all release logic to simplify the release process
+apply from: 'release.gradle'
 
 task toolchain(type:Exec,
     description: 'Setup dev. env via toolchain; Requires: Puppet, sudo',
@@ -391,6 +395,8 @@ task "gen-gradle-home"(type:Exec,
   ]
   workingDir '.'
   commandLine command
+  //store the output instead of printing to the console:
+  standardOutput = new ByteArrayOutputStream()
 }
 
 task "bigtop-slaves"(dependsOn: 'gen-gradle-home', type:Exec,

@@ -117,6 +117,25 @@ public class TestSpecsRuntime {
         Assert.assertTrue("${testName} fail: Directory structure for ${arguments['baseDirEnv']} does not match reference. Missing files: ${missingFiles} ",
           missingFiles.size() == 0)
         break
+
+      case 'hadoop_tools':
+        Assert.assertNotNull("${testName} fail: HADOOP_TOOLS environment variable should be set", ENV["HADOOP_TOOLS"])
+        Assert.assertTrue("${testName} fail: HADOOP_TOOLS should be set to the HADOOP_TOOLS_PATH environment variable.",
+            ENV["HADOOP_TOOLS"]== ENV["HADOOP_TOOLS_PATH"])
+
+        def toolsPath = new File(ENV["HADOOP_TOOLS"])
+        Assert.assertTrue("${testName} fail: HADOOP_TOOLS must be an absolute path.", toolsPath.isAbsolute())
+
+        Assert.assertNotNull("HADOOP_COMMON_HOME has to be set for the test to continue", ENV["HADOOP_COMMON_HOME"])
+        Shell sh = new Shell()
+        def classPath = sh.exec("${ENV["HADOOP_COMMON_HOME"]}/bin/hadoop classpath").getOut().join("\n")
+        Assert.assertTrue("${testName} fail: Failed to retrieve hadoop's classpath", sh.getRet()==0)
+
+        Assert.assertFalse("${testName} fail: The enire '${toolsPath}' path should not be included in the hadoop's classpath",
+          classPath.split(File.pathSeparator).any {
+            new File(it).getCanonicalPath() =~ /^${toolsPath}\/?\*/
+          }
+        )
       
       default:
         break
