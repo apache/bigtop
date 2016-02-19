@@ -105,8 +105,28 @@ print_tests() {
   echo "#                     RESULTS                        #"
   echo "######################################################"
 
+  pushd `pwd`
   for TEST in $(echo $ITESTS | tr ',' '\n'); do
     TESTDIR=bigtop-tests/smoke-tests/$TEST/build
+
+    if [ -d $TESTDIR ]; then
+      cd $TESTDIR
+
+      for FILE in $(find -L reports/tests/classes -type f -name "*.html"); do
+        echo "## $TESTDIR/$FILE"
+        if [ $(which links) ]; then
+            links $FILE -dump
+        else
+            echo "PLEASE INSTALL LINKS: sudo yum -y install links"
+        fi
+        echo ""
+      done
+    fi
+  done
+
+  popd
+  for TEST in $SPEC_TESTS; do
+    TESTDIR=bigtop-tests/spec-tests/$TEST/build
 
     if [ -d $TESTDIR ]; then
       cd $TESTDIR
@@ -142,12 +162,16 @@ echo "# Use --debug/--info/--stacktrace for more details"
 if [ -z "$ITESTS" ]; then
   export ITESTS="hcfs,hdfs,yarn,mapreduce"
 fi
+SPEC_TESTS="runtime"
 for s in `echo $ITESTS | sed -e 's#,# #g'`; do
   ALL_SMOKE_TASKS="$ALL_SMOKE_TASKS bigtop-tests:smoke-tests:$s:test"
 done
+for s in $SPEC_TESTS; do
+  ALL_SPEC_TASKS="$ALL_SPEC_TASKS bigtop-tests:spec-tests:$s:test"
+done
 
 # CALL THE GRADLE WRAPPER TO RUN THE FRAMEWORK
-./gradlew -q clean test -Psmoke.tests $ALL_SMOKE_TASKS $@
+./gradlew -q --continue clean -Psmoke.tests $ALL_SMOKE_TASKS -Pspec.tests $ALL_SPEC_TASKS $@
 
 # SHOW RESULTS (HTML)
 print_tests
