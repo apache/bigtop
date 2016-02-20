@@ -67,7 +67,7 @@
 
 bigtop {
 /** Base Configuration of the mirror and archives */
-  version = "1.2.0-SNAPSHOT"
+  version = "1.1.0-SNAPSHOT"
   stack {
     'jdk' { version = '1.7'; version_base = version }
     'scala' { version = '2.10.4'; version_base = version }
@@ -291,6 +291,19 @@ bigtop {
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }
+
+    'flink' {
+      name    = 'flink'
+      relNotes = 'Apache Flink'
+      version { base = '0.10.2'; pkg = base; release = 1 }
+      tarball { destination = "$name-${version.base}.tar.gz"
+                source      = "$name-${version.base}-src.tgz" }
+      url     { download_path = "/$name/$name-${version.base}"
+                site = "${apache.APACHE_MIRROR}/${download_path}"
+                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+    }
+
+
     'phoenix' {
       name    = 'phoenix'
       relNotes = 'Apache Phoenix: A SQL skin over HBase'
