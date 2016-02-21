@@ -111,7 +111,7 @@ Label: Bigtop
 Suite: stable
 Codename: bigtop
 Version: ${config.bigtop.version}
-Architectures: i386 amd64 source
+Architectures: amd64 ppc64el source
 Components: contrib
 Description: Bigtop
 """;
