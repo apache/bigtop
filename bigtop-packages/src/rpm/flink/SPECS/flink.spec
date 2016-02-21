@@ -56,7 +56,7 @@ Apache flink includes following key features:
  * Hadoop-native YARN & HDFS implementation
 
 %prep
-%setup -n %{name}-%{flink_base_version}-incubating
+%setup -n %{name}-%{flink_base_version}
 
 %build
 env flink_VERSION=%{flink_base_version} bash %{SOURCE1}
@@ -64,7 +64,7 @@ env flink_VERSION=%{flink_base_version} bash %{SOURCE1}
 %install
 %__rm -rf $RPM_BUILD_ROOT
 
-cp $RPM_SOURCE_DIR/flink.1 .
+#cp $RPM_SOURCE_DIR/flink.1 .
 sh -x %{SOURCE2} --prefix=$RPM_BUILD_ROOT --doc-dir=%{doc_flink}
 
 %files 
@@ -73,4 +73,4 @@ sh -x %{SOURCE2} --prefix=$RPM_BUILD_ROOT --doc-dir=%{doc_flink}
 %{lib_flink}
 %{bin_flink}/flink
 %{bin_flink}/dtcli
-%{man_dir}/man1/flink.1.*
+#%{man_dir}/man1/flink.1.*
