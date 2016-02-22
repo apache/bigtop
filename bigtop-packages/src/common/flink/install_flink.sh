@@ -43,7 +43,8 @@ OPTS=$(getopt \
   -l 'installed-lib-dir:' \
   -l 'bin-dir:' \
   -l 'examples-dir:' \
-  -l 'build-dir:' -- "$@")
+  -l 'build-dir:'
+   "$@")
 
 if [ $? != 0 ] ; then
     usage

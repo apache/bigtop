@@ -18,6 +18,4 @@ set -ex
 
 . `dirname $0`/bigtop.bom
 
-mvn clean install -DskipTests -Dhadoop.version=$HADOOP_VERSION "$@"
-rm -rf build
-mkdir -p build/flink-${FLINK_VERSION}/{bin,lib} 
+mvn clean install -DskipTests -Dhadoop.version=$HADOOP_VERSION "$@" 

@@ -22,7 +22,7 @@
 
 %define doc_flink %{_docdir}/%{flink_name}-%{flink_version}
 %define alternatives_cmd alternatives
-
+%define build_flink %{_builddir}/%{flink_name}-%{flink_version}
 %else
 
 %define doc_flink %{_docdir}/%{name}
@@ -64,8 +64,8 @@ env flink_VERSION=%{flink_base_version} bash %{SOURCE1}
 %install
 %__rm -rf $RPM_BUILD_ROOT
 
-#cp $RPM_SOURCE_DIR/flink.1 .
-sh -x %{SOURCE2} --prefix=$RPM_BUILD_ROOT --doc-dir=%{doc_flink}
+
+sh -x %{SOURCE2} --prefix=$RPM_BUILD_ROOT --doc-dir=%{doc_flink} --build-dir=%{build_flink}
 
 %files 
 %defattr(-,root,root,755)
