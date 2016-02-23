@@ -71,6 +71,12 @@ def ifExists = { url ->
   URLConnection uCon = new URL(url).openConnection()
   return (uCon as HttpURLConnection).responseCode == 200
 }
+def safeDelete = { fileName ->
+  exec {
+    workingDir '.'
+    commandLine 'rm', '-rf', fileName
+  }
+}
 def getDate() {
   new Date().format('E, dd MMM yyyy HH:mm:ss Z')
 }
@@ -226,7 +232,7 @@ def genTasks = { target ->
     def final DOWNLOAD_DST = config.bigtop.components[target].downloaddst ?: ""
     def final SEED_TAR = config.bigtop.components[target].seedtar
 
-    delete(TAR_DIR); mkdir(TAR_DIR)
+    safeDelete(TAR_DIR); mkdir(TAR_DIR)
 
     if (TARBALL_SRC.isEmpty() || TARBALL_SRC.endsWith('.zip')) {
       if (TARBALL_SRC.isEmpty()) {
@@ -250,7 +256,7 @@ def genTasks = { target ->
             (f != "." && f != "..")}).each { f ->
               new File("$TAR_DIR/$TOP_LEVEL_DIR/$f").renameTo("$TAR_DIR/$f")
           }
-          delete(TOP_LEVEL_DIR)
+          safeDelete(TOP_LEVEL_DIR)
         }
       }
       // create SEED_TAR
@@ -388,7 +394,7 @@ def genTasks = { target ->
     fileTree (dir: "$DEB_PKG_DIR/..", includes: ['*.dsc', '*.diff.gz', '*.debian.tar.gz', '*.debian.tar.xz', "*_source.changes", "*.orig.tar.gz" ]).copy {
       into PKG_OUTPUT_DIR
     }
-    delete (BUILD_DIR)
+    safeDelete(BUILD_DIR)
     touchTargetFile(config.bigtop.components[target].targetsdeb)
   }
 
@@ -450,7 +456,7 @@ def genTasks = { target ->
     def final PKG_VERSION = config.bigtop.components[target].version.pkg
     def final BASE_VERSION = config.bigtop.components[target].version.base
     def final PKG_OUTPUT_DIR = config.bigtop.components[target].outputdir
-    delete ("$PKG_BUILD_DIR/rpm")
+    safeDelete ("$PKG_BUILD_DIR/rpm")
     ['INSTALL','SOURCES','BUILD','SRPMS','RPMS'].each { rpmdir ->
       mkdir("$PKG_BUILD_DIR/rpm/$rpmdir")
     }
@@ -592,8 +598,8 @@ def genTasks = { target ->
   task "$target-clean" (dependsOn: "${target}_vardefines",
       description: "Removing $target component build and output directories",
       group: PACKAGES_GROUP) << {
-    delete(config.bigtop.components[target].builddir)
-    delete(config.bigtop.components[target].outputdir)
+    safeDelete(config.bigtop.components[target].builddir)
+    safeDelete(config.bigtop.components[target].outputdir)
   }
   task "$target-help" (description: "List of available tasks for $target", group: PACKAGES_GROUP) << {
     println (target + "\n\t[" + tasks.findAll { alltask -> alltask.name.startsWith(target)}*.name.join(", ") + "]")
@@ -649,9 +655,9 @@ project.afterEvaluate {
       description: "Removing $BUILD_DIR, $OUTPUT_DIR, and $DIST_DIR.\n\t\t" +
         "Cleaning all components' build and output directories.",
       group: PACKAGES_GROUP) << {
-    delete (BUILD_DIR)
-    delete (OUTPUT_DIR)
-    delete (DIST_DIR)
+    safeDelete(BUILD_DIR)
+    safeDelete(OUTPUT_DIR)
+    safeDelete(DIST_DIR)
   }
   task realclean (dependsOn: allclean,
       description: "Removing $BUILD_DIR, $OUTPUT_DIR, $DIST_DIR, and $DL_DIR",
