@@ -394,7 +394,7 @@ def genTasks = { target ->
     fileTree (dir: "$DEB_PKG_DIR/..", includes: ['*.dsc', '*.diff.gz', '*.debian.tar.gz', '*.debian.tar.xz', "*_source.changes", "*.orig.tar.gz" ]).copy {
       into PKG_OUTPUT_DIR
     }
-    safeDelete(BUILD_DIR)
+    safeDelete(DEB_BLD_DIR)
     touchTargetFile(config.bigtop.components[target].targetsdeb)
   }
 
