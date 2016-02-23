@@ -43,8 +43,7 @@ OPTS=$(getopt \
   -l 'installed-lib-dir:' \
   -l 'bin-dir:' \
   -l 'examples-dir:' \
-  -l 'build-dir:'
-   "$@")
+  -l 'build-dir:' -- "$@")
 
 if [ $? != 0 ] ; then
     usage
@@ -92,7 +91,7 @@ for var in PREFIX BUILD_DIR ; do
   fi
 done
 
-MAN_DIR=${MAN_DIR:-/usr/share/man/man1}
+#MAN_DIR=${MAN_DIR:-/usr/share/man/man1}
 DOC_DIR=${DOC_DIR:-/usr/share/doc/flink}
 LIB_DIR=${LIB_DIR:-/usr/lib/flink}
 INSTALLED_LIB_DIR=${INSTALLED_LIB_DIR:-/usr/lib/flink}
@@ -106,7 +105,7 @@ install -d -m 0755 $PREFIX/$LIB_DIR/lib
 install -d -m 0755 $PREFIX/$DOC_DIR
 
 cp -ra ${BUILD_DIR}/lib/* $PREFIX/${LIB_DIR}/lib/
-cp ${BUILD_DIR}/flink*.jar $PREFIX/$LIB_DIR
+#cp ${BUILD_DIR}/lib/flink*.jar $PREFIX/$LIB_DIR
 cp -a ${BUILD_DIR}/*.txt $PREFIX/$DOC_DIR
 cp -a ${BUILD_DIR}/bin/* $PREFIX/${LIB_DIR}/bin
 rm -rf $PREFIX/${LIB_DIR}/bin/*.cmd
@@ -118,7 +117,7 @@ ln -s /etc/flink/conf $PREFIX/$LIB_DIR/conf
 
 # Copy in the example files
 cp -a ${BUILD_DIR}/examples/ $PREFIX/$DOC_DIR/
-cp -a ${BUILD_DIR}/h2o/ $PREFIX/$DOC_DIR/
+#cp -a ${BUILD_DIR}/h2o/ $PREFIX/$DOC_DIR/
  
 # Copy in the /usr/bin/flink wrapper
 install -d -m 0755 $PREFIX/$BIN_DIR
@@ -129,12 +128,12 @@ cat > $PREFIX/$BIN_DIR/flink <<EOF
 # FIXME: flink-994
 export HADOOP_HOME=\${HADOOP_HOME:-/usr/lib/hadoop}
 export HADOOP_CONF_DIR=\${HADOOP_CONF_DIR:-/etc/hadoop/conf}
-export flink_HOME=\${flink_HOME:-$INSTALLED_LIB_DIR}
-export flink_CONF_DIR=\${flink_CONF_DIR:-$CONF_DIR}
+export FLINK_HOME=\${FLINK_HOME:-$INSTALLED_LIB_DIR}
+export FLINK_CONF_DIR=\${FLINK_CONF_DIR:-$CONF_DIR}
 # FIXME: the following line is a workaround for BIGTOP-259 
 export HADOOP_CLASSPATH="`echo /usr/lib/flink/flink-examples-*-job.jar`":\$HADOOP_CLASSPATH
 exec $INSTALLED_LIB_DIR/bin/flink "\$@"
-export SPARK_HOME=\${SPARK_HOME:-/usr/lib/spark}
+#export SPARK_HOME=\${SPARK_HOME:-/usr/lib/spark}
 EOF
 chmod 755 $PREFIX/$BIN_DIR/flink
 

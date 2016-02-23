@@ -19,15 +19,13 @@
 %define man_dir %{_mandir}
 
 %if  %{!?suse_version:1}0
-
 %define doc_flink %{_docdir}/%{flink_name}-%{flink_version}
 %define alternatives_cmd alternatives
-%define build_flink %{_builddir}/%{flink_name}-%{flink_version}
+%define build_flink %{_builddir}/%{flink_name}-%{flink_version}/flink-dist/target/%{flink_name}-%{flink_version}-bin/%{flink_name}-%{flink_version}/
+
 %else
-
-%define doc_flink %{_docdir}/%{name}
+%define doc_flink %{_docdir}/%{flink_name}-%{flink_version}
 %define alternatives_cmd update-alternatives
-
 %endif
 
 Name: %{flink_name}
@@ -59,18 +57,19 @@ Apache flink includes following key features:
 %setup -n %{name}-%{flink_base_version}
 
 %build
-env flink_VERSION=%{flink_base_version} bash %{SOURCE1}
+bash $RPM_SOURCE_DIR/do-component-build
+#env flink_VERSION=%{flink_base_version} bash %{SOURCE1}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
 
 
 sh -x %{SOURCE2} --prefix=$RPM_BUILD_ROOT --doc-dir=%{doc_flink} --build-dir=%{build_flink}
+#sh -x %{SOURCE2}  --build-dir=%{build_flink}
 
 %files 
 %defattr(-,root,root,755)
 %doc %{doc_flink}
 %{lib_flink}
 %{bin_flink}/flink
-%{bin_flink}/dtcli
 #%{man_dir}/man1/flink.1.*
