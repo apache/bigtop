@@ -213,14 +213,14 @@ specs {
       type = 'shell'
       arguments {
         command = 'hadoop checknative -a 2>/dev/null | grep snappy | grep true'
-        message = 'hadoop-common-project must be build with Prequire.snappy'
+        message = 'hadoop-common-project must be build with -Prequire.snappy'
       }
     }
     'HADOOP_HNATIVE1' {
       name = 'HADOOP_HNATIVE1'
       type = 'shell'
       arguments {
-        command = 'hadoop checknative -a 2>/dev/null | grep hadoop | grep true'
+        command = 'test -e $HADOOP_COMMON_HOME/lib/native/libhdfs.a'
         message = 'hadoop-hdfs-project must be build with -Pnative or -Pnative-win'
       }
     }
@@ -228,7 +228,7 @@ specs {
       name = 'HADOOP_YNATIVE1'
       type = 'shell'
       arguments {
-        command = 'hadoop checknative -a 2>/dev/null | grep hadoop | grep true'
+        command = 'test -e $HADOOP_YARN_HOME/bin/container-executor'
         message = 'hadoop-yarn-project must be build with -Pnative or -Pnative-win'
       }
     }
@@ -236,16 +236,8 @@ specs {
       name = 'HADOOP_MNATIVE1'
       type = 'shell'
       arguments {
-        command = 'hadoop checknative -a 2>/dev/null | grep hadoop | grep true'
-        message = 'hadoop-mapreduce-project must be build with -Pnative or -Pnative-win'
-      }
-    }
-    'HADOOP_MNATIVE2' {
-      name = 'HADOOP_MNATIVE2'
-      type = 'shell'
-      arguments {
         command = 'hadoop checknative -a 2>/dev/null | grep snappy | grep true'
-        message = 'hadoop-mapreduce-project must be build with Prequire.snappy'
+        message = 'hadoop-mapreduce-project must be build with -Prequire.snappy'
       }
     }
     'HADOOP_COMPRESSION' {
