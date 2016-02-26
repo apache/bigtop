@@ -89,6 +89,7 @@ rat {
        "MAINTAINERS.txt",
        "buildSrc/build/**",
        "bigtop-data-generators/**/input_data/**",
+       "docker/**/*.yaml",
        "bigtop-deploy/puppet/**/*.yaml",
        "bigtop-deploy/puppet/modules/hadoop/files/*/id_hdfsuser*",
        "bigtop-deploy/puppet/modules/bigtop-util/Gemfile.lock",

@@ -23,10 +23,10 @@ distributions {
     baseName = project.hasProperty('assemblyname') ?
       project.property('assemblyname') : 'bigtop-smokes-suite'
     contents {
-      exclude '*.iml'
+      exclude '**/*.iml'
       exclude '.gradle'
-      exclude 'build'
-      exclude 'target'
+      exclude '**/build'
+      exclude '**/target'
       from ("$rootDir") {
         include '*.bom'
         include 'gradlew'
@@ -41,9 +41,8 @@ distributions {
         include '*'
       }
       from ('smoke-tests') {
-        into 'smoke-tests'
-        include '*.gradle'
-        include 'logger-test-config/**'
+        into 'bigtop-tests/smoke-tests'
+        include '**'
       }
       from ('smoke-tests') { // Put the driver script to the top-level
         include 'run_itest.sh'
