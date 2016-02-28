@@ -16,6 +16,8 @@
 %define flink_name flink
 %define lib_flink /usr/lib/%{flink_name}
 %define bin_flink /usr/bin
+%define etc_flink /etc/%{flink_name}
+%define config_flink %{etc_flink}/conf
 %define man_dir %{_mandir}
 
 %if  %{!?suse_version:1}0
@@ -63,13 +65,14 @@ bash $RPM_SOURCE_DIR/do-component-build
 %install
 %__rm -rf $RPM_BUILD_ROOT
 
-
 sh -x %{SOURCE2} --prefix=$RPM_BUILD_ROOT --doc-dir=%{doc_flink} --build-dir=%{build_flink}
-#sh -x %{SOURCE2}  --build-dir=%{build_flink}
+
+%post
+%{alternatives_cmd} --install %{config_flink} %{flink_name}-conf %{config_flink}.dist 30
 
 %files 
 %defattr(-,root,root,755)
+%config(noreplace) %{config_flink}.dist
 %doc %{doc_flink}
 %{lib_flink}
 %{bin_flink}/flink
-#%{man_dir}/man1/flink.1.*
