@@ -19,7 +19,7 @@
 GRANT USAGE ON *.* TO 'mytestuser'@'MYSQLHOST';
 DROP USER 'mytestuser'@'MYSQLHOST';
 create user 'mytestuser'@'MYSQLHOST' identified by 'password';
-GRANT ALL PRIVILEGES ON *.* TO mytestuser@'%' IDENTIFIED BY "password";
-GRANT ALL PRIVILEGES ON *.* TO mytestuser@'localhost' IDENTIFIED BY "password";
-GRANT ALL PRIVILEGES ON *.* TO mytestuser@'MYSQLHOST' IDENTIFIED BY "password";
+GRANT ALL PRIVILEGES ON *.* TO mytestuser@'%' IDENTIFIED BY "password" WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON *.* TO mytestuser@'localhost' IDENTIFIED BY "password" WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON *.* TO mytestuser@'MYSQLHOST' IDENTIFIED BY "password" WITH GRANT OPTION;
 
