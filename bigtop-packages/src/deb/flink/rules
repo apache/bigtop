@@ -1,3 +1,5 @@
+#!/usr/bin/make -f
+
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -12,15 +14,28 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+# -*- makefile -*-
 
-memory_size: 4096
-number_cpus: 1
-box: "puppetlabs/centos-7.0-64-nocm"
-repo: "http://bigtop-repos.s3.amazonaws.com/releases/1.1.0/centos/7/x86_64"
-num_instances: 1
-distro: centos
-components: [hadoop, yarn, pig, flink]
-enable_local_repo: true
-run_smoke_tests: false
-smoke_test_components: [mapreduce, pig]
-jdk: "java-1.7.0-openjdk-devel.x86_64"
+# Uncomment this to turn on verbose mode.
+export DH_VERBOSE=1
+
+# This has to be exported to make some magic below work.
+export DH_OPTIONS
+
+%:
+	dh $@
+
+override_dh_auto_build:
+	bash debian/do-component-build
+
+#svcs=spark-master spark-worker spark-history-server spark-thriftserver
+
+#$(svcs): debian/init.d.tmpl
+#	sh $< debian/$@.svc deb debian/$@.init
+#	touch $@
+
+override_dh_auto_install:
+	sh -x debian/install_flink.sh \
+	--build-dir=`pwd`/flink-dist/target/flink-0.10.2-bin/flink-0.10.2 \
+	--doc-dir=/usr/share/doc/flink \
+	--prefix=debian/tmp

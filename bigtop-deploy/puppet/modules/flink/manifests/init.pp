@@ -13,14 +13,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-memory_size: 4096
-number_cpus: 1
-box: "puppetlabs/centos-7.0-64-nocm"
-repo: "http://bigtop-repos.s3.amazonaws.com/releases/1.1.0/centos/7/x86_64"
-num_instances: 1
-distro: centos
-components: [hadoop, yarn, pig, flink]
-enable_local_repo: true
-run_smoke_tests: false
-smoke_test_components: [mapreduce, pig]
-jdk: "java-1.7.0-openjdk-devel.x86_64"
+class flink {
+
+  class deploy ($roles) {
+    if ("flink-client" in $roles) {
+      include client
+    }
+  }
+
+  class client {
+    package { "flink":
+      ensure => latest,
+      require => Package["hadoop"],
+    }
+
+    file { "/etc/flink/conf/flink.properties":
+      content => template('flink/flink.properties'),
+      require => Package["flink"],
+      owner => "root", /* FIXME: I'm really no sure about these -- we might end  */
+      mode => "755",   /*        up deploying/testing a different thing compared */
+                       /*        to a straight rpm/deb deployment                */
+    }
+  }
+}         

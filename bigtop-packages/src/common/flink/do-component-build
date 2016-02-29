@@ -19,4 +19,4 @@ set -ex
 . `dirname $0`/bigtop.bom
 
 #mvn clean install -DskipTests -Dhadoop.version=$HADOOP_VERSION "$@"
-mvn clean install -DskipTests -Dhadoop.version=2.4.1 "$@" 
+mvn clean install -Drat.skip=true -DskipTests -Dhadoop.version=2.4.1 "$@" 
