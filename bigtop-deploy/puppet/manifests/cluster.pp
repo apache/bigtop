@@ -89,6 +89,9 @@ $roles_map = {
   pig => {
     client => ["pig-client"],
   },
+  flink => {
+    client => ["flink-client"],
+  },
   hive => {
     client => ["hive-client"],
   },
@@ -159,6 +162,7 @@ class node_with_roles ($roles = hiera("bigtop::roles")) inherits hadoop_cluster_
     "hadoop_hive",
     "hadoop_oozie",
     "hadoop_pig",
+    "flink",
     "sqoop2",
     "hadoop_zookeeper",
     "hcatalog",

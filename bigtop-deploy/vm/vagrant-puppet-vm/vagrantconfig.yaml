@@ -19,8 +19,8 @@ box: "puppetlabs/centos-7.0-64-nocm"
 repo: "http://bigtop-repos.s3.amazonaws.com/releases/1.1.0/centos/7/x86_64"
 num_instances: 1
 distro: centos
-components: [hadoop, yarn]
-enable_local_repo: false
+components: [hadoop, yarn, flink]
+enable_local_repo: true
 run_smoke_tests: false
 smoke_test_components: [mapreduce, pig]
 jdk: "java-1.7.0-openjdk-devel.x86_64"
