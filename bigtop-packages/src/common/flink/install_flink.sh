@@ -105,7 +105,6 @@ install -d -m 0755 $PREFIX/$LIB_DIR/lib
 install -d -m 0755 $PREFIX/$DOC_DIR
 
 cp -ra ${BUILD_DIR}/lib/* $PREFIX/${LIB_DIR}/lib/
-#cp ${BUILD_DIR}/lib/flink*.jar $PREFIX/$LIB_DIR
 cp -a ${BUILD_DIR}/*.txt $PREFIX/$DOC_DIR
 cp -a ${BUILD_DIR}/bin/* $PREFIX/${LIB_DIR}/bin
 rm -rf $PREFIX/${LIB_DIR}/bin/*.cmd
@@ -117,11 +116,11 @@ ln -s /etc/flink/conf $PREFIX/$LIB_DIR/conf
 
 # Copy in the example files
 cp -a ${BUILD_DIR}/examples/ $PREFIX/$DOC_DIR/
-#cp -a ${BUILD_DIR}/h2o/ $PREFIX/$DOC_DIR/
  
 # Copy in the /usr/bin/flink wrapper
 install -d -m 0755 $PREFIX/$BIN_DIR
 cat > $PREFIX/$BIN_DIR/flink <<EOF
+
 !/bin/bash
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
@@ -134,8 +133,6 @@ cat > $PREFIX/$BIN_DIR/flink <<EOF
 # FIXME: the following line is a workaround for BIGTOP-259 
 #export HADOOP_CLASSPATH="`echo /usr/lib/flink/flink-examples-*-job.jar`":\$HADOOP_CLASSPATH
 #exec $INSTALLED_LIB_DIR/bin/flink "\$@"
-#export SPARK_HOME=\${SPARK_HOME:-/usr/lib/spark}
 
 EOF
 chmod 755 $PREFIX/$BIN_DIR/flink
-

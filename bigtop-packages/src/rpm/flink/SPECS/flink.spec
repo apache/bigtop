@@ -46,14 +46,23 @@ Source3: bigtop.bom
 Requires: hadoop-client, bigtop-utils >= 0.7
 
 %description
-Apache flink is a free, open source implementation for unified stream and batch processing.
+Apache Flink is an open source platform for distributed stream and batch data processing.
+Flink’s core is a streaming dataflow engine that provides data distribution, communication,
+and fault tolerance for distributed computations over data streams.
 
-Apache flink includes following key features:
- * Event processing guarantees
- * In-memory performance & scalability
- * Fault tolerance and state management
- * Native rolling and tumbling window support
- * Hadoop-native YARN & HDFS implementation
+Flink includes several APIs for creating applications that use the Flink engine:
+    * DataStream API for unbounded streams embedded in Java and Scala, and
+    * DataSet API for static data embedded in Java, Scala, and Python,
+    * Table API with a SQL-like expression language embedded in Java and Scala.
+
+Flink also bundles libraries for domain-specific use cases:
+    * Machine Learning library, and
+    * Gelly, a graph processing API and library.
+
+Some of the key features of Apache Flink includes.
+    * Complete Event Processing (CEP)
+    * Fault-tolerance via Lightweight Distributed Snapshots
+    * Hadoop-native YARN & HDFS implementation
 
 %prep
 %setup -n %{name}-%{flink_base_version}
