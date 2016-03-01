@@ -63,7 +63,7 @@ puts "vagrant conf local repo enabled:  #{enable_local_repo}"
 jdk = CONF['jdk']
 
 # master node hostname
-bigtop_master = "bigtop1.vagrant"
+bigtop_master = "odpi1.vagrant"
 
 $script = <<SCRIPT
 service iptables stop
@@ -104,10 +104,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # nodes definition
   (1..num_instances).each do |i|
-    config.vm.define "bigtop#{i}" do |bigtop|
+    config.vm.define "odpi#{i}" do |bigtop|
 
       bigtop.vm.box = CONF['box']
-      bigtop_hostname="bigtop#{i}"
+      bigtop_hostname="odpi#{i}"
       bigtop_fqdn="#{bigtop_hostname}.vagrant"
       bigtop_ip="10.10.10.1#{i}"
 
