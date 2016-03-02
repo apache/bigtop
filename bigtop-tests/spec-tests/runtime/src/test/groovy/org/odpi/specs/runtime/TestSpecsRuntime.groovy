@@ -65,6 +65,29 @@ public class TestSpecsRuntime {
     return "$testsList/testRuntimeSpecConf.groovy";
   }
 
+  private Map getEnvMap(String command) {
+    def envMap = [:]
+    Shell sh = new Shell()
+    def envvars = sh.exec(command).getOut()
+    if (sh.getRet() == 0) {
+      envvars.each {
+        def match = it =~ /(?<variable>[^=]+)='(?<value>[^']+)'$/
+        if ( match.matches() ) {
+          envMap[match.group('variable')] = match.group('value')
+        }
+      }
+    }
+    return envMap
+  }
+
+  private String getEnv(String name, String cmd) {
+    String value = ENV[name]
+    if (value == null) {
+       value = getEnvMap(cmd)[name]
+    }
+    return value
+  }
+
   @Test
   public void testAll() {
     switch (type) {
@@ -80,7 +103,7 @@ public class TestSpecsRuntime {
       case 'envdir':
         def var = arguments['variable']
         def isPathRelative = arguments['relative']
-        def pathString = ENV[var]
+        def pathString = getEnv(var, arguments['envcmd'])
         Assert.assertTrue("${testName} fail: environment variable ${var} does not exist", pathString != null )
 
         if ( arguments['pattern'] ) {
@@ -102,10 +125,10 @@ public class TestSpecsRuntime {
         new File("${testsList}", "${arguments['referenceList']}").eachLine { line ->
            expectedFiles << line
         }
-
-        Assert.assertNotNull("${arguments['baseDirEnv']} has to be set for the test to continue",
-          ENV["${arguments['baseDirEnv']}"])
-        def root = new File(ENV["${arguments['baseDirEnv']}"])
+        def baseDirEnv = getEnv(arguments['baseDirEnv'], arguments['envcmd'])
+        Assert.assertNotNull("${baseDirEnv} has to be set for the test to continue",
+          baseDirEnv)
+        def root = new File(baseDirEnv)
         def actualFiles = []
         if ( root.exists() ) {
           root.eachFileRecurse(FileType.ANY) { file ->
@@ -114,7 +137,7 @@ public class TestSpecsRuntime {
           }
         }
         def missingFiles = (expectedFiles - actualFiles)
-        Assert.assertTrue("${testName} fail: Directory structure for ${arguments['baseDirEnv']} does not match reference. Missing files: ${missingFiles} ",
+        Assert.assertTrue("${testName} fail: Directory structure for ${baseDirEnv} does not match reference. Missing files: ${missingFiles} ",
           missingFiles.size() == 0)
         break
 
@@ -136,7 +159,7 @@ public class TestSpecsRuntime {
             new File(it).getCanonicalPath() =~ /^${toolsPath}\/?\*/
           }
         )
-      
+        break
       default:
         break
     }
