@@ -4,6 +4,7 @@ specs {
       name = 'HADOOP_EJH1'
       type = 'envdir'
       arguments {
+        envcmd = 'hadoop envvars'
         variable = 'JAVA_HOME'
         pattern = /.*\/usr\/.*/
       }
@@ -12,6 +13,7 @@ specs {
       name = 'HADOOP_EC1'
       type = 'envdir'
       arguments {
+        envcmd = 'hadoop envvars'
         variable = 'HADOOP_TOOLS_PATH'
       }
     }
@@ -19,6 +21,7 @@ specs {
       name = 'HADOOP_EC2'
       type = 'envdir'
       arguments {
+        envcmd = 'hadoop envvars'
         variable = 'HADOOP_COMMON_HOME'
         pattern = /.*\/usr\/lib\/hadoop.*/
       }
@@ -27,6 +30,7 @@ specs {
       name = 'HADOOP_EC3'
       type = 'envdir'
       arguments {
+        envcmd = 'hadoop envvars'
         variable = 'HADOOP_COMMON_DIR'
         relative = true
       }
@@ -35,6 +39,7 @@ specs {
       name = 'HADOOP_EC4'
       type = 'envdir'
       arguments {
+        envcmd = 'hadoop envvars'
         variable = 'HADOOP_COMMON_LIB_JARS_DIR'
         relative = true
       }
@@ -43,6 +48,7 @@ specs {
       name = 'HADOOP_EC5'
       type = 'envdir'
       arguments {
+        envcmd = 'hadoop envvars'
         variable = 'HADOOP_CONF_DIR'
         pattern = /.*\/etc\/hadoop.*/
       }
@@ -51,6 +57,7 @@ specs {
       name = 'HADOOP_EH1'
       type = 'envdir'
       arguments {
+        envcmd = 'hdfs envvars'
         variable = 'HADOOP_HDFS_HOME'
         pattern = /.*\/usr\/lib\/hadoop-hdfs.*/
       }
@@ -59,6 +66,7 @@ specs {
       name = 'HADOOP_EH2'
       type = 'envdir'
       arguments {
+        envcmd = 'hdfs envvars'
         variable = 'HDFS_DIR'
         relative = true
       }
@@ -67,6 +75,7 @@ specs {
       name = 'HADOOP_EH3'
       type = 'envdir'
       arguments {
+        envcmd = 'hdfs envvars'
         variable = 'HDFS_LIB_JARS_DIR'
         relative = true
       }
@@ -75,6 +84,7 @@ specs {
       name = 'HADOOP_EY1'
       type = 'envdir'
       arguments {
+        envcmd = 'yarn envvars'
         variable = 'HADOOP_YARN_HOME'
         pattern = /.*\/usr\/lib\/hadoop-yarn.*/
       }
@@ -83,6 +93,7 @@ specs {
       name = 'HADOOP_EY2'
       type = 'envdir'
       arguments {
+        envcmd = 'yarn envvars'
         variable = 'YARN_DIR'
         relative = true
       }
@@ -91,6 +102,7 @@ specs {
       name = 'HADOOP_EY3'
       type = 'envdir'
       arguments {
+        envcmd = 'yarn envvars'
         variable = 'YARN_LIB_JARS_DIR'
         relative = true
       }
@@ -99,6 +111,7 @@ specs {
       name = 'HADOOP_EM1'
       type = 'envdir'
       arguments {
+        envcmd = 'mapred envvars'
         variable = 'HADOOP_MAPRED_HOME'
         pattern = /.*\/usr\/lib\/hadoop-mapreduce.*/
       }
@@ -107,6 +120,7 @@ specs {
       name = 'HADOOP_EM2'
       type = 'envdir'
       arguments {
+        envcmd = 'mapred envvars'
         variable = 'MAPRED_DIR'
         relative = true
       }
@@ -115,6 +129,7 @@ specs {
       name = 'HADOOP_EM3'
       type = 'envdir'
       arguments {
+        envcmd = 'mapred envvars'
         variable = 'MAPRED_LIB_JARS_DIR'
         relative = true
       }
@@ -123,7 +138,7 @@ specs {
       name = 'HADOOP_EJH2_HADOOP'
       type = 'shell'
       arguments {
-        command = '[ "${JAVA_HOME}xxx" != "xxx" ] || grep -E "^\\s*export\\s+JAVA_HOME=[\\w/]+" $HADOOP_CONF_DIR/hadoop-env.sh'
+        command = '[ "${JAVA_HOME}xxx" != "xxx" ] || grep -E "^\\s*export\\s+JAVA_HOME=[\\w/]+" `hadoop envvars | grep HADOOP_CONF_DIR | sed "s|[^=]\\+=\'\\([^\']\\+\\)\'$|\\1|g"`/hadoop-env.sh'
         message = 'JAVA_HOME is not set'
       }
     }
@@ -131,7 +146,7 @@ specs {
       name = 'HADOOP_EJH2_YARN'
       type = 'shell'
       arguments {
-        command = '[ "${JAVA_HOME}xxx" != "xxx" ] || grep -E "^\\s*export\\s+JAVA_HOME=[\\w/]+" $HADOOP_CONF_DIR/yarn-env.sh'
+        command = '[ "${JAVA_HOME}xxx" != "xxx" ] || grep -E "^\\s*export\\s+JAVA_HOME=[\\w/]+" `hadoop envvars | grep HADOOP_CONF_DIR | sed "s|[^=]\\+=\'\\([^\']\\+\\)\'$|\\1|g"`/yarn-env.sh'
         message = 'JAVA_HOME is not set'
       }
     }
@@ -152,34 +167,38 @@ specs {
         message = 'Log files do not contain correct correct version'
       }
     }
-    'HADOOP_DIRSTRUCT_1' {
-      name = 'HADOOP_DIRSTRUCT'
+    'HADOOP_DIRSTRUCT_COMMON' {
+      name = 'HADOOP_DIRSTRUCT_COMMON'
       type = 'dirstruct'
       arguments {
+        envcmd = 'hadoop envvars'
         baseDirEnv = 'HADOOP_COMMON_HOME'
         referenceList = 'hadoop-common.list'
       }
     }
-    'HADOOP_DIRSTRUCT_2' {
-      name = 'HADOOP_DIRSTRUCT'
+    'HADOOP_DIRSTRUCT_HDFS' {
+      name = 'HADOOP_DIRSTRUCT_HDFS'
       type = 'dirstruct'
       arguments {
+        envcmd = 'hdfs envvars'
         baseDirEnv = 'HADOOP_HDFS_HOME'
         referenceList = 'hadoop-hdfs.list'
       }
     }
-    'HADOOP_DIRSTRUCT_3' {
-      name = 'HADOOP_DIRSTRUCT'
+    'HADOOP_DIRSTRUCT_MAPRED' {
+      name = 'HADOOP_DIRSTRUCT_MAPRED'
       type = 'dirstruct'
       arguments {
+        envcmd = 'mapred envvars'
         baseDirEnv = 'HADOOP_MAPRED_HOME'
         referenceList = 'hadoop-mapreduce.list'
       }
     }
-    'HADOOP_DIRSTRUCT_4' {
-      name = 'HADOOP_DIRSTRUCT'
+    'HADOOP_DIRSTRUCT_YARN' {
+      name = 'HADOOP_DIRSTRUCT_YARN'
       type = 'dirstruct'
       arguments {
+        envcmd = 'yarn envvars'
         baseDirEnv = 'HADOOP_YARN_HOME'
         referenceList = 'hadoop-yarn.list'
       }
@@ -188,6 +207,7 @@ specs {
       name = 'HADOOP_SUBPROJS'
       type = 'dirstruct'
       arguments {
+        envcmd = 'hadoop envvars'
         baseDirEnv = 'HADOOP_COMMON_HOME'
         referenceList = 'hadoop-subprojs.list'
       }
