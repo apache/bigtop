@@ -115,8 +115,10 @@ public class TestSpecsRuntime {
         if ( isPathRelative ) {
             Assert.assertFalse("${testName} fail: ${pathString} is not relative", pathFile.isAbsolute() )
         } else {
-            Assert.assertTrue("${testName} fail: ${pathString} does not exist", pathFile.exists() )
-            Assert.assertTrue("${testName} fail: ${pathString} is not directory", pathFile.isDirectory() )
+            if (!arguments['donotcheckexistance']) {
+              Assert.assertTrue("${testName} fail: ${pathString} does not exist", pathFile.exists() )
+              Assert.assertTrue("${testName} fail: ${pathString} is not directory", pathFile.isDirectory() )
+            }
         }
         break
 
@@ -142,16 +144,14 @@ public class TestSpecsRuntime {
         break
 
       case 'hadoop_tools':
-        Assert.assertNotNull("${testName} fail: HADOOP_TOOLS environment variable should be set", ENV["HADOOP_TOOLS"])
-        Assert.assertTrue("${testName} fail: HADOOP_TOOLS should be set to the HADOOP_TOOLS_PATH environment variable.",
-            ENV["HADOOP_TOOLS"]== ENV["HADOOP_TOOLS_PATH"])
+        def toolsPathStr = getEnv("HADOOP_TOOLS_PATH", "hadoop envvars")
+        Assert.assertNotNull("${testName} fail: HADOOP_TOOLS_PATH environment variable should be set", toolsPathStr)
 
-        def toolsPath = new File(ENV["HADOOP_TOOLS"])
-        Assert.assertTrue("${testName} fail: HADOOP_TOOLS must be an absolute path.", toolsPath.isAbsolute())
+        def toolsPath = new File(toolsPathStr)
+        Assert.assertTrue("${testName} fail: HADOOP_TOOLS_PATH must be an absolute path.", toolsPath.isAbsolute())
 
-        Assert.assertNotNull("HADOOP_COMMON_HOME has to be set for the test to continue", ENV["HADOOP_COMMON_HOME"])
         Shell sh = new Shell()
-        def classPath = sh.exec("${ENV["HADOOP_COMMON_HOME"]}/bin/hadoop classpath").getOut().join("\n")
+        def classPath = sh.exec("hadoop classpath").getOut().join("\n")
         Assert.assertTrue("${testName} fail: Failed to retrieve hadoop's classpath", sh.getRet()==0)
 
         Assert.assertFalse("${testName} fail: The enire '${toolsPath}' path should not be included in the hadoop's classpath",

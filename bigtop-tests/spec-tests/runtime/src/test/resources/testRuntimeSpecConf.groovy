@@ -15,6 +15,7 @@ specs {
       arguments {
         envcmd = 'hadoop envvars'
         variable = 'HADOOP_TOOLS_PATH'
+        donotcheckexistance = true
       }
     }
     'HADOOP_EC2' {
