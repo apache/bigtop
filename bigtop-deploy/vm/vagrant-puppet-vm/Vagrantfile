@@ -72,6 +72,10 @@ chkconfig iptables off
 # which miss leads some daemons to bind on 127.0.0.1 instead of public or private IP
 sed -i "/127.0.0.1/d" /etc/hosts
 echo "Bigtop yum repo = #{repo}"
+# Prepare host manipulation files needed in standalone box
+cp /bigtop-home/bigtop-deploy/vm/vagrant-puppet-vm/config_hosts /etc/init.d
+cp /bigtop-home/bigtop-deploy/vm/vagrant-puppet-vm/gen_hosts.sh /usr/bin
+chkconfig --add config_hosts
 # Prepare puppet configuration file
 mkdir -p /etc/puppet/hieradata
 cp /bigtop-home/bigtop-deploy/puppet/hiera.yaml /etc/puppet

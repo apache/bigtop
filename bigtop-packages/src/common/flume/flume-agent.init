@@ -197,10 +197,14 @@ checkallstatus() {
 # Common function to perform user action on all flume conf files
 #
 run_functions_on_conf() {
+  if [ -f ${FLUME_CONF_DIR}/flume.conf ]; then
+    echo $FLUME_AGENT_NAME
+    $1
+  fi
+  agent_conf_pattern="${FLUME_CONF_DIR}/flume-.*\.conf"
   for f in ${FLUME_CONF_DIR}/*
   do
-    file_ext=${f##*.}
-    if [ "$file_ext" = "conf" ]; then
+    if [ $(echo $f | grep -e ${agent_conf_pattern}) ]; then
       conf_file=${f%.*}
       file_name=${conf_file##*/}
       agent_name=${file_name#*-}
