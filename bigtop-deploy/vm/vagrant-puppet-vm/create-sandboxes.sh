@@ -15,9 +15,11 @@
 #!/bin/bash
 
 set -ex
-WORKDIR=$0.$$.dir
+WORKDIR=${1:-$0.work.dir}
+echo "Cleaning $WORKDIR"
+rm -rf $WORKDIR
 mkdir -p $WORKDIR
-VERSION=${1:-1.0}
+VERSION=${2:-1.0}
 NAME="vagrant-odpi-v$VERSION"
 # clean everything
 vagrant destroy -f
