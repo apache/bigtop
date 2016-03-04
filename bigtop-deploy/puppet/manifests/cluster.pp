@@ -52,9 +52,9 @@ $roles_map = {
     master => ["spark-master"],
     worker => ["spark-worker"],
   },
-  tachyon => {
-    master => ["tachyon-master"],
-    worker => ["tachyon-worker"],
+  alluxio => {
+    master => ["alluxio-master"],
+    worker => ["alluxio-worker"],
   },
   flume => {
     worker => ["flume-agent"],
@@ -158,6 +158,7 @@ class node_with_roles ($roles = hiera("bigtop::roles")) inherits hadoop_cluster_
   }
 
   $modules = [
+    "alluxio",
     "apex",
     "crunch",
     "giraph",
@@ -175,7 +176,6 @@ class node_with_roles ($roles = hiera("bigtop::roles")) inherits hadoop_cluster_
     "mahout",
     "solr",
     "spark",
-    "tachyon",
     "qfs",
     "tez",
     "ycsb",

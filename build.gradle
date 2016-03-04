@@ -73,7 +73,7 @@ rat {
        "**/.gitignore",
        /* Test data with rigid structure and/or binary */
        "bigtop-tests/test-artifacts/**/resources/**",
-       "bigtop-tests/smoke-tests/tachyon/datafile",
+       "bigtop-tests/smoke-tests/alluxio/datafile",
        "bigtop-tests/smoke-tests/hive/passwd.ql",
        "bigtop-tests/smoke-tests/kite/sandwiches.csv",
        "bigtop-tests/smoke-tests/phoenix/*.csv",

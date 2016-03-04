@@ -299,7 +299,7 @@
               <exclude>**/.gitignore</exclude>
               <!-- Test data with rigid structure and/or binary -->
               <exclude>bigtop-tests/test-artifacts/**/resources/**</exclude>
-              <exclude>bigtop-tests/smoke-tests/tachyon/datafile</exclude>
+              <exclude>bigtop-tests/smoke-tests/alluxio/datafile</exclude>
               <exclude>bigtop-tests/smoke-tests/hive/passwd.ql</exclude>
               <exclude>bigtop-tests/smoke-tests/kite/sandwiches.csv</exclude>
               <exclude>bigtop-tests/smoke-tests/phoenix/*.csv</exclude>

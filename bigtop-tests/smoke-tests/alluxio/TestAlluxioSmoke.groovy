@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.apache.bigtop.itest.tachyon
+package org.apache.bigtop.itest.alluxio
 
 import org.junit.Before
 import org.apache.bigtop.itest.shell.Shell
@@ -25,15 +25,15 @@ import static org.junit.Assert.assertNotNull
 import org.junit.Test
 import org.apache.bigtop.itest.JarContent
 
-class TestTachyonSmoke {
+class TestAlluxioSmoke {
 
-  def tachyonHome = prop('TACHYON_HOME');
-  def tachyonMasterAddress = prop('TACHYON_MASTER_ADDRESS');
-  def tachyonTestDir = prop('TACHYON_TEST_DIR', '/bigtop');
+  def alluxioHome = prop('ALLUXIO_HOME');
+  def alluxioMasterAddress = prop('ALLUXIO_MASTER_ADDRESS');
+  def alluxioTestDir = prop('ALLUXIO_TEST_DIR', '/bigtop');
   def hadoopHome = prop('HADOOP_HOME');
 
   def hadoop = "${hadoopHome}/bin/hadoop"
-  def tachyon = "${tachyonHome}/bin/tachyon"
+  def alluxio = "${alluxioHome}/bin/alluxio"
 
    Shell sh = new Shell("/bin/bash -s");
 
@@ -52,13 +52,13 @@ class TestTachyonSmoke {
    }
 
   /**
-   * Runs the Tachyon runTests command that runs the Tachyon examples against the cluster.
+   * Runs the Alluxio runTests command that runs the Alluxio examples against the cluster.
    * This command takes care of cleanup at the start of each test, so this framework
    * does not have to worry about cleanup.
    */
   @Test
   void runTests() {
-    sh.exec("$tachyon runTests");
+    sh.exec("$alluxio runTests");
     assertTrue("runTests failed. " + sh.getOut() + " " + sh.getErr(), sh.getRet() == 0);
   }
 
@@ -68,12 +68,12 @@ class TestTachyonSmoke {
       set -x
       set -e
 
-      export LIB_JARS=\$(find ${tachyonHome} -name "tachyon-client-*-jar-with-dependencies.jar" | sort | head -n1)
+      export LIB_JARS=\$(find ${alluxioHome} -name "alluxio-client-*-jar-with-dependencies.jar" | sort | head -n1)
       export HADOOP_CLASSPATH=\${LIB_JARS}
 
-      $tachyon tfs rm $tachyonTestDir/hadoopLs/datafile
-      $tachyon tfs copyFromLocal datafile $tachyonTestDir/hadoopLs/datafile
-      $hadoop fs -cat $tachyonMasterAddress/$tachyonTestDir/hadoopLs/datafile
+      $alluxio tfs rm $alluxioTestDir/hadoopLs/datafile
+      $alluxio tfs copyFromLocal datafile $alluxioTestDir/hadoopLs/datafile
+      $hadoop fs -cat $alluxioMasterAddress/$alluxioTestDir/hadoopLs/datafile
     """)
     assertTrue("Unable to list from hadoop. " + sh.getOut().join('\n') + " " + sh.getErr().join('\n'), sh.getRet() == 0);
   }

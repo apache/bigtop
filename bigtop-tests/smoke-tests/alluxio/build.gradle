@@ -25,8 +25,8 @@ sourceSets {
 
 test.doFirst {
   checkEnv([
-    "TACHYON_HOME",
-    "TACHYON_MASTER_ADDRESS",
+    "ALLUXIO_HOME",
+    "ALLUXIO_MASTER_ADDRESS",
     "HADOOP_HOME"
     ])
 }

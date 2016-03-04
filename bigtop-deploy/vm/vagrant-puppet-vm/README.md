@@ -59,7 +59,7 @@ num_instances: 5
 first, build up local yum repo
 
 ```
-cd bigtop; ./gradlew tachyon-yum
+cd bigtop; ./gradlew alluxio-yum
 ```
 
 and then enable local yum in vagrantconfig.yaml
