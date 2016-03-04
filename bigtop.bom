@@ -90,7 +90,7 @@ bigtop {
     zookeeper:['hadoop', 'hbase'],
     hadoop:['ignite-hadoop', 'hbase', 'crunch', 'pig', 'hive', 'tez', 'sqoop', 'sqoop2',
       'oozie', 'mahout', 'flume', 'giraph', 'solr', 'crunch', 'spark',
-      'phoenix', 'tachyon', 'kafka', 'ycsb', 'kite', 'hama', 'zeppelin',
+      'phoenix', 'alluxio', 'kafka', 'ycsb', 'kite', 'hama', 'zeppelin',
       'tajo', 'apex'
     ],
     hbase:['phoenix','giraph','ycsb','hive'],
@@ -357,14 +357,14 @@ bigtop {
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }
-    'tachyon' {
-      name    = "tachyon"
-      pkg     = "tachyon-tfs"
-      relNotes = "Tachyon: a memory-centric distributed file system"
-      version { base = '0.6.0'; pkg = base; release = 1 }
+    'alluxio' {
+      name    = "alluxio"
+      pkg     = "alluxio"
+      relNotes = "Alluxio: a memory-centric distributed file system"
+      version { base = '1.0.1'; pkg = base; release = 1 }
       tarball { destination = "$name-${version.base}.tar.gz"
                 source      = "v${version.base}.tar.gz" }
-      url     { site = "https://github.com/amplab/tachyon/archive"
+      url     { site = "https://github.com/Alluxio/alluxio/archive"
                 archive = site }
     }
     'kafka' {

@@ -1,0 +1,24 @@
+From 5f0542f2f39b86cfc534a5f37953d1aa27cddaef Mon Sep 17 00:00:00 2001
+From: Jonathan Kelly <jonathak@amazon.com>
+Date: Mon, 2 May 2016 15:54:58 -0700
+Subject: [PATCH] tmp
+
+---
+ pom.xml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/pom.xml b/pom.xml
+index 69921f9..89ca5a7 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -500,6 +500,7 @@
+ 
+             <!-- Build and Packaging Exclusions -->
+             <exclude>build/**/*</exclude>
++            <exclude>debian/**/*</exclude>
+             <exclude>**/pom.xml</exclude>
+             <exclude>**/logs/*</exclude>
+             <exclude>**/deploy/**/*</exclude>
+-- 
+2.6.4 (Apple Git-63)
+

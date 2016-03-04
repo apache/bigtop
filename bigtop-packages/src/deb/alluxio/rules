@@ -31,13 +31,13 @@ override_dh_auto_build:
 	bash debian/do-component-build -Dmaven.repo.local=${HOME}/.m2/repository
 
 override_dh_auto_install:
-	bash -x debian/install_tachyon.sh \
+	bash -x debian/install_alluxio.sh \
     --build-dir=build \
     --bin-dir=/usr/bin \
     --data-dir=/usr/share \
-    --libexec-dir=/usr/lib/tachyon/libexec \
+    --libexec-dir=/usr/lib/alluxio/libexec \
     --var-dir= /var/ \
     --prefix=debian/tmp
-	mkdir -p debian/tachyon-tfs/etc/init.d/
-	bash debian/init.d.tmpl debian/tachyon-master.svc deb debian/tachyon-tfs/etc/init.d/tachyon-master
-	bash debian/init.d.tmpl debian/tachyon-worker.svc deb debian/tachyon-tfs/etc/init.d/tachyon-worker
+	mkdir -p debian/alluxio/etc/init.d/
+	bash debian/init.d.tmpl debian/alluxio-master.svc deb debian/alluxio/etc/init.d/alluxio-master
+	bash debian/init.d.tmpl debian/alluxio-worker.svc deb debian/alluxio/etc/init.d/alluxio-worker

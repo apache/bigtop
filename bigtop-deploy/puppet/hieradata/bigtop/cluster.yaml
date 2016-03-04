@@ -16,7 +16,7 @@
 # "$components" list. If $components isn't set then everything in the stack will
 # be installed as usual. Otherwise only a specified list will be set
 # Possible elements:
-# hadoop,yarn,hbase,tachyon,flume,solrcloud,spark,oozie,hcat,sqoop,sqoop2,httpfs,
+# hadoop,yarn,hbase,alluxio,flume,solrcloud,spark,oozie,hcat,sqoop,sqoop2,httpfs,
 # hue,mahout,giraph,crunch,pig,hive,zookeeper,ycsb,qfs
 # Example (to deploy only HDFS and YARN server and gateway parts)
 # This can be a comma-separated list or an array.
@@ -129,7 +129,7 @@ hcatalog::webhcat::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 
 spark::common::master_host: "%{hiera('bigtop::hadoop_head_node')}"
 
-tachyon::common::master_host: "%{hiera('bigtop::hadoop_head_node')}"
+alluxio::common::master_host: "%{hiera('bigtop::hadoop_head_node')}"
 
 # qfs
 qfs::common::metaserver_host: "%{hiera('bigtop::hadoop_head_node')}"

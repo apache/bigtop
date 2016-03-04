@@ -14,14 +14,14 @@
 # limitations under the License.
 
 TYPE="master"
-DAEMON="tachyon-${TYPE}"
-DESC="Tachyon ${TYPE}"
-EXEC_PATH="/usr/lib/tachyon/bin/tachyon-start.sh"
-WORKING_DIR="/var/lib/tachyon"
+DAEMON="alluxio-${TYPE}"
+DESC="Alluxio ${TYPE}"
+EXEC_PATH="/usr/lib/alluxio/bin/alluxio-start.sh"
+WORKING_DIR="/var/lib/alluxio"
 DAEMON_FLAGS="master Mount"
-KEYWORD="tachyon.master.TachyonMaster"
-CONF_DIR="/etc/tachyon/conf"
-PIDFILE="/var/run/tachyon/${DAEMON}.pid"
+KEYWORD="alluxio.master.AlluxioMaster"
+CONF_DIR="/etc/alluxio/conf"
+PIDFILE="/var/run/alluxio/${DAEMON}.pid"
 
 generate_start() {
 
@@ -37,7 +37,7 @@ start() {
         exit 0
     fi
 
-    LOG_FILE=/var/log/tachyon/${DAEMON}.out
+    LOG_FILE=/var/log/alluxio/${DAEMON}.out
 
     /bin/bash -c "nohup nice -n 0 \
         ${EXEC_PATH} ${DAEMON_FLAGS} \
@@ -61,7 +61,7 @@ generate_stop() {
 cat <<'__EOT__'
 stop() {
     log_success_msg "Stopping $DESC (${DAEMON}): "
-    /usr/lib/tachyon/bin/tachyon-stop.sh master 2>&1 > /dev/null
+    /usr/lib/alluxio/bin/alluxio-stop.sh master 2>&1 > /dev/null
     RETVAL=$?
 
     [ $RETVAL -eq $RETVAL_SUCCESS ] && rm -f $LOCKFILE $PIDFILE

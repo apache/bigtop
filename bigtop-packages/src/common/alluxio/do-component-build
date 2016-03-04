@@ -18,4 +18,7 @@ set -ex
 
 . `dirname $0`/bigtop.bom
 
-mvn -q clean install -DskipTests -Dhadoop.version=$HADOOP_VERSION "$@"
+t="hadoop.version"
+sed -i "s#<$t>.*</$t>#<$t>${HADOOP_VERSION}</$t>#" pom.xml
+
+mvn clean install -DskipTests -Pspark -Pyarn "$@"
