@@ -143,6 +143,38 @@ public class TestSpecsRuntime {
           missingFiles.size() == 0)
         break
 
+      case 'dircontent':
+        def expectedFiles = []
+        new File("${testsList}", "${arguments['referenceList']}").eachLine { line ->
+          expectedFiles << line
+        }
+
+        def baseDir = getEnv(arguments['baseDirEnv'], arguments['envcmd'])
+        def subDir = arguments['subDir']
+        if (!subDir && arguments['subDirEnv']) {
+          subDir = getEnv(arguments['subDirEnv'], arguments['envcmd'])
+        }
+
+        def dir = null
+        if (subDir) {
+          dir = new File(baseDir, subDir)
+        } else {
+          dir = new File(baseDir)
+        }
+        Assert.assertNotNull("Directory has to be set for the test to continue", dir)
+
+        def actualFiles = []
+        if (dir.exists()) {
+          dir.eachFile FileType.FILES, { file ->
+            def relPath = new File( dir.toURI().relativize( file.toURI() ).toString() ).path
+            actualFiles << relPath
+          }
+        }
+
+        def commonFiles = actualFiles.intersect(expectedFiles)
+        Assert.assertTrue("${testName} fail: Directory content for ${dir.path} does not match reference. ",
+           commonFiles.size()==actualFiles.size() && commonFiles.size()==expectedFiles.size())
+        break
       case 'hadoop_tools':
         def toolsPathStr = getEnv("HADOOP_TOOLS_PATH", "hadoop envvars")
         Assert.assertNotNull("${testName} fail: HADOOP_TOOLS_PATH environment variable should be set", toolsPathStr)
