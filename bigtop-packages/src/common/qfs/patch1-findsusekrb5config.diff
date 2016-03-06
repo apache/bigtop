@@ -1,0 +1,11 @@
+--- qfs-1.1.4/cmake/Modules/FindKrb5.cmake.old	2016-03-06 11:17:38.041431320 +0100
++++ qfs-1.1.4/cmake/Modules/FindKrb5.cmake	2016-03-06 11:18:38.165433125 +0100
+@@ -25,7 +25,7 @@
+     NO_DEFAULT_PATH
+     )
+ ENDIF(KRB5_PREFIX)
+-FIND_PROGRAM(KRB5_C_CONFIG NAMES krb5-config)
++FIND_PROGRAM(KRB5_C_CONFIG NAMES krb5-config PATHS /usr/lib/mit/bin)
+ 
+ MESSAGE(STATUS "found krb5-config here ${KRB5_C_CONFIG}")
+ 

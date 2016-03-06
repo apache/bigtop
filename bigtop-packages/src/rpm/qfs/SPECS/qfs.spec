@@ -74,6 +74,7 @@ Requires: qfs-python
 Requires: qfs-webui
 
 Source0: %{qfs_name}-%{qfs_base_version}.tar.gz
+#BIGTOP_PATCH_FILES
 
 %description
 Quantcast File System (QFS) is a high-performance, fault-tolerant, distributed
@@ -168,8 +169,8 @@ Web UI for viewing Quantcast File Server chunkserver and metaserver status.
 
 echo $RPM_SOURCE_DIR
 echo $RPM_BUILD_ROOT
-exit
 
+#BIGTOP_PATCH_COMMANDS
 %build
 %if 0%{?with_python3}
 PTYHON3_PATH=%{__python3}
