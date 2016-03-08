@@ -67,7 +67,7 @@ commons-codec-1.4.jar
 jackson-core-asl-1.9.13.jar
 servlet-api-2.5.jar
 paranamer-2.3.jar
-joda-time-2.9.1.jar
+joda-time-2.9.2.jar
 hadoop-datajoin-2.7.1-odpi.jar
 jetty-6.1.26.jar
 jersey-server-1.9.jar

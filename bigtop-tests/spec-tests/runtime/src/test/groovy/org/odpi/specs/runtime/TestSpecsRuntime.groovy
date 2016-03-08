@@ -65,6 +65,29 @@ public class TestSpecsRuntime {
     return "$testsList/testRuntimeSpecConf.groovy";
   }
 
+  private Map getEnvMap(String command) {
+    def envMap = [:]
+    Shell sh = new Shell()
+    def envvars = sh.exec(command).getOut()
+    if (sh.getRet() == 0) {
+      envvars.each {
+        def match = it =~ /(?<variable>[^=]+)='(?<value>[^']+)'$/
+        if ( match.matches() ) {
+          envMap[match.group('variable')] = match.group('value')
+        }
+      }
+    }
+    return envMap
+  }
+
+  private String getEnv(String name, String cmd) {
+    String value = ENV[name]
+    if (value == null) {
+       value = getEnvMap(cmd)[name]
+    }
+    return value
+  }
+
   @Test
   public void testAll() {
     switch (type) {
@@ -80,7 +103,7 @@ public class TestSpecsRuntime {
       case 'envdir':
         def var = arguments['variable']
         def isPathRelative = arguments['relative']
-        def pathString = ENV[var]
+        def pathString = getEnv(var, arguments['envcmd'])
         Assert.assertTrue("${testName} fail: environment variable ${var} does not exist", pathString != null )
 
         if ( arguments['pattern'] ) {
@@ -92,8 +115,10 @@ public class TestSpecsRuntime {
         if ( isPathRelative ) {
             Assert.assertFalse("${testName} fail: ${pathString} is not relative", pathFile.isAbsolute() )
         } else {
-            Assert.assertTrue("${testName} fail: ${pathString} does not exist", pathFile.exists() )
-            Assert.assertTrue("${testName} fail: ${pathString} is not directory", pathFile.isDirectory() )
+            if (!arguments['donotcheckexistance']) {
+              Assert.assertTrue("${testName} fail: ${pathString} does not exist", pathFile.exists() )
+              Assert.assertTrue("${testName} fail: ${pathString} is not directory", pathFile.isDirectory() )
+            }
         }
         break
 
@@ -102,10 +127,10 @@ public class TestSpecsRuntime {
         new File("${testsList}", "${arguments['referenceList']}").eachLine { line ->
            expectedFiles << line
         }
-
-        Assert.assertNotNull("${arguments['baseDirEnv']} has to be set for the test to continue",
-          ENV["${arguments['baseDirEnv']}"])
-        def root = new File(ENV["${arguments['baseDirEnv']}"])
+        def baseDirEnv = getEnv(arguments['baseDirEnv'], arguments['envcmd'])
+        Assert.assertNotNull("${baseDirEnv} has to be set for the test to continue",
+          baseDirEnv)
+        def root = new File(baseDirEnv)
         def actualFiles = []
         if ( root.exists() ) {
           root.eachFileRecurse(FileType.ANY) { file ->
@@ -114,21 +139,51 @@ public class TestSpecsRuntime {
           }
         }
         def missingFiles = (expectedFiles - actualFiles)
-        Assert.assertTrue("${testName} fail: Directory structure for ${arguments['baseDirEnv']} does not match reference. Missing files: ${missingFiles} ",
+        Assert.assertTrue("${testName} fail: Directory structure for ${baseDirEnv} does not match reference. Missing files: ${missingFiles} ",
           missingFiles.size() == 0)
         break
 
+      case 'dircontent':
+        def expectedFiles = []
+        new File("${testsList}", "${arguments['referenceList']}").eachLine { line ->
+          expectedFiles << line
+        }
+
+        def baseDir = getEnv(arguments['baseDirEnv'], arguments['envcmd'])
+        def subDir = arguments['subDir']
+        if (!subDir && arguments['subDirEnv']) {
+          subDir = getEnv(arguments['subDirEnv'], arguments['envcmd'])
+        }
+
+        def dir = null
+        if (subDir) {
+          dir = new File(baseDir, subDir)
+        } else {
+          dir = new File(baseDir)
+        }
+        Assert.assertNotNull("Directory has to be set for the test to continue", dir)
+
+        def actualFiles = []
+        if (dir.exists()) {
+          dir.eachFile FileType.FILES, { file ->
+            def relPath = new File( dir.toURI().relativize( file.toURI() ).toString() ).path
+            actualFiles << relPath
+          }
+        }
+
+        def commonFiles = actualFiles.intersect(expectedFiles)
+        Assert.assertTrue("${testName} fail: Directory content for ${dir.path} does not match reference. ",
+           commonFiles.size()==actualFiles.size() && commonFiles.size()==expectedFiles.size())
+        break
       case 'hadoop_tools':
-        Assert.assertNotNull("${testName} fail: HADOOP_TOOLS environment variable should be set", ENV["HADOOP_TOOLS"])
-        Assert.assertTrue("${testName} fail: HADOOP_TOOLS should be set to the HADOOP_TOOLS_PATH environment variable.",
-            ENV["HADOOP_TOOLS"]== ENV["HADOOP_TOOLS_PATH"])
+        def toolsPathStr = getEnv("HADOOP_TOOLS_PATH", "hadoop envvars")
+        Assert.assertNotNull("${testName} fail: HADOOP_TOOLS_PATH environment variable should be set", toolsPathStr)
 
-        def toolsPath = new File(ENV["HADOOP_TOOLS"])
-        Assert.assertTrue("${testName} fail: HADOOP_TOOLS must be an absolute path.", toolsPath.isAbsolute())
+        def toolsPath = new File(toolsPathStr)
+        Assert.assertTrue("${testName} fail: HADOOP_TOOLS_PATH must be an absolute path.", toolsPath.isAbsolute())
 
-        Assert.assertNotNull("HADOOP_COMMON_HOME has to be set for the test to continue", ENV["HADOOP_COMMON_HOME"])
         Shell sh = new Shell()
-        def classPath = sh.exec("${ENV["HADOOP_COMMON_HOME"]}/bin/hadoop classpath").getOut().join("\n")
+        def classPath = sh.exec("hadoop classpath").getOut().join("\n")
         Assert.assertTrue("${testName} fail: Failed to retrieve hadoop's classpath", sh.getRet()==0)
 
         Assert.assertFalse("${testName} fail: The enire '${toolsPath}' path should not be included in the hadoop's classpath",
@@ -136,7 +191,7 @@ public class TestSpecsRuntime {
             new File(it).getCanonicalPath() =~ /^${toolsPath}\/?\*/
           }
         )
-      
+        break
       default:
         break
     }
