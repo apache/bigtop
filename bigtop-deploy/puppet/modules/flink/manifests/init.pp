@@ -23,16 +23,7 @@ class flink {
 
   class client {
     package { "flink":
-      ensure => latest,
-      require => Package["hadoop"],
-    }
-
-    file { "/etc/flink/conf/flink.properties":
-      content => template('flink/flink.properties'),
-      require => Package["flink"],
-      owner => "root", /* FIXME: I'm really no sure about these -- we might end  */
-      mode => "755",   /*        up deploying/testing a different thing compared */
-                       /*        to a straight rpm/deb deployment                */
+      require => Package["hadoop"]
     }
   }
 }         
