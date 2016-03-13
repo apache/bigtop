@@ -17,13 +17,14 @@ class flink {
 
   class deploy ($roles) {
     if ("flink-client" in $roles) {
-      include client
+      include flink::client
     }
   }
 
   class client {
     package { "flink":
-      require => Package["hadoop"]
+      ensure => latest,
+      require => Package["hadoop"],
     }
   }
 }         

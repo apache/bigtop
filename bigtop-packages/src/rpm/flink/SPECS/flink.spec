@@ -33,7 +33,7 @@
 Name: %{flink_name}
 Version: %{flink_version}
 Release: %{flink_release}
-Summary: Apache flink is unified stream and batch processing
+Summary: Apache Flink is an open source platform for distributed stream and batch data processing.
 License: ASL 2.0
 URL: http://flink.apache.org/
 Group: Development/Libraries
@@ -69,7 +69,6 @@ Some of the key features of Apache Flink includes.
 
 %build
 bash $RPM_SOURCE_DIR/do-component-build
-#env flink_VERSION=%{flink_base_version} bash %{SOURCE1}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT

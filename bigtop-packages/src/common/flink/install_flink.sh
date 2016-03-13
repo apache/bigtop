@@ -106,6 +106,8 @@ install -d -m 0755 $PREFIX/$DOC_DIR
 
 cp -ra ${BUILD_DIR}/lib/* $PREFIX/${LIB_DIR}/lib/
 cp -a ${BUILD_DIR}/*.txt $PREFIX/$DOC_DIR
+cp -a ${BUILD_DIR}/LICENSE $PREFIX/$DOC_DIR
+CP -a ${BUILD_DIR}/NOTICE $PREFIX/$DOC_DIR
 cp -a ${BUILD_DIR}/bin/* $PREFIX/${LIB_DIR}/bin
 rm -rf $PREFIX/${LIB_DIR}/bin/*.cmd
 
@@ -114,8 +116,12 @@ install -d -m 0755 $PREFIX/$CONF_DIR
 cp -a ${BUILD_DIR}/conf/* $PREFIX/$CONF_DIR
 ln -s /etc/flink/conf $PREFIX/$LIB_DIR/conf
 
-# Copy in the example files
+# Copy in the examples,tools,log and resources
 cp -a ${BUILD_DIR}/examples/ $PREFIX/$DOC_DIR/
+cp -ra ${BUILD_DIR}/log $PREFIX/${LIB_DIR}
+cp -ra ${BUILD_DIR}/resources $PREFIX/${LIB_DIR}
+cp -ra ${BUILD_DIR}/tools $PREFIX/${LIB_DIR}
+
  
 # Copy in the /usr/bin/flink wrapper
 install -d -m 0755 $PREFIX/$BIN_DIR
