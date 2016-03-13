@@ -301,7 +301,7 @@ bigtop {
        * HBase version in the BOM.
        */
       phoenix.hbase ='HBase-0.98'
-      version { base = "4.6.0-${phoenix.hbase}"; pkg = '4.6.0'; release = 1 }
+      version { base = "4.7.0-${phoenix.hbase}"; pkg = '4.7.0'; release = 1 }
       tarball { destination = "$name-${version.base}-src.tar.gz"
                 source      = destination }
       url     { download_path = "/$name/$name-${version.base}/src"

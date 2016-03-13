@@ -51,7 +51,7 @@
     <solr.version>4.6.0</solr.version>
     <spark.version>1.3.1</spark.version>
     <kafka.version>0.8.1.1</kafka.version>
-    <phoenix.version>4.3.1</phoenix.version>
+    <phoenix.version>4.7.0</phoenix.version>
     <kite.version>1.1.0</kite.version>
     <spark-smoke.version>${project.version}</spark-smoke.version>
 

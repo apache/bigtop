@@ -73,7 +73,6 @@
 
 %endif
 
-
 Name: phoenix
 Version: %{phoenix_version}
 Release: %{phoenix_release}
@@ -116,15 +115,6 @@ Requires: phoenix = %{version}-%{release}
 The Phoenix Query Server provides an alternative means for interaction 
 with Phoenix and HBase. Soon this will enable access from environments 
 other than the JVM.
-
-%package pherf
-Summary: Phoenix and HBase SQL Performance Test Framework
-Group: Development/Libraries
-Requires: phoenix = %{version}-%{release}
-
-%description pherf
-Pherf is a standalone tool that can perform performance and functional testing 
-through Phoenix
 
 %prep
 %setup -n %{name}-%{phoenix_base_version}-src
@@ -190,9 +180,6 @@ fi
 %{bin_phoenix}
 %config(noreplace) %{etc_phoenix_conf_dist}
 %config(noreplace) %{_sysconfdir}/default/phoenix
-
-%files pherf
-%{phoenix_home}/pherf
 
 %define service_macro() \
 %files %1 \

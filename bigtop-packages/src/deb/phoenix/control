@@ -40,8 +40,3 @@ Description: The Phoenix Query Server provides an alternative means for
  interaction with Phoenix and HBase. Soon this will enable access from 
  environments other than the JVM.
 
-Package: phoenix-pherf
-Architecture: all
-Depends: phoenix (= ${source:Version})
-Description: Pherf is a standalone tool that can perform performance and functional testing
- through Phoenix

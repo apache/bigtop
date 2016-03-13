@@ -24,7 +24,9 @@ mvn -DskipTests \
     -Dpig.version=$PIG_VERSION  \
     -Dflume.version=$FLUME_VERSION  \
     -Dspark.version=${SPARK_VERSION} \
-    clean install package "$@"
+    clean install "$@"
 rm -rf build
 mkdir build
 tar -C build --strip-components=1 -xzf phoenix-assembly/target/phoenix-$PHOENIX_VERSION.tar.gz
+cp -ra dev/release_files/* build/
+cp -ra phoenix-pherf/config build/bin/
