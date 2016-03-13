@@ -68,7 +68,7 @@ rules will be used for the CTR process:
     there're doubts in the approach taken, design decision, or implementation
     details
   * a committer should keep an eye on the official CI builds at
-    http://ci.bigtop.apache.org/job/Bigtop-trunk/ (Bigtop-trunk-packages builds)
+    https://ci.bigtop.apache.org/view/Packages/job/Bigtop-trunk-packages/ (Bigtop-trunk-packages builds)
     to make sure that committed changes haven't break anything. In
     which case the committer should take a timely effort to resolve the issues
     and unblock the others in the community
