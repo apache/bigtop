@@ -12,6 +12,7 @@ hadoop::hadoop_storage_dirs:
   - /data/4
 
 #hadoop_cluster_node::cluster_components:
+#  - apex
 #  - crunch
 #  - flume
 #  - giraph
