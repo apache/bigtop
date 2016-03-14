@@ -23,7 +23,11 @@ import org.junit.BeforeClass
 import org.junit.Test
 import static org.junit.Assert.assertEquals
 import static org.apache.bigtop.itest.LogErrorsUtils.logError
+import org.apache.bigtop.itest.JarContent
+import org.junit.experimental.categories.Category;
+import org.apache.bigtop.itest.interfaces.EssentialTests;
 
+@Category ( EssentialTests.class )
 class TestTextSnappy {
   static Shell sh = new Shell("/bin/bash -s")
   static String testDir = "testtextsnappy." + (new Date().getTime())
@@ -31,6 +35,7 @@ class TestTextSnappy {
 
   @BeforeClass
   static void  setUp() throws IOException {
+    JarContent.unpackJarContainer(TestTextSnappy.class, ".", null);
     sh.exec(
     "hadoop fs  -mkdir ${testDir}",
     "hadoop fs -put ${snappyFile} ${testDir}/${snappyFile}",
