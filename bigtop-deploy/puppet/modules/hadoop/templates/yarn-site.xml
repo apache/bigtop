@@ -145,7 +145,12 @@
     <name>yarn.log-aggregation-enable</name>
     <value>true</value>
   </property>
-
+<% if @yarn_log_server_url %>
+  <property>
+    <name>yarn.log.server.url</name>
+    <value><%= @yarn_log_server_url %></value>
+  </property>
+<% end %>
   <property>
     <name>yarn.dispatcher.exit-on-error</name>
     <value>true</value>

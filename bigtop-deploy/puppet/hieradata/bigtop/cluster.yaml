@@ -98,6 +98,10 @@ hadoop::common_yarn::hadoop_rm_port: "8032"
 
 hadoop::common_mapred_app::jobtracker_host: "%{hiera('bigtop::hadoop_head_node')}"
 hadoop::common_mapred_app::mapreduce_jobhistory_host: "%{hiera('bigtop::hadoop_head_node')}"
+# actually default but needed for hadoop::common_yarn::yarn_log_server_url here
+bigtop::hadoop_history_server_port: "19888"
+bigtop::hadoop_history_server_url: "http://%{hiera('hadoop::common_mapred_app::mapreduce_jobhistory_host')}:%{hiera('bigtop::hadoop_history_server_port')}"
+hadoop::common_yarn::yarn_log_server_url: "%{hiera('bigtop::hadoop_history_server_url')}/jobhistory/logs"
 
 # actually default but needed for hue::server::webhdfs_url here
 hadoop::httpfs::hadoop_httpfs_port: "14000"
@@ -142,7 +146,6 @@ hadoop_zookeeper::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 # those are only here because they were present as extlookup keys previously
 bigtop::hadoop_rm_http_port: "8088"
 bigtop::hadoop_rm_proxy_port: "8088"
-bigtop::hadoop_history_server_port: "19888"
 bigtop::sqoop2_server_port: "12000"
 bigtop::hbase_thrift_port: "9090"
 bigtop::hadoop_oozie_port: "11000"
@@ -150,8 +153,8 @@ bigtop::hadoop_oozie_port: "11000"
 hue::server::rm_host: "%{hiera('hadoop::common_yarn::hadoop_rm_host')}"
 hue::server::rm_port: "%{hiera('hadoop::common_yarn::hadoop_rm_port')}"
 hue::server::rm_url: "http://%{hiera('bigtop::hadoop_head_node')}:%{hiera('bigtop::hadoop_rm_http_port')}"
-hue::server::rm_proxy_url: "http://%{hiera('bigtop::hadoop_head_node')}:%{hiera('bigtop::hadoop_rm_proxy_port')}"
-hue::server::history_server_url: "http://%{hiera('bigtop::hadoop_head_node')}:%{hiera('bigtop::hadoop_history_server_port')}"
+hue::server::rm_proxy_url: "http://%{hiera('hadoop::common_yarn::hadoop_ps_host')}:%{hiera('hadoop::common_yarn::hadoop_ps_port')}"
+hue::server::history_server_url: "%{hiera('bigtop::hadoop_history_server_url')}"
 # those use fqdn instead of hadoop_head_node because it's only ever activated
 # on the gatewaynode
 hue::server::webhdfs_url: "http://%{fqdn}:%{hiera('hadoop::httpfs::hadoop_httpfs_port')}/webhdfs/v1"
