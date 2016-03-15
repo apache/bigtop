@@ -6,7 +6,6 @@ specs {
       arguments {
         envcmd = 'hadoop envvars'
         variable = 'JAVA_HOME'
-        pattern = /.*\/usr\/.*/
       }
     }
     'HADOOP_EC1' {
@@ -24,7 +23,6 @@ specs {
       arguments {
         envcmd = 'hadoop envvars'
         variable = 'HADOOP_COMMON_HOME'
-        pattern = /.*\/usr\/lib\/hadoop.*/
       }
     }
     'HADOOP_EC3' {
@@ -51,7 +49,6 @@ specs {
       arguments {
         envcmd = 'hadoop envvars'
         variable = 'HADOOP_CONF_DIR'
-        pattern = /.*\/etc\/hadoop.*/
       }
     }
     'HADOOP_EH1' {
@@ -60,7 +57,6 @@ specs {
       arguments {
         envcmd = 'hdfs envvars'
         variable = 'HADOOP_HDFS_HOME'
-        pattern = /.*\/usr\/lib\/hadoop-hdfs.*/
       }
     }
     'HADOOP_EH2' {
@@ -87,7 +83,6 @@ specs {
       arguments {
         envcmd = 'yarn envvars'
         variable = 'HADOOP_YARN_HOME'
-        pattern = /.*\/usr\/lib\/hadoop-yarn.*/
       }
     }
     'HADOOP_EY2' {
@@ -114,7 +109,6 @@ specs {
       arguments {
         envcmd = 'mapred envvars'
         variable = 'HADOOP_MAPRED_HOME'
-        pattern = /.*\/usr\/lib\/hadoop-mapreduce.*/
       }
     }
     'HADOOP_EM2' {
