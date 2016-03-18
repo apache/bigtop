@@ -26,7 +26,7 @@ distributions {
       exclude '**/*.iml'
       exclude '.gradle'
       exclude '**/build'
-      exclude 'target'
+      exclude '**/target'
       from ("$rootDir") {
         include '*.bom'
         include 'gradlew'

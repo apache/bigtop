@@ -1,3 +1,4 @@
+apex: chinmay <chinmay@apache.org>, aniruddha <aniruddha@apache.org>
 bigpetstore: jay vyas, rj nowling
 CI infra: rvs
 data generators: rj nowling, jay vyas
@@ -20,6 +21,7 @@ smoke-tests: jay vyas, david capwell
 spark: jay vyas, youngwoo kim
 sqoop: sean mackrory, youngwoo kim
 tachyon: jay vyas, huamin chen
+tajo: yeongeon kim
 test-artifacts and test-execution repos:
 tez: evans ye, oflebbe
 vagrant recipes: jay vyas, evans ye

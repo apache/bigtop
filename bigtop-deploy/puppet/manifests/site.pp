@@ -32,6 +32,12 @@ $jdk_package_name = hiera("bigtop::jdk_package_name", "jdk")
 
 stage {"pre": before => Stage["main"]}
 
+# as discussed in BIGTOP-2339 we'll have to enforce init.d until such time 
+# we have a conceptually more welcoming environment for systemd
+Service {
+  provider => init,
+}
+
 case $operatingsystem {
     /(OracleLinux|Amazon|CentOS|Fedora|RedHat)/: {
        yumrepo { "Bigtop":
