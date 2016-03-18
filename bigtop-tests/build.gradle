@@ -42,15 +42,23 @@ distributions {
       }
       from ('smoke-tests') {
         into 'bigtop-tests/smoke-tests'
-        include '**'
+        include '*.gradle'
+        include 'hcfs/**/*'
+        include 'hdfs/**/*'
+        include 'mapreduce/**/*'
+        include 'yarn/**/*'
+        include 'logger-test-config/**'
       }
       from ('smoke-tests') { // Put the driver script to the top-level
         include 'run_itest.sh'
       }
+      from ('spec-tests') {
+        into 'bigtop-tests/spec-tests'
+        include '**/*'
+      }
       from ('test-artifacts') {
         into 'bigtop-tests/test-artifacts'
         include 'hadoop/**'
-        include 'mahout/**'
         include 'pom.xml'
       }
     }

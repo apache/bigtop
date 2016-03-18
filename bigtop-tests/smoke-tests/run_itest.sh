@@ -70,13 +70,63 @@ set_hadoop_vars() {
 }
 
 
+print_cluster_info() {
+
+  # ODPI-87
+
+  echo "######################################################"
+  echo "#               CLUSTER INFORMATION                  #"
+  echo "######################################################"
+
+  which facter >/dev/null 2>&1
+  RC=$?
+  if [[ $RC == 0 ]]; then
+    echo "# OS: $(facter lsbdistdescription)"
+    echo "# ARCH: $(facter architecture)"
+    echo "# KERNEL: $(facter kernelrelease)"
+    echo "# MEMORY: $(facter memorysize)"
+  else
+    echo "# OS: $(cat /etc/issue | tr '\n' ' ')"
+    echo "# ARCH: $(uname -i)"
+    echo "# KERNEL: $(uname -a)"
+    echo "# MEMORY: $(head -n1 /proc/meminfo)"
+  fi
+
+  YARN_NODES=$(yarn node -list 2>/dev/null | egrep ^Total | sed 's/Total Nodes/Total Yarn Nodes/g')
+  echo "# $YARN_NODES"
+
+  HADOOP_VERSION=$(hadoop version 2>/dev/null | head -n1)
+  echo "# HADOOP_VERSION: $HADOOP_VERSION"
+
+}
+
 print_tests() {
   echo "######################################################"
   echo "#                     RESULTS                        #"
   echo "######################################################"
 
+  pushd `pwd`
   for TEST in $(echo $ITESTS | tr ',' '\n'); do
     TESTDIR=bigtop-tests/smoke-tests/$TEST/build
+
+    if [ -d $TESTDIR ]; then
+      cd $TESTDIR
+
+      for FILE in $(find -L reports/tests/classes -type f -name "*.html"); do
+        echo "## $TESTDIR/$FILE"
+        if [ $(which links) ]; then
+            links $FILE -dump
+        else
+            echo "PLEASE INSTALL LINKS: sudo yum -y install links"
+        fi
+        echo ""
+      done
+    fi
+  done
+
+  popd
+  for TEST in $SPEC_TESTS; do
+    TESTDIR=bigtop-tests/spec-tests/$TEST/build
 
     if [ -d $TESTDIR ]; then
       cd $TESTDIR
@@ -100,6 +150,9 @@ set_java_home
 # SET HADOOP SERVICE HOMES
 set_hadoop_vars
 
+# ODPI-87
+print_cluster_info
+
 echo "######################################################"
 echo "#                 STARTING ITEST                     #"
 echo "######################################################"
@@ -109,12 +162,16 @@ echo "# Use --debug/--info/--stacktrace for more details"
 if [ -z "$ITESTS" ]; then
   export ITESTS="hcfs,hdfs,yarn,mapreduce"
 fi
+SPEC_TESTS="runtime"
 for s in `echo $ITESTS | sed -e 's#,# #g'`; do
   ALL_SMOKE_TASKS="$ALL_SMOKE_TASKS bigtop-tests:smoke-tests:$s:test"
 done
+for s in $SPEC_TESTS; do
+  ALL_SPEC_TASKS="$ALL_SPEC_TASKS bigtop-tests:spec-tests:$s:test"
+done
 
 # CALL THE GRADLE WRAPPER TO RUN THE FRAMEWORK
-./gradlew -q clean test -Psmoke.tests $ALL_SMOKE_TASKS $@
+./gradlew -q --continue clean -Psmoke.tests $ALL_SMOKE_TASKS -Pspec.tests $ALL_SPEC_TASKS $@
 
 # SHOW RESULTS (HTML)
 print_tests
