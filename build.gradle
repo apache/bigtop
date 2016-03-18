@@ -80,6 +80,7 @@ rat {
        "bigtop-tests/smoke-tests/phoenix/*.sql",
        "bigtop-tests/smoke-tests/ignite-hadoop/*.data",
        "bigtop-tests/smoke-tests/tajo/table1/*.csv",
+       "bigtop-tests/spec-tests/runtime/src/test/resources/*",
        "**/target/**",
        "**/build/**",
        "**/.gradle/**",

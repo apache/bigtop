@@ -12,15 +12,20 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#!/bin/bash
 
-memory_size: 4096
-number_cpus: 1
-box: "puppetlabs/centos-6.6-64-nocm"
-repo: "http://repo.odpi.org/repository/ODPi/1.0/centos-6/"
-num_instances: 1
-distro: centos
-components: [hadoop, yarn]
-enable_local_repo: false
-run_smoke_tests: false
-smoke_test_components: [mapreduce,hcfs,hdfs,yarn]
-jdk: "java-1.7.0-openjdk-devel.x86_64"
+set -ex
+WORKDIR=${1:-$0.work.dir}
+echo "Cleaning $WORKDIR"
+rm -rf $WORKDIR
+mkdir -p $WORKDIR
+VERSION=${2:-1.0}
+NAME="vagrant-odpi-v$VERSION"
+# clean everything
+vagrant destroy -f
+vagrant up
+vagrant package --output $WORKDIR/${NAME}.box
+vagrant halt
+vmname=`VBoxManage  list vms | cut -d \" -f 2`
+VBoxManage export $vmname --output=$WORKDIR/${NAME}.ova --ovf20
+vagrant destroy -f
