@@ -24,7 +24,6 @@ specs {
       arguments {
         envcmd = 'hadoop envvars'
         variable = 'JAVA_HOME'
-        pattern = /.*\/usr\/.*/
       }
     }
     'HADOOP_EC1' {
@@ -42,7 +41,6 @@ specs {
       arguments {
         envcmd = 'hadoop envvars'
         variable = 'HADOOP_COMMON_HOME'
-        pattern = /.*\/usr\/lib\/hadoop.*/
       }
     }
     'HADOOP_EC3' {
@@ -69,7 +67,6 @@ specs {
       arguments {
         envcmd = 'hadoop envvars'
         variable = 'HADOOP_CONF_DIR'
-        pattern = /.*\/etc\/hadoop.*/
       }
     }
     'HADOOP_EH1' {
@@ -78,7 +75,6 @@ specs {
       arguments {
         envcmd = 'hdfs envvars'
         variable = 'HADOOP_HDFS_HOME'
-        pattern = /.*\/usr\/lib\/hadoop-hdfs.*/
       }
     }
     'HADOOP_EH2' {
@@ -105,7 +101,6 @@ specs {
       arguments {
         envcmd = 'yarn envvars'
         variable = 'HADOOP_YARN_HOME'
-        pattern = /.*\/usr\/lib\/hadoop-yarn.*/
       }
     }
     'HADOOP_EY2' {
@@ -132,7 +127,6 @@ specs {
       arguments {
         envcmd = 'mapred envvars'
         variable = 'HADOOP_MAPRED_HOME'
-        pattern = /.*\/usr\/lib\/hadoop-mapreduce.*/
       }
     }
     'HADOOP_EM2' {
@@ -339,7 +333,8 @@ specs {
       name = 'HADOOP_HNATIVE1'
       type = 'shell'
       arguments {
-        command = 'test -e $HADOOP_COMMON_HOME/lib/native/libhdfs.a'
+        command = '[ ! -n ${HADOOP_COMMON_HOME} ] || HADOOP_COMMON_HOME=`hadoop envvars | grep HADOOP_COMMON_HOME | sed "s/.*=\'\\(.*\\)\'/\\1/"`; '+
+            'test -e $HADOOP_COMMON_HOME/lib/native/libhdfs.a'
         message = 'hadoop-hdfs-project must be build with -Pnative or -Pnative-win'
       }
     }
@@ -347,7 +342,8 @@ specs {
       name = 'HADOOP_YNATIVE1'
       type = 'shell'
       arguments {
-        command = 'test -e $HADOOP_YARN_HOME/bin/container-executor'
+        command = '[ ! -n ${HADOOP_YARN_HOME} ] || HADOOP_YARN_HOME=`yarn envvars | grep HADOOP_YARN_HOME | sed "s/.*=\'\\(.*\\)\'/\\1/"`; '+
+            'echo $HADOOP_YARN_HOME; test -e $HADOOP_YARN_HOME/bin/container-executor'
         message = 'hadoop-yarn-project must be build with -Pnative or -Pnative-win'
       }
     }
