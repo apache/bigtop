@@ -12,3 +12,4 @@ target
 .gradle
 gradle*
 .vagrant
+.DS_Store
