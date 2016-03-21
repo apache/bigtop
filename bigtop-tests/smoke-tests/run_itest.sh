@@ -97,7 +97,11 @@ print_cluster_info() {
 
   HADOOP_VERSION=$(hadoop version 2>/dev/null | head -n1)
   echo "# HADOOP_VERSION: $HADOOP_VERSION"
-
+  
+  echo "# BASH_VERSION: $BASH_VERSION"
+  
+  JAVA_VERSION=$(java -version 2>&1 | head -n 1 | awk -F '"' '{print $2}')
+  echo "# JAVA_VERSION: $JAVA_VERSION"
 }
 
 print_tests() {
