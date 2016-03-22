@@ -107,7 +107,7 @@ install -d -m 0755 $PREFIX/$DOC_DIR
 cp -ra ${BUILD_DIR}/lib/* $PREFIX/${LIB_DIR}/lib/
 cp -a ${BUILD_DIR}/*.txt $PREFIX/$DOC_DIR
 cp -a ${BUILD_DIR}/LICENSE $PREFIX/$DOC_DIR
-CP -a ${BUILD_DIR}/NOTICE $PREFIX/$DOC_DIR
+cp -a ${BUILD_DIR}/NOTICE $PREFIX/$DOC_DIR
 cp -a ${BUILD_DIR}/bin/* $PREFIX/${LIB_DIR}/bin
 rm -rf $PREFIX/${LIB_DIR}/bin/*.cmd
 
@@ -126,19 +126,16 @@ cp -ra ${BUILD_DIR}/tools $PREFIX/${LIB_DIR}
 # Copy in the /usr/bin/flink wrapper
 install -d -m 0755 $PREFIX/$BIN_DIR
 cat > $PREFIX/$BIN_DIR/flink <<EOF
-
 !/bin/bash
 # Autodetect JAVA_HOME if not defined
-. /usr/lib/bigtop-utils/bigtop-detect-javahome
+./usr/lib/bigtop-utils/bigtop-detect-javahome
 
-# FIXME: flink-994
-#export HADOOP_HOME=\${HADOOP_HOME:-/usr/lib/hadoop}
-#export HADOOP_CONF_DIR=\${HADOOP_CONF_DIR:-/etc/hadoop/conf}
-#export FLINK_HOME=\${FLINK_HOME:-$INSTALLED_LIB_DIR}
-#export FLINK_CONF_DIR=\${FLINK_CONF_DIR:-$CONF_DIR}
+export HADOOP_HOME=${HADOOP_HOME:-/usr/lib/hadoop}
+export HADOOP_CONF_DIR=${HADOOP_CONF_DIR:-/etc/hadoop/conf}
+export FLINK_HOME=${FLINK_HOME:-$INSTALLED_LIB_DIR}
+export FLINK_CONF_DIR=${FLINK_CONF_DIR:-$CONF_DIR}
 # FIXME: the following line is a workaround for BIGTOP-259 
 #export HADOOP_CLASSPATH="`echo /usr/lib/flink/flink-examples-*-job.jar`":\$HADOOP_CLASSPATH
 #exec $INSTALLED_LIB_DIR/bin/flink "\$@"
-
 EOF
 chmod 755 $PREFIX/$BIN_DIR/flink

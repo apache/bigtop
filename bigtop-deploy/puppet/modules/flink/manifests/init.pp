@@ -27,4 +27,9 @@ class flink {
       require => Package["hadoop"],
     }
   }
+
+  file { '/etc/flink/conf/flink-conf.yaml':
+	content => template('flink/flink-conf.yaml'),
+	require => Package['flink'],
+  }
 }         
