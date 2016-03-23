@@ -167,7 +167,7 @@ specs {
       name = 'HADOOP_PLATVER'
       type = 'shell'
       arguments {
-        command = 'hadoop version | head -n 1 | grep -E \'Hadoop\\s+[0-9\\.]+-[A-Za-z_0-9]+\''
+        command = 'hadoop version | head -n 1 | grep -E \'Hadoop\\s+[0-9\\.]+[_\-][A-Za-z_0-9]+\''
         message = 'Hadoop\'s version string is not correct'
       }
     }
@@ -176,7 +176,7 @@ specs {
       type = 'shell'
       arguments {
         command = 'grep -E \'STARTUP_MSG:\\s+version\' `find /var/log/ -path "*hadoop*" -name "*.log" | head -n 1` ' +
-        '| sed \'s/[^=]\\+= //\' | grep -E \'[0-9\\.]+-[A-Za-z_0-9]+\''
+        '| sed \'s/[^=]\\+= //\' | grep -E \'[0-9\\.]+[_\-][A-Za-z_0-9]+\''
         message = 'Log files do not contain correct correct version'
       }
     }
