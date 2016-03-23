@@ -22,8 +22,8 @@ usage() {
 usage: $0 <options>
   Required not-so-options:
      --prefix=PREFIX                  path to install into
+     --source-dir=DIR                 path to package shared files dir
      --qfs-version=VERSION            version of qfs we are installing
-     --hadoop-version=VERSION         version of hadoop qfs built against
      --python=PYTHON                  the path to python
 
   Optional options:
@@ -46,6 +46,7 @@ usage: $0 <options>
 OPTS=$(getopt \
   -n $0 \
   -o '' \
+  -l 'source-dir:' \
   -l 'prefix:' \
   -l 'bin-dir:' \
   -l 'lib-dir:' \
@@ -55,7 +56,6 @@ OPTS=$(getopt \
   -l 'var-dir:' \
   -l 'hadoop-home:' \
   -l 'qfs-version:' \
-  -l 'hadoop-version:' \
   -l 'python:' \
   -l 'python3:' \
   -l 'python-extra:' \
@@ -68,6 +68,9 @@ fi
 eval set -- "$OPTS"
 while true ; do
     case "$1" in
+        --source-dir)
+            SOURCE_DIR=$2 ; shift 2
+            ;;
         --prefix)
             PREFIX=$2 ; shift 2
             ;;
@@ -95,9 +98,6 @@ while true ; do
         --qfs-version)
             QFS_VERSION=$2 ; shift 2
             ;;
-        --hadoop-version)
-            HADOOP_VERSION=$2 ; shift 2
-            ;;
         --python)
             PYTHON_PATH=$2 ; shift 2
             ;;
@@ -118,12 +118,16 @@ while true ; do
     esac
 done
 
-for var in PREFIX QFS_VERSION HADOOP_VERSION PYTHON_PATH ; do
+for var in SOURCE_DIR PREFIX QFS_VERSION PYTHON_PATH ; do
   if [ -z "$(eval "echo \$$var")" ]; then
     echo Missing required param: $var
     usage
   fi
 done
+
+if [ -f "$SOURCE_DIR/bigtop.bom" ]; then
+  . $SOURCE_DIR/bigtop.bom
+fi
 
 PREFIX=$(readlink -f $PREFIX)
 BIN_DIR=$PREFIX/${BIN_DIR:-/usr/bin/qfs}
