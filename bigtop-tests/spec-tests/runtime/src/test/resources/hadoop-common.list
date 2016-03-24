@@ -15,11 +15,8 @@ etc/hadoop
 hadoop-common([^.0-9].*)?\.jar
 hadoop-auth-2\.7\.[0-9]([^.0-9].*)?\.jar
 libexec
-libexec/init-hcfs\.groovy
-libexec/init-hcfs\.json
 libexec/hdfs-config\.sh
 libexec/hadoop-layout\.sh
-libexec/kms-config\.sh
 libexec/yarn-config\.sh
 libexec/mapred-config\.sh
 libexec/hadoop-config\.sh
