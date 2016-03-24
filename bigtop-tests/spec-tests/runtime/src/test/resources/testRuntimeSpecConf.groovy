@@ -300,7 +300,7 @@ specs {
       name = 'HADOOP_GETCONF'
       type = 'shell'
       arguments {
-        command = '[ `hdfs getconf -confKey dfs.permissions.superusergroup` == "hadoop" ]'
+        command = '[ `hdfs getconf -confKey dfs.permissions.superusergroup >/dev/null 2>/dev/null; echo $?` == "0" ]'
         message = 'It\' not possible to to determine key Hadoop configuration values by using ${HADOOP_HDFS_HOME}/bin/hdfs getconf'
       }
     }
