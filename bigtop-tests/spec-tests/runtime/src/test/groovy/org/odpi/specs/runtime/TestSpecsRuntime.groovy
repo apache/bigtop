@@ -125,20 +125,36 @@ public class TestSpecsRuntime {
       case 'dirstruct':
         def expectedFiles = []
         new File("${testsList}", "${arguments['referenceList']}").eachLine { line ->
-           expectedFiles << line
+           expectedFiles << ~line
         }
         def baseDirEnv = getEnv(arguments['baseDirEnv'], arguments['envcmd'])
         Assert.assertNotNull("${baseDirEnv} has to be set for the test to continue",
           baseDirEnv)
         def root = new File(baseDirEnv)
         def actualFiles = []
-        if ( root.exists() ) {
-          root.eachFileRecurse(FileType.ANY) { file ->
-            def relPath = new File( root.toURI().relativize( file.toURI() ).toString() ).path
-            actualFiles << relPath
+        def missingFiles = []
+        if ( ! root.exists() ) {
+          Assert.assertFail("${testName} fail: ${baseDirEnv} does not exist!");
+        }
+
+        root.eachFileRecurse(FileType.ANY) { file ->
+          def relPath = new File( root.toURI().relativize( file.toURI() ).toString() ).path
+          actualFiles << relPath
+        }
+
+        expectedFiles.each { wantFile ->
+          def ok = false
+          for (def x : actualFiles) {
+            if (actualFiles =~ wantFile) {
+              ok = true
+              break
+            }
+          }
+          if (!ok) {
+            missingFiles << wantFile
           }
         }
-        def missingFiles = (expectedFiles - actualFiles)
+
         Assert.assertTrue("${testName} fail: Directory structure for ${baseDirEnv} does not match reference. Missing files: ${missingFiles} ",
           missingFiles.size() == 0)
         break
