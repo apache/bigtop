@@ -15,18 +15,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# For debugging:
-# set -ex
+set -ex
 
-# Autodetect JAVA_HOME if not defined
-source /usr/lib/bigtop-utils/bigtop-detect-javahome
+. `dirname $0`/bigtop.bom
 
 usage() {
     echo "
 usage: $0 <options>
   Required not-so-options:
      --qfs-version=VERSION         version of qfs we are installing
-     --hadoop-version=VERSION      version of hadoop qfs built against
      --python=PATH                 path to python
 
   Optional options:
@@ -38,7 +35,6 @@ usage: $0 <options>
 OPTS=$(getopt \
     -n $0 \
     -o '' \
-    -l 'hadoop-version:' \
     -l 'qfs-version:' \
     -l 'python:' \
     -l 'python3:' \
@@ -51,9 +47,6 @@ fi
 eval set -- "$OPTS"
 while true ; do
     case "$1" in
-        --hadoop-version)
-            HADOOP_VERSION=$2 ; shift 2
-            ;;
         --qfs-version)
             QFS_VERSION=$2 ; shift 2
             ;;
@@ -74,7 +67,7 @@ while true ; do
     esac
 done
 
-for var in QFS_VERSION HADOOP_VERSION PYTHON_PATH ; do
+for var in QFS_VERSION PYTHON_PATH ; do
     if [ -z "$(eval "echo \$$var")" ]; then
         echo Missing required param: $var
         usage

@@ -23,12 +23,6 @@
 %define var_dir /var
 %define qfs_services chunkserver metaserver webui
 
-%global HADOOP_VERSION %{hadoop_version}
-
-%if %{?!HADOOP_VERSION:1}0
-%global HADOOP_VERSION 1.0.4
-%endif
-
 %if %{?!HADOOP_HOME:1}0
 %global HADOOP_HOME /usr/lib/hadoop
 %endif
@@ -177,7 +171,6 @@ PTYHON3_PATH=%{__python3}
 %endif # with_python3
 
 bash $RPM_SOURCE_DIR/do-component-build \
-    --hadoop-version=%{HADOOP_VERSION} \
     --qfs-version=%{qfs_version} \
     --python=%{__python} \
     --python3=$PYTHON3_PATH
@@ -187,8 +180,8 @@ rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT
 
 sh $RPM_SOURCE_DIR/install_qfs.sh \
+    --source-dir=$RPM_SOURCE_DIR \
     --prefix=$RPM_BUILD_ROOT \
-    --hadoop-version=%{HADOOP_VERSION} \
     --qfs-version=%{qfs_version} \
     --python=%{__python} \
     --python3=$PYTHON3_PATH \
@@ -342,7 +335,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files hadoop
 %defattr(-,root,root,-)
-%{HADOOP_HOME}/lib/hadoop-%{HADOOP_VERSION}-qfs-%{qfs_version}.jar
+%{HADOOP_HOME}/lib/hadoop-%{hadoop_version}-qfs-%{qfs_version}.jar
 
 %files java
 %defattr(-,root,root,-)
