@@ -162,7 +162,7 @@ public class TestSpecsRuntime {
       case 'dircontent':
         def expectedFiles = []
         new File("${testsList}", "${arguments['referenceList']}").eachLine { line ->
-          expectedFiles << line
+          expectedFiles << ~line
         }
 
         def baseDir = getEnv(arguments['baseDirEnv'], arguments['envcmd'])
@@ -187,9 +187,37 @@ public class TestSpecsRuntime {
           }
         }
 
+        def missingList = []
+        for (def wantFile : expectedFiles) {
+          def ok = false
+          for (def haveFile : actualFiles) {
+            if (haveFile =~ wantFile) {
+              ok = true
+              break
+            }
+          }
+          if (! ok) {
+            missingList << wantFile
+          }
+        }
+
+        def extraList = []
+        for (def haveFile : actualFiles) {
+          def ok = false
+          for (def wantFile : expectedFiles) {
+            if (haveFile =~ wantFile) {
+              ok = true
+              break
+            }
+          }
+          if (! ok) {
+            extraList << haveFile
+          }
+        }
+
         def commonFiles = actualFiles.intersect(expectedFiles)
-        Assert.assertTrue("${testName} fail: Directory content for ${dir.path} does not match reference. ",
-           commonFiles.size()==actualFiles.size() && commonFiles.size()==expectedFiles.size())
+        Assert.assertTrue("${testName} fail: Directory content for ${dir.path} does not match reference. Missing files: ${missingList}. Extra files: ${extraList}",
+           missingList.size() == 0 && extraList.size() == 0)
         break
       case 'hadoop_tools':
         def toolsPathStr = getEnv("HADOOP_TOOLS_PATH", "hadoop envvars")

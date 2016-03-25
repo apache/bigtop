@@ -1,4 +1,4 @@
-hadoop-annotations.jar
-hadoop-auth.jar
-hadoop-common.jar
-hadoop-nfs.jar
+hadoop-annotations\.jar
+hadoop-auth\.jar
+hadoop-common\.jar
+hadoop-nfs\.jar
