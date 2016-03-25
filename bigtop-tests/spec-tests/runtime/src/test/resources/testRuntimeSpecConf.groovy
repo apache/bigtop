@@ -167,7 +167,7 @@ specs {
       name = 'HADOOP_PLATVER'
       type = 'shell'
       arguments {
-        command = 'hadoop version | head -n 1 | grep -E \'Hadoop\\s+[0-9\\.]+[_\-][A-Za-z_0-9]+\''
+        command = 'hadoop version | head -n 1 | grep -E \'Hadoop\\s+[0-9\\.]+[_\\-][A-Za-z_0-9]+\''
         message = 'Hadoop\'s version string is not correct'
       }
     }
