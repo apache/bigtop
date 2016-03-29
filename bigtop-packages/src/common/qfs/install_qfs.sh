@@ -237,5 +237,4 @@ cd ..
 
 mkdir -p $VAR_DIR/metaserver/checkpoint
 mkdir -p $VAR_DIR/log/qfs
-mkdir -p $VAR_DIR/run/qfs
 mkdir -p $VAR_DIR/lib/qfs
