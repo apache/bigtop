@@ -12,7 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-repo: "http://bigtop01.cloudera.org:8080/view/Releases/job/Bigtop-0.8.0/label=centos6/6/artifact/output/"
+repo: "http://bigtop-repos.s3.amazonaws.com/releases/1.1.0/centos/6/x86_64"
 num_instances: 1
 distro: centos
 components: [hadoop, yarn]
