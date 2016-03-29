@@ -40,7 +40,12 @@ start() {
 
     echo "Starting $DESC: "
 
-    mkdir -p $(dirname $PIDFILE)
+    # Debian doesn't like us to package anything inside /var/run. We create the
+    # directory here and set permissions as necessary for both debian and rpm
+    mkdir -p /var/run/qfs
+    chown qfs:qfs -R /var/run/qfs
+    chmod 755 /var/run/qfs
+
     su -s /bin/bash $SVC_USER -c "cd $WORKING_DIR && nohup $EXEC_PATH $CONF_DIR/$CONF_FILE > $LOGFILE 2>&1 < /dev/null & "'echo $! '"> $PIDFILE"
     sleep 3
 

@@ -21,7 +21,6 @@ case "$1" in
     configure)
         update-rc.d qfs-metaserver defaults >/dev/null || exit 1
         chown qfs:qfs -R /var/log/qfs
-        chown qfs:qfs -R /var/run/qfs
         chown qfs:qfs -R /var/lib/qfs
     ;;
     abort-upgrade|abort-remove|abort-deconfigure)
