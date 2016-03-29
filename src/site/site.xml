@@ -61,7 +61,6 @@
       <item name="Powered by" href="https://cwiki.apache.org/confluence/display/BIGTOP/Powered+By+Bigtop" />
       <item name="Who We Are" href="team-list.html" />
       <item name="Feedback" href="issue-tracking.html" />
-      <item name="User Guide" href="book/apache-bigtop-user-guide/apache-bigtop-user-guide.html" />
     </menu>
 
     <menu name="Releases">

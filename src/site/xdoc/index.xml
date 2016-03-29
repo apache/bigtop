@@ -64,7 +64,7 @@
 				Apache Bigtop uses Jenkins for continuous integration testing (you can learn more about Jenkins
 				<a href="http://jenkins-ci.org/">here</a>
 				).
-				There are 2 Jenkins servers currently running for the project:
+				There is a Jenkins server currently running for the project:
 			</p>
 			<ul>
 				<li>

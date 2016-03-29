@@ -389,61 +389,6 @@
     <plugins>
       <!--Build the documentation. We build it twice. Once as a single page and then again as multipage. -->
       <plugin>
-        <groupId>com.agilejava.docbkx</groupId>
-        <artifactId>docbkx-maven-plugin</artifactId>
-        <version>2.0.14</version>
-        <inherited>false</inherited>
-        <dependencies>
-          <dependency>
-            <groupId>org.docbook</groupId>
-            <artifactId>docbook-xml</artifactId>
-            <version>4.4</version>
-            <scope>runtime</scope>
-          </dependency>
-        </dependencies>
-        <configuration>
-          <sourceDirectory>${basedir}/src/site/docbookx/</sourceDirectory>
-          <targetDirectory>${basedir}/target/site/book/</targetDirectory>
-          <htmlCustomization>${basedir}/src/site/docbookx/customization.xsl
-          </htmlCustomization>
-          <chunkerOutputEncoding>UTF-8</chunkerOutputEncoding>
-          <sectionAutolabelMaxDepth>100</sectionAutolabelMaxDepth>
-          <sectionAutolabel>true</sectionAutolabel>
-          <sectionLabelIncludesComponentLabel>true
-          </sectionLabelIncludesComponentLabel>
-          <tocMaxDepth>2</tocMaxDepth>
-          <insertXrefPageNumber>yes</insertXrefPageNumber>
-          <xincludeSupported>true</xincludeSupported>
-          <useIdAsFilename>true</useIdAsFilename>
-        </configuration>
-        <executions>
-          <execution>
-            <id>multipage</id>
-            <goals>
-              <goal>generate-html</goal>
-            </goals>
-            <phase>pre-site</phase>
-            <configuration>
-              <navigShowtitles>true</navigShowtitles>
-              <chunkedOutput>true</chunkedOutput>
-              <imgSrcPath>../../images/</imgSrcPath>
-              <htmlStylesheet>../../css/freebsd_docbook.css</htmlStylesheet>
-            </configuration>
-          </execution>
-          <execution>
-            <id>doc</id>
-            <goals>
-              <goal>generate-pdf</goal>
-            </goals>
-            <phase>pre-site</phase>
-            <configuration>
-              <showXslMessages>true</showXslMessages>
-              <imgSrcPath>${basedir}/src/site/resources/images/</imgSrcPath>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
         <executions>
