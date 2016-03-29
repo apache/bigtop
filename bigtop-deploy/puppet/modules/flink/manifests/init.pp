@@ -16,20 +16,25 @@
 class flink {
 
   class deploy ($roles) {
-    if ("flink-client" in $roles) {
-      include flink::client
+    if ("flink-worker" in $roles) {
+      include flink::common
+    }
+    if ("flink-master" in $roles) {
+      include flink::common
     }
   }
 
-  class client {
+  class common 
+{
     package { "flink":
       ensure => latest,
       require => Package["hadoop"],
     }
-  }
+  
 
   file { '/etc/flink/conf/flink-conf.yaml':
 	content => template('flink/flink-conf.yaml'),
 	require => Package['flink'],
   }
+}
 }         

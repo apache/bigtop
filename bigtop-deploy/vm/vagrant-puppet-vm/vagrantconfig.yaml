@@ -17,9 +17,9 @@ memory_size: 4096
 number_cpus: 1
 box: "puppetlabs/centos-7.0-64-nocm"
 repo: "http://bigtop-repos.s3.amazonaws.com/releases/1.1.0/centos/7/x86_64"
-num_instances: 1
+num_instances: 2 
 distro: centos
-components: [hadoop, yarn, pig, flink]
+components: [hadoop, yarn, flink]
 enable_local_repo: true
 run_smoke_tests: false
 smoke_test_components: [mapreduce, pig]

@@ -90,7 +90,8 @@ $roles_map = {
     client => ["pig-client"],
   },
   flink => {
-    client => ["flink-client"],
+    master => ["flink-master"],
+    worker => ["flink-worker"],
   },
   hive => {
     client => ["hive-client"],
