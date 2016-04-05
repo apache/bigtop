@@ -137,7 +137,7 @@ hadoop_cluster_node::cluster_components:
   - yarn
   - zookeeper
 bigtop::jdk_package_name: "openjdk-7-jre-headless"
-bigtop::bigtop_repo_uri: "http://bigtop.s3.amazonaws.com/releases/1.0.0/ubuntu/trusty/x86_64"
+bigtop::bigtop_repo_uri: "http://bigtop-repos.s3.amazonaws.com/releases/1.1.0/ubuntu/trusty/x86_64"
 ```
 
 And finally execute
