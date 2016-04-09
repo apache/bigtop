@@ -1,1 +1,1 @@
-hadoop-fuse: new-package-should-close-itp-bug
+hadoop-hdfs-fuse: new-package-should-close-itp-bug

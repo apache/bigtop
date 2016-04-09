@@ -4,4 +4,3 @@
 /usr/bin
 /var/lib/hadoop-mapreduce/cache
 /var/log/hadoop-mapreduce
-/var/run/hadoop-mapreduce

@@ -18,7 +18,7 @@ Section: misc
 Priority: extra
 Maintainer: Bigtop <dev@bigtop.apache.org>
 Build-Depends: debhelper (>= 7.0.50~), liblzo2-dev, libzip-dev, sharutils, g++ (>= 4), libfuse-dev, libssl-dev, cmake, pkg-config
-Standards-Version: 3.8.0
+Standards-Version: 3.9.1
 Homepage: http://hadoop.apache.org/core/
 
 Package: hadoop
@@ -81,7 +81,8 @@ Description: The Hadoop MapReduce (MRv2)
 
 Package: hadoop-hdfs-fuse
 Architecture: any
-Depends: ${shlibs:Depends}, hadoop-hdfs (= ${binary:Version}), hadoop-client (= ${binary:Version}), libfuse2, fuse-utils|fuse, bigtop-utils (>= 0.7)
+Depends: ${shlibs:Depends}, hadoop-hdfs (= ${binary:Version}), hadoop-client (= ${binary:Version}), bigtop-utils (>= 0.7)
+Pre-Depends: fuse
 Enhances: hadoop
 Description: Mountable HDFS
  These projects (enumerated below) allow HDFS to be mounted (on most flavors of Unix) as a standard file system using

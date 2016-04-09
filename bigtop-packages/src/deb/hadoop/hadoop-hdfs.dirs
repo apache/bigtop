@@ -4,4 +4,3 @@
 /usr/bin
 /var/lib/hadoop-hdfs/cache
 /var/log/hadoop-hdfs
-/var/run/hadoop-hdfs
