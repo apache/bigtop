@@ -15,11 +15,8 @@
 
 class bigtop_toolchain::gradle {
 
-  include bigtop_toolchain::deps
-
   exec {"/usr/bin/wget http://services.gradle.org/distributions/gradle-2.7-bin.zip":
     cwd     => "/usr/src",
-    require => Package[$packages::pkgs],
     unless  => "/usr/bin/test -f /usr/src/gradle-2.7-bin.zip",
   }
 

@@ -15,8 +15,6 @@
 
 class bigtop_toolchain::protobuf {
 
-  include bigtop_toolchain::deps
-
   case $operatingsystem{
     /Ubuntu|Debian/: {
       case $architecture {
