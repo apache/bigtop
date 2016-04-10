@@ -56,7 +56,7 @@ case ${ID}-${VERSION_ID} in
 	apt-get update
 	apt-get -y install curl sudo unzip wget puppet
 	;;
-    opensuse-13.2)
+    opensuse-*)
 	zypper --gpg-auto-import-keys install -y curl sudo unzip wget puppet suse-release ca-certificates-mozilla net-tools tar
 	;;
     centos-6*)
