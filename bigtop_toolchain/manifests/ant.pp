@@ -16,9 +16,9 @@
 class bigtop_toolchain::ant {
   $ant =  'apache-ant-1.9.6'
 
-  include bigtop_toolchain::deps
+  $apache_prefix = nearest_apache_mirror()
 
-  exec {"/usr/bin/wget http://archive.apache.org/dist/ant/binaries/$ant-bin.tar.gz":
+  exec {"/usr/bin/wget $apache_prefix/ant/binaries/$ant-bin.tar.gz":
     cwd     => "/usr/src",
     unless  => "/usr/bin/test -f /usr/src/$ant-bin.tar.gz",
   }
@@ -26,7 +26,7 @@ class bigtop_toolchain::ant {
   exec {"/bin/tar xvzf /usr/src/$ant-bin.tar.gz":
     cwd         => '/usr/local',
     creates     => "/usr/local/$ant",
-    require     => Exec["/usr/bin/wget http://archive.apache.org/dist/ant/binaries/$ant-bin.tar.gz"],
+    require     => Exec["/usr/bin/wget $apache_prefix/ant/binaries/$ant-bin.tar.gz"],
   }
 
   file {'/usr/local/ant':
