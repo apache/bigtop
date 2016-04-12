@@ -38,6 +38,7 @@
         <include>gradle*</include>
         <include>docs/**</include>
         <include>docker/**</include>
+        <include>provisioner/**</include>
         <include>src/**</include>
         <include>test/**</include>
         <include>*.bom</include>
