@@ -34,7 +34,7 @@ usage() {
 
 create() {
     # Create a shared /etc/hosts and hiera.yaml that will be both mounted to each container soon
-    mkdir config 2> /dev/null
+    mkdir -p config/hieradata 2> /dev/null
     cat /dev/null > ./config/hiera.yaml
     cat /dev/null > ./config/hosts
     export DOCKER_IMAGE=$(get-yaml-config docker image)
@@ -67,7 +67,8 @@ create() {
 generate-hosts() {
     nodes=(`docker-compose ps -q`)
     for node in ${nodes[*]}; do
-        echo `docker inspect --format "{{.NetworkSettings.IPAddress}} {{.Config.Hostname}}.{{.Config.Domainname}}" $node` >> ./config/hosts
+        entry=`docker inspect --format "{{.NetworkSettings.IPAddress}} {{.Config.Hostname}}.{{.Config.Domainname}}" $node`
+        docker exec ${nodes[0]} bash -c "echo $entry >> /etc/hosts"
     done
     wait
 
