@@ -39,7 +39,7 @@ class hue {
                $base_dn = undef , $bind_dn = undef, $bind_password = undef,
                $user_name_attr = undef, $user_filter = undef,
                $group_member_attr = undef, $group_filter = undef,
-               $hue_apps = "all" ) {
+               $hue_apps = "all", $default_hdfs_superuser = "hdfs" ) {
 
     $hue_packages = $hue_apps ? {
       "all"     => [ "hue", "hue-server" ], # The hue metapackage requires all apps
