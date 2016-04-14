@@ -80,6 +80,7 @@ export TAJO_PID_DIR=/var/run/tajo
 
 # A string representing this instance of tajo. $USER by default.
 # export TAJO_IDENT_STRING=$USER
+export TAJO_IDENT_STRING=tajo
 
 # The scheduling priority for daemon processes.  See 'man nice'.
 # export TAJO_NICENESS=10
