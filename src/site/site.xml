@@ -79,6 +79,11 @@
       <item name="IRC channel" href="irc-channel.html" />
     </menu>
 
+    <menu name="Downloads">
+      <item name="Latest release" href="download.html#releases"/>
+      <item name="Snapshots" href="download.html#snapshots"/>
+    </menu>
+
     <menu name="ASF">
       <item name="How Apache Works" href="http://www.apache.org/foundation/how-it-works.html"/>
       <item name="Foundation" href="http://www.apache.org/foundation/"/>

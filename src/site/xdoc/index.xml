@@ -53,7 +53,7 @@
 			<br />
 
 			<subsection name="Download latest release of Bigtop"></subsection>
-			<p><a href="http://www.apache.org/dist/bigtop/bigtop-1.1.0/">Bigtop-1.1.0</a> </p>
+			<p><a href="download.html#releases">Bigtop-1.1.0</a> </p>
 
 			<subsection name="All required tools will be installed by ./gradlew toolchain"></subsection>
 			<p>However place supply a suitable JRE (for instance openjdk7) first</p>
