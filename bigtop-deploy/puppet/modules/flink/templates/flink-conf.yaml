@@ -25,13 +25,13 @@
 # The JobManager process will use this hostname to bind the listening servers to.
 # The TaskManagers will try to connect to the JobManager on that host.
 
-jobmanager.rpc.address: localhost
+jobmanager.rpc.address: bigtop1.vagrant
 
 
 # The port where the JobManager's main actor system listens for messages.
 
 jobmanager.rpc.port: 6123
-
+taskmanager.rpc.port: 6122
 
 # The heap size for the JobManager JVM
 

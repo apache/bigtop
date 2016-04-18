@@ -23,7 +23,7 @@ Homepage: http://flink.apache.org
 
 Package: flink
 Architecture: all
-Depends: hadoop-client, bigtop-utils (>= 0.7)
+Depends: bigtop-utils (>= 0.7)
 Description: Flink’s core is a streaming dataflow engine that provides data 
              distribution, communication, and fault tolerance for distributed 
              computations over data streams.

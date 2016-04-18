@@ -92,17 +92,21 @@ for var in PREFIX BUILD_DIR ; do
 done
 
 #MAN_DIR=${MAN_DIR:-/usr/share/man/man1}
-DOC_DIR=${DOC_DIR:-/usr/share/doc/flink}
+
 LIB_DIR=${LIB_DIR:-/usr/lib/flink}
 INSTALLED_LIB_DIR=${INSTALLED_LIB_DIR:-/usr/lib/flink}
-EXAMPLES_DIR=${EXAMPLES_DIR:-$DOC_DIR/examples}
 BIN_DIR=${BIN_DIR:-/usr/bin}
 CONF_DIR=${CONF_DIR:-/etc/flink/conf.dist}
+EXAMPLES_DIR=${EXAMPLES_DIR:-$DOC_DIR/examples}
+DOC_DIR=${DOC_DIR:-/usr/share/doc/flink}
 
 install -d -m 0755 $PREFIX/$LIB_DIR
 install -d -m 0755 $PREFIX/$LIB_DIR/bin
 install -d -m 0755 $PREFIX/$LIB_DIR/lib
 install -d -m 0755 $PREFIX/$DOC_DIR
+install -d -m 0755 $PREFIX/var/lib/flink
+install -d -m 0755 $PREFIX/var/log/flink
+install -d -m 0755 $PREFIX/var/run/flink
 
 cp -ra ${BUILD_DIR}/lib/* $PREFIX/${LIB_DIR}/lib/
 cp -a ${BUILD_DIR}/*.txt $PREFIX/$DOC_DIR
@@ -122,20 +126,21 @@ cp -ra ${BUILD_DIR}/log $PREFIX/${LIB_DIR}
 cp -ra ${BUILD_DIR}/resources $PREFIX/${LIB_DIR}
 cp -ra ${BUILD_DIR}/tools $PREFIX/${LIB_DIR}
 
- 
+
 # Copy in the /usr/bin/flink wrapper
 install -d -m 0755 $PREFIX/$BIN_DIR
 cat > $PREFIX/$BIN_DIR/flink <<EOF
-!/bin/bash
+#!/bin/bash
 # Autodetect JAVA_HOME if not defined
-./usr/lib/bigtop-utils/bigtop-detect-javahome
+/usr/lib/bigtop-utils/bigtop-detect-javahome
 
 export HADOOP_HOME=${HADOOP_HOME:-/usr/lib/hadoop}
 export HADOOP_CONF_DIR=${HADOOP_CONF_DIR:-/etc/hadoop/conf}
 export FLINK_HOME=${FLINK_HOME:-$INSTALLED_LIB_DIR}
 export FLINK_CONF_DIR=${FLINK_CONF_DIR:-$CONF_DIR}
-# FIXME: the following line is a workaround for BIGTOP-259 
-#export HADOOP_CLASSPATH="`echo /usr/lib/flink/flink-examples-*-job.jar`":\$HADOOP_CLASSPATH
-#exec $INSTALLED_LIB_DIR/bin/flink "\$@"
+
+exec $INSTALLED_LIB_DIR/bin/flink "\$@"
 EOF
 chmod 755 $PREFIX/$BIN_DIR/flink
+#chmod 755 $PREFIX/$LIB_DIR/log/*
+#chmod 755 $PREFIX/$CONF_DIR/*

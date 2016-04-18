@@ -124,6 +124,7 @@ hcatalog::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 hcatalog::webhcat::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 
 spark::common::master_host: "%{hiera('bigtop::hadoop_head_node')}"
+flink::common::master_name: "%{hiera('bigtop::hadoop_head_node')}"
 
 tachyon::common::master_host: "%{hiera('bigtop::hadoop_head_node')}"
 

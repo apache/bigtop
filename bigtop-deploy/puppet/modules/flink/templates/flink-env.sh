@@ -1,5 +1,4 @@
-#!/usr/bin/make -f
-
+#!/usr/bin/env bash
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -14,27 +13,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# -*- makefile -*-
 
-# Uncomment this to turn on verbose mode.
-export DH_VERBOSE=1
+export FLINK_HOME=${FLINK_HOME:-/usr/lib/flink}
+export FLINK_LOG_DIR=${FLINK_LOG_DIR:-/var/log/flink}
+export HADOOP_HOME=${HADOOP_HOME:-/usr/lib/hadoop}
+export HADOOP_CONF_DIR=${HADOOP_CONF_DIR:-/etc/hadoop/conf}
 
-# This has to be exported to make some magic below work.
-export DH_OPTIONS
-
-%:
-	dh $@
-
-override_dh_auto_build:
-	bash debian/do-component-build
-
-
-#$(svcs): debian/init.d.tmpl
-#	sh $< debian/$@.svc deb debian/$@.init
-#	touch $@
-
-override_dh_auto_install:
-	sh -x debian/install_flink.sh \
-	--build-dir=`pwd`/flink-dist/target/flink-1.0.0-bin/flink-1.0.0 \
-	--doc-dir=/usr/share/doc/flink \
-	--prefix=debian/tmp
+export FLINK_MASTER_HOST=bigtop1.vagrant
+export FLINK_MASTER_PORT=<%= @master_port %>
+export FLINK_MASTER_IP=$FLINK_MASTER_HOST
+export FLINK_MASTER_WEBUI_PORT=<%= @master_ui_port %>
