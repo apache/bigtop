@@ -22,6 +22,8 @@ class bigtop_toolchain::protobuf {
                     $arch= "amd64" }
         'ppc64le' : { $url = "https://launchpad.net/ubuntu/+source/protobuf/2.5.0-9ubuntu1/+build/5604345/+files"
                     $arch= "ppc64el" }
+        'aarch64' : { $url = "https://launchpad.net/ubuntu/+source/protobuf/2.5.0-9ubuntu1/+build/5585372/+files"
+                    $arch= "arm64" }
       }
     }
   }

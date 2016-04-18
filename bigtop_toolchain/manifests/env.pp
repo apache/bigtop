@@ -17,6 +17,7 @@ class bigtop_toolchain::env {
   case $architecture {
     'amd64' : { $arch= "amd64" }
     'ppc64le' : { $arch= "ppc64el" }
+    'aarch64' : { $arch = "arm64" }
   }
   case $operatingsystem {
     'Ubuntu','Debian': {
