@@ -20,7 +20,11 @@ repo: "http://bigtop-repos.s3.amazonaws.com/releases/1.1.0/centos/7/x86_64"
 num_instances: 2 
 distro: centos
 components: [hadoop, yarn, flink]
+<<<<<<< HEAD
 enable_local_repo: true 
+=======
+enable_local_repo: true
+>>>>>>> 64a00c45c9e21ac2ad39a334666b9dd5e21037ba
 run_smoke_tests: false
 smoke_test_components: [mapreduce, pig]
 jdk: "java-1.7.0-openjdk-devel.x86_64"
