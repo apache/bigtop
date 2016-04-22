@@ -39,6 +39,7 @@ case ${ID}-${VERSION_ID} in
 	yum -y install hostname curl sudo unzip wget puppet
 	;;
     ubuntu-14.04)
+	apt-get update
 	apt-get -y install wget
 	if [ $HOSTTYPE = "x86_64" ] ; then
 	  # BIGTOP-2003. A workaround to install newer hiera to get rid of hiera 1.3.0 bug.
