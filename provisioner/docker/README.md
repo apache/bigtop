@@ -108,6 +108,7 @@ usage: docker-hadoop.sh [-C file ] args
        -e, --exec INSTANCE_NO|INSTANCE_NAME      Execute command on a specific instance. Instance can be specified by name or number.
                                                  For example: docker-hadoop.sh --exec 1 bash
                                                               docker-hadoop.sh --exec docker_bigtop_1 bash
+       -E, --env-check                           Check whether required tools has been installed
        -p, --provision                           Deploy configuration changes
        -s, --smoke-tests                         Run Bigtop smoke tests
        -h, --help

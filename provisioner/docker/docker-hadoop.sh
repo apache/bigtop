@@ -26,6 +26,7 @@ usage() {
     echo "       -e, --exec INSTANCE_NO|INSTANCE_NAME      Execute command on a specific instance. Instance can be specified by name or number."
     echo "                                                 For example: $PROG --exec 1 bash"
     echo "                                                              $PROG --exec docker_bigtop_1 bash"
+    echo "       -E, --env-check                           Check whether required tools has been installed"
     echo "       -p, --provision                           Deploy configuration changes"
     echo "       -s, --smoke-tests                         Run Bigtop smoke tests"
     echo "       -h, --help"
@@ -155,6 +156,16 @@ execute() {
     fi
 }
 
+env-check() {
+    echo "Environment check..."
+    echo "Check docker:"
+    docker -v || exit 1
+    echo "Check docker-compose:"
+    docker-compose -v || exit 1
+    echo "Check ruby:"
+    ruby -v || exit 1
+}
+
 PROG=`basename $0`
 
 if [ $# -eq 0 ]; then
@@ -169,6 +180,7 @@ while [ $# -gt 0 ]; do
           echo "Create requires a number" 1>&2
           usage
         fi
+        env-check
         create $2
         shift 2;;
     -C|--conf)
@@ -189,6 +201,9 @@ while [ $# -gt 0 ]; do
         shift
         execute $@
         shift $#;;
+    -E|--env-check)
+        env-check
+        shift;;
     -p|--provision)
         provision
         shift;;
