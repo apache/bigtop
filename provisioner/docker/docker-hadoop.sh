@@ -15,8 +15,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-BIGTOP_PUPPET_DIR=../../bigtop-deploy/puppet
-
 usage() {
     echo "usage: $PROG [-C file ] args"
     echo "       -C file                                   Use alternate file for config.yaml"
@@ -27,6 +25,7 @@ usage() {
     echo "                                                 For example: $PROG --exec 1 bash"
     echo "                                                              $PROG --exec docker_bigtop_1 bash"
     echo "       -E, --env-check                           Check whether required tools has been installed"
+    echo "       -l, --list                                List out container status for the cluster"
     echo "       -p, --provision                           Deploy configuration changes"
     echo "       -s, --smoke-tests                         Run Bigtop smoke tests"
     echo "       -h, --help"
@@ -34,6 +33,12 @@ usage() {
 }
 
 create() {
+    if [ -e .provision_id ]; then
+        echo "Cluster already exist! Run ./$PROG -d to destroy the cluster or delete .provision_id file and containers manually."
+        exit 1;
+    fi
+    echo "`date +'%Y%m%d_%H%M%S'`_R$RANDOM" > .provision_id
+    PROVISION_ID=`cat .provision_id`
     # Create a shared /etc/hosts and hiera.yaml that will be both mounted to each container soon
     mkdir -p config/hieradata 2> /dev/null
     cat /dev/null > ./config/hiera.yaml
@@ -41,15 +46,15 @@ create() {
     export DOCKER_IMAGE=$(get-yaml-config docker image)
 
     # Startup instances
-    docker-compose scale bigtop=$1
+    docker-compose -p $PROVISION_ID scale bigtop=$1
     if [ $? -ne 0 ]; then
         echo "Docker container(s) startup failed!";
         exit 1;
     fi
 
     # Get the headnode FQDN
-    nodes=(`docker-compose ps -q`)
-    hadoop_head_node=`docker inspect --format {{.Config.Hostname}}.{{.Config.Domainname}} ${nodes[0]}`
+    NODES=(`docker-compose -p $PROVISION_ID ps -q`)
+    hadoop_head_node=`docker inspect --format {{.Config.Hostname}}.{{.Config.Domainname}} ${NODES[0]}`
 
     # Fetch configurations form specificed yaml config file
     repo=$(get-yaml-config repo)
@@ -66,10 +71,9 @@ create() {
 }
 
 generate-hosts() {
-    nodes=(`docker-compose ps -q`)
-    for node in ${nodes[*]}; do
+    for node in ${NODES[*]}; do
         entry=`docker inspect --format "{{.NetworkSettings.IPAddress}} {{.Config.Hostname}}.{{.Config.Domainname}}" $node`
-        docker exec ${nodes[0]} bash -c "echo $entry >> /etc/hosts"
+        docker exec ${NODES[0]} bash -c "echo $entry >> /etc/hosts"
     done
     wait
 
@@ -89,40 +93,39 @@ EOF
 }
 
 copy-to-instances() {
-    nodes=(`docker-compose ps -q`)
-    for node in ${nodes[*]}; do
+    for node in ${NODES[*]}; do
         docker cp  $1 $node:$2 &
     done
     wait
 }
 
 bootstrap() {
-    nodes=(`docker-compose ps -q`)
-    for node in ${nodes[*]}; do
+    for node in ${NODES[*]}; do
+        docker cp  $1 $node:$2 &
         docker exec $node bash -c "/bigtop-home/bigtop-deploy/vm/utils/setup-env-$1.sh $2" &
     done
     wait
 }
 
 provision() {
-    nodes=(`docker-compose ps -q`)
-    for node in ${nodes[*]}; do
+    for node in ${NODES[*]}; do
         bigtop-puppet $node &
     done
     wait
 }
 
 smoke-tests() {
-    nodes=(`docker-compose ps -q`)
-    hadoop_head_node=${nodes:0:12}
+    hadoop_head_node=${NODES:0:12}
     smoke_test_components="`echo $(get-yaml-config smoke_test_components) | sed 's/ /,/g'`"
     docker exec $hadoop_head_node bash -c "bash -x /bigtop-home/bigtop-deploy/vm/utils/smoke-tests.sh $smoke_test_components"
 }
 
 destroy() {
-    docker-compose stop
-    docker-compose rm -f
-    rm -rvf ./config
+    if [ -n "$PROVISION_ID" ]; then
+        docker-compose -p $PROVISION_ID stop
+        docker-compose -p $PROVISION_ID rm -f
+    fi
+    rm -rvf ./config .provision_id
 }
 
 bigtop-puppet() {
@@ -147,8 +150,7 @@ execute() {
     if [[ $1 =~ $re ]] ; then
         no=$1
         shift
-        nodes=(`docker-compose ps -q`)
-        docker exec -ti ${nodes[$((no-1))]} $@
+        docker exec -ti ${NODES[$((no-1))]} $@
     else
         name=$1
         shift
@@ -166,6 +168,10 @@ env-check() {
     ruby -v || exit 1
 }
 
+list() {
+    docker-compose -p $PROVISION_ID ps
+}
+
 PROG=`basename $0`
 
 if [ $# -eq 0 ]; then
@@ -173,6 +179,15 @@ if [ $# -eq 0 ]; then
 fi
 
 yamlconf="config.yaml"
+
+BIGTOP_PUPPET_DIR=../../bigtop-deploy/puppet
+if [ -e .provision_id ]; then
+    PROVISION_ID=`cat .provision_id`
+fi
+if [ -n "$PROVISION_ID" ]; then
+    NODES=`docker-compose -p $PROVISION_ID ps -q`
+fi
+
 while [ $# -gt 0 ]; do
     case "$1" in
     -c|--create)
@@ -203,6 +218,9 @@ while [ $# -gt 0 ]; do
         shift $#;;
     -E|--env-check)
         env-check
+        shift;;
+    -l|--list)
+        list
         shift;;
     -p|--provision)
         provision

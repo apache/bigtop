@@ -109,6 +109,7 @@ usage: docker-hadoop.sh [-C file ] args
                                                  For example: docker-hadoop.sh --exec 1 bash
                                                               docker-hadoop.sh --exec docker_bigtop_1 bash
        -E, --env-check                           Check whether required tools has been installed
+       -l, --list                                List out container status for the cluster
        -p, --provision                           Deploy configuration changes
        -s, --smoke-tests                         Run Bigtop smoke tests
        -h, --help
