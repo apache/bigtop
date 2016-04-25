@@ -30,6 +30,7 @@ class hue {
                $webhdfs_url, $rm_host, $rm_port, $oozie_url, $rm_proxy_url, $history_server_url,
                $hive_host = "", $hive_port = "10000",
 		$zookeeper_host_port = "localhost:2181",
+               $force_username_lowercase = "false",
                $rm_logical_name = undef, $rm_api_port = "8088", $app_blacklist = "impala, security",
                $hue_host = "0.0.0.0", $hue_port = "8888", $hue_timezone = "America/Los_Angeles",
                $default_fs = "hdfs://localhost:8020",
