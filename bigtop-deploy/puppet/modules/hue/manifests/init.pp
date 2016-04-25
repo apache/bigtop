@@ -31,6 +31,7 @@ class hue {
                $hive_host = "", $hive_port = "10000",
 		$zookeeper_host_port = "localhost:2181",
                $force_username_lowercase = "false",
+               $group_filter_value = "objectclass=groupOfEntries",
                $rm_logical_name = undef, $rm_api_port = "8088", $app_blacklist = "impala, security",
                $hue_host = "0.0.0.0", $hue_port = "8888", $hue_timezone = "America/Los_Angeles",
                $default_fs = "hdfs://localhost:8020",
