@@ -33,6 +33,8 @@ class hue {
                $force_username_lowercase = "false",
                $group_filter_value = "objectclass=groupOfEntries",
                $nt_domain = undef,
+               $use_ldap_username_pattern = false,
+               $ldap_username_pattern = undef,
                $rm_logical_name = undef, $rm_api_port = "8088", $app_blacklist = "impala, security",
                $hue_host = "0.0.0.0", $hue_port = "8888", $hue_timezone = "America/Los_Angeles",
                $default_fs = "hdfs://localhost:8020",
