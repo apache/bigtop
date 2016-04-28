@@ -107,7 +107,7 @@ def nativePackaging = {
     errorOutput devNull
     standardOutput devNull
   }
-  [false, "deb", "rpm"][result.getExitValue()]
+  [false, [pkg:"deb", repo:"apt"], [pkg:"rpm", repo:"yum"]][result.getExitValue()]
 }.call()
 
 def generateDistributionsFile = { file ->
@@ -533,12 +533,13 @@ def genTasks = { target ->
     touchTargetFile(config.bigtop.components[target].targetsrpm)
   }
   if (nativePackaging) {
-    task "$target-pkg" (dependsOn: "$target-$nativePackaging",
-        description: "Invoking a native binary packaging target $nativePackaging",
+    def ptype = nativePackaging.pkg
+    task "$target-pkg" (dependsOn: "$target-$ptype",
+        description: "Invoking a native binary packaging target $ptype",
         group: PACKAGES_GROUP) << {
     }
-    task "$target-spkg" (dependsOn: "$target-s$nativePackaging",
-        description: "Invoking a native binary packaging target s$nativePackaging",
+    task "$target-spkg" (dependsOn: "$target-s$ptype",
+        description: "Invoking a native binary packaging target s$ptype",
         group: PACKAGES_GROUP) << {
     }
   }
@@ -654,6 +655,10 @@ project.afterEvaluate {
       description: "Build all DEB packages for the stack components",
       group: PACKAGES_GROUP
   ) << { }
+  task "pkgs" (dependsOn: tasks.findAll { alltask -> alltask.name.endsWith("-pkg")}*.name,
+      description: "Build all native packages for the stack components",
+      group: PACKAGES_GROUP
+  ) << { }
 
   task allclean (dependsOn: [clean, tasks.findAll { alltask -> alltask.name.endsWith("-clean")}*.name],
       description: "Removing $BUILD_DIR, $OUTPUT_DIR, and $DIST_DIR.\n\t\t" +
@@ -697,4 +702,10 @@ task "yum" (
     workingDir BUILD_DIR
     commandLine "createrepo -o $OUTPUT_DIR $OUTPUT_DIR".split(' ')
   }
+}
+
+if (nativePackaging) {
+  task "repo" (dependsOn: nativePackaging.repo,
+      description: "Invoking a native repository target ${nativePackaging.repo}",
+      group: PACKAGES_GROUP) << { }
 }
