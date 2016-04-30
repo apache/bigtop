@@ -340,6 +340,9 @@ def artifactToInstall = {
   }
 }
 
+
+def _NEXUS_URL = project.hasProperty("NEXUS_URL") ? NEXUS_URL : "http://localhost:8081"
+
 def generate_nexus_tasks = { name, url, snapshot ->
   task "configure-nexus-${name}"(type: Exec) {
     def req = [ data : [ id: name, name: name, repoType: "proxy", repoPolicy : snapshot, browseable: true, "indexable": true, "notFoundCacheTTL": 1440,
@@ -350,6 +353,8 @@ def generate_nexus_tasks = { name, url, snapshot ->
 					    "connectionSettings": null]]]
     def root = new groovy.json.JsonBuilder(req)
     def p = root.toString()
+    def _NEXUS_USERPASS = project.hasProperty("NEXUS_USERPASS") ? NEXUS_USERPASS : "admin:admin123"
+
     File.createTempFile("temp",".tmp").with {
       deleteOnExit()
 
@@ -357,7 +362,7 @@ def generate_nexus_tasks = { name, url, snapshot ->
 
       workingDir '.'
       commandLine  "curl", "-o", "/dev/null", "-X", "POST", "-d", "@$absolutePath",
-        "--header", "Content-Type: application/json", "-u", "admin:admin123", "http://localhost:8081/service/local/repositories"
+        "--header", "Content-Type: application/json", "-u", "$_NEXUS_USERPASS", "$_NEXUS_URL/service/local/repositories"
     }
   }
 }
@@ -373,12 +378,14 @@ repos.each { r->
 }
 
 task "configure-nexus"(dependsOn: tasks.findAll { alltask -> alltask.name.startsWith("configure-nexus-")}*.name,
-      description: "configure all repos") << {
+      description: 'configure build to use a sonatype nexus server.\n' +
+        '  Use -PNEXUS_URL=http://server:8081 to overwrite default server http://localhost:8081\n' +
+        '  Use -PNEXUS_USERPASS=user:passwd to overwrite default username passwd admin:admin123') << {
    def m2Dir = System.getProperty("user.home") + "/.m2"
    mkdir(m2Dir)
    def writer = new File(m2Dir + "/settings.xml")
    def writeMirrorLine = { name ->
-     writer.append("<mirror><name>$name</name><url>http://localhost:8081/content/repositories/$name/</url><mirrorOf>$name</mirrorOf></mirror>")
+     writer.append("<mirror><name>$name</name><url>$_NEXUS_URL/content/repositories/$name/</url><mirrorOf>$name</mirrorOf></mirror>")
    }
    writer.text = "<settings><mirrors>"
    writeMirrorLine( "central")
