@@ -1,0 +1,7 @@
+/etc/flink
+/usr/lib/flink
+/usr/lib/flink/lib
+/usr/lib/flink/bin
+/usr/bin
+/var/log/flink
+/var/log/flink-cli
