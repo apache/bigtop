@@ -1,0 +1,81 @@
+From 05002c01345425d6fe9814ea7f669630fa5514b3 Mon Sep 17 00:00:00 2001
+From: Stefano Baghino <stefano.baghino@radicalbit.io>
+Date: Tue, 29 Mar 2016 19:10:46 +0200
+Subject: [PATCH 1/2] [FLINK-3678] Make Flink logs directory configurable
+
+* Edit config.sh
+* Document the newly defined log directory configuration key
+---
+ docs/setup/config.md                        | 4 ++++
+ flink-dist/src/main/flink-bin/bin/config.sh | 7 ++++++-
+ 2 files changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/docs/setup/config.md b/docs/setup/config.md
+index ce2ad13..63d3f10 100644
+--- a/docs/setup/config.md
++++ b/docs/setup/config.md
+@@ -275,6 +275,10 @@ For example when running Flink on YARN on an environment with a restrictive fire
+
+ - `recovery.job.delay`: (Default 'akka.ask.timeout') Defines the delay before persisted jobs are recovered in case of a recovery situation.
+
++## Environment
++
++- `env.log.dir`: (Defaults to the `log` directory under Flink's home) Defines the directory where the Flink logs are saved.
++
+ ## Background
+
+ ### Configuring the Network Buffers
+diff --git a/flink-dist/src/main/flink-bin/bin/config.sh b/flink-dist/src/main/flink-bin/bin/config.sh
+index 8faf951..43619ce 100755
+--- a/flink-dist/src/main/flink-bin/bin/config.sh
++++ b/flink-dist/src/main/flink-bin/bin/config.sh
+@@ -95,6 +95,7 @@ KEY_TASKM_OFFHEAP="taskmanager.memory.off-heap"
+ KEY_TASKM_MEM_PRE_ALLOCATE="taskmanager.memory.preallocate"
+
+ KEY_ENV_PID_DIR="env.pid.dir"
++KEY_ENV_LOG_DIR="env.log.dir"
+ KEY_ENV_LOG_MAX="env.log.max"
+ KEY_ENV_JAVA_HOME="env.java.home"
+ KEY_ENV_JAVA_OPTS="env.java.opts"
+@@ -136,7 +137,7 @@ FLINK_LIB_DIR=$FLINK_ROOT_DIR/lib
+ FLINK_ROOT_DIR_MANGLED=`manglePath "$FLINK_ROOT_DIR"`
+ if [ -z "$FLINK_CONF_DIR" ]; then FLINK_CONF_DIR=$FLINK_ROOT_DIR_MANGLED/conf; fi
+ FLINK_BIN_DIR=$FLINK_ROOT_DIR_MANGLED/bin
+-FLINK_LOG_DIR=$FLINK_ROOT_DIR_MANGLED/log
++DEFAULT_FLINK_LOG_DIR=$FLINK_ROOT_DIR_MANGLED/log
+ FLINK_CONF_FILE="flink-conf.yaml"
+ YAML_CONF=${FLINK_CONF_DIR}/${FLINK_CONF_FILE}
+
+@@ -211,6 +212,10 @@ if [ -z "${MAX_LOG_FILE_NUMBER}" ]; then
+     MAX_LOG_FILE_NUMBER=$(readFromConfig ${KEY_ENV_LOG_MAX} ${DEFAULT_ENV_LOG_MAX} "${YAML_CONF}")
+ fi
+
++if [ -z "${FLINK_LOG_DIR}" ]; then
++    FLINK_LOG_DIR=$(readFromConfig ${KEY_ENV_LOG_DIR} "${DEFAULT_FLINK_LOG_DIR}" "${YAML_CONF}")
++fi
++
+ if [ -z "${FLINK_PID_DIR}" ]; then
+     FLINK_PID_DIR=$(readFromConfig ${KEY_ENV_PID_DIR} "${DEFAULT_ENV_PID_DIR}" "${YAML_CONF}")
+ fi
+
+From 2ba13dd7278d6d45531ec3e599abce3322066e9d Mon Sep 17 00:00:00 2001
+From: Stefano Baghino <stefano.baghino@radicalbit.io>
+Date: Thu, 31 Mar 2016 02:27:07 +0200
+Subject: [PATCH 2/2] Add comment about absolute path restriction.
+
+---
+ docs/setup/config.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/docs/setup/config.md b/docs/setup/config.md
+index 63d3f10..fdc90a2 100644
+--- a/docs/setup/config.md
++++ b/docs/setup/config.md
+@@ -277,7 +277,7 @@ For example when running Flink on YARN on an environment with a restrictive fire
+
+ ## Environment
+
+-- `env.log.dir`: (Defaults to the `log` directory under Flink's home) Defines the directory where the Flink logs are saved.
++- `env.log.dir`: (Defaults to the `log` directory under Flink's home) Defines the directory where the Flink logs are saved. It has to be an absolute path.
+
+ ## Background
