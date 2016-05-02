@@ -157,4 +157,4 @@ See `bigtop-deploy/puppet/config/site.csv.example` for more details.
 
 ##Notes
 
-* Users currently using vagrant 1.6+ is strongly recommanded to upgrade to 1.6.4+, otherwise you will encounter the [issue](https://github.com/mitchellh/vagrant/issues/3769) when installing plguins
+* Users currently using vagrant 1.6+ is strongly recommanded to upgrade to 1.6.4+, otherwise you will encounter the [issue](https://github.com/mitchellh/vagrant/issues/3769) when installing plugins
