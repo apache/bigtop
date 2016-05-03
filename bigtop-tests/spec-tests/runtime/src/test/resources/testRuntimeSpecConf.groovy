@@ -167,17 +167,8 @@ specs {
       name = 'HADOOP_PLATVER'
       type = 'shell'
       arguments {
-        command = 'hadoop version | head -n 1 | grep -E \'Hadoop\\s+[0-9\\.]+-[A-Za-z_0-9]+\''
+        command = 'hadoop version | head -n 1 | grep -E \'Hadoop\\s+[0-9\\.]+[_\\-][A-Za-z_0-9]+\''
         message = 'Hadoop\'s version string is not correct'
-      }
-    }
-    'HADOOP_PLATVER_2' {
-      name = 'HADOOP_PLATVER'
-      type = 'shell'
-      arguments {
-        command = 'grep -E \'STARTUP_MSG:\\s+version\' `find /var/log/ -path "*hadoop*" -name "*.log" | head -n 1` ' +
-        '| sed \'s/[^=]\\+= //\' | grep -E \'[0-9\\.]+-[A-Za-z_0-9]+\''
-        message = 'Log files do not contain correct correct version'
       }
     }
     'HADOOP_DIRSTRUCT_COMMON' {
@@ -309,7 +300,7 @@ specs {
       name = 'HADOOP_GETCONF'
       type = 'shell'
       arguments {
-        command = '[ `hdfs getconf -confKey dfs.permissions.superusergroup` == "hadoop" ]'
+        command = '[ `hdfs getconf -confKey dfs.permissions.superusergroup >/dev/null 2>/dev/null; echo $?` == "0" ]'
         message = 'It\' not possible to to determine key Hadoop configuration values by using ${HADOOP_HDFS_HOME}/bin/hdfs getconf'
       }
     }
