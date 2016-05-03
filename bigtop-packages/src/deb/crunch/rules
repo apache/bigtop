@@ -26,7 +26,7 @@ export DH_OPTIONS
 lib_crunch=/usr/lib/crunch
 zookeeper_home=/usr/lib/zookeeper
 hadoop_home=/usr/lib/hadoop
-
+hbase_home=/usr/lib/hbase
 
 %:
 	dh $@
@@ -52,3 +52,11 @@ override_dh_auto_install:
 	ln -fs ${hadoop_home}/client/hadoop-mapreduce-client-core.jar debian/tmp/${lib_crunch}/lib/
 	ln -fs ${hadoop_home}/client/hadoop-yarn-api.jar debian/tmp/${lib_crunch}/lib/
 	ln -fs ${hadoop_home}/client/hadoop-yarn-common.jar debian/tmp/${lib_crunch}/lib/
+
+	ln -fs ${hbase_home}/hbase-annotations.jar debian/tmp/${lib_crunch}/lib/
+	ln -fs ${hbase_home}/hbase-common-tests.jar debian/tmp/${lib_crunch}/lib/
+	ln -fs ${hbase_home}/hbase-hadoop-compat.jar debian/tmp/${lib_crunch}/lib/
+	ln -fs ${hbase_home}/hbase-hadoop2-compat.jar debian/tmp/${lib_crunch}/lib/
+	ln -fs ${hbase_home}/hbase-prefix-tree.jar debian/tmp/${lib_crunch}/lib/
+	ln -fs ${hbase_home}/hbase-procedure.jar debian/tmp/${lib_crunch}/lib/
+	ln -fs 4{hbase_home}/hbase-server.jar debian/tmp/${lib_crunch}/lib/

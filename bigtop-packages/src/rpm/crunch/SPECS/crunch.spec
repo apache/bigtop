@@ -18,6 +18,7 @@
 %define crunch_folder apache-%{crunch_name}-%{crunch_base_version}-src
 %define zookeeper_home /usr/lib/zookeeper
 %define hadoop_home /usr/lib/hadoop
+%define hbase_home /usr/lib/hbase
 
 %if  %{?suse_version:1}0
 %define doc_crunch %{_docdir}/crunch-doc
@@ -41,7 +42,7 @@ Source0: %{crunch_folder}.tar.gz
 Source1: do-component-build 
 Source2: install_%{crunch_name}.sh
 Source3: bigtop.bom
-Requires: hadoop-client, bigtop-utils >= 0.7
+Requires: hadoop-client, bigtop-utils >= 0.7, hbase
 
 %description 
 Apache Crunch is a Java library for writing, testing, and running
@@ -76,6 +77,14 @@ ln -fs %{hadoop_home}/client/hadoop-common.jar $RPM_BUILD_ROOT/%{lib_crunch}/lib
 ln -fs %{hadoop_home}/client/hadoop-mapreduce-client-core.jar $RPM_BUILD_ROOT/%{lib_crunch}/lib/
 ln -fs %{hadoop_home}/client/hadoop-yarn-api.jar $RPM_BUILD_ROOT/%{lib_crunch}/lib/
 ln -fs %{hadoop_home}/client/hadoop-yarn-common.jar $RPM_BUILD_ROOT/%{lib_crunch}/lib/
+
+ln -fs %{hbase_home}/hbase-annotations.jar $RPM_BUILD_ROOT/%{lib_crunch}/lib/
+ln -fs %{hbase_home}/hbase-common-tests.jar $RPM_BUILD_ROOT/%{lib_crunch}/lib/
+ln -fs %{hbase_home}/hbase-hadoop-compat.jar $RPM_BUILD_ROOT/%{lib_crunch}/lib/
+ln -fs %{hbase_home}/hbase-hadoop2-compat.jar $RPM_BUILD_ROOT/%{lib_crunch}/lib/
+ln -fs %{hbase_home}/hbase-prefix-tree.jar $RPM_BUILD_ROOT/%{lib_crunch}/lib/
+ln -fs %{hbase_home}/hbase-procedure.jar $RPM_BUILD_ROOT/%{lib_crunch}/lib/
+ln -fs %{hbase_home}/hbase-server.jar $RPM_BUILD_ROOT/%{lib_crunch}/lib/
 
 #######################
 #### FILES SECTION ####

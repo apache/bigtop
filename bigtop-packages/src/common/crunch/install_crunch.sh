@@ -99,4 +99,4 @@ mv $PREFIX/$LIB_DIR/crunch-test-*.jar $PREFIX/$DOC_DIR
 
 rm -f $PREFIX/$LIB_DIR/lib/zookeeper-*.jar
 rm -f $PREFIX/$LIB_DIR/lib/hadoop-*.jar
-
+rm -f $PREFIX/$LIB_DIR/lib/hbase-*.jar
