@@ -1,3 +1,4 @@
+#!/bin/bash
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -13,18 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-memory_size: 4096
-number_cpus: 1
-box: "puppetlabs/centos-7.0-64-nocm"
-repo: "http://bigtop-repos.s3.amazonaws.com/releases/1.1.0/centos/7/x86_64"
-num_instances: 2 
-distro: centos
-components: [hadoop, yarn, flink]
-<<<<<<< HEAD
-enable_local_repo: true 
-=======
-enable_local_repo: true
->>>>>>> 64a00c45c9e21ac2ad39a334666b9dd5e21037ba
-run_smoke_tests: false
-smoke_test_components: [mapreduce, pig]
-jdk: "java-1.7.0-openjdk-devel.x86_64"
+set -ex
+
+. `dirname $0`/bigtop.bom
+
+#mvn clean install -DskipTests -Dhadoop.version=$HADOOP_VERSION "$@"
+mvn clean install -Drat.skip=true -DskipTests -Dhadoop.version=$HADOOP_VERSION "$@" 

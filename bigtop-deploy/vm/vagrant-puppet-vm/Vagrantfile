@@ -91,6 +91,9 @@ EOF
 SCRIPT
 
 VAGRANTFILE_API_VERSION = "2"
+
+slave_ip=[]
+
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # manage /etc/hosts by hostmanager plugin(https://github.com/smdahlen/vagrant-hostmanager)
   # use vagrant-cachier to cache packages at local(https://github.com/fgrehm/vagrant-cachier)
@@ -101,6 +104,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.cache.scope = :box
   end
 
+  
   # nodes definition
   (1..num_instances).each do |i|
     config.vm.define "bigtop#{i}" do |bigtop|
@@ -109,6 +113,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       bigtop_hostname="bigtop#{i}"
       bigtop_fqdn="#{bigtop_hostname}.vagrant"
       bigtop_ip="10.10.10.1#{i}"
+      slave_ip.push(bigtop_ip)
 
       bigtop.vm.provider :virtualbox do |vb|
         vb.customize ["modifyvm", :id, "--memory", CONF['memory_size']]
@@ -140,6 +145,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         puppet.manifests_path =  "../../puppet/manifests/"
         puppet.manifest_file  = "site.pp"
         puppet.options = "--debug"
+        puppet.facter = {'allslaves' => slave_ip }
       end
 
       if run_smoke_tests then

@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -13,18 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-memory_size: 4096
-number_cpus: 1
-box: "puppetlabs/centos-7.0-64-nocm"
-repo: "http://bigtop-repos.s3.amazonaws.com/releases/1.1.0/centos/7/x86_64"
-num_instances: 2 
-distro: centos
-components: [hadoop, yarn, flink]
-<<<<<<< HEAD
-enable_local_repo: true 
-=======
-enable_local_repo: true
->>>>>>> 64a00c45c9e21ac2ad39a334666b9dd5e21037ba
-run_smoke_tests: false
-smoke_test_components: [mapreduce, pig]
-jdk: "java-1.7.0-openjdk-devel.x86_64"
+export FLINK_HOME=${FLINK_HOME:-/usr/lib/flink}
+export FLINK_LOG_DIR=${FLINK_LOG_DIR:-/var/log/flink}
+export HADOOP_HOME=${HADOOP_HOME:-/usr/lib/hadoop}
+export HADOOP_CONF_DIR=${HADOOP_CONF_DIR:-/etc/hadoop/conf}
+
+export FLINK_MASTER_HOST=bigtop1.vagrant
+export FLINK_MASTER_PORT=<%= @master_port %>
+export FLINK_MASTER_IP=$FLINK_MASTER_HOST
+export FLINK_MASTER_WEBUI_PORT=<%= @master_ui_port %>
