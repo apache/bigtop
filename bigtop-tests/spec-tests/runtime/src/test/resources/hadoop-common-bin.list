@@ -1,3 +1,5 @@
 rcc
 hadoop
-fuse_dfs
+hdfs
+yarn
+mapred
