@@ -51,6 +51,8 @@ class TestSqoopHSQLDBETL {
   static private Log LOG = LogFactory.getLog(Object.class);
 
   static Shell sh = new Shell("/bin/bash -s");
+  static final String hsql = "/usr/lib/sqoop/lib/hsqldb-1.8.0.10.jar"
+  static final String port = System.getProperty("port", "9001");
 
 
   @AfterClass
@@ -69,6 +71,7 @@ class TestSqoopHSQLDBETL {
     // just use default.
     p.setProperty("server.dbname.0", "sqooptest");
     p.setProperty("hsqldb.default_table_type", "TEXT");
+    p.setProperty("server.port", port);
 
     server = new Server();
     server.setProperties(p);
@@ -82,7 +85,7 @@ class TestSqoopHSQLDBETL {
 
   final static String DB_DRIVER = "org.hsqldb.jdbcDriver";
   static String DB_CONNECTION =
-      "jdbc:hsqldb:hsql://localhost:9001/sqooptest";
+      "jdbc:hsqldb:hsql://localhost:$port/sqooptest";
   static String DB_USER = "sa";
   static String DB_PASSWORD = "";
 
@@ -107,13 +110,10 @@ class TestSqoopHSQLDBETL {
   }
 
 
-  String hsql = "/usr/lib/sqoop/lib/hsqldb-1.8.0.10.jar"
-  String port = "9001"
-
   @Test
   void test() {
     createDB()
-    sh.exec("sqoop import --libjars /usr/lib/sqoop/lib/hsqldb-1.8.0.10.jar --connect \"jdbc:hsqldb:hsql://localhost:9001/sqooptest\" --username \"SA\" --query \'select ANIMALS.* from ANIMALS WHERE \$CONDITIONS\' --split-by ANIMALS.id --target-dir /tmp/sqooptest")
+    sh.exec("sqoop import --libjars /usr/lib/sqoop/lib/hsqldb-1.8.0.10.jar --connect \"jdbc:hsqldb:hsql://localhost:$port/sqooptest\" --username \"SA\" --query \'select ANIMALS.* from ANIMALS WHERE \$CONDITIONS\' --split-by ANIMALS.id --target-dir /tmp/sqooptest")
   }
 
   void createDB() {
