@@ -1,0 +1,2 @@
+repo: git@github.com:juju-solutions/layer-hadoop-slave.git
+includes: ['layer:hadoop-datanode', 'layer:hadoop-nodemanager']

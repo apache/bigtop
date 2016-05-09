@@ -113,6 +113,9 @@ rat {
        "bigtop-packages/src/common/*/*.json",
        "bigtop-packages/src/common/**/*.default",
        "bigtop-repos/apt/distributions",
+       /* Juju charm files with rigid structure */
+       "bigtop-packages/src/charm/**/wheelhouse.txt",
+       "bigtop-packages/src/charm/**/*.yaml",
        /* Misc individual files */
        "src/site/resources/bigtop.rdf",
        "src/site/resources/images/bigtop-logo.ai",

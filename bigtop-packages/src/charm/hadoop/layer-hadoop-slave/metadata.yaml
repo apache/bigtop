@@ -1,0 +1,8 @@
+name: hadoop-slave
+summary: Combined slave node (DataNode + NodeManager) for Apache Bigtop.
+description: >
+  Hadoop is a software platform that lets one easily write and
+  run applications that process vast amounts of data.
+
+  This charm manages both the storage node (DataNode) for HDFS and the
+  compute node (NodeManager) for Yarn.

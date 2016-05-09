@@ -1,0 +1,25 @@
+repo: git@github.com:juju-solutions/layer-hadoop-namenode.git
+includes:
+  - 'layer:apache-bigtop-base'
+  - 'interface:dfs'
+  - 'interface:dfs-slave'
+  - 'interface:benchmark'
+options:
+  apache-bigtop-base:
+    groups:
+      - 'mapred'
+      - 'yarn'
+    users:
+      mapred:
+        groups: ['hadoop', 'mapred']
+      ubuntu:
+        groups: ['hadoop', 'mapred']
+      yarn:
+        groups: ['hadoop', 'yarn']
+    ports:
+      namenode:
+        port: 8020
+        exposed_on: 'namenode'
+      nn_webapp_http:
+        port: 50070
+        exposed_on: 'namenode'

@@ -1,0 +1,27 @@
+repo: git@github.com:juju-solutions/layer-hadoop-resourcemanager.git
+includes:
+  - 'layer:apache-bigtop-base'
+  - 'interface:dfs'
+  - 'interface:mapred'
+  - 'interface:mapred-slave'
+  - 'interface:benchmark'
+options:
+  apache-bigtop-base:
+    users:
+      ubuntu:
+        groups: ['hadoop', 'mapred']
+    ports:
+        resourcemanager:
+            port: 8032
+        rm_webapp_http:
+            port: 8088
+            exposed_on: 'resourcemanager'
+        # TODO: support SSL
+        #rm_webapp_https:
+        #    port: 8090
+        #    exposed_on: 'yarn-master'
+        jobhistory:
+            port: 10020
+        jh_webapp_http:
+            port: 19888
+            exposed_on: 'resourcemanager'
