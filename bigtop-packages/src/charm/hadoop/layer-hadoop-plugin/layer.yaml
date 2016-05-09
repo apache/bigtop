@@ -1,0 +1,8 @@
+repo: git@github.com:juju-solutions/layer-hadoop-plugin.git
+includes: ['layer:apache-bigtop-base', 'interface:hadoop-plugin', 'interface:dfs', 'interface:mapred']
+options:
+  basic:
+    use_venv: true
+metadata:
+  deletes:
+    - requires.java

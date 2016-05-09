@@ -1,0 +1,2 @@
+smoke-test:
+    description: Verify that HDFS is working by creating and removing a test directory.
