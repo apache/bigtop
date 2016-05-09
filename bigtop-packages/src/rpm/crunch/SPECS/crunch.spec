@@ -42,6 +42,7 @@ Source0: %{crunch_folder}.tar.gz
 Source1: do-component-build 
 Source2: install_%{crunch_name}.sh
 Source3: bigtop.bom
+#BIGTOP_PATCH_FILES
 Requires: hadoop-client, bigtop-utils >= 0.7, hbase
 
 %description 
@@ -58,6 +59,8 @@ Apache Crunch documentation
 
 %prep
 %setup -n %{crunch_folder}
+
+#BIGTOP_PATCH_COMMANDS
 
 %build
 bash $RPM_SOURCE_DIR/do-component-build

@@ -1,0 +1,10 @@
+--- apache-crunch-0.13.0-src/pom.xml.orig	2016-05-09 20:10:32.634858687 +0200
++++ apache-crunch-0.13.0-src/pom.xml	2016-05-09 20:11:04.566858115 +0200
+@@ -610,7 +610,6 @@
+               </group>
+             </groups>
+             <!-- Prevents stricter javadoc 8 from failing the build for now -->
+-            <additionalparam>-Xdoclint:none</additionalparam>
+           </configuration>
+           <executions>
+             <execution>
