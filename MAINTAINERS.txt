@@ -2,6 +2,7 @@ apex: chinmay <chinmay@apache.org>, aniruddha <aniruddha@apache.org>
 bigpetstore: jay vyas, rj nowling
 CI infra: rvs
 data generators: rj nowling, jay vyas
+flink: rmetzger, mbalassi
 flume: bmahe
 gradle / build system: cos, rvs
 ignite-hadoop: cos, Sergey Vladykin <sergi.vladykin@gmail.com>
