@@ -67,7 +67,7 @@ commons-codec-1\.4([^.0-9].*)?\.jar
 jackson-core-asl-1\.9\.13([^.0-9].*)?\.jar
 servlet-api-2\.5([^.0-9].*)?\.jar
 paranamer-2\.3([^.0-9].*)?\.jar
-joda-time-2\.9\.2([^.0-9].*)?\.jar
+joda-time-2\.9\.[2-3]([^.0-9].*)?\.jar
 hadoop-datajoin-2\.7\.[0-9]([^.0-9].*)?\.jar
 jetty-6\.1\.26([^.0-9].*)?\.jar
 jersey-server-1\.9([^.0-9].*)?\.jar
