@@ -28,15 +28,19 @@ export DH_OPTIONS
 override_dh_auto_build:
 	bash debian/do-component-build
 
-svcs=flink-jobmanager flink-taskmanager
 
-$(svcs): debian/init.d.tmpl
-	mkdir -p debian/flink/etc/init.d/
-	sh $< debian/$@.svc deb debian/flink/etc/init.d/$@
-	touch $@
+.PHONY: jobmanager
+.PHONY: taskmanager
+jobmanager taskmanager:
+	bash debian/init.d.tmpl debian/flink-$@.svc deb debian/flink-$@.init
 
-override_dh_auto_install: $(svcs)
+override_dh_auto_install: jobmanager taskmanager
 	bash -x debian/install_flink.sh \
 	--build-dir=`pwd`/build-target \
 	--source-dir=debian \
 	--prefix=debian/tmp
+
+# This should be fixed. Split flink in three packages: flink, flink-taskmanager, flink-jobmanager
+override_dh_installinit: jobmanager taskmanager
+	dh_installinit --name=flink-taskmanager
+	dh_installinit --name=flink-jobmanager
