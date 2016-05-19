@@ -35,6 +35,7 @@ class hue {
                $nt_domain = undef,
                $use_ldap_username_pattern = false,
                $ldap_username_pattern = undef,
+               $remote_deployement_dir = "/user/hue/oozie/deployments",
                $rm_logical_name = undef, $rm_api_port = "8088", $app_blacklist = "impala, security",
                $hue_host = "0.0.0.0", $hue_port = "8888", $hue_timezone = "America/Los_Angeles",
                $default_fs = "hdfs://localhost:8020",
