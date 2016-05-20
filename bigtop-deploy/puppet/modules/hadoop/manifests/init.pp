@@ -61,11 +61,9 @@ class hadoop ($hadoop_security_authentication = "simple",
       include hadoop::historyserver
       include hadoop::proxyserver
 
-      Class['Hadoop::Init_hdfs'] -> Class['Hadoop::Resourcemanager']
       if ("nodemanager" in $roles) {
         Class['Hadoop::Resourcemanager'] -> Class['Hadoop::Nodemanager']
       }
-      Class['Hadoop::Init_hdfs'] -> Class['Hadoop::Historyserver']
     }
 
     if ($hadoop::common_hdfs::ha == "disabled" and "secondarynamenode" in $roles) {
