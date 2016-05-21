@@ -40,7 +40,6 @@ class TestSpark {
 
   static Shell sh = new Shell("/bin/bash -s")
   static final String SPARK_HOME = System.getenv("SPARK_HOME")
-  static final String SPARK_SHELL = SPARK_HOME + "/bin/spark-shell --master yarn-client"
   static final String TEST_SPARKSQL_LOG = "/tmp/TestSpark_testSparkSQL.log"
 
   @BeforeClass
@@ -69,7 +68,22 @@ class TestSpark {
 
   @Test
   void testSparkSQL() {
-    sh.exec(SPARK_SHELL + " --class org.apache.spark.examples.sql.JavaSparkSQL " + " --jars " + SPARK_HOME + "/lib/spark-examples*.jar > " + TEST_SPARKSQL_LOG + " 2>&1")
+    // Let's figure out the proper mode for the submission
+    // If SPARK_MASTER_IP nor SPARK_MASTER_PORT are set, we'll assume
+    // 'yarn-client' mode
+    String masterMode = 'yarn-client'
+    if (System.env.SPARK_MASTER_IP != null && System.env.SPARK_MASTER_PORT != null)
+      masterMode = "spark://$MASTER_IP:$MASTER_PORT"
+    else
+      println("SPARK_MASTER isn't set. yarn-client submission will be used. " +
+          "Refer to smoke-tests/README If this isn't what you you expect.")
+
+    final String SPARK_SHELL = SPARK_HOME + "/bin/spark-shell --master $masterMode"
+    // Let's use time, 'cause the test has one job
+    sh.exec("timeout 120 " + SPARK_SHELL +
+        " --class org.apache.spark.examples.sql.JavaSparkSQL " +
+        " --jars " + SPARK_HOME + "/lib/spark-examples*.jar > " +
+        TEST_SPARKSQL_LOG + " 2>&1")
     logError(sh)
     assertTrue("Failed ...", sh.getRet() == 0);
   }

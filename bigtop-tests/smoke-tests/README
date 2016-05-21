@@ -31,6 +31,15 @@ export TAJO_HOME="/usr/lib/tajo"
 export OOZIE_TAR_HOME="/usr/lib/oozie/doc"
 ```
 
+Fallback mode for shark-shell submission is 'yarn-client'. For a good reason,
+we aren't using YARN to provision cluster services. Hence, in order to execute
+the test against a standalone Spark cluster, like we deploy would require two
+more environment variables:
+`
+export SPARK_MASTER_IP=bigtop1.docker
+export SPARK_MASTER_PORT=7077
+`
+
 Then, simply invoke the tests you want to run, as described below.
 
 Each directory is a gradle "subproject" mapping to an ecosystem component.
