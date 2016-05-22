@@ -20,6 +20,10 @@ package org.apache.bigtop.itest.spark
 
 import org.junit.BeforeClass
 import org.junit.AfterClass
+
+import java.util.jar.JarFile
+import java.util.zip.ZipInputStream
+
 import static org.junit.Assert.assertNotNull
 import org.apache.bigtop.itest.shell.Shell
 import static org.junit.Assert.assertTrue
@@ -42,7 +46,16 @@ class TestSpark {
   @BeforeClass
   static void setUp() {
     sh.exec("rm -f " + TEST_SPARKSQL_LOG)
-    sh.exec("hdfs dfs -put " + SPARK_HOME + "/examples examples")
+    // create HDFS examples/src/main/resources
+    sh.exec("hdfs dfs -mkdir -p examples/src/main/resources")
+    // extract people.txt file into it
+    String examplesJar = JarContent.getJarName("$SPARK_HOME/lib", 'spark-examples.*jar')
+    assertNotNull(examplesJar, "spark-examples.jar file wasn't found")
+    ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream("$SPARK_HOME/lib/$examplesJar"))
+    File examplesDir = new File('examples')
+    examplesDir.mkdirs()
+    zipInputStream.unzip(examplesDir.getName(), 'people')
+    sh.exec("hdfs dfs -put examples/* examples/src/main/resources")
     logError(sh)
   }
 
