@@ -868,6 +868,7 @@ class hadoop ($hadoop_security_authentication = "simple",
 
   class client {
       include common_mapred_app
+      include common_yarn
 
       $hadoop_client_packages = $operatingsystem ? {
         /(OracleLinux|CentOS|RedHat|Fedora)/  => [ "hadoop-doc", "hadoop-hdfs-fuse", "hadoop-client", "hadoop-libhdfs", "hadoop-debuginfo" ],
