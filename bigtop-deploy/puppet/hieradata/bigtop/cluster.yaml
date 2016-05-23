@@ -54,6 +54,13 @@
 
 #bigtop::bigtop_repo_uri: "http://mirror.example.com/path/to/mirror/"
 
+# Use a pre-installed java environment. The default value of 'false' will cause
+# the configured 'bigtop::jdk_package_name' package to be installed. Setting
+# this to 'true' will ignore the configured 'bigtop::jdk_package_name' but
+# requires a compatible java environment be avaialble prior to Bigtop
+# installation.
+#bigtop::jdk_preinstalled: false
+
 # Test-only variable controls if user hdfs' sshkeys should be installed to allow
 # for passwordless login across the cluster. Required by some integration tests
 #hadoop::common_hdfs::testonly_hdfs_sshkeys: "no"

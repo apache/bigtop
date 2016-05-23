@@ -28,6 +28,7 @@ case $operatingsystem {
     }
 }
 
+$jdk_preinstalled = hiera("bigtop::jdk_preinstalled", false)
 $jdk_package_name = hiera("bigtop::jdk_package_name", "jdk")
 
 stage {"pre": before => Stage["main"]}
@@ -70,6 +71,7 @@ case $operatingsystem {
 package { $jdk_package_name:
   ensure => "installed",
   alias => "jdk",
+  noop => $jdk_preinstalled,
 }
 
 import "cluster.pp"
