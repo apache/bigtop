@@ -826,6 +826,7 @@ class hadoop ($hadoop_security_authentication = "simple",
 
 
   class nodemanager {
+    include common_mapred_app
     include common_yarn
 
     package { "hadoop-yarn-nodemanager":
