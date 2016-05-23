@@ -1,0 +1,31 @@
+From 30c659e3fc8e1d9cbc92f070a694ea224aaea2a5 Mon Sep 17 00:00:00 2001
+From: ganeshraju <ganeshraju@gmail.com>
+Date: Mon, 9 May 2016 17:47:10 -0500
+Subject: [PATCH] added aarch64 support
+
+---
+ src/native/unix/support/apsupport.m4 | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/src/native/unix/support/apsupport.m4 b/src/native/unix/support/apsupport.m4
+index db91e32..e03969a 100644
+--- a/src/native/unix/support/apsupport.m4
++++ b/src/native/unix/support/apsupport.m4
+@@ -156,7 +156,13 @@ AC_DEFUN(AP_SUPPORTED_HOST,[
+   arm*)
+     CFLAGS="$CFLAGS -DCPU=\\\"arm\\\""
+     supported_os="arm"
+-    HOST_CPU=arm;;
++    HOST_CPU=arm  
++    ;;
++  aarch64*)
++    CFLAGS="$CFLAGS -DCPU=\\\"aarch64\\\""
++    supported_os="linux"
++    HOST_CPU=aarch64
++    ;;  
+   *)
+     AC_MSG_RESULT([failed])
+     AC_MSG_ERROR([Unsupported CPU architecture "$host_cpu"]);;
+-- 
+2.7.0
+
