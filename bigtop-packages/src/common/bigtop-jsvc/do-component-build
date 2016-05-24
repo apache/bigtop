@@ -19,6 +19,7 @@ set -ex
 rm -f jsvc
 
 pushd unix
+  autoreconf
   ./configure --prefix=/usr
   make
   cp -f jsvc ../jsvc
