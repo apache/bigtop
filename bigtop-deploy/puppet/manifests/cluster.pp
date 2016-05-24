@@ -56,6 +56,10 @@ $roles_map = {
     master => ["alluxio-master"],
     worker => ["alluxio-worker"],
   },
+  flink => {
+    master => ["flink-jobmanager"],
+    worker => ["flink-taskmanager"],
+  },
   flume => {
     worker => ["flume-agent"],
   },
@@ -161,6 +165,7 @@ class node_with_roles ($roles = hiera("bigtop::roles")) inherits hadoop_cluster_
     "alluxio",
     "apex",
     "crunch",
+    "flink",
     "giraph",
     "hadoop",
     "hadoop_hbase",

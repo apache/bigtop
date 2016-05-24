@@ -67,6 +67,7 @@ bigtop_master = "bigtop1.vagrant"
 
 $script = <<SCRIPT
 service iptables stop
+service firewalld stop
 chkconfig iptables off
 # Remove 127.0.0.1 entry since vagrant's hostname setting will map it to FQDN,
 # which miss leads some daemons to bind on 127.0.0.1 instead of public or private IP

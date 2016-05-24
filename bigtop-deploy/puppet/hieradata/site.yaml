@@ -15,6 +15,7 @@ hadoop::hadoop_storage_dirs:
 #  - alluxio
 #  - apex
 #  - crunch
+#  - flink
 #  - flume
 #  - giraph
 #  - ignite_hadoop
