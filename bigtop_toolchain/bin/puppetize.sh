@@ -49,7 +49,7 @@ case ${ID}-${VERSION_ID} in
         fi
 	apt-get -y install curl sudo unzip puppet software-properties-common
 	;;
-    ubuntu-15*)
+    ubuntu-1[56]*)
 	apt-get update
 	apt-get -y install curl sudo unzip wget puppet software-properties-common
 	;;
