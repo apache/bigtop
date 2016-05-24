@@ -64,20 +64,17 @@ index 0000000..80fe85a
 +</document>
 diff --git a/src/native/unix/support/apsupport.m4 b/src/native/unix/support/apsupport.m4
 index db91e32..e03969a 100644
---- a/src/native/unix/support/apsupport.m4
-+++ b/src/native/unix/support/apsupport.m4
-@@ -156,7 +156,13 @@ AC_DEFUN(AP_SUPPORTED_HOST,[
-   arm*)
-     CFLAGS="$CFLAGS -DCPU=\\\"arm\\\""
+--- a/unix/support/apsupport.m4
++++ b/unix/support/apsupport.m4
+@@ -166,6 +166,11 @@
      supported_os="arm"
--    HOST_CPU=arm;;
-+    HOST_CPU=arm  
-+    ;;
+     HOST_CPU=arm
+     ;;
 +  aarch64*)
 +    CFLAGS="$CFLAGS -DCPU=\\\"aarch64\\\""
 +    supported_os="linux"
 +    HOST_CPU=aarch64
-+    ;;  
++    ;;
    *)
      AC_MSG_RESULT([failed])
      AC_MSG_ERROR([Unsupported CPU architecture "$host_cpu"]);;
