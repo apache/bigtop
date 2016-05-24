@@ -1,0 +1,74 @@
+smoke-test:
+    description: Verify that Spark is working by calculating pi.
+sparkpi:
+    description: Calculate Pi
+    params:
+        partitions:
+            description: Number of partitions to use for the SparkPi job
+            type: string
+            default: "10"
+logisticregression:
+    description: Run the Spark Bench LogisticRegression benchmark.
+matrixfactorization:
+    description: Run the Spark Bench MatrixFactorization benchmark.
+pagerank:
+    description: Run the Spark Bench PageRank benchmark.
+sql:
+    description: Run the Spark Bench SQL benchmark.
+streaming:
+    description: Run the Spark Bench Streaming benchmark.
+svdplusplus:
+    description: Run the Spark Bench SVDPlusPlus benchmark.
+svm:
+    description: Run the Spark Bench SVM benchmark.
+trianglecount:
+    description: Run the Spark Bench TriangleCount benchmark.
+restart-spark-job-history-server:
+    description: Restart the Spark job history server.
+start-spark-job-history-server:
+    description: Start the Spark job history server.
+stop-spark-job-history-server:
+    description: Stop the Spark job history server.
+submit:
+    description: Submit a job to Spark.
+    required: ['job']
+    params:
+        job:
+            description: >
+                URL to a JAR or Python file.  This can be any URL supported by
+                spark-submit, such as a remote URL, an hdfs:// path (if
+                connected to HDFS), etc.
+            type: string
+        class:
+            description: >
+                If a JAR is given, this should be the name of the class within
+                the JAR to run.
+            type: string
+        job-args:
+            description: Arguments for the job.
+        packages:
+            description: Comma-separated list of packages to include.
+            type: string
+        py-files:
+            description: Comma-separated list of Python packages to include.
+            type: string
+        extra-params:
+            description: >
+                Additional params to pass to spark-submit.
+                For example: "--executor-memory 1000M --supervise"
+            type: string
+        cron:
+            description: >
+                Schedule the job to be run periodically, according to the
+                given cron rule.  For example: "*/5 * * * *" will run the
+                job every 5 minutes.
+            type: string
+list-jobs:
+    description: List scheduled periodic jobs.
+remove-job:
+    description: Remove a job previously scheduled for repeated execution.
+    required: ['action-id']
+    params:
+        action-id:
+            type: string
+            description: The ID returned by the action that scheduled the job.

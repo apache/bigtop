@@ -1,0 +1,115 @@
+#!/bin/bash
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+set -ex
+
+if ! charms.reactive is_state 'spark.started'; then
+    action-fail 'Spark not yet ready'
+    exit
+fi
+
+# Do not call this script directly. Call it via one of the symlinks. The
+# symlink name determines the benchmark to run.
+BENCHMARK=`basename $0`
+
+# Juju actions have an annoying lowercase alphanum restriction, so translate
+# that into the sparkbench name.
+case "${BENCHMARK}" in
+  logisticregression)
+    BENCHMARK="LogisticRegression"
+    RESULT_KEY="LogisticRegression"
+    ;;
+  matrixfactorization)
+    BENCHMARK="MatrixFactorization"
+    RESULT_KEY="MF"
+    ;;
+  pagerank)
+    BENCHMARK="PageRank"
+    RESULT_KEY="PageRank"
+    ;;
+  sql)
+    BENCHMARK="SQL"
+    RESULT_KEY="sql"
+    ;;
+  streaming)
+    BENCHMARK="Streaming"
+    RESULT_KEY="streaming"
+    ;;
+  svdplusplus)
+    BENCHMARK="SVDPlusPlus"
+    RESULT_KEY="SVDPlusPlus"
+    ;;
+  svm)
+    BENCHMARK="SVM"
+    RESULT_KEY="SVM"
+    ;;
+  trianglecount)
+    BENCHMARK="TriangleCount"
+    RESULT_KEY="TriangleCount"
+    ;;
+esac
+
+SB_HOME=/home/ubuntu/spark-bench
+SB_APPS="${SB_HOME}/bin/applications.lst"
+if [ -f "${SB_APPS}" ]; then
+  VALID_TEST=`grep -c ^${BENCHMARK} ${SB_HOME}/bin/applications.lst`
+
+  if [ ${VALID_TEST} -gt 0 ]; then
+    # create dir to store results
+    RUN=`date +%s`
+    RESULT_DIR=/opt/sparkbench-results/${BENCHMARK}
+    RESULT_LOG=${RESULT_DIR}/${RUN}.log
+    mkdir -p ${RESULT_DIR}
+    chown -R ubuntu:ubuntu ${RESULT_DIR}
+
+    # generate data to be used for benchmarking. this must be run as the ubuntu
+    # user to make sure we pick up correct spark environment.
+    echo 'generating data'
+    su ubuntu << EOF
+    . /etc/environment
+    ~/spark-bench/${BENCHMARK}/bin/gen_data.sh &> /dev/null
+EOF
+
+    # run the benchmark. this must be run as the ubuntu
+    # user to make sure we pick up correct spark environment.
+    echo 'running benchmark'
+    benchmark-start
+    su ubuntu << EOF
+    . /etc/environment
+    ~/spark-bench/${BENCHMARK}/bin/run.sh &> /dev/null
+EOF
+    benchmark-finish
+
+    # collect our data (the last line in our bench-report.dat file)
+    DATA=`grep ${RESULT_KEY} ${SB_HOME}/num/bench-report.dat | tail -1`
+    DURATION=`echo ${DATA} | awk -F, '{print $3}'`
+    THROUGHPUT=`echo ${DATA} | awk -F, '{print $5}'`
+
+    # send data points and composite score
+    benchmark-data 'duration' "${DURATION}" 'secs' 'asc'
+    benchmark-data 'throughput' "${THROUGHPUT}" 'x/sec' 'desc'
+    benchmark-composite "${DURATION}" 'secs' 'asc'
+
+    # send raw data (benchmark-raw takes a file)
+    echo ${DATA} > ${RESULT_LOG}
+    benchmark-raw ${RESULT_LOG}
+  else
+    echo "ERROR: Invalid benchmark (${BENCHMARK})"
+    exit 1
+  fi
+else
+  echo "ERROR: Could not find SparkBench application list"
+  exit 1
+fi
