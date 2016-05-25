@@ -26,6 +26,6 @@ vagrant destroy -f
 vagrant up
 vagrant package --output $WORKDIR/${NAME}.box
 vagrant halt
-vmname=`VBoxManage  list vms | cut -d \" -f 2`
+vmname=`VBoxManage  list vms | cut -d \" -f 2 | grep vagrant-puppet-vm_odpi`
 VBoxManage export $vmname --output=$WORKDIR/${NAME}.ova --ovf20
 vagrant destroy -f
