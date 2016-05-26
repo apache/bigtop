@@ -143,6 +143,8 @@ class spark {
       $worker_ui_port = 8081,
       $history_ui_port = 18080,
       $use_yarn_shuffle_service = false,
+      $event_log_dir =  "hdfs:///var/log/spark/apps",
+      $history_log_dir = "hdfs:///var/log/spark/apps",
   ) {
 
     package { 'spark-core':
