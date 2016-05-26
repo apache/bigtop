@@ -16,20 +16,33 @@
 class flink {
 
   class deploy ($roles) {
+<<<<<<< HEAD
    
    if ('flink-master' in $roles) {
       include flink::master
+=======
+    if ("flink-worker" in $roles) {
+      include flink::common
     }
-
+    if ("flink-master" in $roles) {
+      include flink::common
+>>>>>>> 64a00c45c9e21ac2ad39a334666b9dd5e21037ba
+    }
     if ('flink-worker' in $roles) {
       include flink::worker
     }
    
-}
+  }
 
-class master {
+<<<<<<< HEAD
+ class master {
     include common   
-    service { "jobmanager":
+
+    #package { "flink-master":
+     # ensure => latest,
+    #}
+
+    service { "flink-master":
       ensure     => running,
       require  => [
         Package["flink"],
@@ -40,11 +53,16 @@ class master {
       hasrestart => true,
       hasstatus  => true,
     }
-}
+  }
 
   class worker {
     include common
-    service { "taskmanager":
+
+    #package { "flink-worker":
+     # ensure => latest,
+    #}
+
+    service { "flink-worker":
       ensure     => running,
       require  => [
         Package["flink"],
@@ -54,9 +72,17 @@ class master {
       ],
       hasrestart => true,
       hasstatus  => true,
-     }
-}
- 
+=======
+  class common 
+{
+    package { "flink":
+      ensure => latest,
+      require => Package["hadoop"],
+>>>>>>> 64a00c45c9e21ac2ad39a334666b9dd5e21037ba
+    }
+  
+
+
 
   class common(
       $master_host = $fqdn,
@@ -87,6 +113,6 @@ class master {
 	content => template('flink/masters'),
 	require => Package['flink'],
 	mode => 755,
-    }
   }
+}
 }         
