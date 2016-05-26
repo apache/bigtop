@@ -151,6 +151,7 @@ class hadoop ($hadoop_security_authentication = "simple",
       $container_executor_min_user_id = "499",
       $hadoop_security_authentication = $hadoop::hadoop_security_authentication,
       $kerberos_realm = $hadoop::kerberos_realm,
+      $yarn_nodemanager_vmem_check_enabled = undef,
   ) inherits hadoop {
 
     include hadoop::common
