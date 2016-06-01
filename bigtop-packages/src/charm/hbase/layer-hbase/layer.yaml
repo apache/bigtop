@@ -1,0 +1,33 @@
+repo: https://github.com/apache/bigtop/tree/master/bigtop-packages/src/charm/hbase/layer-hbase
+includes:
+  - 'layer:apache-bigtop-base'
+  - 'layer:hadoop-client'
+  - 'interface:zookeeper'
+  - 'interface:benchmark'
+  - 'interface:hbase'
+options:
+  apache-bigtop-base:
+    ports:
+      # Ports that need to be exposed, overridden, or manually specified.
+      # Only expose ports serving a UI or external API (i.e., namenode and
+      # resourcemanager).  Communication among units within the cluster does
+      # not need ports to be explicitly opened.
+      hbase-master:
+        port: 60000
+        exposed_on: 'hbase'
+      hbase-master-web:
+        port: 60010
+        exposed_on: 'hbase'
+      hbase-region:
+        port: 60020
+        exposed_on: 'hbase'
+      hbase-region-web:
+        port: 60030
+        exposed_on: 'hbase'
+      hbase-thrift:
+        port: 9090
+        exposed_on: 'hbase'
+      # Not yet on bigtop
+      #hbase-rest:
+      #  port: 8080
+      #  exposed_on: 'hbase'
