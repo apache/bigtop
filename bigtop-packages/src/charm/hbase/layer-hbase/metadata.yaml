@@ -1,0 +1,17 @@
+name: hbase
+summary: Apache Bitop HBase
+maintainer: Juju Big Data <bigdata@lists.ubuntu.com>
+description: >
+  Hadoop is a software platform that lets one easily write and
+  run applications that process vast amounts of data.
+
+  This charm provides a Apache HBase usin the Apache Bigtop.
+tags: ["applications", "bigdata", "hadoop", "apache"]
+requires:
+  zookeeper:
+    interface: zookeeper
+provides:
+  hbclient:
+    interface: hbase
+  benchmark:
+    interface: benchmark
