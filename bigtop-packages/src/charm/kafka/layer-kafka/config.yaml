@@ -1,0 +1,7 @@
+options:
+  bind_addr:
+    default: null
+    type: string
+    description: |
+      IP address of the interface to listen on, if something other than the
+      default is desired.
