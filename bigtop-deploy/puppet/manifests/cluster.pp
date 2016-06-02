@@ -117,6 +117,9 @@ $roles_map = {
     worker => ["qfs-chunkserver"],
     client => ["qfs-client"],
   },
+  kafka => {
+    master => ["kafka-server"],
+  }
 }
 
 class hadoop_cluster_node (
@@ -185,7 +188,8 @@ class node_with_roles ($roles = hiera("bigtop::roles")) inherits hadoop_cluster_
     "tez",
     "ycsb",
     "kerberos",
-    "zeppelin"
+    "zeppelin",
+    "kafka"
   ]
 
   deploy_module { $modules:
