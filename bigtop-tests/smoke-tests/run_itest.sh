@@ -41,9 +41,7 @@ set_java_home() {
 
     if [ -z "$JAVA_HOME" ]; then
         source bin/bigtop-detect-javahome
-    fi
-
-    echo "# DEBUG: JAVA_HOME=$JAVA_HOME"
+    fi    
 }
 
 set_hadoop_vars() {
@@ -63,10 +61,9 @@ set_hadoop_vars() {
     fi
     if ( [ -z "$HADOOP_MAPRED_HOME" ] && [ -d /usr/lib/hadoop-mapreduce-client ] ); then
       export HADOOP_MAPRED_HOME=/usr/lib/hadoop-mapreduce-client
+    elif ( [ -z "$HADOOP_MAPRED_HOME" ] && [ -d /usr/lib/hadoop-mapreduce ] ); then
+      export HADOOP_MAPRED_HOME=/usr/lib/hadoop-mapreduce
     fi
-
-    echo "# DEBUG: HADOOP_CONF_DIR=$HADOOP_CONF_DIR"
-    echo "# DEBUG: HADOOP_MAPRED_HOME=$HADOOP_MAPRED_HOME"
 }
 
 
@@ -92,14 +89,17 @@ print_cluster_info() {
     echo "# MEMORY: $(head -n1 /proc/meminfo)"
   fi
 
-  YARN_NODES=$(yarn node -list 2>/dev/null | egrep ^Total | sed 's/Total Nodes/Total Yarn Nodes/g')
+  YARN_NODES=$(yarn node -list 2>/dev/null | egrep ^Total | sed 's/Total Nodes:/TOTAL YARN NODES: /g')
   echo "# $YARN_NODES"
 
   HADOOP_VERSION=$(hadoop version 2>/dev/null | head -n1)
   echo "# HADOOP_VERSION: $HADOOP_VERSION"
+  echo "# HADOOP_CONF_DIR: $HADOOP_CONF_DIR"
+  echo "# HADOOP_MAPRED_HOME: $HADOOP_MAPRED_HOME"
   
   echo "# BASH_VERSION: $BASH_VERSION"
   
+  echo "# JAVA_HOME: $JAVA_HOME"
   JAVA_VERSION=$(java -version 2>&1 | head -n 1 | awk -F '"' '{print $2}')
   echo "# JAVA_VERSION: $JAVA_VERSION"
 }
