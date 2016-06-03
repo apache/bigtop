@@ -1,0 +1,68 @@
+services:
+  openjdk:
+    charm: cs:trusty/openjdk
+    annotations:
+      gui-x: "500"
+      gui-y: "400"
+    options:
+      java-type: "jdk"
+      java-major: "8"
+  namenode:
+    charm: local:trusty/hadoop-namenode
+    num_units: 1
+    annotations:
+      gui-x: "500"
+      gui-y: "800"
+    constraints: mem=7G
+  resourcemanager:
+    charm: local:trusty/hadoop-resourcemanager
+    num_units: 1
+    annotations:
+      gui-x: "500"
+      gui-y: "0"
+    constraints: mem=7G
+  slave:
+    charm: local:trusty/hadoop-slave
+    num_units: 3
+    annotations:
+      gui-x: "0"
+      gui-y: "400"
+    constraints: mem=7G
+  plugin:
+    charm: local:trusty/hadoop-plugin
+    annotations:
+      gui-x: "1000"
+      gui-y: "400"
+  client:
+    charm: cs:trusty/hadoop-client
+    num_units: 1
+    annotations:
+      gui-x: "1250"
+      gui-y: "400"
+  ganglia-node:
+    charm: cs:trusty/ganglia-node
+    annotations:
+      gui-x: "250"
+      gui-y: "400"
+  ganglia:
+    charm: cs:trusty/ganglia
+    num_units: 1
+    annotations:
+      gui-x: "750"
+      gui-y: "400"
+series: trusty
+relations:
+  - [openjdk, namenode]
+  - [openjdk, resourcemanager]
+  - [openjdk, slave]
+  - [openjdk, client]
+  - [resourcemanager, namenode]
+  - [namenode, slave]
+  - [resourcemanager, slave]
+  - [plugin, namenode]
+  - [plugin, resourcemanager]
+  - [client, plugin]
+  - ["ganglia:node", ganglia-node]
+  - [ganglia-node, namenode]
+  - [ganglia-node, resourcemanager]
+  - [ganglia-node, slave]
