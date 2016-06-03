@@ -340,6 +340,7 @@
               <!-- Juju charm files with rigid structure -->
               <exclude>bigtop-packages/src/charm/**/wheelhouse.txt</exclude>
               <exclude>bigtop-packages/src/charm/**/*.yaml</exclude>
+              <exclude>bigtop-deploy/juju/**/*.yaml</exclude>
               <!-- Miscelaneous individual files -->
               <exclude>src/site/resources/bigtop.rdf</exclude>
               <exclude>src/site/resources/images/bigtop-logo.ai</exclude>

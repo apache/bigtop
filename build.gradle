@@ -116,6 +116,7 @@ rat {
        /* Juju charm files with rigid structure */
        "bigtop-packages/src/charm/**/wheelhouse.txt",
        "bigtop-packages/src/charm/**/*.yaml",
+       "bigtop-deploy/juju/**/*.yaml",
        /* Misc individual files */
        "src/site/resources/bigtop.rdf",
        "src/site/resources/images/bigtop-logo.ai",
