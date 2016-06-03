@@ -122,6 +122,7 @@ hadoop_hbase::common_config::rootdir: "%{hiera('bigtop::hadoop_namenode_uri')}%{
 hadoop_hbase::common_config::zookeeper_quorum: "%{hiera('bigtop::hadoop_head_node')}"
 hadoop_hbase::common_config::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 hadoop_hbase::client::thrift: true
+hadoop_hbase::deploy::auxiliary: true
 
 solr::server::root_url: "%{hiera('bigtop::hadoop_namenode_uri')}"
 solr::server::zk: "%{hiera('hadoop::zk')}"

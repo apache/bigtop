@@ -15,15 +15,19 @@
 
 class hadoop_hbase {
 
-  class deploy ($roles) {
+  class deploy ($roles, $auxiliary = true) {
     if ("hbase-server" in $roles) {
       include hadoop_hbase::server
     }
 
     if ("hbase-master" in $roles) {
+      if ($auxiliary == true) {
+        include hadoop_zookeeper::server
+      }
+
+      include hadoop::common_hdfs
       include hadoop::init_hdfs
       include hadoop_hbase::master
-      include hadoop_zookeeper::server
       Class['Hadoop::Init_hdfs'] -> Class['Hadoop_hbase::Master']
     }
 
