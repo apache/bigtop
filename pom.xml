@@ -341,6 +341,7 @@
               <exclude>bigtop-packages/src/charm/**/wheelhouse.txt</exclude>
               <exclude>bigtop-packages/src/charm/**/*.yaml</exclude>
               <exclude>bigtop-deploy/juju/**/*.yaml</exclude>
+              <exclude>bigtop-tests/cloud-weather-report/**/*.yaml</exclude>
               <!-- Miscelaneous individual files -->
               <exclude>src/site/resources/bigtop.rdf</exclude>
               <exclude>src/site/resources/images/bigtop-logo.ai</exclude>

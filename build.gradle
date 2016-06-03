@@ -117,6 +117,7 @@ rat {
        "bigtop-packages/src/charm/**/wheelhouse.txt",
        "bigtop-packages/src/charm/**/*.yaml",
        "bigtop-deploy/juju/**/*.yaml",
+       "bigtop-tests/cloud-weather-report/**/*.yaml",
        /* Misc individual files */
        "src/site/resources/bigtop.rdf",
        "src/site/resources/images/bigtop-logo.ai",
