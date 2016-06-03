@@ -218,7 +218,7 @@ specs {
     }
     'HADOOP_BINCONTENT_COMMON' {
       name = 'HADOOP_BINCONTENT_COMMON'
-      type = 'dircontent'
+      type = 'dirstruct'
       arguments {
         envcmd = 'hadoop envvars'
         baseDirEnv = 'HADOOP_COMMON_HOME'
@@ -228,7 +228,7 @@ specs {
     }
     'HADOOP_BINCONTENT_HDFS' {
       name = 'HADOOP_BINCONTENT_HDFS'
-      type = 'dircontent'
+      type = 'dirstruct'
       arguments {
         envcmd = 'hdfs envvars'
         baseDirEnv = 'HADOOP_HDFS_HOME'
@@ -238,7 +238,7 @@ specs {
     }
     'HADOOP_BINCONTENT_MAPRED' {
       name = 'HADOOP_BINCONTENT_MAPRED'
-      type = 'dircontent'
+      type = 'dirstruct'
       arguments {
         envcmd = 'mapred envvars'
         baseDirEnv = 'HADOOP_MAPRED_HOME'
@@ -248,7 +248,7 @@ specs {
     }
     'HADOOP_BINCONTENT_YARN' {
       name = 'HADOOP_BINCONTENT_YARN'
-      type = 'dircontent'
+      type = 'dirstruct'
       arguments {
         envcmd = 'yarn envvars'
         baseDirEnv = 'HADOOP_YARN_HOME'
@@ -256,9 +256,9 @@ specs {
         referenceList = 'hadoop-yarn-bin.list'
       }
     }
-    'HADOOP_JARCONTENT_COMMON' {
+    'HADOOP_LIBJARSCONTENT_COMMON' {
       name = 'HADOOP_JARCONTENT_COMMON'
-      type = 'dircontent'
+      type = 'dirstruct'
       arguments {
         envcmd = 'hadoop envvars'
         baseDirEnv = 'HADOOP_COMMON_HOME'
@@ -266,9 +266,9 @@ specs {
         referenceList = 'hadoop-common-jar.list'
       }
     }
-    'HADOOP_JARCONTENT_HDFS' {
+    'HADOOP_LIBJARSCONTENT_HDFS' {
       name = 'HADOOP_JARCONTENT_HDFS'
-      type = 'dircontent'
+      type = 'dirstruct'
       arguments {
         envcmd = 'hdfs envvars'
         baseDirEnv = 'HADOOP_HDFS_HOME'
@@ -276,9 +276,9 @@ specs {
         referenceList = 'hadoop-hdfs-jar.list'
       }
     }
-    'HADOOP_JARCONTENT_MAPRED' {
+    'HADOOP_LIBJARSCONTENT_MAPRED' {
       name = 'HADOOP_JARCONTENT_MAPRED'
-      type = 'dircontent'
+      type = 'dirstruct'
       arguments {
         envcmd = 'mapred envvars'
         baseDirEnv = 'HADOOP_MAPRED_HOME'
@@ -286,9 +286,9 @@ specs {
         referenceList = 'hadoop-mapreduce-jar.list'
       }
     }
-    'HADOOP_JARCONTENT_YARN' {
+    'HADOOP_LIBJARSCONTENT_YARN' {
       name = 'HADOOP_JARCONTENT_YARN'
-      type = 'dircontent'
+      type = 'dirstruct'
       arguments {
         envcmd = 'yarn envvars'
         baseDirEnv = 'HADOOP_YARN_HOME'
