@@ -58,7 +58,7 @@ public class TestDFSCLI extends TestHDFSCLI {
         "hadoop fs -mkdir -p " + TEST_DIR_ABSOLUTE,
         "hadoop fs -chmod 777 " + TEST_DIR_ABSOLUTE
     };
-    shHDFS.exec(createTestcliDirCmds);
+    shHDFS.exec((Object[])createTestcliDirCmds);
 
     // Check assumptions which would make some cases fail if not met
     Assert.assertEquals("Creation of testcli dir should succeed and return 0"
