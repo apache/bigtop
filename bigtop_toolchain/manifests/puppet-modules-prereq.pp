@@ -13,26 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class bigtop_toolchain::puppet-modules {
+class bigtop_toolchain::puppet-modules-prereq {
 
-  exec { 'install-puppet-stdlib':
-    path    => '/usr/bin:/bin',
-    command => 'puppet module install puppetlabs-stdlib',
-    creates => '/etc/puppet/modules/stdlib',
+  if versioncmp($::puppetversion,'3.0.0') < 0 {
+    fail("bigtop_toolchain::puppet-modules requires Puppet 3.0.0+, but found: $::puppetversion")
   }
-
-  case $operatingsystem{
-    /Ubuntu|Debian/: {
-      exec { 'install-puppet-apt':
-        path    => '/usr/bin:/bin',
-        command => 'puppet module install puppetlabs-apt',
-        creates => '/etc/puppet/modules/apt',
-      }
-    }
-  }
-
-  stage { 'first':
-    before => Stage['main'],
-  }
-  class { 'bigtop_toolchain::puppet-modules-prereq': stage => 'first' }
 }
