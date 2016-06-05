@@ -25,8 +25,8 @@ class bigtop_toolchain::packages {
        $pkgs = [ "unzip", "curl", "wget", "git", "make", "cmake", "autoconf", "automake", "libtool", "gcc", "gcc-c++", "fuse", "createrepo", "lzo-devel", "fuse-devel", "cppunit-devel", "openssl-devel", "python-devel", "python-setuptools", "libxml2-devel", "libxslt-devel", "cyrus-sasl-devel", "sqlite-devel", "openldap-devel", $mysql_devel, "rpm-build", "redhat-rpm-config", "fuse-libs", "asciidoc", "xmlto", "libyaml-devel", "gmp-devel", "snappy-devel", "boost-devel", "xfsprogs-devel", "libuuid-devel", "bzip2-devel" ]
      }
     /(?i:(SLES|opensuse))/: { $pkgs = [ "unzip", "curl", "wget", "git", "make", "cmake", "autoconf", "automake", "libtool", "gcc", "gcc-c++", "fuse", "createrepo", "lzo-devel", "fuse-devel", "cppunit-devel", "rpm-devel", "rpm-build", "pkg-config", "gmp-devel", "python-devel", "python-setuptools", "libxml2-devel", "libxslt-devel", "cyrus-sasl-devel", "sqlite3-devel", "openldap2-devel", "libyaml-devel", "krb5-devel", "asciidoc", "xmlto", "libmysqlclient-devel", "snappy-devel", "boost-devel", "xfsprogs-devel", "libuuid-devel", "libbz2-devel" ]
-      # fix package dependencies: BIGTOP-2120 and BIGTOP-2152
-      exec { '/usr/bin/zypper -q -n install  --force-resolution krb5':
+      # fix package dependencies: BIGTOP-2120 and BIGTOP-2152 and BIGTOP-2471
+      exec { '/usr/bin/zypper -n install  --force-resolution krb5 libopenssl-devel':
       } -> Package <| |>
     }
     Amazon: {                 $pkgs = [ "unzip", "curl", "wget", "git", "make", "cmake", "autoconf", "automake", "libtool", "gcc", "gcc-c++", "fuse", "createrepo", "lzo-devel", "fuse-devel", "openssl-devel", "rpm-build", "system-rpm-config", "fuse-libs","gmp-devel", "snappy-devel", "bzip2-devel" ] }
