@@ -1,0 +1,2 @@
+restart:
+    description: stop and start a Zookeeper server.
