@@ -180,6 +180,13 @@
     <name>dfs.datanode.data.dir</name>
     <value><%= @hdfs_data_dirs.map { |dir| "file://#{dir}" }.join(",") %></value>
   </property>
+  
+  <!-- BEGIN: Specific change for ODPi reference build ONLY -->
+  <property>
+    <name>dfs.client.block.write.replace-datanode-on-failure.enable</name>
+    <value>false</value>
+  </property>
+  <!-- END: Specific change for ODPi reference build ONLY -->
 
 <% if @hdfs_support_append %>
   <property>
