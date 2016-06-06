@@ -1,0 +1,74 @@
+#!/usr/bin/python3
+
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import unittest
+import amulet
+
+TIMEOUT = 1800
+
+
+class TestDeploy(unittest.TestCase):
+    """
+    Deployment test for Apache Zookkepper quorum
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.d = amulet.Deployment(series='xenial')
+
+        cls.d.add('zookeeper', charm='zookeeper', units=3)
+
+        cls.d.setup(timeout=TIMEOUT)
+        cls.d.sentry.wait(timeout=TIMEOUT)
+        cls.unit = cls.d.sentry['zookeeper'][0]
+
+    def test_deploy(self):
+        output, retcode = self.unit.run("pgrep -a java")
+        assert 'QuorumPeerMain' in output, "zookeeper QuorumPeerMain daemon is not started"
+
+    def test_quorum(self):
+        '''
+        Verify that our peers are talking to each other, and taking on
+        appropriate roles.
+
+        '''
+        self.assertEqual(3, len(self.d.sentry['zookeeper']))
+
+        # Verify that everything worked.
+        for unit in self.d.sentry['zookeeper']:
+            output, _ = unit.run(
+                "/usr/lib/zookeeper/bin/zkServer.sh status"
+            )
+            # Unit should be a leader or follower
+            self.assertTrue("leader" in output or "follower" in output)
+
+    def test_smoke(self):
+        """Validates Zookeeper using the Bigtop 'zookeeper' smoke test."""
+        smk_uuids = []
+
+        for unit in self.d.sentry['zookeeper']:
+            smk_uuids.append(unit.action_do("smoke-test"))
+
+        for smk_uuid in smk_uuids:
+            result = self.d.action_fetch(smk_uuid, full_output=True)
+            # zookeeper smoke-test sets outcome=success on success
+            if (result['outcome'] != "success"):
+                error = "Zookeeper smoke-test failed"
+                amulet.raise_status(amulet.FAIL, msg=error)
+
+if __name__ == '__main__':
+    unittest.main()
