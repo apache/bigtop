@@ -89,6 +89,8 @@ hadoop_cluster_node::cluster_components: #{components}
 bigtop::jdk_package_name: #{jdk}
 hadoop::common_hdfs::testonly_hdfs_sshkeys: "yes"
 EOF
+# ODPI-130 - Upgrade to latest CentOS 6.x to ensure Java works as expected
+yum -y upgrade
 SCRIPT
 
 VAGRANTFILE_API_VERSION = "2"
