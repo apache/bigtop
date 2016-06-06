@@ -1,0 +1,17 @@
+name: hive
+summary: Data warehouse infrastructure built on top of Hadoop
+maintainer: Juju Big Data <bigdata@lists.ubuntu.com>
+description: |
+  Apache Hive is a data warehouse infrastructure built on top of Hadoop that
+  supports data summarization, query, and analysis. Hive provides an SQL-like
+  language called HiveQL that transparently converts queries to MapReduce for
+  execution on large datasets stored in Hadoop's HDFS.
+
+  Learn more at http://hive.apache.org
+tags: ["apache", "bigdata", "bigtop", "hadoop"]
+provides:
+  client:
+    interface: hive
+requires:
+  database:
+    interface: mysql

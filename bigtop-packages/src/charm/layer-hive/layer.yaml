@@ -1,0 +1,31 @@
+repo: git@github.com:juju-solutions/bigtop.git
+includes:
+  - 'layer:apache-bigtop-base'
+  - 'layer:hadoop-client'
+  - 'interface:hive'
+  - 'interface:mysql'
+options:
+  basic:
+    packages:
+      - 'libmysql-java'
+      - 'mysql-client'
+  apache-bigtop-base:
+    groups:
+      - 'hadoop'
+      - 'hive'
+    users:
+      ubuntu:
+        groups: ['hadoop', 'hive']
+    dirs:
+      hive:
+        path: '/usr/lib/hive'
+      hive_conf:
+        path: '/etc/hive/conf'
+      hive_logs:
+        path: '/var/log/hive'
+        owner: 'ubuntu'
+        group: 'hive'
+    ports:
+      hive:
+        port: 10000
+        exposed_on: 'hive'

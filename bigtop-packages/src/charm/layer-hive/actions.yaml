@@ -1,0 +1,4 @@
+smoke-test:
+  description: >
+    Verify that Hive is working as expected
+    by creating and removing a test table.
