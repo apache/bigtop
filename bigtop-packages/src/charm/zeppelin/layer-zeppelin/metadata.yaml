@@ -1,0 +1,13 @@
+name: zeppelin
+summary: A web-based notebook that enables interactive data analytics.
+maintainer: Juju Big Data <bigdata@lists.ubuntu.com>
+description: |
+  Apache Zeppelin is a web-based notebook that enables interactive data
+  analytics. You can make beautiful data-driven, interactive, and collaborative
+  documents with SQL, Scala and more.
+tags: ["analytics"]
+requires:
+  hive:
+    interface: hive
+  spark:
+    interface: spark
