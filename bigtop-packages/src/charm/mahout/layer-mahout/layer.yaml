@@ -1,0 +1,5 @@
+includes:
+  - 'layer:apache-bigtop-base'
+options:
+  basic:
+    use_venv: true
