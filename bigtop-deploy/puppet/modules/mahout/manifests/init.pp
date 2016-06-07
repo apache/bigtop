@@ -22,6 +22,8 @@ class mahout {
   }
 
   class client {
+    include hadoop::common
+
     package { "mahout":
       ensure => latest,
       require => Package["hadoop"],
