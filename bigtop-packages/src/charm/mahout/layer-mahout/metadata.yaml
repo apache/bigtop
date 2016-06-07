@@ -1,0 +1,12 @@
+name: mahout
+summary: Create scalable and performant machine learning applications
+maintainer: Juju Big Data <bigdata@lists.ubuntu.com>
+description: >
+  The Apache Mahout project's goal is to build an environment for quickly
+  creating scalable and performant machine learning applications.
+tags: []
+subordinate: true
+requires:
+  mahout:
+    interface: mahout
+    scope: container
