@@ -22,11 +22,13 @@ class hadoop_pig {
   }
 
   class client {
+    include hadoop::common
+
     package { "pig":
       ensure => latest,
       require => Package["hadoop"],
-    } 
- 
+    }
+
     file { "/etc/pig/conf/pig.properties":
       content => template('hadoop_pig/pig.properties'),
       require => Package["pig"],
