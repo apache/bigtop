@@ -1,0 +1,9 @@
+name: pig
+summary: Create Pig Latin programs for data warehouse analysis
+maintainer: Juju Big Data <bigdata@lists.ubuntu.com>
+description: |
+  Apache Pig is a platform for creating MapReduce programs used with Hadoop.
+  It consists of a high-level language (Pig Latin) for expressing data analysis
+  programs, coupled with infrastructure for evaluating these programs.
+  Learn more at http://pig.apache.org.
+tags: []

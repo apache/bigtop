@@ -1,0 +1,6 @@
+smoke-test:
+    description: |
+      Verify the Bigtop Pig service is working by executing a smoke test. If
+      pig is in 'local' mode, the smoke test will execute a local /etc/passwd
+      analysis job. If pig is in 'mapreduce' mode, the Bigtop smoke test will
+      be executed, which exercises Pig with HDFS and MapReduce.

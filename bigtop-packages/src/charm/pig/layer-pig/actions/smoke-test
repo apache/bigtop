@@ -1,0 +1,70 @@
+#!/usr/bin/env python3
+
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import sys
+sys.path.append('lib')
+
+from charmhelpers.core import hookenv
+from charms.layer.apache_bigtop_base import Bigtop
+from charms.reactive import is_state
+
+from jujubigdata.utils import run_as
+
+from path import Path
+
+
+def fail(msg):
+    hookenv.action_fail(msg)
+    sys.exit()
+
+
+if not is_state('pig.installed'):
+    fail('Pig is not yet ready')
+
+
+if is_state('hadoop.ready'):
+    hookenv.log('Testing Pig in mapreduce mode using the Bigtop smoke test')
+    # Remove any output from previous runs
+    run_as('ubuntu',
+           'hdfs', 'dfs', '-rm', '-f', '-R', '/user/ubuntu/pig-output-wordcount')
+
+    bigtop = Bigtop()
+    bigtop.run_smoke_tests(['pig'])
+    output = run_as('ubuntu',
+                    'hdfs', 'dfs', '-cat', 'pig-output-wordcount/part-r-00000',
+                    capture_output=True)
+else:
+    hookenv.log('Testing Pig in local mode (ignoring bigtop component smoke test)')
+    # Remove any output from previous runs
+    run_as('ubuntu', 'rm', '-R', '-f', '/tmp/test.pig.out')
+
+    script = ("A = load '/etc/passwd' using PigStorage(':'); "
+              "B = foreach A generate $0 as id; store B into '/tmp/test.pig.out';")
+    Path('/tmp/test.pig').write_text(script)
+    run_as('ubuntu', 'pig', '-x', 'local', '-l', '/tmp/test.pig.log', '/tmp/test.pig')
+
+    output = run_as('ubuntu',
+                    'cat', '/tmp/test.pig.out/part-m-00000',
+                    capture_output=True)
+
+# The smoke tests analyze /etc/passwd. Successful runs will have an 'ubuntu'
+# passwd entry in the output.
+if 'ubuntu' not in output:
+    hookenv.action_set({'output': output})
+    fail('Unable to analyze passwd file with Pig')
+else:
+    hookenv.action_set({'outcome': 'success'})
