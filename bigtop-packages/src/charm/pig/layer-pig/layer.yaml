@@ -1,0 +1,19 @@
+repo: git@github.com:juju-solutions/bigtop.git
+includes:
+  - 'layer:apache-bigtop-base'
+  - 'layer:hadoop-client'
+options:
+  apache-bigtop-base:
+    bigtop_smoketest_components:
+      - pig
+    dirs:
+      pig:
+        path: '/usr/lib/pig'
+      pig_conf:
+        path: '/etc/pig/conf'
+      hadoop_conf:
+        path: '/etc/hadoop/conf'
+  hadoop-client:
+    # The hadoop-plugin is optional for pig, so turn off hadoop-client's status
+    # updates about a missing hadoop-plugin.
+    silent: True
