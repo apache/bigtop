@@ -22,7 +22,8 @@ language called HiveQL that transparently converts queries to MapReduce for
 execution on large datasets stored in Hadoop's HDFS. Learn more at
 [hive.apache.org](http://hive.apache.org).
 
-This charm provides the Hive command line interface and the HiveServer2 service.
+This charm deploys the Hive component of the Apache Bigtop platform and
+provides the Hive command line interface and the HiveServer2 service.
 
 
 ## Usage
