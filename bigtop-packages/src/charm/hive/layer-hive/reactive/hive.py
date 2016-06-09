@@ -1,8 +1,8 @@
 from charms.reactive import when, when_not
 from charms.reactive import is_state, set_state, remove_state
 from charmhelpers.core import hookenv
-from charms.layer.apache_hive import Hive
 from charms.layer.apache_bigtop_base import get_layer_opts
+from charms.layer.bigtop_hive import Hive
 
 
 @when('bigtop.available')

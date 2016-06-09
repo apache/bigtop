@@ -43,16 +43,13 @@ class Hive(object):
                 env['PATH'] = ':'.join([env['PATH'], hive_bin])
             env['HIVE_CONF_DIR'] = self.dist_config.path('hive_conf')
 
-        # Copy templates to config files if they don't exist
-        hive_env = self.dist_config.path('hive_conf') / 'hive-env.sh'
-        hive_log4j = self.dist_config.path('hive_conf') / 'hive-log4j.properties'
+        # Copy template to config file so we can adjust config later
         hive_site = self.dist_config.path('hive_conf') / 'hive-site.xml'
-        if not hive_env.exists():
-            (self.dist_config.path('hive_conf') / 'hive-env.sh.template').copy(hive_env)
         if not hive_site.exists():
             (self.dist_config.path('hive_conf') / 'hive-default.xml.template').copy(hive_site)
 
         # Configure immutable things
+        hive_log4j = self.dist_config.path('hive_conf') / 'hive-log4j.properties'
         hive_logs = self.dist_config.path('hive_logs')
         utils.re_edit_in_place(hive_log4j, {
             r'^hive.log.dir.*': 'hive.log.dir={}'.format(hive_logs),
