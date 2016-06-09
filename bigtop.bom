@@ -427,11 +427,11 @@ bigtop {
     }
     'apex' {
       name    = 'apex'
-      relNotes = 'Apache Apex (incubating)'
-      version { base = '3.3.0'; pkg = base; release = 1 }
-      tarball { source      = "$name-${version.base}-incubating-source-release.tar.gz"
+      relNotes = 'Apache Apex'
+      version { base = '3.4.0'; pkg = base; release = 1 }
+      tarball { source      = "$name-${version.base}-source-release.tar.gz"
                 destination = "$name-${version.base}.tar.gz" }
-      url     { download_path = "/incubator/$name/v${version.base}-incubating/"
+      url     { download_path = "/incubator/$name/v${version.base}/"
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }

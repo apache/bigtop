@@ -94,13 +94,13 @@ install -d -m 0755 $BIN_DIR
 install -d -m 0755 $DOC_DIR
 install -d -m 0755 $MAN_DIR
 
-# Install dtcli
+# Install apex cli
 BINARY_FILE=$APEX_DIR/bin/apex
-cp engine/src/main/scripts/dtcli $APEX_DIR/bin/apex
+cp engine/src/main/scripts/apex $APEX_DIR/bin/apex
 chmod 755 $BINARY_FILE
 
 # Make bin wrappers
-for file in $BIN_DIR/apex $BIN_DIR/dtcli
+for file in $BIN_DIR/apex
 do
   cat > $file <<EOF
 #!/bin/bash
@@ -121,5 +121,4 @@ gzip -c apex.1 > $MAN_DIR/apex.1.gz
 # Install license here.
 cp LICENSE $DOC_DIR
 cp *-LICENSE.txt $DOC_DIR
-cp DISCLAIMER $DOC_DIR
 cp NOTICE $DOC_DIR
