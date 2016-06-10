@@ -1,4 +1,6 @@
 reset: false
+bundle_deploy: 00-deploy
+makefile: []
 packages:
   - amulet
   - python3-yaml

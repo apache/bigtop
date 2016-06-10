@@ -1,6 +1,6 @@
 services:
   openjdk:
-    charm: cs:trusty/openjdk-1
+    charm: cs:trusty/openjdk-4
     annotations:
       gui-x: "500"
       gui-y: "400"
@@ -8,28 +8,28 @@ services:
       java-type: "jdk"
       java-major: "8"
   namenode:
-    charm: cs:trusty/hadoop-namenode-3
+    charm: cs:trusty/hadoop-namenode-4
     num_units: 1
     annotations:
       gui-x: "500"
       gui-y: "800"
     constraints: mem=7G
   resourcemanager:
-    charm: cs:trusty/hadoop-resourcemanager-3
+    charm: cs:trusty/hadoop-resourcemanager-4
     num_units: 1
     annotations:
       gui-x: "500"
       gui-y: "0"
     constraints: mem=7G
   slave:
-    charm: cs:trusty/hadoop-slave-4
+    charm: cs:trusty/hadoop-slave-5
     num_units: 3
     annotations:
       gui-x: "0"
       gui-y: "400"
     constraints: mem=7G
   plugin:
-    charm: cs:trusty/hadoop-plugin-3
+    charm: cs:trusty/hadoop-plugin-4
     annotations:
       gui-x: "1000"
       gui-y: "400"
