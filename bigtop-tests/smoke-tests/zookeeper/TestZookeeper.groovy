@@ -27,7 +27,7 @@ import org.apache.commons.logging.Log
 
 import static org.apache.bigtop.itest.LogErrorsUtils.logError
 
-class TestSpark {
+class TestZookeeper {
   static private Log LOG = LogFactory.getLog(Object.class)
 
   static Shell sh = new Shell("/bin/bash -s")
