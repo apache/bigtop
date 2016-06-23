@@ -25,6 +25,7 @@ mvn -DskipTests \
     -Dpig.version=$PIG_VERSION  \
     -Dflume.version=$FLUME_VERSION  \
     -Dspark.version=${SPARK1_VERSION} \
+    -Dhive.version=${HIVE_VERSION}  \
     clean install "$@"
 rm -rf build
 mkdir build
