@@ -421,11 +421,11 @@ bigtop {
     }
     'zeppelin' {
       name    = 'zeppelin'
-      relNotes = 'Apache Zeppelin (incubating)'
-      version { base = '0.5.6'; pkg = base; release = 1 }
-      tarball { source      = "$name-${version.base}-incubating.tgz"
+      relNotes = 'Apache Zeppelin'
+      version { base = '0.6.2'; pkg = base; release = 1 }
+      tarball { source      = "$name-${version.base}.tgz"
                 destination = "$name-${version.base}.tar.gz" }
-      url     { download_path = "/incubator/$name/${version.base}-incubating/"
+      url     { download_path = "/$name/$name-${version.base}/"
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }
