@@ -24,7 +24,7 @@ SOLR_HOME=${SOLR_HOME:-/usr/lib/solr}
 rm -rf ${TOMCAT_DEPLOYMENT}
 mkdir ${TOMCAT_DEPLOYMENT}
 cp -r ${TOMCAT_CONF}/conf ${TOMCAT_DEPLOYMENT}
-cp -r ${SOLR_HOME}/webapps ${TOMCAT_DEPLOYMENT}/webapps
+cp -r ${SOLR_HOME}/server/webapps ${TOMCAT_DEPLOYMENT}/webapps
 cp -r ${TOMCAT_CONF}/WEB-INF/* ${TOMCAT_DEPLOYMENT}/webapps/solr/WEB-INF/
 
 if [ -n "${BIGTOP_CLASSPATH}" ] ; then
