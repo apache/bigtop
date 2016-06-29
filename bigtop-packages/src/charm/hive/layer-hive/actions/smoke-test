@@ -16,60 +16,35 @@
 # limitations under the License.
 
 import sys
-import subprocess
-
-from path import Path
+sys.path.append('lib')
 
 from charmhelpers.core import hookenv
-from jujubigdata.utils import run_as
+from charms import layer
+from charms.layer.apache_bigtop_base import Bigtop
 from charms.reactive import is_state
 
 
-def fail(msg, output):
-    hookenv.action_set({'output': output})
+def fail(msg):
     hookenv.action_fail(msg)
     sys.exit()
 
+if not is_state('hadoop.ready'):
+    fail('Hadoop is not yet ready')
 
 if not is_state('hive.installed'):
-    fail('Hive service not yet ready')
+    fail('Hive is not yet ready')
 
 
-def _run_sql(cmd, sql):
-    Path('/tmp/test.sql').write_text(sql)
-    try:
-        return run_as('root', cmd, '-f', '/tmp/test.sql',
-                      stderr=subprocess.STDOUT,
-                      capture_output=True)
-    except subprocess.CalledProcessError as e:
-        fail('Hive command failed', e.output)
+hookenv.log('Testing Hive using the Bigtop smoke test')
+cfg = layer.options('apache-bigtop-base')
+smoke_components = cfg.get('bigtop_smoketest_components')
+if not smoke_components:
+    fail('No bigtop_smoketest_components configured for this charm')
 
-
-def test_hive():
-    output = _run_sql('hive', 'show tables;')
-    if 'smoketest_cli' in output:
-        return  # smoke-test already successfully ran once
-
-    output = _run_sql(
-        'hive',
-        'create table smoketest_cli(col1 int, col2 string); '
-        'show tables;')
-    if 'smoketest_cli' not in output:
-        fail('Unable to create table using Hive CLI', output)
-
-
-def test_beeline():
-    output = _run_sql('hive', 'show tables;')
-    if 'test_beeline' in output:
-        return  # smoke-test already successfully ran once
-
-    output = _run_sql(
-        'beeline',
-        'create table test_beeline(col1 int, col2 string); '
-        'show tables;')
-    if 'test_beeline' not in output:
-        fail('Unable to create table using Beeline', output)
-
-
-test_hive()
-test_beeline()
+bigtop = Bigtop()
+bigtop.run_smoke_tests(smoke_components)
+result = bigtop.run_smoke_tests(smoke_components)
+if result == 'success':
+    hookenv.action_set({'outcome': result})
+else:
+    fail('failed smoke testing %s: %s' % (smoke_components, result))

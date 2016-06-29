@@ -10,6 +10,8 @@ options:
       - 'libmysql-java'
       - 'mysql-client'
   apache-bigtop-base:
+    bigtop_smoketest_components:
+      - hive
     groups:
       - 'hadoop'
       - 'hive'
@@ -29,3 +31,5 @@ options:
       hive:
         port: 10000
         exposed_on: 'hive'
+  hadoop-client:
+    silent: True
