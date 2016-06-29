@@ -28,43 +28,63 @@ provides the Hive command line interface and the HiveServer2 service.
 
 ## Usage
 
-This charm is intended to be deployed via one of the
-[big data bundles](https://jujucharms.com/u/bigdata-charmers/#bundles).
-For example:
+This charm is intended to be deployed along with the
+[hadoop-processing](https://jujucharms.com/hadoop-processing/) bundle:
 
-    juju quickstart apache-analytics-sql
+    juju deploy hadoop-processing
 
-This will deploy the Apache Hadoop platform with Apache Hive available to
-perform SQL-like queries against your data.
+_**Note**: The above assumes Juju 2.0 or greater. If using an earlier version
+of Juju, the syntax is `juju quickstart cs:bundle/hadoop-processing`._
+
+Now add Hive:
+
+    juju deploy hive
+
+Now relate Hive to Java and the Hadoop cluster:
+
+    juju add-relation hive openjdk
+    juju add-relation hive plugin
+
+Once deployment is complete, you will have an Apache Bigtop Hadoop platform
+with Apache Hive available to analyze your data with SQL-like queries.
 
 
 ## Status and Smoke Test
 
 The services provide extended status reporting to indicate when they are ready:
 
-    juju status --format=tabular
+    juju status
 
 This is particularly useful when combined with `watch` to track the on-going
 progress of the deployment:
 
-    watch -n 0.5 juju status --format=tabular
+    watch -n 0.5 juju status
 
 The message for each unit will provide information about that unit's state.
 Once they all indicate that they are ready, you can perform a "smoke test"
 to verify that Hive is working as expected using the built-in `smoke-test`
 action:
 
-    juju action do hive/0 smoke-test
+    juju run-action hive/0 smoke-test
 
-After a few seconds or so, you can check the results of the smoke test:
+_**Note**: The above assumes Juju 2.0 or greater. If using an earlier version
+of Juju, the syntax is `juju action do hive/0 smoke-test`._
 
-    juju action status
+After a minute or so, you can check the results of the smoke test:
+
+    juju show-action-status
+
+_**Note**: The above assumes Juju 2.0 or greater. If using an earlier version
+of Juju, the syntax is `juju action status`._
 
 You will see `status: completed` if the smoke test was successful, or
 `status: failed` if it was not.  You can get more information on why it failed
 via:
 
-    juju action fetch <action-id>
+    juju show-action-output <action-id>
+
+_**Note**: The above assumes Juju 2.0 or greater. If using an earlier version
+of Juju, the syntax is `juju action fetch <action-id>`._
 
 
 ## Considerations
@@ -73,14 +93,13 @@ This charm will deploy Hive with an embedded metastore_db by default. This
 is suitable for unit or smoke testing Hive, but this configuration should not
 be used in production. The embedded database only allows for one user to
 connect and interact with Hive. For this reason, it is recommended you deploy
-a MySQL database as the backing store for Hive (this is done automatically
-when deploying Hive via one of the big data bundles).
+a database as the backing store for Hive.
 
 If you have deployed Hive without an external database, you can add one
 post-deployment with the following:
 
-    juju deploy mysql
-    juju add-relation hive mysql
+    juju deploy mariadb
+    juju add-relation hive mariadb
 
 
 ## Contact Information
