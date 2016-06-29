@@ -50,8 +50,8 @@ def install_hive(hadoop):
     # Hive cannot handle - in the metastore db name and
     # mysql uses the service name to name the db
     if "-" in hookenv.service_name():
-        hookenv.status_set('blocked', 'Service name should not contain -. '
-                                      'Redeploy with a different name.')
+        hookenv.status_set('blocked', 'service name may not contain -. '
+                                      'redeploy with a different name.')
         return
 
     hive = Hive()
@@ -67,33 +67,30 @@ def config_changed():
     hookenv.status_set('maintenance', 'configuring with new options')
     hive = Hive()
     hive.configure_hive()
-    if is_state('hive.db.configured'):
-        # Only restart hiveserver2 if we have an external db configured
+    if is_state('database.available'):
+        # Only restart hiveserver2 if we have an external db
         hive.restart()
     hookenv.status_set('active', 'ready')
 
 
 @when('hive.installed', 'database.available')
-@when_not('hive.db.configured')
 def configure_with_remote_db(database):
     hookenv.status_set('maintenance', 'configuring external database; starting hiveserver2')
     hive = Hive()
     hive.configure_remote_db(database)
     hive.start()
     hive.open_ports()
-    set_state('hive.db.configured')
     hookenv.status_set('active', 'ready')
 
 
-@when('hive.installed', 'hive.db.configured')
+@when('hive.installed')
 @when_not('database.available')
 def configure_with_local_db():
     hookenv.status_set('maintenance', 'configuring local database; stopping hiveserver2')
     hive = Hive()
-    hive.stop()
     hive.close_ports()
+    hive.stop()
     hive.configure_local_db()
-    remove_state('hive.db.configured')
     hookenv.status_set('active', 'ready (local db, hiveserver2 unavailable)')
 
 
@@ -101,15 +98,15 @@ def configure_with_local_db():
 @when_not('hadoop.ready')
 def stop_hive():
     hive = Hive()
-    hive.stop()
     hive.close_ports()
+    hive.stop()
     remove_state('hive.installed')
 
 
-@when('hive.installed', 'hive.db.configured', 'client.joined')
-def client_joined(client):
+@when('hive.installed', 'client.joined', 'database.available')
+def client_joined(client, db):
     # The client relation is all about access to HiveServer2, so we should only
-    # send data if we have a client *and* we have a db configured. Having an
+    # send data if we have a client *and* an external database. Having an
     # external db configured is a prerequisite condition for starting HiveServer2.
     port = get_layer_opts().port('hive')
     client.send_port(port)

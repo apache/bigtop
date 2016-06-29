@@ -27,11 +27,10 @@ from charms.layer.apache_bigtop_base import Bigtop
 class Hive(object):
     """
     This class manages Hive.
-
-    :param DistConfig dist_config: The configuration container object needed.
     """
-    def __init__(self, dist_config=None):
-        self.dist_config = dist_config or utils.DistConfig(data=layer.options('apache-bigtop-base'))
+    def __init__(self):
+        self.dist_config = utils.DistConfig(
+            data=layer.options('apache-bigtop-base'))
 
     def install(self):
         '''
@@ -57,11 +56,12 @@ class Hive(object):
             if hive_bin not in env['PATH']:
                 env['PATH'] = ':'.join([env['PATH'], hive_bin])
             env['HIVE_CONF_DIR'] = self.dist_config.path('hive_conf')
+            env['HIVE_HOME'] = self.dist_config.path('hive')
 
         # Copy template to config file so we can adjust config later
-        hive_site = self.dist_config.path('hive_conf') / 'hive-site.xml'
-        if not hive_site.exists():
-            (self.dist_config.path('hive_conf') / 'hive-default.xml.template').copy(hive_site)
+        hive_env = self.dist_config.path('hive_conf') / 'hive-env.sh'
+        if not hive_env.exists():
+            (self.dist_config.path('hive_conf') / 'hive-env.sh.template').copy(hive_env)
 
         # Configure immutable things
         hive_log4j = self.dist_config.path('hive_conf') / 'hive-log4j.properties'
@@ -69,6 +69,7 @@ class Hive(object):
         utils.re_edit_in_place(hive_log4j, {
             r'^hive.log.dir.*': 'hive.log.dir={}'.format(hive_logs),
         })
+        hive_site = self.dist_config.path('hive_conf') / 'hive-site.xml'
         with utils.xmlpropmap_edit_in_place(hive_site) as props:
             # XXX (kwm): these 4 were needed in 0.12, but it seems ok without them in > 1.0
             # props['hive.exec.local.scratchdir'] = "/tmp/hive"
