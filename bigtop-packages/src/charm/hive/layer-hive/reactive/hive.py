@@ -67,30 +67,41 @@ def config_changed():
     hookenv.status_set('maintenance', 'configuring with new options')
     hive = Hive()
     hive.configure_hive()
-    if is_state('database.available'):
-        # Only restart hiveserver2 if we have an external db
+    if is_state('hive.db.configured'):
+        # Only restart hiveserver2 if we have an external db configured
         hive.restart()
     hookenv.status_set('active', 'ready')
 
 
 @when('hive.installed', 'database.available')
+@when_not('hive.db.configured')
 def configure_with_remote_db(database):
     hookenv.status_set('maintenance', 'configuring external database; starting hiveserver2')
     hive = Hive()
     hive.configure_remote_db(database)
     hive.start()
     hive.open_ports()
+    set_state('hive.db.configured')
     hookenv.status_set('active', 'ready')
 
 
-@when('hive.installed')
+@when('hive.installed', 'hive.db.configured')
 @when_not('database.available')
 def configure_with_local_db():
+    """
+    Reconfigure Hive using a local metastore db.
+
+    The initial installation will configure Hive with a local metastore_db.
+    Once an external db becomes available, we reconfigure Hive to use it. If
+    that external db goes away, we'll use this method to set Hive back into
+    local mode.
+    """
     hookenv.status_set('maintenance', 'configuring local database; stopping hiveserver2')
     hive = Hive()
     hive.close_ports()
     hive.stop()
     hive.configure_local_db()
+    remove_state('hive.db.configured')
     hookenv.status_set('active', 'ready (local db, hiveserver2 unavailable)')
 
 
@@ -103,10 +114,10 @@ def stop_hive():
     remove_state('hive.installed')
 
 
-@when('hive.installed', 'client.joined', 'database.available')
-def client_joined(client, db):
+@when('hive.installed', 'client.joined', 'hive.db.configured')
+def client_joined(client):
     # The client relation is all about access to HiveServer2, so we should only
-    # send data if we have a client *and* an external database. Having an
+    # send data if we have a client *and* an external db configured. Having an
     # external db configured is a prerequisite condition for starting HiveServer2.
     port = get_layer_opts().port('hive')
     client.send_port(port)

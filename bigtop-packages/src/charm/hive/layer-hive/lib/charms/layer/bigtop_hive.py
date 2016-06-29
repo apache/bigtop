@@ -107,6 +107,7 @@ class Hive(object):
         if not unitdata.kv().get('hive.schema.initialized.%s' % remote_db):
             utils.run_as('ubuntu', 'schematool', '-initSchema', '-dbType', 'mysql')
             unitdata.kv().set('hive.schema.initialized.%s' % remote_db, True)
+            unitdata.kv().flush(True)
 
     def configure_local_db(self):
         local_url = 'jdbc:derby:;databaseName=/var/lib/hive/metastore/metastore_db;create=true'
