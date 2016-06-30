@@ -28,12 +28,8 @@ def fail(msg):
     hookenv.action_fail(msg)
     sys.exit()
 
-if not is_state('hadoop.ready'):
-    fail('Hadoop is not yet ready')
-
 if not is_state('hive.installed'):
     fail('Hive is not yet ready')
-
 
 hookenv.log('Testing Hive using the Bigtop smoke test')
 cfg = layer.options('apache-bigtop-base')
@@ -42,7 +38,6 @@ if not smoke_components:
     fail('No bigtop_smoketest_components configured for this charm')
 
 bigtop = Bigtop()
-bigtop.run_smoke_tests(smoke_components)
 result = bigtop.run_smoke_tests(smoke_components)
 if result == 'success':
     hookenv.action_set({'outcome': result})

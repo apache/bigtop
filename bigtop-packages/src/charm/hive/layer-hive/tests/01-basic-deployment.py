@@ -27,7 +27,7 @@ class TestDeploy(unittest.TestCase):
     def setUpClass(cls):
         cls.d = amulet.Deployment(series='trusty')
         cls.d.add('hive', 'hive')
-        cls.d.setup(timeout=900)
+        cls.d.setup(timeout=1800)
         cls.d.sentry.wait(timeout=1800)
 
     def test_deploy(self):

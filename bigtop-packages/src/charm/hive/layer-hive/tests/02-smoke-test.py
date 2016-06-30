@@ -50,8 +50,8 @@ class TestDeploy(unittest.TestCase):
         cls.d.relate('resourcemanager:java', 'openjdk:java')
         cls.d.relate('slave:java', 'openjdk:java')
 
-        cls.d.setup(timeout=1800)
-        cls.d.sentry.wait_for_messages({'hive': re.compile('ready')}, timeout=1800)
+        cls.d.setup(timeout=3600)
+        cls.d.sentry.wait_for_messages({'hive': re.compile('ready')}, timeout=3600)
         cls.hive = cls.d.sentry['hive'][0]
 
     def test_hive(self):
