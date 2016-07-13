@@ -27,3 +27,13 @@ Depends: bigtop-utils (>= 0.7), adduser
 Description: Flink’s core is a streaming dataflow engine that provides data
              distribution, communication, and fault tolerance for distributed
              computations over data streams.
+
+Package: flink-jobmanager
+Architecture: all
+Depends: flink
+Description: Flink’s jobmanager.
+
+Package: flink-taskmanager
+Architecture: all
+Depends: flink
+Description: Flink’s taskmanager.

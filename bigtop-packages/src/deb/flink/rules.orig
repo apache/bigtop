@@ -39,3 +39,8 @@ override_dh_auto_install: jobmanager taskmanager
 	--build-dir=`pwd`/flink-dist/target/flink-${FLINK_VERSION}-bin/flink-${FLINK_VERSION} \
 	--source-dir=debian \
 	--prefix=debian/tmp
+
+# This should be fixed. Split flink in three packages: flink, flink-taskmanager, flink-jobmanager
+override_dh_installinit: jobmanager taskmanager
+	dh_installinit --name=flink-taskmanager
+	dh_installinit --name=flink-jobmanager

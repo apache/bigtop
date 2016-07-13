@@ -1,5 +1,5 @@
-#!/usr/bin/make -f
-
+#!/bin/bash
+#
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -14,28 +14,20 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# -*- makefile -*-
 
-# Uncomment this to turn on verbose mode.
-export DH_VERBOSE=1
+set -e
 
-# This has to be exported to make some magic below work.
-export DH_OPTIONS
+case "$1" in
+    configure)
+    ;;
 
-%:
-	dh $@
+    abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
 
-override_dh_auto_build:
-	bash debian/do-component-build
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
 
-
-.PHONY: jobmanager
-.PHONY: taskmanager
-jobmanager taskmanager:
-	bash debian/init.d.tmpl debian/flink-$@.svc deb debian/flink-$@.init
-
-override_dh_auto_install: jobmanager taskmanager
-	bash -x debian/install_flink.sh \
-	--build-dir=`pwd`/flink-dist/target/flink-${FLINK_VERSION}-bin/flink-${FLINK_VERSION} \
-	--source-dir=debian \
-	--prefix=debian/tmp
+#DEBHELPER#
