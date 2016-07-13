@@ -19,7 +19,6 @@ set -e
 
 case "$1" in
     remove|upgrade|deconfigure)
-      update-alternatives --remove flink-conf /etc/flink/conf.dist || :
     ;;
 
     failed-upgrade)

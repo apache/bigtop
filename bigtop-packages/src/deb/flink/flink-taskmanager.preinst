@@ -15,18 +15,30 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# preinst script for flink
+#
+# see: dh_installdeb(1)
+
 set -e
 
+# summary of how this script can be called:
+#        * <new-preinst> `install'
+#        * <new-preinst> `install' <old-version>
+#        * <new-preinst> `upgrade' <old-version>
+#        * <old-preinst> `abort-upgrade' <new-version>
+# for details, see http://www.debian.org/doc/debian-policy/ or
+# the debian-policy package
+
+
 case "$1" in
-    remove|upgrade|deconfigure)
-      update-alternatives --remove flink-conf /etc/flink/conf.dist || :
+    install|upgrade)
     ;;
 
-    failed-upgrade)
+    abort-upgrade)
     ;;
 
     *)
-        echo "prerm called with unknown argument \`$1'" >&2
+        echo "preinst called with unknown argument \`$1'" >&2
         exit 1
     ;;
 esac
