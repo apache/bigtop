@@ -67,7 +67,42 @@ public class HiveBulkScriptExecutor {
     runScript(test, "");
   }
   
-  public static String getOutFileName() {
-        return (System.getenv("HADOOP_VERSION") != null && System.getenv("HADOOP_VERSION").trim().equals("2.7.1")) ? "out_271" : "out";
+	public static String getOutFileName() {
+		return isVersionGreaterThan("2.4.1", System.getenv("HADOOP_VERSION").trim()) ? "out_271" : "out";
   }
+
+/**
+ * This version comparator should care for versions manifesting with different lengths
+ */
+  static boolean isVersionGreaterThan(String oldVersion, String newVersion){
+  	String[] oldStringFrags = oldVersion.split("\\.");
+  	String[] newStringFrags = newVersion.split("\\.");
+  	ArrayList<Integer> oldFrags = new ArrayList<Integer>();
+  	ArrayList<Integer> newFrags = new ArrayList<Integer>();
+  	int xx=0;
+  	for(xx=0;xx<oldStringFrags.length;xx++){
+  		oldFrags.add(Integer.parseInt(oldStringFrags[xx]));
+  	}
+  	for(xx=0;xx<newStringFrags.length;xx++){
+  		newFrags.add(Integer.parseInt(newStringFrags[xx]));
+  	}
+  	xx = 0;
+  	while((xx < oldFrags.size()) && (xx < newFrags.size())){
+  		println("%%%%%%Comparing:[" + newFrags.get(xx) +"] && [" + oldFrags.get(xx) +"]%%%%%%")
+  		if (newFrags.get(xx) > oldFrags.get(xx)) {
+  			println(">>>>>>>>>>>>>>>>>>>>>>" + newVersion +" is greater than " + oldVersion + ">>>>>>>>>>>>>>>>>>>>>>");    			
+  			return true;
+  		}else if(newFrags.get(xx) < oldFrags.get(xx)){
+  			println("<<<<<<<<<<<<<<<<<<<<<<" + newVersion +" is lesser than " + oldVersion + "<<<<<<<<<<<<<<<<<<<<<<");    			    		
+  			return false;
+  		}else{
+  			println("========= version substrings same, so far, continuing.. =============");    			    			    			    			
+  		}
+  		xx++;
+  	}
+  	//Should rarely come here
+  	println("version checks fell through the while loop for oldVersion[" + oldVersion +"] and newVersion[" + newVersion +"]");
+  	return false;
+  }
+
 }
