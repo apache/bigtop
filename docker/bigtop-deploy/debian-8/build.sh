@@ -13,8 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-cp -r ../../../bigtop_toolchain .
 docker build -t bigtop/deploy:debian-8 .
 ret=$?
-rm -rf bigtop_toolchain
 exit $ret

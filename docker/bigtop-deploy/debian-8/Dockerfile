@@ -15,12 +15,9 @@
 
 FROM bigtop/puppet:debian-8
 
-COPY bigtop_toolchain /etc/puppet/modules/bigtop_toolchain
-
 # enable ssh
 RUN apt-get update && \
-    apt-get install -y openssh-server vim && \
-    mkdir -p /var/run/sshd && \
+    apt-get install -y openssh-server vim dbus && \
     # requiretty off
     sed -i.bak 's/requiretty/!requiretty/' /etc/sudoers && \
     # setup vagrant account
@@ -28,13 +25,10 @@ RUN apt-get update && \
     chmod 0700 /root/.ssh && \
     wget http://github.com/mitchellh/vagrant/raw/master/keys/vagrant.pub --no-check-certificate -O /root/.ssh/authorized_keys && \
     chmod 0600 /root/.ssh/authorized_keys && \
-    # Install required Puppet modules
-    puppet apply -e "include bigtop_toolchain::puppet-modules"
+    sed -i -e "s,^PermitRootLogin.*,PermitRootLogin without-password," \
+                /etc/ssh/sshd_config
+# fix systemd
+RUN rm  /lib/systemd/system/getty-static.service /lib/systemd/system/console-getty.service && \
+    systemctl disable getty@tty1.service
 
-#Add Tini
-ENV TINI_VERSION v0.8.4
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
-RUN chmod +x /tini
-ENTRYPOINT ["/tini", "--"]
-
-CMD /usr/sbin/sshd -D
+CMD /sbin/init

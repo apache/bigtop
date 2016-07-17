@@ -22,8 +22,14 @@ bash /bigtop-home/bigtop_toolchain/bin/puppetize.sh
 # Setup rng-tools to improve virtual machine entropy performance.
 # The poor entropy performance will cause kerberos provisioning failed.
 yum -y install rng-tools
-sed -i.bak 's/EXTRAOPTIONS=\"\"/EXTRAOPTIONS=\"-r \/dev\/urandom\"/' /etc/sysconfig/rngd
-service rngd start
+if [ -x /usr/bin/systemctl ] ; then
+    sed -i 's@ExecStart=/sbin/rngd -f@ExecStart=/sbin/rngd -f -r /dev/urandom@' /usr/lib/systemd/system/rngd.service
+    systemctl daemon-reload
+    systemctl start rngd
+else
+    sed -i.bak 's/EXTRAOPTIONS=\"\"/EXTRAOPTIONS=\"-r \/dev\/urandom\"/' /etc/sysconfig/rngd
+    service rngd start
+fi
 
 if [ $enable_local_repo == "true" ]; then
     echo "Enabling local yum."

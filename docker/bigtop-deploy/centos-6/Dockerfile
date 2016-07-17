@@ -15,26 +15,14 @@
 
 FROM bigtop/puppet:centos-6
 
-COPY bigtop_toolchain /etc/puppet/modules/bigtop_toolchain
-
 # enable ssh
 RUN yum -y install openssh-server openssh-clients vim && \
-    ssh-keygen -q -N "" -t dsa -f /etc/ssh/ssh_host_dsa_key && \
-    ssh-keygen -q -N "" -t rsa -f /etc/ssh/ssh_host_rsa_key && \
     # requiretty off
     sed -i.bak 's/requiretty/!requiretty/' /etc/sudoers && \
     # setup vagrant account
     mkdir /root/.ssh && \
     chmod 0700 /root/.ssh && \
     wget http://github.com/mitchellh/vagrant/raw/master/keys/vagrant.pub --no-check-certificate -O /root/.ssh/authorized_keys && \
-    chmod 0600 /root/.ssh/authorized_keys && \
-    # Install required Puppet modules
-    puppet apply -e "include bigtop_toolchain::puppet-modules"
+    chmod 0600 /root/.ssh/authorized_keys
 
-#Add Tini
-ENV TINI_VERSION v0.8.4
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
-RUN chmod +x /tini
-ENTRYPOINT ["/tini", "--"]
-
-CMD /usr/sbin/sshd -D
+CMD /sbin/init

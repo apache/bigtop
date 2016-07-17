@@ -15,8 +15,6 @@
 
 FROM bigtop/puppet:ubuntu-14.04
 
-COPY bigtop_toolchain /etc/puppet/modules/bigtop_toolchain
-
 # enable ssh
 RUN apt-get update && \
     apt-get install -y openssh-server vim && \
@@ -27,14 +25,7 @@ RUN apt-get update && \
     mkdir -p /root/.ssh && \
     chmod 0700 /root/.ssh && \
     wget http://github.com/mitchellh/vagrant/raw/master/keys/vagrant.pub --no-check-certificate -O /root/.ssh/authorized_keys && \
-    chmod 0600 /root/.ssh/authorized_keys && \
-    # Install required Puppet modules
-    puppet apply -e "include bigtop_toolchain::puppet-modules"
+    chmod 0600 /root/.ssh/authorized_keys
 
-#Add Tini
-ENV TINI_VERSION v0.8.4
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
-RUN chmod +x /tini
-ENTRYPOINT ["/tini", "--"]
+CMD /sbin/init
 
-CMD /usr/sbin/sshd -D
