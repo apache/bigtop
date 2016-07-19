@@ -56,6 +56,10 @@ class hadoop ($hadoop_security_authentication = "simple",
       include hadoop::nodemanager
     }
 
+    if ("journalnode" in $roles) {
+      include hadoop::journalnode
+    }
+
     if ("resourcemanager" in $roles) {
       include hadoop::resourcemanager
       include hadoop::historyserver
