@@ -24,7 +24,8 @@ class kafka {
   class server(
       $broker_id = "0",
       $port = "9092",
-      $zookeeper_connection_string = "localhost:2181"
+      $zookeeper_connection_string = "localhost:2181",
+      $bind_addr = ""
     ) {
 
     package { 'kafka':
