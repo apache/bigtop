@@ -93,6 +93,12 @@ sh %{SOURCE2} \
         --libexec-dir=%{libexec_tez} \
 	--prefix=$RPM_BUILD_ROOT
 
+%__ln_s -f /usr/lib/hadoop/hadoop-annotations.jar $RPM_BUILD_ROOT/%{lib_tez}/hadoop-annotations.jar
+%__ln_s -f /usr/lib/hadoop/hadoop-auth.jar $RPM_BUILD_ROOT/%{lib_tez}/hadoop-auth.jar
+%__ln_s -f /usr/lib/hadoop-mapreduce/hadoop-mapreduce-client-common.jar $RPM_BUILD_ROOT/%{lib_tez}/hadoop-mapreduce-client-common.jar
+%__ln_s -f /usr/lib/hadoop-mapreduce/hadoop-mapreduce-client-core.jar $RPM_BUILD_ROOT/%{lib_tez}/hhadoop-mapreduce-client-core.jar
+%__ln_s -f /usr/lib/hadoop-yarn/hadoop-yarn-server-web-proxy.jar $RPM_BUILD_ROOT/%{lib_tez}/hadoop-yarn-server-web-proxy.jar
+
 %pre
 
 %post

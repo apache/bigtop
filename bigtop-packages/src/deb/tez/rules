@@ -25,6 +25,8 @@ export DH_VERBOSE=1
 export DH_OPTIONS
 
 tez_pkg_name=tez
+tez_home=/usr/lib/tez
+lib_tez=/usr/lib/tez/lib
 
 %:
 	dh $@
@@ -40,3 +42,8 @@ override_dh_auto_install:
 		--build-dir=. \
 		--doc-dir=usr/share/doc/${tez_pkg_name}-doc \
 		--prefix=debian/tmp
+	ln -sf /usr/lib/hadoop/hadoop-annotations.jar debian/tmp/${lib_tez}/hadoop-annotations.jar
+	ln -sf /usr/lib/hadoop/hadoop-auth.jar debian/tmp/${lib_tez}/hadoop-auth.jar
+	ln -sf /usr/lib/hadoop-mapreduce/hadoop-mapreduce-client-common.jar debian/tmp/${lib_tez}/hadoop-mapreduce-client-common.jar
+	ln -sf /usr/lib/hadoop-mapreduce/hadoop-mapreduce-client-core.jar debian/tmp/${lib_tez}/hhadoop-mapreduce-client-core.jar
+	ln -sf /usr/lib/hadoop-yarn/hadoop-yarn-server-web-proxy.jar debian/tmp/${lib_tez}/hadoop-yarn-server-web-proxy.jar
