@@ -1,6 +1,6 @@
 bigtop:
     image: ${DOCKER_IMAGE}
-    command: sleep infinity
+    command: /sbin/init
     domainname: bigtop.apache.org
     privileged: true
     volumes:

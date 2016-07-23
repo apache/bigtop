@@ -41,8 +41,8 @@ create() {
     PROVISION_ID=`cat .provision_id`
     # Create a shared /etc/hosts and hiera.yaml that will be both mounted to each container soon
     mkdir -p config/hieradata 2> /dev/null
-    cat /dev/null > ./config/hiera.yaml
-    cat /dev/null > ./config/hosts
+    echo > ./config/hiera.yaml
+    echo > ./config/hosts
     export DOCKER_IMAGE=$(get-yaml-config docker image)
 
     # Startup instances
@@ -81,8 +81,8 @@ generate-hosts() {
 
 generate-config() {
     echo "Bigtop Puppet configurations are shared between instances, and can be modified under config/hieradata"
-    cat $BIGTOP_PUPPET_DIR/hiera.yaml > ./config/hiera.yaml
-    yes | cp -vr $BIGTOP_PUPPET_DIR/hieradata ./config/
+    cat $BIGTOP_PUPPET_DIR/hiera.yaml >> ./config/hiera.yaml
+    cp -vfr $BIGTOP_PUPPET_DIR/hieradata ./config/
     cat > ./config/hieradata/site.yaml << EOF
 bigtop::hadoop_head_node: $1
 hadoop::hadoop_storage_dirs: [/data/1, /data/2]
@@ -185,7 +185,7 @@ if [ -e .provision_id ]; then
     PROVISION_ID=`cat .provision_id`
 fi
 if [ -n "$PROVISION_ID" ]; then
-    NODES=`docker-compose -p $PROVISION_ID ps -q`
+    NODES=(`docker-compose -p $PROVISION_ID ps -q`)
 fi
 
 while [ $# -gt 0 ]; do
