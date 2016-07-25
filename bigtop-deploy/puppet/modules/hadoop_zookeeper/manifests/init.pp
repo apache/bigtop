@@ -63,6 +63,7 @@ class hadoop_zookeeper (
                 $datadir = "/var/lib/zookeeper",
                 $ensemble = ["localhost:2888:3888"],
                 $kerberos_realm = $hadoop_zookeeper::kerberos_realm,
+                $client_bind_addr = "",
   ) inherits hadoop_zookeeper {
     include common
 
