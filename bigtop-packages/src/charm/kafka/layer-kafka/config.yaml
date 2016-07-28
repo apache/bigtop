@@ -1,7 +1,10 @@
 options:
-  bind_addr:
-    default: null
+  network_interface:
+    default: ""
     type: string
     description: |
-      IP address of the interface to listen on, if something other than the
-      default is desired.
+      Network interface to bind Kafka to. Defaults to accepting
+      connections on all interfaces. Accepts either the name of an
+      interface (e.g., 'eth0'), or a CIDR range. If the latter, we\'ll
+      bind to the first interface that we find with an IP address in
+      that range.

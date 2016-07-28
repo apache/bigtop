@@ -36,6 +36,8 @@ def waiting_for_zookeeper_ready(zk):
 @when_not('kafka.started')
 def configure_kafka(zk):
     hookenv.status_set('maintenance', 'setting up kafka')
+    data_changed(  # Prime data changed for network interface
+        'kafka.network_interface', hookenv.config().get('network_interface'))
     kafka = Kafka()
     zks = zk.zookeepers()
     kafka.configure_kafka(zks)
@@ -50,9 +52,15 @@ def configure_kafka_zookeepers(zk):
 
     As zks come and go, server.properties will be updated. When that file
     changes, restart Kafka and set appropriate status messages.
+
+    This method also handles the restart if our network_interface
+    config has changed.
+
     """
     zks = zk.zookeepers()
-    if not data_changed('zookeepers', zks):
+    network_interface = hookenv.config().get('network_interface')
+    if not data_changed('zookeepers', zks) and not data_changed(
+            'kafka.network_interface', network_interface):
         return
 
     hookenv.log('Checking Zookeeper configuration')

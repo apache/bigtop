@@ -55,9 +55,10 @@ class Kafka(object):
             'kafka::server::port': kafka_port,
             'kafka::server::zookeeper_connection_string': zk_connect,
         }
-        bind_addr = hookenv.config().get('bind_addr')
-        if bind_addr:
-            override['kafka::server::bind_addr'] = bind_addr
+        network_interface = hookenv.config().get('network_interface')
+        if network_interface:
+            ip = Bigtop().get_ip_for_interface(network_interface)
+            override['kafka::server::bind_addr'] = ip
 
         bigtop = Bigtop()
         bigtop.render_site_yaml(roles=roles, overrides=override)
