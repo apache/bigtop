@@ -45,7 +45,7 @@ config.bigtop.builddir = projectDir.absolutePath + "/build"
 config.bigtop.outputdir = projectDir.absolutePath + "/output"
 config.bigtop.distdir = projectDir.absolutePath + "/dist"
 config.bigtop.dldir = projectDir.absolutePath + "/dl"
-config.bigtop.buildstamp = 1
+if(!config.bigtop.buildstamp) config.bigtop.buildstamp = 1
 
 def bomVersions = []
 
