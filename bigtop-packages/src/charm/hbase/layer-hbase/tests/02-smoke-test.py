@@ -37,7 +37,7 @@ class TestDeploy(unittest.TestCase):
                                     'java-major': '8'})
 
         cls.d.relate('hbase:hadoop', 'plugin:hadoop-plugin')
-        cls.d.relate('hbase:zookeeper', 'zk:zkclient')
+        cls.d.relate('hbase:zookeeper', 'zk:zookeeper')
         cls.d.relate('plugin:namenode', 'namenode:namenode')
         cls.d.relate('slave:namenode', 'namenode:datanode')
 
@@ -45,7 +45,12 @@ class TestDeploy(unittest.TestCase):
         cls.d.relate('plugin:java', 'openjdk:java')
         cls.d.relate('namenode:java', 'openjdk:java')
         cls.d.relate('slave:java', 'openjdk:java')
-        cls.d.relate('zk:java', 'openjdk:java')
+        try:
+            cls.d.relate('zk:java', 'openjdk:java')
+        except ValueError:
+            # No need to related older versions of the zookeeper charm
+            # to java.
+            pass
 
         cls.d.setup(timeout=3600)
         cls.d.sentry.wait_for_messages({'hbase': 'ready'}, timeout=3600)
