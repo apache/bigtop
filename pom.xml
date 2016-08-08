@@ -305,6 +305,7 @@
               <exclude>bigtop-tests/smoke-tests/phoenix/*.csv</exclude>
               <exclude>bigtop-tests/smoke-tests/phoenix/*.sql</exclude>
               <exclude>bigtop-tests/smoke-tests/ignite-hadoop/*.data</exclude>
+              <exclude>bigtop-tests/smoke-tests/tajo/table1/*.csv</exclude>
               <exclude>**/target/**</exclude>
               <exclude>**/build/**</exclude>
               <exclude>**/.gradle/**</exclude>
@@ -355,7 +356,9 @@
                 bigtop-deploy/puppet/modules/hadoop/templates/container-executor.cfg
               </exclude>
               <exclude>bigtop-deploy/puppet/README.md</exclude>
+              <exclude>bigtop-deploy/puppet/modules/qfs/README.md</exclude>
               <exclude>bigtop-deploy/puppet/config/site.csv.example</exclude>
+              <exclude>dl/**</exclude>
             </excludes>
           </configuration>
         </plugin>
