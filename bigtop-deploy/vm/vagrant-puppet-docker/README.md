@@ -106,7 +106,7 @@ create 5 node cluster => run smoke tests => destroy the cluster
 ```
 ./docker-hadoop.sh -h
 usage: docker-hadoop.sh [options]
-       -c NUM_INSTANCES, --create=NUM_INSTANCES  Create a docker based Bigtop Hadoop cluster
+       -c NUM_INSTANCES, --create NUM_INSTANCES  Create a docker based Bigtop Hadoop cluster
        -p, --provision                           Deploy configuration changes
        -s, --smoke-tests                         Run Bigtop smoke tests
        -d, --destroy                             Destroy the cluster

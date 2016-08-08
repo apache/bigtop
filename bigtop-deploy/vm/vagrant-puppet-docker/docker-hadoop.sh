@@ -19,7 +19,7 @@ usage() {
     echo "usage: $PROG [-C file ] args"
     echo "       -C file                                   Use alternate file for vagrantconfig.yaml"
     echo "  commands:"
-    echo "       -c NUM_INSTANCES, --create=NUM_INSTANCES  Create a Docker based Bigtop Hadoop cluster"
+    echo "       -c NUM_INSTANCES, --create NUM_INSTANCES  Create a Docker based Bigtop Hadoop cluster"
     echo "       -p, --provision                           Deploy configuration changes"
     echo "       -s, --smoke-tests                         Run Bigtop smoke tests"
     echo "       -d, --destroy                             Destroy the cluster"
