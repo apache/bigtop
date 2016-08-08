@@ -38,7 +38,7 @@ class Kafka(object):
         for port in self.dist_config.exposed_ports('kafka'):
             hookenv.close_port(port)
 
-    def configure_kafka(self, zk_units):
+    def configure_kafka(self, zk_units, network_interface=None):
         # Get ip:port data from our connected zookeepers
         zks = []
         for unit in zk_units:
@@ -55,7 +55,6 @@ class Kafka(object):
             'kafka::server::port': kafka_port,
             'kafka::server::zookeeper_connection_string': zk_connect,
         }
-        network_interface = hookenv.config().get('network_interface')
         if network_interface:
             ip = Bigtop().get_ip_for_interface(network_interface)
             override['kafka::server::bind_addr'] = ip
