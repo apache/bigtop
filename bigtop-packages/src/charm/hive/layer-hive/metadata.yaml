@@ -9,6 +9,9 @@ description: |
 
   Learn more at http://hive.apache.org
 tags: ["apache", "bigdata", "bigtop", "hadoop"]
+series:
+  - "trusty"
+  - "xenial"
 provides:
   client:
     interface: hive
