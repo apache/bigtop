@@ -20,7 +20,7 @@ class bigtop_toolchain::node {
   $node_dl_url = 'https://nodejs.org/dist/v$node_version/'
 
   exec { "get node":
-    command => "/usr/bin/wget -O - https://nodejs.org/dist/v${node_version}/${node_name}.tar.gz | /usr/bin/tar xzf -",
+    command => "/usr/bin/wget -O - https://nodejs.org/dist/v${node_version}/${node_name}.tar.gz | /bin/tar xzf -",
     cwd     => "/usr/local",
     unless  => "/usr/bin/test -x /usr/local/${node_name}/bin/npm",
   }
