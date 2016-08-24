@@ -12,20 +12,23 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from path import Path
-from charms.reactive import is_state
-from charmhelpers.core import hookenv
-from charmhelpers.core import host
-from charmhelpers.core import unitdata
 from jujubigdata import utils
+from path import Path
+
 from charms.layer.apache_bigtop_base import Bigtop
+from charms.reactive import is_state
+from charms import layer
+from charmhelpers.core import hookenv, host, unitdata
 from charmhelpers.fetch.archiveurl import ArchiveUrlFetchHandler
 
 
 class Spark(object):
-
-    def __init__(self, dist_config):
-        self.dist_config = dist_config
+    """
+    This class manages Spark.
+    """
+    def __init__(self):
+        self.dist_config = utils.DistConfig(
+            data=layer.options('hadoop-client'))
 
     # translate our execution_mode into the appropriate --master value
     def get_master_url(self, spark_master_host):

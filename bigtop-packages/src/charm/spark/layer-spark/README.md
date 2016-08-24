@@ -14,9 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-## Spark Overview
-
-### Spark Cluster
+## Overview
 
 Apache Spark™ is a fast and general purpose engine for large-scale data
 processing. Key features:
@@ -43,8 +41,8 @@ processing. Key features:
 
 ## Deployment
 
-This charm allows the deployment of Apache Spark packaged by Apache Bigtop
-in the modes described below:
+This charm deploys the Spark component of the Apache Bigtop platform and
+supports running Spark in a variety of modes:
 
  * **Standalone**
 
@@ -59,28 +57,27 @@ in the modes described below:
 
     juju add-unit spark
 
- When in standalone mode Juju ensures a single Spark master is appointed.
+ When in standalone mode, Juju ensures a single Spark master is appointed.
  The status of the unit acting as master reads "ready (standalone - master)",
- while the rest of the units display a status of  "ready (standalone)".
- In case you remove the master unit Juju will appoint a new master to the cluster.
- However, should a master fail in this standalone mode running jobs and job history
- will be lost.
+ while the rest of the units display a status of "ready (standalone)".
+ If you remove the master, Juju will appoint a new one. However, if a master
+ fails in standalone mode, running jobs and job history will be lost.
 
  * **Standalone HA**
 
- To enable High Availability properties of a cluster you need to add a relation
- between spark and a zookeeper deployment. For instance:
+ To enable High Availability for a Spark cluster, you need to add Zookeeper to
+ the deployment. To ensure a Zookeeper quorum, it is recommended that you
+ deploy 3 units of the zookeeper application. For instance:
 
-    juju deploy apache-zookeeper zookeeper
+    juju deploy apache-zookeeper zookeeper -n 3
     juju add-relation spark zookeeper
 
- In this mode again you can scale your cluster to match your needs by adding/removing
- units. Spark units report "ready (standalone HA)" in their status so if you need to
- identify the node acting as master you need to query the Zookeeper deployment.
+ In this mode, you can again scale your cluster to match your needs by
+ adding/removing units. Spark units report "ready (standalone HA)" in their
+ status. If you need to identify the node acting as master, query Zookeeper
+ as follows:
 
-    juju ssh zk/0
-    zkCli.sh
-    get /spark/master_status
+    juju run --unit zookeeper/0 'echo "get /spark/master_status" | /usr/lib/zookeeper/bin/zkCli.sh'
 
  * **Yarn-client and Yarn-cluster**
 
@@ -94,10 +91,13 @@ in the modes described below:
     juju add-relation plugin spark
 
 
-Note: To transition among execution modes you need to set the
+Note: To switch to a different execution mode, set the
 `spark_execution_mode` config variable:
 
     juju set spark spark_execution_mode=<new_mode>
+
+See the **Configuration** section below for supported mode options.
+
 
 ## Usage
 

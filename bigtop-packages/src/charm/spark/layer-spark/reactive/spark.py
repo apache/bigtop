@@ -65,8 +65,7 @@ def install_spark(hadoop=None, zks=None):
         nns = hadoop.namenodes()
         hosts['namenode'] = nns[0]
 
-    dist = utils.DistConfig(data=layer.options('hadoop-client'))
-    spark = Spark(dist)
+    spark = Spark()
     spark.configure(hosts, zks, get_spark_peers())
     return True
 
