@@ -157,8 +157,7 @@ def leader_elected():
 def client_present(client):
     if is_state('leadership.is_leader'):
         client.set_spark_started()
-        dist = utils.DistConfig(data=layer.options('hadoop-client'))
-        spark = Spark(dist)
+        spark = Spark()
         master_ip = utils.resolve_private_address(hookenv.unit_private_ip())
         master_url = spark.get_master_url(master_ip)
         client.send_master_info(master_url, master_ip)

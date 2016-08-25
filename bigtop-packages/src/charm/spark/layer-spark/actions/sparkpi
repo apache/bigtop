@@ -23,11 +23,7 @@ import subprocess
 
 from charmhelpers.contrib.benchmark import Benchmark
 from charmhelpers.core import hookenv
-from charms.layer.hadoop_client import get_dist_config
 from charms.reactive import is_state
-from jujubigdata import utils
-
-from charms.layer.bigtop_spark import Spark
 
 
 def fail(msg, output):
