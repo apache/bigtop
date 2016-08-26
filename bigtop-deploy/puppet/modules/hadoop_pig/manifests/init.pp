@@ -17,7 +17,7 @@ class hadoop_pig {
 
   class deploy ($roles) {
     if ("pig-client" in $roles) {
-      include client
+      include hadoop_pig::client
     }
   }
 

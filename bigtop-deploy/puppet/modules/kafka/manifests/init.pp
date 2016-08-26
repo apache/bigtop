@@ -17,7 +17,7 @@ class kafka {
 
   class deploy ($roles) {
     if ('kafka-server' in $roles) {
-      include server
+      include kafka::server
     }
   }
 

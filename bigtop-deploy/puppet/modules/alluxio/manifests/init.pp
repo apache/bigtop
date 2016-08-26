@@ -41,7 +41,7 @@ class alluxio {
   }
 
   class master {
-    include common
+    include alluxio::common
 
    exec {
         "alluxio formatting":
@@ -61,7 +61,7 @@ class alluxio {
   }
 
   class worker {
-    include common
+    include alluxio::common
 
    if ( $fqdn == $alluxio::common::master_host ) {
       notice("alluxio ---> master host")

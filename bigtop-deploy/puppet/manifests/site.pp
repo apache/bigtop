@@ -68,8 +68,6 @@ package { $jdk_package_name:
   noop => $jdk_preinstalled,
 }
 
-import "cluster.pp"
-
 node default {
 
   $roles_enabled = hiera("bigtop::roles_enabled", false)

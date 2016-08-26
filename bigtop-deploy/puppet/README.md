@@ -142,7 +142,7 @@ bigtop::bigtop_repo_uri: "http://bigtop-repos.s3.amazonaws.com/releases/1.1.0/ub
 
 And finally execute
 ```
-puppet apply -d --modulepath="bigtop-deploy/puppet/modules:/etc/puppet/modules" bigtop-deploy/puppet/manifests/site.pp
+puppet apply -d --parser future --modulepath="bigtop-deploy/puppet/modules:/etc/puppet/modules" bigtop-deploy/puppet/manifests
 ```
 When ignite-hadoop accelerator is deployed the client configs are placed under
 `/etc/hadoop/ignite.client.conf`. All one needs to do to run Mapreduce jobs on ignite-hadoop grid

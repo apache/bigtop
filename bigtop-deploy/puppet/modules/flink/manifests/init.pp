@@ -35,7 +35,7 @@ class flink {
   }
 
   class jobmanager {
-    include common
+    include flink::common
 
     service { "flink-jobmanager":
       ensure => running,
@@ -49,7 +49,7 @@ class flink {
   }
 
   class taskmanager {
-    include common
+    include flink::common
 
     service { "flink-taskmanager":
       ensure => running,
