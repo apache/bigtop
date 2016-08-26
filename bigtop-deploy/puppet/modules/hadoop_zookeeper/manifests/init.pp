@@ -43,7 +43,7 @@ class hadoop_zookeeper (
   class client (
     $kerberos_realm = $hadoop_zookeeper::kerberos_realm,
   ) inherits hadoop_zookeeper {
-    include common
+    include hadoop_zookeeper::common
 
     package { "zookeeper":
       ensure => latest,
@@ -64,7 +64,7 @@ class hadoop_zookeeper (
                 $ensemble = [$myid, "localhost:2888:3888"],
                 $kerberos_realm = $hadoop_zookeeper::kerberos_realm,
   ) inherits hadoop_zookeeper {
-    include common
+    include hadoop_zookeeper::common
 
     package { "zookeeper-server":
       ensure => latest,

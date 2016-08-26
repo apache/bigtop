@@ -38,12 +38,12 @@ class qfs {
       ensure => directory,
       owner => root,
       group => root,
-      mode => 0755,
+      mode => '0755',
     }
   }
 
   class metaserver {
-    include common
+    include qfs::common
 
     package { "qfs-metaserver":
       ensure => latest,
@@ -63,7 +63,7 @@ class qfs {
       ensure => directory,
       owner => qfs,
       group => qfs,
-      mode => 0755,
+      mode => '0755',
       before => Service['qfs-metaserver'],
       require => [
         File[$qfs::common::storage_dirs[0]],
@@ -98,7 +98,7 @@ class qfs {
   }
 
   class chunkserver {
-    include common
+    include qfs::common
 
     package { "qfs-chunkserver":
       ensure => latest,
@@ -118,7 +118,7 @@ class qfs {
       ensure => directory,
       owner => qfs,
       group => qfs,
-      mode => 0755,
+      mode => '0755',
       before => Service['qfs-chunkserver'],
       require => [
         File[$qfs::common::storage_dirs],
@@ -138,7 +138,7 @@ class qfs {
   }
 
   class client {
-    include common
+    include qfs::common
 
     package { [
       "qfs-client",
@@ -155,7 +155,7 @@ class qfs {
 
     file { "/usr/bin/hadoop-qfs":
       content => template("qfs/hadoop-qfs"),
-      mode => 0755,
+      mode => '0755',
     }
   }
 }

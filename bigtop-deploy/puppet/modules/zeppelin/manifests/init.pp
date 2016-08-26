@@ -17,7 +17,7 @@ class zeppelin {
 
   class deploy ($roles) {
     if ('zeppelin-server' in $roles) {
-      include server
+      include zeppelin::server
     }
   }
 
