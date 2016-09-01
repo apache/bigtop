@@ -54,14 +54,6 @@ Source6: bigtop.bom
 Requires: bigtop-utils >= 0.7
 Requires(preun): /sbin/service
 
-%if  %{?suse_version:1}0
-# Required for init scripts
-Requires: insserv
-%else
-# Required for init scripts
-Requires: /lib/lsb/init-functions
-%endif
-
 %description
 Apache Flink is an open source platform for distributed stream and batch data processing.
 Flink’s core is a streaming dataflow engine that provides data distribution, communication,
@@ -147,7 +139,6 @@ getent passwd flink >/dev/null || useradd -c "Flink" -s /sbin/nologin -g flink -
 
 %post
 %{alternatives_cmd} --install %{config_flink} %{flink_name}-conf %{config_flink}.dist 30
-systemctl daemon-reload
 
 ###### FILES ###########
 
