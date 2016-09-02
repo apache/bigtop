@@ -80,6 +80,7 @@ def reconfigure_spark():
     hadoop = (RelationBase.from_state('hadoop.yarn.ready') or
               RelationBase.from_state('hadoop.hdfs.ready'))
 
+    zks = None
     if is_state('zookeeper.ready'):
         zk = RelationBase.from_state('zookeeper.ready')
         zks = zk.zookeepers()
