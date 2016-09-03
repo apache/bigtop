@@ -72,7 +72,7 @@ create() {
 
 generate-hosts() {
     for node in ${NODES[*]}; do
-        entry=`docker inspect --format "{{.NetworkSettings.IPAddress}} {{.Config.Hostname}}.{{.Config.Domainname}}" $node`
+        entry=`docker inspect --format "{{.NetworkSettings.IPAddress}} {{.Config.Hostname}}.{{.Config.Domainname}} {{.Config.Hostname}}" $node`
         docker exec ${NODES[0]} bash -c "echo $entry >> /etc/hosts"
     done
     wait
@@ -131,7 +131,7 @@ destroy() {
 }
 
 bigtop-puppet() {
-    docker exec $1 bash -c 'puppet apply -d --modulepath=/bigtop-home/bigtop-deploy/puppet/modules:/etc/puppet/modules /bigtop-home/bigtop-deploy/puppet/manifests/site.pp'
+    docker exec $1 bash -c 'puppet apply --modulepath=/bigtop-home/bigtop-deploy/puppet/modules:/etc/puppet/modules /bigtop-home/bigtop-deploy/puppet/manifests/site.pp'
 }
 
 get-yaml-config() {
