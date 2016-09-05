@@ -30,31 +30,33 @@ give full validation of the BigTop stack.
 
 ## USAGE
 
-1) Install [vagrant-hostmanager plugin](https://github.com/smdahlen/vagrant-hostmanager) to better manage `/etc/hosts`
+1) Install [Vagrant](https://www.vagrantup.com/downloads.html)(DO NOT install 1.8.5 because of a critical [bug](https://github.com/mitchellh/vagrant/issues/7631))
+
+2) Install [vagrant-hostmanager plugin](https://github.com/smdahlen/vagrant-hostmanager) to manage `/etc/hosts`
 
 ```
 vagrant plugin install vagrant-hostmanager
 ```
 
-2) Install [vagrant-cachier plugin](https://github.com/fgrehm/vagrant-cachier) to cache packages at local
+3) (Optional) Install [vagrant-cachier plugin](https://github.com/fgrehm/vagrant-cachier) to cache packages at local
 
 ```
 vagrant plugin install vagrant-cachier
 ```
 
-3) To provision a 3 node Apache Hadoop cluster on top of vagrant boxes
+4) To provision a one node Apache Hadoop cluster on top of vagrant boxes
 
 ```
 vagrant up
 ```
 
-4) You can specify number of nodes you'd like to provision by modifying `num_instances` in vagrantconfig.yaml
+5) You can specify number of nodes you'd like to provision by modifying `num_instances` in vagrantconfig.yaml
 
 ```
 num_instances: 5
 ```
 
-5) Test on local built packages is available by:
+6) Test on local built packages is available by:
 
 first, build up local yum repo
 
@@ -90,15 +92,15 @@ $ MEMORY_SIZE=8000 vagrant up
 * Choose the ecosystem you want to be deployed by modifying components in vagrantconfig.yaml
 
 ```
-components: "hadoop,hbase,yarn,..."
+components: "hadoop, hbase, yarn,..."
 ```
 
-By default, Apache Hadoop, YARN, and Apache HBase will be installed.
-See `bigtop-deploy/puppet/config/site.csv.example` for more details.
+By default, Apache Hadoop and YARN will be installed.
+See `bigtop-deploy/puppet/hieradata/site.yaml` for more details.
 
 ##Example:
 
-5) Run hbase-test.sh to evaluate the deployment.
+Run hbase-test.sh to evaluate the deployment.
 
 ```
 ../utils/hbase-test.sh
