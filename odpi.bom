@@ -142,7 +142,16 @@ bigtop {
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }
-
+    'hive' {
+      name    = 'hive'
+      relNotes = 'Apache Hive'
+      version { base = '1.2.1-odpi'; pkg = '1.2.1+odpi'; release = 1 }
+      tarball { destination = "apache-${name}-${version.base}-src.tar.gz"
+                source      = "odpi-branch-1.2.1.zip" }
+      url     { download_path = "odpi/hive/archive"
+                site = "$https://github.com/${download_path}"
+                archive = site }
+    }	
     'bigtop-groovy' {
       name    = 'bigtop-groovy'
       version { base = '2.4.4'; pkg = base+'+odpi'; release = 1}
