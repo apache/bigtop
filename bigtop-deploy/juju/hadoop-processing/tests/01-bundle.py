@@ -29,13 +29,13 @@ class TestBundle(unittest.TestCase):
     def setUpClass(cls):
         # classmethod inheritance doesn't work quite right with
         # setUpClass / tearDownClass, so subclasses have to manually call this
-        cls.d = amulet.Deployment(series='trusty')
+        cls.d = amulet.Deployment(series='xenial')
         with open(cls.bundle_file) as f:
             bun = f.read()
         bundle = yaml.safe_load(bun)
         cls.d.load(bundle)
         cls.d.setup(timeout=3600)
-        cls.d.sentry.wait_for_messages({'client': 'Ready'}, timeout=3600)
+        cls.d.sentry.wait_for_messages({'client': 'ready'}, timeout=3600)
         cls.hdfs = cls.d.sentry['namenode'][0]
         cls.yarn = cls.d.sentry['resourcemanager'][0]
         cls.slave = cls.d.sentry['slave'][0]
@@ -51,15 +51,12 @@ class TestBundle(unittest.TestCase):
         client, retcode = self.client.run("pgrep -a java")
 
         assert 'NameNode' in hdfs, "NameNode not started"
-        assert 'NameNode' not in yarn, "NameNode should not be running on resourcemanager"
         assert 'NameNode' not in slave, "NameNode should not be running on slave"
 
         assert 'ResourceManager' in yarn, "ResourceManager not started"
-        assert 'ResourceManager' not in hdfs, "ResourceManager should not be running on namenode"
         assert 'ResourceManager' not in slave, "ResourceManager should not be running on slave"
 
         assert 'JobHistoryServer' in yarn, "JobHistoryServer not started"
-        assert 'JobHistoryServer' not in hdfs, "JobHistoryServer should not be running on namenode"
         assert 'JobHistoryServer' not in slave, "JobHistoryServer should not be running on slave"
 
         assert 'NodeManager' in slave, "NodeManager not started"
@@ -71,7 +68,7 @@ class TestBundle(unittest.TestCase):
         assert 'DataNode' not in hdfs, "DataNode should not be running on namenode"
 
     def test_hdfs(self):
-        """Smoke test validates mkdir, ls, chmod, and rm on the hdfs cluster."""
+        """Validates mkdir, ls, chmod, and rm HDFS operations."""
         unit_name = self.hdfs.info['unit_name']
         uuid = self.d.action_do(unit_name, 'smoke-test')
         result = self.d.action_fetch(uuid)
@@ -81,14 +78,23 @@ class TestBundle(unittest.TestCase):
             amulet.raise_status(amulet.FAIL, msg=error)
 
     def test_yarn(self):
-        """Smoke test validates teragen/terasort."""
+        """Validates YARN using the Bigtop 'yarn' smoke test."""
         unit_name = self.yarn.info['unit_name']
         uuid = self.d.action_do(unit_name, 'smoke-test')
         result = self.d.action_fetch(uuid)
-        # yarn smoke-test only returns results on failure; if result is not
-        # empty, the test has failed and has a 'log' key
-        if result:
-            error = "YARN smoke-test failed: %s" % result['log']
+        # yarn smoke-test sets outcome=success on success
+        if (result['outcome'] != "success"):
+            error = "YARN smoke-test failed"
+            amulet.raise_status(amulet.FAIL, msg=error)
+
+    def test_slave(self):
+        """Validates slave using the Bigtop 'hdfs' and 'mapred' smoke test."""
+        unit_name = self.slave.info['unit_name']
+        uuid = self.d.action_do(unit_name, 'smoke-test')
+        result = self.d.action_fetch(uuid)
+        # slave smoke-test sets outcome=success on success
+        if (result['outcome'] != "success"):
+            error = "Slave smoke-test failed"
             amulet.raise_status(amulet.FAIL, msg=error)
 
 

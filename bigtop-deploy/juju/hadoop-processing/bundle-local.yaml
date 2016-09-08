@@ -1,68 +1,105 @@
 services:
-  openjdk:
-    charm: cs:trusty/openjdk
-    annotations:
-      gui-x: "500"
-      gui-y: "400"
-    options:
-      java-type: "jdk"
-      java-major: "8"
   namenode:
-    charm: local:trusty/hadoop-namenode
+    charm: "/home/ubuntu/charms/xenial/hadoop-namenode"
     num_units: 1
     annotations:
       gui-x: "500"
       gui-y: "800"
-    constraints: mem=7G
+    to:
+      - "0"
   resourcemanager:
-    charm: local:trusty/hadoop-resourcemanager
+    charm: "/home/ubuntu/charms/xenial/hadoop-resourcemanager"
     num_units: 1
     annotations:
       gui-x: "500"
       gui-y: "0"
-    constraints: mem=7G
+    to:
+      - "0"
   slave:
-    charm: local:trusty/hadoop-slave
+    charm: "/home/ubuntu/charms/xenial/hadoop-slave"
     num_units: 3
     annotations:
       gui-x: "0"
       gui-y: "400"
-    constraints: mem=7G
+    to:
+      - "1"
+      - "2"
+      - "3"
   plugin:
-    charm: local:trusty/hadoop-plugin
+    charm: "/home/ubuntu/charms/xenial/hadoop-plugin"
     annotations:
       gui-x: "1000"
       gui-y: "400"
   client:
-    charm: cs:trusty/hadoop-client
+    charm: "cs:xenial/hadoop-client-2"
     num_units: 1
     annotations:
       gui-x: "1250"
       gui-y: "400"
+    to:
+      - "4"
+  ganglia:
+    charm: "cs:trusty/ganglia-2"
+    num_units: 1
+    annotations:
+      gui-x: "0"
+      gui-y: "800"
+    to:
+      - "5"
   ganglia-node:
-    charm: cs:trusty/ganglia-node
+    charm: "cs:~bigdata-dev/xenial/ganglia-node-2"
+    series: trusty
     annotations:
       gui-x: "250"
       gui-y: "400"
-  ganglia:
-    charm: cs:trusty/ganglia
+  rsyslog:
+    charm: "cs:trusty/rsyslog-10"
     num_units: 1
+    series: trusty
+    annotations:
+      gui-x: "1000"
+      gui-y: "800"
+    to:
+      - "5"
+  rsyslog-forwarder-ha:
+    charm: "cs:~bigdata-dev/xenial/rsyslog-forwarder-ha-2"
     annotations:
       gui-x: "750"
       gui-y: "400"
-series: trusty
+series: xenial
 relations:
-  - [openjdk, namenode]
-  - [openjdk, resourcemanager]
-  - [openjdk, slave]
-  - [openjdk, client]
   - [resourcemanager, namenode]
   - [namenode, slave]
   - [resourcemanager, slave]
   - [plugin, namenode]
   - [plugin, resourcemanager]
   - [client, plugin]
-  - ["ganglia:node", ganglia-node]
-  - [ganglia-node, namenode]
-  - [ganglia-node, resourcemanager]
-  - [ganglia-node, slave]
+  - ["ganglia-node:juju-info", "client:juju-info"]
+  - ["ganglia-node:juju-info", "namenode:juju-info"]
+  - ["ganglia-node:juju-info", "resourcemanager:juju-info"]
+  - ["ganglia-node:juju-info", "slave:juju-info"]
+  - ["ganglia:node", "ganglia-node:node"]
+  - ["rsyslog-forwarder-ha:juju-info", "client:juju-info"]
+  - ["rsyslog-forwarder-ha:juju-info", "namenode:juju-info"]
+  - ["rsyslog-forwarder-ha:juju-info", "resourcemanager:juju-info"]
+  - ["rsyslog-forwarder-ha:juju-info", "slave:juju-info"]
+  - ["rsyslog:aggregator", "rsyslog-forwarder-ha:syslog"]
+machines:
+  "0":
+    constraints: "mem=7G"
+    series: "xenial"
+  "1":
+    constraints: "mem=7G"
+    series: "xenial"
+  "2":
+    constraints: "mem=7G"
+    series: "xenial"
+  "3":
+    constraints: "mem=7G"
+    series: "xenial"
+  "4":
+    constraints: "mem=3G"
+    series: "xenial"
+  "5":
+    constraints: "mem=3G"
+    series: "trusty"

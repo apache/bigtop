@@ -14,177 +14,267 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-## Overview
+# Overview
 
 The Apache Hadoop software library is a framework that allows for the
 distributed processing of large data sets across clusters of computers
 using a simple programming model.
 
-It is designed to scale up from single servers to thousands of machines,
+Hadoop is designed to scale from a few servers to thousands of machines,
 each offering local computation and storage. Rather than rely on hardware
-to deliver high-avaiability, the library itself is designed to detect
-and handle failures at the application layer, so delivering a
-highly-availabile service on top of a cluster of computers, each of
-which may be prone to failures.
+to deliver high-availability, Hadoop can detect and handle failures at the
+application layer. This provides a highly-available service on top of a cluster
+of machines, each of which may be prone to failure.
 
-This bundle provides a complete deployment of the core components of the
-[Apache Bigtop](http://bigtop.apache.org/)
-platform to perform distributed data analytics at scale.  These components
-include:
+This bundle provides a complete deployment of the core Hadoop components of
+the [Apache Bigtop][] platform to perform distributed data processing at scale.
+Ganglia and rsyslog applications are also provided to monitor cluster health
+and syslog activity.
+
+[Apache Bigtop]: http://bigtop.apache.org/
+
+## Bundle Composition
+
+The applications that comprise this bundle are spread across 6 machines as
+follows:
 
   * NameNode (HDFS)
   * ResourceManager (YARN)
-  * Slaves (DataNode and NodeManager)
-  * Client (Bigtop hadoop client)
-    * Plugin (subordinate cluster facilitator)
+    * Colocated on the NameNode unit
+  * Slave (DataNode and NodeManager)
+    * 3 separate units
+  * Client (Hadoop endpoint)
+  * Plugin (Facilitates communication with the Hadoop cluster)
+    * Colocated on the Client unit
+  * Ganglia (Web interface for monitoring cluster metrics)
+  * Rsyslog (Aggregate cluster syslog events in a single location)
+    * Colocated on the Ganglia unit
 
-Deploying this bundle gives you a fully configured and connected Apache Bigtop
-cluster on any supported cloud, which can be easily scaled to meet workload
+Deploying this bundle results in a fully configured Apache Bigtop
+cluster on any supported cloud, which can be scaled to meet workload
 demands.
 
+# Deploying
 
-## Deploying this bundle
+A working Juju installation is assumed to be present. If Juju is not yet set
+up, please follow the [getting-started][] instructions prior to deploying this
+bundle.
 
-In this deployment, the aforementioned components are deployed on separate
-units. To deploy this bundle, simply use:
+> **Note**: This bundle requires hardware resources that may exceed limits
+of Free-tier or Trial accounts on some clouds. To deploy to these
+environments, modify a local copy of [bundle.yaml][] with `slave: num_units: 1`
+and `machines: 'X': constraints: mem=3G` as needed to satisfy account limits.
+
+Deploy this bundle from the Juju charm store with the `juju deploy` command:
 
     juju deploy hadoop-processing
 
-This will deploy this bundle and all the charms from the [charm store][].
+> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
+of Juju, use [juju-quickstart][] with the following syntax: `juju quickstart
+hadoop-processing`.
 
-> Note: With Juju versions < 2.0, you will need to use [juju-deployer][] to
-deploy the bundle.
+Alternatively, deploy a locally modified `bundle.yaml` with:
 
-You can also build all of the charms from their source layers in the
-[Bigtop repository][].  See the [charm package README][] for instructions
-to build and deploy the charms.
+    juju deploy /path/to/bundle.yaml
 
-The default bundle deploys three slave nodes and one node of each of
-the other services. To scale the cluster, use:
+> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
+of Juju, use [juju-quickstart][] with the following syntax: `juju quickstart
+/path/to/bundle.yaml`.
 
-    juju add-unit slave -n 2
+The charms in this bundle can also be built from their source layers in the
+[Bigtop charm repository][].  See the [Bigtop charm README][] for instructions
+on building and deploying these charms locally.
 
-This will add two additional slave nodes, for a total of five.
+## Network-Restricted Environments
+Charms can be deployed in environments with limited network access. To deploy
+in this environment, configure a Juju model with appropriate proxy and/or
+mirror options. See [Configuring Models][] for more information.
 
-[charm store]: https://jujucharms.com/
-[Bigtop repository]: https://github.com/apache/bigtop
-[charm package README]: ../../../bigtop-packages/src/charm/README.md
-[juju-deployer]: https://pypi.python.org/pypi/juju-deployer/
+[getting-started]: https://jujucharms.com/docs/stable/getting-started
+[bundle.yaml]: https://github.com/apache/bigtop/blob/master/bigtop-deploy/juju/hadoop-processing/bundle.yaml
+[juju-quickstart]: https://launchpad.net/juju-quickstart
+[Bigtop charm repository]: https://github.com/apache/bigtop/tree/master/bigtop-packages/src/charm
+[Bigtop charm README]: https://github.com/apache/bigtop/blob/master/bigtop-packages/src/charm/README.md
+[Configuring Models]: https://jujucharms.com/docs/stable/models-config
 
 
-## Status and Smoke Test
+# Verifying
 
-The services provide extended status reporting to indicate when they are ready:
+## Status
+The applications that make up this bundle provide status messages to indicate
+when they are ready:
 
-    juju status --format=tabular
+    juju status
 
 This is particularly useful when combined with `watch` to track the on-going
 progress of the deployment:
 
-    watch -n 0.5 juju status --format=tabular
+    watch -n 2 juju status
 
-The charms for each master component (namenode, resourcemanager)
-also each provide a `smoke-test` action that can be used to verify that each
-component is functioning as expected.  You can run them all and then watch the
-action status list:
+The message for each unit will provide information about that unit's state.
+Once they all indicate that they are ready, perform application smoke tests
+to verify that the bundle is working as expected.
 
-    juju action do namenode/0 smoke-test
-    juju action do resourcemanager/0 smoke-test
-    watch -n 0.5 juju action status
+## Smoke Test
+The charms for each core component (namenode, resourcemanager, and slave)
+provide a `smoke-test` action that can be used to verify the application is
+functioning as expected. Note that the 'slave' component runs extensive
+tests provided by Apache Bigtop and may take up to 30 minutes to complete.
+Run the smoke-test actions as follows:
+
+    juju run-action namenode/0 smoke-test
+    juju run-action resourcemanager/0 smoke-test
+    juju run-action slave/0 smoke-test
+
+> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
+of Juju, the syntax is `juju action do <application>/0 smoke-test`.
+
+Watch the progress of the smoke test actions with:
+
+    watch -n 2 juju show-action-status
+
+> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
+of Juju, the syntax is `juju action status`.
 
 Eventually, all of the actions should settle to `status: completed`.  If
-any go instead to `status: failed` then it means that component is not working
-as expected.  You can get more information about that component's smoke test:
+any report `status: failed`, that application is not working as expected. Get
+more information about a specific smoke test with:
 
-    juju action fetch <action-id>
+    juju show-action-output <action-id>
+
+> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
+of Juju, the syntax is `juju action fetch <action-id>`.
+
+## Utilities
+Applications in this bundle include Hadoop command line and web utilities that
+can be used to verify information about the cluster.
+
+From the command line, show the HDFS dfsadmin report and view the current list
+of YARN NodeManager units with the following:
+
+    juju run --application namenode "su hdfs -c 'hdfs dfsadmin -report'"
+    juju run --application resourcemanager "su yarn -c 'yarn node -list'"
+
+To access the HDFS web console, find the `PUBLIC-ADDRESS` of the namenode
+application and expose it:
+
+    juju status namenode
+    juju expose namenode
+
+The web interface will be available at the following URL:
+
+    http://NAMENODE_PUBLIC_IP:50070
+
+Similarly, to access the Resource Manager web consoles, find the
+`PUBLIC-ADDRESS` of the resourcemanager application and expose it:
+
+    juju status resourcemanager
+    juju expose resourcemanager
+
+The YARN and Job History web interfaces will be available at the following URLs:
+
+    http://RESOURCEMANAGER_PUBLIC_IP:8088
+    http://RESOURCEMANAGER_PUBLIC_IP:19888
 
 
-## Monitoring
+# Monitoring
 
 This bundle includes Ganglia for system-level monitoring of the namenode,
-resourcemanager, and slave units. Metrics are sent to a central
+resourcemanager, slave, and client units. Metrics are sent to a centralized
 ganglia unit for easy viewing in a browser. To view the ganglia web interface,
-first expose the service:
-
-    juju expose ganglia
-
-Now find the ganglia public IP address:
+find the `PUBLIC-ADDRESS` of the Ganglia application and expose it:
 
     juju status ganglia
+    juju expose ganglia
 
-The ganglia web interface will be available at:
+The web interface will be available at:
 
     http://GANGLIA_PUBLIC_IP/ganglia
 
 
-## Benchmarking
+# Logging
 
-This charm provides several benchmarks to gauge the performance of your
-environment.
+This bundle includes rsyslog to collect syslog data from the namenode,
+resourcemanager, slave, and client units. These logs are sent to a
+centralized rsyslog unit for easy syslog analysis of the units that make up
+the Hadoop cluster. One method of viewing this log data is to simply cat syslog
+from the rsyslog unit:
 
-The easiest way to run the benchmarks on this service is to relate it to the
-[Benchmark GUI][].  You will likely also want to relate it to the
-[Benchmark Collector][] to have machine-level information collected during the
-benchmark, for a more complete picture of how the machine performed.
+    juju run --unit rsyslog/0 'sudo cat /var/log/syslog'
 
-[Benchmark GUI]: https://jujucharms.com/benchmark-gui/
-[Benchmark Collector]: https://jujucharms.com/benchmark-collector/
-
-However, each benchmark is also an action that can be called manually:
-
-        $ juju action do resourcemanager/0 nnbench
-        Action queued with id: 55887b40-116c-4020-8b35-1e28a54cc622
-        $ juju action fetch --wait 0 55887b40-116c-4020-8b35-1e28a54cc622
-
-        results:
-          meta:
-            composite:
-              direction: asc
-              units: secs
-              value: "128"
-            start: 2016-02-04T14:55:39Z
-            stop: 2016-02-04T14:57:47Z
-          results:
-            raw: '{"BAD_ID": "0", "FILE: Number of read operations": "0", "Reduce input groups":
-              "8", "Reduce input records": "95", "Map output bytes": "1823", "Map input records":
-              "12", "Combine input records": "0", "HDFS: Number of bytes read": "18635", "FILE:
-              Number of bytes written": "32999982", "HDFS: Number of write operations": "330",
-              "Combine output records": "0", "Total committed heap usage (bytes)": "3144749056",
-              "Bytes Written": "164", "WRONG_LENGTH": "0", "Failed Shuffles": "0", "FILE:
-              Number of bytes read": "27879457", "WRONG_MAP": "0", "Spilled Records": "190",
-              "Merged Map outputs": "72", "HDFS: Number of large read operations": "0", "Reduce
-              shuffle bytes": "2445", "FILE: Number of large read operations": "0", "Map output
-              materialized bytes": "2445", "IO_ERROR": "0", "CONNECTION": "0", "HDFS: Number
-              of read operations": "567", "Map output records": "95", "Reduce output records":
-              "8", "WRONG_REDUCE": "0", "HDFS: Number of bytes written": "27412", "GC time
-              elapsed (ms)": "603", "Input split bytes": "1610", "Shuffled Maps ": "72", "FILE:
-              Number of write operations": "0", "Bytes Read": "1490"}'
-        status: completed
-        timing:
-          completed: 2016-02-04 14:57:48 +0000 UTC
-          enqueued: 2016-02-04 14:55:14 +0000 UTC
-          started: 2016-02-04 14:55:27 +0000 UTC
+Logs may also be forwarded to an external rsyslog processing service. See
+the *Forwarding logs to a system outside of the Juju environment* section of
+the [rsyslog README](https://jujucharms.com/rsyslog/) for more information.
 
 
-## Deploying in Network-Restricted Environments
+# Benchmarking
 
-Charms can be deployed in environments with limited network access. To deploy
-in this environment, you will need a local mirror to serve required packages.
+The `resourcemanager` charm in this bundle provide several benchmarks to gauge
+the performance of the Hadoop cluster. Each benchmark is an action that can be
+run with `juju run-action`:
+
+    $ juju actions resourcemanager
+    ACTION      DESCRIPTION
+    mrbench     Mapreduce benchmark for small jobs
+    nnbench     Load test the NameNode hardware and configuration
+    smoke-test  Run an Apache Bigtop smoke test.
+    teragen     Generate data with teragen
+    terasort    Runs teragen to generate sample data, and then runs terasort to sort that data
+    testdfsio   DFS IO Testing
+
+    $ juju run-action resourcemanager/0 nnbench
+    Action queued with id: 55887b40-116c-4020-8b35-1e28a54cc622
+
+    $ juju show-action-output 55887b40-116c-4020-8b35-1e28a54cc622
+    results:
+      meta:
+        composite:
+          direction: asc
+          units: secs
+          value: "128"
+        start: 2016-02-04T14:55:39Z
+        stop: 2016-02-04T14:57:47Z
+      results:
+        raw: '{"BAD_ID": "0", "FILE: Number of read operations": "0", "Reduce input groups":
+          "8", "Reduce input records": "95", "Map output bytes": "1823", "Map input records":
+          "12", "Combine input records": "0", "HDFS: Number of bytes read": "18635", "FILE:
+          Number of bytes written": "32999982", "HDFS: Number of write operations": "330",
+          "Combine output records": "0", "Total committed heap usage (bytes)": "3144749056",
+          "Bytes Written": "164", "WRONG_LENGTH": "0", "Failed Shuffles": "0", "FILE:
+          Number of bytes read": "27879457", "WRONG_MAP": "0", "Spilled Records": "190",
+          "Merged Map outputs": "72", "HDFS: Number of large read operations": "0", "Reduce
+          shuffle bytes": "2445", "FILE: Number of large read operations": "0", "Map output
+          materialized bytes": "2445", "IO_ERROR": "0", "CONNECTION": "0", "HDFS: Number
+          of read operations": "567", "Map output records": "95", "Reduce output records":
+          "8", "WRONG_REDUCE": "0", "HDFS: Number of bytes written": "27412", "GC time
+          elapsed (ms)": "603", "Input split bytes": "1610", "Shuffled Maps ": "72", "FILE:
+          Number of write operations": "0", "Bytes Read": "1490"}'
+    status: completed
+    timing:
+      completed: 2016-02-04 14:57:48 +0000 UTC
+      enqueued: 2016-02-04 14:55:14 +0000 UTC
+      started: 2016-02-04 14:55:27 +0000 UTC
 
 
-### Mirroring Packages
+# Scaling
 
-You can setup a local mirror for apt packages using squid-deb-proxy.
-For instructions on configuring juju to use this, see the
-[Juju Proxy Documentation](https://juju.ubuntu.com/docs/howto-proxies.html).
+By default, three slave units and one unit of each of the other components are
+deployed with this bundle. To scale the cluster compute and storage
+capabilities, simply add more slave units. To add one unit:
+
+    juju add-unit slave
+
+Multiple units may be added at once.  For example, add four more slave units:
+
+    juju add-unit -n4 slave
 
 
-## Contact Information
+# Contact Information
 
 - <bigdata@lists.ubuntu.com>
 
 
-## Resources
+# Resources
 
 - [Apache Bigtop](http://bigtop.apache.org/) home page
 - [Apache Bigtop issue tracking](http://bigtop.apache.org/issue-tracking.html)
