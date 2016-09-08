@@ -147,7 +147,7 @@ bigtop {
       relNotes = 'Apache Hive'
       version { base = '1.2.1-odpi'; pkg = '1.2.1+odpi'; release = 1 }
       tarball { destination = "apache-${name}-${version.base}-src.tar.gz"
-                source      = "odpi-branch-1.2.1.zip" }
+                source      = "master.zip" }
       url     { download_path = "odpi/hive/archive"
                 site = "$https://github.com/${download_path}"
                 archive = site }
