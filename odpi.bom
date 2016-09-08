@@ -149,7 +149,7 @@ bigtop {
       tarball { destination = "apache-${name}-${version.base}-src.tar.gz"
                 source      = "master.zip" }
       url     { download_path = "odpi/hive/archive"
-                site = "$https://github.com/${download_path}"
+                site = "https://github.com/${download_path}"
                 archive = site }
     }	
     'bigtop-groovy' {
