@@ -59,7 +59,15 @@ class bigtop_toolchain::packages {
         "boost-devel",
         "xfsprogs-devel",
         "libuuid-devel",
-        "bzip2-devel"
+        "bzip2-devel",
+        "readline-devel",
+        "ncurses-devel",
+        "libidn-devel",
+        "libcurl-devel",
+        "libevent-devel",
+        "apr-devel",
+        "bison",
+        "perl-Env"
       ]
     }
     /(?i:(SLES|opensuse))/: { $pkgs = [
@@ -99,11 +107,27 @@ class bigtop_toolchain::packages {
         "boost-devel",
         "xfsprogs-devel",
         "libuuid-devel",
-        "libbz2-devel"
+        "libbz2-devel",
+        "libcurl-devel",
+        "bison",
+        "flex"
       ]
       # fix package dependencies: BIGTOP-2120 and BIGTOP-2152 and BIGTOP-2471
       exec { '/usr/bin/zypper -n install  --force-resolution krb5 libopenssl-devel':
       } -> Package <| |>
+      # fix package libapr1
+      exec { 'suse_12.3_repo':
+        command => '/usr/bin/zypper ar --no-gpgcheck http://download.opensuse.org/distribution/12.3/repo/oss/suse/ libapr1',
+        unless => "/usr/bin/zypper lr | grep -q libapr1",
+      }
+      package { 'libapr1':
+        ensure => '1.4.6',
+        require => [Exec['suse_12.3_repo']]
+      }
+      package { 'libapr1-devel':
+        ensure => '1.4.6',
+        require => [Package['libapr1']]
+      }
     }
     Amazon: { $pkgs = [
       "unzip",
@@ -172,7 +196,17 @@ class bigtop_toolchain::packages {
         "libsnappy-dev",
         "libboost-regex-dev",
         "xfslibs-dev",
-        "libbz2-dev"
+        "libbz2-dev",
+        "libreadline6",
+        "libreadline6-dev",
+        "zlib1g",
+        "libapr1",
+        "libapr1-dev",
+        "libevent-dev",
+        "libcurl4-gnutls-dev",
+        "bison",
+        "flex",
+        "python-dev"
       ]
       file { "/etc/apt/apt.conf.d/retries":
         content => "Aquire::Retries \"5\";
