@@ -120,7 +120,7 @@ bigtop {
     'hadoop' {
       name    = 'hadoop'
       relNotes = 'Apache Hadoop'
-      version { base = '2.7.1-odpi'; pkg = '2.7.1+odpi'; release = 1 }
+      version { base = '2.7.1'; pkg = '2.7.1+odpi'; release = 1 }
       tarball { destination = "${name}-${version.base}.tar.gz"
                 source      = "odpi-branch-2.7.1.zip" }
       url     { download_path = "odpi/hadoop/archive"
@@ -145,13 +145,44 @@ bigtop {
     'hive' {
       name    = 'hive'
       relNotes = 'Apache Hive'
-      version { base = '1.2.1'; pkg = base+'+odpi'; release = 1 }
+      version { base = '1.2.1'; pkg = base; release = 1 }
       tarball { destination = "apache-${name}-${version.base}-src.tar.gz"
-                source      = "master.zip" }
-      url     { download_path = "odpi/hive/archive"
-                site = "https://github.com/${download_path}"
-                archive = site }
-    }	
+                source      = destination }
+      url     { download_path = "/$name/$name-${version.base}/"
+                site = "${apache.APACHE_MIRROR}/${download_path}"
+                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+    }
+    'tez' {
+      name    = 'tez'
+      relNotes = 'Apache TEZ'
+      version { base = '0.6.2'; pkg = base; release = 1 }
+      tarball { destination = "apache-${name}-${version.base}-src.tar.gz"
+                source      = destination }
+      url     { download_path = "/$name/${version.base}/"
+                site = "${apache.APACHE_MIRROR}/${download_path}"
+                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+    }
+    'spark' {
+      name    = 'spark'
+      pkg     = 'spark-core'
+      relNotes = 'Apache Spark'
+      version { base = '1.5.1'; pkg = base; release = 1 }
+      tarball { destination = "$name-${version.base}.tar.gz"
+                source      = "$name-${version.base}.tgz" }
+      url     { download_path = "/$name/$name-${version.base}"
+                site = "${apache.APACHE_MIRROR}/${download_path}"
+                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+    }
+    'hbase' {
+      name    = 'hbase'
+      relNotes = 'Apache HBase'
+      version { base = '0.98.17'; pkg = base; release = 1 }
+      tarball { destination = "${name}-${version.base}.tar.gz"
+                source      = "${name}-${version.base}-src.tar.gz" }
+      url     { download_path = "/$name/${version.base}/"
+                site = "${apache.APACHE_MIRROR}/${download_path}"
+                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+    }
     'bigtop-groovy' {
       name    = 'bigtop-groovy'
       version { base = '2.4.4'; pkg = base+'+odpi'; release = 1}
