@@ -37,6 +37,7 @@ hadoop::hadoop_storage_dirs:
 #  - yarn
 #  - zookeeper
 #  - ycsb
+#  - gpdb
 
 #bigtop::roles_enabled: false
 
