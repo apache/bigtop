@@ -120,7 +120,7 @@ bigtop {
     'hadoop' {
       name    = 'hadoop'
       relNotes = 'Apache Hadoop'
-      version { base = '2.7.1'; pkg = '2.7.1+odpi'; release = 1 }
+      version { base = '2.7.1-odpi'; pkg = '2.7.1+odpi'; release = 1 }
       tarball { destination = "${name}-${version.base}.tar.gz"
                 source      = "odpi-branch-2.7.1.zip" }
       url     { download_path = "odpi/hadoop/archive"
