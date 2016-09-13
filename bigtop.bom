@@ -42,7 +42,7 @@
    }
    apache { // *required* These shoudn't be modified unless ASF Infra demands changes
      APACHE_MIRROR = "http://apache.osuosl.org"
-     APACHE_ARCHIVE = "http://archive.apache.org/dist"
+     APACHE_ARCHIVE = "https://archive.apache.org/dist"
    }
    components { *required; preserve the name* if empty, nothing will be built
      'label' { // label *SHOULD* be the same as the name; otherwise some tasks will fail
@@ -73,8 +73,8 @@ bigtop {
     'scala' { version = '2.10.4'; version_base = version }
   }
   apache {
-    APACHE_MIRROR = "http://apache.osuosl.org"
-    APACHE_ARCHIVE = "http://archive.apache.org/dist"
+    APACHE_MIRROR = "https://www-us.apache.org"
+    APACHE_ARCHIVE = "https://archive.apache.org/dist"
   }
 /** End of Base Configuration */
 
@@ -327,7 +327,7 @@ bigtop {
       relNotes = "Groovy: a dynamic language for the Java platform"
       tarball { destination = "$name-${version.base}.tar.gz";
                 source      = "apache-groovy-binary-${version.base}.zip"}
-      url     { site = "http://dl.bintray.com/groovy/maven/"; archive = site }
+      url     { site = "https://dl.bintray.com/groovy/maven/"; archive = site }
       // Optional, as only null values are specified
       git     { repo = null; ref = null; dir = null}
     }
