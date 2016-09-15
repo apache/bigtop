@@ -19,4 +19,15 @@ COPY bigtop_toolchain /etc/puppet/modules/bigtop_toolchain
 
 RUN puppet apply -e "include bigtop_toolchain::installer"
 COPY . /tmp/bigtop
+#RUN git git clone https://github.com/OpenPOWER-BigData/frontend-maven-plugin.git
+RUN wget https://github.com/OpenPOWER-BigData/frontend-maven-plugin/archive/master.zip && \
+    unzip master.zip && \
+    cd /frontend-maven-plugin-master && \
+    /usr/local/apache-maven-3.3.9/bin/mvn clean install -DskipTests
+RUN cd ..
+RUN rm -rf frontend-maven-plugin-master
+RUN wget https://github.com/ibmsoe/phantomjs/releases/download/2.1.1/phantomjs-2.1.1-linux-ppc64.tar.bz2
+RUN tar xvf phantomjs-2.1.1-linux-ppc64.tar.bz2 && \
+    cp /phantomjs-2.1.1-linux-ppc64/bin/phantomjs /usr/bin && \
+    rm -rf phantomjs-2.1.1-linux-ppc64
 RUN cd /tmp/bigtop && ./gradlew && cd && rm -rf /tmp/bigtop
