@@ -18,6 +18,8 @@
 import unittest
 import amulet
 
+TIMEOUT = 1800
+
 
 class TestDeploy(unittest.TestCase):
     """
@@ -28,12 +30,10 @@ class TestDeploy(unittest.TestCase):
     def setUpClass(cls):
         cls.d = amulet.Deployment(series='xenial')
 
-        cls.d.add('jdk', charm='openjdk')
         cls.d.add('zookeeper', charm='zookeeper', units=3)
-        cls.d.relate('zookeeper:java', 'jdk:java')
 
-        cls.d.setup(timeout=900)
-        cls.d.sentry.wait(timeout=1800)
+        cls.d.setup(timeout=TIMEOUT)
+        cls.d.sentry.wait(timeout=TIMEOUT)
         cls.unit = cls.d.sentry['zookeeper'][0]
 
     def test_deploy(self):

@@ -25,9 +25,7 @@ implement consensus, group management, leader election, and presence protocols.
 Deploy a Zookeeper unit. With only one unit, the service will be running in
 `standalone` mode:
 
-    juju deploy openjdk
     juju deploy zookeeper zookeeper
-    juju add-relation openjdk zookeeper
 
 
 ## Scaling
