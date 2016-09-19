@@ -15,4 +15,3 @@ provides:
 peers:
   zkpeer:
     interface: zookeeper-quorum
-series: ["xenial"]
