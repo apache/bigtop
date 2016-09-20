@@ -174,7 +174,7 @@ task "all-components" (description: "List the components of the stack") << {
 }
 
 def genTasks = { target ->
-  Task t = task "${target}-download" (dependsOn: "${target}_vardefines",
+  Task t = task "${target}-download" (dependsOn: ["odpi-nexus","${target}_vardefines"],
       description: "Download $target artifacts",
       group: PACKAGES_GROUP) << {
 
@@ -399,7 +399,7 @@ def genTasks = { target ->
   }
 
   // Keeping the reference to task to be used later for correct sequencing
-  Task trpm = task "$target-rpm" (dependsOn: ["odpi-nexus","${target}-srpm"],
+  Task trpm = task "$target-rpm" (dependsOn: "${target}-srpm",
       description: "Building RPM for $target artifacts",
       group: PACKAGES_GROUP) << {
     if (new File(config.bigtop.components[target].targetrpm)?.exists()) {
