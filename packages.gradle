@@ -562,8 +562,8 @@ def genTasks = { target ->
             !config.bigtop.components[target].url.site.isEmpty() &&
             !config.bigtop.components[target].tarball.source.isEmpty()) ?
             config.bigtop.components[target].url.site + '/' + config.bigtop.components[target].tarball.source : null
-        if (!config.bigtop.components[target].tarball.source.isEmpty())
-          config.bigtop.components[target].downloaddst = DL_DIR + '/' + config.bigtop.components[target].tarball.source
+        if (!config.bigtop.components[target].tarball.destination.isEmpty())
+          config.bigtop.components[target].downloaddst = DL_DIR + '/' + config.bigtop.components[target].tarball.destination
 
     // test that the download url will return http 200.  If it does not, use the ARCHIVE url instead of the MIRROR SITE url
     if (!config.bigtop.components[target].url.isEmpty() && !ifExists(config.bigtop.components[target].downloadurl)) {

@@ -52,7 +52,10 @@
        // 'base' is required; [pkg := base ]; [release := 1 ]
        version { base  = 'x.y.z'; pkg   = base; release = 1 }
        tarball {
-         source      = "apache-component1-${version.base}.tar.gz" // *optional*
+         source      = "apache-component1-${version.base}.tar.gz"
+         // It is advised to use different destination filenames to avoid
+         // clashes when working with git repos and downloading the artifacts
+         // from the branches with the same names.
          destination = source
        }
        url { // *optional*
