@@ -98,6 +98,7 @@ print_cluster_info() {
   echo "# HADOOP_MAPRED_HOME: $HADOOP_MAPRED_HOME"
   
   echo "# BASH_VERSION: $BASH_VERSION"
+  echo "# SH_VERSION: $(/bin/sh -c 'echo $BASH_VERSION')"
   
   echo "# JAVA_HOME: $JAVA_HOME"
   JAVA_VERSION=$(java -version 2>&1 | head -n 1 | awk -F '"' '{print $2}')
