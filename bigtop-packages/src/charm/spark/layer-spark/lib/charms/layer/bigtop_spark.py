@@ -170,8 +170,10 @@ class Spark(object):
         # TODO(kjackal): ...do the needed... (investiate,debug,submit patch)
         bigtop.trigger_puppet()
         if 'namenode' not in available_hosts:
-            # Make sure users other than spark can access the events logs dir and run jobs
-            utils.run_as('root', 'chmod', '777', dc.path('spark_events'))
+            # Local event dir (not in HDFS) needs to be 777 so non-spark
+            # users can write job history there. It needs to be g+s so
+            # spark (in the spark group) can read non-spark user entries.
+            dc.path('spark_events').chmod(0o2777)
 
         self.patch_worker_master_url(master_ip)
 

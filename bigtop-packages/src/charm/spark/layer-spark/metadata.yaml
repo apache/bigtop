@@ -2,11 +2,10 @@ name: spark
 summary: Apache Spark from Apache Bigtop platform
 maintainer: Juju Big Data <bigdata@lists.ubuntu.com>
 description: >
-  Hadoop is a software platform that lets one easily write and
-  run applications that process vast amounts of data.
+  Apache Spark is a fast and general engine for large-scale data processing.
 
-  This charm provides a Apache Spark via the Apache Bigtop Spark component.
-tags: ["applications", "bigdata", "hadoop", "apache"]
+  Learn more at http://spark.apache.org.
+tags: ["applications"]
 provides:
   benchmark:
     interface: benchmark
