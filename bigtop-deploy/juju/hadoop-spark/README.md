@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-## Overview
+# Overview
 
 The Apache Hadoop software library is a framework that allows for the
 distributed processing of large data sets across clusters of computers
@@ -26,25 +26,40 @@ to deliver high-availability, Hadoop can detect and handle failures at the
 application layer. This provides a highly-available service on top of a cluster
 of machines, each of which may be prone to failure.
 
-This bundle provides a complete deployment of the core components of the
+Spark is a fast and general engine for large-scale data processing.
+
+This bundle provides a complete deployment of Hadoop and Spark components from
 [Apache Bigtop](http://bigtop.apache.org/)
-platform to perform distributed data processing at scale.  These components
-include:
+that performs distributed data processing at scale. Ganglia and rsyslog
+applications are also provided to monitor cluster health and syslog activity.
+
+## Bundle Composition
+
+The applications that comprise this bundle are spread across 9 units as
+follows:
 
   * NameNode (HDFS)
   * ResourceManager (YARN)
-  * Slaves (DataNode and NodeManager)
-  * Spark (Master and Workers)
-  * Zeppelin (Web based cluster interface)
-    * Plugin (colocated on zeppelin; connects to the Hadoop cluster)
-  * Zookeeper (High Availability coordinator)
+    * Colocated on the NameNode unit
+  * Slave (DataNode and NodeManager)
+    * 3 separate units
+  * Spark (Master and Worker)
+  * Plugin (Facilitates communication with the Hadoop cluster)
+    * Colocated on the Spark unit
+  * Zeppelin (Web interface for Hadoop/Spark)
+    * Colocated on the Spark unit
+  * Zookeeper
+    * 3 separate units
+  * Ganglia (Web interface for monitoring cluster metrics)
+  * Rsyslog (Aggregate cluster syslog events in a single location)
+    * Colocated on the Ganglia unit
 
 Deploying this bundle gives you a fully configured and connected Apache Bigtop
 cluster on any supported cloud, which can be easily scaled to meet workload
 demands.
 
 
-## Deploying
+# Deploying
 
 A working Juju installation is assumed to be present. If you have not yet set
 up Juju, please follow the [getting-started][] instructions
@@ -66,9 +81,9 @@ on building and deploying these charms locally.
 [Bigtop charm README]: https://github.com/apache/bigtop/blob/master/bigtop-packages/src/charm/README.md
 
 
-## Verifying the deployment
+# Verifying
 
-### Status
+## Status
 The applications that make up this bundle provide status messages to
 indicate when they are ready:
 
@@ -83,14 +98,15 @@ The message for each unit will provide information about that unit's state.
 Once they all indicate that they are ready, you can perform a smoke test
 to verify that the bundle is working as expected.
 
-### Smoke Test
-The charms for each master component (namenode, resourcemanager, and spark)
-provide a `smoke-test` action that can be used to verify the application is
-functioning as expected. You can run them all with the following:
+## Smoke Test
+The charms for each master component (namenode, resourcemanager, spark, and
+zeppelin) provide a `smoke-test` action that can be used to verify the
+application is functioning as expected. You can run them all with the following:
 
     juju run-action namenode/0 smoke-test
     juju run-action resourcemanager/0 smoke-test
     juju run-action spark/0 smoke-test
+    juju run-action zeppelin/0 smoke-test
 
 _**Note**: The above assumes Juju 2.0 or greater. If using an earlier version
 of Juju, the syntax is `juju action do <application>/0 smoke-test`._
@@ -112,7 +128,24 @@ _**Note**: The above assumes Juju 2.0 or greater. If using an earlier version
 of Juju, the syntax is `juju action fetch <action-id>`._
 
 
-## Monitoring
+# Cluster User Interface
+
+This bundle includes Apache Zeppelin, a web-based notebook that enables
+interactive data analytics. To interact with your newly deployed cluster,
+expose zeppelin:
+
+    juju expose zeppelin
+
+Now find the zeppelin public IP address:
+
+    juju status zeppelin --format yaml | grep public-address
+
+You can access the web interface at:
+
+    http://{zeppelin_public_ip}:9080
+
+
+# Monitoring
 
 This bundle includes Ganglia for system-level monitoring of the namenode,
 resourcemanager, slave, spark, and zeppelin units. Metrics are sent to a
@@ -123,14 +156,14 @@ interface, first expose the service:
 
 Now find the ganglia public IP address:
 
-    juju status ganglia
+    juju status ganglia --format yaml | grep public-address
 
 The ganglia web interface will be available at:
 
-    http://GANGLIA_PUBLIC_IP/ganglia
+    http://{ganglia_public_ip}/ganglia
 
 
-## Logging
+# Logging
 
 This bundle includes rsyslog to collect syslog data from the namenode,
 resourcemanager, slave, spark, and zeppelin units. These logs are sent to a
@@ -145,20 +178,21 @@ the *Forwarding logs to a system outside of the Juju environment* section of
 the [rsyslog README](https://jujucharms.com/rsyslog/) for more information.
 
 
-## Benchmarking
+# Benchmarking
 
-This charm provides several benchmarks to gauge the performance of your
-environment.
+The charms in this bundle provide several benchmarks to gauge the performance
+of your environment.
 
-The easiest way to run the benchmarks on this service is to relate it to the
-[Benchmark GUI][].  You will likely also want to relate it to the
-[Benchmark Collector][] to have machine-level information collected during the
-benchmark, for a more complete picture of how the machine performed.
+The easiest way to run the benchmarks is to relate charms to the
+[Benchmark GUI][].  You will likely also want to relate the same charms to
+the [Benchmark Collector][] to have machine-level information collected during
+the benchmark, for a more complete picture of how the machine performed.
 
 [Benchmark GUI]: https://jujucharms.com/benchmark-gui/
 [Benchmark Collector]: https://jujucharms.com/benchmark-collector/
 
-However, each benchmark is also an action that can be called manually:
+Each benchmark is also an action that can be run with `juju run-action`,
+for example:
 
     $ juju run-action resourcemanager/0 nnbench
     Action queued with id: 55887b40-116c-4020-8b35-1e28a54cc622
@@ -194,38 +228,35 @@ However, each benchmark is also an action that can be called manually:
           started: 2016-02-04 14:55:27 +0000 UTC
 
 
-## Deploying in Network-Restricted Environments
+# Scaling
 
-Charms can be deployed in environments with limited network access. To deploy
-in this environment, you will need a local mirror to serve required packages.
-
-### Mirroring Packages
-
-You can setup a local mirror for apt packages using squid-deb-proxy.
-For instructions on configuring juju to use this, see the
-[Juju Proxy Documentation](https://juju.ubuntu.com/docs/howto-proxies.html).
-
-
-## Scaling
-
-This bundle was designed to scale out. By default, three slave units, three
-spark units, three zookeeper units, and one unit of each of the other
-components are deployed. To increase the amount of Hadoop slaves, simple add
-more units. To add one unit:
+This bundle is designed to scale out. By default, three Hadoop slave units,
+three zookeeper units, and one spark unit are deployed. To increase the amount
+of Hadoop slaves or spark workers, simple add more units. To add one unit:
 
     juju add-unit slave
+    juju add-unit spark
 
 You can also add multiple units, for example, to add four more slaves:
 
     juju add-unit -n4 slave
 
 
-## Contact Information
+# Network-Restricted Environments
+
+Charms can be deployed in environments with limited network access. To deploy
+in this environment, configure your Juju model with appropriate
+proxy and/or mirror options. See
+[Configuring Models](https://jujucharms.com/docs/2.0/models-config) for more
+information.
+
+
+# Contact Information
 
 - <bigdata@lists.ubuntu.com>
 
 
-## Resources
+# Resources
 
 - [Apache Bigtop](http://bigtop.apache.org/) home page
 - [Apache Bigtop issue tracking](http://bigtop.apache.org/issue-tracking.html)
