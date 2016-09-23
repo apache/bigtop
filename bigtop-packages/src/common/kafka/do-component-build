@@ -27,10 +27,12 @@ BUILD_OPTS="-Divy.home=${HOME}/.ivy2 -Dsbt.ivy.home=${HOME}/.ivy2 -Duser.home=${
 #        http://maven.40175.n5.nabble.com/Not-finding-artifact-in-local-repo-td3727753.html
 export MAVEN_OPTS="-Xmx2g -XX:ReservedCodeCacheSize=512m -XX:PermSize=1024m -XX:MaxPermSize=1024m"
 
+gradle wrapper
+
 ./gradlew -PscalaVersion=${SCALA_VERSION} clean releaseTarGz -x signArchives
 
 rm -rf build
 mkdir build
   
-cp core/build/distributions/kafka_*.tgz build/`basename core/build/distributions/kafka* .tgz`.tar.gz
+cp core/build/distributions/kafka_*.tgz build/
 
