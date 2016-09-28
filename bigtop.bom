@@ -447,5 +447,15 @@ bigtop {
       url     { site = "https://github.com/quantcast/qfs/archive"
                 archive = site }
     }
+    'gpdb' {
+      name    = 'gpdb'
+      relNotes = 'GreenPlum'
+      version { base = '4.3.99.0'; pkg = base; release = 1 }
+      tarball { source      = "master.zip"
+                destination = "$name-${version.base}.tar.gz" }
+      url     { download_path = "pub/greenplum/$name/"
+                site = "https://github.com/greenplum-db/gpdb/archive"
+                archive = "site" }
+    }
   }
 }

@@ -131,7 +131,7 @@ destroy() {
 }
 
 bigtop-puppet() {
-    docker exec $1 bash -c 'puppet apply --modulepath=/bigtop-home/bigtop-deploy/puppet/modules:/etc/puppet/modules /bigtop-home/bigtop-deploy/puppet/manifests/site.pp'
+    docker exec $1 bash -c 'puppet apply --modulepath=/bigtop-home/bigtop-deploy/puppet/modules:/etc/puppet/modules /bigtop-home/bigtop-deploy/puppet/manifests'
 }
 
 get-yaml-config() {

@@ -359,6 +359,7 @@
               <exclude>bigtop-deploy/puppet/modules/qfs/README.md</exclude>
               <exclude>bigtop-deploy/puppet/config/site.csv.example</exclude>
               <exclude>dl/**</exclude>
+              <exclude>bigtop-deploy/puppet/modules/gpdb/templates/**</exclude>
             </excludes>
           </configuration>
         </plugin>
