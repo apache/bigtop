@@ -17,7 +17,7 @@
  */
 
 
-package org.apache.bigtop.itest.hadoop.mapreduce
+package org.apache.bigtop.itest.sqoop
 
 import org.junit.Assert
 import org.junit.BeforeClass

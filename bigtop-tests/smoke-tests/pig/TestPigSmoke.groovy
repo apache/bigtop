@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.apache.bigtop.itest.hadoop.mapreduce
+package org.apache.bigtop.itest.pig
 
 import org.junit.BeforeClass
 import org.junit.AfterClass
