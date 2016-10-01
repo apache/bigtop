@@ -19,7 +19,7 @@ usage() {
     echo "usage: $PROG [-C file ] args"
     echo "       -C file                                   Use alternate file for config.yaml"
     echo "  commands:"
-    echo "       -c NUM_INSTANCES, --create=NUM_INSTANCES  Create a Docker based Bigtop Hadoop cluster"
+    echo "       -c NUM_INSTANCES, --create NUM_INSTANCES  Create a Docker based Bigtop Hadoop cluster"
     echo "       -d, --destroy                             Destroy the cluster"
     echo "       -e, --exec INSTANCE_NO|INSTANCE_NAME      Execute command on a specific instance. Instance can be specified by name or number."
     echo "                                                 For example: $PROG --exec 1 bash"
@@ -101,7 +101,6 @@ copy-to-instances() {
 
 bootstrap() {
     for node in ${NODES[*]}; do
-        docker cp  $1 $node:$2 &
         docker exec $node bash -c "/bigtop-home/bigtop-deploy/vm/utils/setup-env-$1.sh $2" &
     done
     wait
@@ -171,7 +170,12 @@ env-check() {
 }
 
 list() {
-    docker-compose -p $PROVISION_ID ps
+    local msg
+    msg=$(docker-compose -p $PROVISION_ID ps 2>&1)
+    if [ $? -ne 0 ]; then
+        msg="Cluster hasn't been created yet."
+    fi
+    echo "$msg"
 }
 
 PROG=`basename $0`

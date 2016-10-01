@@ -103,7 +103,7 @@ create 5 node cluster => run smoke tests => destroy the cluster
 usage: docker-hadoop.sh [-C file ] args
        -C file                                   Use alternate file for config.yaml
   commands:
-       -c NUM_INSTANCES, --create=NUM_INSTANCES  Create a Docker based Bigtop Hadoop cluster
+       -c NUM_INSTANCES, --create NUM_INSTANCES  Create a Docker based Bigtop Hadoop cluster
        -d, --destroy                             Destroy the cluster
        -e, --exec INSTANCE_NO|INSTANCE_NAME      Execute command on a specific instance. Instance can be specified by name or number.
                                                  For example: docker-hadoop.sh --exec 1 bash
