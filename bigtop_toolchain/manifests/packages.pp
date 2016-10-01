@@ -14,24 +14,166 @@
 # limitations under the License.
 
 class bigtop_toolchain::packages {
-   case $operatingsystem{
-     /(?i:(centos|fedora))/: {
-       # Fedora 20 and CentOS 7 or above are using mariadb, while CentOS 6 is still mysql
-       if ($operatingsystem == "CentOS") and ($operatingsystemmajrelease <=6) {
-         $mysql_devel="mysql-devel"
-       } else {
-         $mysql_devel="mariadb-devel"
-       }
-       $pkgs = [ "unzip", "curl", "wget", "git", "make", "cmake", "autoconf", "automake", "libtool", "gcc", "gcc-c++", "fuse", "createrepo", "lzo-devel", "fuse-devel", "cppunit-devel", "openssl-devel", "python-devel", "python-setuptools", "libxml2-devel", "libxslt-devel", "cyrus-sasl-devel", "sqlite-devel", "openldap-devel", $mysql_devel, "rpm-build", "redhat-rpm-config", "fuse-libs", "asciidoc", "xmlto", "libyaml-devel", "gmp-devel", "snappy-devel", "boost-devel", "xfsprogs-devel", "libuuid-devel", "bzip2-devel" ]
-     }
-    /(?i:(SLES|opensuse))/: { $pkgs = [ "unzip", "curl", "wget", "git", "make", "cmake", "autoconf", "automake", "libtool", "gcc", "gcc-c++", "fuse", "createrepo", "lzo-devel", "fuse-devel", "cppunit-devel", "rpm-devel", "rpm-build", "pkg-config", "gmp-devel", "python-devel", "python-setuptools", "libxml2-devel", "libxslt-devel", "cyrus-sasl-devel", "sqlite3-devel", "openldap2-devel", "libyaml-devel", "krb5-devel", "asciidoc", "xmlto", "libmysqlclient-devel", "snappy-devel", "boost-devel", "xfsprogs-devel", "libuuid-devel", "libbz2-devel" ]
+  case $operatingsystem{
+    /(?i:(centos|fedora))/: {
+      # Fedora 20 and CentOS 7 or above are using mariadb, while CentOS 6 is still mysql
+      if ($operatingsystem == "CentOS") and ($operatingsystemmajrelease <=6) {
+        $mysql_devel="mysql-devel"
+      } else {
+        $mysql_devel="mariadb-devel"
+      }
+      $pkgs = [
+        "unzip",
+        "curl",
+        "wget",
+        "git",
+        "make",
+        "cmake",
+        "autoconf",
+        "automake",
+        "libtool",
+        "gcc",
+        "gcc-c++",
+        "fuse",
+        "createrepo",
+        "lzo-devel",
+        "fuse-devel",
+        "cppunit-devel",
+        "openssl-devel",
+        "python-devel",
+        "python-setuptools",
+        "libxml2-devel",
+        "libxslt-devel",
+        "cyrus-sasl-devel",
+        "sqlite-devel",
+        "openldap-devel",
+        $mysql_devel,
+        "rpm-build",
+        "redhat-rpm-config",
+        "fuse-libs",
+        "asciidoc",
+        "xmlto",
+        "libyaml-devel",
+        "gmp-devel",
+        "snappy-devel",
+        "boost-devel",
+        "xfsprogs-devel",
+        "libuuid-devel",
+        "bzip2-devel"
+      ]
+    }
+    /(?i:(SLES|opensuse))/: { $pkgs = [
+        "unzip",
+        "curl",
+        "wget",
+        "git",
+        "make",
+        "cmake",
+        "autoconf",
+        "automake",
+        "libtool",
+        "gcc",
+        "gcc-c++",
+        "fuse",
+        "createrepo",
+        "lzo-devel",
+        "fuse-devel",
+        "cppunit-devel",
+        "rpm-devel",
+        "rpm-build",
+        "pkg-config",
+        "gmp-devel",
+        "python-devel",
+        "python-setuptools",
+        "libxml2-devel",
+        "libxslt-devel",
+        "cyrus-sasl-devel",
+        "sqlite3-devel",
+        "openldap2-devel",
+        "libyaml-devel",
+        "krb5-devel",
+        "asciidoc",
+        "xmlto",
+        "libmysqlclient-devel",
+        "snappy-devel",
+        "boost-devel",
+        "xfsprogs-devel",
+        "libuuid-devel",
+        "libbz2-devel"
+      ]
       # fix package dependencies: BIGTOP-2120 and BIGTOP-2152 and BIGTOP-2471
       exec { '/usr/bin/zypper -n install  --force-resolution krb5 libopenssl-devel':
       } -> Package <| |>
     }
-    Amazon: {                 $pkgs = [ "unzip", "curl", "wget", "git", "make", "cmake", "autoconf", "automake", "libtool", "gcc", "gcc-c++", "fuse", "createrepo", "lzo-devel", "fuse-devel", "openssl-devel", "rpm-build", "system-rpm-config", "fuse-libs","gmp-devel", "snappy-devel", "bzip2-devel" ] }
-    /(Ubuntu|Debian)/: {      $pkgs = [ "unzip", "curl", "wget", "git-core", "make", "cmake", "autoconf", "automake", "libtool", "gcc", "g++", "fuse", "reprepro", "liblzo2-dev", "libfuse-dev", "libcppunit-dev", "libssl-dev", "libzip-dev", "sharutils", "pkg-config", "debhelper", "devscripts", "build-essential", "dh-make", "libfuse2", "libssh-dev", "libjansi-java", "python2.7-dev", "libxml2-dev", "libxslt1-dev", "zlib1g-dev", "libsqlite3-dev", "libldap2-dev", "libsasl2-dev", "libmysqlclient-dev", "python-setuptools", "libkrb5-dev", "asciidoc", "libyaml-dev", "libgmp-dev", "libsnappy-dev", "libboost-regex-dev", "xfslibs-dev", "libbz2-dev" ]
-
+    Amazon: { $pkgs = [
+      "unzip",
+      "curl",
+      "wget",
+      "git",
+      "make",
+      "cmake",
+      "autoconf",
+      "automake",
+      "libtool",
+      "gcc",
+      "gcc-c++",
+      "fuse",
+      "createrepo",
+      "lzo-devel",
+      "fuse-devel",
+      "openssl-devel",
+      "rpm-build",
+      "system-rpm-config",
+      "fuse-libs","gmp-devel",
+      "snappy-devel",
+      "bzip2-devel"
+    ] }
+    /(Ubuntu|Debian)/: { $pkgs = [
+        "unzip",
+        "curl",
+        "wget",
+        "git-core",
+        "make",
+        "cmake",
+        "autoconf",
+        "automake",
+        "libtool",
+        "gcc",
+        "g++",
+        "fuse",
+        "reprepro",
+        "liblzo2-dev",
+        "libfuse-dev",
+        "libcppunit-dev",
+        "libssl-dev",
+        "libzip-dev",
+        "sharutils",
+        "pkg-config",
+        "debhelper",
+        "devscripts",
+        "build-essential",
+        "dh-make",
+        "libfuse2",
+        "libssh-dev",
+        "libjansi-java",
+        "python2.7-dev",
+        "libxml2-dev",
+        "libxslt1-dev",
+        "zlib1g-dev",
+        "libsqlite3-dev",
+        "libldap2-dev",
+        "libsasl2-dev",
+        "libmysqlclient-dev",
+        "python-setuptools",
+        "libkrb5-dev",
+        "asciidoc",
+        "libyaml-dev",
+        "libgmp-dev",
+        "libsnappy-dev",
+        "libboost-regex-dev",
+        "xfslibs-dev",
+        "libbz2-dev"
+      ]
       exec { "apt-update":
         command => "/usr/bin/apt-get update"
       }
