@@ -174,7 +174,10 @@ class bigtop_toolchain::packages {
         "xfslibs-dev",
         "libbz2-dev"
       ]
-      exec { "apt-update":
+      file { "/etc/apt/apt.conf.d/retries":
+        content => "Aquire::Retries \"5\";
+"
+      } -> exec { "apt-update":
         command => "/usr/bin/apt-get update"
       }
       Exec["apt-update"] -> Package <| |>
