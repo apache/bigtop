@@ -298,9 +298,11 @@
 <%   end -%>
 <% end -%>
 
+<% if not @namenode_datanode_registration_ip_hostname_check.nil? -%>
   <property>
     <name>dfs.namenode.datanode.registration.ip-hostname-check</name>
     <value><%= @namenode_datanode_registration_ip_hostname_check %></value>
   </property>
+<% end -%>
 
 </configuration>
