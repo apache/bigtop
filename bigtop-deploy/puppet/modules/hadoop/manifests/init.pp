@@ -229,7 +229,7 @@ class hadoop ($hadoop_security_authentication = "simple",
       $hadoop_http_authentication_signature_secret_file = "/etc/hadoop/conf/hadoop-http-authentication-signature-secret",
       $hadoop_http_authentication_cookie_domain = regsubst($fqdn, "^[^\\.]+\\.", ""),
       $generate_secrets = $hadoop::generate_secrets,
-      $namenode_datanode_registration_ip_hostname_check = true,
+      $namenode_datanode_registration_ip_hostname_check = undef,
   ) inherits hadoop {
 
     $sshfence_keydir  = "$hadoop_ha_sshfence_user_home/.ssh"
