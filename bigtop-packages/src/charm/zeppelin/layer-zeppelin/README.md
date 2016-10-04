@@ -105,7 +105,6 @@ the `Interpreter` tab of the Zeppelin web interface.
 
  * Affected Spark Interpreter configuration includes:
 
-   * master
    * spark.executor.memory
 
 

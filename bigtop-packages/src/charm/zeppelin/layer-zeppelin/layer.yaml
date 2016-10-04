@@ -4,6 +4,7 @@ includes:
   - 'layer:hadoop-client'
   - 'interface:hive'
   - 'interface:spark'
+  - 'interface:zeppelin'
 options:
   basic:
     packages:

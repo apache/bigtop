@@ -14,10 +14,16 @@
 # limitations under the License.
 
 import os
+import json
+import time
+import socket
+from urllib.parse import urljoin
 
+import requests
 from path import Path
+
 from jujubigdata import utils
-from charmhelpers.core import hookenv, host
+from charmhelpers.core import hookenv, host, unitdata
 from charms import layer
 from charms.layer.apache_bigtop_base import Bigtop
 
@@ -30,6 +36,11 @@ class Zeppelin(object):
         self.dist_config = utils.DistConfig(
             data=layer.options('apache-bigtop-base'))
 
+    def _add_override(self, name, value):
+        unitdata.kv().update({
+            name: value,
+        }, prefix='zeppelin.bigtop.overrides.')
+
     def install(self):
         '''
         Trigger the Bigtop puppet recipe that handles the Zepplin service.
@@ -37,16 +48,24 @@ class Zeppelin(object):
         # Dirs are handled by the bigtop deb. No need to call out to
         # dist_config to do that work.
         self.dist_config.add_users()
-        roles = ['zeppelin-server']
+        self.trigger_bigtop()
 
+    def trigger_bigtop(self):
         bigtop = Bigtop()
-        bigtop.render_site_yaml(roles=roles)
+        overrides = unitdata.kv().getrange('zeppelin.bigtop.overrides.',
+                                           strip=True)
+        bigtop.render_site_yaml(
+            roles=[
+                'zeppelin-server',
+            ],
+            overrides=overrides,
+        )
         bigtop.trigger_puppet()
+        self.wait_for_api(30)
 
-    def initial_zeppelin_config(self):
+    def setup_etc_env(self):
         '''
-        Configure system-wide hive bits and get zeppelin config files set up
-        so future config changes can be added where needed.
+        Write some niceties to /etc/environment
         '''
         # Configure system-wide bits
         zeppelin_bin = self.dist_config.path('zeppelin') / 'bin'
@@ -56,42 +75,11 @@ class Zeppelin(object):
                 env['PATH'] = ':'.join([env['PATH'], zeppelin_bin])
             env['ZEPPELIN_CONF_DIR'] = zeppelin_conf
 
-        # Copy templates to config files if they don't exist
-        zeppelin_env = zeppelin_conf / 'zeppelin-env.sh'
-        if not zeppelin_env.exists():
-            (zeppelin_conf / 'zeppelin-env.sh.template').copy(zeppelin_env)
-
-        # java (esp 8) needs the following mem settings.
-        mem_string = 'export ZEPPELIN_MEM="-Xms128m -Xmx1024m -XX:MaxPermSize=512m"'
-        utils.re_edit_in_place(zeppelin_env, {
-            r'.*export ZEPPELIN_MEM.*': mem_string,
-        }, append_non_matches=True)
-
-        # User needs write access to zepp's conf to write interpreter.json
-        # on notebook binding. chown the whole conf dir, though we could probably
-        # touch that file and chown it, leaving the rest owned as root:root.
-        # TODO: weigh implications of have zepp's conf dir owned by non-root.
-        host.chownr(path=zeppelin_conf, owner="zeppelin", group="zeppelin")
-
-        # create hdfs storage space
-        utils.run_as('hdfs', 'hdfs', 'dfs', '-mkdir', '-p', '/user/zeppelin')
-        utils.run_as('hdfs', 'hdfs', 'dfs', '-chown', 'zeppelin', '/user/zeppelin')
-
-    def copy_tutorial(self, tutorial_name):
-        notebook_dir = self.dist_config.path('zeppelin_notebooks')
-        tutorial_target = Path('%s/%s' % (notebook_dir, tutorial_name))
-        tutorial_target.rmtree_p()
-
-        tutorial_source = Path('resources/{}'.format(tutorial_name))
-        tutorial_source.copytree('%s' % tutorial_target)
-
-        # make sure the notebook dir contents are owned by our user
-        host.chownr(path=notebook_dir, owner="zeppelin", group="zeppelin")
-
     def reconfigure_zeppelin(self):
         '''
         Configure zeppelin based on current environment
         '''
+        raise NotImplementedError()
         # NB (kwm): this method is not currently called because Bigtop spark
         # doesn't expose these settings. Leaving this here just in case
         # we update the bigtop charms to provide these bits in the future.
@@ -111,35 +99,25 @@ class Zeppelin(object):
                 spark_executor_mem))
             f.write('export MASTER={}\n'.format(spark_exe_mode))
 
-    def configure_hive(self, hive=None):
-        '''
-        Configure the zeppelin hive interpreter
-        '''
-        if hive:
-            hive_ip = hive.get_private_ip()
-            hive_port = hive.get_port()
-            hive_connect = 'jdbc:hive2://%s:%s' % (hive_ip, hive_port)
-        else:
-            hive_connect = 'jdbc:hive2://:'
+    def configure_hadoop(self):
+        # create hdfs storage space
+        utils.run_as('hdfs', 'hdfs', 'dfs', '-mkdir', '-p', '/user/zeppelin')
+        utils.run_as('hdfs', 'hdfs', 'dfs', '-chown', 'zeppelin', '/user/zeppelin')
 
-        interpreter_json = self.dist_config.path('zeppelin_conf') / 'interpreter.json'
-        utils.re_edit_in_place(interpreter_json, {
-            r'jdbc:hive2:.*"': '%s"' % hive_connect,
-        })
-
-    def configure_spark(self, spark_connection_url=None):
+    def configure_spark(self, master_url):
         '''
         Configure the zeppelin spark interpreter
         '''
-        if spark_connection_url:
-            spark_url = spark_connection_url
-        else:
-            spark_url = 'yarn-client'
+        # TODO: Need Puppet params created to set Spark driver and executor memory
+        self._add_override('zeppelin::server::spark_master_url', master_url)
+        self.trigger_bigtop()
 
-        zeppelin_env = self.dist_config.path('zeppelin_conf') / 'zeppelin-env.sh'
-        utils.re_edit_in_place(zeppelin_env, {
-            r'.*export MASTER.*': 'export MASTER=%s' % spark_url,
-        })
+    def configure_hive(self, hive_url):
+        '''
+        Configure the zeppelin hive interpreter
+        '''
+        self._add_override('zeppelin::server::hiveserver2_url', hive_url)
+        self.trigger_bigtop()
 
     def restart(self):
         self.stop()
@@ -147,6 +125,21 @@ class Zeppelin(object):
 
     def start(self):
         host.service_start('zeppelin')
+
+    def check_connect(self, addr, port):
+        try:
+            with socket.create_connection((addr, port), timeout=10):
+                return True
+        except OSError:
+            return False
+
+    def wait_for_api(self, timeout):
+        start = time.time()
+        while time.time() - start < timeout:
+            if self.check_connect('localhost', self.dist_config.port('zeppelin')):
+                return True
+            time.sleep(2)
+        raise utils.TimeoutError('Timed-out waiting for connection to Zeppelin')
 
     def stop(self):
         host.service_stop('zeppelin')
@@ -158,3 +151,88 @@ class Zeppelin(object):
     def close_ports(self):
         for port in self.dist_config.exposed_ports('zeppelin'):
             hookenv.close_port(port)
+
+    def register_notebook(self, local_id, contents):
+        api = ZeppelinAPI()
+        kv = unitdata.kv()
+        notebook_ids = kv.get('zeppelin.notebooks.ids', {})
+        if local_id in notebook_ids:
+            hookenv.log('Replacing notebook {} registered as {}'.format(
+                local_id, notebook_ids[local_id]))
+            api.delete_notebook(notebook_ids[local_id])
+        zeppelin_id = api.import_notebook(contents)
+        if zeppelin_id:
+            notebook_ids[local_id] = zeppelin_id
+            hookenv.log('Registered notebook {} as {}'.format(local_id,
+                                                              zeppelin_id))
+            return True
+        else:
+            hookenv.log('Unable to register notebook: {}'.format(local_id),
+                        hookenv.ERROR)
+            return False
+        kv.set('zeppelin.notebooks.ids', notebook_ids)
+
+    def remove_notebook(self, local_id):
+        api = ZeppelinAPI()
+        kv = unitdata.kv()
+        notebook_ids = kv.get('zeppelin.notebooks.ids', {})
+        if local_id in notebook_ids:
+            api.delete_notebook(notebook_ids[local_id])
+            del notebook_ids[local_id]
+        else:
+            hookenv.log('Notebook not registered: {}'.format(local_id),
+                        hookenv.ERROR)
+        kv.set('zeppelin.notebooks.ids', notebook_ids)
+
+    def register_hadoop_notebooks(self):
+        for notebook in ('hdfs-tutorial', 'flume-tutorial'):
+            contents = (Path('resources') / notebook / 'note.json').text()
+            self.register_notebook(notebook, contents)
+
+    def remove_hadoop_notebooks(self):
+        for notebook in ('hdfs-tutorial', 'flume-tutorial'):
+            self.remove_notebook(notebook)
+
+
+class ZeppelinAPI(object):
+    """
+    Helper for interacting with the Appache Zeppelin REST API.
+    """
+    def _url(self, *parts):
+        dc = utils.DistConfig(
+            data=layer.options('apache-bigtop-base'))
+        url = 'http://localhost:{}/api/'.format(dc.port('zeppelin'))
+        for part in parts:
+            url = urljoin(url, part)
+        return url
+
+    def import_notebook(self, contents):
+        response = requests.post(self._url('notebook'), data=contents)
+        if response.status_code != 201:
+            return None
+        return response.json()['body']
+
+    def delete_notebook(self, notebook_id):
+        requests.delete(self._url('notebook/', notebook_id))
+
+    def modify_interpreter(self, interpreter_name, properties):
+        response = requests.get(self._url('interpreter/', 'setting'))
+        try:
+            body = response.json()['body']
+        except json.JSONDecodeError:
+            hookenv.log('Invalid response from API server: {} {}'.format(
+                response, response.text), hookenv.ERROR)
+            raise
+        for interpreter_data in body:
+            if interpreter_data['name'] == interpreter_name:
+                break
+        else:
+            raise ValueError('Interpreter not found: {}'.format(
+                interpreter_name))
+        interpreter_data['properties'].update(properties)
+        response = requests.put(self._url('interpreter/', 'setting/',
+                                          interpreter_data['id']),
+                                data=json.dumps(interpreter_data))
+        if response.status_code != 200:
+            raise ValueError('Unable to update interpreter: {}'.format(
+                response.text))
