@@ -14,103 +14,116 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-## Overview
+# Overview
 
 The Apache Hadoop software library is a framework that allows for the
 distributed processing of large data sets across clusters of computers
 using a simple programming model.
 
 This charm deploys a combined slave node running the NodeManager
-and DataNode components of the Apache Bigtop platform
+and DataNode components of the [Apache Bigtop][] platform
 to provide YARN compute and HDFS storage resources.
 
+[Apache Bigtop]: http://bigtop.apache.org/
 
-## Usage
 
-This charm is intended to be deployed via one of the
-[apache bigtop bundles](https://jujucharms.com/u/bigdata-dev/#bundles).
+# Deploying
+
+A working Juju installation is assumed to be present. If Juju is not yet set
+up, please follow the [getting-started][] instructions prior to deploying this
+charm.
+
+This charm is intended to be deployed via one of the [apache bigtop bundles][].
 For example:
 
     juju deploy hadoop-processing
 
-> Note: With Juju versions < 2.0, you will need to use [juju-deployer][] to
-deploy the bundle.
+> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
+of Juju, use [juju-quickstart][] with the following syntax: `juju quickstart
+hadoop-processing`.
 
-This will deploy the Apache Bigtop platform with a workload node
-preconfigured to work with the cluster.
+This will deploy an Apache Bigtop cluster with 3 units of this charm acting as
+the combined DataNode/NodeManager application. More information about this
+deployment can be found in the [bundle readme](https://jujucharms.com/hadoop-processing/).
 
-You can also manually load and run map-reduce jobs via the plugin charm
-included in the bundles linked above:
+## Network-Restricted Environments
+Charms can be deployed in environments with limited network access. To deploy
+in this environment, configure a Juju model with appropriate proxy and/or
+mirror options. See [Configuring Models][] for more information.
 
-    juju scp my-job.jar plugin/0:
-    juju ssh plugin/0
-    hadoop jar my-job.jar
+[getting-started]: https://jujucharms.com/docs/stable/getting-started
+[apache bigtop bundles]: https://jujucharms.com/u/bigdata-charmers/#bundles
+[juju-quickstart]: https://launchpad.net/juju-quickstart
+[Configuring Models]: https://jujucharms.com/docs/stable/models-config
 
 
-[juju-deployer]: https://pypi.python.org/pypi/juju-deployer/
+# Verifying
 
-
-## Status and Smoke Test
-
+## Status
 Apache Bigtop charms provide extended status reporting to indicate when they
 are ready:
 
-    juju status --format=tabular
+    juju status
 
 This is particularly useful when combined with `watch` to track the on-going
 progress of the deployment:
 
-    watch -n 0.5 juju status --format=tabular
+    watch -n 2 juju status
 
-The message for each unit will provide information about that unit's state.
-Once they all indicate that they are ready, you can perform a "smoke test"
-to verify HDFS or YARN services are working as expected. Trigger the
-`smoke-test` action by:
+The message column will provide information about a given unit's state.
+This charm is ready for use once the status message indicates that it is
+ready as a datanode/nodemanager.
 
-    juju action do namenode/0 smoke-test
-    juju action do resourcemanager/0 smoke-test
+## Smoke Test
+This charm provides a `smoke-test` action that can be used to verify the
+application is functioning as expected. This action executes the 'hdfs'
+and 'mapreduce' smoke tests provided by Apache Bigtop and may take up to
+30 minutes to complete. Run the action as follows:
 
-After a few seconds or so, you can check the results of the smoke test:
+    juju run-action slave/0 smoke-test
 
-    juju action status
+> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
+of Juju, the syntax is `juju action do slave/0 smoke-test`.
 
-You will see `status: completed` if the smoke test was successful, or
-`status: failed` if it was not.  You can get more information on why it failed
-via:
+Watch the progress of the smoke test actions with:
 
-    juju action fetch <action-id>
+    watch -n 2 juju show-action-status
 
+> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
+of Juju, the syntax is `juju action status`.
 
-## Scaling
+Eventually, the action should settle to `status: completed`.  If it
+reports `status: failed`, the application is not working as expected. Get
+more information about a specific smoke test with:
 
-The slave node is the "workhorse" of the Hadoop environment. To scale your
-cluster performance and storage capabilities, you can simply add more slave
-units.  For example, to add three more units:
+    juju show-action-output <action-id>
 
-    juju add-unit slave -n 3
-
-
-## Deploying in Network-Restricted Environments
-
-Charms can be deployed in environments with limited network access. To deploy
-in this environment, you will need a local mirror to serve required packages.
+> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
+of Juju, the syntax is `juju action fetch <action-id>`.
 
 
-### Mirroring Packages
+# Scaling
 
-You can setup a local mirror for apt packages using squid-deb-proxy.
-For instructions on configuring juju to use this, see the
-[Juju Proxy Documentation](https://juju.ubuntu.com/docs/howto-proxies.html).
+To scale the cluster compute and storage capabilities, simply add more
+slave units. To add one unit:
+
+    juju add-unit slave
+
+Multiple units may be added at once.  For example, add four more slave units:
+
+    juju add-unit -n4 slave
 
 
-## Contact Information
+# Contact Information
 
 - <bigdata@lists.ubuntu.com>
 
 
-## Hadoop
+# Resources
 
 - [Apache Bigtop](http://bigtop.apache.org/) home page
 - [Apache Bigtop issue tracking](http://bigtop.apache.org/issue-tracking.html)
 - [Apache Bigtop mailing lists](http://bigtop.apache.org/mail-lists.html)
-- [Apache Bigtop charms](https://jujucharms.com/q/apache/bigtop)
+- [Juju Bigtop charms](https://jujucharms.com/q/apache/bigtop)
+- [Juju mailing list](https://lists.ubuntu.com/mailman/listinfo/juju)
+- [Juju community](https://jujucharms.com/community)

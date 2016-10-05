@@ -1,4 +1,4 @@
-repo: git@github.com:juju-solutions/layer-hadoop-resourcemanager.git
+repo: https://github.com/apache/bigtop/tree/master/bigtop-packages/src/charm/hadoop/layer-hadoop-resourcemanager
 includes:
   - 'layer:apache-bigtop-base'
   - 'interface:dfs'

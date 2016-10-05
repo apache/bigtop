@@ -21,7 +21,7 @@ from charmhelpers.core import hookenv
 from jujubigdata.utils import run_as
 from charms.reactive import is_state
 
-if not is_state('apache-bigtop-namenode.ready'):
+if not is_state('apache-bigtop-plugin.hdfs.ready'):
     hookenv.action_fail('Charm is not yet ready')
 
 

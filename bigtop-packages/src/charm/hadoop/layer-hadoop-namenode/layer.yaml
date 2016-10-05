@@ -1,4 +1,4 @@
-repo: git@github.com:juju-solutions/layer-hadoop-namenode.git
+repo: https://github.com/apache/bigtop/tree/master/bigtop-packages/src/charm/hadoop/layer-hadoop-namenode
 includes:
   - 'layer:apache-bigtop-base'
   - 'interface:dfs'

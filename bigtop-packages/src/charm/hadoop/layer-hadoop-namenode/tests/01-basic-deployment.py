@@ -28,7 +28,7 @@ class TestDeploy(unittest.TestCase):
     """
 
     def test_deploy(self):
-        self.d = amulet.Deployment(series='trusty')
+        self.d = amulet.Deployment(series='xenial')
         self.d.add('namenode', 'hadoop-namenode')
         self.d.setup(timeout=900)
         self.d.sentry.wait(timeout=1800)

@@ -1,12 +1,12 @@
 name: hadoop-resourcemanager
-summary: YARN master (ResourceManager) for Apache Bigtop platform
+summary: YARN master (ResourceManager) from Apache Bigtop
 maintainer: Juju Big Data <bigdata@lists.ubuntu.com>
 description: >
   Hadoop is a software platform that lets one easily write and
   run applications that process vast amounts of data.
 
-  This charm manages the YARN master node (ResourceManager).
-tags: ["applications", "bigdata", "bigtop", "hadoop", "apache"]
+  This charm provides the YARN master node (ResourceManager).
+tags: []
 provides:
   resourcemanager:
     interface: mapred

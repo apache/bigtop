@@ -15,11 +15,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from charms.reactive import when_any, when_none, is_state
+from charms.reactive import when_any, is_state
 from charmhelpers.core.hookenv import status_set
 
 
-@when_none('namenode.spec.mismatch', 'resourcemanager.spec.mismatch')
 @when_any(
     'bigtop.available',
     'apache-bigtop-datanode.pending',

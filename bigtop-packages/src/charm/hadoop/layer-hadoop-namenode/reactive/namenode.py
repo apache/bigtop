@@ -15,7 +15,9 @@
 # limitations under the License.
 
 from charms.reactive import is_state, remove_state, set_state, when, when_not
-from charms.layer.apache_bigtop_base import Bigtop, get_layer_opts, get_fqdn
+from charms.layer.apache_bigtop_base import (
+    Bigtop, get_hadoop_version, get_layer_opts, get_fqdn
+)
 from charmhelpers.core import hookenv, host
 from jujubigdata import utils
 from path import Path
@@ -50,6 +52,8 @@ def send_early_install_info(remote):
 def install_namenode():
     hookenv.status_set('maintenance', 'installing namenode')
     bigtop = Bigtop()
+    hdfs_port = get_layer_opts().port('namenode')
+    webhdfs_port = get_layer_opts().port('nn_webapp_http')
     bigtop.render_site_yaml(
         hosts={
             'namenode': get_fqdn(),
@@ -58,6 +62,10 @@ def install_namenode():
             'namenode',
             'mapred-app',
         ],
+        overrides={
+            'hadoop::common_hdfs::hadoop_namenode_port': hdfs_port,
+            'hadoop::common_hdfs::hadoop_namenode_http_port': webhdfs_port,
+        }
     )
     bigtop.trigger_puppet()
 
@@ -96,6 +104,7 @@ def start_namenode():
     for port in get_layer_opts().exposed_ports('namenode'):
         hookenv.open_port(port)
     set_state('apache-bigtop-namenode.started')
+    hookenv.application_version_set(get_hadoop_version())
     hookenv.status_set('maintenance', 'namenode started')
 
 

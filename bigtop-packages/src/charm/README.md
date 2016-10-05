@@ -18,37 +18,41 @@
 
 ## Overview
 
-These are the charm layers used to build Juju charms for deploying Bigtop
-components.  The charms are also published to the [Juju charm store][] and
-can be deployed directly from there using [bundles][], or they can be
-built from these layers and deployed locally.
+Juju Charms allow you to deploy, configure, and connect an Apache Bigtop cluster
+on any supported cloud, which can be scaled to meet workload demands. You can
+also easily connect other, non-Bigtop components from the [Juju charm store][]
+that support common interfaces.
 
-Charms allow you to deploy, configure, and connect a Apache Bigtop cluster
-on any supported cloud, which can be easily scaled to meet workload demands.
-You can also easily connect other, non-Bigtop components from the
-[Juju charm store][] that support common interfaces.
+This source tree contains the charm layers used to build charms for deploying
+Bigtop components.  Built charms are published to the [Juju charm store][]
+and can be deployed directly from there, either individually or with
+[bundles][]. They can also be built from these layers and deployed locally.
 
+For the remainder of this guide, a working Juju installation is assumed to be
+present. If Juju is not yet set up, please follow the [getting-started][]
+instructions prior to deploying locally built charms and bundles.
 
 [Juju charm store]: https://jujucharms.com/
-[bundles]: https://jujucharms.com/u/bigdata-dev/hadoop-processing
+[bundles]: https://jujucharms.com/hadoop-processing
+[getting-started]: https://jujucharms.com/docs/stable/getting-started
 
 
 ## Building the Bigtop Charms
 
-To build these charms, you will need [charm-tools][].  You should also read
-over the developer [Getting Started][] page for an overview of charms and
-building them.  Then, in any of the charm layer directories, use `charm build`.
+To build these charms, you will need [charm-tools][]. You should also read
+over the developer [Getting Started][] page for an overview of developing and
+building charms. Then, in any of the charm layer directories, use `charm build`.
 For example:
 
     export JUJU_REPOSITORY=$HOME/charms
-    mkdir $HOME/charms
+    mkdir $JUJU_REPOSITORY
 
     cd bigtop-packages/src/charms/hadoop/layer-hadoop-namenode
     charm build
 
 This will build the NameNode charm, pulling in the appropriate base and
 interface layers from [interfaces.juju.solutions][].  You can get local copies
-of those layers as well using `charm pull-source`:
+of those layers as well by using `charm pull-source`:
 
     export LAYER_PATH=$HOME/layers
     export INTERFACE_PATH=$HOME/interfaces
@@ -57,19 +61,22 @@ of those layers as well using `charm pull-source`:
     charm pull-source layer:apache-bigtop-base
     charm pull-source interface:dfs
 
-You can then deploy the locally built charms individually:
+You can deploy the locally built charms individually, for example:
 
-    juju deploy local:trusty/hadoop-namenode
+    juju deploy $JUJU_REPOSITORY/xenial/hadoop-namenode
 
-You can also use the local version of a bundle:
+> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
+of Juju, the syntax is: `juju deploy local:xenial/hadoop-namenode`.
 
-    juju deploy bigtop-deploy/juju/hadoop-processing/bundle-local.yaml
+You can also deploy the local version of a bundle:
 
-> Note: With Juju versions < 2.0, you will need to use [juju-deployer][] to
-deploy the local bundle.
+    juju deploy ./bigtop-deploy/juju/hadoop-processing/bundle-local.yaml
 
+> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
+of Juju, use [juju-quickstart][] with the following syntax: `juju quickstart
+./bigtop-deploy/juju/hadoop-processing/bundle-local.yaml`.
 
 [charm-tools]: https://jujucharms.com/docs/stable/tools-charm-tools
-[Getting Started]: https://jujucharms.com/docs/devel/developer-getting-started
+[Getting Started]: https://jujucharms.com/docs/stable/developer-getting-started
 [interfaces.juju.solutions]: http://interfaces.juju.solutions/
-[juju-deployer]: https://pypi.python.org/pypi/juju-deployer/
+[juju-quickstart]: https://launchpad.net/juju-quickstart
