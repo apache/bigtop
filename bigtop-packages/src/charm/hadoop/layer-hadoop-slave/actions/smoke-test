@@ -29,15 +29,16 @@ def fail(msg, output=None):
     hookenv.action_fail(msg)
     sys.exit()
 
-if not is_state('apache-bigtop-resourcemanager.ready'):
+if not is_state('apache-bigtop-datanode.started'):
     fail('Charm is not yet ready to run the Bigtop smoke test(s)')
 
 # Bigtop smoke test components
-smoke_components = ['yarn']
+smoke_components = ['hdfs', 'mapreduce']
 
 # Env required by test components
 smoke_env = {
     'HADOOP_CONF_DIR': '/etc/hadoop/conf',
+    'HADOOP_MAPRED_HOME': '/usr/lib/hadoop-mapreduce',
 }
 
 bigtop = Bigtop()

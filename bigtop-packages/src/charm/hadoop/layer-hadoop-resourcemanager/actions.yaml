@@ -1,6 +1,5 @@
 smoke-test:
-  description: >
-    Verify that YARN is working as expected by running a small (1MB) terasort.
+    description: Run an Apache Bigtop smoke test.
 mrbench:
     description: Mapreduce benchmark for small jobs
     params:

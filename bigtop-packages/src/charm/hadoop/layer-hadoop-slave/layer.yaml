@@ -1,2 +1,4 @@
-repo: git@github.com:juju-solutions/layer-hadoop-slave.git
-includes: ['layer:hadoop-datanode', 'layer:hadoop-nodemanager']
+repo: https://github.com/apache/bigtop/tree/master/bigtop-packages/src/charm/hadoop/layer-hadoop-slave
+includes:
+  - 'layer:hadoop-datanode'
+  - 'layer:hadoop-nodemanager'

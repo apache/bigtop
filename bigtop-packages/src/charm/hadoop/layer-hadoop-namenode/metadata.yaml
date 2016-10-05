@@ -1,12 +1,12 @@
 name: hadoop-namenode
-summary: HDFS master (NameNode) for Apache Bigtop platform
+summary: HDFS master (NameNode) from Apache Bigtop
 maintainer: Juju Big Data <bigdata@lists.ubuntu.com>
 description: >
   Hadoop is a software platform that lets one easily write and
   run applications that process vast amounts of data.
 
-  This charm manages the HDFS master node (NameNode).
-tags: ["applications", "bigdata", "bigtop", "hadoop", "apache"]
+  This charm provides the HDFS master node (NameNode).
+tags: []
 provides:
   namenode:
     interface: dfs

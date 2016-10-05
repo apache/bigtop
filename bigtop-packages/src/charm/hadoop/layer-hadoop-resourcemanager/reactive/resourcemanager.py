@@ -15,7 +15,9 @@
 # limitations under the License.
 
 from charms.reactive import is_state, remove_state, set_state, when, when_not
-from charms.layer.apache_bigtop_base import Bigtop, get_layer_opts, get_fqdn
+from charms.layer.apache_bigtop_base import (
+    Bigtop, get_hadoop_version, get_layer_opts, get_fqdn
+)
 from charmhelpers.core import hookenv, host
 from jujubigdata import utils
 
@@ -61,11 +63,32 @@ def install_resourcemanager(namenode):
     """
     if namenode.namenodes():
         hookenv.status_set('maintenance', 'installing resourcemanager')
+        # Hosts
         nn_host = namenode.namenodes()[0]
         rm_host = get_fqdn()
+
+        # Ports
+        rm_ipc = get_layer_opts().port('resourcemanager')
+        rm_http = get_layer_opts().port('rm_webapp_http')
+        jh_ipc = get_layer_opts().port('jobhistory')
+        jh_http = get_layer_opts().port('jh_webapp_http')
+
         bigtop = Bigtop()
-        hosts = {'namenode': nn_host, 'resourcemanager': rm_host}
-        bigtop.render_site_yaml(hosts=hosts, roles='resourcemanager')
+        bigtop.render_site_yaml(
+            hosts={
+                'namenode': nn_host,
+                'resourcemanager': rm_host,
+            },
+            roles=[
+                'resourcemanager',
+            ],
+            overrides={
+                'hadoop::common_yarn::hadoop_rm_port': rm_ipc,
+                'hadoop::common_yarn::hadoop_rm_webapp_port': rm_http,
+                'hadoop::common_mapred_app::mapreduce_jobhistory_port': jh_ipc,
+                'hadoop::common_mapred_app::mapreduce_jobhistory_webapp_port': jh_http,
+            }
+        )
         bigtop.trigger_puppet()
 
         # /etc/hosts entries from the KV are not currently used for bigtop,
@@ -104,7 +127,8 @@ def start_resourcemanager(namenode):
     for port in get_layer_opts().exposed_ports('resourcemanager'):
         hookenv.open_port(port)
     set_state('apache-bigtop-resourcemanager.started')
-    hookenv.status_set('active', 'ready')
+    hookenv.application_version_set(get_hadoop_version())
+    hookenv.status_set('maintenance', 'resourcemanager started')
 
 
 ###############################################################################

@@ -1,5 +1,5 @@
 name: hadoop-plugin
-summary: Simplified connection point for Apache Bigtop platform
+summary: Facilitates communication with an Apache Bigtop Hadoop cluster
 maintainer: Juju Big Data <bigdata@lists.ubuntu.com>
 description: >
   Hadoop is a software platform that lets one easily write and
@@ -8,7 +8,7 @@ description: >
   This charm provides a simplified connection point for client / workload
   services which require access to Apache Hadoop. This connection is established
   via the Apache Bigtop gateway.
-tags: ["applications", "bigdata", "hadoop", "apache"]
+tags: []
 subordinate: true
 requires:
   namenode:

@@ -42,6 +42,7 @@ def install_hadoop_client_hdfs(principal, namenode):
         bigtop.render_site_yaml(hosts=hosts, roles='hadoop-client')
         bigtop.trigger_puppet()
         set_state('apache-bigtop-plugin.hdfs.installed')
+        hookenv.application_version_set(get_hadoop_version())
         hookenv.status_set('maintenance', 'plugin (hdfs) installed')
     else:
         hookenv.status_set('waiting', 'waiting for namenode fqdn')
