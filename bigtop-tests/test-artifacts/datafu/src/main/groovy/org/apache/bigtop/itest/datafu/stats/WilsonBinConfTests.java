@@ -75,7 +75,7 @@ public class WilsonBinConfTests extends PigTests
       assertTrue(expectationIterator.hasNext());
       Double lower = (Double)t.get(0);
       Double upper = (Double)t.get(1);
-      assertEquals(String.format("%.5f,%.5f",lower,upper),expectationIterator.next());
+      assertEquals(expectationIterator.next(),String.format("%.5f,%.5f",lower,upper));
     }
   }
 }

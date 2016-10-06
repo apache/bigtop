@@ -111,6 +111,6 @@ class TestTajo {
     } finally {
       if (rs != null) rs.close()
     }
-    assertEquals(answer.toString(), correct.toString())
+    assertEquals(correct.toString(), answer.toString())
   }
 }

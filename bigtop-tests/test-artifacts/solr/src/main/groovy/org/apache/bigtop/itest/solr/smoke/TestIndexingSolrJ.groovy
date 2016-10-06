@@ -83,10 +83,10 @@ class TestIndexingSolrJ extends SolrTestBase {
     query.setRows(1000)
     QueryResponse qr = _server.query(query, SolrRequest.METHOD.POST)
     Object o = qr.getHeader().get("status")
-    Assert.assertEquals(qr.getHeader().get("status"), 0)
+    Assert.assertEquals(0, qr.getHeader().get("status"))
 
     SolrDocumentList sdl = qr.getResults()
-    Assert.assertEquals(sdl.size(), docIds.length)
+    Assert.assertEquals(docIds.length, sdl.size())
     for (SolrDocument doc : sdl) {
       Assert.assertTrue(docIds.contains(doc.get("id")))
     }

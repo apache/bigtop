@@ -91,8 +91,8 @@ public class TestSparkSmoke implements Serializable {
       public Boolean call(String s) { return s.contains("e"); }
     }).count();
 
-    assertEquals("Lines containing 'spark' should be 14", num_Spark, 14);
-    assertEquals("Lines containing 'e' should be 43", num_e, 43);
+    assertEquals("Lines containing 'spark' should be 14", 14, num_Spark);
+    assertEquals("Lines containing 'e' should be 43", 43, num_e);
   }
 
 }

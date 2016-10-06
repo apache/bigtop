@@ -56,7 +56,7 @@ class TestTextSnappy {
     String expected = "1\trafferty\t31\n2\tjones\t33\n3\tsteinberg\t33"
     System.out.println("Expected output:\n${expected}")
     System.out.println("Actual output:\n${output}")
-    assertEquals("Incorrect output", output, expected)
+    assertEquals("Incorrect output", expected, output)
   }
 
 }

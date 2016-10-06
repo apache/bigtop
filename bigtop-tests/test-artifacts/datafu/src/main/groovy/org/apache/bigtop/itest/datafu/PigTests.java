@@ -170,7 +170,7 @@ public abstract class PigTests
     int i=0;
     for (String e : expected)
     {
-      assertEquals(tuples.get(i++).toString(), e);
+      assertEquals(e, tuples.get(i++).toString());
     }
   }
   
