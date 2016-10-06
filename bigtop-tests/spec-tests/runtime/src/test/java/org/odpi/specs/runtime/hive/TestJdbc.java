@@ -6,11 +6,8 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.ByteArrayInputStream;
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,7 +15,6 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.Properties;
 
@@ -343,7 +339,10 @@ public class TestJdbc {
 
       final String dbName = "odpi_jdbc_test_db";
 
-      stmt.execute("drop database if exists " + dbName);
+      final String tableName = "odpi_jdbc_test_table";
+      stmt.execute("drop table if exists " + tableName);
+
+      stmt.execute("drop database if exists " + dbName + " cascade");
       stmt.execute("create database " + dbName);
 
       conn.setSchema(dbName);
@@ -357,8 +356,6 @@ public class TestJdbc {
         LOG.debug("Schema name is " + schemaName);
       }
 
-      final String tableName = "odpi_jdbc_test_table";
-      stmt.execute("drop table if exists " + tableName);
       stmt.execute("create table " + tableName + " (i int, s varchar(32))");
 
       rs = md.getTables(null, dbName, tableName, null);
@@ -373,7 +370,7 @@ public class TestJdbc {
         LOG.debug("Schema name is " + colName);
       }
 
-      rs = md.getFunctions(null, dbName, null);
+      rs = md.getFunctions(null, dbName, "foo");
       while (rs.next()) {
         String funcName = rs.getString(3);
         LOG.debug("Schema name is " + funcName);
@@ -449,7 +446,6 @@ public class TestJdbc {
       stmt.setFetchDirection(ResultSet.FETCH_FORWARD);
       stmt.setFetchSize(500);
       stmt.setMaxRows(500);
-      stmt.setQueryTimeout(30);
     }
   }
 
@@ -458,25 +454,22 @@ public class TestJdbc {
     final String tableName = "odpi_jdbc_psars_test_table";
     try (Statement stmt = conn.createStatement()) {
       stmt.execute("drop table if exists " + tableName);
-      stmt.execute("create table " + tableName + " (bd decimal(15,3), by binary, bo boolean, " +
-          "ti tinyint, da date, db double, fl float, i int, lo long, sh short, st string," +
-          " tm timestamp");
+      stmt.execute("create table " + tableName + " (bo boolean, ti tinyint, db double, fl float, " +
+          "i int, lo bigint, sh smallint, st varchar(32))");
     }
 
+    // NOTE Hive 1.2 theoretically support binary, Date & Timestamp in JDBC, but I get errors when I
+    // try to put them in the query.
     try (PreparedStatement ps = conn.prepareStatement("insert into " + tableName +
-        " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?")) {
-      ps.setBigDecimal(1, new BigDecimal("1234231421343.123"));
-      ps.setBinaryStream(2, new ByteArrayInputStream("abcdef".getBytes()));
-      ps.setBoolean(3, true);
-      ps.setByte(4, (byte)1);
-      ps.setDate(5, new Date(1999, 12, 1));
-      ps.setDouble(6, 3.141592654);
-      ps.setFloat(7, 3.14f);
-      ps.setInt(8, 3);
-      ps.setLong(9, 10L);
-      ps.setShort(10, (short)20);
-      ps.setString(11, "abc");
-      ps.setTimestamp(12, new Timestamp(1999, 12, 1, 13, 23, 40, 0));
+        " values (?, ?, ?, ?, ?, ?, ?, ?)")) {
+      ps.setBoolean(1, true);
+      ps.setByte(2, (byte)1);
+      ps.setDouble(3, 3.141592654);
+      ps.setFloat(4, 3.14f);
+      ps.setInt(5, 3);
+      ps.setLong(6, 10L);
+      ps.setShort(7, (short)20);
+      ps.setString(8, "abc");
       ps.executeUpdate();
     }
 
@@ -550,37 +543,27 @@ public class TestJdbc {
       }
 
       while (rs.next()) {
-        LOG.debug("bd = " + rs.getBigDecimal(1));
-        LOG.debug("bd = " + rs.getBigDecimal("bd"));
-        LOG.debug("bd = " + rs.getBigDecimal(1, 2));
-        LOG.debug("bd = " + rs.getBigDecimal("bd", 2));
-        LOG.debug("by = " + rs.getBinaryStream(2));
-        LOG.debug("by = " + rs.getBinaryStream("by"));
-        LOG.debug("bo = " + rs.getBoolean(3));
+        LOG.debug("bo = " + rs.getBoolean(1));
         LOG.debug("bo = " + rs.getBoolean("bo"));
-        LOG.debug("ti = " + rs.getByte(4));
+        LOG.debug("ti = " + rs.getByte(2));
         LOG.debug("ti = " + rs.getByte("ti"));
-        LOG.debug("da = " + rs.getDate(5));
-        LOG.debug("da = " + rs.getDate("da"));
-        LOG.debug("db = " + rs.getDouble(6));
+        LOG.debug("db = " + rs.getDouble(3));
         LOG.debug("db = " + rs.getDouble("db"));
-        LOG.debug("fl = " + rs.getFloat(7));
+        LOG.debug("fl = " + rs.getFloat(4));
         LOG.debug("fl = " + rs.getFloat("fl"));
-        LOG.debug("i = " + rs.getInt(8));
+        LOG.debug("i = " + rs.getInt(5));
         LOG.debug("i = " + rs.getInt("i"));
-        LOG.debug("lo = " + rs.getLong(9));
+        LOG.debug("lo = " + rs.getLong(6));
         LOG.debug("lo = " + rs.getLong("lo"));
-        LOG.debug("sh = " + rs.getShort(10));
+        LOG.debug("sh = " + rs.getShort(7));
         LOG.debug("sh = " + rs.getShort("sh"));
-        LOG.debug("st = " + rs.getString(11));
+        LOG.debug("st = " + rs.getString(8));
         LOG.debug("st = " + rs.getString("st"));
-        LOG.debug("tm = " + rs.getTimestamp(12));
-        LOG.debug("tm = " + rs.getTimestamp("tm"));
-        LOG.debug("tm = " + rs.getObject(12));
-        LOG.debug("tm = " + rs.getObject("tm"));
+        LOG.debug("tm = " + rs.getObject(8));
+        LOG.debug("tm = " + rs.getObject("st"));
         LOG.debug("tm was null " + rs.wasNull());
       }
-      LOG.debug("bd is column " + rs.findColumn("bd"));
+      LOG.debug("bo is column " + rs.findColumn("bo"));
 
       int intrc = rs.getConcurrency();
       LOG.debug("concurrency " + intrc);
