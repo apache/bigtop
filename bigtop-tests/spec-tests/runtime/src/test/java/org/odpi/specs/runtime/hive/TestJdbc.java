@@ -1,23 +1,3 @@
-package org.odpi.specs.runtime.hive;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.SQLWarning;
-import java.sql.Statement;
-import java.sql.Types;
-import java.util.Properties;
-
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -35,46 +15,24 @@ import java.util.Properties;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class TestJdbc {
-  public static final Log LOG = LogFactory.getLog(TestJdbc.class.getName());
+package org.odpi.specs.runtime.hive;
 
-  private static final String URL = "odpiHiveTestJdbcUrl";
-  private static final String USER = "odpiHiveTestJdbcUser";
-  private static final String PASSWD = "odpiHiveTestJdbcPassword";
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.junit.Test;
 
-  protected static Connection conn;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.SQLWarning;
+import java.sql.Statement;
+import java.sql.Types;
 
-  @BeforeClass
-  public static void connectToJdbc() throws SQLException {
-    // Assume they've put the URL for the JDBC driver in an environment variable.
-    String jdbcUrl = System.getProperty(URL);
-    String jdbcUser = System.getProperty(USER);
-    String jdbcPasswd = System.getProperty(PASSWD);
-
-    LOG.info("URL is " + jdbcUrl);
-    LOG.info("User is " + jdbcUser);
-    LOG.info("Passwd is " + jdbcPasswd);
-    LOG.info("Passwd is null " + (jdbcPasswd == null));
-
-    if (jdbcUrl == null || jdbcUser == null ) {
-      String msg = "You must set the URL, user, and password for the JDBC connection before\n" +
-          "running these tests.  Each is set as a Java property:\n" +
-          URL + " = the URL " +
-          USER + " = the user " +
-          PASSWD + " = the password ";
-      throw new RuntimeException(msg);
-    }
-
-    Properties props = new Properties();
-    props.put("user", jdbcUser);
-    if (jdbcPasswd != null && jdbcPasswd != "") props.put("password", jdbcPasswd);
-    conn = DriverManager.getConnection(jdbcUrl, props);
-  }
-
-  @AfterClass
-  public static void closeJdbc() throws SQLException {
-    if (conn != null) conn.close();
-  }
+public class TestJdbc extends JdbcConnector {
+  private static final Log LOG = LogFactory.getLog(TestJdbc.class.getName());
 
   /**
    * Test simple non-statement related class.  setSchema is tested elsewhere because there's work
