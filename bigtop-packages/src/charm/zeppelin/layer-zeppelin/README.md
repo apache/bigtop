@@ -44,11 +44,6 @@ Now add Zeppelin and expose the web interface:
     juju deploy zeppelin
     juju expose zeppelin
 
-Now relate Zeppelin to Java and the Hadoop cluster:
-
-    juju add-relation zeppelin openjdk
-    juju add-relation zeppelin plugin
-
 Once deployment is complete, you will have an Apache Bigtop Hadoop platform
 with Zeppelin available to create notebooks and start analyzing your data!
 You can access the web interface at http://{zeppelin_unit_ip_address}:9080.
@@ -91,21 +86,6 @@ via:
 
 _**Note**: The above assumes Juju 2.0 or greater. If using an earlier version
 of Juju, the syntax is `juju action fetch <action-id>`._
-
-
-## Limitations
-
-### Spark Interpreter Settings
-
-Zeppelin Spark interpreter configuration is set according to environment
-variable values at deploy time. If you alter these variables post
-deployment (e.g., `juju set-config spark spark_execution_mode=NEW_VALUE`), you will
-need to edit Zeppelin's Spark interpreter to match the new value. Do this on
-the `Interpreter` tab of the Zeppelin web interface.
-
- * Affected Spark Interpreter configuration includes:
-
-   * spark.executor.memory
 
 
 ## Contact Information

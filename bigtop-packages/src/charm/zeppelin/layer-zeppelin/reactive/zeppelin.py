@@ -132,8 +132,10 @@ def configure_spark(spark):
 def unconfigure_spark():
     hookenv.status_set('maintenance', 'removing spark relation')
     zeppelin = Zeppelin()
-    zeppelin.configure_spark(None)
-    data_changed('spark.master', None)  # ensure updated if re-added
+    # Yarn / Hadoop may not actually be available, but that is the default
+    # value and nothing else would reasonably work here either without Spark.
+    zeppelin.configure_spark('yarn-client')
+    data_changed('spark.master', 'yarn-client')  # ensure updated if re-added
     remove_state('zeppelin.spark.configured')
     update_status()
 

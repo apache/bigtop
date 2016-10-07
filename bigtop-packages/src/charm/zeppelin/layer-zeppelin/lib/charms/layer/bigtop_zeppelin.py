@@ -45,9 +45,14 @@ class Zeppelin(object):
         '''
         Trigger the Bigtop puppet recipe that handles the Zepplin service.
         '''
-        # Dirs are handled by the bigtop deb. No need to call out to
-        # dist_config to do that work.
+        # Dirs are handled by the bigtop deb, so no need to call out to
+        # dist_config to do that work.  However, we want to adjust the
+        # groups for the `ubuntu` user for better interaction with Juju.
         self.dist_config.add_users()
+        self._add_override('zeppelin::server::server_port',
+                           self.dist_config.port('zeppelin'))
+        self._add_override('zeppelin::server::web_socket_port',
+                           self.dist_config.port('zeppelin_web'))
         self.trigger_bigtop()
 
     def trigger_bigtop(self):

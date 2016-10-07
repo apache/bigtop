@@ -31,10 +31,6 @@ class TestDeploy(unittest.TestCase):
         cls.d.add('namenode', 'hadoop-namenode')
         cls.d.add('slave', 'hadoop-slave')
         cls.d.add('plugin', 'hadoop-plugin')
-        cls.d.add('openjdk', 'openjdk')
-
-        cls.d.configure('openjdk', {'java-type': 'jdk',
-                                    'java-major': '8'})
 
         cls.d.relate('plugin:hadoop-plugin', 'zeppelin:hadoop')
         cls.d.relate('plugin:namenode', 'namenode:namenode')
@@ -42,12 +38,6 @@ class TestDeploy(unittest.TestCase):
         cls.d.relate('slave:namenode', 'namenode:datanode')
         cls.d.relate('slave:resourcemanager', 'resourcemanager:nodemanager')
         cls.d.relate('namenode:namenode', 'resourcemanager:namenode')
-
-        cls.d.relate('plugin:java', 'openjdk:java')
-        cls.d.relate('namenode:java', 'openjdk:java')
-        cls.d.relate('slave:java', 'openjdk:java')
-        cls.d.relate('resourcemanager:java', 'openjdk:java')
-        cls.d.relate('zeppelin:java', 'openjdk:java')
 
         cls.d.setup(timeout=3600)
         cls.d.sentry.wait_for_messages({'zeppelin': 'ready'}, timeout=3600)
