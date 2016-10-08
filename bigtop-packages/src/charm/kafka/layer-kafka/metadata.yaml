@@ -1,5 +1,5 @@
 name: kafka
-summary: High-performance distributed messaging system
+summary: High-performance distributed messaging system from Apache Bigtop
 maintainer: Juju Big Data <bigdata@lists.ubuntu.com>
 description: |
   Fast
@@ -21,9 +21,7 @@ description: |
   Distributed by Design
   Kafka has a modern cluster-centric design that offers strong durability and
   fault-tolerance guarantees.
-
-  This charm provides Kafka via Apache Bigtop.
-tags: ["apache", "bigdata", "bigtop"]
+tags: []
 provides:
   client:
     interface: kafka
