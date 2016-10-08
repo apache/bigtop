@@ -258,11 +258,12 @@ bigtop {
       name    = 'datafu'
       pkg     = 'pig-udf-datafu'
       relNotes = 'Pig UDF Datafu'
-      version { base = '1.0.0'; pkg = base; release = 1 }
+      version { base = '1.3.0'; pkg = base; release = 1 }
       tarball { destination = "$name-${version.base}.tar.gz"
-                source      = "${version.base}.tar.gz" }
-      url     { site = "https://github.com/linkedin/datafu/archive"
-                archive = site }
+                source      = "apache-$name-incubating-sources-${version.base}.tgz" }
+      url     { download_path = "incubator/$name/apache-$name-incubating-${version.base}"
+                site = "${apache.APACHE_MIRROR}/${download_path}"
+                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }
     'solr' {
       name    = 'solr'
