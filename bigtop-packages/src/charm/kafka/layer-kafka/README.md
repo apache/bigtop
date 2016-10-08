@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-## Overview
+# Overview
 
 Apache Kafka is an open-source message broker project developed by the Apache
 Software Foundation written in Scala. The project aims to provide a unified,
@@ -23,53 +23,60 @@ more at [kafka.apache.org](http://kafka.apache.org/).
 
 This charm deploys the Kafka component of the Apache Bigtop platform.
 
-## Usage
+
+# Deploying / Using
+
+A working Juju installation is assumed to be present. If Juju is not yet set
+up, please follow the
+[getting-started](https://jujucharms.com/docs/2.0/getting-started)
+instructions prior to deploying this charm.
 
 Kafka requires the Zookeeper distributed coordination service. Deploy and
 relate them as follows:
 
-    juju deploy zookeeper
     juju deploy kafka
+    juju deploy zookeeper
     juju add-relation kafka zookeeper
 
-Once deployed, we can list the zookeeper servers that our kafka brokers
+Once deployed, there are a number of actions available in this charm.
+> **Note**: Actions described below assume Juju 2.0 or greater. If using an
+earlier version of Juju, the action syntax is:
+`juju action do kafka/0 <action_name> <action_args>; juju action fetch <id>`.
+
+List the zookeeper servers that our kafka brokers
 are connected to. The following will list `<ip>:<port>` information for each
 zookeeper unit in the environment (e.g.: `10.0.3.221:2181`).
 
     juju run-action kafka/0 list-zks
     juju show-action-output <id>  # <-- id from above command
 
-We can create a Kafka topic with:
+Create a Kafka topic with:
 
     juju run-action kafka/0 create-topic topic=<topic_name> \
      partitions=<#> replication=<#>
     juju show-action-output <id>  # <-- id from above command
 
-We can list topics with:
+List topics with:
 
     juju run-action kafka/0 list-topics
     juju show-action-output <id>  # <-- id from above command
 
-We can write to a topic with:
+Write to a topic with:
 
     juju run-action kafka/0 write-topic topic=<topic_name> data=<data>
     juju show-action-output <id>  # <-- id from above command
 
-We can read from a topic with:
+Read from a topic with:
 
     juju run-action kafka/0 read-topic topic=<topic_name> partition=<#>
     juju show-action-output <id>  # <-- id from above command
 
-_**Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the action syntax is:_
 
-    juju action do kafka/0 <action_name> <action_args>
-    juju action fetch <id>  # <-- id from above command
+# Verifying
 
-
-## Status and Smoke Test
-
-Kafka provides extended status reporting to indicate when it is ready:
+## Status
+Apache Bigtop charms provide extended status reporting to indicate when they
+are ready:
 
     juju status
 
@@ -78,64 +85,66 @@ progress of the deployment:
 
     watch -n 0.5 juju status
 
-The message for each unit will provide information about that unit's state.
-Once they all indicate that they are ready, you can perform a "smoke test"
-to verify that Kafka is working as expected using the built-in `smoke-test`
-action:
+The message column will provide information about a given unit's state.
+This charm is ready for use once the status message indicates that it is
+ready.
 
-    juju run-action kafka/0 smoke-test
+## Smoke Test
+This charm provides a `smoke-test` action that can be used to verify the
+application is functioning as expected. The test will verify connectivity
+between Kafka and Zookeeper, and will test creation and listing of Kafka
+topics. Run the action as follows:
 
-_**Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju action do kafka/0 smoke-test`._
+    juju run-action slave/0 smoke-test
 
-After a minute or so, you can check the results of the smoke test:
+> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
+of Juju, the syntax is `juju action do kafka/0 smoke-test`.
 
-    juju show-action-status
+Watch the progress of the smoke test actions with:
 
-_**Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju action status`._
+    watch -n 0.5 juju show-action-status
 
+> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
+of Juju, the syntax is `juju action status`.
 
-You will see `status: completed` if the smoke test was successful, or
-`status: failed` if it was not.  You can get more information on why it failed
-via:
+Eventually, the action should settle to `status: completed`.  If it
+reports `status: failed`, the application is not working as expected. Get
+more information about a specific smoke test with:
 
     juju show-action-output <action-id>
 
-_**Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju action fetch <action-id>`._
+> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
+of Juju, the syntax is `juju action fetch <action-id>`.
 
 
-## Scaling
+# Scaling
 
-Creating a cluster with many brokers is as easy as adding more Kafka units:
+Expanding a cluster with many brokers is as easy as adding more Kafka units:
 
     juju add-unit kafka
 
-After adding additional brokers, you will be able to create topics with
-replication up to the number of kafka units.
+After adding additional brokers, topics may be created with
+replication up to the number of ready units. For example, if there are two
+ready units, create a replicated topic as follows:
 
-To verify replication is working you can do the following:
-
-    juju add-unit kafka -n 2
     juju run-action kafka/0 create-topic topic=my-replicated-topic \
         partitions=1 replication=2
 
-_**Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju action do kafka/0 create-topic <args>`._
+> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
+of Juju, the syntax is `juju action do kafka/0 create-topic <args>`.
 
-Query for the description of the just created topic:
+Query the description of the recently created topic:
 
     juju run --unit kafka/0 'kafka-topics.sh --describe \
         --topic my-replicated-topic --zookeeper <zookeeperip>:2181'
 
-You should get a response similar to:
+An expected response should be similar to:
 
     Topic: my-replicated-topic PartitionCount:1 ReplicationFactor:2 Configs:
     Topic: my-replicated-topic Partition: 0 Leader: 2 Replicas: 2,0 Isr: 2,0
 
 
-## Connecting External Clients
+# Connecting External Clients
 
 By default, this charm does not expose Kafka outside of the provider's network.
 To allow external clients to connect to Kafka, first expose the service:
@@ -159,43 +168,60 @@ The external kafka client should now be able to access Kafka by using
 `kafka-0:9092` as the broker.
 
 
-## Network Interfaces
+# Network Interfaces
 
-In some network environments, you may want to restrict kafka to
-listening for incoming connections on a specific network interface
-(for example, for security reasons). To do so, you may pass either a
-network interface name or a CIDR range specifying a subnet to the
-``network_interface`` configuration variable. For example:
+In some network environments, kafka may need to be restricted to
+listen for incoming connections on a specific network interface
+(e.g.: for security reasons). To do so, configure kafka with either a
+network interface name or a CIDR range specifying a subnet. For example:
 
-  juju set-config kafka network_interface=eth0
+    juju config kafka network_interface=eth0
+    juju config kafka network_interface=10.0.2.0/24
 
-or
+> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
+of Juju, the syntax is `juju set-config kafka network_interface=eth0`.
 
-  juju set-config kafka network_interface=10.0.2.0/24
-
-Each kafka machine in your cluster will lookup the IP address of that
+Each kafka machine in the cluster will lookup the IP address of that
 network interface, or find the first network interface with an IP
 address in the specified subnet, and bind kafka to that address.
 
-If you make a mistake, and pass in an invalid name for a network
-interface, you may recover by passing the correct name to set-config,
-and then running "juju resolved" on each unit:
+If a mistake is made and an invalid name for the network interface is
+configured, recover by re-configuring with the correct name and then
+run "juju resolved" on each unit:
 
-  juju set-config kafka network_interface=eth0
-  juju resolved -r kafka/0
+    juju config kafka network_interface=eth0
+    juju resolved kafka/0
 
-If you want to go back to listening on any network interface on the
+> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
+of Juju, the syntax is `juju set-config kafka network_interface=eth0;
+juju resolved -r kafka/0`.
+
+To go back to listening on any network interface on the
 machine, simply pass ``0.0.0.0`` to ``network_interface``.
 
-  juju set-config kafka network_interface=0.0.0.0
+    juju config kafka network_interface=0.0.0.0
 
 
-## Contact Information
+# Network-Restricted Environments
+
+Charms can be deployed in environments with limited network access. To deploy
+in this environment, configure a Juju model with appropriate
+proxy and/or mirror options. See
+[Configuring Models](https://jujucharms.com/docs/2.0/models-config) for more
+information.
+
+
+# Contact Information
+
 - <bigdata@lists.ubuntu.com>
 
 
-## Help
+# Resources
+
+- [Apache Bigtop](http://bigtop.apache.org/) home page
+- [Apache Bigtop mailing lists](http://bigtop.apache.org/mail-lists.html)
 - [Apache Kafka home page](http://kafka.apache.org/)
 - [Apache Kafka issue tracker](https://issues.apache.org/jira/browse/KAFKA)
+- [Juju Bigtop charms](https://jujucharms.com/q/apache/bigtop)
 - [Juju mailing list](https://lists.ubuntu.com/mailman/listinfo/juju)
 - [Juju community](https://jujucharms.com/community)
