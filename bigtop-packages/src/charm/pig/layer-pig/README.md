@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-## Overview
+# Overview
 
 Apache Pig is a platform for creating MapReduce programs used with Hadoop.
 It consists of a high-level language (Pig Latin) for expressing data analysis
@@ -31,41 +31,41 @@ supports running Pig in two execution modes:
    `pig` or `pig -x mapreduce`
 
 
-## Usage
+# Deploying / Using
 
-This charm is intended to be deployed along with the
-[hadoop-processing](https://jujucharms.com/hadoop-processing/) bundle:
+A working Juju installation is assumed to be present. If Juju is not yet set
+up, please follow the
+[getting-started](https://jujucharms.com/docs/2.0/getting-started)
+instructions prior to deploying this charm.
+
+This charm is intended to be used with one of the
+[apache bigtop bundles](https://jujucharms.com/u/bigdata-charmers/#bundles).
+For example:
 
     juju deploy hadoop-processing
 
-_**Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju quickstart cs:bundle/hadoop-processing`._
+> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
+of Juju, use [juju-quickstart](https://launchpad.net/juju-quickstart) with the
+following syntax: `juju quickstart hadoop-processing`.
 
-Now add Pig:
+This will deploy an Apache Bigtop Hadoop cluster. More information about this
+deployment can be found in the [bundle readme](https://jujucharms.com/hadoop-processing/).
+
+Now add Pig and relate it to the cluster via the hadoop-plugin:
 
     juju deploy pig
-
-_**Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju deploy cs:trusty/pig`._
-
-Now relate Pig to Java and the Hadoop cluster:
-
-    juju add-relation pig openjdk
     juju add-relation pig plugin
 
-Once deployment is complete, you will have an Apache Bigtop Hadoop platform
-with Apache Pig available to execute Pig Latin jobs on your data. You can run
-Pig in a variety of modes:
+Once deployment is complete, Apache Pig will be available to execute Pig Latin
+jobs on your data. You can run Pig in a variety of modes:
 
-### Local Mode
-
+## Local Mode
 Run Pig in local mode on the Pig unit with the following:
 
     juju ssh pig/0
     pig -x local
 
-### MapReduce Mode
-
+## MapReduce Mode
 MapReduce mode is the default for Pig. To run in this mode, ssh to the Pig unit
 and run pig as follows:
 
@@ -73,9 +73,11 @@ and run pig as follows:
     pig
 
 
-## Status and Smoke Test
+# Verifying
 
-The services provide extended status reporting to indicate when they are ready:
+## Status
+Apache Bigtop charms provide extended status reporting to indicate when they
+are ready:
 
     juju status
 
@@ -84,38 +86,55 @@ progress of the deployment:
 
     watch -n 0.5 juju status
 
-The message for each unit will provide information about that unit's state.
-Once they all indicate that they are ready, you can perform a "smoke test"
-to verify that Pig is working as expected using the built-in `smoke-test`
-action:
+The message column will provide information about a given unit's state.
+This charm is ready for use once the status message indicates that it is
+ready.
+
+## Smoke Test
+This charm provides a `smoke-test` action that can be used to verify the
+application is functioning as expected. Run the action as follows:
 
     juju run-action pig/0 smoke-test
 
-_**Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju action do pig/0 smoke-test`._
+> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
+of Juju, the syntax is `juju action do pig/0 smoke-test`.
 
-After a minute or so, you can check the results of the smoke test:
+Watch the progress of the smoke test actions with:
 
-    juju show-action-status
+    watch -n 0.5 juju show-action-status
 
-_**Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju action status`._
+> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
+of Juju, the syntax is `juju action status`.
 
-You will see `status: completed` if the smoke test was successful, or
-`status: failed` if it was not.  You can get more information on why it failed
-via:
+Eventually, the action should settle to `status: completed`.  If it
+reports `status: failed`, the application is not working as expected. Get
+more information about a specific smoke test with:
 
     juju show-action-output <action-id>
 
-_**Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju action fetch <action-id>`._
+> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
+of Juju, the syntax is `juju action fetch <action-id>`.
 
-## Contact Information
+
+# Network-Restricted Environments
+
+Charms can be deployed in environments with limited network access. To deploy
+in this environment, configure a Juju model with appropriate
+proxy and/or mirror options. See
+[Configuring Models](https://jujucharms.com/docs/2.0/models-config) for more
+information.
+
+
+# Contact Information
 
 - <bigdata@lists.ubuntu.com>
 
 
-## Help
+# Resources
 
+- [Apache Bigtop](http://bigtop.apache.org/) home page
+- [Apache Bigtop issue tracking](http://bigtop.apache.org/issue-tracking.html)
+- [Apache Bigtop mailing lists](http://bigtop.apache.org/mail-lists.html)
+- [Juju Bigtop charms](https://jujucharms.com/q/apache/bigtop)
 - [Juju mailing list](https://lists.ubuntu.com/mailman/listinfo/juju)
 - [Juju community](https://jujucharms.com/community)

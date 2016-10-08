@@ -19,7 +19,6 @@ import sys
 sys.path.append('lib')
 
 from charmhelpers.core import hookenv
-from charms import layer
 from charms.layer.apache_bigtop_base import Bigtop
 from charms.reactive import is_state
 
@@ -39,13 +38,8 @@ if not is_state('pig.installed'):
 
 if is_state('hadoop.ready'):
     hookenv.log('Testing Pig in mapreduce mode using the Bigtop smoke test')
-    cfg = layer.options('apache-bigtop-base')
-    smoke_components = cfg.get('bigtop_smoketest_components')
-    if not smoke_components:
-        fail('No bigtop_smoketest_components configured for this charm')
-
     bigtop = Bigtop()
-    bigtop.run_smoke_tests(smoke_components)
+    bigtop.run_smoke_tests(['pig'])
     output = run_as('ubuntu',
                     'hdfs', 'dfs', '-cat', 'pig-output-wordcount/part-r-00000',
                     capture_output=True)

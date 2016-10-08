@@ -26,12 +26,8 @@ class TestDeploy(unittest.TestCase):
     """
     @classmethod
     def setUpClass(cls):
-        cls.d = amulet.Deployment(series='trusty')
+        cls.d = amulet.Deployment(series='xenial')
         cls.d.add('pig', 'pig')
-        cls.d.add('openjdk', 'openjdk')
-        cls.d.configure('openjdk', {'java-type': 'jdk',
-                                    'java-major': '8'})
-        cls.d.relate('pig:java', 'openjdk:java')
 
         cls.d.setup(timeout=1800)
         cls.d.sentry.wait_for_messages({'pig': re.compile('ready')}, timeout=1800)
