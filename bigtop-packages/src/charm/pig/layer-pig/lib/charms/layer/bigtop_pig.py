@@ -13,9 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from jujubigdata import utils
+from subprocess import CalledProcessError, check_output
+
 from charms.layer.apache_bigtop_base import Bigtop
 from charms import layer
+from charmhelpers.core import hookenv
+from jujubigdata import utils
 
 
 class Pig(object):
@@ -37,6 +40,23 @@ class Pig(object):
         bigtop = Bigtop()
         bigtop.render_site_yaml(roles=roles)
         bigtop.trigger_puppet()
+
+        # Set app version for juju status output; pig --version looks like:
+        #   Apache Pig version 0.15.0 (r: unknown)
+        #   compiled Feb 06 2016, 23:00:40
+        try:
+            pig_out = check_output(['pig', '-x', 'local', '--version']).decode()
+        except CalledProcessError as e:
+            pig_out = e.output
+        lines = pig_out.splitlines()
+        parts = lines[0].split() if lines else []
+        if len(parts) < 4:
+            hookenv.log('Error getting Pig version: {}'.format(pig_out),
+                        hookenv.ERROR)
+            pig_ver = ''
+        else:
+            pig_ver = parts[3]
+        hookenv.application_version_set(pig_ver)
 
     def initial_pig_config(self):
         '''

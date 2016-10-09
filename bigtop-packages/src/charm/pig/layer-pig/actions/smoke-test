@@ -38,6 +38,10 @@ if not is_state('pig.installed'):
 
 if is_state('hadoop.ready'):
     hookenv.log('Testing Pig in mapreduce mode using the Bigtop smoke test')
+    # Remove any output from previous runs
+    run_as('ubuntu',
+           'hdfs', 'dfs', '-rm', '-f', '-R', '/user/ubuntu/pig-output-wordcount')
+
     bigtop = Bigtop()
     bigtop.run_smoke_tests(['pig'])
     output = run_as('ubuntu',
@@ -45,6 +49,7 @@ if is_state('hadoop.ready'):
                     capture_output=True)
 else:
     hookenv.log('Testing Pig in local mode (ignoring bigtop component smoke test)')
+    # Remove any output from previous runs
     run_as('ubuntu', 'rm', '-R', '-f', '/tmp/test.pig.out')
 
     script = ("A = load '/etc/passwd' using PigStorage(':'); "
