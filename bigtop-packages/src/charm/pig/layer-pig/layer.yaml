@@ -11,7 +11,3 @@ options:
         path: '/etc/pig/conf'
       hadoop_conf:
         path: '/etc/hadoop/conf'
-  hadoop-client:
-    # The hadoop-plugin is optional for pig, so turn off hadoop-client's status
-    # updates about a missing hadoop-plugin.
-    silent: True
