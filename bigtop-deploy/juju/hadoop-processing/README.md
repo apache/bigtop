@@ -26,14 +26,16 @@ to deliver high-availability, Hadoop can detect and handle failures at the
 application layer. This provides a highly-available service on top of a cluster
 of machines, each of which may be prone to failure.
 
-This bundle provides a complete deployment of the core components of the
-[Apache Bigtop](http://bigtop.apache.org/)
-platform to perform distributed data processing at scale. Ganglia and rsyslog
-applications are also provided to monitor cluster health and syslog activity.
+This bundle provides a complete deployment of the core Hadoop components of
+the [Apache Bigtop][] platform to perform distributed data processing at scale.
+Ganglia and rsyslog applications are also provided to monitor cluster health
+and syslog activity.
+
+[Apache Bigtop]: http://bigtop.apache.org/
 
 ## Bundle Composition
 
-The applications that comprise this bundle are spread across 6 units as
+The applications that comprise this bundle are spread across 6 machines as
 follows:
 
   * NameNode (HDFS)
@@ -52,26 +54,41 @@ Deploying this bundle results in a fully configured Apache Bigtop
 cluster on any supported cloud, which can be scaled to meet workload
 demands.
 
-
 # Deploying
 
 A working Juju installation is assumed to be present. If Juju is not yet set
-up, please follow the
-[getting-started](https://jujucharms.com/docs/2.0/getting-started)
-instructions prior to deploying this bundle.
+up, please follow the [getting-started][] instructions prior to deploying this
+bundle.
 
-Once ready, deploy this bundle with the `juju deploy` command:
+> **Note**: This bundle requires hardware resources that may exceed limits
+of Free-tier or Trial accounts on some clouds. To deploy to these
+environments, modify a local copy of [bundle.yaml][] with `slave: num_units: 1`
+and `machines: 'X': constraints: mem=3G` as needed to satisfy account limits.
+
+Deploy this bundle from the Juju charm store with the `juju deploy` command:
 
     juju deploy hadoop-processing
 
 > **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, use [juju-quickstart](https://launchpad.net/juju-quickstart) with the
-following syntax: `juju quickstart hadoop-processing`.
+of Juju, use [juju-quickstart][] with the following syntax: `juju quickstart
+hadoop-processing`.
+
+Alternatively, deploy a locally modified `bundle.yaml` with:
+
+    juju deploy /path/to/bundle.yaml
+
+> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
+of Juju, use [juju-quickstart][] with the following syntax: `juju quickstart
+/path/to/bundle.yaml`.
 
 The charms in this bundle can also be built from their source layers in the
 [Bigtop charm repository][].  See the [Bigtop charm README][] for instructions
 on building and deploying these charms locally.
 
+
+[getting-started]: https://jujucharms.com/docs/stable/getting-started
+[bundle.yaml]: https://github.com/apache/bigtop/blob/master/bigtop-deploy/juju/hadoop-processing/bundle.yaml
+[juju-quickstart]: https://launchpad.net/juju-quickstart
 [Bigtop charm repository]: https://github.com/apache/bigtop/tree/master/bigtop-packages/src/charm
 [Bigtop charm README]: https://github.com/apache/bigtop/blob/master/bigtop-packages/src/charm/README.md
 
@@ -79,15 +96,15 @@ on building and deploying these charms locally.
 # Verifying
 
 ## Status
-The applications that make up this bundle provide status messages to
-indicate when they are ready:
+The applications that make up this bundle provide status messages to indicate
+when they are ready:
 
     juju status
 
 This is particularly useful when combined with `watch` to track the on-going
 progress of the deployment:
 
-    watch -n 0.5 juju status
+    watch -n 2 juju status
 
 The message for each unit will provide information about that unit's state.
 Once they all indicate that they are ready, perform application smoke tests
@@ -109,7 +126,7 @@ of Juju, the syntax is `juju action do <application>/0 smoke-test`.
 
 Watch the progress of the smoke test actions with:
 
-    watch -n 0.5 juju show-action-status
+    watch -n 2 juju show-action-status
 
 > **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
 of Juju, the syntax is `juju action status`.
@@ -123,21 +140,49 @@ more information about a specific smoke test with:
 > **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
 of Juju, the syntax is `juju action fetch <action-id>`.
 
+## Utilities
+Applications in this bundle include Hadoop command line and web utilities that
+can be used to verify information about the cluster.
+
+From the command line, show the HDFS dfsadmin report and view the current list
+of YARN NodeManager units with the following:
+
+    juju run --application namenode "su hdfs -c 'hdfs dfsadmin -report'"
+    juju run --application resourcemanager "su yarn -c 'yarn node -list'"
+
+To access the HDFS web console, find the `PUBLIC-ADDRESS` of the namenode
+application and expose it:
+
+    juju status namenode
+    juju expose namenode
+
+The web interface will be available at the following URL:
+
+        http://NAMENODE_PUBLIC_IP:50070
+
+Similarly, to access the Resource Manager web consoles, find the
+`PUBLIC-ADDRESS` of the resourcemanager application and expose it:
+
+    juju status resourcemanager
+    juju expose resourcemanager
+
+The YARN and Job History web interfaces will be available at the following URLs:
+
+    http://RESOURCEMANAGER_PUBLIC_IP:8088
+    http://RESOURCEMANAGER_PUBLIC_IP:19888
+
 
 # Monitoring
 
 This bundle includes Ganglia for system-level monitoring of the namenode,
 resourcemanager, slave, and client units. Metrics are sent to a centralized
 ganglia unit for easy viewing in a browser. To view the ganglia web interface,
-first expose the service:
-
-    juju expose ganglia
-
-Now find the ganglia public IP address:
+find the `PUBLIC-ADDRESS` of the Ganglia application and expose it:
 
     juju status ganglia
+    juju expose ganglia
 
-The ganglia web interface will be available at:
+The web interface will be available at:
 
     http://GANGLIA_PUBLIC_IP/ganglia
 
@@ -222,10 +267,10 @@ Multiple units may be added at once.  For example, add four more slave units:
 # Network-Restricted Environments
 
 Charms can be deployed in environments with limited network access. To deploy
-in this environment, configure a Juju model with appropriate
-proxy and/or mirror options. See
-[Configuring Models](https://jujucharms.com/docs/2.0/models-config) for more
-information.
+in this environment, configure a Juju model with appropriate proxy and/or
+mirror options. See [Configuring Models][] for more information.
+
+[Configuring Models]: https://jujucharms.com/docs/2.0/models-config
 
 
 # Contact Information
