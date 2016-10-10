@@ -85,12 +85,17 @@ The charms in this bundle can also be built from their source layers in the
 [Bigtop charm repository][].  See the [Bigtop charm README][] for instructions
 on building and deploying these charms locally.
 
+## Network-Restricted Environments
+Charms can be deployed in environments with limited network access. To deploy
+in this environment, configure a Juju model with appropriate proxy and/or
+mirror options. See [Configuring Models][] for more information.
 
 [getting-started]: https://jujucharms.com/docs/stable/getting-started
 [bundle.yaml]: https://github.com/apache/bigtop/blob/master/bigtop-deploy/juju/hadoop-processing/bundle.yaml
 [juju-quickstart]: https://launchpad.net/juju-quickstart
 [Bigtop charm repository]: https://github.com/apache/bigtop/tree/master/bigtop-packages/src/charm
 [Bigtop charm README]: https://github.com/apache/bigtop/blob/master/bigtop-packages/src/charm/README.md
+[Configuring Models]: https://jujucharms.com/docs/stable/models-config
 
 
 # Verifying
@@ -262,15 +267,6 @@ capabilities, simply add more slave units. To add one unit:
 Multiple units may be added at once.  For example, add four more slave units:
 
     juju add-unit -n4 slave
-
-
-# Network-Restricted Environments
-
-Charms can be deployed in environments with limited network access. To deploy
-in this environment, configure a Juju model with appropriate proxy and/or
-mirror options. See [Configuring Models][] for more information.
-
-[Configuring Models]: https://jujucharms.com/docs/2.0/models-config
 
 
 # Contact Information
