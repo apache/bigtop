@@ -1,2 +1,4 @@
 restart:
-    description: stop and start a Zookeeper server.
+    description: Restart the Zookeeper server daemon.
+smoke-test:
+    description: Run an Apache Bigtop smoke test.

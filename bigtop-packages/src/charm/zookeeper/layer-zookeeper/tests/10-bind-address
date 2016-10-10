@@ -81,8 +81,11 @@ class TestBindClientPort(unittest.TestCase):
 
         # Verify that smoke tests still run
         smk_uuid = self.unit.action_do("smoke-test")
-        output = self.d.action_fetch(smk_uuid, full_output=True)
-        assert "completed" in output['status']
+        result = self.d.action_fetch(smk_uuid, full_output=True)
+        # zookeeper smoke-test sets outcome=success on success
+        if (result['outcome'] != "success"):
+            error = "Zookeeper smoke-test failed"
+            amulet.raise_status(amulet.FAIL, msg=error)
 
     @unittest.skip(
         'Broken handling of 0.0.0.0 bindings upstream, in Zookeeper project.')

@@ -1,4 +1,4 @@
-repo: git@github.com:juju-solutions/bigtop.git
+repo: https://github.com/apache/bigtop/tree/master/bigtop-packages/src/charm/zookeeper/layer-zookeeper
 includes:
   - 'layer:apache-bigtop-base'
   - 'layer:leadership'
@@ -7,17 +7,9 @@ includes:
 options:
   apache-bigtop-base:
     ports:
-      # Ports that need to be exposed, overridden, or manually specified.
-      # Only expose ports serving a UI or external API (i.e., namenode and
-      # resourcemanager).  Communication among units within the cluster does
-      # not need ports to be explicitly opened.
-      # If adding a new port here, you will need to update
-      # charmhelpers.contrib.bigdata.handlers.apache or hooks/callbacks.py
-      # to ensure that it is supported.
       zookeeper-rest:
           port: 9998
           exposed_on: 'zookeeper'
       zookeeper:
           port: 2181
           exposed_on: 'zookeeper'
-    bigtop_smoketest_components: ['zookeeper']

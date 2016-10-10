@@ -57,17 +57,18 @@ class TestDeploy(unittest.TestCase):
             self.assertTrue("leader" in output or "follower" in output)
 
     def test_smoke(self):
-        '''
-        Run smoke tests.
-        '''
+        """Validates Zookeeper using the Bigtop 'zookeeper' smoke test."""
         smk_uuids = []
 
         for unit in self.d.sentry['zookeeper']:
             smk_uuids.append(unit.action_do("smoke-test"))
 
         for smk_uuid in smk_uuids:
-            output = self.d.action_fetch(smk_uuid, full_output=True)
-            assert "completed" in output['status']
+            result = self.d.action_fetch(smk_uuid, full_output=True)
+            # zookeeper smoke-test sets outcome=success on success
+            if (result['outcome'] != "success"):
+                error = "Zookeeper smoke-test failed"
+                amulet.raise_status(amulet.FAIL, msg=error)
 
 if __name__ == '__main__':
     unittest.main()
