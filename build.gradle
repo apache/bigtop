@@ -115,6 +115,8 @@ rat {
        "bigtop-repos/apt/distributions",
        /* Juju charm files with rigid structure */
        "bigtop-packages/src/charm/**/wheelhouse.txt",
+       "bigtop-packages/src/charm/**/*.json",
+       "bigtop-packages/src/charm/**/*.svg",
        "bigtop-packages/src/charm/**/*.yaml",
        "bigtop-deploy/juju/**/*.yaml",
        "bigtop-tests/cloud-weather-report/**/*.yaml",
@@ -130,7 +132,10 @@ rat {
        "bigtop-deploy/puppet/modules/qfs/README.md",
        "bigtop-deploy/puppet/config/site.csv.example",
        "dl/**",
-       "bigtop-deploy/puppet/modules/gpdb/templates/**"
+       "bigtop-deploy/puppet/modules/gpdb/templates/**",
+       "provisioner/docker/config/hiera.yaml",
+       "provisioner/docker/config/hieradata/PLACEHOLDER",
+       "provisioner/docker/config/hosts",
   ]
 }
 

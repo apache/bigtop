@@ -340,6 +340,8 @@
               <exclude>bigtop-repos/apt/distributions</exclude>
               <!-- Juju charm files with rigid structure -->
               <exclude>bigtop-packages/src/charm/**/wheelhouse.txt</exclude>
+              <exclude>bigtop-packages/src/charm/**/*.json</exclude>
+              <exclude>bigtop-packages/src/charm/**/*.svg</exclude>
               <exclude>bigtop-packages/src/charm/**/*.yaml</exclude>
               <exclude>bigtop-deploy/juju/**/*.yaml</exclude>
               <exclude>bigtop-tests/cloud-weather-report/**/*.yaml</exclude>
@@ -360,6 +362,9 @@
               <exclude>bigtop-deploy/puppet/config/site.csv.example</exclude>
               <exclude>dl/**</exclude>
               <exclude>bigtop-deploy/puppet/modules/gpdb/templates/**</exclude>
+              <exclude>provisioner/docker/config/hiera.yaml</exclude>
+              <exclude>provisioner/docker/config/hieradata/PLACEHOLDER</exclude>
+              <exclude>provisioner/docker/config/hosts</exclude>
             </excludes>
           </configuration>
         </plugin>
