@@ -35,21 +35,19 @@ development, and testing. But in production, you should run ZooKeeper in
 called a quorum, and in `replicated` mode, all servers in the quorum have
 copies of the same configuration file.
 
-In order to add new Zookeeper servers to the quorum, you must deploy
-them, and then perform a rolling restart of all the servers in the
-quorum. Note that Zookeeper can break when you're adding nodes to a
-cluster with active connections, so you'll want to checkup on the
-cluster afterward to verify that everything is still happy.
-
-The following commands will add two new nodes to a cluster:
+In order to add new Zookeeper servers to the quorum, simply add units
+as you usually would in juju:
 
     juju add-unit -n 2 zookeeper
-    juju run-action zookeeper/0 restart
-    juju run-action zookeeper/1 restart
-    juju run-action zookeeper/2 restart
 
-(Future versions of Zookeeper are more stable, and we are planning on
-automating the restart process in the future.)
+The Zookeeper nodes will then automatically perform a rolling restart,
+in order to update the Zookeeper quorum without losing any jobs in
+progress. Once the rolling restart has completed, all of your
+Zookeeper nodes should be in the following state:
+
+    ready (n zk nodes)
+
+(Where 'n' is the total number of Zookeeper nodes in your quorum.)
 
 
 ## Network Interfaces

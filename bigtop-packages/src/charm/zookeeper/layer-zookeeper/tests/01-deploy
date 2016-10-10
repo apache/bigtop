@@ -47,10 +47,6 @@ class TestDeploy(unittest.TestCase):
 
         '''
         self.assertEqual(3, len(self.d.sentry['zookeeper']))
-        # Perform a rolling restart
-        for unit in self.d.sentry['zookeeper']:
-            action_id = unit.run_action("restart")
-            amulet.actions.get_action_output(action_id)  # Wait for restart to complete
 
         # Verify that everything worked.
         for unit in self.d.sentry['zookeeper']:

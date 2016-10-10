@@ -84,6 +84,18 @@ class Zookeeper(object):
         nodes = [format_node(*node) for node in nodes]
         return nodes
 
+    def sort_peers(self, zkpeer):
+        '''
+        Return peers, sorted in an order suitable for performing a rolling
+        restart.
+
+        '''
+        peers = self.read_peers()
+        leader = zkpeer.find_zk_leader()
+        peers.sort(key=lambda x: x[1] == leader)
+
+        return peers
+
     @property
     def dist_config(self):
         '''
@@ -121,6 +133,9 @@ class Zookeeper(object):
         log("Rendering site yaml ''with overrides: {}".format(self._override))
         bigtop.render_site_yaml(self._hosts, self._roles, self._override)
         bigtop.trigger_puppet()
+        if self.is_zk_leader():
+            zkpeer = RelationBase.from_state('zkpeer.joined')
+            zkpeer.set_zk_leader()
 
     def start(self):
         '''

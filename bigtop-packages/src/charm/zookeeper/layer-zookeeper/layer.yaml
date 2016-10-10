@@ -1,6 +1,7 @@
 repo: git@github.com:juju-solutions/bigtop.git
 includes:
   - 'layer:apache-bigtop-base'
+  - 'layer:leadership'
   - 'interface:zookeeper-quorum'
   - 'interface:zookeeper'
 options:

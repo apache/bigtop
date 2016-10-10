@@ -18,6 +18,7 @@
 import unittest
 import re
 import amulet
+import subprocess
 
 DEPLOY_TIMEOUT = 1800
 CONFIG_TIMEOUT = 900
@@ -61,8 +62,12 @@ class TestBindClientPort(unittest.TestCase):
             raise Exception(
                 "Could not find any interface on the unit that matched my "
                 "criteria.")
-
-        self.d.configure('zookeeper', {'network_interface': network_interface})
+        # self.d.configure broken due to change in juju api. TODO:
+        # switch this out when fixed.
+        subprocess.check_call(
+            ['juju', 'config', 'zookeeper', 'network_interface={}'.format(
+                network_interface)])
+        #self.d.configure('zookeeper', {'network_interface': network_interface})
         self.d.sentry.wait_for_messages(
             {'zookeeper': 'updating network interface'}, timeout=CONFIG_TIMEOUT)
         self.d.sentry.wait_for_messages(
