@@ -45,9 +45,15 @@ This will deploy an Apache Bigtop cluster with this charm acting as the
 NameNode. More information about this deployment can be found in the
 [bundle readme](https://jujucharms.com/hadoop-processing/).
 
+## Network-Restricted Environments
+Charms can be deployed in environments with limited network access. To deploy
+in this environment, configure a Juju model with appropriate proxy and/or
+mirror options. See [Configuring Models][] for more information.
+
 [getting-started]: https://jujucharms.com/docs/stable/getting-started
 [apache bigtop bundles]: https://jujucharms.com/u/bigdata-charmers/#bundles
 [juju-quickstart]: https://launchpad.net/juju-quickstart
+[Configuring Models]: https://jujucharms.com/docs/stable/models-config
 
 
 # Verifying
@@ -109,15 +115,6 @@ namenode application and expose it:
 The web interface will be available at the following URL:
 
         http://NAMENODE_PUBLIC_IP:50070
-
-
-# Network-Restricted Environments
-
-Charms can be deployed in environments with limited network access. To deploy
-in this environment, configure a Juju model with appropriate proxy and/or
-mirror options. See [Configuring Models][] for more information.
-
-[Configuring Models]: https://jujucharms.com/docs/stable/models-config
 
 
 # Contact Information

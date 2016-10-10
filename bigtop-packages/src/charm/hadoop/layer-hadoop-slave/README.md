@@ -46,9 +46,15 @@ This will deploy an Apache Bigtop cluster with 3 units of this charm acting as
 the combined DataNode/NodeManager application. More information about this
 deployment can be found in the [bundle readme](https://jujucharms.com/hadoop-processing/).
 
+## Network-Restricted Environments
+Charms can be deployed in environments with limited network access. To deploy
+in this environment, configure a Juju model with appropriate proxy and/or
+mirror options. See [Configuring Models][] for more information.
+
 [getting-started]: https://jujucharms.com/docs/stable/getting-started
 [apache bigtop bundles]: https://jujucharms.com/u/bigdata-charmers/#bundles
 [juju-quickstart]: https://launchpad.net/juju-quickstart
+[Configuring Models]: https://jujucharms.com/docs/stable/models-config
 
 
 # Verifying
@@ -106,15 +112,6 @@ slave units. To add one unit:
 Multiple units may be added at once.  For example, add four more slave units:
 
     juju add-unit -n4 slave
-
-
-# Network-Restricted Environments
-
-Charms can be deployed in environments with limited network access. To deploy
-in this environment, configure a Juju model with appropriate proxy and/or
-mirror options. See [Configuring Models][] for more information.
-
-[Configuring Models]: https://jujucharms.com/docs/stable/models-config
 
 
 # Contact Information

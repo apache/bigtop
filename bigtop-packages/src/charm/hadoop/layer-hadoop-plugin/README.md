@@ -45,9 +45,15 @@ This will deploy an Apache Bigtop cluster with a client unit preconfigured to
 work with the cluster. More information about this deployment can be found in the
 [bundle readme](https://jujucharms.com/hadoop-processing/).
 
+## Network-Restricted Environments
+Charms can be deployed in environments with limited network access. To deploy
+in this environment, configure a Juju model with appropriate proxy and/or
+mirror options. See [Configuring Models][] for more information.
+
 [getting-started]: https://jujucharms.com/docs/stable/getting-started
 [apache bigtop bundles]: https://jujucharms.com/u/bigdata-charmers/#bundles
 [juju-quickstart]: https://launchpad.net/juju-quickstart
+[Configuring Models]: https://jujucharms.com/docs/stable/models-config
 
 
 # Verifying
@@ -99,15 +105,6 @@ to verify information about the cluster.
 Show the dfsadmin report on the command line with the following:
 
     juju run --application plugin "su hdfs -c 'hdfs dfsadmin -report'"
-
-
-# Network-Restricted Environments
-
-Charms can be deployed in environments with limited network access. To deploy
-in this environment, configure a Juju model with appropriate proxy and/or
-mirror options. See [Configuring Models][] for more information.
-
-[Configuring Models]: https://jujucharms.com/docs/stable/models-config
 
 
 # Contact Information
