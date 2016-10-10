@@ -20,30 +20,34 @@ The Apache Hadoop software library is a framework that allows for the
 distributed processing of large data sets across clusters of computers
 using a simple programming model.
 
-This charm deploys the NameNode component of the Apache Bigtop platform
+This charm deploys the NameNode component of the [Apache Bigtop][] platform
 to provide HDFS master resources.
+
+[Apache Bigtop]: http://bigtop.apache.org/
 
 
 # Deploying
 
 A working Juju installation is assumed to be present. If Juju is not yet set
-up, please follow the
-[getting-started](https://jujucharms.com/docs/2.0/getting-started)
-instructions prior to deploying this charm.
+up, please follow the [getting-started][] instructions prior to deploying this
+charm.
 
-This charm is intended to be deployed via one of the
-[apache bigtop bundles](https://jujucharms.com/u/bigdata-charmers/#bundles).
+This charm is intended to be deployed via one of the [apache bigtop bundles][].
 For example:
 
     juju deploy hadoop-processing
 
 > **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, use [juju-quickstart](https://launchpad.net/juju-quickstart) with the
-following syntax: `juju quickstart hadoop-processing`.
+of Juju, use [juju-quickstart][] with the following syntax: `juju quickstart
+hadoop-processing`.
 
 This will deploy an Apache Bigtop cluster with this charm acting as the
 NameNode. More information about this deployment can be found in the
 [bundle readme](https://jujucharms.com/hadoop-processing/).
+
+[getting-started]: https://jujucharms.com/docs/stable/getting-started
+[apache bigtop bundles]: https://jujucharms.com/u/bigdata-charmers/#bundles
+[juju-quickstart]: https://launchpad.net/juju-quickstart
 
 
 # Verifying
@@ -57,7 +61,7 @@ are ready:
 This is particularly useful when combined with `watch` to track the on-going
 progress of the deployment:
 
-    watch -n 0.5 juju status
+    watch -n 2 juju status
 
 The message column will provide information about a given unit's state.
 This charm is ready for use once the status message indicates that it is
@@ -74,7 +78,7 @@ of Juju, the syntax is `juju action do namenode/0 smoke-test`.
 
 Watch the progress of the smoke test actions with:
 
-    watch -n 0.5 juju show-action-status
+    watch -n 2 juju show-action-status
 
 > **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
 of Juju, the syntax is `juju action status`.
@@ -110,10 +114,10 @@ The web interface will be available at the following URL:
 # Network-Restricted Environments
 
 Charms can be deployed in environments with limited network access. To deploy
-in this environment, configure a Juju model with appropriate
-proxy and/or mirror options. See
-[Configuring Models](https://jujucharms.com/docs/2.0/models-config) for more
-information.
+in this environment, configure a Juju model with appropriate proxy and/or
+mirror options. See [Configuring Models][] for more information.
+
+[Configuring Models]: https://jujucharms.com/docs/stable/models-config
 
 
 # Contact Information
