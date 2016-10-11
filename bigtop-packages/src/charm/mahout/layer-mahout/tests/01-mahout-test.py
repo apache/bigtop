@@ -24,32 +24,21 @@ class TestDeploy(unittest.TestCase):
     Deployment and smoke test for Apache Mahout.
     """
     def setUp(self):
-        self.d = amulet.Deployment(series='trusty')
+        self.d = amulet.Deployment(series='xenial')
         self.d.add('mahout', 'mahout')
         self.d.add('client', 'hadoop-client')
-        self.d.add('resourcemgr', 'hadoop-resourcemanager')
+        self.d.add('resourcemanager', 'hadoop-resourcemanager')
         self.d.add('namenode', 'hadoop-namenode')
         self.d.add('slave', 'hadoop-slave')
         self.d.add('plugin', 'hadoop-plugin')
-        self.d.add('openjdk', 'openjdk')
-
-        self.d.configure('openjdk', {'java-type': 'jdk',
-                                     'java-major': '8'})
 
         self.d.relate('plugin:hadoop-plugin', 'client:hadoop')
         self.d.relate('plugin:namenode', 'namenode:namenode')
-        self.d.relate('plugin:resourcemanager', 'resourcemgr:resourcemanager')
+        self.d.relate('plugin:resourcemanager', 'resourcemanager:resourcemanager')
         self.d.relate('slave:namenode', 'namenode:datanode')
-        self.d.relate('slave:resourcemanager', 'resourcemgr:nodemanager')
-        self.d.relate('namenode:namenode', 'resourcemgr:namenode')
+        self.d.relate('slave:resourcemanager', 'resourcemanager:nodemanager')
+        self.d.relate('namenode:namenode', 'resourcemanager:namenode')
         self.d.relate('mahout:mahout', 'client:mahout')
-
-        self.d.relate('plugin:java', 'openjdk:java')
-        self.d.relate('namenode:java', 'openjdk:java')
-        self.d.relate('slave:java', 'openjdk:java')
-        self.d.relate('resourcemgr:java', 'openjdk:java')
-        self.d.relate('mahout:java', 'openjdk:java')
-        self.d.relate('client:java', 'openjdk:java')
 
         self.d.setup(timeout=1800)
         self.d.sentry.wait_for_messages({"mahout": "ready"})

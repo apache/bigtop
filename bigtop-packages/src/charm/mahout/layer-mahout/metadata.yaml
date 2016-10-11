@@ -4,7 +4,7 @@ maintainer: Juju Big Data <bigdata@lists.ubuntu.com>
 description: >
   The Apache Mahout project's goal is to build an environment for quickly
   creating scalable and performant machine learning applications.
-tags: ["apache", "bigdata", "bigtop"]
+tags: []
 subordinate: true
 requires:
   mahout:

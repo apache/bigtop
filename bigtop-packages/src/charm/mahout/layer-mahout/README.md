@@ -14,45 +14,57 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-## Overview
+# Overview
 
-
-The Apache Mahout™ project's goal is to build an environment for quickly creating
+The Apache Mahout project's goal is to build an environment for quickly creating
 scalable performant machine learning applications.
 
 Apache Mahout software provides three major features:
- * A simple and extensible programming environment and framework for building scalable algorithms
- * A wide variety of premade algorithms for Scala + Apache Spark, H2O, Apache Flink
- * Samsara, a vector math experimentation environment with R-like syntax which works at scale
+ * A simple and extensible programming environment and framework for building
+   scalable algorithms
+ * A wide variety of premade algorithms for Scala + Apache Spark, H2O, Apache
+   Flink
+ * Samsara, a vector math experimentation environment with R-like syntax which
+   works at scale
 
 
-## Usage
+# Deploying
 
-This charm is intended to be added to an existing cluster,
-for example, Hadoop. A Hadoop cluster can be deployed via
-one of the [apache bigtop bundles](https://jujucharms.com/u/bigdata-charmers/#bundles).
+A working Juju installation is assumed to be present. If Juju is not yet set
+up, please follow the [getting-started][] instructions prior to deploying this
+charm.
+
+This charm is intended to be used with one of the [apache bigtop bundles][].
 For example:
 
     juju deploy hadoop-processing
 
-> Note: With Juju versions < 2.0, you will need to use [juju-deployer][] to
-deploy the bundle.
+> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
+of Juju, use [juju-quickstart][] with the following syntax: `juju quickstart
+hadoop-processing`.
 
-This will deploy the Apache Bigtop Hadoop platform with a workload node
-preconfigured to work with the cluster.
+This will deploy an Apache Bigtop Hadoop cluster. More information about this
+deployment can be found in the [bundle readme](https://jujucharms.com/hadoop-processing/).
 
-You can then add Mahout by relating it to the client:
+Now add Mahout and relate it to the cluster endpoint:
 
-    juju deploy cs:trusty/mahout
-    juju add-relation client mahout
-    juju add-relation mahout openjdk
+    juju deploy mahout
+    juju add-relation mahout client
+
+## Network-Restricted Environments
+Charms can be deployed in environments with limited network access. To deploy
+in this environment, configure a Juju model with appropriate proxy and/or
+mirror options. See [Configuring Models][] for more information.
+
+[getting-started]: https://jujucharms.com/docs/stable/getting-started
+[apache bigtop bundles]: https://jujucharms.com/u/bigdata-charmers/#bundles
+[juju-quickstart]: https://launchpad.net/juju-quickstart
+[Configuring Models]: https://jujucharms.com/docs/stable/models-config
 
 
-[juju-deployer]: https://pypi.python.org/pypi/juju-deployer/
+# Verifying
 
-
-## Status and Smoke Test
-
+## Status
 Apache Bigtop charms provide extended status reporting to indicate when they
 are ready:
 
@@ -61,43 +73,49 @@ are ready:
 This is particularly useful when combined with `watch` to track the on-going
 progress of the deployment:
 
-    watch -n 0.5 juju status
+    watch -n 2 juju status
 
-The message for each unit will provide information about that unit's state.
-Once they all indicate that they are ready, you can perform a "smoke test"
-to verify that Mahout is working as expected using the built-in `smoke-test`
-action:
+The message column will provide information about a given unit's state.
+This charm is ready for use once the status message indicates that it is
+ready.
+
+## Smoke Test
+This charm provides a `smoke-test` action that can be used to verify the
+application is functioning as expected. Run the action as follows:
 
     juju run-action mahout/0 smoke-test
 
-_**Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju action do mahout/0 smoke-test`._
+> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
+of Juju, the syntax is `juju action do mahout/0 smoke-test`.
 
-After a few minutes, you can check the results of the smoke test:
+Watch the progress of the smoke test actions with:
 
-    juju show-action-status
+    watch -n 2 juju show-action-status
 
-_**Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju action status`._
+> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
+of Juju, the syntax is `juju action status`.
 
-You will see `status: completed` if the smoke test was successful, or
-`status: failed` if it was not.  You can get more information on why it failed
-via:
+Eventually, the action should settle to `status: completed`.  If it
+reports `status: failed`, the application is not working as expected. Get
+more information about a specific smoke test with:
 
     juju show-action-output <action-id>
 
-_**Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju action fetch <action-id>`._
+> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
+of Juju, the syntax is `juju action fetch <action-id>`.
 
 
-## Contact Information
+# Contact Information
 
 - <bigdata@lists.ubuntu.com>
 
 
-## Hadoop
+# Resources
 
 - [Apache Bigtop](http://bigtop.apache.org/) home page
-- [Apache Bigtop issue tracking](http://bigtop.apache.org/issue-tracking.html)
 - [Apache Bigtop mailing lists](http://bigtop.apache.org/mail-lists.html)
-- [Apache Bigtop charms](https://jujucharms.com/q/apache/bigtop)
+- [Apache Mahout home page](https://mahout.apache.org/)
+- [Apache Mahout issue tracker](https://issues.apache.org/jira/browse/MAHOUT)
+- [Juju Bigtop charms](https://jujucharms.com/q/apache/bigtop)
+- [Juju mailing list](https://lists.ubuntu.com/mailman/listinfo/juju)
+- [Juju community](https://jujucharms.com/community)
