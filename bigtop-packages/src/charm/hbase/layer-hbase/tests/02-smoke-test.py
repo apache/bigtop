@@ -25,32 +25,17 @@ class TestDeploy(unittest.TestCase):
     """
     @classmethod
     def setUpClass(cls):
-        cls.d = amulet.Deployment(series='trusty')
+        cls.d = amulet.Deployment(series='xenial')
         cls.d.add('hbase', 'hbase')
         cls.d.add('namenode', 'hadoop-namenode')
-        cls.d.add('openjdk', 'openjdk')
         cls.d.add('plugin', 'hadoop-plugin')
         cls.d.add('slave', 'hadoop-slave')
-        cls.d.add('zk', 'zookeeper')
-
-        cls.d.configure('openjdk', {'java-type': 'jdk',
-                                    'java-major': '8'})
+        cls.d.add('zookeeper', 'zookeeper')
 
         cls.d.relate('hbase:hadoop', 'plugin:hadoop-plugin')
-        cls.d.relate('hbase:zookeeper', 'zk:zookeeper')
+        cls.d.relate('hbase:zookeeper', 'zookeeper:zookeeper')
         cls.d.relate('plugin:namenode', 'namenode:namenode')
         cls.d.relate('slave:namenode', 'namenode:datanode')
-
-        cls.d.relate('hbase:java', 'openjdk:java')
-        cls.d.relate('plugin:java', 'openjdk:java')
-        cls.d.relate('namenode:java', 'openjdk:java')
-        cls.d.relate('slave:java', 'openjdk:java')
-        try:
-            cls.d.relate('zk:java', 'openjdk:java')
-        except ValueError:
-            # No need to related older versions of the zookeeper charm
-            # to java.
-            pass
 
         cls.d.setup(timeout=3600)
         cls.d.sentry.wait_for_messages({'hbase': 'ready'}, timeout=3600)

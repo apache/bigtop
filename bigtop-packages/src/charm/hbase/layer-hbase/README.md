@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-## Overview
+# Overview
 
 HBase is the Hadoop database. Think of it as a distributed scalable Big Data
 store.
@@ -47,103 +47,120 @@ HBase provides:
 
 See [the homepage](http://hbase.apache.org) for more information.
 
-This charm provides the hbase master and regionserver roles as delivered by the
-Apache Bigtop project.
+This charm deploys the hbase master and regionserver components of the
+[Apache Bigtop][] platform.
+
+[Apache Bigtop]: http://bigtop.apache.org/
 
 
-## Usage
+# Deploying
 
-A HBase deployment consists of HBase masters and HBase RegionServers.
-In the distributed HBase deployment this charm provides each unit deploys
-one master and one regionserver on each unit. HBase makes sure that
-only one master is active and the rest are in standby mode in case
-the active one fails.
+A working Juju installation is assumed to be present. If Juju is not yet set
+up, please follow the [getting-started][] instructions prior to deploying this
+charm.
 
-To HBase operates over HDFS so we first need to deploy::
+An HBase deployment consists of HBase masters and HBase RegionServers.
+In a distributed HBase environment, one master and one regionserver are
+deployed on each unit. HBase makes sure that only one master is active and
+the rest are in standby mode in case the active one fails.
+
+HBase operates over HDFS, so we first need to deploy an HDFS cluster:
 
     juju deploy hadoop-namenode namenode
     juju deploy hadoop-slave slave
     juju deploy hadoop-plugin plugin
-    juju deploy openjdk
 
-    juju add-relation namenode openjdk
     juju add-relation namenode slave
     juju add-relation plugin namenode
-    juju add-relation plugin openjdk
-    juju add-relation slave openjdk
 
-In order to function correctly the hbase master and regionserver services
-have a mandatory relationship with zookeeper - please use the zookeeper charm
-to create a functional zookeeper quorum and then relate it to this charm::
-Remember that quorums come in odd numbers start from 3 (but it will work
-with one BUT with no resilience).
+In order to function correctly, the HBase master and regionserver applications
+have a mandatory relationship with Zookeeper. Use the zookeeper charm to
+create a functional zookeeper quorum. Remember that quorums come in odd numbers
+starting with 3 (one will work, but will offer no resilience):
 
     juju deploy zookeeper -n 3
-    juju add-relation zookeeper openjdk
 
-Now we are ready to deploy HBase scaled to 3 units and add the required relations.
+Now add HBase scaled to 3 units and add the required relations:
 
     juju deploy hbase -n 3
 
-    juju add-relation hbase openjdk
     juju add-relation plugin hbase
     juju add-relation zookeeper hbase
 
 The charm also supports use of the thrift gateway.
 
+## Network-Restricted Environments
+Charms can be deployed in environments with limited network access. To deploy
+in this environment, configure a Juju model with appropriate proxy and/or
+mirror options. See [Configuring Models][] for more information.
 
-## Service Restarts
-
-Restarting a HBase deployment is potentially disruptive so you should be aware
-what events cause restarts::
-
-- Zookeeper service units joining or departing relations.
-- Upgrading the charm or changing the configuration.
+[getting-started]: https://jujucharms.com/docs/stable/getting-started
+[Configuring Models]: https://jujucharms.com/docs/stable/models-config
 
 
-## Status and Smoke Test
+# Verifying
 
-The services provide extended status reporting to indicate when they are ready:
+## Status
+Apache Bigtop charms provide extended status reporting to indicate when they
+are ready:
 
     juju status
 
 This is particularly useful when combined with `watch` to track the on-going
 progress of the deployment:
 
-    watch -n 0.5 juju status
+    watch -n 2 juju status
 
-The message for each unit will provide information about that unit's state.
-Once they all indicate that they are ready, you can perform a "smoke test"
-to verify that HBase is working as expected using the built-in `smoke-test`
-action:
+The message column will provide information about a given unit's state.
+This charm is ready for use once the status message indicates that it is
+ready.
+
+## Smoke Test
+This charm provides a `smoke-test` action that can be used to verify the
+application is functioning as expected. Run the action as follows:
 
     juju run-action hbase/0 smoke-test
 
-_**Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju action do hbase/0 smoke-test`._
+> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
+of Juju, the syntax is `juju action do hbase/0 smoke-test`.
 
-After a minute or so, you can check the results of the smoke test:
+Watch the progress of the smoke test actions with:
 
-    juju show-action-status
+    watch -n 2 juju show-action-status
 
-_**Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju action status`._
+> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
+of Juju, the syntax is `juju action status`.
 
-You will see `status: completed` if the smoke test was successful, or
-`status: failed` if it was not.  You can get more information on why it failed
-via:
+Eventually, the action should settle to `status: completed`.  If it
+reports `status: failed`, the application is not working as expected. Get
+more information about a specific smoke test with:
 
     juju show-action-output <action-id>
 
-_**Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju action fetch <action-id>`._
+> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
+of Juju, the syntax is `juju action fetch <action-id>`.
 
 
-## Contact Information
+# Limitations
+
+Restarting an HBase deployment is potentially disruptive. Be aware that the
+following events will cause a restart:
+
+- Zookeeper service units joining or departing relations.
+- Upgrading the charm or changing the configuration.
+
+
+# Contact Information
+
 - <bigdata@lists.ubuntu.com>
 
 
-## Help
+# Resources
+
+- [Apache Bigtop](http://bigtop.apache.org/) home page
+- [Apache Bigtop mailing lists](http://bigtop.apache.org/mail-lists.html)
 - [Apache HBase home page](https://hbase.apache.org/)
+- [Apache Zookeeper issue tracker](https://issues.apache.org/jira/browse/HBASE)
+- [Juju Bigtop charms](https://jujucharms.com/q/apache/bigtop)
 - [Juju mailing list](https://lists.ubuntu.com/mailman/listinfo/juju)
 - [Juju community](https://jujucharms.com/community)
