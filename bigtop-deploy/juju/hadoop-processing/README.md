@@ -163,7 +163,7 @@ application and expose it:
 
 The web interface will be available at the following URL:
 
-        http://NAMENODE_PUBLIC_IP:50070
+    http://NAMENODE_PUBLIC_IP:50070
 
 Similarly, to access the Resource Manager web consoles, find the
 `PUBLIC-ADDRESS` of the resourcemanager application and expose it:
