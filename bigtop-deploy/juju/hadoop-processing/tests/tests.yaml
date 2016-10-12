@@ -1,4 +1,5 @@
 reset: false
+deployment_timeout: 3600
 packages:
   - amulet
   - python3-yaml
