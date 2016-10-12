@@ -24,6 +24,8 @@ import org.junit.Test;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+// This does not test every option that Hive supports, but does try to touch the major
+// options, especially anything unique to Hive.  See each test for areas tested and not tested.
 public class TestSql extends JdbcConnector {
   private static final Log LOG = LogFactory.getLog(TestSql.class.getName());
 
@@ -98,7 +100,7 @@ public class TestSql extends JdbcConnector {
           "stored as orc " +
           "tblproperties ('a' = 'b')");
 
-      // NOTES: Not testing SKEWED BY, ROW FORMAT, STORED BY (storage handler
+      // Not testing SKEWED BY, ROW FORMAT, STORED BY (storage handler
 
       stmt.execute("create temporary table " + table3 + " like " + table2);
 
@@ -111,8 +113,8 @@ public class TestSql extends JdbcConnector {
       stmt.execute("alter table " + table4 + " rename to " + table5);
       stmt.execute("alter table " + table2 + " set tblproperties ('c' = 'd')");
 
-      // NOTE: Not testing alter of clustered or sorted by, because that's suicidal
-      // NOTE: Not testing alter of skewed or serde properties since we didn't test it for create
+      // Not testing alter of clustered or sorted by, because that's suicidal
+      // Not testing alter of skewed or serde properties since we didn't test it for create
       // above.
 
       stmt.execute("drop table " + table1 + " purge");
@@ -144,7 +146,7 @@ public class TestSql extends JdbcConnector {
       stmt.execute("alter table " + table1 + " add columns (c3 float)");
       stmt.execute("alter table " + table1 + " drop partition (p1 = 'a')");
 
-      // NOTE: Not testing rename partition, exchange partition, msck repair, archive/unarchive,
+      // Not testing rename partition, exchange partition, msck repair, archive/unarchive,
       // set location, enable/disable no_drop/offline, compact (because not everyone may have
       // ACID on), change column
 
@@ -178,8 +180,8 @@ public class TestSql extends JdbcConnector {
     }
   }
 
-  // NOTE: Not testing indices because they are currently useless in Hive
-  // NOTE: Not testing macros because as far as I know no one uses them
+  // Not testing indices because they are currently useless in Hive
+  // Not testing macros because as far as I know no one uses them
 
   @Test
   public void function() throws SQLException {
@@ -198,8 +200,135 @@ public class TestSql extends JdbcConnector {
     }
   }
 
-  // NOTE: Not testing grant/revoke/roles as different vendors use different security solutions
+  // Not testing grant/revoke/roles as different vendors use different security solutions
   // and hence different things will work here.
+
+  // This covers insert (non-partitioned, partitioned, dynamic partitions, overwrite, with
+  // values and select), and multi-insert.  Load is not tested as there's no guarantee that the
+  // test machine has access to HDFS and thus the ability to upload a file.
+  @Test
+  public void insert() throws SQLException {
+    final String table1 = "odpi_insert_table1";
+    final String table2 = "odpi_insert_table2";
+    try (Statement stmt = conn.createStatement()) {
+      stmt.execute("drop table if exists " + table1);
+      stmt.execute("create table " + table1 +
+          "(c1 tinyint," +
+          " c2 smallint," +
+          " c3 int," +
+          " c4 bigint," +
+          " c5 float," +
+          " c6 double," +
+          " c7 decimal(8,2)," +
+          " c8 varchar(120)," +
+          " c9 char(10)," +
+          " c10 boolean)" +
+          " partitioned by (p1 string)");
+
+      // insert with partition
+      stmt.execute("insert into " + table1 + " partition (p1 = 'a') values " +
+          "(1, 2, 3, 4, 1.1, 2.2, 3.3, 'abcdef', 'ghi', true)," +
+          "(5, 6, 7, 8, 9.9, 8.8, 7.7, 'jklmno', 'pqr', true)");
+
+      stmt.execute("set hive.exec.dynamic.partition.mode=nonstrict");
+
+      // dynamic partition
+      stmt.execute("insert into " + table1 + " partition (p1) values " +
+          "(1, 2, 3, 4, 1.1, 2.2, 3.3, 'abcdef', 'ghi', true, 'b')," +
+          "(5, 6, 7, 8, 9.9, 8.8, 7.7, 'jklmno', 'pqr', true, 'b')");
+
+      stmt.execute("drop table if exists " + table2);
+
+      stmt.execute("create table " + table2 +
+          "(c1 tinyint," +
+          " c2 smallint," +
+          " c3 int," +
+          " c4 bigint," +
+          " c5 float," +
+          " c6 double," +
+          " c7 decimal(8,2)," +
+          " c8 varchar(120)," +
+          " c9 char(10)," +
+          " c10 boolean)");
+
+      stmt.execute("insert into " + table2 + " values " +
+          "(1, 2, 3, 4, 1.1, 2.2, 3.3, 'abcdef', 'ghi', true)," +
+          "(5, 6, 7, 8, 9.9, 8.8, 7.7, 'jklmno', 'pqr', true)");
+
+      stmt.execute("insert overwrite table " + table2 + " select c1, c2, c3, c4, c5, c6, c7, c8, " +
+          "c9, c10 from " + table1);
+
+      // multi-insert
+      stmt.execute("from " + table1 +
+          " insert into table " + table1 + " partition (p1 = 'c') " +
+          " select c1, c2, c3, c4, c5, c6, c7, c8, c9, c10" +
+          " insert into table " + table2 + " select c1, c2, c3, c4, c5, c6, c7, c8, c9, c10");
+    }
+  }
+
+  // This tests CTEs
+  @Test
+  public void cte() throws SQLException {
+    final String table1 = "odpi_cte_table1";
+    try (Statement stmt = conn.createStatement()) {
+      stmt.execute("drop table if exists " + table1);
+      stmt.execute("create table " + table1 + "(c1 int, c2 varchar(32))");
+      stmt.execute("insert into " + table1 + " values (1, 'abc'), (2, 'def')");
+      stmt.execute("with cte1 as (select c1 from " + table1 + " where c1 < 10) " +
+          " select c1 from cte1");
+    }
+  }
+
+  // This tests select, including CTEs, all/distinct, single tables, joins (inner & outer),
+  // group by (w/ and w/o having), order by, cluster by/distribute by/sort by, limit, union,
+  // subqueries, and over.
+
+  @Test
+  public void select() throws SQLException {
+    final String[] tables = {"odpi_select_table1", "odpi_select_table2"};
+    try (Statement stmt = conn.createStatement()) {
+      for (int i = 0; i < tables.length; i++) {
+        stmt.execute("drop table if exists " + tables[i]);
+        stmt.execute("create table " + tables[i] + "(c1 int, c2 varchar(32))");
+        stmt.execute("insert into " + tables[i] + " values (1, 'abc'), (2, 'def')");
+      }
+
+      // single table queries tested above in several places
+
+      stmt.execute("select all a.c2, SUM(a.c1), SUM(b.c1) " +
+          "from " + tables[0] + " a join " + tables[1] + " b on (a.c2 = b.c2) " +
+          "group by a.c2 " +
+          "order by a.c2 asc " +
+          "limit 10");
+
+      stmt.execute("select distinct a.c2 " +
+          "from " + tables[0] + " a left outer join " + tables[1] + " b on (a.c2 = b.c2) " +
+          "order by a.c2 desc ");
+
+      stmt.execute("select a.c2, SUM(a.c1) " +
+          "from " + tables[0] + " a right outer join " + tables[1] + " b on (a.c2 = b.c2) " +
+          "group by a.c2 " +
+          "having SUM(b.c1) > 0 " +
+          "order by a.c2 ");
+
+      stmt.execute("select a.c2, rank() over (partition by a.c1) " +
+          "from " + tables[0] + " a full outer join " + tables[1] + " b on (a.c2 = b.c2) ");
+
+      stmt.execute("select c2 from " + tables[0] + " union all select c2 from " + tables[1]);
+
+      stmt.execute("select * from " + tables[0] + " distribute by c1 sort by c2");
+      stmt.execute("select * from " + tables[0] + " cluster by c1");
+
+      stmt.execute("select * from (select c1 from " + tables[0] + ") t");
+      stmt.execute("select * from " + tables[0] + " where c1 in (select c1 from " + tables[1] +
+          ")");
+
+    }
+
+  }
+
+  // Update and delete are not tested because not everyone configures their system to run
+  // with ACID.
 
 
 }
