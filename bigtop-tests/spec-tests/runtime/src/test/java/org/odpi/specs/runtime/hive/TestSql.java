@@ -226,14 +226,14 @@ public class TestSql extends JdbcConnector {
           " partitioned by (p1 string)");
 
       // insert with partition
-      stmt.execute("insert into " + table1 + " partition (p1 = 'a') values " +
+      stmt.execute("explain insert into " + table1 + " partition (p1 = 'a') values " +
           "(1, 2, 3, 4, 1.1, 2.2, 3.3, 'abcdef', 'ghi', true)," +
           "(5, 6, 7, 8, 9.9, 8.8, 7.7, 'jklmno', 'pqr', true)");
 
       stmt.execute("set hive.exec.dynamic.partition.mode=nonstrict");
 
       // dynamic partition
-      stmt.execute("insert into " + table1 + " partition (p1) values " +
+      stmt.execute("explain insert into " + table1 + " partition (p1) values " +
           "(1, 2, 3, 4, 1.1, 2.2, 3.3, 'abcdef', 'ghi', true, 'b')," +
           "(5, 6, 7, 8, 9.9, 8.8, 7.7, 'jklmno', 'pqr', true, 'b')");
 
@@ -251,12 +251,12 @@ public class TestSql extends JdbcConnector {
           " c9 char(10)," +
           " c10 boolean)");
 
-      stmt.execute("insert into " + table2 + " values " +
+      stmt.execute("explain insert into " + table2 + " values " +
           "(1, 2, 3, 4, 1.1, 2.2, 3.3, 'abcdef', 'ghi', true)," +
           "(5, 6, 7, 8, 9.9, 8.8, 7.7, 'jklmno', 'pqr', true)");
 
-      stmt.execute("insert overwrite table " + table2 + " select c1, c2, c3, c4, c5, c6, c7, c8, " +
-          "c9, c10 from " + table1);
+      stmt.execute("explain insert overwrite table " + table2 + " select c1, c2, c3, c4, c5, c6, " +
+          "c7, c8, c9, c10 from " + table1);
 
       // multi-insert
       stmt.execute("from " + table1 +
@@ -273,7 +273,6 @@ public class TestSql extends JdbcConnector {
     try (Statement stmt = conn.createStatement()) {
       stmt.execute("drop table if exists " + table1);
       stmt.execute("create table " + table1 + "(c1 int, c2 varchar(32))");
-      stmt.execute("insert into " + table1 + " values (1, 'abc'), (2, 'def')");
       stmt.execute("with cte1 as (select c1 from " + table1 + " where c1 < 10) " +
           " select c1 from cte1");
     }
@@ -290,37 +289,36 @@ public class TestSql extends JdbcConnector {
       for (int i = 0; i < tables.length; i++) {
         stmt.execute("drop table if exists " + tables[i]);
         stmt.execute("create table " + tables[i] + "(c1 int, c2 varchar(32))");
-        stmt.execute("insert into " + tables[i] + " values (1, 'abc'), (2, 'def')");
       }
 
       // single table queries tested above in several places
 
-      stmt.execute("select all a.c2, SUM(a.c1), SUM(b.c1) " +
+      stmt.execute("explain select all a.c2, SUM(a.c1), SUM(b.c1) " +
           "from " + tables[0] + " a join " + tables[1] + " b on (a.c2 = b.c2) " +
           "group by a.c2 " +
           "order by a.c2 asc " +
           "limit 10");
 
-      stmt.execute("select distinct a.c2 " +
+      stmt.execute("explain select distinct a.c2 " +
           "from " + tables[0] + " a left outer join " + tables[1] + " b on (a.c2 = b.c2) " +
           "order by a.c2 desc ");
 
-      stmt.execute("select a.c2, SUM(a.c1) " +
+      stmt.execute("explain select a.c2, SUM(a.c1) " +
           "from " + tables[0] + " a right outer join " + tables[1] + " b on (a.c2 = b.c2) " +
           "group by a.c2 " +
           "having SUM(b.c1) > 0 " +
           "order by a.c2 ");
 
-      stmt.execute("select a.c2, rank() over (partition by a.c1) " +
+      stmt.execute("explain select a.c2, rank() over (partition by a.c1) " +
           "from " + tables[0] + " a full outer join " + tables[1] + " b on (a.c2 = b.c2) ");
 
-      stmt.execute("select c2 from " + tables[0] + " union all select c2 from " + tables[1]);
+      stmt.execute("explain select c2 from " + tables[0] + " union all select c2 from " + tables[1]);
 
-      stmt.execute("select * from " + tables[0] + " distribute by c1 sort by c2");
-      stmt.execute("select * from " + tables[0] + " cluster by c1");
+      stmt.execute("explain select * from " + tables[0] + " distribute by c1 sort by c2");
+      stmt.execute("explain select * from " + tables[0] + " cluster by c1");
 
-      stmt.execute("select * from (select c1 from " + tables[0] + ") t");
-      stmt.execute("select * from " + tables[0] + " where c1 in (select c1 from " + tables[1] +
+      stmt.execute("explain select * from (select c1 from " + tables[0] + ") t");
+      stmt.execute("explain select * from " + tables[0] + " where c1 in (select c1 from " + tables[1] +
           ")");
 
     }
