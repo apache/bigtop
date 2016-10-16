@@ -6,7 +6,7 @@ services:
       gui-x: "500"
       gui-y: "800"
     to:
-      - "1"
+      - "0"
   resourcemanager:
     charm: "cs:~bigdata-dev/xenial/hadoop-resourcemanager"
     num_units: 1
@@ -14,7 +14,7 @@ services:
       gui-x: "500"
       gui-y: "0"
     to:
-      - "1"
+      - "0"
   slave:
     charm: "cs:~bigdata-dev/xenial/hadoop-slave"
     num_units: 3
@@ -22,9 +22,9 @@ services:
       gui-x: "0"
       gui-y: "400"
     to:
+      - "1"
       - "2"
       - "3"
-      - "4"
   plugin:
     charm: "cs:~bigdata-dev/xenial/hadoop-plugin"
     annotations:
@@ -37,7 +37,7 @@ services:
       gui-x: "1250"
       gui-y: "400"
     to:
-      - "5"
+      - "4"
   ganglia:
     charm: "cs:trusty/ganglia-2"
     num_units: 1
@@ -45,7 +45,7 @@ services:
       gui-x: "0"
       gui-y: "800"
     to:
-      - "6"
+      - "5"
   ganglia-node:
     charm: "cs:~bigdata-dev/xenial/ganglia-node-2"
     annotations:
@@ -58,7 +58,7 @@ services:
       gui-x: "1000"
       gui-y: "800"
     to:
-      - "6"
+      - "5"
   rsyslog-forwarder-ha:
     charm: "cs:~bigdata-dev/xenial/rsyslog-forwarder-ha-2"
     annotations:
@@ -83,6 +83,9 @@ relations:
   - ["rsyslog-forwarder-ha:juju-info", "slave:juju-info"]
   - ["rsyslog:aggregator", "rsyslog-forwarder-ha:syslog"]
 machines:
+  "0":
+    constraints: "mem=7G"
+    series: "xenial"
   "1":
     constraints: "mem=7G"
     series: "xenial"
@@ -93,11 +96,8 @@ machines:
     constraints: "mem=7G"
     series: "xenial"
   "4":
-    constraints: "mem=7G"
-    series: "xenial"
-  "5":
     constraints: "mem=3G"
     series: "xenial"
-  "6":
+  "5":
     constraints: "mem=3G"
     series: "trusty"
