@@ -92,6 +92,13 @@
     <value><%= host %>:<%= @hadoop_rm_port %></value>
   </property>
 
+<%     if not @hadoop_rm_bind_host.nil? -%>
+  <property>
+    <name>yarn.resourcemanager.bind-host.rm<%= idx+1 %></name>
+    <value><%= @hadoop_rm_bind_host %></value>
+  </property>
+
+<%     end -%>
   <property>
     <name>yarn.resourcemanager.scheduler.address.rm<%= idx+1 %></name>
     <value><%= host %>:<%= @hadoop_sc_port %></value>
@@ -125,6 +132,13 @@
     <value><%= @hadoop_rm_host %>:<%= @hadoop_rm_port %></value>
   </property>
 
+<%   if not @hadoop_rm_bind_host.nil? -%>
+  <property>
+    <name>yarn.resourcemanager.bind-host</name>
+    <value><%= @hadoop_rm_bind_host %></value>
+  </property>
+
+<%   end -%>
   <property>
     <name>yarn.resourcemanager.scheduler.address</name>
     <value><%= @hadoop_rm_host %>:<%= @hadoop_sc_port %></value>
