@@ -45,16 +45,37 @@
     <value><%= host %>:<%= @hadoop_namenode_port %></value>
   </property>
  
+<%     if not @hadoop_namenode_bind_host.nil? -%>
+  <property>
+    <name>dfs.namenode.rpc-bind-host.<%= @nameservice_id %>.nn<%= idx+1 %></name>
+    <value><%= @hadoop_namenode_bind_host %></value>
+  </property>
+
+<%     end -%>
   <property>
     <name>dfs.namenode.http-address.<%= @nameservice_id %>.nn<%= idx+1 %></name>
     <value><%= host %>:<%= @hadoop_namenode_http_port %></value>
   </property>
 
+<%     if not @hadoop_namenode_http_bind_host.nil? -%>
+  <property>
+    <name>dfs.namenode.http-bind-host.<%= @nameservice_id %>.nn<%= idx+1 %></name>
+    <value><%= @hadoop_namenode_http_bind_host %></value>
+  </property>
+
+<%     end -%>
   <property>
     <name>dfs.namenode.https-address.<%= @nameservice_id %>.nn<%= idx+1 %></name>
     <value><%= host %>:<%= @hadoop_namenode_https_port %></value>
   </property>
 
+<%     if not @hadoop_namenode_https_bind_host.nil? -%>
+  <property>
+    <name>dfs.namenode.https-bind-host.<%= @nameservice_id %>.nn<%= idx+1 %></name>
+    <value><%= @hadoop_namenode_https_bind_host %></value>
+  </property>
+
+<%     end -%>
 <%   end -%>
 <%   if @shared_edits_dir -%>
   <property>
@@ -94,16 +115,37 @@
     <value><%= namenode_hosts[0] %>:<%= @hadoop_namenode_port %></value>
   </property>
 
+<%   if not @hadoop_namenode_bind_host.nil? -%>
+  <property>
+    <name>dfs.namenode.rpc-bind-host</name>
+    <value><%= @hadoop_namenode_bind_host %></value>
+  </property>
+
+<%   end -%>
   <property>
     <name>dfs.namenode.http-address</name>
     <value><%= namenode_hosts[0] %>:<%= @hadoop_namenode_http_port %></value>
   </property>
 
+<%   if not @hadoop_namenode_http_bind_host.nil? -%>
+  <property>
+    <name>dfs.namenode.http-bind-host</name>
+    <value><%= @hadoop_namenode_http_bind_host %></value>
+  </property>
+
+<%   end -%>
   <property>
     <name>dfs.namenode.https-address</name>
     <value><%= namenode_hosts[0] %>:<%= @hadoop_namenode_https_port %></value>
   </property>
 
+<%   if not @hadoop_namenode_https_bind_host.nil? -%>
+  <property>
+    <name>dfs.namenode.https-bind-host</name>
+    <value><%= @hadoop_namenode_https_bind_host %></value>
+  </property>
+
+<%   end -%>
 <%   if @hadoop_security_authentication == "kerberos" -%>
   <property>
     <name>dfs.block.access.token.enable</name>
