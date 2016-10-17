@@ -72,6 +72,8 @@ def install_resourcemanager(namenode):
         rm_http = get_layer_opts().port('rm_webapp_http')
         jh_ipc = get_layer_opts().port('jobhistory')
         jh_http = get_layer_opts().port('jh_webapp_http')
+        hdfs_port = namenode.port()
+        webhdfs_port = namenode.webhdfs_port()
 
         bigtop = Bigtop()
         bigtop.render_site_yaml(
@@ -82,11 +84,21 @@ def install_resourcemanager(namenode):
             roles=[
                 'resourcemanager',
             ],
+            # NB: When we colocate the NN and RM, the RM will run puppet apply
+            # last. To ensure we don't lose any hdfs-site.xml data set by the
+            # NN, override common_hdfs properties again here.
             overrides={
                 'hadoop::common_yarn::hadoop_rm_port': rm_ipc,
                 'hadoop::common_yarn::hadoop_rm_webapp_port': rm_http,
+                'hadoop::common_yarn::hadoop_rm_bind_host': '0.0.0.0',
+                'hadoop::common_mapred_app::mapreduce_jobhistory_host': '0.0.0.0',
                 'hadoop::common_mapred_app::mapreduce_jobhistory_port': jh_ipc,
                 'hadoop::common_mapred_app::mapreduce_jobhistory_webapp_port': jh_http,
+                'hadoop::common_hdfs::hadoop_namenode_port': hdfs_port,
+                'hadoop::common_hdfs::hadoop_namenode_bind_host': '0.0.0.0',
+                'hadoop::common_hdfs::hadoop_namenode_http_port': webhdfs_port,
+                'hadoop::common_hdfs::hadoop_namenode_http_bind_host': '0.0.0.0',
+                'hadoop::common_hdfs::hadoop_namenode_https_bind_host': '0.0.0.0',
             }
         )
         bigtop.trigger_puppet()
