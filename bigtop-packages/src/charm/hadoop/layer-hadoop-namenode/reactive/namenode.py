@@ -20,7 +20,6 @@ from charms.layer.apache_bigtop_base import (
 )
 from charmhelpers.core import hookenv, host
 from jujubigdata import utils
-from path import Path
 
 
 ###############################################################################
@@ -62,9 +61,13 @@ def install_namenode():
             'namenode',
             'mapred-app',
         ],
+        # NB: We want the NN to listen on all interfaces, so bind to 0.0.0.0.
         overrides={
             'hadoop::common_hdfs::hadoop_namenode_port': hdfs_port,
+            'hadoop::common_hdfs::hadoop_namenode_bind_host': '0.0.0.0',
             'hadoop::common_hdfs::hadoop_namenode_http_port': webhdfs_port,
+            'hadoop::common_hdfs::hadoop_namenode_http_bind_host': '0.0.0.0',
+            'hadoop::common_hdfs::hadoop_namenode_https_bind_host': '0.0.0.0',
         }
     )
     bigtop.trigger_puppet()
@@ -74,14 +77,6 @@ def install_namenode():
     # to signify NN's readiness. Set our NN info in the KV to fulfill this
     # requirement.
     utils.initialize_kv_host()
-
-    # make our namenode listen on all interfaces
-    hdfs_site = Path('/etc/hadoop/conf/hdfs-site.xml')
-    with utils.xmlpropmap_edit_in_place(hdfs_site) as props:
-        props['dfs.namenode.rpc-bind-host'] = '0.0.0.0'
-        props['dfs.namenode.servicerpc-bind-host'] = '0.0.0.0'
-        props['dfs.namenode.http-bind-host'] = '0.0.0.0'
-        props['dfs.namenode.https-bind-host'] = '0.0.0.0'
 
     # We need to create the 'mapred' user/group since we are not installing
     # hadoop-mapreduce. This is needed so the namenode can access yarn
