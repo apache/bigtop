@@ -61,7 +61,7 @@ num_instances: 5
 first, build up local yum repo
 
 ```
-cd bigtop; ./gradlew alluxio-yum
+cd bigtop; ./gradlew alluxio-rpm; ./gradlew yum
 ```
 
 and then enable local yum in vagrantconfig.yaml
@@ -92,7 +92,7 @@ $ MEMORY_SIZE=8000 vagrant up
 * Choose the ecosystem you want to be deployed by modifying components in vagrantconfig.yaml
 
 ```
-components: "hadoop, hbase, yarn,..."
+components: [hadoop, hbase, yarn, ...]
 ```
 
 By default, Apache Hadoop and YARN will be installed.
