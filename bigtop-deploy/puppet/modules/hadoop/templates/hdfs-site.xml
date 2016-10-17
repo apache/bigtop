@@ -86,7 +86,25 @@
   </property>
 
 <%   end -%>
-<% elsif @hadoop_security_authentication == "kerberos" -%>
+<% else -%>
+  <!-- non HA -->
+
+  <property>
+    <name>dfs.namenode.rpc-address</name>
+    <value><%= namenode_hosts[0] %>:<%= @hadoop_namenode_port %></value>
+  </property>
+
+  <property>
+    <name>dfs.namenode.http-address</name>
+    <value><%= namenode_hosts[0] %>:<%= @hadoop_namenode_http_port %></value>
+  </property>
+
+  <property>
+    <name>dfs.namenode.https-address</name>
+    <value><%= namenode_hosts[0] %>:<%= @hadoop_namenode_https_port %></value>
+  </property>
+
+<%   if @hadoop_security_authentication == "kerberos" -%>
   <property>
     <name>dfs.block.access.token.enable</name>
     <value>true</value>
@@ -175,6 +193,7 @@
     <value>host/_HOST@<%= @kerberos_realm %></value>
   </property>
 
+<%   end -%>
 <% end -%>
   <property>
     <name>dfs.datanode.data.dir</name>
