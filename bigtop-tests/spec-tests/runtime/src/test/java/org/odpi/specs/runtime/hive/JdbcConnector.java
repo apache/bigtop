@@ -34,6 +34,8 @@ public class JdbcConnector {
   protected static final String USER = "odpi.test.hive.jdbc.user";
   protected static final String PASSWD = "odpi.test.hive.jdbc.password";
   protected static final String LOCATION = "odpi.test.hive.location";
+  protected static final String METASTORE_URL = "odpi.test.hive.metastore.url";
+  protected static final String TEST_THRIFT = "odpi.test.hive.thrift.test";
 
   protected static Connection conn;
 
@@ -63,6 +65,12 @@ public class JdbcConnector {
     }
     LOG.debug(description + " is " + val);
     return val;
+  }
+
+  protected static boolean testActive(String property, String description) {
+    String val = System.getProperty(property, "true");
+    LOG.debug(description + " is " + val);
+    return Boolean.valueOf(val);
   }
 
 }
