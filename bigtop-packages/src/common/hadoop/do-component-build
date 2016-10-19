@@ -55,7 +55,7 @@ mkdir build/src
 # Build artifacts
 MAVEN_OPTS="-Dzookeeper.version=$ZOOKEEPER_VERSION"
 MAVEN_OPTS="$MAVEN_OPTS -DskipTests -DskipTest -DskipITs"
-mvn $ANT_OPTS $BUNDLE_SNAPPY -Pdist -Pnative -Psrc -Dtar ${MAVEN_OPTS} -Dtomcat.version=${BIGTOP_TOMCAT_VERSION} -Dtomcat.download.url="http://www-us.apache.org/dist/tomcat/tomcat-6/v${BIGTOP_TOMCAT_VERSION}/bin/apache-tomcat-${BIGTOP_TOMCAT_VERSION}.tar.gz" install "$@"
+mvn $ANT_OPTS $BUNDLE_SNAPPY -Pdist -Pnative -Psrc -Dtar ${MAVEN_OPTS} -Dtomcat.version=${BIGTOP_TOMCAT_VERSION} -Dtomcat.download.url="http://archive.apache.org/dist/tomcat/tomcat-6/v${BIGTOP_TOMCAT_VERSION}/bin/apache-tomcat-${BIGTOP_TOMCAT_VERSION}.tar.gz" install "$@"
 mvn site site:stage ${MAVEN_OPTS} $@
 
 (cd build ; tar --strip-components=1 -xzvf  ../hadoop-dist/target/hadoop-${HADOOP_VERSION}.tar.gz)
