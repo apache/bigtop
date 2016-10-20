@@ -40,8 +40,13 @@ public class TestHttpFs {
 
   private static final String HTTPFS_PREFIX = "http://$HTTPFS_PROXY/webhdfs/v1";
   private static final String HTTPFS_SUCCESS = "{\"boolean\":true}";
+  private static final String HTTP_OK = "HTTP/1.1 200 OK";
+  private static final String HTTP_CREATE = "HTTP/1.1 201 Created";
+  private static final String HTTP_TMP_REDIR = "HTTP/1.1 307 TEMPORARY_REDIRECT";
 
-  private static final String DATA_DIR = System.getProperty("data.dir", "text-files");
+  public static final String HTTPFS_SOURCE = "bigtop-tests/test-artifacts/httpfs/src/main/resources/"
+  def httpfs_source = System.getenv("BIGTOP_HOME") + "/" + HTTPFS_SOURCE;
+  def DATA_DIR = httpfs_source + "/" + "text-files";
 
   private static String testHttpFsFolder = "/tmp/httpfssmoke-" + (new Date().getTime());
   private static String testHttpFsFolderRenamed = "$testHttpFsFolder-renamed";
@@ -74,7 +79,17 @@ public class TestHttpFs {
   public void assertValueExists(List<String> values, String expected) {
     boolean exists = false;
     for (String value : values) {
-      if (expected.startsWith(value)) {
+      if (value.length() && expected.startsWith(value)) {
+        exists = true;
+      }
+    }
+    assertTrue(expected + " NOT found!", exists == true);
+  }
+
+  public void assertValueContains(List<String> values, String expected) {
+    boolean exists = false;
+    for (String value : values) {
+      if (value.length() && value.contains(expected)) {
         exists = true;
       }
     }
@@ -119,8 +134,8 @@ public class TestHttpFs {
     assertValueExists(sh.getOut(), HTTPFS_SUCCESS);
     sh.exec("curl -i '$HTTPFS_PREFIX$testHttpFsFolder?user.name=$USERNAME&op=GETFILESTATUS'");
     assertTrue("curl command to create a dir failed", sh.getRet() == 0);
-    assertValueExists(sh.getOut(), HTTPFS_SUCCESS);
-    assertValueExists(sh.getOut(), "DIRECTORY");
+    assertValueContains(sh.getOut(), "DIRECTORY");
+    assertValueExists(sh.getOut(), HTTP_OK);
   }
 
   @Test
@@ -140,13 +155,14 @@ public class TestHttpFs {
       }
     }
     LOG.debug("Datanode location: $datanodeLocation");
-    assertValueExists(sh.getOut(), HTTPFS_SUCCESS);
+    assertValueExists(sh.getOut(), HTTP_TMP_REDIR);
+    assertNotNull("Datanode location not in response", datanodeLocation);
     sh.exec("curl -i -T $DATA_DIR/$filename '$datanodeLocation' --header 'Content-Type:application/octet-stream'");
     assertTrue("curl command to create a file failed", sh.getRet() == 0);
-    assertValueExists(sh.getOut(), HTTPFS_SUCCESS);
+    assertValueExists(sh.getOut(), HTTP_CREATE);
     sh.exec("curl -i -L '$HTTPFS_PREFIX$testHttpFsFolder/$filename?user.name=$USERNAME&op=OPEN'");
     assertTrue("curl command to create a file failed", sh.getRet() == 0);
-    assertValueExists(sh.getOut(), HTTPFS_SUCCESS);
+    assertValueExists(sh.getOut(), HTTP_OK);
     assertValueExists(sh.getOut(), filenameContent);
   }
 }
