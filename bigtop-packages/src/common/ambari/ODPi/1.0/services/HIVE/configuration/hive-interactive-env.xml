@@ -1,0 +1,373 @@
+<configuration><property require-input="false">
+    <name>enable_hive_interactive</name>
+    <value>false</value>
+    <description>Enable or disable interactive query in this cluster.</description>
+    <display-name>Enable Interactive Query (Tech Preview)</display-name>
+    <filename>hive-interactive-env.xml</filename>
+    <deleted>false</deleted>
+    <on-ambari-upgrade add="true" delete="false" update="false"/>
+    <property-type></property-type>
+    <value-attributes>
+        <type>value-list</type>
+        <overridable>false</overridable>
+        <entries>
+            <entry>
+                <value>true</value>
+                <label>Yes</label>
+            </entry>
+            <entry>
+                <value>false</value>
+                <label>No</label>
+            </entry>
+        </entries>
+        <selection-cardinality>1</selection-cardinality>
+    </value-attributes>
+    <depends-on/>
+    <property_depended_by>
+        <dependedByProperties>
+            <name>hive.llap.daemon.queue.name</name>
+            <type>hive-interactive-site</type>
+        </dependedByProperties>
+        <dependedByProperties>
+            <name>hive.llap.daemon.num.executors</name>
+            <type>hive-interactive-site</type>
+        </dependedByProperties>
+        <dependedByProperties>
+            <name>llap_queue_capacity</name>
+            <type>hive-interactive-env</type>
+        </dependedByProperties>
+        <dependedByProperties>
+            <name>llap_heap_size</name>
+            <type>hive-interactive-env</type>
+        </dependedByProperties>
+        <dependedByProperties>
+            <name>tez.am.resource.memory.mb</name>
+            <type>tez-interactive-site</type>
+        </dependedByProperties>
+        <dependedByProperties>
+            <name>hive.llap.daemon.yarn.container.mb</name>
+            <type>hive-interactive-site</type>
+        </dependedByProperties>
+        <dependedByProperties>
+            <name>capacity-scheduler</name>
+            <type>capacity-scheduler</type>
+        </dependedByProperties>
+        <dependedByProperties>
+            <name>hive.server2.tez.sessions.per.default.queue</name>
+            <type>hive-interactive-site</type>
+        </dependedByProperties>
+        <dependedByProperties>
+            <name>hive.llap.io.memory.size</name>
+            <type>hive-interactive-site</type>
+        </dependedByProperties>
+        <dependedByProperties>
+            <name>num_llap_nodes</name>
+            <type>hive-interactive-env</type>
+        </dependedByProperties>
+        <dependedByProperties>
+            <name>slider_am_container_mb</name>
+            <type>hive-interactive-env</type>
+        </dependedByProperties>
+    </property_depended_by>
+</property><property require-input="false">
+    <name>hive_server_interactive_host</name>
+    <value>localhost</value>
+    <description>HiveServer2 Interactive Host</description>
+    <display-name>HiveServer2 Interactive Host</display-name>
+    <filename>hive-interactive-env.xml</filename>
+    <deleted>false</deleted>
+    <on-ambari-upgrade add="true" delete="false" update="false"/>
+    <property-type></property-type>
+    <value-attributes>
+        <overridable>false</overridable>
+    </value-attributes>
+    <depends-on/>
+    <property_depended_by/>
+</property><property require-input="false">
+    <name>llap_queue_capacity</name>
+    <value>0</value>
+    <description>Percentage of the cluster dedicated to interactive query.</description>
+    <display-name>% of Cluster Capacity</display-name>
+    <filename>hive-interactive-env.xml</filename>
+    <deleted>false</deleted>
+    <on-ambari-upgrade add="true" delete="false" update="false"/>
+    <property-type></property-type>
+    <value-attributes>
+        <type>int</type>
+        <maximum>100</maximum>
+        <minimum>20</minimum>
+        <increment-step>1</increment-step>
+    </value-attributes>
+    <depends-on>
+        <property>
+            <name>yarn.scheduler.capacity.root.queues</name>
+            <type>capacity-scheduler</type>
+        </property>
+        <property>
+            <name>hive.llap.daemon.queue.name</name>
+            <type>hive-interactive-site</type>
+        </property>
+        <property>
+            <name>enable_hive_interactive</name>
+            <type>hive-interactive-env</type>
+        </property>
+    </depends-on>
+    <property_depended_by>
+        <dependedByProperties>
+            <name>hive.llap.daemon.num.executors</name>
+            <type>hive-interactive-site</type>
+        </dependedByProperties>
+        <dependedByProperties>
+            <name>llap_heap_size</name>
+            <type>hive-interactive-env</type>
+        </dependedByProperties>
+        <dependedByProperties>
+            <name>tez.am.resource.memory.mb</name>
+            <type>tez-interactive-site</type>
+        </dependedByProperties>
+        <dependedByProperties>
+            <name>hive.llap.daemon.yarn.container.mb</name>
+            <type>hive-interactive-site</type>
+        </dependedByProperties>
+        <dependedByProperties>
+            <name>capacity-scheduler</name>
+            <type>capacity-scheduler</type>
+        </dependedByProperties>
+        <dependedByProperties>
+            <name>hive.server2.tez.sessions.per.default.queue</name>
+            <type>hive-interactive-site</type>
+        </dependedByProperties>
+        <dependedByProperties>
+            <name>hive.llap.io.memory.size</name>
+            <type>hive-interactive-site</type>
+        </dependedByProperties>
+        <dependedByProperties>
+            <name>num_llap_nodes</name>
+            <type>hive-interactive-env</type>
+        </dependedByProperties>
+        <dependedByProperties>
+            <name>slider_am_container_mb</name>
+            <type>hive-interactive-env</type>
+        </dependedByProperties>
+    </property_depended_by>
+</property><property require-input="false">
+    <name>num_llap_nodes</name>
+    <value>1</value>
+    <description>The number of Hive LLAP daemons to run.</description>
+    <display-name>Number of LLAP Daemons</display-name>
+    <filename>hive-interactive-env.xml</filename>
+    <deleted>false</deleted>
+    <on-ambari-upgrade add="true" delete="false" update="false"/>
+    <property-type></property-type>
+    <value-attributes>
+        <type>int</type>
+        <minimum>1</minimum>
+    </value-attributes>
+    <depends-on>
+        <property>
+            <name>yarn.scheduler.capacity.root.queues</name>
+            <type>capacity-scheduler</type>
+        </property>
+        <property>
+            <name>hive.llap.daemon.queue.name</name>
+            <type>hive-interactive-site</type>
+        </property>
+        <property>
+            <name>llap_queue_capacity</name>
+            <type>hive-interactive-env</type>
+        </property>
+        <property>
+            <name>enable_hive_interactive</name>
+            <type>hive-interactive-env</type>
+        </property>
+        <property>
+            <name>hive.server2.tez.sessions.per.default.queue</name>
+            <type>hive-interactive-site</type>
+        </property>
+    </depends-on>
+    <property_depended_by/>
+</property><property require-input="false">
+    <name>num_retries_for_checking_llap_status</name>
+    <value>10</value>
+    <description>After starting LLAP app, retry count to check LLAP status before starting HiveServer2.</description>
+    <display-name>Number of retries while checking LLAP app status</display-name>
+    <filename>hive-interactive-env.xml</filename>
+    <deleted>false</deleted>
+    <on-ambari-upgrade add="true" delete="false" update="false"/>
+    <property-type></property-type>
+    <value-attributes>
+        <type>int</type>
+        <maximum>20</maximum>
+        <minimum>0</minimum>
+        <increment-step>1</increment-step>
+    </value-attributes>
+    <depends-on/>
+    <property_depended_by/>
+</property><property require-input="false">
+    <name>llap_heap_size</name>
+    <value>0</value>
+    <description>Heap Size used by LLAP app.</description>
+    <display-name>LLAP heap size</display-name>
+    <filename>hive-interactive-env.xml</filename>
+    <deleted>false</deleted>
+    <on-ambari-upgrade add="true" delete="false" update="false"/>
+    <property-type></property-type>
+    <value-attributes>
+        <type>int</type>
+    </value-attributes>
+    <depends-on>
+        <property>
+            <name>tez.am.resource.memory.mb</name>
+            <type>tez-site</type>
+        </property>
+        <property>
+            <name>yarn.scheduler.capacity.root.queues</name>
+            <type>capacity-scheduler</type>
+        </property>
+        <property>
+            <name>hive.llap.daemon.queue.name</name>
+            <type>hive-interactive-site</type>
+        </property>
+        <property>
+            <name>llap_queue_capacity</name>
+            <type>hive-interactive-env</type>
+        </property>
+        <property>
+            <name>enable_hive_interactive</name>
+            <type>hive-interactive-env</type>
+        </property>
+        <property>
+            <name>hive.server2.tez.sessions.per.default.queue</name>
+            <type>hive-interactive-site</type>
+        </property>
+    </depends-on>
+    <property_depended_by/>
+</property><property require-input="false">
+    <name>slider_am_container_mb</name>
+    <value>341</value>
+    <description>Slider's app master container size in MB.</description>
+    <display-name>Slider AM container size</display-name>
+    <filename>hive-interactive-env.xml</filename>
+    <deleted>false</deleted>
+    <on-ambari-upgrade add="true" delete="false" update="false"/>
+    <property-type></property-type>
+    <value-attributes>
+        <type>int</type>
+        <unit>MB</unit>
+    </value-attributes>
+    <depends-on>
+        <property>
+            <name>yarn.scheduler.capacity.root.queues</name>
+            <type>capacity-scheduler</type>
+        </property>
+        <property>
+            <name>hive.llap.daemon.queue.name</name>
+            <type>hive-interactive-site</type>
+        </property>
+        <property>
+            <name>llap_queue_capacity</name>
+            <type>hive-interactive-env</type>
+        </property>
+        <property>
+            <name>enable_hive_interactive</name>
+            <type>hive-interactive-env</type>
+        </property>
+        <property>
+            <name>hive.server2.tez.sessions.per.default.queue</name>
+            <type>hive-interactive-site</type>
+        </property>
+    </depends-on>
+    <property_depended_by/>
+</property><property require-input="false">
+    <name>llap_log_level</name>
+    <value>INFO</value>
+    <description>LLAP app logging level (WARN/INFO/DEBUG/TRACE)</description>
+    <display-name>LLAP app logging level (WARN/INFO/DEBUG/TRACE)</display-name>
+    <filename>hive-interactive-env.xml</filename>
+    <deleted>false</deleted>
+    <on-ambari-upgrade add="true" delete="false" update="false"/>
+    <property-type></property-type>
+    <value-attributes/>
+    <depends-on/>
+    <property_depended_by/>
+</property><property require-input="false">
+    <name>llap_app_name</name>
+    <value>llap0</value>
+    <description>LLAP app name</description>
+    <display-name>LLAP app name</display-name>
+    <filename>hive-interactive-env.xml</filename>
+    <deleted>false</deleted>
+    <on-ambari-upgrade add="true" delete="false" update="false"/>
+    <property-type></property-type>
+    <value-attributes/>
+    <depends-on/>
+    <property_depended_by/>
+</property><property require-input="false">
+    <name>llap_java_opts</name>
+    <value>-XX:+AlwaysPreTouch {% if java_version &gt; 7 %}-XX:+UseG1GC -XX:TLABSize=8m -XX:+ResizeTLAB -XX:+UseNUMA -XX:+AggressiveOpts -XX:MetaspaceSize=1024m -XX:InitiatingHeapOccupancyPercent=80 -XX:MaxGCPauseMillis=200{% else %}-XX:+PrintGCDetails -verbose:gc -XX:+PrintGCTimeStamps -XX:+UseNUMA -XX:+UseParallelGC{% endif %}</value>
+    <description>Java opts for llap application</description>
+    <display-name>LLAP app java opts</display-name>
+    <filename>hive-interactive-env.xml</filename>
+    <deleted>false</deleted>
+    <on-ambari-upgrade add="true" delete="false" update="false"/>
+    <property-type></property-type>
+    <value-attributes/>
+    <depends-on/>
+    <property_depended_by/>
+</property><property require-input="false">
+    <name>content</name>
+    <value>
+      if [ "$SERVICE" = "cli" ]; then
+      if [ -z "$DEBUG" ]; then
+      export HADOOP_OPTS="$HADOOP_OPTS -XX:NewRatio=12 -XX:MaxHeapFreeRatio=40 -XX:MinHeapFreeRatio=15 -XX:+UseParNewGC -XX:-UseGCOverheadLimit"
+      else
+      export HADOOP_OPTS="$HADOOP_OPTS -XX:NewRatio=12 -XX:MaxHeapFreeRatio=40 -XX:MinHeapFreeRatio=15 -XX:-UseGCOverheadLimit"
+      fi
+      fi
+
+      # The heap size of the jvm stared by hive shell script can be controlled via:
+
+      if [ "$SERVICE" = "metastore" ]; then
+      export HADOOP_HEAPSIZE={{hive_metastore_heapsize}} # Setting for HiveMetastore
+      else
+      export HADOOP_HEAPSIZE={{hive_heapsize}} # Setting for HiveServer2 and Client
+      fi
+
+      export HADOOP_CLIENT_OPTS="$HADOOP_CLIENT_OPTS  -Xmx${HADOOP_HEAPSIZE}m"
+
+      # Larger heap size may be required when running queries over large number of files or partitions.
+      # By default hive shell scripts use a heap size of 256 (MB).  Larger heap size would also be
+      # appropriate for hive server (hwi etc).
+
+
+      # Set HADOOP_HOME to point to a specific hadoop install directory
+      HADOOP_HOME=${HADOOP_HOME:-{{hadoop_home}}}
+
+      # Hive Configuration Directory can be controlled by:
+      export HIVE_CONF_DIR={{hive_server_interactive_conf_dir}}
+
+      # Add additional hcatalog jars
+      if [ "${HIVE_AUX_JARS_PATH}" != "" ]; then
+      export HIVE_AUX_JARS_PATH=${HIVE_AUX_JARS_PATH}
+      else
+      export HIVE_AUX_JARS_PATH=/usr/hdp/current/hive-server2-hive2/lib/hive-hcatalog-core.jar
+      fi
+
+      export METASTORE_PORT={{hive_metastore_port}}
+
+      # Spark assembly contains a conflicting copy of HiveConf from hive-1.2
+      export HIVE_SKIP_SPARK_ASSEMBLY=true
+
+    </value>
+    <description>This is the jinja template for hive-env.sh file</description>
+    <display-name>hive-interactive-env template</display-name>
+    <filename>hive-interactive-env.xml</filename>
+    <deleted>false</deleted>
+    <on-ambari-upgrade add="true" delete="false" update="false"/>
+    <property-type></property-type>
+    <value-attributes>
+        <type>content</type>
+    </value-attributes>
+    <depends-on/>
+    <property_depended_by/>
+</property></configuration>
