@@ -1,0 +1,63 @@
+<configuration><property require-input="false">
+    <name>policy_user</name>
+    <value>ambari-qa</value>
+    <description>This user must be system user and also present at Ranger admin portal</description>
+    <display-name>Policy user for HIVE</display-name>
+    <filename>ranger-hive-plugin-properties.xml</filename>
+    <deleted>false</deleted>
+    <on-ambari-upgrade add="false" delete="false" update="false"/>
+    <property-type></property-type>
+    <value-attributes/>
+    <depends-on/>
+    <property_depended_by/>
+</property><property require-input="false">
+    <name>jdbc.driverClassName</name>
+    <value>org.apache.hive.jdbc.HiveDriver</value>
+    <description>Used for repository creation on ranger admin</description>
+    <filename>ranger-hive-plugin-properties.xml</filename>
+    <deleted>false</deleted>
+    <on-ambari-upgrade add="false" delete="false" update="false"/>
+    <property-type></property-type>
+    <value-attributes/>
+    <depends-on/>
+    <property_depended_by/>
+</property><property require-input="false">
+    <name>common.name.for.certificate</name>
+    <value></value>
+    <description>Common name for certificate, this value should match what is specified in repo within ranger admin</description>
+    <filename>ranger-hive-plugin-properties.xml</filename>
+    <deleted>false</deleted>
+    <on-ambari-upgrade add="false" delete="false" update="false"/>
+    <property-type></property-type>
+    <value-attributes>
+        <empty-value-valid>true</empty-value-valid>
+    </value-attributes>
+    <depends-on/>
+    <property_depended_by/>
+</property><property require-input="false">
+    <name>REPOSITORY_CONFIG_USERNAME</name>
+    <value>hive</value>
+    <description>Used for repository creation on ranger admin</description>
+    <display-name>Ranger repository config user</display-name>
+    <filename>ranger-hive-plugin-properties.xml</filename>
+    <deleted>false</deleted>
+    <on-ambari-upgrade add="false" delete="false" update="false"/>
+    <property-type></property-type>
+    <value-attributes/>
+    <depends-on/>
+    <property_depended_by/>
+</property><property require-input="false">
+    <name>REPOSITORY_CONFIG_PASSWORD</name>
+    <value>hive</value>
+    <description>Used for repository creation on ranger admin</description>
+    <display-name>Ranger repository config password</display-name>
+    <filename>ranger-hive-plugin-properties.xml</filename>
+    <deleted>false</deleted>
+    <on-ambari-upgrade add="false" delete="false" update="false"/>
+    <property-type>PASSWORD</property-type>
+    <value-attributes>
+        <type>password</type>
+    </value-attributes>
+    <depends-on/>
+    <property_depended_by/>
+</property></configuration>
