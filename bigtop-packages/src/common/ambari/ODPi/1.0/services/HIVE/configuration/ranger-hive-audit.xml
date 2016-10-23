@@ -1,0 +1,136 @@
+<configuration><property require-input="false">
+    <name>xasecure.audit.is.enabled</name>
+    <value>true</value>
+    <description>Is Audit enabled?</description>
+    <filename>ranger-hive-audit.xml</filename>
+    <deleted>false</deleted>
+    <on-ambari-upgrade add="false" delete="false" update="false"/>
+    <property-type></property-type>
+    <value-attributes/>
+    <depends-on/>
+    <property_depended_by/>
+</property><property require-input="false">
+    <name>xasecure.audit.destination.hdfs</name>
+    <value>true</value>
+    <description>Is Audit to HDFS enabled?</description>
+    <display-name>Audit to HDFS</display-name>
+    <filename>ranger-hive-audit.xml</filename>
+    <deleted>false</deleted>
+    <on-ambari-upgrade add="false" delete="false" update="false"/>
+    <property-type></property-type>
+    <value-attributes>
+        <type>boolean</type>
+    </value-attributes>
+    <depends-on>
+        <property>
+            <name>xasecure.audit.destination.hdfs</name>
+            <type>ranger-env</type>
+        </property>
+    </depends-on>
+    <property_depended_by/>
+</property><property require-input="false">
+    <name>xasecure.audit.destination.hdfs.dir</name>
+    <value>hdfs://NAMENODE_HOSTNAME:8020/ranger/audit</value>
+    <description>HDFS folder to write audit to, make sure the service user has requried permissions</description>
+    <filename>ranger-hive-audit.xml</filename>
+    <deleted>false</deleted>
+    <on-ambari-upgrade add="false" delete="false" update="false"/>
+    <property-type></property-type>
+    <value-attributes/>
+    <depends-on>
+        <property>
+            <name>xasecure.audit.destination.hdfs.dir</name>
+            <type>ranger-env</type>
+        </property>
+    </depends-on>
+    <property_depended_by/>
+</property><property require-input="false">
+    <name>xasecure.audit.destination.hdfs.batch.filespool.dir</name>
+    <value>/var/log/hive/audit/hdfs/spool</value>
+    <description>/var/log/hive/audit/hdfs/spool</description>
+    <filename>ranger-hive-audit.xml</filename>
+    <deleted>false</deleted>
+    <on-ambari-upgrade add="false" delete="false" update="false"/>
+    <property-type></property-type>
+    <value-attributes/>
+    <depends-on/>
+    <property_depended_by/>
+</property><property require-input="false">
+    <name>xasecure.audit.destination.solr</name>
+    <value>false</value>
+    <description>Is Solr audit enabled?</description>
+    <display-name>Audit to SOLR</display-name>
+    <filename>ranger-hive-audit.xml</filename>
+    <deleted>false</deleted>
+    <on-ambari-upgrade add="false" delete="false" update="false"/>
+    <property-type></property-type>
+    <value-attributes>
+        <type>boolean</type>
+    </value-attributes>
+    <depends-on>
+        <property>
+            <name>xasecure.audit.destination.solr</name>
+            <type>ranger-env</type>
+        </property>
+    </depends-on>
+    <property_depended_by/>
+</property><property require-input="false">
+    <name>xasecure.audit.destination.solr.urls</name>
+    <value></value>
+    <description>Solr URL</description>
+    <filename>ranger-hive-audit.xml</filename>
+    <deleted>false</deleted>
+    <on-ambari-upgrade add="false" delete="false" update="false"/>
+    <property-type></property-type>
+    <value-attributes>
+        <empty-value-valid>true</empty-value-valid>
+    </value-attributes>
+    <depends-on>
+        <property>
+            <name>ranger.audit.solr.urls</name>
+            <type>ranger-admin-site</type>
+        </property>
+    </depends-on>
+    <property_depended_by/>
+</property><property require-input="false">
+    <name>xasecure.audit.destination.solr.zookeepers</name>
+    <value>NONE</value>
+    <description>Solr Zookeeper string</description>
+    <filename>ranger-hive-audit.xml</filename>
+    <deleted>false</deleted>
+    <on-ambari-upgrade add="false" delete="false" update="false"/>
+    <property-type></property-type>
+    <value-attributes/>
+    <depends-on>
+        <property>
+            <name>ranger.audit.solr.zookeepers</name>
+            <type>ranger-admin-site</type>
+        </property>
+    </depends-on>
+    <property_depended_by/>
+</property><property require-input="false">
+    <name>xasecure.audit.destination.solr.batch.filespool.dir</name>
+    <value>/var/log/hive/audit/solr/spool</value>
+    <description>/var/log/hive/audit/solr/spool</description>
+    <filename>ranger-hive-audit.xml</filename>
+    <deleted>false</deleted>
+    <on-ambari-upgrade add="false" delete="false" update="false"/>
+    <property-type></property-type>
+    <value-attributes/>
+    <depends-on/>
+    <property_depended_by/>
+</property><property require-input="false">
+    <name>xasecure.audit.provider.summary.enabled</name>
+    <value>false</value>
+    <description>Enable Summary audit?</description>
+    <display-name>Audit provider summary enabled</display-name>
+    <filename>ranger-hive-audit.xml</filename>
+    <deleted>false</deleted>
+    <on-ambari-upgrade add="false" delete="false" update="false"/>
+    <property-type></property-type>
+    <value-attributes>
+        <type>boolean</type>
+    </value-attributes>
+    <depends-on/>
+    <property_depended_by/>
+</property></configuration>
