@@ -41,6 +41,7 @@ services:
   ganglia:
     charm: "cs:trusty/ganglia-2"
     num_units: 1
+    series: trusty
     annotations:
       gui-x: "0"
       gui-y: "800"
@@ -54,6 +55,7 @@ services:
   rsyslog:
     charm: "cs:trusty/rsyslog-10"
     num_units: 1
+    series: trusty
     annotations:
       gui-x: "1000"
       gui-y: "800"

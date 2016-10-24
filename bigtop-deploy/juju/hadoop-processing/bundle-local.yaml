@@ -48,12 +48,14 @@ services:
       - "5"
   ganglia-node:
     charm: "cs:~bigdata-dev/xenial/ganglia-node-2"
+    series: trusty
     annotations:
       gui-x: "250"
       gui-y: "400"
   rsyslog:
     charm: "cs:trusty/rsyslog-10"
     num_units: 1
+    series: trusty
     annotations:
       gui-x: "1000"
       gui-y: "800"
