@@ -91,6 +91,7 @@ def install_resourcemanager(namenode):
                 'hadoop::common_yarn::hadoop_rm_port': rm_ipc,
                 'hadoop::common_yarn::hadoop_rm_webapp_port': rm_http,
                 'hadoop::common_yarn::hadoop_rm_bind_host': '0.0.0.0',
+                'hadoop::common_mapred_app::mapreduce_jobhistory_host': '0.0.0.0',
                 'hadoop::common_mapred_app::mapreduce_jobhistory_port': jh_ipc,
                 'hadoop::common_mapred_app::mapreduce_jobhistory_webapp_port': jh_http,
                 'hadoop::common_hdfs::hadoop_namenode_port': hdfs_port,
