@@ -32,8 +32,7 @@ mkdir build
 # Make binary tar
 rm -rf $(find . -type d -name archive-tmp);
 
-phoenix_jars=$(find -iname phoenix-*.jar)
-cp $phoenix_jars build/;
+find -iname phoenix-*.jar -exec cp -n {} build/ \;
 
 cp -R bin build/;
 
