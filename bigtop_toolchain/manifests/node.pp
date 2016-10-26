@@ -14,9 +14,16 @@
 # limitations under the License.
 
 class bigtop_toolchain::node {
-  $node_version = "0.10.44"
+   case $architecture {
+      'amd64' : { $node_version = "0.10.44"
+                  $arch = "x64" }
+      'ppc64le' : { $node_version = "4.4.7" 
+                    $arch = "ppc64le" }
+      'aarch64' : { $node_version = "4.4.7" 
+                    $arch = "arm64" }
+  }
   $brunch_version = "1.7.20"
-  $node_name = "node-v${node_version}-linux-x64"
+  $node_name = "node-v${node_version}-linux-$arch"
   $node_dl_url = 'https://nodejs.org/dist/v$node_version/'
 
   exec { "get node":
