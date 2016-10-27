@@ -15,13 +15,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import unittest
-import re
 import amulet
-import subprocess
+import re
+import time
+import unittest
 
-DEPLOY_TIMEOUT = 1800
-CONFIG_TIMEOUT = 900
+TIMEOUT = 1800
 
 
 class TestBindClientPort(unittest.TestCase):
@@ -34,16 +33,16 @@ class TestBindClientPort(unittest.TestCase):
     def setUpClass(cls):
         cls.d = amulet.Deployment(series='xenial')
 
-        cls.d.add('zookeeper', charm='zookeeper', units=3)
+        cls.d.add('zk-test', charm='zookeeper')
 
-        cls.d.setup(timeout=CONFIG_TIMEOUT)
-        cls.d.sentry.wait(timeout=DEPLOY_TIMEOUT)
-        cls.unit = cls.d.sentry['zookeeper'][0]
+        cls.d.setup(timeout=TIMEOUT)
+        cls.d.sentry.wait_for_messages({'zk-test': re.compile('ready')},
+                                       timeout=TIMEOUT)
+        cls.unit = cls.d.sentry['zk-test'][0]
 
     def test_bind_port(self):
         """
-        Test to verify that we update client port bindings successfully.
-
+        Verify that we update client port bindings successfully.
         """
         network_interface = None
         # Regular expression should handle interfaces in the format
@@ -62,43 +61,35 @@ class TestBindClientPort(unittest.TestCase):
             raise Exception(
                 "Could not find any interface on the unit that matched my "
                 "criteria.")
-        # self.d.configure broken due to change in juju api. TODO:
-        # switch this out when fixed.
-        subprocess.check_call(
-            ['juju', 'config', 'zookeeper', 'network_interface={}'.format(
-                network_interface)])
-        #self.d.configure('zookeeper', {'network_interface': network_interface})
-        self.d.sentry.wait_for_messages(
-            {'zookeeper': 'updating network interface'}, timeout=CONFIG_TIMEOUT)
-        self.d.sentry.wait_for_messages(
-            {'zookeeper': 'ready (3 zk nodes)'}, timeout=CONFIG_TIMEOUT)
+        self.d.configure('zk-test', {'network_interface': network_interface})
+
+        # NB: we used to watch for a maintenance status message, but every now
+        # and then, we'd miss it. Wait 2m to let the config-changed hook settle.
+        time.sleep(120)
         ret = self.unit.run(
             'grep clientPortAddress /etc/zookeeper/conf/zoo.cfg')[0]
+
         matcher = re.compile(
             "^clientPortAddress=\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}.*")
-
         self.assertTrue(matcher.match(ret))
 
         # Verify that smoke tests still run
-        smk_uuid = self.unit.action_do("smoke-test")
-        result = self.d.action_fetch(smk_uuid, full_output=True)
-        # zookeeper smoke-test sets outcome=success on success
-        if (result['outcome'] != "success"):
-            error = "Zookeeper smoke-test failed"
-            amulet.raise_status(amulet.FAIL, msg=error)
+        smk_uuid = self.unit.run_action('smoke-test')
+        # 'zookeeper' smoke takes a while (bigtop tests are slow)
+        result = self.d.action_fetch(smk_uuid, timeout=1800, full_output=True)
+        # actions set status=completed on success
+        if (result['status'] != "completed"):
+            self.fail('Zookeeper smoke-test failed: %s' % result)
 
-    @unittest.skip(
-        'Broken handling of 0.0.0.0 bindings upstream, in Zookeeper project.')
     def test_reset_bindings(self):
         """
         Verify that we can reset the client port bindings to 0.0.0.0
-
         """
-        self.d.configure('zookeeper', {'network_interface': '0.0.0.0'})
-        self.d.sentry.wait_for_messages(
-            {'zookeeper': 'updating network interface'}, timeout=CONFIG_TIMEOUT)
-        self.d.sentry.wait_for_messages(
-            {'zookeeper': 'ready (3 zk nodes)'}, timeout=CONFIG_TIMEOUT)
+        self.d.configure('zk-test', {'network_interface': '0.0.0.0'})
+
+        # NB: we used to watch for a maintenance status message, but every now
+        # and then, we'd miss it. Wait 2m to let the config-changed hook settle.
+        time.sleep(120)
         ret = self.unit.run(
             'grep clientPortAddress /etc/zookeeper/conf/zoo.cfg')[0]
 
@@ -106,9 +97,12 @@ class TestBindClientPort(unittest.TestCase):
         self.assertTrue(matcher.match(ret))
 
         # Verify that smoke tests still run
-        smk_uuid = self.unit.action_do("smoke-test")
-        output = self.d.action_fetch(smk_uuid, full_output=True)
-        assert "completed" in output['status']
+        smk_uuid = self.unit.run_action('smoke-test')
+        # 'zookeeper' smoke takes a while (bigtop tests are slow)
+        result = self.d.action_fetch(smk_uuid, timeout=1800, full_output=True)
+        # actions set status=completed on success
+        if (result['status'] != "completed"):
+            self.fail('Zookeeper smoke-test failed: %s' % result)
 
 
 if __name__ == '__main__':

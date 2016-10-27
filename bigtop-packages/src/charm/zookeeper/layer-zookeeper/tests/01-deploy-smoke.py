@@ -15,15 +15,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import unittest
 import amulet
+import unittest
 
 TIMEOUT = 1800
 
 
 class TestDeploy(unittest.TestCase):
     """
-    Deployment test for Apache Zookkepper quorum
+    Deployment test for Apache Zookeeper quorum
     """
 
     @classmethod
@@ -33,22 +33,20 @@ class TestDeploy(unittest.TestCase):
         cls.d.add('zookeeper', charm='zookeeper', units=3)
 
         cls.d.setup(timeout=TIMEOUT)
-        cls.d.sentry.wait(timeout=TIMEOUT)
+        cls.d.sentry.wait_for_messages({'zookeeper': 'ready (3 units)'},
+                                       timeout=TIMEOUT)
         cls.unit = cls.d.sentry['zookeeper'][0]
 
     def test_deploy(self):
+        """Verify zk quorum is running"""
         output, retcode = self.unit.run("pgrep -a java")
-        assert 'QuorumPeerMain' in output, "zookeeper QuorumPeerMain daemon is not started"
+        assert 'QuorumPeerMain' in output, "Zookeeper QuorumPeerMain daemon is not started"
 
     def test_quorum(self):
-        '''
+        """
         Verify that our peers are talking to each other, and taking on
         appropriate roles.
-
-        '''
-        self.assertEqual(3, len(self.d.sentry['zookeeper']))
-
-        # Verify that everything worked.
+        """
         for unit in self.d.sentry['zookeeper']:
             output, _ = unit.run(
                 "/usr/lib/zookeeper/bin/zkServer.sh status"
@@ -61,14 +59,15 @@ class TestDeploy(unittest.TestCase):
         smk_uuids = []
 
         for unit in self.d.sentry['zookeeper']:
-            smk_uuids.append(unit.action_do("smoke-test"))
+            smk_uuids.append(unit.run_action('smoke-test'))
 
         for smk_uuid in smk_uuids:
-            result = self.d.action_fetch(smk_uuid, full_output=True)
-            # zookeeper smoke-test sets outcome=success on success
-            if (result['outcome'] != "success"):
-                error = "Zookeeper smoke-test failed"
-                amulet.raise_status(amulet.FAIL, msg=error)
+            # 'zookeeper' smoke takes a while (bigtop tests are slow)
+            result = self.d.action_fetch(smk_uuid, timeout=1800, full_output=True)
+            # actions set status=completed on success
+            if (result['status'] != "completed"):
+                self.fail('Zookeeper smoke-test failed: %s' % result)
+
 
 if __name__ == '__main__':
     unittest.main()

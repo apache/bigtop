@@ -18,13 +18,14 @@
 import sys
 sys.path.append('lib')  # Add our helpers to our path.
 
-from charmhelpers.core import hookenv
-from charms.layer.zookeeper import Zookeeper
-from charms.reactive import is_state
+from charmhelpers.core import hookenv  # noqa: E402
+from charms.layer.bigtop_zookeeper import Zookeeper  # noqa: E402
+from charms.reactive import is_state  # noqa: E402
 
 LOG = hookenv.log
 
 LOG("starting restart handler.")
+
 
 def main():
     if not is_state('zookeeper.started'):

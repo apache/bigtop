@@ -153,9 +153,9 @@ The Zookeeper nodes will automatically perform a rolling restart to update the
 Zookeeper quorum without losing any jobs in progress. Once the rolling restart
 has completed, all of the Zookeeper nodes should report the following status:
 
-    ready (n zk nodes)
+    ready (n units)
 
-(Where 'n' is the total number of Zookeeper nodes in your quorum.)
+(Where 'n' is the total number of Zookeeper units in the quorum.)
 
 
 # Integrating
