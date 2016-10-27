@@ -24,12 +24,10 @@ class TestDeployment(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.d = amulet.Deployment(series='trusty')
-        cls.d.add('sparkha', 'spark', units=3)
-        cls.d.add('openjdk', 'openjdk')
-        cls.d.add('zk', 'zookeeper')
+        cls.d = amulet.Deployment(series='xenial')
+        cls.d.add('sparkha', 'spark', units=3, series='xenial')
+        cls.d.add('zk', 'zookeeper', series='xenial')
         cls.d.expose('sparkha')
-        cls.d.relate('openjdk:java', 'sparkha:java')
         cls.d.relate('zk:zookeeper', 'sparkha:zookeeper')
         try:
             cls.d.relate('zk:java', 'openjdk:java')
@@ -40,9 +38,10 @@ class TestDeployment(unittest.TestCase):
         cls.d.setup(timeout=1800)
         cls.d.sentry.wait(timeout=1800)
 
-    @classmethod
-    def tearDownClass(cls):
-        cls.d.remove_service('sparkha')
+    # Disable tearDown until amulet supports it
+    # @classmethod
+    # def tearDownClass(cls):
+    #     cls.d.remove_service('sparkha')
 
     def test_master_selected(self):
         '''

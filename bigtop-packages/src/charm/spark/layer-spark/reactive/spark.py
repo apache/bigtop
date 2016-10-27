@@ -19,7 +19,6 @@ from charmhelpers.core import hookenv
 from charms import leadership
 from charms.reactive.helpers import data_changed
 from jujubigdata import utils
-from charms import layer
 
 
 def set_deployment_mode_state(state):

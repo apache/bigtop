@@ -25,16 +25,15 @@ class TestScaleStandalone(unittest.TestCase):
     """
     @classmethod
     def setUpClass(cls):
-        cls.d = amulet.Deployment(series='trusty')
-        cls.d.add('sparkscale', 'spark', units=3)
-        cls.d.add('openjdk', 'openjdk')
-        cls.d.relate('openjdk:java', 'sparkscale:java')
+        cls.d = amulet.Deployment(series='xenial')
+        cls.d.add('sparkscale', 'spark', units=3, series='xenial')
         cls.d.setup(timeout=1800)
         cls.d.sentry.wait(timeout=1800)
 
-    @classmethod
-    def tearDownClass(cls):
-        cls.d.remove_service('sparkscale')
+    # Disable tearDown until amulet supports it
+    # @classmethod
+    # def tearDownClass(cls):
+    #     cls.d.remove_service('sparkscale')
 
     def test_scaleup(self):
         """
@@ -48,7 +47,7 @@ class TestScaleStandalone(unittest.TestCase):
                                                         "ready (standalone)"]}, timeout=900)
 
         print("Waiting for units to agree on master.")
-        time.sleep(60)
+        time.sleep(120)
 
         spark0_unit = self.d.sentry['sparkscale'][0]
         spark1_unit = self.d.sentry['sparkscale'][1]
@@ -71,7 +70,7 @@ class TestScaleStandalone(unittest.TestCase):
                 break
 
         print("Waiting for the cluster to select a new master.")
-        time.sleep(60)
+        time.sleep(120)
         self.d.sentry.wait_for_messages({"sparkscale": ["ready (standalone - master)",
                                                         "ready (standalone)"]}, timeout=900)
 

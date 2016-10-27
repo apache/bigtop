@@ -24,10 +24,8 @@ class TestDeploy(unittest.TestCase):
     """
     @classmethod
     def setUpClass(cls):
-        cls.d = amulet.Deployment(series='trusty')
-        cls.d.add('openjdk', 'openjdk')
-        cls.d.add('spark', 'spark')
-        cls.d.relate('spark:java', 'openjdk:java')
+        cls.d = amulet.Deployment(series='xenial')
+        cls.d.add('spark', 'spark', series='xenial')
         cls.d.setup(timeout=900)
         cls.d.sentry.wait(timeout=1800)
 
