@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -14,9 +15,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import unittest
 import amulet
 import time
+import unittest
 
 
 class TestScaleStandalone(unittest.TestCase):
@@ -25,16 +26,15 @@ class TestScaleStandalone(unittest.TestCase):
     """
     @classmethod
     def setUpClass(cls):
-        cls.d = amulet.Deployment(series='trusty')
-        cls.d.add('sparkscale', 'spark', units=3)
-        cls.d.add('openjdk', 'openjdk')
-        cls.d.relate('openjdk:java', 'sparkscale:java')
-        cls.d.setup(timeout=1800)
-        cls.d.sentry.wait(timeout=1800)
+        cls.d = amulet.Deployment(series='xenial')
+        cls.d.add('spark-test-scale', 'cs:xenial/spark', units=3)
+        cls.d.setup(timeout=3600)
+        cls.d.sentry.wait(timeout=3600)
 
-    @classmethod
-    def tearDownClass(cls):
-        cls.d.remove_service('sparkscale')
+    # Disable tearDown until amulet supports it
+    # @classmethod
+    # def tearDownClass(cls):
+    #     cls.d.remove_service('spark-test-scale')
 
     def test_scaleup(self):
         """
@@ -43,16 +43,16 @@ class TestScaleStandalone(unittest.TestCase):
         Check that all units agree on the same new master.
         """
         print("Waiting for units to become ready.")
-        self.d.sentry.wait_for_messages({"sparkscale": ["ready (standalone - master)",
-                                                        "ready (standalone)",
-                                                        "ready (standalone)"]}, timeout=900)
+        self.d.sentry.wait_for_messages({"spark-test-scale": ["ready (standalone - master)",
+                                                              "ready (standalone)",
+                                                              "ready (standalone)"]}, timeout=900)
 
         print("Waiting for units to agree on master.")
-        time.sleep(60)
+        time.sleep(120)
 
-        spark0_unit = self.d.sentry['sparkscale'][0]
-        spark1_unit = self.d.sentry['sparkscale'][1]
-        spark2_unit = self.d.sentry['sparkscale'][2]
+        spark0_unit = self.d.sentry['spark-test-scale'][0]
+        spark1_unit = self.d.sentry['spark-test-scale'][1]
+        spark2_unit = self.d.sentry['spark-test-scale'][2]
         (stdout0, errcode0) = spark0_unit.run('grep spark.master /etc/spark/conf/spark-defaults.conf')
         (stdout1, errcode1) = spark1_unit.run('grep spark.master /etc/spark/conf/spark-defaults.conf')
         (stdout2, errcode2) = spark2_unit.run('grep spark.master /etc/spark/conf/spark-defaults.conf')
@@ -61,22 +61,22 @@ class TestScaleStandalone(unittest.TestCase):
         assert stdout1 == stdout2
 
         master_name = ''
-        for unit in self.d.sentry['sparkscale']:
+        for unit in self.d.sentry['spark-test-scale']:
             (stdout, stderr) = unit.run("pgrep -f \"[M]aster\"")
             lines = len(stdout.split('\n'))
             if lines > 0:
                 master_name = unit.info['unit_name']
-                print("Killin master {}".format(master_name))
+                print("Killing master {}".format(master_name))
                 self.d.remove_unit(master_name)
                 break
 
         print("Waiting for the cluster to select a new master.")
-        time.sleep(60)
-        self.d.sentry.wait_for_messages({"sparkscale": ["ready (standalone - master)",
-                                                        "ready (standalone)"]}, timeout=900)
+        time.sleep(120)
+        self.d.sentry.wait_for_messages({"spark-test-scale": ["ready (standalone - master)",
+                                                              "ready (standalone)"]}, timeout=900)
 
-        spark1_unit = self.d.sentry['sparkscale'][0]
-        spark2_unit = self.d.sentry['sparkscale'][1]
+        spark1_unit = self.d.sentry['spark-test-scale'][0]
+        spark2_unit = self.d.sentry['spark-test-scale'][1]
         (stdout1, errcode1) = spark1_unit.run('grep spark.master /etc/spark/conf/spark-defaults.conf')
         (stdout2, errcode2) = spark2_unit.run('grep spark.master /etc/spark/conf/spark-defaults.conf')
         # ensure units agree on the master

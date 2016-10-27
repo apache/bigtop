@@ -1,4 +1,4 @@
-repo: git@github.com:juju-solutions/layer-apache-bigtop-spark.git
+repo: https://github.com/apache/bigtop/tree/master/bigtop-packages/src/charm/spark/layer-spark
 includes:
   - 'layer:apache-bigtop-base'
   - 'layer:hadoop-client'
@@ -8,6 +8,11 @@ includes:
   - 'interface:zookeeper'
   - 'interface:spark-quorum'
 options:
+  basic:
+    # bc and libgfortran3 are needed by spark-bench
+    packages:
+      - 'bc'
+      - 'libgfortran3'
   hadoop-client:
     groups:
         - 'hadoop'
@@ -25,4 +30,3 @@ options:
       spark-webui:
         port: 8080
         exposed_on: 'spark'
-    silent: True

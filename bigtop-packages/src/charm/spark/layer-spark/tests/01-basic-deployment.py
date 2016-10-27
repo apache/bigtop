@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -14,21 +15,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import unittest
 import amulet
+import unittest
 
 
 class TestDeploy(unittest.TestCase):
     """
-    Trivial deployment test for Apache Spark.
+    Simple deployment test for Apache Bigtop Spark.
     """
+    @classmethod
+    def setUpClass(cls):
+        cls.d = amulet.Deployment(series='xenial')
+        cls.d.add('spark', 'cs:xenial/spark')
+        cls.d.setup(timeout=1800)
+        cls.d.sentry.wait(timeout=1800)
+        cls.unit = cls.d.sentry['spark'][0]
 
-    def test_deploy(self):
-        self.d = amulet.Deployment(series='trusty')
-        self.d.add('spark', 'spark')
-        self.d.setup(timeout=900)
-        self.d.sentry.wait(timeout=1800)
-        self.unit = self.d.sentry['spark'][0]
+    def test_deployed(self):
+        """
+        Validate Spark deployed successfully.
+        """
+        self.assertTrue(self.d.deployed)
 
 
 if __name__ == '__main__':

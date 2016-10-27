@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -14,31 +15,32 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import unittest
 import amulet
+import re
+import unittest
 
 
 class TestDeploy(unittest.TestCase):
     """
-    Deployment and smoke-test of Apache Spark.
+    Smoke test for Apache Bigtop Spark.
     """
     @classmethod
     def setUpClass(cls):
-        cls.d = amulet.Deployment(series='trusty')
-        cls.d.add('openjdk', 'openjdk')
-        cls.d.add('spark', 'spark')
-        cls.d.relate('spark:java', 'openjdk:java')
-        cls.d.setup(timeout=900)
-        cls.d.sentry.wait(timeout=1800)
+        cls.d = amulet.Deployment(series='xenial')
+        cls.d.add('spark', 'cs:xenial/spark')
+        cls.d.setup(timeout=1800)
+        cls.d.sentry.wait_for_messages({'spark': re.compile('ready')}, timeout=1800)
+        cls.spark = cls.d.sentry['spark'][0]
 
-    def test_deploy(self):
-        self.d.sentry.wait_for_messages({
-            "spark": "ready (standalone - master)",
-        })
-        spark = self.d.sentry['spark'][0]
-        smk_uuid = spark.action_do("smoke-test")
-        output = self.d.action_fetch(smk_uuid, full_output=True)
-        assert "completed" in output['status']
+    def test_spark(self):
+        """
+        Validate Spark by running the smoke-test action.
+        """
+        uuid = self.spark.run_action('smoke-test')
+        result = self.d.action_fetch(uuid, full_output=True)
+        # action status=completed on success
+        if (result['status'] != "completed"):
+            self.fail('Spark smoke-test failed: %s' % result)
 
 
 if __name__ == '__main__':

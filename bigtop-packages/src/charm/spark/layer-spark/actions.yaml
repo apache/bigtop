@@ -7,22 +7,34 @@ sparkpi:
             description: Number of partitions to use for the SparkPi job
             type: string
             default: "10"
+connectedcomponent:
+    description: Run the Spark Bench ConnectedComponent benchmark.
+decisiontree:
+    description: Run the Spark Bench DecisionTree benchmark.
+kmeans:
+    description: Run the Spark Bench KMeans benchmark.
+linearregression:
+    description: Run the Spark Bench LinearRegression benchmark.
 logisticregression:
     description: Run the Spark Bench LogisticRegression benchmark.
 matrixfactorization:
     description: Run the Spark Bench MatrixFactorization benchmark.
 pagerank:
     description: Run the Spark Bench PageRank benchmark.
+pca:
+    description: Run the Spark Bench PCA benchmark.
+pregeloperation:
+    description: Run the Spark Bench PregelOperation benchmark.
+shortestpaths:
+    description: Run the Spark Bench ShortestPaths benchmark.
 sql:
     description: Run the Spark Bench SQL benchmark.
-streaming:
-    description: Run the Spark Bench Streaming benchmark.
+stronglyconnectedcomponent:
+    description: Run the Spark Bench StronglyConnectedComponent benchmark.
 svdplusplus:
     description: Run the Spark Bench SVDPlusPlus benchmark.
 svm:
     description: Run the Spark Bench SVM benchmark.
-trianglecount:
-    description: Run the Spark Bench TriangleCount benchmark.
 restart-spark-job-history-server:
     description: Restart the Spark job history server.
 start-spark-job-history-server:

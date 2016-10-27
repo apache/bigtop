@@ -13,13 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from charms.reactive import RelationBase, when, when_not, is_state, set_state, remove_state, when_any
-from charms.layer.apache_bigtop_base import get_fqdn
+from charms.layer.apache_bigtop_base import get_fqdn, get_package_version
 from charms.layer.bigtop_spark import Spark
 from charmhelpers.core import hookenv
 from charms import leadership
 from charms.reactive.helpers import data_changed
 from jujubigdata import utils
-from charms import layer
 
 
 def set_deployment_mode_state(state):
@@ -27,9 +26,11 @@ def set_deployment_mode_state(state):
         remove_state('spark.yarn.installed')
     if is_state('spark.standalone.installed'):
         remove_state('spark.standalone.installed')
-    remove_state('spark.ready.to.install')
     set_state('spark.started')
     set_state(state)
+    # set app version string for juju status output
+    spark_version = get_package_version('spark-core') or 'unknown'
+    hookenv.application_version_set(spark_version)
 
 
 def report_status():

@@ -27,6 +27,22 @@ BENCHMARK=`basename $0`
 # Juju actions have an annoying lowercase alphanum restriction, so translate
 # that into the sparkbench name.
 case "${BENCHMARK}" in
+  connectedcomponent)
+    BENCHMARK="ConnectedComponent"
+    RESULT_KEY="ConnectedComponent"
+    ;;
+  decisiontree)
+    BENCHMARK="DecisionTree"
+    RESULT_KEY="DecisionTree"
+    ;;
+  kmeans)
+    BENCHMARK="KMeans"
+    RESULT_KEY="KMeans"
+    ;;
+  linearregression)
+    BENCHMARK="LinearRegression"
+    RESULT_KEY="LinearRegression"
+    ;;
   logisticregression)
     BENCHMARK="LogisticRegression"
     RESULT_KEY="LogisticRegression"
@@ -39,13 +55,25 @@ case "${BENCHMARK}" in
     BENCHMARK="PageRank"
     RESULT_KEY="PageRank"
     ;;
+  pca)
+    BENCHMARK="PCA"
+    RESULT_KEY="PCA"
+    ;;
+  pregeloperation)
+    BENCHMARK="PregelOperation"
+    RESULT_KEY="PregelOperation"
+    ;;
+  shortestpaths)
+    BENCHMARK="ShortestPaths"
+    RESULT_KEY="ShortestPaths"
+    ;;
   sql)
     BENCHMARK="SQL"
     RESULT_KEY="sql"
     ;;
-  streaming)
-    BENCHMARK="Streaming"
-    RESULT_KEY="streaming"
+  stronglyconnectedcomponent)
+    BENCHMARK="StronglyConnectedComponent"
+    RESULT_KEY="StronglyConnectedComponent"
     ;;
   svdplusplus)
     BENCHMARK="SVDPlusPlus"
@@ -55,13 +83,9 @@ case "${BENCHMARK}" in
     BENCHMARK="SVM"
     RESULT_KEY="SVM"
     ;;
-  trianglecount)
-    BENCHMARK="TriangleCount"
-    RESULT_KEY="TriangleCount"
-    ;;
 esac
 
-SB_HOME=/home/ubuntu/spark-bench
+SB_HOME="/home/ubuntu/SparkBench"
 SB_APPS="${SB_HOME}/bin/applications.lst"
 if [ -f "${SB_APPS}" ]; then
   VALID_TEST=`grep -c ^${BENCHMARK} ${SB_HOME}/bin/applications.lst`
@@ -74,22 +98,31 @@ if [ -f "${SB_APPS}" ]; then
     mkdir -p ${RESULT_DIR}
     chown -R ubuntu:ubuntu ${RESULT_DIR}
 
-    # generate data to be used for benchmarking. this must be run as the ubuntu
-    # user to make sure we pick up correct spark environment.
-    echo 'generating data'
-    su ubuntu << EOF
-    . /etc/environment
-    ~/spark-bench/${BENCHMARK}/bin/gen_data.sh &> /dev/null
-EOF
+    # user running the benchmark (spark for local modes; ubuntu for yarn-*)
+    SB_USER="spark"
 
-    # run the benchmark. this must be run as the ubuntu
-    # user to make sure we pick up correct spark environment.
+    # make sure our report file is writable by user + group members
+    SB_REPORT="${SB_HOME}/num/bench-report.dat"
+    if [ -f "${SB_REPORT}" ]; then
+      chmod 664 "${SB_REPORT}"
+    fi
+
+    # Benchmark input data is packed into our sparkbench.tgz, which makes
+    # it available on all spark units. In yarn mode, however, the nodemanagers
+    # act as the spark workers and will not have access to this local data.
+    # In yarn mode, generate our own input data (stored in hdfs) so
+    # nodemanagers can access it.
+    MODE=`config-get spark_execution_mode`
+    if [[ $MODE == "yarn"* ]]; then
+      SB_USER="ubuntu"
+      echo 'generating data'
+      sudo -u ${SB_USER} ${SB_HOME}/${BENCHMARK}/bin/gen_data.sh
+    fi
+
+    # run the benchmark
     echo 'running benchmark'
     benchmark-start
-    su ubuntu << EOF
-    . /etc/environment
-    ~/spark-bench/${BENCHMARK}/bin/run.sh &> /dev/null
-EOF
+    sudo -u ${SB_USER} ${SB_HOME}/${BENCHMARK}/bin/run.sh
     benchmark-finish
 
     # collect our data (the last line in our bench-report.dat file)
@@ -99,7 +132,7 @@ EOF
 
     # send data points and composite score
     benchmark-data 'duration' "${DURATION}" 'secs' 'asc'
-    benchmark-data 'throughput' "${THROUGHPUT}" 'x/sec' 'desc'
+    benchmark-data 'throughput' "${THROUGHPUT}" 'MB/sec' 'desc'
     benchmark-composite "${DURATION}" 'secs' 'asc'
 
     # send raw data (benchmark-raw takes a file)

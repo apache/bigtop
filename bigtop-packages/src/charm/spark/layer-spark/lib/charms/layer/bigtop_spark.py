@@ -12,6 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
 from jujubigdata import utils
 from path import Path
 
@@ -59,9 +60,20 @@ class Spark(object):
         return roles
 
     def install_benchmark(self):
+        """
+        Install and configure SparkBench.
+
+        If config[spark_bench_enabled], fetch, install, and configure
+        SparkBench on initial invocation. Subsequent invocations will skip the
+        fetch/install, but will reconfigure SparkBench since we may need to
+        adjust the data dir (eg: benchmark data is stored in hdfs when spark
+        is in yarn mode; locally in all other execution modes).
+        """
         install_sb = hookenv.config()['spark_bench_enabled']
-        sb_dir = '/home/ubuntu/spark-bench'
+        sb_dir = '/home/ubuntu/SparkBench'
         if install_sb:
+            # Fetch/install on our first go-round, then set unit data so we
+            # don't reinstall every time this function is called.
             if not unitdata.kv().get('spark_bench.installed', False):
                 if utils.cpu_arch() == 'ppc64le':
                     sb_url = hookenv.config()['spark_bench_ppc64le']
@@ -73,16 +85,68 @@ class Spark(object):
                 au = ArchiveUrlFetchHandler()
                 au.install(sb_url, '/home/ubuntu')
 
+                # NB: This block is unused when using one of our sb tgzs. It
+                # may come in handy if people want a tgz that does not expand
+                # to our expected sb_dir.
                 # #####
                 # Handle glob if we use a .tgz that doesn't expand to sb_dir
-                # sb_archive_dir = glob('/home/ubuntu/spark-bench-*')[0]
-                # SparkBench expects to live in ~/spark-bench, so put it there
+                # sb_archive_dir = glob('/home/ubuntu/SparkBench*')[0]
+                # SparkBench expects to live in ~/SparkBench, so put it there
                 # Path(sb_archive_dir).rename(sb_dir)
                 # #####
 
+                # Ensure users in the spark group can write to any subdirectory
+                # of sb_dir (spark needs to write benchmark output there when
+                # running in local modes).
+                host.chownr(Path(sb_dir), 'ubuntu', 'spark', chowntopdir=True)
+                for r, d, f in os.walk(sb_dir):
+                    os.chmod(r, 0o2775)
+
                 unitdata.kv().set('spark_bench.installed', True)
                 unitdata.kv().flush(True)
+
+            # Configure the SB env every time this function is called.
+            sb_conf = '{}/conf'.format(sb_dir)
+            sb_env = Path(sb_conf) / 'env.sh'
+            if not sb_env.exists():
+                (Path(sb_conf) / 'env.sh.template').copy(sb_env)
+
+            # NB: A few notes on configuring SparkBench:
+            # 1. Input data has been pregenerated and packed into the tgz. All
+            # spark cluster members will have this data locally, which enables
+            # us to execute benchmarks in the absense of HDFS. When spark is in
+            # yarn mode, we'll need to generate and store this data in HDFS
+            # so nodemanagers can access it (NMs obviously won't have SB
+            # installed locally). Set DATA_HDFS to a local dir or common HDFS
+            # location depending on our spark execution mode.
+            #
+            # 2. SB tries to SSH to spark workers to purge vmem caches. This
+            # isn't possible in containers, nor is it possible in our env
+            # because we don't distribute ssh keys among cluster members.
+            # Set MC_LIST to an empty string to prevent this behavior.
+            #
+            # 3. Throughout SB, HADOOP_HOME/bin is used as the prefix for the
+            # hdfs command. Bigtop's hdfs lives at /usr/bin/hdfs, so set the
+            # SB HADOOP_HOME accordingly (it's not used for anything else).
+            #
+            # 4. Use our MASTER envar to set the SparkBench SPARK_MASTER url.
+            # It is updated every time we (re)configure spark.
+            mode = hookenv.config()['spark_execution_mode']
+            if mode.startswith('yarn'):
+                sb_data_dir = "hdfs:///user/ubuntu/SparkBench"
+            else:
+                sb_data_dir = "file://{}".format(sb_dir)
+
+            utils.re_edit_in_place(sb_env, {
+                r'^DATA_HDFS *=.*': 'DATA_HDFS="{}"'.format(sb_data_dir),
+                r'^DATASET_DIR *=.*': 'DATASET_DIR="{}/dataset"'.format(sb_dir),
+                r'^MC_LIST *=.*': 'MC_LIST=""',
+                r'.*HADOOP_HOME *=.*': 'HADOOP_HOME="/usr"',
+                r'.*SPARK_HOME *=.*': 'SPARK_HOME="/usr/lib/spark"',
+                r'^SPARK_MASTER *=.*': 'SPARK_MASTER="$MASTER"',
+            })
         else:
+            # config[spark_bench_enabled] is false; remove it
             Path(sb_dir).rmtree_p()
             unitdata.kv().set('spark_bench.installed', False)
             unitdata.kv().flush(True)
@@ -99,6 +163,7 @@ class Spark(object):
         events_dir = dc.path('spark_events')
         events_dir = 'hdfs://{}'.format(events_dir)
         utils.run_as('hdfs', 'hdfs', 'dfs', '-mkdir', '-p', events_dir)
+        utils.run_as('hdfs', 'hdfs', 'dfs', '-chmod', '1777', events_dir)
         utils.run_as('hdfs', 'hdfs', 'dfs', '-chown', '-R', 'ubuntu:spark',
                      events_dir)
         return events_dir
@@ -123,8 +188,6 @@ class Spark(object):
         if not unitdata.kv().get('spark.bootstrapped', False):
             self.setup()
             unitdata.kv().set('spark.bootstrapped', True)
-
-        self.install_benchmark()
 
         master_ip = utils.resolve_private_address(available_hosts['spark-master'])
         hosts = {
@@ -172,10 +235,17 @@ class Spark(object):
         if 'namenode' not in available_hosts:
             # Local event dir (not in HDFS) needs to be 777 so non-spark
             # users can write job history there. It needs to be g+s so
-            # spark (in the spark group) can read non-spark user entries.
-            dc.path('spark_events').chmod(0o2777)
+            # all entries will be readable by spark (in the spark group).
+            # It needs to be +t so users cannot remove files they don't own.
+            dc.path('spark_events').chmod(0o3777)
 
         self.patch_worker_master_url(master_ip)
+
+        # SparkBench looks for the spark master in /etc/environment
+        with utils.environment_edit_in_place('/etc/environment') as env:
+            env['MASTER'] = self.get_master_url(master_ip)
+        # Install SB (subsequent calls will reconfigure existing install)
+        self.install_benchmark()
 
     def patch_worker_master_url(self, master_ip):
         '''
