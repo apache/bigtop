@@ -39,7 +39,7 @@ services:
     to:
       - "4"
   ganglia:
-    charm: "cs:trusty/ganglia-2"
+    charm: "cs:~bigdata-dev/xenial/ganglia-5"
     num_units: 1
     annotations:
       gui-x: "0"
@@ -47,22 +47,20 @@ services:
     to:
       - "5"
   ganglia-node:
-    charm: "cs:~bigdata-dev/xenial/ganglia-node-2"
-    series: trusty
+    charm: "cs:~bigdata-dev/xenial/ganglia-node-6"
     annotations:
       gui-x: "250"
       gui-y: "400"
   rsyslog:
-    charm: "cs:trusty/rsyslog-10"
+    charm: "cs:~bigdata-dev/xenial/rsyslog-6"
     num_units: 1
-    series: trusty
     annotations:
       gui-x: "1000"
       gui-y: "800"
     to:
       - "5"
   rsyslog-forwarder-ha:
-    charm: "cs:~bigdata-dev/xenial/rsyslog-forwarder-ha-2"
+    charm: "cs:~bigdata-dev/xenial/rsyslog-forwarder-ha-7"
     annotations:
       gui-x: "750"
       gui-y: "400"
@@ -86,20 +84,20 @@ relations:
   - ["rsyslog:aggregator", "rsyslog-forwarder-ha:syslog"]
 machines:
   "0":
-    constraints: "mem=7G"
+    constraints: "mem=7G root-disk=32G"
     series: "xenial"
   "1":
-    constraints: "mem=7G"
+    constraints: "mem=7G root-disk=32G"
     series: "xenial"
   "2":
-    constraints: "mem=7G"
+    constraints: "mem=7G root-disk=32G"
     series: "xenial"
   "3":
-    constraints: "mem=7G"
+    constraints: "mem=7G root-disk=32G"
     series: "xenial"
   "4":
     constraints: "mem=3G"
     series: "xenial"
   "5":
     constraints: "mem=3G"
-    series: "trusty"
+    series: "xenial"
