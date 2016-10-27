@@ -36,8 +36,7 @@ import org.apache.commons.logging.LogFactory;
 public class HiveHelper {
 	
 	private static final Log LOG = LogFactory.getLog(HiveHelper.class.getName());
-	
-	
+		
 	public static Map<String, String> execCommand(CommandLine commandline) {
 		
 		System.out.println("Executing command:");
@@ -48,6 +47,7 @@ public class HiveHelper {
 			env = EnvironmentUtils.getProcEnvironment();
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
+			LOG.debug("Failed to get process environment: "+ e1.getMessage());
 			e1.printStackTrace();
 		}
 
@@ -63,10 +63,20 @@ public class HiveHelper {
 			executor.execute(commandline, env, resultHandler);
 		} catch (ExecuteException e) {
 			// TODO Auto-generated catch block
+			LOG.debug("Failed to execute command with exit value: "+ String.valueOf(resultHandler.getExitValue()));
+			LOG.debug("outputStream: "+ outputStream.toString());
+			entry.put("exitValue", String.valueOf(resultHandler.getExitValue()));
+			entry.put("outputStream", outputStream.toString() + e.getMessage());
 			e.printStackTrace();
+			return entry;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
+			LOG.debug("Failed to execute command with exit value: "+ String.valueOf(resultHandler.getExitValue()));
+			LOG.debug("outputStream: "+ outputStream.toString());
+			entry.put("exitValue", String.valueOf(resultHandler.getExitValue()));
+			entry.put("outputStream", outputStream.toString() + e.getMessage());
 			e.printStackTrace();
+			return entry;
 		}
 		
 		try {
