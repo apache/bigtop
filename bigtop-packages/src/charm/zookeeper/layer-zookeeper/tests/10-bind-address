@@ -34,7 +34,7 @@ class TestBindClientPort(unittest.TestCase):
     def setUpClass(cls):
         cls.d = amulet.Deployment(series='xenial')
 
-        cls.d.add('zookeeper', charm='zookeeper', units=3)
+        cls.d.add('zookeeper', charm='cs:xenial/zookeeper', units=3)
 
         cls.d.setup(timeout=CONFIG_TIMEOUT)
         cls.d.sentry.wait(timeout=DEPLOY_TIMEOUT)
@@ -43,7 +43,6 @@ class TestBindClientPort(unittest.TestCase):
     def test_bind_port(self):
         """
         Test to verify that we update client port bindings successfully.
-
         """
         network_interface = None
         # Regular expression should handle interfaces in the format
@@ -67,7 +66,7 @@ class TestBindClientPort(unittest.TestCase):
         subprocess.check_call(
             ['juju', 'config', 'zookeeper', 'network_interface={}'.format(
                 network_interface)])
-        #self.d.configure('zookeeper', {'network_interface': network_interface})
+        # self.d.configure('zookeeper', {'network_interface': network_interface})
         self.d.sentry.wait_for_messages(
             {'zookeeper': 'updating network interface'}, timeout=CONFIG_TIMEOUT)
         self.d.sentry.wait_for_messages(
@@ -80,12 +79,11 @@ class TestBindClientPort(unittest.TestCase):
         self.assertTrue(matcher.match(ret))
 
         # Verify that smoke tests still run
-        smk_uuid = self.unit.action_do("smoke-test")
+        smk_uuid = self.unit.run_action('smoke-test')
         result = self.d.action_fetch(smk_uuid, full_output=True)
-        # zookeeper smoke-test sets outcome=success on success
-        if (result['outcome'] != "success"):
-            error = "Zookeeper smoke-test failed"
-            amulet.raise_status(amulet.FAIL, msg=error)
+        # actions set status=completed on success
+        if (result['status'] != "completed"):
+            self.fail('Zookeeper smoke-test failed: %s' % result)
 
     @unittest.skip(
         'Broken handling of 0.0.0.0 bindings upstream, in Zookeeper project.')
@@ -106,7 +104,7 @@ class TestBindClientPort(unittest.TestCase):
         self.assertTrue(matcher.match(ret))
 
         # Verify that smoke tests still run
-        smk_uuid = self.unit.action_do("smoke-test")
+        smk_uuid = self.unit.run_action('smoke-test')
         output = self.d.action_fetch(smk_uuid, full_output=True)
         assert "completed" in output['status']
 
