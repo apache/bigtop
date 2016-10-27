@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -14,9 +15,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import unittest
 import amulet
 import time
+import unittest
 
 
 class TestScaleStandalone(unittest.TestCase):
@@ -26,7 +27,7 @@ class TestScaleStandalone(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.d = amulet.Deployment(series='xenial')
-        cls.d.add('sparkscale', 'spark', units=3, series='xenial')
+        cls.d.add('sparkscale', 'cs:xenial/spark', units=3)
         cls.d.setup(timeout=1800)
         cls.d.sentry.wait(timeout=1800)
 

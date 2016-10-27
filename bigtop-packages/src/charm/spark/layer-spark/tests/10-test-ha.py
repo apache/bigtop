@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -15,48 +16,46 @@
 # limitations under the License.
 
 import amulet
+import requests
 import time
 import unittest
-import requests
 
 
 class TestDeployment(unittest.TestCase):
-
+    """
+    Test scaling of Apache Spark in HA mode.
+    """
     @classmethod
     def setUpClass(cls):
         cls.d = amulet.Deployment(series='xenial')
-        cls.d.add('sparkha', 'spark', units=3, series='xenial')
-        cls.d.add('zk', 'zookeeper', series='xenial')
-        cls.d.expose('sparkha')
-        cls.d.relate('zk:zookeeper', 'sparkha:zookeeper')
-        try:
-            cls.d.relate('zk:java', 'openjdk:java')
-        except ValueError:
-            # No need to related older versions of the zookeeper charm
-            # to java.
-            pass
+        cls.d.add('spark', 'cs:xenial/spark', units=3)
+        cls.d.add('zookeeper', 'cs:xenial/zookeeper')
+        cls.d.relate('zookeeper:zookeeper', 'spark:zookeeper')
+        cls.d.expose('spark')
         cls.d.setup(timeout=1800)
         cls.d.sentry.wait(timeout=1800)
 
     # Disable tearDown until amulet supports it
     # @classmethod
     # def tearDownClass(cls):
-    #     cls.d.remove_service('sparkha')
+    #     cls.d.remove_service('spark')
 
     def test_master_selected(self):
-        '''
+        """
         Wait for all three spark units to agree on a master leader.
         Remove the leader unit.
         Check that a new leader is elected.
-        '''
-        self.d.sentry.wait_for_messages({"sparkha": ["ready (standalone - HA)",
-                                                     "ready (standalone - HA)",
-                                                     "ready (standalone - HA)"]}, timeout=900)
-        # Give some slack for the spark units to elect a master
-        time.sleep(60)
+        """
+        self.d.sentry.wait_for_messages({"spark": ["ready (standalone - HA)",
+                                                   "ready (standalone - HA)",
+                                                   "ready (standalone - HA)"]}, timeout=900)
+
+        print("Waiting for units to agree on master.")
+        time.sleep(120)
+
         master = ''
         masters_count = 0
-        for unit in self.d.sentry['sparkha']:
+        for unit in self.d.sentry['spark']:
             ip = unit.info['public-address']
             url = 'http://{}:8080'.format(ip)
             homepage = requests.get(url)
@@ -72,11 +71,11 @@ class TestDeployment(unittest.TestCase):
         self.d.remove_unit(master)
         time.sleep(120)
 
-        self.d.sentry.wait_for_messages({"sparkha": ["ready (standalone - HA)",
-                                                     "ready (standalone - HA)"]}, timeout=900)
+        self.d.sentry.wait_for_messages({"spark": ["ready (standalone - HA)",
+                                                   "ready (standalone - HA)"]}, timeout=900)
 
         masters_count = 0
-        for unit in self.d.sentry['sparkha']:
+        for unit in self.d.sentry['spark']:
             ip = unit.info['public-address']
             url = 'http://{}:8080'.format(ip)
             homepage = requests.get(url)
