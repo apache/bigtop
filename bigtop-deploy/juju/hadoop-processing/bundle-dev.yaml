@@ -39,30 +39,28 @@ services:
     to:
       - "4"
   ganglia:
-    charm: "cs:trusty/ganglia-2"
+    charm: "cs:~bigdata-dev/xenial/ganglia-2"
     num_units: 1
-    series: trusty
     annotations:
       gui-x: "0"
       gui-y: "800"
     to:
       - "5"
   ganglia-node:
-    charm: "cs:~bigdata-dev/xenial/ganglia-node-2"
+    charm: "cs:~bigdata-dev/xenial/ganglia-node-4"
     annotations:
       gui-x: "250"
       gui-y: "400"
   rsyslog:
-    charm: "cs:trusty/rsyslog-10"
+    charm: "cs:~bigdata-dev/xenial/rsyslog-5"
     num_units: 1
-    series: trusty
     annotations:
       gui-x: "1000"
       gui-y: "800"
     to:
       - "5"
   rsyslog-forwarder-ha:
-    charm: "cs:~bigdata-dev/xenial/rsyslog-forwarder-ha-2"
+    charm: "cs:~bigdata-dev/xenial/rsyslog-forwarder-ha-6"
     annotations:
       gui-x: "750"
       gui-y: "400"
@@ -102,4 +100,4 @@ machines:
     series: "xenial"
   "5":
     constraints: "mem=3G"
-    series: "trusty"
+    series: "xenial"

@@ -33,6 +33,17 @@ class TestBundle(unittest.TestCase):
         with open(cls.bundle_file) as f:
             bun = f.read()
         bundle = yaml.safe_load(bun)
+
+        # NB: strip machine ('to') placement out. amulet loses our machine spec
+        # somewhere between yaml and json; without that spec, charms specifying
+        # machine placement will not deploy. This is ok for now because all
+        # charms in this bundle are using 'reset: false' so we'll already
+        # have our deployment just the way we want it by the time this test
+        # runs. However, it's bad. Somebody tell marco.
+        for service, service_config in bundle['services'].items():
+            if 'to' in service_config:
+                del service_config['to']
+
         cls.d.load(bundle)
         cls.d.setup(timeout=3600)
         cls.d.sentry.wait_for_messages({'client': 'ready'}, timeout=3600)
@@ -69,33 +80,37 @@ class TestBundle(unittest.TestCase):
 
     def test_hdfs(self):
         """Validates mkdir, ls, chmod, and rm HDFS operations."""
-        unit_name = self.hdfs.info['unit_name']
-        uuid = self.d.action_do(unit_name, 'smoke-test')
-        result = self.d.action_fetch(uuid)
+        uuid = self.hdfs.run_action('smoke-test')
+        result = self.d.action_fetch(uuid, timeout=600, full_output=True)
         # hdfs smoke-test sets outcome=success on success
-        if (result['outcome'] != "success"):
-            error = "HDFS smoke-test failed"
-            amulet.raise_status(amulet.FAIL, msg=error)
+        if (result['status'] != "completed"):
+            self.fail('HDFS smoke-test failed: %s' % result)
 
     def test_yarn(self):
-        """Validates YARN using the Bigtop 'yarn' smoke test."""
-        unit_name = self.yarn.info['unit_name']
-        uuid = self.d.action_do(unit_name, 'smoke-test')
-        result = self.d.action_fetch(uuid)
+        """
+        Validates YARN using the Bigtop 'yarn' smoke test.
+
+        Bigtop tests download lots of prereqs, so this may take a while. Give
+        it 30m.
+        """
+        uuid = self.yarn.run_action('smoke-test')
+        result = self.d.action_fetch(uuid, timeout=1800, full_output=True)
         # yarn smoke-test sets outcome=success on success
-        if (result['outcome'] != "success"):
-            error = "YARN smoke-test failed"
-            amulet.raise_status(amulet.FAIL, msg=error)
+        if (result['status'] != "completed"):
+            self.fail('YARN smoke-test failed: %s' % result)
 
     def test_slave(self):
-        """Validates slave using the Bigtop 'hdfs' and 'mapred' smoke test."""
-        unit_name = self.slave.info['unit_name']
-        uuid = self.d.action_do(unit_name, 'smoke-test')
-        result = self.d.action_fetch(uuid)
+        """
+        Validates slave using the Bigtop 'hdfs' and 'mapred' smoke test.
+
+        Bigtop tests download lots of prereqs, so this may take a while. Give
+        it 30m.
+        """
+        uuid = self.slave.run_action('smoke-test')
+        result = self.d.action_fetch(uuid, timeout=1800, full_output=True)
         # slave smoke-test sets outcome=success on success
-        if (result['outcome'] != "success"):
-            error = "Slave smoke-test failed"
-            amulet.raise_status(amulet.FAIL, msg=error)
+        if (result['status'] != "completed"):
+            self.fail('Slave smoke-test failed: %s' % result)
 
 
 if __name__ == '__main__':
