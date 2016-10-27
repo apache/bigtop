@@ -93,12 +93,18 @@ stack_supports_ranger_audit_db = check_stack_feature(StackFeature.RANGER_AUDIT_D
 component_directory = status_params.component_directory
 component_directory_interactive = status_params.component_directory_interactive
 
-hadoop_home = format('{stack_root}/current/hadoop-client')
-hive_bin = format('{stack_root}/current/{component_directory}/bin')
-hive_schematool_ver_bin = format('{stack_root}/{version}/hive/bin')
-hive_schematool_bin = format('{stack_root}/current/{component_directory}/bin')
-hive_lib = format('{stack_root}/current/{component_directory}/lib')
-hive_version_lib = format('{stack_root}/{version}/hive/lib')
+hadoop_home = '/usr/lib/hadoop'
+hive_bin = '/usr/lib/hive/bin'
+hive_schematool_ver_bin = '/usr/lib/hive/bin'
+hive_schematool_bin = '/usr/lib/hive/bin'
+hive_lib = '/usr/lib/hive/lib'
+hive_version_lib = '/usr/lib/hive/lib'
+#hadoop_home = format('{stack_root}/current/hadoop-client')
+#hive_bin = format('{stack_root}/current/{component_directory}/bin')
+#hive_schematool_ver_bin = format('{stack_root}/{version}/hive/bin')
+#hive_schematool_bin = format('{stack_root}/current/{component_directory}/bin')
+#hive_lib = format('{stack_root}/current/{component_directory}/lib')
+#hive_version_lib = format('{stack_root}/{version}/hive/lib')
 hive_var_lib = '/var/lib/hive'
 hive_user_home_dir = "/home/hive"
 
@@ -167,10 +173,6 @@ config_dir = '/etc/hive-webhcat/conf'
 hcat_lib = '/usr/lib/hive-hcatalog/share/hcatalog'
 webhcat_bin_dir = '/usr/lib/hive-hcatalog/sbin'
 
-# there are no client versions of these, use server versions directly
-hcat_lib = format('{stack_root}/current/hive-webhcat/share/hcatalog')
-webhcat_bin_dir = format('{stack_root}/current/hive-webhcat/sbin')
-
 # --- Tarballs ---
 # DON'T CHANGE THESE VARIABLE NAMES
 # Values don't change from those in copy_tarball.py
@@ -189,17 +191,14 @@ tarballs_mode = 0444
 
 purge_tables = "false"
 # Starting from stack version for feature hive_purge_table drop should be executed with purge
-if check_stack_feature(StackFeature.HIVE_PURGE_TABLE, version_for_stack_feature_checks):
-  purge_tables = 'true'
+purge_tables = 'true'
 
-if check_stack_feature(StackFeature.HIVE_WEBHCAT_SPECIFIC_CONFIGS, version_for_stack_feature_checks):
-  # this is NOT a typo.  Configs for hcatalog/webhcat point to a
-  # specific directory which is NOT called 'conf'
-  hcat_conf_dir = format('{stack_root}/current/hive-webhcat/etc/hcatalog')
-  config_dir = format('{stack_root}/current/hive-webhcat/etc/webhcat')
+# this is NOT a typo.  Configs for hcatalog/webhcat point to a
+# specific directory which is NOT called 'conf'
+hcat_conf_dir = format('{stack_root}/current/hive-webhcat/etc/hcatalog')
+config_dir = format('{stack_root}/current/hive-webhcat/etc/webhcat')
 
-if check_stack_feature(StackFeature.HIVE_METASTORE_SITE_SUPPORT, version_for_stack_feature_checks):
-  hive_metastore_site_supported = True
+hive_metastore_site_supported = True
 
 execute_path = os.environ['PATH'] + os.pathsep + hive_bin + os.pathsep + hadoop_bin_dir
 
@@ -395,10 +394,7 @@ start_metastore_path = format("{tmp_dir}/start_metastore_script")
 hadoop_heapsize = config['configurations']['hadoop-env']['hadoop_heapsize']
 
 if 'role' in config and config['role'] in ["HIVE_SERVER", "HIVE_METASTORE"]:
-  if check_stack_feature(StackFeature.HIVE_ENV_HEAPSIZE, version_for_stack_feature_checks):
-    hive_heapsize = config['configurations']['hive-env']['hive.heapsize']
-  else:
-    hive_heapsize = config['configurations']['hive-site']['hive.heapsize']
+  hive_heapsize = config['configurations']['hive-env']['hive.heapsize']
 else:
   hive_heapsize = config['configurations']['hive-env']['hive.client.heapsize']
 
