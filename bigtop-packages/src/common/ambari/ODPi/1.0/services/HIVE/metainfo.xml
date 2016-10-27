@@ -3,7 +3,7 @@
   <services><service>
     <name>HIVE</name>
     <displayName>Hive</displayName>
-    <version>1.2.1</version>
+    <version>1.2.1+odpi</version>
     <comment>Data warehouse system for ad-hoc queries &amp; analysis of large datasets and table &amp; storage management service</comment>
     <components>
         <component>
@@ -12,7 +12,7 @@
             <category>CLIENT</category>
             <deleted>false</deleted>
             <cardinality>0+</cardinality>
-            <versionAdvertised>true</versionAdvertised>
+            <versionAdvertised>false</versionAdvertised>
             <versionAdvertisedInternal>false</versionAdvertisedInternal>
             <commandScript>
                 <script>scripts/hcat_client.py</script>
@@ -37,7 +37,7 @@
             <category>MASTER</category>
             <deleted>false</deleted>
             <cardinality>1+</cardinality>
-            <versionAdvertisedInternal>true</versionAdvertisedInternal>
+            <versionAdvertisedInternal>false</versionAdvertisedInternal>
             <commandScript>
                 <script>scripts/hive_server.py</script>
                 <scriptType>PYTHON</scriptType>
@@ -108,7 +108,7 @@
             <category>CLIENT</category>
             <deleted>false</deleted>
             <cardinality>1+</cardinality>
-            <versionAdvertised>true</versionAdvertised>
+            <versionAdvertised>false</versionAdvertised>
             <versionAdvertisedInternal>false</versionAdvertisedInternal>
             <commandScript>
                 <script>scripts/hive_client.py</script>
@@ -148,7 +148,7 @@
             <category>MASTER</category>
             <deleted>false</deleted>
             <cardinality>1+</cardinality>
-            <versionAdvertisedInternal>true</versionAdvertisedInternal>
+            <versionAdvertisedInternal>false</versionAdvertisedInternal>
             <commandScript>
                 <script>scripts/webhcat_server.py</script>
                 <scriptType>PYTHON</scriptType>
@@ -272,7 +272,7 @@
             <category>MASTER</category>
             <deleted>false</deleted>
             <cardinality>1+</cardinality>
-            <versionAdvertisedInternal>true</versionAdvertisedInternal>
+            <versionAdvertisedInternal>false</versionAdvertisedInternal>
             <commandScript>
                 <script>scripts/hive_metastore.py</script>
                 <scriptType>PYTHON</scriptType>
@@ -295,149 +295,8 @@
             <recovery_enabled>false</recovery_enabled>
             <reassignAllowed>true</reassignAllowed>
         </component>
-        <component>
-            <name>HIVE_SERVER_INTERACTIVE</name>
-            <displayName>HiveServer2 Interactive</displayName>
-            <category>MASTER</category>
-            <deleted>false</deleted>
-            <cardinality>0-1</cardinality>
-            <versionAdvertised>true</versionAdvertised>
-            <versionAdvertisedInternal>false</versionAdvertisedInternal>
-            <commandScript>
-                <script>scripts/hive_server_interactive.py</script>
-                <scriptType>PYTHON</scriptType>
-                <timeout>0</timeout>
-            </commandScript>
-            <customCommands>
-                <customCommand>
-                    <name>RESTART_LLAP</name>
-                    <commandScript>
-                        <script>scripts/hive_server_interactive.py</script>
-                        <scriptType>PYTHON</scriptType>
-                        <timeout>600</timeout>
-                    </commandScript>
-                    <background>false</background>
-                </customCommand>
-            </customCommands>
-            <dependencies>
-                <dependency>
-                    <auto-deploy>
-                        <co-locate>HIVE/HIVE_SERVER_INTERACTIVE</co-locate>
-                        <coLocate>HIVE/HIVE_SERVER_INTERACTIVE</coLocate>
-                        <enabled>true</enabled>
-                    </auto-deploy>
-                    <autoDeploy>
-                        <co-locate>HIVE/HIVE_SERVER_INTERACTIVE</co-locate>
-                        <coLocate>HIVE/HIVE_SERVER_INTERACTIVE</coLocate>
-                        <enabled>true</enabled>
-                    </autoDeploy>
-                    <name>ZOOKEEPER/ZOOKEEPER_SERVER</name>
-                    <scope>cluster</scope>
-                </dependency>
-                <dependency>
-                    <auto-deploy>
-                        <co-locate>HIVE/HIVE_SERVER_INTERACTIVE</co-locate>
-                        <coLocate>HIVE/HIVE_SERVER_INTERACTIVE</coLocate>
-                        <enabled>true</enabled>
-                    </auto-deploy>
-                    <autoDeploy>
-                        <co-locate>HIVE/HIVE_SERVER_INTERACTIVE</co-locate>
-                        <coLocate>HIVE/HIVE_SERVER_INTERACTIVE</coLocate>
-                        <enabled>true</enabled>
-                    </autoDeploy>
-                    <name>YARN/YARN_CLIENT</name>
-                    <scope>host</scope>
-                </dependency>
-                <dependency>
-                    <auto-deploy>
-                        <co-locate>HIVE/HIVE_SERVER_INTERACTIVE</co-locate>
-                        <coLocate>HIVE/HIVE_SERVER_INTERACTIVE</coLocate>
-                        <enabled>true</enabled>
-                    </auto-deploy>
-                    <autoDeploy>
-                        <co-locate>HIVE/HIVE_SERVER_INTERACTIVE</co-locate>
-                        <coLocate>HIVE/HIVE_SERVER_INTERACTIVE</coLocate>
-                        <enabled>true</enabled>
-                    </autoDeploy>
-                    <name>HDFS/HDFS_CLIENT</name>
-                    <scope>host</scope>
-                </dependency>
-                <dependency>
-                    <auto-deploy>
-                        <co-locate>HIVE/HIVE_SERVER_INTERACTIVE</co-locate>
-                        <coLocate>HIVE/HIVE_SERVER_INTERACTIVE</coLocate>
-                        <enabled>true</enabled>
-                    </auto-deploy>
-                    <autoDeploy>
-                        <co-locate>HIVE/HIVE_SERVER_INTERACTIVE</co-locate>
-                        <coLocate>HIVE/HIVE_SERVER_INTERACTIVE</coLocate>
-                        <enabled>true</enabled>
-                    </autoDeploy>
-                    <name>MAPREDUCE2/MAPREDUCE2_CLIENT</name>
-                    <scope>host</scope>
-                </dependency>
-                <dependency>
-                    <auto-deploy>
-                        <co-locate>HIVE/HIVE_SERVER_INTERACTIVE</co-locate>
-                        <coLocate>HIVE/HIVE_SERVER_INTERACTIVE</coLocate>
-                        <enabled>true</enabled>
-                    </auto-deploy>
-                    <autoDeploy>
-                        <co-locate>HIVE/HIVE_SERVER_INTERACTIVE</co-locate>
-                        <coLocate>HIVE/HIVE_SERVER_INTERACTIVE</coLocate>
-                        <enabled>true</enabled>
-                    </autoDeploy>
-                    <name>TEZ/TEZ_CLIENT</name>
-                    <scope>host</scope>
-                </dependency>
-                <dependency>
-                    <auto-deploy>
-                        <co-locate>HIVE/HIVE_SERVER_INTERACTIVE</co-locate>
-                        <coLocate>HIVE/HIVE_SERVER_INTERACTIVE</coLocate>
-                        <enabled>true</enabled>
-                    </auto-deploy>
-                    <autoDeploy>
-                        <co-locate>HIVE/HIVE_SERVER_INTERACTIVE</co-locate>
-                        <coLocate>HIVE/HIVE_SERVER_INTERACTIVE</coLocate>
-                        <enabled>true</enabled>
-                    </autoDeploy>
-                    <name>PIG/PIG</name>
-                    <scope>host</scope>
-                </dependency>
-                <dependency>
-                    <auto-deploy>
-                        <co-locate>HIVE/HIVE_SERVER_INTERACTIVE</co-locate>
-                        <coLocate>HIVE/HIVE_SERVER_INTERACTIVE</coLocate>
-                        <enabled>true</enabled>
-                    </auto-deploy>
-                    <autoDeploy>
-                        <co-locate>HIVE/HIVE_SERVER_INTERACTIVE</co-locate>
-                        <coLocate>HIVE/HIVE_SERVER_INTERACTIVE</coLocate>
-                        <enabled>true</enabled>
-                    </autoDeploy>
-                    <name>SLIDER/SLIDER</name>
-                    <scope>host</scope>
-                </dependency>
-            </dependencies>
-            <configuration-dependencies>
-                <config-type>beeline-log4j2</config-type>
-                <config-type>hive-exec-log4j2</config-type>
-                <config-type>hive-log4j2</config-type>
-                <config-type>hive-site</config-type>
-                <config-type>hive-interactive-site</config-type>
-                <config-type>tez-interactive-site</config-type>
-                <config-type>hiveserver2-interactive-site</config-type>
-                <config-type>hive-interactive-env</config-type>
-                <config-type>llap-cli-log4j2</config-type>
-                <config-type>llap-daemon-log4j</config-type>
-            </configuration-dependencies>
-            <recovery_enabled>false</recovery_enabled>
-        </component>
     </components>
-    <deleted>false</deleted>
     <configuration-dependencies>
-        <config-type>application-properties</config-type>
-        <config-type>hive-atlas-application.properties</config-type>
         <config-type>hive-log4j</config-type>
         <config-type>hive-exec-log4j</config-type>
         <config-type>tez-site</config-type>
@@ -445,12 +304,7 @@
         <config-type>hivemetastore-site.xml</config-type>
         <config-type>webhcat-site</config-type>
         <config-type>webhcat-env</config-type>
-        <config-type>ranger-hive-plugin-properties</config-type>
-        <config-type>ranger-hive-audit</config-type>
-        <config-type>ranger-hive-policymgr-ssl</config-type>
-        <config-type>ranger-hive-security</config-type>
         <config-type>mapred-site</config-type>
-        <config-type>application.properties</config-type>
     </configuration-dependencies>
     <widgetsFileName>widgets.json</widgetsFileName>
     <metricsFileName>metrics.json</metricsFileName>
