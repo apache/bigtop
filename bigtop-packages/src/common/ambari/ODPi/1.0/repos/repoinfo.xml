@@ -18,15 +18,15 @@
 <reposinfo>
   <os family="redhat6">
     <repo>
-      <baseurl>http://repo.odpi.org/ODPi/1.0/centos-6/</baseurl>
-      <repoid>ODPi-1.0</repoid>
+      <baseurl>http://repo.odpi.org/ODPi/trunk/centos-6/</baseurl>
+      <repoid>ODPi-trunk</repoid>
       <reponame>ODPi</reponame>
     </repo>
   </os>
   <os family="ubuntu14">
     <repo>
-      <baseurl>http://repo.odpi.org/ODPi/1.0/ubuntu-14.04/apt</baseurl>
-      <repoid>ODPi-1.0</repoid>
+      <baseurl>http://repo.odpi.org/ODPi/trunk/ubuntu-14.04/apt</baseurl>
+      <repoid>ODPi-trunk</repoid>
       <reponame>odpi</reponame>
     </repo>
   </os>
