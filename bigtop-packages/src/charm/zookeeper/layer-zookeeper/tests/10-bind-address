@@ -17,10 +17,10 @@
 
 import amulet
 import re
+import time
 import unittest
 
-DEPLOY_TIMEOUT = 1800
-CONFIG_TIMEOUT = 900
+TIMEOUT = 1800
 
 
 class TestBindClientPort(unittest.TestCase):
@@ -35,14 +35,14 @@ class TestBindClientPort(unittest.TestCase):
 
         cls.d.add('zookeeper', charm='cs:xenial/zookeeper', units=3)
 
-        cls.d.setup(timeout=DEPLOY_TIMEOUT)
+        cls.d.setup(timeout=TIMEOUT)
         cls.d.sentry.wait_for_messages({'zookeeper': 'ready (3 units)'},
-                                       timeout=DEPLOY_TIMEOUT)
+                                       timeout=TIMEOUT)
         cls.unit = cls.d.sentry['zookeeper'][0]
 
     def test_bind_port(self):
         """
-        Test to verify that we update client port bindings successfully.
+        Verify that we update client port bindings successfully.
         """
         network_interface = None
         # Regular expression should handle interfaces in the format
@@ -62,15 +62,15 @@ class TestBindClientPort(unittest.TestCase):
                 "Could not find any interface on the unit that matched my "
                 "criteria.")
         self.d.configure('zookeeper', {'network_interface': network_interface})
-        self.d.sentry.wait_for_messages(
-            {'zookeeper': 'updating network interface'}, timeout=CONFIG_TIMEOUT)
-        self.d.sentry.wait_for_messages(
-            {'zookeeper': 'ready (3 units)'}, timeout=CONFIG_TIMEOUT)
+
+        # NB: we used to watch for a maintenance status message, but every now
+        # and then, we'd miss it. Wait 2m to let the config-changed hook settle.
+        time.sleep(120)
         ret = self.unit.run(
             'grep clientPortAddress /etc/zookeeper/conf/zoo.cfg')[0]
+
         matcher = re.compile(
             "^clientPortAddress=\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}.*")
-
         self.assertTrue(matcher.match(ret))
 
         # Verify that smoke tests still run
@@ -81,18 +81,15 @@ class TestBindClientPort(unittest.TestCase):
         if (result['status'] != "completed"):
             self.fail('Zookeeper smoke-test failed: %s' % result)
 
-    @unittest.skip(
-        'Broken handling of 0.0.0.0 bindings upstream, in Zookeeper project.')
     def test_reset_bindings(self):
         """
         Verify that we can reset the client port bindings to 0.0.0.0
-
         """
         self.d.configure('zookeeper', {'network_interface': '0.0.0.0'})
-        self.d.sentry.wait_for_messages(
-            {'zookeeper': 'updating network interface'}, timeout=CONFIG_TIMEOUT)
-        self.d.sentry.wait_for_messages(
-            {'zookeeper': 'ready (3 units)'}, timeout=CONFIG_TIMEOUT)
+
+        # NB: we used to watch for a maintenance status message, but every now
+        # and then, we'd miss it. Wait 2m to let the config-changed hook settle.
+        time.sleep(120)
         ret = self.unit.run(
             'grep clientPortAddress /etc/zookeeper/conf/zoo.cfg')[0]
 
