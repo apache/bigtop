@@ -28,34 +28,34 @@ class TestDeployment(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.d = amulet.Deployment(series='xenial')
-        cls.d.add('spark', 'cs:xenial/spark', units=3)
+        cls.d.add('spark-test-ha', 'cs:xenial/spark', units=3)
         cls.d.add('zookeeper', 'cs:xenial/zookeeper')
-        cls.d.relate('zookeeper:zookeeper', 'spark:zookeeper')
-        cls.d.expose('spark')
+        cls.d.relate('zookeeper:zookeeper', 'spark-test-ha:zookeeper')
+        cls.d.expose('spark-test-ha')
         cls.d.setup(timeout=1800)
         cls.d.sentry.wait(timeout=1800)
 
     # Disable tearDown until amulet supports it
     # @classmethod
     # def tearDownClass(cls):
-    #     cls.d.remove_service('spark')
+    #     cls.d.remove_service('spark-test-ha')
 
     def test_master_selected(self):
         """
-        Wait for all three spark units to agree on a master leader.
+        Wait for all three spark-test-ha units to agree on a master leader.
         Remove the leader unit.
         Check that a new leader is elected.
         """
-        self.d.sentry.wait_for_messages({"spark": ["ready (standalone - HA)",
-                                                   "ready (standalone - HA)",
-                                                   "ready (standalone - HA)"]}, timeout=900)
+        self.d.sentry.wait_for_messages({"spark-test-ha": ["ready (standalone - HA)",
+                                                           "ready (standalone - HA)",
+                                                           "ready (standalone - HA)"]}, timeout=900)
 
         print("Waiting for units to agree on master.")
         time.sleep(120)
 
         master = ''
         masters_count = 0
-        for unit in self.d.sentry['spark']:
+        for unit in self.d.sentry['spark-test-ha']:
             ip = unit.info['public-address']
             url = 'http://{}:8080'.format(ip)
             homepage = requests.get(url)
@@ -71,11 +71,11 @@ class TestDeployment(unittest.TestCase):
         self.d.remove_unit(master)
         time.sleep(120)
 
-        self.d.sentry.wait_for_messages({"spark": ["ready (standalone - HA)",
-                                                   "ready (standalone - HA)"]}, timeout=900)
+        self.d.sentry.wait_for_messages({"spark-test-ha": ["ready (standalone - HA)",
+                                                           "ready (standalone - HA)"]}, timeout=900)
 
         masters_count = 0
-        for unit in self.d.sentry['spark']:
+        for unit in self.d.sentry['spark-test-ha']:
             ip = unit.info['public-address']
             url = 'http://{}:8080'.format(ip)
             homepage = requests.get(url)
