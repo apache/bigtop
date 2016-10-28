@@ -52,7 +52,7 @@ class TestBundle(unittest.TestCase):
         Confirm that all of the required components are up and running.
         """
         spark, rc = self.spark.run("pgrep -a java")
-        zk, rc = self.unit.run("pgrep -a java")
+        zk, rc = self.zookeeper.run("pgrep -a java")
 
         assert 'Master' in spark, "Spark Master should be running"
         assert 'QuorumPeerMain' in zk, "Zookeeper QuorumPeerMain should be running"
@@ -77,7 +77,6 @@ class TestBundle(unittest.TestCase):
         # action status=completed on success
         if (result['status'] != "completed"):
             self.fail('Zookeeper smoke-test failed: %s' % result)
-
 
 
 if __name__ == '__main__':
