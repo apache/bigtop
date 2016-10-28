@@ -108,7 +108,8 @@ else:
   if check_stack_feature(StackFeature.HIVE_WEBHCAT_SPECIFIC_CONFIGS, stack_version_formatted_major):
     # this is NOT a typo. Configs for hcatalog/webhcat point to a
     # specific directory which is NOT called 'conf'
-    webhcat_conf_dir = format("{stack_root}/current/hive-webhcat/etc/webhcat")
+    #  FIXME ODPi: webhcat_conf_dir = format("{stack_root}/current/hive-webhcat/etc/webhcat")
+    webhcat_conf_dir = format("/etc/hive-webhcat/conf")
 
   # if stack version supports hive serve interactive
   if check_stack_feature(StackFeature.HIVE_SERVER_INTERACTIVE, stack_version_formatted_major):
