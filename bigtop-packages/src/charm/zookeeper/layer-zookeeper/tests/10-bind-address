@@ -61,7 +61,7 @@ class TestBindClientPort(unittest.TestCase):
             raise Exception(
                 "Could not find any interface on the unit that matched my "
                 "criteria.")
-        self.d.configure('zookeeper', {'network_interface': network_interface})
+        self.d.configure('zk-test', {'network_interface': network_interface})
 
         # NB: we used to watch for a maintenance status message, but every now
         # and then, we'd miss it. Wait 2m to let the config-changed hook settle.
@@ -85,7 +85,7 @@ class TestBindClientPort(unittest.TestCase):
         """
         Verify that we can reset the client port bindings to 0.0.0.0
         """
-        self.d.configure('zookeeper', {'network_interface': '0.0.0.0'})
+        self.d.configure('zk-test', {'network_interface': '0.0.0.0'})
 
         # NB: we used to watch for a maintenance status message, but every now
         # and then, we'd miss it. Wait 2m to let the config-changed hook settle.
