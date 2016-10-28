@@ -88,7 +88,7 @@ class TestBundle(unittest.TestCase):
         """
         uuid = self.hdfs.run_action('smoke-test')
         result = self.d.action_fetch(uuid, timeout=600, full_output=True)
-        # hdfs smoke-test sets outcome=success on success
+        # action status=completed on success
         if (result['status'] != "completed"):
             self.fail('HDFS smoke-test failed: %s' % result)
 
@@ -99,7 +99,7 @@ class TestBundle(unittest.TestCase):
         uuid = self.yarn.run_action('smoke-test')
         # 'yarn' smoke takes a while (bigtop tests download lots of stuff)
         result = self.d.action_fetch(uuid, timeout=1800, full_output=True)
-        # yarn smoke-test sets outcome=success on success
+        # action status=completed on success
         if (result['status'] != "completed"):
             self.fail('YARN smoke-test failed: %s' % result)
 
@@ -111,7 +111,7 @@ class TestBundle(unittest.TestCase):
         uuid = self.slave.run_action('smoke-test')
         # 'hdfs+mapred' smoke takes a long while (bigtop tests are slow)
         result = self.d.action_fetch(uuid, timeout=3600, full_output=True)
-        # slave smoke-test sets outcome=success on success
+        # action status=completed on success
         if (result['status'] != "completed"):
             self.fail('Slave smoke-test failed: %s' % result)
 
