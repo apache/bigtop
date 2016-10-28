@@ -32,8 +32,8 @@ class TestDeployment(unittest.TestCase):
         cls.d.add('zookeeper', 'cs:xenial/zookeeper')
         cls.d.relate('zookeeper:zookeeper', 'spark-test-ha:zookeeper')
         cls.d.expose('spark-test-ha')
-        cls.d.setup(timeout=1800)
-        cls.d.sentry.wait(timeout=1800)
+        cls.d.setup(timeout=3600)
+        cls.d.sentry.wait(timeout=3600)
 
     # Disable tearDown until amulet supports it
     # @classmethod

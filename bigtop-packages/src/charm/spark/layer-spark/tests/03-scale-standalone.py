@@ -28,8 +28,8 @@ class TestScaleStandalone(unittest.TestCase):
     def setUpClass(cls):
         cls.d = amulet.Deployment(series='xenial')
         cls.d.add('spark-test-scale', 'cs:xenial/spark', units=3)
-        cls.d.setup(timeout=1800)
-        cls.d.sentry.wait(timeout=1800)
+        cls.d.setup(timeout=3600)
+        cls.d.sentry.wait(timeout=3600)
 
     # Disable tearDown until amulet supports it
     # @classmethod
