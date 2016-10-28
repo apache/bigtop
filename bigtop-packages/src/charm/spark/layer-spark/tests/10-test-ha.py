@@ -29,8 +29,8 @@ class TestDeployment(unittest.TestCase):
     def setUpClass(cls):
         cls.d = amulet.Deployment(series='xenial')
         cls.d.add('spark-test-ha', 'cs:xenial/spark', units=3)
-        cls.d.add('spark-test-zk', 'cs:xenial/zookeeper')
-        cls.d.relate('spark-test-zk:zookeeper', 'spark-test-ha:zookeeper')
+        cls.d.add('zk-test', 'cs:xenial/zookeeper')
+        cls.d.relate('zk-test:zookeeper', 'spark-test-ha:zookeeper')
         cls.d.expose('spark-test-ha')
         cls.d.setup(timeout=3600)
         cls.d.sentry.wait(timeout=3600)
