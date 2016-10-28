@@ -113,23 +113,6 @@
           ]
         },
         {
-          "name": "HIVE_SERVER_INTERACTIVE",
-          "identities": [
-            {
-              "name": "/HDFS/NAMENODE/hdfs"
-            },
-            {
-              "name": "/HIVE/HIVE_SERVER/hive_server_hive"
-            },
-            {
-              "name": "/HIVE/HIVE_SERVER/spnego"
-            },
-            {
-              "name": "/YARN/NODEMANAGER/llap_zk_hive"
-            }
-          ]
-        },
-        {
           "name": "WEBHCAT_SERVER",
           "identities": [
             {
