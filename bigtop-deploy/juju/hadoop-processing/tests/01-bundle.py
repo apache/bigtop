@@ -95,11 +95,9 @@ class TestBundle(unittest.TestCase):
     def test_yarn(self):
         """
         Validates YARN using the Bigtop 'yarn' smoke test.
-
-        Bigtop tests download lots of prereqs, so this may take a while. Give
-        it 30m.
         """
         uuid = self.yarn.run_action('smoke-test')
+        # 'yarn' smoke takes a while (bigtop tests download lots of stuff)
         result = self.d.action_fetch(uuid, timeout=1800, full_output=True)
         # yarn smoke-test sets outcome=success on success
         if (result['status'] != "completed"):
@@ -108,12 +106,11 @@ class TestBundle(unittest.TestCase):
     def test_slave(self):
         """
         Validates slave using the Bigtop 'hdfs' and 'mapred' smoke test.
-
-        Bigtop tests download lots of prereqs, so this may take a while. Give
         it 30m.
         """
         uuid = self.slave.run_action('smoke-test')
-        result = self.d.action_fetch(uuid, timeout=1800, full_output=True)
+        # 'hdfs+mapred' smoke takes a long while (bigtop tests are slow)
+        result = self.d.action_fetch(uuid, timeout=3600, full_output=True)
         # slave smoke-test sets outcome=success on success
         if (result['status'] != "completed"):
             self.fail('Slave smoke-test failed: %s' % result)
