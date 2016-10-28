@@ -195,8 +195,11 @@ purge_tables = 'true'
 
 # this is NOT a typo.  Configs for hcatalog/webhcat point to a
 # specific directory which is NOT called 'conf'
-hcat_conf_dir = format('{stack_root}/current/hive-webhcat/etc/hcatalog')
-config_dir = format('{stack_root}/current/hive-webhcat/etc/webhcat')
+# FIXME: ODPi
+# hcat_conf_dir = format('{stack_root}/current/hive-webhcat/etc/hcatalog')
+# config_dir = format('{stack_root}/current/hive-webhcat/etc/webhcat')
+hcat_conf_dir = format('/etc/hive-hcatalog/conf')
+config_dir = format('/etc/hive-webhcat/conf')
 
 hive_metastore_site_supported = True
 
