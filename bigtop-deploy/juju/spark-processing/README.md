@@ -23,11 +23,11 @@ applications are included to monitor cluster health and syslog activity.
 
 ## Bundle Composition
 
-The applications that comprise this bundle are spread across 7 units as
+The applications that comprise this bundle are spread across 6 units as
 follows:
 
   * Spark (Master and Worker)
-    * 3 separate units
+    * 2 separate units
   * Zookeeper
     * 3 separate units
   * Ganglia (Web interface for monitoring cluster metrics)
