@@ -1,47 +1,46 @@
 services:
   spark:
     charm: "/home/ubuntu/charms/xenial/spark"
-    num_units: 3
+    num_units: 2
     annotations:
       gui-x: "500"
       gui-y: "0"
     to:
+      - "0"
       - "1"
-      - "2"
-      - "3"
   zookeeper:
-    charm: "cs:~charmers/trusty/zookeeper-1"
+    charm: "cs:xenial/zookeeper-10"
     num_units: 3
     annotations:
       gui-x: "500"
       gui-y: "400"
     to:
+      - "2"
+      - "3"
       - "4"
-      - "5"
-      - "6"
   ganglia:
-    charm: "cs:trusty/ganglia-2"
+    charm: "cs:~bigdata-dev/xenial/ganglia-5"
     num_units: 1
     annotations:
       gui-x: "0"
       gui-y: "800"
     to:
-      - "7"
+      - "5"
   ganglia-node:
-    charm: "cs:~bigdata-dev/xenial/ganglia-node-2"
+    charm: "cs:~bigdata-dev/xenial/ganglia-node-6"
     annotations:
       gui-x: "250"
       gui-y: "400"
   rsyslog:
-    charm: "cs:trusty/rsyslog-10"
+    charm: "cs:~bigdata-dev/xenial/rsyslog-6"
     num_units: 1
     annotations:
       gui-x: "1000"
       gui-y: "800"
     to:
-      - "7"
+      - "5"
   rsyslog-forwarder-ha:
-    charm: "cs:~bigdata-dev/xenial/rsyslog-forwarder-ha-2"
+    charm: "cs:~bigdata-dev/xenial/rsyslog-forwarder-ha-7"
     annotations:
       gui-x: "750"
       gui-y: "400"
@@ -49,28 +48,27 @@ series: xenial
 relations:
   - [spark, zookeeper]
   - ["ganglia-node:juju-info", "spark:juju-info"]
+  - ["ganglia-node:juju-info", "zookeeper:juju-info"]
   - ["ganglia:node", "ganglia-node:node"]
   - ["rsyslog-forwarder-ha:juju-info", "spark:juju-info"]
+  - ["rsyslog-forwarder-ha:juju-info", "zookeeper:juju-info"]
   - ["rsyslog:aggregator", "rsyslog-forwarder-ha:syslog"]
 machines:
+  "0":
+    constraints: "mem=7G root-disk=32G"
+    series: "xenial"
   "1":
-    constraints: "mem=7G"
+    constraints: "mem=7G root-disk=32G"
     series: "xenial"
   "2":
-    constraints: "mem=7G"
+    constraints: "mem=3G root-disk=32G"
     series: "xenial"
   "3":
-    constraints: "mem=7G"
+    constraints: "mem=3G root-disk=32G"
     series: "xenial"
   "4":
-    constraints: "mem=3G"
-    series: "trusty"
+    constraints: "mem=3G root-disk=32G"
+    series: "xenial"
   "5":
     constraints: "mem=3G"
-    series: "trusty"
-  "6":
-    constraints: "mem=3G"
-    series: "trusty"
-  "7":
-    constraints: "mem=3G"
-    series: "trusty"
+    series: "xenial"

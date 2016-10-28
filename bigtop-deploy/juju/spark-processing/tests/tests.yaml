@@ -1,2 +1,7 @@
+reset: false
+deployment_timeout: 3600
+sources:
+  - 'ppa:juju/stable'
 packages:
   - amulet
+  - python3-yaml
