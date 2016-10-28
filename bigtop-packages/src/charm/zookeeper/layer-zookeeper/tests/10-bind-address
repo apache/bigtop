@@ -15,10 +15,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import unittest
-import re
 import amulet
-import subprocess
+import re
+import unittest
 
 DEPLOY_TIMEOUT = 1800
 CONFIG_TIMEOUT = 900
@@ -36,8 +35,9 @@ class TestBindClientPort(unittest.TestCase):
 
         cls.d.add('zookeeper', charm='cs:xenial/zookeeper', units=3)
 
-        cls.d.setup(timeout=CONFIG_TIMEOUT)
-        cls.d.sentry.wait(timeout=DEPLOY_TIMEOUT)
+        cls.d.setup(timeout=DEPLOY_TIMEOUT)
+        cls.d.sentry.wait_for_messages({'zookeeper': 'ready (3 units)'},
+                                       timeout=DEPLOY_TIMEOUT)
         cls.unit = cls.d.sentry['zookeeper'][0]
 
     def test_bind_port(self):
@@ -61,16 +61,11 @@ class TestBindClientPort(unittest.TestCase):
             raise Exception(
                 "Could not find any interface on the unit that matched my "
                 "criteria.")
-        # self.d.configure broken due to change in juju api. TODO:
-        # switch this out when fixed.
-        subprocess.check_call(
-            ['juju', 'config', 'zookeeper', 'network_interface={}'.format(
-                network_interface)])
-        # self.d.configure('zookeeper', {'network_interface': network_interface})
+        self.d.configure('zookeeper', {'network_interface': network_interface})
         self.d.sentry.wait_for_messages(
             {'zookeeper': 'updating network interface'}, timeout=CONFIG_TIMEOUT)
         self.d.sentry.wait_for_messages(
-            {'zookeeper': 'ready (3 zk nodes)'}, timeout=CONFIG_TIMEOUT)
+            {'zookeeper': 'ready (3 units)'}, timeout=CONFIG_TIMEOUT)
         ret = self.unit.run(
             'grep clientPortAddress /etc/zookeeper/conf/zoo.cfg')[0]
         matcher = re.compile(
@@ -80,7 +75,8 @@ class TestBindClientPort(unittest.TestCase):
 
         # Verify that smoke tests still run
         smk_uuid = self.unit.run_action('smoke-test')
-        result = self.d.action_fetch(smk_uuid, full_output=True)
+        # 'zookeeper' smoke takes a while (bigtop tests are slow)
+        result = self.d.action_fetch(smk_uuid, timeout=1800, full_output=True)
         # actions set status=completed on success
         if (result['status'] != "completed"):
             self.fail('Zookeeper smoke-test failed: %s' % result)
@@ -96,7 +92,7 @@ class TestBindClientPort(unittest.TestCase):
         self.d.sentry.wait_for_messages(
             {'zookeeper': 'updating network interface'}, timeout=CONFIG_TIMEOUT)
         self.d.sentry.wait_for_messages(
-            {'zookeeper': 'ready (3 zk nodes)'}, timeout=CONFIG_TIMEOUT)
+            {'zookeeper': 'ready (3 units)'}, timeout=CONFIG_TIMEOUT)
         ret = self.unit.run(
             'grep clientPortAddress /etc/zookeeper/conf/zoo.cfg')[0]
 
@@ -105,8 +101,11 @@ class TestBindClientPort(unittest.TestCase):
 
         # Verify that smoke tests still run
         smk_uuid = self.unit.run_action('smoke-test')
-        output = self.d.action_fetch(smk_uuid, full_output=True)
-        assert "completed" in output['status']
+        # 'zookeeper' smoke takes a while (bigtop tests are slow)
+        result = self.d.action_fetch(smk_uuid, timeout=1800, full_output=True)
+        # actions set status=completed on success
+        if (result['status'] != "completed"):
+            self.fail('Zookeeper smoke-test failed: %s' % result)
 
 
 if __name__ == '__main__':
