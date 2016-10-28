@@ -15,11 +15,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-import unittest
-
-import yaml
 import amulet
+import os
+import re
+import unittest
+import yaml
 
 
 class TestBundle(unittest.TestCase):
@@ -46,11 +46,16 @@ class TestBundle(unittest.TestCase):
 
         cls.d.load(bundle)
         cls.d.setup(timeout=3600)
-        cls.d.sentry.wait_for_messages({'client': 'ready'}, timeout=3600)
+
+        # we need units reporting ready before we attempt our smoke tests
+        cls.d.sentry.wait_for_messages({'client': re.compile('ready'),
+                                        'namenode': re.compile('ready'),
+                                        'resourcemanager': re.compile('ready'),
+                                        'slave': re.compile('ready'),
+                                        }, timeout=3600)
         cls.hdfs = cls.d.sentry['namenode'][0]
         cls.yarn = cls.d.sentry['resourcemanager'][0]
         cls.slave = cls.d.sentry['slave'][0]
-        cls.client = cls.d.sentry['client'][0]
 
     def test_components(self):
         """
@@ -59,7 +64,6 @@ class TestBundle(unittest.TestCase):
         hdfs, retcode = self.hdfs.run("pgrep -a java")
         yarn, retcode = self.yarn.run("pgrep -a java")
         slave, retcode = self.slave.run("pgrep -a java")
-        client, retcode = self.client.run("pgrep -a java")
 
         assert 'NameNode' in hdfs, "NameNode not started"
         assert 'NameNode' not in slave, "NameNode should not be running on slave"
@@ -79,7 +83,9 @@ class TestBundle(unittest.TestCase):
         assert 'DataNode' not in hdfs, "DataNode should not be running on namenode"
 
     def test_hdfs(self):
-        """Validates mkdir, ls, chmod, and rm HDFS operations."""
+        """
+        Validates mkdir, ls, chmod, and rm HDFS operations.
+        """
         uuid = self.hdfs.run_action('smoke-test')
         result = self.d.action_fetch(uuid, timeout=600, full_output=True)
         # hdfs smoke-test sets outcome=success on success
