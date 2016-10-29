@@ -48,14 +48,6 @@ services:
       gui-y: "0"
     to:
       - "4"
-  zeppelin:
-    charm: "cs:xenial/zeppelin-1"
-    num_units: 1
-    annotations:
-      gui-x: "1250"
-      gui-y: "0"
-    to:
-      - "4"
   zookeeper:
     charm: "cs:xenial/zookeeper-6"
     num_units: 3
@@ -102,8 +94,6 @@ relations:
   - [client, plugin]
   - [spark, plugin]
   - [spark, zookeeper]
-  - [zeppelin, plugin]
-  - [zeppelin, spark]
   - ["ganglia-node:juju-info", "client:juju-info"]
   - ["ganglia-node:juju-info", "namenode:juju-info"]
   - ["ganglia-node:juju-info", "resourcemanager:juju-info"]

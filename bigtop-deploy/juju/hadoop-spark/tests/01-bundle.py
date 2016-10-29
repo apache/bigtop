@@ -15,11 +15,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-import unittest
-
-import yaml
 import amulet
+import os
+import re
+import unittest
+import yaml
 
 
 class TestBundle(unittest.TestCase):
@@ -33,9 +33,27 @@ class TestBundle(unittest.TestCase):
         with open(cls.bundle_file) as f:
             bun = f.read()
         bundle = yaml.safe_load(bun)
+
+        # NB: strip machine ('to') placement out. amulet loses our machine spec
+        # somewhere between yaml and json; without that spec, charms specifying
+        # machine placement will not deploy. This is ok for now because all
+        # charms in this bundle are using 'reset: false' so we'll already
+        # have our deployment just the way we want it by the time this test
+        # runs. However, it's bad. Somebody tell marco.
+        for service, service_config in bundle['services'].items():
+            if 'to' in service_config:
+                del service_config['to']
+
         cls.d.load(bundle)
         cls.d.setup(timeout=3600)
-        cls.d.sentry.wait_for_messages({'spark': 'ready (standalone - HA)'}, timeout=3600)
+
+        # we need units reporting ready before we attempt our smoke tests
+        cls.d.sentry.wait_for_messages({'client': re.compile('ready'),
+                                        'namenode': re.compile('ready'),
+                                        'resourcemanager': re.compile('ready'),
+                                        'slave': re.compile('ready'),
+                                        'spark': re.compile('ready'),
+                                        }, timeout=3600)
         cls.hdfs = cls.d.sentry['namenode'][0]
         cls.yarn = cls.d.sentry['resourcemanager'][0]
         cls.slave = cls.d.sentry['slave'][0]
@@ -51,45 +69,66 @@ class TestBundle(unittest.TestCase):
         spark, retcode = self.spark.run("pgrep -a java")
 
         assert 'NameNode' in hdfs, "NameNode not started"
-        assert 'NameNode' not in yarn, "NameNode should not be running on resourcemanager"
         assert 'NameNode' not in slave, "NameNode should not be running on slave"
 
         assert 'ResourceManager' in yarn, "ResourceManager not started"
-        assert 'ResourceManager' not in hdfs, "ResourceManager should not be running on namenode"
         assert 'ResourceManager' not in slave, "ResourceManager should not be running on slave"
 
         assert 'JobHistoryServer' in yarn, "JobHistoryServer not started"
-        assert 'JobHistoryServer' not in hdfs, "JobHistoryServer should not be running on namenode"
         assert 'JobHistoryServer' not in slave, "JobHistoryServer should not be running on slave"
 
         assert 'NodeManager' in slave, "NodeManager not started"
         assert 'NodeManager' not in yarn, "NodeManager should not be running on resourcemanager"
         assert 'NodeManager' not in hdfs, "NodeManager should not be running on namenode"
 
-        assert 'DataNode' in slave, "DataServer not started"
+        assert 'DataNode' in slave, "DataNode not started"
         assert 'DataNode' not in yarn, "DataNode should not be running on resourcemanager"
         assert 'DataNode' not in hdfs, "DataNode should not be running on namenode"
 
+        assert 'Master' in spark, "Spark Master not started"
+
     def test_hdfs(self):
-        """Smoke test validates mkdir, ls, chmod, and rm on the hdfs cluster."""
-        unit_name = self.hdfs.info['unit_name']
-        uuid = self.d.action_do(unit_name, 'smoke-test')
-        result = self.d.action_fetch(uuid)
-        # hdfs smoke-test sets outcome=success on success
-        if (result['outcome'] != "success"):
-            error = "HDFS smoke-test failed"
-            amulet.raise_status(amulet.FAIL, msg=error)
+        """
+        Validates mkdir, ls, chmod, and rm HDFS operations.
+        """
+        uuid = self.hdfs.run_action('smoke-test')
+        result = self.d.action_fetch(uuid, timeout=600, full_output=True)
+        # action status=completed on success
+        if (result['status'] != "completed"):
+            self.fail('HDFS smoke-test failed: %s' % result)
 
     def test_yarn(self):
-        """Smoke test validates teragen/terasort."""
-        unit_name = self.yarn.info['unit_name']
-        uuid = self.d.action_do(unit_name, 'smoke-test')
-        result = self.d.action_fetch(uuid)
-        # yarn smoke-test only returns results on failure; if result is not
-        # empty, the test has failed and has a 'log' key
-        if result:
-            error = "YARN smoke-test failed: %s" % result['log']
-            amulet.raise_status(amulet.FAIL, msg=error)
+        """
+        Validates YARN using the Bigtop 'yarn' smoke test.
+        """
+        uuid = self.yarn.run_action('smoke-test')
+        # 'yarn' smoke takes a while (bigtop tests download lots of stuff)
+        result = self.d.action_fetch(uuid, timeout=1800, full_output=True)
+        # action status=completed on success
+        if (result['status'] != "completed"):
+            self.fail('YARN smoke-test failed: %s' % result)
+
+    def test_spark(self):
+        """
+        Validates Spark with a simple sparkpi test.
+        """
+        uuid = self.spark.run_action('smoke-test')
+        result = self.d.action_fetch(uuid, timeout=600, full_output=True)
+        # action status=completed on success
+        if (result['status'] != "completed"):
+            self.fail('Spark smoke-test failed: %s' % result)
+
+    def test_slave(self):
+        """
+        Validates slave using the Bigtop 'hdfs' and 'mapred' smoke test.
+        it 30m.
+        """
+        uuid = self.slave.run_action('smoke-test')
+        # 'hdfs+mapred' smoke takes a long while (bigtop tests are slow)
+        result = self.d.action_fetch(uuid, timeout=3600, full_output=True)
+        # action status=completed on success
+        if (result['status'] != "completed"):
+            self.fail('Slave smoke-test failed: %s' % result)
 
 
 if __name__ == '__main__':
