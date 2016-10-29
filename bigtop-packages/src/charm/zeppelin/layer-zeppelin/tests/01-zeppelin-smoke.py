@@ -16,6 +16,7 @@
 # limitations under the License.
 
 import amulet
+import re
 import unittest
 
 
@@ -27,9 +28,12 @@ class TestDeploy(unittest.TestCase):
     def setUpClass(cls):
         cls.d = amulet.Deployment(series='xenial')
         cls.d.add('zeppelin', 'cs:xenial/zeppelin')
+        cls.d.add('spark', 'cs:xenial/spark')
 
-        cls.d.setup(timeout=3600)
-        cls.d.sentry.wait_for_messages({'zeppelin': 'ready'}, timeout=3600)
+        cls.d.relate('zeppelin:spark', 'spark:client')
+
+        cls.d.setup(timeout=1800)
+        cls.d.sentry.wait_for_messages({'zeppelin': re.compile('ready')}, timeout=1800)
         cls.zeppelin = cls.d.sentry['zeppelin'][0]
 
     def test_zeppelin(self):
@@ -37,7 +41,7 @@ class TestDeploy(unittest.TestCase):
         Validate Zeppelin by running the smoke-test action.
         """
         uuid = self.zeppelin.run_action('smoke-test')
-        result = self.d.action_fetch(uuid, timeout=600, full_output=True)
+        result = self.d.action_fetch(uuid, full_output=True)
         # action status=completed on success
         if (result['status'] != "completed"):
             self.fail('Zeppelin smoke-test failed: %s' % result)
