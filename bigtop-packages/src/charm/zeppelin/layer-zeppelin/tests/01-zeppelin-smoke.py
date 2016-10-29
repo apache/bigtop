@@ -15,8 +15,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import unittest
 import amulet
+import unittest
 
 
 class TestDeploy(unittest.TestCase):
@@ -25,19 +25,8 @@ class TestDeploy(unittest.TestCase):
     """
     @classmethod
     def setUpClass(cls):
-        cls.d = amulet.Deployment(series='trusty')
-        cls.d.add('zeppelin', 'zeppelin')
-        cls.d.add('resourcemanager', 'hadoop-resourcemanager')
-        cls.d.add('namenode', 'hadoop-namenode')
-        cls.d.add('slave', 'hadoop-slave')
-        cls.d.add('plugin', 'hadoop-plugin')
-
-        cls.d.relate('plugin:hadoop-plugin', 'zeppelin:hadoop')
-        cls.d.relate('plugin:namenode', 'namenode:namenode')
-        cls.d.relate('plugin:resourcemanager', 'resourcemanager:resourcemanager')
-        cls.d.relate('slave:namenode', 'namenode:datanode')
-        cls.d.relate('slave:resourcemanager', 'resourcemanager:nodemanager')
-        cls.d.relate('namenode:namenode', 'resourcemanager:namenode')
+        cls.d = amulet.Deployment(series='xenial')
+        cls.d.add('zeppelin', 'cs:xenial/zeppelin')
 
         cls.d.setup(timeout=3600)
         cls.d.sentry.wait_for_messages({'zeppelin': 'ready'}, timeout=3600)
@@ -47,9 +36,11 @@ class TestDeploy(unittest.TestCase):
         """
         Validate Zeppelin by running the smoke-test action.
         """
-        uuid = self.zeppelin.action_do('smoke-test')
-        output = self.d.action_fetch(uuid, full_output=True)
-        assert "completed" in output['status']
+        uuid = self.zeppelin.run_action('smoke-test')
+        result = self.d.action_fetch(uuid, timeout=600, full_output=True)
+        # action status=completed on success
+        if (result['status'] != "completed"):
+            self.fail('Zeppelin smoke-test failed: %s' % result)
 
 
 if __name__ == '__main__':
