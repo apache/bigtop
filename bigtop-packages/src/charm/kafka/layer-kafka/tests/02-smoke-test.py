@@ -15,34 +15,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import unittest
 import amulet
+import unittest
 
 
 class TestDeploy(unittest.TestCase):
     """
-    Smoke test of Apache Kafka.
+    Smoke test for Apache Bigtop Kafka.
     """
     @classmethod
     def setUpClass(cls):
-        cls.d = amulet.Deployment(series='trusty')
-        cls.d.add('kafka', 'kafka')
-        cls.d.add('openjdk', 'openjdk')
-        cls.d.add('zk', 'zookeeper')
+        cls.d = amulet.Deployment(series='xenial')
+        cls.d.add('kafka', 'cs:xenial/kafka')
+        cls.d.add('zookeeper', 'cs:xenial/zookeeper')
 
-        cls.d.configure('openjdk', {'java-type': 'jdk',
-                                    'java-major': '8'})
+        cls.d.relate('kafka:zookeeper', 'zookeeper:zookeeper')
 
-        cls.d.relate('kafka:zookeeper', 'zk:zookeeper')
-        cls.d.relate('kafka:java', 'openjdk:java')
-        try:
-            cls.d.relate('zk:java', 'openjdk:java')
-        except ValueError:
-            # No need to related older versions of the zookeeper charm
-            # to java.
-            pass
-
-        cls.d.setup(timeout=900)
+        cls.d.setup(timeout=1800)
         cls.d.sentry.wait_for_messages({'kafka': 'ready'}, timeout=1800)
         cls.kafka = cls.d.sentry['kafka'][0]
 
@@ -50,9 +39,11 @@ class TestDeploy(unittest.TestCase):
         """
         Validate Kafka by running the smoke-test action.
         """
-        smk_uuid = self.kafka.action_do("smoke-test")
-        output = self.d.action_fetch(smk_uuid, full_output=True)
-        assert "completed" in output['status']
+        uuid = self.kafka.run_action('smoke-test')
+        result = self.d.action_fetch(uuid, full_output=True)
+        # action status=completed on success
+        if (result['status'] != "completed"):
+            self.fail('Kafka smoke-test failed: %s' % result)
 
 
 if __name__ == '__main__':
