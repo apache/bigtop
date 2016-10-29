@@ -19,17 +19,19 @@
 Apache Kafka is an open-source message broker project developed by the Apache
 Software Foundation written in Scala. The project aims to provide a unified,
 high-throughput, low-latency platform for handling real-time data feeds. Learn
-more at [kafka.apache.org](http://kafka.apache.org/).
+more at [kafka.apache.org][].
 
-This charm deploys the Kafka component of the Apache Bigtop platform.
+This charm deploys the Kafka component of the [Apache Bigtop][] platform.
+
+[kafka.apache.org]: http://kafka.apache.org/
+[Apache Bigtop]: http://bigtop.apache.org/
 
 
-# Deploying / Using
+# Deploying
 
 A working Juju installation is assumed to be present. If Juju is not yet set
-up, please follow the
-[getting-started](https://jujucharms.com/docs/2.0/getting-started)
-instructions prior to deploying this charm.
+up, please follow the [getting-started][] instructions prior to deploying this
+charm.
 
 Kafka requires the Zookeeper distributed coordination service. Deploy and
 relate them as follows:
@@ -37,6 +39,17 @@ relate them as follows:
     juju deploy kafka
     juju deploy zookeeper
     juju add-relation kafka zookeeper
+
+## Network-Restricted Environments
+Charms can be deployed in environments with limited network access. To deploy
+in this environment, configure a Juju model with appropriate proxy and/or
+mirror options. See [Configuring Models][] for more information.
+
+[getting-started]: https://jujucharms.com/docs/stable/getting-started
+[Configuring Models]: https://jujucharms.com/docs/stable/models-config
+
+
+# Using
 
 Once deployed, there are a number of actions available in this charm.
 > **Note**: Actions described below assume Juju 2.0 or greater. If using an
@@ -83,7 +96,7 @@ are ready:
 This is particularly useful when combined with `watch` to track the on-going
 progress of the deployment:
 
-    watch -n 0.5 juju status
+    watch -n 2 juju status
 
 The message column will provide information about a given unit's state.
 This charm is ready for use once the status message indicates that it is
@@ -102,7 +115,7 @@ of Juju, the syntax is `juju action do kafka/0 smoke-test`.
 
 Watch the progress of the smoke test actions with:
 
-    watch -n 0.5 juju show-action-status
+    watch -n 2 juju show-action-status
 
 > **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
 of Juju, the syntax is `juju action status`.
@@ -200,15 +213,6 @@ To go back to listening on any network interface on the
 machine, simply pass ``0.0.0.0`` to ``network_interface``.
 
     juju config kafka network_interface=0.0.0.0
-
-
-# Network-Restricted Environments
-
-Charms can be deployed in environments with limited network access. To deploy
-in this environment, configure a Juju model with appropriate
-proxy and/or mirror options. See
-[Configuring Models](https://jujucharms.com/docs/2.0/models-config) for more
-information.
 
 
 # Contact Information
