@@ -21,33 +21,39 @@ import amulet
 
 class TestDeploy(unittest.TestCase):
     """
-    Deployment and smoke test for Apache Mahout.
+    Deployment and smoke test for Apache Bigtop Mahout.
     """
-    def setUp(self):
-        self.d = amulet.Deployment(series='xenial')
-        self.d.add('mahout', 'mahout')
-        self.d.add('client', 'hadoop-client')
-        self.d.add('resourcemanager', 'hadoop-resourcemanager')
-        self.d.add('namenode', 'hadoop-namenode')
-        self.d.add('slave', 'hadoop-slave')
-        self.d.add('plugin', 'hadoop-plugin')
+    @classmethod
+    def setUpClass(cls):
+        cls.d = amulet.Deployment(series='xenial')
+        cls.d.add('mahout', 'cs:xenial/mahout')
+        cls.d.add('client', 'cs:xenial/hadoop-client')
+        cls.d.add('resourcemanager', 'cs:xenial/hadoop-resourcemanager')
+        cls.d.add('namenode', 'cs:xenial/hadoop-namenode')
+        cls.d.add('slave', 'cs:xenial/hadoop-slave')
+        cls.d.add('plugin', 'cs:xenial/hadoop-plugin')
 
-        self.d.relate('plugin:hadoop-plugin', 'client:hadoop')
-        self.d.relate('plugin:namenode', 'namenode:namenode')
-        self.d.relate('plugin:resourcemanager', 'resourcemanager:resourcemanager')
-        self.d.relate('slave:namenode', 'namenode:datanode')
-        self.d.relate('slave:resourcemanager', 'resourcemanager:nodemanager')
-        self.d.relate('namenode:namenode', 'resourcemanager:namenode')
-        self.d.relate('mahout:mahout', 'client:mahout')
+        cls.d.relate('plugin:hadoop-plugin', 'client:hadoop')
+        cls.d.relate('plugin:namenode', 'namenode:namenode')
+        cls.d.relate('plugin:resourcemanager', 'resourcemanager:resourcemanager')
+        cls.d.relate('slave:namenode', 'namenode:datanode')
+        cls.d.relate('slave:resourcemanager', 'resourcemanager:nodemanager')
+        cls.d.relate('namenode:namenode', 'resourcemanager:namenode')
+        cls.d.relate('mahout:mahout', 'client:mahout')
 
-        self.d.setup(timeout=1800)
-        self.d.sentry.wait_for_messages({"mahout": "ready"})
-        self.mahout = self.d.sentry['mahout'][0]
+        cls.d.setup(timeout=3600)
+        cls.d.sentry.wait_for_messages({"mahout": "ready"}, timeout=3600)
+        cls.mahout = cls.d.sentry['mahout'][0]
 
     def test_mahout(self):
-        smk_uuid = self.mahout.action_do("smoke-test")
-        output = self.d.action_fetch(smk_uuid, full_output=True)
-        assert "completed" in output['status']
+        """
+        Validate Mahout by running the smoke-test action.
+        """
+        uuid = self.mahout.run_action('smoke-test')
+        result = self.d.action_fetch(uuid, full_output=True)
+        # action status=completed on success
+        if (result['status'] != "completed"):
+            self.fail('Mahout smoke-test failed: %s' % result)
 
 
 if __name__ == '__main__':
