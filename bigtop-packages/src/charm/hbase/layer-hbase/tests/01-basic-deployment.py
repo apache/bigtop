@@ -22,21 +22,16 @@ import unittest
 
 class TestDeploy(unittest.TestCase):
     """
-    Trivial deployment test for Apache HBase.
+    Trivial deployment test for Apache Bigtop HBase.
     """
-    def setUp(self):
-        self.d = amulet.Deployment(series='trusty')
-        self.d.add('hbase', 'hbase')
-        self.d.setup(timeout=1800)
-        self.d.sentry.wait(timeout=1800)
+    @classmethod
+    def setUpClass(cls):
+        cls.d = amulet.Deployment(series='xenial')
+        cls.d.add('hbase', 'cs:xenial/hbase')
 
-    def test_deploy(self):
-        # Our tests will reuse applications in an existing deployment. If
-        # we have already deployed hbase, it may be ready. If this is the
-        # first time we're deploying hbase, it will be waiting on java.
-        # Either message is acceptable for passing this test.
-        messages = re.compile('^ready|waiting on relation to java')
-        self.d.sentry.wait_for_messages({"hbase": messages})
+        cls.d.setup(timeout=1800)
+        cls.d.sentry.wait_for_messages({'hbase': re.compile('ready')}, timeout=1800)
+        cls.unit = cls.d.sentry['hbase'][0]
 
 
 if __name__ == '__main__':

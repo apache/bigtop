@@ -16,6 +16,7 @@
 # limitations under the License.
 
 import amulet
+import re
 import unittest
 
 
@@ -26,11 +27,11 @@ class TestDeploy(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.d = amulet.Deployment(series='xenial')
-        cls.d.add('hbase', 'hbase')
-        cls.d.add('namenode', 'hadoop-namenode')
-        cls.d.add('plugin', 'hadoop-plugin')
-        cls.d.add('slave', 'hadoop-slave')
-        cls.d.add('zookeeper', 'zookeeper')
+        cls.d.add('hbase', 'cs:xenial/hbase')
+        cls.d.add('namenode', 'cs:xenial/hadoop-namenode')
+        cls.d.add('plugin', 'cs:xenial/hadoop-plugin')
+        cls.d.add('slave', 'cs:xenial/hadoop-slave')
+        cls.d.add('zookeeper', 'cs:xenial/zookeeper')
 
         cls.d.relate('hbase:hadoop', 'plugin:hadoop-plugin')
         cls.d.relate('hbase:zookeeper', 'zookeeper:zookeeper')
@@ -38,19 +39,18 @@ class TestDeploy(unittest.TestCase):
         cls.d.relate('slave:namenode', 'namenode:datanode')
 
         cls.d.setup(timeout=3600)
-        cls.d.sentry.wait_for_messages({'hbase': 'ready'}, timeout=3600)
+        cls.d.sentry.wait_for_messages({'hbase': re.compile('ready')}, timeout=3600)
         cls.hbase = cls.d.sentry['hbase'][0]
 
     def test_hbase(self):
         """
         Validate HBase by running the smoke-test action.
         """
-        uuid = self.hbase.action_do("smoke-test")
-        result = self.d.action_fetch(uuid)
-        # hbase smoke-test sets outcome=success on success
-        if (result['outcome'] != "success"):
-            error = "HBase smoke-test failed"
-            amulet.raise_status(amulet.FAIL, msg=error)
+        uuid = self.hbase.run_action('smoke-test')
+        result = self.d.action_fetch(uuid, full_output=True)
+        # action status=completed on success
+        if (result['status'] != "completed"):
+            self.fail('HBase smoke-test failed: %s' % result)
 
 
 if __name__ == '__main__':
