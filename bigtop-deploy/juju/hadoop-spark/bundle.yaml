@@ -39,7 +39,7 @@ services:
     to:
       - "4"
   spark:
-    charm: "cs:xenial/spark-7"
+    charm: "cs:xenial/spark-8"
     num_units: 1
     options:
       spark_execution_mode: "yarn-client"
