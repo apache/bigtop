@@ -99,6 +99,7 @@ class Spark(object):
         events_dir = dc.path('spark_events')
         events_dir = 'hdfs://{}'.format(events_dir)
         utils.run_as('hdfs', 'hdfs', 'dfs', '-mkdir', '-p', events_dir)
+        utils.run_as('hdfs', 'hdfs', 'dfs', '-chmod', '1777', events_dir)
         utils.run_as('hdfs', 'hdfs', 'dfs', '-chown', '-R', 'ubuntu:spark',
                      events_dir)
         return events_dir
@@ -172,10 +173,15 @@ class Spark(object):
         if 'namenode' not in available_hosts:
             # Local event dir (not in HDFS) needs to be 777 so non-spark
             # users can write job history there. It needs to be g+s so
-            # spark (in the spark group) can read non-spark user entries.
-            dc.path('spark_events').chmod(0o2777)
+            # all entries will be readable by spark (in the spark group).
+            # It needs to be +t so users cannot remove files they don't own.
+            dc.path('spark_events').chmod(0o3777)
 
         self.patch_worker_master_url(master_ip)
+
+        # Spark-Bench looks for the spark master in /etc/environment
+        with utils.environment_edit_in_place('/etc/environment') as env:
+            env['MASTER'] = self.get_master_url(master_ip)
 
     def patch_worker_master_url(self, master_ip):
         '''
