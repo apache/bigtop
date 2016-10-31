@@ -34,9 +34,9 @@ public class TestBeeline {
 
 	public static final Log LOG = LogFactory.getLog(TestBeeline.class.getName());
 
-	  private static final String URL = "odpiHiveTestBeelineUrl";
-	  private static final String USER = "odpiHiveTestBeelineUser";
-	  private static final String PASSWD = "odpiHiveTestBeelinePassword";
+	  private static final String URL = "odpiHiveTestJdbcUrl";
+	  private static final String USER = "odpiHiveTestJdbcUser";
+	  private static final String PASSWD = "odpiHiveTestJdbcPassword";
 	  
 	  private static Map<String, String> results;
 	  
