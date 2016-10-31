@@ -36,7 +36,8 @@ class TestBundle(unittest.TestCase):
         # machine placement will not deploy. This is ok for now because all
         # charms in this bundle are using 'reset: false' so we'll already
         # have our deployment just the way we want it by the time this test
-        # runs. However, it's bad. Somebody tell marco.
+        # runs. However, it's bad. Remove once this is fixed:
+        #  https://github.com/juju/amulet/issues/148
         for service, service_config in bundle['services'].items():
             if 'to' in service_config:
                 del service_config['to']
@@ -65,7 +66,7 @@ class TestBundle(unittest.TestCase):
         result = self.d.action_fetch(uuid, timeout=600, full_output=True)
         # action status=completed on success
         if (result['status'] != "completed"):
-            self.fail('Spark smoke-test failed: %s' % result)
+            self.fail('Spark smoke-test did not complete: %s' % result)
 
     def test_zookeeper(self):
         """
@@ -76,7 +77,7 @@ class TestBundle(unittest.TestCase):
         result = self.d.action_fetch(uuid, timeout=1800, full_output=True)
         # action status=completed on success
         if (result['status'] != "completed"):
-            self.fail('Zookeeper smoke-test failed: %s' % result)
+            self.fail('Zookeeper smoke-test did not complete: %s' % result)
 
 
 if __name__ == '__main__':
