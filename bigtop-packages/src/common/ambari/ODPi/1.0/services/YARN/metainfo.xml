@@ -26,12 +26,26 @@
       <version>2.7.1+odpi</version>
       <components>
 
+      <component>
+          <name>APP_TIMELINE_SERVER</name>
+          <displayName>App Timeline Server</displayName>
+          <category>MASTER</category>
+          <cardinality>0-1</cardinality>
+          <versionAdvertised>false</versionAdvertised>
+          <reassignAllowed>true</reassignAllowed>
+          <commandScript>
+            <script>scripts/application_timeline_server.py</script>
+            <scriptType>PYTHON</scriptType>
+            <timeout>1200</timeout>
+          </commandScript>
+        </component>
+
         <component>
           <name>RESOURCEMANAGER</name>
           <displayName>ResourceManager</displayName>
           <category>MASTER</category>
           <cardinality>1</cardinality>
-          <versionAdvertised>true</versionAdvertised>
+          <versionAdvertised>false</versionAdvertised>
           <reassignAllowed>true</reassignAllowed>
           <commandScript>
             <script>scripts/resourcemanager.py</script>
@@ -79,7 +93,7 @@
           <displayName>NodeManager</displayName>
           <category>SLAVE</category>
           <cardinality>1+</cardinality>
-          <versionAdvertised>true</versionAdvertised>
+          <versionAdvertised>false</versionAdvertised>
           <decommissionAllowed>true</decommissionAllowed>
           <commandScript>
             <script>scripts/nodemanager.py</script>
@@ -103,7 +117,7 @@
           <displayName>YARN Client</displayName>
           <category>CLIENT</category>
           <cardinality>1+</cardinality>
-          <versionAdvertised>true</versionAdvertised>
+          <versionAdvertised>false</versionAdvertised>
           <commandScript>
             <script>scripts/yarn_client.py</script>
             <scriptType>PYTHON</scriptType>
@@ -196,7 +210,7 @@
           <displayName>History Server</displayName>
           <category>MASTER</category>
           <cardinality>1</cardinality>
-          <versionAdvertised>true</versionAdvertised>
+          <versionAdvertised>false</versionAdvertised>
           <reassignAllowed>true</reassignAllowed>
           <auto-deploy>
             <enabled>true</enabled>
@@ -236,7 +250,7 @@
           <displayName>MapReduce2 Client</displayName>
           <category>CLIENT</category>
           <cardinality>0+</cardinality>
-          <versionAdvertised>true</versionAdvertised>
+          <versionAdvertised>false</versionAdvertised>
           <commandScript>
             <script>scripts/mapreduce2_client.py</script>
             <scriptType>PYTHON</scriptType>
