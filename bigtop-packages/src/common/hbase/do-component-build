@@ -20,11 +20,17 @@ set -ex
 
 export MAVEN_OPTS="-Xmx512m -XX:MaxPermSize=128m"
 
+if [ $HOSTTYPE = "powerpc64le" ] ; then
+  sed  -i "s|<asciidoctor.plugin.version>.*</asciidoctor.plugin.version>|<asciidoctor.plugin.version>1.5.3</asciidoctor.plugin.version>|" pom.xml
+  sed -i 's|<jruby.version>.*</jruby.version>|<jruby.version>1.7.23</jruby.version>|' pom.xml
+  sed  -i "s|<version>1.5.0-alpha.6</version>|<version>1.5.0-alpha.11</version>|" pom.xml
+fi
 mvn -DskipTests -Dslf4j.version=1.6.1         \
     -Dhadoop-two.version=$HADOOP_VERSION      \
     -Dzookeeper.version=$ZOOKEEPER_VERSION    \
     -Dcheckstyle.skip=true                    \
     clean site install assembly:single "$@"
+
 rm -rf build
 mkdir build
 tar -C build --strip-components=1 -xzf hbase-assembly/target/hbase*.tar.gz
