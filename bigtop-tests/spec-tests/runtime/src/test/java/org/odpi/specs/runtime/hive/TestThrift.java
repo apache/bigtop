@@ -17,29 +17,27 @@
  */
 package org.odpi.specs.runtime.hive;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.hive.conf.HiveConf;
-import org.apache.hadoop.hive.metastore.HiveMetaStore;
+import org.apache.hadoop.hive.metastore.HiveMetaStoreClient;
+import org.apache.hadoop.hive.metastore.IMetaStoreClient;
 import org.apache.hadoop.hive.metastore.TableType;
-import org.apache.hadoop.hive.metastore.api.AddPartitionsRequest;
 import org.apache.hadoop.hive.metastore.api.Database;
-import org.apache.hadoop.hive.metastore.api.DropPartitionsRequest;
-import org.apache.hadoop.hive.metastore.api.EnvironmentContext;
 import org.apache.hadoop.hive.metastore.api.FieldSchema;
 import org.apache.hadoop.hive.metastore.api.MetaException;
 import org.apache.hadoop.hive.metastore.api.Partition;
-import org.apache.hadoop.hive.metastore.api.RequestPartsSpec;
 import org.apache.hadoop.hive.metastore.api.SerDeInfo;
 import org.apache.hadoop.hive.metastore.api.StorageDescriptor;
 import org.apache.hadoop.hive.metastore.api.Table;
-import org.apache.hadoop.hive.metastore.api.ThriftHiveMetastore;
 import org.apache.thrift.TException;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -47,7 +45,9 @@ import java.util.Random;
 
 public class TestThrift {
 
-  private static ThriftHiveMetastore.Iface client = null;
+  private static final Log LOG = LogFactory.getLog(JdbcConnector.class.getName());
+
+  private static IMetaStoreClient client = null;
   private static HiveConf conf;
 
   private Random rand;
@@ -58,7 +58,8 @@ public class TestThrift {
       String url = JdbcConnector.getProperty(JdbcConnector.METASTORE_URL, "Thrift metastore URL");
       conf = new HiveConf();
       conf.setVar(HiveConf.ConfVars.METASTOREURIS, url);
-      client = new HiveMetaStore.HMSHandler("ODPi test", conf, true);
+      LOG.info("Set to test against metastore at " + url);
+      client = new HiveMetaStoreClient(conf);
     }
   }
 
@@ -72,22 +73,20 @@ public class TestThrift {
   public void db() throws TException {
     final String dbName = "odpi_thrift_db_" + rand.nextInt(Integer.MAX_VALUE);
 
-    String location = JdbcConnector.getProperty(JdbcConnector.LOCATION, " HDFS location we can " +
-        "write to");
-    Database db = new Database(dbName, "a db", location, new HashMap<String, String>());
-    client.create_database(db);
-    db = client.get_database(dbName);
+    Database db = new Database(dbName, "a db", null, new HashMap<String, String>());
+    client.createDatabase(db);
+    db = client.getDatabase(dbName);
     Assert.assertNotNull(db);
     db = new Database(db);
     db.getParameters().put("a", "b");
-    client.alter_database(dbName, db);
-    List<String> alldbs = client.get_databases("odpi_*");
+    client.alterDatabase(dbName, db);
+    List<String> alldbs = client.getDatabases("odpi_*");
     Assert.assertNotNull(alldbs);
     Assert.assertTrue(alldbs.size() > 0);
-    alldbs = client.get_all_databases();
+    alldbs = client.getAllDatabases();
     Assert.assertNotNull(alldbs);
     Assert.assertTrue(alldbs.size() > 0);
-    client.drop_database(dbName, true, true);
+    client.dropDatabase(dbName, true, true);
   }
 
   // Not testing types calls, as they aren't used AFAIK
@@ -95,137 +94,128 @@ public class TestThrift {
   @Test
   public void nonPartitionedTable() throws TException {
     final String tableName = "odpi_thrift_table_" + rand.nextInt(Integer.MAX_VALUE);
-    String location = JdbcConnector.getProperty(JdbcConnector.LOCATION, " HDFS location we can " +
-        "write to");
 
     // I don't test every operation related to tables, but only those that are frequently used.
     SerDeInfo serde = new SerDeInfo("default_serde",
         conf.getVar(HiveConf.ConfVars.HIVEDEFAULTSERDE), new HashMap<String, String>());
     FieldSchema fs = new FieldSchema("a", "int", "no comment");
-    StorageDescriptor sd = new StorageDescriptor(Collections.singletonList(fs), location,
+    StorageDescriptor sd = new StorageDescriptor(Collections.singletonList(fs), null,
         conf.getVar(HiveConf.ConfVars.HIVEDEFAULTFILEFORMAT),
         conf.getVar(HiveConf.ConfVars.HIVEDEFAULTFILEFORMAT), false, 0, serde, null, null,
         new HashMap<String, String>());
     Table table = new Table(tableName, "default", "me", 0, 0, 0, sd, null,
         new HashMap<String, String>(), null, null, TableType.MANAGED_TABLE.toString());
-    EnvironmentContext envContext = new EnvironmentContext(new HashMap<String, String>());
-    client.create_table_with_environment_context(table, envContext);
+    client.createTable(table);
 
-    table = client.get_table("default", tableName);
+    table = client.getTable("default", tableName);
     Assert.assertNotNull(table);
 
     List<Table> tables =
-        client.get_table_objects_by_name("default", Collections.singletonList(tableName));
+        client.getTableObjectsByName("default", Collections.singletonList(tableName));
     Assert.assertNotNull(tables);
     Assert.assertEquals(1, tables.size());
 
-    List<String> tableNames = client.get_tables("default", "odpi_*");
+    List<String> tableNames = client.getTables("default", "odpi_*");
     Assert.assertNotNull(tableNames);
     Assert.assertTrue(tableNames.size() >= 1);
 
-    tableNames = client.get_all_tables("default");
+    tableNames = client.getAllTables("default");
     Assert.assertNotNull(tableNames);
     Assert.assertTrue(tableNames.size() >= 1);
 
-    List<FieldSchema> cols = client.get_fields("default", tableName);
+    List<FieldSchema> cols = client.getFields("default", tableName);
     Assert.assertNotNull(cols);
     Assert.assertEquals(1, cols.size());
 
-    cols = client.get_schema_with_environment_context("default", tableName, envContext);
+    cols = client.getSchema("default", tableName);
     Assert.assertNotNull(cols);
     Assert.assertEquals(1, cols.size());
 
     table = new Table(table);
     table.getParameters().put("a", "b");
-    client.alter_table_with_cascade("default", tableName, table, false);
+    client.alter_table("default", tableName, table, false);
 
     table.getParameters().put("c", "d");
-    client.alter_table_with_environment_context("default", tableName, table, envContext);
+    client.alter_table("default", tableName, table);
 
-    client.drop_table_with_environment_context("default", tableName, true, envContext);
+    client.dropTable("default", tableName, true, false);
   }
 
   @Test
   public void partitionedTable() throws TException {
     final String tableName = "odpi_thrift_partitioned_table_" + rand.nextInt(Integer.MAX_VALUE);
-    String location = JdbcConnector.getProperty(JdbcConnector.LOCATION, " HDFS location we can " +
-        "write to");
 
     // I don't test every operation related to tables, but only those that are frequently used.
     SerDeInfo serde = new SerDeInfo("default_serde",
         conf.getVar(HiveConf.ConfVars.HIVEDEFAULTSERDE), new HashMap<String, String>());
     FieldSchema fs = new FieldSchema("a", "int", "no comment");
-    StorageDescriptor sd = new StorageDescriptor(Collections.singletonList(fs), location,
+    StorageDescriptor sd = new StorageDescriptor(Collections.singletonList(fs), null,
         conf.getVar(HiveConf.ConfVars.HIVEDEFAULTFILEFORMAT),
         conf.getVar(HiveConf.ConfVars.HIVEDEFAULTFILEFORMAT), false, 0, serde, null, null,
         new HashMap<String, String>());
     FieldSchema pk = new FieldSchema("pk", "string", "");
     Table table = new Table(tableName, "default", "me", 0, 0, 0, sd, Collections.singletonList(pk),
         new HashMap<String, String>(), null, null, TableType.MANAGED_TABLE.toString());
-    EnvironmentContext envContext = new EnvironmentContext(new HashMap<String, String>());
-    client.create_table_with_environment_context(table, envContext);
+    client.createTable(table);
 
-    sd = new StorageDescriptor(Collections.singletonList(fs), location + "/x",
+    sd = new StorageDescriptor(Collections.singletonList(fs), null,
         conf.getVar(HiveConf.ConfVars.HIVEDEFAULTSERDE),
         conf.getVar(HiveConf.ConfVars.HIVEDEFAULTSERDE), false, 0, serde, null, null,
         new HashMap<String, String>());
     Partition partition = new Partition(Collections.singletonList("x"), "default", tableName, 0,
         0, sd, new HashMap<String, String>());
-    client.add_partition_with_environment_context(partition, envContext);
+    client.add_partition(partition);
 
-    sd = new StorageDescriptor(Collections.singletonList(fs), location + "/y",
+    List<Partition> partitions = new ArrayList<>(2);
+    sd = new StorageDescriptor(Collections.singletonList(fs), null,
         conf.getVar(HiveConf.ConfVars.HIVEDEFAULTSERDE),
         conf.getVar(HiveConf.ConfVars.HIVEDEFAULTSERDE), false, 0, serde, null, null,
         new HashMap<String, String>());
-    partition = new Partition(Collections.singletonList("y"), "default", tableName, 0,
-        0, sd, new HashMap<String, String>());
-    client.add_partitions(Collections.singletonList(partition));
-
-    sd = new StorageDescriptor(Collections.singletonList(fs), location + "/z",
+    partitions.add(new Partition(Collections.singletonList("y"), "default", tableName, 0,
+        0, sd, new HashMap<String, String>()));
+    sd = new StorageDescriptor(Collections.singletonList(fs), null,
         conf.getVar(HiveConf.ConfVars.HIVEDEFAULTSERDE),
         conf.getVar(HiveConf.ConfVars.HIVEDEFAULTSERDE), false, 0, serde, null, null,
         new HashMap<String, String>());
-    partition = new Partition(Collections.singletonList("z"), "default", tableName, 0,
-        0, sd, new HashMap<String, String>());
-    AddPartitionsRequest rqst = new AddPartitionsRequest("default", tableName,
-        Collections.singletonList(partition), true);
-    client.add_partitions_req(rqst);
+    partitions.add(new Partition(Collections.singletonList("z"), "default", tableName, 0,
+        0, sd, new HashMap<String, String>()));
+    client.add_partitions(partitions);
 
-    List<Partition> parts = client.get_partitions("default", tableName, (short)-1);
+    List<Partition> parts = client.listPartitions("default", tableName, (short)-1);
     Assert.assertNotNull(parts);
     Assert.assertEquals(3, parts.size());
 
-    parts = client.get_partitions_with_auth("default", tableName, (short)-1, "me",
-        Collections.<String>emptyList());
-    Assert.assertNotNull(parts);
-    Assert.assertEquals(3, parts.size());
-
-    parts = client.get_partitions_ps("default", tableName, Collections.singletonList("x"),
+    parts = client.listPartitions("default", tableName, Collections.singletonList("x"),
         (short)-1);
     Assert.assertNotNull(parts);
     Assert.assertEquals(1, parts.size());
 
-    parts = client.get_partitions_by_filter("default", tableName, "pk = \"x\"", (short)-1);
+    parts = client.listPartitionsWithAuthInfo("default", tableName, (short)-1, "me",
+        Collections.<String>emptyList());
+    Assert.assertNotNull(parts);
+    Assert.assertEquals(3, parts.size());
+
+    List<String> partNames = client.listPartitionNames("default", tableName, (short)-1);
+    Assert.assertNotNull(partNames);
+    Assert.assertEquals(3, partNames.size());
+
+    parts = client.listPartitionsByFilter("default", tableName, "pk = \"x\"", (short)-1);
     Assert.assertNotNull(parts);
     Assert.assertEquals(1, parts.size());
 
-    parts = client.get_partitions_by_names("default", tableName, Collections.singletonList("pk=x"));
+    parts = client.getPartitionsByNames("default", tableName, Collections.singletonList("pk=x"));
     Assert.assertNotNull(parts);
     Assert.assertEquals(1, parts.size());
 
-    partition = client.get_partition("default", tableName, Collections.singletonList("x"));
+    partition = client.getPartition("default", tableName, Collections.singletonList("x"));
     Assert.assertNotNull(partition);
 
-    partition = client.get_partition_by_name("default", tableName, "pk=x");
+    partition = client.getPartition("default", tableName, "pk=x");
     Assert.assertNotNull(partition);
 
-    partition = client.get_partition_with_auth("default", tableName, Collections.singletonList("x"),
+    partition = client.getPartitionWithAuthInfo("default", tableName, Collections.singletonList("x"),
         "me", Collections.<String>emptyList());
     Assert.assertNotNull(partition);
-
-    List<String> partitionNames = client.get_partition_names("default", tableName, (short)-1);
-    Assert.assertNotNull(partitionNames);
-    Assert.assertEquals(3, partitionNames.size());
 
     partition = new Partition(partition);
     partition.getParameters().put("a", "b");
@@ -240,13 +230,8 @@ public class TestThrift {
 
     // Not testing partition marking events, not used by anyone but Hive replication AFAIK
 
-    client.drop_partition_by_name_with_environment_context("default", tableName, "pk=x", true,
-        envContext);
-    client.drop_partition_with_environment_context("default", tableName,
-        Collections.singletonList("y"), true, envContext);
-    DropPartitionsRequest dropRequest = new DropPartitionsRequest("default", tableName,
-        RequestPartsSpec.names(Collections.singletonList("pk=z")));
-    client.drop_partitions_req(dropRequest);
+    client.dropPartition("default", tableName, "pk=x", true);
+    client.dropPartition("default", tableName, Collections.singletonList("y"), true);
   }
 
   // Not testing index calls, as no one uses indices
