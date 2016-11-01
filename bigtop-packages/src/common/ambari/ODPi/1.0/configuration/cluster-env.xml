@@ -196,7 +196,7 @@ gpgcheck=0</value>
   </property>
   <property>
     <name>stack_root</name>
-    <value>/usr/hdp</value>
+    <value>/usr/odpi</value>
     <description>Stack root folder</description>
     <value-attributes>
       <read-only>true</read-only>
