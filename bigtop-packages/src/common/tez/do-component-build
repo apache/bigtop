@@ -18,6 +18,19 @@ set -xe
 
 . `dirname $0`/bigtop.bom
 
+if [ $HOSTTYPE = "powerpc64le" ] ; then
+  git clone https://github.com/ibmsoe/phantomjs-1
+  cd phantomjs-1
+  export PHANTOMJS_CDNURL=https://github.com/ibmsoe/phantomjs/releases/download/2.1.1
+  npm install -g
+  cd ..
+  rm -rf phantomjs-1
+  sed  -i "s|<nodeVersion>.*</nodeVersion>|<nodeVersion>v4.4.7</nodeVersion>|" tez-ui/pom.xml
+  sed  -i "s|<npmVersion>.*</npmVersion>|<npmVersion>2.15.3</npmVersion>|" tez-ui/pom.xml
+  sed -i 's|"phantomjs": .*|"phantomjs": "^1.9.19"|' tez-ui/src/main/webapp/package.json
+  sed  -i "s|<frontend-maven-plugin.version>.*</frontend-maven-plugin.version>|<frontend-maven-plugin.version>1.1</frontend-maven-plugin.version>|" pom.xml
+fi
+
 sed -i '/--remove-unnecessary-resolutions=false/a\\t\t<argument>--allow-root</argument>' tez-ui/pom.xml
 
 BUILD_TEZ_OPTS="clean package \
