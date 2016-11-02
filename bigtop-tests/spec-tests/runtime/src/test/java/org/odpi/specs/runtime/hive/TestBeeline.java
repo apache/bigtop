@@ -31,9 +31,11 @@ import java.util.Map;
 public class TestBeeline {
 	
 	public static final Log LOG = LogFactory.getLog(TestBeeline.class.getName());
-	private static final String URL = "odpiHiveTestJdbcUrl";
-	private static final String USER = "odpiHiveTestJdbcUser";
-	private static final String PASSWD = "odpiHiveTestJdbcPassword";
+	
+	private static final String URL = "odpi.test.hive.jdbc.url";
+	private static final String USER = "odpi.test.hive.jdbc.user";
+	private static final String PASSWD = "odpi.test.hive.jdbc.password";
+	
 	private static Map<String, String> results;
 	private static String beelineUrl; 
 	private static String beelineUser;
