@@ -60,8 +60,11 @@ class Spark(object):
 
     def install_benchmark(self):
         install_sb = hookenv.config()['spark_bench_enabled']
-        sb_dir = '/home/ubuntu/spark-bench'
+        sb_dir = '/home/ubuntu/SparkBench'
         if install_sb:
+            # Fetch, install, and configure sb our first time around. Our
+            # config is generic, so no need to reconfigure even if our spark
+            # master changes.
             if not unitdata.kv().get('spark_bench.installed', False):
                 if utils.cpu_arch() == 'ppc64le':
                     sb_url = hookenv.config()['spark_bench_ppc64le']
@@ -73,12 +76,44 @@ class Spark(object):
                 au = ArchiveUrlFetchHandler()
                 au.install(sb_url, '/home/ubuntu')
 
+                # NB: This block is unused when using one of our sb tgzs. It
+                # may come in handy if people want a tgz that does not expand
+                # to our expected sb_dir.
                 # #####
                 # Handle glob if we use a .tgz that doesn't expand to sb_dir
-                # sb_archive_dir = glob('/home/ubuntu/spark-bench-*')[0]
-                # SparkBench expects to live in ~/spark-bench, so put it there
+                # sb_archive_dir = glob('/home/ubuntu/SparkBench-*')[0]
+                # SparkBench expects to live in ~/SparkBench, so put it there
                 # Path(sb_archive_dir).rename(sb_dir)
                 # #####
+
+                # NB: A few config notes on spark bench:
+                # 1. It tries to SSH to spark workers to purge vmem caches. This
+                # isn't possible in containers, nor is it possible in our env
+                # because we don't distribute ssh keys among cluster members.
+                # Set MC_LIST to an empty string to prevent this behavior.
+                #
+                # 2. All input data has been pregenerated and is < 100MB. Don't
+                # bother with an HDFS location because all spark cluster
+                # members will have the same local data on disk.
+                #
+                # 3. Use the MASTER envar to set the spark bench master url. It
+                # is updated every time we (re)configure spark.
+                sb_conf = '{}/conf'.format(sb_dir)
+                sb_env = Path(sb_conf) / 'env.sh'
+                if not sb_env.exists():
+                    (Path(sb_conf) / 'env.sh.template').copy(sb_env)
+                utils.re_edit_in_place(sb_env, {
+                    r'^MC_LIST *=.*': 'MC_LIST=""',
+                    r'^DATA_HDFS *=.*': 'DATA_HDFS="file://{}"'.format(sb_dir),
+                    r'.*HADOOP_HOME *=.*': 'HADOOP_HOME="/usr/lib/hadoop"',
+                    r'.*SPARK_HOME *=.*': 'SPARK_HOME="/usr/lib/spark"',
+                    r'^SPARK_MASTER *=.*': 'SPARK_MASTER="$MASTER"',
+                })
+
+                # Ensure the spark user (in the spark group) can read all
+                # files in our sparkbench dir.
+                host.chownr(Path(sb_dir), 'ubuntu', 'spark', chowntopdir=True)
+                Path(sb_dir).chmod(0o2775)
 
                 unitdata.kv().set('spark_bench.installed', True)
                 unitdata.kv().flush(True)
@@ -124,8 +159,6 @@ class Spark(object):
         if not unitdata.kv().get('spark.bootstrapped', False):
             self.setup()
             unitdata.kv().set('spark.bootstrapped', True)
-
-        self.install_benchmark()
 
         master_ip = utils.resolve_private_address(available_hosts['spark-master'])
         hosts = {
@@ -179,9 +212,11 @@ class Spark(object):
 
         self.patch_worker_master_url(master_ip)
 
-        # Spark-Bench looks for the spark master in /etc/environment
+        # SparkBench looks for the spark master in /etc/environment
         with utils.environment_edit_in_place('/etc/environment') as env:
             env['MASTER'] = self.get_master_url(master_ip)
+        # Install SB (subsequent calls will reconfigure existing install)
+        self.install_benchmark()
 
     def patch_worker_master_url(self, master_ip):
         '''

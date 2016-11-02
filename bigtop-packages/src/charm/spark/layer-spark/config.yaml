@@ -16,7 +16,7 @@ options:
             preserved.
     spark_bench_ppc64le:
         type: string
-        default: 'https://s3.amazonaws.com/jujubigdata/ibm/noarch/spark-bench-2.0-20151214-ffb72f23.tgz#sha256=ffb72f233eaafccef4dda6d4516f23e043d1b14b9d63734211f4d1968db86a3c'
+        default: 'https://s3.amazonaws.com/jujubigdata/ibm/noarch/SparkBench-2.0-20161101.tgz#sha256=2a34150dc3ad4a1469ca09c202f4db4ee995e2932b8a633d8c006d46c1f61e9f'
         description: |
             URL (including hash) of a ppc64le tarball of SparkBench. By
             default, this points to a pre-built SparkBench binary based on
@@ -24,7 +24,7 @@ options:
             'spark_bench_enabled' is 'true'.
     spark_bench_x86_64:
         type: string
-        default: 'https://s3.amazonaws.com/jujubigdata/ibm/noarch/spark-bench-2.0-20151214-ffb72f23.tgz#sha256=ffb72f233eaafccef4dda6d4516f23e043d1b14b9d63734211f4d1968db86a3c'
+        default: 'https://s3.amazonaws.com/jujubigdata/ibm/noarch/SparkBench-2.0-20161101.tgz#sha256=2a34150dc3ad4a1469ca09c202f4db4ee995e2932b8a633d8c006d46c1f61e9f'
         description: |
             URL (including hash) of an x86_64 tarball of SparkBench. By
             default, this points to a pre-built SparkBench binary based on

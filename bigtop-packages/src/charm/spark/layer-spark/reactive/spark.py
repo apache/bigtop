@@ -26,9 +26,9 @@ def set_deployment_mode_state(state):
         remove_state('spark.yarn.installed')
     if is_state('spark.standalone.installed'):
         remove_state('spark.standalone.installed')
-    remove_state('spark.ready.to.install')
     set_state('spark.started')
     set_state(state)
+    hookenv.application_version_set('1.5.1')
 
 
 def report_status():

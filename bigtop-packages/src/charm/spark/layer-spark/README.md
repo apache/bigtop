@@ -275,16 +275,22 @@ benchmarking suite (if enabled), to gauge the performance of the environment.
 Each benchmark is an action that can be run with `juju run-action`:
 
     $ juju actions spark | grep Bench
+    connectedcomponent                Run the Spark Bench ConnectedComponent benchmark.
+    decisiontree                      Run the Spark Bench DecisionTree benchmark.
+    kmeans                            Run the Spark Bench KMeans benchmark.
+    linearregression                  Run the Spark Bench LinearRegression benchmark.
     logisticregression                Run the Spark Bench LogisticRegression benchmark.
     matrixfactorization               Run the Spark Bench MatrixFactorization benchmark.
     pagerank                          Run the Spark Bench PageRank benchmark.
+    pca                               Run the Spark Bench PCA benchmark.
+    pregeloperation                   Run the Spark Bench PregelOperation benchmark.
+    shortestpaths                     Run the Spark Bench ShortestPaths benchmark.
     sql                               Run the Spark Bench SQL benchmark.
-    streaming                         Run the Spark Bench Streaming benchmark.
+    stronglyconnectedcomponent        Run the Spark Bench StronglyConnectedComponent benchmark.
     svdplusplus                       Run the Spark Bench SVDPlusPlus benchmark.
     svm                               Run the Spark Bench SVM benchmark.
-    trianglecount                     Run the Spark Bench TriangleCount benchmark.
 
-    $ juju run-action spark/0 pagerank
+    $ juju run-action spark/0 svdplusplus
     Action queued with id: 339cec1f-e903-4ee7-85ca-876fb0c3d28e
 
     $ juju show-action-output 339cec1f-e903-4ee7-85ca-876fb0c3d28e
@@ -293,25 +299,25 @@ Each benchmark is an action that can be run with `juju run-action`:
         composite:
           direction: asc
           units: secs
-          value: ".982000"
+          value: "200.754000"
         raw: |
-          PageRank,0,.982000,,,,PageRank-MLlibConfig,,,,,10,12,,200000,4.0,1.3,0.15
-        start: 2016-09-22T21:52:26Z
-        stop: 2016-09-22T21:52:33Z
+          SVDPlusPlus,2016-11-02-03:08:26,200.754000,85.974071,.428255,0,SVDPlusPlus-MLlibConfig,,,,,10,,,50000,4.0,1.3,
+        start: 2016-11-02T03:08:26Z
+        stop: 2016-11-02T03:11:47Z
       results:
         duration:
           direction: asc
           units: secs
-          value: ".982000"
+          value: "200.754000"
         throughput:
           direction: desc
           units: x/sec
-          value: ""
+          value: ".428255"
     status: completed
     timing:
-      completed: 2016-09-22 21:52:36 +0000 UTC
-      enqueued: 2016-09-22 21:52:09 +0000 UTC
-      started: 2016-09-22 21:52:13 +0000 UTC
+      completed: 2016-11-02 03:11:48 +0000 UTC
+      enqueued: 2016-11-02 03:08:21 +0000 UTC
+      started: 2016-11-02 03:08:26 +0000 UTC
 
 [Spark Bench]: https://github.com/SparkTC/spark-bench
 

@@ -9,9 +9,10 @@ includes:
   - 'interface:spark-quorum'
 options:
   basic:
-    # bc is needed by spark-bench
+    # bc and libgfortran3 are needed by spark-bench
     packages:
       - 'bc'
+      - 'libgfortran3'
   hadoop-client:
     groups:
         - 'hadoop'
@@ -29,4 +30,3 @@ options:
       spark-webui:
         port: 8080
         exposed_on: 'spark'
-    silent: True
