@@ -12,6 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
 from jujubigdata import utils
 from path import Path
 
@@ -94,10 +95,12 @@ class Spark(object):
                 # Path(sb_archive_dir).rename(sb_dir)
                 # #####
 
-                # Ensure users in the spark group have access to all files in
-                # our sparkbench dir (chmod g+s).
+                # Ensure users in the spark group can write to any subdirectory
+                # of sb_dir (spark needs to write benchmark output there when
+                # running in local modes).
                 host.chownr(Path(sb_dir), 'ubuntu', 'spark', chowntopdir=True)
-                Path(sb_dir).chmod(0o2775)
+                for r, d, f in os.walk(sb_dir):
+                    os.chmod(r, 0o2775)
 
                 unitdata.kv().set('spark_bench.installed', True)
                 unitdata.kv().flush(True)
@@ -136,6 +139,7 @@ class Spark(object):
 
             utils.re_edit_in_place(sb_env, {
                 r'^DATA_HDFS *=.*': 'DATA_HDFS="{}"'.format(sb_data_dir),
+                r'^DATASET_DIR *=.*': 'DATASET_DIR="{}/dataset"'.format(sb_dir),
                 r'^MC_LIST *=.*': 'MC_LIST=""',
                 r'.*HADOOP_HOME *=.*': 'HADOOP_HOME="/usr"',
                 r'.*SPARK_HOME *=.*': 'SPARK_HOME="/usr/lib/spark"',
