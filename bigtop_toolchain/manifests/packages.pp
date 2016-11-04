@@ -109,6 +109,7 @@ class bigtop_toolchain::packages {
         "libuuid-devel",
         "libbz2-devel",
         "libcurl-devel",
+        "libevent-devel",
         "bison",
         "flex"
       ]

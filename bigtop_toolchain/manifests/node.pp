@@ -15,7 +15,7 @@
 
 class bigtop_toolchain::node {
    case $architecture {
-      'amd64' : { $node_version = "0.10.44"
+      /amd64|x86_64/ : { $node_version = "0.10.44"
                   $arch = "x64" }
       'ppc64le' : { $node_version = "4.4.7" 
                     $arch = "ppc64le" }

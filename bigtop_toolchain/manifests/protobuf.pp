@@ -59,15 +59,17 @@ class bigtop_toolchain::protobuf {
              command => '/bin/true',
              require => Yumrepo['protobuf'],
            }
+           $package_name = 'protobuf-devel'
          }
          /(?i:(SLES|opensuse))/:{
            exec { 'install_mrdocs_repo':
-              command => '/usr/bin/zypper ar --no-gpgcheck http://download.opensuse.org/repositories/home:/mrdocs:/protobuf-rpm/openSUSE_13.2/ protobuf',
+              command => '/usr/bin/zypper ar --no-gpgcheck http://download.opensuse.org/repositories/home:/mrdocs:/protobuf-rpm/openSUSE_Leap_42.1/ protobuf',
               unless => "/usr/bin/zypper lr | grep -q protobuf",
            }
+           $package_name = 'protobuf-devel-2.5.0-4.1'
          }
       }
-      package { 'protobuf-devel':
+      package { $package_name:
         ensure => present,
         require => Exec['install_mrdocs_repo'],
       }
