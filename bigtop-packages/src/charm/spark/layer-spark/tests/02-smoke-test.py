@@ -32,7 +32,7 @@ class TestDeploy(unittest.TestCase):
         cls.d.sentry.wait_for_messages({'spark': re.compile('ready')}, timeout=1800)
         cls.unit = cls.d.sentry['spark'][0]
 
-    def test_deploy(self):
+    def test_spark(self):
         smk_uuid = self.unit.run_action('smoke-test')
         output = self.d.action_fetch(smk_uuid, full_output=True)
         assert "completed" in output['status']

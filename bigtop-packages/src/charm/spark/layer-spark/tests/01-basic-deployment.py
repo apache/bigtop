@@ -21,14 +21,21 @@ import unittest
 
 class TestDeploy(unittest.TestCase):
     """
-    Trivial deployment test for Apache Bigtop Spark.
+    Simple deployment test for Apache Bigtop Spark.
     """
-    def test_deploy(self):
-        self.d = amulet.Deployment(series='xenial')
-        self.d.add('spark', 'cs:xenial/spark')
-        self.d.setup(timeout=1800)
-        self.d.sentry.wait(timeout=1800)
-        self.unit = self.d.sentry['spark'][0]
+    @classmethod
+    def setUpClass(cls):
+        cls.d = amulet.Deployment(series='xenial')
+        cls.d.add('spark', 'cs:xenial/spark')
+        cls.d.setup(timeout=1800)
+        cls.d.sentry.wait(timeout=1800)
+        cls.unit = cls.d.sentry['spark'][0]
+
+    def test_deployed(self):
+        """
+        Validate Spark deployed successfully.
+        """
+        self.assertTrue(self.d.deployed)
 
 
 if __name__ == '__main__':
