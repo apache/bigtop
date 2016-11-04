@@ -22,7 +22,7 @@ import unittest
 
 class TestDeploy(unittest.TestCase):
     """
-    Deployment and smoke test for the Apache Bigtop Zeppelin service.
+    Smoke test for Apache Bigtop Zeppelin.
     """
     @classmethod
     def setUpClass(cls):
@@ -33,7 +33,7 @@ class TestDeploy(unittest.TestCase):
         cls.d.relate('zeppelin:spark', 'spark:client')
 
         cls.d.setup(timeout=1800)
-        cls.d.sentry.wait_for_messages({'zeppelin': re.compile('ready')}, timeout=1800)
+        cls.d.sentry.wait_for_messages({'zeppelin': re.compile('ready with')}, timeout=1800)
         cls.zeppelin = cls.d.sentry['zeppelin'][0]
 
     def test_zeppelin(self):

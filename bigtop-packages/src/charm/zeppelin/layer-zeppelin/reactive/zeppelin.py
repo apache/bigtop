@@ -18,6 +18,7 @@ import hashlib
 from charms.reactive import when, when_not
 from charms.reactive import is_state, set_state, remove_state
 from charmhelpers.core import hookenv
+from charms.layer.apache_bigtop_base import get_package_version
 from charms.layer.bigtop_zeppelin import Zeppelin
 from charms.reactive.helpers import data_changed
 
@@ -72,6 +73,9 @@ def initial_setup():
     zeppelin.open_ports()
     set_state('zeppelin.installed')
     update_status()
+    # set app version string for juju status output
+    zeppelin_version = get_package_version('zeppelin') or 'unknown'
+    hookenv.application_version_set(zeppelin_version)
 
 
 @when('zeppelin.installed')
