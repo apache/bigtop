@@ -1,6 +1,6 @@
 services:
   spark:
-    charm: "cs:xenial/spark-12"
+    charm: "cs:xenial/spark-13"
     num_units: 2
     annotations:
       gui-x: "500"
