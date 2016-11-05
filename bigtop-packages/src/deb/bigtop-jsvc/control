@@ -22,6 +22,6 @@ Homepage: http://commons.apache.org/daemon/
 
 Package: bigtop-jsvc
 Architecture: any 
-Depends: bigtop-utils (>= 0.7)
+Depends: bigtop-utils (>= 0.7), ${shlibs:Depends}
 Description: Application to launch java daemon
  jsvc executes classfile that implements a Daemon interface.
