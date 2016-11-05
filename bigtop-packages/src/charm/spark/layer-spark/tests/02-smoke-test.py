@@ -22,7 +22,7 @@ import unittest
 
 class TestDeploy(unittest.TestCase):
     """
-    Deployment and smoke-test of Apache Spark.
+    Smoke test for Apache Bigtop Spark.
     """
     @classmethod
     def setUpClass(cls):
@@ -30,12 +30,17 @@ class TestDeploy(unittest.TestCase):
         cls.d.add('spark', 'cs:xenial/spark')
         cls.d.setup(timeout=1800)
         cls.d.sentry.wait_for_messages({'spark': re.compile('ready')}, timeout=1800)
-        cls.unit = cls.d.sentry['spark'][0]
+        cls.spark = cls.d.sentry['spark'][0]
 
     def test_spark(self):
-        smk_uuid = self.unit.run_action('smoke-test')
-        output = self.d.action_fetch(smk_uuid, full_output=True)
-        assert "completed" in output['status']
+        """
+        Validate Spark by running the smoke-test action.
+        """
+        uuid = self.spark.run_action('smoke-test')
+        result = self.d.action_fetch(uuid, full_output=True)
+        # action status=completed on success
+        if (result['status'] != "completed"):
+            self.fail('Spark smoke-test failed: %s' % result)
 
 
 if __name__ == '__main__':

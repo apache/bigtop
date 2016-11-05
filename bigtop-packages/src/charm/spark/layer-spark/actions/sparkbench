@@ -133,7 +133,7 @@ if [ -f "${SB_APPS}" ]; then
     # send data points and composite score
     benchmark-data 'duration' "${DURATION}" 'secs' 'asc'
     benchmark-data 'throughput' "${THROUGHPUT}" 'MB/sec' 'desc'
-    benchmark-composite "${THROUGHPUT}" 'MB/sec' 'desc'
+    benchmark-composite "${DURATION}" 'secs' 'asc'
 
     # send raw data (benchmark-raw takes a file)
     echo ${DATA} > ${RESULT_LOG}
