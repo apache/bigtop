@@ -45,7 +45,7 @@ import java.util.Random;
 
 public class TestThrift {
 
-  private static final Log LOG = LogFactory.getLog(JdbcConnector.class.getName());
+  private static final Log LOG = LogFactory.getLog(TestThrift.class.getName());
 
   private static IMetaStoreClient client = null;
   private static HiveConf conf;
