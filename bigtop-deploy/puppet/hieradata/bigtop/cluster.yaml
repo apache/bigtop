@@ -84,6 +84,17 @@ hadoop::common_hdfs::hadoop_namenode_host: "%{hiera('bigtop::hadoop_head_node')}
 # actually default but needed for hadoop_namenode_uri here
 hadoop::common_hdfs::hadoop_namenode_port: "8020"
 
+# If there is a datanode/network failure in the write pipeline, DFSClient will try
+# to remove the failed datanode from the pipeline and then continue writing with the
+# remaining datanodes. As a result, the number of datanodes in the pipeline is decreased.
+# The feature is to add new datanodes to the pipeline. This is a site-wide property to
+# enable/disable the feature. When the cluster size is extremely small, e.g. 3 nodes or
+# less, cluster administrators may want to set the policy to NEVER in the default
+# configuration file or disable this feature. Otherwise, users may experience an unusually
+# high rate of pipeline failures since it is impossible to find new datanodes for replacement.
+# See also dfs.client.block.write.replace-datanode-on-failure.policy
+# hadoop::common_hdfs::hdfs_replace_datanode_on_failure: "false"
+
 # Set as shown below in site.yaml to also enable Kerberos authentication
 # on the web GUIs of journalnode, namenode, datanode, resourcemanager and
 # nodemanager when you enable Kerberos for Hadoop API communication. This
