@@ -188,6 +188,13 @@
   </property>
   <!-- END: Specific change for ODPi reference build ONLY -->
 
+<% if @hdfs_replace_datanode_on_failure %>
+  <property>
+    <name>dfs.client.block.write.replace-datanode-on-failure.enable</name>
+    <value><%= @hdfs_replace_datanode_on_failure %></value>
+  </property>
+<% end %>
+
 <% if @hdfs_support_append %>
   <property>
     <name>dfs.support.append</name>
