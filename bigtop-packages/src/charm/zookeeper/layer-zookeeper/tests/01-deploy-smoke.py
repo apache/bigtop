@@ -23,7 +23,7 @@ TIMEOUT = 1800
 
 class TestDeploy(unittest.TestCase):
     """
-    Deployment test for Apache Zookkepper quorum
+    Deployment test for Apache Zookeeper quorum
     """
 
     @classmethod
