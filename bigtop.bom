@@ -228,7 +228,7 @@ bigtop {
     'flume' {
       name    = 'flume'
       relNotes = 'Apache Flume'
-      version { base = '1.6.0'; pkg = base; release = 1 }
+      version { base = '1.7.0'; pkg = base; release = 1 }
       tarball { destination = "apache-$name-${version.base}-src.tar.gz"
                 source      = destination }
       url     { download_path = "/$name/${version.base}/"
