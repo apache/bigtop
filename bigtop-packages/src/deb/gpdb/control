@@ -16,9 +16,12 @@ Source: gpdb
 Section: misc
 Priority: extra
 Maintainer: Bigtop <dev@bigtop.apache.org>
-Standards-Version: 4.3.99.0
+Build-Depends: debhelper (>= 9)
+Standards-Version: 3.9.4
 Homepage: https://github.com/greenplum-db/gpdb
 
 Package: gpdb
-Architecture: all
+Architecture: any
+Depends: ${shlibs:Depends}, python (>= 2.6)
 Description: Greenplum MPP database engine
+  Provides the Greenplum MPP database engine

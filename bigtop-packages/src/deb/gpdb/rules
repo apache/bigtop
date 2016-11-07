@@ -27,6 +27,7 @@ export DH_OPTIONS
 	dh $@
 
 override_dh_auto_clean:
+	@echo Clean disabled
 
 override_dh_auto_configure:
 	bash debian/do-component-configure /usr/lib/gpdb
@@ -35,10 +36,8 @@ override_dh_auto_build:
 	bash debian/do-component-build
 
 override_dh_auto_install:
-	bash -x debian/install_gpdb.sh /tmp
-	install -d -p -m 755 debian/gpdb/usr/lib/gpdb
-	cp -r --parents /tmp/usr/lib/gpdb debian/gpdb/usr/lib/gpdb
-	rm -rf /tmp/usr/lib/gpdb
+	install -d -p -m 755 debian/gpdb
+	bash -x debian/install_gpdb.sh ${PWD}/debian/gpdb
 
 override_dh_auto_test:
 	@echo Tests are disabled
