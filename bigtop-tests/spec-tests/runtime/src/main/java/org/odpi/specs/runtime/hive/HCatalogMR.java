@@ -27,6 +27,7 @@ import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.util.GenericOptionsParser;
 import org.apache.hadoop.util.Tool;
+import org.apache.hadoop.util.ToolRunner;
 import org.apache.hive.hcatalog.data.DefaultHCatRecord;
 import org.apache.hive.hcatalog.data.HCatRecord;
 import org.apache.hive.hcatalog.data.schema.HCatSchema;
@@ -74,6 +75,7 @@ public class HCatalogMR extends Configured implements Tool {
     job.addCacheArchive(new URI("hdfs:/user/gates/hive-hcatalog-core-1.2.1.jar"));
     job.addCacheArchive(new URI("hdfs:/user/gates/hive-metastore-1.2.1.jar"));
     job.addCacheArchive(new URI("hdfs:/user/gates/hive-exec-1.2.1.jar"));
+    job.addCacheArchive(new URI("hdfs:/user/gates/libfb303-0.9.2.jar"));
 
     return job.waitForCompletion(true) ? 0 : 1;
 
@@ -120,5 +122,10 @@ public class HCatalogMR extends Configured implements Tool {
       output.set("count", outputSchema, sum);
       context.write(null, output);
     }
+  }
+
+  public static void main(String[] args) throws Exception {
+    int exitCode = ToolRunner.run(new HCatalogMR(), args);
+    System.exit(exitCode);
   }
  }
