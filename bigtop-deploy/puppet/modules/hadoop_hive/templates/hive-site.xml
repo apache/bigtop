@@ -65,4 +65,38 @@
   <description>This is the WAR file with the jsp content for Hive Web Interface</description>
 </property>
 
+<property>
+   <name>hive.server2.allow.user.substitution</name>
+   <value>true</value>
+</property>
+
+<property>
+   <name>hive.server2.enable.doAs</name>
+   <value>true</value>
+</property>
+
+<property>
+   <name>hive.server2.thrift.port</name>
+   <value><%= @server2_thrift_port %></value>
+</property>
+
+<property>
+   <name>hive.server2.thrift.http.port</name>
+   <value><%= @server2_thrift_http_port %></value>
+</property>
+
+<% if @kerberos_realm != "" %>
+<property>
+    <name>hive.server2.authentication</name>
+    <value>KERBEROS</value>
+</property>
+<property>
+    <name>hive.server2.authentication.kerberos.principal</name>
+    <value>hive/_HOST@<%= @kerberos_realm %></value>
+</property>
+<property>
+    <name>hive.server2.authentication.kerberos.keytab</name>
+    <value>/etc/hive.keytab</value>
+</property>
+<% end %> 
 </configuration>

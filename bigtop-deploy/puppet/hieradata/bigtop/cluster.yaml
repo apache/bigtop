@@ -168,7 +168,8 @@ hue::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 
 giraph::client::zookeeper_quorum: "%{hiera('bigtop::hadoop_head_node')}"
 
-hadoop_hive::client::hbase_zookeeper_quorum: "%{hiera('hadoop_hbase::common_config::zookeeper_quorum')}"
+hadoop_hive::common_config::hbase_zookeeper_quorum: "%{hiera('hadoop_hbase::common_config::zookeeper_quorum')}"
+hadoop_hive::common_config::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 
 # tez
 hadoop::common::tez_conf_dir: "/etc/tez/conf"
@@ -179,7 +180,7 @@ hadoop::common::tez_jars: "/usr/lib/tez"
 # hadoop::common_mapred_app::mapreduce_framework_name: "yarn-tez"
 
 # to enable tez in hive, uncomment the lines below
-# hadoop_hive::client::hive_execution_engine: "tez"
+# hadoop_hive::common_config::hive_execution_engine: "tez"
 
 zeppelin::server::spark_master_url: "yarn-client"
 zeppelin::server::hiveserver2_url: "jdbc:hive2://%{hiera('hadoop-hive::common::hiveserver2_host')}:%{hiera('hadoop-hive::common::hiveserver2_port')}"

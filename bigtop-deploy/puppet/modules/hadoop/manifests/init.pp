@@ -19,9 +19,10 @@ class hadoop ($hadoop_security_authentication = "simple",
   # Set from facter if available
   $hadoop_storage_dirs = split($::hadoop_storage_dirs, ";"),
   $proxyusers = {
-    oozie => { groups => 'hudson,testuser,root,hadoop,jenkins,oozie,httpfs,hue,users', hosts => "*" },
-                  hue => { groups => 'hudson,testuser,root,hadoop,jenkins,oozie,httpfs,hue,users', hosts => "*" },
-               httpfs => { groups => 'hudson,testuser,root,hadoop,jenkins,oozie,httpfs,hue,users', hosts => "*" } },
+    oozie => { groups => 'hudson,testuser,root,hadoop,jenkins,oozie,hive,httpfs,hue,users', hosts => "*" },
+     hive => { groups => 'hudson,testuser,root,hadoop,jenkins,oozie,hive,httpfs,hue,users', hosts => "*" },
+      hue => { groups => 'hudson,testuser,root,hadoop,jenkins,oozie,hive,httpfs,hue,users', hosts => "*" },
+   httpfs => { groups => 'hudson,testuser,root,hadoop,jenkins,oozie,hive,httpfs,hue,users', hosts => "*" } },
   $generate_secrets = false,
 ) {
 
