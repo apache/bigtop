@@ -9,7 +9,7 @@ services:
       - "0"
       - "1"
   zookeeper:
-    charm: "cs:xenial/zookeeper-6"
+    charm: "cs:xenial/zookeeper-7"
     num_units: 3
     annotations:
       gui-x: "500"
