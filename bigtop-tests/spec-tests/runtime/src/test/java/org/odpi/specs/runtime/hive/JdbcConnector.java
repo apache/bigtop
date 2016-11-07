@@ -36,6 +36,9 @@ public class JdbcConnector {
   protected static final String LOCATION = "odpi.test.hive.location";
   protected static final String METASTORE_URL = "odpi.test.hive.metastore.url";
   protected static final String TEST_THRIFT = "odpi.test.hive.thrift.test";
+  protected static final String TEST_HCATALOG = "odpi.test.hive.hcatalog.test";
+  protected static final String HIVE_CONF_DIR = "odpi.test.hive.conf.dir";
+  protected static final String HADOOP_CONF_DIR = "odpi.test.hadoop.conf.dir";
 
   protected static Connection conn;
 
