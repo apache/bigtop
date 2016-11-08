@@ -85,6 +85,18 @@
    <value><%= @server2_thrift_http_port %></value>
 </property>
 
+<% if @metastore_uris != "" %>
+<property>
+   <name>hive.metastore.uris</name>
+   <value><%= @metastore_uris %></value>
+</property>
+<% end %>
+
+<property>
+   <name>hive.security.metastore.authorization.manager</name>
+   <value>org.apache.hadoop.hive.ql.security.authorization.StorageBasedAuthorizationProvider</value>
+</property>
+
 <% if @kerberos_realm != "" %>
 <property>
     <name>hive.server2.authentication</name>
@@ -97,6 +109,23 @@
 <property>
     <name>hive.server2.authentication.kerberos.keytab</name>
     <value>/etc/hive.keytab</value>
+</property>
+
+<property>
+    <name>hive.metastore.kerberos.principal</name>
+    <value>hive/_HOST@<%= @kerberos_realm %></value>
+</property>
+<property>
+    <name>hive.metastore.kerberos.keytab.file</name>
+    <value>/etc/hive.keytab</value>
+</property>
+<property>
+    <name>hive.metastore.pre.event.listeners</name>
+    <value>org.apache.hadoop.hive.ql.security.authorization.AuthorizationPreEventListener</value>
+</property>
+<property>
+    <name>hive.metastore.sasl.enabled</name>
+    <value>true</value>
 </property>
 <% end %> 
 </configuration>

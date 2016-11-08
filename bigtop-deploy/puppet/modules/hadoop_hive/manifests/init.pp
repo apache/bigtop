@@ -20,6 +20,10 @@ class hadoop_hive {
       include hadoop_hive::client
     }
 
+    if ("hive-metastore" in $roles) {
+      include hadoop_hive::metastore
+    }
+
     if ("hive-server2" in $roles) {
       include hadoop_hive::server2
 
@@ -40,6 +44,7 @@ class hadoop_hive {
   class common_config ($hbase_master = "",
                        $hbase_zookeeper_quorum = "",
                        $kerberos_realm = "",
+                       $metastore_uris = "",
                        $server2_thrift_port = "10000",
                        $server2_thrift_http_port = "10001",
                        $hive_execution_engine = "mr") {
@@ -80,5 +85,23 @@ class hadoop_hive {
       hasstatus => true,
     } 
     Kerberos::Host_keytab <| title == "hive" |> -> Service["hive-server2"]
+  }
+
+  class metastore {
+    include hadoop_hive::common_config
+
+    package { "hive-metastore":
+      ensure => latest,
+    }
+
+    service { "hive-metastore":
+      ensure => running,
+      require => Package["hive-server2"],
+      subscribe => File["/etc/hive/conf/hive-site.xml"],
+      hasrestart => true,
+      hasstatus => true,
+    }
+    Kerberos::Host_keytab <| title == "hive" |> -> Service["hive-metastore"]
+    Service["hive-metastore"] -> Service["hive-server2"]
   }
 }
