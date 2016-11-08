@@ -39,7 +39,7 @@ services:
     to:
       - "4"
   ganglia:
-    charm: "cs:~bigdata-dev/xenial/ganglia-3"
+    charm: "cs:~bigdata-dev/xenial/ganglia-5"
     num_units: 1
     annotations:
       gui-x: "0"
@@ -47,7 +47,7 @@ services:
     to:
       - "5"
   ganglia-node:
-    charm: "cs:~bigdata-dev/xenial/ganglia-node-4"
+    charm: "cs:~bigdata-dev/xenial/ganglia-node-6"
     annotations:
       gui-x: "250"
       gui-y: "400"
