@@ -36,8 +36,13 @@ import org.apache.commons.logging.LogFactory;
 public class HiveHelper {
 	
 	private static final Log LOG = LogFactory.getLog(HiveHelper.class.getName());
-		
+
 	public static Map<String, String> execCommand(CommandLine commandline) {
+		return execCommand(commandline, null);
+	}
+
+	public static Map<String, String> execCommand(CommandLine commandline,
+																								Map<String, String> envVars) {
 		
 		System.out.println("Executing command:");
 		System.out.println(commandline.toString());
@@ -49,6 +54,11 @@ public class HiveHelper {
 			// TODO Auto-generated catch block
 			LOG.debug("Failed to get process environment: "+ e1.getMessage());
 			e1.printStackTrace();
+		}
+		if (envVars != null) {
+			for (String key : envVars.keySet()) {
+				env.put(key, envVars.get(key));
+			}
 		}
 
 		DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();

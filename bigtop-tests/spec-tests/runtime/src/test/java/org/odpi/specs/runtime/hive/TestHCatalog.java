@@ -32,20 +32,8 @@ import org.apache.hadoop.hive.metastore.api.MetaException;
 import org.apache.hadoop.hive.metastore.api.SerDeInfo;
 import org.apache.hadoop.hive.metastore.api.StorageDescriptor;
 import org.apache.hadoop.hive.metastore.api.Table;
-import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.io.Text;
-import org.apache.hadoop.io.WritableComparable;
-import org.apache.hadoop.mapreduce.Job;
-import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.hadoop.mapreduce.Reducer;
-import org.apache.hive.hcatalog.data.DefaultHCatRecord;
-import org.apache.hive.hcatalog.data.HCatRecord;
 import org.apache.hive.hcatalog.data.schema.HCatFieldSchema;
 import org.apache.hive.hcatalog.data.schema.HCatSchema;
-import org.apache.hive.hcatalog.data.schema.HCatSchemaUtils;
-import org.apache.hive.hcatalog.mapreduce.HCatInputFormat;
-import org.apache.hive.hcatalog.mapreduce.HCatOutputFormat;
-import org.apache.hive.hcatalog.mapreduce.OutputJobInfo;
 import org.apache.thrift.TException;
 import org.junit.Assert;
 import org.junit.Assume;
@@ -54,14 +42,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-import java.util.StringTokenizer;
 
 
 public class TestHCatalog {
@@ -136,10 +122,6 @@ public class TestHCatalog {
     // Write some stuff into a file in the location of the table
     table = client.getTable("default", inputTable);
     String inputFile = table.getSd().getLocation() + "/input";
-    /*
-    String inputFile = JdbcConnector.getProperty(JdbcConnector.LOCATION,
-        "Directory to write a file in ") + "/odpi_hcat_input_" + rand.nextInt(Integer.MAX_VALUE);
-        */
     Path inputPath = new Path(inputFile);
     FileSystem fs = FileSystem.get(conf);
     FSDataOutputStream out = fs.create(inputPath);
@@ -149,76 +131,24 @@ public class TestHCatalog {
     out.writeChars("the lamb was sure to go\n");
     out.close();
 
-    Map<String, String> results = HiveHelper.execCommand(new CommandLine("hadoop")
+    Map<String, String> env = new HashMap<>();
+    env.put("HADOOP_HOME","/Users/gates/grid/odpi-testing/hadoop-2.7.3");
+    env.put("HADOOP_CLASSPATH", "/Users/gates/grid/odpi-testing/apache-hive-1.2.1-bin/hcatalog/share/hcatalog/hive-hcatalog-core-1.2.1.jar");
+    env.put("HIVE_HOME", "/Users/gates/grid/odpi-testing/apache-hive-1.2.1-bin");
+    Map<String, String> results = HiveHelper.execCommand(new CommandLine("/Users/gates/grid/odpi-testing/apache-hive-1.2.1-bin/bin/hive")
+        .addArgument("--service")
         .addArgument("jar")
         .addArgument("/Users/gates/git/bigtop/runtime-1.2.0-SNAPSHOT.jar")
         .addArgument(HCatalogMR.class.getName())
         .addArgument(inputTable)
         .addArgument(outputTable)
         .addArgument(inputSchema.getSchemaAsTypeString())
-        .addArgument(outputSchema.getSchemaAsTypeString()));
+        .addArgument(outputSchema.getSchemaAsTypeString()), env);
+    LOG.info(results.toString());
     Assert.assertEquals("HCat job failed", 0, Integer.parseInt(results.get("exitValue")));
-
-
-
-    /*
-    Job job = new Job(conf, "odpi_hcat_test");
-    HCatInputFormat.setInput(job, "default", inputTable);
-
-    job.setInputFormatClass(HCatInputFormat.class);
-    job.setJarByClass(TestHCatalog.class);
-    job.setMapperClass(Map.class);
-    job.setReducerClass(Reduce.class);
-    job.setMapOutputKeyClass(Text.class);
-    job.setMapOutputValueClass(IntWritable.class);
-    job.setOutputKeyClass(WritableComparable.class);
-    job.setOutputValueClass(HCatRecord.class);
-    HCatOutputFormat.setOutput(job, OutputJobInfo.create("default", outputTable, null));
-    HCatOutputFormat.setSchema(job, outputSchema);
-    job.setOutputFormatClass(HCatOutputFormat.class);
-
-    job.addCacheArchive(new URI("hdfs:/user/gates/hive-hcatalog-core-1.2.1.jar"));
-    job.addCacheArchive(new URI("hdfs:/user/gates/hive-metastore-1.2.1.jar"));
-    job.addCacheArchive(new URI("hdfs:/user/gates/hive-exec-1.2.1.jar"));
-
-    Assert.assertTrue(job.waitForCompletion(true));
-    */
 
     client.dropTable("default", inputTable);
     client.dropTable("default", outputTable);
   }
 
-  /*
-  public static class Map extends Mapper<WritableComparable,
-        HCatRecord, Text, IntWritable> {
-    private final static IntWritable one = new IntWritable(1);
-    private Text word = new Text();
-
-    @Override
-    protected void map(WritableComparable key, HCatRecord value, Context context)
-        throws IOException, InterruptedException {
-      String line = value.getString("line", inputSchema);
-      StringTokenizer tokenizer = new StringTokenizer(line);
-      while (tokenizer.hasMoreTokens()) {
-        word.set(tokenizer.nextToken());
-        context.write(word, one);
-      }
-    }
-  }
-
-  public static class Reduce extends Reducer<Text, IntWritable, WritableComparable, HCatRecord> {
-    @Override
-    protected void reduce(Text key, Iterable<IntWritable> values, Context context) throws
-        IOException, InterruptedException {
-      int sum = 0;
-      for (IntWritable i : values) {
-        sum += i.get();
-      }
-      HCatRecord output = new DefaultHCatRecord(2);
-      output.set("word", outputSchema, key);
-      output.set("count", outputSchema, sum);
-      context.write(null, output);
-    }
-  }
-  */
 }
