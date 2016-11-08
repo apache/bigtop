@@ -118,7 +118,7 @@ public class TestHCatalog {
         new HCatFieldSchema("word", HCatFieldSchema.Type.STRING, ""),
         new HCatFieldSchema("count", HCatFieldSchema.Type.INT, "")));
 
-    // TODO Could I use HCatWriter hear and the reader to read it?
+    // LATER Could I use HCatWriter here and the reader to read it?
     // Write some stuff into a file in the location of the table
     table = client.getTable("default", inputTable);
     String inputFile = table.getSd().getLocation() + "/input";
@@ -132,12 +132,17 @@ public class TestHCatalog {
     out.close();
 
     Map<String, String> env = new HashMap<>();
+    // TODO These need to be set from the environment rather than hard wired
     env.put("HADOOP_HOME","/Users/gates/grid/odpi-testing/hadoop-2.7.3");
     env.put("HADOOP_CLASSPATH", "/Users/gates/grid/odpi-testing/apache-hive-1.2.1-bin/hcatalog/share/hcatalog/hive-hcatalog-core-1.2.1.jar");
     env.put("HIVE_HOME", "/Users/gates/grid/odpi-testing/apache-hive-1.2.1-bin");
     Map<String, String> results = HiveHelper.execCommand(new CommandLine("/Users/gates/grid/odpi-testing/apache-hive-1.2.1-bin/bin/hive")
         .addArgument("--service")
         .addArgument("jar")
+        // TODO This is the jar built by gradle, but I didn't know how to take the jar built in
+        // the build phase and reference it in the test phase.  Perhaps a move operation could be
+        // put in the middle so the jar is moved to a known location that can be referenced here,
+        // or maybe gradle can pass in its working directory so that we can reference it from there.
         .addArgument("/Users/gates/git/bigtop/runtime-1.2.0-SNAPSHOT.jar")
         .addArgument(HCatalogMR.class.getName())
         .addArgument(inputTable)
