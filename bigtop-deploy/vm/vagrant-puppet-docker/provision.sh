@@ -34,4 +34,5 @@ bigtop::bigtop_repo_uri: $2
 hadoop_cluster_node::cluster_components: $3
 bigtop::jdk_package_name: $4
 hadoop::common_hdfs::testonly_hdfs_sshkeys: "yes"
+hadoop::common_hdfs::hdfs_replace_datanode_on_failure: "false"
 EOF
