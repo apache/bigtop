@@ -90,7 +90,7 @@ $roles_map = {
     client => ["pig-client"],
   },
   hive => {
-    master => ["hive-server2"],
+    master => ["hive-server2", "hive-metastore"],
     client => ["hive-client"],
   },
   tez => {
