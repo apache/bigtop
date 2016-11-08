@@ -19,19 +19,66 @@ class hadoop_hive {
     if ("hive-client" in $roles) {
       include hadoop_hive::client
     }
+
+    if ("hive-server2" in $roles) {
+      include hadoop_hive::server2
+
+      # include hadoop::init_hdfs
+      # Class['Hadoop::Init_hdfs'] -> Class['Hadoop_hive::Server2']
+      # if ("mapred-app" in $roles) {
+      #  Class['Hadoop::Mapred_app'] -> Class['Hadoop_hive::Server2']
+      # }
+    }
+  }
+
+  class client_package {
+    package { "hive":
+      ensure => latest,
+    } 
+  }
+
+  class common_config ($hbase_master = "",
+                       $hbase_zookeeper_quorum = "",
+                       $kerberos_realm = "",
+                       $server2_thrift_port = "10000",
+                       $server2_thrift_http_port = "10001",
+                       $hive_execution_engine = "mr") {
+    include hadoop_hive::client_package
+    if ($kerberos_realm) {
+      require kerberos::client
+      kerberos::host_keytab { "hive": 
+        spnego => true,
+        require => Package["hive"],
+      }
+    }
+
+    file { "/etc/hive/conf/hive-site.xml":
+      content => template('hadoop_hive/hive-site.xml'),
+      require => Package["hive"],
+    }
   }
 
   class client($hbase_master = "",
       $hbase_zookeeper_quorum = "",
       $hive_execution_engine = "mr") {
 
-    package { "hive":
-      ensure => latest,
-    } 
+      include hadoop_hive::common_config
+  }
 
-    file { "/etc/hive/conf/hive-site.xml":
-      content => template('hadoop_hive/hive-site.xml'),
-      require => Package["hive"],
+  class server2 {
+    include hadoop_hive::common_config
+
+    package { "hive-server2":
+      ensure => latest,
     }
+
+    service { "hive-server2":
+      ensure => running,
+      require => Package["hive-server2"],
+      subscribe => File["/etc/hive/conf/hive-site.xml"],
+      hasrestart => true,
+      hasstatus => true,
+    } 
+    Kerberos::Host_keytab <| title == "hive" |> -> Service["hive-server2"]
   }
 }
