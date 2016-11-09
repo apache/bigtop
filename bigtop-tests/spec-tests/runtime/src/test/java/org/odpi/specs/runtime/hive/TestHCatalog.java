@@ -51,6 +51,8 @@ import java.util.Random;
 
 
 public class TestHCatalog {
+  private static final String JOBJAR = "odpi.test.hive.hcat.job.jar";
+  private static final String HCATCORE = "odpi.test.hive.hcat.core.jar";
 
   private static final Log LOG = LogFactory.getLog(TestHCatalog.class.getName());
 
@@ -132,18 +134,11 @@ public class TestHCatalog {
     out.close();
 
     Map<String, String> env = new HashMap<>();
-    // TODO These need to be set from the environment rather than hard wired
-    env.put("HADOOP_HOME","/Users/gates/grid/odpi-testing/hadoop-2.7.3");
-    env.put("HADOOP_CLASSPATH", "/Users/gates/grid/odpi-testing/apache-hive-1.2.1-bin/hcatalog/share/hcatalog/hive-hcatalog-core-1.2.1.jar");
-    env.put("HIVE_HOME", "/Users/gates/grid/odpi-testing/apache-hive-1.2.1-bin");
-    Map<String, String> results = HiveHelper.execCommand(new CommandLine("/Users/gates/grid/odpi-testing/apache-hive-1.2.1-bin/bin/hive")
+    env.put("HADOOP_CLASSPATH", System.getProperty(HCATCORE, ""));
+    Map<String, String> results = HiveHelper.execCommand(new CommandLine("hive")
         .addArgument("--service")
         .addArgument("jar")
-        // TODO This is the jar built by gradle, but I didn't know how to take the jar built in
-        // the build phase and reference it in the test phase.  Perhaps a move operation could be
-        // put in the middle so the jar is moved to a known location that can be referenced here,
-        // or maybe gradle can pass in its working directory so that we can reference it from there.
-        .addArgument("/Users/gates/git/bigtop/runtime-1.2.0-SNAPSHOT.jar")
+        .addArgument(System.getProperty(JOBJAR))
         .addArgument(HCatalogMR.class.getName())
         .addArgument(inputTable)
         .addArgument(outputTable)

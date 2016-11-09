@@ -43,7 +43,20 @@ dependencies {
   if (System.env.HADOOP_CONF_DIR) testRuntime files(System.env.HADOOP_CONF_DIR)
 }
 
+jar {
+    from {
+        (configurations.runtime).grep{it.toString() =~ /(hive|libfb303)-.*[jw]ar$/}.collect {
+              zipTree(it)
+        }
+    }
+
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
+}
+
 test {
   // Change the default location where test data is picked up
   systemProperty 'test.resources.dir', "${buildDir}/resources/test/"
+  systemProperty 'odpi.test.hive.hcat.job.jar', jar.archivePath
+  systemProperty 'odpi.test.hive.hcat.core.jar', (configurations.runtime).find { it.toString() =~ /hive-hcatalog-core-.*jar$/ }
 }
+test.dependsOn jar

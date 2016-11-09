@@ -72,17 +72,6 @@ public class HCatalogMR extends Configured implements Tool {
     HCatOutputFormat.setSchema(job, HCatSchemaUtils.getHCatSchema(outputSchemaStr));
     job.setOutputFormatClass(HCatOutputFormat.class);
 
-    // TODO All four of these jars need to be in the distributed cache of the job for the job to
-    // succeed.  I loaded them into a known location in HDFS to get them in the cache.  There may
-    // be a way to load them from a file on the gateway machine.  We could also put in a hdfs dfs
-    // -put operation into a gradle step as part of the build so that the jars are picked up from
-    // the distribution and put in a known location in HDFS from when they can be picked up in
-    // the distributed cache.
-    job.addCacheArchive(new URI("hdfs:/user/gates/hive-hcatalog-core-1.2.1.jar"));
-    job.addCacheArchive(new URI("hdfs:/user/gates/hive-metastore-1.2.1.jar"));
-    job.addCacheArchive(new URI("hdfs:/user/gates/hive-exec-1.2.1.jar"));
-    job.addCacheArchive(new URI("hdfs:/user/gates/libfb303-0.9.2.jar"));
-
     return job.waitForCompletion(true) ? 0 : 1;
 
 
