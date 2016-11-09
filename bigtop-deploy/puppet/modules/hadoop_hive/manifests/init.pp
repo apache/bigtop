@@ -85,6 +85,7 @@ class hadoop_hive {
       hasstatus => true,
     } 
     Kerberos::Host_keytab <| title == "hive" |> -> Service["hive-server2"]
+    Service <| title == "hive-metastore" |> -> Service["hive-server2"]
   }
 
   class metastore {
@@ -96,12 +97,12 @@ class hadoop_hive {
 
     service { "hive-metastore":
       ensure => running,
-      require => Package["hive-server2"],
+      require => Package["hive-metastore"],
       subscribe => File["/etc/hive/conf/hive-site.xml"],
       hasrestart => true,
       hasstatus => true,
     }
     Kerberos::Host_keytab <| title == "hive" |> -> Service["hive-metastore"]
-    Service["hive-metastore"] -> Service["hive-server2"]
+    File <| title == "/etc/hadoop/conf/core-site.xml" |> -> Service["hive-metastore"]
   }
 }
