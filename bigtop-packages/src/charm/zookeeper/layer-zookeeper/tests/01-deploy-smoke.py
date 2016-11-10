@@ -30,7 +30,7 @@ class TestDeploy(unittest.TestCase):
     def setUpClass(cls):
         cls.d = amulet.Deployment(series='xenial')
 
-        cls.d.add('zookeeper', charm='cs:xenial/zookeeper', units=3)
+        cls.d.add('zookeeper', charm='zookeeper', units=3)
 
         cls.d.setup(timeout=TIMEOUT)
         cls.d.sentry.wait_for_messages({'zookeeper': 'ready (3 units)'},

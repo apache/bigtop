@@ -33,7 +33,7 @@ class TestBindClientPort(unittest.TestCase):
     def setUpClass(cls):
         cls.d = amulet.Deployment(series='xenial')
 
-        cls.d.add('zk-test', charm='cs:xenial/zookeeper')
+        cls.d.add('zk-test', charm='zookeeper')
 
         cls.d.setup(timeout=TIMEOUT)
         cls.d.sentry.wait_for_messages({'zk-test': re.compile('ready')},
