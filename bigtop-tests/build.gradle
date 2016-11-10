@@ -32,12 +32,13 @@ distributions {
         include 'gradlew'
         include '*.gradle'
         include 'gradle/**'
+        include 'run_itest.sh'
       }
       from ("$rootDir/buildSrc") {
         into 'buildSrc'
       }
       from ("$rootDir/bigtop-packages/src/common/bigtop-utils") {
-        into 'bin'
+        into 'bigtop-packages/src/common/bigtop-utils'
         include '*'
       }
       from ('smoke-tests') {
@@ -47,10 +48,8 @@ distributions {
         include 'hdfs/**/*'
         include 'mapreduce/**/*'
         include 'yarn/**/*'
+        include 'hive/**/*'
         include 'logger-test-config/**'
-      }
-      from ('smoke-tests') { // Put the driver script to the top-level
-        include 'run_itest.sh'
       }
       from ('spec-tests') {
         into 'bigtop-tests/spec-tests'
@@ -67,4 +66,3 @@ distributions {
 
 distZip.dependsOn clean
 distTar.dependsOn clean
-
