@@ -1,0 +1,2 @@
+/usr/lib/spark/lib/spark-*-yarn-shuffle.jar
+/usr/lib/spark/yarn/lib/spark-yarn-shuffle.jar
