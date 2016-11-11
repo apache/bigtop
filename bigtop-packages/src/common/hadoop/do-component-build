@@ -18,10 +18,16 @@ set -ex
 ######################################################################
 # BIGTOP-2288 Please remove this patch when maven repository is updated
 # with version of leveldbjni-all library that is not x86 specific
-if [ $HOSTTYPE = "powerpc64le" ] ; then
+if [ $HOSTTYPE = "powerpc64le" ]  || [ $HOSTTYPE = "aarch64" ] ; then
+        if [ $HOSTTYPE = "powerpc64le" ] ; then
         #download the POWER version of leveldb
         git clone git://github.com/ibmsoe/leveldb.git
         git clone https://github.com/ibmsoe/leveldbjni.git
+        else
+        # download leveldbjni 1.8 from original repo
+        git clone https://github.com/chirino/leveldb.git
+        git clone https://github.com/fusesource/leveldbjni.git --branch leveldbjni-1.8 --single-branch
+        fi
         export SNAPPY_HOME=/usr/lib
         export LEVELDB_HOME=`cd leveldb; pwd`
         export LEVELDBJNI_HOME=`cd leveldbjni; pwd`
@@ -29,6 +35,45 @@ if [ $HOSTTYPE = "powerpc64le" ] ; then
         cd ${LEVELDB_HOME}
         export C_INCLUDE_PATH=${LIBRARY_PATH}
         export CPLUS_INCLUDE_PATH=${LIBRARY_PATH}
+        if [ $HOSTTYPE = "aarch64" ] ; then
+        # apply ARM64 specific patch
+        patch -p1 -E << 'EOF'
+diff a/port/atomic_pointer.h b/port/atomic_pointer.h
+--- a/port/atomic_pointer.h
++++ b/port/atomic_pointer.h
+@@ -36,6 +36,8 @@
+ #define ARCH_CPU_X86_FAMILY 1
+ #elif defined(__ARMEL__)
+ #define ARCH_CPU_ARM_FAMILY 1
++#elif defined(__aarch64__)
++#define ARCH_CPU_ARM64_FAMILY 1
+ #elif defined(__ppc__) || defined(__powerpc__) || defined(__powerpc64__)
+ #define ARCH_CPU_PPC_FAMILY 1
+ #endif
+@@ -93,6 +95,13 @@ inline void MemoryBarrier() {
+ }
+ #define LEVELDB_HAVE_MEMORY_BARRIER
+
++// ARM64
++#elif defined(ARCH_CPU_ARM64_FAMILY) && defined(__linux__)
++inline void MemoryBarrier() {
++  asm volatile("dmb sy" : : : "memory");
++}
++#define LEVELDB_HAVE_MEMORY_BARRIER
++
+ // PPC
+ #elif defined(ARCH_CPU_PPC_FAMILY) && defined(__GNUC__)
+ inline void MemoryBarrier() {
+@@ -216,6 +225,7 @@ class AtomicPointer {
+ #undef LEVELDB_HAVE_MEMORY_BARRIER
+ #undef ARCH_CPU_X86_FAMILY
+ #undef ARCH_CPU_ARM_FAMILY
++#undef ARCH_CPU_ARM64_FAMILY
+ #undef ARCH_CPU_PPC_FAMILY
+
+ }  // namespace port
+EOF
+        fi 
         git apply ../leveldbjni/leveldb.patch
         make libleveldb.a
         #Now use maven to build and update the local maven repository with ppc version of
