@@ -1,2 +1,4 @@
+sources:
+  - 'ppa:juju/stable'
 packages:
   - amulet
