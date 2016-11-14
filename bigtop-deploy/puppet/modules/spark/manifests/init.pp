@@ -49,7 +49,7 @@ class spark {
       require => Package['spark-core'],
     }
 
-    package { 'spark-extras':
+    package { 'spark-external':
       ensure  => latest,
       require => Package['spark-core'],
     }

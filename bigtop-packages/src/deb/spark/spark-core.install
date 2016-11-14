@@ -1,9 +1,11 @@
 /etc/spark
 /usr/bin/spark-class
-/usr/bin/spark-submit
+/usr/bin/spark-example
 /usr/bin/spark-shell
 /usr/bin/spark-sql
+/usr/bin/spark-submit
 /usr/lib/spark/LICENSE
+/usr/lib/spark/README.md
 /usr/lib/spark/RELEASE
 /usr/lib/spark/NOTICE
 /usr/lib/spark/bin/beeline
@@ -16,8 +18,8 @@
 /usr/lib/spark/conf
 /usr/lib/spark/data
 /usr/lib/spark/examples
-/usr/lib/spark/lib/spark-assembly*.jar
-/usr/lib/spark/lib/spark-examples*.jar
+/usr/lib/spark/jars
+/usr/lib/spark/licenses
 /usr/lib/spark/sbin
 /usr/lib/spark/work
 /usr/share/doc/spark*

@@ -73,7 +73,7 @@ bigtop {
   version = "1.2.0-SNAPSHOT"
   stack {
     'jdk' { version = '1.7'; version_base = version }
-    'scala' { version = '2.10.4'; version_base = version }
+    'scala' { version = '2.11.8'; version_base = version }
   }
   apache {
     APACHE_MIRROR = "https://www-us.apache.org"
@@ -299,10 +299,10 @@ bigtop {
       name    = 'spark'
       pkg     = 'spark-core'
       relNotes = 'Apache Spark'
-      version { base = '1.6.2'; pkg = base; release = 1 }
+      version { base = '2.0.1'; pkg = base; release = 1 }
       tarball { destination = "$name-${version.base}.tar.gz"
                 source      = "$name-${version.base}.tgz" }
-      url     { download_path = "/spark/spark-${version.base}"
+      url     { download_path = "/$name/$name-${version.base}"
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }

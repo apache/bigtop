@@ -66,10 +66,10 @@ Architecture: all
 Description: DataNucleus libraries for Apache Spark
  DataNucleus libraries used by Spark SQL with Hive Support
 
-Package: spark-extras
+Package: spark-external
 Architecture: all
-Description: External/extra libraries for Apache Spark
- External/extra libraries built for Apache Spark but not included in the main assembly JAR (e.g., external streaming libraries)
+Description: External libraries for Apache Spark
+ External libraries built for Apache Spark but not included in the main distribution (e.g., external streaming libraries)
 
 Package: spark-yarn-shuffle
 Architecture: all

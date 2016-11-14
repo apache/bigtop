@@ -126,13 +126,13 @@ Group: Development/Libraries
 %description -n spark-datanucleus
 DataNucleus libraries used by Spark SQL with Hive Support
 
-%package -n spark-extras
-Summary: External/extra libraries for Apache Spark
+%package -n spark-external
+Summary: External libraries for Apache Spark
 Group: Development/Libraries
 
-%description -n spark-extras
-External/extra libraries built for Apache Spark but not included in the main
-assembly JAR (e.g., external streaming libraries)
+%description -n spark-external
+External libraries built for Apache Spark but not included in the main
+distribution (e.g., external streaming libraries)
 
 %package -n spark-yarn-shuffle
 Summary: Spark YARN Shuffle Service
@@ -191,28 +191,25 @@ done
 %defattr(-,root,root,755)
 %config(noreplace) %{config_spark}.dist
 %doc %{doc_spark}
-%{lib_spark}/conf
 %{lib_spark}/LICENSE
-%{lib_spark}/RELEASE
 %{lib_spark}/NOTICE
-%{lib_spark}/bin
-%{lib_spark}/lib
-%exclude %{lib_spark}/lib/datanucleus-*.jar
-%exclude %{lib_spark}/lib/spark-*-yarn-shuffle.jar
-%{lib_spark}/sbin
+%{lib_spark}/README.md
+%{lib_spark}/RELEASE
+%{bin_spark}
+%exclude %{bin_spark}/pyspark
+%{lib_spark}/conf
 %{lib_spark}/data
 %{lib_spark}/examples
+%{lib_spark}/jars
+%exclude %{lib_spark}/jars/datanucleus-*.jar
+%{lib_spark}/licenses
+%{lib_spark}/sbin
 %{lib_spark}/work
-%exclude %{bin_spark}/pyspark
-%exclude %{lib_spark}/python
 %{etc_spark}
 %attr(0755,spark,spark) %{var_lib_spark}
 %attr(0755,spark,spark) %{var_run_spark}
 %attr(0755,spark,spark) %{var_log_spark}
-%{bin}/spark-class
-%{bin}/spark-shell
-%{bin}/spark-sql
-%{bin}/spark-submit
+%{bin}/spark-*
 
 %files -n spark-python
 %defattr(-,root,root,755)
@@ -222,16 +219,16 @@ done
 
 %files -n spark-datanucleus
 %defattr(-,root,root,755)
-%{lib_spark}/lib/datanucleus-*.jar
+%{lib_spark}/jars/datanucleus-*.jar
 %{lib_spark}/yarn/lib/datanucleus-*.jar
 
-%files -n spark-extras
+%files -n spark-external
 %defattr(-,root,root,755)
-%{lib_spark}/extras
+%{lib_spark}/external
 
 %files -n spark-yarn-shuffle
 %defattr(-,root,root,755)
-%{lib_spark}/lib/spark-*-yarn-shuffle.jar
+%{lib_spark}/yarn/spark-*-yarn-shuffle.jar
 %{lib_spark}/yarn/lib/spark-yarn-shuffle.jar
 
 %define service_macro() \
