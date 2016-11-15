@@ -44,7 +44,7 @@ class hadoop_hbase {
 
   class common_config ($rootdir, $zookeeper_quorum, $kerberos_realm = "", $heap_size="1024") {
     include hadoop_hbase::client_package
-    if ($kerberos_realm) {
+    if ($kerberos_realm and $kerberos_realm != "") {
       require kerberos::client
       kerberos::host_keytab { "hbase": 
         spnego => true,

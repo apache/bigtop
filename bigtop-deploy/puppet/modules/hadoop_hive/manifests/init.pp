@@ -49,7 +49,7 @@ class hadoop_hive {
                        $server2_thrift_http_port = "10001",
                        $hive_execution_engine = "mr") {
     include hadoop_hive::client_package
-    if ($kerberos_realm) {
+    if ($kerberos_realm and $kerberos_realm != "") {
       require kerberos::client
       kerberos::host_keytab { "hive": 
         spnego => true,
