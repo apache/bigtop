@@ -155,7 +155,7 @@ has completed, all of the Zookeeper nodes should report the following status:
 
     ready (n units)
 
-(Where 'n' is the total number of Zookeeper units in your quorum.)
+(Where 'n' is the total number of Zookeeper units in the quorum.)
 
 
 # Integrating

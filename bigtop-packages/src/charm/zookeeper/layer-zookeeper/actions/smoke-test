@@ -18,9 +18,9 @@
 import sys
 sys.path.append('lib')
 
-from charmhelpers.core import hookenv
-from charms.layer.apache_bigtop_base import Bigtop
-from charms.reactive import is_state
+from charmhelpers.core import hookenv  # noqa: E402
+from charms.layer.apache_bigtop_base import Bigtop  # noqa: E402
+from charms.reactive import is_state  # noqa: E402
 
 
 def fail(msg, output=None):

@@ -17,7 +17,7 @@ import json
 import time
 from charmhelpers.core import hookenv
 from charms.layer.apache_bigtop_base import get_package_version
-from charms.layer.zookeeper import Zookeeper
+from charms.layer.bigtop_zookeeper import Zookeeper
 from charms.leadership import leader_set, leader_get
 from charms.reactive import set_state, when, when_not, is_state
 from charms.reactive.helpers import data_changed
