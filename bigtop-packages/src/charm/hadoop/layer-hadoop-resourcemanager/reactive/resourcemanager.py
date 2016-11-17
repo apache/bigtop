@@ -141,9 +141,10 @@ def start_resourcemanager(namenode):
         for port in get_layer_opts().exposed_ports('resourcemanager'):
             hookenv.open_port(port)
         set_state('apache-bigtop-resourcemanager.started')
-        hookenv.application_version_set(get_hadoop_version())
         hookenv.status_set('maintenance', 'resourcemanager started')
+        hookenv.application_version_set(get_hadoop_version())
     else:
+        hookenv.log('YARN ResourceManager failed to start')
         hookenv.status_set('blocked', 'resourcemanager failed to start')
         remove_state('apache-bigtop-resourcemanager.started')
         for port in get_layer_opts().exposed_ports('resourcemanager'):
@@ -151,7 +152,7 @@ def start_resourcemanager(namenode):
 
     hs_started = host.service_restart('hadoop-mapreduce-historyserver')
     if not hs_started:
-        hookenv.log('YARN History Server failed to start')
+        hookenv.log('YARN HistoryServer failed to start')
 
 
 ###############################################################################

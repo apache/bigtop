@@ -102,9 +102,10 @@ def start_namenode():
         for port in get_layer_opts().exposed_ports('namenode'):
             hookenv.open_port(port)
         set_state('apache-bigtop-namenode.started')
-        hookenv.application_version_set(get_hadoop_version())
         hookenv.status_set('maintenance', 'namenode started')
+        hookenv.application_version_set(get_hadoop_version())
     else:
+        hookenv.log('NameNode failed to start')
         hookenv.status_set('blocked', 'namenode failed to start')
         remove_state('apache-bigtop-namenode.started')
         for port in get_layer_opts().exposed_ports('namenode'):
