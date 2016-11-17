@@ -139,8 +139,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       bigtop.vm.provision :puppet do |puppet|
         puppet.module_path = "../../puppet/modules/"
         puppet.manifests_path =  "../../puppet/manifests/"
-        puppet.manifest_file  = "site.pp"
-        puppet.options = "--debug"
+        puppet.manifest_file = "."
+        puppet.options = "--parser future"
       end
 
       if run_smoke_tests then
