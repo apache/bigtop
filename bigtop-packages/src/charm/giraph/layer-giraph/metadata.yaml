@@ -1,0 +1,10 @@
+name: giraph
+summary: Large-scale graph processing on Hadoop
+maintainer: Panagiotis Liakos <p.liakos@di.uoa.gr>
+description: Large-scale graph processing on Hadoop 
+tags: []
+subordinate: true
+requires:
+  mahout:
+    interface: mahout
+    scope: container
