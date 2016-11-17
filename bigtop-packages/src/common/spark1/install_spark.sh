@@ -139,13 +139,13 @@ tar --wildcards -C $PREFIX/$LIB_DIR/ -zxf ${BUILD_DIR}/assembly/target/spark-ass
 rm -rf $PREFIX/$LIB_DIR/bin/*.cmd
 
 # External/extra jars
-ls ${BUILD_DIR}/{external,extras}/*/target/*${SPARK_VERSION}.jar | grep -v 'original-\|assembly' | xargs -IJARS cp JARS $PREFIX/$LIB_DIR/extras/lib
+ls ${BUILD_DIR}/{external,extras}/*/target/*${SPARK1_VERSION}.jar | grep -v 'original-\|assembly' | xargs -IJARS cp JARS $PREFIX/$LIB_DIR/extras/lib
 
 # Examples jar
-cp ${BUILD_DIR}/examples/target/spark-examples*${SPARK_VERSION}.jar $PREFIX/$LIB_DIR/lib/spark-examples-${SPARK_VERSION}-hadoop${HADOOP_VERSION}.jar
+cp ${BUILD_DIR}/examples/target/spark-examples*${SPARK1_VERSION}.jar $PREFIX/$LIB_DIR/lib/spark-examples-${SPARK1_VERSION}-hadoop${HADOOP_VERSION}.jar
 
 # Spark YARN Shuffle jar
-cp ${BUILD_DIR}/network/yarn/target/*/spark-${SPARK_VERSION}-yarn-shuffle.jar $PREFIX/$LIB_DIR/lib/
+cp ${BUILD_DIR}/network/yarn/target/*/spark-${SPARK1_VERSION}-yarn-shuffle.jar $PREFIX/$LIB_DIR/lib/
 
 # Examples src
 cp -ra ${BUILD_DIR}/examples/src $PREFIX/$EXAMPLES_DIR/
