@@ -155,8 +155,7 @@ bash $RPM_SOURCE_DIR/install_spark.sh \
           --build-dir=`pwd`         \
           --source-dir=$RPM_SOURCE_DIR \
           --prefix=$RPM_BUILD_ROOT  \
-          --doc-dir=%{doc_spark} \
-          --pyspark-python=python
+          --doc-dir=%{doc_spark}
 
 for service in %{spark_services}
 do
