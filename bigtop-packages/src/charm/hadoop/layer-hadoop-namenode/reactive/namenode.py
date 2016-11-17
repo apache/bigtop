@@ -92,15 +92,24 @@ def install_namenode():
 @when_not('apache-bigtop-namenode.started')
 def start_namenode():
     hookenv.status_set('maintenance', 'starting namenode')
-    # NB: service should be started by install, but this may be handy in case
-    # we have something that removes the .started state in the future. Also
-    # note we restart here in case we modify conf between install and now.
-    host.service_restart('hadoop-hdfs-namenode')
-    for port in get_layer_opts().exposed_ports('namenode'):
-        hookenv.open_port(port)
-    set_state('apache-bigtop-namenode.started')
-    hookenv.application_version_set(get_hadoop_version())
-    hookenv.status_set('maintenance', 'namenode started')
+    # NB: service should be started by install, but we want to verify it is
+    # running before we set the .started state and open ports. We always
+    # restart here, which may seem heavy-handed. However, restart works
+    # whether the service is currently started or stopped. It also ensures the
+    # service is using the most current config.
+    started = host.service_restart('hadoop-hdfs-namenode')
+    if started:
+        for port in get_layer_opts().exposed_ports('namenode'):
+            hookenv.open_port(port)
+        set_state('apache-bigtop-namenode.started')
+        hookenv.status_set('maintenance', 'namenode started')
+        hookenv.application_version_set(get_hadoop_version())
+    else:
+        hookenv.log('NameNode failed to start')
+        hookenv.status_set('blocked', 'namenode failed to start')
+        remove_state('apache-bigtop-namenode.started')
+        for port in get_layer_opts().exposed_ports('namenode'):
+            hookenv.close_port(port)
 
 
 ###############################################################################

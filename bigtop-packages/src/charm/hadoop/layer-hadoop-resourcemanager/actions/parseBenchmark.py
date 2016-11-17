@@ -16,7 +16,7 @@
 # limitations under the License.
 
 """
-Simple script to parse nnbench transaction results
+Simple script to parse benchmark transaction results
 and reformat them as JSON for sending back to juju
 """
 import sys
@@ -25,12 +25,10 @@ from charmhelpers.core import hookenv
 import re
 
 
-def parse_nnbench_output():
+def parse_benchmark_output():
     """
-    Parse the output from nnbench and set the action results:
-
+    Parse the output from the benchmark and set the action results:
     """
-
     results = {}
 
     # Find all of the interesting things
@@ -42,4 +40,4 @@ def parse_nnbench_output():
     hookenv.action_set({"results.raw": json.dumps(results)})
 
 if __name__ == "__main__":
-    parse_nnbench_output()
+    parse_benchmark_output()
