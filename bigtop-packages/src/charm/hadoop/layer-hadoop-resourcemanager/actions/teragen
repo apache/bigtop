@@ -47,7 +47,7 @@ START=`date +%s`
 su hdfs << EOF
 . /etc/default/hadoop
 echo 'generating data'
-hadoop jar \${HADOOP_MAPRED_HOME}/hadoop-mapreduce-examples-*.jar teragen ${SIZE} ${IN_DIR} &> ${RESULT_LOG}
+hadoop jar \${HADOOP_MAPRED_HOME}/hadoop-mapreduce-examples-*.jar teragen ${SIZE} ${IN_DIR} | tee -a ${RESULT_LOG}
 EOF
 STOP=`date +%s`
 benchmark-finish

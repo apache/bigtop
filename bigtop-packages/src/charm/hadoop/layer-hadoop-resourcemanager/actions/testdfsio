@@ -65,7 +65,7 @@ su ubuntu << EOF
 . /etc/default/hadoop
 echo 'running benchmark'
 cd /tmp/
-hadoop jar \${HADOOP_MAPRED_HOME}/hadoop-mapreduce-*test*.jar TestDFSIO $OPTIONS &> ${RESULT_LOG}
+hadoop jar \${HADOOP_MAPRED_HOME}/hadoop-mapreduce-*test*.jar TestDFSIO $OPTIONS | tee -a ${RESULT_LOG}
 EOF
 STOP=`date +%s`
 benchmark-finish
