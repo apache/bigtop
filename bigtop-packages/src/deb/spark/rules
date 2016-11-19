@@ -40,3 +40,8 @@ override_dh_auto_install: $(svcs)
 	--doc-dir=/usr/share/doc/spark \
 	--source-dir=debian \
 	--prefix=debian/tmp
+
+override_dh_install:
+	dh_install
+	# BIGTOP-2588 drop datanucleus jars from spark-core
+	rm -Rf debian/spark-core/usr/lib/spark/jars/datanucleus*
