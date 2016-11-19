@@ -109,8 +109,9 @@ for x in flume-ng-* \
           DISCLAIMER \
           LICENSE \
           NOTICE \
-          README \
+          README.md \
           RELEASE-NOTES \
+          doap_Flume.rdf \
           bin/ia64 \
           bin/amd64; do
   rm -rf ${PREFIX}/$LIB_DIR/$x 
@@ -161,8 +162,9 @@ for x in CHANGELOG \
           DEVNOTES \
           LICENSE \
           NOTICE \
-          README \
-          RELEASE-NOTES ; do
+          README.md \
+          RELEASE-NOTES \
+          doap_Flume.rdf ; do
   if [ -e $x ] ; then
     cp -r $x $PREFIX/${DOC_DIR}
   fi
