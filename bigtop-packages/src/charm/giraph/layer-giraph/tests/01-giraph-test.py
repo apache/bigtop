@@ -21,12 +21,12 @@ import amulet
 
 class TestDeploy(unittest.TestCase):
     """
-    Deployment and smoke test for Apache Bigtop Mahout.
+    Deployment and smoke test for Apache Giraph.
     """
     @classmethod
     def setUpClass(cls):
         cls.d = amulet.Deployment(series='xenial')
-        cls.d.add('mahout', 'cs:xenial/mahout')
+        cls.d.add('giraph', 'cs:xenial/giraph')
         cls.d.add('client', 'cs:xenial/hadoop-client')
         cls.d.add('resourcemanager', 'cs:xenial/hadoop-resourcemanager')
         cls.d.add('namenode', 'cs:xenial/hadoop-namenode')
@@ -39,21 +39,21 @@ class TestDeploy(unittest.TestCase):
         cls.d.relate('slave:namenode', 'namenode:datanode')
         cls.d.relate('slave:resourcemanager', 'resourcemanager:nodemanager')
         cls.d.relate('namenode:namenode', 'resourcemanager:namenode')
-        cls.d.relate('mahout:mahout', 'client:mahout')
+        cls.d.relate('giraph:giraph', 'client:mahout')
 
         cls.d.setup(timeout=3600)
-        cls.d.sentry.wait_for_messages({"mahout": "ready"}, timeout=3600)
-        cls.mahout = cls.d.sentry['mahout'][0]
+        cls.d.sentry.wait_for_messages({"giraph": "ready"}, timeout=3600)
+        cls.giraph = cls.d.sentry['giraph'][0]
 
-    def test_mahout(self):
+    def test_giraph(self):
         """
-        Validate Mahout by running the smoke-test action.
+        Validate Giraph by running the smoke-test action.
         """
-        uuid = self.mahout.run_action('smoke-test')
+        uuid = self.giraph.run_action('smoke-test')
         result = self.d.action_fetch(uuid, full_output=True)
         # action status=completed on success
         if (result['status'] != "completed"):
-            self.fail('Mahout smoke-test failed: %s' % result)
+            self.fail('Giraph smoke-test failed: %s' % result)
 
 
 if __name__ == '__main__':

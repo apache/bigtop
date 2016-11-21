@@ -1,0 +1,6 @@
+options:
+  network_interface:
+    default: ""
+    type: string
+    description: |
+      Something.

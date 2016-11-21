@@ -49,10 +49,10 @@ hadoop-processing`.
 This will deploy an Apache Bigtop Hadoop cluster. More information about this
 deployment can be found in the [bundle readme](https://jujucharms.com/hadoop-processing/).
 
-Now add Mahout and relate it to the cluster endpoint:
+Now add Giraph and relate it to the cluster endpoint:
 
-    juju deploy mahout
-    juju add-relation mahout client
+    juju deploy giraph
+    juju add-relation giraph client
 
 ## Network-Restricted Environments
 Charms can be deployed in environments with limited network access. To deploy
@@ -86,7 +86,7 @@ ready.
 This charm provides a `smoke-test` action that can be used to verify the
 application is functioning as expected. Run the action as follows:
 
-    juju run-action mahout/0 smoke-test
+    juju run-action giraph/0 smoke-test
 
 > **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
 of Juju, the syntax is `juju action do mahout/0 smoke-test`.
