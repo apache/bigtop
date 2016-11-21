@@ -23,7 +23,7 @@ export MAVEN_OPTS="-Xmx512m -XX:MaxPermSize=128m"
 mvn -DskipTests -Dcrunch.platform=2           \
     -Dhadoop.version=$HADOOP_VERSION          \
     -Dhbase.version=$HBASE_VERSION            \
-    -Dspark.version=$SPARK_VERSION            \
+    -Dspark.version=$SPARK1_VERSION            \
     -Papache-release clean site:site package "$@"
 
 rm -rf build
