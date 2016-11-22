@@ -7,9 +7,14 @@ includes:
   - 'interface:benchmark'
 options:
   apache-bigtop-base:
+    groups:
+      - 'mapred'
+      - 'spark'
     users:
+      spark:
+        groups: ['spark', 'hadoop']
       ubuntu:
-        groups: ['hadoop', 'mapred']
+        groups: ['hadoop', 'mapred', 'spark']
     ports:
         resourcemanager:
             port: 8032
