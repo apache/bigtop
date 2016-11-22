@@ -8,14 +8,17 @@ options:
   apache-bigtop-base:
     groups:
       - 'mapred'
+      - 'spark'
       - 'yarn'
     users:
       mapred:
-        groups: ['hadoop', 'mapred']
+        groups: ['mapred', 'hadoop']
+      spark:
+        groups: ['spark', 'hadoop']
       ubuntu:
-        groups: ['hadoop', 'mapred']
+        groups: ['hadoop', 'mapred', 'spark']
       yarn:
-        groups: ['hadoop', 'yarn']
+        groups: ['yarn', 'hadoop']
     ports:
       namenode:
         port: 8020

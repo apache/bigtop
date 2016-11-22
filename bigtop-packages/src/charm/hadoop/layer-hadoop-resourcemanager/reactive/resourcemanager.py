@@ -109,7 +109,10 @@ def install_resourcemanager(namenode):
         # requirement.
         utils.initialize_kv_host()
 
-        # Add our ubuntu user to the hadoop and mapred groups.
+        # We need to create the 'spark' user/group since we may not be
+        # installing spark on this machine. This is needed so the history
+        # server can access spark job history files in hdfs. Also add our
+        # ubuntu user to the hadoop, mapred, and spark groups on this machine.
         get_layer_opts().add_users()
 
         set_state('apache-bigtop-resourcemanager.installed')
