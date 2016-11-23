@@ -78,10 +78,10 @@ def install_namenode():
     # requirement.
     utils.initialize_kv_host()
 
-    # We need to create the 'mapred' user/group since we are not installing
-    # hadoop-mapreduce. This is needed so the namenode can access yarn
-    # job history files in hdfs. Also add our ubuntu user to the hadoop
-    # and mapred groups.
+    # We need to create the 'mapred' and 'spark' user/group since we may not
+    # be installing hadoop-mapreduce or spark on this machine. This is needed
+    # so the namenode can access yarn and spark job history files in hdfs. Also
+    # add our ubuntu user to the hadoop, mapred, and spark groups.
     get_layer_opts().add_users()
 
     set_state('apache-bigtop-namenode.installed')
