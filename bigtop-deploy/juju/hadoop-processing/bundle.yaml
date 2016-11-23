@@ -1,6 +1,6 @@
 services:
   namenode:
-    charm: "cs:xenial/hadoop-namenode-5"
+    charm: "cs:xenial/hadoop-namenode-6"
     num_units: 1
     annotations:
       gui-x: "500"
@@ -8,7 +8,7 @@ services:
     to:
       - "0"
   resourcemanager:
-    charm: "cs:xenial/hadoop-resourcemanager-5"
+    charm: "cs:xenial/hadoop-resourcemanager-6"
     num_units: 1
     annotations:
       gui-x: "500"
@@ -16,7 +16,7 @@ services:
     to:
       - "0"
   slave:
-    charm: "cs:xenial/hadoop-slave-5"
+    charm: "cs:xenial/hadoop-slave-6"
     num_units: 3
     annotations:
       gui-x: "0"
@@ -26,7 +26,7 @@ services:
       - "2"
       - "3"
   plugin:
-    charm: "cs:xenial/hadoop-plugin-5"
+    charm: "cs:xenial/hadoop-plugin-6"
     annotations:
       gui-x: "1000"
       gui-y: "400"
@@ -84,19 +84,19 @@ relations:
   - ["rsyslog:aggregator", "rsyslog-forwarder-ha:syslog"]
 machines:
   "0":
-    constraints: "mem=7G"
+    constraints: "mem=7G root-disk=20G"
     series: "xenial"
   "1":
-    constraints: "mem=7G"
+    constraints: "mem=7G root-disk=20G"
     series: "xenial"
   "2":
-    constraints: "mem=7G"
+    constraints: "mem=7G root-disk=20G"
     series: "xenial"
   "3":
-    constraints: "mem=7G"
+    constraints: "mem=7G root-disk=20G"
     series: "xenial"
   "4":
-    constraints: "mem=3G"
+    constraints: "mem=3G root-disk=20G"
     series: "xenial"
   "5":
     constraints: "mem=3G"

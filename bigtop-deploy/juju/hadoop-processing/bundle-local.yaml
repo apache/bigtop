@@ -84,19 +84,19 @@ relations:
   - ["rsyslog:aggregator", "rsyslog-forwarder-ha:syslog"]
 machines:
   "0":
-    constraints: "mem=7G"
+    constraints: "mem=7G root-disk=20G"
     series: "xenial"
   "1":
-    constraints: "mem=7G"
+    constraints: "mem=7G root-disk=20G"
     series: "xenial"
   "2":
-    constraints: "mem=7G"
+    constraints: "mem=7G root-disk=20G"
     series: "xenial"
   "3":
-    constraints: "mem=7G"
+    constraints: "mem=7G root-disk=20G"
     series: "xenial"
   "4":
-    constraints: "mem=3G"
+    constraints: "mem=3G root-disk=20G"
     series: "xenial"
   "5":
     constraints: "mem=3G"
