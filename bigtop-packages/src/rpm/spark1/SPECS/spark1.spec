@@ -29,7 +29,7 @@
 %define doc_spark %{_docdir}/spark
 %define alternatives_cmd update-alternatives
 %else
-%define doc_spark %{_docdir}/spark-%{spark_version}
+%define doc_spark %{_docdir}/spark-%{spark1_version}
 %define alternatives_cmd alternatives
 %endif
 
@@ -37,15 +37,15 @@
 %define __os_install_post %{nil}
 
 Name: spark-core
-Version: %{spark_version}
-Release: %{spark_release}
+Version: %{spark1_version}
+Release: %{spark1_release}
 Summary: Lightning-Fast Cluster Computing
 URL: http://spark.apache.org/
 Group: Development/Libraries
 BuildArch: noarch
 Buildroot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 License: ASL 2.0
-Source0: %{spark_name}-%{spark_base_version}.tar.gz
+Source0: %{spark_name}-%{spark1_base_version}.tar.gz
 Source1: do-component-build 
 Source2: install_%{spark_name}.sh
 Source3: spark-master.svc
@@ -142,7 +142,7 @@ Group: Development/Libraries
 Spark YARN Shuffle Service
 
 %prep
-%setup -n %{spark_name}-%{spark_base_version}
+%setup -n %{spark_name}-%{spark1_base_version}
 
 %build
 bash $RPM_SOURCE_DIR/do-component-build
