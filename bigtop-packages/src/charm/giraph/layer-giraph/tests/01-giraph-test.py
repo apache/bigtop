@@ -26,7 +26,7 @@ class TestDeploy(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.d = amulet.Deployment(series='xenial')
-        cls.d.add('giraph', 'cs:~panagiotisl/giraph')
+        cls.d.add('giraph', '/home/juju/workspace/charms/builds/giraph')
         cls.d.add('client', 'cs:xenial/hadoop-client')
         cls.d.add('resourcemanager', 'cs:xenial/hadoop-resourcemanager')
         cls.d.add('namenode', 'cs:xenial/hadoop-namenode')
@@ -51,9 +51,10 @@ class TestDeploy(unittest.TestCase):
         """
         uuid = self.giraph.run_action('smoke-test')
         result = self.d.action_fetch(uuid, full_output=True)
-        # action status=completed on success
+        print(result)
+        #action status=completed on success
         if (result['status'] != "completed"):
-            self.fail('Giraph smoke-test failed: %s' % result)
+          self.fail('Giraph smoke-test failed: %s' % result)
 
 
 if __name__ == '__main__':
