@@ -1,6 +1,6 @@
 services:
   spark:
-    charm: "cs:xenial/spark-14"
+    charm: "cs:xenial/spark-15"
     num_units: 2
     annotations:
       gui-x: "500"
@@ -9,7 +9,7 @@ services:
       - "0"
       - "1"
   zookeeper:
-    charm: "cs:xenial/zookeeper-9"
+    charm: "cs:xenial/zookeeper-10"
     num_units: 3
     annotations:
       gui-x: "500"
