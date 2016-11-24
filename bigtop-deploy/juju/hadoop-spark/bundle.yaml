@@ -39,7 +39,7 @@ services:
     to:
       - "4"
   spark:
-    charm: "cs:xenial/spark-14"
+    charm: "cs:xenial/spark-15"
     num_units: 1
     options:
       spark_execution_mode: "yarn-client"
@@ -49,7 +49,7 @@ services:
     to:
       - "4"
   zookeeper:
-    charm: "cs:xenial/zookeeper-9"
+    charm: "cs:xenial/zookeeper-10"
     num_units: 3
     annotations:
       gui-x: "500"
