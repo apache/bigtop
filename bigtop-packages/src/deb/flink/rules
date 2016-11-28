@@ -36,7 +36,7 @@ jobmanager taskmanager:
 
 override_dh_auto_install: jobmanager taskmanager
 	bash -x debian/install_flink.sh \
-	--build-dir=`pwd`/build-target \
+	--build-dir=`pwd`/flink-dist/target/flink-${FLINK_VERSION}-bin/flink-${FLINK_VERSION} \
 	--source-dir=debian \
 	--prefix=debian/tmp
 
