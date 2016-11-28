@@ -21,6 +21,7 @@
 %define man_dir %{_mandir}
 %define flink_services flink-jobmanager flink-taskmanager
 %define var_log_flink /var/log/%{flink_name}
+%define build_target_flink flink-dist/target/%{flink_name}-%{flink_version}-bin/%{flink_name}-%{flink_version}/
 
 
 %if  %{!?suse_version:1}0
@@ -104,7 +105,7 @@ bash $RPM_SOURCE_DIR/do-component-build
 %install
 %__rm -rf $RPM_BUILD_ROOT
 
-sh -x %{SOURCE2} --prefix=$RPM_BUILD_ROOT --source-dir=$RPM_SOURCE_DIR --build-dir=`pwd`/build-target
+sh -x %{SOURCE2} --prefix=$RPM_BUILD_ROOT --source-dir=$RPM_SOURCE_DIR --build-dir=`pwd`/%{build_target_flink}
 
 
 
