@@ -38,6 +38,11 @@ case ${ID}-${VERSION_ID} in
         yum update
 	yum -y install hostname curl sudo unzip wget puppet
 	;;
+    fedora-25*)
+        dnf -y install yum-utils
+        dnf -y update 
+        dnf -y install hostname findutils curl sudo unzip wget puppet
+        ;;
     ubuntu-14.04)
 	apt-get update
 	apt-get -y install wget
