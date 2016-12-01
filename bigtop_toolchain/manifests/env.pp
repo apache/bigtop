@@ -14,9 +14,11 @@
 # limitations under the License.
 
 class bigtop_toolchain::env {
-  $java_version = '1.7.0'
+  case "$::operatingsystem $::operatingsystemrelease" {
+    /(Fedora) 25/: { $java_version = '1.8.0' }
+    default: { $java_version = '1.7.0' }
+    }
   $java = "java-${java_version}"
-
   case $architecture {
     'amd64' : { $arch= "amd64" }
     'ppc64le' : { $arch= "ppc64el" }
@@ -27,7 +29,10 @@ class bigtop_toolchain::env {
       $javahome = "/usr/lib/jvm/${java}-openjdk-$arch"
     }
     'Fedora','Centos', 'Amazon': {
-      $javahome = "/usr/lib/jvm/${java}"
+      case $architecture {
+         'amd64' : { $javahome = "/usr/lib/jvm/${java}" }
+         'ppc64le' : { $javahome = "/usr/lib/jvm/${java}-openjdk" }
+       }
     }
     'OpenSuSE' : {
       $javahome = "/usr/lib64/jvm/${java}-openjdk-${java_version}"
@@ -38,7 +43,7 @@ class bigtop_toolchain::env {
     ensure => present,
     owner  => root,
     group  => root,
-    mode   => 644,
+    mode   => "644",
   }
 }
 

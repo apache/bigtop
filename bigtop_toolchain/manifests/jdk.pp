@@ -14,8 +14,12 @@
 # limitations under the License.
 
 class bigtop_toolchain::jdk {
-
-  case $operatingsystem{
+  case "$::operatingsystem $::operatingsystemrelease" {
+    /(Fedora) 25/: {
+       package { 'java-1.8.0-openjdk-devel' :
+       ensure => present
+      }
+    }
     Debian: {
       include apt
       include apt::backports
