@@ -23,6 +23,7 @@ class bigtop_toolchain::env {
     'amd64' : { $arch= "amd64" }
     'ppc64le' : { $arch= "ppc64el" }
     'aarch64' : { $arch = "arm64" }
+    'x86_64' : { $arch = "x86_64"}
   }
   case $operatingsystem {
     'Ubuntu','Debian': {
@@ -30,7 +31,7 @@ class bigtop_toolchain::env {
     }
     'Fedora','Centos', 'Amazon': {
       case $architecture {
-         'amd64' : { $javahome = "/usr/lib/jvm/${java}" }
+         'amd64','x86_64' : { $javahome = "/usr/lib/jvm/${java}" }
          'ppc64le' : { $javahome = "/usr/lib/jvm/${java}-openjdk" }
        }
     }
