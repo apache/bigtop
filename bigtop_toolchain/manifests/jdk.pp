@@ -14,13 +14,8 @@
 # limitations under the License.
 
 class bigtop_toolchain::jdk {
-  case "$::operatingsystem $::operatingsystemrelease" {
-    /(Fedora) 25/: {
-       package { 'java-1.8.0-openjdk-devel' :
-       ensure => present
-      }
-    }
-    Debian: {
+  case $operatingsystem {
+    /Debian/: {
       include apt
       include apt::backports
 
@@ -33,7 +28,7 @@ class bigtop_toolchain::jdk {
 
       Apt::Source['backports'] -> Exec['apt-update']
     }
-    Ubuntu: {
+    /Ubuntu/: {
       include apt
       
       package { 'openjdk-7-jdk' :
@@ -51,7 +46,7 @@ class bigtop_toolchain::jdk {
       
       Apt::Ppa['http://ppa.launchpad.net/openjdk-r/ppa/ubuntu'] -> Exec['apt-update']
     }
-    /(CentOS|Fedora|Amazon)/: {
+    /(CentOS|Amazon)/: {
       package { 'java-1.7.0-openjdk-devel' :
         ensure => present
       }
@@ -59,7 +54,17 @@ class bigtop_toolchain::jdk {
         ensure => present
       }
     }
-    /(OpenSuSE)/: {
+    /Fedora/: {
+      if 0 + $operatingsystemrelease < 21 {
+         package { 'java-1.7.0-openjdk-devel' :
+           ensure => present
+        }
+      }
+      package { 'java-1.8.0-openjdk-devel' :
+        ensure => present
+      }
+    }
+    /OpenSuSE/: {
       package { 'java-1_7_0-openjdk-devel' :
         ensure => present
       }
