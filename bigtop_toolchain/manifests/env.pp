@@ -15,8 +15,7 @@
 
 class bigtop_toolchain::env {
   case "$::operatingsystem $::operatingsystemrelease" {
-    /(Fedora) 25/: { $java_version = '1.8.0' }
-    default: { $java_version = '1.7.0' }
+    default: { $java_version = '1.8.0' }
     }
   $java = "java-${java_version}"
   case $architecture {

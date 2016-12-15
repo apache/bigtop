@@ -209,17 +209,13 @@ class bigtop_toolchain::packages {
         "flex",
         "python-dev"
       ]
-      file { "/etc/apt/apt.conf.d/retries":
-        content => "Aquire::Retries \"5\";
-"
-      } -> exec { "apt-update":
-        command => "/usr/bin/apt-get update"
-      }
-      Exec["apt-update"] -> Package <| |>
+      file { '/etc/apt/apt.conf.d/01retries':
+        content => 'Aquire::Retries "5";'
+      } -> Package <| |>
     }
   }
   package { $pkgs:
-    ensure => installed,
+    ensure => installed
   }
 
   # Some bigtop packages use `/usr/lib/rpm/redhat` tools

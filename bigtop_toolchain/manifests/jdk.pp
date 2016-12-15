@@ -14,37 +14,52 @@
 # limitations under the License.
 
 class bigtop_toolchain::jdk {
-  case $operatingsystem {
+  case $::operatingsystem {
     /Debian/: {
-      include apt
-      include apt::backports
+      require apt
+      require apt::backports
 
       package { 'openjdk-7-jdk' :
-        ensure => present
+        ensure => present,
       }
+
       package { 'openjdk-8-jdk' :
         ensure => present,
       }
 
-      Apt::Source['backports'] -> Exec['apt-update']
+      exec { '/usr/sbin/update-alternatives --set javac /usr/lib/jvm/java-8-openjdk-amd64/bin/javac':
+        require => Package['openjdk-7-jdk', 'openjdk-8-jdk']
+      }
+      exec { '/usr/sbin/update-alternatives --set java /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java':
+        require => Package['openjdk-7-jdk', 'openjdk-8-jdk']
+      }
     }
     /Ubuntu/: {
       include apt
-      
+
       package { 'openjdk-7-jdk' :
-        ensure => present
+        ensure  => present,
+        # needed for 16.04
+        require => [ Apt::Ppa[ 'http://ppa.launchpad.net/openjdk-r/ppa/ubuntu'], Class['apt::update'] ]
       }
       package { 'openjdk-8-jdk' :
-        ensure => present,
+        ensure  => present,
+        # needed for 14.04 
+        require => [ Apt::Ppa[ 'http://ppa.launchpad.net/openjdk-r/ppa/ubuntu'], Class['apt::update'] ]
       }
 
       apt::key { 'openjdk-ppa':
-        id => 'eb9b1d8886f44e2a',
-	server  => 'keyserver.ubuntu.com'
+        id     => 'eb9b1d8886f44e2a',
+        server => 'keyserver.ubuntu.com'
       }  ->
       apt::ppa { 'http://ppa.launchpad.net/openjdk-r/ppa/ubuntu':  }
-      
-      Apt::Ppa['http://ppa.launchpad.net/openjdk-r/ppa/ubuntu'] -> Exec['apt-update']
+
+      exec { '/usr/bin/update-alternatives --set javac /usr/lib/jvm/java-8-openjdk-amd64/bin/javac':
+        require => Package['openjdk-7-jdk', 'openjdk-8-jdk']
+      }
+      exec { '/usr/bin/update-alternatives --set java /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java':
+        require => Package['openjdk-7-jdk', 'openjdk-8-jdk']
+      }
     }
     /(CentOS|Amazon)/: {
       package { 'java-1.7.0-openjdk-devel' :
@@ -53,11 +68,12 @@ class bigtop_toolchain::jdk {
       package { 'java-1.8.0-openjdk-devel' :
         ensure => present
       }
+      # java 1.8 
     }
     /Fedora/: {
-      if 0 + $operatingsystemrelease < 21 {
-         package { 'java-1.7.0-openjdk-devel' :
-           ensure => present
+      if 0 + $::operatingsystemrelease < 21 {
+        package { 'java-1.7.0-openjdk-devel' :
+          ensure => present
         }
       }
       package { 'java-1.8.0-openjdk-devel' :
