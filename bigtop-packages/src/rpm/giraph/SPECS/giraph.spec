@@ -58,6 +58,7 @@ Source0: %{name}-%{giraph_base_version}.tar.gz
 Source1: do-component-build
 Source2: install_%{name}.sh
 Source3: giraph-site.xml
+#BIGTOP_PATCH_FILES
 Buildarch: noarch
 Requires: zookeeper, hadoop-client, bigtop-utils >= 0.7
 
@@ -75,6 +76,8 @@ Documentation for Apache Solr
 
 %prep
 %setup -n %{name}-%{giraph_base_version}
+
+#BIGTOP_PATCH_COMMANDS
 
 %build
 bash %{SOURCE1}
