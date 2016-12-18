@@ -20,11 +20,12 @@ set -ex
 
 export MAVEN_OPTS="-Xmx1024m"
 
-mvn -DskipTests -Dcrunch.platform=2           \
-    -Dhadoop.version=$HADOOP_VERSION          \
-    -Dhbase.version=$HBASE_VERSION            \
+mvn -DskipTests -Dcrunch.platform=2            \
+    -Dhadoop.version=$HADOOP_VERSION           \
+    -Dhbase.version=$HBASE_VERSION             \
     -Dspark.version=$SPARK1_VERSION            \
-    -Papache-release -Ddependency.locations.enabled=false clean site:site package "$@"
+    -Papache-release -Ddependency.locations.enabled=false \
+    -Dadditionalparam=-Xdoclint:none clean site:site package "$@"
 
 rm -rf build
 mkdir build
