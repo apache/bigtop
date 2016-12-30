@@ -13,4 +13,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 cp ../../../bigtop_toolchain/bin/puppetize.sh .
-docker build -t bigtop/puppet:centos-7 .
+docker build --pull=true -t bigtop/puppet:centos-7 .
