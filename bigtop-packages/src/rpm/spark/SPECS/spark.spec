@@ -209,6 +209,7 @@ done
 %attr(0755,spark,spark) %{var_run_spark}
 %attr(0755,spark,spark) %{var_log_spark}
 %{bin}/spark-*
+%{bin}/find-spark-home
 
 %files -n spark-python
 %defattr(-,root,root,755)
