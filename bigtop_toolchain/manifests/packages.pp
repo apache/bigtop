@@ -67,7 +67,8 @@ class bigtop_toolchain::packages {
         "libevent-devel",
         "apr-devel",
         "bison",
-        "perl-Env"
+        "perl-Env",
+        "libffi-devel"
       ]
     }
     /(?i:(SLES|opensuse))/: { $pkgs = [
@@ -111,7 +112,8 @@ class bigtop_toolchain::packages {
         "libcurl-devel",
         "libevent-devel",
         "bison",
-        "flex"
+        "flex",
+        "libffi-devel"
       ]
       # fix package dependencies: BIGTOP-2120 and BIGTOP-2152 and BIGTOP-2471
       exec { '/usr/bin/zypper -n install  --force-resolution krb5 libopenssl-devel':
@@ -149,9 +151,11 @@ class bigtop_toolchain::packages {
       "openssl-devel",
       "rpm-build",
       "system-rpm-config",
-      "fuse-libs","gmp-devel",
+      "fuse-libs",
+      "gmp-devel",
       "snappy-devel",
-      "bzip2-devel"
+      "bzip2-devel",
+      "libffi-devel"
     ] }
     /(Ubuntu|Debian)/: { $pkgs = [
         "unzip",
@@ -193,7 +197,7 @@ class bigtop_toolchain::packages {
         "libkrb5-dev",
         "asciidoc",
         "libyaml-dev",
-        "libgmp-dev",
+        "libgmp3-dev",
         "libsnappy-dev",
         "libboost-regex-dev",
         "xfslibs-dev",
@@ -207,7 +211,8 @@ class bigtop_toolchain::packages {
         "libcurl4-gnutls-dev",
         "bison",
         "flex",
-        "python-dev"
+        "python-dev",
+        "libffi-dev"
       ]
       file { '/etc/apt/apt.conf.d/01retries':
         content => 'Aquire::Retries "5";'

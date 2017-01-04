@@ -248,7 +248,7 @@ bigtop {
     'hue' {
       name    = 'hue'
       relNotes = 'Hadoop User Interface'
-      version { base = '3.9.0'; pkg = base; release = 1 }
+      version { base = '3.11.0'; pkg = base; release = 1 }
       tarball { destination = "$name-${version.base}.tar.gz"
                 source      = "release-${version.base}.tar.gz" }
       url     { site = "https://github.com/cloudera/hue/archive"
