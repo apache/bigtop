@@ -1,7 +1,7 @@
 name: giraph
 summary: Large-scale graph processing on Hadoop
 maintainer: Panagiotis Liakos <p.liakos@di.uoa.gr>
-description: Large-scale graph processing on Hadoop 
+description: The Apache Giraph project's goal is to provide an environment that addresses the challenges of Managing Big Graphs.
 tags: []
 subordinate: true
 series: ['xenial']

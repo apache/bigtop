@@ -32,5 +32,3 @@ if hdfs dfs -stat output &> /dev/null; then
 fi
 
 hadoop jar /usr/lib/giraph/giraph-core.jar org.apache.giraph.GiraphRunner -libjars ${LIB_JARS} org.apache.giraph.examples.SimplePageRankComputation -vif org.apache.giraph.io.formats.JsonLongDoubleFloatDoubleVertexInputFormat -vip /tmp/input/tiny_graph.txt -mc org.apache.giraph.examples.SimplePageRankComputation\$SimplePageRankMasterCompute -vof org.apache.giraph.io.formats.IdWithValueTextOutputFormat -op output -w 1 -ca mapred.job.tracker=empty yarn.log-aggregation-enable=true
-
-#hadoop jar resources/giraph-examples-1.1.0.jar org.apache.giraph.GiraphRunner org.apache.giraph.examples.SimpleShortestPathsComputation -vif org.apache.giraph.io.formats.JsonLongDoubleFloatDoubleVertexInputFormat -vip /tmp/input/tiny_graph.txt -vof org.apache.giraph.io.formats.IdWithValueTextOutputFormat -op /tmp/output/shortestpaths -w 1

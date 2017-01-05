@@ -18,18 +18,17 @@
 
 The Apache Giraph
 
-TBD...
- project's goal is to build an environment for quickly creating
-scalable performant machine learning applications.
-
-Apache Mahout software provides three major features:
- * A simple and extensible programming environment and framework for building
-   scalable algorithms
- * A wide variety of premade algorithms for Scala + Apache Spark, H2O, Apache
-   Flink
- * Samsara, a vector math experimentation environment with R-like syntax which
-   works at scale
-
+Apache Giraph is an iterative graph processing system built for high scalability.
+For example, it is currently used at Facebook to analyze the social graph formed
+by users and their connections. Giraph originated as the open-source counterpart
+to Pregel, the graph processing architecture developed at Google and described in
+a 2010 [paper](http://dl.acm.org/citation.cfm?id=1807184). Both systems are
+inspired by the [Bulk Synchronous Parallel model](http://en.wikipedia.org/wiki/Bulk_synchronous_parallel)
+of distributed computation introduced by Leslie Valiant. Giraph adds several features
+beyond the basic Pregel model, including master computation, sharded aggregators,
+edge-oriented input, out-of-core computation, and more. With a steady development
+cycle and a growing community of users worldwide, Giraph is a natural choice for
+unleashing the potential of structured datasets at a massive scale.
 
 # Deploying
 
@@ -89,7 +88,7 @@ application is functioning as expected. Run the action as follows:
     juju run-action giraph/0 smoke-test
 
 > **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju action do mahout/0 smoke-test`.
+of Juju, the syntax is `juju action do giraph/0 smoke-test`.
 
 Watch the progress of the smoke test actions with:
 
@@ -110,15 +109,15 @@ of Juju, the syntax is `juju action fetch <action-id>`.
 
 # Contact Information
 
-- <bigdata@lists.ubuntu.com>
+- <p.liakos@di.uoa.gr>
 
 
 # Resources
 
 - [Apache Bigtop](http://bigtop.apache.org/) home page
 - [Apache Bigtop mailing lists](http://bigtop.apache.org/mail-lists.html)
-- [Apache Mahout home page](https://mahout.apache.org/)
-- [Apache Mahout issue tracker](https://issues.apache.org/jira/browse/MAHOUT)
+- [Apache Giraph home page](http://giraph.apache.org/)
+- [Apache Giraph issue tracker](https://issues.apache.org/jira/browse/GIRAPH)
 - [Juju Bigtop charms](https://jujucharms.com/q/apache/bigtop)
 - [Juju mailing list](https://lists.ubuntu.com/mailman/listinfo/juju)
 - [Juju community](https://jujucharms.com/community)
