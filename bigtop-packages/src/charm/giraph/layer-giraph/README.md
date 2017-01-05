@@ -16,8 +16,6 @@
 -->
 # Overview
 
-The Apache Giraph
-
 Apache Giraph is an iterative graph processing system built for high scalability.
 For example, it is currently used at Facebook to analyze the social graph formed
 by users and their connections. Giraph originated as the open-source counterpart
