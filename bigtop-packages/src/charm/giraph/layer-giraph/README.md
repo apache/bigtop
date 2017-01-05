@@ -14,9 +14,11 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+
 # Overview
 
 Apache Giraph is an iterative graph processing system built for high scalability. For example, it is currently used at Facebook to analyze the social graph formed by users and their connections. Giraph originated as the open-source counterpart to Pregel, the graph processing architecture developed at Google and described in a 2010 [paper](http://dl.acm.org/citation.cfm?id=1807184). Both systems are inspired by the [Bulk Synchronous Parallel model](http://en.wikipedia.org/wiki/Bulk_synchronous_parallel) of distributed computation introduced by Leslie Valiant. Giraph adds several features beyond the basic Pregel model, including master computation, sharded aggregators, edge-oriented input, out-of-core computation, and more. With a steady development cycle and a growing community of users worldwide, Giraph is a natural choice for unleashing the potential of structured datasets at a massive scale.
+
 # Deploying
 
 A working Juju installation is assumed to be present. If Juju is not yet set up, please follow the [getting-started][] instructions prior to deploying this
@@ -39,6 +41,7 @@ Now add Giraph and relate it to the cluster endpoint:
     juju add-relation giraph client
 
 ## Network-Restricted Environments
+
 Charms can be deployed in environments with limited network access. To deploy in this environment, configure a Juju model with appropriate proxy and/or mirror options. See [Configuring Models][] for more information.
 
 [getting-started]: https://jujucharms.com/docs/stable/getting-started
@@ -46,10 +49,10 @@ Charms can be deployed in environments with limited network access. To deploy in
 [juju-quickstart]: https://launchpad.net/juju-quickstart
 [Configuring Models]: https://jujucharms.com/docs/stable/models-config
 
-
 # Verifying
 
 ## Status
+
 Apache Bigtop charms provide extended status reporting to indicate when they are ready:
 
     juju status
@@ -61,6 +64,7 @@ This is particularly useful when combined with `watch` to track the on-going pro
 The message column will provide information about a given unit's state. This charm is ready for use once the status message indicates that it is ready.
 
 ## Smoke Test
+
 This charm provides a `smoke-test` action that can be used to verify the application is functioning as expected. Run the action as follows:
 
     juju run-action giraph/0 smoke-test
@@ -82,11 +86,9 @@ Eventually, the action should settle to `status: completed`.  If it reports `sta
 > **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
 of Juju, the syntax is `juju action fetch <action-id>`.
 
-
 # Contact Information
 
 - <p.liakos@di.uoa.gr>
-
 
 # Resources
 
