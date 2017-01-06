@@ -302,6 +302,7 @@ def genTasks = { target ->
 --preserve-envvar MAVEN3_HOME \
 --preserve-envvar MAVEN_OPTS \
 --preserve-envvar JAVA_HOME \
+--preserve-envvar BIGTOP_JDK \
 --set-envvar=HADOOP_VERSION=$HADOOP_VERSION \
 --set-envvar=${toOldStyleName(target)}_BASE_VERSION=$BASE_VERSION \
 --set-envvar=${toOldStyleName(target)}_VERSION=$PKG_VERSION \

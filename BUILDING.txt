@@ -81,4 +81,24 @@ A nightly build job can be created with
 For more background information on BIGTOP_BUILD_STAMP see ticket BIGTOP-1580.
 
 
+Using a different JVM
+=====================
 
+By default, bigtop is compiled with a JDK version 8. If you want to change it,
+for example to use JDK version 7, you just have to define the variable
+BIGTOP_JDK:
+
+BIGTOP_JDK=7; export BIGTOP_JDK
+./gradlew deb
+
+
+Note on LC_ALL/LANG
+===================
+
+Compilation may fail if your locale is not in english. You might for example
+see some strange errors with dpkg-buildpackage. In that case, you should reset
+the language variables before compiling:
+
+LC_ALL=C; export LC_ALL
+LANG=C; export LANG
+./gradlew deb

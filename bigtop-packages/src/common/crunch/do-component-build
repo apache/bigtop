@@ -20,12 +20,17 @@ set -ex
 
 export MAVEN_OPTS="-Xmx1024m"
 
+if [ "${BIGTOP_JDK:=8}" == "8" ]; then
+    MAVEN_ADDITIONAL="-Dadditionalparam=-Xdoclint:none"
+fi
+
 mvn -DskipTests -Dcrunch.platform=2            \
     -Dhadoop.version=$HADOOP_VERSION           \
     -Dhbase.version=$HBASE_VERSION             \
     -Dspark.version=$SPARK1_VERSION            \
     -Papache-release -Ddependency.locations.enabled=false \
-    -Dadditionalparam=-Xdoclint:none clean site:site package "$@"
+    ${MAVEN_ADDITIONAL} \
+    clean site:site package "$@"
 
 rm -rf build
 mkdir build
