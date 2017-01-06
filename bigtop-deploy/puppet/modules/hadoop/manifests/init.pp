@@ -382,6 +382,10 @@ class hadoop ($hadoop_security_authentication = "simple",
       $mapreduce_output_fileoutputformat_compress_type = "BLOCK", # "RECORD" default
       $mapreduce_map_output_compress = undef,
       $mapreduce_job_reduce_slowstart_completedmaps = undef,
+      $mapreduce_map_memory_mb = undef,
+      $mapreduce_reduce_memory_mb = undef,
+      $mapreduce_map_java_opts = "-Xmx1024m",
+      $mapreduce_reduce_java_opts = "-Xmx1024m",
       $hadoop_security_authentication = $hadoop::hadoop_security_authentication,
       $kerberos_realm = $hadoop::kerberos_realm,
   ) inherits hadoop {
