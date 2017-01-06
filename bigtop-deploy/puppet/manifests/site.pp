@@ -33,7 +33,7 @@ $jdk_package_name = hiera("bigtop::jdk_package_name", "jdk")
 
 stage {"pre": before => Stage["main"]}
 
-case $operatingsystem {
+case $::operatingsystem {
     /(OracleLinux|Amazon|CentOS|Fedora|RedHat)/: {
        yumrepo { "Bigtop":
           baseurl => hiera("bigtop::bigtop_repo_uri", $default_repo),
@@ -62,10 +62,24 @@ case $operatingsystem {
     }
 }
 
-package { $jdk_package_name:
-  ensure => "installed",
-  alias => "jdk",
-  noop => $jdk_preinstalled,
+case $::operatingsystem {
+    /Debian/: {
+      require apt
+      require apt::backports
+
+      package { "jdk":
+        name => $jdk_package_name,
+        ensure => present,
+      }
+    }
+    default: {
+      package { "jdk":
+        name => $jdk_package_name,
+        ensure => "installed",
+        alias => "jdk",
+        noop => $jdk_preinstalled,
+     }
+   }
 }
 
 node default {
