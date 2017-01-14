@@ -123,20 +123,17 @@ usage: docker-hadoop.sh [-C file ] args
 
 ```
 docker:
-        memory_size: "2048"
+        memory_limit: "2g"
 
 ```
 
-2) Use different host ports mapping for web UIs
+2) Enable local repository
+
+If you've built packages using local cloned bigtop and produced the apt/yum repo, set the following to true to deploy those packages:
 
 ```
-namenode_ui_port: "50070"
-yarn_ui_port: "8088"
-hbase_ui_port: "60010"
-
+enable_local_repo = true
 ```
-Note: If running on OS X or Windows, the boot2docker VM should be reloaded after ports changed
-
 
 ##Configure Apache Hadoop ecosystem components
 * Choose the ecosystem you want to be deployed by modifying components in config.yaml

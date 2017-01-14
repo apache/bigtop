@@ -43,7 +43,6 @@ create() {
     mkdir -p config/hieradata 2> /dev/null
     echo > ./config/hiera.yaml
     echo > ./config/hosts
-    export DOCKER_IMAGE=$(get-yaml-config docker image)
 
     # Startup instances
     docker-compose -p $PROVISION_ID scale bigtop=$1
@@ -193,6 +192,8 @@ fi
 if [ -n "$PROVISION_ID" ]; then
     NODES=(`docker-compose -p $PROVISION_ID ps -q`)
 fi
+export DOCKER_IMAGE=$(get-yaml-config docker image)
+export MEM_LIMIT=$(get-yaml-config docker memory_limit)
 
 while [ $# -gt 0 ]; do
     case "$1" in

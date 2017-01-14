@@ -14,19 +14,12 @@
 # limitations under the License.
 
 docker:
-        memory_size: "4096"
-        image:  "bigtop/deploy:ubuntu-14.04"
+        memory_limit: "4g"
+        image: "bigtop/puppet:debian-8"
 
-boot2docker:
-        memory_size: "4096"
-        number_cpus: "1"
-
-repo: "http://bigtop-repos.s3.amazonaws.com/releases/1.0.0/ubuntu/trusty/x86_64"
+repo: "http://bigtop-repos.s3.amazonaws.com/releases/1.1.0/debian/8/x86_64"
 distro: debian
 components: [hadoop, yarn]
-namenode_ui_port: "50070"
-yarn_ui_port: "8088"
-hbase_ui_port: "60010"
 enable_local_repo: false
 smoke_test_components: [mapreduce, pig]
 jdk: "openjdk-7-jdk"
