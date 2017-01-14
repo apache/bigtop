@@ -15,9 +15,9 @@
 
 docker:
         memory_limit: "4g"
-        image: "bigtop/puppet:centos-7"
+        image: "bigtop/puppet:centos-6"
 
-repo: "http://bigtop-repos.s3.amazonaws.com/releases/1.1.0/centos/7/x86_64"
+repo: "http://bigtop-repos.s3.amazonaws.com/releases/1.1.0/centos/6/x86_64"
 distro: centos
 components: [hadoop, yarn]
 enable_local_repo: false
