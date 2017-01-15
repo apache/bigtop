@@ -100,7 +100,7 @@ copy-to-instances() {
 
 bootstrap() {
     for node in ${NODES[*]}; do
-        docker exec $node bash -c "/bigtop-home/bigtop-deploy/vm/utils/setup-env-$1.sh $2" &
+        docker exec $node bash -c "/bigtop-home/provisioner/utils/setup-env-$1.sh $2" &
     done
     wait
 }
@@ -115,7 +115,7 @@ provision() {
 smoke-tests() {
     hadoop_head_node=${NODES:0:12}
     smoke_test_components="`echo $(get-yaml-config smoke_test_components) | sed 's/ /,/g'`"
-    docker exec $hadoop_head_node bash -c "bash -x /bigtop-home/bigtop-deploy/vm/utils/smoke-tests.sh $smoke_test_components"
+    docker exec $hadoop_head_node bash -c "bash -x /bigtop-home/provisioner/utils/smoke-tests.sh $smoke_test_components"
 }
 
 destroy() {
