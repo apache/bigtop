@@ -46,13 +46,24 @@ public class HCatalogMR extends Configured implements Tool {
 
   @Override
   public int run(String[] args) throws Exception {
+    String inputTable = null;
+    String outputTable = null;
+    String inputSchemaStr = null;
+    String outputSchemaStr = null;
+    for(int i = 0; i < args.length; i++){
+        if(args[i].equalsIgnoreCase("-it")){
+            inputTable = args[i+1];
+        }else if(args[i].equalsIgnoreCase("-ot")){
+            outputTable = args[i+1];
+        }else if(args[i].equalsIgnoreCase("-is")){
+            inputSchemaStr = args[i+1];
+        }else if(args[i].equalsIgnoreCase("-os")){
+            outputSchemaStr = args[i+1];
+        }
+    }
+    
     Configuration conf = getConf();
     args = new GenericOptionsParser(conf, args).getRemainingArgs();
-
-    String inputTable = args[0];
-    String outputTable = args[1];
-    String inputSchemaStr = args[2];
-    String outputSchemaStr = args[3];
 
     conf.set(INPUT_SCHEMA, inputSchemaStr);
     conf.set(OUTPUT_SCHEMA, outputSchemaStr);
