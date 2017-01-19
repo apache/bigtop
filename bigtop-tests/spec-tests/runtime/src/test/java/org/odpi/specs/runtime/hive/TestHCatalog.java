@@ -140,9 +140,13 @@ public class TestHCatalog {
         .addArgument("jar")
         .addArgument(System.getProperty(JOBJAR))
         .addArgument(HCatalogMR.class.getName())
+        .addArgument("-it")
         .addArgument(inputTable)
+        .addArgument("-ot")
         .addArgument(outputTable)
+        .addArgument("-is")
         .addArgument(inputSchema.getSchemaAsTypeString())
+        .addArgument("-os")
         .addArgument(outputSchema.getSchemaAsTypeString()), env);
     LOG.info(results.toString());
     Assert.assertEquals("HCat job failed", 0, Integer.parseInt(results.get("exitValue")));
