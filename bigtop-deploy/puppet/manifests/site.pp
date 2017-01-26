@@ -31,9 +31,12 @@ case $operatingsystem {
 $jdk_preinstalled = hiera("bigtop::jdk_preinstalled", false)
 $jdk_package_name = hiera("bigtop::jdk_package_name", "jdk")
 
+$provision_repo = hiera("bigtop::provision_repo", true)
+
 stage {"pre": before => Stage["main"]}
 
-case $::operatingsystem {
+if ($provision_repo) {
+  case $::operatingsystem {
     /(OracleLinux|Amazon|CentOS|Fedora|RedHat)/: {
        yumrepo { "Bigtop":
           baseurl => hiera("bigtop::bigtop_repo_uri", $default_repo),
@@ -60,6 +63,7 @@ case $::operatingsystem {
     default: {
       notify{"WARNING: running on a neither yum nor apt platform -- make sure Bigtop repo is setup": }
     }
+  }
 }
 
 case $::operatingsystem {
