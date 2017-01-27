@@ -26,20 +26,18 @@ class TestDeploy(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.d = amulet.Deployment(series='xenial')
-        cls.d.add('giraph', '/home/juju/workspace/charms/builds/giraph')
-        cls.d.add('client', 'cs:xenial/hadoop-client')
+        cls.d.add('giraph', 'cs:xenial/giraph')
         cls.d.add('resourcemanager', 'cs:xenial/hadoop-resourcemanager')
         cls.d.add('namenode', 'cs:xenial/hadoop-namenode')
         cls.d.add('slave', 'cs:xenial/hadoop-slave')
         cls.d.add('plugin', 'cs:xenial/hadoop-plugin')
 
-        cls.d.relate('plugin:hadoop-plugin', 'client:hadoop')
+        cls.d.relate('plugin:hadoop-plugin', 'giraph:hadoop')
         cls.d.relate('plugin:namenode', 'namenode:namenode')
         cls.d.relate('plugin:resourcemanager', 'resourcemanager:resourcemanager')
         cls.d.relate('slave:namenode', 'namenode:datanode')
         cls.d.relate('slave:resourcemanager', 'resourcemanager:nodemanager')
         cls.d.relate('namenode:namenode', 'resourcemanager:namenode')
-        cls.d.relate('giraph:mahout', 'client:mahout')
 
         cls.d.setup(timeout=3600)
         cls.d.sentry.wait_for_messages({"giraph": "ready"}, timeout=3600)
@@ -52,9 +50,9 @@ class TestDeploy(unittest.TestCase):
         uuid = self.giraph.run_action('smoke-test')
         result = self.d.action_fetch(uuid, full_output=True)
         print(result)
-        #action status=completed on success
+        # action status=completed on success
         if (result['status'] != "completed"):
-          self.fail('Giraph smoke-test failed: %s' % result)
+            self.fail('Giraph smoke-test failed: %s' % result)
 
 
 if __name__ == '__main__':

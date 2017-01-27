@@ -35,10 +35,10 @@ hadoop-processing`.
 
 This will deploy an Apache Bigtop Hadoop cluster. More information about this deployment can be found in the [bundle readme](https://jujucharms.com/hadoop-processing/).
 
-Now add Giraph and relate it to the cluster endpoint:
+Now add Giraph and relate it to the cluster:
 
     juju deploy giraph
-    juju add-relation giraph client
+    juju add-relation giraph plugin
 
 ## Network-Restricted Environments
 
@@ -92,7 +92,7 @@ of Juju, the syntax is `juju action fetch <action-id>`.
 
 # Resources
 
-- [Apache Bigtop home page](http://bigtop.apache.org/) 
+- [Apache Bigtop home page](http://bigtop.apache.org/)
 - [Apache Bigtop mailing lists](http://bigtop.apache.org/mail-lists.html)
 - [Apache Giraph home page](http://giraph.apache.org/)
 - [Apache Giraph issue tracker](https://issues.apache.org/jira/browse/GIRAPH)
