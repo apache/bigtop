@@ -17,18 +17,55 @@
 
 set -ex
 
-if hdfs dfs -stat /tmp/input/ &> /dev/null; then
-    hdfs dfs -rm -r -skipTrash /tmp/input/ || true
+if ! charms.reactive is_state 'giraph.installed'; then
+    action-fail 'Giraph is not yet ready'
+    exit
 fi
 
-hdfs dfs -mkdir /tmp/input/
-hdfs dfs -put resources/tiny_graph.txt /tmp/input/
+# create dir to store results
+RUN=`date +%s`
+RESULT_DIR=/opt/giraph-smoke-results
+RESULT_LOG=${RESULT_DIR}/${RUN}.log
+mkdir -p ${RESULT_DIR}
+chown -R ubuntu:ubuntu ${RESULT_DIR}
 
-if hdfs dfs -stat temp &> /dev/null; then
-    hdfs dfs -rm -r -skipTrash temp || true
-fi
-if hdfs dfs -stat output &> /dev/null; then
-    hdfs dfs -rm -r -skipTrash output || true
-fi
+# hdfs dirs
+GIRAPH_SMOKE="/tmp/giraph-smoke"
+GIRAPH_INPUT="${GIRAPH_SMOKE}/input"
+GIRAPH_OUTPUT="${GIRAPH_SMOKE}/output"
 
-hadoop jar /usr/lib/giraph/giraph-core.jar org.apache.giraph.GiraphRunner -libjars ${LIB_JARS} org.apache.giraph.examples.SimplePageRankComputation -vif org.apache.giraph.io.formats.JsonLongDoubleFloatDoubleVertexInputFormat -vip /tmp/input/tiny_graph.txt -mc org.apache.giraph.examples.SimplePageRankComputation\$SimplePageRankMasterCompute -vof org.apache.giraph.io.formats.IdWithValueTextOutputFormat -op output -w 1 -ca mapred.job.tracker=empty yarn.log-aggregation-enable=true
+# remove any previous smoke test run. must be run as ubuntu, since that user
+# owns the hdfs space
+su - ubuntu -c "hadoop fs -rm -f -r -skipTrash ${GIRAPH_SMOKE}"
+
+echo 'running giraph smoke-test as the ubuntu user'
+# NB: Escaped envars in the block below (e.g., \${LIB_JARS}) come from
+# the environment while non-escaped vars (e.g., ${GIRAPH_INPUT}) come from
+# this outer scope.
+su ubuntu << EOF
+set -x
+. /etc/default/hadoop
+. /etc/environment
+
+# setup our smoke test input
+hdfs dfs -mkdir -p ${GIRAPH_INPUT}
+hdfs dfs -put \${CHARM_DIR}/resources/tiny_graph.txt ${GIRAPH_INPUT}
+
+hadoop jar /usr/lib/giraph/giraph-core.jar \
+  org.apache.giraph.GiraphRunner \
+  -libjars \${LIB_JARS} \
+  org.apache.giraph.examples.SimplePageRankComputation \
+  -vif org.apache.giraph.io.formats.JsonLongDoubleFloatDoubleVertexInputFormat \
+  -vip ${GIRAPH_INPUT}/tiny_graph.txt \
+  -mc org.apache.giraph.examples.SimplePageRankComputation\\\$SimplePageRankMasterCompute \
+  -vof org.apache.giraph.io.formats.IdWithValueTextOutputFormat \
+  -op ${GIRAPH_OUTPUT} \
+  -w 1 \
+  -ca mapred.job.tracker=empty \
+  yarn.log-aggregation-enable=true 2>&1 | tee -a ${RESULT_LOG}
+EOF
+echo 'giraph smoke-test complete'
+
+# Set action output
+RAW=`cat ${RESULT_LOG}`
+action-set raw="${RAW}"
