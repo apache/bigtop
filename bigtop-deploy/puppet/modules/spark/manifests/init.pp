@@ -109,7 +109,7 @@ class spark {
       ],
       hasrestart => true,
       hasstatus => true,
-    } 
+    }
   }
 
   class yarn {
@@ -159,11 +159,10 @@ class spark {
       ensure => latest,
     }
 
-    if $zookeeper_connection_string {
-      $spark_daemon_java_opts = "\"-Dspark.deploy.recoveryMode=ZOOKEEPER -Dspark.deploy.zookeeper.url=${zookeeper_connection_string}\""
-    }
-    else {
+    if $zookeeper_connection_string == undef {
       $spark_daemon_java_opts = "\"-Dspark.deploy.recoveryMode=NONE\""
+    } else {
+      $spark_daemon_java_opts = "\"-Dspark.deploy.recoveryMode=ZOOKEEPER -Dspark.deploy.zookeeper.url=${zookeeper_connection_string}\""
     }
 
     file { '/etc/spark/conf/spark-env.sh':
