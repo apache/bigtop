@@ -1,6 +1,6 @@
 services:
   spark:
-    charm: "cs:xenial/spark-15"
+    charm: "cs:xenial/spark-17"
     num_units: 2
     annotations:
       gui-x: "500"
@@ -32,7 +32,7 @@ services:
       gui-x: "250"
       gui-y: "400"
   rsyslog:
-    charm: "cs:~bigdata-dev/xenial/rsyslog-6"
+    charm: "cs:~bigdata-dev/xenial/rsyslog-7"
     num_units: 1
     annotations:
       gui-x: "1000"
