@@ -40,8 +40,10 @@ t="spark.version"
 find . -name pom.xml -exec sed -i "s#<$t>.*</$t>#<$t>${SPARK_VERSION}</$t>#" {} \;
 t="hadoop.version"
 find . -name pom.xml -exec sed -i "s#<$t>.*</$t>#<$t>${HADOOP_VERSION}</$t>#" {} \;
-t="hbase.version"
+t="hbase.hbase.version"
 find . -name pom.xml -exec sed -i "s#<$t>.*</$t>#<$t>${HBASE_VERSION}</$t>#" {} \;
+t="hbase.hadoop.version"
+find . -name pom.xml -exec sed -i "s#<$t>.*</$t>#<$t>${HADOOP_VERSION}</$t>#" {} \;
 t="ignite.version"
 find . -name pom.xml -exec sed -i "s#<$t>.*</$t>#<$t>${IGNITE_HADOOP_VERSION}</$t>#" {} \;
 
@@ -60,3 +62,6 @@ fi
 export MAVEN_OPTS="-Xmx1500m -Xms1500m -XX:MaxPermSize=256m"
 
 mvn $BUILD_OPTS clean package
+
+mkdir -p build/dist
+tar -C build/dist --strip-components=1 -xzf zeppelin-distribution/target/zeppelin-*.tar.gz

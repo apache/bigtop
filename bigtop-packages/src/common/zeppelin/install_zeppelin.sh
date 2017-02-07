@@ -115,19 +115,14 @@ install -d -m 0755 $PREFIX/var/log/zeppelin/
 install -d -m 0755 $PREFIX/var/run/zeppelin/
 install -d -m 0755 $PREFIX/var/run/zeppelin/webapps
 
-tar --wildcards --strip-components=1 -C $PREFIX/$LIB_DIR -zxf ${BUILD_DIR}/zeppelin-distribution/target/zeppelin-*.tar.gz \*/bin/\*
-tar --wildcards --strip-components=1 -C $PREFIX/$LIB_DIR -zxf ${BUILD_DIR}/zeppelin-distribution/target/zeppelin-*.tar.gz \*/interpreter/\*
-tar --wildcards --strip-components=1 -C $PREFIX/$LIB_DIR -zxf ${BUILD_DIR}/zeppelin-distribution/target/zeppelin-*.tar.gz \*/lib/\*
-tar --wildcards --strip-components=1 -C $PREFIX/$LIB_DIR -zxf ${BUILD_DIR}/zeppelin-distribution/target/zeppelin-*.tar.gz \*zeppelin-server\*.jar
-tar --wildcards --strip-components=1 -C $PREFIX/$LIB_DIR -zxf ${BUILD_DIR}/zeppelin-distribution/target/zeppelin-*.tar.gz \*zeppelin-web\*.war
-tar --wildcards --strip-components=1 -C $PREFIX/var/lib/zeppelin -zxf ${BUILD_DIR}/zeppelin-distribution/target/zeppelin-*.tar.gz \*/notebook/\*
+cp -a ${BUILD_DIR}/build/dist/{bin,interpreter,lib,zeppelin-web-${ZEPPELIN_VERSION}.war} $PREFIX/$LIB_DIR/
+cp -a ${BUILD_DIR}/build/dist/{LICENSE,NOTICE,README.md,licenses} $PREFIX/$DOC_DIR
+cp -a ${BUILD_DIR}/build/dist/conf/* $PREFIX/$CONF_DIR
+cp -a ${BUILD_DIR}/build/dist/notebook $PREFIX/var/lib/zeppelin/
 
 rm -f $PREFIX/$LIB_DIR/bin/*.cmd
 chmod 755 $PREFIX/$LIB_DIR/bin/*
 
-cp -a ${BUILD_DIR}/{LICENSE,README.md} $PREFIX/$LIB_DIR
-
-cp -a ${BUILD_DIR}/conf/* $PREFIX/$CONF_DIR
 rm -f $PREFIX/$CONF_DIR/*.cmd.*
 cp -a ${SOURCE_DIR}/zeppelin-env.sh $PREFIX/$CONF_DIR
 ln -s /etc/zeppelin/conf $PREFIX/$LIB_DIR/conf
