@@ -120,9 +120,6 @@ chkconfig --del %{name}
 %defattr(-,root,root,755)
 %config(noreplace) %{config_zeppelin}.dist
 %doc %{doc_zeppelin}
-%{lib_zeppelin}/LICENSE
-%{lib_zeppelin}/README.md
-%{lib_zeppelin}/*.jar
 %{lib_zeppelin}/*.war
 %{lib_zeppelin}/bin
 %{lib_zeppelin}/conf
