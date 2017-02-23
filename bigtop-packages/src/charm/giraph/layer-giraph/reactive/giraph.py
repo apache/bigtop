@@ -50,23 +50,19 @@ def get_good_jars(dir, prefix=True):
 @when('bigtop.available')
 def report_status():
     """Set juju status based on the deployment topology."""
-    hadoop_joined = is_state('hadoop.joined')
-    hadoop_ready = is_state('hadoop.ready')
+    giraph_joined = is_state('giraph.joined')
     giraph_installed = is_state('giraph.installed')
-    if not hadoop_joined:
+    if not giraph_joined:
         hookenv.status_set('blocked',
-                           'waiting for relation to hadoop plugin')
-    elif not hadoop_ready:
-        hookenv.status_set('waiting',
-                           'waiting for hadoop')
+                           'waiting for relation to a giraph host')
     elif giraph_installed:
         hookenv.status_set('active',
                            'ready')
 
 
-@when('bigtop.available', 'hadoop.ready')
+@when('bigtop.available', 'giraph.joined')
 @when_not('giraph.installed')
-def install_giraph(hadoop):
+def install_giraph(giraph):
     """Install giraph when prerequisite states are present."""
     hookenv.status_set('maintenance', 'installing giraph')
     bigtop = Bigtop()
@@ -87,15 +83,19 @@ def install_giraph(hadoop):
     giraph_jars.extend(get_good_jars(giraph_libdir, prefix=True))
 
     # Update environment with appropriate giraph bits. HADOOP_CLASSPATH can
-    # use wildcards (and it should for readability), but LIB_JARS needs to be
-    # a comma-separate list of jars.
+    # use wildcards (and it should for readability), but GIRAPH_JARS, which
+    # is intended to be used as 'hadoop jar -libjars $GIRAPH_JARS', needs to
+    # be a comma-separate list of jars.
     with utils.environment_edit_in_place('/etc/environment') as env:
+        cur_cp = env['HADOOP_CLASSPATH'] if 'HADOOP_CLASSPATH' in env else ""
         env['GIRAPH_HOME'] = giraph_home
-        env['HADOOP_CLASSPATH'] = "{ex}:{home}/*:{libdir}/*".format(
+        env['HADOOP_CLASSPATH'] = "{ex}:{home}/*:{libs}/*:{cp}".format(
             ex=giraph_examples,
             home=giraph_home,
-            libdir=giraph_libdir)
-        env['LIB_JARS'] = ','.join(j for j in giraph_jars)
+            libs=giraph_libdir,
+            cp=cur_cp
+            )
+        env['GIRAPH_JARS'] = ','.join(j for j in giraph_jars)
 
     set_state('giraph.installed')
     report_status()

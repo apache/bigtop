@@ -1,4 +1,7 @@
 repo: https://github.com/panagiotisl/bigtop/tree/master/bigtop-packages/src/charm/giraph/layer-giraph
 includes:
+  - 'interface:giraph'
   - 'layer:apache-bigtop-base'
-  - 'layer:hadoop-client'
+options:
+  basic:
+    use_venv: true

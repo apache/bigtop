@@ -6,3 +6,8 @@ description: |
   the challenges of Managing Big Graphs.
 tags: ['graph processing']
 series: ['xenial']
+subordinate: true
+requires:
+  giraph:
+    interface: giraph
+    scope: container

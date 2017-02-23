@@ -39,7 +39,7 @@ GIRAPH_OUTPUT="${GIRAPH_SMOKE}/output"
 su - ubuntu -c "hadoop fs -rm -f -r -skipTrash ${GIRAPH_SMOKE}"
 
 echo 'running giraph smoke-test as the ubuntu user'
-# NB: Escaped envars in the block below (e.g., \${LIB_JARS}) come from
+# NB: Escaped envars in the block below (e.g., \${GIRAPH_JARS}) come from
 # the environment while non-escaped vars (e.g., ${GIRAPH_INPUT}) come from
 # this outer scope.
 su ubuntu << EOF
@@ -53,7 +53,7 @@ hdfs dfs -put \${CHARM_DIR}/resources/tiny_graph.txt ${GIRAPH_INPUT}
 
 hadoop jar /usr/lib/giraph/giraph-core.jar \
   org.apache.giraph.GiraphRunner \
-  -libjars \${LIB_JARS} \
+  -libjars \${GIRAPH_JARS} \
   org.apache.giraph.examples.SimplePageRankComputation \
   -vif org.apache.giraph.io.formats.JsonLongDoubleFloatDoubleVertexInputFormat \
   -vip ${GIRAPH_INPUT}/tiny_graph.txt \
