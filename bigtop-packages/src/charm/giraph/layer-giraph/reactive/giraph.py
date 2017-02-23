@@ -94,7 +94,7 @@ def install_giraph(giraph):
             home=giraph_home,
             libs=giraph_libdir,
             cp=cur_cp
-            )
+        )
         env['GIRAPH_JARS'] = ','.join(j for j in giraph_jars)
 
     set_state('giraph.installed')
