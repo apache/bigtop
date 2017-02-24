@@ -57,7 +57,7 @@ Apache Apex includes following key features:
  * Hadoop-native YARN & HDFS implementation
 
 %prep
-%setup -n %{name}-%{apex_base_version}
+%setup -n apache-%{name}-core-%{apex_base_version}
 
 %build
 env APEX_VERSION=%{apex_base_version} bash %{SOURCE1}
