@@ -468,5 +468,15 @@ bigtop {
       url     { site = "https://github.com/greenplum-db/gpdb/archive/"
                 archive = site }
     }
+    'ambari' {
+      name    = 'ambari'
+      relNotes = 'Apache Ambari'
+      version { base = '2.4.2'; pkg = base; release = 1 }
+      tarball { destination = "apache-$name-${version.base}-src.tar.gz"
+                source      = destination }
+      url     { download_path = "/$name/$name-${version.base}/"
+                site = "${apache.APACHE_MIRROR}/${download_path}"
+                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+    }
   }
 }

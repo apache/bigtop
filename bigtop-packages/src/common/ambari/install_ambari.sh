@@ -88,7 +88,6 @@ SERVER_DIR=$BUILD_DIR/ambari-server/target/ambari-server-*-dist
 cp -ra $SERVER_DIR/* ${PREFIX}/
 cp -a  $SOURCE_DIR/ambari-common/src/main/unix/ambari-python-wrap ${PREFIX}/${VAR_LIB_DIR}
 rm -rf ${PREFIX}/var/lib/ambari-server/resources/stacks/HDP*
-cp -r  ${DISTRO_DIR}/ODPi ${PREFIX}/var/lib/ambari-server/resources/stacks/
 
 # End of Ambari Server
 
@@ -103,7 +102,6 @@ AGENT_DEST_DIR=/usr/lib/python2.6/site-packages/ambari_agent
 cp -ra $AGENT_BUILD_DIR/* ${PREFIX}/
 cp -a $SOURCE_DIR/ambari-common/src/main/unix/ambari-python-wrap ${PREFIX}/${VAR_LIB_DIR}
 rm -rf ${PREFIX}/var/lib/ambari-agent/cache/stacks/HDP*
-cp -r  ${DISTRO_DIR}/ODPi ${PREFIX}/var/lib/ambari-agent/cache/stacks/
 
 #Ambari Groovy Client 
 
