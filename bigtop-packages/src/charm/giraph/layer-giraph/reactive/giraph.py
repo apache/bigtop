@@ -13,15 +13,57 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
 from jujubigdata import utils
-from charms.reactive import when, when_not, set_state
-from charms.layer.apache_bigtop_base import Bigtop
+from path import Path
+
+from charms.reactive import is_state, when, when_not, set_state
+from charms.layer.apache_bigtop_base import Bigtop, get_package_version
 from charmhelpers.core import hookenv
 
 
+def get_good_jars(dir, prefix=True):
+    """
+    Walk a directory (non-recursively) and return a list of (good) jars.
+
+    Some jars included in giraph have classes that are incompatible with yarn
+    nodemanagers. Filter these out when constructing a list of good
+    jars. If omitting the entire .jar is too coarse, the jar will need to be
+    reconstructed with the offending .class removed.
+
+    param: str dir: Directory to walk
+    param: bool prefix: When true, prepend the directory to each jar entry
+    """
+    # Known incompatible jars:
+    # - hive-exec-0.11.0 protobuf class
+    #   java.lang.VerifyError: ... overrides final method getUnknownFields
+    bad_jars = ['hive-exec-0.11.0.jar']
+    good_jars = []
+    for file in os.listdir(dir):
+        if file.endswith('.jar') and file not in bad_jars:
+            good_jars.append(Path(dir / file) if prefix else file)
+
+    return good_jars
+
+
 @when('bigtop.available')
+def report_status():
+    """Set juju status based on the deployment topology."""
+    giraph_joined = is_state('giraph.joined')
+    giraph_installed = is_state('giraph.installed')
+    if not giraph_joined:
+        hookenv.status_set('blocked',
+                           'waiting for relation to a giraph host')
+    elif giraph_installed:
+        hookenv.status_set('active',
+                           'ready')
+
+
+@when('bigtop.available', 'giraph.joined')
 @when_not('giraph.installed')
-def install_giraph():
+def install_giraph(giraph):
+    """Install giraph when prerequisite states are present."""
     hookenv.status_set('maintenance', 'installing giraph')
     bigtop = Bigtop()
     bigtop.render_site_yaml(
@@ -30,11 +72,33 @@ def install_giraph():
         ],
     )
     bigtop.trigger_puppet()
+    giraph_home = Path('/usr/lib/giraph')
+    giraph_libdir = Path(giraph_home / 'lib')
+    giraph_examples = Path('{}/resources/giraph-examples-1.1.0.jar'.format(
+        hookenv.charm_dir()))
+
+    # Gather a list of all the giraph jars (needed for -libjars)
+    giraph_jars = [giraph_examples]
+    giraph_jars.extend(get_good_jars(giraph_home, prefix=True))
+    giraph_jars.extend(get_good_jars(giraph_libdir, prefix=True))
+
+    # Update environment with appropriate giraph bits. HADOOP_CLASSPATH can
+    # use wildcards (and it should for readability), but GIRAPH_JARS, which
+    # is intended to be used as 'hadoop jar -libjars $GIRAPH_JARS', needs to
+    # be a comma-separate list of jars.
     with utils.environment_edit_in_place('/etc/environment') as env:
-        env['GIRAPH_HOME'] = '/usr/lib/giraph'
-        env['HADOOP_CLASSPATH'] = '/usr/lib/giraph/giraph-accumulo-1.1.0.jar:/usr/lib/giraph/giraph-core.jar:/usr/lib/giraph/giraph-hbase-1.1.0.jar:/usr/lib/giraph/giraph-hcatalog.jar:/usr/lib/giraph/giraph-kibble-1.1.0.jar:/usr/lib/giraph/giraph-rexster.jar:/usr/lib/giraph/giraph-accumulo.jar:/usr/lib/giraph/giraph-gora-1.1.0.jar:/usr/lib/giraph/giraph-hbase.jar:/usr/lib/giraph/giraph-hive-1.1.0.jar:/usr/lib/giraph/giraph-kibble.jar:/usr/lib/giraph/giraph-core-1.1.0.jar:/usr/lib/giraph/giraph-gora.jar:/usr/lib/giraph/giraph-hcatalog-1.1.0.jar:/usr/lib/giraph/giraph-hive.jar:/usr/lib/giraph/giraph-rexster-io-1.1.0.jar:resources/giraph-examples-1.1.0.jar:/usr/lib/giraph/lib/JavaEWAH-0.3.2.jar:/usr/lib/giraph/lib/cxf-api-2.5.2.jar:/usr/lib/giraph/lib/jackson-jaxrs-1.9.13.jar:/usr/lib/giraph/lib/rexster-core-2.4.0.jar:/usr/lib/giraph/lib/ST4-4.0.4.jar:/usr/lib/giraph/lib/cxf-common-utilities-2.5.2.jar:/usr/lib/giraph/lib/jackson-mapper-asl-1.9.2.jar:/usr/lib/giraph/lib/servlet-api-2.5-20081211.jar:/usr/lib/giraph/lib/activation-1.1.jar:/usr/lib/giraph/lib/cxf-rt-bindings-xml-2.5.2.jar:/usr/lib/giraph/lib/jackson-xc-1.9.13.jar:/usr/lib/giraph/lib/sigar-1.6.5.132-5.jar:/usr/lib/giraph/lib/annotations-2.0.2.jar:/usr/lib/giraph/lib/cxf-rt-core-2.5.2.jar:/usr/lib/giraph/lib/javax.inject-1.jar:/usr/lib/giraph/lib/slf4j-api-1.7.5.jar:/usr/lib/giraph/lib/antlr-2.7.7.jar:/usr/lib/giraph/lib/cxf-rt-frontend-jaxrs-2.5.2.jar:/usr/lib/giraph/lib/javolution-5.5.1.jar:/usr/lib/giraph/lib/slf4j-log4j12-1.7.5.jar:/usr/lib/giraph/lib/antlr-3.4.jar:/usr/lib/giraph/lib/cxf-rt-transports-common-2.5.2.jar:/usr/lib/giraph/lib/jaxb-api-2.2.2.jar:/usr/lib/giraph/lib/slice-0.5.jar:/usr/lib/giraph/lib/antlr-runtime-3.4.jar:/usr/lib/giraph/lib/cxf-rt-transports-http-2.5.2.jar:/usr/lib/giraph/lib/jaxb-impl-2.2.4-1.jar:/usr/lib/giraph/lib/snappy-java-1.0.5.jar:/usr/lib/giraph/lib/aopalliance-1.0.jar:/usr/lib/giraph/lib/datanucleus-connectionpool-2.0.3.jar:/usr/lib/giraph/lib/jdo2-api-2.3-ec.jar:/usr/lib/giraph/lib/spring-aop-3.0.6.RELEASE.jar:/usr/lib/giraph/lib/asm-4.0.jar:/usr/lib/giraph/lib/datanucleus-core-2.0.3.jar:/usr/lib/giraph/lib/jersey-core-1.17.jar:/usr/lib/giraph/lib/spring-asm-3.0.6.RELEASE.jar:/usr/lib/giraph/lib/avro-1.7.6.jar:/usr/lib/giraph/lib/datanucleus-rdbms-2.0.3.jar:/usr/lib/giraph/lib/jersey-json-1.17.jar:/usr/lib/giraph/lib/spring-beans-3.0.6.RELEASE.jar:/usr/lib/giraph/lib/avro-ipc-1.7.6-tests.jar:/usr/lib/giraph/lib/derby-10.4.2.0.jar:/usr/lib/giraph/lib/jettison-1.3.3.jar:/usr/lib/giraph/lib/spring-context-3.0.6.RELEASE.jar:/usr/lib/giraph/lib/avro-ipc-1.7.6.jar:/usr/lib/giraph/lib/fastutil-6.5.4.jar:/usr/lib/giraph/lib/jetty-6.1.26.jar:/usr/lib/giraph/lib/spring-core-3.0.6.RELEASE.jar:/usr/lib/giraph/lib/avro-mapred-1.7.6.jar:/usr/lib/giraph/lib/geronimo-javamail_1.4_spec-1.7.1.jar:/usr/lib/giraph/lib/jetty-util-6.1.26.jar:/usr/lib/giraph/lib/spring-expression-3.0.6.RELEASE.jar:/usr/lib/giraph/lib/base64-2.3.8.jar:/usr/lib/giraph/lib/giraph-core-1.1.0-tests.jar:/usr/lib/giraph/lib/jline-0.9.94.jar:/usr/lib/giraph/lib/spring-web-3.0.6.RELEASE.jar:/usr/lib/giraph/lib/blueprints-core-2.4.0.jar:/usr/lib/giraph/lib/gora-core-0.5.jar:/usr/lib/giraph/lib/jmxutils-1.16.jar:/usr/lib/giraph/lib/stats-0.91.jar:/usr/lib/giraph/lib/bval-core-0.5.jar:/usr/lib/giraph/lib/guava-14.0.1.jar:/usr/lib/giraph/lib/jol-core-0.1.jar:/usr/lib/giraph/lib/stax-api-1.0.1.jar:/usr/lib/giraph/lib/bval-jsr303-0.5.jar:/usr/lib/giraph/lib/guice-3.0.jar:/usr/lib/giraph/lib/json-20090211.jar:/usr/lib/giraph/lib/stax2-api-3.1.1.jar:/usr/lib/giraph/lib/cglib-nodep-2.2.2.jar:/usr/lib/giraph/lib/guice-multibindings-3.0.jar:/usr/lib/giraph/lib/jsr311-api-1.1.1.jar:/usr/lib/giraph/lib/stringtemplate-3.2.1.jar:/usr/lib/giraph/lib/colt-1.2.0.jar:/usr/lib/giraph/lib/hcatalog-core-0.5.0-incubating.jar:/usr/lib/giraph/lib/jta-1.1.jar:/usr/lib/giraph/lib/swift-annotations-0.13.1.jar:/usr/lib/giraph/lib/commons-beanutils-1.7.0.jar:/usr/lib/giraph/lib/hive-builtins-0.10.0.jar:/usr/lib/giraph/lib/jython-2.5.3.jar:/usr/lib/giraph/lib/swift-codec-0.13.1.jar:/usr/lib/giraph/lib/commons-beanutils-core-1.8.0.jar:/usr/lib/giraph/lib/hive-cli-0.10.0.jar:/usr/lib/giraph/lib/libfb303-0.9.0.jar:/usr/lib/giraph/lib/swift-service-0.13.1.jar:/usr/lib/giraph/lib/commons-cli-1.2.jar:/usr/lib/giraph/lib/hive-exec-0.11.0.jar:/usr/lib/giraph/lib/libthrift-0.9.0.jar:/usr/lib/giraph/lib/typetools-0.2.1.jar:/usr/lib/giraph/lib/commons-codec-1.8.jar:/usr/lib/giraph/lib/hive-io-exp-core-0.26.jar:/usr/lib/giraph/lib/log4j-1.2.17.jar:/usr/lib/giraph/lib/units-0.91.jar:/usr/lib/giraph/lib/commons-compress-1.4.1.jar:/usr/lib/giraph/lib/hive-metastore-0.11.0.jar:/usr/lib/giraph/lib/metrics-core-2.2.0.jar:/usr/lib/giraph/lib/validation-api-1.1.0.Final.jar:/usr/lib/giraph/lib/commons-configuration-1.6.jar:/usr/lib/giraph/lib/hive-pdk-0.10.0.jar:/usr/lib/giraph/lib/metrics-core-3.0.0.jar:/usr/lib/giraph/lib/velocity-1.7.jar:/usr/lib/giraph/lib/commons-dbcp-1.4.jar:/usr/lib/giraph/lib/hive-service-0.10.0.jar:/usr/lib/giraph/lib/neethi-3.0.1.jar:/usr/lib/giraph/lib/woodstox-core-asl-4.1.1.jar:/usr/lib/giraph/lib/commons-digester-1.8.jar:/usr/lib/giraph/lib/httpclient-4.1.2.jar:/usr/lib/giraph/lib/netty-3.6.2.Final.jar:/usr/lib/giraph/lib/wsdl4j-1.6.2.jar:/usr/lib/giraph/lib/commons-io-2.1.jar:/usr/lib/giraph/lib/httpcore-4.1.2.jar:/usr/lib/giraph/lib/netty-all-4.0.14.Final.jar:/usr/lib/giraph/lib/xmlschema-core-2.0.1.jar:/usr/lib/giraph/lib/commons-lang-2.6.jar:/usr/lib/giraph/lib/jackson-annotations-2.1.4.jar:/usr/lib/giraph/lib/nifty-client-0.13.1.jar:/usr/lib/giraph/lib/xz-1.0.jar:/usr/lib/giraph/lib/commons-lang3-3.1.jar:/usr/lib/giraph/lib/jackson-core-2.1.2.jar:/usr/lib/giraph/lib/nifty-core-0.13.1.jar:/usr/lib/giraph/lib/yjp-controller-api-redist-11.0.10.jar:/usr/lib/giraph/lib/commons-pool-1.5.4.jar:/usr/lib/giraph/lib/jackson-core-asl-1.9.2.jar:/usr/lib/giraph/lib/paranamer-2.5.2.jar:/usr/lib/giraph/lib/zookeeper-3.4.5.jar:/usr/lib/giraph/lib/concurrent-1.3.4.jar:/usr/lib/giraph/lib/jackson-databind-2.1.2.jar:/usr/lib/giraph/lib/protobuf-java-2.5.0.jar:/usr/lib/giraph/lib/configuration-0.91.jar:/usr/lib/giraph/lib/jackson-datatype-json-org-2.1.2.jar:/usr/lib/giraph/lib/reflectasm-1.07.jar:resources/giraph-examples-1.1.0.jar'
-        env['LIB_JARS'] = '/usr/lib/giraph/giraph-accumulo-1.1.0.jar,/usr/lib/giraph/giraph-core.jar,/usr/lib/giraph/giraph-hbase-1.1.0.jar,/usr/lib/giraph/giraph-hcatalog.jar,/usr/lib/giraph/giraph-kibble-1.1.0.jar,/usr/lib/giraph/giraph-rexster.jar,/usr/lib/giraph/giraph-accumulo.jar,/usr/lib/giraph/giraph-gora-1.1.0.jar,/usr/lib/giraph/giraph-hbase.jar,/usr/lib/giraph/giraph-hive-1.1.0.jar,/usr/lib/giraph/giraph-kibble.jar,/usr/lib/giraph/giraph-core-1.1.0.jar,/usr/lib/giraph/giraph-gora.jar,/usr/lib/giraph/giraph-hcatalog-1.1.0.jar,/usr/lib/giraph/giraph-hive.jar,/usr/lib/giraph/giraph-rexster-io-1.1.0.jar,resources/giraph-examples-1.1.0.jar,/usr/lib/giraph/lib/JavaEWAH-0.3.2.jar,/usr/lib/giraph/lib/cxf-api-2.5.2.jar,/usr/lib/giraph/lib/jackson-jaxrs-1.9.13.jar,/usr/lib/giraph/lib/rexster-core-2.4.0.jar,/usr/lib/giraph/lib/ST4-4.0.4.jar,/usr/lib/giraph/lib/cxf-common-utilities-2.5.2.jar,/usr/lib/giraph/lib/jackson-mapper-asl-1.9.2.jar,/usr/lib/giraph/lib/servlet-api-2.5-20081211.jar,/usr/lib/giraph/lib/activation-1.1.jar,/usr/lib/giraph/lib/cxf-rt-bindings-xml-2.5.2.jar,/usr/lib/giraph/lib/jackson-xc-1.9.13.jar,/usr/lib/giraph/lib/sigar-1.6.5.132-5.jar,/usr/lib/giraph/lib/annotations-2.0.2.jar,/usr/lib/giraph/lib/cxf-rt-core-2.5.2.jar,/usr/lib/giraph/lib/javax.inject-1.jar,/usr/lib/giraph/lib/slf4j-api-1.7.5.jar,/usr/lib/giraph/lib/antlr-2.7.7.jar,/usr/lib/giraph/lib/cxf-rt-frontend-jaxrs-2.5.2.jar,/usr/lib/giraph/lib/javolution-5.5.1.jar,/usr/lib/giraph/lib/slf4j-log4j12-1.7.5.jar,/usr/lib/giraph/lib/antlr-3.4.jar,/usr/lib/giraph/lib/cxf-rt-transports-common-2.5.2.jar,/usr/lib/giraph/lib/jaxb-api-2.2.2.jar,/usr/lib/giraph/lib/slice-0.5.jar,/usr/lib/giraph/lib/antlr-runtime-3.4.jar,/usr/lib/giraph/lib/cxf-rt-transports-http-2.5.2.jar,/usr/lib/giraph/lib/jaxb-impl-2.2.4-1.jar,/usr/lib/giraph/lib/snappy-java-1.0.5.jar,/usr/lib/giraph/lib/aopalliance-1.0.jar,/usr/lib/giraph/lib/datanucleus-connectionpool-2.0.3.jar,/usr/lib/giraph/lib/jdo2-api-2.3-ec.jar,/usr/lib/giraph/lib/spring-aop-3.0.6.RELEASE.jar,/usr/lib/giraph/lib/asm-4.0.jar,/usr/lib/giraph/lib/datanucleus-core-2.0.3.jar,/usr/lib/giraph/lib/jersey-core-1.17.jar,/usr/lib/giraph/lib/spring-asm-3.0.6.RELEASE.jar,/usr/lib/giraph/lib/avro-1.7.6.jar,/usr/lib/giraph/lib/datanucleus-rdbms-2.0.3.jar,/usr/lib/giraph/lib/jersey-json-1.17.jar,/usr/lib/giraph/lib/spring-beans-3.0.6.RELEASE.jar,/usr/lib/giraph/lib/avro-ipc-1.7.6-tests.jar,/usr/lib/giraph/lib/derby-10.4.2.0.jar,/usr/lib/giraph/lib/jettison-1.3.3.jar,/usr/lib/giraph/lib/spring-context-3.0.6.RELEASE.jar,/usr/lib/giraph/lib/avro-ipc-1.7.6.jar,/usr/lib/giraph/lib/fastutil-6.5.4.jar,/usr/lib/giraph/lib/jetty-6.1.26.jar,/usr/lib/giraph/lib/spring-core-3.0.6.RELEASE.jar,/usr/lib/giraph/lib/avro-mapred-1.7.6.jar,/usr/lib/giraph/lib/geronimo-javamail_1.4_spec-1.7.1.jar,/usr/lib/giraph/lib/jetty-util-6.1.26.jar,/usr/lib/giraph/lib/spring-expression-3.0.6.RELEASE.jar,/usr/lib/giraph/lib/base64-2.3.8.jar,/usr/lib/giraph/lib/giraph-core-1.1.0-tests.jar,/usr/lib/giraph/lib/jline-0.9.94.jar,/usr/lib/giraph/lib/spring-web-3.0.6.RELEASE.jar,/usr/lib/giraph/lib/blueprints-core-2.4.0.jar,/usr/lib/giraph/lib/gora-core-0.5.jar,/usr/lib/giraph/lib/jmxutils-1.16.jar,/usr/lib/giraph/lib/stats-0.91.jar,/usr/lib/giraph/lib/bval-core-0.5.jar,/usr/lib/giraph/lib/guava-14.0.1.jar,/usr/lib/giraph/lib/jol-core-0.1.jar,/usr/lib/giraph/lib/stax-api-1.0.1.jar,/usr/lib/giraph/lib/bval-jsr303-0.5.jar,/usr/lib/giraph/lib/guice-3.0.jar,/usr/lib/giraph/lib/json-20090211.jar,/usr/lib/giraph/lib/stax2-api-3.1.1.jar,/usr/lib/giraph/lib/cglib-nodep-2.2.2.jar,/usr/lib/giraph/lib/guice-multibindings-3.0.jar,/usr/lib/giraph/lib/jsr311-api-1.1.1.jar,/usr/lib/giraph/lib/stringtemplate-3.2.1.jar,/usr/lib/giraph/lib/colt-1.2.0.jar,/usr/lib/giraph/lib/hcatalog-core-0.5.0-incubating.jar,/usr/lib/giraph/lib/jta-1.1.jar,/usr/lib/giraph/lib/swift-annotations-0.13.1.jar,/usr/lib/giraph/lib/commons-beanutils-1.7.0.jar,/usr/lib/giraph/lib/hive-builtins-0.10.0.jar,/usr/lib/giraph/lib/jython-2.5.3.jar,/usr/lib/giraph/lib/swift-codec-0.13.1.jar,/usr/lib/giraph/lib/commons-beanutils-core-1.8.0.jar,/usr/lib/giraph/lib/hive-cli-0.10.0.jar,/usr/lib/giraph/lib/libfb303-0.9.0.jar,/usr/lib/giraph/lib/swift-service-0.13.1.jar,/usr/lib/giraph/lib/commons-cli-1.2.jar,/usr/lib/giraph/lib/hive-exec-0.11.0.jar,/usr/lib/giraph/lib/libthrift-0.9.0.jar,/usr/lib/giraph/lib/typetools-0.2.1.jar,/usr/lib/giraph/lib/commons-codec-1.8.jar,/usr/lib/giraph/lib/hive-io-exp-core-0.26.jar,/usr/lib/giraph/lib/log4j-1.2.17.jar,/usr/lib/giraph/lib/units-0.91.jar,/usr/lib/giraph/lib/commons-compress-1.4.1.jar,/usr/lib/giraph/lib/hive-metastore-0.11.0.jar,/usr/lib/giraph/lib/metrics-core-2.2.0.jar,/usr/lib/giraph/lib/validation-api-1.1.0.Final.jar,/usr/lib/giraph/lib/commons-configuration-1.6.jar,/usr/lib/giraph/lib/hive-pdk-0.10.0.jar,/usr/lib/giraph/lib/metrics-core-3.0.0.jar,/usr/lib/giraph/lib/velocity-1.7.jar,/usr/lib/giraph/lib/commons-dbcp-1.4.jar,/usr/lib/giraph/lib/hive-service-0.10.0.jar,/usr/lib/giraph/lib/neethi-3.0.1.jar,/usr/lib/giraph/lib/woodstox-core-asl-4.1.1.jar,/usr/lib/giraph/lib/commons-digester-1.8.jar,/usr/lib/giraph/lib/httpclient-4.1.2.jar,/usr/lib/giraph/lib/netty-3.6.2.Final.jar,/usr/lib/giraph/lib/wsdl4j-1.6.2.jar,/usr/lib/giraph/lib/commons-io-2.1.jar,/usr/lib/giraph/lib/httpcore-4.1.2.jar,/usr/lib/giraph/lib/netty-all-4.0.14.Final.jar,/usr/lib/giraph/lib/xmlschema-core-2.0.1.jar,/usr/lib/giraph/lib/commons-lang-2.6.jar,/usr/lib/giraph/lib/jackson-annotations-2.1.4.jar,/usr/lib/giraph/lib/nifty-client-0.13.1.jar,/usr/lib/giraph/lib/xz-1.0.jar,/usr/lib/giraph/lib/commons-lang3-3.1.jar,/usr/lib/giraph/lib/jackson-core-2.1.2.jar,/usr/lib/giraph/lib/nifty-core-0.13.1.jar,/usr/lib/giraph/lib/yjp-controller-api-redist-11.0.10.jar,/usr/lib/giraph/lib/commons-pool-1.5.4.jar,/usr/lib/giraph/lib/jackson-core-asl-1.9.2.jar,/usr/lib/giraph/lib/paranamer-2.5.2.jar,/usr/lib/giraph/lib/zookeeper-3.4.5.jar,/usr/lib/giraph/lib/concurrent-1.3.4.jar,/usr/lib/giraph/lib/jackson-databind-2.1.2.jar,/usr/lib/giraph/lib/protobuf-java-2.5.0.jar,/usr/lib/giraph/lib/configuration-0.91.jar,/usr/lib/giraph/lib/jackson-datatype-json-org-2.1.2.jar,/usr/lib/giraph/lib/reflectasm-1.07.jar,resources/giraph-examples-1.1.0.jar'
+        cur_cp = env['HADOOP_CLASSPATH'] if 'HADOOP_CLASSPATH' in env else ""
+        env['GIRAPH_HOME'] = giraph_home
+        env['HADOOP_CLASSPATH'] = "{ex}:{home}/*:{libs}/*:{cp}".format(
+            ex=giraph_examples,
+            home=giraph_home,
+            libs=giraph_libdir,
+            cp=cur_cp
+        )
+        env['GIRAPH_JARS'] = ','.join(j for j in giraph_jars)
 
-
-    hookenv.status_set('active', 'ready')
     set_state('giraph.installed')
+    report_status()
+    # set app version string for juju status output
+    giraph_version = get_package_version('giraph') or 'unknown'
+    hookenv.application_version_set(giraph_version)
