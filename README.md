@@ -178,6 +178,10 @@ __On all systems, Building Apache Bigtop requires certain set of tools__
   This build task expected Puppet 3.x to be installed; user has to have sudo permissions. The task will pull down and install
   all development dependencies, frameworks and SDKs, required to build the stack on your platform.
 
+  To immediately set environment after running toolchain, run
+
+    . /etc/profile.d/bigtop.sh
+
 * __Building packages__ : `gradle [component-name]-[rpm|deb]`
 
   If -Dbuildwithdeps=true is set, the Gradle will follow the order of the build specified in
@@ -214,25 +218,31 @@ The source for the website is located in "project_root/src/site/".
 For Developers: Building a component from Git repository
 --------------------------------------------------------
 
-To fetch source from a Git repository you need to modify `bigtop.mk` and add the
-following fields to your package:
+To fetch source from a Git repository you need to modify `bigtop.bom` and add the
+following JSON snippets to your component/package:
 
-* `_GIT_REPO` - SSH, HTTP or local path to Git repo.
-* `_GIT_REF` - branch, tag or commit hash to check out.
+```
+git     { repo = ""; ref = ""; dir = ""}
+```
+
+* `repo` - SSH, HTTP or local path to Git repo.
+* `ref` - branch, tag or commit hash to check out.
+* `dir` - directory name to write source into.
 
 Some packages have different names for source directory and source tarball
 (`hbase-0.98.5-src.tar.gz` contains `hbase-0.98.5` directory).
-By default source will be fetched in a directory named `_TARBALL_SRC`
+By default source will be fetched in a directory named by `tarball { destination = TARBALL_DST}`
 without `.t*` extension.
-To explicitly set directory name use the `_GIT_DIR` option.
+To explicitly set directory name use the `dir` option.
 
 Example for HBase:
 
-
-```make
-HBASE_GIT_REPO=https://github.com/apache/hbase.git
-HBASE_GIT_REF=$(HBASE_PKG_VERSION)
-HBASE_GIT_DIR=hbase-$(HBASE_PKG_VERSION)
+```
+      name    = 'hbase'
+      version { base = '1.1.3'; pkg = base; release = 1 }
+      git     { repo = "https://github.com/apache/hbase.git"
+                ref  = "${version.base}"
+                dir  = "${name}-${version.base}" }
 ```
 
 
