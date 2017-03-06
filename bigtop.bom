@@ -462,12 +462,11 @@ bigtop {
     'gpdb' {
       name    = 'gpdb'
       relNotes = 'GreenPlum'
-      version { base = '4.3.99.0'; pkg = base; release = 1 }
-      tarball { source      = "master.zip"
+      version { base = '5.0.0.alpha.0'; pkg = base; release = 1 }
+      tarball { source      = "5.0.0-alpha.0.tar.gz"
                 destination = "$name-${version.base}.tar.gz" }
-      url     { download_path = "pub/greenplum/$name/"
-                site = "https://github.com/greenplum-db/gpdb/archive"
-                archive = "site" }
+      url     { site = "https://github.com/greenplum-db/gpdb/archive/"
+                archive = site }
     }
   }
 }
