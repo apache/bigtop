@@ -51,7 +51,6 @@ public class ApiExaminer {
   private static final Log LOG = LogFactory.getLog(ApiExaminer.class.getName());
 
   static private Set<String> unloadableClasses;
-  //static private List<String> jarsWeCareAbout;
 
   private List<String> errors;
   private List<String> warnings;
@@ -65,17 +64,12 @@ public class ApiExaminer {
 
     /*
     jarsWeCareAbout = new ArrayList<>();
+    jarsWeCareAbout.add("hadoop-common");
     jarsWeCareAbout.add("hadoop-hdfs");
     jarsWeCareAbout.add("hadoop-yarn-common");
     jarsWeCareAbout.add("hadoop-yarn-client");
     jarsWeCareAbout.add("hadoop-yarn-api");
-    jarsWeCareAbout.add("hadoop-mapreduce-client-app");
-    jarsWeCareAbout.add("hadoop-mapreduce-client-common");
     jarsWeCareAbout.add("hadoop-mapreduce-client-core");
-    jarsWeCareAbout.add("hadoop-mapreduce-client-hs");
-    jarsWeCareAbout.add("hadoop-mapreduce-client-hs-plugins");
-    jarsWeCareAbout.add("hadoop-mapreduce-client-jobclient");
-    jarsWeCareAbout.add("hadoop-mapreduce-client-shuffle");
     */
   }
 

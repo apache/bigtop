@@ -40,7 +40,7 @@ dependencies {
   testCompile group: 'org.apache.hadoop', name: 'hadoop-mapreduce-client-common', version: '2.7.2'
   testCompile group: 'org.apache.hadoop', name: 'hadoop-hdfs', version: '2.7.2'
   testCompile group: 'org.apache.hive', name: 'hive-exec', version: '1.2.1'
-    testCompile "junit:junit:4.11"
+  testCompile "junit:junit:4.11"
   if (System.env.HADOOP_CONF_DIR) testRuntime files(System.env.HADOOP_CONF_DIR)
 }
 
