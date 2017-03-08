@@ -31,7 +31,7 @@ hadoop-mapreduce-client-hs-plugins-2\.7\.[0-9][\.\-_].*jar
 hadoop-sls[\.\-_].*jar
 hadoop-ant[\.\-_].*jar
 netty-3\.6\.2\.Final[\.\-_].*jar
-httpcore-4\.2\.5[\.\-_].*jar
+httpcore-4\.[0-9]\.[0-9][\.\-_].*jar
 jsch-0\.1\.(4[2-9]|[5-9]\d)[\.\-_].*jar
 hadoop-mapreduce-client-jobclient[\.\-_].*jar
 hadoop-archives[\.\-_].*jar
@@ -85,7 +85,7 @@ hadoop-mapreduce-client-app-2\.7\.[0-9][\.\-_].*jar
 hadoop-datajoin[\.\-_].*jar
 apacheds-kerberos-codec-2\.0\.0-M15[\.\-_].*jar
 java-xmlbuilder-0\.4[\.\-_].*jar
-httpclient-4\.2\.5[\.\-_].*jar
+httpclient-4\.[0-9]\.[0-9][\.\-_].*jar
 hadoop-rumen-2\.7\.[0-9][\.\-_].*jar
 hadoop-mapreduce-client-core-2\.7\.[0-9][\.\-_].*jar
 guava-11\.0\.2[\.\-_].*jar
