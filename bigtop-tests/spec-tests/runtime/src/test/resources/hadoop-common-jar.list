@@ -17,7 +17,7 @@ curator-client-2\.7\.1[\.\-_].*jar
 jets3t-0\.9\.0[\.\-_].*jar
 commons-net-3\.1[\.\-_].*jar
 jaxb-impl-2\.2\.3-1[\.\-_].*jar
-httpclient-4\.2\.5[\.\-_].*jar
+httpclient-4\.[0-9]\.[0-9][\.\-_].*jar
 apacheds-kerberos-codec-2\.0\.0-M15[\.\-_].*jar
 commons-cli-1\.2[\.\-_].*jar
 log4j-1\.2\.17[\.\-_].*jar
@@ -47,7 +47,7 @@ commons-lang-2\.6[\.\-_].*jar
 jetty-util-6\.1\.26[\.\-_].*jar
 jsr305-3\.0\.0[\.\-_].*jar
 protobuf-java-2\.5\.0[\.\-_].*jar
-httpcore-4\.2\.5[\.\-_].*jar
+httpcore-4\.[0-9]\.[0-9][\.\-_].*jar
 commons-io-2\.4[\.\-_].*jar
 activation-1\.1[\.\-_].*jar
 jersey-json-1\.9[\.\-_].*jar
