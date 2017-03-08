@@ -74,7 +74,7 @@ client/xercesImpl[\.\-_].*jar
 client/commons-codec[\.\-_].*jar
 client/netty-3\.6\.2\.Final[\.\-_].*jar
 client/commons-collections[\.\-_].*jar
-client/httpcore-4\.2\.5[\.\-_].*jar
+client/httpcore-4\.[0-9]\.[0-9][\.\-_].*jar
 client/hadoop-mapreduce-client-jobclient[\.\-_].*jar
 client/htrace-core[\.\-_].*jar
 client/jersey-core-1\.9[\.\-_].*jar
@@ -139,7 +139,7 @@ client/protobuf-java-2\.5\.0[\.\-_].*jar
 client/hadoop-mapreduce-client-app-2\.7\.[0-9][\.\-_].*jar
 client/apacheds-kerberos-codec-2\.0\.0-M15[\.\-_].*jar
 client/commons-lang[\.\-_].*jar
-client/httpclient-4\.2\.5[\.\-_].*jar
+client/httpclient-4\.[0-9]\.[0-9][\.\-_].*jar
 client/paranamer[\.\-_].*jar
 client/hadoop-yarn-api[\.\-_].*jar
 client/jersey-client[\.\-_].*jar
@@ -176,7 +176,7 @@ lib/jetty-util-6\.1\.26[\.\-_].*jar
 lib/avro-1\.7\.[4-7][\.\-_].*jar
 lib/jaxb-impl-2\.2\.3-1[\.\-_].*jar
 lib/netty-3\.6\.2\.Final[\.\-_].*jar
-lib/httpcore-4\.2\.5[\.\-_].*jar
+lib/httpcore-4\.[0-9]\.[0-9][\.\-_].*jar
 lib/jsch-0\.1\.(4[2-9]|[5-9]\d)[\.\-_].*jar
 lib/jersey-core-1\.9[\.\-_].*jar
 lib/jackson-mapper-asl-1\.9\.13[\.\-_].*jar
@@ -219,7 +219,7 @@ lib/htrace-core-3\.1\.0-incubating[\.\-_].*jar
 lib/protobuf-java-2\.5\.0[\.\-_].*jar
 lib/apacheds-kerberos-codec-2\.0\.0-M15[\.\-_].*jar
 lib/java-xmlbuilder-0\.4[\.\-_].*jar
-lib/httpclient-4\.2\.5[\.\-_].*jar
+lib/httpclient-4\.[0-9]\.[0-9][\.\-_].*jar
 lib/guava-11\.0\.2[\.\-_].*jar
 lib/jsr305-3\.0\.0[\.\-_].*jar
 lib/jackson-jaxrs-1\.9\.13[\.\-_].*jar
