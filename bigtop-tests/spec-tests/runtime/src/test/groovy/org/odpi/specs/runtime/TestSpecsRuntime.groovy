@@ -25,6 +25,9 @@ import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 import org.junit.runners.Parameterized.Parameters
 
+import java.util.regex.Matcher
+import java.util.regex.Pattern
+
 /**
  * Check all expected environment
  * Tests are constructed dynamically, using external DSL to define
@@ -236,6 +239,35 @@ public class TestSpecsRuntime {
           }
         )
         break
+      case 'api_examination':
+        def basedir = getEnv(arguments['baseDirEnv'], arguments['envcmd'])
+        def libdir = getEnv(arguments['libDir'], arguments['envcmd'])
+
+        def dir = new File(basedir + "/" + libdir)
+        Assert.assertTrue("Expected " + dir.getPath() + " to be a directory", dir.isDirectory())
+        def pattern = Pattern.compile(arguments['jar'] + "-[0-9]+.*\\.jar")
+        def String[] jars = dir.list(new FilenameFilter() {
+          @Override
+          boolean accept(File d, String name) {
+            Matcher matcher = pattern.matcher(name)
+            return (matcher.matches() && !name.contains("test"))
+          }
+        })
+        Assert.assertEquals("Expected only one jar, but got " + jars.join(", "), 1, jars.length)
+        def jar = dir.getAbsolutePath() + "/" + jars[0]
+
+        def examinerJar = System.properties['odpi.test.hive.hcat.job.jar']
+        def resourceFile = System.properties['test.resources.dir']+ "/" + arguments['resourceFile']
+        Shell sh = new Shell()
+        def results = sh.exec("hadoop jar " + examinerJar + " org.odpi.specs.runtime.hadoop.ApiExaminer -c " + resourceFile + " -j " + jar).getErr()
+        int rc = sh.getRet()
+        Assert.assertEquals("Expected command to succeed, but got return code " + rc, 0, rc)
+        if (results.size() > 0) {
+          System.out.println("Received report for jar " + arguments['jar'] + results.join("\n"))
+        }
+        break;
+
+
       default:
         break
     }

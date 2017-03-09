@@ -360,5 +360,71 @@ specs {
       arguments {
       }
     }
+    'HADOOP_API1' {
+      name = "HADOOP_API1"
+      type = 'api_examination'
+      arguments {
+        baseDirEnv = 'HADOOP_COMMON_HOME'
+        libDir = 'HADOOP_COMMON_DIR'
+        envcmd = 'hadoop envvars'
+        jar = 'hadoop-common'
+        resourceFile = 'hadoop-common-2.7.3-api-report.json'
+      }
+    }
+    'HADOOP_API2' {
+      name = "HADOOP_API2"
+      type = 'api_examination'
+      arguments {
+        baseDirEnv = 'HADOOP_HDFS_HOME'
+        libDir = 'HDFS_DIR'
+        envcmd = 'hdfs envvars'
+        jar = 'hadoop-hdfs'
+        resourceFile = 'hadoop-hdfs-2.7.3-api-report.json'
+      }
+    }
+    'HADOOP_API3' {
+      name = "HADOOP_API3"
+      type = 'api_examination'
+      arguments {
+        baseDirEnv = 'HADOOP_YARN_HOME'
+        libDir = 'YARN_DIR'
+        envcmd = 'yarn envvars'
+        jar = 'hadoop-yarn-common'
+        resourceFile = 'hadoop-yarn-common-2.7.3-api-report.json'
+      }
+    }
+    'HADOOP_API4' {
+      name = "HADOOP_API4"
+      type = 'api_examination'
+      arguments {
+        baseDirEnv = 'HADOOP_YARN_HOME'
+        libDir = 'YARN_DIR'
+        envcmd = 'yarn envvars'
+        jar = 'hadoop-yarn-client'
+        resourceFile = 'hadoop-yarn-client-2.7.3-api-report.json'
+      }
+    }
+    'HADOOP_API5' {
+      name = "HADOOP_API5"
+      type = 'api_examination'
+      arguments {
+        baseDirEnv = 'HADOOP_YARN_HOME'
+        libDir = 'YARN_DIR'
+        envcmd = 'yarn envvars'
+        jar = 'hadoop-yarn-api'
+        resourceFile = 'hadoop-yarn-api-2.7.3-api-report.json'
+      }
+    }
+    'HADOOP_API6' {
+      name = "HADOOP_API6"
+      type = 'api_examination'
+      arguments {
+        baseDirEnv = 'HADOOP_MAPRED_HOME'
+        libDir = 'MAPRED_DIR'
+        envcmd = 'mapred envvars'
+        jar = 'hadoop-mapreduce-client-core'
+        resourceFile = 'hadoop-mapreduce-client-core-2.7.3-api-report.json'
+      }
+    }
   }
 }
