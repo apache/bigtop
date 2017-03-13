@@ -20,12 +20,12 @@ echo "Cleaning $WORKDIR"
 rm -rf $WORKDIR
 mkdir -p $WORKDIR
 VERSION=${2:-1.0}
-NAME="vagrant-odpi-v$VERSION"
+NAME="vagrant-bigtop-v$VERSION"
 # clean everything
 vagrant destroy -f
 vagrant up
 vagrant package --output $WORKDIR/${NAME}.box
 vagrant halt
-vmname=`VBoxManage  list vms | cut -d \" -f 2 | grep vagrant-puppet-vm_odpi`
+vmname=`VBoxManage  list vms | cut -d \" -f 2 | grep vagrant-puppet-vm_bigtop`
 VBoxManage export $vmname --output=$WORKDIR/${NAME}.ova --ovf20
 vagrant destroy -f
