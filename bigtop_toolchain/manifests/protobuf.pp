@@ -16,7 +16,7 @@
 class bigtop_toolchain::protobuf {
 
   case $operatingsystem{
-    /Ubuntu|Debian/: {
+    Ubuntu: {
       case $architecture {
         'amd64' : { $url = "https://launchpad.net/ubuntu/+source/protobuf/2.5.0-9ubuntu1/+build/5585371/+files/"
                     $arch= "amd64" }
@@ -26,10 +26,16 @@ class bigtop_toolchain::protobuf {
                     $arch= "arm64" }
       }
     }
+    Debian: {
+       case $architecture {
+         default : { $url = "https://github.com/google/protobuf/releases/download/v2.5.0/"
+                     $arch = "default" }
+       }
+    }
   }
  
   case $operatingsystem{
-    /Ubuntu|Debian/: {
+    Ubuntu: {
       $libprotobuf8 = "libprotobuf8_2.5.0-9ubuntu1_$arch.deb"
       $libprotoc8 = "libprotoc8_2.5.0-9ubuntu1_$arch.deb"
       $protobuf_compiler = "protobuf-compiler_2.5.0-9ubuntu1_$arch.deb"
@@ -44,6 +50,20 @@ class bigtop_toolchain::protobuf {
         command => "/usr/bin/dpkg -i $libprotobuf8 $libprotoc8 $protobuf_compiler",
         require => EXEC["download protobuf"],
       }
+    }
+    Debian: {
+        $protobuf8 = "protobuf-2.5.0.tar.gz"
+        $protobuf8dir = "protobuf-2.5.0"
+
+        exec { "download protobuf":
+           cwd  => "/usr/src",
+           command => "/usr/bin/wget $url/$protobuf8 && /bin/tar -xvzf $protobuf8 -C $protobuf8dir --strip-components=1"
+        }
+        exec { "install protobuf":
+           cwd => "/usr/src/$protobuf8dir",
+           command => "/usr/src/$protobuf8dir/configure --prefix=/usr && /usr/bin/make && /usr/bin/make install",
+           require => EXEC["download protobuf"]
+        }
     }
     default: {
       case $operatingsystem {
