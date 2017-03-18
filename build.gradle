@@ -153,7 +153,6 @@ allprojects {
   targetCompatibility = langLevel
 
   repositories {
-    maven { url "http://repository.apache.org/snapshots" }
     maven { url "http://repo.maven.apache.org/maven2" }
     mavenCentral()
   }
@@ -434,9 +433,4 @@ installAllLocalArtifacts.dependsOn installTopLevel, installCommon, installConf, 
 
 help.doFirst {
   println ASCII_bigtop
-}
-
-repositories {
-  maven { url "http://repository.apache.org/snapshots" }
-  maven { url "http://repo.maven.apache.org/maven2" }
 }
