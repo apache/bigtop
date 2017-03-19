@@ -17,7 +17,7 @@ from charms.reactive import when, when_not_all, is_state, set_state, remove_stat
 from charms.layer.bigtop_hbase import HBase
 from charmhelpers.core import hookenv
 from charms.reactive.helpers import data_changed
-from charms.layer.apache_bigtop_base import get_layer_opts
+from charms.layer.apache_bigtop_base import get_layer_opts, get_package_version
 
 
 @when('bigtop.available')
@@ -60,7 +60,10 @@ def installing_hbase(zk, hdfs):
     hbase.configure(hosts, zks)
     hbase.open_ports()
     set_state('hbase.installed')
-    hookenv.status_set('active', 'ready')
+    report_status()
+    # set app version string for juju status output
+    hbase_version = get_package_version('hbase-master') or 'unknown'
+    hookenv.application_version_set(hbase_version)
 
 
 @when('hbase.installed')

@@ -2,8 +2,8 @@ name: hbase
 summary: Apache Bitop HBase
 maintainer: Juju Big Data <bigdata@lists.ubuntu.com>
 description: >
-  HBase is the Hadoop database. This charm provides a Apache HBase from
-  Apache Bigtop.
+  HBase is the Hadoop database. This charm provides HBase from the
+  Apache Bigtop project.
 tags: []
 requires:
   zookeeper:
