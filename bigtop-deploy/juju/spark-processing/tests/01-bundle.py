@@ -17,6 +17,7 @@
 
 import amulet
 import os
+import re
 import unittest
 import yaml
 
@@ -31,9 +32,25 @@ class TestBundle(unittest.TestCase):
             bun = f.read()
         bundle = yaml.safe_load(bun)
 
+        # NB: strip machine ('to') placement. We don't seem to be guaranteed
+        # the same machine numbering after the initial bundletester deployment,
+        # so we might fail when redeploying --to a specific machine to run
+        # these bundle tests. This is ok because all charms in this bundle are
+        # using 'reset: false', so we'll already have our deployment just the
+        # way we want it by the time this test runs. This was originally
+        # raised as:
+        #  https://github.com/juju/amulet/issues/148
+        for service, service_config in bundle['services'].items():
+            if 'to' in service_config:
+                del service_config['to']
+
         cls.d.load(bundle)
         cls.d.setup(timeout=3600)
-        cls.d.sentry.wait_for_messages({'spark': 'ready (standalone - HA)'}, timeout=3600)
+
+        # we need units reporting ready before we attempt our smoke tests
+        cls.d.sentry.wait_for_messages({'spark': 'ready (standalone - HA)',
+                                        'zookeeper': re.compile('ready'),
+                                        }, timeout=3600)
         cls.spark = cls.d.sentry['spark'][0]
         cls.zookeeper = cls.d.sentry['zookeeper'][0]
 

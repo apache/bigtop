@@ -77,15 +77,15 @@ testdfsio:
                 default: 1000
         buffersize:
                 description: Buffer size in bytes
-                type: integer
-                default: 1000000
+                type: string
+                default: "1000000"
 teragen:
     description: Generate data with teragen
     params:
         size:
             description: The number of 100 byte rows, default to 1GB of data to generate
-            type: integer
-            default: 10000000
+            type: string
+            default: "10000000"
         indir:
             description: HDFS directory where generated data is stored
             type: string
@@ -103,8 +103,8 @@ terasort:
             default: '/benchmarks/TeraSort'
         size:
             description: The number of 100 byte rows, default to 1GB of data to generate and sort
-            type: integer
-            default: 10000000
+            type: string
+            default: "10000000"
         maps:
             description: The default number of map tasks per job. 1-20
             type: integer

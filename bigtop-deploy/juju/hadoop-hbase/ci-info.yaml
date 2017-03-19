@@ -1,5 +1,5 @@
 bundle:
-  name: hadoop-spark
+  name: hadoop-hbase
   namespace: bigdata-charmers
   release: true
   to-channel: edge
@@ -24,7 +24,7 @@ charm-upgrade:
     from-channel: edge
     release: false
     to-channel: beta
-  spark:
+  hbase:
     from-channel: edge
     release: false
     to-channel: beta

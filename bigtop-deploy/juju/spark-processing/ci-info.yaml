@@ -2,13 +2,13 @@ bundle:
   name: spark-processing
   namespace: bigdata-charmers
   release: true
-  to-channel: beta
+  to-channel: edge
 charm-upgrade:
   spark:
     from-channel: edge
-    release: true
+    release: false
     to-channel: beta
   zookeeper:
     from-channel: edge
-    release: true
+    release: false
     to-channel: beta

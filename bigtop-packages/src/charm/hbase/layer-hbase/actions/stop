@@ -18,14 +18,15 @@
 import sys
 sys.path.append('lib')
 
-from charmhelpers.core import hookenv
-from charms.reactive import is_state
-from charms.layer.bigtop_hbase import HBase
+from charmhelpers.core import hookenv  # noqa: E402
+from charms.reactive import is_state  # noqa: E402
+from charms.layer.bigtop_hbase import HBase  # noqa: E402
 
 
 def fail(msg):
     hookenv.action_fail(msg)
     sys.exit()
+
 
 if not is_state('hbase.installed'):
     fail('HBase is not yet ready')

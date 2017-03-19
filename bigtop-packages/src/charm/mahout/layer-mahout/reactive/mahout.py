@@ -15,7 +15,7 @@
 
 from jujubigdata import utils
 from charms.reactive import when, when_not, set_state
-from charms.layer.apache_bigtop_base import Bigtop
+from charms.layer.apache_bigtop_base import Bigtop, get_package_version
 from charmhelpers.core import hookenv
 
 
@@ -33,5 +33,8 @@ def install_mahout():
     with utils.environment_edit_in_place('/etc/environment') as env:
         env['MAHOUT_HOME'] = '/usr/lib/mahout'
 
-    hookenv.status_set('active', 'ready')
     set_state('mahout.installed')
+    hookenv.status_set('active', 'ready')
+    # set app version string for juju status output
+    mahout_version = get_package_version('mahout') or 'unknown'
+    hookenv.application_version_set(mahout_version)

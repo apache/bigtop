@@ -16,7 +16,6 @@
 # limitations under the License.
 
 import sys
-sys.path.append('lib')
 
 from charmhelpers.core import host, hookenv
 from charms.reactive import is_state
@@ -25,6 +24,7 @@ from charms.reactive import is_state
 def fail(msg):
     hookenv.action_fail(msg)
     sys.exit()
+
 
 if not is_state('hbase.installed'):
     fail('HBase is not yet ready')
