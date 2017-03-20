@@ -1,6 +1,7 @@
 services:
   spark:
     charm: "cs:~bigdata-dev/xenial/spark"
+    constraints: "mem=7G root-disk=32G"
     num_units: 2
     annotations:
       gui-x: "500"
@@ -9,7 +10,8 @@ services:
       - "0"
       - "1"
   zookeeper:
-    charm: "cs:xenial/zookeeper-10"
+    charm: "cs:~bigdata-dev/xenial/zookeeper"
+    constraints: "mem=3G root-disk=32G"
     num_units: 3
     annotations:
       gui-x: "500"
@@ -32,7 +34,7 @@ services:
       gui-x: "250"
       gui-y: "400"
   rsyslog:
-    charm: "cs:~bigdata-dev/xenial/rsyslog-6"
+    charm: "cs:~bigdata-dev/xenial/rsyslog-7"
     num_units: 1
     annotations:
       gui-x: "1000"
@@ -55,20 +57,14 @@ relations:
   - ["rsyslog:aggregator", "rsyslog-forwarder-ha:syslog"]
 machines:
   "0":
-    constraints: "mem=7G root-disk=32G"
     series: "xenial"
   "1":
-    constraints: "mem=7G root-disk=32G"
     series: "xenial"
   "2":
-    constraints: "mem=3G root-disk=32G"
     series: "xenial"
   "3":
-    constraints: "mem=3G root-disk=32G"
     series: "xenial"
   "4":
-    constraints: "mem=3G root-disk=32G"
     series: "xenial"
   "5":
-    constraints: "mem=3G"
     series: "xenial"

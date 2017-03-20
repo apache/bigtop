@@ -26,16 +26,22 @@ to deliver high-availability, Hadoop can detect and handle failures at the
 application layer. This provides a highly-available service on top of a cluster
 of machines, each of which may be prone to failure.
 
-This bundle provides a complete deployment of the core Hadoop components of
-the [Apache Bigtop][] platform to perform distributed data processing at scale.
-Ganglia and rsyslog applications are also provided to monitor cluster health
-and syslog activity.
+Apache Kafka is an open-source message broker project developed by the Apache
+Software Foundation written in Scala. The project aims to provide a unified,
+high-throughput, low-latency platform for handling real-time data feeds. Learn
+more at [kafka.apache.org][].
 
+This bundle provides a complete deployment of Hadoop and Kafka components from
+[Apache Bigtop][] that perform distributed data processing at scale. Ganglia
+and rsyslog applications are also provided to monitor cluster health and syslog
+activity.
+
+[kafka.apache.org]: http://kafka.apache.org/
 [Apache Bigtop]: http://bigtop.apache.org/
 
 ## Bundle Composition
 
-The applications that comprise this bundle are spread across 5 machines as
+The applications that comprise this bundle are spread across 9 units as
 follows:
 
   * NameNode (HDFS)
@@ -43,17 +49,30 @@ follows:
     * Colocated on the NameNode unit
   * Slave (DataNode and NodeManager)
     * 3 separate units
+  * Kafka
+  * Flume-Kafka
+    * Colocated on the Kafka unit
+  * Zookeeper
+    * 3 separate units
   * Client (Hadoop endpoint)
   * Plugin (Facilitates communication with the Hadoop cluster)
+    * Colocated on the Client unit
+  * Flume-HDFS
     * Colocated on the Client unit
   * Ganglia (Web interface for monitoring cluster metrics)
     * Colocated on the Client unit
   * Rsyslog (Aggregate cluster syslog events in a single location)
     * Colocated on the Client unit
 
+The Flume-HDFS unit provides an Apache Flume agent featuring an Avro source,
+memory channel, and HDFS sink. This agent supports a relation with the
+Flume-Kafka charm (apache-flume-kafka) to ingest messages published to a given
+Kafka topic into HDFS.
+
 Deploying this bundle results in a fully configured Apache Bigtop
 cluster on any supported cloud, which can be scaled to meet workload
 demands.
+
 
 # Deploying
 
@@ -63,16 +82,17 @@ bundle.
 
 > **Note**: This bundle requires hardware resources that may exceed limits
 of Free-tier or Trial accounts on some clouds. To deploy to these
-environments, modify a local copy of [bundle.yaml][] with `slave: num_units: 1`
-and `machines: 'X': constraints: mem=3G` as needed to satisfy account limits.
+environments, modify a local copy of [bundle.yaml][] to set
+`services: 'X': num_units: 1` and `machines: 'X': constraints: mem=3G` as
+needed to satisfy account limits.
 
 Deploy this bundle from the Juju charm store with the `juju deploy` command:
 
-    juju deploy hadoop-processing
+    juju deploy hadoop-kafka
 
 > **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
 of Juju, use [juju-quickstart][] with the following syntax: `juju quickstart
-hadoop-processing`.
+hadoop-kafka`.
 
 Alternatively, deploy a locally modified `bundle.yaml` with:
 
@@ -92,11 +112,28 @@ in this environment, configure a Juju model with appropriate proxy and/or
 mirror options. See [Configuring Models][] for more information.
 
 [getting-started]: https://jujucharms.com/docs/stable/getting-started
-[bundle.yaml]: https://github.com/apache/bigtop/blob/master/bigtop-deploy/juju/hadoop-processing/bundle.yaml
+[bundle.yaml]: https://github.com/apache/bigtop/blob/master/bigtop-deploy/juju/hadoop-kafka/bundle.yaml
 [juju-quickstart]: https://launchpad.net/juju-quickstart
 [Bigtop charm repository]: https://github.com/apache/bigtop/tree/master/bigtop-packages/src/charm
 [Bigtop charm README]: https://github.com/apache/bigtop/blob/master/bigtop-packages/src/charm/README.md
 [Configuring Models]: https://jujucharms.com/docs/stable/models-config
+
+
+# Configuring
+
+The default Kafka topic where messages are published is unset. Set this to
+an existing Kafka topic as follows:
+
+    juju config flume-kafka kafka_topic='<topic_name>'
+
+If no existing topic is available, create and verify a new topic with:
+
+    juju run-action kafka/0 create-topic topic=<topic_name> \
+     partitions=1 replication=1
+    juju show-action-output <id>  # <-- id from above command
+
+Once the Flume agents start, messages will start flowing into
+HDFS in year-month-day directories here: `/user/flume/flume-kafka/%y-%m-%d`.
 
 
 # Verifying
@@ -117,15 +154,17 @@ Once they all indicate that they are ready, perform application smoke tests
 to verify that the bundle is working as expected.
 
 ## Smoke Test
-The charms for each core component (namenode, resourcemanager, and slave)
-provide a `smoke-test` action that can be used to verify the application is
-functioning as expected. Note that the 'slave' component runs extensive
-tests provided by Apache Bigtop and may take up to 30 minutes to complete.
-Run the smoke-test actions as follows:
+The charms for each core component (namenode, resourcemanager, slave, kafka,
+and zookeeper) provide a `smoke-test` action that can be used to verify the
+application is functioning as expected. Note that the 'slave' component runs
+extensive tests provided by Apache Bigtop and may take up to 30 minutes to
+complete. Run the smoke-test actions as follows:
 
     juju run-action namenode/0 smoke-test
     juju run-action resourcemanager/0 smoke-test
     juju run-action slave/0 smoke-test
+    juju run-action kafka/0 smoke-test
+    juju run-action zookeeper/0 smoke-test
 
 > **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
 of Juju, the syntax is `juju action do <application>/0 smoke-test`.
@@ -147,7 +186,7 @@ more information about a specific smoke test with:
 of Juju, the syntax is `juju action fetch <action-id>`.
 
 ## Utilities
-Applications in this bundle include Hadoop command line and web utilities that
+Applications in this bundle include command line and web utilities that
 can be used to verify information about the cluster.
 
 From the command line, show the HDFS dfsadmin report and view the current list
@@ -155,6 +194,10 @@ of YARN NodeManager units with the following:
 
     juju run --application namenode "su hdfs -c 'hdfs dfsadmin -report'"
     juju run --application resourcemanager "su yarn -c 'yarn node -list'"
+
+Show the list of Zookeeper nodes with the following:
+
+    juju run --unit zookeeper/0 'echo "ls /" | /usr/lib/zookeeper/bin/zkCli.sh'
 
 To access the HDFS web console, find the `PUBLIC-ADDRESS` of the namenode
 application and expose it:
@@ -181,9 +224,9 @@ The YARN and Job History web interfaces will be available at the following URLs:
 # Monitoring
 
 This bundle includes Ganglia for system-level monitoring of the namenode,
-resourcemanager, slave, and client units. Metrics are sent to a centralized
-ganglia unit for easy viewing in a browser. To view the ganglia web interface,
-find the `PUBLIC-ADDRESS` of the Ganglia application and expose it:
+resourcemanager, slave, kafka, and zookeeper units. Metrics are sent to a
+centralized ganglia unit for easy viewing in a browser. To view the ganglia web
+interface, find the `PUBLIC-ADDRESS` of the Ganglia application and expose it:
 
     juju status ganglia
     juju expose ganglia
@@ -196,10 +239,9 @@ The web interface will be available at:
 # Logging
 
 This bundle includes rsyslog to collect syslog data from the namenode,
-resourcemanager, slave, and client units. These logs are sent to a
-centralized rsyslog unit for easy syslog analysis of the units that make up
-the Hadoop cluster. One method of viewing this log data is to simply cat syslog
-from the rsyslog unit:
+resourcemanager, slave, kafka, and zookeeper units. These logs are sent to a
+centralized rsyslog unit for easy syslog analysis. One method of viewing this
+log data is to simply cat syslog from the rsyslog unit:
 
     juju run --unit rsyslog/0 'sudo cat /var/log/syslog'
 
@@ -259,11 +301,13 @@ run with `juju run-action`:
 
 # Scaling
 
-By default, three slave units and one unit of each of the other components are
-deployed with this bundle. To scale the cluster compute and storage
-capabilities, simply add more slave units. To add one unit:
+By default, three Hadoop slave, one Kafka, and three zookeeper units are
+deployed with this bundle. Scaling these applications is as simple as adding
+more units. To add one unit:
 
+    juju add-unit kafka
     juju add-unit slave
+    juju add-unit zookeeper
 
 Multiple units may be added at once.  For example, add four more slave units:
 

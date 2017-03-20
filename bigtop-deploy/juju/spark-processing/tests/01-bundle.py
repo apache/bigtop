@@ -31,17 +31,6 @@ class TestBundle(unittest.TestCase):
             bun = f.read()
         bundle = yaml.safe_load(bun)
 
-        # NB: strip machine ('to') placement out. amulet loses our machine spec
-        # somewhere between yaml and json; without that spec, charms specifying
-        # machine placement will not deploy. This is ok for now because all
-        # charms in this bundle are using 'reset: false' so we'll already
-        # have our deployment just the way we want it by the time this test
-        # runs. However, it's bad. Remove once this is fixed:
-        #  https://github.com/juju/amulet/issues/148
-        for service, service_config in bundle['services'].items():
-            if 'to' in service_config:
-                del service_config['to']
-
         cls.d.load(bundle)
         cls.d.setup(timeout=3600)
         cls.d.sentry.wait_for_messages({'spark': 'ready (standalone - HA)'}, timeout=3600)

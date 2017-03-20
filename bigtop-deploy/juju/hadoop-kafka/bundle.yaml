@@ -1,6 +1,6 @@
 services:
   namenode:
-    charm: "cs:~bigdata-dev/xenial/hadoop-namenode"
+    charm: "cs:xenial/hadoop-namenode-10"
     constraints: "mem=7G root-disk=32G"
     num_units: 1
     annotations:
@@ -9,7 +9,7 @@ services:
     to:
       - "0"
   resourcemanager:
-    charm: "cs:~bigdata-dev/xenial/hadoop-resourcemanager"
+    charm: "cs:xenial/hadoop-resourcemanager-10"
     constraints: "mem=7G root-disk=32G"
     num_units: 1
     annotations:
@@ -18,7 +18,7 @@ services:
     to:
       - "0"
   slave:
-    charm: "cs:~bigdata-dev/xenial/hadoop-slave"
+    charm: "cs:xenial/hadoop-slave-10"
     constraints: "mem=7G root-disk=32G"
     num_units: 3
     annotations:
@@ -29,7 +29,7 @@ services:
       - "2"
       - "3"
   plugin:
-    charm: "cs:~bigdata-dev/xenial/hadoop-plugin"
+    charm: "cs:xenial/hadoop-plugin-10"
     annotations:
       gui-x: "1000"
       gui-y: "400"
@@ -42,6 +42,44 @@ services:
       gui-y: "400"
     to:
       - "4"
+# TODO: Charm bigtop flume
+  flume-hdfs:
+    charm: "cs:~bigdata-dev/xenial/apache-flume-hdfs-37"
+    num_units: 1
+    annotations:
+      gui-x: "1500"
+      gui-y: "400"
+    to:
+      - "4"
+  zookeeper:
+    charm: "cs:xenial/zookeeper-11"
+    constraints: "mem=3G root-disk=32G"
+    num_units: 3
+    annotations:
+      gui-x: "500"
+      gui-y: "400"
+    to:
+      - "5"
+      - "6"
+      - "7"
+  kafka:
+    charm: "cs:xenial/kafka-6"
+    constraints: "mem=3G"
+    num_units: 1
+    annotations:
+      gui-x: "1250"
+      gui-y: "800"
+    to:
+      - "8"
+# NOTE: flume-kafka cannot be colocated with flume-hdfs as they both use /etc/flume/conf
+  flume-kafka:
+    charm: "cs:~bigdata-dev/xenial/apache-flume-kafka-11"
+    num_units: 1
+    annotations:
+      gui-x: "1500"
+      gui-y: "800"
+    to:
+      - "8"
   ganglia:
     charm: "cs:~bigdata-dev/xenial/ganglia-5"
     num_units: 1
@@ -76,13 +114,21 @@ relations:
   - [plugin, namenode]
   - [plugin, resourcemanager]
   - [client, plugin]
+  - [flume-hdfs, plugin]
+  - [flume-kafka, flume-hdfs]
+  - [flume-kafka, kafka]
+  - [kafka, zookeeper]
   - ["ganglia-node:juju-info", "namenode:juju-info"]
   - ["ganglia-node:juju-info", "resourcemanager:juju-info"]
   - ["ganglia-node:juju-info", "slave:juju-info"]
+  - ["ganglia-node:juju-info", "kafka:juju-info"]
+  - ["ganglia-node:juju-info", "zookeeper:juju-info"]
   - ["ganglia:node", "ganglia-node:node"]
   - ["rsyslog-forwarder-ha:juju-info", "namenode:juju-info"]
   - ["rsyslog-forwarder-ha:juju-info", "resourcemanager:juju-info"]
   - ["rsyslog-forwarder-ha:juju-info", "slave:juju-info"]
+  - ["rsyslog-forwarder-ha:juju-info", "kafka:juju-info"]
+  - ["rsyslog-forwarder-ha:juju-info", "zookeeper:juju-info"]
   - ["rsyslog:aggregator", "rsyslog-forwarder-ha:syslog"]
 machines:
   "0":
@@ -94,4 +140,12 @@ machines:
   "3":
     series: "xenial"
   "4":
+    series: "xenial"
+  "5":
+    series: "xenial"
+  "6":
+    series: "xenial"
+  "7":
+    series: "xenial"
+  "8":
     series: "xenial"

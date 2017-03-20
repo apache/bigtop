@@ -112,7 +112,7 @@ of Juju, the syntax is `juju action fetch <action-id>`.
 
 # Resources
 
-- [Apache Bigtop](http://bigtop.apache.org/) home page
+- [Apache Bigtop home page](http://bigtop.apache.org/)
 - [Apache Bigtop mailing lists](http://bigtop.apache.org/mail-lists.html)
 - [Apache Mahout home page](https://mahout.apache.org/)
 - [Apache Mahout issue tracker](https://issues.apache.org/jira/browse/MAHOUT)
