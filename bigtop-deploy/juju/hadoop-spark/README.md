@@ -45,16 +45,16 @@ follows:
     * Colocated on the NameNode unit
   * Slave (DataNode and NodeManager)
     * 3 separate units
-  * Spark
-  * Plugin (Facilitates communication with the Hadoop cluster)
-    * Colocated on the Spark unit
-  * Client (Hadoop endpoint)
-    * Colocated on the Spark unit
+  * Spark (Master in yarn-client mode)
   * Zookeeper
     * 3 separate units
+  * Client (Hadoop endpoint)
+  * Plugin (Facilitates communication with the Hadoop cluster)
+    * Colocated on the Spark and Client units
   * Ganglia (Web interface for monitoring cluster metrics)
+    * Colocated on the Client unit
   * Rsyslog (Aggregate cluster syslog events in a single location)
-    * Colocated on the Ganglia unit
+    * Colocated on the Client unit
 
 Deploying this bundle results in a fully configured Apache Bigtop
 cluster on any supported cloud, which can be scaled to meet workload
@@ -348,7 +348,7 @@ Multiple units may be added at once.  For example, add four more slave units:
 
 # Resources
 
-- [Apache Bigtop](http://bigtop.apache.org/) home page
+- [Apache Bigtop home page](http://bigtop.apache.org/)
 - [Apache Bigtop issue tracking](http://bigtop.apache.org/issue-tracking.html)
 - [Apache Bigtop mailing lists](http://bigtop.apache.org/mail-lists.html)
 - [Juju Bigtop charms](https://jujucharms.com/q/apache/bigtop)

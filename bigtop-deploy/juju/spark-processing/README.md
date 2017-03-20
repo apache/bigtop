@@ -251,7 +251,7 @@ Multiple units may be added at once.  For example, add four more spark units:
 
 # Resources
 
-- [Apache Bigtop](http://bigtop.apache.org/) home page
+- [Apache Bigtop home page](http://bigtop.apache.org/)
 - [Apache Bigtop issue tracking](http://bigtop.apache.org/issue-tracking.html)
 - [Apache Bigtop mailing lists](http://bigtop.apache.org/mail-lists.html)
 - [Juju Bigtop charms](https://jujucharms.com/q/apache/bigtop)

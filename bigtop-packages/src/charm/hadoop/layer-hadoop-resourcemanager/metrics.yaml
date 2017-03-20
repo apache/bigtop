@@ -1,0 +1,5 @@
+metrics:
+  nodemanagers:
+    type: gauge
+    description: number of running node managers in the cluster
+    command: yarn node -list -all 2>/dev/null | grep RUNNING | wc -l

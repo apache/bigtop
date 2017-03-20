@@ -222,7 +222,7 @@ machine, simply pass ``0.0.0.0`` to ``network_interface``.
 
 # Resources
 
-- [Apache Bigtop](http://bigtop.apache.org/) home page
+- [Apache Bigtop home page](http://bigtop.apache.org/)
 - [Apache Bigtop mailing lists](http://bigtop.apache.org/mail-lists.html)
 - [Apache Kafka home page](http://kafka.apache.org/)
 - [Apache Kafka issue tracker](https://issues.apache.org/jira/browse/KAFKA)

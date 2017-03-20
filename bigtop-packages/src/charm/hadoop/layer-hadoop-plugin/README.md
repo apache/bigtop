@@ -114,7 +114,7 @@ Show the dfsadmin report on the command line with the following:
 
 # Resources
 
-- [Apache Bigtop](http://bigtop.apache.org/) home page
+- [Apache Bigtop home page](http://bigtop.apache.org/)
 - [Apache Bigtop issue tracking](http://bigtop.apache.org/issue-tracking.html)
 - [Apache Bigtop mailing lists](http://bigtop.apache.org/mail-lists.html)
 - [Juju Bigtop charms](https://jujucharms.com/q/apache/bigtop)
