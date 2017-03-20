@@ -15,7 +15,7 @@
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-#BigTop VM provisioner
+# BigTop VM provisioner
 
 ## Overview
 
@@ -88,7 +88,7 @@ or
 $ MEMORY_SIZE=8000 vagrant up
 ```
 
-##Configure Apache Hadoop ecosystem components
+## Configure Apache Hadoop ecosystem components
 * Choose the ecosystem you want to be deployed by modifying components in vagrantconfig.yaml
 
 ```
@@ -97,3 +97,18 @@ components: "hadoop, hbase, yarn,..."
 
 By default, Apache Hadoop and YARN will be installed.
 See `bigtop-deploy/puppet/hieradata/site.yaml` for more details.
+
+## Sandbox VM generation
+
+Vagrant is a useful tool for times when you would like to capture the state of the VM and
+publish it as a sandbox for others to use. We provide a wrapper script for this that works
+with VirtualBox. Here's how to run it:
+
+```
+./create-sandboxes.sh [temp work dir] [version]
+```
+If you don't specify the temp work dir the current directory is going to be used, the version
+by default is 1.0.
+
+Once the script is done running you will have vagrant-bigtop-v<version>.box and
+vagrant-bigtop-v<version>.ova VM images available to you under the temp work dir.

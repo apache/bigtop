@@ -15,7 +15,7 @@
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-#BigTop Docker provisioner
+# BigTop Docker provisioner
 
 ## Overview
 
@@ -33,12 +33,15 @@ This has been verified on Docker Engine 1.9.1, with api version 1.15, and Docker
 ### OS X and Windows
 
 * Install [Docker Toolbox](https://www.docker.com/docker-toolbox)
+* Install Ruby
 
 ### Linux
 
 * Install [Docker](https://docs.docker.com/installation/)
 
 * Install [Docker Compose](https://docs.docker.com/compose/install/)
+
+* Install Ruby
 
 * Start the Docker daemon
 
@@ -115,7 +118,7 @@ usage: docker-hadoop.sh [-C file ] args
        -h, --help
 ```
 
-##Configurations
+## Configurations
 
 * There are several parameters can be configured in config.yaml:
 
@@ -135,7 +138,7 @@ If you've built packages using local cloned bigtop and produced the apt/yum repo
 enable_local_repo = true
 ```
 
-##Configure Apache Hadoop ecosystem components
+## Configure Apache Hadoop ecosystem components
 * Choose the ecosystem you want to be deployed by modifying components in config.yaml
 
 ```
