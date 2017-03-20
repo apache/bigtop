@@ -38,6 +38,7 @@ hadoop::hadoop_storage_dirs:
 #  - zookeeper
 #  - ycsb
 #  - gpdb
+#  - ambari
 
 #bigtop::roles_enabled: false
 

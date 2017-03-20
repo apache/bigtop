@@ -144,6 +144,10 @@ $roles_map = {
   },
   kafka => {
     master => ["kafka-server"],
+  },
+  ambari => {
+    master => ["ambari-server"],
+    worker => ["ambari-agent"],
   }
 }
 
@@ -215,7 +219,8 @@ class node_with_roles ($roles = hiera("bigtop::roles")) inherits hadoop_cluster_
     "kerberos",
     "zeppelin",
     "kafka",
-    "gpdb"
+    "gpdb",
+    "ambari",
   ]
 
   deploy_module { $modules:
