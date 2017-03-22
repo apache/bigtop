@@ -28,10 +28,11 @@
 %define doc_flink %{_docdir}/%{flink_name}-%{flink_version}
 %define alternatives_cmd alternatives
 %define build_flink %{_builddir}/%{flink_name}-%{flink_version}/flink-dist/target/%{flink_name}-%{flink_version}-bin/%{flink_name}-%{flink_version}/
-
+%global initd_dir %{_sysconfdir}/rc.d/init.d
 %else
 %define doc_flink %{_docdir}/%{flink_name}-%{flink_version}
 %define alternatives_cmd update-alternatives
+%global initd_dir %{_sysconfdir}/rc.d
 %endif
 
 Name: %{flink_name}
@@ -73,19 +74,38 @@ Some of the key features of Apache Flink includes.
     * Fault-tolerance via Lightweight Distributed Snapshots
     * Hadoop-native YARN & HDFS implementation
 
-# Additions for master-worker configuration #
+%package jobmanager
+Summary: Provides the Apache Flink Job Manager service.
+Group: System/Daemons
+Requires: %{name} = %{version}-%{release}
+Requires(pre): %{name} = %{version}-%{release}
 
-%global initd_dir %{_sysconfdir}/init.d
+%description jobmanager
+Apache Flink Job Manager service.
 
 %if  %{?suse_version:1}0
 # Required for init scripts
 Requires: insserv
-%global initd_dir %{_sysconfdir}/rc.d
-
 %else
 # Required for init scripts
 Requires: /lib/lsb/init-functions
-%global initd_dir %{_sysconfdir}/rc.d/init.d
+%endif
+
+%package taskmanager
+Summary: Provides the Apache Flink Task Manager service.
+Group: System/Daemons
+Requires: %{name} = %{version}-%{release}
+Requires(pre): %{name} = %{version}-%{release}
+
+%description taskmanager
+Apache Flink Task Manager service.
+
+%if  %{?suse_version:1}0
+# Required for init scripts
+Requires: insserv
+%else
+# Required for init scripts
+Requires: /lib/lsb/init-functions
 %endif
 
 ##############################################
@@ -107,8 +127,6 @@ bash $RPM_SOURCE_DIR/do-component-build
 
 sh -x %{SOURCE2} --prefix=$RPM_BUILD_ROOT --source-dir=$RPM_SOURCE_DIR --build-dir=`pwd`/%{build_target_flink}
 
-
-
 for service in %{flink_services}
 do
     # Install init script
@@ -116,23 +134,12 @@ do
     bash %{SOURCE3} $RPM_SOURCE_DIR/${service}.svc rpm $init_file
 done
 
-
-%preun
-for service in %{flink_services}; do
-  /sbin/service ${service} status > /dev/null 2>&1
-  if [ $? -eq 0 ]; then
-    /sbin/service ${service} stop > /dev/null 2>&1
-  fi
-done
-
 %pre
 getent group flink >/dev/null || groupadd -r flink
 getent passwd flink >/dev/null || useradd -c "Flink" -s /sbin/nologin -g flink -r -d %{lib_flink} flink 2> /dev/null || :
 
-
 %post
 %{alternatives_cmd} --install %{config_flink} %{flink_name}-conf %{config_flink}.dist 30
-systemctl daemon-reload
 
 ###### FILES ###########
 
@@ -141,10 +148,26 @@ systemctl daemon-reload
 %config(noreplace) %{config_flink}.dist
 
 %dir %{_sysconfdir}/%{flink_name}
-%config(noreplace) %{initd_dir}/flink-jobmanager
-%config(noreplace) %{initd_dir}/flink-taskmanager
 #%doc %{doc_flink}
 %attr(0755,flink,flink) %{var_log_flink}
 %attr(0767,flink,flink) /var/log/flink-cli
 %{lib_flink}
 %{bin_flink}/flink
+
+%define service_macro() \
+%files %1 \
+%config(noreplace) %{initd_dir}/%{name}-%1 \
+%post %1 \
+chkconfig --add %{name}-%1 \
+%preun %1 \
+/sbin/service ${name}-%1 status > /dev/null 2>&1 \
+if [ "$?" -eq 0 ]; then \
+  service ${name}-%1 stop > /dev/null 2>&1 \
+  chkconfig --del %{name}-%1 \
+fi \
+%postun %1 \
+if [ "$?" -ge 1 ]; then \
+   service %{name}-%1 condrestart > /dev/null 2>&1 || : \
+fi
+%service_macro jobmanager 
+%service_macro taskmanager
