@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.odpi.specs.runtime.hive;
+package org.apache.bigtop.itest.hive;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -31,8 +31,8 @@ public class TestSql extends JdbcConnector {
 
   @Test
   public void db() throws SQLException {
-    final String db1 = "odpi_sql_db1";
-    final String db2 = "odpi_sql_db2";
+    final String db1 = "bigtop_sql_db1";
+    final String db2 = "bigtop_sql_db2";
     try (Statement stmt = conn.createStatement()) {
       stmt.execute("drop database if exists " + db1 + " cascade");
 
@@ -56,11 +56,11 @@ public class TestSql extends JdbcConnector {
 
   @Test
   public void table() throws SQLException {
-    final String table1 = "odpi_sql_table1";
-    final String table2 = "odpi_sql_table2";
-    final String table3 = "odpi_sql_table3";
-    final String table4 = "odpi_sql_table4";
-    final String table5 = "odpi_sql_table5";
+    final String table1 = "bigtop_sql_table1";
+    final String table2 = "bigtop_sql_table2";
+    final String table3 = "bigtop_sql_table3";
+    final String table4 = "bigtop_sql_table4";
+    final String table5 = "bigtop_sql_table5";
 
     try (Statement stmt = conn.createStatement()) {
       stmt.execute("drop table if exists " + table1);
@@ -126,7 +126,7 @@ public class TestSql extends JdbcConnector {
 
   @Test
   public void partitionedTable() throws SQLException {
-    final String table1 = "odpi_sql_ptable1";
+    final String table1 = "bigtop_sql_ptable1";
     try (Statement stmt = conn.createStatement()) {
       stmt.execute("drop table if exists " + table1);
 
@@ -157,9 +157,9 @@ public class TestSql extends JdbcConnector {
 
   @Test
   public void view() throws SQLException {
-    final String table1 = "odpi_sql_vtable1";
-    final String view1 = "odpi_sql_view1";
-    final String view2 = "odpi_sql_view2";
+    final String table1 = "bigtop_sql_vtable1";
+    final String view1 = "bigtop_sql_view1";
+    final String view2 = "bigtop_sql_view2";
     try (Statement stmt = conn.createStatement()) {
       stmt.execute("drop table if exists " + table1);
       stmt.execute("drop view if exists " + view1);
@@ -185,8 +185,8 @@ public class TestSql extends JdbcConnector {
 
   @Test
   public void function() throws SQLException {
-    final String func1 = "odpi_sql_func1";
-    final String func2 = "odpi_sql_func2";
+    final String func1 = "bigtop_sql_func1";
+    final String func2 = "bigtop_sql_func2";
     try (Statement stmt = conn.createStatement()) {
       stmt.execute("create temporary function " + func1 +
           " as 'org.apache.hadoop.hive.ql.udf.UDFToInteger'");
@@ -208,8 +208,8 @@ public class TestSql extends JdbcConnector {
   // test machine has access to HDFS and thus the ability to upload a file.
   @Test
   public void insert() throws SQLException {
-    final String table1 = "odpi_insert_table1";
-    final String table2 = "odpi_insert_table2";
+    final String table1 = "bigtop_insert_table1";
+    final String table2 = "bigtop_insert_table2";
     try (Statement stmt = conn.createStatement()) {
       stmt.execute("drop table if exists " + table1);
       stmt.execute("create table " + table1 +
@@ -269,7 +269,7 @@ public class TestSql extends JdbcConnector {
   // This tests CTEs
   @Test
   public void cte() throws SQLException {
-    final String table1 = "odpi_cte_table1";
+    final String table1 = "bigtop_cte_table1";
     try (Statement stmt = conn.createStatement()) {
       stmt.execute("drop table if exists " + table1);
       stmt.execute("create table " + table1 + "(c1 int, c2 varchar(32))");
@@ -284,7 +284,7 @@ public class TestSql extends JdbcConnector {
 
   @Test
   public void select() throws SQLException {
-    final String[] tables = {"odpi_select_table1", "odpi_select_table2"};
+    final String[] tables = {"bigtop_select_table1", "bigtop_select_table2"};
     try (Statement stmt = conn.createStatement()) {
       for (int i = 0; i < tables.length; i++) {
         stmt.execute("drop table if exists " + tables[i]);

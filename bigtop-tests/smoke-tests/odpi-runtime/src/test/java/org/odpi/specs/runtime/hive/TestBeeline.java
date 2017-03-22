@@ -15,7 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.odpi.specs.runtime.hive;
+package org.apache.bigtop.itest.hive;
+
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -31,9 +32,9 @@ public class TestBeeline {
 	
 	public static final Log LOG = LogFactory.getLog(TestBeeline.class.getName());
 	
-	private static final String URL = "odpi.test.hive.jdbc.url";
-	private static final String USER = "odpi.test.hive.jdbc.user";
-	private static final String PASSWD = "odpi.test.hive.jdbc.password";
+	private static final String URL = "bigtop.test.hive.jdbc.url";
+	private static final String USER = "bigtop.test.hive.jdbc.user";
+	private static final String PASSWD = "bigtop.test.hive.jdbc.password";
 	
 	private static Map<String, String> results;
 	private static String beelineUrl; 
@@ -94,29 +95,29 @@ public class TestBeeline {
 	@Test
 	public void checkBeelineQueryExecFromCmdLine(){
 		results = HiveHelper.execCommand(new CommandLine(beelineBaseCommand).addArgument("-e").addArgument("SHOW DATABASES;"));
-		if(!results.get("outputStream").contains("odpi_runtime_hive")){
-			results = HiveHelper.execCommand(new CommandLine(beelineBaseCommand).addArgument("-e").addArgument("CREATE DATABASE odpi_runtime_hive;"));
+		if(!results.get("outputStream").contains("bigtop_runtime_hive")){
+			results = HiveHelper.execCommand(new CommandLine(beelineBaseCommand).addArgument("-e").addArgument("CREATE DATABASE bigtop_runtime_hive;"));
 			results = HiveHelper.execCommand(new CommandLine(beelineBaseCommand).addArgument("-e").addArgument("SHOW DATABASES;"));
 		}else{
-			results = HiveHelper.execCommand(new CommandLine(beelineBaseCommand).addArgument("-e").addArgument("DROP DATABASE odpi_runtime_hive;"));
-			results = HiveHelper.execCommand(new CommandLine(beelineBaseCommand).addArgument("-e").addArgument("CREATE DATABASE odpi_runtime_hive;"));
+			results = HiveHelper.execCommand(new CommandLine(beelineBaseCommand).addArgument("-e").addArgument("DROP DATABASE bigtop_runtime_hive;"));
+			results = HiveHelper.execCommand(new CommandLine(beelineBaseCommand).addArgument("-e").addArgument("CREATE DATABASE bigtop_runtime_hive;"));
 			results = HiveHelper.execCommand(new CommandLine(beelineBaseCommand).addArgument("-e").addArgument("SHOW DATABASES;"));
 		}
 		String consoleMsg = results.get("outputStream").toLowerCase();
-		Assert.assertEquals("beeline -e FAILED. \n" +results.get("outputStream"), true, consoleMsg.contains("odpi_runtime_hive" ) && !consoleMsg.contains("error") && !consoleMsg.contains("exception"));
-		HiveHelper.execCommand(new CommandLine(beelineBaseCommand).addArgument("-e").addArgument("DROP DATABASE odpi_runtime_hive"));
+		Assert.assertEquals("beeline -e FAILED. \n" +results.get("outputStream"), true, consoleMsg.contains("bigtop_runtime_hive" ) && !consoleMsg.contains("error") && !consoleMsg.contains("exception"));
+		HiveHelper.execCommand(new CommandLine(beelineBaseCommand).addArgument("-e").addArgument("DROP DATABASE bigtop_runtime_hive"));
 	}
 	
 	@Test
 	public void checkBeelineQueryExecFromFile() throws FileNotFoundException{
 		
 		try(PrintWriter out = new PrintWriter("beeline-f1.sql")){ out.println("SHOW DATABASES;"); }
-		try(PrintWriter out = new PrintWriter("beeline-f2.sql")){ out.println("CREATE DATABASE odpi_runtime_hive;"); }
-		try(PrintWriter out = new PrintWriter("beeline-f3.sql")){ out.println("DROP DATABASE odpi_runtime_hive;"); out.println("CREATE DATABASE odpi_runtime_hive;"); }
-		try(PrintWriter out = new PrintWriter("beeline-f4.sql")){ out.println("DROP DATABASE odpi_runtime_hive;"); }
+		try(PrintWriter out = new PrintWriter("beeline-f2.sql")){ out.println("CREATE DATABASE bigtop_runtime_hive;"); }
+		try(PrintWriter out = new PrintWriter("beeline-f3.sql")){ out.println("DROP DATABASE bigtop_runtime_hive;"); out.println("CREATE DATABASE bigtop_runtime_hive;"); }
+		try(PrintWriter out = new PrintWriter("beeline-f4.sql")){ out.println("DROP DATABASE bigtop_runtime_hive;"); }
 		results = HiveHelper.execCommand(new CommandLine(beelineBaseCommand).addArgument("-f").addArgument("beeline-f1.sql",false));
 		
-		if(!results.get("outputStream").contains("odpi_runtime_hive")){
+		if(!results.get("outputStream").contains("bigtop_runtime_hive")){
 			results = HiveHelper.execCommand(new CommandLine(beelineBaseCommand).addArgument("-f").addArgument("beeline-f2.sql",false));
 		}else{
 			results = HiveHelper.execCommand(new CommandLine(beelineBaseCommand).addArgument("-f").addArgument("beeline-f3.sql",false));
@@ -125,7 +126,7 @@ public class TestBeeline {
 		results = HiveHelper.execCommand(new CommandLine(beelineBaseCommand).addArgument("-f").addArgument("beeline-f1.sql",false));
 
 		String consoleMsg = results.get("outputStream").toLowerCase();
-		Assert.assertEquals("beeline -f FAILED. \n" +results.get("outputStream"), true, consoleMsg.contains("odpi_runtime_hive" ) && !consoleMsg.contains("error") && !consoleMsg.contains("exception"));
+		Assert.assertEquals("beeline -f FAILED. \n" +results.get("outputStream"), true, consoleMsg.contains("bigtop_runtime_hive" ) && !consoleMsg.contains("error") && !consoleMsg.contains("exception"));
 		HiveHelper.execCommand(new CommandLine(beelineBaseCommand).addArgument("-f").addArgument("beeline-f4.sql",false));	
 	}
 	
@@ -133,12 +134,12 @@ public class TestBeeline {
 	public void checkBeelineInitFile() throws FileNotFoundException{
 
 		try(PrintWriter out = new PrintWriter("beeline-i1.sql")){ out.println("SHOW DATABASES;"); }
-		try(PrintWriter out = new PrintWriter("beeline-i2.sql")){ out.println("CREATE DATABASE odpi_runtime_beeline_init;"); }
-		try(PrintWriter out = new PrintWriter("beeline-i3.sql")){ out.println("DROP DATABASE odpi_runtime_beeline_init;"); out.println("CREATE DATABASE odpi_runtime_beeline_init;"); }
-		try(PrintWriter out = new PrintWriter("beeline-i4.sql")){ out.println("DROP DATABASE odpi_runtime_beeline_init;"); }
+		try(PrintWriter out = new PrintWriter("beeline-i2.sql")){ out.println("CREATE DATABASE bigtop_runtime_beeline_init;"); }
+		try(PrintWriter out = new PrintWriter("beeline-i3.sql")){ out.println("DROP DATABASE bigtop_runtime_beeline_init;"); out.println("CREATE DATABASE bigtop_runtime_beeline_init;"); }
+		try(PrintWriter out = new PrintWriter("beeline-i4.sql")){ out.println("DROP DATABASE bigtop_runtime_beeline_init;"); }
 		results = HiveHelper.execCommand(new CommandLine(beelineBaseCommand).addArgument("-i").addArgument("beeline-i1.sql",false));
 	
-		if(!results.get("outputStream").contains("odpi_runtime_beeline_init")){
+		if(!results.get("outputStream").contains("bigtop_runtime_beeline_init")){
 			results = HiveHelper.execCommand(new CommandLine(beelineBaseCommand).addArgument("-i").addArgument("beeline-i2.sql",false));
 		}else{
 			results = HiveHelper.execCommand(new CommandLine(beelineBaseCommand).addArgument("-i").addArgument("beeline-i3.sql",false));
@@ -146,7 +147,7 @@ public class TestBeeline {
 		
 		results = HiveHelper.execCommand(new CommandLine(beelineBaseCommand).addArgument("-i").addArgument("beeline-i1.sql",false));
 		String consoleMsg = results.get("outputStream").toLowerCase();
-		Assert.assertEquals("beeline -i FAILED. \n" +results.get("outputStream"), true, consoleMsg.contains("odpi_runtime_beeline_init") && !consoleMsg.contains("error") && !consoleMsg.contains("exception"));
+		Assert.assertEquals("beeline -i FAILED. \n" +results.get("outputStream"), true, consoleMsg.contains("bigtop_runtime_beeline_init") && !consoleMsg.contains("error") && !consoleMsg.contains("exception"));
 		HiveHelper.execCommand(new CommandLine(beelineBaseCommand).addArgument("-i").addArgument("beeline-i4.sql",false));	
 	}
 	
@@ -157,18 +158,18 @@ public class TestBeeline {
 		try(PrintWriter out = new PrintWriter("beeline-hv2.sql")){ out.println("CREATE DATABASE ${db};"); }
 		try(PrintWriter out = new PrintWriter("beeline-hv3.sql")){ out.println("DROP DATABASE ${db};"); out.println("CREATE DATABASE ${db};"); }
 		try(PrintWriter out = new PrintWriter("beeline-hv4.sql")){ out.println("DROP DATABASE ${db};"); }
-		results = HiveHelper.execCommand(new CommandLine(beelineBaseCommand).addArgument("--hivevar").addArgument("db=odpi_runtime_beeline_hivevar").addArgument("-i").addArgument("beeline-hv1.sql",false));
+		results = HiveHelper.execCommand(new CommandLine(beelineBaseCommand).addArgument("--hivevar").addArgument("db=bigtop_runtime_beeline_hivevar").addArgument("-i").addArgument("beeline-hv1.sql",false));
 	
-		if(!results.get("outputStream").contains("odpi_runtime_beeline_hivevar")){
-			results = HiveHelper.execCommand(new CommandLine(beelineBaseCommand).addArgument("--hivevar").addArgument("db=odpi_runtime_beeline_hivevar").addArgument("-i").addArgument("beeline-hv2.sql",false));
+		if(!results.get("outputStream").contains("bigtop_runtime_beeline_hivevar")){
+			results = HiveHelper.execCommand(new CommandLine(beelineBaseCommand).addArgument("--hivevar").addArgument("db=bigtop_runtime_beeline_hivevar").addArgument("-i").addArgument("beeline-hv2.sql",false));
 		}else{
-			results = HiveHelper.execCommand(new CommandLine(beelineBaseCommand).addArgument("--hivevar").addArgument("db=odpi_runtime_beeline_hivevar").addArgument("-i").addArgument("beeline-hv3.sql",false));
+			results = HiveHelper.execCommand(new CommandLine(beelineBaseCommand).addArgument("--hivevar").addArgument("db=bigtop_runtime_beeline_hivevar").addArgument("-i").addArgument("beeline-hv3.sql",false));
 		}
 		
-		results = HiveHelper.execCommand(new CommandLine(beelineBaseCommand).addArgument("--hivevar").addArgument("db=odpi_runtime_beeline_hivevar").addArgument("-i").addArgument("beeline-hv1.sql",false));
+		results = HiveHelper.execCommand(new CommandLine(beelineBaseCommand).addArgument("--hivevar").addArgument("db=bigtop_runtime_beeline_hivevar").addArgument("-i").addArgument("beeline-hv1.sql",false));
 		String consoleMsg = results.get("outputStream").toLowerCase();
-		Assert.assertEquals("beeline --hivevar FAILED. \n" +results.get("outputStream"), true, consoleMsg.contains("odpi_runtime_beeline_hivevar") && !consoleMsg.contains("error") && !consoleMsg.contains("exception"));
-		HiveHelper.execCommand(new CommandLine(beelineBaseCommand).addArgument("--hivevar").addArgument("db=odpi_runtime_beeline_hivevar").addArgument("-i").addArgument("beeline-hv4.sql",false));		 
+		Assert.assertEquals("beeline --hivevar FAILED. \n" +results.get("outputStream"), true, consoleMsg.contains("bigtop_runtime_beeline_hivevar") && !consoleMsg.contains("error") && !consoleMsg.contains("exception"));
+		HiveHelper.execCommand(new CommandLine(beelineBaseCommand).addArgument("--hivevar").addArgument("db=bigtop_runtime_beeline_hivevar").addArgument("-i").addArgument("beeline-hv4.sql",false));		 
 	}
 	
 	@Test

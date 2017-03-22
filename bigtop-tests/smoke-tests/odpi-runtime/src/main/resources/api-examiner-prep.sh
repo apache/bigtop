@@ -40,7 +40,7 @@
 # $BIGTOP_HOME/bigtop-tests/spec-tests/runtime/src/main/resources/api-examiner.sh -j $HADOOP_HOME/share/hadoop/common/hadoop-common-2.7.3.jar -p $BIGTOP_HOME/bigtop-tests/spec-tests/runtime/src/test/resources
 #
 # The resulting reports should be committed to git.  This script only needs
-# to be run once per ODPi release.
+# to be run once per Bigtop release.
 ############################################################################
 
 
@@ -66,5 +66,5 @@ do
     CLASSPATH=$CLASSPATH:$jar
 done
 
-java -cp $CLASSPATH org.odpi.specs.runtime.hadoop.ApiExaminer $@
+java -cp $CLASSPATH org.apache.bigtop.itest.hadoop.api.ApiExaminer $@
 

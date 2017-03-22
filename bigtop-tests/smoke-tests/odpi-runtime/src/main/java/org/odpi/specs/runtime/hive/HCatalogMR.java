@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.odpi.specs.runtime.hive;
+package org.apache.bigtop.itest.hive;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
@@ -41,8 +41,8 @@ import java.net.URI;
 import java.util.StringTokenizer;
 
 public class HCatalogMR extends Configured implements Tool {
-  private final static String INPUT_SCHEMA = "odpi.test.hcat.schema.input";
-  private final static String OUTPUT_SCHEMA = "odpi.test.hcat.schema.output";
+  private final static String INPUT_SCHEMA = "bigtop.test.hcat.schema.input";
+  private final static String OUTPUT_SCHEMA = "bigtop.test.hcat.schema.output";
 
   @Override
   public int run(String[] args) throws Exception {
@@ -68,7 +68,7 @@ public class HCatalogMR extends Configured implements Tool {
     conf.set(INPUT_SCHEMA, inputSchemaStr);
     conf.set(OUTPUT_SCHEMA, outputSchemaStr);
 
-    Job job = new Job(conf, "odpi_hcat_test");
+    Job job = new Job(conf, "bigtop_hcat_test");
     HCatInputFormat.setInput(job, "default", inputTable);
 
     job.setInputFormatClass(HCatInputFormat.class);

@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.odpi.specs.runtime.hive;
+package org.apache.bigtop.itest.hive;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -295,9 +295,9 @@ public class TestJdbc extends JdbcConnector {
     try (Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
         ResultSet.CONCUR_READ_ONLY)) {
 
-      final String dbName = "odpi_jdbc_test_db";
+      final String dbName = "bigtop_jdbc_test_db";
 
-      final String tableName = "odpi_jdbc_test_table";
+      final String tableName = "bigtop_jdbc_test_table";
       stmt.execute("drop table if exists " + tableName);
 
       stmt.execute("drop database if exists " + dbName + " cascade");
@@ -345,7 +345,7 @@ public class TestJdbc extends JdbcConnector {
     try (Statement stmt = conn.createStatement()) {
       stmt.clearWarnings();
 
-      final String tableName = "odpi_jdbc_statement_test_table";
+      final String tableName = "bigtop_jdbc_statement_test_table";
 
       stmt.execute("drop table if exists " + tableName);
       stmt.execute("create table " + tableName + " (a int, b varchar(32))");
@@ -409,7 +409,7 @@ public class TestJdbc extends JdbcConnector {
 
   @Test
   public void preparedStmtAndResultSet() throws SQLException {
-    final String tableName = "odpi_jdbc_psars_test_table";
+    final String tableName = "bigtop_jdbc_psars_test_table";
     try (Statement stmt = conn.createStatement()) {
       stmt.execute("drop table if exists " + tableName);
       stmt.execute("create table " + tableName + " (bo boolean, ti tinyint, db double, fl float, " +

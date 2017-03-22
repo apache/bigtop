@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.odpi.specs.runtime.hadoop;
+package org.apache.bigtop.itest.hadoop.api;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;

@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.odpi.specs.runtime.hive;
+package org.apache.bigtop.itest.hive;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -71,7 +71,7 @@ public class TestThrift {
 
   @Test
   public void db() throws TException {
-    final String dbName = "odpi_thrift_db_" + rand.nextInt(Integer.MAX_VALUE);
+    final String dbName = "bigtop_thrift_db_" + rand.nextInt(Integer.MAX_VALUE);
 
     Database db = new Database(dbName, "a db", null, new HashMap<String, String>());
     client.createDatabase(db);
@@ -80,7 +80,7 @@ public class TestThrift {
     db = new Database(db);
     db.getParameters().put("a", "b");
     client.alterDatabase(dbName, db);
-    List<String> alldbs = client.getDatabases("odpi_*");
+    List<String> alldbs = client.getDatabases("bigtop_*");
     Assert.assertNotNull(alldbs);
     Assert.assertTrue(alldbs.size() > 0);
     alldbs = client.getAllDatabases();
@@ -93,7 +93,7 @@ public class TestThrift {
 
   @Test
   public void nonPartitionedTable() throws TException {
-    final String tableName = "odpi_thrift_table_" + rand.nextInt(Integer.MAX_VALUE);
+    final String tableName = "bigtop_thrift_table_" + rand.nextInt(Integer.MAX_VALUE);
 
     // I don't test every operation related to tables, but only those that are frequently used.
     SerDeInfo serde = new SerDeInfo("default_serde",
@@ -115,7 +115,7 @@ public class TestThrift {
     Assert.assertNotNull(tables);
     Assert.assertEquals(1, tables.size());
 
-    List<String> tableNames = client.getTables("default", "odpi_*");
+    List<String> tableNames = client.getTables("default", "bigtop_*");
     Assert.assertNotNull(tableNames);
     Assert.assertTrue(tableNames.size() >= 1);
 
@@ -143,7 +143,7 @@ public class TestThrift {
 
   @Test
   public void partitionedTable() throws TException {
-    final String tableName = "odpi_thrift_partitioned_table_" + rand.nextInt(Integer.MAX_VALUE);
+    final String tableName = "bigtop_thrift_partitioned_table_" + rand.nextInt(Integer.MAX_VALUE);
 
     // I don't test every operation related to tables, but only those that are frequently used.
     SerDeInfo serde = new SerDeInfo("default_serde",

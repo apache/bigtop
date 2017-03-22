@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.odpi.specs.runtime.hive;
+package org.apache.bigtop.itest.hive;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,15 +30,15 @@ import java.util.Properties;
 public class JdbcConnector {
   private static final Log LOG = LogFactory.getLog(JdbcConnector.class.getName());
 
-  protected static final String URL = "odpi.test.hive.jdbc.url";
-  protected static final String USER = "odpi.test.hive.jdbc.user";
-  protected static final String PASSWD = "odpi.test.hive.jdbc.password";
-  protected static final String LOCATION = "odpi.test.hive.location";
-  protected static final String METASTORE_URL = "odpi.test.hive.metastore.url";
-  protected static final String TEST_THRIFT = "odpi.test.hive.thrift.test";
-  protected static final String TEST_HCATALOG = "odpi.test.hive.hcatalog.test";
-  protected static final String HIVE_CONF_DIR = "odpi.test.hive.conf.dir";
-  protected static final String HADOOP_CONF_DIR = "odpi.test.hadoop.conf.dir";
+  protected static final String URL = "bigtop.test.hive.jdbc.url";
+  protected static final String USER = "bigtop.test.hive.jdbc.user";
+  protected static final String PASSWD = "bigtop.test.hive.jdbc.password";
+  protected static final String LOCATION = "bigtop.test.hive.location";
+  protected static final String METASTORE_URL = "bigtop.test.hive.metastore.url";
+  protected static final String TEST_THRIFT = "bigtop.test.hive.thrift.test";
+  protected static final String TEST_HCATALOG = "bigtop.test.hive.hcatalog.test";
+  protected static final String HIVE_CONF_DIR = "bigtop.test.hive.conf.dir";
+  protected static final String HADOOP_CONF_DIR = "bigtop.test.hadoop.conf.dir";
 
   protected static Connection conn;
 

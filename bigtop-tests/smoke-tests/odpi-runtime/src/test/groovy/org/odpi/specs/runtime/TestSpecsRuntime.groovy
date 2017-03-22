@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.odpi.specs.runtime
+package org.apache.bigtop.itest.hadoop.odpi 
 
 import groovy.io.FileType
 import org.junit.Assert
@@ -256,10 +256,10 @@ public class TestSpecsRuntime {
         Assert.assertEquals("Expected only one jar, but got " + jars.join(", "), 1, jars.length)
         def jar = dir.getAbsolutePath() + "/" + jars[0]
 
-        def examinerJar = System.properties['odpi.test.hive.hcat.job.jar']
+        def examinerJar = System.properties['bigtop.test.hive.hcat.job.jar']
         def resourceFile = System.properties['test.resources.dir']+ "/" + arguments['resourceFile']
         Shell sh = new Shell()
-        def results = sh.exec("hadoop jar " + examinerJar + " org.odpi.specs.runtime.hadoop.ApiExaminer -c " + resourceFile + " -j " + jar).getErr()
+        def results = sh.exec("hadoop jar " + examinerJar + " org.apache.bigtop.itest.hadoop.api.ApiExaminer -c " + resourceFile + " -j " + jar).getErr()
         int rc = sh.getRet()
         Assert.assertEquals("Expected command to succeed, but got return code " + rc, 0, rc)
         if (results.size() > 0) {

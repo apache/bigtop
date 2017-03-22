@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.odpi.specs.runtime.hive;
+package org.apache.bigtop.itest.hive;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.logging.Log;
@@ -51,8 +51,8 @@ import java.util.Random;
 
 
 public class TestHCatalog {
-  private static final String JOBJAR = "odpi.test.hive.hcat.job.jar";
-  private static final String HCATCORE = "odpi.test.hive.hcat.core.jar";
+  private static final String JOBJAR = "bigtop.test.hive.hcat.job.jar";
+  private static final String HCATCORE = "bigtop.test.hive.hcat.core.jar";
 
   private static final Log LOG = LogFactory.getLog(TestHCatalog.class.getName());
 
@@ -92,7 +92,7 @@ public class TestHCatalog {
   public void hcatInputFormatOutputFormat() throws TException, IOException, ClassNotFoundException,
       InterruptedException, URISyntaxException {
     // Create a table to write to
-    final String inputTable = "odpi_hcat_input_table_" + rand.nextInt(Integer.MAX_VALUE);
+    final String inputTable = "bigtop_hcat_input_table_" + rand.nextInt(Integer.MAX_VALUE);
     SerDeInfo serde = new SerDeInfo("default_serde",
         conf.getVar(HiveConf.ConfVars.HIVEDEFAULTSERDE), new HashMap<String, String>());
     FieldSchema schema = new FieldSchema("line", "string", "");
@@ -106,7 +106,7 @@ public class TestHCatalog {
         new HashMap<String, String>(), null, null, TableType.MANAGED_TABLE.toString());
     client.createTable(table);
 
-    final String outputTable = "odpi_hcat_output_table_" + rand.nextInt(Integer.MAX_VALUE);
+    final String outputTable = "bigtop_hcat_output_table_" + rand.nextInt(Integer.MAX_VALUE);
     sd = new StorageDescriptor(Arrays.asList(
           new FieldSchema("word", "string", ""),
           new FieldSchema("count", "int", "")),

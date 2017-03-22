@@ -57,7 +57,7 @@ jar {
 test {
   // Change the default location where test data is picked up
   systemProperty 'test.resources.dir', "${buildDir}/resources/test/"
-  systemProperty 'odpi.test.hive.hcat.job.jar', jar.archivePath
-  systemProperty 'odpi.test.hive.hcat.core.jar', (configurations.runtime).find { it.toString() =~ /hive-hcatalog-core-.*jar$/ }
+  systemProperty 'bigtop.test.hive.hcat.job.jar', jar.archivePath
+  systemProperty 'bigtop.test.hive.hcat.core.jar', (configurations.runtime).find { it.toString() =~ /hive-hcatalog-core-.*jar$/ }
 }
 test.dependsOn jar
