@@ -34,88 +34,88 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 public class HiveHelper {
-	
-	private static final Log LOG = LogFactory.getLog(HiveHelper.class.getName());
 
-	public static Map<String, String> execCommand(CommandLine commandline) {
-		return execCommand(commandline, null);
-	}
+    private static final Log LOG = LogFactory.getLog(HiveHelper.class.getName());
 
-	public static Map<String, String> execCommand(CommandLine commandline,
-																								Map<String, String> envVars) {
-		
-		System.out.println("Executing command:");
-		System.out.println(commandline.toString());
-		Map<String, String> env = null;
-		Map<String, String> entry = new HashMap<String, String>();
-		try {
-			env = EnvironmentUtils.getProcEnvironment();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			LOG.debug("Failed to get process environment: "+ e1.getMessage());
-			e1.printStackTrace();
-		}
-		if (envVars != null) {
-			for (String key : envVars.keySet()) {
-				env.put(key, envVars.get(key));
-			}
-		}
+    public static Map<String, String> execCommand(CommandLine commandline) {
+        return execCommand(commandline, null);
+    }
 
-		DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream);
-		ExecuteWatchdog watchdog = new ExecuteWatchdog(60*10000);
-		Executor executor = new DefaultExecutor();
-		executor.setExitValue(1);
-		executor.setWatchdog(watchdog);
-		executor.setStreamHandler(streamHandler);
-		try {
-			executor.execute(commandline, env, resultHandler);
-		} catch (ExecuteException e) {
-			// TODO Auto-generated catch block
-			LOG.debug("Failed to execute command with exit value: "+ String.valueOf(resultHandler.getExitValue()));
-			LOG.debug("outputStream: "+ outputStream.toString());
-			entry.put("exitValue", String.valueOf(resultHandler.getExitValue()));
-			entry.put("outputStream", outputStream.toString() + e.getMessage());
-			e.printStackTrace();
-			return entry;
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			LOG.debug("Failed to execute command with exit value: "+ String.valueOf(resultHandler.getExitValue()));
-			LOG.debug("outputStream: "+ outputStream.toString());
-			entry.put("exitValue", String.valueOf(resultHandler.getExitValue()));
-			entry.put("outputStream", outputStream.toString() + e.getMessage());
-			e.printStackTrace();
-			return entry;
-		}
-		
-		try {
-			resultHandler.waitFor();
+    public static Map<String, String> execCommand(CommandLine commandline,
+                                                  Map<String, String> envVars) {
+
+        System.out.println("Executing command:");
+        System.out.println(commandline.toString());
+        Map<String, String> env = null;
+        Map<String, String> entry = new HashMap<String, String>();
+        try {
+            env = EnvironmentUtils.getProcEnvironment();
+        } catch (IOException e1) {
+            // TODO Auto-generated catch block
+            LOG.debug("Failed to get process environment: " + e1.getMessage());
+            e1.printStackTrace();
+        }
+        if (envVars != null) {
+            for (String key : envVars.keySet()) {
+                env.put(key, envVars.get(key));
+            }
+        }
+
+        DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream);
+        ExecuteWatchdog watchdog = new ExecuteWatchdog(60 * 10000);
+        Executor executor = new DefaultExecutor();
+        executor.setExitValue(1);
+        executor.setWatchdog(watchdog);
+        executor.setStreamHandler(streamHandler);
+        try {
+            executor.execute(commandline, env, resultHandler);
+        } catch (ExecuteException e) {
+            // TODO Auto-generated catch block
+            LOG.debug("Failed to execute command with exit value: " + String.valueOf(resultHandler.getExitValue()));
+            LOG.debug("outputStream: " + outputStream.toString());
+            entry.put("exitValue", String.valueOf(resultHandler.getExitValue()));
+            entry.put("outputStream", outputStream.toString() + e.getMessage());
+            e.printStackTrace();
+            return entry;
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            LOG.debug("Failed to execute command with exit value: " + String.valueOf(resultHandler.getExitValue()));
+            LOG.debug("outputStream: " + outputStream.toString());
+            entry.put("exitValue", String.valueOf(resultHandler.getExitValue()));
+            entry.put("outputStream", outputStream.toString() + e.getMessage());
+            e.printStackTrace();
+            return entry;
+        }
+
+        try {
+            resultHandler.waitFor();
+            /*System.out.println("Command output: "+outputStream.toString());*/
+            entry.put("exitValue", String.valueOf(resultHandler.getExitValue()));
+            entry.put("outputStream", outputStream.toString());
+            return entry;
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
 			/*System.out.println("Command output: "+outputStream.toString());*/
-			entry.put("exitValue", String.valueOf(resultHandler.getExitValue()));
-			entry.put("outputStream", outputStream.toString());
-			return entry;
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			/*System.out.println("Command output: "+outputStream.toString());*/
-			LOG.debug("exitValue: "+ String.valueOf(resultHandler.getExitValue()));
-			LOG.debug("outputStream: "+ outputStream.toString());
-			entry.put("exitValue", String.valueOf(resultHandler.getExitValue()));
-			entry.put("outputStream", outputStream.toString());
-			e.printStackTrace();		
-			return entry;
-		}
-	}
-	
-	protected static String getProperty(String property, String description) {
-		String val = System.getProperty(property);
-		if (val == null) {
-			throw new RuntimeException("You must set the property " + property + " with " +
-				description);
-		}
-		LOG.debug(description + " is " + val);
-		return val;
-	 }
-	
+            LOG.debug("exitValue: " + String.valueOf(resultHandler.getExitValue()));
+            LOG.debug("outputStream: " + outputStream.toString());
+            entry.put("exitValue", String.valueOf(resultHandler.getExitValue()));
+            entry.put("outputStream", outputStream.toString());
+            e.printStackTrace();
+            return entry;
+        }
+    }
+
+    protected static String getProperty(String property, String description) {
+        String val = System.getProperty(property);
+        if (val == null) {
+            throw new RuntimeException("You must set the property " + property + " with " +
+                    description);
+        }
+        LOG.debug(description + " is " + val);
+        return val;
+    }
+
 
 }

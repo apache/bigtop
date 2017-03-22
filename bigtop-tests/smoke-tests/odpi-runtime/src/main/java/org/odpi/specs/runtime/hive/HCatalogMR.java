@@ -41,97 +41,98 @@ import java.net.URI;
 import java.util.StringTokenizer;
 
 public class HCatalogMR extends Configured implements Tool {
-  private final static String INPUT_SCHEMA = "bigtop.test.hcat.schema.input";
-  private final static String OUTPUT_SCHEMA = "bigtop.test.hcat.schema.output";
+    private final static String INPUT_SCHEMA = "bigtop.test.hcat.schema.input";
+    private final static String OUTPUT_SCHEMA = "bigtop.test.hcat.schema.output";
 
-  @Override
-  public int run(String[] args) throws Exception {
-    String inputTable = null;
-    String outputTable = null;
-    String inputSchemaStr = null;
-    String outputSchemaStr = null;
-    for(int i = 0; i < args.length; i++){
-        if(args[i].equalsIgnoreCase("-it")){
-            inputTable = args[i+1];
-        }else if(args[i].equalsIgnoreCase("-ot")){
-            outputTable = args[i+1];
-        }else if(args[i].equalsIgnoreCase("-is")){
-            inputSchemaStr = args[i+1];
-        }else if(args[i].equalsIgnoreCase("-os")){
-            outputSchemaStr = args[i+1];
+    @Override
+    public int run(String[] args) throws Exception {
+        String inputTable = null;
+        String outputTable = null;
+        String inputSchemaStr = null;
+        String outputSchemaStr = null;
+        for (int i = 0; i < args.length; i++) {
+            if (args[i].equalsIgnoreCase("-it")) {
+                inputTable = args[i + 1];
+            } else if (args[i].equalsIgnoreCase("-ot")) {
+                outputTable = args[i + 1];
+            } else if (args[i].equalsIgnoreCase("-is")) {
+                inputSchemaStr = args[i + 1];
+            } else if (args[i].equalsIgnoreCase("-os")) {
+                outputSchemaStr = args[i + 1];
+            }
+        }
+
+        Configuration conf = getConf();
+        args = new GenericOptionsParser(conf, args).getRemainingArgs();
+
+        conf.set(INPUT_SCHEMA, inputSchemaStr);
+        conf.set(OUTPUT_SCHEMA, outputSchemaStr);
+
+        Job job = new Job(conf, "bigtop_hcat_test");
+        HCatInputFormat.setInput(job, "default", inputTable);
+
+        job.setInputFormatClass(HCatInputFormat.class);
+        job.setJarByClass(HCatalogMR.class);
+        job.setMapperClass(Map.class);
+        job.setReducerClass(Reduce.class);
+        job.setMapOutputKeyClass(Text.class);
+        job.setMapOutputValueClass(IntWritable.class);
+        job.setOutputKeyClass(WritableComparable.class);
+        job.setOutputValueClass(HCatRecord.class);
+        HCatOutputFormat.setOutput(job, OutputJobInfo.create("default", outputTable, null));
+        HCatOutputFormat.setSchema(job, HCatSchemaUtils.getHCatSchema(outputSchemaStr));
+        job.setOutputFormatClass(HCatOutputFormat.class);
+
+        return job.waitForCompletion(true) ? 0 : 1;
+
+
+    }
+
+    public static class Map extends Mapper<WritableComparable,
+            HCatRecord, Text, IntWritable> {
+        private final static IntWritable one = new IntWritable(1);
+        private Text word = new Text();
+        private HCatSchema inputSchema = null;
+
+        @Override
+        protected void map(WritableComparable key, HCatRecord value, Context context)
+                throws IOException, InterruptedException {
+            if (inputSchema == null) {
+                inputSchema =
+                        HCatSchemaUtils.getHCatSchema(context.getConfiguration().get(INPUT_SCHEMA));
+            }
+            String line = value.getString("line", inputSchema);
+            StringTokenizer tokenizer = new StringTokenizer(line);
+            while (tokenizer.hasMoreTokens()) {
+                word.set(tokenizer.nextToken());
+                context.write(word, one);
+            }
         }
     }
-    
-    Configuration conf = getConf();
-    args = new GenericOptionsParser(conf, args).getRemainingArgs();
 
-    conf.set(INPUT_SCHEMA, inputSchemaStr);
-    conf.set(OUTPUT_SCHEMA, outputSchemaStr);
+    public static class Reduce extends Reducer<Text, IntWritable, WritableComparable, HCatRecord> {
+        private HCatSchema outputSchema = null;
 
-    Job job = new Job(conf, "bigtop_hcat_test");
-    HCatInputFormat.setInput(job, "default", inputTable);
-
-    job.setInputFormatClass(HCatInputFormat.class);
-    job.setJarByClass(HCatalogMR.class);
-    job.setMapperClass(Map.class);
-    job.setReducerClass(Reduce.class);
-    job.setMapOutputKeyClass(Text.class);
-    job.setMapOutputValueClass(IntWritable.class);
-    job.setOutputKeyClass(WritableComparable.class);
-    job.setOutputValueClass(HCatRecord.class);
-    HCatOutputFormat.setOutput(job, OutputJobInfo.create("default", outputTable, null));
-    HCatOutputFormat.setSchema(job, HCatSchemaUtils.getHCatSchema(outputSchemaStr));
-    job.setOutputFormatClass(HCatOutputFormat.class);
-
-    return job.waitForCompletion(true) ? 0 : 1;
-
-
-  }
-  public static class Map extends Mapper<WritableComparable,
-          HCatRecord, Text, IntWritable> {
-    private final static IntWritable one = new IntWritable(1);
-    private Text word = new Text();
-    private HCatSchema inputSchema = null;
-
-    @Override
-    protected void map(WritableComparable key, HCatRecord value, Context context)
-        throws IOException, InterruptedException {
-      if (inputSchema == null) {
-        inputSchema =
-            HCatSchemaUtils.getHCatSchema(context.getConfiguration().get(INPUT_SCHEMA));
-      }
-      String line = value.getString("line", inputSchema);
-      StringTokenizer tokenizer = new StringTokenizer(line);
-      while (tokenizer.hasMoreTokens()) {
-        word.set(tokenizer.nextToken());
-        context.write(word, one);
-      }
+        @Override
+        protected void reduce(Text key, Iterable<IntWritable> values, Context context) throws
+                IOException, InterruptedException {
+            if (outputSchema == null) {
+                outputSchema =
+                        HCatSchemaUtils.getHCatSchema(context.getConfiguration().get(OUTPUT_SCHEMA));
+            }
+            int sum = 0;
+            for (IntWritable i : values) {
+                sum += i.get();
+            }
+            HCatRecord output = new DefaultHCatRecord(2);
+            output.set("word", outputSchema, key);
+            output.set("count", outputSchema, sum);
+            context.write(null, output);
+        }
     }
-  }
 
-  public static class Reduce extends Reducer<Text, IntWritable, WritableComparable, HCatRecord> {
-    private HCatSchema outputSchema = null;
-
-    @Override
-    protected void reduce(Text key, Iterable<IntWritable> values, Context context) throws
-        IOException, InterruptedException {
-      if (outputSchema == null) {
-        outputSchema =
-            HCatSchemaUtils.getHCatSchema(context.getConfiguration().get(OUTPUT_SCHEMA));
-      }
-      int sum = 0;
-      for (IntWritable i : values) {
-        sum += i.get();
-      }
-      HCatRecord output = new DefaultHCatRecord(2);
-      output.set("word", outputSchema, key);
-      output.set("count", outputSchema, sum);
-      context.write(null, output);
+    public static void main(String[] args) throws Exception {
+        int exitCode = ToolRunner.run(new HCatalogMR(), args);
+        System.exit(exitCode);
     }
-  }
-
-  public static void main(String[] args) throws Exception {
-    int exitCode = ToolRunner.run(new HCatalogMR(), args);
-    System.exit(exitCode);
-  }
- }
+}
