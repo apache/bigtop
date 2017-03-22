@@ -31,18 +31,5 @@ Running the tests
 
 Tests could be executed by running the following command 
 ```
-  gradle :bigtop-tests:spec-tests:runtime:test -Pspec.tests --info
+  gradle :bigtop-tests:smoke-tests:odpi-runtime:test -Psmoke.tests --info
 ```
-=======
-consists of two essential parts: a configuration file, communicating the
-functional commands and expected outcome(s) of it; and the test driver to run
-the commands and compare the results.
-
-Running the tests
-=================
-
-Tests could be executed by running the following command
-```
-  gradle :bigtop-tests:spec-tests:runtime:test -Pspec.tests --info
-```
-
