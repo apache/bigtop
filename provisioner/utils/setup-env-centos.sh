@@ -17,6 +17,10 @@
 
 enable_local_repo=${1:-false}
 
+# This may be crazy, but unless we change this - RHEL will actively
+# revert back to localhost.localdomain
+sed -ie 's#HOSTNAME=.*$#HOSTNAME='`hostname -f`'#' /etc/sysconfig/network
+
 # Setup rng-tools to improve virtual machine entropy performance.
 # The poor entropy performance will cause kerberos provisioning failed.
 yum -y install rng-tools

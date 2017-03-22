@@ -77,7 +77,8 @@ generate-hosts() {
         docker exec ${NODES[0]} bash -c "echo $entry >> /etc/hosts"
     done
     wait
-
+    # This must be the last entry in the /etc/hosts
+    echo "127.0.0.1 localhost" >> ./config/hosts
 }
 
 generate-config() {
