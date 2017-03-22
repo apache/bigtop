@@ -36,7 +36,6 @@ class TestBundle(unittest.TestCase):
 
         cls.d.load(bundle)
         cls.d.setup(timeout=3600)
-
         # we need units reporting ready before we attempt our smoke tests
         cls.d.sentry.wait_for_messages({'client': re.compile('ready'),
                                         'namenode': re.compile('ready'),
@@ -46,6 +45,7 @@ class TestBundle(unittest.TestCase):
         cls.hdfs = cls.d.sentry['namenode'][0]
         cls.yarn = cls.d.sentry['resourcemanager'][0]
         cls.slave = cls.d.sentry['slave'][0]
+        cls.kafka = cls.d.sentry['kafka'][0]
 
     def test_components(self):
         """
@@ -54,6 +54,7 @@ class TestBundle(unittest.TestCase):
         hdfs, retcode = self.hdfs.run("pgrep -a java")
         yarn, retcode = self.yarn.run("pgrep -a java")
         slave, retcode = self.slave.run("pgrep -a java")
+        kafka, retcode = self.kafka.run("pgrep -a java")
 
         assert 'NameNode' in hdfs, "NameNode not started"
         assert 'NameNode' not in slave, "NameNode should not be running on slave"
@@ -71,6 +72,8 @@ class TestBundle(unittest.TestCase):
         assert 'DataNode' in slave, "DataServer not started"
         assert 'DataNode' not in yarn, "DataNode should not be running on resourcemanager"
         assert 'DataNode' not in hdfs, "DataNode should not be running on namenode"
+
+        assert 'Kafka' in kafka, 'Kafka should be running on kafka'
 
     def test_hdfs(self):
         """
@@ -92,6 +95,16 @@ class TestBundle(unittest.TestCase):
         # action status=completed on success
         if (result['status'] != "completed"):
             self.fail('YARN smoke-test did not complete: %s' % result)
+
+    def test_kafka(self):
+        """
+        Validates create/list/delete of a Kafka topic.
+        """
+        uuid = self.kafka.run_action('smoke-test')
+        result = self.d.action_fetch(uuid, timeout=600, full_output=True)
+        # action status=completed on success
+        if (result['status'] != "completed"):
+            self.fail('Kafka smoke-test did not complete: %s' % result)
 
     @unittest.skip(
         'Skipping slave smoke tests; they are too inconsistent and long running for CWR.')
