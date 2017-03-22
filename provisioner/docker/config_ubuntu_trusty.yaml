@@ -22,4 +22,4 @@ distro: debian
 components: [hadoop, yarn]
 enable_local_repo: false
 smoke_test_components: [mapreduce, pig]
-jdk: "openjdk-7-jdk"
+jdk: "openjdk-8-jdk"

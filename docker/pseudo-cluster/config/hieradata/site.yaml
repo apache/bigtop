@@ -6,5 +6,5 @@ hadoop_cluster_node::cluster_components:
   - hadoop
   - yarn
 bigtop::bigtop_repo_uri: http://bigtop-repos.s3.amazonaws.com/releases/1.1.0/ubuntu/trusty/x86_64
-bigtop::jdk_package_name: openjdk-7-jdk
+bigtop::jdk_package_name: openjdk-8-jdk
 
