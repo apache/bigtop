@@ -44,7 +44,7 @@ Contributing
 
 There are lots of ways to contribute.  People with different expertise can help with various subprojects:
     
-* __puppet__ : Much of the Apache Bigtop deploy and pacakging tools use puppet to bootstrap and set up a cluster. But recipes for other tools are also welcome (ie. Chef, Ansible, etc.)
+* __puppet__ : Much of the Apache Bigtop deploy and packaging tools use puppet to bootstrap and set up a cluster. But recipes for other tools are also welcome (ie. Chef, Ansible, etc.)
 * __groovy__ : Primary language used to write the Apache Bigtop smokes and itest framework. 
 * __maven__ : Used to build Apache Bigtop smokes and also to define the high level Apache Bigtop project. 
 * __RPM/DEB__ : Used to package Apache Hadoop ecosystem related projects into GNU/Linux installable packages for most popular GNU/Linux distributions. So one could add a new project or improve existing packages.
