@@ -15,18 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import org.ajoberstar.grgit.*
 import groovy.json.JsonOutput
+import java.net.URI
 
 buildscript {
   repositories {
     mavenCentral()
-  }
-  dependencies {
-    classpath 'org.ajoberstar:grgit:0.4.1'
-    // To handle symbolic links when cloning git repos, the jgit.java7 jar
-    // must be added to the classpath.
-    classpath 'org.eclipse.jgit:org.eclipse.jgit.java7:3.6.2.201501210735-r'
   }
 }
 
@@ -186,6 +180,15 @@ def genTasks = { target ->
     def final GIT_REF = config.bigtop.components[target].git.ref
     def final GIT_DIR = config.bigtop.components[target].git.dir
 
+    def GIT_USER_NAME = BOM_map[variable + '_GIT_USER_NAME']
+    if (!GIT_USER_NAME)
+      GIT_USER_NAME = BOM_map['GIT_USER_NAME']
+    def GIT_ACCESS_TOKEN = BOM_map[variable + '_GIT_ACCESS_TOKEN']
+    if (!GIT_ACCESS_TOKEN)
+      GIT_ACCESS_TOKEN = BOM_map['GIT_ACCESS_TOKEN']
+
+    def devNull = new org.apache.bigtop.NullOutputStream()
+
     if (!DOWNLOAD_URL)
       return
 
@@ -200,11 +203,36 @@ def genTasks = { target ->
         dir = TARBALL_DST.substring(0, TARBALL_DST.lastIndexOf(".t"))
       }
       delete("${DL_DIR}/${dir}")
-      Grgit.clone(
-        uri: GIT_REPO,
-        refToCheckout: GIT_REF,
-        dir: new File("${DL_DIR}/${dir}")
-      )
+      if (GIT_USER_NAME && GIT_ACCESS_TOKEN) {
+        def uri = new URI(GIT_REPO)
+        if (!GIT_REPO.toLowerCase().startsWith("http")) {
+          println("\tGit credentials supported only with 'http' or 'https' schemes");
+          return
+        }
+        uri = new URI(uri.getScheme(),
+         "${GIT_USER_NAME}:${GIT_ACCESS_TOKEN}".toString(), // userInfo
+         uri.getHost(), uri.getPort(), uri.getPath(), uri.getQuery(),
+         uri.getFragment())
+        exec {
+          workingDir DL_DIR
+          commandLine "git clone --depth 1 ${uri} ${dir}".split()
+          errorOutput devNull
+          standardOutput devNull
+        }
+      } else {
+        exec {
+          workingDir DL_DIR
+          commandLine "git clone --depth 1 ${GIT_REPO} ${dir}".split()
+          errorOutput devNull
+          standardOutput devNull
+        }
+      }
+      exec {
+        workingDir "$DL_DIR/${dir}"
+        commandLine "git checkout $GIT_REF".split()
+        errorOutput devNull
+        standardOutput devNull
+      }
       delete("${DL_DIR}/${dir}/.git")
       exec {
         workingDir DL_DIR
