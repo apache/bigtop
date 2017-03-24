@@ -44,6 +44,7 @@ create() {
     echo > ./config/hiera.yaml
     echo > ./config/hosts
     export DOCKER_IMAGE=$(get-yaml-config docker image)
+    export MEM_LIMIT=$(get-yaml-config docker memory_limit)
 
     # Startup instances
     docker-compose -p $PROVISION_ID scale bigtop=$1
@@ -76,7 +77,8 @@ generate-hosts() {
         docker exec ${NODES[0]} bash -c "echo $entry >> /etc/hosts"
     done
     wait
-
+    # This must be the last entry in the /etc/hosts
+    echo "127.0.0.1 localhost" >> ./config/hosts
 }
 
 generate-config() {
@@ -101,7 +103,7 @@ copy-to-instances() {
 
 bootstrap() {
     for node in ${NODES[*]}; do
-        docker exec $node bash -c "/bigtop-home/bigtop-deploy/vm/utils/setup-env-$1.sh $2" &
+        docker exec $node bash -c "/bigtop-home/provisioner/utils/setup-env-$1.sh $2" &
     done
     wait
 }
@@ -116,7 +118,7 @@ provision() {
 smoke-tests() {
     hadoop_head_node=${NODES:0:12}
     smoke_test_components="`echo $(get-yaml-config smoke_test_components) | sed 's/ /,/g'`"
-    docker exec $hadoop_head_node bash -c "bash -x /bigtop-home/bigtop-deploy/vm/utils/smoke-tests.sh $smoke_test_components"
+    docker exec $hadoop_head_node bash -c "bash -x /bigtop-home/provisioner/utils/smoke-tests.sh $smoke_test_components"
 }
 
 destroy() {

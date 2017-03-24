@@ -30,28 +30,33 @@ RUN=`date +%s`
 RESULT_DIR=/opt/teragen-results
 RESULT_LOG=${RESULT_DIR}/${RUN}.log
 mkdir -p ${RESULT_DIR}
-chown -R hdfs ${RESULT_DIR}
+chown -R ubuntu:ubuntu ${RESULT_DIR}
 
-# clean out any previously generated data (must be run as hdfs)
-su hdfs << EOF
-if hadoop fs -stat ${IN_DIR} &> /dev/null; then
-    hadoop fs -rm -r -skipTrash ${IN_DIR} || true
-fi
-EOF
+benchmark_cleanup() {
+  # must be run as ubuntu, since that user owns the hdfs space
+  su - ubuntu -c "hadoop fs -rm -f -r -skipTrash ${IN_DIR}"
+}
+
+# clean out benchmark dir
+benchmark_cleanup
 
 benchmark-start
 START=`date +%s`
 # NB: Escaped vars in the block below (e.g., \${HADOOP_HOME}) come from
 # /etc/environment while non-escaped vars (e.g., ${IN_DIR}) are parameterized
 # from this outer scope
-su hdfs << EOF
+su ubuntu << EOF
 . /etc/default/hadoop
 echo 'generating data'
-hadoop jar \${HADOOP_MAPRED_HOME}/hadoop-mapreduce-examples-*.jar teragen ${SIZE} ${IN_DIR} &> ${RESULT_LOG}
+hadoop jar \${HADOOP_MAPRED_HOME}/hadoop-mapreduce-examples-*.jar teragen ${SIZE} ${IN_DIR} 2>&1 | tee -a ${RESULT_LOG}
 EOF
 STOP=`date +%s`
 benchmark-finish
 
-`cat ${RESULT_LOG} | $CHARM_DIR/actions/parseTerasort.py`
+# Set action and benchmark output
+cat ${RESULT_LOG} | $CHARM_DIR/actions/parseBenchmark.py
 DURATION=`expr $STOP - $START`
 benchmark-composite "${DURATION}" 'secs' 'asc'
+
+# clean out benchmark dir
+benchmark_cleanup

@@ -17,6 +17,6 @@ MAINTAINER Amir Sanjar
 
 COPY bigtop_toolchain /etc/puppet/modules/bigtop_toolchain
 
-RUN puppet apply -e "include bigtop_toolchain::installer"
+RUN  apt-get clean && apt-get update && puppet apply -e "include bigtop_toolchain::installer"
 COPY . /tmp/bigtop
 RUN cd /tmp/bigtop && ./gradlew && cd && rm -rf /tmp/bigtop

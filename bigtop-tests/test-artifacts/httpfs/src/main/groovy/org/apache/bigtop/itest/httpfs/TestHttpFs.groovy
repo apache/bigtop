@@ -32,6 +32,7 @@ public class TestHttpFs {
   private static Log LOG = LogFactory.getLog(TestHttpFs.class)
 
   private static final String USERNAME = System.getProperty("user.name");
+  private static final String DOASUSER = 'hdfs';
   private static final String HTTPFS_PROXY = System.getenv('HTTPFS_PROXY');
   static {
     assertNotNull("HTTPFS_PROXY has to be set to run this test",
@@ -40,8 +41,13 @@ public class TestHttpFs {
 
   private static final String HTTPFS_PREFIX = "http://$HTTPFS_PROXY/webhdfs/v1";
   private static final String HTTPFS_SUCCESS = "{\"boolean\":true}";
+  private static final String HTTP_OK = "HTTP/1.1 200 OK";
+  private static final String HTTP_CREATE = "HTTP/1.1 201 Created";
+  private static final String HTTP_TMP_REDIR = "HTTP/1.1 307 TEMPORARY_REDIRECT";
 
-  private static final String DATA_DIR = System.getProperty("data.dir", "text-files");
+  public static final String HTTPFS_SOURCE = "bigtop-tests/test-artifacts/httpfs/src/main/resources/"
+  def httpfs_source = System.getenv("BIGTOP_HOME") + "/" + HTTPFS_SOURCE;
+  def DATA_DIR = httpfs_source + "/" + "text-files";
 
   private static String testHttpFsFolder = "/tmp/httpfssmoke-" + (new Date().getTime());
   private static String testHttpFsFolderRenamed = "$testHttpFsFolder-renamed";
@@ -74,63 +80,76 @@ public class TestHttpFs {
   public void assertValueExists(List<String> values, String expected) {
     boolean exists = false;
     for (String value : values) {
-      if (expected.startsWith(value)) {
+      if (value.length() && expected.startsWith(value)) {
         exists = true;
       }
     }
     assertTrue(expected + " NOT found!", exists == true);
   }
 
-  private void createDir(String dirname) {
-    sh.exec("curl -i -X PUT '$HTTPFS_PREFIX$dirname?user.name=$USERNAME&op=MKDIRS'");
+  public void assertValueContains(List<String> values, String expected) {
+    boolean exists = false;
+    for (String value : values) {
+      if (value.length() && value.contains(expected)) {
+        exists = true;
+      }
+    }
+    assertTrue(expected + " NOT found!", exists == true);
   }
 
-  @Test
-  public void testCreateDir() {
-    createDir(testHttpFsFolder)
+  private void createDir(String dirname, String doasUser='') {
+    def doasStr = ''
+    if(doasUser.length()) {
+        doasStr = "doas=$doasUser&"
+    }
+    sh.exec("curl -i -X PUT '$HTTPFS_PREFIX$dirname?user.name=$USERNAME&${doasStr}op=MKDIRS'");
     assertTrue("curl command to create a dir failed", sh.getRet() == 0);
     assertValueExists(sh.getOut(), HTTPFS_SUCCESS);
   }
 
-  @Test
-  public void testRenameDir() {
-    createDir(testHttpFsFolder);
-    assertTrue("curl command to create a dir failed", sh.getRet() == 0);
-    assertValueExists(sh.getOut(), HTTPFS_SUCCESS);
-    sh.exec("curl -i -X PUT '$HTTPFS_PREFIX$testHttpFsFolder?user.name=$USERNAME&op=RENAME&destination=$testHttpFsFolderRenamed'");
+  private void renameDir(String dirname, String doasUser='') {
+    createDir(dirname, doasUser);
+    def doasStr = ''
+    if(doasUser.length()) {
+        doasStr = "doas=$doasUser&"
+    }
+    sh.exec("curl -i -X PUT '$HTTPFS_PREFIX$testHttpFsFolder?user.name=$USERNAME&${doasStr}op=RENAME&destination=$testHttpFsFolderRenamed'");
     assertTrue("curl command to rename a dir failed", sh.getRet() == 0);
     assertValueExists(sh.getOut(), HTTPFS_SUCCESS);
   }
 
-  @Test
-  public void testDeleteDir() {
-    createDir(testHttpFsFolder);
-    assertTrue("curl command to create a dir failed", sh.getRet() == 0);
-    assertValueExists(sh.getOut(), HTTPFS_SUCCESS);
-    sh.exec("curl -i -X DELETE '$HTTPFS_PREFIX$testHttpFsFolder?user.name=$USERNAME&op=DELETE'");
+  private void deleteDir(String dirname, String doasUser='') {
+    createDir(dirname, doasUser);
+    def doasStr = ''
+    if(doasUser.length()) {
+        doasStr = "doas=$doasUser&"
+    }
+    sh.exec("curl -i -X DELETE '$HTTPFS_PREFIX$testHttpFsFolder?user.name=$USERNAME&${doasStr}op=DELETE'");
     assertTrue("curl command to delete a dir failed", sh.getRet() == 0);
     assertValueExists(sh.getOut(), HTTPFS_SUCCESS);
   }
 
-  @Test
-  public void testStatusDir() {
-    createDir(testHttpFsFolder);
+  private void statusDir(String dirname, String doasUser='') {
+    createDir(dirname, doasUser);
+    def doasStr = ''
+    if(doasUser.length()) {
+        doasStr = "doas=$doasUser&"
+    }
+    sh.exec("curl -i '$HTTPFS_PREFIX$testHttpFsFolder?user.name=$USERNAME&${doasStr}op=GETFILESTATUS'");
     assertTrue("curl command to create a dir failed", sh.getRet() == 0);
-    assertValueExists(sh.getOut(), HTTPFS_SUCCESS);
-    sh.exec("curl -i '$HTTPFS_PREFIX$testHttpFsFolder?user.name=$USERNAME&op=GETFILESTATUS'");
-    assertTrue("curl command to create a dir failed", sh.getRet() == 0);
-    assertValueExists(sh.getOut(), HTTPFS_SUCCESS);
-    assertValueExists(sh.getOut(), "DIRECTORY");
+    assertValueContains(sh.getOut(), "DIRECTORY");
+    assertValueExists(sh.getOut(), HTTP_OK);
   }
 
-  @Test
-  public void testCreateFile() {
-    String filename = "helloworld.txt";
+  private void createFile(String filename, String doasUser='') {
     String filenameContent = 'Hello World!';
+    def doasStr = ''
+    if(doasUser.length()) {
+        doasStr = "doas=$doasUser&"
+    }
 
-    createDir(testHttpFsFolder);
-    assertTrue("curl command to create a dir failed", sh.getRet() == 0);
-    sh.exec("curl -i -X PUT '$HTTPFS_PREFIX$testHttpFsFolder/$filename?user.name=$USERNAME&op=CREATE'");
+    createDir(testHttpFsFolder, doasUser);
+    sh.exec("curl -i -X PUT '$HTTPFS_PREFIX$testHttpFsFolder/$filename?user.name=$USERNAME&${doasStr}op=CREATE'");
     assertTrue("curl command to create a file failed", sh.getRet() == 0);
     String datanodeLocation = null;
     sh.getOut().each {
@@ -140,14 +159,67 @@ public class TestHttpFs {
       }
     }
     LOG.debug("Datanode location: $datanodeLocation");
-    assertValueExists(sh.getOut(), HTTPFS_SUCCESS);
+    assertValueExists(sh.getOut(), HTTP_TMP_REDIR);
+    assertNotNull("Datanode location not in response", datanodeLocation);
     sh.exec("curl -i -T $DATA_DIR/$filename '$datanodeLocation' --header 'Content-Type:application/octet-stream'");
     assertTrue("curl command to create a file failed", sh.getRet() == 0);
-    assertValueExists(sh.getOut(), HTTPFS_SUCCESS);
+    assertValueExists(sh.getOut(), HTTP_CREATE);
     sh.exec("curl -i -L '$HTTPFS_PREFIX$testHttpFsFolder/$filename?user.name=$USERNAME&op=OPEN'");
     assertTrue("curl command to create a file failed", sh.getRet() == 0);
-    assertValueExists(sh.getOut(), HTTPFS_SUCCESS);
+    assertValueExists(sh.getOut(), HTTP_OK);
     assertValueExists(sh.getOut(), filenameContent);
+  }
+
+  @Test
+  public void testCreateDir() {
+    createDir(testHttpFsFolder)
+  }
+
+  @Test
+  public void testCreateDirAsUser() {
+    createDir(testHttpFsFolder, DOASUSER)
+  }
+
+  @Test
+  public void testRenameDir() {
+    renameDir(testHttpFsFolder);
+  }
+
+  @Test
+  public void testRenameDirAsUser() {
+    renameDir(testHttpFsFolder, DOASUSER);
+  }
+
+  @Test
+  public void testDeleteDir() {
+    deleteDir(testHttpFsFolder);
+  }
+
+  @Test
+  public void testDeleteDirAsUser() {
+    deleteDir(testHttpFsFolder, DOASUSER);
+  }
+
+  @Test
+  public void testStatusDir() {
+    statusDir(testHttpFsFolder);
+  }
+
+  @Test
+  public void testStatusDirAsUser() {
+    statusDir(testHttpFsFolder, DOASUSER);
+  }
+
+  @Test
+  public void testCreateFile() {
+    String filename = "helloworld.txt";
+    createFile(filename)
+  }
+
+  @Test
+  public void testCreateFileAsUser() {
+    String filename = "helloworld.txt";
+    createFile(filename, DOASUSER)
   }
 }
 

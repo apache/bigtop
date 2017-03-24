@@ -153,9 +153,9 @@ The Zookeeper nodes will automatically perform a rolling restart to update the
 Zookeeper quorum without losing any jobs in progress. Once the rolling restart
 has completed, all of the Zookeeper nodes should report the following status:
 
-    ready (n zk nodes)
+    ready (n units)
 
-(Where 'n' is the total number of Zookeeper nodes in your quorum.)
+(Where 'n' is the total number of Zookeeper units in the quorum.)
 
 
 # Integrating
@@ -183,7 +183,7 @@ that require Zookeeper as follows:
 
 # Resources
 
-- [Apache Bigtop](http://bigtop.apache.org/) home page
+- [Apache Bigtop home page](http://bigtop.apache.org/)
 - [Apache Bigtop mailing lists](http://bigtop.apache.org/mail-lists.html)
 - [Apache Zookeeper home page](https://zookeeper.apache.org/)
 - [Apache Zookeeper issue tracker](https://issues.apache.org/jira/browse/ZOOKEEPER)

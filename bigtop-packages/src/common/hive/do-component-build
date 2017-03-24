@@ -28,7 +28,7 @@ HIVE_MAVEN_OPTS=" -Dhbase.version=$HBASE_VERSION \
 -DskipTests \
 -Dhbase.version.with.hadoop.version=$HBASE_VERSION \
 -Dtez.version=${TEZ_VERSION} \
--Dspark.version=${SPARK_VERSION}
+-Dspark.version=${SPARK1_VERSION}
 "
 
 export MAVEN_OPTS="-Xmx1500m -Xms1500m -XX:MaxPermSize=256m"

@@ -111,20 +111,44 @@
     <name>yarn.app.mapreduce.am.staging-dir</name>
     <value><%= @yarn_app_mapreduce_am_staging_dir %></value>
   </property>
-
 <% end -%>
+
+<!-- Memory settings -->
+<% if @mapreduce_map_memory_mb -%>
   <property>
-    <name>mapred.child.java.opts</name>
-    <value>-Xmx1024m</value>
+    <name>mapreduce.map.memory.mb</name>
+    <value><%= @mapreduce_map_memory_mb %></value>
   </property>
+<% end -%>
+
+<% if @mapreduce_reduce_memory_mb -%>
+  <property>
+    <name>mapreduce.reduce.memory.mb</name>
+    <value><%= @mapreduce_reduce_memory_mb %></value>
+  </property>
+<% end -%>
+
+<% if @mapreduce_map_java_opts -%>
+  <property>
+    <name>mapreduce.map.java.opts</name>
+    <value><%= @mapreduce_map_java_opts %></value>
+  </property>
+<% end -%>
+
+<% if @mapreduce_reduce_java_opts -%>
+  <property>
+    <name>mapreduce.reduce.java.opts</name>
+    <value><%= @mapreduce_reduce_java_opts %></value>
+  </property>
+<% end -%>
 
 <% if @mapreduce_task_io_sort_mb -%>
   <property>
     <name>mapreduce.task.io.sort.mb</name>
     <value><%= @mapreduce_task_io_sort_mb %></value>
   </property>
-
 <% end -%>
+
 <% if @mapreduce_task_io_sort_factor -%>
   <property>
     <name>mapreduce.task.io.sort.factor</name>
@@ -189,6 +213,5 @@
     <name>mapreduce.job.reduce.slowstart.completedmaps</name>
     <value><%= @mapreduce_job_reduce_slowstart_completedmaps %></value>
   </property>
-
 <% end -%>
 </configuration>

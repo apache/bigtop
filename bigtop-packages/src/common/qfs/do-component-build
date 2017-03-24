@@ -83,6 +83,9 @@ command -v mvn > /dev/null 2>&1 || {
 
 PYTHON3_PATH=${PYTHON3_PATH:-}
 
+# Workaround for BIGTOP-2710 
+sed -ie '/which/!s#mvn #mvn -Duser.home=${HOME} #g' src/java/javabuild.sh
+
 # Build and install QFS into the build/release directory
 make
 
@@ -111,8 +114,8 @@ get_hadoop_qfs_profile() {
 
 HADOOP_QFS_PROFILE=$(get_hadoop_qfs_profile)
 cd src/java
-mvn -Dqfs.release.version=${QFS_VERSION} --projects qfs-access package
-mvn -P $HADOOP_QFS_PROFILE -Dqfs.release.version=${QFS_VERSION} \
+mvn -Duser.home=${HOME} -Dqfs.release.version=${QFS_VERSION} --projects qfs-access package
+mvn -P $HADOOP_QFS_PROFILE -Duser.home=${HOME} -Dqfs.release.version=${QFS_VERSION} \
     -Dhadoop.release.version=${HADOOP_VERSION} -Dtest.build.data=/tmp \
     package
 cd ../..

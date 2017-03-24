@@ -20,4 +20,4 @@ set -ex
 
 export MAVEN_OPTS="-Xmx512M -XX:MaxPermSize=512M"
 
-mvn clean install -DskipTests -Dhadoop.version=$HADOOP_VERSION -Dspark.version=$SPARK_VERSION -Dignite.edition=hadoop
+mvn clean install -DskipTests -Dhadoop.version=$HADOOP_VERSION -Dspark.version=$SPARK1_VERSION -Dignite.edition=hadoop

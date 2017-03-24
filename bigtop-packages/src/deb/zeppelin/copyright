@@ -1,6 +1,6 @@
 Format: http://dep.debian.net/deps/dep5
-Source: http://zeppelin.incubator.apache.org/
-Upstream-Name: Apache Zeppelin (Incubating)
+Source: http://zeppelin.apache.org/
+Upstream-Name: Apache Zeppelin
 
 Files: *
 Copyright: 2013-2015, The Apache Software Foundation

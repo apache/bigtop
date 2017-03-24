@@ -89,7 +89,7 @@ def install_hadoop_client_yarn(principal, namenode, resourcemanager):
         bigtop.render_site_yaml(hosts=hosts, roles='hadoop-client')
         bigtop.trigger_puppet()
         set_state('apache-bigtop-plugin.yarn.installed')
-        hookenv.status_set('active', 'ready (HDFS & YARN)')
+        hookenv.status_set('maintenance', 'plugin (yarn) installed')
     else:
         hookenv.status_set('waiting', 'waiting for master fqdns')
 
@@ -108,8 +108,7 @@ def send_rm_spec(principal, resourcemanager):
 @when_not('apache-bigtop-plugin.yarn.ready')
 def send_principal_yarn_info(principal, resourcemanager):
     """Send YARN data when the resourcemanager becomes ready."""
-    version = get_hadoop_version()
-    principal.set_installed(version)
+    principal.set_installed(get_hadoop_version())
     principal.set_yarn_ready(
         resourcemanager.resourcemanagers(), resourcemanager.port(),
         resourcemanager.hs_http(), resourcemanager.hs_ipc())

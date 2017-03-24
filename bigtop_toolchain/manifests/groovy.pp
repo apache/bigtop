@@ -15,7 +15,7 @@
 
 class bigtop_toolchain::groovy {
 
-  $groovy_version = '2.4.4'
+  $groovy_version = '2.4.10'
   $groovy = "apache-groovy-binary-${groovy_version}"
 
   include bigtop_toolchain::packages

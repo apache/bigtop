@@ -3147,7 +3147,7 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted TEST_DIR_ABSOLUTE/dir0/file0</expected-output>
+          <expected-output>^(Deleted TEST_DIR_ABSOLUTE/dir0/file0|Moved:.*TEST_DIR_ABSOLUTE/dir0/file0.*)</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -3165,7 +3165,7 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted file0</expected-output>
+          <expected-output>^(Deleted file0|Moved:.*file0.*)</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -3186,19 +3186,19 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted TEST_DIR_ABSOLUTE/dir0/file0</expected-output>
+          <expected-output>^(Deleted TEST_DIR_ABSOLUTE/dir0/file0|Moved:.*TEST_DIR_ABSOLUTE/dir0/file0.*)</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted TEST_DIR_ABSOLUTE/dir0/file1</expected-output>
+          <expected-output>^(Deleted TEST_DIR_ABSOLUTE/dir0/file1|Moved:.*TEST_DIR_ABSOLUTE/dir0/file1.*)</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted TEST_DIR_ABSOLUTE/dir0/file2</expected-output>
+          <expected-output>^(Deleted TEST_DIR_ABSOLUTE/dir0/file2|Moved:.*TEST_DIR_ABSOLUTE/dir0/file2.*)</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted TEST_DIR_ABSOLUTE/dir0/file3</expected-output>
+          <expected-output>^(Deleted TEST_DIR_ABSOLUTE/dir0/file3|Moved:.*TEST_DIR_ABSOLUTE/dir0/file3.*)</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -3219,19 +3219,19 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted file0</expected-output>
+          <expected-output>^(Deleted file0|Moved:.*file0.*)</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted file1</expected-output>
+          <expected-output>^(Deleted file1|Moved:.*file1.*)</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted file2</expected-output>
+          <expected-output>^(Deleted file2|Moved:.*file2.*)</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted file3</expected-output>
+          <expected-output>^(Deleted file3|Moved:.*file3.*)</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -3314,7 +3314,7 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted HCFS_SCHEME//TEST_DIR_ABSOLUTE/file0</expected-output>
+          <expected-output>^(Deleted HCFS_SCHEME//TEST_DIR_ABSOLUTE/file0|Moved:.*HCFS_SCHEME.*TEST_DIR_ABSOLUTE/file0.*)</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -3334,19 +3334,19 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted HCFS_SCHEME//TEST_DIR_ABSOLUTE/file0</expected-output>
+          <expected-output>^(Deleted HCFS_SCHEME//TEST_DIR_ABSOLUTE/file0|Moved:.*HCFS_SCHEME.*TEST_DIR_ABSOLUTE/file0.*)</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted HCFS_SCHEME//TEST_DIR_ABSOLUTE/file1</expected-output>
+          <expected-output>^(Deleted HCFS_SCHEME//TEST_DIR_ABSOLUTE/file1|Moved:.*HCFS_SCHEME.*TEST_DIR_ABSOLUTE/file1.*)</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted HCFS_SCHEME//TEST_DIR_ABSOLUTE/file2</expected-output>
+          <expected-output>^(Deleted HCFS_SCHEME//TEST_DIR_ABSOLUTE/file2|Moved:.*HCFS_SCHEME.*TEST_DIR_ABSOLUTE/file2.*)</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted HCFS_SCHEME//TEST_DIR_ABSOLUTE/file3</expected-output>
+          <expected-output>^(Deleted HCFS_SCHEME//TEST_DIR_ABSOLUTE/file3|Moved:.*HCFS_SCHEME.*TEST_DIR_ABSOLUTE/file3.*)</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -3400,19 +3400,19 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted HCFS_SCHEME//TEST_DIR_ABSOLUTE/file0</expected-output>
+          <expected-output>^(Deleted HCFS_SCHEME//TEST_DIR_ABSOLUTE/file0|Moved:.*HCFS_SCHEME.*TEST_DIR_ABSOLUTE/file0.*)</expected-output>
        </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted HCFS_SCHEME//TEST_DIR_ABSOLUTE/file1</expected-output>
+          <expected-output>^(Deleted HCFS_SCHEME//TEST_DIR_ABSOLUTE/file1|Moved:.*HCFS_SCHEME.*TEST_DIR_ABSOLUTE/file1.*)</expected-output>
        </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted HCFS_SCHEME//TEST_DIR_ABSOLUTE/file2</expected-output>
+          <expected-output>^(Deleted HCFS_SCHEME//TEST_DIR_ABSOLUTE/file2|Moved:.*HCFS_SCHEME.*TEST_DIR_ABSOLUTE/file2.*)</expected-output>
        </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted HCFS_SCHEME//TEST_DIR_ABSOLUTE/file3</expected-output>
+          <expected-output>^(Deleted HCFS_SCHEME//TEST_DIR_ABSOLUTE/file3|Moved:.*HCFS_SCHEME.*TEST_DIR_ABSOLUTE/file3.*)</expected-output>
        </comparator>
       </comparators>
     </test>
@@ -3429,7 +3429,7 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted NAMENODETEST_DIR_ABSOLUTE/file0</expected-output>
+          <expected-output>^(Deleted NAMENODETEST_DIR_ABSOLUTE/file0|Moved:.*NAMENODETEST_DIR_ABSOLUTE/file0.*)</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -3449,19 +3449,19 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted NAMENODETEST_DIR_ABSOLUTE/file0</expected-output>
+          <expected-output>^(Deleted NAMENODETEST_DIR_ABSOLUTE/file0|Moved:.*NAMENODETEST_DIR_ABSOLUTE/file0.*)</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted NAMENODETEST_DIR_ABSOLUTE/file1</expected-output>
+          <expected-output>^(Deleted NAMENODETEST_DIR_ABSOLUTE/file1|Moved:.*NAMENODETEST_DIR_ABSOLUTE/file1.*)</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted NAMENODETEST_DIR_ABSOLUTE/file2</expected-output>
+          <expected-output>^(Deleted NAMENODETEST_DIR_ABSOLUTE/file2|Moved:.*NAMENODETEST_DIR_ABSOLUTE/file2.*)</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted NAMENODETEST_DIR_ABSOLUTE/file3</expected-output>
+          <expected-output>^(Deleted NAMENODETEST_DIR_ABSOLUTE/file3|Moved:.*NAMENODETEST_DIR_ABSOLUTE/file3.*)</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -3515,19 +3515,19 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted NAMENODETEST_DIR_ABSOLUTE/file0</expected-output>
+          <expected-output>^(Deleted NAMENODETEST_DIR_ABSOLUTE/file0|Moved:.*NAMENODETEST_DIR_ABSOLUTE/file0.*)</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted NAMENODETEST_DIR_ABSOLUTE/file1</expected-output>
+          <expected-output>^(Deleted NAMENODETEST_DIR_ABSOLUTE/file1|Moved:.*NAMENODETEST_DIR_ABSOLUTE/file1.*)</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted NAMENODETEST_DIR_ABSOLUTE/file2</expected-output>
+          <expected-output>^(Deleted NAMENODETEST_DIR_ABSOLUTE/file2|Moved:.*NAMENODETEST_DIR_ABSOLUTE/file2.*)</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted NAMENODETEST_DIR_ABSOLUTE/file3</expected-output>
+          <expected-output>^(Deleted NAMENODETEST_DIR_ABSOLUTE/file3|Moved:.*NAMENODETEST_DIR_ABSOLUTE/file3.*)</expected-output>
        </comparator>
       </comparators>
     </test>
@@ -3546,7 +3546,7 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted TEST_DIR_ABSOLUTE/dir0/file0</expected-output>
+          <expected-output>^(Deleted TEST_DIR_ABSOLUTE/dir0/file0|Moved:.*TEST_DIR_ABSOLUTE/dir0/file0.*)</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -3564,7 +3564,7 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted file0</expected-output>
+          <expected-output>^(Deleted file0|Moved:.*file0.*)</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -3581,7 +3581,7 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted TEST_DIR_ABSOLUTE/dir0</expected-output>
+          <expected-output>^(Deleted TEST_DIR_ABSOLUTE/dir0|Moved:.*TEST_DIR_ABSOLUTE/dir0.*)</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -3598,7 +3598,7 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted dir0</expected-output>
+          <expected-output>^(Deleted dir0|Moved:.*dir0.*)</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -3618,19 +3618,19 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted TEST_DIR_ABSOLUTE/dir0</expected-output>
+          <expected-output>^(Deleted TEST_DIR_ABSOLUTE/dir0|Moved:.*TEST_DIR_ABSOLUTE/dir0.*)</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted TEST_DIR_ABSOLUTE/dir1</expected-output>
+          <expected-output>^(Deleted TEST_DIR_ABSOLUTE/dir1|Moved:.*TEST_DIR_ABSOLUTE/dir1.*)</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted TEST_DIR_ABSOLUTE/dir2</expected-output>
+          <expected-output>^(Deleted TEST_DIR_ABSOLUTE/dir2|Moved:.*TEST_DIR_ABSOLUTE/dir2.*)</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted TEST_DIR_ABSOLUTE/dir3</expected-output>
+          <expected-output>^(Deleted TEST_DIR_ABSOLUTE/dir3|Moved:.*TEST_DIR_ABSOLUTE/dir3.*)</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -3650,19 +3650,19 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted dir0</expected-output>
+          <expected-output>^(Deleted dir0|Moved:.*dir0.*)</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted dir1</expected-output>
+          <expected-output>^(Deleted dir1|Moved:.*dir1.*)</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted dir2</expected-output>
+          <expected-output>^(Deleted dir2|Moved:.*dir2.*)</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted dir3</expected-output>
+          <expected-output>^(Deleted dir3|Moved:.*dir3.*)</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -3711,7 +3711,7 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted HCFS_SCHEME//TEST_DIR_ABSOLUTE/file0</expected-output>
+          <expected-output>^(Deleted HCFS_SCHEME//TEST_DIR_ABSOLUTE/file0|Moved:.*HCFS_SCHEME.*TEST_DIR_ABSOLUTE/file0.*)</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -3728,7 +3728,7 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted HCFS_SCHEME//TEST_DIR_ABSOLUTE/dir0</expected-output>
+          <expected-output>^(Deleted HCFS_SCHEME//TEST_DIR_ABSOLUTE/dir0|Moved:.*HCFS_SCHEME.*TEST_DIR_ABSOLUTE/dir0.*)</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -3748,19 +3748,19 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted HCFS_SCHEME//TEST_DIR_ABSOLUTE/dir0</expected-output>
+          <expected-output>^(Deleted HCFS_SCHEME//TEST_DIR_ABSOLUTE/dir0|Moved:.*HCFS_SCHEME.*TEST_DIR_ABSOLUTE/dir0.*)</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted HCFS_SCHEME//TEST_DIR_ABSOLUTE/dir1</expected-output>
+          <expected-output>^(Deleted HCFS_SCHEME//TEST_DIR_ABSOLUTE/dir1|Moved:.*HCFS_SCHEME.*TEST_DIR_ABSOLUTE/dir1.*)</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted HCFS_SCHEME//TEST_DIR_ABSOLUTE/dir2</expected-output>
+          <expected-output>^(Deleted HCFS_SCHEME//TEST_DIR_ABSOLUTE/dir2|Moved:.*HCFS_SCHEME.*TEST_DIR_ABSOLUTE/dir2.*)</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted HCFS_SCHEME//TEST_DIR_ABSOLUTE/dir3</expected-output>
+          <expected-output>^(Deleted HCFS_SCHEME//TEST_DIR_ABSOLUTE/dir3|Moved:.*HCFS_SCHEME.*TEST_DIR_ABSOLUTE/dir3.*)</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -3796,19 +3796,19 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted HCFS_SCHEME//TEST_DIR_ABSOLUTE/dir0</expected-output>
+          <expected-output>^(Deleted HCFS_SCHEME//TEST_DIR_ABSOLUTE/dir0|Moved:.*HCFS_SCHEME.*TEST_DIR_ABSOLUTE/dir0.*)</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted HCFS_SCHEME//TEST_DIR_ABSOLUTE/dir1</expected-output>
+          <expected-output>^(Deleted HCFS_SCHEME//TEST_DIR_ABSOLUTE/dir1|Moved:.*HCFS_SCHEME.*TEST_DIR_ABSOLUTE/dir1.*)</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted HCFS_SCHEME//TEST_DIR_ABSOLUTE/dir2</expected-output>
+          <expected-output>^(Deleted HCFS_SCHEME//TEST_DIR_ABSOLUTE/dir2|Moved:.*HCFS_SCHEME.*TEST_DIR_ABSOLUTE/dir2.*)</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted HCFS_SCHEME//TEST_DIR_ABSOLUTE/dir3</expected-output>
+          <expected-output>^(Deleted HCFS_SCHEME//TEST_DIR_ABSOLUTE/dir3|Moved:.*HCFS_SCHEME.*TEST_DIR_ABSOLUTE/dir3.*)</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -3825,7 +3825,7 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted NAMENODETEST_DIR_ABSOLUTE/file0</expected-output>
+          <expected-output>^(Deleted NAMENODETEST_DIR_ABSOLUTE/file0|Moved:.*NAMENODETEST_DIR_ABSOLUTE/file0.*)</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -3842,7 +3842,7 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted NAMENODETEST_DIR_ABSOLUTE/dir0</expected-output>
+          <expected-output>^(Deleted NAMENODETEST_DIR_ABSOLUTE/dir0|Moved:.*NAMENODETEST_DIR_ABSOLUTE/dir0.*)</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -3862,19 +3862,19 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted NAMENODETEST_DIR_ABSOLUTE/dir0</expected-output>
+          <expected-output>^(Deleted NAMENODETEST_DIR_ABSOLUTE/dir0|Moved:.*NAMENODETEST_DIR_ABSOLUTE/dir0.*)</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted NAMENODETEST_DIR_ABSOLUTE/dir1</expected-output>
+          <expected-output>^(Deleted NAMENODETEST_DIR_ABSOLUTE/dir1|Moved:.*NAMENODETEST_DIR_ABSOLUTE/dir1.*)</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted NAMENODETEST_DIR_ABSOLUTE/dir2</expected-output>
+          <expected-output>^(Deleted NAMENODETEST_DIR_ABSOLUTE/dir2|Moved:.*NAMENODETEST_DIR_ABSOLUTE/dir2.*)</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted NAMENODETEST_DIR_ABSOLUTE/dir3</expected-output>
+          <expected-output>^(Deleted NAMENODETEST_DIR_ABSOLUTE/dir3|Moved:.*NAMENODETEST_DIR_ABSOLUTE/dir3.*)</expected-output>
         </comparator>
       </comparators>
     </test>
@@ -3910,19 +3910,19 @@
       <comparators>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted NAMENODETEST_DIR_ABSOLUTE/dir0</expected-output>
+          <expected-output>^(Deleted NAMENODETEST_DIR_ABSOLUTE/dir0|Moved:.*NAMENODETEST_DIR_ABSOLUTE/dir0.*)</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted NAMENODETEST_DIR_ABSOLUTE/dir1</expected-output>
+          <expected-output>^(Deleted NAMENODETEST_DIR_ABSOLUTE/dir1|Moved:.*NAMENODETEST_DIR_ABSOLUTE/dir1.*)</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted NAMENODETEST_DIR_ABSOLUTE/dir2</expected-output>
+          <expected-output>^(Deleted NAMENODETEST_DIR_ABSOLUTE/dir2|Moved:.*NAMENODETEST_DIR_ABSOLUTE/dir2.*)</expected-output>
         </comparator>
         <comparator>
           <type>RegexpComparator</type>
-          <expected-output>^Deleted NAMENODETEST_DIR_ABSOLUTE/dir3</expected-output>
+          <expected-output>^(Deleted NAMENODETEST_DIR_ABSOLUTE/dir3|Moved:.*NAMENODETEST_DIR_ABSOLUTE/dir3.*)</expected-output>
         </comparator>
       </comparators>
     </test>

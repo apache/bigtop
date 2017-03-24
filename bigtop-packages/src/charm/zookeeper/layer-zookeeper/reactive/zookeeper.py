@@ -16,7 +16,8 @@
 import json
 import time
 from charmhelpers.core import hookenv
-from charms.layer.zookeeper import Zookeeper
+from charms.layer.apache_bigtop_base import get_package_version
+from charms.layer.bigtop_zookeeper import Zookeeper
 from charms.leadership import leader_set, leader_get
 from charms.reactive import set_state, when, when_not, is_state
 from charms.reactive.helpers import data_changed
@@ -44,6 +45,9 @@ def install_zookeeper():
     set_state('zookeeper.installed')
     set_state('zookeeper.started')
     hookenv.status_set('active', 'ready {}'.format(zookeeper.quorum_check()))
+    # set app version string for juju status output
+    zoo_version = get_package_version('zookeeper') or 'unknown'
+    hookenv.application_version_set(zoo_version)
 
 
 def _restart_zookeeper(msg):

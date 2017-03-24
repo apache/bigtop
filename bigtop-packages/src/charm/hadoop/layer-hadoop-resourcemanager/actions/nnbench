@@ -22,7 +22,7 @@ if ! charms.reactive is_state 'apache-bigtop-resourcemanager.ready'; then
     exit
 fi
 
-BASE_DIR=`action-get basedir`/`hostname -s`
+BASE_DIR=`action-get basedir`
 OPTIONS=''
 
 MAPS=`action-get maps`
@@ -32,6 +32,8 @@ BYTES=`action-get bytes`
 NUMFILES=`action-get numfiles`
 REPFACTOR=`action-get repfactor`
 
+# construct options
+OPTIONS="${OPTIONS} -operation create_write -readFileAfterOpen true"
 OPTIONS="${OPTIONS} -maps ${MAPS}"
 OPTIONS="${OPTIONS} -reduces ${REDUCES}"
 OPTIONS="${OPTIONS} -blockSize ${BLOCKSIZE}"
@@ -47,12 +49,13 @@ RESULT_LOG=${RESULT_DIR}/${RUN}.log
 mkdir -p ${RESULT_DIR}
 chown -R ubuntu:ubuntu ${RESULT_DIR}
 
-# clean out any previous data (must be run as ubuntu)
-su ubuntu << EOF
-if hadoop fs -stat ${BASE_DIR} &> /dev/null; then
-    hadoop fs -rm -r -skipTrash ${BASE_DIR} || true
-fi
-EOF
+benchmark_cleanup() {
+  # must be run as ubuntu, since that user owns the hdfs space
+  su - ubuntu -c "hadoop fs -rm -f -r -skipTrash ${BASE_DIR}"
+}
+
+# clean out benchmark dir
+benchmark_cleanup
 
 benchmark-start
 START=`date +%s`
@@ -63,14 +66,15 @@ su ubuntu << EOF
 . /etc/default/hadoop
 echo 'running benchmark'
 cd /tmp/
-hadoop jar \${HADOOP_MAPRED_HOME}/hadoop-mapreduce-*test*.jar nnbench -operation create_write -readFileAfterOpen true $OPTIONS &> ${RESULT_LOG}
+hadoop jar \${HADOOP_MAPRED_HOME}/hadoop-mapreduce-*test*.jar nnbench $OPTIONS 2>&1 | tee -a ${RESULT_LOG}
 EOF
 STOP=`date +%s`
 benchmark-finish
 
-su ubuntu << EOF
-`cat ${RESULT_LOG} | $CHARM_DIR/actions/parseTerasort.py`
-EOF
-
+# Set action and benchmark output
+cat ${RESULT_LOG} | $CHARM_DIR/actions/parseBenchmark.py
 DURATION=`expr $STOP - $START`
 benchmark-composite "${DURATION}" 'secs' 'asc'
+
+# clean out benchmark dir
+benchmark_cleanup

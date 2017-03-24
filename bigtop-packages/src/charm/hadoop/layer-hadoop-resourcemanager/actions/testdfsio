@@ -22,7 +22,6 @@ if ! charms.reactive is_state 'apache-bigtop-resourcemanager.ready'; then
     exit
 fi
 
-RESULTS_FILE=`action-get resfile`
 OPTIONS=''
 
 MODE=`action-get mode`
@@ -30,16 +29,15 @@ NUMFILES=`action-get numfiles`
 FILESIZE=`action-get filesize`
 BUFFERSIZE=`action-get buffersize`
 
+# construct options
 if [ $MODE == 'read' ] ; then
         OPTIONS="${OPTIONS} -read"
 else
         OPTIONS="${OPTIONS} -write"
 fi
-
 OPTIONS="${OPTIONS} -nrFiles ${NUMFILES}"
 OPTIONS="${OPTIONS} -fileSize ${FILESIZE}"
 OPTIONS="${OPTIONS} -bufferSize ${BUFFERSIZE}"
-OPTIONS="${OPTIONS} -resFile ${RESULTS_FILE}"
 
 # create dir to store results
 RUN=`date +%s`
@@ -48,13 +46,17 @@ RESULT_LOG=${RESULT_DIR}/${RUN}.log
 mkdir -p ${RESULT_DIR}
 chown -R ubuntu:ubuntu ${RESULT_DIR}
 
-
-# clean out any previous data (must be run as ubuntu)
-su ubuntu << EOF
-. /etc/default/hadoop
-echo 'cleaning data'
-hadoop jar \${HADOOP_MAPRED_HOME}/hadoop-mapreduce-*test*.jar TestDFSIO -clean
+benchmark_cleanup() {
+  # must be run as ubuntu, since that user owns the hdfs space
+  su ubuntu << EOF
+  . /etc/default/hadoop
+  echo 'cleaning data'
+  hadoop jar \${HADOOP_MAPRED_HOME}/hadoop-mapreduce-*test*.jar TestDFSIO -clean
 EOF
+}
+
+# clean out benchmark dir
+benchmark_cleanup
 
 benchmark-start
 START=`date +%s`
@@ -65,12 +67,15 @@ su ubuntu << EOF
 . /etc/default/hadoop
 echo 'running benchmark'
 cd /tmp/
-hadoop jar \${HADOOP_MAPRED_HOME}/hadoop-mapreduce-*test*.jar TestDFSIO $OPTIONS &> ${RESULT_LOG}
+hadoop jar \${HADOOP_MAPRED_HOME}/hadoop-mapreduce-*test*.jar TestDFSIO $OPTIONS 2>&1 | tee -a ${RESULT_LOG}
 EOF
 STOP=`date +%s`
 benchmark-finish
 
-`cat ${RESULTS_FILE} ${RESULT_LOG} | $CHARM_DIR/actions/parseNNBench.py`
-
+# Set action and benchmark output
+cat ${RESULT_LOG} | $CHARM_DIR/actions/parseBenchmark.py
 DURATION=`expr $STOP - $START`
 benchmark-composite "${DURATION}" 'secs' 'asc'
+
+# clean out benchmark dir
+benchmark_cleanup

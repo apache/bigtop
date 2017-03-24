@@ -33,7 +33,7 @@ URL: https://github.com/greenplum-db/gpdb
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 License: ASL 2.0
-Source0: gpdb-%{gpdb_version}.tar.gz
+Source0: gpdb-%{gpdb_base_version}.tar.gz
 Source1: do-component-build
 Source2: install_gpdb.sh
 Source3: do-component-configure
@@ -43,7 +43,7 @@ AutoReqProv: %{autorequire}
 gpdb
 
 %prep
-%autosetup
+%setup -n %{name}-%{gpdb_base_version}
 
 %build
 bash %{SOURCE3} %{bin_gpdb}

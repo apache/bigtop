@@ -80,6 +80,8 @@ rat {
        "bigtop-tests/smoke-tests/phoenix/*.sql",
        "bigtop-tests/smoke-tests/ignite-hadoop/*.data",
        "bigtop-tests/smoke-tests/tajo/table1/*.csv",
+       "bigtop-tests/smoke-tests/odpi-runtime/src/test/resources/*.json",
+       "bigtop-tests/smoke-tests/odpi-runtime/src/test/resources/*.list",
        "**/target/**",
        "**/build/**",
        "**/.gradle/**",
@@ -118,6 +120,7 @@ rat {
        "bigtop-packages/src/charm/**/*.json",
        "bigtop-packages/src/charm/**/*.svg",
        "bigtop-packages/src/charm/**/*.yaml",
+       "bigtop-packages/src/charm/**/resources/**/*.txt",
        "bigtop-deploy/juju/**/*.yaml",
        "bigtop-tests/cloud-weather-report/**/*.yaml",
        /* Misc individual files */
@@ -153,7 +156,6 @@ allprojects {
   targetCompatibility = langLevel
 
   repositories {
-    maven { url "http://repository.apache.org/snapshots" }
     maven { url "http://repo.maven.apache.org/maven2" }
     mavenCentral()
   }
@@ -167,7 +169,7 @@ project(':itest-common') {
   description = """iTest: system and integration testing in the cloud"""
 
   dependencies {
-    compile group: 'org.codehaus.groovy', name: 'groovy-all', version:'2.1.8'
+    compile group: 'org.codehaus.groovy', name: 'groovy-all', version:'2.4.10'
     compile group: 'junit', name: 'junit', version:'4.11'
     compile group: 'commons-logging', name: 'commons-logging', version:'1.1'
     compile group: 'org.apache.ant', name: 'ant', version:'1.8.2'
@@ -434,9 +436,4 @@ installAllLocalArtifacts.dependsOn installTopLevel, installCommon, installConf, 
 
 help.doFirst {
   println ASCII_bigtop
-}
-
-repositories {
-  maven { url "http://repository.apache.org/snapshots" }
-  maven { url "http://repo.maven.apache.org/maven2" }
 }
