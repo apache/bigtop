@@ -28,7 +28,6 @@ class TestBindClientPort(unittest.TestCase):
     Test to verify that we can bind to listen for client connections
     on a specific interface.
     """
-
     @classmethod
     def setUpClass(cls):
         cls.d = amulet.Deployment(series='xenial')
@@ -39,6 +38,10 @@ class TestBindClientPort(unittest.TestCase):
         cls.d.sentry.wait_for_messages({'zk-test': re.compile('ready')},
                                        timeout=TIMEOUT)
         cls.unit = cls.d.sentry['zk-test'][0]
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.d.remove_service('zk-test')
 
     def test_bind_port(self):
         """

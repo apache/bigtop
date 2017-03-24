@@ -5,6 +5,7 @@ includes:
   - 'interface:zookeeper'
   - 'interface:benchmark'
   - 'interface:hbase'
+  - 'interface:hbase-quorum'
 options:
   apache-bigtop-base:
     ports:

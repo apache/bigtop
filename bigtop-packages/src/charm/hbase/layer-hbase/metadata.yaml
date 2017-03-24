@@ -13,3 +13,6 @@ provides:
     interface: hbase
   benchmark:
     interface: benchmark
+peers:
+  hbpeer:
+    interface: hbase-quorum

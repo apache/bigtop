@@ -29,14 +29,18 @@ class TestConfigChanged(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.d = amulet.Deployment(series='xenial')
-        cls.d.add('kafka', charm='kafka')
-        cls.d.add('zookeeper', charm='cs:xenial/zookeeper')
+        cls.d.add('kafka-test', charm='kafka')
+        cls.d.add('zk-test', charm='cs:xenial/zookeeper')
 
-        cls.d.relate('kafka:zookeeper', 'zookeeper:zookeeper')
+        cls.d.relate('kafka-test:zookeeper', 'zk-test:zookeeper')
 
         cls.d.setup(timeout=1800)
-        cls.d.sentry.wait_for_messages({'kafka': 'ready'}, timeout=1800)
-        cls.unit = cls.d.sentry['kafka'][0]
+        cls.d.sentry.wait_for_messages({'kafka-test': 'ready'}, timeout=1800)
+        cls.unit = cls.d.sentry['kafka-test'][0]
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.d.remove_service('zk-test', 'kafka-test')
 
     def test_bind_network_interface(self):
         """
@@ -59,7 +63,7 @@ class TestConfigChanged(unittest.TestCase):
             raise Exception(
                 "Could not find any interface on the unit that matched my "
                 "criteria.")
-        self.d.configure('kafka', {'network_interface': network_interface})
+        self.d.configure('kafka-test', {'network_interface': network_interface})
 
         # NB: we used to watch for a maintenance status message, but every now
         # and then, we'd miss it. Wait 2m to let the config-changed hook settle.
@@ -85,7 +89,7 @@ class TestConfigChanged(unittest.TestCase):
         """
         Verify that we can reset the client port bindings to 0.0.0.0
         """
-        self.d.configure('kafka', {'network_interface': '0.0.0.0'})
+        self.d.configure('kafka-test', {'network_interface': '0.0.0.0'})
 
         # NB: we used to watch for a maintenance status message, but every now
         # and then, we'd miss it. Wait 2m to let the config-changed hook settle.

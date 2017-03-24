@@ -45,9 +45,10 @@ def report_status():
 
 
 @when('bigtop.available', 'zookeeper.ready', 'hadoop.hdfs.ready')
-def installing_hbase(zk, hdfs):
+def install_hbase(zk, hdfs):
     zks = zk.zookeepers()
-    if is_state('hbase.installed') and (not data_changed('zks', zks)):
+    if (is_state('hbase.installed') and
+            (not data_changed('zks', zks))):
         return
 
     msg = "configuring hbase" if is_state('hbase.installed') else "installing hbase"

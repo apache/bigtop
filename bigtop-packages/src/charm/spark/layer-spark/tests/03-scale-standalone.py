@@ -31,10 +31,18 @@ class TestScaleStandalone(unittest.TestCase):
         cls.d.setup(timeout=3600)
         cls.d.sentry.wait(timeout=3600)
 
-    # Disable tearDown until amulet supports it
-    # @classmethod
-    # def tearDownClass(cls):
-    #     cls.d.remove_service('spark-test-scale')
+    @classmethod
+    def tearDownClass(cls):
+        try:
+            cls.d.remove_service('spark-test-scale')
+        except OSError as e:
+            # NB: it looks like remove_service complains if it cannot tear down
+            # all the units that we spun up in setupClass. Since we manually
+            # kill units as part of the tests below, allow remove-application
+            # to fail with an OSError. Pay attention here (kwmonroe) in
+            # case this needs to be reported as an amulet issue.
+            print("Amulet remove-service returned: {}".format(e.errno))
+            pass
 
     def test_scaleup(self):
         """
