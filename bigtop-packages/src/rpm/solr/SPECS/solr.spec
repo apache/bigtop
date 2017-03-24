@@ -62,6 +62,7 @@ Source8: schema.xml
 Source9: solrconfig.xml
 Source10: solrctl.sh
 Source11: tomcat-deployment.sh
+#BIGTOP_PATCH_FILES
 Requires: bigtop-utils >= 0.7, bigtop-tomcat
 
 # CentOS 5 does not have any dist macro
@@ -110,6 +111,8 @@ Documentation for Apache Solr
 
 %prep
 %setup -n solr-%{solr_base_version}
+
+#BIGTOP_PATCH_COMMANDS
 
 %build
 env FULL_VERSION=%{solr_base_version} bash %{SOURCE1}
