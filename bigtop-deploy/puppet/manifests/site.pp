@@ -69,7 +69,10 @@ if ($provision_repo) {
 case $::operatingsystem {
     /Debian/: {
       require apt
-      require apt::backports
+      class { 'apt::backports':
+        pin => 500,
+      }
+      Class['apt::backports'] -> Package <||>
 
       package { "jdk":
         name => $jdk_package_name,

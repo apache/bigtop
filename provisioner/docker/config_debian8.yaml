@@ -19,7 +19,7 @@ docker:
 
 repo: "http://bigtop-repos.s3.amazonaws.com/releases/1.1.0/debian/8/x86_64"
 distro: debian
-components: [hadoop, yarn]
+components: [hdfs, yarn, mapreduce]
 enable_local_repo: false
-smoke_test_components: [mapreduce, pig]
+smoke_test_components: [hdfs, yarn, mapreduce]
 jdk: "openjdk-8-jdk"

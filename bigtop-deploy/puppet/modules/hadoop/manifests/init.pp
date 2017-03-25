@@ -45,7 +45,7 @@ class hadoop ($hadoop_security_authentication = "simple",
       }
     }
 
-    if ($hadoop::common_hdfs::ha != "disabled" and "standby-namenode" in $roles) {
+    if ("standby-namenode" in $roles and $hadoop::common_hdfs::ha != "disabled") {
       include hadoop::namenode
     }
 
@@ -67,7 +67,7 @@ class hadoop ($hadoop_security_authentication = "simple",
       }
     }
 
-    if ($hadoop::common_hdfs::ha == "disabled" and "secondarynamenode" in $roles) {
+    if ("secondarynamenode" in $roles and $hadoop::common_hdfs::ha == "disabled") {
       include hadoop::secondarynamenode
     }
 
