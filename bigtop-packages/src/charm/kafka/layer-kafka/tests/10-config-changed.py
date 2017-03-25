@@ -29,7 +29,7 @@ class TestConfigChanged(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.d = amulet.Deployment(series='xenial')
-        cls.d.add('kafka-test', charm='kafka')
+        cls.d.add('kafka-test', charm='cs:xenial/kafka')
         cls.d.add('zk-test', charm='cs:xenial/zookeeper')
 
         cls.d.relate('kafka-test:zookeeper', 'zk-test:zookeeper')
