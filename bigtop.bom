@@ -44,6 +44,11 @@
      APACHE_MIRROR = "http://apache.osuosl.org"
      APACHE_ARCHIVE = "https://archive.apache.org/dist"
    }
+   git { // *optional* This is a global setting to access protected git repositories, 
+         //            can be specified per component as well
+     user = "john_doe"
+     token = "john's access token"
+   }
    components { *required; preserve the name* if empty, nothing will be built
      'label' { // label *SHOULD* be the same as the name; otherwise some tasks will fail
        name    = 'component1' // *required* the name of the component

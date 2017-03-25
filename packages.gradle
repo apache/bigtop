@@ -179,13 +179,8 @@ def genTasks = { target ->
     def final GIT_REPO = config.bigtop.components[target].git.repo
     def final GIT_REF = config.bigtop.components[target].git.ref
     def final GIT_DIR = config.bigtop.components[target].git.dir
-
-    def GIT_USER_NAME = BOM_map[variable + '_GIT_USER_NAME']
-    if (!GIT_USER_NAME)
-      GIT_USER_NAME = BOM_map['GIT_USER_NAME']
-    def GIT_ACCESS_TOKEN = BOM_map[variable + '_GIT_ACCESS_TOKEN']
-    if (!GIT_ACCESS_TOKEN)
-      GIT_ACCESS_TOKEN = BOM_map['GIT_ACCESS_TOKEN']
+    def final GIT_USER_NAME = config.bigtop.components[target].git.user ?: config.bigtop.git.user
+    def final GIT_ACCESS_TOKEN = config.bigtop.components[target].git.token ?: config.bigtop.git.token
 
     def devNull = new org.apache.bigtop.NullOutputStream()
 
