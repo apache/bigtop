@@ -35,13 +35,21 @@ class TestBindClientPort(unittest.TestCase):
         cls.d.add('zk-test', charm='cs:xenial/zookeeper')
 
         cls.d.setup(timeout=TIMEOUT)
-        cls.d.sentry.wait_for_messages({'zk-test': re.compile('ready')},
+        cls.d.sentry.wait_for_messages({'zk-test': re.compile('^ready')},
                                        timeout=TIMEOUT)
         cls.unit = cls.d.sentry['zk-test'][0]
 
     @classmethod
     def tearDownClass(cls):
-        cls.d.remove_service('zk-test')
+        # NB: seems to be a remove_service issue with amulet. However, the
+        # unit does still get removed. Pass OSError for now:
+        #  OSError: juju command failed ['remove-application', 'zk-test']:
+        #  ERROR allocation for service ...zk-test... owned by ... not found
+        try:
+            cls.d.remove_service('zk-test')
+        except OSError as e:
+            print("IGNORE: Amulet remove_service failed: {}".format(e))
+            pass
 
     def test_bind_port(self):
         """
@@ -76,13 +84,15 @@ class TestBindClientPort(unittest.TestCase):
             "^clientPortAddress=\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}.*")
         self.assertTrue(matcher.match(ret))
 
-        # Verify that smoke tests still run
+        # Verify that smoke tests still run and the unit returns to 'ready'
         smk_uuid = self.unit.run_action('smoke-test')
         # 'zookeeper' smoke takes a while (bigtop tests are slow)
         result = self.d.action_fetch(smk_uuid, timeout=1800, full_output=True)
         # actions set status=completed on success
         if (result['status'] != "completed"):
             self.fail('Zookeeper smoke-test failed: %s' % result)
+        self.d.sentry.wait_for_messages({'zk-test': re.compile('^ready')},
+                                        timeout=TIMEOUT)
 
     def test_reset_bindings(self):
         """
@@ -99,13 +109,15 @@ class TestBindClientPort(unittest.TestCase):
         matcher = re.compile("^clientPortAddress=0\.0\.0\.0.*")
         self.assertTrue(matcher.match(ret))
 
-        # Verify that smoke tests still run
+        # Verify that smoke tests still run and the unit returns to 'ready'
         smk_uuid = self.unit.run_action('smoke-test')
         # 'zookeeper' smoke takes a while (bigtop tests are slow)
         result = self.d.action_fetch(smk_uuid, timeout=1800, full_output=True)
         # actions set status=completed on success
         if (result['status'] != "completed"):
             self.fail('Zookeeper smoke-test failed: %s' % result)
+        self.d.sentry.wait_for_messages({'zk-test': re.compile('^ready')},
+                                        timeout=TIMEOUT)
 
 
 if __name__ == '__main__':

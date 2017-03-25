@@ -40,7 +40,15 @@ class TestConfigChanged(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        cls.d.remove_service('zk-test', 'kafka-test')
+        # NB: seems to be a remove_service issue with amulet. However, the
+        # unit does still get removed. Pass OSError for now:
+        #  OSError: juju command failed ['remove-application', 'zk-test']:
+        #  ERROR allocation for service ...zk-test... owned by ... not found
+        try:
+            cls.d.remove_service('zk-test', 'kafka-test')
+        except OSError as e:
+            print("IGNORE: Amulet remove_service failed: {}".format(e))
+            pass
 
     def test_bind_network_interface(self):
         """

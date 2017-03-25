@@ -33,15 +33,14 @@ class TestScaleStandalone(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
+        # NB: seems to be a remove_service issue with amulet. However, the
+        # unit does still get removed. Pass OSError for now:
+        #  OSError: juju command failed ['remove-application', 'zk-test']:
+        #  ERROR allocation for service ...zk-test... owned by ... not found
         try:
             cls.d.remove_service('spark-test-scale')
         except OSError as e:
-            # NB: it looks like remove_service complains if it cannot tear down
-            # all the units that we spun up in setupClass. Since we manually
-            # kill units as part of the tests below, allow remove-application
-            # to fail with an OSError. Pay attention here (kwmonroe) in
-            # case this needs to be reported as an amulet issue.
-            print("Amulet remove-service returned: {}".format(e.errno))
+            print("IGNORE: Amulet remove_service failed: {}".format(e))
             pass
 
     def test_scaleup(self):
