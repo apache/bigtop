@@ -54,7 +54,7 @@ services:
       - "2"
       - "3"
   zookeeper:
-    charm: "cs:xenial/zookeeper-15"
+    charm: "cs:xenial/zookeeper-16"
     constraints: "mem=3G root-disk=32G"
     num_units: 3
     annotations:

@@ -2,25 +2,25 @@ bundle:
   name: hadoop-processing
   namespace: bigdata-charmers
   release: true
-  to-channel: beta
+  to-channel: edge
 charm-upgrade:
   hadoop-namenode:
     from-channel: edge
-    release: true
+    release: false
     to-channel: beta
   hadoop-resourcemanager:
     from-channel: edge
-    release: true
+    release: false
     to-channel: beta
   hadoop-slave:
     from-channel: edge
-    release: true
+    release: false
     to-channel: beta
   hadoop-client:
     from-channel: edge
-    release: true
+    release: false
     to-channel: beta
   hadoop-plugin:
     from-channel: edge
-    release: true
+    release: false
     to-channel: beta
