@@ -1,5 +1,5 @@
 reset: false
-deployment_timeout: 3600
+bundle_deploy: false
 sources:
   - 'ppa:juju/stable'
 packages:

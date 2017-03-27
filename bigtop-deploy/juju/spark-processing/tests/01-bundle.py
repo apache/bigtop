@@ -17,6 +17,7 @@
 
 import amulet
 import os
+import re
 import unittest
 import yaml
 
@@ -46,7 +47,10 @@ class TestBundle(unittest.TestCase):
         cls.d.load(bundle)
         cls.d.setup(timeout=3600)
 
-        cls.d.sentry.wait_for_messages({'spark': 'ready (standalone - HA)'}, timeout=3600)
+        # we need units reporting ready before we attempt our smoke tests
+        cls.d.sentry.wait_for_messages({'spark': 'ready (standalone - HA)',
+                                        'zookeeper': re.compile('ready'),
+                                        }, timeout=3600)
         cls.spark = cls.d.sentry['spark'][0]
         cls.zookeeper = cls.d.sentry['zookeeper'][0]
 
