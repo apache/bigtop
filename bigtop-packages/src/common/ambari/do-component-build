@@ -19,3 +19,5 @@ set -ex
 
 export _JAVA_OPTIONS="-Xmx2048m -XX:MaxPermSize=512m -Djava.awt.headless=true"
 mvn clean package -DskipTests -Drat.skip
+
+(cd contrib/management-packs/odpi-ambari-mpack ; mvn clean package -DskipTests -Drat.skip)
