@@ -73,7 +73,7 @@ services:
     to:
       - "4"
   ganglia-node:
-    charm: "cs:~bigdata-dev/xenial/ganglia-node-6"
+    charm: "cs:~bigdata-dev/xenial/ganglia-node-7"
     annotations:
       gui-x: "250"
       gui-y: "400"
