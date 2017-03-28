@@ -128,19 +128,16 @@
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-assembly-plugin</artifactId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.0.0</version>
         <configuration>
-          <appendAssemblyId>false</appendAssemblyId>
-          <descriptorRefs>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
-          </descriptorRefs>
+          <!-- put your configurations here -->
         </configuration>
         <executions>
           <execution>
-            <id>make-assembly</id>
             <phase>package</phase>
             <goals>
-              <goal>assembly</goal>
+              <goal>shade</goal>
             </goals>
           </execution>
         </executions>

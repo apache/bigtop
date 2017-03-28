@@ -16,45 +16,47 @@
  *  limitations under the License.
  *
  */
-
 apply plugin: 'groovy'
 
 def final mvnProfile="release"
-task dosite (type: Exec) << {
+task dosite (type: Exec) {
   workingDir "."
-  commandLine 'mvn clean site'.split(" ")
+  commandLine "mvn clean site".split(" ")
 }
 
-task doassembly (type: Exec) << {
+task doassembly (type: Exec) {
   workingDir "."
-  commandLine 'mvn -P$mvnProfile package assembly:assembly'.split(" ")
+  commandLine "mvn -P$mvnProfile package assembly:assembly".split(" ")
 }
 
-task deployTop (type: Exec) << {
+task deployTop (type: Exec, dependsOn: ["bigtop-tests:assembleDist"]) {
   workingDir "."
-  commandLine 'mvn -P$mvnProfile deploy -f pom.xml'.split(" ")
+  commandLine "mvn -P$mvnProfile -Pattach-smokes deploy -f pom.xml".split(" ")
+  standardInput System.in
 }
-task deployITest (type: Exec) << {
+task deployITest (type: Exec) {
   workingDir "."
-  commandLine 'mvn -P$mvnProfile deploy -f bigtop-test-framework/pom.xml'.split(" ")
+  commandLine "mvn -P$mvnProfile -DskipTests deploy -f bigtop-test-framework/pom.xml".split(" ")
+  standardInput System.in
 }
-task deployTestArtifacts (type: Exec) << {
+task deployTestArtifacts (type: Exec) {
   workingDir "."
-  commandLine 'mvn -P$mvnProfile deploy -f bigtop-tests/test-artifacts/pom.xml'.split(" ")
+  commandLine "mvn -P$mvnProfile deploy -f bigtop-tests/test-artifacts/pom.xml".split(" ")
+  standardInput System.in
 }
-task deployTestExecutors (type: Exec) << {
+task deployTestExecutors (type: Exec) {
   workingDir "."
-  commandLine 'mvn -P$mvnProfile deploy -f bigtop-tests/test-execution/pom.xml'.split(" ")
+  commandLine "mvn -P$mvnProfile deploy -f bigtop-tests/test-execution/pom.xml".split(" ")
+  environment HADOOP_CONF_DIR: "", HADOOP_HOME: ""
+  standardInput System.in
 }
-task deployAll (type: Exec,
-    dependsOn: [deployTestExecutors, deployTestArtifacts,
-                deployITest, deployTop]) << {
-  workingDir "."
-  commandLine 'mvn deploy -Prelease'.split(" ")
+task deployAll (dependsOn: [deployTestExecutors, deployTestArtifacts,
+                            deployITest, deployTop]) << {
+  println "Done!"
 }
 
 task dorelease(description: 'Convenient wrapper for existing release tasks',
-  dependsOn: [doassembly, dosite, deployAll]) << {
+  dependsOn: [dosite, deployAll]) << {
 }
 
 task setversion << {
