@@ -1,5 +1,12 @@
+pagerank:
+    description: Calculate PageRank for a sample data set
+    params:
+        iterations:
+            description: Number of iterations for the SparkPageRank job
+            type: string
+            default: "1"
 smoke-test:
-    description: Verify that Spark is working by calculating pi.
+    description: Verify that Spark is working by calculating pi
 sparkpi:
     description: Calculate Pi
     params:
@@ -19,8 +26,6 @@ logisticregression:
     description: Run the Spark Bench LogisticRegression benchmark.
 matrixfactorization:
     description: Run the Spark Bench MatrixFactorization benchmark.
-pagerank:
-    description: Run the Spark Bench PageRank benchmark.
 pca:
     description: Run the Spark Bench PCA benchmark.
 pregeloperation:

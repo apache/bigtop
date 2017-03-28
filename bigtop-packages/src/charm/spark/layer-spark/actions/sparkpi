@@ -14,8 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import sys
-sys.path.append('lib')
 
 from path import Path
 from time import time
@@ -55,12 +55,23 @@ def main():
 
     print('calculating pi')
 
+    # get the examples jar
+    spark_home = "/usr/lib/spark"
+    example_jar_name = "spark-examples.jar"
+    example_jar_path = None
+    for root, dirs, files in os.walk(spark_home):
+        if example_jar_name in files:
+            example_jar_path = os.path.join(root, example_jar_name)
+
+    if not example_jar_path:
+        fail('could not find {}'.format(example_jar_name), 'error')
+
     with open(result_log, 'w') as log_file:
         arg_list = [
             'spark-submit',
             '--class',
             'org.apache.spark.examples.SparkPi',
-            '/usr/lib/spark/lib/spark-examples.jar'
+            example_jar_path
         ]
         if num_partitions:
             # This is always blank. TODO: figure out what it was

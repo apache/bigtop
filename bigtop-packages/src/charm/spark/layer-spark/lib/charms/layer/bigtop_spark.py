@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import os
+import time
 from jujubigdata import utils
 from path import Path
 
@@ -174,7 +175,7 @@ class Spark(object):
 
         Two flags are needed:
 
-          * Namenode exists aka HDFS is there
+          * Namenode exists aka HDFS is ready
           * Resource manager exists aka YARN is ready
 
         both flags are infered from the available hosts.
@@ -189,7 +190,9 @@ class Spark(object):
             self.setup()
             unitdata.kv().set('spark.bootstrapped', True)
 
+        mode = hookenv.config()['spark_execution_mode']
         master_ip = utils.resolve_private_address(available_hosts['spark-master'])
+        master_url = self.get_master_url(master_ip)
         hosts = {
             'spark': master_ip,
         }
@@ -206,7 +209,7 @@ class Spark(object):
         roles = self.get_roles()
 
         override = {
-            'spark::common::master_url': self.get_master_url(master_ip),
+            'spark::common::master_url': master_url,
             'spark::common::event_log_dir': events_log_dir,
             'spark::common::history_log_dir': events_log_dir,
         }
@@ -220,18 +223,13 @@ class Spark(object):
             zk_connect = ",".join(zks)
             override['spark::common::zookeeper_connection_string'] = zk_connect
         else:
-            override['spark::common::zookeeper_connection_string'] = ""
+            override['spark::common::zookeeper_connection_string'] = None
 
         bigtop = Bigtop()
         bigtop.render_site_yaml(hosts, roles, override)
         bigtop.trigger_puppet()
-        # There is a race condition here.
-        # The work role will not start the first time we trigger puppet apply.
-        # The exception in /var/logs/spark:
-        # Exception in thread "main" org.apache.spark.SparkException: Invalid master URL: spark://:7077
-        # The master url is not set at the time the worker start the first time.
-        # TODO(kjackal): ...do the needed... (investiate,debug,submit patch)
-        bigtop.trigger_puppet()
+
+        # Do this after our puppet bits in case puppet overrides needed perms
         if 'namenode' not in available_hosts:
             # Local event dir (not in HDFS) needs to be 777 so non-spark
             # users can write job history there. It needs to be g+s so
@@ -239,22 +237,54 @@ class Spark(object):
             # It needs to be +t so users cannot remove files they don't own.
             dc.path('spark_events').chmod(0o3777)
 
-        self.patch_worker_master_url(master_ip)
+        self.patch_worker_master_url(master_ip, master_url)
 
+        # handle tuning options that may be set as percentages
+        driver_mem = '1g'
+        req_driver_mem = hookenv.config()['driver_memory']
+        executor_mem = '1g'
+        req_executor_mem = hookenv.config()['executor_memory']
+        if req_driver_mem.endswith('%'):
+            if mode == 'standalone' or mode.startswith('local'):
+                mem_mb = host.get_total_ram() / 1024 / 1024
+                req_percentage = float(req_driver_mem.strip('%')) / 100
+                driver_mem = str(int(mem_mb * req_percentage)) + 'm'
+            else:
+                hookenv.log("driver_memory percentage in non-local mode. Using 1g default.",
+                            level=None)
+        else:
+            driver_mem = req_driver_mem
+
+        if req_executor_mem.endswith('%'):
+            if mode == 'standalone' or mode.startswith('local'):
+                mem_mb = host.get_total_ram() / 1024 / 1024
+                req_percentage = float(req_executor_mem.strip('%')) / 100
+                executor_mem = str(int(mem_mb * req_percentage)) + 'm'
+            else:
+                hookenv.log("executor_memory percentage in non-local mode. Using 1g default.",
+                            level=None)
+        else:
+            executor_mem = req_executor_mem
+
+        spark_env = '/etc/spark/conf/spark-env.sh'
+        utils.re_edit_in_place(spark_env, {
+            r'.*SPARK_DRIVER_MEMORY.*': 'export SPARK_DRIVER_MEMORY={}'.format(driver_mem),
+            r'.*SPARK_EXECUTOR_MEMORY.*': 'export SPARK_EXECUTOR_MEMORY={}'.format(executor_mem),
+        }, append_non_matches=True)
+
+        # Install SB (subsequent calls will reconfigure existing install)
         # SparkBench looks for the spark master in /etc/environment
         with utils.environment_edit_in_place('/etc/environment') as env:
-            env['MASTER'] = self.get_master_url(master_ip)
-        # Install SB (subsequent calls will reconfigure existing install)
+            env['MASTER'] = master_url
         self.install_benchmark()
 
-    def patch_worker_master_url(self, master_ip):
+    def patch_worker_master_url(self, master_ip, master_url):
         '''
         Patch the worker startup script to use the full master url istead of contracting it.
         The master url is placed in the spark-env.sh so that the startup script will use it.
         In HA mode the master_ip is set to be the local_ip instead of the one the leader
         elects. This requires a restart of the master service.
         '''
-        master_url = self.get_master_url(master_ip)
         zk_units = unitdata.kv().get('zookeeper.units', [])
         if master_url.startswith('spark://'):
             if zk_units:
@@ -268,8 +298,6 @@ class Spark(object):
             self.inplace_change('/etc/init.d/spark-worker',
                                 'spark://$SPARK_MASTER_IP:$SPARK_MASTER_PORT',
                                 '$SPARK_MASTER_URL')
-            host.service_restart('spark-master')
-            host.service_restart('spark-worker')
 
     def inplace_change(self, filename, old_string, new_string):
         # Safely read the input filename using 'with'
@@ -294,27 +322,24 @@ class Spark(object):
         Path(demo_target).chown('ubuntu', 'hadoop')
 
     def start(self):
-        if unitdata.kv().get('spark.uprading', False):
-            return
-
-        # stop services (if they're running) to pick up any config change
-        self.stop()
         # always start the history server, start master/worker if we're standalone
         host.service_start('spark-history-server')
         if hookenv.config()['spark_execution_mode'] == 'standalone':
-            host.service_start('spark-master')
+            if host.service_start('spark-master'):
+                # If the master started, wait 2m for recovery before starting
+                # the worker.
+                hookenv.status_set('maintenance',
+                                   'waiting for spark master recovery')
+                hookenv.log("Waiting 2m to ensure spark master is ALIVE")
+                time.sleep(120)
+            else:
+                hookenv.log("Master did not start")
             host.service_start('spark-worker')
 
     def stop(self):
-        if not unitdata.kv().get('spark.installed', False):
-            return
-        # Only stop services if they're running
-        if utils.jps("HistoryServer"):
-            host.service_stop('spark-history-server')
-        if utils.jps("Master"):
-            host.service_stop('spark-master')
-        if utils.jps("Worker"):
-            host.service_stop('spark-worker')
+        host.service_stop('spark-history-server')
+        host.service_stop('spark-master')
+        host.service_stop('spark-worker')
 
     def open_ports(self):
         for port in self.dist_config.exposed_ports('spark'):
