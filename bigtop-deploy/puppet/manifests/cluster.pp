@@ -143,7 +143,7 @@ $roles_map = {
     worker => ["gpdb-segment"],
   },
   kafka => {
-    master => ["kafka-server"],
+    worker => ["kafka-server"],
   },
   ambari => {
     master => ["ambari-server"],
