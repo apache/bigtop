@@ -64,7 +64,7 @@ o88o     o8888o 888bod8P'`Y888""8o`Y8bod8P'o888o o888o`Y8bod8P'  o888bood8P' o88
                o888o                                                              "Y88888P'                 o888o     
 '''
 
-def final langLevel = "1.7"
+def final langLevel = "1.8"
 
 rat {
   excludes = [

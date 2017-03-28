@@ -20,20 +20,6 @@
 BIGTOP_DEFAULTS_DIR=${BIGTOP_DEFAULTS_DIR-/etc/default}
 [ -n "${BIGTOP_DEFAULTS_DIR}" -a -r ${BIGTOP_DEFAULTS_DIR}/bigtop-utils ] && . ${BIGTOP_DEFAULTS_DIR}/bigtop-utils
 
-JAVA7_HOME_CANDIDATES=(
-    '/usr/java/jdk1.7'
-    '/usr/java/jre1.7'
-    '/usr/lib/jvm/j2sdk1.7-oracle'
-    '/usr/lib/jvm/j2sdk1.7-oracle/jre'
-    '/usr/lib/jvm/java-7-oracle'
-    '/usr/lib/jdk7-latest'
-)
-
-OPENJAVA7_HOME_CANDIDATES=(
-    '/usr/lib/jvm/java-1.7.0-openjdk'
-    '/usr/lib/jvm/java-7-openjdk'
-)
-
 JAVA8_HOME_CANDIDATES=(
     '/usr/java/jdk1.8'
     '/usr/java/jre1.8'
@@ -61,18 +47,14 @@ MISCJAVA_HOME_CANDIDATES=(
 )
 
 case ${BIGTOP_JAVA_MAJOR} in
-  6) echo "Java 6 is no longer supported. Please upgrade"
+  6|7) echo "Java ${BIGTOP_JAVA_MAJOR} is no longer supported. Please upgrade"
      exit 1
-     ;;
-  7) JAVA_HOME_CANDIDATES=(${JAVA7_HOME_CANDIDATES[@]} ${OPENJAVA7_HOME_CANDIDATES[@]})
      ;;
   8) JAVA_HOME_CANDIDATES=(${JAVA8_HOME_CANDIDATES[@]} ${OPENJAVA8_HOME_CANDIDATES[@]})
      ;;
   *) JAVA_HOME_CANDIDATES=(${JAVA8_HOME_CANDIDATES[@]}
-                           ${JAVA7_HOME_CANDIDATES[@]}
                            ${MISCJAVA_HOME_CANDIDATES[@]}
-                           ${OPENJAVA8_HOME_CANDIDATES[@]}
-                           ${OPENJAVA7_HOME_CANDIDATES[@]})
+                           ${OPENJAVA8_HOME_CANDIDATES[@]})
      ;;
 esac
 
