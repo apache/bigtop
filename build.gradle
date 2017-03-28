@@ -257,9 +257,9 @@ task "toolchain-devtools"(type:Exec,
 }
 
 task "docker-provisioner"(type:Exec,
-    description: 'Provision a Bigtop cluster on Docker container(s). Default to CentOS and 1 node.\nCreate a 3 node cluster:\n  $ ./gradlew -Pnum_instances=3 docker-provisioner\nRun smoke tests on 3 node cluster:\n  $ ./gradlew -Pnum_instances=3 -Prun_smoke_tests=true docker-provisioner\nSpecify configuration file (located in bigtop-deploy/vm/vagrant-puppet-docker/):\n  $ ./gradlew -Pconfig=vagrantconfig_debian.yaml docker-provisioner',
+    description: 'Provision a Bigtop cluster on Docker container(s). Default to CentOS and 1 node.\nCreate a 3 node cluster:\n  $ ./gradlew -Pnum_instances=3 docker-provisioner\nRun smoke tests on 3 node cluster:\n  $ ./gradlew -Pnum_instances=3 -Prun_smoke_tests=true docker-provisioner\nSpecify configuration file (located in provisioner/docker/):\n  $ ./gradlew -Pconfig=config_debian8.yaml docker-provisioner',
     group: DEPLOY_GROUP) {
-  def _config = project.hasProperty("config") ? config : "vagrantconfig.yaml"
+  def _config = project.hasProperty("config") ? config : "config.yaml"
   def _num_instances = project.hasProperty("num_instances") ? num_instances : 1
   def command = [
       './docker-hadoop.sh',
@@ -269,14 +269,14 @@ task "docker-provisioner"(type:Exec,
   if ( project.hasProperty("run_smoke_tests") && run_smoke_tests ) {
     command.add("--smoke-tests")
   }
-  workingDir 'bigtop-deploy/vm/vagrant-puppet-docker'
+  workingDir 'provisioner/docker'
   commandLine command
 }
 task "docker-provisioner-ssh"(type:Exec,
-    description: 'Show ssh command to get in to the provisioned container',
+    description: 'Show command to get in to the provisioned container',
     group: DEPLOY_GROUP) {
-  workingDir 'bigtop-deploy/vm/vagrant-puppet-docker'
-  def message = "To ssh in to the container, do: \n(cd " + workingDir + " && vagrant ssh <CONTAIER_NAME>)"
+  workingDir 'provisioner/docker'
+  def message = "To get in to the container, do: \n\ndocker exec -ti <CONTAIER_NAME> bash \n\nYou can get container name by ./gradlew docker-provisioner-status"
   def command = [
       '/bin/echo',
       message
@@ -287,10 +287,10 @@ task "docker-provisioner-status"(type:Exec,
     description: 'Show status of Bigtop Docker cluster',
     group: DEPLOY_GROUP) {
   def command = [
-      'vagrant',
-      'status',
+      './docker-hadoop.sh',
+      '--list',
   ]
-  workingDir 'bigtop-deploy/vm/vagrant-puppet-docker'
+  workingDir 'provisioner/docker'
   commandLine command
 }
 task "docker-provisioner-destroy"(type:Exec,
@@ -300,7 +300,7 @@ task "docker-provisioner-destroy"(type:Exec,
       './docker-hadoop.sh',
       '--destroy'
   ]
-  workingDir 'bigtop-deploy/vm/vagrant-puppet-docker'
+  workingDir 'provisioner/docker'
   commandLine command
 }
 
