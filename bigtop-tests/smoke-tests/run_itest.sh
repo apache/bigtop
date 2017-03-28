@@ -33,6 +33,80 @@
 #   --debug         - turns up the log4j output to maximum
 #   --traceback     - shows tracebacks from tests
 
+usage ()
+{
+  echo "Usage : $0 [-options]"
+  echo
+  echo "   -j, --hivejdbc             hive jdbc url - default: e.g. jdbc:hive2://localhost:10000"
+  echo "   -m, --hivemeta             hive metastore url - default: thrift://localhost:9083"
+  echo "   -l, --hivelocation         location of hdfs for hive to write to - default: /user/<current user>"
+  echo "   -u, --hiveuser             hive user - default: current user"
+  echo "   -p, --hivepassword         hive user password - default: current user"
+  echo "   -t, --hivethrift           optional: true/false to test thrift, defaults to true"
+  echo "   -c, --hivecatalog          optional: true/false to test HCatalog, default to true"
+  echo "   -C, --hiveconf             hive conf dir - default: /etc/hive/conf"
+  echo "   -F, --hadoopconf           hadoop user - default: /etc/hadoop/conf"
+  echo "   -i, --info                 optional: info/debug"
+  echo "   -h, --help                 display this help and exit"
+  echo
+  exit
+}
+
+while [ "$1" != "" ]; do
+case $1 in
+        -j | --hivejdbc )       shift
+                                HIVE_JDBC_URL=$1
+                                ;;
+        -m | --hivemeta )       shift
+                                HIVE_METASTORE_URL=$1
+                                ;;
+        -l | --hivelocation )   shift
+                                HIVE_HDFS_LOCATION=$1
+                                ;;
+        -u | --hiveuser )       shift
+                                HIVE_USER=$1
+                                ;;
+        -p | --hivepassword )   shift
+                                HIVE_PASSWORD=$1
+                                ;;
+        -t | --hivethrift )     shift
+                                TEST_THRIFT=$1
+                                ;;
+        -c | --hivecatalog )     shift
+                                TEST_HCATALOG=$1
+                                ;;
+        -C | --hiveconf )       shift
+                                HIVE_CONF_DIR=$1
+                                ;;
+        -F | --hadoopconf )     shift
+                                HADOOP_CONF_DIR=$1
+                                ;;
+        -i | --info )           shift
+                                LOGGING=$1
+                                ;;
+        -h | --help )
+                                usage  # Call your function
+                                exit 0
+                                ;;
+    esac
+    shift
+done
+
+if [ ! $(which links) ]; then
+    echo "PLEASE INSTALL LINKS: sudo yum|apt-get install -y links"
+    exit 1
+fi
+
+if [ "$LOGGING" == "info" ]; then
+    LOGGING="--info --stacktrace"
+elif [ "$LOGGING" == "debug" ]; then
+    LOGGING="--debug --stacktrace"
+else
+    LOGGING=""
+fi
+
+export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 set_java_home() {
 
     #####################################################################
@@ -40,10 +114,8 @@ set_java_home() {
     #####################################################################
 
     if [ -z "$JAVA_HOME" ]; then
-        source bin/bigtop-detect-javahome
+        source $DIR/bin/bigtop-detect-javahome
     fi
-
-    echo "# DEBUG: JAVA_HOME=$JAVA_HOME"
 }
 
 set_hadoop_vars() {
@@ -63,12 +135,94 @@ set_hadoop_vars() {
     fi
     if ( [ -z "$HADOOP_MAPRED_HOME" ] && [ -d /usr/lib/hadoop-mapreduce-client ] ); then
       export HADOOP_MAPRED_HOME=/usr/lib/hadoop-mapreduce-client
+    elif ( [ -z "$HADOOP_MAPRED_HOME" ] && [ -d /usr/lib/hadoop-mapreduce ] ); then
+      export HADOOP_MAPRED_HOME=/usr/lib/hadoop-mapreduce
     fi
-
-    echo "# DEBUG: HADOOP_CONF_DIR=$HADOOP_CONF_DIR"
-    echo "# DEBUG: HADOOP_MAPRED_HOME=$HADOOP_MAPRED_HOME"
+    if ( [ -z "$HIVE_HOME" ] && [ -d /usr/lib/hive ] ); then
+      export HIVE_HOME=/usr/lib/hive
+    fi
 }
 
+set_hive_vars() {
+    if [ -z "$HIVE_JDBC_URL" ]; then
+        HIVE_PORT=`sed -n '/hive.server2.thrift.port/{n;p}' /etc/hive/conf/hive-site.xml | sed -n 's:.*<value>\(.*\)</value>.*:\1:p'`
+        netstat -nltp | grep $HIVE_PORT > /dev/null 2>&1
+        if [ $? -eq 0 ]; then
+            HIVE_JDBC_URL=jdbc:hive2://localhost:$HIVE_PORT
+        else
+            echo -e "\n**** Could not find hive server 2 service, please specify --hivejdbc argument. ****\n"
+            usage
+        fi
+    fi
+    if [ -z "$HIVE_METASTORE_URL" ]; then
+        HIVE_METASTORE_URL=`sed -n '/hive.metastore.uris/{n;p}' /etc/hive/conf/hive-site.xml | sed -n 's:.*<value>\(.*\)</value>.*:\1:p'`
+    fi
+    if [ -z "$HIVE_HDFS_LOCATION" ]; then
+        HIVE_HDFS_LOCATION=/tmp/`id -u -n`
+    fi
+    if [ -z "$HIVE_USER" ]; then
+        HIVE_USER=`id -u -n`
+    fi
+    if [ -z "$HIVE_PASSWORD" ]; then
+        HIVE_PASSWORD=`id -u -n`
+    fi
+    if [ -z "$HIVE_CONF_DIR" ]; then
+        export HIVE_CONF_DIR=/etc/hive/conf
+    fi
+    if [ -z "$HADOOP_CONF_DIR" ]; then
+        export HADOOP_CONF_DIR=/etc/hadoop/conf
+    fi
+    if [ -z "$TEST_THRIFT" ]; then
+        TEST_THRIFT=true
+    fi
+    if [ -z "$TEST_HCATALOG" ]; then
+        TEST_HCATALOG=true
+    fi
+
+    TEST_SETTINGS="$TEST_SETTINGS -Dbigtop.test.hive.jdbc.url=$HIVE_JDBC_URL -Dbigtop.test.hive.metastore.url=$HIVE_METASTORE_URL -Dbigtop.test.hive.location=$HIVE_HDFS_LOCATION -Dbigtop.test.hive.jdbc.user=$HIVE_USER -Dbigtop.test.hive.jdbc.password=$HIVE_PASSWORD -Dbigtop.test.hive.conf.dir=$HIVE_CONF_DIR -Dbigtop.test.hadoop.conf.dir=$HADOOP_CONF_DIR -Dbigtop.test.hive.thrift.test=$TEST_THRIFT -Dbigtop.test.hive.hcatalog.test=$TEST_HCATALOG"
+}
+
+
+print_cluster_info() {
+
+  echo "######################################################"
+  echo "#               CLUSTER INFORMATION                  #"
+  echo "######################################################"
+
+  which facter >/dev/null 2>&1
+  RC=$?
+  if [[ $RC == 0 ]]; then
+    echo "# OS: $(facter lsbdistdescription)"
+    echo "# ARCH: $(facter architecture)"
+    echo "# KERNEL: $(facter kernelrelease)"
+    echo "# MEMORY: $(facter memorysize)"
+  else
+    echo "# OS: $(cat /etc/issue | tr '\n' ' ')"
+    echo "# ARCH: $(uname -i)"
+    echo "# KERNEL: $(uname -a)"
+    echo "# MEMORY: $(head -n1 /proc/meminfo)"
+  fi
+
+  YARN_NODES=$(yarn node -list 2>/dev/null | egrep ^Total | sed 's/Total Nodes:/TOTAL YARN NODES: /g')
+  echo "# $YARN_NODES"
+
+  HADOOP_VERSION=$(hadoop version 2>/dev/null | head -n1)
+  echo "# HADOOP_VERSION: $HADOOP_VERSION"
+  echo "# HADOOP_CONF_DIR: $HADOOP_CONF_DIR"
+  echo "# HADOOP_MAPRED_HOME: $HADOOP_MAPRED_HOME"
+
+  echo "# BASH_VERSION: $BASH_VERSION"
+  echo "# SH_VERSION: $(/bin/sh -c 'echo $BASH_VERSION')"
+
+  echo "# JAVA_HOME: $JAVA_HOME"
+  JAVA_VERSION=$(java -version 2>&1 | head -n 1 | awk -F '"' '{print $2}')
+  echo "# JAVA_VERSION: $JAVA_VERSION"
+  
+  if [ ! -f $JAVA_HOME/lib/tools.jar ]; then
+    echo -e "\n**** Could not find Java tools.jar, please set JAVA_HOME to a JDK and make sure the java devel package is installed! ****\n"
+    exit 1
+  fi
+}
 
 print_tests() {
   echo "######################################################"
@@ -76,18 +230,14 @@ print_tests() {
   echo "######################################################"
 
   for TEST in $(echo $ITESTS | tr ',' '\n'); do
-    TESTDIR=bigtop-tests/smoke-tests/$TEST/build
+    TESTDIR=$DIR/bigtop-tests/smoke-tests/$TEST/build
 
     if [ -d $TESTDIR ]; then
       cd $TESTDIR
 
       for FILE in $(find -L reports/tests/classes -type f -name "*.html"); do
         echo "## $TESTDIR/$FILE"
-        if [ $(which links) ]; then
-            links $FILE -dump
-        else
-            echo "PLEASE INSTALL LINKS: sudo yum -y install links"
-        fi
+        links $FILE -dump
         echo ""
       done
     fi
@@ -100,21 +250,28 @@ set_java_home
 # SET HADOOP SERVICE HOMES
 set_hadoop_vars
 
+# Diagnostic output
+print_cluster_info
+
 echo "######################################################"
 echo "#                 STARTING ITEST                     #"
 echo "######################################################"
-echo "# Use --debug/--info/--stacktrace for more details"
+echo "# Use --debug/--info for more details"
 
 # SET THE DEFAULT TESTS
 if [ -z "$ITESTS" ]; then
-  export ITESTS="hcfs,hdfs,yarn,mapreduce"
+  export ITESTS="hive,hcfs,hdfs,yarn,mapreduce,odpi-runtime"
 fi
 for s in `echo $ITESTS | sed -e 's#,# #g'`; do
   ALL_SMOKE_TASKS="$ALL_SMOKE_TASKS bigtop-tests:smoke-tests:$s:test"
 done
 
+if echo "$ITESTS" | egrep -q 'hive|odpi-runtime' ; then
+  set_hive_vars
+fi 
+
 # CALL THE GRADLE WRAPPER TO RUN THE FRAMEWORK
-./gradlew -q clean test -Psmoke.tests $ALL_SMOKE_TASKS $@
+$DIR/gradlew -q --continue clean -Psmoke.tests $TEST_SETTINGS $ALL_SMOKE_TASKS $LOGGING
 
 # SHOW RESULTS (HTML)
 print_tests
