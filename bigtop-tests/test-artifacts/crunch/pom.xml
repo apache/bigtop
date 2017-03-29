@@ -31,17 +31,6 @@
   <name>crunchsmoke</name>
 
   <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.rat</groupId>
-        <artifactId>apache-rat-plugin</artifactId>
-        <configuration>
-          <excludes>
-            <exclude>**/resources/crunch-examples/**</exclude>
-          </excludes>
-        </configuration>
-      </plugin>
-    </plugins>
   </build>
 
 </project>

@@ -53,20 +53,6 @@
   </dependencies>
 
   <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.rat</groupId>
-        <artifactId>apache-rat-plugin</artifactId>
-        <configuration>
-          <excludes>
-            <exclude>**/clitest_data/**</exclude>
-            <exclude>**/ints/file*.txt</exclude>
-            <exclude>**/text/file*.txt</exclude>
-            <exclude>**/resources/**</exclude>
-          </excludes>
-        </configuration>
-      </plugin>
-    </plugins>
   </build>
 
 </project>

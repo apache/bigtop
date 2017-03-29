@@ -63,17 +63,6 @@
   </dependencies>
 
   <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.rat</groupId>
-        <artifactId>apache-rat-plugin</artifactId>
-        <configuration>
-          <excludes>
-            <exclude>**/resources/datafu/**/*.pig</exclude>
-          </excludes>
-        </configuration>
-      </plugin>
-    </plugins>
   </build>
 
 </project>

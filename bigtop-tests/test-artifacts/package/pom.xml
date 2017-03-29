@@ -50,15 +50,6 @@
 
   <build>
     <plugins>
-      <plugin>
-        <groupId>org.apache.rat</groupId>
-        <artifactId>apache-rat-plugin</artifactId>
-        <configuration>
-          <excludes>
-            <exclude>**/main/resources/**/*.xml</exclude>
-          </excludes>
-        </configuration>
-      </plugin>
         <plugin>
           <groupId>org.codehaus.groovy.maven</groupId>
           <artifactId>gmaven-plugin</artifactId>
