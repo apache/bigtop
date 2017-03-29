@@ -58,13 +58,19 @@ relations:
 machines:
   "0":
     series: "xenial"
+    constraints: "mem=7G root-disk=32G"
   "1":
     series: "xenial"
+    constraints: "mem=7G root-disk=32G"
   "2":
     series: "xenial"
+    constraints: "mem=3G root-disk=32G"
   "3":
     series: "xenial"
+    constraints: "mem=3G root-disk=32G"
   "4":
     series: "xenial"
+    constraints: "mem=3G root-disk=32G"
   "5":
     series: "xenial"
+    constraints: "mem=3G"
