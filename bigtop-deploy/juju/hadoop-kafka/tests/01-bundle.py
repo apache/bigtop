@@ -27,8 +27,6 @@ class TestBundle(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        # classmethod inheritance doesn't work quite right with
-        # setUpClass / tearDownClass, so subclasses have to manually call this
         cls.d = amulet.Deployment(series='xenial')
         with open(cls.bundle_file) as f:
             bun = f.read()
