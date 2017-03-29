@@ -497,6 +497,8 @@ Ambari Client
 %attr(755,root,root) /etc/init.d/ambari-agent
 %attr(755,root,root) /var/lib/ambari-agent/data
 %attr(755,root,root) /var/lib/ambari-agent/cache
+%attr(755,root,root) /var/lib/ambari-agent/cred
+%attr(755,root,root) /var/lib/ambari-agent/tools
 
 %files client
 %defattr(644,root,root,755)

@@ -28,20 +28,20 @@ class ambari {
     }
 
     exec {
-        "server setup":
-           command => "/usr/sbin/ambari-server setup -s",
+        "mpack install":
+           command => "/bin/bash -c 'echo yes | /usr/sbin/ambari-server install-mpack --purge --verbose --mpack=/var/lib/ambari-server/resources/odpi-ambari-mpack-1.0.0.0-SNAPSHOT.tar.gz'",
            require => [ Package["ambari-server"] ]
     }
 
-    # FIXME: this is currently a workaround for 2.5
-    file { ["/var/lib/ambari-server/resources/stacks/Bigtop", "/var/lib/ambari-server/resources/stacks/Bigtop/1.2.0"]:
-      ensure => 'directory',
-      require => [ Package["ambari-server"] ]
+    exec {
+        "server setup":
+           command => "/usr/sbin/ambari-server setup -s",
+           require => [ Package["ambari-server"], Exec["mpack install"] ]
     }
 
     service { "ambari-server":
         ensure => running,
-        require => [ Package["ambari-server"], Exec["server setup"], File["/var/lib/ambari-server/resources/stacks/Bigtop/1.2.0"] ],
+        require => [ Package["ambari-server"], Exec["server setup"] ],
         hasrestart => true,
         hasstatus => true,
     }
