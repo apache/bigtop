@@ -81,7 +81,7 @@ bigtop {
     'scala' { version = '2.11.8'; version_base = version }
   }
   apache {
-    APACHE_MIRROR = "https://www-us.apache.org"
+    APACHE_MIRROR = "https://www-us.apache.org/dist"
     APACHE_ARCHIVE = "https://archive.apache.org/dist"
   }
 /** End of Base Configuration */
