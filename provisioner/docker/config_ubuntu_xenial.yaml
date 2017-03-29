@@ -17,7 +17,7 @@ docker:
         memory_limit: "4g"
         image:  "bigtop/puppet:ubuntu-16.04"
 
-repo: "http://bigtop-repos.s3.amazonaws.com/releases/1.1.0/ubuntu/trusty/x86_64"
+repo: "http://bigtop-repos.s3.amazonaws.com/releases/1.2.0/ubuntu/trusty/x86_64"
 distro: debian
 components: [hdfs, yarn, mapreduce]
 enable_local_repo: false

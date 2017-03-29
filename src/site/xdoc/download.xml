@@ -35,12 +35,12 @@
 			<ul>
 				<li>
 					The latest release of Apache Bigtop software framework <br/>
-					<a href="http://www.apache.org/dist/bigtop/bigtop-1.1.0/">Bigtop 1.1.0</a>
+					<a href="http://www.apache.org/dist/bigtop/bigtop-1.2.0/">Bigtop 1.2.0</a>
 				</li>
 				<li>
 					Repositories of instsallable binary packages built with latest release
 					of the Apache Bitop project <br/>
-					<a href="https://www.apache.org/dist/bigtop/bigtop-1.1.0/repos/">Installable binary artifacts</a>
+					<a href="https://www.apache.org/dist/bigtop/bigtop-1.2.0/repos/">Installable binary artifacts</a>
 				</li>
 			</ul>
 			<subsection name="Nightly builds" id="snapshots"></subsection>
