@@ -12,6 +12,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import time
+
 from charms.reactive import RelationBase, when, when_not, is_state, set_state, remove_state, when_any
 from charms.layer.apache_bigtop_base import get_fqdn, get_package_version
 from charms.layer.bigtop_spark import Spark
@@ -67,6 +69,15 @@ def install_spark(hadoop=None, zks=None):
         hosts['namenode'] = nns[0]
 
     spark = Spark()
+    if (zks and data_changed('zks', zks)):
+        # If zks have changed, give the ensemble time to settle, or else we
+        # might try to start spark master with data from the wrong zk leader.
+        # Doing so will cause spark-master to shutdown:
+        #  https://issues.apache.org/jira/browse/SPARK-15544
+        hookenv.status_set('maintenance',
+                           'waiting for zookeeper ensemble to settle')
+        time.sleep(120)
+    hookenv.status_set('maintenance', 'configuring spark')
     spark.configure(hosts, zks, get_spark_peers())
     return True
 
@@ -123,7 +134,6 @@ def reinstall_spark():
     if not data_changed('deployment_matrix', deployment_matrix):
         return
 
-    hookenv.status_set('maintenance', 'configuring spark')
     hadoop = (RelationBase.from_state('hadoop.yarn.ready') or
               RelationBase.from_state('hadoop.hdfs.ready'))
     if install_spark(hadoop, zks):
