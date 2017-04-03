@@ -1,10 +1,4 @@
 options:
-    resources_mirror:
-        type: string
-        default: ''
-        description: |
-            URL used to fetch resources (e.g., Hadoop binaries) instead of the
-            location specified in resources.yaml.
     spark_bench_enabled:
         type: boolean
         default: true

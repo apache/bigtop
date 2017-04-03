@@ -220,7 +220,7 @@ class Spark(object):
             zk_connect = ",".join(zks)
             override['spark::common::zookeeper_connection_string'] = zk_connect
         else:
-            override['spark::common::zookeeper_connection_string'] = ""
+            override['spark::common::zookeeper_connection_string'] = None
 
         bigtop = Bigtop()
         bigtop.render_site_yaml(hosts, roles, override)

@@ -69,10 +69,11 @@ def install_spark(hadoop=None, zks=None):
         hosts['namenode'] = nns[0]
 
     spark = Spark()
-    if (zks and data_changed('zks', zks)):
-        # If zks have changed, give the ensemble time to settle, or else we
-        # might try to start spark master with data from the wrong zk leader.
-        # Doing so will cause spark-master to shutdown:
+    if (data_changed('zks', zks) and not is_state('sparkpeers.departed')):
+        # If zks have changed and we are not handling a departed spark peer,
+        # give the ensemble time to settle. Otherwise we might try to start
+        # spark master with data from the wrong zk leader. Doing so will cause
+        # spark-master to shutdown:
         #  https://issues.apache.org/jira/browse/SPARK-15544
         hookenv.status_set('maintenance',
                            'waiting for zookeeper ensemble to settle')
