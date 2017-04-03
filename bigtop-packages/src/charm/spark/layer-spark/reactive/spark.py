@@ -87,9 +87,9 @@ def install_spark(hadoop=None, zks=None):
 
 def set_deployment_mode_state(state):
     if is_state('spark.yarn.installed'):
-        remove_state('spark.yarn.installed')
-    if is_state('spark.standalone.installed'):
         remove_state('spark.standalone.installed')
+    if is_state('spark.standalone.installed'):
+        remove_state('spark.yarn.installed')
     set_state('spark.started')
     set_state(state)
     # set app version string for juju status output
@@ -167,7 +167,7 @@ def reconfigure_spark():
 def send_fqdn():
     spark_master_host = get_fqdn()
     leadership.leader_set({'master-fqdn': spark_master_host})
-    hookenv.log("Setting leader to {}".format(spark_master_host))
+    hookenv.log("Setting juju leader to {}".format(spark_master_host))
 
 
 @when('leadership.changed.master-fqdn')
