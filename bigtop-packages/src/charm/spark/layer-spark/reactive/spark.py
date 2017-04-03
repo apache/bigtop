@@ -23,18 +23,9 @@ from charms.reactive.helpers import data_changed
 from jujubigdata import utils
 
 
-def set_deployment_mode_state(state):
-    if is_state('spark.yarn.installed'):
-        remove_state('spark.yarn.installed')
-    if is_state('spark.standalone.installed'):
-        remove_state('spark.standalone.installed')
-    set_state('spark.started')
-    set_state(state)
-    # set app version string for juju status output
-    spark_version = get_package_version('spark-core') or 'unknown'
-    hookenv.application_version_set(spark_version)
-
-
+###############################################################################
+# Status methods
+###############################################################################
 def report_status():
     mode = hookenv.config()['spark_execution_mode']
     if (not is_state('spark.yarn.installed')) and mode.startswith('yarn'):
@@ -48,6 +39,17 @@ def report_status():
         mode = mode + " - master"
 
     hookenv.status_set('active', 'ready ({})'.format(mode))
+
+
+###############################################################################
+# Utility methods
+###############################################################################
+def get_spark_peers():
+    nodes = [(hookenv.local_unit(), hookenv.unit_private_ip())]
+    sparkpeer = RelationBase.from_state('sparkpeers.joined')
+    if sparkpeer:
+        nodes.extend(sorted(sparkpeer.get_nodes()))
+    return nodes
 
 
 def install_spark(hadoop=None, zks=None):
@@ -83,35 +85,31 @@ def install_spark(hadoop=None, zks=None):
     return True
 
 
-@when('config.changed', 'spark.started')
-def reconfigure_spark():
-    config = hookenv.config()
-    mode = config['spark_execution_mode']
-    hookenv.status_set('maintenance',
-                       'changing default execution mode to {}'.format(mode))
-
-    hadoop = (RelationBase.from_state('hadoop.yarn.ready') or
-              RelationBase.from_state('hadoop.hdfs.ready'))
-
-    zks = None
-    if is_state('zookeeper.ready'):
-        zk = RelationBase.from_state('zookeeper.ready')
-        zks = zk.zookeepers()
-
-    if install_spark(hadoop, zks):
-        report_status()
+def set_deployment_mode_state(state):
+    if is_state('spark.yarn.installed'):
+        remove_state('spark.yarn.installed')
+    if is_state('spark.standalone.installed'):
+        remove_state('spark.standalone.installed')
+    set_state('spark.started')
+    set_state(state)
+    # set app version string for juju status output
+    spark_version = get_package_version('spark-core') or 'unknown'
+    hookenv.application_version_set(spark_version)
 
 
-# This is a triky call. We want to fire when the leader changes, yarn and hdfs become ready or
-# depart. In the future this should fire when Cassandra or any other storage
-# becomes ready or departs. Since hdfs and yarn do not have a departed state we make sure
-# we fire this method always ('spark.started'). We then build a deployment-matrix
-# and if anything has changed we re-install.
-# 'hadoop.yarn.ready', 'hadoop.hdfs.ready' can be ommited but I like them here for clarity
+###############################################################################
+# Reactive methods
+###############################################################################
 @when_any('hadoop.yarn.ready',
           'hadoop.hdfs.ready', 'master.elected', 'sparkpeers.joined', 'zookeeper.ready')
 @when('bigtop.available', 'master.elected')
 def reinstall_spark():
+    # This is a triky call. We want to fire when the leader changes, yarn and hdfs become ready or
+    # depart. In the future this should fire when Cassandra or any other storage
+    # becomes ready or departs. Since hdfs and yarn do not have a departed state we make sure
+    # we fire this method always ('spark.started'). We then build a deployment-matrix
+    # and if anything has changed we re-install.
+    # 'hadoop.yarn.ready', 'hadoop.hdfs.ready' can be ommited but I like them here for clarity
     spark_master_host = leadership.leader_get('master-fqdn')
     peers = []
     zks = []
@@ -146,12 +144,23 @@ def reinstall_spark():
         report_status()
 
 
-def get_spark_peers():
-    nodes = [(hookenv.local_unit(), hookenv.unit_private_ip())]
-    sparkpeer = RelationBase.from_state('sparkpeers.joined')
-    if sparkpeer:
-        nodes.extend(sorted(sparkpeer.get_nodes()))
-    return nodes
+@when('config.changed', 'spark.started')
+def reconfigure_spark():
+    config = hookenv.config()
+    mode = config['spark_execution_mode']
+    hookenv.status_set('maintenance',
+                       'changing default execution mode to {}'.format(mode))
+
+    hadoop = (RelationBase.from_state('hadoop.yarn.ready') or
+              RelationBase.from_state('hadoop.hdfs.ready'))
+
+    zks = None
+    if is_state('zookeeper.ready'):
+        zk = RelationBase.from_state('zookeeper.ready')
+        zks = zk.zookeepers()
+
+    if install_spark(hadoop, zks):
+        report_status()
 
 
 @when('leadership.is_leader', 'bigtop.available')
