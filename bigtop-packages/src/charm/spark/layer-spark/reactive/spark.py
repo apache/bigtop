@@ -52,37 +52,30 @@ def get_spark_peers():
     return nodes
 
 
-def install_spark(hadoop=None, zks=None):
-    spark_master_host = leadership.leader_get('master-fqdn')
-    if not spark_master_host:
-        hookenv.status_set('waiting', 'master not elected yet')
-        return False
-
+def install_spark(hadoop, zks, peers):
+    """
+    Must be called after Juju has elected a leader.
+    """
     hosts = {
-        'spark-master': spark_master_host,
+        'spark-master': leadership.leader_get('master-fqdn'),
     }
 
-    if is_state('hadoop.yarn.ready'):
-        rms = hadoop.resourcemanagers()
-        hosts['resourcemanager'] = rms[0]
+    mode = hookenv.config()['spark_execution_mode']
+    # Only include hadoop hosts if we're in yarn-* mode
+    if mode.startswith('yarn'):
+        if is_state('hadoop.yarn.ready'):
+            rms = hadoop.resourcemanagers()
+            hosts['resourcemanager'] = rms[0]
 
-    if is_state('hadoop.hdfs.ready'):
-        nns = hadoop.namenodes()
-        hosts['namenode'] = nns[0]
+        if is_state('hadoop.hdfs.ready'):
+            nns = hadoop.namenodes()
+            hosts['namenode'] = nns[0]
 
     spark = Spark()
-    if (data_changed('zks', zks) and not is_state('sparkpeers.departed')):
-        # If zks have changed and we are not handling a departed spark peer,
-        # give the ensemble time to settle. Otherwise we might try to start
-        # spark master with data from the wrong zk leader. Doing so will cause
-        # spark-master to shutdown:
-        #  https://issues.apache.org/jira/browse/SPARK-15544
-        hookenv.status_set('maintenance',
-                           'waiting for zookeeper ensemble to settle')
-        time.sleep(120)
-    hookenv.status_set('maintenance', 'configuring spark')
-    spark.configure(hosts, zks, get_spark_peers())
-    return True
+    hookenv.status_set('maintenance', 'configuring spark in mode: {}'.format(mode))
+    spark.configure(hosts, zks, peers)
+    # BUG: if a zk, spark master will go into recovery; workers will need to
+    # be restarted after the master becomes alive again.
 
 
 def set_deployment_mode_state(state):
@@ -100,28 +93,34 @@ def set_deployment_mode_state(state):
 ###############################################################################
 # Reactive methods
 ###############################################################################
-@when_any('hadoop.yarn.ready',
-          'hadoop.hdfs.ready', 'master.elected', 'sparkpeers.joined', 'zookeeper.ready')
+@when_any('config.changed', 'master.elected',
+          'hadoop.hdfs.ready', 'hadoop.yarn.ready',
+          'sparkpeers.joined', 'sparkpeers.departed',
+          'zookeeper.ready')
 @when('bigtop.available', 'master.elected')
 def reinstall_spark():
-    # This is a triky call. We want to fire when the leader changes, yarn and hdfs become ready or
-    # depart. In the future this should fire when Cassandra or any other storage
-    # becomes ready or departs. Since hdfs and yarn do not have a departed state we make sure
-    # we fire this method always ('spark.started'). We then build a deployment-matrix
-    # and if anything has changed we re-install.
-    # 'hadoop.yarn.ready', 'hadoop.hdfs.ready' can be ommited but I like them here for clarity
+    """
+    This is tricky. We want to fire on config or leadership changes, or when
+    hadoop, sparkpeers, or zookeepers come and go. In the future this should
+    fire when Cassandra or any other storage comes or goes. We always fire
+    this method (or rather, when bigtop is ready and juju has elected a
+    master). We then build a deployment-matrix and (re)install as things
+    change.
+    """
     spark_master_host = leadership.leader_get('master-fqdn')
-    peers = []
-    zks = []
+    if not spark_master_host:
+        hookenv.status_set('maintenance', 'juju leader not elected yet')
+        return
+
+    # If ZK is available, we are in HA. Do not consider the master_host
+    # from juju leadership in our matrix. ZK takes care of this.
+    zks = None
     if is_state('zookeeper.ready'):
-        # if ZK is availuable we are in HA. We do not want reconfigurations if a leader fails
-        # HA takes care of this
         spark_master_host = ''
         zk = RelationBase.from_state('zookeeper.ready')
         zks = zk.zookeepers()
-        # We need reconfigure Spark when in HA and peers change ignore otherwise
-        peers = get_spark_peers()
 
+    peers = get_spark_peers()
     deployment_matrix = {
         'spark_master': spark_master_host,
         'yarn_ready': is_state('hadoop.yarn.ready'),
@@ -130,40 +129,34 @@ def reinstall_spark():
         'peers': peers,
     }
 
-    if not data_changed('deployment_matrix', deployment_matrix):
+    # If neither config nor our matrix is changing, there is nothing to do.
+    if (not is_state('config.changed') and
+            not data_changed('deployment_matrix', deployment_matrix)):
         return
 
-    hadoop = (RelationBase.from_state('hadoop.yarn.ready') or
-              RelationBase.from_state('hadoop.hdfs.ready'))
-    if install_spark(hadoop, zks):
-        if is_state('hadoop.yarn.ready'):
-            set_deployment_mode_state('spark.yarn.installed')
-        else:
-            set_deployment_mode_state('spark.standalone.installed')
-
-        report_status()
-
-
-@when('config.changed', 'spark.started')
-def reconfigure_spark():
-    config = hookenv.config()
-    mode = config['spark_execution_mode']
-    hookenv.status_set('maintenance',
-                       'changing default execution mode to {}'.format(mode))
+    # If zks have changed and we are not handling a departed spark peer,
+    # give the ensemble time to settle. Otherwise we might try to start
+    # spark master with data from the wrong zk leader. Doing so will cause
+    # spark-master to shutdown:
+    #  https://issues.apache.org/jira/browse/SPARK-15544
+    if (zks and data_changed('zks', zks) and not is_state('sparkpeers.departed')):
+        hookenv.status_set('maintenance',
+                           'waiting for zookeeper ensemble to settle')
+        hookenv.log("Waiting 2m to ensure zk ensemble has settled: {}".format(zks))
+        time.sleep(120)
 
     hadoop = (RelationBase.from_state('hadoop.yarn.ready') or
               RelationBase.from_state('hadoop.hdfs.ready'))
+    install_spark(hadoop, zks, peers)
+    if is_state('hadoop.yarn.ready'):
+        set_deployment_mode_state('spark.yarn.installed')
+    else:
+        set_deployment_mode_state('spark.standalone.installed')
 
-    zks = None
-    if is_state('zookeeper.ready'):
-        zk = RelationBase.from_state('zookeeper.ready')
-        zks = zk.zookeepers()
-
-    if install_spark(hadoop, zks):
-        report_status()
+    report_status()
 
 
-@when('leadership.is_leader', 'bigtop.available')
+@when('bigtop.available', 'leadership.is_leader')
 def send_fqdn():
     spark_master_host = get_fqdn()
     leadership.leader_set({'master-fqdn': spark_master_host})

@@ -174,7 +174,7 @@ class Spark(object):
 
         Two flags are needed:
 
-          * Namenode exists aka HDFS is there
+          * Namenode exists aka HDFS is ready
           * Resource manager exists aka YARN is ready
 
         both flags are infered from the available hosts.
@@ -190,6 +190,7 @@ class Spark(object):
             unitdata.kv().set('spark.bootstrapped', True)
 
         master_ip = utils.resolve_private_address(available_hosts['spark-master'])
+        master_url = self.get_master_url(master_ip)
         hosts = {
             'spark': master_ip,
         }
@@ -206,7 +207,7 @@ class Spark(object):
         roles = self.get_roles()
 
         override = {
-            'spark::common::master_url': self.get_master_url(master_ip),
+            'spark::common::master_url': master_url,
             'spark::common::event_log_dir': events_log_dir,
             'spark::common::history_log_dir': events_log_dir,
         }
@@ -231,7 +232,7 @@ class Spark(object):
         # Exception in thread "main" org.apache.spark.SparkException: Invalid master URL: spark://:7077
         # The master url is not set at the time the worker start the first time.
         # TODO(kjackal): ...do the needed... (investiate,debug,submit patch)
-        bigtop.trigger_puppet()
+        # bigtop.trigger_puppet()
         if 'namenode' not in available_hosts:
             # Local event dir (not in HDFS) needs to be 777 so non-spark
             # users can write job history there. It needs to be g+s so
@@ -239,22 +240,23 @@ class Spark(object):
             # It needs to be +t so users cannot remove files they don't own.
             dc.path('spark_events').chmod(0o3777)
 
-        self.patch_worker_master_url(master_ip)
+        self.patch_worker_master_url(master_ip, master_url)
+        if master_url.startswith('yarn'):
+            self.stop_master_worker()
 
         # SparkBench looks for the spark master in /etc/environment
         with utils.environment_edit_in_place('/etc/environment') as env:
-            env['MASTER'] = self.get_master_url(master_ip)
+            env['MASTER'] = master_url
         # Install SB (subsequent calls will reconfigure existing install)
         self.install_benchmark()
 
-    def patch_worker_master_url(self, master_ip):
+    def patch_worker_master_url(self, master_ip, master_url):
         '''
         Patch the worker startup script to use the full master url istead of contracting it.
         The master url is placed in the spark-env.sh so that the startup script will use it.
         In HA mode the master_ip is set to be the local_ip instead of the one the leader
         elects. This requires a restart of the master service.
         '''
-        master_url = self.get_master_url(master_ip)
         zk_units = unitdata.kv().get('zookeeper.units', [])
         if master_url.startswith('spark://'):
             if zk_units:
@@ -294,9 +296,6 @@ class Spark(object):
         Path(demo_target).chown('ubuntu', 'hadoop')
 
     def start(self):
-        if unitdata.kv().get('spark.uprading', False):
-            return
-
         # stop services (if they're running) to pick up any config change
         self.stop()
         # always start the history server, start master/worker if we're standalone
@@ -314,6 +313,12 @@ class Spark(object):
         if utils.jps("Master"):
             host.service_stop('spark-master')
         if utils.jps("Worker"):
+            host.service_stop('spark-worker')
+
+    def stop_master_worker(self):
+        # In yarn mode, we want the master and worker shut down
+        if hookenv.config()['spark_execution_mode'].startswith('yarn'):
+            host.service_stop('spark-master')
             host.service_stop('spark-worker')
 
     def open_ports(self):
