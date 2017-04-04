@@ -190,6 +190,7 @@ class Spark(object):
             self.setup()
             unitdata.kv().set('spark.bootstrapped', True)
 
+        mode = hookenv.config()['spark_execution_mode']
         master_ip = utils.resolve_private_address(available_hosts['spark-master'])
         master_url = self.get_master_url(master_ip)
         hosts = {
@@ -227,13 +228,8 @@ class Spark(object):
         bigtop = Bigtop()
         bigtop.render_site_yaml(hosts, roles, override)
         bigtop.trigger_puppet()
-        # There is a race condition here.
-        # The work role will not start the first time we trigger puppet apply.
-        # The exception in /var/logs/spark:
-        # Exception in thread "main" org.apache.spark.SparkException: Invalid master URL: spark://:7077
-        # The master url is not set at the time the worker start the first time.
-        # TODO(kjackal): ...do the needed... (investiate,debug,submit patch)
-        # bigtop.trigger_puppet()
+
+        # Do this after our puppet bits in case puppet overrides needed perms
         if 'namenode' not in available_hosts:
             # Local event dir (not in HDFS) needs to be 777 so non-spark
             # users can write job history there. It needs to be g+s so
@@ -243,10 +239,43 @@ class Spark(object):
 
         self.patch_worker_master_url(master_ip, master_url)
 
+        # handle tuning options that may be set as percentages
+        driver_mem = '1g'
+        req_driver_mem = hookenv.config()['driver_memory']
+        executor_mem = '1g'
+        req_executor_mem = hookenv.config()['executor_memory']
+        if req_driver_mem.endswith('%'):
+            if mode == 'standalone' or mode.startswith('local'):
+                mem_mb = host.get_total_ram() / 1024 / 1024
+                req_percentage = float(req_driver_mem.strip('%')) / 100
+                driver_mem = str(int(mem_mb * req_percentage)) + 'm'
+            else:
+                hookenv.log("driver_memory percentage in non-local mode. Using 1g default.",
+                            level=None)
+        else:
+            driver_mem = req_driver_mem
+
+        if req_executor_mem.endswith('%'):
+            if mode == 'standalone' or mode.startswith('local'):
+                mem_mb = host.get_total_ram() / 1024 / 1024
+                req_percentage = float(req_executor_mem.strip('%')) / 100
+                executor_mem = str(int(mem_mb * req_percentage)) + 'm'
+            else:
+                hookenv.log("executor_memory percentage in non-local mode. Using 1g default.",
+                            level=None)
+        else:
+            executor_mem = req_executor_mem
+
+        spark_env = '/etc/spark/conf/spark-env.sh'
+        utils.re_edit_in_place(spark_env, {
+            r'.*SPARK_DRIVER_MEMORY.*': 'SPARK_DRIVER_MEMORY={}'.format(driver_mem),
+            r'.*SPARK_EXECUTOR_MEMORY.*': 'SPARK_EXECUTOR_MEMORY={}'.format(executor_mem),
+        }, append_non_matches=True)
+
+        # Install SB (subsequent calls will reconfigure existing install)
         # SparkBench looks for the spark master in /etc/environment
         with utils.environment_edit_in_place('/etc/environment') as env:
             env['MASTER'] = master_url
-        # Install SB (subsequent calls will reconfigure existing install)
         self.install_benchmark()
 
     def patch_worker_master_url(self, master_ip, master_url):
@@ -296,12 +325,16 @@ class Spark(object):
         # always start the history server, start master/worker if we're standalone
         host.service_start('spark-history-server')
         if hookenv.config()['spark_execution_mode'] == 'standalone':
-            host.service_start('spark-master')
-            hookenv.status_set('maintenance',
-                               'waiting for spark master recovery')
-            hookenv.log("Waiting 1m to ensure spark master is ALIVE")
-            time.sleep(60)
-            host.service_start('spark-worker')
+            if host.service_start('spark-master'):
+                # If the master started, wait 60s for recovery before starting
+                # the worker.
+                hookenv.status_set('maintenance',
+                                   'waiting for spark master recovery')
+                hookenv.log("Waiting 1m to ensure spark master is ALIVE")
+                time.sleep(60)
+                host.service_start('spark-worker')
+            else:
+                hookenv.log("Master did not start; not starting worker")
 
     def stop(self):
         host.service_stop('spark-history-server')

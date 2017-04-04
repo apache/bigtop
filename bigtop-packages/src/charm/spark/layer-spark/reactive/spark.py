@@ -38,7 +38,10 @@ def report_status():
     elif mode == 'standalone' and is_state('leadership.is_leader'):
         mode = mode + " - master"
 
-    hookenv.status_set('active', 'ready ({})'.format(mode))
+    if is_state('spark.started'):
+        hookenv.status_set('active', 'ready ({})'.format(mode))
+    else:
+        hookenv.status_set('blocked', 'unable to start spark ({})'.format(mode))
 
 
 ###############################################################################
@@ -52,32 +55,52 @@ def get_spark_peers():
     return nodes
 
 
-def install_spark(hadoop, zks, peers):
+def install_spark_standalone(zks, peers):
     """
-    Must be called after Juju has elected a leader.
+    Called in local/standalone mode after Juju has elected a leader.
     """
     hosts = {
         'spark-master': leadership.leader_get('master-fqdn'),
     }
 
-    mode = hookenv.config()['spark_execution_mode']
-    # Only include hadoop hosts if we're in yarn-* mode
-    if mode.startswith('yarn'):
-        if is_state('hadoop.yarn.ready'):
-            rms = hadoop.resourcemanagers()
-            hosts['resourcemanager'] = rms[0]
-
-        if is_state('hadoop.hdfs.ready'):
-            nns = hadoop.namenodes()
-            hosts['namenode'] = nns[0]
+    # If zks have changed and we are not handling a departed spark peer,
+    # give the ensemble time to settle. Otherwise we might try to start
+    # spark master with data from the wrong zk leader. Doing so will cause
+    # spark-master to shutdown:
+    #  https://issues.apache.org/jira/browse/SPARK-15544
+    if (zks and data_changed('zks', zks) and not is_state('sparkpeers.departed')):
+        hookenv.status_set('maintenance',
+                           'waiting for zookeeper ensemble to settle')
+        hookenv.log("Waiting 2m to ensure zk ensemble has settled: {}".format(zks))
+        time.sleep(120)
 
     spark = Spark()
-    hookenv.status_set('maintenance', 'configuring spark in mode: {}'.format(mode))
     spark.configure(hosts, zks, peers)
+    set_deployment_mode_state('spark.standalone.installed')
 
-    # restart services to pick up possible config changes
-    spark.stop()
-    spark.start()
+
+def install_spark_yarn():
+    """
+    Called in 'yarn-*' mode after Juju has elected a leader. The
+    'hadoop.yarn.ready' state must be set.
+    """
+    hosts = {
+        'spark-master': leadership.leader_get('master-fqdn'),
+    }
+    hadoop = (RelationBase.from_state('hadoop.yarn.ready') or
+              RelationBase.from_state('hadoop.hdfs.ready'))
+    rms = hadoop.resourcemanagers()
+    hosts['resourcemanager'] = rms[0]
+
+    # Probably don't need to check this since yarn.ready implies hdfs.ready
+    # for us, but it doesn't hurt.
+    if is_state('hadoop.hdfs.ready'):
+        nns = hadoop.namenodes()
+        hosts['namenode'] = nns[0]
+
+    spark = Spark()
+    spark.configure(hosts, zk_units=None, peers=None)
+    set_deployment_mode_state('spark.yarn.installed')
 
 
 def set_deployment_mode_state(state):
@@ -85,7 +108,6 @@ def set_deployment_mode_state(state):
         remove_state('spark.standalone.installed')
     if is_state('spark.standalone.installed'):
         remove_state('spark.yarn.installed')
-    set_state('spark.started')
     set_state(state)
     # set app version string for juju status output
     spark_version = get_package_version('spark-core') or 'unknown'
@@ -114,15 +136,19 @@ def reinstall_spark():
         hookenv.status_set('maintenance', 'juju leader not elected yet')
         return
 
-    # If ZK is available, we are in HA. Do not consider the master_host
-    # from juju leadership in our matrix. ZK takes care of this.
+    mode = hookenv.config()['spark_execution_mode']
+    peers = None
     zks = None
-    if is_state('zookeeper.ready'):
+
+    # If mode is standalone and ZK is ready, we are in HA. Do not consider
+    # the master_host from juju leadership in our matrix. ZK handles this.
+    if (mode == 'standalone' and is_state('zookeeper.ready')):
         spark_master_host = ''
         zk = RelationBase.from_state('zookeeper.ready')
         zks = zk.zookeepers()
+        # peers are only used to set our MASTER_URL in standalone HA mode
+        peers = get_spark_peers()
 
-    peers = get_spark_peers()
     deployment_matrix = {
         'spark_master': spark_master_host,
         'yarn_ready': is_state('hadoop.yarn.ready'),
@@ -136,25 +162,24 @@ def reinstall_spark():
             not data_changed('deployment_matrix', deployment_matrix)):
         return
 
-    # If zks have changed and we are not handling a departed spark peer,
-    # give the ensemble time to settle. Otherwise we might try to start
-    # spark master with data from the wrong zk leader. Doing so will cause
-    # spark-master to shutdown:
-    #  https://issues.apache.org/jira/browse/SPARK-15544
-    if (zks and data_changed('zks', zks) and not is_state('sparkpeers.departed')):
-        hookenv.status_set('maintenance',
-                           'waiting for zookeeper ensemble to settle')
-        hookenv.log("Waiting 2m to ensure zk ensemble has settled: {}".format(zks))
-        time.sleep(120)
-
-    hadoop = (RelationBase.from_state('hadoop.yarn.ready') or
-              RelationBase.from_state('hadoop.hdfs.ready'))
-    install_spark(hadoop, zks, peers)
-    if is_state('hadoop.yarn.ready'):
-        set_deployment_mode_state('spark.yarn.installed')
+    # (Re)install based on our execution mode
+    hookenv.status_set('maintenance', 'configuring spark in {} mode'.format(mode))
+    if mode.startswith('yarn') and is_state('hadoop.yarn.ready'):
+        install_spark_yarn()
+    elif mode.startswith('local') or mode == 'standalone':
+        install_spark_standalone(zks, peers)
     else:
-        set_deployment_mode_state('spark.standalone.installed')
+        # Something's wrong (probably requested yarn without yarn.ready).
+        remove_state('spark.started')
+        report_status()
+        return
 
+    # restart services to pick up possible config changes
+    spark = Spark()
+    spark.stop()
+    spark.start()
+
+    set_state('spark.started')
     report_status()
 
 
