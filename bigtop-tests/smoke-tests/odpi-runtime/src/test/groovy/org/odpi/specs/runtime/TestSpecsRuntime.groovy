@@ -245,25 +245,25 @@ public class TestSpecsRuntime {
 
         def dfsUser = sh.exec("sed -n '/dfs.cluster.administrator/ {n;p}' " + confDir + "/hdfs-site.xml | grep -oPm1 '(?<=<value>)[^<]+'").out
         if (sh.getRet() == 0) {
-          System.out.println("Found DFS user " + dfsUser)
+          System.out.println("Found DFS user in hadoop conf hdfs-site.xml: " + dfsUser)
         }
         def dfsGroup = sh.exec("sed -n '/dfs.permissions.superusergroup/ {n;p}' " + confDir + "/hdfs-site.xml | grep -oPm1 '(?<=<value>)[^<]+'").out
         if (sh.getRet() == 0) {
-          System.out.println("Found DFS group " + dfsGroup)
+          System.out.println("Found DFS group in hadoop conf hdfs-site.xml: " + dfsGroup)
         }
 
         def yarnUser = sh.exec("sed -n '/yarn.admin.acl/ {n;p}' " + confDir + "/yarn-site.xml | grep -oPm1 '(?<=<value>)[^<]+'").out
         if (sh.getRet() == 0) {
-          System.out.println("Found Yarn user " + yarnUser)
+          System.out.println("Found Yarn user in hadoop conf yarn-site.xml: " + yarnUser)
         }
         def yarnGroup = sh.exec("sed -n '/yarn.nodemanager.linux-container-executor.group/ {n;p}' " + confDir + "/yarn-site.xml | grep -oPm1 '(?<=<value>)[^<]+'").out
         if (sh.getRet() == 0) {
-          System.out.println("Yarn group: " + yarnGroup)
+          System.out.println("Found Yarn group in hadoop conf yarn-site.xml: " + yarnGroup)
         }
 
         def mapredUser = sh.exec("sed -n '/mapreduce.cluster.administrators/ {n;p}' " + confDir + "/mapred-site.xml | grep -oPm1 '(?<=<value>)[^<]+'").out
         if (sh.getRet() == 0) {
-          System.out.println("Found MapReduce user: " + mapredUser)
+          System.out.println("Found MapReduce user in hadoop conf mapred-site.xml: " + mapredUser)
         }
 
         break
