@@ -1,8 +1,11 @@
 services:
   spark:
-    charm: "cs:xenial/spark-28"
+    charm: "cs:xenial/spark-29"
     constraints: "mem=7G root-disk=32G"
     num_units: 2
+    options:
+      driver_memory: "3g"
+      executor_memory: "3g"
     annotations:
       gui-x: "500"
       gui-y: "0"
