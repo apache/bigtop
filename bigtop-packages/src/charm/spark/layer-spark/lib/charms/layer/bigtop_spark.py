@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import os
+import time
 from jujubigdata import utils
 from path import Path
 
@@ -241,8 +242,6 @@ class Spark(object):
             dc.path('spark_events').chmod(0o3777)
 
         self.patch_worker_master_url(master_ip, master_url)
-        if master_url.startswith('yarn'):
-            self.stop_master_worker()
 
         # SparkBench looks for the spark master in /etc/environment
         with utils.environment_edit_in_place('/etc/environment') as env:
@@ -270,8 +269,6 @@ class Spark(object):
             self.inplace_change('/etc/init.d/spark-worker',
                                 'spark://$SPARK_MASTER_IP:$SPARK_MASTER_PORT',
                                 '$SPARK_MASTER_URL')
-            host.service_restart('spark-master')
-            host.service_restart('spark-worker')
 
     def inplace_change(self, filename, old_string, new_string):
         # Safely read the input filename using 'with'
@@ -296,30 +293,20 @@ class Spark(object):
         Path(demo_target).chown('ubuntu', 'hadoop')
 
     def start(self):
-        # stop services (if they're running) to pick up any config change
-        self.stop()
         # always start the history server, start master/worker if we're standalone
         host.service_start('spark-history-server')
         if hookenv.config()['spark_execution_mode'] == 'standalone':
             host.service_start('spark-master')
+            hookenv.status_set('maintenance',
+                               'waiting for spark master recovery')
+            hookenv.log("Waiting 1m to ensure spark master is ALIVE")
+            time.sleep(60)
             host.service_start('spark-worker')
 
     def stop(self):
-        if not unitdata.kv().get('spark.installed', False):
-            return
-        # Only stop services if they're running
-        if utils.jps("HistoryServer"):
-            host.service_stop('spark-history-server')
-        if utils.jps("Master"):
-            host.service_stop('spark-master')
-        if utils.jps("Worker"):
-            host.service_stop('spark-worker')
-
-    def stop_master_worker(self):
-        # In yarn mode, we want the master and worker shut down
-        if hookenv.config()['spark_execution_mode'].startswith('yarn'):
-            host.service_stop('spark-master')
-            host.service_stop('spark-worker')
+        host.service_stop('spark-history-server')
+        host.service_stop('spark-master')
+        host.service_stop('spark-worker')
 
     def open_ports(self):
         for port in self.dist_config.exposed_ports('spark'):

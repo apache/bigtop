@@ -74,8 +74,10 @@ def install_spark(hadoop, zks, peers):
     spark = Spark()
     hookenv.status_set('maintenance', 'configuring spark in mode: {}'.format(mode))
     spark.configure(hosts, zks, peers)
-    # BUG: if a zk, spark master will go into recovery; workers will need to
-    # be restarted after the master becomes alive again.
+
+    # restart services to pick up possible config changes
+    spark.stop()
+    spark.start()
 
 
 def set_deployment_mode_state(state):
