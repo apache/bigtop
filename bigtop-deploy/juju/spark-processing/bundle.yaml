@@ -1,6 +1,6 @@
 services:
   spark:
-    charm: "cs:xenial/spark-27"
+    charm: "cs:xenial/spark-28"
     constraints: "mem=7G root-disk=32G"
     num_units: 2
     annotations:
