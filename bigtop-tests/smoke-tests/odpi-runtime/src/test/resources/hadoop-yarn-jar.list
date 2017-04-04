@@ -34,5 +34,5 @@ activation-1\.1[\.\-_].*jar
 jersey-json-1\.9[\.\-_].*jar
 jaxb-api-2\.2\.2[\.\-_].*jar
 guice-servlet-3\.0[\.\-_].*jar
-servlet-api-2\.5[\.\-_].*jar
+.*servlet-api-[2-3]\.[0-9][\.\-_].*jar
 jackson-jaxrs-1\.9\.13[\.\-_].*jar

@@ -22,4 +22,4 @@ jetty-util-6\.1\.26[\.\-_].*jar
 jsr305-3\.0\.0[\.\-_].*jar
 protobuf-java-2\.5\.0[\.\-_].*jar
 commons-io-2\.4[\.\-_].*jar
-servlet-api-2\.5[\.\-_].*jar
+.*servlet-api-[2-3]\.[0-9][\.\-_].*jar
