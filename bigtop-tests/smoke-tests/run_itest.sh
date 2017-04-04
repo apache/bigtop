@@ -215,7 +215,7 @@ set_hive_vars() {
         HIVE_METASTORE_URL=`sed -n '/hive.metastore.uris/{n;p}' /etc/hive/conf/hive-site.xml | sed -n 's:.*<value>\(.*\)</value>.*:\1:p'`
     fi
     if [ -z "$HIVE_HDFS_LOCATION" ]; then
-        HIVE_HDFS_LOCATION=/tmp
+        HIVE_HDFS_LOCATION=/tmp/`id -u -n`
     fi
     if [ -z "$HIVE_USER" ]; then
         HIVE_USER=hive
