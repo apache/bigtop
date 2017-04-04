@@ -326,12 +326,12 @@ class Spark(object):
         host.service_start('spark-history-server')
         if hookenv.config()['spark_execution_mode'] == 'standalone':
             if host.service_start('spark-master'):
-                # If the master started, wait 60s for recovery before starting
+                # If the master started, wait 2m for recovery before starting
                 # the worker.
                 hookenv.status_set('maintenance',
                                    'waiting for spark master recovery')
-                hookenv.log("Waiting 1m to ensure spark master is ALIVE")
-                time.sleep(60)
+                hookenv.log("Waiting 2m to ensure spark master is ALIVE")
+                time.sleep(120)
                 host.service_start('spark-worker')
             else:
                 hookenv.log("Master did not start; not starting worker")

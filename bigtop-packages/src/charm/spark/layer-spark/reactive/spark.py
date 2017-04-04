@@ -158,12 +158,14 @@ def reinstall_spark():
     }
 
     # If neither config nor our matrix is changing, there is nothing to do.
-    if (not is_state('config.changed') and
+    if (not is_state('config.changed') or
             not data_changed('deployment_matrix', deployment_matrix)):
         return
 
     # (Re)install based on our execution mode
     hookenv.status_set('maintenance', 'configuring spark in {} mode'.format(mode))
+    hookenv.log("Configuring spark with deployment matrix: {}".format(deployment_matrix))
+
     if mode.startswith('yarn') and is_state('hadoop.yarn.ready'):
         install_spark_yarn()
     elif mode.startswith('local') or mode == 'standalone':
