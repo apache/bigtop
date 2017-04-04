@@ -158,8 +158,8 @@ def reinstall_spark():
     }
 
     # If neither config nor our matrix is changing, there is nothing to do.
-    if (not is_state('config.changed') or
-            not data_changed('deployment_matrix', deployment_matrix)):
+    if not (is_state('config.changed') or
+            data_changed('deployment_matrix', deployment_matrix)):
         return
 
     # (Re)install based on our execution mode
