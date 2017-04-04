@@ -268,8 +268,8 @@ class Spark(object):
 
         spark_env = '/etc/spark/conf/spark-env.sh'
         utils.re_edit_in_place(spark_env, {
-            r'.*SPARK_DRIVER_MEMORY.*': 'SPARK_DRIVER_MEMORY={}'.format(driver_mem),
-            r'.*SPARK_EXECUTOR_MEMORY.*': 'SPARK_EXECUTOR_MEMORY={}'.format(executor_mem),
+            r'.*SPARK_DRIVER_MEMORY.*': 'export SPARK_DRIVER_MEMORY={}'.format(driver_mem),
+            r'.*SPARK_EXECUTOR_MEMORY.*': 'export SPARK_EXECUTOR_MEMORY={}'.format(executor_mem),
         }, append_non_matches=True)
 
         # Install SB (subsequent calls will reconfigure existing install)
