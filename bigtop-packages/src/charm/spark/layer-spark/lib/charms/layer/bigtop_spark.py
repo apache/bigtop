@@ -332,9 +332,9 @@ class Spark(object):
                                    'waiting for spark master recovery')
                 hookenv.log("Waiting 2m to ensure spark master is ALIVE")
                 time.sleep(120)
-                host.service_start('spark-worker')
             else:
-                hookenv.log("Master did not start; not starting worker")
+                hookenv.log("Master did not start")
+            host.service_start('spark-worker')
 
     def stop(self):
         host.service_stop('spark-history-server')
