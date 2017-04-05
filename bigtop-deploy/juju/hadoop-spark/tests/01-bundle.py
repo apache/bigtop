@@ -86,7 +86,9 @@ class TestBundle(unittest.TestCase):
         assert 'DataNode' not in yarn, "DataNode should not be running on resourcemanager"
         assert 'DataNode' not in hdfs, "DataNode should not be running on namenode"
 
-        assert 'Master' in spark, "Spark Master not started"
+        assert 'HistoryServer' in spark, "Spark HistoryServer not started"
+        assert 'Master' not in spark, "Spark Master should not be running in yarn mode"
+        assert 'Worker' not in spark, "Spark Worker should not be running in yarn mode"
 
     def test_hdfs(self):
         """
