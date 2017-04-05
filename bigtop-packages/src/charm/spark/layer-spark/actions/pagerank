@@ -61,19 +61,20 @@ def main():
     # act as the spark workers and will not have access to this local data.
     # In yarn mode, copy our input data to hdfs so nodemanagers can access it.
     mode = hookenv.config()['spark_execution_mode']
-    if mode.startswith('yarn') and is_state('hadoop.hdfs.ready'):
-        try:
-            utils.run_as('ubuntu',
-                         'hdfs', 'dfs', '-put', '-f', sample, '/user/ubuntu',
-                         capture_output=True)
-        except subprocess.CalledProcessError as e:
-            msg = 'Unable to copy pagerank sample data to hdfs'
-            fail('{}: {}'.format(msg, e), 'error')
+    if mode.startswith('yarn'):
+        if is_state('hadoop.hdfs.ready'):
+            try:
+                utils.run_as('ubuntu',
+                             'hdfs', 'dfs', '-put', '-f', sample, '/user/ubuntu',
+                             capture_output=True)
+            except subprocess.CalledProcessError as e:
+                msg = 'Unable to copy pagerank sample data to hdfs'
+                fail('{}: {}'.format(msg, e), 'error')
+            else:
+                sample = "/user/ubuntu/web-Google.txt"
         else:
-            sample = "/user/ubuntu/web-Google.txt"
-    else:
-        msg = 'Spark is configured for yarn mode, but HDFS is not ready yet'
-        fail(msg, 'error')
+            msg = 'Spark is configured for yarn mode, but HDFS is not ready yet'
+            fail(msg, 'error')
 
     # find jar location
     spark_home = "/usr/lib/spark"
