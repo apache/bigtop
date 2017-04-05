@@ -15,18 +15,20 @@
 # limitations under the License.
 
 import os
+import subprocess
 import sys
 
 from path import Path
 from time import time
-import subprocess
 
 from charmhelpers.contrib.benchmark import Benchmark
 from charmhelpers.core import hookenv
 from charms.reactive import is_state
+from jujubigdata import utils
 
 
 def fail(msg, output):
+    print(msg)
     hookenv.action_set({'output': output})
     hookenv.action_fail(msg)
     sys.exit(1)
@@ -36,27 +38,44 @@ def main():
     bench = Benchmark()
 
     if not is_state('spark.started'):
-        fail('Spark not yet ready', 'error')
+        msg = 'Spark is not started yet'
+        fail(msg, 'error')
 
+    # gather params and create dir to store results
     num_iter = hookenv.action_get('iterations')
-
-    # create dir to store results
     run = int(time())
     result_dir = Path('/opt/sparkpagerank-results')
     result_log = result_dir / '{}.log'.format(run)
     if not result_dir.exists():
         result_dir.mkdir()
     result_dir.chown('ubuntu', 'ubuntu')
-
-    bench.start()
-    start = int(time())
-
     hookenv.log("values: {} {}".format(num_iter, result_log))
 
-    print('calculating pagerank')
-
-    # set sample jar and data location
     sample = "/home/ubuntu/SparkBench/PageRank/web-Google.txt"
+    if not os.path.isfile(sample):
+        msg = 'Could not find pagerank sample data'
+        fail('{}: {}'.format(msg, sample), 'error')
+
+    # Benchmark input data is packed into our sparkbench.tgz, which makes
+    # it available on all spark units. In yarn mode, however, the nodemanagers
+    # act as the spark workers and will not have access to this local data.
+    # In yarn mode, copy our input data to hdfs so nodemanagers can access it.
+    mode = hookenv.config()['spark_execution_mode']
+    if mode.startswith('yarn') and is_state('hadoop.hdfs.ready'):
+        try:
+            utils.run_as('ubuntu',
+                         'hdfs', 'dfs', '-put', '-f', sample, '/user/ubuntu',
+                         capture_output=True)
+        except subprocess.CalledProcessError as e:
+            msg = 'Unable to copy pagerank sample data to hdfs'
+            fail('{}: {}'.format(msg, e), 'error')
+        else:
+            sample = "/user/ubuntu/web-Google.txt"
+    else:
+        msg = 'Spark is configured for yarn mode, but HDFS is not ready yet'
+        fail(msg, 'error')
+
+    # find jar location
     spark_home = "/usr/lib/spark"
     example_jar_name = "spark-examples.jar"
     example_jar_path = None
@@ -65,7 +84,12 @@ def main():
             example_jar_path = os.path.join(root, example_jar_name)
 
     if not example_jar_path:
-        fail('could not find {}'.format(example_jar_name), 'error')
+        msg = 'Could not find {}'.format(example_jar_name)
+        fail(msg, 'error')
+
+    print('Calculating PageRank')
+    bench.start()
+    start = int(time())
 
     with open(result_log, 'w') as log_file:
         arg_list = [
@@ -81,9 +105,8 @@ def main():
             subprocess.check_call(arg_list, stdout=log_file,
                                   stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
-            print('SparkPageRank command failed: ')
-            print('{}'.format(' '.join(arg_list)))
-            fail('spark-submit failed: {}'.format(e), 'error')
+            msg = 'SparkPageRank command failed: {}'.format(' '.join(arg_list))
+            fail('{}: {}'.format(msg, e), 'error')
 
     stop = int(time())
     bench.finish()
@@ -100,7 +123,8 @@ def main():
                 break
 
     if not success:
-        fail('spark-submit failed to calculate pagerank', 'error')
+        msg = 'Spark-submit failed to calculate pagerank'
+        fail(msg, 'error')
 
     hookenv.action_set({'output': {'status': 'completed'}})
 
