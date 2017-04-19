@@ -88,9 +88,8 @@ def configure_hadoop(hadoop):
     set_state('zeppelin.hadoop.configured')
 
 
-@when('zeppelin.installed')
+@when('zeppelin.installed', 'zeppelin.hadoop.configured')
 @when_not('hadoop.ready')
-@when('zeppelin.hadoop.configured')
 def unconfigure_hadoop():
     zeppelin = Zeppelin()
     zeppelin.remove_hadoop_notebooks()

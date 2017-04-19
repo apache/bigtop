@@ -16,7 +16,6 @@
 # limitations under the License.
 
 import sys
-import json
 from time import sleep
 from urllib.parse import urljoin
 from operator import itemgetter
@@ -28,6 +27,7 @@ from charms.reactive import is_state
 
 
 def fail(msg):
+    hookenv.action_set({'outcome': 'failure'})
     hookenv.action_fail(msg)
     sys.exit()
 
@@ -35,23 +35,13 @@ def fail(msg):
 if not is_state('zeppelin.installed'):
     fail('Zeppelin not yet ready')
 
-
 notebook_id = '2A94M5J1Z'
 zep_addr = 'localhost'
 base_url = 'http://{}:9080/api/notebook/'.format(zep_addr)
-interp_url = urljoin(base_url, 'interpreter/bind/%s' % notebook_id)
 job_url = urljoin(base_url, 'job/%s' % notebook_id)
 para_url = urljoin(base_url, '%s/paragraph/' % notebook_id)
 
 try:
-    # bind interpreters
-    resp = requests.get(interp_url, timeout=60)
-    resp.raise_for_status()
-    interpreters = resp.json()
-    interp_ids = list(map(itemgetter('id'), interpreters['body']))
-    resp = requests.put(interp_url, data=json.dumps(interp_ids), timeout=60)
-    resp.raise_for_status()
-
     # run notebook
     resp = requests.post(job_url, timeout=60)
     resp.raise_for_status()
@@ -91,3 +81,5 @@ try:
             fail('Notebook failed: {}'.format(errmsg))
 except requests.exceptions.RequestException as e:
     fail('Request failed: {}: {}'.format(e.request.url, e))
+
+hookenv.action_set({'outcome': 'success'})
