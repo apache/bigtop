@@ -21,7 +21,8 @@ Software Foundation written in Scala. The project aims to provide a unified,
 high-throughput, low-latency platform for handling real-time data feeds. Learn
 more at [kafka.apache.org][].
 
-This charm deploys the Kafka component of the [Apache Bigtop][] platform.
+This charm deploys version 0.10.1 of the Kafka component from
+[Apache Bigtop][].
 
 [kafka.apache.org]: http://kafka.apache.org/
 [Apache Bigtop]: http://bigtop.apache.org/
@@ -29,9 +30,8 @@ This charm deploys the Kafka component of the [Apache Bigtop][] platform.
 
 # Deploying
 
-A working Juju installation is assumed to be present. If Juju is not yet set
-up, please follow the [getting-started][] instructions prior to deploying this
-charm.
+This charm requires Juju 2.0 or greater. If Juju is not yet set up, please
+follow the [getting-started][] instructions prior to deploying this charm.
 
 Kafka requires the Zookeeper distributed coordination service. Deploy and
 relate them as follows:
@@ -52,9 +52,6 @@ mirror options. See [Configuring Models][] for more information.
 # Using
 
 Once deployed, there are a number of actions available in this charm.
-> **Note**: Actions described below assume Juju 2.0 or greater. If using an
-earlier version of Juju, the action syntax is:
-`juju action do kafka/0 <action_name> <action_args>; juju action fetch <id>`.
 
 List the zookeeper servers that our kafka brokers
 are connected to. The following will list `<ip>:<port>` information for each
@@ -110,24 +107,15 @@ topics. Run the action as follows:
 
     juju run-action slave/0 smoke-test
 
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju action do kafka/0 smoke-test`.
-
 Watch the progress of the smoke test actions with:
 
     watch -n 2 juju show-action-status
-
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju action status`.
 
 Eventually, the action should settle to `status: completed`.  If it
 reports `status: failed`, the application is not working as expected. Get
 more information about a specific smoke test with:
 
     juju show-action-output <action-id>
-
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju action fetch <action-id>`.
 
 
 # Scaling
@@ -142,9 +130,6 @@ ready units, create a replicated topic as follows:
 
     juju run-action kafka/0 create-topic topic=my-replicated-topic \
         partitions=1 replication=2
-
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju action do kafka/0 create-topic <args>`.
 
 Query the description of the recently created topic:
 
@@ -191,9 +176,6 @@ network interface name or a CIDR range specifying a subnet. For example:
     juju config kafka network_interface=eth0
     juju config kafka network_interface=10.0.2.0/24
 
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju set-config kafka network_interface=eth0`.
-
 Each kafka machine in the cluster will lookup the IP address of that
 network interface, or find the first network interface with an IP
 address in the specified subnet, and bind kafka to that address.
@@ -205,14 +187,22 @@ run "juju resolved" on each unit:
     juju config kafka network_interface=eth0
     juju resolved kafka/0
 
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju set-config kafka network_interface=eth0;
-juju resolved -r kafka/0`.
-
 To go back to listening on any network interface on the
 machine, simply pass ``0.0.0.0`` to ``network_interface``.
 
     juju config kafka network_interface=0.0.0.0
+
+
+# Issues
+
+Apache Bigtop tracks issues using JIRA (Apache account required). File an
+issue for this charm at:
+
+https://issues.apache.org/jira/secure/CreateIssue!default.jspa
+
+Ensure `Bigtop` is selected as the project. Typically, charm issues are filed
+in the `deployment` component with the latest stable release selected as the
+affected version. Any uncertain fields may be left blank.
 
 
 # Contact Information
@@ -222,10 +212,10 @@ machine, simply pass ``0.0.0.0`` to ``network_interface``.
 
 # Resources
 
-- [Apache Bigtop home page](http://bigtop.apache.org/)
-- [Apache Bigtop mailing lists](http://bigtop.apache.org/mail-lists.html)
 - [Apache Kafka home page](http://kafka.apache.org/)
-- [Apache Kafka issue tracker](https://issues.apache.org/jira/browse/KAFKA)
-- [Juju Bigtop charms](https://jujucharms.com/q/apache/bigtop)
+- [Apache Bigtop home page](http://bigtop.apache.org/)
+- [Apache Bigtop issue tracking](http://bigtop.apache.org/issue-tracking.html)
+- [Apache Bigtop mailing lists](http://bigtop.apache.org/mail-lists.html)
+- [Juju Big Data](https://jujucharms.com/big-data)
+- [Juju Bigtop charms](https://jujucharms.com/q/bigtop)
 - [Juju mailing list](https://lists.ubuntu.com/mailman/listinfo/juju)
-- [Juju community](https://jujucharms.com/community)

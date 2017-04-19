@@ -21,22 +21,23 @@ from path import Path
 from time import time
 import subprocess
 
-from charmhelpers.contrib.benchmark import Benchmark
 from charmhelpers.core import hookenv
+from charms.benchmark import Benchmark
 from charms.reactive import is_state
 
 
-def fail(msg, output):
-    hookenv.action_set({'output': output})
+def fail(msg):
+    hookenv.action_set({'outcome': 'failure'})
     hookenv.action_fail(msg)
-    sys.exit(1)
+    sys.exit()
 
 
 def main():
     bench = Benchmark()
 
     if not is_state('spark.started'):
-        fail('Spark not yet ready', 'error')
+        msg = 'Spark is not started yet'
+        fail(msg)
 
     num_partitions = hookenv.action_get('partitions') or ''
 
@@ -64,7 +65,8 @@ def main():
             example_jar_path = os.path.join(root, example_jar_name)
 
     if not example_jar_path:
-        fail('could not find {}'.format(example_jar_name), 'error')
+        msg = 'Could not find {}'.format(example_jar_name)
+        fail(msg)
 
     with open(result_log, 'w') as log_file:
         arg_list = [
@@ -84,26 +86,32 @@ def main():
         except subprocess.CalledProcessError as e:
             print('smoke test command failed: ')
             print('{}'.format(' '.join(arg_list)))
-            fail('spark-submit failed: {}'.format(e), 'error')
+            fail('spark-submit failed: {}'.format(e))
 
     stop = int(time())
     bench.finish()
 
     duration = stop - start
-    bench.set_composite_score(duration, 'secs')
-    subprocess.check_call(['benchmark-raw', result_log])
+    bench.set_composite_score(duration, units='secs', direction='asc')
+
+    # Tell the user how they can get the full result log
+    scp_log_msg = "juju scp {}:{} .".format(hookenv.local_unit(), result_log)
+    hookenv.action_set({'meta.fetchcmd': scp_log_msg})
 
     with open(result_log) as log:
         success = False
         for line in log.readlines():
             if 'Pi is roughly 3.1' in line:
                 success = True
+                pi_calc = line
                 break
 
     if not success:
-        fail('spark-submit did not calculate pi', 'error')
+        msg = 'Spark-submit failed to calculate pi'
+        fail(msg)
 
-    hookenv.action_set({'output': {'status': 'completed'}})
+    hookenv.action_set({'meta.raw': pi_calc})
+    hookenv.action_set({'outcome': 'success'})
 
 
 if __name__ == '__main__':
