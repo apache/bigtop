@@ -17,36 +17,18 @@
 # Overview
 
 Apache Spark is a fast and general purpose engine for large-scale data
-processing. This charm deploys the Spark component of the [Apache Bigtop][]
-platform. Key features:
+processing. Learn more at [spark.apache.org][].
 
- * **Speed**
+This charm deploys version 2.1.0 of the Spark component from [Apache Bigtop][].
 
- Run programs up to 100x faster than Hadoop MapReduce in memory, or 10x faster
- on disk. Spark has an advanced DAG execution engine that supports cyclic data
- flow and in-memory computing.
-
- * **Ease of Use**
-
- Write applications quickly in Java, Scala or Python. Spark offers over 80
- high-level operators that make it easy to build parallel apps for use
- interactively from the Scala and Python shells.
-
- * **General Purpose Engine**
-
- Combine SQL, streaming, and complex analytics. Spark powers a stack of
- high-level tools including Shark for SQL, MLlib for machine learning, GraphX,
- and Spark Streaming. Combine these frameworks seamlessly in the same
- application.
-
+[spark.apache.org]: http://spark.apache.org/
 [Apache Bigtop]: http://bigtop.apache.org/
 
 
 # Deploying
 
-A working Juju installation is assumed to be present. If Juju is not yet set
-up, please follow the [getting-started][] instructions prior to deploying this
-charm.
+This charm requires Juju 2.0 or greater. If Juju is not yet set up, please
+follow the [getting-started][] instructions prior to deploying this charm.
 
 This charm supports running Spark in a variety of modes:
 
@@ -82,25 +64,16 @@ the unit acting as master, query Zookeeper as follows:
 
 ### YARN-client and YARN-cluster
 This charm leverages our pluggable Hadoop model with the `hadoop-plugin`
-interface. This means that this charm can be related to a base Apache Hadoop
+interface. This means that this charm can be related to an Apache Hadoop
 cluster to run Spark jobs there. The suggested deployment method is to use the
-[hadoop-processing][] bundle and add a relation between spark and the plugin.
+[hadoop-spark][] bundle:
 
-
-    juju deploy hadoop-processing
-    juju add-relation plugin spark
-
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, use [juju-quickstart][] with the following syntax: `juju quickstart
-hadoop-processing`.
+    juju deploy hadoop-spark
 
 To switch among the above execution modes, set the `spark_execution_mode`
 config variable:
 
     juju config spark spark_execution_mode=<new_mode>
-
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju set spark spark_execution_mode=<new_mode>`.
 
 See the **Configuring** section below for supported mode options.
 
@@ -110,8 +83,7 @@ in this environment, configure a Juju model with appropriate proxy and/or
 mirror options. See [Configuring Models][] for more information.
 
 [getting-started]: https://jujucharms.com/docs/stable/getting-started
-[hadoop-processing]: https://jujucharms.com/hadoop-processing/
-[juju-quickstart]: https://launchpad.net/juju-quickstart
+[hadoop-spark]: https://jujucharms.com/hadoop-spark/
 [Configuring Models]: https://jujucharms.com/docs/stable/models-config
 
 
@@ -138,24 +110,15 @@ application is functioning as expected. Run the action as follows:
 
     juju run-action spark/0 smoke-test
 
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju action do spark/0 smoke-test`.
-
 Watch the progress of the smoke test actions with:
 
     watch -n 2 juju show-action-status
-
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju action status`.
 
 Eventually, the action should settle to `status: completed`.  If it
 reports `status: failed`, the application is not working as expected. Get
 more information about a specific smoke test with:
 
     juju show-action-output <action-id>
-
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju action fetch <action-id>`.
 
 ## Spark Master web UI
 Spark provides a web console that can be used to verify information about
@@ -322,6 +285,18 @@ Each benchmark is an action that can be run with `juju run-action`:
 [Spark Bench]: https://github.com/SparkTC/spark-bench
 
 
+# Issues
+
+Apache Bigtop tracks issues using JIRA (Apache account required). File an
+issue for this charm at:
+
+https://issues.apache.org/jira/secure/CreateIssue!default.jspa
+
+Leave any uncertain fields blank. Typically, charm issues are filed in the
+`deployment` component with the latest stable release selected as the affected
+version.
+
+
 # Contact Information
 
 - <bigdata@lists.ubuntu.com>
@@ -329,9 +304,10 @@ Each benchmark is an action that can be run with `juju run-action`:
 
 # Resources
 
+- [Apache Spark home page](http://spark.apache.org/)
 - [Apache Bigtop home page](http://bigtop.apache.org/)
 - [Apache Bigtop issue tracking](http://bigtop.apache.org/issue-tracking.html)
 - [Apache Bigtop mailing lists](http://bigtop.apache.org/mail-lists.html)
-- [Juju Bigtop charms](https://jujucharms.com/q/apache/bigtop)
+- [Juju Big Data](https://jujucharms.com/big-data)
+- [Juju Bigtop charms](https://jujucharms.com/q/bigtop)
 - [Juju mailing list](https://lists.ubuntu.com/mailman/listinfo/juju)
-- [Juju community](https://jujucharms.com/community)

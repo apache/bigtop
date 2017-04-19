@@ -20,18 +20,19 @@ Apache ZooKeeper is a high-performance coordination service for distributed
 applications. It exposes common services such as naming, configuration
 management, synchronization, and group services in a simple interface. Use it
 off-the-shelf to implement consensus, group management, leader election, and
-presence protocols.
+presence protocols. Learn more at [zookeeper.apache.org][].
 
-This charm provides the Zookeeper component of the [Apache Bigtop][] platform.
+This charm provides version 3.4.6 of the Zookeeper component from
+[Apache Bigtop][].
 
+[zookeeper.apache.org]: http://zookeeper.apache.org/
 [Apache Bigtop]: http://bigtop.apache.org/
 
 
 # Deploying
 
-A working Juju installation is assumed to be present. If Juju is not yet set
-up, please follow the [getting-started][] instructions prior to deploying this
-charm.
+This charm requires Juju 2.0 or greater. If Juju is not yet set up, please
+follow the [getting-started][] instructions prior to deploying this charm.
 
 Deploy a Zookeeper unit. With only one unit, the application will be running in
 `standalone` mode:
@@ -55,9 +56,6 @@ network interface name or a CIDR range specifying a subnet. For example:
     juju config zookeeper network_interface=eth0
     juju config zookeeper network_interface=10.0.2.0/24
 
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju set-config zookeeper network_interface=eth0`.
-
 Each zookeeper unit in the cluster will lookup the IP address of that
 network interface, or find the first network interface with an IP
 address in the specified subnet, and bind Zookeeper to that address.
@@ -69,17 +67,10 @@ run "juju resolved" on any failed units:
     juju config zookeeper network_interface=eth0
     juju resolved zookeeper/0
 
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju set-config zookeeper network_interface=eth0;
-juju resolved -r zookeeper/0`.
-
 To go back to listening on all interfaces, configure zookeeper with
 `network_interface=0.0.0.0`:
 
     juju config zookeeper network_interface=0.0.0.0
-
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju set-config zookeeper network_interface=0.0.0.0`.
 
 
 # Verifying
@@ -105,24 +96,15 @@ application is functioning as expected. Run the action as follows:
 
     juju run-action zookeeper/0 smoke-test
 
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju action do zookeeper/0 smoke-test`.
-
 Watch the progress of the smoke test actions with:
 
     watch -n 2 juju show-action-status
-
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju action status`.
 
 Eventually, the action should settle to `status: completed`.  If it
 reports `status: failed`, the application is not working as expected. Get
 more information about a specific smoke test with:
 
     juju show-action-output <action-id>
-
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju action fetch <action-id>`.
 
 ## Utilities
 This charm includes Zookeeper command line utilities that can also be used to
@@ -176,6 +158,18 @@ that require Zookeeper as follows:
     ZK_port = relation_get('port')
 
 
+# Issues
+
+Apache Bigtop tracks issues using JIRA (Apache account required). File an
+issue for this charm at:
+
+https://issues.apache.org/jira/secure/CreateIssue!default.jspa
+
+Leave any uncertain fields blank. Typically, charm issues are filed in the
+`deployment` component with the latest stable release selected as the affected
+version.
+
+
 # Contact Information
 
 - <bigdata@lists.ubuntu.com>
@@ -183,10 +177,10 @@ that require Zookeeper as follows:
 
 # Resources
 
+- [Apache Zookeeper home page](http://zookeeper.apache.org/)
 - [Apache Bigtop home page](http://bigtop.apache.org/)
+- [Apache Bigtop issue tracking](http://bigtop.apache.org/issue-tracking.html)
 - [Apache Bigtop mailing lists](http://bigtop.apache.org/mail-lists.html)
-- [Apache Zookeeper home page](https://zookeeper.apache.org/)
-- [Apache Zookeeper issue tracker](https://issues.apache.org/jira/browse/ZOOKEEPER)
-- [Juju Bigtop charms](https://jujucharms.com/q/apache/bigtop)
+- [Juju Big Data](https://jujucharms.com/big-data)
+- [Juju Bigtop charms](https://jujucharms.com/q/bigtop)
 - [Juju mailing list](https://lists.ubuntu.com/mailman/listinfo/juju)
-- [Juju community](https://jujucharms.com/community)
