@@ -109,9 +109,9 @@ issue for this charm at:
 
 https://issues.apache.org/jira/secure/CreateIssue!default.jspa
 
-Leave any uncertain fields blank. Typically, charm issues are filed in the
-`deployment` component with the latest stable release selected as the affected
-version.
+Ensure `Bigtop` is selected as the project. Typically, charm issues are filed
+in the `deployment` component with the latest stable release selected as the
+affected version. Any uncertain fields may be left blank.
 
 
 # Contact Information
