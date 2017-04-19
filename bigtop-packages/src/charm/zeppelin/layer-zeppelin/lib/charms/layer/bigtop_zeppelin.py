@@ -16,16 +16,17 @@
 import os
 import json
 import time
+import requests
 import socket
+
+from path import Path
 from urllib.parse import urljoin
 
-import requests
-from path import Path
-
-from jujubigdata import utils
 from charmhelpers.core import hookenv, host, unitdata
 from charms import layer
 from charms.layer.apache_bigtop_base import Bigtop
+from charms.reactive import is_state
+from jujubigdata import utils
 
 
 class Zeppelin(object):
@@ -43,19 +44,67 @@ class Zeppelin(object):
 
     def install(self):
         '''
-        Trigger the Bigtop puppet recipe that handles the Zepplin service.
+        Perform initial one-time setup, workaround upstream bugs, and
+        trigger puppet.
         '''
         # Dirs are handled by the bigtop deb, so no need to call out to
         # dist_config to do that work.  However, we want to adjust the
         # groups for the `ubuntu` user for better interaction with Juju.
         self.dist_config.add_users()
+
+        # Set ports based on layer.yaml options
         self._add_override('zeppelin::server::server_port',
                            self.dist_config.port('zeppelin'))
         self._add_override('zeppelin::server::web_socket_port',
                            self.dist_config.port('zeppelin_web'))
+
+        # Default spark to local mode on initial install. This will be
+        # reconfigured if/when hadoop or spark relations are made.
+        self._add_override('zeppelin::server::spark_master_url', 'local[*]')
+
+        ##########
+        # BUG: BIGTOP-2742
+        # Default zeppelin init script looks for the literal '$(hostname)'
+        # string. Symlink it so it exists before the apt install from puppet
+        # tries to start the service.
+        import subprocess
+        host = subprocess.check_output(['hostname']).decode('utf8').strip()
+        zepp_pid = '/var/run/zeppelin/zeppelin-zeppelin-{}.pid'.format(host)
+        utils.run_as('root', 'mkdir', '-p', '/var/run/zeppelin')
+        utils.run_as('root', 'ln', '-sf',
+                     zepp_pid,
+                     '/var/run/zeppelin/zeppelin-zeppelin-$(hostname).pid')
+        ##########
+
         self.trigger_bigtop()
 
+        ##########
+        # BUG: BIGTOP-2742
+        # Puppet apply will call systemctl daemon-reload, which removes the
+        # symlink we just created. Now that the bits are on disk, update the
+        # init script $(hostname) that caused this mess to begin with.
+        zepp_init_script = '/etc/init.d/zeppelin'
+        utils.re_edit_in_place(zepp_init_script, {
+            r'^# pidfile.*': '# pidfile: {}'.format(zepp_pid),
+        })
+        utils.run_as('root', 'systemctl', 'daemon-reload')
+        self.restart()
+        self.wait_for_api(30)
+        ##########
+
+        ##########
+        # BUG: BIGTOP-2154
+        # The zep deb depends on spark-core and spark-python. However, because
+        # of the unholy requirement to have hive tightly coupled to spark,
+        # we need to ensure spark-datanucleus is installed. Do this after the
+        # initial install so the bigtop repo is available to us.
+        utils.run_as('root', 'apt-get', 'install', '-qy', 'spark-datanucleus')
+        ##########
+
     def trigger_bigtop(self):
+        '''
+        Trigger the Bigtop puppet recipe that handles the Zeppelin service.
+        '''
         bigtop = Bigtop()
         overrides = unitdata.kv().getrange('zeppelin.bigtop.overrides.',
                                            strip=True)
@@ -65,6 +114,7 @@ class Zeppelin(object):
             ],
             overrides=overrides,
         )
+
         bigtop.trigger_puppet()
         self.wait_for_api(30)
 
@@ -108,6 +158,12 @@ class Zeppelin(object):
         # create hdfs storage space
         utils.run_as('hdfs', 'hdfs', 'dfs', '-mkdir', '-p', '/user/zeppelin')
         utils.run_as('hdfs', 'hdfs', 'dfs', '-chown', 'zeppelin', '/user/zeppelin')
+
+        # If spark is ready, let it handle the spark_master_url. Otherwise,
+        # zepp is in local mode; set it to yarn-client since hadoop is here.
+        if not is_state('spark.ready'):
+            self._add_override('zeppelin::server::spark_master_url', 'yarn-client')
+            self.trigger_bigtop()
 
     def configure_spark(self, master_url):
         '''

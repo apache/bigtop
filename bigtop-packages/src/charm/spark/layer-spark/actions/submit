@@ -16,8 +16,9 @@
 set -e
 
 if ! charms.reactive is_state 'spark.started'; then
+    action-set outcome="failure"
     action-fail 'Spark not yet ready'
-    exit
+    exit 1
 fi
 
 py_files="$(action-get py-files)"

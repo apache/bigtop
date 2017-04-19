@@ -19,8 +19,8 @@ import sys
 from charmhelpers.core import hookenv
 
 
-def fail(msg, output='<No output>'):
-    hookenv.action_set({'output': output})
+def fail(msg):
+    hookenv.action_set({'outcome': 'failure'})
     hookenv.action_fail(msg)
     sys.exit()
 

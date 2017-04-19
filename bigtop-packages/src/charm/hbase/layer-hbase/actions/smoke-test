@@ -44,6 +44,6 @@ echo "HBase shell return code was: " $status
 if [ $status -eq 0 ]; then
   action-set outcome="success"
 else
-  action-set outcome="failed with return code ${status}"
-  action-fail "smoke-test failed"
+  action-set outcome="failure"
+  action-fail "smoke-test failed with return code ${status}"
 fi
