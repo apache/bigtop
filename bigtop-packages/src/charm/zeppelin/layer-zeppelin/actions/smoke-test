@@ -28,6 +28,7 @@ from charms.reactive import is_state
 
 
 def fail(msg):
+    hookenv.action_set({'outcome': 'failure'})
     hookenv.action_fail(msg)
     sys.exit()
 
@@ -91,3 +92,5 @@ try:
             fail('Notebook failed: {}'.format(errmsg))
 except requests.exceptions.RequestException as e:
     fail('Request failed: {}: {}'.format(e.request.url, e))
+
+hookenv.action_set({'outcome': 'success'})

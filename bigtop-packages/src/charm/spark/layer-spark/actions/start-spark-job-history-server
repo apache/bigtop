@@ -15,22 +15,22 @@
 # limitations under the License.
 import sys
 
+from charmhelpers.core import hookenv, host
+from charms.reactive import is_state
 
-try:
-    from charmhelpers.core import host, hookenv, unitdata
-    from jujubigdata import utils
-    charm_ready = True
-except ImportError:
-    charm_ready = False
 
-if not charm_ready:
-    from subprocess import call
-    call(['action-fail', 'Spark service not yet ready'])
-    sys.exit(1)
+def fail(msg):
+    hookenv.action_set({'outcome': 'failure'})
+    hookenv.action_fail(msg)
+    sys.exit()
+
+
+if not is_state('spark.started'):
+    msg = 'Spark is not started yet'
+    fail(msg)
 
 if not host.service_available('spark-history-server'):
-    from subprocess import call
-    call(['action-fail', 'Spark history service not available'])
-    sys.exit(1)
+    msg = 'Spark history service not available'
+    fail(msg)
 
 host.service_start('spark-history-server')

@@ -48,7 +48,7 @@ if host.service_available('kafka-server') and host.service_running('kafka-server
                         '--replication-factor', topic_replication,
                         capture_output=True)
     except subprocess.CalledProcessError as e:
-        kafkautils.fail('Kafka command failed', e.output)
+        kafkautils.fail('Kafka command failed: {}'.format(e.output))
 
     # List topics
     try:
@@ -56,9 +56,9 @@ if host.service_available('kafka-server') and host.service_running('kafka-server
                         '--zookeeper', zookeepers, '--list',
                         capture_output=True)
     except subprocess.CalledProcessError as e:
-        kafkautils.fail('Kafka command failed', e.output)
+        kafkautils.fail('Kafka command failed: {}'.format(e.output))
 
     # If we haven't failed yet, we passed
     hookenv.action_set({'outcome': 'success'})
 else:
-    kafkautils.fail('Kafka service is not running')
+    kafkautils.fail('kafka-server service is not running')

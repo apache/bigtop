@@ -18,16 +18,15 @@
 import sys
 sys.path.append('lib')
 
-from charmhelpers.core import hookenv
-from charms.layer.apache_bigtop_base import Bigtop
-from charms.reactive import is_state
-
-from jujubigdata.utils import run_as
-
-from path import Path
+from charmhelpers.core import hookenv  # noqa: E402
+from charms.layer.apache_bigtop_base import Bigtop  # noqa: E402
+from charms.reactive import is_state  # noqa: E402
+from jujubigdata.utils import run_as  # noqa: E402
+from path import Path  # noqa: E402
 
 
 def fail(msg):
+    hookenv.action_set({'outcome': 'failure'})
     hookenv.action_fail(msg)
     sys.exit()
 
@@ -63,8 +62,8 @@ else:
 
 # The smoke tests analyze /etc/passwd. Successful runs will have an 'ubuntu'
 # passwd entry in the output.
+hookenv.action_set({'raw': output})
 if 'ubuntu' not in output:
-    hookenv.action_set({'output': output})
     fail('Unable to analyze passwd file with Pig')
 else:
     hookenv.action_set({'outcome': 'success'})

@@ -78,6 +78,7 @@ benchmark-finish
 cat ${RESULT_LOG} | $CHARM_DIR/actions/parseBenchmark.py
 DURATION=`expr $STOP - $START`
 benchmark-composite "${DURATION}" 'secs' 'asc'
+action-set outcome="success"
 
 # clean out benchmark dir
 benchmark_cleanup

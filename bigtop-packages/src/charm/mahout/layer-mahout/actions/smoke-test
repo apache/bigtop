@@ -62,3 +62,4 @@ hadoop jar /usr/lib/mahout/mahout-mr-*-job.jar \
   -s SIMILARITY_LOGLIKELIHOOD 2>&1 | tee -a ${RESULT_LOG}
 EOF
 echo 'mahout smoke-test complete'
+action-set outcome="success"
