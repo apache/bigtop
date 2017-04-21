@@ -28,9 +28,10 @@ Bigtop components.  Built charms are published to the [Juju charm store][]
 and can be deployed directly from there, either individually or with
 [bundles][]. They can also be built from these layers and deployed locally.
 
-For the remainder of this guide, a working Juju installation is assumed to be
-present. If Juju is not yet set up, please follow the [getting-started][]
-instructions prior to deploying locally built charms and bundles.
+For the remainder of this guide, a working Juju 2.0 or greater installation is
+assumed to be present. If Juju is not yet set up, please follow the
+[getting-started][] instructions prior to deploying locally built charms and
+bundles.
 
 [Juju charm store]: https://jujucharms.com/
 [bundles]: https://jujucharms.com/hadoop-processing
@@ -48,11 +49,12 @@ For example:
     mkdir $JUJU_REPOSITORY
 
     cd bigtop-packages/src/charms/hadoop/layer-hadoop-namenode
-    charm build
+    charm build --series xenial --report
 
-This will build the NameNode charm, pulling in the appropriate base and
-interface layers from [interfaces.juju.solutions][].  You can get local copies
-of those layers as well by using `charm pull-source`:
+This will build the NameNode charm in the
+$JUJU_REPOSITORY/xenial/hadoop-namenode directory, pulling in the appropriate
+base and interface layers from [interfaces.juju.solutions][].  You can get
+local copies of those layers as well by using `charm pull-source`:
 
     export LAYER_PATH=$HOME/layers
     export INTERFACE_PATH=$HOME/interfaces
@@ -65,16 +67,9 @@ You can deploy the locally built charms individually, for example:
 
     juju deploy $JUJU_REPOSITORY/xenial/hadoop-namenode
 
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is: `juju deploy local:xenial/hadoop-namenode`.
-
 You can also deploy the local version of a bundle:
 
     juju deploy ./bigtop-deploy/juju/hadoop-processing/bundle-local.yaml
-
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, use [juju-quickstart][] with the following syntax: `juju quickstart
-./bigtop-deploy/juju/hadoop-processing/bundle-local.yaml`.
 
 [charm-tools]: https://jujucharms.com/docs/stable/tools-charm-tools
 [Getting Started]: https://jujucharms.com/docs/stable/developer-getting-started
