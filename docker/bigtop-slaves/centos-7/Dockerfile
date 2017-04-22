@@ -15,8 +15,8 @@
 FROM bigtop/puppet:centos-7
 MAINTAINER oflebbe@apache.org
 
-COPY bigtop_toolchain /etc/puppet/modules/bigtop_toolchain
+COPY bigtop_toolchain /opt/puppetlabs/puppet/modules/bigtop_toolchain
 
-RUN puppet apply -e "include bigtop_toolchain::installer"
+RUN /opt/puppetlabs/puppet/bin/puppet apply -e "include bigtop_toolchain::installer"
 COPY . /tmp/bigtop
 RUN cd /tmp/bigtop && ./gradlew && cd && rm -rf /tmp/bigtop

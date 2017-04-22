@@ -65,11 +65,11 @@ case ${ID}-${VERSION_ID} in
 	zypper --gpg-auto-import-keys install -y curl sudo unzip wget puppet suse-release ca-certificates-mozilla net-tools tar
 	;;
     centos-6*)
-        rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm
+        rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-pc1-el-6.noarch.rpm
 	yum -y install curl sudo unzip wget puppet tar
 	;;
     centos-7*)
-        rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-el-7.noarch.rpm
+        rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-pc1-el-7.noarch.rpm
 	yum -y install hostname curl sudo unzip wget puppet
 	;;
     *)
