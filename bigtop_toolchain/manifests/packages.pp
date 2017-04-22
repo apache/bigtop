@@ -132,7 +132,7 @@ class bigtop_toolchain::packages {
         require => [Package['libapr1']]
       }
     }
-    Amazon: { $pkgs = [
+    /Amazon/: { $pkgs = [
       "unzip",
       "curl",
       "wget",
