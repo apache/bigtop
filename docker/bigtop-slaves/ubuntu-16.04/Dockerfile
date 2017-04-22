@@ -15,8 +15,8 @@
 FROM bigtop/puppet:ubuntu-16.04
 MAINTAINER Amir Sanjar
 
-COPY bigtop_toolchain /etc/puppet/modules/bigtop_toolchain
+COPY bigtop_toolchain /opt/puppetlabs/puppet/modules/bigtop_toolchain
 
-RUN  apt-get clean && apt-get update && puppet apply -e "include bigtop_toolchain::installer"
+RUN  apt-get clean && apt-get update && /opt/puppetlabs/bin/puppet apply -e "include bigtop_toolchain::installer"
 COPY . /tmp/bigtop
 RUN cd /tmp/bigtop && ./gradlew && cd && rm -rf /tmp/bigtop

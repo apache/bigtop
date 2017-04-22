@@ -39,26 +39,27 @@ case ${ID}-${VERSION_ID} in
     ubuntu-14.04)
 	apt-get update
 	apt-get -y install wget
-	if [ $HOSTTYPE = "x86_64" ] ; then
-	  # BIGTOP-2003. A workaround to install newer hiera to get rid of hiera 1.3.0 bug.
-	  wget -O /tmp/puppetlabs-release-trusty.deb https://apt.puppetlabs.com/puppetlabs-release-trusty.deb && dpkg -i /tmp/puppetlabs-release-trusty.deb
-	  rm -f /tmp/puppetlabs-release-trusty.deb
-	  apt-get update
-        fi
+	wget -O /tmp/puppetlabs-release-pc1-trusty.deb https://apt.puppetlabs.com/puppetlabs-release-pc1-trusty.deb && dpkg -i /tmp/puppetlabs-release-trusty-pc1.deb
+	rm -f /tmp/puppetlabs-release-trusty.deb
+	apt-get update
 	apt-get -y install curl sudo unzip puppet software-properties-common
 	;;
-    ubuntu-*)
-	apt-get update
-	apt-get -y install curl sudo unzip wget puppet software-properties-common
-	;;
+    ubuntu-16.04)
+        apt-get update
+        apt-get -y install wget
+        wget -O /tmp/puppetlabs-release-pc1-xenial.deb https://apt.puppetlabs.com/puppetlabs-release-pc1-xenial.deb 
+        dpkg -i /tmp/puppetlabs-release-pc1-xenial.deb
+        rm -f /tmp/puppetlabs-release-pc1-xenial.deb
+        apt-get update
+        apt-get -y install curl sudo unzip puppet-agent software-properties-common
+        ;;
     debian-8*)
 	apt-get update
 	apt-get -y install wget
-	# BIGTOP-2523. in order to install puppet 3.8 we need to get it from puppet repo
-	wget -O /tmp/puppetlabs-release-jessie.deb https://apt.puppetlabs.com/puppetlabs-release-jessie.deb && dpkg -i /tmp/puppetlabs-release-jessie.deb
-	rm -f /tmp/puppetlabs-release-jessie.deb
+	wget -O /tmp/puppetlabs-release-pc1-jessie.deb https://apt.puppetlabs.com/puppetlabs-release-pc1-jessie.deb && dpkg -i /tmp/puppetlabs-release-pc1-jessie.deb
+	rm -f /tmp/puppetlabs-release-pc1-jessie.deb
 	apt-get update
-	apt-get -y install curl sudo unzip puppet
+	apt-get -y install curl sudo unzip puppet-agent
 	;;
     opensuse-*)
 	zypper --gpg-auto-import-keys install -y curl sudo unzip wget puppet suse-release ca-certificates-mozilla net-tools tar
@@ -76,9 +77,9 @@ case ${ID}-${VERSION_ID} in
 	exit 1
 esac
 
-puppet module install puppetlabs-stdlib
+/opt/puppetlabs/bin/puppet module install puppetlabs-stdlib
 
 case ${ID} in
    debian|ubuntu)
-      puppet module install puppetlabs-apt;;
+      /opt/puppetlabs/bin/puppet module install puppetlabs-apt;;
 esac
