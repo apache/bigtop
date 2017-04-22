@@ -92,7 +92,7 @@ def main():
     bench.finish()
 
     duration = stop - start
-    bench.set_composite_score(duration, 'secs')
+    bench.set_composite_score(duration, units='secs', direction='asc')
 
     # Tell the user how they can get the full result log
     scp_log_msg = "juju scp {}:{} .".format(hookenv.local_unit(), result_log)
