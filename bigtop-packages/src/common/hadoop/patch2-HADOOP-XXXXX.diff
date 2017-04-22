@@ -1,0 +1,12 @@
+diff -uraN hadoop-2.7.3-src-orig/hadoop-project/pom.xml hadoop-2.7.3-src/hadoop-project/pom.xml
+--- hadoop-2.7.3-src-orig/hadoop-project/pom.xml	2016-08-12 05:29:36.000000000 +0200
++++ hadoop-2.7.3-src/hadoop-project/pom.xml	2017-04-10 19:57:23.394654637 +0200
+@@ -75,7 +75,7 @@
+     <protobuf.version>2.5.0</protobuf.version>
+     <protoc.path>${env.HADOOP_PROTOC_PATH}</protoc.path>
+ 
+-    <zookeeper.version>3.4.6</zookeeper.version>
++    <zookeeper.version>3.4.10</zookeeper.version>
+     <curator.version>2.7.1</curator.version>
+     <findbugs.version>3.0.0</findbugs.version>
+ 
