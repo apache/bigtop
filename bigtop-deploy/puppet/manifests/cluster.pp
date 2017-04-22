@@ -223,7 +223,7 @@ class node_with_roles ($roles = hiera("bigtop::roles")) inherits hadoop_cluster_
     "ambari",
   ]
 
-  deploy_module { $modules:
+  node_with_roles::deploy_module { $modules:
     roles => $roles,
   }
 }

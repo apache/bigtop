@@ -21,6 +21,8 @@ case $operatingsystem {
     }
     # Detect env to pick up default repo for other Bigtop supported OSs
     default: {
+      include stdlib
+
       $lower_os = downcase($operatingsystem)
       # We use code name such as trusty for Ubuntu instead of release version in bigtop's binary convenience repos
       if ($operatingsystem == "Ubuntu") { $release = $lsbdistcodename } else { $release = $operatingsystemmajrelease }
