@@ -77,9 +77,13 @@ case ${ID}-${VERSION_ID} in
 	exit 1
 esac
 
-/opt/puppetlabs/bin/puppet module install puppetlabs-stdlib
+
+# in case we installed puppetlabs puppet above
+export PATH=/opt/puppetlabs/bin:$PATH
+
+puppet module install puppetlabs-stdlib
 
 case ${ID} in
    debian|ubuntu)
-      /opt/puppetlabs/bin/puppet module install puppetlabs-apt;;
+      puppet module install puppetlabs-apt;;
 esac
