@@ -65,7 +65,33 @@ class Zeppelin(object):
             ],
             overrides=overrides,
         )
+
+        ##########
+        # BUG: BIGTOP-2742
+        # Default zeppelin init script looks for the literal '$(hostname)'
+        # string. Symlink it so it's there when apt install (called during
+        # puppet apply) initially starts the service.
+        import subprocess
+        host = subprocess.check_output(['hostname']).decode('utf8').strip()
+        utils.run_as('root', 'mkdir', '/var/run/zeppelin')
+        utils.run_as('root', 'ln', '-sf',
+                     '/var/run/zeppelin/zeppelin-zeppelin-{}.pid'.format(host),
+                     '/var/run/zeppelin/zeppelin-zeppelin-$(hostname).pid')
+        ##########
+
         bigtop.trigger_puppet()
+
+        ##########
+        # BUG: BIGTOP-2742
+        # Puppet apply will call systemctl daemon-reload, which removes the
+        # symlink we just created. Put it back so users will continue to have
+        # a working systemctl service.
+        utils.run_as('root', 'ln', '-sf',
+                     '/var/run/zeppelin/zeppelin-zeppelin-{}.pid'.format(host),
+                     '/var/run/zeppelin/zeppelin-zeppelin-$(hostname).pid')
+        utils.run_as('root', 'systemctl', 'restart', 'zeppelin')
+        ##########
+
         self.wait_for_api(30)
 
     def setup_etc_env(self):
