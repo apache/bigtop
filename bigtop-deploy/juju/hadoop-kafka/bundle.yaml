@@ -63,7 +63,7 @@ services:
       - "6"
       - "7"
   kafka:
-    charm: "cs:xenial/kafka-14"
+    charm: "cs:xenial/kafka-15"
     constraints: "mem=3G"
     num_units: 1
     annotations:
