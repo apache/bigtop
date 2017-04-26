@@ -1,0 +1,36 @@
+#!/usr/bin/env matrix
+"tests":
+- "name": deployment
+  "description": Deploy with Glitches
+  "rules":
+    - "do":
+        "action": matrix.plugins.actions.deploy
+        "entity": "cs:bundle/hadoop-processing"
+        "version": current
+    - "after": deploy
+      "periodic": 5
+      "do":
+        "action": matrix.plugins.actions.health
+      "until": glitch.complete
+    - "after": health.status.healthy
+      "do":
+        "action": matrix.plugins.actions.glitch
+- "name": traffic
+  "description": Traffic in the face of Chaos
+  "rules":
+    - "do":
+        "action": matrix.plugins.actions.deploy
+        "entity": "cs:bundle/hadoop-processing"
+        "version": current
+    - "after": deploy
+      "periodic": 5
+      "do":
+        "action": matrix.plugins.actions.health
+      "until": glitch.complete
+    - "after": health.status.healthy
+      "do":
+        "action": matrix.plugins.actions.glitch
+    - "after": health.status.healthy
+      "do":
+        "action": tests.traffic.test_traffic
+      "until": glitch.complete
