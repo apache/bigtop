@@ -355,7 +355,8 @@ bigtop {
       name    = "bigtop-utils"
       relNotes = "Service package for Apache Bigtop runtime"
       version { base = bigtop.version; pkg = base-"-SNAPSHOT"; release = 1 }
-      tarball { destination = "bigtop-utils-${version.base}.tar.gz" }
+      tarball { destination = "bigtop-utils-${version.base}.tar.gz";
+                source =  ""}
     }
     'bigtop-jsvc' {
       name    = "bigtop-jsvc"
