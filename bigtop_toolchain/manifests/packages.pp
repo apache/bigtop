@@ -157,7 +157,14 @@ class bigtop_toolchain::packages {
       "bzip2-devel",
       "libffi-devel"
     ] }
-    /(Ubuntu|Debian)/: { $pkgs = [
+    /(Ubuntu|Debian)/: {
+      # Debian-9 is using mariadb instead of mysql
+      if ($operatingsystem == "Debian") and ($os[release][major] > "8") {
+        $mysql_dev="libmariadb-dev"
+      } else {
+        $mysql_dev="libmysqlclient-dev"
+      }
+      $pkgs = [
         "unzip",
         "curl",
         "wget",
@@ -192,7 +199,7 @@ class bigtop_toolchain::packages {
         "libsqlite3-dev",
         "libldap2-dev",
         "libsasl2-dev",
-        "libmysqlclient-dev",
+        $mysql_dev,
         "python-setuptools",
         "libkrb5-dev",
         "asciidoc",
@@ -202,8 +209,7 @@ class bigtop_toolchain::packages {
         "libboost-regex-dev",
         "xfslibs-dev",
         "libbz2-dev",
-        "libreadline6",
-        "libreadline6-dev",
+        "libreadline-dev",
         "zlib1g",
         "libapr1",
         "libapr1-dev",

@@ -17,7 +17,9 @@ class bigtop_toolchain::jdk {
   case $::operatingsystem {
     /Debian/: {
       require apt
-      require apt::backports
+      unless $os[release][major] > "8" {
+         require apt::backports
+      }
 
       package { 'openjdk-8-jdk' :
         ensure => present,

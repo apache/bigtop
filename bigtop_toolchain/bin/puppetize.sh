@@ -60,6 +60,10 @@ case ${ID}-${VERSION_ID} in
 	apt-get update
 	apt-get -y install curl sudo unzip puppet
 	;;
+    debian-9*)
+        apt-get update
+        apt-get -y install wget curl sudo unzip puppet
+        ;;
     opensuse-*)
 	zypper --gpg-auto-import-keys install -y curl sudo unzip wget puppet suse-release ca-certificates-mozilla net-tools tar
 	;;
