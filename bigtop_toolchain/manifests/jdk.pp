@@ -42,6 +42,12 @@ class bigtop_toolchain::jdk {
       package { 'java-1.8.0-openjdk-devel' :
         ensure => present
       }
+      if ($::operatingsystem == "Fedora") {
+        file { '/usr/lib/jvm/java-1.8.0-openjdk/jre/lib/security/cacerts':
+          ensure => 'link',
+          target => '/etc/pki/java/cacerts'
+        }
+      }
     }
     /OpenSuSE/: {
       package { 'java-1_8_0-openjdk-devel' :
