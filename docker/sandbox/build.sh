@@ -135,6 +135,10 @@ show_deploy_configs() {
     echo "-------------------------------------------------"
 }
 
+log() {
+    echo -e "\n[LOG] $1\n"
+}
+
 usage() {
     echo "usage: $PROG args"
     echo "       -a, --account                            Specify account name for image."
@@ -158,6 +162,9 @@ while [ $# -gt 0 ]; do
         fi
         ACCOUNT=$2
         shift 2;;
+    -d|--dryrun)
+        DRYRUN=true
+        shift;;
     -c|--components)
         if [ $# -lt 2 ]; then
             usage
@@ -203,7 +210,7 @@ else
     if [ -f "$FILE" ]; then
         cp -vfr $FILE site.yaml.template
     else
-        echo "$FILE not exist!"
+        log "$FILE not exist!"
 	exit 1
     fi
 fi
@@ -211,5 +218,10 @@ fi
 export ACCOUNT
 export TAG
 generate_dockerfile
+if [ "$DRYRUN" == true ]; then
+    log "Generated Dockerfile:"
+    cat Dockerfile
+    exit 0
+fi
 build
 cleanup
