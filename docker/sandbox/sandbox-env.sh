@@ -15,10 +15,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-RPMS=(centos-6 centos-7 fedora-20)
-DEBS=(debian-8 ubuntu-14.04)
+BIGTOP_VERSION=1.2.0
+# REPO="YOUR CUSTOM REPO"
 
+RPMS=( \
+    centos-6 \
+    centos-7 \
+    fedora-25 \
+    opensuse-42.1 \
+)
 RPM_JDK=java-1.8.0-openjdk-devel.x86_64
+
+DEBS=( \
+    debian-8 \
+    ubuntu-14.04 \
+    ubuntu-16.04 \
+)
 DEB_JDK=openjdk-8-jdk
 
-BIGTOP_VERSION=1.2.0
+OS_TO_CODE_NAME() {
+    case $1 in
+        "ubuntu-14.04") OS_WITH_CODE_NAME="ubuntu-trusty" ;;
+        "ubuntu-16.04") OS_WITH_CODE_NAME="ubuntu-xenial" ;;
+    esac
+    echo $OS_WITH_CODE_NAME
+}
