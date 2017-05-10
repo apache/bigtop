@@ -13,11 +13,13 @@ hadoop::hadoop_storage_dirs:
 
 #hadoop_cluster_node::cluster_components:
 #  - alluxio
+#  - ambari
 #  - apex
 #  - crunch
 #  - flink
 #  - flume
 #  - giraph
+#  - gpdb
 #  - ignite_hadoop
 #  - hbase
 #  - hcat
@@ -31,14 +33,13 @@ hadoop::hadoop_storage_dirs:
 #  - qfs
 #  - solrcloud
 #  - spark
+#  - spark-standalone
 #  - sqoop
 #  - sqoop2
 #  - tez
 #  - yarn
-#  - zookeeper
 #  - ycsb
-#  - gpdb
-#  - ambari
+#  - zookeeper
 
 #bigtop::roles_enabled: false
 

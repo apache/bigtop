@@ -135,7 +135,7 @@ class spark {
   }
 
   class common(
-      $master_url = 'yarn',
+      $master_url = undef,
       $master_host = $fqdn,
       $zookeeper_connection_string = undef,
       $master_port = 7077,
