@@ -92,15 +92,6 @@ class Zeppelin(object):
         self.wait_for_api(30)
         ##########
 
-        ##########
-        # BUG: BIGTOP-2154
-        # The zep deb depends on spark-core and spark-python. However, because
-        # of the unholy requirement to have hive tightly coupled to spark,
-        # we need to ensure spark-datanucleus is installed. Do this after the
-        # initial install so the bigtop repo is available to us.
-        utils.run_as('root', 'apt-get', 'install', '-qy', 'spark-datanucleus')
-        ##########
-
     def trigger_bigtop(self):
         '''
         Trigger the Bigtop puppet recipe that handles the Zeppelin service.
@@ -108,8 +99,15 @@ class Zeppelin(object):
         bigtop = Bigtop()
         overrides = unitdata.kv().getrange('zeppelin.bigtop.overrides.',
                                            strip=True)
+
+        # The zep deb depends on spark-core, spark-python, and unfortunately,
+        # most of hadoop. Include appropriate roles here to ensure these
+        # packages are configured in the same way as our other Bigtop
+        # software deployed with puppet.
         bigtop.render_site_yaml(
             roles=[
+                'spark-client',
+                'spark-yarn-slave',
                 'zeppelin-server',
             ],
             overrides=overrides,

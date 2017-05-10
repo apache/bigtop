@@ -18,7 +18,6 @@ from jujubigdata import utils
 from path import Path
 
 from charms.layer.apache_bigtop_base import Bigtop
-from charms.reactive import is_state
 from charms import layer
 from charmhelpers.core import hookenv, host, unitdata
 from charmhelpers.fetch.archiveurl import ArchiveUrlFetchHandler
@@ -51,14 +50,6 @@ class Spark(object):
         elif mode.startswith('yarn'):
             master = 'yarn-client'
         return master
-
-    def get_roles(self):
-        roles = ['spark-worker', 'spark-client']
-        zk_units = unitdata.kv().get('zookeeper.units', [])
-        if is_state('leadership.is_leader') or zk_units:
-            roles.append('spark-master')
-            roles.append('spark-history-server')
-        return roles
 
     def install_benchmark(self):
         """
@@ -182,23 +173,27 @@ class Spark(object):
 
         :param dict available_hosts: Hosts that Spark should know about.
         """
-        unitdata.kv().set('zookeeper.units', zk_units)
-        unitdata.kv().set('sparkpeer.units', peers)
-        unitdata.kv().flush(True)
-
+        # Bootstrap spark
         if not unitdata.kv().get('spark.bootstrapped', False):
             self.setup()
             unitdata.kv().set('spark.bootstrapped', True)
 
+        # Set KV based on connected applications
+        unitdata.kv().set('zookeeper.units', zk_units)
+        unitdata.kv().set('sparkpeer.units', peers)
+        unitdata.kv().flush(True)
+
+        # Get our config ready
+        dc = self.dist_config
+        events_log_dir = 'file://{}'.format(dc.path('spark_events'))
         mode = hookenv.config()['spark_execution_mode']
         master_ip = utils.resolve_private_address(available_hosts['spark-master'])
         master_url = self.get_master_url(master_ip)
+
+        # Setup hosts dict
         hosts = {
             'spark': master_ip,
         }
-
-        dc = self.dist_config
-        events_log_dir = 'file://{}'.format(dc.path('spark_events'))
         if 'namenode' in available_hosts:
             hosts['namenode'] = available_hosts['namenode']
             events_log_dir = self.setup_hdfs_logs()
@@ -206,14 +201,22 @@ class Spark(object):
         if 'resourcemanager' in available_hosts:
             hosts['resourcemanager'] = available_hosts['resourcemanager']
 
-        roles = self.get_roles()
+        # Setup roles dict. We always include the history server and client.
+        # Determine other roles based on our execution mode.
+        roles = ['spark-history-server', 'spark-client']
+        if mode == 'standalone':
+            roles.append('spark-master')
+            roles.append('spark-worker')
+        elif mode.startswith('yarn'):
+            roles.append('spark-on-yarn')
+            roles.append('spark-yarn-slave')
 
+        # Setup overrides dict
         override = {
             'spark::common::master_url': master_url,
             'spark::common::event_log_dir': events_log_dir,
             'spark::common::history_log_dir': events_log_dir,
         }
-
         if zk_units:
             zks = []
             for unit in zk_units:
@@ -225,6 +228,7 @@ class Spark(object):
         else:
             override['spark::common::zookeeper_connection_string'] = None
 
+        # Create our site.yaml and trigger puppet
         bigtop = Bigtop()
         bigtop.render_site_yaml(hosts, roles, override)
         bigtop.trigger_puppet()
