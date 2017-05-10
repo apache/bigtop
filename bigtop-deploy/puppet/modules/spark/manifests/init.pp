@@ -148,14 +148,13 @@ class spark {
       $history_log_dir = "hdfs:///var/log/spark/apps",
   ) {
 
-    package { 'spark-core':
-      ensure => latest,
-    }
 ### This is an ungodly hack to deal with the consequence of adding
 ### unconditional hive-support into Spark
 ### The addition is tracked by BIGTOP-2154
 ### The real fix will come in BIGTOP-2268
-    package { 'spark-datanucleus':
+    include spark::datanucleus
+
+    package { 'spark-core':
       ensure => latest,
     }
 
