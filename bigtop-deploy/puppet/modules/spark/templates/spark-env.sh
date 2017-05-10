@@ -24,7 +24,15 @@ export HIVE_CONF_DIR=${HIVE_CONF_DIR:-/etc/hive/conf}
 export STANDALONE_SPARK_MASTER_HOST=<%= @master_host %>
 export SPARK_MASTER_PORT=<%= @master_port %>
 export SPARK_MASTER_IP=$STANDALONE_SPARK_MASTER_HOST
+<% if @master_url -%>
 export SPARK_MASTER_URL=<%= @master_url %>
+<% else -%>
+<% if (scope['deploy::roles'] & ['spark-master', 'spark-worker']) != [] -%>
+export SPARK_MASTER_URL=spark://<%= @master_host %>:<%= @master_port %>
+<% else -%>
+export SPARK_MASTER_URL=yarn
+<% end -%>
+<% end -%>
 export SPARK_MASTER_WEBUI_PORT=<%= @master_ui_port %>
 
 export SPARK_WORKER_DIR=${SPARK_WORKER_DIR:-/var/run/spark/work}
