@@ -26,12 +26,12 @@ class TestDeploy(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.d = amulet.Deployment(series='xenial')
-        cls.d.add('mahout', 'cs:xenial/mahout')
-        cls.d.add('client', 'cs:xenial/hadoop-client')
-        cls.d.add('resourcemanager', 'cs:xenial/hadoop-resourcemanager')
-        cls.d.add('namenode', 'cs:xenial/hadoop-namenode')
-        cls.d.add('slave', 'cs:xenial/hadoop-slave')
-        cls.d.add('plugin', 'cs:xenial/hadoop-plugin')
+        cls.d.add('mahout')
+        cls.d.add('client', charm='hadoop-client')
+        cls.d.add('namenode', charm='hadoop-namenode')
+        cls.d.add('resourcemanager', charm='hadoop-resourcemanager')
+        cls.d.add('slave', charm='hadoop-slave')
+        cls.d.add('plugin', charm='hadoop-plugin')
 
         cls.d.relate('plugin:hadoop-plugin', 'client:hadoop')
         cls.d.relate('plugin:namenode', 'namenode:namenode')

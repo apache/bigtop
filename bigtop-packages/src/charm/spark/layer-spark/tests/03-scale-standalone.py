@@ -27,7 +27,8 @@ class TestScaleStandalone(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.d = amulet.Deployment(series='xenial')
-        cls.d.add('spark-test-scale', 'cs:xenial/spark', units=3)
+        cls.d.add('spark-test-scale', charm='spark',
+                  units=3, constraints={'mem': '7G'})
         cls.d.setup(timeout=3600)
         cls.d.sentry.wait(timeout=3600)
 
@@ -35,8 +36,8 @@ class TestScaleStandalone(unittest.TestCase):
     def tearDownClass(cls):
         # NB: seems to be a remove_service issue with amulet. However, the
         # unit does still get removed. Pass OSError for now:
-        #  OSError: juju command failed ['remove-application', 'zk-test']:
-        #  ERROR allocation for service ...zk-test... owned by ... not found
+        #  OSError: juju command failed ['remove-application', ...]:
+        #  ERROR allocation for service ... owned by ... not found
         try:
             cls.d.remove_service('spark-test-scale')
         except OSError as e:
