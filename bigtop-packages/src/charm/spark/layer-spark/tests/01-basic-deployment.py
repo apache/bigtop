@@ -26,7 +26,7 @@ class TestDeploy(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.d = amulet.Deployment(series='xenial')
-        cls.d.add('spark', 'cs:xenial/spark')
+        cls.d.add('spark')
         cls.d.setup(timeout=1800)
         cls.d.sentry.wait(timeout=1800)
         cls.unit = cls.d.sentry['spark'][0]

@@ -24,13 +24,10 @@ class TestDeploy(unittest.TestCase):
     """
     Deployment test for Apache Zookeeper quorum
     """
-
     @classmethod
     def setUpClass(cls):
         cls.d = amulet.Deployment(series='xenial')
-
-        cls.d.add('zookeeper', charm='cs:xenial/zookeeper', units=3)
-
+        cls.d.add('zookeeper', units=3)
         cls.d.setup(timeout=1800)
         cls.d.sentry.wait_for_messages({'zookeeper': re.compile('ready')},
                                        timeout=1800)
