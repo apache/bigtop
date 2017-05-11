@@ -1,6 +1,6 @@
 services:
   namenode:
-    charm: "cs:xenial/hadoop-namenode-18"
+    charm: "cs:xenial/hadoop-namenode-19"
     constraints: "mem=7G root-disk=32G"
     num_units: 1
     annotations:
@@ -9,7 +9,7 @@ services:
     to:
       - "0"
   resourcemanager:
-    charm: "cs:xenial/hadoop-resourcemanager-20"
+    charm: "cs:xenial/hadoop-resourcemanager-21"
     constraints: "mem=7G root-disk=32G"
     num_units: 1
     annotations:
@@ -18,7 +18,7 @@ services:
     to:
       - "0"
   slave:
-    charm: "cs:xenial/hadoop-slave-19"
+    charm: "cs:xenial/hadoop-slave-20"
     constraints: "mem=7G root-disk=32G"
     num_units: 3
     annotations:
@@ -29,7 +29,7 @@ services:
       - "2"
       - "3"
   plugin:
-    charm: "cs:xenial/hadoop-plugin-18"
+    charm: "cs:xenial/hadoop-plugin-19"
     annotations:
       gui-x: "1000"
       gui-y: "400"
@@ -43,7 +43,7 @@ services:
     to:
       - "4"
   spark:
-    charm: "cs:xenial/spark-38"
+    charm: "cs:xenial/spark-39"
     constraints: "mem=7G root-disk=32G"
     num_units: 1
     options:
