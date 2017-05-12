@@ -1,6 +1,6 @@
 services:
   spark:
-    charm: "cs:xenial/spark-40"
+    charm: "cs:xenial/spark-41"
     constraints: "mem=7G root-disk=32G"
     num_units: 2
     options:
