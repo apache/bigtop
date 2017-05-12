@@ -27,8 +27,8 @@ class TestDeploy(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.d = amulet.Deployment(series='xenial')
-        cls.d.add('zeppelin', 'cs:xenial/zeppelin')
-        cls.d.add('spark', 'cs:xenial/spark')
+        cls.d.add('zeppelin')
+        cls.d.add('spark')
 
         cls.d.relate('zeppelin:spark', 'spark:client')
 

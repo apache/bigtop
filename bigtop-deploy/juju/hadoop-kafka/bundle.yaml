@@ -52,7 +52,7 @@ services:
     to:
       - "4"
   zookeeper:
-    charm: "cs:xenial/zookeeper-24"
+    charm: "cs:xenial/zookeeper-25"
     constraints: "mem=3G root-disk=32G"
     num_units: 3
     annotations:
@@ -63,7 +63,7 @@ services:
       - "6"
       - "7"
   kafka:
-    charm: "cs:xenial/kafka-20"
+    charm: "cs:xenial/kafka-21"
     constraints: "mem=3G"
     num_units: 1
     annotations:

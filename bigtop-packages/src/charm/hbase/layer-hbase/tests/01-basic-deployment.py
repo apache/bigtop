@@ -27,7 +27,7 @@ class TestDeploy(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.d = amulet.Deployment(series='xenial')
-        cls.d.add('hbase', 'cs:xenial/hbase')
+        cls.d.add('hbase')
 
         cls.d.setup(timeout=1800)
         cls.d.sentry.wait_for_messages({'hbase': re.compile('ready')}, timeout=1800)

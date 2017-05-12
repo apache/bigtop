@@ -29,10 +29,10 @@ class TestConfigChanged(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.d = amulet.Deployment(series='xenial')
-        cls.d.add('kafka-test', charm='cs:xenial/kafka')
-        cls.d.add('zk-test', charm='cs:xenial/zookeeper')
+        cls.d.add('kafka-test', charm='kafka')
+        cls.d.add('kafka-test-zk', charm='zookeeper')
 
-        cls.d.relate('kafka-test:zookeeper', 'zk-test:zookeeper')
+        cls.d.relate('kafka-test:zookeeper', 'kafka-test-zk:zookeeper')
 
         cls.d.setup(timeout=1800)
         cls.d.sentry.wait_for_messages({'kafka-test': 'ready'}, timeout=1800)
@@ -42,10 +42,10 @@ class TestConfigChanged(unittest.TestCase):
     def tearDownClass(cls):
         # NB: seems to be a remove_service issue with amulet. However, the
         # unit does still get removed. Pass OSError for now:
-        #  OSError: juju command failed ['remove-application', 'zk-test']:
-        #  ERROR allocation for service ...zk-test... owned by ... not found
+        #  OSError: juju command failed ['remove-application', ...]:
+        #  ERROR allocation for service ... owned by ... not found
         try:
-            cls.d.remove_service('zk-test', 'kafka-test')
+            cls.d.remove_service('kafka-test', 'kafka-test-zk')
         except OSError as e:
             print("IGNORE: Amulet remove_service failed: {}".format(e))
             pass
