@@ -35,7 +35,7 @@ class TestDeployment(unittest.TestCase):
         cls.d.relate('spark-test-zk:zookeeper', 'spark-test-ha:zookeeper')
         cls.d.expose('spark-test-ha')
 
-        cls.d.setup(timeout=300)
+        cls.d.setup(timeout=3600)
         cls.d.sentry.wait(timeout=3600)
 
     @classmethod
