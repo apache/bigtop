@@ -28,15 +28,6 @@ RPM_JDK=java-1.8.0-openjdk-devel.x86_64
 
 DEBS=( \
     debian-8 \
-    ubuntu-14.04 \
     ubuntu-16.04 \
 )
 DEB_JDK=openjdk-8-jdk
-
-OS_TO_CODE_NAME() {
-    case $1 in
-        "ubuntu-14.04") OS_WITH_CODE_NAME="ubuntu-trusty" ;;
-        "ubuntu-16.04") OS_WITH_CODE_NAME="ubuntu-xenial" ;;
-    esac
-    echo $OS_WITH_CODE_NAME
-}
