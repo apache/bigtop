@@ -74,12 +74,8 @@ detect_jdk() {
 }
 
 detect_repo() {
-    OS_WITH_CODE_NAME=$(OS_TO_CODE_NAME $OS)
-    if [ -z "$OS_WITH_CODE_NAME" ]; then
-        OS_WITH_CODE_NAME=$OS
-    fi
-    OS_WITH_CODE_NAME_SEP_BY_SLASH=${OS_WITH_CODE_NAME/-//}
-    REPO=${REPO:-"http://bigtop-repos.s3.amazonaws.com/releases/${BIGTOP_VERSION}/${OS_WITH_CODE_NAME_SEP_BY_SLASH}/x86_64"}
+    OS_SEP_BY_SLASH=${OS/-//}
+    REPO=${REPO:-"http://bigtop-repos.s3.amazonaws.com/releases/${BIGTOP_VERSION}/${OS_SEP_BY_SLASH}/x86_64"}
 }
 
 image_config_validator() {
