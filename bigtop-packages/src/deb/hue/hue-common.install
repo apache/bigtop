@@ -8,7 +8,7 @@
 /usr/lib/hue/Makefile.sdk
 /usr/lib/hue/Makefile.vars
 /usr/lib/hue/Makefile.vars.priv
-/usr/lib/hue/README.rst
+/usr/lib/hue/README.md
 /usr/lib/hue/tools
 /usr/lib/hue/VERSION
 /usr/lib/hue/build/env/bin/*

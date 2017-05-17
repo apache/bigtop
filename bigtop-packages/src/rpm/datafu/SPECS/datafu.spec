@@ -53,7 +53,7 @@ Convenience utility functions (e.g., assertions, easier writing of EvalFuncs)
 and more...
 
 %prep
-%setup -n %{datafu_name}-%{datafu_base_version}
+%setup -n apache-%{datafu_name}-incubating-sources-%{datafu_base_version}
 
 %build
 bash $RPM_SOURCE_DIR/do-component-build
@@ -61,7 +61,7 @@ bash $RPM_SOURCE_DIR/do-component-build
 %install
 %__rm -rf $RPM_BUILD_ROOT
 sh $RPM_SOURCE_DIR/install_datafu.sh \
-          --build-dir=dist \
+          --build-dir=datafu-pig/build/libs \
           --prefix=$RPM_BUILD_ROOT
 
 #######################

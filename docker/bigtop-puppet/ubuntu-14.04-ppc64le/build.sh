@@ -13,4 +13,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 cp ../../../bigtop_toolchain/bin/puppetize.sh .
-docker build -t bigtop/puppet:ubuntu-14.04-ppc64le .
+docker build --pull=true -t bigtop/puppet:ubuntu-14.04-ppc64le .

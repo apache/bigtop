@@ -1,0 +1,140 @@
+diff -ur giraph-1.1.0/giraph-accumulo/pom.xml giraph-1.1.0.new/giraph-accumulo/pom.xml
+--- giraph-1.1.0/giraph-accumulo/pom.xml	2014-11-01 06:25:12.000000000 +0100
++++ giraph-1.1.0.new/giraph-accumulo/pom.xml	2016-12-22 19:16:52.000000000 +0100
+@@ -76,10 +76,6 @@
+           </systemProperties>
+         </configuration>
+       </plugin>
+-      <plugin>
+-        <groupId>org.codehaus.mojo</groupId>
+-        <artifactId>findbugs-maven-plugin</artifactId>
+-      </plugin>
+     </plugins>
+   </build>
+ 
+diff -ur giraph-1.1.0/giraph-core/pom.xml giraph-1.1.0.new/giraph-core/pom.xml
+--- giraph-1.1.0/giraph-core/pom.xml	2014-11-01 06:25:12.000000000 +0100
++++ giraph-1.1.0.new/giraph-core/pom.xml	2016-12-22 19:17:12.000000000 +0100
+@@ -142,24 +142,6 @@
+           </execution>
+         </executions>
+       </plugin>
+-      <plugin>
+-        <groupId>org.codehaus.mojo</groupId>
+-        <artifactId>findbugs-maven-plugin</artifactId>
+-        <version>2.5.1</version>
+-        <configuration>
+-          <xmlOutput>true</xmlOutput>
+-          <findbugsXmlOutput>false</findbugsXmlOutput>
+-          <excludeFilterFile>${top.dir}/findbugs-exclude.xml</excludeFilterFile>
+-        </configuration>
+-        <executions>
+-          <execution>
+-            <phase>verify</phase>
+-            <goals>
+-              <goal>check</goal>
+-            </goals>
+-          </execution>
+-        </executions>
+-      </plugin>
+     </plugins>
+   </build>
+ 
+diff -ur giraph-1.1.0/giraph-examples/pom.xml giraph-1.1.0.new/giraph-examples/pom.xml
+--- giraph-1.1.0/giraph-examples/pom.xml	2014-11-01 06:25:12.000000000 +0100
++++ giraph-1.1.0.new/giraph-examples/pom.xml	2016-12-22 19:17:29.000000000 +0100
+@@ -93,10 +93,6 @@
+         <groupId>org.apache.rat</groupId>
+         <artifactId>apache-rat-plugin</artifactId>
+       </plugin>
+-      <plugin>
+-        <groupId>org.codehaus.mojo</groupId>
+-        <artifactId>findbugs-maven-plugin</artifactId>
+-      </plugin>
+     </plugins>
+   </build>
+ 
+diff -ur giraph-1.1.0/giraph-gora/pom.xml giraph-1.1.0.new/giraph-gora/pom.xml
+--- giraph-1.1.0/giraph-gora/pom.xml	2014-11-01 06:25:12.000000000 +0100
++++ giraph-1.1.0.new/giraph-gora/pom.xml	2016-12-22 19:17:36.000000000 +0100
+@@ -67,10 +67,6 @@
+                     </systemProperties>
+                 </configuration>
+             </plugin>
+-            <plugin>
+-                <groupId>org.codehaus.mojo</groupId>
+-                <artifactId>findbugs-maven-plugin</artifactId>
+-            </plugin>
+         </plugins>
+     </build>
+ 
+diff -ur giraph-1.1.0/giraph-hbase/pom.xml giraph-1.1.0.new/giraph-hbase/pom.xml
+--- giraph-1.1.0/giraph-hbase/pom.xml	2014-11-01 06:25:12.000000000 +0100
++++ giraph-1.1.0.new/giraph-hbase/pom.xml	2016-12-22 19:17:42.000000000 +0100
+@@ -80,10 +80,6 @@
+           </systemProperties>
+         </configuration>
+       </plugin>
+-      <plugin>
+-        <groupId>org.codehaus.mojo</groupId>
+-        <artifactId>findbugs-maven-plugin</artifactId>
+-      </plugin>
+     </plugins>
+   </build>
+ 
+diff -ur giraph-1.1.0/giraph-hcatalog/pom.xml giraph-1.1.0.new/giraph-hcatalog/pom.xml
+--- giraph-1.1.0/giraph-hcatalog/pom.xml	2014-11-01 06:25:12.000000000 +0100
++++ giraph-1.1.0.new/giraph-hcatalog/pom.xml	2016-12-22 19:17:48.000000000 +0100
+@@ -75,10 +75,6 @@
+           </systemProperties>
+         </configuration>
+       </plugin>
+-      <plugin>
+-        <groupId>org.codehaus.mojo</groupId>
+-        <artifactId>findbugs-maven-plugin</artifactId>
+-      </plugin>
+     </plugins>
+   </build>
+ 
+diff -ur giraph-1.1.0/giraph-hive/pom.xml giraph-1.1.0.new/giraph-hive/pom.xml
+--- giraph-1.1.0/giraph-hive/pom.xml	2014-11-01 06:25:12.000000000 +0100
++++ giraph-1.1.0.new/giraph-hive/pom.xml	2016-12-22 19:17:55.000000000 +0100
+@@ -85,10 +85,6 @@
+           </systemProperties>
+         </configuration>
+       </plugin>
+-      <plugin>
+-        <groupId>org.codehaus.mojo</groupId>
+-        <artifactId>findbugs-maven-plugin</artifactId>
+-      </plugin>
+     </plugins>
+   </build>
+ 
+diff -ur giraph-1.1.0/giraph-rexster/giraph-kibble/pom.xml giraph-1.1.0.new/giraph-rexster/giraph-kibble/pom.xml
+--- giraph-1.1.0/giraph-rexster/giraph-kibble/pom.xml	2014-11-01 06:25:12.000000000 +0100
++++ giraph-1.1.0.new/giraph-rexster/giraph-kibble/pom.xml	2016-12-22 19:32:12.000000000 +0100
+@@ -79,10 +79,6 @@
+         <groupId>org.apache.maven.plugins</groupId>
+         <artifactId>maven-javadoc-plugin</artifactId>
+       </plugin>
+-      <plugin>
+-        <groupId>org.codehaus.mojo</groupId>
+-        <artifactId>findbugs-maven-plugin</artifactId>
+-      </plugin>
+     </plugins>
+   </build>
+ 
+diff -ur giraph-1.1.0/giraph-rexster/giraph-rexster-io/pom.xml giraph-1.1.0.new/giraph-rexster/giraph-rexster-io/pom.xml
+--- giraph-1.1.0/giraph-rexster/giraph-rexster-io/pom.xml	2014-11-01 06:25:12.000000000 +0100
++++ giraph-1.1.0.new/giraph-rexster/giraph-rexster-io/pom.xml	2016-12-22 19:32:19.000000000 +0100
+@@ -80,10 +80,6 @@
+           </systemProperties>
+         </configuration>
+       </plugin>
+-      <plugin>
+-        <groupId>org.codehaus.mojo</groupId>
+-        <artifactId>findbugs-maven-plugin</artifactId>
+-      </plugin>
+     </plugins>
+   </build>
+ 

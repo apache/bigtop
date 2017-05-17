@@ -32,7 +32,7 @@ class bigtop_toolchain::maven {
   
   file {'/usr/local/maven':
     ensure  => link,
-    target  => "/usr/local/apache-maven-$mvnversion",
+    target  => "/usr/local/$mvn",
     require => Exec["/bin/tar xvzf /usr/src/$mvn-bin.tar.gz"],
   }
 }

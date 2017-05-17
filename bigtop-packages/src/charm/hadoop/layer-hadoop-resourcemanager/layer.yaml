@@ -1,4 +1,4 @@
-repo: git@github.com:juju-solutions/layer-hadoop-resourcemanager.git
+repo: https://github.com/apache/bigtop/tree/master/bigtop-packages/src/charm/hadoop/layer-hadoop-resourcemanager
 includes:
   - 'layer:apache-bigtop-base'
   - 'interface:dfs'
@@ -7,9 +7,14 @@ includes:
   - 'interface:benchmark'
 options:
   apache-bigtop-base:
+    groups:
+      - 'mapred'
+      - 'spark'
     users:
+      spark:
+        groups: ['spark', 'hadoop']
       ubuntu:
-        groups: ['hadoop', 'mapred']
+        groups: ['hadoop', 'mapred', 'spark']
     ports:
         resourcemanager:
             port: 8032

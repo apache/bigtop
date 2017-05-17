@@ -15,8 +15,377 @@
 
 Bigtop Changelog
 
-* Release 1.2.0 (unreleased)
+* Release 1.2.0 (2017-04-04)
 
+Release Notes - Bigtop - Version 1.2.0
+
+** Sub-task
+    * [BIGTOP-1406] - package Ambari in Bigtop
+    * [BIGTOP-1408] - create basic end-to-end tests for Ambari integration
+    * [BIGTOP-1409] - consider using ambari shell
+    * [BIGTOP-1624] - Add puppet recipes for deploying kafka
+    * [BIGTOP-2179] - Apache Tajo to bigtop: packaging as deb/rpm
+    * [BIGTOP-2180] - Apache Tajo to bigtop: make tests
+    * [BIGTOP-2224] - Let's bump groovy version for smokes to 2.4.10
+    * [BIGTOP-2254] - Replace the Docker orchestration tool from Vagrant to Docker Compose
+    * [BIGTOP-2285] - Add qfs rpm and debian packaging code
+    * [BIGTOP-2293] - Add puppet recipes for qfs components
+    * [BIGTOP-2312] - Add environment check
+    * [BIGTOP-2314] - Added deb and rpm package of Apache Apex to bigtop.
+    * [BIGTOP-2315] - Add smoke test for apex
+    * [BIGTOP-2316] - Add apex puppet receipes
+    * [BIGTOP-2317] - Add smoke tests for QFS
+    * [BIGTOP-2319] - Build initial smoke-tests distribution 
+    * [BIGTOP-2326] - Build salves need to have the toolchain run again to install qfs dependencies
+    * [BIGTOP-2345] - Create Flink packaging
+    * [BIGTOP-2357] - Create puppet recipes
+    * [BIGTOP-2468] - Add Juju hadoop-processing bundle
+    * [BIGTOP-2469] - Add cloud-weather-report test plan
+    * [BIGTOP-2491] - Update provisioner/docker-hadoop.sh to bind with provisioner/utils
+    * [BIGTOP-2492] - Split flink debian packaging
+    * [BIGTOP-2505] - Support systemd containers, clean up hiera.yaml handling, fix exec (-e) flag
+    * [BIGTOP-2518] - Add node to the build slave configuration
+    * [BIGTOP-2526] - Bump flink version to 1.1.3
+    * [BIGTOP-2530] - Create Greenplum packages
+    * [BIGTOP-2531] - Create Greenplum deployment scripts
+    * [BIGTOP-2532] - Create Greenplum test
+    * [BIGTOP-2600] - Bump Groovy version to 2.4.10
+    * [BIGTOP-2601] - Bump Ignite to 1.9
+    * [BIGTOP-2613] - create bigtop/puppet docker image or fedora 25
+    * [BIGTOP-2614] - create bigtop/slave docker image for fedora 25
+    * [BIGTOP-2620] - Bump oozie version to 4.3.0
+    * [BIGTOP-2624] - Bump Phoenix version to 4.9.0
+    * [BIGTOP-2625] - update crunch for JAVA 8
+    * [BIGTOP-2626] - HBase build fails when JAVA 8 is used
+    * [BIGTOP-2627] - Kite 1.1.0 build fails when JAVA 8 is used
+    * [BIGTOP-2646] - Move Vagrant Provisioner from bigtop-deploy/vm to provisioner directory
+    * [BIGTOP-2647] - Clean up code under bigtop-deploy/vm after everything moved to provisioner directory
+    * [BIGTOP-2657] - Upgrade to Hue 3.11.0
+    * [BIGTOP-2668] - Polish and update Docker Provisioner configurations
+    * [BIGTOP-2672] - Update gradle wrapper for Docker Provisioner
+    * [BIGTOP-2700] - Adding tests to test the doas feature of httpfs
+    * [BIGTOP-2701] - Update hcfs tests so it can work in both casers where fs.trash.interval is disabled or enabled.
+    * [BIGTOP-2702] - Fix Sandbox creation script
+    * [BIGTOP-2704] - Include ODPi runtime tests option into the battery of smoke tests
+    * [BIGTOP-2705] - provide puppet deployment code for Ambari
+
+
+
+
+
+
+
+** Bug
+    * [BIGTOP-976] - package deployment tests are CDH specific: _has_ to be removed or fixed
+    * [BIGTOP-1533] - failed to load/initialize native-bzip2 library system-native
+    * [BIGTOP-2047] - detect JAVA_HOME for JDK8, remove obsolete detection code (JDK6/oracle JDK)
+    * [BIGTOP-2133] - Running BPSGenerator using fat-jar fails on Mac OS X
+    * [BIGTOP-2134] - Wrong package name in bigpetstore-mapreduce/arch.dot
+    * [BIGTOP-2135] - PigCSVCleaner fails due to the lack of the dependent jar
+    * [BIGTOP-2136] - A comment about parameter substitution in BPS_analytics.pig is slightly wrong
+    * [BIGTOP-2138] - deb: make bigtop-jsvc a wrapper package for jsvc package
+    * [BIGTOP-2220] - flume-agent.init incorrectly handles flume.conf
+    * [BIGTOP-2225] - Bump toolchain gradle to 2.10
+    * [BIGTOP-2229] - bigtop deploy to support centos-7
+    * [BIGTOP-2231] - build.gradle carries one too many sets of repositories
+    * [BIGTOP-2261] - adding bigtop/puppet:fedora-22 build support for ppc64le
+    * [BIGTOP-2274] - CLONE - rpm: need to make bigtop-jsvc a wrapper package for jsvc package
+    * [BIGTOP-2301] - Bigtop Homepage shows wrong url to CI
+    * [BIGTOP-2302] - Use apt instead of yum in setup-env-debian.sh
+    * [BIGTOP-2303] - Fix the indentation in docker-hadoop.sh
+    * [BIGTOP-2308] - Clean up build directory after sucessfull build of package
+    * [BIGTOP-2318] - Release assembly needs to be updated
+    * [BIGTOP-2340] - BIGTOP-2319 is incomplete: the code for smoke-tests is missing
+    * [BIGTOP-2342] - Set yarn.log.server.url to point to JH server
+    * [BIGTOP-2346] - Do not use gradle delete() for sources and build directories
+    * [BIGTOP-2347] - Clean up build directory after sucessfull build of package (2nd try)
+    * [BIGTOP-2350] - HCatalog WebHCat server's default file incorrectly specifies HCAT_PREFIX AND HADOOP_PREFIX
+    * [BIGTOP-2353] - fix qfs suse build
+    * [BIGTOP-2354] - qfs does not build on fedora
+    * [BIGTOP-2358] - Update the URL for Bigtop-trunk-packages job on README
+    * [BIGTOP-2359] - Add .DS_Store to .gitignore
+    * [BIGTOP-2362] - Enabling bigtop docker provisioner for ppc64le (ubuntu 15.04)
+    * [BIGTOP-2366] - Support https:// repositories for DEB systems
+    * [BIGTOP-2367] - QFS packages do not handle /var/run/qfs properly
+    * [BIGTOP-2372] - Puppet deploy README points to non-existing repo
+    * [BIGTOP-2373] - kinit path is not correctly configured in hue.ini template for CentOs by puppet module
+    * [BIGTOP-2374] - Toolchain needs clear warning for Puppet <3
+    * [BIGTOP-2376] - Update Tomcat and remove obsolete downloads 
+    * [BIGTOP-2377] - Update to Hadoop 2.7.2
+    * [BIGTOP-2378] - Do not use archive.apache.org for ant download
+    * [BIGTOP-2379] - update maven to 3.3.9 and refactor toolchain
+    * [BIGTOP-2380] - support opensuse-42.1 (leap)
+    * [BIGTOP-2382] - Parameterise and expose "default_hdfs_superuser" for hue.ini
+    * [BIGTOP-2399] - Maven artifacts are still on 2.6.0 version of Apache Hadoop
+    * [BIGTOP-2400] - Get groovy plugins used by Maven in sync with Bigtop groovy runtime
+    * [BIGTOP-2401] - a commiter name is missing in the "Who we are" page
+    * [BIGTOP-2402] - yet another commiter name is missing in the "Who we are" page
+    * [BIGTOP-2404] - puppetize.sh fails on Ubuntu 14.04 because of the lack of apt-get update
+    * [BIGTOP-2405] - Rollback BIGTOP-2049 as the original issue was fixed in the upstream
+    * [BIGTOP-2406] - init scripts do not work reliable on systemd systems
+    * [BIGTOP-2412] - arm dockerfile breaks RAT
+    * [BIGTOP-2413] - QFS README.md breaks RAT
+    * [BIGTOP-2419] - Fix symlinks on packaging Crunch rpm and deb
+    * [BIGTOP-2421] - Ignite RPM is broken: "missing" osgi package deps
+    * [BIGTOP-2423] - Fix hard-coded port number in Sqoop smokes
+    * [BIGTOP-2425] - crunch needs JDK8 javadoc
+    * [BIGTOP-2427] - jsvc build not recognizing ARM as valid platform
+    * [BIGTOP-2430] - Adding Dockerfile to build puppet image for ubuntu-16.04-ppc64le
+    * [BIGTOP-2431] - Adding Dockerfile to build slaves image for ubuntu-16.04-ppc64le
+    * [BIGTOP-2433] - mvn is missing in Bigtop Toolchain
+    * [BIGTOP-2434] - Change Spark test to unpack jar file and retrieve resources
+    * [BIGTOP-2439] - flink: fix adduser and register init.d scripts on DEB systemes
+    * [BIGTOP-2441] - spark smoke test doesn't work relying on yarn-client submittion
+    * [BIGTOP-2445] - Adding Dockerfile to build deploy image for ubuntu-16.04-ppc64le
+    * [BIGTOP-2448] - Adding Dockerfile to build puppet image for ubuntu-16.04-arm
+    * [BIGTOP-2449] - Adding Dockerfile to build slaves image for ubuntu-16.04-x86
+    * [BIGTOP-2450] - Adding Dockerfile to build slaves image for ubuntu-16.04-arm
+    * [BIGTOP-2460] -  docker-hadoop.sh fails when deploying on ubunt 16.04 images
+    * [BIGTOP-2463] - Regression: bigtop-jsvc build fails on ppc64le architecture 
+    * [BIGTOP-2464] - Outdated descriptions in vagrant-puppet-vm/README.md
+    * [BIGTOP-2471] - qfs does not build on opensuse:42.1
+    * [BIGTOP-2472] - zeppelin puppet module needs to expose ZEPPELIN_WAR_TEMPDIR
+    * [BIGTOP-2473] - Mahout puppet script fails to find Package[hadoop]
+    * [BIGTOP-2474] - Improve handling of gradle home
+    * [BIGTOP-2487] - Alluxio /var/log/alluxio is not created 
+    * [BIGTOP-2488] - Redundant zookeeper/lib directory
+    * [BIGTOP-2494] - Use systemd within bigtop/deploy docker image for debian-8, centos-7, fix centos-7 provisioner
+    * [BIGTOP-2495] - hive-hbase package is broken
+    * [BIGTOP-2509] - Path error in bigtop-packages/src/common/solr/tomcat-deployment.sh
+    * [BIGTOP-2512] - Wrong help message in docker-hadoop.sh
+    * [BIGTOP-2513] - Some RAT exclude rules defined in build.gradle are not defined in pom.xml
+    * [BIGTOP-2523] - Incorrect cycle dependency during puppet deployment causes error at Debian 8
+    * [BIGTOP-2527] - Recreate all bigtop docker images and install "host" on debian
+    * [BIGTOP-2528] - provisioner fails to add short host name
+    * [BIGTOP-2529] - Vagrant Provisioner failed to start up daemons
+    * [BIGTOP-2533] - Use TLS for downloading sources
+    * [BIGTOP-2535] - frontend-maven-plugin fails on ppc64le
+    * [BIGTOP-2536] - tarball.destination is ignored when set
+    * [BIGTOP-2537] - Hive smoke test identifies as org.apache.bigtop.itest.hadoop.mapreduce
+    * [BIGTOP-2542] - Some files related to docker provisioner breaks RAT
+    * [BIGTOP-2543] - Some minor problems on provisioner/docker/docker-hadoop.sh
+    * [BIGTOP-2545] - Add ZOOKEEPER-2594 to bigtop
+    * [BIGTOP-2546] - Make debian/ubuntu toolchain install more resistent agains failures
+    * [BIGTOP-2549] - "Expected" and "actual" values are mistakenly switched in some JUnit method invocation
+    * [BIGTOP-2551] - docker-hadoop.sh --create fails with "Error: Could not match |$index" message
+    * [BIGTOP-2553] - namenode ports are not configured for non-HA mode
+    * [BIGTOP-2556] - Building Hadoop fails because Tomcat 6.0.45 is not downloadable from Apache mirror
+    * [BIGTOP-2557] - BIGTOP-2536 broke DataFu, QFS and YCSB
+    * [BIGTOP-2558] - Add ppc64le and arm64 node to the build slave configuration
+    * [BIGTOP-2559] - Revert JIRA BIGTOP-2535
+    * [BIGTOP-2560] - Spark charm failing automated tests
+    * [BIGTOP-2563] - zeppelin build fails on ppc64le
+    * [BIGTOP-2564] - HBase build fails on Power
+    * [BIGTOP-2565] - upgrade Spark to version 1.6.2
+    * [BIGTOP-2566] - Specify KAFKA_VERSION in build command for Flume
+    * [BIGTOP-2569] - Spark 2.0
+    * [BIGTOP-2570] - ease hadoop charm debugging
+    * [BIGTOP-2582] - Adding Spark1 components for Spark 1.x family 
+    * [BIGTOP-2585] - Zookeeper service does not start if kerberos is disabled
+    * [BIGTOP-2587] - vagrant-puppet-vm fails with "Could not find class node_with_components"
+    * [BIGTOP-2588] - Spark 2.0.1 installation fails on DEB
+    * [BIGTOP-2589] - spark1 build break
+    * [BIGTOP-2590] - Flume build break on RPM
+    * [BIGTOP-2591] - Fix bug in BIGTOP-2569
+    * [BIGTOP-2593] - Build fail caused by tomcat 6.0.45 version
+    * [BIGTOP-2594] - Workaround to fix Hive Build, by using SPARK1 Version
+    * [BIGTOP-2596] - Phoenix build fails
+    * [BIGTOP-2597] - crunch build failed
+    * [BIGTOP-2599] - Zeppelin 0.6.2 build fails on Power
+    * [BIGTOP-2602] - ignite-hadoop build break
+    * [BIGTOP-2603] - NN/RM charm should include a spark user/group
+    * [BIGTOP-2604] - Build flink-dist with proper shading
+    * [BIGTOP-2605] - Addendum for BIGTOP-2514
+    * [BIGTOP-2606] - spark1 build fails when RPM is sellected
+    * [BIGTOP-2608] - upgrade Hadoop to 2.7.3
+    * [BIGTOP-2609] - upgrade Kafka to version 0.10.0.0
+    * [BIGTOP-2610] - upgrade mahout to version 0.12.2
+    * [BIGTOP-2612] - Need bigtop/puppet image for Fedora-25
+    * [BIGTOP-2618] - bigtop-jsvc build fails with OpenJDK-1.8
+    * [BIGTOP-2621] - JAVA_HOME is not set on Fedora-25+JAVA-1.8 for x86 
+    * [BIGTOP-2623] - Zeppelin 0.6.2 build fails on all platforms
+    * [BIGTOP-2628] - sqoop2 build fails when JAVA 8 is used
+    * [BIGTOP-2632] - bigtop 1.1.0 sqoop2 wrote rpm error
+    * [BIGTOP-2635] - ubuntu on ppc64le is missing a apt-get update
+    * [BIGTOP-2636] - Fix giraph after upgrade to Hadoop-2.7.3
+    * [BIGTOP-2637] - Fix flume because of kafka 0.10 update
+    * [BIGTOP-2638] - Update to kafka 0.10.1.0
+    * [BIGTOP-2640] - Incomplete patch BIGTOP-2635 - Bigtop stack build fails on Ubuntu 16.04-ppc64le
+    * [BIGTOP-2643] - Force giraph to compile by removing findbugs from all pom.xml
+    * [BIGTOP-2644] - CI compiles random greenplum source
+    * [BIGTOP-2648] - Gradle 2.7 SSL Problems
+    * [BIGTOP-2649] - Default Java8 blocks default debian jdk
+    * [BIGTOP-2650] - Docker build should pull up to date packages
+    * [BIGTOP-2651] - Delete obsolete docker images and build files.
+    * [BIGTOP-2652] - tajo rpm packaging seriously broken
+    * [BIGTOP-2653] - upgrading to Spark 2.1
+    * [BIGTOP-2654] - spark 2.1 binaries need either SPARK_HOME or non existing find-spark-home exe
+    * [BIGTOP-2655] - Help spark find the native hadoop libs
+    * [BIGTOP-2656] - regression - spark 2.1 upgrade breaks rpm packaging 
+    * [BIGTOP-2661] - Docker deploy images should pull upstream images
+    * [BIGTOP-2662] - provisioner: Add support for JDK8 on debian
+    * [BIGTOP-2663] - puppet hadoop module: Consolidate memory resource settings 
+    * [BIGTOP-2664] - create provisioner test for trunk packages with jdk8
+    * [BIGTOP-2665] - Fix hue for opensuse
+    * [BIGTOP-2669] - Create bigtop-1.2 repository 
+    * [BIGTOP-2673] - Need to back port HADOOP-11628 for JDK8
+    * [BIGTOP-2674] - docker-hadoop option -C does not work correctly any more
+    * [BIGTOP-2675] - [Puppet] Kafka can only be deployed on master node
+    * [BIGTOP-2676] - Smoke test fails on Spark 2
+    * [BIGTOP-2678] - Add hive-hbase role to install hive-hbase rpm
+    * [BIGTOP-2689] - Upgrade Zeppelin to version 0.7
+    * [BIGTOP-2690] - gradlew toolchain fails trying to download Ant 1.9.8
+    * [BIGTOP-2692] - Flume init script should load only '.conf' extension files
+    * [BIGTOP-2693] - Update readme for build and configuring git repo for packages
+    * [BIGTOP-2695] - arch.dot for bigpetstore-spark is outdated
+    * [BIGTOP-2699] - Zeppeling CI build is broken 
+    * [BIGTOP-2707] - localhost is missing in docker provisioner instances
+    * [BIGTOP-2708] - puppet code always installs hdfs by default
+    * [BIGTOP-2710] - qfs debian build is breaking because it is confused about Maven home
+    * [BIGTOP-2711] - fix rat problems
+    * [BIGTOP-2715] - Tiny typo in the README.md
+    * [BIGTOP-2718] - Mark tez package as arch dependent
+    * [BIGTOP-2719] - Mark zeppelin package as arch dependent
+    * [BIGTOP-2721] - libsnappy reference path is not correct for hadoop/ubuntu16 build
+    * [BIGTOP-2724] - putting a final nail in Java's 7 coffin
+    * [BIGTOP-2725] - a few usability improvements to run_itest.sh
+    * [BIGTOP-2726] - Bump ambari version to 2.5
+    * [BIGTOP-2727] - fix deployment tasks
+
+
+
+
+
+** Improvement
+    * [BIGTOP-1608] - Create Unified testing solution: Smoke-Tests and Test-Artifacts
+    * [BIGTOP-1843] - Upgrade Sqoop to 1.4.6
+    * [BIGTOP-2077] - Bump HBase version to 1.1
+    * [BIGTOP-2118] - Update HBase to 0.98.17
+    * [BIGTOP-2306] - Add support for specifying git repository access credentials
+    * [BIGTOP-2309] - Update submodules after git clone
+    * [BIGTOP-2327] - Bump up Phoenix to 4.7.0
+    * [BIGTOP-2330] - Bump Tachyon version to 0.8.2
+    * [BIGTOP-2332] - Upgrade Tajo version to 0.11.1
+    * [BIGTOP-2333] - Make Apache Pig work with HBase 1.1 on Hadoop 2
+    * [BIGTOP-2337] - Fix script to make deb in Tajo
+    * [BIGTOP-2351] - Vagrant VM is missing /user/vagrant HDFS directory
+    * [BIGTOP-2352] - Packaged Vagrant box has incorrect host info on restart
+    * [BIGTOP-2370] - Upgrade DataFu version to 1.3.0
+    * [BIGTOP-2381] - Making Zookeeper hosts templatize in puppet module of hue
+    * [BIGTOP-2384] - Refactor toolchain code to extract packages version out of every action
+    * [BIGTOP-2385] - Reformat bigtop_toolchain/manifests/packages.pp to ease maintenance
+    * [BIGTOP-2393] - Add ARM64 support for build environment
+    * [BIGTOP-2395] - Create separate page to point "Download now" link to
+    * [BIGTOP-2403] - Remove affiliation column in the team list
+    * [BIGTOP-2407] - Making "force_username_lowercase" variable templatize in puppet module of hue
+    * [BIGTOP-2408] - group_filter variable value is not templatize in puppet module of hue
+    * [BIGTOP-2409] - nt_domain configuration option for hue to connect to Active Directory
+    * [BIGTOP-2410] - Making "ldap_username_pattern" variable templatize in puppet module of hue
+    * [BIGTOP-2411] - Add OS-neutral wrappers to build all native packages and repositories 
+    * [BIGTOP-2416] - Upgrade Crunch to 0.13.0
+    * [BIGTOP-2429] - Add Solr to gradle smokes
+    * [BIGTOP-2443] - inject unzip method to ZipInputStream, accepting regex for include
+    * [BIGTOP-2455] - support pre-installed java environment
+    * [BIGTOP-2458] - Add option to disable IP hostname checking for DataNode registration
+    * [BIGTOP-2459] - Add option to disable vmem check for NodeManager
+    * [BIGTOP-2466] - HBase puppet scripts co-deploy ZK and Datanode along with HBase
+    * [BIGTOP-2478] - Zookeeper does not have any smoke tests
+    * [BIGTOP-2479] - Update qfs maintainer to kstinson
+    * [BIGTOP-2490] - Spark in HA when Zookeeper is available 
+    * [BIGTOP-2504] - Kafka should be able to bind to something other than 0.0.0.0/the default interface
+    * [BIGTOP-2506] - Zookeeper: non default interface for client
+    * [BIGTOP-2507] - Make buildstamp configurable by a bom file
+    * [BIGTOP-2516] - Add Zeppelin Charm
+    * [BIGTOP-2521] - Problem with deprecated methods in puppet code with puppet option parser=future
+    * [BIGTOP-2522] - Add spark processing juju bundle
+    * [BIGTOP-2547] - Don't render ip-hostname-check in hdfs-site.xml if default
+    * [BIGTOP-2548] - Refresh charms for Juju 2.0 and Xenial
+    * [BIGTOP-2554] - expose bind-host options in hieradata
+    * [BIGTOP-2555] - hadoop charms should use bind-host overrides
+    * [BIGTOP-2561] - add juju bundle for hadoop-spark
+    * [BIGTOP-2571] - cwr driven updates to the zeppelin juju charm
+    * [BIGTOP-2575] - zk charm test updates
+    * [BIGTOP-2576] - For small clusters it is useful to turn replace-datanode-on-failure off
+    * [BIGTOP-2577] - kafka charm test updates
+    * [BIGTOP-2578] - Puppet needs to be updated for Hive Server2
+    * [BIGTOP-2579] - Puppet needs to be updated for Hive Metastore service
+    * [BIGTOP-2611] - Adding Fedora-25 with Java 1.8 support
+    * [BIGTOP-2616] - refresh juju hadoop-processing bundle
+    * [BIGTOP-2617] - refresh juju spark-processing bundle
+    * [BIGTOP-2682] - update juju bundles with recent charm revs
+    * [BIGTOP-2688] - Add flag for provisioning of Yum Repo
+    * [BIGTOP-2694] - Added Hernan Vivani (hvivani) as elasticsearch maintainer
+    * [BIGTOP-2696] - Build out VM for sandboxes
+    * [BIGTOP-2697] - Back port HADOOP-12366 into Bigtop
+    * [BIGTOP-2712] - Juju CI driven updates
+    * [BIGTOP-2714] - Update Groovy in the toolchain to 2.4.10
+
+
+
+
+** New Feature
+    * [BIGTOP-1641] - Add packaging for Apache Tajo
+    * [BIGTOP-2282] - Define Bigtop 1.2 release BOM
+    * [BIGTOP-2296] - Provide a way to build Docker container with functional stack
+    * [BIGTOP-2339] - add centos-7 to the provisioiner matrix
+    * [BIGTOP-2435] - Add Juju charms for hadoop component
+    * [BIGTOP-2451] - Adding Ubuntu 16.04 support to Bigtop
+    * [BIGTOP-2452] - Adding Dockerfile to build deploy image for ubuntu-16.04-x86
+    * [BIGTOP-2476] - Add Zookeeper Charm
+    * [BIGTOP-2477] - Add Juju charm for spark component
+    * [BIGTOP-2481] - Add HBase Charm
+    * [BIGTOP-2482] - Adding Pig charm
+    * [BIGTOP-2483] - Add Mahout Charm
+    * [BIGTOP-2486] - Add Kafka Charm
+    * [BIGTOP-2524] - Add Greenplum component
+    * [BIGTOP-2615] - Provide a tool to build pseudo cluster docker images
+    * [BIGTOP-2660] - Add Giraph Charm
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+** Task
+    * [BIGTOP-2289] - Set master version to 1.2.0-SNAPSHOT
+    * [BIGTOP-2334] - Update latest release link on the website
+    * [BIGTOP-2335] - ci link should use https:// authority
+    * [BIGTOP-2368] - OpenStack config bigtop repo-url changes.
+    * [BIGTOP-2371] - Add Oozie to gradle smoke tests
+    * [BIGTOP-2414] - Rename Tachyon to Alluxio
+    * [BIGTOP-2415] - readme spelling error
+    * [BIGTOP-2456] - Update Apache Apex version to 3.4.0
+    * [BIGTOP-2497] - Upgrade Apache Phoenix to 4.8.1
+    * [BIGTOP-2500] - Remove hadoop jars from TEZ_HOME/lib and create appropriate symlinks
+    * [BIGTOP-2525] - committer test:  add myself to team-list.xml
+    * [BIGTOP-2538] - Bump version of Solr to 4.10.4
+    * [BIGTOP-2550] - Update juju hadoop bundle for Juju 2.0 and Xenial
+    * [BIGTOP-2567] - Upgrade Flume version to 1.7.0
+    * [BIGTOP-2568] - Upgrade Kafka version to 0.9.0.1
+    * [BIGTOP-2592] - Upgrade to Spark 2.0.2
+    * [BIGTOP-2622] - Add Kengo Seki to team list
+    * [BIGTOP-2629] - Add Jonathan Kelly to team list
+    * [BIGTOP-2670] - Bump up Apache Apex version to 3.5.0
+    * [BIGTOP-2687] - Remove /usr/share/java/*.jar from Sqoop2 catalina.properties
+    * [BIGTOP-2703] - refresh juju charms/bundles with metric and CI support
+    * [BIGTOP-2722] - Remove workaround allowing build by root in Tez
+
+
+
+** Test
+    * [BIGTOP-2534] - Flume tests fail with java.lang.NoClassDefFoundError: org/apache/commons/io/Charsets
+
+
+** Wish
+    * [BIGTOP-2680] - Update kafka to 0.10.1.1
 
 * Release 1.1.0 (2016-01-30)
 

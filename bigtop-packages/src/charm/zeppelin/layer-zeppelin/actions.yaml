@@ -1,0 +1,7 @@
+smoke-test:
+  description: >
+    Verify that Zeppelin is working by running one of
+    the example notebook paragraphs, using the REST server.
+restart:
+  description: >
+    Restart Zeppelin.

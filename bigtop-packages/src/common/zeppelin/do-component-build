@@ -18,13 +18,39 @@ set -ex
 
 . `dirname $0`/bigtop.bom
 
+if [ $HOSTTYPE = "powerpc64le" ] ; then
+  git clone https://github.com/ibmsoe/phantomjs-1
+  cd phantomjs-1
+  export PHANTOMJS_CDNURL=https://github.com/ibmsoe/phantomjs/releases/download/2.1.1
+  npm install -g
+  cd ..
+  rm -rf phantomjs-1
+  sed  -i "s|<nodeVersion>.*</nodeVersion>|<nodeVersion>v4.4.7</nodeVersion>|" zeppelin-web/pom.xml
+  sed -i 's|"karma-phantomjs-launcher": "~0.1.4"|"karma-phantomjs-launcher": "~1.0.0"|' zeppelin-web/package.json
+  sed  -i "s|<version>0.0.25</version>|<version>1.1</version>|" zeppelin-web/pom.xml
+fi
+
+t="scala.version"
+find . -name pom.xml -exec sed -i "s#<$t>.*</$t>#<$t>${SCALA_VERSION}</$t>#" {} \;
+t="scala.binary.version"
+find . -name pom.xml -exec sed -i "s#<$t>.*</$t>#<$t>${SCALA_VERSION%.*}</$t>#" {} \;
+t="scala.macros.version"
+find . -name pom.xml -exec sed -i "s#<$t>.*</$t>#<$t>2.1.0</$t>#" {} \;
+t="spark.version"
+find . -name pom.xml -exec sed -i "s#<$t>.*</$t>#<$t>${SPARK_VERSION}</$t>#" {} \;
+t="hadoop.version"
+find . -name pom.xml -exec sed -i "s#<$t>.*</$t>#<$t>${HADOOP_VERSION}</$t>#" {} \;
+t="hbase.hbase.version"
+find . -name pom.xml -exec sed -i "s#<$t>.*</$t>#<$t>${HBASE_VERSION}</$t>#" {} \;
+t="hbase.hadoop.version"
+find . -name pom.xml -exec sed -i "s#<$t>.*</$t>#<$t>${HADOOP_VERSION}</$t>#" {} \;
+t="ignite.version"
+find . -name pom.xml -exec sed -i "s#<$t>.*</$t>#<$t>${IGNITE_HADOOP_VERSION}</$t>#" {} \;
+
 BUILD_OPTS="-Divy.home=${HOME}/.ivy2 -Dsbt.ivy.home=${HOME}/.ivy2 -Duser.home=${HOME} \
             -Drepo.maven.org=$IVY_MIRROR_PROP \
             -Dreactor.repo=file://${HOME}/.m2/repository \
-            -Dignite.version=$IGNITE_HADOOP_VERSION \
-            -Pspark-1.5 -Dspark.version=$SPARK_VERSION \
-            -Phadoop-2.6 -Dhadoop.version=$HADOOP_VERSION \
-            -Pyarn \
+            -Pscala-${SCALA_VERSION%.*} \
             -Pbuild-distr"
             
 if [ "$ZEPPELIN_RUN_TESTS" = "true" ]; then
@@ -36,3 +62,6 @@ fi
 export MAVEN_OPTS="-Xmx1500m -Xms1500m -XX:MaxPermSize=256m"
 
 mvn $BUILD_OPTS clean package
+
+mkdir -p build/dist
+tar -C build/dist --strip-components=1 -xzf zeppelin-distribution/target/zeppelin-*.tar.gz

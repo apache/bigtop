@@ -17,16 +17,18 @@ class hadoop_pig {
 
   class deploy ($roles) {
     if ("pig-client" in $roles) {
-      include client
+      include hadoop_pig::client
     }
   }
 
   class client {
+    include hadoop::common
+
     package { "pig":
       ensure => latest,
       require => Package["hadoop"],
-    } 
- 
+    }
+
     file { "/etc/pig/conf/pig.properties":
       content => template('hadoop_pig/pig.properties'),
       require => Package["pig"],

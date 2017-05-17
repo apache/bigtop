@@ -1,0 +1,23 @@
+restart:
+    description: Retart HBase HMaster and RegionServer.
+start-hbase-master:
+    description: Start HBase HMaster.
+start-hbase-regionserver:
+    description: Start HBase RegionServer.
+start:
+    description: Start HBase HMaster and RegionServer.
+stop-hbase-master:
+    description: Stop HBase HMaster.
+stop-hbase-regionserver:
+    description: Stop HBase RegionServer.
+stop:
+    description: Stop HBase HMaster and RegionServer.
+smoke-test:
+    description: Verify that HBase is working.
+perf-test:
+    description: Verify that HBase is working by running a perf test.
+    params:
+        mrows:
+            description: Rows to be written in milions
+            type: integer
+            default: 1

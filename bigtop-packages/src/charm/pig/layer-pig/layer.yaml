@@ -1,0 +1,13 @@
+repo: https://github.com/apache/bigtop/tree/master/bigtop-packages/src/charm/pig/layer-pig
+includes:
+  - 'layer:apache-bigtop-base'
+  - 'layer:hadoop-client'
+options:
+  apache-bigtop-base:
+    dirs:
+      pig:
+        path: '/usr/lib/pig'
+      pig_conf:
+        path: '/etc/pig/conf'
+      hadoop_conf:
+        path: '/etc/hadoop/conf'

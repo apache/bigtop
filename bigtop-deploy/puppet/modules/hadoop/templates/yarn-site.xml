@@ -92,6 +92,13 @@
     <value><%= host %>:<%= @hadoop_rm_port %></value>
   </property>
 
+<%     if not @hadoop_rm_bind_host.nil? -%>
+  <property>
+    <name>yarn.resourcemanager.bind-host.rm<%= idx+1 %></name>
+    <value><%= @hadoop_rm_bind_host %></value>
+  </property>
+
+<%     end -%>
   <property>
     <name>yarn.resourcemanager.scheduler.address.rm<%= idx+1 %></name>
     <value><%= host %>:<%= @hadoop_sc_port %></value>
@@ -125,6 +132,13 @@
     <value><%= @hadoop_rm_host %>:<%= @hadoop_rm_port %></value>
   </property>
 
+<%   if not @hadoop_rm_bind_host.nil? -%>
+  <property>
+    <name>yarn.resourcemanager.bind-host</name>
+    <value><%= @hadoop_rm_bind_host %></value>
+  </property>
+
+<%   end -%>
   <property>
     <name>yarn.resourcemanager.scheduler.address</name>
     <value><%= @hadoop_rm_host %>:<%= @hadoop_sc_port %></value>
@@ -174,6 +188,13 @@
     <value>/var/log/hadoop-yarn/apps</value>
   </property>
 
+<% if not @yarn_nodemanager_vmem_check_enabled.nil? -%>
+  <property>
+    <name>yarn.nodemanager.vmem-check-enabled</name>
+    <value><%= @yarn_nodemanager_vmem_check_enabled %></value>
+  </property>
+<% end -%>
+
   <property>
     <description>Classpath for typical applications.</description>
      <name>yarn.application.classpath</name>
@@ -213,4 +234,12 @@
     <value><%= @yarn_resourcemanager_scheduler_class %></value>
   </property>
 <% end -%>
+
+<!-- The defaut setting (2.1) is silly. The virtual memory is not 
+     a limiting factor on 64Bit systems, at least not a limiting  
+     resource, so make it large, very large. -->
+  <property>
+    <name>yarn.nodemanager.vmem-pmem-ratio</name>
+    <value>100</value>
+  </property>
 </configuration>

@@ -13,4 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-hadoop_hive::client { "test-hive": }
+include hadoop_hive::client
+include hadoop_hive::metastore
+include hadoop_hive::server2

@@ -23,27 +23,16 @@
   <parent>
     <groupId>org.apache.bigtop.itest</groupId>
     <artifactId>bigtop-smokes</artifactId>
-    <version>1.2.0-SNAPSHOT</version>
+    <version>1.3.0-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>httpfs-smoke</artifactId>
-  <version>1.2.0-SNAPSHOT</version>
+  <version>1.3.0-SNAPSHOT</version>
   <name>httpfssmokes</name>
 
   <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.rat</groupId>
-        <artifactId>apache-rat-plugin</artifactId>
-        <configuration>
-          <excludes>
-            <exclude>**/resources/text-files/helloworld.txt</exclude>
-          </excludes>
-        </configuration>
-      </plugin>
-    </plugins>
   </build>
 
 </project>

@@ -55,7 +55,7 @@ public class TestCrunchSmoke {
       + " org.apache.crunch.examples.${algorithm}"
       + " ${examples.get(algorithm)}"
     );
-    assertEquals("running Crunch example failed", sh.getRet(), 0);
+    assertEquals("running Crunch example failed", 0, sh.getRet());
   }
 
   @Test(timeout = 300000L)

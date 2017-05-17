@@ -13,6 +13,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# The following is a bit of a tricky map. The idea here is that the keys
+# correspond to anything that could be specified in
+#   hadoop_cluster_node::cluster_components:
+# The values are maps from each role that a node can have in a cluster:
+#   client, gateway_server, library, master, worker, standby
+# to a role recognized by each puppet module's deploy class.
+#
+# Note that the code here will pass all these roles to all the deploy
+# classes defined in every single Bigtop's puppet module. This is similar
+# to how a visitor pattern works in OOP. One subtle ramification of this
+# approach is that you should make sure that deploy classes from different
+# modules do NOT accept same strings for role types.
+#
+# And if that wasn't enough of a head scratcher -- you also need to keep
+# in mind that there's no hdfs key in the following map, even though it
+# is a perfectly legal value for hadoop_cluster_node::cluster_components:
+# The reason for this is that hdfs is treated as an alias for either
+# hdfs-non-ha or hdfs-ha depending on whether HA for HDFS is either enabled
+# or disabled.
+
 $roles_map = {
   apex => {
     client => ["apex-client"],
@@ -49,12 +69,21 @@ $roles_map = {
     worker => ["solr-server"],
   },
   spark => {
+    worker => ["spark-on-yarn"],
+    client => ["spark-client"],
+    library => ["spark-yarn-slave"],
+  },
+  spark-standalone => {
     master => ["spark-master"],
     worker => ["spark-worker"],
   },
   alluxio => {
     master => ["alluxio-master"],
     worker => ["alluxio-worker"],
+  },
+  flink => {
+    master => ["flink-jobmanager"],
+    worker => ["flink-taskmanager"],
   },
   flume => {
     worker => ["flume-agent"],
@@ -93,6 +122,7 @@ $roles_map = {
     client => ["pig-client"],
   },
   hive => {
+    master => ["hive-server2", "hive-metastore"],
     client => ["hive-client"],
   },
   tez => {
@@ -113,6 +143,17 @@ $roles_map = {
     worker => ["qfs-chunkserver"],
     client => ["qfs-client"],
   },
+  gpdb => {
+    master => ["gpdb-master"],
+    worker => ["gpdb-segment"],
+  },
+  kafka => {
+    worker => ["kafka-server"],
+  },
+  ambari => {
+    master => ["ambari-server"],
+    worker => ["ambari-agent"],
+  }
 }
 
 class hadoop_cluster_node (
@@ -161,6 +202,7 @@ class node_with_roles ($roles = hiera("bigtop::roles")) inherits hadoop_cluster_
     "alluxio",
     "apex",
     "crunch",
+    "flink",
     "giraph",
     "hadoop",
     "hadoop_hbase",
@@ -180,10 +222,13 @@ class node_with_roles ($roles = hiera("bigtop::roles")) inherits hadoop_cluster_
     "tez",
     "ycsb",
     "kerberos",
-    "zeppelin"
+    "zeppelin",
+    "kafka",
+    "gpdb",
+    "ambari",
   ]
 
-  deploy_module { $modules:
+  node_with_roles::deploy_module { $modules:
     roles => $roles,
   }
 }
@@ -202,14 +247,17 @@ class node_with_components inherits hadoop_cluster_node {
   }
 
   $given_components = $components_array[0] ? {
-    "all"   => delete(keys($roles_map), ["hdfs-non-ha", "hdfs-ha"]),
+    "all"   => delete(keys($roles_map), ["hdfs-non-ha", "hdfs-ha"]) << "hdfs",
     default => $components_array,
   }
   $ha_dependent_components = $ha_enabled ? {
-    true    => ["hdfs-ha"],
-    default => ["hdfs-non-ha"],
+    true    => "hdfs-ha",
+    default => "hdfs-non-ha",
   }
-  $components = concat($given_components, $ha_dependent_components)
+  $components = member($given_components, "hdfs") ? {
+    true    => delete($given_components, "hdfs") << $ha_dependent_components,
+    default => $given_components
+  }
 
   $master_role_types = ["master", "worker", "library"]
   $standby_role_types = ["standby", "library"]
@@ -235,4 +283,6 @@ class node_with_components inherits hadoop_cluster_node {
   class { 'node_with_roles':
     roles => $roles,
   }
+
+  notice("Roles to deploy: ${roles}")
 }

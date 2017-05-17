@@ -16,9 +16,8 @@ FROM bigtop/puppet:debian-8
 MAINTAINER oflebbe@apache.org
 
 COPY bigtop_toolchain /etc/puppet/modules/bigtop_toolchain
-COPY gradle.home /usr/share/gradle.home
 
-RUN puppet apply -e "include bigtop_toolchain::installer"
-RUN chown jenkins:jenkins /usr/share/gradle.home
+RUN  apt-get clean && apt-get update && puppet apply -e "include bigtop_toolchain::installer"
 
-ENV GRADLE_USER_HOME=/usr/share/gradle.home
+COPY . /tmp/bigtop
+RUN cd /tmp/bigtop && ./gradlew && cd && rm -rf /tmp/bigtop

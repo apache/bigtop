@@ -21,28 +21,16 @@
   <parent>
     <groupId>org.apache.bigtop.itest</groupId>
     <artifactId>bigtop-smokes</artifactId>
-    <version>1.2.0-SNAPSHOT</version>
+    <version>1.3.0-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>hcatalog-smoke</artifactId>
-  <version>1.2.0-SNAPSHOT</version>
+  <version>1.3.0-SNAPSHOT</version>
   <name>hcatalogsmoke</name>
 
   <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.rat</groupId>
-        <artifactId>apache-rat-plugin</artifactId>
-        <configuration>
-          <excludes>
-            <exclude>**/resources/data/*</exclude>
-            <exclude>**/resources/*.expected</exclude>
-          </excludes>
-        </configuration>
-      </plugin>
-    </plugins>
   </build>
 
 </project>

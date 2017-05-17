@@ -73,9 +73,9 @@ public class SessionTests extends PigTests
       userValues.get(userId).put(max, true);
     }
     
-    assertEquals(userValues.get(1).size(), 2);
-    assertEquals(userValues.get(2).size(), 5);
-    assertEquals(userValues.get(3).size(), 1);    
+    assertEquals(2, userValues.get(1).size());
+    assertEquals(5, userValues.get(2).size());
+    assertEquals(1, userValues.get(3).size());
     
     assertTrue(userValues.get(1).containsKey(20));
     assertTrue(userValues.get(1).containsKey(30));

@@ -32,4 +32,5 @@ mvn -DskipTests  \
   -Dhbase.version=${HBASE_VERSION} \
   -Dkite.version=${KITE_VERSION} \
   -Dhive.version=${HIVE_VERSION} \
+  -Dkafka.version=${KAFKA_VERSION} \
   clean install "$@"

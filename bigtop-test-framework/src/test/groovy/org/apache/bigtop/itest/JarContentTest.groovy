@@ -18,6 +18,8 @@
 
 package org.apache.bigtop.itest
 
+import groovy.io.FileType
+import java.util.zip.ZipInputStream
 import org.junit.Test
 import static org.junit.Assert.assertTrue
 import static org.junit.Assert.assertEquals
@@ -57,6 +59,96 @@ class JarContentTest {
     }
     assertTrue('Expect more than one file', count > 1);
     dir.deleteDir();
+  }
+
+  @Test
+  void testUnzipSingleString() {
+    def destination = System.properties['buildDir'] ?: 'target/local.unpack.dir'
+    URL url = JarContent.getJarURL(String.class)
+    ZipInputStream zis = new ZipInputStream(url.openConnection().getInputStream())
+    zis.unzip(destination, 'visitor')
+    File dir = new File(destination)
+    int count = 0
+    boolean result = true
+    dir.eachFileRecurse(FileType.FILES) {
+      if (it.name.endsWith(".class"))
+        count++
+      if (!it.path.contains("visitor"))
+        result = false
+    }
+    assertTrue('Expect more than one file', count > 1);
+    assertTrue('Expect that all paths contain the specified string', result);
+    dir.deleteDir()
+  }
+
+  @Test
+  void testUnzipMultipleStrings() {
+    def destination = System.properties['buildDir'] ?: 'target/local.unpack.dir'
+    URL url = JarContent.getJarURL(String.class)
+    ZipInputStream zis = new ZipInputStream(url.openConnection().getInputStream())
+    zis.unzip(destination, ['visitor', 'tree'])
+    File dir = new File(destination)
+    int count = 0
+    boolean result = true
+    dir.eachFileRecurse(FileType.FILES) {
+      if (it.name.endsWith(".class"))
+        count++
+      if (!it.path.contains("visitor") && !it.path.contains("tree"))
+        result = false
+    }
+    assertTrue('Expect more than one file', count > 1);
+    assertTrue('Expect that all paths contain at least one of the specified string', result);
+    dir.deleteDir()
+  }
+
+  @Test
+  void testUnzipSingleRegex() {
+    def destination = System.properties['buildDir'] ?: 'target/local.unpack.dir'
+    URL url = JarContent.getJarURL(String.class)
+    ZipInputStream zis = new ZipInputStream(url.openConnection().getInputStream())
+    // This will unzip sun/security/x509/GeneralSubtree.class and sun/security/x509/GeneralSubtrees.class
+    // but not sun/reflect/generics/tree/*
+    zis.unzip(destination, ~/[^\/]tree[^\/]/)
+    File dir = new File(destination)
+    int count = 0
+    boolean posChkResult = true
+    boolean negChkResult = true
+    dir.eachFileRecurse(FileType.FILES) {
+      if (it.name.endsWith(".class"))
+        count++
+      if (!it.path.contains("tree"))
+        posChkResult = false
+      if (it.path.contains("/tree/"))
+        negChkResult = false
+    }
+    assertTrue('Expect more than one file', count > 1);
+    assertTrue('Expect that all paths contain the string "tree"', posChkResult);
+    assertTrue('Expect that all paths do not contain the string "/tree/"', negChkResult);
+    dir.deleteDir()
+  }
+
+  @Test
+  void testUnzipMultipleRegexes() {
+    def destination = System.properties['buildDir'] ?: 'target/local.unpack.dir'
+    URL url = JarContent.getJarURL(String.class)
+    ZipInputStream zis = new ZipInputStream(url.openConnection().getInputStream())
+    zis.unzip(destination, [~/[^\/]visitor[^\/]/, ~/[^\/]tree[^\/]/])
+    File dir = new File(destination)
+    int count = 0
+    boolean posChkResult = true
+    boolean negChkResult = true
+    dir.eachFileRecurse(FileType.FILES) {
+      if (it.name.endsWith(".class"))
+        count++
+      if (!it.path.contains("visitor") && !it.path.contains("tree"))
+        posChkResult = false
+      if (it.path.contains("/visitor/") || it.path.contains("/tree/"))
+        negChkResult = false
+    }
+    assertTrue('Expect more than one file', count > 1);
+    assertTrue('Expect that all paths contain either "visitor" or "tree"', posChkResult);
+    assertTrue('Expect that all paths do not contain both "/visitor/" and "/tree/"', negChkResult);
+    dir.deleteDir()
   }
 
   @Test

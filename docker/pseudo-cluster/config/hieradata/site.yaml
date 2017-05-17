@@ -3,8 +3,9 @@ hadoop::hadoop_storage_dirs:
   - /data/1
   - /data/2
 hadoop_cluster_node::cluster_components:
-  - hadoop
+  - hdfs 
   - yarn
-bigtop::bigtop_repo_uri: http://bigtop-repos.s3.amazonaws.com/releases/1.1.0/ubuntu/trusty/x86_64
-bigtop::jdk_package_name: openjdk-7-jdk
+  - mapreduce
+bigtop::bigtop_repo_uri: http://bigtop-repos.s3.amazonaws.com/releases/1.2.0/ubuntu/16.04/x86_64
+bigtop::jdk_package_name: openjdk-8-jdk
 

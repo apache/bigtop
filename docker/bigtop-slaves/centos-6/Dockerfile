@@ -16,9 +16,7 @@ FROM bigtop/puppet:centos-6
 MAINTAINER oflebbe@apache.org
 
 COPY bigtop_toolchain /etc/puppet/modules/bigtop_toolchain
-COPY gradle.home /usr/share/gradle.home
 
 RUN puppet apply -e "include bigtop_toolchain::installer"
-RUN chown jenkins:jenkins /usr/share/gradle.home
-
-ENV GRADLE_USER_HOME=/usr/share/gradle.home
+COPY . /tmp/bigtop
+RUN cd /tmp/bigtop && ./gradlew && cd && rm -rf /tmp/bigtop

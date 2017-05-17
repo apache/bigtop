@@ -19,10 +19,9 @@ set -ex
 rm -f jsvc
 
 pushd unix
-if [ $HOSTTYPE != "powerpc64le" ] ; then
-    autoreconf
-fi
-  ./configure --prefix=/usr
-  make
-  cp -f jsvc ../jsvc
+rm configure
+support/buildconf.sh
+./configure --prefix=/usr
+make
+cp -f jsvc ../jsvc
 popd

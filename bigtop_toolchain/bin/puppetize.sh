@@ -31,13 +31,11 @@ else
 fi
 
 case ${ID}-${VERSION_ID} in
-    fedora-20*)
-	# Work around issue in fedora:20 docker image
-	yum -y install yum-utils;  yum-config-manager --enable updates-testing
-        rpm -ivh https://yum.puppetlabs.com/puppetlabs-release-fedora-20.noarch.rpm
-        yum update
-	yum -y install hostname curl sudo unzip wget puppet
-	;;
+    fedora-25*)
+        dnf -y install yum-utils
+        dnf -y update 
+        dnf -y install hostname findutils curl sudo unzip wget puppet
+        ;;
     ubuntu-14.04)
 	apt-get update
 	apt-get -y install wget
@@ -49,14 +47,23 @@ case ${ID}-${VERSION_ID} in
         fi
 	apt-get -y install curl sudo unzip puppet software-properties-common
 	;;
-    ubuntu-1[56]*)
+    ubuntu-*)
 	apt-get update
 	apt-get -y install curl sudo unzip wget puppet software-properties-common
 	;;
     debian-8*)
 	apt-get update
-	apt-get -y install curl sudo unzip wget puppet
+	apt-get -y install wget
+	# BIGTOP-2523. in order to install puppet 3.8 we need to get it from puppet repo
+	wget -O /tmp/puppetlabs-release-jessie.deb https://apt.puppetlabs.com/puppetlabs-release-jessie.deb && dpkg -i /tmp/puppetlabs-release-jessie.deb
+	rm -f /tmp/puppetlabs-release-jessie.deb
+	apt-get update
+	apt-get -y install curl sudo unzip puppet
 	;;
+    debian-9*)
+        apt-get update
+        apt-get -y install wget curl sudo unzip puppet
+        ;;
     opensuse-*)
 	zypper --gpg-auto-import-keys install -y curl sudo unzip wget puppet suse-release ca-certificates-mozilla net-tools tar
 	;;

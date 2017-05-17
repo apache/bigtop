@@ -15,8 +15,8 @@
 FROM centos:7
 MAINTAINER jay@apache.org
 RUN yum update -y
-RUN yum install -y java-1.7.0-openjdk unzip wget
-RUN yum install -y java-1.7.0-openjdk-devel
+RUN yum install -y java-1.8.0-openjdk unzip wget
+RUN yum install -y java-1.8.0-openjdk-devel
 
 WORKDIR /opt/
 

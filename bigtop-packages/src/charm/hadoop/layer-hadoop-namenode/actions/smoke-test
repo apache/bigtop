@@ -22,7 +22,7 @@ from jujubigdata.utils import run_as
 from charms.reactive import is_state
 
 if not is_state('apache-bigtop-namenode.ready'):
-    hookenv.action_fail('NameNode service not yet ready')
+    hookenv.action_fail('Charm is not yet ready')
 
 
 # verify the hdfs-test directory does not already exist

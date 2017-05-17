@@ -20,54 +20,41 @@
 BIGTOP_DEFAULTS_DIR=${BIGTOP_DEFAULTS_DIR-/etc/default}
 [ -n "${BIGTOP_DEFAULTS_DIR}" -a -r ${BIGTOP_DEFAULTS_DIR}/bigtop-utils ] && . ${BIGTOP_DEFAULTS_DIR}/bigtop-utils
 
-JAVA6_HOME_CANDIDATES=(
-    '/usr/lib/j2sdk1.6-sun'
-    '/usr/lib/jvm/java-6-sun'
-    '/usr/lib/jvm/java-1.6.0-sun-1.6.0'
-    '/usr/lib/jvm/j2sdk1.6-oracle'
-    '/usr/lib/jvm/j2sdk1.6-oracle/jre'
-    '/usr/java/jdk1.6'
-    '/usr/java/jre1.6'
+JAVA8_HOME_CANDIDATES=(
+    '/usr/java/jdk1.8'
+    '/usr/java/jre1.8'
+    '/usr/lib/jvm/j2sdk1.8-oracle'
+    '/usr/lib/jvm/j2sdk1.8-oracle/jre'
+    '/usr/lib/jvm/java-8-oracle'
+    '/usr/lib/jdk8-latest'
 )
 
-OPENJAVA6_HOME_CANDIDATES=(
-    '/usr/lib/jvm/java-1.6.0-openjdk'
-    '/usr/lib/jvm/java-1.6.0-openjdk-'
-    '/usr/lib/jvm/jre-1.6.0-openjdk'
-)
-
-JAVA7_HOME_CANDIDATES=(
-    '/usr/java/jdk1.7'
-    '/usr/java/jre1.7'
-    '/usr/lib/jvm/j2sdk1.7-oracle'
-    '/usr/lib/jvm/j2sdk1.7-oracle/jre'
-    '/usr/lib/jvm/java-7-oracle'
-    '/usr/lib/jdk7-latest'
-)
-
-OPENJAVA7_HOME_CANDIDATES=(
-    '/usr/lib/jvm/java-1.7.0-openjdk'
-    '/usr/lib/jvm/java-7-openjdk'
+OPENJAVA8_HOME__CANDIDATES=(
+    '/usr/lib/jvm/java-1.8.0-openjdk-amd64'
+    '/usr/lib/jvm/java-1.8.0-openjdk-ppc64el'
+    '/usr/lib/jvm/java-1.8.0-openjdk'
+    '/usr/lib64/jvm/java-1.8.0-openjdk-1.8.0'
 )
 
 MISCJAVA_HOME_CANDIDATES=(
     '/Library/Java/Home'
     '/usr/java/default'
+    '/usr/lib/jvm/java'
+    '/usr/lib/jvm/jre'
     '/usr/lib/jvm/default-java'
     '/usr/lib/jvm/java-openjdk'
     '/usr/lib/jvm/jre-openjdk'
 )
 
 case ${BIGTOP_JAVA_MAJOR} in
-  6) JAVA_HOME_CANDIDATES=(${JAVA6_HOME_CANDIDATES[@]})
+  6|7) echo "Java ${BIGTOP_JAVA_MAJOR} is no longer supported. Please upgrade"
+     exit 1
      ;;
-  7) JAVA_HOME_CANDIDATES=(${JAVA7_HOME_CANDIDATES[@]} ${OPENJAVA7_HOME_CANDIDATES[@]})
+  8) JAVA_HOME_CANDIDATES=(${JAVA8_HOME_CANDIDATES[@]} ${OPENJAVA8_HOME_CANDIDATES[@]})
      ;;
-  *) JAVA_HOME_CANDIDATES=(${JAVA6_HOME_CANDIDATES[@]}
-                           ${JAVA7_HOME_CANDIDATES[@]}
+  *) JAVA_HOME_CANDIDATES=(${JAVA8_HOME_CANDIDATES[@]}
                            ${MISCJAVA_HOME_CANDIDATES[@]}
-                           ${OPENJAVA7_HOME_CANDIDATES[@]}
-                           ${OPENJAVA6_HOME_CANDIDATES[@]})
+                           ${OPENJAVA8_HOME_CANDIDATES[@]})
      ;;
 esac
 
@@ -82,4 +69,3 @@ if [ -z "${JAVA_HOME}" ]; then
       done
   done
 fi
-

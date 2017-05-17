@@ -168,3 +168,4 @@ fi
 %attr(0755,kafka,kafka) %{var_lib_kafka}
 %attr(0755,kafka,kafka) %{var_run_kafka}
 %attr(0755,kafka,kafka) %{var_log_kafka}
+%doc %{doc_kafka}

@@ -17,7 +17,7 @@ class zeppelin {
 
   class deploy ($roles) {
     if ('zeppelin-server' in $roles) {
-      include server
+      include zeppelin::server
     }
   }
 
@@ -30,6 +30,7 @@ class zeppelin {
       $hiveserver2_password = '') {
     package { 'zeppelin':
       ensure => latest,
+      require => Package["jdk"],
     }
 
     file { '/etc/zeppelin/conf/zeppelin-env.sh':

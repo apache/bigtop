@@ -42,7 +42,7 @@ public class TestGiraphSmoke {
       + " -V 100000"   // aggregate vertices
       + " -w 3"        // workers
     )
-    assertEquals("running PageRankBenchmark failed", sh.getRet(), 0);
+    assertEquals("running PageRankBenchmark failed", 0, sh.getRet());
   }
 
   @Test(timeout = 300000L)
@@ -57,7 +57,7 @@ public class TestGiraphSmoke {
       + " -n 10"       // Number of messages per edge
       + " -b 100"      // size of each message in bytes
     )
-    assertEquals("running RandomMessageBenchmark failed", sh.getRet(), 0);
+    assertEquals("running RandomMessageBenchmark failed", 0, sh.getRet());
   }
 
   @Test(timeout = 300000L)
@@ -70,7 +70,7 @@ public class TestGiraphSmoke {
       + " -w 3"        // workers
       + " -o ${testDir}"
     )
-    assertEquals("running SimpleCheckpointVertex failed", sh.getRet(), 0);
+    assertEquals("running SimpleCheckpointVertex failed", 0, sh.getRet());
   }
 
   @Test(timeout = 300000L)
@@ -80,7 +80,7 @@ public class TestGiraphSmoke {
       + " org.apache.giraph.examples.SimpleVertexWithWorkerContext"
       + " ${testDir} 3"
     )
-    assertEquals("running SimpleCheckpointVertex failed", sh.getRet(), 0);
+    assertEquals("running SimpleCheckpointVertex failed", 0, sh.getRet());
   }
 
   @Test(timeout = 300000L)
@@ -110,6 +110,6 @@ public class TestGiraphSmoke {
       + " ${testDir}/output"
       + " 0 ${graphDescription.size() / partitionSize}"
     )
-    assertEquals("running SimpleShortestPathsVertex failed", sh.getRet(), 0);
+    assertEquals("running SimpleShortestPathsVertex failed", 0, sh.getRet());
   }
 }

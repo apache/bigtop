@@ -44,8 +44,8 @@ public class QuantileTests  extends PigTests
     
     List<Tuple> output = getLinesForAlias(test, "data_out", true);
     
-    assertEquals(output.size(),1);
-    assertEquals(output.get(0).toString(), "(1.0,3.0,5.5,8.0,10.0)");
+    assertEquals(1,output.size());
+    assertEquals("(1.0,3.0,5.5,8.0,10.0)", output.get(0).toString());
   }
   
   @Test
@@ -61,8 +61,8 @@ public class QuantileTests  extends PigTests
     
     List<Tuple> output = getLinesForAlias(test, "data_out", true);
     
-    assertEquals(output.size(),1);
-    assertEquals(output.get(0).toString(), "(1.0,3.0,5.5,8.0,10.0)");
+    assertEquals(1,output.size());
+    assertEquals("(1.0,3.0,5.5,8.0,10.0)", output.get(0).toString());
   }
   
   @Test
@@ -77,8 +77,8 @@ public class QuantileTests  extends PigTests
     
     List<Tuple> output = getLinesForAlias(test, "data_out", true);
     
-    assertEquals(output.size(),1);
-    assertEquals(output.get(0).toString(), "(5.5)");
+    assertEquals(1,output.size());
+    assertEquals("(5.5)", output.get(0).toString());
   }
   
   @Test
@@ -93,8 +93,8 @@ public class QuantileTests  extends PigTests
     
     List<Tuple> output = getLinesForAlias(test, "data_out", true);
     
-    assertEquals(output.size(),1);
-    assertEquals(output.get(0).toString(), "(5.0)");
+    assertEquals(1,output.size());
+    assertEquals("(5.0)", output.get(0).toString());
   }
 
   @Test
@@ -109,8 +109,8 @@ public class QuantileTests  extends PigTests
     
     List<Tuple> output = getLinesForAlias(test, "data_out", true);
     
-    assertEquals(output.size(),1);
-    assertEquals(output.get(0).toString(), "(1.0,3.0,5.0,8.0,10.0)");
+    assertEquals(1,output.size());
+    assertEquals("(1.0,3.0,5.0,8.0,10.0)", output.get(0).toString());
   }
   
   @Test
@@ -125,8 +125,8 @@ public class QuantileTests  extends PigTests
     
     List<Tuple> output = getLinesForAlias(test, "data_out", true);
     
-    assertEquals(output.size(),1);
-    assertEquals(output.get(0).toString(), "(5.0,8.0,10.0)");
+    assertEquals(1,output.size());
+    assertEquals("(5.0,8.0,10.0)", output.get(0).toString());
   }
   
   @Test
@@ -146,8 +146,8 @@ public class QuantileTests  extends PigTests
     
     List<Tuple> output = getLinesForAlias(test, "data_out", true);
     
-    assertEquals(output.size(),1);
-    assertEquals(output.get(0).toString(), "(70.0,30.0,370.0,1000.0,1.0)");
+    assertEquals(1,output.size());
+    assertEquals("(70.0,30.0,370.0,1000.0,1.0)", output.get(0).toString());
   }
   
   @Test
@@ -167,8 +167,8 @@ public class QuantileTests  extends PigTests
     
     List<Tuple> output = getLinesForAlias(test, "data_out", true);
     
-    assertEquals(output.size(),1);
-    assertEquals(output.get(0).toString(), "(130.0,2280.0,15870.0,50000.0,84130.0,97720.0,99870.0)");
+    assertEquals(1,output.size());
+    assertEquals("(130.0,2280.0,15870.0,50000.0,84130.0,97720.0,99870.0)", output.get(0).toString());
   }
   
 
@@ -190,7 +190,7 @@ public class QuantileTests  extends PigTests
     
     List<Tuple> output = getLinesForAlias(test, "data_out", true);
     
-    assertEquals(output.size(),1);
-    assertEquals(output.get(0).toString(), "(130.0,2280.0,15870.0,50000.0,84130.0,97720.0,99870.0)");
+    assertEquals(1,output.size());
+    assertEquals("(130.0,2280.0,15870.0,50000.0,84130.0,97720.0,99870.0)", output.get(0).toString());
   }
 }

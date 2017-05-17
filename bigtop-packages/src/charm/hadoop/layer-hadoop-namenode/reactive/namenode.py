@@ -15,10 +15,11 @@
 # limitations under the License.
 
 from charms.reactive import is_state, remove_state, set_state, when, when_not
-from charms.layer.apache_bigtop_base import Bigtop, get_layer_opts, get_fqdn
+from charms.layer.apache_bigtop_base import (
+    Bigtop, get_hadoop_version, get_layer_opts, get_fqdn
+)
 from charmhelpers.core import hookenv, host
 from jujubigdata import utils
-from path import Path
 
 
 ###############################################################################
@@ -50,6 +51,8 @@ def send_early_install_info(remote):
 def install_namenode():
     hookenv.status_set('maintenance', 'installing namenode')
     bigtop = Bigtop()
+    hdfs_port = get_layer_opts().port('namenode')
+    webhdfs_port = get_layer_opts().port('nn_webapp_http')
     bigtop.render_site_yaml(
         hosts={
             'namenode': get_fqdn(),
@@ -58,6 +61,14 @@ def install_namenode():
             'namenode',
             'mapred-app',
         ],
+        # NB: We want the NN to listen on all interfaces, so bind to 0.0.0.0.
+        overrides={
+            'hadoop::common_hdfs::hadoop_namenode_port': hdfs_port,
+            'hadoop::common_hdfs::hadoop_namenode_bind_host': '0.0.0.0',
+            'hadoop::common_hdfs::hadoop_namenode_http_port': webhdfs_port,
+            'hadoop::common_hdfs::hadoop_namenode_http_bind_host': '0.0.0.0',
+            'hadoop::common_hdfs::hadoop_namenode_https_bind_host': '0.0.0.0',
+        }
     )
     bigtop.trigger_puppet()
 
@@ -67,18 +78,10 @@ def install_namenode():
     # requirement.
     utils.initialize_kv_host()
 
-    # make our namenode listen on all interfaces
-    hdfs_site = Path('/etc/hadoop/conf/hdfs-site.xml')
-    with utils.xmlpropmap_edit_in_place(hdfs_site) as props:
-        props['dfs.namenode.rpc-bind-host'] = '0.0.0.0'
-        props['dfs.namenode.servicerpc-bind-host'] = '0.0.0.0'
-        props['dfs.namenode.http-bind-host'] = '0.0.0.0'
-        props['dfs.namenode.https-bind-host'] = '0.0.0.0'
-
-    # We need to create the 'mapred' user/group since we are not installing
-    # hadoop-mapreduce. This is needed so the namenode can access yarn
-    # job history files in hdfs. Also add our ubuntu user to the hadoop
-    # and mapred groups.
+    # We need to create the 'mapred' and 'spark' user/group since we may not
+    # be installing hadoop-mapreduce or spark on this machine. This is needed
+    # so the namenode can access yarn and spark job history files in hdfs. Also
+    # add our ubuntu user to the hadoop, mapred, and spark groups.
     get_layer_opts().add_users()
 
     set_state('apache-bigtop-namenode.installed')
@@ -89,14 +92,24 @@ def install_namenode():
 @when_not('apache-bigtop-namenode.started')
 def start_namenode():
     hookenv.status_set('maintenance', 'starting namenode')
-    # NB: service should be started by install, but this may be handy in case
-    # we have something that removes the .started state in the future. Also
-    # note we restart here in case we modify conf between install and now.
-    host.service_restart('hadoop-hdfs-namenode')
-    for port in get_layer_opts().exposed_ports('namenode'):
-        hookenv.open_port(port)
-    set_state('apache-bigtop-namenode.started')
-    hookenv.status_set('maintenance', 'namenode started')
+    # NB: service should be started by install, but we want to verify it is
+    # running before we set the .started state and open ports. We always
+    # restart here, which may seem heavy-handed. However, restart works
+    # whether the service is currently started or stopped. It also ensures the
+    # service is using the most current config.
+    started = host.service_restart('hadoop-hdfs-namenode')
+    if started:
+        for port in get_layer_opts().exposed_ports('namenode'):
+            hookenv.open_port(port)
+        set_state('apache-bigtop-namenode.started')
+        hookenv.status_set('maintenance', 'namenode started')
+        hookenv.application_version_set(get_hadoop_version())
+    else:
+        hookenv.log('NameNode failed to start')
+        hookenv.status_set('blocked', 'namenode failed to start')
+        remove_state('apache-bigtop-namenode.started')
+        for port in get_layer_opts().exposed_ports('namenode'):
+            hookenv.close_port(port)
 
 
 ###############################################################################

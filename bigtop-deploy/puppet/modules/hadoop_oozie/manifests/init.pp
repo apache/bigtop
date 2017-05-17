@@ -17,15 +17,15 @@ class hadoop_oozie {
 
   class deploy ($roles) {
     if ("oozie-client" in $roles) {
-      include client
+      include hadoop_oozie::client
     }
 
     if ("oozie-server" in $roles) {
       include hadoop::init_hdfs
-      include server
+      include hadoop_oozie::server
       Class['Hadoop::Init_hdfs'] -> Class['Hadoop_oozie::Server']
       if ("mapred-app" in $roles) {
-        Class['Hadoop::Mapred-app'] -> Class['Hadoop_oozie::Server']
+        Class['Hadoop::Mapred_app'] -> Class['Hadoop_oozie::Server']
       }
     }
   }
@@ -37,7 +37,7 @@ class hadoop_oozie {
   }
 
   class server($kerberos_realm = "") {
-    if ($kerberos_realm) {
+    if ($kerberos_realm and $kerberos_realm != "") {
       require kerberos::client
       kerberos::host_keytab { "oozie":
         spnego => true,

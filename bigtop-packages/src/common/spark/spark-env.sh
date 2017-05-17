@@ -39,5 +39,5 @@ export SPARK_MASTER_WEBUI_PORT=18080
 export SPARK_WORKER_DIR=${SPARK_WORKER_DIR:-/var/run/spark/work}
 export SPARK_WORKER_PORT=7078
 export SPARK_WORKER_WEBUI_PORT=18081
-
+export SPARK_MASTER_URL=spark://$STANDALONE_SPARK_MASTER_HOST:$SPARK_MASTER_PORT
 export SPARK_HISTORY_OPTS="$SPARK_HISTORY_OPTS -Dspark.history.fs.logDirectory=hdfs:///var/log/spark/apps -Dspark.history.ui.port=18082"

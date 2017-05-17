@@ -1,0 +1,19 @@
+reset: false
+deployment_timeout: 3600
+sources:
+  - 'ppa:juju/stable'
+packages:
+  - amulet
+  - python3-yaml
+# exclude tests that are unrelated to bigtop. the exclusion of spark might
+# look weird here, but for this bundle, we only care that spark is good in
+# yarn mode (covered by this bundle when we invoke the spark smoke-test). the
+# typical spark tests will test spark once in standalone and twice more in
+# various HA modes. that takes forever, so leave those heavy tests for the
+# spark-processing bundle. let's go fast on this one.
+excludes:
+  - ganglia
+  - ganglia-node
+  - rsyslog
+  - rsyslog-forwarder-ha
+  - spark

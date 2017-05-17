@@ -188,8 +188,9 @@ BuildRequires: openssl-devel
 BuildRequires: krb5-devel
 BuildRequires: asciidoc
 BuildRequires: gmp-devel
+BuildRequires: libffi-devel
 Group: Applications/Engineering
-Requires: cyrus-sasl-gssapi, libxml2, libxslt, zlib, sqlite, libyaml, gmp
+Requires: cyrus-sasl-gssapi, libxml2, libxslt, zlib, sqlite, libyaml, gmp, python, libffi
 # The only reason we need the following is because we also have AutoProv: no
 Provides: config(%{name}-common) = %{version}
 
@@ -202,7 +203,6 @@ BuildRequires: /sbin/runuser, sqlite-devel, openldap-devel, mysql-devel, openssl
 # Required for init scripts
 Requires: /lib/lsb/init-functions
 BuildRequires: python-devel, python-setuptools
-Requires: python
 %endif
 
 # Disable automatic Provides generation - otherwise we will claim to provide all of the
@@ -270,7 +270,7 @@ fi
 %{hue_dir}/Makefile.sdk
 %{hue_dir}/Makefile.vars
 %{hue_dir}/Makefile.vars.priv
-%{hue_dir}/README.rst
+%{hue_dir}/README.md
 %{hue_dir}/tools
 %{hue_dir}/VERSION
 %{hue_dir}/build/env/bin/*

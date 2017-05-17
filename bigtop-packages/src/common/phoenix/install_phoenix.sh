@@ -137,3 +137,8 @@ ln -s `cd $PREFIX/$LIB_DIR ; ls phoenix*-thin-client.jar` $PREFIX/$LIB_DIR/phoen
 # phoenix-server for placing on the HBase regionserver classpath
 ln -s `cd $PREFIX/$LIB_DIR ; ls phoenix*-server.jar` $PREFIX/$LIB_DIR/phoenix-server.jar
 
+# phoenix-hive
+ln -s `cd $PREFIX/$LIB_DIR ; ls phoenix*-hive.jar` $PREFIX/$LIB_DIR/phoenix-hive.jar
+
+# phoenix-pig
+ln -s `cd $PREFIX/$LIB_DIR ; ls phoenix*-pig.jar` $PREFIX/$LIB_DIR/phoenix-pig.jar

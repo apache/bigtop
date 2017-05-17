@@ -21,6 +21,8 @@ case $operatingsystem {
     }
     # Detect env to pick up default repo for other Bigtop supported OSs
     default: {
+      include stdlib
+
       $lower_os = downcase($operatingsystem)
       # We use code name such as trusty for Ubuntu instead of release version in bigtop's binary convenience repos
       if ($operatingsystem == "Ubuntu") { $release = $lsbdistcodename } else { $release = $operatingsystemmajrelease }
@@ -31,15 +33,12 @@ case $operatingsystem {
 $jdk_preinstalled = hiera("bigtop::jdk_preinstalled", false)
 $jdk_package_name = hiera("bigtop::jdk_package_name", "jdk")
 
+$provision_repo = hiera("bigtop::provision_repo", true)
+
 stage {"pre": before => Stage["main"]}
 
-# as discussed in BIGTOP-2339 we'll have to enforce init.d until such time 
-# we have a conceptually more welcoming environment for systemd
-Service {
-  provider => init,
-}
-
-case $operatingsystem {
+if ($provision_repo) {
+  case $::operatingsystem {
     /(OracleLinux|Amazon|CentOS|Fedora|RedHat)/: {
        yumrepo { "Bigtop":
           baseurl => hiera("bigtop::bigtop_repo_uri", $default_repo),
@@ -66,15 +65,31 @@ case $operatingsystem {
     default: {
       notify{"WARNING: running on a neither yum nor apt platform -- make sure Bigtop repo is setup": }
     }
+  }
 }
 
-package { $jdk_package_name:
-  ensure => "installed",
-  alias => "jdk",
-  noop => $jdk_preinstalled,
-}
+case $::operatingsystem {
+    /Debian/: {
+      require apt
+      class { 'apt::backports':
+        pin => 500,
+      }
+      Class['apt::backports'] -> Package <||>
 
-import "cluster.pp"
+      package { "jdk":
+        name => $jdk_package_name,
+        ensure => present,
+      }
+    }
+    default: {
+      package { "jdk":
+        name => $jdk_package_name,
+        ensure => "installed",
+        alias => "jdk",
+        noop => $jdk_preinstalled,
+     }
+   }
+}
 
 node default {
 

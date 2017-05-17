@@ -15,18 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import org.ajoberstar.grgit.*
 import groovy.json.JsonOutput
+import java.net.URI
 
 buildscript {
   repositories {
     mavenCentral()
-  }
-  dependencies {
-    classpath 'org.ajoberstar:grgit:0.4.1'
-    // To handle symbolic links when cloning git repos, the jgit.java7 jar
-    // must be added to the classpath.
-    classpath 'org.eclipse.jgit:org.eclipse.jgit.java7:3.6.2.201501210735-r'
   }
 }
 
@@ -45,7 +39,7 @@ config.bigtop.builddir = projectDir.absolutePath + "/build"
 config.bigtop.outputdir = projectDir.absolutePath + "/output"
 config.bigtop.distdir = projectDir.absolutePath + "/dist"
 config.bigtop.dldir = projectDir.absolutePath + "/dl"
-config.bigtop.buildstamp = 1
+if(!config.bigtop.buildstamp) config.bigtop.buildstamp = 1
 
 def bomVersions = []
 
@@ -178,37 +172,72 @@ def genTasks = { target ->
       description: "Download $target artifacts",
       group: PACKAGES_GROUP) << {
 
-    def final TARBALL_SRC = config.bigtop.components[target].tarball.source
+    def final TARBALL_DST = config.bigtop.components[target].tarball.destination
     def final DOWNLOAD_DST = config.bigtop.components[target].downloaddst
     def final DOWNLOAD_URL = config.bigtop.components[target].downloadurl
 
     def final GIT_REPO = config.bigtop.components[target].git.repo
     def final GIT_REF = config.bigtop.components[target].git.ref
     def final GIT_DIR = config.bigtop.components[target].git.dir
+    def final GIT_USER_NAME = config.bigtop.components[target].git.user ?: config.bigtop.git.user
+    def final GIT_ACCESS_TOKEN = config.bigtop.components[target].git.token ?: config.bigtop.git.token
 
-    if (!DOWNLOAD_DST)
+    def devNull = new org.apache.bigtop.NullOutputStream()
+
+    if (!DOWNLOAD_URL)
       return
 
     mkdir(DL_DIR)
-    if (TARBALL_SRC?.isEmpty() || new File(DOWNLOAD_DST)?.exists() || new File(config.bigtop.components[target].targetdl)?.exists()) {
+    if (TARBALL_DST?.isEmpty() || new File(DOWNLOAD_DST)?.exists() || new File(config.bigtop.components[target].targetdl)?.exists()) {
       println "\tFile $DOWNLOAD_DST appears to be already downloaded. Exiting..."
       return
     }
     if (GIT_REPO && GIT_REF) {
       def dir = GIT_DIR
       if (dir == null || dir.isEmpty()) {
-        dir = TARBALL_SRC.substring(0, TARBALL_SRC.lastIndexOf(".t"))
+        dir = TARBALL_DST.substring(0, TARBALL_DST.lastIndexOf(".t"))
       }
       delete("${DL_DIR}/${dir}")
-      Grgit.clone(
-        uri: GIT_REPO,
-        refToCheckout: GIT_REF,
-        dir: new File("${DL_DIR}/${dir}")
-      )
+      if (GIT_USER_NAME && GIT_ACCESS_TOKEN) {
+        def uri = new URI(GIT_REPO)
+        if (!GIT_REPO.toLowerCase().startsWith("http")) {
+          println("\tGit credentials supported only with 'http' or 'https' schemes");
+          return
+        }
+        uri = new URI(uri.getScheme(),
+         "${GIT_USER_NAME}:${GIT_ACCESS_TOKEN}".toString(), // userInfo
+         uri.getHost(), uri.getPort(), uri.getPath(), uri.getQuery(),
+         uri.getFragment())
+        exec {
+          workingDir DL_DIR
+          commandLine "git clone --depth 1 ${uri} ${dir}".split()
+          errorOutput devNull
+          standardOutput devNull
+        }
+      } else {
+        exec {
+          workingDir DL_DIR
+          commandLine "git clone --depth 1 ${GIT_REPO} ${dir}".split()
+          errorOutput devNull
+          standardOutput devNull
+        }
+      }
+      exec {
+        workingDir "$DL_DIR/${dir}"
+        commandLine "git checkout $GIT_REF".split()
+        errorOutput devNull
+        standardOutput devNull
+      }
+      exec {
+        workingDir "$DL_DIR/${dir}"
+        commandLine "git submodule update --init".split()
+        errorOutput devNull
+        standardOutput devNull
+      }
       delete("${DL_DIR}/${dir}/.git")
       exec {
         workingDir DL_DIR
-        commandLine "tar -czf ${TARBALL_SRC} ${dir}".split()
+        commandLine "tar -czf ${TARBALL_DST} ${dir}".split()
       }
       delete("${DL_DIR}/${dir}")
     }
@@ -229,6 +258,7 @@ def genTasks = { target ->
     }
     def final TAR_DIR = config.bigtop.components[target].tardir
     def final TARBALL_SRC = config.bigtop.components[target].tarball.source ?: ""
+    def final TARBALL_DST = config.bigtop.components[target].tarball.destination
     def final DOWNLOAD_DST = config.bigtop.components[target].downloaddst ?: ""
     def final SEED_TAR = config.bigtop.components[target].seedtar
 
@@ -269,7 +299,7 @@ def genTasks = { target ->
       copy {
         from DOWNLOAD_DST
         into config.bigtop.builddir + "/$target/tar/"
-        rename TARBALL_SRC, SEED_TAR
+        rename TARBALL_DST, SEED_TAR
       }
     }
     touchTargetFile(config.bigtop.components[target].targettar)
@@ -301,6 +331,7 @@ def genTasks = { target ->
 --preserve-envvar MAVEN3_HOME \
 --preserve-envvar MAVEN_OPTS \
 --preserve-envvar JAVA_HOME \
+--preserve-envvar BIGTOP_JDK \
 --set-envvar=HADOOP_VERSION=$HADOOP_VERSION \
 --set-envvar=${toOldStyleName(target)}_BASE_VERSION=$BASE_VERSION \
 --set-envvar=${toOldStyleName(target)}_VERSION=$PKG_VERSION \
@@ -334,6 +365,8 @@ def genTasks = { target ->
       println "\tNothing to do. Exiting..."
       return
     }
+    def final TARBALL_SRC = config.bigtop.components[target].tarball.source
+    def final TARBALL_DST = config.bigtop.components[target].tarball.destination ?: TARBALL_SRC
     def final PKG_BUILD_DIR = config.bigtop.components[target].builddir
     def final NAME = config.bigtop.components[target].name
     def final PKG_NAME = config.bigtop.components[target].pkg
@@ -347,7 +380,7 @@ def genTasks = { target ->
     copy {
       from SEED_TAR
       into "$PKG_BUILD_DIR/deb/"
-      rename config.bigtop.components[target].tarball.destination, "${PKG_NAME}_${PKG_VERSION}.orig.tar.gz"
+      rename TARBALL_DST, "${PKG_NAME}_${PKG_VERSION}.orig.tar.gz"
     }
     exec {
       workingDir DEB_BLD_DIR
@@ -562,8 +595,8 @@ def genTasks = { target ->
             !config.bigtop.components[target].url.site.isEmpty() &&
             !config.bigtop.components[target].tarball.source.isEmpty()) ?
             config.bigtop.components[target].url.site + '/' + config.bigtop.components[target].tarball.source : null
-        if (!config.bigtop.components[target].tarball.source.isEmpty())
-          config.bigtop.components[target].downloaddst = DL_DIR + '/' + config.bigtop.components[target].tarball.source
+        if (!config.bigtop.components[target].tarball.destination.isEmpty())
+          config.bigtop.components[target].downloaddst = DL_DIR + '/' + config.bigtop.components[target].tarball.destination
 
     // test that the download url will return http 200.  If it does not, use the ARCHIVE url instead of the MIRROR SITE url
     if (!config.bigtop.components[target].url.isEmpty() && !ifExists(config.bigtop.components[target].downloadurl)) {

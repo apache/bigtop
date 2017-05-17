@@ -20,6 +20,7 @@ package org.apache.bigtop.itest
 
 import java.util.jar.JarEntry
 import java.util.jar.JarFile
+import java.util.regex.Pattern
 import java.util.zip.ZipInputStream
 import java.util.zip.ZipException
 import org.apache.commons.logging.LogFactory
@@ -198,13 +199,10 @@ public abstract class JarContent {
      * Adding an ability to unpack a content of an given ZipInputStream
      * to specified destination with given pattern
      * @param dest directory where the content will be unpacked
-     * @param includes regexps to include resources to be unpacked
+     * @param includes string(s) or regexp(s) to include resources to be unpacked
      */
-    ZipInputStream.metaClass.unzip = { String dest, String includes ->
-      //in metaclass added methods, 'delegate' is the object on which
-      //the method is called. Here it's the file to unzip
+    def unzip = { InputStream result, String dest, includes, predicate ->
       if (includes == null) includes = "";
-      def result = delegate
       def destFile = new File(dest)
       if (!destFile.exists()) {
         destFile.mkdir();
@@ -212,7 +210,7 @@ public abstract class JarContent {
       result.withStream {
         def entry
         while (entry = result.nextEntry) {
-          if (!entry.name.contains(includes)) {
+          if (!predicate(entry.name, includes)) {
             continue
           };
           if (!entry.isDirectory()) {
@@ -232,6 +230,20 @@ public abstract class JarContent {
         }
       }
     }
+
+    ZipInputStream.metaClass.unzip = { String dest, String includes ->
+      //in metaclass added methods, 'delegate' is the object on which
+      //the method is called. Here it's the file to unzip
+      unzip(delegate, dest, includes) { dst, inc -> dst.contains(inc) } }
+
+    ZipInputStream.metaClass.unzip = { String dest, List<String> includes ->
+      unzip(delegate, dest, includes) { dst, inc -> inc.any { dst.contains(it) } } }
+
+    ZipInputStream.metaClass.unzip = { String dest, Pattern includes ->
+      unzip(delegate, dest, includes) { dst, inc -> (dst =~ inc) as boolean } }
+
+    ZipInputStream.metaClass.unzip = { String dest, List<Pattern> includes ->
+      unzip(delegate, dest, includes) { dst, inc -> inc.any { (dst =~ it) as boolean } } }
   }
 }
 

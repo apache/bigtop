@@ -16,15 +16,20 @@
 
 set -ex
 
+if [ "${BIGTOP_JDK:=8}" == "8" ]; then
+    MAVEN_ADDITIONAL="-Dadditionalparam=-Xdoclint:none"
+fi
+
 if [ -z "$GIT_REPO" ]; then
-    export MAVEN_OPTS='-Xmx512m -XX:MaxPermSize=512m'
+    export MAVEN_OPTS='-Xmx512m'
     if [ -z "${DO_MAVEN_DEPLOY}" ]; then
         MAVEN_INST_DEPLOY=install
     else
         MAVEN_INST_DEPLOY=$DO_MAVEN_DEPLOY
     fi
 
-    mvn -DskipTests=true source:jar-no-fork javadoc:jar -P=binary $@ $MAVEN_INST_DEPLOY
+    mvn -DskipTests=true source:jar-no-fork javadoc:jar \
+        -P=binary ${MAVEN_ADDITIONAL} $@ $MAVEN_INST_DEPLOY
     
 # Repackaging and changing the name to "sqoop2" is necessary as long
 # as we continue to distribute a version of Sqoop 1.x as "sqoop"

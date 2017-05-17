@@ -86,8 +86,11 @@ Source3: ignite-hadoop.svc
 Source4: init.d.tmpl
 Source5: ignite-hadoop.default
 BuildArch: noarch
+## This package _explicitly_ turns off the auto-discovery of required dependencies
+## to work around OSGI corner case, added to RPM lately. See BIGTOP-2421 for more info.
 Requires: coreutils, /usr/sbin/useradd, /sbin/chkconfig, /sbin/service
 Requires: hadoop-hdfs, hadoop-mapreduce, bigtop-utils >= 0.7
+AutoReq: no
 
 %if  0%{?mgaversion}
 Requires: bsh-utils

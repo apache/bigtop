@@ -29,7 +29,7 @@ class TestDeploy(unittest.TestCase):
     """
 
     def test_deploy(self):
-        self.d = amulet.Deployment(series='trusty')
+        self.d = amulet.Deployment(series='xenial')
         self.d.load({
             'services': {
                 'client': {'charm': 'hadoop-client'},

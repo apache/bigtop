@@ -73,13 +73,6 @@ class BTServices {
 
   static final Map<String, List<String>> release2services = [
     "bigtop": ["HDFS", "mapreduce", "hive", "HBase", "zookeeper", "oozie", "flume"],
-    "2": ["HDFS", "mapreduce", "hive"],
-    "3b2": ["HDFS", "mapreduce", "hive", "HBase", "zookeeper", "oozie", "flume", "hue"],
-    "3b3": ["HDFS", "mapreduce", "hive", "HBase", "zookeeper", "oozie", "flume", "sqoop", "hue"],
-    "3b4": ["HDFS", "mapreduce", "hive", "HBase", "zookeeper", "oozie", "flume", "sqoop", "hue"],
-    "3u0": ["HDFS", "mapreduce", "hive", "HBase", "zookeeper", "oozie", "flume", "sqoop", "hue"],
-    "3u1": ["HDFS", "mapreduce", "hive", "HBase", "zookeeper", "oozie", "flume", "sqoop", "hue"],
-    "3": ["HDFS", "mapreduce", "hive", "HBase", "zookeeper", "oozie", "flume"],
   ];
 
   public static Map getServices(String release) {

@@ -1,6 +1,5 @@
 smoke-test:
-  description: >
-    Verify that YARN is working as expected by running a small (1MB) terasort.
+    description: Run an Apache Bigtop smoke test.
 mrbench:
     description: Mapreduce benchmark for small jobs
     params:
@@ -76,40 +75,36 @@ testdfsio:
                 description: filesize in MB
                 type: integer
                 default: 1000
-        resfile:
-                description: Results file name
-                type: string
-                default: "/tmp/TestDFSIO_results.log"
         buffersize:
                 description: Buffer size in bytes
-                type: integer
-                default: 1000000
+                type: string
+                default: "1000000"
 teragen:
     description: Generate data with teragen
     params:
         size:
             description: The number of 100 byte rows, default to 1GB of data to generate
-            type: integer
-            default: 10000000
+            type: string
+            default: "10000000"
         indir:
             description: HDFS directory where generated data is stored
             type: string
-            default: 'tera_demo_in'
+            default: '/benchmarks/TeraGen'
 terasort:
     description: Runs teragen to generate sample data, and then runs terasort to sort that data
     params:
         indir:
             description: HDFS directory where generated data is stored
             type: string
-            default: 'tera_demo_in'
+            default: '/benchmarks/TeraGen'
         outdir:
             description: HDFS directory where sorted data is stored
             type: string
-            default: 'tera_demo_out'
+            default: '/benchmarks/TeraSort'
         size:
             description: The number of 100 byte rows, default to 1GB of data to generate and sort
-            type: integer
-            default: 10000000
+            type: string
+            default: "10000000"
         maps:
             description: The default number of map tasks per job. 1-20
             type: integer

@@ -1,0 +1,38 @@
+repo: git@github.com:juju-solutions/bigtop.git
+includes:
+  - 'layer:apache-bigtop-base'
+  - 'layer:hadoop-client'
+  - 'interface:hive'
+  - 'interface:spark'
+  - 'interface:zeppelin'
+options:
+  basic:
+    packages:
+      - 'unzip'
+  apache-bigtop-base:
+    groups:
+      - 'hadoop'
+      - 'zeppelin'
+    users:
+      ubuntu:
+        groups: ['hadoop', 'zeppelin']
+    dirs:
+      zeppelin:
+          path: '/usr/lib/zeppelin'
+      zeppelin_conf:
+          path: '/etc/zeppelin/conf'
+      zeppelin_logs:
+          path: '/var/log/zeppelin'
+      zeppelin_notebooks:
+          path: '/var/lib/zeppelin/notebook'
+    ports:
+      # Ports that need to be exposed, overridden, or manually specified.
+      # Only expose ports serving a UI or external API (i.e., namenode and
+      # resourcemanager).  Communication among units within the cluster does
+      # not need ports to be explicitly opened.
+      zeppelin:
+          port: 9080
+          exposed_on: 'zeppelin'
+      zeppelin_web:
+          port: 9081
+          exposed_on: 'zeppelin'

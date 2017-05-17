@@ -35,7 +35,7 @@ Version: %{apex_version}
 Release: %{apex_release}
 Summary: Apache Apex is an enterprise Grade YARN-native platform for unified stream and batch processing
 License: ASL 2.0
-URL: http://apex.incubator.apache.org
+URL: http://apex.apache.org
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 BuildArch: noarch
@@ -44,6 +44,7 @@ Source1: do-component-build
 Source2: install_apex.sh
 Source3: apex.1
 Source4: bigtop.bom
+#BIGTOP_PATCH_FILES
 Requires: hadoop-client, bigtop-utils >= 0.7
 
 %description
@@ -57,7 +58,9 @@ Apache Apex includes following key features:
  * Hadoop-native YARN & HDFS implementation
 
 %prep
-%setup -n %{name}-%{apex_base_version}-incubating
+%setup -n apache-%{name}-core-%{apex_base_version}
+
+#BIGTOP_PATCH_COMMANDS
 
 %build
 env APEX_VERSION=%{apex_base_version} bash %{SOURCE1}
@@ -73,5 +76,4 @@ sh -x %{SOURCE2} --prefix=$RPM_BUILD_ROOT --doc-dir=$RPM_BUILD_ROOT/%{doc_apex}
 %doc %{doc_apex}
 %{lib_apex}
 %{bin_apex}/apex
-%{bin_apex}/dtcli
 %{man_dir}/man1/apex.1.*

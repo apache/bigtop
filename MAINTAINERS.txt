@@ -19,7 +19,7 @@ oozie evans ye, rvs
 phoenix: andrew purtell, youngwoo kim
 pig: evans ye, daniel dai
 puppet recipes: jay vyas, cos, evans ye, rvs
-qfs: fsareshwala <fsareshwala@quantcast.com>
+qfs: kstinson <kstinson@quantcast.com>
 smoke-tests: jay vyas, david capwell
 spark: jay vyas, youngwoo kim
 sqoop: sean mackrory, youngwoo kim
@@ -29,3 +29,4 @@ tez: evans ye, oflebbe
 vagrant recipes: jay vyas, evans ye
 ycsb: youngwoo kim
 zookeeper: sean mackrory, rvs
+elasticsearch: hernan vivani

@@ -20,14 +20,14 @@
   <parent>
     <groupId>org.apache.bigtop.itest</groupId>
     <artifactId>bigtop-smokes</artifactId>
-    <version>1.2.0-SNAPSHOT</version>
+    <version>1.3.0-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>datafu-smoke</artifactId>
-  <version>1.2.0-SNAPSHOT</version>
+  <version>1.3.0-SNAPSHOT</version>
   <name>datafusmoke</name>
 
   <dependencies>
@@ -63,17 +63,6 @@
   </dependencies>
 
   <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.rat</groupId>
-        <artifactId>apache-rat-plugin</artifactId>
-        <configuration>
-          <excludes>
-            <exclude>**/resources/datafu/**/*.pig</exclude>
-          </excludes>
-        </configuration>
-      </plugin>
-    </plugins>
   </build>
 
 </project>

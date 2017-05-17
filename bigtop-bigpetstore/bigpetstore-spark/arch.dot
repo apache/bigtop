@@ -22,15 +22,12 @@ digraph bigpetstore {
    STRUCTURED_DATA [label="Data model serialized as sequence files"];
    generator [label="Data Generator (generator.SparkDriver)"];
    ETL [label="Extract-Transform-Load (etl.SparkETL)"];
-   SalesAnalytics [label="Sales Analytics (analytics.Sales)"];
-   SalesTables [label="Sales Trends Tables (CSV)"];
-   CustomerAnalytics [label="Customer Analytics (analytics.Customers)"];
-   CustomerTables [label="Customer Trends Tables (CSV)"];
-   ItemRecommender [label="Item Recommendor (analytics.ItemRecommendor)"];
-   ItemRecommendations [label="Customer Product Recommendations (CSV)"];
+   SalesAnalytics [label="Sales Analytics (analytics.PetStoreStatistics)"];
+   SalesTables [label="Sales Trends Tables (JSON)"];
+   ItemRecommender [label="Item Recommender (analytics.RecommendProducts)"];
+   ItemRecommendations [label="Customer Product Recommendations (JSON)"];
 
    generator -> DIRTY_CSV -> ETL -> STRUCTURED_DATA;
    STRUCTURED_DATA -> SalesAnalytics -> SalesTables;
-   STRUCTURED_DATA -> CustomerAnalytics -> CustomerTables;
    STRUCTURED_DATA -> ItemRecommender -> ItemRecommendations;
 }

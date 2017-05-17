@@ -15,7 +15,9 @@
 # limitations under the License.
 
 from charms.reactive import is_state, remove_state, set_state, when, when_not
-from charms.layer.apache_bigtop_base import Bigtop, get_layer_opts, get_fqdn
+from charms.layer.apache_bigtop_base import (
+    Bigtop, get_hadoop_version, get_layer_opts, get_fqdn
+)
 from charmhelpers.core import hookenv, host
 from jujubigdata import utils
 
@@ -61,11 +63,44 @@ def install_resourcemanager(namenode):
     """
     if namenode.namenodes():
         hookenv.status_set('maintenance', 'installing resourcemanager')
+        # Hosts
         nn_host = namenode.namenodes()[0]
         rm_host = get_fqdn()
+
+        # Ports
+        rm_ipc = get_layer_opts().port('resourcemanager')
+        rm_http = get_layer_opts().port('rm_webapp_http')
+        jh_ipc = get_layer_opts().port('jobhistory')
+        jh_http = get_layer_opts().port('jh_webapp_http')
+        hdfs_port = namenode.port()
+        webhdfs_port = namenode.webhdfs_port()
+
         bigtop = Bigtop()
-        hosts = {'namenode': nn_host, 'resourcemanager': rm_host}
-        bigtop.render_site_yaml(hosts=hosts, roles='resourcemanager')
+        bigtop.render_site_yaml(
+            hosts={
+                'namenode': nn_host,
+                'resourcemanager': rm_host,
+            },
+            roles=[
+                'resourcemanager',
+            ],
+            # NB: When we colocate the NN and RM, the RM will run puppet apply
+            # last. To ensure we don't lose any hdfs-site.xml data set by the
+            # NN, override common_hdfs properties again here.
+            overrides={
+                'hadoop::common_yarn::hadoop_rm_port': rm_ipc,
+                'hadoop::common_yarn::hadoop_rm_webapp_port': rm_http,
+                'hadoop::common_yarn::hadoop_rm_bind_host': '0.0.0.0',
+                'hadoop::common_mapred_app::mapreduce_jobhistory_host': '0.0.0.0',
+                'hadoop::common_mapred_app::mapreduce_jobhistory_port': jh_ipc,
+                'hadoop::common_mapred_app::mapreduce_jobhistory_webapp_port': jh_http,
+                'hadoop::common_hdfs::hadoop_namenode_port': hdfs_port,
+                'hadoop::common_hdfs::hadoop_namenode_bind_host': '0.0.0.0',
+                'hadoop::common_hdfs::hadoop_namenode_http_port': webhdfs_port,
+                'hadoop::common_hdfs::hadoop_namenode_http_bind_host': '0.0.0.0',
+                'hadoop::common_hdfs::hadoop_namenode_https_bind_host': '0.0.0.0',
+            }
+        )
         bigtop.trigger_puppet()
 
         # /etc/hosts entries from the KV are not currently used for bigtop,
@@ -74,7 +109,10 @@ def install_resourcemanager(namenode):
         # requirement.
         utils.initialize_kv_host()
 
-        # Add our ubuntu user to the hadoop and mapred groups.
+        # We need to create the 'spark' user/group since we may not be
+        # installing spark on this machine. This is needed so the history
+        # server can access spark job history files in hdfs. Also add our
+        # ubuntu user to the hadoop, mapred, and spark groups on this machine.
         get_layer_opts().add_users()
 
         set_state('apache-bigtop-resourcemanager.installed')
@@ -96,15 +134,28 @@ def send_nn_spec(namenode):
 @when_not('apache-bigtop-resourcemanager.started')
 def start_resourcemanager(namenode):
     hookenv.status_set('maintenance', 'starting resourcemanager')
-    # NB: service should be started by install, but this may be handy in case
-    # we have something that removes the .started state in the future. Also
-    # note we restart here in case we modify conf between install and now.
-    host.service_restart('hadoop-yarn-resourcemanager')
-    host.service_restart('hadoop-mapreduce-historyserver')
-    for port in get_layer_opts().exposed_ports('resourcemanager'):
-        hookenv.open_port(port)
-    set_state('apache-bigtop-resourcemanager.started')
-    hookenv.status_set('active', 'ready')
+    # NB: service should be started by install, but we want to verify it is
+    # running before we set the .started state and open ports. We always
+    # restart here, which may seem heavy-handed. However, restart works
+    # whether the service is currently started or stopped. It also ensures the
+    # service is using the most current config.
+    rm_started = host.service_restart('hadoop-yarn-resourcemanager')
+    if rm_started:
+        for port in get_layer_opts().exposed_ports('resourcemanager'):
+            hookenv.open_port(port)
+        set_state('apache-bigtop-resourcemanager.started')
+        hookenv.status_set('maintenance', 'resourcemanager started')
+        hookenv.application_version_set(get_hadoop_version())
+    else:
+        hookenv.log('YARN ResourceManager failed to start')
+        hookenv.status_set('blocked', 'resourcemanager failed to start')
+        remove_state('apache-bigtop-resourcemanager.started')
+        for port in get_layer_opts().exposed_ports('resourcemanager'):
+            hookenv.close_port(port)
+
+    hs_started = host.service_restart('hadoop-mapreduce-historyserver')
+    if not hs_started:
+        hookenv.log('YARN HistoryServer failed to start')
 
 
 ###############################################################################

@@ -19,7 +19,7 @@ Priority: extra
 Maintainer: Bigtop <dev@bigtop.apache.org>
 Build-Depends: debhelper (>= 9)
 Standards-Version: 3.9.4
-Homepage: http://apex.incubator.apache.org
+Homepage: http://apex.apache.org
 
 Package:  apex
 Architecture: all

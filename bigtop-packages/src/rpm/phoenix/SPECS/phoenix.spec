@@ -116,7 +116,7 @@ with Phoenix and HBase. Soon this will enable access from environments
 other than the JVM.
 
 %prep
-%setup -n %{name}-%{phoenix_base_version}-src
+%setup -n apache-%{name}-%{phoenix_base_version}-src
 
 %build
 bash %{SOURCE1}

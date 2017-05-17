@@ -24,7 +24,8 @@ mvn -DskipTests \
     -Dhbase.version=$HBASE_VERSION  \
     -Dpig.version=$PIG_VERSION  \
     -Dflume.version=$FLUME_VERSION  \
-    -Dspark.version=${SPARK_VERSION} \
+    -Dspark.version=${SPARK1_VERSION} \
+    -Dhive.version=${HIVE_VERSION}  \
     clean install "$@"
 rm -rf build
 mkdir build
@@ -32,8 +33,7 @@ mkdir build
 # Make binary tar
 rm -rf $(find . -type d -name archive-tmp);
 
-phoenix_jars=$(find -iname phoenix-*.jar)
-cp $phoenix_jars build/;
+find -iname phoenix-*.jar -exec cp -n {} build/ \;
 
 cp -R bin build/;
 

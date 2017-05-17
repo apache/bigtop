@@ -1,0 +1,7 @@
+# Bundle info: https://jujucharms.com/hadoop-processing
+bundle: bundle:hadoop-processing
+benchmark:
+    resourcemanager:
+        terasort
+bundle_name: hadoop-processing
+bundle_file: bundle.yaml

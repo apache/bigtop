@@ -1,0 +1,32 @@
+repo: https://github.com/apache/bigtop/tree/master/bigtop-packages/src/charm/spark/layer-spark
+includes:
+  - 'layer:apache-bigtop-base'
+  - 'layer:hadoop-client'
+  - 'layer:leadership'
+  - 'interface:benchmark'
+  - 'interface:spark'
+  - 'interface:zookeeper'
+  - 'interface:spark-quorum'
+options:
+  basic:
+    # bc and libgfortran3 are needed by spark-bench
+    packages:
+      - 'bc'
+      - 'libgfortran3'
+  hadoop-client:
+    groups:
+        - 'hadoop'
+    dirs:
+      spark_events:
+        path: '/var/log/spark/apps'
+    ports:
+      # Ports that need to be exposed, overridden, or manually specified.
+      # Only expose ports serving a UI or external API (i.e., namenode and
+      # resourcemanager).  Communication among units within the cluster does
+      # not need ports to be explicitly opened.
+      spark-history:
+        port: 18080
+        exposed_on: 'spark'
+      spark-webui:
+        port: 8080
+        exposed_on: 'spark'

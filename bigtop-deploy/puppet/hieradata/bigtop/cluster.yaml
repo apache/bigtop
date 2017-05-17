@@ -16,7 +16,7 @@
 # "$components" list. If $components isn't set then everything in the stack will
 # be installed as usual. Otherwise only a specified list will be set
 # Possible elements:
-# hadoop,yarn,hbase,alluxio,flume,solrcloud,spark,oozie,hcat,sqoop,sqoop2,httpfs,
+# hadoop,yarn,hbase,alluxio,flink,flume,solrcloud,spark,oozie,hcat,sqoop,sqoop2,httpfs,
 # hue,mahout,giraph,crunch,pig,hive,zookeeper,ycsb,qfs
 # Example (to deploy only HDFS and YARN server and gateway parts)
 # This can be a comma-separated list or an array.
@@ -84,6 +84,17 @@ hadoop::common_hdfs::hadoop_namenode_host: "%{hiera('bigtop::hadoop_head_node')}
 # actually default but needed for hadoop_namenode_uri here
 hadoop::common_hdfs::hadoop_namenode_port: "8020"
 
+# If there is a datanode/network failure in the write pipeline, DFSClient will try
+# to remove the failed datanode from the pipeline and then continue writing with the
+# remaining datanodes. As a result, the number of datanodes in the pipeline is decreased.
+# The feature is to add new datanodes to the pipeline. This is a site-wide property to
+# enable/disable the feature. When the cluster size is extremely small, e.g. 3 nodes or
+# less, cluster administrators may want to set the policy to NEVER in the default
+# configuration file or disable this feature. Otherwise, users may experience an unusually
+# high rate of pipeline failures since it is impossible to find new datanodes for replacement.
+# See also dfs.client.block.write.replace-datanode-on-failure.policy
+# hadoop::common_hdfs::hdfs_replace_datanode_on_failure: "false"
+
 # Set as shown below in site.yaml to also enable Kerberos authentication
 # on the web GUIs of journalnode, namenode, datanode, resourcemanager and
 # nodemanager when you enable Kerberos for Hadoop API communication. This
@@ -122,6 +133,7 @@ hadoop_hbase::common_config::rootdir: "%{hiera('bigtop::hadoop_namenode_uri')}%{
 hadoop_hbase::common_config::zookeeper_quorum: "%{hiera('bigtop::hadoop_head_node')}"
 hadoop_hbase::common_config::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 hadoop_hbase::client::thrift: true
+hadoop_hbase::deploy::auxiliary: true
 
 solr::server::root_url: "%{hiera('bigtop::hadoop_namenode_uri')}"
 solr::server::zk: "%{hiera('hadoop::zk')}"
@@ -134,7 +146,10 @@ hadoop_oozie::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 hcatalog::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 hcatalog::webhcat::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 
+# spark
 spark::common::master_host: "%{hiera('bigtop::hadoop_head_node')}"
+# to enable spark HA, ensure zookeeper is available and uncomment the line below
+#spark::common::zookeeper_connection_string: "%{hiera('hadoop::zk')}"
 
 alluxio::common::master_host: "%{hiera('bigtop::hadoop_head_node')}"
 
@@ -147,7 +162,7 @@ qfs::common::chunkserver_client_port: "22000"
 
 hadoop_zookeeper::server::myid: "0"
 hadoop_zookeeper::server::ensemble:
-  - "%{hiera('bigtop::hadoop_head_node')}:2888:3888"
+  - ["0", "%{hiera('bigtop::hadoop_head_node')}:2888:3888"]
 hadoop_zookeeper::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 
 # those are only here because they were present as extlookup keys previously
@@ -174,7 +189,9 @@ hue::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 
 giraph::client::zookeeper_quorum: "%{hiera('bigtop::hadoop_head_node')}"
 
-hadoop_hive::client::hbase_zookeeper_quorum: "%{hiera('hadoop_hbase::common_config::zookeeper_quorum')}"
+hadoop_hive::common_config::hbase_zookeeper_quorum: "%{hiera('hadoop_hbase::common_config::zookeeper_quorum')}"
+hadoop_hive::common_config::kerberos_realm: "%{hiera('kerberos::site::realm')}"
+hadoop_hive::common_config::metastore_uris: "thrift://%{hiera('bigtop::hadoop_head_node')}:9083"
 
 # tez
 hadoop::common::tez_conf_dir: "/etc/tez/conf"
@@ -185,9 +202,28 @@ hadoop::common::tez_jars: "/usr/lib/tez"
 # hadoop::common_mapred_app::mapreduce_framework_name: "yarn-tez"
 
 # to enable tez in hive, uncomment the lines below
-# hadoop_hive::client::hive_execution_engine: "tez"
+# hadoop_hive::common_config::hive_execution_engine: "tez"
+
+#kafka
+kafka::server::port: "9092"
+kafka::server::zookeeper_connection_string: "%{hiera('bigtop::hadoop_head_node')}:2181"
 
 zeppelin::server::spark_master_url: "yarn-client"
 zeppelin::server::hiveserver2_url: "jdbc:hive2://%{hiera('hadoop-hive::common::hiveserver2_host')}:%{hiera('hadoop-hive::common::hiveserver2_port')}"
 zeppelin::server::hiveserver2_user: "%{hiera('bigtop::hiveserver2_user')}"
 zeppelin::server::hiveserver2_password: "%{hiera('bigtop::hiveserver2_password')}"
+
+# Flink
+flink::common::jobmanager_host: "%{hiera('bigtop::hadoop_head_node')}"
+flink::common::jobmanager_port: "6123"
+
+flink::common::ui_port: "8081"
+flink::common::storage_dirs: "%{hiera('hadoop::hadoop_storage_dirs')}"
+
+gpdb::common::nodes: ["master_node_fqdn", "segment_node_fqdn"]
+gpdb::common::gp_home: "/usr/lib/gpdb"
+gpdb::common::db_base_dir: "/data_gp"
+gpdb::common::master_db_port: "5432"
+gpdb::common::segment_db_port_prefix: "4000"
+
+ambari::agent::server_host: "%{hiera('bigtop::hadoop_head_node')}"
