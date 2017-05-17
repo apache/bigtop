@@ -50,8 +50,8 @@ def install_hive(hadoop):
     # Hive cannot handle - in the metastore db name and
     # mysql uses the service name to name the db
     if "-" in hookenv.service_name():
-        hookenv.status_set('blocked', 'service name may not contain -. '
-                                      'redeploy with a different name.')
+        hookenv.status_set('blocked', "application name may not contain '-'; "
+                                      "redeploy with a different name")
         return
 
     hive = Hive()
@@ -118,7 +118,7 @@ def stop_hive():
 def client_joined(client):
     # The client relation is all about access to HiveServer2, so we should only
     # send data if we have a client *and* an external db configured. Having an
-    # external db configured is a prerequisite condition for starting HiveServer2.
+    # external db configured is a prerequisite for starting HiveServer2.
     port = get_layer_opts().port('hive')
     client.send_port(port)
     client.set_ready()
