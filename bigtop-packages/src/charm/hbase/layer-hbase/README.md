@@ -95,23 +95,23 @@ more information about a specific smoke test with:
 
     juju show-action-output <action-id>
 
-## HBase web UI
-HBase provides a web console that can be used to verify information about
-the cluster. To access it, find the `PUBLIC-ADDRESS` of any hbase unit and
-expose the application:
 
-    juju status hbase
-    juju expose hbase
+# Configuring
 
-The web interface will be available at the following URL:
+Charm configuration can be changed at runtime with `juju config`. This charm
+supports the following config parameters.
 
-    http://HBASE_PUBLIC_IP:60010
+## Heap
+The default heap size for the the HBase master JVM is 1024MB. Set a different
+value (in MB) with the following:
+
+    juju config hbase heap=4096
 
 
 # Using
 
-Once the deployment has been verified, there are a number of actions available
-in this charm.
+## Actions
+Once HBase is ready, there are a number of actions available in this charm.
 
 Run a performance test:
 
@@ -138,6 +138,18 @@ Start/Stop the HBase RegionServer and Thrift services on a unit:
 
     juju run-action hbase/0 [start|stop]-hbase-regionserver
     juju show-action-output <id>  # <-- id from above command
+
+## HBase web UI
+HBase provides a web console that can be used to verify information about
+the cluster. To access it, find the `PUBLIC-ADDRESS` of any hbase unit and
+expose the application:
+
+    juju status hbase
+    juju expose hbase
+
+The web interface will be available at the following URL:
+
+    http://HBASE_PUBLIC_IP:60010
 
 
 # Limitations
