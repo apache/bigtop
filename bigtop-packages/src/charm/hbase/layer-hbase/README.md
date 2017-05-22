@@ -139,17 +139,23 @@ Start/Stop the HBase RegionServer and Thrift services on a unit:
     juju run-action hbase/0 [start|stop]-hbase-regionserver
     juju show-action-output <id>  # <-- id from above command
 
-## HBase web UI
-HBase provides a web console that can be used to verify information about
-the cluster. To access it, find the `PUBLIC-ADDRESS` of any hbase unit and
-expose the application:
+## HBase web interfaces
+The HBase Master service provides a web console that can be used to verify
+information about the cluster. To access it, find the `PUBLIC-ADDRESS` of any
+hbase unit and expose the application:
 
     juju status hbase
     juju expose hbase
 
 The web interface will be available at the following URL:
 
-    http://HBASE_PUBLIC_IP:60010
+    http://HBASE_PUBLIC_IP:16010
+
+The HBase RegionServer and Thrift services also provide web interfaces that
+are accessible at the following URLs:
+
+    http://HBASE_PUBLIC_IP:16030
+    http://HBASE_PUBLIC_IP:9095
 
 
 # Limitations
