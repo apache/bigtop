@@ -1,0 +1,6 @@
+options:
+  heap:
+    type: int
+    default: 1024
+    description: |
+      The maximum heap size (in MB) used by the HBase master JVM.
