@@ -19,52 +19,56 @@ A tool to build and run big data pseudo cluster using Docker.
 
 ## How to run
 
-* Make sure you have Docker installed. We've tested this using [Docker for Mac](https://docs.docker.com/docker-for-mac/)
+Make sure you have Docker installed. We've tested this using [Docker for Mac](https://docs.docker.com/docker-for-mac/)
 
-* Currently supported OS list:
+Currently supported OS list:
 
  * centos-6
  * debian-8
- * ubuntu-14.04
+ * ubuntu-16.04
 
-* Running Hadoop
-
-```
-docker run -ti --privileged -p 50070:50070 bigtop/sandbox:centos-6_hadoop
-```
-
-* Running Spark (Standalone mode)
+### Run Hadoop HDFS
 
 ```
-docker run -ti --privileged -p 8080:8080 bigtop/sandbox:debian-8_spark
+docker run -d -p 50070:50070 bigtop/sandbox:centos-6_hdfs
 ```
 
-* Running Hadoop + HBase
+### Run Spark on YARN
 
 ```
-docker run -ti --privileged -p 50070:50070 -p 60010:60010 bigtop/sandbox:ubuntu-14.04_hbase
+docker run -d -p 50070:50070 -p 8088:8088 -p 8080:8080 bigtop/sandbox:debian-8_hdfs_yarn_spark
+```
+
+### Run Hadoop HDFS + HBase
+
+```
+docker run -d -p 50070:50070 -p 60010:60010 bigtop/sandbox:ubuntu-16.04_hdfs_hbase
 ```
 
 ## How to build
 
-### Examples
-
-* Build sandbox image that has Hadoop provisioned
+### Build a Hadoop HDFS sandbox image
 
 ```
-./build.sh -a bigtop -o debian-8 -c hadoop
+./build.sh -a bigtop -o centos-6 -c hdfs
 ```
 
-* Build sandbox image that has Hadoop and Spark provisioned
+### Build a Hadoop HDFS, Hadoop YARN, and Spark on YARN sandbox image
 
 ```
-./build.sh -a bigtop -o debian-8 -c "hadoop, spark"
+./build.sh -a bigtop -o debian-8 -c "hdfs, yarn, spark"
 ```
 
-* Build sandbox image that has Hadoop and HBase provisioned
+### Build a Hadoop HDFS and HBase sandbox image
 
 ```
-./build.sh -a bigtop -o debian-8 -c "hadoop, yarn, hbase"
+./build.sh -a bigtop -o ubuntu-16.04 -c "hdfs, hbase"
+```
+
+### Use --dryrun to skip the build and get Dockerfile and configuration
+
+```
+./build.sh -a bigtop -o ubuntu-16.04 -c "hdfs, hbase" --dryrun
 ```
 
 ### Change the repository of packages
@@ -73,10 +77,10 @@ docker run -ti --privileged -p 50070:50070 -p 60010:60010 bigtop/sandbox:ubuntu-
 
 ```
 export REPO=http://ci.bigtop.apache.org:8080/job/Bigtop-trunk-repos/BUILD_ENVIRONMENTS=centos-6%2Clabel=docker-slave-06//ws/output
-./build.sh -a bigtop -o centos-6 -c "hadoop, spark, ignite"
+./build.sh -a bigtop -o centos-6 -c "hdfs, yarn, spark, ignite"
 ```
 
-### Customize your Hadoop stack
+### Customize your Big Data Stack
 
 * Edit *site.yaml.template.centos-6_hadoop* to create your own prefered stack
 
@@ -89,7 +93,7 @@ vim site.yaml.template.centos-6_hadoop_ignite
 
 ```
 ...
-hadoop_cluster_node::cluster_components: [hadoop, yarn, ignite]
+hadoop_cluster_node::cluster_components: [hdfs, yarn, ignite]
 ...
 ```
 
