@@ -23,9 +23,14 @@ class bigtop_toolchain::puppet-modules {
 
   case $operatingsystem{
     /Ubuntu|Debian/: {
+      if versioncmp($::puppetversion, '4') < 0 {
+        $version = '--version 2.4.0'
+      } else {
+        $version = ''
+      }
       exec { 'install-puppet-apt':
         path    => '/usr/bin:/bin',
-        command => 'puppet module install puppetlabs-apt',
+        command => "puppet module install puppetlabs-apt ${version}",
         creates => '/etc/puppet/modules/apt',
       }
     }
