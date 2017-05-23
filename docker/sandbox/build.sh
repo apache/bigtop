@@ -145,6 +145,7 @@ usage() {
     echo "       -c, --components                         Specify components to build."
     echo "                                                    You need to specify a comma separated, quoted string."
     echo "                                                    For example: --components \"hadoop, yarn\""
+    echo "       -d, --dryrun                             Generate the Dockerfile and configuration and skip the build."
     echo "       -f, --file                               Specify a written site.yaml config file."
     echo "       -o, --operating-system                   Specify an OS from Bigtop supported OS list."
     echo "                                                    RPM base: ${RPMS[*]}"
