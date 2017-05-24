@@ -60,10 +60,9 @@ create() {
     # Fetch configurations form specificed yaml config file
     repo=$(get-yaml-config repo)
     components="[`echo $(get-yaml-config components) | sed 's/ /, /g'`]"
-    jdk=$(get-yaml-config jdk)
     distro=$(get-yaml-config distro)
     enable_local_repo=$(get-yaml-config enable_local_repo)
-    generate-config "$hadoop_head_node" "$repo" "$components" "$jdk"
+    generate-config "$hadoop_head_node" "$repo" "$components"
 
     # Start provisioning
     generate-hosts
@@ -90,7 +89,6 @@ bigtop::hadoop_head_node: $1
 hadoop::hadoop_storage_dirs: [/data/1, /data/2]
 bigtop::bigtop_repo_uri: $2
 hadoop_cluster_node::cluster_components: $3
-bigtop::jdk_package_name: $4
 EOF
 }
 

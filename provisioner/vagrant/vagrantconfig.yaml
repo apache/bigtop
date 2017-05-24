@@ -23,4 +23,3 @@ components: [hdfs, yarn, mapreduce]
 enable_local_repo: false
 run_smoke_tests: false
 smoke_test_components: [hdfs, yarn, mapreduce]
-jdk: "java-1.8.0-openjdk-devel.x86_64"
