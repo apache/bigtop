@@ -22,4 +22,3 @@ distro: debian
 components: [hdfs, yarn, mapreduce]
 enable_local_repo: false
 smoke_test_components: [hdfs, yarn, mapreduce]
-jdk: "openjdk-8-jdk"
