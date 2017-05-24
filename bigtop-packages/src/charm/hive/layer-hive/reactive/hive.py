@@ -122,3 +122,9 @@ def client_joined(client):
     port = get_layer_opts().port('hive')
     client.send_port(port)
     client.set_ready()
+
+
+@when('hive.installed', 'hbase.ready')
+def configure_hbase(hbase):
+    print(hbase.hbase_servers())
+    print("DID YOU SEE THATA")

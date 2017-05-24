@@ -15,3 +15,5 @@ provides:
 requires:
   database:
     interface: mysql
+  hbase:
+    interface: hbase

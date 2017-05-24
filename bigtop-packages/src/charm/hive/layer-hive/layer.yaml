@@ -2,6 +2,7 @@ repo: git@github.com:juju-solutions/bigtop.git
 includes:
   - 'layer:apache-bigtop-base'
   - 'layer:hadoop-client'
+  - 'interface:hbase'
   - 'interface:hive'
   - 'interface:mysql'
 options:
