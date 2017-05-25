@@ -3,6 +3,4 @@ options:
         type: int
         default: 1024
         description: |
-            The maximum heap size (in MB) used by the hadoop client jvm. If you
-            experience out of memory (OOM) errors when running jobs, consider
-            increasing this value.
+          The maximum heap size (in MB) used by the Hive shell JVM.

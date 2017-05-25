@@ -13,73 +13,59 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import time
-import os
-import signal
-
-from charmhelpers.core import hookenv
-from charmhelpers.core import unitdata
+from charmhelpers.core import hookenv, host, unitdata
 from charms import layer
-from jujubigdata import utils
 from charms.layer.apache_bigtop_base import Bigtop
+from jujubigdata import utils
 
 
 class Hive(object):
-    """
-    This class manages Hive.
-    """
+    '''This class manages Hive.'''
     def __init__(self):
         self.dist_config = utils.DistConfig(
             data=layer.options('apache-bigtop-base'))
 
-    def install(self):
+    def install(self, hbase=None):
         '''
         Trigger the Bigtop puppet recipe that handles the Hive service.
         '''
         # Dirs are handled by the bigtop deb. No need to call out to
-        # dist_config to do that work.
+        # dist_config to do that. We do want 'ubuntu' in the hive group though.
         self.dist_config.add_users()
-        roles = ['hive-client']
 
+        # Prep config
+        roles = ['hive-client', 'hive-metastore', 'hive-server2']
+        metastore = "thrift://{}:9083".format(hookenv.unit_private_ip())
+        if hbase:
+            roles.append('hive-hbase')
+            hb_connect = "{}:{}".format(hbase['host'], hbase['master_port'])
+            zk_connect = hbase['zk_connect']
+        else:
+            hb_connect = ""
+            zk_connect = ""
+
+        override = {
+            'hadoop_hive::common_config::hbase_master': hb_connect,
+            'hadoop_hive::common_config::hbase_zookeeper_quorum': zk_connect,
+            'hadoop_hive::common_config::metastore_uris': metastore,
+            'hadoop_hive::common_config::server2_thrift_port':
+                self.dist_config.port('hive-thrift'),
+            'hadoop_hive::common_config::server2_thrift_http_port':
+                self.dist_config.port('hive-thrift-web'),
+        }
         bigtop = Bigtop()
-        bigtop.render_site_yaml(roles=roles)
+        bigtop.render_site_yaml(roles=roles, overrides=override)
         bigtop.trigger_puppet()
 
-    def initial_hive_config(self):
-        '''
-        Configure system-wide hive bits and get hive config files set up
-        so future config changes can be added where needed.
-        '''
-        # Configure system-wide bits
-        hive_bin = self.dist_config.path('hive') / 'bin'
-        with utils.environment_edit_in_place('/etc/environment') as env:
-            if hive_bin not in env['PATH']:
-                env['PATH'] = ':'.join([env['PATH'], hive_bin])
-            env['HIVE_CONF_DIR'] = self.dist_config.path('hive_conf')
-            env['HIVE_HOME'] = self.dist_config.path('hive')
-
-        # Copy template to config file so we can adjust config later
+        # Bigtop doesn't create a hive-env.sh, but we need it for heap config
         hive_env = self.dist_config.path('hive_conf') / 'hive-env.sh'
         if not hive_env.exists():
             (self.dist_config.path('hive_conf') / 'hive-env.sh.template').copy(hive_env)
 
-        # Configure immutable things
-        hive_log4j = self.dist_config.path('hive_conf') / 'hive-log4j.properties'
-        hive_logs = self.dist_config.path('hive_logs')
-        utils.re_edit_in_place(hive_log4j, {
-            r'^hive.log.dir.*': 'hive.log.dir={}'.format(hive_logs),
-        })
-        hive_site = self.dist_config.path('hive_conf') / 'hive-site.xml'
-        with utils.xmlpropmap_edit_in_place(hive_site) as props:
-            # XXX (kwm): these 4 were needed in 0.12, but it seems ok without them in > 1.0
-            # props['hive.exec.local.scratchdir'] = "/tmp/hive"
-            # props['hive.downloaded.resources.dir'] = "/tmp/hive_resources"
-            # props['hive.querylog.location'] = "/tmp/hive"
-            # props['hive.server2.logging.operation.log.location'] = "/tmp/hive"
-            props['hive.hwi.war.file'] = "lib/hive-hwi.jar"
-
-    # called during config-changed events
     def configure_hive(self):
+        '''
+        Called during config-changed events
+        '''
         config = hookenv.config()
         hive_env = self.dist_config.path('hive_conf') / 'hive-env.sh'
         utils.re_edit_in_place(hive_env, {
@@ -105,7 +91,8 @@ class Hive(object):
         # Now that we have db connection info, init our schema (only once)
         remote_db = hookenv.remote_service_name()
         if not unitdata.kv().get('hive.schema.initialized.%s' % remote_db):
-            utils.run_as('ubuntu', 'schematool', '-initSchema', '-dbType', 'mysql')
+            tool_path = "{}/bin/schematool".format(self.dist_config.path('hive'))
+            utils.run_as('ubuntu', tool_path, '-initSchema', '-dbType', 'mysql')
             unitdata.kv().set('hive.schema.initialized.%s' % remote_db, True)
             unitdata.kv().flush(True)
 
@@ -129,18 +116,18 @@ class Hive(object):
         self.start()
 
     def start(self):
-        self.stop()
-        hive_log = self.dist_config.path('hive_logs') / 'HiveServer2.out'
-        utils.run_bg_as(
-            'root', hive_log, 'hive',
-            '--config', self.dist_config.path('hive_conf'),
-            '--service', 'hiveserver2')
-        time.sleep(5)
+        # order is important; metastore must start first.
+        hookenv.log('Starting Hive services')
+        host.service_start('hive-metastore')
+        host.service_start('hive-server2')
+        hookenv.log('Hive services have been started')
 
     def stop(self):
-        hive_pids = utils.jps('HiveServer2')
-        for pid in hive_pids:
-            os.kill(int(pid), signal.SIGTERM)
+        # order is important; metastore must stop last.
+        hookenv.log('Stopping Hive services')
+        host.service_stop('hive-server2')
+        host.service_stop('hive-metastore')
+        hookenv.log('Hive services have been stopped')
 
     def open_ports(self):
         for port in self.dist_config.exposed_ports('hive'):

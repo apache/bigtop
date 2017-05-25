@@ -1,4 +1,4 @@
-repo: git@github.com:juju-solutions/bigtop.git
+repo: https://github.com/apache/bigtop/tree/master/bigtop-packages/src/charm/hive/layer-hive
 includes:
   - 'layer:apache-bigtop-base'
   - 'layer:hadoop-client'
@@ -22,11 +22,10 @@ options:
         path: '/usr/lib/hive'
       hive_conf:
         path: '/etc/hive/conf'
-      hive_logs:
-        path: '/var/log/hive'
-        owner: 'ubuntu'
-        group: 'hive'
     ports:
-      hive:
+      hive-thrift:
         port: 10000
+        exposed_on: 'hive'
+      hive-thrift-web:
+        port: 10001
         exposed_on: 'hive'

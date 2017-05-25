@@ -35,8 +35,14 @@ if not is_state('hive.installed'):
 # Bigtop smoke test components
 smoke_components = ['hive']
 
+# Env required by test components
+smoke_env = {
+    'HIVE_HOME': '/usr/lib/hive',
+    'HIVE_CONF_DIR': '/etc/hive/conf',
+}
+
 bigtop = Bigtop()
-result = bigtop.run_smoke_tests(smoke_components)
+result = bigtop.run_smoke_tests(smoke_components, smoke_env)
 if result == 'success':
     hookenv.action_set({'outcome': 'success'})
 else:

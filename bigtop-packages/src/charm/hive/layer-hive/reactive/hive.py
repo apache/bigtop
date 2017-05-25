@@ -13,17 +13,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from charms.reactive import when, when_not
-from charms.reactive import is_state, set_state, remove_state
 from charmhelpers.core import hookenv
-from charms.layer.apache_bigtop_base import get_layer_opts
+from charms.layer.apache_bigtop_base import get_layer_opts, get_package_version
 from charms.layer.bigtop_hive import Hive
+from charms.reactive import (
+    RelationBase,
+    is_state,
+    remove_state,
+    set_state,
+    when,
+    when_not,
+)
+from charms.reactive.helpers import data_changed
 
 
 @when('bigtop.available')
 def report_status():
     hadoop_joined = is_state('hadoop.joined')
     hadoop_ready = is_state('hadoop.ready')
+    hbase_joined = is_state('hbase.joined')
+    hbase_ready = is_state('hbase.ready')
     database_joined = is_state('database.connected')
     database_ready = is_state('database.available')
     hive_installed = is_state('hive.installed')
@@ -32,21 +41,29 @@ def report_status():
                            'waiting for relation to hadoop plugin')
     elif not hadoop_ready:
         hookenv.status_set('waiting',
-                           'waiting for hadoop')
+                           'waiting for hadoop to become ready')
     elif database_joined and not database_ready:
         hookenv.status_set('waiting',
-                           'waiting for database')
+                           'waiting for database to become ready')
+    elif hbase_joined and not hbase_ready:
+        hookenv.status_set('waiting',
+                           'waiting for hbase to become ready')
     elif hive_installed and not database_ready:
         hookenv.status_set('active',
-                           'ready (local db, hiverserver2 unavailable)')
+                           'ready (local metastore)')
     elif hive_installed and database_ready:
         hookenv.status_set('active',
-                           'ready')
+                           'ready (remote metastore)')
 
 
 @when('bigtop.available', 'hadoop.ready')
-@when_not('hive.installed')
 def install_hive(hadoop):
+    '''
+    Anytime our dependencies are available, check to see if we have a valid
+    reason to (re)install. These include:
+    - initial install
+    - HBase has joined/departed
+    '''
     # Hive cannot handle - in the metastore db name and
     # mysql uses the service name to name the db
     if "-" in hookenv.service_name():
@@ -54,12 +71,43 @@ def install_hive(hadoop):
                                       "redeploy with a different name")
         return
 
+    # Get hbase connection dict if it's available
+    if is_state('hbase.ready'):
+        hbase = RelationBase.from_state('hbase.ready')
+        hbserver = hbase.hbase_servers()[0]
+    else:
+        hbserver = None
+
+    # Use this to determine if we need to reinstall
+    deployment_matrix = {
+        'hbase': hbserver,
+    }
+
+    # Handle nuances when installing versus re-installing
+    if not is_state('hive.installed'):
+        prefix = "installing"
+
+        # On initial install, prime our kv with the current deployment matrix.
+        # Subsequent calls will use this to determine if a reinstall is needed.
+        data_changed('deployment_matrix', deployment_matrix)
+    else:
+        prefix = "configuring"
+
+        # Return if our matrix has not changed
+        if not data_changed('deployment_matrix', deployment_matrix):
+            return
+
+    hookenv.status_set('maintenance', '{} hive'.format(prefix))
+    hookenv.log("{} hive with: {}".format(prefix, deployment_matrix))
     hive = Hive()
-    hookenv.status_set('maintenance', 'installing hive')
-    hive.install()
-    hive.initial_hive_config()
+    hive.install(hbase=hbserver)
+    hive.open_ports()
     set_state('hive.installed')
-    hookenv.status_set('active', 'ready (local db, hiveserver2 unavailable)')
+    report_status()
+
+    # set app version string for juju status output
+    hive_version = get_package_version('hive') or 'unknown'
+    hookenv.application_version_set(hive_version)
 
 
 @when('hive.installed', 'config.changed.heap')
@@ -67,64 +115,69 @@ def config_changed():
     hookenv.status_set('maintenance', 'configuring with new options')
     hive = Hive()
     hive.configure_hive()
-    if is_state('hive.db.configured'):
-        # Only restart hiveserver2 if we have an external db configured
-        hive.restart()
-    hookenv.status_set('active', 'ready')
+    hive.restart()
+    report_status()
 
 
 @when('hive.installed', 'database.available')
 @when_not('hive.db.configured')
-def configure_with_remote_db(database):
-    hookenv.status_set('maintenance', 'configuring external database; starting hiveserver2')
+def configure_with_remote_db(db):
+    hookenv.status_set('maintenance', 'configuring external database')
     hive = Hive()
-    hive.configure_remote_db(database)
-    hive.start()
-    hive.open_ports()
+    hive.configure_remote_db(db)
+    hive.restart()
     set_state('hive.db.configured')
-    hookenv.status_set('active', 'ready')
+    report_status()
 
 
 @when('hive.installed', 'hive.db.configured')
 @when_not('database.available')
 def configure_with_local_db():
-    """
+    '''
     Reconfigure Hive using a local metastore db.
 
     The initial installation will configure Hive with a local metastore_db.
     Once an external db becomes available, we reconfigure Hive to use it. If
     that external db goes away, we'll use this method to set Hive back into
     local mode.
-    """
-    hookenv.status_set('maintenance', 'configuring local database; stopping hiveserver2')
+    '''
+    hookenv.status_set('maintenance', 'configuring local database')
     hive = Hive()
-    hive.close_ports()
-    hive.stop()
     hive.configure_local_db()
+    hive.restart()
     remove_state('hive.db.configured')
-    hookenv.status_set('active', 'ready (local db, hiveserver2 unavailable)')
+    report_status()
 
 
 @when('hive.installed')
 @when_not('hadoop.ready')
 def stop_hive():
+    '''
+    Hive depends on Hadoop. If we are installed and hadoop goes away, shut down
+    services and remove our installed state.
+    '''
     hive = Hive()
     hive.close_ports()
     hive.stop()
     remove_state('hive.installed')
+    report_status()
 
 
-@when('hive.installed', 'client.joined', 'hive.db.configured')
-def client_joined(client):
-    # The client relation is all about access to HiveServer2, so we should only
-    # send data if we have a client *and* an external db configured. Having an
-    # external db configured is a prerequisite for starting HiveServer2.
-    port = get_layer_opts().port('hive')
+@when('hive.installed', 'client.joined')
+def serve_client(client):
+    '''
+    Inform clients when hive is ready to serve.
+    '''
+    port = get_layer_opts().port('hive-thrift')
     client.send_port(port)
     client.set_ready()
 
 
-@when('hive.installed', 'hbase.ready')
-def configure_hbase(hbase):
-    print(hbase.hbase_servers())
-    print("DID YOU SEE THATA")
+@when('client.joined')
+@when_not('hive.installed')
+def stop_serving_client(client):
+    '''
+    Inform connected clients that Hive is no longer ready. This can happen
+    if Hadoop goes away (the 'installed' state will be removed).
+    '''
+    client.clear_ready()
