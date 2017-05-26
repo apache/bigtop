@@ -173,6 +173,23 @@ value (in MB) with the following:
     juju config hbase heap=4096
 
 
+# Limitations
+
+## Restarting Hive
+Restarting Hive is potentially disruptive when queries are running. Be aware
+that the following events will cause a restart of all Hive services:
+
+- Adding or removing an HBase relation
+- Changing charm configuration with `juju config`
+- Upgrading this charm
+
+## Hive Web Interface
+The Hive Web Interface (HWI) has been removed upstream ([HIVE-15622][]). This
+charm does not provide HWI. Use the command line or thrift interfaces for
+interacting with Hive.
+
+[HIVE-15622]: https://issues.apache.org/jira/browse/HIVE-15622
+
 # Issues
 
 Apache Bigtop tracks issues using JIRA (Apache account required). File an
