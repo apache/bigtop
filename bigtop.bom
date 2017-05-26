@@ -448,7 +448,7 @@ bigtop {
     'apex' {
       name    = 'apex'
       relNotes = 'Apache Apex'
-      version { base = '3.5.0'; pkg = base; release = 1 }
+      version { base = '3.6.0'; pkg = base; release = 1 }
       tarball { source      = "apache-$name-core-${version.base}-source-release.tar.gz"
                 destination = "$name-${version.base}.tar.gz" }
       url     { download_path = "/$name/apache-$name-core-${version.base}/"
