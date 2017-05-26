@@ -3,10 +3,18 @@ diff -ruaN apache-ambari-2.5.0-src.orig/ambari-metrics/ambari-metrics-storm-sink
 +++ apache-ambari-2.5.0-src/ambari-metrics/ambari-metrics-storm-sink/pom.xml	2017-04-10 22:05:35.679219116 +0200
 @@ -31,7 +31,7 @@
    <packaging>jar</packaging>
+<<<<<<< HEAD
+ 
+=======
 
+>>>>>>> upstream/master
    <properties>
 -    <storm.version>1.1.0-SNAPSHOT</storm.version>
 +    <storm.version>1.1.0</storm.version>
    </properties>
+<<<<<<< HEAD
+ 
+=======
 
+>>>>>>> upstream/master
    <build>
