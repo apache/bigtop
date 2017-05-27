@@ -59,7 +59,7 @@ else
   BUILD_OPTS="$BUILD_OPTS -DskipTests"
 fi
 
-export MAVEN_OPTS="-Xmx1500m -Xms1500m"
+export MAVEN_OPTS="-Xmx1500m -Xms1500m -XX:MaxPermSize=256m"
 
 mvn $BUILD_OPTS clean package
 
