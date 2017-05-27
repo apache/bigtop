@@ -34,7 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * run this test with vm options -XX:MaxPermSize=256m -Xms512m -Xmx1024m
+ * run this test with vm options -Xms512m -Xmx1024m
  *
  */
 public class TestPetStoreTransactionGeneratorJob {

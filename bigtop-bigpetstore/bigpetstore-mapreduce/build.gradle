@@ -190,8 +190,6 @@ task integrationTest(type: Test, dependsOn: test) {
             //memory requirements.
             minHeapSize = "1000m"
             maxHeapSize = "4000m"
-            // set JVM arguments for the test JVM(s)
-            jvmArgs '-XX:MaxPermSize=256m'
             break
         case "crunch":
             patternsToInclude = "*CrunchIT*"
