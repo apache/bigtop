@@ -17,5 +17,5 @@
 set -ex
 
 . `dirname $0`/bigtop.bom
-export MAVEN_OPTS="-XX:PermSize=1024m -XX:MaxPermSize=1024m"
+export MAVEN_OPTS=""
 mvn -Phadoop2 -Dhadoop.version=$HADOOP_VERSION -Dzookeeper.version=$ZOOKEEPER_VERSION clean install -DskipTests "$@"
