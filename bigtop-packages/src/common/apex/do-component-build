@@ -16,7 +16,7 @@
 
 . `dirname $0`/bigtop.bom
 
-export MAVEN_OPTS="-XX:PermSize=1024m -XX:MaxPermSize=1024m"
+export MAVEN_OPTS=""
 
 # bigtop installs maven on its own and not through the package manager
 export PATH=/usr/local/maven/bin:$PATH
