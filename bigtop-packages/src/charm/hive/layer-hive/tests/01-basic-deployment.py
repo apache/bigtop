@@ -15,23 +15,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import unittest
 import amulet
+import re
+import unittest
 
 
 class TestDeploy(unittest.TestCase):
     """
-    Trivial deployment test for Apache Hive.
+    Trivial deployment test for Apache Bigtop Hive.
     """
     @classmethod
     def setUpClass(cls):
-        cls.d = amulet.Deployment(series='trusty')
-        cls.d.add('hive', 'hive')
-        cls.d.setup(timeout=1800)
-        cls.d.sentry.wait(timeout=1800)
+        cls.d = amulet.Deployment(series='xenial')
+        cls.d.add('hive')
 
-    def test_deploy(self):
-        self.d.sentry.wait_for_messages({"hive": "waiting on relation to java"})
+        cls.d.setup(timeout=1800)
+        cls.d.sentry.wait_for_messages({'hive': re.compile('ready|waiting')},
+                                       timeout=1800)
+        cls.unit = cls.d.sentry['hive'][0]
+
 
 if __name__ == '__main__':
     unittest.main()
