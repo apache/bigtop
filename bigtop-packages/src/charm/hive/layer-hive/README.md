@@ -33,7 +33,7 @@ This charm deploys version 1.2.1 of the Hive component from [Apache Bigtop][].
 This charm requires Juju 2.0 or greater. If Juju is not yet set up, please
 follow the [getting-started][] instructions prior to deploying this charm.
 
-This charm is intended to be deployed via one of the [apache bigtop bundles][].
+This charm is intended to be deployed via one of the [bigtop hadoop bundles][].
 For example:
 
     juju deploy hadoop-processing
@@ -50,18 +50,25 @@ Now add Hive and relate it to the cluster via the hadoop-plugin:
 This charm will start the Hive Metastore service using a local Apache Derby
 metastore database by default. This is suitable for unit or smoke testing Hive,
 but this configuration should not be used in production. Deploying an external
-database as the Hive metastore is recommended:
+database for the Hive metastore is recommended:
 
     juju deploy mariadb
     juju add-relation hive mariadb
 
 ## HBase Integration
-This charm supports interacting with HBase tables using Hive. Enable this by
-relating Hive to a deployed HBase charm:
+This charm supports interacting with HBase using Hive. Enable this by relating
+Hive to a deployment that includes HBase. For example:
 
+    juju deploy hadoop-hbase
     juju add-relation hive hbase
 
-See the [hadoop-hbase][] bundle for an example HBase deployment.
+See the [hadoop-hbase][] bundle for more information about this HBase
+deployment.
+
+> **Note:** Applications that are duplicated in multiple bundles will be
+reused. This means when deploying both `hadoop-processing` and `hadoop-hbase`,
+Juju will reuse (and not duplicate) common applications like the NameNode,
+ResourceManager, Slaves, etc.
 
 ## Network-Restricted Environments
 Charms can be deployed in environments with limited network access. To deploy
@@ -69,7 +76,7 @@ in this environment, configure a Juju model with appropriate proxy and/or
 mirror options. See [Configuring Models][] for more information.
 
 [getting-started]: https://jujucharms.com/docs/stable/getting-started
-[apache bigtop bundles]: https://jujucharms.com/u/bigdata-charmers/#bundles
+[bigtop hadoop bundles]: https://jujucharms.com/u/bigdata-charmers/#bundles
 [Configuring Models]: https://jujucharms.com/docs/stable/models-config
 [hadoop-hbase]: https://jujucharms.com/hadoop-hbase/
 
@@ -110,10 +117,21 @@ more information about a specific smoke test with:
 
 # Using
 
-Once the deployment has been verified, Apache Hive is ready to execute HiveQL
-queries via the command line or thrift interfaces:
+This charm provides a variety of actions and interfaces that can be used
+to interact with Hive.
 
-## Command Line
+## Actions
+Run a smoke test (as described in the **Verifying** section):
+
+    juju run-action hive/0 smoke-test
+    juju show-action-output <id>  # <-- id from above command
+
+Restart all Hive services on a unit:
+
+    juju run-action hive/0 restart
+    juju show-action-output <id>  # <-- id from above command
+
+## Command Line Interface
 
     $ juju ssh hive/0
     $ hive
@@ -128,10 +146,10 @@ queries via the command line or thrift interfaces:
     Time taken: 0.202 seconds, Fetched: 2 row(s)
     hive> exit;
 
-## HBase
+### HBase
 As mentioned in the **Deploying** section, this charm supports integration
-with HBase. When HBase is deployed and related to Hive, use the Hive cli to
-interact with HBase tables:
+with HBase. When HBase is deployed and related to Hive, use the Hive CLI to
+interact with HBase:
 
     $ juju ssh hive/0
     $ hive
@@ -148,10 +166,11 @@ interact with HBase tables:
     mycol               	string              	from deserializer
     Time taken: 0.174 seconds, Fetched: 2 row(s)
 
-## Thrift
+## Thrift Interface
 The HiveServer2 service provides a thrift server that can be used by Hive
-clients. To access it, find the `PUBLIC-ADDRESS` of the hive unit and expose
-the application:
+clients. To access this interface from external clients (i.e. applications
+that are not part of the Juju deployment), find the `Public address` of the
+hive unit and expose the application:
 
     juju status hive
     juju expose hive

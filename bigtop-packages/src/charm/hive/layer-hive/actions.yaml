@@ -1,3 +1,4 @@
+restart:
+    description: Retart Hive Metastore and HiveServer2.
 smoke-test:
-  description: |
-    Verify the Bigtop Hive service is working by executing a smoke test.
+  description: Verify that Hive is working.
