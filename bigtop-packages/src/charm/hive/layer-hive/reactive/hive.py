@@ -101,6 +101,7 @@ def install_hive(hadoop):
     hookenv.log("{} hive with: {}".format(prefix, deployment_matrix))
     hive = Hive()
     hive.install(hbase=hbserver)
+    hive.restart()
     hive.open_ports()
     set_state('hive.installed')
     report_status()
