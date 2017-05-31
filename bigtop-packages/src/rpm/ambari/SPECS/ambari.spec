@@ -37,7 +37,7 @@ Group: Development
 BuildArch: noarch
 Buildroot: %(mktemp -ud %{_tmppath}/apache-%{ambari_name}-%{version}-%{release}-XXXXXX)
 License: ASL 2.0 
-Source0: apache-%{ambari_name}-%{ambari_version}-src.tar.gz
+Source0: apache-%{ambari_name}-%{ambari_base_version}-src.tar.gz
 Source1: do-component-build 
 Source2: install_%{ambari_name}.sh
 Source3: bigtop.bom
