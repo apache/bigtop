@@ -15,10 +15,15 @@
 # limitations under the License.
 set -e
 
-for line in "$(crontab -lu ubuntu | grep '# mapreduce job: ')"; do
+for line in "$(crontab -lu ubuntu | grep '# action: ')"; do
     if [[ -n "$line" ]]; then
-        action_id=$(echo "$line" | sed -e 's/.*  # mapreduce job: //')
-        job_code=$(echo "$line" | sed -e 's/  # mapreduce job: .*//')
+        # the action uuid is after the 'action:' comment
+        action_id=$(echo "$line" | sed -e 's/.* # action: //')
+
+        # the actual job is everything before the 'action:' comment
+        job_code=$(echo "$line" | sed -e 's/ # action: .*//')
+
+        # show the people what they want
         action-set job.$action_id="$job_code"
     fi
 done

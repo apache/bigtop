@@ -1,3 +1,8 @@
+series: xenial
+description: >
+  This is a five unit big data cluster that includes Hadoop 2.7.3 and Spark 2.1
+  from Apache Bigtop. Use it to analyse batch data with MapReduce or streaming
+  data with Spark. It will run on 5 machines in your cloud.
 services:
   namenode:
     charm: "/home/ubuntu/charms/xenial/hadoop-namenode"
@@ -79,7 +84,6 @@ services:
     annotations:
       gui-x: "750"
       gui-y: "400"
-series: xenial
 relations:
   - [resourcemanager, namenode]
   - [namenode, slave]

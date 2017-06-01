@@ -23,16 +23,16 @@ using a simple programming model.
 Hadoop is designed to scale from a few servers to thousands of machines,
 each offering local computation and storage. Rather than rely on hardware
 to deliver high-availability, Hadoop can detect and handle failures at the
-application layer. This provides a highly-available service on top of a cluster
-of machines, each of which may be prone to failure.
+application layer. This provides a highly-available service on top of a
+cluster of machines, each of which may be prone to failure.
 
 Apache Spark is a fast and general engine for large-scale data processing.
 Learn more at [spark.apache.org][].
 
-This bundle provides a complete deployment of Hadoop and Spark components from
-[Apache Bigtop][] that performs distributed data processing at scale. Ganglia
-and rsyslog applications are also provided to monitor cluster health and syslog
-activity.
+This bundle provides a complete deployment of Hadoop and Spark components
+from [Apache Bigtop][] that performs distributed data processing at scale.
+Ganglia and rsyslog applications are also provided to monitor cluster health
+and syslog activity.
 
 [spark.apache.org]: http://spark.apache.org/
 [Apache Bigtop]: http://bigtop.apache.org/
