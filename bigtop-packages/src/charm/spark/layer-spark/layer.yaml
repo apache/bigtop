@@ -21,12 +21,15 @@ options:
         path: '/var/log/spark/apps'
     ports:
       # Ports that need to be exposed, overridden, or manually specified.
-      # Only expose ports serving a UI or external API (i.e., namenode and
-      # resourcemanager).  Communication among units within the cluster does
-      # not need ports to be explicitly opened.
-      spark-history:
+      # Only expose ports serving a UI or external API (e.g. spark history
+      # server). IPC among units within a deployment does not typically
+      # require a port to be exposed.
+      spark-history-ui:
         port: 18080
         exposed_on: 'spark'
-      spark-webui:
+      spark-master-ui:
         port: 8080
+        exposed_on: 'spark'
+      spark-worker-ui:
+        port: 8081
         exposed_on: 'spark'
