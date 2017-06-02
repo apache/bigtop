@@ -147,7 +147,6 @@ class Spark(object):
         self.dist_config.add_users()
         self.dist_config.add_dirs()
         self.install_demo()
-        self.open_ports()
 
     def setup_hdfs_logs(self):
         # create hdfs storage space for history server
@@ -326,29 +325,50 @@ class Spark(object):
         Path(demo_target).chown('ubuntu', 'hadoop')
 
     def start(self):
-        # always start the history server, start master/worker if we're standalone
+        '''
+        Always start the Spark History Server. Start other services as
+        required by our execution mode. Open related ports as appropriate.
+        '''
         host.service_start('spark-history-server')
+        hookenv.open_port(self.dist_config.port('spark-history-ui'))
+
+        # Spark master/worker is only started in standalone mode
         if hookenv.config()['spark_execution_mode'] == 'standalone':
             if host.service_start('spark-master'):
-                # If the master started, wait 2m for recovery before starting
-                # the worker.
-                hookenv.status_set('maintenance',
-                                   'waiting for spark master recovery')
-                hookenv.log("Waiting 2m to ensure spark master is ALIVE")
-                time.sleep(120)
+                hookenv.log("Spark Master started")
+                hookenv.open_port(self.dist_config.port('spark-master-ui'))
+                # If the master started and we have peers, wait 2m for recovery
+                # before starting the worker. This ensures the worker binds
+                # to the correct master.
+                if unitdata.kv().get('sparkpeer.units'):
+                    hookenv.status_set('maintenance',
+                                       'waiting for spark master recovery')
+                    hookenv.log("Waiting 2m to ensure spark master is ALIVE")
+                    time.sleep(120)
             else:
-                hookenv.log("Master did not start")
-            host.service_start('spark-worker')
+                hookenv.log("Spark Master did not start; this is normal "
+                            "for non-leader units in standalone mode")
+
+            # NB: Start the worker even if the master process on this unit
+            # fails to start. In non-HA mode, spark master only runs on the
+            # leader. On non-leader units, we still want a worker bound to
+            # the leader.
+            if host.service_start('spark-worker'):
+                hookenv.log("Spark Worker started")
+                hookenv.open_port(self.dist_config.port('spark-worker-ui'))
+            else:
+                hookenv.log("Spark Worker did not start")
 
     def stop(self):
+        '''
+        Stop all services (and close associated ports). Stopping a service
+        that is not currently running does no harm.
+        '''
         host.service_stop('spark-history-server')
-        host.service_stop('spark-master')
+        hookenv.close_port(self.dist_config.port('spark-history-ui'))
+
+        # Stop the worker before the master
         host.service_stop('spark-worker')
-
-    def open_ports(self):
-        for port in self.dist_config.exposed_ports('spark'):
-            hookenv.open_port(port)
-
-    def close_ports(self):
-        for port in self.dist_config.exposed_ports('spark'):
-            hookenv.close_port(port)
+        hookenv.close_port(self.dist_config.port('spark-worker-ui'))
+        host.service_stop('spark-master')
+        hookenv.close_port(self.dist_config.port('spark-master-ui'))
