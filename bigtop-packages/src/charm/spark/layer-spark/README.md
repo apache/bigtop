@@ -122,7 +122,7 @@ more information about a specific smoke test with:
 
 ## Spark Master web UI
 Spark provides a web console that can be used to verify information about
-the cluster. To access it, find the `PUBLIC-ADDRESS` of the spark application
+the cluster. To access it, find the `Public address` of the spark application
 and expose it:
 
     juju status spark
@@ -142,10 +142,33 @@ address. The job history web interface will be available at the following URL:
 
 # Using
 
-Once deployment is verified, Spark batch or streaming jobs can be run in a
-variety of ways:
+## Actions
+Once Spark is ready, there are a number of actions available in this charm.
 
-### Spark shell
+Run a benchmark (as described in the **Benchmarking** section):
+
+    juju run-action spark/0 pagerank
+    juju show-action-output <id>  # <-- id from above command
+
+Run a smoke test (as described in the **Verifying** section):
+
+    juju run-action spark/0 smoke-test
+    juju show-action-output <id>  # <-- id from above command
+
+Start/Stop/Restart the Spark Job History service:
+
+    juju run-action spark/0 [start|stop|restart]-spark-job-history-server
+    juju show-action-output <id>  # <-- id from above command
+
+Submit a Spark job:
+
+    juju run-action spark/0 spark-submit \
+      options='--class org.apache.spark.examples.SparkPi' \
+      job='/usr/lib/spark/examples/jars/spark-examples.jar' \
+      job-args='10'
+    juju show-action-output <id>  # <-- id from above command
+
+## Spark shell
 Spark shell provides a simple way to learn the API, as well as a powerful
 tool to analyze data interactively. It is available in either Scala or Python
 and can be run from the Spark unit as follows:
@@ -154,14 +177,14 @@ and can be run from the Spark unit as follows:
     spark-shell # for interaction using scala
     pyspark     # for interaction using python
 
-### Command line
+## Command line
 SSH to the Spark unit and manually run a spark-submit job, for example:
 
     juju ssh spark/0
     spark-submit --class org.apache.spark.examples.SparkPi \
      /usr/lib/spark/examples/jars/spark-examples.jar 10
 
-### Apache Zeppelin
+## Apache Zeppelin
 Apache Zeppelin is a web-based notebook that enables interactive data
 analytics. Make beautiful data-driven, interactive, and collaborative documents
 with SQL, Scala and more. Deploy Zeppelin and relate it to Spark:
@@ -169,7 +192,7 @@ with SQL, Scala and more. Deploy Zeppelin and relate it to Spark:
     juju deploy zeppelin
     juju add-relation spark zeppelin
 
-To access the web console, find the `PUBLIC-ADDRESS` of the zeppelin
+To access the web console, find the `Public address` of the zeppelin
 application and expose it:
 
     juju status zeppelin
@@ -181,6 +204,21 @@ The web interface will be available at the following URL:
 
 
 # Configuring
+
+Charm configuration can be changed at runtime with `juju config`. This charm
+supports the following config parameters.
+
+## driver_memory
+**Local/Standalone mode only**: Amount of memory to use for the driver
+process (1g by default). Set a different value (in g, m, or %) with:
+
+    juju config spark driver_memory=50%
+
+## executor_memory
+**Local/Standalone mode only**: Amount of memory to use for each executor
+process (1g by default). Set a different value (in g, m, or %) with:
+
+    juju config spark executor_memory=2g
 
 ## spark_bench_enabled
 

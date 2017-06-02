@@ -34,7 +34,11 @@ if [[ -z "$cron" ]]; then
 else
     juju-log "Scheduling job with ID $JUJU_ACTION_UUID"
     action-set action-id="$JUJU_ACTION_UUID"
-    job_line="$cron $job_code # $JUJU_ACTION_UUID"
+    job_line="$cron $job_code # action: $JUJU_ACTION_UUID"
+
+    # if we dont have a crontab, make an empty one
     crontab -lu ubuntu > /dev/null || echo -n | crontab -u ubuntu -
+
+    # append our job to then end of any existing crontab
     (crontab -lu ubuntu; echo "$job_line") | crontab -u ubuntu -
 fi
