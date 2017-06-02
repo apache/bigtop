@@ -46,33 +46,22 @@ start-spark-job-history-server:
     description: Start the Spark job history server.
 stop-spark-job-history-server:
     description: Stop the Spark job history server.
-submit:
-    description: Submit a job to Spark.
+spark-submit:
+    description: Submit a job to run with the 'spark-submit' utility.
     required: ['job']
     params:
         job:
             description: >
                 URL to a JAR or Python file.  This can be any URL supported by
-                spark-submit, such as a remote URL, an hdfs:// path (if
-                connected to HDFS), etc.
-            type: string
-        class:
-            description: >
-                If a JAR is given, this should be the name of the class within
-                the JAR to run.
+                spark-submit, such as a local path, remote URL, an hdfs:// path
+                (if connected to HDFS), etc.
             type: string
         job-args:
-            description: Arguments for the job.
-        packages:
-            description: Comma-separated list of packages to include.
-            type: string
-        py-files:
-            description: Comma-separated list of Python packages to include.
-            type: string
-        extra-params:
+            description: Arguments required by the job.
+        options:
             description: >
-                Additional params to pass to spark-submit.
-                For example: "--executor-memory 1000M --supervise"
+                Options to pass to spark-submit. For example:
+                "--driver-memory 1000M --class org.foo.MyApp"
             type: string
         cron:
             description: >
@@ -80,6 +69,8 @@ submit:
                 given cron rule.  For example: "*/5 * * * *" will run the
                 job every 5 minutes.
             type: string
+submit:
+    description: DEPRECATED: use the spark-submit action instead.
 list-jobs:
     description: List scheduled periodic jobs.
 remove-job:

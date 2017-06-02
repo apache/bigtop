@@ -159,7 +159,7 @@ SSH to the Spark unit and manually run a spark-submit job, for example:
 
     juju ssh spark/0
     spark-submit --class org.apache.spark.examples.SparkPi \
-     --master yarn-client /usr/lib/spark/lib/spark-examples*.jar 10
+     /usr/lib/spark/examples/jars/spark-examples.jar 10
 
 ### Apache Zeppelin
 Apache Zeppelin is a web-based notebook that enables interactive data
