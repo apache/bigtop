@@ -209,16 +209,20 @@ Charm configuration can be changed at runtime with `juju config`. This charm
 supports the following config parameters.
 
 ## driver_memory
-**Local/Standalone mode only**: Amount of memory to use for the driver
-process (1g by default). Set a different value (in g, m, or %) with:
+Amount of memory available for the Spark driver process (1g by default).
+Set a different value with:
 
-    juju config spark driver_memory=50%
+    juju config spark driver_memory=4096m
 
 ## executor_memory
-**Local/Standalone mode only**: Amount of memory to use for each executor
-process (1g by default). Set a different value (in g, m, or %) with:
+Amount of memory available for each Spark executor process (1g by default).
+Set a different value with:
 
     juju config spark executor_memory=2g
+
+> **Note**: When Spark is in YARN mode, ensure the configured executor memory
+does not exceed the NodeManager maximum (defined on each nodemanager as
+`yarn.nodemanager.resource.memory-mb` in `yarn-default.xml`).
 
 ## spark_bench_enabled
 
@@ -230,7 +234,7 @@ or `spark_bench_x86_64`, depending on the unit's architecture.
 
 Spark has four modes of execution: local, standalone, yarn-client, and
 yarn-cluster. The default mode is `standalone` and can be changed by setting
-the `spark_execution_mode` config variable.
+the `spark_execution_mode` config option.
 
   * **Local**
 
