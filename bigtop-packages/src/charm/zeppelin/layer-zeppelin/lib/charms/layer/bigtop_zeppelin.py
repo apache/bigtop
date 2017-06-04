@@ -56,11 +56,20 @@ class Zeppelin(object):
         self._add_override('zeppelin::server::server_port',
                            self.dist_config.port('zeppelin'))
         self._add_override('zeppelin::server::web_socket_port',
-                           self.dist_config.port('zeppelin_web'))
+                           self.dist_config.port('zeppelin_websocket'))
 
         # Default spark to local mode on initial install. This will be
         # reconfigured if/when hadoop or spark relations are made.
-        self._add_override('zeppelin::server::spark_master_url', 'local[*]')
+        local_master = 'local[*]'
+        self._add_override('zeppelin::server::spark_master_url', local_master)
+
+        # The spark-client role expects hdfs by default. Since we want to
+        # keep Hadoop optional, ensure we remove hadoopy bits from our
+        # local spark config. This has no effect if/when a remote spark joins.
+        events_log_dir = 'file:///var/log/spark/apps'
+        self._add_override('spark::common::master_url', local_master)
+        self._add_override('spark::common::event_log_dir', events_log_dir)
+        self._add_override('spark::common::history_log_dir', events_log_dir)
 
         ##########
         # BUG: BIGTOP-2742
@@ -115,18 +124,6 @@ class Zeppelin(object):
 
         bigtop.trigger_puppet()
         self.wait_for_api(30)
-
-    def setup_etc_env(self):
-        '''
-        Write some niceties to /etc/environment
-        '''
-        # Configure system-wide bits
-        zeppelin_bin = self.dist_config.path('zeppelin') / 'bin'
-        zeppelin_conf = self.dist_config.path('zeppelin_conf')
-        with utils.environment_edit_in_place('/etc/environment') as env:
-            if zeppelin_bin not in env['PATH']:
-                env['PATH'] = ':'.join([env['PATH'], zeppelin_bin])
-            env['ZEPPELIN_CONF_DIR'] = zeppelin_conf
 
     def reconfigure_zeppelin(self):
         '''

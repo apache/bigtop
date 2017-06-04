@@ -77,7 +77,7 @@ try:
                 errmsg = para['result']['msg'].splitlines()[0]
             else:
                 errmsg = 'Unable to find error message'
-                hookenv.action_set('paragraph', resp.text)
+                hookenv.action_set({'paragraph': resp.text})
             fail('Notebook failed: {}'.format(errmsg))
 except requests.exceptions.RequestException as e:
     fail('Request failed: {}: {}'.format(e.request.url, e))
