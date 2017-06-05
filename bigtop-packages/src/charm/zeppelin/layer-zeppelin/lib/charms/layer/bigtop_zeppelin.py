@@ -65,8 +65,10 @@ class Zeppelin(object):
 
         # The spark-client role expects hdfs by default. Since we want to
         # keep Hadoop optional, ensure we remove hadoopy bits from our
-        # local spark config. This has no effect if/when a remote spark joins.
-        events_log_dir = 'file:///var/log/spark/apps'
+        # local spark config. This has no effect if/when a remote spark joins,
+        # and since there is no spark history server running, the event dirs
+        # are not important -- they just need not be 'hdfs:///blah'.
+        events_log_dir = 'file:///tmp'
         self._add_override('spark::common::master_url', local_master)
         self._add_override('spark::common::event_log_dir', events_log_dir)
         self._add_override('spark::common::history_log_dir', events_log_dir)
