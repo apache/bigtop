@@ -42,6 +42,8 @@ class bigtop_repo {
           location => hiera("bigtop::bigtop_repo_uri", $default_repo),
           release => "bigtop",
           repos => "contrib",
+          # BIGTOP-2796. Give Bigtop repo higher priority to solve zookeeper package conflict probem on Ubuntu
+          pin => "900",
           ensure => present,
        } ->
        exec {'bigtop-apt-update':
