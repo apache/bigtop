@@ -13,6 +13,12 @@ options:
             Specify gigabytes (e.g. 1g) or megabytes (e.g. 1024m). If running
             in 'local' or 'standalone' mode, you may also specify a percentage
             of total system memory (e.g. 50%).
+    install-cuda:
+        type: boolean
+        default: True
+        description: |
+            Included by layer-nvidia-cuda, this controls the installation
+            of NVIDIA CUDA binaries if capable hardware is present.
     spark_bench_enabled:
         type: boolean
         default: true
