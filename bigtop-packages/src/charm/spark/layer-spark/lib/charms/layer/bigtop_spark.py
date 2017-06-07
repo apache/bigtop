@@ -36,7 +36,7 @@ class Spark(object):
         mode = hookenv.config()['spark_execution_mode']
         zk_units = unitdata.kv().get('zookeeper.units', [])
         master = None
-        if mode.startswith('local') or mode == 'yarn-cluster':
+        if mode.startswith('local') or mode.startswith('yarn'):
             master = mode
         elif mode == 'standalone' and not zk_units:
             master = 'spark://{}:7077'.format(spark_master_host)
@@ -47,8 +47,6 @@ class Spark(object):
                 nodes.append('{}:7077'.format(ip))
             nodes_str = ','.join(nodes)
             master = 'spark://{}'.format(nodes_str)
-        elif mode.startswith('yarn'):
-            master = 'yarn-client'
         return master
 
     def install_benchmark(self):
@@ -149,7 +147,8 @@ class Spark(object):
         self.install_demo()
 
     def setup_hdfs_logs(self):
-        # create hdfs storage space for history server
+        # Create hdfs storage space for history server and return the name
+        # of the created directory.
         dc = self.dist_config
         events_dir = dc.path('spark_events')
         events_dir = 'hdfs://{}'.format(events_dir)
@@ -159,18 +158,14 @@ class Spark(object):
                      events_dir)
         return events_dir
 
-    def configure(self, available_hosts, zk_units, peers):
+    def configure(self, available_hosts, zk_units, peers, extra_libs):
         """
         This is the core logic of setting up spark.
 
-        Two flags are needed:
-
-          * Namenode exists aka HDFS is ready
-          * Resource manager exists aka YARN is ready
-
-        both flags are infered from the available hosts.
-
         :param dict available_hosts: Hosts that Spark should know about.
+        :param list zk_units: List of Zookeeper dicts with host/port info.
+        :param list peers: List of Spark peer tuples (unit name, IP).
+        :param list extra_libs: List of extra lib paths for driver/executors.
         """
         # Bootstrap spark
         if not unitdata.kv().get('spark.bootstrapped', False):
@@ -188,6 +183,33 @@ class Spark(object):
         mode = hookenv.config()['spark_execution_mode']
         master_ip = utils.resolve_private_address(available_hosts['spark-master'])
         master_url = self.get_master_url(master_ip)
+        req_driver_mem = hookenv.config()['driver_memory']
+        req_executor_mem = hookenv.config()['executor_memory']
+
+        # handle tuning options that may be set as percentages
+        driver_mem = '1g'
+        executor_mem = '1g'
+        if req_driver_mem.endswith('%'):
+            if mode == 'standalone' or mode.startswith('local'):
+                mem_mb = host.get_total_ram() / 1024 / 1024
+                req_percentage = float(req_driver_mem.strip('%')) / 100
+                driver_mem = str(int(mem_mb * req_percentage)) + 'm'
+            else:
+                hookenv.log("driver_memory percentage in non-local mode. Using 1g default.",
+                            level=None)
+        else:
+            driver_mem = req_driver_mem
+
+        if req_executor_mem.endswith('%'):
+            if mode == 'standalone' or mode.startswith('local'):
+                mem_mb = host.get_total_ram() / 1024 / 1024
+                req_percentage = float(req_executor_mem.strip('%')) / 100
+                executor_mem = str(int(mem_mb * req_percentage)) + 'm'
+            else:
+                hookenv.log("executor_memory percentage in non-local mode. Using 1g default.",
+                            level=None)
+        else:
+            executor_mem = req_executor_mem
 
         # Setup hosts dict
         hosts = {
@@ -196,7 +218,11 @@ class Spark(object):
         if 'namenode' in available_hosts:
             hosts['namenode'] = available_hosts['namenode']
             events_log_dir = self.setup_hdfs_logs()
-
+        else:
+            # Bigtop includes a default hadoop_head_node if we do not specify
+            # any namenode info. To ensure spark standalone doesn't get
+            # invalid hadoop config, set our NN to an empty string.
+            hosts['namenode'] = ''
         if 'resourcemanager' in available_hosts:
             hosts['resourcemanager'] = available_hosts['resourcemanager']
 
@@ -215,6 +241,10 @@ class Spark(object):
             'spark::common::master_url': master_url,
             'spark::common::event_log_dir': events_log_dir,
             'spark::common::history_log_dir': events_log_dir,
+            'spark::common::extra_lib_dirs':
+                ':'.join(extra_libs) if extra_libs else None,
+            'spark::common::driver_mem': driver_mem,
+            'spark::common::executor_mem': executor_mem,
         }
         if zk_units:
             zks = []
@@ -241,39 +271,6 @@ class Spark(object):
             dc.path('spark_events').chmod(0o3777)
 
         self.patch_worker_master_url(master_ip, master_url)
-
-        # handle tuning options that may be set as percentages
-        driver_mem = '1g'
-        req_driver_mem = hookenv.config()['driver_memory']
-        executor_mem = '1g'
-        req_executor_mem = hookenv.config()['executor_memory']
-        if req_driver_mem.endswith('%'):
-            if mode == 'standalone' or mode.startswith('local'):
-                mem_mb = host.get_total_ram() / 1024 / 1024
-                req_percentage = float(req_driver_mem.strip('%')) / 100
-                driver_mem = str(int(mem_mb * req_percentage)) + 'm'
-            else:
-                hookenv.log("driver_memory percentage in non-local mode. Using 1g default.",
-                            level=None)
-        else:
-            driver_mem = req_driver_mem
-
-        if req_executor_mem.endswith('%'):
-            if mode == 'standalone' or mode.startswith('local'):
-                mem_mb = host.get_total_ram() / 1024 / 1024
-                req_percentage = float(req_executor_mem.strip('%')) / 100
-                executor_mem = str(int(mem_mb * req_percentage)) + 'm'
-            else:
-                hookenv.log("executor_memory percentage in non-local mode. Using 1g default.",
-                            level=None)
-        else:
-            executor_mem = req_executor_mem
-
-        spark_env = '/etc/spark/conf/spark-env.sh'
-        utils.re_edit_in_place(spark_env, {
-            r'.*SPARK_DRIVER_MEMORY.*': 'export SPARK_DRIVER_MEMORY={}'.format(driver_mem),
-            r'.*SPARK_EXECUTOR_MEMORY.*': 'export SPARK_EXECUTOR_MEMORY={}'.format(executor_mem),
-        }, append_non_matches=True)
 
         # Install SB (subsequent calls will reconfigure existing install)
         # SparkBench looks for the spark master in /etc/environment
