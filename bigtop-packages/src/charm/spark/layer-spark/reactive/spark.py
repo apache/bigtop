@@ -38,6 +38,9 @@ def report_status():
     elif mode == 'standalone' and is_state('leadership.is_leader'):
         mode = mode + " - master"
 
+    if is_state('spark.cuda.configured'):
+        mode = mode + " with CUDA"
+
     if is_state('spark.started'):
         hookenv.status_set('active', 'ready ({})'.format(mode))
     else:
@@ -74,8 +77,15 @@ def install_spark_standalone(zks, peers):
         hookenv.log("Waiting 2m to ensure zk ensemble has settled: {}".format(zks))
         time.sleep(120)
 
+    # Let spark know if we have cuda libs installed.
+    # NB: spark packages prereq hadoop (boo), so even in standalone mode, we'll
+    # have hadoop libs installed. May as well include them in our lib path.
+    extra_libs = ["/usr/lib/hadoop/lib/native"]
+    if is_state('cuda.installed'):
+        extra_libs.append("/usr/local/cuda/lib64")
+
     spark = Spark()
-    spark.configure(hosts, zks, peers)
+    spark.configure(hosts, zk_units=zks, peers=peers, extra_libs=extra_libs)
     set_deployment_mode_state('spark.standalone.installed')
 
 
@@ -98,8 +108,13 @@ def install_spark_yarn():
         nns = hadoop.namenodes()
         hosts['namenode'] = nns[0]
 
+    # Always include native hadoop libs in yarn mode; add cuda libs if present.
+    extra_libs = ["/usr/lib/hadoop/lib/native"]
+    if is_state('cuda.installed'):
+        extra_libs.append("/usr/local/cuda/lib64")
+
     spark = Spark()
-    spark.configure(hosts, zk_units=None, peers=None)
+    spark.configure(hosts, zk_units=None, peers=None, extra_libs=extra_libs)
     set_deployment_mode_state('spark.yarn.installed')
 
 
@@ -160,6 +175,7 @@ def reinstall_spark():
     # If neither config nor our matrix is changing, there is nothing to do.
     if not (is_state('config.changed') or
             data_changed('deployment_matrix', deployment_matrix)):
+        report_status()
         return
 
     # (Re)install based on our execution mode
@@ -195,6 +211,47 @@ def send_fqdn():
 @when('leadership.changed.master-fqdn')
 def leader_elected():
     set_state("master.elected")
+
+
+@when('spark.started', 'cuda.installed')
+@when_not('spark.cuda.configured')
+def configure_cuda():
+    """
+    Ensure cuda bits are configured.
+
+    We can't be sure that the config.changed handler in the nvidia-cuda
+    layer will fire before the handler in this layer. We might call
+    reinstall_spark on config-changed before the cuda.installed state is set,
+    thereby missing the cuda lib path configuration. Deal with this by
+    excplicitly calling reinstall_spark after we *know* cuda.installed is set.
+    This may result in 2 calls to reinstall_spark when cuda-related config
+    changes, but it ensures our spark lib config is accurate.
+    """
+    hookenv.log("Configuring spark with CUDA library paths")
+    reinstall_spark()
+    set_state('spark.cuda.configured')
+    report_status()
+
+
+@when('spark.started', 'spark.cuda.configured')
+@when_not('cuda.installed')
+def unconfigure_cuda():
+    """
+    Ensure cuda bits are unconfigured.
+
+    Similar to the configure_cuda method, we can't be sure that the
+    config.changed handler in the nvidia-cuda layer will fire before the
+    handler in this layer. We might call reinstall_spark on config-changed
+    before the cuda.installed state is removed, thereby configuring spark with
+    a cuda lib path when the user wanted cuda config removed. Deal with this by
+    excplicitly calling reinstall_spark after we *know* cuda.installed is gone.
+    This may result in 2 calls to reinstall_spark when cuda-related config
+    changes, but it ensures our spark lib config is accurate.
+    """
+    hookenv.log("Removing CUDA library paths from spark configuration")
+    reinstall_spark()
+    remove_state('spark.cuda.configured')
+    report_status()
 
 
 @when('spark.started', 'client.joined')

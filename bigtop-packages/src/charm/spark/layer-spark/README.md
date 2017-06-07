@@ -62,7 +62,7 @@ the unit acting as master, query Zookeeper as follows:
 
     juju run --unit zookeeper/0 'echo "get /spark/master_status" | /usr/lib/zookeeper/bin/zkCli.sh'
 
-### YARN-client and YARN-cluster
+### YARN
 This charm leverages our pluggable Hadoop model with the `hadoop-plugin`
 interface. This means that this charm can be related to an Apache Hadoop
 cluster to run Spark jobs there. The suggested deployment method is to use the
@@ -224,14 +224,25 @@ Set a different value with:
 does not exceed the NodeManager maximum (defined on each nodemanager as
 `yarn.nodemanager.resource.memory-mb` in `yarn-default.xml`).
 
-## spark_bench_enabled
+## install-cuda
+Provided by `layer-nvidia-cuda`, this option controls the installation
+of NVIDIA CUDA packages if capable GPU hardware is present. When `false` (the
+default), CUDA will not be installed or configured regardless of hardware
+support. Set this to `true` to fetch and install CUDA-related packages from
+the NVIDIA developer repository.
 
+    juju config spark install-cuda=true
+
+> **Note**: This option requires external network access to
+http://developer.download.nvidia.com/. Ensure appropriate proxies are
+configured if needed.
+
+## spark_bench_enabled
 Install the SparkBench benchmarking suite. If `true` (the default), this charm
 will download spark bench from the URL specified by `spark_bench_ppc64le`
 or `spark_bench_x86_64`, depending on the unit's architecture.
 
 ## spark_execution_mode
-
 Spark has four modes of execution: local, standalone, yarn-client, and
 yarn-cluster. The default mode is `standalone` and can be changed by setting
 the `spark_execution_mode` config option.
