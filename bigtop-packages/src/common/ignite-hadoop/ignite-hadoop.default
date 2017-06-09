@@ -20,3 +20,5 @@ export IGNITE_PID_DIR="/var/run/ignite-hadoop"
 export IGNITE_LOG_DIR="/var/log/ignite-hadoop"
 export IGNITE_WORK_DIR="/var/run/ignite-hadoop/work"
 export IGNITE_IDENT_STRING=ignite
+
+export HADOOP_HOME=${HADOOP_HOME:-/usr/lib/hadoop}
