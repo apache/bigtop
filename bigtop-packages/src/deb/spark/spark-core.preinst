@@ -32,11 +32,12 @@ set -e
 
 case "$1" in
     install|upgrade)
+        getent group spark >/dev/null || groupadd -r spark
         if ! getent passwd spark >/dev/null; then
                 # Adding system user: spark .
                 adduser \
                   --system \
-                  --group \
+                  --ingroup spark \
                   --home /var/lib/spark \
                   --gecos "Spark" \
                   --shell /bin/false \

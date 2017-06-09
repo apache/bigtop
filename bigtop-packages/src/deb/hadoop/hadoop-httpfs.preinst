@@ -32,10 +32,11 @@ set -e
 
 case "$1" in
     install|upgrade)
+        getent group httpfs >/dev/null || groupadd -r httpfs
         if ! getent passwd httpfs >/dev/null; then
             adduser \
                 --system \
-                --group \
+                --ingroup httpfs \
                 --home /var/run/hadoop-httpfs \
                 --gecos "Hadoop HTTPFS" \
                 --shell /bin/bash \

@@ -32,11 +32,12 @@ set -e
 
 case "$1" in
     install|upgrade)
+        getent group zeppelin >/dev/null || groupadd -r zeppelin
         if ! getent passwd zeppelin >/dev/null; then
                 # Adding system user: zeppelin .
                 adduser \
                   --system \
-                  --group \
+                  --ingroup zeppelin \
                   --home /var/lib/zeppelin \
                   --gecos "Zeppelin" \
                   --shell /bin/false \
