@@ -26,13 +26,9 @@ options:
       zeppelin_notebooks:
           path: '/var/lib/zeppelin/notebook'
     ports:
-      # Ports that need to be exposed, overridden, or manually specified.
-      # Only expose ports serving a UI or external API (i.e., namenode and
-      # resourcemanager).  Communication among units within the cluster does
-      # not need ports to be explicitly opened.
       zeppelin:
           port: 9080
           exposed_on: 'zeppelin'
-      zeppelin_web:
+      zeppelin_websocket:
           port: 9081
           exposed_on: 'zeppelin'

@@ -32,21 +32,13 @@ This charm deploys version 0.7.0 of the Zeppelin component from
 This charm requires Juju 2.0 or greater. If Juju is not yet set up, please
 follow the [getting-started][] instructions prior to deploying this charm.
 
-This charm is intended to be deployed via one of the [apache bigtop bundles][].
-For example:
-
-    juju deploy hadoop-processing
-
-This will deploy an Apache Bigtop Hadoop cluster. More information about this
-deployment can be found in the [bundle readme](https://jujucharms.com/hadoop-processing/).
-
-Now add Zeppelin and relate it to the cluster via the hadoop-plugin:
+Zeppelin can be deployed by itself as a stand-alone web notebook. Deployment
+is simple:
 
     juju deploy zeppelin
-    juju add-relation zeppelin plugin
 
-To access the web console, find the `PUBLIC-ADDRESS` of the
-zeppelin application and expose it:
+To access the web interface, find the `Public address` of the `zeppelin`
+application and expose it:
 
     juju status zeppelin
     juju expose zeppelin
@@ -54,6 +46,45 @@ zeppelin application and expose it:
 The web interface will be available at the following URL:
 
     http://ZEPPELIN_PUBLIC_IP:9080
+
+This charm also supports more complex integration scenarios as described below.
+
+## Hadoop Integration
+This charm may be deployed alongside any of the [Apache Bigtop bundles][].
+For example:
+
+    juju deploy hadoop-processing
+
+This will deploy a basic Bigtop Hadoop cluster. More information about this
+deployment can be found in the [bundle readme](https://jujucharms.com/hadoop-processing/).
+
+Now relate the previously deployed `zeppelin` charm to the Hadoop plugin. This
+enables communication between Zeppelin and Hadoop:
+
+    juju add-relation zeppelin plugin
+
+Once deployment is complete, Zeppelin notebooks will have access to the
+Hadoop Distributed File System (HDFS). Additionally, the local Spark driver
+will be reconfigured in YARN mode. Any notebooks that submit Spark jobs will
+leverage the Hadoop compute resources deployed by the `hadoop-processing`
+bundle.
+
+## Spark Integration
+Zeppelin includes a local Spark driver by default. This allows notebooks to
+use a SparkContext without needing external Spark resources. This driver can
+process jobs using local machine resources or compute resources from a Hadoop
+cluster as mentioned above.
+
+Zeppelin's Spark driver can also use external Spark cluster resources. For
+example, the following will deploy a 3-unit Spark cluster that Zeppelin will
+use when submitting jobs:
+
+    juju deploy spark -n 3
+    juju relate zeppelin spark
+
+Once deployment is complete, the local Spark driver will be reconfigured to
+use the external cluster as the Spark Master. Any notebooks that submit Spark
+jobs will leverage the newly deployed `spark` units.
 
 ## Network-Restricted Environments
 Charms can be deployed in environments with limited network access. To deploy
@@ -97,6 +128,13 @@ reports `status: failed`, the application is not working as expected. Get
 more information about a specific smoke test with:
 
     juju show-action-output <action-id>
+
+
+# Limitations
+
+When related to Spark, Zeppelin requires a `spark://xxx.xxx.xxx.xxx:7077`
+URL for the Spark Master. This is only available when the `spark` charm is
+in `standalone` mode -- `local` and `yarn` modes are not supported.
 
 
 # Issues
