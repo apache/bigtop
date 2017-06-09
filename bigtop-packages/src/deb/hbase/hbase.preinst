@@ -32,11 +32,12 @@ set -e
 
 case "$1" in
     install|upgrade)
+        getent group hbase >/dev/null || groupadd -r hbase
         if ! getent passwd hbase >/dev/null; then
                 # Adding system user: hbase.
                 adduser \
                   --system \
-                  --group \
+                  --ingroup hbase \
                   --home /var/run/hbase \
                   --gecos "HBase User" \
                   --shell /bin/bash \

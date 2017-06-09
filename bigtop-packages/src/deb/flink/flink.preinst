@@ -32,11 +32,12 @@ set -e
 
 case "$1" in
     install|upgrade)
+        getent group flink >/dev/null || groupadd -r flink
         if ! getent passwd flink >/dev/null; then
                 # Adding system user: flink .
                 adduser \
                   --system \
-                  --group \
+                  --ingroup flink \
                   --home /var/lib/flink \
                   --gecos "Flink" \
                   --shell /bin/false \

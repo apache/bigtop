@@ -32,12 +32,13 @@ set -e
 
 case "$1" in
     install|upgrade)
+        getent group oozie >/dev/null || groupadd -r oozie
         if ! getent passwd oozie >/dev/null; then
                 # Adding system user: oozie.
                 adduser \
                   --system \
                   --disabled-login \
-                  --group \
+                  --ingroup oozie \
                   --home /var/lib/oozie \
                   --gecos "Oozie User" \
                   --shell /bin/false \
