@@ -32,7 +32,10 @@ Source0: %{ycsb_name}-%{ycsb_base_version}.tar.gz
 Source1: do-component-build 
 Source2: install_%{ycsb_name}.sh
 Source3: bigtop.bom
-Requires: python
+## This package _explicitly_ turns off the auto-discovery of required dependencies
+## to work around OSGI corner case, added to RPM lately. See BIGTOP-2421 for more info.
+Requires: coreutils, bigtop-utils >= 0.7, python
+AutoReq: no
 
 %description 
 The Yahoo! Cloud Serving Benchmark (YCSB) is an open-source 
