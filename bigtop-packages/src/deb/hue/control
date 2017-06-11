@@ -23,7 +23,7 @@ Homepage: http://github.com/cloudera/hue
 
 Package: hue-common
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, ${build:SYS-PYTHON}, libsasl2-modules-gssapi-mit, libxslt1.1, make, python (>= 2.6), libgmp10, libffi
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${build:SYS-PYTHON}, libsasl2-modules-gssapi-mit, libxslt1.1, make, python (>= 2.6), libgmp10, libffi6
 Description: A browser-based desktop interface for Hadoop
  Hue is a browser-based desktop interface for interacting with Hadoop.
  It supports a file browser, job tracker interface, cluster health monitor, and more.
