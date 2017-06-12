@@ -23,11 +23,12 @@ set -e
 
 case "$1" in
     install|upgrade)
+        getent group hive >/dev/null || groupadd -r hive
         if ! getent passwd hive >/dev/null; then
                 # Adding system user: hive.
                 adduser \
                   --system \
-                  --group \
+                  --ingroup hive \
                   --home /var/lib/hive \
                   --gecos "Hive User" \
                   --shell /bin/false \

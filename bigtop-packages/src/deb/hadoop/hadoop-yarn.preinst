@@ -32,11 +32,12 @@ set -e
 
 case "$1" in
     install|upgrade)
+        getent group yarn >/dev/null || groupadd -r yarn
         if ! getent passwd yarn >/dev/null; then
             # Adding system user: yarn.
             adduser \
                 --system \
-                --group \
+                --ingroup yarn \
                 --home /var/lib/hadoop-yarn \
                 --gecos "Hadoop YARN" \
                 --shell /bin/bash \

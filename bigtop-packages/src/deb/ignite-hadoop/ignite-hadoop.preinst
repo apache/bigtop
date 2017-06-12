@@ -32,11 +32,12 @@ set -e
 
 case "$1" in
     install|upgrade)
+        getent group ignite >/dev/null || groupadd -r ignite
         if ! getent passwd ignite >/dev/null; then
                 # Adding system user: ignite.
                 adduser \
                   --system \
-                  --group \
+                  --ingroup ignite \
                   --home /var/run/ignite-hadoop \
                   --gecos "Ignite User" \
                   --shell /bin/bash \

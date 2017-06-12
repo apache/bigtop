@@ -32,11 +32,12 @@ set -e
 
 case "$1" in
     install|upgrade)
+        getent group solr >/dev/null || groupadd -r solr
         if ! getent passwd solr >/dev/null; then
                 # Adding system user: solr .
                 adduser \
                   --system \
-                  --group \
+                  --ingroup solr \
                   --home /var/lib/solr \
                   --gecos "Solr" \
                   --shell /bin/false \

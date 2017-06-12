@@ -32,11 +32,12 @@ set -e
 
 case "$1" in
     install|upgrade)
+        getent group hdfs >/dev/null || groupadd -r hdfs
         if ! getent passwd hdfs >/dev/null; then
             # Adding system user: hdfs.
             adduser \
                 --system \
-                --group \
+                --ingroup hdfs \
                 --home /var/lib/hadoop-hdfs \
                 --gecos "Hadoop HDFS" \
                 --shell /bin/bash \

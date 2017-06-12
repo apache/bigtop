@@ -32,11 +32,12 @@ set -e
 USER=hue
 case "$1" in
     install|upgrade)
+        getent group $USER >/dev/null || groupadd -r $USER
         if ! getent passwd $USER >/dev/null; then
                 adduser \
                   --system \
                   --disabled-login \
-                  --group \
+                  --ingroup $USER \
                   --home /usr/lib/hue \
                   --gecos "Hue daemon" \
                   $USER >/dev/null

@@ -32,11 +32,12 @@ set -e
 
 case "$1" in
     install|upgrade)
+        getent group hama >/dev/null || groupadd -r hama
         if ! getent passwd hama >/dev/null; then
                 # Adding system user: hama.
                 adduser \
                   --system \
-                  --group \
+                  --ingroup hama \
                   --home /var/lib/hama \
                   --gecos "Apache Hama User" \
                   --shell /bin/bash \
