@@ -91,8 +91,7 @@ bigtop {
            dependsOn := [list of dependents]
       So, below phoenix and giraph ought to be build after the hbase has been built
 
-      To build a component without its dependencies, simply comment out
-      dependencies section or run build with -Dbuildnodeps=true
+      To build a component with its dependencies, run build with -Dbuildwithdeps=true
   */
   dependencies = [
     zookeeper:['hadoop', 'hbase'],
