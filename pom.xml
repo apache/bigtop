@@ -47,7 +47,6 @@
     <sqoop2.version>1.99.4</sqoop2.version>
     <zookeeper.version>3.4.6</zookeeper.version>
     <giraph.version>1.1.0</giraph.version>
-    <solr.version>4.10.4</solr.version>
     <spark.version>2.1.0</spark.version>
     <kafka.version>0.10.1.1</kafka.version>
     <phoenix.version>4.9.0-HBase-1.1</phoenix.version>
@@ -221,11 +220,6 @@
         <groupId>org.apache.giraph</groupId>
         <artifactId>giraph</artifactId>
         <version>${giraph.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.solr</groupId>
-        <artifactId>solr-solrj</artifactId>
-        <version>${solr.version}</version>
       </dependency>
       <!-- Sqoop -->
       <dependency>
