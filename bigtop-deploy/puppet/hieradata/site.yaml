@@ -43,4 +43,8 @@ hadoop::hadoop_storage_dirs:
 
 #bigtop::roles_enabled: false
 
-#bigtop::bigtop_repo_uri: "http://mirror.example.com/path/to/mirror/"
+## You can specify one (or more) repositories. It is convenient if
+## you provide hotfix repo separately from the stable release, etc.
+#bigtop::bigtop_repo_uri:
+#   - "http://mirror1.example.com/path/to/mirror/"
+#   - "http://mirror2.example.com/path/to/mirror/"
