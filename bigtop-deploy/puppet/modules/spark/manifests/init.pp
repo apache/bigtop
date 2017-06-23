@@ -146,6 +146,9 @@ class spark {
       $use_yarn_shuffle_service = false,
       $event_log_dir =  "hdfs:///var/log/spark/apps",
       $history_log_dir = "hdfs:///var/log/spark/apps",
+      $extra_lib_dirs = "/usr/lib/hadoop/lib/native",
+      $driver_mem = "1g",
+      $executor_mem = "1g",
   ) {
 
 ### This is an ungodly hack to deal with the consequence of adding
