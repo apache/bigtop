@@ -293,7 +293,7 @@ bigtop {
       name    = 'spark1'
       pkg     = 'spark-core'
       relNotes = 'Apache Spark'
-      version { base = '1.6.2'; pkg = base; release = 1 }
+      version { base = '1.6.3'; pkg = base; release = 1 }
       tarball { destination = "spark-${version.base}.tar.gz"
                 source      = "spark-${version.base}.tgz" }
       url     { download_path = "/spark/spark-${version.base}"
