@@ -89,8 +89,11 @@ def setDefaults = { comp ->
     comp.version.pkg = comp.version.base
   }
 }
+def devNull = new OutputStream() {
+  @Override
+  public void write(int b) {}
+}
 def nativePackaging = {
-  def devNull = new org.apache.bigtop.NullOutputStream()
   def result = exec {
     commandLine "/bin/bash", "-c",
     """dpkg-query -S /bin/sh && exit 1
@@ -181,8 +184,6 @@ def genTasks = { target ->
     def final GIT_DIR = config.bigtop.components[target].git.dir
     def final GIT_USER_NAME = config.bigtop.components[target].git.user ?: config.bigtop.git.user
     def final GIT_ACCESS_TOKEN = config.bigtop.components[target].git.token ?: config.bigtop.git.token
-
-    def devNull = new org.apache.bigtop.NullOutputStream()
 
     if (!DOWNLOAD_URL)
       return
