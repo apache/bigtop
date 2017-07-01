@@ -41,7 +41,6 @@ bigtop::hadoop_head_node: ${HEAD_NODE:-"head.node.fqdn"}
 hadoop::hadoop_storage_dirs: [/data/1, /data/2]
 bigtop::bigtop_repo_uri: ${REPO}
 hadoop_cluster_node::cluster_components: [${COMPONENTS}]
-bigtop::jdk_package_name: ${JDK}
 EOF
 }
 
@@ -62,15 +61,6 @@ generate_tag() {
     if [ -z "$TAG" ]; then
         TAG="${OS}_`echo ${COMPONENTS//,/_} | tr -d ' '`"
     fi
-}
-
-detect_jdk() {
-    for RPM in ${RPMS[*]}; do
-        [[ $OS == $RPM ]] && JDK=$RPM_JDK
-    done
-    for DEB in ${DEBS[*]}; do
-        [[ $OS == $DEB ]] && JDK=$DEB_JDK
-    done
 }
 
 detect_repo() {
@@ -103,10 +93,6 @@ deploy_config_validator() {
         echo "repository unset!"
         invalid=0
     fi
-    if [ -z "$JDK" ]; then
-        echo "jdk unset!"
-        invalid=0
-    fi
     if [ -z "$COMPONENTS" ]; then
         echo "components unset!"
         invalid=0
@@ -131,7 +117,6 @@ show_deploy_configs() {
     echo "DEPLOY CONFIGS:"
     echo "REPOSITORY $REPO"
     echo "COMPONENTS $COMPONENTS"
-    echo "JDK        $JDK"
     echo "-------------------------------------------------"
 }
 
@@ -202,7 +187,6 @@ image_config_validator
 show_image_configs
 
 if [ -z "$FILE" ]; then
-    detect_jdk
     detect_repo
     deploy_config_validator
     generate_config
