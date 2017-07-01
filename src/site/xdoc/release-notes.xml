@@ -17,6 +17,182 @@
 		<section name="Bigtop Project Release Notes">
 			<!-- Paste release notes from https://issues.apache.org/jira/browse/BIGTOP here. -->
 
+                    <h3>Release Notes - Bigtop - Version 1.2.1</h3>
+    
+<h2>        Sub-task
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2165'>BIGTOP-2165</a>] -         ignite-hadoop service doesn&#39;t start
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2396'>BIGTOP-2396</a>] -         Create CI jobs for new Docker Provisioner
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2758'>BIGTOP-2758</a>] -         [Sandbox] Support dryrun in build script
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2760'>BIGTOP-2760</a>] -         [Sandbox] Upgrade to Bigtop 1.2
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2761'>BIGTOP-2761</a>] -         Remove bigtop-deploy image build scripts
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2767'>BIGTOP-2767</a>] -         Auto detect repo does not need OS code name since 1.2.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2769'>BIGTOP-2769</a>] -         OS_TO_CODE_NAME has been removed in BIGTOP-2767
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2772'>BIGTOP-2772</a>] -         [Sandbox] Add --dryrun mode into helper script and document
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2814'>BIGTOP-2814</a>] -         Make provisioner config names be consistent with OS names in CI
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2815'>BIGTOP-2815</a>] -         Puppet should be able to generate multiple repo files
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2816'>BIGTOP-2816</a>] -         Fix provisioner config name for ubuntu-16.04
+</li>
+</ul>
+                            
+<h2>        Bug
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2295'>BIGTOP-2295</a>] -         Docker tests should consume current builds
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2679'>BIGTOP-2679</a>] -         Streamline CI Jobs
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2729'>BIGTOP-2729</a>] -         AMBARI-20686: Add ID to allow compilation with recent maven
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2737'>BIGTOP-2737</a>] -         Spark charm doesn&#39;t handle HA or examples well
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2738'>BIGTOP-2738</a>] -         spark-worker fails to start
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2740'>BIGTOP-2740</a>] -         hbase 1.1.3 does not work on ppc64le
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2743'>BIGTOP-2743</a>] -         hbase shell does not work on ppc64le
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2748'>BIGTOP-2748</a>] -         Fix a puppet compatibilty issue 
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2749'>BIGTOP-2749</a>] -         puppet: use jessie package on jessie, not trusty
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2750'>BIGTOP-2750</a>] -         puppet: increase compatibility with future versions
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2751'>BIGTOP-2751</a>] -         ambari: Storm 1.1.0-SNAPSHOT is no longer available, use released version
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2753'>BIGTOP-2753</a>] -         Initial support for Debian-9
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2754'>BIGTOP-2754</a>] -         Revert BIGTOP-2730: Upgrade Zookeeper to version 3.4.10
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2755'>BIGTOP-2755</a>] -         Gradle needs cacerts file in place on fedora
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2756'>BIGTOP-2756</a>] -         Get rid of Permission Denied when creating/destroying Docker Provisioner cluster
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2762'>BIGTOP-2762</a>] -         Zeppelin installation failed due to JDK not installed
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2763'>BIGTOP-2763</a>] -         Add /user/zeppelin directory for running Spark job on YARN in Zeppelin 
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2764'>BIGTOP-2764</a>] -         deployment failure when roles include spark::common and spark::yarn*
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2765'>BIGTOP-2765</a>] -         fix roles logic for spark/zeppelin charms
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2766'>BIGTOP-2766</a>] -         [Puppet] Spark worker startup failed due to default master_url is yarn
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2771'>BIGTOP-2771</a>] -         ambari: build failed due to using third-party ConcurrentHashMap instead of the standard one unnecessarily
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2774'>BIGTOP-2774</a>] -         gradlew toolchain does not work on Ubuntu 16.04.2/Puppet 3.8.5
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2775'>BIGTOP-2775</a>] -         Make open jdk 8 available on bigtop/puppet:debian-8
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2781'>BIGTOP-2781</a>] -         [Provisioner] 127.0.0.1 does not successfully inserted after BIGTOP-2756
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2788'>BIGTOP-2788</a>] -         Corrects Apex patch for version 3.6.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2789'>BIGTOP-2789</a>] -         Ambari: installing ODPi mpack fails due to changing its file name
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2790'>BIGTOP-2790</a>] -         Ambari: deploying cluster fails due to ambari-agent version mismatch
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2793'>BIGTOP-2793</a>] -         BIGTOP-2790 broke Ambari build on rpm-based system
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2796'>BIGTOP-2796</a>] -         Bigtop Zookeeper(3.4.6) package conflict with Ubuntu 16.04 Zookeeper(3.4.8)
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2797'>BIGTOP-2797</a>] -         zeppelin charm external role handling
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2798'>BIGTOP-2798</a>] -         Apex component has duplicate slf4j binding
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2799'>BIGTOP-2799</a>] -         [Puppet] Flink deployment failure on all supported OS
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2800'>BIGTOP-2800</a>] -         provisioner fails for kerberos on centos-7
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2801'>BIGTOP-2801</a>] -         charm race condition when gathering metrics
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2803'>BIGTOP-2803</a>] -         Minor issues in bigtop.bom
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2805'>BIGTOP-2805</a>] -         ycsb: turn of autodetection of dependencies by rpm
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2806'>BIGTOP-2806</a>] -         hue is not installable on debian, ubuntu
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2808'>BIGTOP-2808</a>] -         Handle deletion of symlinks: update gradle
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2818'>BIGTOP-2818</a>] -         Ambari downloads jdk 
+</li>
+</ul>
+                        
+<h2>        Improvement
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2355'>BIGTOP-2355</a>] -         Update Mahout version to 0.13.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2677'>BIGTOP-2677</a>] -         layer-spark: Improve sparkpi action output
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2730'>BIGTOP-2730</a>] -         Bump zookeeper to 3.4.10
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2770'>BIGTOP-2770</a>] -         Juju charm/bundle refresh
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2777'>BIGTOP-2777</a>] -         make hbase charm more robust
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2778'>BIGTOP-2778</a>] -         Delete PermSize / MaxPermsize options, no longer support by Java 8
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2783'>BIGTOP-2783</a>] -         new charm icons for zookeeper and zeppelin
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2795'>BIGTOP-2795</a>] -         spark charm: fix sparkpi and rework start/stop logic
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2802'>BIGTOP-2802</a>] -         Some packages don&#39;t create necessary groups on debian-based system if the users correspond to them already exist
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2807'>BIGTOP-2807</a>] -         Upgrade Spark to 2.1.1
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2812'>BIGTOP-2812</a>] -         Upgrade Zeppelin version to 0.7.2
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2819'>BIGTOP-2819</a>] -         Polish the README.md for 1.2.1 release
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2820'>BIGTOP-2820</a>] -         Polish the documentations on Bigtop Wiki for 1.2.1 release
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2821'>BIGTOP-2821</a>] -         expose extra config options for spark
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2827'>BIGTOP-2827</a>] -         juju bundle refresh (june 2017)
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2828'>BIGTOP-2828</a>] -         Since BIGTOP-2775 JDK version has been specified by Bigtop Puppet
+</li>
+</ul>
+                
+<h2>        New Feature
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2253'>BIGTOP-2253</a>] -         Rewrite Bigtop Docker Provisioner to use native solutions and support multi-host cluster deployment
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2779'>BIGTOP-2779</a>] -         new hive charm
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2822'>BIGTOP-2822</a>] -         spark charm: leverage puppet config, gpu enablement
+</li>
+</ul>
+                                                            
+<h2>        Task
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2739'>BIGTOP-2739</a>] -         refresh juju bundles with latest charm revs
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2747'>BIGTOP-2747</a>] -         new charm revs for bigtop-1.2
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2776'>BIGTOP-2776</a>] -         Bump Apache Apex version to 3.6.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2785'>BIGTOP-2785</a>] -         Define Bigtop 1.2.1 release BOM
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2786'>BIGTOP-2786</a>] -         Push Bigtop 1.2.1 Docker build slaves to Docker Hub
+</li>
+</ul>
+
+
                     <h3>Release Notes - Bigtop - Version 1.2.0</h3>
 
 <h2>        Sub-task
