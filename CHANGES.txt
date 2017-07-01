@@ -15,6 +15,93 @@
 
 Bigtop Changelog
 
+* Release 1.2.1 (2017-07-01)
+
+Release Notes - Bigtop - Version 1.2.1
+
+** Sub-task
+    * [BIGTOP-2165] - ignite-hadoop service doesn't start
+    * [BIGTOP-2396] - Create CI jobs for new Docker Provisioner
+    * [BIGTOP-2758] - [Sandbox] Support dryrun in build script
+    * [BIGTOP-2760] - [Sandbox] Upgrade to Bigtop 1.2
+    * [BIGTOP-2761] - Remove bigtop-deploy image build scripts
+    * [BIGTOP-2767] - Auto detect repo does not need OS code name since 1.2.0
+    * [BIGTOP-2769] - OS_TO_CODE_NAME has been removed in BIGTOP-2767
+    * [BIGTOP-2772] - [Sandbox] Add --dryrun mode into helper script and document
+    * [BIGTOP-2814] - Make provisioner config names be consistent with OS names in CI
+    * [BIGTOP-2815] - Puppet should be able to generate multiple repo files
+    * [BIGTOP-2816] - Fix provisioner config name for ubuntu-16.04
+
+** Bug
+    * [BIGTOP-2295] - Docker tests should consume current builds
+    * [BIGTOP-2679] - Streamline CI Jobs
+    * [BIGTOP-2729] - AMBARI-20686: Add ID to allow compilation with recent maven
+    * [BIGTOP-2737] - Spark charm doesn't handle HA or examples well
+    * [BIGTOP-2738] - spark-worker fails to start
+    * [BIGTOP-2740] - hbase 1.1.3 does not work on ppc64le
+    * [BIGTOP-2743] - hbase shell does not work on ppc64le
+    * [BIGTOP-2748] - Fix a puppet compatibilty issue 
+    * [BIGTOP-2749] - puppet: use jessie package on jessie, not trusty
+    * [BIGTOP-2750] - puppet: increase compatibility with future versions
+    * [BIGTOP-2751] - ambari: Storm 1.1.0-SNAPSHOT is no longer available, use released version
+    * [BIGTOP-2753] - Initial support for Debian-9
+    * [BIGTOP-2754] - Revert BIGTOP-2730: Upgrade Zookeeper to version 3.4.10
+    * [BIGTOP-2755] - Gradle needs cacerts file in place on fedora
+    * [BIGTOP-2756] - Get rid of Permission Denied when creating/destroying Docker Provisioner cluster
+    * [BIGTOP-2762] - Zeppelin installation failed due to JDK not installed
+    * [BIGTOP-2763] - Add /user/zeppelin directory for running Spark job on YARN in Zeppelin 
+    * [BIGTOP-2764] - deployment failure when roles include spark::common and spark::yarn*
+    * [BIGTOP-2765] - fix roles logic for spark/zeppelin charms
+    * [BIGTOP-2766] - [Puppet] Spark worker startup failed due to default master_url is yarn
+    * [BIGTOP-2771] - ambari: build failed due to using third-party ConcurrentHashMap instead of the standard one unnecessarily
+    * [BIGTOP-2774] - gradlew toolchain does not work on Ubuntu 16.04.2/Puppet 3.8.5
+    * [BIGTOP-2775] - Make open jdk 8 available on bigtop/puppet:debian-8
+    * [BIGTOP-2781] - [Provisioner] 127.0.0.1 does not successfully inserted after BIGTOP-2756
+    * [BIGTOP-2788] - Corrects Apex patch for version 3.6.0
+    * [BIGTOP-2789] - Ambari: installing ODPi mpack fails due to changing its file name
+    * [BIGTOP-2790] - Ambari: deploying cluster fails due to ambari-agent version mismatch
+    * [BIGTOP-2793] - BIGTOP-2790 broke Ambari build on rpm-based system
+    * [BIGTOP-2796] - Bigtop Zookeeper(3.4.6) package conflict with Ubuntu 16.04 Zookeeper(3.4.8)
+    * [BIGTOP-2797] - zeppelin charm external role handling
+    * [BIGTOP-2798] - Apex component has duplicate slf4j binding
+    * [BIGTOP-2799] - [Puppet] Flink deployment failure on all supported OS
+    * [BIGTOP-2800] - provisioner fails for kerberos on centos-7
+    * [BIGTOP-2801] - charm race condition when gathering metrics
+    * [BIGTOP-2803] - Minor issues in bigtop.bom
+    * [BIGTOP-2805] - ycsb: turn of autodetection of dependencies by rpm
+    * [BIGTOP-2806] - hue is not installable on debian, ubuntu
+    * [BIGTOP-2808] - Handle deletion of symlinks: update gradle
+
+** Improvement
+    * [BIGTOP-2355] - Update Mahout version to 0.13.0
+    * [BIGTOP-2677] - layer-spark: Improve sparkpi action output
+    * [BIGTOP-2730] - Bump zookeeper to 3.4.10
+    * [BIGTOP-2770] - Juju charm/bundle refresh
+    * [BIGTOP-2777] - make hbase charm more robust
+    * [BIGTOP-2778] - Delete PermSize / MaxPermsize options, no longer support by Java 8
+    * [BIGTOP-2783] - new charm icons for zookeeper and zeppelin
+    * [BIGTOP-2795] - spark charm: fix sparkpi and rework start/stop logic
+    * [BIGTOP-2802] - Some packages don't create necessary groups on debian-based system if the users correspond to them already exist
+    * [BIGTOP-2807] - Upgrade Spark to 2.1.1
+    * [BIGTOP-2812] - Upgrade Zeppelin version to 0.7.2
+    * [BIGTOP-2819] - Polish the README.md for 1.2.1 release
+    * [BIGTOP-2820] - Polish the documentations on Bigtop Wiki for 1.2.1 release
+    * [BIGTOP-2821] - expose extra config options for spark
+    * [BIGTOP-2827] - juju bundle refresh (june 2017)
+    * [BIGTOP-2828] - Since BIGTOP-2775 JDK version has been specified by Bigtop Puppet
+
+** New Feature
+    * [BIGTOP-2253] - Rewrite Bigtop Docker Provisioner to use native solutions and support multi-host cluster deployment
+    * [BIGTOP-2779] - new hive charm
+    * [BIGTOP-2822] - spark charm: leverage puppet config, gpu enablement
+
+** Task
+    * [BIGTOP-2739] - refresh juju bundles with latest charm revs
+    * [BIGTOP-2747] - new charm revs for bigtop-1.2
+    * [BIGTOP-2776] - Bump Apache Apex version to 3.6.0
+    * [BIGTOP-2785] - Define Bigtop 1.2.1 release BOM
+    * [BIGTOP-2786] - Push Bigtop 1.2.1 Docker build slaves to Docker Hub
+
 * Release 1.2.0 (2017-04-04)
 
 Release Notes - Bigtop - Version 1.2.0
