@@ -24,10 +24,7 @@ RPMS=( \
     fedora-25 \
     opensuse-42.1 \
 )
-RPM_JDK=java-1.8.0-openjdk-devel.x86_64
-
 DEBS=( \
     debian-8 \
     ubuntu-16.04 \
 )
-DEB_JDK=openjdk-8-jdk

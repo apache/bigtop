@@ -136,7 +136,6 @@ hadoop_cluster_node::cluster_components:
   - spark
   - yarn
   - zookeeper
-bigtop::jdk_package_name: "openjdk-7-jre-headless"
 bigtop::bigtop_repo_uri: "http://bigtop-repos.s3.amazonaws.com/releases/1.2.0/ubuntu/16.04/x86_64"
 ```
 
