@@ -32,11 +32,12 @@ set -e
 
 case "$1" in
     install|upgrade)
+        getent group flume >/dev/null || groupadd -r flume
         if ! getent passwd flume >/dev/null; then
                 # Adding system user: flume .
                 adduser \
                   --system \
-                  --group \
+                  --ingroup flume \
                   --home /var/lib/flume \
                   --gecos "Flume User" \
                   --shell /bin/false \

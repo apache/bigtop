@@ -55,11 +55,15 @@ case ${ID}-${VERSION_ID} in
 	apt-get update
 	apt-get -y install wget
 	# BIGTOP-2523. in order to install puppet 3.8 we need to get it from puppet repo
-	wget -O /tmp/puppetlabs-release-trusty.deb https://apt.puppetlabs.com/puppetlabs-release-trusty.deb && dpkg -i /tmp/puppetlabs-release-trusty.deb
-	rm -f /tmp/puppetlabs-release-trusty.deb
+	wget -O /tmp/puppetlabs-release-jessie.deb https://apt.puppetlabs.com/puppetlabs-release-jessie.deb && dpkg -i /tmp/puppetlabs-release-jessie.deb
+	rm -f /tmp/puppetlabs-release-jessie.deb
 	apt-get update
 	apt-get -y install curl sudo unzip puppet
 	;;
+    debian-9*)
+        apt-get update
+        apt-get -y install wget curl sudo unzip puppet
+        ;;
     opensuse-*)
 	zypper --gpg-auto-import-keys install -y curl sudo unzip wget puppet suse-release ca-certificates-mozilla net-tools tar
 	;;

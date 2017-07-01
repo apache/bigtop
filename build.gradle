@@ -23,7 +23,7 @@ buildscript {
 }
 
 plugins {
-  id "de.undercouch.download" version "2.0.0"
+  id "de.undercouch.download" version "3.2.0"
   id "org.nosphere.apache.rat" version "0.2.0"
 }
 
@@ -226,7 +226,7 @@ task toolchain(type:Exec,
     description: 'Setup dev. env via toolchain; Requires: Puppet, sudo',
     group: DEVENV_GROUP) {
   def command = [
-      'sudo', 'puppet', 'apply', '-d',
+      'sudo', 'puppet', 'apply', '-d', '--parser', 'future',
       "--modulepath=${projectDir.absolutePath}:/etc/puppet/modules", '-e',
       'include bigtop_toolchain::installer'
   ]

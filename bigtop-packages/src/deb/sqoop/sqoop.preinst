@@ -32,11 +32,12 @@ set -e
 
 case "$1" in
     install|upgrade)
+        getent group sqoop >/dev/null || groupadd -r sqoop
         if ! getent passwd sqoop >/dev/null; then
                 # Adding system user: sqoop .
                 adduser \
                   --system \
-                  --group \
+                  --ingroup sqoop \
                   --home /var/lib/sqoop \
                   --gecos "Sqoop User" \
                   --shell /bin/false \

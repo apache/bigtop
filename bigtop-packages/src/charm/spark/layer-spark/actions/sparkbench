@@ -16,8 +16,9 @@
 set -ex
 
 if ! charms.reactive is_state 'spark.started'; then
+    action-set outcome="failure"
     action-fail 'Spark not yet ready'
-    exit
+    exit 1
 fi
 
 # Do not call this script directly. Call it via one of the symlinks. The
@@ -138,11 +139,14 @@ if [ -f "${SB_APPS}" ]; then
     # send raw data (benchmark-raw takes a file)
     echo ${DATA} > ${RESULT_LOG}
     benchmark-raw ${RESULT_LOG}
+    action-set outcome="success"
   else
-    echo "ERROR: Invalid benchmark (${BENCHMARK})"
+    action-set outcome="failure"
+    action-fail "ERROR: Invalid benchmark (${BENCHMARK})"
     exit 1
   fi
 else
-  echo "ERROR: Could not find SparkBench application list"
+  action-set outcome="failure"
+  action-fail "ERROR: Could not find SparkBench application list"
   exit 1
 fi

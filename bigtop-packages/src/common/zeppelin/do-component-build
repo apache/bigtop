@@ -30,36 +30,31 @@ if [ $HOSTTYPE = "powerpc64le" ] ; then
   sed  -i "s|<version>0.0.25</version>|<version>1.1</version>|" zeppelin-web/pom.xml
 fi
 
-t="scala.version"
-find . -name pom.xml -exec sed -i "s#<$t>.*</$t>#<$t>${SCALA_VERSION}</$t>#" {} \;
-t="scala.binary.version"
-find . -name pom.xml -exec sed -i "s#<$t>.*</$t>#<$t>${SCALA_VERSION%.*}</$t>#" {} \;
-t="scala.macros.version"
-find . -name pom.xml -exec sed -i "s#<$t>.*</$t>#<$t>2.1.0</$t>#" {} \;
-t="spark.version"
-find . -name pom.xml -exec sed -i "s#<$t>.*</$t>#<$t>${SPARK_VERSION}</$t>#" {} \;
-t="hadoop.version"
-find . -name pom.xml -exec sed -i "s#<$t>.*</$t>#<$t>${HADOOP_VERSION}</$t>#" {} \;
-t="hbase.hbase.version"
-find . -name pom.xml -exec sed -i "s#<$t>.*</$t>#<$t>${HBASE_VERSION}</$t>#" {} \;
-t="hbase.hadoop.version"
-find . -name pom.xml -exec sed -i "s#<$t>.*</$t>#<$t>${HADOOP_VERSION}</$t>#" {} \;
-t="ignite.version"
-find . -name pom.xml -exec sed -i "s#<$t>.*</$t>#<$t>${IGNITE_HADOOP_VERSION}</$t>#" {} \;
+./dev/change_scala_version.sh ${SCALA_VERSION%.*}
 
-BUILD_OPTS="-Divy.home=${HOME}/.ivy2 -Dsbt.ivy.home=${HOME}/.ivy2 -Duser.home=${HOME} \
-            -Drepo.maven.org=$IVY_MIRROR_PROP \
-            -Dreactor.repo=file://${HOME}/.m2/repository \
+BUILD_OPTS="-Dscala.version=${SCALA_VERSION} \
+            -Dscala.binary.version=${SCALA_VERSION%.*} \
+            -Dscala.macros.version=2.1.0 \
+            -Dspark.version=${SPARK_VERSION} \
+            -Dhadoop.version=${HADOOP_VERSION} \
+            -Dhbase.hbase.version=${HBASE_VERSION} \
+            -Dhbase.hadoop.version=${HADOOP_VERSION} \
+            -Dignite.version=${IGNITE_HADOOP_VERSION} \
+            -Dflink.version=${FLINK_VERSION} \
+            -Pspark-${SPARK_VERSION%.*} \
+            -Phadoop-${HADOOP_VERSION%.*} \
             -Pscala-${SCALA_VERSION%.*} \
+            -Ppyspark \
+            -Psparkr \
             -Pbuild-distr"
-            
+
 if [ "$ZEPPELIN_RUN_TESTS" = "true" ]; then
   BUILD_OPTS="$BUILD_OPTS -DskipTests=false"
 else
   BUILD_OPTS="$BUILD_OPTS -DskipTests"
 fi
 
-export MAVEN_OPTS="-Xmx1500m -Xms1500m -XX:MaxPermSize=256m"
+export MAVEN_OPTS="-Xmx1500m -Xms1500m"
 
 mvn $BUILD_OPTS clean package
 

@@ -82,7 +82,7 @@ sed -i.bak "/http:\/\/repository.codehaus.org/a\\
                 <enabled>false</enabled>\\
             </releases>" ${WORKDIR}/pom.xml
 
-export MAVEN_OPTS="-Xmx512m -XX:MaxPermSize=128m"
+export MAVEN_OPTS="-Xmx512m"
 # Invoke Oozie build script
 ${WORKDIR}/bin/mkdistro.sh -DjavaVersion=${JDK_VERSION} -DskipTests -Phadoop-2 -Puber -Dhadoop.version=${HADOOP_VERSION} -Dhadoop.auth.version=${HADOOP_VERSION} -Dhive.version=${HIVE_VERSION} -Dpig.version=${PIG_VERSION} -Dsqoop.version=${SQOOP_VERSION} -Dspark.version=${SPARK_VERSION} ${EXTRA_GOALS} -Dmaven.repo.local=${HOME}/.m2/repository "$@"
 MKDISTRO_RESULT=$?

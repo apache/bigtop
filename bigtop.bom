@@ -91,13 +91,12 @@ bigtop {
            dependsOn := [list of dependents]
       So, below phoenix and giraph ought to be build after the hbase has been built
 
-      To build a component without its dependencies, simply comment out
-      dependencies section or run build with -Dbuildnodeps=true
+      To build a component with its dependencies, run build with -Dbuildwithdeps=true
   */
   dependencies = [
     zookeeper:['hadoop', 'hbase'],
     hadoop:['ignite-hadoop', 'hbase', 'crunch', 'pig', 'hive', 'tez', 'sqoop', 'sqoop2',
-      'oozie', 'mahout', 'flume', 'giraph', 'solr', 'crunch', 'spark','spark1',
+      'oozie', 'mahout', 'flume', 'giraph', 'solr', 'spark','spark1',
       'phoenix', 'alluxio', 'kafka', 'ycsb', 'kite', 'hama', 'zeppelin',
       'tajo', 'apex'
     ],
@@ -151,7 +150,7 @@ bigtop {
     'hbase' {
       name    = 'hbase'
       relNotes = 'Apache HBase'
-      version { base = '1.1.3'; pkg = base; release = 1 }
+      version { base = '1.1.9'; pkg = base; release = 1 }
       tarball { destination = "${name}-${version.base}.tar.gz"
                 source      = "${name}-${version.base}-src.tar.gz" }
       url     { download_path = "/$name/${version.base}/"
@@ -223,7 +222,7 @@ bigtop {
     'mahout' {
       name    = 'mahout'
       relNotes = 'Apache Mahout'
-      version { base = '0.12.2'; pkg = base; release = 1 }
+      version { base = '0.13.0'; pkg = base; release = 1 }
       tarball { destination = "apache-$name-distribution-${version.base}-src.tar.gz"
                 source      = destination }
       url     { download_path = "/$name/${version.base}/"
@@ -305,7 +304,7 @@ bigtop {
       name    = 'spark'
       pkg     = 'spark-core'
       relNotes = 'Apache Spark'
-      version { base = '2.1.0'; pkg = base; release = 1 }
+      version { base = '2.1.1'; pkg = base; release = 1 }
       tarball { destination = "$name-${version.base}.tar.gz"
                 source      = "$name-${version.base}.tgz" }
       url     { download_path = "/$name/$name-${version.base}"
@@ -428,7 +427,7 @@ bigtop {
     'zeppelin' {
       name    = 'zeppelin'
       relNotes = 'Apache Zeppelin'
-      version { base = '0.7.0'; pkg = base; release = 1 }
+      version { base = '0.7.2'; pkg = base; release = 1 }
       tarball { source      = "$name-${version.base}.tgz"
                 destination = "$name-${version.base}.tar.gz" }
       url     { download_path = "/$name/$name-${version.base}/"
@@ -448,7 +447,7 @@ bigtop {
     'apex' {
       name    = 'apex'
       relNotes = 'Apache Apex'
-      version { base = '3.5.0'; pkg = base; release = 1 }
+      version { base = '3.6.0'; pkg = base; release = 1 }
       tarball { source      = "apache-$name-core-${version.base}-source-release.tar.gz"
                 destination = "$name-${version.base}.tar.gz" }
       url     { download_path = "/$name/apache-$name-core-${version.base}/"
@@ -476,7 +475,7 @@ bigtop {
     'ambari' {
       name    = 'ambari'
       relNotes = 'Apache Ambari'
-      version { base = '2.5.0'; pkg = base; release = 1 }
+      version { base = '2.5.0'; pkg = '2.5.0.0'; release = 1 }
       tarball { destination = "apache-$name-${version.base}-src.tar.gz"
                 source      = destination }
       url     { download_path = "/$name/$name-${version.base}/"

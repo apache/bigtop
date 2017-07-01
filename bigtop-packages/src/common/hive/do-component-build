@@ -31,7 +31,7 @@ HIVE_MAVEN_OPTS=" -Dhbase.version=$HBASE_VERSION \
 -Dspark.version=${SPARK1_VERSION}
 "
 
-export MAVEN_OPTS="-Xmx1500m -Xms1500m -XX:MaxPermSize=256m"
+export MAVEN_OPTS="-Xmx1500m -Xms1500m"
 mvn ${HIVE_MAVEN_OPTS} clean install -Phadoop-2,dist "$@"
 
 mkdir -p build/dist

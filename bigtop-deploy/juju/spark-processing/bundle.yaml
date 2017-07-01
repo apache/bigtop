@@ -1,8 +1,11 @@
 services:
   spark:
-    charm: "cs:xenial/spark-24"
+    charm: "cs:xenial/spark-49"
     constraints: "mem=7G root-disk=32G"
     num_units: 2
+    options:
+      driver_memory: "3g"
+      executor_memory: "3g"
     annotations:
       gui-x: "500"
       gui-y: "0"
@@ -10,7 +13,7 @@ services:
       - "0"
       - "1"
   zookeeper:
-    charm: "cs:xenial/zookeeper-16"
+    charm: "cs:xenial/zookeeper-30"
     constraints: "mem=3G root-disk=32G"
     num_units: 3
     annotations:
@@ -21,7 +24,7 @@ services:
       - "3"
       - "4"
   ganglia:
-    charm: "cs:~bigdata-dev/xenial/ganglia-5"
+    charm: "cs:xenial/ganglia-12"
     num_units: 1
     annotations:
       gui-x: "0"
@@ -29,7 +32,7 @@ services:
     to:
       - "5"
   ganglia-node:
-    charm: "cs:~bigdata-dev/xenial/ganglia-node-7"
+    charm: "cs:xenial/ganglia-node-7"
     annotations:
       gui-x: "250"
       gui-y: "400"
@@ -58,13 +61,19 @@ relations:
 machines:
   "0":
     series: "xenial"
+    constraints: "mem=7G root-disk=32G"
   "1":
     series: "xenial"
+    constraints: "mem=7G root-disk=32G"
   "2":
     series: "xenial"
+    constraints: "mem=3G root-disk=32G"
   "3":
     series: "xenial"
+    constraints: "mem=3G root-disk=32G"
   "4":
     series: "xenial"
+    constraints: "mem=3G root-disk=32G"
   "5":
     series: "xenial"
+    constraints: "mem=3G"

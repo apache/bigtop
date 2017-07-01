@@ -239,7 +239,7 @@ Example for HBase:
 
 ```
       name    = 'hbase'
-      version { base = '1.1.3'; pkg = base; release = 1 }
+      version { base = '1.1.9'; pkg = base; release = 1 }
       git     { repo = "https://github.com/apache/hbase.git"
                 ref  = "${version.base}"
                 dir  = "${name}-${version.base}" }

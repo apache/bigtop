@@ -59,9 +59,6 @@ smoke_test_components = CONF['smoke_test_components'].join(',')
 enable_local_repo = CONF['enable_local_repo']
 puts "vagrant conf local repo enabled:  #{enable_local_repo}"
 
-# JDK package name
-jdk = CONF['jdk']
-
 # master node hostname
 bigtop_master = "bigtop1.vagrant"
 
@@ -86,7 +83,6 @@ bigtop::hadoop_head_node: #{bigtop_master}
 hadoop::hadoop_storage_dirs: [/data/1, /data/2]
 bigtop::bigtop_repo_uri: #{repo}
 hadoop_cluster_node::cluster_components: #{components}
-bigtop::jdk_package_name: #{jdk}
 hadoop::common_hdfs::testonly_hdfs_sshkeys: "yes"
 EOF
 SCRIPT

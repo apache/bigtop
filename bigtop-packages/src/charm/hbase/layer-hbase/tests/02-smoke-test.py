@@ -27,11 +27,11 @@ class TestDeploy(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.d = amulet.Deployment(series='xenial')
-        cls.d.add('hbase', 'cs:xenial/hbase')
-        cls.d.add('namenode', 'cs:xenial/hadoop-namenode')
-        cls.d.add('plugin', 'cs:xenial/hadoop-plugin')
-        cls.d.add('slave', 'cs:xenial/hadoop-slave')
-        cls.d.add('zookeeper', 'cs:xenial/zookeeper')
+        cls.d.add('hbase')
+        cls.d.add('namenode', charm='hadoop-namenode')
+        cls.d.add('plugin', charm='hadoop-plugin')
+        cls.d.add('slave', charm='hadoop-slave')
+        cls.d.add('zookeeper')
 
         cls.d.relate('hbase:hadoop', 'plugin:hadoop-plugin')
         cls.d.relate('hbase:zookeeper', 'zookeeper:zookeeper')

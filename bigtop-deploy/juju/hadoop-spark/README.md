@@ -23,38 +23,39 @@ using a simple programming model.
 Hadoop is designed to scale from a few servers to thousands of machines,
 each offering local computation and storage. Rather than rely on hardware
 to deliver high-availability, Hadoop can detect and handle failures at the
-application layer. This provides a highly-available service on top of a cluster
-of machines, each of which may be prone to failure.
+application layer. This provides a highly-available service on top of a
+cluster of machines, each of which may be prone to failure.
 
-Spark is a fast and general engine for large-scale data processing.
+Apache Spark is a fast and general engine for large-scale data processing.
+Learn more at [spark.apache.org][].
 
-This bundle provides a complete deployment of Hadoop and Spark components from
-[Apache Bigtop][] that performs distributed data processing at scale. Ganglia
-and rsyslog applications are also provided to monitor cluster health and syslog
-activity.
+This bundle provides a complete deployment of Hadoop and Spark components
+from [Apache Bigtop][] that performs distributed data processing at scale.
+Ganglia and rsyslog applications are also provided to monitor cluster health
+and syslog activity.
 
+[spark.apache.org]: http://spark.apache.org/
 [Apache Bigtop]: http://bigtop.apache.org/
 
 ## Bundle Composition
 
-The applications that comprise this bundle are spread across 9 units as
+The applications that comprise this bundle are spread across 5 units as
 follows:
 
-  * NameNode (HDFS)
-  * ResourceManager (YARN)
+  * NameNode v2.7.3
+  * ResourceManager v2.7.3
     * Colocated on the NameNode unit
-  * Slave (DataNode and NodeManager)
+  * Slave (DataNode and NodeManager) v2.7.3
     * 3 separate units
-  * Spark (Master in yarn-client mode)
-  * Zookeeper
-    * 3 separate units
+  * Spark (Driver in yarn-client mode) v2.1.0
   * Client (Hadoop endpoint)
+    * Colocated on the Spark unit
   * Plugin (Facilitates communication with the Hadoop cluster)
-    * Colocated on the Spark and Client units
+    * Colocated on the Spark/Client unit
   * Ganglia (Web interface for monitoring cluster metrics)
-    * Colocated on the Client unit
+    * Colocated on the Spark/Client unit
   * Rsyslog (Aggregate cluster syslog events in a single location)
-    * Colocated on the Client unit
+    * Colocated on the Spark/Client unit
 
 Deploying this bundle results in a fully configured Apache Bigtop
 cluster on any supported cloud, which can be scaled to meet workload
@@ -63,9 +64,8 @@ demands.
 
 # Deploying
 
-A working Juju installation is assumed to be present. If Juju is not yet set
-up, please follow the [getting-started][] instructions prior to deploying this
-bundle.
+This charm requires Juju 2.0 or greater. If Juju is not yet set up, please
+follow the [getting-started][] instructions prior to deploying this bundle.
 
 > **Note**: This bundle requires hardware resources that may exceed limits
 of Free-tier or Trial accounts on some clouds. To deploy to these
@@ -77,17 +77,9 @@ Deploy this bundle from the Juju charm store with the `juju deploy` command:
 
     juju deploy hadoop-spark
 
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, use [juju-quickstart][] with the following syntax: `juju quickstart
-hadoop-spark`.
-
 Alternatively, deploy a locally modified `bundle.yaml` with:
 
     juju deploy /path/to/bundle.yaml
-
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, use [juju-quickstart][] with the following syntax: `juju quickstart
-/path/to/bundle.yaml`.
 
 The charms in this bundle can also be built from their source layers in the
 [Bigtop charm repository][].  See the [Bigtop charm README][] for instructions
@@ -100,7 +92,6 @@ mirror options. See [Configuring Models][] for more information.
 
 [getting-started]: https://jujucharms.com/docs/stable/getting-started
 [bundle.yaml]: https://github.com/apache/bigtop/blob/master/bigtop-deploy/juju/hadoop-spark/bundle.yaml
-[juju-quickstart]: https://launchpad.net/juju-quickstart
 [Bigtop charm repository]: https://github.com/apache/bigtop/tree/master/bigtop-packages/src/charm
 [Bigtop charm README]: https://github.com/apache/bigtop/blob/master/bigtop-packages/src/charm/README.md
 [Configuring Models]: https://jujucharms.com/docs/stable/models-config
@@ -124,8 +115,8 @@ Once they all indicate that they are ready, perform application smoke tests
 to verify that the bundle is working as expected.
 
 ## Smoke Test
-The charms for each core component (namenode, resourcemanager, slave, spark,
-and zookeeper) provide a `smoke-test` action that can be used to verify the
+The charms for each core component (namenode, resourcemanager, slave, and
+spark) provide a `smoke-test` action that can be used to verify the
 application is functioning as expected. Note that the 'slave' component runs
 extensive tests provided by Apache Bigtop and may take up to 30 minutes to
 complete. Run the smoke-test actions as follows:
@@ -134,26 +125,16 @@ complete. Run the smoke-test actions as follows:
     juju run-action resourcemanager/0 smoke-test
     juju run-action slave/0 smoke-test
     juju run-action spark/0 smoke-test
-    juju run-action zookeeper/0 smoke-test
-
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju action do <application>/0 smoke-test`.
 
 Watch the progress of the smoke test actions with:
 
     watch -n 2 juju show-action-status
-
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju action status`.
 
 Eventually, all of the actions should settle to `status: completed`.  If
 any report `status: failed`, that application is not working as expected. Get
 more information about a specific smoke test with:
 
     juju show-action-output <action-id>
-
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju action fetch <action-id>`.
 
 ## Utilities
 Applications in this bundle include command line and web utilities that
@@ -164,10 +145,6 @@ of YARN NodeManager units with the following:
 
     juju run --application namenode "su hdfs -c 'hdfs dfsadmin -report'"
     juju run --application resourcemanager "su yarn -c 'yarn node -list'"
-
-Show the list of Zookeeper nodes with the following:
-
-    juju run --unit zookeeper/0 'echo "ls /" | /usr/lib/zookeeper/bin/zkCli.sh'
 
 To access the HDFS web console, find the `PUBLIC-ADDRESS` of the namenode
 application and expose it:
@@ -204,7 +181,7 @@ The web interface will be available at the following URL:
 # Monitoring
 
 This bundle includes Ganglia for system-level monitoring of the namenode,
-resourcemanager, slave, spark, and zookeeper units. Metrics are sent to a
+resourcemanager, slave, and spark units. Metrics are sent to a
 centralized ganglia unit for easy viewing in a browser. To view the ganglia web
 interface, find the `PUBLIC-ADDRESS` of the Ganglia application and expose it:
 
@@ -219,7 +196,7 @@ The web interface will be available at:
 # Logging
 
 This bundle includes rsyslog to collect syslog data from the namenode,
-resourcemanager, slave, spark, and zookeeper units. These logs are sent to a
+resourcemanager, slave, and spark units. These logs are sent to a
 centralized rsyslog unit for easy syslog analysis. One method of viewing this
 log data is to simply cat syslog from the rsyslog unit:
 
@@ -278,27 +255,17 @@ run with `juju run-action`:
       enqueued: 2016-02-04 14:55:14 +0000 UTC
       started: 2016-02-04 14:55:27 +0000 UTC
 
-The `spark` charm in this bundle also provides several benchmarks to gauge
-the performance of the Spark cluster. Each benchmark is an action that can be
-run with `juju run-action`:
+The `spark` charm in this bundle provides benchmarks to gauge the performance
+of the Spark/YARN cluster. Each benchmark is an action that can be run with
+`juju run-action`:
 
-    $ juju actions spark | grep Bench
-    connectedcomponent                Run the Spark Bench ConnectedComponent benchmark.
-    decisiontree                      Run the Spark Bench DecisionTree benchmark.
-    kmeans                            Run the Spark Bench KMeans benchmark.
-    linearregression                  Run the Spark Bench LinearRegression benchmark.
-    logisticregression                Run the Spark Bench LogisticRegression benchmark.
-    matrixfactorization               Run the Spark Bench MatrixFactorization benchmark.
-    pagerank                          Run the Spark Bench PageRank benchmark.
-    pca                               Run the Spark Bench PCA benchmark.
-    pregeloperation                   Run the Spark Bench PregelOperation benchmark.
-    shortestpaths                     Run the Spark Bench ShortestPaths benchmark.
-    sql                               Run the Spark Bench SQL benchmark.
-    stronglyconnectedcomponent        Run the Spark Bench StronglyConnectedComponent benchmark.
-    svdplusplus                       Run the Spark Bench SVDPlusPlus benchmark.
-    svm                               Run the Spark Bench SVM benchmark.
+    $ juju actions spark
+    ...
+    pagerank                          Calculate PageRank for a sample data set
+    sparkpi                           Calculate Pi
+    ...
 
-    $ juju run-action spark/0 svdplusplus
+    $ juju run-action spark/0 pagerank
     Action queued with id: 339cec1f-e903-4ee7-85ca-876fb0c3d28e
 
     $ juju show-action-output 339cec1f-e903-4ee7-85ca-876fb0c3d28e
@@ -307,38 +274,39 @@ run with `juju run-action`:
         composite:
           direction: asc
           units: secs
-          value: "200.754000"
-        raw: |
-          SVDPlusPlus,2016-11-02-03:08:26,200.754000,85.974071,.428255,0,SVDPlusPlus-MLlibConfig,,,,,10,,,50000,4.0,1.3,
-        start: 2016-11-02T03:08:26Z
-        stop: 2016-11-02T03:11:47Z
-      results:
-        duration:
-          direction: asc
-          units: secs
-          value: "200.754000"
-        throughput:
-          direction: desc
-          units: MB/sec
-          value: ".428255"
+          value: "83"
+        start: 2017-04-12T23:22:38Z
+        stop: 2017-04-12T23:24:01Z
+      output: '{''status'': ''completed''}'
     status: completed
     timing:
-      completed: 2016-11-02 03:11:48 +0000 UTC
-      enqueued: 2016-11-02 03:08:21 +0000 UTC
-      started: 2016-11-02 03:08:26 +0000 UTC
+      completed: 2017-04-12 23:24:02 +0000 UTC
+      enqueued: 2017-04-12 23:22:36 +0000 UTC
+      started: 2017-04-12 23:22:37 +0000 UTC
 
 
 # Scaling
 
-By default, three Hadoop slave and three zookeeper units are deployed. Scaling
-these applications is as simple as adding more units. To add one unit:
+By default, three Hadoop slave units are deployed. Scaling these is as simple
+as adding more units. To add one unit:
 
     juju add-unit slave
-    juju add-unit zookeeper
 
 Multiple units may be added at once.  For example, add four more slave units:
 
     juju add-unit -n4 slave
+
+
+# Issues
+
+Apache Bigtop tracks issues using JIRA (Apache account required). File an
+issue for this bundle at:
+
+https://issues.apache.org/jira/secure/CreateIssue!default.jspa
+
+Ensure `Bigtop` is selected as the project. Typically, bundle issues are filed
+in the `deployment` component with the latest stable release selected as the
+affected version. Any uncertain fields may be left blank.
 
 
 # Contact Information
@@ -351,6 +319,6 @@ Multiple units may be added at once.  For example, add four more slave units:
 - [Apache Bigtop home page](http://bigtop.apache.org/)
 - [Apache Bigtop issue tracking](http://bigtop.apache.org/issue-tracking.html)
 - [Apache Bigtop mailing lists](http://bigtop.apache.org/mail-lists.html)
-- [Juju Bigtop charms](https://jujucharms.com/q/apache/bigtop)
+- [Juju Big Data](https://jujucharms.com/big-data)
+- [Juju Bigtop charms](https://jujucharms.com/q/bigtop)
 - [Juju mailing list](https://lists.ubuntu.com/mailman/listinfo/juju)
-- [Juju community](https://jujucharms.com/community)

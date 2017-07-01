@@ -17,7 +17,9 @@ class bigtop_toolchain::jdk {
   case $::operatingsystem {
     /Debian/: {
       require apt
-      require apt::backports
+      unless $os[release][major] > "8" {
+         require apt::backports
+      }
 
       package { 'openjdk-8-jdk' :
         ensure => present,
@@ -41,6 +43,12 @@ class bigtop_toolchain::jdk {
     /(CentOS|Amazon|Fedora)/: {
       package { 'java-1.8.0-openjdk-devel' :
         ensure => present
+      }
+      if ($::operatingsystem == "Fedora") {
+        file { '/usr/lib/jvm/java-1.8.0-openjdk/jre/lib/security/cacerts':
+          ensure => 'link',
+          target => '/etc/pki/java/cacerts'
+        }
       }
     }
     /OpenSuSE/: {

@@ -1,10 +1,13 @@
 name: zeppelin
-summary: A web-based notebook that enables interactive data analytics.
+summary: Zeppelin from Apache Bigtop
 maintainer: Juju Big Data <bigdata@lists.ubuntu.com>
-description: |
+description: >
   Apache Zeppelin is a web-based notebook that enables interactive data
   analytics. You can make beautiful data-driven, interactive, and collaborative
   documents with SQL, Scala and more.
+
+  This charm provides version 0.7.0 of the Zeppelin application from Apache
+  Bigtop.
 tags: ["analytics"]
 provides:
   client:
