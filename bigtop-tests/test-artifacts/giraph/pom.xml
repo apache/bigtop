@@ -21,12 +21,12 @@
   <parent>
     <groupId>org.apache.bigtop.itest</groupId>
     <artifactId>bigtop-smokes</artifactId>
-    <version>1.2.0</version>
+    <version>1.2.1</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>giraph-smoke</artifactId>
-  <version>1.2.0</version>
+  <version>1.2.1</version>
 
   <name>giraphsmoke</name>
 

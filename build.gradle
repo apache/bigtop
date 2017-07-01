@@ -148,7 +148,7 @@ allprojects {
   apply plugin: 'maven'
 
   group = 'org.apache.bigtop'
-  version = '1.2.0'
+  version = '1.2.1'
 
   description = """Bigtop"""
 
