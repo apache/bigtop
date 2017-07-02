@@ -24,18 +24,20 @@ The primary goal of Apache Bigtop is to build a community around the packaging a
 Immediately Get Started with Deployment and Smoke Testing of BigTop
 ===================================================================
 
-The simplest way to get a feel for how bigtop works, is to just cd into `bigtop-deploy/vm` and try out the recipes under vagrant-puppet-vm, vagrant-puppet-docker, and so on.  Each one rapidly spins up, and runs the bigtop smoke tests on, a local bigtop based big data distribution.  Once you get the gist, you can hack around with the recipes to learn how the puppet/rpm/smoke-tests all work together, going deeper into the components you are interested in as described below.
+The simplest way to get a feel for how bigtop works, is to just cd into `provisioner` and try out the recipes under vagrant or docker.  Each one rapidly spins up, and runs the bigtop smoke tests on, a local bigtop based big data distribution. Once you get the gist, you can hack around with the recipes to learn how the puppet/rpm/smoke-tests all work together, going deeper into the components you are interested in as described below.
 
 Quick overview of source code directories
 =========================================
 
-* __bigtop-deploy__ : deployment scripts, puppet stuff, VM utilities for Apache Bigtop.
-* __bigtop-packages__ : RPM/DEB specifications for Apache Bigtop subcomponents
+* __bigtop-deploy__ : deployment scripts and puppet stuff for Apache Bigtop.
+* __bigtop-packages__ : RPM/DEB specifications for Apache Bigtop subcomponents.
 * __bigtop-test-framework__ : The source code for the iTest utilities (framework used by smoke tests).
 * __bigtop-tests__ : 
 * __test-artifacts__ : source for tests.
 * __test-execution__ : maven pom drivers for running the integration tests found in test-artifacts.
 * __bigtop-toolchain__ : puppet scripts for setting up an instance which can build Apache Bigtop, sets up utils like jdk/maven/protobufs/...
+* __provisioner__ : Vagrant and Docker Provisioner that automatically spin up Hadoop environment with one click.
+* __docker__ : Dockerfiles and Docker Sandbox build scripts.
 
 Also, there is a new project underway, Apache Bigtop blueprints, which aims to create templates/examples that demonstrate/compare various Apache Hadoop ecosystem components with one another.
 
@@ -91,17 +93,17 @@ You can go to the [Apache Bigtop website](http://bigtop.apache.org/) for notes o
 Getting Started
 ===============
 
-Below are some recipes for getting started with using Apache Bigtop. As Apache Bigtop has different subprojects, these recipes will continue to evolve.  
+Below are some recipes for getting started with using Apache Bigtop. As Apache Bigtop has different subprojects, these recipes will continue to evolve.
 For specific questions it's always a good idea to ping the mailing list at dev-subscribe@bigtop.apache.org to get some immediate feedback, or [open a JIRA](https://issues.apache.org/jira/browse/BIGTOP).
 
-For Users: Running the smoke tests.
+For Users: Running the smoke tests
 -----------------------------------
 
 The simplest way to test bigtop is described in bigtop-tests/smoke-tests/README file
 
 For integration (API level) testing with maven, read on. 
 
-For Users: Running the integration tests.
+For Users: Running the integration tests
 -----------------------------------------
 
 WARNING: since testing packages requires installing them on a live system it is highly recommended to use VMs for that. Testing Apache Bigtop is done using iTest framework. The tests are organized in maven submodules, with one submodule per Apache Bigtop component.  The bigtop-tests/test-execution/smokes/pom.xml defines all submodules to be tested, and each submodule is in its own directory under smokes/, for example:
@@ -159,15 +161,13 @@ For Users: Creating Your Own Apache Hadoop Environment
 
 Another common use case for Apache Bigtop is creating / setting up your own Apache Hadoop distribution.  
 For details on this, check out the bigtop-deploy/README.md file, which describes how to use the puppet repos
-to create and setup your VMs.  
-There is a current effort underway to create vagrant/docker recipes as well, which will be contained in the 
-bigtop-deploy/ package.     
-
+to create and setup your VMs.
+You can also try out provisioner to quickly get the idea how it works.
 
 For Developers: Building the entire distribution from scratch
 -------------------------------------------------------------
  
-Packages have been built for CentOS/RHEL 5 and 6, Fedora 18, SuSE Linux Enterprise 11, OpenSUSE12.2, Ubuntu LTS Lucid and Precise, and Ubuntu Quantal. They can probably be built for other platforms as well. Some of the binary artifacts might be compatible with other closely related distributions.
+Packages have been built for CentOS, Fedora, OpenSUSE, Ubuntu, and Debian. They can probably be built for other platforms as well. Some of the binary artifacts might be compatible with other closely related distributions.
  
 __On all systems, Building Apache Bigtop requires certain set of tools__
 
@@ -175,14 +175,14 @@ __On all systems, Building Apache Bigtop requires certain set of tools__
 
     ./gradlew toolchain
 
-  This build task expected Puppet 3.x to be installed; user has to have sudo permissions. The task will pull down and install
+  This build task expected Puppet to be installed; user has to have sudo permissions. The task will pull down and install
   all development dependencies, frameworks and SDKs, required to build the stack on your platform.
 
   To immediately set environment after running toolchain, run
 
     . /etc/profile.d/bigtop.sh
 
-* __Building packages__ : `gradle [component-name]-[rpm|deb]`
+* __Building packages__ : `gradle [component-name]-pkg`
 
   If -Dbuildwithdeps=true is set, the Gradle will follow the order of the build specified in
   the "dependencies" section of bigtop.bom file. Otherwise just a single component will get build (original behavior).
@@ -191,7 +191,7 @@ __On all systems, Building Apache Bigtop requires certain set of tools__
   name with -Dbomfile=<filename> system property in the build time.
 
   You can visualize all tasks dependencies by running `gradle tasks --all`
-* __Building local YUM/APT repositories__ : `gradle [component-name]-[yum|apt]`
+* __Building local YUM/APT repositories__ : `gradle [yum|apt]`
 
 * __Recommended build environments__
 
@@ -200,10 +200,10 @@ __On all systems, Building Apache Bigtop requires certain set of tools__
   environment configured and cached. All currently supported OSes could be pulled
   from official Bigtop repository at https://hub.docker.com/r/bigtop/slaves/tags/
 
-  To build a component (bigtop-groovy) for a particular OS (ubuntu-14.04) you can
+  To build a component (bigtop-groovy) for a particular OS (ubuntu-16.04) you can
   run the following from a clone of Bigtop workspace (assuming your system has
   Docker engine setup and working)
-  ```docker run --rm -u jenkins:jenkins -v `pwd`:/ws --workdir /ws bigtop/slaves:trunk-ubuntu-14.04
+  ```docker run --rm -u jenkins:jenkins -v `pwd`:/ws --workdir /ws bigtop/slaves:trunk-ubuntu-16.04
   bash -l -c './gradlew allclean ; ./gradlew bigtop-groovy-pkg'```
 
 For Developers: Building and modifying the web site
