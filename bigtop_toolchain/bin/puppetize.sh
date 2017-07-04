@@ -72,7 +72,9 @@ case ${ID}-${VERSION_ID} in
 	yum -y install curl sudo unzip wget puppet tar
 	;;
     centos-7*)
-        rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-el-7.noarch.rpm
+	if [ $HOSTTYPE = "x86_64" ] ; then
+		rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-el-7.noarch.rpm
+	fi
 	yum -y install hostname curl sudo unzip wget puppet
 	;;
     *)
