@@ -21,6 +21,7 @@ from charms.layer.apache_bigtop_base import Bigtop
 from charms import layer
 from charmhelpers.core import hookenv, host, unitdata
 from charmhelpers.fetch.archiveurl import ArchiveUrlFetchHandler
+from charmhelpers.payload import archive
 
 
 class Spark(object):
@@ -308,14 +309,45 @@ class Spark(object):
             f.write(s)
 
     def install_demo(self):
-        '''
-        Install sparkpi.sh to /home/ubuntu (executes SparkPI example app)
-        '''
-        demo_source = 'scripts/sparkpi.sh'
-        demo_target = '/home/ubuntu/sparkpi.sh'
-        Path(demo_source).copy(demo_target)
-        Path(demo_target).chmod(0o755)
-        Path(demo_target).chown('ubuntu', 'hadoop')
+        """
+        Install sparkpi.sh and sample data to /home/ubuntu.
+
+        The sparkpi.sh script demonstrates spark-submit with the SparkPi
+        example. This small script is packed into the spark charm source in the
+        ./scripts subdirectory.
+
+        The sample data is used for benchmarks (only PageRank for now). This
+        may grow quite large in the future, so we utilize Juju Resources for
+        getting this data onto the unit.
+        """
+        # Handle sparkpi.sh
+        script_source = 'scripts/sparkpi.sh'
+        script_target = '/home/ubuntu/sparkpi.sh'
+        Path(script_source).copy(script_target)
+        Path(script_target).chmod(0o755)
+        Path(script_target).chown('ubuntu', 'hadoop')
+
+        # Handle sample data
+        filename = hookenv.resource_get('sample-data')
+        filepath = filename and Path(filename)
+        if filepath and filepath.exists() and filepath.stat().st_size:
+            sample_target = '/home/ubuntu'
+            new_hash = host.file_hash(filename)
+            old_hash = unitdata.kv().get('sample-data.hash')
+            if new_hash != old_hash:
+                hookenv.status_set('maintenance', 'extracting sample-data')
+                # Extract the sample data; since sample data does not impact
+                # functionality, log any extraction error but don't fail.
+                try:
+                    archive.extract(filepath, destpath=sample_target)
+                except Exception:
+                    hookenv.log('Error extracting Spark sample data: {}'
+                                .format(filepath))
+                else:
+                    unitdata.kv().set('sample-data.hash', new_hash)
+                    hookenv.status_set('maintenance', 'sample-data extracted')
+            else:
+                hookenv.log('Resource sample-data is unchanged')
 
     def start(self):
         '''
