@@ -49,13 +49,13 @@ class Spark(object):
             master = 'spark://{}'.format(nodes_str)
         return master
 
-    def install_benchmark(self):
+    def handle_sparkbench(self):
         """
-        Install and configure SparkBench.
+        Install/configure/remove Spark-Bench based on user config.
 
         If config[spark_bench_enabled], fetch, install, and configure
-        SparkBench on initial invocation. Subsequent invocations will skip the
-        fetch/install, but will reconfigure SparkBench since we may need to
+        Spark-Bench on initial invocation. Subsequent invocations will skip the
+        fetch/install, but will reconfigure Spark-Bench since we may need to
         adjust the data dir (eg: benchmark data is stored in hdfs when spark
         is in yarn mode; locally in all other execution modes).
         """
@@ -65,11 +65,7 @@ class Spark(object):
             # Fetch/install on our first go-round, then set unit data so we
             # don't reinstall every time this function is called.
             if not unitdata.kv().get('spark_bench.installed', False):
-                if utils.cpu_arch() == 'ppc64le':
-                    sb_url = hookenv.config()['spark_bench_ppc64le']
-                else:
-                    # TODO: may need more arch cases (go with x86 sb for now)
-                    sb_url = hookenv.config()['spark_bench_x86_64']
+                sb_url = hookenv.config()['spark_bench_url']
 
                 Path(sb_dir).rmtree_p()
                 au = ArchiveUrlFetchHandler()
@@ -143,7 +139,6 @@ class Spark(object):
 
     def setup(self):
         self.dist_config.add_users()
-        self.dist_config.add_dirs()
         self.install_demo()
 
     def setup_hdfs_logs(self):
@@ -272,11 +267,12 @@ class Spark(object):
 
         self.patch_worker_master_url(master_ip, master_url)
 
-        # Install SB (subsequent calls will reconfigure existing install)
-        # SparkBench looks for the spark master in /etc/environment
+        # Some spark applications look for envars in /etc/environment
         with utils.environment_edit_in_place('/etc/environment') as env:
             env['MASTER'] = master_url
-        self.install_benchmark()
+            env['SPARK_HOME'] = dc.path('spark_home')
+        # Handle SB (subsequent calls will reconfigure existing install)
+        self.handle_sparkbench()
 
     def patch_worker_master_url(self, master_ip, master_url):
         '''
