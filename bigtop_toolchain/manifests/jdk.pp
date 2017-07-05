@@ -17,8 +17,23 @@ class bigtop_toolchain::jdk {
   case $::operatingsystem {
     /Debian/: {
       require apt
-      unless $os[release][major] > "8" {
+      unless $operatingsystemmajrelease > "8" {
+         # we pin openjdk-8-* and ca-certificates-java to backports
          require apt::backports
+
+         apt::pin { 'backports_jdk':
+            packages => 'openjdk-8-*',
+            priority => 500,
+            release  => 'jessie-backports',
+         } ->
+         apt::pin { 'backports_ca':
+            packages => 'ca-certificates-java',
+            priority => 500,
+            release  => 'jessie-backports',
+         } ->
+         exec {'own_update':
+            command => '/usr/bin/apt-get update'
+         } -> Package['openjdk-8-jdk']
       }
 
       package { 'openjdk-8-jdk' :
