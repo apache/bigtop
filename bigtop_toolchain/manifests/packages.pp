@@ -159,7 +159,7 @@ class bigtop_toolchain::packages {
     ] }
     /(Ubuntu|Debian)/: {
       # Debian-9 is using mariadb instead of mysql
-      if ($operatingsystem == "Debian") and ($os[release][major] > "8") {
+      if ($operatingsystem == "Debian") and ($operatingsystemmajrelease > "8") {
         $mysql_dev="libmariadb-dev"
       } else {
         $mysql_dev="libmysqlclient-dev"
