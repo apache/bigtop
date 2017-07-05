@@ -21,6 +21,7 @@ BIGTOP_VERSION=1.2.0
 RPMS=( \
     centos-6 \
     centos-7 \
+    centos-7-aarch64 \
     fedora-25 \
     opensuse-42.1 \
 )
