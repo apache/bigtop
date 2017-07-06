@@ -50,7 +50,7 @@ def main():
     result_dir.chown('ubuntu', 'ubuntu')
     hookenv.log("values: {} {}".format(num_iter, result_log))
 
-    sample = "/home/ubuntu/SparkBench/PageRank/web-Google.txt"
+    sample = "/home/ubuntu/sample-data/pagerank/web-Google.txt"
     if not os.path.isfile(sample):
         msg = 'Could not find pagerank sample data'
         fail('{}: {}'.format(msg, sample))
