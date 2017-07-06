@@ -140,6 +140,7 @@ class Spark(object):
 
     def setup(self):
         self.dist_config.add_users()
+        self.dist_config.add_dirs()
         self.install_demo()
 
     def setup_hdfs_logs(self):
