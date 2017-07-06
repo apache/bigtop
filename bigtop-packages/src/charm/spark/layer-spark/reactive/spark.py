@@ -17,7 +17,7 @@ import time
 from charms.reactive import RelationBase, when, when_not, is_state, set_state, remove_state, when_any
 from charms.layer.apache_bigtop_base import get_fqdn, get_package_version
 from charms.layer.bigtop_spark import Spark
-from charmhelpers.core import hookenv
+from charmhelpers.core import hookenv, host
 from charms import leadership
 from charms.reactive.helpers import data_changed
 from jujubigdata import utils
@@ -164,12 +164,15 @@ def reinstall_spark():
         # peers are only used to set our MASTER_URL in standalone HA mode
         peers = get_spark_peers()
 
+    # Construct a deployment matrix
+    sample_data = hookenv.resource_get('sample-data')
     deployment_matrix = {
+        'hdfs_ready': is_state('hadoop.hdfs.ready'),
+        'peers': peers,
+        'sample_data': host.file_hash(sample_data) if sample_data else None,
         'spark_master': spark_master_host,
         'yarn_ready': is_state('hadoop.yarn.ready'),
-        'hdfs_ready': is_state('hadoop.hdfs.ready'),
         'zookeepers': zks,
-        'peers': peers,
     }
 
     # If neither config nor our matrix is changing, there is nothing to do.
