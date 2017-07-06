@@ -14,8 +14,6 @@ options:
       - 'bc'
       - 'libgfortran3'
   hadoop-client:
-    groups:
-        - 'hadoop'
     dirs:
       # Dirs are not configurable by Bigtop puppet, but we still set config
       # based on them to avoid hard coding paths; specify dirs that align with
