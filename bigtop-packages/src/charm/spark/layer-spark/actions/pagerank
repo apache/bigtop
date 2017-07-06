@@ -48,15 +48,16 @@ def main():
     if not result_dir.exists():
         result_dir.mkdir()
     result_dir.chown('ubuntu', 'ubuntu')
-    hookenv.log("values: {} {}".format(num_iter, result_log))
+    hookenv.log("pagerank ({} iteration) log: {}".format(num_iter, result_log))
 
-    sample = "/home/ubuntu/sample-data/pagerank/web-Google.txt"
-    if not os.path.isfile(sample):
+    sample_dir = "/home/ubuntu/sample-data"
+    sample_pr = "/home/ubuntu/sample-data/pagerank/web-Google.txt"
+    if not os.path.isfile(sample_pr):
         msg = 'Could not find pagerank sample data'
-        fail('{}: {}'.format(msg, sample))
+        fail('{}: {}'.format(msg, sample_pr))
 
-    # Benchmark input data is packed into our sparkbench.tgz, which makes
-    # it available on all spark units. In yarn mode, however, the nodemanagers
+    # Benchmark input data is packed into a sample-data resource, which makes
+    # it available on all spark units. In yarn mode, the nodemanagers
     # act as the spark workers and will not have access to this local data.
     # In yarn mode, copy our input data to hdfs so nodemanagers can access it.
     mode = hookenv.config()['spark_execution_mode']
@@ -64,13 +65,14 @@ def main():
         if is_state('hadoop.hdfs.ready'):
             try:
                 utils.run_as('ubuntu',
-                             'hdfs', 'dfs', '-put', '-f', sample, '/user/ubuntu',
+                             'hdfs', 'dfs', '-copyFromLocal', '-f',
+                             sample_dir, '/user/ubuntu',
                              capture_output=True)
             except subprocess.CalledProcessError as e:
                 msg = 'Unable to copy pagerank sample data to hdfs'
                 fail('{}: {}'.format(msg, e))
             else:
-                sample = "/user/ubuntu/web-Google.txt"
+                sample_pr = "/user/ubuntu/sample-data/pagerank/web-Google.txt"
         else:
             msg = 'Spark is configured for yarn mode, but HDFS is not ready yet'
             fail(msg)
@@ -97,7 +99,7 @@ def main():
             '--class',
             'org.apache.spark.examples.SparkPageRank',
             example_jar_path,
-            sample,
+            sample_pr,
             num_iter,
         ]
 
