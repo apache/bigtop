@@ -1,6 +1,6 @@
 services:
   spark:
-    charm: "cs:xenial/spark-49"
+    charm: "cs:xenial/spark-51"
     constraints: "mem=7G root-disk=32G"
     num_units: 2
     options:
@@ -13,7 +13,7 @@ services:
       - "0"
       - "1"
   zookeeper:
-    charm: "cs:xenial/zookeeper-30"
+    charm: "cs:xenial/zookeeper-32"
     constraints: "mem=3G root-disk=32G"
     num_units: 3
     annotations:
