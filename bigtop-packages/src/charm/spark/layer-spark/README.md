@@ -238,9 +238,19 @@ http://developer.download.nvidia.com/. Ensure appropriate proxies are
 configured if needed.
 
 ## spark_bench_enabled
-Install the SparkBench benchmarking suite. If `true` (the default), this charm
-will download spark bench from the URL specified by `spark_bench_ppc64le`
-or `spark_bench_x86_64`, depending on the unit's architecture.
+Controls the installation of the [Spark-Bench][] benchmarking suite. When set
+to `true`, this charm will download and install Spark-Bench from the URL
+specified by the `spark_bench_url` config option. When set to `false`
+(the default), Spark-Bench will not be installed on the unit, though any data
+stored in `hdfs:///user/ubuntu/spark-bench` from previous installations will
+be preserved.
+
+> **Note**: Spark-Bench has not been verified to work with Spark 2.1.x.
+
+> **Note**: This option requires external network access to the configured
+Spark-Bench URL. Ensure appropriate proxies are configured if needed.
+
+[Spark-Bench]: https://github.com/SparkTC/spark-bench
 
 ## spark_execution_mode
 Spark has four modes of execution: local, standalone, yarn-client, and
