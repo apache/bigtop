@@ -1,3 +1,9 @@
+series: xenial
+description: >
+  This is a fourteen unit big data cluster that includes Hadoop 2.7 and
+  HBase 1.1 from Apache Bigtop. Use it when you need a distributed big data
+  store with MapReduce processing capabilities. It will run on 8 machines in
+  your cloud.
 services:
   namenode:
     charm: "/home/ubuntu/charms/xenial/hadoop-namenode"
@@ -47,7 +53,7 @@ services:
     constraints: "mem=7G root-disk=32G"
     num_units: 3
     annotations:
-      gui-x: "0"
+      gui-x: "1000"
       gui-y: "0"
     to:
       - "1"
@@ -90,7 +96,6 @@ services:
     annotations:
       gui-x: "750"
       gui-y: "400"
-series: xenial
 relations:
   - [resourcemanager, namenode]
   - [namenode, slave]
@@ -103,13 +108,11 @@ relations:
   - ["ganglia-node:juju-info", "namenode:juju-info"]
   - ["ganglia-node:juju-info", "resourcemanager:juju-info"]
   - ["ganglia-node:juju-info", "slave:juju-info"]
-  - ["ganglia-node:juju-info", "hbase:juju-info"]
   - ["ganglia-node:juju-info", "zookeeper:juju-info"]
   - ["ganglia:node", "ganglia-node:node"]
   - ["rsyslog-forwarder-ha:juju-info", "namenode:juju-info"]
   - ["rsyslog-forwarder-ha:juju-info", "resourcemanager:juju-info"]
   - ["rsyslog-forwarder-ha:juju-info", "slave:juju-info"]
-  - ["rsyslog-forwarder-ha:juju-info", "hbase:juju-info"]
   - ["rsyslog-forwarder-ha:juju-info", "zookeeper:juju-info"]
   - ["rsyslog:aggregator", "rsyslog-forwarder-ha:syslog"]
 machines:

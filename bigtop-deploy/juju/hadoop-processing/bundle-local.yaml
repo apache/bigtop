@@ -1,3 +1,8 @@
+series: xenial
+description: >
+  This is an eight unit big data cluster that includes Hadoop 2.7 from Apache
+  Bigtop. Use it to store data in HDFS and run MapReduce analysis jobs. It
+  will run on 5 machines in your cloud.
 services:
   namenode:
     charm: "/home/ubuntu/charms/xenial/hadoop-namenode"
@@ -68,7 +73,6 @@ services:
     annotations:
       gui-x: "750"
       gui-y: "400"
-series: xenial
 relations:
   - [resourcemanager, namenode]
   - [namenode, slave]

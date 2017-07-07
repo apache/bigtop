@@ -68,9 +68,11 @@ class TestDeployment(unittest.TestCase):
         print("Removing master: {} ".format(master))
         self.d.remove_unit(master)
         time.sleep(120)
-
         self.d.sentry.wait_for_messages({"spark-test-ha": ["ready (standalone - HA)",
                                                            "ready (standalone - HA)"]}, timeout=900)
+
+        print("Waiting for remaining units to agree on master.")
+        time.sleep(120)
 
         masters_count = 0
         for unit in self.d.sentry['spark-test-ha']:
