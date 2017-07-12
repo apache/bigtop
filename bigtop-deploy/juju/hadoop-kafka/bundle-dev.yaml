@@ -44,7 +44,7 @@ services:
       - "4"
 # TODO: Charm bigtop flume
   flume-hdfs:
-    charm: "cs:~bigdata-dev/xenial/apache-flume-hdfs-39"
+    charm: "cs:~bigdata-dev/xenial/apache-flume-hdfs-40"
     num_units: 1
     annotations:
       gui-x: "1500"
@@ -73,7 +73,7 @@ services:
       - "8"
 # NOTE: flume-kafka cannot be colocated with flume-hdfs as they both use /etc/flume/conf
   flume-kafka:
-    charm: "cs:~bigdata-dev/xenial/apache-flume-kafka-13"
+    charm: "cs:~bigdata-dev/xenial/apache-flume-kafka-14"
     num_units: 1
     annotations:
       gui-x: "1500"
