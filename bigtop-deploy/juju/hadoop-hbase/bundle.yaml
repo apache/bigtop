@@ -1,6 +1,7 @@
+series: xenial
 services:
   namenode:
-    charm: "cs:xenial/hadoop-namenode-26"
+    charm: "cs:xenial/hadoop-namenode-27"
     constraints: "mem=7G root-disk=32G"
     num_units: 1
     annotations:
@@ -9,7 +10,7 @@ services:
     to:
       - "0"
   resourcemanager:
-    charm: "cs:xenial/hadoop-resourcemanager-28"
+    charm: "cs:xenial/hadoop-resourcemanager-29"
     constraints: "mem=7G root-disk=32G"
     num_units: 1
     annotations:
@@ -18,7 +19,7 @@ services:
     to:
       - "0"
   slave:
-    charm: "cs:xenial/hadoop-slave-27"
+    charm: "cs:xenial/hadoop-slave-28"
     constraints: "mem=7G root-disk=32G"
     num_units: 3
     annotations:
@@ -29,7 +30,7 @@ services:
       - "2"
       - "3"
   plugin:
-    charm: "cs:xenial/hadoop-plugin-26"
+    charm: "cs:xenial/hadoop-plugin-27"
     annotations:
       gui-x: "1000"
       gui-y: "400"
@@ -43,7 +44,7 @@ services:
     to:
       - "4"
   hbase:
-    charm: "cs:xenial/hbase-27"
+    charm: "cs:xenial/hbase-28"
     constraints: "mem=7G root-disk=32G"
     num_units: 3
     annotations:
@@ -54,7 +55,7 @@ services:
       - "2"
       - "3"
   zookeeper:
-    charm: "cs:xenial/zookeeper-32"
+    charm: "cs:xenial/zookeeper-33"
     constraints: "mem=3G root-disk=32G"
     num_units: 3
     annotations:
@@ -90,7 +91,6 @@ services:
     annotations:
       gui-x: "750"
       gui-y: "400"
-series: xenial
 relations:
   - [resourcemanager, namenode]
   - [namenode, slave]

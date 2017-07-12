@@ -1,6 +1,7 @@
+series: xenial
 services:
   spark:
-    charm: "cs:xenial/spark-51"
+    charm: "cs:xenial/spark-52"
     constraints: "mem=7G root-disk=32G"
     num_units: 2
     options:
@@ -13,7 +14,7 @@ services:
       - "0"
       - "1"
   zookeeper:
-    charm: "cs:xenial/zookeeper-32"
+    charm: "cs:xenial/zookeeper-33"
     constraints: "mem=3G root-disk=32G"
     num_units: 3
     annotations:
@@ -49,7 +50,6 @@ services:
     annotations:
       gui-x: "750"
       gui-y: "400"
-series: xenial
 relations:
   - [spark, zookeeper]
   - ["ganglia-node:juju-info", "spark:juju-info"]
