@@ -156,9 +156,10 @@ class Zeppelin(object):
         utils.run_as('hdfs', 'hdfs', 'dfs', '-mkdir', '-p', '/user/zeppelin')
         utils.run_as('hdfs', 'hdfs', 'dfs', '-chown', 'zeppelin', '/user/zeppelin')
 
-        # If spark is ready, let it handle the spark_master_url. Otherwise,
+        # If spark is ready, let configure_spark() set master_url. Otherwise,
         # zepp is in local mode; set it to yarn-client since hadoop is here.
         if not is_state('spark.ready'):
+            self._add_override('spark::common::master_url', 'yarn-client')
             self._add_override('zeppelin::server::spark_master_url', 'yarn-client')
             self.trigger_bigtop()
 
@@ -167,6 +168,7 @@ class Zeppelin(object):
         Configure the zeppelin spark interpreter
         '''
         # TODO: Need Puppet params created to set Spark driver and executor memory
+        self._add_override('spark::common::master_url', master_url)
         self._add_override('zeppelin::server::spark_master_url', master_url)
         self.trigger_bigtop()
 
