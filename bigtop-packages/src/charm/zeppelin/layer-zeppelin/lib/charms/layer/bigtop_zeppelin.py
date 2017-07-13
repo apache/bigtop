@@ -111,7 +111,7 @@ class Zeppelin(object):
         overrides = unitdata.kv().getrange('zeppelin.bigtop.overrides.',
                                            strip=True)
 
-        # The zep deb depends on spark-core, spark-python, and unfortunately,
+        # The zep deb depends on spark-core which unfortunately brings in
         # most of hadoop. Include appropriate roles here to ensure these
         # packages are configured in the same way as our other Bigtop
         # software deployed with puppet.
@@ -156,9 +156,10 @@ class Zeppelin(object):
         utils.run_as('hdfs', 'hdfs', 'dfs', '-mkdir', '-p', '/user/zeppelin')
         utils.run_as('hdfs', 'hdfs', 'dfs', '-chown', 'zeppelin', '/user/zeppelin')
 
-        # If spark is ready, let it handle the spark_master_url. Otherwise,
-        # zepp is in local mode; set it to yarn-client since hadoop is here.
+        # If spark is ready, let configure_spark() trigger bigtop. Otherwise,
+        # put our spark in yarn-client mode since hadoop is here.
         if not is_state('spark.ready'):
+            self._add_override('spark::common::master_url', 'yarn-client')
             self._add_override('zeppelin::server::spark_master_url', 'yarn-client')
             self.trigger_bigtop()
 
@@ -166,7 +167,8 @@ class Zeppelin(object):
         '''
         Configure the zeppelin spark interpreter
         '''
-        # TODO: Need Puppet params created to set Spark driver and executor memory
+        # TODO: Add config for Spark driver and executor memory overrides
+        self._add_override('spark::common::master_url', master_url)
         self._add_override('zeppelin::server::spark_master_url', master_url)
         self.trigger_bigtop()
 
