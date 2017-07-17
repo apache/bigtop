@@ -211,23 +211,17 @@ def genTasks = { target ->
          uri.getFragment())
         exec {
           workingDir DL_DIR
-          commandLine "git clone --depth 1 ${uri} ${dir}".split()
+          commandLine "git clone --depth 1 --branch $GIT_REF ${uri} ${dir}".split()
           errorOutput devNull
           standardOutput devNull
         }
       } else {
         exec {
           workingDir DL_DIR
-          commandLine "git clone --depth 1 ${GIT_REPO} ${dir}".split()
+          commandLine "git clone --depth 1 --branch $GIT_REF ${GIT_REPO} ${dir}".split()
           errorOutput devNull
           standardOutput devNull
         }
-      }
-      exec {
-        workingDir "$DL_DIR/${dir}"
-        commandLine "git checkout $GIT_REF".split()
-        errorOutput devNull
-        standardOutput devNull
       }
       exec {
         workingDir "$DL_DIR/${dir}"
