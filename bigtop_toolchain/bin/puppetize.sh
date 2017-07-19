@@ -86,5 +86,9 @@ puppet module install puppetlabs-stdlib
 
 case ${ID} in
    debian|ubuntu)
-      puppet module install puppetlabs-apt;;
+       version=""
+       if [ `puppet --version | cut -c1` -lt "4" ]; then
+           version="--version 2.4.0"
+       fi
+      puppet module install puppetlabs-apt $version;;
 esac
