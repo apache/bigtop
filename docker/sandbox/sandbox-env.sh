@@ -27,5 +27,6 @@ RPMS=( \
 )
 DEBS=( \
     debian-8 \
+    debian-8-aarch64 \
     ubuntu-16.04 \
 )
