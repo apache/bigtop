@@ -68,6 +68,21 @@
          site          = "${apache.APACHE_MIRROR}/${download_path}"
          archive       = "${apache.APACHE_ARCHIVE}/${download_path}"
        }
+       git {
+         // Setting the info to access a git repository. Ref is any valid git reference.
+         // If git repo information is provided, the *url* element above will be ignored.
+         repo  = "https://github.com/apache/bigtop.git"
+         ref   = "branch-name"
+         // *dir* defines the name of the top-level folder inside of the tar-ball archive.
+         // if set to null, the directory name will be set to tar-ball.dist without
+         // the .tar* suffix
+         // This setting is important to allow build to locate unpacked source code
+         dir   = "${name}-${version.base}-src"
+         // *optional*
+         // You can setup repo-specific user credentials overriding any global settings
+         user  = "john_doe"
+         token = "john's access token"
+       }
      }
    }
  }
