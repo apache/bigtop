@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -14,21 +12,5 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-BIGTOP_VERSION=1.2.0
-# REPO="YOUR CUSTOM REPO"
-
-RPMS=( \
-    centos-6 \
-    centos-7 \
-    centos-7-aarch64 \
-    fedora-25 \
-    fedora-25-aarch64 \
-    opensuse-42.1 \
-)
-DEBS=( \
-    debian-8 \
-    debian-8-aarch64 \
-    debian-9-aarch64 \
-    ubuntu-16.04 \
-)
+cp ../../../bigtop_toolchain/bin/puppetize.sh .
+docker build --pull=true -t bigtop/puppet:debian-9-aarch64 .
