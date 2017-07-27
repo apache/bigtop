@@ -47,7 +47,8 @@ OPTS=$(getopt \
   -l 'python-dir:' \
   -l 'hcatalog-dir:' \
   -l 'installed-hcatalog-dir:' \
-  -l 'build-dir:' -- "$@")
+  -l 'build-dir:' \
+  -l 'hive-version:' -- "$@")
 
 if [ $? != 0 ] ; then
     usage
@@ -85,6 +86,9 @@ while true ; do
         ;;
         --installed-hcatalog-dir)
         INSTALLED_HCATALOG_DIR=$2 ; shift 2
+        ;;
+        --hive-version)
+        HIVE_VERSION=$2 ; shift 2
         ;;
         --)
         shift ; break
