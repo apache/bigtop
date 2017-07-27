@@ -15,18 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import org.ajoberstar.grgit.*
 import groovy.json.JsonOutput
+import java.net.URI
 
 buildscript {
   repositories {
     mavenCentral()
-  }
-  dependencies {
-    classpath 'org.ajoberstar:grgit:0.4.1'
-    // To handle symbolic links when cloning git repos, the jgit.java7 jar
-    // must be added to the classpath.
-    classpath 'org.eclipse.jgit:org.eclipse.jgit.java7:3.6.2.201501210735-r'
   }
 }
 
@@ -95,8 +89,11 @@ def setDefaults = { comp ->
     comp.version.pkg = comp.version.base
   }
 }
+def devNull = new OutputStream() {
+  @Override
+  public void write(int b) {}
+}
 def nativePackaging = {
-  def devNull = new org.apache.bigtop.NullOutputStream()
   def result = exec {
     commandLine "/bin/bash", "-c",
     """dpkg-query -S /bin/sh && exit 1
@@ -117,7 +114,7 @@ Label: Bigtop
 Suite: stable
 Codename: bigtop
 Version: ${config.bigtop.version}
-Architectures: amd64 ppc64el source
+Architectures: amd64 ppc64el arm64 source
 Components: contrib
 Description: Bigtop
 """;
@@ -185,6 +182,8 @@ def genTasks = { target ->
     def final GIT_REPO = config.bigtop.components[target].git.repo
     def final GIT_REF = config.bigtop.components[target].git.ref
     def final GIT_DIR = config.bigtop.components[target].git.dir
+    def final GIT_USER_NAME = config.bigtop.components[target].git.user ?: config.bigtop.git.user
+    def final GIT_ACCESS_TOKEN = config.bigtop.components[target].git.token ?: config.bigtop.git.token
 
     if (!DOWNLOAD_URL)
       return
@@ -200,11 +199,36 @@ def genTasks = { target ->
         dir = TARBALL_DST.substring(0, TARBALL_DST.lastIndexOf(".t"))
       }
       delete("${DL_DIR}/${dir}")
-      Grgit.clone(
-        uri: GIT_REPO,
-        refToCheckout: GIT_REF,
-        dir: new File("${DL_DIR}/${dir}")
-      )
+      if (GIT_USER_NAME && GIT_ACCESS_TOKEN) {
+        def uri = new URI(GIT_REPO)
+        if (!GIT_REPO.toLowerCase().startsWith("http")) {
+          println("\tGit credentials supported only with 'http' or 'https' schemes");
+          return
+        }
+        uri = new URI(uri.getScheme(),
+         "${GIT_USER_NAME}:${GIT_ACCESS_TOKEN}".toString(), // userInfo
+         uri.getHost(), uri.getPort(), uri.getPath(), uri.getQuery(),
+         uri.getFragment())
+        exec {
+          workingDir DL_DIR
+          commandLine "git clone --depth 1 --branch $GIT_REF ${uri} ${dir}".split()
+          errorOutput devNull
+          standardOutput devNull
+        }
+      } else {
+        exec {
+          workingDir DL_DIR
+          commandLine "git clone --depth 1 --branch $GIT_REF ${GIT_REPO} ${dir}".split()
+          errorOutput devNull
+          standardOutput devNull
+        }
+      }
+      exec {
+        workingDir "$DL_DIR/${dir}"
+        commandLine "git submodule update --init".split()
+        errorOutput devNull
+        standardOutput devNull
+      }
       delete("${DL_DIR}/${dir}/.git")
       exec {
         workingDir DL_DIR
@@ -302,6 +326,7 @@ def genTasks = { target ->
 --preserve-envvar MAVEN3_HOME \
 --preserve-envvar MAVEN_OPTS \
 --preserve-envvar JAVA_HOME \
+--preserve-envvar BIGTOP_JDK \
 --set-envvar=HADOOP_VERSION=$HADOOP_VERSION \
 --set-envvar=${toOldStyleName(target)}_BASE_VERSION=$BASE_VERSION \
 --set-envvar=${toOldStyleName(target)}_VERSION=$PKG_VERSION \

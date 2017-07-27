@@ -30,6 +30,7 @@ class zeppelin {
       $hiveserver2_password = '') {
     package { 'zeppelin':
       ensure => latest,
+      require => Package["jdk"],
     }
 
     file { '/etc/zeppelin/conf/zeppelin-env.sh':

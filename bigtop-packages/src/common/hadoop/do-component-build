@@ -47,6 +47,7 @@ fi
 if [ -z "$BUNDLE_SNAPPY" ] ; then
   [ -f /usr/lib/libsnappy.so ] && BUNDLE_SNAPPY="-Dsnappy.prefix=x -Dbundle.snappy=true -Dsnappy.lib=/usr/lib"
   [ -f /usr/lib64/libsnappy.so ] && BUNDLE_SNAPPY="-Dsnappy.prefix=x -Dbundle.snappy=true -Dsnappy.lib=/usr/lib64"
+  [ -f /usr/lib/${HOSTTYPE}-linux-gnu/libsnappy.so ] && BUNDLE_SNAPPY="-Dsnappy.prefix=x -Dbundle.snappy=true -Dsnappy.lib=/usr/lib/${HOSTTYPE}-linux-gnu"
 fi
 
 mkdir build

@@ -68,6 +68,8 @@
 %global initd_dir %{_sysconfdir}/rc.d/init.d
 %endif
 
+# Disable debuginfo package
+%define debug_package %{nil}
 
 Name:    %{tajo_name}
 Version: %{tajo_version}
@@ -170,12 +172,9 @@ done
 %{tajo_home}
 %dir %{_sysconfdir}/%{tajo_name}
 %config(noreplace) %{config_tajo}.dist
-%dir %{_localstatedir}/log/tajo
-%dir %{_localstatedir}/run/tajo
-%dir %{_localstatedir}/lib/tajo
-%attr(0775,tajo,tajo) %{log_tajo}
-%attr(0775,tajo,tajo) %{run_tajo}
-%attr(0775,tajo,tajo) %{pid_tajo}
+%attr(0755,tajo,tajo) %dir %{_localstatedir}/log/%{tajo_name}
+%attr(0755,tajo,tajo) %dir %{_localstatedir}/run/%{tajo_name}
+%attr(0755,tajo,tajo) %dir %{_localstatedir}/lib/%{tajo_name}
 %attr(0775,tajo,tajo) %(config_tajo)
 %{bin}/tsql
 %{bin}/tajo

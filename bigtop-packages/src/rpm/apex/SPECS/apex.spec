@@ -44,6 +44,7 @@ Source1: do-component-build
 Source2: install_apex.sh
 Source3: apex.1
 Source4: bigtop.bom
+#BIGTOP_PATCH_FILES
 Requires: hadoop-client, bigtop-utils >= 0.7
 
 %description
@@ -57,7 +58,9 @@ Apache Apex includes following key features:
  * Hadoop-native YARN & HDFS implementation
 
 %prep
-%setup -n %{name}-%{apex_base_version}
+%setup -n apache-%{name}-core-%{apex_base_version}
+
+#BIGTOP_PATCH_COMMANDS
 
 %build
 env APEX_VERSION=%{apex_base_version} bash %{SOURCE1}

@@ -17,36 +17,18 @@
 # Overview
 
 Apache Spark is a fast and general purpose engine for large-scale data
-processing. This charm deploys the Spark component of the [Apache Bigtop][]
-platform. Key features:
+processing. Learn more at [spark.apache.org][].
 
- * **Speed**
+This charm deploys version 2.1.0 of the Spark component from [Apache Bigtop][].
 
- Run programs up to 100x faster than Hadoop MapReduce in memory, or 10x faster
- on disk. Spark has an advanced DAG execution engine that supports cyclic data
- flow and in-memory computing.
-
- * **Ease of Use**
-
- Write applications quickly in Java, Scala or Python. Spark offers over 80
- high-level operators that make it easy to build parallel apps for use
- interactively from the Scala and Python shells.
-
- * **General Purpose Engine**
-
- Combine SQL, streaming, and complex analytics. Spark powers a stack of
- high-level tools including Shark for SQL, MLlib for machine learning, GraphX,
- and Spark Streaming. Combine these frameworks seamlessly in the same
- application.
-
+[spark.apache.org]: http://spark.apache.org/
 [Apache Bigtop]: http://bigtop.apache.org/
 
 
 # Deploying
 
-A working Juju installation is assumed to be present. If Juju is not yet set
-up, please follow the [getting-started][] instructions prior to deploying this
-charm.
+This charm requires Juju 2.0 or greater. If Juju is not yet set up, please
+follow the [getting-started][] instructions prior to deploying this charm.
 
 This charm supports running Spark in a variety of modes:
 
@@ -80,27 +62,18 @@ the unit acting as master, query Zookeeper as follows:
 
     juju run --unit zookeeper/0 'echo "get /spark/master_status" | /usr/lib/zookeeper/bin/zkCli.sh'
 
-### YARN-client and YARN-cluster
+### YARN
 This charm leverages our pluggable Hadoop model with the `hadoop-plugin`
-interface. This means that this charm can be related to a base Apache Hadoop
+interface. This means that this charm can be related to an Apache Hadoop
 cluster to run Spark jobs there. The suggested deployment method is to use the
-[hadoop-processing][] bundle and add a relation between spark and the plugin.
+[hadoop-spark][] bundle:
 
-
-    juju deploy hadoop-processing
-    juju add-relation plugin spark
-
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, use [juju-quickstart][] with the following syntax: `juju quickstart
-hadoop-processing`.
+    juju deploy hadoop-spark
 
 To switch among the above execution modes, set the `spark_execution_mode`
 config variable:
 
     juju config spark spark_execution_mode=<new_mode>
-
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju set spark spark_execution_mode=<new_mode>`.
 
 See the **Configuring** section below for supported mode options.
 
@@ -110,8 +83,7 @@ in this environment, configure a Juju model with appropriate proxy and/or
 mirror options. See [Configuring Models][] for more information.
 
 [getting-started]: https://jujucharms.com/docs/stable/getting-started
-[hadoop-processing]: https://jujucharms.com/hadoop-processing/
-[juju-quickstart]: https://launchpad.net/juju-quickstart
+[hadoop-spark]: https://jujucharms.com/hadoop-spark/
 [Configuring Models]: https://jujucharms.com/docs/stable/models-config
 
 
@@ -138,15 +110,9 @@ application is functioning as expected. Run the action as follows:
 
     juju run-action spark/0 smoke-test
 
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju action do spark/0 smoke-test`.
-
 Watch the progress of the smoke test actions with:
 
     watch -n 2 juju show-action-status
-
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju action status`.
 
 Eventually, the action should settle to `status: completed`.  If it
 reports `status: failed`, the application is not working as expected. Get
@@ -154,12 +120,9 @@ more information about a specific smoke test with:
 
     juju show-action-output <action-id>
 
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju action fetch <action-id>`.
-
 ## Spark Master web UI
 Spark provides a web console that can be used to verify information about
-the cluster. To access it, find the `PUBLIC-ADDRESS` of the spark application
+the cluster. To access it, find the `Public address` of the spark application
 and expose it:
 
     juju status spark
@@ -179,10 +142,33 @@ address. The job history web interface will be available at the following URL:
 
 # Using
 
-Once deployment is verified, Spark batch or streaming jobs can be run in a
-variety of ways:
+## Actions
+Once Spark is ready, there are a number of actions available in this charm.
 
-### Spark shell
+Run a benchmark (as described in the **Benchmarking** section):
+
+    juju run-action spark/0 pagerank
+    juju show-action-output <id>  # <-- id from above command
+
+Run a smoke test (as described in the **Verifying** section):
+
+    juju run-action spark/0 smoke-test
+    juju show-action-output <id>  # <-- id from above command
+
+Start/Stop/Restart the Spark Job History service:
+
+    juju run-action spark/0 [start|stop|restart]-spark-job-history-server
+    juju show-action-output <id>  # <-- id from above command
+
+Submit a Spark job:
+
+    juju run-action spark/0 spark-submit \
+      options='--class org.apache.spark.examples.SparkPi' \
+      job='/usr/lib/spark/examples/jars/spark-examples.jar' \
+      job-args='10'
+    juju show-action-output <id>  # <-- id from above command
+
+## Spark shell
 Spark shell provides a simple way to learn the API, as well as a powerful
 tool to analyze data interactively. It is available in either Scala or Python
 and can be run from the Spark unit as follows:
@@ -191,14 +177,14 @@ and can be run from the Spark unit as follows:
     spark-shell # for interaction using scala
     pyspark     # for interaction using python
 
-### Command line
+## Command line
 SSH to the Spark unit and manually run a spark-submit job, for example:
 
     juju ssh spark/0
     spark-submit --class org.apache.spark.examples.SparkPi \
-     --master yarn-client /usr/lib/spark/lib/spark-examples*.jar 10
+     /usr/lib/spark/examples/jars/spark-examples.jar 10
 
-### Apache Zeppelin
+## Apache Zeppelin
 Apache Zeppelin is a web-based notebook that enables interactive data
 analytics. Make beautiful data-driven, interactive, and collaborative documents
 with SQL, Scala and more. Deploy Zeppelin and relate it to Spark:
@@ -206,7 +192,7 @@ with SQL, Scala and more. Deploy Zeppelin and relate it to Spark:
     juju deploy zeppelin
     juju add-relation spark zeppelin
 
-To access the web console, find the `PUBLIC-ADDRESS` of the zeppelin
+To access the web console, find the `Public address` of the zeppelin
 application and expose it:
 
     juju status zeppelin
@@ -219,17 +205,57 @@ The web interface will be available at the following URL:
 
 # Configuring
 
-## spark_bench_enabled
+Charm configuration can be changed at runtime with `juju config`. This charm
+supports the following config parameters.
 
-Install the SparkBench benchmarking suite. If `true` (the default), this charm
-will download spark bench from the URL specified by `spark_bench_ppc64le`
-or `spark_bench_x86_64`, depending on the unit's architecture.
+## driver_memory
+Amount of memory available for the Spark driver process (1g by default).
+Set a different value with:
+
+    juju config spark driver_memory=4096m
+
+## executor_memory
+Amount of memory available for each Spark executor process (1g by default).
+Set a different value with:
+
+    juju config spark executor_memory=2g
+
+> **Note**: When Spark is in YARN mode, ensure the configured executor memory
+does not exceed the NodeManager maximum (defined on each nodemanager as
+`yarn.nodemanager.resource.memory-mb` in `yarn-default.xml`).
+
+## install-cuda
+Provided by `layer-nvidia-cuda`, this option controls the installation
+of NVIDIA CUDA packages if capable GPU hardware is present. When `false` (the
+default), CUDA will not be installed or configured regardless of hardware
+support. Set this to `true` to fetch and install CUDA-related packages from
+the NVIDIA developer repository.
+
+    juju config spark install-cuda=true
+
+> **Note**: This option requires external network access to
+http://developer.download.nvidia.com/. Ensure appropriate proxies are
+configured if needed.
+
+## spark_bench_enabled
+Controls the installation of the [Spark-Bench][] benchmarking suite. When set
+to `true`, this charm will download and install Spark-Bench from the URL
+specified by the `spark_bench_url` config option. When set to `false`
+(the default), Spark-Bench will not be installed on the unit, though any data
+stored in `hdfs:///user/ubuntu/spark-bench` from previous installations will
+be preserved.
+
+> **Note**: Spark-Bench has not been verified to work with Spark 2.1.x.
+
+> **Note**: This option requires external network access to the configured
+Spark-Bench URL. Ensure appropriate proxies are configured if needed.
+
+[Spark-Bench]: https://github.com/SparkTC/spark-bench
 
 ## spark_execution_mode
-
 Spark has four modes of execution: local, standalone, yarn-client, and
 yarn-cluster. The default mode is `standalone` and can be changed by setting
-the `spark_execution_mode` config variable.
+the `spark_execution_mode` config option.
 
   * **Local**
 
@@ -270,27 +296,16 @@ the `spark_execution_mode` config variable.
 
 # Benchmarking
 
-This charm provides several benchmarks, including the [Spark Bench][]
-benchmarking suite (if enabled), to gauge the performance of the environment.
+This charm provides benchmarks to gauge the performance of the Spark cluster.
 Each benchmark is an action that can be run with `juju run-action`:
 
-    $ juju actions spark | grep Bench
-    connectedcomponent                Run the Spark Bench ConnectedComponent benchmark.
-    decisiontree                      Run the Spark Bench DecisionTree benchmark.
-    kmeans                            Run the Spark Bench KMeans benchmark.
-    linearregression                  Run the Spark Bench LinearRegression benchmark.
-    logisticregression                Run the Spark Bench LogisticRegression benchmark.
-    matrixfactorization               Run the Spark Bench MatrixFactorization benchmark.
-    pagerank                          Run the Spark Bench PageRank benchmark.
-    pca                               Run the Spark Bench PCA benchmark.
-    pregeloperation                   Run the Spark Bench PregelOperation benchmark.
-    shortestpaths                     Run the Spark Bench ShortestPaths benchmark.
-    sql                               Run the Spark Bench SQL benchmark.
-    stronglyconnectedcomponent        Run the Spark Bench StronglyConnectedComponent benchmark.
-    svdplusplus                       Run the Spark Bench SVDPlusPlus benchmark.
-    svm                               Run the Spark Bench SVM benchmark.
+    $ juju actions spark
+    ...
+    pagerank                          Calculate PageRank for a sample data set
+    sparkpi                           Calculate Pi
+    ...
 
-    $ juju run-action spark/0 svdplusplus
+    $ juju run-action spark/0 pagerank
     Action queued with id: 339cec1f-e903-4ee7-85ca-876fb0c3d28e
 
     $ juju show-action-output 339cec1f-e903-4ee7-85ca-876fb0c3d28e
@@ -299,27 +314,27 @@ Each benchmark is an action that can be run with `juju run-action`:
         composite:
           direction: asc
           units: secs
-          value: "200.754000"
-        raw: |
-          SVDPlusPlus,2016-11-02-03:08:26,200.754000,85.974071,.428255,0,SVDPlusPlus-MLlibConfig,,,,,10,,,50000,4.0,1.3,
-        start: 2016-11-02T03:08:26Z
-        stop: 2016-11-02T03:11:47Z
-      results:
-        duration:
-          direction: asc
-          units: secs
-          value: "200.754000"
-        throughput:
-          direction: desc
-          units: x/sec
-          value: ".428255"
+          value: "83"
+        start: 2017-04-12T23:22:38Z
+        stop: 2017-04-12T23:24:01Z
+      output: '{''status'': ''completed''}'
     status: completed
     timing:
-      completed: 2016-11-02 03:11:48 +0000 UTC
-      enqueued: 2016-11-02 03:08:21 +0000 UTC
-      started: 2016-11-02 03:08:26 +0000 UTC
+      completed: 2017-04-12 23:24:02 +0000 UTC
+      enqueued: 2017-04-12 23:22:36 +0000 UTC
+      started: 2017-04-12 23:22:37 +0000 UTC
 
-[Spark Bench]: https://github.com/SparkTC/spark-bench
+
+# Issues
+
+Apache Bigtop tracks issues using JIRA (Apache account required). File an
+issue for this charm at:
+
+https://issues.apache.org/jira/secure/CreateIssue!default.jspa
+
+Ensure `Bigtop` is selected as the project. Typically, charm issues are filed
+in the `deployment` component with the latest stable release selected as the
+affected version. Any uncertain fields may be left blank.
 
 
 # Contact Information
@@ -329,9 +344,10 @@ Each benchmark is an action that can be run with `juju run-action`:
 
 # Resources
 
-- [Apache Bigtop](http://bigtop.apache.org/) home page
+- [Apache Spark home page](http://spark.apache.org/)
+- [Apache Bigtop home page](http://bigtop.apache.org/)
 - [Apache Bigtop issue tracking](http://bigtop.apache.org/issue-tracking.html)
 - [Apache Bigtop mailing lists](http://bigtop.apache.org/mail-lists.html)
-- [Juju Bigtop charms](https://jujucharms.com/q/apache/bigtop)
+- [Juju Big Data](https://jujucharms.com/big-data)
+- [Juju Bigtop charms](https://jujucharms.com/q/bigtop)
 - [Juju mailing list](https://lists.ubuntu.com/mailman/listinfo/juju)
-- [Juju community](https://jujucharms.com/community)

@@ -18,16 +18,16 @@
 import sys
 sys.path.append('lib')
 
-from charmhelpers.core import hookenv
-from charms.layer.apache_bigtop_base import Bigtop
-from charms.reactive import is_state
+from charmhelpers.core import hookenv  # noqa: E402
+from charms.layer.apache_bigtop_base import Bigtop  # noqa: E402
+from charms.reactive import is_state  # noqa: E402
 
 
-def fail(msg, output=None):
-    if output:
-        hookenv.action_set({'output': output})
+def fail(msg):
+    hookenv.action_set({'outcome': 'failure'})
     hookenv.action_fail(msg)
     sys.exit()
+
 
 if not is_state('apache-bigtop-datanode.started'):
     fail('Charm is not yet ready to run the Bigtop smoke test(s)')
@@ -44,6 +44,6 @@ smoke_env = {
 bigtop = Bigtop()
 result = bigtop.run_smoke_tests(smoke_components, smoke_env)
 if result == 'success':
-    hookenv.action_set({'outcome': result})
+    hookenv.action_set({'outcome': 'success'})
 else:
-    fail('{} smoke tests failed'.format(smoke_components), result)
+    fail('{} smoke tests failed with: {}'.format(smoke_components, result))

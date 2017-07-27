@@ -92,7 +92,8 @@
     ["/user/hbase","755","hbase",null],
     ["/apps",null,null,null],
     ["/apps/tez",null,null,null],
-    ["/apps/tez/lib",null,null,null]
+    ["/apps/tez/lib",null,null,null],
+    ["/user/zeppelin","777","zeppelin"]
  ],
   "user": [
     ["tom", "0755", null],

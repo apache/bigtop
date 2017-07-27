@@ -22,6 +22,7 @@
 %define pids_ignite %{ignite_home}/pids
 %define man_dir %{_mandir}
 %define ignite_username ignite
+%define service_name %{name}-service
 %define vcs_tag %{ignite_hadoop_version}
 
 %if  %{?suse_version:1}0
@@ -86,8 +87,11 @@ Source3: ignite-hadoop.svc
 Source4: init.d.tmpl
 Source5: ignite-hadoop.default
 BuildArch: noarch
+## This package _explicitly_ turns off the auto-discovery of required dependencies
+## to work around OSGI corner case, added to RPM lately. See BIGTOP-2421 for more info.
 Requires: coreutils, /usr/sbin/useradd, /sbin/chkconfig, /sbin/service
 Requires: hadoop-hdfs, hadoop-mapreduce, bigtop-utils >= 0.7
+AutoReq: no
 
 %if  0%{?mgaversion}
 Requires: bsh-utils
@@ -160,8 +164,8 @@ ln -s %{_localstatedir}/log/%{name} %{buildroot}/%{logs_ignite}
 %__install -d  -m 0755  %{buildroot}/%{_localstatedir}/run/%{name}
 ln -s %{_localstatedir}/run/%{name} %{buildroot}/%{pids_ignite}
 
-init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{name}
-bash %{SOURCE4} ${RPM_SOURCE_DIR}/ignite.svc rpm $init_file
+init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{service_name}
+bash %{SOURCE4} ${RPM_SOURCE_DIR}/ignite-hadoop.svc rpm $init_file
 chmod 755 $init_file
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/usr/bin
@@ -201,17 +205,17 @@ fi
 
 %define service_macro() \
 %files %1 \
-%attr(0755,root,root)/%{initd_dir}/%{name} \
+%attr(0755,root,root)/%{initd_dir}/%{service_name} \
 %post %1 \
-chkconfig --add %{name} \
+chkconfig --add %{service_name} \
 \
 %preun %1 \
 if [ $1 = 0 ] ; then \
-        service %{name} stop > /dev/null 2>&1 \
-        chkconfig --del %{name} \
+        service %{service_name} stop > /dev/null 2>&1 \
+        chkconfig --del %{service_name} \
 fi \
 %postun %1 \
 if [ $1 -ge 1 ]; then \
-        service %{name} condrestart >/dev/null 2>&1 \
+        service %{service_name} condrestart >/dev/null 2>&1 \
 fi
 %service_macro service

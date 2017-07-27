@@ -28,17 +28,27 @@ class TestDeployment(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.d = amulet.Deployment(series='xenial')
-        cls.d.add('spark-test-ha', 'cs:xenial/spark', units=3)
-        cls.d.add('zk-test', 'cs:xenial/zookeeper')
-        cls.d.relate('zk-test:zookeeper', 'spark-test-ha:zookeeper')
+        cls.d.add('spark-test-ha', charm='spark',
+                  units=3, constraints={'mem': '7G'})
+        cls.d.add('spark-test-zk', charm='zookeeper')
+
+        cls.d.relate('spark-test-zk:zookeeper', 'spark-test-ha:zookeeper')
         cls.d.expose('spark-test-ha')
+
         cls.d.setup(timeout=3600)
         cls.d.sentry.wait(timeout=3600)
 
-    # Disable tearDown until amulet supports it
-    # @classmethod
-    # def tearDownClass(cls):
-    #     cls.d.remove_service('spark-test-ha')
+    @classmethod
+    def tearDownClass(cls):
+        # NB: seems to be a remove_service issue with amulet. However, the
+        # unit does still get removed. Pass OSError for now:
+        #  OSError: juju command failed ['remove-application', ...]:
+        #  ERROR allocation for service ... owned by ... not found
+        try:
+            cls.d.remove_service('spark-test-ha', 'spark-test-zk')
+        except OSError as e:
+            print("IGNORE: Amulet remove_service failed: {}".format(e))
+            pass
 
     def test_master_selected(self):
         """

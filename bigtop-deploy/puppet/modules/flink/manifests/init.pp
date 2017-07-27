@@ -37,23 +37,29 @@ class flink {
   class jobmanager {
     include flink::common
 
+    package { "flink-jobmanager":
+      ensure => latest,
+    }
+
     service { "flink-jobmanager":
       ensure => running,
-      require => Package["flink"],
+      require => Package["flink-jobmanager"],
       subscribe => File["/etc/flink/conf/flink-conf.yaml"],
       hasrestart => true,
       hasstatus => true
-     
     }
-
   }
 
   class taskmanager {
     include flink::common
 
+    package { "flink-taskmanager":
+      ensure => latest,
+    }
+
     service { "flink-taskmanager":
       ensure => running,
-      require => Package["flink"],
+      require => Package["flink-taskmanager"],
       subscribe => File["/etc/flink/conf/flink-conf.yaml"],
       hasrestart => true,
       hasstatus => true,

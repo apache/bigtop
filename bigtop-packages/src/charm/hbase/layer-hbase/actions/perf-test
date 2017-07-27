@@ -42,4 +42,5 @@ benchmark-finish
 
 DURATION=`expr $STOP - $START`
 benchmark-composite "${DURATION}" 'secs' 'asc'
-benchmark-raw ${RESULT_LOG}
+action-set meta.raw=${RESULT_LOG}
+action-set outcome="success"

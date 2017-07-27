@@ -18,13 +18,19 @@ set -ex
 
 . `dirname $0`/bigtop.bom
 
-export MAVEN_OPTS="-Xmx512m -XX:MaxPermSize=128m"
+export MAVEN_OPTS="-Xmx1024m"
 
-mvn -DskipTests -Dcrunch.platform=2           \
-    -Dhadoop.version=$HADOOP_VERSION          \
-    -Dhbase.version=$HBASE_VERSION            \
-    -Dspark.version=$SPARK_VERSION            \
-    -Papache-release clean site:site package "$@"
+if [ "${BIGTOP_JDK:=8}" == "8" ]; then
+    MAVEN_ADDITIONAL="-Dadditionalparam=-Xdoclint:none"
+fi
+
+mvn -DskipTests -Dcrunch.platform=2            \
+    -Dhadoop.version=$HADOOP_VERSION           \
+    -Dhbase.version=$HBASE_VERSION             \
+    -Dspark.version=$SPARK1_VERSION            \
+    -Papache-release -Ddependency.locations.enabled=false \
+    ${MAVEN_ADDITIONAL} \
+    clean site:site package "$@"
 
 rm -rf build
 mkdir build

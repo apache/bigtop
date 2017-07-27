@@ -14,7 +14,7 @@
 # limitations under the License.
 
 from charmhelpers.core import hookenv
-from charms.layer.apache_bigtop_base import get_layer_opts
+from charms.layer.apache_bigtop_base import get_layer_opts, get_package_version
 from charms.layer.bigtop_kafka import Kafka
 from charms.reactive import set_state, remove_state, when, when_not
 from charms.reactive.helpers import data_changed
@@ -44,6 +44,9 @@ def configure_kafka(zk):
     kafka.open_ports()
     set_state('kafka.started')
     hookenv.status_set('active', 'ready')
+    # set app version string for juju status output
+    kafka_version = get_package_version('kafka') or 'unknown'
+    hookenv.application_version_set(kafka_version)
 
 
 @when('kafka.started', 'zookeeper.ready')

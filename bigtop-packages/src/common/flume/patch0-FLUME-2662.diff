@@ -1,0 +1,11 @@
+--- apache-flume-1.7.0-src/pom.xml.	2016-11-19 20:56:05.683682127 +0100
++++ apache-flume-1.7.0-src/pom.xml	2016-11-19 20:56:22.707682094 +0100
+@@ -951,7 +951,7 @@
+       <dependency>
+         <groupId>commons-io</groupId>
+         <artifactId>commons-io</artifactId>
+-        <version>2.1</version>
++        <version>2.4</version>
+       </dependency>
+ 
+       <dependency>

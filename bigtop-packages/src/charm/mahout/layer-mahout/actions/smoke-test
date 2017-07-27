@@ -17,19 +17,49 @@
 
 set -ex
 
-if hdfs dfs -stat /tmp/input/ &> /dev/null; then
-    hdfs dfs -rm -r -skipTrash /tmp/input/ || true
+if ! charms.reactive is_state 'mahout.installed'; then
+    action-fail 'Mahout is not yet ready'
+    exit
 fi
 
-hdfs dfs -mkdir /tmp/input/
-hdfs dfs -put resources/links-converted.txt /tmp/input/
-hdfs dfs -put resources/users.txt /tmp/input/
+# create dir to store results
+RUN=`date +%s`
+RESULT_DIR=/opt/mahout-smoke-results
+RESULT_LOG=${RESULT_DIR}/${RUN}.log
+mkdir -p ${RESULT_DIR}
+chown -R ubuntu:ubuntu ${RESULT_DIR}
 
-if hdfs dfs -stat temp &> /dev/null; then
-    hdfs dfs -rm -r -skipTrash temp || true
-fi
-if hdfs dfs -stat output &> /dev/null; then
-    hdfs dfs -rm -r -skipTrash output || true
-fi
+# hdfs dirs
+MAHOUT_SMOKE="/tmp/mahout-smoke"
+MAHOUT_INPUT="${MAHOUT_SMOKE}/input"
+MAHOUT_OUTPUT="${MAHOUT_SMOKE}/output"
 
-hadoop jar /usr/lib/mahout/mahout-mr-*-job.jar org.apache.mahout.cf.taste.hadoop.item.RecommenderJob -Dmapred.input.dir=/tmp/input/links-converted.txt -Dmapred.output.dir=output --usersFile /tmp/input/users.txt --booleanData -s SIMILARITY_LOGLIKELIHOOD
+# remove any previous smoke test run. must be run as ubuntu, since that user
+# owns the hdfs space
+su - ubuntu -c "hadoop fs -rm -f -r -skipTrash ${MAHOUT_SMOKE}"
+su - ubuntu -c "hadoop fs -rm -f -r -skipTrash temp"
+
+echo 'running mahout smoke-test as the ubuntu user'
+# NB: Escaped envars in the block below (e.g., \${CHARM_DIR}) come from
+# the environment while non-escaped vars (e.g., ${MAHOUT_INPUT}) come from
+# this outer scope.
+su ubuntu << EOF
+set -x
+. /etc/default/hadoop
+. /etc/environment
+
+# setup our smoke test input
+hdfs dfs -mkdir -p ${MAHOUT_INPUT}
+hdfs dfs -put \${CHARM_DIR}/resources/links-converted.txt ${MAHOUT_INPUT}
+hdfs dfs -put \${CHARM_DIR}/resources/users.txt ${MAHOUT_INPUT}
+
+hadoop jar /usr/lib/mahout/mahout-mr-*-job.jar \
+  org.apache.mahout.cf.taste.hadoop.item.RecommenderJob \
+  -Dmapreduce.input.fileinputformat.inputdir=${MAHOUT_INPUT}/links-converted.txt \
+  -Dmapred.output.dir=${MAHOUT_OUTPUT} \
+  --usersFile ${MAHOUT_INPUT}/users.txt \
+  --booleanData \
+  -s SIMILARITY_LOGLIKELIHOOD 2>&1 | tee -a ${RESULT_LOG}
+EOF
+echo 'mahout smoke-test complete'
+action-set outcome="success"

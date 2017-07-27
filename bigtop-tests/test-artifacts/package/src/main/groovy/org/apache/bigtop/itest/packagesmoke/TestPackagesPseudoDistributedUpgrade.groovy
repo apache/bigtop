@@ -23,7 +23,6 @@ import org.junit.runner.RunWith
 @RunWith(Suite.class)
 
 @Suite.SuiteClasses([
-DeployCDH.class,
 TestServicesCreateState.class,
 TestPackagesPseudoDistributed.class,
 TestServicesCreateStateMissing.class,

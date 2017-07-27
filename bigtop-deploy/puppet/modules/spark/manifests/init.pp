@@ -109,7 +109,7 @@ class spark {
       ],
       hasrestart => true,
       hasstatus => true,
-    } 
+    }
   }
 
   class yarn {
@@ -135,8 +135,9 @@ class spark {
   }
 
   class common(
-      $master_url = 'yarn',
+      $master_url = undef,
       $master_host = $fqdn,
+      $zookeeper_connection_string = undef,
       $master_port = 7077,
       $worker_port = 7078,
       $master_ui_port = 8080,
@@ -145,17 +146,25 @@ class spark {
       $use_yarn_shuffle_service = false,
       $event_log_dir =  "hdfs:///var/log/spark/apps",
       $history_log_dir = "hdfs:///var/log/spark/apps",
+      $extra_lib_dirs = "/usr/lib/hadoop/lib/native",
+      $driver_mem = "1g",
+      $executor_mem = "1g",
   ) {
 
-    package { 'spark-core':
-      ensure => latest,
-    }
 ### This is an ungodly hack to deal with the consequence of adding
 ### unconditional hive-support into Spark
 ### The addition is tracked by BIGTOP-2154
 ### The real fix will come in BIGTOP-2268
-    package { 'spark-datanucleus':
+    include spark::datanucleus
+
+    package { 'spark-core':
       ensure => latest,
+    }
+
+    if $zookeeper_connection_string == undef {
+      $spark_daemon_java_opts = "\"-Dspark.deploy.recoveryMode=NONE\""
+    } else {
+      $spark_daemon_java_opts = "\"-Dspark.deploy.recoveryMode=ZOOKEEPER -Dspark.deploy.zookeeper.url=${zookeeper_connection_string}\""
     }
 
     file { '/etc/spark/conf/spark-env.sh':

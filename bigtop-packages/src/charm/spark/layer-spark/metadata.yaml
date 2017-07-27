@@ -1,11 +1,16 @@
 name: spark
-summary: Apache Spark from Apache Bigtop platform
+summary: Spark from Apache Bigtop
 maintainer: Juju Big Data <bigdata@lists.ubuntu.com>
 description: >
   Apache Spark is a fast and general engine for large-scale data processing.
 
-  Learn more at http://spark.apache.org.
-tags: ["applications"]
+  This charm provides version 2.1.0 of the Spark application from Apache Bigtop.
+tags: ["analytics"]
+resources:
+  sample-data:
+    description: A zip archive of sample data required by Spark benchmarks.
+    type: file
+    filename: sample-data.zip
 provides:
   benchmark:
     interface: benchmark

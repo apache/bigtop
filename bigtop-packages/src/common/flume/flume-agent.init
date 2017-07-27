@@ -201,7 +201,7 @@ run_functions_on_conf() {
     echo $FLUME_AGENT_NAME
     $1
   fi
-  agent_conf_pattern="${FLUME_CONF_DIR}/flume-.*\.conf"
+  agent_conf_pattern="${FLUME_CONF_DIR}/flume-.*\.conf$"
   for f in ${FLUME_CONF_DIR}/*
   do
     if [ $(echo $f | grep -e ${agent_conf_pattern}) ]; then

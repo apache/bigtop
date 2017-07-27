@@ -33,7 +33,7 @@ class bigtop_toolchain::user {
     ensure => directory,
     owner => 'jenkins',
     group => 'jenkins',
-    mode => 755,
+    mode => "755",
     require => User['jenkins'],
   }
 
@@ -41,7 +41,7 @@ class bigtop_toolchain::user {
     ensure => directory,
     owner => 'jenkins',
     group => 'jenkins',
-    mode => 600,
+    mode => "600",
     require => User['jenkins'],
   }
 }

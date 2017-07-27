@@ -13,11 +13,13 @@ hadoop::hadoop_storage_dirs:
 
 #hadoop_cluster_node::cluster_components:
 #  - alluxio
+#  - ambari
 #  - apex
 #  - crunch
 #  - flink
 #  - flume
 #  - giraph
+#  - gpdb
 #  - ignite_hadoop
 #  - hbase
 #  - hcat
@@ -31,15 +33,18 @@ hadoop::hadoop_storage_dirs:
 #  - qfs
 #  - solrcloud
 #  - spark
+#  - spark-standalone
 #  - sqoop
 #  - sqoop2
 #  - tez
 #  - yarn
-#  - zookeeper
 #  - ycsb
-#  - gpdb
+#  - zookeeper
 
 #bigtop::roles_enabled: false
 
-#bigtop::jdk_package_name: "openjdk-7-jre-headless"
-#bigtop::bigtop_repo_uri: "http://mirror.example.com/path/to/mirror/"
+## You can specify one (or more) repositories. It is convenient if
+## you provide hotfix repo separately from the stable release, etc.
+#bigtop::bigtop_repo_uri:
+#   - "http://mirror1.example.com/path/to/mirror/"
+#   - "http://mirror2.example.com/path/to/mirror/"

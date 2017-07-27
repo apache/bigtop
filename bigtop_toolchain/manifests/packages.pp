@@ -67,7 +67,8 @@ class bigtop_toolchain::packages {
         "libevent-devel",
         "apr-devel",
         "bison",
-        "perl-Env"
+        "perl-Env",
+        "libffi-devel"
       ]
     }
     /(?i:(SLES|opensuse))/: { $pkgs = [
@@ -111,7 +112,8 @@ class bigtop_toolchain::packages {
         "libcurl-devel",
         "libevent-devel",
         "bison",
-        "flex"
+        "flex",
+        "libffi48-devel"
       ]
       # fix package dependencies: BIGTOP-2120 and BIGTOP-2152 and BIGTOP-2471
       exec { '/usr/bin/zypper -n install  --force-resolution krb5 libopenssl-devel':
@@ -130,7 +132,7 @@ class bigtop_toolchain::packages {
         require => [Package['libapr1']]
       }
     }
-    Amazon: { $pkgs = [
+    /Amazon/: { $pkgs = [
       "unzip",
       "curl",
       "wget",
@@ -149,11 +151,20 @@ class bigtop_toolchain::packages {
       "openssl-devel",
       "rpm-build",
       "system-rpm-config",
-      "fuse-libs","gmp-devel",
+      "fuse-libs",
+      "gmp-devel",
       "snappy-devel",
-      "bzip2-devel"
+      "bzip2-devel",
+      "libffi-devel"
     ] }
-    /(Ubuntu|Debian)/: { $pkgs = [
+    /(Ubuntu|Debian)/: {
+      # Debian-9 is using mariadb instead of mysql
+      if ($operatingsystem == "Debian") and ($operatingsystemmajrelease > "8") {
+        $mysql_dev="libmariadb-dev"
+      } else {
+        $mysql_dev="libmysqlclient-dev"
+      }
+      $pkgs = [
         "unzip",
         "curl",
         "wget",
@@ -188,18 +199,17 @@ class bigtop_toolchain::packages {
         "libsqlite3-dev",
         "libldap2-dev",
         "libsasl2-dev",
-        "libmysqlclient-dev",
+        $mysql_dev,
         "python-setuptools",
         "libkrb5-dev",
         "asciidoc",
         "libyaml-dev",
-        "libgmp-dev",
+        "libgmp3-dev",
         "libsnappy-dev",
         "libboost-regex-dev",
         "xfslibs-dev",
         "libbz2-dev",
-        "libreadline6",
-        "libreadline6-dev",
+        "libreadline-dev",
         "zlib1g",
         "libapr1",
         "libapr1-dev",
@@ -207,19 +217,16 @@ class bigtop_toolchain::packages {
         "libcurl4-gnutls-dev",
         "bison",
         "flex",
-        "python-dev"
+        "python-dev",
+        "libffi-dev"
       ]
-      file { "/etc/apt/apt.conf.d/retries":
-        content => "Aquire::Retries \"5\";
-"
-      } -> exec { "apt-update":
-        command => "/usr/bin/apt-get update"
-      }
-      Exec["apt-update"] -> Package <| |>
+      file { '/etc/apt/apt.conf.d/01retries':
+        content => 'Aquire::Retries "5";'
+      } -> Package <| |>
     }
   }
   package { $pkgs:
-    ensure => installed,
+    ensure => installed
   }
 
   # Some bigtop packages use `/usr/lib/rpm/redhat` tools

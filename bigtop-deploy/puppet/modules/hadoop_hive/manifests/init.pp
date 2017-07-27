@@ -33,6 +33,10 @@ class hadoop_hive {
       #  Class['Hadoop::Mapred_app'] -> Class['Hadoop_hive::Server2']
       # }
     }
+
+    if ('hive-hbase' in $roles) {
+      include hadoop_hive::hbase
+    }
   }
 
   class client_package {
@@ -49,7 +53,7 @@ class hadoop_hive {
                        $server2_thrift_http_port = "10001",
                        $hive_execution_engine = "mr") {
     include hadoop_hive::client_package
-    if ($kerberos_realm) {
+    if ($kerberos_realm and $kerberos_realm != "") {
       require kerberos::client
       kerberos::host_keytab { "hive": 
         spnego => true,
@@ -104,5 +108,11 @@ class hadoop_hive {
     }
     Kerberos::Host_keytab <| title == "hive" |> -> Service["hive-metastore"]
     File <| title == "/etc/hadoop/conf/core-site.xml" |> -> Service["hive-metastore"]
+  }
+
+  class hbase {
+    package { 'hive-hbase':
+      ensure => latest,
+    }
   }
 }

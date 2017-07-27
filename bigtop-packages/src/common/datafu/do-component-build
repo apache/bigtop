@@ -18,12 +18,5 @@ set -ex
 
 . `dirname $0`/bigtop.bom
 
-sed -i -e '/<dependency org="org.apache.pig"/s# rev=[^ >][^ >]*# rev="'$PIG_VERSION'"#' ivy.xml
-sed -i -e 's/\(<settings defaultResolver="ivyrep"\/>\)/\1\n<property name="m2-pattern" value="${user.home}\/.m2\/repository\/[organisation]\/[module]\/[revision]\/[module]-[revision](-[classifier]).[ext]" override="false"\/>/' ivysettings.xml
-sed -i -e 's/\(^ *<ibiblio\)/    <filesystem name="local-maven2" m2compatible="true">\n      <artifact pattern="${m2-pattern}"\/>\n      <ivy pattern="${m2-pattern}"\/>\n    <\/filesystem>\n\1/' ivysettings.xml
-
-ant jar -Dversion=$DATAFU_VERSION "$@"
-
-# Install artifacts into the local Maven cache
-mvn install:install-file -DcreateChecksum=true -DgroupId=com.linkedin.datafu -DartifactId=datafu -Dversion=$DATAFU_VERSION -Dpackaging=jar -Dfile=dist/datafu-$DATAFU_VERSION.jar
-
+gradle -b bootstrap.gradle
+./gradlew clean assemble

@@ -19,34 +19,23 @@
 Apache Pig is a platform for creating MapReduce programs used with Hadoop.
 It consists of a high-level language (Pig Latin) for expressing data analysis
 programs, coupled with infrastructure for evaluating these programs. Learn more
-at [pig.apache.org](http://pig.apache.org).
+at [pig.apache.org][].
 
-This charm deploys the Pig component of the Apache Bigtop platform and
-supports running Pig in two execution modes:
+This charm deploys version 0.15.0 of the Pig component from [Apache Bigtop][].
 
- * Local Mode: Pig runs using your local host and file system. Specify local
-   mode using the -x flag: `pig -x local`
- * Mapreduce Mode: Pig runs using a Hadoop cluster and HDFS. This is the default
-   mode; you can, optionally, specify it using the -x flag:
-   `pig` or `pig -x mapreduce`
+[pig.apache.org]: http://pig.apache.org/
+[Apache Bigtop]: http://bigtop.apache.org/
 
 
-# Deploying / Using
+# Deploying
 
-A working Juju installation is assumed to be present. If Juju is not yet set
-up, please follow the
-[getting-started](https://jujucharms.com/docs/2.0/getting-started)
-instructions prior to deploying this charm.
+This charm requires Juju 2.0 or greater. If Juju is not yet set up, please
+follow the [getting-started][] instructions prior to deploying this charm.
 
-This charm is intended to be used with one of the
-[apache bigtop bundles](https://jujucharms.com/u/bigdata-charmers/#bundles).
+This charm is intended to be deployed via one of the [apache bigtop bundles][].
 For example:
 
     juju deploy hadoop-processing
-
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, use [juju-quickstart](https://launchpad.net/juju-quickstart) with the
-following syntax: `juju quickstart hadoop-processing`.
 
 This will deploy an Apache Bigtop Hadoop cluster. More information about this
 deployment can be found in the [bundle readme](https://jujucharms.com/hadoop-processing/).
@@ -56,8 +45,54 @@ Now add Pig and relate it to the cluster via the hadoop-plugin:
     juju deploy pig
     juju add-relation pig plugin
 
-Once deployment is complete, Apache Pig will be available to execute Pig Latin
-jobs on your data. You can run Pig in a variety of modes:
+## Network-Restricted Environments
+Charms can be deployed in environments with limited network access. To deploy
+in this environment, configure a Juju model with appropriate proxy and/or
+mirror options. See [Configuring Models][] for more information.
+
+[getting-started]: https://jujucharms.com/docs/stable/getting-started
+[apache bigtop bundles]: https://jujucharms.com/u/bigdata-charmers/#bundles
+[Configuring Models]: https://jujucharms.com/docs/stable/models-config
+
+
+# Verifying
+
+## Status
+Apache Bigtop charms provide extended status reporting to indicate when they
+are ready:
+
+    juju status
+
+This is particularly useful when combined with `watch` to track the on-going
+progress of the deployment:
+
+    watch -n 2 juju status
+
+The message column will provide information about a given unit's state.
+This charm is ready for use once the status message indicates that it is
+ready.
+
+## Smoke Test
+This charm provides a `smoke-test` action that can be used to verify the
+application is functioning as expected. Run the action as follows:
+
+    juju run-action pig/0 smoke-test
+
+Watch the progress of the smoke test actions with:
+
+    watch -n 2 juju show-action-status
+
+Eventually, the action should settle to `status: completed`.  If it
+reports `status: failed`, the application is not working as expected. Get
+more information about a specific smoke test with:
+
+    juju show-action-output <action-id>
+
+
+# Using
+
+Once the deployment has been verified, Apache Pig will be available to execute
+Pig Latin jobs on your data. You can run Pig in a variety of modes:
 
 ## Local Mode
 Run Pig in local mode on the Pig unit with the following:
@@ -73,56 +108,16 @@ and run pig as follows:
     pig
 
 
-# Verifying
+# Issues
 
-## Status
-Apache Bigtop charms provide extended status reporting to indicate when they
-are ready:
+Apache Bigtop tracks issues using JIRA (Apache account required). File an
+issue for this charm at:
 
-    juju status
+https://issues.apache.org/jira/secure/CreateIssue!default.jspa
 
-This is particularly useful when combined with `watch` to track the on-going
-progress of the deployment:
-
-    watch -n 0.5 juju status
-
-The message column will provide information about a given unit's state.
-This charm is ready for use once the status message indicates that it is
-ready.
-
-## Smoke Test
-This charm provides a `smoke-test` action that can be used to verify the
-application is functioning as expected. Run the action as follows:
-
-    juju run-action pig/0 smoke-test
-
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju action do pig/0 smoke-test`.
-
-Watch the progress of the smoke test actions with:
-
-    watch -n 0.5 juju show-action-status
-
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju action status`.
-
-Eventually, the action should settle to `status: completed`.  If it
-reports `status: failed`, the application is not working as expected. Get
-more information about a specific smoke test with:
-
-    juju show-action-output <action-id>
-
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju action fetch <action-id>`.
-
-
-# Network-Restricted Environments
-
-Charms can be deployed in environments with limited network access. To deploy
-in this environment, configure a Juju model with appropriate
-proxy and/or mirror options. See
-[Configuring Models](https://jujucharms.com/docs/2.0/models-config) for more
-information.
+Ensure `Bigtop` is selected as the project. Typically, charm issues are filed
+in the `deployment` component with the latest stable release selected as the
+affected version. Any uncertain fields may be left blank.
 
 
 # Contact Information
@@ -132,9 +127,10 @@ information.
 
 # Resources
 
-- [Apache Bigtop](http://bigtop.apache.org/) home page
+- [Apache Pig home page](http://pig.apache.org/)
+- [Apache Bigtop home page](http://bigtop.apache.org/)
 - [Apache Bigtop issue tracking](http://bigtop.apache.org/issue-tracking.html)
 - [Apache Bigtop mailing lists](http://bigtop.apache.org/mail-lists.html)
-- [Juju Bigtop charms](https://jujucharms.com/q/apache/bigtop)
+- [Juju Big Data](https://jujucharms.com/big-data)
+- [Juju Bigtop charms](https://jujucharms.com/q/bigtop)
 - [Juju mailing list](https://lists.ubuntu.com/mailman/listinfo/juju)
-- [Juju community](https://jujucharms.com/community)

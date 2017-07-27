@@ -57,6 +57,11 @@ distributions {
   }
 }
 
+tasks.withType(Tar) {
+    compression = Compression.GZIP
+    extension = "tar.gz"
+}
+
 distZip.dependsOn clean
 distTar.dependsOn clean
 

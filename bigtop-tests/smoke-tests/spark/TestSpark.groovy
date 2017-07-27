@@ -48,9 +48,9 @@ class TestSpark {
     // create HDFS examples/src/main/resources
     sh.exec("hdfs dfs -mkdir -p examples/src/main/resources")
     // extract people.txt file into it
-    String examplesJar = JarContent.getJarName("$SPARK_HOME/lib", 'spark-examples.*jar')
+    String examplesJar = JarContent.getJarName("$SPARK_HOME/examples/jars", 'spark-examples.*jar')
     assertNotNull(examplesJar, "spark-examples.jar file wasn't found")
-    ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream("$SPARK_HOME/lib/$examplesJar"))
+    ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream("$SPARK_HOME/examples/jars/$examplesJar"))
     File examplesDir = new File('examples')
     examplesDir.mkdirs()
     zipInputStream.unzip(examplesDir.getName(), 'people')
@@ -81,8 +81,8 @@ class TestSpark {
     final String SPARK_SHELL = SPARK_HOME + "/bin/spark-shell --master $masterMode"
     // Let's use time, 'cause the test has one job
     sh.exec("timeout 120 " + SPARK_SHELL +
-        " --class org.apache.spark.examples.sql.JavaSparkSQL " +
-        " --jars " + SPARK_HOME + "/lib/spark-examples*.jar > " +
+        " --class org.apache.spark.examples.sql.JavaSparkSQLExample " +
+        " --jars " + SPARK_HOME + "/examples/jars/spark-examples*.jar > " +
         TEST_SPARKSQL_LOG + " 2>&1")
     logError(sh)
     assertTrue("Failed ...", sh.getRet() == 0);

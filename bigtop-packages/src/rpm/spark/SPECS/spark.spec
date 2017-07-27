@@ -24,6 +24,8 @@
 %define bin /usr/bin
 %define man_dir /usr/share/man
 %define spark_services master worker history-server thriftserver
+%define lib_hadoop_client /usr/lib/hadoop/client
+%define lib_hadoop_yarn /usr/lib/hadoop-yarn/
 
 %if  %{?suse_version:1}0
 %define doc_spark %{_docdir}/spark
@@ -54,7 +56,7 @@ Source6: init.d.tmpl
 Source7: spark-history-server.svc
 Source8: spark-thriftserver.svc
 Source9: bigtop.bom
-Requires: bigtop-utils >= 0.7, hadoop-client
+Requires: bigtop-utils >= 0.7, hadoop-client, hadoop-yarn
 Requires(preun): /sbin/service
 
 %global initd_dir %{_sysconfdir}/init.d
@@ -155,8 +157,24 @@ bash $RPM_SOURCE_DIR/install_spark.sh \
           --build-dir=`pwd`         \
           --source-dir=$RPM_SOURCE_DIR \
           --prefix=$RPM_BUILD_ROOT  \
-          --doc-dir=%{doc_spark} \
-          --pyspark-python=python
+          --doc-dir=%{doc_spark}
+
+%__rm -f $RPM_BUILD_ROOT/%{lib_spark}/jars/hadoop-*.jar
+%__ln_s  %{lib_hadoop_client}/hadoop-annotations.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
+%__ln_s  %{lib_hadoop_client}/hadoop-auth.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
+%__ln_s  %{lib_hadoop_client}/hadoop-client.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
+%__ln_s  %{lib_hadoop_client}/hadoop-common.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
+%__ln_s  %{lib_hadoop_client}/hadoop-hdfs.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
+%__ln_s  %{lib_hadoop_client}/hadoop-mapreduce-client-app.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
+%__ln_s  %{lib_hadoop_client}/hadoop-mapreduce-client-common.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
+%__ln_s  %{lib_hadoop_client}/hadoop-mapreduce-client-core.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
+%__ln_s  %{lib_hadoop_client}/hadoop-mapreduce-client-jobclient.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
+%__ln_s  %{lib_hadoop_client}/hadoop-mapreduce-client-shuffle.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
+%__ln_s  %{lib_hadoop_yarn}/hadoop-yarn-api.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
+%__ln_s  %{lib_hadoop_yarn}/hadoop-yarn-client.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
+%__ln_s  %{lib_hadoop_yarn}/hadoop-yarn-common.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
+%__ln_s  %{lib_hadoop_yarn}/hadoop-yarn-server-common.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
+%__ln_s  %{lib_hadoop_yarn}/hadoop-yarn-server-web-proxy.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
 
 for service in %{spark_services}
 do
@@ -210,6 +228,7 @@ done
 %attr(0755,spark,spark) %{var_run_spark}
 %attr(0755,spark,spark) %{var_log_spark}
 %{bin}/spark-*
+%{bin}/find-spark-home
 
 %files -n spark-python
 %defattr(-,root,root,755)

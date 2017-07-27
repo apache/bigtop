@@ -226,6 +226,7 @@ fi
 %{usr_bin}/oozie
 %dir %{lib_oozie}
 %{lib_oozie}/bin/oozie
+%{lib_oozie}/conf/oozie-client-env.sh
 %{lib_oozie}/lib
 %doc %{doc_oozie}
 %{man_dir}/man1/oozie.1.*

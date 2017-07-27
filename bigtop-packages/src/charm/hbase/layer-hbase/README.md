@@ -16,78 +16,42 @@
 -->
 # Overview
 
-HBase is the Hadoop database. Think of it as a distributed scalable Big Data
+HBase is the Hadoop database. Think of it as a distributed, scalable Big Data
 store.
 
 Use HBase when you need random, realtime read/write access to your Big Data.
 This project's goal is the hosting of very large tables -- billions of rows X
-millions of columns -- atop clusters of commodity hardware.
+millions of columns -- atop clusters of commodity hardware. Learn more at
+[hbase.apache.org][].
 
-HBase is an open-source, distributed, versioned, column-oriented store modeled
-after Google's Bigtable: A Distributed Storage System for Structured Data by
-Chang et al. Just as Bigtable leverages the distributed data storage provided
-by the Google File System, HBase provides Bigtable-like capabilities on top of
-Hadoop and HDFS.
+This charm deploys version 1.1.9 of the HBase master, regionserver, and thrift
+components from [Apache Bigtop][].
 
-HBase provides:
-
-- Linear and modular scalability.
-- Strictly consistent reads and writes.
-- Automatic and configurable sharding of tables
-- Automatic failover support between RegionServers.
-- Convenient base classes for backing Hadoop MapReduce jobs with HBase tables.
-- Easy to use Java API for client access.
-- Block cache and Bloom Filters for real-time queries.
-- Query predicate push down via server side Filters
-- Thrift gateway and a REST-ful Web service that supports XML, Protobuf,
-  and binary data encoding options
-- Extensible jruby-based (JIRB) shell
-- Support for exporting metrics via the Hadoop metrics subsystem to files
-  or Ganglia; or via JMX.
-
-See [the homepage](http://hbase.apache.org) for more information.
-
-This charm deploys the hbase master and regionserver components of the
-[Apache Bigtop][] platform.
-
+[hbase.apache.org]: http://hbase.apache.org/
 [Apache Bigtop]: http://bigtop.apache.org/
 
 
 # Deploying
 
-A working Juju installation is assumed to be present. If Juju is not yet set
-up, please follow the [getting-started][] instructions prior to deploying this
-charm.
+This charm requires Juju 2.0 or greater. If Juju is not yet set up, please
+follow the [getting-started][] instructions prior to deploying this charm.
 
-An HBase deployment consists of HBase masters and HBase RegionServers.
+An HBase deployment consists of HBase Masters and HBase RegionServers.
 In a distributed HBase environment, one master and one regionserver are
-deployed on each unit. HBase makes sure that only one master is active and
-the rest are in standby mode in case the active one fails.
+deployed on each unit. HBase ensures that only one master is active with
+the rest in standby mode in case the active master fails.
 
-HBase operates over HDFS, so we first need to deploy an HDFS cluster:
+Because HBase requires HDFS, this charm is recommended to be deployed as part
+of the `hadoop-hbase` bundle:
 
-    juju deploy hadoop-namenode namenode
-    juju deploy hadoop-slave slave
-    juju deploy hadoop-plugin plugin
+    juju deploy hadoop-hbase
 
-    juju add-relation namenode slave
-    juju add-relation plugin namenode
+This will deploy an Apache Bigtop Hadoop cluster with 3 HBase units colocated
+on 3 Hadoop DataNodes. More information about this deployment can be found in
+the [bundle readme](https://jujucharms.com/hadoop-hbase/).
 
-In order to function correctly, the HBase master and regionserver applications
-have a mandatory relationship with Zookeeper. Use the zookeeper charm to
-create a functional zookeeper quorum. Remember that quorums come in odd numbers
-starting with 3 (one will work, but will offer no resilience):
-
-    juju deploy zookeeper -n 3
-
-Now add HBase scaled to 3 units and add the required relations:
-
-    juju deploy hbase -n 3
-
-    juju add-relation plugin hbase
-    juju add-relation zookeeper hbase
-
-The charm also supports use of the thrift gateway.
+This charm also supports the Thrift client API for HBase. Thrift is both
+cross-platform and more lightweight than REST for many operations.
 
 ## Network-Restricted Environments
 Charms can be deployed in environments with limited network access. To deploy
@@ -121,15 +85,9 @@ application is functioning as expected. Run the action as follows:
 
     juju run-action hbase/0 smoke-test
 
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju action do hbase/0 smoke-test`.
-
 Watch the progress of the smoke test actions with:
 
     watch -n 2 juju show-action-status
-
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju action status`.
 
 Eventually, the action should settle to `status: completed`.  If it
 reports `status: failed`, the application is not working as expected. Get
@@ -137,17 +95,128 @@ more information about a specific smoke test with:
 
     juju show-action-output <action-id>
 
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju action fetch <action-id>`.
+## HBase web interfaces
+The HBase Master service provides a web console that can be used to verify
+information about the cluster. To access it, find the `PUBLIC-ADDRESS` of any
+hbase unit and expose the application:
+
+    juju status hbase
+    juju expose hbase
+
+The HBase Master web interface will be available at the following URL:
+
+    http://HBASE_PUBLIC_IP:16010
+
+The HBase RegionServer and Thrift services also provide web interfaces that
+are accessible at the following URLs:
+
+    http://HBASE_PUBLIC_IP:16030
+    http://HBASE_PUBLIC_IP:9095
+
+
+# Using
+
+## Actions
+Once HBase is ready, there are a number of actions available in this charm.
+
+Run a performance test (as described in the **Benchmarking** section):
+
+    juju run-action hbase/0 perf-test
+    juju show-action-output <id>  # <-- id from above command
+
+Run a smoke test (as described in the **Verifying** section):
+
+    juju run-action hbase/0 smoke-test
+    juju show-action-output <id>  # <-- id from above command
+
+Start/Stop/Restart all HBase services on a unit:
+
+    juju run-action hbase/0 [start|stop|restart]
+    juju show-action-output <id>  # <-- id from above command
+
+
+Start/Stop the HBase Master service on a unit:
+
+    juju run-action hbase/0 [start|stop]-hbase-master
+    juju show-action-output <id>  # <-- id from above command
+
+Start/Stop the HBase RegionServer and Thrift services on a unit:
+
+    juju run-action hbase/0 [start|stop]-hbase-regionserver
+    juju show-action-output <id>  # <-- id from above command
+
+## HBase Shell
+
+HBase includes a shell that can be used to interact with the cluster. Access it
+from any hbase unit (e.g. `hbase/0`) as follows:
+
+    $ juju ssh hbase/0
+    $ hbase shell
+    HBase Shell; enter 'help<RETURN>' for list of supported commands.
+    Type "exit<RETURN>" to leave the HBase Shell
+    Version 1.1.3, rUnknown, Wed Mar 29 07:39:44 UTC 2017
+
+    hbase(main):002:0> exit
+
+# Configuring
+
+Charm configuration can be changed at runtime with `juju config`. This charm
+supports the following config parameters.
+
+## Heap
+The default heap size for the the HBase master JVM is 1024MB. Set a different
+value (in MB) with the following:
+
+    juju config hbase heap=4096
+
+
+# Benchmarking
+
+This charm provides a `perf-test` action to gauge the performance of the HBase
+cluster:
+
+    $ juju run-action hbase/0 perf-test
+    Action queued with id: 339cec1f-e903-4ee7-85ca-876fb0c3d28e
+
+    $ juju show-action-output 339cec1f-e903-4ee7-85ca-876fb0c3d28e
+    results:
+      meta:
+        composite:
+          direction: asc
+          units: secs
+          value: "90"
+        raw: /opt/hbase-perf-results/1495562300.log
+        start: 2017-05-23T17:58:20Z
+        stop: 2017-05-23T17:59:50Z
+      outcome: success
+    status: completed
+    timing:
+      completed: 2017-05-23 17:59:51 +0000 UTC
+      enqueued: 2017-05-23 17:58:16 +0000 UTC
+      started: 2017-05-23 17:58:20 +0000 UTC
 
 
 # Limitations
 
-Restarting an HBase deployment is potentially disruptive. Be aware that the
-following events will cause a restart:
+Restarting an HBase cluster is potentially disruptive. Be aware that the
+following events will cause a restart of all HBase services:
 
-- Zookeeper service units joining or departing relations.
-- Upgrading the charm or changing the configuration.
+- Adding or removing HBase units
+- Adding or removing Zookeeper units
+- Changing charm configuration with `juju config`
+- Upgrading this charm
+
+
+# Issues
+
+Apache Bigtop tracks issues using JIRA (Apache account required). File an
+issue for this charm at:
+
+https://issues.apache.org/jira/secure/CreateIssue!default.jspa
+
+Ensure `Bigtop` is selected as the project. Typically, charm issues are filed
+in the `deployment` component with the latest stable release selected as the
+affected version. Any uncertain fields may be left blank.
 
 
 # Contact Information
@@ -157,10 +226,10 @@ following events will cause a restart:
 
 # Resources
 
-- [Apache Bigtop](http://bigtop.apache.org/) home page
+- [Apache HBase home page](http://hbase.apache.org/)
+- [Apache Bigtop home page](http://bigtop.apache.org/)
+- [Apache Bigtop issue tracking](http://bigtop.apache.org/issue-tracking.html)
 - [Apache Bigtop mailing lists](http://bigtop.apache.org/mail-lists.html)
-- [Apache HBase home page](https://hbase.apache.org/)
-- [Apache Zookeeper issue tracker](https://issues.apache.org/jira/browse/HBASE)
-- [Juju Bigtop charms](https://jujucharms.com/q/apache/bigtop)
+- [Juju Big Data](https://jujucharms.com/big-data)
+- [Juju Bigtop charms](https://jujucharms.com/q/bigtop)
 - [Juju mailing list](https://lists.ubuntu.com/mailman/listinfo/juju)
-- [Juju community](https://jujucharms.com/community)

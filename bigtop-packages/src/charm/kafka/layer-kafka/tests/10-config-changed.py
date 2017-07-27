@@ -15,83 +15,105 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import unittest
 import amulet
 import re
+import time
+import unittest
 
 
 class TestConfigChanged(unittest.TestCase):
     """
-    Test to verify that we update network interface bindings successfully.
-
+    Test to verify that we can bind to listen for client connections
+    on a specific interface.
     """
     @classmethod
     def setUpClass(cls):
-        cls.d = amulet.Deployment(series='trusty')
-        cls.d.log.debug("foo!")
-        cls.d.add('kafka', 'kafka')
-        cls.d.add('openjdk', 'openjdk')
-        cls.d.add('zk', 'zookeeper')
+        cls.d = amulet.Deployment(series='xenial')
+        cls.d.add('kafka-test', charm='kafka')
+        cls.d.add('kafka-test-zk', charm='zookeeper')
 
-        cls.d.configure('openjdk', {'java-type': 'jdk',
-                                    'java-major': '8'})
+        cls.d.relate('kafka-test:zookeeper', 'kafka-test-zk:zookeeper')
 
-        cls.d.relate('kafka:zookeeper', 'zk:zookeeper')
-        cls.d.relate('kafka:java', 'openjdk:java')
+        cls.d.setup(timeout=1800)
+        cls.d.sentry.wait_for_messages({'kafka-test': 'ready'}, timeout=1800)
+        cls.unit = cls.d.sentry['kafka-test'][0]
+
+    @classmethod
+    def tearDownClass(cls):
+        # NB: seems to be a remove_service issue with amulet. However, the
+        # unit does still get removed. Pass OSError for now:
+        #  OSError: juju command failed ['remove-application', ...]:
+        #  ERROR allocation for service ... owned by ... not found
         try:
-            cls.d.relate('zk:java', 'openjdk:java')
-        except ValueError:
-            # No need to related older versions of the zookeeper charm
-            # to java.
+            cls.d.remove_service('kafka-test', 'kafka-test-zk')
+        except OSError as e:
+            print("IGNORE: Amulet remove_service failed: {}".format(e))
             pass
-
-        cls.d.setup(timeout=900)
-        cls.d.sentry.wait_for_messages({'kafka': 'ready'}, timeout=1800)
-        cls.kafka = cls.d.sentry['kafka'][0]
 
     def test_bind_network_interface(self):
         """
-        Test to verify that we update network interface bindings successfully.
-
+        Verify that we update client port bindings successfully.
         """
-        self.d.configure('kafka', {'network_interface': 'eth0'})
-        self.d.sentry.wait_for_messages({'kafka': 'updating zookeeper instances'}, timeout=600)
+        network_interface = None
+        # Regular expression should handle interfaces in the format
+        # eth[n], and in the format en[foo] (the "predicatble
+        # interface names" in v197+ of systemd).
+        ethernet_interface = re.compile('^e[thn]+.*')
+        interfaces, _ = self.unit.run(
+            "ifconfig -a | sed 's/[ \t].*//;/^$/d'")
+        interfaces = interfaces.split()  # Splits on newlines
+        for interface in interfaces:
+            if ethernet_interface.match(interface):
+                network_interface = interface
+                break
 
-        self.d.sentry.wait_for_messages({'kafka': 'ready'}, timeout=600)
-        ret = self.kafka.run(
+        if network_interface is None:
+            raise Exception(
+                "Could not find any interface on the unit that matched my "
+                "criteria.")
+        self.d.configure('kafka-test', {'network_interface': network_interface})
+
+        # NB: we used to watch for a maintenance status message, but every now
+        # and then, we'd miss it. Wait 2m to let the config-changed hook settle.
+        time.sleep(120)
+        ret = self.unit.run(
             'grep host.name /etc/kafka/conf/server.properties')[0]
+
         # Correct line should start with host.name (no comment hash
         # mark), followed by an equals sign and something that looks
         # like an IP address (we aren't too strict about it being a
         # valid ip address.)
         matcher = re.compile("^host\.name=\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}.*")
-
-        self.assertTrue('host.name' in ret)
         self.assertTrue(matcher.match(ret))
 
         # Verify that smoke tests still run
-        smk_uuid = self.kafka.action_do("smoke-test")
-        output = self.d.action_fetch(smk_uuid, full_output=True)
-        assert "completed" in output['status']
+        smk_uuid = self.unit.run_action('smoke-test')
+        result = self.d.action_fetch(smk_uuid, full_output=True)
+        # actions set status=completed on success
+        if (result['status'] != "completed"):
+            self.fail('Kafka test failed after setting nic config: %s' % result)
 
     def test_reset_network_interface(self):
         """
-        Verify that we can reset the network interface to 0.
-
+        Verify that we can reset the client port bindings to 0.0.0.0
         """
-        self.d.configure('kafka', {'network_interface': '0.0.0.0'})
-        self.d.sentry.wait_for_messages({'kafka': 'updating zookeeper instances'}, timeout=600)
-        self.d.sentry.wait_for_messages({'kafka': 'ready'}, timeout=600)
-        ret = self.kafka.run(
+        self.d.configure('kafka-test', {'network_interface': '0.0.0.0'})
+
+        # NB: we used to watch for a maintenance status message, but every now
+        # and then, we'd miss it. Wait 2m to let the config-changed hook settle.
+        time.sleep(120)
+        ret = self.unit.run(
             'grep host.name /etc/kafka/conf/server.properties')[0]
 
         matcher = re.compile("^host\.name=0\.0\.0\.0.*")
         self.assertTrue(matcher.match(ret))
 
         # Verify that smoke tests still run
-        smk_uuid = self.kafka.action_do("smoke-test")
-        output = self.d.action_fetch(smk_uuid, full_output=True)
-        assert "completed" in output['status']
+        smk_uuid = self.unit.run_action('smoke-test')
+        result = self.d.action_fetch(smk_uuid, full_output=True)
+        # actions set status=completed on success
+        if (result['status'] != "completed"):
+            self.fail('Kafka test failed after resetting nic config: %s' % result)
 
 
 if __name__ == '__main__':

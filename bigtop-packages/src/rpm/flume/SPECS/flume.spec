@@ -67,6 +67,7 @@ Source1: do-component-build
 Source2: install_%{name}.sh
 Source3: %{name}-agent.init
 Source4: flume-agent.default
+#BIGTOP_PATCH_FILES
 Requires: /usr/sbin/useradd
 Requires: coreutils
 Requires: hadoop, hadoop-hdfs 
@@ -113,6 +114,8 @@ Flume is a reliable, scalable, and manageable distributed data collection applic
 
 %prep
 %setup -n %{flume_folder}
+
+#BIGTOP_PATCH_COMMANDS
 
 %build
 env FLUME_VERSION=%{version} sh %{SOURCE1}

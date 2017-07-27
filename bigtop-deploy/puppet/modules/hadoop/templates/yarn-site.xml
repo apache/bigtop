@@ -234,4 +234,12 @@
     <value><%= @yarn_resourcemanager_scheduler_class %></value>
   </property>
 <% end -%>
+
+<!-- The defaut setting (2.1) is silly. The virtual memory is not 
+     a limiting factor on 64Bit systems, at least not a limiting  
+     resource, so make it large, very large. -->
+  <property>
+    <name>yarn.nodemanager.vmem-pmem-ratio</name>
+    <value>100</value>
+  </property>
 </configuration>

@@ -15,16 +15,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import sys
-sys.path.append('lib')
-
 import kafkautils
 import subprocess
+import sys
+sys.path.append('lib')  # Add our helpers to our path.
 
-from charmhelpers.core import hookenv, host
-from charms.layer.apache_bigtop_base import get_layer_opts
-from charms.reactive import is_state
-from jujubigdata import utils
+from charmhelpers.core import hookenv, host  # noqa: E402
+from charms.layer.apache_bigtop_base import get_layer_opts  # noqa: E402
+from charms.reactive import is_state  # noqa: E402
+from jujubigdata import utils  # noqa: E402
 
 
 if not is_state('kafka.started'):
@@ -48,8 +47,9 @@ if host.service_available('kafka-server') and host.service_running('kafka-server
                               '--no-wait-at-logend',
                               capture_output=True)
     except subprocess.CalledProcessError as e:
-        kafkautils.fail('Kafka command failed', e.output)
+        kafkautils.fail('Kafka command failed: {}'.format(e.output))
     else:
-        hookenv.action_set({'output': output})
+        hookenv.action_set({'raw': output})
+        hookenv.action_set({'outcome': 'success'})
 else:
-    kafkautils.fail('Kafka service is not running')
+    kafkautils.fail('kafka-server service is not running')

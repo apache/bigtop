@@ -30,7 +30,7 @@ class hadoop_zookeeper (
   class common (
     $kerberos_realm = $hadoop_zookeeper::kerberos_realm,
   ) inherits hadoop_zookeeper {
-    if ($kerberos_realm) {
+    if ($kerberos_realm and $kerberos_realm != "") {
       file { '/etc/zookeeper/conf/java.env':
         source => 'puppet:///modules/hadoop_zookeeper/java.env',
       }
@@ -50,7 +50,7 @@ class hadoop_zookeeper (
       require => Package["jdk"],
     }
 
-    if ($kerberos_realm) {
+    if ($kerberos_realm and $kerberos_realm != "") {
       file { '/etc/zookeeper/conf/client-jaas.conf':
         content => template('hadoop_zookeeper/client-jaas.conf'),
         require => Package['zookeeper'],
@@ -63,6 +63,7 @@ class hadoop_zookeeper (
                 $datadir = "/var/lib/zookeeper",
                 $ensemble = [$myid, "localhost:2888:3888"],
                 $kerberos_realm = $hadoop_zookeeper::kerberos_realm,
+                $client_bind_addr = "",
   ) inherits hadoop_zookeeper {
     include hadoop_zookeeper::common
 
@@ -98,7 +99,7 @@ class hadoop_zookeeper (
       require => Package["zookeeper-server"],
     }
 
-    if ($kerberos_realm) {
+    if ($kerberos_realm and $kerberos_realm != "") {
       require kerberos::client
 
       kerberos::host_keytab { "zookeeper":
