@@ -40,6 +40,8 @@ class TestSpark {
 
   static Shell sh = new Shell("/bin/bash -s")
   static final String SPARK_HOME = System.getenv("SPARK_HOME")
+  static final String SPARK_MASTER_IP = System.getenv("SPARK_MASTER_IP")
+  static final String SPARK_MASTER_PORT = System.getenv("SPARK_MASTER_PORT")
   static final String TEST_SPARKSQL_LOG = "/tmp/TestSpark_testSparkSQL.log"
 
   @BeforeClass
@@ -72,8 +74,8 @@ class TestSpark {
     // If SPARK_MASTER_IP nor SPARK_MASTER_PORT are set, we'll assume
     // 'yarn-client' mode
     String masterMode = 'yarn-client'
-    if (System.env.SPARK_MASTER_IP != null && System.env.SPARK_MASTER_PORT != null)
-      masterMode = "spark://$MASTER_IP:$MASTER_PORT"
+    if (SPARK_MASTER_IP != null && SPARK_MASTER_PORT != null)
+      masterMode = "spark://$SPARK_MASTER_IP:$SPARK_MASTER_PORT"
     else
       println("SPARK_MASTER isn't set. yarn-client submission will be used. " +
           "Refer to smoke-tests/README If this isn't what you you expect.")
