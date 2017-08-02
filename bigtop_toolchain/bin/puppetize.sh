@@ -53,12 +53,13 @@ case ${ID}-${VERSION_ID} in
 	;;
     debian-8*)
 	apt-get update
-	apt-get -y install wget
-	# BIGTOP-2523. in order to install puppet 3.8 we need to get it from puppet repo
-	wget -O /tmp/puppetlabs-release-jessie.deb https://apt.puppetlabs.com/puppetlabs-release-jessie.deb && dpkg -i /tmp/puppetlabs-release-jessie.deb
-	rm -f /tmp/puppetlabs-release-jessie.deb
-	apt-get update
-	apt-get -y install curl sudo unzip puppet
+	apt-get -y install wget hiera facter ruby lsb-release
+        # puppetlabs-release-jessie.deb doesn't provide puppet 3.8.*
+        # so it is needed to install from tarball
+        wget -O /tmp/puppet-3.8.7.tar.gz https://downloads.puppetlabs.com/puppet/puppet-3.8.7.tar.gz
+        tar -xf /tmp/puppet-3.8.7.tar.gz && cd puppet-3.8.7 && ruby install.rb
+        cd - && rm -rf puppet-3.8.7
+	apt-get -y install curl sudo unzip
 	;;
     debian-9*)
         apt-get update
