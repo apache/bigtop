@@ -20,28 +20,28 @@ import re
 import unittest
 
 
-class TestDeploy(unittest.TestCase):
+class TestConfigStandalone(unittest.TestCase):
     """
-    Smoke test for Apache Bigtop Spark.
+    Test configuring Apache Spark in standalone mode.
     """
     @classmethod
     def setUpClass(cls):
         cls.d = amulet.Deployment(series='xenial')
-        cls.d.add('spark')
+        cls.d.add('spark-test-config', charm='spark',
+                  constraints={'mem': '7G'})
         cls.d.setup(timeout=1800)
-        cls.d.sentry.wait_for_messages({'spark': re.compile('ready')},
+        cls.d.sentry.wait_for_messages({'spark-test-config': re.compile('ready')},
                                        timeout=1800)
-        cls.spark = cls.d.sentry['spark'][0]
+        cls.spark = cls.d.sentry['spark-test-config'][0]
 
-    def test_spark(self):
+    def test_bigtop_upgrade(self):
         """
-        Validate Spark by running the smoke-test action.
+        Validate Spark status is changed when upgrading spark.
         """
-        uuid = self.spark.run_action('smoke-test')
-        result = self.d.action_fetch(uuid, full_output=True)
-        # action status=completed on success
-        if (result['status'] != "completed"):
-            self.fail('Spark smoke-test failed: %s' % result)
+        self.d.configure('spark-test-config',
+                         {'bigtop_version': 'master'})
+        self.d.sentry.wait_for_messages({'spark-test-config': re.compile('reinstall|ready')},
+                                        timeout=900)
 
 
 if __name__ == '__main__':

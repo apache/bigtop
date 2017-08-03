@@ -38,18 +38,6 @@ class TestDeployment(unittest.TestCase):
         cls.d.setup(timeout=3600)
         cls.d.sentry.wait(timeout=3600)
 
-    @classmethod
-    def tearDownClass(cls):
-        # NB: seems to be a remove_service issue with amulet. However, the
-        # unit does still get removed. Pass OSError for now:
-        #  OSError: juju command failed ['remove-application', ...]:
-        #  ERROR allocation for service ... owned by ... not found
-        try:
-            cls.d.remove_service('spark-test-ha', 'spark-test-zk')
-        except OSError as e:
-            print("IGNORE: Amulet remove_service failed: {}".format(e))
-            pass
-
     def test_master_selected(self):
         """
         Wait for all three spark-test-ha units to agree on a master leader.
