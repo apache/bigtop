@@ -36,7 +36,7 @@ import java.util.List;
  * annotation to the desired testcases (default run stage
  * is 0). Later on run stages are executed according to the order of their levels
  * and testcases within the same run stage have no guaranteed order of execution.
- * <p/>
+ * <p>
  * Here's how to use it:
  * <pre>
  * public class Example {
