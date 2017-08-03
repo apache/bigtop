@@ -81,3 +81,5 @@ remove-job:
         action-id:
             type: string
             description: The ID returned by the action that scheduled the job.
+reinstall:
+    description: Reinstall spark with the version available in the repo.
