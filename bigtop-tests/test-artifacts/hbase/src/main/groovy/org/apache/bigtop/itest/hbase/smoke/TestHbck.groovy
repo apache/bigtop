@@ -26,13 +26,15 @@ import static org.apache.bigtop.itest.LogErrorsUtils.logError
  * Validates the HBase cluster health.
  */
 public class TestHbck {
+  private static final String USER = System.properties["hcfs.root.username"]?
+			"${System.properties['hcfs.root.username']}": "hdfs";
   static Shell sh = new Shell("/bin/bash -s")
   String[] hbckCmds = [
-    "hbase hbck",
-    "hbase hbck -details",
-    "hbase hbck -timelag 120",
-    "hbase hbck -summary",
-    "hbase hbck -metaonly"
+    "HADOOP_USER_NAME=$USER hbase hbck",
+    "HADOOP_USER_NAME=$USER hbase hbck -details",
+    "HADOOP_USER_NAME=$USER hbase hbck -timelag 120",
+    "HADOOP_USER_NAME=$USER hbase hbck -summary",
+    "HADOOP_USER_NAME=$USER hbase hbck -metaonly"
   ]
 
   @Test
