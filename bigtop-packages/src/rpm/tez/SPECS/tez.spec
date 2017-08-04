@@ -93,6 +93,7 @@ sh %{SOURCE2} \
         --libexec-dir=%{libexec_tez} \
 	--prefix=$RPM_BUILD_ROOT
 
+%__rm -f $RPM_BUILD_ROOT/%{lib_tez}/slf4j-log4j12-*.jar
 %__ln_s -f /usr/lib/hadoop/hadoop-annotations.jar $RPM_BUILD_ROOT/%{lib_tez}/hadoop-annotations.jar
 %__ln_s -f /usr/lib/hadoop/hadoop-auth.jar $RPM_BUILD_ROOT/%{lib_tez}/hadoop-auth.jar
 %__ln_s -f /usr/lib/hadoop-mapreduce/hadoop-mapreduce-client-common.jar $RPM_BUILD_ROOT/%{lib_tez}/hadoop-mapreduce-client-common.jar
