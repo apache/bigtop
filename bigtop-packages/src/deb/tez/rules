@@ -42,6 +42,7 @@ override_dh_auto_install:
 		--build-dir=. \
 		--doc-dir=usr/share/doc/${tez_pkg_name}-doc \
 		--prefix=debian/tmp
+	rm -f debian/tmp/usr/lib/${tez_pkg_name}/lib/slf4j-log4j12-*.jar
 	ln -sf /usr/lib/hadoop/hadoop-annotations.jar debian/tmp/${lib_tez}/hadoop-annotations.jar
 	ln -sf /usr/lib/hadoop/hadoop-auth.jar debian/tmp/${lib_tez}/hadoop-auth.jar
 	ln -sf /usr/lib/hadoop-mapreduce/hadoop-mapreduce-client-common.jar debian/tmp/${lib_tez}/hadoop-mapreduce-client-common.jar
