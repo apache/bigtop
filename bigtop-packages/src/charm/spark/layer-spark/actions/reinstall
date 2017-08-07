@@ -20,6 +20,7 @@ sys.path.append('lib')
 
 from charmhelpers.core import hookenv, unitdata  # noqa: E402
 from charms.layer.apache_bigtop_base import Bigtop, get_package_version  # noqa: E402
+from charms.reactive import is_state  # noqa: E402
 
 
 def fail(msg):
@@ -28,8 +29,11 @@ def fail(msg):
     sys.exit()
 
 
+if not is_state('bigtop.version.changed'):
+    fail('No Bigtop version changes were found; nothing to reinstall.')
+
 if not unitdata.kv().get('spark.version.repo', False):
-    fail('No Spark repository changes found; nothing to reinstall.')
+    fail('Charm is not prepared to run the reinstall action.')
 
 # Call the base reinstall method with 'spark-*' so all spark related packages
 # are removed prior to reinstalling new versions via puppet apply.
@@ -51,4 +55,5 @@ if result == 'success':
     unitdata.kv().unset('spark.version.repo')
     hookenv.action_set({'outcome': 'success'})
 else:
-    fail("Failed to reinstall spark. Check 'juju debug-log' for details.")
+    fail('Reinstall failed; hiera data and package repos have been restored '
+         'to the previous working state.')
