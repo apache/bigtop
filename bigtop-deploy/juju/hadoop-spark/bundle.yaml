@@ -5,7 +5,7 @@ description: >
   data with Spark. It will run on 5 machines in your cloud.
 services:
   namenode:
-    charm: "cs:xenial/hadoop-namenode-27"
+    charm: "cs:xenial/hadoop-namenode-28"
     constraints: "mem=7G root-disk=32G"
     num_units: 1
     annotations:
@@ -14,7 +14,7 @@ services:
     to:
       - "0"
   resourcemanager:
-    charm: "cs:xenial/hadoop-resourcemanager-29"
+    charm: "cs:xenial/hadoop-resourcemanager-30"
     constraints: "mem=7G root-disk=32G"
     num_units: 1
     annotations:
@@ -23,7 +23,7 @@ services:
     to:
       - "0"
   slave:
-    charm: "cs:xenial/hadoop-slave-28"
+    charm: "cs:xenial/hadoop-slave-29"
     constraints: "mem=7G root-disk=32G"
     num_units: 3
     annotations:
@@ -34,7 +34,7 @@ services:
       - "2"
       - "3"
   plugin:
-    charm: "cs:xenial/hadoop-plugin-27"
+    charm: "cs:xenial/hadoop-plugin-28"
     annotations:
       gui-x: "1000"
       gui-y: "400"
@@ -48,7 +48,7 @@ services:
     to:
       - "4"
   spark:
-    charm: "cs:xenial/spark-52"
+    charm: "cs:xenial/spark-53"
     constraints: "mem=7G root-disk=32G"
     num_units: 1
     options:
@@ -95,12 +95,10 @@ relations:
   - ["ganglia-node:juju-info", "namenode:juju-info"]
   - ["ganglia-node:juju-info", "resourcemanager:juju-info"]
   - ["ganglia-node:juju-info", "slave:juju-info"]
-  - ["ganglia-node:juju-info", "spark:juju-info"]
   - ["ganglia:node", "ganglia-node:node"]
   - ["rsyslog-forwarder-ha:juju-info", "namenode:juju-info"]
   - ["rsyslog-forwarder-ha:juju-info", "resourcemanager:juju-info"]
   - ["rsyslog-forwarder-ha:juju-info", "slave:juju-info"]
-  - ["rsyslog-forwarder-ha:juju-info", "spark:juju-info"]
   - ["rsyslog:aggregator", "rsyslog-forwarder-ha:syslog"]
 machines:
   "0":
