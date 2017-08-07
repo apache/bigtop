@@ -41,7 +41,7 @@ class TestSpark {
   static Shell sh = new Shell("/bin/bash -s")
   static final String SPARK_HOME = System.getenv("SPARK_HOME")
   static final String SPARK_MASTER_IP = System.getenv("SPARK_MASTER_IP")
-  static final String SPARK_PORT = System.getenv("SPARK_MASTER_PORT")
+  static final String SPARK_MASTER_PORT = System.getenv("SPARK_MASTER_PORT")
   static final String TEST_SPARKSQL_LOG = "/tmp/TestSpark_testSparkSQL.log"
 
   @BeforeClass
