@@ -62,7 +62,7 @@ class TestSpark {
   public static void tearDown() {
     sh.exec("hdfs dfs -ls")
     logError(sh)
-    sh.exec("hdfs dfs -rmr people* examples")
+    sh.exec("hdfs dfs -rm -r examples")
     logError(sh)
   }
 
