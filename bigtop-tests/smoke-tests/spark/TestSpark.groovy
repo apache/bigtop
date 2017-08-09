@@ -74,7 +74,7 @@ class TestSpark {
     // If SPARK_MASTER_IP nor SPARK_MASTER_PORT are set, we'll assume
     // 'yarn-client' mode
     String masterMode = 'yarn-client'
-    if (System.env.SPARK_MASTER_IP != null && System.env.SPARK_MASTER_PORT != null)
+    if (SPARK_MASTER_IP != null && SPARK_MASTER_PORT != null)
       masterMode = "spark://$SPARK_MASTER_IP:$SPARK_MASTER_PORT"
     else
       println("SPARK_MASTER isn't set. yarn-client submission will be used. " +
