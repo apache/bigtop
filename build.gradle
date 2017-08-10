@@ -75,6 +75,7 @@ rat {
        "bigtop-tests/test-artifacts/**/resources/**",
        "bigtop-tests/smoke-tests/alluxio/datafile",
        "bigtop-tests/smoke-tests/hive/passwd.ql",
+       "bigtop-tests/smoke-tests/hive/samdat1.csv",
        "bigtop-tests/smoke-tests/kite/sandwiches.csv",
        "bigtop-tests/smoke-tests/phoenix/*.csv",
        "bigtop-tests/smoke-tests/phoenix/*.sql",
