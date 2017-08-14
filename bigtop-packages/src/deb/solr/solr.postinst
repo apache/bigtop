@@ -20,7 +20,6 @@ case "$1" in
     configure)
         # Install config alternatives
         update-alternatives --install /etc/solr/conf solr-conf /etc/solr/conf.dist 30
-        update-alternatives --install /etc/solr/tomcat-conf solr-tomcat-conf /etc/solr/tomcat-conf.dist 30
 	chown solr:solr /var/log/solr /var/lib/solr /var/run/solr
     ;;
 
