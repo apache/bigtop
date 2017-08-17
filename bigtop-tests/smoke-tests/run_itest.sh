@@ -237,7 +237,7 @@ print_tests() {
 
       for FILE in $(find -L reports/tests/classes -type f -name "*.html"); do
         echo "## $TESTDIR/$FILE"
-        links $FILE -dump
+        links $FILE -dump | awk '/^Standard error$/ { stop_stdin=1 } (!stop_stdin) { print $0; } { print $0 > "/dev/stderr" }'
         echo ""
       done
     fi
