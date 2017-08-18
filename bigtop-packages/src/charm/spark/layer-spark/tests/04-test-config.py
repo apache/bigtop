@@ -40,7 +40,7 @@ class TestConfigStandalone(unittest.TestCase):
         """
         self.d.configure('spark-test-config',
                          {'bigtop_version': 'master'})
-        self.d.sentry.wait_for_messages({'spark-test-config': re.compile('reinstall')},
+        self.d.sentry.wait_for_messages({'spark-test-config': re.compile('reinstall|ready')},
                                         timeout=900)
 
 
