@@ -138,9 +138,11 @@ public class TestFuseDFS {
 
   @AfterClass
   public static void tearDown() {
-    shRoot.exec("umount ${mount_point}");
-    logError(shRoot);
-    assertEquals("Failed: FUSE-DFS mount not cleaned up", 0, shRoot.getRet());
+    if (isHDFS) {
+      shRoot.exec("umount ${mount_point}");
+      logError(shRoot);
+      assertEquals("Failed: FUSE-DFS mount not cleaned up", 0, shRoot.getRet());
+    }
   }
 
   @Test
