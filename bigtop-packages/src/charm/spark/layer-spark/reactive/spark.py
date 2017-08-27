@@ -15,9 +15,9 @@
 import time
 
 from charms.reactive import RelationBase, when, when_not, is_state, set_state, remove_state, when_any
-from charms.layer.apache_bigtop_base import get_fqdn, get_package_version
+from charms.layer.apache_bigtop_base import Bigtop, get_fqdn, get_package_version
 from charms.layer.bigtop_spark import Spark
-from charmhelpers.core import hookenv, host
+from charmhelpers.core import hookenv, host, unitdata
 from charms import leadership
 from charms.reactive.helpers import data_changed
 from jujubigdata import utils
@@ -29,8 +29,13 @@ from jujubigdata import utils
 def report_status():
     mode = hookenv.config()['spark_execution_mode']
     if (not is_state('spark.yarn.installed')) and mode.startswith('yarn'):
-        hookenv.status_set('blocked',
-                           'yarn execution mode not available')
+        # if hadoop isn't here at all, we're blocked; otherwise, we're waiting
+        if is_state('hadoop.joined'):
+            hookenv.status_set('waiting',
+                               'waiting for yarn to become ready')
+        else:
+            hookenv.status_set('blocked',
+                               'yarn execution mode not available')
         return
 
     if mode == 'standalone' and is_state('zookeeper.ready'):
@@ -42,7 +47,13 @@ def report_status():
         mode = mode + " with CUDA"
 
     if is_state('spark.started'):
-        hookenv.status_set('active', 'ready ({})'.format(mode))
+        # inform the user if we have a different repo pkg available
+        repo_ver = unitdata.kv().get('spark.version.repo', False)
+        if repo_ver:
+            msg = "install version {} with the 'reinstall' action".format(repo_ver)
+        else:
+            msg = 'ready ({})'.format(mode)
+        hookenv.status_set('active', msg)
     else:
         hookenv.status_set('blocked', 'unable to start spark ({})'.format(mode))
 
@@ -132,19 +143,21 @@ def set_deployment_mode_state(state):
 ###############################################################################
 # Reactive methods
 ###############################################################################
-@when_any('config.changed', 'master.elected',
+@when_any('master.elected',
           'hadoop.hdfs.ready', 'hadoop.yarn.ready',
           'sparkpeers.joined', 'sparkpeers.departed',
           'zookeeper.ready')
-@when('bigtop.available', 'master.elected')
-def reinstall_spark():
+@when('bigtop.available')
+@when_not('config.changed')
+def reinstall_spark(force=False):
     """
-    This is tricky. We want to fire on config or leadership changes, or when
-    hadoop, sparkpeers, or zookeepers come and go. In the future this should
-    fire when Cassandra or any other storage comes or goes. We always fire
-    this method (or rather, when bigtop is ready and juju has elected a
-    master). We then build a deployment-matrix and (re)install as things
-    change.
+    Gather the state of our deployment and (re)install when leaders, hadoop,
+    sparkpeers, or zookeepers change. In the future this should also
+    fire when Cassandra or any other storage comes or goes. Config changed
+    events will also call this method, but that is invoked with a separate
+    handler below.
+
+    Use a deployment-matrix dict to track changes and (re)install as needed.
     """
     spark_master_host = leadership.leader_get('master-fqdn')
     if not spark_master_host:
@@ -175,9 +188,8 @@ def reinstall_spark():
         'zookeepers': zks,
     }
 
-    # If neither config nor our matrix is changing, there is nothing to do.
-    if not (is_state('config.changed') or
-            data_changed('deployment_matrix', deployment_matrix)):
+    # No-op if we are not forcing a reinstall or our matrix is unchanged.
+    if not (force or data_changed('deployment_matrix', deployment_matrix)):
         report_status()
         return
 
@@ -214,6 +226,40 @@ def send_fqdn():
 @when('leadership.changed.master-fqdn')
 def leader_elected():
     set_state("master.elected")
+
+
+@when('spark.started', 'config.changed')
+def reconfigure_spark():
+    """
+    Reconfigure spark when user config changes.
+    """
+    # Almost all config changes should trigger a reinstall... except when
+    # changing the bigtop repo version. Repo version changes require the user
+    # to run an action, so we skip the reinstall in that case.
+    if not is_state('config.changed.bigtop_version'):
+        # Config changes should reinstall even if the deployment topology has
+        # not changed. Hence, pass force=True.
+        reinstall_spark(force=True)
+
+
+@when('spark.started', 'bigtop.version.changed')
+def check_repo_version():
+    """
+    Configure a bigtop site.yaml if a new version of spark is available.
+
+    This method will set unitdata if a different version of spark-core is
+    available in the newly configured bigtop repo. This unitdata allows us to
+    configure site.yaml while gating the actual puppet apply. The user must do
+    the puppet apply by calling the 'reinstall' action.
+    """
+    repo_ver = Bigtop().check_bigtop_repo_package('spark-core')
+    if repo_ver:
+        unitdata.kv().set('spark.version.repo', repo_ver)
+        unitdata.kv().flush(True)
+        reinstall_spark(force=True)
+    else:
+        unitdata.kv().unset('spark.version.repo')
+    report_status()
 
 
 @when('spark.started', 'cuda.installed')
