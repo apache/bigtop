@@ -103,13 +103,11 @@ relations:
   - ["ganglia-node:juju-info", "namenode:juju-info"]
   - ["ganglia-node:juju-info", "resourcemanager:juju-info"]
   - ["ganglia-node:juju-info", "slave:juju-info"]
-  - ["ganglia-node:juju-info", "hbase:juju-info"]
   - ["ganglia-node:juju-info", "zookeeper:juju-info"]
   - ["ganglia:node", "ganglia-node:node"]
   - ["rsyslog-forwarder-ha:juju-info", "namenode:juju-info"]
   - ["rsyslog-forwarder-ha:juju-info", "resourcemanager:juju-info"]
   - ["rsyslog-forwarder-ha:juju-info", "slave:juju-info"]
-  - ["rsyslog-forwarder-ha:juju-info", "hbase:juju-info"]
   - ["rsyslog-forwarder-ha:juju-info", "zookeeper:juju-info"]
   - ["rsyslog:aggregator", "rsyslog-forwarder-ha:syslog"]
 machines:
