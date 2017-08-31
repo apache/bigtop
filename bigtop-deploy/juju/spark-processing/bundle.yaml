@@ -5,7 +5,7 @@ description: >
   from the spark-shell. It will run on 6 machines in your cloud.
 services:
   spark:
-    charm: "cs:xenial/spark-55"
+    charm: "cs:xenial/spark-56"
     constraints: "mem=7G root-disk=32G"
     num_units: 2
     options:
