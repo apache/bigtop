@@ -19,19 +19,19 @@
 
 Apache Giraph is an iterative graph processing system built for high scalability. For example, it is currently used at Facebook to analyze the social graph formed by users and their connections. Giraph originated as the open-source counterpart to Pregel, the graph processing architecture developed at Google and described in a 2010 [paper](http://dl.acm.org/citation.cfm?id=1807184). Both systems are inspired by the [Bulk Synchronous Parallel model](http://en.wikipedia.org/wiki/Bulk_synchronous_parallel) of distributed computation introduced by Leslie Valiant. Giraph adds several features beyond the basic Pregel model, including master computation, sharded aggregators, edge-oriented input, out-of-core computation, and more. With a steady development cycle and a growing community of users worldwide, Giraph is a natural choice for unleashing the potential of structured datasets at a massive scale.
 
+This charm deploys version 1.1.0 of the Giraph component from [Apache Bigtop][].
+
+[Apache Bigtop]: http://bigtop.apache.org/
+
 # Deploying
 
-A working Juju installation is assumed to be present. If Juju is not yet set up, please follow the [getting-started][] instructions prior to deploying this
-charm.
+This charm requires Juju 2.0 or greater. If Juju is not yet set up, please
+follow the [getting-started][] instructions prior to deploying this charm.
 
 This charm is intended to be used with one of the [apache bigtop bundles][].
 For example:
 
     juju deploy hadoop-processing
-
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, use [juju-quickstart][] with the following syntax: `juju quickstart
-hadoop-processing`.
 
 This will deploy an Apache Bigtop Hadoop cluster. More information about this deployment can be found in the [bundle readme](https://jujucharms.com/hadoop-processing/).
 
@@ -46,7 +46,6 @@ Charms can be deployed in environments with limited network access. To deploy in
 
 [getting-started]: https://jujucharms.com/docs/stable/getting-started
 [apache bigtop bundles]: https://jujucharms.com/u/bigdata-charmers/#bundles
-[juju-quickstart]: https://launchpad.net/juju-quickstart
 [Configuring Models]: https://jujucharms.com/docs/stable/models-config
 
 # Verifying
@@ -69,22 +68,13 @@ This charm provides a `smoke-test` action that can be used to verify the applica
 
     juju run-action giraph/0 smoke-test
 
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju action do giraph/0 smoke-test`.
-
 Watch the progress of the smoke test actions with:
 
     watch -n 2 juju show-action-status
 
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju action status`.
-
 Eventually, the action should settle to `status: completed`.  If it reports `status: failed`, the application is not working as expected. Get more information about a specific smoke test with:
 
     juju show-action-output <action-id>
-
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju action fetch <action-id>`.
 
 # Contact Information
 

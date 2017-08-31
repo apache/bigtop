@@ -38,7 +38,12 @@ def get_good_jars(dir, prefix=True):
     # Known incompatible jars:
     # - hive-exec-0.11.0 protobuf class
     #   java.lang.VerifyError: ... overrides final method getUnknownFields
-    bad_jars = ['hive-exec-0.11.0.jar']
+    # - jersey-*-1.17
+    #   Conflicts with hadoop-2.7.3 jersey-*-1.9.jar, manifesting as:
+    #   com.sun.jersey.api.container: No WebApplication provider is present
+    bad_jars = ['hive-exec-0.11.0.jar',
+                'jersey-core-1.17.jar',
+                'jersey-json-1.17.jar']
     good_jars = []
     for file in os.listdir(dir):
         if file.endswith('.jar') and file not in bad_jars:
