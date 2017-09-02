@@ -122,7 +122,7 @@ From the command line, show the list of Zookeeper nodes with the following:
 
     juju run --unit zookeeper/0 'echo "ls /" | /usr/lib/zookeeper/bin/zkCli.sh'
 
-To access the Spark web console, find the `PUBLIC-ADDRESS` of the spark
+To access the Spark web console, find the `Public address` of the spark
 application and expose it:
 
     juju status spark
@@ -138,7 +138,7 @@ The web interface will be available at the following URL:
 This bundle includes Ganglia for system-level monitoring of the spark and
 zookeeper units. Metrics are sent to a centralized ganglia unit for easy
 viewing in a browser. To view the ganglia web interface, find the
-`PUBLIC-ADDRESS` of the Ganglia application and expose it:
+`Public address` of the Ganglia application and expose it:
 
     juju status ganglia
     juju expose ganglia

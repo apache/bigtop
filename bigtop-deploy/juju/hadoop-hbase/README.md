@@ -158,7 +158,7 @@ Show the list of Zookeeper nodes with the following:
 
     juju run --unit zookeeper/0 'echo "ls /" | /usr/lib/zookeeper/bin/zkCli.sh'
 
-To access the HDFS web console, find the `PUBLIC-ADDRESS` of the namenode
+To access the HDFS web console, find the `Public address` of the namenode
 application and expose it:
 
     juju status namenode
@@ -169,7 +169,7 @@ The web interface will be available at the following URL:
     http://NAMENODE_PUBLIC_IP:50070
 
 Similarly, to access the Resource Manager web consoles, find the
-`PUBLIC-ADDRESS` of the resourcemanager application and expose it:
+`Public address` of the resourcemanager application and expose it:
 
     juju status resourcemanager
     juju expose resourcemanager
@@ -179,7 +179,7 @@ The YARN and Job History web interfaces will be available at the following URLs:
     http://RESOURCEMANAGER_PUBLIC_IP:8088
     http://RESOURCEMANAGER_PUBLIC_IP:19888
 
-Finally, to access the HBase web console, find the `PUBLIC-ADDRESS` of any
+Finally, to access the HBase web console, find the `Public address` of any
 hbase unit and expose the application:
 
     juju status hbase
@@ -193,9 +193,9 @@ The web interface will be available at the following URL:
 # Monitoring
 
 This bundle includes Ganglia for system-level monitoring of the namenode,
-resourcemanager, slave, hbase, and zookeeper units. Metrics are sent to a
+resourcemanager, slave, and zookeeper units. Metrics are sent to a
 centralized ganglia unit for easy viewing in a browser. To view the ganglia web
-interface, find the `PUBLIC-ADDRESS` of the Ganglia application and expose it:
+interface, find the `Public address` of the Ganglia application and expose it:
 
     juju status ganglia
     juju expose ganglia
@@ -208,7 +208,7 @@ The web interface will be available at:
 # Logging
 
 This bundle includes rsyslog to collect syslog data from the namenode,
-resourcemanager, slave, hbase, and zookeeper units. These logs are sent to a
+resourcemanager, slave, and zookeeper units. These logs are sent to a
 centralized rsyslog unit for easy syslog analysis. One method of viewing this
 log data is to simply cat syslog from the rsyslog unit:
 
