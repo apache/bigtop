@@ -37,6 +37,7 @@ Source0: gpdb-%{gpdb_base_version}.tar.gz
 Source1: do-component-build
 Source2: install_gpdb.sh
 Source3: do-component-configure
+#BIGTOP_PATCH_FILES
 AutoReqProv: %{autorequire}
 
 %description
