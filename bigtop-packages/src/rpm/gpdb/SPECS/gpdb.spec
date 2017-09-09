@@ -46,6 +46,8 @@ gpdb
 %prep
 %setup -n %{name}-%{gpdb_base_version}
 
+#BIGTOP_PATCH_COMMANDS
+
 %build
 bash %{SOURCE3} %{bin_gpdb}
 bash %{SOURCE1}
