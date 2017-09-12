@@ -25,7 +25,6 @@ export FLUME_HOME=/usr/lib/flume/
 export HIVE_CONF_DIR=/etc/hive/conf/
 export JAVA_HOME="/usr/lib/jvm/java-openjdk/"
 export MAHOUT_HOME="/usr/lib/mahout"
-export KITE_HOME="/usr/lib/kite"
 export SPARK_HOME="/usr/lib/spark"
 export TAJO_HOME="/usr/lib/tajo"
 export OOZIE_TAR_HOME="/usr/lib/oozie/doc"

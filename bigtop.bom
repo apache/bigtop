@@ -112,7 +112,7 @@ bigtop {
     zookeeper:['hadoop', 'hbase'],
     hadoop:['ignite-hadoop', 'hbase', 'crunch', 'pig', 'hive', 'tez', 'sqoop', 'sqoop2',
       'oozie', 'mahout', 'flume', 'giraph', 'solr', 'spark','spark1',
-      'phoenix', 'alluxio', 'kafka', 'ycsb', 'kite', 'hama', 'zeppelin',
+      'phoenix', 'alluxio', 'kafka', 'ycsb', 'hama', 'zeppelin',
       'tajo', 'apex'
     ],
     hbase:['phoenix','giraph','ycsb','hive'],
@@ -418,15 +418,6 @@ bigtop {
       tarball { destination = "$name-${version.base}.tar.gz"
                 source      = "${version.base}.tar.gz" }
       url     { site = "https://github.com/brianfrankcooper/YCSB/archive"
-                archive = site }
-    }
-    'kite' {
-      name    = 'kite'
-      relNotes = 'Kite Software Development Kit'
-      version { base = '1.1.0'; pkg = base; release = 1 }
-      tarball { destination = "$name-${version.base}.tar.gz"
-                source      = "release-${version.base}.tar.gz" }
-      url     { site = "https://github.com/kite-sdk/kite/archive"
                 archive = site }
     }
     'hama' {

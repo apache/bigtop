@@ -51,7 +51,6 @@
     <spark.version>2.1.0</spark.version>
     <kafka.version>0.10.1.1</kafka.version>
     <phoenix.version>4.9.0-HBase-1.1</phoenix.version>
-    <kite.version>1.1.0</kite.version>
     <spark-smoke.version>${project.version}</spark-smoke.version>
 
     <itest-common.version>${project.version}</itest-common.version>
