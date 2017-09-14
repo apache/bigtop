@@ -1,9 +1,9 @@
-From 3131744ed6e1e874d7cd0666208adc424fec3224 Mon Sep 17 00:00:00 2001
-From: Konstantin Boudnik <cos@boudnik.org>
-Date: Mon, 15 Feb 2016 10:42:16 +0300
-Subject: [PATCH] HADOOP-12366. expose calculated paths
+From f10ec9f9bec56bcfa5e2015ea87a8a5054d096c5 Mon Sep 17 00:00:00 2001
+From: Anton Chevychalov <pub@mnu.pp.ru>
+Date: Tue, 5 Sep 2017 15:14:19 +0300
+Subject: [PATCH] [PATCH] HADOOP-12366. expose calculated paths
 
-Adapted the patch to apply cleanly on branch-2.7.1
+Adapted the patch to apply cleanly on branch-2.8.1
 ---
  hadoop-common-project/hadoop-common/src/main/bin/hadoop | 10 ++++++++++
  hadoop-hdfs-project/hadoop-hdfs/src/main/bin/hdfs       |  9 +++++++++
@@ -12,7 +12,7 @@ Adapted the patch to apply cleanly on branch-2.7.1
  4 files changed, 37 insertions(+)
 
 diff --git a/hadoop-common-project/hadoop-common/src/main/bin/hadoop b/hadoop-common-project/hadoop-common/src/main/bin/hadoop
-index a5e8885..715ad9b 100755
+index 1575996..44be2e3 100755
 --- a/hadoop-common-project/hadoop-common/src/main/bin/hadoop
 +++ b/hadoop-common-project/hadoop-common/src/main/bin/hadoop
 @@ -38,6 +38,7 @@ function print_usage(){
@@ -22,7 +22,7 @@ index a5e8885..715ad9b 100755
 +  echo "  envvars              display computed Hadoop environment variables"
    echo "  archive -archiveName NAME -p <parent path> <src>* <dest> create a hadoop archive"
    echo "  classpath            prints the class path needed to get the"
-   echo "  credential           interact with credential providers"
+   echo "                       Hadoop jar and the required libraries"
 @@ -116,6 +117,15 @@ case $COMMAND in
        CLASSPATH=${CLASSPATH}:${TOOL_PATH}
      elif [ "$COMMAND" = "daemonlog" ] ; then
@@ -40,18 +40,18 @@ index a5e8885..715ad9b 100755
        CLASS=org.apache.hadoop.tools.HadoopArchives
        CLASSPATH=${CLASSPATH}:${TOOL_PATH}
 diff --git a/hadoop-hdfs-project/hadoop-hdfs/src/main/bin/hdfs b/hadoop-hdfs-project/hadoop-hdfs/src/main/bin/hdfs
-index 155df14..b744761 100755
+index fbfbaf2..714280e 100755
 --- a/hadoop-hdfs-project/hadoop-hdfs/src/main/bin/hdfs
 +++ b/hadoop-hdfs-project/hadoop-hdfs/src/main/bin/hdfs
-@@ -46,6 +46,7 @@ function print_usage(){
-   echo "  zkfc                 run the ZK Failover Controller daemon"
+@@ -47,6 +47,7 @@ function print_usage(){
    echo "  datanode             run a DFS datanode"
+   echo "  debug                run a Debug Admin to execute HDFS debug commands"
    echo "  dfsadmin             run a DFS admin client"
 +  echo "  envvars              display computed Hadoop environment variables"
    echo "  haadmin              run a DFS HA admin client"
    echo "  fsck                 run a DFS filesystem checking utility"
    echo "  balancer             run a cluster balancing utility"
-@@ -160,6 +161,14 @@ elif [ "$COMMAND" = "haadmin" ] ; then
+@@ -161,6 +162,14 @@ elif [ "$COMMAND" = "haadmin" ] ; then
    CLASS=org.apache.hadoop.hdfs.tools.DFSHAAdmin
    CLASSPATH=${CLASSPATH}:${TOOL_PATH}
    HADOOP_OPTS="$HADOOP_OPTS $HADOOP_CLIENT_OPTS"
@@ -67,7 +67,7 @@ index 155df14..b744761 100755
    CLASS=org.apache.hadoop.hdfs.tools.DFSck
    HADOOP_OPTS="$HADOOP_OPTS $HADOOP_CLIENT_OPTS"
 diff --git a/hadoop-mapreduce-project/bin/mapred b/hadoop-mapreduce-project/bin/mapred
-index fe16e07..6a21fed 100755
+index 6f3bc04..fd1300d 100755
 --- a/hadoop-mapreduce-project/bin/mapred
 +++ b/hadoop-mapreduce-project/bin/mapred
 @@ -38,6 +38,7 @@ function print_usage(){
@@ -76,9 +76,9 @@ index fe16e07..6a21fed 100755
    echo "  distcp <srcurl> <desturl> copy file or directories recursively"
 +  echo "  envvars              display computed Hadoop environment variables"
    echo "  archive -archiveName NAME -p <parent path> <src>* <dest> create a hadoop archive"
+   echo "  archive-logs         combine aggregated logs into hadoop archives"
    echo "  hsadmin              job history server admin interface"
-   echo ""
-@@ -74,6 +75,14 @@ elif [ "$COMMAND" = "sampler" ] ; then
+@@ -75,6 +76,14 @@ elif [ "$COMMAND" = "sampler" ] ; then
    HADOOP_OPTS="$HADOOP_OPTS $HADOOP_CLIENT_OPTS"
  elif [ "$COMMAND" = "classpath" ] ; then
    echo -n 
@@ -94,18 +94,18 @@ index fe16e07..6a21fed 100755
    CLASS=org.apache.hadoop.mapreduce.v2.hs.JobHistoryServer
    HADOOP_OPTS="$HADOOP_OPTS -Dmapred.jobsummary.logger=${HADOOP_JHS_LOGGER:-INFO,console} $HADOOP_JOB_HISTORYSERVER_OPTS"
 diff --git a/hadoop-yarn-project/hadoop-yarn/bin/yarn b/hadoop-yarn-project/hadoop-yarn/bin/yarn
-index 71347a2..ce3e24a 100644
+index 552cef4..5495387 100644
 --- a/hadoop-yarn-project/hadoop-yarn/bin/yarn
 +++ b/hadoop-yarn-project/hadoop-yarn/bin/yarn
-@@ -87,6 +87,7 @@ function print_usage(){
+@@ -89,6 +89,7 @@ function print_usage(){
    echo "  cluster                               prints cluster information"
    echo "  daemonlog                             get/set the log level for each"
    echo "                                        daemon"
 +  echo "  envvars                               display computed Hadoop environment variables"
+   echo "  top                                   run cluster usage tool"
    echo ""
    echo "Most commands print help when invoked w/o parameters."
- }
-@@ -214,6 +215,14 @@ if [ "$COMMAND" = "classpath" ] ; then
+@@ -217,6 +218,14 @@ if [ "$COMMAND" = "classpath" ] ; then
      echo $CLASSPATH
      exit 0
    fi
@@ -121,5 +121,5 @@ index 71347a2..ce3e24a 100644
    CLASS='org.apache.hadoop.yarn.client.cli.RMAdminCLI'
    YARN_OPTS="$YARN_OPTS $YARN_CLIENT_OPTS"
 -- 
-2.0.4
+2.7.4
 

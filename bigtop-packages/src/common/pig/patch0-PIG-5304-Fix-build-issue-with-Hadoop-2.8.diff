@@ -1,0 +1,30 @@
+From 65b931966108f374210b83368b8356a79058226d Mon Sep 17 00:00:00 2001
+From: Anton Chevychalov <cab@arenadata.io>
+Date: Thu, 14 Sep 2017 11:58:21 +0300
+Subject: [PATCH] PIG-5304 Fix build issue with Hadoop 2.8
+
+There is a regression in build after HDFS-8740.
+We have to add hadoop-hdfs-client artifact as dependency now.
+---
+ ivy.xml | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/ivy.xml b/ivy.xml
+index db722a5..2978888 100644
+--- a/ivy.xml
++++ b/ivy.xml
+@@ -129,6 +129,11 @@
+       <artifact name="hadoop-hdfs" ext="jar" />
+       <artifact name="hadoop-hdfs" type="tests" ext="jar" m:classifier="tests" />
+     </dependency>
++    <dependency org="org.apache.hadoop" name="hadoop-hdfs-client"
++      rev="${hadoop-hdfs.version}" conf="hadoop2->master">
++      <artifact name="hadoop-hdfs-client" ext="jar" />
++      <artifact name="hadoop-hdfs-client" type="tests" ext="jar" m:classifier="tests" />
++    </dependency>
+     <dependency org="org.apache.hadoop" name="hadoop-mapreduce-client-core" rev="${hadoop-mapreduce.version}"
+       conf="hadoop2->master"/>
+     <dependency org="org.apache.hadoop" name="hadoop-mapreduce-client-jobclient" rev="${hadoop-mapreduce.version}"
+-- 
+2.7.4
+
