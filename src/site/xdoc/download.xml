@@ -35,7 +35,7 @@
 			<ul>
 				<li>
 					The latest release of Apache Bigtop software framework <br/>
-					<a href="http://www.apache.org/dist/bigtop/bigtop-1.2.0/">Bigtop 1.2.0</a>
+					<a href="http://www.apache.org/dyn/closer.lua/bigtop/bigtop-1.2.0/">Bigtop 1.2.0</a>
 				</li>
 				<li>
 					Repositories of instsallable binary packages built with latest release
