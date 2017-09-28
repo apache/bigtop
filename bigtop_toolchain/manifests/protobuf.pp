@@ -15,74 +15,23 @@
 
 class bigtop_toolchain::protobuf {
 
-  case $operatingsystem{
-    /Ubuntu|Debian/: {
-      case $architecture {
-        'amd64' : { $url = "https://launchpad.net/ubuntu/+source/protobuf/2.5.0-9ubuntu1/+build/5585371/+files/"
-                    $arch= "amd64" }
-        'ppc64le' : { $url = "https://launchpad.net/ubuntu/+source/protobuf/2.5.0-9ubuntu1/+build/5604345/+files"
-                    $arch= "ppc64el" }
-        'aarch64' : { $url = "https://launchpad.net/ubuntu/+source/protobuf/2.5.0-9ubuntu1/+build/5585372/+files"
-                    $arch= "arm64" }
-      }
-    }
-  }
- 
-  case $operatingsystem{
-    /Ubuntu|Debian/: {
-      $libprotobuf8 = "libprotobuf8_2.5.0-9ubuntu1_$arch.deb"
-      $libprotoc8 = "libprotoc8_2.5.0-9ubuntu1_$arch.deb"
-      $protobuf_compiler = "protobuf-compiler_2.5.0-9ubuntu1_$arch.deb"
+  include bigtop_toolchain::packages
 
-      exec { "download protobuf":
-        cwd     => "/usr/src",
-        command => "/usr/bin/curl -L $url/$libprotobuf8 -o $libprotobuf8; /usr/bin/curl -L $url/$libprotoc8 -o $libprotoc8; /usr/bin/curl -L $url/$protobuf_compiler -o $protobuf_compiler",
-        creates  => [ "/usr/src/$libprotobuf8", "/usr/src/$libprotoc8", "/usr/src/$protobuf_compiler" ]
-      }
-      exec { "install protobuf":
-        cwd     => "/usr/src",
-        command => "/usr/bin/dpkg -i $libprotobuf8 $libprotoc8 $protobuf_compiler",
-        require => EXEC["download protobuf"],
-      }
-    }
-    default: {
-      case $operatingsystem {
-         /(?i:(centos|fedora|amazon))/: {
-          case $architecture {
-           'ppc64le' : { 
-            exec { 'install_mrdocs_repo':
-              command => "/usr/bin/rpm -ivh https://dl.fedoraproject.org/pub/fedora-secondary/releases/22/Everything/ppc64le/os/Packages/p/protobuf-2.5.0-11.fc22.ppc64le.rpm;/usr/bin/rpm -ivh https://dl.fedoraproject.org/pub/fedora-secondary/releases/22/Everything/ppc64le/os/Packages/p/protobuf-compiler-2.5.0-11.fc22.ppc64le.rpm;/usr/bin/rpm -ivh https://dl.fedoraproject.org/pub/fedora-secondary/releases/22/Everything/ppc64le/os/Packages/p/protobuf-devel-2.5.0-11.fc22.ppc64le.rpm",
-            }
-            $package_name = 'protobuf-devel'
-           }
-             
-           default: { yumrepo { "protobuf":
-             baseurl => "http://download.opensuse.org/repositories/home:/mrdocs:/protobuf-rpm/CentOS_CentOS-6/",
-             descr => "Bigtop protobuf repo",
-             enabled => 1,
-             priority => 1,
-             gpgcheck => 0
-           }
-           exec { 'install_mrdocs_repo':
-             command => '/bin/true',
-             require => Yumrepo['protobuf'],
-           }
-           $package_name = 'protobuf-devel'
-           }
-          }
-         }
-         /(?i:(SLES|opensuse))/:{
-           exec { 'install_mrdocs_repo':
-              command => '/usr/bin/zypper ar --no-gpgcheck http://download.opensuse.org/repositories/home:/mrdocs:/protobuf-rpm/openSUSE_Leap_42.1/ protobuf',
-              unless => "/usr/bin/zypper lr | grep -q protobuf",
-           }
-           $package_name = 'protobuf-devel-2.5.0-6.1'
-         }
-      }
-      package { $package_name:
-        ensure => present,
-        require => Exec['install_mrdocs_repo'],
-      }
-    }
+  $url = "https://github.com/google/protobuf/releases/download/v2.5.0/"
+
+  $protobuf8 = "protobuf-2.5.0.tar.gz"
+  $protobuf8dir = "protobuf-2.5.0"
+
+  exec { "download protobuf":
+     cwd  => "/usr/src",
+     command => "/usr/bin/wget $url/$protobuf8 && mkdir -p $protobuf8dir && /bin/tar -xvzf $protobuf8 -C $protobuf8dir --strip-components=1",
+     creates => "/usr/src/$protobuf8dir"
   }
+
+  exec { "install protobuf":
+     cwd => "/usr/src/$protobuf8dir",
+     command => "/usr/src/$protobuf8dir/configure --prefix=/usr && /usr/bin/make && /usr/bin/make install",
+     require => EXEC["download protobuf"]
+  }
+
 }
