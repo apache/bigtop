@@ -56,9 +56,24 @@ class bigtop_toolchain::jdk {
       apt::ppa { 'http://ppa.launchpad.net/openjdk-r/ppa/ubuntu':  }
     }
     /(CentOS|Amazon|Fedora)/: {
-      package { 'java-1.8.0-openjdk-devel' :
+      # BIGTOP-2900: Crunch build failed because of OS OOM killer on OpenJDK 1.8.0-144
+      # Here we pin other version of JDK for CentOS 7 and Fedora to workaround this problem
+      if ($::operatingsystem == "CentOS" and $operatingsystemmajrelease == "7") {
+        $jdk = [
+          'java-1.8.0-openjdk-headless-1.8.0.131',
+          'java-1.8.0-openjdk-devel-1.8.0.131'
+        ]
+      }
+      elsif ($::operatingsystem == "Fedora") {
+        $jdk = 'java-1.8.0-openjdk-devel-1:1.8.0.111'
+      }
+      else {
+        $jdk = 'java-1.8.0-openjdk-devel'
+      }
+      package { $jdk :
         ensure => present
       }
+
       if ($::operatingsystem == "Fedora") {
         file { '/usr/lib/jvm/java-1.8.0-openjdk/jre/lib/security/cacerts':
           ensure => 'link',
