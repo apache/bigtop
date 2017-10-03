@@ -454,6 +454,7 @@ bigtop {
       url     { site = "https://github.com/quantcast/qfs/archive"
                 archive = site }
     }
+    /* commented out because of BIGTOP-2901
     'gpdb' {
       name    = 'gpdb'
       relNotes = 'GreenPlum'
@@ -462,7 +463,7 @@ bigtop {
                 source      = "${version.base}.tar.gz" }
       url     { site = "https://github.com/greenplum-db/gpdb/archive/"
                 archive = site }
-    }
+    } */
     'ambari' {
       name    = 'ambari'
       relNotes = 'Apache Ambari'
