@@ -53,6 +53,8 @@
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2679'>BIGTOP-2679</a>] -         Streamline CI Jobs
 </li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2716'>BIGTOP-2716</a>] -         Solr build failed when OpenJDK8u_121 is used
+</li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2729'>BIGTOP-2729</a>] -         AMBARI-20686: Add ID to allow compilation with recent maven
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2737'>BIGTOP-2737</a>] -         Spark charm doesn&#39;t handle HA or examples well
@@ -125,8 +127,32 @@
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2808'>BIGTOP-2808</a>] -         Handle deletion of symlinks: update gradle
 </li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2826'>BIGTOP-2826</a>] -         Zeppelin RPM is broken: &quot;missing&quot; osgi package deps
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2829'>BIGTOP-2829</a>] -         [iTest] build failed during Maven integration test phase
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2832'>BIGTOP-2832</a>] -         Toolchain failed to install on Debian 8
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2850'>BIGTOP-2850</a>] -         Not able to build bigtop/slaves image for OpenSuSE 42.1
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2870'>BIGTOP-2870</a>] -         testHCFS should be using USER_NAME for expected output
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2871'>BIGTOP-2871</a>] -         Make run_itest report Standard Error from tests to stderr
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2873'>BIGTOP-2873</a>] -         A few cosmetic changes to run_itest.sh output
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2879'>BIGTOP-2879</a>] -         BIGTOP-2749 breaks deployments on Debian-8
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2890'>BIGTOP-2890</a>] -         Download page must not link to snapshots / nightly builds
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2891'>BIGTOP-2891</a>] -         Download page must link to ASF mirrors
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2900'>BIGTOP-2900</a>] -         Crunch build failed because of OS OOM killer on OpenJDK 1.8.0-144
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2901'>BIGTOP-2901</a>] -         disable GPDB because of build failure on OpenSuSE 42.1
+</li>
 </ul>
-                        
+
 <h2>        Improvement
 </h2>
 <ul>
@@ -153,8 +179,6 @@
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2812'>BIGTOP-2812</a>] -         Upgrade Zeppelin version to 0.7.2
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2819'>BIGTOP-2819</a>] -         Polish the README.md for 1.2.1 release
-</li>
-<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2820'>BIGTOP-2820</a>] -         Polish the documentations on Bigtop Wiki for 1.2.1 release
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2821'>BIGTOP-2821</a>] -         expose extra config options for spark
 </li>
@@ -187,6 +211,8 @@
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2785'>BIGTOP-2785</a>] -         Define Bigtop 1.2.1 release BOM
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2786'>BIGTOP-2786</a>] -         Push Bigtop 1.2.1 Docker build slaves to Docker Hub
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2877'>BIGTOP-2877</a>] -         Drop Kite packaging
 </li>
 </ul>
 
