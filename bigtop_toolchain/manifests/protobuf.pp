@@ -51,7 +51,7 @@ class bigtop_toolchain::protobuf {
           case $architecture {
            'ppc64le' : { 
             exec { 'install_mrdocs_repo':
-              command => "/usr/bin/rpm -ivh https://dl.fedoraproject.org/pub/fedora-secondary/releases/22/Everything/ppc64le/os/Packages/p/protobuf-2.5.0-11.fc22.ppc64le.rpm;/usr/bin/rpm -ivh https://dl.fedoraproject.org/pub/fedora-secondary/releases/22/Everything/ppc64le/os/Packages/p/protobuf-compiler-2.5.0-11.fc22.ppc64le.rpm;/usr/bin/rpm -ivh https://dl.fedoraproject.org/pub/fedora-secondary/releases/22/Everything/ppc64le/os/Packages/p/protobuf-devel-2.5.0-11.fc22.ppc64le.rpm",
+              command => "/usr/bin/rpm -ivh https://archives.fedoraproject.org/pub/archive/fedora-secondary/releases/22/Everything/ppc64le/os/Packages/p/protobuf-2.5.0-11.fc22.ppc64le.rpm;/usr/bin/rpm -ivh https://archives.fedoraproject.org/pub/archive/fedora-secondary/releases/22/Everything/ppc64le/os/Packages/p/protobuf-compiler-2.5.0-11.fc22.ppc64le.rpm;/usr/bin/rpm -ivh https://archives.fedoraproject.org/pub/archive/fedora-secondary/releases/22/Everything/ppc64le/os/Packages/p/protobuf-devel-2.5.0-11.fc22.ppc64le.rpm",
             }
             $package_name = 'protobuf-devel'
            }
