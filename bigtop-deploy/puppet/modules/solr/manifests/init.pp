@@ -34,7 +34,7 @@ class solr {
 
     exec { "solr init":
       command => "/bin/bash -c '/usr/bin/solrctl debug-dump | grep -q solr.xml || /usr/bin/solrctl init'",
-      require => [ Package["solr-server"], File["/etc/default/solr"] ],
+      require => [ Package["solr-server"], File["/etc/default/solr"], Service["zookeeper-server"] ],
       logoutput => true,
     }
 
@@ -44,7 +44,7 @@ class solr {
       subscribe => [Package["solr-server"], File["/etc/default/solr"] ],
       hasrestart => true,
       hasstatus => true,
-    } 
+    }
 
     if ($kerberos_realm and $kerberos_realm != "") {
       require kerberos::client
