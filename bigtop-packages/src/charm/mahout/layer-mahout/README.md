@@ -20,7 +20,7 @@ The Apache Mahout project's goal is to build an environment for quickly
 creating scalable, performant machine learning applications. Learn more at
 [mahout.apache.org][].
 
-This charm deploys version 0.12.2 of the Mahout component from
+This charm deploys version 0.13.0 of the Mahout component from
 [Apache Bigtop][].
 
 [mahout.apache.org]: http://mahout.apache.org/

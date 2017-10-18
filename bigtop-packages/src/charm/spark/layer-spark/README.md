@@ -19,7 +19,7 @@
 Apache Spark is a fast and general purpose engine for large-scale data
 processing. Learn more at [spark.apache.org][].
 
-This charm deploys version 2.1.0 of the Spark component from [Apache Bigtop][].
+This charm deploys version 2.1.1 of the Spark component from [Apache Bigtop][].
 
 [spark.apache.org]: http://spark.apache.org/
 [Apache Bigtop]: http://bigtop.apache.org/

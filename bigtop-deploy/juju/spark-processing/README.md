@@ -31,7 +31,7 @@ applications are included to monitor cluster health and syslog activity.
 The applications that comprise this bundle are spread across 6 units as
 follows:
 
-  * Spark (Master and Worker) v2.1.0
+  * Spark (Master and Worker) v2.1.1
     * 2 separate units
   * Zookeeper v3.4.6
     * 3 separate units

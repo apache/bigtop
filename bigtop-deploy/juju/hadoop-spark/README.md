@@ -47,7 +47,7 @@ follows:
     * Colocated on the NameNode unit
   * Slave (DataNode and NodeManager) v2.7.3
     * 3 separate units
-  * Spark (Driver in yarn-client mode) v2.1.0
+  * Spark (Driver in yarn-client mode) v2.1.1
   * Client (Hadoop endpoint)
     * Colocated on the Spark unit
   * Plugin (Facilitates communication with the Hadoop cluster)

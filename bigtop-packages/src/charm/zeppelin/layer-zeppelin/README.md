@@ -20,7 +20,7 @@ Apache Zeppelin is a web-based notebook that enables interactive data analytics.
 It allows for beautiful data-driven, interactive, and collaborative documents
 with SQL, Scala and more. Learn more at [zeppelin.apache.org][].
 
-This charm deploys version 0.7.0 of the Zeppelin component from
+This charm deploys version 0.7.2 of the Zeppelin component from
 [Apache Bigtop][].
 
 [zeppelin.apache.org]: http://zeppelin.apache.org/
