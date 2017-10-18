@@ -10,16 +10,4 @@ index 7b97e65..49c37f3 100644
            <tarLongFileMode>gnu</tarLongFileMode>
            <descriptors>
              <descriptor>src/main/assemblies/odpi-ambari-mpack.xml</descriptor>
-diff --git a/contrib/management-packs/odpi-ambari-mpack/src/main/assemblies/odpi-ambari-mpack.xml b/contrib/management-packs/odpi-ambari-mpack/src/main/assemblies/odpi-ambari-mpack.xml
-index 5dd3db4..f7bd433 100644
---- a/contrib/management-packs/odpi-ambari-mpack/src/main/assemblies/odpi-ambari-mpack.xml
-+++ b/contrib/management-packs/odpi-ambari-mpack/src/main/assemblies/odpi-ambari-mpack.xml
-@@ -17,7 +17,7 @@
-   limitations under the License.
- -->
- <assembly>
--  <id></id>
-+  <id>odpi-ambari-mpack</id>
-   <formats>
-     <format>dir</format>
-     <format>tar.gz</format>
+
