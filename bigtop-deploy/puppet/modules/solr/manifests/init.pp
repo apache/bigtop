@@ -21,7 +21,7 @@ class solr {
     }
   }
 
-  class server($port = "1978", $port_admin = "1979", $zk = "localhost:2181", $root_url = "hdfs://localhost:8020/solr", $kerberos_realm = "") {
+  class server($port = "8983", $port_admin = "8984", $zk = "localhost:2181", $root_url = "hdfs://localhost:8020/solr", $kerberos_realm = "") {
     package { "solr-server":
       ensure => latest,
     }

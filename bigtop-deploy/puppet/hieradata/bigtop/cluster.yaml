@@ -138,7 +138,7 @@ solr::server::root_url: "%{hiera('bigtop::hadoop_namenode_uri')}"
 solr::server::zk: "%{hiera('hadoop::zk')}"
 solr::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 # Default but needed here to make sure, hue uses the same port
-solr::server::port: "1978"
+solr::server::port: "8983"
 
 hadoop_oozie::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 
