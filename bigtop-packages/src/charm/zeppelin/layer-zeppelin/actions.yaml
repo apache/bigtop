@@ -1,7 +1,10 @@
-smoke-test:
+reinstall:
   description: >
-    Verify that Zeppelin is working by running one of
-    the example notebook paragraphs, using the REST server.
+    Reinstall Zeppelin with the version available in the repo.
 restart:
   description: >
     Restart Zeppelin.
+smoke-test:
+  description: >
+    Verify that Zeppelin is working by running one of the example notebook
+    paragraphs, using the REST server.

@@ -20,28 +20,28 @@ import re
 import unittest
 
 
-class TestSmoke(unittest.TestCase):
+class TestConfig(unittest.TestCase):
     """
-    Smoke test for Apache Bigtop Zeppelin.
+    Test configuring Apache Zeppelin.
     """
     @classmethod
     def setUpClass(cls):
         cls.d = amulet.Deployment(series='xenial')
-        cls.d.add('zeppelin')
-
+        cls.d.add('zeppelin-test-config', charm='zeppelin',
+                  constraints={'mem': '7G'})
         cls.d.setup(timeout=1800)
-        cls.d.sentry.wait_for_messages({'zeppelin': re.compile('ready')}, timeout=1800)
-        cls.zeppelin = cls.d.sentry['zeppelin'][0]
+        cls.d.sentry.wait_for_messages({'zeppelin-test-config': re.compile('ready')},
+                                       timeout=1800)
+        cls.zeppelin = cls.d.sentry['zeppelin-test-config'][0]
 
-    def test_zeppelin(self):
+    def test_bigtop_upgrade(self):
         """
-        Validate Zeppelin by running the smoke-test action.
+        Validate Zeppelin status is changed when upgrading zeppelin.
         """
-        uuid = self.zeppelin.run_action('smoke-test')
-        result = self.d.action_fetch(uuid, full_output=True)
-        # action status=completed on success
-        if (result['status'] != "completed"):
-            self.fail('Zeppelin smoke-test failed: %s' % result)
+        self.d.configure('zeppelin-test-config',
+                         {'bigtop_version': 'master'})
+        self.d.sentry.wait_for_messages({'zeppelin-test-config': re.compile('reinstall|ready')},
+                                        timeout=900)
 
 
 if __name__ == '__main__':
