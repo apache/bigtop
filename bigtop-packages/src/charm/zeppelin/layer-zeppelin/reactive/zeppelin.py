@@ -15,10 +15,9 @@
 
 import hashlib
 
-from charms.reactive import when, when_not
-from charms.reactive import is_state, set_state, remove_state
-from charmhelpers.core import hookenv
-from charms.layer.apache_bigtop_base import get_package_version
+from charms.reactive import is_state, remove_state, set_state, when, when_not
+from charmhelpers.core import hookenv, unitdata
+from charms.layer.apache_bigtop_base import Bigtop, get_package_version
 from charms.layer.bigtop_zeppelin import Zeppelin
 from charms.reactive.helpers import data_changed
 
@@ -58,13 +57,19 @@ def update_status():
         elif spark_ready:
             ready_apps.append('spark')
 
-        # Set appropriate status based on the apps we checked above
-        if waiting_apps:
-            hookenv.status_set('waiting',
-                               'waiting for: {}'.format(' & '.join(waiting_apps)))
+        # Set appropriate status
+        repo_ver = unitdata.kv().get('zeppelin.version.repo', False)
+        if repo_ver:
+            # Pending upgrade takes precedent over other status messages
+            msg = "install version {} with the 'reinstall' action".format(repo_ver)
+            hookenv.status_set('active', msg)
+        elif waiting_apps:
+            # Waiting takes precedent over active status messages
+            msg = "waiting for: {}".format(' & '.join(waiting_apps))
+            hookenv.status_set('waiting', msg)
         elif ready_apps:
-            hookenv.status_set('active',
-                               'ready with: {}'.format(' & '.join(ready_apps)))
+            msg = "ready with: {}".format(' & '.join(ready_apps))
+            hookenv.status_set('active', msg)
         else:
             hookenv.status_set('active', 'ready')
 
@@ -81,6 +86,27 @@ def initial_setup():
     # set app version string for juju status output
     zeppelin_version = get_package_version('zeppelin') or 'unknown'
     hookenv.application_version_set(zeppelin_version)
+
+
+@when('zeppelin.installed', 'bigtop.version.changed')
+def check_repo_version():
+    """
+    Configure a bigtop site.yaml if a new version of zeppelin is available.
+
+    This method will set unitdata if a different version of zeppelin is
+    available in the newly configured bigtop repo. This unitdata allows us to
+    configure site.yaml while gating the actual puppet apply. The user must do
+    the puppet apply by calling the 'reinstall' action.
+    """
+    repo_ver = Bigtop().check_bigtop_repo_package('zeppelin')
+    if repo_ver:
+        unitdata.kv().set('zeppelin.version.repo', repo_ver)
+        unitdata.kv().flush(True)
+        zeppelin = Zeppelin()
+        zeppelin.trigger_bigtop()
+    else:
+        unitdata.kv().unset('zeppelin.version.repo')
+    update_status()
 
 
 @when('zeppelin.installed', 'hadoop.ready')
@@ -170,7 +196,7 @@ def unconfigure_spark():
     update_status()
 
 
-@when('zeppelin.started', 'client.notebook.registered')
+@when('zeppelin.installed', 'client.notebook.registered')
 def register_notebook(client):
     zeppelin = Zeppelin()
     for notebook in client.unregistered_notebooks():
@@ -181,7 +207,7 @@ def register_notebook(client):
             client.reject_notebook(notebook)
 
 
-@when('zeppelin.started', 'client.notebook.removed')
+@when('zeppelin.installed', 'client.notebook.removed')
 def remove_notebook(client):
     zeppelin = Zeppelin()
     for notebook in client.unremoved_notebooks():
