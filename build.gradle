@@ -415,13 +415,24 @@ task "bigtop-slaves"(type:Exec,
     group: DOCKERBUILD_GROUP) {
   def _prefix = project.hasProperty("prefix") ? prefix : "trunk"
   def _OS = project.hasProperty("OS") ? OS : "centos-7"
+  def _from = project.hasProperty("from") ? from : "pull"
   def command = [
       'docker', 'build',
       '-t', 'bigtop/slaves:' + _prefix + '-' + _OS,
       '-f', "docker/bigtop-slaves/" + _OS + "/Dockerfile",
-      '--force-rm', '--no-cache', '--pull', '--rm',
+      '--force-rm', '--no-cache', '--rm',
       '.'
   ]
+  if (_from == "pull") {
+    // pull from docker.io
+    command << '--pull'
+  } else if (_from == "local") {
+    // pull from local
+  } else {
+    // default to docker.io
+    println "Invalid -Pfrom value. Set default to use pull mode"
+    command << '--pull'
+  }
   workingDir '.'
   commandLine command
 }
