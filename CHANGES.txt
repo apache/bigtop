@@ -15,7 +15,7 @@
 
 Bigtop Changelog
 
-* Release 1.2.1 (2017-07-01)
+* Release 1.2.1 (2017-10-24)
 
 Release Notes - Bigtop - Version 1.2.1
 
@@ -84,6 +84,8 @@ Release Notes - Bigtop - Version 1.2.1
     * [BIGTOP-2891] - Download page must link to ASF mirrors
     * [BIGTOP-2900] - Crunch build failed because of OS OOM killer on OpenJDK 1.8.0-144
     * [BIGTOP-2901] - disable GPDB because of build failure on OpenSuSE 42.1
+    * [BIGTOP-2903] - update protobuf rpm links
+    * [BIGTOP-2908] - giraph charm: release audit failure
 
 ** Improvement
     * [BIGTOP-2355] - Update Mahout version to 0.13.0

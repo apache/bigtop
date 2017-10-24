@@ -45,7 +45,6 @@
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2816'>BIGTOP-2816</a>] -         Fix provisioner config name for ubuntu-16.04
 </li>
 </ul>
-                            
 <h2>        Bug
 </h2>
 <ul>
@@ -151,8 +150,11 @@
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2901'>BIGTOP-2901</a>] -         disable GPDB because of build failure on OpenSuSE 42.1
 </li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2903'>BIGTOP-2903</a>] -         update protobuf rpm links
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2908'>BIGTOP-2908</a>] -         giraph charm: release audit failure
+</li>
 </ul>
-
 <h2>        Improvement
 </h2>
 <ul>
@@ -187,7 +189,6 @@
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2828'>BIGTOP-2828</a>] -         Since BIGTOP-2775 JDK version has been specified by Bigtop Puppet
 </li>
 </ul>
-                
 <h2>        New Feature
 </h2>
 <ul>
@@ -198,7 +199,6 @@
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2822'>BIGTOP-2822</a>] -         spark charm: leverage puppet config, gpu enablement
 </li>
 </ul>
-                                                            
 <h2>        Task
 </h2>
 <ul>
