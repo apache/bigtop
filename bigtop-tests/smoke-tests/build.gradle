@@ -69,7 +69,7 @@ subprojects {
     environment ("BIGTOP_HOME", BIGTOP_HOME)
   }
 
-  test << {
+  test.doLast {
     println("Now testing...");
     //todo, add back in 'basic' after BIGTOP-1392 .
     testLogging {

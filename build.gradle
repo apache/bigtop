@@ -341,7 +341,7 @@ def artifactToInstall = {
     task "install-${artifact}" (description: "Installs ${artifact} artifact with Maven",
         group: TESTARTIFACTS_GROUP,
         dependsOn: installiTest
-    ) << {
+    ) doLast {
       def final PATH = "${TEST_DIR}/$artifact/pom.xml"
       def final WRAPPER = "mvn clean install -f " + PATH
       exec {
@@ -392,7 +392,7 @@ repos.each { r->
 task "configure-nexus"(dependsOn: tasks.findAll { alltask -> alltask.name.startsWith("configure-nexus-")}*.name,
       description: 'configure build to use a sonatype nexus server.\n' +
         '  Use -PNEXUS_URL=http://server:8081 to overwrite default server http://localhost:8081\n' +
-        '  Use -PNEXUS_USERPASS=user:passwd to overwrite default username passwd admin:admin123') << {
+        '  Use -PNEXUS_USERPASS=user:passwd to overwrite default username passwd admin:admin123') doLast {
    def m2Dir = System.getProperty("user.home") + "/.m2"
    mkdir(m2Dir)
    def writer = new File(m2Dir + "/settings.xml")
