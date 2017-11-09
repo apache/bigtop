@@ -33,8 +33,8 @@ class TestIndexing extends SolrTestBase {
   @Test
   public void testSearch() {
     testEquals(doReq("/select?q=*:*"), "response.numFound", "2")
-    testEquals(doReq("/select?q=name:first"), "response.numFound", "1")
-    testEquals(doReq("/select?q=name:document"), "response.numFound", "2")
+    testEquals(doReq("/select?q=name:first*"), "response.numFound", "1")
+    testEquals(doReq("/select?q=name:*document"), "response.numFound", "2")
     testEquals(doReq("/select?q=none"), "response.numFound", "0")
   }
 }
