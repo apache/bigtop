@@ -12,11 +12,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-FROM bigtop/puppet:fedora-25-aarch64
+FROM arm64v8/fedora:26
 MAINTAINER Jun He <jun.he@arm.com>
 
-COPY bigtop_toolchain /etc/puppet/modules/bigtop_toolchain
-
-RUN puppet apply -e "include bigtop_toolchain::installer"
-COPY . /tmp/bigtop
-RUN cd /tmp/bigtop && ./gradlew && cd && rm -rf /tmp/bigtop
+COPY puppetize.sh /tmp/puppetize.sh
+RUN bash /tmp/puppetize.sh

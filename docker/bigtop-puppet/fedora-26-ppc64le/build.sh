@@ -13,4 +13,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 cp ../../../bigtop_toolchain/bin/puppetize.sh .
-docker build --pull=true -t bigtop/puppet:fedora-25-ppc64le .
+docker build --pull=true -t bigtop/puppet:fedora-26-ppc64le .
