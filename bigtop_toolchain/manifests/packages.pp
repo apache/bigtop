@@ -16,12 +16,6 @@
 class bigtop_toolchain::packages {
   case $operatingsystem{
     /(?i:(centos|fedora))/: {
-      # Fedora 20 and CentOS 7 or above are using mariadb, while CentOS 6 is still mysql
-      if ($operatingsystem == "CentOS") and ($operatingsystemmajrelease <=6) {
-        $mysql_devel="mysql-devel"
-      } else {
-        $mysql_devel="mariadb-devel"
-      }
       $pkgs = [
         "unzip",
         "curl",
@@ -47,7 +41,7 @@ class bigtop_toolchain::packages {
         "cyrus-sasl-devel",
         "sqlite-devel",
         "openldap-devel",
-        $mysql_devel,
+        "mariadb-devel",
         "rpm-build",
         "redhat-rpm-config",
         "fuse-libs",
@@ -157,12 +151,6 @@ class bigtop_toolchain::packages {
       "libffi-devel"
     ] }
     /(Ubuntu|Debian)/: {
-      # Debian-9 is using mariadb instead of mysql
-      if ($operatingsystem == "Debian") and ($operatingsystemmajrelease > "8") {
-        $mysql_dev="libmariadb-dev"
-      } else {
-        $mysql_dev="libmysqlclient-dev"
-      }
       $pkgs = [
         "unzip",
         "curl",
@@ -198,7 +186,7 @@ class bigtop_toolchain::packages {
         "libsqlite3-dev",
         "libldap2-dev",
         "libsasl2-dev",
-        $mysql_dev,
+        "libmariadb-dev",
         "python-setuptools",
         "libkrb5-dev",
         "asciidoc",
