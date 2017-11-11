@@ -67,7 +67,6 @@ class bigtop_toolchain::packages {
         "libevent-devel",
         "apr-devel",
         "bison",
-        "perl-Env",
         "libffi-devel"
       ]
     }
