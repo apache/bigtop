@@ -15,7 +15,7 @@
 
 docker:
         memory_limit: "4g"
-        image: "bigtop/puppet:centos-6"
+        image: "bigtop/puppet:trunk-centos-6"
 
 repo: "http://repos.bigtop.apache.org/releases/1.2.1/centos/6/x86_64"
 distro: centos

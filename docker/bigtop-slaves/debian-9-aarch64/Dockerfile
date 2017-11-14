@@ -12,7 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-FROM bigtop/puppet:debian-9-aarch64
+FROM bigtop/puppet:trunk-debian-9-aarch64
 MAINTAINER Yuqi Gu <yuqi.gu@arm.com>
 
 COPY bigtop_toolchain /usr/share/puppet/modules/bigtop_toolchain

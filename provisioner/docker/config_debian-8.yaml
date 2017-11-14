@@ -15,7 +15,7 @@
 
 docker:
         memory_limit: "4g"
-        image: "bigtop/puppet:debian-8"
+        image: "bigtop/puppet:trunk-debian-8"
 
 repo: "http://repos.bigtop.apache.org/releases/1.2.1/debian/8/x86_64"
 distro: debian
