@@ -65,7 +65,7 @@ generate_tag() {
 
 detect_repo() {
     OS_SEP_BY_SLASH=${OS/-//}
-    REPO=${REPO:-"http://bigtop-repos.s3.amazonaws.com/releases/${BIGTOP_VERSION}/${OS_SEP_BY_SLASH}/$HOSTTYPE"}
+    REPO=${REPO:-"http://repos.bigtop.apache.org/releases/${BIGTOP_VERSION}/${OS_SEP_BY_SLASH}/$HOSTTYPE"}
 }
 
 image_config_validator() {

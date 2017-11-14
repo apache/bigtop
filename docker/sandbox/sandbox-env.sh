@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-BIGTOP_VERSION=1.2.0
+BIGTOP_VERSION=1.2.1
 # REPO="YOUR CUSTOM REPO"
 
 RPMS=( \
