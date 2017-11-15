@@ -186,7 +186,7 @@ class bigtop_toolchain::packages {
         "libsqlite3-dev",
         "libldap2-dev",
         "libsasl2-dev",
-        "libmariadb-dev",
+        "libmariadbd-dev",
         "python-setuptools",
         "libkrb5-dev",
         "asciidoc",
