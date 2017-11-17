@@ -21,7 +21,7 @@ case "$1" in
     install|upgrade)
         getent group qfs >/dev/null || groupadd -r qfs
         getent passwd qfs > /dev/null || useradd -c "qfs" -s /bin/bash -g qfs \
-            -d /var/lib/qfs qfs 2> /dev/null || :
+            -r -d /var/lib/qfs qfs 2> /dev/null || :
     ;;
     abort-upgrade)
     ;;
