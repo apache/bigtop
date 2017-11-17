@@ -359,11 +359,11 @@ def _NEXUS_URL = project.hasProperty("NEXUS_URL") ? NEXUS_URL : "http://localhos
 def generate_nexus_tasks = { name, url, snapshot ->
   task "configure-nexus-${name}"(type: Exec) {
     def req = [ data : [ id: name, name: name, repoType: "proxy", repoPolicy : snapshot, browseable: true, "indexable": true, "notFoundCacheTTL": 1440,
-        "artifactMaxAge": 1440, "metadataMaxAge": 1440, "itemMaxAge": 1440, "provider": "maven2",
-        "providerRole": "org.sonatype.nexus.proxy.repository.Repository", "downloadRemoteIndexes": true,
-        "autoBlockActive": true, "fileTypeValidation": true, "exposed": true, "checksumPolicy": "WARN",
-        "remoteStorage": ["remoteStorageUrl": url, "authentication": null,
-              "connectionSettings": null]]]
+			  "artifactMaxAge": 1440, "metadataMaxAge": 1440, "itemMaxAge": 1440, "provider": "maven2",
+			  "providerRole": "org.sonatype.nexus.proxy.repository.Repository", "downloadRemoteIndexes": true,
+			  "autoBlockActive": true, "fileTypeValidation": true, "exposed": true, "checksumPolicy": "WARN",
+			  "remoteStorage": ["remoteStorageUrl": url, "authentication": null,
+					    "connectionSettings": null]]]
     def root = new groovy.json.JsonBuilder(req)
     def p = root.toString()
     def _NEXUS_USERPASS = project.hasProperty("NEXUS_USERPASS") ? NEXUS_USERPASS : "admin:admin123"
