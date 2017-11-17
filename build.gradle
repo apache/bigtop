@@ -23,7 +23,7 @@ buildscript {
 }
 
 plugins {
-  id "de.undercouch.download" version "2.0.0"
+  id "de.undercouch.download" version "3.2.0"
   id "org.nosphere.apache.rat" version "0.2.0"
 }
 
@@ -64,7 +64,7 @@ o88o     o8888o 888bod8P'`Y888""8o`Y8bod8P'o888o o888o`Y8bod8P'  o888bood8P' o88
                o888o                                                              "Y88888P'                 o888o     
 '''
 
-def final langLevel = "1.7"
+def final langLevel = "1.8"
 
 rat {
   excludes = [
@@ -73,15 +73,15 @@ rat {
        "**/.gitignore",
        /* Test data with rigid structure and/or binary */
        "bigtop-tests/test-artifacts/**/resources/**",
-       "bigtop-tests/smoke-tests/tachyon/datafile",
+       "bigtop-tests/smoke-tests/alluxio/datafile",
        "bigtop-tests/smoke-tests/hive/passwd.ql",
-	   "bigtop-tests/smoke-tests/hive/samdat1.csv",
-       "bigtop-tests/smoke-tests/kite/sandwiches.csv",
+       "bigtop-tests/smoke-tests/hive/samdat1.csv",
        "bigtop-tests/smoke-tests/phoenix/*.csv",
        "bigtop-tests/smoke-tests/phoenix/*.sql",
        "bigtop-tests/smoke-tests/ignite-hadoop/*.data",
        "bigtop-tests/smoke-tests/tajo/table1/*.csv",
-       "bigtop-tests/spec-tests/runtime/src/test/resources/*",
+       "bigtop-tests/smoke-tests/odpi-runtime/src/test/resources/*.json",
+       "bigtop-tests/smoke-tests/odpi-runtime/src/test/resources/*.list",
        "**/target/**",
        "**/build/**",
        "**/.gradle/**",
@@ -115,6 +115,14 @@ rat {
        "bigtop-packages/src/common/*/*.json",
        "bigtop-packages/src/common/**/*.default",
        "bigtop-repos/apt/distributions",
+       /* Juju charm files with rigid structure */
+       "bigtop-packages/src/charm/**/wheelhouse.txt",
+       "bigtop-packages/src/charm/**/*.json",
+       "bigtop-packages/src/charm/**/*.svg",
+       "bigtop-packages/src/charm/**/*.yaml",
+       "bigtop-packages/src/charm/**/resources/**/*.txt",
+       "bigtop-deploy/juju/**/*.yaml",
+       "bigtop-tests/cloud-weather-report/**/*.yaml",
        /* Misc individual files */
        "src/site/resources/bigtop.rdf",
        "src/site/resources/images/bigtop-logo.ai",
@@ -124,8 +132,13 @@ rat {
        "bigtop-deploy/puppet/modules/hadoop/templates/taskcontroller.cfg",
        "bigtop-deploy/puppet/modules/hadoop/templates/container-executor.cfg",
        "bigtop-deploy/puppet/README.md",
+       "bigtop-deploy/puppet/modules/qfs/README.md",
        "bigtop-deploy/puppet/config/site.csv.example",
-       "dl/**"
+       "dl/**",
+       "bigtop-deploy/puppet/modules/gpdb/templates/**",
+       "provisioner/docker/config/hiera.yaml",
+       "provisioner/docker/config/hieradata/PLACEHOLDER",
+       "provisioner/docker/config/hosts",
   ]
 }
 
@@ -135,7 +148,7 @@ allprojects {
   apply plugin: 'maven'
 
   group = 'org.apache.bigtop'
-  version = '2.1.0-SNAPSHOT'
+  version = '1.3.0-SNAPSHOT'
 
   description = """Bigtop"""
 
@@ -143,7 +156,6 @@ allprojects {
   targetCompatibility = langLevel
 
   repositories {
-    maven { url "http://repository.apache.org/snapshots" }
     maven { url "http://repo.maven.apache.org/maven2" }
     mavenCentral()
   }
@@ -157,7 +169,7 @@ project(':itest-common') {
   description = """iTest: system and integration testing in the cloud"""
 
   dependencies {
-    compile group: 'org.codehaus.groovy', name: 'groovy-all', version:'2.1.8'
+    compile group: 'org.codehaus.groovy', name: 'groovy-all', version:'2.4.10'
     compile group: 'junit', name: 'junit', version:'4.11'
     compile group: 'commons-logging', name: 'commons-logging', version:'1.1'
     compile group: 'org.apache.ant', name: 'ant', version:'1.8.2'
@@ -214,7 +226,7 @@ task toolchain(type:Exec,
     description: 'Setup dev. env via toolchain; Requires: Puppet, sudo',
     group: DEVENV_GROUP) {
   def command = [
-      'sudo', 'puppet', 'apply', '-d',
+      'sudo', 'puppet', 'apply', '-d', '--parser', 'future',
       "--modulepath=${projectDir.absolutePath}:/etc/puppet/modules", '-e',
       'include bigtop_toolchain::installer'
   ]
@@ -245,9 +257,9 @@ task "toolchain-devtools"(type:Exec,
 }
 
 task "docker-provisioner"(type:Exec,
-    description: 'Provision a Bigtop cluster on Docker container(s). Default to CentOS and 1 node.\nCreate a 3 node cluster:\n  $ ./gradlew -Pnum_instances=3 docker-provisioner\nRun smoke tests on 3 node cluster:\n  $ ./gradlew -Pnum_instances=3 -Prun_smoke_tests=true docker-provisioner\nSpecify configuration file (located in bigtop-deploy/vm/vagrant-puppet-docker/):\n  $ ./gradlew -Pconfig=vagrantconfig_debian.yaml docker-provisioner',
+    description: 'Provision a Bigtop cluster on Docker container(s). Default to CentOS and 1 node.\nCreate a 3 node cluster:\n  $ ./gradlew -Pnum_instances=3 docker-provisioner\nRun smoke tests on 3 node cluster:\n  $ ./gradlew -Pnum_instances=3 -Prun_smoke_tests=true docker-provisioner\nSpecify configuration file (located in provisioner/docker/):\n  $ ./gradlew -Pconfig=config_debian8.yaml docker-provisioner',
     group: DEPLOY_GROUP) {
-  def _config = project.hasProperty("config") ? config : "vagrantconfig.yaml"
+  def _config = project.hasProperty("config") ? config : "config.yaml"
   def _num_instances = project.hasProperty("num_instances") ? num_instances : 1
   def command = [
       './docker-hadoop.sh',
@@ -257,14 +269,14 @@ task "docker-provisioner"(type:Exec,
   if ( project.hasProperty("run_smoke_tests") && run_smoke_tests ) {
     command.add("--smoke-tests")
   }
-  workingDir 'bigtop-deploy/vm/vagrant-puppet-docker'
+  workingDir 'provisioner/docker'
   commandLine command
 }
 task "docker-provisioner-ssh"(type:Exec,
-    description: 'Show ssh command to get in to the provisioned container',
+    description: 'Show command to get in to the provisioned container',
     group: DEPLOY_GROUP) {
-  workingDir 'bigtop-deploy/vm/vagrant-puppet-docker'
-  def message = "To ssh in to the container, do: \n(cd " + workingDir + " && vagrant ssh <CONTAIER_NAME>)"
+  workingDir 'provisioner/docker'
+  def message = "To get in to the container, do: \n\ndocker exec -ti <CONTAIER_NAME> bash \n\nYou can get container name by ./gradlew docker-provisioner-status"
   def command = [
       '/bin/echo',
       message
@@ -275,10 +287,10 @@ task "docker-provisioner-status"(type:Exec,
     description: 'Show status of Bigtop Docker cluster',
     group: DEPLOY_GROUP) {
   def command = [
-      'vagrant',
-      'status',
+      './docker-hadoop.sh',
+      '--list',
   ]
-  workingDir 'bigtop-deploy/vm/vagrant-puppet-docker'
+  workingDir 'provisioner/docker'
   commandLine command
 }
 task "docker-provisioner-destroy"(type:Exec,
@@ -288,7 +300,7 @@ task "docker-provisioner-destroy"(type:Exec,
       './docker-hadoop.sh',
       '--destroy'
   ]
-  workingDir 'bigtop-deploy/vm/vagrant-puppet-docker'
+  workingDir 'provisioner/docker'
   commandLine command
 }
 
@@ -330,7 +342,7 @@ def artifactToInstall = {
     task "install-${artifact}" (description: "Installs ${artifact} artifact with Maven",
         group: TESTARTIFACTS_GROUP,
         dependsOn: installiTest
-    ) << {
+    ) doLast {
       def final PATH = "${TEST_DIR}/$artifact/pom.xml"
       def final WRAPPER = "mvn clean install -f " + PATH
       exec {
@@ -341,16 +353,21 @@ def artifactToInstall = {
   }
 }
 
+
+def _NEXUS_URL = project.hasProperty("NEXUS_URL") ? NEXUS_URL : "http://localhost:8081"
+
 def generate_nexus_tasks = { name, url, snapshot ->
   task "configure-nexus-${name}"(type: Exec) {
     def req = [ data : [ id: name, name: name, repoType: "proxy", repoPolicy : snapshot, browseable: true, "indexable": true, "notFoundCacheTTL": 1440,
-			  "artifactMaxAge": 1440, "metadataMaxAge": 1440, "itemMaxAge": 1440, "provider": "maven2",
-			  "providerRole": "org.sonatype.nexus.proxy.repository.Repository", "downloadRemoteIndexes": true,
-			  "autoBlockActive": true, "fileTypeValidation": true, "exposed": true, "checksumPolicy": "WARN",
-			  "remoteStorage": ["remoteStorageUrl": url, "authentication": null,
-					    "connectionSettings": null]]]
+        "artifactMaxAge": 1440, "metadataMaxAge": 1440, "itemMaxAge": 1440, "provider": "maven2",
+        "providerRole": "org.sonatype.nexus.proxy.repository.Repository", "downloadRemoteIndexes": true,
+        "autoBlockActive": true, "fileTypeValidation": true, "exposed": true, "checksumPolicy": "WARN",
+        "remoteStorage": ["remoteStorageUrl": url, "authentication": null,
+              "connectionSettings": null]]]
     def root = new groovy.json.JsonBuilder(req)
     def p = root.toString()
+    def _NEXUS_USERPASS = project.hasProperty("NEXUS_USERPASS") ? NEXUS_USERPASS : "admin:admin123"
+
     File.createTempFile("temp",".tmp").with {
       deleteOnExit()
 
@@ -358,7 +375,7 @@ def generate_nexus_tasks = { name, url, snapshot ->
 
       workingDir '.'
       commandLine  "curl", "-o", "/dev/null", "-X", "POST", "-d", "@$absolutePath",
-        "--header", "Content-Type: application/json", "-u", "admin:admin123", "http://localhost:8081/service/local/repositories"
+        "--header", "Content-Type: application/json", "-u", "$_NEXUS_USERPASS", "$_NEXUS_URL/service/local/repositories"
     }
   }
 }
@@ -374,12 +391,14 @@ repos.each { r->
 }
 
 task "configure-nexus"(dependsOn: tasks.findAll { alltask -> alltask.name.startsWith("configure-nexus-")}*.name,
-      description: "configure all repos") << {
+      description: 'configure build to use a sonatype nexus server.\n' +
+        '  Use -PNEXUS_URL=http://server:8081 to overwrite default server http://localhost:8081\n' +
+        '  Use -PNEXUS_USERPASS=user:passwd to overwrite default username passwd admin:admin123') doLast {
    def m2Dir = System.getProperty("user.home") + "/.m2"
    mkdir(m2Dir)
    def writer = new File(m2Dir + "/settings.xml")
    def writeMirrorLine = { name ->
-     writer.append("<mirror><name>$name</name><url>http://localhost:8081/content/repositories/$name/</url><mirrorOf>$name</mirrorOf></mirror>")
+     writer.append("<mirror><name>$name</name><url>$_NEXUS_URL/content/repositories/$name/</url><mirrorOf>$name</mirrorOf></mirror>")
    }
    writer.text = "<settings><mirrors>"
    writeMirrorLine( "central")
@@ -389,23 +408,10 @@ task "configure-nexus"(dependsOn: tasks.findAll { alltask -> alltask.name.starts
    writer.append("</mirrors></settings>")
 }
 
-task "gen-gradle-home"(type:Exec,
-    description: 'Pre-load gradle home as cache for bigtop/slaves images',
-    group: DOCKERBUILD_GROUP) {
-  def dir = System.getProperty("user.dir")
-  def command = [
-      './gradlew', '-g', dir + '/gradle.home'
-  ]
-  workingDir '.'
-  commandLine command
-  //store the output instead of printing to the console:
-  standardOutput = new ByteArrayOutputStream()
-}
-
-task "bigtop-slaves"(dependsOn: 'gen-gradle-home', type:Exec,
+task "bigtop-slaves"(type:Exec,
     description: 'Build bigtop/slaves images.\n' +
-      'Usage:\n  $ ./gradlew -POS=[centos-6|centos-7|fedora-20|debian-8|ubuntu-14.04|opensuse-13.2] -Pprefix=STRING_TO_PREFIX bigtop-slaves\n' +
-      'Example:\n  $ ./gradlew -POS=debian-8 -Pprefix=1.0.0 bigtop-slaves\n' +
+      'Usage:\n  $ ./gradlew -POS=[centos-7|fedora-26|debian-9|ubuntu-16.04|opensuse-42.3] -Pprefix=STRING_TO_PREFIX bigtop-slaves\n' +
+      'Example:\n  $ ./gradlew -POS=debian-9 -Pprefix=1.0.0 bigtop-slaves\n' +
       'The built image name: bigtop/slaves:1.0.0-debian-8',
     group: DOCKERBUILD_GROUP) {
   def _prefix = project.hasProperty("prefix") ? prefix : "trunk"
@@ -414,7 +420,6 @@ task "bigtop-slaves"(dependsOn: 'gen-gradle-home', type:Exec,
       'docker', 'build',
       '-t', 'bigtop/slaves:' + _prefix + '-' + _OS,
       '-f', "docker/bigtop-slaves/" + _OS + "/Dockerfile",
-      '--force-rm', '--no-cache', '--pull', '--rm',
       '.'
   ]
   workingDir '.'
@@ -423,7 +428,6 @@ task "bigtop-slaves"(dependsOn: 'gen-gradle-home', type:Exec,
 
 project.afterEvaluate {
   checkClusterTestProjects("smoke.tests")
-  checkClusterTestProjects("spec.tests")
   artifactToInstall(dependsOn: [installTopLevel, installCommon, installConf, installiTest])
 }
 
@@ -431,9 +435,4 @@ installAllLocalArtifacts.dependsOn installTopLevel, installCommon, installConf, 
 
 help.doFirst {
   println ASCII_bigtop
-}
-
-repositories {
-  maven { url "http://repository.apache.org/snapshots" }
-  maven { url "http://repo.maven.apache.org/maven2" }
 }
