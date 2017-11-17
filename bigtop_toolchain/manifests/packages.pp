@@ -18,6 +18,7 @@ class bigtop_toolchain::packages {
     /(?i:(centos|fedora))/: {
       $pkgs = [
         "unzip",
+        "rsync",
         "curl",
         "wget",
         "git",
