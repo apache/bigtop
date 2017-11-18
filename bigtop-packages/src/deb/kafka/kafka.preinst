@@ -20,7 +20,7 @@ set -e
 case "$1" in
     install|upgrade)
         getent group kafka >/dev/null || groupadd -r kafka
-        getent passwd kafka > /dev/null || useradd -c "kafka" -s /bin/bash -g kafka -d /var/lib/kafka kafka 2> /dev/null || :
+        getent passwd kafka > /dev/null || useradd -c "kafka" -s /bin/bash -g kafka -r -d /var/lib/kafka kafka 2> /dev/null || :
     ;;
     abort-upgrade)
     ;;
