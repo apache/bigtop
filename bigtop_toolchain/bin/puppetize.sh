@@ -22,39 +22,28 @@ fi
 
 case ${ID}-${VERSION_ID} in
     fedora-26)
-        dnf -y install yum-utils
-        dnf -y update 
-        dnf -y install hostname findutils curl sudo unzip wget puppet
+      dnf -y install yum-utils
+      dnf -y update
+      dnf -y install hostname findutils curl sudo unzip wget puppet puppetlabs-stdlib
         ;;
     ubuntu-16.04)
         apt-get update
-        apt-get -y install wget curl sudo unzip puppet software-properties-common
-	;;
+        apt-get -y install wget curl sudo unzip puppet software-properties-common puppet-module-puppetlabs-apt puppet-module-puppetlabs-stdlib
+        ;;
     debian-9*)
         apt-get update
-        apt-get -y install wget curl sudo unzip puppet
-        ;;
+        apt-get -y install wget curl sudo unzip puppet puppet-module-puppetlabs-apt puppet-module-puppetlabs-stdlib
+         ;;
     opensuse-42.3)
-	zypper --gpg-auto-import-keys install -y curl sudo unzip wget puppet suse-release ca-certificates-mozilla net-tools tar
-	;;
+        zypper --gpg-auto-import-keys install -y curl sudo unzip wget puppet suse-release ca-certificates-mozilla net-tools tar
+        puppet module install puppetlabs-stdlib
+        ;;
     centos-7*)
-        if [ $HOSTTYPE = "x86_64" ] ; then
-          rpm -ivh https://yum.puppetlabs.com/puppetlabs-release-el-7.noarch.rpm
-        fi
-	yum -y install hostname curl sudo unzip wget puppet
-	;;
+        rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+        yum -y install hostname curl sudo unzip wget puppet puppetlabs-stdlib
+        ;;
     *)
-	echo "Unsupported OS ${ID}-${VERSION_ID}."
-	exit 1
-esac
-
-puppet module install puppetlabs-stdlib
-
-case ${ID} in
-   debian|ubuntu)
-       version=""
-       if [ `puppet --version | cut -c1` -lt "4" ]; then
-           version="--version 2.4.0"
-       fi
-      puppet module install puppetlabs-apt $version;;
+        echo "Unsupported OS ${ID}-${VERSION_ID}."
+        exit 1
+        ;;
 esac
