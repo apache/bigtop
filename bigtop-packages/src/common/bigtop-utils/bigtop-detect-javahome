@@ -27,6 +27,8 @@ JAVA8_HOME_CANDIDATES=(
     '/usr/lib/jvm/j2sdk1.8-oracle/jre'
     '/usr/lib/jvm/java-8-oracle'
     '/usr/lib/jdk8-latest'
+    '/usr/lib/jvm/java-1.8.0'
+    '/usr/lib/jvm/java-1.8.0-oracle'
 )
 
 OPENJAVA8_HOME__CANDIDATES=(
@@ -44,6 +46,7 @@ MISCJAVA_HOME_CANDIDATES=(
     '/usr/lib/jvm/default-java'
     '/usr/lib/jvm/java-openjdk'
     '/usr/lib/jvm/jre-openjdk'
+    '/usr/lib/jvm/java-oracle'
 )
 
 case ${BIGTOP_JAVA_MAJOR} in
