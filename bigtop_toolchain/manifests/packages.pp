@@ -178,7 +178,6 @@ class bigtop_toolchain::packages {
         "build-essential",
         "dh-make",
         "libfuse2",
-        "libssh-dev",
         "libjansi-java",
         "python2.7-dev",
         "libxml2-dev",
