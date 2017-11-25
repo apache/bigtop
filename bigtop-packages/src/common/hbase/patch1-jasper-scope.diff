@@ -1,0 +1,11 @@
+--- hbase-1.1.12/pom.xml_	2017-11-25 21:30:50.000000000 +0100
++++ hbase-1.1.12/pom.xml	2017-11-25 21:57:11.000000000 +0100
+@@ -1720,7 +1720,7 @@
+         <groupId>tomcat</groupId>
+         <artifactId>jasper-runtime</artifactId>
+         <version>${jasper.version}</version>
+-        <scope>runtime</scope>
++        <scope>compile</scope>
+         <exclusions>
+           <exclusion>
+             <groupId>javax.servlet</groupId>
