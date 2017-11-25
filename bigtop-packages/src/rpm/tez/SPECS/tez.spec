@@ -62,6 +62,7 @@ Source3: tez.1
 Source4: tez-site.xml
 Source5: bigtop.bom
 Source6: init.d.tmpl
+#BIGTOP_PATCH_FILES
 BuildArch: noarch
 Requires: hadoop hadoop-hdfs hadoop-yarn hadoop-mapreduce
 
@@ -79,6 +80,8 @@ processing data. It is currently built atop Apache Hadoop YARN
 
 %prep
 %setup -q -n apache-%{name}-%{tez_base_version}-src
+
+#BIGTOP_PATCH_COMMANDS
 
 %build
 env TEZ_VERSION=%{version} bash %{SOURCE1}
