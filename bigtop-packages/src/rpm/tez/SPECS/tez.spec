@@ -117,4 +117,4 @@ sh %{SOURCE2} \
 %{tez_home}
 %doc %{doc_tez}
 %{man_dir}/man1/tez.1.*
-/etc/tez/conf/tez-site.xml
+%config(noreplace) /etc/tez/conf/tez-site.xml
