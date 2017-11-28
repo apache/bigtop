@@ -17,7 +17,7 @@ Source: hue
 Section: misc
 Priority: extra
 Maintainer: Apache Bigtopr <dev@bigtop.apache.org>
-Build-Depends: debhelper (>= 7.0.50~), python2.6-dev | python2.7-dev, libxml2-dev, libxslt1-dev, zlib1g-dev, libsqlite3-dev, libldap2-dev, libsasl2-dev, libmysqlclient-dev, make, python-setuptools, libkrb5-dev, libgmp3-dev, libffi-dev
+Build-Depends: debhelper (>= 7.0.50~), python2.6-dev | python2.7-dev, libxml2-dev, libxslt1-dev, zlib1g-dev, libsqlite3-dev, libldap2-dev, libsasl2-dev, libmysqlclient-dev | libmariadbclient-dev, make, python-setuptools, libkrb5-dev, libgmp3-dev, libffi-dev
 Standards-Version: 3.9.4
 Homepage: http://github.com/cloudera/hue
 
