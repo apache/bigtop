@@ -66,3 +66,5 @@ docker run --name container-$OS-$TARGET-$$ $NEXUS image-$OS $CONFIGURE_NEXUS $TA
 mkdir -p output
 docker cp container-$OS-$TARGET-$$:/var/lib/jenkins/bigtop/output .
 docker rm -v container-$OS-$TARGET-$$
+docker rmi image-$OS
+rm -rf Dockerfile
