@@ -571,6 +571,27 @@ def genTasks = { target ->
         group: PACKAGES_GROUP) doLast {
     }
   }
+  task "$target-pkg-ind" (
+          description: "Invoking a native binary packaging for $target in Docker. Usage: \$ ./gradlew " +
+                  "-POS=[centos-7|fedora-26|debian-9|ubuntu-16.04|opensuse-42.3] " +
+                  "-Pprefix=[trunk|1.2.1|1.2.0|1.1.0|...] $target-pkg-ind",
+          group: PACKAGES_GROUP) doLast {
+    def _prefix = project.hasProperty("prefix") ? prefix : "trunk"
+    def _OS = project.hasProperty("OS") ? OS : "centos-7"
+    def _target_pkg = "$target-pkg"
+    def command = [
+            './bigtop-ci/build.sh',
+            '--os', _prefix + '-' + _OS,
+            '--target', _target_pkg
+    ]
+
+    println "Building $_prefix $_target_pkg on $_OS in Docker...\n"
+
+    exec {
+      workingDir BASE_DIR
+      commandLine command
+    }
+  }
   task "$target-version" (description: "Show version of $target component", group: PACKAGES_GROUP) doLast {
     println "Base: ${config.bigtop.components[target].version.base}"
   }
