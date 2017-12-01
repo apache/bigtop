@@ -44,4 +44,4 @@ SPARK_SKIP_TESTS=$([ "$SPARK_RUN_TESTS" = "true" ] && echo false || echo true)
 # This is also the point that we can run the tests if desired, since tests must
 # be run after Spark has already been packaged.
 # See http://spark.apache.org/docs/latest/building-spark.html#spark-tests-in-maven
-mvn $BUILD_OPTS install -DskipTests=$SPARK_SKIP_TESTS
+./build/mvn $BUILD_OPTS install -DskipTests=$SPARK_SKIP_TESTS
