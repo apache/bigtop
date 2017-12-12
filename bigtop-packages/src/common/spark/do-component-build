@@ -32,7 +32,7 @@ BUILD_OPTS="-Divy.home=${HOME}/.ivy2 -Dsbt.ivy.home=${HOME}/.ivy2 -Duser.home=${
             -Phive -Phive-thriftserver \
             $SPARK_BUILD_OPTS"
 
-./dev/make-distribution.sh $BUILD_OPTS -DskipTests
+./dev/make-distribution.sh --mvn mvn $BUILD_OPTS -DskipTests
 
 SPARK_SKIP_TESTS=$([ "$SPARK_RUN_TESTS" = "true" ] && echo false || echo true)
 
