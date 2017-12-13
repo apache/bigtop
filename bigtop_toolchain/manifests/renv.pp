@@ -13,20 +13,38 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class bigtop_toolchain::installer {
-  include bigtop_toolchain::jdk
-  include bigtop_toolchain::maven
-  include bigtop_toolchain::ant
-  include bigtop_toolchain::gradle
-  include bigtop_toolchain::node
-  include bigtop_toolchain::protobuf
-  include bigtop_toolchain::packages
-  include bigtop_toolchain::env
-  include bigtop_toolchain::user
-  include bigtop_toolchain::renv
-
-  stage { 'last':
-    require => Stage['main'],
+class bigtop_toolchain::renv {
+  case $operatingsystem{
+    /(?i:(centos|fedora|Amazon))/: {
+      $pkgs = [
+        "R",
+        "R-devel",
+        "pandoc"
+      ]
+    }
+    /(?i:(SLES|opensuse))/: { 
+      $pkgs = [
+        "R-base",
+        "R-base-devel",
+        "pandoc"
+      ]
+    }
+    /(Ubuntu|Debian)/: {
+      $pkgs = [
+        "r-base",
+        "r-base-dev",
+        "pandoc"
+      ]
+    }
   }
-  class { 'bigtop_toolchain::cleanup': stage => 'last' }
+  package { $pkgs:
+    ensure => installed,
+    before => [Exec['install_r_packages']] 
+  }
+
+  # Install required R packages
+  exec { 'install_r_packages':
+    cwd     => "/usr/bin",
+    command => "/usr/bin/R -e \"install.packages(c('devtools', 'evaluate', 'rmarkdown', 'knitr', 'roxygen2', 'testthat', 'e1071'), repos = 'http://cran.us.r-project.org')\"",
+  }
 }
