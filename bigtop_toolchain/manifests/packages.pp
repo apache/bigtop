@@ -62,7 +62,8 @@ class bigtop_toolchain::packages {
         "libevent-devel",
         "apr-devel",
         "bison",
-        "libffi-devel"
+        "libffi-devel",
+        "epel-release"
       ]
     }
     /(?i:(SLES|opensuse))/: { $pkgs = [
