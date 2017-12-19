@@ -61,7 +61,7 @@ public class HiveJdbcGeneralTest extends TestMethods {
     Statement stmt = con.createStatement();
     String newTableName = "btest";
     String columnNames = "Flight int, Dates varchar(255), Depart varchar(10), Orig varchar(5), Dest varchar(5), Miles int, Boarded int, Capacity int";
-    String localFilepath = f + "/samdat1.csv";
+    String localFilepath = f + "/bigtop-tests/smoke-tests/hive/samdat1.csv";
     String HdfsURI = "hdfs://" + hdfsConnection;
     String fileDestination = HdfsURI + "/tmp/htest/Hadoop_File.txt";
     String filePath = "/tmp/htest/Hadoop_File.txt";
