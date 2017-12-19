@@ -16,4 +16,4 @@
 
 set -ex
 
-./configure --prefix=$1
+./configure --prefix=$1 --disable-orca

@@ -44,8 +44,7 @@ class Zeppelin(object):
 
     def install(self):
         '''
-        Perform initial one-time setup, workaround upstream bugs, and
-        trigger puppet.
+        Perform initial one-time setup and trigger puppet.
         '''
         # Dirs are handled by the bigtop deb, so no need to call out to
         # dist_config to do that work.  However, we want to adjust the
@@ -73,35 +72,7 @@ class Zeppelin(object):
         self._add_override('spark::common::event_log_dir', events_log_dir)
         self._add_override('spark::common::history_log_dir', events_log_dir)
 
-        ##########
-        # BUG: BIGTOP-2742
-        # Default zeppelin init script looks for the literal '$(hostname)'
-        # string. Symlink it so it exists before the apt install from puppet
-        # tries to start the service.
-        import subprocess
-        host = subprocess.check_output(['hostname']).decode('utf8').strip()
-        zepp_pid = '/var/run/zeppelin/zeppelin-zeppelin-{}.pid'.format(host)
-        utils.run_as('root', 'mkdir', '-p', '/var/run/zeppelin')
-        utils.run_as('root', 'ln', '-sf',
-                     zepp_pid,
-                     '/var/run/zeppelin/zeppelin-zeppelin-$(hostname).pid')
-        ##########
-
         self.trigger_bigtop()
-
-        ##########
-        # BUG: BIGTOP-2742
-        # Puppet apply will call systemctl daemon-reload, which removes the
-        # symlink we just created. Now that the bits are on disk, update the
-        # init script $(hostname) that caused this mess to begin with.
-        zepp_init_script = '/etc/init.d/zeppelin'
-        utils.re_edit_in_place(zepp_init_script, {
-            r'^# pidfile.*': '# pidfile: {}'.format(zepp_pid),
-        })
-        utils.run_as('root', 'systemctl', 'daemon-reload')
-        self.restart()
-        self.wait_for_api(30)
-        ##########
 
     def trigger_bigtop(self):
         '''
@@ -111,7 +82,7 @@ class Zeppelin(object):
         overrides = unitdata.kv().getrange('zeppelin.bigtop.overrides.',
                                            strip=True)
 
-        # The zep deb depends on spark-core, spark-python, and unfortunately,
+        # The zep deb depends on spark-core which unfortunately brings in
         # most of hadoop. Include appropriate roles here to ensure these
         # packages are configured in the same way as our other Bigtop
         # software deployed with puppet.
@@ -124,8 +95,43 @@ class Zeppelin(object):
             overrides=overrides,
         )
 
-        bigtop.trigger_puppet()
-        self.wait_for_api(30)
+        # NB: during an upgrade, we configure the site.yaml, but do not
+        # trigger puppet. The user must do that with the 'reinstall' action.
+        if unitdata.kv().get('zeppelin.version.repo', False):
+            hookenv.log("An upgrade is available and the site.yaml has been "
+                        "configured. Run the 'reinstall' action to continue.",
+                        level=hookenv.INFO)
+        else:
+            ####################################################################
+            # BUG: BIGTOP-2742
+            # Default zeppelin init script looks for the literal '$(hostname)'
+            # string. Symlink it so it exists before the apt install from puppet
+            # tries to start the service.
+            import subprocess
+            host = subprocess.check_output(['hostname']).decode('utf8').strip()
+            zepp_pid = '/var/run/zeppelin/zeppelin-zeppelin-{}.pid'.format(host)
+            utils.run_as('root', 'mkdir', '-p', '/var/run/zeppelin')
+            utils.run_as('root', 'ln', '-sf',
+                         zepp_pid,
+                         '/var/run/zeppelin/zeppelin-zeppelin-$(hostname).pid')
+            ####################################################################
+
+            bigtop.trigger_puppet()
+            self.wait_for_api(30)
+
+            ####################################################################
+            # BUG: BIGTOP-2742
+            # Puppet apply will call systemctl daemon-reload, which removes the
+            # symlink we just created. Now that the bits are on disk, update the
+            # init script $(hostname) that caused this mess to begin with.
+            zepp_init_script = '/etc/init.d/zeppelin'
+            utils.re_edit_in_place(zepp_init_script, {
+                r'^# pidfile.*': '# pidfile: {}'.format(zepp_pid),
+            })
+            utils.run_as('root', 'systemctl', 'daemon-reload')
+            self.restart()
+            self.wait_for_api(30)
+            ####################################################################
 
     def reconfigure_zeppelin(self):
         '''
@@ -156,9 +162,10 @@ class Zeppelin(object):
         utils.run_as('hdfs', 'hdfs', 'dfs', '-mkdir', '-p', '/user/zeppelin')
         utils.run_as('hdfs', 'hdfs', 'dfs', '-chown', 'zeppelin', '/user/zeppelin')
 
-        # If spark is ready, let it handle the spark_master_url. Otherwise,
-        # zepp is in local mode; set it to yarn-client since hadoop is here.
+        # If spark is ready, let configure_spark() trigger bigtop. Otherwise,
+        # put our spark in yarn-client mode since hadoop is here.
         if not is_state('spark.ready'):
+            self._add_override('spark::common::master_url', 'yarn-client')
             self._add_override('zeppelin::server::spark_master_url', 'yarn-client')
             self.trigger_bigtop()
 
@@ -166,7 +173,8 @@ class Zeppelin(object):
         '''
         Configure the zeppelin spark interpreter
         '''
-        # TODO: Need Puppet params created to set Spark driver and executor memory
+        # TODO: Add config for Spark driver and executor memory overrides
+        self._add_override('spark::common::master_url', master_url)
         self._add_override('zeppelin::server::spark_master_url', master_url)
         self.trigger_bigtop()
 

@@ -20,7 +20,7 @@ import re
 import unittest
 
 
-class TestDeploy(unittest.TestCase):
+class TestSmokeSpark(unittest.TestCase):
     """
     Smoke test for Apache Bigtop Zeppelin using remote Spark resources.
     """
@@ -28,13 +28,25 @@ class TestDeploy(unittest.TestCase):
     def setUpClass(cls):
         cls.d = amulet.Deployment(series='xenial')
         cls.d.add('zeppelin')
-        cls.d.add('spark')
+        cls.d.add('zeppelin-test-spark', charm='spark')
 
-        cls.d.relate('zeppelin:spark', 'spark:client')
+        cls.d.relate('zeppelin-test-spark:client', 'zeppelin:spark')
 
         cls.d.setup(timeout=1800)
         cls.d.sentry.wait_for_messages({'zeppelin': re.compile('ready with')}, timeout=1800)
         cls.zeppelin = cls.d.sentry['zeppelin'][0]
+
+    @classmethod
+    def tearDownClass(cls):
+        # NB: seems to be a remove_service issue with amulet. However, the
+        # unit does still get removed. Pass OSError for now:
+        #  OSError: juju command failed ['remove-application', ...]:
+        #  ERROR allocation for service ... owned by ... not found
+        try:
+            cls.d.remove_service('zeppelin-test-spark')
+        except OSError as e:
+            print("IGNORE: Amulet remove_service failed: {}".format(e))
+            pass
 
     def test_zeppelin(self):
         """

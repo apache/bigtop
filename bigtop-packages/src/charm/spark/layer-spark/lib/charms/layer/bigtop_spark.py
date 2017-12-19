@@ -249,8 +249,8 @@ class Spark(object):
                 req_percentage = float(req_driver_mem.strip('%')) / 100
                 driver_mem = str(int(mem_mb * req_percentage)) + 'm'
             else:
-                hookenv.log("driver_memory percentage in non-local mode. Using 1g default.",
-                            level=None)
+                hookenv.log("driver_memory percentage in non-local mode. "
+                            "Using 1g default.", level=hookenv.WARNING)
         else:
             driver_mem = req_driver_mem
 
@@ -260,10 +260,15 @@ class Spark(object):
                 req_percentage = float(req_executor_mem.strip('%')) / 100
                 executor_mem = str(int(mem_mb * req_percentage)) + 'm'
             else:
-                hookenv.log("executor_memory percentage in non-local mode. Using 1g default.",
-                            level=None)
+                hookenv.log("executor_memory percentage in non-local mode. "
+                            "Using 1g default.", level=hookenv.WARNING)
         else:
             executor_mem = req_executor_mem
+
+        # Some spark applications look for envars in /etc/environment
+        with utils.environment_edit_in_place('/etc/environment') as env:
+            env['MASTER'] = master_url
+            env['SPARK_HOME'] = dc.path('spark_home')
 
         # Setup hosts dict
         hosts = {
@@ -305,19 +310,22 @@ class Spark(object):
         else:
             override['spark::common::zookeeper_connection_string'] = None
 
-        # Create our site.yaml and trigger puppet
+        # Create our site.yaml and trigger puppet.
+        # NB: during an upgrade, we configure the site.yaml, but do not
+        # trigger puppet. The user must do that with the 'reinstall' action.
         bigtop = Bigtop()
         bigtop.render_site_yaml(hosts, roles, override)
-        bigtop.trigger_puppet()
-        self.patch_worker_master_url(master_ip, master_url)
+        if unitdata.kv().get('spark.version.repo', False):
+            hookenv.log("An upgrade is available and the site.yaml has been "
+                        "configured. Run the 'reinstall' action to continue.",
+                        level=hookenv.INFO)
+        else:
+            bigtop.trigger_puppet()
+            self.patch_worker_master_url(master_ip, master_url)
 
-        # Packages don't create the event dir out of the box. Do it now.
-        self.configure_events_dir(mode)
-
-        # Some spark applications look for envars in /etc/environment
-        with utils.environment_edit_in_place('/etc/environment') as env:
-            env['MASTER'] = master_url
-            env['SPARK_HOME'] = dc.path('spark_home')
+            # Packages don't create the event dir by default. Do it each time
+            # spark is (re)installed to ensure location/perms are correct.
+            self.configure_events_dir(mode)
 
         # Handle examples and Spark-Bench. Do this each time this method is
         # called in case we need to act on a new resource or user config.
@@ -325,12 +333,12 @@ class Spark(object):
         self.configure_sparkbench()
 
     def patch_worker_master_url(self, master_ip, master_url):
-        '''
+        """
         Patch the worker startup script to use the full master url istead of contracting it.
         The master url is placed in the spark-env.sh so that the startup script will use it.
         In HA mode the master_ip is set to be the local_ip instead of the one the leader
         elects. This requires a restart of the master service.
-        '''
+        """
         zk_units = unitdata.kv().get('zookeeper.units', [])
         if master_url.startswith('spark://'):
             if zk_units:
@@ -358,10 +366,10 @@ class Spark(object):
             f.write(s)
 
     def start(self):
-        '''
+        """
         Always start the Spark History Server. Start other services as
         required by our execution mode. Open related ports as appropriate.
-        '''
+        """
         host.service_start('spark-history-server')
         hookenv.open_port(self.dist_config.port('spark-history-ui'))
 
@@ -393,10 +401,10 @@ class Spark(object):
                 hookenv.log("Spark Worker did not start")
 
     def stop(self):
-        '''
+        """
         Stop all services (and close associated ports). Stopping a service
         that is not currently running does no harm.
-        '''
+        """
         host.service_stop('spark-history-server')
         hookenv.close_port(self.dist_config.port('spark-history-ui'))
 

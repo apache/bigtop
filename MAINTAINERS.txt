@@ -13,7 +13,6 @@ hbase: andrew purtell, rvs
 hive: mark grover, youngwoo kim
 hue: oflebbe
 itest: cos, rvs
-kite: youngwoo kim
 mvn publishing/packaging: rvs
 oozie evans ye, rvs
 phoenix: andrew purtell, youngwoo kim

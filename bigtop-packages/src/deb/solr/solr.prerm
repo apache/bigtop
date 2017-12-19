@@ -19,7 +19,6 @@ set -e
 case "$1" in
     remove|upgrade|deconfigure)
       update-alternatives --remove solr-conf /etc/solr/conf.dist || :
-      update-alternatives --remove solr-tomcat-conf /etc/solr/tomcat-conf.dist || :
     ;;
 
     failed-upgrade)

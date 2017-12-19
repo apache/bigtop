@@ -137,7 +137,7 @@ of YARN NodeManager units with the following:
     juju run --application namenode "su hdfs -c 'hdfs dfsadmin -report'"
     juju run --application resourcemanager "su yarn -c 'yarn node -list'"
 
-To access the HDFS web console, find the `PUBLIC-ADDRESS` of the namenode
+To access the HDFS web console, find the `Public address` of the namenode
 application and expose it:
 
     juju status namenode
@@ -148,7 +148,7 @@ The web interface will be available at the following URL:
     http://NAMENODE_PUBLIC_IP:50070
 
 Similarly, to access the Resource Manager web consoles, find the
-`PUBLIC-ADDRESS` of the resourcemanager application and expose it:
+`Public address` of the resourcemanager application and expose it:
 
     juju status resourcemanager
     juju expose resourcemanager
@@ -164,7 +164,7 @@ The YARN and Job History web interfaces will be available at the following URLs:
 This bundle includes Ganglia for system-level monitoring of the namenode,
 resourcemanager, slave, and client units. Metrics are sent to a centralized
 ganglia unit for easy viewing in a browser. To view the ganglia web interface,
-find the `PUBLIC-ADDRESS` of the Ganglia application and expose it:
+find the `Public address` of the Ganglia application and expose it:
 
     juju status ganglia
     juju expose ganglia

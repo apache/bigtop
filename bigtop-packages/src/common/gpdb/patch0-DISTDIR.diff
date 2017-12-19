@@ -1,0 +1,27 @@
+diff --git a/gpAux/extensions/gpcloud/Makefile b/gpAux/extensions/gpcloud/Makefile
+index 516b4ee..e8370f2 100644
+--- a/gpAux/extensions/gpcloud/Makefile
++++ b/gpAux/extensions/gpcloud/Makefile
+@@ -32,7 +32,7 @@ gpcheckcloud:
+ install: install-symlink
+ 
+ install-symlink:
+-	ln -sf gpcloud.so $(pkglibdir)/gps3ext.so
++	ln -sf gpcloud.so $(DESTDIR)/$(pkglibdir)/gps3ext.so
+ 
+ test: format
+ 	@$(MAKE) -C test test
+diff --git a/gpAux/platform/gpnetbench/Makefile b/gpAux/platform/gpnetbench/Makefile
+index dff409f..6fd74bf 100644
+--- a/gpAux/platform/gpnetbench/Makefile
++++ b/gpAux/platform/gpnetbench/Makefile
+@@ -25,6 +25,6 @@ clean:
+ 	rm -rf *.o gpnetbenchServer gpnetbenchClient
+ 
+ install: all
+-	mkdir -p $(prefix)/bin/lib
+-	cp -p gpnetbenchServer $(prefix)/bin/lib
+-	cp -p gpnetbenchClient $(prefix)/bin/lib
++	mkdir -p $(DESTDIR)/$(prefix)/bin/lib
++	cp -p gpnetbenchServer $(DESTDIR)/$(prefix)/bin/lib
++	cp -p gpnetbenchClient $(DESTDIR)/$(prefix)/bin/lib

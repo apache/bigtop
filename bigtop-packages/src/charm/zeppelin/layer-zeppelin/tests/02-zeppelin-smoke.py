@@ -20,7 +20,7 @@ import re
 import unittest
 
 
-class TestDeploy(unittest.TestCase):
+class TestSmoke(unittest.TestCase):
     """
     Smoke test for Apache Bigtop Zeppelin.
     """

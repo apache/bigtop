@@ -74,6 +74,25 @@ for var in PREFIX BUILD_DIR ; do
 done
 
 LIB_DIR=${LIB_DIR:-/usr/lib/ycsb}
+BIN_DIR=${BIN_DIR:-$PREFIX/usr/bin}
 
 install -d -m 0755 $PREFIX/$LIB_DIR
+install -d -m 0755 ${BIN_DIR}
+
 (cd ${BUILD_DIR} && tar -cf - .)|(cd $PREFIX/${LIB_DIR} && tar -xf -)
+rm -rf $PREFIX/$LIB_DIR/bin/*.bat
+
+wrapper=$BIN_DIR/ycsb
+cat >>$wrapper <<EOF
+#!/bin/bash
+BIGTOP_DEFAULTS_DIR=${BIGTOP_DEFAULTS_DIR-/etc/default}
+[ -n "${BIGTOP_DEFAULTS_DIR}" -a -r ${BIGTOP_DEFAULTS_DIR}/hadoop ] && . ${BIGTOP_DEFAULTS_DIR}/hadoop
+
+# Autodetect JAVA_HOME if not defined
+if [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
+  . /usr/lib/bigtop-utils/bigtop-detect-javahome
+fi
+
+exec $LIB_DIR/bin/ycsb "\$@"
+EOF
+chmod 755 $wrapper

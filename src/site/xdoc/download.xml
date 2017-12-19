@@ -35,26 +35,12 @@
 			<ul>
 				<li>
 					The latest release of Apache Bigtop software framework <br/>
-					<a href="http://www.apache.org/dist/bigtop/bigtop-1.2.0/">Bigtop 1.2.0</a>
+					<a href="https://www.apache.org/dyn/closer.lua/bigtop/bigtop-1.2.1/">Bigtop 1.2.1</a>
 				</li>
 				<li>
 					Repositories of instsallable binary packages built with latest release
 					of the Apache Bitop project <br/>
-					<a href="https://www.apache.org/dist/bigtop/bigtop-1.2.0/repos/">Installable binary artifacts</a>
-				</li>
-			</ul>
-			<subsection name="Nightly builds" id="snapshots"></subsection>
-			<p>
-			</p>
-			<ul>
-				<li>
-					If you would like to use the latest development version of the source code
-					please use <br />
-					<a href="https://git-wip-us.apache.org/repos/asf?p=bigtop.git">Apache Bigtop source code repo</a>
-				</li>
-				<li>
-					For the nightly built binaries of the Apache Bigtop bigdata stack proceed to <br/>
-					<a href="https://ci.bigtop.apache.org/view/Packages/job/Bigtop-trunk-packages/">CI trunk build matrix</a>
+					<a href="https://www.apache.org/dyn/closer.lua/bigtop/bigtop-1.2.1/repos/">Installable binary artifacts</a>
 				</li>
 			</ul>
 		</section>

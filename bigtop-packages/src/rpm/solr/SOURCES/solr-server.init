@@ -1,5 +1,4 @@
-#!/bin/bash
-#
+#! /bin/sh
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -14,145 +13,176 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
-# Starts a Solr server
-#
-# chkconfig: 345 90 10
-# description: Solr server
-#
-### BEGIN INIT INFO
-# Provides:          solr-server
-# Required-Start:    $remote_fs
-# Should-Start:
-# Required-Stop:     $remote_fs
-# Should-Stop:
-# Default-Start:     3 4 5
-# Default-Stop:      0 1 2 6
-# Short-Description: Solr server
-### END INIT INFO
 
-. /lib/lsb/init-functions
+### BEGIN INIT INFO
+# Provides:		solr-server
+# Required-Start:	$remote_fs $syslog
+# Required-Stop:	$remote_fs $syslog
+# Default-Start:	2 3 4 5
+# Default-Stop:		0 1 6
+# Short-Description:	Apache Solr as a Service
+### END INIT INFO
 
 STATUS_RUNNING=0
 STATUS_DEAD=1
 STATUS_DEAD_AND_LOCK=2
 STATUS_NOT_RUNNING=3
 
-ERROR_PROGRAM_NOT_INSTALLED=5
+SERVICE_DESC="Apache Solr server"
+SOLR_INSTALL_DIR="/usr/lib/solr"
 
-SOLR_RUN_DIR=/var/run/solr
-SOLR_HOME=/usr/lib/solr
-SOLR_USER=solr
+if [ ! -d "$SOLR_INSTALL_DIR" ]; then
+  echo "$SOLR_INSTALL_DIR not found! Please check the SOLR_INSTALL_DIR setting in your $0 script."
+  exit 1
+fi
 
-SOLR_LOCK_DIR="/var/lock/subsys/"
-LOCKFILE="${SOLR_LOCK_DIR}/solr"
-desc="Solr server daemon"
+# Path to an include file that defines environment specific settings to override default
+# variables used by the bin/solr script. It's highly recommended to define this script so
+# that you can keep the Solr binary files separated from live files (pid, logs, index data, etc)
+# see bin/solr.in.sh for an example
+SOLR_ENV="/etc/default/solr"
 
-EXEC_PATH=". $SOLR_HOME/bin/solrd"
+if [ ! -f "$SOLR_ENV" ]; then
+  echo "$SOLR_ENV not found! Please check the SOLR_ENV setting in your $0 script."
+  exit 1
+fi
+. $SOLR_ENV
+[ "$SOLR_HOME" = "" ] && SOLR_HOME="/var/lib/solr"
+[ "$SOLR_PORT" = "" ] && SOLR_PORT="8983"
+[ "$SOLR_PID_DIR" = "" ] && SOLR_PID_DIR="/var/run/solr"
+SOLR_PID_FILE="$SOLR_PID_DIR/solr-$SOLR_PORT.pid"
 
-BIGTOP_DEFAULTS_DIR=${BIGTOP_DEFAULTS_DIR-/etc/default}
-[ -n "${BIGTOP_DEFAULTS_DIR}" -a -r ${BIGTOP_DEFAULTS_DIR}/solr ] && \
-    EXEC_PATH=". ${BIGTOP_DEFAULTS_DIR}/solr ; ${EXEC_PATH}"
+. /lib/lsb/init-functions
 
-SOLR_PID_FILE=${SOLR_RUN_DIR}/solr.pid
+# Specify the user to run Solr as; if not set, then Solr will run as root.
+# Running Solr as root is not recommended for production environments
+RUNAS="solr"
 
-# These directories may be tmpfs and may or may not exist
-# depending on the OS (ex: /var/lock/subsys does not exist on debian/ubuntu)
-for dir in "$SOLR_RUN_DIR" "$SOLR_LOCK_DIR"; do
-  [ -d "${dir}" ] || install -d -m 0755 -o $SOLR_USER -g $SOLR_USER ${dir}
-done
+# verify the specified run as user exists
+runas_uid="`id -u "$RUNAS"`"
+if [ $? -ne 0 ]; then
+  echo "User $RUNAS not found! Please create the $RUNAS user before running this script."
+  exit 1
+fi
 
-SOLR_SHUTDOWN_TIMEOUT=${SOLR_SHUTDOWN_TIMEOUT:-60}
-
-start() {
-  [ -x $exec ] || exit $ERROR_PROGRAM_NOT_INSTALLED
-
-  checkstatus > /dev/null 2>&1
-  status=$?
-  if [ "$status" -eq "$STATUS_RUNNING" ]; then
-    exit 0
-  fi
-
-  log_success_msg "Starting $desc: "
-  . /usr/lib/solr/tomcat-deployment.sh
-  /bin/su -s /bin/bash -c "${EXEC_PATH} start" $SOLR_USER
-  RETVAL=$?
-  [ $RETVAL -eq 0 ] && touch $LOCKFILE
-  return $RETVAL
+check_status()
+{
+  pidofproc -p $SOLR_PID_FILE $SOLR_INSTALL_DIR/bin/solrd > /dev/null
+  return $?
 }
 
-stop() {
-  if [ ! -e $SOLR_PID_FILE ]; then
-    log_success_msg "$desc is not running"
-    return 0
-  fi
-
-  log_success_msg "Stopping ${desc}: "
-
-  /bin/su -s /bin/bash -c "${EXEC_PATH} stop $SOLR_SHUTDOWN_TIMEOUT -force" $SOLR_USER
-  rm -f $LOCKFILE $SOLR_PID_FILE
-  return 0
+start_server()
+{
+  /bin/su -s /bin/bash -c \
+    "$SOLR_INSTALL_DIR/bin/solrd start --config $SOLR_ENV" $RUNAS 2>&1 > /dev/null || return 2
 }
 
-restart() {
-  stop
-  start
+stop_server()
+{
+  /bin/su -s /bin/bash -c \
+    "$SOLR_INSTALL_DIR/bin/solrd stop --config $SOLR_ENV" $RUNAS 2>&1 > /dev/null || return 2
 }
 
-checkstatus(){
-  pidofproc -p $SOLR_PID_FILE java > /dev/null
-  status=$?
-
-  case "$status" in
-    $STATUS_RUNNING)
-      log_success_msg "$desc is running"
-      ;;
-    $STATUS_DEAD)
-      log_failure_msg "$desc is dead and pid file exists"
-      ;;
-    $STATUS_DEAD_AND_LOCK)
-      log_failure_msg "$desc is dead and lock file exists"
-      ;;
-    $STATUS_NOT_RUNNING)
-      log_failure_msg "$desc agent is not running"
-      ;;
-    *)
-      log_failure_msg "$desc agent status is unknown"
-      ;;
-  esac
-  return $status
-}
-
-condrestart(){
-  [ -e ${LOCKFILE} ] && restart || :
-}
-
-init(){
-  rm -rf /var/lib/solr/*
-}
+export PATH="${PATH:+$PATH:}/usr/lib/solr/bin:/usr/sbin:/sbin"
 
 case "$1" in
   start)
-    start
-    ;;
+    check_status > /dev/null 2>&1
+    status=$?
+    if [ $status = 0 ]; then
+      log_success_msg "${SERVICE_DESC} is already running"
+      exit 0
+    fi
+    start_server
+    case "$?" in
+      0|1) log_success_msg "Starting ${SERVICE_DESC} in cloud mode" ;;
+      2) log_failure_msg "Starting ${SERVICE_DESC} in cloud mode" ;;
+      *) log_failure_msg "Starting ${SERVICE_DESC} in cloud mode" ;;
+    esac
+  ;;
   stop)
-    stop
-    ;;
-  status)
-    checkstatus
-    ;;
+    check_status > /dev/null 2>&1
+    status=$?
+    if [ $status != 0 ]; then
+      log_success_msg "${SERVICE_DESC} is not running"
+      exit 1
+    fi
+
+    stop_server
+    case "$?" in
+      0|1) log_success_msg "Stopping ${SERVICE_DESC}" ;;
+      2) log_failure_msg "Stopping ${SERVICE_DESC}" ;;
+      *) log_failure_msg "Stopping ${SERVICE_DESC}" ;;
+    esac
+  ;;
+
   restart)
-    restart
-    ;;
-  condrestart|try-restart)
-    condrestart
-    ;;
+    check_status > /dev/null 2>&1
+    status=$?
+    # stop running service
+    if [ $status = 0 ]; then
+      stop_server
+      if [ $? != 0 ]; then
+        log_failure_msg "Restarting ${SERVICE_DESC}"
+        exit 1
+      fi
+    fi
+    # start service
+    start_server
+    case "$?" in
+      0|1) log_success_msg "Restarting ${SERVICE_DESC}" ;;
+      2) log_failure_msg "Restarting ${SERVICE_DESC}" ;;
+      *) log_failure_msg "Restarting ${SERVICE_DESC}" ;;
+    esac
+  ;;
+
+  try-restart)
+    check_status > /dev/null 2>&1
+    status=$?
+    if [ $status != 0 ]; then
+      log_failure_msg "${SERVICE_DESC} is not running"
+      exit 1
+    fi
+    stop_server
+    if [ $status != 0 ]; then
+      log_failure_msg "Restarting ${SERVICE_DESC}"
+      exit 1
+    fi
+    # start service
+    start_server
+    case "$?" in
+      0|1) log_success_msg "Restarting ${SERVICE_DESC}" ;;
+      2) log_failure_msg "Restarting ${SERVICE_DESC}" ;;
+      *) log_failure_msg "Restarting ${SERVICE_DESC}" ;;
+    esac
+  ;;
+
+  status)
+    pidofproc -p $SOLR_PID_FILE $SOLR_INSTALL_DIR/bin/solrd > /dev/null
+	status=$?
+    if [ $status = 0 ]; then
+      log_success_msg "${SERVICE_DESC} is running"
+	else
+	  log_success_msg "${SERVICE_DESC} is stopped"
+    fi
+	exit $status
+  ;;
+
   init)
-    init
-    ;;
+    check_status > /dev/null 2>&1
+    status=$?
+    if [ $status = 0 ]; then
+      log_failure_msg "${SERVICE_DESC} is running"
+      exit 1
+    fi
+    rm -r ${SOLR_HOME}/*
+    /usr/bin/solrctl init --force
+  ;;
+
   *)
-    echo $"Usage: $0 {start|stop|status|restart|try-restart|condrestart|init}"
+    log_action_msg "Usage: /etc/init.d/solr-server {start|stop|restart|try-restart|status|init}" || true
     exit 1
+  ;;
 esac
 
-exit $RETVAL
+exit 0

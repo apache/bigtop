@@ -15,7 +15,7 @@
 
 docker:
         memory_limit: "4g"
-        image: "bigtop/puppet:centos-7-aarch64"
+        image: "bigtop/puppet:trunk-centos-7-aarch64"
 
 repo: "http://bigtop-repos.s3.amazonaws.com/releases/1.2.0/centos/7/aarch64"
 distro: centos

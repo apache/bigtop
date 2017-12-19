@@ -15,6 +15,7 @@
 
 %define ycsb_name ycsb
 %define lib_ycsb /usr/lib/ycsb
+%define usr_bin /usr/bin
 
 # disable repacking jars
 %define __os_install_post %{nil}
@@ -56,3 +57,4 @@ sh $RPM_SOURCE_DIR/install_ycsb.sh --build-dir=build/dist --prefix=$RPM_BUILD_RO
 %files 
 %defattr(-,root,root,755)
 %{lib_ycsb}
+%{usr_bin}/ycsb

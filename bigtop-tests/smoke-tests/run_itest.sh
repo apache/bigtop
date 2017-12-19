@@ -182,6 +182,9 @@ set_hive_vars() {
     TEST_SETTINGS="$TEST_SETTINGS -Dbigtop.test.hive.jdbc.url=$HIVE_JDBC_URL -Dbigtop.test.hive.metastore.url=$HIVE_METASTORE_URL -Dbigtop.test.hive.location=$HIVE_HDFS_LOCATION -Dbigtop.test.hive.jdbc.user=$HIVE_USER -Dbigtop.test.hive.jdbc.password=$HIVE_PASSWORD -Dbigtop.test.hive.conf.dir=$HIVE_CONF_DIR -Dbigtop.test.hadoop.conf.dir=$HADOOP_CONF_DIR -Dbigtop.test.hive.thrift.test=$TEST_THRIFT -Dbigtop.test.hive.hcatalog.test=$TEST_HCATALOG"
 }
 
+set_odpi_runtime_vars() {
+    TEST_SETTINGS="$TEST_SETTINGS -DHCFS_IMPLEMENTATION=HCFS"
+}
 
 print_cluster_info() {
 
@@ -237,7 +240,7 @@ print_tests() {
 
       for FILE in $(find -L reports/tests/classes -type f -name "*.html"); do
         echo "## $TESTDIR/$FILE"
-        links $FILE -dump
+        links $FILE -dump | awk '/^Standard error$/ { stop_stdin=1 } (!stop_stdin) { print $0; } { print $0 > "/dev/stderr" }'
         echo ""
       done
     fi
@@ -266,12 +269,16 @@ for s in `echo $ITESTS | sed -e 's#,# #g'`; do
   ALL_SMOKE_TASKS="$ALL_SMOKE_TASKS bigtop-tests:smoke-tests:$s:test"
 done
 
-if echo "$ITESTS" | egrep -q 'hive|odpi-runtime' ; then
-  set_hive_vars
-fi 
+case "$ITESTS" in
+  *odpi-runtime*) set_hive_vars
+                  set_odpi_runtime_vars
+                  ;;
+  *hive*)         set_hive_vars
+                  ;;
+esac
 
 # CALL THE GRADLE WRAPPER TO RUN THE FRAMEWORK
-$DIR/gradlew -q --continue clean -Psmoke.tests $TEST_SETTINGS $ALL_SMOKE_TASKS $LOGGING
+$DIR/gradlew -q --continue clean -Psmoke.tests $TEST_SETTINGS $ALL_SMOKE_TASKS $LOGGING 1>&2
 
 # SHOW RESULTS (HTML)
 print_tests

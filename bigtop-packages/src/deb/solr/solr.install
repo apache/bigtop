@@ -1,5 +1,5 @@
-/etc/solr
 /etc/default
+/etc/solr
 /usr/lib/solr
-/var
 /usr/bin/solrctl
+/var

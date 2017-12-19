@@ -385,7 +385,7 @@ exit 0
 
 
 if [ "$1" -eq 0 ]; then  # Action is uninstall
-    /usr/sbin/ambari-agent stop > /dev/null 2>&1
+    /var/lib/ambari-agent/bin/ambari-agent stop > /dev/null 2>&1
     if [ -d "/etc/ambari-agent/conf.save" ]; then
         mv /etc/ambari-agent/conf.save /etc/ambari-agent/conf_$(date '+%d_%m_%y_%H_%M').save
     fi
@@ -488,7 +488,7 @@ Ambari Client
 %attr(755,root,root) /usr/lib/ambari-agent/lib/examples
 %attr(755,root,root) /etc/ambari-agent/conf/ambari-agent.ini
 %attr(755,root,root) /etc/ambari-agent/conf/logging.conf.sample
-%attr(755,root,root) /usr/sbin/ambari-agent
+%attr(755,root,root) /var/lib/ambari-agent/bin/ambari-agent 
 %config %attr(700,root,root) /var/lib/ambari-agent/ambari-env.sh
 %attr(700,root,root) /var/lib/ambari-agent/install-helper.sh
 %attr(700,root,root) /var/lib/ambari-agent/upgrade_agent_configs.py

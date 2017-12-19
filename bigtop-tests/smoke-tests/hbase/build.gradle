@@ -1,0 +1,81 @@
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+def tests_to_include() {
+  return [
+    "TestHBaseBalancer.groovy",
+    "TestHBaseCompression.groovy",
+    "TestHBaseImportExport.groovy",
+    "TestHBasePigSmoke.groovy",
+    "TestHbck.groovy",
+    "TestImportTsv.groovy",
+    "IncrementalPELoad.java",
+    "TestCopyTable.java",
+    "TestHBaseSmoke.java",
+    "TestHFileOutputFormat.java",
+    "TestLoadIncrementalHFiles.java",
+  ];
+}
+
+def junitVersion = '4.11'
+dependencies {
+  compile group: 'junit', name: 'junit', version: junitVersion, transitive: 'true'
+  compile group: 'org.apache.hbase', name: 'hbase-common',
+      version: hbaseVersion, classifier: 'tests', transitive: 'true'
+  compile group: 'org.apache.hbase', name: 'hbase-server',
+      version: hbaseVersion, classifier: 'tests', transitive: 'true'
+  compile group: 'org.apache.hadoop', name: 'hadoop-common', version: hadoopVersion, transitive: 'true'
+  compile group: 'org.apache.hadoop', name: 'hadoop-client', version: hadoopVersion, transitive: 'true'
+  compile group: 'org.apache.hbase', name: 'hbase-common', version: hbaseVersion, transitive: 'true'
+  compile group: 'org.apache.hbase', name: 'hbase-server', version: hbaseVersion, transitive: 'true'
+}
+
+sourceSets {
+  main {
+    java {
+      srcDirs = [
+        "${BIGTOP_HOME}/bigtop-tests/test-artifacts/hbase/src/main/groovy/org/apache/bigtop/itest/hbase/smoke",
+        "${BIGTOP_HOME}/bigtop-tests/test-artifacts/hbase/src/main/groovy/org/apache/bigtop/itest/hbase/system",
+        "${BIGTOP_HOME}/bigtop-tests/test-artifacts/hbase/src/main/groovy/org/apache/bigtop/itest/hbase/util"
+      ]
+    }
+  }
+  test {
+    groovy {
+      resources {
+        srcDirs = [
+            "${BIGTOP_HOME}/bigtop-tests/test-artifacts/hbase/src/main/resources",
+        ]
+      }
+      srcDirs = [
+        "${BIGTOP_HOME}/bigtop-tests/test-artifacts/hbase/src/main/groovy/org/apache/bigtop/itest/hbase/smoke"
+      ]
+      exclude {
+        FileTreeElement elem -> (doExclude(elem.getName()))
+      }
+    }
+  }
+}
+
+test.doFirst {
+  checkEnv(["HBASE_HOME", "HBASE_CONF_DIR"])
+}
+
+test {
+  // Change the default location where test data is picked up
+  systemProperty 'test.resources.dir', "${buildDir}/resources/test/"
+}

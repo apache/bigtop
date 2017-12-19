@@ -112,7 +112,7 @@ bigtop {
     zookeeper:['hadoop', 'hbase'],
     hadoop:['ignite-hadoop', 'hbase', 'crunch', 'pig', 'hive', 'tez', 'sqoop', 'sqoop2',
       'oozie', 'mahout', 'flume', 'giraph', 'solr', 'spark','spark1',
-      'phoenix', 'alluxio', 'kafka', 'ycsb', 'kite', 'hama', 'zeppelin',
+      'phoenix', 'alluxio', 'kafka', 'ycsb', 'hama', 'zeppelin',
       'tajo', 'apex'
     ],
     hbase:['phoenix','giraph','ycsb','hive'],
@@ -144,7 +144,7 @@ bigtop {
     'hadoop' {
       name    = 'hadoop'
       relNotes = 'Apache Hadoop'
-      version { base = '2.7.3'; pkg = base; release = 1 }
+      version { base = '2.7.4'; pkg = base; release = 1 }
       tarball { destination = "${name}-${version.base}.tar.gz"
                 source      = "${name}-${version.base}-src.tar.gz" }
       url     { download_path = "/$name/common/$name-${version.base}"
@@ -165,7 +165,7 @@ bigtop {
     'hbase' {
       name    = 'hbase'
       relNotes = 'Apache HBase'
-      version { base = '1.1.9'; pkg = base; release = 1 }
+      version { base = '1.1.12'; pkg = base; release = 1 }
       tarball { destination = "${name}-${version.base}.tar.gz"
                 source      = "${name}-${version.base}-src.tar.gz" }
       url     { download_path = "/$name/${version.base}/"
@@ -197,7 +197,7 @@ bigtop {
     'tez' {
       name    = 'tez'
       relNotes = 'Apache TEZ'
-      version { base = '0.6.2'; pkg = base; release = 1 }
+      version { base = '0.9.0'; pkg = base; release = 1 }
       tarball { destination = "apache-${name}-${version.base}-src.tar.gz"
                 source      = destination }
       url     { download_path = "/$name/${version.base}/"
@@ -267,7 +267,7 @@ bigtop {
     'hue' {
       name    = 'hue'
       relNotes = 'Hadoop User Interface'
-      version { base = '3.11.0'; pkg = base; release = 1 }
+      version { base = '4.1.0'; pkg = base; release = 1 }
       tarball { destination = "$name-${version.base}.tar.gz"
                 source      = "release-${version.base}.tar.gz" }
       url     { site = "https://github.com/cloudera/hue/archive"
@@ -287,7 +287,7 @@ bigtop {
     'solr' {
       name    = 'solr'
       relNotes = 'Apache Solr'
-      version { base = '4.10.4'; pkg = base; release = 1 }
+      version { base = '6.6.0'; pkg = base; release = 1 }
       tarball { destination = "$name-${version.base}-src.tgz"
                 source      = destination }
       url     { download_path = "lucene/$name/${version.base}"
@@ -414,19 +414,10 @@ bigtop {
     'ycsb' {
       name    = 'ycsb'
       relNotes = 'Yahoo! Cloud Serving Benchmark'
-      version { base = '0.4.0'; pkg = base; release = 1 }
+      version { base = '0.12.0'; pkg = base; release = 1 }
       tarball { destination = "$name-${version.base}.tar.gz"
                 source      = "${version.base}.tar.gz" }
       url     { site = "https://github.com/brianfrankcooper/YCSB/archive"
-                archive = site }
-    }
-    'kite' {
-      name    = 'kite'
-      relNotes = 'Kite Software Development Kit'
-      version { base = '1.1.0'; pkg = base; release = 1 }
-      tarball { destination = "$name-${version.base}.tar.gz"
-                source      = "release-${version.base}.tar.gz" }
-      url     { site = "https://github.com/kite-sdk/kite/archive"
                 archive = site }
     }
     'hama' {
@@ -481,7 +472,7 @@ bigtop {
     'gpdb' {
       name    = 'gpdb'
       relNotes = 'GreenPlum'
-      version { base = '5.0.0-alpha.0'; pkg = '5.0.0+alpha.0'; release = 1 }
+      version { base = '5.0.0'; pkg = '5.0.0'; release = 1 }
       tarball { destination = "$name-${version.base}.tar.gz"
                 source      = "${version.base}.tar.gz" }
       url     { site = "https://github.com/greenplum-db/gpdb/archive/"
@@ -490,7 +481,7 @@ bigtop {
     'ambari' {
       name    = 'ambari'
       relNotes = 'Apache Ambari'
-      version { base = '2.5.0'; pkg = '2.5.0.0'; release = 1 }
+      version { base = '2.5.2'; pkg = '2.5.2.0'; release = 1 }
       tarball { destination = "apache-$name-${version.base}-src.tar.gz"
                 source      = destination }
       url     { download_path = "/$name/$name-${version.base}/"
