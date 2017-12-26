@@ -28,7 +28,7 @@ BUILD_OPTS="-Divy.home=${HOME}/.ivy2 -Dsbt.ivy.home=${HOME}/.ivy2 -Duser.home=${
             -Dyarn.version=$HADOOP_VERSION \
             -Dprotobuf.version=2.5.0 \
             -DrecompileMode=all \
-            -Pyarn -Phadoop-2.7 \
+            -Pyarn -Phadoop-2.7 -Phadoop-provided \
             -Phive -Phive-thriftserver \
             $SPARK_BUILD_OPTS"
 

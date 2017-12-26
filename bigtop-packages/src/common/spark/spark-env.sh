@@ -28,8 +28,7 @@ export SPARK_LAUNCH_WITH_SCALA=0
 export SPARK_LIBRARY_PATH=${SPARK_LIBRARY_PATH:-${SPARK_HOME}/lib}
 export SCALA_LIBRARY_PATH=${SCALA_LIBRARY_PATH:-${SPARK_HOME}/lib}
 
-# Let's make sure that all needed hadoop libs are added properly
-export CLASSPATH="$CLASSPATH:$HADOOP_HOME/*:$HADOOP_HDFS_HOME/*:$HADOOP_YARN_HOME/*:$HADOOP_MAPRED_HOME/*"
+export SPARK_DIST_CLASSPATH=$(hadoop classpath)
 export SPARK_LIBRARY_PATH=$SPARK_LIBRARY_PATH:${HADOOP_HOME}/lib/native
 
 export STANDALONE_SPARK_MASTER_HOST=`hostname -f`
