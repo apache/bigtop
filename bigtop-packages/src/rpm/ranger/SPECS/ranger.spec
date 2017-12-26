@@ -412,7 +412,7 @@ fi
 %files kafka-plugin
 %defattr(-,root,root,755)
 %{usr_lib_ranger}-kafka-plugin
-%{kafka_home}/lib
+%{kafka_home}/libs
 
 %files atlas-plugin
 %defattr(-,root,root,755)
