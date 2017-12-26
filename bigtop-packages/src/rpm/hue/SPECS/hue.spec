@@ -189,8 +189,9 @@ BuildRequires: krb5-devel
 BuildRequires: asciidoc
 BuildRequires: gmp-devel
 BuildRequires: libffi-devel
+BuildRequires: python-ipaddress
 Group: Applications/Engineering
-Requires: cyrus-sasl-gssapi, libxml2, libxslt, zlib, sqlite, libyaml, gmp, python, libffi
+Requires: cyrus-sasl-gssapi, libxml2, libxslt, zlib, sqlite, libyaml, gmp, python, libffi, python-ipaddress
 # The only reason we need the following is because we also have AutoProv: no
 Provides: config(%{name}-common) = %{version}
 

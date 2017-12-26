@@ -63,7 +63,8 @@ class bigtop_toolchain::packages {
         "apr-devel",
         "bison",
         "libffi-devel",
-        "epel-release"
+        "epel-release",
+        "python-ipaddress"
       ]
     }
     /(?i:(SLES|opensuse))/: { $pkgs = [
@@ -108,7 +109,8 @@ class bigtop_toolchain::packages {
         "libevent-devel",
         "bison",
         "flex",
-        "libffi48-devel"
+        "libffi48-devel",
+        "python-ipaddress"
       ]
       # fix package dependencies: BIGTOP-2120 and BIGTOP-2152 and BIGTOP-2471
       exec { '/usr/bin/zypper -n install  --force-resolution krb5 libopenssl-devel':
@@ -150,7 +152,8 @@ class bigtop_toolchain::packages {
       "gmp-devel",
       "snappy-devel",
       "bzip2-devel",
-      "libffi-devel"
+      "libffi-devel",
+      "python-ipaddress"
     ] }
     /(Ubuntu|Debian)/: {
       $pkgs = [
@@ -206,7 +209,8 @@ class bigtop_toolchain::packages {
         "bison",
         "flex",
         "python-dev",
-        "libffi-dev"
+        "libffi-dev",
+        "python-ipaddress"
       ]
       file { '/etc/apt/apt.conf.d/01retries':
         content => 'Aquire::Retries "5";'
