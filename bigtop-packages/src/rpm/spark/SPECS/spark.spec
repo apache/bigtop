@@ -166,23 +166,6 @@ bash $RPM_SOURCE_DIR/install_spark.sh \
           --prefix=$RPM_BUILD_ROOT  \
           --doc-dir=%{doc_spark}
 
-%__rm -f $RPM_BUILD_ROOT/%{lib_spark}/jars/hadoop-*.jar
-%__ln_s  %{lib_hadoop_client}/hadoop-annotations.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
-%__ln_s  %{lib_hadoop_client}/hadoop-auth.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
-%__ln_s  %{lib_hadoop_client}/hadoop-client.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
-%__ln_s  %{lib_hadoop_client}/hadoop-common.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
-%__ln_s  %{lib_hadoop_client}/hadoop-hdfs.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
-%__ln_s  %{lib_hadoop_client}/hadoop-mapreduce-client-app.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
-%__ln_s  %{lib_hadoop_client}/hadoop-mapreduce-client-common.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
-%__ln_s  %{lib_hadoop_client}/hadoop-mapreduce-client-core.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
-%__ln_s  %{lib_hadoop_client}/hadoop-mapreduce-client-jobclient.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
-%__ln_s  %{lib_hadoop_client}/hadoop-mapreduce-client-shuffle.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
-%__ln_s  %{lib_hadoop_yarn}/hadoop-yarn-api.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
-%__ln_s  %{lib_hadoop_yarn}/hadoop-yarn-client.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
-%__ln_s  %{lib_hadoop_yarn}/hadoop-yarn-common.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
-%__ln_s  %{lib_hadoop_yarn}/hadoop-yarn-server-common.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
-%__ln_s  %{lib_hadoop_yarn}/hadoop-yarn-server-web-proxy.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
-
 for service in %{spark_services}
 do
     # Install init script
