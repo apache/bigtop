@@ -43,6 +43,7 @@ class spark {
 
   class client {
     include spark::common
+    include spark::sparkr
 
     package { 'spark-python':
       ensure  => latest,
@@ -130,6 +131,12 @@ class spark {
 
   class datanucleus {
     package { 'spark-datanucleus':
+      ensure => latest,
+    }
+  }
+
+  class sparkr {
+    package { 'spark-sparkr':
       ensure => latest,
     }
   }
