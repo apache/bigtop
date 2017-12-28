@@ -172,7 +172,7 @@ Source29: hadoop-yarn-timelineserver.svc
 #BIGTOP_PATCH_FILES
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
 BuildRequires: fuse-devel, fuse, cmake
-Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils >= 0.7, zookeeper >= 3.4.0
+Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils >= 0.7
 Requires: psmisc, %{netcat_package}
 # Sadly, Sun/Oracle JDK in RPM form doesn't provide libjvm.so, which means we have
 # to set AutoReq to no in order to minimize confusion. Not ideal, but seems to work.
@@ -326,7 +326,7 @@ blocks of data over the network to Hadoop Distributed Filesystem
 %package httpfs
 Summary: HTTPFS for Hadoop
 Group: System/Daemons
-Requires: %{name}-hdfs = %{version}-%{release}, bigtop-tomcat
+Requires: %{name}-hdfs = %{version}-%{release}
 Requires(pre): %{name} = %{version}-%{release}
 Requires(pre): %{name}-hdfs = %{version}-%{release}
 
@@ -502,11 +502,6 @@ env HADOOP_VERSION=%{hadoop_base_version} bash %{SOURCE2} \
   --installed-lib-dir=%{lib_hadoop} \
   --man-dir=$RPM_BUILD_ROOT%{man_hadoop} \
 
-# Forcing Zookeeper dependency to be on the packaged jar
-%__ln_s -f /usr/lib/zookeeper/zookeeper.jar $RPM_BUILD_ROOT/%{lib_hadoop}/lib/zookeeper*.jar
-# Workaround for BIGTOP-583
-%__rm -f $RPM_BUILD_ROOT/%{lib_hadoop}-*/lib/slf4j-log4j12-*.jar
-
 # Init.d scripts
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
 
@@ -632,7 +627,7 @@ fi
 
 %files mapreduce
 %defattr(-,root,root)
-%config(noreplace) %{etc_hadoop}/conf.empty/mapred-site.xml
+#%config(noreplace) %{etc_hadoop}/conf.empty/mapred-site.xml
 %config(noreplace) %{etc_hadoop}/conf.empty/mapred-env.sh
 %config(noreplace) %{etc_hadoop}/conf.empty/mapred-queues.xml.template
 %config(noreplace) %{etc_hadoop}/conf.empty/mapred-site.xml.template
@@ -649,10 +644,10 @@ fi
 %files
 %defattr(-,root,root)
 %config(noreplace) %{etc_hadoop}/conf.empty/core-site.xml
-%config(noreplace) %{etc_hadoop}/conf.empty/hadoop-metrics.properties
+#%config(noreplace) %{etc_hadoop}/conf.empty/hadoop-metrics.properties
 %config(noreplace) %{etc_hadoop}/conf.empty/hadoop-metrics2.properties
 %config(noreplace) %{etc_hadoop}/conf.empty/log4j.properties
-%config(noreplace) %{etc_hadoop}/conf.empty/slaves
+#%config(noreplace) %{etc_hadoop}/conf.empty/slaves
 %config(noreplace) %{etc_hadoop}/conf.empty/ssl-client.xml.example
 %config(noreplace) %{etc_hadoop}/conf.empty/ssl-server.xml.example
 %config(noreplace) %{etc_hadoop}/conf.empty/configuration.xsl
@@ -689,7 +684,7 @@ fi
 %defattr(-,root,root)
 %config(noreplace) %{etc_httpfs}
 %config(noreplace) /etc/default/%{name}-httpfs
-%{lib_hadoop}/libexec/httpfs-config.sh
+#%{lib_hadoop}/libexec/httpfs-config.sh
 %{initd_dir}/%{name}-httpfs
 %{lib_httpfs}
 %attr(0775,httpfs,httpfs) %{run_httpfs}

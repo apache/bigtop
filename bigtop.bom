@@ -109,16 +109,6 @@ bigtop {
       To build a component with its dependencies, run build with -Dbuildwithdeps=true
   */
   dependencies = [
-    zookeeper:['hadoop', 'hbase'],
-    hadoop:['ignite-hadoop', 'hbase', 'hive', 'tez', 'sqoop', 'sqoop2',
-      'oozie', 'mahout', 'flume', 'giraph', 'solr', 'spark',
-      'phoenix', 'alluxio', 'kafka', 'ycsb', 'hama', 'zeppelin',
-      'tajo', 'apex'
-    ],
-    hbase:['phoenix','giraph','ycsb','hive'],
-    hive:['oozie', 'zeppelin'],
-    'ignite-hadoop':['zeppelin'],
-    spark:['zeppelin']
   ]
 
   components {
@@ -126,7 +116,7 @@ bigtop {
       name    = 'zookeeper'
       pkg     = name
       version {
-        base  = '3.4.6'
+        base  = '3.4.11'
         pkg   = base
         release = 1
       }
@@ -143,7 +133,7 @@ bigtop {
     'hadoop' {
       name    = 'hadoop'
       relNotes = 'Apache Hadoop'
-      version { base = '2.8.5'; pkg = base; release = 1 }
+      version { base = '3.1.2'; pkg = base; release = 1 }
       tarball { destination = "${name}-${version.base}.tar.gz"
                 source      = "${name}-${version.base}-src.tar.gz" }
       url     { download_path = "/$name/common/$name-${version.base}"

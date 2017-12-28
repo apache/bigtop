@@ -1,0 +1,40 @@
+--- hadoop-3.1.2-src/hadoop-client-modules/hadoop-client-check-invariants/pom.xml	2019-01-23 16:07:50.000000000 +0100
++++ hadoop-3.1.2-src/hadoop-client-modules/hadoop-client-check-invariants/pom.xml_	2019-06-22 23:36:50.531792133 +0200
+@@ -92,7 +92,7 @@
+                     <exclude>com.google.code.findbugs:jsr305</exclude>
+                   </excludes>
+                 </banTransitiveDependencies>
+-                <banDuplicateClasses>
++                <!-- <banDuplicateClasses>
+                   <findAllDuplicates>true</findAllDuplicates>
+                   <dependencies>
+                     <dependency>
+@@ -103,7 +103,7 @@
+                       </ignoreClasses>
+                     </dependency>
+                   </dependencies>
+-                </banDuplicateClasses>
++                </banDuplicateClasses> -->
+               </rules>
+ <!-- TODO we need a rule for "the constants in this set of classes haven't been shaded / don't have this prefix"
+      Manually checking the set of Keys that look like packages we relocate:
+--- hadoop-3.1.2-src/hadoop-client-modules/hadoop-client-check-test-invariants/pom.xml	2019-01-23 16:07:50.000000000 +0100
++++ hadoop-3.1.2-src/hadoop-client-modules/hadoop-client-check-test-invariants/pom.xml_	2019-06-22 23:37:00.251792363 +0200
+@@ -100,7 +100,7 @@
+                     <exclude>com.google.code.findbugs:jsr305</exclude>
+                   </excludes>
+                 </banTransitiveDependencies>
+-                <banDuplicateClasses>
++               <!-- <banDuplicateClasses>
+                   <findAllDuplicates>true</findAllDuplicates>
+                   <dependencies>
+                     <dependency>
+@@ -111,7 +111,7 @@
+                       </ignoreClasses>
+                     </dependency>
+                   </dependencies>
+-                </banDuplicateClasses>
++                </banDuplicateClasses> -->
+               </rules>
+ <!-- TODO we need a rule for "the constants in this set of classes haven't been shaded / don't have this prefix"
+      Manually checking the set of Keys that look like packages we relocate:

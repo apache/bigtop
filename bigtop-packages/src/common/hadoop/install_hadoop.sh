@@ -181,7 +181,7 @@ done
 
 #libexec
 install -d -m 0755 ${SYSTEM_LIBEXEC_DIR}
-cp ${BUILD_DIR}/libexec/* ${SYSTEM_LIBEXEC_DIR}/
+cp -r ${BUILD_DIR}/libexec/* ${SYSTEM_LIBEXEC_DIR}/
 cp ${DISTRO_DIR}/hadoop-layout.sh ${SYSTEM_LIBEXEC_DIR}/
 install -m 0755 ${DISTRO_DIR}/init-hdfs.sh ${SYSTEM_LIBEXEC_DIR}/
 install -m 0755 ${DISTRO_DIR}/init-hcfs.json ${SYSTEM_LIBEXEC_DIR}/
@@ -192,7 +192,7 @@ rm -rf ${SYSTEM_LIBEXEC_DIR}/*.cmd
 install -d -m 0755 ${HADOOP_DIR}
 cp ${BUILD_DIR}/share/hadoop/common/*.jar ${HADOOP_DIR}/
 cp ${BUILD_DIR}/share/hadoop/common/lib/hadoop-auth*.jar ${HADOOP_DIR}/
-cp ${BUILD_DIR}/share/hadoop/mapreduce/lib/hadoop-annotations*.jar ${HADOOP_DIR}/
+cp ${BUILD_DIR}/share/hadoop/common/lib/hadoop-annotations*.jar ${HADOOP_DIR}/
 install -d -m 0755 ${MAPREDUCE_DIR}
 cp ${BUILD_DIR}/share/hadoop/mapreduce/hadoop-mapreduce*.jar ${MAPREDUCE_DIR}
 cp ${BUILD_DIR}/share/hadoop/tools/lib/*.jar ${MAPREDUCE_DIR}
@@ -205,20 +205,18 @@ chmod 644 ${HADOOP_DIR}/*.jar ${MAPREDUCE_DIR}/*.jar ${HDFS_DIR}/*.jar ${YARN_DI
 # lib jars
 install -d -m 0755 ${HADOOP_DIR}/lib
 cp ${BUILD_DIR}/share/hadoop/common/lib/*.jar ${HADOOP_DIR}/lib
-install -d -m 0755 ${MAPREDUCE_DIR}/lib
-cp ${BUILD_DIR}/share/hadoop/mapreduce/lib/*.jar ${MAPREDUCE_DIR}/lib
 install -d -m 0755 ${HDFS_DIR}/lib 
 cp ${BUILD_DIR}/share/hadoop/hdfs/lib/*.jar ${HDFS_DIR}/lib
 install -d -m 0755 ${YARN_DIR}/lib
 cp ${BUILD_DIR}/share/hadoop/yarn/lib/*.jar ${YARN_DIR}/lib
-chmod 644 ${HADOOP_DIR}/lib/*.jar ${MAPREDUCE_DIR}/lib/*.jar ${HDFS_DIR}/lib/*.jar ${YARN_DIR}/lib/*.jar
+chmod 644 ${HADOOP_DIR}/lib/*.jar ${HDFS_DIR}/lib/*.jar ${YARN_DIR}/lib/*.jar
 
 # Install webapps
 cp -ra ${BUILD_DIR}/share/hadoop/hdfs/webapps ${HDFS_DIR}/
 
 # bin
 install -d -m 0755 ${HADOOP_DIR}/bin
-cp -a ${BUILD_DIR}/bin/{hadoop,rcc,fuse_dfs} ${HADOOP_DIR}/bin
+cp -a ${BUILD_DIR}/bin/{hadoop,fuse_dfs} ${HADOOP_DIR}/bin
 install -d -m 0755 ${HDFS_DIR}/bin
 cp -a ${BUILD_DIR}/bin/hdfs ${HDFS_DIR}/bin
 install -d -m 0755 ${YARN_DIR}/bin
@@ -230,7 +228,7 @@ cp -a ${BUILD_DIR}/bin/mapred ${YARN_DIR}/bin
 
 # sbin
 install -d -m 0755 ${HADOOP_DIR}/sbin
-cp -a ${BUILD_DIR}/sbin/{hadoop-daemon,hadoop-daemons,slaves}.sh ${HADOOP_DIR}/sbin
+cp -a ${BUILD_DIR}/sbin/{hadoop-daemon,hadoop-daemons}.sh ${HADOOP_DIR}/sbin
 install -d -m 0755 ${HDFS_DIR}/sbin
 cp -a ${BUILD_DIR}/sbin/{distribute-exclude,refresh-namenodes}.sh ${HDFS_DIR}/sbin
 install -d -m 0755 ${YARN_DIR}/sbin
@@ -244,7 +242,7 @@ install -d -m 0755 ${HADOOP_NATIVE_LIB_DIR}
 for library in libhdfs.so.0.0.0; do
   cp ${BUILD_DIR}/lib/native/${library} ${SYSTEM_LIB_DIR}/
   ldconfig -vlN ${SYSTEM_LIB_DIR}/${library}
-  ln -s ${library} ${SYSTEM_LIB_DIR}/${library/.so.*/}.so
+  ln -sf ${library} ${SYSTEM_LIB_DIR}/${library/.so.*/}.so
 done
 
 install -d -m 0755 ${SYSTEM_INCLUDE_DIR}
@@ -254,7 +252,7 @@ cp ${BUILD_DIR}/lib/native/*.a ${HADOOP_NATIVE_LIB_DIR}/
 for library in `cd ${BUILD_DIR}/lib/native ; ls libsnappy.so.1.* 2>/dev/null` libhadoop.so.1.0.0; do
   cp ${BUILD_DIR}/lib/native/${library} ${HADOOP_NATIVE_LIB_DIR}/
   ldconfig -vlN ${HADOOP_NATIVE_LIB_DIR}/${library}
-  ln -s ${library} ${HADOOP_NATIVE_LIB_DIR}/${library/.so.*/}.so
+  ln -sf ${library} ${HADOOP_NATIVE_LIB_DIR}/${library/.so.*/}.so
 done
 
 # Install fuse wrapper
@@ -304,7 +302,7 @@ cp ${DISTRO_DIR}/conf.empty/mapred-site.xml $HADOOP_ETC_DIR/conf.empty
 # so that it can still be used as example, but doesn't affect anything
 # by default
 sed -i -e '/^[^#]/s,^,#,' ${BUILD_DIR}/etc/hadoop/hadoop-env.sh
-cp ${BUILD_DIR}/etc/hadoop/* $HADOOP_ETC_DIR/conf.empty
+cp -r ${BUILD_DIR}/etc/hadoop/* $HADOOP_ETC_DIR/conf.empty
 rm -rf $HADOOP_ETC_DIR/conf.empty/*.cmd
 
 # docs
@@ -321,7 +319,7 @@ done
 # HTTPFS
 install -d -m 0755 ${HTTPFS_DIR}/sbin
 cp ${BUILD_DIR}/sbin/httpfs.sh ${HTTPFS_DIR}/sbin/
-cp -r ${BUILD_DIR}/share/hadoop/httpfs/tomcat/webapps ${HTTPFS_DIR}/webapps
+#???cp -r ${BUILD_DIR}/share/hadoop/httpfs/tomcat/webapps ${HTTPFS_DIR}/webapps
 install -d -m 0755 ${PREFIX}/var/lib/hadoop-httpfs
 install -d -m 0755 $HTTPFS_ETC_DIR/conf.empty
 
@@ -331,14 +329,14 @@ HTTP_DIRECTORY=$HTTPFS_ETC_DIR/tomcat-conf.dist
 HTTPS_DIRECTORY=$HTTPFS_ETC_DIR/tomcat-conf.https
 
 install -d -m 0755 ${HTTP_DIRECTORY}
-cp -r ${BUILD_DIR}/share/hadoop/httpfs/tomcat/conf ${HTTP_DIRECTORY}
-chmod 644 ${HTTP_DIRECTORY}/conf/*
+#??cp -r ${BUILD_DIR}/share/hadoop/httpfs/tomcat/conf ${HTTP_DIRECTORY}
+#?? chmod 644 ${HTTP_DIRECTORY}/conf/*
 install -d -m 0755 ${HTTP_DIRECTORY}/WEB-INF
-mv ${HTTPFS_DIR}/webapps/webhdfs/WEB-INF/*.xml ${HTTP_DIRECTORY}/WEB-INF/
+#??mv ${HTTPFS_DIR}/webapps/webhdfs/WEB-INF/*.xml ${HTTP_DIRECTORY}/WEB-INF/
 
 cp -r ${HTTP_DIRECTORY} ${HTTPS_DIRECTORY}
-mv ${HTTPS_DIRECTORY}/conf/ssl-server.xml ${HTTPS_DIRECTORY}/conf/server.xml
-rm ${HTTP_DIRECTORY}/conf/ssl-server.xml
+#??mv ${HTTPS_DIRECTORY}/conf/ssl-server.xml ${HTTPS_DIRECTORY}/conf/server.xml
+#?? rm ${HTTP_DIRECTORY}/conf/ssl-server.xml
 
 mv $HADOOP_ETC_DIR/conf.empty/httpfs* $HTTPFS_ETC_DIR/conf.empty
 sed -i -e '/<\/configuration>/i\
@@ -351,7 +349,7 @@ sed -i -e '/<\/configuration>/i\
 for conf in conf.pseudo ; do
   install -d -m 0755 $HADOOP_ETC_DIR/$conf
   # Install the upstream config files
-  cp ${BUILD_DIR}/etc/hadoop/* $HADOOP_ETC_DIR/$conf
+  cp -r ${BUILD_DIR}/etc/hadoop/* $HADOOP_ETC_DIR/$conf
   # Remove the ones that shouldn't be installed
   rm -rf $HADOOP_ETC_DIR/$conf/httpfs*
   rm -rf $HADOOP_ETC_DIR/$conf/*.cmd
@@ -365,9 +363,9 @@ cp ${BUILD_DIR}/etc/hadoop/log4j.properties $HADOOP_ETC_DIR/conf.pseudo
 
 # FIXME: Provide a convenience link for configuration (HADOOP-7939)
 install -d -m 0755 ${HADOOP_DIR}/etc
-ln -s ${HADOOP_ETC_DIR##${PREFIX}}/conf ${HADOOP_DIR}/etc/hadoop
+ln -sf ${HADOOP_ETC_DIR##${PREFIX}}/conf ${HADOOP_DIR}/etc/hadoop
 install -d -m 0755 ${YARN_DIR}/etc
-ln -s ${HADOOP_ETC_DIR##${PREFIX}}/conf ${YARN_DIR}/etc/hadoop
+ln -sf ${HADOOP_ETC_DIR##${PREFIX}}/conf ${YARN_DIR}/etc/hadoop
 
 # Create log, var and lib
 install -d -m 0755 $PREFIX/var/{log,run,lib}/hadoop-hdfs

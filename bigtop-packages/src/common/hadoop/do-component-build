@@ -131,18 +131,18 @@ MAVEN_OPTS="$MAVEN_OPTS -DskipTests -DskipTest -DskipITs"
 . $(dirname ${0})/maven_deploy.sh
 
 # Build artifacts
-mvn $ANT_OPTS $BUNDLE_SNAPPY -Pdist -Pnative -Psrc -Dtar ${MAVEN_OPTS} -Dtomcat.version=${BIGTOP_TOMCAT_VERSION} -Dtomcat.download.url="$BIGTOP_TOMCAT_DOWNLOAD_URL" install package ${EXTRA_GOALS} "$@"
-mvn site site:stage ${MAVEN_OPTS} $@
+mvn $ANT_OPTS $BUNDLE_SNAPPY -Pdist -Pnative -Psrc -Dtar ${MAVEN_OPTS}" install package "$@"
+#mvn site site:stage ${MAVEN_OPTS} $@
 
 (cd build ; tar --strip-components=1 -xzvf  ../hadoop-dist/target/hadoop-${HADOOP_VERSION}.tar.gz)
-(cd build/src ; tar --strip-components=1 -xzvf  ../../hadoop-dist/target/hadoop-${HADOOP_VERSION}-src.tar.gz)
+#(cd build/src ; tar --strip-components=1 -xzvf  ../../hadoop-dist/target/hadoop-${HADOOP_VERSION}-src.tar.gz)
 
 # Copy generated docs
 mkdir -p build/share
-cp -r target/staging/hadoop-project build/share/doc
+#cp -r target/staging/hadoop-project build/share/doc
 
 # Create a manifest for hadoop client package
-(cd hadoop-client/target/hadoop-client-*/share/hadoop/client/lib ; ls) > build/hadoop-client.list
+(cd hadoop-client-modules/hadoop-client/target/hadoop-client-*/share/hadoop/client/lib ; ls) > build/hadoop-client.list
 
 # Copy fuse output to the build directory
 cp hadoop-hdfs-project/hadoop-hdfs-native-client/target/main/native/fuse-dfs/fuse_dfs build/bin
