@@ -55,7 +55,7 @@ mkdir build/src
 
 # Build artifacts
 MAVEN_OPTS="-DskipTests -DskipTest -DskipITs"
-mvn $ANT_OPTS $BUNDLE_SNAPPY -Pdist -Pnative -Psrc -Dtar ${MAVEN_OPTS}" install package "$@"
+mvn $ANT_OPTS $BUNDLE_SNAPPY -Pdist -Pnative -Psrc -Dtar ${MAVEN_OPTS} install package "$@"
 mvn site site:stage ${MAVEN_OPTS} $@
 
 (cd build ; tar --strip-components=1 -xzvf  ../hadoop-dist/target/hadoop-${HADOOP_VERSION}.tar.gz)
@@ -66,7 +66,7 @@ mkdir -p build/share
 cp -r target/staging/hadoop-project build/share/doc
 
 # Create a manifest for hadoop client package
-(cd hadoop-client/target/hadoop-client-*/share/hadoop/client/lib ; ls) > build/hadoop-client.list
+(cd hadoop-client-modules/hadoop-client/target/hadoop-client-*/share/hadoop/client/lib ; ls) > build/hadoop-client.list
 
 # Copy fuse output to the build directory
 cp hadoop-hdfs-project/hadoop-hdfs-native-client/target/main/native/fuse-dfs/fuse_dfs build/bin
