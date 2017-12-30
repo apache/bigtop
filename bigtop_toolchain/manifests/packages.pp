@@ -62,8 +62,7 @@ class bigtop_toolchain::packages {
         "libevent-devel",
         "apr-devel",
         "bison",
-        "libffi-devel",
-        "epel-release"
+        "libffi-devel"
       ]
     }
     /(?i:(SLES|opensuse))/: { $pkgs = [
@@ -223,6 +222,12 @@ class bigtop_toolchain::packages {
     file { '/usr/lib/rpm/redhat':
       ensure => 'link',
       target => '/usr/lib/rpm/amazon',
+    }
+  }
+
+  if $operatingsystem == 'CentOS' {
+    package { 'epel-release':
+      ensure => installed
     }
   }
 }
