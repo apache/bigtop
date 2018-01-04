@@ -166,6 +166,8 @@ bash $RPM_SOURCE_DIR/install_spark.sh \
           --prefix=$RPM_BUILD_ROOT  \
           --doc-dir=%{doc_spark}
 
+%__rm -f $RPM_BUILD_ROOT/%{lib_spark}/jars/hadoop-*.jar
+
 for service in %{spark_services}
 do
     # Install init script

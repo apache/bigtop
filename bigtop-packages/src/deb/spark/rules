@@ -49,3 +49,5 @@ override_dh_install:
 	dh_install
 	# BIGTOP-2588 drop datanucleus jars from spark-core
 	rm -Rf debian/spark-core/usr/lib/spark/jars/datanucleus*
+
+	rm -f debian/tmp/${lib_spark}/jars/hadoop-*.jar
