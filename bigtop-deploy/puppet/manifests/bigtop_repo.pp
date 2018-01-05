@@ -14,6 +14,8 @@
 # limitations under the License.
 
 class bigtop_repo {
+  include stdlib
+
   case $::operatingsystem {
     /(OracleLinux|Amazon|CentOS|Fedora|RedHat)/: {
       $default_repo = "http://repos.bigtop.apache.org/releases/1.2.1/centos/7/x86_64"
