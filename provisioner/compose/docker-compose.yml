@@ -20,9 +20,9 @@ services:
       context: ../..
       dockerfile: provisioner/compose/Dockerfile
     command: /sbin/init
+    image: oflebbe/node
     domainname: bigtop.org
     hostname: datanode1
-    container_name: datanode1
     networks:
       bigtop.org:
         aliases:
@@ -30,14 +30,9 @@ services:
     volumes:
       - /data/1
       - /data/2
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
     tmpfs:
       - /run
       - /tmp
-    security_opt:
-      - seccomp=unconfined
-    cap_add:
-      - SYS_ADMIN
 
   datanode2:
     build:
@@ -45,22 +40,16 @@ services:
       dockerfile: provisioner/compose/Dockerfile
     command: /sbin/init
     domainname: bigtop.org
-    container_name: datanode2
+    image: oflebbe/node
     hostname: datanode2
     networks:
       bigtop.org:
     volumes:
       - /data/1
       - /data/2
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
     tmpfs:
       - /run
       - /tmp
-    security_opt:
-      - seccomp=unconfined
-    cap_add:
-      - SYS_ADMIN
-
 
 
 
@@ -70,26 +59,20 @@ services:
       dockerfile: provisioner/compose/Dockerfile
     command: /sbin/init
     domainname: bigtop.org
+    image: oflebbe/node
     hostname: headnode
-    container_name: headnode
     networks:
       -  bigtop.org
     volumes:
       - /data/1
       - /data/2
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
     tmpfs:
       - /run
       - /tmp
-    security_opt:
-      - seccomp=unconfined
-    cap_add:
-      - SYS_ADMIN
-
 
 
 
 networks:
   bigtop.org:
     external:
-      name: bigtop.org
+      name: bigtop

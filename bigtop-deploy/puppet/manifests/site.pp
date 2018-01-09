@@ -16,6 +16,10 @@
 require jdk
 Class['jdk'] -> Service<||>
 
+Service {
+  provider => init,
+}
+
 $provision_repo = hiera("bigtop::provision_repo", true)
 if ($provision_repo) {
    require bigtop_repo
