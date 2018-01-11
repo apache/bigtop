@@ -2,4 +2,4 @@ metrics:
   peers:
     type: gauge
     description: number of zookeeper servers in the cluster
-    command: grep ^server /etc/zookeeper/conf/zoo.cfg  | wc -l
+    command: grep ^server /etc/zookeeper/conf/zoo.cfg | wc -l || echo 0

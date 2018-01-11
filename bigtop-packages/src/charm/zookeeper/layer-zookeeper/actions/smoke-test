@@ -23,11 +23,11 @@ from charms.layer.apache_bigtop_base import Bigtop  # noqa: E402
 from charms.reactive import is_state  # noqa: E402
 
 
-def fail(msg, output=None):
-    if output:
-        hookenv.action_set({'output': output})
+def fail(msg):
+    hookenv.action_set({'outcome': 'failure'})
     hookenv.action_fail(msg)
     sys.exit()
+
 
 if not is_state('zookeeper.started'):
     fail('Charm is not yet ready to run the Bigtop smoke test(s)')
@@ -38,6 +38,6 @@ smoke_components = ['zookeeper']
 bigtop = Bigtop()
 result = bigtop.run_smoke_tests(smoke_components)
 if result == 'success':
-    hookenv.action_set({'outcome': result})
+    hookenv.action_set({'outcome': 'success'})
 else:
-    fail('{} smoke tests failed'.format(smoke_components), result)
+    fail('{} smoke tests failed with: {}'.format(smoke_components, result))

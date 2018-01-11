@@ -27,9 +27,10 @@ class TestDeploy(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.d = amulet.Deployment(series='xenial')
-        cls.d.add('spark', 'cs:xenial/spark')
+        cls.d.add('spark')
         cls.d.setup(timeout=1800)
-        cls.d.sentry.wait_for_messages({'spark': re.compile('ready')}, timeout=1800)
+        cls.d.sentry.wait_for_messages({'spark': re.compile('ready')},
+                                       timeout=1800)
         cls.spark = cls.d.sentry['spark'][0]
 
     def test_spark(self):

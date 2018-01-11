@@ -25,6 +25,7 @@
 %define hadoop_yarn_home /usr/lib/hadoop-yarn
 %define hadoop_hdfs_home /usr/lib/hadoop-hdfs
 %define hbase_home /usr/lib/hbase
+#BIGTOP_PATCH_FILES
 
 %if  %{?suse_version:1}0
 
@@ -117,6 +118,7 @@ other than the JVM.
 
 %prep
 %setup -n apache-%{name}-%{phoenix_base_version}-src
+#BIGTOP_PATCH_COMMANDS
 
 %build
 bash %{SOURCE1}

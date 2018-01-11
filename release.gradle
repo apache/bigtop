@@ -53,15 +53,15 @@ task deployTestExecutors (type: Exec, dependsOn: [deployTop]) {
   standardInput System.in
 }
 task deployAll (dependsOn: [deployTestExecutors, deployTestArtifacts,
-                            deployITest, deployTop]) << {
+                            deployITest, deployTop]) doLast {
   println "Done!"
 }
 
 task dorelease(description: 'Convenient wrapper for existing release tasks',
-  dependsOn: [dosite, deployAll]) << {
+  dependsOn: [dosite, deployAll]) doLast {
 }
 
-task setversion << {
+task setversion doLast {
   assert project.hasProperty('nextversion')
 
   FileTree fTree = fileTree(dir: projectDir, exclude: ['dl', 'build'],

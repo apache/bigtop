@@ -33,14 +33,14 @@ import org.apache.bigtop.itest.shell.Shell;
  * This program unloads and reloads region servers and checks that
  * regions do not get stuck in transition for too long. The region
  * servers are specified by hostname.
- * <p/>
+ * <p>
  * Required arguments:
- * -Dregionservers=<regionserver1>,<regionserver2>,...
- * <p/>
+ * -Dregionservers=&lt;regionserver1&gt;,&lt;regionserver2&gt;,...
+ * <p>
  * Optional arguments:
- * -Dload.iterations=<number of times to unload and load the region servers>
- * -Dtimeout.intervals=<number of times to wait for no regions in transition>
- * -Dtimeout.ms=<milliseconds to wait before checking for regions in transition>
+ * -Dload.iterations=&lt;number of times to unload and load the region servers&gt;
+ * -Dtimeout.intervals=&lt;number of times to wait for no regions in transition&gt;
+ * -Dtimeout.ms=&lt;milliseconds to wait before checking for regions in transition&gt;
  */
 public class TestRegionMover {
   private static Shell sh = new Shell("/bin/bash -s");

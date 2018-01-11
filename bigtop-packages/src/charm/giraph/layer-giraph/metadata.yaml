@@ -4,6 +4,9 @@ maintainer: Panagiotis Liakos <p.liakos@di.uoa.gr>
 description: |
   The Apache Giraph project's goal is to provide an environment that addresses
   the challenges of Managing Big Graphs.
+
+  This charm provides version 1.1.0 of the Giraph application from Apache
+  Bigtop.
 tags: ['graph processing']
 series: ['xenial']
 subordinate: true

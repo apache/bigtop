@@ -15,6 +15,9 @@
 # limitations under the License.
 set -eu
 
+JAR_PATH=`find /usr/lib/spark -name spark-examples.jar`
+CMD="spark-submit --class org.apache.spark.examples.SparkPi ${JAR_PATH} 10"
+
 echo "Running SparkPi"
-spark-submit --class org.apache.spark.examples.SparkPi /usr/lib/spark/lib/spark-examples-*.jar 10
-echo ""
+echo "Command: ${CMD}"
+${CMD} 2>&1 | grep "Pi is"

@@ -58,7 +58,7 @@ def bomTasks = []
 
 def touchTargetFile = { fileName ->
   // to comply with make build
-  GFileUtils.touch new File(fileName)
+  ant.touch(file:fileName,mkdirs:true)
 }
 def ifExists = { url ->
   if (url == null) return
@@ -89,8 +89,11 @@ def setDefaults = { comp ->
     comp.version.pkg = comp.version.base
   }
 }
+def devNull = new OutputStream() {
+  @Override
+  public void write(int b) {}
+}
 def nativePackaging = {
-  def devNull = new org.apache.bigtop.NullOutputStream()
   def result = exec {
     commandLine "/bin/bash", "-c",
     """dpkg-query -S /bin/sh && exit 1
@@ -111,19 +114,19 @@ Label: Bigtop
 Suite: stable
 Codename: bigtop
 Version: ${config.bigtop.version}
-Architectures: amd64 ppc64el source
+Architectures: amd64 ppc64el arm64 source
 Components: contrib
 Description: Bigtop
 """;
 }
 
-task "packages-help" (description: "All package build related tasks information", group: PACKAGES_GROUP) << {
+task "packages-help" (description: "All package build related tasks information", group: PACKAGES_GROUP) doLast {
   config.bigtop.components.each { label, comp ->
     println (comp.name + "\n\t[" + tasks.findAll { alltask -> alltask.name.startsWith(comp.name)}*.name.join(", ") + "]")
   }
 }
 
-task "bom-json" (description: "List the components of the stack in json format") << {
+task "bom-json" (description: "List the components of the stack in json format") doLast {
   def componentObjects = config.bigtop.components.sort().collect {
     setDefaults(it.value)
     [
@@ -160,7 +163,7 @@ task "bom-json" (description: "List the components of the stack in json format")
   println JsonOutput.prettyPrint(json)
 }
 
-task "all-components" (description: "List the components of the stack") << {
+task "all-components" (description: "List the components of the stack") doLast {
   println "${project.name} ${config.bigtop.version} stack includes the following components"
   config.bigtop.components.sort().each { label, comp ->
     println sprintf ('\t%1$s %2$s', comp.name.padRight(20), comp.version.base.padLeft(15))
@@ -170,7 +173,7 @@ task "all-components" (description: "List the components of the stack") << {
 def genTasks = { target ->
   Task t = task "${target}-download" (dependsOn: "${target}_vardefines",
       description: "Download $target artifacts",
-      group: PACKAGES_GROUP) << {
+      group: PACKAGES_GROUP) doLast {
 
     def final TARBALL_DST = config.bigtop.components[target].tarball.destination
     def final DOWNLOAD_DST = config.bigtop.components[target].downloaddst
@@ -182,9 +185,7 @@ def genTasks = { target ->
     def final GIT_USER_NAME = config.bigtop.components[target].git.user ?: config.bigtop.git.user
     def final GIT_ACCESS_TOKEN = config.bigtop.components[target].git.token ?: config.bigtop.git.token
 
-    def devNull = new org.apache.bigtop.NullOutputStream()
-
-    if (!DOWNLOAD_URL)
+    if (!DOWNLOAD_URL && !(GIT_REPO && GIT_REF))
       return
 
     mkdir(DL_DIR)
@@ -210,23 +211,17 @@ def genTasks = { target ->
          uri.getFragment())
         exec {
           workingDir DL_DIR
-          commandLine "git clone --depth 1 ${uri} ${dir}".split()
+          commandLine "git clone --depth 1 --branch $GIT_REF ${uri} ${dir}".split()
           errorOutput devNull
           standardOutput devNull
         }
       } else {
         exec {
           workingDir DL_DIR
-          commandLine "git clone --depth 1 ${GIT_REPO} ${dir}".split()
+          commandLine "git clone --depth 1 --branch $GIT_REF ${GIT_REPO} ${dir}".split()
           errorOutput devNull
           standardOutput devNull
         }
-      }
-      exec {
-        workingDir "$DL_DIR/${dir}"
-        commandLine "git checkout $GIT_REF".split()
-        errorOutput devNull
-        standardOutput devNull
       }
       exec {
         workingDir "$DL_DIR/${dir}"
@@ -251,7 +246,7 @@ def genTasks = { target ->
   }
   task "${target}-tar" (dependsOn: ["${target}_vardefines", "${target}-download"],
       description: "Preparing a tarball for $target artifacts",
-      group: PACKAGES_GROUP) << {
+      group: PACKAGES_GROUP) doLast {
     if (new File(config.bigtop.components[target].targettar)?.exists()) {
       println "\tNothing to do. Exiting..."
       return
@@ -308,7 +303,7 @@ def genTasks = { target ->
   // Keeping the reference to deb task to be used later for correct sequencing
   Task tdeb = task "$target-deb"(dependsOn: "${target}-sdeb",
       description: "Building DEB for $target artifacts",
-      group: PACKAGES_GROUP) << {
+      group: PACKAGES_GROUP) doLast {
     if (new File(config.bigtop.components[target].targetdeb)?.exists()) {
       println "\tNothing to do. Exiting..."
       return
@@ -360,7 +355,7 @@ def genTasks = { target ->
    task "$target-sdeb" (dependsOn: ["${target}_vardefines",  "${target}-tar"],
       description: "Building SDEB for $target artifacts",
       group: PACKAGES_GROUP
-  ) << {
+  ) doLast {
     if (new File(config.bigtop.components[target].targetsdeb)?.exists()) {
       println "\tNothing to do. Exiting..."
       return
@@ -436,7 +431,7 @@ def genTasks = { target ->
   // Keeping the reference to task to be used later for correct sequencing
   Task trpm = task "$target-rpm" (dependsOn: ["${target}-srpm"],
       description: "Building RPM for $target artifacts",
-      group: PACKAGES_GROUP) << {
+      group: PACKAGES_GROUP) doLast {
     if (new File(config.bigtop.components[target].targetrpm)?.exists()) {
       println "\tNothing to do. Exiting..."
       return
@@ -480,7 +475,7 @@ def genTasks = { target ->
     trpm.mustRunAfter "${bomTasks.get(bomTasks.size() - 1)}-rpm".toLowerCase()
   task "$target-srpm" (dependsOn: ["${target}_vardefines" , "${target}-tar"],
       description: "Building SRPM for $target artifacts",
-      group: PACKAGES_GROUP) << {
+      group: PACKAGES_GROUP) doLast {
     if (new File(config.bigtop.components[target].targetsrpm)?.exists()) {
       println "\tNothing to do. Exiting..."
       return
@@ -569,17 +564,17 @@ def genTasks = { target ->
     def ptype = nativePackaging.pkg
     task "$target-pkg" (dependsOn: "$target-$ptype",
         description: "Invoking a native binary packaging target $ptype",
-        group: PACKAGES_GROUP) << {
+        group: PACKAGES_GROUP) doLast {
     }
     task "$target-spkg" (dependsOn: "$target-s$ptype",
         description: "Invoking a native binary packaging target s$ptype",
-        group: PACKAGES_GROUP) << {
+        group: PACKAGES_GROUP) doLast {
     }
   }
-  task "$target-version" (description: "Show version of $target component", group: PACKAGES_GROUP) << {
+  task "$target-version" (description: "Show version of $target component", group: PACKAGES_GROUP) doLast {
     println "Base: ${config.bigtop.components[target].version.base}"
   }
-  task "${target}_vardefines" << {
+  task "${target}_vardefines" doLast {
     setDefaults(config.bigtop.components[target])
 
     config.bigtop.components[target].package.release = '1'
@@ -621,7 +616,7 @@ def genTasks = { target ->
 
   task "$target-info" (dependsOn: "${target}_vardefines",
       description: "Info about $target component build",
-      group: PACKAGES_GROUP) << {
+      group: PACKAGES_GROUP) doLast {
     println "Info for package $target"
     println "  Will download from URL: ${config.bigtop.components[target].downloadurl}"
     println "  To destination file: ${config.bigtop.components[target].downloaddst}"
@@ -631,15 +626,15 @@ def genTasks = { target ->
     println "Version: " + config.bigtop.components[target].version.base
     //TODO more about stamping
   }
-  task "$target-relnotes" (description: "Preparing release notes for $target. No yet implemented!!!", group: PACKAGES_GROUP)<< {
+  task "$target-relnotes" (description: "Preparing release notes for $target. No yet implemented!!!", group: PACKAGES_GROUP) doLast {
   }
   task "$target-clean" (dependsOn: "${target}_vardefines",
       description: "Removing $target component build and output directories",
-      group: PACKAGES_GROUP) << {
+      group: PACKAGES_GROUP) doLast {
     safeDelete(config.bigtop.components[target].builddir)
     safeDelete(config.bigtop.components[target].outputdir)
   }
-  task "$target-help" (description: "List of available tasks for $target", group: PACKAGES_GROUP) << {
+  task "$target-help" (description: "List of available tasks for $target", group: PACKAGES_GROUP) doLast {
     println (target + "\n\t[" + tasks.findAll { alltask -> alltask.name.startsWith(target)}*.name.join(", ") + "]")
   }
 
@@ -675,42 +670,42 @@ project.afterEvaluate {
   task "srpm" (dependsOn: tasks.findAll { alltask -> alltask.name.endsWith("-srpm")}*.name,
       description: "Build all SRPM packages for the stack components",
       group: PACKAGES_GROUP
-  ) << { }
+  ) doLast { }
   task "rpm" (dependsOn: tasks.findAll { alltask -> alltask.name.endsWith("-rpm")}*.name,
       description: "Build all RPM packages for the stack",
       group: PACKAGES_GROUP
-  ) << { }
+  ) doLast { }
   task "sdeb" (dependsOn: tasks.findAll { alltask -> alltask.name.endsWith("-sdeb")}*.name,
       description: "Build all SDEB packages for the stack components",
       group: PACKAGES_GROUP
-  ) << { }
+  ) doLast { }
   task "deb" (dependsOn: tasks.findAll { alltask -> alltask.name.endsWith("-deb")}*.name,
       description: "Build all DEB packages for the stack components",
       group: PACKAGES_GROUP
-  ) << { }
+  ) doLast { }
   task "pkgs" (dependsOn: tasks.findAll { alltask -> alltask.name.endsWith("-pkg")}*.name,
       description: "Build all native packages for the stack components",
       group: PACKAGES_GROUP
-  ) << { }
+  ) doLast { }
 
   task allclean (dependsOn: [clean, tasks.findAll { alltask -> alltask.name.endsWith("-clean")}*.name],
       description: "Removing $BUILD_DIR, $OUTPUT_DIR, and $DIST_DIR.\n\t\t" +
         "Cleaning all components' build and output directories.",
-      group: PACKAGES_GROUP) << {
+      group: PACKAGES_GROUP) doLast {
     safeDelete(BUILD_DIR)
     safeDelete(OUTPUT_DIR)
     safeDelete(DIST_DIR)
   }
   task realclean (dependsOn: allclean,
       description: "Removing $BUILD_DIR, $OUTPUT_DIR, $DIST_DIR, and $DL_DIR",
-      group: PACKAGES_GROUP) << {
+      group: PACKAGES_GROUP) doLast {
     delete (DL_DIR)
   }
 }
 
 task "apt" (
     description: "Creating APT repository",
-    group: PACKAGES_GROUP) << {
+    group: PACKAGES_GROUP) doLast {
 
   delete ( "$OUTPUT_DIR/apt")
   mkdir ("$OUTPUT_DIR/apt/conf")
@@ -729,7 +724,7 @@ task "apt" (
 
 task "yum" (
     description: "Creating YUM repository",
-    group: PACKAGES_GROUP) << {
+    group: PACKAGES_GROUP) doLast {
   delete ( "$OUTPUT_DIR/repodata")
   exec {
     workingDir BUILD_DIR
@@ -740,5 +735,5 @@ task "yum" (
 if (nativePackaging) {
   task "repo" (dependsOn: nativePackaging.repo,
       description: "Invoking a native repository target ${nativePackaging.repo}",
-      group: PACKAGES_GROUP) << { }
+      group: PACKAGES_GROUP) doLast { }
 }

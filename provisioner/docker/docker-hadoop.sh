@@ -34,7 +34,7 @@ usage() {
 
 create() {
     if [ -e .provision_id ]; then
-        echo "Cluster already exist! Run ./$PROG -d to destroy the cluster or delete .provision_id file and containers manually."
+        log "Cluster already exist! Run ./$PROG -d to destroy the cluster or delete .provision_id file and containers manually."
         exit 1;
     fi
     echo "`date +'%Y%m%d_%H%M%S'`_R$RANDOM" > .provision_id
@@ -49,7 +49,7 @@ create() {
     # Startup instances
     docker-compose -p $PROVISION_ID scale bigtop=$1
     if [ $? -ne 0 ]; then
-        echo "Docker container(s) startup failed!";
+        log "Docker container(s) startup failed!";
         exit 1;
     fi
 
@@ -60,10 +60,9 @@ create() {
     # Fetch configurations form specificed yaml config file
     repo=$(get-yaml-config repo)
     components="[`echo $(get-yaml-config components) | sed 's/ /, /g'`]"
-    jdk=$(get-yaml-config jdk)
     distro=$(get-yaml-config distro)
     enable_local_repo=$(get-yaml-config enable_local_repo)
-    generate-config "$hadoop_head_node" "$repo" "$components" "$jdk"
+    generate-config "$hadoop_head_node" "$repo" "$components"
 
     # Start provisioning
     generate-hosts
@@ -78,11 +77,11 @@ generate-hosts() {
     done
     wait
     # This must be the last entry in the /etc/hosts
-    echo "127.0.0.1 localhost" >> ./config/hosts
+    docker exec ${NODES[0]} bash -c "echo '127.0.0.1 localhost' >> ./etc/hosts"
 }
 
 generate-config() {
-    echo "Bigtop Puppet configurations are shared between instances, and can be modified under config/hieradata"
+    log "Bigtop Puppet configurations are shared between instances, and can be modified under config/hieradata"
     cat $BIGTOP_PUPPET_DIR/hiera.yaml >> ./config/hiera.yaml
     cp -vfr $BIGTOP_PUPPET_DIR/hieradata ./config/
     cat > ./config/hieradata/site.yaml << EOF
@@ -90,7 +89,6 @@ bigtop::hadoop_head_node: $1
 hadoop::hadoop_storage_dirs: [/data/1, /data/2]
 bigtop::bigtop_repo_uri: $2
 hadoop_cluster_node::cluster_components: $3
-bigtop::jdk_package_name: $4
 EOF
 }
 
@@ -122,17 +120,19 @@ smoke-tests() {
 }
 
 destroy() {
+    docker exec ${NODES[0]} bash -c "umount /etc/hosts; rm -f /etc/hosts"
     if [ -n "$PROVISION_ID" ]; then
         docker-compose -p $PROVISION_ID stop
         docker-compose -p $PROVISION_ID rm -f
     fi
-    echo > ./config/hiera.yaml
-    echo > ./config/hosts
-    rm -rvf ./config/hieradata/bigtop ./config/hieradata/site.yaml .provision_id
+    rm -rvf ./config .provision_id
 }
 
 bigtop-puppet() {
-    docker exec $1 bash -c 'puppet apply --parser future --modulepath=/bigtop-home/bigtop-deploy/puppet/modules:/etc/puppet/modules /bigtop-home/bigtop-deploy/puppet/manifests'
+    if docker exec $1 bash -c "puppet --version" | grep ^3 >/dev/null ; then
+      future="--parser future"
+    fi
+    docker exec $1 bash -c "puppet apply $future --modulepath=/bigtop-home/bigtop-deploy/puppet/modules:/etc/puppet/modules:/usr/share/puppet/modules /bigtop-home/bigtop-deploy/puppet/manifests"
 }
 
 get-yaml-config() {
@@ -178,6 +178,10 @@ list() {
         msg="Cluster hasn't been created yet."
     fi
     echo "$msg"
+}
+
+log() {
+    echo -e "\n[LOG] $1\n"
 }
 
 PROG=`basename $0`

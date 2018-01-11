@@ -37,7 +37,8 @@ def parse_benchmark_output():
         m = regex.match(line)
         if m:
             results[m.group(1)] = m.group(2)
-    hookenv.action_set({"results.raw": json.dumps(results)})
+    hookenv.action_set({"meta.raw": json.dumps(results)})
+
 
 if __name__ == "__main__":
     parse_benchmark_output()

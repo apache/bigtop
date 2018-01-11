@@ -27,8 +27,6 @@ class TestBundle(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        # classmethod inheritance doesn't work quite right with
-        # setUpClass / tearDownClass, so subclasses have to manually call this
         cls.d = amulet.Deployment(series='xenial')
         with open(cls.bundle_file) as f:
             bun = f.read()
@@ -55,7 +53,6 @@ class TestBundle(unittest.TestCase):
                                         'resourcemanager': re.compile('ready'),
                                         'slave': re.compile('ready'),
                                         'spark': re.compile('ready'),
-                                        'zookeeper': re.compile('ready'),
                                         }, timeout=3600)
         cls.hdfs = cls.d.sentry['namenode'][0]
         cls.yarn = cls.d.sentry['resourcemanager'][0]
@@ -88,7 +85,9 @@ class TestBundle(unittest.TestCase):
         assert 'DataNode' not in yarn, "DataNode should not be running on resourcemanager"
         assert 'DataNode' not in hdfs, "DataNode should not be running on namenode"
 
-        assert 'Master' in spark, "Spark Master not started"
+        assert 'HistoryServer' in spark, "Spark HistoryServer not started"
+        assert 'Master' not in spark, "Spark Master should not be running in yarn mode"
+        assert 'Worker' not in spark, "Spark Worker should not be running in yarn mode"
 
     def test_hdfs(self):
         """

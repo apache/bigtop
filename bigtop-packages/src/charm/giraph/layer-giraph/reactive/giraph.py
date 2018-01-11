@@ -15,11 +15,13 @@
 
 import os
 
+from glob import glob
 from jujubigdata import utils
 from path import Path
 
 from charms.reactive import is_state, when, when_not, set_state
 from charms.layer.apache_bigtop_base import Bigtop, get_package_version
+from charmhelpers import fetch
 from charmhelpers.core import hookenv
 
 
@@ -38,7 +40,12 @@ def get_good_jars(dir, prefix=True):
     # Known incompatible jars:
     # - hive-exec-0.11.0 protobuf class
     #   java.lang.VerifyError: ... overrides final method getUnknownFields
-    bad_jars = ['hive-exec-0.11.0.jar']
+    # - jersey-*-1.17
+    #   Conflicts with hadoop-2.7.3 jersey-*-1.9.jar, manifesting as:
+    #   com.sun.jersey.api.container: No WebApplication provider is present
+    bad_jars = ['hive-exec-0.11.0.jar',
+                'jersey-core-1.17.jar',
+                'jersey-json-1.17.jar']
     good_jars = []
     for file in os.listdir(dir):
         if file.endswith('.jar') and file not in bad_jars:
@@ -72,13 +79,17 @@ def install_giraph(giraph):
         ],
     )
     bigtop.trigger_puppet()
+
+    # Put down the -doc subpackage so we get giraph-examples
+    fetch.apt_install('giraph-doc')
+
     giraph_home = Path('/usr/lib/giraph')
+    giraph_docdir = Path('/usr/share/doc/giraph')
     giraph_libdir = Path(giraph_home / 'lib')
-    giraph_examples = Path('{}/resources/giraph-examples-1.1.0.jar'.format(
-        hookenv.charm_dir()))
+    giraph_examples = glob('{}/giraph-examples-*.jar'.format(giraph_docdir))
 
     # Gather a list of all the giraph jars (needed for -libjars)
-    giraph_jars = [giraph_examples]
+    giraph_jars = giraph_examples
     giraph_jars.extend(get_good_jars(giraph_home, prefix=True))
     giraph_jars.extend(get_good_jars(giraph_libdir, prefix=True))
 
@@ -89,8 +100,8 @@ def install_giraph(giraph):
     with utils.environment_edit_in_place('/etc/environment') as env:
         cur_cp = env['HADOOP_CLASSPATH'] if 'HADOOP_CLASSPATH' in env else ""
         env['GIRAPH_HOME'] = giraph_home
-        env['HADOOP_CLASSPATH'] = "{ex}:{home}/*:{libs}/*:{cp}".format(
-            ex=giraph_examples,
+        env['HADOOP_CLASSPATH'] = "{examples}/*:{home}/*:{libs}/*:{cp}".format(
+            examples=giraph_docdir,
             home=giraph_home,
             libs=giraph_libdir,
             cp=cur_cp

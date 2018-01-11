@@ -16,7 +16,7 @@
 
 . `dirname $0`/bigtop.bom
 
-export MAVEN_OPTS="-XX:PermSize=1024m -XX:MaxPermSize=1024m"
+export MAVEN_OPTS=""
 
 # bigtop installs maven on its own and not through the package manager
 export PATH=/usr/local/maven/bin:$PATH
@@ -117,6 +117,7 @@ for i in `diff -r all-deps/ hadoop-deps/ | grep all-deps | awk '{print $4}'`; do
 
 rm -rf all-deps/ hadoop-deps/
 rm -rf deps/hadoop-common-$HADOOP_VERSION-tests.jar
+rm -rf deps/slf4j-*.jar
 
 #Download non-ASF licenses for libraries
 wget -t 3 -q -O jline-LICENSE.txt https://raw.githubusercontent.com/jline/jline2/jline-2.11/LICENSE.txt

@@ -53,16 +53,10 @@ License: ASL 2.0
 Source0: solr-%{solr_base_version}-src.tgz
 Source1: do-component-build 
 Source2: install_%{name}.sh
-Source3: server.xml
-Source4: web.xml
-Source5: logging.properties
-Source6: solr.default
-Source7: solr-server.init
-Source8: schema.xml
-Source9: solrconfig.xml
-Source10: solrctl.sh
-Source11: tomcat-deployment.sh
-Requires: bigtop-utils >= 0.7, bigtop-tomcat
+Source3: solr.default
+Source4: solr-server.init
+Source5: solrctl.sh
+Requires: bigtop-utils >= 0.7
 
 # CentOS 5 does not have any dist macro
 # So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
@@ -124,7 +118,7 @@ sh $RPM_SOURCE_DIR/install_solr.sh \
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
 init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{svc_solr}
-%__cp %{SOURCE7} $init_file
+%__cp %{SOURCE4} $init_file
 chmod 755 $init_file
 
 %pre
@@ -133,12 +127,10 @@ getent passwd solr > /dev/null || useradd -c "Solr" -s /sbin/nologin -g solr -r 
 
 %post
 %{alternatives_cmd} --install %{config_solr} %{solr_name}-conf %{config_solr}.dist 30
-%{alternatives_cmd} --install %{tomcat_deployment_solr} %{solr_name}-tomcat-conf %{tomcat_deployment_solr}.dist 30
 
 %preun
 if [ "$1" = 0 ]; then
         %{alternatives_cmd} --remove %{solr_name}-conf %{config_solr}.dist || :
-        %{alternatives_cmd} --remove %{solr_name}-tomcat-conf %{tomcat_deployment_solr}.dist || :
 fi
 
 %post server
@@ -161,7 +153,6 @@ fi
 %files 
 %defattr(-,root,root,755)
 %config(noreplace) %{config_solr}.dist
-%config(noreplace) %{tomcat_deployment_solr}.dist
 %config(noreplace) /etc/default/solr 
 %{lib_solr}
 %{bin_solr}/solrctl

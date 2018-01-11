@@ -23,7 +23,7 @@ buildscript {
 }
 
 plugins {
-  id "de.undercouch.download" version "2.0.0"
+  id "de.undercouch.download" version "3.2.0"
   id "org.nosphere.apache.rat" version "0.2.0"
 }
 
@@ -75,7 +75,6 @@ rat {
        "bigtop-tests/test-artifacts/**/resources/**",
        "bigtop-tests/smoke-tests/alluxio/datafile",
        "bigtop-tests/smoke-tests/hive/passwd.ql",
-       "bigtop-tests/smoke-tests/kite/sandwiches.csv",
        "bigtop-tests/smoke-tests/phoenix/*.csv",
        "bigtop-tests/smoke-tests/phoenix/*.sql",
        "bigtop-tests/smoke-tests/ignite-hadoop/*.data",
@@ -226,7 +225,7 @@ task toolchain(type:Exec,
     description: 'Setup dev. env via toolchain; Requires: Puppet, sudo',
     group: DEVENV_GROUP) {
   def command = [
-      'sudo', 'puppet', 'apply', '-d',
+      'sudo', 'puppet', 'apply', '-d', '--parser', 'future',
       "--modulepath=${projectDir.absolutePath}:/etc/puppet/modules", '-e',
       'include bigtop_toolchain::installer'
   ]
@@ -342,7 +341,7 @@ def artifactToInstall = {
     task "install-${artifact}" (description: "Installs ${artifact} artifact with Maven",
         group: TESTARTIFACTS_GROUP,
         dependsOn: installiTest
-    ) << {
+    ) doLast {
       def final PATH = "${TEST_DIR}/$artifact/pom.xml"
       def final WRAPPER = "mvn clean install -f " + PATH
       exec {
@@ -393,7 +392,7 @@ repos.each { r->
 task "configure-nexus"(dependsOn: tasks.findAll { alltask -> alltask.name.startsWith("configure-nexus-")}*.name,
       description: 'configure build to use a sonatype nexus server.\n' +
         '  Use -PNEXUS_URL=http://server:8081 to overwrite default server http://localhost:8081\n' +
-        '  Use -PNEXUS_USERPASS=user:passwd to overwrite default username passwd admin:admin123') << {
+        '  Use -PNEXUS_USERPASS=user:passwd to overwrite default username passwd admin:admin123') doLast {
    def m2Dir = System.getProperty("user.home") + "/.m2"
    mkdir(m2Dir)
    def writer = new File(m2Dir + "/settings.xml")
@@ -410,8 +409,8 @@ task "configure-nexus"(dependsOn: tasks.findAll { alltask -> alltask.name.starts
 
 task "bigtop-slaves"(type:Exec,
     description: 'Build bigtop/slaves images.\n' +
-      'Usage:\n  $ ./gradlew -POS=[centos-6|centos-7|fedora-20|debian-8|ubuntu-14.04|opensuse-13.2] -Pprefix=STRING_TO_PREFIX bigtop-slaves\n' +
-      'Example:\n  $ ./gradlew -POS=debian-8 -Pprefix=1.0.0 bigtop-slaves\n' +
+      'Usage:\n  $ ./gradlew -POS=[centos-7|fedora-26|debian-9|ubuntu-16.04|opensuse-42.3] -Pprefix=STRING_TO_PREFIX bigtop-slaves\n' +
+      'Example:\n  $ ./gradlew -POS=debian-9 -Pprefix=1.0.0 bigtop-slaves\n' +
       'The built image name: bigtop/slaves:1.0.0-debian-8',
     group: DOCKERBUILD_GROUP) {
   def _prefix = project.hasProperty("prefix") ? prefix : "trunk"
@@ -420,7 +419,6 @@ task "bigtop-slaves"(type:Exec,
       'docker', 'build',
       '-t', 'bigtop/slaves:' + _prefix + '-' + _OS,
       '-f', "docker/bigtop-slaves/" + _OS + "/Dockerfile",
-      '--force-rm', '--no-cache', '--pull', '--rm',
       '.'
   ]
   workingDir '.'

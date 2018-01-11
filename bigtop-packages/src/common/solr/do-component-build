@@ -26,7 +26,6 @@ BUILD_OPTS="-Dversion=${FULL_VERSION} -Dhadoop.version=${HADOOP_VERSION} \
             -Dreactor.repo=file://${HOME}/.m2/repository"
 
 # FIXME: the following really needs to be made flexible at the product level
-sed -i -e '/ENTITY.*hadoop.version/s#"[^"]*"#"'${HADOOP_VERSION}'"#' ./solr/test-framework/ivy.xml ./solr/core/ivy.xml
 sed -i -e '/<dependency org="org.mortbay.jetty" name="jetty"/s#/ *>#>#' solr/core/ivy.xml
 sed -i -e '/<dependency org="org.mortbay.jetty" name="jetty"/a<artifact name="jetty" ext="jar"/></dependency>' solr/core/ivy.xml
 

@@ -50,6 +50,7 @@ Source3: %{name}-bspmaster.init
 Source4: %{name}-groom.init
 Source5: %{name}.default
 Source6: bigtop.bom
+#BIGTOP_PATCH_FILES
 Requires: hadoop, bigtop-utils, zookeeper
 
 # Disable automatic Requires generation
@@ -160,6 +161,8 @@ Documentation for Apache Hama
   
 %prep
 %setup -n %{name}-%{hama_base_version}
+
+#BIGTOP_PATCH_COMMANDS
 
 %build
 bash $RPM_SOURCE_DIR/do-component-build

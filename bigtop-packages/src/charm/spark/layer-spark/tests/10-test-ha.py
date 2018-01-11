@@ -28,26 +28,15 @@ class TestDeployment(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.d = amulet.Deployment(series='xenial')
-        cls.d.add('spark-test-ha', 'cs:xenial/spark', units=3)
-        cls.d.add('zk-test', 'cs:xenial/zookeeper')
+        cls.d.add('spark-test-ha', charm='spark',
+                  units=3, constraints={'mem': '7G'})
+        cls.d.add('spark-test-zk', charm='zookeeper')
 
-        cls.d.relate('zk-test:zookeeper', 'spark-test-ha:zookeeper')
+        cls.d.relate('spark-test-zk:zookeeper', 'spark-test-ha:zookeeper')
         cls.d.expose('spark-test-ha')
 
         cls.d.setup(timeout=3600)
         cls.d.sentry.wait(timeout=3600)
-
-    @classmethod
-    def tearDownClass(cls):
-        # NB: seems to be a remove_service issue with amulet. However, the
-        # unit does still get removed. Pass OSError for now:
-        #  OSError: juju command failed ['remove-application', 'zk-test']:
-        #  ERROR allocation for service ...zk-test... owned by ... not found
-        try:
-            cls.d.remove_service('spark-test-ha', 'zk-test')
-        except OSError as e:
-            print("IGNORE: Amulet remove_service failed: {}".format(e))
-            pass
 
     def test_master_selected(self):
         """
@@ -79,9 +68,11 @@ class TestDeployment(unittest.TestCase):
         print("Removing master: {} ".format(master))
         self.d.remove_unit(master)
         time.sleep(120)
-
         self.d.sentry.wait_for_messages({"spark-test-ha": ["ready (standalone - HA)",
                                                            "ready (standalone - HA)"]}, timeout=900)
+
+        print("Waiting for remaining units to agree on master.")
+        time.sleep(120)
 
         masters_count = 0
         for unit in self.d.sentry['spark-test-ha']:

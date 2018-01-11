@@ -20,20 +20,17 @@ import re
 import unittest
 
 
-class TestDeploy(unittest.TestCase):
+class TestSmoke(unittest.TestCase):
     """
     Smoke test for Apache Bigtop Zeppelin.
     """
     @classmethod
     def setUpClass(cls):
         cls.d = amulet.Deployment(series='xenial')
-        cls.d.add('zeppelin', 'cs:xenial/zeppelin')
-        cls.d.add('spark', 'cs:xenial/spark')
-
-        cls.d.relate('zeppelin:spark', 'spark:client')
+        cls.d.add('zeppelin')
 
         cls.d.setup(timeout=1800)
-        cls.d.sentry.wait_for_messages({'zeppelin': re.compile('ready with')}, timeout=1800)
+        cls.d.sentry.wait_for_messages({'zeppelin': re.compile('ready')}, timeout=1800)
         cls.zeppelin = cls.d.sentry['zeppelin'][0]
 
     def test_zeppelin(self):

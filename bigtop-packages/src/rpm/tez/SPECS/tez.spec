@@ -62,6 +62,7 @@ Source3: tez.1
 Source4: tez-site.xml
 Source5: bigtop.bom
 Source6: init.d.tmpl
+#BIGTOP_PATCH_FILES
 BuildArch: noarch
 Requires: hadoop hadoop-hdfs hadoop-yarn hadoop-mapreduce
 
@@ -80,6 +81,8 @@ processing data. It is currently built atop Apache Hadoop YARN
 %prep
 %setup -q -n apache-%{name}-%{tez_base_version}-src
 
+#BIGTOP_PATCH_COMMANDS
+
 %build
 env TEZ_VERSION=%{version} bash %{SOURCE1}
 
@@ -93,10 +96,11 @@ sh %{SOURCE2} \
         --libexec-dir=%{libexec_tez} \
 	--prefix=$RPM_BUILD_ROOT
 
+%__rm -f $RPM_BUILD_ROOT/%{lib_tez}/slf4j-log4j12-*.jar
 %__ln_s -f /usr/lib/hadoop/hadoop-annotations.jar $RPM_BUILD_ROOT/%{lib_tez}/hadoop-annotations.jar
 %__ln_s -f /usr/lib/hadoop/hadoop-auth.jar $RPM_BUILD_ROOT/%{lib_tez}/hadoop-auth.jar
 %__ln_s -f /usr/lib/hadoop-mapreduce/hadoop-mapreduce-client-common.jar $RPM_BUILD_ROOT/%{lib_tez}/hadoop-mapreduce-client-common.jar
-%__ln_s -f /usr/lib/hadoop-mapreduce/hadoop-mapreduce-client-core.jar $RPM_BUILD_ROOT/%{lib_tez}/hhadoop-mapreduce-client-core.jar
+%__ln_s -f /usr/lib/hadoop-mapreduce/hadoop-mapreduce-client-core.jar $RPM_BUILD_ROOT/%{lib_tez}/hadoop-mapreduce-client-core.jar
 %__ln_s -f /usr/lib/hadoop-yarn/hadoop-yarn-server-web-proxy.jar $RPM_BUILD_ROOT/%{lib_tez}/hadoop-yarn-server-web-proxy.jar
 
 %pre
@@ -113,4 +117,4 @@ sh %{SOURCE2} \
 %{tez_home}
 %doc %{doc_tez}
 %{man_dir}/man1/tez.1.*
-/etc/tez/conf/tez-site.xml
+%config(noreplace) /etc/tez/conf/tez-site.xml

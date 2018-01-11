@@ -19,7 +19,10 @@ init() {
     echo "`facter ipaddress` `facter fqdn`" >> /etc/hosts
     cp /etc/puppet/hieradata/site.yaml.template /etc/puppet/hieradata/site.yaml
     sed -i -e "s/head.node.fqdn/`facter fqdn`/g" /etc/puppet/hieradata/site.yaml
-    puppet apply --parser future --modulepath=/bigtop-puppet/modules:/etc/puppet/modules /bigtop-puppet/manifests
+    if puppet --version | grep ^3 >/dev/null ; then
+       future="--parser future"
+    fi
+    puppet apply $future --modulepath=/bigtop-puppet/modules:/etc/puppet/modules:/usr/share/puppet/modules /bigtop-puppet/manifests
 }
 
 usage() {

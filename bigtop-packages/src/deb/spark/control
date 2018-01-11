@@ -23,7 +23,7 @@ Homepage: http://spark.apache.org/
 
 Package: spark-core
 Architecture: all
-Depends: adduser, bigtop-utils (>= 0.7), hadoop-client
+Depends: adduser, bigtop-utils (>= 0.7), hadoop-client, hadoop-yarn
 Description: Lightning-Fast Cluster Computing
  Spark is a MapReduce-like cluster computing framework designed to support
  low-latency iterative jobs and interactive use from an interpreter. It is
@@ -75,3 +75,8 @@ Package: spark-yarn-shuffle
 Architecture: all
 Description: Spark YARN Shuffle Service
  Spark YARN Shuffle Service
+
+Package: spark-sparkr
+Architecture: all
+Description: R package for Apache Spark
+ SparkR is an R package that provides a light-weight frontend to use Apache Spark from R

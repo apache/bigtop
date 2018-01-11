@@ -247,7 +247,8 @@ cp $RPM_SOURCE_DIR/hive-site.xml .
 /bin/bash %{SOURCE2} \
   --prefix=$RPM_BUILD_ROOT \
   --build-dir=%{hive_dist} \
-  --doc-dir=$RPM_BUILD_ROOT/%{doc_hive}
+  --doc-dir=$RPM_BUILD_ROOT/%{doc_hive} \
+  --hive-version=%{hive_base_version}
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
 %__install -d -m 0755 $RPM_BUILD_ROOT/etc/default/
@@ -262,7 +263,8 @@ cp $RPM_SOURCE_DIR/hive-site.xml .
 # We need to get rid of jars that happen to be shipped in other Bigtop packages
 %__rm -f $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/hbase-*.jar $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/zookeeper-*.jar
 %__ln_s  /usr/lib/zookeeper/zookeeper.jar  $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/
-%__ln_s  /usr/lib/hbase/hbase-common.jar /usr/lib/hbase/hbase-client.jar $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/
+%__ln_s  /usr/lib/hbase/hbase-common.jar /usr/lib/hbase/hbase-client.jar /usr/lib/hbase/hbase-hadoop-compat.jar /usr/lib/hbase/hbase-hadoop2-compat.jar $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/
+%__ln_s  /usr/lib/hbase/hbase-prefix-tree.jar /usr/lib/hbase/hbase-procedure.jar /usr/lib/hbase/hbase-protocol.jar /usr/lib/hbase/hbase-server.jar $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/
 
 # Workaround for BIGTOP-583
 %__rm -f $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/slf4j-log4j12-*.jar
@@ -333,18 +335,8 @@ fi
 %doc %{doc_hive}
 %{man_dir}/man1/hive.1.*
 %exclude %dir %{usr_lib_hive}
-%exclude %dir %{usr_lib_hive}/lib
-%exclude %{usr_lib_hive}/lib/hive-jdbc-*.jar
-%exclude %{usr_lib_hive}/lib/hive-metastore-*.jar
-%exclude %{usr_lib_hive}/lib/hive-serde-*.jar
-%exclude %{usr_lib_hive}/lib/hive-exec-*.jar
-%exclude %{usr_lib_hive}/lib/libthrift-*.jar
-%exclude %{usr_lib_hive}/lib/hive-service-*.jar
-%exclude %{usr_lib_hive}/lib/libfb303-*.jar
-%exclude %{usr_lib_hive}/lib/log4j-*.jar
-%exclude %{usr_lib_hive}/lib/commons-logging-*.jar
-%exclude %{usr_lib_hive}/lib/hbase-*.jar
-%exclude %{usr_lib_hive}/lib/hive-hbase-handler*.jar
+%exclude %dir %{usr_lib_hive}/jdbc
+%exclude %{usr_lib_hive}/jdbc/hive-jdbc-*.jar
 
 %files hbase
 %defattr(-,root,root,755)
@@ -354,16 +346,8 @@ fi
 %files jdbc
 %defattr(-,root,root,755)
 %dir %{usr_lib_hive}
-%dir %{usr_lib_hive}/lib
-%{usr_lib_hive}/lib/hive-jdbc-*.jar
-%{usr_lib_hive}/lib/hive-metastore-*.jar
-%{usr_lib_hive}/lib/hive-serde-*.jar
-%{usr_lib_hive}/lib/hive-exec-*.jar
-%{usr_lib_hive}/lib/libthrift-*.jar
-%{usr_lib_hive}/lib/hive-service-*.jar
-%{usr_lib_hive}/lib/libfb303-*.jar
-%{usr_lib_hive}/lib/log4j-*.jar
-%{usr_lib_hive}/lib/commons-logging-*.jar
+%dir %{usr_lib_hive}/jdbc
+%{usr_lib_hive}/jdbc/hive-jdbc-*.jar
 
 %files hcatalog
 %defattr(-,root,root,755)

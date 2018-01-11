@@ -51,6 +51,9 @@ public class TestImportTsv {
   private static final String OUTDIR = "/user/$USER/import_movies_output";
 
   private static final String HBASE_HOME = System.getenv("HBASE_HOME");
+  private static final String HBASE_RESOURCE = System.properties["test.resources.dir"]?
+			"${System.properties['test.resources.dir']}": ".";
+
   static {
     assertNotNull("HBASE_HOME has to be set to run this test",
       HBASE_HOME);
@@ -79,17 +82,18 @@ public class TestImportTsv {
         sh.getRet() == 0);
     }
     // load data into HDFS
-    sh.exec("hadoop fs -put movies.tsv $DATADIR1/items",
-      "hadoop fs -put movies.psv $DATADIR2/items");
+    sh.exec("hadoop fs -put $HBASE_RESOURCE/movies.tsv $DATADIR1/items",
+      "hadoop fs -put $HBASE_RESOURCE/movies.psv $DATADIR2/items");
     assertTrue("setup failed", sh.getRet() == 0);
   }
 
   @AfterClass
   public static void cleanUp() {
     // delete data and junk from HDFS
-    sh.exec("hadoop fs -rmr -skipTrash $DATADIR1",
-      "hadoop fs -rmr -skipTrash $DATADIR2",
-      "hadoop fs -rmr -skipTrash /user/$USER/partitions_*");
+    sh.exec("hadoop fs -rm -r -skipTrash $DATADIR1",
+      "hadoop fs -rm -r -skipTrash $DATADIR2",
+      "hadoop fs -rm -r -skipTrash /user/$USER/hbase*",
+      "hadoop fs -rm -r -skipTrash /user/$USER/orig_*");
     assertTrue("teardown failed", sh.getRet() == 0);
   }
 
@@ -200,7 +204,7 @@ public class TestImportTsv {
     Configuration conf = HBaseConfiguration.create();
     HBaseAdmin admin = new HBaseAdmin(conf);
     HTable table = new HTable(conf, Bytes.toBytes(tableName));
-    new File("movies.tsv").eachLine { line ->
+    new File("$HBASE_RESOURCE/movies.tsv").eachLine { line ->
       String[] tokens = line.split("\t");
       byte[] row = Bytes.toBytes(tokens[0]);
       Get g = new Get(row);

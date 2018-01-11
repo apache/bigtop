@@ -34,7 +34,7 @@ class TestIgniteHadoop {
   static String hadoopClassPath = "/usr/lib/ignite-hadoop/libs/*:/usr/lib/ignite-hadoop/libs/ignite-hadoop/*"
 
   static String cmdPrefix = "export HADOOP_CLASSPATH=$hadoopClassPath:\$HADOOP_CLASSPATH; " +
-    "export HADOOP_CONF_DIR=\$(pwd)/conf;"
+    "export HADOOP_CONF_DIR=\$(pwd)/conf;HADOOP_USER_NAME=hdfs"
 
 
   private static void execCommand(String cmd) {

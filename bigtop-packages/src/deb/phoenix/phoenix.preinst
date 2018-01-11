@@ -23,12 +23,13 @@ set -e
 
 case "$1" in
     install|upgrade)
-        if ! getent passwd phenix >/dev/null; then
-                # Adding system user: phenix.
+        getent group phoenix >/dev/null || groupadd -r phoenix
+        if ! getent passwd phoenix >/dev/null; then
+                # Adding system user: phoenix.
                 adduser \
                   --system \
-                  --group \
-                  --home /var/lib/phenix \
+                  --ingroup phoenix \
+                  --home /var/lib/phoenix \
                   --gecos "Phoenix User" \
                   --shell /bin/false \
                   phoenix >/dev/null

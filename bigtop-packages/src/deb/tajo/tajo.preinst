@@ -32,11 +32,12 @@ set -e
 
 case "$1" in
 	install|upgrade)
+		getent group tajo >/dev/null || groupadd -r tajo
 		if ! getent passwd tajo >/dev/null; then
 			# Adding system user: tajo .
 			adduser \
 			--system \
-			--group \
+			--ingroup tajo \
 			--home /var/lib/tajo \
 			--gecos "Tajo" \
 			--shell /bin/false \

@@ -20,19 +20,17 @@ set -ex
 
 HIVE_MAVEN_OPTS=" -Dhbase.version=$HBASE_VERSION \
 -Dzookeeper.version=$ZOOKEEPER_VERSION \
--Dhadoop.mr.rev=23 \
--Dhadoop.security.version=$HADOOP_VERSION \
--Dhadoop-23.version=$HADOOP_VERSION \
--Dhbase.hadoop2.version=$HBASE_VERSION \
--Dmvn.hadoop.profile=hadoop23 \
+-Dhadoop.version=$HADOOP_VERSION \
 -DskipTests \
--Dhbase.version.with.hadoop.version=$HBASE_VERSION \
 -Dtez.version=${TEZ_VERSION} \
--Dspark.version=${SPARK1_VERSION}
+-Dspark.version=${SPARK_VERSION}
 "
 
-export MAVEN_OPTS="-Xmx1500m -Xms1500m -XX:MaxPermSize=256m"
-mvn ${HIVE_MAVEN_OPTS} clean install -Phadoop-2,dist "$@"
+export MAVEN_OPTS="-Xmx1500m -Xms1500m"
+mvn ${HIVE_MAVEN_OPTS} clean install -Pdist "$@"
 
 mkdir -p build/dist
 tar -C build/dist --strip-components=1 -xzf packaging/target/apache-hive-${HIVE_VERSION}-bin.tar.gz
+
+# HIVE-13177 
+sed -i "s#jdbcStandaloneJarPath=\`ls \${HIVE_LIB}/hive-jdbc-\*-standalone.jar\`#jdbcStandaloneJarPath=#" build/dist/bin/ext/beeline.sh

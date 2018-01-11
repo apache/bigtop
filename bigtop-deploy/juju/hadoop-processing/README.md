@@ -38,10 +38,10 @@ and syslog activity.
 The applications that comprise this bundle are spread across 5 machines as
 follows:
 
-  * NameNode (HDFS)
-  * ResourceManager (YARN)
+  * NameNode v2.7.3
+  * ResourceManager v2.7.3
     * Colocated on the NameNode unit
-  * Slave (DataNode and NodeManager)
+  * Slave (DataNode and NodeManager) v2.7.3
     * 3 separate units
   * Client (Hadoop endpoint)
   * Plugin (Facilitates communication with the Hadoop cluster)
@@ -57,9 +57,8 @@ demands.
 
 # Deploying
 
-A working Juju installation is assumed to be present. If Juju is not yet set
-up, please follow the [getting-started][] instructions prior to deploying this
-bundle.
+This charm requires Juju 2.0 or greater. If Juju is not yet set up, please
+follow the [getting-started][] instructions prior to deploying this bundle.
 
 > **Note**: This bundle requires hardware resources that may exceed limits
 of Free-tier or Trial accounts on some clouds. To deploy to these
@@ -70,17 +69,9 @@ Deploy this bundle from the Juju charm store with the `juju deploy` command:
 
     juju deploy hadoop-processing
 
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, use [juju-quickstart][] with the following syntax: `juju quickstart
-hadoop-processing`.
-
 Alternatively, deploy a locally modified `bundle.yaml` with:
 
     juju deploy /path/to/bundle.yaml
-
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, use [juju-quickstart][] with the following syntax: `juju quickstart
-/path/to/bundle.yaml`.
 
 The charms in this bundle can also be built from their source layers in the
 [Bigtop charm repository][].  See the [Bigtop charm README][] for instructions
@@ -93,7 +84,6 @@ mirror options. See [Configuring Models][] for more information.
 
 [getting-started]: https://jujucharms.com/docs/stable/getting-started
 [bundle.yaml]: https://github.com/apache/bigtop/blob/master/bigtop-deploy/juju/hadoop-processing/bundle.yaml
-[juju-quickstart]: https://launchpad.net/juju-quickstart
 [Bigtop charm repository]: https://github.com/apache/bigtop/tree/master/bigtop-packages/src/charm
 [Bigtop charm README]: https://github.com/apache/bigtop/blob/master/bigtop-packages/src/charm/README.md
 [Configuring Models]: https://jujucharms.com/docs/stable/models-config
@@ -127,24 +117,15 @@ Run the smoke-test actions as follows:
     juju run-action resourcemanager/0 smoke-test
     juju run-action slave/0 smoke-test
 
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju action do <application>/0 smoke-test`.
-
 Watch the progress of the smoke test actions with:
 
     watch -n 2 juju show-action-status
-
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju action status`.
 
 Eventually, all of the actions should settle to `status: completed`.  If
 any report `status: failed`, that application is not working as expected. Get
 more information about a specific smoke test with:
 
     juju show-action-output <action-id>
-
-> **Note**: The above assumes Juju 2.0 or greater. If using an earlier version
-of Juju, the syntax is `juju action fetch <action-id>`.
 
 ## Utilities
 Applications in this bundle include Hadoop command line and web utilities that
@@ -156,7 +137,7 @@ of YARN NodeManager units with the following:
     juju run --application namenode "su hdfs -c 'hdfs dfsadmin -report'"
     juju run --application resourcemanager "su yarn -c 'yarn node -list'"
 
-To access the HDFS web console, find the `PUBLIC-ADDRESS` of the namenode
+To access the HDFS web console, find the `Public address` of the namenode
 application and expose it:
 
     juju status namenode
@@ -167,7 +148,7 @@ The web interface will be available at the following URL:
     http://NAMENODE_PUBLIC_IP:50070
 
 Similarly, to access the Resource Manager web consoles, find the
-`PUBLIC-ADDRESS` of the resourcemanager application and expose it:
+`Public address` of the resourcemanager application and expose it:
 
     juju status resourcemanager
     juju expose resourcemanager
@@ -183,7 +164,7 @@ The YARN and Job History web interfaces will be available at the following URLs:
 This bundle includes Ganglia for system-level monitoring of the namenode,
 resourcemanager, slave, and client units. Metrics are sent to a centralized
 ganglia unit for easy viewing in a browser. To view the ganglia web interface,
-find the `PUBLIC-ADDRESS` of the Ganglia application and expose it:
+find the `Public address` of the Ganglia application and expose it:
 
     juju status ganglia
     juju expose ganglia
@@ -270,6 +251,18 @@ Multiple units may be added at once.  For example, add four more slave units:
     juju add-unit -n4 slave
 
 
+# Issues
+
+Apache Bigtop tracks issues using JIRA (Apache account required). File an
+issue for this bundle at:
+
+https://issues.apache.org/jira/secure/CreateIssue!default.jspa
+
+Ensure `Bigtop` is selected as the project. Typically, bundle issues are filed
+in the `deployment` component with the latest stable release selected as the
+affected version. Any uncertain fields may be left blank.
+
+
 # Contact Information
 
 - <bigdata@lists.ubuntu.com>
@@ -280,6 +273,6 @@ Multiple units may be added at once.  For example, add four more slave units:
 - [Apache Bigtop home page](http://bigtop.apache.org/)
 - [Apache Bigtop issue tracking](http://bigtop.apache.org/issue-tracking.html)
 - [Apache Bigtop mailing lists](http://bigtop.apache.org/mail-lists.html)
-- [Juju Bigtop charms](https://jujucharms.com/q/apache/bigtop)
+- [Juju Big Data](https://jujucharms.com/big-data)
+- [Juju Bigtop charms](https://jujucharms.com/q/bigtop)
 - [Juju mailing list](https://lists.ubuntu.com/mailman/listinfo/juju)
-- [Juju community](https://jujucharms.com/community)

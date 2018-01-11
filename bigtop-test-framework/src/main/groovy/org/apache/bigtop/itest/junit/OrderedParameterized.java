@@ -44,7 +44,7 @@ import java.util.*;
  * and testcases within the same run stage have no guaranteed order of execution.
  * 2. it lets give names to the parameterized testcases via making the factory method
  * &#064;Parameters return a Map (mapping names to testcases) instead of a List.
- * <p/>
+ * <p>
  * Here's how to use it:
  * <pre>
  * public class Example {
@@ -64,8 +64,8 @@ import java.util.*;
  *    }
  *
  *    &#064;Parameters
- *    public static Map<String, Object[]> generateTests() {
- *      HashMap<String, Object[]> res = new HashMap();
+ *    public static Map&lt;String, Object[]&gt; generateTests() {
+ *      HashMap&lt;String, Object[]&gt; res = new HashMap();
  *      res.put("test name", new Object[] {1, 2});
  * return res;
  *    }

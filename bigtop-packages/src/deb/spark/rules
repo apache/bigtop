@@ -22,6 +22,10 @@ export DH_VERBOSE=1
 # This has to be exported to make some magic below work.
 export DH_OPTIONS
 
+lib_spark=/usr/lib/spark
+lib_hadoop_client=/usr/lib/hadoop/client
+lib_hadoop_yarn=/usr/lib/hadoop-yarn/
+
 %:
 	dh $@
 
@@ -45,3 +49,5 @@ override_dh_install:
 	dh_install
 	# BIGTOP-2588 drop datanucleus jars from spark-core
 	rm -Rf debian/spark-core/usr/lib/spark/jars/datanucleus*
+
+	rm -f debian/tmp/${lib_spark}/jars/hadoop-*.jar

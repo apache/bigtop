@@ -22,15 +22,16 @@ from charms.reactive import is_state
 
 
 if not is_state('kafka.started'):
-    kafkautils.fail('Kafka service not yet ready', 'Please deploy kafka and required relations')
+    kafkautils.fail('Kafka service not yet ready')
 
 
 # List zookeepers if kafka is running
 if host.service_available('kafka-server') and host.service_running('kafka-server'):
     zookeepers = kafkautils.get_zookeepers()
     if zookeepers:
-        hookenv.action_set({'output': zookeepers})
+        hookenv.action_set({'raw': zookeepers})
+        hookenv.action_set({'outcome': 'success'})
     else:
-        kafkautils.fail('No zookeeper.connect string found', 'Please relate kafka to zookeeper')
+        kafkautils.fail('No zookeeper.connect string found')
 else:
-    kafkautils.fail('Kafka service is not running', 'Please start kafka-server')
+    kafkautils.fail('kafka-server service is not running')

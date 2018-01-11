@@ -6,6 +6,5 @@ hadoop_cluster_node::cluster_components:
   - hdfs 
   - yarn
   - mapreduce
-bigtop::bigtop_repo_uri: http://bigtop-repos.s3.amazonaws.com/releases/1.2.0/ubuntu/16.04/x86_64
-bigtop::jdk_package_name: openjdk-8-jdk
+bigtop::bigtop_repo_uri: http://repos.bigtop.apache.org/releases/1.2.1/ubuntu/16.04/x86_64
 

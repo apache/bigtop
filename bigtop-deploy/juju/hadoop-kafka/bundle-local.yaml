@@ -1,3 +1,8 @@
+series: xenial
+description: >
+  This is a fourteen unit big data cluster that includes Hadoop 2.7 and
+  Kafka 0.10 from Apache Bigtop. Use it to store streams of data in HDFS
+  for future analysis with MapReduce. It will run on 9 machines in your cloud.
 services:
   namenode:
     charm: "/home/ubuntu/charms/xenial/hadoop-namenode"
@@ -34,7 +39,7 @@ services:
       gui-x: "1000"
       gui-y: "400"
   client:
-    charm: "cs:xenial/hadoop-client-3"
+    charm: "cs:xenial/hadoop-client-8"
     constraints: "mem=3G"
     num_units: 1
     annotations:
@@ -44,7 +49,7 @@ services:
       - "4"
 # TODO: Charm bigtop flume
   flume-hdfs:
-    charm: "cs:~bigdata-dev/xenial/apache-flume-hdfs-37"
+    charm: "cs:xenial/apache-flume-hdfs-7"
     num_units: 1
     annotations:
       gui-x: "1500"
@@ -71,9 +76,10 @@ services:
       gui-y: "800"
     to:
       - "8"
+# TODO: Charm bigtop flume
 # NOTE: flume-kafka cannot be colocated with flume-hdfs as they both use /etc/flume/conf
   flume-kafka:
-    charm: "cs:~bigdata-dev/xenial/apache-flume-kafka-11"
+    charm: "cs:xenial/apache-flume-kafka-1"
     num_units: 1
     annotations:
       gui-x: "1500"
@@ -81,7 +87,7 @@ services:
     to:
       - "8"
   ganglia:
-    charm: "cs:~bigdata-dev/xenial/ganglia-5"
+    charm: "cs:xenial/ganglia-12"
     num_units: 1
     annotations:
       gui-x: "0"
@@ -89,7 +95,7 @@ services:
     to:
       - "4"
   ganglia-node:
-    charm: "cs:~bigdata-dev/xenial/ganglia-node-7"
+    charm: "cs:xenial/ganglia-node-7"
     annotations:
       gui-x: "250"
       gui-y: "400"
@@ -106,7 +112,6 @@ services:
     annotations:
       gui-x: "750"
       gui-y: "400"
-series: xenial
 relations:
   - [resourcemanager, namenode]
   - [namenode, slave]
@@ -133,19 +138,28 @@ relations:
 machines:
   "0":
     series: "xenial"
+    constraints: "mem=7G root-disk=32G"
   "1":
     series: "xenial"
+    constraints: "mem=7G root-disk=32G"
   "2":
     series: "xenial"
+    constraints: "mem=7G root-disk=32G"
   "3":
     series: "xenial"
+    constraints: "mem=7G root-disk=32G"
   "4":
     series: "xenial"
+    constraints: "mem=3G"
   "5":
     series: "xenial"
+    constraints: "mem=3G root-disk=32G"
   "6":
     series: "xenial"
+    constraints: "mem=3G root-disk=32G"
   "7":
     series: "xenial"
+    constraints: "mem=3G root-disk=32G"
   "8":
     series: "xenial"
+    constraints: "mem=3G"

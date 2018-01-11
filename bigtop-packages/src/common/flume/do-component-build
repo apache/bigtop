@@ -18,7 +18,7 @@ set -ex
 
 . `dirname $0`/bigtop.bom
 
-export MAVEN_OPTS="-Xmx1536m -Xms256m -XX:MaxPermSize=256m"
+export MAVEN_OPTS="-Xmx1536m -Xms256m"
 
 sed -i -e \
 's#<artifactId>asynchbase</artifactId>#<artifactId>asynchbase</artifactId>\n<exclusions>\n<exclusion>\n<groupId>org.apache.zookeeper</groupId>\n<artifactId>zookeeper</artifactId>\n</exclusion>\n</exclusions>#' flume-ng-sinks/flume-ng-hbase-sink/pom.xml
@@ -30,7 +30,6 @@ sed -i -e \
 mvn -DskipTests  \
   -Dhadoop2.version=$HADOOP_VERSION        \
   -Dhbase.version=${HBASE_VERSION} \
-  -Dkite.version=${KITE_VERSION} \
   -Dhive.version=${HIVE_VERSION} \
   -Dkafka.version=${KAFKA_VERSION} \
   clean install "$@"

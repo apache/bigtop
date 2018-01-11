@@ -24,6 +24,8 @@
 %define bin /usr/bin
 %define man_dir /usr/share/man
 %define spark_services master worker history-server thriftserver
+%define lib_hadoop_client /usr/lib/hadoop/client
+%define lib_hadoop_yarn /usr/lib/hadoop-yarn/
 
 %if  %{?suse_version:1}0
 %define doc_spark %{_docdir}/spark
@@ -54,7 +56,7 @@ Source6: init.d.tmpl
 Source7: spark-history-server.svc
 Source8: spark-thriftserver.svc
 Source9: bigtop.bom
-Requires: bigtop-utils >= 0.7, hadoop-client
+Requires: bigtop-utils >= 0.7, hadoop-client, hadoop-yarn
 Requires(preun): /sbin/service
 
 %global initd_dir %{_sysconfdir}/init.d
@@ -141,6 +143,13 @@ Group: Development/Libraries
 %description -n spark-yarn-shuffle
 Spark YARN Shuffle Service
 
+%package -n spark-sparkr
+Summary: R package for Apache Spark
+Group: Development/Libraries
+
+%description -n spark-sparkr
+SparkR is an R package that provides a light-weight frontend to use Apache Spark from R.
+
 %prep
 %setup -n %{spark_name}-%{spark_base_version}
 
@@ -156,6 +165,8 @@ bash $RPM_SOURCE_DIR/install_spark.sh \
           --source-dir=$RPM_SOURCE_DIR \
           --prefix=$RPM_BUILD_ROOT  \
           --doc-dir=%{doc_spark}
+
+%__rm -f $RPM_BUILD_ROOT/%{lib_spark}/jars/hadoop-*.jar
 
 for service in %{spark_services}
 do
@@ -210,6 +221,9 @@ done
 %attr(0755,spark,spark) %{var_log_spark}
 %{bin}/spark-*
 %{bin}/find-spark-home
+%exclude %{lib_spark}/R
+%exclude %{lib_spark}/bin/sparkR
+%exclude %{bin}/sparkR
 
 %files -n spark-python
 %defattr(-,root,root,755)
@@ -230,6 +244,12 @@ done
 %defattr(-,root,root,755)
 %{lib_spark}/yarn/spark-*-yarn-shuffle.jar
 %{lib_spark}/yarn/lib/spark-yarn-shuffle.jar
+
+%files -n spark-sparkr
+%defattr(-,root,root,755)
+%{lib_spark}/R
+%{lib_spark}/bin/sparkR
+%{bin}/sparkR
 
 %define service_macro() \
 %files -n %1 \

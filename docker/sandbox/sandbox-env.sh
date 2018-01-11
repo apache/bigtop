@@ -15,10 +15,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-RPMS=(centos-6 centos-7 fedora-20)
-DEBS=(debian-8 ubuntu-14.04)
+BIGTOP_VERSION=1.2.1
+# REPO="YOUR CUSTOM REPO"
 
-RPM_JDK=java-1.8.0-openjdk-devel.x86_64
-DEB_JDK=openjdk-8-jdk
-
-BIGTOP_VERSION=1.2.0
+RPMS=( \
+    centos-6 \
+    centos-7 \
+    centos-7-aarch64 \
+    fedora-25 \
+    fedora-25-aarch64 \
+    opensuse-42.1 \
+)
+DEBS=( \
+    debian-8 \
+    debian-8-aarch64 \
+    debian-9-aarch64 \
+    ubuntu-16.04 \
+)

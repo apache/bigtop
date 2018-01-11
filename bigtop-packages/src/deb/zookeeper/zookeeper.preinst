@@ -32,11 +32,12 @@ set -e
 
 case "$1" in
     install|upgrade)
+        getent group zookeeper >/dev/null || groupadd -r zookeeper
         if ! getent passwd zookeeper >/dev/null; then
                 # Adding system user: zookeeper .
                 adduser \
                   --system \
-                  --group \
+                  --ingroup zookeeper \
                   --home /var/lib/zookeeper \
                   --gecos "ZooKeeper User" \
                   --shell /bin/false \

@@ -13,9 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-solr::server { "test-solr-server": 
-  port        => "1978",
-  port_admin  => "1979",
+solr::server { "test-solr-server":
+  port        => "8983",
+  port_admin  => "8984",
   zk          => "localhost:2181",
   root_url    => "hdfs://localhost:8020/solr",
   kerberos_realm => "KRB.YOU.ORG",
