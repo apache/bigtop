@@ -16,10 +16,6 @@
 
 set -e
 
-#base_path=`pwd`
-#build_support_dir=`echo ${base_path%bigtop*}`
-
-
 . `dirname $0`/bigtop.bom
 
 mkdir build
