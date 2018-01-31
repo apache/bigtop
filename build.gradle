@@ -138,6 +138,7 @@ rat {
        "provisioner/docker/config/hiera.yaml",
        "provisioner/docker/config/hieradata/PLACEHOLDER",
        "provisioner/docker/config/hosts",
+       "bigtop_toolchain/files/*.patch",
   ]
 }
 
