@@ -52,11 +52,18 @@ fi
 
 mkdir build
 mkdir build/src
+ 
+# For build environments that don't support downloads from Internet, support a local source.
+if [ ! -z ${LOCAL_DOWNLOADS_DIR-} ] && [ -f $LOCAL_DOWNLOADS_DIR/tomcat/apache-tomcat-$BIGTOP_TOMCAT_VERSION.tar.gz ]; then
+  BIGTOP_TOMCAT_DOWNLOAD_URL=file://$LOCAL_DOWNLOADS_DIR/tomcat/apache-tomcat-$BIGTOP_TOMCAT_VERSION.tar.gz
+else
+  BIGTOP_TOMCAT_DOWNLOAD_URL=http://archive.apache.org/dist/tomcat/tomcat-6/v${BIGTOP_TOMCAT_VERSION}/bin/apache-tomcat-${BIGTOP_TOMCAT_VERSION}.tar.gz
+fi
 
 # Build artifacts
 MAVEN_OPTS="-Dzookeeper.version=$ZOOKEEPER_VERSION"
 MAVEN_OPTS="$MAVEN_OPTS -DskipTests -DskipTest -DskipITs"
-mvn $ANT_OPTS $BUNDLE_SNAPPY -Pdist -Pnative -Psrc -Dtar ${MAVEN_OPTS} -Dtomcat.version=${BIGTOP_TOMCAT_VERSION} -Dtomcat.download.url="http://archive.apache.org/dist/tomcat/tomcat-6/v${BIGTOP_TOMCAT_VERSION}/bin/apache-tomcat-${BIGTOP_TOMCAT_VERSION}.tar.gz" install package "$@"
+mvn $ANT_OPTS $BUNDLE_SNAPPY -Pdist -Pnative -Psrc -Dtar ${MAVEN_OPTS} -Dtomcat.version=${BIGTOP_TOMCAT_VERSION} -Dtomcat.download.url="$BIGTOP_TOMCAT_DOWNLOAD_URL" install package "$@"
 mvn site site:stage ${MAVEN_OPTS} $@
 
 (cd build ; tar --strip-components=1 -xzvf  ../hadoop-dist/target/hadoop-${HADOOP_VERSION}.tar.gz)
