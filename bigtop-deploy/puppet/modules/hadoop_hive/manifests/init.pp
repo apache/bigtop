@@ -47,6 +47,8 @@ class hadoop_hive {
 
   class common_config ($hbase_master = "",
                        $hbase_zookeeper_quorum = "",
+                       $hive_zookeeper_quorum = "",
+                       $hive_support_concurrency = false,
                        $kerberos_realm = "",
                        $metastore_uris = "",
                        $server2_thrift_port = "10000",

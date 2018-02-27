@@ -36,6 +36,7 @@ def report_status():
     database_joined = is_state('database.connected')
     database_ready = is_state('database.available')
     hive_installed = is_state('hive.installed')
+
     if not hadoop_joined:
         hookenv.status_set('blocked',
                            'waiting for relation to hadoop plugin')
@@ -78,9 +79,17 @@ def install_hive(hadoop):
     else:
         hbserver = None
 
+    # Get zookeeper connection dict if it's available
+    if is_state('zookeeper.ready'):
+        zk = RelationBase.from_state('zookeeper.ready')
+        zks = zk.zookeepers()
+    else:
+        zks = None
+
     # Use this to determine if we need to reinstall
     deployment_matrix = {
         'hbase': hbserver,
+        'zookeepers': zks
     }
 
     # Handle nuances when installing versus re-installing
@@ -99,8 +108,9 @@ def install_hive(hadoop):
 
     hookenv.status_set('maintenance', '{} hive'.format(prefix))
     hookenv.log("{} hive with: {}".format(prefix, deployment_matrix))
+
     hive = Hive()
-    hive.install(hbase=hbserver)
+    hive.install(hbase=hbserver, zk_units=zks)
     hive.restart()
     hive.open_ports()
     set_state('hive.installed')

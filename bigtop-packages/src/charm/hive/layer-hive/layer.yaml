@@ -5,6 +5,7 @@ includes:
   - 'interface:hbase'
   - 'interface:hive'
   - 'interface:mysql'
+  - 'interface:zookeeper'
 options:
   basic:
     packages:
