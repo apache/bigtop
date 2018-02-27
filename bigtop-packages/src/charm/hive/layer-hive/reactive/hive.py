@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from charmhelpers.core import hookenv
+from charmhelpers.core import hookenv, unitdata
 from charms.layer.apache_bigtop_base import get_layer_opts, get_package_version
 from charms.layer.bigtop_hive import Hive
 from charms.reactive import (
@@ -36,6 +36,7 @@ def report_status():
     database_joined = is_state('database.connected')
     database_ready = is_state('database.available')
     hive_installed = is_state('hive.installed')
+
     if not hadoop_joined:
         hookenv.status_set('blocked',
                            'waiting for relation to hadoop plugin')
@@ -54,6 +55,12 @@ def report_status():
     elif hive_installed and database_ready:
         hookenv.status_set('active',
                            'ready (remote metastore)')
+
+
+@when('zookeeper.ready')
+def set_zk_hosts(zk):
+    kv = unitdata.kv()
+    kv.set('zookeepers', zk.zookeepers())
 
 
 @when('bigtop.available', 'hadoop.ready')
@@ -78,9 +85,14 @@ def install_hive(hadoop):
     else:
         hbserver = None
 
+    # Get zookeepers or None
+    kv = unitdata.kv()
+    zks = kv.get('zookeepers', None)
+
     # Use this to determine if we need to reinstall
     deployment_matrix = {
         'hbase': hbserver,
+        'zookeepers': zks
     }
 
     # Handle nuances when installing versus re-installing
@@ -99,8 +111,9 @@ def install_hive(hadoop):
 
     hookenv.status_set('maintenance', '{} hive'.format(prefix))
     hookenv.log("{} hive with: {}".format(prefix, deployment_matrix))
+
     hive = Hive()
-    hive.install(hbase=hbserver)
+    hive.install(hbase=hbserver, zk_units=zks)
     hive.restart()
     hive.open_ports()
     set_state('hive.installed')
