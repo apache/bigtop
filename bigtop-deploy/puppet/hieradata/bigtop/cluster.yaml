@@ -192,6 +192,9 @@ hadoop_hive::common_config::hbase_zookeeper_quorum: "%{hiera('hadoop_hbase::comm
 hadoop_hive::common_config::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 hadoop_hive::common_config::metastore_uris: "thrift://%{hiera('bigtop::hadoop_head_node')}:9083"
 
+hadoop_hive::common_config::hive_zookeeper_quorum: "%{hiera('hadoop_hive::common_config::hive_zookeeper_quorum')}"
+hadoop_hive::common_config::hive_support_concurrency: "%{hiera('hadoop_hive::common_config::hive_support_concurrency')}"
+
 # tez
 hadoop::common::tez_conf_dir: "/etc/tez/conf"
 hadoop::common::tez_jars: "/usr/lib/tez"

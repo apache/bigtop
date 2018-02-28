@@ -27,6 +27,9 @@ from charms.reactive import (
 from charms.reactive.helpers import data_changed
 
 
+KV = unitdata.kv()
+
+
 @when('bigtop.available')
 def report_status():
     hadoop_joined = is_state('hadoop.joined')
@@ -59,8 +62,7 @@ def report_status():
 
 @when('zookeeper.ready')
 def set_zk_hosts(zk):
-    kv = unitdata.kv()
-    kv.set('zookeepers', zk.zookeepers())
+    KV.set('zookeepers', zk.zookeepers())
 
 
 @when('bigtop.available', 'hadoop.ready')
@@ -86,8 +88,7 @@ def install_hive(hadoop):
         hbserver = None
 
     # Get zookeepers or None
-    kv = unitdata.kv()
-    zks = kv.get('zookeepers', None)
+    zks = KV.get('zookeepers', None)
 
     # Use this to determine if we need to reinstall
     deployment_matrix = {
