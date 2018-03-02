@@ -115,10 +115,19 @@ class Zookeeper(object):
             "hadoop_zookeeper::server::myid": local_unit().split("/")[1],
             "hadoop_zookeeper::server::ensemble": self.read_peers()
         }
-        network_interface = config().get('network_interface')
+        conf = config()
+        network_interface = conf.get('network_interface')
+        autopurge_purge_interval = conf.get('autopurge_purge_interval')
+        autopurge_snap_retain_count = conf.get('autopurge_snap_retain_count')
         if network_interface:
             key = "hadoop_zookeeper::server::client_bind_addr"
             override[key] = Bigtop().get_ip_for_interface(network_interface)
+        if autopurge_purge_interval:
+            key = "hadoop_zookeeper::server::autopurge_purge_interval"
+            override[key] = autopurge_purge_interval
+        if autopurge_snap_retain_count:
+            key = "hadoop_zookeeper::server::autopurge_snap_retain_count"
+            override[key] = autopurge_snap_retain_count
 
         return override
 

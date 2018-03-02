@@ -40,6 +40,12 @@ def install_zookeeper():
     data_changed(
         'zk.network_interface',
         hookenv.config().get('network_interface'))
+    data_changed(
+        'zk.autopurge_purge_interval',
+        hookenv.config().get('autopurge_purge_interval'))
+    data_changed(
+        'zk.autopurge_snap_retain_count',
+        hookenv.config().get('autopurge_snap_retain_count'))
     zookeeper.install()
     zookeeper.open_ports()
     set_state('zookeeper.installed')
@@ -71,6 +77,20 @@ def update_network_interface():
     network_interface = hookenv.config().get('network_interface')
     if data_changed('zk.network_interface', network_interface):
         _restart_zookeeper('updating network interface')
+
+
+@when('zookeeper.started')
+def update_autopurge_purge_interval():
+    purge_interval = hookenv.config().get('autopurge_purge_interval')
+    if data_changed('zk.autopurge_purge_interval', purge_interval):
+        _restart_zookeeper('updating snapshot purge interval')
+
+
+@when('zookeeper.started')
+def update_autopurge_snap_retain_count():
+    snap_retain = hookenv.config().get('autopurge_snap_retain_count')
+    if data_changed('zk.autopurge_snap_retain_count', snap_retain):
+        _restart_zookeeper('updating number of retained snapshots')
 
 
 @when('zookeeper.started', 'zookeeper.joined')
