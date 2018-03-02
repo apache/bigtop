@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from charmhelpers.core import hookenv, unitdata
+from charmhelpers.core import hookenv
 from charms.layer.apache_bigtop_base import get_layer_opts, get_package_version
 from charms.layer.bigtop_hive import Hive
 from charms.reactive import (
@@ -25,9 +25,6 @@ from charms.reactive import (
     when_not,
 )
 from charms.reactive.helpers import data_changed
-
-
-KV = unitdata.kv()
 
 
 @when('bigtop.available')
@@ -60,11 +57,6 @@ def report_status():
                            'ready (remote metastore)')
 
 
-@when('zookeeper.ready')
-def set_zk_hosts(zk):
-    KV.set('zookeepers', zk.zookeepers())
-
-
 @when('bigtop.available', 'hadoop.ready')
 def install_hive(hadoop):
     '''
@@ -87,8 +79,12 @@ def install_hive(hadoop):
     else:
         hbserver = None
 
-    # Get zookeepers or None
-    zks = KV.get('zookeepers', None)
+    # Get zookeeper connection dict if it's available
+    if is_state('zookeeper.ready'):
+        zk = RelationBase.from_state('zookeeper.ready')
+        zks = zk.zookeepers()
+    else:
+        zks = None
 
     # Use this to determine if we need to reinstall
     deployment_matrix = {
