@@ -25,7 +25,7 @@ class Hive(object):
         self.dist_config = utils.DistConfig(
             data=layer.options('apache-bigtop-base'))
 
-    def install(self, hbase=None):
+    def install(self, hbase=None, zk_units=None):
         '''
         Trigger the Bigtop puppet recipe that handles the Hive service.
         '''
@@ -36,23 +36,37 @@ class Hive(object):
         # Prep config
         roles = ['hive-client', 'hive-metastore', 'hive-server2']
         metastore = "thrift://{}:9083".format(hookenv.unit_private_ip())
+
         if hbase:
             roles.append('hive-hbase')
             hb_connect = "{}:{}".format(hbase['host'], hbase['master_port'])
-            zk_connect = hbase['zk_connect']
+            zk_hbase_connect = hbase['zk_connect']
         else:
             hb_connect = ""
-            zk_connect = ""
+            zk_hbase_connect = ""
+
+        if zk_units:
+            hive_support_concurrency = True
+            zk_hive_connect = self.get_zk_connect(zk_units)
+        else:
+            hive_support_concurrency = False
+            zk_hive_connect = ""
 
         override = {
             'hadoop_hive::common_config::hbase_master': hb_connect,
-            'hadoop_hive::common_config::hbase_zookeeper_quorum': zk_connect,
+            'hadoop_hive::common_config::hbase_zookeeper_quorum':
+                zk_hbase_connect,
+            'hadoop_hive::common_config::hive_zookeeper_quorum':
+                zk_hive_connect,
+            'hadoop_hive::common_config::hive_support_concurrency':
+                hive_support_concurrency,
             'hadoop_hive::common_config::metastore_uris': metastore,
             'hadoop_hive::common_config::server2_thrift_port':
                 self.dist_config.port('hive-thrift'),
             'hadoop_hive::common_config::server2_thrift_http_port':
                 self.dist_config.port('hive-thrift-web'),
         }
+
         bigtop = Bigtop()
         bigtop.render_site_yaml(roles=roles, overrides=override)
         bigtop.trigger_puppet()
@@ -60,7 +74,16 @@ class Hive(object):
         # Bigtop doesn't create a hive-env.sh, but we need it for heap config
         hive_env = self.dist_config.path('hive_conf') / 'hive-env.sh'
         if not hive_env.exists():
-            (self.dist_config.path('hive_conf') / 'hive-env.sh.template').copy(hive_env)
+            (self.dist_config.path('hive_conf') / 'hive-env.sh.template').copy(
+                hive_env)
+
+    def get_zk_connect(self, zk_units):
+        zks = []
+        for unit in zk_units:
+            ip = utils.resolve_private_address(unit['host'])
+            zks.append(ip)
+        zks.sort()
+        return ",".join(zks)
 
     def configure_hive(self):
         '''
@@ -69,35 +92,44 @@ class Hive(object):
         config = hookenv.config()
         hive_env = self.dist_config.path('hive_conf') / 'hive-env.sh'
         utils.re_edit_in_place(hive_env, {
-            r'.*export HADOOP_HEAPSIZE *=.*': 'export HADOOP_HEAPSIZE=%s' % config['heap'],
+            r'.*export HADOOP_HEAPSIZE *=.*':
+                'export HADOOP_HEAPSIZE=%s' % config['heap'],
         })
 
     def configure_remote_db(self, mysql):
         hive_site = self.dist_config.path('hive_conf') / 'hive-site.xml'
-        jdbc_url = "jdbc:mysql://{}:{}/{}?createDatabaseIfNotExist=true".format(
-            mysql.host(), mysql.port(), mysql.database()
-        )
+        jdbc_url = \
+            "jdbc:mysql://{}:{}/{}?createDatabaseIfNotExist=true".format(
+                mysql.host(), mysql.port(), mysql.database()
+            )
         with utils.xmlpropmap_edit_in_place(hive_site) as props:
             props['javax.jdo.option.ConnectionURL'] = jdbc_url
             props['javax.jdo.option.ConnectionUserName'] = mysql.user()
             props['javax.jdo.option.ConnectionPassword'] = mysql.password()
-            props['javax.jdo.option.ConnectionDriverName'] = "com.mysql.jdbc.Driver"
+            props['javax.jdo.option.ConnectionDriverName'] = \
+                "com.mysql.jdbc.Driver"
 
         hive_env = self.dist_config.path('hive_conf') / 'hive-env.sh'
         utils.re_edit_in_place(hive_env, {
-            r'.*export HIVE_AUX_JARS_PATH *=.*': 'export HIVE_AUX_JARS_PATH=/usr/share/java/mysql-connector-java.jar',
+            r'.*export HIVE_AUX_JARS_PATH *=.*':
+            ('export HIVE_AUX_JARS_PATH='
+             '/usr/share/java/mysql-connector-java.jar'),
         })
 
         # Now that we have db connection info, init our schema (only once)
         remote_db = hookenv.remote_service_name()
         if not unitdata.kv().get('hive.schema.initialized.%s' % remote_db):
-            tool_path = "{}/bin/schematool".format(self.dist_config.path('hive'))
-            utils.run_as('ubuntu', tool_path, '-initSchema', '-dbType', 'mysql')
+            tool_path = "{}/bin/schematool".format(
+                self.dist_config.path('hive'))
+            utils.run_as(
+                'ubuntu', tool_path, '-initSchema', '-dbType', 'mysql')
             unitdata.kv().set('hive.schema.initialized.%s' % remote_db, True)
             unitdata.kv().flush(True)
 
     def configure_local_db(self):
-        local_url = 'jdbc:derby:;databaseName=/var/lib/hive/metastore/metastore_db;create=true'
+        local_url = \
+            ('jdbc:derby:;databaseName='
+             '/var/lib/hive/metastore/metastore_db;create=true')
         local_driver = 'org.apache.derby.jdbc.EmbeddedDriver'
         hive_site = self.dist_config.path('hive_conf') / 'hive-site.xml'
         with utils.xmlpropmap_edit_in_place(hive_site) as props:
@@ -108,7 +140,8 @@ class Hive(object):
 
         hive_env = self.dist_config.path('hive_conf') / 'hive-env.sh'
         utils.re_edit_in_place(hive_env, {
-            r'.*export HIVE_AUX_JARS_PATH *=.*': '# export HIVE_AUX_JARS_PATH=',
+            r'.*export HIVE_AUX_JARS_PATH *=.*':
+            '# export HIVE_AUX_JARS_PATH=',
         })
 
     def restart(self):

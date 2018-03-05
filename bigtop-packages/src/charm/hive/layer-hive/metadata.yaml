@@ -17,3 +17,5 @@ requires:
     interface: mysql
   hbase:
     interface: hbase
+  zookeeper:
+    interface: zookeeper
