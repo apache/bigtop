@@ -37,26 +37,35 @@ class Hive(object):
         roles = ['hive-client', 'hive-metastore', 'hive-server2']
         metastore = "thrift://{}:9083".format(hookenv.unit_private_ip())
 
+        if hbase:
+            roles.append('hive-hbase')
+            hb_connect = "{}:{}".format(hbase['host'], hbase['master_port'])
+            zk_hbase_connect = hbase['zk_connect']
+        else:
+            hb_connect = ""
+            zk_hbase_connect = ""
+
+        if zk_units:
+            hive_support_concurrency = True
+            zk_hive_connect = self.get_zk_connect(zk_units)
+        else:
+            hive_support_concurrency = False
+            zk_hive_connect = ""
+
         override = {
+            'hadoop_hive::common_config::hbase_master': hb_connect,
+            'hadoop_hive::common_config::hbase_zookeeper_quorum':
+                zk_hbase_connect,
+            'hadoop_hive::common_config::hive_zookeeper_quorum':
+                zk_hive_connect,
+            'hadoop_hive::common_config::hive_support_concurrency':
+                hive_support_concurrency,
             'hadoop_hive::common_config::metastore_uris': metastore,
             'hadoop_hive::common_config::server2_thrift_port':
                 self.dist_config.port('hive-thrift'),
             'hadoop_hive::common_config::server2_thrift_http_port':
                 self.dist_config.port('hive-thrift-web'),
         }
-
-        if hbase:
-            roles.append('hive-hbase')
-            override['hadoop_hive::common_config::hbase_master'] =\
-                "{}:{}".format(hbase['host'], hbase['master_port'])
-            override['hadoop_hive::common_config::hbase_zookeeper_quorum'] =\
-                hbase['zk_connect']
-
-        if zk_units:
-            override['hadoop_hive::common_config::hive_zookeeper_quorum'] =\
-                self.get_zk_connect(zk_units)
-            override['hadoop_hive::common_config::hive_support_concurrency'] =\
-                True
 
         bigtop = Bigtop()
         bigtop.render_site_yaml(roles=roles, overrides=override)
