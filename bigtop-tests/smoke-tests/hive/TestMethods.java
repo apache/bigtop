@@ -1,3 +1,4 @@
+
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -24,6 +25,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -60,18 +63,18 @@ public class TestMethods {
     document.getDocumentElement().normalize();
     Element docElement = document.getDocumentElement();
     NodeList nodeList = docElement.getElementsByTagName("property");
-    ArrayList<String> names = new ArrayList<String>();
-    ArrayList<String> values = new ArrayList<String>();
+    ArrayList<String> names = new ArrayList<>();
+    ArrayList<String> values = new ArrayList<>();
     if (nodeList != null) {
       int length = nodeList.getLength();
       for (int i = 0; i < length; i++) {
         if (nodeList.item(i).getNodeType() == Node.ELEMENT_NODE) {
           Element element = (Element) nodeList.item(i);
           if (element.getNodeName().contains("property")) {
-            names.add(element.getElementsByTagName("name").item(0)
-                .getTextContent());
-            values.add(element.getElementsByTagName("value").item(0)
-                .getTextContent());
+            names.add(
+                element.getElementsByTagName("name").item(0).getTextContent());
+            values.add(
+                element.getElementsByTagName("value").item(0).getTextContent());
 
           }
         }
@@ -82,6 +85,21 @@ public class TestMethods {
     int valuePosition = Arrays.asList(nameslist).indexOf(propertyName);
     String propertyValue = valueslist[valuePosition].toString();
     return propertyValue;
+  }
+
+  static void getTables(Connection con) throws SQLException {
+    DatabaseMetaData dbmd = con.getMetaData();
+    ResultSet res = dbmd.getTables(null, null, "%", null);
+    ResultSetMetaData rsmd = res.getMetaData();
+    int columnsNumber = rsmd.getColumnCount();
+
+    while (res.next()) {
+
+      for (int i = 1; i <= columnsNumber; i++) {
+        String columnValue = res.getString(i);
+        System.out.println(columnValue);
+      }
+    }
   }
 
   static void dropTable(Statement stmt, String newTableName)
@@ -127,8 +145,8 @@ public class TestMethods {
   }
 
   static void loadFile(String localFilepath, String HdfsURI,
-      String fileDestination) throws IllegalArgumentException, IOException,
-      URISyntaxException {
+      String fileDestination)
+          throws IllegalArgumentException, IOException, URISyntaxException {
     Configuration conf = new Configuration();
     InputStream inputStream =
         new BufferedInputStream(new FileInputStream(localFilepath));
@@ -145,9 +163,8 @@ public class TestMethods {
 
   static void loadData(Statement stmt, String filePath, String newTableName)
       throws SQLException {
-    String sql =
-        "LOAD data inpath '" + filePath + "' OVERWRITE into table "
-            + newTableName;
+    String sql = "LOAD data inpath '" + filePath + "' OVERWRITE into table "
+        + newTableName;
     System.out.println("Running: " + sql + "\n");
     stmt.executeUpdate(sql);
   }
@@ -163,7 +180,8 @@ public class TestMethods {
     }
   }
 
-  static void updateTable(Statement stmt, String selection) throws SQLException {
+  static void updateTable(Statement stmt, String selection)
+      throws SQLException {
     String sql = selection;
     int affectedRows = stmt.executeUpdate(sql);
     System.out.println("Updating Table: " + sql + "\n");
