@@ -143,6 +143,13 @@ Group: Development/Libraries
 %description -n spark-yarn-shuffle
 Spark YARN Shuffle Service
 
+%package -n spark-sparkr
+Summary: R package for Apache Spark
+Group: Development/Libraries
+
+%description -n spark-sparkr
+SparkR is an R package that provides a light-weight frontend to use Apache Spark from R.
+
 %prep
 %setup -n %{spark_name}-%{spark_base_version}
 
@@ -160,21 +167,6 @@ bash $RPM_SOURCE_DIR/install_spark.sh \
           --doc-dir=%{doc_spark}
 
 %__rm -f $RPM_BUILD_ROOT/%{lib_spark}/jars/hadoop-*.jar
-%__ln_s  %{lib_hadoop_client}/hadoop-annotations.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
-%__ln_s  %{lib_hadoop_client}/hadoop-auth.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
-%__ln_s  %{lib_hadoop_client}/hadoop-client.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
-%__ln_s  %{lib_hadoop_client}/hadoop-common.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
-%__ln_s  %{lib_hadoop_client}/hadoop-hdfs.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
-%__ln_s  %{lib_hadoop_client}/hadoop-mapreduce-client-app.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
-%__ln_s  %{lib_hadoop_client}/hadoop-mapreduce-client-common.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
-%__ln_s  %{lib_hadoop_client}/hadoop-mapreduce-client-core.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
-%__ln_s  %{lib_hadoop_client}/hadoop-mapreduce-client-jobclient.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
-%__ln_s  %{lib_hadoop_client}/hadoop-mapreduce-client-shuffle.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
-%__ln_s  %{lib_hadoop_yarn}/hadoop-yarn-api.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
-%__ln_s  %{lib_hadoop_yarn}/hadoop-yarn-client.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
-%__ln_s  %{lib_hadoop_yarn}/hadoop-yarn-common.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
-%__ln_s  %{lib_hadoop_yarn}/hadoop-yarn-server-common.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
-%__ln_s  %{lib_hadoop_yarn}/hadoop-yarn-server-web-proxy.jar $RPM_BUILD_ROOT/%{lib_spark}/jars/
 
 for service in %{spark_services}
 do
@@ -229,6 +221,9 @@ done
 %attr(0755,spark,spark) %{var_log_spark}
 %{bin}/spark-*
 %{bin}/find-spark-home
+%exclude %{lib_spark}/R
+%exclude %{lib_spark}/bin/sparkR
+%exclude %{bin}/sparkR
 
 %files -n spark-python
 %defattr(-,root,root,755)
@@ -249,6 +244,12 @@ done
 %defattr(-,root,root,755)
 %{lib_spark}/yarn/spark-*-yarn-shuffle.jar
 %{lib_spark}/yarn/lib/spark-yarn-shuffle.jar
+
+%files -n spark-sparkr
+%defattr(-,root,root,755)
+%{lib_spark}/R
+%{lib_spark}/bin/sparkR
+%{bin}/sparkR
 
 %define service_macro() \
 %files -n %1 \

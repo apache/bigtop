@@ -28,18 +28,34 @@ hadoop-hdfs.version=$HADOOP_VERSION
 hadoop-mapreduce.version=$HADOOP_VERSION
 __EOT__
 
-# use .m2/repository/apache-forrest as store for apache forrest depency download store
-# since -O and -N cannot be used together, work around this issue
-( mkdir -p $HOME/.m2/repository/apache-forrest ;
-  cd $HOME/.m2/repository/apache-forrest  ;
-  /usr/bin/wget -N https://archive.apache.org/dist/forrest/0.9/apache-forrest-0.9.tar.gz
-  echo "ea58a078e3861d4dfc8bf3296a53a5f8  apache-forrest-0.9.tar.gz" >apache-forrest-0.9.tar.md5
-  if ! md5sum  -c --quiet apache-forrest-0.9.tar.md5 ; then
-    exit 1
+# Respect FORREST_HOME if defined and valid (assume users knows what they are doing), else fallback to creating our own home.
+if [ -z ${FORREST_HOME-} ] || [ ! -d $FORREST_HOME ]; then
+  BIGTOP_FORREST_VER=${BIGTOP_FORREST_VER:-0.9}
+  BIGTOP_FORREST_MD5=${BIGTOP_FORREST_MD5:-ea58a078e3861d4dfc8bf3296a53a5f8}
+  BIGTOP_FORREST_TAR=apache-forrest-${BIGTOP_FORREST_VER}.tar.gz
+
+  if [ ! -z ${LOCAL_DOWNLOADS_DIR-} ] \
+      && [ -f $LOCAL_DOWNLOADS_DIR/forrest/$BIGTOP_FORREST_TAR ]; then
+    forrest_tar_path=$LOCAL_DOWNLOADS_DIR/forrest/$BIGTOP_FORREST_TAR
+  else
+    forrest_dir=$HOME/.m2/repository/apache-forrest
+    forrest_tar_path=$forrest_dir/$BIGTOP_FORREST_TAR
+    (
+      mkdir -p $forrest_dir ;
+      # since -O and -N cannot be used together, work around this issue by changing dir first.
+      cd $forrest_dir ;
+      /usr/bin/wget -N https://archive.apache.org/dist/forrest/$BIGTOP_FORREST_VER/$BIGTOP_FORREST_TAR
+    )
   fi
-)
-tar xf  $HOME/.m2/repository/apache-forrest/apache-forrest-0.9.tar.gz
-export FORREST_HOME=`pwd`/apache-forrest-0.9
+
+  forrest_tar_md5=$(md5sum $forrest_tar_path | cut -d" " -f1)
+  if [ $forrest_tar_md5 != $BIGTOP_FORREST_MD5 ]; then
+      echo "ERROR: MD5: $forrest_tar_md5 of $forrest_tar_path is not matching expected MD5: $BIGTOP_FORREST_MD5"
+      exit 1
+  fi
+  tar xf $forrest_tar_path
+  export FORREST_HOME=`pwd`/apache-forrest-${BIGTOP_FORREST_VER}
+fi
 
 BUILD_OPTS="-Djavac.version=${JDK_VERSION} -Dforrest.home=${FORREST_HOME} -Dversion=${PIG_VERSION} -Dhadoopversion=23"
 

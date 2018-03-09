@@ -20,7 +20,7 @@ set -xe
 
 BUILD_TEZ_OPTS="clean package \
 -Dtar -Dhadoop.version=${HADOOP_VERSION} \
--Phadoop27 \
+-Phadoop28 \
 -DskipTests"
 
 mvn ${BUILD_TEZ_OPTS} "$@"

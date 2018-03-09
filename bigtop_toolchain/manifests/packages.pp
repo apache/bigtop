@@ -224,4 +224,10 @@ class bigtop_toolchain::packages {
       target => '/usr/lib/rpm/amazon',
     }
   }
+
+  if $operatingsystem == 'CentOS' {
+    package { 'epel-release':
+      ensure => installed
+    }
+  }
 }

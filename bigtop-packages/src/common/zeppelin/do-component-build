@@ -30,7 +30,7 @@ BUILD_OPTS="-Dscala.version=${SCALA_VERSION} \
             -Dignite.version=${IGNITE_HADOOP_VERSION} \
             -Dflink.version=${FLINK_VERSION} \
             -Pspark-${SPARK_VERSION%.*} \
-            -Phadoop-${HADOOP_VERSION%.*} \
+            -Phadoop-2.7 \
             -Pscala-${SCALA_VERSION%.*} \
             -Ppyspark \
             -Psparkr \

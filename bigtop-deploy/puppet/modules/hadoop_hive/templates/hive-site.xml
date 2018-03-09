@@ -42,6 +42,20 @@
 </property>
 <% end %>
 
+<% if @hive_zookeeper_quorum != "" %>
+<property>
+  <name>hive.zookeeper.quorum</name>
+  <value><%= @hive_zookeeper_quorum %></value>
+  <description>Zookeeper quorum used by Hive's Table Lock Manager</description>
+</property>
+<% end %>
+
+<property>
+  <name>hive.support.concurrency</name>
+  <value><%= @hive_support_concurrency %></value>
+  <description>Enable Hive's Table Lock Manager Service</description>
+</property>
+
 <property>
   <name>hive.execution.engine</name>
   <value><%= @hive_execution_engine %></value>

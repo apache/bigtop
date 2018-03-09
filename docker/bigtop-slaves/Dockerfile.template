@@ -12,9 +12,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-FROM ppc64le/fedora:26
-MAINTAINER Amir Sanjar
 
-COPY puppetize.sh /tmp/puppetize.sh
+FROM bigtop/puppet:PREFIX-OS-VERSION
 
-RUN bash /tmp/puppetize.sh
+MAINTAINER dev@bigtop.apache.org
+
+COPY bigtop_toolchain PUPPET_MODULES
+
+RUN  UPDATE_SOURCE && puppet apply -e "include bigtop_toolchain::installer"
+COPY . /tmp/bigtop
+RUN cd /tmp/bigtop && ./gradlew && cd && rm -rf /tmp/*

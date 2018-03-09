@@ -5,7 +5,7 @@ description: >
   The Apache Mahout project's goal is to build an environment for quickly
   creating scalable, performant machine learning applications.
 
-  This charm provides version 0.12.2 of the Mahout application from Apache
+  This charm provides version 0.13.0 of the Mahout application from Apache
   Bigtop.
 tags: []
 subordinate: true
