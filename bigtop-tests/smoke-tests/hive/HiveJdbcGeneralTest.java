@@ -70,6 +70,7 @@ public class HiveJdbcGeneralTest extends TestMethods {
     // result set data
 
     dropTable(stmt, newTableName);
+    getTables(con);
     showTables(stmt, "show tables like 'b*'");
     createTable(stmt, newTableName, columnNames, ",");
     showTables(stmt, "show tables like 'b*'");
