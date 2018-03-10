@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/local/sbin/charm-env python
 
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -16,11 +16,10 @@
 # limitations under the License.
 
 import sys
-sys.path.append('lib')
 
-from charmhelpers.core import hookenv, unitdata  # noqa: E402
-from charms.layer.apache_bigtop_base import Bigtop, get_package_version  # noqa: E402
-from charms.reactive import is_state  # noqa: E402
+from charmhelpers.core import hookenv, unitdata
+from charms.layer.apache_bigtop_base import Bigtop, get_package_version
+from charms.reactive import is_state
 
 
 def fail(msg):

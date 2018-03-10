@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/local/sbin/charm-env python
 
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -17,13 +17,11 @@
 
 import kafkautils
 import subprocess
-import sys
-sys.path.append('lib')  # Add our helpers to our path.
 
-from charmhelpers.core import hookenv, host  # noqa: E402
-from charms.layer.apache_bigtop_base import get_layer_opts  # noqa: E402
-from charms.reactive import is_state  # noqa: E402
-from jujubigdata import utils  # noqa: E402
+from charmhelpers.core import hookenv, host
+from charms.layer.apache_bigtop_base import get_layer_opts
+from charms.reactive import is_state
+from jujubigdata import utils
 
 
 if not is_state('kafka.started'):
