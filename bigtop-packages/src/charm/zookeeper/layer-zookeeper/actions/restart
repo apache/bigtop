@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/local/sbin/charm-env python3
 
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -16,11 +16,10 @@
 # limitations under the License.
 
 import sys
-sys.path.append('lib')  # Add our helpers to our path.
 
-from charmhelpers.core import hookenv  # noqa: E402
-from charms.layer.bigtop_zookeeper import Zookeeper  # noqa: E402
-from charms.reactive import is_state  # noqa: E402
+from charmhelpers.core import hookenv
+from charms.layer.bigtop_zookeeper import Zookeeper
+from charms.reactive import is_state
 
 
 def main():
