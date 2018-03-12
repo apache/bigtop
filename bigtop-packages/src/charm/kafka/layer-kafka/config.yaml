@@ -1,11 +1,4 @@
 options:
-  bigtop_version:
-    type: string
-    default: 'master'
-    description: |
-        Apache Bigtop release version. The default, 'master' will use the
-        upsteam bits for all hiera data, puppet recipes, and installable
-        packages.
   network_interface:
     default: ""
     type: string
