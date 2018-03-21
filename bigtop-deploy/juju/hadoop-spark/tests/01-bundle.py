@@ -48,8 +48,7 @@ class TestBundle(unittest.TestCase):
         cls.d.setup(timeout=3600)
 
         # we need units reporting ready before we attempt our smoke tests
-        cls.d.sentry.wait_for_messages({'client': re.compile('ready'),
-                                        'namenode': re.compile('ready'),
+        cls.d.sentry.wait_for_messages({'namenode': re.compile('ready'),
                                         'resourcemanager': re.compile('ready'),
                                         'slave': re.compile('ready'),
                                         'spark': re.compile('ready'),
