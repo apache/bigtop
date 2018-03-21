@@ -1,6 +1,6 @@
 series: xenial
 description: >
-  This is a nine unit big data cluster that includes Hadoop 2.7 and Spark 2.1
+  This is an eight unit big data cluster that includes Hadoop 2.7 and Spark 2.1
   from Apache Bigtop. Use it to analyse batch data with MapReduce or streaming
   data with Spark. It will run on 5 machines in your cloud.
 services:
@@ -38,15 +38,6 @@ services:
     annotations:
       gui-x: "1000"
       gui-y: "400"
-  client:
-    charm: "cs:xenial/hadoop-client-9"
-    constraints: "mem=7G root-disk=32G"
-    num_units: 1
-    annotations:
-      gui-x: "1250"
-      gui-y: "400"
-    to:
-      - "4"
   spark:
     charm: "/home/ubuntu/charms/xenial/spark"
     constraints: "mem=7G root-disk=32G"
@@ -91,7 +82,6 @@ relations:
   - [plugin, namenode]
   - [plugin, resourcemanager]
   - [spark, plugin]
-  - [client, plugin]
   - ["ganglia-node:juju-info", "namenode:juju-info"]
   - ["ganglia-node:juju-info", "resourcemanager:juju-info"]
   - ["ganglia-node:juju-info", "slave:juju-info"]
