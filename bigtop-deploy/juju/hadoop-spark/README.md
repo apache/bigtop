@@ -48,14 +48,12 @@ follows:
   * Slave (DataNode and NodeManager) v2.7.3
     * 3 separate units
   * Spark (Driver in yarn-client mode) v2.1.1
-  * Client (Hadoop endpoint)
-    * Colocated on the Spark unit
   * Plugin (Facilitates communication with the Hadoop cluster)
-    * Colocated on the Spark/Client unit
+    * Colocated on the Spark unit
   * Ganglia (Web interface for monitoring cluster metrics)
-    * Colocated on the Spark/Client unit
+    * Colocated on the Spark unit
   * Rsyslog (Aggregate cluster syslog events in a single location)
-    * Colocated on the Spark/Client unit
+    * Colocated on the Spark unit
 
 Deploying this bundle results in a fully configured Apache Bigtop
 cluster on any supported cloud, which can be scaled to meet workload
