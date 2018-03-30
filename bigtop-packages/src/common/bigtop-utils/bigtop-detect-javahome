@@ -31,7 +31,7 @@ JAVA8_HOME_CANDIDATES=(
     '/usr/lib/jvm/java-1.8.0-oracle'
 )
 
-OPENJAVA8_HOME__CANDIDATES=(
+OPENJAVA8_HOME_CANDIDATES=(
     '/usr/lib/jvm/java-1.8.0-openjdk-amd64'
     '/usr/lib/jvm/java-1.8.0-openjdk-ppc64el'
     '/usr/lib/jvm/java-1.8.0-openjdk'
