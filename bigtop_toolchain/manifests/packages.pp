@@ -23,7 +23,6 @@ class bigtop_toolchain::packages {
         "wget",
         "git",
         "make",
-        "cmake",
         "autoconf",
         "automake",
         "libtool",
@@ -65,6 +64,14 @@ class bigtop_toolchain::packages {
         "libffi-devel",
         "epel-release"
       ]
+      package { 'cmake3':
+        ensure => latest
+      }
+      file { '/usr/bin/cmake':
+        ensure => 'link',
+        target => '/usr/bin/cmake3',
+        require => [Package['cmake3']]
+      }
     }
     /(?i:(SLES|opensuse))/: { $pkgs = [
         "unzip",
