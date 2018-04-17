@@ -14,7 +14,7 @@
 # limitations under the License.
 
 class bigtop_toolchain::ant {
-  $ant =  'apache-ant-1.9.9'
+  $ant =  'apache-ant-1.9.11'
 
   $apache_prefix = nearest_apache_mirror()
 
