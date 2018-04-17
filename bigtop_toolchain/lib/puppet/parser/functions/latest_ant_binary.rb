@@ -13,25 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class bigtop_toolchain::ant {
-  # Ant version restricted to 1.9 because 1.10 supports Java>=8 only.
-  $ant =  latest_ant_binary("1.9.[0-9]*")
-  $apache_prefix = nearest_apache_mirror()
-
-  exec {"/usr/bin/wget $apache_prefix/ant/binaries/$ant-bin.tar.gz":
-    cwd     => "/usr/src",
-    unless  => "/usr/bin/test -f /usr/src/$ant-bin.tar.gz",
-  }
-
-  exec {"/bin/tar xvzf /usr/src/$ant-bin.tar.gz":
-    cwd         => '/usr/local',
-    creates     => "/usr/local/$ant",
-    require     => Exec["/usr/bin/wget $apache_prefix/ant/binaries/$ant-bin.tar.gz"],
-  }
-
-  file {'/usr/local/ant':
-    ensure  => link,
-    target  => "/usr/local/$ant",
-    require => Exec["/bin/tar xvzf /usr/src/$ant-bin.tar.gz"],
-  }
-}
+module Puppet::Parser::Functions
+    newfunction(:latest_ant_binary, :type => :rvalue) do |args|
+        versionmask=args[0]
+        # We are using main mirror here because can't be sure about Apache Server config on every mirror. It could be Nginx, btw. 
+        %x(curl --stderr /dev/null 'https://www.apache.org/dist/ant/binaries/?F=0&V=1' | grep -o '<li>.*href="apache-ant-#{versionmask}-bin.tar.gz"'  |  grep -o "apache-ant-#{versionmask}" | tail -1 | tr -d '\r').chomp
+    end
+end
