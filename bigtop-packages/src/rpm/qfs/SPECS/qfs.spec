@@ -260,8 +260,6 @@ rm -rf $RPM_BUILD_ROOT
 %{bin_dir}/qfstoggleworm
 %{bin_dir}/qfssample
 %{bin_dir}/qfs_backup
-%{bin_dir}/qfs_checkpoint_prune
-%{bin_dir}/qfs_log_prune
 %{bin_dir}/cpfromqfs
 %{bin_dir}/cptoqfs
 
