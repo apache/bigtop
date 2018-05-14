@@ -14,7 +14,7 @@
 # limitations under the License.
 
 class bigtop_toolchain::maven {
-  $mvnversion = '3.5.2'
+  $mvnversion = '3.5.3'
   $mvn = "apache-maven-$mvnversion"
 
   $apache_prefix = nearest_apache_mirror()
@@ -29,7 +29,7 @@ class bigtop_toolchain::maven {
     creates     => "/usr/local/$mvn",
     require     => Exec["/usr/bin/wget $apache_prefix/maven/maven-3/$mvnversion/binaries/$mvn-bin.tar.gz"],
   }
-  
+
   file {'/usr/local/maven':
     ensure  => link,
     target  => "/usr/local/$mvn",
