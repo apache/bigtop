@@ -13,26 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class bigtop_toolchain::maven {
-  $mvnversion = latest_maven_binary("3.5.[0-9]*")
-  $mvn = "apache-maven-$mvnversion"
-
-  $apache_prefix = nearest_apache_mirror()
-
-  exec {"/usr/bin/wget $apache_prefix/maven/maven-3/$mvnversion/binaries/$mvn-bin.tar.gz":
-    cwd     => "/usr/src",
-    unless  => "/usr/bin/test -f /usr/src/$mvn-bin.tar.gz",
-  }
-
-  exec {"/bin/tar xvzf /usr/src/$mvn-bin.tar.gz":
-    cwd         => '/usr/local',
-    creates     => "/usr/local/$mvn",
-    require     => Exec["/usr/bin/wget $apache_prefix/maven/maven-3/$mvnversion/binaries/$mvn-bin.tar.gz"],
-  }
-  
-  file {'/usr/local/maven':
-    ensure  => link,
-    target  => "/usr/local/$mvn",
-    require => Exec["/bin/tar xvzf /usr/src/$mvn-bin.tar.gz"],
-  }
-}
+module Puppet::Parser::Functions
+    newfunction(:latest_maven_binary, :type => :rvalue) do |args|
+        versionmask=args[0]
+        # We are using main mirror here because can't be sure about Apache Server config on every mirror. It could be Nginx, btw.
+        %x(curl --stderr /dev/null 'https://www.apache.org/dist/maven/maven-3/?F=0&V=1' | grep -o '<li>.*href="#{versionmask}/"' | grep -o '#{versionmask}').chomp
+    end
+end
