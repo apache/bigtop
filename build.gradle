@@ -226,11 +226,12 @@ apply from: 'release.gradle'
 task toolchain(type:Exec,
     description: 'Setup dev. env via toolchain; Requires: Puppet, sudo',
     group: DEVENV_GROUP) {
-  def command = [
-      'sudo', 'puppet', 'apply', '-d', '--parser', 'future',
-      "--modulepath=${projectDir.absolutePath}:/etc/puppet/modules", '-e',
-      'include bigtop_toolchain::installer'
-  ]
+  def command = ['sudo', 'puppet', 'apply', '-d']
+  if ("puppet --version".execute().text[0] == '3') {
+    command.addAll(['--parser', 'future'])
+  }
+  command.addAll(["--modulepath=${projectDir.absolutePath}:/etc/puppet/modules", '-e',
+      'include bigtop_toolchain::installer'])
   workingDir '.'
   commandLine command
 }
