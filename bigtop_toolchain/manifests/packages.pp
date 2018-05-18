@@ -107,7 +107,8 @@ class bigtop_toolchain::packages {
         "libevent-devel",
         "bison",
         "flex",
-        "libffi48-devel"
+        "libffi48-devel",
+        "texlive-latex-bin-bin"
       ]
       # fix package dependencies: BIGTOP-2120 and BIGTOP-2152 and BIGTOP-2471
       exec { '/usr/bin/zypper -n install  --force-resolution krb5 libopenssl-devel':
