@@ -18,21 +18,17 @@ class bigtop_toolchain::gradle {
   $gradle_version = '4.0'
   $gradle = "gradle-${gradle_version}"
 
-  exec {"/usr/bin/wget http://services.gradle.org/distributions/${gradle}-bin.zip":
+  exec {"/usr/bin/wget https://services.gradle.org/distributions/${gradle}-bin.zip":
     cwd     => "/usr/src",
     unless  => "/usr/bin/test -f /usr/src/${gradle}-bin.zip",
-  }
+  } ~>
 
   exec {"/usr/bin/unzip -x -o /usr/src/${gradle}-bin.zip":
     cwd         => '/usr/local',
-    refreshonly => true,
-    subscribe   => Exec["/usr/bin/wget http://services.gradle.org/distributions/${gradle}-bin.zip"],
-    require     => Exec["/usr/bin/wget http://services.gradle.org/distributions/${gradle}-bin.zip"],
-  }
+  } ->
 
   file {'/usr/local/gradle':
     ensure  => link,
     target  => "/usr/local/${gradle}",
-    require => Exec["/usr/bin/unzip -x -o /usr/src/${gradle}-bin.zip"],
   }
 }

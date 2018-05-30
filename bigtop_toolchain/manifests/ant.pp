@@ -18,20 +18,42 @@ class bigtop_toolchain::ant {
   $ant =  latest_ant_binary("1.9.[0-9]*")
   $apache_prefix = nearest_apache_mirror()
 
+  case $operatingsystem{
+    /(?i:(centos|fedora))/: {
+       $pkg = "gnupg2"
+    }
+    /(?i:(SLES|opensuse))/: {
+       $pkg = "gpg2"
+    }
+    /(Ubuntu|Debian)/: {
+       $pkg = "gnupg"
+    }
+  }
+
   exec {"/usr/bin/wget $apache_prefix/ant/binaries/$ant-bin.tar.gz":
     cwd     => "/usr/src",
     unless  => "/usr/bin/test -f /usr/src/$ant-bin.tar.gz",
-  }
+  } ~>
+
+  exec {"/usr/bin/wget https://www.apache.org/dist/ant/binaries/$ant-bin.tar.gz.asc":
+    cwd     => "/usr/src",
+    unless  => "/usr/bin/test -f /usr/src/$ant-bin.tar.gz.asc",
+  } ~>
+
+  package { $pkg:
+  } ->
+
+  exec {"/usr/bin/gpg -v --verify --auto-key-retrieve --keyserver hkp://keyserver.ubuntu.com:80 $ant-bin.tar.gz.asc":
+    cwd     => "/usr/src"
+  } ->
 
   exec {"/bin/tar xvzf /usr/src/$ant-bin.tar.gz":
     cwd         => '/usr/local',
     creates     => "/usr/local/$ant",
-    require     => Exec["/usr/bin/wget $apache_prefix/ant/binaries/$ant-bin.tar.gz"],
-  }
+  } ->
 
   file {'/usr/local/ant':
     ensure  => link,
     target  => "/usr/local/$ant",
-    require => Exec["/bin/tar xvzf /usr/src/$ant-bin.tar.gz"],
   }
 }
