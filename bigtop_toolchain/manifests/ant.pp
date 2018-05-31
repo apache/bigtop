@@ -14,21 +14,12 @@
 # limitations under the License.
 
 class bigtop_toolchain::ant {
+
+  require bigtop_toolchain::gnupg
+
   # Ant version restricted to 1.9 because 1.10 supports Java>=8 only.
   $ant =  latest_ant_binary("1.9.[0-9]*")
   $apache_prefix = nearest_apache_mirror()
-
-  case $operatingsystem{
-    /(?i:(centos|fedora))/: {
-       $pkg = "gnupg2"
-    }
-    /(?i:(SLES|opensuse))/: {
-       $pkg = "gpg2"
-    }
-    /(Ubuntu|Debian)/: {
-       $pkg = "gnupg"
-    }
-  }
 
   exec {"/usr/bin/wget $apache_prefix/ant/binaries/$ant-bin.tar.gz":
     cwd     => "/usr/src",
@@ -40,16 +31,13 @@ class bigtop_toolchain::ant {
     unless  => "/usr/bin/test -f /usr/src/$ant-bin.tar.gz.asc",
   } ~>
 
-  package { $pkg:
-  } ->
-
-  exec {"/usr/bin/gpg -v --verify --auto-key-retrieve --keyserver hkp://keyserver.ubuntu.com:80 $ant-bin.tar.gz.asc":
-    cwd     => "/usr/src"
+  exec {"/usr/bin/$bigtop_toolchain::gnupg::cmd -v --verify --auto-key-retrieve --keyserver hkp://keyserver.ubuntu.com:80 $ant-bin.tar.gz.asc":
+    cwd     => "/usr/src",
   } ->
 
   exec {"/bin/tar xvzf /usr/src/$ant-bin.tar.gz":
-    cwd         => '/usr/local',
-    creates     => "/usr/local/$ant",
+    cwd     => '/usr/local',
+    creates => "/usr/local/$ant",
   } ->
 
   file {'/usr/local/ant':
