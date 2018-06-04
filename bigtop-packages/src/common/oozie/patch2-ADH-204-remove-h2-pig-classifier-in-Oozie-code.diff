@@ -1,0 +1,16 @@
+ pom.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/pom.xml b/pom.xml
+index 6f358689..71810f44 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -93,7 +93,7 @@
+          <hive.version>1.2.0</hive.version>
+          <hive.jline.version>2.12</hive.jline.version>
+          <pig.version>0.16.0</pig.version>
+-         <pig.classifier>h2</pig.classifier>
++         <pig.classifier></pig.classifier>
+          <hive.classifier>core</hive.classifier>
+          <sqoop.version>1.4.3</sqoop.version>
+          <spark.version>1.6.1</spark.version>

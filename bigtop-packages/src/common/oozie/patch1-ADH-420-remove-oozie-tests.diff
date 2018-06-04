@@ -1,0 +1,20 @@
+ src/main/assemblies/distro.xml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/main/assemblies/distro.xml b/src/main/assemblies/distro.xml
+index d28be909..e9e655a2 100644
+--- a/src/main/assemblies/distro.xml
++++ b/src/main/assemblies/distro.xml
+@@ -112,10 +112,10 @@
+             <outputDirectory>/oozie-core</outputDirectory>
+         </file>
+         <!-- Oozie core test jar -->
+-        <file>
++<!--        <file>
+             <source>${basedir}/../core/target/oozie-core-${project.version}-tests.jar</source>
+             <outputDirectory>/oozie-core</outputDirectory>
+-        </file>
++        </file> -->
+         <!-- Oozie Documentation -->
+         <file>
+             <source>${basedir}/../docs/target/oozie-docs-${project.version}-docs.zip</source>

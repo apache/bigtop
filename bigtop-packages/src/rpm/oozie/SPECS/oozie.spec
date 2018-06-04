@@ -17,9 +17,11 @@
 %define man_dir /usr/share/man
 %define conf_oozie %{_sysconfdir}/%{name}/conf
 %define conf_oozie_dist %{conf_oozie}.dist
-%define tomcat_conf_oozie %{_sysconfdir}/%{name}/tomcat-conf
 %define data_oozie /var/lib/oozie
 %define lib_hadoop /usr/lib/hadoop
+
+# disable repacking jars
+%define __jar_repack 0
 
 %if  %{!?suse_version:1}0
   %define doc_oozie %{_docdir}/oozie-%{oozie_version}
@@ -64,14 +66,14 @@ Source5: oozie.init
 Source6: catalina.properties
 Source7: context.xml
 Source8: hive.xml
-Source9: tomcat-deployment.sh
-Source10: oozie-site.xml
-Source11: bigtop.bom
+Source9: oozie-site.xml
+Source10: bigtop.bom
 #BIGTOP_PATCH_FILES
 Requires(pre): /usr/sbin/groupadd, /usr/sbin/useradd
 Requires(post): /sbin/chkconfig
 Requires(preun): /sbin/chkconfig, /sbin/service
-Requires: oozie-client = %{version}, hadoop-client, bigtop-tomcat
+Requires: oozie-client = %{version}, hadoop-client
+AutoReq: no
 BuildArch: noarch
 
 %description
@@ -122,6 +124,7 @@ Group: Development/Libraries
 License: ASL 2.0
 BuildArch: noarch
 Requires: bigtop-utils >= 0.7
+AutoReq: no
 
 
 %description client
@@ -140,16 +143,13 @@ Requires: bigtop-utils >= 0.7
 #BIGTOP_PATCH_COMMANDS
 
 %build
-    mkdir -p distro/downloads
-    env DO_MAVEN_DEPLOY="" FULL_VERSION=%{oozie_base_version} bash -x %{SOURCE1}
+mkdir -p distro/downloads
+env DO_MAVEN_DEPLOY="" FULL_VERSION=%{oozie_base_version} bash -x %{SOURCE1}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
     sh %{SOURCE2} --extra-dir=$RPM_SOURCE_DIR --build-dir=$PWD --server-dir=$RPM_BUILD_ROOT --client-dir=$RPM_BUILD_ROOT --docs-dir=$RPM_BUILD_ROOT%{doc_oozie} --initd-dir=$RPM_BUILD_ROOT%{initd_dir} --conf-dir=$RPM_BUILD_ROOT%{conf_oozie_dist}
 
-%__ln_s -f %{data_oozie}/ext-2.2 $RPM_BUILD_ROOT/%{lib_oozie}/webapps/oozie/ext-2.2
-%__rm  -rf              $RPM_BUILD_ROOT/%{lib_oozie}/webapps/oozie/docs
-%__ln_s -f %{doc_oozie} $RPM_BUILD_ROOT/%{lib_oozie}/webapps/oozie/docs
 
 # Oozie server
 %__rm  -rf $RPM_BUILD_ROOT/%{lib_oozie}/lib/hadoop-*.jar
@@ -157,6 +157,7 @@ Requires: bigtop-utils >= 0.7
 %__ln_s -f %{lib_hadoop}/client/hadoop-auth.jar $RPM_BUILD_ROOT/%{lib_oozie}/lib/
 %__ln_s -f %{lib_hadoop}/client/hadoop-common.jar $RPM_BUILD_ROOT/%{lib_oozie}/lib/
 %__ln_s -f %{lib_hadoop}/client/hadoop-hdfs.jar $RPM_BUILD_ROOT/%{lib_oozie}/lib/
+%__ln_s -f %{lib_hadoop}/client/hadoop-hdfs-client.jar $RPM_BUILD_ROOT/%{lib_oozie}/lib/
 %__ln_s -f %{lib_hadoop}/client/hadoop-mapreduce-client-app.jar $RPM_BUILD_ROOT/%{lib_oozie}/lib/
 %__ln_s -f %{lib_hadoop}/client/hadoop-mapreduce-client-common.jar $RPM_BUILD_ROOT/%{lib_oozie}/lib/
 %__ln_s -f %{lib_hadoop}/client/hadoop-mapreduce-client-core.jar $RPM_BUILD_ROOT/%{lib_oozie}/lib/
@@ -178,18 +179,14 @@ getent passwd oozie >/dev/null || /usr/sbin/useradd --comment "Oozie User" --she
 
 %post
 %{alternatives_cmd} --install %{conf_oozie} %{name}-conf %{conf_oozie_dist} 30
-%{alternatives_cmd} --install %{tomcat_conf_oozie} %{name}-tomcat-conf %{tomcat_conf_oozie}.http 30
-%{alternatives_cmd} --install %{tomcat_conf_oozie} %{name}-tomcat-conf %{tomcat_conf_oozie}.https 20
+
 
 /sbin/chkconfig --add oozie
 
 %preun
 if [ "$1" = 0 ]; then
-  rm -r /etc/oozie/conf/tomcat-conf
-  /sbin/service oozie stop > /dev/null
+    /sbin/service oozie stop > /dev/null
   /sbin/chkconfig --del oozie
-  %{alternatives_cmd} --remove %{name}-tomcat-conf %{tomcat_conf_oozie}.http || :
-  %{alternatives_cmd} --remove %{name}-tomcat-conf %{tomcat_conf_oozie}.https || :
   %{alternatives_cmd} --remove %{name}-conf %{conf_oozie_dist} || :
 fi
 
@@ -201,19 +198,17 @@ fi
 %files
 %defattr(-,root,root)
 %config(noreplace) %{conf_oozie_dist}
-%config(noreplace) %{tomcat_conf_oozie}.*
 %{usr_bin}/oozie-setup
 %{lib_oozie}/bin/oozie-sys.sh
 %{lib_oozie}/bin/oozie-env.sh
 %{lib_oozie}/bin/oozied.sh
 %{lib_oozie}/bin/ooziedb.sh
 %{lib_oozie}/bin/oozie-setup.sh
-%{lib_oozie}/webapps
+%{lib_oozie}/embedded-oozie-server
 %{lib_oozie}/libtools
 %{lib_oozie}/lib
 %{lib_oozie}/oozie-sharelib.tar.gz
 %{lib_oozie}/libext
-%{lib_oozie}/tomcat-deployment.sh
 %{initd_dir}/oozie
 %defattr(-, oozie, oozie)
 %dir %{_sysconfdir}/%{name}
