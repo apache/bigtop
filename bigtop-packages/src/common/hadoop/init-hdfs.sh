@@ -35,9 +35,9 @@ fi
 HADOOP_LIB_DIR=/usr/lib/hadoop/lib
 HDFS_LIB_DIR=/usr/lib/hadoop-hdfs/lib
 HADOOP_DEPENDENCIES="commons-logging*.jar commons-io*.jar guava*.jar commons-configuration*.jar commons-collections*.jar slf4j-api*.jar protobuf-java*.jar commons-lang*.jar servlet-api-2.5.jar"
-HDFS_DEPENDENCIES="htrace-core*.jar"
+HDFS_DEPENDENCIES="htrace-core*.jar jackson-*.jar"
 for i in /usr/lib/hadoop/*.jar; do CLASSPATH=$CLASSPATH:$i; done
-CLASSPATH=/etc/hadoop/conf:$CLASSPATH:/usr/lib/hadoop-hdfs/hadoop-hdfs.jar
+CLASSPATH=/etc/hadoop/conf:$CLASSPATH:/usr/lib/hadoop-hdfs/hadoop-hdfs.jar:/usr/lib/hadoop-hdfs/hadoop-hdfs-client.jar
 pushd .
 cd $HADOOP_LIB_DIR
 for d in $HADOOP_DEPENDENCIES; do CLASSPATH=$CLASSPATH:$HADOOP_LIB_DIR/$d; done
