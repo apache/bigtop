@@ -273,8 +273,8 @@ while test $# != 0 ; do
 
             mkdir -p "$3" > /dev/null 2>&1
             [ -d "$3" ] || usage "Error: $3 has to be a directory"
-            # data_driven_schema_configs is used as default
-            cp -r ${SOLR_INSTALL_DIR}/server/solr/configsets/data_driven_schema_configs/conf "$3/conf"
+            # sample_techproducts_configs is used as default, this provides many common used optional features
+            cp -r ${SOLR_INSTALL_DIR}/server/solr/configsets/sample_techproducts_configs/conf "$3/conf"
             shift 3
             ;;
         --list)
