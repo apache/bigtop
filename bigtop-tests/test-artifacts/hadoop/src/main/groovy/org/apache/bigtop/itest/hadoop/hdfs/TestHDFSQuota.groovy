@@ -136,8 +136,6 @@ public class TestHDFSQuota {
     assertTrue("setSpaceQuota should not have worked", shHDFS.getRet() != 0);
     shHDFS.exec("hadoop dfsadmin -setQuota 0 $testQuotaFolder1");
     assertTrue("setQuota should not have worked", shHDFS.getRet() != 0);
-    shHDFS.exec("hadoop dfsadmin -setSpaceQuota 0 $testQuotaFolder1");
-    assertTrue("setSpaceQuota should not have worked", shHDFS.getRet() != 0);
     shHDFS.exec("hadoop dfsadmin -setQuota $LARGE $testQuotaFolder1");
     assertTrue("setQuota failed", shHDFS.getRet() == 0);
     shHDFS.exec("hadoop dfsadmin -setSpaceQuota $LARGE $testQuotaFolder1");
