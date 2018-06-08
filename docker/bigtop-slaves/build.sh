@@ -31,7 +31,11 @@ OS=$(echo "$1" | cut -d '-' -f 2)
 VERSION=$(echo "$1" | cut -d '-' -f 3)
 ARCH=$(uname -m)
 if [ "${ARCH}" != "x86_64" ];then
-VERSION="${VERSION}-${ARCH}"
+  VERSION="${VERSION}-${ARCH}"
+fi
+## Workaround for docker defect on linaros cloud
+if [ "${ARCH}" == "aarch64" ];then
+  NETWORK="--network=host"
 fi
 
 # setup puppet/modules path and update cmds
@@ -65,5 +69,5 @@ esac
 sed -e "s|PREFIX|${PREFIX}|;s|OS|${OS}|;s|VERSION|${VERSION}|" Dockerfile.template | \
   sed -e "s|PUPPET_MODULES|${PUPPET_MODULES}|;s|UPDATE_SOURCE|${UPDATE_SOURCE}|" > Dockerfile
 
-docker build --rm -t bigtop/slaves:${PREFIX}-${OS}-${VERSION} -f Dockerfile ../..
+docker build ${NETWORK} --rm -t bigtop/slaves:${PREFIX}-${OS}-${VERSION} -f Dockerfile ../..
 rm -f Dockerfile
