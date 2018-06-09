@@ -19,7 +19,7 @@ set -ex
 if [ $# != 1 ]; then
   echo "Creates bigtop/slaves image"
   echo
-  echo "Usage: build.sh <PREIX-OS-VERSION>"
+  echo "Usage: build.sh <PREFIX-OS-VERSION>"
   echo
   echo "Example: build.sh trunk-centos-7"
   echo "       : build.sh 1.0.0-centos-7"
@@ -34,7 +34,7 @@ if [ "${ARCH}" != "x86_64" ];then
   VERSION="${VERSION}-${ARCH}"
 fi
 ## Workaround for docker defect on linaros cloud
-if [ "${ARCH}" == "aarch64" ];then
+if [ "${ARCH}" = "aarch64" ];then
   NETWORK="--network=host"
 fi
 
