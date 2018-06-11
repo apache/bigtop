@@ -17,6 +17,8 @@
  * limitations under the License.
  */
 // A masterclass containing methods which aid in the replication of access to hadoop
+import static org.junit.Assert.fail;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,12 +27,15 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -87,9 +92,9 @@ public class TestMethods {
     return propertyValue;
   }
 
-  static void getTables(Connection con) throws SQLException {
+  static void getTables(Connection con, String tableName) throws SQLException {
     DatabaseMetaData dbmd = con.getMetaData();
-    ResultSet res = dbmd.getTables(null, null, "%", null);
+    ResultSet res = dbmd.getTables(null, null, tableName, null);
     ResultSetMetaData rsmd = res.getMetaData();
     int columnsNumber = rsmd.getColumnCount();
 
@@ -221,6 +226,73 @@ public class TestMethods {
 
     }
     return validate;
+  }
+
+  static String preparedStatement(Connection con, String selection,
+      int columnVerificationNumber) throws SQLException {
+    ResultSet res;
+    PreparedStatement pstmt = con.prepareStatement(selection);
+    res = pstmt.executeQuery();
+    System.out.println("\n" + "Printing Results: " + "\n");
+    ResultSetMetaData rsmd = res.getMetaData();
+    int columnsNumber = rsmd.getColumnCount();
+    for (int q = 1; q <= columnsNumber; q++) {
+      System.out.print(rsmd.getColumnName(q) + " ");
+    }
+    System.out.println("\n");
+    while (res.next()) {
+      for (int i = 1; i <= columnsNumber; i++) {
+        String columnValue = res.getString(i);
+        System.out.print(columnValue + "  ");
+      }
+      System.out.println("");
+    }
+
+    res = pstmt.executeQuery();
+    return resultSetVerification(res, columnVerificationNumber);
+  }
+
+  static int callableStatement(Connection con, double testVal)
+      throws SQLException {
+    CallableStatement cstmt = con.prepareCall("{ ? = CALL sign(?)}");
+    cstmt.registerOutParameter(1, Types.INTEGER);
+    cstmt.setDouble(2, testVal);
+    cstmt.executeQuery();
+    int sign = cstmt.getInt(1);
+    System.out.println(sign);
+    return sign;
+  }
+
+  static String getObject(Connection con) throws SQLException {
+    Statement stmt = con.createStatement();
+    ResultSet res = stmt.executeQuery("test");
+    String object = res.getString(1);
+    return object;
+  }
+
+  static int setFetchSizeStatement(Statement stmt) throws SQLException {
+    stmt.setFetchSize(15);
+    ResultSet res = stmt.executeQuery("show tables");
+    int resultFetchSize = res.getFetchSize();
+    System.out.println("\n" + resultFetchSize);
+    return resultFetchSize;
+  }
+
+  static int setFetchSizePreparedStatement(Connection con) throws SQLException {
+    PreparedStatement pstmt = con.prepareStatement("show tables");
+    pstmt.setFetchSize(15);
+    ResultSet res = pstmt.executeQuery();
+    int resultFetchSize = res.getFetchSize();
+    System.out.println("\n" + resultFetchSize);
+    return resultFetchSize;
+  }
+
+  static void setNegativeFetchSize(Statement stmt) {
+    try {
+      stmt.setFetchSize(-5);
+      fail("should not reach this");
+    } catch (SQLException e) {
+    }
   }
 
   static void executeStatement(Statement stmt, String sqlStatement)
