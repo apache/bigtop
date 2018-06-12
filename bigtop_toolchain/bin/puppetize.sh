@@ -32,7 +32,7 @@ case ${ID}-${VERSION_ID} in
         ;;
     debian-9*)
         apt-get update
-        apt-get -y install wget curl sudo unzip puppet puppet-module-puppetlabs-apt puppet-module-puppetlabs-stdlib
+        apt-get -y install wget curl sudo unzip puppet puppet-module-puppetlabs-apt puppet-module-puppetlabs-stdlib systemd-sysv
          ;;
     opensuse-42.3)
         zypper --gpg-auto-import-keys install -y curl sudo unzip wget puppet suse-release ca-certificates-mozilla net-tools tar
