@@ -18,7 +18,7 @@ set -ex
 
 . `dirname $0`/bigtop.bom
 
-export MAVEN_OPTS="-Xmx512m"
+export MAVEN_OPTS="-Xmx1024m"
 
 if [ "${BIGTOP_JDK:=8}" == "8" ]; then
     MAVEN_ADDITIONAL="-Dadditionalparam=-Xdoclint:none"
@@ -31,13 +31,21 @@ if [ $HOSTTYPE = "powerpc64le" ] ; then
 fi
 
 rm -f hbase-server/src/test/java/org/apache/hadoop/hbase/regionserver/TestBulkLoad.java
-
-mvn -DskipTests -Dslf4j.version=1.6.1         \
-    -Dhadoop-two.version=$HADOOP_VERSION      \
+mvn -DskipTests         \
+    -Dhadoop.profile=3.0 \
+    -Dhadoop-three.version=$HADOOP_VERSION                  \
     -Dzookeeper.version=$ZOOKEEPER_VERSION    \
     -Dcheckstyle.skip=true                    \
     ${MAVEN_ADDITIONAL} \
-    install site assembly:single "$@"
+    site "$@"
+
+mvn -DskipTests         \
+    -Dhadoop.profile=3.0 \
+    -Dhadoop-three.version=$HADOOP_VERSION                  \
+    -Dzookeeper.version=$ZOOKEEPER_VERSION    \
+    -Dcheckstyle.skip=true                    \
+    ${MAVEN_ADDITIONAL} \
+    install assembly:single"$@"
 
 rm -rf build
 mkdir build
