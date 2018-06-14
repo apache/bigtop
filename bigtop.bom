@@ -116,16 +116,16 @@ bigtop {
       name    = 'zookeeper'
       pkg     = name
       version {
-        base  = '3.5.3'
+        base  = '3.4.12'
         pkg   = base
         release = 1
       }
       tarball {
-        source      = "zookeeper-${version.base}-beta.tar.gz"
+        source      = "zookeeper-${version.base}.tar.gz"
         destination = source
       }
       url {
-        download_path = "/zookeeper/zookeeper-${version.base}-beta"
+        download_path = "/zookeeper/zookeeper-${version.base}"
         site          = "${apache.APACHE_MIRROR}/${download_path}"
         archive       = "${apache.APACHE_ARCHIVE}/${download_path}"
       }
