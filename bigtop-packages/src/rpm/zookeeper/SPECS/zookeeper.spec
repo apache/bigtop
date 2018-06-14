@@ -66,9 +66,9 @@ Release: %{zookeeper_release}
 Summary: A high-performance coordination service for distributed applications.
 URL: http://zookeeper.apache.org/
 Group: Development/Libraries
-Buildroot: %{_topdir}/INSTALL/%{name}-%{version}-beta
+Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 License: ASL 2.0
-Source0: %{name}-%{zookeeper_base_version}-beta.tar.gz
+Source0: %{name}-%{zookeeper_base_version}.tar.gz
 Source1: do-component-build
 Source2: install_zookeeper.sh
 Source3: zookeeper-server.sh
@@ -143,7 +143,7 @@ Provides native libraries and development headers for C / C++ ZooKeeper clients.
 This package starts the zookeeper REST server on startup
 
 %prep
-%setup -n %{name}-%{zookeeper_base_version}-beta
+%setup -n %{name}-%{zookeeper_base_version}
 
 #BIGTOP_PATCH_COMMANDS
 
@@ -154,7 +154,7 @@ bash %{SOURCE1}
 %__rm -rf $RPM_BUILD_ROOT
 cp $RPM_SOURCE_DIR/zookeeper.1 $RPM_SOURCE_DIR/zoo.cfg $RPM_SOURCE_DIR/zookeeper.default .
 bash %{SOURCE2} \
-          --build-dir=build/%{name}-%{zookeeper_base_version}-beta \
+          --build-dir=build/%{name}-%{zookeeper_base_version} \
           --doc-dir=%{doc_zookeeper} \
           --prefix=$RPM_BUILD_ROOT \
           --system-include-dir=%{_includedir} \
