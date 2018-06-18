@@ -17,8 +17,6 @@
  * limitations under the License.
  */
 // A masterclass containing methods which aid in the replication of access to hadoop
-import static org.junit.Assert.fail;
-
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -113,9 +111,10 @@ public class TestMethods {
   }
 
   static void createTable(Statement stmt, String newTableName,
-      String columnNames, String delimiter) throws SQLException {
+      String columnNames, String delimiter, String sql) throws SQLException {
     stmt.execute("CREATE TABLE " + newTableName + " (" + columnNames
-        + ") ROW FORMAT DELIMITED FIELDS TERMINATED BY '" + delimiter + "'");
+        + ") ROW FORMAT DELIMITED FIELDS TERMINATED BY '" + delimiter + "'"
+        + sql);
     System.out.println("Creating Table " + newTableName + "\n");
   }
 
@@ -174,9 +173,10 @@ public class TestMethods {
     stmt.executeUpdate(sql);
   }
 
-  static void deleteFile(Statement stmt, Path upload, String HdfsURI)
+  static void deleteFile(Statement stmt, String filePath, String HdfsURI)
       throws IOException, URISyntaxException {
     Configuration conf = new Configuration();
+    Path upload = new Path(filePath);
     FileSystem hdfs = FileSystem.get(new URI(HdfsURI), conf);
     hdfs.getConf();
     if (hdfs.exists(upload)) {
@@ -185,12 +185,12 @@ public class TestMethods {
     }
   }
 
-  static void updateTable(Statement stmt, String selection)
-      throws SQLException {
+  static int updateTable(Statement stmt, String selection) throws SQLException {
     String sql = selection;
     int affectedRows = stmt.executeUpdate(sql);
     System.out.println("Updating Table: " + sql + "\n");
     System.out.println("Affected Rows: " + affectedRows);
+    return affectedRows;
   }
 
   static String printResults(Statement stmt, String selection,
@@ -290,7 +290,7 @@ public class TestMethods {
   static void setNegativeFetchSize(Statement stmt) {
     try {
       stmt.setFetchSize(-5);
-      fail("should not reach this");
+      // fail("should not reach this");
     } catch (SQLException e) {
     }
   }
