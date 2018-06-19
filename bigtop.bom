@@ -449,6 +449,17 @@ bigtop {
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }
+	'atlas' {
+      name    = 'atlas'
+      relNotes = 'Apache Atlas'
+      version { base = '1.0.0'; pkg = base; release = 1 }
+      tarball { source      = "apache-$name-${version.base}-sources.tar.gz"
+                destination = "$name-${version.base}.tar.gz" }
+      url     { download_path = "/$name/${version.base}/"
+                site = "${apache.APACHE_MIRROR}/${download_path}"
+                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+      pkg = "atlas-metadata"
+    }
     'qfs' {
       name    = 'qfs'
       relNotes = 'Quantcast Filesystem'
