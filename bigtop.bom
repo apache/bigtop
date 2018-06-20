@@ -460,7 +460,17 @@ bigtop {
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
       pkg = "atlas-metadata"
     }
-    'qfs' {
+	'nifi' {
+      name    = 'nifi'
+      relNotes = 'Apache NiFi'
+      version { base = '1.6.0'; pkg = base; release = 1 }
+      tarball { source      = "$name-${version.base}-source-release.zip"
+                destination = "$name-${version.base}.tar.gz" }
+      url     { download_path = "/$name/${version.base}/"
+                site = "${apache.APACHE_MIRROR}/${download_path}"
+                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+    }
+	    'qfs' {
       name    = 'qfs'
       relNotes = 'Quantcast Filesystem'
       version { base = '1.1.4'; pkg = base; release = 1 }
