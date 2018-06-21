@@ -19,7 +19,7 @@ Provides: 	nifi
 AutoReqProv: 	no
 
 %description
-nifi is a scalable and extensible set of core foundational governance services – enabling enterprises to effectively and efficiently meet their compliance requirements within Hadoop and allows integration with the whole enterprise data ecosystem.
+Apache NiFi  is a software project designed to automate the flow of data between software systems.
 
 %prep
 %setup -q -n nifi-%{nifi_version}
