@@ -51,6 +51,26 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+/**
+ * THE METHODS IN THIS CLASS ENABLE HIVE OPERATIONS: propertyValue Reads
+ * properties from hadoop configuration files; getTables Uses MetaData to print
+ * the tables in the database; dropTable Drops the table from the database;
+ * createTable Creates a new table with user defined properties
+ * createPartitionedTable Creates a new table with a partition on a specified
+ * column; showTables Lists tables in the database; loadFile Loads a local data
+ * file into HDFS; loadData Inserts data from a data file into a table;
+ * deleteFile Deletes a file from HDFS; updateTable Performs an ACID Transaction
+ * on a table; printResults Performs a regular query and parses the result set;
+ * resulSetVerification Returns the value in a column of the table in order to
+ * verify data; preparedStatement Performs a prepared query in hive;
+ * callableStatement Creates and executes a stored procedure; getObject Performs
+ * a test query; setFetchSizeStatement Tests setting the fetch size on a result
+ * set; setFetchSizePreparedStatement Tests setting the fetch size on a prepared
+ * statement's result set; setNegativeFetchSize Ensures that negative values
+ * cannot be passed to the result set; executeStatement Performs a regular query
+ *
+ */
+
 public class TestMethods {
 
   static String propertyValue(String propertyFile, String propertyName)
@@ -112,9 +132,18 @@ public class TestMethods {
 
   static void createTable(Statement stmt, String newTableName,
       String columnNames, String delimiter, String sql) throws SQLException {
-    stmt.execute("CREATE TABLE " + newTableName + " (" + columnNames
-        + ") ROW FORMAT DELIMITED FIELDS TERMINATED BY '" + delimiter + "'"
+    stmt.execute("CREATE TABLE " + newTableName + columnNames
+        + "ROW FORMAT DELIMITED FIELDS TERMINATED BY '" + delimiter + "'"
         + sql);
+    System.out.println("Creating Table " + newTableName + "\n");
+  }
+
+  static void createPartitionedTable(Statement stmt, String newTableName,
+      String columnNames, String partitionedColumn, String delimiter,
+      String sql) throws SQLException {
+    stmt.execute("CREATE TABLE " + newTableName + columnNames + "PARTITIONED BY"
+        + partitionedColumn + "ROW FORMAT DELIMITED FIELDS TERMINATED BY '"
+        + delimiter + "'" + sql);
     System.out.println("Creating Table " + newTableName + "\n");
   }
 
@@ -193,8 +222,8 @@ public class TestMethods {
     return affectedRows;
   }
 
-  static String printResults(Statement stmt, String selection,
-      int columnVerificationNumber) throws SQLException {
+  static String printResults(Statement stmt, String selection)
+      throws SQLException {
     ResultSet res;
     String sql = selection;
     res = stmt.executeQuery(sql);
@@ -214,7 +243,7 @@ public class TestMethods {
     }
 
     res = stmt.executeQuery(sql);
-    return resultSetVerification(res, columnVerificationNumber);
+    return resultSetVerification(res, 1);
   }
 
   static String resultSetVerification(ResultSet res,
@@ -228,8 +257,8 @@ public class TestMethods {
     return validate;
   }
 
-  static String preparedStatement(Connection con, String selection,
-      int columnVerificationNumber) throws SQLException {
+  static String preparedStatement(Connection con, String selection)
+      throws SQLException {
     ResultSet res;
     PreparedStatement pstmt = con.prepareStatement(selection);
     res = pstmt.executeQuery();
@@ -249,7 +278,7 @@ public class TestMethods {
     }
 
     res = pstmt.executeQuery();
-    return resultSetVerification(res, columnVerificationNumber);
+    return resultSetVerification(res, 1);
   }
 
   static int callableStatement(Connection con, double testVal)
@@ -289,7 +318,7 @@ public class TestMethods {
 
   static void setNegativeFetchSize(Statement stmt) {
     try {
-      stmt.setFetchSize(-5);
+      stmt.setFetchSize(-1);
       // fail("should not reach this");
     } catch (SQLException e) {
     }
