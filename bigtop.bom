@@ -470,6 +470,16 @@ bigtop {
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }
+	'knox' {
+      name    = 'knox'
+      relNotes = 'Apache Knox'
+      version { base = '1.0.0'; pkg = base; release = 1 }
+      tarball { source      = "$name-${version.base}-src.zip"
+                destination = "$name-${version.base}.tar.gz" }
+      url     { download_path = "/$name/${version.base}/"
+                site = "${apache.APACHE_MIRROR}/${download_path}"
+                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+    }
 	    'qfs' {
       name    = 'qfs'
       relNotes = 'Quantcast Filesystem'
