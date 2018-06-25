@@ -15,6 +15,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+def create_collection() {
+  exec {
+    executable "/usr/bin/solrctl"
+    args "instancedir", "--generate", "/tmp/smoke_data"
+  }
+  exec {
+    executable "/usr/bin/solrctl"
+    args "instancedir", "--create", "smoke", "/tmp/smoke_data"
+  }
+  exec {
+    executable "/usr/bin/solrctl"
+    args "collection", "--create", "smoke"
+  }
+}
+
 def junitVersion = '4.11'
 dependencies {
   compile group: 'junit', name: 'junit', version: junitVersion, transitive: 'true'
@@ -35,8 +51,10 @@ sourceSets {
 
 test.doFirst {
   checkEnv(["HADOOP_CONF_DIR"])
+  create_collection()
 }
 
 test {
   include '**/Test*'
+  systemProperty "org.apache.bigtop.itest.solr_url", "http://localhost:8983/solr/smoke"
 }

@@ -129,7 +129,10 @@ destroy() {
 }
 
 bigtop-puppet() {
-    docker exec $1 bash -c 'puppet apply --parser future --modulepath=/bigtop-home/bigtop-deploy/puppet/modules:/etc/puppet/modules /bigtop-home/bigtop-deploy/puppet/manifests'
+    if docker exec $1 bash -c "puppet --version" | grep ^3 >/dev/null ; then
+      future="--parser future"
+    fi
+    docker exec $1 bash -c "puppet apply $future --modulepath=/bigtop-home/bigtop-deploy/puppet/modules:/etc/puppet/modules:/usr/share/puppet/modules /bigtop-home/bigtop-deploy/puppet/manifests"
 }
 
 get-yaml-config() {

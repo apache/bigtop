@@ -25,7 +25,6 @@ hadoop::hadoop_storage_dirs:
 #  - hcat
 #  - hive
 #  - httpfs
-#  - hue
 #  - mahout
 #  - mapred-app
 #  - oozie

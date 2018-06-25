@@ -65,8 +65,9 @@
 
     <menu name="Releases">
       <item name="Release Notes" href="release-notes.html"/>
-      <item name="1.1.0" href="http://www.apache.org/dyn/closer.lua/bigtop/bigtop-1.1.0/"/>
-      <item name="1.2.0" href="http://www.apache.org/dyn/closer.lua/bigtop/bigtop-1.2.0/"/>
+      <item name="1.1.0" href="https://www.apache.org/dyn/closer.lua/bigtop/bigtop-1.1.0/"/>
+      <item name="1.2.0" href="https://www.apache.org/dyn/closer.lua/bigtop/bigtop-1.2.0/"/>
+      <item name="1.2.1" href="https://www.apache.org/dyn/closer.lua/bigtop/bigtop-1.2.1/"/>
     </menu>
 
     <menu name="Project Information">

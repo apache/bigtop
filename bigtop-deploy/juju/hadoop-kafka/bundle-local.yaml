@@ -39,7 +39,7 @@ services:
       gui-x: "1000"
       gui-y: "400"
   client:
-    charm: "cs:xenial/hadoop-client-8"
+    charm: "cs:xenial/hadoop-client-9"
     constraints: "mem=3G"
     num_units: 1
     annotations:

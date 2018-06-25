@@ -49,7 +49,7 @@ follows:
     * Colocated on the NameNode unit
   * Slave (DataNode and NodeManager) v2.7.3
     * 3 separate units
-  * Kafka v0.10.1
+  * Kafka v0.10.1.1
   * Flume-Kafka
     * Colocated on the Kafka unit
   * Zookeeper v3.4.6

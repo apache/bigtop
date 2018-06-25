@@ -85,8 +85,8 @@ No changes are required to the default puppet 3 auth.conf.
 
 For other options that may be set here, look for class parameters in the modules'
 manifests/init.pp files. Any class parameter can be used as a hiera key if prefixed with the
-module and class namespace. Module hue's server class will look for its parameter rm_host as
-`hue::server::rm_host` in hiera.
+module and class namespace. Module kafka's server class will look for its parameter `port` as
+`kafka::server::port` in hiera.
 Note that if `hadoop::hadoop_storage_dirs` is left unset, puppet will attempt to guess which
 directories to use.
 
@@ -136,7 +136,7 @@ hadoop_cluster_node::cluster_components:
   - spark
   - yarn
   - zookeeper
-bigtop::bigtop_repo_uri: "http://bigtop-repos.s3.amazonaws.com/releases/1.2.0/ubuntu/16.04/x86_64"
+bigtop::bigtop_repo_uri: "http://repos.bigtop.apache.org/releases/1.2.1/ubuntu/16.04/x86_64"
 ```
 
 And finally execute

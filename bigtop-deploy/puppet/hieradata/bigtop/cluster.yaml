@@ -17,7 +17,7 @@
 # be installed as usual. Otherwise only a specified list will be set
 # Possible elements:
 # hadoop,yarn,hbase,alluxio,flink,flume,solrcloud,spark,oozie,hcat,sqoop,sqoop2,httpfs,
-# hue,mahout,giraph,crunch,pig,hive,zookeeper,ycsb,qfs
+# mahout,giraph,crunch,pig,hive,zookeeper,ycsb,qfs
 # Example (to deploy only HDFS and YARN server and gateway parts)
 # This can be a comma-separated list or an array.
 #hadoop_cluster_node::cluster_components:
@@ -110,7 +110,6 @@ hadoop::common_hdfs::hadoop_namenode_port: "8020"
 
 hadoop::common_yarn::hadoop_ps_host: "%{hiera('bigtop::hadoop_head_node')}"
 hadoop::common_yarn::hadoop_rm_host: "%{hiera('bigtop::hadoop_head_node')}"
-# actually default but needed for hue::server::rm_port here
 hadoop::common_yarn::hadoop_rm_port: "8032"
 
 hadoop::common_mapred_app::jobtracker_host: "%{hiera('bigtop::hadoop_head_node')}"
@@ -120,7 +119,6 @@ bigtop::hadoop_history_server_port: "19888"
 bigtop::hadoop_history_server_url: "http://%{hiera('hadoop::common_mapred_app::mapreduce_jobhistory_host')}:%{hiera('bigtop::hadoop_history_server_port')}"
 hadoop::common_yarn::yarn_log_server_url: "%{hiera('bigtop::hadoop_history_server_url')}/jobhistory/logs"
 
-# actually default but needed for hue::server::webhdfs_url here
 hadoop::httpfs::hadoop_httpfs_port: "14000"
 
 bigtop::hadoop_zookeeper_port: "2181"
@@ -138,7 +136,7 @@ solr::server::root_url: "%{hiera('bigtop::hadoop_namenode_uri')}"
 solr::server::zk: "%{hiera('hadoop::zk')}"
 solr::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 # Default but needed here to make sure, hue uses the same port
-solr::server::port: "1978"
+solr::server::port: "8983"
 
 hadoop_oozie::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 
@@ -170,21 +168,6 @@ bigtop::hadoop_rm_proxy_port: "8088"
 bigtop::sqoop2_server_port: "12000"
 bigtop::hbase_thrift_port: "9090"
 bigtop::hadoop_oozie_port: "11000"
-
-hue::server::rm_host: "%{hiera('hadoop::common_yarn::hadoop_rm_host')}"
-hue::server::rm_port: "%{hiera('hadoop::common_yarn::hadoop_rm_port')}"
-hue::server::rm_url: "http://%{hiera('bigtop::hadoop_head_node')}:%{hiera('bigtop::hadoop_rm_http_port')}"
-hue::server::rm_proxy_url: "http://%{hiera('hadoop::common_yarn::hadoop_ps_host')}:%{hiera('hadoop::common_yarn::hadoop_ps_port')}"
-hue::server::history_server_url: "%{hiera('bigtop::hadoop_history_server_url')}"
-# those use fqdn instead of hadoop_head_node because it's only ever activated
-# on the gatewaynode
-hue::server::webhdfs_url: "http://%{fqdn}:%{hiera('hadoop::httpfs::hadoop_httpfs_port')}/webhdfs/v1"
-hue::server::sqoop2_url: "http://%{fqdn}:%{hiera('bigtop::sqoop2_server_port')}/sqoop"
-hue::server::solr_url: "http://%{fqdn}:%{hiera('solr::server::port')}/solr/"
-hue::server::hbase_thrift_url: "%{fqdn}:%{hiera('bigtop::hbase_thrift_port')}"
-hue::server::oozie_url: "http://%{hiera('bigtop::hadoop_head_node')}:%{hiera('bigtop::hadoop_oozie_port')}/oozie"
-hue::server::default_fs: "%{hiera('bigtop::hadoop_namenode_uri')}"
-hue::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 
 giraph::client::zookeeper_quorum: "%{hiera('bigtop::hadoop_head_node')}"
 

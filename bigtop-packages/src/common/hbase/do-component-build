@@ -29,12 +29,19 @@ if [ $HOSTTYPE = "powerpc64le" ] ; then
   sed -i 's|<jruby.version>.*</jruby.version>|<jruby.version>1.7.23</jruby.version>|' pom.xml
   sed  -i "s|<version>1.5.0-alpha.6</version>|<version>1.5.0-alpha.11</version>|" pom.xml
 fi
+
+rm -f hbase-server/src/test/java/org/apache/hadoop/hbase/regionserver/TestBulkLoad.java
+
+if [ $HOSTTYPE = "aarch64" ] ; then
+   sed -i '/<version>1.5.0-alpha.6<\/version>/,+1d' ./pom.xml
+   sed -i '/<artifactId>asciidoctorj-pdf<\/artifactId>/a\<version>1.5.0-alpha.6<\/version>\n</dependency>\n<dependency>\n<groupId>org.jruby<\/groupId>\n<artifactId>jruby-complete<\/artifactId>\n<version>9.1.8.0<\/version>\n<\/dependency>' ./pom.xml
+fi
 mvn -DskipTests -Dslf4j.version=1.6.1         \
     -Dhadoop-two.version=$HADOOP_VERSION      \
     -Dzookeeper.version=$ZOOKEEPER_VERSION    \
     -Dcheckstyle.skip=true                    \
     ${MAVEN_ADDITIONAL} \
-    clean site install assembly:single "$@"
+    install site assembly:single "$@"
 
 rm -rf build
 mkdir build

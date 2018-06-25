@@ -56,3 +56,6 @@ override_dh_auto_install:
 	ln -sf /usr/lib/hadoop/client/hadoop-yarn-client.jar debian/oozie/usr/lib/oozie/lib/
 	ln -sf /usr/lib/hadoop/client/hadoop-yarn-common.jar debian/oozie/usr/lib/oozie/lib/
 	ln -sf /usr/lib/hadoop/client/hadoop-yarn-server-common.jar debian/oozie/usr/lib/oozie/lib/
+
+override_dh_strip_nondeterminism:
+	echo ""

@@ -15,24 +15,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-SOLR_XML='<solr>
-
-  <solrcloud>
-    <str name="host">${host:}</str>
-    <int name="hostPort">${solr.port:8983}</int>
-    <str name="hostContext">${hostContext:solr}</str>
-    <int name="zkClientTimeout">${zkClientTimeout:15000}</int>
-    <bool name="genericCoreNodeNames">${genericCoreNodeNames:true}</bool>
-  </solrcloud>
-
-  <shardHandlerFactory name="shardHandlerFactory"
-    class="HttpShardHandlerFactory">
-    <int name="socketTimeout">${socketTimeout:0}</int>
-    <int name="connTimeout">${connTimeout:0}</int>
-  </shardHandlerFactory>
-
-</solr>'
-
 usage() {
   [ $# -eq 0 ] || echo "$@"
   echo "
@@ -106,7 +88,7 @@ local_coreconfig() {
       mkdir -p $4
       cp -r /var/lib/solr/$6/conf/* $4
       ;;
-  esac 
+  esac
 }
 
 solr_webapi() {
@@ -118,13 +100,11 @@ solr_webapi() {
         break
       fi
     done
-    [ -n "$SOLR_ADMIN_URI" ] || die "Error: can't discover Solr URI. Please specify it explicitly via --solr." 
+    [ -n "$SOLR_ADMIN_URI" ] || die "Error: can't discover Solr URI. Please specify it explicitly via --solr."
   fi
-
-  URI="$SOLR_ADMIN_URI/$1"
+  URI="$SOLR_ADMIN_URI$1"
   shift
-  local WEB_OUT=`$SOLR_ADMIN_CURL $URI "$@" | sed -e 's#>#>\n#g'`
-
+  local WEB_OUT=$($SOLR_ADMIN_CURL $URI "$@" | sed -e 's#>#>\n#g')
   if [ $? -eq 0 ] && (echo "$WEB_OUT" | grep -q 'HTTP/.*200.*OK') ; then
     echo "$WEB_OUT" | egrep -q '<lst name="(failure|exception|error)">' || return 0
   fi
@@ -146,15 +126,14 @@ if [ -e "$SOLR_CONF_DIR/solr-env.sh" ] ; then
   . "$SOLR_CONF_DIR/solr-env.sh"
 elif [ -e /etc/default/solr ] ; then
   . /etc/default/solr
-else
-  SOLR_PORT=8983
 fi
 
+SOLR_PORT=${SOLR_PORT:-8983}
 SOLR_ADMIN_CURL='curl -i --retry 5 -s -L -k --negotiate -u :'
 SOLR_ADMIN_CHAT=echo
 SOLR_ADMIN_API_CMD='solr_webapi'
 
-SOLR_HOME=${SOLR_HOME:-/usr/lib/solr/}
+SOLR_INSTALL_DIR=/usr/lib/solr
 
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
@@ -162,7 +141,7 @@ SOLR_HOME=${SOLR_HOME:-/usr/lib/solr/}
 # First eat up all the global options
 
 while test $# != 0 ; do
-  case "$1" in 
+  case "$1" in
     --help)
       usage
       ;;
@@ -190,19 +169,19 @@ if [ -z "$SOLR_ZK_ENSEMBLE" ] ; then
   SOLR_ADMIN_ZK_CMD="local_coreconfig"
   cat >&2 <<-__EOT__
 	Warning: Non-SolrCloud mode has been completely deprecated
-	Please configure SolrCloud via SOLR_ZK_ENSEMBLE setting in 
+	Please configure SolrCloud via SOLR_ZK_ENSEMBLE setting in
 	/etc/default/solr
 	If you running remotely, please use --zk zk_ensemble.
 	__EOT__
 else
-  SOLR_ADMIN_ZK_CMD='${JAVA_HOME}/bin/java -classpath "${SOLR_HOME}/server/webapps/solr/WEB-INF/lib/*" org.apache.solr.cloud.ZkCLI -zkhost $SOLR_ZK_ENSEMBLE 2>/dev/null'
+  SOLR_ADMIN_ZK_CMD='${JAVA_HOME}/bin/java -classpath "${SOLR_INSTALL_DIR}/server/solr-webapp/webapp/WEB-INF/lib/*:${SOLR_INSTALL_DIR}/server/lib/ext/*:${SOLR_INSTALL_DIR}/server/lib/*" org.apache.solr.cloud.ZkCLI -zkhost $SOLR_ZK_ENSEMBLE 2>/dev/null'
 fi
 
 
 # Now start parsing commands -- there has to be at least one!
-[ $# -gt 0 ] || usage 
+[ $# -gt 0 ] || usage
 while test $# != 0 ; do
-  case "$1" in 
+  case "$1" in
     debug-dump)
       get_solr_state
 
@@ -222,10 +201,10 @@ while test $# != 0 ; do
         fi
       fi
 
-      eval $SOLR_ADMIN_ZK_CMD -cmd makepath / > /dev/null 2>&1 || : 
+      eval $SOLR_ADMIN_ZK_CMD -cmd makepath / > /dev/null 2>&1 || :
       eval $SOLR_ADMIN_ZK_CMD -cmd clear /    || die "Error: failed to initialize Solr"
 
-      eval $SOLR_ADMIN_ZK_CMD -cmd put /solr.xml "'$SOLR_XML'"
+      eval $SOLR_ADMIN_ZK_CMD -cmd put /solr.xml "'$(cat $SOLR_INSTALL_DIR/server/solr/solr.xml)'"
 
       shift 1
       ;;
@@ -238,8 +217,8 @@ while test $# != 0 ; do
     instancedir)
       [ $# -gt 1 ] || usage "Error: incorrect specification of arguments for $1"
       case "$2" in
-        --create) 
-            [ $# -gt 3 ] || usage "Error: incorrect specification of arguments for $1 $2" 
+        --create)
+            [ $# -gt 3 ] || usage "Error: incorrect specification of arguments for $1 $2"
 
             if [ -d $4/conf ] ; then
               INSTANCE_DIR="$4/conf"
@@ -247,7 +226,7 @@ while test $# != 0 ; do
               INSTANCE_DIR="$4"
             fi
 
-            [ -e ${INSTANCE_DIR}/solrconfig.xml -a -e ${INSTANCE_DIR}/schema.xml ] || die "Error: ${INSTANCE_DIR} must be a directory with at least solrconfig.xml and schema.xml"
+            [ -e ${INSTANCE_DIR}/solrconfig.xml -a -e ${INSTANCE_DIR}/managed-schema ] || die "Error: ${INSTANCE_DIR} must be a directory with at least solrconfig.xml and managed-schema"
 
             get_solr_state | grep -q '^ */configs/'"$3/" && die "Error: \"$3\" configuration already exists. Aborting. Try --update if you want to override"
 
@@ -264,7 +243,7 @@ while test $# != 0 ; do
               INSTANCE_DIR="$4"
             fi
 
-            [ -e ${INSTANCE_DIR}/solrconfig.xml -a -e ${INSTANCE_DIR}/schema.xml ] || die "Error: ${INSTANCE_DIR} must be a directory with at least solrconfig.xml and schema.xml"
+            [ -e ${INSTANCE_DIR}/solrconfig.xml -a -e ${INSTANCE_DIR}/managed-schema ] || die "Error: ${INSTANCE_DIR} must be a directory with at least solrconfig.xml and managed-schema"
 
             eval $SOLR_ADMIN_ZK_CMD -cmd clear /configs/$3 2>/dev/null || die "Error: can't delete configuration"
 
@@ -283,7 +262,7 @@ while test $# != 0 ; do
             ;;
         --delete)
             [ $# -gt 2 ] || usage "Error: incorrect specification of arguments for $1"
-            
+
             eval $SOLR_ADMIN_ZK_CMD -cmd clear /configs/$3 2>/dev/null || die "Error: can't delete configuration"
             shift 3
             ;;
@@ -294,14 +273,15 @@ while test $# != 0 ; do
 
             mkdir -p "$3" > /dev/null 2>&1
             [ -d "$3" ] || usage "Error: $3 has to be a directory"
-            cp -r ${SOLR_HOME}/coreconfig-template "$3/conf"
+            # sample_techproducts_configs is used as default, this provides many common used optional features
+            cp -r ${SOLR_INSTALL_DIR}/server/solr/configsets/sample_techproducts_configs/conf "$3/conf"
             shift 3
             ;;
         --list)
             get_solr_state | sed -n -e '/\/configs\//s#^.*/configs/\([^/]*\)/.*$#\1#p' | sort -u
             shift 2
             ;;
-        *)  
+        *)
             shift 1
             ;;
       esac
@@ -310,7 +290,7 @@ while test $# != 0 ; do
     collection)
       [ "$2" = "--list" ] || [ $# -gt 2 ] || usage "Error: incorrect specification of arguments for $1"
       case "$2" in
-        --create) 
+        --create)
             COL_CREATE_NAME=$3
             COL_CREATE_NUMSHARDS=1
             shift 3
@@ -357,7 +337,7 @@ while test $# != 0 ; do
             [ -n "$COL_CREATE_REPL" ] && COL_CREATE_CALL="${COL_CREATE_CALL}&replicationFactor=${COL_CREATE_REPL}"
             [ -n "$COL_CREATE_MAXSHARDS" ] && COL_CREATE_CALL="${COL_CREATE_CALL}&maxShardsPerNode=${COL_CREATE_MAXSHARDS}"
             [ -n "$COL_CREATE_NODESET" ] && COL_CREATE_CALL="${COL_CREATE_CALL}&createNodeSet=${COL_CREATE_NODESET}"
-            
+
             eval $SOLR_ADMIN_API_CMD "'/admin/collections?action=CREATE${COL_CREATE_CALL}'"
 
             shift 4
@@ -379,7 +359,7 @@ while test $# != 0 ; do
             get_solr_state | sed -ne '/\/collections\/[^\/]*$/s#^.*/collections/##p'
             shift 2
             ;;
-        *)  
+        *)
             shift 1
             ;;
       esac
@@ -404,7 +384,7 @@ while test $# != 0 ; do
             esac
           done
           [ -n "$CORE_KV_PAIRS" ] || CORE_KV_PAIRS="&instanceDir=${CORE_CREATE_NAME}"
- 
+
           eval $SOLR_ADMIN_API_CMD "'/admin/cores?action=CREATE&name=${CORE_CREATE_NAME}${CORE_KV_PAIRS}'"
           ;;
         --reload|--unload|--status)
@@ -412,7 +392,7 @@ while test $# != 0 ; do
           eval $SOLR_ADMIN_API_CMD "'/admin/cores?action=`echo $CORE_ACTION`&core=$3'"
           shift 3
           ;;
-        *)  
+        *)
           shift 1
           ;;
       esac

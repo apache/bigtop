@@ -1,0 +1,60 @@
+From 7e3b1d7f830b6e6abd5c4ee6a775f4063b648b60 Mon Sep 17 00:00:00 2001
+From: Anton Chevychalov <pub@mnu.pp.ru>
+Date: Fri, 8 Sep 2017 19:09:23 +0300
+Subject: [PATCH 1/2] Partial backport HBASE-16712 to 1.3.1
+
+That partial backport should fix net:jcip package licence trouble
+when we are building hbase with Hadoop 2.8.x
+
+https://issues.apache.org/jira/browse/HBASE-17893?focusedCommentId=15963617
+https://issues.apache.org/jira/browse/HBASE-16712
+---
+ .../src/main/resources/META-INF/LICENSE.vm             |  4 +++-
+ .../src/main/resources/supplemental-models.xml         | 18 ++++++++++++++++++
+ 2 files changed, 21 insertions(+), 1 deletion(-)
+
+diff --git a/hbase-resource-bundle/src/main/resources/META-INF/LICENSE.vm b/hbase-resource-bundle/src/main/resources/META-INF/LICENSE.vm
+index f403c89..0a4a23e 100644
+--- a/hbase-resource-bundle/src/main/resources/META-INF/LICENSE.vm
++++ b/hbase-resource-bundle/src/main/resources/META-INF/LICENSE.vm
+@@ -1561,7 +1561,9 @@ You can redistribute it and/or modify it under either the terms of the GPL
+ ## Whitelist of licenses that it's safe to not aggregate as above.
+ ## Note that this doesn't include ALv2 or the aforementioned aggregate
+ ## license mentions.
+-#set($non_aggregate_fine = [ 'Public Domain', 'New BSD license', 'BSD license', 'Mozilla Public License Version 2.0' ])
++##
++## See this FAQ link for justifications: https://www.apache.org/legal/resolved.html
++#set($non_aggregate_fine = [ 'Public Domain', 'New BSD license', 'BSD license', 'Mozilla Public License Version 2.0', 'Creative Commons Attribution License, Version 2.5', 'MPL 1.1'])
+ ## include LICENSE sections for anything not under ASL2.0
+ #foreach( ${dep} in ${projects} )
+ #if(${debug-print-included-work-info.equalsIgnoreCase("true")})
+diff --git a/hbase-resource-bundle/src/main/resources/supplemental-models.xml b/hbase-resource-bundle/src/main/resources/supplemental-models.xml
+index d6237d0..d5495cb 100644
+--- a/hbase-resource-bundle/src/main/resources/supplemental-models.xml
++++ b/hbase-resource-bundle/src/main/resources/supplemental-models.xml
+@@ -2047,4 +2047,22 @@ Copyright (c) 2007-2011 The JRuby project
+       </licenses>
+     </project>
+   </supplement>
++  <supplement>
++    <project>
++      <groupId>net.jcip</groupId>
++      <artifactId>jcip-annotations</artifactId>
++      <version>1.0</version>
++      <organization>
++        <name>Brian Goetz and Tim Peierls</name>
++        <url>http://www.jcip.net</url>
++      </organization>
++      <licenses>
++        <license>
++          <name>Creative Commons Attribution License, Version 2.5</name>
++          <url>http://creativecommons.org/licenses/by/2.5</url>
++          <distribution>repo</distribution>
++        </license>
++      </licenses>
++    </project>
++  </supplement>
+ </supplementalDataModels>
+-- 
+2.7.4
+

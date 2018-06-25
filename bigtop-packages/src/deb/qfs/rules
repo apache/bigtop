@@ -47,6 +47,9 @@ override_dh_auto_build:
 		--qfs-version=$(QFS_BASE_VERSION) \
 		--python=$(PYTHON_PATH)
 
+override_dh_auto_test:
+	@echo Tests are disabled
+
 override_dh_auto_install:
 	bash -x debian/install_qfs.sh \
 		--source-dir=debian \

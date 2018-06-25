@@ -20,4 +20,5 @@ set -ex
 
 export MAVEN_OPTS="-Xmx512M"
 
+sed -i '/asm-all/{n;s/4.2/5.0.2/}' modules/hadoop/pom.xml
 mvn clean install -DskipTests -Dhadoop.version=$HADOOP_VERSION -Dspark.version=$SPARK_VERSION -Dignite.edition=hadoop

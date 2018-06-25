@@ -34,7 +34,7 @@ Description: The Hadoop Zookeeper server
 
 Package: zookeeper-rest
 Architecture: all
-Depends: zookeeper (= ${source:Version})
+Depends: zookeeper (= ${source:Version}), lsb-base
 Description: The Zookeeper REST server
  This package starts the zookeeper REST server on startup
 

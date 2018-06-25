@@ -21,7 +21,7 @@ Software Foundation written in Scala. The project aims to provide a unified,
 high-throughput, low-latency platform for handling real-time data feeds. Learn
 more at [kafka.apache.org][].
 
-This charm deploys version 0.10.1 of the Kafka component from
+This charm deploys version 0.10.1.1 of the Kafka component from
 [Apache Bigtop][].
 
 [kafka.apache.org]: http://kafka.apache.org/

@@ -12,8 +12,6 @@
 /usr/bin/qfstoggleworm
 /usr/bin/qfssample
 /usr/bin/qfs_backup
-/usr/bin/qfs_checkpoint_prune
-/usr/bin/qfs_log_prune
 /usr/bin/cpfromqfs
 /usr/bin/cptoqfs
 
