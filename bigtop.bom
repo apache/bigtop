@@ -470,6 +470,16 @@ bigtop {
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }
+	'nifi-registry' {
+      name    = 'nifi-registry'
+      relNotes = 'Apache NiFi Registry'
+      version { base = '0.2.0'; pkg = base; release = 1 }
+      tarball { source      = "$name-${version.base}-source-release.zip"
+                destination = "$name-${version.base}.tar.gz" }
+      url     { download_path = "nifi/$name/$name-${version.base}/"
+                site = "${apache.APACHE_MIRROR}/${download_path}"
+                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+    }
 	'knox' {
       name    = 'knox'
       relNotes = 'Apache Knox'
