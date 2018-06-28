@@ -19,8 +19,98 @@ from charmhelpers.core import hookenv
 from charms.layer.apache_bigtop_base import get_package_version
 from charms.layer.bigtop_zookeeper import Zookeeper
 from charms.leadership import leader_set, leader_get
-from charms.reactive import set_state, when, when_not, is_state
+from charms.reactive import set_state, when, when_not, is_state, remove_state, hook
 from charms.reactive.helpers import data_changed
+import shutil
+import os
+
+
+@when('local-monitors.available')
+def local_monitors_available(nagios):
+    setup_nagios(nagios)
+
+
+@when('nrpe-external-master.available')
+def nrpe_external_master_available(nagios):
+    setup_nagios(nagios)
+
+
+def setup_nagios(nagios):
+    config = hookenv.config()
+    unit_name = hookenv.local_unit()
+    checks = [
+        {
+            'name'       : 'zk_open_file_descriptor_coun',
+            'description': 'ZK_Open_File_Descriptors_Count',
+            'warn'       : 500,
+            'crit'       : 800
+         },
+        {
+            'name'       : 'zk_ephemerals_count',
+            'description': 'ZK_Ephemerals_Count',
+            'warn'       : 10000,
+            'crit'       : 100000
+         },
+        {
+            'name'       : 'zk_avg_latency',
+            'description': 'ZK_Avg_Latency',
+            'warn'       : 500,
+            'crit'       : 1000
+         },
+        {
+            'name'       : 'zk_max_latency',
+            'description': 'ZK_Max_Latency',
+            'warn'       : 1000,
+            'crit'       : 2000
+         },
+        {
+            'name'       : 'zk_min_latency',
+            'description': 'ZK_Min_Latency',
+            'warn'       : 500,
+            'crit'       : 1000
+         },
+        {
+            'name'       : 'zk_outstanding_requests',
+            'description': 'ZK_Outstanding_Requests',
+            'warn'       : 20,
+            'crit'       : 50
+         },
+        {
+            'name'       : 'zk_watch_count',
+            'description': 'ZK_Watch_Count',
+            'warn'       : 100,
+            'crit'       : 500
+         },
+    ]
+    check_cmd = ['/usr/local/lib/nagios/plugins/check_zookeeper.py', '-o', 'nagios', '-s', 'localhost:2181']
+    for check in checks:
+        nagios.add_check(check_cmd + ['--key', check['name'], '-w', str(check['warn']), '-c', str(check['crit'])],
+                         name=check['name'],
+                         description=check['description'],
+                         context=config["nagios_context"],
+                         servicegroups=config["nagios_servicegroups"],
+                         unit=unit_name
+                         )
+    nagios.updated()
+
+
+@hook('upgrade-charm')
+def nrpe_helper_upgrade_charm():
+    # Make sure the nrpe handler will get replaced at charm upgrade
+    remove_state('zookeeper.nrpe_helper.installed')
+
+
+@when('zookeeper.nrpe_helper.registered')
+@when_not('zookeeper.nrpe_helper.installed')
+def install_nrpe_helper():
+    dst_dir = '/usr/local/lib/nagios/plugins/'
+    if not os.path.exists(dst_dir):
+        os.makedirs(dst_dir)
+    src = '{}/files/check_zookeeper.py'.format(hookenv.charm_dir())
+    dst = '{}/check_zookeeper.py'.format(dst_dir)
+    shutil.copy(src, dst)
+    os.chmod(dst, 0o755)
+    set_state('zookeeper.nrpe_helper.installed')
 
 
 @when('bigtop.available')
