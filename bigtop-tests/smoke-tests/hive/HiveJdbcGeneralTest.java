@@ -141,8 +141,8 @@ public class HiveJdbcGeneralTest extends TestMethods {
           "Select * from btest where Dest= 'LAX' and boarded >= 180"));
       assertEquals("114", printResults(stmt,
           "Select * from btest where Dest ='LAX' and boarded = 197"));
-      assertEquals("219", printResults(stmt,
-          "Select * from btest LIMIT 10 --"));
+      assertEquals("219",
+          printResults(stmt, "Select * from btest LIMIT 10 --"));
       assertEquals("114", preparedStatement(con,
           "Select * from btest where Dest ='LAX' and boarded = 197"));
       assertEquals(15, setFetchSizeStatement(stmt));
@@ -276,16 +276,17 @@ public class HiveJdbcGeneralTest extends TestMethods {
   @Test
   public void testFrequency() throws Exception {
 
-    String queryValues = "insert into table btestf values (1, 'blue', 'fair', 23),  (1, 'blue', 'red', 7),  (1, 'blue', 'medium', 24)," +
-        "(1, 'blue', 'dark', 11), (1, 'green', 'fair', 19),  (1, 'green', 'red', 7)," +
-        "(1, 'green', 'medium', 18), (1, 'green', 'dark', 14),  (1, 'brown', 'fair', 34)," +
-        "(1, 'brown', 'red', 5), (1, 'brown', 'medium', 41),  (1, 'brown', 'dark', 40)," +
-        "(1, 'brown', 'black', 3), (2, 'blue', 'fair', 46), (2, 'blue', 'red', 21)," +
-        "(2, 'blue', 'medium', 44), (2, 'blue', 'dark', 40), (2, 'blue', 'black', 6)," +
-        "(2, 'green', 'fair', 50), (2, 'green', 'red', 31), (2, 'green', 'medium', 37)," +
-        "(2, 'green', 'dark', 23), (2, 'brown', 'fair', 56), (2, 'brown', 'red', 42)," +
-        "(2, 'brown', 'medium', 53), (2, 'brown', 'dark', 54), (2, 'brown', 'black', 13)" +
-        "";
+    String queryValues =
+        "insert into table btestf values (1, 'blue', 'fair', 23),  (1, 'blue', 'red', 7),  (1, 'blue', 'medium', 24),"
+            + "(1, 'blue', 'dark', 11), (1, 'green', 'fair', 19),  (1, 'green', 'red', 7),"
+            + "(1, 'green', 'medium', 18), (1, 'green', 'dark', 14),  (1, 'brown', 'fair', 34),"
+            + "(1, 'brown', 'red', 5), (1, 'brown', 'medium', 41),  (1, 'brown', 'dark', 40),"
+            + "(1, 'brown', 'black', 3), (2, 'blue', 'fair', 46), (2, 'blue', 'red', 21),"
+            + "(2, 'blue', 'medium', 44), (2, 'blue', 'dark', 40), (2, 'blue', 'black', 6),"
+            + "(2, 'green', 'fair', 50), (2, 'green', 'red', 31), (2, 'green', 'medium', 37),"
+            + "(2, 'green', 'dark', 23), (2, 'brown', 'fair', 56), (2, 'brown', 'red', 42),"
+            + "(2, 'brown', 'medium', 53), (2, 'brown', 'dark', 54), (2, 'brown', 'black', 13)"
+            + "";
 
     String freqQuery =
         "select SUM(TXT_1.`count`) as ZSQL1, MIN(TXT_1.`count`) as ZSQL2, case  when COUNT(*) > COUNT(TXT_1.`eyes`) then ' ' else MIN(TXT_1.`eyes`) end as ZSQL3, case  when COUNT(*) > COUNT(TXT_1.`hair`) then ' ' else MIN(TXT_1.`hair`) end as ZSQL4 from `btestf` TXT_1 where (TXT_1.`count` is not null) and (TXT_1.`count` <> 0) group by TXT_1.`eyes`, TXT_1.`hair`";
@@ -300,17 +301,13 @@ public class HiveJdbcGeneralTest extends TestMethods {
     }
   }
 
-
   @Test
   public void testRank() throws Exception {
 
-    String queryValues = "insert into table btestr values ('Davis', 77, 84)," +
-        "('Orlando', 93, 80)," +
-        "('Ramey', 68, 72)," +
-        "('Roe', 68, 75)," +
-        "('Sanders', 56, 79)," +
-        "('Simms', 68, 77)," +
-        "('Strickland', 82, 79)";
+    String queryValues = "insert into table btestr values ('Davis', 77, 84),"
+        + "('Orlando', 93, 80)," + "('Ramey', 68, 72)," + "('Roe', 68, 75),"
+        + "('Sanders', 56, 79)," + "('Simms', 68, 77),"
+        + "('Strickland', 82, 79)";
 
     String rankQuery =
         "WITH `subquery0` AS ( SELECT `name` AS `name`, `present` AS `present`, `taste` AS `taste` FROM btestr ) SELECT `table0`.`name`, `table0`.`present`, `table0`.`taste`, `table1`.`rankalias0` AS `PresentRank`, `table2`.`rankalias1` AS `TasteRank` FROM `subquery0` AS `table0` LEFT JOIN ( SELECT DISTINCT `present`, `rankalias0` FROM ( SELECT `present`, `tempcol0` AS `rankalias0` FROM ( SELECT `present`, MIN( `tempcol1` ) OVER ( PARTITION BY `present` ) AS `tempcol0` FROM( SELECT `present`, CAST( ROW_NUMBER() OVER ( ORDER BY `present` DESC ) AS DOUBLE ) AS `tempcol1` FROM `subquery0` WHERE ( ( `present` IS NOT NULL ) ) ) AS `subquery3` ) AS `subquery1` ) AS subquery2 ) AS `table1` ON ( ( `table0`.`present` = `table1`.`present` ) ) LEFT JOIN ( SELECT DISTINCT `taste`, `rankalias1` FROM ( SELECT `taste`, `tempcol2` AS `rankalias1` FROM ( SELECT `taste`, MIN( `tempcol3` ) OVER ( PARTITION BY `taste` ) AS `tempcol2` FROM( SELECT `taste`, CAST( ROW_NUMBER() OVER ( ORDER BY `taste` DESC ) AS DOUBLE ) AS `tempcol3` FROM `subquery0` WHERE ( ( `taste` IS NOT NULL ) ) ) AS `subquery6` ) AS `subquery4` ) AS subquery5 ) AS `table2` ON ( ( `table0`.`taste` = `table2`.`taste` ) )";
@@ -328,22 +325,21 @@ public class HiveJdbcGeneralTest extends TestMethods {
   @Test
   public void testSort() throws Exception {
 
-    String queryValues = "insert into table btests values ('Paul''s Pizza', 83.00, 1019, 'Apex')," +
-        "('World Wide Electronics', 119.95, 1122, 'Garner')," +
-        "('Strickland Industries', 657.22, 1675, 'Morrisville')," +
-        "('Ice Cream Delight', 299.98, 2310, 'Holly Springs')," +
-        "('Watson Tabor Travel', 37.95, 3131, 'Apex')," +
-        "('Boyd & Sons Accounting', 312.49, 4762, 'Garner')," +
-        "('Bob''s Beds', 119.95, 4998, 'Morrisville')," +
-        "('Tina''s Pet Shop', 37.95, 5108, 'Apex')," +
-        "('Elway Piano and Organ', 65.79, 5217, 'Garner')," +
-        "('Tim''s Burger Stand', 119.95, 6335, 'Holly Springs')," +
-        "('Peter''s Auto Parts', 65.79, 7288, 'Apex')," +
-        "('Deluxe Hardware', 467.12, 8941, 'Garner')," +
-        "('Pauline''s Antiques', 302.05, 9112, 'Morrisville')," +
-        "('Apex Catering', 37.95, 9923, 'Apex')";
-
-
+    String queryValues =
+        "insert into table btests values ('Paul''s Pizza', 83.00, 1019, 'Apex'),"
+            + "('World Wide Electronics', 119.95, 1122, 'Garner'),"
+            + "('Strickland Industries', 657.22, 1675, 'Morrisville'),"
+            + "('Ice Cream Delight', 299.98, 2310, 'Holly Springs'),"
+            + "('Watson Tabor Travel', 37.95, 3131, 'Apex'),"
+            + "('Boyd & Sons Accounting', 312.49, 4762, 'Garner'),"
+            + "('Bob''s Beds', 119.95, 4998, 'Morrisville'),"
+            + "('Tina''s Pet Shop', 37.95, 5108, 'Apex'),"
+            + "('Elway Piano and Organ', 65.79, 5217, 'Garner'),"
+            + "('Tim''s Burger Stand', 119.95, 6335, 'Holly Springs'),"
+            + "('Peter''s Auto Parts', 65.79, 7288, 'Apex'),"
+            + "('Deluxe Hardware', 467.12, 8941, 'Garner'),"
+            + "('Pauline''s Antiques', 302.05, 9112, 'Morrisville'),"
+            + "('Apex Catering', 37.95, 9923, 'Apex')";
 
     String sortQuery =
         "WITH `subquery0` AS ( SELECT `accountnumber` AS `accountnumber`, `company` AS `company`, `debt` AS `debt`, `town` AS `town` FROM btests ) SELECT `table0`.`company`, `table0`.`debt`, `table0`.`accountnumber`, `table0`.`town` FROM ( SELECT `accountnumber`, `company`, `debt`, `town` FROM ( SELECT `accountnumber`, `company`, `debt`, `town`, ROW_NUMBER() OVER ( PARTITION BY `town` ORDER BY CASE WHEN `town` IS NULL THEN 0 ELSE 1 END, `town` ) AS `tempcol0` FROM `subquery0` ) AS `subquery1` WHERE ( `tempcol0` = 1 ) ) AS `table0` ORDER BY CASE WHEN `table0`.`town` IS NULL THEN 0 ELSE 1 END, `table0`.`town`";
