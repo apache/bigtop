@@ -1,5 +1,3 @@
-#!/usr/local/sbin/charm-env python3
-
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -15,21 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import sys
-
-from charmhelpers.core import hookenv
-from charms.reactive import is_state
-from charms.layer.bigtop_hbase import HBase
-
-
-def fail(msg):
-    hookenv.action_fail(msg)
-    sys.exit()
-
-
-if not is_state('hbase.installed'):
-    fail('HBase is not yet ready')
-
-hb = HBase()
-hb.start()
-hb.open_ports()
+module Puppet::Parser::Functions
+    newfunction(:latest_ant_binary, :type => :rvalue) do |args|
+        versionmask=args[0]
+        # We are using main mirror here because can't be sure about Apache Server config on every mirror. It could be Nginx, btw. 
+        %x(curl --stderr /dev/null 'https://www.apache.org/dist/ant/binaries/?F=0&V=1' | grep -o '<li>.*href="apache-ant-#{versionmask}-bin.tar.gz"'  |  grep -o "apache-ant-#{versionmask}" | tail -1 | tr -d '\r').chomp
+    end
+end

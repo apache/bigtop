@@ -279,25 +279,6 @@
     <description>The name of the group of super-users.</description>
   </property>
 
-  <!-- Enable Hue plugins -->
-<% if @hadoop_dfs_namenode_plugins -%>
-  <property>
-    <name>dfs.namenode.plugins</name>
-    <value><%= @hadoop_dfs_namenode_plugins %></value>
-    <description>Comma-separated list of namenode plug-ins to be activated.
-    </description>
-  </property>
-
-<% end -%>
-<% if @hadoop_dfs_datanode_plugins -%>
-  <property>
-    <name>dfs.datanode.plugins</name>
-    <value><%= @hadoop_dfs_datanode_plugins %></value>
-    <description>Comma-separated list of datanode plug-ins to be activated.
-    </description>
-  </property>
-
-<% end -%>
   <!-- increase the number of datanode transceivers way above the default of 256
      - this is for hbase -->
   <property>

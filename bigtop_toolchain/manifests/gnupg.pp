@@ -1,5 +1,3 @@
-#!/usr/local/sbin/charm-env python3
-
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -15,21 +13,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import sys
+class bigtop_toolchain::gnupg {
 
-from charmhelpers.core import hookenv
-from charms.reactive import is_state
-from charms.layer.bigtop_hbase import HBase
+  case $operatingsystem {
+    /(?i:(centos|fedora))/: {
+       $pkg = "gnupg2"
+       $cmd = "gpg2"
+    }
+    /(?i:(SLES|opensuse))/: {
+       $pkg = "gpg2"
+       $cmd = "gpg"
+    }
+    /(Ubuntu|Debian)/: {
+       $pkg = "gnupg"
+       $cmd = "gpg"
+    }
+  }
 
-
-def fail(msg):
-    hookenv.action_fail(msg)
-    sys.exit()
-
-
-if not is_state('hbase.installed'):
-    fail('HBase is not yet ready')
-
-hb = HBase()
-hb.start()
-hb.open_ports()
+  package { $pkg:
+    ensure => installed
+  }
+}

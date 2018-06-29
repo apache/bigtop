@@ -8,3 +8,18 @@ options:
       name of an interface (e.g., 'eth0'), or a CIDR range. If the
       latter, we\'ll bind to the first interface that we find with an
       IP address in that range.
+  autopurge_purge_interval:
+    default: "24"
+    type: string
+    description: |
+      The time interval in hours for which the purge task has to be
+      triggered. Set to a positive integer (1 and above) to enable
+      the auto purging. Defaults to 24.
+  autopurge_snap_retain_count:
+    default: "3"
+    type: string
+    description: |
+      When enabled, ZooKeeper auto purge feature retains the
+      snapRetainCount most recent snapshots and the corresponding
+      transaction logs in the dataDir and dataLogDir respectively
+      and deletes the rest. Defaults to 3. Minimum value is 3.

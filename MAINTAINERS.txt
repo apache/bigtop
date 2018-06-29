@@ -11,7 +11,6 @@ hadoop: mark grover, cos, rvs
 hama: minho kim <minho@apache.org>, edward j. yoon
 hbase: andrew purtell, rvs
 hive: mark grover, youngwoo kim
-hue: oflebbe
 itest: cos, rvs
 mvn publishing/packaging: rvs
 oozie evans ye, rvs

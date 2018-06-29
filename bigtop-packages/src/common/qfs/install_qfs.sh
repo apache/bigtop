@@ -179,8 +179,6 @@ install -m 755 build/release/bin/tools/qfsstats $BIN_DIR
 install -m 755 build/release/bin/tools/qfstoggleworm $BIN_DIR
 
 install -m 755 scripts/qfs_backup $BIN_DIR
-install -m 755 scripts/qfs_checkpoint_prune.py $BIN_DIR/qfs_checkpoint_prune
-install -m 755 scripts/qfs_log_prune.py $BIN_DIR/qfs_log_prune
 
 mkdir -p $LIB_DIR
 install -m 644 build/release/lib/libgf_complete.so $LIB_DIR
@@ -212,9 +210,9 @@ install -m 644 build/release/lib/static/libqfs_qcrs.a $LIB_DIR
 install -m 644 build/release/lib/static/libqfs_tools.a $LIB_DIR
 
 mkdir -p $ETC_DIR/logrotate.d
-install -m 644 contrib/logrotate/qfs-chunkserver $ETC_DIR/logrotate.d
-install -m 644 contrib/logrotate/qfs-metaserver $ETC_DIR/logrotate.d
-install -m 644 contrib/logrotate/qfs-webui $ETC_DIR/logrotate.d
+cp $SOURCE_DIR/qfs-chunkserver.cfg $ETC_DIR/logrotate.d/qfs-chunkserver
+cp $SOURCE_DIR/qfs-metaserver.cfg $ETC_DIR/logrotate.d/qfs-metaserver
+cp $SOURCE_DIR/qfs-webui.cfg $ETC_DIR/logrotate.d/qfs-webui
 
 mkdir -p $INCLUDE_DIR
 cp -a build/release/include/* $INCLUDE_DIR

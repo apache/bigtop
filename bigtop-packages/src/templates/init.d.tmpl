@@ -246,7 +246,6 @@ checkstatusofproc(){
 checkstatus(){
   checkstatusofproc
   status=$?
-
   case "$status" in
     $STATUS_RUNNING)
       log_success_msg "${DESC} is running"
@@ -309,7 +308,7 @@ cat <<'__EOT__'
   esac
 }
 
-service "$1"
+service "$@"
 
 exit $RETVAL
 __EOT__

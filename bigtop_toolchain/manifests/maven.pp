@@ -14,7 +14,10 @@
 # limitations under the License.
 
 class bigtop_toolchain::maven {
-  $mvnversion = '3.5.2'
+
+  require bigtop_toolchain::gnupg
+
+  $mvnversion = latest_maven_binary("3.5.[0-9]*")
   $mvn = "apache-maven-$mvnversion"
 
   $apache_prefix = nearest_apache_mirror()
@@ -22,17 +25,24 @@ class bigtop_toolchain::maven {
   exec {"/usr/bin/wget $apache_prefix/maven/maven-3/$mvnversion/binaries/$mvn-bin.tar.gz":
     cwd     => "/usr/src",
     unless  => "/usr/bin/test -f /usr/src/$mvn-bin.tar.gz",
-  }
+  } ~>
+
+  exec {"/usr/bin/wget https://www.apache.org/dist/maven/maven-3/3.5.3/binaries/$mvn-bin.tar.gz.asc":
+    cwd     => "/usr/src",
+    unless  => "/usr/bin/test -f /usr/src/$mvn-bin.tar.gz.asc",
+  } ~>
+
+  exec {"/usr/bin/$bigtop_toolchain::gnupg::cmd -v --verify --auto-key-retrieve --keyserver hkp://keyserver.ubuntu.com:80 $mvn-bin.tar.gz.asc":
+    cwd     => "/usr/src",
+  } ->
 
   exec {"/bin/tar xvzf /usr/src/$mvn-bin.tar.gz":
-    cwd         => '/usr/local',
-    creates     => "/usr/local/$mvn",
-    require     => Exec["/usr/bin/wget $apache_prefix/maven/maven-3/$mvnversion/binaries/$mvn-bin.tar.gz"],
-  }
+    cwd     => '/usr/local',
+    creates => "/usr/local/$mvn",
+  } ->
   
   file {'/usr/local/maven':
     ensure  => link,
     target  => "/usr/local/$mvn",
-    require => Exec["/bin/tar xvzf /usr/src/$mvn-bin.tar.gz"],
   }
 }

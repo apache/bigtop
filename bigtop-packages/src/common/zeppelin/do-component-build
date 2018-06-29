@@ -45,6 +45,8 @@ fi
 
 export MAVEN_OPTS="-Xmx1500m -Xms1500m"
 
+# change spark src download url to apache
+sed -i "s/http\:\/\/d3kbcqa49mib13\.cloudfront\.net/https\:\/\/www\.apache\.org\/dist\/spark\/spark-\$\{spark\.version\}/g" spark-dependencies/pom.xml
 mvn $BUILD_OPTS clean package
 
 mkdir -p build/dist

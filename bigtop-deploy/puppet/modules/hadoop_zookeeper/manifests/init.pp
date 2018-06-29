@@ -64,6 +64,8 @@ class hadoop_zookeeper (
                 $ensemble = [$myid, "localhost:2888:3888"],
                 $kerberos_realm = $hadoop_zookeeper::kerberos_realm,
                 $client_bind_addr = "",
+                $autopurge_purge_interval = "24",
+                $autopurge_snap_retain_count = "3",
   ) inherits hadoop_zookeeper {
     include hadoop_zookeeper::common
 
