@@ -353,4 +353,40 @@ public class HiveJdbcGeneralTest extends TestMethods {
       dropTable(stmt, newTableName + "S");
     }
   }
+
+  @Test
+  public void testSpecifiedLocation() throws Exception {
+
+    String queryValues = "insert into table `class` values"
+        + "('Alfred', 'M', 14, 69, 112.5)," + "('Alice', 'F', 13, 56.5, 84),"
+        + "('Barbara', 'F', 13, 65.3, 98)," + "('Carol', 'F', 14, 62.8, 102.5),"
+        + "('Henry', 'M', 14, 63.5, 102.5)," + "('James', 'M', 12, 57.3, 83),"
+        + "('Jane', 'F', 12, 59.8, 84.5)," + "('Janet', 'F', 15, 62.5, 112.5),"
+        + "('Jeffrey', 'M', 13, 62.5, 84)," + "('John', 'M', 12, 59, 99.5),"
+        + "('Joyce', 'F', 11, 51.3, 50.5)," + "('Judy', 'F', 14, 64.3, 90),"
+        + "('Louise', 'F', 12, 56.3, 77)," + "('Mary', 'F', 15, 66.5, 112),"
+        + "('Philip', 'M', 16, 72, 150)," + "('Robert', 'M', 12, 64.8, 128),"
+        + "('Ronald', 'M', 15, 67, 133)," + "('Thomas', 'M', 11, 57.5, 85),"
+        + "('William', 'M', 15, 66.5, 112)";
+
+    String locationQuery = "CREATE TABLE test42 ROW FORMAT SERDE"
+        + "'org.apache.hadoop.hive.serde2.columnar.ColumnarSerDe' STORED AS RCFILE"
+        + " LOCATION '/tmp/test1' AS SELECT  `CLASS`.`age`,"
+        + " `CLASS`.`name`, `CLASS`.`sex`, `CLASS`.`height`, `CLASS`.`weight`  FROM"
+        + " `CLASS` TBLPROPERTIES(\\\"transactional\\\"=\\\"true\\\")";
+
+    try (Statement stmt = con.createStatement()) {
+      dropTable(stmt, "class");
+      dropTable(stmt, "test42");
+      stmt.executeUpdate(
+          "create table `class` (name varchar(8), sex varchar(1), age double precision, height double precision, weight double precision)");
+      stmt.executeUpdate(queryValues);
+      try {
+        stmt.execute(locationQuery);
+      } catch (SQLException e) {
+      }
+      dropTable(stmt, "class");
+      dropTable(stmt, "test42");
+    }
+  }
 }
