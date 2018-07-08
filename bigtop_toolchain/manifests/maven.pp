@@ -27,7 +27,7 @@ class bigtop_toolchain::maven {
     unless  => "/usr/bin/test -f /usr/src/$mvn-bin.tar.gz",
   } ~>
 
-  exec {"/usr/bin/wget https://www.apache.org/dist/maven/maven-3/3.5.3/binaries/$mvn-bin.tar.gz.asc":
+  exec {"/usr/bin/wget https://www.apache.org/dist/maven/maven-3/$mvnversion/binaries/$mvn-bin.tar.gz.asc":
     cwd     => "/usr/src",
     unless  => "/usr/bin/test -f /usr/src/$mvn-bin.tar.gz.asc",
   } ~>
