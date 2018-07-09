@@ -200,7 +200,9 @@ install -d -m 0755 ${HDFS_DIR}
 cp ${BUILD_DIR}/share/hadoop/hdfs/*.jar ${HDFS_DIR}/
 install -d -m 0755 ${YARN_DIR}
 cp ${BUILD_DIR}/share/hadoop/yarn/hadoop-yarn*.jar ${YARN_DIR}/
-chmod 644 ${HADOOP_DIR}/*.jar ${MAPREDUCE_DIR}/*.jar ${HDFS_DIR}/*.jar ${YARN_DIR}/*.jar
+install -d -m 0755 ${YARN_DIR}/timelineservice
+cp ${BUILD_DIR}/share/hadoop/yarn/timelineservice/hadoop-yarn*.jar ${YARN_DIR}/timelineservice/
+chmod 644 ${HADOOP_DIR}/*.jar ${MAPREDUCE_DIR}/*.jar ${HDFS_DIR}/*.jar ${YARN_DIR}/*.jar ${YARN_DIR}/timelineservice/*.jar 
 
 # lib jars
 install -d -m 0755 ${HADOOP_DIR}/lib
@@ -209,7 +211,9 @@ install -d -m 0755 ${HDFS_DIR}/lib
 cp ${BUILD_DIR}/share/hadoop/hdfs/lib/*.jar ${HDFS_DIR}/lib
 install -d -m 0755 ${YARN_DIR}/lib
 cp ${BUILD_DIR}/share/hadoop/yarn/lib/*.jar ${YARN_DIR}/lib
-chmod 644 ${HADOOP_DIR}/lib/*.jar ${HDFS_DIR}/lib/*.jar ${YARN_DIR}/lib/*.jar
+install -d -m 0755 ${YARN_DIR}/timelineservice/lib
+cp ${BUILD_DIR}/share/hadoop/yarn/timelineservice/lib/*.jar ${YARN_DIR}/timelineservice/lib
+chmod 644 ${HADOOP_DIR}/lib/*.jar ${HDFS_DIR}/lib/*.jar ${YARN_DIR}/lib/*.jar ${YARN_DIR}/timelineservice/lib/*.jar
 
 # Install webapps
 cp -ra ${BUILD_DIR}/share/hadoop/hdfs/webapps ${HDFS_DIR}/
@@ -383,7 +387,7 @@ install -d -m 0755 $PREFIX/var/{log,run,lib}/hadoop-yarn
 install -d -m 0755 $PREFIX/var/{log,run,lib}/hadoop-mapreduce
 
 # Remove all source and create version-less symlinks to offer integration point with other projects
-for DIR in ${HADOOP_DIR} ${HDFS_DIR} ${YARN_DIR} ${MAPREDUCE_DIR} ${HTTPFS_DIR} ; do
+for DIR in ${HADOOP_DIR} ${HDFS_DIR} ${YARN_DIR} ${MAPREDUCE_DIR} ${HTTPFS_DIR} ${YARN_DIR}/timelineservice ; do
   (cd $DIR &&
    rm -fv *-sources.jar
    rm -fv lib/hadoop-*.jar

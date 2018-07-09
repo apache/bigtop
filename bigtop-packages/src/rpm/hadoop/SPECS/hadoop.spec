@@ -660,6 +660,8 @@ fi
 %{lib_hadoop}/libexec/hadoop-config.sh
 %{lib_hadoop}/libexec/hadoop-layout.sh
 %{lib_hadoop}/libexec/hadoop-functions.sh
+%{lib_hadoop}/libexec/tools
+%{lib_hadoop}/libexec/shellprofile.d
 %{bin_hadoop}/hadoop
 %{man_hadoop}/man1/hadoop.1.*
 %{man_hadoop}/man1/yarn.1.*
