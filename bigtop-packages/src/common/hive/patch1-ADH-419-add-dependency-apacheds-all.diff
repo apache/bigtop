@@ -1,0 +1,18 @@
+*** apache-hive-3.0.0-src/service/pom.xml.old	2018-05-16 01:21:00.000000000 +0300
+--- apache-hive-3.0.0-src/service/pom.xml	2018-07-12 14:33:28.767656536 +0300
+***************
+*** 327,332 ****
+--- 327,339 ----
+        <scope>test</scope>
+      </dependency>
+  
++ <dependency>
++     <groupId>org.apache.directory.server</groupId>
++     <artifactId>apacheds-all</artifactId>
++     <version>1.5.6</version>
++     <scope>test</scope>
++ </dependency>
++ 
+      <dependency>
+        <groupId>org.apache.directory.server</groupId>
+        <artifactId>apacheds-test-framework</artifactId>
