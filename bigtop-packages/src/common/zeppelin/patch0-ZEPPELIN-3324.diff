@@ -1,0 +1,19 @@
+*** zeppelin-0.8.0/spark/scala-2.10/src/main/scala/org/apache/zeppelin/spark/SparkScala210Interpreter.scala.old	2018-06-23 15:58:53.000000000 +0300
+--- zeppelin-0.8.0/spark/scala-2.10/src/main/scala/org/apache/zeppelin/spark/SparkScala210Interpreter.scala	2018-07-13 16:17:59.748008172 +0300
+***************
+*** 67,73 ****
+      settings.embeddedDefaults(Thread.currentThread().getContextClassLoader())
+      settings.usejavacp.value = true
+      settings.classpath.value = getUserJars.mkString(File.pathSeparator)
+!     sparkILoop = new SparkILoop(null, new JPrintWriter(Console.out, true))
+      if (printReplOutput) {
+        Console.setOut(interpreterOutput)
+      }
+--- 67,73 ----
+      settings.embeddedDefaults(Thread.currentThread().getContextClassLoader())
+      settings.usejavacp.value = true
+      settings.classpath.value = getUserJars.mkString(File.pathSeparator)
+!     sparkILoop = new SparkILoop()
+      if (printReplOutput) {
+        Console.setOut(interpreterOutput)
+      }

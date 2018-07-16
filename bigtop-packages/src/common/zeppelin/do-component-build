@@ -30,7 +30,7 @@ BUILD_OPTS="-Dscala.version=${SCALA_VERSION} \
             -Dignite.version=${IGNITE_HADOOP_VERSION} \
             -Dflink.version=${FLINK_VERSION} \
             -Pspark-${SPARK_VERSION%.*} \
-            -Phadoop-${HADOOP_VERSION%.*} \
+            -Phadoop3 \
             -Pscala-${SCALA_VERSION%.*} \
             -Ppyspark \
             -Psparkr \
@@ -44,6 +44,8 @@ else
 fi
 
 export MAVEN_OPTS="-Xmx1500m -Xms1500m"
+
+npm install phantomjs-prebuilt@2.1.16 --ignore-scripts
 
 mvn $BUILD_OPTS clean package
 
