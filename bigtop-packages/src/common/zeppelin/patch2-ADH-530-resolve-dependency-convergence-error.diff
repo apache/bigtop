@@ -1,0 +1,59 @@
+*** zeppelin-0.8.0/zeppelin-server/pom.xml.old	2018-07-17 12:08:53.998310999 +0300
+--- zeppelin-0.8.0/zeppelin-server/pom.xml	2018-07-17 14:46:17.687083122 +0300
+***************
+*** 105,110 ****
+--- 105,126 ----
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-server</artifactId>
+          </exclusion>
++ 	<exclusion>
++           <groupId>com.fasterxml.jackson.core</groupId>
++           <artifactId>jackson-core</artifactId>
++         </exclusion>
++         <exclusion>
++           <groupId>com.fasterxml.jackson.core</groupId>
++           <artifactId>jackson-annotations</artifactId>
++         </exclusion>
++         <exclusion>
++           <groupId>com.nimbusds</groupId>
++           <artifactId>nimbus-jose-jwt</artifactId>
++         </exclusion>
++         <exclusion>
++           <groupId>com.fasterxml.jackson.module</groupId>
++           <artifactId>jackson-module-jaxb-annotations</artifactId>
++         </exclusion>
+        </exclusions>
+      </dependency>
+  
+***************
+*** 189,195 ****
+      <dependency>
+        <groupId>commons-beanutils</groupId>
+        <artifactId>commons-beanutils</artifactId>
+!       <version>1.9.2</version>
+      </dependency>
+  
+      <dependency>
+--- 205,211 ----
+      <dependency>
+        <groupId>commons-beanutils</groupId>
+        <artifactId>commons-beanutils</artifactId>
+!       <version>1.9.3</version>
+      </dependency>
+  
+      <dependency>
+***************
+*** 231,236 ****
+--- 247,258 ----
+        <groupId>org.eclipse.jetty.websocket</groupId>
+        <artifactId>websocket-server</artifactId>
+        <version>${jetty.version}</version>
++       <exclusions>
++         <exclusion>
++           <groupId>org.eclipse.jetty</groupId>
++           <artifactId>jetty-servlet</artifactId>
++         </exclusion>
++       </exclusions>
+      </dependency>
+  
+      <dependency>
