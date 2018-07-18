@@ -493,7 +493,7 @@ bigtop {
 	'ranger' {
       name    = 'ranger'
       relNotes = 'Apache Ranger'
-      version { base = '1.0.0'; pkg = base; release = 1 }
+      version { base = '1.1.0'; pkg = base; release = 1 }
       tarball { source      = "apache-$name-${version.base}.tar.gz"
                 destination = "$name-${version.base}.tar.gz" }
       url     { download_path = "/$name/${version.base}/"
