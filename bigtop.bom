@@ -308,7 +308,7 @@ bigtop {
       name    = 'spark'
       pkg     = 'spark-core'
       relNotes = 'Apache Spark'
-      version { base = '2.1.1'; pkg = base; release = 1 }
+      version { base = '2.3.1'; pkg = base; release = 1 }
       tarball { destination = "$name-${version.base}.tar.gz"
                 source      = "$name-${version.base}.tgz" }
       url     { download_path = "/$name/$name-${version.base}"
@@ -493,7 +493,7 @@ bigtop {
 	'ranger' {
       name    = 'ranger'
       relNotes = 'Apache Ranger'
-      version { base = '1.0.0'; pkg = base; release = 1 }
+      version { base = '1.1.0'; pkg = base; release = 1 }
       tarball { source      = "apache-$name-${version.base}.tar.gz"
                 destination = "$name-${version.base}.tar.gz" }
       url     { download_path = "/$name/${version.base}/"
