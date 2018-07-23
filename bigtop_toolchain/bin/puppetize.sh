@@ -26,9 +26,13 @@ case ${ID}-${VERSION_ID} in
       dnf -y check-update
       dnf -y install hostname findutils curl sudo unzip wget puppet puppetlabs-stdlib
         ;;
-    ubuntu-1[6,8].04)
+    ubuntu-16.04)
         apt-get update
         apt-get -y install wget curl sudo unzip puppet software-properties-common puppet-module-puppetlabs-apt puppet-module-puppetlabs-stdlib
+        ;;
+    ubuntu-18.04)
+        apt-get update
+        apt-get -y install wget curl sudo unzip puppet software-properties-common puppet-module-puppetlabs-apt puppet-module-puppetlabs-stdlib rsync dh-python
         ;;
     debian-9*)
         apt-get update
