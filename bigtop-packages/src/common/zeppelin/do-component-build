@@ -28,7 +28,7 @@ BUILD_OPTS="-Dscala.version=${SCALA_VERSION} \
             -Dhbase.hadoop.version=${HADOOP_VERSION} \
             -Dignite.version=${IGNITE_HADOOP_VERSION} \
             -Dflink.version=${FLINK_VERSION} \
-OD            -Phadoop3 \
+            -Phadoop3 \
             -Pscala-${SCALA_VERSION%.*} \
             -Ppyspark \
             -Psparkr \
