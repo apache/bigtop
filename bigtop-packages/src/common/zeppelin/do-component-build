@@ -23,13 +23,11 @@ set -ex
 BUILD_OPTS="-Dscala.version=${SCALA_VERSION} \
             -Dscala.binary.version=${SCALA_VERSION%.*} \
             -Dscala.macros.version=2.1.0 \
-            -Dspark.version=${SPARK_VERSION} \
             -Dhadoop.version=${HADOOP_VERSION} \
             -Dhbase.hbase.version=${HBASE_VERSION} \
             -Dhbase.hadoop.version=${HADOOP_VERSION} \
             -Dignite.version=${IGNITE_HADOOP_VERSION} \
             -Dflink.version=${FLINK_VERSION} \
-            -Pspark-${SPARK_VERSION%.*} \
             -Phadoop3 \
             -Pscala-${SCALA_VERSION%.*} \
             -Ppyspark \
