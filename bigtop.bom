@@ -273,6 +273,17 @@ bigtop {
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }
+     'slider' {
+      name    = 'slider'
+      pkg     = 'slider'
+      relNotes = 'Apache Slider'
+      version { base = '0.92.0'; pkg = base; release = 1 }
+      tarball { destination = "$name-${version.base}.tar.gz"
+                source      = "apache-$name-${version.base}-incubating-source-release.tar.gz" }
+      url     { download_path = "incubator/$name/${version.base}-incubating"
+                site = "${apache.APACHE_MIRROR}/${download_path}"
+                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+    }
     'solr' {
       name    = 'solr'
       relNotes = 'Apache Solr'
