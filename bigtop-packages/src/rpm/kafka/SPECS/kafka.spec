@@ -66,6 +66,7 @@ Source2: install_%{kafka_name}.sh
 Source3: kafka-server.svc
 Source4: init.d.tmpl
 Source6: kafka.default
+Source7: kafka
 Requires: zookeeper
 Requires: bigtop-utils >= 0.7
 Requires(preun): /sbin/service

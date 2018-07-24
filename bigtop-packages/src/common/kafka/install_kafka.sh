@@ -118,6 +118,9 @@ done
 rm -f ${PREFIX}/${LIB_DIR}/{LICENSE,NOTICE}
 rm -rf ${PREFIX}/${LIB_DIR}/site-docs
 
+# Add init like bin/kafka script
+cp ${SOURCE_DIR}/kafka  ${PREFIX}/${LIB_DIR}/bin/
+
 # Site docs
 tar zxf ${BUILD_DIR}/build/kafka*site-docs.tgz -C ${PREFIX}/${DOC_DIR} 
 
