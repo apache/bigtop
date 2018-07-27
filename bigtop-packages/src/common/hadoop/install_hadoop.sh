@@ -362,6 +362,7 @@ sed -i -e '/<\/configuration>/i\
 # Make the pseudo-distributed config
 for conf in conf.pseudo ; do
   install -d -m 0755 $HADOOP_ETC_DIR/$conf
+  install -d -m 0755 $HADOOP_ETC_DIR/$conf/shellprofile.d
   # Install the upstream config files
   cp -r ${BUILD_DIR}/etc/hadoop/* $HADOOP_ETC_DIR/$conf
   # Remove the ones that shouldn't be installed
@@ -369,7 +370,7 @@ for conf in conf.pseudo ; do
   rm -rf $HADOOP_ETC_DIR/$conf/*.cmd
   # Overlay the -site files
   (cd $DISTRO_DIR/$conf && tar -cf - .) | (cd $HADOOP_ETC_DIR/$conf && tar -xf -)
-  chmod -R 0644 $HADOOP_ETC_DIR/$conf/*
+  chmod 0644 $(find  $HADOOP_ETC_DIR/$conf/ -type f)
   # When building straight out of svn we have to account for pesky .svn subdirs 
   rm -rf `find $HADOOP_ETC_DIR/$conf -name .svn -type d` 
 done
