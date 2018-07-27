@@ -1,0 +1,24 @@
+*** apache-tez-0.9.1-src/tez-tools/analyzers/job-analyzer/pom.xml.old	2017-12-13 03:11:51.000000000 +0300
+--- apache-tez-0.9.1-src/tez-tools/analyzers/job-analyzer/pom.xml	2018-07-26 16:40:05.102367370 +0300
+***************
+*** 25,31 ****
+    <artifactId>tez-job-analyzer</artifactId>
+  
+    <dependencies>
+!     <dependency>
+        <groupId>io.dropwizard.metrics</groupId>
+        <artifactId>metrics-core</artifactId>
+      </dependency>
+--- 25,36 ----
+    <artifactId>tez-job-analyzer</artifactId>
+  
+    <dependencies>
+!   <dependency>
+!       <groupId>com.sun.istack</groupId>
+!       <artifactId>istack-commons-runtime</artifactId>
+!       <version>3.0.5</version>
+!   </dependency>
+!       <dependency>
+        <groupId>io.dropwizard.metrics</groupId>
+        <artifactId>metrics-core</artifactId>
+      </dependency>
