@@ -217,6 +217,8 @@ chmod 644 ${HADOOP_DIR}/lib/*.jar ${HDFS_DIR}/lib/*.jar ${YARN_DIR}/lib/*.jar ${
 
 # Install webapps
 cp -ra ${BUILD_DIR}/share/hadoop/hdfs/webapps ${HDFS_DIR}/
+cp -ra ${BUILD_DIR}/share/hadoop/yarn/webapps ${YARN_DIR}/
+
 
 # bin
 install -d -m 0755 ${HADOOP_DIR}/bin
