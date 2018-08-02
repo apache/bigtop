@@ -4,6 +4,8 @@ includes:
   - 'layer:leadership'
   - 'interface:zookeeper-quorum'
   - 'interface:zookeeper'
+  - 'interface:nrpe-external-master'
+  - 'interface:local-monitors'
 options:
   apache-bigtop-base:
     ports:
