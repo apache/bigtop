@@ -51,43 +51,43 @@ def setup_nagios(nagios):
             'description': 'ZK_Open_File_Descriptors_Count',
             'warn': 500,
             'crit': 800
-         },
+        },
         {
             'name': 'zk_ephemerals_count',
             'description': 'ZK_Ephemerals_Count',
             'warn': 10000,
             'crit': 100000
-         },
+        },
         {
             'name': 'zk_avg_latency',
             'description': 'ZK_Avg_Latency',
             'warn': 500,
             'crit': 1000
-         },
+        },
         {
             'name': 'zk_max_latency',
             'description': 'ZK_Max_Latency',
             'warn': 1000,
             'crit': 2000
-         },
+        },
         {
             'name': 'zk_min_latency',
             'description': 'ZK_Min_Latency',
             'warn': 500,
             'crit': 1000
-         },
+        },
         {
             'name': 'zk_outstanding_requests',
             'description': 'ZK_Outstanding_Requests',
             'warn': 20,
             'crit': 50
-         },
+        },
         {
             'name': 'zk_watch_count',
             'description': 'ZK_Watch_Count',
             'warn': 100,
             'crit': 500
-         },
+        },
     ]
     check_cmd = ['/usr/local/lib/nagios/plugins/check_zookeeper.py',
                  '-o', 'nagios', '-s', 'localhost:2181']
