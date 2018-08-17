@@ -423,7 +423,7 @@ bigtop {
     'hama' {
       name    = 'hama'
       relNotes = 'Apache Hama'
-      version { base = '0.7.0'; pkg = base; release = 1 }
+      version { base = '0.7.1'; pkg = base; release = 1 }
       tarball { destination = "$name-dist-${version.base}.tar.gz"
                 source      = "$name-dist-${version.base}-src.tar.gz" }
       url     { download_path = "/$name/$name-${version.base}/"
