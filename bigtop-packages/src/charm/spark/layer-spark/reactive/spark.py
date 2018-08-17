@@ -21,7 +21,7 @@ from charmhelpers.core import hookenv, host, unitdata
 from charms import leadership
 from charms.reactive.helpers import data_changed
 from jujubigdata import utils
-
+from subprocess import check_call
 
 ###############################################################################
 # Status methods
@@ -138,7 +138,6 @@ def set_deployment_mode_state(state):
     # set app version string for juju status output
     spark_version = get_package_version('spark-core') or 'unknown'
     hookenv.application_version_set(spark_version)
-
 
 ###############################################################################
 # Reactive methods
@@ -318,3 +317,12 @@ def client_present(client):
 def client_should_stop(client):
     if is_state('leadership.is_leader'):
         client.clear_spark_started()
+
+@when('spark.started')
+def start_thrift():
+    enable_thrift = hookenv.config()['spark_enable_thriftserver']
+    if data_changed('enable_thrift', enable_thrift):
+        if enable_thrift:
+            check_call(['/usr/lib/spark/sbin/start-thriftserver.sh'])
+        else:
+            check_call(['/usr/lib/spark/sbin/stop-thriftserver.sh'])
