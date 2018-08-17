@@ -235,7 +235,8 @@ def reconfigure_spark():
     # Almost all config changes should trigger a reinstall... except when
     # changing the bigtop repo version. Repo version changes require the user
     # to run an action, so we skip the reinstall in that case.
-    if not is_state('config.changed.bigtop_version'):
+    if not is_state('config.changed.bigtop_version') \
+            and not is_state('config.changed.spark_enable_thriftserver'):
         # Config changes should reinstall even if the deployment topology has
         # not changed. Hence, pass force=True.
         reinstall_spark(force=True)
