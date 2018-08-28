@@ -319,11 +319,9 @@ def client_should_stop(client):
     if is_state('leadership.is_leader'):
         client.clear_spark_started()
 
-@when('spark.started')
+@when('spark.started', 'config.changed.spark_enable_thriftserver')
 def start_thrift():
-    enable_thrift = hookenv.config()['spark_enable_thriftserver']
-    if data_changed('enable_thrift', enable_thrift):
-        if enable_thrift:
-            check_call(['/usr/lib/spark/sbin/start-thriftserver.sh'])
-        else:
-            check_call(['/usr/lib/spark/sbin/stop-thriftserver.sh'])
+    if hookenv.config()['spark_enable_thriftserver']:
+        check_call(['/usr/lib/spark/sbin/start-thriftserver.sh'])
+    else:
+        check_call(['/usr/lib/spark/sbin/stop-thriftserver.sh'])

@@ -400,6 +400,10 @@ class Spark(object):
             else:
                 hookenv.log("Spark Worker did not start")
 
+        # Open port for Thrift Server
+        if hookenv.config()['spark_enable_thriftserver']:
+            hookenv.open_port('10000')
+
     def stop(self):
         """
         Stop all services (and close associated ports). Stopping a service
