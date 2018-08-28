@@ -17,6 +17,8 @@ class bigtop_toolchain::packages {
   case $operatingsystem{
     /(?i:(centos|fedora))/: {
       $pkgs = [
+        "yasm",
+        "nasm",
         "unzip",
         "rsync",
         "curl",
