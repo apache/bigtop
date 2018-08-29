@@ -111,13 +111,13 @@ bigtop {
   dependencies = [
     zookeeper:['hadoop', 'hbase'],
     hadoop:['ignite-hadoop', 'hbase', 'crunch', 'pig', 'hive', 'tez', 'sqoop', 'sqoop2',
-      'oozie', 'mahout', 'flume', 'giraph', 'solr', 'spark','spark1',
+      'mahout', 'flume', 'giraph', 'solr', 'spark','spark1',
       'phoenix', 'alluxio', 'kafka', 'ycsb', 'hama', 'zeppelin',
       'tajo', 'apex'
     ],
     hbase:['phoenix','giraph','ycsb','hive'],
-    pig:['datafu', 'oozie'],
-    hive:['oozie', 'pig','zeppelin'],
+    pig:['datafu'],
+    hive:['pig','zeppelin'],
     'ignite-hadoop':['zeppelin'],
     spark:['zeppelin']
   ]
@@ -221,16 +221,6 @@ bigtop {
       tarball { destination = "${sqoop.name}-${version.base}.tar.gz"
                 source      = destination }
       url     { download_path = "/${sqoop.name}/${version.base}/"
-                site = "${apache.APACHE_MIRROR}/${download_path}"
-                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
-    }
-    'oozie' {
-      name    = 'oozie'
-      relNotes = 'Apache Oozie'
-      version { base = '4.3.0'; pkg = base; release = 1 }
-      tarball { destination = "$name-${version.base}.tar.gz"
-                source      = destination }
-      url     { download_path = "/$name/${version.base}/"
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }
