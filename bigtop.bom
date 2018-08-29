@@ -529,6 +529,15 @@ bigtop {
       url     { site = "https://github.com/greenplum-db/gpdb/archive/"
                 archive = site }
     }
+    'libisal' {
+      name    = 'libisal'
+      relNotes = 'Intel(R) Intelligent Storage Acceleration Library'
+      version { base = '2.23.0'; pkg = base; release = 1 }
+      tarball { destination = "isa-l-${version.base}.tar.gz"
+                source      = "v${version.base}.tar.gz" }
+      url     { site = "https://github.com/01org/isa-l/archive/"
+                archive = site }
+    }
     'ambari' {
       name    = 'ambari'
       relNotes = 'Apache Ambari'
