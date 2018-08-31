@@ -55,7 +55,7 @@ mkdir build/src
 
 # Build artifacts
 MAVEN_OPTS="-DskipTests -DskipTest -DskipITs"
-mvn $ANT_OPTS $BUNDLE_SNAPPY -Pyarn-ui -Pdist -Pnative -Psrc -Dtar ${MAVEN_OPTS} install package "$@"
+mvn $ANT_OPTS $BUNDLE_SNAPPY -Pyarn-ui -Pdist -Pnative -Psrc -Dtar -Drequire.isal -Disal.prefix -Disal.lib -Dbundle.isa ${MAVEN_OPTS} install package "$@"
 mvn site site:stage ${MAVEN_OPTS} $@
 
 (cd build ; tar --strip-components=1 -xzvf  ../hadoop-dist/target/hadoop-${HADOOP_VERSION}.tar.gz)
