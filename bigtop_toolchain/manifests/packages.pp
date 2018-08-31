@@ -64,8 +64,12 @@ class bigtop_toolchain::packages {
         "apr-devel",
         "bison",
         "libffi-devel",
-        "epel-release"
+        "epel-release",
+        "libisal-dev"
       ]
+      exec { 'arenadata_repo':
+              command => '/bin/echo -e [ADH16]"\n"name=Arenadata ADH16"\n"baseurl=https://ci.arenadata.io/artifactory/adh16-centos7-x64-adh/"\n"enabled=1"\n"gpgcheck=0> /etc/yum.repos.d/adb.repo',
+            }
       package { 'cmake3':
         ensure => latest
       }
