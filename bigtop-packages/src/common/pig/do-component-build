@@ -20,12 +20,15 @@ set -ex
 
 cat <<__EOT__ >> ivy/libraries.properties
 
-hbase95.version=$HBASE_VERSION
-hive.version=$HIVE_VERSION
+#hbase95.version=$HBASE_VERSION
+#hive.version=$HIVE_VERSION
 zookeeper.version=$ZOOKEEPER_VERSION
-hadoop-common.version=$HADOOP_VERSION
-hadoop-hdfs.version=$HADOOP_VERSION
-hadoop-mapreduce.version=$HADOOP_VERSION
+#hadoop-common.version=$HADOOP_VERSION
+#hadoop-hdfs.version=$HADOOP_VERSION
+#hadoop-mapreduce.version=$HADOOP_VERSION
+hadoop-common.version=2.8.1
+hadoop-hdfs.version=2.8.1
+hadoop-mapreduce.version=2.8.1
 __EOT__
 
 # use .m2/repository/apache-forrest as store for apache forrest depency download store
