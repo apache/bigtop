@@ -54,7 +54,7 @@ public class HiveJdbcGeneralTest extends TestMethods {
   String newTableName = "btest";
 
   @BeforeClass
-  public static void onTimeSetup() throws Exception {
+  public static void oneTimeSetup() throws Exception {
     String username = System.getenv("HIVE_USER");
     String password = System.getenv("HIVE_PASSWORD");
     Properties connectionProps = new Properties();
@@ -63,6 +63,12 @@ public class HiveJdbcGeneralTest extends TestMethods {
     Class.forName("org.apache.hive.jdbc.HiveDriver");
     con = DriverManager.getConnection(
         jdbcConnection + ":" + hivePort + "/default;", connectionProps);
+    assertFalse(con.getMetaData().supportsRefCursors());
+    assertTrue(con.getMetaData().allTablesAreSelectable());
+    assertEquals("Apache Hive", con.getMetaData().getDatabaseProductName());
+    System.out
+    .println("Hive Version: " + con.getMetaData().getDatabaseMajorVersion()
+        + "." + con.getMetaData().getDatabaseMinorVersion());
   }
 
   @AfterClass
@@ -85,12 +91,6 @@ public class HiveJdbcGeneralTest extends TestMethods {
       String HdfsURI = "hdfs://" + hdfsConnection;
       String filePath = "/tmp/htest/00000_";
       String fileDestination = HdfsURI + filePath;
-      assertFalse(con.getMetaData().supportsRefCursors());
-      assertTrue(con.getMetaData().allTablesAreSelectable());
-      assertEquals("Apache Hive", con.getMetaData().getDatabaseProductName());
-      System.out.println(
-          "Hive Version: " + con.getMetaData().getDatabaseMajorVersion() + "."
-              + con.getMetaData().getDatabaseMinorVersion());
       getTables(con, newTableName);
       dropTable(stmt, newTableName);
       dropTable(stmt, newTableName + "NT");
@@ -167,7 +167,9 @@ public class HiveJdbcGeneralTest extends TestMethods {
       setNegativeFetchSize(stmt);
     }
   }
-  @Test public void testTableDeletion() throws Exception{
+
+  @Test
+  public void testTableDeletion() throws Exception {
     try (Statement stmt = con.createStatement()) {
       dropTable(stmt, newTableName);
       dropTable(stmt, newTableName + "NT");
@@ -255,9 +257,7 @@ public class HiveJdbcGeneralTest extends TestMethods {
         boolean found = false;
         while (res2.next()) {
           String value = res2.getString(2);
-          if (value != null && value.contains("SASFMT"))
-
-          {
+          if (value != null && value.contains("SASFMT")) {
             assertEquals("SASFMT:t", res2.getString(2).trim());
             assertEquals("TIME(10.0)", res2.getString(3).trim());
             found = true;
