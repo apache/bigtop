@@ -71,17 +71,9 @@ public class HiveJdbcGeneralTest extends TestMethods {
   }
 
   @Test // (expected=java.sql.SQLDataException.class)
-  public void testHive() throws Exception {
+  public void testTableCreation() throws Exception {
     final File f = new File(HiveJdbcGeneralTest.class.getProtectionDomain()
         .getCodeSource().getLocation().getPath());
-    // String jdbcDriver = propertyValue("hive-site.xml",
-    // "javax.jdo.option.ConnectionDriverName");
-
-    // String qualifiedName = propertyValue("hdfs-site.xml",
-    // "dfs.internal.nameservices");
-    // String[] haNodes = propertyValue("hdfs-site.xml",
-    // "dfs.ha.namenodes."+qualifiedName).split(",");
-    // String primaryNode = haNodes[0];
     String hdfsConnection =
         propertyValue("hdfs-site.xml", "dfs.namenode.rpc-address");
     try (Statement stmt = con.createStatement()) {
@@ -172,12 +164,16 @@ public class HiveJdbcGeneralTest extends TestMethods {
       assertEquals("45072", printResults(stmt, "Select * from testview"));
       executeStatement(stmt, "Drop view testview");
       printResults(stmt, "Describe formatted btest");
+      setNegativeFetchSize(stmt);
+    }
+  }
+  @Test public void testTableDeletion() throws Exception{
+    try (Statement stmt = con.createStatement()) {
       dropTable(stmt, newTableName);
       dropTable(stmt, newTableName + "NT");
       dropTable(stmt, newTableName + "T");
       dropTable(stmt, newTableName + "P");
       dropTable(stmt, newTableName + "V");
-      setNegativeFetchSize(stmt);
     }
   }
 
@@ -373,7 +369,7 @@ public class HiveJdbcGeneralTest extends TestMethods {
         + "'org.apache.hadoop.hive.serde2.columnar.ColumnarSerDe' STORED AS RCFILE"
         + " LOCATION '/tmp/test1' AS SELECT  `CLASS`.`age`,"
         + " `CLASS`.`name`, `CLASS`.`sex`, `CLASS`.`height`, `CLASS`.`weight`  FROM"
-        + " `CLASS` TBLPROPERTIES(\\\"transactional\\\"=\\\"true\\\")";
+        + " `CLASS`";
 
     try (Statement stmt = con.createStatement()) {
       dropTable(stmt, "class");
@@ -381,9 +377,11 @@ public class HiveJdbcGeneralTest extends TestMethods {
       stmt.executeUpdate(
           "create table `class` (name varchar(8), sex varchar(1), age double precision, height double precision, weight double precision)");
       stmt.executeUpdate(queryValues);
+      // specifying the location fails in hortonworks 3.0
       try {
         stmt.execute(locationQuery);
-      } catch (SQLException e) {
+      } catch (Exception e) {
+
       }
       dropTable(stmt, "class");
       dropTable(stmt, "test42");
