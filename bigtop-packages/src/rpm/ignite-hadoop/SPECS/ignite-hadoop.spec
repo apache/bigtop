@@ -86,6 +86,7 @@ Source2: install_ignite.sh
 Source3: ignite-hadoop.svc
 Source4: init.d.tmpl
 Source5: ignite-hadoop.default
+#BIGTOP_PATCH_FILES
 BuildArch: noarch
 ## This package _explicitly_ turns off the auto-discovery of required dependencies
 ## to work around OSGI corner case, added to RPM lately. See BIGTOP-2421 for more info.
@@ -140,6 +141,8 @@ Documentation for Ignite platform
 
 %prep
 %setup -n ignite-hadoop-%{vcs_tag}
+
+#BIGTOP_PATCH_COMMANDS
 
 %build
 bash %{SOURCE1}
