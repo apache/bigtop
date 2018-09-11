@@ -139,7 +139,7 @@ install -d -m 0755 $PREFIX/$LIB_DIR/bin
 # FIXME: a workaround in preparation for Zookeeper 3.5
 echo '#!/bin/bash' > $BUILD_DIR/bin/zkServer-initialize.sh
 
-for i in zkServer.sh zkEnv.sh zkCli.sh zkCleanup.sh zkServer-initialize.sh
+for i in zkServer.sh zkEnv.sh zkCli.sh zkCleanup.sh zkServer-initialize.sh zkTxnLogToolkit.sh
 	do cp $BUILD_DIR/bin/$i $PREFIX/$LIB_DIR/bin
 	chmod 755 $PREFIX/$LIB_DIR/bin/$i
 done
