@@ -178,13 +178,6 @@
       </zookeeper-server>
     </services>
   </zookeeper-server>
-  <pig>
-    <deps>
-      <tag name="/bin/sh"/>
-      <tag name="/usr/bin/env"/>
-      <jre>&gt;=1.6</jre>
-    </deps>
-  </pig>
   <hive>
     <deps>
       <tag name="/bin/sh"/>

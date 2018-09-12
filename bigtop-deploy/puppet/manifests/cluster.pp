@@ -111,9 +111,6 @@ $roles_map = {
   crunch => {
     client => ["crunch-client"],
   },
-  pig => {
-    client => ["pig-client"],
-  },
   hive => {
     master => ["hive-server2", "hive-metastore"],
     client => ["hive-client"],
@@ -202,7 +199,6 @@ class node_with_roles ($roles = hiera("bigtop::roles")) inherits hadoop_cluster_
     "ignite_hadoop",
     "hadoop_flume",
     "hadoop_hive",
-    "hadoop_pig",
     "sqoop2",
     "hadoop_zookeeper",
     "hcatalog",
