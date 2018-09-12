@@ -28,7 +28,6 @@ hadoop::hadoop_storage_dirs:
 #  - mahout
 #  - mapred-app
 #  - oozie
-#  - pig
 #  - qfs
 #  - solrcloud
 #  - spark

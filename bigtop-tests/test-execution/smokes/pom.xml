@@ -55,7 +55,6 @@
     List of modules which should be executed as a part of stack testing run
   -->
   <modules>
-    <module>pig</module>
     <module>hive</module>
     <module>hadoop</module>
     <module>hbase</module>
@@ -103,12 +102,6 @@
         <groupId>org.apache.bigtop.itest</groupId>
         <artifactId>mahout-smoke</artifactId>
         <version>${mahout-smoke.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.pig</groupId>
-        <artifactId>pig-smoke</artifactId>
-        <version>${pig-smoke.version}</version>
         <scope>test</scope>
       </dependency>
       <dependency>

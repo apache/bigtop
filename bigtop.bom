@@ -110,14 +110,13 @@ bigtop {
   */
   dependencies = [
     zookeeper:['hadoop', 'hbase'],
-    hadoop:['ignite-hadoop', 'hbase', 'crunch', 'pig', 'hive', 'tez', 'sqoop', 'sqoop2',
+    hadoop:['ignite-hadoop', 'hbase', 'crunch', 'hive', 'tez', 'sqoop', 'sqoop2',
       'mahout', 'flume', 'giraph', 'solr', 'spark','spark1',
       'phoenix', 'alluxio', 'kafka', 'ycsb', 'hama', 'zeppelin',
       'tajo', 'apex'
     ],
     hbase:['phoenix','giraph','ycsb','hive'],
-    pig:['datafu'],
-    hive:['pig','zeppelin'],
+    hive:['zeppelin'],
     'ignite-hadoop':['zeppelin'],
     spark:['zeppelin']
   ]
@@ -173,17 +172,6 @@ bigtop {
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }
 
-    'pig' {
-      name    = 'pig'
-      pkg     = 'pig'
-      relNotes = 'Apache Pig'
-      version { base = '0.17.0'; pkg = base; release = 1 }
-      tarball { destination = "${name}-${version.base}-src.tar.gz"
-                source      = destination }
-      url     { download_path = "/$name/$name-${version.base}/"
-                site = "${apache.APACHE_MIRROR}/${download_path}"
-                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
-    }
     'hive' {
       name    = 'hive'
       relNotes = 'Apache Hive'
@@ -253,15 +241,6 @@ bigtop {
       url     { download_path = "/$name/$name-${version.base}/"
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
-    }
-    'hue' {
-      name    = 'hue'
-      relNotes = 'Hadoop User Interface'
-      version { base = '4.1.0'; pkg = base; release = 1 }
-      tarball { destination = "$name-${version.base}.tar.gz"
-                source      = "release-${version.base}.tar.gz" }
-      url     { site = "https://github.com/cloudera/hue/archive"
-                archive = site }
     }
     'datafu' {
       name    = 'datafu'
