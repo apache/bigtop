@@ -233,6 +233,11 @@ Init scripts for WebHcat server.
 #BIGTOP_PATCH_COMMANDS
 
 %build
+env \
+  DO_MAVEN_DEPLOY=%{?do_maven_deploy} \
+  MAVEN_DEPLOY_SOURCE=%{?maven_deploy_source} \
+  MAVEN_REPO_ID=%{?maven_repo_id} \
+  MAVEN_REPO_URI=%{?maven_repo_uri} \
 bash %{SOURCE1}
 
 #########################

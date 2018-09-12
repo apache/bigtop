@@ -14,26 +14,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -ex
+if [ "${DO_MAVEN_DEPLOY}" = "true" ]; then
 
-. `dirname ${0}`/bigtop.bom
+  SCHEME=${MAVEN_REPO_URI%%:*}
+  case ${SCHEME} in
+  http | https)
+    ;;
+  s3)
+    mkdir -p ./.mvn
+    cp $(dirname ${0})/aws-maven.xml ./.mvn/extensions.xml
+    ;;
+  *)
+    echo "Unsupported URI scheme \"${SCHEME}\""
+    exit 1
+    ;;
+  esac
 
-HIVE_MAVEN_OPTS=" -Dhbase.version=$HBASE_VERSION \
--Dzookeeper.version=$ZOOKEEPER_VERSION \
--Dhadoop.version=$HADOOP_VERSION \
--DskipTests \
--Dtez.version=${TEZ_VERSION} \
--Dspark.version=${SPARK_VERSION}
-"
-
-# Include common Maven Deployment logic
-. $(dirname ${0})/maven_deploy.sh
-
-export MAVEN_OPTS="${MAVEN_OPTS} -Xmx1500m -Xms1500m"
-mvn ${HIVE_MAVEN_OPTS} clean install ${EXTRA_GOALS} -Pdist "$@"
-
-mkdir -p build/dist
-tar -C build/dist --strip-components=1 -xzf packaging/target/apache-hive-${HIVE_VERSION}-bin.tar.gz
-
-# HIVE-13177 
-sed -i "s#jdbcStandaloneJarPath=\`ls \${HIVE_LIB}/hive-jdbc-\*-standalone.jar\`#jdbcStandaloneJarPath=#" build/dist/bin/ext/beeline.sh
+  if [ "${MAVEN_DEPLOY_SOURCE}" = "true" ]; then
+    EXTRA_GOALS+=" source:jar"
+  fi
+  if [ ! -z "${MAVEN_REPO_URI}" ]; then
+    MAVEN_OPTS+=" -DaltDeploymentRepository=${MAVEN_REPO_ID:-default}::default::${MAVEN_REPO_URI}"
+  fi
+  EXTRA_GOALS+=" deploy"
+  # Conditionally add Maven extension for S3 URIs
+fi

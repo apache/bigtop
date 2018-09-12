@@ -466,7 +466,14 @@ These projects (enumerated below) allow HDFS to be mounted (on most flavors of U
 # This assumes that you installed Java JDK 6 and set JAVA_HOME
 # This assumes that you installed Forrest and set FORREST_HOME
 
-env HADOOP_VERSION=%{hadoop_base_version} HADOOP_ARCH=%{hadoop_arch} bash %{SOURCE1}
+env \
+  HADOOP_VERSION=%{hadoop_base_version} \
+  HADOOP_ARCH=%{hadoop_arch} \
+  DO_MAVEN_DEPLOY=%{?do_maven_deploy} \
+  MAVEN_DEPLOY_SOURCE=%{?maven_deploy_source} \
+  MAVEN_REPO_ID=%{?maven_repo_id} \
+  MAVEN_REPO_URI=%{?maven_repo_uri} \
+bash %{SOURCE1}
 
 %clean
 %__rm -rf $RPM_BUILD_ROOT
