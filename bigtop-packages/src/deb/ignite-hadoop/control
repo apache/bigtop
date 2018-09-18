@@ -21,7 +21,7 @@ Standards-Version: 3.9.4
 Homepage: http://ignite.apache.org/
 
 Package: ignite-hadoop
-Architecture: all
+Architecture: any
 Depends: adduser, hadoop-hdfs, hadoop-mapreduce, bigtop-utils (>= 0.8)
 Description: Ignite is an open-source, distributed, in-memory computation platform
  .
