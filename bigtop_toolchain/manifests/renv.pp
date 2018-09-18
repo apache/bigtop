@@ -24,8 +24,6 @@ class bigtop_toolchain::renv {
     }
     /(?i:(SLES|opensuse))/: { 
       $pkgs = [
-        "R-base",
-        "R-base-devel",
         "pandoc"
       ]
     }
