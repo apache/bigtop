@@ -21,6 +21,14 @@
 # that would make newer RPM debuginfo generation scripts happy.
 %undefine _missing_build_ids_terminate_build
 
+
+%if  %{?suse_version:1}0
+%define cmake_package cmake
+%else
+%define cmake_package cmake3
+%endif
+
+
 %define hadoop_name hadoop
 %define etc_hadoop /etc/%{name}
 %define etc_yarn /etc/yarn
@@ -171,7 +179,7 @@ Source28: mapred.1
 Source29: hadoop-yarn-timelineserver.svc
 #BIGTOP_PATCH_FILES
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
-BuildRequires: fuse-devel, fuse, cmake3
+BuildRequires: fuse-devel, fuse, %{cmake_package}
 Requires: libisal-dev, coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils >= 0.7
 Requires: psmisc, %{netcat_package}
 # Sadly, Sun/Oracle JDK in RPM form doesn't provide libjvm.so, which means we have
