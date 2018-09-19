@@ -1,5 +1,5 @@
 diff --git a/flume-ng-channels/flume-kafka-channel/src/test/java/org/apache/flume/channel/kafka/TestKafkaChannel.java b/flume-ng-channels/flume-kafka-channel/src/test/java/org/apache/flume/channel/kafka/TestKafkaChannel.java
-index 5e5f2d0..917cee2 100644
+index 5e5f2d0..63607f7 100644
 --- a/flume-ng-channels/flume-kafka-channel/src/test/java/org/apache/flume/channel/kafka/TestKafkaChannel.java
 +++ b/flume-ng-channels/flume-kafka-channel/src/test/java/org/apache/flume/channel/kafka/TestKafkaChannel.java
 @@ -20,6 +20,7 @@ package org.apache.flume.channel.kafka;
@@ -15,13 +15,13 @@ index 5e5f2d0..917cee2 100644
      int replicationFactor = 1;
      Properties topicConfig = new Properties();
 -    AdminUtils.createTopic(zkUtils, topicName, numPartitions, replicationFactor, topicConfig);
-+    AdminUtils.createTopic(zkUtils, topicName, numPartitions, replicationFactor, topicConfig, 
++    AdminUtils.createTopic(zkUtils, topicName, numPartitions, replicationFactor, topicConfig,
 +                           RackAwareMode.Disabled$.MODULE$);
    }
  
    public static void deleteTopic(String topicName) {
 diff --git a/flume-ng-sinks/flume-ng-kafka-sink/src/test/java/org/apache/flume/sink/kafka/TestKafkaSink.java b/flume-ng-sinks/flume-ng-kafka-sink/src/test/java/org/apache/flume/sink/kafka/TestKafkaSink.java
-index 7c66420..bc2a299 100644
+index d92c71f..66c6fe3 100644
 --- a/flume-ng-sinks/flume-ng-kafka-sink/src/test/java/org/apache/flume/sink/kafka/TestKafkaSink.java
 +++ b/flume-ng-sinks/flume-ng-kafka-sink/src/test/java/org/apache/flume/sink/kafka/TestKafkaSink.java
 @@ -21,6 +21,7 @@ package org.apache.flume.sink.kafka;
@@ -32,18 +32,25 @@ index 7c66420..bc2a299 100644
  import kafka.message.MessageAndMetadata;
  import kafka.utils.ZkUtils;
  
-@@ -551,7 +552,8 @@ public class TestKafkaSink {
+@@ -674,7 +675,8 @@ public class TestKafkaSink {
          ZkUtils.apply(testUtil.getZkUrl(), sessionTimeoutMs, connectionTimeoutMs, false);
      int replicationFactor = 1;
      Properties topicConfig = new Properties();
 -    AdminUtils.createTopic(zkUtils, topicName, numPartitions, replicationFactor, topicConfig);
-+    AdminUtils.createTopic(zkUtils, topicName, numPartitions, replicationFactor, topicConfig, 
++    AdminUtils.createTopic(zkUtils, topicName, numPartitions, replicationFactor, topicConfig,
 +                           RackAwareMode.Disabled$.MODULE$);
    }
  
    public static void deleteTopic(String topicName) {
+@@ -698,4 +700,4 @@ public class TestKafkaSink {
+     return newTopic;
+   }
+ 
+-}
+\ No newline at end of file
++}
 diff --git a/flume-ng-sources/flume-kafka-source/src/test/java/org/apache/flume/source/kafka/KafkaSourceEmbeddedKafka.java b/flume-ng-sources/flume-kafka-source/src/test/java/org/apache/flume/source/kafka/KafkaSourceEmbeddedKafka.java
-index 53bd65c..ae5348c 100644
+index 53bd65c..ba75623 100644
 --- a/flume-ng-sources/flume-kafka-source/src/test/java/org/apache/flume/source/kafka/KafkaSourceEmbeddedKafka.java
 +++ b/flume-ng-sources/flume-kafka-source/src/test/java/org/apache/flume/source/kafka/KafkaSourceEmbeddedKafka.java
 @@ -17,6 +17,7 @@
@@ -59,13 +66,13 @@ index 53bd65c..ae5348c 100644
      int replicationFactor = 1;
      Properties topicConfig = new Properties();
 -    AdminUtils.createTopic(zkUtils, topicName, numPartitions, replicationFactor, topicConfig);
-+    AdminUtils.createTopic(zkUtils, topicName, numPartitions, replicationFactor, topicConfig, 
++    AdminUtils.createTopic(zkUtils, topicName, numPartitions, replicationFactor, topicConfig,
 +                           RackAwareMode.Disabled$.MODULE$);
    }
  
  }
 diff --git a/flume-ng-sources/flume-kafka-source/src/test/java/org/apache/flume/source/kafka/TestKafkaSource.java b/flume-ng-sources/flume-kafka-source/src/test/java/org/apache/flume/source/kafka/TestKafkaSource.java
-index d1daceb..cda91f9 100644
+index 7804fa2..2d5bbf8 100644
 --- a/flume-ng-sources/flume-kafka-source/src/test/java/org/apache/flume/source/kafka/TestKafkaSource.java
 +++ b/flume-ng-sources/flume-kafka-source/src/test/java/org/apache/flume/source/kafka/TestKafkaSource.java
 @@ -20,7 +20,7 @@ package org.apache.flume.source.kafka;
@@ -78,15 +85,15 @@ index d1daceb..cda91f9 100644
  import kafka.utils.ZkUtils;
  import org.apache.avro.io.BinaryEncoder;
 diff --git a/pom.xml b/pom.xml
-index f62c99a..fb2340f 100644
+index 3c82a47..2276355 100644
 --- a/pom.xml
 +++ b/pom.xml
-@@ -52,7 +52,7 @@ limitations under the License.
-     <elasticsearch.version>0.90.1</elasticsearch.version>
-     <hadoop2.version>2.4.0</hadoop2.version>
-     <thrift.version>0.7.0</thrift.version>
+@@ -77,7 +77,7 @@ limitations under the License.
+     <jetty.version>6.1.26</jetty.version>
+     <joda-time.version>2.9.9</joda-time.version>
+     <junit.version>4.10</junit.version>
 -    <kafka.version>0.9.0.1</kafka.version>
-+    <kafka.version>0.10.1.0</kafka.version>
++    <kafka.version>0.10.2.2</kafka.version>
      <kite.version>1.0.0</kite.version>
      <hive.version>1.0.0</hive.version>
-     <xalan.verion>2.7.1</xalan.verion>
+     <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
