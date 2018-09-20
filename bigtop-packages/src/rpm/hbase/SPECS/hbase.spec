@@ -74,6 +74,8 @@
 
 %endif
 
+# Disable debuginfo package
+%define debug_package %{nil}
 
 Name: hbase
 Version: %{hbase_version}

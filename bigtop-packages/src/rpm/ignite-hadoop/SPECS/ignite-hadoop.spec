@@ -71,6 +71,8 @@
 
 %endif
 
+# Disable debuginfo package
+%define debug_package %{nil}
 
 Name: ignite-hadoop
 Version: %{ignite_hadoop_version}
