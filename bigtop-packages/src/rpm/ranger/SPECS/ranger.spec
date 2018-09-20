@@ -158,35 +158,35 @@ bash %{SOURCE1}
 /usr/lib/ranger-admin
 
 %files atlas-plugin
-/usr/lib/atlas-server
+/usr/lib/atlas-server/*
 /usr/lib/ranger-atlas-plugin
 
 %files hbase-plugin
-/usr/lib/hbase
+/usr/lib/hbase/*
 /usr/lib/ranger-hbase-plugin
 
 %files hdfs-plugin
-/usr/lib/hadoop
+/usr/lib/hadoop/*
 /usr/lib/ranger-hdfs-plugin
 
 %files hive-plugin
-/usr/lib/hive
-/usr/lib/hive2
+/usr/lib/hive/*
+/usr/lib/hive2/*
 /usr/lib/ranger-hive-plugin
 
 %files kafka-plugin
-/usr/lib/kafka
+/usr/lib/kafka/*
 /usr/lib/ranger-kafka-plugin
 
 %files kms
 /usr/lib/ranger-kms
 
 %files knox-plugin
-/usr/lib/knox
+/usr/lib/knox/*
 /usr/lib/ranger-knox-plugin
 
 %files solr-plugin
-/usr/lib/solr
+/usr/lib/solr/*
 /usr/lib/ranger-solr-plugin
 
 %files storm-plugin
