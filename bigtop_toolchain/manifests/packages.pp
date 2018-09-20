@@ -80,6 +80,8 @@ class bigtop_toolchain::packages {
       }
     }
     /(?i:(SLES|opensuse))/: { $pkgs = [
+        "yasm",
+        "nasm",
         "unzip",
         "curl",
         "wget",
