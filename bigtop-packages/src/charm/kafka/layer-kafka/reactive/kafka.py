@@ -13,10 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from charmhelpers.core import hookenv
+import os
+
+from charmhelpers.core import hookenv, unitdata
 from charms.layer.apache_bigtop_base import get_layer_opts, get_package_version
 from charms.layer.bigtop_kafka import Kafka
-from charms.reactive import set_state, remove_state, when, when_not
+from charms.reactive import set_state, remove_state, when, when_not, hook
 from charms.reactive.helpers import data_changed
 
 
@@ -38,9 +40,11 @@ def configure_kafka(zk):
     hookenv.status_set('maintenance', 'setting up kafka')
     data_changed(  # Prime data changed for network interface
         'kafka.network_interface', hookenv.config().get('network_interface'))
+    log_dir = unitdata.kv().get('kafka.storage.log_dir')
+    data_changed('kafka.storage.log_dir', log_dir)
     kafka = Kafka()
     zks = zk.zookeepers()
-    kafka.configure_kafka(zks)
+    kafka.configure_kafka(zks, log_dir=log_dir)
     kafka.open_ports()
     set_state('kafka.started')
     hookenv.status_set('active', 'ready')
@@ -62,14 +66,18 @@ def configure_kafka_zookeepers(zk):
     """
     zks = zk.zookeepers()
     network_interface = hookenv.config().get('network_interface')
-    if not data_changed('zookeepers', zks) and not data_changed(
-            'kafka.network_interface', network_interface):
+    log_dir = unitdata.kv().get('kafka.storage.log_dir')
+    if not(any((
+            data_changed('zookeepers', zks),
+            data_changed('kafka.network_interface', network_interface),
+            data_changed('kafka.storage.log_dir', log_dir)))):
         return
 
     hookenv.log('Checking Zookeeper configuration')
     hookenv.status_set('maintenance', 'updating zookeeper instances')
     kafka = Kafka()
-    kafka.configure_kafka(zks, network_interface)
+    kafka.configure_kafka(zks, network_interface=network_interface,
+                          log_dir=log_dir)
     hookenv.status_set('active', 'ready')
 
 
@@ -90,3 +98,39 @@ def serve_client(client, zookeeper):
     client.send_port(kafka_port)
     client.send_zookeepers(zookeeper.zookeepers())
     hookenv.log('Sent Kafka configuration to client')
+
+
+@hook('logs-storage-attached')
+def storage_attach():
+    storageids = hookenv.storage_list('logs')
+    if not storageids:
+        hookenv.status_set('blocked', 'cannot locate attached storage')
+        return
+    storageid = storageids[0]
+
+    mount = hookenv.storage_get('location', storageid)
+    if not mount:
+        hookenv.status_set('blocked', 'cannot locate attached storage mount')
+        return
+
+    log_dir = os.path.join(mount, "logs")
+    unitdata.kv().set('kafka.storage.log_dir', log_dir)
+    hookenv.log('Kafka logs storage attached at {}'.format(log_dir))
+    # Stop Kafka; removing the kafka.started state will trigger a reconfigure if/when it's ready
+    kafka = Kafka()
+    kafka.close_ports()
+    kafka.stop()
+    remove_state('kafka.started')
+    hookenv.status_set('waiting', 'reconfiguring to use attached storage')
+    set_state('kafka.storage.logs.attached')
+
+
+@hook('logs-storage-detaching')
+def storage_detaching():
+    unitdata.kv().unset('kafka.storage.log_dir')
+    kafka = Kafka()
+    kafka.close_ports()
+    kafka.stop()
+    remove_state('kafka.started')
+    hookenv.status_set('waiting', 'reconfiguring to use temporary storage')
+    remove_state('kafka.storage.logs.attached')
