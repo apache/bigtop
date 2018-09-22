@@ -14,12 +14,14 @@
 # limitations under the License.
 
 import os
+import shutil
+from subprocess import check_output
+
 from charmhelpers.core import hookenv
 from charmhelpers.core import host
 from jujubigdata import utils
 from charms.layer.apache_bigtop_base import Bigtop
 from charms import layer
-from subprocess import check_output
 
 
 class Kafka(object):
@@ -38,7 +40,7 @@ class Kafka(object):
         for port in self.dist_config.exposed_ports('kafka'):
             hookenv.close_port(port)
 
-    def configure_kafka(self, zk_units, network_interface=None):
+    def configure_kafka(self, zk_units, network_interface=None, log_dir=None):
         # Get ip:port data from our connected zookeepers
         zks = []
         for unit in zk_units:
@@ -58,10 +60,14 @@ class Kafka(object):
         if network_interface:
             ip = Bigtop().get_ip_for_interface(network_interface)
             override['kafka::server::bind_addr'] = ip
+        if log_dir:
+            override['kafka::server::log_dirs'] = log_dir
 
         bigtop = Bigtop()
         bigtop.render_site_yaml(roles=roles, overrides=override)
         bigtop.trigger_puppet()
+        os.makedirs(log_dir, mode=0o700, exist_ok=True)
+        shutil.chown(log_dir, user='kafka')
         self.set_advertise()
         self.restart()
 
