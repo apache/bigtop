@@ -16,7 +16,7 @@
 class bigtop_repo {
   case $::operatingsystem {
     /(OracleLinux|Amazon|CentOS|Fedora|RedHat)/: {
-      $default_repo = "http://repos.bigtop.apache.org/releases/1.2.1/centos/7/x86_64"
+      $default_repo = "http://repos.bigtop.apache.org/releases/1.3.0/centos/7/x86_64"
       $baseurls_array = any2array(hiera("bigtop::bigtop_repo_uri", $default_repo))
       each ($baseurls_array) |$count, $baseurl| {
         yumrepo { "Bigtop_$count":
@@ -36,7 +36,7 @@ class bigtop_repo {
        $lower_os = downcase($operatingsystem)
        # We use code name such as trusty for Ubuntu instead of release version in bigtop's binary convenience repos
        if ($operatingsystem == "Ubuntu") { $release = $lsbdistcodename } else { $release = $operatingsystemmajrelease }
-       $default_repo = "http://repos.bigtop.apache.org/releases/1.2.1/${lower_os}/${release}/x86_64"
+       $default_repo = "http://repos.bigtop.apache.org/releases/1.3.0/${lower_os}/${release}/x86_64"
        $baseurls_array = any2array(hiera("bigtop::bigtop_repo_uri", $default_repo))
 
       # I couldn't enforce the sequence -> anymore because of this
