@@ -1,0 +1,316 @@
+commit 1edcf453efba04b4535b529b6c0af36d2d56085d
+Author: Ankit Singhal <ankitsinghal59@gmail.com>
+Date:   Thu Jul 26 15:20:20 2018 -0700
+
+    BUG-108170 Replace usage of HBase Base64 implementation with java.util.Base64(related to HBASE-20884)
+    
+    Change-Id: If52319395b1318e408540461f32731d936b119ca
+
+diff --git a/phoenix-core/src/it/java/org/apache/phoenix/end2end/QueryMoreIT.java b/phoenix-core/src/it/java/org/apache/phoenix/end2end/QueryMoreIT.java
+index 9109c123e..661f72e1f 100644
+--- a/phoenix-core/src/it/java/org/apache/phoenix/end2end/QueryMoreIT.java
++++ b/phoenix-core/src/it/java/org/apache/phoenix/end2end/QueryMoreIT.java
+@@ -31,12 +31,13 @@ import java.sql.ResultSet;
+ import java.sql.SQLException;
+ import java.sql.Statement;
+ import java.util.ArrayList;
++import java.util.Base64;
+ import java.util.HashMap;
+ import java.util.List;
+ import java.util.Map;
+ import java.util.Properties;
+ 
+-import org.apache.hadoop.hbase.util.Base64;
++import org.apache.hadoop.hbase.util.Bytes;
+ import org.apache.hadoop.hbase.util.Pair;
+ import org.apache.phoenix.jdbc.PhoenixConnection;
+ import org.apache.phoenix.query.QueryServices;
+@@ -278,7 +279,7 @@ public class QueryMoreIT extends ParallelStatsDisabledIT {
+                 values[i] = rs.getObject(i + 1);
+             }
+             conn = getTenantSpecificConnection(tenantId);
+-            pkIds.add(Base64.encodeBytes(PhoenixRuntime.encodeColumnValues(conn, tableOrViewName.toUpperCase(), values, columns)));
++            pkIds.add(Bytes.toString(Base64.getEncoder().encode(PhoenixRuntime.encodeColumnValues(conn, tableOrViewName.toUpperCase(), values, columns))));
+         }
+         return pkIds.toArray(new String[pkIds.size()]);
+     }
+@@ -296,7 +297,7 @@ public class QueryMoreIT extends ParallelStatsDisabledIT {
+         PreparedStatement stmt = conn.prepareStatement(query);
+         int bindCounter = 1;
+         for (int i = 0; i < cursorIds.length; i++) {
+-            Object[] pkParts = PhoenixRuntime.decodeColumnValues(conn, tableName.toUpperCase(), Base64.decode(cursorIds[i]), columns);
++            Object[] pkParts = PhoenixRuntime.decodeColumnValues(conn, tableName.toUpperCase(), Base64.getDecoder().decode(cursorIds[i]), columns);
+             for (int j = 0; j < pkParts.length; j++) {
+                 stmt.setObject(bindCounter++, pkParts[j]);
+             }
+diff --git a/phoenix-core/src/main/java/org/apache/phoenix/mapreduce/CsvBulkImportUtil.java b/phoenix-core/src/main/java/org/apache/phoenix/mapreduce/CsvBulkImportUtil.java
+index ff9ff7271..bf5a538cc 100644
+--- a/phoenix-core/src/main/java/org/apache/phoenix/mapreduce/CsvBulkImportUtil.java
++++ b/phoenix-core/src/main/java/org/apache/phoenix/mapreduce/CsvBulkImportUtil.java
+@@ -17,9 +17,11 @@
+  */
+ package org.apache.phoenix.mapreduce;
+ 
++import java.util.Base64;
++
+ import org.apache.hadoop.conf.Configuration;
+ import org.apache.hadoop.fs.Path;
+-import org.apache.hadoop.hbase.util.Base64;
++import org.apache.hadoop.hbase.util.Bytes;
+ import org.apache.phoenix.mapreduce.util.PhoenixConfigurationUtil;
+ import org.apache.phoenix.query.QueryConstants;
+ import org.apache.phoenix.query.QueryServices;
+@@ -68,7 +70,7 @@ public class CsvBulkImportUtil {
+ 
+     @VisibleForTesting
+     static void setChar(Configuration conf, String confKey, char charValue) {
+-        conf.set(confKey, Base64.encodeBytes(Character.toString(charValue).getBytes()));
++        conf.set(confKey, Bytes.toString(Base64.getEncoder().encode(Character.toString(charValue).getBytes())));
+     }
+ 
+     @VisibleForTesting
+@@ -77,7 +79,7 @@ public class CsvBulkImportUtil {
+         if (strValue == null) {
+             return null;
+         }
+-        return new String(Base64.decode(strValue)).charAt(0);
++        return new String(Base64.getDecoder().decode(strValue)).charAt(0);
+     }
+ 
+     public static Path getOutputPath(Path outputdir, String tableName) {
+diff --git a/phoenix-core/src/main/java/org/apache/phoenix/mapreduce/util/PhoenixConfigurationUtil.java b/phoenix-core/src/main/java/org/apache/phoenix/mapreduce/util/PhoenixConfigurationUtil.java
+index f3f0415ed..3b63f668c 100644
+--- a/phoenix-core/src/main/java/org/apache/phoenix/mapreduce/util/PhoenixConfigurationUtil.java
++++ b/phoenix-core/src/main/java/org/apache/phoenix/mapreduce/util/PhoenixConfigurationUtil.java
+@@ -24,6 +24,7 @@ import static org.apache.phoenix.query.QueryServicesOptions.DEFAULT_USE_STATS_FO
+ import java.io.IOException;
+ import java.sql.Connection;
+ import java.sql.SQLException;
++import java.util.Base64;
+ import java.util.List;
+ import java.util.Map;
+ import java.util.Properties;
+@@ -35,7 +36,7 @@ import org.apache.hadoop.hbase.HBaseConfiguration;
+ import org.apache.hadoop.hbase.HConstants;
+ import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
+ import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
+-import org.apache.hadoop.hbase.util.Base64;
++import org.apache.hadoop.hbase.util.Bytes;
+ import org.apache.hadoop.mapreduce.Job;
+ import org.apache.hadoop.mapreduce.lib.db.DBInputFormat.NullDBWritable;
+ import org.apache.hadoop.mapreduce.lib.db.DBWritable;
+@@ -506,14 +507,14 @@ public final class PhoenixConfigurationUtil {
+ 
+     public static byte[] getIndexMaintainers(final Configuration configuration){
+         Preconditions.checkNotNull(configuration);
+-        return Base64.decode(configuration.get(INDEX_MAINTAINERS));
++        return Base64.getDecoder().decode(configuration.get(INDEX_MAINTAINERS));
+     }
+     
+     public static void setIndexMaintainers(final Configuration configuration,
+             final ImmutableBytesWritable indexMetaDataPtr) {
+         Preconditions.checkNotNull(configuration);
+         Preconditions.checkNotNull(indexMetaDataPtr);
+-        configuration.set(INDEX_MAINTAINERS, Base64.encodeBytes(indexMetaDataPtr.get()));
++        configuration.set(INDEX_MAINTAINERS,Bytes.toString(Base64.getEncoder().encode(indexMetaDataPtr.get())));
+     }
+     
+     public static void setDisableIndexes(Configuration configuration, String indexName) {
+diff --git a/phoenix-core/src/main/java/org/apache/phoenix/schema/types/PVarbinary.java b/phoenix-core/src/main/java/org/apache/phoenix/schema/types/PVarbinary.java
+index b3ce57ad4..e165a9cd0 100644
+--- a/phoenix-core/src/main/java/org/apache/phoenix/schema/types/PVarbinary.java
++++ b/phoenix-core/src/main/java/org/apache/phoenix/schema/types/PVarbinary.java
+@@ -19,8 +19,8 @@ package org.apache.phoenix.schema.types;
+ 
+ import java.sql.Types;
+ import java.text.Format;
++import java.util.Base64;
+ 
+-import org.apache.hadoop.hbase.util.Base64;
+ import org.apache.hadoop.hbase.util.Bytes;
+ import org.apache.phoenix.schema.SortOrder;
+ import org.apache.phoenix.util.ByteUtil;
+@@ -131,7 +131,7 @@ public class PVarbinary extends PBinaryBase {
+         if (value == null || value.length() == 0) {
+             return null;
+         }
+-        Object object = Base64.decode(value);
++        Object object = Base64.getDecoder().decode(value);
+         if (object == null) { throw newIllegalDataException(
+                 "Input: [" + value + "]  is not base64 encoded"); }
+         return object;
+diff --git a/phoenix-core/src/main/java/org/apache/phoenix/util/csv/CsvUpsertExecutor.java b/phoenix-core/src/main/java/org/apache/phoenix/util/csv/CsvUpsertExecutor.java
+index cd40b4415..4f98adab6 100644
+--- a/phoenix-core/src/main/java/org/apache/phoenix/util/csv/CsvUpsertExecutor.java
++++ b/phoenix-core/src/main/java/org/apache/phoenix/util/csv/CsvUpsertExecutor.java
+@@ -21,13 +21,13 @@ import java.sql.Connection;
+ import java.sql.PreparedStatement;
+ import java.sql.SQLException;
+ import java.sql.Types;
++import java.util.Base64;
+ import java.util.List;
+ import java.util.Properties;
+ 
+ import javax.annotation.Nullable;
+ 
+ import org.apache.commons.csv.CSVRecord;
+-import org.apache.hadoop.hbase.util.Base64;
+ import org.apache.hadoop.hbase.util.Bytes;
+ import org.apache.phoenix.expression.function.EncodeFormat;
+ import org.apache.phoenix.query.QueryServices;
+@@ -189,7 +189,7 @@ public class CsvUpsertExecutor extends UpsertExecutor<CSVRecord, String> {
+                 Object object = null;
+                 switch (format) {
+                     case BASE64:
+-                        object = Base64.decode(input);
++                        object = Base64.getDecoder().decode(input);
+                         if (object == null) { throw new IllegalDataException(
+                                 "Input: [" + input + "]  is not base64 encoded"); }
+                         break;
+diff --git a/phoenix-core/src/main/java/org/apache/phoenix/util/json/JsonUpsertExecutor.java b/phoenix-core/src/main/java/org/apache/phoenix/util/json/JsonUpsertExecutor.java
+index ffa797dfa..867a4cb06 100644
+--- a/phoenix-core/src/main/java/org/apache/phoenix/util/json/JsonUpsertExecutor.java
++++ b/phoenix-core/src/main/java/org/apache/phoenix/util/json/JsonUpsertExecutor.java
+@@ -22,13 +22,13 @@ import java.sql.Connection;
+ import java.sql.PreparedStatement;
+ import java.sql.SQLException;
+ import java.sql.Types;
++import java.util.Base64;
+ import java.util.List;
+ import java.util.Map;
+ import java.util.Properties;
+ 
+ import javax.annotation.Nullable;
+ 
+-import org.apache.hadoop.hbase.util.Base64;
+ import org.apache.hadoop.hbase.util.Bytes;
+ import org.apache.phoenix.expression.function.EncodeFormat;
+ import org.apache.phoenix.query.QueryServices;
+@@ -212,7 +212,7 @@ public class JsonUpsertExecutor extends UpsertExecutor<Map<?, ?>, Object> {
+             Object object = null;
+             switch (format) {
+                 case BASE64:
+-                    object = Base64.decode(input.toString());
++                    object = Base64.getDecoder().decode(input.toString());
+                     if (object == null) { throw new IllegalDataException(
+                             "Input: [" + input + "]  is not base64 encoded"); }
+                     break;
+diff --git a/phoenix-core/src/test/java/org/apache/phoenix/util/AbstractUpsertExecutorTest.java b/phoenix-core/src/test/java/org/apache/phoenix/util/AbstractUpsertExecutorTest.java
+index 2b2544dd5..02bf54807 100644
+--- a/phoenix-core/src/test/java/org/apache/phoenix/util/AbstractUpsertExecutorTest.java
++++ b/phoenix-core/src/test/java/org/apache/phoenix/util/AbstractUpsertExecutorTest.java
+@@ -30,10 +30,10 @@ import java.sql.PreparedStatement;
+ import java.sql.SQLException;
+ import java.sql.Types;
+ import java.util.Arrays;
++import java.util.Base64;
+ import java.util.List;
+ import java.util.Properties;
+ 
+-import org.apache.hadoop.hbase.util.Base64;
+ import org.apache.hadoop.hbase.util.Bytes;
+ import org.apache.phoenix.query.BaseConnectionlessQueryTest;
+ import org.apache.phoenix.query.QueryServices;
+@@ -81,7 +81,7 @@ public abstract class AbstractUpsertExecutorTest<R, F> extends BaseConnectionles
+     @Test
+     public void testExecute() throws Exception {
+         byte[] binaryData=(byte[])PBinary.INSTANCE.getSampleValue();
+-        String encodedBinaryData = Base64.encodeBytes(binaryData);
++        String encodedBinaryData = Bytes.toString(Base64.getEncoder().encode(binaryData));
+         getUpsertExecutor().execute(createRecord(123L, "NameValue", 42,
+                 Arrays.asList(1, 2, 3), true, encodedBinaryData));
+ 
+@@ -110,7 +110,7 @@ public abstract class AbstractUpsertExecutorTest<R, F> extends BaseConnectionles
+     @Test
+     public void testExecute_TooManyFields() throws Exception {
+         byte[] binaryData=(byte[])PBinary.INSTANCE.getSampleValue();
+-        String encodedBinaryData = Base64.encodeBytes(binaryData);
++        String encodedBinaryData = Bytes.toString(Base64.getEncoder().encode(binaryData));
+         R recordWithTooManyFields = createRecord(123L, "NameValue", 42, Arrays.asList(1, 2, 3),
+                 true, encodedBinaryData, "garbage");
+         getUpsertExecutor().execute(recordWithTooManyFields);
+@@ -131,7 +131,7 @@ public abstract class AbstractUpsertExecutorTest<R, F> extends BaseConnectionles
+     @Test
+     public void testExecute_NullField() throws Exception {
+         byte[] binaryData=(byte[])PBinary.INSTANCE.getSampleValue();
+-        String encodedBinaryData = Base64.encodeBytes(binaryData);
++        String encodedBinaryData = Bytes.toString(Base64.getEncoder().encode(binaryData));
+         getUpsertExecutor().execute(createRecord(123L, "NameValue", null,
+                 Arrays.asList(1, 2, 3), false, encodedBinaryData));
+ 
+@@ -151,7 +151,7 @@ public abstract class AbstractUpsertExecutorTest<R, F> extends BaseConnectionles
+     @Test
+     public void testExecute_InvalidType() throws Exception {
+         byte[] binaryData=(byte[])PBinary.INSTANCE.getSampleValue();
+-        String encodedBinaryData = Base64.encodeBytes(binaryData);
++        String encodedBinaryData = Bytes.toString(Base64.getEncoder().encode(binaryData));
+         R recordWithInvalidType = createRecord(123L, "NameValue", "ThisIsNotANumber",
+                 Arrays.asList(1, 2, 3), true, encodedBinaryData);
+         getUpsertExecutor().execute(recordWithInvalidType);
+@@ -163,7 +163,7 @@ public abstract class AbstractUpsertExecutorTest<R, F> extends BaseConnectionles
+     @Test
+     public void testExecute_InvalidBoolean() throws Exception {
+         byte[] binaryData=(byte[])PBinary.INSTANCE.getSampleValue();
+-        String encodedBinaryData = Base64.encodeBytes(binaryData);
++        String encodedBinaryData = Bytes.toString(Base64.getEncoder().encode(binaryData));
+         R csvRecordWithInvalidType = createRecord("123,NameValue,42,1:2:3,NotABoolean,"+encodedBinaryData);
+         getUpsertExecutor().execute(csvRecordWithInvalidType);
+ 
+diff --git a/phoenix-core/src/test/java/org/apache/phoenix/util/TenantIdByteConversionTest.java b/phoenix-core/src/test/java/org/apache/phoenix/util/TenantIdByteConversionTest.java
+index fb70d2287..3ef9230f9 100644
+--- a/phoenix-core/src/test/java/org/apache/phoenix/util/TenantIdByteConversionTest.java
++++ b/phoenix-core/src/test/java/org/apache/phoenix/util/TenantIdByteConversionTest.java
+@@ -22,20 +22,40 @@ import static org.junit.Assert.assertArrayEquals;
+ import static org.junit.Assert.fail;
+ 
+ import java.sql.SQLException;
+-import org.apache.hadoop.hbase.util.Base64;
++import java.util.Base64;
+ import java.util.Collection;
+ import java.util.List;
+ 
+-import org.apache.phoenix.schema.*;
+-import org.apache.phoenix.schema.types.*;
++import org.apache.phoenix.schema.PDatum;
++import org.apache.phoenix.schema.PName;
++import org.apache.phoenix.schema.PNameFactory;
++import org.apache.phoenix.schema.RowKeySchema;
+ import org.apache.phoenix.schema.RowKeySchema.RowKeySchemaBuilder;
++import org.apache.phoenix.schema.SortOrder;
++import org.apache.phoenix.schema.types.PBinary;
++import org.apache.phoenix.schema.types.PBoolean;
++import org.apache.phoenix.schema.types.PChar;
++import org.apache.phoenix.schema.types.PDataType;
++import org.apache.phoenix.schema.types.PDecimal;
++import org.apache.phoenix.schema.types.PDouble;
++import org.apache.phoenix.schema.types.PFloat;
++import org.apache.phoenix.schema.types.PInteger;
++import org.apache.phoenix.schema.types.PLong;
++import org.apache.phoenix.schema.types.PSmallint;
++import org.apache.phoenix.schema.types.PTinyint;
++import org.apache.phoenix.schema.types.PUnsignedDouble;
++import org.apache.phoenix.schema.types.PUnsignedFloat;
++import org.apache.phoenix.schema.types.PUnsignedInt;
++import org.apache.phoenix.schema.types.PUnsignedLong;
++import org.apache.phoenix.schema.types.PUnsignedSmallint;
++import org.apache.phoenix.schema.types.PUnsignedTinyint;
++import org.apache.phoenix.schema.types.PVarchar;
+ import org.junit.Test;
+ import org.junit.runner.RunWith;
+ import org.junit.runners.Parameterized;
+ import org.junit.runners.Parameterized.Parameters;
+ 
+ import com.google.common.collect.Lists;
+-import org.mockito.Mockito;
+ 
+ /*Test the getTenantIdBytes method in ScanUtil*/
+ @RunWith(Parameterized.class)
+@@ -201,7 +221,7 @@ public class TenantIdByteConversionTest {
+ 
+         //Binary
+         byte[] bytes = new byte[] {0, 1, 2, 3};
+-        String byteString = new String( Base64.encodeBytes(bytes) );
++        String byteString = new String( Base64.getEncoder().encode(bytes) );
+         testCases.add(new Object[] {
+                 getDataSchema(PBinary.INSTANCE, SortOrder.getDefault()),
+                 false,
