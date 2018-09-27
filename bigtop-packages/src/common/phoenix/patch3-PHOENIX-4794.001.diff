@@ -1,0 +1,263 @@
+From c34c871be6429e87fbadaf011b46b6e4da12ccb3 Mon Sep 17 00:00:00 2001
+From: Jesus Camacho Rodriguez <jcamacho@apache.org>
+Date: Mon, 25 Jun 2018 13:40:47 -0400
+Subject: [PATCH] PHOENIX-4794 Support Hive-3.1
+
+Adds a log4j.properties file, fixes the date/timestamp logic after HIVE-12192,
+and tweaks the HBaseMiniCluster to work on Hadoop 3.1.0 (which Hive 3.1.0 brings
+in -- AsyncWAL is busted for Hadoop versions other than 3.0.0).
+
+Signed-off-by: Josh Elser <elserj@apache.org>
+---
+ .../apache/phoenix/hive/HivePhoenixStoreIT.java    |  2 +-
+ .../org/apache/phoenix/hive/PhoenixSerializer.java |  6 ++++
+ .../PhoenixDateObjectInspector.java                | 30 +++++++++--------
+ .../PhoenixTimestampObjectInspector.java           | 24 +++++++-------
+ phoenix-hive/src/test/resources/hbase-site.xml     | 10 ++++++
+ phoenix-hive/src/test/resources/log4j.properties   | 38 ++++++++++++++++++++++
+ pom.xml                                            |  2 +-
+ 7 files changed, 85 insertions(+), 27 deletions(-)
+ create mode 100644 phoenix-hive/src/test/resources/hbase-site.xml
+ create mode 100644 phoenix-hive/src/test/resources/log4j.properties
+
+diff --git a/phoenix-hive/src/it/java/org/apache/phoenix/hive/HivePhoenixStoreIT.java b/phoenix-hive/src/it/java/org/apache/phoenix/hive/HivePhoenixStoreIT.java
+index ecb2003b1..fefbfb108 100644
+--- a/phoenix-hive/src/it/java/org/apache/phoenix/hive/HivePhoenixStoreIT.java
++++ b/phoenix-hive/src/it/java/org/apache/phoenix/hive/HivePhoenixStoreIT.java
+@@ -315,7 +315,7 @@ public class HivePhoenixStoreIT  extends BaseHivePhoenixStoreIT {
+     public void testTimestampPredicate() throws Exception {
+         String testName = "testTimeStampPredicate";
+         hbaseTestUtil.getTestFileSystem().createNewFile(new Path(hiveLogDir, testName + ".out"));
+-        createFile("10\t2013-01-02 01:01:01.123\n", new Path(hiveOutputDir, testName + ".out").toString());
++        createFile("10\t2013-01-02 01:01:01.123456\n", new Path(hiveOutputDir, testName + ".out").toString());
+         createFile(StringUtil.EMPTY_STRING, new Path(hiveLogDir, testName + ".out").toString());
+ 
+         StringBuilder sb = new StringBuilder();
+diff --git a/phoenix-hive/src/main/java/org/apache/phoenix/hive/PhoenixSerializer.java b/phoenix-hive/src/main/java/org/apache/phoenix/hive/PhoenixSerializer.java
+index 852407a3b..b640ebf26 100644
+--- a/phoenix-hive/src/main/java/org/apache/phoenix/hive/PhoenixSerializer.java
++++ b/phoenix-hive/src/main/java/org/apache/phoenix/hive/PhoenixSerializer.java
+@@ -20,8 +20,10 @@ package org.apache.phoenix.hive;
+ import org.apache.commons.logging.Log;
+ import org.apache.commons.logging.LogFactory;
+ import org.apache.hadoop.conf.Configuration;
++import org.apache.hadoop.hive.common.type.Date;
+ import org.apache.hadoop.hive.common.type.HiveChar;
+ import org.apache.hadoop.hive.common.type.HiveDecimal;
++import org.apache.hadoop.hive.common.type.Timestamp;
+ import org.apache.hadoop.hive.serde2.SerDeException;
+ import org.apache.hadoop.hive.serde2.objectinspector.ObjectInspector;
+ import org.apache.hadoop.hive.serde2.objectinspector.PrimitiveObjectInspector;
+@@ -136,6 +138,10 @@ public class PhoenixSerializer {
+                             value = ((HiveDecimal) value).bigDecimalValue();
+                         } else if (value instanceof HiveChar) {
+                             value = ((HiveChar) value).getValue().trim();
++                        } else if (value instanceof Date) {
++                            value = java.sql.Date.valueOf(value.toString());
++                        } else if (value instanceof Timestamp) {
++                            value = java.sql.Timestamp.valueOf(value.toString());
+                         }
+ 
+                         pResultWritable.add(value);
+diff --git a/phoenix-hive/src/main/java/org/apache/phoenix/hive/objectinspector/PhoenixDateObjectInspector.java b/phoenix-hive/src/main/java/org/apache/phoenix/hive/objectinspector/PhoenixDateObjectInspector.java
+index d97993e41..7702c6406 100644
+--- a/phoenix-hive/src/main/java/org/apache/phoenix/hive/objectinspector/PhoenixDateObjectInspector.java
++++ b/phoenix-hive/src/main/java/org/apache/phoenix/hive/objectinspector/PhoenixDateObjectInspector.java
+@@ -17,17 +17,16 @@
+  */
+ package org.apache.phoenix.hive.objectinspector;
+ 
+-import org.apache.hadoop.hive.serde2.io.DateWritable;
++import org.apache.hadoop.hive.common.type.Date;
++import org.apache.hadoop.hive.serde2.io.DateWritableV2;
+ import org.apache.hadoop.hive.serde2.objectinspector.primitive.DateObjectInspector;
+ import org.apache.hadoop.hive.serde2.typeinfo.TypeInfoFactory;
+ 
+-import java.sql.Date;
+-
+ /**
+  * ObjectInspector for date type
+  */
+ 
+-public class PhoenixDateObjectInspector extends AbstractPhoenixObjectInspector<DateWritable>
++public class PhoenixDateObjectInspector extends AbstractPhoenixObjectInspector<DateWritableV2>
+         implements DateObjectInspector {
+ 
+     public PhoenixDateObjectInspector() {
+@@ -36,28 +35,31 @@ public class PhoenixDateObjectInspector extends AbstractPhoenixObjectInspector<D
+ 
+     @Override
+     public Object copyObject(Object o) {
+-        return o == null ? null : new Date(((Date) o).getTime());
++        return o == null ? null : java.sql.Date.valueOf(o.toString());
++    }
++
++    @Override
++    public Date getPrimitiveJavaObject(Object o) {
++        if (o == null) {
++            return null;
++        }
++        return Date.valueOf(((java.sql.Date) o).toString());
+     }
+ 
+     @Override
+-    public DateWritable getPrimitiveWritableObject(Object o) {
+-        DateWritable value = null;
++    public DateWritableV2 getPrimitiveWritableObject(Object o) {
++        DateWritableV2 value = null;
+ 
+         if (o != null) {
+             try {
+-                value = new DateWritable((Date) o);
++                value = new DateWritableV2(getPrimitiveJavaObject(o));
+             } catch (Exception e) {
+                 logExceptionMessage(o, "DATE");
+-                value = new DateWritable();
++                value = new DateWritableV2();
+             }
+         }
+ 
+         return value;
+     }
+ 
+-    @Override
+-    public Date getPrimitiveJavaObject(Object o) {
+-        return (Date) o;
+-    }
+-
+ }
+diff --git a/phoenix-hive/src/main/java/org/apache/phoenix/hive/objectinspector/PhoenixTimestampObjectInspector.java b/phoenix-hive/src/main/java/org/apache/phoenix/hive/objectinspector/PhoenixTimestampObjectInspector.java
+index 7b13f2ba7..99ad0ccb3 100644
+--- a/phoenix-hive/src/main/java/org/apache/phoenix/hive/objectinspector/PhoenixTimestampObjectInspector.java
++++ b/phoenix-hive/src/main/java/org/apache/phoenix/hive/objectinspector/PhoenixTimestampObjectInspector.java
+@@ -17,17 +17,16 @@
+  */
+ package org.apache.phoenix.hive.objectinspector;
+ 
+-import org.apache.hadoop.hive.serde2.io.TimestampWritable;
++import org.apache.hadoop.hive.common.type.Timestamp;
++import org.apache.hadoop.hive.serde2.io.TimestampWritableV2;
+ import org.apache.hadoop.hive.serde2.objectinspector.primitive.TimestampObjectInspector;
+ import org.apache.hadoop.hive.serde2.typeinfo.TypeInfoFactory;
+ 
+-import java.sql.Timestamp;
+-
+ /**
+  * ObjectInspector for timestamp type
+  */
+ public class PhoenixTimestampObjectInspector extends
+-        AbstractPhoenixObjectInspector<TimestampWritable>
++        AbstractPhoenixObjectInspector<TimestampWritableV2>
+         implements TimestampObjectInspector {
+ 
+     public PhoenixTimestampObjectInspector() {
+@@ -35,22 +34,25 @@ public class PhoenixTimestampObjectInspector extends
+     }
+ 
+     @Override
+-    public Timestamp getPrimitiveJavaObject(Object o) {
+-        return (Timestamp) o;
++    public Object copyObject(Object o) {
++        return o == null ? null : java.sql.Timestamp.valueOf(o.toString());
+     }
+ 
+     @Override
+-    public Object copyObject(Object o) {
+-        return o == null ? null : new Timestamp(((Timestamp) o).getTime());
++    public Timestamp getPrimitiveJavaObject(Object o) {
++        if (o == null) {
++            return null;
++        }
++        return Timestamp.valueOf(((java.sql.Timestamp) o).toString());
+     }
+ 
+     @Override
+-    public TimestampWritable getPrimitiveWritableObject(Object o) {
+-        TimestampWritable value = null;
++    public TimestampWritableV2 getPrimitiveWritableObject(Object o) {
++        TimestampWritableV2 value = null;
+ 
+         if (o != null) {
+             try {
+-                value = new TimestampWritable((Timestamp) o);
++                value = new TimestampWritableV2(getPrimitiveJavaObject(o));
+             } catch (Exception e) {
+                 logExceptionMessage(o, "TIMESTAMP");
+             }
+diff --git a/phoenix-hive/src/test/resources/hbase-site.xml b/phoenix-hive/src/test/resources/hbase-site.xml
+new file mode 100644
+index 000000000..d185eb710
+--- /dev/null
++++ b/phoenix-hive/src/test/resources/hbase-site.xml
+@@ -0,0 +1,10 @@
++<configuration>
++  <property>
++    <name>hbase.wal.provider</name>
++    <value>filesystem</value>
++  </property>
++  <property>
++    <name>hbase.wal.meta_provider</name>
++    <value>filesystem</value>
++  </property>
++</configuration>
+\ No newline at end of file
+diff --git a/phoenix-hive/src/test/resources/log4j.properties b/phoenix-hive/src/test/resources/log4j.properties
+new file mode 100644
+index 000000000..41fe21e53
+--- /dev/null
++++ b/phoenix-hive/src/test/resources/log4j.properties
+@@ -0,0 +1,38 @@
++# Licensed to the Apache Software Foundation (ASF) under one
++# or more contributor license agreements.  See the NOTICE file
++# distributed with this work for additional information
++# regarding copyright ownership.  The ASF licenses this file
++# to you under the Apache License, Version 2.0 (the
++# "License"); you may not use this file except in compliance
++# with the License.  You may obtain a copy of the License at
++#
++#     http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++
++# Define the root logger to the system property "hbase.root.logger".
++log4j.rootLogger=INFO,console
++
++# Logging Threshold
++log4j.threshhold=ALL
++
++#
++# console
++# Add "console" to rootlogger above if you want to use this
++#
++log4j.appender.console=org.apache.log4j.ConsoleAppender
++log4j.appender.console.target=System.err
++log4j.appender.console.layout=org.apache.log4j.PatternLayout
++log4j.appender.console.layout.ConversionPattern=%d %-5p %C(%L): %m%n
++
++# Custom Logging levels
++
++log4j.logger.org.apache.zookeeper=ERROR
++log4j.logger.org.apache.hadoop.hbase=DEBUG
++log4j.logger.org.apache.phoenix.hive=DEBUG
++log4j.logger.org.apache.phoenix.hive.query=DEBUG
++log4j.logger.org.apache.phoenix.hive.objectinspector=DEBUG
+diff --git a/pom.xml b/pom.xml
+index 054ad78d8..bb188de51 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -71,7 +71,7 @@
+ 
+     <!-- Dependency versions -->
+     <commons-cli.version>1.4</commons-cli.version>
+-    <hive.version>3.0.0</hive.version>
++    <hive.version>3.1.0-SNAPSHOT</hive.version>
+     <pig.version>0.13.0</pig.version>
+     <jackson.version>1.9.2</jackson.version>
+     <antlr.version>3.5.2</antlr.version>
+-- 
+2.16.3
+
