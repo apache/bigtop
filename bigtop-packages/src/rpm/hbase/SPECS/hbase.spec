@@ -74,6 +74,8 @@
 
 %endif
 
+# Disable debuginfo package
+%define debug_package %{nil}
 
 Name: hbase
 Version: %{hbase_version}
@@ -92,7 +94,6 @@ Source5: hbase.default
 Source6: hbase.nofiles.conf
 Source7: regionserver-init.d.tpl
 #BIGTOP_PATCH_FILES
-BuildArch: noarch
 Requires: coreutils, /usr/sbin/useradd, /sbin/chkconfig, /sbin/service
 Requires: hadoop-client, zookeeper >= 3.3.1, bigtop-utils >= 0.7
 

@@ -19,14 +19,14 @@ class bigtop_toolchain::user {
     ensure => present,
     home => '/var/lib/jenkins',
     managehome => true,
-    uid        => 500,
+    uid        => 1000,
     gid        => 'jenkins',
     require    => Group['jenkins'],
   }
 
   group { 'jenkins':
     ensure => present,
-    gid    => 500,
+    gid    => 1000,
   }
 
   file {"/var/lib/jenkins/.m2":

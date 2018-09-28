@@ -446,6 +446,11 @@ def genTasks = { target ->
     def RELEASE_DIST = "rpmbuild --eval '%{?dist}' 2>/dev/null".execute().text.trim().replaceAll("'",'')
     def SRCRPM="$PKG_OUTPUT_DIR/$PKG_NAME-${PKG_VERSION}-$BIGTOP_BUILD_STAMP${RELEASE_DIST}.src.rpm"
 
+    def final DO_MAVEN_DEPLOY = project.findProperty('doMavenDeploy') == 'true'
+    def final MAVEN_DEPLOY_SOURCE = project.findProperty('mavenDeploySource') == 'true'
+    def final MAVEN_REPO_ID = project.hasProperty('mavenRepoId') ? project.property('mavenRepoId') : 'default'
+    def final MAVEN_REPO_URI = project.hasProperty('mavenRepoUri') ? project.property('mavenRepoUri') : null
+
     def command = [
         '--define', "_topdir $PKG_BUILD_DIR/rpm/",
         '--define', "${NAME}_base_version $BASE_VERSION",
@@ -453,7 +458,15 @@ def genTasks = { target ->
         '--define', "${NAME}_version ${PKG_VERSION}",
         '--define', "${NAME}_release ${BIGTOP_BUILD_STAMP}%{?dist}",
         '--rebuild', SRCRPM,
+        '--define', "do_maven_deploy ${DO_MAVEN_DEPLOY}",
+        '--define', "maven_deploy_source ${MAVEN_DEPLOY_SOURCE}"
     ]
+
+   if (MAVEN_REPO_URI != null) {
+      command.addAll('--define', "maven_repo_uri ${MAVEN_REPO_URI}")
+      command.addAll('--define', "maven_repo_id ${MAVEN_REPO_ID}")
+    }
+
     exec {
       workingDir BASE_DIR
       executable 'rpmbuild'
@@ -502,6 +515,16 @@ def genTasks = { target ->
     copy {
       from "${BASE_DIR}/bigtop-packages/src/templates/init.d.tmpl"
       into "$PKG_BUILD_DIR/rpm/SOURCES"
+    }
+    copy {
+      from "${BASE_DIR}/bigtop-packages/src/extensions"
+      into "$PKG_BUILD_DIR/rpm/SOURCES"
+      include "*"
+    }
+    copy {
+      from "${BASE_DIR}/bigtop-packages/src/scripts"
+      into "$PKG_BUILD_DIR/rpm/SOURCES"
+      include "*"
     }
     fileTree ("$BASE_DIR/bigtop-packages/src/common/$NAME") {
       include '**/*'

@@ -1,3 +1,4 @@
+#!/bin/bash
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -13,28 +14,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class hadoop_pig {
+if [ "${DO_MAVEN_DEPLOY}" = "true" ]; then
 
-  class deploy ($roles) {
-    if ("pig-client" in $roles) {
-      include hadoop_pig::client
-    }
-  }
+  SCHEME=${MAVEN_REPO_URI%%:*}
+  case ${SCHEME} in
+  http | https)
+    ;;
+  s3)
+    mkdir -p ./.mvn
+    cp $(dirname ${0})/aws-maven.xml ./.mvn/extensions.xml
+    ;;
+  *)
+    echo "Unsupported URI scheme \"${SCHEME}\""
+    exit 1
+    ;;
+  esac
 
-  class client {
-    include hadoop::common
-
-    package { "pig":
-      ensure => latest,
-      require => Package["hadoop"],
-    }
-
-    file { "/etc/pig/conf/pig.properties":
-      content => template('hadoop_pig/pig.properties'),
-      require => Package["pig"],
-      owner => "root", /* FIXME: I'm really no sure about these -- we might end  */
-      mode => "755",   /*        up deploying/testing a different thing compared */
-                       /*        to a straight rpm/deb deployment                */
-    }
-  }
-}
+  if [ "${MAVEN_DEPLOY_SOURCE}" = "true" ]; then
+    EXTRA_GOALS+=" source:jar"
+  fi
+  if [ ! -z "${MAVEN_REPO_URI}" ]; then
+    MAVEN_OPTS+=" -DaltDeploymentRepository=${MAVEN_REPO_ID:-default}::default::${MAVEN_REPO_URI}"
+  fi
+  EXTRA_GOALS+=" deploy"
+  # Conditionally add Maven extension for S3 URIs
+fi
