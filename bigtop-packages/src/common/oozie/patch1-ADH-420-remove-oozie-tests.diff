@@ -1,20 +1,28 @@
- src/main/assemblies/distro.xml | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/src/main/assemblies/distro.xml b/src/main/assemblies/distro.xml
-index d28be909..e9e655a2 100644
---- a/src/main/assemblies/distro.xml
-+++ b/src/main/assemblies/distro.xml
-@@ -112,10 +112,10 @@
-             <outputDirectory>/oozie-core</outputDirectory>
-         </file>
-         <!-- Oozie core test jar -->
--        <file>
-+<!--        <file>
-             <source>${basedir}/../core/target/oozie-core-${project.version}-tests.jar</source>
-             <outputDirectory>/oozie-core</outputDirectory>
--        </file>
-+        </file> -->
-         <!-- Oozie Documentation -->
-         <file>
-             <source>${basedir}/../docs/target/oozie-docs-${project.version}-docs.zip</source>
+*** oozie-4.3.1/src/main/assemblies/distro.xml.orig	2018-02-06 15:26:38.000000000 +0300
+--- oozie-4.3.1/src/main/assemblies/distro.xml	2018-09-28 18:19:41.367969409 +0300
+***************
+*** 116,126 ****
+              <source>${basedir}/../core/target/oozie-core-${project.version}.jar</source>
+              <outputDirectory>/oozie-core</outputDirectory>
+          </file>
+!         <!-- Oozie core test jar -->
+          <file>
+              <source>${basedir}/../core/target/oozie-core-${project.version}-tests.jar</source>
+              <outputDirectory>/oozie-core</outputDirectory>
+          </file>
+          <!-- Oozie war -->
+          <file>
+              <source>${basedir}/../webapp/target/oozie-webapp-${project.version}.war</source>
+--- 116,127 ----
+              <source>${basedir}/../core/target/oozie-core-${project.version}.jar</source>
+              <outputDirectory>/oozie-core</outputDirectory>
+          </file>
+!         <!-- Oozie core test jar 
+          <file>
+              <source>${basedir}/../core/target/oozie-core-${project.version}-tests.jar</source>
+              <outputDirectory>/oozie-core</outputDirectory>
+          </file>
++         -->
+          <!-- Oozie war -->
+          <file>
+              <source>${basedir}/../webapp/target/oozie-webapp-${project.version}.war</source>
