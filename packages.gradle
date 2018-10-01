@@ -388,6 +388,14 @@ def genTasks = { target ->
       from "${BASE_DIR}/bigtop-packages/src/templates/init.d.tmpl"
       into "$DEB_BLD_DIR/debian"
     }
+    copy {
+      from "${BASE_DIR}/bigtop-packages/src/scripts"
+      into "$DEB_BLD_DIR/debian"
+    }
+    copy {
+      from "${BASE_DIR}/bigtop-packages/src/extensions"
+      into "$DEB_BLD_DIR/debian"
+    }
     fileTree ("$BASE_DIR/bigtop-packages/src/common/$NAME") {
       include '**/*'
     }.copy { into "$DEB_BLD_DIR/debian" }
