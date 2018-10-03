@@ -60,12 +60,6 @@ class jdk {
         ensure => present,
         noop => $jdk_preinstalled,
       }
-      if ($::operatingsystem == "Fedora") {
-        file { '/usr/lib/jvm/java-1.8.0-openjdk/jre/lib/security/cacerts':
-          ensure => 'link',
-          target => '/etc/pki/java/cacerts'
-        }
-      }
     }
     /OpenSuSE/: {
       package { 'jdk':
