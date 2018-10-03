@@ -40,7 +40,12 @@ case ${ID}-${VERSION_ID} in
         ;;
     centos-7*)
         rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-        yum -y install hostname curl sudo unzip wget puppet puppetlabs-stdlib
+        yum updateinfo
+        # BIGTOP-3088: pin puppetlabs-stdlib to 4.12.0 as the one provided by
+        # distro (4.25.0) has conflict with puppet<4. Should be removed once
+        # puppet in distro is updated.
+        yum -y install hostname curl sudo unzip wget puppet
+        puppet module install puppetlabs-stdlib --version 4.12.0
         ;;
     *)
         echo "Unsupported OS ${ID}-${VERSION_ID}."
