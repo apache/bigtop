@@ -43,7 +43,15 @@ create() {
     mkdir -p config/hieradata 2> /dev/null
     echo > ./config/hiera.yaml
     echo > ./config/hosts
-    export DOCKER_IMAGE=$(get-yaml-config docker image)
+    # set correct image name based on running architecture
+    image_name=$(get-yaml-config docker image)
+    running_arch=$(uname -m)
+    if [ "x86_64" == ${running_arch} ]; then
+        image_name=${image_name}
+    else
+        image_name=${image_name}-${running_arch}
+    fi
+    export DOCKER_IMAGE=${image_name}
     export MEM_LIMIT=$(get-yaml-config docker memory_limit)
 
     # Startup instances
