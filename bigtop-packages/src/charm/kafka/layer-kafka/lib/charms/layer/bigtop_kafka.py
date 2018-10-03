@@ -56,18 +56,20 @@ class Kafka(object):
             'kafka::server::broker_id': unit_num,
             'kafka::server::port': kafka_port,
             'kafka::server::zookeeper_connection_string': zk_connect,
+            'kafka::server::log_dirs': log_dir,
         }
         if network_interface:
             ip = Bigtop().get_ip_for_interface(network_interface)
             override['kafka::server::bind_addr'] = ip
-        if log_dir:
-            override['kafka::server::log_dirs'] = log_dir
 
         bigtop = Bigtop()
         bigtop.render_site_yaml(roles=roles, overrides=override)
         bigtop.trigger_puppet()
-        os.makedirs(log_dir, mode=0o700, exist_ok=True)
-        shutil.chown(log_dir, user='kafka')
+
+        if log_dir:
+            os.makedirs(log_dir, mode=0o700, exist_ok=True)
+            shutil.chown(log_dir, user='kafka')
+
         self.set_advertise()
         self.restart()
 

@@ -41,6 +41,7 @@ def configure_kafka(zk):
     data_changed(  # Prime data changed for network interface
         'kafka.network_interface', hookenv.config().get('network_interface'))
     log_dir = unitdata.kv().get('kafka.storage.log_dir')
+    data_changed('kafka.storage.log_dir', log_dir)
     kafka = Kafka()
     zks = zk.zookeepers()
     kafka.configure_kafka(zks, log_dir=log_dir)
