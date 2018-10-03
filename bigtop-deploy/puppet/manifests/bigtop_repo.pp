@@ -24,6 +24,7 @@ class bigtop_repo {
           descr    => "Bigtop packages",
           enabled  => 1,
           gpgcheck => 0,
+          priority => 10,
         }
         Yumrepo<||> -> Package<||>
       }
