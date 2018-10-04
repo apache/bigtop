@@ -76,9 +76,8 @@ def configure_kafka_zookeepers(zk):
     hookenv.log('Checking Zookeeper configuration')
     hookenv.status_set('maintenance', 'updating zookeeper instances')
     kafka = Kafka()
-    kafka.configure_kafka(zks,
-        network_interface=network_interface,
-        log_dir=log_dir)
+    kafka.configure_kafka(zks, network_interface=network_interface,
+                          log_dir=log_dir)
     hookenv.status_set('active', 'ready')
 
 
