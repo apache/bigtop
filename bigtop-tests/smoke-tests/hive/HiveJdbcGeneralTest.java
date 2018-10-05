@@ -16,6 +16,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package org.apache.bigtop.hive;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -51,15 +54,30 @@ public class HiveJdbcGeneralTest extends TestMethods {
   static String hivePort = System.getenv("HIVE_PORT");
   static String jdbcConnection = System.getenv("HIVE_JDBC_URL");
   static Connection con;
-  String newTableName = "btest";
+  static String newTableName = "BIGTOP_SMOKETEST_HIVE_TESTTABLE_";
 
   @BeforeClass
   public static void oneTimeSetup() throws Exception {
     String username = System.getenv("HIVE_USER");
     String password = System.getenv("HIVE_PASSWORD");
     Properties connectionProps = new Properties();
-    connectionProps.put("user", username);
-    connectionProps.put("password", password);
+    if (username != null) //for kerberos its ok to not have a hive user
+    {
+      connectionProps.put("user", username);
+    }
+    if (password != null) //for kerberos, its ok to not have a hive password
+    {
+      connectionProps.put("password", password);
+    }
+    if (jdbcConnection == null)
+    {
+      throw new Exception("HIVE_JDBC_URL Enviornment Variable is not set and is required!");
+    }
+    if (hivePort == null)
+    {
+      hivePort = "10000";//default to 10000 if none is specified.
+    }
+
     Class.forName("org.apache.hive.jdbc.HiveDriver");
     con = DriverManager.getConnection(
         jdbcConnection + ":" + hivePort + "/default;", connectionProps);
@@ -72,8 +90,19 @@ public class HiveJdbcGeneralTest extends TestMethods {
   }
 
   @AfterClass
-  public static void oneTimeTearDown() throws Exception {
-    con.close();
+  public static void oneTimeTearDown() throws Exception
+  {
+    try (Statement stmt = con.createStatement()) {
+      dropTable(stmt, newTableName);
+      dropTable(stmt, newTableName + "NT");
+      dropTable(stmt, newTableName + "T");
+      dropTable(stmt, newTableName + "P");
+      dropTable(stmt, newTableName + "V");
+    }
+    if (con != null)
+    {
+      con.close();
+    }
   }
 
   @Test // (expected=java.sql.SQLDataException.class)
@@ -94,7 +123,6 @@ public class HiveJdbcGeneralTest extends TestMethods {
       getTables(con, newTableName);
       dropTable(stmt, newTableName);
       dropTable(stmt, newTableName + "NT");
-      dropTable(stmt, newTableName + "T");
       dropTable(stmt, newTableName + "P");
       dropTable(stmt, newTableName + "V");
       showTables(stmt, "show tables like 'b*'");
@@ -106,8 +134,6 @@ public class HiveJdbcGeneralTest extends TestMethods {
       } catch (SQLException e) {
 
       }
-      createTable(stmt, newTableName + "T", columnNames, ",",
-          "STORED AS ORC TBLPROPERTIES(\"transactional\"=\"true\")");
       createPartitionedTable(stmt, newTableName + "P", partitionedColumns,
           "(Capacity double)", ",", "STORED AS ORC");
       createTable(stmt, newTableName + "V", "(Dest varchar(5))", ",",
@@ -116,12 +142,15 @@ public class HiveJdbcGeneralTest extends TestMethods {
       loadFile(localFilepath, HdfsURI, fileDestination + ".txt");
       loadData(stmt, filePath + ".txt", newTableName);
       describeTable(stmt, newTableName);
-      updateTable(stmt, "Insert into table btestt SELECT * from btest");
       updateTable(stmt, "Insert into table btestv SELECT Dest from btest");
+
+      printResults(stmt, "select * from btest");
+
       updateTable(stmt,
-          "Insert into table btestp PARTITION (Capacity) SELECT * from btest");
+          "Insert into table btestp SELECT * from btest");
       deleteFile(stmt, filePath + ".txt", HdfsURI);
       deleteFile(stmt, filePath + "0.orc", HdfsURI);
+      //tests SQL as specified by NIST standards
       assertEquals("302", printResults(stmt, "Select * from btest"));
       assertEquals("114", printResults(stmt,
           "Select * from btest where Dest = 'LAX' order by boarded desc"));
@@ -142,16 +171,7 @@ public class HiveJdbcGeneralTest extends TestMethods {
       // assertEquals(callableStatement(con, -20), -1);
       assertEquals("95487", printResults(stmt, "Select SUM(Miles) from btest"));
       assertEquals("302", printResults(stmt, "Select * from btest"));
-      assertEquals(0, updateTable(stmt,
-          "Update btestt set Orig= 'test' where Dest= 'LAX'"));
-      try {
-        loadData(stmt, filePath + ".txt", newTableName + "T");
-        fail("shouldn't get here");
-      } catch (HiveSQLException e) {
-        System.out.println("File does not exist in specified location");
-      }
-      assertEquals("132",
-          printResults(stmt, "Select * from btestt order by Dest"));
+
       assertEquals("capacity=250.0",
           printResults(stmt, "show partitions btestp"));
       assertEquals("LAX", printResults(stmt,
@@ -168,21 +188,97 @@ public class HiveJdbcGeneralTest extends TestMethods {
     }
   }
 
+  /**
+   * testNLSCharactersInORCTable - Test that nls multi-byte characters are able be written and read from hive
+   *
+   * Previous Issues:
+   * https://issues.apache.org/jira/browse/ORC-406
+   * @throws SQLException
+   */
   @Test
-  public void testTableDeletion() throws Exception {
-    try (Statement stmt = con.createStatement()) {
-      dropTable(stmt, newTableName);
-      dropTable(stmt, newTableName + "NT");
-      dropTable(stmt, newTableName + "T");
-      dropTable(stmt, newTableName + "P");
-      dropTable(stmt, newTableName + "V");
+  public void testNLSCharactersInORCTable() throws SQLException
+  {
+    //Run this test only on Hive Version's greater than 1.2; as this uses an insert into values statement
+    if (minimumHiveVersion(con, 1, 2))
+    {
+      String columnNames =    "(charCol char(3))";
+      String tableName = newTableName + "ORC";
+      Statement stmt = con.createStatement();
+
+      dropTable(stmt, tableName);
+
+      createTable(stmt, tableName, columnNames, null, "STORED AS ORC");
+
+      //Insert three multi-byte characters into a char(3)
+      executeStatement(stmt, "insert into " + tableName + " values ('ÞÔÞ')");
+
+      //We should be able to get this back on a select.
+      assertEquals("Insert and Read back of multiple byte characters into char(3) failed",
+          "ÞÔÞ", printResults(stmt, "select * from " + tableName));
+
+      dropTable(stmt, tableName);
     }
   }
 
-  @Test
-  public void testFunctionsandMetaData() throws Exception {
+  @Test // (expected=java.sql.SQLDataException.class)
+  public void testTransactionalTableCreation() throws Exception
+  {
+    //Run this test only on Hive Version's greater than 3.0; this test tries transactional tables on
+    // non-bucketed orc table; which needs hive version >= 3.0.
+    if (minimumHiveVersion(con, 3, 0))
+    {
+      final File f = new File(HiveJdbcGeneralTest.class.getProtectionDomain()
+          .getCodeSource().getLocation().getPath());
+      String hdfsConnection =
+          propertyValue("hdfs-site.xml", "dfs.namenode.rpc-address");
+      try (Statement stmt = con.createStatement())
+      {
+        String columnNames =
+            "(Flight int, Dates varchar(255), Depart varchar(10), Orig varchar(5), Dest varchar(5), Miles int, Boarded int, Capacity double)";
+        String localFilepath = f + "/samdat1.csv";
+        String HdfsURI = "hdfs://" + hdfsConnection;
+        String filePath = "/tmp/htest/00000_";
+        String fileDestination = HdfsURI + filePath;
 
-    String queryValues = "insert into table btestm values"
+        String transactionTableName = newTableName + "T";
+        getTables(con, transactionTableName);
+        showTables(stmt, "show tables like '" + transactionTableName.substring(0, 1) + "*'");
+
+        loadFile(localFilepath, HdfsURI, fileDestination + ".txt");
+        loadData(stmt, filePath + ".txt", transactionTableName);
+
+        createTable(stmt, transactionTableName, columnNames, ",", "STORED AS ORC TBLPROPERTIES(\"transactional\"=\"true\")");
+        showTables(stmt, "show tables like '" + transactionTableName.substring(0, 1) + "*'");
+        try
+        {
+          loadData(stmt, filePath + ".txt", transactionTableName);
+          fail("shouldn't get here");
+        }
+        catch (HiveSQLException e)
+        {
+          System.out.println("File does not exist in specified location");
+        }
+
+        assertEquals(0, updateTable(stmt,
+            "Update " + transactionTableName + " set Orig= 'test' where Dest= 'LAX'"));
+
+        dropTable(stmt, transactionTableName);
+
+        stmt.close();
+      }
+    }
+  }
+
+  /**
+   * testMeans - This tests the query used to perform means statistics for a specific table.
+   *   SAS's PROC Means integration.
+   * @throws Exception
+   */
+  @Test
+  public void testMeans() throws Exception {
+
+    String meansTableName = newTableName + "M";
+    String queryValues = "insert into table " + meansTableName + " values"
         + " ('Alfred', 'M', 69.0, 122.5, 'AJH', 1),"
         + " ('Alfred', 'M', 71.0, 130.5, 'AJH', 2),"
         + " ('Alicia', 'F', 56.5, 84.0, 'BJH', 1),"
@@ -222,7 +318,7 @@ public class HiveJdbcGeneralTest extends TestMethods {
         + " ('William', 'M', 66.5, 112.0, 'BJH', 1),"
         + " ('William', 'M', 68.3, 118.2, 'BJH', 2)";
 
-    // failing query from SAS Institute, code generated by PROC MEANS for version 3.0.0
+    // failing query from SAS Institute, code generated by PROC MEANS
     String failingQuery =
         " select COUNT(*) as ZSQL1, MIN(TXT_1.`school`) as ZSQL2, MIN(TXT_1.`time`) as"
             + " ZSQL3, COUNT(*) as ZSQL4, COUNT(TXT_1.`height`) as ZSQL5, MIN(TXT_1.`height`)"
@@ -231,29 +327,31 @@ public class HiveJdbcGeneralTest extends TestMethods {
             + " COUNT(TXT_1.`weight`) as ZSQL10, MIN(TXT_1.`weight`) as ZSQL11,"
             + " MAX(TXT_1.`weight`) as ZSQL12, SUM(TXT_1.`weight`) as ZSQL13,"
             + " COALESCE(VAR_SAMP(TXT_1.`weight`)*(COUNT(TXT_1.`weight`)-1),0) as ZSQL14 from"
-            + " `btestm` TXT_1 where TXT_1.`school` = 'AJH' group by"
-            + " TXT_1.`school`, TXT_1.`time`";
+            + " `" + meansTableName +"` TXT_1 where TXT_1.`school` = 'AJH' group by"
+            + " TXT_1.`school`, TXT_1.`time` order by 1";
 
-    try (Statement stmt = con.createStatement()) {
-      dropTable(stmt, newTableName + "M");
-      stmt.executeUpdate(
-          "create table btestm (name varchar(8), sex varchar(8), height double, weight double, school varchar(8), `time` double) TBLPROPERTIES('SASFMT:t'='TIME(10.0)')");
+    try (Statement stmt = con.createStatement())
+    {
+      dropTable(stmt, meansTableName); //drop in case it's laying around
+
+      createTable(stmt, meansTableName, "(name varchar(8), sex varchar(8), height double, weight double, school varchar(8), `time` double)", null,
+          "TBLPROPERTIES('SASFMT:t'='TIME(10.0)')");
+
       stmt.executeUpdate(queryValues);
 
-      try (ResultSet res = stmt.executeQuery(failingQuery)) {
+      try (ResultSet res = stmt.executeQuery(failingQuery))
+      {
         assertTrue(res.next());
-        assertEquals(null, res.getString(2));
+        assertEquals("AJH", res.getString(2));
         ResultSetMetaData rsmd = res.getMetaData();
-        assertEquals(19, rsmd.getPrecision(1));
-        assertEquals(-5, rsmd.getColumnType(1));
+
+        assertEquals(java.sql.Types.BIGINT, rsmd.getColumnType(1));
         assertEquals(14, rsmd.getColumnCount());
-        printResults(stmt, "describe formatted btestm");
-        ResultSet res2 = stmt.executeQuery("describe formatted btestm");
-        while (res2.next()) {
-          String section = res2.getString(1);
-          if (section.contains("Detailed"))
-            break;
-        }
+
+        printResults(stmt, "describe formatted " + meansTableName);
+        ResultSet res2 = stmt.executeQuery("describe formatted " + meansTableName);
+
+        //Ensure that the Table Properties is successfully retrievable with the describe formatted
         boolean found = false;
         while (res2.next()) {
           String value = res2.getString(2);
@@ -265,10 +363,15 @@ public class HiveJdbcGeneralTest extends TestMethods {
         }
         assertTrue(found);
       }
-      dropTable(stmt, newTableName + "M");
+      dropTable(stmt, meansTableName);
     }
   }
 
+  /**
+   * testFrequency - This tests the query used to perform frequency statistics for a specific table.
+   *   SAS's PROC Freq integration.
+   * @throws Exception
+   */
   @Test
   public void testFrequency() throws Exception {
 
@@ -285,18 +388,25 @@ public class HiveJdbcGeneralTest extends TestMethods {
             + "";
 
     String freqQuery =
-        "select SUM(TXT_1.`count`) as ZSQL1, MIN(TXT_1.`count`) as ZSQL2, case  when COUNT(*) > COUNT(TXT_1.`eyes`) then ' ' else MIN(TXT_1.`eyes`) end as ZSQL3, case  when COUNT(*) > COUNT(TXT_1.`hair`) then ' ' else MIN(TXT_1.`hair`) end as ZSQL4 from `btestf` TXT_1 where (TXT_1.`count` is not null) and (TXT_1.`count` <> 0) group by TXT_1.`eyes`, TXT_1.`hair`";
+        "select SUM(TXT_1.`count`) as ZSQL1, MIN(TXT_1.`count`) as ZSQL2, case  when COUNT(*) > COUNT(TXT_1.`eyes`) then ' ' else MIN(TXT_1.`eyes`) end as ZSQL3, "
+            + "case  when COUNT(*) > COUNT(TXT_1.`hair`) then ' ' else MIN(TXT_1.`hair`) end as ZSQL4 from `btestf` TXT_1 "
+            + "where (TXT_1.`count` is not null) and (TXT_1.`count` <> 0) group by TXT_1.`eyes`, TXT_1.`hair` order by zsql1, zsql2";
 
     try (Statement stmt = con.createStatement()) {
       dropTable(stmt, newTableName + "F");
       stmt.executeUpdate(
           "create table btestf (region int, eyes varchar(8), hair varchar(8), count int)");
       stmt.executeUpdate(queryValues);
-      assertEquals("55", printResults(stmt, freqQuery));
+      assertEquals("94", printResults(stmt, freqQuery));
       dropTable(stmt, newTableName + "F");
     }
   }
 
+  /**
+   * testRank - This tests the query used to perform a ranking of a specific table.
+   *   SAS's PROC Rank integration.
+   * @throws Exception
+   */
   @Test
   public void testRank() throws Exception {
 
@@ -304,22 +414,41 @@ public class HiveJdbcGeneralTest extends TestMethods {
         + "('Orlando', 93, 80)," + "('Ramey', 68, 72)," + "('Roe', 68, 75),"
         + "('Sanders', 56, 79)," + "('Simms', 68, 77),"
         + "('Strickland', 82, 79)";
-
+    String rankTableName = newTableName + "R";
     String rankQuery =
-        "WITH `subquery0` AS ( SELECT `name` AS `name`, `present` AS `present`, `taste` AS `taste` FROM btestr ) SELECT `table0`.`name`, `table0`.`present`, `table0`.`taste`, `table1`.`rankalias0` AS `PresentRank`, `table2`.`rankalias1` AS `TasteRank` FROM `subquery0` AS `table0` LEFT JOIN ( SELECT DISTINCT `present`, `rankalias0` FROM ( SELECT `present`, `tempcol0` AS `rankalias0` FROM ( SELECT `present`, MIN( `tempcol1` ) OVER ( PARTITION BY `present` ) AS `tempcol0` FROM( SELECT `present`, CAST( ROW_NUMBER() OVER ( ORDER BY `present` DESC ) AS DOUBLE ) AS `tempcol1` FROM `subquery0` WHERE ( ( `present` IS NOT NULL ) ) ) AS `subquery3` ) AS `subquery1` ) AS subquery2 ) AS `table1` ON ( ( `table0`.`present` = `table1`.`present` ) ) LEFT JOIN ( SELECT DISTINCT `taste`, `rankalias1` FROM ( SELECT `taste`, `tempcol2` AS `rankalias1` FROM ( SELECT `taste`, MIN( `tempcol3` ) OVER ( PARTITION BY `taste` ) AS `tempcol2` FROM( SELECT `taste`, CAST( ROW_NUMBER() OVER ( ORDER BY `taste` DESC ) AS DOUBLE ) AS `tempcol3` FROM `subquery0` WHERE ( ( `taste` IS NOT NULL ) ) ) AS `subquery6` ) AS `subquery4` ) AS subquery5 ) AS `table2` ON ( ( `table0`.`taste` = `table2`.`taste` ) )";
+        "WITH `subquery0` AS ( SELECT `name` AS `name`, `present` AS `present`, `taste` AS `taste` FROM " + rankTableName + " ) "
+            + "SELECT `table0`.`name`, `table0`.`present`, `table0`.`taste`, `table1`.`rankalias0` AS `PresentRank`, "
+            + "`table2`.`rankalias1` AS `TasteRank` FROM `subquery0` AS `table0` "
+            + "LEFT JOIN ( SELECT DISTINCT `present`, `rankalias0` FROM ( SELECT `present`, `tempcol0` AS `rankalias0` "
+            + "FROM ( SELECT `present`, MIN( `tempcol1` ) OVER ( PARTITION BY `present` ) AS `tempcol0` "
+            + "FROM( SELECT `present`, CAST( ROW_NUMBER() OVER ( ORDER BY `present` DESC ) AS DOUBLE ) AS `tempcol1`"
+            + "FROM `subquery0` WHERE ( ( `present` IS NOT NULL ) ) ) AS `subquery3` ) AS `subquery1` ) AS subquery2 ) AS `table1` "
+            + "ON ( ( `table0`.`present` = `table1`.`present` ) ) LEFT JOIN ( SELECT DISTINCT `taste`, `rankalias1` "
+            + "FROM ( SELECT `taste`, `tempcol2` AS `rankalias1` "
+            + "FROM ( SELECT `taste`, MIN( `tempcol3` ) OVER ( PARTITION BY `taste` ) AS `tempcol2` "
+            + "FROM( SELECT `taste`, CAST( ROW_NUMBER() OVER ( ORDER BY `taste` DESC ) AS DOUBLE ) AS `tempcol3` "
+            + "FROM `subquery0` WHERE ( ( `taste` IS NOT NULL ) ) ) AS `subquery6` ) AS `subquery4` ) AS subquery5 ) AS `table2` "
+            + "ON ( ( `table0`.`taste` = `table2`.`taste` ) ) order by PresentRank";
 
-    try (Statement stmt = con.createStatement()) {
-      dropTable(stmt, newTableName + "R");
+    try (Statement stmt = con.createStatement())
+    {
+      dropTable(stmt, rankTableName);
       stmt.executeUpdate(
-          "create table btestr (name varchar(10), present int, taste int)");
+          "create table " + rankTableName + " (name varchar(10), present int, taste int)");
       stmt.executeUpdate(queryValues);
-      assertEquals("Strickland", printResults(stmt, rankQuery));
-      dropTable(stmt, newTableName + "R");
+      assertEquals("Sanders", printResults(stmt, rankQuery));
+      dropTable(stmt, rankTableName);
     }
   }
 
+  /**
+   * testSort - Tests the Query used to Perform a Sort with Duplicates Removed.
+   *   [I.e. the Rows with only for First Ranked Row for each by group]
+   *   SAS's Proc Sort NODUPS integration
+   * @throws Exception
+   */
   @Test
-  public void testSort() throws Exception {
+  public void testSortNoDups() throws Exception {
 
     String queryValues =
         "insert into table btests values ('Paul''s Pizza', 83.00, 1019, 'Apex'),"
@@ -338,9 +467,15 @@ public class HiveJdbcGeneralTest extends TestMethods {
             + "('Apex Catering', 37.95, 9923, 'Apex')";
 
     String sortQuery =
-        "WITH `subquery0` AS ( SELECT `accountnumber` AS `accountnumber`, `company` AS `company`, `debt` AS `debt`, `town` AS `town` FROM btests ) SELECT `table0`.`company`, `table0`.`debt`, `table0`.`accountnumber`, `table0`.`town` FROM ( SELECT `accountnumber`, `company`, `debt`, `town` FROM ( SELECT `accountnumber`, `company`, `debt`, `town`, ROW_NUMBER() OVER ( PARTITION BY `town` ORDER BY CASE WHEN `town` IS NULL THEN 0 ELSE 1 END, `town` ) AS `tempcol0` FROM `subquery0` ) AS `subquery1` WHERE ( `tempcol0` = 1 ) ) AS `table0` ORDER BY CASE WHEN `table0`.`town` IS NULL THEN 0 ELSE 1 END, `table0`.`town`";
+        "WITH `subquery0` AS ( SELECT `accountnumber` AS `accountnumber`, `company` AS `company`, `debt` AS `debt`, `town` AS `town` FROM btests ) "
+            + "SELECT `table0`.`company`, `table0`.`debt`, `table0`.`accountnumber`, `table0`.`town` "
+            + "FROM ( SELECT `accountnumber`, `company`, `debt`, `town` "
+            + "FROM ( SELECT `accountnumber`, `company`, `debt`, `town`, ROW_NUMBER() "
+            + "OVER ( PARTITION BY `town` ORDER BY CASE WHEN `town` IS NULL THEN 0 ELSE 1 END, `town` ) AS `tempcol0` "
+            + "FROM `subquery0` ) AS `subquery1` WHERE ( `tempcol0` = 1 ) ) AS `table0` ORDER BY CASE WHEN `table0`.`town` IS NULL THEN 0 ELSE 1 END, `table0`.`town`";
 
-    try (Statement stmt = con.createStatement()) {
+    try (Statement stmt = con.createStatement())
+    {
       dropTable(stmt, newTableName + "S");
       stmt.executeUpdate(
           "create table btests (company varchar(22), debt double, accountnumber double, town varchar(13))");
@@ -375,7 +510,7 @@ public class HiveJdbcGeneralTest extends TestMethods {
       dropTable(stmt, "class");
       dropTable(stmt, "test42");
       stmt.executeUpdate(
-          "create table `class` (name varchar(8), sex varchar(1), age double precision, height double precision, weight double precision)");
+          "create table `class` (name varchar(8), sex varchar(1), age double, height double, weight double)");
       stmt.executeUpdate(queryValues);
       // specifying the location fails in hortonworks 3.0
       try {

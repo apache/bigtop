@@ -17,6 +17,8 @@
  * limitations under the License.
  */
 // A masterclass containing methods which aid in the replication of access to hadoop
+package org.apache.bigtop.hive;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -110,6 +112,15 @@ public class TestMethods {
     return propertyValue;
   }
 
+  /**
+   * getTables
+   *       Prints out the contents of the Table to System out
+   *
+   *
+   * @param con - active connection to hive
+   * @param tableName - name of the table
+   * @throws SQLException
+   */
   static void getTables(Connection con, String tableName) throws SQLException {
     DatabaseMetaData dbmd = con.getMetaData();
     ResultSet res = dbmd.getTables(null, null, tableName, null);
@@ -125,15 +136,31 @@ public class TestMethods {
     }
   }
 
-  static void dropTable(Statement stmt, String newTableName)
+  /**
+   * dropTable - drops the given table
+   * @param stmt - open statement
+   * @param tableName - table to drop
+   * @throws SQLException
+   */
+  static void dropTable(Statement stmt, String tableName)
       throws SQLException {
-    stmt.executeUpdate("DROP TABLE IF EXISTS " + newTableName);
+    stmt.executeUpdate("DROP TABLE IF EXISTS " + tableName);
   }
 
+  /**
+   * createTable method
+   *
+   * @param stmt - Connected Statement to the Hive Database
+   * @param newTableName - target table name
+   * @param columnNames - enumerated column names and types enclosed by parenthesis
+   * @param delimiter - fields terminated by option [or NULL if not included]
+   * @param sql - post table options
+   * @throws SQLException
+   */
   static void createTable(Statement stmt, String newTableName,
       String columnNames, String delimiter, String sql) throws SQLException {
-    stmt.execute("CREATE TABLE " + newTableName + columnNames
-        + "ROW FORMAT DELIMITED FIELDS TERMINATED BY '" + delimiter + "'"
+    stmt.execute("CREATE TABLE " + newTableName + columnNames +
+        (delimiter == null ? "" : "ROW FORMAT DELIMITED FIELDS TERMINATED BY '" + delimiter + "'")
         + sql);
     System.out.println("Creating Table " + newTableName + "\n");
   }
@@ -147,10 +174,17 @@ public class TestMethods {
     System.out.println("Creating Table " + newTableName + "\n");
   }
 
-  static void describeTable(Statement stmt, String newTableName)
+  /**
+   * describeTable - Performs a describe table and sends the results to System.out
+   *
+   * @param stmt
+   * @param tableName
+   * @throws SQLException
+   */
+  static void describeTable(Statement stmt, String tableName)
       throws SQLException {
     ResultSet res;
-    String sql = "describe " + newTableName;
+    String sql = "describe " + tableName;
     System.out.println("Running: " + sql);
     res = stmt.executeQuery(sql);
     while (res.next()) {
@@ -159,6 +193,13 @@ public class TestMethods {
     }
   }
 
+  /**
+   *
+   * showTables
+   * @param stmt
+   * @param sql
+   * @throws SQLException
+   */
   static void showTables(Statement stmt, String sql) throws SQLException {
     ResultSet res;
     System.out.println("Running: " + sql + "\n");
@@ -177,6 +218,16 @@ public class TestMethods {
     System.out.println("");
   }
 
+  /**
+   * loadFile  - loads a local file into hdfs
+   *
+   * @param localFilepath - local file path
+   * @param HdfsURI -
+   * @param fileDestination
+   * @throws IllegalArgumentException
+   * @throws IOException
+   * @throws URISyntaxException
+   */
   static void loadFile(String localFilepath, String HdfsURI,
       String fileDestination)
           throws IllegalArgumentException, IOException, URISyntaxException {
@@ -193,14 +244,21 @@ public class TestMethods {
     }
 
   }
-
-  static void loadData(Statement stmt, String filePath, String newTableName)
+  /**
+   * loadData - Loads the inpath file path into the target table
+   * @param stmt - open statement
+   * @param filePath - inpath file location
+   * @param tableName - target table
+   * @throws SQLException
+   */
+  static void loadData(Statement stmt, String filePath, String tableName)
       throws SQLException {
     String sql = "LOAD data inpath '" + filePath + "' OVERWRITE into table "
-        + newTableName;
+        + tableName;
     System.out.println("Running: " + sql + "\n");
     stmt.executeUpdate(sql);
   }
+
 
   static void deleteFile(Statement stmt, String filePath, String HdfsURI)
       throws IOException, URISyntaxException {
@@ -214,18 +272,38 @@ public class TestMethods {
     }
   }
 
-  static int updateTable(Statement stmt, String selection) throws SQLException {
-    String sql = selection;
+  /**
+   * updateTable - performs an execute Update against the database. Results are
+   *    printed to System.out
+   *
+   * @param stmt - open statement
+   * @param sql - sql to perform
+   * @return
+   * @throws SQLException
+   */
+  static int updateTable(Statement stmt, String sql) throws SQLException
+  {
     int affectedRows = stmt.executeUpdate(sql);
     System.out.println("Updating Table: " + sql + "\n");
     System.out.println("Affected Rows: " + affectedRows);
     return affectedRows;
   }
 
-  static String printResults(Statement stmt, String selection)
-      throws SQLException {
+  /**
+   * printResults - executes the given sql, and prints the results to
+   *    System.out
+   *
+   * @param stmt
+   * @param sql
+   * @return
+   * @throws SQLException
+   */
+  static String printResults(Statement stmt, String sql)
+      throws SQLException
+  {
     ResultSet res;
-    String sql = selection;
+    String validate = null;
+
     res = stmt.executeQuery(sql);
     System.out.println("\n" + "Printing Results: " + sql + "\n");
     ResultSetMetaData rsmd = res.getMetaData();
@@ -234,7 +312,9 @@ public class TestMethods {
       System.out.print(rsmd.getColumnName(q) + " ");
     }
     System.out.println("\n");
-    while (res.next()) {
+    while (res.next())
+    {
+      validate = res.getString(1);
       for (int i = 1; i <= columnsNumber; i++) {
         String columnValue = res.getString(i);
         System.out.print(columnValue + "  ");
@@ -242,26 +322,15 @@ public class TestMethods {
       System.out.println("");
     }
 
-    res = stmt.executeQuery(sql);
-    return resultSetVerification(res, 1);
-  }
-
-  static String resultSetVerification(ResultSet res,
-      int columnVerificationNumber) throws SQLException {
-    String validate = null;
-    while (res.next()) {
-
-      validate = res.getString(columnVerificationNumber);
-
-    }
     return validate;
   }
 
   static String preparedStatement(Connection con, String selection)
-      throws SQLException {
-    ResultSet res;
+      throws SQLException
+  {
+    String validate = null;
     PreparedStatement pstmt = con.prepareStatement(selection);
-    res = pstmt.executeQuery();
+    ResultSet res = pstmt.executeQuery();
     System.out.println("\n" + "Printing Results: " + "\n");
     ResultSetMetaData rsmd = res.getMetaData();
     int columnsNumber = rsmd.getColumnCount();
@@ -269,7 +338,9 @@ public class TestMethods {
       System.out.print(rsmd.getColumnName(q) + " ");
     }
     System.out.println("\n");
-    while (res.next()) {
+    while (res.next())
+    {
+      validate = res.getString(1);
       for (int i = 1; i <= columnsNumber; i++) {
         String columnValue = res.getString(i);
         System.out.print(columnValue + "  ");
@@ -277,8 +348,7 @@ public class TestMethods {
       System.out.println("");
     }
 
-    res = pstmt.executeQuery();
-    return resultSetVerification(res, 1);
+    return validate;
   }
 
   static int callableStatement(Connection con, double testVal)
@@ -316,6 +386,11 @@ public class TestMethods {
     return resultFetchSize;
   }
 
+  /**
+   * setNegativeFetchSize
+   *     Negative Test case which should throw a SQLException due to setting a -1 fetch size
+   * @param stmt
+   */
   static void setNegativeFetchSize(Statement stmt) {
     try {
       stmt.setFetchSize(-1);
@@ -324,8 +399,34 @@ public class TestMethods {
     }
   }
 
-  static void executeStatement(Statement stmt, String sqlStatement)
-      throws SQLException {
-    stmt.execute(sqlStatement);
+
+  /**
+   * minimumHiveVersion
+   *
+   * @param con - hive connection
+   * @param major - major database version
+   * @param minor - minor database version
+   * @return  Returns true, if the connections database version is at least the
+   *          passed in values
+   *
+   * @throws SQLException
+   */
+  public static boolean minimumHiveVersion(Connection con, int major, int minor) throws SQLException
+  {
+    return con.getMetaData().getDatabaseMajorVersion() > major ||
+        (con.getMetaData().getDatabaseMajorVersion() == major &&
+        con.getMetaData().getDatabaseMinorVersion() >= minor);
+  }
+
+  /**
+   * executeStatement - Executes the given sql against the stmt
+   * @param stmt - open statement
+   * @param sql - sql to execute
+   * @throws SQLException
+   */
+  static void executeStatement(Statement stmt, String sql)
+      throws SQLException
+  {
+    stmt.execute(sql);
   }
 }
