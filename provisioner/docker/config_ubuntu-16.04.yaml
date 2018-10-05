@@ -15,7 +15,7 @@
 
 docker:
         memory_limit: "4g"
-        image:  "bigtop/puppet:trunk-ubuntu-16.04"
+        image:  "bigtop/puppet:1.3.0-ubuntu-16.04"
 
 repo: "http://repos.bigtop.apache.org/releases/1.3.0/ubuntu/16.04/$(ARCH)"
 distro: debian
