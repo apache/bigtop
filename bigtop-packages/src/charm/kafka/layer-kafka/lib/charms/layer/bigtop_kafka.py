@@ -62,7 +62,6 @@ class Kafka(object):
         bigtop = Bigtop()
         bigtop.render_site_yaml(roles=roles, overrides=override)
         bigtop.trigger_puppet()
-        self.set_advertise()
         self.restart()
 
     def restart(self):
@@ -74,15 +73,3 @@ class Kafka(object):
 
     def stop(self):
         host.service_stop('kafka-server')
-
-    def set_advertise(self):
-        short_host = check_output(['hostname', '-s']).decode('utf8').strip()
-
-        # Configure server.properties
-        # NB: We set the advertised.host.name below to our short hostname
-        # to kafka (admin will still have to expose kafka and ensure the
-        # external client can resolve the short hostname to our public ip).
-        kafka_server_conf = '/etc/kafka/conf/server.properties'
-        utils.re_edit_in_place(kafka_server_conf, {
-            r'^#?advertised.host.name=.*': 'advertised.host.name=%s' % short_host,
-        })
