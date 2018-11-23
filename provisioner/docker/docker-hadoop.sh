@@ -55,7 +55,7 @@ create() {
     export MEM_LIMIT=$(get-yaml-config docker memory_limit)
 
     # Startup instances
-    docker-compose -p $PROVISION_ID scale bigtop=$1
+    docker-compose -p $PROVISION_ID up -d --scale bigtop=$1 --no-recreate
     if [ $? -ne 0 ]; then
         log "Docker container(s) startup failed!";
         exit 1;
