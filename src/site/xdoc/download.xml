@@ -24,7 +24,7 @@
 	</properties>
 	<body>
 		<section name="Software downloads">
-			<subsection name="Releases" id="releases"></subsection>
+			<subsection name="Latest Release" id="releases"></subsection>
 			<p>
 				You can download the latest most stable release of Apache Bigtop project.
 				Source code of the framework will allow you to build, deploy, test, and
@@ -35,12 +35,31 @@
 			<ul>
 				<li>
 					The latest release of Apache Bigtop software framework <br/>
-					<a href="https://www.apache.org/dyn/closer.lua/bigtop/bigtop-1.3.0/">Bigtop 1.3.0</a>
+					<a href="https://www.apache.org/dyn/closer.lua/bigtop/bigtop-1.3.0/">Bigtop 1.3.0</a> (<a href="https://archive.apache.org/dist/bigtop/bigtop-1.3.0/bigtop-1.3.0-project.tar.gz.asc">pgp</a> <a href="https://archive.apache.org/dist/bigtop/bigtop-1.3.0/bigtop-1.3.0-project.tar.gz.sha256">sha256</a> <a href="https://archive.apache.org/dist/bigtop/bigtop-1.3.0/bigtop-1.3.0-project.tar.gz.sha512">sha512</a>)
 				</li>
 				<li>
 					Repositories of instsallable binary packages built with latest release
 					of the Apache Bitop project <br/>
 					<a href="https://www.apache.org/dyn/closer.lua/bigtop/bigtop-1.3.0/repos/">Installable binary artifacts</a>
+				</li>
+			</ul>
+			<subsection name="Previous Releases" id="archived"></subsection>
+			<ul>
+				<li>
+					1.2.1 released on 2017-11-12<br/>
+					<a href="https://www.apache.org/dyn/closer.lua/bigtop/bigtop-1.2.1/">Bigtop 1.2.1</a>(<a href="https://archive.apache.org/dist/bigtop/bigtop-1.2.1/bigtop-1.2.1-project.tar.gz.asc">pgp</a> <a href="https://archive.apache.org/dist/bigtop/bigtop-1.2.1/bigtop-1.2.1-project.tar.gz.md5">md5</a> <a href="https://archive.apache.org/dist/bigtop/bigtop-1.2.1/bigtop-1.2.1-project.tar.gz.sha1">sha1</a>)
+				</li>
+				<li>
+					1.2.0 released on 2017-03-30<br/>
+					<a href="https://www.apache.org/dyn/closer.lua/bigtop/bigtop-1.2.0/">Bigtop 1.2.0</a>(<a href="https://archive.apache.org/dist/bigtop/bigtop-1.2.0/bigtop-1.2.0-project.tar.gz.asc">pgp</a> <a href="https://archive.apache.org/dist/bigtop/bigtop-1.2.0/bigtop-1.2.0-project.tar.gz.asc.md5">md5</a> <a href="https://archive.apache.org/dist/bigtop/bigtop-1.2.0/bigtop-1.2.0-project.tar.gz.asc.sha1">sha1</a>)
+				</li>
+				<li>
+					1.1.0 released on 2016-01-31<br/>
+					<a href="https://www.apache.org/dyn/closer.lua/bigtop/bigtop-1.1.0/">Bigtop 1.1.0</a>(<a href="https://archive.apache.org/dist/bigtop/bigtop-1.1.0/bigtop-1.1.0-project.tar.gz.asc">pgp</a> <a href="https://archive.apache.org/dist/bigtop/bigtop-1.1.0/bigtop-1.1.0-project.tar.gz.md5">md5</a> <a href="https://archive.apache.org/dist/bigtop/bigtop-1.1.0/bigtop-1.1.0-project.tar.gz.sha1">sha1</a>)
+				</li>
+				<li>
+					1.0.0 released on 2015-08-12<br/>
+					<a href="https://www.apache.org/dyn/closer.lua/bigtop/bigtop-1.0.0/">Bigtop 1.0.0</a>(<a href="https://archive.apache.org/dist/bigtop/bigtop-1.0.0/bigtop-1.0.0-project.tar.gz.asc">pgp</a> <a href="https://archive.apache.org/dist/bigtop/bigtop-1.0.0/bigtop-1.0.0-project.tar.gz.md5">md5</a> <a href="https://archive.apache.org/dist/bigtop/bigtop-1.0.0/bigtop-1.0.0-project.tar.gz.sha1">sha1</a>)
 				</li>
 			</ul>
 		</section>
