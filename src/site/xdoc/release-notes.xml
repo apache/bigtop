@@ -17,6 +17,410 @@
 		<section name="Bigtop Project Release Notes">
 			<!-- Paste release notes from https://issues.apache.org/jira/browse/BIGTOP here. -->
 
+                    <h3>Release Notes - Bigtop - Version 1.3.0</h3>
+    
+<h2>        Sub-task
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2833'>BIGTOP-2833</a>] -         [puppetize.sh] Support centos-7-aarch64 support
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2893'>BIGTOP-2893</a>] -         Bump Hadoop to 2.8.1
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2894'>BIGTOP-2894</a>] -         Bump HBASE to 1.3.1
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2895'>BIGTOP-2895</a>] -         Bump Pig to 0.17.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2897'>BIGTOP-2897</a>] -         Bump Phoenix to  4.11-HBASE-1.3
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2898'>BIGTOP-2898</a>] -         Bug: regression in Phoenix build after BIGTOP-2895
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2899'>BIGTOP-2899</a>] -         Bug: regression in Oozie build after BIGTOP-2895
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2949'>BIGTOP-2949</a>] -         Add gradle task which leverage bigtop-ci/build.sh to build packages
+</li>
+</ul>
+        
+<h2>        Bug
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2101'>BIGTOP-2101</a>] -         ignite-hadoop contains an arch-dependent shared lib
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2213'>BIGTOP-2213</a>] -         tez build downloads amd64 nodejs executable
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2292'>BIGTOP-2292</a>] -         Remove Centos 6 Support
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2503'>BIGTOP-2503</a>] -         Solr packaging is broken on both DEB and RPM
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2634'>BIGTOP-2634</a>] -         package perl-Env does not exist in centos 6
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2679'>BIGTOP-2679</a>] -         Streamline CI Jobs
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2723'>BIGTOP-2723</a>] -         Fix asciidoctor-maven-plugin for HBase build on AArch64
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2737'>BIGTOP-2737</a>] -         Spark charm doesn&#39;t handle HA or examples well
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2738'>BIGTOP-2738</a>] -         spark-worker fails to start
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2748'>BIGTOP-2748</a>] -         Fix a puppet compatibilty issue 
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2749'>BIGTOP-2749</a>] -         puppet: use jessie package on jessie, not trusty
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2750'>BIGTOP-2750</a>] -         puppet: increase compatibility with future versions
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2753'>BIGTOP-2753</a>] -         Initial support for Debian-9
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2754'>BIGTOP-2754</a>] -         Revert BIGTOP-2730: Upgrade Zookeeper to version 3.4.10
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2804'>BIGTOP-2804</a>] -         Drop Solr package and Puppet snippets
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2818'>BIGTOP-2818</a>] -         Ambari downloads jdk 
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2826'>BIGTOP-2826</a>] -         Zeppelin RPM is broken: &quot;missing&quot; osgi package deps
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2829'>BIGTOP-2829</a>] -         [iTest] build failed during Maven integration test phase
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2832'>BIGTOP-2832</a>] -         Toolchain failed to install on Debian 8
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2835'>BIGTOP-2835</a>] -         puppet fails when bigtop::jdk_preinstalled is true
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2836'>BIGTOP-2836</a>] -         charm metric collector race condition
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2838'>BIGTOP-2838</a>] -         Support ARM64 for  packages.gradle
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2841'>BIGTOP-2841</a>] -         Failed to build bigtop/slaves-ubuntu-16.04-aarch64
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2844'>BIGTOP-2844</a>] -         zeppelin charm: spark config should match zeppelin spark config
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2847'>BIGTOP-2847</a>] -         Building from git is broken
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2850'>BIGTOP-2850</a>] -         Not able to build bigtop/slaves image for OpenSuSE 42.1
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2859'>BIGTOP-2859</a>] -         Missing HIVE_VERSION when build hive rpms
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2860'>BIGTOP-2860</a>] -         Fix TestSpark.groovy syntax error
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2863'>BIGTOP-2863</a>] -         Test build failed for incompatible JavaDoc format with JDK-8-121 and later
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2864'>BIGTOP-2864</a>] -         Tez with &quot;Class path contains multiple SLF4J bindings&quot; warnings
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2866'>BIGTOP-2866</a>] -         Fix rmr depricated and people* No such file or directory error
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2878'>BIGTOP-2878</a>] -         Download task does not work for git repositories
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2881'>BIGTOP-2881</a>] -         Greenpulm 5.0 got released - lets switch the Bigtop to it
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2885'>BIGTOP-2885</a>] -         gpdb: disable gpcloud on CentOS 6
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2890'>BIGTOP-2890</a>] -         Download page must not link to snapshots / nightly builds
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2891'>BIGTOP-2891</a>] -         Download page must link to ASF mirrors
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2903'>BIGTOP-2903</a>] -         update protobuf rpm links
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2906'>BIGTOP-2906</a>] -         Failed to start solr-server service using bigtop-deploy
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2907'>BIGTOP-2907</a>] -         upgrading Ambari from 2.5.0 to 2.5.2
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2908'>BIGTOP-2908</a>] -         giraph charm: release audit failure
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2909'>BIGTOP-2909</a>] -         ppc64le: Zeppelin 0.7.2 build is failing
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2911'>BIGTOP-2911</a>] -         Change Solr service ports to default 8983/8984
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2912'>BIGTOP-2912</a>] -         Intialize dataset for solr smoke test
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2915'>BIGTOP-2915</a>] -         Some files are missing ALv2 header
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2917'>BIGTOP-2917</a>] -         Ignite smoke test failed with JDK8
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2926'>BIGTOP-2926</a>] -         introduce bigtop version into bigtop/puppet images
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2929'>BIGTOP-2929</a>] -         Fix typo in opensuse version name
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2930'>BIGTOP-2930</a>] -         sqoop fedora26 : rsync missing
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2931'>BIGTOP-2931</a>] -         hadoop debian-9 : Unmet build dependencies: libssl-dev
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2932'>BIGTOP-2932</a>] -         hadoop fedora26: openssl in native code problem
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2934'>BIGTOP-2934</a>] -         Consolidate puppet usage by installing puppet from distro
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2935'>BIGTOP-2935</a>] -         provisioner: Use proper command line depending on puppet version
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2942'>BIGTOP-2942</a>] -         update tez to 0.9
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2943'>BIGTOP-2943</a>] -         hbase does not compile with maven-3.5.2
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2944'>BIGTOP-2944</a>] -         Update hbase and fix compilation issue
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2950'>BIGTOP-2950</a>] -         BIGTOP-2869 breaks RAT check 
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2953'>BIGTOP-2953</a>] -         qfs is not buildable under Debian 9
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2957'>BIGTOP-2957</a>] -         Upgrade YCSB to 0.12.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2958'>BIGTOP-2958</a>] -         Tez should use appropriate profile for Hadoop shims
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2968'>BIGTOP-2968</a>] -         Bump Hive version to 2.3.2
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2973'>BIGTOP-2973</a>] -         Hama packaging is broken with Hadoop 2.8+
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2976'>BIGTOP-2976</a>] -         zookeeper-rest missing dependency on lsb-base
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2979'>BIGTOP-2979</a>] -         JAVA_HOME inconsistent on non-x86 architectures
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2980'>BIGTOP-2980</a>] -         Hama does not build on DEB type systems
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2981'>BIGTOP-2981</a>] -         Packaging SparkR is broken due to BIGTOP-2959
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2984'>BIGTOP-2984</a>] -         Rat check failed after BIGTOP-2698
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2987'>BIGTOP-2987</a>] -         Phoenix build break
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2990'>BIGTOP-2990</a>] -         Upgrade Phoenix version to 4.13.1-HBase-1.3
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2991'>BIGTOP-2991</a>] -         Bump up Spark version to 2.2.1
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3001'>BIGTOP-3001</a>] -         Change uid and gid for jenkins user in bigtop-toolchain
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3003'>BIGTOP-3003</a>] -         Ant-1.9.9 tarball is removed from Apache mirrors
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3004'>BIGTOP-3004</a>] -         Fix HBase build failure on Debian/Fedora
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3013'>BIGTOP-3013</a>] -         kafka charm: fail to deploy using Bigtop-trunk-repos
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3014'>BIGTOP-3014</a>] -         juju: use charm-env for shebangs
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3018'>BIGTOP-3018</a>] -         detect-javahome script has a typo in variable name
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3023'>BIGTOP-3023</a>] -         Bump qfs to 2.0.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3024'>BIGTOP-3024</a>] -         Zeppelin build is failed after Spark is bumpped to 2.2.1
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3025'>BIGTOP-3025</a>] -         ci.bigtop.apache.org certificate is expired and causes errors
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3026'>BIGTOP-3026</a>] -         404 error: http://ci.bigtop.apache.org/view/Packages/job/Bigtop-trunk-packages/
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3027'>BIGTOP-3027</a>] -         Wrong Leveldbjni native binary for aarch64
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3030'>BIGTOP-3030</a>] -         Fix Ambari build failure on non-x86 platforms
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3033'>BIGTOP-3033</a>] -         Spark build on OpenSUSE is failed
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3035'>BIGTOP-3035</a>] -         Provisioner failed because init is missed in Debian-9
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3036'>BIGTOP-3036</a>] -         Download gradle and groovy via TLS and do signature checking on ant
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3037'>BIGTOP-3037</a>] -         Download maven securely
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3040'>BIGTOP-3040</a>] -         Solr&#39;s default configsets doesn&#39;t work with smoke test cases
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3041'>BIGTOP-3041</a>] -         Failed to init hadoop hdfs using init-hdfs.sh
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3042'>BIGTOP-3042</a>] -         HDFS TestHDFSQuota doesn&#39;t match Hadoop&#39;s definition
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3044'>BIGTOP-3044</a>] -         Fix docker build command for simple sh
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3045'>BIGTOP-3045</a>] -         Remove insecure maven repository URL from gradle config
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3046'>BIGTOP-3046</a>] -         Not correct auto find latest maven dist 
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3048'>BIGTOP-3048</a>] -         Revert BIGTOP-3001 to bring packaging CI back
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3050'>BIGTOP-3050</a>] -         cgroups: cannot found cgroup mount destination: unknown
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3052'>BIGTOP-3052</a>] -         Maven version is fixed in security verification code
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3053'>BIGTOP-3053</a>] -         Tez failed to build due to bower version is deprecated
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3054'>BIGTOP-3054</a>] -         Missing Spark archive caused Zeppelin build failure
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3061'>BIGTOP-3061</a>] -         Crunch build failure
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3076'>BIGTOP-3076</a>] -         QFS build failed on ppc64le
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3077'>BIGTOP-3077</a>] -         OpenSuse-42.3 packages install error
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3078'>BIGTOP-3078</a>] -         ignite-shmem failed to build on ppc64le
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3081'>BIGTOP-3081</a>] -         Update HBase/Ignite-hadoop arch info
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3082'>BIGTOP-3082</a>] -         Fix build failure with flume-1.8+kafka-0.10.2.2
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3083'>BIGTOP-3083</a>] -         HBase and iginite-hadoop build failed on Fedora-26 due to BIGTOP-3081
+</li>
+</ul>
+        
+<h2>        New Feature
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2868'>BIGTOP-2868</a>] -         Travis integration for Jar files. 
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3007'>BIGTOP-3007</a>] -         expose hive config options for zookeeper
+</li>
+</ul>
+        
+<h2>        Improvement
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2698'>BIGTOP-2698</a>] -         Build/install protobuf-2.5 from source
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2730'>BIGTOP-2730</a>] -         Bump zookeeper to 3.4.10
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2784'>BIGTOP-2784</a>] -         Bump version of Solr to 6.5.1
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2787'>BIGTOP-2787</a>] -         [bigtop-slaves] Support of CentOS 7 ARM64 bigtop-slaves
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2794'>BIGTOP-2794</a>] -         [bigtop-puppet] Support CentOS 7 AArch64 bigtop puppet
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2809'>BIGTOP-2809</a>] -         Support R integration for Spark
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2810'>BIGTOP-2810</a>] -         Support R integration for Zeppelin
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2811'>BIGTOP-2811</a>] -         Add R to toolchain for Spark and Zeppelin
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2819'>BIGTOP-2819</a>] -         Polish the README.md for 1.2.1 release
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2824'>BIGTOP-2824</a>] -         [sandbox] Support CentOS 7 AArch64 sandbox
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2825'>BIGTOP-2825</a>] -         Upgrade gradle to the latest 4.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2834'>BIGTOP-2834</a>] -         spark charm: refactor for restricted networks; lib cleanup
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2839'>BIGTOP-2839</a>] -         Bump Hadoop version to 2.7.4
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2843'>BIGTOP-2843</a>] -         Add provisioner config yaml for ubuntu-16.04-aarch64
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2846'>BIGTOP-2846</a>] -         Add DSL documentation for GIT-based builds
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2848'>BIGTOP-2848</a>] -         Add provisioner docker yaml config file CentOS-7 AArch64
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2851'>BIGTOP-2851</a>] -         [bigtop-puppet] Add Debian 8 AArch64 bigtop puppet
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2852'>BIGTOP-2852</a>] -         [bigtop-slaves] Add Debian 8 AArch64 bigtop-slaves
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2853'>BIGTOP-2853</a>] -         [sandbox] Add Debian 8 AArch64 sandbox
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2854'>BIGTOP-2854</a>] -         Add provisioner docker yaml config file Debian 8 AArch64
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2856'>BIGTOP-2856</a>] -         [sandbox] Add a condition in detect_repo()
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2857'>BIGTOP-2857</a>] -         Add aarch64 support for fedora-25
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2858'>BIGTOP-2858</a>] -         Add AArch64 support for Debian 9
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2867'>BIGTOP-2867</a>] -         spark charm: make bigtop version configurable
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2869'>BIGTOP-2869</a>] -         Bump solr to 6.6.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2872'>BIGTOP-2872</a>] -         Replace aarch64 orgnanization with the more-specific arm64v8 organization in Official docker 
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2874'>BIGTOP-2874</a>] -         juju bundle refresh (august 2017)
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2875'>BIGTOP-2875</a>] -         giraph charm: update metadata/readme
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2882'>BIGTOP-2882</a>] -         Bump Hadoop and all dependencies to actual releases
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2889'>BIGTOP-2889</a>] -         Remove HADOOP_HOME_WARN_SUPPRESS setting
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2910'>BIGTOP-2910</a>] -         zeppelin charm: support bigtop upgrade
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2914'>BIGTOP-2914</a>] -         GPDB 5.1.0 has been release. Let&#39;s bump that
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2916'>BIGTOP-2916</a>] -         fix deprecated gradle syntax
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2918'>BIGTOP-2918</a>] -         Update distributions for Bigtop-1.3
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2919'>BIGTOP-2919</a>] -         Update maven to 3.5.2
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2920'>BIGTOP-2920</a>] -         Cleanup puppet recipies: remove deprecated platforms
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2922'>BIGTOP-2922</a>] -         Drop arch specific bigtop-* images
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2925'>BIGTOP-2925</a>] -         Missing license header for .travis.yml
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2936'>BIGTOP-2936</a>] -         Add RedHat default Oracle Java install location to detection script
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2959'>BIGTOP-2959</a>] -         Add SPARK_DIST_CLASSPATH to include libraries for HDFS and YARN
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2974'>BIGTOP-2974</a>] -         Add puppet code to deploy SparkR package
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2989'>BIGTOP-2989</a>] -         Building Hadoop with a pre-downloaded Tomcat
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2992'>BIGTOP-2992</a>] -         Building Pig with pre-arranged Forrest
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3002'>BIGTOP-3002</a>] -         For Kafka, it should be possible to set the broker.id config and log.dirs config.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3005'>BIGTOP-3005</a>] -         Add zkpeer-relation-changed hook to zookeeper charm.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3010'>BIGTOP-3010</a>] -         juju bundle refresh (feb 2018)
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3011'>BIGTOP-3011</a>] -         zookeeper: support autopurge.purgeInterval and autopurge.snapRetainCount.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3031'>BIGTOP-3031</a>] -         Auto find latest maven dist
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3038'>BIGTOP-3038</a>] -         Add rollingupgrade option in hadoop-hdfs-namenode.svc
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3039'>BIGTOP-3039</a>] -         Change git browse link to Github
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3047'>BIGTOP-3047</a>] -         Add nagios monitoring to zookeeper charm.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3055'>BIGTOP-3055</a>] -         Bump GPDB to 5.10.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3059'>BIGTOP-3059</a>] -         Bump Ambari to 2.6.1
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3060'>BIGTOP-3060</a>] -         juju bundle refresh (august 2018)
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3062'>BIGTOP-3062</a>] -         Bump flink to 1.4.2
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3064'>BIGTOP-3064</a>] -         Bump HBase to 1.3.2
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3065'>BIGTOP-3065</a>] -         Bump Hadoop to 2.8.4
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3066'>BIGTOP-3066</a>] -         Bump tez to 0.9.1
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3067'>BIGTOP-3067</a>] -         Bump Hive to 2.3.3
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3068'>BIGTOP-3068</a>] -         Bump Hama to 0.7.1
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3069'>BIGTOP-3069</a>] -         Bump crunch to 0.15.0
+</li>
+</ul>
+    
+<h2>        Test
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2865'>BIGTOP-2865</a>] -         HBase smoke test implementation
+</li>
+</ul>
+        
+<h2>        Task
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2739'>BIGTOP-2739</a>] -         refresh juju bundles with latest charm revs
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2877'>BIGTOP-2877</a>] -         Drop Kite packaging
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2884'>BIGTOP-2884</a>] -         Upgrade gcc to support C++11 on CentOS 6
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2924'>BIGTOP-2924</a>] -         Bring back 1.2.1 changes into master
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2945'>BIGTOP-2945</a>] -         Define Bigtop 1.3 release BOM
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2969'>BIGTOP-2969</a>] -         Bump up Spark version to 2.2.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2970'>BIGTOP-2970</a>] -         Bump Zeppelin version to 0.7.3
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3006'>BIGTOP-3006</a>] -         Add Jun He to team list
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3063'>BIGTOP-3063</a>] -         [Umbrella] Efforts for 1.3.0 release
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3074'>BIGTOP-3074</a>] -         Drop oozie packaging
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3075'>BIGTOP-3075</a>] -         Drop pig packaging
+</li>
+</ul>
+
                     <h3>Release Notes - Bigtop - Version 1.2.1</h3>
     
 <h2>        Sub-task
