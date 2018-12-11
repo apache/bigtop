@@ -62,6 +62,50 @@
 					<a href="https://www.apache.org/dyn/closer.cgi/bigtop/bigtop-1.0.0/bigtop-1.0.0-project.tar.gz">Bigtop 1.0.0</a>(<a href="https://archive.apache.org/dist/bigtop/bigtop-1.0.0/bigtop-1.0.0-project.tar.gz.asc">pgp</a> <a href="https://archive.apache.org/dist/bigtop/bigtop-1.0.0/bigtop-1.0.0-project.tar.gz.md5">md5</a> <a href="https://archive.apache.org/dist/bigtop/bigtop-1.0.0/bigtop-1.0.0-project.tar.gz.sha1">sha1</a>)
 				</li>
 			</ul>
+			<subsection name="To verify Bigtop releases using GPG:" id="gpg"></subsection>
+			<ol>
+				<li>
+					Download the release bigtop-X.Y.Z-project.tar.gz from links above.<br/>
+				</li>
+				<li>
+					Download the signature file pgp(bigtop-X.Y.Z-project.tar.gz.asc) from links above.<br/>
+				</li>
+				<li>
+					Download the <a href="https://dist.apache.org/repos/dist/release/bigtop/KEYS">Bigtop KEYS</a> file.<br/>
+				</li>
+				<li>
+					$ gpg --import KEYS<br/>
+				</li>
+				<li>
+					$ gpg --verify bigtop-X.Y.Z-src.tar.gz.asc<br/>
+				</li>
+			</ol>
+			<subsection name="To verify Bigtop releases using SHA-256 or SHA-512:" id="checksum"></subsection>
+			<ol>
+				<li>
+					Download the release bigtop-X.Y.Z-project.tar.gz from links above.<br/>
+				</li>
+				<li>
+					Download the checksum file sha256/512 from links above.<br/>
+				</li>
+				<li>
+					$ shasum -a 256 bigtop-X.Y.Z-src.tar.gz<br/>
+					$ shasum -a 512 bigtop-X.Y.Z-src.tar.gz<br/>
+				</li>
+			</ol>
+			<subsection name="To verify Bigtop releases using SHA-1 or MD5(previous releases only):" id="checksum_prev"></subsection>
+			<ol>
+				<li>
+					Download the release bigtop-X.Y.Z-project.tar.gz from links above.<br/>
+				</li>
+				<li>
+					Download the checksum file sha1 or md5 from links above.<br/>
+				</li>
+				<li>
+					$ shasum bigtop-X.Y.Z-src.tar.gz<br/>
+					$ md5 bigtop-X.Y.Z-src.tar.gz<br/>
+				</li>
+			</ol>
 		</section>
 	</body>
 </document>
