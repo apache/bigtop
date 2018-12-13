@@ -174,6 +174,8 @@ giraph::client::zookeeper_quorum: "%{hiera('bigtop::hadoop_head_node')}"
 hadoop_hive::common_config::hbase_zookeeper_quorum: "%{hiera('hadoop_hbase::common_config::zookeeper_quorum')}"
 hadoop_hive::common_config::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 hadoop_hive::common_config::metastore_uris: "thrift://%{hiera('bigtop::hadoop_head_node')}:9083"
+# set this to true in production to avoid potential metastore corruption
+hadoop_hive::common_config::metastore_schema_verification: false
 
 # tez
 hadoop::common::tez_conf_dir: "/etc/tez/conf"
