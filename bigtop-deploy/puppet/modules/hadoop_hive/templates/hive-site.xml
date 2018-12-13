@@ -142,4 +142,26 @@
     <value>true</value>
 </property>
 <% end %> 
+
+<property>
+  <name>hive.metastore.schema.verification</name>
+   <value><%= @metastore_schema_verification %></value>
+  <description>
+    Enforce metastore schema version consistency.
+    True: Verify that version information stored in is compatible with one from Hive jars.  Also disable automatic
+          schema migration attempt. Users are required to manually migrate schema after Hive upgrade which ensures
+          proper metastore schema migration. (Default)
+    False: Warn if the version information stored in metastore doesn't match with one from in Hive jars.
+  </description>
+</property>
+<% if @metastore_schema_verification == false %>
+<property>
+   <name>datanucleus.schema.autoCreateAll</name>
+   <value>true</value>
+  <description>
+    Creates necessary schema on a startup if one does not exist. Reset this to false, after creating it once.
+    datanucleus.schema.autoCreateAll is disabled if hive.metastore.schema.verification is true.
+  </description>
+</property>
+<% end %>
 </configuration>

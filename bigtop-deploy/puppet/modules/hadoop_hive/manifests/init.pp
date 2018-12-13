@@ -51,6 +51,7 @@ class hadoop_hive {
                        $hive_support_concurrency = false,
                        $kerberos_realm = "",
                        $metastore_uris = "",
+                       $metastore_schema_verification = true,
                        $server2_thrift_port = "10000",
                        $server2_thrift_http_port = "10001",
                        $hive_execution_engine = "mr") {
