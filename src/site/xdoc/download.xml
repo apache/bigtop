@@ -71,7 +71,7 @@
 					Download the signature file pgp(bigtop-X.Y.Z-project.tar.gz.asc) from links above.<br/>
 				</li>
 				<li>
-					Download the <a href="https://dist.apache.org/repos/dist/release/bigtop/KEYS">Bigtop KEYS</a> file.<br/>
+					Download the <a href="https://apache.org/dist/bigtop/KEYS">Bigtop KEYS</a> file.<br/>
 				</li>
 				<li>
 					$ gpg --import KEYS<br/>
