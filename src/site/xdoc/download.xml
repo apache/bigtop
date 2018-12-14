@@ -47,19 +47,19 @@
 			<ul>
 				<li>
 					1.2.1 released on 2017-11-12<br/>
-					<a href="https://www.apache.org/dyn/closer.cgi/bigtop/bigtop-1.2.1/bigtop-1.2.1-project.tar.gz">Bigtop 1.2.1</a>(<a href="https://archive.apache.org/dist/bigtop/bigtop-1.2.1/bigtop-1.2.1-project.tar.gz.asc">pgp</a> <a href="https://archive.apache.org/dist/bigtop/bigtop-1.2.1/bigtop-1.2.1-project.tar.gz.md5">md5</a> <a href="https://archive.apache.org/dist/bigtop/bigtop-1.2.1/bigtop-1.2.1-project.tar.gz.sha1">sha1</a>)
+					<a href="https://archive.apache.org/dist/bigtop/bigtop-1.2.1/bigtop-1.2.1-project.tar.gz">Bigtop 1.2.1</a>(<a href="https://archive.apache.org/dist/bigtop/bigtop-1.2.1/bigtop-1.2.1-project.tar.gz.asc">pgp</a> <a href="https://archive.apache.org/dist/bigtop/bigtop-1.2.1/bigtop-1.2.1-project.tar.gz.md5">md5</a> <a href="https://archive.apache.org/dist/bigtop/bigtop-1.2.1/bigtop-1.2.1-project.tar.gz.sha1">sha1</a>)
 				</li>
 				<li>
 					1.2.0 released on 2017-03-30<br/>
-					<a href="https://www.apache.org/dyn/closer.cgi/bigtop/bigtop-1.2.0/bigtop-1.2.0-project.tar.gz">Bigtop 1.2.0</a>(<a href="https://archive.apache.org/dist/bigtop/bigtop-1.2.0/bigtop-1.2.0-project.tar.gz.asc">pgp</a> <a href="https://archive.apache.org/dist/bigtop/bigtop-1.2.0/bigtop-1.2.0-project.tar.gz.asc.md5">md5</a> <a href="https://archive.apache.org/dist/bigtop/bigtop-1.2.0/bigtop-1.2.0-project.tar.gz.asc.sha1">sha1</a>)
+					<a href="https://archive.apache.org/dist/bigtop/bigtop-1.2.0/bigtop-1.2.0-project.tar.gz">Bigtop 1.2.0</a>(<a href="https://archive.apache.org/dist/bigtop/bigtop-1.2.0/bigtop-1.2.0-project.tar.gz.asc">pgp</a> <a href="https://archive.apache.org/dist/bigtop/bigtop-1.2.0/bigtop-1.2.0-project.tar.gz.md5">md5</a> <a href="https://archive.apache.org/dist/bigtop/bigtop-1.2.0/bigtop-1.2.0-project.tar.gz.sha1">sha1</a>)
 				</li>
 				<li>
 					1.1.0 released on 2016-01-31<br/>
-					<a href="https://www.apache.org/dyn/closer.cgi/bigtop/bigtop-1.1.0/bigtop-1.1.0-project.tar.gz">Bigtop 1.1.0</a>(<a href="https://archive.apache.org/dist/bigtop/bigtop-1.1.0/bigtop-1.1.0-project.tar.gz.asc">pgp</a> <a href="https://archive.apache.org/dist/bigtop/bigtop-1.1.0/bigtop-1.1.0-project.tar.gz.md5">md5</a> <a href="https://archive.apache.org/dist/bigtop/bigtop-1.1.0/bigtop-1.1.0-project.tar.gz.sha1">sha1</a>)
+					<a href="https://archive.apache.org/dist/bigtop/bigtop-1.1.0/bigtop-1.1.0-project.tar.gz">Bigtop 1.1.0</a>(<a href="https://archive.apache.org/dist/bigtop/bigtop-1.1.0/bigtop-1.1.0-project.tar.gz.asc">pgp</a> <a href="https://archive.apache.org/dist/bigtop/bigtop-1.1.0/bigtop-1.1.0-project.tar.gz.md5">md5</a> <a href="https://archive.apache.org/dist/bigtop/bigtop-1.1.0/bigtop-1.1.0-project.tar.gz.sha1">sha1</a>)
 				</li>
 				<li>
 					1.0.0 released on 2015-08-12<br/>
-					<a href="https://www.apache.org/dyn/closer.cgi/bigtop/bigtop-1.0.0/bigtop-1.0.0-project.tar.gz">Bigtop 1.0.0</a>(<a href="https://archive.apache.org/dist/bigtop/bigtop-1.0.0/bigtop-1.0.0-project.tar.gz.asc">pgp</a> <a href="https://archive.apache.org/dist/bigtop/bigtop-1.0.0/bigtop-1.0.0-project.tar.gz.md5">md5</a> <a href="https://archive.apache.org/dist/bigtop/bigtop-1.0.0/bigtop-1.0.0-project.tar.gz.sha1">sha1</a>)
+					<a href="https://archive.apache.org/dist/bigtop/bigtop-1.0.0/bigtop-1.0.0-project.tar.gz">Bigtop 1.0.0</a>(<a href="https://archive.apache.org/dist/bigtop/bigtop-1.0.0/bigtop-1.0.0-project.tar.gz.asc">pgp</a> <a href="https://archive.apache.org/dist/bigtop/bigtop-1.0.0/bigtop-1.0.0-project.tar.gz.md5">md5</a> <a href="https://archive.apache.org/dist/bigtop/bigtop-1.0.0/bigtop-1.0.0-project.tar.gz.sha1">sha1</a>)
 				</li>
 			</ul>
 			<subsection name="To verify Bigtop releases using GPG:" id="gpg"></subsection>
