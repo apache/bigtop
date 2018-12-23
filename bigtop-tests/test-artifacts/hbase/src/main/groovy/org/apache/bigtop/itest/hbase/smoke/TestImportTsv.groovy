@@ -191,12 +191,12 @@ public class TestImportTsv {
   }
 
   private void doImport(String opts, String datadir) {
-    sh.exec("HADOOP_CLASSPATH=`hbase classpath` hadoop jar $HBASE_JAR importtsv -Dimporttsv.bulk.output=$OUTDIR $opts -Dimporttsv.columns=$COLUMNS $TABLE $datadir");
+    sh.exec("$HBASE_HOME/bin/hbase org.apache.hadoop.hbase.mapreduce.ImportTsv -Dimporttsv.bulk.output=$OUTDIR $opts -Dimporttsv.columns=$COLUMNS $TABLE $datadir");
     assertTrue("importtsv failed", sh.getRet() == 0);
   }
 
   private void doLoad(String table) {
-    sh.exec("HADOOP_CLASSPATH=`hbase classpath` hadoop jar $HBASE_JAR completebulkload $OUTDIR $table");
+    sh.exec("$HBASE_HOME/bin/hbase org.apache.hadoop.hbase.mapreduce.LoadIncrementalHFiles $OUTDIR $table");
     assertTrue("completebulkload failed", sh.getRet() == 0);
   }
 
