@@ -26,6 +26,11 @@ class alluxio {
       ensure => latest,
     }
 
+    exec { "daemon-reload":
+      command => "/usr/bin/systemctl daemon-reload",
+      require => [ Package["alluxio"] ]
+    }
+
     # add logging into /var/log/..
     file {
         "/etc/alluxio/conf/log4j.properties":
@@ -43,7 +48,7 @@ class alluxio {
   class master {
     include alluxio::common
 
-   exec {
+    exec {
         "alluxio formatting":
            command => "/usr/lib/alluxio/bin/alluxio format",
            require => [ Package["alluxio"], File["/etc/alluxio/conf/log4j.properties"], File["/etc/alluxio/conf/alluxio-env.sh"] ]
@@ -52,7 +57,8 @@ class alluxio {
     if ( $fqdn == $alluxio::common::master_host ) {
       service { "alluxio-master":
         ensure => running,
-        require => [ Package["alluxio"], Exec["alluxio formatting"] ],
+        require => [ Package["alluxio"], Exec["daemon-reload"], Exec["alluxio formatting"] ],
+        subscribe => [ File["/etc/alluxio/conf/log4j.properties"], File["/etc/alluxio/conf/alluxio-env.sh"] ],
         hasrestart => true,
         hasstatus => true,
       }
@@ -63,15 +69,16 @@ class alluxio {
   class worker {
     include alluxio::common
 
-   if ( $fqdn == $alluxio::common::master_host ) {
-      notice("alluxio ---> master host")
-      # We want master to run first in all cases
-      Service["alluxio-master"] ~> Service["alluxio-worker"]
-   }
+    if ( $fqdn == $alluxio::common::master_host ) {
+       notice("alluxio ---> master host")
+       # We want master to run first in all cases
+       Service["alluxio-master"] ~> Service["alluxio-worker"]
+    }
 
     service { "alluxio-worker":
       ensure => running,
-      require => [ Package["alluxio"], File["/etc/alluxio/conf/log4j.properties"], File["/etc/alluxio/conf/alluxio-env.sh"] ],
+      require => [ Package["alluxio"], Exec["daemon-reload"], File["/etc/alluxio/conf/log4j.properties"], File["/etc/alluxio/conf/alluxio-env.sh"] ],
+      subscribe => [ File["/etc/alluxio/conf/log4j.properties"], File["/etc/alluxio/conf/alluxio-env.sh"] ],
       hasrestart => true,
       hasstatus => true,
     }
