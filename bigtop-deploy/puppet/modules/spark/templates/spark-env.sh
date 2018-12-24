@@ -38,3 +38,5 @@ export SPARK_MASTER_WEBUI_PORT=<%= @master_ui_port %>
 export SPARK_WORKER_DIR=${SPARK_WORKER_DIR:-/var/run/spark/work}
 export SPARK_WORKER_PORT=<%= @worker_port %>
 export SPARK_WORKER_WEBUI_PORT=<%= @worker_ui_port %>
+
+export SPARK_DIST_CLASSPATH=$(hadoop classpath)
