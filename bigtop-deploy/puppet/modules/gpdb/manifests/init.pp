@@ -64,6 +64,7 @@ class gpdb {
 
     class { 'gpdb::common::stop_master_in_admin_mode':
       base_dir      => "$db_base_dir",
+      nodes         => $nodes,
       gp_home       => $gp_home,
       master_port   => $master_db_port,
       require       => Class['gpdb::common::configure_master_node']
@@ -75,7 +76,7 @@ class gpdb {
       db_base_dir             => $gpdb::common::db_base_dir,
       master_db_port          => $gpdb::common::master_db_port,
       segment_db_port_prefix  => $gpdb::common::segment_db_port_prefix,
-      require                 => Class['gpdb::common::stop_master_in_admin_mode'],
+      require                 => [ Server["stop_if_running"], Class['gpdb::common::stop_master_in_admin_mode'] ],
       start_or_stop           => running,
     }
 
@@ -107,17 +108,23 @@ class gpdb {
           package { ["python-lockfile"]:
             ensure => latest,
           }
+          package { ["gcc"]:
+            ensure => latest,
+          }
+          package { ["python-devel"]:
+            ensure => latest,
+          }
           package { ["psutil"]:
             ensure   => latest,
             provider => pip,
-            require  => Package["python-pip"],
+            require  => [ File["/usr/bin/pip-python"], Package["gcc"], Package["python-devel"] ],
           }
           package { ["paramiko"]:
             ensure   => latest,
             provider => pip,
-            require  => Package["python-pip"],
+            require  => File["/usr/bin/pip-python"],
           }
-          package { ["python-pip"]:
+          package { ["python2-pip"]:
             ensure  => latest,
             require => [
               Yumrepo["epel"],
@@ -125,10 +132,15 @@ class gpdb {
               Package["python-lockfile"],
             ],
           }
+	  file { '/usr/bin/pip-python':
+            ensure  => 'link',
+	    require => Package["python2-pip"],
+            target  => '/usr/bin/pip',
+          }
         }
         /(?i:(SLES|opensuse))/: {
         }
-        Amazon: { }
+        /(Amazon)/: { }
         /(Ubuntu|Debian)/: {
           package { ["libffi-dev"]:
             ensure => latest,
@@ -274,15 +286,17 @@ class gpdb {
       }
     }
 
-    class stop_master_in_admin_mode($base_dir = undef, $gp_home = undef, $master_port = undef){
-      exec { 'stop-master-db-in-admin-mode':
-        command => "stop-db.sh $base_dir/master/gpseg-1 $master_port",
-        path    => '/home/gpadmin',
-        user    => 'gpadmin',
-        require => [
-          Exec["create_master_db$base_dir/master/gpseg-1"],
-          File['/home/gpadmin/stop-db.sh']
-        ],
+    class stop_master_in_admin_mode($nodes = undef, $base_dir = undef, $gp_home = undef, $master_port = undef){
+      if ($::fqdn == $nodes[0]) {
+        exec { 'stop-master-db-in-admin-mode':
+          command => "stop-db.sh $base_dir/master/gpseg-1 $master_port",
+          path    => '/home/gpadmin',
+          user    => 'gpadmin',
+          require => [
+            Exec["create_master_db$base_dir/master/gpseg-1"],
+            File['/home/gpadmin/stop-db.sh']
+          ],
+        }
       }
     }
 
