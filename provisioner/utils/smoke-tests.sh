@@ -15,7 +15,12 @@
 # limitations under the License.
 
 HCFS_USER="hdfs"
-SMOKE_TESTS=${1:-mapreduce,pig}
+SMOKE_TESTS=$1
+
+if [ -z "$SMOKE_TESTS" ]; then
+  >&2 echo -e "\nSMOKE_TESTS VARIABLE IS NOT DEFINED. CHECK THE INPUT OF `basename $0` \n"
+  exit 2
+fi
 
 # Autodetect JAVA_HOME
 if [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
@@ -25,19 +30,24 @@ else
   exit 2
 fi
 
-echo -e "\n===== START TO RUN SMOKE TESTS: $SMOKE_TESTS =====\n"
+echo -e "\n===== EXPORTING VARIABLES =====\n"
 
-export HADOOP_CONF_DIR=/etc/hadoop/conf/
-export HADOOP_MAPRED_HOME=/usr/lib/hadoop-mapreduce/
-export HIVE_HOME=/usr/lib/hive/
-export PIG_HOME=/usr/lib/pig/
-export FLUME_HOME=/usr/lib/flume/
-export SQOOP_HOME=/usr/lib/sqoop/
-export HIVE_CONF_DIR=/etc/hive/conf/
-export MAHOUT_HOME="/usr/lib/mahout"
-export HBASE_HOME=/usr/lib/hbase
-export HBASE_CONF_DIR=/usr/lib/hbase/conf
-export ZOOKEEPER_HOME=/usr/lib/zookeeper
+export ALLUXIO_HOME=${ALLUXIO_HOME:-/usr/lib/alluxio}
+export AMBARI_URL=${AMBARI_URL:-http://localhost:8080}
+export FLUME_HOME=${FLUME_HOME:-/usr/lib/flume}
+export GPDB_HOME=${GPDB_HOME:-/usr/lib/gpdb}
+export HADOOP_MAPRED_HOME=${HADOOP_MAPRED_HOME:-/usr/lib/hadoop-mapreduce}
+export HADOOP_CONF_DIR=${HADOOP_CONF_DIR:-/etc/hadoop/conf}
+export HBASE_HOME=${HBASE_HOME:-/usr/lib/hbase}
+export HBASE_CONF_DIR=${HBASE_CONF_DIR:-/usr/lib/hbase/conf}
+export HIVE_HOME=${HIVE_HOME:-/usr/lib/hive}
+export HIVE_CONF_DIR=${HIVE_CONF_DIR:-/etc/hive/conf}
+export MAHOUT_HOME=${MAHOUT_HOME:-/usr/lib/mahout}
+export SPARK_HOME=${SPARK_HOME:-/usr/lib/spark}
+export SQOOP_HOME=${SQOOP_HOME:-/usr/lib/sqoop}
+export ZOOKEEPER_HOME=${ZOOKEEPER_HOME:-/usr/lib/zookeeper}
+
+echo -e "\n===== START TO RUN SMOKE TESTS: $SMOKE_TESTS =====\n"
 
 prep() {
     HADOOP_COMMAND=$1
@@ -51,11 +61,6 @@ if [[ $SMOKE_TESTS == *"qfs"* ]]; then
     prep hadoop-qfs
 fi
 
-if [ -f /etc/debian_version ] ; then
-    apt-get -y install pig hive flume mahout sqoop
-else
-    yum install -y pig hive flume mahout sqoop
-fi
 ALL_SMOKE_TASKS=""
 for s in `echo $SMOKE_TESTS | sed -e 's#,# #g'`; do
   ALL_SMOKE_TASKS="$ALL_SMOKE_TASKS bigtop-tests:smoke-tests:$s:test"
