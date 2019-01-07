@@ -385,9 +385,9 @@
     </mailingList>
   </mailingLists>
   <scm>
-    <connection>scm:git:https://git-wip-us.apache.org/repos/asf/bigtop.git
+    <connection>scm:git:https://gitbox.apache.org/repos/asf/bigtop.git
     </connection>
-    <url>https://git-wip-us.apache.org/repos/asf?p=bigtop.git</url>
+    <url>https://gitbox.apache.org/repos/asf?p=bigtop.git</url>
   </scm>
 
   <distributionManagement>

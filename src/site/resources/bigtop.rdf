@@ -32,8 +32,8 @@
     <category rdf:resource="http://projects.apache.org/category/big-data" />
     <repository>
       <SVNRepository>
-        <location rdf:resource="https://git-wip-us.apache.org/repos/asf/bigtop.git"/>
-        <browse rdf:resource="https://git-wip-us.apache.org/repos/asf?p=bigtop.git"/>
+        <location rdf:resource="https://gitbox.apache.org/repos/asf/bigtop.git"/>
+        <browse rdf:resource="https://gitbox.apache.org/repos/asf?p=bigtop.git"/>
       </SVNRepository>
     </repository>
   </Project>

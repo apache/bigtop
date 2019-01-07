@@ -104,7 +104,7 @@
   </properties>
 
   <scm>
-    <connection>scm:git:https://git-wip-us.apache.org/repos/asf/bigtop.git</connection>
+    <connection>scm:git:https://gitbox.apache.org/repos/asf/bigtop.git</connection>
   </scm>
 
   <dependencies>
