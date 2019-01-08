@@ -47,12 +47,12 @@
     <url>https://issues.apache.org/jira/browse/BIGTOP</url>
   </issueManagement>
   <scm>
-    <url>http://git-wip-us.apache.org/repos/asf/bigtop.git</url>
+    <url>http://gitbox.apache.org/repos/asf/bigtop.git</url>
   </scm>
   <distributionManagement>
     <site>
       <id>git-project-site</id>
-      <url>http://git-wip-us.apache.org/repos/asf/bigtop.git</url>
+      <url>http://gitbox.apache.org/repos/asf/bigtop.git</url>
     </site>
   </distributionManagement>
 

@@ -75,7 +75,7 @@
       <item name="Wiki" href="https://cwiki.apache.org/confluence/display/BIGTOP" />
       <item name="JIRA" href="https://issues.apache.org/jira/browse/BIGTOP" />
       <item name="GIT (github)" href="https://github.com/apache/bigtop" />
-      <item name="GIT (clone link)" href="https://git-wip-us.apache.org/repos/asf/bigtop.git" />
+      <item name="GIT (clone link)" href="https://gitbox.apache.org/repos/asf/bigtop.git" />
       <item name="Blog" href="http://blogs.apache.org/bigtop/" />
       <item name="Mailing Lists" href="mail-lists.html" />
       <item name="IRC channel" href="irc-channel.html" />
