@@ -16,14 +16,7 @@
  * limitations under the License.
  */
 def tests_to_include() {
-  def smoke_tests = System.getenv('SMOKE_TESTS')
-  if (smoke_tests == null || !smoke_tests.contains("qfs")) {
-    return [];
-  }
-
-  return [
-    "TestHadoopExamples.groovy"
-  ];
+  return ["TestHadoopExamples.groovy"];
 }
 
 sourceSets {
