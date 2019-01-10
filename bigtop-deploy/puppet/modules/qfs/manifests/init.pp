@@ -159,5 +159,13 @@ class qfs {
       content => template("qfs/hadoop-qfs"),
       mode => '0755',
     }
+
+    # Add QFS native lib into Hadoop native lib dir
+    exec { "add_qfs_native_lib":
+      path    => ['/bin','/sbin','/usr/bin','/usr/sbin'],
+      command => 'find /usr/lib/qfs/ -name "lib*" -exec ln -s {} /usr/lib/hadoop/lib/native \;',
+      require => Package["qfs-client"],
+      notify => [ Service["hadoop-yarn-nodemanager"], Service["hadoop-yarn-resourcemanager"] ],
+    }
   }
 }

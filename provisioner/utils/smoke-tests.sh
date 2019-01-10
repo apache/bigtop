@@ -51,13 +51,15 @@ echo -e "\n===== START TO RUN SMOKE TESTS: $SMOKE_TESTS =====\n"
 
 prep() {
     HADOOP_COMMAND=$1
-    su -s /bin/bash $HCFS_USER -c "JAVA_LIBRARY_PATH=/usr/lib/qfs $HADOOP_COMMAND fs -mkdir /user/vagrant /user/root"
+    su -s /bin/bash $HCFS_USER -c "JAVA_LIBRARY_PATH=/usr/lib/qfs $HADOOP_COMMAND fs -mkdir -p /user/vagrant /user/root /user/yarn"
     su -s /bin/bash $HCFS_USER -c "JAVA_LIBRARY_PATH=/usr/lib/qfs $HADOOP_COMMAND fs -chmod 777 /user/vagrant"
     su -s /bin/bash $HCFS_USER -c "JAVA_LIBRARY_PATH=/usr/lib/qfs $HADOOP_COMMAND fs -chmod 777 /user/root"
+    su -s /bin/bash $HCFS_USER -c "JAVA_LIBRARY_PATH=/usr/lib/qfs $HADOOP_COMMAND fs -chown yarn:yarn /user/yarn"
 }
 
 prep hadoop
 if [[ $SMOKE_TESTS == *"qfs"* ]]; then
+    HCFS_USER=root
     prep hadoop-qfs
 fi
 

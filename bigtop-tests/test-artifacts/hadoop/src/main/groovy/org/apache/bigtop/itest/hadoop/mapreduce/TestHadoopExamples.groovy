@@ -45,7 +45,11 @@ class TestHadoopExamples {
 
   // The hadoop command is dynamic in order to support both hadoop over hdfs
   // and hadoop over qfs easily.
-  private static final String HADOOP_COMMAND = System.getProperty('HADOOP_COMMAND', 'hadoop');
+  private static final String HADOOP_COMMAND = System.getenv('HADOOP_COMMAND') ?: "hadoop";
+
+  // BIGTOP-3129: Only yarn can successfully write to staging dir, hence workaround by running as yarn.
+  private static final String BIGTOP_TEST_USER = "${HADOOP_COMMAND}" == "hadoop-qfs" ?
+    "yarn" : (System.getenv('BIGTOP_TEST_USER') ?: System.getenv('USER'))
 
   private static String hadoopExamplesJar =
     JarContent.getJarName(HADOOP_MAPRED_HOME, 'hadoop.*examples.*.jar');
@@ -78,8 +82,8 @@ class TestHadoopExamples {
 
   @AfterClass
   public static void tearDown() {
-    sh.exec("${HADOOP_COMMAND} fs -rmr -skipTrash ${EXAMPLES}",
-      "${HADOOP_COMMAND} fs -rmr -skipTrash ${EXAMPLES_OUT}");
+    sh.exec("su -s /bin/bash $BIGTOP_TEST_USER -c '${HADOOP_COMMAND} fs -rmr -skipTrash ${EXAMPLES}'",
+      "su -s /bin/bash $BIGTOP_TEST_USER -c '${HADOOP_COMMAND} fs -rmr -skipTrash ${EXAMPLES_OUT}'");
   }
 
 
@@ -101,12 +105,12 @@ class TestHadoopExamples {
       LOG.info("MAKING DIRECTORIES ..................... ${EXAMPLES} ${EXAMPLES_OUT}");
 
       //add the files in resources/
-      sh.exec("${HADOOP_COMMAND} fs -put ${source}/*.* .");
+      sh.exec("su -s /bin/bash $BIGTOP_TEST_USER -c '${HADOOP_COMMAND} fs -put ${source}/*.* .'");
       //add the directories under resources (like examples/)
-      sh.exec("${HADOOP_COMMAND} fs -put ${source}/${EXAMPLES} ${EXAMPLES}");
-      sh.exec("${HADOOP_COMMAND} fs -mkdir -p ${EXAMPLES_OUT}");
+      sh.exec("su -s /bin/bash $BIGTOP_TEST_USER -c '${HADOOP_COMMAND} fs -put ${source}/${EXAMPLES} ${EXAMPLES}'");
+      sh.exec("su -s /bin/bash $BIGTOP_TEST_USER -c '${HADOOP_COMMAND} fs -mkdir -p ${EXAMPLES_OUT}'");
     }
-    sh.exec("${HADOOP_COMMAND} fs -ls ${EXAMPLES}");
+    sh.exec("su -s /bin/bash $BIGTOP_TEST_USER -c '${HADOOP_COMMAND} fs -ls ${EXAMPLES}'");
     assertTrue("Failed asserting that 'examples' were created in the DFS", sh.getRet() == 0);
   }
 
@@ -158,7 +162,7 @@ class TestHadoopExamples {
       || FailureVars.instance.getNetworkShutdown()) {
       runFailureThread();
     }
-    sh.exec("${HADOOP_COMMAND} jar $testJar $testName $testArgs");
+    sh.exec("su -s /bin/bash $BIGTOP_TEST_USER -c '${HADOOP_COMMAND} jar $testJar $testName $testArgs'");
     assertTrue("Example $testName $testJar $testName $testArgs failed", sh.getRet() == 0);
   }
 
