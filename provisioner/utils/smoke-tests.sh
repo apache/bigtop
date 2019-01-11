@@ -61,6 +61,11 @@ if [[ $SMOKE_TESTS == *"qfs"* ]]; then
     prep hadoop-qfs
 fi
 
+if [[ $SMOKE_TESTS == *"apex"* ]]; then
+    puppet apply --modulepath=/bigtop-home -e 'include bigtop_toolchain::maven'
+    export PATH=/usr/local/maven/bin:$PATH
+fi
+
 ALL_SMOKE_TASKS=""
 for s in `echo $SMOKE_TESTS | sed -e 's#,# #g'`; do
   ALL_SMOKE_TASKS="$ALL_SMOKE_TASKS bigtop-tests:smoke-tests:$s:test"
