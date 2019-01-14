@@ -57,7 +57,6 @@ License: ASL 2.0
 Source0: %{name}-%{giraph_base_version}.tar.gz
 Source1: do-component-build
 Source2: install_%{name}.sh
-Source3: giraph-site.xml
 #BIGTOP_PATCH_FILES
 Buildarch: noarch
 Requires: zookeeper, hadoop-client, bigtop-utils >= 0.7
@@ -89,8 +88,6 @@ sh %{SOURCE2} \
           --conf-dir=%{conf_giraph}.dist \
           --doc-dir=%{doc_giraph} \
           --prefix=$RPM_BUILD_ROOT
-# Workaround for GIRAPH-198
-%__cp -f %{SOURCE3} $RPM_BUILD_ROOT/etc/giraph/conf.dist
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/usr/bin
 
