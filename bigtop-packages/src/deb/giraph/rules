@@ -35,6 +35,4 @@ override_dh_auto_install:
 	  --conf-dir=/etc/giraph/conf.dist \
           --doc-dir=/usr/share/doc/giraph  \
 	  --prefix=debian/tmp
-	# Workaround for GIRAPH-198
-	cp -f debian/giraph-site.xml debian/tmp/etc/giraph/conf.dist
 
