@@ -26,7 +26,6 @@ sourceSets {
 test.doFirst {
   checkEnv([
     "ALLUXIO_HOME",
-    "ALLUXIO_MASTER_ADDRESS",
     "HADOOP_HOME"
     ])
 }

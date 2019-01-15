@@ -28,7 +28,6 @@ import org.apache.bigtop.itest.JarContent
 class TestAlluxioSmoke {
 
   def alluxioHome = prop('ALLUXIO_HOME');
-  def alluxioMasterAddress = prop('ALLUXIO_MASTER_ADDRESS');
   def alluxioTestDir = prop('ALLUXIO_TEST_DIR', '/bigtop');
   def hadoopHome = prop('HADOOP_HOME');
 
@@ -66,14 +65,15 @@ class TestAlluxioSmoke {
   void hadoopCat() {
     sh.exec("""
       set -x
+      # Clear test environment
+      $hadoop fs -rm $alluxioTestDir/hadoopLs/datafile
+      $alluxio fs rm $alluxioTestDir/hadoopLs/datafile
+
       set -e
-
-      export LIB_JARS=\$(find ${alluxioHome} -name "alluxio-client-*-jar-with-dependencies.jar" | sort | head -n1)
-      export HADOOP_CLASSPATH=\${LIB_JARS}
-
-      $alluxio tfs rm $alluxioTestDir/hadoopLs/datafile
-      $alluxio tfs copyFromLocal datafile $alluxioTestDir/hadoopLs/datafile
-      $hadoop fs -cat $alluxioMasterAddress/$alluxioTestDir/hadoopLs/datafile
+      # Test Alluxio and HDFS interoperability
+      $alluxio fs copyFromLocal datafile $alluxioTestDir/hadoopLs/datafile
+      $alluxio fs persist $alluxioTestDir/hadoopLs/datafile
+      $hadoop fs -cat /underFSStorage/$alluxioTestDir/hadoopLs/datafile
     """)
     assertTrue("Unable to list from hadoop. " + sh.getOut().join('\n') + " " + sh.getErr().join('\n'), sh.getRet() == 0);
   }
