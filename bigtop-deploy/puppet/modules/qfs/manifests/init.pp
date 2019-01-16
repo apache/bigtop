@@ -74,6 +74,8 @@ class qfs {
     exec { "mkfs":
       command => "/usr/bin/metaserver -c $metaserver_conf",
       creates => "${qfs::common::storage_dirs[0]}/metaserver/checkpoint/latest",
+      # BIGTOP-3126: qfs init script requires to run under a permitted directory
+      cwd => "/tmp",
       user => qfs,
       group => qfs,
       require => [
