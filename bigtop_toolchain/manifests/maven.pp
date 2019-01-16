@@ -32,7 +32,7 @@ class bigtop_toolchain::maven {
     unless  => "/usr/bin/test -f /usr/src/$mvn-bin.tar.gz.asc",
   } ~>
 
-  exec {"/usr/bin/$bigtop_toolchain::gnupg::cmd -v --verify --auto-key-retrieve --keyserver hkp://keyserver.ubuntu.com:80 $mvn-bin.tar.gz.asc":
+  exec {"/usr/bin/$bigtop_toolchain::gnupg::cmd --no-tty -v --verify --auto-key-retrieve --keyserver hkp://keyserver.ubuntu.com:80 $mvn-bin.tar.gz.asc":
     cwd     => "/usr/src",
   } ->
 
