@@ -110,11 +110,12 @@ install -d -m 0755 ${PREFIX}/${LIB_DIR}
 # Installing Giraph core
 install -d -m 0755 ${PREFIX}/${LIB_DIR}
 cp -r $BUILD_DIR/giraph-dist/target/giraph*-bin/*/* ${PREFIX}/${LIB_DIR}
+cp  $BUILD_DIR/giraph-examples/target/giraph-examples*.jar ${PREFIX}/${LIB_DIR}
 
 # Installing docs and examples
 install -d -m 0755 $PREFIX/${DOC_DIR}
 # cp -r $BUILD_DIR/target/staging/*  $PREFIX/${DOC_DIR}
-mv ${PREFIX}/${LIB_DIR}/giraph-examples*.jar $PREFIX/${DOC_DIR}
+cp ${PREFIX}/${LIB_DIR}/giraph-examples*.jar $PREFIX/${DOC_DIR}
 
 # Install executable wrappers
 install -d -m 0755 $PREFIX/usr/bin
@@ -134,6 +135,7 @@ for i in giraph ; do
 # Workaround for GIRAPH-199
 export HADOOP_HOME=\${HADOOP_HOME:-/usr/lib/hadoop}
 export HADOOP_CONF_DIR=\${HADOOP_CONF_DIR:-/etc/hadoop/conf}
+export HADOOP_CLASSPATH=\${HADOOP_CLASSPATH:-/etc/giraph/conf}
 
 export GIRAPH_HOME=$LIB_DIR
 exec $BIN_DIR/$i "\$@"

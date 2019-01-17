@@ -24,17 +24,12 @@ import org.apache.bigtop.itest.shell.Shell
 import org.junit.Test
 
 public class TestGiraphSmoke {
-  static String runnerScript = "HADOOP_CLASSPATH=/etc/giraph/conf hadoop jar"
   static String testDir = "test.giraphsmoke." + (new Date().getTime())
-
-  static String giraphHome = System.getProperty('GIRAPH_HOME', '/usr/lib/giraph')
-  static String giraphJar = "${giraphHome}/giraph-jar-with-dependencies.jar"
-
   static Shell sh = new Shell("/bin/bash -s")
 
   @Test(timeout = 300000L)
   public void testPageRankBenchmark() {
-    sh.exec("${runnerScript} ${giraphJar}"
+    sh.exec("hadoop jar /usr/lib/giraph/giraph-examples*with-dependencies.jar"
       + " org.apache.giraph.benchmark.PageRankBenchmark"
       + " -v  "        // verbose
       + " -e 1"        // edges per vertex
@@ -47,7 +42,7 @@ public class TestGiraphSmoke {
 
   @Test(timeout = 300000L)
   public void testRandomMessageBenchmark() {
-    sh.exec("${runnerScript} ${giraphJar}"
+    sh.exec("hadoop jar /usr/lib/giraph/giraph-examples*with-dependencies.jar"
       + " org.apache.giraph.benchmark.RandomMessageBenchmark"
       + " -v  "        // verbose
       + " -e 1"        // edges per vertex
@@ -61,55 +56,22 @@ public class TestGiraphSmoke {
   }
 
   @Test(timeout = 300000L)
-  public void testSimpleCheckpointVertex() {
-    sh.exec("hadoop fs -rmr ${testDir}");
-    sh.exec("${runnerScript} ${giraphJar}"
-      + " org.apache.giraph.examples.SimpleCheckpointVertex"
-      + " -v  "        // verbose
-      + " -s 3"        // number of supersteps
-      + " -w 3"        // workers
-      + " -o ${testDir}"
+  public void testSimpleShortestPathsComputation() {
+    sh.exec("echo -e '[0,0,[[1,1],[3,3]]]\n[1,0,[[0,1],[2,2],[3,1]]]\n[2,0,[[1,2],[4,4]]]\n[3,0,[[0,3],[1,1],[4,4]]]\n[4,0,[[3,4],[2,4]]]' > ./giraphTest.txt");
+
+    sh.exec("hadoop fs -mkdir ${testDir}");
+
+    sh.exec("hadoop fs -copyFromLocal ./giraphTest.txt ${testDir}/giraphTest.txt");
+
+    sh.exec("hadoop jar /usr/lib/giraph/giraph-examples*with-dependencies.jar"
+      + " org.apache.giraph.GiraphRunner"
+      + " org.apache.giraph.examples.SimpleShortestPathsComputation"
+      + " -vif org.apache.giraph.io.formats.JsonLongDoubleFloatDoubleVertexInputFormat"
+      + " -vip ${testDir}/giraphTest.txt"
+      + " -vof org.apache.giraph.io.formats.IdWithValueTextOutputFormat"
+      + " -op ${testDir}/shortestpaths"
+      + " -w 3"
     )
-    assertEquals("running SimpleCheckpointVertex failed", 0, sh.getRet());
-  }
-
-  @Test(timeout = 300000L)
-  public void testSimpleVertexWithWorkerContext() {
-    sh.exec("hadoop fs -rmr ${testDir}");
-    sh.exec("${runnerScript} ${giraphJar}"
-      + " org.apache.giraph.examples.SimpleVertexWithWorkerContext"
-      + " ${testDir} 3"
-    )
-    assertEquals("running SimpleCheckpointVertex failed", 0, sh.getRet());
-  }
-
-  @Test(timeout = 300000L)
-  public void testSimpleShortestPathsVertex() {
-    // A graph definition: 
-    //   [vertex id, vertex value, [[edge1, value1], .. [edgeN, valueN]]] 
-    List graphDescription = [[0, 0, [[1, 1], [2, 2]]],
-      [1, 1, [[2, 2], [3, 3]]],
-      [2, 2, [[3, 3], [4, 4]]],
-      [3, 3, [[4, 4], [5, 5]]],
-      [4, 4, [[5, 5], [0, 0]]],
-      [5, 5, [[0, 0], [1, 1]]]];
-    int partitionSize = 2;
-
-    sh.exec("hadoop fs -rmr ${testDir}",
-      "hadoop fs -mkdir ${testDir}/input");
-
-    for (int i = 0; i < graphDescription.size(); i += partitionSize) {
-      String part = graphDescription[i..(i + partitionSize - 1)].join("\n");
-      int partId = i / partitionSize;
-      sh.exec("hadoop fs -put <(echo '${part}') ${testDir}/input/part-m-${partId}");
-    }
-
-    sh.exec("${runnerScript} ${giraphJar}"
-      + " org.apache.giraph.examples.SimpleShortestPathsVertex"
-      + " ${testDir}/input"
-      + " ${testDir}/output"
-      + " 0 ${graphDescription.size() / partitionSize}"
-    )
-    assertEquals("running SimpleShortestPathsVertex failed", 0, sh.getRet());
+    assertEquals("running SimpleShortestPathsComputation failed", 0, sh.getRet());
   }
 }
