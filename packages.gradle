@@ -39,7 +39,6 @@ config.bigtop.builddir = projectDir.absolutePath + "/build"
 config.bigtop.outputdir = projectDir.absolutePath + "/output"
 config.bigtop.distdir = projectDir.absolutePath + "/dist"
 config.bigtop.dldir = projectDir.absolutePath + "/dl"
-if(!config.bigtop.buildstamp) config.bigtop.buildstamp = 1
 
 def bomVersions = []
 
@@ -49,7 +48,6 @@ def final BUILD_DIR = config.bigtop.builddir
 def final OUTPUT_DIR = config.bigtop.outputdir
 def final DIST_DIR = config.bigtop.distdir
 def final DL_DIR = config.bigtop.dldir
-def final BIGTOP_BUILD_STAMP = System.getenv('BIGTOP_BUILD_STAMP') ?: config.bigtop.buildstamp
 
 // List of tasks derived from the BOM file is used to preserve the natural order
 def bomTasks = []
@@ -308,6 +306,8 @@ def genTasks = { target ->
       println "\tNothing to do. Exiting..."
       return
     }
+    def final BIGTOP_BUILD_STAMP = System.getenv('BIGTOP_BUILD_STAMP') ?:
+            config.bigtop.components[target].version.release
     def final PKG_NAME = config.bigtop.components[target].pkg
     def final PKG_VERSION = config.bigtop.components[target].version.pkg
     def final PKG_OUTPUT_DIR = config.bigtop.components[target].outputdir
@@ -360,6 +360,8 @@ def genTasks = { target ->
       println "\tNothing to do. Exiting..."
       return
     }
+     def final BIGTOP_BUILD_STAMP = System.getenv('BIGTOP_BUILD_STAMP') ?:
+             config.bigtop.components[target].version.release
     def final TARBALL_SRC = config.bigtop.components[target].tarball.source
     def final TARBALL_DST = config.bigtop.components[target].tarball.destination ?: TARBALL_SRC
     def final PKG_BUILD_DIR = config.bigtop.components[target].builddir
@@ -444,6 +446,8 @@ def genTasks = { target ->
       println "\tNothing to do. Exiting..."
       return
     }
+    def final BIGTOP_BUILD_STAMP = System.getenv('BIGTOP_BUILD_STAMP') ?:
+            config.bigtop.components[target].version.release
     def final PKG_BUILD_DIR = config.bigtop.components[target].builddir
     def final NAME = config.bigtop.components[target].name
     def final PKG_NAME = config.bigtop.components[target].pkg
@@ -501,6 +505,8 @@ def genTasks = { target ->
       println "\tNothing to do. Exiting..."
       return
     }
+    def final BIGTOP_BUILD_STAMP = System.getenv('BIGTOP_BUILD_STAMP') ?:
+            config.bigtop.components[target].version.release
     def final NAME = config.bigtop.components[target].name
     def final PKG_NAME = config.bigtop.components[target].pkg
     def final PKG_NAME_FOR_PKG = NAME.replaceAll("-", "_")
