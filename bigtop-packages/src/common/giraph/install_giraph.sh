@@ -144,8 +144,8 @@ done
 install -d -m 0755 $PREFIX/$CONF_DIR
 (cd ${BUILD_DIR}/conf && tar cf - .) | (cd $PREFIX/$CONF_DIR && tar xf -)
 
-unlink $PREFIX/$LIB_DIR/conf || /bin/true
-ln -s $ETC_DIR/conf $PREFIX/$LIB_DIR/conf
+rm -rf $PREFIX/$LIB_DIR/conf
+ln -rs $ETC_DIR/conf $PREFIX/$LIB_DIR/conf
 
 # Create version independent symlinks
 for i in accumulo core gora hbase hcatalog hive kibble rexster ; do
