@@ -1,3 +1,3 @@
-/etc/alluxio/conf
+/etc/alluxio/conf.dist
 /usr/lib/alluxio
 /usr/bin/alluxio

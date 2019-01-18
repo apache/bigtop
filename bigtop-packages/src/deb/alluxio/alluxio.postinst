@@ -14,10 +14,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+alluxio_pkg_name=alluxio
+
 set -e
 
 case "$1" in
     configure)
+        # Install config alternatives
+        chown -R alluxio:alluxio /var/log/alluxio
+        update-alternatives  --install /etc/${alluxio_pkg_name}/conf ${alluxio_pkg_name}-conf /etc/${alluxio_pkg_name}/conf.dist 30
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

@@ -47,7 +47,7 @@ start() {
         ${EXEC_PATH} ${DAEMON_FLAGS} \
         > $LOG_FILE 2>&1 & "
 
-    sleep 3
+    sleep $SLEEP_TIME
 
     echo `ps -A -o pid,command | grep -i "[j]ava" | grep $KEYWORD | awk '{print $1}'` > $PIDFILE
 

@@ -92,12 +92,18 @@ done
 LIB_DIR=${LIB_DIR:-/usr/lib/alluxio}
 LIBEXEC_DIR=${INSTALLED_LIB_DIR:-/usr/libexec}
 BIN_DIR=${BIN_DIR:-/usr/bin}
+CONF_DIST_DIR=/etc/alluxio/conf.dist/
 
 install -d -m 0755 $PREFIX/$LIB_DIR
+install -d -m 0755 $PREFIX/$LIB_DIR/assembly/client/target
+install -d -m 0755 $PREFIX/$LIB_DIR/assembly/server/target
 install -d -m 0755 $PREFIX/$LIB_DIR/bin
 install -d -m 0755 $PREFIX/$LIB_DIR/libexec
 install -d -m 0755 $PREFIX/$LIB_DIR/lib
+install -d -m 0755 $PREFIX/$LIB_DIR/client
+install -d -m 0755 $PREFIX/$LIB_DIR/integration
 install -d -m 0755 $PREFIX/$LIB_DIR/share
+install -d -m 0755 $PREFIX/$LIB_DIR/core/server/common/src/main/webapp
 install -d -m 0755 $PREFIX/$DATA_DIR
 install -d -m 0755 $PREFIX/$DATA_DIR/alluxio
 install -d -m 0755 $PREFIX/etc
@@ -105,18 +111,36 @@ install -d -m 0755 $PREFIX/etc/alluxio
 install -d -m 0755 $PREFIX/etc/alluxio/conf
 install -d -m 0755 $PREFIX/$VAR_DIR/log/alluxio
 install -d -m 0755 $PREFIX/$VAR_DIR/lib/alluxio/journal
-install -d -m 0755 $PREFIX/$VAR_DIR/lib/alluxio/core/server/src/main/webapp
-ln -s $VAR_DIR/log/alluxio $PREFIX/$VAR_DIR/lib/alluxio/logs
 install -d -m 0755 $PREFIX/$VAR_DIR/run/alluxio
+install -d -m 0755 $PREFIX/$CONF_DIST_DIR
 
-cp assembly/target/alluxio*dependencies.jar core/client/target/alluxio*dependencies.jar $PREFIX/$LIB_DIR
-cp -a bin/* $PREFIX/${LIB_DIR}/bin
-cp -a libexec/* $PREFIX/${LIB_DIR}/libexec
-cp -rf core/server/src/main/webapp $PREFIX/$VAR_DIR/lib/alluxio/core/server/src/main
+ln -s $CONF_DIST_DIR $PREFIX/$LIB_DIR/conf
+ln -s $VAR_DIR/log/alluxio $PREFIX/$LIB_DIR/logs
+
+cp assembly/server/target/alluxio*dependencies.jar $PREFIX/$LIB_DIR/assembly/server/target
+cp assembly/client/target/alluxio*dependencies.jar $PREFIX/$LIB_DIR/assembly/client/target
+cp -a bin/* $PREFIX/$LIB_DIR/bin
+cp -a lib/* $PREFIX/$LIB_DIR/lib
+cp -a libexec/* $PREFIX/$LIB_DIR/libexec
+cp -a client/* $PREFIX/$LIB_DIR/client
+cp -a integration/* $PREFIX/$LIB_DIR/integration
+cp integration/checker/target/alluxio-checker-*-jar-with-dependencies.jar $PREFIX/$LIB_DIR/integration/checker
+cp integration/fuse/target/alluxio-integration-fuse-*-jar-with-dependencies.jar $PREFIX/$LIB_DIR/integration/fuse
+cp integration/yarn/target/alluxio-integration-yarn-*-jar-with-dependencies.jar $PREFIX/$LIB_DIR/integration/yarn
+rm -rf $PREFIX/$LIB_DIR/integration/pom.xml $PREFIX/$LIB_DIR/integration/**/pom.xml
+rm -rf $PREFIX/$LIB_DIR/integration/target $PREFIX/$LIB_DIR/integration/**/target
+rm -rf $PREFIX/$LIB_DIR/integration/**/src
+rm -rf $PREFIX/$LIB_DIR/integration/**/README.md
+cp -rf core/server/common/src/main/webapp $PREFIX/$LIB_DIR/core/server/common/src/main
 
 # Copy in the configuration files
-install -m 0644 conf/log4j.properties $PREFIX/etc/alluxio/conf
-cp conf/alluxio-env.sh.template $PREFIX/etc/alluxio/conf/alluxio-env.sh
+install -m 0644 conf/log4j.properties $PREFIX/$CONF_DIST_DIR
+cp conf/alluxio-env.sh.template $PREFIX/$CONF_DIST_DIR/alluxio-env.sh
+cp conf/alluxio-site.properties.template $PREFIX/$CONF_DIST_DIR/alluxio-site.properties
+cp conf/core-site.xml.template $PREFIX/$CONF_DIST_DIR/core-site.xml
+cp conf/metrics.properties.template $PREFIX/$CONF_DIST_DIR/metrics.properties
+cp conf/masters $PREFIX/$CONF_DIST_DIR/masters
+cp conf/workers $PREFIX/$CONF_DIST_DIR/workers
 
 # Copy in the /usr/bin/alluxio wrapper
 install -d -m 0755 $PREFIX/$BIN_DIR
@@ -137,23 +161,3 @@ exec ${LIB_DIR}/bin/alluxio "\$@"
 EOF
 chmod 755 $PREFIX/$BIN_DIR/alluxio
 
-cat >$PREFIX/$LIB_DIR/libexec/alluxio-layout.sh <<EOF
-#!/usr/bin/env bash
-
-export ALLUXIO_SYSTEM_INSTALLATION="TRUE"
-export ALLUXIO_PREFIX="$LIB_DIR"
-export ALLUXIO_HOME="/var/lib/alluxio"
-export ALLUXIO_CONF_DIR="/etc/alluxio/conf"
-export ALLUXIO_LOGS_DIR="/var/log/alluxio"
-export ALLUXIO_DATA_DIR="/var/run/alluxio"
-export ALLUXIO_JARS="\`find $LIB_DIR/ -name alluxio*dependencies.jar|grep -v client\`"
-
-# find JAVA_HOME
-. /usr/lib/bigtop-utils/bigtop-detect-javahome
-
-if [ -z "JAVA_HOME" ]; then
-  export JAVA="/usr/bin/java"
-else
-  export JAVA="\$JAVA_HOME/bin/java"
-fi
-EOF
