@@ -36,8 +36,9 @@ export ALLUXIO_HOME=${ALLUXIO_HOME:-/usr/lib/alluxio}
 export AMBARI_URL=${AMBARI_URL:-http://localhost:8080}
 export FLUME_HOME=${FLUME_HOME:-/usr/lib/flume}
 export GPDB_HOME=${GPDB_HOME:-/usr/lib/gpdb}
-export HADOOP_MAPRED_HOME=${HADOOP_MAPRED_HOME:-/usr/lib/hadoop-mapreduce}
+export HADOOP_HOME=${HADOOP_HOME:-/usr/lib/hadoop}
 export HADOOP_CONF_DIR=${HADOOP_CONF_DIR:-/etc/hadoop/conf}
+export HADOOP_MAPRED_HOME=${HADOOP_MAPRED_HOME:-/usr/lib/hadoop-mapreduce}
 export HBASE_HOME=${HBASE_HOME:-/usr/lib/hbase}
 export HBASE_CONF_DIR=${HBASE_CONF_DIR:-/usr/lib/hbase/conf}
 export HIVE_HOME=${HIVE_HOME:-/usr/lib/hive}
@@ -66,6 +67,11 @@ fi
 if [[ $SMOKE_TESTS == *"apex"* ]]; then
     puppet apply --modulepath=/bigtop-home -e 'include bigtop_toolchain::maven'
     export PATH=/usr/local/maven/bin:$PATH
+fi
+
+if [[ $SMOKE_TESTS == *"alluxio"* ]]; then
+    su -s /bin/bash $HCFS_USER -c "$HADOOP_COMMAND fs -mkdir /underFSStorage"
+    su -s /bin/bash $HCFS_USER -c "$HADOOP_COMMAND fs -chmod 777 /underFSStorage"
 fi
 
 ALL_SMOKE_TASKS=""
