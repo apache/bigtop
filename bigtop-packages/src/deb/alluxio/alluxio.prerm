@@ -14,10 +14,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+alluxio_pkg_name=alluxio
+
 set -e
 
 case "$1" in
     remove|upgrade|deconfigure)
+      update-alternatives --remove ${alluxio_pkg_name}-conf /etc/${alluxio_pkg_name}/conf.dist || :
     ;;
 
     failed-upgrade)

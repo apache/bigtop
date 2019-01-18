@@ -125,20 +125,19 @@ done
 %defattr(-,root,root,-)
 %doc LICENSE README.md
 %dir %{_sysconfdir}/%{alluxio_name}
-%config(noreplace) %{_sysconfdir}/%{alluxio_name}/conf/log4j.properties
+%config(noreplace) %{_sysconfdir}/%{alluxio_name}/conf.dist
+%config(noreplace) %{_sysconfdir}/%{alluxio_name}/conf.dist/log4j.properties
+%config(noreplace) %{_sysconfdir}/%{alluxio_name}/conf.dist/alluxio-env.sh
+%config(noreplace) %{_sysconfdir}/%{alluxio_name}/conf.dist/alluxio-site.properties
+%config(noreplace) %{_sysconfdir}/%{alluxio_name}/conf.dist/core-site.xml
 %config(noreplace) %{initd_dir}/%{alluxio_name}-master
 %config(noreplace) %{initd_dir}/%{alluxio_name}-worker
-%config(noreplace) %{_sysconfdir}/%{alluxio_name}/conf/alluxio-env.sh
-%config(noreplace) %{alluxio_home}/libexec/alluxio-layout.sh
 %attr(0755,alluxio,alluxio) %{var_lib}
 %attr(0755,alluxio,alluxio) %{var_run}
 %attr(0755,alluxio,alluxio) %{var_log}
-%{alluxio_home}/alluxio*
-%{alluxio_home}/bin/alluxio*
-%{alluxio_home}/libexec/alluxio*
+%{alluxio_home}
 %{_datadir}/%{alluxio_name}
 /usr/bin/alluxio
-%{alluxio_home}/share
 
 
 %clean
