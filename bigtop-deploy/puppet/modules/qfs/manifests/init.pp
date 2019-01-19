@@ -36,8 +36,8 @@ class qfs {
     hadoop::create_storage_dir { $qfs::common::storage_dirs: } ->
     file { $qfs::common::storage_dirs:
       ensure => directory,
-      owner => qfs,
-      group => qfs,
+      owner => root,
+      group => root,
       mode => '0755',
     }
   }
@@ -74,8 +74,8 @@ class qfs {
     exec { "mkfs":
       command => "/usr/bin/metaserver -c $metaserver_conf",
       creates => "${qfs::common::storage_dirs[0]}/metaserver/checkpoint/latest",
-      # BIGTOP-3126: workaround that the qfs init script requires to run under a permitted directory
-      cwd => "${qfs::common::storage_dirs[0]}",
+      # BIGTOP-3126: qfs init script requires to run under a permitted directory
+      cwd => "/tmp",
       user => qfs,
       group => qfs,
       require => [
