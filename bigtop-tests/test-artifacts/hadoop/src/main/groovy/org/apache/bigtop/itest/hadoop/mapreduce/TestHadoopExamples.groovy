@@ -48,8 +48,9 @@ class TestHadoopExamples {
   private static final String HADOOP_COMMAND = System.getenv('HADOOP_COMMAND') ?: "hadoop";
 
   // BIGTOP-3129: Only yarn can successfully write to staging dir, hence workaround by running as yarn.
+  // For normal case, use BIGTOP_TEST_USER variable when it's defined. Otherwise run as current user.
   private static final String BIGTOP_TEST_USER = "${HADOOP_COMMAND}" == "hadoop-qfs" ?
-    "yarn" : (System.getenv('BIGTOP_TEST_USER') ?: System.getenv('USER'))
+    "yarn" : (System.getenv('BIGTOP_TEST_USER') ?: "")
 
   private static String hadoopExamplesJar =
     JarContent.getJarName(HADOOP_MAPRED_HOME, 'hadoop.*examples.*.jar');
