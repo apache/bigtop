@@ -70,7 +70,8 @@ AMBARI_VERSION=%{ambari_version} bash $RPM_SOURCE_DIR/install_ambari.sh \
 %package server
 Summary: Ambari Server
 Group: Development/Libraries
-Requires: openssl, postgresql-server >= 8.1, python >= 2.6, curl
+# BIGTOP-3139: install initscripts to workaround service command not available issue
+Requires: openssl, postgresql-server >= 8.1, python >= 2.6, curl, initscripts
 AutoProv: no
 AutoReqProv: no
 %description server
