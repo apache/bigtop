@@ -134,7 +134,7 @@ $roles_map = {
   },
   qfs => {
     master => ["qfs-metaserver"],
-    worker => ["qfs-chunkserver"],
+    worker => ["qfs-chunkserver", "qfs-client"],
     client => ["qfs-client"],
   },
   gpdb => {
