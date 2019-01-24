@@ -105,7 +105,7 @@ else
     LOGGING=""
 fi
 
-export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../.." && pwd )"
 
 set_java_home() {
 
