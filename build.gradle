@@ -353,7 +353,7 @@ def artifactToInstall = {
 }
 
 
-def _NEXUS_URL = project.hasProperty("NEXUS_URL") ? NEXUS_URL : "http://localhost:8081"
+def _NEXUS_URL = project.hasProperty("NEXUS_URL") ? NEXUS_URL : "http://localhost:8081/nexus"
 
 def generate_nexus_tasks = { name, url, snapshot ->
   task "configure-nexus-${name}"(type: Exec) {
@@ -383,7 +383,7 @@ def repos = [ [ "name": "conjars", "url" : "http://conjars.org", 'snapshot':'REL
           [ "name": "repository.jboss.org", "url": "http://repository.jboss.org/nexus/content/groups/public/", 'snapshot': 'RELEASE'],
           [ "name": "apache.snapshots.https", "url": "https://repository.apache.org/content/repositories/snapshots", "snapshot": 'SNAPSHOT'],
           [ "name": "apache.snapshots", "url": "https://repository.apache.org/content/repositories/snapshots", "snapshot": 'SNAPSHOT'],
-          [ "name": "maven2-repository.atlassian", "url": "https://maven.atlassian.com/repository/public", "snapshot": 'RELASE']]
+          [ "name": "maven2-repository.atlassian", "url": "https://maven.atlassian.com/repository/public", "snapshot": 'RELEASE']]
 
 repos.each { r->
   generate_nexus_tasks( r.name, r.url, r.snapshot)
@@ -391,7 +391,7 @@ repos.each { r->
 
 task "configure-nexus"(dependsOn: tasks.findAll { alltask -> alltask.name.startsWith("configure-nexus-")}*.name,
       description: 'configure build to use a sonatype nexus server.\n' +
-        '  Use -PNEXUS_URL=http://server:8081 to overwrite default server http://localhost:8081\n' +
+        '  Use -PNEXUS_URL=http://server:8081 to overwrite default server http://localhost:8081/nexus\n' +
         '  Use -PNEXUS_USERPASS=user:passwd to overwrite default username passwd admin:admin123') doLast {
    def m2Dir = System.getProperty("user.home") + "/.m2"
    mkdir(m2Dir)
