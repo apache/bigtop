@@ -373,8 +373,25 @@ def generate_nexus_tasks = { name, url, snapshot ->
       write root.toString()
 
       workingDir '.'
-      commandLine  "curl", "-o", "/dev/null", "-X", "POST", "-d", "@$absolutePath",
+      commandLine  "curl", "-o", "/dev/null", "-s", "-w", "%{http_code}", "-X", "POST", "-d", "@$absolutePath",
         "--header", "Content-Type: application/json", "-u", "$_NEXUS_USERPASS", "$_NEXUS_URL/service/local/repositories"
+      standardOutput = new ByteArrayOutputStream()
+
+      doLast {
+        def httpCode = standardOutput.toString()
+        switch (httpCode) {
+          case "200":
+            println "Nexus proxy ${name} successfully configured"
+            break
+          case "400":
+            println "Skipped because Nexus proxy ${name} already configured"
+            break
+          default:
+            throw new GradleException("Failed to configure Nexus proxy ${name} with http code ${httpCode} returned. " +
+             "Run with --info option to see the executed command")
+            break
+        }
+      }
     }
   }
 }
