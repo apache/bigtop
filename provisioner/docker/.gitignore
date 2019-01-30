@@ -1,1 +1,3 @@
 config/
+.provision_id
+.error_msg*
