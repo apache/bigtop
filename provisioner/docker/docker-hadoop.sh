@@ -16,7 +16,7 @@
 # limitations under the License.
 
 usage() {
-    echo "usage: $PROG [-C file ] args"
+    echo "usage: $PROG [-C file] args"
     echo "       -C file                                   Use alternate file for config.yaml"
     echo "  commands:"
     echo "       -c NUM_INSTANCES, --create NUM_INSTANCES  Create a Docker based Bigtop Hadoop cluster"
@@ -27,6 +27,9 @@ usage() {
     echo "       -E, --env-check                           Check whether required tools has been installed"
     echo "       -l, --list                                List out container status for the cluster"
     echo "       -p, --provision                           Deploy configuration changes"
+    echo "       -n, --nexus [NEXUS_URL]                   Configure Nexus proxy to speed up test execution"
+    echo "                                                 If no NEXUS_URL specified, default to http://NEXUS_IP:8081/nexus,"
+    echo "                                                 where NEXUS_IP is the ip of the container named nexus"
     echo "       -s, --smoke-tests                         Run Bigtop smoke tests"
     echo "       -h, --help"
     exit 1
@@ -192,6 +195,14 @@ log() {
     echo -e "\n[LOG] $1\n"
 }
 
+configure-nexus() {
+    for node in ${NODES[*]}; do
+        docker exec $node bash -c "cd /bigtop-home; ./gradlew -PNEXUS_URL=$1 configure-nexus"
+    done
+    wait
+}
+
+
 PROG=`basename $0`
 
 if [ $# -eq 0 ]; then
@@ -242,6 +253,20 @@ while [ $# -gt 0 ]; do
     -l|--list)
         list
         shift;;
+    -n|--nexus)
+        if [ $# -lt 2 ] || [[ $2 == -* ]]; then
+            NEXUS_IP=`docker inspect --format "{{.NetworkSettings.IPAddress}}" nexus`
+            if [ $? != 0 ]; then
+                log "No container named nexus exists. To create one:\n $ docker run -d --name nexus sonatype/nexus"
+                exit 1
+            fi
+            configure-nexus "http://$NEXUS_IP:8081/nexus"
+            shift
+        else
+            configure-nexus $2
+            shift 2
+        fi
+        ;;
     -p|--provision)
         provision
         shift;;
