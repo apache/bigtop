@@ -22,12 +22,6 @@ under the License.
 
 <configuration>
   <property>
-    <name>giraph.useNetty</name>
-    <value>true</value>
-    <description>Force the use of Netty over Hadoop RPC to avoid issues with different versions of Hadoop</description>
-  </property>
-
-  <property>
     <name>giraph.zkList</name>
     <value><%= @zookeeper_quorum %></value>
     <description>Prefer external Zookeeper over the embedded one</description>
