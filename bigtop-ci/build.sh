@@ -14,7 +14,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-while [[ $# -gt 1 ]]
+BIGTOP_HOME=`cd $(dirname $0)/.. && pwd`
+
+usage() {
+    echo "usage build.sh --prefix trunk|1.3.0|1.2.1|... --os debian-8|centos-7|... --target hadoop|tez|... [--nexus]"
+    exit 1 # unknown option
+}
+
+ if [ $# -eq 0 ]; then
+     usage
+ fi
+
+while [[ $# -gt 0 ]]
 do
 key="$1"
 case $key in
@@ -26,45 +37,45 @@ case $key in
     OS="$2"
     shift
     ;;
+    -p|--prefix)
+    PREFIX="$2"
+    shift
+    ;;
     -n|--nexus)
     NEXUS="--net=container:nexus"
     CONFIGURE_NEXUS="configure-nexus"
     shift
     ;;
     *)
-    echo "usage build.sh --os debian-8|centos-7|... --target hadoop|tez|..."
-    exit 1 # unknown option
+    usage
     ;;
 esac
 shift
 done
 
-# prepare source image
-cat >Dockerfile <<EOF
-FROM bigtop/slaves:$OS
-# copy source to container
-COPY . /var/lib/jenkins/bigtop
-# make it belong to compile account
-RUN chown -R jenkins /var/lib/jenkins/bigtop
-# define default user jenkins
-USER jenkins
-WORKDIR /var/lib/jenkins/bigtop
-ENTRYPOINT [ "bigtop-ci/entrypoint.sh" ]
-# initialize gradle
-RUN bigtop-ci/entrypoint.sh
-# make it a volume, performancewise
-VOLUME /var/lib/jenkins
-EOF
+if [ -z ${PREFIX+x} ]; then
+    echo "PREFIX is required";
+    UNSATISFIED=true
+fi
+if [ -z ${OS+x} ]; then
+    echo "OS is required";
+    UNSATISFIED=true
+fi
+if [ "$UNSATISFIED" == true ]; then
+    usage
+fi
 
-# build source image
-docker build -t image-$OS .
+# Start up build container
+CONTAINER_ID=`docker run -d $NEXUS bigtop/slaves:$PREFIX-$OS /sbin/init`
 
-# run build
-docker run --name container-$OS-$TARGET-$$ $NEXUS image-$OS $CONFIGURE_NEXUS $TARGET
+# Copy bigtop repo into container
+docker cp $BIGTOP_HOME $CONTAINER_ID:/bigtop
+docker cp $BIGTOP_HOME/bigtop-ci/entrypoint.sh $CONTAINER_ID:/bigtop/entrypoint.sh
+
+# Build
+docker exec $CONTAINER_ID bash -c "cd /bigtop && ./entrypoint.sh $CONFIGURE_NEXUS $TARGET"
 
 # save result
 mkdir -p output
-docker cp container-$OS-$TARGET-$$:/var/lib/jenkins/bigtop/output .
-docker rm -v container-$OS-$TARGET-$$
-docker rmi image-$OS
-rm -rf Dockerfile
+docker cp $CONTAINER_ID:/bigtop/output .
+#docker rm -f $CONTAINER_ID
