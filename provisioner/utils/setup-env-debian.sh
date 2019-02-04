@@ -17,6 +17,7 @@
 
 enable_local_repo=${1:-false}
 
+apt-get update
 # Setup rng-tools to improve virtual machine entropy performance.
 # The poor entropy performance will cause kerberos provisioning failed.
 apt-get -y install rng-tools
