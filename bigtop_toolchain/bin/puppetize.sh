@@ -24,7 +24,7 @@ case ${ID}-${VERSION_ID} in
     fedora-26)
       dnf -y install yum-utils
       dnf -y check-update
-      dnf -y install hostname findutils curl sudo unzip wget puppet puppetlabs-stdlib
+      dnf -y install hostname findutils curl sudo unzip wget puppet puppetlabs-stdlib procps-ng
         ;;
     ubuntu-16.04)
         apt-get update
