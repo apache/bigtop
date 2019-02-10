@@ -118,10 +118,18 @@ bootstrap() {
 }
 
 provision() {
+    rm -f .error_msg_*
     for node in ${NODES[*]}; do
-        bigtop-puppet $node &
+        (
+        bigtop-puppet $node
+        result=$?
+        if [ $result != 0 ]; then
+            log "Failed to provision container $node with exit code $result" > .error_msg_$node
+        fi
+        ) &
     done
     wait
+    cat .error_msg_* 2>/dev/null && exit 1
 }
 
 smoke-tests() {
@@ -136,14 +144,14 @@ destroy() {
         docker-compose -p $PROVISION_ID stop
         docker-compose -p $PROVISION_ID rm -f
     fi
-    rm -rvf ./config .provision_id
+    rm -rvf ./config .provision_id .error_msg*
 }
 
 bigtop-puppet() {
     if docker exec $1 bash -c "puppet --version" | grep ^3 >/dev/null ; then
       future="--parser future"
     fi
-    docker exec $1 bash -c "puppet apply $future --modulepath=/bigtop-home/bigtop-deploy/puppet/modules:/etc/puppet/modules:/usr/share/puppet/modules /bigtop-home/bigtop-deploy/puppet/manifests"
+    docker exec $1 bash -c "puppet apply --detailed-exitcodes $future --modulepath=/bigtop-home/bigtop-deploy/puppet/modules:/etc/puppet/modules:/usr/share/puppet/modules /bigtop-home/bigtop-deploy/puppet/manifests"
 }
 
 get-yaml-config() {
