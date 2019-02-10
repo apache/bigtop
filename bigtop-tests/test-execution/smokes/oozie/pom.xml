@@ -58,7 +58,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
-        <version>2.11</version>
+        <version>${maven-failsafe-plugin.version}</version>
         <configuration>
           <systemPropertyVariables>
             <org.apache.bigtop.itest.oozie_url>${OOZIE_URL}</org.apache.bigtop.itest.oozie_url>
