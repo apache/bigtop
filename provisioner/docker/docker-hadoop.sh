@@ -123,7 +123,12 @@ provision() {
         (
         bigtop-puppet $node
         result=$?
-        if [ $result != 0 ]; then
+        # 0: The run succeeded with no changes or failures; the system was already in the desired state.
+        # 1: The run failed, or wasn't attempted due to another run already in progress.
+        # 2: The run succeeded, and some resources were changed.
+        # 4: The run succeeded, and some resources failed.
+        # 6: The run succeeded, and included both changes and failures.
+        if [ $result != 0 ] && [ $result != 2 ]; then
             log "Failed to provision container $node with exit code $result" > .error_msg_$node
         fi
         ) &
