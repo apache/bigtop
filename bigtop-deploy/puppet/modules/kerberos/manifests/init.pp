@@ -23,8 +23,8 @@ class kerberos {
     }
   }
 
-  class site ($domain = inline_template('<%= domain %>'),
-      $realm = inline_template('<%= domain.upcase %>'),
+  class krb_site ($domain = inline_template('<%= @domain %>'),
+      $realm = inline_template('<%= @domain.upcase %>'),
       $kdc_server = 'localhost',
       $kdc_port = '88',
       $admin_port = 749,
@@ -73,7 +73,7 @@ class kerberos {
     }
   }
 
-  class kdc inherits kerberos::site {
+  class kdc inherits kerberos::krb_site {
     package { $package_name_kdc:
       ensure => installed,
     }
@@ -142,7 +142,7 @@ class kerberos {
     }
   }
 
-  class client inherits kerberos::site {
+  class client inherits kerberos::krb_site {
     package { $package_name_client:
       ensure => installed,
     }
@@ -163,23 +163,23 @@ class kerberos {
   define principal {
     require "kerberos::client"
 
-    realize(File[$kerberos::site::keytab_export_dir])
+    realize(File[$kerberos::krb_site::keytab_export_dir])
 
     $principal = "$title/$::fqdn"
-    $keytab    = "$kerberos::site::keytab_export_dir/$title.keytab"
+    $keytab    = "$kerberos::krb_site::keytab_export_dir/$title.keytab"
 
     exec { "addprinc.$title":
-      path => $kerberos::site::exec_path,
+      path => $kerberos::krb_site::exec_path,
       command => "kadmin -w secure -p kadmin/admin -q 'addprinc -randkey $principal'",
       unless => "kadmin -w secure -p kadmin/admin -q listprincs | grep -q $principal",
-      require => Package[$kerberos::site::package_name_client],
+      require => Package[$kerberos::krb_site::package_name_client],
     } 
     ->
     exec { "xst.$title":
-      path    => $kerberos::site::exec_path, 
+      path    => $kerberos::krb_site::exec_path,
       command => "kadmin -w secure -p kadmin/admin -q 'xst -k $keytab $principal'",
       unless  => "klist -kt $keytab 2>/dev/null | grep -q $principal",
-      require => File[$kerberos::site::keytab_export_dir],
+      require => File[$kerberos::krb_site::keytab_export_dir],
     }
   }
 
@@ -196,7 +196,7 @@ class kerberos {
 
     $includes = inline_template("<%=
       [@princs, @internal_princs].flatten.map { |x|
-        \"rkt $kerberos::site::keytab_export_dir/#{x}.keytab\"
+        \"rkt $kerberos::krb_site::keytab_export_dir/#{x}.keytab\"
       }.join(\"\n\")
     %>")
 
@@ -204,7 +204,7 @@ class kerberos {
     }
 
     exec { "ktinject.$title":
-      path     => $kerberos::site::exec_path,
+      path     => $kerberos::krb_site::exec_path,
       command  => "ktutil <<EOF
         $includes
         wkt $keytab
@@ -217,7 +217,7 @@ EOF
     }
 
     exec { "aquire $title keytab":
-        path    => $kerberos::site::exec_path,
+        path    => $kerberos::krb_site::exec_path,
         user    => $owner,
         command => "bash -c 'kinit -kt $keytab ${title}/$::fqdn ; kinit -R'",
         require => Exec["ktinject.$title"],
