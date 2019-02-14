@@ -48,6 +48,7 @@ export SPARK_HOME=${SPARK_HOME:-/usr/lib/spark}
 export SQOOP_HOME=${SQOOP_HOME:-/usr/lib/sqoop}
 export ZOOKEEPER_HOME=${ZOOKEEPER_HOME:-/usr/lib/zookeeper}
 export GIRAPH_HOME=${GIRAPH_HOME:-/usr/lib/giraph}
+export FLINK_HOME=${FLINK_HOME:-/usr/lib/flink}
 
 echo -e "\n===== START TO RUN SMOKE TESTS: $SMOKE_TESTS =====\n"
 
