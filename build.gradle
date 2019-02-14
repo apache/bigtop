@@ -74,6 +74,7 @@ rat {
        /* Test data with rigid structure and/or binary */
        "bigtop-tests/test-artifacts/**/resources/**",
        "bigtop-tests/smoke-tests/alluxio/datafile",
+       "bigtop-tests/smoke-tests/flink/test.data",
        "bigtop-tests/smoke-tests/hive/passwd.ql",
        "bigtop-tests/smoke-tests/phoenix/*.csv",
        "bigtop-tests/smoke-tests/phoenix/*.sql",
