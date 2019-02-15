@@ -43,8 +43,11 @@ start() {
         ${EXEC_PATH} ${DAEMON_FLAGS} \
         > $LOG_FILE 2>&1 & "
 
-    sleep $SLEEP_TIME
-
+    WAIT_TIMES=0
+    until ps -A -o pid,command | grep -i "[j]ava" | grep $KEYWORD || [ $WAIT_TIMES -eq 10 ]; do
+        (( WAIT_TIMES++ ))
+        sleep 1
+    done
     echo `ps -A -o pid,command | grep -i "[j]ava" | grep $KEYWORD | awk '{print $1}'` > $PIDFILE
 
     checkstatusofproc
