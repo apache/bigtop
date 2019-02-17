@@ -21,7 +21,9 @@ class alluxio {
     }
   }
 
-  class common ($master_host, $hdfs_ha = hiera('hadoop::common_hdfs::ha', undef)) {
+  class common ($master_host,
+      $alluxio_underfs_address = hiera('bigtop::hadoop_namenode_uri'),
+  ) {
     package { "alluxio":
       ensure => latest,
     }
