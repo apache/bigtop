@@ -53,6 +53,8 @@ esac
 shift
 done
 
+set -e
+
 if [ -z ${PREFIX+x} ]; then
     echo "PREFIX is required";
     UNSATISFIED=true

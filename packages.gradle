@@ -616,15 +616,17 @@ def genTasks = { target ->
           group: PACKAGES_GROUP) doLast {
     def _prefix = project.hasProperty("prefix") ? prefix : "trunk"
     def _OS = project.hasProperty("OS") ? OS : "centos-7"
-    def _nexus = project.hasProperty("nexus") ? nexus : "false"
+    def _nexus = project.hasProperty("nexus") ? nexus : false
     def _target_pkg = "$target-pkg"
     def command = [
             './bigtop-ci/build.sh',
             '--prefix', _prefix,
             '--os', _OS,
             '--target', _target_pkg,
-            _nexus ? '--nexus' : ''
     ]
+    if (_nexus) {
+      command.add('--nexus')
+    }
 
     println "Building $_prefix $_target_pkg on $_OS in Docker...\n"
 
