@@ -616,7 +616,6 @@ def genTasks = { target ->
           group: PACKAGES_GROUP) doLast {
     def _prefix = project.hasProperty("prefix") ? prefix : "trunk"
     def _OS = project.hasProperty("OS") ? OS : "centos-7"
-    def _nexus = project.hasProperty("nexus") ? nexus : false
     def _target_pkg = "$target-pkg"
     def command = [
             './bigtop-ci/build.sh',
@@ -624,7 +623,7 @@ def genTasks = { target ->
             '--os', _OS,
             '--target', _target_pkg,
     ]
-    if (_nexus) {
+    if ( project.hasProperty("nexus") ) {
       command.add('--nexus')
     }
 

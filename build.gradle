@@ -265,8 +265,19 @@ task "docker-provisioner"(type:Exec,
       '-C', _config,
       '--create', _num_instances,
   ]
-  if ( project.hasProperty("run_smoke_tests") && run_smoke_tests ) {
+  if ( project.hasProperty("stack") ) {
+    command.add('--stack')
+    command.add("${stack}")
+  }
+  if ( project.hasProperty("run_smoke_tests") ) {
     command.add("--smoke-tests")
+  }
+  if ( project.hasProperty("smoke_tests") ) {
+    command.add('--smoke-tests')
+    command.add("${smoke_tests}")
+  }
+  if ( project.hasProperty("nexus") ) {
+    command.add('--nexus')
   }
   workingDir 'provisioner/docker'
   commandLine command
