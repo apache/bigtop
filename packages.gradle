@@ -808,9 +808,11 @@ task "repo-ind" (
   def _prefix = project.hasProperty("prefix") ? prefix : "trunk"
   def _OS = project.hasProperty("OS") ? OS : "centos-7"
   def command = [
-      'docker', 'run', '--rm', '--volume', BASE_DIR + ':/bigtop-home', '--workdir', '/bigtop-home',
-      'bigtop/slaves:' + _prefix + '-' + _OS,
-      './gradlew', 'repo'
+      'bash', '-x',
+      './bigtop-ci/build.sh',
+      '--prefix', _prefix,
+      '--os', _OS,
+      '--target', 'repo'
   ]
   exec {
     workingDir BASE_DIR
