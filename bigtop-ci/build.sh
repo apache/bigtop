@@ -53,8 +53,6 @@ esac
 shift
 done
 
-set -e
-
 if [ -z ${PREFIX+x} ]; then
     echo "PREFIX is required";
     UNSATISFIED=true
@@ -75,9 +73,14 @@ docker cp $BIGTOP_HOME $CONTAINER_ID:/bigtop
 docker cp $BIGTOP_HOME/bigtop-ci/entrypoint.sh $CONTAINER_ID:/bigtop/entrypoint.sh
 
 # Build
-docker exec $CONTAINER_ID bash -c "cd /bigtop && ./entrypoint.sh $CONFIGURE_NEXUS $TARGET"
+docker exec $CONTAINER_ID bash -c "cd /bigtop && ./entrypoint.sh $CONFIGURE_NEXUS $TARGET --info"
+RESULT=$?
 
 # save result
 mkdir -p output
 docker cp $CONTAINER_ID:/bigtop/output .
-#docker rm -f $CONTAINER_ID
+docker rm -f $CONTAINER_ID
+
+if [ $RESULT -ne 0 ]; then
+    exit 1
+fi

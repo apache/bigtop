@@ -619,6 +619,7 @@ def genTasks = { target ->
     def _nexus = project.hasProperty("nexus") ? nexus : false
     def _target_pkg = "$target-pkg"
     def command = [
+            'bash', '-x',
             './bigtop-ci/build.sh',
             '--prefix', _prefix,
             '--os', _OS,
