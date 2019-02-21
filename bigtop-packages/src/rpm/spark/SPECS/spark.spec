@@ -212,7 +212,6 @@ done
 %{lib_spark}/examples
 %{lib_spark}/jars
 %exclude %{lib_spark}/jars/datanucleus-*.jar
-%{lib_spark}/licenses
 %{lib_spark}/sbin
 %{lib_spark}/work
 %{etc_spark}
