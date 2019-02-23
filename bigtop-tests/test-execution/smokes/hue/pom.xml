@@ -57,6 +57,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
+        <version>${maven-failsafe-plugin.version}</version>
         <configuration>
           <systemPropertyVariables>
             <org.apache.bigtop.itest.hue_url>${HUE_URL}</org.apache.bigtop.itest.hue_url>

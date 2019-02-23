@@ -122,7 +122,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
-        <version>2.7.1</version>
+        <version>${maven-failsafe-plugin.version}</version>
         <configuration>
           <includes>
             <include>**/Test*</include>

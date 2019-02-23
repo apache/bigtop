@@ -42,7 +42,6 @@
     <org.apache.maven-dependency-plugin.output>${project.build.directory}</org.apache.maven-dependency-plugin.output>
 
     <org.apache.maven-dependency-plugin.type>jar</org.apache.maven-dependency-plugin.type>
-    <org.apache.maven-failsafe-plugin.testInclude>**/PackagesSuite*</org.apache.maven-failsafe-plugin.testInclude>
   </properties>
 
   <dependencies>
@@ -58,6 +57,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
+        <version>${maven-failsafe-plugin.version}</version>
         <configuration>
           <systemPropertyVariables>
              <bigtop.repo.host>${bigtop.repo.host}</bigtop.repo.host>
