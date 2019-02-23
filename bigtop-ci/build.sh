@@ -65,8 +65,14 @@ if [ "$UNSATISFIED" == true ]; then
     usage
 fi
 
+IMAGE_NAME=bigtop/slaves:$PREFIX-$OS
+ARCH=$(uname -m)
+if [ "x86_64" != $ARCH ]; then
+    IMAGE_NAME=$IMAGE_NAME-$ARCH
+fi
+
 # Start up build container
-CONTAINER_ID=`docker run -d $NEXUS bigtop/slaves:$PREFIX-$OS /sbin/init`
+CONTAINER_ID=`docker run -d $NEXUS $IMAGE_NAME /sbin/init`
 
 # Copy bigtop repo into container
 docker cp $BIGTOP_HOME $CONTAINER_ID:/bigtop
