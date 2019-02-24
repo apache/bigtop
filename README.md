@@ -220,32 +220,63 @@ The source for the website is located in "project_root/src/site/".
 For Developers: Building a component from Git repository
 --------------------------------------------------------
 
-To fetch source from a Git repository you need to modify `bigtop.bom` and add the
-following JSON snippets to your component/package:
+To fetch source from a Git repository, there're two ways to achieve this:
+a). modify `bigtop.bom` and add JSON snippets to your component/package, or
+b). specify properties at command line
+
+* __bigtop.bom__
+
+Add following JSON snippets to the desired component/package:
 
 ```
-git     { repo = ""; ref = ""; dir = ""}
+git     { repo = ""; ref = ""; dir = ""; commit_hash = "" }
 ```
 
-* `repo` - SSH, HTTP or local path to Git repo.
-* `ref` - branch, tag or commit hash to check out.
-* `dir` - directory name to write source into.
+  * `repo` - SSH, HTTP or local path to Git repo.
+  * `ref` - branch, tag or commit hash to check out.
+  * `dir` - [OPTIONAL] directory name to write source into.
+  * `commit_hash` - [OPTIONAL] a commit hash to reset to.
 
 Some packages have different names for source directory and source tarball
 (`hbase-0.98.5-src.tar.gz` contains `hbase-0.98.5` directory).
-By default source will be fetched in a directory named by `tarball { destination = TARBALL_DST}`
+By default source will be fetched in a directory named by `tarball { source = TARBALL_SRC }`
 without `.t*` extension.
 To explicitly set directory name use the `dir` option.
+
+When `commit_hash` specified, the repo to build the package will be reset to the commit hash.
 
 Example for HBase:
 
 ```
       name    = 'hbase'
-      version { base = '1.1.9'; pkg = base; release = 1 }
+      version { base = '1.3.2'; pkg = base; release = 1 }
       git     { repo = "https://github.com/apache/hbase.git"
-                ref  = "${version.base}"
-                dir  = "${name}-${version.base}" }
+                ref  = "branch-1.3"
+                dir  = "${name}-${version.base}"
+                commit_hash = "1bedb5bfbb5a99067e7bc54718c3124f632b6e17"
+              }
 ```
+
+* __command line__
+
+
+```
+./gradlew COMPONENT-pkg -Pgit_repo="" -Pgit_ref="" -Pgit_dir="" -Pgit_commit_hash="" -Pbase_version=""
+```
+
+Where `git_repo`, `git_ref`, `git_dir`, and `git_commit_hash` are exactly the same with what we set in JSON.
+And `base_version` is to overwrite:
+```
+      version { base = ''}
+```
+
+Example for Kafka:
+
+```
+./gradlew kafka-pkg -Pgit_repo=https://github.com/apache/kafka.git -Pgit_ref=1.1 -Pgit_sha1=4dae083af486eaedd27c69c973c74605bffd416b -Pbase_version=1.1.1 --info
+```
+
+You can mix both ways to build from Git, but command line always overwrites `bigtop.bom`.
 
 
 Contact us

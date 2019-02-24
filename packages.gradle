@@ -173,13 +173,15 @@ def genTasks = { target ->
       description: "Download $target artifacts",
       group: PACKAGES_GROUP) doLast {
 
+    def final TARBALL_SRC = config.bigtop.components[target].tarball.source
     def final TARBALL_DST = config.bigtop.components[target].tarball.destination
     def final DOWNLOAD_DST = config.bigtop.components[target].downloaddst
     def final DOWNLOAD_URL = config.bigtop.components[target].downloadurl
 
-    def final GIT_REPO = config.bigtop.components[target].git.repo
-    def final GIT_REF = config.bigtop.components[target].git.ref
-    def final GIT_DIR = config.bigtop.components[target].git.dir
+    def final GIT_REPO = project.hasProperty('git_repo') ? project.property('git_repo') : config.bigtop.components[target].git.repo
+    def final GIT_REF = project.hasProperty('git_ref') ? project.property('git_ref') : config.bigtop.components[target].git.ref
+    def final GIT_DIR = project.hasProperty('git_dir') ? project.property('git_dir') : config.bigtop.components[target].git.dir
+    def final GIT_COMMIT_HASH = project.hasProperty('git_commit_hash') ? project.property('git_commit_hash') : config.bigtop.components[target].git.commit_hash
     def final GIT_USER_NAME = config.bigtop.components[target].git.user ?: config.bigtop.git.user
     def final GIT_ACCESS_TOKEN = config.bigtop.components[target].git.token ?: config.bigtop.git.token
 
@@ -194,9 +196,13 @@ def genTasks = { target ->
     if (GIT_REPO && GIT_REF) {
       def dir = GIT_DIR
       if (dir == null || dir.isEmpty()) {
-        dir = TARBALL_DST.substring(0, TARBALL_DST.lastIndexOf(".t"))
+        dir = TARBALL_SRC.substring(0, TARBALL_SRC.lastIndexOf(".t"))
       }
       delete("${DL_DIR}/${dir}")
+      def depth = "--depth 1"
+      if ( GIT_COMMIT_HASH ) {
+        depth = ""
+      }
       if (GIT_USER_NAME && GIT_ACCESS_TOKEN) {
         def uri = new URI(GIT_REPO)
         if (!GIT_REPO.toLowerCase().startsWith("http")) {
@@ -209,14 +215,14 @@ def genTasks = { target ->
          uri.getFragment())
         exec {
           workingDir DL_DIR
-          commandLine "git clone --depth 1 --branch $GIT_REF ${uri} ${dir}".split()
+          commandLine "git clone ${depth} --branch $GIT_REF ${uri} ${dir}".split()
           errorOutput devNull
           standardOutput devNull
         }
       } else {
         exec {
           workingDir DL_DIR
-          commandLine "git clone --depth 1 --branch $GIT_REF ${GIT_REPO} ${dir}".split()
+          commandLine "git clone ${depth} --branch $GIT_REF ${GIT_REPO} ${dir}".split()
           errorOutput devNull
           standardOutput devNull
         }
@@ -226,6 +232,14 @@ def genTasks = { target ->
         commandLine "git submodule update --init".split()
         errorOutput devNull
         standardOutput devNull
+      }
+      if ( GIT_COMMIT_HASH ) {
+        exec {
+          workingDir "$DL_DIR/${dir}"
+          commandLine "git reset $GIT_COMMIT_HASH --hard".split()
+          errorOutput devNull
+          standardOutput devNull
+        }
       }
       delete("${DL_DIR}/${dir}/.git")
       exec {
@@ -618,6 +632,12 @@ def genTasks = { target ->
     def _OS = project.hasProperty("OS") ? OS : "centos-7"
     def _nexus = project.hasProperty("nexus") ? nexus : false
     def _target_pkg = "$target-pkg"
+    def additionalConfigKeys = ['git_repo', 'git_ref', 'git_dir', 'git_commit_hash', 'base_version']
+    additionalConfigKeys.each { key ->
+      if (project.hasProperty(key)) {
+        _target_pkg += " -P${key}=" + project.property(key)
+      }
+    }
     def command = [
             'bash', '-x',
             './bigtop-ci/build.sh',
@@ -640,6 +660,19 @@ def genTasks = { target ->
     println "Base: ${config.bigtop.components[target].version.base}"
   }
   task "${target}_vardefines" doLast {
+    if (project.hasProperty('base_version')) {
+      def BASE_VERSION = project.property("base_version")
+      if (config.bigtop.components[target].tarball.source) {
+        config.bigtop.components[target].tarball.source = config.bigtop.components[target].tarball.source
+                .replaceAll(config.bigtop.components[target].version.base, BASE_VERSION)
+      }
+      config.bigtop.components[target].tarball.destination = config.bigtop.components[target].tarball.destination
+              .replaceAll(config.bigtop.components[target].version.base, BASE_VERSION)
+
+      config.bigtop.components[target].version.base = BASE_VERSION
+      config.bigtop.components[target].version.pkg = BASE_VERSION
+    }
+
     setDefaults(config.bigtop.components[target])
 
     config.bigtop.components[target].package.release = '1'
