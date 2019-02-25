@@ -43,7 +43,7 @@ task fatJar(type: Jar) {
 repositories {
     mavenCentral()
     maven {
-       url "http://dl.bintray.com/rnowling/bigpetstore"
+       url "https://dl.bintray.com/rnowling/bigpetstore"
    }
 }
 
