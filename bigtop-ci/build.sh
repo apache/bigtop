@@ -73,6 +73,7 @@ fi
 
 # Start up build container
 CONTAINER_ID=`docker run -d $NEXUS $IMAGE_NAME /sbin/init`
+trap "docker rm -f $CONTAINER_ID" EXIT
 
 # Copy bigtop repo into container
 docker cp $BIGTOP_HOME $CONTAINER_ID:/bigtop
