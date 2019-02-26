@@ -70,7 +70,9 @@ create() {
 
     # Fetch configurations form specificed yaml config file
     repo=$(get-yaml-config repo)
-    components="[`echo $(get-yaml-config components) | sed 's/ /, /g'`]"
+    if [ -z ${components+x} ]; then
+        components="[`echo $(get-yaml-config components) | sed 's/ /, /g'`]"
+    fi
     distro=$(get-yaml-config distro)
     enable_local_repo=$(get-yaml-config enable_local_repo)
     generate-config "$hadoop_head_node" "$repo" "$components"
@@ -139,7 +141,9 @@ provision() {
 
 smoke-tests() {
     hadoop_head_node=${NODES:0:12}
-    smoke_test_components="`echo $(get-yaml-config smoke_test_components) | sed 's/ /,/g'`"
+    if [ -z ${smoke_test_components+x} ]; then
+        smoke_test_components="`echo $(get-yaml-config smoke_test_components) | sed 's/ /,/g'`"
+    fi
     docker exec $hadoop_head_node bash -c "bash -x /bigtop-home/provisioner/utils/smoke-tests.sh $smoke_test_components"
 }
 
@@ -240,14 +244,15 @@ while [ $# -gt 0 ]; do
           usage
         fi
         env-check
-        create $2
+        READY_TO_LAUNCH=true
+        NUM_INSTANCES=$2
         shift 2;;
     -C|--conf)
         if [ $# -lt 2 ]; then
           echo "Alternative config file for config.yaml" 1>&2
           usage
         fi
-	yamlconf=$2
+	    yamlconf=$2
         shift 2;;
     -d|--destroy)
         destroy
@@ -280,12 +285,25 @@ while [ $# -gt 0 ]; do
             shift 2
         fi
         ;;
+    -k|--stack)
+        if [ $# -lt 2 ]; then
+          log "No stack specified"
+          usage
+        fi
+        components="[$2]"
+        shift 2;;
     -p|--provision)
         provision
         shift;;
     -s|--smoke-tests)
-        smoke-tests
-        shift;;
+        if [ $# -lt 2 ] || [[ $2 == -* ]]; then
+            shift
+        else
+            smoke_test_components=$2
+            shift 2
+        fi
+        READY_TO_TEST=true
+        ;;
     -h|--help)
         usage
         shift;;
@@ -294,3 +312,10 @@ while [ $# -gt 0 ]; do
         usage;;
     esac
 done
+
+if [ "$READY_TO_LAUNCH" = true ]; then
+    create $NUM_INSTANCES
+fi
+if [ "$READY_TO_TEST" = true ]; then
+    smoke-tests
+fi
