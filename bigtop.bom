@@ -41,7 +41,7 @@
      'scala' { version = '2.10.4'; version_base = version }
    }
    apache { // *required* These shoudn't be modified unless ASF Infra demands changes
-     APACHE_MIRROR = "http://apache.osuosl.org"
+     APACHE_MIRROR = "https://apache.osuosl.org"
      APACHE_ARCHIVE = "https://archive.apache.org/dist"
    }
    git { // *optional* This is a global setting to access protected git repositories, 
@@ -96,7 +96,7 @@ bigtop {
     'scala' { version = '2.11.8'; version_base = version }
   }
   apache {
-    APACHE_MIRROR = "https://www-us.apache.org/dist"
+    APACHE_MIRROR = "https://apache.osuosl.org"
     APACHE_ARCHIVE = "https://archive.apache.org/dist"
   }
 /** End of Base Configuration */
