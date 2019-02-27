@@ -456,5 +456,15 @@ bigtop {
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }
+    'ranger' {
+      name    = 'ranger'
+      relNotes = 'Apache Ranger'
+      version { base = '0.7.1'; pkg = base; release = 1 }
+      tarball { destination = "apache-$name-${version.base}.tar.gz"
+                source      = destination }
+      url     { download_path = "/$name/$name-${version.base}/"
+                site = "${apache.APACHE_MIRROR}/${download_path}"
+                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+    }
   }
 }
