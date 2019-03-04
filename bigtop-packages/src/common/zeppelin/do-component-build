@@ -47,6 +47,9 @@ export MAVEN_OPTS="-Xmx1500m -Xms1500m"
 
 # change spark src download url to apache
 sed -i "s/http\:\/\/d3kbcqa49mib13\.cloudfront\.net/https\:\/\/archive\.apache\.org\/dist\/spark\/spark-\$\{spark\.version\}/g" spark-dependencies/pom.xml
+# BIGTOP-3183: See https://github.com/eirslett/frontend-maven-plugin/issues/562
++sed -i "s/<plugin.frontend.version>1.3<\/plugin.frontend.version>/<plugin.frontend.version>1.6<\/plugin.frontend.version>/g" pom.xml
++sed -i "s/<plugin.frontned.version>1.3<\/plugin.frontned.version>/<plugin.frontned.version>1.6<\/plugin.frontned.version>/g" zeppelin-web/pom.xml
 mvn $BUILD_OPTS clean package
 
 mkdir -p build/dist
