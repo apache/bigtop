@@ -78,9 +78,10 @@ trap "docker rm -f $CONTAINER_ID" EXIT
 # Copy bigtop repo into container
 docker cp $BIGTOP_HOME $CONTAINER_ID:/bigtop
 docker cp $BIGTOP_HOME/bigtop-ci/entrypoint.sh $CONTAINER_ID:/bigtop/entrypoint.sh
+docker exec $CONTAINER_ID bash -c "chown -R jenkins:jenkins /bigtop"
 
 # Build
-docker exec $CONTAINER_ID bash -c "cd /bigtop && ./entrypoint.sh $CONFIGURE_NEXUS $TARGET --info"
+docker exec --user jenkins $CONTAINER_ID bash -c "cd /bigtop && ./entrypoint.sh $CONFIGURE_NEXUS $TARGET --info"
 RESULT=$?
 
 # save result
