@@ -110,7 +110,7 @@ install -d -m 0755 $PREFIX/$LIB_DIR/external/lib
 install -d -m 0755 $PREFIX/$LIB_DIR/yarn/lib
 install -d -m 0755 $PREFIX/$CONF_DIR
 install -d -m 0755 $PREFIX/$DOC_DIR
-
+install -d -m 0755 $PREFIX/$LIB_DIR/standalone-metastore/
 install -d -m 0755 $PREFIX/var/lib/spark/
 install -d -m 0755 $PREFIX/var/log/spark/
 install -d -m 0755 $PREFIX/var/run/spark/
@@ -118,6 +118,7 @@ install -d -m 0755 $PREFIX/var/run/spark/work/
 
 rm $DIST_DIR/bin/*.cmd
 cp -r $DIST_DIR/* $PREFIX/$LIB_DIR
+cp -r ${BUILD_DIR}/hive-spark2-horton/standalone-metastore/target/standalone-metastore*.jar $PREFIX/$LIB_DIR/standalone-metastore/
 
 ln -s $LIB_DIR/examples $PREFIX/$DOC_DIR/
 

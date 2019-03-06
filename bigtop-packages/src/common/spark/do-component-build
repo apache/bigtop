@@ -19,18 +19,29 @@ set -ex
 . `dirname $0`/bigtop.bom
 
 
+git clone git@github.com:arenadata/hive-spark2-horton.git
+cd hive-spark2-horton
+git checkout removeGPG
+
+HIVE_MAVEN_OPTS=" -Phadoop-2 -DskipTests"
+
+export MAVEN_OPTS="-Xmx1500m -Xms1500m"
+mvn ${HIVE_MAVEN_OPTS} clean install -Pdist "$@"
+
+cd ..
+
+
 BUILD_OPTS="-Divy.home=${HOME}/.ivy2 -Dsbt.ivy.home=${HOME}/.ivy2 -Duser.home=${HOME} \
             -Drepo.maven.org=$IVY_MIRROR_PROP \
             -Dreactor.repo=file://${HOME}/.m2/repository \
-            -Dhadoop.version=2.8.1 \
-            -Dyarn.version=2.8.1 \
             -Dprotobuf.version=2.5.0 \
             -DrecompileMode=all \
-            -Pyarn -Phadoop-2.7 \
+            -Pyarn -Phadoop-3.1 \
             -Phive -Phive-thriftserver \
             -Psparkr \
             $SPARK_BUILD_OPTS"
 
+            
 export MAVEN_OPTS="-Xmx1536m"
 
 ./dev/make-distribution.sh --r $BUILD_OPTS -DskipTests
