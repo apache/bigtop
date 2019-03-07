@@ -56,6 +56,7 @@ Source6: init.d.tmpl
 Source7: spark-history-server.svc
 Source8: spark-thriftserver.svc
 Source9: bigtop.bom
+
 #BIGTOP_PATCH_FILES
 Requires: bigtop-utils >= 0.7, hadoop-client, hadoop-yarn
 Requires(preun): /sbin/service
@@ -150,6 +151,16 @@ Group: Development/Libraries
 
 %description -n spark-sparkr
 SparkR is an R package that provides a light-weight frontend to use Apache Spark from R.
+
+%package -n spark-standalone-metastore
+Summary: Package hosts a metadata server for Hive clients across a network to use
+Group: Development/Libraries
+Requires: spark-core = %{version}-%{release}
+
+%description -n spark-standalone-metastore
+Package hosts a metadata server for Hive clients across a network to use
+
+
 
 %prep
 %setup -n %{spark_name}-%{spark_base_version}
@@ -268,6 +279,11 @@ done
 %{lib_spark}/R
 %{lib_spark}/bin/sparkR
 %{bin}/sparkR
+
+
+%files -n spark-standalone-metastore
+%defattr(-,root,root,755)
+%{lib_spark}/standalone-metastore
 
 %define service_macro() \
 %files -n %1 \
