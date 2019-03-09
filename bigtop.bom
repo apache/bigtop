@@ -435,5 +435,17 @@ bigtop {
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }
+    'livy' {
+      name    = 'livy'
+      relNotes = 'Apache Livy'
+      version { base = '0.6.0'; pkg = base; release = 1 }
+      tarball { destination = "${name}-${version.base}.tar.gz"
+                source      = destination  }
+      git {
+        repo = "https://github.com/apache/incubator-livy.git"
+        ref = "v${version.base}-incubating"
+        dir  = "${name}-${version.pkg}"
+      }
+    }
   }
 }
