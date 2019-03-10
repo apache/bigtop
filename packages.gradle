@@ -61,8 +61,12 @@ def touchTargetFile = { fileName ->
 def ifExists = { url ->
   if (url == null) return
   URLConnection uCon = new URL(url).openConnection()
-  return (uCon as HttpURLConnection).responseCode == 200
-}
+  try {
+    return (uCon as HttpURLConnection).responseCode == 200
+  } catch(Exception e) {
+    return false
+  }
+}    
 def safeDelete = { fileName ->
   exec {
     workingDir '.'
