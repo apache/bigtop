@@ -256,10 +256,11 @@ def genTasks = { target ->
     def final TARBALL_DST = config.bigtop.components[target].tarball.destination
     def final DOWNLOAD_DST = config.bigtop.components[target].downloaddst ?: ""
     def final SEED_TAR = config.bigtop.components[target].seedtar
+    def final DO_NOT_REPACK = config.bigtop.components[target].tarball.donotrepack ?: false
 
     safeDelete(TAR_DIR); mkdir(TAR_DIR)
 
-    if (TARBALL_SRC.isEmpty() || TARBALL_SRC.endsWith('.zip')) {
+    if (TARBALL_SRC.isEmpty() || (TARBALL_SRC.endsWith('.zip') && !DO_NOT_REPACK)) {
       if (TARBALL_SRC.isEmpty()) {
         // if no tar file needed (i.e. bigtop-utils)
         // create some contents to pack later
