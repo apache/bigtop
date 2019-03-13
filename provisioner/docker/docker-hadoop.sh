@@ -17,20 +17,29 @@
 
 usage() {
     echo "usage: $PROG [-C file] args"
-    echo "       -C file                                   Use alternate file for config.yaml"
+    echo "       -C file                                   - Use alternate file for config.yaml"
     echo "  commands:"
-    echo "       -c NUM_INSTANCES, --create NUM_INSTANCES  Create a Docker based Bigtop Hadoop cluster"
-    echo "       -d, --destroy                             Destroy the cluster"
-    echo "       -e, --exec INSTANCE_NO|INSTANCE_NAME      Execute command on a specific instance. Instance can be specified by name or number."
-    echo "                                                 For example: $PROG --exec 1 bash"
-    echo "                                                              $PROG --exec docker_bigtop_1 bash"
-    echo "       -E, --env-check                           Check whether required tools has been installed"
-    echo "       -l, --list                                List out container status for the cluster"
-    echo "       -p, --provision                           Deploy configuration changes"
-    echo "       -n, --nexus [NEXUS_URL]                   Configure Nexus proxy to speed up test execution"
-    echo "                                                 If no NEXUS_URL specified, default to http://NEXUS_IP:8081/nexus,"
-    echo "                                                 where NEXUS_IP is the ip of the container named nexus"
-    echo "       -s, --smoke-tests                         Run Bigtop smoke tests"
+    echo "       -c NUM_INSTANCES, --create NUM_INSTANCES  - Create a Docker based Bigtop Hadoop cluster"
+    echo "       -d, --destroy                             - Destroy the cluster"
+    echo "       -e, --exec INSTANCE_NO|INSTANCE_NAME      - Execute command on a specific instance. Instance can be specified by name or number"
+    echo "                                                   For example: $PROG --exec 1 bash"
+    echo "                                                                $PROG --exec docker_bigtop_1 bash"
+    echo "       -E, --env-check                           - Check whether required tools has been installed"
+    echo "       -k, --stack COMPONENTS                    - Overwrite the components to deploy defined in config file"
+    echo "                                                   COMPONENTS is a comma separated string"
+    echo "                                                   For example: $PROG -c 3 --stack hdfs"
+    echo "                                                                $PROG -c 3 --stack 'hdfs, yarn, spark'"
+    echo "       -l, --list                                - List out container status for the cluster"
+    echo "       -n, --nexus NEXUS_URL                     - Configure Nexus proxy to speed up test execution"
+    echo "                                                   NEXUS_URL is optional. If not specified, default to http://NEXUS_IP:8081/nexus"
+    echo "                                                   Where NEXUS_IP is the ip of container named nexus"
+    echo "       -p, --provision                           - Deploy configuration changes"
+    echo "       -r, --enable-local-repo                   - Whether to use repo created at local file system. You can get one by $ ./gradlew repo"
+    echo "       -s, --smoke-tests COMPONENTS              - Run Bigtop smoke tests"
+    echo "                                                   COMPONENTS is optional. If not specified, default to smoke_test_components in config file"
+    echo "                                                   COMPONENTS is a comma separated string"
+    echo "                                                   For example: $PROG -c 3 --smoke-tests hdfs"
+    echo "                                                                $PROG -c 3 --smoke-tests 'hdfs, yarn, mapreduce'"
     echo "       -h, --help"
     exit 1
 }
@@ -47,7 +56,9 @@ create() {
     echo > ./config/hiera.yaml
     echo > ./config/hosts
     # set correct image name based on running architecture
-    image_name=$(get-yaml-config docker image)
+    if [ -z ${image_name+x} ]; then
+        image_name=$(get-yaml-config docker image)
+    fi
     running_arch=$(uname -m)
     if [ "x86_64" == ${running_arch} ]; then
         image_name=${image_name}
@@ -74,7 +85,9 @@ create() {
         components="[`echo $(get-yaml-config components) | sed 's/ /, /g'`]"
     fi
     distro=$(get-yaml-config distro)
-    enable_local_repo=$(get-yaml-config enable_local_repo)
+    if [ -z ${enable_local_repo+x} ]; then
+        enable_local_repo=$(get-yaml-config enable_local_repo)
+    fi
     generate-config "$hadoop_head_node" "$repo" "$components"
 
     # Start provisioning
@@ -268,6 +281,20 @@ while [ $# -gt 0 ]; do
     -E|--env-check)
         env-check
         shift;;
+    -k|--stack)
+        if [ $# -lt 2 ]; then
+          log "No stack specified"
+          usage
+        fi
+        components="[$2]"
+        shift 2;;
+    -i|--image)
+        if [ $# -lt 2 ]; then
+          log "No image specified"
+          usage
+        fi
+        image_name=$2
+        shift 2;;
     -l|--list)
         list
         shift;;
@@ -285,15 +312,11 @@ while [ $# -gt 0 ]; do
             shift 2
         fi
         ;;
-    -k|--stack)
-        if [ $# -lt 2 ]; then
-          log "No stack specified"
-          usage
-        fi
-        components="[$2]"
-        shift 2;;
     -p|--provision)
         provision
+        shift;;
+    -r|--enable-local-repo)
+        enable_local_repo=true
         shift;;
     -s|--smoke-tests)
         if [ $# -lt 2 ] || [[ $2 == -* ]]; then
