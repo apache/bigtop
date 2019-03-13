@@ -1,0 +1,32 @@
+diff --git a/spark/scala-2.10/src/main/scala/org/apache/zeppelin/spark/SparkScala210Interpreter.scala b/spark/scala-2.10/src/main/scala/org/apache/zeppelin/spark/SparkScala210Interpreter.scala
+index 995ee1539..9d2ac83e0 100644
+--- a/spark/scala-2.10/src/main/scala/org/apache/zeppelin/spark/SparkScala210Interpreter.scala
++++ b/spark/scala-2.10/src/main/scala/org/apache/zeppelin/spark/SparkScala210Interpreter.scala
+@@ -67,7 +67,6 @@ class SparkScala210Interpreter(override val conf: SparkConf,
+     settings.embeddedDefaults(Thread.currentThread().getContextClassLoader())
+     settings.usejavacp.value = true
+     settings.classpath.value = getUserJars.mkString(File.pathSeparator)
+-    sparkILoop = new SparkILoop(null, new JPrintWriter(Console.out, true))
+     if (printReplOutput) {
+       Console.setOut(interpreterOutput)
+     }
+diff --git a/r/src/main/scala/org/apache/spark/api/r/RBackendHelper.scala b/r/src/main/scala/org/apache/spark/api/r/RBackendHelper.scala
+index 9c1eb38d5..155f645dc 100644
+--- a/r/src/main/scala/org/apache/spark/api/r/RBackendHelper.scala
++++ b/r/src/main/scala/org/apache/spark/api/r/RBackendHelper.scala
+@@ -30,7 +30,7 @@ class RBackendHelper(val backend : RBackend) {
+   var port : Int = 0
+
+   def init() : Int = {
+-    port = backend.init()
++    port = backend.init()._1
+     port
+   }
+
+@@ -81,4 +81,4 @@ Its for testing purposes and should never be called
+
+   def apply() : RBackendHelper = new RBackendHelper(new RBackend())
+
+-}
+\ No newline at end of file
++}
