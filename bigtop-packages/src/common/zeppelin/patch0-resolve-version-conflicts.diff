@@ -1,0 +1,69 @@
+diff --git a/pom.xml b/pom.xml
+index 61646d655..f98b42cc4 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -264,6 +264,38 @@
+         <version>${shiro.version}</version>
+       </dependency>
+
++      <!-- Resolve dependency conflicts -->
++      <dependency>
++              <groupId>org.codehaus.jackson</groupId>
++              <artifactId>jackson-mapper-asl</artifactId>
++              <version>1.9.13</version>
++      </dependency>
++      <dependency>
++              <groupId>org.codehaus.jackson</groupId>
++              <artifactId>jackson-core-asl</artifactId>
++              <version>1.9.13</version>
++      </dependency>
++      <dependency>
++              <groupId>org.apache.zookeeper</groupId>
++              <artifactId>zookeeper</artifactId>
++              <version>3.4.6</version>
++      </dependency>
++      <dependency>
++              <groupId>com.amazonaws</groupId>
++              <artifactId>aws-java-sdk-s3</artifactId>
++              <version>1.10.62</version>
++      </dependency>
++      <dependency>
++              <groupId>com.amazonaws</groupId>
++              <artifactId>aws-java-sdk-core</artifactId>
++              <version>1.10.62</version>
++      </dependency>
++      <dependency>
++          <groupId>com.nimbusds</groupId>
++          <artifactId>nimbus-jose-jwt</artifactId>
++          <version>4.41.2</version>
++      </dependency>
++
+       <!-- Test libraries -->
+       <dependency>
+         <groupId>junit</groupId>
+diff --git a/spark/pom.xml b/spark/pom.xml
+index f461fea56..dfe328f46 100644
+--- a/spark/pom.xml
++++ b/spark/pom.xml
+@@ -45,8 +45,8 @@
+         <plugin.shade.version>2.4.1</plugin.shade.version>
+         <plugin.scala.version>2.15.2</plugin.scala.version>
+         <!-- spark versions -->
+-        <spark.version>2.2.0</spark.version>
+-        <py4j.version>0.10.4</py4j.version>
++        <spark.version>2.2.3</spark.version>
++        <py4j.version>0.10.7</py4j.version>
+
+         <spark.archive>spark-${spark.version}</spark.archive>
+         <spark.src.download.url>
+@@ -213,8 +213,8 @@
+         <profile>
+             <id>spark-2.2</id>
+             <properties>
+-                <spark.version>2.2.1</spark.version>
+-                <py4j.version>0.10.4</py4j.version>
++                <spark.version>2.2.3</spark.version>
++                <py4j.version>0.10.7</py4j.version>
+             </properties>
+             <activation>
+                 <activeByDefault>true</activeByDefault>

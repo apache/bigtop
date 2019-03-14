@@ -51,6 +51,7 @@ Source3: init.d.tmpl
 Source4: install_zeppelin.sh
 Source5: zeppelin-env.sh
 Source6: zeppelin.svc
+#BIGTOP_PATCH_FILES
 Requires: bigtop-utils >= 0.7, hadoop-client, spark-core >= 1.5, spark-python >= 1.5
 Requires(preun): /sbin/service
 AutoReq: no
@@ -76,6 +77,8 @@ You can make beautiful data-driven, interactive and collaborative documents with
 
 %prep
 %setup -n %{name}-%{zeppelin_base_version}
+
+#BIGTOP_PATCH_COMMANDS
 
 %build
 bash $RPM_SOURCE_DIR/do-component-build
