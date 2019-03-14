@@ -257,10 +257,36 @@ task "toolchain-devtools"(type:Exec,
 }
 
 task "docker-provisioner"(type:Exec,
-    description: 'Provision a Bigtop cluster on Docker container(s). Default to CentOS and 1 node.\nCreate a 3 node cluster:\n  $ ./gradlew -Pnum_instances=3 docker-provisioner\nRun smoke tests on 3 node cluster:\n  $ ./gradlew -Pnum_instances=3 -Prun_smoke_tests=true docker-provisioner\nSpecify configuration file (located in provisioner/docker/):\n  $ ./gradlew -Pconfig=config_debian8.yaml docker-provisioner',
+    description: '''
+Provision a Bigtop stack cluster on Docker container(s). Default to CentOS and 1 node.
+Properties:
+  -Pconfig=[CONFIG_FILE] (located under provisioner/docker/)
+  -Penable_local_repo
+  -Pimage=[DOCKER_IMAGE] (overwrites -POS and -Pprefix)
+  -Pnum_instances=[NUM_INSTANCES]
+  -Pnexus=[NEXUS_URL] (NEXUS_URL is optional)
+  -POS=[centos-7|fedora-26|debian-9|ubuntu-16.04|opensuse-42.3]
+  -Pprefix=[trunk|1.2.1|1.2.0|1.1.0|...]
+  -Prun_smoke_tests (run test components defined in config file)
+  -Psmoke_tests=[COMPONENTS]
+  -Pstack=[COMPONENTS]
+
+For detailed explaination, please refer to the helper message:
+  $ provisioner/docker/docker-hadoop.sh --help
+
+Examples:
+Create a 3 node cluster:
+  $ ./gradlew -Pnum_instances=3 docker-provisioner
+Run smoke tests on 3 node cluster:
+  $ ./gradlew -Pnum_instances=3 -Prun_smoke_tests docker-provisioner
+Specify custom configuration file:
+  $ ./gradlew -Pconfig=config_debian-9.yaml docker-provisioner
+''',
     group: DEPLOY_GROUP) {
   def _config = project.hasProperty("config") ? config : "config.yaml"
   def _num_instances = project.hasProperty("num_instances") ? num_instances : 1
+  def _OS = project.hasProperty("OS") ? OS : 'centos-7'
+  def _prefix = project.hasProperty("prefix") ? prefix : 'trunk'
   def command = [
       './docker-hadoop.sh',
       '-C', _config,
@@ -279,6 +305,18 @@ task "docker-provisioner"(type:Exec,
   }
   if ( project.hasProperty("nexus") ) {
     command.add('--nexus')
+    command.add("${nexus}")
+  }
+  if ( project.hasProperty("enable_local_repo") ) {
+    command.add('--enable-local-repo')
+  }
+  if (project.hasProperty("OS") || project.hasProperty("prefix")) {
+    command.add('--image')
+    command.add("bigtop/puppet:${_prefix}-${_OS}")
+  }
+  if (project.hasProperty("image")) {
+    command.add('--image')
+    command.add("${image}")
   }
   workingDir 'provisioner/docker'
   commandLine command
@@ -450,10 +488,14 @@ allprojects {
 }
 
 task "bigtop-puppet"(type:Exec,
-    description: 'Build bigtop/puppet images.\n' +
-      'Usage:\n  $ ./gradlew -POS=[centos-7|fedora-26|debian-9|ubuntu-16.04|opensuse-42.3] -Pprefix=STRING_TO_PREFIX bigtop-puppet\n' +
-      'Example:\n  $ ./gradlew -POS=debian-9 -Pprefix=1.0.0 bigtop-puppet\n' +
-      'The built image name: bigtop/puppet:1.0.0-debian-9',
+    description: '''
+Build bigtop/puppet images
+Usage:
+  $ ./gradlew -POS=[centos-7|fedora-26|debian-9|ubuntu-16.04|opensuse-42.3] -Pprefix=[trunk|1.2.1|1.2.0|1.1.0|...] bigtop-puppet
+Example:
+  $ ./gradlew -POS=debian-9 -Pprefix=1.0.0 bigtop-puppet
+  The built image name: bigtop/puppet:1.0.0-debian-9
+      ''',
     group: DOCKERBUILD_GROUP) {
   def _prefix = project.hasProperty("prefix") ? prefix : "trunk"
   def _OS = project.hasProperty("OS") ? OS : "centos-7"
@@ -465,10 +507,14 @@ task "bigtop-puppet"(type:Exec,
 }
 
 task "bigtop-slaves"(type:Exec,
-    description: 'Build bigtop/slaves images.\n' +
-      'Usage:\n  $ ./gradlew -POS=[centos-7|fedora-26|debian-9|ubuntu-16.04|opensuse-42.3] -Pprefix=STRING_TO_PREFIX bigtop-slaves\n' +
-      'Example:\n  $ ./gradlew -POS=debian-9 -Pprefix=1.0.0 bigtop-slaves\n' +
-      'The built image name: bigtop/slaves:1.0.0-debian-9',
+    description: '''
+Build bigtop/slaves images
+Usage:
+  $ ./gradlew -POS=[centos-7|fedora-26|debian-9|ubuntu-16.04|opensuse-42.3] -Pprefix=[trunk|1.2.1|1.2.0|1.1.0|...] bigtop-slaves
+Example:
+  $ ./gradlew -POS=debian-9 -Pprefix=1.0.0 bigtop-slaves
+  The built image name: bigtop/slaves:1.0.0-debian-9
+      ''',
     group: DOCKERBUILD_GROUP) {
   def _prefix = project.hasProperty("prefix") ? prefix : "trunk"
   def _OS = project.hasProperty("OS") ? OS : "centos-7"
