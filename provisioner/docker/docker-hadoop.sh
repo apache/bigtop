@@ -161,6 +161,10 @@ smoke-tests() {
 }
 
 destroy() {
+    if [ -z ${PROVISION_ID+x} ]; then
+        echo "No cluster exists!"
+        exit 1
+    fi
     docker exec ${NODES[0]} bash -c "umount /etc/hosts; rm -f /etc/hosts"
     if [ -n "$PROVISION_ID" ]; then
         docker-compose -p $PROVISION_ID stop
