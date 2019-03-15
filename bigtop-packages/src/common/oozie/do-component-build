@@ -82,9 +82,9 @@ sed -i.bak "/http:\/\/repository.codehaus.org/a\\
                 <enabled>false</enabled>\\
             </releases>" ${WORKDIR}/pom.xml
 
-export MAVEN_OPTS="-Xmx1024m"
+export MAVEN_OPTS="-Xmx512m"
 # Invoke Oozie build script
-${WORKDIR}/bin/mkdistro.sh -DjavaVersion=${JDK_VERSION} -DskipTests -Dmaven.test.skip=true -Puber -Dhadoop.version=${HADOOP_VERSION} -Dhadoop.auth.version=${HADOOP_VERSION} -Dhive.version=${HIVE_VERSION} -Dpig.version=${PIG_VERSION} -Dsqoop.version=${SQOOP_VERSION} -Dsqoop.classifier=hadoop260 -Dspark.version=${SPARK_VERSION} -Dspark.scala.binary.version=2.11 ${EXTRA_GOALS} -Dmaven.repo.local=${HOME}/.m2/repository "$@"
+${WORKDIR}/bin/mkdistro.sh -DjavaVersion=${JDK_VERSION} -DskipTests -Phadoop-2 -Puber -Dhadoop.version=2.8.5 -Dhadoop.auth.version=2.8.5 -Dhive.version=1.2.0 -Dpig.version=${PIG_VERSION} -Dsqoop.version=${SQOOP_VERSION}  -Dsqoop.classifier=hadoop260 -Dspark.version=${SPARK_VERSION} -Dspark.scala.binary.version=2.11 ${EXTRA_GOALS} -Dmaven.repo.local=${HOME}/.m2/repository "$@"
 MKDISTRO_RESULT=$?
 if [ "${MKDISTRO_RESULT}" != "0" ]; then
   echo "ERROR: mkdistro.sh failed with error ${MKDISTRO_RESULT}"

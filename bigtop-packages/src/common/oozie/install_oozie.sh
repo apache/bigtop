@@ -211,7 +211,7 @@ mkdir ${WEBAPP_DIR}
 mv -f ${WEBAPP_DIR}/WEB-INF/lib/* ${SERVER_LIB_DIR}/lib/
 cp ${BUILD_DIR}/oozie.war ${SERVER_LIB_DIR}/oozie.war
 zip -d ${SERVER_LIB_DIR}/oozie.war  WEB-INF/lib/jsp-api*jar
-#zip -d ${SERVER_LIB_DIR}/oozie.war  WEB-INF/lib/servlet-api*jar
+zip -d ${SERVER_LIB_DIR}/oozie.war  WEB-INF/lib/servlet-api*jar
 
 install -m 0755 ${EXTRA_DIR}/tomcat-deployment.sh ${SERVER_LIB_DIR}/tomcat-deployment.sh
 
