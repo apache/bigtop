@@ -13,6 +13,7 @@ index 6e7da6dc6..298e0b1ca 100644
 +        <py4j.version>0.10.7</py4j.version>
        </properties>
      </profile>
+
 diff --git a/r/src/main/scala/org/apache/spark/api/r/RBackendHelper.scala b/r/src/main/scala/org/apache/spark/api/r/RBackendHelper.scala
 index 9c1eb38d5..155f645dc 100644
 --- a/r/src/main/scala/org/apache/spark/api/r/RBackendHelper.scala
