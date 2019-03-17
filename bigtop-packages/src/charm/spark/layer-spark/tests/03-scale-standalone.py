@@ -47,10 +47,8 @@ class TestScaleStandalone(unittest.TestCase):
         time.sleep(120)
 
         spark0_unit = self.d.sentry['spark-test-scale'][0]
-        spark1_unit = self.d.sentry['spark-test-scale'][1]
         spark2_unit = self.d.sentry['spark-test-scale'][2]
         (stdout0, errcode0) = spark0_unit.run('grep spark.master /etc/spark/conf/spark-defaults.conf')
-        (stdout1, errcode1) = spark1_unit.run('grep spark.master /etc/spark/conf/spark-defaults.conf')
         (stdout2, errcode2) = spark2_unit.run('grep spark.master /etc/spark/conf/spark-defaults.conf')
         # ensure units agree on the master
         assert stdout0 == stdout2

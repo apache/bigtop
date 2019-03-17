@@ -111,7 +111,7 @@ bigtop {
   dependencies = [
     zookeeper:['hadoop', 'hbase'],
     hadoop:['ignite-hadoop', 'hbase', 'crunch', 'hive', 'tez', 'sqoop', 'sqoop2',
-      'oozie', 'mahout', 'flume', 'giraph', 'solr', 'spark','spark1',
+      'oozie', 'mahout', 'flume', 'giraph', 'solr', 'spark',
       'phoenix', 'alluxio', 'kafka', 'ycsb', 'hama', 'zeppelin',
       'tajo', 'apex'
     ],
@@ -269,17 +269,6 @@ bigtop {
       tarball { destination = "apache-$name-${version.base}-src.tar.gz"
                 source      = destination }
       url     { download_path = "/$name/$name-${version.base}/"
-                site = "${apache.APACHE_MIRROR}/${download_path}"
-                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
-    }
-    'spark1' {
-      name    = 'spark1'
-      pkg     = 'spark-core'
-      relNotes = 'Apache Spark'
-      version { base = '1.6.2'; pkg = base; release = 1 }
-      tarball { destination = "spark-${version.base}.tar.gz"
-                source      = "spark-${version.base}.tgz" }
-      url     { download_path = "/spark/spark-${version.base}"
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }

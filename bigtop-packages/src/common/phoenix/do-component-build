@@ -22,7 +22,7 @@ mvn -DskipTests \
     -Dhadoop-two.version=$HADOOP_VERSION  \
     -Dhbase.version=$HBASE_VERSION  \
     -Dflume.version=$FLUME_VERSION  \
-    -Dspark.version=${SPARK1_VERSION} \
+    -Dspark.version=${SPARK_VERSION} \
     -Dhive.version=${HIVE_VERSION}  \
     clean install "$@"
 rm -rf build
