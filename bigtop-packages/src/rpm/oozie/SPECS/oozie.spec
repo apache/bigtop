@@ -172,6 +172,9 @@ env DO_MAVEN_DEPLOY="" FULL_VERSION=%{oozie_base_version} bash -x %{SOURCE1}
 %__ln_s -f %{lib_hadoop}/client/hadoop-yarn-client.jar $RPM_BUILD_ROOT/%{lib_oozie}/lib/
 %__ln_s -f %{lib_hadoop}/client/hadoop-yarn-common.jar $RPM_BUILD_ROOT/%{lib_oozie}/lib/
 %__ln_s -f %{lib_hadoop}/client/hadoop-yarn-server-common.jar $RPM_BUILD_ROOT/%{lib_oozie}/lib/
+%__ln_s -f %{lib_hadoop}/client/woodstox-core.jar $RPM_BUILD_ROOT/%{lib_oozie}/lib/
+%__ln_s -f %{lib_hadoop}/client/stax2-api.jar $RPM_BUILD_ROOT/%{lib_oozie}/lib/
+
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/usr/bin
 

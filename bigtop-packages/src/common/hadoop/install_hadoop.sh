@@ -399,7 +399,7 @@ for DIR in ${HADOOP_DIR} ${HDFS_DIR} ${YARN_DIR} ${MAPREDUCE_DIR} ${HTTPFS_DIR} 
        name=${BASH_REMATCH[1]}
        ln -s $j hadoop-$name.jar
      fi
-   done)
+   done)   
 done
 
 # Now create a client installation area full of symlinks
@@ -413,3 +413,7 @@ for file in `cat ${BUILD_DIR}/hadoop-client.list` ; do
   done
   exit 1
 done
+
+cd ${HADOOP_DIR}/lib
+ln -s woodstox-core-*.jar woodstox-core.jar
+ln -s stax2-api-3.1.4.jar stax2-api.jar
