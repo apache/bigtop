@@ -416,4 +416,4 @@ done
 
 cd ${HADOOP_DIR}/lib
 ln -s woodstox-core-*.jar woodstox-core.jar
-ln -s stax2-api-3.1.4.jar stax2-api.jar
+ln -s stax2-api-*.jar stax2-api.jar
