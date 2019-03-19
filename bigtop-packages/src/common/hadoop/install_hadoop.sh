@@ -413,3 +413,7 @@ for file in `cat ${BUILD_DIR}/hadoop-client.list` ; do
   done
   exit 1
 done
+
+cd ${HADOOP_DIR}/lib
+ln -s woodstox-core-*.jar woodstox-core.jar
+ln -s stax2-api-*.jar stax2-api.jar
