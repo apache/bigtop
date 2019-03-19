@@ -399,7 +399,7 @@ for DIR in ${HADOOP_DIR} ${HDFS_DIR} ${YARN_DIR} ${MAPREDUCE_DIR} ${HTTPFS_DIR} 
        name=${BASH_REMATCH[1]}
        ln -s $j hadoop-$name.jar
      fi
-   done)   
+   done)
 done
 
 # Now create a client installation area full of symlinks
