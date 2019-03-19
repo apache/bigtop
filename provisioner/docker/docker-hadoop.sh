@@ -30,11 +30,13 @@ usage() {
     echo "                                                   For example: $PROG -c 3 --stack hdfs"
     echo "                                                                $PROG -c 3 --stack 'hdfs, yarn, spark'"
     echo "       -l, --list                                - List out container status for the cluster"
+    echo "       -L, --enable-local-repo                   - Whether to use repo created at local file system. You can get one by $ ./gradlew repo"
+    echo "       -m, --memory MEMORY_LIMIT                 - Overwrite the memory_limit defined in config file"
     echo "       -n, --nexus NEXUS_URL                     - Configure Nexus proxy to speed up test execution"
     echo "                                                   NEXUS_URL is optional. If not specified, default to http://NEXUS_IP:8081/nexus"
     echo "                                                   Where NEXUS_IP is the ip of container named nexus"
     echo "       -p, --provision                           - Deploy configuration changes"
-    echo "       -r, --enable-local-repo                   - Whether to use repo created at local file system. You can get one by $ ./gradlew repo"
+    echo "       -r, --repo REPO_URL                       - Overwrite the yum/apt repo defined in config file"
     echo "       -s, --smoke-tests COMPONENTS              - Run Bigtop smoke tests"
     echo "                                                   COMPONENTS is optional. If not specified, default to smoke_test_components in config file"
     echo "                                                   COMPONENTS is a comma separated string"
@@ -66,7 +68,11 @@ create() {
         image_name=${image_name}-${running_arch}
     fi
     export DOCKER_IMAGE=${image_name}
-    export MEM_LIMIT=$(get-yaml-config docker memory_limit)
+
+    if [ -z ${memory_limit+x} ]; then
+        memory_limit=$(get-yaml-config docker memory_limit)
+    fi
+    export MEM_LIMIT=${memory_limit}
 
     # Startup instances
     docker-compose -p $PROVISION_ID up -d --scale bigtop=$1 --no-recreate
@@ -80,11 +86,15 @@ create() {
     hadoop_head_node=`docker inspect --format {{.Config.Hostname}}.{{.Config.Domainname}} ${NODES[0]}`
 
     # Fetch configurations form specificed yaml config file
-    repo=$(get-yaml-config repo)
+    if [ -z ${repo+x} ]; then
+        repo=$(get-yaml-config repo)
+    fi
     if [ -z ${components+x} ]; then
         components="[`echo $(get-yaml-config components) | sed 's/ /, /g'`]"
     fi
-    distro=$(get-yaml-config distro)
+    if [ -z ${distro+x} ]; then
+        distro=$(get-yaml-config distro)
+    fi
     if [ -z ${enable_local_repo+x} ]; then
         enable_local_repo=$(get-yaml-config enable_local_repo)
     fi
@@ -298,10 +308,33 @@ while [ $# -gt 0 ]; do
           usage
         fi
         image_name=$2
+        # Determine distro to bootstrap provisioning environment
+        case "${image_name}" in
+          *-centos-*|*-fedora-*|*-opensuse-*)
+            distro=centos
+            ;;
+          *-debian-*|*-ubuntu-*)
+            distro=debian
+            ;;
+          *)
+            echo "Unsupported distro [${image_name}]"
+            exit 1
+            ;;
+        esac
         shift 2;;
     -l|--list)
         list
         shift;;
+    -L|--enable-local-repo)
+        enable_local_repo=true
+        shift;;
+    -m|--memory)
+        if [ $# -lt 2 ]; then
+          log "No memory specified. Try --memory 4g"
+          usage
+        fi
+        memory_limit=$2
+        shift 2;;
     -n|--nexus)
         if [ $# -lt 2 ] || [[ $2 == -* ]]; then
             NEXUS_IP=`docker inspect --format "{{.NetworkSettings.IPAddress}}" nexus`
@@ -319,9 +352,13 @@ while [ $# -gt 0 ]; do
     -p|--provision)
         provision
         shift;;
-    -r|--enable-local-repo)
-        enable_local_repo=true
-        shift;;
+    -r|--repo)
+        if [ $# -lt 2 ]; then
+          log "No yum/apt repo specified"
+          usage
+        fi
+        repo=$2
+        shift 2;;
     -s|--smoke-tests)
         if [ $# -lt 2 ] || [[ $2 == -* ]]; then
             shift
