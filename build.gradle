@@ -263,10 +263,12 @@ Properties:
   -Pconfig=[CONFIG_FILE] (located under provisioner/docker/)
   -Penable_local_repo
   -Pimage=[DOCKER_IMAGE] (overwrites -POS and -Pprefix)
+  -Pmemory=[4g|8g|...]
   -Pnum_instances=[NUM_INSTANCES]
   -Pnexus=[NEXUS_URL] (NEXUS_URL is optional)
   -POS=[centos-7|fedora-26|debian-9|ubuntu-16.04|opensuse-42.3]
   -Pprefix=[trunk|1.2.1|1.2.0|1.1.0|...]
+  -Prepo=[REPO_URL]
   -Prun_smoke_tests (run test components defined in config file)
   -Psmoke_tests=[COMPONENTS]
   -Pstack=[COMPONENTS]
@@ -317,6 +319,14 @@ Specify custom configuration file:
   if (project.hasProperty("image")) {
     command.add('--image')
     command.add("${image}")
+  }
+  if (project.hasProperty("repo")) {
+    command.add('--repo')
+    command.add("${repo}")
+  }
+  if (project.hasProperty("memory")) {
+    command.add('--memory')
+    command.add("${memory}")
   }
   workingDir 'provisioner/docker'
   commandLine command
