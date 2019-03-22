@@ -20,7 +20,7 @@ SVC_USER="phoenix"
 WORKING_DIR="/usr/lib/phoenix"
 DAEMON_FLAGS=""
 CONF_DIR=""
-PIDFILE="/var/run/phoenix/${DAEMON}.pid"
+PIDFILE="/var/run/phoenix/${SVC_USER}-${DAEMON}.pid"
 
 generate_start() {
 
