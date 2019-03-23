@@ -44,7 +44,6 @@
     <module>giraph</module>
     <module>hue</module>
     <module>solr</module>
-    <module>crunch</module>
     <module>longevity</module>
     <module>hcatalog</module>
     <module>spark</module>
