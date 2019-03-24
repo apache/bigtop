@@ -15,6 +15,8 @@
 
 Bigtop Changelog
 
+* Release 1.5.0 (unreleased)
+
 * Release 1.4.0 (2019-03-24)
 
 * Release 1.3.0 (2018-8-16)
