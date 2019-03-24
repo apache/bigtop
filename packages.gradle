@@ -788,6 +788,10 @@ project.afterEvaluate {
       description: "Build all native packages for the stack components",
       group: PACKAGES_GROUP
   ) doLast { }
+  task "pkgs-ind" (dependsOn: tasks.findAll { alltask -> alltask.name.endsWith("-pkg-ind")}*.name,
+          description: "Build all native packages for the stack components inside Docker",
+          group: PACKAGES_GROUP
+  ) doLast { }
 
   task allclean (dependsOn: [clean, tasks.findAll { alltask -> alltask.name.endsWith("-clean")}*.name],
       description: "Removing $BUILD_DIR, $OUTPUT_DIR, and $DIST_DIR.\n\t\t" +
