@@ -1,8 +1,0 @@
-one,1,1 
-one,2,-3 
-two,4,5 
-two,2,6 
-two,1,7,9 
-three,0,-1 
-one,-5,10 
-one,-10,garbage

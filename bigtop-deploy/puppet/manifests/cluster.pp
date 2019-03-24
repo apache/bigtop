@@ -112,9 +112,6 @@ $roles_map = {
   giraph => {
     client => ["giraph-client"],
   },
-  crunch => {
-    client => ["crunch-client"],
-  },
   hive => {
     master => ["hive-server2", "hive-metastore"],
     client => ["hive-client"],
@@ -198,7 +195,6 @@ class node_with_roles ($roles = hiera("bigtop::roles")) inherits hadoop_cluster_
   $modules = [
     "alluxio",
     "apex",
-    "crunch",
     "flink",
     "giraph",
     "hadoop",

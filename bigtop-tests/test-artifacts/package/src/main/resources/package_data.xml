@@ -398,23 +398,6 @@ server.</description>
       <zookeeper>/self</zookeeper>
     </deps>
   </zookeeper-server>
-  <crunch>
-    <metadata>
-      <summary>Simple and Efficient MapReduce Pipelines.</summary>
-      <description>Apache Crunch is a Java library for writing, testing, and running
-MapReduce pipelines, based on Google's FlumeJava. Its goal is to make
-pipelines that are composed of many user-defined functions simple to write,
-easy to test, and efficient to run.</description>
-      <url>http://crunch.apache.org/</url>
-    </metadata>
-  </crunch>
-  <crunch-doc>
-    <metadata>
-      <summary>Apache Crunch documentation</summary>
-      <description>Apache Crunch documentation</description>
-      <url>http://crunch.apache.org/</url>
-    </metadata>
-  </crunch-doc>
   <hive-hcatalog>
     <metadata>
       <summary>Apache Hcatalog is a data warehouse infrastructure built on top of Hadoop</summary>

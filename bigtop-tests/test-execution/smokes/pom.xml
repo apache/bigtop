@@ -44,7 +44,6 @@
     <mahout-smoke.version>${project.version}</mahout-smoke.version>
     <oozie-smoke.version>${project.version}</oozie-smoke.version>
     <giraph-smoke.version>${project.version}</giraph-smoke.version>
-    <crunch-smoke.version>${project.version}</crunch-smoke.version>
     <hue-smoke.version>${project.version}</hue-smoke.version>
     <package-smoke.version>${project.version}</package-smoke.version>
     <solr-smoke.version>${project.version}</solr-smoke.version>
@@ -63,7 +62,6 @@
     <module>mahout</module>
     <module>giraph</module>
     <module>hue</module>
-    <module>crunch</module>
     <!--
     <module>httpfs</module>
     <module>flume</module>
@@ -116,12 +114,6 @@
         <groupId>org.apache.bigtop.itest</groupId>
         <artifactId>giraph-smoke</artifactId>
         <version>${giraph-smoke.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.bigtop.itest</groupId>
-        <artifactId>crunch-smoke</artifactId>
-        <version>${crunch-smoke.version}</version>
         <scope>test</scope>
       </dependency>
       <dependency>
