@@ -136,7 +136,7 @@ hadoop_cluster_node::cluster_components:
   - spark
   - yarn
   - zookeeper
-bigtop::bigtop_repo_uri: "http://repos.bigtop.apache.org/releases/1.3.0/ubuntu/16.04/x86_64"
+bigtop::bigtop_repo_uri: "http://repos.bigtop.apache.org/releases/1.4.0/ubuntu/16.04/x86_64"
 ```
 
 And finally execute
