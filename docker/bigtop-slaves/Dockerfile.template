@@ -19,6 +19,6 @@ MAINTAINER dev@bigtop.apache.org
 
 COPY bigtop_toolchain PUPPET_MODULES
 
-RUN  UPDATE_SOURCE && puppet apply -e "include bigtop_toolchain::installer"
+RUN  UPDATE_SOURCE && puppet apply -e "include bigtop_toolchain::installer" || if [ $? -ne 2 ]; then exit 1; fi
 COPY . /tmp/bigtop
 RUN cd /tmp/bigtop && ./gradlew && cd && rm -rf /tmp/*
