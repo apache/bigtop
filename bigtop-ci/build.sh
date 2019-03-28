@@ -86,6 +86,7 @@ RESULT=$?
 
 # save result
 mkdir -p output
+docker cp $CONTAINER_ID:/bigtop/build .
 docker cp $CONTAINER_ID:/bigtop/output .
 docker rm -f $CONTAINER_ID
 

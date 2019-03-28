@@ -268,7 +268,7 @@ Properties:
   -Pnexus=[NEXUS_URL] (NEXUS_URL is optional)
   -POS=[centos-7|fedora-26|debian-9|ubuntu-16.04|opensuse-42.3]
   -Pprefix=[trunk|1.2.1|1.2.0|1.1.0|...]
-  -Prepo=[REPO_URL]
+  -Prepository=[REPO_URL]
   -Prun_smoke_tests (run test components defined in config file)
   -Psmoke_tests=[COMPONENTS]
   -Pstack=[COMPONENTS]
@@ -320,9 +320,9 @@ Specify custom configuration file:
     command.add('--image')
     command.add("${image}")
   }
-  if (project.hasProperty("repo")) {
+  if (project.hasProperty("repository")) {
     command.add('--repo')
-    command.add("${repo}")
+    command.add("${repository}")
   }
   if (project.hasProperty("memory")) {
     command.add('--memory')

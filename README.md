@@ -59,30 +59,6 @@ There are lots of ways to contribute.  People with different expertise can help 
 
 Also, opening [JIRA's](https://issues.apache.org/jira/browse/BIGTOP) and getting started by posting on the mailing list is helpful.
 
-CTR model
-=========
-
-Bigtop supports Commit-Then-Review model of development. The following
-rules will be used for the CTR process:
-  * a committer can go ahead and commit the patch without mandatory review if
-    felt confident in its quality (e.g. reasonable testing has been done
-    locally; all compilations pass; RAT check is passed; the patch follows
-    coding guidelines)
-  * a committer is encouraged to seek peer-review and/or advice before hand if
-    there're doubts in the approach taken, design decision, or implementation
-    details
-  * a committer should keep an eye on the official CI builds at
-    https://ci.bigtop.apache.org/view/Packages/job/Bigtop-trunk-packages/ (Bigtop-trunk-packages builds)
-    to make sure that committed changes haven't break anything. In
-    which case the committer should take a timely effort to resolve the issues
-    and unblock the others in the community
-  * any non-document patch is required to be opened for at least 24 hours for
-    community feedback before it gets committed unless it has an explicit +1
-    from another committer
-  * any non-document patch needs to address all the comment and reach consensus
-    before it gets committed without a +1 from other committers
-  * there's no changes in the JIRA process, except as specified above
-
 What do people use Apache Bigtop for?
 ==============================
 
@@ -273,7 +249,7 @@ And `base_version` is to overwrite:
 Example for Kafka:
 
 ```
-./gradlew kafka-pkg -Pgit_repo=https://github.com/apache/kafka.git -Pgit_ref=1.1 -Pgit_sha1=4dae083af486eaedd27c69c973c74605bffd416b -Pbase_version=1.1.1 --info
+./gradlew kafka-pkg-ind -Pgit_repo=https://github.com/apache/kafka.git -Pgit_ref=trunk -Pgit_commit_hash=dc0601a1c604bea3f426ed25b6c20176ff444079 -Pbase_version=2.2.0
 ```
 
 You can mix both ways to build from Git, but command line always overwrites `bigtop.bom`.
