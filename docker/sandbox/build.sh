@@ -65,8 +65,7 @@ generate_tag() {
 
 detect_repo() {
     OS_SEP_BY_SLASH=${OS/-//}
-    ARCH=$(docker run --rm bigtop/puppet:${PREFIX}-${OS}${ARCH_SUFFIX} facter architecture)
-    REPO=${REPO:-"http://repos.bigtop.apache.org/releases/${PREFIX}/${OS_SEP_BY_SLASH}/$ARCH"}
+    REPO=${REPO:-"http://repos.bigtop.apache.org/releases/${PREFIX}/${OS_SEP_BY_SLASH}/$ARCH_FOR_PKG"}
 }
 
 image_config_validator() {
@@ -177,7 +176,10 @@ while [ $# -gt 0 ]; do
         fi
         OS=$2
         running_arch=$(uname -m)
-        if [ "x86_64" != ${running_arch} ]; then
+        if [ "x86_64" == "${running_arch}" ]; then
+            ARCH_FOR_PKG="amd64"
+        else
+            ARCH_FOR_PKG="arm64"
             ARCH_SUFFIX="-${running_arch}"
         fi
         shift 2;;
