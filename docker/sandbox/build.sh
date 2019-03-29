@@ -46,7 +46,7 @@ EOF
 
 generate_dockerfile() {
     cat > Dockerfile << EOF
-FROM bigtop/puppet:${OS}
+FROM bigtop/puppet:${PREFIX}-${OS}${ARCH_SUFFIX}
 ADD startup.sh /startup.sh
 ADD bigtop-puppet /bigtop-puppet
 ADD bigtop-puppet/hiera.yaml /etc/puppet/hiera.yaml
@@ -59,13 +59,14 @@ EOF
 
 generate_tag() {
     if [ -z "$TAG" ]; then
-        TAG="${OS}_`echo ${COMPONENTS//,/_} | tr -d ' '`"
+        TAG="${PREFIX}-${OS}_`echo ${COMPONENTS//,/_} | tr -d ' '`"
     fi
 }
 
 detect_repo() {
     OS_SEP_BY_SLASH=${OS/-//}
-    REPO=${REPO:-"http://repos.bigtop.apache.org/releases/${BIGTOP_VERSION}/${OS_SEP_BY_SLASH}/$HOSTTYPE"}
+    ARCH=$(docker run --rm bigtop/puppet:${PREFIX}-${OS}${ARCH_SUFFIX} facter architecture)
+    REPO=${REPO:-"http://repos.bigtop.apache.org/releases/${PREFIX}/${OS_SEP_BY_SLASH}/$ARCH"}
 }
 
 image_config_validator() {
@@ -76,6 +77,10 @@ image_config_validator() {
     fi
     if [ -z "$OS" ]; then
         echo "operating system unset!"
+        invalid=0
+    fi
+    if [ -z "$PREFIX" ]; then
+        echo "prefix unset!"
         invalid=0
     fi
     if [ -z "$TAG" ]; then
@@ -106,6 +111,7 @@ show_image_configs() {
     echo "-------------------------------------------------"
     echo "IMAGE CONFIGS:"
     echo "ACCOUNT    $ACCOUNT"
+    echo "PREFIX     $PREFIX"
     echo "OS         $OS"
     echo "TAG        $TAG"
     echo "IMAGE      $ACCOUNT/sandbox:$TAG"
@@ -135,6 +141,8 @@ usage() {
     echo "       -o, --operating-system                   Specify an OS from Bigtop supported OS list."
     echo "                                                    RPM base: ${RPMS[*]}"
     echo "                                                    DEB base: ${DEBS[*]}"
+    echo "       -p, --prefix                             Specify prefix for image."
+    echo "                                                    Example: trunk|1.2.0|1.2.1|1.3.0|1.4.0|..."
     echo "       -t, --tag                                Specify tag for image."
     echo "                                                    If not specified, this will be auto filled by specified OS and components."
     exit 1
@@ -168,6 +176,16 @@ while [ $# -gt 0 ]; do
             usage
         fi
         OS=$2
+        running_arch=$(uname -m)
+        if [ "x86_64" != ${running_arch} ]; then
+            ARCH_SUFFIX="-${running_arch}"
+        fi
+        shift 2;;
+    -p|--prefix)
+        if [ $# -lt 2 ]; then
+            usage
+        fi
+        PREFIX=$2
         shift 2;;
     -t|--tag)
         if [ $# -lt 2 ]; then
