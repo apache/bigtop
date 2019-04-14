@@ -173,14 +173,14 @@ smoke-tests() {
 destroy() {
     if [ -z ${PROVISION_ID+x} ]; then
         echo "No cluster exists!"
-        exit 0
+    else
+        docker exec ${NODES[0]} bash -c "umount /etc/hosts; rm -f /etc/hosts"
+        if [ -n "$PROVISION_ID" ]; then
+            docker-compose -p $PROVISION_ID stop
+            docker-compose -p $PROVISION_ID rm -f
+        fi
+        rm -rvf ./config .provision_id .error_msg*
     fi
-    docker exec ${NODES[0]} bash -c "umount /etc/hosts; rm -f /etc/hosts"
-    if [ -n "$PROVISION_ID" ]; then
-        docker-compose -p $PROVISION_ID stop
-        docker-compose -p $PROVISION_ID rm -f
-    fi
-    rm -rvf ./config .provision_id .error_msg*
 }
 
 bigtop-puppet() {
