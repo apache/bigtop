@@ -191,8 +191,6 @@ hadoop::common::tez_jars: "/usr/lib/tez"
 #kafka
 kafka::server::port: "9092"
 kafka::server::zookeeper_connection_string: "%{hiera('bigtop::hadoop_head_node')}:2181"
-# Set to 3 for production deployment
-# kafka::server::offsets_topic_replication_factor: 3
 
 zeppelin::server::spark_master_url: "yarn-client"
 zeppelin::server::hiveserver2_url: "jdbc:hive2://%{hiera('hadoop-hive::common::hiveserver2_host')}:%{hiera('hadoop-hive::common::hiveserver2_port')}"

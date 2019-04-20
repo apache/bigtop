@@ -1,0 +1,13 @@
+diff --git a/pom.xml b/pom.xml
+index 3c82a47..bdd998d 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -58,7 +58,7 @@ limitations under the License.
+     <commons-collections.version>3.2.2</commons-collections.version>
+     <commons-compress.version>1.4.1</commons-compress.version>
+     <commons-dbcp.version>1.4</commons-dbcp.version>
+-    <commons-io.version>2.1</commons-io.version>
++    <commons-io.version>2.4</commons-io.version>
+     <commons-lang.version>2.5</commons-lang.version>
+     <curator.version>2.6.0</curator.version>
+     <derby.version>10.11.1.1</derby.version>
