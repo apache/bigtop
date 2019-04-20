@@ -27,8 +27,6 @@ class kafka {
       $bind_addr = undef,
       $port = "9092",
       $zookeeper_connection_string = "localhost:2181",
-      # Default to 1 for less than 3 nodes deployment to work.
-      $offsets_topic_replication_factor = 1,
     ) {
 
     package { 'kafka':
