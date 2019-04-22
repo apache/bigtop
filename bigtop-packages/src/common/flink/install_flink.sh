@@ -102,7 +102,6 @@ install -d -m 0755 $PREFIX/$LIB_DIR
 install -d -m 0755 $PREFIX/$LIB_DIR/bin
 install -d -m 0755 $PREFIX/$LIB_DIR/lib
 install -d -m 0755 $PREFIX/$LIB_DIR/examples
-install -d -m 0755 $PREFIX/$LIB_DIR/resources
 install -d -m 0755 $PREFIX/$CONF_DIR
 install -d -m 0755 $PREFIX/var/log/flink
 install -d -m 0755 $PREFIX/var/log/flink-cli
@@ -120,7 +119,6 @@ cp -a ${BUILD_DIR}/conf/* $PREFIX/$CONF_DIR
 ln -s /etc/flink/conf $PREFIX/$LIB_DIR/conf
 
 cp -ra ${BUILD_DIR}/examples/* $PREFIX/${LIB_DIR}/examples/
-cp -ra ${BUILD_DIR}/resources/* $PREFIX/${LIB_DIR}/resources/
 
 cp ${BUILD_DIR}/{LICENSE,NOTICE,README.txt} ${PREFIX}/${LIB_DIR}/
 
