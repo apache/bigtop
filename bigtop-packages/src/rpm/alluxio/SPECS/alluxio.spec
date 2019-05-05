@@ -53,6 +53,7 @@ Requires: insserv
 %else
 # Required for init scripts
 Requires: /lib/lsb/init-functions
+Requires: initscripts
 
 %global        initd_dir %{_sysconfdir}/rc.d/init.d
 
