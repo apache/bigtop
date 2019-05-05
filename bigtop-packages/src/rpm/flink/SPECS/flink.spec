@@ -55,6 +55,14 @@ Source6: bigtop.bom
 Requires: bigtop-utils >= 0.7
 Requires(preun): /sbin/service
 
+%if  %{?suse_version:1}0
+# Required for init scripts
+Requires: insserv
+%else
+# Required for init scripts
+Requires: /lib/lsb/init-functions
+%endif
+
 %description
 Apache Flink is an open source platform for distributed stream and batch data processing.
 Flink’s core is a streaming dataflow engine that provides data distribution, communication,
@@ -83,14 +91,6 @@ Requires(pre): %{name} = %{version}-%{release}
 %description jobmanager
 Apache Flink Job Manager service.
 
-%if  %{?suse_version:1}0
-# Required for init scripts
-Requires: insserv
-%else
-# Required for init scripts
-Requires: /lib/lsb/init-functions
-%endif
-
 %package taskmanager
 Summary: Provides the Apache Flink Task Manager service.
 Group: System/Daemons
@@ -99,14 +99,6 @@ Requires(pre): %{name} = %{version}-%{release}
 
 %description taskmanager
 Apache Flink Task Manager service.
-
-%if  %{?suse_version:1}0
-# Required for init scripts
-Requires: insserv
-%else
-# Required for init scripts
-Requires: /lib/lsb/init-functions
-%endif
 
 ##############################################
 
