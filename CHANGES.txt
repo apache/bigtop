@@ -19,7 +19,343 @@ Bigtop Changelog
 
 * Release 1.4.0 (2019-03-24)
 
+
+Release Notes - Bigtop - Version 1.4.0
+
+** Sub-task
+    * [BIGTOP-2012] - Add new tests for webhdfs
+    * [BIGTOP-2993] - Switch to gradle XXX-pkg-ind feature developed in BIGTOP-2949 for Bigtop CI
+    * [BIGTOP-2994] - Document the new feature added in BIGTOP-2949
+    * [BIGTOP-2995] - Add example CI pipeline to build end-to-end from a commit to smoke test
+    * [BIGTOP-2996] - Update Smoke Test CI matrix against Bigtop master Distros
+    * [BIGTOP-3009] - Add gradle repo-ind
+    * [BIGTOP-3110] - [Puppet] Hive metastore can not startup successfully
+    * [BIGTOP-3114] - [Test] HBase Importtsv smoke tests are failing
+    * [BIGTOP-3115] - [Puppet] Alluxio master/worker can not startup successfully
+    * [BIGTOP-3117] - [Puppet] Can't run spark commands for Spark on Yarn deployment
+    * [BIGTOP-3118] - [Puppet] Failed to deploy GPDB
+    * [BIGTOP-3120] - [Puppet] Annoying warning message from Ambari snippet
+    * [BIGTOP-3121] - [Provisioner] Can't create docker containers after using Docker Provisioner on Amazon Linux
+    * [BIGTOP-3122] - CI matrix for smoke tests
+    * [BIGTOP-3124] - Remove package installation in provisioner/utils/smoke-tests.sh and polish the script
+    * [BIGTOP-3126] - [Puppet] Failed to deploy QFS due to Permission denied error at initailization
+    * [BIGTOP-3129] - Failed to run QFS smoke test
+    * [BIGTOP-3130] - Failed to run Alluxio smoke test
+    * [BIGTOP-3131] - Apex smoke test requires mvn to compile test jar
+    * [BIGTOP-3132] - Bump Alluxio up to 1.8.1
+    * [BIGTOP-3133] - [Puppet] Add a module to deploy bigtop-utils
+    * [BIGTOP-3134] - [Puppet] An upgrade to deploy Alluxio 1.8.1
+    * [BIGTOP-3136] - [Provisioner] Local built repo should have higher priority
+    * [BIGTOP-3138] - Maven installation failed on debian-9
+    * [BIGTOP-3139] - Failed to deploy Ambari on CentOS/Fedora cause no service command available
+    * [BIGTOP-3140] - [Test] TestHadoopExamples.groovy can have $USER = null when running in Docker
+    * [BIGTOP-3141] - Release number is not honored by the build system
+    * [BIGTOP-3142] - Better user expereince when calling docker-hadoop.sh -d with no cluster running
+    * [BIGTOP-3144] - [Test] QFS smoke test failed on multi-node cluster
+    * [BIGTOP-3146] - gradlew is not available in bigtop-tests/smoke-tests for running run_itest.sh
+    * [BIGTOP-3147] - Nexus proxy cache configuration is broken
+    * [BIGTOP-3148] - Error out when configure-nexus encounter any issue
+    * [BIGTOP-3149] - Support to enable Nexus proxy for Docker Provisioner
+    * [BIGTOP-3150] - [Provisioner] Raise proper exit code and error messages when provisioning failed
+    * [BIGTOP-3153] - Switch to docker cp based solution to build inside containers
+    * [BIGTOP-3154] - [Provisioner] Failed to bootstrap provisioning environment on Debian/Ubuntu
+    * [BIGTOP-3155] - Setup manual smoke test for Pull Requests
+    * [BIGTOP-3157] - Failed to start Ambari server and agent on Fedora 26
+    * [BIGTOP-3158] - [Test] Fix test specification with maven failsafe plugin
+    * [BIGTOP-3159] - Failed to deploy Alluxio due to Puppet compatibility issue
+    * [BIGTOP-3160] - [Provisioner] Treat both exit code 0 and 2 as success for Puppet execution
+    * [BIGTOP-3161] - Upgrade to Puppet 5.X
+    * [BIGTOP-3163] - Bump Hadoop to 2.8.5
+    * [BIGTOP-3164] - Bump Kafka to 1.1.1
+    * [BIGTOP-3166] - Update Kerberos module to comply with Puppet's syntax
+    * [BIGTOP-3167] - Nexus is always enabled for ./gradlew XXX-ind
+    * [BIGTOP-3169] - Enable local repo is not working on yum systems
+    * [BIGTOP-3170] - Loop and wait for daemon to be started up for Alluxio
+    * [BIGTOP-3171] - Update Kafka Puppet module for version 1.1.1
+    * [BIGTOP-3172] - [Provisioner] Support to specify components and smoke-tests when launching Docker Provisioner
+    * [BIGTOP-3173] - Fix bugs and improve usability of COMPONENT-pkg-ind
+    * [BIGTOP-3174] - ./gradlew repo-ind failed on Bigtop build slaves
+    * [BIGTOP-3175] - [Build] Support to specify commit SHA1 when building packages
+    * [BIGTOP-3176] - [Build] Support non X86 archs for COMPONENT-pkg-ind
+    * [BIGTOP-3177] - [Build] Exit w/o container left dangling when running docker in gradle wrapper
+    * [BIGTOP-3179] - Connection refused by www-us.apache.org mirror site
+    * [BIGTOP-3180] - Gradle 5 incompatible issue
+    * [BIGTOP-3181] - Build as non-root for COMPONENT-pkg-ind
+    * [BIGTOP-3182] - Helper message and documentation of new XXX-ind features
+    * [BIGTOP-3183] - Zeppelin build failed
+    * [BIGTOP-3185] - Bump Kafka to 2.1.1
+    * [BIGTOP-3186] - Bump Spark to 2.2.3
+    * [BIGTOP-3187] - Bump Flume to 1.9.0
+    * [BIGTOP-3189] - Allow to specify more properties/options at command line for docker provisioner
+    * [BIGTOP-3190] - Compatibility issue for Zeppelin with Spark 2.2.3
+    * [BIGTOP-3191] - Old Gradle version causes Kafka 2.1.1 build failed
+    * [BIGTOP-3192] - Remove Spark 1.6 from the stack
+    * [BIGTOP-3193] - Add REPO and MEMORY as options for docker-provisioner
+    * [BIGTOP-3195] - Add pkgs-ind to package all artifacts inside docker
+    * [BIGTOP-3196] - Drop Apache Crunch in Bigtop distribution
+    * [BIGTOP-3197] - [Docker] Treat both exit code 0 and 2 as success for Puppet execution
+    * [BIGTOP-3198] - [Sandbox] Support AARCH64/PPC64LE
+    * [BIGTOP-3199] - Can not run smoke test inside docker-provisioner
+    * [BIGTOP-3200] - Bugfix Integration test framework 2.0 and documentation
+    * [BIGTOP-3203] - [Sandbox] Architecture string is a mess for Distributions
+    * [BIGTOP-3206] - Missing /etc/init.d/functions when deploying Alluxio on Fedora 26
+    * [BIGTOP-3207] - [Provisioner] Do not exit when destroying got no cluster exists
+    * [BIGTOP-3209] - Revert Kafka to 0.10.2.2 and Flume to 1.8.0
+    * [BIGTOP-3210] - Missing /lib/lsb/init-functions when deploying Flink on Fedora 26
+    * [BIGTOP-3212] - Deploy QFS client failed due to no such directory error
+    * [BIGTOP-3213] - Bugs in pom.xml files when releasing Bigtop 1.4.0
+
+
+** Bug
+    * [BIGTOP-2595] - Make Spark1 and Spark2 coexist
+    * [BIGTOP-2892] - The download page should provide instructions to check hashes and signatures
+    * [BIGTOP-2986] - Oozie build is failing
+    * [BIGTOP-3099] - Fix oozie build
+    * [BIGTOP-3102] - docker-hadoop.sh WARNING: The scale command is deprecated
+    * [BIGTOP-3107] - QFS cannot compile with newer Oracle SDK
+    * [BIGTOP-3112] - Update release KEYS file from dist.apache.org to apache.org/dist
+    * [BIGTOP-3113] - Update previous releases links to the archive.apache.org in the download page
+    * [BIGTOP-3125] - [provisioner] sbin/init is missed in puppet:opensuse-42.3
+    * [BIGTOP-3151] - Add flink smoke test
+    * [BIGTOP-3184] - URLConnection check fails with exception when it should return false
+    * [BIGTOP-3194] - Phoneix QueryServer PID file name in svc file is inconsistent with that in QueryServer's execution script
+
+
+** New Feature
+    * [BIGTOP-2947] - Project Frontier: Bigtop Integration Test Framework 2.0
+
+
+** Improvement
+    * [BIGTOP-1227] - Deploy artifacts to maven repository
+    * [BIGTOP-3085] - Hello world example for adding a new package
+    * [BIGTOP-3135] - Remove deprecated giraph-site.xml
+    * [BIGTOP-3152] - No need to Force the use of Netty over Hadoop RPC in Giraph
+    * [BIGTOP-3204] - Upgrade flink from 1.4.2 to 1.6.0 or higher
+
+
+
+** Task
+    * [BIGTOP-3098] - Update maven plugins for project pom
+    * [BIGTOP-3105] - Sync up site changes from branch 1.3 to master
+    * [BIGTOP-3106] - Update links in download page
+    * [BIGTOP-3108] - Update version strings to 1.3.0 in the master
+    * [BIGTOP-3109] - Overhaul the deployment and testing modules
+    * [BIGTOP-3128] - Switch to new gitbox repository
+    * [BIGTOP-3162] - Define Bigtop 1.4.0 release BOM
+    * [BIGTOP-3178] - Fix two insecure maven repositories
+
 * Release 1.3.0 (2018-8-16)
+
+Release Notes - Bigtop - Version 1.3.0
+
+** Sub-task
+    * [BIGTOP-2833] - [puppetize.sh] Support centos-7-aarch64 support
+    * [BIGTOP-2893] - Bump Hadoop to 2.8.1
+    * [BIGTOP-2894] - Bump HBASE to 1.3.1
+    * [BIGTOP-2895] - Bump Pig to 0.17.0
+    * [BIGTOP-2897] - Bump Phoenix to  4.11-HBASE-1.3
+    * [BIGTOP-2898] - Bug: regression in Phoenix build after BIGTOP-2895
+    * [BIGTOP-2899] - Bug: regression in Oozie build after BIGTOP-2895
+    * [BIGTOP-2949] - Add gradle task which leverage bigtop-ci/build.sh to build packages
+
+
+** Bug
+    * [BIGTOP-2101] - ignite-hadoop contains an arch-dependent shared lib
+    * [BIGTOP-2213] - tez build downloads amd64 nodejs executable
+    * [BIGTOP-2292] - Remove Centos 6 Support
+    * [BIGTOP-2503] - Solr packaging is broken on both DEB and RPM
+    * [BIGTOP-2634] - package perl-Env does not exist in centos 6
+    * [BIGTOP-2679] - Streamline CI Jobs
+    * [BIGTOP-2723] - Fix asciidoctor-maven-plugin for HBase build on AArch64
+    * [BIGTOP-2737] - Spark charm doesn't handle HA or examples well
+    * [BIGTOP-2738] - spark-worker fails to start
+    * [BIGTOP-2748] - Fix a puppet compatibilty issue
+    * [BIGTOP-2749] - puppet: use jessie package on jessie, not trusty
+    * [BIGTOP-2750] - puppet: increase compatibility with future versions
+    * [BIGTOP-2753] - Initial support for Debian-9
+    * [BIGTOP-2754] - Revert BIGTOP-2730: Upgrade Zookeeper to version 3.4.10
+    * [BIGTOP-2804] - Drop Solr package and Puppet snippets
+    * [BIGTOP-2818] - Ambari downloads jdk
+    * [BIGTOP-2826] - Zeppelin RPM is broken: "missing" osgi package deps
+    * [BIGTOP-2829] - [iTest] build failed during Maven integration test phase
+    * [BIGTOP-2832] - Toolchain failed to install on Debian 8
+    * [BIGTOP-2835] - puppet fails when bigtop::jdk_preinstalled is true
+    * [BIGTOP-2836] - charm metric collector race condition
+    * [BIGTOP-2838] - Support ARM64 for  packages.gradle
+    * [BIGTOP-2841] - Failed to build bigtop/slaves-ubuntu-16.04-aarch64
+    * [BIGTOP-2844] - zeppelin charm: spark config should match zeppelin spark config
+    * [BIGTOP-2847] - Building from git is broken
+    * [BIGTOP-2850] - Not able to build bigtop/slaves image for OpenSuSE 42.1
+    * [BIGTOP-2859] - Missing HIVE_VERSION when build hive rpms
+    * [BIGTOP-2860] - Fix TestSpark.groovy syntax error
+    * [BIGTOP-2863] - Test build failed for incompatible JavaDoc format with JDK-8-121 and later
+    * [BIGTOP-2864] - Tez with "Class path contains multiple SLF4J bindings" warnings
+    * [BIGTOP-2866] - Fix rmr depricated and people* No such file or directory error
+    * [BIGTOP-2878] - Download task does not work for git repositories
+    * [BIGTOP-2881] - Greenpulm 5.0 got released - lets switch the Bigtop to it
+    * [BIGTOP-2885] - gpdb: disable gpcloud on CentOS 6
+    * [BIGTOP-2890] - Download page must not link to snapshots / nightly builds
+    * [BIGTOP-2891] - Download page must link to ASF mirrors
+    * [BIGTOP-2903] - update protobuf rpm links
+    * [BIGTOP-2906] - Failed to start solr-server service using bigtop-deploy
+    * [BIGTOP-2907] - upgrading Ambari from 2.5.0 to 2.5.2
+    * [BIGTOP-2908] - giraph charm: release audit failure
+    * [BIGTOP-2909] - ppc64le: Zeppelin 0.7.2 build is failing
+    * [BIGTOP-2911] - Change Solr service ports to default 8983/8984
+    * [BIGTOP-2912] - Intialize dataset for solr smoke test
+    * [BIGTOP-2915] - Some files are missing ALv2 header
+    * [BIGTOP-2917] - Ignite smoke test failed with JDK8
+    * [BIGTOP-2926] - introduce bigtop version into bigtop/puppet images
+    * [BIGTOP-2929] - Fix typo in opensuse version name
+    * [BIGTOP-2930] - sqoop fedora26 : rsync missing
+    * [BIGTOP-2931] - hadoop debian-9 : Unmet build dependencies: libssl-dev
+    * [BIGTOP-2932] - hadoop fedora26: openssl in native code problem
+    * [BIGTOP-2934] - Consolidate puppet usage by installing puppet from distro
+    * [BIGTOP-2935] - provisioner: Use proper command line depending on puppet version
+    * [BIGTOP-2942] - update tez to 0.9
+    * [BIGTOP-2943] - hbase does not compile with maven-3.5.2
+    * [BIGTOP-2944] - Update hbase and fix compilation issue
+    * [BIGTOP-2950] - BIGTOP-2869 breaks RAT check
+    * [BIGTOP-2953] - qfs is not buildable under Debian 9
+    * [BIGTOP-2957] - Upgrade YCSB to 0.12.0
+    * [BIGTOP-2958] - Tez should use appropriate profile for Hadoop shims
+    * [BIGTOP-2968] - Bump Hive version to 2.3.2
+    * [BIGTOP-2973] - Hama packaging is broken with Hadoop 2.8+
+    * [BIGTOP-2976] - zookeeper-rest missing dependency on lsb-base
+    * [BIGTOP-2979] - JAVA_HOME inconsistent on non-x86 architectures
+    * [BIGTOP-2980] - Hama does not build on DEB type systems
+    * [BIGTOP-2981] - Packaging SparkR is broken due to BIGTOP-2959
+    * [BIGTOP-2984] - Rat check failed after BIGTOP-2698
+    * [BIGTOP-2987] - Phoenix build break
+    * [BIGTOP-2990] - Upgrade Phoenix version to 4.13.1-HBase-1.3
+    * [BIGTOP-2991] - Bump up Spark version to 2.2.1
+    * [BIGTOP-3001] - Change uid and gid for jenkins user in bigtop-toolchain
+    * [BIGTOP-3003] - Ant-1.9.9 tarball is removed from Apache mirrors
+    * [BIGTOP-3004] - Fix HBase build failure on Debian/Fedora
+    * [BIGTOP-3013] - kafka charm: fail to deploy using Bigtop-trunk-repos
+    * [BIGTOP-3014] - juju: use charm-env for shebangs
+    * [BIGTOP-3018] - detect-javahome script has a typo in variable name
+    * [BIGTOP-3023] - Bump qfs to 2.0.0
+    * [BIGTOP-3024] - Zeppelin build is failed after Spark is bumpped to 2.2.1
+    * [BIGTOP-3025] - ci.bigtop.apache.org certificate is expired and causes errors
+    * [BIGTOP-3026] - 404 error: http://ci.bigtop.apache.org/view/Packages/job/Bigtop-trunk-packages/
+    * [BIGTOP-3027] - Wrong Leveldbjni native binary for aarch64
+    * [BIGTOP-3030] - Fix Ambari build failure on non-x86 platforms
+    * [BIGTOP-3033] - Spark build on OpenSUSE is failed
+    * [BIGTOP-3035] - Provisioner failed because init is missed in Debian-9
+    * [BIGTOP-3036] - Download gradle and groovy via TLS and do signature checking on ant
+    * [BIGTOP-3037] - Download maven securely
+    * [BIGTOP-3040] - Solr's default configsets doesn't work with smoke test cases
+    * [BIGTOP-3041] - Failed to init hadoop hdfs using init-hdfs.sh
+    * [BIGTOP-3042] - HDFS TestHDFSQuota doesn't match Hadoop's definition
+    * [BIGTOP-3044] - Fix docker build command for simple sh
+    * [BIGTOP-3045] - Remove insecure maven repository URL from gradle config
+    * [BIGTOP-3046] - Not correct auto find latest maven dist
+    * [BIGTOP-3048] - Revert BIGTOP-3001 to bring packaging CI back
+    * [BIGTOP-3050] - cgroups: cannot found cgroup mount destination: unknown
+    * [BIGTOP-3052] - Maven version is fixed in security verification code
+    * [BIGTOP-3053] - Tez failed to build due to bower version is deprecated
+    * [BIGTOP-3054] - Missing Spark archive caused Zeppelin build failure
+    * [BIGTOP-3061] - Crunch build failure
+    * [BIGTOP-3076] - QFS build failed on ppc64le
+    * [BIGTOP-3077] - OpenSuse-42.3 packages install error
+    * [BIGTOP-3078] - ignite-shmem failed to build on ppc64le
+    * [BIGTOP-3081] - Update HBase/Ignite-hadoop arch info
+    * [BIGTOP-3082] - Fix build failure with flume-1.8+kafka-0.10.2.2
+    * [BIGTOP-3083] - HBase and iginite-hadoop build failed on Fedora-26 due to BIGTOP-3081
+    * [BIGTOP-3088] - provisioner failed to run puppet deployment on CentOS-7
+    * [BIGTOP-3089] - Update provision config files with changes in 1.3.0 release
+    * [BIGTOP-3090] - provisioner failed on fedora-26 when deploying jdk
+    * [BIGTOP-3091] - Set Bigtop repo to higher priority
+
+
+** New Feature
+    * [BIGTOP-2868] - Travis integration for Jar files.
+    * [BIGTOP-3007] - expose hive config options for zookeeper
+
+
+** Improvement
+    * [BIGTOP-2698] - Build/install protobuf-2.5 from source
+    * [BIGTOP-2730] - Bump zookeeper to 3.4.10
+    * [BIGTOP-2784] - Bump version of Solr to 6.5.1
+    * [BIGTOP-2787] - [bigtop-slaves] Support of CentOS 7 ARM64 bigtop-slaves
+    * [BIGTOP-2794] - [bigtop-puppet] Support CentOS 7 AArch64 bigtop puppet
+    * [BIGTOP-2809] - Support R integration for Spark
+    * [BIGTOP-2810] - Support R integration for Zeppelin
+    * [BIGTOP-2811] - Add R to toolchain for Spark and Zeppelin
+    * [BIGTOP-2819] - Polish the README.md for 1.2.1 release
+    * [BIGTOP-2824] - [sandbox] Support CentOS 7 AArch64 sandbox
+    * [BIGTOP-2825] - Upgrade gradle to the latest 4.0
+    * [BIGTOP-2834] - spark charm: refactor for restricted networks; lib cleanup
+    * [BIGTOP-2839] - Bump Hadoop version to 2.7.4
+    * [BIGTOP-2843] - Add provisioner config yaml for ubuntu-16.04-aarch64
+    * [BIGTOP-2846] - Add DSL documentation for GIT-based builds
+    * [BIGTOP-2848] - Add provisioner docker yaml config file CentOS-7 AArch64
+    * [BIGTOP-2851] - [bigtop-puppet] Add Debian 8 AArch64 bigtop puppet
+    * [BIGTOP-2852] - [bigtop-slaves] Add Debian 8 AArch64 bigtop-slaves
+    * [BIGTOP-2853] - [sandbox] Add Debian 8 AArch64 sandbox
+    * [BIGTOP-2854] - Add provisioner docker yaml config file Debian 8 AArch64
+    * [BIGTOP-2856] - [sandbox] Add a condition in detect_repo()
+    * [BIGTOP-2857] - Add aarch64 support for fedora-25
+    * [BIGTOP-2858] - Add AArch64 support for Debian 9
+    * [BIGTOP-2867] - spark charm: make bigtop version configurable
+    * [BIGTOP-2869] - Bump solr to 6.6.0
+    * [BIGTOP-2872] - Replace aarch64 orgnanization with the more-specific arm64v8 organization in Official docker
+    * [BIGTOP-2874] - juju bundle refresh (august 2017)
+    * [BIGTOP-2875] - giraph charm: update metadata/readme
+    * [BIGTOP-2882] - Bump Hadoop and all dependencies to actual releases
+    * [BIGTOP-2889] - Remove HADOOP_HOME_WARN_SUPPRESS setting
+    * [BIGTOP-2910] - zeppelin charm: support bigtop upgrade
+    * [BIGTOP-2914] - GPDB 5.1.0 has been release. Let's bump that
+    * [BIGTOP-2916] - fix deprecated gradle syntax
+    * [BIGTOP-2918] - Update distributions for Bigtop-1.3
+    * [BIGTOP-2919] - Update maven to 3.5.2
+    * [BIGTOP-2920] - Cleanup puppet recipies: remove deprecated platforms
+    * [BIGTOP-2922] - Drop arch specific bigtop-* images
+    * [BIGTOP-2925] - Missing license header for .travis.yml
+    * [BIGTOP-2936] - Add RedHat default Oracle Java install location to detection script
+    * [BIGTOP-2959] - Add SPARK_DIST_CLASSPATH to include libraries for HDFS and YARN
+    * [BIGTOP-2974] - Add puppet code to deploy SparkR package
+    * [BIGTOP-2989] - Building Hadoop with a pre-downloaded Tomcat
+    * [BIGTOP-2992] - Building Pig with pre-arranged Forrest
+    * [BIGTOP-3002] - For Kafka, it should be possible to set the broker.id config and log.dirs config.
+    * [BIGTOP-3005] - Add zkpeer-relation-changed hook to zookeeper charm.
+    * [BIGTOP-3010] - juju bundle refresh (feb 2018)
+    * [BIGTOP-3011] - zookeeper: support autopurge.purgeInterval and autopurge.snapRetainCount.
+    * [BIGTOP-3031] - Auto find latest maven dist
+    * [BIGTOP-3038] - Add rollingupgrade option in hadoop-hdfs-namenode.svc
+    * [BIGTOP-3039] - Change git browse link to Github
+    * [BIGTOP-3047] - Add nagios monitoring to zookeeper charm.
+    * [BIGTOP-3055] - Bump GPDB to 5.10.0
+    * [BIGTOP-3058] - Bump flume to 1.8.0
+    * [BIGTOP-3059] - Bump Ambari to 2.6.1
+    * [BIGTOP-3060] - juju bundle refresh (august 2018)
+    * [BIGTOP-3062] - Bump flink to 1.4.2
+    * [BIGTOP-3064] - Bump HBase to 1.3.2
+    * [BIGTOP-3065] - Bump Hadoop to 2.8.4
+    * [BIGTOP-3066] - Bump tez to 0.9.1
+    * [BIGTOP-3067] - Bump Hive to 2.3.3
+    * [BIGTOP-3068] - Bump Hama to 0.7.1
+    * [BIGTOP-3069] - Bump crunch to 0.15.0
+    * [BIGTOP-3103] - Update download page to comply with Apache announcement requirements
+
+** Test
+    * [BIGTOP-2865] - HBase smoke test implementation
+
+
+** Task
+    * [BIGTOP-2739] - refresh juju bundles with latest charm revs
+    * [BIGTOP-2877] - Drop Kite packaging
+    * [BIGTOP-2884] - Upgrade gcc to support C++11 on CentOS 6
+    * [BIGTOP-2924] - Bring back 1.2.1 changes into master
+    * [BIGTOP-2945] - Define Bigtop 1.3 release BOM
+    * [BIGTOP-2969] - Bump up Spark version to 2.2.0
+    * [BIGTOP-2970] - Bump Zeppelin version to 0.7.3
+    * [BIGTOP-3006] - Add Jun He to team list
+    * [BIGTOP-3063] - [Umbrella] Efforts for 1.3.0 release
+    * [BIGTOP-3074] - Drop oozie packaging
+    * [BIGTOP-3075] - Drop pig packaging
+    * [BIGTOP-3106] - Update links in download page
 
 * Release 1.2.1 (2017-10-24)
 

@@ -17,6 +17,247 @@
 		<section name="Bigtop Project Release Notes">
 			<!-- Paste release notes from https://issues.apache.org/jira/browse/BIGTOP here. -->
 
+                    <h3>Release Notes - Bigtop - Version 1.4.0</h3>
+    
+<h2>        Sub-task
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2012'>BIGTOP-2012</a>] -         Add new tests for webhdfs
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2993'>BIGTOP-2993</a>] -         Switch to gradle XXX-pkg-ind feature developed in BIGTOP-2949 for Bigtop CI
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2994'>BIGTOP-2994</a>] -         Document the new feature added in BIGTOP-2949
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2995'>BIGTOP-2995</a>] -         Add example CI pipeline to build end-to-end from a commit to smoke test
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2996'>BIGTOP-2996</a>] -         Update Smoke Test CI matrix against Bigtop master Distros
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3009'>BIGTOP-3009</a>] -         Add gradle repo-ind
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3110'>BIGTOP-3110</a>] -         [Puppet] Hive metastore can not startup successfully
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3114'>BIGTOP-3114</a>] -         [Test] HBase Importtsv smoke tests are failing
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3115'>BIGTOP-3115</a>] -         [Puppet] Alluxio master/worker can not startup successfully
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3117'>BIGTOP-3117</a>] -         [Puppet] Can&#39;t run spark commands for Spark on Yarn deployment
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3118'>BIGTOP-3118</a>] -         [Puppet] Failed to deploy GPDB
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3120'>BIGTOP-3120</a>] -         [Puppet] Annoying warning message from Ambari snippet
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3121'>BIGTOP-3121</a>] -         [Provisioner] Can&#39;t create docker containers after using Docker Provisioner on Amazon Linux
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3122'>BIGTOP-3122</a>] -         CI matrix for smoke tests
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3124'>BIGTOP-3124</a>] -         Remove package installation in provisioner/utils/smoke-tests.sh and polish the script
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3126'>BIGTOP-3126</a>] -         [Puppet] Failed to deploy QFS due to Permission denied error at initailization
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3129'>BIGTOP-3129</a>] -         Failed to run QFS smoke test
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3130'>BIGTOP-3130</a>] -         Failed to run Alluxio smoke test
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3131'>BIGTOP-3131</a>] -         Apex smoke test requires mvn to compile test jar
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3132'>BIGTOP-3132</a>] -         Bump Alluxio up to 1.8.1
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3133'>BIGTOP-3133</a>] -         [Puppet] Add a module to deploy bigtop-utils
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3134'>BIGTOP-3134</a>] -         [Puppet] An upgrade to deploy Alluxio 1.8.1
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3136'>BIGTOP-3136</a>] -         [Provisioner] Local built repo should have higher priority
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3138'>BIGTOP-3138</a>] -         Maven installation failed on debian-9
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3139'>BIGTOP-3139</a>] -         Failed to deploy Ambari on CentOS/Fedora cause no service command available
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3140'>BIGTOP-3140</a>] -         [Test] TestHadoopExamples.groovy can have $USER = null when running in Docker
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3141'>BIGTOP-3141</a>] -         Release number is not honored by the build system
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3142'>BIGTOP-3142</a>] -         Better user expereince when calling docker-hadoop.sh -d with no cluster running
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3144'>BIGTOP-3144</a>] -         [Test] QFS smoke test failed on multi-node cluster
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3146'>BIGTOP-3146</a>] -         gradlew is not available in bigtop-tests/smoke-tests for running run_itest.sh
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3147'>BIGTOP-3147</a>] -         Nexus proxy cache configuration is broken
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3148'>BIGTOP-3148</a>] -         Error out when configure-nexus encounter any issue
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3149'>BIGTOP-3149</a>] -         Support to enable Nexus proxy for Docker Provisioner
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3150'>BIGTOP-3150</a>] -         [Provisioner] Raise proper exit code and error messages when provisioning failed
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3153'>BIGTOP-3153</a>] -         Switch to docker cp based solution to build inside containers
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3154'>BIGTOP-3154</a>] -         [Provisioner] Failed to bootstrap provisioning environment on Debian/Ubuntu
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3155'>BIGTOP-3155</a>] -         Setup manual smoke test for Pull Requests
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3157'>BIGTOP-3157</a>] -         Failed to start Ambari server and agent on Fedora 26
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3158'>BIGTOP-3158</a>] -         [Test] Fix test specification with maven failsafe plugin
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3159'>BIGTOP-3159</a>] -         Failed to deploy Alluxio due to Puppet compatibility issue
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3160'>BIGTOP-3160</a>] -         [Provisioner] Treat both exit code 0 and 2 as success for Puppet execution
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3161'>BIGTOP-3161</a>] -         Upgrade to Puppet 5.X
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3163'>BIGTOP-3163</a>] -         Bump Hadoop to 2.8.5
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3164'>BIGTOP-3164</a>] -         Bump Kafka to 1.1.1
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3166'>BIGTOP-3166</a>] -         Update Kerberos module to comply with Puppet&#39;s syntax
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3167'>BIGTOP-3167</a>] -         Nexus is always enabled for ./gradlew XXX-ind
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3169'>BIGTOP-3169</a>] -         Enable local repo is not working on yum systems
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3170'>BIGTOP-3170</a>] -         Loop and wait for daemon to be started up for Alluxio
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3171'>BIGTOP-3171</a>] -         Update Kafka Puppet module for version 1.1.1
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3172'>BIGTOP-3172</a>] -         [Provisioner] Support to specify components and smoke-tests when launching Docker Provisioner
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3173'>BIGTOP-3173</a>] -         Fix bugs and improve usability of COMPONENT-pkg-ind
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3174'>BIGTOP-3174</a>] -         ./gradlew repo-ind failed on Bigtop build slaves
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3175'>BIGTOP-3175</a>] -         [Build] Support to specify commit SHA1 when building packages
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3176'>BIGTOP-3176</a>] -         [Build] Support non X86 archs for COMPONENT-pkg-ind
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3177'>BIGTOP-3177</a>] -         [Build] Exit w/o container left dangling when running docker in gradle wrapper
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3179'>BIGTOP-3179</a>] -         Connection refused by www-us.apache.org mirror site
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3180'>BIGTOP-3180</a>] -         Gradle 5 incompatible issue
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3181'>BIGTOP-3181</a>] -         Build as non-root for COMPONENT-pkg-ind
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3182'>BIGTOP-3182</a>] -         Helper message and documentation of new XXX-ind features
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3183'>BIGTOP-3183</a>] -         Zeppelin build failed
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3185'>BIGTOP-3185</a>] -         Bump Kafka to 2.1.1
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3186'>BIGTOP-3186</a>] -         Bump Spark to 2.2.3
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3187'>BIGTOP-3187</a>] -         Bump Flume to 1.9.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3189'>BIGTOP-3189</a>] -         Allow to specify more properties/options at command line for docker provisioner
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3190'>BIGTOP-3190</a>] -         Compatibility issue for Zeppelin with Spark 2.2.3
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3191'>BIGTOP-3191</a>] -         Old Gradle version causes Kafka 2.1.1 build failed
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3192'>BIGTOP-3192</a>] -         Remove Spark 1.6 from the stack
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3193'>BIGTOP-3193</a>] -         Add REPO and MEMORY as options for docker-provisioner
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3195'>BIGTOP-3195</a>] -         Add pkgs-ind to package all artifacts inside docker
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3196'>BIGTOP-3196</a>] -         Drop Apache Crunch in Bigtop distribution
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3197'>BIGTOP-3197</a>] -         [Docker] Treat both exit code 0 and 2 as success for Puppet execution
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3198'>BIGTOP-3198</a>] -         [Sandbox] Support AARCH64/PPC64LE 
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3199'>BIGTOP-3199</a>] -         Can not run smoke test inside docker-provisioner
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3200'>BIGTOP-3200</a>] -         Bugfix Integration test framework 2.0 and documentation
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3203'>BIGTOP-3203</a>] -         [Sandbox] Architecture string is a mess for Distributions
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3206'>BIGTOP-3206</a>] -         Missing /etc/init.d/functions when deploying Alluxio on Fedora 26
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3207'>BIGTOP-3207</a>] -         [Provisioner] Do not exit when destroying got no cluster exists
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3209'>BIGTOP-3209</a>] -         Revert Kafka to 0.10.2.2 and Flume to 1.8.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3210'>BIGTOP-3210</a>] -         Missing /lib/lsb/init-functions when deploying Flink on Fedora 26
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3212'>BIGTOP-3212</a>] -         Deploy QFS client failed due to no such directory error
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3213'>BIGTOP-3213</a>] -         Bugs in pom.xml files when releasing Bigtop 1.4.0
+</li>
+</ul>
+        
+<h2>        Bug
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2595'>BIGTOP-2595</a>] -         Make Spark1 and Spark2 coexist
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2892'>BIGTOP-2892</a>] -         The download page should provide instructions to check hashes and signatures
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2986'>BIGTOP-2986</a>] -         Oozie build is failing 
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3099'>BIGTOP-3099</a>] -         Fix oozie build
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3102'>BIGTOP-3102</a>] -         docker-hadoop.sh WARNING: The scale command is deprecated
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3107'>BIGTOP-3107</a>] -         QFS cannot compile with newer Oracle SDK
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3112'>BIGTOP-3112</a>] -         Update release KEYS file from dist.apache.org to apache.org/dist
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3113'>BIGTOP-3113</a>] -         Update previous releases links to the archive.apache.org in the download page
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3125'>BIGTOP-3125</a>] -         [provisioner] sbin/init is missed in puppet:opensuse-42.3
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3151'>BIGTOP-3151</a>] -         Add flink smoke test
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3184'>BIGTOP-3184</a>] -         URLConnection check fails with exception when it should return false
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3194'>BIGTOP-3194</a>] -         Phoneix QueryServer PID file name in svc file is inconsistent with that in QueryServer&#39;s execution script
+</li>
+</ul>
+        
+<h2>        New Feature
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-2947'>BIGTOP-2947</a>] -         Project Frontier: Bigtop Integration Test Framework 2.0
+</li>
+</ul>
+        
+<h2>        Improvement
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-1227'>BIGTOP-1227</a>] -         Deploy artifacts to maven repository
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3085'>BIGTOP-3085</a>] -         Hello world example for adding a new package
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3135'>BIGTOP-3135</a>] -         Remove deprecated giraph-site.xml
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3152'>BIGTOP-3152</a>] -         No need to Force the use of Netty over Hadoop RPC in Giraph
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3204'>BIGTOP-3204</a>] -         Upgrade flink from 1.4.2 to 1.6.0 or higher
+</li>
+</ul>
+            
+<h2>        Task
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3098'>BIGTOP-3098</a>] -         Update maven plugins for project pom
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3105'>BIGTOP-3105</a>] -         Sync up site changes from branch 1.3 to master
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3106'>BIGTOP-3106</a>] -         Update links in download page
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3108'>BIGTOP-3108</a>] -         Update version strings to 1.3.0 in the master
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3109'>BIGTOP-3109</a>] -         Overhaul the deployment and testing modules
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3128'>BIGTOP-3128</a>] -         Switch to new gitbox repository 
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3162'>BIGTOP-3162</a>] -         Define Bigtop 1.4.0 release BOM
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3178'>BIGTOP-3178</a>] -         Fix two insecure maven repositories
+</li>
+</ul>
+
                     <h3>Release Notes - Bigtop - Version 1.3.0</h3>
     
 <h2>        Sub-task
