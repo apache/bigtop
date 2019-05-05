@@ -40,6 +40,11 @@ class qfs {
       group => root,
       mode => '0755',
     }
+
+    file { "/etc/qfs":
+      ensure => directory,
+      mode => '0755',
+    }
   }
 
   class metaserver {
@@ -109,7 +114,7 @@ class qfs {
     $chunkserver_conf = "/etc/qfs/ChunkServer.prp"
     file { $chunkserver_conf:
       content => template("qfs/ChunkServer.prp"),
-      require => Package["qfs-chunkserver"],
+      require => [Package["qfs-chunkserver"], File["/etc/qfs"]],
     }
 
     $cs_dirs = suffix($hadoop::hadoop_storage_dirs, "/qfs/chunkserver")
@@ -152,7 +157,7 @@ class qfs {
 
     file { "/etc/qfs/QfsClient.prp":
       content => template("qfs/QfsClient.prp"),
-      require => Package["qfs-client"],
+      require => [Package["qfs-client"], File["/etc/qfs"]],
     }
 
     file { "/usr/bin/hadoop-qfs":
