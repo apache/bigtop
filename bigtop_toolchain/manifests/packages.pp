@@ -36,7 +36,7 @@ class bigtop_toolchain::packages {
         "cppunit-devel",
         "openssl-devel",
         "python-devel",
-        "python-setuptools",
+        "python2-pip",
         "libxml2-devel",
         "libxslt-devel",
         "cyrus-sasl-devel",
@@ -87,7 +87,7 @@ class bigtop_toolchain::packages {
         "pkg-config",
         "gmp-devel",
         "python-devel",
-        "python-setuptools",
+        "python-pip",
         "libxml2-devel",
         "libxslt-devel",
         "cyrus-sasl-devel",
@@ -133,6 +133,7 @@ class bigtop_toolchain::packages {
       "lzo-devel",
       "fuse-devel",
       "openssl-devel",
+      "python27-pip",
       "rpm-build",
       "system-rpm-config",
       "fuse-libs",
@@ -177,7 +178,6 @@ class bigtop_toolchain::packages {
         "libldap2-dev",
         "libsasl2-dev",
         "libmariadbd-dev",
-        "python-setuptools",
         "libkrb5-dev",
         "asciidoc",
         "libyaml-dev",
@@ -195,6 +195,7 @@ class bigtop_toolchain::packages {
         "bison",
         "flex",
         "python-dev",
+        "python-pip",
         "libffi-dev"
       ]
       file { '/etc/apt/apt.conf.d/01retries':
@@ -219,5 +220,32 @@ class bigtop_toolchain::packages {
     package { 'epel-release':
       ensure => installed
     }
+  }
+
+  # Install Python packages using pip
+  case $operatingsystem{
+    /(?i:(centos|fedora))/: {
+      $pip = 'python2-pip'
+    } /(?i:(SLES|opensuse))/: { 
+      $pip = 'python-pip'
+    } /Amazon/: { 
+      $pip = 'python27-pip'
+    } /(Ubuntu|Debian)/: {
+      $pip = 'python-pip'
+    }
+  }
+  file { '/usr/bin/pip-python':
+    ensure => 'link',
+    target => '/usr/bin/pip',
+  }
+  package { 'setuptools':
+    ensure => 'latest',
+    provider => 'pip',
+    require => [ Package[$pip], File['/usr/bin/pip-python'] ]
+  }
+  package { 'flake8':
+    ensure => 'installed',
+    provider => 'pip',
+    require => [ Package[$pip], File['/usr/bin/pip-python'] ]
   }
 }
