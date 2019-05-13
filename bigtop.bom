@@ -284,6 +284,16 @@ bigtop {
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }
+    'livy' {
+      name    = 'livy'
+      relNotes = 'Apache Livy'
+      version { base = '0.6.0'; pkg = base; release = 1 }
+      tarball { destination = "$name-${version.base}.tar.gz"
+                source      = "apache-$name-${version.base}-incubating-src.zip" }
+      url     { download_path = "incubator/$name/${version.base}-incubating/"
+                site = "${apache.APACHE_MIRROR}/${download_path}"
+                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+    }
      'slider' {
       name    = 'slider'
       pkg     = 'slider'
