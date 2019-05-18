@@ -15,7 +15,7 @@
 
 docker:
         memory_limit: "4g"
-        image: "bigtop/puppet:trunk-centos-7"
+        image: "bigtop/puppet:1.4.0-centos-7"
 
 repo: "http://repos.bigtop.apache.org/releases/1.4.0/centos/7/$basearch"
 distro: centos
