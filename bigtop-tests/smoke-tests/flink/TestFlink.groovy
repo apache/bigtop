@@ -58,18 +58,20 @@ class TestFlink {
   void testCheckRestfulAPI() {
     // read JM address and port from conf
     execCommand("awk '{if(/jobmanager.rpc.address:/) print \$2}' < "+ config_file);
-    final String jmhost = sh.out.join('\n');
+    final String jmHost = sh.out.join('\n');
     execCommand("awk '{if(/jobmanager.web.port:/) print \$2}' < "+config_file);
     final String webPort = sh.out.join('\n');
     // check web API
-    execCommand("curl http://"+jmhost+":"+webPort+"/config");
+    execCommand("curl http://"+jmHost+":"+webPort+"/config");
     final String result = sh.out.join('\n');
     assert(result.contains("flink-version"));
   }
 
   @Test
   void testWordCountBatch() {
-    execCommand("flink run \$FLINK_HOME/examples/batch/WordCount.jar --input hdfs:///flink/test.data --output hdfs:///tmp/result.txt")
+    execCommand("hdfs getconf -confKey fs.defaultFS");
+    final String hdfsUri = sh.out.join('\n');
+    execCommand("flink run \$FLINK_HOME/examples/batch/WordCount.jar --input "+hdfsUri+"/flink/test.data --output "+hdfsUri+"/tmp/result.txt")
 
     execCommand("hadoop fs -cat /tmp/result.txt")
 
