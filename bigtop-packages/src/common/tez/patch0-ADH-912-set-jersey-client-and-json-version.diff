@@ -1,0 +1,29 @@
+*** apache-tez-0.9.2-src/pom.xml	2019-03-19 23:50:01.000000000 +0300
+--- apache-tez-0.9.2-src/pom.xml	2019-05-23 11:14:57.359033783 +0300
+***************
+*** 731,742 ****
+        <dependency>
+          <groupId>com.sun.jersey</groupId>
+          <artifactId>jersey-client</artifactId>
+!        <version>1.9</version>
+        </dependency>
+        <dependency>
+          <groupId>com.sun.jersey</groupId>
+          <artifactId>jersey-json</artifactId>
+!         <version>1.9</version>
+        </dependency>
+        <dependency>
+          <groupId>org.bouncycastle</groupId>
+--- 731,742 ----
+        <dependency>
+          <groupId>com.sun.jersey</groupId>
+          <artifactId>jersey-client</artifactId>
+!        <version>1.19</version>
+        </dependency>
+        <dependency>
+          <groupId>com.sun.jersey</groupId>
+          <artifactId>jersey-json</artifactId>
+!         <version>1.19</version>
+        </dependency>
+        <dependency>
+          <groupId>org.bouncycastle</groupId>
