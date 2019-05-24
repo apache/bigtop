@@ -35,7 +35,7 @@ case ${ID}-${VERSION_ID} in
         apt-get -y install wget curl sudo unzip puppet puppet-module-puppetlabs-apt puppet-module-puppetlabs-stdlib systemd-sysv
          ;;
     opensuse-42.3)
-        zypper --gpg-auto-import-keys install -y curl sudo unzip wget puppet suse-release ca-certificates-mozilla net-tools tar systemd-sysvinit
+        zypper --gpg-auto-import-keys install -y curl sudo unzip wget puppet suse-release ca-certificates-mozilla net-tools tar
         puppet module install puppetlabs-stdlib
         ;;
     centos-7*)
