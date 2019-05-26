@@ -148,6 +148,9 @@ $roles_map = {
   bigtop-utils => {
     client => ["bigtop-utils"],
   },
+  livy => {
+    master => ["livy-server"],
+  },
 }
 
 class hadoop_cluster_node (
