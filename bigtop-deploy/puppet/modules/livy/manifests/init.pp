@@ -32,7 +32,7 @@ class livy {
     }
 
     file { '/etc/livy/conf/livy.conf':
-      content => template('livy/livy.json'),
+      content => template('livy/livy.conf'),
       require => Package['livy'],
     }
 
