@@ -15,19 +15,10 @@
 FROM centos:7
 MAINTAINER jay@apache.org
 RUN yum update -y
-RUN yum install -y java-1.8.0-openjdk unzip wget
-RUN yum install -y java-1.8.0-openjdk-devel
+RUN yum install -y java-1.8.0-openjdk
 
 WORKDIR /opt/
 
-# Get Bigtop
-# This comes with a gradlew wrapper we can use.
-RUN wget http://www.apache.org/dist/bigtop/bigtop-1.0.0/bigtop-1.0.0-project.tar.gz
-RUN  tar -xvf bigtop-1.0.0-project.tar.gz
+COPY build/libs/bigpetstore-transaction-queue-all-1.0.jar /opt
 
-# Install bigpetstore transaction queue
-WORKDIR /opt/bigtop-1.0.0/bigtop-bigpetstore/bigpetstore-transaction-queue
-RUN /opt/bigtop-1.0.0/gradlew distZip
-RUN unzip build/distributions/bigpetstore-transaction-queue-1.0.zip
-RUN mv ./bigpetstore-transaction-queue-1.0 /opt/bigpetstore-transaction-queue-1.0/
-CMD /opt/bigpetstore-transaction-queue-1.0/bigpetstore-transaction-queue-1.0/bin/bigpetstore-transaction-queue
+ENTRYPOINT ["java", "-jar", "bigpetstore-transaction-queue-all-1.0.jar"]
