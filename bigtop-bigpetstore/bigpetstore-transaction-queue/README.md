@@ -73,7 +73,7 @@ The command line arguments are:
 From docker
 
 ```
-docker run -t -i jayunit100/bigpetstore-load-generator  /opt/bigpetstore-transaction-queue-1.0/bin/bigpetstore-transaction-queue /tmp/ 1 1 3.0
+docker run -t -i jayunit100/bigpetstore-load-generator /tmp/ 1 1 3.0
 ```
 or Java
 ```
@@ -87,8 +87,7 @@ OR Replace the file path with a REST API root (it will jsonify the transactions,
 From docker
 
 ```
-docker run -t -i jayunit100/bigpetstore-load-generator /opt/bigpetstore-transaction-queue-1.0/bin/bigpetstore-transaction-queue
- http://localhost:3000/restapi/rpush/ 1 5 10000 123
+docker run -t -i jayunit100/bigpetstore-load-generator http://localhost:3000/restapi/rpush/ 1 5 10000 123
 ```
 Or from java
 ```

@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 FROM centos:7
-MAINTAINER jay@apache.org
+LABEL maintainer="jay@apache.org"
 RUN yum update -y
 RUN yum install -y java-1.8.0-openjdk
 
