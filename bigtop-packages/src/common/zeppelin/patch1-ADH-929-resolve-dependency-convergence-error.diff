@@ -1,0 +1,28 @@
+*** zeppelin-0.8.1/zeppelin-zengine/pom.xml.old	2019-06-17 20:58:08.687004099 +0300
+--- zeppelin-0.8.1/zeppelin-zengine/pom.xml	2019-06-17 20:58:42.095888766 +0300
+***************
+*** 719,724 ****
+--- 719,728 ----
+            <version>${hadoop.version}</version>
+            <exclusions>
+              <exclusion>
++               <groupId>org.eclipse.jetty</groupId>
++               <artifactId>jetty-xml</artifactId>
++             </exclusion>
++             <exclusion>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+              </exclusion>
+***************
+*** 811,816 ****
+--- 815,824 ----
+            <version>${hadoop.version}</version>
+            <exclusions>
+              <exclusion>
++               <groupId>org.eclipse.jetty</groupId>
++               <artifactId>jetty-xml</artifactId>
++             </exclusion>
++             <exclusion>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+              </exclusion>
