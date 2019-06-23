@@ -124,11 +124,11 @@ MAVEN_OPTS="$MAVEN_OPTS -DskipTests -DskipTest -DskipITs"
 . $(dirname ${0})/maven_deploy.sh
 
 # Build artifacts
-mvn $ANT_OPTS $BUNDLE_SNAPPY -Pdist -Pnative -Psrc -Dtar ${MAVEN_OPTS} install package "$@"
+mvn $ANT_OPTS $BUNDLE_SNAPPY -Pdist -Pnative -Psrc -Pdocs -Dtar ${MAVEN_OPTS} install package "$@"
 #mvn site site:stage ${MAVEN_OPTS} $@
 
 (cd build ; tar --strip-components=1 -xzvf  ../hadoop-dist/target/hadoop-${HADOOP_VERSION}.tar.gz)
-#(cd build/src ; tar --strip-components=1 -xzvf  ../../hadoop-dist/target/hadoop-${HADOOP_VERSION}-src.tar.gz)
+(cd build/src ; tar --strip-components=1 -xzvf  ../../hadoop-dist/target/hadoop-${HADOOP_VERSION}-src.tar.gz)
 
 # Copy generated docs
 mkdir -p build/share
