@@ -19,7 +19,6 @@
 %define run_zookeeper /var/run/%{name}
 %define vlb_zookeeper /var/lib/%{name}
 %define svc_zookeeper %{name}-server
-%define svc_zookeeper_rest %{name}-rest
 %define man_dir %{_mandir}
 
 %if  %{?suse_version:1}0
@@ -71,13 +70,11 @@ License: ASL 2.0
 Source0: %{name}-%{zookeeper_base_version}.tar.gz
 Source1: do-component-build
 Source2: install_zookeeper.sh
-Source3: zookeeper-server.sh
-Source4: zookeeper-server.sh.suse
-Source5: zookeeper.1
-Source6: zoo.cfg
-Source7: zookeeper.default
-Source8: init.d.tmpl
-Source9: zookeeper-rest.svc
+Source3: zookeeper.1
+Source4: zoo.cfg
+Source5: zookeeper.default
+Source6: zookeeper.service
+
 #BIGTOP_PATCH_FILES
 BuildRequires: autoconf, automake, cppunit-devel
 Requires(pre): coreutils, /usr/sbin/groupadd, /usr/sbin/useradd
@@ -95,52 +92,12 @@ difficulty of implementing these kinds of services, applications initially
 usually skimp on them ,which make them brittle in the presence of change and 
 difficult to manage. Even when done correctly, different implementations of these services lead to management complexity when the applications are deployed.  
 
-%package server
-Summary: The Hadoop Zookeeper server
-Group: System/Daemons
-Requires: %{name} = %{version}-%{release}
-Requires(pre): %{name} = %{version}-%{release}
-Requires(post): %{chkconfig_dep}
-Requires(preun): %{service_dep}, %{chkconfig_dep}
-
-%if  %{?suse_version:1}0
-# Required for init scripts
-Requires: insserv
-%endif
-
-%if  0%{?mgaversion}
-# Required for init scripts
-Requires: initscripts
-%endif
-
-# CentOS 5 does not have any dist macro
-# So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
-%if %{!?suse_version:1}0 && %{!?mgaversion:1}0
-# Required for init scripts
-Requires: /lib/lsb/init-functions
-%endif
-
-
-%description server
-This package starts the zookeeper server on startup
-
-%package rest
-Summary: ZooKeeper REST Server
-Group: System/Daemons
-Requires: %{name} = %{version}-%{release}
-Requires(pre): %{name} = %{version}-%{release}
-Requires(post): %{chkconfig_dep}
-Requires(preun): %{service_dep}, %{chkconfig_dep}
-
 %package native
 Summary: C bindings for ZooKeeper clients
 Group: Development/Libraries
 
 %description native
 Provides native libraries and development headers for C / C++ ZooKeeper clients. Consists of both single-threaded and multi-threaded implementations.
-
-%description rest
-This package starts the zookeeper REST server on startup
 
 %prep
 %setup -n %{name}-%{zookeeper_base_version}
@@ -159,21 +116,7 @@ bash %{SOURCE2} \
           --prefix=$RPM_BUILD_ROOT \
           --system-include-dir=%{_includedir} \
           --system-lib-dir=%{_libdir}
-
-%if  %{?suse_version:1}0
-orig_init_file=%{SOURCE4}
-%else
-orig_init_file=%{SOURCE3}
-%endif
-
-%__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
-init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{svc_zookeeper}
-%__cp $orig_init_file $init_file
-chmod 755 $init_file
-
-# Install Zookeeper REST server init script
-init_file=$RPM_BUILD_ROOT/%{initd_dir}/zookeeper-rest
-bash $RPM_SOURCE_DIR/init.d.tmpl $RPM_SOURCE_DIR/zookeeper-rest.svc rpm $init_file
+cp -R  %{SOURCE6} $RPM_BUILD_ROOT/usr/lib/systemd/system/
 
 %pre
 getent group zookeeper >/dev/null || groupadd -r zookeeper
@@ -186,39 +129,13 @@ getent passwd zookeeper > /dev/null || useradd -c "ZooKeeper" -s /sbin/nologin -
 %post
 %{alternatives_cmd} --install %{etc_zookeeper}/conf %{name}-conf %{etc_zookeeper}/conf.dist 30
 %__install -d -o zookeeper -g zookeeper -m 0755 %{vlb_zookeeper}
+systemctl daemon-reload
 
 %preun
 if [ "$1" = 0 ]; then
         %{alternatives_cmd} --remove %{name}-conf %{etc_zookeeper}/conf.dist || :
 fi
 
-%post server
-	chkconfig --add %{svc_zookeeper}
-
-%preun server
-if [ $1 = 0 ] ; then
-	service %{svc_zookeeper} stop > /dev/null 2>&1
-	chkconfig --del %{svc_zookeeper}
-fi
-
-%postun server
-if [ $1 -ge 1 ]; then
-        service %{svc_zookeeper} condrestart > /dev/null 2>&1
-fi
-
-%post rest
-	chkconfig --add %{svc_zookeeper_rest}
-
-%preun rest
-if [ $1 = 0 ] ; then
-	service %{svc_zookeeper_rest} stop > /dev/null 2>&1
-	chkconfig --del %{svc_zookeeper_rest}
-fi
-
-%postun rest
-if [ $1 -ge 1 ]; then
-        service %{svc_zookeeper_rest} condrestart > /dev/null 2>&1
-fi
 
 #######################
 #### FILES SECTION ####
@@ -234,12 +151,7 @@ fi
 %{bin_zookeeper}/zookeeper-server-cleanup
 %doc %{doc_zookeeper}
 %{man_dir}/man1/zookeeper.1.*
-
-%files server
-%attr(0755,root,root) %{initd_dir}/%{svc_zookeeper}
-
-%files rest
-%attr(0755,root,root) %{initd_dir}/%{svc_zookeeper_rest}
+%attr(0755,root,root) /usr/lib/systemd/system/
 
 %files native
 %defattr(-,root,root)

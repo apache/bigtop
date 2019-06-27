@@ -1,0 +1,16 @@
+[Unit]
+Description=Zookeeper
+After=network.target
+Wants=network.target
+
+[Service]
+Type=forking
+User=zookeeper
+PermissionsStartOnly=true
+ExecStartPre=/usr/bin/mkdir -p /var/run/zookeeper
+ExecStartPre=/usr/bin/chown -R zookeeper:zookeeper /var/run/zookeeper
+ExecStart=/usr/lib/zookeeper/bin/zkServer.sh start
+ExecStop=/usr/lib/zookeeper/bin/zkServer.sh stop
+
+[Install]
+WantedBy=multi-user.target

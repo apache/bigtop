@@ -109,10 +109,10 @@ SYSTEM_LIB_DIR=${SYSTEM_LIB_DIR:-/usr/lib}
 install -d -m 0755 $PREFIX/$LIB_DIR/
 rm -f $BUILD_DIR/zookeeper-*-javadoc.jar $BUILD_DIR/zookeeper-*-bin.jar $BUILD_DIR/zookeeper-*-sources.jar $BUILD_DIR/zookeeper-*-test.jar
 cp $BUILD_DIR/zookeeper*.jar $PREFIX/$LIB_DIR/
-install -d -m 0755 ${PREFIX}/${LIB_DIR}/contrib
-for module in rest; do
-    cp -r ${BUILD_DIR}/contrib/${module} ${PREFIX}/${LIB_DIR}/contrib/
-done
+#install -d -m 0755 ${PREFIX}/${LIB_DIR}/contrib
+#for module in rest; do
+#    cp -r ${BUILD_DIR}/contrib/${module} ${PREFIX}/${LIB_DIR}/contrib/
+#done
 
 # Make a symlink of zookeeper.jar to zookeeper-version.jar
 for x in $PREFIX/$LIB_DIR/zookeeper*jar ; do
@@ -128,11 +128,11 @@ install -d -m 0755 $PREFIX/$CONF_DIST_DIR
 cp zoo.cfg $BUILD_DIR/conf/* $PREFIX/$CONF_DIST_DIR/
 ln -s $CONF_DIR $PREFIX/$LIB_DIR/conf
 
-install -d -m 0755 ${PREFIX}/${LIB_DIR}/contrib
-for module in rest; do
-    cp -r ${BUILD_DIR}/contrib/${module} ${PREFIX}/${LIB_DIR}/contrib/
-    mv ${PREFIX}/${LIB_DIR}/contrib/${module}/conf ${PREFIX}/${CONF_DIST_DIR}/${module}
-done
+#install -d -m 0755 ${PREFIX}/${LIB_DIR}/contrib
+#for module in rest; do
+#    cp -r ${BUILD_DIR}/contrib/${module} ${PREFIX}/${LIB_DIR}/contrib/
+#    mv ${PREFIX}/${LIB_DIR}/contrib/${module}/conf ${PREFIX}/${CONF_DIST_DIR}/${module}
+#done
 
 # Copy in the /usr/bin/zookeeper-server wrapper
 install -d -m 0755 $PREFIX/$LIB_DIR/bin
@@ -203,6 +203,7 @@ install -d ${PREFIX}/$SYSTEM_INCLUDE_DIR
 install -d ${PREFIX}/$SYSTEM_LIB_DIR
 install -d ${PREFIX}/${LIB_DIR}-native
 
+
 (cd ${BUILD_DIR}/.. && tar xzf zookeeper-*-lib.tar.gz)
 cp -R ${BUILD_DIR}/../usr/include/* ${PREFIX}/${SYSTEM_INCLUDE_DIR}/
 cp -R ${BUILD_DIR}/../usr/lib*/* ${PREFIX}/${SYSTEM_LIB_DIR}/
@@ -219,3 +220,4 @@ EOF
 done
 chmod 755 ${PREFIX}/${BIN_DIR}/* ${PREFIX}/${LIB_DIR}-native/*
 
+install -d -m 0755 "${PREFIX}/usr/lib/systemd/system/"
