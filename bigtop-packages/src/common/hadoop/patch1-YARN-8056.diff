@@ -1,0 +1,15 @@
+diff --git a/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-web-proxy/src/main/java/org/apache/hadoop/yarn/server/webproxy/amfilter/AmFilterInitializer.java b/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-web-proxy/src/main/java/org/apache/hadoop/yarn/server/webproxy/amfilter/AmFilterInitializer.java
+index 27742e41a29e..100cc27e043e 100644
+--- a/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-web-proxy/src/main/java/org/apache/hadoop/yarn/server/webproxy/amfilter/AmFilterInitializer.java
++++ b/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-web-proxy/src/main/java/org/apache/hadoop/yarn/server/webproxy/amfilter/AmFilterInitializer.java
+@@ -68,7 +68,9 @@ public void initFilter(FilterContainer container, Configuration conf) {
+       List<String> urls = new ArrayList<>();
+       for (String rmId : rmIds) {
+         String url = getUrlByRmId(yarnConf, rmId);
+-        urls.add(url);
++        if (url != null) {
++          urls.add(url);
++        }
+       }
+       if (!urls.isEmpty()) {
+         params.put(RM_HA_URLS, StringUtils.join(",", urls));
