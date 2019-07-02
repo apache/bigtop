@@ -82,3 +82,6 @@ override_dh_install: $(hadoop_svcs)
 	rm -Rf debian/hadoop/usr/lib/hadoop/bin/fuse_dfs 
 	rm -Rf debian/hadoop/usr/lib/hadoop/contrib/fuse-dfs
 	rm -Rf debian/hadoop/usr/lib/hadoop/hdfs/contrib/fuse-dfs
+
+override_dh_strip_nondeterminism:
+	echo skipped
