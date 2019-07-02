@@ -223,7 +223,7 @@ located.
 %package hdfs
 Summary: The Hadoop Distributed File System
 Group: System/Daemons
-Requires: %{name} = %{version}-%{release}, bigtop-groovy, bigtop-jsvc
+Requires: %{name} = %{version}-%{release}, bigtop-groovy
 
 %description hdfs
 Hadoop Distributed File System (HDFS) is the primary storage system used by
@@ -666,6 +666,7 @@ fi
 %{lib_hadoop}/etc
 %{lib_hadoop}/libexec/hadoop-config.sh
 %{lib_hadoop}/libexec/hadoop-layout.sh
+%{lib_hadoop}/libexec/hadoop-functions.sh
 %{lib_hadoop}/libexec/kms-config.sh
 %{bin_hadoop}/hadoop
 %{man_hadoop}/man1/hadoop.1.*

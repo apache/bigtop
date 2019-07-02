@@ -47,7 +47,7 @@ Description: Hadoop is a software platform for processing vast amounts of data
 
 Package: hadoop-hdfs
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, adduser, bigtop-utils (>= 0.7), bigtop-groovy, hadoop (= ${binary:Version}), bigtop-jsvc
+Depends: ${shlibs:Depends}, ${misc:Depends}, adduser, bigtop-utils (>= 0.7), bigtop-groovy, hadoop (= ${binary:Version})
 Description: The Hadoop Distributed File System
  Hadoop Distributed File System (HDFS) is the primary storage system used by 
  Hadoop applications. HDFS creates multiple replicas of data blocks and distributes 
@@ -56,7 +56,7 @@ Description: The Hadoop Distributed File System
 
 Package: hadoop-yarn
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, adduser, bigtop-utils (>= 0.7), hadoop (= ${binary:Version})
+Depends: ${shlibs:Depends}, ${misc:Depends}, adduser, bigtop-utils (>= 0.7), hadoop (= ${binary:Version}), lsb-base
 Description: The Hadoop NextGen MapReduce (YARN)
  YARN (Hadoop NextGen MapReduce) is a general purpose data-computation framework.
  The fundamental idea of YARN is to split up the two major functionalities of the 
@@ -106,13 +106,13 @@ Description: Pseudo-distributed Hadoop configuration
 
 Package: hadoop-mapreduce-historyserver
 Architecture: any
-Depends: hadoop-mapreduce (= ${binary:Version}), hadoop-hdfs (= ${binary:Version})
+Depends: hadoop-mapreduce (= ${binary:Version}), hadoop-hdfs (= ${binary:Version}), lsb-base
 Description: MapReduce History Server
  The History server keeps records of the different activities being performed on a Apache Hadoop cluster
 
 Package: hadoop-yarn-nodemanager
 Architecture: any
-Depends: hadoop-yarn (= ${binary:Version})
+Depends: hadoop-yarn (= ${binary:Version}), lsb-base
 Description: YARN Node Manager
  The NodeManager is the per-machine framework agent who is responsible for
  containers, monitoring their resource usage (cpu, memory, disk, network) and
@@ -120,19 +120,19 @@ Description: YARN Node Manager
 
 Package: hadoop-yarn-resourcemanager
 Architecture: any
-Depends: hadoop-yarn (= ${binary:Version})
+Depends: hadoop-yarn (= ${binary:Version}), lsb-base
 Description: YARN Resource Manager
  The resource manager manages the global assignment of compute resources to applications
 
 Package: hadoop-yarn-proxyserver
 Architecture: any
-Depends: hadoop-yarn (= ${binary:Version})
+Depends: hadoop-yarn (= ${binary:Version}), lsb-base
 Description: YARN Web Proxy
  The web proxy server sits in front of the YARN application master web UI.
 
 Package: hadoop-yarn-timelineserver
 Architecture: any
-Depends: hadoop-yarn (= ${binary:Version})
+Depends: hadoop-yarn (= ${binary:Version}), lsb-base
 Description: YARN Timeline Server
  Storage and retrieval of applications' current as well as historic 
  information in a generic fashion is solved in YARN through the 
@@ -140,14 +140,14 @@ Description: YARN Timeline Server
  
 Package: hadoop-hdfs-namenode
 Architecture: any
-Depends: hadoop-hdfs (= ${binary:Version})
+Depends: hadoop-hdfs (= ${binary:Version}), lsb-base
 Description: The Hadoop namenode manages the block locations of HDFS files
  The Hadoop Distributed Filesystem (HDFS) requires one unique server, the
  namenode, which manages the block locations of files on the filesystem.
 
 Package: hadoop-hdfs-secondarynamenode
 Architecture: any
-Depends: hadoop-hdfs (= ${binary:Version})
+Depends: hadoop-hdfs (= ${binary:Version}), lsb-base
 Description: Hadoop Secondary namenode
  The Secondary Name Node periodically compacts the Name Node EditLog
  into a checkpoint.  This compaction ensures that Name Node restarts
@@ -155,7 +155,7 @@ Description: Hadoop Secondary namenode
 
 Package: hadoop-hdfs-zkfc
 Architecture: any
-Depends: hadoop-hdfs (= ${binary:Version})
+Depends: hadoop-hdfs (= ${binary:Version}), lsb-base
 Description: Hadoop HDFS failover controller
  The Hadoop HDFS failover controller is a ZooKeeper client which also
  monitors and manages the state of the NameNode. Each of the machines
@@ -166,7 +166,7 @@ Description: Hadoop HDFS failover controller
 Package: hadoop-hdfs-journalnode
 Provides: hadoop-hdfs-journalnode
 Architecture: any
-Depends: hadoop-hdfs (= ${binary:Version})
+Depends: hadoop-hdfs (= ${binary:Version}), lsb-base
 Description: Hadoop HDFS JournalNode 
  The HDFS JournalNode is responsible for persisting NameNode edit logs. 
  In a typical deployment the JournalNode daemon runs on at least three 
@@ -174,7 +174,7 @@ Description: Hadoop HDFS JournalNode
 
 Package: hadoop-hdfs-datanode
 Architecture: any
-Depends: hadoop-hdfs (= ${binary:Version})
+Depends: hadoop-hdfs (= ${binary:Version}), lsb-base
 Description: Hadoop Data Node
  The Data Nodes in the Hadoop Cluster are responsible for serving up
  blocks of data over the network to Hadoop Distributed Filesystem
