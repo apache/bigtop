@@ -308,26 +308,6 @@ bigtop {
       version { base = bigtop.version; pkg = base-"-SNAPSHOT"; release = 1 }
       tarball { destination = "bigtop-utils-${version.base}.tar.gz" }
     }
-    'bigtop-jsvc' {
-      name    = "bigtop-jsvc"
-      relNotes = "Apache Common Daemon (jsvc) service package"
-      version { base = '1.0.15'; pkg = base; release = 1 }
-      tarball { source      = "commons-daemon-${version.base}-native-src.tar.gz"
-                destination = "commons-daemon-${version.base}.tar.gz" }
-      url     { download_path = "/commons/daemon/source"
-                site = "${apache.APACHE_MIRROR}/${download_path}"
-                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
-    }
-    'bigtop-tomcat' {
-      name    = "bigtop-tomcat"
-      relNotes = "Apache Tomcat"
-      version { base = '6.0.45'; pkg = base; release = 1 }
-      tarball { source      = "apache-tomcat-${version.base}-src.tar.gz"
-                destination = "apache-tomcat-${version.base}.tar.gz" }
-      url     { download_path = "/tomcat/tomcat-6/v${version.base}/src"
-                site = "${apache.APACHE_MIRROR}/${download_path}"
-                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
-    }
     'alluxio' {
       name    = "alluxio"
       pkg     = "alluxio"
