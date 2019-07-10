@@ -2,5 +2,3 @@
 /usr/lib/hadoop/libexec
 /usr/lib/hadoop-hdfs
 /usr/bin
-/var/lib/hadoop-hdfs/cache
-/var/log/hadoop-hdfs

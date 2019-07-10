@@ -2,5 +2,3 @@
 /usr/lib/hadoop/libexec
 /usr/lib/hadoop-mapreduce
 /usr/bin
-/var/lib/hadoop-mapreduce/cache
-/var/log/hadoop-mapreduce

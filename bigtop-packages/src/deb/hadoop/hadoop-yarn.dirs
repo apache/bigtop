@@ -2,5 +2,3 @@
 /usr/lib/hadoop/libexec
 /usr/lib/hadoop-yarn
 /usr/bin
-/var/lib/hadoop-yarn/cache
-/var/log/hadoop-yarn
