@@ -6,6 +6,3 @@
 /usr/lib/hadoop-yarn
 /usr/lib/hadoop/libexec/yarn-config.sh
 /usr/bin/yarn
-/var/lib/hadoop-yarn
-/var/log/hadoop-yarn
-/var/run/hadoop-yarn
