@@ -209,7 +209,11 @@ install -d -m 0755 ${HDFS_DIR}/lib
 cp ${BUILD_DIR}/share/hadoop/hdfs/lib/*.jar ${HDFS_DIR}/lib
 install -d -m 0755 ${YARN_DIR}/lib
 cp ${BUILD_DIR}/share/hadoop/yarn/lib/*.jar ${YARN_DIR}/lib
-chmod 644 ${HADOOP_DIR}/lib/*.jar ${HDFS_DIR}/lib/*.jar ${YARN_DIR}/lib/*.jar
+install -d -m 0755 ${YARN_DIR}/timelineservice
+cp ${BUILD_DIR}/share/hadoop/yarn/timelineservice/*.jar ${YARN_DIR}/timelineservice
+install -d -m 0755 ${YARN_DIR}/timelineservice/lib
+cp ${BUILD_DIR}/share/hadoop/yarn/timelineservice/lib/*.jar ${YARN_DIR}/timelineservice/lib
+chmod 644 ${HADOOP_DIR}/lib/*.jar ${HDFS_DIR}/lib/*.jar ${YARN_DIR}/lib/*.jar ${YARN_DIR}/timelineservice/*.jar ${YARN_DIR}/timelineservice/lib/*
 
 # Install webapps
 cp -ra ${BUILD_DIR}/share/hadoop/hdfs/webapps ${HDFS_DIR}/
