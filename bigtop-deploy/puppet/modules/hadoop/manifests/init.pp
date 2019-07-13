@@ -82,8 +82,8 @@ class hadoop ($hadoop_security_authentication = "simple",
   class init_hdfs {
     exec { "init hdfs":
       path    => ['/bin','/sbin','/usr/bin','/usr/sbin'],
-      command => 'bash -x /usr/lib/hadoop/libexec/init-hdfs.sh',
-      require => Package['hadoop-hdfs']
+      command => '/etc/init.d/hadoop-hdfs-namenode init',
+      require => Package['hadoop-hdfs-namenode']
     }
   }
 
@@ -648,8 +648,7 @@ class hadoop ($hadoop_security_authentication = "simple",
     $first_namenode = $namenode_array[0]
     if ($::fqdn == $first_namenode) {
       exec { "namenode format":
-        user => "hdfs",
-        command => "/bin/bash -c 'hdfs namenode -format -nonInteractive >> /var/lib/hadoop-hdfs/nn.format.log 2>&1'",
+        command => "/etc/init.d/hadoop-hdfs-namenode init",
         returns => [ 0, 1],
         creates => "${hadoop::common_hdfs::namenode_data_dirs[0]}/current/VERSION",
         require => [ Package["hadoop-hdfs-namenode"], File[$hadoop::common_hdfs::namenode_data_dirs], File["/etc/hadoop/conf/hdfs-site.xml"] ],
