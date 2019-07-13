@@ -1,0 +1,24 @@
+--- ./hadoop-common-project/hadoop-common/src/main/bin/hadoop-functions.sh.ORG	2019-07-13 17:45:20.890928876 +0200
++++ ./hadoop-common-project/hadoop-common/src/main/bin/hadoop-functions.sh	2019-07-13 17:45:57.285377702 +0200
+@@ -874,21 +874,6 @@
+     exit 1
+   fi
+ 
+-  if [[ ! -d "${HADOOP_HDFS_HOME}" ]]; then
+-    hadoop_error "ERROR: Invalid HADOOP_HDFS_HOME"
+-    exit 1
+-  fi
+-
+-  if [[ ! -d "${HADOOP_YARN_HOME}" ]]; then
+-    hadoop_error "ERROR: Invalid HADOOP_YARN_HOME"
+-    exit 1
+-  fi
+-
+-  if [[ ! -d "${HADOOP_MAPRED_HOME}" ]]; then
+-    hadoop_error "ERROR: Invalid HADOOP_MAPRED_HOME"
+-    exit 1
+-  fi
+-
+   # if for some reason the shell doesn't have $USER defined
+   # (e.g., ssh'd in to execute a command)
+   # let's get the effective username and use that
