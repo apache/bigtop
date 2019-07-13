@@ -15,7 +15,7 @@
 HADOOP_NAME="historyserver"
 DAEMON="hadoop-mapreduce-$HADOOP_NAME"
 DESC="Hadoop $HADOOP_NAME"
-EXEC_PATH="/usr/lib/hadoop-mapreduce/sbin/mr-jobhistory-daemon.sh"
+EXEC_PATH="/usr/bin/mapreduce"
 SVC_USER="mapred"
 WORKING_DIR="/var/lib/hadoop-mapreduce"
 DAEMON_FLAGS="$HADOOP_NAME"
