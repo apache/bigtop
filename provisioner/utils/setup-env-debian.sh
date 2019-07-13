@@ -20,9 +20,12 @@ enable_local_repo=${1:-false}
 apt-get update
 # Setup rng-tools to improve virtual machine entropy performance.
 # The poor entropy performance will cause kerberos provisioning failed.
-apt-get -y install rng-tools
+apt-get -y install rng-tools locales
 sed -i.bak 's@#HRNGDEVICE=/dev/null@HRNGDEVICE=/dev/urandom@' /etc/default/rng-tools
 service rng-tools start
+
+
+echo "Acquire::http { Proxy \"http://192.168.178.34:3142\"; };" >/etc/apt/apt.conf.d/01proxy
 
 if [ $enable_local_repo == "true" ]; then
     echo "deb file:///bigtop-home/output/apt bigtop contrib" > /etc/apt/sources.list.d/bigtop-home_output.list
