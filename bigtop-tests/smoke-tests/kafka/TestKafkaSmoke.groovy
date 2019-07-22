@@ -32,7 +32,34 @@ class TestKafkaSmoke {
   static Shell sh = new Shell("/bin/bash -s");
 
   static final String KAFKA_HOME = "/usr/lib/kafka"
-  static final String KAFKA_TOPICS = KAFKA_HOME + "/bin/kafka-topics.sh"
+  static final String KAFKA_CONFIG = KAFKA_HOME + "/config/server.properties "
+  static final String KAFKA_TOPICS = KAFKA_HOME + "/bin/kafka-topics.sh "
+  static final String KAFKA_SERVER_START = KAFKA_HOME + "/bin/kafka-server-start.sh "
+  static final String KAFKA_SERVER_STOP = KAFKA_HOME + "/bin/kafka-server-stop.sh "
+
+  @BeforeClass
+  static void kafkaSetUp() {
+    /* Restart kafka server with new broker id 111
+     * Enable delete.topic.enable
+     */
+    sh.exec(KAFKA_SERVER_STOP);
+    sh.exec(KAFKA_SERVER_START + KAFKA_CONFIG
+      + " --override delete.topic.enable=true"
+      + " --override broker.id=111"
+      + " --override port=9192"
+      + " --override log.dirs=/tmp/kafka-logs-111 &"
+    );
+    assertTrue(" Restart Kafka server failed. " + sh.getOut() + " " + sh.getErr(), sh.getRet() == 0);
+  }
+
+  @AfterClass
+  public static void deleteKafkaTopics() {
+    sh.exec(KAFKA_TOPICS
+      + " --zookeeper localhost:2181"
+      + " --delete --topic test"
+    );
+    assertTrue(" Delete Kafka topics failed. " + sh.getOut() + " " + sh.getErr(), sh.getRet() == 0);
+  }
 
   @Test
   public void testCreateTopics() {
