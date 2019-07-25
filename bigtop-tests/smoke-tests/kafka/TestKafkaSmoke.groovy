@@ -39,17 +39,12 @@ class TestKafkaSmoke {
 
   @BeforeClass
   static void kafkaSetUp() {
-    /* Restart kafka server with new broker id 111
-     * Enable delete.topic.enable
-     */
+    /* Restart kafka server for Enabling 'delete.topic.enable' */
     sh.exec(KAFKA_SERVER_STOP);
     sh.exec(KAFKA_SERVER_START + KAFKA_CONFIG
-      + " --override delete.topic.enable=true"
-      + " --override broker.id=111"
-      + " --override port=9192"
-      + " --override log.dirs=/tmp/kafka-logs-111 &"
+      + " --override delete.topic.enable=true &"
     );
-    assertTrue(" Restart Kafka server failed. " + sh.getOut() + " " + sh.getErr(), sh.getRet() == 0);
+    assertTrue("Restart Kafka server failed. ", sh.getRet() == 0);
   }
 
   @AfterClass
@@ -58,7 +53,7 @@ class TestKafkaSmoke {
       + " --zookeeper localhost:2181"
       + " --delete --topic test"
     );
-    assertTrue(" Delete Kafka topics failed. " + sh.getOut() + " " + sh.getErr(), sh.getRet() == 0);
+    assertTrue("Delete Kafka topics failed. ", sh.getRet() == 0);
   }
 
   @Test
