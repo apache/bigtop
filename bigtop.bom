@@ -176,7 +176,7 @@ bigtop {
     'hive' {
       name    = 'hive'
       relNotes = 'Apache Hive'
-      version { base = '3.1.0'; pkg = base; release = 1 }
+      version { base = '3.1.1'; pkg = base; release = 1 }
       tarball { destination = "apache-${name}-${version.base}-src.tar.gz"
                 source      = destination }
       url     { download_path = "/$name/$name-${version.base}/"
