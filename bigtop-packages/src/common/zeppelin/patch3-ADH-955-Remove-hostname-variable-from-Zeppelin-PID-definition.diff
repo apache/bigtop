@@ -1,0 +1,13 @@
+diff --git a/bin/zeppelin-daemon.sh b/bin/zeppelin-daemon.sh
+index e89884975..7b6125d86 100755
+--- a/bin/zeppelin-daemon.sh
++++ b/bin/zeppelin-daemon.sh
+@@ -50,7 +50,7 @@ HOSTNAME=$(hostname)
+ ZEPPELIN_NAME="Zeppelin"
+ ZEPPELIN_LOGFILE="${ZEPPELIN_LOG_DIR}/zeppelin-${ZEPPELIN_IDENT_STRING}-${HOSTNAME}.log"
+ ZEPPELIN_OUTFILE="${ZEPPELIN_LOG_DIR}/zeppelin-${ZEPPELIN_IDENT_STRING}-${HOSTNAME}.out"
+-ZEPPELIN_PID="${ZEPPELIN_PID_DIR}/zeppelin-${ZEPPELIN_IDENT_STRING}-${HOSTNAME}.pid"
++ZEPPELIN_PID="${ZEPPELIN_PID_DIR}/zeppelin-${ZEPPELIN_IDENT_STRING}.pid"
+ ZEPPELIN_MAIN=org.apache.zeppelin.server.ZeppelinServer
+ JAVA_OPTS+=" -Dzeppelin.log.file=${ZEPPELIN_LOGFILE}"
+ 
