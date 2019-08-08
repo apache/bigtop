@@ -551,7 +551,7 @@ getent group hadoop >/dev/null || groupadd -r hadoop
 
 %pre hdfs
 getent group hdfs >/dev/null   || groupadd -r hdfs
-getent passwd hdfs >/dev/null || /usr/sbin/useradd --comment "Hadoop HDFS" --shell /bin/bash -M -r -g hdfs -G hadoop --home %{state_hdfs} hdfs
+getent passwd hdfs >/dev/null || /usr/sbin/useradd --comment "Hadoop HDFS" --shell /bin/bash -M -r -g hadoop -G hdfs --home %{state_hdfs} hdfs
 
 %pre httpfs
 getent group httpfs >/dev/null   || groupadd -r httpfs
@@ -559,11 +559,11 @@ getent passwd httpfs >/dev/null || /usr/sbin/useradd --comment "Hadoop HTTPFS" -
 
 %pre yarn
 getent group yarn >/dev/null   || groupadd -r yarn
-getent passwd yarn >/dev/null || /usr/sbin/useradd --comment "Hadoop Yarn" --shell /bin/bash -M -r -g yarn -G hadoop --home %{state_yarn} yarn
+getent passwd yarn >/dev/null || /usr/sbin/useradd --comment "Hadoop Yarn" --shell /bin/bash -M -r -g hadoop -G yarn --home %{state_yarn} yarn
 
 %pre mapreduce
 getent group mapred >/dev/null   || groupadd -r mapred
-getent passwd mapred >/dev/null || /usr/sbin/useradd --comment "Hadoop MapReduce" --shell /bin/bash -M -r -g mapred -G hadoop --home %{state_mapreduce} mapred
+getent passwd mapred >/dev/null || /usr/sbin/useradd --comment "Hadoop MapReduce" --shell /bin/bash -M -r -g hadoop -G mapred --home %{state_mapreduce} mapred
 
 %post
 %{alternatives_cmd} --install %{config_hadoop} %{name}-conf %{etc_hadoop}/conf.empty 10
