@@ -1,0 +1,22 @@
+# A headless service to create DNS records
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "hbase.name" . }}-hbase-rs
+  labels:
+    app: {{ template "hbase.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: hbase-rs
+spec:
+  clusterIP: "None"
+  ports:
+  - port: 16020
+    name: rs
+  - port: 16030
+    name: rsinfo
+  selector:
+    app: {{ template "hbase.name" . }}
+    release: {{ .Release.Name }}
+    component: hbase-rs

@@ -1,0 +1,49 @@
+	<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+	  <configuration><property>                                                                                                                                                                        <name>fs.gs.impl</name>                                                                                                                                                                  
+	    <value>com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem</value>                                                                                                                     
+	    <description>The FileSystem for gs: (GCS) uris.</description>                                                                                                                       
+	  </property>                                                                                                                              
+	  <property>                                                                                                                                                                                 
+	    <name>fs.AbstractFileSystem.gs.impl</name>                                                                                                                                               
+	    <value>com.google.cloud.hadoop.fs.gcs.GoogleHadoopFS</value>                                                                                                                             
+	    <description>The AbstractFileSystem for gs: (GCS) uris. Only necessary for use with Hadoop 2.</description>                                                                              
+	  </property>                                                                                
+	  <property>                                                                                                                                                                                 
+	    <name>fs.gs.project.id</name>                                                                                                                                                            
+	    <value>NOT_RUNNING_INSIDE_GCE</value>                                                                                                                                                   
+	  </property>                                                                                                                                                      
+	    <property>                                                                                                                                                                                 
+	    <name>fs.s3a.endpoint</name>                                                                                                                                                               
+	    <description>AWS S3 endpoint to connect to. An up-to-date list is                                                                                                                          
+	      provided in the AWS Documentation: regions and endpoints. Without this                                                                                                                   
+	      property, the standard region (s3.amazonaws.com) is assumed.                                                                                                                             
+	    </description>                                                                                                                                                                             
+	    <value>http://127.0.0.1:9000</value>                                                                                                                                                       
+	  </property>                                                                                                                                                                                  
+																								       
+	  <property>                                                                                                                                                                                   
+	    <name>fs.s3a.access.key</name>                                                                                                                                                             
+	    <description>AWS access key ID.</description>                                                                                                                                              
+	    <value>minio</value>                                                                                                                                                                       
+	  </property>                                                                                                                                                                                  
+																								       
+	  <property>                                                                                                                                                                                   
+	    <name>fs.s3a.secret.key</name>                                                                                                                                                             
+	    <description>AWS secret key.</description>                                                                                                                                                 
+	    <value>minio123</value>                                                                                                                                                                    
+	  </property>                                                                                                                                                                                  
+																								       
+	  <property>                                                                                                                                                                                   
+	    <name>fs.s3a.path.style.access</name>                                                                                                                                                      
+	    <value>true</value>                                                                                                                                                                        
+	    <description>Enable S3 path style access ie disabling the default virtual hosting behaviour.                                                                                               
+	      Useful for S3A-compliant storage providers as it removes the need to set up DNS for virtual hosting.                                                                                     
+	    </description>                                                                                                                                                                             
+	  </property>                                                                                                                                                                                  
+																								       
+	  <property>                                                                                                                                                                                   
+	    <name>fs.s3a.impl</name>                                                                                                                                                                   
+	    <value>org.apache.hadoop.fs.s3a.S3AFileSystem</value>                                                                                                                                      
+	    <description>The implementation class of the S3A Filesystem</description>                                                                                                                  
+	  </property>                                                                                                                                                                         																					       
+	</configuration>

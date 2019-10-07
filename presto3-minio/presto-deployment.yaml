@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+  name: presto-worker
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: presto
+    spec:
+      containers:
+      - image: jayunit100/wlan0-presto-worker:latest
+        name: presto-w
+        ports:
+        - containerPort: 8080
+      hostname: presto
+      restartPolicy: Always
+status: {}

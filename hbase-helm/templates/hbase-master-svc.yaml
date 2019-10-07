@@ -1,0 +1,26 @@
+# A headless service to create DNS records
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "hbase.name" . }}-hbase-master
+  labels:
+    app: {{ template "hbase.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: hbase-master
+spec:
+  ports:
+  - port: 8080
+    name: restapi
+  - port: 9090
+    name: thriftapi
+  - port: 16000
+    name: master
+  - port: 16010
+    name: masterinfo
+  clusterIP: "None"
+  selector:
+    app: {{ template "hbase.name" . }}
+    release: {{ .Release.Name }}
+    component: hbase-master

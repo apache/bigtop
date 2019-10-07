@@ -1,0 +1,31 @@
+### Example of how to use a hostPath to implement Dynamic storage
+
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: hp-pv-001
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/tmp/data01"
+
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: hp-pv-002
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/tmp/data02"
