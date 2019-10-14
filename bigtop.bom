@@ -122,6 +122,18 @@ bigtop {
   ]
 
   components {
+    'kubespray' {
+      name    = "kubespray"
+      pkg     = "kubespray"
+      relNotes = ""
+      website = "https://github.com/kubernetes-sigs/kubespray"
+      version { base = '2.11.0'; pkg = base; release = 1 }
+      tarball { destination = "$name-${version.base}.tar.gz"
+                source      = "v${version.base}.tar.gz" }
+      url     { site = "https://github.com/kubernetes-sigs/kubespray/archive/"
+                archive = site }
+    }
+
     'zookeeper' {
       name    = 'zookeeper'
       pkg     = name
