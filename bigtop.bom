@@ -133,7 +133,17 @@ bigtop {
       url     { site = "https://github.com/kubernetes-sigs/kubespray/archive/"
                 archive = site }
     }
-
+    'rook' {
+      name    = "rook"
+      pkg     = "rook"
+      relNotes = "Rook is an open source cloud-native storage orchestrator for Kubernetes"
+      website = "http://https://github.com/rook/rook"
+      version { base = '1.1.2'; pkg = base; release = 1 }
+      tarball { destination = "$name-${version.base}.tar.gz"
+                source      = "v${version.base}.tar.gz" }
+      url     { site = "https://github.com/rook/rook/archive"
+                archive = site }
+    }
     'zookeeper' {
       name    = 'zookeeper'
       pkg     = name

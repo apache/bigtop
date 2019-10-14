@@ -25,7 +25,7 @@ TBD
 
 Prerequisites:
 - Vagrant
-- Java 
+- Java
 
 ## Set up 3-Node Kubernetes cluster via Kubespray on local machine
 ```
@@ -51,6 +51,72 @@ kubernetes-dashboard is running at https://172.17.8.101:6443/api/v1/namespaces/k
 To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 ```
 
+## Storage
+You need to install ```lvm2``` package for Rook-Ceph:
+```
+# Centos
+sudo yum install -y lvm2
+
+# Ubuntu
+sudo apt-get install -y lvm2
+```
+Refer to https://rook.io/docs/rook/v1.1/k8s-pre-reqs.html for prerequisites on Rook
+
+Run ```download``` task to get Rook binary:
+```
+$ ./gradlew rook-clean rook-download && cd dl/ && tar xvfz rook-1.1.2.tar.gz
+```
+
+Create Rook operator:
+```
+$ kubectl create -f dl/rook-1.1.2/cluster/examples/kubernetes/ceph/common.yaml
+$ kubectl create -f dl/rook-1.1.2/cluster/examples/kubernetes/ceph/operator.yaml
+$ kubectl -n rook-ceph get pod
+```
+
+Create Ceph cluster:
+```
+# test
+$ kubectl create -f storage/rook/ceph/cluster-test.yaml
+
+# production
+$ kubectl create -f storage/rook/ceph/cluster.yaml
+
+$ kubectl get pod -n rook-ceph
+```
+
+Deploy Ceph Toolbox:
+```
+$ kubectl create -f dl/rook-1.1.2/cluster/examples/kubernetes/ceph/toolbox.yaml
+$ kubectl -n rook-ceph get pod -l "app=rook-ceph-tools"
+$ kubectl -n rook-ceph exec -it $(kubectl -n rook-ceph get pod -l "app=rook-ceph-tools" -o jsonpath='{.items[0].metadata.name}') bash
+
+# ceph status &&
+ceph osd status &&
+ceph df &&
+rados df &&
+```
+Refer to https://rook.io/docs/rook/v1.1/ceph-toolbox.html for more details.
+
+Create a StorageClass for Ceph RBD:
+```
+$ kubectl create -f dl/rook-1.1.2/cluster/examples/kubernetes/ceph/csi/rbd/storageclass.yaml
+kubectl get storageclass
+rook-ceph-block
+```
+
+Create Minio operator:
+```
+$ kubectl create -f dl/rook-1.1.2/cluster/examples/kubernetes/minio/operator.yaml
+
+#
+$ kubectl -n rook-minio-system get pod
+```
+```
+$ kubectl create -f storage/rook/minio/object-store.yaml
+$ kubectl -n rook-minio get pod -l app=minio,objectstore=my-store
+```
+
 # Cloud Native Bigtop
 This is the content for the talk given by jay vyas and sid mani @ apachecon 2019 in Las Vegas,  you can watch it here  https://www.youtube.com/watch?v=LUCE63q !
 
@@ -61,7 +127,7 @@ helm install stable/nfs-server-provisioner ; kubectl patch storageclass nfs -p '
 Minio:  kubectl -n minio create secret generic my-minio-secret --from-literal=accesskey=minio --from-literal=secretkey=minio123
 helm install --set existingSecret=my-minio-secret stable/minio --namespace=minio --name=minio
 Nifi: helm repo add cetic https://cetic.github.io/helm-charts ; helm install nifi --namespace=minio
-Kafka:  helm repo add incubator http://storage.googleapis.com/kubernetes-charts-incubator $ helm install --name my-kafka incubator/kafka , kubectl edit statefulset kafka 
+Kafka:  helm repo add incubator http://storage.googleapis.com/kubernetes-charts-incubator $ helm install --name my-kafka incubator/kafka , kubectl edit statefulset kafka
  envFrom:
         - configMapRef:
             name: kafka-cm
@@ -177,25 +243,23 @@ In particular, this repo modifies stock helm charts in a variety of ways to make
 1. We don't use stable/spark because its *old*.  Instead we use microsofts spark, which comes integrated
 with zepplin properly.
 2. We use configmaps for configuration of *spark*.  For spark, this allows us to inject
-different types of configuration stuff from the kuberentes level, rather then baking them into the image (note that 
+different types of configuration stuff from the kuberentes level, rather then baking them into the image (note that
 you cant just inject a single file from a config map, b/c it overwrites the whole directory).  This allows us
 to inject minio access properties into spark itself, while also injecting other config.
-3. For Kafka, we config map the environment variables so that we can use the same zookeeper instance as 
+3. For Kafka, we config map the environment variables so that we can use the same zookeeper instance as
 NiFi.  
 4. For Presto, the configuration parameters for workers/masters are all injected also via config map.  We use
 a fork of https://github.com/dharmeshkakadia/presto-kubernetes for this change (PR's are submitted to make this upstream).
 5. For minio there arent any major changes needed out of the box, except using emptyDir for storage if you dont have a volume provisioner.
 6. For HBase, we also reuse the same zookeeper instance that is used via NIFI and kafka.  For now we use the nifi zk deployment but at some point we will make ZK a first class citizen.
 
-============================================ 
+============================================
 
 Notes and Ideas
- 
-# Inspiration 
+
+# Inspiration
 
 Recently saw https://github.com/dacort/damons-data-lake.
 - A problem set that is increasingly relevant: lots of sources, real time, unstructured warehouse/lake.
 - No upstream plug-and-play alternative to cloud native services stack.
 - Infrastructure, storage, networking is the hardest part.
-
-
