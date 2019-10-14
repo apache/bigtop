@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+echo "Kubectl plugin for Apache Bigtop"
+
+# version of Bigtop plugin
+if [[ "$1" == "version" ]]
+then
+    echo "2.0.0"
+    exit 0
+fi
+
+if [[ "$1" == "cluster-info" ]]
+then
+    kubectl cluster-info
+    exit 0
+fi
+
