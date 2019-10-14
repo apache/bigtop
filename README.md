@@ -35,6 +35,22 @@ $ cd dl/kubespray-2.11.0/ && cp ../../kubespray/vagrant/Vagrantfile .
 $ vagrant up
 ```
 
+## Configuring ```kubectl``` for local cluster
+```
+$ vagrant ssh k8s-1
+
+k8s-1$ mkdir -p ~/.kube
+k8s-1$ sudo cp /etc/kubernetes/admin.conf .kube/config
+k8s-1$ sudo chown -R vagrant:vagrant .kube
+k8s-1$ kubectl cluster-info
+
+Kubernetes master is running at https://172.17.8.101:6443
+coredns is running at https://172.17.8.101:6443/api/v1/namespaces/kube-system/services/coredns:dns/proxy
+kubernetes-dashboard is running at https://172.17.8.101:6443/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+```
+
 # Cloud Native Bigtop
 This is the content for the talk given by jay vyas and sid mani @ apachecon 2019 in Las Vegas,  you can watch it here  https://www.youtube.com/watch?v=LUCE63q !
 
