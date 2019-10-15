@@ -1,9 +1,9 @@
-# This is the new smoke testing module for bigtop
+# This is the new smoke testing module for Bigtop
 
 ## Goals
 
 This gradle based test framework aims at making it extremely simple to
-customize and test Apache BigTop's hadoop distribution.
+customize and test Apache BigTop's distribution.
 
  - Easily add new tests to bigtop without adding new directories / xml files.
  - Debug tests easily and make logging extremely transparent.
@@ -17,27 +17,10 @@ So overall, this framework makes testing with apache bigtop easy as well as fun!
 
 You need to export several environment variables.   For example,
 ```
-export HADOOP_CONF_DIR=/etc/hadoop/conf/
-export HADOOP_MAPRED_HOME=/usr/lib/hadoop-mapreduce/
-export HIVE_HOME=/usr/lib/hive/
-export PIG_HOME=/usr/lib/pig/
-export FLUME_HOME=/usr/lib/flume/
-export HIVE_CONF_DIR=/etc/hive/conf/
 export JAVA_HOME="/usr/lib/jvm/java-openjdk/"
-export MAHOUT_HOME="/usr/lib/mahout"
-export SPARK_HOME="/usr/lib/spark"
-export TAJO_HOME="/usr/lib/tajo"
-export OOZIE_TAR_HOME="/usr/lib/oozie/doc"
-```
 
-Fallback mode for shark-shell submission is 'yarn-client'. For a good reason,
-we aren't using YARN to provision cluster services. Hence, in order to execute
-the test against a standalone Spark cluster, like we deploy would require two
-more environment variables:
-`
-export SPARK_MASTER_IP=bigtop1.docker
-export SPARK_MASTER_PORT=7077
-`
+```
+If you are running smoke tests on Kubernetes, you need ```kubectl``` in your PATH variable.
 
 Then, simply invoke the tests you want to run, as described below.
 
@@ -46,17 +29,17 @@ Invoking test task of flume subproject will execute flume tests. To test hive as
 you would add the invocation of hive:test, and so on. To run the tests from the top-level
 Bigtop folder, follow the example below:
 ```
-    ./gradlew bigtop-tests:smoke-tests:flume:test bigtop-tests:smoke-tests:hive:test -Psmoke.tests --info
+    ./gradlew bigtop-tests:smoke-tests:zookeeper:test bigtop-tests:smoke-tests:rook-ceph:test -Psmoke.tests --info
 ```
 You also can run smoke tests from bigtop-tests/smoke-tests directory,
 or from any subproject of it. E.g.
 ```
     cd bigtop-tests/smoke-tests
-    ../../gradlew hive:test -Psmoke.tests
+    ../../gradlew zookeeper:test -Psmoke.tests
 ```
 or
 ```
-    cd bigtop-tests/smoke-tests/hive
+    cd bigtop-tests/smoke-tests/zookeeper
     ../../../gradlew test -Psmoke.tests
 ```
 Instead of using top-level Gradle wrapper one can also use system-wide

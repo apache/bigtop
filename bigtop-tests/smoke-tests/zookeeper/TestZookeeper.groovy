@@ -31,6 +31,8 @@ class TestZookeeper {
   static private Log LOG = LogFactory.getLog(Object.class)
 
   static Shell sh = new Shell("/bin/bash -s")
+  static String DEFAULT_NAMESPACE = "bigtop";
+  static String DEFAULT_POD_NAME = "zookeeper-0";
 
   @BeforeClass
   static void setUp() {
@@ -46,12 +48,13 @@ class TestZookeeper {
   void testZkServerStatus() {
     // Basic test to verify that the server is running, and is in a
     // state that we expect.
-    LOG.info('Running zkServer.sh status');
-    sh.exec("/usr/lib/zookeeper/bin/zkServer.sh status");
+    LOG.info('Running zkServer.sh status on pod');
+    sh.exec("kubectl exec -n " + DEFAULT_NAMESPACE + " " + DEFAULT_POD_NAME + " -- bin/zkServer.sh status");
     logError(sh);
     assertTrue("Failed ...", sh.getRet() == 0);
 
-    String out = sh.getOut()[0].trim();
+    String out = sh.getOut().toString();
+    LOG.info("Output of zkServer.sh status:\n" + out);
     assertTrue(out.contains("Mode"));
     // If this is the only Zookeeper node, then we should be in
     // "standalone" mode. If not, we should be in "leader" or

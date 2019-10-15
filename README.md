@@ -129,6 +129,19 @@ $ kubectl exec -n $NS zookeeper-0 -- bin/zkServer.sh status
 ```
 Refer to https://github.com/helm/charts/tree/master/incubator/zookeeper for more configurations.
 
+Getting Started
+===============
+
+Below are some recipes for getting started with using Apache Bigtop. As Apache Bigtop has different subprojects, these recipes will continue to evolve.
+For specific questions it's always a good idea to ping the mailing list at dev-subscribe@bigtop.apache.org to get some immediate feedback, or [open a JIRA](https://issues.apache.org/jira/browse/BIGTOP).
+
+For Users: Running the smoke tests
+-----------------------------------
+
+The simplest way to test bigtop is described in bigtop-tests/smoke-tests/README file
+
+For integration (API level) testing with maven, read on.
+
 # Cloud Native Bigtop
 This is the content for the talk given by jay vyas and sid mani @ apachecon 2019 in Las Vegas,  you can watch it here  https://www.youtube.com/watch?v=LUCE63q !
 
