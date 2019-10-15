@@ -129,6 +129,43 @@ $ kubectl exec -n $NS zookeeper-0 -- bin/zkServer.sh status
 ```
 Refer to https://github.com/helm/charts/tree/master/incubator/zookeeper for more configurations.
 
+## Kafka
+Deploy Kafka cluser via Helm:
+```
+$ helm repo add incubator http://storage.googleapis.com/kubernetes-charts-incubator
+$ helm install --name kafka \
+--namespace bigtop \
+-f kafka/values.yaml \
+--set zookeeper.url="zookeeper-0.zookeeper-headless:2181\,zookeeper-1.zookeeper-headless:2181\,zookeeper-2.zookeeper-headless:2181" \
+incubator/kafka
+
+# Deploy Kafka client:
+$ kubectl create --namespace bigtop -f kafka/kafka-client.yaml
+
+# Usage of Kafka client
+$ export ZOOKEEPER_URL="zookeeper-0.zookeeper-headless:2181,zookeeper-1.zookeeper-headless:2181,zookeeper-2.zookeeper-headless:2181"
+
+# List all topics
+$ kubectl -n bigtop exec kafka-client -- kafka-topics \
+--zookeeper  $ZOOKEEPER_URL \
+--list
+
+# To create a new topic:
+$ kubectl -n bigtop exec kafka-client -- kafka-topics \
+--zookeeper $ZOOKEEPER_URL \
+--topic test1 --create --partitions 1 --replication-factor 1
+
+```
+
+### Schema Registry 
+Optionally, You can create schema registry service for Kafka:
+```
+helm install --name kafka-schema-registry --namespace bigtop -f kafka/schema-registry/values.yaml \
+--set kafkaStore.overrideBootstrapServers="kafka-0.kafka-headless:9092\,kafka-1.kafka-headless:9092\,kafka-2.kafka-headless:9092" \
+incubator/schema-registry
+
+```
+
 Getting Started
 ===============
 
