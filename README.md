@@ -117,6 +117,18 @@ $ kubectl create -f storage/rook/minio/object-store.yaml
 $ kubectl -n rook-minio get pod -l app=minio,objectstore=my-store
 ```
 
+## Zookeeper
+Deploy Zookeeper cluster on Kubernetes cluster via Helm chart:
+```
+$ cd $BIGTOP_HOME
+$ export NS="bigtop"
+$ helm repo add incubator http://storage.googleapis.com/kubernetes-charts-incubator
+$ helm install --name zookeeper --namespace $NS -f zookeeper/values.yaml incubator/zookeeper
+$ kubectl get all -n $NS -l app=zookeeper
+$ kubectl exec -n $NS zookeeper-0 -- bin/zkServer.sh status
+```
+Refer to https://github.com/helm/charts/tree/master/incubator/zookeeper for more configurations.
+
 # Cloud Native Bigtop
 This is the content for the talk given by jay vyas and sid mani @ apachecon 2019 in Las Vegas,  you can watch it here  https://www.youtube.com/watch?v=LUCE63q !
 
