@@ -14,7 +14,7 @@ spec:
         io.kompose.service: presto
     spec:
       containers:
-      - image: jayunit100/wlan0-presto-worker:latest
+      - image: bigtop/bigtop-prestosql-worker:latest
         name: presto-w
         ports:
         - containerPort: 8080
