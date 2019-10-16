@@ -19,9 +19,82 @@ limitations under the License.
 [Apache Bigtop](http://bigtop.apache.org/)
 ==========================================
 
-TBD
+...is a project for the development of packaging and tests of the Big Data and Data Analytics ecosystem.
 
-# Get Started with Deployment and Smoke Testing of Cloud Native BigTop
+The primary goal of Apache Bigtop is to build a community around the packaging and interoperability testing of bigdata-related projects. This includes testing at various levels (packaging, platform, runtime, upgrade, etc...) developed by a community with a focus on the system as a whole, rather than individual projects.
+
+The simplest way to get a feel for how bigtop works, is to just cd into `provisioner` and try out the recipes under vagrant or docker.  Each one rapidly spins up, and runs the bigtop smoke tests on, a local bigtop based big data distribution. Once you get the gist, you can hack around with the recipes to learn how the puppet/rpm/smoke-tests all work together, going deeper into the components you are interested in as described below.
+
+# Quick overview of source code directories
+
+* __bigtop-deploy__ : deployment scripts and puppet stuff for Apache Bigtop.
+* __bigtop-packages__ : RPM/DEB specifications for Apache Bigtop subcomponents.
+* __bigtop-test-framework__ : The source code for the iTest utilities (framework used by smoke tests).
+* __bigtop-tests__ :
+* __test-artifacts__ : source for tests.
+* __test-execution__ : maven pom drivers for running the integration tests found in test-artifacts.
+* __bigtop-toolchain__ : puppet scripts for setting up an instance which can build Apache Bigtop, sets up utils like jdk/maven/protobufs/...
+* __provisioner__ : Vagrant and Docker Provisioner that automatically spin up Hadoop environment with one click.
+* __docker__ : Dockerfiles and Docker Sandbox build scripts.
+
+Also, there is a new project underway, Apache Bigtop blueprints, which aims to create templates/examples that demonstrate/compare various Apache Hadoop ecosystem components with one another.
+
+# Contributing
+
+There are lots of ways to contribute.  People with different expertise can help with various subprojects:
+
+* __puppet__ : Much of the Apache Bigtop deploy and packaging tools use puppet to bootstrap and set up a cluster. But recipes for other tools are also welcome (ie. Chef, Ansible, etc.)
+* __groovy__ : Primary language used to write the Apache Bigtop smokes and itest framework.
+* __maven__ : Used to build Apache Bigtop smokes and also to define the high level Apache Bigtop project.
+* __contributing your workloads__ : Contributing your workloads enable us to tests projects against real use cases and enable you to have people verifying the use cases you care about are always working.
+* __documentation__ : We are always in need of a better documentation!
+* __giving feedback__ : Tell us how you use Apache Bigtop, what was great and what was not so great. Also, what are you expecting from it and what would you like to see in the future?
+
+Also, opening [JIRA's](https://issues.apache.org/jira/browse/BIGTOP) and getting started by posting on the mailing list is helpful.
+
+# Cloud Native Bigtop
+
+This is the content for the talk given by jay vyas and sid mani @ apachecon 2019 in Las Vegas,  you can watch it here  https://www.youtube.com/watch?v=LUCE63q !
+
+## TLDR, heres how you create an analytics distro on K8s...
+
+```
+helm install stable/nfs-server-provisioner ; kubectl patch storageclass nfs -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+Minio:  kubectl -n minio create secret generic my-minio-secret --from-literal=accesskey=minio --from-literal=secretkey=minio123
+helm install --set existingSecret=my-minio-secret stable/minio --namespace=minio --name=minio
+Nifi: helm repo add cetic https://cetic.github.io/helm-charts ; helm install nifi --namespace=minio
+Kafka:  helm repo add incubator http://storage.googleapis.com/kubernetes-charts-incubator $ helm install --name my-kafka incubator/kafka , kubectl edit statefulset kafka
+ envFrom:
+        - configMapRef:
+            name: kafka-cm
+Spark: kubectl create configmap spark-conf --from-file=core-site.xml --from-file=log4j.properties --from-file=spark-defaults.conf --from-file=spark-env.sh -n bigdata ; helm install microsoft/spark --version 1.0.0 --namespace=minio
+Presto: cd ./presto3-minio/ , kubectl create -f - -n minio
+
+```
+## Problem
+
+Installation of things has been commoditized by containers and K8s.  The more important
+problems we have nowadays are around interoperation, learning, and integration of different
+tools for different problems in the analytics space.
+
+Modern data scientists need 'batteries included' frameworks that can be used to model and
+address different types of analytics problems over time, which can replicate the integrated
+functionality of AWS, GCP, and so on.
+
+## Current Status
+
+This repository currently integrates installation of a full analytics stack for kubernetes
+with batteries included, including storage.
+
+## Modifications from generic charts or recipes
+
+configuration isnt really externalized very well in most off the shelf helm charts.  The other obvious missing link is that storage isnt provided for you, which is a problem for folks that don't know how to do things in K8s.   We've externalized configuration for all files (i.e. see spark as a canonical example of this) into configmaps and unified zookeeper instances into a single instances for ease of deployment here.  Also, this repo has *tested* different helm repos / yaml files to see what random code on the internet actually works
+the way it should.  
+
+For example, the stable helm charts don't properly configure zepplin, allow for empty storage on ZK, or inject config into kafka as you'd want to be able to in certain scenarios.  In this repo, everything should *just work* provided you create things in *the right order*.
+
+
+# Immediately Get Started with Deployment and Smoke Testing of Cloud Native BigTop
 
 Prerequisites:
 - Vagrant
@@ -157,7 +230,7 @@ $ kubectl -n bigtop exec kafka-client -- kafka-topics \
 
 ```
 
-### Schema Registry 
+### Schema Registry
 Optionally, You can create schema registry service for Kafka:
 ```
 helm install --name kafka-schema-registry --namespace bigtop -f kafka/schema-registry/values.yaml \
@@ -166,8 +239,7 @@ incubator/schema-registry
 
 ```
 
-Getting Started
-===============
+# Getting Started
 
 Below are some recipes for getting started with using Apache Bigtop. As Apache Bigtop has different subprojects, these recipes will continue to evolve.
 For specific questions it's always a good idea to ping the mailing list at dev-subscribe@bigtop.apache.org to get some immediate feedback, or [open a JIRA](https://issues.apache.org/jira/browse/BIGTOP).
@@ -179,149 +251,15 @@ The simplest way to test bigtop is described in bigtop-tests/smoke-tests/README 
 
 For integration (API level) testing with maven, read on.
 
-# Cloud Native Bigtop
-This is the content for the talk given by jay vyas and sid mani @ apachecon 2019 in Las Vegas,  you can watch it here  https://www.youtube.com/watch?v=LUCE63q !
+For Developers: Building and modifying the web site
+---------------------------------------------------
 
-# TLDR, heres how you create an analytics distro on K8s...
+The website can be built by running `mvn site:site` from the root directory of the
+project.  The main page can be accessed from "project_root/target/site/index.html".
 
-```
-helm install stable/nfs-server-provisioner ; kubectl patch storageclass nfs -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
-Minio:  kubectl -n minio create secret generic my-minio-secret --from-literal=accesskey=minio --from-literal=secretkey=minio123
-helm install --set existingSecret=my-minio-secret stable/minio --namespace=minio --name=minio
-Nifi: helm repo add cetic https://cetic.github.io/helm-charts ; helm install nifi --namespace=minio
-Kafka:  helm repo add incubator http://storage.googleapis.com/kubernetes-charts-incubator $ helm install --name my-kafka incubator/kafka , kubectl edit statefulset kafka
- envFrom:
-        - configMapRef:
-            name: kafka-cm
-Spark: kubectl create configmap spark-conf --from-file=core-site.xml --from-file=log4j.properties --from-file=spark-defaults.conf --from-file=spark-env.sh -n bigdata ; helm install microsoft/spark --version 1.0.0 --namespace=minio
-Presto: cd ./presto3-minio/ , kubectl create -f - -n minio
-
-```
-
-# Problem
-
-Installation of things has been commoditized by containers and K8s.  The more important
-problems we have nowadays are around interoperation, learning, and integration of different
-tools for different problems in the analytics space.
-
-Modern data scientists need 'batteries included' frameworks that can be used to model and
-address different types of analytics problems over time, which can replicate the integrated
-functionality of AWS, GCP, and so on.
-
-# Current Status
-
-This repository currently integrates installation of a full analytics stack for kubernetes
-with batteries included, including storage.
-
-```
-                       +----------------+
-                       |                |    XXX           XXX          XXXXXX
-                       |    NIFI        |XXXXX  XXX       XX  XXX     XXX    XX
-                       |                |         XX    XXX     XX    X       XX
-                       |                |          XXXXXX        XXXXXX        X
-                       +-----+----------+                                     X
-+-------------+              |                                                X
-|             |              |                                                XXXXXX
-|    Kafka    |              |                                                      XXXX
-|             |              |                         +----------------+           XXXX
-+-----+-------+              |                         |                |     XXXXXXX
-      |                      |                         |  Zepplin       |    XX
-      |               +------v------+                  |                |    XXXXXX
-      +-------------->+             |                  |                |         X
-                      |    Zookeeper+-------+          +-----------+----+         X
-                      |             |       |                      |           X  X  XX
-                      +-------------+       |                      |           XX X XX
-                                            |                      |            XXXXX
-                                            |                      |
-                                            |                      |  +--------v------+
-                                            v                      +> | Spark         |
-                                    +-------+----------+---+          |               |
-                                    |                  |   |          |               |
-                                    |    Volume PRovisioner|          +---------------+
-                                    |    (NFS or hostpath) |
-                                    |                  |   |
-                                    +-------------^----+---+ .            (Presto)
-                                                  ^                          |
-                                                  |                          |
-                                                  |                          V
-                                                  |                +---------------+
-                                                  |                |               |
-                                                  |                |               |
-                                                  +----------------+   Minio       |
-                                                                   |               |
-                                                                   +---------------+
-```
-
-If all services are deployed succesfully, you ultimately will have an inventory looking like this:
+The source for the website is located in "project_root/src/site/".
 
 
-```
-$> kubectl get pods -n bigdata
-NAME                                          READY   STATUS    RESTARTS   AGE
-coordinator-56956c8d84-hgxvc                  1/1     Running   0          34s
-fantastic-chipmunk-livy-5856779cf8-w8wlr      1/1     Running   0          3d1h
-fantastic-chipmunk-master-55f5945997-mbvbm    1/1     Running   0          3d
-fantastic-chipmunk-worker-5f7f468b8f-mwnmg    1/1     Running   1          3d1h
-fantastic-chipmunk-worker-5f7f468b8f-zkbrw    1/1     Running   0          3d1h
-fantastic-chipmunk-zeppelin-7958b9477-vv25d   1/1     Running   0          3d1h
-hbase-hbase-master-0                          1/1     Running   0          4h4m
-hbase-hbase-rs-0                              1/1     Running   2          4h7m
-hbase-hbase-rs-1                              1/1     Running   1          4h5m
-hbase-hbase-rs-2                              1/1     Running   0          4h4m
-hbase-hdfs-dn-0                               1/1     Running   1          4h7m
-hbase-hdfs-dn-1                               1/1     Running   0          4h5m
-hbase-hdfs-dn-2                               1/1     Running   0          4h5m
-hbase-hdfs-nn-0                               1/1     Running   0          4h7m
-minio-7bf4678799-cd8qz                        1/1     Running   0          3d22h
-my-kafka-0                                    1/1     Running   0          27h
-my-kafka-1                                    1/1     Running   0          27h
-my-kafka-2                                    1/1     Running   0          27h
-nifi-0                                        4/4     Running   0          2d3h
-nifi-zookeeper-0                              1/1     Running   0          2d3h
-nifi-zookeeper-1                              1/1     Running   0          2d3h
-nifi-zookeeper-2                              1/1     Running   0          2d3h
-worker-565c7c858-pjlpg                        1/1     Running   0          34s
-```
+# Contact us
 
-# Modifications from generic charts or recipes
-
-configuration isnt really externalized very well in most off the shelf helm charts.  The other obvious missing link is that storage isnt provided for you, which is a problem for folks that don't know how to do things in K8s.   We've externalized configuration for all files (i.e. see spark as a canonical example of this) into configmaps and unified zookeeper instances into a single instances for ease of deployment here.  Also, this repo has *tested* different helm repos / yaml files to see what random code on the internet actually works
-the way it should.  
-
-For example, the stable helm charts don't properly configure zepplin, allow for empty storage on ZK, or inject config into kafka as you'd want to be able to in certain scenarios.  In this repo, everything should *just work* provided you create things in *the right order*.
-
-# Instructions.
-
-1. First , install an NFS volume provisioner from the instructions storage/ directory
-2. Then follow the other instructions in the storage README
-3. Now, install components one by one from the README.md files in the processing/ directory.
-
-This will yield the following analytics distro, all running in the bigdata namespace (make sure to use
-`--namespace=bigdata` or similar on all `helm install` or `kubectl create` directives).  IF you mess anything up
-do `helm list` (find your installation, i.e. XYZ) followed by `helm delete XYZ`  to clear out your components.
-
-In particular, this repo modifies stock helm charts in a variety of ways to make things work together.
-
-1. We don't use stable/spark because its *old*.  Instead we use microsofts spark, which comes integrated
-with zepplin properly.
-2. We use configmaps for configuration of *spark*.  For spark, this allows us to inject
-different types of configuration stuff from the kuberentes level, rather then baking them into the image (note that
-you cant just inject a single file from a config map, b/c it overwrites the whole directory).  This allows us
-to inject minio access properties into spark itself, while also injecting other config.
-3. For Kafka, we config map the environment variables so that we can use the same zookeeper instance as
-NiFi.  
-4. For Presto, the configuration parameters for workers/masters are all injected also via config map.  We use
-a fork of https://github.com/dharmeshkakadia/presto-kubernetes for this change (PR's are submitted to make this upstream).
-5. For minio there arent any major changes needed out of the box, except using emptyDir for storage if you dont have a volume provisioner.
-6. For HBase, we also reuse the same zookeeper instance that is used via NIFI and kafka.  For now we use the nifi zk deployment but at some point we will make ZK a first class citizen.
-
-============================================
-
-Notes and Ideas
-
-# Inspiration
-
-Recently saw https://github.com/dacort/damons-data-lake.
-- A problem set that is increasingly relevant: lots of sources, real time, unstructured warehouse/lake.
-- No upstream plug-and-play alternative to cloud native services stack.
-- Infrastructure, storage, networking is the hardest part.
+You can get in touch with us on [the Apache Bigtop mailing lists](http://bigtop.apache.org/mail-lists.html).
