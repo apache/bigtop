@@ -14,7 +14,7 @@ spec:
         app: presto
     spec:
       containers:
-      - image: jayunit100/wlan0-presto-coordinator:latest
+      - image: bigtop/prestosql-coordinator:latest
         name: presto-w
         ports:
         - containerPort: 8080

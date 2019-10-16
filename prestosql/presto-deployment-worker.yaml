@@ -14,11 +14,11 @@ spec:
         app: presto-worker
     spec:
       containers:
-      - image: jayunit100/wlan0-presto-worker:latest
+      - image: bigtop/prestosql-worker:latest
         name: presto-w
         resources:
           requests:
-            memory: "6G"
+            memory: "2G"
         ports:
         - containerPort: 8080
       hostname: presto
