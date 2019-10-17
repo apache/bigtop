@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+
+set -ex
+
+echo "Kubectl plugin for Apache Bigtop"
+
+BIGTOP_HOME=${BIGTOP_HOME:-/bigtop}
+
+
+detect_java() {
+  # detect JAVA_HOME
+  source $BIGTOP_HOME/bigtop-packages/src/common/bigtop-utils/bigtop-detect-javahome
+
+  if [ -x "$JAVA_HOME/bin/java" ]; then
+      JAVA="$JAVA_HOME/bin/java"
+  else
+      JAVA=`which java`
+  fi
+
+  if [ -z "$JAVA" ]; then
+      echo "could not find java; set JAVA_HOME or ensure java is in PATH"
+      exit 1
+  fi
+}
+
+# version of Bigtop plugin
+if [[ "$1" == "version" ]]; then
+    # FIXME
+    echo "9.9.9"
+    exit 0
+fi
+
+# Configure kubectl
+if [[ "$1" == "kubectl-config" ]]; then
+    # FIXME
+    if [[ ! -f "$HOME/.kube/config" ]]; then
+        echo "configuring kubectl..."
+        sudo mkdir -p ~/.kube
+        sudo cp /etc/kubernetes/admin.conf ~/.kube/config
+        sudo chown -R $USER:$USER ~/.kube
+        kubectl config view
+    fi
+fi
+
+# Cluster info
+if [[ "$1" == "cluster-info" ]]; then
+    kubectl cluster-info
+    exit 0
+fi
+
+# Install Helm
+if [[ "$1" == "helm-install" ]]; then
+    curl -L https://git.io/get_helm.sh | bash
+    helm version -c
+    kubectl --namespace kube-system create serviceaccount tiller
+    kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
+    helm init --history-max 200
+    sleep 10s
+    kubectl --namespace kube-system patch deploy tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
+    sleep 10s
+    helm version
+    exit 0
+fi

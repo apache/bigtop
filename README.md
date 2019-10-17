@@ -112,16 +112,11 @@ $ vagrant up
 ```
 $ vagrant ssh k8s-1
 
-k8s-1$ mkdir -p ~/.kube
-k8s-1$ sudo cp /etc/kubernetes/admin.conf .kube/config
-k8s-1$ sudo chown -R vagrant:vagrant .kube
-k8s-1$ kubectl cluster-info
+```
+```
+k8s-1$ kubectl plugin list
+k8s-1$ kubectl bigtop kubectl-config && kubectl bigtop helm-install
 
-Kubernetes master is running at https://172.17.8.101:6443
-coredns is running at https://172.17.8.101:6443/api/v1/namespaces/kube-system/services/coredns:dns/proxy
-kubernetes-dashboard is running at https://172.17.8.101:6443/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy
-
-To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 ```
 
 ## Storage
