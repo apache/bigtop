@@ -178,7 +178,7 @@ Vagrant.configure("2") do |config|
       # Disable swap for each vm
       node.vm.provision "shell", inline: "swapoff -a"
 
-      node.vm.provision "shell", inline: "yum install -y lvm2"
+      node.vm.provision "shell", inline: "yum install -y lvm2 java-1.8.0-openjdk-devel"
       node.vm.provision "shell", inline: "sudo cp /bigtop/kubectl/plugin/kubectl-bigtop /usr/local/bin/ ; sudo chmod +x /usr/local/bin/kubectl-bigtop" 
 
       host_vars[vm_name] = {

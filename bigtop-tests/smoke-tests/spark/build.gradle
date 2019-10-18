@@ -29,5 +29,5 @@ sourceSets {
 }
 
 test.doFirst {
-  checkEnv(["SPARK_HOME"])
+  checkEnv(["BIGTOP_HOME"])
 }

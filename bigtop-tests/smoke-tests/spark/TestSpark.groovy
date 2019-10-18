@@ -39,54 +39,33 @@ class TestSpark {
   static private Log LOG = LogFactory.getLog(Object.class)
 
   static Shell sh = new Shell("/bin/bash -s")
-  static final String SPARK_HOME = System.getenv("SPARK_HOME")
-  static final String SPARK_MASTER_IP = System.getenv("SPARK_MASTER_IP")
-  static final String SPARK_MASTER_PORT = System.getenv("SPARK_MASTER_PORT")
-  static final String TEST_SPARKSQL_LOG = "/tmp/TestSpark_testSparkSQL.log"
+  static final String BIGTOP_HOME = System.getenv("BIGTOP_HOME")
+  static final String BIGTOP_K8S_NS = "bigtop";
 
   @BeforeClass
   static void setUp() {
-    sh.exec("rm -f " + TEST_SPARKSQL_LOG)
-    // create HDFS examples/src/main/resources
-    sh.exec("hdfs dfs -mkdir -p examples/src/main/resources")
-    // extract people.txt file into it
-    String examplesJar = JarContent.getJarName("$SPARK_HOME/examples/jars", 'spark-examples.*jar')
-    assertNotNull(examplesJar, "spark-examples.jar file wasn't found")
-    ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream("$SPARK_HOME/examples/jars/$examplesJar"))
-    File examplesDir = new File('examples')
-    examplesDir.mkdirs()
-    zipInputStream.unzip(examplesDir.getName(), 'people')
-    sh.exec("hdfs dfs -put examples/* examples/src/main/resources")
-    logError(sh)
   }
 
   @AfterClass
   public static void tearDown() {
-    sh.exec("hdfs dfs -ls")
-    logError(sh)
-    sh.exec("hdfs dfs -rm -r examples")
+    sh.exec("kubectl delete sparkapplication " + "-n " + BIGTOP_K8S_NS + " spark-pi")
     logError(sh)
   }
 
   @Test
-  void testSparkSQL() {
-    // Let's figure out the proper mode for the submission
-    // If SPARK_MASTER_IP nor SPARK_MASTER_PORT are set, we'll assume
-    // 'yarn-client' mode
-    String masterMode = 'yarn-client'
-    if (SPARK_MASTER_IP != null && SPARK_MASTER_PORT != null)
-      masterMode = "spark://$SPARK_MASTER_IP:$SPARK_MASTER_PORT"
-    else
-      println("SPARK_MASTER isn't set. yarn-client submission will be used. " +
-          "Refer to smoke-tests/README If this isn't what you you expect.")
-
-    final String SPARK_SHELL = SPARK_HOME + "/bin/spark-shell --master $masterMode"
-    // Let's use time, 'cause the test has one job
-    sh.exec("timeout 120 " + SPARK_SHELL +
-        " --class org.apache.spark.examples.sql.JavaSparkSQLExample " +
-        " --jars " + SPARK_HOME + "/examples/jars/spark-examples*.jar > " +
-        TEST_SPARKSQL_LOG + " 2>&1")
-    logError(sh)
+  void testSparkPi() {
+    sh.exec("kubectl apply -f " + BIGTOP_HOME + "/spark/examples/spark-pi.yaml");
+    logError(sh);
     assertTrue("Failed ...", sh.getRet() == 0);
+
+    // sleep 20s
+    sleep(20000);
+
+    sh.exec("kubectl logs " + "-n " + BIGTOP_K8S_NS + " spark-pi-driver");
+    logError(sh);
+    String out = sh.getOut().toString();
+    LOG.info("Output of Spark application driver:\n" + out);
+    assertTrue(out.contains("Pi is roughly")); 
   }
 }
+

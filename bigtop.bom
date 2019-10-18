@@ -90,7 +90,7 @@
 
 bigtop {
 /** Base Configuration of the mirror and archives */
-  version = "1.5.0-SNAPSHOT"
+  version = "2.0.0-SNAPSHOT"
   stack {
     'jdk' { version = "1." + ( System.getenv('BIGTOP_JDK') ?: "8" ); version_base = version }
     'scala' { version = '2.11.8'; version_base = version }
@@ -142,6 +142,17 @@ bigtop {
       tarball { destination = "$name-${version.base}.tar.gz"
                 source      = "v${version.base}.tar.gz" }
       url     { site = "https://github.com/rook/rook/archive"
+                archive = site }
+    }
+    'volcano' {
+      name    = "volcano"
+      pkg     = "volcano"
+      relNotes = "Volcano is system for runnning high performance workloads on Kubernetes"
+      website = "https://volcano.sh"
+      version { base = '0.2'; pkg = base; release = 1 }
+      tarball { destination = "$name-${version.base}.tar.gz"
+                source      = "v${version.base}.tar.gz" }
+      url     { site = "https://github.com/volcano-sh/volcano/archive"
                 archive = site }
     }
     'zookeeper' {
