@@ -6,19 +6,19 @@ metadata:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: minio-my-store-access-keys
+  name: minio-object-store-access-keys
   namespace: rook-minio
 type: Opaque
 data:
-  # Base64 encoded string: "TEMP_DEMO_ACCESS_KEY"
-  username: VEVNUF9ERU1PX0FDQ0VTU19LRVk=
-  # Base64 encoded string: "TEMP_DEMO_SECRET_KEY"
-  password: VEVNUF9ERU1PX1NFQ1JFVF9LRVk=
+  # Base64 encoded string: "minio"
+  username: bWluaW8=
+  # Base64 encoded string: "minio123"
+  password: bWluaW8xMjM=
 ---
 apiVersion: minio.rook.io/v1alpha1
 kind: ObjectStore
 metadata:
-  name: my-store
+  name: bigtop-rook-minio
   namespace: rook-minio
 spec:
   scope:
@@ -55,14 +55,14 @@ spec:
     podAffinity:
     podAnyAffinity:
   credentials:
-    name: minio-my-store-access-keys
+    name: minio-object-store-access-keys
     namespace: rook-minio
   clusterDomain:
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: minio-my-store
+  name: bigtop-rook-minio-svc
   namespace: rook-minio
 spec:
   type: NodePort

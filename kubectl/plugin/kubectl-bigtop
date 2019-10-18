@@ -61,3 +61,40 @@ if [[ "$1" == "helm-install" ]]; then
     helm version
     exit 0
 fi
+
+# Install Rook-Ceph
+if [[ "$1" == "rook-ceph-install" ]]; then
+
+    kubectl create -f $BIGTOP_HOME/dl/rook-1.1.2/cluster/examples/kubernetes/ceph/common.yaml
+    kubectl create -f $BIGTOP_HOME/dl/rook-1.1.2/cluster/examples/kubernetes/ceph/operator.yaml
+    kubectl -n rook-ceph get pod
+
+    # Ceph cluster
+    # test
+    kubectl create -f $BIGTOP_HOME/storage/rook/ceph/cluster-test.yaml
+    # production
+    # kubectl create -f $BIGTOP_HOME/storage/rook/ceph/cluster.yaml
+    
+    sleep 10s
+
+    # Ceph toolbox
+    kubectl create -f $BIGTOP_HOME/dl/rook-1.1.2/cluster/examples/kubernetes/ceph/toolbox.yaml
+
+    # StorageClass: Ceph RBD
+    kubectl create -f $BIGTOP_HOME/dl/rook-1.1.2/cluster/examples/kubernetes/ceph/csi/rbd/storageclass.yaml
+    kubectl get storageclass
+    exit 0
+fi
+
+# Rook Ceph toolbox
+if [[ "$1" == "rook-ceph-toolbox" ]]; then
+    kubectl -n rook-ceph exec -it $(kubectl -n rook-ceph get pod -l "app=rook-ceph-tools" -o jsonpath='{.items[0].metadata.name}') bash
+    exit 0
+fi
+
+# Minio
+if [[ "$1" == "minio-install" ]]; then
+    helm install --name bigtop-minio --namespace bigtop -f storage/minio/values.yaml stable/minio
+    exit 0
+fi
+

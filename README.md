@@ -130,6 +130,8 @@ sudo apt-get install -y lvm2
 ```
 Refer to https://rook.io/docs/rook/v1.1/k8s-pre-reqs.html for prerequisites on Rook
 
+### Rook Ceph
+
 Run ```download``` task to get Rook binary:
 ```
 $ ./gradlew rook-clean rook-download && cd dl/ && tar xvfz rook-1.1.2.tar.gz
@@ -169,10 +171,12 @@ Refer to https://rook.io/docs/rook/v1.1/ceph-toolbox.html for more details.
 Create a StorageClass for Ceph RBD:
 ```
 $ kubectl create -f dl/rook-1.1.2/cluster/examples/kubernetes/ceph/csi/rbd/storageclass.yaml
-kubectl get storageclass
+
+$ kubectl get storageclass
 rook-ceph-block
 ```
 
+### Rook Minio
 Create Minio operator:
 ```
 $ kubectl create -f dl/rook-1.1.2/cluster/examples/kubernetes/minio/operator.yaml
@@ -180,9 +184,44 @@ $ kubectl create -f dl/rook-1.1.2/cluster/examples/kubernetes/minio/operator.yam
 #
 $ kubectl -n rook-minio-system get pod
 ```
+
+Create object store:
 ```
 $ kubectl create -f storage/rook/minio/object-store.yaml
-$ kubectl -n rook-minio get pod -l app=minio,objectstore=my-store
+$ kubectl -n rook-minio get objectstores.minio.rook.io
+$ kubectl -n rook-minio get pod -l app=minio,objectstore=bigtop-rook-minio
+```
+
+### Minio
+
+```
+$ cd $BIGTOP_HOME
+$ helm install --name bigtop-minio --namespace bigtop -f storage/minio/values.yaml stable/minio
+
+```
+
+```
+Minio can be accessed via port 9000 on the following DNS name from within your cluster:
+bigtop-minio.bigtop.svc.cluster.local
+
+To access Minio from localhost, run the below commands:
+
+  1. export POD_NAME=$(kubectl get pods --namespace bigtop -l "release=bigtop-minio" -o jsonpath="{.items[0].metadata.name}")
+
+  2. kubectl port-forward $POD_NAME 9000 --namespace bigtop
+
+Read more about port forwarding here: http://kubernetes.io/docs/user-guide/kubectl/kubectl_port-forward/
+
+You can now access Minio server on http://localhost:9000. Follow the below steps to connect to Minio server with mc client:
+
+  1. Download the Minio mc client - https://docs.minio.io/docs/minio-client-quickstart-guide
+
+  2. mc config host add bigtop-minio-local http://localhost:9000 minio minio123 S3v4
+
+  3. mc ls bigtop-minio-local
+
+Alternately, you can use your browser or the Minio SDK to access the server - https://docs.minio.io/categories/17
+
 ```
 
 ## Zookeeper
