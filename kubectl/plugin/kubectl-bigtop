@@ -49,7 +49,7 @@ if [[ "$1" == "cluster-info" ]]; then
 fi
 
 # Install Helm
-if [[ "$1" == "helm-install" ]]; then
+if [[ "$1" == "helm-deploy" ]]; then
     curl -L https://git.io/get_helm.sh | bash
     helm version -c
     kubectl --namespace kube-system create serviceaccount tiller
@@ -63,11 +63,13 @@ if [[ "$1" == "helm-install" ]]; then
 fi
 
 # Install Rook-Ceph
-if [[ "$1" == "rook-ceph-install" ]]; then
+if [[ "$1" == "rook-ceph-deploy" ]]; then
 
     kubectl create -f $BIGTOP_HOME/dl/rook-1.1.2/cluster/examples/kubernetes/ceph/common.yaml
     kubectl create -f $BIGTOP_HOME/dl/rook-1.1.2/cluster/examples/kubernetes/ceph/operator.yaml
     kubectl -n rook-ceph get pod
+
+    sleep 10s
 
     # Ceph cluster
     # test
@@ -82,6 +84,8 @@ if [[ "$1" == "rook-ceph-install" ]]; then
 
     # StorageClass: Ceph RBD
     kubectl create -f $BIGTOP_HOME/dl/rook-1.1.2/cluster/examples/kubernetes/ceph/csi/rbd/storageclass.yaml
+    # Make the storageClass as default
+    kubectl patch storageclass rook-ceph-block -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
     kubectl get storageclass
     exit 0
 fi
@@ -92,8 +96,19 @@ if [[ "$1" == "rook-ceph-toolbox" ]]; then
     exit 0
 fi
 
+# Rook NFS
+if [[ "$1" == "rook-nfs-deploy" ]]; then
+    kubectl create -f $BIGTOP_HOME/dl/rook-1.1.2/cluster/examples/kubernetes/nfs/operator.yaml
+    sleep 10s
+    kubectl -n rook-nfs-system get pod
+    kubectl create -f $BIGTOP_HOME/storage/rook/nfs/nfs.yaml
+    # kubectl create -f $BIGTOP_HOME/storage/rook/nfs/nfs-ceph.yaml
+    kubectl create -f $BIGTOP_HOME/storage/rook/nfs/storageclass.yaml
+    kubectl get storageclass
+fi
+
 # Minio
-if [[ "$1" == "minio-install" ]]; then
+if [[ "$1" == "minio-deploy" ]]; then
     helm install --name bigtop-minio --namespace bigtop -f storage/minio/values.yaml stable/minio
     exit 0
 fi

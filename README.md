@@ -115,7 +115,7 @@ $ vagrant ssh k8s-1
 ```
 ```
 k8s-1$ kubectl plugin list
-k8s-1$ kubectl bigtop kubectl-config && kubectl bigtop helm-install
+k8s-1$ kubectl bigtop kubectl-config && kubectl bigtop helm-deploy
 
 ```
 
@@ -176,8 +176,39 @@ $ kubectl get storageclass
 rook-ceph-block
 ```
 
+Mark ```rook-ceph-block``` StorageClass as default:
+```
+kubectl patch storageclass rook-ceph-block -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+
+```
+
+### NFS
+
+```
+$ kubectl create -f dl/rook-1.1.2/cluster/examples/kubernetes/nfs/operator.yaml
+$ kubectl -n rook-nfs-system get pod
+
+# NFS by the default storageClass
+$ kubectl create -f storage/rook/nfs/nfs.yaml
+
+# NFS by the Ceph RBD volumes
+$ kubectl create -f storage/rook/nfs/nfs-ceph.yaml
+
+# NFS by the ```hostpath``` storageClass
+$ kubectl create -f storage/rook/nfs/nfs-hostpath.yaml
+
+# storageClass by NFS export
+$ kubectl create -f storage/rook/nfs/storageclass.yaml
+```
+
+If you want to mark ```rook-nfs-share1``` storageClass as default:
+```
+$ kubectl patch storageclass rook-nfs-share1 -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+$ kubectl get storageclass
+```
+
 ### Rook Minio
-Create Minio operator:
+Deploy Minio operator:
 ```
 $ kubectl create -f dl/rook-1.1.2/cluster/examples/kubernetes/minio/operator.yaml
 
@@ -265,7 +296,7 @@ $ kubectl -n bigtop exec kafka-client -- kafka-topics \
 ```
 
 ### Schema Registry
-Optionally, You can create schema registry service for Kafka:
+Optionally, You can deploy schema registry service for Kafka:
 ```
 helm install --name kafka-schema-registry --namespace bigtop -f kafka/schema-registry/values.yaml \
 --set kafkaStore.overrideBootstrapServers="kafka-0.kafka-headless:9092\,kafka-1.kafka-headless:9092\,kafka-2.kafka-headless:9092" \
