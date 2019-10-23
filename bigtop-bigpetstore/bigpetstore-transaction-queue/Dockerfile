@@ -12,13 +12,18 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-FROM centos:7
+FROM gradle:5.6.3-jdk12 as build
+
+ADD . /bigpetstore-transaction-queue
+WORKDIR /bigpetstore-transaction-queue
+
+RUN [ "gradle", "fatJar" ]
+
+FROM openjdk:14-ea-12-jdk-alpine3.10
 LABEL maintainer="jay@apache.org"
-RUN yum update -y
-RUN yum install -y java-1.8.0-openjdk
 
 WORKDIR /opt/
 
-COPY build/libs/bigpetstore-transaction-queue-all-1.0.jar /opt
+COPY --from=build /bigpetstore-transaction-queue/build/libs/bigpetstore-transaction-queue-all-1.0.jar /opt
 
 ENTRYPOINT ["java", "-jar", "bigpetstore-transaction-queue-all-1.0.jar"]
