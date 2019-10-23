@@ -308,6 +308,10 @@ incubator/schema-registry
 
 See spark/README.md
 
+## Monitoring
+
+See prometheus/README.md
+
 # Getting Started
 
 Below are some recipes for getting started with using Apache Bigtop. As Apache Bigtop has different subprojects, these recipes will continue to evolve.
