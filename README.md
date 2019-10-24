@@ -96,11 +96,22 @@ For example, the stable helm charts don't properly configure zepplin, allow for 
 
 # Immediately Get Started with Deployment and Smoke Testing of Cloud Native BigTop
 
+Minikube is the easiest tool to run a single-node Kubernetes cluster.
+
+```
+$ cd $BIGTOP_HOME
+$ minikube start --cpus 8 --memory 8196 --container-runtime=cri-o 
+$ kubectl cluster-info
+
+```
+
+## Set up 3-Node Kubernetes cluster via Kubespray on local machine
+
 Prerequisites:
 - Vagrant
 - Java
 
-## Set up 3-Node Kubernetes cluster via Kubespray on local machine
+If you want a multi-node cluster on local machine, you can create the cluster using Kubespray:
 ```
 $ cd $BIGTOP_HOME
 $ ./gradlew kubespray-clean kubespray-download && cd dl/ && tar xvfz kubespray-2.11.0.tar.gz
@@ -120,6 +131,33 @@ k8s-1$ kubectl bigtop kubectl-config && kubectl bigtop helm-deploy
 ```
 
 ## Storage
+
+The easiest way to get simple persistent volumes with dynamic volume provisiong on a one node cluster:
+```
+$ helm repo add rimusz https://charts.rimusz.net
+$ helm repo update
+$ helm upgrade --install hostpath-provisioner \
+--namespace kube-system \
+--set storageClass.defaultClass=true \
+rimusz/hostpath-provisioner
+
+$ kubectl get storageclass
+```
+
+Mark ```hostpath``` StorageClass as default:
+```
+$ kubectl patch storageclass hostpath -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+$ kubectl get storageclass
+```
+
+On Minikube, there is 'standard' storage class as default storage class. you can make 'hostpath' storage class as default:
+```
+$ kubectl patch storageclass standard -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
+$ kubectl get storageclass
+```
+
+### Rook
+
 You need to install ```lvm2``` package for Rook-Ceph:
 ```
 # Centos
@@ -129,8 +167,6 @@ sudo yum install -y lvm2
 sudo apt-get install -y lvm2
 ```
 Refer to https://rook.io/docs/rook/v1.1/k8s-pre-reqs.html for prerequisites on Rook
-
-### Rook Ceph
 
 Run ```download``` task to get Rook binary:
 ```

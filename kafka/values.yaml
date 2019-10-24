@@ -231,7 +231,6 @@ persistence:
   ##   GKE, AWS & OpenStack)
   ##
   # storageClass:
-  storageClass: "rook-ceph-block"
 
 jmx:
   ## Rules to apply to the Prometheus JMX Exporter.  Note while lots of stats have been cleaned and exposed,

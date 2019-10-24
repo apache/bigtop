@@ -121,7 +121,7 @@ persistence:
   ##   GKE, AWS & OpenStack)
   ##
   # storageClass: "-"
-  storageClass: "rook-ceph-block"
+  
   accessMode: ReadWriteOnce
   size: 5Gi
 

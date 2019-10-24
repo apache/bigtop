@@ -62,6 +62,16 @@ if [[ "$1" == "helm-deploy" ]]; then
     exit 0
 fi
 
+# Hostpah storageClass
+if [[ "$1" == "hostpath-deploy" ]]; then
+    helm repo add rimusz https://charts.rimusz.net
+    helm repo update
+    helm upgrade --install hostpath-provisioner --namespace kube-system --set storageClass.defaultClass=true rimusz/hostpath-provisioner
+    sleep 5s ; kubectl get storageclass
+
+    exit 0
+fi
+
 # Install Rook-Ceph
 if [[ "$1" == "rook-ceph-deploy" ]]; then
 
