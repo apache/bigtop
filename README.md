@@ -348,6 +348,8 @@ See spark/README.md
 
 See prometheus/README.md
 
+And also, You can aggregate logs from Kubernetes cluster (Pods) in using Loki stack (Loki and promtail). See logs/loki/README.md for deploying Liki and querying logs from Loki on Grafana.
+
 # Getting Started
 
 Below are some recipes for getting started with using Apache Bigtop. As Apache Bigtop has different subprojects, these recipes will continue to evolve.

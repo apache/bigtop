@@ -123,3 +123,14 @@ if [[ "$1" == "minio-deploy" ]]; then
     exit 0
 fi
 
+# Loki
+if [[ "$1" == "loki-deploy" ]]; then
+    helm repo add loki https://grafana.github.io/loki/charts
+    helm repo update
+    helm upgrade --install --namespace default loki -f logs/loki/loki-values.yaml loki/loki
+    sleep 10s
+    helm upgrade --install --namespace default promtail -f logs/loki/proimtail-values.yaml loki/promtail --set "loki.serviceName=loki"
+    # http url for loki server: http://loki:3100
+    helm list && kubectl get po -A
+    exit 0
+fi
