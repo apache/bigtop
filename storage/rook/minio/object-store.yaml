@@ -32,7 +32,6 @@ spec:
         accessModes: [ "ReadWriteOnce" ]
         # Set the storage class that will be used, otherwise Kubernetes' default storage class will be used.
         #storageClassName: "my-storage-class"
-        storageClassName: "rook-ceph-block"
         resources:
           requests:
             storage: "8Gi"

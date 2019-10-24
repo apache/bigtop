@@ -84,7 +84,6 @@ persistence:
   ## If the PV uses a different storage class, specify that here.
   # storageClass: standard
   # VolumeName: ""
-  storageClass: "rook-ceph-block"
 
   accessMode: ReadWriteOnce
   size: 10Gi
