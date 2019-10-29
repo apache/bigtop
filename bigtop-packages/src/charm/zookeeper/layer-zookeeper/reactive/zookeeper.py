@@ -49,44 +49,44 @@ def setup_nagios(nagios):
         {
             'name': 'zk_open_file_descriptor_coun',
             'description': 'ZK_Open_File_Descriptors_Count',
-            'warn': 500,
-            'crit': 800
+            'warn': config['open_file_descriptor_count_warn'],
+            'crit': config['open_file_descriptor_count_crit']
         },
         {
             'name': 'zk_ephemerals_count',
             'description': 'ZK_Ephemerals_Count',
-            'warn': 10000,
-            'crit': 100000
+            'warn': config['ephemerals_count_warn'],
+            'crit': config['ephemerals_count_crit']
         },
         {
             'name': 'zk_avg_latency',
             'description': 'ZK_Avg_Latency',
-            'warn': 500,
-            'crit': 1000
+            'warn': config['avg_latency_warn'],
+            'crit': config['avg_latency_crit']
         },
         {
             'name': 'zk_max_latency',
             'description': 'ZK_Max_Latency',
-            'warn': 1000,
-            'crit': 2000
+            'warn': config['max_latency_warn'],
+            'crit': config['max_latency_crit']
         },
         {
             'name': 'zk_min_latency',
             'description': 'ZK_Min_Latency',
-            'warn': 500,
-            'crit': 1000
+            'warn': config['min_latency_warn'],
+            'crit': config['min_latency_crit']
         },
         {
             'name': 'zk_outstanding_requests',
             'description': 'ZK_Outstanding_Requests',
-            'warn': 20,
-            'crit': 50
+            'warn': config['outstanding_requests_warn'],
+            'crit': config['outstanding_requests_crit']
         },
         {
             'name': 'zk_watch_count',
             'description': 'ZK_Watch_Count',
-            'warn': 100,
-            'crit': 500
+            'warn': config['watch_count_warn'],
+            'crit': config['watch_count_crit']
         },
     ]
     check_cmd = ['/usr/local/lib/nagios/plugins/check_zookeeper.py',
