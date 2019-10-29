@@ -39,3 +39,73 @@ options:
     description: |
       A comma-separated list of nagios servicegroups.
       If left empty, the nagios_context will be used as the servicegroup
+  open_file_descriptor_count_warn:
+    default: 500
+    type: int
+    description: |
+      The allowed open file descriptor count before a warning alert is triggered.
+  open_file_descriptor_count_crit:
+    default: 800
+    type: int
+    description: |
+      The allowed open file descriptor count before a critical alert is triggered.
+  ephemerals_count_warn:
+    default: 10000
+    type: int
+    description: |
+      The allowed ephemerals count before a warning alert is triggered.
+  ephemerals_count_crit:
+    default: 100000
+    type: int
+    description: |
+      The allowed ephemerals count before a critical alert is triggered.
+  avg_latency_warn:
+    default: 500
+    type: int
+    description: |
+      The allowed average latency before a warning alert is triggered.
+  avg_latency_crit:
+    default: 1000
+    type: int
+    description: |
+      The allowed average latency before a critical alert is triggered.
+  max_latency_warn:
+    default: 1000
+    type: int
+    description: |
+      The allowed maximum latency before a warning alert is triggered.
+  max_latency_crit:
+    default: 2000
+    type: int
+    description: |
+      The allowed maximum latency before a critical alert is triggered.
+  min_latency_warn:
+    default: 500
+    type: int
+    description: |
+      The allowed minimum latency before a warning alert is triggered.
+  min_latency_crit:
+    default: 1000
+    type: int
+    description: |
+      The allowed minimum latency before a critical alert is triggered.
+  outstanding_requests_warn:
+    default: 20
+    type: int
+    description: |
+      The allowed outstanding requests before a warning alert is triggered.
+  outstanding_requests_crit:
+    default: 50
+    type: int
+    description: |
+      The allowed outstanding requests before a critical alert is triggered.
+  watch_count_warn:
+    default: 100
+    type: int
+    description: |
+      The allowed watch count before a warning alert is triggered.
+  watch_count_crit:
+    default: 500
+    type: int
+    description: |
+      The allowed watch count before a critical alert is triggered.

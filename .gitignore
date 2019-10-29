@@ -13,3 +13,4 @@ target
 gradle*
 .vagrant
 .DS_Store
+*.swp
