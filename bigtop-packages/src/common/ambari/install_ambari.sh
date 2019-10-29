@@ -90,7 +90,7 @@ cp -a  $SOURCE_DIR/ambari-common/src/main/unix/ambari-python-wrap ${PREFIX}/${VA
 # Both of these are a stopgap before we get our own stack
 rm -rf ${PREFIX}/var/lib/ambari-server/resources/stacks/HDP*
 mkdir -p ${PREFIX}/var/lib/ambari-server/resources/stacks/Bigtop/2.1
-cp $BUILD_DIR/contrib/management-packs/odpi-ambari-mpack/target/odpi-ambari-mpack-*.tar.gz ${PREFIX}/var/lib/ambari-server/resources
+cp $BUILD_DIR/contrib/management-packs/bgtp-ambari-mpack/target/bgtp-ambari-mpack-*.tar.gz ${PREFIX}/var/lib/ambari-server/resources
 
 # End of Ambari Server
 

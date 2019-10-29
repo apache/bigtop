@@ -25,4 +25,4 @@ sed -i "s|http://repo.spring.io|https://repo.spring.io|g" pom.xml
 
 mvn clean package -DskipTests -Drat.skip
 
-(cd contrib/management-packs/odpi-ambari-mpack ; mvn clean package -DskipTests -Drat.skip)
+(cd contrib/management-packs/bgtp-ambari-mpack ; mvn clean package -DskipTests -Drat.skip)
