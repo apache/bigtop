@@ -100,7 +100,7 @@ Minikube is the easiest tool to run a single-node Kubernetes cluster.
 
 ```
 $ cd $BIGTOP_HOME
-$ minikube start --cpus 8 --memory 8196 --container-runtime=cri-o 
+$ minikube start --cpus 8 --memory 8196 --disk-size=80g --container-runtime=cri-o 
 $ kubectl cluster-info
 
 ```
@@ -252,18 +252,27 @@ $ kubectl create -f dl/rook-1.1.2/cluster/examples/kubernetes/minio/operator.yam
 $ kubectl -n rook-minio-system get pod
 ```
 
-Create object store:
+Create standalone Minio object store:
 ```
 $ kubectl create -f storage/rook/minio/object-store.yaml
 $ kubectl -n rook-minio get objectstores.minio.rook.io
 $ kubectl -n rook-minio get pod -l app=minio,objectstore=bigtop-rook-minio
 ```
+If you want to deploy Distributed Minio cluster, Increase the ```nodeCount``` in object-store.yaml file. e.g., ```nodeCount: 4``` 
 
 ### Minio
 
+Standalone Minio:
 ```
 $ cd $BIGTOP_HOME
 $ helm install --name bigtop-minio --namespace bigtop -f storage/minio/values.yaml stable/minio
+
+```
+
+Distributed Minio:
+```
+$ cd $BIGTOP_HOME
+$ helm install --name bigtop-minio --namespace bigtop --set mode=distributed,replicas=4 -f storage/minio/values.yaml stable/minio
 
 ```
 

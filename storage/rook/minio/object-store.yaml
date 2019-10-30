@@ -22,7 +22,10 @@ metadata:
   namespace: rook-minio
 spec:
   scope:
-    nodeCount: 4
+    # Standalone Minio
+    nodeCount: 1
+    # Distributed Minio
+    #nodeCount: 4
     # You can have multiple PersistentVolumeClaims in the volumeClaimTemplates list.
     # Be aware though that all PersistentVolumeClaim Templates will be used for each intance (see nodeCount).
     volumeClaimTemplates:

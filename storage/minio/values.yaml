@@ -6,7 +6,7 @@ clusterDomain: cluster.local
 ##
 image:
   repository: minio/minio
-  tag: RELEASE.2019-08-07T01-59-21Z
+  tag: RELEASE.2019-10-12T01-39-57Z 
   pullPolicy: IfNotPresent
 
 ## Set default image, imageTag, and imagePullPolicy for the `mc` (the minio
@@ -14,14 +14,13 @@ image:
 ##
 mcImage:
   repository: minio/mc
-  tag: RELEASE.2019-08-07T23-14-43Z
+  tag: latest
   pullPolicy: IfNotPresent
 
 ## minio server mode, i.e. standalone or distributed.
 ## Distributed Minio ref: https://docs.minio.io/docs/distributed-minio-quickstart-guide
 ##
-#mode: standalone
-mode: distributed
+mode: standalone
 
 ## Additional arguments to pass to minio binary
 extraArgs: []
@@ -47,8 +46,8 @@ priorityClassName: ""
 ## Distributed Minio ref: https://docs.minio.io/docs/distributed-minio-quickstart-guide
 ##
 existingSecret: ""
-accessKey: "minio"
-secretKey: "minio123"
+accessKey: "AKIAIOSFODNN7EXAMPLE"
+secretKey: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
 configPath: "/root/.minio/"
 configPathmc: "/root/.mc/"
 mountPath: "/export"
@@ -84,7 +83,6 @@ persistence:
   ## If the PV uses a different storage class, specify that here.
   # storageClass: standard
   # VolumeName: ""
-
   accessMode: ReadWriteOnce
   size: 10Gi
 
@@ -170,9 +168,9 @@ resources:
 ## Create a bucket after minio install
 ##
 defaultBucket:
-  enabled: true
+  enabled: false
   ## If enabled, must be a string with length > 0
-  name: testbucket
+  name: bucket
   ## Can be one of none|download|upload|public
   policy: none
   ## Purge if bucket exists already
