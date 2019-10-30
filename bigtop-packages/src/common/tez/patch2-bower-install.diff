@@ -1,0 +1,12 @@
+diff -ruaN tez-0.9.1.orig/tez-ui/pom.xml tez-0.9.1/tez-ui/pom.xml
+--- tez-0.9.1.orig/tez-ui/pom.xml	2019-10-30 15:27:11.243196060 +0800
++++ tez-0.9.1/tez-ui/pom.xml	2019-10-30 16:24:36.611781238 +0800
+@@ -144,7 +144,7 @@
+             <phase>generate-resources</phase>
+             <id>bower install</id>
+             <configuration>
+-              <arguments>install</arguments>
++              <arguments>install --allow-root</arguments>
+             </configuration>
+             <goals>
+               <goal>bower</goal>
