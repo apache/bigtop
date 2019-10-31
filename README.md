@@ -262,14 +262,14 @@ If you want to deploy Distributed Minio cluster, Increase the ```nodeCount``` in
 
 ### Minio
 
-Standalone Minio:
+Deploy a Standalone Minio:
 ```
 $ cd $BIGTOP_HOME
 $ helm install --name bigtop-minio --namespace bigtop -f storage/minio/values.yaml stable/minio
 
 ```
 
-Distributed Minio:
+Deploy a Distributed Minio:
 ```
 $ cd $BIGTOP_HOME
 $ helm install --name bigtop-minio --namespace bigtop --set mode=distributed,replicas=4 -f storage/minio/values.yaml stable/minio
@@ -297,6 +297,30 @@ You can now access Minio server on http://localhost:9000. Follow the below steps
   3. mc ls bigtop-minio-local
 
 Alternately, you can use your browser or the Minio SDK to access the server - https://docs.minio.io/categories/17
+
+```
+
+### mc (Minio Client)
+
+Deploy mc pod:
+```
+$ cd $BIGTOP_HOME
+$ kubectl create -n bigtop -f storage/mc/minio-client.yaml
+```
+```
+$ kubectl exec -n bigtop minio-client mc admin info server bigtop-minio
+```
+
+Make a bucket and remove the bucket:
+```
+$ kubectl exec -n bigtop minio-client mc mb bigtop-minio/testbucket1
+Bucket created successfully `bigtop-minio/testbucket1`.
+
+$ kubectl exec -n bigtop minio-client mc ls bigtop-minio/
+[2019-10-31 04:46:44 UTC]      0B testbucket1/
+
+$ kubectl exec -n bigtop minio-client mc rb bigtop-minio/testbucket1
+Removing `bigtop-minio/testbucket1`.
 
 ```
 

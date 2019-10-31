@@ -46,8 +46,8 @@ priorityClassName: ""
 ## Distributed Minio ref: https://docs.minio.io/docs/distributed-minio-quickstart-guide
 ##
 existingSecret: ""
-accessKey: "AKIAIOSFODNN7EXAMPLE"
-secretKey: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+accessKey: "minio"
+secretKey: "minio123"
 configPath: "/root/.minio/"
 configPathmc: "/root/.mc/"
 mountPath: "/export"
