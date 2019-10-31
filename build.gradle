@@ -140,6 +140,7 @@ rat {
        "provisioner/docker/config/hieradata/PLACEHOLDER",
        "provisioner/docker/config/hosts",
        "bigtop_toolchain/files/*.patch",
+       "bigtop-bigpetstore/bigpetstore-transaction-queue/.dockerignore",
   ]
 }
 
