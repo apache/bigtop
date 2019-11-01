@@ -22,7 +22,7 @@ management, synchronization, and group services in a simple interface. Use it
 off-the-shelf to implement consensus, group management, leader election, and
 presence protocols. Learn more at [zookeeper.apache.org][].
 
-This charm provides version 3.4.6 of the Zookeeper component from
+This charm provides version 3.4.6 of the ZooKeeper component from
 [Apache Bigtop][].
 
 [zookeeper.apache.org]: http://zookeeper.apache.org/
@@ -58,7 +58,7 @@ network interface name or a CIDR range specifying a subnet. For example:
 
 Each zookeeper unit in the cluster will lookup the IP address of that
 network interface, or find the first network interface with an IP
-address in the specified subnet, and bind Zookeeper to that address.
+address in the specified subnet, and bind zookeeper to that address.
 
 If a mistake is made and an invalid name for the network interface is
 configured, recover by re-configuring with the correct name and then
@@ -107,15 +107,15 @@ more information about a specific smoke test with:
     juju show-action-output <action-id>
 
 ## Utilities
-This charm includes Zookeeper command line utilities that can also be used to
+This charm includes ZooKeeper command line utilities that can also be used to
 verify that the application is running as expected. Check the status of the
-Zookeeper daemon with `zkServer.sh`:
+ZooKeeper daemon with `zkServer.sh`:
 
     juju run --application=zookeeper '/usr/lib/zookeeper/bin/zkServer.sh status'
 
 A successful deployment will report the service mode as either `standalone`
-(if only one Zookeeper unit has been deployed) or `leader` / `follower` (if
-a Zookeeper quorum has been formed).
+(if only one zookeeper unit has been deployed) or `leader` / `follower` (if
+a zookeeper quorum has been formed).
 
 
 # Scaling
@@ -126,24 +126,24 @@ development, and testing. In production, however, ZooKeeper should be run in
 called a quorum, and in `replicated` mode, all servers in the quorum have
 copies of the same configuration file.
 
-In order to add new Zookeeper servers to the quorum, simply add more units.
+In order to add new zookeeper servers to the quorum, simply add more units.
 For example, add two more zookeeper units with:
 
     juju add-unit -n 2 zookeeper
 
-The Zookeeper nodes will automatically perform a rolling restart to update the
-Zookeeper quorum without losing any jobs in progress. Once the rolling restart
-has completed, all of the Zookeeper nodes should report the following status:
+The zookeeper nodes will automatically perform a rolling restart to update the
+zookeeper quorum without losing any jobs in progress. Once the rolling restart
+has completed, all of the zookeeper nodes should report the following status:
 
     ready (n units)
 
-(Where 'n' is the total number of Zookeeper units in the quorum.)
+(Where 'n' is the total number of zookeeper units in the quorum.)
 
 
 # Integrating
 
-To integrate Zookeeper into solutions with other charms, update the charms
-that require Zookeeper as follows:
+To integrate ZooKeeper into solutions with other charms, update the charms
+that require ZooKeeper as follows:
 
 1) Add following lines to `metadata.yaml`:
 
@@ -177,7 +177,7 @@ affected version. Any uncertain fields may be left blank.
 
 # Resources
 
-- [Apache Zookeeper home page](http://zookeeper.apache.org/)
+- [Apache ZooKeeper home page](http://zookeeper.apache.org/)
 - [Apache Bigtop home page](http://bigtop.apache.org/)
 - [Apache Bigtop issue tracking](http://bigtop.apache.org/issue-tracking.html)
 - [Apache Bigtop mailing lists](http://bigtop.apache.org/mail-lists.html)

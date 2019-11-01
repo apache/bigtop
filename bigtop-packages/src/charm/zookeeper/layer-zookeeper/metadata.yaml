@@ -1,5 +1,6 @@
 name: zookeeper
-summary: Zookeeper from Apache Bigtop
+display-name: ZooKeeper
+summary: ZooKeeper from Apache Bigtop
 maintainer: Juju Big Data <bigdata@lists.ubuntu.com>
 description: >
   Apache ZooKeeper is a centralized, reliable application for maintaining
@@ -8,7 +9,7 @@ description: >
   applications. In order to install and configure Apache HBase and other Hadoop
   ecosystem components, you need ZooKeeper.
 
-  This charm provides version 3.4.6 of the Zookeeper application from Apache
+  This charm provides version 3.4.6 of the ZooKeeper application from Apache
   Bigtop.
 tags: []
 provides:
