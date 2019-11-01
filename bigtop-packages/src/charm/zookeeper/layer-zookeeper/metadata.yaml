@@ -1,4 +1,5 @@
 name: zookeeper
+display-name: ZooKeeper
 summary: Zookeeper from Apache Bigtop
 maintainer: Juju Big Data <bigdata@lists.ubuntu.com>
 description: >
