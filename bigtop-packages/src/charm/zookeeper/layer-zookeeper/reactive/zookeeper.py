@@ -47,7 +47,7 @@ def setup_nagios(nagios):
     unit_name = hookenv.local_unit()
     checks = [
         {
-            'name': 'zk_open_file_descriptor_coun',
+            'name': 'zk_open_file_descriptor_count',
             'description': 'ZK_Open_File_Descriptors_Count',
             'warn': config['open_file_descriptor_count_warn'],
             'crit': config['open_file_descriptor_count_crit']
