@@ -11,6 +11,8 @@ description: >
   This charm provides version 3.4.6 of the Zookeeper application from Apache
   Bigtop.
 tags: []
+series:
+  - xenial
 provides:
   zookeeper:
     interface: zookeeper
