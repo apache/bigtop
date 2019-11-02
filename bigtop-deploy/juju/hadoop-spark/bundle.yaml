@@ -1,11 +1,11 @@
 series: xenial
 description: >
-  This is an eight unit big data cluster that includes Hadoop 2.7 and Spark 2.1
+  This is an eight unit big data cluster that includes Hadoop 2.8 and Spark 2.2
   from Apache Bigtop. Use it to analyse batch data with MapReduce or streaming
   data with Spark. It will run on 5 machines in your cloud.
 services:
   namenode:
-    charm: "cs:xenial/hadoop-namenode-46"
+    charm: "cs:~bigdata-charmers/hadoop-namenode-54"
     constraints: "mem=7G root-disk=32G"
     num_units: 1
     annotations:
@@ -14,7 +14,7 @@ services:
     to:
       - "0"
   resourcemanager:
-    charm: "cs:xenial/hadoop-resourcemanager-48"
+    charm: "cs:~bigdata-charmers/hadoop-resourcemanager-56"
     constraints: "mem=7G root-disk=32G"
     num_units: 1
     annotations:
@@ -23,7 +23,7 @@ services:
     to:
       - "0"
   slave:
-    charm: "cs:xenial/hadoop-slave-47"
+    charm: "cs:~bigdata-charmers/hadoop-slave-55"
     constraints: "mem=7G root-disk=32G"
     num_units: 3
     annotations:
@@ -34,12 +34,12 @@ services:
       - "2"
       - "3"
   plugin:
-    charm: "cs:xenial/hadoop-plugin-46"
+    charm: "cs:~bigdata-charmers/hadoop-plugin-52"
     annotations:
       gui-x: "1000"
       gui-y: "400"
   spark:
-    charm: "cs:xenial/spark-71"
+    charm: "cs:~bigdata-charmers/spark-81"
     constraints: "mem=7G root-disk=32G"
     num_units: 1
     options:

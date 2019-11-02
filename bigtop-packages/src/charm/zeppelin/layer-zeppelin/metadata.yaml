@@ -6,7 +6,7 @@ description: >
   analytics. You can make beautiful data-driven, interactive, and collaborative
   documents with SQL, Scala and more.
 
-  This charm provides version 0.7.2 of the Zeppelin application from Apache
+  This charm provides version 0.7.3 of the Zeppelin application from Apache
   Bigtop.
 tags: ["analytics"]
 provides:

@@ -1,6 +1,6 @@
 series: xenial
 description: >
-  This is an eight unit big data cluster that includes Hadoop 2.7 and Spark 2.1
+  This is an eight unit big data cluster that includes Hadoop 2.8 and Spark 2.2
   from Apache Bigtop. Use it to analyse batch data with MapReduce or streaming
   data with Spark. It will run on 5 machines in your cloud.
 services:

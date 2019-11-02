@@ -1,11 +1,11 @@
 series: xenial
 description: >
-  This is a seven unit big data cluster that includes Spark 2.1 from Apache
+  This is a seven unit big data cluster that includes Spark 2.2 from Apache
   Bigtop. Use it to analyse streaming data or execute Spark jobs interactively
   from the spark-shell. It will run on 6 machines in your cloud.
 services:
   spark:
-    charm: "cs:xenial/spark-71"
+    charm: "cs:~bigdata-charmers/spark-81"
     constraints: "mem=7G root-disk=32G"
     num_units: 2
     options:
@@ -18,7 +18,7 @@ services:
       - "0"
       - "1"
   zookeeper:
-    charm: "cs:xenial/zookeeper-53"
+    charm: "cs:~bigdata-charmers/zookeeper-58"
     constraints: "mem=3G root-disk=32G"
     num_units: 3
     annotations:

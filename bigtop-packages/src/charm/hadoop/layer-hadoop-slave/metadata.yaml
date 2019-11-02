@@ -5,5 +5,5 @@ description: >
   Hadoop is a software platform that lets one easily write and
   run applications that process vast amounts of data.
 
-  This charm provides version 2.7.3 of both the HDFS DataNode and the
+  This charm provides version 2.8.5 of both the HDFS DataNode and the
   YARN NodeManager from Apache Bigtop.

@@ -22,7 +22,7 @@ language called HiveQL that transparently converts queries to MapReduce for
 execution on large datasets stored in Hadoop's HDFS. Learn more at
 [hive.apache.org][].
 
-This charm deploys version 1.2.1 of the Hive component from [Apache Bigtop][].
+This charm deploys version 2.3.3 of the Hive component from [Apache Bigtop][].
 
 [hive.apache.org]: http://hive.apache.org/
 [Apache Bigtop]: http://bigtop.apache.org/
@@ -232,6 +232,5 @@ affected version. Any uncertain fields may be left blank.
 - [Apache Bigtop home page](http://bigtop.apache.org/)
 - [Apache Bigtop issue tracking](http://bigtop.apache.org/issue-tracking.html)
 - [Apache Bigtop mailing lists](http://bigtop.apache.org/mail-lists.html)
-- [Juju Big Data](https://jujucharms.com/big-data)
-- [Juju Bigtop charms](https://jujucharms.com/q/bigtop)
-- [Juju mailing list](https://lists.ubuntu.com/mailman/listinfo/juju)
+- [Juju Big Data](https://jaas.ai/big-data)
+- [Juju Bigtop charms](https://jaas.ai/search?q=bigtop)

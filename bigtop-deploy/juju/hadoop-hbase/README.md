@@ -47,14 +47,14 @@ and syslog activity.
 The applications that comprise this bundle are spread across 8 units as
 follows:
 
-  * NameNode v2.7.3
-  * ResourceManager v2.7.3
+  * NameNode v2.8.5
+  * ResourceManager v2.8.5
     * Colocated on the NameNode unit
   * Zookeeper v3.4.6
     * 3 separate units
-  * Slave (DataNode and NodeManager) v2.7.3
+  * Slave (DataNode and NodeManager) v2.8.5
     * 3 separate units
-  * HBase v1.1.9
+  * HBase v1.3.2
     * 3 units colocated with the Hadoop Slaves
   * Client (Hadoop endpoint)
   * Plugin (Facilitates communication with the Hadoop cluster)
@@ -323,6 +323,5 @@ affected version. Any uncertain fields may be left blank.
 - [Apache Bigtop home page](http://bigtop.apache.org/)
 - [Apache Bigtop issue tracking](http://bigtop.apache.org/issue-tracking.html)
 - [Apache Bigtop mailing lists](http://bigtop.apache.org/mail-lists.html)
-- [Juju Big Data](https://jujucharms.com/big-data)
-- [Juju Bigtop charms](https://jujucharms.com/q/bigtop)
-- [Juju mailing list](https://lists.ubuntu.com/mailman/listinfo/juju)
+- [Juju Big Data](https://jaas.ai/big-data)
+- [Juju Bigtop charms](https://jaas.ai/search?q=bigtop)

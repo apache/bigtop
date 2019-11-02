@@ -44,12 +44,12 @@ activity.
 The applications that comprise this bundle are spread across 9 units as
 follows:
 
-  * NameNode v2.7.3
-  * ResourceManager v2.7.3
+  * NameNode v2.8.5
+  * ResourceManager v2.8.5
     * Colocated on the NameNode unit
-  * Slave (DataNode and NodeManager) v2.7.3
+  * Slave (DataNode and NodeManager) v2.8.5
     * 3 separate units
-  * Kafka v0.10.1.1
+  * Kafka v0.10.2.2
   * Flume-Kafka
     * Colocated on the Kafka unit
   * Zookeeper v3.4.6
@@ -317,6 +317,5 @@ affected version. Any uncertain fields may be left blank.
 - [Apache Bigtop home page](http://bigtop.apache.org/)
 - [Apache Bigtop issue tracking](http://bigtop.apache.org/issue-tracking.html)
 - [Apache Bigtop mailing lists](http://bigtop.apache.org/mail-lists.html)
-- [Juju Big Data](https://jujucharms.com/big-data)
-- [Juju Bigtop charms](https://jujucharms.com/q/bigtop)
-- [Juju mailing list](https://lists.ubuntu.com/mailman/listinfo/juju)
+- [Juju Big Data](https://jaas.ai/big-data)
+- [Juju Bigtop charms](https://jaas.ai/search?q=bigtop)

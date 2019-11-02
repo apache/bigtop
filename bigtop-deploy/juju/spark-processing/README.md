@@ -31,7 +31,7 @@ applications are included to monitor cluster health and syslog activity.
 The applications that comprise this bundle are spread across 6 units as
 follows:
 
-  * Spark (Master and Worker) v2.1.1
+  * Spark (Master and Worker) v2.2.3
     * 2 separate units
   * Zookeeper v3.4.6
     * 3 separate units
@@ -229,6 +229,5 @@ affected version. Any uncertain fields may be left blank.
 - [Apache Bigtop home page](http://bigtop.apache.org/)
 - [Apache Bigtop issue tracking](http://bigtop.apache.org/issue-tracking.html)
 - [Apache Bigtop mailing lists](http://bigtop.apache.org/mail-lists.html)
-- [Juju Big Data](https://jujucharms.com/big-data)
-- [Juju Bigtop charms](https://jujucharms.com/q/bigtop)
-- [Juju mailing list](https://lists.ubuntu.com/mailman/listinfo/juju)
+- [Juju Big Data](https://jaas.ai/big-data)
+- [Juju Bigtop charms](https://jaas.ai/search?q=bigtop)

@@ -21,7 +21,7 @@ Software Foundation written in Scala. The project aims to provide a unified,
 high-throughput, low-latency platform for handling real-time data feeds. Learn
 more at [kafka.apache.org][].
 
-This charm deploys version 0.10.1.1 of the Kafka component from
+This charm deploys version 0.10.2.2 of the Kafka component from
 [Apache Bigtop][].
 
 [kafka.apache.org]: http://kafka.apache.org/
@@ -216,6 +216,5 @@ affected version. Any uncertain fields may be left blank.
 - [Apache Bigtop home page](http://bigtop.apache.org/)
 - [Apache Bigtop issue tracking](http://bigtop.apache.org/issue-tracking.html)
 - [Apache Bigtop mailing lists](http://bigtop.apache.org/mail-lists.html)
-- [Juju Big Data](https://jujucharms.com/big-data)
-- [Juju Bigtop charms](https://jujucharms.com/q/bigtop)
-- [Juju mailing list](https://lists.ubuntu.com/mailman/listinfo/juju)
+- [Juju Big Data](https://jaas.ai/big-data)
+- [Juju Bigtop charms](https://jaas.ai/search?q=bigtop)

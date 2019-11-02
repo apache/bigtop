@@ -1,6 +1,6 @@
 series: xenial
 description: >
-  This is a seven unit big data cluster that includes Spark 2.1 from Apache
+  This is a seven unit big data cluster that includes Spark 2.2 from Apache
   Bigtop. Use it to analyse streaming data or execute Spark jobs interactively
   from the spark-shell. It will run on 6 machines in your cloud.
 services:

@@ -1,7 +1,7 @@
 series: xenial
 description: >
-  This is a fourteen unit big data cluster that includes Hadoop 2.7 and
-  HBase 1.1 from Apache Bigtop. Use it when you need a distributed big data
+  This is a fourteen unit big data cluster that includes Hadoop 2.8 and
+  HBase 1.3 from Apache Bigtop. Use it when you need a distributed big data
   store with MapReduce processing capabilities. It will run on 8 machines in
   your cloud.
 services:
@@ -40,7 +40,7 @@ services:
       gui-x: "1000"
       gui-y: "400"
   client:
-    charm: "cs:xenial/hadoop-client-9"
+    charm: "cs:~bigdata-charmers/hadoop-client-13"
     constraints: "mem=3G"
     num_units: 1
     annotations:

@@ -1,6 +1,6 @@
 series: xenial
 description: >
-  This is an eight unit big data cluster that includes Hadoop 2.7 from Apache
+  This is an eight unit big data cluster that includes Hadoop 2.8 from Apache
   Bigtop. Use it to store data in HDFS and run MapReduce analysis jobs. It
   will run on 5 machines in your cloud.
 services:
@@ -39,7 +39,7 @@ services:
       gui-x: "1000"
       gui-y: "400"
   client:
-    charm: "cs:xenial/hadoop-client-9"
+    charm: "cs:~bigdata-charmers/hadoop-client-13"
     constraints: "mem=3G"
     num_units: 1
     annotations:

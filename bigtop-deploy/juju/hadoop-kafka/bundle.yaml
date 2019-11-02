@@ -1,11 +1,11 @@
 series: xenial
 description: >
-  This is a fourteen unit big data cluster that includes Hadoop 2.7 and
+  This is a fourteen unit big data cluster that includes Hadoop 2.8 and
   Kafka 0.10 from Apache Bigtop. Use it to store streams of data in HDFS
   for future analysis with MapReduce. It will run on 9 machines in your cloud.
 services:
   namenode:
-    charm: "cs:xenial/hadoop-namenode-46"
+    charm: "cs:~bigdata-charmers/hadoop-namenode-54"
     constraints: "mem=7G root-disk=32G"
     num_units: 1
     annotations:
@@ -14,7 +14,7 @@ services:
     to:
       - "0"
   resourcemanager:
-    charm: "cs:xenial/hadoop-resourcemanager-48"
+    charm: "cs:~bigdata-charmers/hadoop-resourcemanager-56"
     constraints: "mem=7G root-disk=32G"
     num_units: 1
     annotations:
@@ -23,7 +23,7 @@ services:
     to:
       - "0"
   slave:
-    charm: "cs:xenial/hadoop-slave-47"
+    charm: "cs:~bigdata-charmers/hadoop-slave-55"
     constraints: "mem=7G root-disk=32G"
     num_units: 3
     annotations:
@@ -34,12 +34,12 @@ services:
       - "2"
       - "3"
   plugin:
-    charm: "cs:xenial/hadoop-plugin-46"
+    charm: "cs:~bigdata-charmers/hadoop-plugin-52"
     annotations:
       gui-x: "1000"
       gui-y: "400"
   client:
-    charm: "cs:xenial/hadoop-client-12"
+    charm: "cs:~bigdata-charmers/hadoop-client-13"
     constraints: "mem=3G"
     num_units: 1
     annotations:
@@ -57,7 +57,7 @@ services:
     to:
       - "4"
   zookeeper:
-    charm: "cs:xenial/zookeeper-53"
+    charm: "cs:~bigdata-charmers/zookeeper-58"
     constraints: "mem=3G root-disk=32G"
     num_units: 3
     annotations:
@@ -68,7 +68,7 @@ services:
       - "6"
       - "7"
   kafka:
-    charm: "cs:xenial/kafka-51"
+    charm: "cs:~bigdata-charmers/kafka-55"
     constraints: "mem=3G"
     num_units: 1
     annotations:

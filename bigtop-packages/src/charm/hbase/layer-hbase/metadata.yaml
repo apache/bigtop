@@ -2,7 +2,7 @@ name: hbase
 summary: HBase from Apache Bigtop
 maintainer: Juju Big Data <bigdata@lists.ubuntu.com>
 description: >
-  HBase is the Hadoop database. This charm provides version 1.1.9 of the
+  HBase is the Hadoop database. This charm provides version 1.3.2 of the
   HBase application from Apache Bigtop.
 tags: []
 requires:
