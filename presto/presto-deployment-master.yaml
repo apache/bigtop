@@ -2,7 +2,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   annotations:
-  name: presto-worker
+  name: presto-master
 spec:
   replicas: 1
   strategy:
@@ -11,13 +11,16 @@ spec:
     metadata:
       creationTimestamp: null
       labels:
-        io.kompose.service: presto
+        app: presto
     spec:
       containers:
-      - image: bigtop/bigtop-prestosql-worker:latest
+      - image: bigtop/presto-coordinator:latest
         name: presto-w
         ports:
         - containerPort: 8080
+        resources:
+          requests:
+            memory: "6G"
       hostname: presto
       restartPolicy: Always
 status: {}

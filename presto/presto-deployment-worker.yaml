@@ -14,7 +14,7 @@ spec:
         app: presto-worker
     spec:
       containers:
-      - image: bigtop/prestosql-worker:latest
+      - image: bigtop/presto-worker:latest
         name: presto-w
         resources:
           requests:
