@@ -1,0 +1,26 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+  name: presto-worker
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: presto-worker
+    spec:
+      containers:
+      - image: bigtop/prestosql-worker:latest
+        name: presto-w
+        resources:
+          requests:
+            memory: "2G"
+        ports:
+        - containerPort: 8080
+      hostname: presto
+      restartPolicy: Always
+status: {}

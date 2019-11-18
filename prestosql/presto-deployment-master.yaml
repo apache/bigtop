@@ -1,0 +1,26 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+  name: presto-master
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: presto
+    spec:
+      containers:
+      - image: bigtop/prestosql-coordinator:latest
+        name: presto-w
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            memory: "6G"
+      hostname: presto
+      restartPolicy: Always
+status: {}
