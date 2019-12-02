@@ -52,6 +52,7 @@ export GIRAPH_HOME=${GIRAPH_HOME:-/usr/lib/giraph}
 export FLINK_HOME=${FLINK_HOME:-/usr/lib/flink}
 export LIVY_HOME=${LIVY_HOME:-/usr/lib/livy}
 export KAFKA_HOME=${KAFKA_HOME:-/usr/lib/kafka}
+export YCSB_HOME=${YCSB_HOME:-/usr/lib/ycsb}
 
 echo -e "\n===== START TO RUN SMOKE TESTS: $SMOKE_TESTS =====\n"
 
