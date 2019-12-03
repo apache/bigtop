@@ -151,6 +151,10 @@ $roles_map = {
   livy => {
     master => ["livy-server"],
   },
+  elasticsearch => {
+    master => ["elasticsearch-server"],
+    worker => ["elasticsearch-server"],
+  },
 }
 
 class hadoop_cluster_node (
@@ -222,6 +226,7 @@ class node_with_roles ($roles = hiera("bigtop::roles")) inherits hadoop_cluster_
     "gpdb",
     "ambari",
     "bigtop_utils",
+    "elasticsearch",
   ]
 
   node_with_roles::deploy_module { $modules:
