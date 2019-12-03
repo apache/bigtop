@@ -98,6 +98,14 @@ PID_FILE="${PID_DIR}/${NAME}.pid"
 DAEMON=${ES_HOME}/bin/elasticsearch
 DAEMON_OPTS="-d -p ${PID_FILE} -Edefault.path.logs=${LOG_DIR} -Edefault.path.data=${DATA_DIR} -Edefault.path.conf=${CONF_DIR}"
 
+if [ -z "$ES_JVM_OPTIONS" ]; then
+    for jvm_options in "$CONF_DIR"/jvm.options; do
+        if [ -r "$jvm_options" ]; then
+            ES_JVM_OPTIONS=$jvm_options
+            break
+        fi
+    done
+fi
 export ES_JAVA_OPTS
 export JAVA_HOME
 export ES_INCLUDE
@@ -149,7 +157,7 @@ case "$1" in
 
 	# Start Daemon
 	echo -n $"Starting $DESC ..."
-	sudo -u ${ES_USER} bash -c "${DAEMON} ${DAEMON_OPTS}"
+	/sbin/runuser ${ES_USER} -s /bin/bash -c "${DAEMON} ${DAEMON_OPTS}"
 	return=$?
 	if [ $return -eq 0 ]; then
 		i=0

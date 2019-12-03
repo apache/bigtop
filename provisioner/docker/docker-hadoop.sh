@@ -118,6 +118,12 @@ generate-hosts() {
 
 generate-config() {
     log "Bigtop Puppet configurations are shared between instances, and can be modified under config/hieradata"
+    # add ip of all nodes to config
+    for node in ${NODES[*]}; do
+        this_node_ip=`docker inspect --format "{{.NetworkSettings.IPAddress}}" $node`
+	node_list="$node_list$this_node_ip "
+    done
+    node_list=$(echo "$node_list" | xargs | sed 's/ /, /g')
     cat $BIGTOP_PUPPET_DIR/hiera.yaml >> ./config/hiera.yaml
     cp -vfr $BIGTOP_PUPPET_DIR/hieradata ./config/
     cat > ./config/hieradata/site.yaml << EOF
@@ -125,6 +131,7 @@ bigtop::hadoop_head_node: $1
 hadoop::hadoop_storage_dirs: [/data/1, /data/2]
 bigtop::bigtop_repo_uri: $2
 hadoop_cluster_node::cluster_components: $3
+hadoop_cluster_node::cluster_nodes: [$node_list]
 EOF
 }
 
