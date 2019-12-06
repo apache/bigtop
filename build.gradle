@@ -231,7 +231,7 @@ task toolchain(type:Exec,
   if ('3.7' <= version && version < '4') {
     command.addAll(['--parser', 'future'])
   }
-  command.addAll(["--modulepath=${projectDir.absolutePath}:/etc/puppet/modules:/usr/share/puppet/modules",
+  command.addAll(["--modulepath=${projectDir.absolutePath}:/etc/puppet/modules:/usr/share/puppet/modules:/etc/puppetlabs/code/environments/production/modules",
     '-e', 'include bigtop_toolchain::installer'])
   workingDir '.'
   commandLine command
@@ -242,7 +242,7 @@ task "toolchain-puppetmodules"(type:Exec,
   def command = [
       'sudo', 'puppet', 'apply', '-d',
       "--modulepath=${projectDir.absolutePath}", '-e',
-      'include bigtop_toolchain::puppet-modules'
+      'include bigtop_toolchain::puppet_modules'
   ]
   workingDir '.'
   commandLine command
@@ -253,7 +253,7 @@ task "toolchain-devtools"(type:Exec,
   def command = [
       'sudo', 'puppet', 'apply', '-d',
       "--modulepath=${projectDir.absolutePath}", '-e',
-      'include bigtop_toolchain::development-tools'
+      'include bigtop_toolchain::development_tools'
   ]
   workingDir '.'
   commandLine command

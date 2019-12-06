@@ -25,10 +25,17 @@ class bigtop_toolchain::env {
     'x86_64' : { $arch = "x86_64"}
   }
   case $operatingsystem {
-    'Ubuntu','Debian': {
+    'Debian': {
+      if $::operatingsystemmajrelease =~ /^\d$/ {
+        $javahome = "/usr/lib/jvm/${java}-openjdk-$arch"
+      } else {
+        $javahome = "/usr/lib/jvm/adoptopenjdk-8-hotspot-$arch"
+      }
+    }
+    'Ubuntu': {
       $javahome = "/usr/lib/jvm/${java}-openjdk-$arch"
     }
-    'Fedora','Centos', 'Amazon': {
+    'Fedora','Centos','RedHat','Amazon': {
       $javahome = "/usr/lib/jvm/${java}"
     }
     'OpenSuSE' : {

@@ -13,9 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class bigtop_toolchain::puppet-modules-prereq {
-
-  if versioncmp($::puppetversion,'3.0.0') < 0 {
-    fail("bigtop_toolchain::puppet-modules requires Puppet 3.0.0+, but found: $::puppetversion")
-  }
+class bigtop_toolchain::development_tools {
+  include bigtop_toolchain::groovy
 }

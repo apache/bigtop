@@ -15,8 +15,8 @@
 
 class bigtop_toolchain::packages {
   case $operatingsystem{
-    /(?i:(centos|fedora))/: {
-      $pkgs = [
+    /(?i:(centos|fedora|redhat))/: {
+      $_pkgs = [
         "unzip",
         "rsync",
         "curl",
@@ -35,7 +35,6 @@ class bigtop_toolchain::packages {
         "fuse-devel",
         "cppunit-devel",
         "openssl-devel",
-        "python-devel",
         "python2-pip",
         "libxml2-devel",
         "libxslt-devel",
@@ -64,6 +63,12 @@ class bigtop_toolchain::packages {
         "bison",
         "libffi-devel"
       ]
+      if ($operatingsystem != 'Fedora' and $operatingsystemmajrelease !~ /^[0-7]$/) {
+        # The python-devel package does not exist any longer from CentOS (and RHEL) 8
+        $pkgs = concat($_pkgs, "python2-devel")
+      } else {
+        $pkgs = concat($_pkgs, "python-devel")
+      }
     }
     /(?i:(SLES|opensuse))/: { $pkgs = [
         "unzip",
@@ -220,11 +225,20 @@ class bigtop_toolchain::packages {
     package { 'epel-release':
       ensure => installed
     }
+    # On CentOS 8, EPEL requires that the PowerTools repository is enabled.
+    # See https://fedoraproject.org/wiki/EPEL#How_can_I_use_these_extra_packages.3F
+    if $operatingsystemmajrelease !~ /^[0-7]$/ {
+      yumrepo { 'PowerTools':
+        ensure  => 'present',
+        enabled => '1'
+      }
+      Yumrepo<||> -> Package<||>
+    }
   }
 
   # Install Python packages using pip
   case $operatingsystem{
-    /(?i:(centos|fedora))/: {
+    /(?i:(centos|fedora|redhat))/: {
       $pip = 'python2-pip'
     } /(?i:(SLES|opensuse))/: { 
       $pip = 'python-pip'
@@ -236,7 +250,7 @@ class bigtop_toolchain::packages {
   }
   file { '/usr/bin/pip-python':
     ensure => 'link',
-    target => '/usr/bin/pip',
+    target => '/usr/bin/pip2',
   }
   package { 'setuptools':
     ensure => 'latest',
