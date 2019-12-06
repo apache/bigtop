@@ -16,8 +16,27 @@
 class bigtop_toolchain::jdk {
   case $::operatingsystem {
     /Debian/: {
-      package { 'openjdk-8-jdk' :
-        ensure => present,
+      if $::operatingsystemmajrelease =~ /^\d$/ {
+        # Up to Debian 9
+        package { 'openjdk-8-jdk' :
+          ensure => present,
+        }
+      } else {
+        # We need JDK 8, but Debian 10 only provides the openjdk-11-jdk package in the official repo.
+        # So we use AdoptOpenJDK instead, following the steps described on:
+        # https://adoptopenjdk.net/installation.html#linux-pkg
+        include apt
+
+        apt::source { 'adoptopenjdk':
+          location => 'https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/',
+          key      => {
+            id     => '8ED17AF5D7E675EB3EE3BCE98AC3B29174885C03',
+            source => 'https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public',
+          },
+        } ->
+        package { 'adoptopenjdk-8-hotspot' :
+          ensure => present,
+        }
       }
     }
     /Ubuntu/: {
@@ -27,7 +46,7 @@ class bigtop_toolchain::jdk {
         ensure  => present,
       }
     }
-    /(CentOS|Amazon|Fedora)/: {
+    /(CentOS|Amazon|Fedora|RedHat)/: {
       package { 'java-1.8.0-openjdk-devel' :
         ensure => present
       }

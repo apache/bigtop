@@ -20,11 +20,11 @@ bigtop-toolchain
 
 Puppet module for configuring a host for building BigTop. It installs:
 
-**Apache Ant 1.9.4**
+**Apache Ant 1.9**
 
-**OpenJDK 1.7**
+**OpenJDK 1.8**
 
-**Apache Maven 3.2.5**
+**Apache Maven 3.5**
 
 **Gradle 2.4**
 
@@ -52,11 +52,11 @@ Or installed as a whole with:
 	  include bigtop_toolchain::installer
 	}
 
-It will create a user jenkins with the required  environment variables set for
+It will create a user jenkins with the required environment variables set for
 building BigTop:
 ```
 MAVEN_HOME=/usr/local/maven
-JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk.x86_64
+JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk.x86_64
 ANT_HOME=/usr/local/ant
 GRADLE_HOME=/usr/local/gradle
 PATH=$MAVEN_HOME/bin:$ANT_HOME/bin:$FORREST_HOME/bin:$GRADLE_HOME/bin:$PATH
@@ -74,7 +74,7 @@ where <path_to_bigtop> is the cloned git repo.
 This is a separated set of manifests that helps to setup tools for Bigtop deployment.
 The usage is as below:
 
-	puppet apply --modulepath=<path_to_bigtop> -e "include bigtop_toolchain::deployment-tools"
+	puppet apply --modulepath=<path_to_bigtop> -e "include bigtop_toolchain::deployment_tools"
 
 By applying the snippet, Vagrant will be installed(the Docker installation will be added soon).
 
@@ -86,7 +86,7 @@ As Groovy isn't required (yet!) for creation of a Bigtop stack, this environment
 In case you system doesn't have already installed version of Bigtop recommended Groovy environment,
 you should be able to so easily by running
 
-	puppet apply --modulepath=<path_to_bigtop> -e "include bigtop_toolchain::development-tools"
+	puppet apply --modulepath=<path_to_bigtop> -e "include bigtop_toolchain::development_tools"
 
 Potentially, we'll be adding more development tools in this manifest.
 

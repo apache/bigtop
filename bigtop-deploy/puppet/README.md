@@ -103,7 +103,7 @@ gradle toolchain-puppetmodules # if you already have JAVA installed
 or
 
 ```
-puppet apply --modulepath=<path_to_bigtop> -e "include bigtop_toolchain::puppet-modules"
+puppet apply --modulepath=<path_to_bigtop> -e "include bigtop_toolchain::puppet_modules"
 ```
 
 This will install the following module(s) for you:

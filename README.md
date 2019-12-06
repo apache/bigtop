@@ -156,6 +156,16 @@ __On all systems, Building Apache Bigtop requires certain set of tools__
   This build task expected Puppet to be installed; user has to have sudo permissions. The task will pull down and install
   all development dependencies, frameworks and SDKs, required to build the stack on your platform.
 
+  Before executing the above command, user can use the following script to install Puppet:
+
+    sudo bigtop_toolchain/bin/puppetize.sh
+
+  Note for CentOS (and RHEL, which is not supported officially but on a best effort basis) 8 users: on these distros,
+  puppetize.sh installs the puppet command into /opt/puppetlabs/bin, which is not included usually in secure_path defined in /etc/sudoers.
+  So users may have to add that path to secure_path manually.
+  Also, RHEL 8 users may have to enable their subscriptions themselves for using EPEL.
+  cf. https://fedoraproject.org/wiki/EPEL#How_can_I_use_these_extra_packages.3F
+
   To immediately set environment after running toolchain, run
 
     . /etc/profile.d/bigtop.sh

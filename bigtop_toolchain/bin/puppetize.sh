@@ -21,22 +21,18 @@ if [ -f /etc/os-release ]; then
 fi
 
 case ${ID}-${VERSION_ID} in
-    fedora-26)
-      dnf -y install yum-utils
-      dnf -y check-update
-      dnf -y install hostname findutils curl sudo unzip wget puppet puppetlabs-stdlib procps-ng
+    fedora-31)
+        dnf -y install yum-utils
+        dnf -y check-update
+        dnf -y install hostname findutils curl sudo unzip wget puppet puppetlabs-stdlib procps-ng
         ;;
-    ubuntu-16.04)
+    ubuntu-16.04 | ubuntu-18.04)
         apt-get update
         apt-get -y install wget curl sudo unzip puppet software-properties-common puppet-module-puppetlabs-apt puppet-module-puppetlabs-stdlib
         ;;
-    debian-9*)
+    debian-9* | debian-10*)
         apt-get update
         apt-get -y install wget curl sudo unzip puppet puppet-module-puppetlabs-apt puppet-module-puppetlabs-stdlib systemd-sysv
-         ;;
-    opensuse-42.3)
-        zypper --gpg-auto-import-keys install -y curl sudo unzip wget puppet suse-release ca-certificates-mozilla net-tools tar
-        puppet module install puppetlabs-stdlib
         ;;
     centos-7*)
         rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
@@ -46,6 +42,12 @@ case ${ID}-${VERSION_ID} in
         # puppet in distro is updated.
         yum -y install hostname curl sudo unzip wget puppet
         puppet module install puppetlabs-stdlib --version 4.12.0
+        ;;
+    centos-8* | rhel-8*)
+        rpm -Uvh https://yum.puppet.com/puppet5-release-el-8.noarch.rpm
+        dnf -y check-update
+        dnf -y install puppet-agent
+        /opt/puppetlabs/bin/puppet module install puppetlabs-stdlib
         ;;
     *)
         echo "Unsupported OS ${ID}-${VERSION_ID}."
