@@ -47,10 +47,10 @@ class TestAmbariSmoke {
 
   @Test
   void testStackNameVersion() {
-     ambari.get( path: 'stacks/ODPi' ) { resp, json ->
+     ambari.get( path: 'stacks/BGTP' ) { resp, json ->
        println json
-       assertEquals("ODPi", json.versions.Versions[0].stack_name)
-       assertEquals("2.0", json.versions.Versions[0].stack_version)
+       assertEquals("BGTP", json.versions.Versions[0].stack_name)
+       assertEquals("1.0", json.versions.Versions[0].stack_version)
      } 
   }
 
