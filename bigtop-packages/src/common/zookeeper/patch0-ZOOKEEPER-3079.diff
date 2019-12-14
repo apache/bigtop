@@ -1,0 +1,13 @@
+diff --git a/src/c/src/zookeeper.c b/src/c/src/zookeeper.c
+index c0878648..bb454ddc 100644
+--- a/src/c/src/zookeeper.c
++++ b/src/c/src/zookeeper.c
+@@ -3478,7 +3478,7 @@ int zoo_add_auth(zhandle_t *zh,const char* scheme,const char* cert,
+ static const char* format_endpoint_info(const struct sockaddr_storage* ep)
+ {
+     static char buf[128];
+-    char addrstr[128];
++    char addrstr[INET6_ADDRSTRLEN];
+     void *inaddr;
+ #ifdef WIN32
+     char * addrstring;
