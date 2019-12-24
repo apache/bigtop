@@ -1,19 +1,30 @@
-*** hadoop-3.1.0-src/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-ui/src/main/webapp/package.json.old	2018-03-21 20:57:56.000000000 +0300
---- hadoop-3.1.0-src/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-ui/src/main/webapp/package.json	2018-07-30 14:36:29.371388347 +0300
-***************
-*** 19,25 ****
-    "author": "",
-    "license": "Apache",
-    "devDependencies": {
-!     "bower": "1.7.7",
-      "bower-shrinkwrap-resolver-ext": "0.1.0",
-      "broccoli-asset-rev": "2.4.2",
-      "broccoli-funnel": "1.0.1",
---- 19,25 ----
-    "author": "",
-    "license": "Apache",
-    "devDependencies": {
-!     "bower": "1.8.4",
-      "bower-shrinkwrap-resolver-ext": "0.1.0",
-      "broccoli-asset-rev": "2.4.2",
-      "broccoli-funnel": "1.0.1",
+diff --git a/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-ui/src/main/webapp/package.json b/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-ui/src/main/webapp/package.json
+index 457ce47b96e1..99d6c524cd4e 100644
+--- a/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-ui/src/main/webapp/package.json
++++ b/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-ui/src/main/webapp/package.json
+@@ -19,7 +19,7 @@
+   "author": "",
+   "license": "Apache",
+   "devDependencies": {
+-    "bower": "1.7.7",
++    "bower": "1.8.8",
+     "bower-shrinkwrap-resolver-ext": "0.1.0",
+     "broccoli-asset-rev": "2.4.2",
+     "broccoli-funnel": "1.0.1",
+diff --git a/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-ui/src/main/webapp/yarn.lock b/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-ui/src/main/webapp/yarn.lock
+index a9b3ab758c33..b4501b0b60a6 100644
+--- a/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-ui/src/main/webapp/yarn.lock
++++ b/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-ui/src/main/webapp/yarn.lock
+@@ -541,9 +541,9 @@ bower-shrinkwrap-resolver-ext@0.1.0:
+     semver "^5.3.0"
+     string.prototype.endswith "^0.2.0"
+ 
+-bower@1.7.7, bower@^1.3.12:
+-  version "1.7.7"
+-  resolved "https://registry.yarnpkg.com/bower/-/bower-1.7.7.tgz#2fd7ff3ebdcba5a8ffcd84c397c8fdfe9f825f92"
++bower@1.8.8, bower@^1.3.12:
++  version "1.8.8"
++  resolved "https://registry.yarnpkg.com/bower/-/bower-1.8.8.tgz#82544be34a33aeae7efb8bdf9905247b2cffa985"
+ 
+ brace-expansion@^1.0.0:
+   version "1.1.7"

@@ -1,0 +1,25 @@
+diff --git a/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-ui/src/main/webapp/bower.json b/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-ui/src/main/webapp/bower.json
+index 8fa96681d45d..9b5cc9fb9fec 100644
+--- a/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-ui/src/main/webapp/bower.json
++++ b/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-ui/src/main/webapp/bower.json
+@@ -23,6 +23,6 @@
+     "select2": "4.0.0",
+     "snippet-ss": "~1.11.0",
+     "alasql": "^0.4.3",
+-    "abdmob/x2js": "1.2.0"
++    "x2js": "1.2.0"
+   }
+ }
+diff --git a/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-ui/src/main/webapp/ember-cli-build.js b/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-ui/src/main/webapp/ember-cli-build.js
+index 309c53b69bf4..c4bb95f0e7a3 100644
+--- a/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-ui/src/main/webapp/ember-cli-build.js
++++ b/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-ui/src/main/webapp/ember-cli-build.js
+@@ -51,7 +51,7 @@ module.exports = function(defaults) {
+   app.import('bower_components/bootstrap/dist/css/bootstrap-theme.css');
+   app.import('bower_components/bootstrap/dist/js/bootstrap.min.js');
+   app.import('bower_components/alasql/dist/alasql.js');
+-  app.import('bower_components/abdmob/x2js/xml2json.js');
++  app.import('bower_components/x2js/xml2json.js');
+ 
+   // Use `app.import` to add additional libraries to the generated
+   // output files.
