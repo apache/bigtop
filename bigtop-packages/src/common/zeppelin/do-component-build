@@ -20,6 +20,8 @@ set -ex
 
 ./dev/change_scala_version.sh ${SCALA_VERSION%.*}
 
+export HADOOP_VERSION=3.1.0
+
 BUILD_OPTS="-Dscala.version=${SCALA_VERSION} \
             -Dscala.binary.version=${SCALA_VERSION%.*} \
             -Dscala.macros.version=2.1.0 \
