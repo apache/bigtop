@@ -41,7 +41,11 @@ fi
 # setup puppet/modules path and update cmds
 case ${OS} in
     ubuntu)
-        PUPPET_MODULES="/etc/puppet/modules/bigtop_toolchain"
+        if [ "${VERSION}" > "16.04" ]; then
+            PUPPET_MODULES="/usr/share/puppet/modules/bigtop_toolchain"
+        else
+            PUPPET_MODULES="/etc/puppet/modules/bigtop_toolchain"
+        fi
         UPDATE_SOURCE="apt-get clean \&\& apt-get update"
         ;;
     debian)
@@ -53,8 +57,13 @@ case ${OS} in
         UPDATE_SOURCE="dnf clean all \&\& dnf updateinfo"
         ;;
     centos)
-        PUPPET_MODULES="/etc/puppet/modules/bigtop_toolchain"
-        UPDATE_SOURCE="yum clean all \&\& yum updateinfo"
+        if [ "${VERSION}" -gt "7" ]; then
+            PUPPET_MODULES="/etc/puppetlabs/code/environments/production/modules/bigtop_toolchain"
+            UPDATE_SOURCE="dnf clean all \&\& dnf updateinfo"
+        else
+            PUPPET_MODULES="/etc/puppet/modules/bigtop_toolchain"
+            UPDATE_SOURCE="yum clean all \&\& yum updateinfo"
+        fi
         ;;
     opensuse)
         PUPPET_MODULES="/etc/puppet/modules/bigtop_toolchain"

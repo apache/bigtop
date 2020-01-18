@@ -24,7 +24,11 @@ case ${ID}-${VERSION_ID} in
     fedora-31)
         dnf -y install yum-utils
         dnf -y check-update
-        dnf -y install hostname findutils curl sudo unzip wget puppet puppetlabs-stdlib procps-ng
+        dnf -y install hostname findutils curl sudo unzip wget puppet procps-ng
+        # On Fedora 31, the puppetlabs-stdlib package provided by the distro installs the module
+        # into /usr/share/puppet/modules, but it's not recognized as the default module path.
+        # So we install that module in the same way as CentOS 7.
+        puppet module install puppetlabs-stdlib --version 4.12.0
         ;;
     ubuntu-16.04 | ubuntu-18.04)
         apt-get update
@@ -46,8 +50,11 @@ case ${ID}-${VERSION_ID} in
     centos-8* | rhel-8*)
         rpm -Uvh https://yum.puppet.com/puppet5-release-el-8.noarch.rpm
         dnf -y check-update
-        dnf -y install puppet-agent
+        dnf -y install hostname curl sudo unzip wget puppet-agent 'dnf-command(config-manager)'
         /opt/puppetlabs/bin/puppet module install puppetlabs-stdlib
+        # Enabling the PowerTools and EPEL repositories via Puppet doesn't seem to work in some cases.
+        # As a workaround for that, enable the former here in advance of running the Puppet manifests.
+        dnf config-manager --set-enabled PowerTools
         ;;
     *)
         echo "Unsupported OS ${ID}-${VERSION_ID}."
