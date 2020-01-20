@@ -1,0 +1,13 @@
+diff --git a/build.properties.default b/build.properties.default
+index f0977a7..7873015 100644
+--- a/build.properties.default
++++ b/build.properties.default
+@@ -65,7 +65,7 @@ base-tomcat.loc.2=${base-apache.loc.2}/tomcat
+ 
+ base-sf.loc=http://downloads.sourceforge.net
+ # repo.maven.apache.org is the same as repo2.maven.org
+-base-maven.loc=http://repo.maven.apache.org/maven2
++base-maven.loc=https://repo.maven.apache.org/maven2
+ 
+ # ----- Commons Logging, version 1.1 or later -----
+ # If this version is updated, check the versions required for the deps

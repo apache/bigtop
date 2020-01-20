@@ -32,6 +32,7 @@ License: ASL 2.0
 Source0: apache-tomcat-%{bigtop_tomcat_base_version}.tar.gz
 Source1: do-component-build
 Source2: install_tomcat.sh
+#BIGTOP_PATCH_FILES
 Requires: bigtop-utils >= 0.7
 
 %description 
@@ -41,6 +42,7 @@ Java Servlet and JavaServer Pages technologies.
 %prep
 %setup -n apache-tomcat-%{bigtop_tomcat_base_version}-src
 
+#BIGTOP_PATCH_COMMANDS
 %build
 bash %{SOURCE1}
 
