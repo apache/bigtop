@@ -1,0 +1,18 @@
+commit ae3f5d66e4fac859f31a66870e079c91ba8993d9
+Author: Jonathan Hung <jhung@linkedin.com>
+Date:   Thu Oct 31 15:30:23 2019 -0700
+
+    YARN-9945. Fix javadoc in FederationProxyProviderUtil in branch-2
+
+diff --git a/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-common/src/main/java/org/apache/hadoop/yarn/server/federation/failover/FederationProxyProviderUtil.java b/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-common/src/main/java/org/apache/hadoop/yarn/server/federation/failover/Feder
+index 33883b9..91924da 100644
+--- a/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-common/src/main/java/org/apache/hadoop/yarn/server/federation/failover/FederationProxyProviderUtil.java
++++ b/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-common/src/main/java/org/apache/hadoop/yarn/server/federation/failover/FederationProxyProviderUtil.java
+@@ -28,6 +28,7 @@
+ import org.apache.hadoop.security.token.Token;
+ import org.apache.hadoop.security.token.TokenIdentifier;
+ import org.apache.hadoop.yarn.client.AMRMClientUtils;
++import org.apache.hadoop.yarn.client.ClientRMProxy;
+ import org.apache.hadoop.yarn.client.RMFailoverProxyProvider;
+ import org.apache.hadoop.yarn.conf.HAUtil;
+ import org.apache.hadoop.yarn.conf.YarnConfiguration;
