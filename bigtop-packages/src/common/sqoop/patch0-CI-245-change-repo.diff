@@ -1,0 +1,29 @@
+diff --git a/build.xml b/build.xml
+index ede5ba8..d378348 100644
+--- a/build.xml
++++ b/build.xml
+@@ -171,9 +171,9 @@
+   <property name="ivysettings.xml" location="${ivy.dir}/ivysettings.xml"/>
+   <property name="ivy.jar" location="${lib.dir}/ivy-${ivy.version}.jar"/>
+   <property name="ivy_repo_url"
+-  value="http://repo2.maven.org/maven2/org/apache/ivy/ivy/${ivy.version}/ivy-${ivy.version}.jar" />
++  value="https://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.version}/ivy-${ivy.version}.jar" />
+   <property name="mvn_repo_url"
+-  value="http://repo2.maven.org/maven2/org/apache/maven/maven-ant-tasks/${mvn.version}/maven-ant-tasks-${mvn.version}.jar"/>
++  value="https://repo1.maven.org/maven2/org/apache/maven/maven-ant-tasks/${mvn.version}/maven-ant-tasks-${mvn.version}.jar"/>
+   <property name="mvn.jar"
+       location="${build.dir}/maven-ant-tasks-${mvn.version}.jar" />
+   <property name="build.ivy.dir" location="${build.dir}/ivy" />
+diff --git a/ivy/ivysettings.xml b/ivy/ivysettings.xml
+index f0383c3..09ee60f 100644
+--- a/ivy/ivysettings.xml
++++ b/ivy/ivysettings.xml
+@@ -31,7 +31,7 @@ under the License.
+           http://ibiblio.lsu.edu/main/pub/packages/maven2
+           http://www.ibiblio.net/pub/packages/maven2
+   -->
+-  <property name="repo.maven.org" value="http://repo1.maven.org/maven2/"
++  <property name="repo.maven.org" value="https://repo1.maven.org/maven2/"
+       override="false"/>
+   <property name="snapshot.apache.org"
+       value="https://repository.apache.org/content/repositories/snapshots/"

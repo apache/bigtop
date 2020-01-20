@@ -1,0 +1,26 @@
+diff --git a/build.xml b/build.xml
+index 84c6b1f..9cee41f 100644
+--- a/build.xml
++++ b/build.xml
+@@ -247,7 +247,7 @@
+ 
+     <property name="asfrepo" value="https://repository.apache.org"/>
+     <property name="asfsnapshotrepo" value="${asfrepo}/content/repositories/snapshots"/>
+-    <property name="mvnrepo" value="http://repo2.maven.org/maven2"/>
++    <property name="mvnrepo" value="https://repo1.maven.org/maven2"/>
+     <property name="asfstagingrepo" value="${asfrepo}/service/local/staging/deploy/maven2"/>
+     <property name="staging_repo_id" value="apache.staging.https"/>
+     <property name="snapshots_repo_id" value="apache.snapshots.https"/>
+diff --git a/test/e2e/pig/build.xml b/test/e2e/pig/build.xml
+index 384639d..c6baf80 100644
+--- a/test/e2e/pig/build.xml
++++ b/test/e2e/pig/build.xml
+@@ -30,7 +30,7 @@
+   <property name="hadoopversion" value="2" />
+   <property name="hive.hadoop.shims.version" value="0.23" />
+ 
+-  <property name="mvnrepo" value="http://repo2.maven.org/maven2"/>
++  <property name="mvnrepo" value="https://repo1.maven.org/maven2"/>
+ 
+   <!-- Separate property name for udfs' build.xml -->
+   <property name="udf.dir" value="${basedir}/udfs"/>
