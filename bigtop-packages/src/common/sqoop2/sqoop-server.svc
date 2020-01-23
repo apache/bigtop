@@ -47,7 +47,8 @@ start() {
   log_success_msg "Starting ${DESC}: "
 
   sqoop_env
-
+  mkdir -p "$(dirname "${PIDFILE}")"
+  chown ${SVC_USER} "$(dirname "${PIDFILE}")"
   su -s /bin/bash -c "cd ~/ && ${EXEC_PATH} start $DAEMON_FLAGS" $SVC_USER
 
   for second in {5..0}
