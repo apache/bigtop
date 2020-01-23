@@ -68,6 +68,7 @@ Source9: sqoop-server.svc
 Source10: sqoop-server.sh
 Source11: sqoop-tool.sh
 Source12: tomcat-deployment.sh
+#BIGTOP_PATCH_FILES
 Buildarch: noarch
 Requires: hadoop-client, bigtop-utils >= 0.7, bigtop-tomcat >= 0.7, %{name}-client = %{version}-%{release}
 
@@ -114,6 +115,8 @@ Centralized server for Sqoop 2.
 
 %prep
 %setup -n sqoop-%{sqoop2_base_version}
+
+#BIGTOP_PATCH_COMMANDS
 
 %build
 # No easy way to disable the default RAT run which fails the build because of some fails in the debian/ directory

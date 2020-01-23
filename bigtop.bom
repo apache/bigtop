@@ -331,10 +331,10 @@ bigtop {
     'bigtop-tomcat' {
       name    = "bigtop-tomcat"
       relNotes = "Apache Tomcat"
-      version { base = '6.0.45'; pkg = base; release = 1 }
+      version { base = '8.5.50'; pkg = base; release = 1 }
       tarball { source      = "apache-tomcat-${version.base}-src.tar.gz"
                 destination = "apache-tomcat-${version.base}.tar.gz" }
-      url     { download_path = "/tomcat/tomcat-6/v${version.base}/src"
+      url     { download_path = "/tomcat/tomcat-8/v${version.base}/src"
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }

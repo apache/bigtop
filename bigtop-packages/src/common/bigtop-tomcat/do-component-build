@@ -19,10 +19,8 @@ set -ex
 # This download may fail and is unneccesary
 sed -i '/<!-- Download NSIS (Nullsoft Scriptable Install System) -->/,+5d' build.xml
 mkdir dl
-#update to supported commons pool version
-ant -Dbase.path=dl -Dcommons-pool.version=1.6 clean download
-ant -Dbase.path=dl -Dcommons-pool.version=1.6
-ant -Dbase.path=dl -Dcommons-pool.version=1.6 -Dskip.installer=true -f dist.xml dist-static package-tgz
+
+ant -Dbase.path=dl -Dskip.installer=true dist-static package-tgz
 
 mkdir build
 tar -C build --strip-components=1 -xzf output/release/v*/bin/apache-tomcat-*[0-9].tar.gz
