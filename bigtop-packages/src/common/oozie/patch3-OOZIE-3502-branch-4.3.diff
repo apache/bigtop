@@ -1,15 +1,8 @@
 diff --git a/pom.xml b/pom.xml
-index a3a024d..207e3ce 100644
+index 9daf6b1..f6f6b8b 100644
 --- a/pom.xml
 +++ b/pom.xml
-@@ -35,13 +35,13 @@
-     <licenses>
-         <license>
-             <name>The Apache Software License, Version 2.0</name>
--            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
-         </license>
-     </licenses>
+@@ -41,7 +41,7 @@
  
      <organization>
          <name>Apache Software Foundation</name>
@@ -18,7 +11,7 @@ index a3a024d..207e3ce 100644
      </organization>
  
      <properties>
-@@ -145,7 +145,7 @@
+@@ -136,7 +136,7 @@
      <repositories>
          <repository>
              <id>central</id>
@@ -27,7 +20,7 @@ index a3a024d..207e3ce 100644
              <snapshots>
                  <enabled>false</enabled>
              </snapshots>
-@@ -159,9 +159,8 @@
+@@ -150,9 +150,8 @@
              </snapshots>
          </repository>
          <repository>
