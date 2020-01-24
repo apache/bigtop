@@ -60,6 +60,7 @@ Source1: do-component-build
 Source2: install_%{name}.sh
 Source3: sqoop-metastore.sh
 Source4: sqoop-metastore.sh.suse
+#BIGTOP_PATCH_FILES
 Buildarch: noarch
 BuildRequires: asciidoc, xmlto
 Requires: hadoop-client, bigtop-utils >= 0.7
@@ -98,6 +99,7 @@ server for Sqoop clients across a network to use.
 
 %prep
 %setup -n %{name}-%{sqoop_base_version}
+#BIGTOP_PATCH_COMMANDS
 
 %build
 bash %{SOURCE1} -Dversion=%{sqoop_base_version}
