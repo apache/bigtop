@@ -158,8 +158,8 @@ for conf in web.xml tomcat-users.xml server.xml logging.properties context.xml c
 do
     install -m 0644 ${DIST_DIR}/server/conf/$conf ${PREFIX}/${TOMCAT_CONF_DIR}.dist/conf/
 done
-sed -i -e "s|<Host |<Host workDir=\"/var/tmp/sqoop\" |" ${PREFIX}/${TOMCAT_CONF_DIR}.dist/conf/server.xml
-sed -i -e "s|\${catalina\.base}/logs|/var/log/sqoop|"   ${PREFIX}/${TOMCAT_CONF_DIR}.dist/conf/logging.properties
+sed -i -e "s|<Host |<Host workDir=\"/var/tmp/sqoop2\" |" ${PREFIX}/${TOMCAT_CONF_DIR}.dist/conf/server.xml
+sed -i -e "s|\${catalina\.base}/logs|/var/log/sqoop2|"   ${PREFIX}/${TOMCAT_CONF_DIR}.dist/conf/logging.properties
 cp -f ${EXTRA_DIR}/catalina.properties ${PREFIX}/${TOMCAT_CONF_DIR}.dist/conf/catalina.properties
 install -d -m 0755 ${PREFIX}/${TOMCAT_CONF_DIR}.dist/WEB-INF
 mv $SQOOP_WEBAPPS/sqoop/WEB-INF/*.xml ${PREFIX}/${TOMCAT_CONF_DIR}.dist/WEB-INF
