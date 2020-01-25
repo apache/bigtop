@@ -1,0 +1,34 @@
+diff --git a/pom.xml b/pom.xml
+index 9daf6b1..f6f6b8b 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -41,7 +41,7 @@
+ 
+     <organization>
+         <name>Apache Software Foundation</name>
+-        <url>http://www.apache.org</url>
++        <url>https://www.apache.org</url>
+     </organization>
+ 
+     <properties>
+@@ -136,7 +136,7 @@
+     <repositories>
+         <repository>
+             <id>central</id>
+-            <url>http://repo1.maven.org/maven2</url>
++            <url>https://repo1.maven.org/maven2</url>
+             <snapshots>
+                 <enabled>false</enabled>
+             </snapshots>
+@@ -150,9 +150,8 @@
+             </snapshots>
+         </repository>
+         <repository>
+-            <id>datanucleus</id>
+-            <url>http://www.datanucleus.org/downloads/maven2</url>
+-            <name>Datanucleus</name>
++            <id>redhat</id>
++            <url>https://maven.repository.redhat.com/ga/</url>
+             <snapshots>
+                 <enabled>false</enabled>
+             </snapshots>
