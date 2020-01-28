@@ -41,6 +41,7 @@ OPTS=$(getopt \
   -l 'installed-lib-dir:' \
   -l 'hadoop-dir:' \
   -l 'httpfs-dir:' \
+  -l 'kms-dir:' \
   -l 'hdfs-dir:' \
   -l 'yarn-dir:' \
   -l 'mapreduce-dir:' \
@@ -50,6 +51,7 @@ OPTS=$(getopt \
   -l 'system-libexec-dir:' \
   -l 'hadoop-etc-dir:' \
   -l 'httpfs-etc-dir:' \
+  -l 'kms-etc-dir:' \
   -l 'doc-dir:' \
   -l 'man-dir:' \
   -l 'example-dir:' \
@@ -71,6 +73,9 @@ while true ; do
         ;;
         --httpfs-dir)
         HTTPFS_DIR=$2 ; shift 2
+        ;;
+        --kms-dir)
+        KMS_DIR=$2 ; shift 2
         ;;
         --hadoop-dir)
         HADOOP_DIR=$2 ; shift 2
@@ -111,6 +116,9 @@ while true ; do
         --httpfs-etc-dir)
         HTTPFS_ETC_DIR=$2 ; shift 2
         ;;
+        --kms-etc-dir)
+        KMS_ETC_DIR=$2 ; shift 2
+	;;
         --installed-lib-dir)
         INSTALLED_LIB_DIR=$2 ; shift 2
         ;;
@@ -144,6 +152,7 @@ YARN_DIR=${YARN_DIR:-$PREFIX/usr/lib/hadoop-yarn}
 MAPREDUCE_DIR=${MAPREDUCE_DIR:-$PREFIX/usr/lib/hadoop-mapreduce}
 CLIENT_DIR=${CLIENT_DIR:-$PREFIX/usr/lib/hadoop/client}
 HTTPFS_DIR=${HTTPFS_DIR:-$PREFIX/usr/lib/hadoop-httpfs}
+KMS_DIR=${KMS_DIR:-$PREFIX/usr/lib/hadoop-kms}
 SYSTEM_LIB_DIR=${SYSTEM_LIB_DIR:-/usr/lib}
 BIN_DIR=${BIN_DIR:-$PREFIX/usr/bin}
 DOC_DIR=${DOC_DIR:-$PREFIX/usr/share/doc/hadoop}
@@ -153,6 +162,7 @@ SYSTEM_LIBEXEC_DIR=${SYSTEM_LIBEXEC_DIR:-$PREFIX/usr/libexec}
 EXAMPLE_DIR=${EXAMPLE_DIR:-$DOC_DIR/examples}
 HADOOP_ETC_DIR=${HADOOP_ETC_DIR:-$PREFIX/etc/hadoop}
 HTTPFS_ETC_DIR=${HTTPFS_ETC_DIR:-$PREFIX/etc/hadoop-httpfs}
+KMS_ETC_DIR=${KMS_ETC_DIR:-$PREFIX/etc/hadoop-kms}
 BASH_COMPLETION_DIR=${BASH_COMPLETION_DIR:-$PREFIX/etc/bash_completion.d}
 
 INSTALLED_HADOOP_DIR=${INSTALLED_HADOOP_DIR:-/usr/lib/hadoop}
@@ -331,18 +341,18 @@ install -d -m 0755 $HTTPFS_ETC_DIR/conf.empty
 
 install -m 0755 ${DISTRO_DIR}/httpfs-tomcat-deployment.sh ${HTTPFS_DIR}/tomcat-deployment.sh
 
-HTTP_DIRECTORY=$HTTPFS_ETC_DIR/tomcat-conf.dist
-HTTPS_DIRECTORY=$HTTPFS_ETC_DIR/tomcat-conf.https
+HTTPFS_HTTP_DIRECTORY=$HTTPFS_ETC_DIR/tomcat-conf.dist
+HTTPFS_HTTPS_DIRECTORY=$HTTPFS_ETC_DIR/tomcat-conf.https
 
-install -d -m 0755 ${HTTP_DIRECTORY}
-cp -r ${BUILD_DIR}/share/hadoop/httpfs/tomcat/conf ${HTTP_DIRECTORY}
-chmod 644 ${HTTP_DIRECTORY}/conf/*
-install -d -m 0755 ${HTTP_DIRECTORY}/WEB-INF
-mv ${HTTPFS_DIR}/webapps/webhdfs/WEB-INF/*.xml ${HTTP_DIRECTORY}/WEB-INF/
+install -d -m 0755 ${HTTPFS_HTTP_DIRECTORY}
+cp -r ${BUILD_DIR}/share/hadoop/httpfs/tomcat/conf ${HTTPFS_HTTP_DIRECTORY}
+chmod 644 ${HTTPFS_HTTP_DIRECTORY}/conf/*
+install -d -m 0755 ${HTTPFS_HTTP_DIRECTORY}/WEB-INF
+mv ${HTTPFS_DIR}/webapps/webhdfs/WEB-INF/*.xml ${HTTPFS_HTTP_DIRECTORY}/WEB-INF/
 
-cp -r ${HTTP_DIRECTORY} ${HTTPS_DIRECTORY}
-mv ${HTTPS_DIRECTORY}/conf/ssl-server.xml ${HTTPS_DIRECTORY}/conf/server.xml
-rm ${HTTP_DIRECTORY}/conf/ssl-server.xml
+cp -r ${HTTPFS_HTTP_DIRECTORY} ${HTTPFS_HTTPS_DIRECTORY}
+mv ${HTTPFS_HTTPS_DIRECTORY}/conf/ssl-server.xml ${HTTPFS_HTTPS_DIRECTORY}/conf/server.xml
+rm ${HTTPFS_HTTP_DIRECTORY}/conf/ssl-server.xml
 
 mv $HADOOP_ETC_DIR/conf.empty/httpfs* $HTTPFS_ETC_DIR/conf.empty
 sed -i -e '/<\/configuration>/i\
@@ -350,6 +360,31 @@ sed -i -e '/<\/configuration>/i\
     <name>httpfs.hadoop.config.dir</name>\
     <value>/etc/hadoop/conf</value>\
   </property>' $HTTPFS_ETC_DIR/conf.empty/httpfs-site.xml
+
+# KMS
+install -d -m 0755 ${KMS_DIR}/sbin
+cp ${BUILD_DIR}/sbin/kms.sh ${KMS_DIR}/sbin/
+cp -r ${BUILD_DIR}/share/hadoop/kms/tomcat/webapps ${KMS_DIR}/webapps
+install -d -m 0755 ${PREFIX}/var/lib/hadoop-kms
+install -d -m 0755 $KMS_ETC_DIR/conf.empty
+
+install -m 0755 ${DISTRO_DIR}/kms-tomcat-deployment.sh ${KMS_DIR}/tomcat-deployment.sh
+
+KMS_HTTPS_DIRECTORY=$KMS_ETC_DIR/tomcat-conf.dist
+KMS_HTTP_DIRECTORY=$KMS_ETC_DIR/tomcat-conf.https
+
+install -d -m 0755 ${KMS_HTTP_DIRECTORY}
+cp -r ${BUILD_DIR}/share/hadoop/kms/tomcat/conf ${KMS_HTTP_DIRECTORY}
+chmod 644 ${KMS_HTTP_DIRECTORY}/conf/*
+install -d -m 0755 ${KMS_HTTP_DIRECTORY}/WEB-INF
+cp ${KMS_DIR}/webapps/kms/WEB-INF/*.xml ${KMS_HTTP_DIRECTORY}/WEB-INF/
+
+cp -r ${KMS_HTTP_DIRECTORY} ${KMS_HTTPS_DIRECTORY}
+mv ${KMS_HTTPS_DIRECTORY}/conf/ssl-server.xml ${KMS_HTTPS_DIRECTORY}/conf/server.xml
+rm ${KMS_HTTP_DIRECTORY}/conf/ssl-server.xml
+
+mv $HADOOP_ETC_DIR/conf.empty/kms* $KMS_ETC_DIR/conf.empty
+cp $HADOOP_ETC_DIR/conf.empty/core-site.xml  $KMS_ETC_DIR/conf.empty
 
 # Make the pseudo-distributed config
 for conf in conf.pseudo ; do
@@ -379,7 +414,7 @@ install -d -m 0755 $PREFIX/var/{log,run,lib}/hadoop-yarn
 install -d -m 0755 $PREFIX/var/{log,run,lib}/hadoop-mapreduce
 
 # Remove all source and create version-less symlinks to offer integration point with other projects
-for DIR in ${HADOOP_DIR} ${HDFS_DIR} ${YARN_DIR} ${MAPREDUCE_DIR} ${HTTPFS_DIR} ; do
+for DIR in ${HADOOP_DIR} ${HDFS_DIR} ${YARN_DIR} ${MAPREDUCE_DIR} ${HTTPFS_DIR} ${KMS_DIR}; do
   (cd $DIR &&
    rm -fv *-sources.jar
    rm -fv lib/hadoop-*.jar
