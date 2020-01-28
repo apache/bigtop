@@ -370,8 +370,8 @@ install -d -m 0755 $KMS_ETC_DIR/conf.empty
 
 install -m 0755 ${DISTRO_DIR}/kms-tomcat-deployment.sh ${KMS_DIR}/tomcat-deployment.sh
 
-KMS_HTTPS_DIRECTORY=$KMS_ETC_DIR/tomcat-conf.dist
-KMS_HTTP_DIRECTORY=$KMS_ETC_DIR/tomcat-conf.https
+KMS_HTTP_DIRECTORY=$KMS_ETC_DIR/tomcat-conf.dist
+KMS_HTTPS_DIRECTORY=$KMS_ETC_DIR/tomcat-conf.https
 
 install -d -m 0755 ${KMS_HTTP_DIRECTORY}
 cp -r ${BUILD_DIR}/share/hadoop/kms/tomcat/conf ${KMS_HTTP_DIRECTORY}

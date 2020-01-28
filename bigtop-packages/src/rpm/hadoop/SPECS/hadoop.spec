@@ -587,7 +587,7 @@ getent passwd httpfs >/dev/null || /usr/sbin/useradd --comment "Hadoop HTTPFS" -
 
 %pre kms
 getent group kms >/dev/null   || groupadd -r kms
-getent passwd kms >/dev/null || /usr/sbin/useradd --comment "Hadoop KMS" --shell /bin/bash -M -r -g kms -G kms --home %{run_kms} kms
+getent passwd kms >/dev/null || /usr/sbin/useradd --comment "Hadoop KMS" --shell /bin/bash -M -r -g kms -G kms --home %{state_kms} kms
 
 %pre yarn
 getent group yarn >/dev/null   || groupadd -r yarn
