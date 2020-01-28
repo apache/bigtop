@@ -41,7 +41,7 @@ override_dh_auto_build:
 
 hadoop_svcs=hdfs-namenode hdfs-secondarynamenode hdfs-datanode hdfs-zkfc hdfs-journalnode \
             yarn-resourcemanager yarn-nodemanager yarn-proxyserver yarn-timelineserver\
-            mapreduce-historyserver httpfs
+            mapreduce-historyserver httpfs kms
 
 $(hadoop_svcs): debian/init.d.tmpl
 	bash $< debian/hadoop-$@.svc deb debian/hadoop-$@.init
@@ -59,6 +59,8 @@ override_dh_auto_install:
 	  --build-dir=${PWD}/build \
 	  --httpfs-dir=debian/tmp/usr/lib/hadoop-httpfs \
 	  --httpfs-etc-dir=debian/tmp/etc/hadoop-httpfs \
+	  --kms-dir=debian/tmp/usr/lib/hadoop-kms \
+	  --kms-etc-dir=debian/tmp/etc/hadoop-kms \
 	  --system-lib-dir=debian/tmp/usr/lib/ \
 	  --system-libexec-dir=debian/tmp/usr/lib/hadoop/libexec/ \
 	  --system-include-dir=debian/tmp/usr/include \
