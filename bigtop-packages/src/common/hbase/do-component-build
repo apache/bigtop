@@ -36,13 +36,20 @@ if [ $HOSTTYPE = "aarch64" ] ; then
    sed -i '/<version>1.5.0-alpha.6<\/version>/,+1d' ./pom.xml
    sed -i '/<artifactId>asciidoctorj-pdf<\/artifactId>/a\<version>1.5.0-alpha.6<\/version>\n</dependency>\n<dependency>\n<groupId>org.jruby<\/groupId>\n<artifactId>jruby-complete<\/artifactId>\n<version>9.1.8.0<\/version>\n<\/dependency>' ./pom.xml
 fi
-mvn -DskipTests -Dslf4j.version=1.6.1         \
-    -Dhadoop-two.version=$HADOOP_VERSION      \
-    -Dzookeeper.version=$ZOOKEEPER_VERSION    \
-    -Dcheckstyle.skip=true                    \
-    ${MAVEN_ADDITIONAL} \
-    install site assembly:single "$@"
+
+MAVEN_PARAMS=" -DskipTests "
+MAVEN_PARAMS+=" -Dslf4j.version=1.7.25 "
+MAVEN_PARAMS+=" -Dhadoop-two.version=${HADOOP_VERSION} "
+MAVEN_PARAMS+=" -Dzookeeper.version=${ZOOKEEPER_VERSION} "
+MAVEN_PARAMS+=" -Dcheckstyle.skip=true "
+MAVEN_PARAMS+=" -Dmaven.repo.local=${HOME}/.m2/repository "
+
+# separate site and assembly:single to avoid assembly issues.
+mvn install ${MAVEN_PARAMS} ${MAVEN_ADDITIONAL} "$@"
+mvn site ${MAVEN_PARAMS} ${MAVEN_ADDITIONAL} "$@"
+mvn package assembly:single ${MAVEN_PARAMS} ${MAVEN_ADDITIONAL} "$@"
 
 rm -rf build
 mkdir build
-tar -C build --strip-components=1 -xzf hbase-assembly/target/hbase*.tar.gz
+tar -C build --strip-components=1 -xzf hbase-assembly/target/hbase-${HBASE_VERSION}-bin.tar.gz
+tar -C build --strip-components=1 -xzf hbase-assembly/target/hbase-${HBASE_VERSION}-client-bin.tar.gz
