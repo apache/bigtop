@@ -42,7 +42,6 @@ MAVEN_PARAMS+=" -Dslf4j.version=1.7.25 "
 MAVEN_PARAMS+=" -Dhadoop-two.version=${HADOOP_VERSION} "
 MAVEN_PARAMS+=" -Dzookeeper.version=${ZOOKEEPER_VERSION} "
 MAVEN_PARAMS+=" -Dcheckstyle.skip=true "
-MAVEN_PARAMS+=" -Dmaven.repo.local=${HOME}/.m2/repository "
 
 # separate site and assembly:single to avoid assembly issues.
 mvn install ${MAVEN_PARAMS} ${MAVEN_ADDITIONAL} "$@"
