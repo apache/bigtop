@@ -43,7 +43,7 @@ MAVEN_PARAMS+=" -Dhadoop-two.version=${HADOOP_VERSION} "
 MAVEN_PARAMS+=" -Dzookeeper.version=${ZOOKEEPER_VERSION} "
 MAVEN_PARAMS+=" -Dcheckstyle.skip=true "
 
-# separate site and assembly:single to avoid assembly issues.
+# HBASE-21513: separate site and assembly:single to avoid assembly issues.
 mvn install ${MAVEN_PARAMS} ${MAVEN_ADDITIONAL} "$@"
 mvn site ${MAVEN_PARAMS} ${MAVEN_ADDITIONAL} "$@"
 mvn package assembly:single ${MAVEN_PARAMS} ${MAVEN_ADDITIONAL} "$@"
