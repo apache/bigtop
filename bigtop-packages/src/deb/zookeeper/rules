@@ -46,3 +46,6 @@ override_dh_auto_install:
 	   mv debian/zookeeper/usr/lib/zookeeper-native debian/zookeeper-native/usr/lib/
 	   mv debian/zookeeper/usr/include debian/zookeeper-native/usr/include
 	bash debian/init.d.tmpl debian/zookeeper-rest.svc deb debian/zookeeper-rest.init
+
+override_dh_strip:
+	dh_strip --no-automatic-dbgsym
