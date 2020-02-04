@@ -13,8 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-export PHOENIX_HOME="/usr/lib/phoenix"
-export PHOENIX_LIB_DIR="$PHOENIX_HOME"
+PHOENIX_HOME="/usr/lib/phoenix"
+PHOENIX_LIB_DIR="$PHOENIX_HOME"
 
 # Add the Phoenix server side jar to the HBase classpath
-export HBASE_CLASSPATH="$HBASE_CLASSPATH $PHOENIX_HOME/phoenix-server.jar"
+HBASE_CLASSPATH="$HBASE_CLASSPATH:$PHOENIX_HOME/phoenix-server.jar"

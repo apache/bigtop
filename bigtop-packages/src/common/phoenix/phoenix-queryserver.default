@@ -13,8 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-export HBASE_CONF_DIR=/etc/hbase/conf/
+HBASE_CONF_DIR=/etc/hbase/conf/
 
-export PHOENIX_QUERYSERVER_OPTS=
-export PHOENIX_QUERYSERVER_PID_DIR=/var/run/phoenix
-export PHOENIX_QUERYSERVER_LOG_DIR=/var/log/phoenix
+PHOENIX_QUERYSERVER_OPTS=
+PHOENIX_QUERYSERVER_PID_DIR=/var/run/phoenix
+PHOENIX_QUERYSERVER_LOG_DIR=/var/log/phoenix

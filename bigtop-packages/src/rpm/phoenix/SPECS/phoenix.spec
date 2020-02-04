@@ -46,7 +46,7 @@
 
 %define doc_phoenix %{_docdir}/%{name}
 %define alternatives_cmd update-alternatives
-%global initd_dir %{_sysconfdir}/rc.d
+#%global initd_dir %{_sysconfdir}/rc.d
 
 %else
 
@@ -69,7 +69,7 @@
 
 %define doc_phoenix %{_docdir}/%{name}-%{phoenix_version}
 %define alternatives_cmd alternatives
-%global initd_dir %{_sysconfdir}/rc.d/init.d
+#%global initd_dir %{_sysconfdir}/rc.d/init.d
 
 %endif
 
@@ -86,10 +86,15 @@ Source1: do-component-build
 Source2: install_phoenix.sh
 Source3: phoenix.default
 Source4: bigtop.bom
-Source5: %{name}-queryserver.svc
+#Source5: %{name}-queryserver.svc
 Source6: %{name}-queryserver.default
+Source7: %{name}-queryserver.service
 BuildArch: noarch
 Requires: hadoop, hadoop-mapreduce, hadoop-yarn, hbase, zookeeper
+Requires(post):   systemd
+Requires(preun):  systemd
+Requires(postun): systemd
+
 
 %if  0%{?mgaversion}
 Requires: bsh-utils
@@ -135,8 +140,11 @@ bash %{SOURCE2} \
 %__install -m 0644 %{SOURCE6} $RPM_BUILD_ROOT/etc/default/%{name}-queryserver
 
 # Install init script
-init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{name}-queryserver
-bash $RPM_SOURCE_DIR/init.d.tmpl $RPM_SOURCE_DIR/%{name}-queryserver.svc rpm $init_file
+#init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{name}-queryserver
+#bash $RPM_SOURCE_DIR/init.d.tmpl $RPM_SOURCE_DIR/%{name}-queryserver.svc rpm $init_file
+# Install systemd unit file
+%__install -D -p -m 0644 %{SOURCE7} %{buildroot}%{_unitdir}/%{name}-queryserver.service
+
 
 %pre
 getent group phoenix >/dev/null || groupadd -r phoenix
@@ -165,20 +173,17 @@ fi
 
 %define service_macro() \
 %files %1 \
-%attr(0755,root,root)/%{initd_dir}/%{name}-%1 \
+%attr(0644,root,root) %{_unitdir}/%{name}-%1.service \
 %attr(0775,phoenix,phoenix) %{var_lib_phoenix} \
 %attr(0775,phoenix,phoenix) %{var_log_phoenix} \
 %config(noreplace) /etc/default/%{name}-%1 \
 %post %1 \
-chkconfig --add %{name}-%1 \
+%systemd_post phoenix-queryserver.service \
 \
 %preun %1 \
-if [ "$1" = 0 ] ; then \
-        service %{name}-%1 stop > /dev/null \
-        chkconfig --del %{name}-%1 \
-fi \
+%systemd_preun phoenix-queryserver.service \
+\
 %postun %1 \
-if [ $1 -ge 1 ]; then \
-   service %{name}-%1 condrestart >/dev/null 2>&1 || : \
-fi
+%systemd_postun_with_restart phoenix-queryserver.service
+
 %service_macro queryserver

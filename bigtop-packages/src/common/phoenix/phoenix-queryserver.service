@@ -1,0 +1,25 @@
+[Unit]
+Description=HBase Phoenix query server
+After=network.target
+
+[Service]
+User=phoenix
+Group=phoenix
+Type=simple
+Nice=0
+PermissionsStartOnly=true
+
+EnvironmentFile=-/etc/default/phoenix-queryserver
+EnvironmentFile=-/etc/default/hadoop
+# TODO: JAVA_HOME determination
+Environment=JAVA_HOME=/usr/lib/jvm/jre-openjdk
+
+
+ExecStartPre=/usr/bin/mkdir -p /var/run/phoenix
+ExecStartPre=/usr/bin/chown phoenix:phoenix /var/run/phoenix
+ExecStart=/usr/lib/phoenix/bin/queryserver.py start
+ExecStop=/usr/lib/phoenix/bin/queryserver.py stop
+PIDFile=/var/run/phoenix/phoenix-phoenix-queryserver.pid
+
+[Install]
+WantedBy=multi-user.target
