@@ -200,6 +200,12 @@ Description: HTTPFS for Hadoop
   The server providing HTTP REST API support for the complete FileSystem/FileContext
   interface in HDFS.
 
+Package: hadoop-kms
+Architecture: any
+Depends: hadoop (= ${binary:Version}), bigtop-tomcat
+Description: KMS for Hadoop
+  The server providing cryptographic key management based on Hadoop KeyProvider API.
+
 Package: hadoop-client
 Architecture: any
 Depends: hadoop (= ${binary:Version}), hadoop-hdfs (= ${binary:Version}),
