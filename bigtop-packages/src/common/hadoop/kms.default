@@ -22,3 +22,5 @@ export CATALINA_BASE=/var/lib/hadoop-kms/tomcat-deployment
 export CATALINA_TMPDIR=/var/run/hadoop-kms/
 # KMS_HTTP_PORT
 # KMS_ADMIN_PORT
+
+export SYSTEMCTL_SKIP_REDIRECT=true
