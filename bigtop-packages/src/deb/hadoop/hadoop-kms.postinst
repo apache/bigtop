@@ -22,7 +22,7 @@ set -e
 case "$1" in
     configure)
         mkdir -p /var/log/hadoop-kms /var/run/hadoop-kms || :
-        chown kms:kms /var/log/hadoop-kms /var/run/hadoop-kms
+        chown kms:kms /var/lib/hadoop-kms /var/log/hadoop-kms /var/run/hadoop-kms
         update-alternatives --install /etc/hadoop-kms/conf hadoop-kms-conf /etc/hadoop-kms/conf.empty 10
         update-alternatives --install /etc/hadoop-kms/tomcat-conf hadoop-kms-tomcat-conf /etc/hadoop-kms/tomcat-conf.dist 10
         update-alternatives --install /etc/hadoop-kms/tomcat-conf hadoop-kms-tomcat-conf /etc/hadoop-kms/tomcat-conf.https 5

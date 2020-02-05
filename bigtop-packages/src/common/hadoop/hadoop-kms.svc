@@ -43,7 +43,7 @@ start() {
 
   . /usr/lib/hadoop-kms/tomcat-deployment.sh
 
-  su -s /bin/bash -c "${EXEC_PATH} start $DAEMON_FLAGS" $KMS_USER
+  runuser -s /bin/bash -c "${EXEC_PATH} start $DAEMON_FLAGS" $KMS_USER
 
   for second in {5..0}
   do
