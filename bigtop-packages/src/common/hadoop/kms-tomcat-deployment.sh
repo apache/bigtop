@@ -25,7 +25,7 @@ rm -rf ${TOMCAT_DEPLOYMENT}
 mkdir ${TOMCAT_DEPLOYMENT}
 cp -r ${TOMCAT_CONF}/conf ${TOMCAT_DEPLOYMENT}/
 cp -r ${KMS_HOME}/webapps ${TOMCAT_DEPLOYMENT}/
-cp -r ${TOMCAT_CONF}/WEB-INF/* ${TOMCAT_DEPLOYMENT}/webapps/webhdfs/WEB-INF/
+cp -r ${TOMCAT_CONF}/WEB-INF/* ${TOMCAT_DEPLOYMENT}/webapps/kms/WEB-INF/
 
 if [ -n "${BIGTOP_CLASSPATH}" ] ; then
   sed -i -e "s#^\(common.loader=.*\)\$#\1,${BIGTOP_CLASSPATH/:/,}#" ${TOMCAT_DEPLOYMENT}/conf/catalina.properties
@@ -35,4 +35,3 @@ chown -R kms:kms ${TOMCAT_DEPLOYMENT}
 chmod -R 755 ${TOMCAT_DEPLOYMENT}
 
 export CATALINA_BASE=${TOMCAT_DEPLOYMENT}
-
