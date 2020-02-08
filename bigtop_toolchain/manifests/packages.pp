@@ -63,9 +63,8 @@ class bigtop_toolchain::packages {
         "bison",
         "libffi-devel"
       ]
-      if ($operatingsystem != 'Fedora' and $operatingsystemmajrelease !~ /^[0-7]$/) {
-        # The python-devel package does not exist any longer from CentOS (and RHEL) 8
-        $pkgs = concat($_pkgs, "python2-devel")
+      if ($operatingsystem == 'Fedora' or $operatingsystemmajrelease !~ /^[0-7]$/) {
+        $pkgs = concat($_pkgs, ["python2-devel", "libtirpc-devel"])
       } else {
         $pkgs = concat($_pkgs, "python-devel")
       }
