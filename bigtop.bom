@@ -294,8 +294,8 @@ bigtop {
        * to the base HBase version. Update as needed whenever changing the
        * HBase version in the BOM.
        */
-      phoenix.hbase ='HBase-1.3'
-      version { base = "4.13.1-${phoenix.hbase}"; pkg = '4.13.1'; release = 1 }
+      phoenix.hbase ='HBase-1.5'
+      version { base = "4.15.0-${phoenix.hbase}"; pkg = '4.15.0'; release = 1 }
       tarball { destination = "$name-${version.base}-src.tar.gz"
                 source      = "apache-$name-${version.base}-src.tar.gz" }
       url     { download_path = "/$name/apache-$name-${version.base}/src"
