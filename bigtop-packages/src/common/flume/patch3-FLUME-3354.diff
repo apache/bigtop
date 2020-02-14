@@ -1,0 +1,67 @@
+diff --git a/flume-ng-sinks/flume-hive-sink/src/test/java/org/apache/flume/sink/hive/TestHiveSink.java b/flume-ng-sinks/flume-hive-sink/src/test/java/org/apache/flume/sink/hive/TestHiveSink.java
+index c417404..c88967f 100644
+--- a/flume-ng-sinks/flume-hive-sink/src/test/java/org/apache/flume/sink/hive/TestHiveSink.java
++++ b/flume-ng-sinks/flume-hive-sink/src/test/java/org/apache/flume/sink/hive/TestHiveSink.java
+@@ -99,10 +99,11 @@ public class TestHiveSink {
+ 
+     conf = new HiveConf(this.getClass());
+     TestUtil.setConfValues(conf);
++    TxnDbUtil.setConfValues(conf);
+ 
+     // 1) prepare hive
+-    TxnDbUtil.cleanDb();
+-    TxnDbUtil.prepDb();
++    TxnDbUtil.cleanDb(conf);
++    TxnDbUtil.prepDb(conf);
+ 
+     // 2) Setup Hive client
+     SessionState.start(new CliSessionState(conf));
+diff --git a/flume-ng-sinks/flume-hive-sink/src/test/java/org/apache/flume/sink/hive/TestHiveWriter.java b/flume-ng-sinks/flume-hive-sink/src/test/java/org/apache/flume/sink/hive/TestHiveWriter.java
+index 4d7c9bb..3bdb4ec 100644
+--- a/flume-ng-sinks/flume-hive-sink/src/test/java/org/apache/flume/sink/hive/TestHiveWriter.java
++++ b/flume-ng-sinks/flume-hive-sink/src/test/java/org/apache/flume/sink/hive/TestHiveWriter.java
+@@ -86,6 +86,7 @@ public class TestHiveWriter {
+     // 1) Start metastore
+     conf = new HiveConf(this.getClass());
+     TestUtil.setConfValues(conf);
++    TxnDbUtil.setConfValues(conf);
+     if (metaStoreURI != null) {
+       conf.setVar(HiveConf.ConfVars.METASTOREURIS, metaStoreURI);
+     }
+@@ -99,8 +100,8 @@ public class TestHiveWriter {
+   @Before
+   public void setUp() throws Exception {
+     // 1) prepare hive
+-    TxnDbUtil.cleanDb();
+-    TxnDbUtil.prepDb();
++    TxnDbUtil.cleanDb(conf);
++    TxnDbUtil.prepDb(conf);
+ 
+     // 1) Setup tables
+     TestUtil.dropDB(conf, dbName);
+diff --git a/flume-ng-sinks/flume-hive-sink/src/test/java/org/apache/flume/sink/hive/TestUtil.java b/flume-ng-sinks/flume-hive-sink/src/test/java/org/apache/flume/sink/hive/TestUtil.java
+index 1fcb4eb..db724fa 100644
+--- a/flume-ng-sinks/flume-hive-sink/src/test/java/org/apache/flume/sink/hive/TestUtil.java
++++ b/flume-ng-sinks/flume-hive-sink/src/test/java/org/apache/flume/sink/hive/TestUtil.java
+@@ -58,6 +58,8 @@ public class TestUtil {
+     conf.setVar(HiveConf.ConfVars.HIVE_TXN_MANAGER, txnMgr);
+     conf.setBoolVar(HiveConf.ConfVars.HIVE_SUPPORT_CONCURRENCY, true);
+     conf.set("fs.raw.impl", RawFileSystem.class.getName());
++    conf.setBoolVar(HiveConf.ConfVars.METASTORE_SCHEMA_VERIFICATION, false);
++    conf.set("datanucleus.schema.autoCreateAll", "true");
+   }
+ 
+   public static void createDbAndTable(Driver driver, String databaseName,
+diff --git a/pom.xml b/pom.xml
+index bdd998d..2304421 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -79,7 +79,7 @@ limitations under the License.
+     <junit.version>4.10</junit.version>
+     <kafka.version>0.10.2.2</kafka.version>
+     <kite.version>1.0.0</kite.version>
+-    <hive.version>1.0.0</hive.version>
++    <hive.version>2.3.6</hive.version>
+     <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
+     <log4j-extras.version>1.1</log4j-extras.version>
+     <log4j-log4j.version>1.2.17</log4j-log4j.version>
