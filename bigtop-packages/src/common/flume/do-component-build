@@ -28,8 +28,9 @@ sed -i -e \
 # This profile will activate hadoop2.version as the relevant property
 # and will also make us specify hbase version with -hadoop2 prefix
 mvn -DskipTests  \
-  -Dhadoop2.version=$HADOOP_VERSION        \
+  -Dhadoop.version=${HADOOP_VERSION} \
   -Dhbase.version=${HBASE_VERSION} \
   -Dhive.version=${HIVE_VERSION} \
   -Dkafka.version=${KAFKA_VERSION} \
+  -Dzookeeper.version=${ZOOKEEPER_VERSION} \
   clean install "$@"

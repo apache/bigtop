@@ -52,16 +52,3 @@ index 1fcb4eb..db724fa 100644
    }
  
    public static void createDbAndTable(Driver driver, String databaseName,
-diff --git a/pom.xml b/pom.xml
-index bdd998d..2304421 100644
---- a/pom.xml
-+++ b/pom.xml
-@@ -79,7 +79,7 @@ limitations under the License.
-     <junit.version>4.10</junit.version>
-     <kafka.version>0.10.2.2</kafka.version>
-     <kite.version>1.0.0</kite.version>
--    <hive.version>1.0.0</hive.version>
-+    <hive.version>2.3.6</hive.version>
-     <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
-     <log4j-extras.version>1.1</log4j-extras.version>
-     <log4j-log4j.version>1.2.17</log4j-log4j.version>
