@@ -1,0 +1,21 @@
+diff -ur giraph-1.2.0/pom.xml giraph-1.2.0.new/pom.xml
+--- giraph-1.2.0/pom.xml	2020-02-15 13:32:08.188790392 +0900
++++ giraph-1.2.0.new/pom.xml	2020-02-15 13:41:49.161987124 +0900
+@@ -255,7 +255,7 @@
+   <repositories>
+     <repository>
+       <id>central</id>
+-      <url>http://repo1.maven.org/maven2</url>
++      <url>https://repo1.maven.org/maven2</url>
+       <releases>
+         <enabled>true</enabled>
+       </releases>
+@@ -787,6 +787,8 @@
+                 <exclude>giraph-debugger/src/main/resources/org/apache/giraph/debugger/mock/*.vm</exclude>
+                 <exclude>giraph-debugger/src/main/protobuf/*.proto</exclude> 
+                 <exclude>giraph-debugger/gui</exclude>
++		<exclude>debian/**</exclude>
++		<exclude>.pc/*</exclude>
+               </excludes>
+           </configuration>
+         </plugin>

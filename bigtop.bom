@@ -245,7 +245,7 @@ bigtop {
     'giraph' {
       name    = 'giraph'
       relNotes = 'Apache Giraph'
-      version { base = '1.1.0'; pkg = base; release = 1 }
+      version { base = '1.2.0'; pkg = base; release = 1 }
       tarball { destination = "$name-${version.base}.tar.gz"
                 source      = "$name-dist-${version.base}-src.tar.gz" }
       url     { download_path = "/$name/$name-${version.base}/"
