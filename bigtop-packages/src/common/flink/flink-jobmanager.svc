@@ -44,7 +44,7 @@ start() {
 
     LOG_FILE=/var/log/flink/${DAEMON}.out
     # Flink will set the pid file
-    su -s /bin/bash $SVC_USER -c "nohup nice -n 0 \
+    runuser -s /bin/bash $SVC_USER -c "nohup nice -n 0 \
     ${EXEC_PATH} start ${DAEMON_FLAGS} --configDir $CONF_DIR --executionMode cluster \
     > $LOG_FILE 2>&1 & "
 

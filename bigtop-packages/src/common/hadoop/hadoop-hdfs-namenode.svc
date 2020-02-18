@@ -40,7 +40,7 @@ cat <<'__EOT__'
         echo "Error: $DESC is running. Stop it first."
         exit 1
       else
-        su -s /bin/bash $SVC_USER -c "hdfs namenode -format"
+        runuser -s /bin/bash $SVC_USER -c "hdfs namenode -format"
       fi
       ;;
     *)

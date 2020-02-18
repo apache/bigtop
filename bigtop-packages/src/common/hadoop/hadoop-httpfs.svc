@@ -43,7 +43,7 @@ start() {
 
   . /usr/lib/hadoop-httpfs/tomcat-deployment.sh
 
-  su -s /bin/bash -c "${EXEC_PATH} start $DAEMON_FLAGS" $HTTPFS_USER
+  runuser -s /bin/bash -c "${EXEC_PATH} start $DAEMON_FLAGS" $HTTPFS_USER
 
   for second in {5..0}
   do
@@ -76,7 +76,7 @@ stop() {
   # FIXME: workaround for BIGTOP-537
   checkstatusofproc
   if [ "$?" = "$STATUS_RUNNING" ] ; then
-    su -s /bin/bash $SVC_USER -c "${EXEC_PATH} stop $SLEEP_TIME -force"
+    runuser -s /bin/bash $SVC_USER -c "${EXEC_PATH} stop $SLEEP_TIME -force"
     RETVAL=$?
   else
     RETVAL=$RETVAL_SUCCESS

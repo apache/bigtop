@@ -49,7 +49,7 @@ start() {
   sqoop_env
   mkdir -p "$(dirname "${PIDFILE}")"
   chown ${SVC_USER} "$(dirname "${PIDFILE}")"
-  su -s /bin/bash -c "cd ~/ && ${EXEC_PATH} start $DAEMON_FLAGS" $SVC_USER
+  runuser -s /bin/bash -c "cd ~/ && ${EXEC_PATH} start $DAEMON_FLAGS" $SVC_USER
 
   for second in {5..0}
   do
@@ -78,7 +78,7 @@ stop() {
 
     sqoop_env
 
-    su -s /bin/bash -c "cd ~/ && ${EXEC_PATH} stop" $SVC_USER
+    runuser -s /bin/bash -c "cd ~/ && ${EXEC_PATH} stop" $SVC_USER
 
     SQOOP_SHUTDOWN_TIMEOUT=${SQOOP_SHUTDOWN_TIMEOUT:-60}
 

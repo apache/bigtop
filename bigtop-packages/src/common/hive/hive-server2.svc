@@ -39,7 +39,7 @@ start() {
 
     exec_env="HADOOP_OPTS=\"-Dhive.log.dir=`dirname $LOG_FILE` -Dhive.log.file=${DAEMON}.log -Dhive.log.threshold=INFO\""
 
-    su -s /bin/bash $SVC_USER -c "$exec_env nohup nice -n 0 \
+    runuser -s /bin/bash $SVC_USER -c "$exec_env nohup nice -n 0 \
         $EXEC_PATH --service hiveserver2 $PORT \
             > $LOG_FILE 2>&1 < /dev/null & "'echo $! '"> $PIDFILE"
     sleep 3

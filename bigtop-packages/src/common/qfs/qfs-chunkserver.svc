@@ -46,7 +46,7 @@ start() {
     chown qfs:qfs -R /var/run/qfs
     chmod 755 /var/run/qfs
 
-    su -s /bin/bash $SVC_USER -c "cd $WORKING_DIR && nohup $EXEC_PATH $CONF_DIR/$CONF_FILE > $LOGFILE 2>&1 < /dev/null & "'echo $! '"> $PIDFILE"
+    runuser -s /bin/bash $SVC_USER -c "cd $WORKING_DIR && nohup $EXEC_PATH $CONF_DIR/$CONF_FILE > $LOGFILE 2>&1 < /dev/null & "'echo $! '"> $PIDFILE"
     sleep 3
 
     checkstatusofproc

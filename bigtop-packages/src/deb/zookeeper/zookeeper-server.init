@@ -118,11 +118,11 @@ hadoop_stop_pidfile() {
 
 
 start() {
-    su -s /bin/bash zookeeper -c "${DAEMON_SCRIPT} start"
+    runuser -s /bin/bash zookeeper -c "${DAEMON_SCRIPT} start"
 }
 stop() {
 	if hadoop_check_pidfile $PID_FILE ;  then
-        su -s /bin/bash zookeeper -c "${DAEMON_SCRIPT} stop"
+        runuser -s /bin/bash zookeeper -c "${DAEMON_SCRIPT} stop"
 	fi
 }
 
@@ -176,7 +176,7 @@ case "$1" in
           exit 1
         else
           shift
-          su -s /bin/bash zookeeper -c "zookeeper-server-initialize $*"
+          runuser -s /bin/bash zookeeper -c "zookeeper-server-initialize $*"
         fi
 	;;
     *)

@@ -123,11 +123,11 @@ start() {
     # The dir should be recreated first.
     local piddir=`dirname "$PID_FILE"`
     install -d -m 0755 -o sqoop -g sqoop "$piddir"
-    su -s /bin/bash sqoop -c \
+    runuser -s /bin/bash sqoop -c \
          "/usr/lib/sqoop/bin/start-metastore.sh -p $PID_FILE -l $LOGDIR"
 }
 stop() {
-    su -s /bin/bash sqoop -c \
+    runuser -s /bin/bash sqoop -c \
         "/usr/lib/sqoop/bin/stop-metastore.sh -p $PID_FILE"
 }
 

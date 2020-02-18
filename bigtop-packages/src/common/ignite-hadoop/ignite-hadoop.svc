@@ -33,7 +33,7 @@ start() {
         exit 0
     fi
 
-    su -s /bin/bash ${SVC_USER} -c "${EXEC_PATH} start ${DAEMON}"
+    runuser -s /bin/bash ${SVC_USER} -c "${EXEC_PATH} start ${DAEMON}"
 
     checkstatusofproc
     RETVAL=$?
@@ -50,7 +50,7 @@ cat <<'__EOT__'
 stop() {
     log_success_msg "Stopping $DESC (${DAEMON}): "
 
-    su -s /bin/bash ${SVC_USER} -c "${EXEC_PATH} stop ${DAEMON}"
+    runuser -s /bin/bash ${SVC_USER} -c "${EXEC_PATH} stop ${DAEMON}"
 
     sleep 3
     RETVAL=$?

@@ -44,7 +44,7 @@ start() {
     . /usr/lib/bigtop-utils/bigtop-detect-classpath
     exec_env="HADOOP_CLASSPATH=${HADOOP_CLASSPATH}:${BIGTOP_CLASSPATH} $exec_env"
 
-    su -s /bin/bash $SVC_USER -c "$exec_env nohup nice -n 0 \
+    runuser -s /bin/bash $SVC_USER -c "$exec_env nohup nice -n 0 \
         $EXEC_PATH --service metastore $PORT \
             > $LOG_FILE 2>&1 < /dev/null & "'echo $! '"> $PIDFILE"
     sleep 3

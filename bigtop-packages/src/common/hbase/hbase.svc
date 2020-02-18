@@ -49,7 +49,7 @@ start() {
         exit 0
     fi
 
-    su -s /bin/bash hbase -c "${EXEC_PATH} start @HBASE_DAEMON@"
+    runuser -s /bin/bash hbase -c "${EXEC_PATH} start @HBASE_DAEMON@"
 
     checkstatusofproc
     RETVAL=$?
@@ -73,7 +73,7 @@ cat <<'__EOT__'
 stop() {
     hbase_env
 
-    su -s /bin/bash hbase -c "${EXEC_PATH} stop @HBASE_DAEMON@"
+    runuser -s /bin/bash hbase -c "${EXEC_PATH} stop @HBASE_DAEMON@"
     sleep 3
     RETVAL=$?
 

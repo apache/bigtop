@@ -225,7 +225,7 @@ multi_hbase_daemon() {
             echo "Already stopped"
             continue
         fi
-        su -s /bin/bash hbase -c "${DAEMON_SCRIPT} ${COMMAND} regionserver ${HBASE_MULTI_ARGS} >> ${LOG_FILE}"
+        runuser -s /bin/bash hbase -c "${DAEMON_SCRIPT} ${COMMAND} regionserver ${HBASE_MULTI_ARGS} >> ${LOG_FILE}"
         if [[ "$COMMAND" == "stop" ]] ; then
             rm -f $PID_FILE
         fi
@@ -328,7 +328,7 @@ start() {
       return 1
     fi
     echo -n "Starting $DESC: "
-    su -s /bin/bash hbase -c "$DAEMON_SCRIPT start @HBASE_DAEMON@"
+    runuser -s /bin/bash hbase -c "$DAEMON_SCRIPT start @HBASE_DAEMON@"
     if hbase_check_pidfile $PID_FILE ; then
         echo "$NAME."
         return $ALL_DAEMONS_RUNNING
@@ -344,7 +344,7 @@ stop() {
     fi
 
     echo -n "Stopping $DESC: "
-    su -s /bin/bash hbase -c "$DAEMON_SCRIPT stop @HBASE_DAEMON@"
+    runuser -s /bin/bash hbase -c "$DAEMON_SCRIPT stop @HBASE_DAEMON@"
     if hbase_check_pidfile $PID_FILE ; then
         echo "ERROR."
         return 1

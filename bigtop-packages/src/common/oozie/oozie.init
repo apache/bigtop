@@ -53,13 +53,13 @@ start_oozie() {
   install -d -o oozie -g oozie /var/run/oozie
   install -d -o oozie -g oozie /var/log/oozie
   install -d -o oozie -g oozie /var/tmp/oozie
-  su --shell=/bin/bash -l oozie -c "env JAVA_HOME=$JAVA_HOME /usr/lib/oozie/bin/oozied.sh start"
+  runuser --shell=/bin/bash -l oozie -c "env JAVA_HOME=$JAVA_HOME /usr/lib/oozie/bin/oozied.sh start"
 }
 
 stop_oozie() {
   is_oozie_alive
   if [ "${STATUS}" = "0" ]; then
-    su --shell=/bin/bash -l oozie -c "env JAVA_HOME=$JAVA_HOME /usr/lib/oozie/bin/oozied.sh stop -force"
+    runuser --shell=/bin/bash -l oozie -c "env JAVA_HOME=$JAVA_HOME /usr/lib/oozie/bin/oozied.sh stop -force"
     if [ $? -eq 0 ]; then
       is_oozie_alive
       if [ "${STATUS}" = "1" ]; then

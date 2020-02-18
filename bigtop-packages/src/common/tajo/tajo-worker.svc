@@ -44,7 +44,7 @@ start() {
         . $CONF_DIR/tajo-env.sh
     fi
 
-    su -s /bin/bash $SVC_USER -c "nohup nice -n 0 \
+    runuser -s /bin/bash $SVC_USER -c "nohup nice -n 0 \
         ${EXEC_PATH} ${DAEMON_FLAGS} \
         > $LOG_FILE 2>&1 & "
 
