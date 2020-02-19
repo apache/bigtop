@@ -17,6 +17,6 @@ module Puppet::Parser::Functions
     newfunction(:latest_maven_binary, :type => :rvalue) do |args|
         versionmask=args[0]
         # We are using main mirror here because can't be sure about Apache Server config on every mirror. It could be Nginx, btw.
-        %x(curl --stderr /dev/null 'https://www.apache.org/dist/maven/maven-3/?F=0&V=1' | grep -o '<li>.*href="#{versionmask}/"' | tail -1 | grep -o '#{versionmask}'| tr -d '\r').chomp
+        %x(curl -L --stderr /dev/null 'https://downloads.apache.org/maven/maven-3/?F=0&amp;V=1' | grep -o '<li>.*href="#{versionmask}/"' | tail -1 | grep -o '#{versionmask}'| tr -d '\r').chomp
     end
 end
