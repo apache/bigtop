@@ -255,7 +255,7 @@ bigtop {
     'solr' {
       name    = 'solr'
       relNotes = 'Apache Solr'
-      version { base = '6.6.0'; pkg = base; release = 1 }
+      version { base = '6.6.6'; pkg = base; release = 1 }
       tarball { destination = "$name-${version.base}-src.tgz"
                 source      = destination }
       url     { download_path = "lucene/$name/${version.base}"
