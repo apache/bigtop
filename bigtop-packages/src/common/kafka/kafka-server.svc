@@ -47,7 +47,7 @@ start() {
       JAVA_OPTS="-Xmx512M -server  -Dlog4j.configuration=file:$CONF_DIR/log4j.properties"
     fi
 
-    su -s /bin/bash $SVC_USER -c "nohup $EXEC_PATH $CONF_DIR/server.properties > $LOG_FILE 2>&1 < /dev/null & "'echo $! '"> $PIDFILE"
+    runuser -s /bin/bash $SVC_USER -c "nohup $EXEC_PATH $CONF_DIR/server.properties > $LOG_FILE 2>&1 < /dev/null & "'echo $! '"> $PIDFILE"
     sleep 3
 
     checkstatusofproc

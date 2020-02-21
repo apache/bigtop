@@ -48,7 +48,7 @@ start() {
     fi
 
 
-    su -s /bin/bash $SVC_USER -c "nohup nice -n 0 \
+    runuser -s /bin/bash $SVC_USER -c "nohup nice -n 0 \
         ${EXEC_PATH} org.apache.spark.deploy.master.Master \
         --ip $SPARK_MASTER_IP $DAEMON_FLAGS \
         > $LOG_FILE 2>&1 & "'echo $!' > "$PIDFILE"

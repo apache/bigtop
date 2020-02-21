@@ -36,7 +36,7 @@ start() {
   fi
 
   export HADOOP_IDENT_STRING=$TARGET_USER
-  su -s /bin/bash $TARGET_USER -c "$EXEC_PATH --config '$CONF_DIR' start $DAEMON_FLAGS"
+  runuser -s /bin/bash $TARGET_USER -c "$EXEC_PATH --config '$CONF_DIR' start $DAEMON_FLAGS"
 
   # Some processes are slow to start
   sleep $SLEEP_TIME

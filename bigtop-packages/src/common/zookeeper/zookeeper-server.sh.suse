@@ -131,7 +131,7 @@ case "$1" in
       exit 1
     else
       shift
-      su -s /bin/bash $USER -c "zookeeper-server-initialize $*"
+      runuser -s /bin/bash $USER -c "zookeeper-server-initialize $*"
     fi
     ;;
   *)

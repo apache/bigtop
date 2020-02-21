@@ -44,7 +44,7 @@ start() {
 
     LOG_FILE=/var/log/spark/${DAEMON}.out
 
-    su -s /bin/bash $SVC_USER -c "nohup nice -n 0 \
+    runuser -s /bin/bash $SVC_USER -c "nohup nice -n 0 \
         ${EXEC_PATH} --class org.apache.spark.sql.hive.thriftserver.HiveThriftServer2 1 $DAEMON_FLAGS \
         > $LOG_FILE 2>&1 & "'echo $!' > "$PIDFILE"
 

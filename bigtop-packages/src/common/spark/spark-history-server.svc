@@ -39,7 +39,7 @@ start() {
 
     LOG_FILE=/var/log/spark/${DAEMON}.out
 
-    su -s /bin/bash $SVC_USER -c "nohup nice -n 0 \
+    runuser -s /bin/bash $SVC_USER -c "nohup nice -n 0 \
         ${EXEC_PATH} org.apache.spark.deploy.history.HistoryServer $DAEMON_FLAGS \
         > $LOG_FILE 2>&1 & "'echo $!' > "$PIDFILE"
 

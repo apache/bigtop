@@ -23,7 +23,7 @@ PIDFILE="/var/run/zeppelin/zeppelin-${SVC_USER}-\$(hostname).pid"
 
 generate_start_script() {
 cat <<'__EOT__'
-    su -s /bin/bash $SVC_USER -c "cd $WORKING_DIR && $EXEC_PATH --config '$CONF_DIR' start > /dev/null 2>&1"
+    runuser -s /bin/bash $SVC_USER -c "cd $WORKING_DIR && $EXEC_PATH --config '$CONF_DIR' start > /dev/null 2>&1"
 
 __EOT__
 }

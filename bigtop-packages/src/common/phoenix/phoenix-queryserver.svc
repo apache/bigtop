@@ -37,7 +37,7 @@ start() {
 
     LOG_FILE=/var/log/phoenix/${DAEMON}.out
 
-    su -s /bin/bash $SVC_USER -c "nohup nice -n 0 $EXEC_PATH start \
+    runuser -s /bin/bash $SVC_USER -c "nohup nice -n 0 $EXEC_PATH start \
       > $LOG_FILE 2>&1 < /dev/null & "'echo $! '"> $PIDFILE"
     sleep 3
 
@@ -61,7 +61,7 @@ generate_stop() {
 
 cat <<'__EOT__'
 stop() {
-    su -s /bin/bash $SVC_USER -c "$EXEC_PATH stop"
+    runuser -s /bin/bash $SVC_USER -c "$EXEC_PATH stop"
     RETVAL=$?
 
     if [ $RETVAL -eq $RETVAL_SUCCESS ]; then
