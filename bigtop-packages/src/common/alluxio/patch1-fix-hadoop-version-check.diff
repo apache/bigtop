@@ -1,0 +1,13 @@
+diff --git a/integration/yarn/pom.xml b/integration/yarn/pom.xml
+index 7196350..e11713c 100644
+--- a/integration/yarn/pom.xml
++++ b/integration/yarn/pom.xml
+@@ -90,7 +90,7 @@
+               <rules>
+                 <requireProperty>
+                   <property>hadoop.version</property>
+-                  <regex>[^12]\..*|2\.[4-9]\..*</regex>
++                  <regex>[^12]\..*|2\.([4-9]|[1-9]\d{1,})\..*</regex>
+                   <regexMessage>
+                     hadoop.version must be 2.4.0 or later to build yarn integration.
+                   </regexMessage>

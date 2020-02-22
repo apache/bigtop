@@ -28,6 +28,7 @@ Source2:       install_alluxio.sh
 Source3:       init.d.tmpl
 Source4:       alluxio-master.svc
 Source5:       alluxio-worker.svc
+#BIGTOP_PATCH_FILES
 %define        alluxio_name alluxio
 %define        alluxio_home /usr/lib/%{alluxio_name}
 %define        alluxio_services master worker
@@ -78,6 +79,8 @@ are frequently read.
 
 %prep
 %setup -n %{alluxio_name}-%{alluxio_base_version}
+
+#BIGTOP_PATCH_COMMANDS
 
 %build
 bash $RPM_SOURCE_DIR/do-component-build
