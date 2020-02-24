@@ -33,8 +33,12 @@ fi
 rm -f hbase-server/src/test/java/org/apache/hadoop/hbase/regionserver/TestBulkLoad.java
 
 if [ $HOSTTYPE = "aarch64" ] ; then
-   sed -i '/<version>1.5.0-alpha.6<\/version>/,+1d' ./pom.xml
-   sed -i '/<artifactId>asciidoctorj-pdf<\/artifactId>/a\<version>1.5.0-alpha.6<\/version>\n</dependency>\n<dependency>\n<groupId>org.jruby<\/groupId>\n<artifactId>jruby-complete<\/artifactId>\n<version>9.1.8.0<\/version>\n<\/dependency>' ./pom.xml
+  sed -i '/asciidoctorj-pdf/!{p;d;};n;n;a'\
+'\          <dependency>\n'\
+'\             <groupId>org.jruby<\/groupId>\n'\
+'\             <artifactId>jruby-complete<\/artifactId>\n'\
+'\             <version>9.1.8.0</version>\n'\
+'\          <\/dependency>' pom.xml
 fi
 
 MVN_ARGS="-DskipTests "
