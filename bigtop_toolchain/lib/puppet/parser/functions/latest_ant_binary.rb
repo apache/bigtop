@@ -17,6 +17,6 @@ module Puppet::Parser::Functions
     newfunction(:latest_ant_binary, :type => :rvalue) do |args|
         versionmask=args[0]
         # We are using main mirror here because can't be sure about Apache Server config on every mirror. It could be Nginx, btw. 
-        %x(curl --stderr /dev/null 'https://www.apache.org/dist/ant/binaries/?F=0&V=1' | grep -o '<li>.*href="apache-ant-#{versionmask}-bin.tar.gz"'  |  grep -o "apache-ant-#{versionmask}" | tail -1 | tr -d '\r').chomp
+        %x(curl --stderr /dev/null 'https://downloads.apache.org/ant/binaries/?F=0' | grep -o '<li>.*href="apache-ant-#{versionmask}-bin.tar.gz"'  |  grep -o "apache-ant-#{versionmask}" | tail -1 | tr -d '\r').chomp
     end
 end
