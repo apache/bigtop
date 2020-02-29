@@ -46,7 +46,7 @@ override_dh_auto_install:
 	ln -sf /usr/lib/hadoop/client/hadoop-annotations.jar debian/oozie/usr/lib/oozie/lib/
 	ln -sf /usr/lib/hadoop/client/hadoop-auth.jar debian/oozie/usr/lib/oozie/lib/
 	ln -sf /usr/lib/hadoop/client/hadoop-common.jar debian/oozie/usr/lib/oozie/lib/
-	ln -sf /usr/lib/hadoop/client/hadoop-hdfs.jar debian/oozie/usr/lib/oozie/lib/
+	ln -sf /usr/lib/hadoop/client/hadoop-hdfs-client.jar debian/oozie/usr/lib/oozie/lib/
 	ln -sf /usr/lib/hadoop/client/hadoop-mapreduce-client-app.jar debian/oozie/usr/lib/oozie/lib/
 	ln -sf /usr/lib/hadoop/client/hadoop-mapreduce-client-common.jar debian/oozie/usr/lib/oozie/lib/
 	ln -sf /usr/lib/hadoop/client/hadoop-mapreduce-client-core.jar debian/oozie/usr/lib/oozie/lib/
