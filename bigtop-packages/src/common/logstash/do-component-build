@@ -1,3 +1,4 @@
+#!/bin/bash
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -13,20 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class bigtop_toolchain::installer {
-  include bigtop_toolchain::jdk
-  include bigtop_toolchain::maven
-  include bigtop_toolchain::ant
-  include bigtop_toolchain::gradle
-  include bigtop_toolchain::protobuf
-  include bigtop_toolchain::packages
-  include bigtop_toolchain::env
-  include bigtop_toolchain::user
-  include bigtop_toolchain::renv
-  include bigtop_toolchain::ruby
+set -ex
 
-  stage { 'last':
-    require => Stage['main'],
-  }
-  class { 'bigtop_toolchain::cleanup': stage => 'last' }
-}
+. `dirname $0`/bigtop.bom
+
+export RELEASE=1
+export LANG="en_US.UTF-8"
+export JAVA_HOME=`readlink -f /usr/bin/java | sed "s:jre/bin/java::"`
+
+rake bootstrap
+rake plugin:install-default
+rake artifact:tar

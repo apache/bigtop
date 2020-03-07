@@ -13,20 +13,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class bigtop_toolchain::installer {
-  include bigtop_toolchain::jdk
-  include bigtop_toolchain::maven
-  include bigtop_toolchain::ant
-  include bigtop_toolchain::gradle
-  include bigtop_toolchain::protobuf
-  include bigtop_toolchain::packages
-  include bigtop_toolchain::env
-  include bigtop_toolchain::user
-  include bigtop_toolchain::renv
-  include bigtop_toolchain::ruby
+class bigtop_toolchain::ruby {
 
-  stage { 'last':
-    require => Stage['main'],
+  require bigtop_toolchain::packages
+
+  $url = "https://cache.ruby-lang.org/pub/ruby/2.4"
+
+  $ruby24 = "ruby-2.4.0.tar.gz"
+  $ruby24dir = "ruby-2.4.0"
+
+  exec { "download ruby":
+     cwd  => "/usr/src",
+     command => "/usr/bin/wget $url/$ruby24 && mkdir -p $ruby24dir && /bin/tar -xvzf $ruby24 -C $ruby24dir --strip-components=1 && cd $ruby24dir",
+     creates => "/usr/src/$ruby24dir",
   }
-  class { 'bigtop_toolchain::cleanup': stage => 'last' }
+
+  exec { "install ruby":
+     cwd => "/usr/src/$ruby24dir",
+     command => "/usr/src/$ruby24dir/configure --prefix=/usr/local --disable-shared && /usr/bin/make install",
+     creates => "/usr/local/bin/ruby",
+     timeout => 1800,
+     require => EXEC["download ruby"]
+  }
 }

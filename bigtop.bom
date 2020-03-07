@@ -431,5 +431,14 @@ bigtop {
       url     { site = "https://github.com/elastic/elasticsearch/archive"
                 archive = site }
     }
+    'logstash' {
+      name    = 'logstash'
+      relNotes = 'Data processing pipeline'
+      version { base = '5.4.1'; pkg = base; release = 1 }
+      tarball { destination = "$name-${version.base}.tar.gz"
+                source      = "v${version.base}.zip" }
+      url     { site = "https://github.com/elastic/logstash/archive"
+                archive = site }
+    }
   }
 }

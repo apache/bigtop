@@ -1,3 +1,5 @@
+#!/bin/bash
+#
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -13,20 +15,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class bigtop_toolchain::installer {
-  include bigtop_toolchain::jdk
-  include bigtop_toolchain::maven
-  include bigtop_toolchain::ant
-  include bigtop_toolchain::gradle
-  include bigtop_toolchain::protobuf
-  include bigtop_toolchain::packages
-  include bigtop_toolchain::env
-  include bigtop_toolchain::user
-  include bigtop_toolchain::renv
-  include bigtop_toolchain::ruby
+# postinst script for logstash
 
-  stage { 'last':
-    require => Stage['main'],
-  }
-  class { 'bigtop_toolchain::cleanup': stage => 'last' }
-}
+set -e
+
+LS_USER="logstash"
+LS_GROUP="logstash"
+
+case "$1" in
+    configure)
+        # Install config alternatives
+        update-alternatives --install /etc/logstash/conf logstash-conf /etc/logstash/conf.dist 30
+        chown ${LS_USER}:${LS_GROUP} /var/{lib,log,run}/logstash
+        chown -R root:${LS_GROUP} /etc/logstash
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+#DEBHELPER#

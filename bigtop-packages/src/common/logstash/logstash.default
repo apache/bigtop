@@ -13,20 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class bigtop_toolchain::installer {
-  include bigtop_toolchain::jdk
-  include bigtop_toolchain::maven
-  include bigtop_toolchain::ant
-  include bigtop_toolchain::gradle
-  include bigtop_toolchain::protobuf
-  include bigtop_toolchain::packages
-  include bigtop_toolchain::env
-  include bigtop_toolchain::user
-  include bigtop_toolchain::renv
-  include bigtop_toolchain::ruby
-
-  stage { 'last':
-    require => Stage['main'],
-  }
-  class { 'bigtop_toolchain::cleanup': stage => 'last' }
-}
+export LOGSTASH_HOME="/usr/lib/logstash"
+export LOGSTASH_CONF_DIR="/etc/logstash/conf"
+export LOGSTASH_DATA_DIR="/usr/lib/logstash/data"

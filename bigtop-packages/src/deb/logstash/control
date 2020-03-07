@@ -13,20 +13,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class bigtop_toolchain::installer {
-  include bigtop_toolchain::jdk
-  include bigtop_toolchain::maven
-  include bigtop_toolchain::ant
-  include bigtop_toolchain::gradle
-  include bigtop_toolchain::protobuf
-  include bigtop_toolchain::packages
-  include bigtop_toolchain::env
-  include bigtop_toolchain::user
-  include bigtop_toolchain::renv
-  include bigtop_toolchain::ruby
+Source: logstash
+Section: misc
+Priority: extra
+Maintainer: Apache Bigtop <dev@bigtop.apache.org>
+Build-Depends: debhelper (>= 7.0.50~)
+Version: 5.4.1
+Standards-Version: 3.8.0
+Homepage: https://www.elastic.co/
 
-  stage { 'last':
-    require => Stage['main'],
-  }
-  class { 'bigtop_toolchain::cleanup': stage => 'last' }
-}
+Package: logstash
+Architecture: all
+Depends: bigtop-utils (>= 0.7)
+Description: Logstash is an open source, server-side data
+ processing pipeline that ingests data from a multitude of
+ sources simultaneously, transforms it, and then sends it
+ to your favorite "stash."
