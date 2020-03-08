@@ -1,0 +1,11 @@
+--- hadoop-2.8.5/pom.xml_old	2020-02-23 16:12:14.956399393 +0000
++++ hadoop-2.8.5/pom.xml	2020-02-23 16:12:38.116835137 +0000
+@@ -59,7 +59,7 @@
+     </repository>
+     <repository>
+       <id>repository.jboss.org</id>
+-      <url>http://repository.jboss.org/nexus/content/groups/public/</url>
++      <url>https://repository.jboss.org/nexus/content/groups/public/</url>
+       <snapshots>
+         <enabled>false</enabled>
+       </snapshots>
