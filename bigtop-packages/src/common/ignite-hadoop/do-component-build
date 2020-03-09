@@ -22,6 +22,10 @@ export MAVEN_OPTS="-Xmx512M"
 
 sed -i '/asm-all/{n;s/4.2/5.0.2/}' modules/hadoop/pom.xml
 
+# Fix JVM_OPTS variable unbound issue when starting ignite-hadoop-service
+sed -i "s/JVM_OPTS/\{JVM_OPTS\:\-\}/g" bin/include/service.sh
+sed -i "s/^.*{JVM_OPTS:-}=.*$/JVM_OPTS=\"\$\{JVM_OPTS\:\-\} \-Xms1g \-Xmx1g \-server \-XX\:\+AggressiveOpts \-XX\:MaxPermSize\=512m\"/" bin/include/service.sh
+
 cd ipc/shmem
 # patch and build it
 sed -i 's/\&ipcData->closed\,/(char *)\&ipcData->closed\,/' igniteshmem/org_apache_ignite_internal_util_ipc_shmem_IpcSharedMemoryUtils.cpp
@@ -36,4 +40,5 @@ mvn install:install-file -Dfile=ignite-shmem-1.0.0.jar -DgroupId=org.gridgain -D
 rm -rf META-INF
 cd -
 
-mvn clean install -DskipTests -Dhadoop.version=$HADOOP_VERSION -Dspark.version=$SPARK_VERSION -Dignite.edition=hadoop
+mvn clean install -Pall-java,all-scala -DskipTests -Dhadoop.version=$HADOOP_VERSION
+mvn initialize -Prelease -Dignite.edition=apache-ignite-hadoop
