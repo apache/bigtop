@@ -202,7 +202,7 @@ Description: HTTPFS for Hadoop
 
 Package: hadoop-kms
 Architecture: any
-Depends: hadoop (= ${binary:Version}), bigtop-tomcat
+Depends: hadoop (= ${binary:Version}), bigtop-tomcat, adduser
 Description: KMS for Hadoop
   The server providing cryptographic key management based on Hadoop KeyProvider API.
 
