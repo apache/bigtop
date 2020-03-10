@@ -76,7 +76,7 @@
 #kerberos::site::admin_port: "749"
 #kerberos::site::keytab_export_dir: "/var/lib/bigtop_keytabs"
 
-# applies to hdfs, yarn, mapred and httpfs
+# applies to hdfs, yarn, mapred, kms and httpfs
 hadoop::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 
 hadoop::common_hdfs::hadoop_namenode_host: "%{hiera('bigtop::hadoop_head_node')}"
@@ -120,6 +120,9 @@ bigtop::hadoop_history_server_url: "http://%{hiera('hadoop::common_mapred_app::m
 hadoop::common_yarn::yarn_log_server_url: "%{hiera('bigtop::hadoop_history_server_url')}/jobhistory/logs"
 
 hadoop::httpfs::hadoop_httpfs_port: "14000"
+
+hadoop::kms_host: "%{hiera('bigtop::hadoop_head_node')}"
+hadoop::kms_port: "16000"
 
 bigtop::hadoop_zookeeper_port: "2181"
 hadoop::zk: "%{hiera('bigtop::hadoop_head_node')}:%{hiera('bigtop::hadoop_zookeeper_port')}"

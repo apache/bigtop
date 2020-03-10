@@ -38,7 +38,7 @@ $roles_map = {
     client => ["apex-client"],
   },
   hdfs-non-ha => {
-    master => ["namenode"],
+    master => ["namenode", "kms"],
     worker => ["datanode"],
     standby => ["secondarynamenode"],
   },
