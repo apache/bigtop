@@ -28,7 +28,6 @@
     <file name='/usr/lib/solr/lib/httpclient-4.1.3.jar' owners='-1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/solr/lib/httpmime-4.1.3.jar' owners='-1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/solr/apache-solr-dataimporthandler-extras-4.0.0.jar' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/lib/solr/apache-solr-uima-4.0.0.jar' owners='-1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/solr/apache-solr-solrj-4.0.0.jar' owners='-1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/solr/apache-solr-velocity-4.0.0.jar' owners='-1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/solr/apache-solr-test-framework-4.0.0.jar' owners='-1' perm='-rw-r--r--' user='root' group='root' />

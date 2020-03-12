@@ -139,7 +139,7 @@ cp -ra ${BUILD_DIR}/example/ $PREFIX/$DOC_DIR/
 install -d -m 0755 $PREFIX/$DEFAULT_DIR
 cp $DISTRO_DIR/solr.default $PREFIX/$DEFAULT_DIR/solr
 install -d -m 0755 $PREFIX/${CONF_DIR}.dist
-cp -a ${BUILD_DIR}/server/resources/log4j.properties $PREFIX/${CONF_DIR}.dist
+cp -a ${BUILD_DIR}/server/resources/log4j2.xml $PREFIX/${CONF_DIR}.dist
 
 # Copy in the wrapper
 cp -a ${DISTRO_DIR}/solrd $PREFIX/$LIB_DIR/bin/solrd

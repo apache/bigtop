@@ -64,7 +64,7 @@ BASEDIR=`cd ${BASEDIR}/..;pwd`
 SOLR_MODE=${RUN_MODE:-cloud}
 SOLR_PORT=${SOLR_PORT:-8983}
 SOLR_ADMIN_PORT=${SOLR_ADMIN_PORT:-8984}
-SOLR_LOG4J_CONFIG=${LOG4J_PROPS:-/etc/solr/conf/log4j.properties}
+SOLR_LOG4J_CONFIG=${LOG4J_PROPS:-/etc/solr/conf/log4j2.xml}
 
 SOLR_HOME=${SOLR_HOME:-/var/lib/solr}
 export SOLR_LOGS_DIR=${SOLR_LOGS_DIR:-/var/log/solr}
@@ -134,7 +134,7 @@ SOLR_OPTS="${SOLR_OPTS} -Dhost=$HOSTNAME -Djetty.port=$SOLR_PORT"
 export SOLR_OPTS="${SOLR_OPTS} -Dsolr.host=$HOSTNAME
                                -Dsolr.port=$SOLR_PORT
                                -Dsolr.admin.port=$SOLR_ADMIN_PORT
-                               -Dlog4j.configuration=file://$SOLR_LOG4J_CONFIG
+                               -Dlog4j.configurationFile=file://$SOLR_LOG4J_CONFIG
                                -Dsolr.log.dir=$SOLR_LOGS_DIR
                                -Dsolr.solr.home=$SOLR_HOME"
 
