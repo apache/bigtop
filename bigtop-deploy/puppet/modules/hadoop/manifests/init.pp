@@ -550,6 +550,9 @@ class hadoop ($hadoop_security_authentication = "simple",
 
     file { "/etc/hadoop-kms/conf/kms-env.sh":
       content => template('hadoop/kms-env.sh'),
+      owner   => 'kms',
+      group   => 'kms',
+      mode    => '0400',
       require => [Package["hadoop-kms"]],
     }
 
