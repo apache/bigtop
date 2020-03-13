@@ -69,15 +69,15 @@
 
 # Kerberos
 #hadoop::hadoop_security_authentication: "kerberos"
-#kerberos::site::domain: "do.main"
-#kerberos::site::realm: "DO.MAIN"
-#kerberos::site::kdc_server: "localhost"
-#kerberos::site::kdc_port: "88"
-#kerberos::site::admin_port: "749"
-#kerberos::site::keytab_export_dir: "/var/lib/bigtop_keytabs"
+#kerberos::krb_site::domain: "bigtop.apache.org"
+#kerberos::krb_site::realm: "BIGTOP.APACHE.ORG"
+#kerberos::krb_site::kdc_server: "%{hiera('bigtop::hadoop_head_node')}"
+#kerberos::krb_site::kdc_port: "88"
+#kerberos::krb_site::admin_port: "749"
+#kerberos::krb_site::keytab_export_dir: "/var/lib/bigtop_keytabs"
 
 # applies to hdfs, yarn, mapred, kms and httpfs
-hadoop::kerberos_realm: "%{hiera('kerberos::site::realm')}"
+hadoop::kerberos_realm: "%{hiera('kerberos::krb_site::realm')}"
 
 hadoop::common_hdfs::hadoop_namenode_host: "%{hiera('bigtop::hadoop_head_node')}"
 # actually default but needed for hadoop_namenode_uri here

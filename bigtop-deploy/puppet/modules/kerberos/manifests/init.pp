@@ -74,6 +74,8 @@ class kerberos {
   }
 
   class kdc inherits kerberos::krb_site {
+    Class['kerberos::kdc'] -> Class['hadoop_cluster_node']
+
     package { $package_name_kdc:
       ensure => installed,
     }
@@ -173,6 +175,8 @@ class kerberos {
       command => "kadmin -w secure -p kadmin/admin -q 'addprinc -randkey $principal'",
       unless => "kadmin -w secure -p kadmin/admin -q listprincs | grep -q $principal",
       require => Package[$kerberos::krb_site::package_name_client],
+      tries => 180,
+      try_sleep => 1,
     } 
     ->
     exec { "xst.$title":
@@ -189,8 +193,9 @@ class kerberos {
     $keytab = "/etc/$title.keytab"
 
     $internal_princs = $spnego ? {
-      /(true|enabled)/ => [ 'HTTP' ],
-      default          => [ ],
+      true      => [ 'HTTP' ],
+      'enabled' => [ 'HTTP' ],
+      default   => [ ],
     }
     realize(Kerberos::Principal[$internal_princs])
 

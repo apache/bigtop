@@ -367,6 +367,7 @@ class hadoop ($hadoop_security_authentication = "simple",
       Kerberos::Host_keytab["HTTP"] -> Service<| title == "hadoop-hdfs-datanode" |>
       Kerberos::Host_keytab["HTTP"] -> Service<| title == "hadoop-yarn-resourcemanager" |>
       Kerberos::Host_keytab["HTTP"] -> Service<| title == "hadoop-yarn-nodemanager" |>
+      Kerberos::Host_keytab["HTTP"] -> Service<| title == "hadoop-kms" |>
     }
   }
 

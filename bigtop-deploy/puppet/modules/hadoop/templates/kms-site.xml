@@ -86,11 +86,11 @@
 <% if @hadoop_security_authentication == "kerberos" -%>
   <property>
     <name>hadoop.kms.authentication.kerberos.keytab</name>
-    <value>${user.home}/kms.keytab</value>
+    <value>/etc/kms.keytab</value>
   </property>
   <property>
     <name>hadoop.kms.authentication.kerberos.principal</name>
-    <value>HTTP/_HOST@<%= @kerberos_realm %></value>
+    <value>HTTP/<%= @fqdn %>@<%= @kerberos_realm %></value>
   </property>
   <property>
     <name>hadoop.kms.authentication.kerberos.name.rules</name>
