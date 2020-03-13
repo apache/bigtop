@@ -266,7 +266,12 @@ bigtop {
       name    = 'spark'
       pkg     = 'spark-core'
       relNotes = 'Apache Spark'
-      version { base = '2.2.3'; pkg = base; release = 1 }
+      /*
+       * Remember to fetch the new LICENSE-binary and licenses-binary files
+       * when upgrading spark version.
+       * See comments in [bigtop-packages/src/common/spark/install_spark.sh] for details.
+       */
+      version { base = '2.4.5'; pkg = base; release = 1 }
       tarball { destination = "$name-${version.base}.tar.gz"
                 source      = "$name-${version.base}.tgz" }
       url     { download_path = "/$name/$name-${version.base}"

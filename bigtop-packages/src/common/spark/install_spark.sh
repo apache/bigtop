@@ -179,7 +179,19 @@ EOF
 chmod 755 $PREFIX/$BIN_DIR/spark-example
 
 touch $PREFIX/$LIB_DIR/RELEASE
-cp ${BUILD_DIR}/{LICENSE,NOTICE} ${PREFIX}/${LIB_DIR}/
+cp ${BUILD_DIR}/NOTICE ${PREFIX}/${LIB_DIR}/
+
+# For Spark 2.4, we need to add the license files here
+# since the Spark community doesn't include licenses for binary in the source tar ball
+# after they splitted license files between source and binary licenses.
+# See the discussion on the followings:
+#   - https://issues.apache.org/jira/browse/SPARK-25840
+#   - https://github.com/apache/spark/pull/22840
+#   - https://issues.apache.org/jira/browse/SPARK-24654
+# Remenber to fetch the new LICENSE-binary and licenses-binary files when upgrading Spark version.
+echo ${PWD}
+cp ${SOURCE_DIR}/LICENSE-binary ${PREFIX}/${LIB_DIR}/LICENSE
+cp -r ${SOURCE_DIR}/licenses-binary ${PREFIX}/${LIB_DIR}/licenses
 
 # Version-less symlinks
 (cd $PREFIX/$LIB_DIR/examples/jars; ln -s spark-examples*.jar spark-examples.jar)
