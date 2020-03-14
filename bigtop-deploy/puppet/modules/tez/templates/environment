@@ -13,22 +13,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class tez {
-  class deploy ($roles) {
-    if ("tez-client" in $roles) {
-      include hadoop::init_hdfs
-      include tez::client
-      Class['Tez::Client'] -> Class['Hadoop::Init_hdfs']
-    }
-  }
-
-  class client {
-    package { "tez":
-      ensure => latest,
-    }
-    file { "/etc/environment":
-      content => template("tez/environment"),
-      require => Package["tez"],
-    }
-  }
-}
+PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+HADOOP_CLASSPATH="/etc/tez/conf:/usr/lib/tez/*:/usr/lib/tez/lib/*"
