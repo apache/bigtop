@@ -121,6 +121,7 @@ rat {
        "bigtop-packages/src/charm/**/*.svg",
        "bigtop-packages/src/charm/**/*.yaml",
        "bigtop-packages/src/charm/**/resources/**/*.txt",
+       "bigtop-packages/src/common/spark/licenses-binary/*",
        "bigtop-deploy/juju/**/*.yaml",
        "bigtop-tests/cloud-weather-report/**/*.yaml",
        /* Misc individual files */
