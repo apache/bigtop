@@ -23,6 +23,8 @@ class hadoop ($hadoop_security_authentication = "simple",
      hive => { groups => 'hudson,testuser,root,hadoop,jenkins,oozie,hive,httpfs,users', hosts => "*" },
    httpfs => { groups => 'hudson,testuser,root,hadoop,jenkins,oozie,hive,httpfs,users', hosts => "*" } },
   $generate_secrets = false,
+  $kms_host = undef,
+  $kms_port = undef,
 ) {
 
   include stdlib
@@ -72,6 +74,10 @@ class hadoop ($hadoop_security_authentication = "simple",
 
     if ("httpfs-server" in $roles) {
       include hadoop::httpfs
+    }
+
+    if ("kms" in $roles) {
+      include hadoop::kms
     }
 
     if ("hadoop-client" in $roles) {
@@ -235,6 +241,8 @@ class hadoop ($hadoop_security_authentication = "simple",
       $hadoop_http_authentication_cookie_domain = regsubst($fqdn, "^[^\\.]+\\.", ""),
       $generate_secrets = $hadoop::generate_secrets,
       $namenode_datanode_registration_ip_hostname_check = undef,
+      $kms_host = $hadoop::kms_host,
+      $kms_port = $hadoop::kms_port,
   ) inherits hadoop {
 
     $sshfence_keydir  = "$hadoop_ha_sshfence_user_home/.ssh"
@@ -359,6 +367,7 @@ class hadoop ($hadoop_security_authentication = "simple",
       Kerberos::Host_keytab["HTTP"] -> Service<| title == "hadoop-hdfs-datanode" |>
       Kerberos::Host_keytab["HTTP"] -> Service<| title == "hadoop-yarn-resourcemanager" |>
       Kerberos::Host_keytab["HTTP"] -> Service<| title == "hadoop-yarn-nodemanager" |>
+      Kerberos::Host_keytab["HTTP"] -> Service<| title == "hadoop-kms" |>
     }
   }
 
@@ -510,6 +519,67 @@ class hadoop ($hadoop_security_authentication = "simple",
       require => [ Package["hadoop-httpfs"] ],
     }
     Kerberos::Host_keytab <| title == "httpfs" |> -> Service["hadoop-httpfs"]
+  }
+
+  class kms ($kms_host = $hadoop::kms_host,
+      $kms_port = $hadoop::kms_port,
+      $secret = "hadoop kms secret",
+      $generate_secrets = $hadoop::generate_secrets,
+      $hadoop_core_proxyusers = $hadoop::proxyusers,
+      $hadoop_security_authentcation = $hadoop::hadoop_security_authentication,
+      $kerberos_realm = $hadoop::kerberos_realm,
+  ) inherits hadoop {
+    include hadoop::common_hdfs
+
+    if ($hadoop_security_authentication == "kerberos") {
+      kerberos::host_keytab { "kms":
+        spnego => true,
+        require => Package["hadoop-kms"],
+      }
+    }
+
+    package { "hadoop-kms":
+      ensure => latest,
+      require => Package["jdk"],
+    }
+
+    file { "/etc/hadoop-kms/conf/kms-site.xml":
+      content => template('hadoop/kms-site.xml'),
+      require => [Package["hadoop-kms"]],
+    }
+
+    file { "/etc/hadoop-kms/conf/kms-env.sh":
+      content => template('hadoop/kms-env.sh'),
+      owner   => 'kms',
+      group   => 'kms',
+      mode    => '0400',
+      require => [Package["hadoop-kms"]],
+    }
+
+    if $generate_secrets {
+      $kms_signature_secret = trocla("kms-signature-secret", "plain")
+    } else {
+      $kms_signature_secret = $secret
+    }
+    if $kms_signature_secret == undef {
+      fail("KMS signature secret must be set")
+    }
+
+    file { "/etc/hadoop-kms/conf/kms-signature.secret":
+      content => $kms_signature_secret,
+      # it's a password file - do not filebucket
+      backup => false,
+      require => [Package["hadoop-kms"]],
+    }
+
+    service { "hadoop-kms":
+      ensure => running,
+      hasstatus => true,
+      subscribe => [Package["hadoop-kms"], File["/etc/hadoop-kms/conf/kms-site.xml"], File["/etc/hadoop-kms/conf/kms-env.sh"], File["/etc/hadoop-kms/conf/kms-signature.secret"],
+        File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"]],
+      require => [ Package["hadoop-kms"] ],
+    }
+    Kerberos::Host_keytab <| title == "kms" |> -> Service["hadoop-kms"]
   }
 
   class kinit {
@@ -893,4 +963,5 @@ class hadoop ($hadoop_security_authentication = "simple",
         require => [Package["jdk"], Package["hadoop"], Package["hadoop-hdfs"], Package["hadoop-mapreduce"]],  
       }
   }
+
 }

@@ -57,6 +57,9 @@ $roles_map = {
   mapred => {
     library => ["mapred-app"],
   },
+  kms => {
+    master => ["kms"],
+  },
   hbase => {
     master => ["hbase-master"],
     worker => ["hbase-server"],

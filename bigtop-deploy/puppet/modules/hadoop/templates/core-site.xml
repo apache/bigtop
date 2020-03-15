@@ -169,4 +169,11 @@
     <value>com.quantcast.qfs.hadoop.QuantcastFileSystem</value>
   </property>
 <% end -%>
+
+<% if @kms_host %>
+  <property>
+    <name>hadoop.security.key.provider.path</name>
+    <value>kms://http@<%= @kms_host %>:<%= @kms_port %>/kms</value>
+  </property>
+<% end -%>
 </configuration>
