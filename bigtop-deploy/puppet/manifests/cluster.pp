@@ -155,6 +155,9 @@ $roles_map = {
     master => ["elasticsearch-server"],
     worker => ["elasticsearch-server"],
   },
+  logstash => {
+    client => ["logstash-client"],
+  },
 }
 
 class hadoop_cluster_node (
@@ -226,6 +229,7 @@ class node_with_roles ($roles = hiera("bigtop::roles")) inherits hadoop_cluster_
     "ambari",
     "bigtop_utils",
     "elasticsearch",
+    "logstash",
   ]
 
   node_with_roles::deploy_module { $modules:
