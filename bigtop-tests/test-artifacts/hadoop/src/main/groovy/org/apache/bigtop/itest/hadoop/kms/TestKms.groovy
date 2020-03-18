@@ -24,38 +24,38 @@ import org.junit.Test;
 import org.apache.bigtop.itest.shell.Shell;
 
 public class TestKms {
-  private static final String USERNAME = System.getProperty("user.name");
-  private static final String ZONEDIR  = "/user/$USERNAME/zone1";
-  private static final String KEYNAME  = "key1";
-  private static final String LOCALDIR = "temp_kms";
-  private static final String TXTFILE  = "test.txt";
+  private static final String USER_NAME = System.getProperty("user.name");
+  private static final String ZONE_DIR  = "/user/$USER_NAME/zone1";
+  private static final String KEY_NAME  = "key1";
+  private static final String LOCAL_DIR = "temp_kms";
+  private static final String TXT_FILE  = "test.txt";
   private static Shell sh = new Shell("/bin/bash -s");
   private static Shell shHDFS = new Shell("/bin/bash", "hdfs")
 
 
   @BeforeClass
   public static void setUp() {
-    sh.exec("mkdir -p $LOCALDIR");
-    sh.exec("echo testdata >> $LOCALDIR/$TXTFILE");
-    sh.exec("hdfs dfs -mkdir -p $ZONEDIR");
+    sh.exec("mkdir -p $LOCAL_DIR");
+    sh.exec("echo testdata >> $LOCAL_DIR/$TXT_FILE");
+    sh.exec("hdfs dfs -mkdir -p $ZONE_DIR");
   }
 
   @AfterClass
   public static void tearDown() {
-    sh.exec("rm -rf $LOCALDIR");
-    shHDFS.exec("hdfs dfs -rm -r -skipTrash $ZONEDIR");
-    sh.exec("hadoop key delete $KEYNAME -f");
+    sh.exec("rm -rf ./$LOCAL_DIR");
+    shHDFS.exec("hdfs dfs -rm -r -skipTrash $ZONE_DIR");
+    sh.exec("hadoop key delete $KEY_NAME -f");
   }
 
   @Test
   public void testEncryptionZone() {
-    sh.exec("hadoop key create $KEYNAME");
-    assertTrue("failed to create key $KEYNAME", sh.getRet() == 0);
-    shHDFS.exec("hdfs crypto -createZone -keyName $KEYNAME -path $ZONEDIR");
+    sh.exec("hadoop key create $KEY_NAME");
+    assertTrue("failed to create key $KEY_NAME", sh.getRet() == 0);
+    shHDFS.exec("hdfs crypto -createZone -keyName $KEY_NAME -path $ZONE_DIR");
     assertTrue("failed to create encryption zone", shHDFS.getRet() == 0);
-    sh.exec("hdfs dfs -put $LOCALDIR/$TXTFILE $ZONEDIR/");
+    sh.exec("hdfs dfs -put $LOCAL_DIR/$TXT_FILE $ZONE_DIR/");
     assertTrue("failed to put file into encryption zone", sh.getRet() == 0);
-    sh.exec("hdfs dfs -get $ZONEDIR/$TXTFILE $LOCALDIR/$TXTFILE.1");
+    sh.exec("hdfs dfs -get $ZONE_DIR/$TXT_FILE $LOCAL_DIR/$TXT_FILE.1");
     assertTrue("failed to get file from encryption zone", sh.getRet() == 0);
   }
 }
