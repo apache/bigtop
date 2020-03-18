@@ -23,6 +23,9 @@ export _JAVA_OPTIONS="-Xmx2048m -Djava.awt.headless=true"
 sed -i "s|http://download.java.net|https://download.java.net|g" pom.xml
 sed -i "s|http://repo.spring.io|https://repo.spring.io|g" pom.xml
 
+# Download BGTP-mpack jar
+wget -P contrib/management-packs/bgtp-ambari-mpack/src/main/resources/stacks/BGTP/1.0/hooks/before-START/files https://github.com/apache/ambari/raw/trunk/contrib/management-packs/odpi-ambari-mpack/src/main/resources/stacks/ODPi/2.0/hooks/before-START/files/fast-hdfs-resource.jar
+
 mvn clean package -DskipTests -Drat.skip
 
 (cd contrib/management-packs/odpi-ambari-mpack ; mvn clean package -DskipTests -Drat.skip)
