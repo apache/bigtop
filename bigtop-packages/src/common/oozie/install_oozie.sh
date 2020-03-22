@@ -232,3 +232,8 @@ cp -R ${BUILD_DIR}/libtools ${SERVER_LIB_DIR}/
 # Provide a convenience symlink to be more consistent with tarball deployment
 ln -s ${DATA_DIR#${SERVER_PREFIX}} ${SERVER_LIB_DIR}/libext
 
+# Remove jars provided by 'oozie-client' from 'oozie' to avoid run-time issues
+# while installing the package.
+for oozie_client_jar_file in $(ls $CLIENT_LIB_DIR/lib); do
+  rm -f $SERVER_LIB_DIR/lib/$oozie_client_jar_file
+done
