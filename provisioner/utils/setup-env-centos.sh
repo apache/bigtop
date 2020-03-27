@@ -36,11 +36,22 @@ fi
 if [ $enable_local_repo == "true" ]; then
     echo "Enabling local yum."
     yum -y install yum-utils
-    sudo echo "gpgcheck=0" >> /etc/yum.conf
+
+    if [ -f /etc/os-release ]; then
+        . /etc/os-release
+    fi
+    case ${ID} in
+        fedora)
+            sed -i 's/gpgcheck=1/gpgcheck=0/g' /etc/dnf/dnf.conf
+            ;;
+        centos)
+            sudo echo "gpgcheck=0" >> /etc/yum.conf
+            ;;
+    esac
+
     sudo yum-config-manager --add-repo file:///bigtop-home/output
     sudo echo "gpgcheck=0" >> /etc/yum.repos.d/bigtop-home_output.repo
     sudo echo "priority=10" >> /etc/yum.repos.d/bigtop-home_output.repo
 else
     echo "local yum = $enable_local_repo ; NOT Enabling local yum.  Packages will be pulled from remote..."
 fi
-
