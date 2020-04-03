@@ -1,0 +1,22 @@
+diff --git a/python-api/pom.xml b/python-api/pom.xml
+index 8e5cdab..f042e73 100644
+--- a/python-api/pom.xml
++++ b/python-api/pom.xml
+@@ -46,7 +46,7 @@
+               <goal>exec</goal>
+             </goals>
+             <configuration>
+-            <executable>python</executable>
++            <executable>python2</executable>
+               <arguments>
+                 <argument>setup.py</argument>
+                 <argument>sdist</argument>
+@@ -60,7 +60,7 @@
+               <goal>exec</goal>
+             </goals>
+             <configuration>
+-              <executable>python</executable>
++              <executable>python2</executable>
+               <skip>${skipTests}</skip>
+               <arguments>
+                 <argument>setup.py</argument>
