@@ -20,7 +20,6 @@ set -ex
 
 export RELEASE=1
 export LANG="en_US.UTF-8"
-export JAVA_HOME=`readlink -f /usr/bin/java | sed "s:jre/bin/java::"`
 
 rake bootstrap
 rake plugin:install-default
