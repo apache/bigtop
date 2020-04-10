@@ -118,7 +118,7 @@ bigtop {
     hbase:['phoenix','giraph','ycsb','hive'],
     hive:['oozie', 'zeppelin'],
     'ignite-hadoop':['zeppelin'],
-    spark:['livy', 'mahout', 'zeppelin'],
+    spark:['livy', 'mahout', 'oozie', 'zeppelin'],
     flink:['mahout']
   ]
 
