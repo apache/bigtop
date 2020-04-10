@@ -22,7 +22,10 @@ mvn clean install -DskipTests -Dmahout.skip.distribution=false \
   -Phadoop2 \
   -Dhadoop.version=$HADOOP_VERSION \
   -Dhbase.version=$HBASE_VERSION   \
+  -Dscala.compat.version=${SCALA_VERSION%.*} \
+  -Dscala.version=${SCALA_VERSION} \
   -Dspark.version=${SPARK_VERSION} \
+  -Dflink.version=${FLINK_VERSION} \
   "$@"
 
 mkdir build
