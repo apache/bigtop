@@ -79,3 +79,6 @@ override_dh_fixperms:
 	# upstream qfs has executable gifs -- later version fixes but hasn't been
 	# released yet
 	chmod -c a-x debian/qfs-webui/usr/share/qfs/webui/files/sorttable/*.gif
+
+override_dh_strip:
+	dh_strip --no-automatic-dbgsym
