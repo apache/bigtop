@@ -256,7 +256,7 @@ class bigtop_toolchain::packages {
     provider => 'pip',
     require => [ Package[$pip], File['/usr/bin/pip-python'] ]
   }
-  package { 'flake8':
+  package { ['flake8', 'wheel']:
     ensure => 'installed',
     provider => 'pip',
     require => [ Package[$pip], File['/usr/bin/pip-python'] ]
