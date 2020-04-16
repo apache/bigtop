@@ -1,0 +1,69 @@
+diff --git a/r/src/main/scala/org/apache/spark/api/r/RBackendHelper.scala b/r/src/main/scala/org/apache/spark/api/r/RBackendHelper.scala
+index 9c1eb38d5..155f645dc 100644
+--- a/r/src/main/scala/org/apache/spark/api/r/RBackendHelper.scala
++++ b/r/src/main/scala/org/apache/spark/api/r/RBackendHelper.scala
+@@ -30,7 +30,7 @@ class RBackendHelper(val backend : RBackend) {
+   var port : Int = 0
+ 
+   def init() : Int = {
+-    port = backend.init()
++    port = backend.init()._1
+     port
+   }
+ 
+@@ -81,4 +81,4 @@ Its for testing purposes and should never be called
+ 
+   def apply() : RBackendHelper = new RBackendHelper(new RBackend())
+ 
+-}
+\ No newline at end of file
++}
+diff --git a/spark/pom.xml b/spark/pom.xml
+index 2211efd87..db5b58cf4 100644
+--- a/spark/pom.xml
++++ b/spark/pom.xml
+@@ -45,8 +45,8 @@
+         <plugin.shade.version>2.4.1</plugin.shade.version>
+         <plugin.scala.version>2.15.2</plugin.scala.version>
+         <!-- spark versions -->
+-        <spark.version>2.2.0</spark.version>
+-        <py4j.version>0.10.4</py4j.version>
++        <spark.version>2.4.5</spark.version>
++        <py4j.version>0.10.7</py4j.version>
+ 
+         <spark.archive>spark-${spark.version}</spark.archive>
+         <spark.src.download.url>
+diff --git a/spark/scala-2.10/src/main/scala/org/apache/zeppelin/spark/SparkScala210Interpreter.scala b/spark/scala-2.10/src/main/scala/org/apache/zeppelin/spark/SparkScala210Interpreter.scala
+index 995ee1539..e712c7d73 100644
+--- a/spark/scala-2.10/src/main/scala/org/apache/zeppelin/spark/SparkScala210Interpreter.scala
++++ b/spark/scala-2.10/src/main/scala/org/apache/zeppelin/spark/SparkScala210Interpreter.scala
+@@ -67,7 +67,8 @@ class SparkScala210Interpreter(override val conf: SparkConf,
+     settings.embeddedDefaults(Thread.currentThread().getContextClassLoader())
+     settings.usejavacp.value = true
+     settings.classpath.value = getUserJars.mkString(File.pathSeparator)
+-    sparkILoop = new SparkILoop(null, new JPrintWriter(Console.out, true))
++    // ZEPPELIN-3324: Fix ambiguous reference to overloaded definition
++    sparkILoop = new SparkILoop()
+     if (printReplOutput) {
+       Console.setOut(interpreterOutput)
+     }
+diff --git a/spark/spark1-shims/pom.xml b/spark/spark1-shims/pom.xml
+index 797c461e4..6bc18e6e2 100644
+--- a/spark/spark1-shims/pom.xml
++++ b/spark/spark1-shims/pom.xml
+@@ -50,7 +50,7 @@
+     <dependency>
+       <groupId>org.apache.spark</groupId>
+       <artifactId>spark-core_${scala.binary.version}</artifactId>
+-      <version>${spark.version}</version>
++      <version>2.2.3</version>
+       <scope>provided</scope>
+     </dependency>
+ 
+@@ -79,4 +79,4 @@
+     </plugins>
+   </build>
+ 
+-</project>
+\ No newline at end of file
++</project>
