@@ -17,7 +17,6 @@ export MAVEN_HOME=/usr/local/maven
 export JAVA_HOME=<%= @javahome %>
 export ANT_HOME=/usr/local/ant
 export GRADLE_HOME=/usr/local/gradle
-export NODE_HOME=/usr/local/node
-export PATH=$MAVEN_HOME/bin:$ANT_HOME/bin:$GRADLE_HOME/bin:$NODE_HOME/bin:$PATH
+export PATH=$MAVEN_HOME/bin:$ANT_HOME/bin:$GRADLE_HOME/bin:$PATH
 
 export GRADLE_OPTS="-Dorg.gradle.daemon=true"
