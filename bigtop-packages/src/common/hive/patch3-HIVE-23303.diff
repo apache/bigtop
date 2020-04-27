@@ -1,0 +1,37 @@
+diff --git a/shims/common/src/main/java/org/apache/hadoop/fs/ProxyFileSystem.java b/shims/common/src/main/java/org/apache/hadoop/fs/ProxyFileSystem.java
+index 2c37a51cf4..c8122a2d61 100644
+--- a/shims/common/src/main/java/org/apache/hadoop/fs/ProxyFileSystem.java
++++ b/shims/common/src/main/java/org/apache/hadoop/fs/ProxyFileSystem.java
+@@ -23,6 +23,7 @@
+ import java.net.URISyntaxException;
+ 
+ import org.apache.hadoop.conf.Configuration;
++import org.apache.hadoop.fs.Options.Rename;
+ import org.apache.hadoop.fs.permission.FsPermission;
+ import org.apache.hadoop.util.Progressable;
+ import org.apache.hadoop.util.Shell;
+@@ -180,6 +181,12 @@ public boolean rename(Path src, Path dst) throws IOException {
+     return super.isFile(dest) ? false : super.rename(swizzleParamPath(src), dest);
+   }
+ 
++   @Override
++   protected void rename(Path src, Path dst, Rename... options)
++       throws IOException {
++     super.rename(swizzleParamPath(src), swizzleParamPath(dst), options);
++   }
++
+   @Override
+   public boolean delete(Path f, boolean recursive) throws IOException {
+     return super.delete(swizzleParamPath(f), recursive);
+@@ -215,6 +222,11 @@ public Path getWorkingDirectory() {
+     return swizzleReturnPath(super.getWorkingDirectory());
+   }
+ 
++  @Override
++  public boolean mkdirs(Path f) throws IOException {
++    return super.mkdirs(swizzleParamPath(f));
++  }
++
+   @Override
+   public boolean mkdirs(Path f, FsPermission permission) throws IOException {
+     return super.mkdirs(swizzleParamPath(f), permission);
