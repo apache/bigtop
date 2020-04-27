@@ -1,0 +1,73 @@
+diff --git a/pom.xml b/pom.xml
+index f91f7f43a6..71a889746a 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -178,7 +178,7 @@
+     <orc.version>1.3.4</orc.version>
+     <mockito-all.version>1.9.5</mockito-all.version>
+     <mina.version>2.0.0-M5</mina.version>
+-    <netty.version>4.0.52.Final</netty.version>
++    <netty.version>4.1.17.Final</netty.version>
+     <parquet.version>1.8.1</parquet.version>
+     <pig.version>0.16.0</pig.version>
+     <protobuf.version>2.5.0</protobuf.version>
+@@ -189,7 +189,7 @@
+     <tez.version>0.8.4</tez.version>
+     <slider.version>0.90.2-incubating</slider.version>
+     <super-csv.version>2.2.0</super-csv.version>
+-    <spark.version>2.0.0</spark.version>
++    <spark.version>2.3.0</spark.version>
+     <scala.binary.version>2.11</scala.binary.version>
+     <scala.version>2.11.8</scala.version>
+     <tempus-fugit.version>1.1</tempus-fugit.version>
+diff --git a/ql/src/java/org/apache/hadoop/hive/ql/exec/spark/LocalHiveSparkClient.java b/ql/src/java/org/apache/hadoop/hive/ql/exec/spark/LocalHiveSparkClient.java
+index beeafd0672..c871ba6c33 100644
+--- a/ql/src/java/org/apache/hadoop/hive/ql/exec/spark/LocalHiveSparkClient.java
++++ b/ql/src/java/org/apache/hadoop/hive/ql/exec/spark/LocalHiveSparkClient.java
+@@ -84,7 +84,7 @@ public static synchronized LocalHiveSparkClient getInstance(SparkConf sparkConf)
+   private LocalHiveSparkClient(SparkConf sparkConf) {
+     sc = new JavaSparkContext(sparkConf);
+     jobMetricsListener = new JobMetricsListener();
+-    sc.sc().listenerBus().addListener(jobMetricsListener);
++    sc.sc().addSparkListener(jobMetricsListener);
+   }
+ 
+   @Override
+diff --git a/spark-client/src/test/java/org/apache/hive/spark/client/rpc/TestKryoMessageCodec.java b/spark-client/src/test/java/org/apache/hive/spark/client/rpc/TestKryoMessageCodec.java
+index 24858d7cef..fb736471b2 100644
+--- a/spark-client/src/test/java/org/apache/hive/spark/client/rpc/TestKryoMessageCodec.java
++++ b/spark-client/src/test/java/org/apache/hive/spark/client/rpc/TestKryoMessageCodec.java
+@@ -72,7 +72,8 @@ public void testEmbeddedChannel() throws Exception {
+     c.writeAndFlush(MESSAGE);
+     assertEquals(1, c.outboundMessages().size());
+     assertFalse(MESSAGE.getClass().equals(c.outboundMessages().peek().getClass()));
+-    c.writeInbound(c.readOutbound());
++    Object readOutboundResult = c.readOutbound();
++    c.writeInbound(readOutboundResult);
+     assertEquals(1, c.inboundMessages().size());
+     assertEquals(MESSAGE, c.readInbound());
+     c.close();
+diff --git a/spark-client/src/test/java/org/apache/hive/spark/client/rpc/TestRpc.java b/spark-client/src/test/java/org/apache/hive/spark/client/rpc/TestRpc.java
+index 5a4801c5fa..21b3d4e494 100644
+--- a/spark-client/src/test/java/org/apache/hive/spark/client/rpc/TestRpc.java
++++ b/spark-client/src/test/java/org/apache/hive/spark/client/rpc/TestRpc.java
+@@ -287,7 +287,8 @@ private void transfer(Rpc serverRpc, Rpc clientRpc) {
+ 
+     int count = 0;
+     while (!client.outboundMessages().isEmpty()) {
+-      server.writeInbound(client.readOutbound());
++      Object readOutboundResult = client.readOutbound();
++      server.writeInbound(readOutboundResult);
+       count++;
+     }
+     server.flush();
+@@ -295,7 +296,8 @@ private void transfer(Rpc serverRpc, Rpc clientRpc) {
+ 
+     count = 0;
+     while (!server.outboundMessages().isEmpty()) {
+-      client.writeInbound(server.readOutbound());
++      Object readOutboundResult = server.readOutbound();
++      client.writeInbound(readOutboundResult);
+       count++;
+     }
+     client.flush();
