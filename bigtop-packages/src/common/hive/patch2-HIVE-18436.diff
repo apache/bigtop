@@ -1,20 +1,3 @@
-diff --git a/itests/pom.xml b/itests/pom.xml
-index 0e4383acef..b911ffb130 100644
---- a/itests/pom.xml
-+++ b/itests/pom.xml
-@@ -96,10 +96,10 @@
-                           cd -
-                         fi
-                         tar -zxf $DOWNLOAD_DIR/$tarName -C $BASE_DIR
--                        mv $BASE_DIR/spark-${spark.version}-bin-hadoop2-without-hive $BASE_DIR/$finalName
-+                        mv $BASE_DIR/spark-${spark.version}-bin-hadoop3-beta1-without-hive $BASE_DIR/$finalName
-                       }
-                       mkdir -p $DOWNLOAD_DIR
--                      download "http://d3jw87u4immizc.cloudfront.net/spark-tarball/spark-${spark.version}-bin-hadoop2-without-hive.tgz" "spark"
-+                      download "http://d3jw87u4immizc.cloudfront.net/spark-tarball/spark-${spark.version}-bin-hadoop3-beta1-without-hive.tgz" "spark"
-                       cp -f $HIVE_ROOT/data/conf/spark/log4j2.properties $BASE_DIR/spark/conf/
-                     </echo>
-                   </target>
 diff --git a/pom.xml b/pom.xml
 index f91f7f43a6..71a889746a 100644
 --- a/pom.xml
