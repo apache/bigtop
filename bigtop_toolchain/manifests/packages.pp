@@ -161,6 +161,7 @@ class bigtop_toolchain::packages {
         "g++",
         "fuse",
         "reprepro",
+        "rsync",
         "liblzo2-dev",
         "libfuse-dev",
         "libcppunit-dev",
