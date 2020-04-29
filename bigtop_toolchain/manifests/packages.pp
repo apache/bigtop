@@ -172,6 +172,7 @@ class bigtop_toolchain::packages {
         "devscripts",
         "build-essential",
         "dh-make",
+        "dh-python",
         "libfuse2",
         "libjansi-java",
         "python2.7-dev",
