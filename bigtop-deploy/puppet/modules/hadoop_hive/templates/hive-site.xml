@@ -73,11 +73,6 @@
   <description>Driver class name for a JDBC metastore</description>
 </property>
 
-<property>
-  <name>hive.hwi.war.file</name>
-  <value>/usr/lib/hive/lib/hive-hwi.war</value>
-  <description>This is the WAR file with the jsp content for Hive Web Interface</description>
-</property>
 
 <property>
    <name>hive.server2.allow.user.substitution</name>
