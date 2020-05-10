@@ -35,7 +35,8 @@ Pin-Priority: 901
 EOF
     apt-get update
 else
-    apt-get install -y apt-transport-https
+    # Install gpg so that puppet apt module can fetch the gpg key
+    apt-get install -y apt-transport-https gpg
     echo "local apt = $enable_local_repo ; NOT Enabling local apt. Packages will be pulled from remote..."
 fi
 
