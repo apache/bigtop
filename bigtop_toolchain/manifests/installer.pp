@@ -23,7 +23,6 @@ class bigtop_toolchain::installer {
   include bigtop_toolchain::env
   include bigtop_toolchain::user
   include bigtop_toolchain::renv
-  include bigtop_toolchain::ruby
 
   stage { 'last':
     require => Stage['main'],
