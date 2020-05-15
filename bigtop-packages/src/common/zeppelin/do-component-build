@@ -30,10 +30,7 @@ BUILD_OPTS="-Dscala.version=${SCALA_VERSION} \
             -Dignite.version=${IGNITE_HADOOP_VERSION} \
             -Dflink.version=${FLINK_VERSION} \
             -Pspark-${SPARK_VERSION%.*} \
-            -Phadoop-2.7 \
             -Pscala-${SCALA_VERSION%.*} \
-            -Ppyspark \
-            -Psparkr \
             -Pr \
             -Pbuild-distr"
 
@@ -45,8 +42,6 @@ fi
 
 export MAVEN_OPTS="-Xmx1500m -Xms1500m"
 
-# change spark src download url to apache
-sed -i "s/http\:\/\/d3kbcqa49mib13\.cloudfront\.net/https\:\/\/archive\.apache\.org\/dist\/spark\/spark-\$\{spark\.version\}/g" spark-dependencies/pom.xml
 mvn $BUILD_OPTS clean package
 
 mkdir -p build/dist
