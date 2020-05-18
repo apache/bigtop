@@ -42,8 +42,8 @@ case "$1" in
                   --ingroup "$LS_GROUP" \
                   --home /usr/lib/logstash \
                   --gecos "Logstash" \
-		  --disabled-password \
-		  --shell /bin/false \
+                  --disabled-password \
+                  --shell /bin/false \
                   "$LS_USER" >/dev/null
         fi
     ;;
