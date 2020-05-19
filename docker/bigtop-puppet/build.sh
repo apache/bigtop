@@ -37,11 +37,17 @@ else
 ARCH=""
 fi
 
+ENV_PATH=""
+if [ ${OS} = "centos" -a ${VERSION} -ge 8 ]; then
+  ENV_PATH='ENV PATH /opt/puppetlabs/bin:$PATH'
+fi
+
 cp ../../bigtop_toolchain/bin/puppetize.sh .
 cat >Dockerfile <<EOF
 FROM ${OS}:${VERSION}
 MAINTAINER dev@bigtop.apache.org
 COPY puppetize.sh /tmp/puppetize.sh
+${ENV_PATH}
 RUN bash /tmp/puppetize.sh
 EOF
 

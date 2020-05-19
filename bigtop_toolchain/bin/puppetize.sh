@@ -51,7 +51,7 @@ case ${ID}-${VERSION_ID} in
         rpm -Uvh https://yum.puppet.com/puppet5-release-el-8.noarch.rpm
         dnf -y check-update
         dnf -y install hostname curl sudo unzip wget puppet-agent 'dnf-command(config-manager)'
-        /opt/puppetlabs/bin/puppet module install puppetlabs-stdlib
+        puppet module install puppetlabs-stdlib
         # Enabling the PowerTools and EPEL repositories via Puppet doesn't seem to work in some cases.
         # As a workaround for that, enable the former here in advance of running the Puppet manifests.
         dnf config-manager --set-enabled PowerTools
