@@ -1,0 +1,36 @@
+diff -ruaN kibana-5.4.1-orig/tasks/build/os_packages.js kibana-5.4.1-arm64-support/tasks/build/os_packages.js
+--- kibana-5.4.1-orig/tasks/build/os_packages.js	2020-07-22 14:51:45.240239878 +0800
++++ kibana-5.4.1-arm64-support/tasks/build/os_packages.js	2020-07-22 14:51:34.283874336 +0800
+@@ -14,7 +14,7 @@
+     grunt.file.mkdir(targetDir);
+ 
+     config.get('platforms')
+-    .filter(({ name }) => /linux-x86(_64)?$/.test(name))
++    .filter(({ name }) => /linux-(x86|x86_64|arm64)?$/.test(name))
+     .forEach(({ buildDir, debArch, rpmArch }) => {
+       const baseOptions = [
+         '--force',
+diff -ruaN kibana-5.4.1-orig/tasks/config/platforms.js kibana-5.4.1-arm64-support/tasks/config/platforms.js
+--- kibana-5.4.1-orig/tasks/config/platforms.js	2020-07-22 14:51:45.244239999 +0800
++++ kibana-5.4.1-arm64-support/tasks/config/platforms.js	2020-07-22 14:51:34.283874336 +0800
+@@ -12,6 +12,7 @@
+     'darwin-x64',
+     'linux-x64',
+     'linux-x86',
++    'linux-arm64',
+     'windows-x86'
+   ].map(function (baseName) {
+     const win = baseName === 'windows-x86';
+@@ -42,10 +43,12 @@
+     let rpmArch;
+     if (name.match('linux')) {
+       debArch = name.match('x86_64') ? 'amd64' : 'i386';
++      debArch = name.match('arm64') ? 'arm64' : debArch;
+       debName = `kibana-${version}-${debArch}.deb`;
+       debPath = resolve(rootPath, `target/${debName}`);
+ 
+       rpmArch = name.match('x86_64') ? 'x86_64' : 'i686';
++      rpmArch = name.match('arm64') ? 'arm64' : rpmArch;
+       rpmName = `kibana-${version}-${rpmArch}.rpm`;
+       rpmPath = resolve(rootPath, `target/${rpmName}`);
+     }
