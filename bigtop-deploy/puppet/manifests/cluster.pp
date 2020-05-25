@@ -54,7 +54,7 @@ $roles_map = {
     # mapred is the default app which runs on yarn.
     library => ["mapred-app"],
   },
-  mapred => {
+  mapreduce => {
     library => ["mapred-app"],
   },
   kms => {

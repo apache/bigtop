@@ -54,6 +54,8 @@ Puppet::Parser::Functions.newfunction(:get_roles, :type => :rvalue) do |argument
           temp_roles = component_map[role_type]
           roles.concat(temp_roles)
         end
+      else
+        fail Puppet::ParseError, "get_roles(): No such component in roles_map. #{component}"
       end
     end
   end
