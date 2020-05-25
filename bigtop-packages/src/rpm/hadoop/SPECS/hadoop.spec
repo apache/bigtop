@@ -140,6 +140,9 @@
 # like thrift so disable this
 %define _use_internal_dependency_generator 0
 
+# BIGTOP-3359
+%define _build_id_links none
+
 Name: %{hadoop_name}
 Version: %{hadoop_version}
 Release: %{hadoop_release}
