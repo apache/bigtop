@@ -24,3 +24,4 @@ bigtop:
     - ./config/hiera.yaml:/etc/puppet/hiera.yaml
     - ./config/hieradata:/etc/puppet/hieradata
     - ./config/hosts:/etc/hosts
+    - /sys/fs/cgroup:/sys/fs/cgroup:ro
