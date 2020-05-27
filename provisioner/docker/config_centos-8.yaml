@@ -13,15 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-bigtop:
-    image: ${DOCKER_IMAGE}
-    command: /sbin/init
-    domainname: bigtop.apache.org
-    privileged: true
-    mem_limit: ${MEM_LIMIT}
-    volumes:
-    - ../../:/bigtop-home
-    - ./config/hiera.yaml:/etc/puppet/hiera.yaml
-    - ./config/hieradata:/etc/puppet/hieradata
-    - ./config/hosts:/etc/hosts
-    - /sys/fs/cgroup:/sys/fs/cgroup:ro
+docker:
+        memory_limit: "4g"
+        image: "bigtop/puppet:trunk-centos-8"
+
+repo: "http://repos.bigtop.apache.org/releases/1.5.0/centos/8/$basearch"
+distro: centos
+components: [hdfs, yarn, mapreduce]
+enable_local_repo: false
+smoke_test_components: [hdfs, yarn, mapreduce]

@@ -194,7 +194,7 @@ bigtop-puppet() {
     if docker exec $1 bash -c "puppet --version" | grep ^3 >/dev/null ; then
       future="--parser future"
     fi
-    docker exec $1 bash -c "puppet apply --detailed-exitcodes $future --modulepath=/bigtop-home/bigtop-deploy/puppet/modules:/etc/puppet/modules:/usr/share/puppet/modules /bigtop-home/bigtop-deploy/puppet/manifests"
+    docker exec $1 bash -c "puppet apply --detailed-exitcodes $future --hiera_config=/etc/puppet/hiera.yaml --modulepath=/bigtop-home/bigtop-deploy/puppet/modules:/etc/puppet/modules:/usr/share/puppet/modules:/etc/puppetlabs/code/environments/production/modules /bigtop-home/bigtop-deploy/puppet/manifests"
 }
 
 get-yaml-config() {
