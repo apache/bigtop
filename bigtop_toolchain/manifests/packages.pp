@@ -61,7 +61,8 @@ class bigtop_toolchain::packages {
         "libevent-devel",
         "apr-devel",
         "bison",
-        "libffi-devel"
+        "libffi-devel",
+        "perl-Digest-SHA"
       ]
       if ($operatingsystem == 'Fedora' or $operatingsystemmajrelease !~ /^[0-7]$/) {
         $pkgs = concat($_pkgs, ["python2-devel", "libtirpc-devel"])
