@@ -24,7 +24,7 @@ case ${ID}-${VERSION_ID} in
     fedora-31)
         dnf -y install yum-utils
         dnf -y check-update
-        dnf -y install hostname findutils curl sudo unzip wget puppet procps-ng
+        dnf -y install hostname findutils curl sudo unzip wget puppet procps-ng libxcrypt-compat
         # On Fedora 31, the puppetlabs-stdlib package provided by the distro installs the module
         # into /usr/share/puppet/modules, but it's not recognized as the default module path.
         # So we install that module in the same way as CentOS 7.
