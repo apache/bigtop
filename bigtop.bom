@@ -396,7 +396,7 @@ bigtop {
     'tajo' {
       name    = 'tajo'
       relNotes = 'Apache Tajo'
-      version { base = '0.11.1'; pkg = base; release = 1 }
+      version { base = '0.11.2'; pkg = base; release = 1 }
       tarball { source      = "$name-${version.base}-src.tar.gz"
                 destination = "$name-${version.base}.tar.gz" }
       url     { download_path = "/$name/$name-${version.base}"

@@ -93,7 +93,6 @@ install -d -m 0755 $PREFIX/$LIB_DIR
 install -d -m 0755 $PREFIX/$LIB_DIR/bin
 install -d -m 0755 $PREFIX/$LIB_DIR/lib
 install -d -m 0755 $PREFIX/$LIB_DIR/extlib
-install -d -m 0755 $PREFIX/$LIB_DIR/hive
 install -d -m 0755 $PREFIX/$LIB_DIR/share
 install -d -m 0755 $PREFIX/$LIB_DIR/share/jdbc-dist
 install -d -m 0755 $PREFIX/$CONF_DIR
@@ -120,12 +119,6 @@ for module in ${BUILD_DIR}/extlib/*; do
   if [ -f $module ]; then
     x=$(basename $module)
     cp -ra ${BUILD_DIR}/extlib/$x $PREFIX/${LIB_DIR}/extlib/
-  fi
-done
-for module in ${BUILD_DIR}/hive/*; do
-  if [ -f $module ]; then
-    x=$(basename $module)
-    cp -ra ${BUILD_DIR}/hive/$x $PREFIX/${LIB_DIR}/hive/
   fi
 done
 for module in ${BUILD_DIR}/share/jdbc-dist/*; do
