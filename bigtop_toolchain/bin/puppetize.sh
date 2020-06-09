@@ -47,7 +47,7 @@ case ${ID}-${VERSION_ID} in
         yum -y install hostname curl sudo unzip wget puppet
         puppet module install puppetlabs-stdlib --version 4.12.0
         ;;
-    centos-8* | rhel-8*)
+    centos-8*)
         rpm -Uvh https://yum.puppet.com/puppet5-release-el-8.noarch.rpm
         dnf -y check-update
         dnf -y install hostname curl sudo unzip wget puppet-agent 'dnf-command(config-manager)'
@@ -55,6 +55,15 @@ case ${ID}-${VERSION_ID} in
         # Enabling the PowerTools and EPEL repositories via Puppet doesn't seem to work in some cases.
         # As a workaround for that, enable the former here in advance of running the Puppet manifests.
         dnf config-manager --set-enabled PowerTools
+        ;;
+    rhel-8*)
+        rpm -Uvh https://yum.puppet.com/puppet5-release-el-8.noarch.rpm
+        dnf -y check-update
+        dnf -y install hostname curl sudo unzip wget puppet-agent 'dnf-command(config-manager)'
+        puppet module install puppetlabs-stdlib
+        # Enabling the CodeReady repositories via Puppet doesn't seem to work in some cases.
+        # As a workaround for that, enable the former here in advance of running the Puppet manifests.
+        dnf config-manager --set-enabled codeready-builder-for-rhel-8-rhui-rpms
         ;;
     *)
         echo "Unsupported OS ${ID}-${VERSION_ID}."
