@@ -237,30 +237,23 @@ class bigtop_toolchain::packages {
     }
   }
 
-  # Install Python packages using pip
-  case $operatingsystem{
-    /(?i:(centos|fedora|redhat))/: {
-      $pip = 'python2-pip'
-    } /(?i:(SLES|opensuse))/: { 
-      $pip = 'python-pip'
-    } /Amazon/: { 
-      $pip = 'python27-pip'
-    } /(Ubuntu|Debian)/: {
-      $pip = 'python-pip'
-    }
+
+  # BIGTOP-3364: Failed to install setuptools by pip/pip2
+  # on Ubuntu-16.04/18.04 and centos-7.
+  # From https://packaging.python.org/tutorials/installing-packages/#requirements-for-installing-packages,
+  # it suggests to leverage python3/pip3 to install setuptools.
+  #
+  # "provider => 'pip3'" is not available for puppet 3.8.5,
+  #  Workaround: Exec {pip3 install setuptools} directly insead of Package{}.
+  package { 'python3-pip':
+    ensure => installed
   }
-  file { '/usr/bin/pip-python':
-    ensure => 'link',
-    target => '/usr/bin/pip2',
+
+  exec { "Setuptools Installation":
+    command => "/usr/bin/pip3 install -q --upgrade setuptools",
   }
-  package { 'setuptools':
-    ensure => 'latest',
-    provider => 'pip',
-    require => [ Package[$pip], File['/usr/bin/pip-python'] ]
-  }
-  package { ['flake8', 'wheel']:
-    ensure => 'installed',
-    provider => 'pip',
-    require => [ Package[$pip], File['/usr/bin/pip-python'] ]
+
+  exec { "flake8 and whell Installation":
+    command => "/usr/bin/pip3 freeze --all; /usr/bin/pip3 --version; /usr/bin/pip3 install -q flake8 wheel",
   }
 }
