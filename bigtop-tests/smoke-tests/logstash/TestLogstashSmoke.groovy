@@ -63,7 +63,7 @@ class TestLogstashSmoke {
     );
 
     // Wait for completion
-    sleep(50000);
+    sleep(15000);
     // Logstash pipefile verify
     assertEquals("Logstash output did not match expected output.", 0,
       sh.exec("diff -u $FILE_EXPECTED $FILE_OUTPUT").getRet());

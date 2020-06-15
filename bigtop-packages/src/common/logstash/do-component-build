@@ -25,13 +25,8 @@ if [ -f /etc/os-release ]; then
     . /etc/os-release
 fi
 
-case ${ID} in
-    ubuntu | debian)
-        sudo apt-get -y update
-        sudo apt-get install -y gnupg2
-        ;;
-esac
-
+# IPv6 issues in docker containers:
+# https://rvm.io/rvm/security#ipv6-issues
 case ${ID}-${VERSION_ID} in
     ubuntu-18* | debian-9)
     gpg2 --list-keys
@@ -39,6 +34,7 @@ case ${ID}-${VERSION_ID} in
     ;;
 esac
 
+# Install ruby-2.4.0 to build Logstash
 gpg2 --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
 curl -sSL https://get.rvm.io | bash -s stable
 [ -s /usr/local/rvm/scripts/rvm ] && source /usr/local/rvm/scripts/rvm
@@ -47,3 +43,7 @@ rvm install ruby-2.4.0 && rvm use 2.4.0
 rake bootstrap
 rake plugin:install-default
 rake artifact:tar
+
+# Remove ruby-2.4.0 to make build-environment consistent
+rvm remove ruby-2.4.0
+sudo rm -rf /usr/local/rvm/

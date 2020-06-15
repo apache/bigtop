@@ -53,6 +53,7 @@ Source1: do-component-build
 Source2: install_%{name}.sh
 Source3: log4j2.properties
 Source4: logstash.default
+#BIGTOP_PATCH_FILES
 Requires: bigtop-utils >= 0.7
 AutoProv: no
 AutoReqProv: no
@@ -74,6 +75,7 @@ transforms it, and then sends it to your favorite "stash."
 %prep
 %setup -n logstash-%{logstash_base_version}
 
+#BIGTOP_PATCH_COMMANDS
 %build
 env FULL_VERSION=%{logstash_base_version} bash %{SOURCE1}
 
