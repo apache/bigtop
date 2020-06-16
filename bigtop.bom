@@ -112,7 +112,7 @@ bigtop {
     zookeeper:['hadoop', 'hbase'],
     hadoop:['ignite-hadoop', 'hbase', 'hive', 'tez', 'sqoop', 'sqoop2',
       'oozie', 'mahout', 'flume', 'giraph', 'solr', 'spark',
-      'phoenix', 'alluxio', 'kafka', 'ycsb', 'zeppelin', 'tajo'
+      'phoenix', 'alluxio', 'kafka', 'ycsb', 'zeppelin'
     ],
     hbase:['phoenix','giraph','ycsb','hive'],
     hive:['oozie', 'zeppelin'],
@@ -379,16 +379,6 @@ bigtop {
       tarball { source      = "$name-${version.base}.tgz"
                 destination = "$name-${version.base}.tar.gz" }
       url     { download_path = "/$name/$name-${version.base}/"
-                site = "${apache.APACHE_MIRROR}/${download_path}"
-                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
-    }
-    'tajo' {
-      name    = 'tajo'
-      relNotes = 'Apache Tajo'
-      version { base = '0.11.1'; pkg = base; release = 1 }
-      tarball { source      = "$name-${version.base}-src.tar.gz"
-                destination = "$name-${version.base}.tar.gz" }
-      url     { download_path = "/$name/$name-${version.base}"
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }
