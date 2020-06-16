@@ -112,8 +112,7 @@ bigtop {
     zookeeper:['hadoop', 'hbase'],
     hadoop:['ignite-hadoop', 'hbase', 'hive', 'tez', 'sqoop', 'sqoop2',
       'oozie', 'mahout', 'flume', 'giraph', 'solr', 'spark',
-      'phoenix', 'alluxio', 'kafka', 'ycsb', 'hama', 'zeppelin',
-      'tajo'
+      'phoenix', 'alluxio', 'kafka', 'ycsb', 'zeppelin', 'tajo'
     ],
     hbase:['phoenix','giraph','ycsb','hive'],
     hive:['oozie', 'zeppelin'],
@@ -372,16 +371,6 @@ bigtop {
                 source      = "${version.base}.tar.gz" }
       url     { site = "https://github.com/brianfrankcooper/YCSB/archive"
                 archive = site }
-    }
-    'hama' {
-      name    = 'hama'
-      relNotes = 'Apache Hama'
-      version { base = '0.7.1'; pkg = base; release = 1 }
-      tarball { destination = "$name-dist-${version.base}.tar.gz"
-                source      = "$name-dist-${version.base}-src.tar.gz" }
-      url     { download_path = "/$name/$name-${version.base}/"
-                site = "${apache.APACHE_MIRROR}/${download_path}"
-                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }
     'zeppelin' {
       name    = 'zeppelin'
