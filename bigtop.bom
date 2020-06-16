@@ -113,7 +113,7 @@ bigtop {
     hadoop:['ignite-hadoop', 'hbase', 'hive', 'tez', 'sqoop', 'sqoop2',
       'oozie', 'mahout', 'flume', 'giraph', 'solr', 'spark',
       'phoenix', 'alluxio', 'kafka', 'ycsb', 'hama', 'zeppelin',
-      'tajo', 'apex'
+      'tajo'
     ],
     hbase:['phoenix','giraph','ycsb','hive'],
     hive:['oozie', 'zeppelin'],
@@ -400,16 +400,6 @@ bigtop {
       tarball { source      = "$name-${version.base}-src.tar.gz"
                 destination = "$name-${version.base}.tar.gz" }
       url     { download_path = "/$name/$name-${version.base}"
-                site = "${apache.APACHE_MIRROR}/${download_path}"
-                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
-    }
-    'apex' {
-      name    = 'apex'
-      relNotes = 'Apache Apex'
-      version { base = '3.6.0'; pkg = base; release = 1 }
-      tarball { source      = "apache-$name-core-${version.base}-source-release.tar.gz"
-                destination = "$name-${version.base}.tar.gz" }
-      url     { download_path = "/$name/apache-$name-core-${version.base}/"
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }

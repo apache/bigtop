@@ -34,9 +34,6 @@
 # or disabled.
 
 $roles_map = {
-  apex => {
-    client => ["apex-client"],
-  },
   hdfs-non-ha => {
     master => ["namenode"],
     worker => ["datanode"],
@@ -204,7 +201,6 @@ class node_with_roles ($roles = hiera("bigtop::roles")) inherits hadoop_cluster_
 
   $modules = [
     "alluxio",
-    "apex",
     "flink",
     "giraph",
     "hadoop",

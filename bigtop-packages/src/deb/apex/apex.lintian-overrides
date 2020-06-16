@@ -1,3 +1,0 @@
-apex binary: classpath-contains-relative-path
-apex binary: jar-not-in-usr-share
-apex binary: binary-without-manpage

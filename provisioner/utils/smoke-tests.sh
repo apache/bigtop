@@ -71,11 +71,6 @@ if [[ $SMOKE_TESTS == *"qfs"* ]]; then
     prep hadoop-qfs
 fi
 
-if [[ $SMOKE_TESTS == *"apex"* ]]; then
-    puppet apply --modulepath=/bigtop-home -e 'include bigtop_toolchain::maven'
-    export PATH=/usr/local/maven/bin:$PATH
-fi
-
 if [[ $SMOKE_TESTS == *"alluxio"* ]]; then
     su -s /bin/bash $HCFS_USER -c "$HADOOP_COMMAND fs -mkdir /underFSStorage"
     su -s /bin/bash $HCFS_USER -c "$HADOOP_COMMAND fs -chmod 777 /underFSStorage"
