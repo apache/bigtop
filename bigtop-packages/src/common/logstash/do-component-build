@@ -37,7 +37,12 @@ esac
 # Install ruby-2.4.0 to build Logstash
 gpg2 --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
 curl -sSL https://get.rvm.io | bash -s stable
-[ -s /usr/local/rvm/scripts/rvm ] && source /usr/local/rvm/scripts/rvm
+if ((UID == 0))
+then
+  [ -s /usr/local/rvm/scripts/rvm ] && source /usr/local/rvm/scripts/rvm
+else
+  [ -s $HOME/.rvm/scripts/rvm ] && source $HOME/.rvm/scripts/rvm
+fi
 rvm install ruby-2.4.0 && rvm use 2.4.0
 
 rake bootstrap
@@ -46,4 +51,3 @@ rake artifact:tar
 
 # Remove ruby-2.4.0 to make build-environment consistent
 rvm remove ruby-2.4.0
-sudo rm -rf /usr/local/rvm/
