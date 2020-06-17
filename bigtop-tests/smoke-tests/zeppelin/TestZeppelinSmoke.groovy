@@ -34,14 +34,11 @@ class TestZeppelinSmoke {
 
   private static String ZEPPELIN_HOME = System.getenv("ZEPPELIN_HOME");
 
-  /* Align with the version defined in bigtop.bom*/
-  private static String ZEPPELIN_VERSION = "0.7.3";
-
   @Test
   public void InstallIntperTest() {
     sh.exec(ZEPPELIN_HOME
       + "/bin/install-interpreter.sh "
-      + "--name shell --artifact org.apache.zeppelin:zeppelin-shell:${ZEPPELIN_VERSION}"
+      + "--name cassandra,scio,md,python,flink,hbase,bigquery,jdbc"
     );
     logError(sh);
     assertTrue("Install Interpreter failed." + sh.getOut() + " " + sh.getErr(), sh.getRet() == 0);
