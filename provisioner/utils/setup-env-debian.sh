@@ -24,6 +24,9 @@ apt-get -y install rng-tools
 sed -i.bak 's@#HRNGDEVICE=/dev/null@HRNGDEVICE=/dev/urandom@' /etc/default/rng-tools
 service rng-tools start
 
+# The testing process would be broken due to "No such file or derictory: /etc/default/locale" in ubuntu16.04.
+apt-get install -y locales
+
 if [ $enable_local_repo == "true" ]; then
     echo "deb file:///bigtop-home/output/apt bigtop contrib" > /etc/apt/sources.list.d/bigtop-home_output.list
     # In BIGTOP-2796 repo installed by puppet has priority 900, here we set higher priority for local repo

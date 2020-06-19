@@ -42,6 +42,17 @@ fi
 
 export MAVEN_OPTS="-Xmx1500m -Xms1500m"
 
+# BIGTOP-2742:
+# The default zeppelin PIDFILE includes the literal $(hostname) string, which is carried into the init script's pidfile declaration.
+# But pidfile does not subshell out to generate the expected string.
+# The zeppelin process does indeed start up, but systemctl reports a failure because it's looking for a non-existent pidfile.
+#
+# Workaround:
+#   Remove unnecessary $HOSTNAME from zeppelin-daemon.sh and also make the same adjustment to zeppelin.svc.
+# TODO:
+#   Request the issue to zeppelin upstream, If accepted, remove this workaround.
+sed -i "s/^.*ZEPPELIN_PID=.*$/ZEPPELIN_PID=\"\$\{ZEPPELIN_PID_DIR\}\/zeppelin\-\$\{ZEPPELIN_IDENT_STRING\}\.pid\"/" bin/zeppelin-daemon.sh
+
 mvn $BUILD_OPTS clean package
 
 mkdir -p build/dist
