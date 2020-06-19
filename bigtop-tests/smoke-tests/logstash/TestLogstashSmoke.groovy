@@ -28,16 +28,10 @@ import static org.junit.Assert.assertEquals
 
 class TestLogstashSmoke {
   static Shell sh = new Shell("/bin/bash -s");
+  private static String LOGSTASH_HOME = System.getenv("LOGSTASH_HOME");
 
-  static final String LOGSTASH_CMD = "/usr/lib/logstash/bin/logstash "
+  static final String LOGSTASH_CMD =  LOGSTASH_HOME + "/bin/logstash "
   static final String TINYBENCH_CONFIG = "resources/generator.conf "
-  static final String FILEPIPELINE_CONFIG = "resources/filepipeline.conf "
-
-  @AfterClass
-  public static void LogstashCleanUp() {
-    sh.exec("rm -f resources/output.log");
-    assertTrue("Logstash cleanup failed. ", sh.getRet() == 0);
-  }
 
   @Test
   public void LogstashTinyBenchTest() {
@@ -47,25 +41,6 @@ class TestLogstashSmoke {
       + "-f "
       + TINYBENCH_CONFIG
     );
-    def out = sh.out.join('\n');
-    assertFalse("Logstash tiny benchmark failed", (out =~ /ERROR/).find());
-  }
-
-  @Test
-  public void LogstashFilePipelineTest() {
-    def FILE_EXPECTED = 'resources/output-expected.log';
-    def FILE_OUTPUT = 'resources/output.log';
-
-    sh.exec(LOGSTASH_CMD
-      + "-f "
-      + FILEPIPELINE_CONFIG
-      + "&"
-    );
-
-    // Wait for completion
-    sleep(15000);
-    // Logstash pipefile verify
-    assertEquals("Logstash output did not match expected output.", 0,
-      sh.exec("diff -u $FILE_EXPECTED $FILE_OUTPUT").getRet());
+    assertTrue("Logstash tiny benchmark Failed.", sh.getRet() == 0);
   }
 }
