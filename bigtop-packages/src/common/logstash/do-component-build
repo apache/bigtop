@@ -45,6 +45,9 @@ else
 fi
 rvm install ruby-2.4.0 && rvm use 2.4.0
 
+# Specify childprocess to 3.0.0. The latest release 4.0.0 is not compatible with 5.4.1.
+sed -i "s/^.*childprocess.*$/gem \"childprocess\"\, \"3\.0\.0\"/" Gemfile
+
 rake bootstrap
 rake plugin:install-default
 rake artifact:tar
