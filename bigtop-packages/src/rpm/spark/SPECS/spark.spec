@@ -56,6 +56,7 @@ Source6: init.d.tmpl
 Source7: spark-history-server.svc
 Source8: spark-thriftserver.svc
 Source9: bigtop.bom
+#BIGTOP_PATCH_FILES
 Requires: bigtop-utils >= 0.7, hadoop-client, hadoop-yarn
 Requires(preun): /sbin/service
 
@@ -156,6 +157,8 @@ SparkR is an R package that provides a light-weight frontend to use Apache Spark
 
 %prep
 %setup -n %{spark_name}-%{spark_base_version}
+
+#BIGTOP_PATCH_COMMANDS
 
 %build
 bash $RPM_SOURCE_DIR/do-component-build
