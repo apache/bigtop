@@ -14,58 +14,83 @@
 # limitations under the License.
 
 class bigtop_repo {
+  $bigtop_repo_default_version = hiera("bigtop::bigtop_repo_default_version")
+  $bigtop_repo_gpg_check = hiera("bigtop::bigtop_repo_gpg_check", true)
+  $lower_os = downcase($operatingsystem)
+  $default_repo = "http://repos.bigtop.apache.org/releases/${bigtop_repo_default_version}/${lower_os}/${operatingsystemmajrelease}/${architecture}"
+
   case $::operatingsystem {
     /(OracleLinux|Amazon|CentOS|Fedora|RedHat)/: {
-      $default_repo = "http://repos.bigtop.apache.org/releases/1.3.0/centos/7/x86_64"
       $baseurls_array = any2array(hiera("bigtop::bigtop_repo_uri", $default_repo))
-      each ($baseurls_array) |$count, $baseurl| {
-        yumrepo { "Bigtop_$count":
-          baseurl  => $baseurl,
-          descr    => "Bigtop packages",
-          enabled  => 1,
-          gpgcheck => 0,
-          priority => 10,
+      each($baseurls_array) |$count, $baseurl| {
+        notify { "Baseurl: $baseurl": }
+
+        if ($bigtop_repo_gpg_check) {
+          yumrepo { "Bigtop_$count":
+            baseurl  => $baseurl,
+            descr    => "Bigtop packages",
+            enabled  => 1,
+            gpgcheck => 1,
+            gpgkey   => hiera("bigtop::bigtop_repo_yum_key_url"),
+            priority => 10,
+            ensure  => present,
+          }
+        } else {
+          yumrepo { "Bigtop_$count":
+            baseurl  => $baseurl,
+            descr    => "Bigtop packages",
+            enabled  => 1,
+            gpgcheck => 0,
+            priority => 10,
+            ensure  => present,
+          }
         }
-        Yumrepo<||> -> Package<||>
       }
+      Yumrepo<||> -> Package<||>
     }
 
     /(Ubuntu|Debian)/: {
-       include stdlib
-       include apt
+      include stdlib
+      include apt
+      $baseurls_array = any2array(hiera("bigtop::bigtop_repo_uri", $default_repo))
 
-       $lower_os = downcase($operatingsystem)
-       # We use code name such as trusty for Ubuntu instead of release version in bigtop's binary convenience repos
-       if ($operatingsystem == "Ubuntu") { $release = $lsbdistcodename } else { $release = $operatingsystemmajrelease }
-       $default_repo = "http://repos.bigtop.apache.org/releases/1.3.0/${lower_os}/${release}/x86_64"
-       $baseurls_array = any2array(hiera("bigtop::bigtop_repo_uri", $default_repo))
+      each($baseurls_array) |$count, $baseurl| {
+        notify { "Baseurl: $baseurl": }
 
-      # I couldn't enforce the sequence -> anymore because of this
-      # https://twitter.com/c0sin/status/875869783979196416
-       apt::conf { "disable_keys":
-          content => "APT::Get::AllowUnauthenticated 1;",
-          ensure => present
-       }
-       each ($baseurls_array) |$count, $baseurl| {
-         notify {"Baseurl: $baseurl" :}
-         apt::source { "Bigtop_$count":
-            location => $baseurl,
-            release => "bigtop",
-            repos => "contrib",
-            # BIGTOP-2796. Give Bigtop repo higher priority to solve zookeeper package conflict probem on Ubuntu
-            pin => "900",
-            ensure => present,
-         }
-       }
+        apt::source { "Bigtop_$count":
+          location => $baseurl,
+          release  => "bigtop",
+          repos    => "contrib",
+          # BIGTOP-2796. Give Bigtop repo higher priority to solve zookeeper package conflict probem on Ubuntu
+          pin      => "900",
+          ensure   => present,
+        }
+      }
+
       # It seems that calling update explicitely isn't needed because as far I can see
       # it is getting called automatically. Perhaps this was needed for older versions?
-       exec {'bigtop-apt-update':
-          command => '/usr/bin/apt-get update'
-       }
-       Apt::Source<||> -> Exec['bigtop-apt-update'] -> Package<||>
+      exec { 'bigtop-apt-update':
+        command => '/usr/bin/apt-get update'
+      }
+
+      if ($bigtop_repo_gpg_check) {
+        apt::conf { "remove_disable_keys":
+          content => "APT::Get::AllowUnauthenticated 1;",
+          ensure  => absent
+        }
+        apt::key { "add_key":
+          id => hiera("bigtop::bigtop_repo_apt_key"),
+        }
+      } else {
+        apt::conf { "disable_keys":
+          content => "APT::Get::AllowUnauthenticated 1;",
+          ensure  => present
+        }
+      }
+      Apt::Conf<||> -> Apt::Key<||> -> Apt::Source<||> -> Exec['bigtop-apt-update'] -> Package<||>
     }
     default: {
-      notify{"WARNING: running on a neither yum nor apt platform -- make sure Bigtop repo is setup": }
+      notify { "WARNING: running on a neither yum nor apt platform -- make sure Bigtop repo is setup": }
     }
   }
 }
