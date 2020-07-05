@@ -97,6 +97,12 @@ create() {
     fi
     if [ -z ${enable_local_repo+x} ]; then
         enable_local_repo=$(get-yaml-config enable_local_repo)
+        if [ $enable_local_repo == true ]; then
+            # When enabling local repo, set gpg check to false
+            gpg_check=false
+        else
+            gpg_check=true
+        fi
     fi
     generate-config "$hadoop_head_node" "$repo" "$components"
 
@@ -130,6 +136,7 @@ generate-config() {
 bigtop::hadoop_head_node: $1
 hadoop::hadoop_storage_dirs: [/data/1, /data/2]
 bigtop::bigtop_repo_uri: $2
+bigtop::bigtop_repo_gpg_check: $gpg_check
 hadoop_cluster_node::cluster_components: $3
 hadoop_cluster_node::cluster_nodes: [$node_list]
 EOF
