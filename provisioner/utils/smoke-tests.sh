@@ -55,6 +55,7 @@ export KAFKA_HOME=${KAFKA_HOME:-/usr/lib/kafka}
 export YCSB_HOME=${YCSB_HOME:-/usr/lib/ycsb}
 export TEZ_HOME=${TEZ_HOME:-/usr/lib/tez}
 export ZEPPELIN_HOME=${ZEPPELIN_HOME:-/usr/lib/zeppelin}
+export LOGSTASH_HOME=${LOGSTASH_HOME:-/usr/lib/logstash}
 
 echo -e "\n===== START TO RUN SMOKE TESTS: $SMOKE_TESTS =====\n"
 

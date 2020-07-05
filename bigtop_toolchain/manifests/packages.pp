@@ -152,6 +152,7 @@ class bigtop_toolchain::packages {
         "curl",
         "wget",
         "git-core",
+        "gnupg2",
         "make",
         "cmake",
         "autoconf",
