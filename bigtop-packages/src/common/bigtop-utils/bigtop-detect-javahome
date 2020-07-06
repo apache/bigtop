@@ -36,6 +36,7 @@ OPENJAVA8_HOME_CANDIDATES=(
     '/usr/lib/jvm/java-1.8.0-openjdk-ppc64el'
     '/usr/lib/jvm/java-1.8.0-openjdk'
     '/usr/lib64/jvm/java-1.8.0-openjdk-1.8.0'
+    '/usr/lib/jvm/adoptopenjdk-8-hotspot'
 )
 
 MISCJAVA_HOME_CANDIDATES=(

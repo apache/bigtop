@@ -30,13 +30,21 @@ case ${ID}-${VERSION_ID} in
         # So we install that module in the same way as CentOS 7.
         puppet module install puppetlabs-stdlib --version 4.12.0
         ;;
-    ubuntu-16.04 | ubuntu-18.04)
+    ubuntu-16.04)
         apt-get update
         apt-get -y install wget curl sudo unzip puppet software-properties-common puppet-module-puppetlabs-apt puppet-module-puppetlabs-stdlib
         ;;
-    debian-9* | debian-10*)
+    ubuntu-18.04)
+        apt-get update
+        apt-get -y install wget curl sudo unzip puppet software-properties-common puppet-module-puppetlabs-apt puppet-module-puppetlabs-stdlib systemd-sysv
+        ;;
+    debian-9*)
         apt-get update
         apt-get -y install wget curl sudo unzip puppet puppet-module-puppetlabs-apt puppet-module-puppetlabs-stdlib systemd-sysv
+        ;;
+    debian-10*)
+        apt-get update
+        apt-get -y install wget curl sudo unzip puppet puppet-module-puppetlabs-apt puppet-module-puppetlabs-stdlib systemd-sysv gnupg
         ;;
     centos-7*)
         rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
