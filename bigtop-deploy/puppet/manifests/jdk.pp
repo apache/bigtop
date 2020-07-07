@@ -19,27 +19,14 @@ class jdk {
   case $::operatingsystem {
     /Debian/: {
       require apt
-      unless $operatingsystemmajrelease > "8" {
-         # we pin openjdk-8-* and ca-certificates-java to backports
-         require apt::backports
 
-         Exec['bigtop-apt-update'] ->
-         apt::pin { 'backports_jdk':
-            packages => 'openjdk-8-*',
-            priority => 500,
-            release  => 'jessie-backports',
-         } ->
-         apt::pin { 'backports_ca':
-            packages => 'ca-certificates-java',
-            priority => 500,
-            release  => 'jessie-backports',
-         } ->
-         exec {'own_update':
-            command => '/usr/bin/apt-get update'
-         } -> Package['jdk']
+      if versioncmp($operatingsystemrelease, "10") < 0 {
+        $jdk_pkg_name = 'openjdk-8-jdk'
+      } else {
+        $jdk_pkg_name = 'adoptopenjdk-8-hotspot'
       }
       package { 'jdk':
-        name => 'openjdk-8-jdk',
+        name => $jdk_pkg_name,
         ensure => present,
         noop => $jdk_preinstalled,
       }

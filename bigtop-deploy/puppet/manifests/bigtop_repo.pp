@@ -67,6 +67,14 @@ class bigtop_repo {
         }
       }
 
+      # BIGTOP-3343. This is a JDK-related stuff, so it should be in jdk.pp ordinarily.
+      # But it looks like that this definition must be here to avoid cyclic resource dependencies.
+      if ($operatingsystem == 'Debian' and 0 <= versioncmp($operatingsystemrelease, "10")) {
+        apt::source { 'adoptopenjdk':
+          location => 'https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/',
+        }
+      }
+
       # It seems that calling update explicitely isn't needed because as far I can see
       # it is getting called automatically. Perhaps this was needed for older versions?
       exec { 'bigtop-apt-update':
@@ -75,15 +83,23 @@ class bigtop_repo {
 
       if ($bigtop_repo_gpg_check) {
         apt::conf { "remove_disable_keys":
-          content => "APT::Get::AllowUnauthenticated 1;",
+          content => "APT::Get::AllowUnauthenticated 1;\nAcquire::AllowInsecureRepositories \"true\";",
           ensure  => absent
         }
         apt::key { "add_key":
           id => hiera("bigtop::bigtop_repo_apt_key"),
         }
+
+        # BIGTOP-3343. This is a JDK-related stuff, but it's here for the same reason described above.
+        if ($operatingsystem == 'Debian' and 0 <= versioncmp($operatingsystemrelease, "10")) {
+          apt::key { "add_adoptopenjdk_key":
+            id => "8ED17AF5D7E675EB3EE3BCE98AC3B29174885C03",
+            source => "https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public",
+          }
+        }
       } else {
         apt::conf { "disable_keys":
-          content => "APT::Get::AllowUnauthenticated 1;",
+          content => "APT::Get::AllowUnauthenticated 1;\nAcquire::AllowInsecureRepositories \"true\";",
           ensure  => present
         }
       }
