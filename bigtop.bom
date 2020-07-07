@@ -109,6 +109,11 @@ bigtop {
       To build a component with its dependencies, run build with -Dbuildwithdeps=true
   */
   dependencies = [
+    'bigtop-utils':['ambari', 'bigtop-groovy', 'bigtop-jsvc', 'bigtop-tomcat',
+                    'elasticsearch', 'flink', 'logstash', 'qfs', 'zookeeper'],
+    'bigtop-groovy':['hadoop'],
+    'bigtop-jsvc':['hadoop'],
+    'bigtop-tomcat':['oozie', 'sqoop2'],
     zookeeper:['hadoop', 'hbase'],
     hadoop:['ignite-hadoop', 'hbase', 'hive', 'tez', 'sqoop', 'sqoop2',
       'oozie', 'mahout', 'flume', 'giraph', 'solr', 'spark',
