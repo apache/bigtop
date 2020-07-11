@@ -7,7 +7,7 @@ index 8e5cdab..f042e73 100644
              </goals>
              <configuration>
 -            <executable>python</executable>
-+            <executable>python2</executable>
++            <executable>python3</executable>
                <arguments>
                  <argument>setup.py</argument>
                  <argument>sdist</argument>
@@ -16,7 +16,7 @@ index 8e5cdab..f042e73 100644
              </goals>
              <configuration>
 -              <executable>python</executable>
-+              <executable>python2</executable>
++              <executable>python3</executable>
                <skip>${skipTests}</skip>
                <arguments>
                  <argument>setup.py</argument>
