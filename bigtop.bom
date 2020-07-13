@@ -415,6 +415,16 @@ bigtop {
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }
+    'bigtop-ambari-mpack' {
+      name    = 'bigtop-ambari-mpack'
+      relNotes = 'Bigtop Mpack'
+      version { base = '2.6.1'; pkg = '2.6.1.0'; release = 1 }
+      tarball { destination = "apache-ambari-${version.base}-src.tar.gz"
+                source      = destination }
+      url     { download_path = "/ambari/ambari-${version.base}/"
+                site = "${apache.APACHE_MIRROR}/${download_path}"
+                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+    }
     'livy' {
       name    = 'livy'
       relNotes = 'Apache Livy'
