@@ -158,6 +158,9 @@ $roles_map = {
   logstash => {
     client => ["logstash-client"],
   },
+  kibana => {
+    client => ["kibana-client"],
+  },
 }
 
 class hadoop_cluster_node (
@@ -230,6 +233,7 @@ class node_with_roles ($roles = hiera("bigtop::roles")) inherits hadoop_cluster_
     "bigtop_utils",
     "elasticsearch",
     "logstash",
+    "kibana",
   ]
 
   node_with_roles::deploy_module { $modules:
