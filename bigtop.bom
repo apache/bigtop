@@ -418,7 +418,7 @@ bigtop {
     'livy' {
       name    = 'livy'
       relNotes = 'Apache Livy'
-      version { base = '0.6.0'; pkg = base; release = 1 }
+      version { base = '0.7.0'; pkg = base; release = 1 }
       tarball { destination = "${name}-${version.base}.tar.gz"
                 source      = destination  }
       git {

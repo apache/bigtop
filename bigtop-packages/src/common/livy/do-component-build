@@ -20,9 +20,14 @@ set -ex
 
 LIVY_BUILD_OPTS="-Drat.skip=true \
                  -DskipTests \
+                 -Dskip=true \
                  -DskipITs=true \
-                 -Dspark.version=$SPARK_VERSION \
-                 -Dhadoop.version=$HADOOP_VERSION"
+                 -Dscala.version=${SCALA_VERSION} \
+                 -Dscala.binary.version=${SCALA_VERSION%.*} \
+                 -Dzookeeper.version=${ZOOKEEPER_VERSION} \
+                 -Dhadoop.version=${HADOOP_VERSION} \
+                 -Dspark.version=${SPARK_VERSION} \
+                 -Pspark-${SPARK_VERSION%.*}"
 
 mvn install $LIVY_BUILD_OPTS "$@"
 
