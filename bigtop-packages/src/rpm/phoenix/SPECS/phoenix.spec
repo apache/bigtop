@@ -94,7 +94,7 @@ Requires: hadoop, hadoop-mapreduce, hadoop-yarn, hbase, zookeeper
 %if  0%{?mgaversion}
 Requires: bsh-utils
 %else
-Requires: sh-utils
+Requires: coreutils
 %endif
 
 %description

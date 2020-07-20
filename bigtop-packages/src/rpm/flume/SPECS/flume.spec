@@ -76,7 +76,7 @@ Requires: bigtop-utils >= 0.7
 %if  0%{?mgaversion}
 Requires: bsh-utils
 %else
-Requires: sh-utils
+Requires: coreutils
 %endif
 
 %description 
