@@ -1,0 +1,114 @@
+diff --git a/R/pkg/R/utils.R b/R/pkg/R/utils.R
+index 15e2410d3a..23982c9881 100644
+--- a/R/pkg/R/utils.R
++++ b/R/pkg/R/utils.R
+@@ -530,7 +530,10 @@ processClosure <- function(node, oldEnv, defVars, checkedFuncs, newEnv) {
+         # Namespaces other than "SparkR" will not be searched.
+         if (!isNamespace(func.env) ||
+             (getNamespaceName(func.env) == "SparkR" &&
+-               !(nodeChar %in% getNamespaceExports("SparkR")))) {
++               !(nodeChar %in% getNamespaceExports("SparkR")) &&
++                  # Note that generic S4 methods should not be set to the environment of
++                  # cleaned closure. It does not work with R 4.0.0+. See also SPARK-31918.
++                  nodeChar != "" && !methods::isGeneric(nodeChar, func.env))) {
+           # Only include SparkR internals.
+ 
+           # Set parameter 'inherits' to FALSE since we do not need to search in
+diff --git a/R/pkg/tests/fulltests/test_context.R b/R/pkg/tests/fulltests/test_context.R
+index 0e5af3c29f..7a3f2c8f39 100644
+--- a/R/pkg/tests/fulltests/test_context.R
++++ b/R/pkg/tests/fulltests/test_context.R
+@@ -25,7 +25,9 @@ test_that("Check masked functions", {
+   namesOfMasked <- c("describe", "cov", "filter", "lag", "na.omit", "predict", "sd", "var",
+                      "colnames", "colnames<-", "intersect", "rank", "rbind", "sample", "subset",
+                      "summary", "transform", "drop", "window", "as.data.frame", "union", "not")
+-  if (as.numeric(R.version$major) >= 3 && as.numeric(R.version$minor) >= 3) {
++  is33Above <- as.numeric(R.version$major) >= 3 && as.numeric(R.version$minor) >= 3
++  is40Above <- as.numeric(R.version$major) >= 4
++  if (is33Above || is40Above) {
+     namesOfMasked <- c("endsWith", "startsWith", namesOfMasked)
+   }
+   masked <- conflicts(detail = TRUE)$`package:SparkR`
+diff --git a/R/pkg/tests/fulltests/test_mllib_classification.R b/R/pkg/tests/fulltests/test_mllib_classification.R
+index 023686e75d..b98341d9f2 100644
+--- a/R/pkg/tests/fulltests/test_mllib_classification.R
++++ b/R/pkg/tests/fulltests/test_mllib_classification.R
+@@ -34,7 +34,7 @@ test_that("spark.svmLinear", {
+   summary <- summary(model)
+ 
+   # test summary coefficients return matrix type
+-  expect_true(class(summary$coefficients) == "matrix")
++  expect_true(any(class(summary$coefficients)) == "matrix")
+   expect_true(class(summary$coefficients[, 1]) == "numeric")
+ 
+   coefs <- summary$coefficients[, "Estimate"]
+@@ -130,7 +130,7 @@ test_that("spark.logit", {
+   summary <- summary(model)
+ 
+   # test summary coefficients return matrix type
+-  expect_true(class(summary$coefficients) == "matrix")
++  expect_true(any(class(summary$coefficients)) == "matrix")
+   expect_true(class(summary$coefficients[, 1]) == "numeric")
+ 
+   versicolorCoefsR <- c(1.52, 0.03, -0.53, 0.04, 0.00)
+@@ -242,8 +242,8 @@ test_that("spark.logit", {
+   # Test binomial logistic regression against two classes with upperBoundsOnCoefficients
+   # and upperBoundsOnIntercepts
+   u <- matrix(c(1.0, 0.0, 1.0, 0.0), nrow = 1, ncol = 4)
+-  model <- spark.logit(training, Species ~ ., upperBoundsOnCoefficients = u,
+-                       upperBoundsOnIntercepts = 1.0)
++  model <- suppressWarnings(spark.logit(training, Species ~ ., upperBoundsOnCoefficients = u,
++                                        upperBoundsOnIntercepts = 1.0))
+   summary <- summary(model)
+   coefsR <- c(-11.13331, 1.00000, 0.00000, 1.00000, 0.00000)
+   coefs <- summary$coefficients[, "Estimate"]
+@@ -255,8 +255,8 @@ test_that("spark.logit", {
+   # Test binomial logistic regression against two classes with lowerBoundsOnCoefficients
+   # and lowerBoundsOnIntercepts
+   l <- matrix(c(0.0, -1.0, 0.0, -1.0), nrow = 1, ncol = 4)
+-  model <- spark.logit(training, Species ~ ., lowerBoundsOnCoefficients = l,
+-                       lowerBoundsOnIntercepts = 0.0)
++  model <- suppressWarnings(spark.logit(training, Species ~ ., lowerBoundsOnCoefficients = l,
++                                        lowerBoundsOnIntercepts = 0.0))
+   summary <- summary(model)
+   coefsR <- c(0, 0, -1, 0, 1.902192)
+   coefs <- summary$coefficients[, "Estimate"]
+@@ -268,9 +268,9 @@ test_that("spark.logit", {
+   # Test multinomial logistic regression with lowerBoundsOnCoefficients
+   # and lowerBoundsOnIntercepts
+   l <- matrix(c(0.0, -1.0, 0.0, -1.0, 0.0, -1.0, 0.0, -1.0), nrow = 2, ncol = 4)
+-  model <- spark.logit(training, Species ~ ., family = "multinomial",
+-                       lowerBoundsOnCoefficients = l,
+-                       lowerBoundsOnIntercepts = as.array(c(0.0, 0.0)))
++  model <- suppressWarnings(spark.logit(training, Species ~ ., family = "multinomial",
++                                        lowerBoundsOnCoefficients = l,
++                                        lowerBoundsOnIntercepts = as.array(c(0.0, 0.0))))
+   summary <- summary(model)
+   versicolorCoefsR <- c(42.639465, 7.258104, 14.330814, 16.298243, 11.716429)
+   virginicaCoefsR <- c(0.0002970796, 4.79274, 7.65047, 25.72793, 30.0021)
+diff --git a/R/pkg/tests/fulltests/test_mllib_clustering.R b/R/pkg/tests/fulltests/test_mllib_clustering.R
+index 4110e13da4..e90c194758 100644
+--- a/R/pkg/tests/fulltests/test_mllib_clustering.R
++++ b/R/pkg/tests/fulltests/test_mllib_clustering.R
+@@ -171,7 +171,7 @@ test_that("spark.kmeans", {
+   expect_equal(sort(collect(distinct(select(cluster, "prediction")))$prediction), c(0, 1))
+ 
+   # test summary coefficients return matrix type
+-  expect_true(class(summary.model$coefficients) == "matrix")
++  expect_true(any(class(summary.model$coefficients)) == "matrix")
+   expect_true(class(summary.model$coefficients[1, ]) == "numeric")
+ 
+   # Test model save/load
+diff --git a/R/pkg/tests/fulltests/test_mllib_regression.R b/R/pkg/tests/fulltests/test_mllib_regression.R
+index 23daca75fc..c9ea174bc5 100644
+--- a/R/pkg/tests/fulltests/test_mllib_regression.R
++++ b/R/pkg/tests/fulltests/test_mllib_regression.R
+@@ -108,7 +108,7 @@ test_that("spark.glm summary", {
+   rStats <- summary(glm(Sepal.Width ~ Sepal.Length + Species, data = iris))
+ 
+   # test summary coefficients return matrix type
+-  expect_true(class(stats$coefficients) == "matrix")
++  expect_true(any(class(stats$coefficients)) == "matrix")
+   expect_true(class(stats$coefficients[, 1]) == "numeric")
+ 
+   coefs <- stats$coefficients
