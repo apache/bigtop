@@ -40,6 +40,9 @@ start() {
   [ -x $EXEC_PATH ] || exit $ERROR_PROGRAM_NOT_INSTALLED
   [ -d $CONF_DIR ] || exit $ERROR_PROGRAM_NOT_CONFIGURED
 
+  export SPARK_HOME=/usr/lib/spark
+  export LIVY_LOG_DIR=/var/log/livy
+  export LIVY_PID_DIR=/var/run/livy
   runuser -s /bin/bash $SVC_USER -c "cd $WORKING_DIR && $EXEC_PATH start"
 
   # Some processes are slow to start
