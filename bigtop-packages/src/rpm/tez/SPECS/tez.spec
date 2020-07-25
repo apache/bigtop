@@ -69,7 +69,7 @@ Requires: hadoop hadoop-hdfs hadoop-yarn hadoop-mapreduce
 %if  0%{?mgaversion}
 Requires: bsh-utils
 %else
-Requires: sh-utils
+Requires: coreutils
 %endif
 
 
