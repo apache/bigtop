@@ -12,10 +12,10 @@ index 07b0b68319..9cfc2daeb5 100644
 +rpm.dependency.list=openssl,\nRequires: zlib,\nRequires: python2 >= 2.6
 +deb.dependency.list=openssl, zlibc, python (>= 2.6)
 diff --git a/ambari-common/src/main/python/resource_management/core/providers/package/__init__.py b/ambari-common/src/main/python/resource_management/core/providers/package/__init__.py
-index 799cf3eed0..ade58292cb 100644
+index 799cf3eed0..bc066e6318 100644
 --- a/ambari-common/src/main/python/resource_management/core/providers/package/__init__.py
 +++ b/ambari-common/src/main/python/resource_management/core/providers/package/__init__.py
-@@ -359,9 +359,8 @@ class RPMBasedPackageProvider(PackageProvider):
+@@ -359,17 +359,13 @@ class RPMBasedPackageProvider(PackageProvider):
    INSTALLED_PACKAGE_VERSION_COMMAND = "rpm -q --queryformat '%{{version}}-%{{release}}' \"{0}\""
  
    def rpm_check_package_available(self, name):
@@ -27,6 +27,15 @@ index 799cf3eed0..ade58292cb 100644
  
      name_regex = re.escape(name).replace("\\?", ".").replace("\\*", ".*") + '$'
      regex = re.compile(name_regex)
+ 
+-    for package in packages:
+-      if regex.match(package['name']):
+-        return True
+-    return False
++    return any(regex.match(package) for package in packages)
+ 
+   def get_installed_package_version(self, package_name):
+     version = None
 diff --git a/ambari-common/src/main/python/resource_management/core/providers/package/yumrpm.py b/ambari-common/src/main/python/resource_management/core/providers/package/yumrpm.py
 index da2a3b1de1..503644137c 100644
 --- a/ambari-common/src/main/python/resource_management/core/providers/package/yumrpm.py
