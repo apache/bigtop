@@ -18,22 +18,10 @@
 %define etc_kibana /etc/%{pkg_name}
 %define config_kibana %{etc_kibana}/conf
 %define log_kibana /var/log/%{pkg_name}
-%define bin_kibana /usr/bin
 %define man_kibana /usr/share/man
 %define run_kibana /var/run/%{pkg_name}
 %define _unpackaged_files_terminate_build 0
-
-%if  %{?suse_version:1}0
-%define alternatives_cmd update-alternatives
-%define chkconfig_dep    aaa_base
-%define service_dep      aaa_base
-%global initd_dir %{_sysconfdir}/rc.d
-%else
-%define alternatives_cmd alternatives
-%define chkconfig_dep    chkconfig
-%define service_dep      initscripts
-%global initd_dir %{_sysconfdir}/rc.d/init.d
-%endif
+%define debug_package %{nil}
 
 # disable repacking jars
 %define __os_install_post %{nil}
@@ -44,7 +32,6 @@ Release: %{kibana_release}
 Summary: Kibana is a browser-based analytics and search dashboard.
 URL: https://www.elastic.co/kibana
 Group: Application/Internet
-BuildArch: noarch
 Buildroot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 License: ASL 2.0
 Source0: kibana-%{kibana_base_version}.tar.gz
@@ -105,7 +92,6 @@ fi
 %defattr(-,root,root,755)
 %config(noreplace) %{config_kibana}.dist
 %{lib_kibana}
-%{bin_kibana}
 
 %defattr(-,kibana,kibana,755)
 /var/lib/kibana

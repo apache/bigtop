@@ -24,24 +24,28 @@ import static org.junit.Assert.assertFalse
 import org.junit.Test
 import org.apache.bigtop.itest.TestUtils
 import org.junit.runner.RunWith
+import static org.apache.bigtop.itest.LogErrorsUtils.logError
 import static org.junit.Assert.assertEquals
 
 class TestKibanaSmoke {
   static Shell sh = new Shell("/bin/bash -s");
   private static String KIBANA_HOME = System.getenv("KIBANA_HOME");
 
-  static final String KIBANA_START =  KIBANA_HOME + "/bin/start-kibana &"
+  static final String KIBANA_START =  KIBANA_HOME + "/bin/start-kibana;"
+  static final String WAIT_FOR_COMPLETION =  "sleep 10;"
+  static final String GET_KIBANA_STATUS =  "curl -i localhost:5601;"
 
   @Test
   public void KibanaWebTest() {
-    /* Check if elasticsearch was deployed firstly  */
-    def folder = new File('/usr/lib/elasticsearch')
-    if(!folder.exists()) {
+    /* Check if elasticsearch was deployed firstly */
+    def folder = new File("/usr/lib/elasticsearch");
+    if (!folder.exists()) {
+      println "No ElasticSearch stack, please install ES first.";
       assertTrue(0);
     }
 
-    sh.exec(KIBANA_START);
-    sh.exec("curl -i localhost:5601");
-    assertTrue("Kibana web start failed.", sh.getRet() == 0);
+    sh.exec(KIBANA_START + WAIT_FOR_COMPLETION + GET_KIBANA_STATUS);
+    logError(sh);
+    assertTrue("Kibana start failed", sh.getRet() == 0);
   }
 }

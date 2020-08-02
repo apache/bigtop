@@ -105,8 +105,15 @@ install -d -m 0755 $PREFIX/$ETC_DIR
 install -d -m 0755 $PREFIX/$CONF_DIR
 install -d -m 0755 $PREFIX/$BIN_DIR
 
-# Extract files and copy to LIB_DIR
-tar zxf $BUILD_DIR/kibana-*-linux-*64.tar.gz -C $PREFIX/$LIB_DIR --strip-components 1
+# Copy to LIB_DIR
+ARCH=$(uname -m)
+if [ "${ARCH}" = "x86_64" ];then
+  cp -ar $BUILD_DIR/kibana-*-linux-x86_64/* $PREFIX/$LIB_DIR/
+fi
+if [ "${ARCH}" = "aarch64" ];then
+  cp -ar $BUILD_DIR/kibana-*-linux-arm64/* $PREFIX/$LIB_DIR/
+fi
+
 chmod 755 $PREFIX/$LIB_DIR/* -R
 
 # Copy configuration files

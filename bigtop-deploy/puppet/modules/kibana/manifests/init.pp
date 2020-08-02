@@ -39,8 +39,8 @@ class kibana {
     }
     file { "/usr/lib/kibana/bin/start-kibana":
         content => template("kibana/start-kibana"),
-        require => Package["kibana"]
+        require => Package["kibana"],
+        mode    => '0775'
     }
-
   }
 }
