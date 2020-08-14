@@ -22,6 +22,7 @@
 %define data_dir /usr/share/qfs
 %define var_dir /var
 %define qfs_services chunkserver metaserver webui
+%define __python /usr/bin/python2
 
 %if %{?!HADOOP_HOME:1}0
 %global HADOOP_HOME /usr/lib/hadoop
@@ -151,7 +152,7 @@ System libraries via Python.
 
 %package webui
 Group: System Environment/Daemons
-Requires: python
+Requires: python2
 Summary: Quantcast File System metaserver/chunkserver web frontend
 
 %description webui
@@ -167,7 +168,7 @@ echo $RPM_BUILD_ROOT
 #BIGTOP_PATCH_COMMANDS
 %build
 %if 0%{?with_python3}
-PTYHON3_PATH=%{__python3}
+PYTHON3_PATH=%{__python3}
 %endif # with_python3
 
 bash $RPM_SOURCE_DIR/do-component-build \

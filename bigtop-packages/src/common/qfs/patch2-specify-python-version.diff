@@ -1,0 +1,20 @@
+diff --git a/scripts/qfs_backup b/scripts/qfs_backup
+index d3743611..96be5fe7 100755
+--- a/scripts/qfs_backup
++++ b/scripts/qfs_backup
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Author: Christopher Zimmerman
+ #
+diff --git a/webui/qfsstatus.py b/webui/qfsstatus.py
+index c2178b23..c4525985 100755
+--- a/webui/qfsstatus.py
++++ b/webui/qfsstatus.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # $Id$
+ #
