@@ -1,5 +1,0 @@
-# Kibana home directory
-KBN_HOME=/usr/lib/kibana
-
-# Kibana configuration directory
-CONF_DIR=/etc/kibana/conf
