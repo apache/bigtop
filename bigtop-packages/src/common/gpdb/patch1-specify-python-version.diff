@@ -1,0 +1,2793 @@
+diff --git a/concourse/pipelines/gen_pipeline.py b/concourse/pipelines/gen_pipeline.py
+index 1cdc3bd1ad..08e8aaa2a5 100755
+--- a/concourse/pipelines/gen_pipeline.py
++++ b/concourse/pipelines/gen_pipeline.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # ----------------------------------------------------------------------
+ # Licensed to the Apache Software Foundation (ASF) under one
+ # or more contributor license agreements.  See the NOTICE file
+diff --git a/gpAux/Makefile.global b/gpAux/Makefile.global
+index c35fdd762d..0ad078975d 100644
+--- a/gpAux/Makefile.global
++++ b/gpAux/Makefile.global
+@@ -104,7 +104,7 @@ endif
+ 
+ export PYTHON=python
+ ifneq "$(PYTHONHOME)" ""
+-export PYTHON=$(PYTHONHOME)/bin/python
++export PYTHON=$(PYTHONHOME)/bin/python2
+ aix5_ppc_32_PYTHON=$(PYTHONHOME)/bin/python2.7
+ aix5_ppc_64_PYTHON=$(PYTHONHOME)/bin/python2.7_64
+ aix7_ppc_64_PYTHON=$(PYTHONHOME)/bin/python2.7_64
+diff --git a/gpAux/extensions/gpcloud/bin/dummyHTTPServer.py b/gpAux/extensions/gpcloud/bin/dummyHTTPServer.py
+index 0cfeafbc4d..118c479c4a 100755
+--- a/gpAux/extensions/gpcloud/bin/dummyHTTPServer.py
++++ b/gpAux/extensions/gpcloud/bin/dummyHTTPServer.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ """
+ Very simple HTTP server in python.
+diff --git a/gpAux/extensions/gphdfs/regression/input/parsefile.py b/gpAux/extensions/gphdfs/regression/input/parsefile.py
+index bc06480010..457ea706eb 100755
+--- a/gpAux/extensions/gphdfs/regression/input/parsefile.py
++++ b/gpAux/extensions/gphdfs/regression/input/parsefile.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ """
+ Copyright (C) 2004-2015 Pivotal Software, Inc. All rights reserved.
+diff --git a/gpAux/extensions/gphdfs/regression/input/regression/createData.py b/gpAux/extensions/gphdfs/regression/input/regression/createData.py
+index b3bc033b91..11370c8121 100755
+--- a/gpAux/extensions/gphdfs/regression/input/regression/createData.py
++++ b/gpAux/extensions/gphdfs/regression/input/regression/createData.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ """
+ Copyright (C) 2004-2015 Pivotal Software, Inc. All rights reserved.
+ 
+diff --git a/gpAux/extensions/gphdfs/regression/input/regression/printLargeTable.py b/gpAux/extensions/gphdfs/regression/input/regression/printLargeTable.py
+index c594a07cb9..6b9c5cfe7a 100755
+--- a/gpAux/extensions/gphdfs/regression/input/regression/printLargeTable.py
++++ b/gpAux/extensions/gphdfs/regression/input/regression/printLargeTable.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ """
+ Copyright (C) 2004-2015 Pivotal Software, Inc. All rights reserved.
+ 
+diff --git a/gpAux/extensions/gphdfs/regression/integrate/create_data.py b/gpAux/extensions/gphdfs/regression/integrate/create_data.py
+index cb383df38b..8b3e80a760 100644
+--- a/gpAux/extensions/gphdfs/regression/integrate/create_data.py
++++ b/gpAux/extensions/gphdfs/regression/integrate/create_data.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ """
+ Copyright (C) 2004-2015 Pivotal Software, Inc. All rights reserved.
+ 
+diff --git a/gpAux/extensions/gphdfs/regression/legacy/lib/create_data.py b/gpAux/extensions/gphdfs/regression/legacy/lib/create_data.py
+index cb383df38b..8b3e80a760 100644
+--- a/gpAux/extensions/gphdfs/regression/legacy/lib/create_data.py
++++ b/gpAux/extensions/gphdfs/regression/legacy/lib/create_data.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ """
+ Copyright (C) 2004-2015 Pivotal Software, Inc. All rights reserved.
+ 
+diff --git a/gpAux/gpperfmon/src/gpmon/gpperfmon_install b/gpAux/gpperfmon/src/gpmon/gpperfmon_install
+index 908ed49cb0..7d9754fe9d 100755
+--- a/gpAux/gpperfmon/src/gpmon/gpperfmon_install
++++ b/gpAux/gpperfmon/src/gpmon/gpperfmon_install
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ '''
+ USAGE:   gpperfmon_install --port GPDB_PORT [--enable --password GPMON_PASSWORD] [--pgpass PATH_TO_FILE] [--gpperfmonport GPPERFMON_PORT] [--verbose]
+diff --git a/gpMgmt/bin/Makefile b/gpMgmt/bin/Makefile
+index d0330c6cac..a81950c072 100644
+--- a/gpMgmt/bin/Makefile
++++ b/gpMgmt/bin/Makefile
+@@ -29,7 +29,7 @@ LIB_DIR=$(SRC)/lib
+ PYLIB_DIR=$(SRC)/ext
+ 
+ core: pygresql subprocess32
+-	python gpconfig_modules/parse_guc_metadata.py $(prefix)
++	python2 gpconfig_modules/parse_guc_metadata.py $(prefix)
+ 
+ ifneq "$(wildcard $(CURDIR)/pythonSrc/ext/*.tar.gz)" ""
+ install: core lockfile paramiko ecdsa pycrypto stream psutil
+@@ -64,7 +64,7 @@ pygresql:
+ 	elif [ "$(BLD_ARCH)" = 'aix7_ppc_64' ]; then \
+ 	    cd $(PYLIB_SRC)/$(PYGRESQL_DIR) && DESTDIR="$(DESTDIR)" CC="$(CC)" python_64 setup.py build; \
+ 	else \
+-	    cd $(PYLIB_SRC)/$(PYGRESQL_DIR) && DESTDIR="$(DESTDIR)" CC="$(CC)" python setup.py build; \
++	    cd $(PYLIB_SRC)/$(PYGRESQL_DIR) && DESTDIR="$(DESTDIR)" CC="$(CC)" python2 setup.py build; \
+ 	fi
+ 	mkdir -p $(PYLIB_DIR)/pygresql
+ 	if [ `uname -s` = 'Darwin' ]; then \
+@@ -84,7 +84,7 @@ PARAMIKO_DIR=paramiko-$(PARAMIKO_VERSION)
+ paramiko:
+ 	@echo "--- paramiko"
+ 	cd $(PYLIB_SRC_EXT)/ && $(TAR) xzf $(PARAMIKO_DIR).tar.gz
+-	cd $(PYLIB_SRC_EXT)/$(PARAMIKO_DIR)/ && python setup.py build
++	cd $(PYLIB_SRC_EXT)/$(PARAMIKO_DIR)/ && python2 setup.py build
+ 	cp -r $(PYLIB_SRC_EXT)/$(PARAMIKO_DIR)/build/lib*/paramiko $(PYLIB_DIR)/
+ 
+ #
+@@ -95,7 +95,7 @@ ECDSA_DIR=ecdsa-$(ECDSA_VERSION)
+ ecdsa:
+ 	@echo "--- ecdsa"
+ 	cd $(PYLIB_SRC_EXT)/ && $(TAR) xzf $(ECDSA_DIR).tar.gz
+-	cd $(PYLIB_SRC_EXT)/$(ECDSA_DIR)/ && python setup.py build
++	cd $(PYLIB_SRC_EXT)/$(ECDSA_DIR)/ && python2 setup.py build
+ 	cp -r $(PYLIB_SRC_EXT)/$(ECDSA_DIR)/build/lib*/ecdsa $(PYLIB_DIR)/
+ 
+ #
+@@ -112,7 +112,7 @@ LOCKFILE_DST=$(PYLIB_DIR)/lockfile
+ lockfile:
+ 	@echo "--- lockfile"
+ 	cd $(PYLIB_SRC_EXT)/ && $(TAR) xzf $(LOCKFILE_DIR).tar.gz
+-	cd $(PYLIB_SRC_EXT)/$(LOCKFILE_DIR)/ && python setup.py build
++	cd $(PYLIB_SRC_EXT)/$(LOCKFILE_DIR)/ && python2 setup.py build
+ 	mkdir -p $(LOCKFILE_DST)
+ 	awk 'BEGIN{print "# pylint: disable-all"} /^if hasattr/ {exit} { print }' < `echo $(LOCKFILE_SRC)/__init__.py`    > $(LOCKFILE_DST)/__init__.py
+ 	awk 'BEGIN{print "# pylint: disable-all"} { print }'                      < `echo $(LOCKFILE_SRC)/pidlockfile.py` > $(LOCKFILE_DST)/pidlockfile.py
+@@ -120,7 +120,7 @@ lockfile:
+ subprocess32:
+ 	@echo "--- subprocess32, Linux only"
+ 	@if [ `uname -s` = 'Linux' ]; then \
+-		  cd $(PYLIB_SRC)/subprocess32 && CC="$(CC)" python setup.py build; \
++		  cd $(PYLIB_SRC)/subprocess32 && CC="$(CC)" python2 setup.py build; \
+ 		  cp -f $(PYLIB_SRC)/subprocess32/build/lib.*/* $(PYLIB_DIR)/;  \
+ 	  fi
+ 
+@@ -187,7 +187,7 @@ SETUP_TOOLS_DIR=setuptools-$(SETUP_TOOLS_VERSION)
+ PARSE_DIR=parse-$(PARSE_VERSION)
+ ARG_PARSE_DIR=argparse-$(ARG_PARSE_VERSION)
+ PYTHONSRC_INSTALL=$(PYLIB_SRC_EXT)/install
+-PYTHON_VERSION=$(shell python -c "import sys; print '%s.%s' % (sys.version_info[0:2])")
++PYTHON_VERSION=$(shell python2 -c "import sys; print '%s.%s' % (sys.version_info[0:2])")
+ PYTHONSRC_INSTALL_SITE=$(PYLIB_SRC_EXT)/install/lib/python$(PYTHON_VERSION)/site-packages
+ PYTHONSRC_INSTALL_PYTHON_PATH=$(PYTHONPATH):$(PYTHONSRC_INSTALL_SITE)
+ BEHAVE_BIN=$(PYTHONSRC_INSTALL)/bin/behave
+@@ -200,9 +200,9 @@ pylint:
+ 	@cd $(PYLIB_SRC_EXT)/ && $(TAR) xzf $(PYLINT_DIR).tar.gz
+ 	@cd $(PYLIB_SRC_EXT)/ && $(TAR) xzf $(LOGILAB_ASTNG_DIR).tar.gz
+ 	@cd $(PYLIB_SRC_EXT)/ && $(TAR) xzf $(LOGILAB_COMMON_DIR).tar.gz
+-	@cd $(PYLIB_SRC_EXT)/$(PYLINT_DIR)/ && python setup.py build 1> /dev/null
+-	@cd $(PYLIB_SRC_EXT)/$(LOGILAB_ASTNG_DIR)/ && python setup.py build 1> /dev/null
+-	@cd $(PYLIB_SRC_EXT)/$(LOGILAB_COMMON_DIR)/ && python setup.py build 1> /dev/null
++	@cd $(PYLIB_SRC_EXT)/$(PYLINT_DIR)/ && python2 setup.py build 1> /dev/null
++	@cd $(PYLIB_SRC_EXT)/$(LOGILAB_ASTNG_DIR)/ && python2 setup.py build 1> /dev/null
++	@cd $(PYLIB_SRC_EXT)/$(LOGILAB_COMMON_DIR)/ && python2 setup.py build 1> /dev/null
+ 	@cp -r $(PYLIB_SRC_EXT)/$(LOGILAB_COMMON_DIR)/build/lib/logilab $(PYLIB_SRC_EXT)/$(PYLINT_DIR)/build/lib/
+ 	@cp -r $(PYLIB_SRC_EXT)/$(LOGILAB_ASTNG_DIR)/build/lib/logilab $(PYLIB_SRC_EXT)/$(PYLINT_DIR)/build/lib/
+ 	@touch $(PYLIB_SRC_EXT)/$(PYLINT_DIR)/build/lib/__init__.py
+@@ -216,7 +216,7 @@ $(MOCK_BIN):
+        mkdir -p $(PYTHONSRC_INSTALL_SITE) && \
+ 	   cd $(PYLIB_SRC_EXT)/ && $(TAR) xzf $(MOCK_DIR).tar.gz && \
+ 	   cd $(PYLIB_SRC_EXT)/$(MOCK_DIR)/ && \
+-	   PYTHONPATH=$(PYTHONSRC_INSTALL_PYTHON_PATH) python setup.py install --prefix $(PYTHONSRC_INSTALL) ; \
++	   PYTHONPATH=$(PYTHONSRC_INSTALL_PYTHON_PATH) python2 setup.py install --prefix $(PYTHONSRC_INSTALL) ; \
+ 	 fi;
+ 
+ #
+@@ -230,14 +230,14 @@ $(BEHAVE_BIN):
+ 	@cd $(PYLIB_SRC_EXT)/ && $(TAR) xzf $(SETUP_TOOLS_DIR).tar.gz
+ 	@cd $(PYLIB_SRC_EXT)/ && $(TAR) xzf $(PARSE_DIR).tar.gz
+ 	@cd $(PYLIB_SRC_EXT)/ && $(TAR) xzf $(ARG_PARSE_DIR).tar.gz
+-	@cd $(PYLIB_SRC_EXT)/$(SETUP_TOOLS_DIR)/ && PYTHONPATH=$(PYTHONSRC_INSTALL_PYTHON_PATH) python setup.py install --prefix $(PYTHONSRC_INSTALL)
+-	@cd $(PYLIB_SRC_EXT)/$(PARSE_DIR)/ && PYTHONPATH=$(PYTHONSRC_INSTALL_PYTHON_PATH) python setup.py install --prefix $(PYTHONSRC_INSTALL)
+-	@cd $(PYLIB_SRC_EXT)/$(ARG_PARSE_DIR)/ && PYTHONPATH=$(PYTHONSRC_INSTALL_PYTHON_PATH) python setup.py install --prefix $(PYTHONSRC_INSTALL)
++	@cd $(PYLIB_SRC_EXT)/$(SETUP_TOOLS_DIR)/ && PYTHONPATH=$(PYTHONSRC_INSTALL_PYTHON_PATH) python2 setup.py install --prefix $(PYTHONSRC_INSTALL)
++	@cd $(PYLIB_SRC_EXT)/$(PARSE_DIR)/ && PYTHONPATH=$(PYTHONSRC_INSTALL_PYTHON_PATH) python2 setup.py install --prefix $(PYTHONSRC_INSTALL)
++	@cd $(PYLIB_SRC_EXT)/$(ARG_PARSE_DIR)/ && PYTHONPATH=$(PYTHONSRC_INSTALL_PYTHON_PATH) python2 setup.py install --prefix $(PYTHONSRC_INSTALL)
+ 	# We're forcing a change in the requirements since we're in python
+ 	# 2.7.12. There's a new syntax in the python requirements for
+ 	# parse_type 0.4.2 which breaks if you're under 2.7.13
+ 	@cd $(PYLIB_SRC_EXT)/$(BEHAVE_DIR)/ && sed -i 's/parse_type>=0.3.4/parse_type==0.4.1/' setup.py \
+-		&& PYTHONPATH=$(PYTHONSRC_INSTALL_PYTHON_PATH) python setup.py install --prefix $(PYTHONSRC_INSTALL)
++		&& PYTHONPATH=$(PYTHONSRC_INSTALL_PYTHON_PATH) python2 setup.py install --prefix $(PYTHONSRC_INSTALL)
+ 	@echo "--- behave done"
+ 
+ PYTHON_FILES=`grep -l --exclude=Makefile --exclude=gplogfilter "/bin/env python" *`\
+@@ -265,7 +265,7 @@ check: $(MOCK_BIN)
+ 
+ unitdevel:
+ 	@echo "Running pure unit tests..."
+-	python -m unittest discover --verbose -s $(SRC)/gppylib -p "test_unit*.py"
++	python2 -m unittest discover --verbose -s $(SRC)/gppylib -p "test_unit*.py"
+ 
+ solarisTest:
+ 	@if [ `uname -s` = 'SunOS' ]; then \
+diff --git a/gpMgmt/bin/analyzedb b/gpMgmt/bin/analyzedb
+index e34bf90cf2..c6e8809663 100755
+--- a/gpMgmt/bin/analyzedb
++++ b/gpMgmt/bin/analyzedb
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # -*- coding: utf-8 -*-
+ 
+ # Copyright (c) 2015 Pivotal Software, Inc. All Rights Reserved
+diff --git a/gpMgmt/bin/gp_df b/gpMgmt/bin/gp_df
+index 555a51c597..b2714b8f83 100755
+--- a/gpMgmt/bin/gp_df
++++ b/gpMgmt/bin/gp_df
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ '''
+ USAGE: gp_df [-m]
+diff --git a/gpMgmt/bin/gpactivatestandby b/gpMgmt/bin/gpactivatestandby
+index 01d4d9503a..929a43c332 100755
+--- a/gpMgmt/bin/gpactivatestandby
++++ b/gpMgmt/bin/gpactivatestandby
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # -*- coding: utf-8 -*-
+ # Line too long - pylint: disable=C0301
+ # Invalid name  - pylint: disable=C0103
+diff --git a/gpMgmt/bin/gpaddmirrors b/gpMgmt/bin/gpaddmirrors
+index a7c368071e..1f4e7665c6 100755
+--- a/gpMgmt/bin/gpaddmirrors
++++ b/gpMgmt/bin/gpaddmirrors
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Recovers Greenplum segment instances that are marked as invalid, if
+ # mirroring is configured and operational
+diff --git a/gpMgmt/bin/gpcheck b/gpMgmt/bin/gpcheck
+index 09addfe769..a5dec9c929 100755
+--- a/gpMgmt/bin/gpcheck
++++ b/gpMgmt/bin/gpcheck
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2010. All Rights Reserved. 
+ 
+diff --git a/gpMgmt/bin/gpcheckcat b/gpMgmt/bin/gpcheckcat
+index 4d14de609c..cddd4bc5aa 100755
+--- a/gpMgmt/bin/gpcheckcat
++++ b/gpMgmt/bin/gpcheckcat
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ '''
+ Usage: gpcheckcat [<option>] [dbname]
+ 
+diff --git a/gpMgmt/bin/gpcheckcat_modules/foreign_key_check.py b/gpMgmt/bin/gpcheckcat_modules/foreign_key_check.py
+index 04e07406aa..da9d0a49d5 100644
+--- a/gpMgmt/bin/gpcheckcat_modules/foreign_key_check.py
++++ b/gpMgmt/bin/gpcheckcat_modules/foreign_key_check.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ from gppylib.gplog import *
+ from gppylib.gpcatalog import *
+diff --git a/gpMgmt/bin/gpcheckcat_modules/repair.py b/gpMgmt/bin/gpcheckcat_modules/repair.py
+index 905f2b6083..b9c1d43450 100644
+--- a/gpMgmt/bin/gpcheckcat_modules/repair.py
++++ b/gpMgmt/bin/gpcheckcat_modules/repair.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ """
+ Purpose : Creates the repair dir and the corresponding sql/bash scripts for
+           repairing some of the catalog issues(see the list below) reported by gpcheckcat.
+diff --git a/gpMgmt/bin/gpcheckcat_modules/repair_missing_extraneous.py b/gpMgmt/bin/gpcheckcat_modules/repair_missing_extraneous.py
+index f6ea0d61dc..7bd89426f5 100644
+--- a/gpMgmt/bin/gpcheckcat_modules/repair_missing_extraneous.py
++++ b/gpMgmt/bin/gpcheckcat_modules/repair_missing_extraneous.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ from gppylib.operations.backup_utils import escapeDoubleQuoteInSQLString
+ 
+ 
+diff --git a/gpMgmt/bin/gpcheckcat_modules/unique_index_violation_check.py b/gpMgmt/bin/gpcheckcat_modules/unique_index_violation_check.py
+index 8bf847a839..e385eaca5f 100644
+--- a/gpMgmt/bin/gpcheckcat_modules/unique_index_violation_check.py
++++ b/gpMgmt/bin/gpcheckcat_modules/unique_index_violation_check.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ class UniqueIndexViolationCheck:
+     unique_indexes_query = """
+diff --git a/gpMgmt/bin/gpcheckperf b/gpMgmt/bin/gpcheckperf
+index ea2eeeb526..c4382d9fff 100755
+--- a/gpMgmt/bin/gpcheckperf
++++ b/gpMgmt/bin/gpcheckperf
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ """
+ gpcheckperf -- Check the hardware for Greenplum Database
+ 
+diff --git a/gpMgmt/bin/gpcheckresgroupimpl b/gpMgmt/bin/gpcheckresgroupimpl
+index 02d9d8d2d0..1897b3aaaf 100755
+--- a/gpMgmt/bin/gpcheckresgroupimpl
++++ b/gpMgmt/bin/gpcheckresgroupimpl
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) 2017, Pivotal Software Inc.
+ #
+diff --git a/gpMgmt/bin/gpchecksubnetcfg b/gpMgmt/bin/gpchecksubnetcfg
+index 0f40044841..f60d5b28eb 100755
+--- a/gpMgmt/bin/gpchecksubnetcfg
++++ b/gpMgmt/bin/gpchecksubnetcfg
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # -*- coding: utf-8 -*-
+ #
+ # Copyright (c) Greenplum Inc 2010. All Rights Reserved. 
+diff --git a/gpMgmt/bin/gpconfig b/gpMgmt/bin/gpconfig
+index 7c39ba87cf..34d47995f6 100755
+--- a/gpMgmt/bin/gpconfig
++++ b/gpMgmt/bin/gpconfig
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2009. All Rights Reserved.
+ 
+diff --git a/gpMgmt/bin/gpcrondump b/gpMgmt/bin/gpcrondump
+index 545c8d1ce7..bfdb3a7ca5 100755
+--- a/gpMgmt/bin/gpcrondump
++++ b/gpMgmt/bin/gpcrondump
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2008. All Rights Reserved.
+ #
+diff --git a/gpMgmt/bin/gpdbrestore b/gpMgmt/bin/gpdbrestore
+index 5d74245faa..4b962669cf 100755
+--- a/gpMgmt/bin/gpdbrestore
++++ b/gpMgmt/bin/gpdbrestore
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2008. All Rights Reserved.
+ #
+diff --git a/gpMgmt/bin/gpdeletesystem b/gpMgmt/bin/gpdeletesystem
+index 24b1a7a9bc..e95765fb39 100755
+--- a/gpMgmt/bin/gpdeletesystem
++++ b/gpMgmt/bin/gpdeletesystem
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # -*- coding: utf-8 -*-
+ #
+ # Copyright (c) Greenplum Inc 2010. All Rights Reserved.
+diff --git a/gpMgmt/bin/gpexpand b/gpMgmt/bin/gpexpand
+index 52c2944f9b..b0dc1bd49f 100755
+--- a/gpMgmt/bin/gpexpand
++++ b/gpMgmt/bin/gpexpand
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # Line too long            - pylint: disable=C0301
+ # Invalid name             - pylint: disable=C0103
+ #
+diff --git a/gpMgmt/bin/gpfaultinjector b/gpMgmt/bin/gpfaultinjector
+index afb7cdab59..cdcb7c2029 100755
+--- a/gpMgmt/bin/gpfaultinjector
++++ b/gpMgmt/bin/gpfaultinjector
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2010. All Rights Reserved.
+ #
+diff --git a/gpMgmt/bin/gpfilespace b/gpMgmt/bin/gpfilespace
+index 53b4c63b15..c130cc6baf 100755
+--- a/gpMgmt/bin/gpfilespace
++++ b/gpMgmt/bin/gpfilespace
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # -*- coding: utf-8 -*-
+ '''
+   gpfilespace [options]
+diff --git a/gpMgmt/bin/gpgenfsmap.py b/gpMgmt/bin/gpgenfsmap.py
+index 0c40d3e4e0..04ad0657b1 100755
+--- a/gpMgmt/bin/gpgenfsmap.py
++++ b/gpMgmt/bin/gpgenfsmap.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2011. All Rights Reserved.
+ '''
+diff --git a/gpMgmt/bin/gpinitstandby b/gpMgmt/bin/gpinitstandby
+index 179dc40b2a..543fe0fb51 100755
+--- a/gpMgmt/bin/gpinitstandby
++++ b/gpMgmt/bin/gpinitstandby
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # -*- coding: utf-8 -*-
+ #
+ # Copyright (c) Greenplum Inc 2010. All Rights Reserved. 
+diff --git a/gpMgmt/bin/gpload.py b/gpMgmt/bin/gpload.py
+index f07be89738..8ecf4c8515 100755
+--- a/gpMgmt/bin/gpload.py
++++ b/gpMgmt/bin/gpload.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # -*- coding: utf-8 -*-
+ # gpload - load file(s) into Greenplum Database
+ # Copyright Greenplum 2008
+diff --git a/gpMgmt/bin/gpload_test/gpload/TEST.py b/gpMgmt/bin/gpload_test/gpload/TEST.py
+index 7a88f54ffd..71449680d9 100755
+--- a/gpMgmt/bin/gpload_test/gpload/TEST.py
++++ b/gpMgmt/bin/gpload_test/gpload/TEST.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import unittest
+ import sys
+diff --git a/gpMgmt/bin/gpload_test/gpload2/TEST.py b/gpMgmt/bin/gpload_test/gpload2/TEST.py
+index d3acdc8728..5822b6eef2 100755
+--- a/gpMgmt/bin/gpload_test/gpload2/TEST.py
++++ b/gpMgmt/bin/gpload_test/gpload2/TEST.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import unittest
+ import sys
+diff --git a/gpMgmt/bin/gpload_test/gpload2/TEST_REMOTE.py b/gpMgmt/bin/gpload_test/gpload2/TEST_REMOTE.py
+index eda65daf64..0129efd9ce 100755
+--- a/gpMgmt/bin/gpload_test/gpload2/TEST_REMOTE.py
++++ b/gpMgmt/bin/gpload_test/gpload2/TEST_REMOTE.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import unittest
+ import sys
+diff --git a/gpMgmt/bin/gplogfilter b/gpMgmt/bin/gplogfilter
+index 09f36cf2f1..abd086283e 100755
+--- a/gpMgmt/bin/gplogfilter
++++ b/gpMgmt/bin/gplogfilter
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # -*- coding: utf-8 -*-
+ #
+ # gplogfilter [options] [inputfile]...
+diff --git a/gpMgmt/bin/gpmfr.py b/gpMgmt/bin/gpmfr.py
+index 2c3dcc4789..04a2849c6d 100755
+--- a/gpMgmt/bin/gpmfr.py
++++ b/gpMgmt/bin/gpmfr.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2013. All Rights Reserved. 
+ #
+diff --git a/gpMgmt/bin/gpmovemirrors b/gpMgmt/bin/gpmovemirrors
+index daaf596fef..bbf8f69477 100755
+--- a/gpMgmt/bin/gpmovemirrors
++++ b/gpMgmt/bin/gpmovemirrors
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # Line too long            - pylint: disable=C0301
+ # Invalid name             - pylint: disable=C0103
+ #
+diff --git a/gpMgmt/bin/gppkg b/gpMgmt/bin/gppkg
+index 24a09b2dae..4794129283 100755
+--- a/gpMgmt/bin/gppkg
++++ b/gpMgmt/bin/gppkg
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python 
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2010. All Rights Reserved.
+ #
+diff --git a/gpMgmt/bin/gppylib/commands/base.py b/gpMgmt/bin/gppylib/commands/base.py
+index fe6f3720bb..cc8e13ca3b 100755
+--- a/gpMgmt/bin/gppylib/commands/base.py
++++ b/gpMgmt/bin/gppylib/commands/base.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2008. All Rights Reserved.
+ #
+diff --git a/gpMgmt/bin/gppylib/commands/dca.py b/gpMgmt/bin/gppylib/commands/dca.py
+index 3bde8e3af8..64bb685d61 100644
+--- a/gpMgmt/bin/gppylib/commands/dca.py
++++ b/gpMgmt/bin/gppylib/commands/dca.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2011. All Rights Reserved.
+ #
+diff --git a/gpMgmt/bin/gppylib/commands/gp.py b/gpMgmt/bin/gppylib/commands/gp.py
+index 82ee2f687f..985b77ae33 100644
+--- a/gpMgmt/bin/gppylib/commands/gp.py
++++ b/gpMgmt/bin/gppylib/commands/gp.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2008. All Rights Reserved.
+ #
+diff --git a/gpMgmt/bin/gppylib/commands/pg.py b/gpMgmt/bin/gppylib/commands/pg.py
+index 2eb1392db1..cc8a6ee175 100644
+--- a/gpMgmt/bin/gppylib/commands/pg.py
++++ b/gpMgmt/bin/gppylib/commands/pg.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2008. All Rights Reserved. 
+ #
+diff --git a/gpMgmt/bin/gppylib/commands/test/regress/test_regress_pg.py b/gpMgmt/bin/gppylib/commands/test/regress/test_regress_pg.py
+index 22c0473ccf..a2dc1e1879 100755
+--- a/gpMgmt/bin/gppylib/commands/test/regress/test_regress_pg.py
++++ b/gpMgmt/bin/gppylib/commands/test/regress/test_regress_pg.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2008. All Rights Reserved. 
+ #
+diff --git a/gpMgmt/bin/gppylib/commands/test/unit/test_unit_base.py b/gpMgmt/bin/gppylib/commands/test/unit/test_unit_base.py
+index a0ec1ad275..720c6d20c7 100644
+--- a/gpMgmt/bin/gppylib/commands/test/unit/test_unit_base.py
++++ b/gpMgmt/bin/gppylib/commands/test/unit/test_unit_base.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2012. All Rights Reserved.
+ #
+diff --git a/gpMgmt/bin/gppylib/commands/test/unit/test_unit_gp.py b/gpMgmt/bin/gppylib/commands/test/unit/test_unit_gp.py
+index 896d6b4a05..532e370daa 100644
+--- a/gpMgmt/bin/gppylib/commands/test/unit/test_unit_gp.py
++++ b/gpMgmt/bin/gppylib/commands/test/unit/test_unit_gp.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2012. All Rights Reserved. 
+ #
+diff --git a/gpMgmt/bin/gppylib/commands/unix.py b/gpMgmt/bin/gppylib/commands/unix.py
+index 39fb8cfb27..75fd52acbd 100644
+--- a/gpMgmt/bin/gppylib/commands/unix.py
++++ b/gpMgmt/bin/gppylib/commands/unix.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2008. All Rights Reserved. 
+ #
+diff --git a/gpMgmt/bin/gppylib/datetimeutils.py b/gpMgmt/bin/gppylib/datetimeutils.py
+index 94549eb92b..024875c8c1 100644
+--- a/gpMgmt/bin/gppylib/datetimeutils.py
++++ b/gpMgmt/bin/gppylib/datetimeutils.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # $Id: $
+ # $Change: $
+ # $DateTime: $
+diff --git a/gpMgmt/bin/gppylib/db/catalog.py b/gpMgmt/bin/gppylib/db/catalog.py
+index 63e055d591..342ad2f392 100644
+--- a/gpMgmt/bin/gppylib/db/catalog.py
++++ b/gpMgmt/bin/gppylib/db/catalog.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2008. All Rights Reserved. 
+ #
+diff --git a/gpMgmt/bin/gppylib/db/dbconn.py b/gpMgmt/bin/gppylib/db/dbconn.py
+index 5e534f07b4..446025584f 100644
+--- a/gpMgmt/bin/gppylib/db/dbconn.py
++++ b/gpMgmt/bin/gppylib/db/dbconn.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2008. All Rights Reserved.
+ #
+diff --git a/gpMgmt/bin/gppylib/db/test/regress/test_regress_catalog.py b/gpMgmt/bin/gppylib/db/test/regress/test_regress_catalog.py
+index 9d9e7b08e2..d8c760cf48 100644
+--- a/gpMgmt/bin/gppylib/db/test/regress/test_regress_catalog.py
++++ b/gpMgmt/bin/gppylib/db/test/regress/test_regress_catalog.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2008. All Rights Reserved. 
+ #
+diff --git a/gpMgmt/bin/gppylib/db/test/test_catalog.py b/gpMgmt/bin/gppylib/db/test/test_catalog.py
+index 121244cf06..fe656cc594 100644
+--- a/gpMgmt/bin/gppylib/db/test/test_catalog.py
++++ b/gpMgmt/bin/gppylib/db/test/test_catalog.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2008. All Rights Reserved. 
+ #
+diff --git a/gpMgmt/bin/gppylib/db/test/test_dbconn.py b/gpMgmt/bin/gppylib/db/test/test_dbconn.py
+index 385ddb4e52..af61a5a81f 100755
+--- a/gpMgmt/bin/gppylib/db/test/test_dbconn.py
++++ b/gpMgmt/bin/gppylib/db/test/test_dbconn.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2008. All Rights Reserved. 
+ #
+diff --git a/gpMgmt/bin/gppylib/db/test/unit/test_unit_dbconn.py b/gpMgmt/bin/gppylib/db/test/unit/test_unit_dbconn.py
+index 9c9d9e4a96..9c19565faf 100755
+--- a/gpMgmt/bin/gppylib/db/test/unit/test_unit_dbconn.py
++++ b/gpMgmt/bin/gppylib/db/test/unit/test_unit_dbconn.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2008. All Rights Reserved. 
+ #
+diff --git a/gpMgmt/bin/gppylib/fault_injection.py b/gpMgmt/bin/gppylib/fault_injection.py
+index 756ac0ad0c..5df5776edc 100644
+--- a/gpMgmt/bin/gppylib/fault_injection.py
++++ b/gpMgmt/bin/gppylib/fault_injection.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import os
+ 
+diff --git a/gpMgmt/bin/gppylib/gp_dbid.py b/gpMgmt/bin/gppylib/gp_dbid.py
+index 29db66ee21..c6f07055fa 100644
+--- a/gpMgmt/bin/gppylib/gp_dbid.py
++++ b/gpMgmt/bin/gppylib/gp_dbid.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # Line too long - pylint: disable=C0301
+ # Invalid name  - pylint: disable=C0103
+ 
+diff --git a/gpMgmt/bin/gppylib/gp_era.py b/gpMgmt/bin/gppylib/gp_era.py
+index abd0c1acfa..c874990596 100644
+--- a/gpMgmt/bin/gppylib/gp_era.py
++++ b/gpMgmt/bin/gppylib/gp_era.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # Line too long - pylint: disable=C0301
+ # Invalid name  - pylint: disable=C0103
+ 
+diff --git a/gpMgmt/bin/gppylib/gparray.py b/gpMgmt/bin/gppylib/gparray.py
+index e0d3a4906a..a8311568fe 100755
+--- a/gpMgmt/bin/gppylib/gparray.py
++++ b/gpMgmt/bin/gppylib/gparray.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2008. All Rights Reserved.
+ #
+diff --git a/gpMgmt/bin/gppylib/gpcatalog.py b/gpMgmt/bin/gppylib/gpcatalog.py
+index 1d6ee74165..069b6cbb35 100644
+--- a/gpMgmt/bin/gppylib/gpcatalog.py
++++ b/gpMgmt/bin/gppylib/gpcatalog.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) 2010-2011 EMC Corporation.  All Rights Reserved
+ #
+diff --git a/gpMgmt/bin/gppylib/gpcheckutil.py b/gpMgmt/bin/gppylib/gpcheckutil.py
+index 0fc8188dec..ec9ce44245 100755
+--- a/gpMgmt/bin/gppylib/gpcheckutil.py
++++ b/gpMgmt/bin/gppylib/gpcheckutil.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ class HostType:
+     GPCHECK_HOSTTYPE_UNDEFINED  = 0
+diff --git a/gpMgmt/bin/gppylib/gphostcache.py b/gpMgmt/bin/gppylib/gphostcache.py
+index 6cffada8d0..d678ff9b56 100644
+--- a/gpMgmt/bin/gppylib/gphostcache.py
++++ b/gpMgmt/bin/gppylib/gphostcache.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2008. All Rights Reserved.
+ #
+diff --git a/gpMgmt/bin/gppylib/gplog.py b/gpMgmt/bin/gppylib/gplog.py
+index 4b0736ba50..4c6f02b098 100644
+--- a/gpMgmt/bin/gppylib/gplog.py
++++ b/gpMgmt/bin/gppylib/gplog.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2008. All Rights Reserved. 
+ #
+diff --git a/gpMgmt/bin/gppylib/gpparseopts.py b/gpMgmt/bin/gppylib/gpparseopts.py
+index b478cb2015..f07312312f 100644
+--- a/gpMgmt/bin/gppylib/gpparseopts.py
++++ b/gpMgmt/bin/gppylib/gpparseopts.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2008. All Rights Reserved. 
+ #
+diff --git a/gpMgmt/bin/gppylib/gpresgroup.py b/gpMgmt/bin/gppylib/gpresgroup.py
+index c686aa558b..b72930fe47 100644
+--- a/gpMgmt/bin/gppylib/gpresgroup.py
++++ b/gpMgmt/bin/gppylib/gpresgroup.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) 2017, Pivotal Software Inc.
+ #
+diff --git a/gpMgmt/bin/gppylib/gpsubprocess.py b/gpMgmt/bin/gppylib/gpsubprocess.py
+index b39d096b6d..a5cd500436 100644
+--- a/gpMgmt/bin/gppylib/gpsubprocess.py
++++ b/gpMgmt/bin/gppylib/gpsubprocess.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2008. All Rights Reserved. 
+ #
+diff --git a/gpMgmt/bin/gppylib/gpunit b/gpMgmt/bin/gppylib/gpunit
+index 4ea2e2ccea..4eb73706da 100755
+--- a/gpMgmt/bin/gppylib/gpunit
++++ b/gpMgmt/bin/gppylib/gpunit
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#!/usr/bin/env python2
+ 
+ """
+ gpunit is similar to unit2 in python but runs with our GpMgmtTestRunner and GpMgmtTextTestResult.
+diff --git a/gpMgmt/bin/gppylib/gpversion.py b/gpMgmt/bin/gppylib/gpversion.py
+index f63a6d0bcb..c0a777be81 100644
+--- a/gpMgmt/bin/gppylib/gpversion.py
++++ b/gpMgmt/bin/gppylib/gpversion.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2008. All Rights Reserved. 
+ #
+diff --git a/gpMgmt/bin/gppylib/logfilter.py b/gpMgmt/bin/gppylib/logfilter.py
+index da5e1b0f31..997ece19ff 100644
+--- a/gpMgmt/bin/gppylib/logfilter.py
++++ b/gpMgmt/bin/gppylib/logfilter.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # $Id: $
+ # $Change: $
+ # $DateTime: $
+diff --git a/gpMgmt/bin/gppylib/operations/deletesystem.py b/gpMgmt/bin/gppylib/operations/deletesystem.py
+index 921c92f7a5..4d6e925ef6 100644
+--- a/gpMgmt/bin/gppylib/operations/deletesystem.py
++++ b/gpMgmt/bin/gppylib/operations/deletesystem.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import os 
+ 
+diff --git a/gpMgmt/bin/gppylib/operations/initstandby.py b/gpMgmt/bin/gppylib/operations/initstandby.py
+index 56c373576a..27f7c3e100 100755
+--- a/gpMgmt/bin/gppylib/operations/initstandby.py
++++ b/gpMgmt/bin/gppylib/operations/initstandby.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import os
+ import base64
+diff --git a/gpMgmt/bin/gppylib/operations/persistent_rebuild.py b/gpMgmt/bin/gppylib/operations/persistent_rebuild.py
+index cc22bb1fca..e28d87d1b7 100644
+--- a/gpMgmt/bin/gppylib/operations/persistent_rebuild.py
++++ b/gpMgmt/bin/gppylib/operations/persistent_rebuild.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ # Copyright (c) 2014 Pivotal Software, Inc. All Rights Reserved
+ #
+diff --git a/gpMgmt/bin/gppylib/operations/reload.py b/gpMgmt/bin/gppylib/operations/reload.py
+index 55eaab1cef..0f5a6e6b11 100644
+--- a/gpMgmt/bin/gppylib/operations/reload.py
++++ b/gpMgmt/bin/gppylib/operations/reload.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import os
+ import time
+diff --git a/gpMgmt/bin/gppylib/operations/test/regress/test_package/test_regress_clean_gppkg.py b/gpMgmt/bin/gppylib/operations/test/regress/test_package/test_regress_clean_gppkg.py
+index 8b881abaa4..53e3580535 100755
+--- a/gpMgmt/bin/gppylib/operations/test/regress/test_package/test_regress_clean_gppkg.py
++++ b/gpMgmt/bin/gppylib/operations/test/regress/test_package/test_regress_clean_gppkg.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import os
+ 
+diff --git a/gpMgmt/bin/gppylib/operations/test/regress/test_package/test_regress_misc.py b/gpMgmt/bin/gppylib/operations/test/regress/test_package/test_regress_misc.py
+index 1d9c933dd8..21b632d6af 100755
+--- a/gpMgmt/bin/gppylib/operations/test/regress/test_package/test_regress_misc.py
++++ b/gpMgmt/bin/gppylib/operations/test/regress/test_package/test_regress_misc.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import os
+ import shutil
+diff --git a/gpMgmt/bin/gppylib/operations/test/regress/test_package/test_regress_muck_with_internals.py b/gpMgmt/bin/gppylib/operations/test/regress/test_package/test_regress_muck_with_internals.py
+index 32c515a500..be1e6c1284 100755
+--- a/gpMgmt/bin/gppylib/operations/test/regress/test_package/test_regress_muck_with_internals.py
++++ b/gpMgmt/bin/gppylib/operations/test/regress/test_package/test_regress_muck_with_internals.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import os
+ import tarfile
+diff --git a/gpMgmt/bin/gppylib/operations/test/regress/test_package/test_regress_muck_with_internals_on_standby.py b/gpMgmt/bin/gppylib/operations/test/regress/test_package/test_regress_muck_with_internals_on_standby.py
+index 02aecdf249..7b9908fe28 100755
+--- a/gpMgmt/bin/gppylib/operations/test/regress/test_package/test_regress_muck_with_internals_on_standby.py
++++ b/gpMgmt/bin/gppylib/operations/test/regress/test_package/test_regress_muck_with_internals_on_standby.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import os
+ import tarfile
+diff --git a/gpMgmt/bin/gppylib/operations/test/regress/test_package/test_regress_query.py b/gpMgmt/bin/gppylib/operations/test/regress/test_package/test_regress_query.py
+index c59e374138..5be0a1acc1 100755
+--- a/gpMgmt/bin/gppylib/operations/test/regress/test_package/test_regress_query.py
++++ b/gpMgmt/bin/gppylib/operations/test/regress/test_package/test_regress_query.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import os
+ import tarfile
+diff --git a/gpMgmt/bin/gppylib/operations/test/regress/test_package/test_regress_shared_dependencies.py b/gpMgmt/bin/gppylib/operations/test/regress/test_package/test_regress_shared_dependencies.py
+index 71e36e9361..1ab08797c5 100755
+--- a/gpMgmt/bin/gppylib/operations/test/regress/test_package/test_regress_shared_dependencies.py
++++ b/gpMgmt/bin/gppylib/operations/test/regress/test_package/test_regress_shared_dependencies.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import os
+ 
+diff --git a/gpMgmt/bin/gppylib/operations/test/regress/test_package/test_regress_simple_gppkg.py b/gpMgmt/bin/gppylib/operations/test/regress/test_package/test_regress_simple_gppkg.py
+index 44154e5bf1..cd309159f5 100755
+--- a/gpMgmt/bin/gppylib/operations/test/regress/test_package/test_regress_simple_gppkg.py
++++ b/gpMgmt/bin/gppylib/operations/test/regress/test_package/test_regress_simple_gppkg.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import unittest
+ 
+diff --git a/gpMgmt/bin/gppylib/operations/test/regress/test_package/test_regress_simple_negative.py b/gpMgmt/bin/gppylib/operations/test/regress/test_package/test_regress_simple_negative.py
+index d1667a21c8..13c7ef9f38 100755
+--- a/gpMgmt/bin/gppylib/operations/test/regress/test_package/test_regress_simple_negative.py
++++ b/gpMgmt/bin/gppylib/operations/test/regress/test_package/test_regress_simple_negative.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import os 
+ import tarfile
+diff --git a/gpMgmt/bin/gppylib/operations/test/regress/test_package/test_regress_single_dependencies.py b/gpMgmt/bin/gppylib/operations/test/regress/test_package/test_regress_single_dependencies.py
+index 7b3187aac3..9dd7a9ce5e 100755
+--- a/gpMgmt/bin/gppylib/operations/test/regress/test_package/test_regress_single_dependencies.py
++++ b/gpMgmt/bin/gppylib/operations/test/regress/test_package/test_regress_single_dependencies.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import os
+ 
+diff --git a/gpMgmt/bin/gppylib/operations/test/regress/test_regress_filespace.py b/gpMgmt/bin/gppylib/operations/test/regress/test_regress_filespace.py
+index b68c163644..be896c3d57 100644
+--- a/gpMgmt/bin/gppylib/operations/test/regress/test_regress_filespace.py
++++ b/gpMgmt/bin/gppylib/operations/test/regress/test_regress_filespace.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import unittest
+ 
+diff --git a/gpMgmt/bin/gppylib/operations/test/test_package.py b/gpMgmt/bin/gppylib/operations/test/test_package.py
+index 8014b593cf..39c67db5ea 100755
+--- a/gpMgmt/bin/gppylib/operations/test/test_package.py
++++ b/gpMgmt/bin/gppylib/operations/test/test_package.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import os
+ import shutil
+diff --git a/gpMgmt/bin/gppylib/operations/test/unit/test_unit_backup_utils.py b/gpMgmt/bin/gppylib/operations/test/unit/test_unit_backup_utils.py
+index 4b26cbbcf6..acfd8797eb 100644
+--- a/gpMgmt/bin/gppylib/operations/test/unit/test_unit_backup_utils.py
++++ b/gpMgmt/bin/gppylib/operations/test/unit/test_unit_backup_utils.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2016. All Rights Reserved.
+ #
+diff --git a/gpMgmt/bin/gppylib/operations/test/unit/test_unit_buildMirrorSegments.py b/gpMgmt/bin/gppylib/operations/test/unit/test_unit_buildMirrorSegments.py
+index ef61d71234..6d19b5da95 100644
+--- a/gpMgmt/bin/gppylib/operations/test/unit/test_unit_buildMirrorSegments.py
++++ b/gpMgmt/bin/gppylib/operations/test/unit/test_unit_buildMirrorSegments.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2008. All Rights Reserved. 
+ #
+diff --git a/gpMgmt/bin/gppylib/operations/test/unit/test_unit_deletesystem.py b/gpMgmt/bin/gppylib/operations/test/unit/test_unit_deletesystem.py
+index a79172c118..4ab958350c 100644
+--- a/gpMgmt/bin/gppylib/operations/test/unit/test_unit_deletesystem.py
++++ b/gpMgmt/bin/gppylib/operations/test/unit/test_unit_deletesystem.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import unittest
+ from gppylib.operations.deletesystem import validate_pgport
+diff --git a/gpMgmt/bin/gppylib/operations/test/unit/test_unit_filespace.py b/gpMgmt/bin/gppylib/operations/test/unit/test_unit_filespace.py
+index 78806edcad..69294ea0e6 100644
+--- a/gpMgmt/bin/gppylib/operations/test/unit/test_unit_filespace.py
++++ b/gpMgmt/bin/gppylib/operations/test/unit/test_unit_filespace.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2012. All Rights Reserved. 
+ #
+diff --git a/gpMgmt/bin/gppylib/operations/test/unit/test_unit_initstandby.py b/gpMgmt/bin/gppylib/operations/test/unit/test_unit_initstandby.py
+index e9468db2df..6d5d06cc6b 100644
+--- a/gpMgmt/bin/gppylib/operations/test/unit/test_unit_initstandby.py
++++ b/gpMgmt/bin/gppylib/operations/test/unit/test_unit_initstandby.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import os
+ import unittest
+diff --git a/gpMgmt/bin/gppylib/operations/test/unit/test_unit_persistent_rebuild.py b/gpMgmt/bin/gppylib/operations/test/unit/test_unit_persistent_rebuild.py
+index 87fef804df..2881bf43b3 100644
+--- a/gpMgmt/bin/gppylib/operations/test/unit/test_unit_persistent_rebuild.py
++++ b/gpMgmt/bin/gppylib/operations/test/unit/test_unit_persistent_rebuild.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) 2014-Present Pivotal Software, Inc.
+ #
+diff --git a/gpMgmt/bin/gppylib/operations/test/unit/test_unit_reload.py b/gpMgmt/bin/gppylib/operations/test/unit/test_unit_reload.py
+index cbe2494008..02972ce813 100644
+--- a/gpMgmt/bin/gppylib/operations/test/unit/test_unit_reload.py
++++ b/gpMgmt/bin/gppylib/operations/test/unit/test_unit_reload.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import os
+ import unittest
+diff --git a/gpMgmt/bin/gppylib/operations/test/unit/test_unit_restore.py b/gpMgmt/bin/gppylib/operations/test/unit/test_unit_restore.py
+index 2844f0f44e..adb4bb474d 100755
+--- a/gpMgmt/bin/gppylib/operations/test/unit/test_unit_restore.py
++++ b/gpMgmt/bin/gppylib/operations/test/unit/test_unit_restore.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # coding: utf-8
+ #
+ # Copyright (c) Greenplum Inc 2008. All Rights Reserved.
+diff --git a/gpMgmt/bin/gppylib/operations/test/unit/test_unit_unix.py b/gpMgmt/bin/gppylib/operations/test/unit/test_unit_unix.py
+index b934e295b5..4066aee765 100755
+--- a/gpMgmt/bin/gppylib/operations/test/unit/test_unit_unix.py
++++ b/gpMgmt/bin/gppylib/operations/test/unit/test_unit_unix.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2014. All Rights Reserved. 
+ #
+diff --git a/gpMgmt/bin/gppylib/operations/test/unit/test_unit_utils.py b/gpMgmt/bin/gppylib/operations/test/unit/test_unit_utils.py
+index fbf1d80793..0424acc7f3 100755
+--- a/gpMgmt/bin/gppylib/operations/test/unit/test_unit_utils.py
++++ b/gpMgmt/bin/gppylib/operations/test/unit/test_unit_utils.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2008. All Rights Reserved. 
+ #
+diff --git a/gpMgmt/bin/gppylib/parseutils.py b/gpMgmt/bin/gppylib/parseutils.py
+index 49dfcbfefa..b4cf48eb58 100644
+--- a/gpMgmt/bin/gppylib/parseutils.py
++++ b/gpMgmt/bin/gppylib/parseutils.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # Line too long            - pylint: disable=C0301
+ # Invalid name             - pylint: disable=C0103
+ 
+diff --git a/gpMgmt/bin/gppylib/pgconf.py b/gpMgmt/bin/gppylib/pgconf.py
+index 6f264e3cc9..5398c8383f 100644
+--- a/gpMgmt/bin/gppylib/pgconf.py
++++ b/gpMgmt/bin/gppylib/pgconf.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # $Id: $
+ """
+ postgresql.conf configuration file reader
+diff --git a/gpMgmt/bin/gppylib/programs/clsAddMirrors.py b/gpMgmt/bin/gppylib/programs/clsAddMirrors.py
+index d54b617773..1ee1719c27 100644
+--- a/gpMgmt/bin/gppylib/programs/clsAddMirrors.py
++++ b/gpMgmt/bin/gppylib/programs/clsAddMirrors.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # Line too long            - pylint: disable=C0301
+ # Invalid name             - pylint: disable=C0103
+ #
+diff --git a/gpMgmt/bin/gppylib/programs/clsInjectFault.py b/gpMgmt/bin/gppylib/programs/clsInjectFault.py
+index 8cae3ea4da..c4aeff2b6f 100644
+--- a/gpMgmt/bin/gppylib/programs/clsInjectFault.py
++++ b/gpMgmt/bin/gppylib/programs/clsInjectFault.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2010. All Rights Reserved.
+ #
+diff --git a/gpMgmt/bin/gppylib/programs/clsRecoverSegment.py b/gpMgmt/bin/gppylib/programs/clsRecoverSegment.py
+index fc19167936..dd13ca582a 100644
+--- a/gpMgmt/bin/gppylib/programs/clsRecoverSegment.py
++++ b/gpMgmt/bin/gppylib/programs/clsRecoverSegment.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # Line too long            - pylint: disable=C0301
+ # Invalid name             - pylint: disable=C0103
+ #
+diff --git a/gpMgmt/bin/gppylib/programs/clsSystemState.py b/gpMgmt/bin/gppylib/programs/clsSystemState.py
+index 26c4055e19..c9f52068c2 100644
+--- a/gpMgmt/bin/gppylib/programs/clsSystemState.py
++++ b/gpMgmt/bin/gppylib/programs/clsSystemState.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2010. All Rights Reserved.
+ #
+diff --git a/gpMgmt/bin/gppylib/programs/test/unit/test_cluster_clsrecoversegment.py b/gpMgmt/bin/gppylib/programs/test/unit/test_cluster_clsrecoversegment.py
+index ce2f6706f6..3891419d0c 100644
+--- a/gpMgmt/bin/gppylib/programs/test/unit/test_cluster_clsrecoversegment.py
++++ b/gpMgmt/bin/gppylib/programs/test/unit/test_cluster_clsrecoversegment.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ from gparray import GpDB, GpArray, FAULT_STRATEGY_NONE
+ from gppylib import gparray
+diff --git a/gpMgmt/bin/gppylib/system/ComputeCatalogUpdate.py b/gpMgmt/bin/gppylib/system/ComputeCatalogUpdate.py
+index 7b07fdcb87..baae6b02a8 100755
+--- a/gpMgmt/bin/gppylib/system/ComputeCatalogUpdate.py
++++ b/gpMgmt/bin/gppylib/system/ComputeCatalogUpdate.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # Line too long - pylint: disable=C0301
+ # Invalid name  - pylint: disable=C0103
+ 
+diff --git a/gpMgmt/bin/gppylib/system/configurationImplGpdb.py b/gpMgmt/bin/gppylib/system/configurationImplGpdb.py
+index b37f42e0e3..7e865e26a9 100644
+--- a/gpMgmt/bin/gppylib/system/configurationImplGpdb.py
++++ b/gpMgmt/bin/gppylib/system/configurationImplGpdb.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2010. All Rights Reserved.
+ # Copyright (c) EMC/Greenplum Inc 2011. All Rights Reserved.
+diff --git a/gpMgmt/bin/gppylib/system/configurationImplTest.py b/gpMgmt/bin/gppylib/system/configurationImplTest.py
+index afdaac583c..7803b805ce 100644
+--- a/gpMgmt/bin/gppylib/system/configurationImplTest.py
++++ b/gpMgmt/bin/gppylib/system/configurationImplTest.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2010. All Rights Reserved.
+ #
+diff --git a/gpMgmt/bin/gppylib/system/configurationInterface.py b/gpMgmt/bin/gppylib/system/configurationInterface.py
+index 2532f46ea6..24aa442658 100644
+--- a/gpMgmt/bin/gppylib/system/configurationInterface.py
++++ b/gpMgmt/bin/gppylib/system/configurationInterface.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2009. All Rights Reserved.
+ #
+diff --git a/gpMgmt/bin/gppylib/system/environment.py b/gpMgmt/bin/gppylib/system/environment.py
+index a45ee884d7..da56d3a329 100644
+--- a/gpMgmt/bin/gppylib/system/environment.py
++++ b/gpMgmt/bin/gppylib/system/environment.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2010. All Rights Reserved.
+ #
+diff --git a/gpMgmt/bin/gppylib/system/fileSystemImplOs.py b/gpMgmt/bin/gppylib/system/fileSystemImplOs.py
+index 1f8b48e745..0f0b3713a2 100644
+--- a/gpMgmt/bin/gppylib/system/fileSystemImplOs.py
++++ b/gpMgmt/bin/gppylib/system/fileSystemImplOs.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2009. All Rights Reserved.
+ #
+diff --git a/gpMgmt/bin/gppylib/system/fileSystemImplTest.py b/gpMgmt/bin/gppylib/system/fileSystemImplTest.py
+index 0094f834be..d79449e804 100644
+--- a/gpMgmt/bin/gppylib/system/fileSystemImplTest.py
++++ b/gpMgmt/bin/gppylib/system/fileSystemImplTest.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2009. All Rights Reserved.
+ #
+diff --git a/gpMgmt/bin/gppylib/system/fileSystemInterface.py b/gpMgmt/bin/gppylib/system/fileSystemInterface.py
+index 6ad7bcca75..32acfc32f4 100644
+--- a/gpMgmt/bin/gppylib/system/fileSystemInterface.py
++++ b/gpMgmt/bin/gppylib/system/fileSystemInterface.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2009. All Rights Reserved.
+ #
+diff --git a/gpMgmt/bin/gppylib/system/info.py b/gpMgmt/bin/gppylib/system/info.py
+index a542d9e924..7145d78080 100644
+--- a/gpMgmt/bin/gppylib/system/info.py
++++ b/gpMgmt/bin/gppylib/system/info.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#!/usr/bin/env python2
+ import psutil
+ import os
+ import resource
+diff --git a/gpMgmt/bin/gppylib/system/osImplNative.py b/gpMgmt/bin/gppylib/system/osImplNative.py
+index 30def949b2..2a11d5f5bd 100644
+--- a/gpMgmt/bin/gppylib/system/osImplNative.py
++++ b/gpMgmt/bin/gppylib/system/osImplNative.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2009. All Rights Reserved.
+ #
+diff --git a/gpMgmt/bin/gppylib/system/osImplTest.py b/gpMgmt/bin/gppylib/system/osImplTest.py
+index c1c159ef16..e8b9a6d741 100644
+--- a/gpMgmt/bin/gppylib/system/osImplTest.py
++++ b/gpMgmt/bin/gppylib/system/osImplTest.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2009. All Rights Reserved.
+ #
+diff --git a/gpMgmt/bin/gppylib/system/osInterface.py b/gpMgmt/bin/gppylib/system/osInterface.py
+index 17743ca773..9cd167c112 100644
+--- a/gpMgmt/bin/gppylib/system/osInterface.py
++++ b/gpMgmt/bin/gppylib/system/osInterface.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2009. All Rights Reserved.
+ #
+diff --git a/gpMgmt/bin/gppylib/test/regress/test_regress_gpexpand.py b/gpMgmt/bin/gppylib/test/regress/test_regress_gpexpand.py
+index 8a3df57a53..ce4bca726c 100644
+--- a/gpMgmt/bin/gppylib/test/regress/test_regress_gpexpand.py
++++ b/gpMgmt/bin/gppylib/test/regress/test_regress_gpexpand.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import unittest
+ import os, socket
+diff --git a/gpMgmt/bin/gppylib/test/regress/test_regress_gpssh.py b/gpMgmt/bin/gppylib/test/regress/test_regress_gpssh.py
+index ecc8510022..a325215f8d 100755
+--- a/gpMgmt/bin/gppylib/test/regress/test_regress_gpssh.py
++++ b/gpMgmt/bin/gppylib/test/regress/test_regress_gpssh.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import os, signal, time, re
+ import unittest
+diff --git a/gpMgmt/bin/gppylib/test/regress/test_regress_pygresql.py b/gpMgmt/bin/gppylib/test/regress/test_regress_pygresql.py
+index b611ee4d2e..c9e4d8f4ac 100755
+--- a/gpMgmt/bin/gppylib/test/regress/test_regress_pygresql.py
++++ b/gpMgmt/bin/gppylib/test/regress/test_regress_pygresql.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2008. All Rights Reserved. 
+ #
+diff --git a/gpMgmt/bin/gppylib/test/unit/test_cluster_gpcheckcat.py b/gpMgmt/bin/gppylib/test/unit/test_cluster_gpcheckcat.py
+index 2bca593732..ce3d1c748b 100644
+--- a/gpMgmt/bin/gppylib/test/unit/test_cluster_gpcheckcat.py
++++ b/gpMgmt/bin/gppylib/test/unit/test_cluster_gpcheckcat.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import imp
+ import os
+diff --git a/gpMgmt/bin/gppylib/test/unit/test_cluster_gpcrondump.py b/gpMgmt/bin/gppylib/test/unit/test_cluster_gpcrondump.py
+index cb8c083ef5..427aa2f241 100644
+--- a/gpMgmt/bin/gppylib/test/unit/test_cluster_gpcrondump.py
++++ b/gpMgmt/bin/gppylib/test/unit/test_cluster_gpcrondump.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import os
+ import sys
+diff --git a/gpMgmt/bin/gppylib/test/unit/test_cluster_gpsegstart.py b/gpMgmt/bin/gppylib/test/unit/test_cluster_gpsegstart.py
+index 0d7ba70572..7c9b5e93ba 100644
+--- a/gpMgmt/bin/gppylib/test/unit/test_cluster_gpsegstart.py
++++ b/gpMgmt/bin/gppylib/test/unit/test_cluster_gpsegstart.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import os, sys
+ import unittest
+diff --git a/gpMgmt/bin/gppylib/test/unit/test_cluster_gpsegstop.py b/gpMgmt/bin/gppylib/test/unit/test_cluster_gpsegstop.py
+index d9cde57840..1736975403 100644
+--- a/gpMgmt/bin/gppylib/test/unit/test_cluster_gpsegstop.py
++++ b/gpMgmt/bin/gppylib/test/unit/test_cluster_gpsegstop.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import os, sys
+ import unittest
+diff --git a/gpMgmt/bin/gppylib/test/unit/test_unit_gparray.py b/gpMgmt/bin/gppylib/test/unit/test_unit_gparray.py
+index 14cc2ac42f..15de18fd69 100755
+--- a/gpMgmt/bin/gppylib/test/unit/test_unit_gparray.py
++++ b/gpMgmt/bin/gppylib/test/unit/test_unit_gparray.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # -*- coding: utf-8 -*-
+ # Line too long - pylint: disable=C0301
+ #
+diff --git a/gpMgmt/bin/gppylib/test/unit/test_unit_gpcheckresgroupimpl.py b/gpMgmt/bin/gppylib/test/unit/test_unit_gpcheckresgroupimpl.py
+index e69b524cf6..e15ced9d2a 100644
+--- a/gpMgmt/bin/gppylib/test/unit/test_unit_gpcheckresgroupimpl.py
++++ b/gpMgmt/bin/gppylib/test/unit/test_unit_gpcheckresgroupimpl.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) 2017, Pivotal Software Inc.
+ #
+diff --git a/gpMgmt/bin/gppylib/test/unit/test_unit_gpdbrestore.py b/gpMgmt/bin/gppylib/test/unit/test_unit_gpdbrestore.py
+index 20aad1e9e9..ada56c5402 100644
+--- a/gpMgmt/bin/gppylib/test/unit/test_unit_gpdbrestore.py
++++ b/gpMgmt/bin/gppylib/test/unit/test_unit_gpdbrestore.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import os
+ import sys
+diff --git a/gpMgmt/bin/gppylib/test/unit/test_unit_gphostcachelookup.py b/gpMgmt/bin/gppylib/test/unit/test_unit_gphostcachelookup.py
+index 81976645e8..8fd89c8565 100755
+--- a/gpMgmt/bin/gppylib/test/unit/test_unit_gphostcachelookup.py
++++ b/gpMgmt/bin/gppylib/test/unit/test_unit_gphostcachelookup.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2012. All Rights Reserved. 
+ #
+diff --git a/gpMgmt/bin/gppylib/test/unit/test_unit_gpload.py b/gpMgmt/bin/gppylib/test/unit/test_unit_gpload.py
+index bae41e7864..d5f6484adc 100755
+--- a/gpMgmt/bin/gppylib/test/unit/test_unit_gpload.py
++++ b/gpMgmt/bin/gppylib/test/unit/test_unit_gpload.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2013. All Rights Reserved. 
+ #
+diff --git a/gpMgmt/bin/gppylib/test/unit/test_unit_gplog.py b/gpMgmt/bin/gppylib/test/unit/test_unit_gplog.py
+index ef2c487bf7..10f7d7acb3 100755
+--- a/gpMgmt/bin/gppylib/test/unit/test_unit_gplog.py
++++ b/gpMgmt/bin/gppylib/test/unit/test_unit_gplog.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2008. All Rights Reserved. 
+ #
+diff --git a/gpMgmt/bin/gppylib/test/unit/test_unit_gprestore_filter.py b/gpMgmt/bin/gppylib/test/unit/test_unit_gprestore_filter.py
+index c5e7c0d7cc..c9cd9864a7 100755
+--- a/gpMgmt/bin/gppylib/test/unit/test_unit_gprestore_filter.py
++++ b/gpMgmt/bin/gppylib/test/unit/test_unit_gprestore_filter.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # coding: utf-8
+ 
+ import os, sys
+diff --git a/gpMgmt/bin/gppylib/test/unit/test_unit_gprestore_post_data_filter.py b/gpMgmt/bin/gppylib/test/unit/test_unit_gprestore_post_data_filter.py
+index 6cab6d3892..546ad9761c 100644
+--- a/gpMgmt/bin/gppylib/test/unit/test_unit_gprestore_post_data_filter.py
++++ b/gpMgmt/bin/gppylib/test/unit/test_unit_gprestore_post_data_filter.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # coding: utf-8 
+ 
+ import os, sys
+diff --git a/gpMgmt/bin/gppylib/test/unit/test_unit_gpversion.py b/gpMgmt/bin/gppylib/test/unit/test_unit_gpversion.py
+index d9e112b63b..537e9e2421 100755
+--- a/gpMgmt/bin/gppylib/test/unit/test_unit_gpversion.py
++++ b/gpMgmt/bin/gppylib/test/unit/test_unit_gpversion.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2010. All Rights Reserved. 
+ #
+diff --git a/gpMgmt/bin/gppylib/test/unit/test_unit_userinput.py b/gpMgmt/bin/gppylib/test/unit/test_unit_userinput.py
+index 6d1f39f924..ff040573ce 100755
+--- a/gpMgmt/bin/gppylib/test/unit/test_unit_userinput.py
++++ b/gpMgmt/bin/gppylib/test/unit/test_unit_userinput.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import sys, os, getpass
+ import unittest
+diff --git a/gpMgmt/bin/gppylib/testold/programs/test_clsAddMirrors.py b/gpMgmt/bin/gppylib/testold/programs/test_clsAddMirrors.py
+index 80b15a0e9d..1de9954682 100755
+--- a/gpMgmt/bin/gppylib/testold/programs/test_clsAddMirrors.py
++++ b/gpMgmt/bin/gppylib/testold/programs/test_clsAddMirrors.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ #
+ from gppylib.testold.testDriver import TestDriver
+diff --git a/gpMgmt/bin/gppylib/testold/programs/test_clsInjectFault.py b/gpMgmt/bin/gppylib/testold/programs/test_clsInjectFault.py
+index 70992e8dec..eb90d02f72 100755
+--- a/gpMgmt/bin/gppylib/testold/programs/test_clsInjectFault.py
++++ b/gpMgmt/bin/gppylib/testold/programs/test_clsInjectFault.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ #
+ from gppylib.testold.testDriver import TestDriver
+diff --git a/gpMgmt/bin/gppylib/testold/programs/test_clsRecoverSegment.py b/gpMgmt/bin/gppylib/testold/programs/test_clsRecoverSegment.py
+index b8ea257cd0..7dfcc25bec 100755
+--- a/gpMgmt/bin/gppylib/testold/programs/test_clsRecoverSegment.py
++++ b/gpMgmt/bin/gppylib/testold/programs/test_clsRecoverSegment.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ #
+ from gppylib.testold.testDriver import TestDriver
+diff --git a/gpMgmt/bin/gppylib/testold/programs/test_clsSystemState.py b/gpMgmt/bin/gppylib/testold/programs/test_clsSystemState.py
+index f0e6576842..ba43a52109 100755
+--- a/gpMgmt/bin/gppylib/testold/programs/test_clsSystemState.py
++++ b/gpMgmt/bin/gppylib/testold/programs/test_clsSystemState.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ #
+ from gppylib.testold.testDriver import TestDriver
+diff --git a/gpMgmt/bin/gppylib/testold/testUtils.py b/gpMgmt/bin/gppylib/testold/testUtils.py
+index 4eda9c99f9..31eda43a15 100644
+--- a/gpMgmt/bin/gppylib/testold/testUtils.py
++++ b/gpMgmt/bin/gppylib/testold/testUtils.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2010. All Rights Reserved.
+ #
+diff --git a/gpMgmt/bin/gppylib/unit2 b/gpMgmt/bin/gppylib/unit2
+index 08d1006a20..883ad3bf6a 100755
+--- a/gpMgmt/bin/gppylib/unit2
++++ b/gpMgmt/bin/gppylib/unit2
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#!/usr/bin/env python2
+ 
+ __unittest = True
+ 
+diff --git a/gpMgmt/bin/gppylib/userinput.py b/gpMgmt/bin/gppylib/userinput.py
+index 9a98835c23..d00778a59b 100644
+--- a/gpMgmt/bin/gppylib/userinput.py
++++ b/gpMgmt/bin/gppylib/userinput.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2008. All Rights Reserved. 
+ #
+diff --git a/gpMgmt/bin/gppylib/util/gp_utils.py b/gpMgmt/bin/gppylib/util/gp_utils.py
+index 90ec48343c..3afd54c366 100644
+--- a/gpMgmt/bin/gppylib/util/gp_utils.py
++++ b/gpMgmt/bin/gppylib/util/gp_utils.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2008. All Rights Reserved.
+ #
+diff --git a/gpMgmt/bin/gppylib/util/ssh_utils.py b/gpMgmt/bin/gppylib/util/ssh_utils.py
+index 92fdfe5c81..998c98cfe5 100644
+--- a/gpMgmt/bin/gppylib/util/ssh_utils.py
++++ b/gpMgmt/bin/gppylib/util/ssh_utils.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2008. All Rights Reserved.
+ #
+diff --git a/gpMgmt/bin/gppylib/util/test/test_logging.py b/gpMgmt/bin/gppylib/util/test/test_logging.py
+index 5e88864f3b..d2b2ce8d09 100755
+--- a/gpMgmt/bin/gppylib/util/test/test_logging.py
++++ b/gpMgmt/bin/gppylib/util/test/test_logging.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ """
+ test script to provide gplog.feature (behave) test with logging samples.
+diff --git a/gpMgmt/bin/gppylib/util/test/unit/test_cluster_ssh_utils.py b/gpMgmt/bin/gppylib/util/test/unit/test_cluster_ssh_utils.py
+index 4a29d53ee1..48c8e90c9c 100644
+--- a/gpMgmt/bin/gppylib/util/test/unit/test_cluster_ssh_utils.py
++++ b/gpMgmt/bin/gppylib/util/test/unit/test_cluster_ssh_utils.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import mock
+ import sys, os, pwd
+diff --git a/gpMgmt/bin/gprecoverseg b/gpMgmt/bin/gprecoverseg
+index 777852a0ba..7a3fbbf545 100755
+--- a/gpMgmt/bin/gprecoverseg
++++ b/gpMgmt/bin/gprecoverseg
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ """
+ gprecoverseg
+ 
+diff --git a/gpMgmt/bin/gpreload b/gpMgmt/bin/gpreload
+index c2a5765255..cffc4a592d 100755
+--- a/gpMgmt/bin/gpreload
++++ b/gpMgmt/bin/gpreload
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ from gppylib.mainUtils import simple_main
+ from gppylib.operations.reload import GpReload
+diff --git a/gpMgmt/bin/gprestore_filter.py b/gpMgmt/bin/gprestore_filter.py
+index 54d54c8a8b..908da848b7 100755
+--- a/gpMgmt/bin/gprestore_filter.py
++++ b/gpMgmt/bin/gprestore_filter.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ from gppylib.gpparseopts import OptParser, OptChecker
+ from gppylib.operations.backup_utils import split_fqn, checkAndRemoveEnclosingDoubleQuote, removeEscapingDoubleQuoteInSQLString,\
+diff --git a/gpMgmt/bin/gprestore_post_data_filter.py b/gpMgmt/bin/gprestore_post_data_filter.py
+index 84dd4e3c69..9018ae6b36 100755
+--- a/gpMgmt/bin/gprestore_post_data_filter.py
++++ b/gpMgmt/bin/gprestore_post_data_filter.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ from gppylib.gpparseopts import OptParser, OptChecker
+ from gppylib.operations.backup_utils import split_fqn, checkAndRemoveEnclosingDoubleQuote, removeEscapingDoubleQuoteInSQLString, \
+diff --git a/gpMgmt/bin/gpscp b/gpMgmt/bin/gpscp
+index 882139c82e..f43cddf0c7 100755
+--- a/gpMgmt/bin/gpscp
++++ b/gpMgmt/bin/gpscp
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ '''
+ gpscp -- scp to multiple hosts at once
+diff --git a/gpMgmt/bin/gpsd b/gpMgmt/bin/gpsd
+index cec2c48e92..55a7d84e7c 100755
+--- a/gpMgmt/bin/gpsd
++++ b/gpMgmt/bin/gpsd
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # Copyright (c) 2014 Pivotal inc.
+ 
+ 
+diff --git a/gpMgmt/bin/gpseginstall b/gpMgmt/bin/gpseginstall
+index bef86d52e3..50fc3a1dfb 100755
+--- a/gpMgmt/bin/gpseginstall
++++ b/gpMgmt/bin/gpseginstall
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ '''
+ USAGE:   gpseginstall -f|--file HOSTFILE [-u|--user USER] [-g|--group GROUP] [-p|--password PASSWORD] [-c|--commands COMMAND_OPTIONS] [--verbose]
+          where HOSTFILE lists all the hosts to install the software on
+diff --git a/gpMgmt/bin/gpssh b/gpMgmt/bin/gpssh
+index fd8cab3ae0..ef0b81f532 100755
+--- a/gpMgmt/bin/gpssh
++++ b/gpMgmt/bin/gpssh
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ '''
+ gpssh -- ssh access to multiple hosts at once
+diff --git a/gpMgmt/bin/gpssh-exkeys b/gpMgmt/bin/gpssh-exkeys
+index 71583d887c..cae3fa1d5d 100755
+--- a/gpMgmt/bin/gpssh-exkeys
++++ b/gpMgmt/bin/gpssh-exkeys
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # -*- indent-tabs-mode: nil; tab-width:4 -*-
+ # vim:set tabstop=4 expandtab:
+ '''
+diff --git a/gpMgmt/bin/gpstart b/gpMgmt/bin/gpstart
+index 4ffee9876c..b6e1c237bf 100755
+--- a/gpMgmt/bin/gpstart
++++ b/gpMgmt/bin/gpstart
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2008. All Rights Reserved.
+ #
+diff --git a/gpMgmt/bin/gpstate b/gpMgmt/bin/gpstate
+index bbbf8c4383..d0f45d048e 100755
+--- a/gpMgmt/bin/gpstate
++++ b/gpMgmt/bin/gpstate
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Displays system status information
+ #
+diff --git a/gpMgmt/bin/gpstop b/gpMgmt/bin/gpstop
+index caf6266c85..2a7e9ca947 100755
+--- a/gpMgmt/bin/gpstop
++++ b/gpMgmt/bin/gpstop
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2008. All Rights Reserved.
+ #
+diff --git a/gpMgmt/bin/gpsys1 b/gpMgmt/bin/gpsys1
+index 03cab7349f..1f93723e12 100755
+--- a/gpMgmt/bin/gpsys1
++++ b/gpMgmt/bin/gpsys1
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ """
+ gpsys1 -- print system info on a host
+ 
+diff --git a/gpMgmt/bin/gptransfer b/gpMgmt/bin/gptransfer
+index b518a4111f..a876168c3d 100755
+--- a/gpMgmt/bin/gptransfer
++++ b/gpMgmt/bin/gptransfer
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # -*- coding: utf-8 -*-
+ 
+ # Builtin function use - pylint: disable=W0141
+diff --git a/gpMgmt/bin/lib/gpconfigurenewsegment b/gpMgmt/bin/lib/gpconfigurenewsegment
+index c29c70d1d4..b29201b78b 100755
+--- a/gpMgmt/bin/lib/gpconfigurenewsegment
++++ b/gpMgmt/bin/lib/gpconfigurenewsegment
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import sys
+ import os
+diff --git a/gpMgmt/bin/lib/gphostcachelookup.py b/gpMgmt/bin/lib/gphostcachelookup.py
+index 52aa71c842..965ffbfbc6 100755
+--- a/gpMgmt/bin/lib/gphostcachelookup.py
++++ b/gpMgmt/bin/lib/gphostcachelookup.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ '''
+ gphostcachelookup.py -- look up the hostname for a list of interfaces
+ 
+diff --git a/gpMgmt/bin/lib/gpinitsegment b/gpMgmt/bin/lib/gpinitsegment
+index e79c158ec5..e29ea7cb6d 100755
+--- a/gpMgmt/bin/lib/gpinitsegment
++++ b/gpMgmt/bin/lib/gpinitsegment
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python 
++#!/usr/bin/env python2
+ # ==============================================================================
+ '''
+ Usage: gpinitsegment [options]
+diff --git a/gpMgmt/bin/lib/gplogextract.py b/gpMgmt/bin/lib/gplogextract.py
+index 7973828841..14d09d28c2 100755
+--- a/gpMgmt/bin/lib/gplogextract.py
++++ b/gpMgmt/bin/lib/gplogextract.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # -*- coding: utf-8 -*-
+ '''
+   gplogextract.py [options] file ...
+diff --git a/gpMgmt/bin/lib/gppinggpfdist.py b/gpMgmt/bin/lib/gppinggpfdist.py
+index 419fdaad39..6ba80cb18b 100644
+--- a/gpMgmt/bin/lib/gppinggpfdist.py
++++ b/gpMgmt/bin/lib/gppinggpfdist.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import sys, httplib, getopt, socket
+ 
+diff --git a/gpMgmt/bin/lib/gpstate.py b/gpMgmt/bin/lib/gpstate.py
+index 33d19e80fc..b9c64dc157 100755
+--- a/gpMgmt/bin/lib/gpstate.py
++++ b/gpMgmt/bin/lib/gpstate.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Recovers Greenplum segment instances that are marked as invalid, if
+ # mirroring is configured and operational
+diff --git a/gpMgmt/bin/lib/gpsys.py b/gpMgmt/bin/lib/gpsys.py
+index 9f0bf3c88c..7eaa117925 100755
+--- a/gpMgmt/bin/lib/gpsys.py
++++ b/gpMgmt/bin/lib/gpsys.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ '''
+ gpsys.py -- print system properties
+ 
+diff --git a/gpMgmt/bin/lib/multidd b/gpMgmt/bin/lib/multidd
+index 17c7c54e20..45c027f3e3 100755
+--- a/gpMgmt/bin/lib/multidd
++++ b/gpMgmt/bin/lib/multidd
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ '''
+ multidd - run multiple dd concurrently to determine disk throughput
+ 
+diff --git a/gpMgmt/bin/lib/pysync.py b/gpMgmt/bin/lib/pysync.py
+index 63c9c8b984..edf592d889 100755
+--- a/gpMgmt/bin/lib/pysync.py
++++ b/gpMgmt/bin/lib/pysync.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import os, sys
+ 
+diff --git a/gpMgmt/bin/minirepro b/gpMgmt/bin/minirepro
+index eb1d722e75..ccef013bd5 100755
+--- a/gpMgmt/bin/minirepro
++++ b/gpMgmt/bin/minirepro
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ '''
+ minirepro utility
+ 
+diff --git a/gpMgmt/bin/pythonSrc/PyGreSQL-4.0/pg.py b/gpMgmt/bin/pythonSrc/PyGreSQL-4.0/pg.py
+index 53c666912c..a04d82c7e7 100644
+--- a/gpMgmt/bin/pythonSrc/PyGreSQL-4.0/pg.py
++++ b/gpMgmt/bin/pythonSrc/PyGreSQL-4.0/pg.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # pg.py
+ #
+diff --git a/gpMgmt/bin/pythonSrc/PyGreSQL-4.0/pgdb.py b/gpMgmt/bin/pythonSrc/PyGreSQL-4.0/pgdb.py
+index 4b4344c971..4649a45c78 100644
+--- a/gpMgmt/bin/pythonSrc/PyGreSQL-4.0/pgdb.py
++++ b/gpMgmt/bin/pythonSrc/PyGreSQL-4.0/pgdb.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # pgdb.py
+ #
+diff --git a/gpMgmt/bin/pythonSrc/PyGreSQL-4.0/setup.py b/gpMgmt/bin/pythonSrc/PyGreSQL-4.0/setup.py
+index 0b65800908..a82377ef8e 100755
+--- a/gpMgmt/bin/pythonSrc/PyGreSQL-4.0/setup.py
++++ b/gpMgmt/bin/pythonSrc/PyGreSQL-4.0/setup.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # $Id: setup.py,v 1.27 2008/11/21 17:08:17 cito Exp $
+ 
+ """Setup script for PyGreSQL version 4.0
+diff --git a/gpMgmt/bin/pythonSrc/PyGreSQL-4.0/tutorial/advanced.py b/gpMgmt/bin/pythonSrc/PyGreSQL-4.0/tutorial/advanced.py
+index 41a5bc457a..fd414610c0 100755
+--- a/gpMgmt/bin/pythonSrc/PyGreSQL-4.0/tutorial/advanced.py
++++ b/gpMgmt/bin/pythonSrc/PyGreSQL-4.0/tutorial/advanced.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#!/usr/bin/env python2
+ # advanced.py - demo of advanced features of PostGres. Some may not be ANSI.
+ # inspired from the Postgres tutorial 
+ # adapted to Python 1995 by Pascal Andre
+diff --git a/gpMgmt/bin/pythonSrc/PyGreSQL-4.0/tutorial/basics.py b/gpMgmt/bin/pythonSrc/PyGreSQL-4.0/tutorial/basics.py
+index 98a7f86a90..64a5cab993 100755
+--- a/gpMgmt/bin/pythonSrc/PyGreSQL-4.0/tutorial/basics.py
++++ b/gpMgmt/bin/pythonSrc/PyGreSQL-4.0/tutorial/basics.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#!/usr/bin/env python2
+ # basics.py - basic SQL commands tutorial
+ # inspired from the Postgres95 tutorial 
+ # adapted to Python 1995 by Pascal ANDRE
+diff --git a/gpMgmt/bin/pythonSrc/subprocess32/setup.py b/gpMgmt/bin/pythonSrc/subprocess32/setup.py
+index 07d9c374af..9498783fe2 100755
+--- a/gpMgmt/bin/pythonSrc/subprocess32/setup.py
++++ b/gpMgmt/bin/pythonSrc/subprocess32/setup.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/python
++#!/usr/bin/python2
+ 
+ import sys
+ from distutils.core import setup, Extension
+diff --git a/gpMgmt/bin/test_gpmfr.py b/gpMgmt/bin/test_gpmfr.py
+index c90d7678bc..7ed28244a0 100755
+--- a/gpMgmt/bin/test_gpmfr.py
++++ b/gpMgmt/bin/test_gpmfr.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2013. All Rights Reserved. 
+ #
+diff --git a/gpMgmt/bin/throttlingD.py b/gpMgmt/bin/throttlingD.py
+index 403a13759b..ba408c7a00 100755
+--- a/gpMgmt/bin/throttlingD.py
++++ b/gpMgmt/bin/throttlingD.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import ConfigParser
+ import os
+diff --git a/gpMgmt/sbin/gpaddconfig.py b/gpMgmt/sbin/gpaddconfig.py
+index 7c7ed98e79..e999337da6 100755
+--- a/gpMgmt/sbin/gpaddconfig.py
++++ b/gpMgmt/sbin/gpaddconfig.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2009. All Rights Reserved.
+ #
+diff --git a/gpMgmt/sbin/gpchangeuserpassword b/gpMgmt/sbin/gpchangeuserpassword
+index 0279330613..8bd7f3e527 100755
+--- a/gpMgmt/sbin/gpchangeuserpassword
++++ b/gpMgmt/sbin/gpchangeuserpassword
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ ''' 
+ USAGE:  gpchangeuserpassword --user USER --password PASSWORD
+         where USER is the user for whom the password is being changed
+diff --git a/gpMgmt/sbin/gpcheck_hostdump b/gpMgmt/sbin/gpcheck_hostdump
+index 0ea0c5ff32..64a9589ac9 100755
+--- a/gpMgmt/sbin/gpcheck_hostdump
++++ b/gpMgmt/sbin/gpcheck_hostdump
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ '''
+ USAGE:   gpcheck_hostdump [--appliance] [--linux] [--solaris]
+          where --appliance will do a dump of appliance server
+diff --git a/gpMgmt/sbin/gpcleansegmentdir.py b/gpMgmt/sbin/gpcleansegmentdir.py
+index 86c98a88e2..00d28e2888 100755
+--- a/gpMgmt/sbin/gpcleansegmentdir.py
++++ b/gpMgmt/sbin/gpcleansegmentdir.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2010. All Rights Reserved.
+ #
+diff --git a/gpMgmt/sbin/gpfixuserlimts b/gpMgmt/sbin/gpfixuserlimts
+index c2866b3e34..aaa5e274de 100755
+--- a/gpMgmt/sbin/gpfixuserlimts
++++ b/gpMgmt/sbin/gpfixuserlimts
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ ''' 
+ USAGE:  gpfixuserlimts -f|--file FILE -u|--user USER
+         where FILE is the file to be modified
+diff --git a/gpMgmt/sbin/gpgetstatususingtransition.py b/gpMgmt/sbin/gpgetstatususingtransition.py
+index 7f638f9f79..e916a50925 100755
+--- a/gpMgmt/sbin/gpgetstatususingtransition.py
++++ b/gpMgmt/sbin/gpgetstatususingtransition.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2010. All Rights Reserved. 
+ #
+diff --git a/gpMgmt/sbin/gpoperation.py b/gpMgmt/sbin/gpoperation.py
+index 2383a807b2..639e2ed1ed 100755
+--- a/gpMgmt/sbin/gpoperation.py
++++ b/gpMgmt/sbin/gpoperation.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ import sys
+ import pickle
+ import traceback
+diff --git a/gpMgmt/sbin/gppersistent_backup.py b/gpMgmt/sbin/gppersistent_backup.py
+index e78355a3db..8c0021ad7e 100755
+--- a/gpMgmt/sbin/gppersistent_backup.py
++++ b/gpMgmt/sbin/gppersistent_backup.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) 2014-Present Pivotal Software, Inc.
+ #
+diff --git a/gpMgmt/sbin/gppersistentrebuild b/gpMgmt/sbin/gppersistentrebuild
+index 25fd0cd66d..98da202504 100755
+--- a/gpMgmt/sbin/gppersistentrebuild
++++ b/gpMgmt/sbin/gppersistentrebuild
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ # Copyright (c) 2014 Pivotal Software, Inc. All Rights Reserved
+ #
+diff --git a/gpMgmt/sbin/gprepairmirrorseg.py b/gpMgmt/sbin/gprepairmirrorseg.py
+index df73632870..71dc9be719 100755
+--- a/gpMgmt/sbin/gprepairmirrorseg.py
++++ b/gpMgmt/sbin/gprepairmirrorseg.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2010. All Rights Reserved.
+ #
+diff --git a/gpMgmt/sbin/gpsegstart.py b/gpMgmt/sbin/gpsegstart.py
+index b4ce5e9744..c0fe64ab6b 100755
+--- a/gpMgmt/sbin/gpsegstart.py
++++ b/gpMgmt/sbin/gpsegstart.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # Line too long - pylint: disable=C0301
+ # Invalid name  - pylint: disable=C0103
+ #
+diff --git a/gpMgmt/sbin/gpsegstop.py b/gpMgmt/sbin/gpsegstop.py
+index 0fcd76cf3d..8dd9cab1b3 100755
+--- a/gpMgmt/sbin/gpsegstop.py
++++ b/gpMgmt/sbin/gpsegstop.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2008. All Rights Reserved.
+ #
+diff --git a/gpMgmt/sbin/gpsegtoprimaryormirror.py b/gpMgmt/sbin/gpsegtoprimaryormirror.py
+index 821ad23756..793a1fbad3 100755
+--- a/gpMgmt/sbin/gpsegtoprimaryormirror.py
++++ b/gpMgmt/sbin/gpsegtoprimaryormirror.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2008. All Rights Reserved. 
+ #
+diff --git a/gpMgmt/sbin/gpsetdbid.py b/gpMgmt/sbin/gpsetdbid.py
+index 3c44a0e609..e488006e8d 100755
+--- a/gpMgmt/sbin/gpsetdbid.py
++++ b/gpMgmt/sbin/gpsetdbid.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ '''
+ Copyright (c) Greenplum Inc 2010. All Rights Reserved. 
+ 
+diff --git a/gpMgmt/sbin/packcore b/gpMgmt/sbin/packcore
+index 40325782fc..40f366d806 100755
+--- a/gpMgmt/sbin/packcore
++++ b/gpMgmt/sbin/packcore
+@@ -1,4 +1,4 @@
+-#!/bin/env python
++#!/usr/bin/env python2
+ # Copyright Pivotal 2014
+ 
+ 
+diff --git a/gpMgmt/test/behave/mgmt_utils/steps/data/pid_background_script.py b/gpMgmt/test/behave/mgmt_utils/steps/data/pid_background_script.py
+index 278df54451..bb2a918b9e 100644
+--- a/gpMgmt/test/behave/mgmt_utils/steps/data/pid_background_script.py
++++ b/gpMgmt/test/behave/mgmt_utils/steps/data/pid_background_script.py
+@@ -1,4 +1,4 @@
+- #!/usr/bin/env python
++ #!/usr/bin/env python2
+ 
+ import time
+ import signal
+diff --git a/gpMgmt/test/behave/mgmt_utils/steps/scripts/ao_non_part.py b/gpMgmt/test/behave/mgmt_utils/steps/scripts/ao_non_part.py
+index c4d5d943ec..03cb4363a7 100755
+--- a/gpMgmt/test/behave/mgmt_utils/steps/scripts/ao_non_part.py
++++ b/gpMgmt/test/behave/mgmt_utils/steps/scripts/ao_non_part.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ import sys
+ 
+ if len(sys.argv) != 2:
+diff --git a/gpMgmt/test/behave/mgmt_utils/steps/scripts/co_non_part.py b/gpMgmt/test/behave/mgmt_utils/steps/scripts/co_non_part.py
+index 226b9d6e3a..31a7313832 100755
+--- a/gpMgmt/test/behave/mgmt_utils/steps/scripts/co_non_part.py
++++ b/gpMgmt/test/behave/mgmt_utils/steps/scripts/co_non_part.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ import sys
+ 
+ if len(sys.argv) != 2:
+diff --git a/gpMgmt/test/behave/mgmt_utils/steps/scripts/dirty_non_part.py b/gpMgmt/test/behave/mgmt_utils/steps/scripts/dirty_non_part.py
+index 925df360e0..f172ec40c8 100755
+--- a/gpMgmt/test/behave/mgmt_utils/steps/scripts/dirty_non_part.py
++++ b/gpMgmt/test/behave/mgmt_utils/steps/scripts/dirty_non_part.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ import sys
+ 
+ if len(sys.argv) != 3:
+diff --git a/gpMgmt/test/behave/mgmt_utils/steps/scripts/dirty_part.py b/gpMgmt/test/behave/mgmt_utils/steps/scripts/dirty_part.py
+index 709805f266..dc8e04b30d 100755
+--- a/gpMgmt/test/behave/mgmt_utils/steps/scripts/dirty_part.py
++++ b/gpMgmt/test/behave/mgmt_utils/steps/scripts/dirty_part.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ import sys
+ import datetime
+ 
+diff --git a/gpMgmt/test/behave/mgmt_utils/steps/scripts/heap_non_part.py b/gpMgmt/test/behave/mgmt_utils/steps/scripts/heap_non_part.py
+index aec87728eb..345d163b99 100755
+--- a/gpMgmt/test/behave/mgmt_utils/steps/scripts/heap_non_part.py
++++ b/gpMgmt/test/behave/mgmt_utils/steps/scripts/heap_non_part.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ import sys
+ 
+ if len(sys.argv) != 2:
+diff --git a/gpMgmt/test/behave/mgmt_utils/steps/scripts/part_data.py b/gpMgmt/test/behave/mgmt_utils/steps/scripts/part_data.py
+index 8b529b0e4f..87c6b55683 100755
+--- a/gpMgmt/test/behave/mgmt_utils/steps/scripts/part_data.py
++++ b/gpMgmt/test/behave/mgmt_utils/steps/scripts/part_data.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ import sys
+ import datetime
+ 
+diff --git a/gpMgmt/test/behave/mgmt_utils/steps/scripts/part_ddl.py b/gpMgmt/test/behave/mgmt_utils/steps/scripts/part_ddl.py
+index 18af979c19..9f0717fc1e 100755
+--- a/gpMgmt/test/behave/mgmt_utils/steps/scripts/part_ddl.py
++++ b/gpMgmt/test/behave/mgmt_utils/steps/scripts/part_ddl.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ import sys
+ import datetime
+ 
+diff --git a/gpMgmt/test/behave/mgmt_utils/steps/scripts/reference_non_part.py b/gpMgmt/test/behave/mgmt_utils/steps/scripts/reference_non_part.py
+index 9f58afffec..6c4c8429e4 100755
+--- a/gpMgmt/test/behave/mgmt_utils/steps/scripts/reference_non_part.py
++++ b/gpMgmt/test/behave/mgmt_utils/steps/scripts/reference_non_part.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ import sys
+ 
+ NON_PART_ROW_COUNT = 10000
+diff --git a/gpMgmt/test/behave_utils/gpfdist_utils/gpfdist_client.py b/gpMgmt/test/behave_utils/gpfdist_utils/gpfdist_client.py
+index a65d9cb076..0b9f288bf6 100755
+--- a/gpMgmt/test/behave_utils/gpfdist_utils/gpfdist_client.py
++++ b/gpMgmt/test/behave_utils/gpfdist_utils/gpfdist_client.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import socket, time
+ 
+diff --git a/gpMgmt/test/behave_utils/gpfdist_utils/gpfdist_httpclient.py b/gpMgmt/test/behave_utils/gpfdist_utils/gpfdist_httpclient.py
+index 5c1b89cfa9..e63f5ea3b9 100755
+--- a/gpMgmt/test/behave_utils/gpfdist_utils/gpfdist_httpclient.py
++++ b/gpMgmt/test/behave_utils/gpfdist_utils/gpfdist_httpclient.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import sys
+ import os
+diff --git a/gpMgmt/test/behave_utils/gpfdist_utils/gpfdist_specialrequest.py b/gpMgmt/test/behave_utils/gpfdist_utils/gpfdist_specialrequest.py
+index 09cef81bda..f39d6950e5 100755
+--- a/gpMgmt/test/behave_utils/gpfdist_utils/gpfdist_specialrequest.py
++++ b/gpMgmt/test/behave_utils/gpfdist_utils/gpfdist_specialrequest.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ # This script will send whatever request body to gpfdist to test
+ # gpfdist stability.
+diff --git a/gpMgmt/test/behave_utils/utils.py b/gpMgmt/test/behave_utils/utils.py
+index 66a0a893ac..3e0c6f9632 100644
+--- a/gpMgmt/test/behave_utils/utils.py
++++ b/gpMgmt/test/behave_utils/utils.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ import filecmp
+ import fileinput
+ import os
+diff --git a/gpMgmt/test/data/dump_pipe.py b/gpMgmt/test/data/dump_pipe.py
+index dbbc17838b..399a4e1079 100755
+--- a/gpMgmt/test/data/dump_pipe.py
++++ b/gpMgmt/test/data/dump_pipe.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import os
+ import cPickle
+diff --git a/gpMgmt/test/data/restore_pipe.py b/gpMgmt/test/data/restore_pipe.py
+index a1eaef390e..001d854249 100755
+--- a/gpMgmt/test/data/restore_pipe.py
++++ b/gpMgmt/test/data/restore_pipe.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import os
+ import cPickle
+diff --git a/gpMgmt/test/parse_behave.py b/gpMgmt/test/parse_behave.py
+index 222f8f7966..dc1b83101c 100755
+--- a/gpMgmt/test/parse_behave.py
++++ b/gpMgmt/test/parse_behave.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import re, sys
+ 
+diff --git a/src/backend/catalog/process_col_defaults.pl b/src/backend/catalog/process_col_defaults.pl
+index 675c9627ef..771a1fb1c4 100755
+--- a/src/backend/catalog/process_col_defaults.pl
++++ b/src/backend/catalog/process_col_defaults.pl
+@@ -1,4 +1,4 @@
+-#! /usr/bin/perl -w
++#!/usr/bin/perl -w
+ #-------------------------------------------------------------------------
+ #
+ # process_col_defaults.pl
+diff --git a/src/backend/catalog/process_foreign_keys.pl b/src/backend/catalog/process_foreign_keys.pl
+index c66f5c9f63..9b3447386c 100755
+--- a/src/backend/catalog/process_foreign_keys.pl
++++ b/src/backend/catalog/process_foreign_keys.pl
+@@ -1,4 +1,4 @@
+-#! /usr/bin/perl -w
++#!/usr/bin/perl -w
+ #-------------------------------------------------------------------------
+ #
+ # process_foreign_keys.pl
+diff --git a/src/backend/utils/Gen_fmgrtab.pl b/src/backend/utils/Gen_fmgrtab.pl
+index 34da810f7b..79f4f210a6 100644
+--- a/src/backend/utils/Gen_fmgrtab.pl
++++ b/src/backend/utils/Gen_fmgrtab.pl
+@@ -1,4 +1,4 @@
+-#! /usr/bin/perl -w
++#!/usr/bin/perl -w
+ #-------------------------------------------------------------------------
+ #
+ # Gen_fmgrtab.pl
+diff --git a/src/backend/utils/error/pg_ltrace.c b/src/backend/utils/error/pg_ltrace.c
+index f9bfb49740..5f8b0fad9d 100644
+--- a/src/backend/utils/error/pg_ltrace.c
++++ b/src/backend/utils/error/pg_ltrace.c
+@@ -60,7 +60,7 @@ struct pg_trace_data_t
+ 
+ #if 0 
+ ---------------------  BEGIN EXAMPLE STP ---------------------------------
+-#! /usr/bin/env stap
++#!/usr/bin/env stap
+ 
+ /* 
+  * Example stap.  The stp must be run as root because it uses embeded C.
+diff --git a/src/backend/utils/mb/Unicode/UCS_to_BIG5.pl b/src/backend/utils/mb/Unicode/UCS_to_BIG5.pl
+index 8b9612f118..17ef281c78 100755
+--- a/src/backend/utils/mb/Unicode/UCS_to_BIG5.pl
++++ b/src/backend/utils/mb/Unicode/UCS_to_BIG5.pl
+@@ -1,4 +1,4 @@
+-#! /usr/bin/perl
++#!/usr/bin/perl
+ #
+ # Copyright (c) 2001-2009, PostgreSQL Global Development Group
+ #
+diff --git a/src/backend/utils/mb/Unicode/UCS_to_EUC_CN.pl b/src/backend/utils/mb/Unicode/UCS_to_EUC_CN.pl
+index 222042a17a..bbce46b09c 100755
+--- a/src/backend/utils/mb/Unicode/UCS_to_EUC_CN.pl
++++ b/src/backend/utils/mb/Unicode/UCS_to_EUC_CN.pl
+@@ -1,4 +1,4 @@
+-#! /usr/bin/perl
++#!/usr/bin/perl
+ #
+ # Copyright (c) 2001-2009, PostgreSQL Global Development Group
+ #
+diff --git a/src/backend/utils/mb/Unicode/UCS_to_EUC_JIS_2004.pl b/src/backend/utils/mb/Unicode/UCS_to_EUC_JIS_2004.pl
+index 2564b0cb73..1b34fa6c57 100644
+--- a/src/backend/utils/mb/Unicode/UCS_to_EUC_JIS_2004.pl
++++ b/src/backend/utils/mb/Unicode/UCS_to_EUC_JIS_2004.pl
+@@ -1,4 +1,4 @@
+-#! /usr/bin/perl
++#!/usr/bin/perl
+ #
+ # Copyright (c) 2007-2009, PostgreSQL Global Development Group
+ #
+diff --git a/src/backend/utils/mb/Unicode/UCS_to_EUC_JP.pl b/src/backend/utils/mb/Unicode/UCS_to_EUC_JP.pl
+index 2f6e63abe0..9fe4d28845 100755
+--- a/src/backend/utils/mb/Unicode/UCS_to_EUC_JP.pl
++++ b/src/backend/utils/mb/Unicode/UCS_to_EUC_JP.pl
+@@ -1,4 +1,4 @@
+-#! /usr/bin/perl
++#!/usr/bin/perl
+ #
+ # Copyright (c) 2001-2009, PostgreSQL Global Development Group
+ #
+diff --git a/src/backend/utils/mb/Unicode/UCS_to_EUC_KR.pl b/src/backend/utils/mb/Unicode/UCS_to_EUC_KR.pl
+index f757793b94..5f08800234 100755
+--- a/src/backend/utils/mb/Unicode/UCS_to_EUC_KR.pl
++++ b/src/backend/utils/mb/Unicode/UCS_to_EUC_KR.pl
+@@ -1,4 +1,4 @@
+-#! /usr/bin/perl
++#!/usr/bin/perl
+ #
+ # Copyright (c) 2001-2009, PostgreSQL Global Development Group
+ #
+diff --git a/src/backend/utils/mb/Unicode/UCS_to_EUC_TW.pl b/src/backend/utils/mb/Unicode/UCS_to_EUC_TW.pl
+index 6843488fc3..8c296a5caf 100755
+--- a/src/backend/utils/mb/Unicode/UCS_to_EUC_TW.pl
++++ b/src/backend/utils/mb/Unicode/UCS_to_EUC_TW.pl
+@@ -1,4 +1,4 @@
+-#! /usr/bin/perl
++#!/usr/bin/perl
+ #
+ # Copyright (c) 2001-2009, PostgreSQL Global Development Group
+ #
+diff --git a/src/backend/utils/mb/Unicode/UCS_to_GB18030.pl b/src/backend/utils/mb/Unicode/UCS_to_GB18030.pl
+index 68dc87b498..30aca81f66 100755
+--- a/src/backend/utils/mb/Unicode/UCS_to_GB18030.pl
++++ b/src/backend/utils/mb/Unicode/UCS_to_GB18030.pl
+@@ -1,4 +1,4 @@
+-#! /usr/bin/perl
++#!/usr/bin/perl
+ #
+ # Copyright 2002 by Bill Huang
+ #
+diff --git a/src/backend/utils/mb/Unicode/UCS_to_SHIFT_JIS_2004.pl b/src/backend/utils/mb/Unicode/UCS_to_SHIFT_JIS_2004.pl
+index a88d90e2b2..06401eab59 100644
+--- a/src/backend/utils/mb/Unicode/UCS_to_SHIFT_JIS_2004.pl
++++ b/src/backend/utils/mb/Unicode/UCS_to_SHIFT_JIS_2004.pl
+@@ -1,4 +1,4 @@
+-#! /usr/bin/perl
++#!/usr/bin/perl
+ #
+ # Copyright (c) 2007-2009, PostgreSQL Global Development Group
+ #
+diff --git a/src/backend/utils/mb/Unicode/UCS_to_SJIS.pl b/src/backend/utils/mb/Unicode/UCS_to_SJIS.pl
+index 49757db10b..e5b370b198 100755
+--- a/src/backend/utils/mb/Unicode/UCS_to_SJIS.pl
++++ b/src/backend/utils/mb/Unicode/UCS_to_SJIS.pl
+@@ -1,4 +1,4 @@
+-#! /usr/bin/perl
++#!/usr/bin/perl
+ #
+ # Copyright (c) 2001-2009, PostgreSQL Global Development Group
+ #
+diff --git a/src/backend/utils/mb/Unicode/UCS_to_most.pl b/src/backend/utils/mb/Unicode/UCS_to_most.pl
+index aadfa38149..a6f5a7f16a 100755
+--- a/src/backend/utils/mb/Unicode/UCS_to_most.pl
++++ b/src/backend/utils/mb/Unicode/UCS_to_most.pl
+@@ -1,4 +1,4 @@
+-#! /usr/bin/perl
++#!/usr/bin/perl
+ #
+ # Copyright (c) 2001-2009, PostgreSQL Global Development Group
+ #
+diff --git a/src/bin/psql/create_help.pl b/src/bin/psql/create_help.pl
+index 495100326d..81e8d7d7b1 100755
+--- a/src/bin/psql/create_help.pl
++++ b/src/bin/psql/create_help.pl
+@@ -1,4 +1,4 @@
+-#! /usr/bin/perl -w
++#!/usr/bin/perl -w
+ 
+ #################################################################
+ # create_help.pl -- converts SGML docs to internal psql help
+diff --git a/src/include/catalog/li_extras.py b/src/include/catalog/li_extras.py
+index 90fc10086e..16e953ea78 100755
+--- a/src/include/catalog/li_extras.py
++++ b/src/include/catalog/li_extras.py
+@@ -1,4 +1,4 @@
+-#! /usr/local/bin/python
++#!/usr/bin/python2
+ 
+ import sys
+ import datetime
+diff --git a/src/test/locale/sort-test.pl b/src/test/locale/sort-test.pl
+index aedfa22c88..7f68c0bd17 100755
+--- a/src/test/locale/sort-test.pl
++++ b/src/test/locale/sort-test.pl
+@@ -1,4 +1,4 @@
+-#! /usr/bin/perl
++#!/usr/bin/perl
+ use locale;
+ 
+ open(INFILE, "<$ARGV[0]");
+diff --git a/src/test/locale/sort-test.py b/src/test/locale/sort-test.py
+index 1dafcedde5..f3f4a9328b 100755
+--- a/src/test/locale/sort-test.py
++++ b/src/test/locale/sort-test.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import sys, string, locale
+ locale.setlocale(locale.LC_ALL, "")
+diff --git a/src/test/performance/parse_perf_results.py b/src/test/performance/parse_perf_results.py
+index fd2497e64c..6f13431582 100644
+--- a/src/test/performance/parse_perf_results.py
++++ b/src/test/performance/parse_perf_results.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#!/usr/bin/env python2
+ 
+ '''
+ Parse the results of the performance test into a CSV for loading into
+diff --git a/src/test/regress/checkinc.py b/src/test/regress/checkinc.py
+index 8d8405b56a..f247cd2aaa 100755
+--- a/src/test/regress/checkinc.py
++++ b/src/test/regress/checkinc.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import sys, os, re, subprocess
+ 
+diff --git a/src/test/regress/mem_quota_util.py b/src/test/regress/mem_quota_util.py
+index b4b029aec0..11773d5a2e 100755
+--- a/src/test/regress/mem_quota_util.py
++++ b/src/test/regress/mem_quota_util.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import os, sys
+ 
+diff --git a/src/test/tinc/ext/unittest2/unit2 b/src/test/tinc/ext/unittest2/unit2
+index 6d84985f36..01abd4f914 100755
+--- a/src/test/tinc/ext/unittest2/unit2
++++ b/src/test/tinc/ext/unittest2/unit2
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#!/usr/bin/env python2
+ 
+ __unittest = True
+ 
+diff --git a/src/test/tinc/sbin/sync.py b/src/test/tinc/sbin/sync.py
+index 074aa868f2..812f752507 100755
+--- a/src/test/tinc/sbin/sync.py
++++ b/src/test/tinc/sbin/sync.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#!/usr/bin/env python2
+ 
+ """
+ Copyright (c) 2004-Present Pivotal Software, Inc.
+diff --git a/src/test/tinc/sbin/tinc_check.py b/src/test/tinc/sbin/tinc_check.py
+index e231a2644c..4dd69c5eda 100755
+--- a/src/test/tinc/sbin/tinc_check.py
++++ b/src/test/tinc/sbin/tinc_check.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#!/usr/bin/env python2
+ 
+ """
+ Copyright (c) 2004-Present Pivotal Software, Inc.
+diff --git a/src/test/tinc/sbin/tincmm.py b/src/test/tinc/sbin/tincmm.py
+index 7370788058..970031b6a0 100755
+--- a/src/test/tinc/sbin/tincmm.py
++++ b/src/test/tinc/sbin/tincmm.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#!/usr/bin/env python2
+ 
+ """
+ Copyright (c) 2004-Present Pivotal Software, Inc.
+diff --git a/src/test/tinc/tinc.py b/src/test/tinc/tinc.py
+index 5fbe727743..08b1452d5f 100755
+--- a/src/test/tinc/tinc.py
++++ b/src/test/tinc/tinc.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#!/usr/bin/env python2
+ 
+ """
+ Copyright (c) 2004-Present Pivotal Software, Inc.
+diff --git a/src/test/tinc/tincrepo/mpp/gpdb/tests/package/contrib/pgcrypto/install/test_install.py b/src/test/tinc/tincrepo/mpp/gpdb/tests/package/contrib/pgcrypto/install/test_install.py
+index 1b4ad99e9c..9ea95c610d 100644
+--- a/src/test/tinc/tincrepo/mpp/gpdb/tests/package/contrib/pgcrypto/install/test_install.py
++++ b/src/test/tinc/tincrepo/mpp/gpdb/tests/package/contrib/pgcrypto/install/test_install.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ """
+ Copyright (c) 2004-Present Pivotal Software, Inc.
+ 
+diff --git a/src/test/tinc/tincrepo/mpp/gpdb/tests/package/contrib/postgis/test_postgis.py b/src/test/tinc/tincrepo/mpp/gpdb/tests/package/contrib/postgis/test_postgis.py
+index e07da3af01..99cb35530d 100644
+--- a/src/test/tinc/tincrepo/mpp/gpdb/tests/package/contrib/postgis/test_postgis.py
++++ b/src/test/tinc/tincrepo/mpp/gpdb/tests/package/contrib/postgis/test_postgis.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ """
+ Copyright (c) 2004-Present Pivotal Software, Inc.
+ 
+diff --git a/src/test/tinc/tincrepo/mpp/gpdb/tests/package/language/test_language.py b/src/test/tinc/tincrepo/mpp/gpdb/tests/package/language/test_language.py
+index 2b279dd1f6..1efd744711 100644
+--- a/src/test/tinc/tincrepo/mpp/gpdb/tests/package/language/test_language.py
++++ b/src/test/tinc/tincrepo/mpp/gpdb/tests/package/language/test_language.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ """
+ Copyright (c) 2004-Present Pivotal Software, Inc.
+ 
+diff --git a/src/test/tinc/tincrepo/mpp/gpdb/tests/package/procedural_language/__init__.py b/src/test/tinc/tincrepo/mpp/gpdb/tests/package/procedural_language/__init__.py
+index 7ee8c88931..49376d386a 100644
+--- a/src/test/tinc/tincrepo/mpp/gpdb/tests/package/procedural_language/__init__.py
++++ b/src/test/tinc/tincrepo/mpp/gpdb/tests/package/procedural_language/__init__.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ """
+ Copyright (c) 2004-Present Pivotal Software, Inc.
+ 
+diff --git a/src/test/tinc/tincrepo/mpp/gpdb/tests/package/procedural_language/plpgsql_caching/functional/test_plpgsql.py b/src/test/tinc/tincrepo/mpp/gpdb/tests/package/procedural_language/plpgsql_caching/functional/test_plpgsql.py
+index dfed6db8e9..993e89e437 100644
+--- a/src/test/tinc/tincrepo/mpp/gpdb/tests/package/procedural_language/plpgsql_caching/functional/test_plpgsql.py
++++ b/src/test/tinc/tincrepo/mpp/gpdb/tests/package/procedural_language/plpgsql_caching/functional/test_plpgsql.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ """
+ Copyright (c) 2004-Present Pivotal Software, Inc.
+ 
+diff --git a/src/test/tinc/tincrepo/mpp/gpdb/tests/package/system_catalog/guc_settings/TEST.py b/src/test/tinc/tincrepo/mpp/gpdb/tests/package/system_catalog/guc_settings/TEST.py
+index 12dabc9514..ed64f2e1f0 100755
+--- a/src/test/tinc/tincrepo/mpp/gpdb/tests/package/system_catalog/guc_settings/TEST.py
++++ b/src/test/tinc/tincrepo/mpp/gpdb/tests/package/system_catalog/guc_settings/TEST.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ """
+ Copyright (c) 2004-Present Pivotal Software, Inc.
+ 
+diff --git a/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/access_methods/ao_memory.py b/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/access_methods/ao_memory.py
+index 7b4c616c92..e40405d873 100644
+--- a/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/access_methods/ao_memory.py
++++ b/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/access_methods/ao_memory.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ """
+ Copyright (c) 2004-Present Pivotal Software, Inc.
+diff --git a/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/basic/partition/manual/TEST.py b/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/basic/partition/manual/TEST.py
+index 1f4b2fc916..13885406b3 100755
+--- a/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/basic/partition/manual/TEST.py
++++ b/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/basic/partition/manual/TEST.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ """
+ Copyright (c) 2004-Present Pivotal Software, Inc.
+ 
+diff --git a/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/walrepl/basebackup/test_xlog_cleanup.py b/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/walrepl/basebackup/test_xlog_cleanup.py
+index 7cb9f1ee89..92b2435098 100644
+--- a/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/walrepl/basebackup/test_xlog_cleanup.py
++++ b/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/walrepl/basebackup/test_xlog_cleanup.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ """
+ Copyright (c) 2004-Present Pivotal Software, Inc.
+diff --git a/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/walrepl/demo0522.py b/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/walrepl/demo0522.py
+index 1822238da8..7e19c20ac7 100755
+--- a/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/walrepl/demo0522.py
++++ b/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/walrepl/demo0522.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ """
+ Copyright (c) 2004-Present Pivotal Software, Inc.
+diff --git a/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/walrepl/demo0612-2.py b/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/walrepl/demo0612-2.py
+index 34a224933f..0475064b9f 100644
+--- a/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/walrepl/demo0612-2.py
++++ b/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/walrepl/demo0612-2.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ """
+ Copyright (c) 2004-Present Pivotal Software, Inc.
+diff --git a/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/walrepl/demo0612.py b/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/walrepl/demo0612.py
+index 01b01011dc..8b72127188 100644
+--- a/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/walrepl/demo0612.py
++++ b/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/walrepl/demo0612.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ """
+ Copyright (c) 2004-Present Pivotal Software, Inc.
+diff --git a/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/walrepl/demo0822.py b/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/walrepl/demo0822.py
+index 473d6c9599..a2503152a1 100755
+--- a/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/walrepl/demo0822.py
++++ b/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/walrepl/demo0822.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ """
+ Copyright (c) 2004-Present Pivotal Software, Inc.
+diff --git a/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/walrepl/regress/test_basic.py b/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/walrepl/regress/test_basic.py
+index da2fba68c7..26378f9a00 100644
+--- a/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/walrepl/regress/test_basic.py
++++ b/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/walrepl/regress/test_basic.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ """
+ Copyright (c) 2004-Present Pivotal Software, Inc.
+diff --git a/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/walrepl/smart_shutdown/test_basic.py b/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/walrepl/smart_shutdown/test_basic.py
+index 50b61ee519..a9e0c03084 100644
+--- a/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/walrepl/smart_shutdown/test_basic.py
++++ b/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/walrepl/smart_shutdown/test_basic.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ """
+ Copyright (c) 2004-Present Pivotal Software, Inc.
+diff --git a/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/walrepl/syncrep/test_basic.py b/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/walrepl/syncrep/test_basic.py
+index f7254891c7..baa8e8e889 100644
+--- a/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/walrepl/syncrep/test_basic.py
++++ b/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/walrepl/syncrep/test_basic.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ """
+ Copyright (c) 2004-Present Pivotal Software, Inc.
+diff --git a/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/walrepl/walsender/test_negative.py b/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/walrepl/walsender/test_negative.py
+index be999da16b..ab7298097a 100644
+--- a/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/walrepl/walsender/test_negative.py
++++ b/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/walrepl/walsender/test_negative.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ """
+ Copyright (c) 2004-Present Pivotal Software, Inc.
+diff --git a/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/walrepl/xact/test_basic.py b/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/walrepl/xact/test_basic.py
+index 85b3b4d02e..468e401041 100644
+--- a/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/walrepl/xact/test_basic.py
++++ b/src/test/tinc/tincrepo/mpp/gpdb/tests/storage/walrepl/xact/test_basic.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ """
+ Copyright (c) 2004-Present Pivotal Software, Inc.
+diff --git a/src/test/tinc/tincrepo/mpp/gpdb/tests/utilities/gpinitstandby/test_initstandby.py b/src/test/tinc/tincrepo/mpp/gpdb/tests/utilities/gpinitstandby/test_initstandby.py
+index b747ba112f..2099968da9 100644
+--- a/src/test/tinc/tincrepo/mpp/gpdb/tests/utilities/gpinitstandby/test_initstandby.py
++++ b/src/test/tinc/tincrepo/mpp/gpdb/tests/utilities/gpinitstandby/test_initstandby.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ """
+ Copyright (c) 2004-Present Pivotal Software, Inc.
+diff --git a/src/test/tinc/tincrepo/mpp/lib/FileUtil.py b/src/test/tinc/tincrepo/mpp/lib/FileUtil.py
+index 14caba6528..e0328b7884 100644
+--- a/src/test/tinc/tincrepo/mpp/lib/FileUtil.py
++++ b/src/test/tinc/tincrepo/mpp/lib/FileUtil.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # Line too long - pylint: disable=C0301
+ # Invalid name  - pylint: disable=C0103
+ 
+diff --git a/src/test/tinc/tincrepo/mpp/lib/Globals.py b/src/test/tinc/tincrepo/mpp/lib/Globals.py
+index d95fbb620a..a88a4080d6 100644
+--- a/src/test/tinc/tincrepo/mpp/lib/Globals.py
++++ b/src/test/tinc/tincrepo/mpp/lib/Globals.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ """
+ Copyright (c) 2004-Present Pivotal Software, Inc.
+ 
+diff --git a/src/test/tinc/tincrepo/mpp/lib/String.py b/src/test/tinc/tincrepo/mpp/lib/String.py
+index 34f375f7c3..3311a92f12 100644
+--- a/src/test/tinc/tincrepo/mpp/lib/String.py
++++ b/src/test/tinc/tincrepo/mpp/lib/String.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # Line too long - pylint: disable=C0301
+ # Invalid name  - pylint: disable=C0103
+ 
+diff --git a/src/test/tinc/tincrepo/mpp/lib/config.py b/src/test/tinc/tincrepo/mpp/lib/config.py
+index 0b58f7e624..e430d54dce 100644
+--- a/src/test/tinc/tincrepo/mpp/lib/config.py
++++ b/src/test/tinc/tincrepo/mpp/lib/config.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ """
+ Copyright (c) 2004-Present Pivotal Software, Inc.
+ 
+diff --git a/src/test/tinc/tincrepo/mpp/lib/generalUtil.py b/src/test/tinc/tincrepo/mpp/lib/generalUtil.py
+index 03f32aeb3a..93079724a7 100644
+--- a/src/test/tinc/tincrepo/mpp/lib/generalUtil.py
++++ b/src/test/tinc/tincrepo/mpp/lib/generalUtil.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # Line too long - pylint: disable=C0301
+ # Invalid name  - pylint: disable=C0103
+ 
+diff --git a/src/test/tinc/tincrepo/mpp/lib/gpConfig.py b/src/test/tinc/tincrepo/mpp/lib/gpConfig.py
+index dc860417d9..70915f3a1e 100644
+--- a/src/test/tinc/tincrepo/mpp/lib/gpConfig.py
++++ b/src/test/tinc/tincrepo/mpp/lib/gpConfig.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # Line too long - pylint: disable=C0301
+ # Invalid name  - pylint: disable=C0103
+ 
+diff --git a/src/test/tinc/tincrepo/mpp/lib/gpSystem.py b/src/test/tinc/tincrepo/mpp/lib/gpSystem.py
+index 7d10c18c82..2b5ea8316c 100644
+--- a/src/test/tinc/tincrepo/mpp/lib/gpSystem.py
++++ b/src/test/tinc/tincrepo/mpp/lib/gpSystem.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # Line too long - pylint: disable=C0301
+ # Invalid name  - pylint: disable=C0103
+ 
+diff --git a/src/test/tinc/tincrepo/mpp/lib/gpUserRole.py b/src/test/tinc/tincrepo/mpp/lib/gpUserRole.py
+index b089adb676..e1b4287407 100644
+--- a/src/test/tinc/tincrepo/mpp/lib/gpUserRole.py
++++ b/src/test/tinc/tincrepo/mpp/lib/gpUserRole.py
+@@ -1,4 +1,4 @@
+-#!/usrbin/env python
++#!/usrbin/env python2
+ # Line too long - pylint: disable=C0301
+ # Invalid name  - pylint: disable=C0103
+ 
+diff --git a/src/test/tinc/tincrepo/mpp/lib/gp_procedural_languages.py b/src/test/tinc/tincrepo/mpp/lib/gp_procedural_languages.py
+index f18c44daf8..1cbde8092f 100644
+--- a/src/test/tinc/tincrepo/mpp/lib/gp_procedural_languages.py
++++ b/src/test/tinc/tincrepo/mpp/lib/gp_procedural_languages.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ """
+ Copyright (c) 2004-Present Pivotal Software, Inc.
+diff --git a/src/test/tinc/tincrepo/mpp/lib/gpdbSegmentConfig.py b/src/test/tinc/tincrepo/mpp/lib/gpdbSegmentConfig.py
+index 0edbcf145b..baee42a25c 100644
+--- a/src/test/tinc/tincrepo/mpp/lib/gpdbSegmentConfig.py
++++ b/src/test/tinc/tincrepo/mpp/lib/gpdbSegmentConfig.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # Line too long - pylint: disable=C0301
+ # Invalid name  - pylint: disable=C0103
+ 
+diff --git a/src/test/tinc/tincrepo/mpp/lib/gpdbSystem.py b/src/test/tinc/tincrepo/mpp/lib/gpdbSystem.py
+index 8ab022ebca..66575d8e71 100644
+--- a/src/test/tinc/tincrepo/mpp/lib/gpdbSystem.py
++++ b/src/test/tinc/tincrepo/mpp/lib/gpdbSystem.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # Line too long - pylint: disable=C0301
+ # Invalid name  - pylint: disable=C0103
+ 
+diff --git a/src/test/tinc/tincrepo/mpp/lib/gpfilespace.py b/src/test/tinc/tincrepo/mpp/lib/gpfilespace.py
+index f1abff5ccf..fdb45ffb1d 100644
+--- a/src/test/tinc/tincrepo/mpp/lib/gpfilespace.py
++++ b/src/test/tinc/tincrepo/mpp/lib/gpfilespace.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ """
+ Copyright (c) 2004-Present Pivotal Software, Inc.
+ 
+diff --git a/src/test/tinc/tincrepo/mpp/lib/network.py b/src/test/tinc/tincrepo/mpp/lib/network.py
+index 191131a588..31be8b1383 100644
+--- a/src/test/tinc/tincrepo/mpp/lib/network.py
++++ b/src/test/tinc/tincrepo/mpp/lib/network.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ """
+ Copyright (c) 2004-Present Pivotal Software, Inc.
+ 
+diff --git a/src/test/tinc/tincrepo/mpp/lib/test/test_cluster_control.py b/src/test/tinc/tincrepo/mpp/lib/test/test_cluster_control.py
+index 1074fedd72..d17719effb 100644
+--- a/src/test/tinc/tincrepo/mpp/lib/test/test_cluster_control.py
++++ b/src/test/tinc/tincrepo/mpp/lib/test/test_cluster_control.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#!/usr/bin/env python2
+ 
+ """
+ Copyright (c) 2004-Present Pivotal Software, Inc.
+diff --git a/src/test/tinc/tincrepo/mpp/lib/test/test_gpconfig.py b/src/test/tinc/tincrepo/mpp/lib/test/test_gpconfig.py
+index 66367f70dc..2367c7e671 100644
+--- a/src/test/tinc/tincrepo/mpp/lib/test/test_gpconfig.py
++++ b/src/test/tinc/tincrepo/mpp/lib/test/test_gpconfig.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#!/usr/bin/env python2
+ 
+ """
+ Copyright (c) 2004-Present Pivotal Software, Inc.
+diff --git a/src/test/tinc/tincrepo/mpp/lib/test/test_gpdbSegmentConfig.py b/src/test/tinc/tincrepo/mpp/lib/test/test_gpdbSegmentConfig.py
+index d2497ea78a..93259b50ec 100644
+--- a/src/test/tinc/tincrepo/mpp/lib/test/test_gpdbSegmentConfig.py
++++ b/src/test/tinc/tincrepo/mpp/lib/test/test_gpdbSegmentConfig.py
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#!/usr/bin/env python2
+ 
+ """
+ Copyright (c) 2004-Present Pivotal Software, Inc.
+diff --git a/src/test/unit/mock/mocker.py b/src/test/unit/mock/mocker.py
+index cf3c2c3de2..a0f145dffd 100755
+--- a/src/test/unit/mock/mocker.py
++++ b/src/test/unit/mock/mocker.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import logging
+ import optparse
+diff --git a/src/tools/pginclude/pgcheckdefines b/src/tools/pginclude/pgcheckdefines
+index 2936caf2e0..102398fbae 100755
+--- a/src/tools/pginclude/pgcheckdefines
++++ b/src/tools/pginclude/pgcheckdefines
+@@ -1,4 +1,4 @@
+-#! /usr/bin/perl -w
++#!/usr/bin/perl -w
+ 
+ #
+ # This script looks for symbols that are referenced in #ifdef or defined()
+diff --git a/src/tools/version_stamp.pl b/src/tools/version_stamp.pl
+index b9be30f63b..8106cfd4ba 100644
+--- a/src/tools/version_stamp.pl
++++ b/src/tools/version_stamp.pl
+@@ -1,4 +1,4 @@
+-#! /usr/bin/perl -w
++#!/usr/bin/perl -w
+ 
+ #################################################################
+ # version_stamp.pl -- update version stamps throughout the source tree
