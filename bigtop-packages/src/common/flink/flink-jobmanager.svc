@@ -16,12 +16,12 @@
 TYPE="jobmanager"
 DAEMON="flink-${TYPE}"
 DESC="Flink ${TYPE}"
-EXEC_PATH="/usr/lib/flink/bin/flink-daemon.sh"
+EXEC_PATH="/usr/lib/flink/bin/jobmanager.sh"
 WORKING_DIR="/var/lib/flink"
 DAEMON_FLAGS=jobmanager
 CONF_DIR="/etc/flink/conf"
 SVC_USER="flink"
-PIDFILE="/var/run/flink/flink-$SVC_USER-jobmanager.pid"
+PIDFILE="/var/run/flink/flink-$SVC_USER-standalonesession.pid"
 EXEC_MODE="cluster"
 
 generate_start() {
@@ -31,6 +31,7 @@ start() {
     [ -x $EXE_FILE ] || exit $ERROR_PROGRAM_NOT_INSTALLED
     log_success_msg "Starting $DESC (${DAEMON}): "
 
+    export FLINK_CONF_DIR="${CONF_DIR}"
     export FLINK_LOG_DIR="/var/log/flink"
     export FLINK_PID_DIR="/var/run/flink"
     mkdir -p $FLINK_PID_DIR
@@ -44,9 +45,7 @@ start() {
 
     LOG_FILE=/var/log/flink/${DAEMON}.out
     # Flink will set the pid file
-    runuser -s /bin/bash $SVC_USER -c "nohup nice -n 0 \
-    ${EXEC_PATH} start ${DAEMON_FLAGS} --configDir $CONF_DIR --executionMode cluster \
-    > $LOG_FILE 2>&1 & "
+    runuser -s /bin/bash $SVC_USER -c "nohup nice -n 0 ${EXEC_PATH} start > $LOG_FILE 2>&1 & "
 
     sleep 3
 

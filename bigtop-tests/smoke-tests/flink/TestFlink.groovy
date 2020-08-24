@@ -59,7 +59,7 @@ class TestFlink {
     // read JM address and port from conf
     execCommand("awk '{if(/jobmanager.rpc.address:/) print \$2}' < "+ config_file);
     final String jmHost = sh.out.join('\n');
-    execCommand("awk '{if(/jobmanager.web.port:/) print \$2}' < "+config_file);
+    execCommand("awk '{if(/rest.port:/) print \$2}' < "+config_file);
     final String webPort = sh.out.join('\n');
     // check web API
     execCommand("curl http://"+jmHost+":"+webPort+"/config");
