@@ -260,4 +260,12 @@ class bigtop_toolchain::packages {
   exec { "flake8 and whell Installation":
     command => "/usr/bin/pip3 freeze --all; /usr/bin/pip3 --version; /usr/bin/pip3 install -q flake8 wheel",
   }
+
+  if ($operatingsystem == 'Fedora' and versioncmp($operatingsystemmajrelease, '31') >= 0) or
+     ($osfamily == 'RedHat' and $operatingsystem != 'Fedora' and versioncmp($operatingsystemmajrelease, '8') >= 0) {
+    file { '/usr/bin/python':
+      ensure => 'link',
+      target => '/usr/bin/python2',
+    }
+  }
 }

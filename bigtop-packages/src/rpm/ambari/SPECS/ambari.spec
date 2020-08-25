@@ -71,7 +71,7 @@ AMBARI_VERSION=%{ambari_version} bash $RPM_SOURCE_DIR/install_ambari.sh \
 Summary: Ambari Server
 Group: Development/Libraries
 # BIGTOP-3139: install initscripts to workaround service command not available issue
-Requires: openssl, postgresql-server >= 8.1, python >= 2.6, curl, initscripts
+Requires: openssl, postgresql-server >= 8.1, python2 >= 2.6, curl, initscripts
 AutoProv: no
 AutoReqProv: no
 %description server
@@ -260,7 +260,7 @@ exit 0
 %package agent
 Summary: Ambari Agent
 Group: Development/Libraries
-Requires: openssl, zlib, python >= 2.6, rpm-python
+Requires: openssl, zlib, python2 >= 2.6
 AutoProv: no
 AutoReqProv: no
 %description agent

@@ -49,6 +49,6 @@ class bigtop_toolchain::renv {
   exec { 'install_r_packages':
     cwd     => "/usr/bin",
     command => "/usr/bin/R -e \"install.packages(c('devtools', 'evaluate', 'rmarkdown', 'knitr', 'roxygen2', 'testthat', 'e1071'), repos = 'http://cran.us.r-project.org')\"",
-    timeout => 1800
+    timeout => 6000
   }
 }
