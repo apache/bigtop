@@ -12,6 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+%define        alluxio_name alluxio
 
 Name:           alluxio
 Version:        %{alluxio_version}
@@ -29,7 +30,6 @@ Source3:       init.d.tmpl
 Source4:       alluxio-master.svc
 Source5:       alluxio-worker.svc
 #BIGTOP_PATCH_FILES
-%define        alluxio_name alluxio
 %define        alluxio_home /usr/lib/%{alluxio_name}
 %define        alluxio_services master worker
 %define        var_lib /var/lib/%{alluxio_name}
