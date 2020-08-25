@@ -62,6 +62,8 @@ class bigtop_toolchain::packages {
         "apr-devel",
         "bison",
         "libffi-devel",
+        "krb5-devel",
+        "net-tools",
         "perl-Digest-SHA"
       ]
       if ($operatingsystem == 'Fedora' or $operatingsystemmajrelease !~ /^[0-7]$/) {

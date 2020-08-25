@@ -37,7 +37,6 @@ License: ASL 2.0
 Source0: kibana-%{kibana_base_version}.tar.gz
 Source1: do-component-build
 Source2: install_%{name}.sh
-Source3: kibana.default
 #BIGTOP_PATCH_FILES
 Requires: bigtop-utils >= 0.7
 AutoProv: no
