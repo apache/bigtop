@@ -445,5 +445,14 @@ bigtop {
       url     { site = "https://github.com/elastic/logstash/archive"
                 archive = site }
     }
+    'kibana' {
+      name    = 'kibana'
+      relNotes = 'A browser-based analytics and search dashboard'
+      version { base = '5.4.1'; pkg = base; release = 1 }
+      tarball { destination = "$name-${version.base}.tar.gz"
+                source      = "v${version.base}.zip" }
+      url     { site = "https://github.com/elastic/kibana/archive"
+                archive = site }
+    }
   }
 }
