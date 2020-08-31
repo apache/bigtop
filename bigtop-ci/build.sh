@@ -17,7 +17,7 @@
 BIGTOP_HOME=`cd $(dirname $0)/.. && pwd`
 
 usage() {
-    echo "usage build.sh --prefix trunk|1.3.0|1.2.1|... --os debian-8|centos-7|... --target hadoop|tez|... [--nexus]"
+    echo "usage build.sh --prefix trunk|1.4.0|1.3.0|... --os debian-9|centos-7|... --target hadoop|tez|... [--nexus] [--docker-run-option ...]"
     exit 1 # unknown option
 }
 
@@ -46,6 +46,10 @@ case $key in
     CONFIGURE_NEXUS="configure-nexus"
     shift
     ;;
+    --docker-run-option)
+    DOCKER_RUN_OPTION="$2"
+    shift
+    ;;
     *)
     usage
     ;;
@@ -72,7 +76,7 @@ if [ "x86_64" != $ARCH ]; then
 fi
 
 # Start up build container
-CONTAINER_ID=`docker run -d $NEXUS $IMAGE_NAME /sbin/init`
+CONTAINER_ID=`docker run -d $DOCKER_RUN_OPTION $NEXUS $IMAGE_NAME /sbin/init`
 trap "docker rm -f $CONTAINER_ID" EXIT
 
 # Copy bigtop repo into container
