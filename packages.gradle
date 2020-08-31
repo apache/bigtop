@@ -628,13 +628,14 @@ def genTasks = { target ->
   }
   task "$target-pkg-ind" (
           description: "Invoking a native binary packaging for $target in Docker. Usage: \$ ./gradlew " +
-                  "-POS=[centos-7|fedora-26|debian-9|ubuntu-16.04|opensuse-42.3] " +
-                  "-Pprefix=[trunk|1.2.1|1.2.0|1.1.0|...] $target-pkg-ind " +
+                  "-POS=[centos-7|fedora-31|debian-9|ubuntu-16.04] " +
+                  "-Pprefix=[trunk|1.4.0|1.3.0|1.2.1|...] $target-pkg-ind " +
                   "-Pnexus=[true|false]",
           group: PACKAGES_GROUP) doLast {
     def _prefix = project.hasProperty("prefix") ? prefix : "trunk"
     def _OS = project.hasProperty("OS") ? OS : "centos-7"
     def _target_pkg = "$target-pkg"
+    def _docker_run_option = project.hasProperty("docker-run-option") ? this.'docker-run-option' : ""
     def additionalConfigKeys = ['git_repo', 'git_ref', 'git_dir', 'git_commit_hash', 'base_version']
     additionalConfigKeys.each { key ->
       if (project.hasProperty(key)) {
@@ -647,6 +648,7 @@ def genTasks = { target ->
             '--prefix', _prefix,
             '--os', _OS,
             '--target', _target_pkg,
+            '--docker-run-option', _docker_run_option,
     ]
     if ( project.hasProperty("nexus") ) {
       command.add('--nexus')
@@ -845,17 +847,19 @@ if (nativePackaging) {
 
 task "repo-ind" (
     description: "Invoking a native repository in Docker. Usage: \$ ./gradlew " +
-            "-POS=[centos-7|fedora-26|debian-9|ubuntu-16.04|opensuse-42.3] " +
-            "-Pprefix=[trunk|1.2.1|1.2.0|1.1.0|...] repo-ind",
+            "-POS=[centos-7|fedora-31|debian-9|ubuntu-16.04] " +
+            "-Pprefix=[trunk|1.4.0|1.3.0|1.2.1|...] repo-ind",
     group: PACKAGES_GROUP) doLast {
   def _prefix = project.hasProperty("prefix") ? prefix : "trunk"
   def _OS = project.hasProperty("OS") ? OS : "centos-7"
+  def _docker_run_option = project.hasProperty("docker-run-option") ? this.'docker-run-option' : ""
   def command = [
       'bash', '-x',
       './bigtop-ci/build.sh',
       '--prefix', _prefix,
       '--os', _OS,
-      '--target', 'repo'
+      '--target', 'repo',
+      '--docker-run-option', _docker_run_option
   ]
   exec {
     workingDir BASE_DIR
