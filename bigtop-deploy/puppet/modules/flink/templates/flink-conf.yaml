@@ -23,6 +23,6 @@ jobmanager.rpc.port: <%= @jobmanager_port %>
 jobmanager.memory.process.size: <%= @jobmanager_memory %>
 taskmanager.memory.process.size: <%= @taskmanager_memory %>
 taskmanager.numberOfTaskSlots: <%= @taskmanager_number_of_taskslots %>
-parallelism.default: <%= @paralelism_default %>
+parallelism.default: <%= @parallelism_default %>
 jobmanager.execution.failover-strategy: <%= @jobmanager_failover_strategy %>
 rest.port: <%=@rest_port %>
