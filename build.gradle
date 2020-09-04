@@ -172,7 +172,7 @@ project(':itest-common') {
   description = """iTest: system and integration testing in the cloud"""
 
   dependencies {
-    compile group: 'org.codehaus.groovy', name: 'groovy-all', version:'2.4.10'
+    compile group: 'org.codehaus.groovy', name: 'groovy-all', version:'2.5.4'
     compile group: 'junit', name: 'junit', version:'4.11'
     compile group: 'commons-logging', name: 'commons-logging', version:'1.1'
     compile group: 'org.apache.ant', name: 'ant', version:'1.8.2'

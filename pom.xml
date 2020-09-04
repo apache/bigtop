@@ -53,7 +53,7 @@
 
     <itest-common.version>${project.version}</itest-common.version>
 
-    <groovy.version>2.4.10</groovy.version>
+    <groovy.version>2.5.4</groovy.version>
     <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
     <maven-failsafe-plugin.version>2.12</maven-failsafe-plugin.version>
     <groovy-eclipse-compiler.version>2.9.2-01</groovy-eclipse-compiler.version>
