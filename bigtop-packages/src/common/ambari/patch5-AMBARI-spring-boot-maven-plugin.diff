@@ -1,0 +1,14 @@
+diff --git a/ambari-shell/ambari-groovy-shell/pom.xml b/ambari-shell/ambari-groovy-shell/pom.xml
+index 34dfce1585..8d1e1a8530 100644
+--- a/ambari-shell/ambari-groovy-shell/pom.xml
++++ b/ambari-shell/ambari-groovy-shell/pom.xml
+@@ -114,7 +114,8 @@
+       <plugin>
+         <groupId>org.springframework.boot</groupId>
+         <artifactId>spring-boot-maven-plugin</artifactId>
+-        <version>1.0.2.RELEASE</version>
++        <!-- Upgrade to avoid build error on fedora-31-aarch64 -->
++        <version>2.3.0.RELEASE</version>
+         <executions>
+           <execution>
+             <goals>
