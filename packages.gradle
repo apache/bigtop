@@ -401,9 +401,12 @@ def genTasks = { target ->
       workingDir DEB_BLD_DIR
       commandLine "tar --strip-components 1 -xf $DEB_BLD_DIR/../${PKG_NAME}_${PKG_VERSION}.orig.tar.gz".split(' ')
     }
-    fileTree ("${BASE_DIR}/bigtop-packages/src/deb/$NAME") {
-      include '**/*'
-    }.copy { into "$DEB_BLD_DIR/debian" }
+    copy {
+      from fileTree("${BASE_DIR}/bigtop-packages/src/deb/$NAME") {
+        include '**/*'
+      }
+      into "$DEB_BLD_DIR/debian"
+    }
     copy {
       from "${BASE_DIR}/bigtop-packages/src/templates/init.d.tmpl"
       into "$DEB_BLD_DIR/debian"
@@ -416,9 +419,12 @@ def genTasks = { target ->
       from "${BASE_DIR}/bigtop-packages/src/extensions"
       into "$DEB_BLD_DIR/debian"
     }
-    fileTree ("$BASE_DIR/bigtop-packages/src/common/$NAME") {
-      include '**/*'
-    }.copy { into "$DEB_BLD_DIR/debian" }
+    copy {
+      from fileTree("$BASE_DIR/bigtop-packages/src/common/$NAME") {
+        include '**/*'
+      }
+      into "$DEB_BLD_DIR/debian"
+    }
     // Prepeare bom file with all the versions
     def bomWriter = new File("$DEB_BLD_DIR/debian/bigtop.bom").newWriter()
     bomVersions.each { bomWriter << "$it\n"}
@@ -442,14 +448,15 @@ def genTasks = { target ->
       seriesWriter.close()
     }
     // Deleting obsolete files
-    delete fileTree (dir: "$DEB_BLD_DIR/debian", includes: ['*.ex', '*.EX', '*.~'])
+    delete fileTree(dir: "$DEB_BLD_DIR/debian", includes: ['*.ex', '*.EX', '*.~'])
     // Creating source package
     exec {
       workingDir DEB_BLD_DIR
       commandLine "dpkg-buildpackage -uc -us -sa -S".split(' ')
     }
     mkdir(PKG_OUTPUT_DIR)
-    fileTree (dir: "$DEB_PKG_DIR/..", includes: ['*.dsc', '*.diff.gz', '*.debian.tar.gz', '*.debian.tar.xz', "*_source.changes", "*.orig.tar.gz" ]).copy {
+    copy {
+      from fileTree(dir: "$DEB_PKG_DIR/..", includes: ['*.dsc', '*.diff.gz', '*.debian.tar.gz', '*.debian.tar.xz', "*_source.changes", "*.orig.tar.gz" ])
       into PKG_OUTPUT_DIR
     }
     safeDelete(DEB_BLD_DIR)
@@ -502,9 +509,12 @@ def genTasks = { target ->
       executable 'rpmbuild'
       args command
     }
-    fileTree ("$PKG_BUILD_DIR/rpm/RPMS") {
-      include '**/*'
-    }.copy { into PKG_OUTPUT_DIR }
+    copy {
+      from fileTree("$PKG_BUILD_DIR/rpm/RPMS") {
+        include '**/*'
+      }
+      into PKG_OUTPUT_DIR
+    }
     touchTargetFile(config.bigtop.components[target].targetrpm)
   }
   // Guarantee that tasks are ran in the order set by BOM file dependencies section
@@ -537,9 +547,12 @@ def genTasks = { target ->
     ['INSTALL','SOURCES','BUILD','SRPMS','RPMS'].each { rpmdir ->
       mkdir("$PKG_BUILD_DIR/rpm/$rpmdir")
     }
-    fileTree ("${BASE_DIR}/bigtop-packages/src/rpm/$NAME") {
-      include '**/*'
-    }.copy { into "$PKG_BUILD_DIR/rpm" }
+    copy {
+      from fileTree("${BASE_DIR}/bigtop-packages/src/rpm/$NAME") {
+        include '**/*'
+      }
+      into "$PKG_BUILD_DIR/rpm"
+    }
     copy {
       from SEED_TAR
       into "$PKG_BUILD_DIR/rpm/SOURCES"
@@ -558,9 +571,12 @@ def genTasks = { target ->
       into "$PKG_BUILD_DIR/rpm/SOURCES"
       include "*"
     }
-    fileTree ("$BASE_DIR/bigtop-packages/src/common/$NAME") {
-      include '**/*'
-    }.copy { into "$PKG_BUILD_DIR/rpm/SOURCES" }
+    copy {
+      from fileTree("$BASE_DIR/bigtop-packages/src/common/$NAME") {
+        include '**/*'
+      }
+      into "$PKG_BUILD_DIR/rpm/SOURCES"
+    }
     // Writing bigtop.bom files with all the versions
     def bomWriter = new File("$PKG_BUILD_DIR/rpm/SOURCES/bigtop.bom").newWriter()
     bomVersions.each { bomWriter << "$it\n"}

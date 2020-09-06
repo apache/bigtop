@@ -15,7 +15,7 @@
 
 class bigtop_toolchain::groovy {
 
-  $groovy_version = '2.4.10'
+  $groovy_version = '2.5.4'
   $groovy = "apache-groovy-binary-${groovy_version}"
 
   exec {"/usr/bin/wget https://dl.bintray.com/groovy/maven/${groovy}.zip":
