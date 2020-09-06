@@ -21,7 +21,7 @@ class flink {
     }
   }
 
-  class common($jobmanager_host, $jobmanager_port, $jobmanager_memory, $taskmanager_memory, $taskmanager_number_of_taskslots, $parallelism_default, $jobmanager_failover_strategy, $rest_port) {
+  class common($jobmanager_host, $jobmanager_port, $ui_port, $storage_dirs) {
     # make sure flink is installed
     package { "flink":
       ensure => latest

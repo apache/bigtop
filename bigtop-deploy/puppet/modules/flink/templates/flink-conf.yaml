@@ -20,9 +20,20 @@
 # Configuration values managed by puppet:
 jobmanager.rpc.address: <%= @jobmanager_host %>
 jobmanager.rpc.port: <%= @jobmanager_port %>
-jobmanager.memory.process.size: <%= @jobmanager_memory %>
-taskmanager.memory.process.size: <%= @taskmanager_memory %>
-taskmanager.numberOfTaskSlots: <%= @taskmanager_number_of_taskslots %>
-parallelism.default: <%= @parallelism_default %>
-jobmanager.execution.failover-strategy: <%= @jobmanager_failover_strategy %>
-rest.port: <%=@rest_port %>
+jobmanager.web.port: <%= @ui_port %>
+
+<% if defined?(storage_dirs) %>
+taskmanager.tmp.dirs: <%= @storage_dirs.join(":") %>
+<% end %>
+
+# Starting from Flink v1.5, there is a rewrite of Flink’s deployment and process
+# model (internally known as FLIP-6). A new option 'mode' was introduced to
+# indicate which executions to use. However, the way Bigtop puppet deploys
+# 'flink-jobmanager' and 'flink-taskmanager', ie. calling 'flink-daemon.sh 
+# jobmanager' and 'flink-daemon.sh taskmanager', is legacy. Without setting
+# mode to 'legacy', flink's built-in exmaples fail with error
+# "JobSubmissionException: Failed to submit JobGraph"
+mode: legacy
+
+# For performance reasons its highly recommended to allocate as much memory to the
+# Flink TaskManager as possible by setting 'taskmanager.heap.mb'.

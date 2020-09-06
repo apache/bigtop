@@ -1,0 +1,12 @@
+diff --git a/flink-yarn/src/test/java/org/apache/flink/yarn/AbstractYarnClusterTest.java b/flink-yarn/src/test/java/org/apache/flink/yarn/AbstractYarnClusterTest.java
+index 8ee08db..fcd56d0 100644
+--- a/flink-yarn/src/test/java/org/apache/flink/yarn/AbstractYarnClusterTest.java
++++ b/flink-yarn/src/test/java/org/apache/flink/yarn/AbstractYarnClusterTest.java
+@@ -98,6 +98,7 @@ public class AbstractYarnClusterTest extends TestLogger {
+ 			yarnApplicationState,
+ 			null,
+ 			null,
++			0,
+ 			1L,
+ 			2L,
+ 			finalApplicationStatus,
