@@ -76,7 +76,7 @@ class gpdb {
       db_base_dir             => $gpdb::common::db_base_dir,
       master_db_port          => $gpdb::common::master_db_port,
       segment_db_port_prefix  => $gpdb::common::segment_db_port_prefix,
-      require                 => [ Server["stop_if_running"], Class['gpdb::common::stop_master_in_admin_mode'] ],
+      require                 => [ Gpdb::Server["stop_if_running"], Class['gpdb::common::stop_master_in_admin_mode'] ],
       start_or_stop           => running,
     }
 
@@ -102,22 +102,26 @@ class gpdb {
             enabled  => 1,
             gpgcheck => 0,
           }
+          if ($operatingsystem == 'Fedora' or $operatingsystemmajrelease !~ /^[0-7]$/) {
+            package { ["python2-devel"]:
+              ensure => latest,
+            }
+          } else {
+            package { ["python-devel"]:
+              ensure => latest,
+            }
+          }
           package { ["libffi-devel"]:
             ensure => latest,
           }
-          package { ["python-lockfile"]:
+          package { ["python2-lockfile"]:
             ensure => latest,
           }
           package { ["gcc"]:
             ensure => latest,
           }
-          package { ["python-devel"]:
-            ensure => latest,
-          }
-          package { ["psutil"]:
+          package { ["python2-psutil"]:
             ensure   => latest,
-            provider => pip,
-            require  => [ File["/usr/bin/pip-python"], Package["gcc"], Package["python-devel"] ],
           }
           package { ["paramiko"]:
             ensure   => latest,
@@ -129,7 +133,7 @@ class gpdb {
             require => [
               Yumrepo["epel"],
               Package["libffi-devel"],
-              Package["python-lockfile"],
+              Package["python2-lockfile"],
             ],
           }
 	  file { '/usr/bin/pip-python':
