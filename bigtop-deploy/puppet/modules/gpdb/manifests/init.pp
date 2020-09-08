@@ -95,21 +95,28 @@ class gpdb {
 
     class install_packages{
       case $operatingsystem{
-        /(?i:(centos|fedora))/: {
+        /(?i:(centos|fedora|redhat))/: {
+          if ($operatingsystem != 'Fedora') {
+            if (versioncmp($operatingsystemmajrelease, '8') < 0) {
+              $base_url = 'http://download.fedoraproject.org/pub/epel/$releasever/$basearch'
+              $python_devel = 'python-devel'
+            } else {
+              $base_url = 'http://download.fedoraproject.org/pub/epel/$releasever/Everything/$basearch'
+              $python_devel = 'python2-devel'
+            }
+          } else {
+            # Looks like it works, at least with Fedora 31
+            $base_url = 'http://download.fedoraproject.org/pub/epel/7/$basearch'
+            $python_devel = 'python2-devel'
+          }
           yumrepo { "epel":
-            baseurl  => "http://download.fedoraproject.org/pub/epel/7/\$basearch",
+            baseurl  => $base_url,
             descr    => "epel packages",
             enabled  => 1,
             gpgcheck => 0,
           }
-          if ($operatingsystem == 'Fedora' or $operatingsystemmajrelease !~ /^[0-7]$/) {
-            package { ["python2-devel"]:
-              ensure => latest,
-            }
-          } else {
-            package { ["python-devel"]:
-              ensure => latest,
-            }
+          package { [$python_devel]:
+            ensure => latest,
           }
           package { ["libffi-devel"]:
             ensure => latest,
