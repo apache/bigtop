@@ -99,9 +99,7 @@ chmod 755 ${PREFIX}/${BIN_DIR}/*
 # lib
 install -d -m 0755 ${PREFIX}/${LIB_DIR}
 cp ${BUILD_DIR}/lib/groovy-${BIGTOP_GROOVY_VERSION}.jar ${PREFIX}/${LIB_DIR}
-cp ${BUILD_DIR}/embeddable/groovy-all-${BIGTOP_GROOVY_VERSION}.jar ${PREFIX}/${LIB_DIR}
-cp ${BUILD_DIR}/lib/commons-cli-1.2.jar ${PREFIX}/${LIB_DIR}
-cp ${BUILD_DIR}/lib/*antlr*.jar ${PREFIX}/${LIB_DIR}
+cp ${BUILD_DIR}/lib/groovy-json-${BIGTOP_GROOVY_VERSION}.jar ${PREFIX}/${LIB_DIR}
 
 #conf
 install -d -m 0755 ${PREFIX}/${CONF_DIR}
