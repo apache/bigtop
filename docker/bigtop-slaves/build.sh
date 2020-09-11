@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -13,7 +15,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#!/bin/sh
 set -ex
 
 if [ $# != 1 ]; then
@@ -30,18 +31,20 @@ PREFIX=$(echo "$1" | cut -d '-' -f 1)
 OS=$(echo "$1" | cut -d '-' -f 2)
 VERSION=$(echo "$1" | cut -d '-' -f 3)
 ARCH=$(uname -m)
-if [ "${ARCH}" != "x86_64" ];then
-  VERSION="${VERSION}-${ARCH}"
-fi
+
 ## Workaround for docker defect on linaros cloud
 if [ "${ARCH}" = "aarch64" ];then
   NETWORK="--network=host"
 fi
 
+# Decimals are not supported. Either use integers only
+# e.g. 16.04 -> 16
+VERSION_INT=$(echo "$VERSION" | cut -d '.' -f 1)
+
 # setup puppet/modules path and update cmds
 case ${OS} in
     ubuntu)
-        if [ "${VERSION}" > "16.04" ]; then
+        if [ "${VERSION_INT}" -gt "16" ]; then
             PUPPET_MODULES="/usr/share/puppet/modules/bigtop_toolchain"
         else
             PUPPET_MODULES="/etc/puppet/modules/bigtop_toolchain"
@@ -57,7 +60,7 @@ case ${OS} in
         UPDATE_SOURCE="dnf clean all \&\& dnf updateinfo"
         ;;
     centos)
-        if [ "${VERSION}" -gt "7" ]; then
+        if [ "${VERSION_INT}" -gt "7" ]; then
             PUPPET_MODULES="/etc/puppetlabs/code/environments/production/modules/bigtop_toolchain"
             UPDATE_SOURCE="dnf clean all \&\& dnf updateinfo"
         else
@@ -73,6 +76,10 @@ case ${OS} in
         echo "[ERROR] Specified distro [${OS}] is not supported!"
         exit 1
 esac
+
+if [ "${ARCH}" != "x86_64" ];then
+  VERSION="${VERSION}-${ARCH}"
+fi
 
 # generate Dockerfile for build
 sed -e "s|PREFIX|${PREFIX}|;s|OS|${OS}|;s|VERSION|${VERSION}|" Dockerfile.template | \
