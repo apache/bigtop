@@ -25,6 +25,7 @@ usage() {
     echo "                                                   For example: $PROG --exec 1 bash"
     echo "                                                                $PROG --exec docker_bigtop_1 bash"
     echo "       -E, --env-check                           - Check whether required tools has been installed"
+    echo "       -G, --disable-gpg-check                   - Disable gpg check for the Bigtop repository"
     echo "       -k, --stack COMPONENTS                    - Overwrite the components to deploy defined in config file"
     echo "                                                   COMPONENTS is a comma separated string"
     echo "                                                   For example: $PROG -c 3 --stack hdfs"
@@ -97,8 +98,17 @@ create() {
     fi
     if [ -z ${enable_local_repo+x} ]; then
         enable_local_repo=$(get-yaml-config enable_local_repo)
-        if [ $enable_local_repo == true ]; then
-            # When enabling local repo, set gpg check to false
+    fi
+    if [ -z ${gpg_check+x} ]; then
+        disable_gpg_check=$(get-yaml-config disable_gpg_check)
+        if [ -z "${disable_gpg_check}" ]; then
+            if [ "${enable_local_repo}" = true ]; then
+                # When enabling local repo, set gpg check to false
+                gpg_check=false
+            else
+                gpg_check=true
+            fi
+        elif [ "${disable_gpg_check}" = true ]; then
             gpg_check=false
         else
             gpg_check=true
@@ -308,6 +318,9 @@ while [ $# -gt 0 ]; do
         shift $#;;
     -E|--env-check)
         env-check
+        shift;;
+    -G|--disable-gpg-check)
+        gpg_check=false
         shift;;
     -k|--stack)
         if [ $# -lt 2 ]; then
