@@ -83,7 +83,9 @@ create() {
     fi
 
     # Get the headnode FQDN
+    # shellcheck disable=SC2207
     NODES=(`docker-compose -p $PROVISION_ID ps -q`)
+    # shellcheck disable=SC1083
     hadoop_head_node=`docker inspect --format {{.Config.Hostname}}.{{.Config.Domainname}} ${NODES[0]}`
 
     # Fetch configurations form specificed yaml config file
@@ -91,7 +93,7 @@ create() {
         repo=$(get-yaml-config repo)
     fi
     if [ -z ${components+x} ]; then
-        components="[`echo $(get-yaml-config components) | sed 's/ /, /g'`]"
+        components="[`echo "$(get-yaml-config components)" | sed 's/ /, /g'`]"
     fi
     if [ -z ${distro+x} ]; then
         distro=$(get-yaml-config distro)
@@ -189,7 +191,7 @@ provision() {
 smoke-tests() {
     hadoop_head_node=${NODES:0:12}
     if [ -z ${smoke_test_components+x} ]; then
-        smoke_test_components="`echo $(get-yaml-config smoke_test_components) | sed 's/ /,/g'`"
+        smoke_test_components="`echo "$(get-yaml-config smoke_test_components)" | sed 's/ /,/g'`"
     fi
     docker exec $hadoop_head_node bash -c "bash -x /bigtop-home/provisioner/utils/smoke-tests.sh $smoke_test_components"
 }
@@ -211,7 +213,8 @@ bigtop-puppet() {
     if docker exec $1 bash -c "puppet --version" | grep ^3 >/dev/null ; then
       future="--parser future"
     fi
-    docker exec $1 bash -c "puppet apply --detailed-exitcodes $future --hiera_config=/etc/puppet/hiera.yaml --modulepath=/bigtop-home/bigtop-deploy/puppet/modules:/etc/puppet/modules:/usr/share/puppet/modules:/etc/puppetlabs/code/environments/production/modules /bigtop-home/bigtop-deploy/puppet/manifests"
+    # BIGTOP-3401 Modify Puppet modulepath for puppetlabs-4.12
+    docker exec $1 bash -c "puppet apply --detailed-exitcodes $future --hiera_config=/etc/puppet/hiera.yaml --modulepath=/bigtop-home/bigtop-deploy/puppet/modules:/etc/puppet/modules:/usr/share/puppet/modules:/etc/puppetlabs/code/modules /bigtop-home/bigtop-deploy/puppet/manifests"
 }
 
 get-yaml-config() {
@@ -232,11 +235,11 @@ execute() {
     if [[ $1 =~ $re ]] ; then
         no=$1
         shift
-        docker exec -ti ${NODES[$((no-1))]} $@
+        docker exec -ti ${NODES[$((no-1))]} "$@"
     else
         name=$1
         shift
-        docker exec -ti $name $@
+        docker exec -ti $name "$@"
     fi
 }
 
@@ -284,6 +287,7 @@ if [ -e .provision_id ]; then
     PROVISION_ID=`cat .provision_id`
 fi
 if [ -n "$PROVISION_ID" ]; then
+    # shellcheck disable=SC2207
     NODES=(`docker-compose -p $PROVISION_ID ps -q`)
 fi
 
@@ -314,7 +318,7 @@ while [ $# -gt 0 ]; do
           usage
         fi
         shift
-        execute $@
+        execute "$@"
         shift $#;;
     -E|--env-check)
         env-check

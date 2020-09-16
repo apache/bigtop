@@ -233,7 +233,7 @@ task toolchain(type:Exec,
   if ('3.7' <= version && version < '4') {
     command.addAll(['--parser', 'future'])
   }
-  command.addAll(["--modulepath=${projectDir.absolutePath}:/etc/puppet/modules:/usr/share/puppet/modules:/etc/puppetlabs/code/environments/production/modules",
+  command.addAll(["--modulepath=${projectDir.absolutePath}:/etc/puppet/modules:/usr/share/puppet/modules:/etc/puppetlabs/code/modules",
     '-e', 'include bigtop_toolchain::installer'])
   workingDir '.'
   commandLine command
