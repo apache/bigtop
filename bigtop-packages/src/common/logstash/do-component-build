@@ -43,6 +43,12 @@ then
 else
   [ -s $HOME/.rvm/scripts/rvm ] && source $HOME/.rvm/scripts/rvm
 fi
+
+# BIGTOP-3394
+# Disable unnecessary autolibs installation
+# for rvm fail to "try_sudo" to install autolibs
+# dependencies under user:'jenkins'
+rvm autolibs disable
 rvm install ruby-2.4.0 && rvm use 2.4.0
 
 # Specify childprocess to 3.0.0. The latest release 4.0.0 is not compatible with 5.4.1.
