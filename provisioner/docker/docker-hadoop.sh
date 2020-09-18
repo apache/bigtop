@@ -93,7 +93,7 @@ create() {
         repo=$(get-yaml-config repo)
     fi
     if [ -z ${components+x} ]; then
-        components="[`echo "$(get-yaml-config components)" | sed 's/ /, /g'`]"
+        components="[`echo $(get-yaml-config components) | sed 's/ /, /g'`]"
     fi
     if [ -z ${distro+x} ]; then
         distro=$(get-yaml-config distro)
