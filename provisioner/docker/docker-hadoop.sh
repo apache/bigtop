@@ -191,7 +191,7 @@ provision() {
 smoke-tests() {
     hadoop_head_node=${NODES:0:12}
     if [ -z ${smoke_test_components+x} ]; then
-        smoke_test_components="`echo "$(get-yaml-config smoke_test_components)" | sed 's/ /,/g'`"
+        smoke_test_components="`echo $(get-yaml-config smoke_test_components) | sed 's/ /,/g'`"
     fi
     docker exec $hadoop_head_node bash -c "bash -x /bigtop-home/provisioner/utils/smoke-tests.sh $smoke_test_components"
 }
