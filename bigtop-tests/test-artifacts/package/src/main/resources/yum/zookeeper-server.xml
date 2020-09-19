@@ -1,5 +1,0 @@
-<zookeeper-server>
-  <content>
-    <file name='/etc/rc.d/init.d/zookeeper-server' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
-  </content>
-</zookeeper-server>

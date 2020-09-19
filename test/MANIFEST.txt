@@ -1,8 +1,0 @@
-ASF License 2.0
-    org.codehaus.groovy.maven.runtime:gmaven-runtime-1.6:jar:1.0	GMaven
-    commons-logging:commons-logging:jar:1.1				ASF
-    org.apache.ant:ant-junit:jar:1.8.2					ASF
-    org.apache.pig:pigsmoke:jar:0.8.0-SNAPSHOT				ASF
-
-Public Code License 1.0
-    junit:junit:jar:4.8.1						JUnit

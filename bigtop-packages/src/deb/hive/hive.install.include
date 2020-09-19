@@ -1,9 +1,0 @@
-etc/hive
-usr/bin/hive
-usr/bin/beeline
-usr/bin/hiveserver2
-usr/lib/hive/bin
-usr/lib/hive/conf
-usr/lib/hive/scripts
-usr/share/man/man1/hive.1.gz
-usr/share/doc/hive

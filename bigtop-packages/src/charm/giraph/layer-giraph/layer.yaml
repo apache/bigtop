@@ -1,7 +1,0 @@
-repo: https://github.com/panagiotisl/bigtop/tree/master/bigtop-packages/src/charm/giraph/layer-giraph
-includes:
-  - 'interface:giraph'
-  - 'layer:apache-bigtop-base'
-options:
-  basic:
-    use_venv: true

@@ -1,3 +1,0 @@
-smoke-test:
-    description: |
-      Run an Apache Bigtop smoke test. Requires 3 slave units.

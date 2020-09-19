@@ -1,3 +1,0 @@
-hadoop-doc: embedded-javascript-library usr/share/doc/hadoop-doc/cn/skin/prototype.js.gz
-hadoop-doc: embedded-javascript-library usr/share/doc/hadoop-doc/skin/prototype.js.gz
-hadoop-doc: new-package-should-close-itp-bug

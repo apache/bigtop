@@ -1,4 +1,0 @@
-restart:
-    description: Retart Hive Metastore and HiveServer2.
-smoke-test:
-  description: Verify that Hive is working.

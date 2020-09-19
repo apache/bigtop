@@ -1,5 +1,0 @@
-<hbase-regionserver>
-  <content>
-    <file name='/etc/rc.d/init.d/hbase-regionserver' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
-  </content>
-</hbase-regionserver>

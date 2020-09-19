@@ -1,8 +1,0 @@
-<hadoop-libhdfs>
-  <content>
-    <file name='/usr/include/hdfs.h' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
-    <file name='/usr/lib64/libhdfs.so' owners='1' perm='lrwxrwxrwx' user='root' group='root' target='libhdfs.so.0.0.0' />
-    <file name='/usr/lib64/libhdfs.so.0' owners='1' perm='lrwxrwxrwx' user='root' group='root' target='libhdfs.so.0.0.0' />
-    <file name='/usr/lib64/libhdfs.so.0.0.0' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
-  </content>
-</hadoop-libhdfs>

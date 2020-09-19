@@ -1,5 +1,0 @@
-<flume-agent>
-  <content>
-    <file name='/etc/rc.d/flume-agent' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
-  </content>
-</flume-agent>

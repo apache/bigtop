@@ -1,8 +1,0 @@
-<bigtop-utils>
-  <content>
-    <config name='/etc/default/bigtop-utils' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/lib/bigtop-utils/bigtop-detect-javahome' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
-    <file name='/usr/share/doc/packages/bigtop-utils' owners='1' perm='drwxr-xr-x' user='root' group='root' />
-    <doc  name='/usr/share/doc/packages/bigtop-utils/LICENSE' owners='1' perm='-rw-r--r--' user='root' group='root' />
-  </content>
-</bigtop-utils>

@@ -1,4 +1,0 @@
-/usr/bin/metaserver
-/usr/bin/filelister
-/usr/bin/logcompactor
-/etc/qfs/logrotate.d/qfs-metaserver

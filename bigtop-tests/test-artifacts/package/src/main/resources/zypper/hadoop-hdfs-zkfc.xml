@@ -1,6 +1,0 @@
-<hadoop-hdfs-zkfc>
-  <content>
-    <config name='/etc/default/hadoop-hdfs-zkfc' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/etc/rc.d/hadoop-hdfs-zkfc' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
-  </content>
-</hadoop-hdfs-zkfc>

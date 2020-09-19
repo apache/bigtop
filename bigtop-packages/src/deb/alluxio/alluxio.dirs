@@ -1,5 +1,0 @@
-/etc/alluxio/conf.dist
-/usr/lib/alluxio
-/usr/bin
-/var/run/alluxio
-/var/log/alluxio

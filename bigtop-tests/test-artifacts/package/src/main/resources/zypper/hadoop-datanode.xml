@@ -1,5 +1,0 @@
-<hadoop-datanode>
-  <content>
-    <file name='/etc/rc.d/hadoop-datanode' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
-  </content>
-</hadoop-datanode>

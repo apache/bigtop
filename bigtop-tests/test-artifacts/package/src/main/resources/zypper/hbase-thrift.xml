@@ -1,5 +1,0 @@
-<hbase-thrift>
-  <content>
-    <file name='/etc/rc.d/hbase-thrift' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
-  </content>
-</hbase-thrift>

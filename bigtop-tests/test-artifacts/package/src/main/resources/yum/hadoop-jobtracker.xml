@@ -1,5 +1,0 @@
-<hadoop-jobtracker>
-  <content>
-    <file name='/etc/rc.d/init.d/hadoop-jobtracker' owners=1 perm='-rwxr-xr-x' user='root' group='root' />
-  </content>
-</hadoop-jobtracker>

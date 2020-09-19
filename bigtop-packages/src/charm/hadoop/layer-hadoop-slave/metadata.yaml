@@ -1,9 +1,0 @@
-name: hadoop-slave
-summary: Combined slave node (DataNode + NodeManager) from Apache Bigtop.
-maintainer: Juju Big Data <bigdata@lists.ubuntu.com>
-description: >
-  Hadoop is a software platform that lets one easily write and
-  run applications that process vast amounts of data.
-
-  This charm provides version 2.7.3 of both the HDFS DataNode and the
-  YARN NodeManager from Apache Bigtop.

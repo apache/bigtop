@@ -1,5 +1,0 @@
-bigtop::bigtop_repo_gpg_check: true
-bigtop::bigtop_repo_apt_key: "BB95B97B18226C73CB2838D1DBBF9D42B7B4BD70"
-bigtop::bigtop_repo_yum_key_url: "https://downloads.apache.org/bigtop/KEYS"
-bigtop::bigtop_repo_default_version: "1.4.0"
-

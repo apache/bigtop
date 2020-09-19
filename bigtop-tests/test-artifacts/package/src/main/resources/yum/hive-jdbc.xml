@@ -1,7 +1,0 @@
-<hive-jdbc>
-  <content>
-    <file name='/usr/lib/hive' owners='1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/lib/hive/lib' owners='1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/lib/hive/lib/ant-contrib-1.0b3.jar' owners='1' perm='-rw-r--r--' user='root' group='root' />
-  </content>
-</hive-jdbc>

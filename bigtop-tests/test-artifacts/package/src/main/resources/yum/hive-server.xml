@@ -1,6 +1,0 @@
-<hive-server>
-  <content>
-    <config name='/etc/default/hive-server' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/etc/rc.d/init.d/hive-server' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
-  </content>
-</hive-server>

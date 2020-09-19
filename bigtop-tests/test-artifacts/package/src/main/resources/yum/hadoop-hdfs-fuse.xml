@@ -1,7 +1,0 @@
-<hadoop-hdfs-fuse>
-  <content>
-    <config name='/etc/default/hadoop-fuse' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/bin/hadoop-fuse-dfs' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
-    <file name='/usr/lib/hadoop/bin/fuse_dfs' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
-  </content>
-</hadoop-hdfs-fuse>

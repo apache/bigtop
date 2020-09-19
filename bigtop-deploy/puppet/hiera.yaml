@@ -1,8 +1,0 @@
----
-:yaml:
-  :datadir: /etc/puppet/hieradata
-:hierarchy:
-  - site
-  - "bigtop/%{hadoop_hiera_ha_path}"
-  - bigtop/cluster
-  - bigtop/repo

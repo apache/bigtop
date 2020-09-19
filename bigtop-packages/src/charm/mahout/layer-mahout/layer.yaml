@@ -1,6 +1,0 @@
-repo: https://github.com/apache/bigtop/tree/master/bigtop-packages/src/charm/mahout/layer-mahout
-includes:
-  - 'layer:apache-bigtop-base'
-options:
-  basic:
-    use_venv: true

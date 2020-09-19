@@ -1,6 +1,0 @@
-<hadoop-yarn-nodemanager>
-  <content>
-    <config name='/etc/default/hadoop-yarn-nodemanager' owners='1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/etc/rc.d/hadoop-yarn-nodemanager' owners='1' perm='-rwxr-xr-x' user='root' group='root' />
-  </content>
-</hadoop-yarn-nodemanager>

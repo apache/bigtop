@@ -1,2 +1,0 @@
-testlink/cache.txt
-testlink/cache2.txt

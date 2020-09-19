@@ -1,5 +1,0 @@
-<hadoop-secondarynamenode>
-  <content>
-    <file name='/etc/rc.d/init.d/hadoop-secondarynamenode' owners=1 perm='-rwxr-xr-x' user='root' group='root' />
-  </content>
-</hadoop-secondarynamenode>
