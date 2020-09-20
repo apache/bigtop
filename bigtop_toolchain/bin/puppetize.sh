@@ -44,7 +44,7 @@ case ${ID}-${VERSION_ID} in
         ;;
     debian-10*)
         apt-get update
-        apt-get -y install wget curl sudo unzip puppet puppet-module-puppetlabs-apt puppet-module-puppetlabs-stdlib systemd-sysv gnupg
+        apt-get -y install wget curl sudo unzip puppet puppet-module-puppetlabs-apt puppet-module-puppetlabs-stdlib systemd-sysv gnupg procps
         ;;
     centos-7*)
         rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
