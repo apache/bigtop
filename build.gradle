@@ -115,6 +115,7 @@ rat {
        "bigtop-packages/src/**/*.diff",
        "bigtop-packages/src/common/*/*.json",
        "bigtop-packages/src/common/**/*.default",
+       "bigtop-packages/src/common/bigtop-ambari-mpack/bgtp-ambari-mpack/src/main/resources/**",
        "bigtop-repos/apt/distributions",
        /* Juju charm files with rigid structure */
        "bigtop-packages/src/charm/**/wheelhouse.txt",
