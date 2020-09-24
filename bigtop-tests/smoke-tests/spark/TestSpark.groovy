@@ -83,7 +83,7 @@ class TestSpark {
 
     final String SPARK_SHELL = SPARK_HOME + "/bin/spark-shell --master $masterMode"
     // Let's use time, 'cause the test has one job
-    sh.exec("timeout 120 " + SPARK_SHELL +
+    sh.exec("timeout 300 " + SPARK_SHELL +
         " --class org.apache.spark.examples.sql.JavaSparkSQLExample " +
         " --jars " + SPARK_HOME + "/examples/jars/spark-examples*.jar > " +
         TEST_SPARKSQL_LOG + " 2>&1")
@@ -108,7 +108,7 @@ class TestSpark {
     }
 
     final String SPARK_SUBMIT = SPARK_HOME + "/bin/spark-submit --master $masterMode"
-    sh.exec("timeout 120 " + SPARK_SUBMIT + " /tmp/dataframe.R > " + TEST_SPARKR_LOG + " 2>&1")
+    sh.exec("timeout 300 " + SPARK_SUBMIT + " /tmp/dataframe.R > " + TEST_SPARKR_LOG + " 2>&1")
     logError(sh)
     assertTrue("Failed to execute SparkR script", sh.getRet() == 0);
   }
