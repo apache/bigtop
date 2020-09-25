@@ -35,7 +35,7 @@ Source2: install_%{ycsb_name}.sh
 Source3: bigtop.bom
 ## This package _explicitly_ turns off the auto-discovery of required dependencies
 ## to work around OSGI corner case, added to RPM lately. See BIGTOP-2421 for more info.
-Requires: coreutils, bigtop-utils >= 0.7, python
+Requires: coreutils, bigtop-utils >= 0.7, python2
 AutoReq: no
 
 %description 
