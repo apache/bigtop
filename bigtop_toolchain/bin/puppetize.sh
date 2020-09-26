@@ -24,7 +24,7 @@ case ${ID}-${VERSION_ID} in
     fedora-31)
         dnf -y install yum-utils
         dnf -y check-update
-        dnf -y install hostname findutils curl sudo unzip wget puppet procps-ng libxcrypt-compat
+        dnf -y install hostname diffutils findutils curl sudo unzip wget puppet procps-ng libxcrypt-compat
         # On Fedora 31, the puppetlabs-stdlib package provided by the distro installs the module
         # into /usr/share/puppet/modules, but it's not recognized as the default module path.
         # So we install that module in the same way as CentOS 7.
@@ -58,7 +58,7 @@ case ${ID}-${VERSION_ID} in
     centos-8*)
         rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
         dnf -y check-update
-        dnf -y install hostname curl sudo unzip wget puppet 'dnf-command(config-manager)'
+        dnf -y install hostname diffutils curl sudo unzip wget puppet 'dnf-command(config-manager)'
         # Install the module in the same way as Fedora 31 and CentOS 7 for compatibility issues.
         puppet module install puppetlabs-stdlib --version 4.12.0
         # Enabling the PowerTools and EPEL repositories via Puppet doesn't seem to work in some cases.
@@ -68,7 +68,7 @@ case ${ID}-${VERSION_ID} in
     rhel-8*)
         rpm -Uvh https://yum.puppet.com/puppet5-release-el-8.noarch.rpm
         dnf -y check-update
-        dnf -y install hostname curl sudo unzip wget puppet-agent 'dnf-command(config-manager)'
+        dnf -y install hostname diffutils curl sudo unzip wget puppet-agent 'dnf-command(config-manager)'
         puppet module install puppetlabs-stdlib
         # Enabling the CodeReady repositories via Puppet doesn't seem to work in some cases.
         # As a workaround for that, enable the former here in advance of running the Puppet manifests.
