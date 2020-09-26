@@ -49,9 +49,9 @@ pipeline {
         }
 
         stage('Deploy to ASF site') {
-            when {
+            /* when {
                 branch 'master'
-            }
+            } */
 
             steps {
                 dir('deploy') {
