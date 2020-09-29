@@ -127,15 +127,21 @@ class TestHadoopExamples {
     [
       pi: "${pi_maps} ${pi_samples}",
       wordcount: "$EXAMPLES/text $EXAMPLES_OUT/wordcount",
-      teragen: "${terasort_rows} teragen${terasortid}",
-      terasort: "teragen${terasortid} terasort${terasortid}",
-      teravalidate: "terasort${terasortid} tervalidate${terasortid}",
       multifilewc: "$EXAMPLES/text $EXAMPLES_OUT/multifilewc",
       aggregatewordcount: "$EXAMPLES/text $EXAMPLES_OUT/aggregatewordcount 2 textinputformat",
       aggregatewordhist: "$EXAMPLES/text $EXAMPLES_OUT/aggregatewordhist 2 textinputformat",
       grep: "$EXAMPLES/text $EXAMPLES_OUT/grep '[Cc]uriouser'",
       secondarysort: "$EXAMPLES/ints $EXAMPLES_OUT/secondarysort",
       randomtextwriter: "-D $RANDOMTEXTWRITER_TOTALBYTES=1073741824 $EXAMPLES_OUT/randomtextwriter"
+    ];
+
+  // The following example MR jobs are enabled only when running without QFS,
+  // which doesn't seem to work with TeraOutputFormat. See BIGTOP-3413 for details.
+  static LinkedHashMap additional_examples =
+    [
+      teragen: "${terasort_rows} teragen${terasortid}",
+      terasort: "teragen${terasortid} terasort${terasortid}",
+      teravalidate: "terasort${terasortid} tervalidate${terasortid}"
     ];
 
   private String testName;
@@ -146,6 +152,9 @@ class TestHadoopExamples {
   public static LinkedHashMap<String, Object[]> generateTests() {
     LinkedHashMap<String, Object[]> res = [:];
     examples.each { k, v -> res[k] = [k.toString(), v.toString()] as Object[]; }
+    if (HADOOP_COMMAND != "hadoop-qfs") {
+      additional_examples.each { k, v -> res[k] = [k.toString(), v.toString()] as Object[]; }
+    }
     return res;
   }
 
