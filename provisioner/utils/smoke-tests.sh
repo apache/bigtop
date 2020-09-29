@@ -35,7 +35,9 @@ echo -e "\n===== EXPORTING VARIABLES =====\n"
 export ALLUXIO_HOME=${ALLUXIO_HOME:-/usr/lib/alluxio}
 export AMBARI_URL=${AMBARI_URL:-http://localhost:8080}
 export ELASTICSEARCH_URL=${ELASTICSEARCH_URL:-http://localhost}
+export FLINK_HOME=${FLINK_HOME:-/usr/lib/flink}
 export FLUME_HOME=${FLUME_HOME:-/usr/lib/flume}
+export GIRAPH_HOME=${GIRAPH_HOME:-/usr/lib/giraph}
 export GPDB_HOME=${GPDB_HOME:-/usr/lib/gpdb}
 export HADOOP_HOME=${HADOOP_HOME:-/usr/lib/hadoop}
 export HADOOP_CONF_DIR=${HADOOP_CONF_DIR:-/etc/hadoop/conf}
@@ -44,19 +46,19 @@ export HBASE_HOME=${HBASE_HOME:-/usr/lib/hbase}
 export HBASE_CONF_DIR=${HBASE_CONF_DIR:-/usr/lib/hbase/conf}
 export HIVE_HOME=${HIVE_HOME:-/usr/lib/hive}
 export HIVE_CONF_DIR=${HIVE_CONF_DIR:-/etc/hive/conf}
+export KAFKA_HOME=${KAFKA_HOME:-/usr/lib/kafka}
+export KIBANA_HOME=${KIBANA_HOME:-/usr/lib/kibana}
+export LIVY_HOME=${LIVY_HOME:-/usr/lib/livy}
+export LOGSTASH_HOME=${LOGSTASH_HOME:-/usr/lib/logstash}
 export MAHOUT_HOME=${MAHOUT_HOME:-/usr/lib/mahout}
+export OOZIE_TAR_HOME=${OOZIE_TAR_HOME:-/usr/lib/oozie}
+export OOZIE_URL=${OOZIE_URL:-http://localhost:11000/oozie}
 export SPARK_HOME=${SPARK_HOME:-/usr/lib/spark}
 export SQOOP_HOME=${SQOOP_HOME:-/usr/lib/sqoop}
-export ZOOKEEPER_HOME=${ZOOKEEPER_HOME:-/usr/lib/zookeeper}
-export GIRAPH_HOME=${GIRAPH_HOME:-/usr/lib/giraph}
-export FLINK_HOME=${FLINK_HOME:-/usr/lib/flink}
-export LIVY_HOME=${LIVY_HOME:-/usr/lib/livy}
-export KAFKA_HOME=${KAFKA_HOME:-/usr/lib/kafka}
-export YCSB_HOME=${YCSB_HOME:-/usr/lib/ycsb}
 export TEZ_HOME=${TEZ_HOME:-/usr/lib/tez}
+export YCSB_HOME=${YCSB_HOME:-/usr/lib/ycsb}
 export ZEPPELIN_HOME=${ZEPPELIN_HOME:-/usr/lib/zeppelin}
-export LOGSTASH_HOME=${LOGSTASH_HOME:-/usr/lib/logstash}
-export KIBANA_HOME=${KIBANA_HOME:-/usr/lib/kibana}
+export ZOOKEEPER_HOME=${ZOOKEEPER_HOME:-/usr/lib/zookeeper}
 
 echo -e "\n===== START TO RUN SMOKE TESTS: $SMOKE_TESTS =====\n"
 
@@ -77,6 +79,13 @@ fi
 if [[ $SMOKE_TESTS == *"alluxio"* ]]; then
     su -s /bin/bash $HCFS_USER -c "$HADOOP_COMMAND fs -mkdir /underFSStorage"
     su -s /bin/bash $HCFS_USER -c "$HADOOP_COMMAND fs -chmod 777 /underFSStorage"
+fi
+
+if [[ $SMOKE_TESTS == *"oozie"* ]]; then
+    su -s /bin/bash $HCFS_USER -c "$HADOOP_COMMAND fs -mkdir -p /user/oozie/share/lib"
+    su -s /bin/bash $HCFS_USER -c "$HADOOP_COMMAND fs -chown -R oozie:oozie /user/oozie"
+    oozie-setup sharelib create -fs hdfs://$(hostname -f):8020/
+    oozie admin -sharelibupdate
 fi
 
 ALL_SMOKE_TASKS=""

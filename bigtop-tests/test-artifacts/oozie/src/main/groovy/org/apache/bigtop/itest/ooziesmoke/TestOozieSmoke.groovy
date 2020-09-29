@@ -98,12 +98,12 @@ class TestOozieSmoke {
   public void testMapReduce() {
     testOozieExamplesCommon("map-reduce");
   }
-
+/*
   @Test(timeout = 300000L)
   public void testCustomMain() {
     testOozieExamplesCommon("custom-main");
   }
-
+*/
   @Test(timeout = 300000L)
   public void testHadoopEl() {
     testOozieExamplesCommon("hadoop-el");
@@ -113,15 +113,15 @@ class TestOozieSmoke {
   public void testStreaming() {
     testOozieExamplesCommon("streaming");
   }
-
+/*
   @Test(timeout = 300000L)
   public void testPig() {
     testOozieExamplesCommon("pig");
   }
-
+*/
   @Test(timeout = 300000L)
   public void testHive() {
-    testOozieExamplesCommon("hive");
+    testOozieExamplesCommon("hive2");
   }
 
   @Test(timeout = 300000L)

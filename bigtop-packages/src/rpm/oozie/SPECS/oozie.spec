@@ -228,5 +228,6 @@ fi
 %{lib_oozie}/bin/oozie
 %{lib_oozie}/conf/oozie-client-env.sh
 %{lib_oozie}/lib
+%{lib_oozie}/oozie-examples.tar.gz
 %doc %{doc_oozie}
 %{man_dir}/man1/oozie.1.*

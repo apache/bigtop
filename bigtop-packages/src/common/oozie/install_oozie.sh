@@ -103,9 +103,9 @@ BIN_DIR=${CLIENT_PREFIX}/usr/bin
 
 install -d -m 0755 ${CLIENT_LIB_DIR}
 tar --strip-components=1 -zxf ${BUILD_DIR}/oozie-client-*.tar.gz -C ${CLIENT_LIB_DIR}/
+cp ${BUILD_DIR}/oozie-examples.tar.gz ${CLIENT_LIB_DIR}/
 install -d -m 0755 ${DOC_DIR}
 mv ${CLIENT_LIB_DIR}/*.txt ${DOC_DIR}/
-cp -R ${BUILD_DIR}/oozie-examples.tar.gz ${DOC_DIR}
 cp -R ${BUILD_DIR}/docs/* ${DOC_DIR}
 rm -rf ${DOC_DIR}/target
 install -d -m 0755 ${MAN_DIR}
