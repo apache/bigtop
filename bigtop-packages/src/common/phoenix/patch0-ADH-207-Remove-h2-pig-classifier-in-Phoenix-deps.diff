@@ -1,0 +1,40 @@
+From 401934c00d7184a05c308bc219a4597ba4e3dce2 Mon Sep 17 00:00:00 2001
+From: Anton Chevychalov <cab@arenadata.io>
+Date: Thu, 28 Sep 2017 19:06:07 +0300
+Subject: [PATCH] ADH-207 Remove h2 pig classifier in Phoenix deps
+
+There is a regression in Pig relase 0.17
+After PIG-4923 they drop h2 classifer.
+There is only one jar now and it suports Hadoop 2
+---
+ phoenix-pig/pom.xml | 1 -
+ pom.xml             | 1 -
+ 2 files changed, 2 deletions(-)
+
+diff --git a/phoenix-pig/pom.xml b/phoenix-pig/pom.xml
+index aed4a9d..77d2e23 100644
+--- a/phoenix-pig/pom.xml
++++ b/phoenix-pig/pom.xml
+@@ -54,7 +54,6 @@
+     <dependency>
+       <groupId>org.apache.pig</groupId>
+       <artifactId>pig</artifactId>
+-      <classifier>h2</classifier>
+     </dependency>
+     <dependency>
+       <groupId>org.apache.hbase</groupId>
+diff --git a/pom.xml b/pom.xml
+index 0f93146..35dc64e 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -748,7 +748,6 @@
+         <groupId>org.apache.pig</groupId>
+         <artifactId>pig</artifactId>
+         <version>${pig.version}</version>
+-        <classifier>h2</classifier>
+         <exclusions>
+           <exclusion>
+             <groupId>org.xerial.snappy</groupId>
+-- 
+2.7.4
+
