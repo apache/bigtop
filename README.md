@@ -206,8 +206,20 @@ The source for the website is located in "project_root/src/site/".
 For Developers: Building a component from Git repository
 --------------------------------------------------------
 
+Prerequisites
+ * You will need git installed.
+ * You will need java 8 installed.
+ * You will need to use [gradlew](https://docs.gradle.org/current/userguide/gradle_wrapper.html) which is included in the source code. (Right in the root of the project folder)
+  * This project's gradlew has more documentation [here](https://cwiki.apache.org/confluence/display/BIGTOP/Quickstart+Guide%3A+Bigtop+Integration+Test+Framework+2.0)
+ * Use git to download BigTop :
+
+`git clone https://github.com/apache/bigtop.git`
+ * move into the root project folder:
+
+`cd bigtop`
+
 To fetch source from a Git repository, there're two ways to achieve this:
-a). modify `bigtop.bom` and add JSON snippets to your component/package, or
+a). modify `./bigtop.bom` and add JSON snippets to your component/package, or
 b). specify properties at command line
 
 * __bigtop.bom__
@@ -247,7 +259,7 @@ Example for HBase:
 
 
 ```
-./gradlew COMPONENT-pkg -Pgit_repo="" -Pgit_ref="" -Pgit_dir="" -Pgit_commit_hash="" -Pbase_version=""
+./gradlew [component]-pkg-ind -Pgit_repo="" -Pgit_ref="" -Pgit_dir="" -Pgit_commit_hash="" -Pbase_version=""
 ```
 
 Where `git_repo`, `git_ref`, `git_dir`, and `git_commit_hash` are exactly the same with what we set in JSON.
