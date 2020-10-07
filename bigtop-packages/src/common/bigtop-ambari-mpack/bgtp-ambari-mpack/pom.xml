@@ -102,13 +102,19 @@
       <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>buildnumber-maven-plugin</artifactId>
-          <version>${buildnumber-maven-plugin-version}</version>
+	  <version>${buildnumber-maven-plugin-version}</version>
+          <configuration>
+              <revisionOnScmFailure>no.scm.config.in.pom</revisionOnScmFailure>
+          </configuration>
           <executions>
               <execution>
                   <phase>validate</phase>
                   <goals>
-                      <goal>create</goal>
+                      <goal>create-timestamp</goal>
                   </goals>
+                  <configuration>
+                      <timestampFormat>yyyy-MM-dd HH:mm:ss.S</timestampFormat>
+                  </configuration>
               </execution>
           </executions>
       </plugin>
