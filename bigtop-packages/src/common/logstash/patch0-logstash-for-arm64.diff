@@ -30,7 +30,7 @@ diff -ruaN logstash-5.4.1/Gemfile linaro-logstash-5.4.1/Gemfile
  gem "gems", "~> 0.8.3", :group => :build
  gem "rack-test", :require => "rack/test", :group => :development
  gem "flores", "~> 0.0.6", :group => :development
-@@ -117,3 +117,24 @@
+@@ -117,3 +117,25 @@
  gem "logstash-output-udp"
  gem "logstash-output-webhdfs"
  gem "logstash-filter-dissect"
@@ -55,6 +55,7 @@ diff -ruaN logstash-5.4.1/Gemfile linaro-logstash-5.4.1/Gemfile
 +gem "poseidon", ">= 0"
 +gem "snappy", ">= 0"
 +gem "webmock", "~> 1.21.0"
++gem "amazing_print", "= 1.2.1"
 diff -ruaN logstash-5.4.1/Gemfile.jruby-1.9.lock linaro-logstash-5.4.1/Gemfile.jruby-1.9.lock
 --- logstash-5.4.1/Gemfile.jruby-1.9.lock	2017-05-18 23:13:07.000000000 +0800
 +++ linaro-logstash-5.4.1/Gemfile.jruby-1.9.lock	1970-01-01 08:00:00.000000000 +0800
