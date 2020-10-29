@@ -41,6 +41,6 @@ sourceSets {
 test.doFirst {
   checkEnv(["HADOOP_CONF_DIR", "OOZIE_URL", "OOZIE_TAR_HOME"])
   // OOZIE_TAR_HOME should point to the directory where oozie-examples.tar.gz is located
-  // Usually, it could be found in $HADOOP_HOME/share/doc/oozie
+  // Usually, it could be found in /usr/lib/oozie
   systemProperty "org.apache.bigtop.itest.oozie_tar_home", System.getenv('OOZIE_TAR_HOME')
 }
