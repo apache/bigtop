@@ -121,10 +121,16 @@ class gpdb {
           package { ["libffi-devel"]:
             ensure => latest,
           }
+          package { ["openssl-devel"]:
+            ensure => latest,
+          }
           package { ["python2-lockfile"]:
             ensure => latest,
           }
           package { ["gcc"]:
+            ensure => latest,
+          }
+          package { ["make"]:
             ensure => latest,
           }
           package { ["python2-psutil"]:
@@ -140,6 +146,7 @@ class gpdb {
             require => [
               Yumrepo["epel"],
               Package["libffi-devel"],
+              Package["openssl-devel"],
               Package["python2-lockfile"],
             ],
           }
