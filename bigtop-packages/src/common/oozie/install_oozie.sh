@@ -234,6 +234,8 @@ ln -s ${DATA_DIR#${SERVER_PREFIX}} ${SERVER_LIB_DIR}/libext
 
 # Remove jars provided by 'oozie-client' from 'oozie' to avoid run-time issues
 # while installing the package.
-for oozie_client_jar_file in $(ls $CLIENT_LIB_DIR/lib); do
-  rm -f $SERVER_LIB_DIR/lib/$oozie_client_jar_file
-done
+if [ "${SERVER_PREFIX}" != "${CLIENT_PREFIX}" ]; then
+  for oozie_client_jar_file in $(ls $CLIENT_LIB_DIR/lib); do
+    rm -f $SERVER_LIB_DIR/lib/$oozie_client_jar_file
+  done
+fi
