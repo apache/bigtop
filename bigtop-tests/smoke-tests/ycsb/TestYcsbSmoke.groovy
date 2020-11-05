@@ -59,7 +59,8 @@ class TestYcsbSmoke {
     sh.exec(basic_load
       + "-P " + ycsb_workloadA
       + "-p " + record_cnt
-      + "-s > load_basic.dat"
+      // BIGTOP-3441. If users want to check status after test, enable the following option.
+      // + "-s > load_basic.dat"
     );
     logError(sh);
     assertTrue("YCSB basic load failed." + sh.getOut() + " " + sh.getErr(), sh.getRet() == 0);
@@ -70,7 +71,8 @@ class TestYcsbSmoke {
       + "-p measurementtype=timeseries "
       + "-p timeseries.granularity=2000 "
       + "-threads 10 -target 100 "
-      + "-s > transactions_basic.dat"
+      // BIGTOP-3441. If users want to check status after test, enable the following option.
+      // + "-s > transactions_basic.dat"
     );
     logError(sh);
     assertTrue("YCSB basic run failed." + sh.getOut() + " " + sh.getErr(), sh.getRet() == 0);
