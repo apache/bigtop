@@ -163,6 +163,9 @@ class gpdb {
           package { ["libffi-dev"]:
             ensure => latest,
           }
+          package { ["libssl-dev"]:
+            ensure => latest,
+          }
           package { ["python-lockfile"]:
             ensure => latest,
           }
@@ -180,6 +183,7 @@ class gpdb {
             ensure  => latest,
             require => [
               Package["libffi-dev"],
+              Package["libssl-dev"],
               Package["python-lockfile"],
             ],
           }
