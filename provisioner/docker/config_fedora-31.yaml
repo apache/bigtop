@@ -15,7 +15,7 @@
 
 docker:
         memory_limit: "4g"
-        image: "bigtop/puppet:trunk-fedora-31"
+        image: "bigtop/puppet:1.5.0-fedora-31"
 
 repo: "http://repos.bigtop.apache.org/releases/1.5.0/fedora/31/$basearch"
 distro: centos

@@ -15,7 +15,7 @@
 
 docker:
         memory_limit: "4g"
-        image: "bigtop/puppet:trunk-debian-10"
+        image: "bigtop/puppet:1.5.0-debian-10"
 
 repo: "http://repos.bigtop.apache.org/releases/1.5.0/debian/10/$(ARCH)"
 distro: debian

@@ -15,9 +15,9 @@
 
 docker:
         memory_limit: "4g"
-        image: "bigtop/puppet:trunk-centos-7"
+        image: "bigtop/puppet:1.5.0-centos-7"
 
-repo: "http://repos.bigtop.apache.org/releases/1.4.0/centos/7/$basearch"
+repo: "http://repos.bigtop.apache.org/releases/1.5.0/centos/7/$basearch"
 distro: centos
 components: [hdfs, yarn, mapreduce]
 enable_local_repo: false
