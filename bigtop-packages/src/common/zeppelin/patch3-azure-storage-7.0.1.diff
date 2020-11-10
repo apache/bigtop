@@ -1,0 +1,13 @@
+diff --git a/zeppelin-zengine/src/main/java/org/apache/zeppelin/notebook/repo/AzureNotebookRepo.java b/zeppelin-zengine/src/main/java/org/apache/zeppelin/notebook/repo/AzureNotebookRepo.java
+index 3b0108890..679f2513a 100644
+--- a/zeppelin-zengine/src/main/java/org/apache/zeppelin/notebook/repo/AzureNotebookRepo.java
++++ b/zeppelin-zengine/src/main/java/org/apache/zeppelin/notebook/repo/AzureNotebookRepo.java
+@@ -160,7 +160,7 @@ public class AzureNotebookRepo implements NotebookRepo {
+   }
+ 
+   // unfortunately, we need to use a recursive delete here
+-  private void delete(ListFileItem item) throws StorageException {
++  private void delete(ListFileItem item) throws StorageException, URISyntaxException {
+     if (item.getClass() == CloudFileDirectory.class) {
+       CloudFileDirectory dir = (CloudFileDirectory) item;
+ 
