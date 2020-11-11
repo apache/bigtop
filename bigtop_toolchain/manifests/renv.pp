@@ -33,22 +33,64 @@ class bigtop_toolchain::renv {
       ]
     }
     /(Ubuntu|Debian)/: {
-      $pkgs = [
-        "r-base",
-        "r-base-dev",
-        "pandoc"
-      ]
+      if (versioncmp($operatingsystemmajrelease, '16.04') == 0) {
+        $pkgs = [
+          "r-base",
+          "r-base-dev",
+          "libcairo2-dev",
+          "pandoc",
+          "pandoc-citeproc",
+        ]
+        $rpkgs = "install_r_packages_ubt16.04"
+      } else {
+        $pkgs = [
+          "r-base",
+          "r-base-dev",
+          "pandoc",
+        ]
+        $rpkgs = "install_r_packages"
+      }
     }
   }
+
   package { $pkgs:
     ensure => installed,
-    before => [Exec['install_r_packages']] 
+    before => [Exec[$rpkgs]]
   }
 
-  # Install required R packages
-  exec { 'install_r_packages':
-    cwd     => "/usr/bin",
-    command => "/usr/bin/R -e \"install.packages(c('devtools', 'evaluate', 'rmarkdown', 'knitr', 'roxygen2', 'testthat', 'e1071'), repos = 'http://cran.us.r-project.org')\"",
-    timeout => 6000
+  # BIGTOP-3443:
+  #   Upgrade R version to 3.4.4 to fix dependency issuse in R 3.2
+  #
+  # Then Install required R packages dependency
+  if ($operatingsystem == 'Ubuntu' and versioncmp($operatingsystemmajrelease, '16.04') == 0) {
+    $url = "https://cran.rstudio.com/src/base/R-3/"
+    $rfile = "R-3.4.4.tar.gz"
+    $rdir = "R-3.4.4"
+
+    exec { "download_R":
+      cwd  => "/usr/src",
+      command => "/usr/bin/wget $url/$rfile && mkdir -p $rdir && /bin/tar -xvzf $rfile -C $rdir --strip-components=1 && cd $rdir",
+      creates => "/usr/src/$rdir",
+    }
+    exec { "install_R":
+      cwd => "/usr/src/$rdir",
+      command => "/usr/src/$rdir/configure --with-recommended-packages=yes --without-x --with-cairo --with-libpng --with-libtiff --with-jpeglib --with-tcltk --with-blas --with-lapack --enable-R-shlib --prefix=/usr/local && /usr/bin/make && /usr/bin/make install && /sbin/ldconfig",
+      creates => "/usr/local/bin/R",
+      require => EXEC["download_R"],
+      timeout => 3000
+    }
+
+    exec { $rpkgs :
+      cwd     => "/usr/local/bin",
+      command => "/usr/local/bin/R -e \"install.packages(c('devtools', 'evaluate', 'rmarkdown', 'knitr', 'roxygen2', 'testthat', 'e1071'), repos = 'http://cran.us.r-project.org')\"",
+      require => EXEC["install_R"],
+      timeout => 6000
+    }
+  } else {
+    exec { $rpkgs :
+      cwd     => "/usr/bin",
+      command => "/usr/bin/R -e \"install.packages(c('devtools', 'evaluate', 'rmarkdown', 'knitr', 'roxygen2', 'testthat', 'e1071'), repos = 'http://cran.us.r-project.org')\"",
+      timeout => 6000
+    }
   }
 }
