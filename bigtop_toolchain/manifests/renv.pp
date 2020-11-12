@@ -59,7 +59,7 @@ class bigtop_toolchain::renv {
   }
 
   # BIGTOP-3443:
-  #   Upgrade R version to 3.4.4 to fix dependency issuse in R 3.2
+  #   Upgrade R version to 3.4.4 to fix dependency issue in R 3.2
   #
   # Then Install required R packages dependency
   if ($operatingsystem == 'Ubuntu' and versioncmp($operatingsystemmajrelease, '16.04') == 0) {
@@ -76,14 +76,14 @@ class bigtop_toolchain::renv {
       cwd => "/usr/src/$rdir",
       command => "/usr/src/$rdir/configure --with-recommended-packages=yes --without-x --with-cairo --with-libpng --with-libtiff --with-jpeglib --with-tcltk --with-blas --with-lapack --enable-R-shlib --prefix=/usr/local && /usr/bin/make && /usr/bin/make install && /sbin/ldconfig",
       creates => "/usr/local/bin/R",
-      require => EXEC["download_R"],
+      require => [Exec["download_R"]],
       timeout => 3000
     }
 
     exec { $rpkgs :
       cwd     => "/usr/local/bin",
       command => "/usr/local/bin/R -e \"install.packages(c('devtools', 'evaluate', 'rmarkdown', 'knitr', 'roxygen2', 'testthat', 'e1071'), repos = 'http://cran.us.r-project.org')\"",
-      require => EXEC["install_R"],
+      require => [Exec["install_R"]],
       timeout => 6000
     }
   } else {
