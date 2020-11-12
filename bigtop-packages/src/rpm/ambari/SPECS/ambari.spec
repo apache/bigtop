@@ -260,7 +260,7 @@ exit 0
 %package agent
 Summary: Ambari Agent
 Group: Development/Libraries
-Requires: openssl, zlib, python2 >= 2.6
+Requires: openssl, zlib, python2 >= 2.6, initscripts
 AutoProv: no
 AutoReqProv: no
 %description agent
