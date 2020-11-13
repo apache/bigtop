@@ -17,6 +17,8 @@ class bigtop_toolchain::renv {
 
   require bigtop_toolchain::packages
 
+  $rpkgs = "install_r_packages"
+
   case $operatingsystem{
     /(?i:(centos|fedora|redhat|Amazon))/: {
       $pkgs = [
@@ -48,7 +50,6 @@ class bigtop_toolchain::renv {
           "r-base-dev",
           "pandoc",
         ]
-        $rpkgs = "install_r_packages"
       }
     }
   }
