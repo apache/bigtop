@@ -41,21 +41,19 @@ class bigtop_toolchain::renv {
           "pandoc",
           "pandoc-citeproc",
         ]
-        $rpkgs = "install_r_packages_ubt16.04"
       } else {
         $pkgs = [
           "r-base",
           "r-base-dev",
           "pandoc",
         ]
-        $rpkgs = "install_r_packages"
       }
     }
   }
 
   package { $pkgs:
     ensure => installed,
-    before => [Exec[$rpkgs]]
+    before => [Exec["install_r_packages"]]
   }
 
   # BIGTOP-3443:
@@ -80,14 +78,14 @@ class bigtop_toolchain::renv {
       timeout => 3000
     }
 
-    exec { $rpkgs :
+    exec { "install_r_packages" :
       cwd     => "/usr/local/bin",
       command => "/usr/local/bin/R -e \"install.packages(c('devtools', 'evaluate', 'rmarkdown', 'knitr', 'roxygen2', 'testthat', 'e1071'), repos = 'http://cran.us.r-project.org')\"",
       require => [Exec["install_R"]],
       timeout => 6000
     }
   } else {
-    exec { $rpkgs :
+    exec { "install_r_packages" :
       cwd     => "/usr/bin",
       command => "/usr/bin/R -e \"install.packages(c('devtools', 'evaluate', 'rmarkdown', 'knitr', 'roxygen2', 'testthat', 'e1071'), repos = 'http://cran.us.r-project.org')\"",
       timeout => 6000
