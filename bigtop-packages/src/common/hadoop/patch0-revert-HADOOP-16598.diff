@@ -1,0 +1,796 @@
+commit 49478f7a59d52cbb379f641d9e7a8ac5e08e3c0f
+Author: Masatake Iwasaki <iwasakims@apache.org>
+Date:   Mon Nov 16 03:54:23 2020 +0000
+
+    Revert "HADOOP-16598. Backport "HADOOP-16558 [COMMON+HDFS] use protobuf-maven-plugin to generate protobuf classes" to all active branches"
+    
+    This reverts commit e649b30b32962256aa2fb48f8c69d30a705a1220.
+
+diff --git a/hadoop-common-project/hadoop-common/pom.xml b/hadoop-common-project/hadoop-common/pom.xml
+index 1da0b49dc7a..e79e1e2d3cd 100644
+--- a/hadoop-common-project/hadoop-common/pom.xml
++++ b/hadoop-common-project/hadoop-common/pom.xml
+@@ -369,20 +369,6 @@
+       </resource>
+     </resources>
+     <plugins>
+-      <plugin>
+-        <groupId>org.xolstice.maven.plugins</groupId>
+-        <artifactId>protobuf-maven-plugin</artifactId>
+-        <executions>
+-          <execution>
+-            <id>src-compile-protoc</id>
+-            <configuration><skip>false</skip></configuration>
+-          </execution>
+-          <execution>
+-            <id>src-test-compile-protoc</id>
+-            <configuration><skip>false</skip></configuration>
+-          </execution>
+-        </executions>
+-      </plugin>
+       <plugin>
+         <groupId>org.apache.hadoop</groupId>
+         <artifactId>hadoop-maven-plugins</artifactId>
+@@ -403,6 +389,57 @@
+               </source>
+             </configuration>
+           </execution>
++          <execution>
++            <id>compile-protoc</id>
++            <goals>
++              <goal>protoc</goal>
++            </goals>
++            <configuration>
++              <protocVersion>${protobuf.version}</protocVersion>
++              <protocCommand>${protoc.path}</protocCommand>
++              <imports>
++                <param>${basedir}/src/main/proto</param>
++              </imports>
++              <source>
++                <directory>${basedir}/src/main/proto</directory>
++                <includes>
++                  <include>HAServiceProtocol.proto</include>
++                  <include>IpcConnectionContext.proto</include>
++                  <include>ProtocolInfo.proto</include>
++                  <include>RpcHeader.proto</include>
++                  <include>ZKFCProtocol.proto</include>
++                  <include>ProtobufRpcEngine.proto</include>
++                  <include>Security.proto</include>
++                  <include>GetUserMappingsProtocol.proto</include>
++                  <include>TraceAdmin.proto</include>
++                  <include>RefreshAuthorizationPolicyProtocol.proto</include>
++                  <include>RefreshUserMappingsProtocol.proto</include>
++                  <include>RefreshCallQueueProtocol.proto</include>
++                  <include>GenericRefreshProtocol.proto</include>
++                </includes>
++              </source>
++            </configuration>
++          </execution>
++          <execution>
++            <id>compile-test-protoc</id>
++            <goals>
++              <goal>test-protoc</goal>
++            </goals>
++            <configuration>
++              <protocVersion>${protobuf.version}</protocVersion>
++              <protocCommand>${protoc.path}</protocCommand>
++              <imports>
++                <param>${basedir}/src/test/proto</param>
++              </imports>
++              <source>
++                <directory>${basedir}/src/test/proto</directory>
++                <includes>
++                  <include>test.proto</include>
++                  <include>test_rpc_service.proto</include>
++                </includes>
++              </source>
++            </configuration>
++          </execution>
+         </executions>
+       </plugin>
+       <plugin>
+diff --git a/hadoop-common-project/hadoop-common/src/main/proto/GenericRefreshProtocol.proto b/hadoop-common-project/hadoop-common/src/main/proto/GenericRefreshProtocol.proto
+index 6296f88da69..fe465490b19 100644
+--- a/hadoop-common-project/hadoop-common/src/main/proto/GenericRefreshProtocol.proto
++++ b/hadoop-common-project/hadoop-common/src/main/proto/GenericRefreshProtocol.proto
+@@ -21,7 +21,7 @@
+  * Please see http://wiki.apache.org/hadoop/Compatibility
+  * for what changes are allowed for a *stable* .proto interface.
+  */
+-syntax = "proto2";
++
+ option java_package = "org.apache.hadoop.ipc.proto";
+ option java_outer_classname = "GenericRefreshProtocolProtos";
+ option java_generic_services = true;
+diff --git a/hadoop-common-project/hadoop-common/src/main/proto/GetUserMappingsProtocol.proto b/hadoop-common-project/hadoop-common/src/main/proto/GetUserMappingsProtocol.proto
+index cb91a13b048..51552b879f3 100644
+--- a/hadoop-common-project/hadoop-common/src/main/proto/GetUserMappingsProtocol.proto
++++ b/hadoop-common-project/hadoop-common/src/main/proto/GetUserMappingsProtocol.proto
+@@ -21,7 +21,7 @@
+  * Please see http://wiki.apache.org/hadoop/Compatibility
+  * for what changes are allowed for a *stable* .proto interface.
+  */
+-syntax = "proto2";
++
+ option java_package = "org.apache.hadoop.tools.proto";
+ option java_outer_classname = "GetUserMappingsProtocolProtos";
+ option java_generic_services = true;
+diff --git a/hadoop-common-project/hadoop-common/src/main/proto/HAServiceProtocol.proto b/hadoop-common-project/hadoop-common/src/main/proto/HAServiceProtocol.proto
+index 5a88a7ff03f..16ee9a2e0a5 100644
+--- a/hadoop-common-project/hadoop-common/src/main/proto/HAServiceProtocol.proto
++++ b/hadoop-common-project/hadoop-common/src/main/proto/HAServiceProtocol.proto
+@@ -21,7 +21,7 @@
+  * Please see http://wiki.apache.org/hadoop/Compatibility
+  * for what changes are allowed for a *stable* .proto interface.
+  */
+-syntax = "proto2";
++
+ option java_package = "org.apache.hadoop.ha.proto";
+ option java_outer_classname = "HAServiceProtocolProtos";
+ option java_generic_services = true;
+diff --git a/hadoop-common-project/hadoop-common/src/main/proto/IpcConnectionContext.proto b/hadoop-common-project/hadoop-common/src/main/proto/IpcConnectionContext.proto
+index 16e2fb7c4db..4557e893cff 100644
+--- a/hadoop-common-project/hadoop-common/src/main/proto/IpcConnectionContext.proto
++++ b/hadoop-common-project/hadoop-common/src/main/proto/IpcConnectionContext.proto
+@@ -21,7 +21,7 @@
+  * Please see http://wiki.apache.org/hadoop/Compatibility
+  * for what changes are allowed for a *stable* .proto interface.
+  */
+-syntax = "proto2";
++
+ option java_package = "org.apache.hadoop.ipc.protobuf";
+ option java_outer_classname = "IpcConnectionContextProtos";
+ option java_generate_equals_and_hash = true;
+diff --git a/hadoop-common-project/hadoop-common/src/main/proto/ProtobufRpcEngine.proto b/hadoop-common-project/hadoop-common/src/main/proto/ProtobufRpcEngine.proto
+index fa113134027..a17e2078e94 100644
+--- a/hadoop-common-project/hadoop-common/src/main/proto/ProtobufRpcEngine.proto
++++ b/hadoop-common-project/hadoop-common/src/main/proto/ProtobufRpcEngine.proto
+@@ -21,7 +21,7 @@
+  * Please see http://wiki.apache.org/hadoop/Compatibility
+  * for what changes are allowed for a *stable* .proto interface.
+  */
+-syntax = "proto2";
++
+ /**
+  * These are the messages used by Hadoop RPC for the Rpc Engine Protocol Buffer
+  * to marshal the request and response in the RPC layer.
+diff --git a/hadoop-common-project/hadoop-common/src/main/proto/ProtocolInfo.proto b/hadoop-common-project/hadoop-common/src/main/proto/ProtocolInfo.proto
+index 0e9d0d4baa4..fdbc440d91c 100644
+--- a/hadoop-common-project/hadoop-common/src/main/proto/ProtocolInfo.proto
++++ b/hadoop-common-project/hadoop-common/src/main/proto/ProtocolInfo.proto
+@@ -21,7 +21,7 @@
+  * Please see http://wiki.apache.org/hadoop/Compatibility
+  * for what changes are allowed for a *stable* .proto interface.
+  */
+-syntax = "proto2";
++
+ option java_package = "org.apache.hadoop.ipc.protobuf";
+ option java_outer_classname = "ProtocolInfoProtos";
+ option java_generic_services = true;
+diff --git a/hadoop-common-project/hadoop-common/src/main/proto/RefreshAuthorizationPolicyProtocol.proto b/hadoop-common-project/hadoop-common/src/main/proto/RefreshAuthorizationPolicyProtocol.proto
+index f57c6d63039..5ef1c2d0a8c 100644
+--- a/hadoop-common-project/hadoop-common/src/main/proto/RefreshAuthorizationPolicyProtocol.proto
++++ b/hadoop-common-project/hadoop-common/src/main/proto/RefreshAuthorizationPolicyProtocol.proto
+@@ -21,7 +21,7 @@
+  * Please see http://wiki.apache.org/hadoop/Compatibility
+  * for what changes are allowed for a *stable* .proto interface.
+  */
+-syntax = "proto2";
++
+ option java_package = "org.apache.hadoop.security.proto";
+ option java_outer_classname = "RefreshAuthorizationPolicyProtocolProtos";
+ option java_generic_services = true;
+diff --git a/hadoop-common-project/hadoop-common/src/main/proto/RefreshCallQueueProtocol.proto b/hadoop-common-project/hadoop-common/src/main/proto/RefreshCallQueueProtocol.proto
+index 463b7c548fe..67ed1332510 100644
+--- a/hadoop-common-project/hadoop-common/src/main/proto/RefreshCallQueueProtocol.proto
++++ b/hadoop-common-project/hadoop-common/src/main/proto/RefreshCallQueueProtocol.proto
+@@ -21,7 +21,7 @@
+  * Please see http://wiki.apache.org/hadoop/Compatibility
+  * for what changes are allowed for a *stable* .proto interface.
+  */
+-syntax = "proto2";
++
+ option java_package = "org.apache.hadoop.ipc.proto";
+ option java_outer_classname = "RefreshCallQueueProtocolProtos";
+ option java_generic_services = true;
+diff --git a/hadoop-common-project/hadoop-common/src/main/proto/RefreshUserMappingsProtocol.proto b/hadoop-common-project/hadoop-common/src/main/proto/RefreshUserMappingsProtocol.proto
+index a1130f5c2d9..41031ed9ea0 100644
+--- a/hadoop-common-project/hadoop-common/src/main/proto/RefreshUserMappingsProtocol.proto
++++ b/hadoop-common-project/hadoop-common/src/main/proto/RefreshUserMappingsProtocol.proto
+@@ -21,7 +21,7 @@
+  * Please see http://wiki.apache.org/hadoop/Compatibility
+  * for what changes are allowed for a *stable* .proto interface.
+  */
+-syntax = "proto2";
++
+ option java_package = "org.apache.hadoop.security.proto";
+ option java_outer_classname = "RefreshUserMappingsProtocolProtos";
+ option java_generic_services = true;
+diff --git a/hadoop-common-project/hadoop-common/src/main/proto/RpcHeader.proto b/hadoop-common-project/hadoop-common/src/main/proto/RpcHeader.proto
+index 4705b4276b8..e8d8cbbfe70 100644
+--- a/hadoop-common-project/hadoop-common/src/main/proto/RpcHeader.proto
++++ b/hadoop-common-project/hadoop-common/src/main/proto/RpcHeader.proto
+@@ -21,7 +21,7 @@
+  * Please see http://wiki.apache.org/hadoop/Compatibility
+  * for what changes are allowed for a *stable* .proto interface.
+  */
+-syntax = "proto2";
++
+ option java_package = "org.apache.hadoop.ipc.protobuf";
+ option java_outer_classname = "RpcHeaderProtos";
+ option java_generate_equals_and_hash = true;
+diff --git a/hadoop-common-project/hadoop-common/src/main/proto/Security.proto b/hadoop-common-project/hadoop-common/src/main/proto/Security.proto
+index 736850110b6..5ff571decf5 100644
+--- a/hadoop-common-project/hadoop-common/src/main/proto/Security.proto
++++ b/hadoop-common-project/hadoop-common/src/main/proto/Security.proto
+@@ -21,7 +21,7 @@
+  * Please see http://wiki.apache.org/hadoop/Compatibility
+  * for what changes are allowed for a *stable* .proto interface.
+  */
+-syntax = "proto2";
++
+ option java_package = "org.apache.hadoop.security.proto";
+ option java_outer_classname = "SecurityProtos";
+ option java_generic_services = true;
+diff --git a/hadoop-common-project/hadoop-common/src/main/proto/TraceAdmin.proto b/hadoop-common-project/hadoop-common/src/main/proto/TraceAdmin.proto
+index 8cf131bfb46..52d2a90abf4 100644
+--- a/hadoop-common-project/hadoop-common/src/main/proto/TraceAdmin.proto
++++ b/hadoop-common-project/hadoop-common/src/main/proto/TraceAdmin.proto
+@@ -21,7 +21,7 @@
+  * Please see http://wiki.apache.org/hadoop/Compatibility
+  * for what changes are allowed for a *stable* .proto interface.
+  */
+-syntax = "proto2";
++
+ option java_package = "org.apache.hadoop.tracing";
+ option java_outer_classname = "TraceAdminPB";
+ option java_generic_services = true;
+diff --git a/hadoop-common-project/hadoop-common/src/main/proto/ZKFCProtocol.proto b/hadoop-common-project/hadoop-common/src/main/proto/ZKFCProtocol.proto
+index 98bc05f4a36..a2b8dd10b30 100644
+--- a/hadoop-common-project/hadoop-common/src/main/proto/ZKFCProtocol.proto
++++ b/hadoop-common-project/hadoop-common/src/main/proto/ZKFCProtocol.proto
+@@ -21,7 +21,7 @@
+  * Please see http://wiki.apache.org/hadoop/Compatibility
+  * for what changes are allowed for a *stable* .proto interface.
+  */
+-syntax = "proto2";
++
+ option java_package = "org.apache.hadoop.ha.proto";
+ option java_outer_classname = "ZKFCProtocolProtos";
+ option java_generic_services = true;
+diff --git a/hadoop-common-project/hadoop-common/src/test/proto/test.proto b/hadoop-common-project/hadoop-common/src/test/proto/test.proto
+index c5425f945c0..be148d1f475 100644
+--- a/hadoop-common-project/hadoop-common/src/test/proto/test.proto
++++ b/hadoop-common-project/hadoop-common/src/test/proto/test.proto
+@@ -15,7 +15,7 @@
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
+  */
+-syntax = "proto2";
++
+ option java_package = "org.apache.hadoop.ipc.protobuf";
+ option java_outer_classname = "TestProtos";
+ option java_generate_equals_and_hash = true;
+diff --git a/hadoop-common-project/hadoop-common/src/test/proto/test_rpc_service.proto b/hadoop-common-project/hadoop-common/src/test/proto/test_rpc_service.proto
+index 9fdfb59dbd6..b0121ca217a 100644
+--- a/hadoop-common-project/hadoop-common/src/test/proto/test_rpc_service.proto
++++ b/hadoop-common-project/hadoop-common/src/test/proto/test_rpc_service.proto
+@@ -15,7 +15,6 @@
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
+  */
+-syntax = "proto2";
+ option java_package = "org.apache.hadoop.ipc.protobuf";
+ option java_outer_classname = "TestRpcServiceProtos";
+ option java_generic_services = true;
+diff --git a/hadoop-hdfs-project/hadoop-hdfs-client/pom.xml b/hadoop-hdfs-project/hadoop-hdfs-client/pom.xml
+index 8b1b3dcdcc8..fe26603d81e 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs-client/pom.xml
++++ b/hadoop-hdfs-project/hadoop-hdfs-client/pom.xml
+@@ -124,18 +124,35 @@ https://maven.apache.org/xsd/maven-4.0.0.xsd">
+         </configuration>
+       </plugin>
+       <plugin>
+-        <groupId>org.xolstice.maven.plugins</groupId>
+-        <artifactId>protobuf-maven-plugin</artifactId>
++        <groupId>org.apache.hadoop</groupId>
++        <artifactId>hadoop-maven-plugins</artifactId>
+         <executions>
+           <execution>
+-            <id>src-compile-protoc</id>
++            <id>compile-protoc</id>
++            <goals>
++              <goal>protoc</goal>
++            </goals>
+             <configuration>
+-              <skip>false</skip>
+-              <additionalProtoPathElements>
+-                <additionalProtoPathElement>
+-                  ${basedir}/../../hadoop-common-project/hadoop-common/src/main/proto
+-                </additionalProtoPathElement>
+-              </additionalProtoPathElements>
++              <protocVersion>${protobuf.version}</protocVersion>
++              <protocCommand>${protoc.path}</protocCommand>
++              <imports>
++                <param>${basedir}/../../hadoop-common-project/hadoop-common/src/main/proto</param>
++                <param>${basedir}/src/main/proto</param>
++              </imports>
++              <source>
++                <directory>${basedir}/src/main/proto</directory>
++                <includes>
++                  <include>ClientDatanodeProtocol.proto</include>
++                  <include>ClientNamenodeProtocol.proto</include>
++                  <include>acl.proto</include>
++                  <include>xattr.proto</include>
++                  <include>datatransfer.proto</include>
++                  <include>hdfs.proto</include>
++                  <include>encryption.proto</include>
++                  <include>inotify.proto</include>
++                  <include>ReconfigurationProtocol.proto</include>
++                </includes>
++              </source>
+             </configuration>
+           </execution>
+         </executions>
+diff --git a/hadoop-hdfs-project/hadoop-hdfs-client/src/main/proto/ClientDatanodeProtocol.proto b/hadoop-hdfs-project/hadoop-hdfs-client/src/main/proto/ClientDatanodeProtocol.proto
+index bcc6ed4f7ca..b9077f6ef01 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs-client/src/main/proto/ClientDatanodeProtocol.proto
++++ b/hadoop-hdfs-project/hadoop-hdfs-client/src/main/proto/ClientDatanodeProtocol.proto
+@@ -21,7 +21,7 @@
+  * Please see http://wiki.apache.org/hadoop/Compatibility
+  * for what changes are allowed for a *stable* .proto interface.
+  */
+-syntax="proto2";
++
+ // This file contains protocol buffers that are used throughout HDFS -- i.e.
+ // by the client, server, and data transfer protocols.
+ 
+diff --git a/hadoop-hdfs-project/hadoop-hdfs-client/src/main/proto/ClientNamenodeProtocol.proto b/hadoop-hdfs-project/hadoop-hdfs-client/src/main/proto/ClientNamenodeProtocol.proto
+index bb4d5e8c3d9..1dbf56ced3f 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs-client/src/main/proto/ClientNamenodeProtocol.proto
++++ b/hadoop-hdfs-project/hadoop-hdfs-client/src/main/proto/ClientNamenodeProtocol.proto
+@@ -21,7 +21,7 @@
+  * Please see http://wiki.apache.org/hadoop/Compatibility
+  * for what changes are allowed for a *stable* .proto interface.
+  */
+-syntax="proto2";
++
+ option java_package = "org.apache.hadoop.hdfs.protocol.proto";
+ option java_outer_classname = "ClientNamenodeProtocolProtos";
+ option java_generic_services = true;
+diff --git a/hadoop-hdfs-project/hadoop-hdfs-client/src/main/proto/ReconfigurationProtocol.proto b/hadoop-hdfs-project/hadoop-hdfs-client/src/main/proto/ReconfigurationProtocol.proto
+index bad9f45cf62..12a38b110fe 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs-client/src/main/proto/ReconfigurationProtocol.proto
++++ b/hadoop-hdfs-project/hadoop-hdfs-client/src/main/proto/ReconfigurationProtocol.proto
+@@ -15,7 +15,7 @@
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
+  */
+-syntax="proto2";
++
+  // This file contains protocol buffers that are used to reconfigure NameNode
+  // and DataNode by HDFS admin.
+ 
+diff --git a/hadoop-hdfs-project/hadoop-hdfs-client/src/main/proto/acl.proto b/hadoop-hdfs-project/hadoop-hdfs-client/src/main/proto/acl.proto
+index 32aac91df30..bb7fdb0168f 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs-client/src/main/proto/acl.proto
++++ b/hadoop-hdfs-project/hadoop-hdfs-client/src/main/proto/acl.proto
+@@ -15,7 +15,7 @@
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
+  */
+-syntax="proto2";
++
+ option java_package = "org.apache.hadoop.hdfs.protocol.proto";
+ option java_outer_classname = "AclProtos";
+ option java_generate_equals_and_hash = true;
+diff --git a/hadoop-hdfs-project/hadoop-hdfs-client/src/main/proto/datatransfer.proto b/hadoop-hdfs-project/hadoop-hdfs-client/src/main/proto/datatransfer.proto
+index 91b58d2bd23..135bab1625f 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs-client/src/main/proto/datatransfer.proto
++++ b/hadoop-hdfs-project/hadoop-hdfs-client/src/main/proto/datatransfer.proto
+@@ -21,7 +21,7 @@
+  * Please see http://wiki.apache.org/hadoop/Compatibility
+  * for what changes are allowed for a *stable* .proto interface.
+  */
+-syntax="proto2";
++
+ // This file contains protocol buffers that are used to transfer data
+ // to and from the datanode, as well as between datanodes.
+ 
+diff --git a/hadoop-hdfs-project/hadoop-hdfs-client/src/main/proto/encryption.proto b/hadoop-hdfs-project/hadoop-hdfs-client/src/main/proto/encryption.proto
+index 6a2e0a19769..68b2f3af29c 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs-client/src/main/proto/encryption.proto
++++ b/hadoop-hdfs-project/hadoop-hdfs-client/src/main/proto/encryption.proto
+@@ -21,7 +21,7 @@
+  * Please see http://wiki.apache.org/hadoop/Compatibility
+  * for what changes are allowed for a *stable* .proto interface.
+  */
+-syntax="proto2";
++
+ // This file contains protocol buffers that are used throughout HDFS -- i.e.
+ // by the client, server, and data transfer protocols.
+ 
+diff --git a/hadoop-hdfs-project/hadoop-hdfs-client/src/main/proto/hdfs.proto b/hadoop-hdfs-project/hadoop-hdfs-client/src/main/proto/hdfs.proto
+index c07dd9e8c97..04f8730c5f7 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs-client/src/main/proto/hdfs.proto
++++ b/hadoop-hdfs-project/hadoop-hdfs-client/src/main/proto/hdfs.proto
+@@ -21,7 +21,7 @@
+  * Please see http://wiki.apache.org/hadoop/Compatibility
+  * for what changes are allowed for a *stable* .proto interface.
+  */
+-syntax="proto2";
++
+ // This file contains protocol buffers that are used throughout HDFS -- i.e.
+ // by the client, server, and data transfer protocols.
+ 
+diff --git a/hadoop-hdfs-project/hadoop-hdfs-client/src/main/proto/inotify.proto b/hadoop-hdfs-project/hadoop-hdfs-client/src/main/proto/inotify.proto
+index dfc6618b10a..53399029582 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs-client/src/main/proto/inotify.proto
++++ b/hadoop-hdfs-project/hadoop-hdfs-client/src/main/proto/inotify.proto
+@@ -21,7 +21,7 @@
+  * Please see http://wiki.apache.org/hadoop/Compatibility
+  * for what changes are allowed for a *stable* .proto interface.
+  */
+-syntax="proto2";
++
+ // This file contains protocol buffers used to communicate edits to clients
+ // as part of the inotify system.
+ 
+diff --git a/hadoop-hdfs-project/hadoop-hdfs-client/src/main/proto/xattr.proto b/hadoop-hdfs-project/hadoop-hdfs-client/src/main/proto/xattr.proto
+index a53aa86c16d..6c8b5eb5943 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs-client/src/main/proto/xattr.proto
++++ b/hadoop-hdfs-project/hadoop-hdfs-client/src/main/proto/xattr.proto
+@@ -15,7 +15,7 @@
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
+  */
+-syntax="proto2";
++
+ option java_package = "org.apache.hadoop.hdfs.protocol.proto";
+ option java_outer_classname = "XAttrProtos";
+ option java_generate_equals_and_hash = true;
+diff --git a/hadoop-hdfs-project/hadoop-hdfs-rbf/pom.xml b/hadoop-hdfs-project/hadoop-hdfs-rbf/pom.xml
+index 3944308f8b2..02339640576 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs-rbf/pom.xml
++++ b/hadoop-hdfs-project/hadoop-hdfs-rbf/pom.xml
+@@ -179,21 +179,29 @@ https://maven.apache.org/xsd/maven-4.0.0.xsd">
+         </executions>
+       </plugin>
+       <plugin>
+-        <groupId>org.xolstice.maven.plugins</groupId>
+-        <artifactId>protobuf-maven-plugin</artifactId>
++        <groupId>org.apache.hadoop</groupId>
++        <artifactId>hadoop-maven-plugins</artifactId>
+         <executions>
+           <execution>
+-            <id>src-compile-protoc</id>
++            <id>compile-protoc</id>
++            <goals>
++              <goal>protoc</goal>
++            </goals>
+             <configuration>
+-              <skip>false</skip>
+-              <additionalProtoPathElements>
+-                <additionalProtoPathElement>
+-                  ${basedir}/../../hadoop-common-project/hadoop-common/src/main/proto
+-                </additionalProtoPathElement>
+-                <additionalProtoPathElement>
+-                  ${basedir}/../hadoop-hdfs-client/src/main/proto
+-                </additionalProtoPathElement>
+-              </additionalProtoPathElements>
++              <protocVersion>${protobuf.version}</protocVersion>
++              <protocCommand>${protoc.path}</protocCommand>
++              <imports>
++                <param>${basedir}/../hadoop-hdfs-client/src/main/proto</param>
++                <param>${basedir}/../../hadoop-common-project/hadoop-common/src/main/proto</param>
++                <param>${basedir}/src/main/proto</param>
++              </imports>
++              <source>
++                <directory>${basedir}/src/main/proto</directory>
++                <includes>
++                  <include>FederationProtocol.proto</include>
++                  <include>RouterProtocol.proto</include>
++                </includes>
++              </source>
+             </configuration>
+           </execution>
+         </executions>
+diff --git a/hadoop-hdfs-project/hadoop-hdfs-rbf/src/main/proto/FederationProtocol.proto b/hadoop-hdfs-project/hadoop-hdfs-rbf/src/main/proto/FederationProtocol.proto
+index a7ef1a46843..2ea240c11d1 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs-rbf/src/main/proto/FederationProtocol.proto
++++ b/hadoop-hdfs-project/hadoop-hdfs-rbf/src/main/proto/FederationProtocol.proto
+@@ -15,7 +15,7 @@
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
+  */
+-syntax = "proto2";
++
+ option java_package = "org.apache.hadoop.hdfs.federation.protocol.proto";
+ option java_outer_classname = "HdfsServerFederationProtos";
+ option java_generic_services = true;
+diff --git a/hadoop-hdfs-project/hadoop-hdfs-rbf/src/main/proto/RouterProtocol.proto b/hadoop-hdfs-project/hadoop-hdfs-rbf/src/main/proto/RouterProtocol.proto
+index 3eff0929775..f3a2b6e8abc 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs-rbf/src/main/proto/RouterProtocol.proto
++++ b/hadoop-hdfs-project/hadoop-hdfs-rbf/src/main/proto/RouterProtocol.proto
+@@ -15,7 +15,7 @@
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
+  */
+-syntax = "proto2";
++
+ option java_package = "org.apache.hadoop.hdfs.protocol.proto";
+ option java_outer_classname = "RouterProtocolProtos";
+ option java_generic_services = true;
+diff --git a/hadoop-hdfs-project/hadoop-hdfs/pom.xml b/hadoop-hdfs-project/hadoop-hdfs/pom.xml
+index 97c7cec5998..573e2d68dd8 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs/pom.xml
++++ b/hadoop-hdfs-project/hadoop-hdfs/pom.xml
+@@ -324,21 +324,37 @@ https://maven.apache.org/xsd/maven-4.0.0.xsd">
+         </executions>
+       </plugin>
+       <plugin>
+-        <groupId>org.xolstice.maven.plugins</groupId>
+-        <artifactId>protobuf-maven-plugin</artifactId>
++        <groupId>org.apache.hadoop</groupId>
++        <artifactId>hadoop-maven-plugins</artifactId>
+         <executions>
+           <execution>
+-            <id>src-compile-protoc</id>
++            <id>compile-protoc</id>
++            <goals>
++              <goal>protoc</goal>
++            </goals>
+             <configuration>
+-              <skip>false</skip>
+-              <additionalProtoPathElements>
+-                <additionalProtoPathElement>
+-                  ${basedir}/../../hadoop-common-project/hadoop-common/src/main/proto
+-                </additionalProtoPathElement>
+-                <additionalProtoPathElement>
+-                  ${basedir}/../hadoop-hdfs-client/src/main/proto
+-                </additionalProtoPathElement>
+-              </additionalProtoPathElements>
++              <protocVersion>${protobuf.version}</protocVersion>
++              <protocCommand>${protoc.path}</protocCommand>
++              <imports>
++                <param>${basedir}/../../hadoop-common-project/hadoop-common/src/main/proto</param>
++                <param>${basedir}/../hadoop-hdfs-client/src/main/proto</param>
++                <param>${basedir}/src/main/proto</param>
++              </imports>
++              <source>
++                <directory>${basedir}/src/main/proto</directory>
++                <includes>
++                  <include>HdfsServer.proto</include>
++                  <include>DatanodeProtocol.proto</include>
++                  <include>DatanodeLifelineProtocol.proto</include>
++                  <include>HAZKInfo.proto</include>
++                  <include>InterDatanodeProtocol.proto</include>
++                  <include>JournalProtocol.proto</include>
++                  <include>NamenodeProtocol.proto</include>
++                  <include>QJournalProtocol.proto</include>
++                  <include>editlog.proto</include>
++                  <include>fsimage.proto</include>
++                </includes>
++              </source>
+             </configuration>
+           </execution>
+         </executions>
+diff --git a/hadoop-hdfs-project/hadoop-hdfs/src/contrib/bkjournal/src/main/proto/bkjournal.proto b/hadoop-hdfs-project/hadoop-hdfs/src/contrib/bkjournal/src/main/proto/bkjournal.proto
+index 4b7a5f261cf..fc487186c53 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs/src/contrib/bkjournal/src/main/proto/bkjournal.proto
++++ b/hadoop-hdfs-project/hadoop-hdfs/src/contrib/bkjournal/src/main/proto/bkjournal.proto
+@@ -19,7 +19,6 @@
+ // This file contains protocol buffers that are used by bkjournal
+ // mostly for storing data in zookeeper
+ 
+-syntax = "proto2";
+ option java_package = "org.apache.hadoop.contrib.bkjournal";
+ option java_outer_classname = "BKJournalProtos";
+ option java_generate_equals_and_hash = true;
+@@ -46,4 +45,4 @@ message MaxTxIdProto {
+ message CurrentInprogressProto {
+   required string path = 1;
+   optional string hostname = 2;
+-}
++}
+\ No newline at end of file
+diff --git a/hadoop-hdfs-project/hadoop-hdfs/src/main/proto/DatanodeLifelineProtocol.proto b/hadoop-hdfs-project/hadoop-hdfs/src/main/proto/DatanodeLifelineProtocol.proto
+index e10a8861e61..b6ab75653a1 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs/src/main/proto/DatanodeLifelineProtocol.proto
++++ b/hadoop-hdfs-project/hadoop-hdfs/src/main/proto/DatanodeLifelineProtocol.proto
+@@ -21,7 +21,7 @@
+  * Please see http://wiki.apache.org/hadoop/Compatibility
+  * for what changes are allowed for a *stable* .proto interface.
+  */
+-syntax = "proto2";
++
+ option java_package = "org.apache.hadoop.hdfs.protocol.proto";
+ option java_outer_classname = "DatanodeLifelineProtocolProtos";
+ option java_generic_services = true;
+diff --git a/hadoop-hdfs-project/hadoop-hdfs/src/main/proto/DatanodeProtocol.proto b/hadoop-hdfs-project/hadoop-hdfs/src/main/proto/DatanodeProtocol.proto
+index 89b7c96efc7..0e4b2fb959c 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs/src/main/proto/DatanodeProtocol.proto
++++ b/hadoop-hdfs-project/hadoop-hdfs/src/main/proto/DatanodeProtocol.proto
+@@ -24,7 +24,7 @@
+ 
+ // This file contains protocol buffers that are used throughout HDFS -- i.e.
+ // by the client, server, and data transfer protocols.
+-syntax = "proto2";
++
+ option java_package = "org.apache.hadoop.hdfs.protocol.proto";
+ option java_outer_classname = "DatanodeProtocolProtos";
+ option java_generic_services = true;
+diff --git a/hadoop-hdfs-project/hadoop-hdfs/src/main/proto/HAZKInfo.proto b/hadoop-hdfs-project/hadoop-hdfs/src/main/proto/HAZKInfo.proto
+index 6d45a935ee4..aa8b6be4532 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs/src/main/proto/HAZKInfo.proto
++++ b/hadoop-hdfs-project/hadoop-hdfs/src/main/proto/HAZKInfo.proto
+@@ -21,7 +21,7 @@
+  * Please see http://wiki.apache.org/hadoop/Compatibility
+  * for what changes are allowed for a *stable* .proto interface.
+  */
+-syntax = "proto2";
++
+ option java_package = "org.apache.hadoop.hdfs.server.namenode.ha.proto";
+ option java_outer_classname = "HAZKInfoProtos";
+ package hadoop.hdfs;
+diff --git a/hadoop-hdfs-project/hadoop-hdfs/src/main/proto/HdfsServer.proto b/hadoop-hdfs-project/hadoop-hdfs/src/main/proto/HdfsServer.proto
+index 266024e3696..4c84615a494 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs/src/main/proto/HdfsServer.proto
++++ b/hadoop-hdfs-project/hadoop-hdfs/src/main/proto/HdfsServer.proto
+@@ -24,7 +24,7 @@
+ 
+ // This file contains protocol buffers that are used throughout HDFS -- i.e.
+ // by the client, server, and data transfer protocols.
+-syntax = "proto2";
++
+ 
+ option java_package = "org.apache.hadoop.hdfs.protocol.proto";
+ option java_outer_classname = "HdfsServerProtos";
+diff --git a/hadoop-hdfs-project/hadoop-hdfs/src/main/proto/InterDatanodeProtocol.proto b/hadoop-hdfs-project/hadoop-hdfs/src/main/proto/InterDatanodeProtocol.proto
+index 47332a8817b..580f8d34730 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs/src/main/proto/InterDatanodeProtocol.proto
++++ b/hadoop-hdfs-project/hadoop-hdfs/src/main/proto/InterDatanodeProtocol.proto
+@@ -24,7 +24,7 @@
+ 
+ // This file contains protocol buffers that are used throughout HDFS -- i.e.
+ // by the client, server, and data transfer protocols.
+-syntax = "proto2";
++
+ option java_package = "org.apache.hadoop.hdfs.protocol.proto";
+ option java_outer_classname = "InterDatanodeProtocolProtos";
+ option java_generic_services = true;
+diff --git a/hadoop-hdfs-project/hadoop-hdfs/src/main/proto/JournalProtocol.proto b/hadoop-hdfs-project/hadoop-hdfs/src/main/proto/JournalProtocol.proto
+index 35c401e33e5..3fd029b7362 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs/src/main/proto/JournalProtocol.proto
++++ b/hadoop-hdfs-project/hadoop-hdfs/src/main/proto/JournalProtocol.proto
+@@ -24,7 +24,7 @@
+ 
+ // This file contains protocol buffers that are used throughout HDFS -- i.e.
+ // by the client, server, and data transfer protocols.
+-syntax = "proto2";
++
+ option java_package = "org.apache.hadoop.hdfs.protocol.proto";
+ option java_outer_classname = "JournalProtocolProtos";
+ option java_generic_services = true;
+diff --git a/hadoop-hdfs-project/hadoop-hdfs/src/main/proto/NamenodeProtocol.proto b/hadoop-hdfs-project/hadoop-hdfs/src/main/proto/NamenodeProtocol.proto
+index 201039890a4..8aa09d32ce4 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs/src/main/proto/NamenodeProtocol.proto
++++ b/hadoop-hdfs-project/hadoop-hdfs/src/main/proto/NamenodeProtocol.proto
+@@ -24,7 +24,7 @@
+ 
+ // This file contains protocol buffers that are used throughout HDFS -- i.e.
+ // by the client, server, and data transfer protocols.
+-syntax = "proto2";
++
+ option java_package = "org.apache.hadoop.hdfs.protocol.proto";
+ option java_outer_classname = "NamenodeProtocolProtos";
+ option java_generic_services = true;
+diff --git a/hadoop-hdfs-project/hadoop-hdfs/src/main/proto/QJournalProtocol.proto b/hadoop-hdfs-project/hadoop-hdfs/src/main/proto/QJournalProtocol.proto
+index b33d99c39a9..d230166e908 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs/src/main/proto/QJournalProtocol.proto
++++ b/hadoop-hdfs-project/hadoop-hdfs/src/main/proto/QJournalProtocol.proto
+@@ -21,7 +21,7 @@
+  * Please see http://wiki.apache.org/hadoop/Compatibility
+  * for what changes are allowed for a *stable* .proto interface.
+  */
+-syntax = "proto2";
++
+ option java_package = "org.apache.hadoop.hdfs.qjournal.protocol";
+ option java_outer_classname = "QJournalProtocolProtos";
+ option java_generic_services = true;
+diff --git a/hadoop-hdfs-project/hadoop-hdfs/src/main/proto/editlog.proto b/hadoop-hdfs-project/hadoop-hdfs/src/main/proto/editlog.proto
+index 22fd7437bb8..f25fe591ad3 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs/src/main/proto/editlog.proto
++++ b/hadoop-hdfs-project/hadoop-hdfs/src/main/proto/editlog.proto
+@@ -15,7 +15,7 @@
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
+  */
+-syntax = "proto2";
++
+ option java_package = "org.apache.hadoop.hdfs.protocol.proto";
+ option java_outer_classname = "EditLogProtos";
+ option java_generate_equals_and_hash = true;
+diff --git a/hadoop-hdfs-project/hadoop-hdfs/src/main/proto/fsimage.proto b/hadoop-hdfs-project/hadoop-hdfs/src/main/proto/fsimage.proto
+index 2ea26cff940..5fb7c69a7fd 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs/src/main/proto/fsimage.proto
++++ b/hadoop-hdfs-project/hadoop-hdfs/src/main/proto/fsimage.proto
+@@ -15,7 +15,7 @@
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
+  */
+-syntax = "proto2";
++
+ option java_package = "org.apache.hadoop.hdfs.server.namenode";
+ option java_outer_classname = "FsImageProto";
+ 
+diff --git a/hadoop-project/pom.xml b/hadoop-project/pom.xml
+index f52c0c9ae29..ad3daaf589e 100644
+--- a/hadoop-project/pom.xml
++++ b/hadoop-project/pom.xml
+@@ -1429,64 +1429,9 @@
+           <artifactId>hadoop-maven-plugins</artifactId>
+           <version>${project.version}</version>
+         </plugin>
+-        <plugin>
+-          <groupId>org.xolstice.maven.plugins</groupId>
+-          <artifactId>protobuf-maven-plugin</artifactId>
+-          <version>${protobuf-maven-plugin.version}</version>
+-          <extensions>true</extensions>
+-          <dependencies>
+-            <!-- for compiling with java7 -->
+-            <dependency>
+-              <groupId>com.google.guava</groupId>
+-              <artifactId>guava</artifactId>
+-              <version>20.0</version>
+-            </dependency>
+-          </dependencies>
+-          <configuration>
+-            <protocArtifact>
+-              com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}
+-            </protocArtifact>
+-            <attachProtoSources>false</attachProtoSources>
+-          </configuration>
+-          <executions>
+-            <execution>
+-              <id>src-compile-protoc</id>
+-              <phase>generate-sources</phase>
+-              <goals>
+-                <goal>compile</goal>
+-              </goals>
+-              <configuration>
+-                <includeDependenciesInDescriptorSet>false</includeDependenciesInDescriptorSet>
+-                <protoSourceRoot>${basedir}/src/main/proto</protoSourceRoot>
+-                <outputDirectory>${project.build.directory}/generated-sources/java</outputDirectory>
+-                <clearOutputDirectory>false</clearOutputDirectory>
+-                <skip>true</skip>
+-              </configuration>
+-            </execution>
+-            <execution>
+-              <id>src-test-compile-protoc</id>
+-              <phase>generate-test-sources</phase>
+-              <goals>
+-                <goal>test-compile</goal>
+-              </goals>
+-              <configuration>
+-                <protoTestSourceRoot>${basedir}/src/test/proto</protoTestSourceRoot>
+-                <outputDirectory>${project.build.directory}/generated-test-sources/java</outputDirectory>
+-                <clearOutputDirectory>false</clearOutputDirectory>
+-                <skip>true</skip>
+-              </configuration>
+-            </execution>
+-          </executions>
+-        </plugin>
+       </plugins>
+     </pluginManagement>
+-    <extensions>
+-      <extension>
+-        <groupId>kr.motd.maven</groupId>
+-        <artifactId>os-maven-plugin</artifactId>
+-        <version>${os-maven-plugin.version}</version>
+-      </extension>
+-    </extensions>
++
+     <plugins>
+       <plugin>
+         <groupId>org.codehaus.mojo</groupId>
