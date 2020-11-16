@@ -1,0 +1,18 @@
+diff --git a/pom.xml b/pom.xml
+index fc9e13a149..162824764f 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -100,10 +100,9 @@
+       </snapshots>
+     </repository>
+     <repository>
+-      <!-- for Pivotal's distribution -->
+-      <id>spring-releases</id>
+-      <name>Spring Release Repository</name>
+-      <url>http://repo.spring.io/libs-release</url>
++      <id>bintray</id>
++      <name>bintray</name>
++      <url>https://jcenter.bintray.com</url>
+       <releases>
+         <enabled>true</enabled>
+       </releases>
