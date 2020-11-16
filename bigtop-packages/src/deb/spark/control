@@ -78,5 +78,6 @@ Description: Spark YARN Shuffle Service
 
 Package: spark-sparkr
 Architecture: all
+Depends: spark-core (= ${source:Version}), r-base
 Description: R package for Apache Spark
  SparkR is an R package that provides a light-weight frontend to use Apache Spark from R
