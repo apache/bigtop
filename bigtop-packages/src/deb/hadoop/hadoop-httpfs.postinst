@@ -22,7 +22,6 @@ set -e
 case "$1" in
     configure)
         chown httpfs:httpfs /var/run/hadoop-httpfs /var/log/hadoop-httpfs
-        update-alternatives --install /etc/hadoop-httpfs/conf hadoop-httpfs-conf /etc/hadoop-httpfs/conf.empty 10
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

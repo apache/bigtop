@@ -1,4 +1,3 @@
 /etc/default/hadoop-kms
-/etc/hadoop-kms
 /usr/lib/hadoop-kms
 /var/lib/hadoop-kms

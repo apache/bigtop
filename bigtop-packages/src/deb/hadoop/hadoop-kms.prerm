@@ -35,7 +35,6 @@ set -e
 
 case "$1" in
     remove|upgrade|deconfigure)
-      update-alternatives --remove hadoop-kms-conf /etc/hadoop-kms/conf.empty || :
     ;;
 
     failed-upgrade)

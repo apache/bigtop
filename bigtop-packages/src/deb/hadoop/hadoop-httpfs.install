@@ -1,4 +1,3 @@
 /etc/default/hadoop-httpfs
-/etc/hadoop-httpfs
 /usr/lib/hadoop-httpfs
 /var/lib/hadoop-httpfs
