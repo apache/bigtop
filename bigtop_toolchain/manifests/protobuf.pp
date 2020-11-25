@@ -35,7 +35,7 @@ class bigtop_toolchain::protobuf {
 
   exec { "install protobuf":
      cwd => "/usr/src/$protobuf8dir",
-     command => "/usr/src/$protobuf8dir/configure --prefix=/usr/local --disable-shared && /usr/bin/make install",
+     command => "/usr/src/$protobuf8dir/configure --prefix=/usr/local && /usr/bin/make install",
      creates => "/usr/local/bin/protoc",
      require => EXEC["download protobuf"],
      timeout => 3000

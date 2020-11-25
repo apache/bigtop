@@ -1,0 +1,92 @@
+diff --git a/BUILDING.txt b/BUILDING.txt
+index 9d40d24524e..cb3d68edfff 100644
+--- a/BUILDING.txt
++++ b/BUILDING.txt
+@@ -422,6 +422,47 @@ Building command example:
+ Note that the command above manually specified the openssl library and include
+ path. This is necessary at least for Homebrewed OpenSSL.
+ 
++
++----------------------------------------------------------------------------------
++
++Building on CentOS 8
++
++----------------------------------------------------------------------------------
++
++
++* Install development tools such as GCC, autotools, OpenJDK and Maven.
++  $ sudo dnf group install 'Development Tools'
++  $ sudo dnf install java-1.8.0-openjdk-devel maven
++
++* Install Protocol Buffers v2.5.0.
++  $ git clone https://github.com/protocolbuffers/protobuf
++  $ cd protobuf
++  $ git checkout v2.5.0
++  $ autoreconf -i
++  $ ./configure --prefix=/usr/local
++  $ make
++  $ sudo make install
++  $ cd ..
++
++* Install libraries provided by CentOS 8.
++  $ sudo dnf install libtirpc-devel zlib-devel lz4-devel bzip2-devel openssl-devel cyrus-sasl-devel libpmem-devel
++
++* Install optional dependencies (snappy-devel).
++  $ sudo dnf --enablerepo=PowerTools snappy-devel
++
++* Install optional dependencies (libzstd-devel).
++  $ sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
++  $ sudo dnf --enablerepo=epel install libzstd-devel
++
++* Install optional dependencies (isa-l).
++  $ sudo dnf --enablerepo=PowerTools install nasm
++  $ git clone https://github.com/intel/isa-l
++  $ cd isa-l/
++  $ ./autogen.sh
++  $ ./configure
++  $ make
++  $ sudo make install
++
+ ----------------------------------------------------------------------------------
+ 
+ Building on Windows
+diff --git a/hadoop-tools/hadoop-pipes/src/CMakeLists.txt b/hadoop-tools/hadoop-pipes/src/CMakeLists.txt
+index ff660bfafce..ce6ee317936 100644
+--- a/hadoop-tools/hadoop-pipes/src/CMakeLists.txt
++++ b/hadoop-tools/hadoop-pipes/src/CMakeLists.txt
+@@ -22,6 +22,25 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/../../../hadoop-common-project
+ include(HadoopCommon)
+ 
+ find_package(OpenSSL REQUIRED)
++find_package(PkgConfig QUIET)
++pkg_check_modules(LIBTIRPC libtirpc)
++
++find_path(RPC_INCLUDE_DIRS NAMES rpc/rpc.h)
++
++if (NOT RPC_INCLUDE_DIRS)
++    find_path(TIRPC_INCLUDE_DIRS
++        NAMES netconfig.h
++        PATH_SUFFIXES tirpc
++        HINTS ${LIBTIRPC_INCLUDE_DIRS}
++    )
++
++    find_library(TIRPC_LIBRARIES
++        NAMES tirpc
++        HINTS ${LIBTIRPC_LIBRARY_DIRS}
++    )
++
++    include_directories(${TIRPC_INCLUDE_DIRS})
++endif()
+ 
+ include_directories(
+     main/native/utils/api
+@@ -51,6 +70,9 @@ add_library(hadooputils STATIC
+     main/native/utils/impl/StringUtils.cc
+     main/native/utils/impl/SerialUtils.cc
+ )
++if (NOT RPC_INCLUDE_DIRS AND LIBTIRPC_FOUND)
++    target_link_libraries(hadooputils tirpc)
++endif()
+ 
+ add_library(hadooppipes STATIC
+     main/native/pipes/impl/HadoopPipes.cc

@@ -13,6 +13,8 @@
 /usr/lib/hadoop/etc
 /usr/lib/hadoop/libexec/hadoop-config.sh
 /usr/lib/hadoop/libexec/hadoop-layout.sh
+/usr/lib/hadoop/libexec/hadoop-functions.sh
+/usr/lib/hadoop/libexec/shellprofile.d
 /usr/lib/hadoop/*.jar
 /usr/lib/hadoop/lib
 /usr/lib/hadoop/sbin

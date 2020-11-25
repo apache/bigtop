@@ -36,7 +36,6 @@ set -e
 case "$1" in
     remove|upgrade|deconfigure)
       update-alternatives --remove hadoop-httpfs-conf /etc/hadoop-httpfs/conf.empty || :
-      update-alternatives --remove-all hadoop-httpfs-tomcat-conf || :
     ;;
 
     failed-upgrade)

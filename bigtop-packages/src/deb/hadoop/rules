@@ -58,9 +58,7 @@ override_dh_auto_install:
 	  --distro-dir=debian \
 	  --build-dir=${PWD}/build \
 	  --httpfs-dir=debian/tmp/usr/lib/hadoop-httpfs \
-	  --httpfs-etc-dir=debian/tmp/etc/hadoop-httpfs \
 	  --kms-dir=debian/tmp/usr/lib/hadoop-kms \
-	  --kms-etc-dir=debian/tmp/etc/hadoop-kms \
 	  --system-lib-dir=debian/tmp/usr/lib/ \
 	  --system-libexec-dir=debian/tmp/usr/lib/hadoop/libexec/ \
 	  --system-include-dir=debian/tmp/usr/include \

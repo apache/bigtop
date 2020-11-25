@@ -24,14 +24,8 @@
 %define hadoop_name hadoop
 %define etc_hadoop /etc/%{name}
 %define etc_yarn /etc/yarn
-%define etc_httpfs /etc/%{name}-httpfs
-%define etc_kms /etc/%{name}-kms
 %define config_hadoop %{etc_hadoop}/conf
 %define config_yarn %{etc_yarn}/conf
-%define config_httpfs %{etc_httpfs}/conf
-%define config_kms %{etc_kms}/conf
-%define tomcat_deployment_httpfs %{etc_httpfs}/tomcat-conf
-%define tomcat_deployment_kms %{etc_kms}/tomcat-conf
 %define lib_hadoop_dirname /usr/lib
 %define lib_hadoop %{lib_hadoop_dirname}/%{name}
 %define lib_httpfs %{lib_hadoop_dirname}/%{name}-httpfs
@@ -175,14 +169,12 @@ Source21: yarn.default
 Source22: hadoop-layout.sh
 Source23: hadoop-hdfs-zkfc.svc
 Source24: hadoop-hdfs-journalnode.svc
-Source25: httpfs-tomcat-deployment.sh
 Source26: yarn.1
 Source27: hdfs.1
 Source28: mapred.1
 Source29: hadoop-yarn-timelineserver.svc
 Source30: hadoop-kms.svc
 Source31: kms.default
-Source32: kms-tomcat-deployment.sh
 #BIGTOP_PATCH_FILES
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
 BuildRequires: fuse-devel, fuse, cmake
@@ -340,7 +332,7 @@ blocks of data over the network to Hadoop Distributed Filesystem
 %package httpfs
 Summary: HTTPFS for Hadoop
 Group: System/Daemons
-Requires: %{name}-hdfs = %{version}-%{release}, bigtop-tomcat
+Requires: %{name}-hdfs = %{version}-%{release}
 Requires(pre): %{name} = %{version}-%{release}
 Requires(pre): %{name}-hdfs = %{version}-%{release}
 
@@ -351,7 +343,7 @@ interface in HDFS.
 %package kms
 Summary: KMS for Hadoop
 Group: System/Daemons
-Requires: %{name}-client = %{version}-%{release}, bigtop-tomcat
+Requires: %{name}-client = %{version}-%{release}
 Requires(pre): %{name} = %{version}-%{release}
 
 %description kms
@@ -518,8 +510,6 @@ env HADOOP_VERSION=%{hadoop_base_version} bash %{SOURCE2} \
   --system-lib-dir=$RPM_BUILD_ROOT%{_libdir} \
   --system-libexec-dir=$RPM_BUILD_ROOT/%{lib_hadoop}/libexec \
   --hadoop-etc-dir=$RPM_BUILD_ROOT%{etc_hadoop} \
-  --httpfs-etc-dir=$RPM_BUILD_ROOT%{etc_httpfs} \
-  --kms-etc-dir=$RPM_BUILD_ROOT%{etc_kms} \
   --prefix=$RPM_BUILD_ROOT \
   --doc-dir=$RPM_BUILD_ROOT%{doc_hadoop} \
   --example-dir=$RPM_BUILD_ROOT%{doc_hadoop}/examples \
@@ -604,17 +594,9 @@ getent passwd mapred >/dev/null || /usr/sbin/useradd --comment "Hadoop MapReduce
 %{alternatives_cmd} --install %{config_hadoop} %{name}-conf %{etc_hadoop}/conf.empty 10
 
 %post httpfs
-%{alternatives_cmd} --install %{config_httpfs} %{name}-httpfs-conf %{etc_httpfs}/conf.empty 10
-%{alternatives_cmd} --install %{tomcat_deployment_httpfs} %{name}-httpfs-tomcat-conf %{etc_httpfs}/tomcat-conf.dist 10
-%{alternatives_cmd} --install %{tomcat_deployment_httpfs} %{name}-httpfs-tomcat-conf %{etc_httpfs}/tomcat-conf.https 5
-
 chkconfig --add %{name}-httpfs
 
 %post kms
-%{alternatives_cmd} --install %{config_kms} %{name}-kms-conf %{etc_kms}/conf.empty 10
-%{alternatives_cmd} --install %{tomcat_deployment_kms} %{name}-kms-tomcat-conf %{etc_kms}/tomcat-conf.dist 10
-%{alternatives_cmd} --install %{tomcat_deployment_kms} %{name}-kms-tomcat-conf %{etc_kms}/tomcat-conf.https 5
-
 chkconfig --add %{name}-kms
 
 %preun
@@ -626,9 +608,6 @@ fi
 if [ $1 = 0 ]; then
   service %{name}-httpfs stop > /dev/null 2>&1
   chkconfig --del %{name}-httpfs
-  %{alternatives_cmd} --remove %{name}-httpfs-conf %{etc_httpfs}/conf.empty || :
-  %{alternatives_cmd} --remove %{name}-httpfs-tomcat-conf %{etc_httpfs}/tomcat-conf.dist || :
-  %{alternatives_cmd} --remove %{name}-httpfs-tomcat-conf %{etc_httpfs}/tomcat-conf.https || :
 fi
 
 %postun httpfs
@@ -640,9 +619,6 @@ fi
 if [ $1 = 0 ]; then
   service %{name}-kms stop > /dev/null 2>&1
   chkconfig --del %{name}-kms
-  %{alternatives_cmd} --remove %{name}-kms-conf %{etc_kms}/conf.empty || :
-  %{alternatives_cmd} --remove %{name}-kms-tomcat-conf %{etc_kms}/tomcat-conf.dist || :
-  %{alternatives_cmd} --remove %{name}-kms-tomcat-conf %{etc_kms}/tomcat-conf.https || :
 fi
 
 %postun kms
@@ -686,7 +662,6 @@ fi
 %config(noreplace) %{etc_hadoop}/conf.empty/mapred-site.xml
 %config(noreplace) %{etc_hadoop}/conf.empty/mapred-env.sh
 %config(noreplace) %{etc_hadoop}/conf.empty/mapred-queues.xml.template
-%config(noreplace) %{etc_hadoop}/conf.empty/mapred-site.xml.template
 %config(noreplace) /etc/security/limits.d/mapreduce.conf
 %{lib_mapreduce}
 %{lib_hadoop}/libexec/mapred-config.sh
@@ -700,10 +675,9 @@ fi
 %files
 %defattr(-,root,root)
 %config(noreplace) %{etc_hadoop}/conf.empty/core-site.xml
-%config(noreplace) %{etc_hadoop}/conf.empty/hadoop-metrics.properties
 %config(noreplace) %{etc_hadoop}/conf.empty/hadoop-metrics2.properties
 %config(noreplace) %{etc_hadoop}/conf.empty/log4j.properties
-%config(noreplace) %{etc_hadoop}/conf.empty/slaves
+%config(noreplace) %{etc_hadoop}/conf.empty/workers
 %config(noreplace) %{etc_hadoop}/conf.empty/ssl-client.xml.example
 %config(noreplace) %{etc_hadoop}/conf.empty/ssl-server.xml.example
 %config(noreplace) %{etc_hadoop}/conf.empty/configuration.xsl
@@ -718,7 +692,8 @@ fi
 %{lib_hadoop}/etc
 %{lib_hadoop}/libexec/hadoop-config.sh
 %{lib_hadoop}/libexec/hadoop-layout.sh
-%{lib_hadoop}/libexec/kms-config.sh
+%{lib_hadoop}/libexec/hadoop-functions.sh
+%{lib_hadoop}/libexec/shellprofile.d
 %{bin_hadoop}/hadoop
 %{man_hadoop}/man1/hadoop.1.*
 %{man_hadoop}/man1/yarn.1.*
@@ -734,9 +709,7 @@ fi
 
 %files httpfs
 %defattr(-,root,root)
-%config(noreplace) %{etc_httpfs}
 %config(noreplace) /etc/default/%{name}-httpfs
-%{lib_hadoop}/libexec/httpfs-config.sh
 %{initd_dir}/%{name}-httpfs
 %{lib_httpfs}
 %attr(0775,httpfs,httpfs) %{run_httpfs}
@@ -745,9 +718,7 @@ fi
 
 %files kms
 %defattr(-,root,root)
-%config(noreplace) %{etc_kms}
 %config(noreplace) /etc/default/%{name}-kms
-%{lib_hadoop}/libexec/kms-config.sh
 %{initd_dir}/%{name}-kms
 %{lib_kms}
 %attr(0775,kms,kms) %{run_kms}
