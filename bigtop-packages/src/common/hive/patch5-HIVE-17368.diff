@@ -1,0 +1,293 @@
+diff --git a/itests/hive-minikdc/src/test/java/org/apache/hive/minikdc/MiniHiveKdc.java b/itests/hive-minikdc/src/test/java/org/apache/hive/minikdc/MiniHiveKdc.java
+index bbec37eea76..c02879d9bfd 100644
+--- a/itests/hive-minikdc/src/test/java/org/apache/hive/minikdc/MiniHiveKdc.java
++++ b/itests/hive-minikdc/src/test/java/org/apache/hive/minikdc/MiniHiveKdc.java
+@@ -51,6 +51,7 @@
+   public static String HIVE_TEST_USER_2 = "user2";
+   public static String HIVE_TEST_SUPER_USER = "superuser";
+   public static String AUTHENTICATION_TYPE = "KERBEROS";
++  private static final String HIVE_METASTORE_SERVICE_PRINCIPAL = "hive";
+ 
+   private final MiniKdc miniKdc;
+   private final File workDir;
+@@ -204,6 +205,39 @@ public static MiniHS2 getMiniHS2WithKerbWithRemoteHMS(MiniHiveKdc miniHiveKdc, H
+     return getMiniHS2WithKerbWithRemoteHMS(miniHiveKdc, hiveConf, AUTHENTICATION_TYPE);
+   }
+ 
++  public static MiniHS2 getMiniHS2WithKerbWithRemoteHMSWithKerb(MiniHiveKdc miniHiveKdc,
++      HiveConf hiveConf) throws Exception {
++    return getMiniHS2WithKerbWithRemoteHMSWithKerb(miniHiveKdc, hiveConf, AUTHENTICATION_TYPE);
++  }
++
++  /**
++   * Create a MiniHS2 with the hive service principal and keytab in MiniHiveKdc. It uses remote HMS
++   * and can support a different Sasl authType. It creates a metastore service principal and keytab
++   * which can be used for secure HMS
++   * @param miniHiveKdc
++   * @param hiveConf
++   * @param authenticationType
++   * @return new MiniHS2 instance
++   * @throws Exception
++   */
++  private static MiniHS2 getMiniHS2WithKerbWithRemoteHMSWithKerb(MiniHiveKdc miniHiveKdc,
++      HiveConf hiveConf, String authenticationType) throws Exception {
++    String hivePrincipal =
++        miniHiveKdc.getFullyQualifiedServicePrincipal(MiniHiveKdc.HIVE_SERVICE_PRINCIPAL);
++    String hiveKeytab = miniHiveKdc.getKeyTabFile(
++        miniHiveKdc.getServicePrincipalForUser(MiniHiveKdc.HIVE_SERVICE_PRINCIPAL));
++
++    String hiveMetastorePrincipal =
++        miniHiveKdc.getFullyQualifiedServicePrincipal(MiniHiveKdc.HIVE_METASTORE_SERVICE_PRINCIPAL);
++    String hiveMetastoreKeytab = miniHiveKdc.getKeyTabFile(
++        miniHiveKdc.getServicePrincipalForUser(MiniHiveKdc.HIVE_METASTORE_SERVICE_PRINCIPAL));
++
++    return new MiniHS2.Builder().withConf(hiveConf)
++        .withSecureRemoteMetastore(hiveMetastorePrincipal, hiveMetastoreKeytab).
++            withMiniKdc(hivePrincipal, hiveKeytab).withAuthenticationType(authenticationType)
++        .build();
++  }
++
+   /**
+    * Create a MiniHS2 with the hive service principal and keytab in MiniHiveKdc. It uses remote HMS
+    * and can support a different Sasl authType
+diff --git a/itests/hive-minikdc/src/test/java/org/apache/hive/minikdc/TestJdbcWithDBTokenStore.java b/itests/hive-minikdc/src/test/java/org/apache/hive/minikdc/TestJdbcWithDBTokenStore.java
+index d690aaa673a..fc1dc493d7f 100644
+--- a/itests/hive-minikdc/src/test/java/org/apache/hive/minikdc/TestJdbcWithDBTokenStore.java
++++ b/itests/hive-minikdc/src/test/java/org/apache/hive/minikdc/TestJdbcWithDBTokenStore.java
+@@ -34,7 +34,11 @@ public static void beforeTest() throws Exception {
+     HiveConf hiveConf = new HiveConf();
+     hiveConf.setVar(ConfVars.METASTORE_CLUSTER_DELEGATION_TOKEN_STORE_CLS, "org.apache.hadoop.hive.thrift.DBTokenStore");
+     miniHiveKdc = MiniHiveKdc.getMiniHiveKdc(hiveConf);
+-    miniHS2 = MiniHiveKdc.getMiniHS2WithKerbWithRemoteHMS(miniHiveKdc, hiveConf);
++    miniHS2 = MiniHiveKdc.getMiniHS2WithKerbWithRemoteHMSWithKerb(miniHiveKdc, hiveConf);
+     miniHS2.start(confOverlay);
++    String metastorePrincipal = miniHS2.getConfProperty(ConfVars.METASTORE_KERBEROS_PRINCIPAL.varname);
++    String hs2Principal = miniHS2.getConfProperty(ConfVars.HIVE_SERVER2_KERBEROS_PRINCIPAL.varname);
++    String hs2KeyTab = miniHS2.getConfProperty(ConfVars.HIVE_SERVER2_KERBEROS_KEYTAB.varname);
++    System.out.println("HS2 principal : " + hs2Principal + " HS2 keytab : " + hs2KeyTab + " Metastore principal : " + metastorePrincipal);
+   }
+ }
+\ No newline at end of file
+diff --git a/itests/hive-unit-hadoop2/src/test/java/org/apache/hadoop/hive/thrift/TestHadoopAuthBridge23.java b/itests/hive-unit-hadoop2/src/test/java/org/apache/hadoop/hive/thrift/TestHadoopAuthBridge23.java
+index 36a9ea830a6..7e5005cdcfd 100644
+--- a/itests/hive-unit-hadoop2/src/test/java/org/apache/hadoop/hive/thrift/TestHadoopAuthBridge23.java
++++ b/itests/hive-unit-hadoop2/src/test/java/org/apache/hadoop/hive/thrift/TestHadoopAuthBridge23.java
+@@ -169,7 +169,7 @@ public void testDelegationTokenSharedStore() throws Exception {
+     tokenManager.startThreads();
+     tokenManager.stopThreads();
+ 
+-    String tokenStrForm = tokenManager.getDelegationToken(clientUgi.getShortUserName());
++    String tokenStrForm = tokenManager.getDelegationToken(clientUgi.getShortUserName(), clientUgi.getShortUserName());
+     Token<DelegationTokenIdentifier> t= new Token<DelegationTokenIdentifier>();
+     t.decodeFromUrlString(tokenStrForm);
+ 
+diff --git a/itests/util/src/main/java/org/apache/hive/jdbc/miniHS2/MiniHS2.java b/itests/util/src/main/java/org/apache/hive/jdbc/miniHS2/MiniHS2.java
+index 71f9640ad21..ebc4c10b640 100644
+--- a/itests/util/src/main/java/org/apache/hive/jdbc/miniHS2/MiniHS2.java
++++ b/itests/util/src/main/java/org/apache/hive/jdbc/miniHS2/MiniHS2.java
+@@ -72,6 +72,7 @@
+   private final String serverPrincipal;
+   private final boolean isMetastoreRemote;
+   private final boolean cleanupLocalDirOnStartup;
++  private final boolean isMetastoreSecure;
+   private MiniClusterType miniClusterType = MiniClusterType.LOCALFS_ONLY;
+ 
+   public enum MiniClusterType {
+@@ -93,6 +94,9 @@
+     private String authType = "KERBEROS";
+     private boolean isHA = false;
+     private boolean cleanupLocalDirOnStartup = true;
++    private boolean isMetastoreSecure;
++    private String metastoreServerPrincipal;
++    private String metastoreServerKeyTab;
+ 
+     public Builder() {
+     }
+@@ -119,6 +123,14 @@ public Builder withRemoteMetastore() {
+       return this;
+     }
+ 
++    public Builder withSecureRemoteMetastore(String metastoreServerPrincipal, String metastoreServerKeyTab) {
++      this.isMetastoreRemote = true;
++      this.isMetastoreSecure = true;
++      this.metastoreServerPrincipal = metastoreServerPrincipal;
++      this.metastoreServerKeyTab = metastoreServerKeyTab;
++      return this;
++    }
++
+     public Builder withConf(HiveConf hiveConf) {
+       this.hiveConf = hiveConf;
+       return this;
+@@ -153,7 +165,8 @@ public MiniHS2 build() throws Exception {
+         hiveConf.setVar(ConfVars.HIVE_SERVER2_TRANSPORT_MODE, HS2_BINARY_MODE);
+       }
+       return new MiniHS2(hiveConf, miniClusterType, useMiniKdc, serverPrincipal, serverKeytab,
+-          isMetastoreRemote, usePortsFromConf, authType, isHA, cleanupLocalDirOnStartup);
++          isMetastoreRemote, usePortsFromConf, authType, isHA, cleanupLocalDirOnStartup,
++          isMetastoreSecure, metastoreServerPrincipal, metastoreServerKeyTab);
+     }
+   }
+ 
+@@ -191,7 +204,10 @@ public boolean isUseMiniKdc() {
+ 
+   private MiniHS2(HiveConf hiveConf, MiniClusterType miniClusterType, boolean useMiniKdc,
+       String serverPrincipal, String serverKeytab, boolean isMetastoreRemote,
+-      boolean usePortsFromConf, String authType, boolean isHA, boolean cleanupLocalDirOnStartup) throws Exception {
++      boolean usePortsFromConf, String authType, boolean isHA, boolean cleanupLocalDirOnStartup,
++      boolean isMetastoreSecure,
++      String metastoreServerPrincipal,
++      String metastoreKeyTab) throws Exception {
+     // Always use localhost for hostname as some tests like SSL CN validation ones
+     // are tied to localhost being present in the certificate name
+     super(
+@@ -208,6 +224,7 @@ private MiniHS2(HiveConf hiveConf, MiniClusterType miniClusterType, boolean useM
+     this.useMiniKdc = useMiniKdc;
+     this.serverPrincipal = serverPrincipal;
+     this.isMetastoreRemote = isMetastoreRemote;
++    this.isMetastoreSecure = isMetastoreSecure;
+     this.cleanupLocalDirOnStartup = cleanupLocalDirOnStartup;
+     baseDir = getBaseDir();
+     localFS = FileSystem.getLocal(hiveConf);
+@@ -261,9 +278,15 @@ private MiniHS2(HiveConf hiveConf, MiniClusterType miniClusterType, boolean useM
+       hiveConf.setVar(ConfVars.HIVE_SERVER2_KERBEROS_KEYTAB, serverKeytab);
+       hiveConf.setVar(ConfVars.HIVE_SERVER2_AUTHENTICATION, authType);
+     }
+-    String metaStoreURL =
+-        "jdbc:derby:;databaseName=" + baseDir.getAbsolutePath() + File.separator
+-            + "test_metastore;create=true";
++
++    String metaStoreURL = "jdbc:derby:;databaseName=" + baseDir.getAbsolutePath() + File.separator
++        + "test_metastore;create=true";
++
++    if (isMetastoreSecure) {
++      hiveConf.setVar(ConfVars.METASTORE_KERBEROS_PRINCIPAL, metastoreServerPrincipal);
++      hiveConf.setVar(ConfVars.METASTORE_KERBEROS_KEYTAB_FILE, metastoreKeyTab);
++      hiveConf.setBoolVar(ConfVars.METASTORE_USE_THRIFT_SASL, true);
++    }
+ 
+     fs.mkdirs(baseFsDir);
+     Path wareHouseDir = new Path(baseFsDir, "warehouse");
+@@ -301,10 +324,11 @@ public MiniHS2(HiveConf hiveConf, MiniClusterType clusterType) throws Exception
+     this(hiveConf, clusterType, false);
+   }
+ 
+-  public MiniHS2(HiveConf hiveConf, MiniClusterType clusterType,
+-      boolean usePortsFromConf) throws Exception {
+-    this(hiveConf, clusterType, false, null, null, false, usePortsFromConf,
+-      "KERBEROS", false, true);
++  public MiniHS2(HiveConf hiveConf, MiniClusterType clusterType, boolean usePortsFromConf)
++      throws Exception {
++    this(hiveConf, clusterType, false, null, null,
++        false, usePortsFromConf, "KERBEROS", false, true,
++        false, null, null);
+   }
+ 
+   public void start(Map<String, String> confOverlay) throws Exception {
+diff --git a/ql/src/java/org/apache/hadoop/hive/ql/session/SessionState.java b/ql/src/java/org/apache/hadoop/hive/ql/session/SessionState.java
+index ffce1d1aec8..6705a98bb2a 100644
+--- a/ql/src/java/org/apache/hadoop/hive/ql/session/SessionState.java
++++ b/ql/src/java/org/apache/hadoop/hive/ql/session/SessionState.java
+@@ -54,6 +54,7 @@
+ import org.apache.hadoop.hive.common.log.ProgressMonitor;
+ import org.apache.hadoop.hive.conf.HiveConf;
+ import org.apache.hadoop.hive.conf.HiveConf.ConfVars;
++import org.apache.hadoop.hive.conf.HiveConfUtil;
+ import org.apache.hadoop.hive.metastore.ObjectStore;
+ import org.apache.hadoop.hive.metastore.api.ColumnStatisticsObj;
+ import org.apache.hadoop.hive.ql.MapRedStats;
+@@ -1589,10 +1590,11 @@ public void close() throws IOException {
+ 
+   private void unCacheDataNucleusClassLoaders() {
+     try {
+-      Hive threadLocalHive = Hive.get(sessionConf);
+-      if ((threadLocalHive != null) && (threadLocalHive.getMSC() != null)
+-          && (threadLocalHive.getMSC().isLocalMetaStore())) {
+-        if (sessionConf.getVar(ConfVars.METASTORE_RAW_STORE_IMPL).equals(ObjectStore.class.getName())) {
++      boolean isLocalMetastore =
++          HiveConfUtil.isEmbeddedMetaStore(sessionConf.getVar(HiveConf.ConfVars.METASTOREURIS));
++      if (isLocalMetastore) {
++        if (sessionConf.getVar(ConfVars.METASTORE_RAW_STORE_IMPL)
++            .equals(ObjectStore.class.getName())) {
+           ObjectStore.unCacheDataNucleusClassLoaders();
+         }
+       }
+diff --git a/service/src/java/org/apache/hive/service/cli/session/HiveSessionImplwithUGI.java b/service/src/java/org/apache/hive/service/cli/session/HiveSessionImplwithUGI.java
+index 00a7e742cab..444d741cd86 100644
+--- a/service/src/java/org/apache/hive/service/cli/session/HiveSessionImplwithUGI.java
++++ b/service/src/java/org/apache/hive/service/cli/session/HiveSessionImplwithUGI.java
+@@ -125,6 +125,8 @@ private void cancelDelegationToken() throws HiveSQLException {
+     if (hmsDelegationTokenStr != null) {
+       try {
+         Hive.get(getHiveConf()).cancelDelegationToken(hmsDelegationTokenStr);
++        hmsDelegationTokenStr = null;
++        getHiveConf().setVar(HiveConf.ConfVars.METASTORE_TOKEN_SIGNATURE, "");
+       } catch (HiveException e) {
+         throw new HiveSQLException("Couldn't cancel delegation token", e);
+       }
+diff --git a/shims/common/src/main/java/org/apache/hadoop/hive/thrift/DBTokenStore.java b/shims/common/src/main/java/org/apache/hadoop/hive/thrift/DBTokenStore.java
+index d6dc0796e77..326ef4e99ca 100644
+--- a/shims/common/src/main/java/org/apache/hadoop/hive/thrift/DBTokenStore.java
++++ b/shims/common/src/main/java/org/apache/hadoop/hive/thrift/DBTokenStore.java
+@@ -152,8 +152,8 @@ private Object invokeOnTokenStore(String methName, Object[] params, Class<?> ...
+           break;
+         case HIVESERVER2 :
+           Object hiveObject = ((Class<?>)handler)
+-            .getMethod("get", org.apache.hadoop.conf.Configuration.class, java.lang.Class.class)
+-            .invoke(handler, conf, DBTokenStore.class);
++            .getMethod("get")
++            .invoke(handler, null);
+           tokenStore = ((Class<?>)handler).getMethod("getMSC").invoke(hiveObject);
+           break;
+        default:
+diff --git a/shims/common/src/main/java/org/apache/hadoop/hive/thrift/DelegationTokenSecretManager.java b/shims/common/src/main/java/org/apache/hadoop/hive/thrift/DelegationTokenSecretManager.java
+index 5299e18743a..6a863d8a53d 100644
+--- a/shims/common/src/main/java/org/apache/hadoop/hive/thrift/DelegationTokenSecretManager.java
++++ b/shims/common/src/main/java/org/apache/hadoop/hive/thrift/DelegationTokenSecretManager.java
+@@ -97,12 +97,15 @@ public synchronized long renewDelegationToken(String tokenStrForm) throws IOExce
+     return renewToken(t, user);
+   }
+ 
+-  public synchronized String getDelegationToken(String renewer) throws IOException {
+-    UserGroupInformation ugi = UserGroupInformation.getCurrentUser();
+-    Text owner = new Text(ugi.getUserName());
++  public synchronized String getDelegationToken(final String ownerStr, final String renewer) throws IOException {
++    if(ownerStr == null) {
++      throw new RuntimeException("Delegation token owner is null");
++    }
++    Text owner = new Text(ownerStr);
+     Text realUser = null;
+-    if (ugi.getRealUser() != null) {
+-      realUser = new Text(ugi.getRealUser().getUserName());
++    UserGroupInformation currentUgi = UserGroupInformation.getCurrentUser();
++    if (currentUgi.getUserName() != null) {
++      realUser = new Text(currentUgi.getUserName());
+     }
+     DelegationTokenIdentifier ident =
+       new DelegationTokenIdentifier(owner, new Text(renewer), realUser);
+diff --git a/shims/common/src/main/java/org/apache/hadoop/hive/thrift/HiveDelegationTokenManager.java b/shims/common/src/main/java/org/apache/hadoop/hive/thrift/HiveDelegationTokenManager.java
+index b3e4a760828..db5ec69bdd0 100644
+--- a/shims/common/src/main/java/org/apache/hadoop/hive/thrift/HiveDelegationTokenManager.java
++++ b/shims/common/src/main/java/org/apache/hadoop/hive/thrift/HiveDelegationTokenManager.java
+@@ -116,13 +116,14 @@ public String getDelegationToken(final String owner, final String renewer, Strin
+       ownerUgi = UserGroupInformation.createProxyUser(owner, UserGroupInformation.getCurrentUser());
+       ProxyUsers.authorize(ownerUgi, remoteAddr, null);
+     }
+-    return ownerUgi.doAs(new PrivilegedExceptionAction<String>() {
+-
+-      @Override
+-      public String run() throws IOException {
+-        return secretManager.getDelegationToken(renewer);
+-      }
+-    });
++    //if impersonation is turned on this called using the HiveSessionImplWithUGI
++    //using sessionProxy. so the currentUser will be the impersonated user here eg. oozie
++    //we cannot create a proxy user which represents Oozie's client user here since
++    //we cannot authenticate it using Kerberos/Digest. We trust the user which opened
++    //session using Kerberos in this case.
++    //if impersonation is turned off, the current user is Hive which can open
++    //kerberos connections to HMS if required.
++    return secretManager.getDelegationToken(owner, renewer);
+   }
+ 
+   public String getDelegationTokenWithService(String owner, String renewer, String service, String remoteAddr)
+
