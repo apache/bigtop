@@ -35,8 +35,9 @@ class bigtop_toolchain::protobuf {
 
   exec { "install protobuf":
      cwd => "/usr/src/$protobuf8dir",
-     command => "/usr/src/$protobuf8dir/configure --prefix=/usr/local && /usr/bin/make install",
+     command => "/usr/src/$protobuf8dir/configure --prefix=/usr/local && /usr/bin/make install && ldconfig /usr/local/lib",
      creates => "/usr/local/bin/protoc",
+     path => ['/usr/local/bin', '/usr/bin', '/bin', '/usr/local/sbin', '/usr/sbin', '/sbin'],
      require => EXEC["download protobuf"],
      timeout => 3000
   }
