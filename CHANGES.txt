@@ -15,7 +15,170 @@
 
 Bigtop Changelog
 
-* Release 1.5.0 (2020-11-06)
+* Release 1.5.0 (2020-11-27)
+
+Release Notes - Bigtop - Version 1.5.0
+
+** Sub-task
+    * [BIGTOP-3165] - Bump Spark to 2.4.5
+    * [BIGTOP-3188] - Bump Zeppelin to 0.8.1
+    * [BIGTOP-3215] - Failed to build bigtop/puppet image for OpenSuSE
+    * [BIGTOP-3220] - Add support for Elasticsearch deb build
+    * [BIGTOP-3221] - Add support for Elasticsearch rpm build
+    * [BIGTOP-3222] - Add puppet deployment for Elasticsearch
+    * [BIGTOP-3223] - Add smoke tests for Elasticsearch
+    * [BIGTOP-3276] - Update supported distros in the toolchain manifests for v1.5.0
+    * [BIGTOP-3279] - Bump Zookeeper to 3.4.13
+    * [BIGTOP-3281] - Bump Tez to 0.9.2
+    * [BIGTOP-3282] - Bump Hive to 2.3.6
+    * [BIGTOP-3285] - Bump Kafka to 2.4.0
+    * [BIGTOP-3286] - Bump Ignite to 2.7.6
+    * [BIGTOP-3287] - Bump Hadoop to 2.10.0
+    * [BIGTOP-3288] - Update supported distros in the Docker build scripts for v1.5.0
+    * [BIGTOP-3289] - Bump Tomcat to 8.5.50
+    * [BIGTOP-3297] - Bump HBase to 1.5.0
+    * [BIGTOP-3298] - Bump Phoenix to 4.15.0-HBase-1.5
+    * [BIGTOP-3305] - Bump Flume to 1.9.0
+    * [BIGTOP-3306] - Bump Giraph to 1.2.0
+    * [BIGTOP-3313] - Bump solor to 6.6.6
+    * [BIGTOP-3315] - Bump Alluxio to 1.8.2
+    * [BIGTOP-3343] - Add Debian 10 and Ubuntu 18.04 support to the Docker provisioner
+    * [BIGTOP-3356] - Add CentOS 8 support to the Docker provisioner
+    * [BIGTOP-3363] - Drop Apex, Hama and Tajo in the 1.5.0 release
+    * [BIGTOP-3375] - Bump Livy to 0.7.0 and build it with Python3
+
+** Bug
+    * [BIGTOP-2742] - broken zeppelin init script
+    * [BIGTOP-3029] - "--parser" is invalidated in puppet v4.x. Affects Debian-9 builds
+    * [BIGTOP-3208] - Exception in master branch (and branch-1.4): kafka-server failed to launch due to missing zookeeper AsyncCallback.MultiCallback
+    * [BIGTOP-3216] - Flink smoke test failed on Debian-9
+    * [BIGTOP-3261] - Fix broken BPS Dockerfile
+    * [BIGTOP-3265] - Fix TEZ build error
+    * [BIGTOP-3266] - Rat check failed for one file with unapproved/unknown licenses
+    * [BIGTOP-3290] - Fix build failure of Oozie
+    * [BIGTOP-3291] - Fix build failure of Sqoop
+    * [BIGTOP-3292] - Fix service configuration of sqoop2-server
+    * [BIGTOP-3295] - Fix build failure of hadoop-2.10.0 on CentOS 8
+    * [BIGTOP-3296] - Creating apt repository fails on Ubuntu 18.04
+    * [BIGTOP-3299] - Fix Zookeeper build to make other build success
+    * [BIGTOP-3302] - init scripts using su do not work on recent systemd
+    * [BIGTOP-3303] - Fix build failure of hbase-1.5.0 on Ubuntu
+    * [BIGTOP-3304] - Fix build failure of Flume against hive-2.3.6
+    * [BIGTOP-3308] - Openssl fails to load in hadoop checknative -a on Debian 9
+    * [BIGTOP-3309] - Missing build target for Debian 10 in BigTop 1.5
+    * [BIGTOP-3310] - URL of maven and ant package list page is changed
+    * [BIGTOP-3311] - Fix Alluxio build failure with upgraded hadoop version
+    * [BIGTOP-3312] - Fix Ambari build failure due to maven repo requires https now
+    * [BIGTOP-3314] - Fix flink build failure with upgraded hadoop version
+    * [BIGTOP-3316] - Fix HBase build failure on Arm platform
+    * [BIGTOP-3317] - Oozie sharedlib create command fails when uploading to HDFS
+    * [BIGTOP-3327] - Fix Zeppelin build issue after upgrading Spark-2.4.5
+    * [BIGTOP-3330] - oozie and oozie-client deb packages try to install the same jars in the same dir
+    * [BIGTOP-3331] - Provisioner Deployment failed on Fedora
+    * [BIGTOP-3332] - Add new provisioner yaml configuration for Fedora 31
+    * [BIGTOP-3333] - Fix Hive build after upgrading Spark to 2.4.5
+    * [BIGTOP-3334] - Fix Oozie build after upgrading Spark to 2.4.5
+    * [BIGTOP-3335] - Fix Mahout build after upgrading Spark to 2.4.5
+    * [BIGTOP-3336] - Fix Livy build on CentOS and Fedora
+    * [BIGTOP-3338] - Fix `./gradlew repo` to work with GPDB and QFS on Ubuntu 18.04
+    * [BIGTOP-3339] - Fix Ambari build failure due to using old Bower
+    * [BIGTOP-3341] - Support for Openssl 1.1.1
+    * [BIGTOP-3347] - Fix failures of Hive ProxyFileSystem against Hadoop 2.10.0
+    * [BIGTOP-3348] - Fix Hive test failures caused by NoSuchMethodError of ApplicationId.fromString
+    * [BIGTOP-3351] - Fix sqoop build error on Ubuntu 18.04
+    * [BIGTOP-3352] - Fix qfs build error on Ubuntu 18.04
+    * [BIGTOP-3355] - [Puppet] Make GPG check for repos a configuration and default to true
+    * [BIGTOP-3359] - Fix failure of installing Hadoop due to conflicting .build-id entry on CentOS 8
+    * [BIGTOP-3361] - No libcrypt.so.1 in Fedora-31
+    * [BIGTOP-3364] - Zeppelin build failed in Ubuntu16.04/18.04 and CentOS7
+    * [BIGTOP-3372] - Building Spark fails on Debian 9 and Ubuntu 16.04
+    * [BIGTOP-3376] - Make Mpack as a standalone component in Bigtop
+    * [BIGTOP-3377] - Fix deployment failures on Fedora 31
+    * [BIGTOP-3378] - Fix Livy deployment failure on Debian and Ubuntu
+    * [BIGTOP-3379] - Fix Spark build failure on CentOS 8
+    * [BIGTOP-3380] - Bump Tomcat to 8.5.57
+    * [BIGTOP-3386] - Building GPDB fails on CentOS 8
+    * [BIGTOP-3387] - Building QFS fails on CentOS 8
+    * [BIGTOP-3390] - Building Alluxio fails on Fedora 31
+    * [BIGTOP-3392] - All packaging jobs are failing on Fedora 31 for aarch64 and ppc64le
+    * [BIGTOP-3394] - Building Logstash is failing on CentOS 8, Debian 10 and Ubuntu 18.04
+    * [BIGTOP-3395] - Building Kafka is failing on Fedora 31 for ARM64
+    * [BIGTOP-3396] - Building Ambari is failing on Fedora 31 for ARM64
+    * [BIGTOP-3397] - Building Spark is failing on CentOS 7 for ARM64 and PPC64
+    * [BIGTOP-3398] - Fix GPDB puppet manifest to work
+    * [BIGTOP-3399] - Fix bigtop-groovy build failure
+    * [BIGTOP-3401] - Failed to build Centos-8 docker images for Arm64
+    * [BIGTOP-3406] - Fix Oozie smoke test to work
+    * [BIGTOP-3407] - Ensure the procps package is installed in Debian 10
+    * [BIGTOP-3408] - docker-hadoop.sh generates broken site.yaml from config.yaml containing multiple components
+    * [BIGTOP-3410] - Fix bigtop-tomcat build failure due to downloading problem
+    * [BIGTOP-3413] - QFS doesn't work with Hadoop's TeraGen
+    * [BIGTOP-3414] - Fix the default value of GPDB configuration for smoke test
+    * [BIGTOP-3416] - Fix YCSB to work with CentOS 8 and Fedora 31
+    * [BIGTOP-3418] - Fix Ambari deployment on CentOS 8, Fedora 31 and Debian 10
+    * [BIGTOP-3422] - Fix ambari-server setup failure due to PostgreSQL initdb error
+    * [BIGTOP-3425] - Deploying Ambari fails on Fedora 31
+    * [BIGTOP-3426] - Flink smoke test fails with fedora-31 and debian-10 on arm64
+    * [BIGTOP-3427] - Deploying GPDB fails due to the paramiko installation on some distros
+    * [BIGTOP-3429] - QFS smoke test fails on Ubuntu 16.04
+    * [BIGTOP-3430] - QFS smoke test fails on Fedora 31/arm64
+    * [BIGTOP-3437] - Building Logstash fails due to amazing_print version mismatch
+    * [BIGTOP-3439] - Oozie's smoke test fails on CentOS and Fedora
+    * [BIGTOP-3440] - Building flume fails on all distros
+    * [BIGTOP-3443] - Building Spark fails on Ubuntu 16.04
+    * [BIGTOP-3444] - Bump Hadoop to 2.10.1
+    * [BIGTOP-3446] - Fix toolchain task failure due to undefined variable in renv.pp
+    * [BIGTOP-3448] - Building Alluxio fails on all distros
+    * [BIGTOP-3449] - Failed to build Haddop-2.10.1 on Arm64
+    * [BIGTOP-3451] - Fix smoke test for SparkR
+    * [BIGTOP-3455] - Hive 2.2.x bug with DBTokenStore
+
+** New Feature
+    * [BIGTOP-2961] - Add Apache Livy (incubating) to Bigtop stack
+    * [BIGTOP-3219] - Add Elasticsearch as component
+    * [BIGTOP-3293] - Add hadoop-kms package
+    * [BIGTOP-3319] - Add Logstash as Bigtop component
+    * [BIGTOP-3320] - Add Kibana as Bigtop component
+    * [BIGTOP-3325] - Spark LICENSE files should be exempted by RAT check
+    * [BIGTOP-3411] - Disable unnecessary  scm check in Buildnumber-maven-plugin for Mpack
+
+** Improvement
+    * [BIGTOP-3092] - kafka charm: support juju storage
+    * [BIGTOP-3168] - Kafka smoke tests implementation
+    * [BIGTOP-3214] - Install python libraries for Livy
+    * [BIGTOP-3217] - Add smoke tests for Apache Livy
+    * [BIGTOP-3234] - TEZ smoke tests implementation
+    * [BIGTOP-3236] - Zeppelin smoke tests implementation
+    * [BIGTOP-3237] - Add smoke tests for YCSB
+    * [BIGTOP-3259] - Update the default stack version for docker-provisioner to 1.4.0
+    * [BIGTOP-3300] - Add puppet manifests for hadoop-kms
+    * [BIGTOP-3301] - Add smoke-tests for hadoop-kms
+    * [BIGTOP-3337] - Remove Node.js from the toolchain
+    * [BIGTOP-3353] - hive.hwi.war.file configuration is no longer needed
+    * [BIGTOP-3358] - get_roles() function should fail if a component is not in roles_map
+    * [BIGTOP-3362] - Unable to install spark-python package on CentOS8 due to lack of python package
+    * [BIGTOP-3369] - RHEL8 does not have PowerTools repo but CodeReady Builder
+    * [BIGTOP-3371] - Unable to build Apache Ambari on RHEL8
+    * [BIGTOP-3374] - Add dependencies on the utilities provided by Bigtop to bigtop.bom
+    * [BIGTOP-3389] - Extend timeout for installing protobuf and R packages
+    * [BIGTOP-3391] - Support GPDB on Perl 5.30+ environment
+    * [BIGTOP-3405] - Make gpg_check in docker-hadoop.sh configurable
+    * [BIGTOP-3415] - Extend timeout for Spark smoke test
+    * [BIGTOP-3431] - Update github Readme.md to be more newbie friendly
+    * [BIGTOP-3441] - Suppress YCSB smoke test output
+
+** Wish
+    * [BIGTOP-3268] - Add ability to change limits for nagios checks in charm
+
+** Task
+    * [BIGTOP-3015] - hadoop-spark bundle correction
+    * [BIGTOP-3123] - Define Bigtop 1.5.0 release BOM
+    * [BIGTOP-3318] - Use secure repo in bigtop-tests
+    * [BIGTOP-3322] - Lintian Warnings in Hadoop
+    * [BIGTOP-3340] - Add Masatake Iwasaki to team list
+    * [BIGTOP-3409] - Move bigtop website off from CMS: staging
+    * [BIGTOP-3419] - Automate Deployment to asf-site
+
 
 * Release 1.4.0 (2019-03-24)
 
