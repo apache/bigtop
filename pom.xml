@@ -79,6 +79,7 @@
         <groupId>org.codehaus.groovy</groupId>
         <artifactId>groovy-all</artifactId>
         <version>${groovy.version}</version>
+        <type>pom</type>
       </dependency>
       <dependency>
         <groupId>org.codehaus.groovy.maven.runtime</groupId>
