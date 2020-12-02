@@ -100,14 +100,17 @@ class gpdb {
             if (versioncmp($operatingsystemmajrelease, '8') < 0) {
               $base_url = 'http://download.fedoraproject.org/pub/epel/$releasever/$basearch'
               $python_devel = 'python-devel'
+              $python_lockfile = 'python-lockfile'
             } else {
               $base_url = 'http://download.fedoraproject.org/pub/epel/$releasever/Everything/$basearch'
               $python_devel = 'python2-devel'
+              $python_lockfile = 'python2-lockfile'
             }
           } else {
             # Looks like it works, at least with Fedora 31
             $base_url = 'http://download.fedoraproject.org/pub/epel/7/$basearch'
             $python_devel = 'python2-devel'
+            $python_lockfile = 'python2-lockfile'
           }
           yumrepo { "epel":
             baseurl  => $base_url,
@@ -124,7 +127,7 @@ class gpdb {
           package { ["openssl-devel"]:
             ensure => latest,
           }
-          package { ["python2-lockfile"]:
+          package { [$python_lockfile]:
             ensure => latest,
           }
           package { ["gcc"]:
@@ -139,6 +142,16 @@ class gpdb {
           package { ["paramiko"]:
             ensure   => latest,
             provider => pip,
+            require  => Package["setuptools"],
+          }
+          package { ["setuptools"]:
+            ensure   => latest,
+            provider => pip,
+            require  => Package["pip"],
+          }
+          package { ["pip"]:
+            ensure   => latest,
+            provider => pip,
             require  => File["/usr/bin/pip-python"],
           }
           package { ["python2-pip"]:
@@ -147,7 +160,7 @@ class gpdb {
               Yumrepo["epel"],
               Package["libffi-devel"],
               Package["openssl-devel"],
-              Package["python2-lockfile"],
+              Package[$python_lockfile],
             ],
           }
 	  file { '/usr/bin/pip-python':
