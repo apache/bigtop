@@ -36,7 +36,8 @@ class ambari {
     exec {
         "server setup":
            command => "/usr/sbin/ambari-server setup -j $(readlink -f /usr/bin/java | sed -e 's@jre/bin/java@@' -e 's@bin/java@@') -s",
-           require => [ Package["ambari-server"], Package["jdk"], Exec["mpack install"] ]
+           require => [ Package["ambari-server"], Package["jdk"], Exec["mpack install"] ],
+           timeout => 600,
     }
 
     service { "ambari-server":
