@@ -37,6 +37,9 @@ class ambari {
         "server setup":
            command => "/usr/sbin/ambari-server setup -j $(readlink -f /usr/bin/java | sed -e 's@jre/bin/java@@' -e 's@bin/java@@') -s",
            require => [ Package["ambari-server"], Package["jdk"], Exec["mpack install"] ],
+           # The default timeout is 300 seconds, but it's sometimes too short to setup Ambari Server.
+           # In most of the successful cases, applying puppet manifest finishes within 600 seconds on CI,
+           # so extend the timeout to that value.
            timeout => 600,
     }
 
