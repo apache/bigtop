@@ -15,6 +15,7 @@ class livy {
   class deploy ($roles) {
     if ('livy-server' in $roles) {
       include livy::server
+      include spark::common
     }
   }
 
