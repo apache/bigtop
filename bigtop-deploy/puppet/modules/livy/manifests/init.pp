@@ -15,6 +15,7 @@ class livy {
   class deploy ($roles) {
     if ('livy-server' in $roles) {
       include livy::server
+      include spark::common
     }
   }
 
@@ -43,10 +44,13 @@ class livy {
 
     service { 'livy-server':
       ensure     => running,
-      require    => Package['livy'],
+      require    => [
+        Package['spark-core'],
+        Package['livy'],
+      ],
       hasrestart => true,
       hasstatus  => true,
-      subscribe => [
+      subscribe  => [
         File['/etc/livy/conf/livy-env.sh'],
         File['/etc/livy/conf/livy.conf']
       ]
