@@ -17,7 +17,7 @@ Bigtop Changelog
 
 * Release 1.6.0 (unreleased)
 
-* Release 1.5.0 (2020-11-27)
+* Release 1.5.0 (2020-12-07)
 
 Release Notes - Bigtop - Version 1.5.0
 
@@ -134,6 +134,9 @@ Release Notes - Bigtop - Version 1.5.0
     * [BIGTOP-3449] - Failed to build Haddop-2.10.1 on Arm64
     * [BIGTOP-3451] - Fix smoke test for SparkR
     * [BIGTOP-3455] - Hive 2.2.x bug with DBTokenStore
+    * [BIGTOP-3458] - Fix broken dependency on groovy-all in the test framework
+    * [BIGTOP-3459] - Deploying GPDB fails on ARM64 CentOS 7
+    * [BIGTOP-3462] - Deploying Livy fails if the SPARK_HOME directory doesn't exist
 
 ** New Feature
     * [BIGTOP-2961] - Add Apache Livy (incubating) to Bigtop stack
@@ -168,6 +171,7 @@ Release Notes - Bigtop - Version 1.5.0
     * [BIGTOP-3415] - Extend timeout for Spark smoke test
     * [BIGTOP-3431] - Update github Readme.md to be more newbie friendly
     * [BIGTOP-3441] - Suppress YCSB smoke test output
+    * [BIGTOP-3460] - Extend timeout for Ambari Server setup
 
 ** Wish
     * [BIGTOP-3268] - Add ability to change limits for nagios checks in charm
