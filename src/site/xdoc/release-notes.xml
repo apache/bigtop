@@ -247,6 +247,12 @@
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3455'>BIGTOP-3455</a>] -         Hive 2.2.x bug with DBTokenStore
 </li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3458'>BIGTOP-3458</a>] -         Fix broken dependency on groovy-all in the test framework
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3459'>BIGTOP-3459</a>] -         Deploying GPDB fails on ARM64 CentOS 7
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3462'>BIGTOP-3462</a>] -         Deploying Livy fails if the SPARK_HOME directory doesn&#39;t exist
+</li>
 </ul>
 
 <h2>        New Feature
@@ -316,6 +322,8 @@
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3431'>BIGTOP-3431</a>] -         Update github Readme.md to be more newbie friendly
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3441'>BIGTOP-3441</a>] -         Suppress YCSB smoke test output
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3460'>BIGTOP-3460</a>] -         Extend timeout for Ambari Server setup
 </li>
 </ul>
 
