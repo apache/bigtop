@@ -35,16 +35,20 @@
 			<ul>
 				<li>
 					The latest release of Apache Bigtop software framework <br/>
-					<a href="https://www.apache.org/dyn/closer.cgi/bigtop/bigtop-1.4.0/bigtop-1.4.0-project.tar.gz">Bigtop 1.4.0</a> (<a href="https://apache.org/dist/bigtop/bigtop-1.4.0/bigtop-1.4.0-project.tar.gz.asc">pgp</a> <a href="https://apache.org/dist/bigtop/bigtop-1.4.0/bigtop-1.4.0-project.tar.gz.sha256">sha256</a> <a href="https://apache.org/dist/bigtop/bigtop-1.4.0/bigtop-1.4.0-project.tar.gz.sha512">sha512</a>)
+					<a href="https://www.apache.org/dyn/closer.cgi/bigtop/bigtop-1.5.0/bigtop-1.5.0-project.tar.gz">Bigtop 1.5.0</a> (<a href="https://apache.org/dist/bigtop/bigtop-1.5.0/bigtop-1.5.0-project.tar.gz.asc">pgp</a> <a href="https://apache.org/dist/bigtop/bigtop-1.5.0/bigtop-1.5.0-project.tar.gz.sha256">sha256</a> <a href="https://apache.org/dist/bigtop/bigtop-1.5.0/bigtop-1.5.0-project.tar.gz.sha512">sha512</a>)
 				</li>
 				<li>
 					Repositories of instsallable binary packages built with latest release
 					of the Apache Bitop project <br/>
-					<a href="https://www.apache.org/dyn/closer.cgi/bigtop/bigtop-1.4.0/repos/">Installable binary artifacts</a>
+					<a href="https://www.apache.org/dyn/closer.cgi/bigtop/bigtop-1.5.0/repos/">Installable binary artifacts</a>
 				</li>
 			</ul>
 			<subsection name="Previous Releases" id="archived"></subsection>
 			<ul>
+				<li>
+					1.4.0 released on 2019-06-15<br/>
+					<a href="https://archive.apache.org/dist/bigtop/bigtop-1.4.0/bigtop-1.4.0-project.tar.gz">Bigtop 1.4.0</a>(<a href="https://archive.apache.org/dist/bigtop/bigtop-1.4.0/bigtop-1.4.0-project.tar.gz.asc">pgp</a> <a href="https://archive.apache.org/dist/bigtop/bigtop-1.4.0/bigtop-1.4.0-project.tar.gz.sha256">sha256</a> <a href="https://archive.apache.org/dist/bigtop/bigtop-1.4.0/bigtop-1.4.0-project.tar.gz.sha512">sha512</a>)
+				</li>
 				<li>
 					1.3.0 released on 2018-11-17<br/>
 					<a href="https://archive.apache.org/dist/bigtop/bigtop-1.3.0/bigtop-1.3.0-project.tar.gz">Bigtop 1.3.0</a>(<a href="https://archive.apache.org/dist/bigtop/bigtop-1.3.0/bigtop-1.3.0-project.tar.gz.asc">pgp</a> <a href="https://archive.apache.org/dist/bigtop/bigtop-1.3.0/bigtop-1.3.0-project.tar.gz.sha256">sha256</a> <a href="https://archive.apache.org/dist/bigtop/bigtop-1.3.0/bigtop-1.3.0-project.tar.gz.sha512">sha512</a>)
