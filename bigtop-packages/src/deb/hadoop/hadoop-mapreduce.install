@@ -2,7 +2,6 @@
 /etc/hadoop/conf.empty/mapred-site.xml
 /etc/hadoop/conf.empty/mapred-env.sh
 /etc/hadoop/conf.empty/mapred-queues.xml.template
-/etc/hadoop/conf.empty/mapred-site.xml.template
 /usr/lib/hadoop-mapreduce
 /usr/lib/hadoop/libexec/mapred-config.sh
 /usr/bin/mapred

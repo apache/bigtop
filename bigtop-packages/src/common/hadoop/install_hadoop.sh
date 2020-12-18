@@ -50,8 +50,6 @@ OPTS=$(getopt \
   -l 'system-lib-dir:' \
   -l 'system-libexec-dir:' \
   -l 'hadoop-etc-dir:' \
-  -l 'httpfs-etc-dir:' \
-  -l 'kms-etc-dir:' \
   -l 'doc-dir:' \
   -l 'man-dir:' \
   -l 'example-dir:' \
@@ -113,12 +111,6 @@ while true ; do
         --hadoop-etc-dir)
         HADOOP_ETC_DIR=$2 ; shift 2
         ;;
-        --httpfs-etc-dir)
-        HTTPFS_ETC_DIR=$2 ; shift 2
-        ;;
-        --kms-etc-dir)
-        KMS_ETC_DIR=$2 ; shift 2
-	;;
         --installed-lib-dir)
         INSTALLED_LIB_DIR=$2 ; shift 2
         ;;
@@ -161,8 +153,6 @@ SYSTEM_INCLUDE_DIR=${SYSTEM_INCLUDE_DIR:-$PREFIX/usr/include}
 SYSTEM_LIBEXEC_DIR=${SYSTEM_LIBEXEC_DIR:-$PREFIX/usr/libexec}
 EXAMPLE_DIR=${EXAMPLE_DIR:-$DOC_DIR/examples}
 HADOOP_ETC_DIR=${HADOOP_ETC_DIR:-$PREFIX/etc/hadoop}
-HTTPFS_ETC_DIR=${HTTPFS_ETC_DIR:-$PREFIX/etc/hadoop-httpfs}
-KMS_ETC_DIR=${KMS_ETC_DIR:-$PREFIX/etc/hadoop-kms}
 BASH_COMPLETION_DIR=${BASH_COMPLETION_DIR:-$PREFIX/etc/bash_completion.d}
 
 INSTALLED_HADOOP_DIR=${INSTALLED_HADOOP_DIR:-/usr/lib/hadoop}
@@ -191,7 +181,7 @@ done
 
 #libexec
 install -d -m 0755 ${SYSTEM_LIBEXEC_DIR}
-cp ${BUILD_DIR}/libexec/* ${SYSTEM_LIBEXEC_DIR}/
+cp -r ${BUILD_DIR}/libexec/* ${SYSTEM_LIBEXEC_DIR}/
 cp ${DISTRO_DIR}/hadoop-layout.sh ${SYSTEM_LIBEXEC_DIR}/
 install -m 0755 ${DISTRO_DIR}/init-hdfs.sh ${SYSTEM_LIBEXEC_DIR}/
 install -m 0755 ${DISTRO_DIR}/init-hcfs.json ${SYSTEM_LIBEXEC_DIR}/
@@ -202,7 +192,7 @@ rm -rf ${SYSTEM_LIBEXEC_DIR}/*.cmd
 install -d -m 0755 ${HADOOP_DIR}
 cp ${BUILD_DIR}/share/hadoop/common/*.jar ${HADOOP_DIR}/
 cp ${BUILD_DIR}/share/hadoop/common/lib/hadoop-auth*.jar ${HADOOP_DIR}/
-cp ${BUILD_DIR}/share/hadoop/mapreduce/lib/hadoop-annotations*.jar ${HADOOP_DIR}/
+cp ${BUILD_DIR}/share/hadoop/common/lib/hadoop-annotations*.jar ${HADOOP_DIR}/
 install -d -m 0755 ${MAPREDUCE_DIR}
 cp ${BUILD_DIR}/share/hadoop/mapreduce/hadoop-mapreduce*.jar ${MAPREDUCE_DIR}
 cp ${BUILD_DIR}/share/hadoop/tools/lib/*.jar ${MAPREDUCE_DIR}
@@ -232,7 +222,7 @@ cp -ra ${BUILD_DIR}/share/hadoop/hdfs/webapps ${HDFS_DIR}/
 
 # bin
 install -d -m 0755 ${HADOOP_DIR}/bin
-cp -a ${BUILD_DIR}/bin/{hadoop,rcc,fuse_dfs} ${HADOOP_DIR}/bin
+cp -a ${BUILD_DIR}/bin/{hadoop,fuse_dfs} ${HADOOP_DIR}/bin
 install -d -m 0755 ${HDFS_DIR}/bin
 cp -a ${BUILD_DIR}/bin/hdfs ${HDFS_DIR}/bin
 install -d -m 0755 ${YARN_DIR}/bin
@@ -244,7 +234,7 @@ cp -a ${BUILD_DIR}/bin/mapred ${YARN_DIR}/bin
 
 # sbin
 install -d -m 0755 ${HADOOP_DIR}/sbin
-cp -a ${BUILD_DIR}/sbin/{hadoop-daemon,hadoop-daemons,slaves}.sh ${HADOOP_DIR}/sbin
+cp -a ${BUILD_DIR}/sbin/{hadoop-daemon,hadoop-daemons,workers}.sh ${HADOOP_DIR}/sbin
 install -d -m 0755 ${HDFS_DIR}/sbin
 cp -a ${BUILD_DIR}/sbin/{distribute-exclude,refresh-namenodes}.sh ${HDFS_DIR}/sbin
 install -d -m 0755 ${YARN_DIR}/sbin
@@ -265,7 +255,7 @@ install -d -m 0755 ${SYSTEM_INCLUDE_DIR}
 cp ${BUILD_DIR}/include/hdfs.h ${SYSTEM_INCLUDE_DIR}/
 
 cp ${BUILD_DIR}/lib/native/*.a ${HADOOP_NATIVE_LIB_DIR}/
-for library in `cd ${BUILD_DIR}/lib/native ; ls libsnappy.so.1.* 2>/dev/null` libhadoop.so.1.0.0; do
+for library in `cd ${BUILD_DIR}/lib/native ; ls libsnappy.so.1.* 2>/dev/null` libhadoop.so.1.0.0 libnativetask.so.1.0.0; do
   cp ${BUILD_DIR}/lib/native/${library} ${HADOOP_NATIVE_LIB_DIR}/
   ldconfig -vlN ${HADOOP_NATIVE_LIB_DIR}/${library}
   ln -s ${library} ${HADOOP_NATIVE_LIB_DIR}/${library/.so.*/}.so
@@ -318,7 +308,7 @@ cp ${DISTRO_DIR}/conf.empty/mapred-site.xml $HADOOP_ETC_DIR/conf.empty
 # so that it can still be used as example, but doesn't affect anything
 # by default
 sed -i -e '/^[^#]/s,^,#,' ${BUILD_DIR}/etc/hadoop/hadoop-env.sh
-cp ${BUILD_DIR}/etc/hadoop/* $HADOOP_ETC_DIR/conf.empty
+cp -r ${BUILD_DIR}/etc/hadoop/* $HADOOP_ETC_DIR/conf.empty
 rm -rf $HADOOP_ETC_DIR/conf.empty/*.cmd
 
 # docs
@@ -335,68 +325,24 @@ done
 # HTTPFS
 install -d -m 0755 ${HTTPFS_DIR}/sbin
 cp ${BUILD_DIR}/sbin/httpfs.sh ${HTTPFS_DIR}/sbin/
-cp -r ${BUILD_DIR}/share/hadoop/httpfs/tomcat/webapps ${HTTPFS_DIR}/webapps
 install -d -m 0755 ${PREFIX}/var/lib/hadoop-httpfs
-install -d -m 0755 $HTTPFS_ETC_DIR/conf.empty
-
-install -m 0755 ${DISTRO_DIR}/httpfs-tomcat-deployment.sh ${HTTPFS_DIR}/tomcat-deployment.sh
-
-HTTPFS_HTTP_DIRECTORY=$HTTPFS_ETC_DIR/tomcat-conf.dist
-HTTPFS_HTTPS_DIRECTORY=$HTTPFS_ETC_DIR/tomcat-conf.https
-
-install -d -m 0755 ${HTTPFS_HTTP_DIRECTORY}
-cp -r ${BUILD_DIR}/share/hadoop/httpfs/tomcat/conf ${HTTPFS_HTTP_DIRECTORY}
-chmod 644 ${HTTPFS_HTTP_DIRECTORY}/conf/*
-install -d -m 0755 ${HTTPFS_HTTP_DIRECTORY}/WEB-INF
-mv ${HTTPFS_DIR}/webapps/webhdfs/WEB-INF/*.xml ${HTTPFS_HTTP_DIRECTORY}/WEB-INF/
-
-cp -r ${HTTPFS_HTTP_DIRECTORY} ${HTTPFS_HTTPS_DIRECTORY}
-mv ${HTTPFS_HTTPS_DIRECTORY}/conf/ssl-server.xml ${HTTPFS_HTTPS_DIRECTORY}/conf/server.xml
-rm ${HTTPFS_HTTP_DIRECTORY}/conf/ssl-server.xml
-
-mv $HADOOP_ETC_DIR/conf.empty/httpfs* $HTTPFS_ETC_DIR/conf.empty
-sed -i -e '/<\/configuration>/i\
-  <property>\
-    <name>httpfs.hadoop.config.dir</name>\
-    <value>/etc/hadoop/conf</value>\
-  </property>' $HTTPFS_ETC_DIR/conf.empty/httpfs-site.xml
 
 # KMS
 install -d -m 0755 ${KMS_DIR}/sbin
 cp ${BUILD_DIR}/sbin/kms.sh ${KMS_DIR}/sbin/
-cp -r ${BUILD_DIR}/share/hadoop/kms/tomcat/webapps ${KMS_DIR}/webapps
 install -d -m 0755 ${PREFIX}/var/lib/hadoop-kms
-install -d -m 0755 $KMS_ETC_DIR/conf.empty
 
-install -m 0755 ${DISTRO_DIR}/kms-tomcat-deployment.sh ${KMS_DIR}/tomcat-deployment.sh
 
-KMS_HTTP_DIRECTORY=$KMS_ETC_DIR/tomcat-conf.dist
-KMS_HTTPS_DIRECTORY=$KMS_ETC_DIR/tomcat-conf.https
-
-install -d -m 0755 ${KMS_HTTP_DIRECTORY}
-cp -r ${BUILD_DIR}/share/hadoop/kms/tomcat/conf ${KMS_HTTP_DIRECTORY}
-chmod 644 ${KMS_HTTP_DIRECTORY}/conf/*
-install -d -m 0755 ${KMS_HTTP_DIRECTORY}/WEB-INF
-cp ${KMS_DIR}/webapps/kms/WEB-INF/*.xml ${KMS_HTTP_DIRECTORY}/WEB-INF/
-
-cp -r ${KMS_HTTP_DIRECTORY} ${KMS_HTTPS_DIRECTORY}
-mv ${KMS_HTTPS_DIRECTORY}/conf/ssl-server.xml ${KMS_HTTPS_DIRECTORY}/conf/server.xml
-rm ${KMS_HTTP_DIRECTORY}/conf/ssl-server.xml
-
-mv $HADOOP_ETC_DIR/conf.empty/kms* $KMS_ETC_DIR/conf.empty
-cp $HADOOP_ETC_DIR/conf.empty/core-site.xml  $KMS_ETC_DIR/conf.empty
-
-# Make the pseudo-distributed config
 for conf in conf.pseudo ; do
   install -d -m 0755 $HADOOP_ETC_DIR/$conf
   # Install the upstream config files
-  cp ${BUILD_DIR}/etc/hadoop/* $HADOOP_ETC_DIR/$conf
+  cp -r ${BUILD_DIR}/etc/hadoop/* $HADOOP_ETC_DIR/$conf
   # Remove the ones that shouldn't be installed
-  rm -rf $HADOOP_ETC_DIR/$conf/httpfs*
   rm -rf $HADOOP_ETC_DIR/$conf/*.cmd
   # Overlay the -site files
   (cd $DISTRO_DIR/$conf && tar -cf - .) | (cd $HADOOP_ETC_DIR/$conf && tar -xf -)
-  chmod -R 0644 $HADOOP_ETC_DIR/$conf/*
+  find $HADOOP_ETC_DIR/$conf/ -type f -print -exec chmod 0644 {} \;
+  find $HADOOP_ETC_DIR/$conf/ -type d -print -exec chmod 0755 {} \;
   # When building straight out of svn we have to account for pesky .svn subdirs 
   rm -rf `find $HADOOP_ETC_DIR/$conf -name .svn -type d` 
 done

@@ -195,14 +195,14 @@ Description: Development support for libhdfs0
 
 Package: hadoop-httpfs
 Architecture: any
-Depends: hadoop-hdfs (= ${binary:Version}), bigtop-tomcat
+Depends: hadoop-hdfs (= ${binary:Version})
 Description: HTTPFS for Hadoop
   The server providing HTTP REST API support for the complete FileSystem/FileContext
   interface in HDFS.
 
 Package: hadoop-kms
 Architecture: any
-Depends: hadoop (= ${binary:Version}), bigtop-tomcat, adduser
+Depends: hadoop (= ${binary:Version}), adduser
 Description: KMS for Hadoop
   The server providing cryptographic key management based on Hadoop KeyProvider API.
 
