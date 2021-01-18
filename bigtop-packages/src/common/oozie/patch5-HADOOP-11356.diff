@@ -1,0 +1,54 @@
+diff --git a/core/src/main/java/org/apache/oozie/action/hadoop/JavaActionExecutor.java b/core/src/main/java/org/apache/oozie/action/hadoop/JavaActionExecutor.java
+index 31d4817cb..c2233d1d8 100644
+--- a/core/src/main/java/org/apache/oozie/action/hadoop/JavaActionExecutor.java
++++ b/core/src/main/java/org/apache/oozie/action/hadoop/JavaActionExecutor.java
+@@ -45,13 +45,13 @@ import org.apache.hadoop.filecache.DistributedCache;
+ import org.apache.hadoop.fs.FileStatus;
+ import org.apache.hadoop.fs.FileSystem;
+ import org.apache.hadoop.fs.Path;
+-import org.apache.hadoop.fs.permission.AccessControlException;
+ import org.apache.oozie.hadoop.utils.HadoopShims;
+ import org.apache.hadoop.io.Text;
+ import org.apache.hadoop.mapred.JobClient;
+ import org.apache.hadoop.mapred.JobConf;
+ import org.apache.hadoop.mapred.JobID;
+ import org.apache.hadoop.mapred.RunningJob;
++import org.apache.hadoop.security.AccessControlException;
+ import org.apache.hadoop.mapreduce.security.token.delegation.DelegationTokenIdentifier;
+ import org.apache.hadoop.security.UserGroupInformation;
+ import org.apache.hadoop.security.token.Token;
+diff --git a/core/src/main/java/org/apache/oozie/service/AuthorizationService.java b/core/src/main/java/org/apache/oozie/service/AuthorizationService.java
+index 4e4ab17fd..d5f789e1d 100644
+--- a/core/src/main/java/org/apache/oozie/service/AuthorizationService.java
++++ b/core/src/main/java/org/apache/oozie/service/AuthorizationService.java
+@@ -35,6 +35,7 @@ import org.apache.hadoop.conf.Configuration;
+ import org.apache.hadoop.fs.FileSystem;
+ import org.apache.hadoop.fs.Path;
+ import org.apache.oozie.BundleJobBean;
++import org.apache.hadoop.security.AccessControlException;
+ import org.apache.oozie.CoordinatorJobBean;
+ import org.apache.oozie.ErrorCode;
+ import org.apache.oozie.WorkflowJobBean;
+@@ -338,9 +339,8 @@ public class AuthorizationService implements Service {
+                 }
+                 fs.open(wfXml).close();
+             }
+-            // TODO change this when stopping support of 0.18 to the new
+-            // Exception
+-            catch (org.apache.hadoop.fs.permission.AccessControlException ex) {
++            // // fs.permission.AccessControlException removed by HADOOP-11356
++            catch (AccessControlException ex) {
+                 incrCounter(INSTR_FAILED_AUTH_COUNTER, 1);
+                 throw new AuthorizationException(ErrorCode.E0507, appPath, ex.getMessage(), ex);
+             }
+@@ -394,9 +394,7 @@ public class AuthorizationService implements Service {
+                     }
+                 }
+             }
+-            // TODO change this when stopping support of 0.18 to the new
+-            // Exception
+-            catch (org.apache.hadoop.fs.permission.AccessControlException ex) {
++            catch (AccessControlException ex) {
+                 incrCounter(INSTR_FAILED_AUTH_COUNTER, 1);
+                 throw new AuthorizationException(ErrorCode.E0507, appPath, ex.getMessage(), ex);
+             }
