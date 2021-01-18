@@ -1,7 +1,7 @@
-diff --git a/src/c/src/zookeeper.c b/src/c/src/zookeeper.c
-index c0878648..bb454ddc 100644
---- a/src/c/src/zookeeper.c
-+++ b/src/c/src/zookeeper.c
+diff --git a/zookeeper-client/zookeeper-client-c/src/zookeeper.c b/zookeeper-client/zookeeper-client-c/src/zookeeper.c
+index c08786484..bb454ddc4 100644
+--- a/zookeeper-client/zookeeper-client-c/src/zookeeper.c
++++ b/zookeeper-client/zookeeper-client-c/src/zookeeper.c
 @@ -3478,7 +3478,7 @@ int zoo_add_auth(zhandle_t *zh,const char* scheme,const char* cert,
  static const char* format_endpoint_info(const struct sockaddr_storage* ep)
  {
