@@ -5,13 +5,13 @@ Subject: [PATCH 1/4] ZOOKEEPER-3302 ZooKeeper C client does not compile on
  Fedora 29
 
 ---
- src/c/src/cli.c | 6 +++---
+ zookeeper-client/zookeeper-client-c/src/cli.c | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/src/c/src/cli.c b/src/c/src/cli.c
+diff --git a/zookeeper-client/zookeeper-client-c/src/cli.c b/zookeeper-client/zookeeper-client-c/src/cli.c
 index 6ca4a415f9..c3c0ff8ea4 100644
---- a/src/c/src/cli.c
-+++ b/src/c/src/cli.c
+--- a/zookeeper-client/zookeeper-client-c/src/cli.c
++++ b/zookeeper-client/zookeeper-client-c/src/cli.c
 @@ -678,15 +678,15 @@ int main(int argc, char **argv) {
      }
      if (argc > 2) {
@@ -39,13 +39,13 @@ Subject: [PATCH 2/4] ZOOKEEPER-3302 ZooKeeper C client does not compile on
  Fedora 29
 
 ---
- src/c/src/cli.c | 46 +++++++++++++++----
+ zookeeper-client/zookeeper-client-c/src/cli.c | 46 +++++++++++++++----
  1 file changed, 36 insertions(+), 10 deletions(-)
 
-diff --git a/src/c/src/cli.c b/src/c/src/cli.c
+diff --git a/zookeeper-client/zookeeper-client-c/src/cli.c b/zookeeper-client/zookeeper-client-c/src/cli.c
 index c3c0ff8ea4..96836dfeab 100644
---- a/src/c/src/cli.c
-+++ b/src/c/src/cli.c
+--- a/zookeeper-client/zookeeper-client-c/src/cli.c
++++ b/zookeeper-client/zookeeper-client-c/src/cli.c
 @@ -649,6 +649,38 @@ void processline(char *line) {
        zoo_add_auth(zh, line, ptr, ptr ? strlen(ptr) : 0, NULL, NULL);
      }
@@ -56,9 +56,9 @@ index c3c0ff8ea4..96836dfeab 100644
 + * Returns 0 if the argument does not start with the prefix.
 + * Returns -1 in case of error (command too long).
 + * Returns 1 in case of success.
-+ *
++ * 
 + */
-+int handleBatchMode(char* arg, char* buf, size_t maxlen) {
++int handleBatchMode(char* arg, char* buf, size_t maxlen) {    
 +    size_t cmdlen = strlen(arg);
 +    if (cmdlen < 4) {
 +        // too short
@@ -66,7 +66,7 @@ index c3c0ff8ea4..96836dfeab 100644
 +    }
 +    cmdlen -= 4;
 +    if(strncmp("cmd:", arg, 4) != 0){
-+        return 0;
++        return 0;        
 +    }
 +    if (cmdlen >= maxlen) {
 +          fprintf(stderr,
@@ -82,7 +82,7 @@ index c3c0ff8ea4..96836dfeab 100644
 +    memcpy(cmd, arg + 4, cmdlen);
 +    return 1;
 +}
-
+ 
  int main(int argc, char **argv) {
  #ifndef THREADED
 @@ -677,18 +709,12 @@ int main(int argc, char **argv) {
@@ -101,7 +101,7 @@ index c3c0ff8ea4..96836dfeab 100644
            return 2;
 -        }
 -        memcpy(cmd, argv[2]+4, cmdlen);
-+      } else if(batchModeRes == 1){
++      } else if(batchModeRes == 1){                
          batchMode=1;
 -        fprintf(stderr,"Batch mode: %s\n",cmd);
 +        fprintf(stderr,"Batch mode: '%s'\n",cmd);
@@ -115,13 +115,13 @@ Date: Sun, 31 Mar 2019 15:20:44 +0200
 Subject: [PATCH 3/4] Drop debug
 
 ---
- src/c/src/cli.c | 4 ----
+ zookeeper-client/zookeeper-client-c/src/cli.c | 4 ----
  1 file changed, 4 deletions(-)
 
-diff --git a/src/c/src/cli.c b/src/c/src/cli.c
+diff --git a/zookeeper-client/zookeeper-client-c/src/cli.c b/zookeeper-client/zookeeper-client-c/src/cli.c
 index 96836dfeab..bf8fcfa216 100644
---- a/src/c/src/cli.c
-+++ b/src/c/src/cli.c
+--- a/zookeeper-client/zookeeper-client-c/src/cli.c
++++ b/zookeeper-client/zookeeper-client-c/src/cli.c
 @@ -674,10 +674,6 @@ int handleBatchMode(char* arg, char* buf, size_t maxlen) {
                    maxlen);
            return -1;
@@ -140,16 +140,16 @@ Date: Sun, 31 Mar 2019 15:35:33 +0200
 Subject: [PATCH 4/4] add comment
 
 ---
- src/c/src/cli.c | 1 +
+ zookeeper-client/zookeeper-client-c/src/cli.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/src/c/src/cli.c b/src/c/src/cli.c
+diff --git a/zookeeper-client/zookeeper-client-c/src/cli.c b/zookeeper-client/zookeeper-client-c/src/cli.c
 index bf8fcfa216..6f443cd50e 100644
---- a/src/c/src/cli.c
-+++ b/src/c/src/cli.c
+--- a/zookeeper-client/zookeeper-client-c/src/cli.c
++++ b/zookeeper-client/zookeeper-client-c/src/cli.c
 @@ -667,6 +667,7 @@ int handleBatchMode(char* arg, char* buf, size_t maxlen) {
      if(strncmp("cmd:", arg, 4) != 0){
-         return 0;
+         return 0;        
      }
 +    // we must leave space for the NULL terminator
      if (cmdlen >= maxlen) {

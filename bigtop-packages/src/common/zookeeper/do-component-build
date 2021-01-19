@@ -18,13 +18,9 @@ set -ex
 
 . `dirname ${0}`/bigtop.bom
 
-# ZOOKEEPER-2654, BIGTOP-2642
-sed -i -e 's@AM_PATH_CPPUNIT(1.10.2)@PKG_CHECK_MODULES([CPPUNIT], [cppunit])@' src/c/configure.ac
-
 ANT_OPTS="-Dversion=$ZOOKEEPER_VERSION -f build.xml $@"
 sed -i.orig -e 's#test-jar,api-report#test-jar#g' build.xml
 ant compile ${ANT_OPTS}
-(cd src/contrib/rest && ant jar ${ANT_OPTS})
 ant package package-native tar ${ANT_OPTS}
 
 mvn install:install-file -DcreateChecksum=true -DgroupId=org.apache.zookeeper -DartifactId=zookeeper -Dversion=$ZOOKEEPER_VERSION -Dpackaging=jar -Dfile=build/zookeeper-$ZOOKEEPER_VERSION.jar -DpomFile=build/zookeeper-$ZOOKEEPER_VERSION/dist-maven/zookeeper-$ZOOKEEPER_VERSION.pom
