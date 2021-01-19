@@ -1,0 +1,15 @@
+diff --git a/hadoop-client-modules/hadoop-client-minicluster/pom.xml b/hadoop-client-modules/hadoop-client-minicluster/pom.xml
+index 780ae0c4d63..d9eeba0aade 100644
+--- a/hadoop-client-modules/hadoop-client-minicluster/pom.xml
++++ b/hadoop-client-modules/hadoop-client-minicluster/pom.xml
+@@ -322,6 +322,10 @@
+           <groupId>dnsjava</groupId>
+           <artifactId>dnsjava</artifactId>
+         </exclusion>
++        <exclusion>
++          <groupId>com.github.spotbugs</groupId>
++          <artifactId>spotbugs-annotations</artifactId>
++        </exclusion>
+       </exclusions>
+     </dependency>
+     <!-- Add optional runtime dependency on the in-development timeline server module
