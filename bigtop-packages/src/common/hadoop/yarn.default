@@ -12,7 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-export YARN_IDENT_STRING=yarn
-export YARN_PID_DIR=/var/run/hadoop-yarn
-export YARN_LOG_DIR=/var/log/hadoop-yarn
-export YARN_CONF_DIR=/etc/hadoop/conf
+export HADOOP_IDENT_STRING=yarn
+export HADOOP_PID_DIR=/var/run/hadoop-yarn
+export HADOOP_LOG_DIR=/var/log/hadoop-yarn
+export HADOOP_CONF_DIR=/etc/hadoop/conf
