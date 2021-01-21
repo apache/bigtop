@@ -21,12 +21,13 @@ set -e
 
 case "$1" in
     configure)
-	mkdir -p /var/log/hadoop-hdfs /var/run/hadoop-hdfs || :
+	mkdir -p /var/log/hadoop-hdfs /var/run/hadoop-hdfs /var/lib/hadoop-hdfs/cache /usr/lib/hadoop/logs || :
 	chgrp -R hadoop /var/log/hadoop-hdfs /var/run/hadoop-hdfs
 	chmod g+w /var/run/hadoop-hdfs /var/log/hadoop-hdfs
 	chown hdfs:hadoop /var/lib/hadoop-hdfs/ /var/lib/hadoop-hdfs/cache
 	chmod 0755 /var/lib/hadoop-hdfs
 	chmod 1777 /var/lib/hadoop-hdfs/cache
+	chmod 1777 /usr/lib/hadoop/logs
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

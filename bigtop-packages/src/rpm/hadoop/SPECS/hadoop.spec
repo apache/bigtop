@@ -567,6 +567,8 @@ done
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{run_httpfs}
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{run_kms}
 
+%__install -d -m 1777 $RPM_BUILD_ROOT/%{lib_hadoop}/logs
+
 %pre
 getent group hadoop >/dev/null || groupadd -r hadoop
 
@@ -690,6 +692,7 @@ fi
 %{lib_hadoop}/sbin
 %{lib_hadoop}/bin
 %{lib_hadoop}/etc
+%{lib_hadoop}/logs
 %{lib_hadoop}/libexec/hadoop-config.sh
 %{lib_hadoop}/libexec/hadoop-layout.sh
 %{lib_hadoop}/libexec/hadoop-functions.sh
@@ -699,6 +702,7 @@ fi
 %{man_hadoop}/man1/yarn.1.*
 %{man_hadoop}/man1/hdfs.1.*
 %{man_hadoop}/man1/mapred.1.*
+%attr(1777,hdfs,hadoop) %{lib_hadoop}/logs
 
 # Shouldn't the following be moved to hadoop-hdfs?
 %exclude %{lib_hadoop}/bin/fuse_dfs

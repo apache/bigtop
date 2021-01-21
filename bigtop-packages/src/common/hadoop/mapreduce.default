@@ -13,6 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-export HADOOP_MAPRED_IDENT_STRING=mapred
-export HADOOP_MAPRED_PID_DIR=/var/run/hadoop-mapreduce
-export HADOOP_MAPRED_LOG_DIR=/var/log/hadoop-mapreduce
+export HADOOP_IDENT_STRING=mapred
+export HADOOP_PID_DIR=/var/run/hadoop-mapreduce
+export HADOOP_LOG_DIR=/var/log/hadoop-mapreduce

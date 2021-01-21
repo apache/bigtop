@@ -44,9 +44,9 @@
 <%= shell_config("HADOOP_OPTS") %>
 
 # Command specific options appended to HADOOP_OPTS when specified
-<%= shell_config("HADOOP_NAMENODE_OPTS") %>
+<%= shell_config("HDFS_NAMENODE_OPTS") %>
 <%= shell_config("HADOOP_SECONDARYNAMENODE_OPTS") %>
-<%= shell_config("HADOOP_DATANODE_OPTS") %>
+<%= shell_config("HDFS_DATANODE_OPTS") %>
 <%= shell_config("HADOOP_BALANCER_OPTS") %>
 <%= shell_config("HADOOP_JOBTRACKER_OPTS") %>
 <%= shell_config("HADOOP_TASKTRACKER_OPTS") %>
@@ -91,8 +91,8 @@ export HADOOP_CLASSPATH=$HADOOP_CLASSPATH:${TEZ_CONF_DIR}:${TEZ_JARS}/*:${TEZ_JA
 ### WARNING: the following is NOT really optional. It is a shame that stock Hadoop
 ### hadoop_env.sh doesn't make it clear -- you can NOT turn  com.sun.management.jmxremote off
 ### and have a working Hadoop cluster.
-export HADOOP_NAMENODE_OPTS="-Dcom.sun.management.jmxremote $HADOOP_NAMENODE_OPTS"
+export HDFS_NAMENODE_OPTS="-Dcom.sun.management.jmxremote $HDFS_NAMENODE_OPTS"
 export HADOOP_SECONDARYNAMENODE_OPTS="-Dcom.sun.management.jmxremote $HADOOP_SECONDARYNAMENODE_OPTS"
-export HADOOP_DATANODE_OPTS="-Dcom.sun.management.jmxremote $HADOOP_DATANODE_OPTS"
+export HDFS_DATANODE_OPTS="-Dcom.sun.management.jmxremote $HDFS_DATANODE_OPTS"
 export HADOOP_BALANCER_OPTS="-Dcom.sun.management.jmxremote $HADOOP_BALANCER_OPTS"
 export HADOOP_JOBTRACKER_OPTS="-Dcom.sun.management.jmxremote $HADOOP_JOBTRACKER_OPTS"
