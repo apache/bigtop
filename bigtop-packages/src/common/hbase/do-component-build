@@ -41,15 +41,19 @@ if [ $HOSTTYPE = "aarch64" ] ; then
 '\          <\/dependency>' pom.xml
 fi
 
+MVN_ARGS="-Phadoop-3.0 "
 MVN_ARGS="-DskipTests "
+MVN_ARGS+="-Dhadoop-three.version=${HADOOP_VERSION} "
 MVN_ARGS+="-Dslf4j.version=1.7.25 "
-MVN_ARGS+="-Dhadoop-two.version=${HADOOP_VERSION} "
 MVN_ARGS+="-Dzookeeper.version=${ZOOKEEPER_VERSION} "
 MVN_ARGS+="-Dcheckstyle.skip=true "
-mvn ${MVN_ARGS} ${MAVEN_ADDITIONAL} install "$@"
+
+# HBASE-21513: separate site and assembly:single to avoid assembly issues.
+mvn ${MVN_ARGS} ${MAVEN_ADDITIONAL} clean install "$@"
 mvn ${MVN_ARGS} ${MAVEN_ADDITIONAL} site "$@"
 mvn ${MVN_ARGS} ${MAVEN_ADDITIONAL} package assembly:single "$@"
 
 rm -rf build
 mkdir build
-tar -C build --strip-components=1 -xzf hbase-assembly/target/hbase*.tar.gz
+tar -C build --strip-components=1 -xzf hbase-assembly/target/hbase-${HBASE_VERSION}-bin.tar.gz
+tar -C build --strip-components=1 -xzf hbase-assembly/target/hbase-${HBASE_VERSION}-client-bin.tar.gz
