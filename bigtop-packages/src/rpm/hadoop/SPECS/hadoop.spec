@@ -177,7 +177,12 @@ Source30: hadoop-kms.svc
 Source31: kms.default
 #BIGTOP_PATCH_FILES
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
-BuildRequires: fuse-devel, fuse, cmake
+BuildRequires: fuse-devel, fuse
+%if %{?el7}0
+BuildRequires: cmake3
+%else
+BuildRequires: cmake
+%endif
 Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils >= 0.7, zookeeper >= 3.4.0
 Requires: psmisc, %{netcat_package}
 # Sadly, Sun/Oracle JDK in RPM form doesn't provide libjvm.so, which means we have
