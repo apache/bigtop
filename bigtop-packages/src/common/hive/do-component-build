@@ -23,7 +23,9 @@ HIVE_MAVEN_OPTS=" -Dhbase.version=$HBASE_VERSION \
 -Dhadoop.version=$HADOOP_VERSION \
 -DskipTests \
 -Dtez.version=${TEZ_VERSION} \
--Dspark.version=${SPARK_VERSION}
+-Dspark.version=${SPARK_VERSION} \
+-Dscala.binary.version=${SCALA_VERSION%.*} \
+-Dscala.version=${SCALA_VERSION}
 "
 
 # Include common Maven Deployment logic

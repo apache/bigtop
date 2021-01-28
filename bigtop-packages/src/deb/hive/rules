@@ -56,6 +56,3 @@ override_dh_auto_install: server2 metastore hcatalog-server webhcat-server
 	# Workaround for BIGTOP-583
 	rm -f debian/tmp/usr/lib/hive/lib/slf4j-log4j12-*.jar
 	bash debian/build-hive-install-file.sh >> debian/hive.install
-
-	# Hive source contains a directory docs/changes that is interpreted a special way in Debian 7+ packaging
-	mv docs/changes docs/changes_
