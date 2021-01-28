@@ -23,7 +23,6 @@ class bigtop_toolchain::packages {
         "wget",
         "git",
         "make",
-        "cmake",
         "autoconf",
         "automake",
         "libtool",
@@ -67,9 +66,9 @@ class bigtop_toolchain::packages {
         "perl-Digest-SHA"
       ]
       if ($operatingsystem == 'Fedora' or $operatingsystemmajrelease !~ /^[0-7]$/) {
-        $pkgs = concat($_pkgs, ["python2-devel", "libtirpc-devel"])
+        $pkgs = concat($_pkgs, ["python2-devel", "libtirpc-devel", "cmake"])
       } else {
-        $pkgs = concat($_pkgs, "python-devel")
+        $pkgs = concat($_pkgs, ["python-devel", "cmake3"])
       }
     }
     /(?i:(SLES|opensuse))/: { $pkgs = [
@@ -266,6 +265,11 @@ class bigtop_toolchain::packages {
     file { '/usr/bin/python':
       ensure => 'link',
       target => '/usr/bin/python2',
+    }
+  } else {
+    file { '/usr/bin/cmake':
+      ensure => 'link',
+      target => '/usr/bin/cmake3',
     }
   }
 }
