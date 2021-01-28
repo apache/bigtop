@@ -23,9 +23,11 @@ BUILD_OPTS="-Divy.home=${HOME}/.ivy2 -Dsbt.ivy.home=${HOME}/.ivy2 -Duser.home=${
             -Dreactor.repo=file://${HOME}/.m2/repository \
             -Dhadoop.version=$HADOOP_VERSION \
             -Dyarn.version=$HADOOP_VERSION \
-            -Pyarn -Phadoop-2.7 \
+            -Pyarn -Phadoop-3.2 \
             -Phive -Phive-thriftserver \
             -Psparkr \
+            -Pscala-${SCALA_VERSION%.*} \
+            -Dguava.version=27.0-jre \
             $SPARK_BUILD_OPTS"
 
 ./dev/make-distribution.sh --mvn mvn --r $BUILD_OPTS -DskipTests
