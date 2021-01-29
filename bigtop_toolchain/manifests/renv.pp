@@ -33,9 +33,8 @@ class bigtop_toolchain::renv {
       ]
     }
     /(Ubuntu|Debian)/: {
-      if (versioncmp($operatingsystemmajrelease, '16.04') == 0) {
+      if (versioncmp($operatingsystemmajrelease, '18.04') <= 0) {
         $pkgs = [
-          "r-base",
           "r-base-dev",
           "libcairo2-dev",
           "pandoc",
@@ -56,14 +55,14 @@ class bigtop_toolchain::renv {
     before => [Exec["install_r_packages"]]
   }
 
-  # BIGTOP-3443:
-  #   Upgrade R version to 3.4.4 to fix dependency issue in R 3.2
+  # BIGTOP-3483:
+  #   Upgrade R version to 3.6.3 to build Spark 3.0.1 on Ubuntu 16.04 and 18.04
   #
   # Then Install required R packages dependency
-  if ($operatingsystem == 'Ubuntu' and versioncmp($operatingsystemmajrelease, '16.04') == 0) {
-    $url = "https://cran.rstudio.com/src/base/R-3/"
-    $rfile = "R-3.4.4.tar.gz"
-    $rdir = "R-3.4.4"
+  if ($operatingsystem == 'Ubuntu' and versioncmp($operatingsystemmajrelease, '18.04') <= 0) {
+    $url = "http://cran.r-project.org/src/base/R-3/"
+    $rfile = "R-3.6.3.tar.gz"
+    $rdir = "R-3.6.3"
 
     exec { "download_R":
       cwd  => "/usr/src",
@@ -80,14 +79,14 @@ class bigtop_toolchain::renv {
 
     exec { "install_r_packages" :
       cwd     => "/usr/local/bin",
-      command => "/usr/local/bin/R -e \"install.packages(c('devtools', 'evaluate', 'rmarkdown', 'knitr', 'roxygen2', 'testthat', 'e1071'), repos = 'http://cran.us.r-project.org')\"",
+      command => "/usr/local/bin/R -e \"install.packages(c('devtools', 'evaluate', 'rmarkdown', 'knitr', 'roxygen2', 'testthat', 'e1071'), repos = 'http://cran.r-project.org/')\"",
       require => [Exec["install_R"]],
       timeout => 6000
     }
   } else {
     exec { "install_r_packages" :
       cwd     => "/usr/bin",
-      command => "/usr/bin/R -e \"install.packages(c('devtools', 'evaluate', 'rmarkdown', 'knitr', 'roxygen2', 'testthat', 'e1071'), repos = 'http://cran.us.r-project.org')\"",
+      command => "/usr/bin/R -e \"install.packages(c('devtools', 'evaluate', 'rmarkdown', 'knitr', 'roxygen2', 'testthat', 'e1071'), repos = 'http://cran.r-project.org/')\"",
       timeout => 6000
     }
   }
