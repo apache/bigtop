@@ -117,8 +117,9 @@ mkdir build
 mkdir build/src
  
 # Build artifacts
-MAVEN_OPTS="-Dzookeeper.version=$ZOOKEEPER_VERSION"
-MAVEN_OPTS="$MAVEN_OPTS -DskipTests -DskipTest -DskipITs"
+MAVEN_OPTS="-Dzookeeper.version=$ZOOKEEPER_VERSION "
+MAVEN_OPTS+="-Djetty.version=9.3.29.v20201019 "
+MAVEN_OPTS+="-DskipTests -DskipTest -DskipITs "
 
 # Include common Maven Deployment logic
 . $(dirname ${0})/maven_deploy.sh
