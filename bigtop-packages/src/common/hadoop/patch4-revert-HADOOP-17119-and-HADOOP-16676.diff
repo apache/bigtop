@@ -1,0 +1,281 @@
+diff --git a/hadoop-client-modules/hadoop-client-minicluster/pom.xml b/hadoop-client-modules/hadoop-client-minicluster/pom.xml
+index 780ae0c4d63..118df814bb1 100644
+--- a/hadoop-client-modules/hadoop-client-minicluster/pom.xml
++++ b/hadoop-client-modules/hadoop-client-minicluster/pom.xml
+@@ -779,19 +779,6 @@
+                         <exclude>ehcache-core.xsd</exclude>
+                       </excludes>
+                     </filter>
+-                    <!-- Jetty 9.4.x: jetty-client and jetty-xml are depended by org.eclipse.jetty.websocket:websocket-client.-->
+-                    <filter>
+-                      <artifact>org.eclipse.jetty:jetty-client</artifact>
+-                      <excludes>
+-                        <exclude>*/**</exclude>
+-                      </excludes>
+-                    </filter>
+-                    <filter>
+-                      <artifact>org.eclipse.jetty:jetty-xml</artifact>
+-                      <excludes>
+-                        <exclude>*/**</exclude>
+-                      </excludes>
+-                    </filter>
+                   </filters>
+ 
+                   <!-- relocate classes from mssql-jdbc -->
+@@ -920,13 +907,6 @@
+                         <exclude>**/pom.xml</exclude>
+                       </excludes>
+                     </relocation>
+-                    <relocation>
+-                      <pattern>javax/websocket/</pattern>
+-                      <shadedPattern>${shaded.dependency.prefix}.javax.websocket.</shadedPattern>
+-                      <excludes>
+-                        <exclude>**/pom.xml</exclude>
+-                      </excludes>
+-                    </relocation>
+                     <relocation>
+                       <pattern>jersey/</pattern>
+                       <shadedPattern>${shaded.dependency.prefix}.jersey.</shadedPattern>
+diff --git a/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/http/HttpRequestLog.java b/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/http/HttpRequestLog.java
+index b2f18538b6c..05573a8de95 100644
+--- a/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/http/HttpRequestLog.java
++++ b/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/http/HttpRequestLog.java
+@@ -24,8 +24,7 @@
+ import org.apache.commons.logging.LogConfigurationException;
+ import org.apache.commons.logging.LogFactory;
+ import org.apache.log4j.Appender;
+-import org.eclipse.jetty.server.AsyncRequestLogWriter;
+-import org.eclipse.jetty.server.CustomRequestLog;
++import org.eclipse.jetty.server.NCSARequestLog;
+ import org.eclipse.jetty.server.RequestLog;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+@@ -86,11 +85,10 @@ public static RequestLog getRequestLog(String name) {
+       if (appender instanceof HttpRequestLogAppender) {
+         HttpRequestLogAppender requestLogAppender
+           = (HttpRequestLogAppender)appender;
+-        AsyncRequestLogWriter logWriter = new AsyncRequestLogWriter();
+-        logWriter.setFilename(requestLogAppender.getFilename());
+-        logWriter.setRetainDays(requestLogAppender.getRetainDays());
+-        return new CustomRequestLog(logWriter,
+-            CustomRequestLog.EXTENDED_NCSA_FORMAT);
++        NCSARequestLog requestLog = new NCSARequestLog();
++        requestLog.setFilename(requestLogAppender.getFilename());
++        requestLog.setRetainDays(requestLogAppender.getRetainDays());
++        return requestLog;
+       } else {
+         LOG.warn("Jetty request log for {} was of the wrong class", loggerName);
+         return null;
+diff --git a/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/http/HttpServer2.java b/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/http/HttpServer2.java
+index a126c1c71a8..5b9b71a4199 100644
+--- a/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/http/HttpServer2.java
++++ b/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/http/HttpServer2.java
+@@ -82,10 +82,12 @@
+ import org.eclipse.jetty.server.SecureRequestCustomizer;
+ import org.eclipse.jetty.server.Server;
+ import org.eclipse.jetty.server.ServerConnector;
++import org.eclipse.jetty.server.SessionManager;
+ import org.eclipse.jetty.server.SslConnectionFactory;
+ import org.eclipse.jetty.server.handler.ContextHandlerCollection;
+ import org.eclipse.jetty.server.handler.HandlerCollection;
+ import org.eclipse.jetty.server.handler.RequestLogHandler;
++import org.eclipse.jetty.server.session.AbstractSessionManager;
+ import org.eclipse.jetty.server.session.SessionHandler;
+ import org.eclipse.jetty.servlet.DefaultServlet;
+ import org.eclipse.jetty.servlet.FilterHolder;
+@@ -529,8 +531,7 @@ private ServerConnector createHttpsChannelConnector(
+           new SecureRequestCustomizer(sniHostCheckEnabled));
+       ServerConnector conn = createHttpChannelConnector(server, httpConfig);
+ 
+-      SslContextFactory.Server sslContextFactory =
+-          new SslContextFactory.Server();
++      SslContextFactory sslContextFactory = new SslContextFactory();
+       sslContextFactory.setNeedClientAuth(needsClientAuth);
+       sslContextFactory.setKeyManagerPassword(keyPassword);
+       if (keyStore != null) {
+@@ -598,9 +599,12 @@ private void initializeWebServer(String name, String hostName,
+       threadPool.setMaxThreads(maxThreads);
+     }
+ 
+-    SessionHandler handler = webAppContext.getSessionHandler();
+-    handler.setHttpOnly(true);
+-    handler.getSessionCookieConfig().setSecure(true);
++    SessionManager sm = webAppContext.getSessionHandler().getSessionManager();
++    if (sm instanceof AbstractSessionManager) {
++      AbstractSessionManager asm = (AbstractSessionManager)sm;
++      asm.setHttpOnly(true);
++      asm.getSessionCookieConfig().setSecure(true);
++    }
+ 
+     ContextHandlerCollection contexts = new ContextHandlerCollection();
+     RequestLog requestLog = HttpRequestLog.getRequestLog(name);
+@@ -739,8 +743,12 @@ protected void addDefaultApps(ContextHandlerCollection parent,
+       }
+       logContext.setDisplayName("logs");
+       SessionHandler handler = new SessionHandler();
+-      handler.setHttpOnly(true);
+-      handler.getSessionCookieConfig().setSecure(true);
++      SessionManager sm = handler.getSessionManager();
++      if (sm instanceof AbstractSessionManager) {
++        AbstractSessionManager asm = (AbstractSessionManager) sm;
++        asm.setHttpOnly(true);
++        asm.getSessionCookieConfig().setSecure(true);
++      }
+       logContext.setSessionHandler(handler);
+       setContextAttributes(logContext, conf);
+       addNoCacheFilter(logContext);
+@@ -757,8 +765,12 @@ protected void addDefaultApps(ContextHandlerCollection parent,
+     params.put("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
+     params.put("org.eclipse.jetty.servlet.Default.gzip", "true");
+     SessionHandler handler = new SessionHandler();
+-    handler.setHttpOnly(true);
+-    handler.getSessionCookieConfig().setSecure(true);
++    SessionManager sm = handler.getSessionManager();
++    if (sm instanceof AbstractSessionManager) {
++      AbstractSessionManager asm = (AbstractSessionManager) sm;
++      asm.setHttpOnly(true);
++      asm.getSessionCookieConfig().setSecure(true);
++    }
+     staticContext.setSessionHandler(handler);
+     setContextAttributes(staticContext, conf);
+     defaultContexts.put(staticContext, true);
+@@ -1226,7 +1238,7 @@ private static void bindListener(ServerConnector listener) throws Exception {
+    * @return
+    */
+   private static BindException constructBindException(ServerConnector listener,
+-      IOException ex) {
++      BindException ex) {
+     BindException be = new BindException("Port in use: "
+         + listener.getHost() + ":" + listener.getPort());
+     if (ex != null) {
+@@ -1248,7 +1260,7 @@ private void bindForSinglePort(ServerConnector listener, int port)
+       try {
+         bindListener(listener);
+         break;
+-      } catch (IOException ex) {
++      } catch (BindException ex) {
+         if (port == 0 || !findPort) {
+           throw constructBindException(listener, ex);
+         }
+@@ -1268,13 +1280,13 @@ private void bindForSinglePort(ServerConnector listener, int port)
+    */
+   private void bindForPortRange(ServerConnector listener, int startPort)
+       throws Exception {
+-    IOException ioException = null;
++    BindException bindException = null;
+     try {
+       bindListener(listener);
+       return;
+-    } catch (IOException ex) {
++    } catch (BindException ex) {
+       // Ignore exception.
+-      ioException = ex;
++      bindException = ex;
+     }
+     for(Integer port : portRanges) {
+       if (port == startPort) {
+@@ -1285,16 +1297,12 @@ private void bindForPortRange(ServerConnector listener, int startPort)
+       try {
+         bindListener(listener);
+         return;
+-      } catch (IOException ex) {
+-        if (!(ex instanceof BindException)
+-            && !(ex.getCause() instanceof BindException)) {
+-          throw ex;
+-        }
++      } catch (BindException ex) {
+         // Ignore exception. Move to next port.
+-        ioException = ex;
++        bindException = ex;
+       }
+     }
+-    throw constructBindException(listener, ioException);
++    throw constructBindException(listener, bindException);
+   }
+ 
+   /**
+diff --git a/hadoop-common-project/hadoop-common/src/test/java/org/apache/hadoop/http/TestHttpRequestLog.java b/hadoop-common-project/hadoop-common/src/test/java/org/apache/hadoop/http/TestHttpRequestLog.java
+index d0123e32039..212807f78ef 100644
+--- a/hadoop-common-project/hadoop-common/src/test/java/org/apache/hadoop/http/TestHttpRequestLog.java
++++ b/hadoop-common-project/hadoop-common/src/test/java/org/apache/hadoop/http/TestHttpRequestLog.java
+@@ -18,7 +18,7 @@
+ package org.apache.hadoop.http;
+ 
+ import org.apache.log4j.Logger;
+-import org.eclipse.jetty.server.CustomRequestLog;
++import org.eclipse.jetty.server.NCSARequestLog;
+ import org.eclipse.jetty.server.RequestLog;
+ import org.junit.Test;
+ 
+@@ -42,7 +42,6 @@ public void testAppenderDefined() {
+     RequestLog requestLog = HttpRequestLog.getRequestLog("test");
+     Logger.getLogger("http.requests.test").removeAppender(requestLogAppender);
+     assertNotNull("RequestLog should not be null", requestLog);
+-    assertEquals("Class mismatch",
+-        CustomRequestLog.class, requestLog.getClass());
++    assertEquals("Class mismatch", NCSARequestLog.class, requestLog.getClass());
+   }
+ }
+diff --git a/hadoop-hdfs-project/hadoop-hdfs-httpfs/src/test/java/org/apache/hadoop/test/TestJettyHelper.java b/hadoop-hdfs-project/hadoop-hdfs-httpfs/src/test/java/org/apache/hadoop/test/TestJettyHelper.java
+index e4df1184356..1da3901b395 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs-httpfs/src/test/java/org/apache/hadoop/test/TestJettyHelper.java
++++ b/hadoop-hdfs-project/hadoop-hdfs-httpfs/src/test/java/org/apache/hadoop/test/TestJettyHelper.java
+@@ -105,8 +105,7 @@ private Server createJettyServer() {
+       conn.setHost(host);
+       conn.setPort(port);
+       if (ssl) {
+-        SslContextFactory.Server sslContextFactory =
+-            new SslContextFactory.Server();
++        SslContextFactory sslContextFactory = new SslContextFactory();
+         sslContextFactory.setNeedClientAuth(false);
+         sslContextFactory.setKeyStorePath(keyStore);
+         sslContextFactory.setKeyStoreType(keyStoreType);
+diff --git a/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/web/DatanodeHttpServer.java b/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/web/DatanodeHttpServer.java
+index fade4b4ee98..1c7850608ae 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/web/DatanodeHttpServer.java
++++ b/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/web/DatanodeHttpServer.java
+@@ -93,9 +93,8 @@
+   // set them to the minimum possible
+   private static final int HTTP_SELECTOR_THREADS = 1;
+   private static final int HTTP_ACCEPTOR_THREADS = 1;
+-  // Jetty 9.4.x: Adding one more thread to HTTP_MAX_THREADS.
+   private static final int HTTP_MAX_THREADS =
+-      HTTP_SELECTOR_THREADS + HTTP_ACCEPTOR_THREADS + 2;
++      HTTP_SELECTOR_THREADS + HTTP_ACCEPTOR_THREADS + 1;
+ 
+   public DatanodeHttpServer(final Configuration conf,
+       final DataNode datanode,
+diff --git a/hadoop-project/pom.xml b/hadoop-project/pom.xml
+index e76347962b2..c476e712aee 100644
+--- a/hadoop-project/pom.xml
++++ b/hadoop-project/pom.xml
+@@ -35,7 +35,7 @@
+ 
+     <failIfNoTests>false</failIfNoTests>
+     <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
+-    <jetty.version>9.4.20.v20190813</jetty.version>
++    <jetty.version>9.3.27.v20190418</jetty.version>
+     <test.exclude>_</test.exclude>
+     <test.exclude.pattern>_</test.exclude.pattern>
+ 
+diff --git a/hadoop-tools/hadoop-sls/src/main/java/org/apache/hadoop/yarn/sls/SLSRunner.java b/hadoop-tools/hadoop-sls/src/main/java/org/apache/hadoop/yarn/sls/SLSRunner.java
+index 0a469ad66b7..9779193ad49 100644
+--- a/hadoop-tools/hadoop-sls/src/main/java/org/apache/hadoop/yarn/sls/SLSRunner.java
++++ b/hadoop-tools/hadoop-sls/src/main/java/org/apache/hadoop/yarn/sls/SLSRunner.java
+@@ -93,6 +93,7 @@
+ import org.apache.hadoop.yarn.util.UTCClock;
+ import org.apache.hadoop.yarn.util.resource.ResourceUtils;
+ import org.apache.hadoop.yarn.util.resource.Resources;
++import org.eclipse.jetty.util.ConcurrentHashSet;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ 
+@@ -334,7 +335,7 @@ private void startNM() throws YarnException, IOException,
+ 
+     // create NM simulators
+     Random random = new Random();
+-    Set<String> rackSet = ConcurrentHashMap.newKeySet();
++    Set<String> rackSet = new ConcurrentHashSet<>();
+     int threadPoolSize = Math.max(poolSize,
+         SLSConfiguration.RUNNER_POOL_SIZE_DEFAULT);
+     ExecutorService executorService = Executors.
