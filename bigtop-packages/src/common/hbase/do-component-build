@@ -30,8 +30,6 @@ if [ $HOSTTYPE = "powerpc64le" ] ; then
   sed  -i "s|<version>1.5.0-alpha.6</version>|<version>1.5.0-alpha.11</version>|" pom.xml
 fi
 
-rm -f hbase-server/src/test/java/org/apache/hadoop/hbase/regionserver/TestBulkLoad.java
-
 if [ $HOSTTYPE = "aarch64" ] ; then
   sed -i '/asciidoctorj-pdf/!{p;d;};n;n;a'\
 '\          <dependency>\n'\
@@ -42,10 +40,11 @@ if [ $HOSTTYPE = "aarch64" ] ; then
 fi
 
 MVN_ARGS="-Phadoop-3.0 "
-MVN_ARGS="-DskipTests "
 MVN_ARGS+="-Dhadoop-three.version=${HADOOP_VERSION} "
+MVN_ARGS+="-Dhadoop.guava.version=27.0-jre "
 MVN_ARGS+="-Dslf4j.version=1.7.25 "
 MVN_ARGS+="-Dzookeeper.version=${ZOOKEEPER_VERSION} "
+MVN_ARGS+="-DskipTests "
 MVN_ARGS+="-Dcheckstyle.skip=true "
 
 # HBASE-21513: separate site and assembly:single to avoid assembly issues.
