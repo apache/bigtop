@@ -31,4 +31,4 @@ LIVY_BUILD_OPTS="-Drat.skip=true \
 
 mvn install $LIVY_BUILD_OPTS "$@"
 
-unzip assembly/target/apache-livy-$LIVY_VERSION-incubating-bin.zip && mv apache-livy-$LIVY_VERSION-incubating-bin build
+unzip assembly/target/apache-livy-$LIVY_VERSION-incubating-bin_${SCALA_VERSION%.*}.zip && mv apache-livy-$LIVY_VERSION-incubating-bin_${SCALA_VERSION%.*} build
