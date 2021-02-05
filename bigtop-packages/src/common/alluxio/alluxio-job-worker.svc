@@ -13,13 +13,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-TYPE="worker"
+TYPE="job-worker"
 DAEMON="alluxio-${TYPE}"
 DESC="Alluxio ${TYPE}"
-EXEC_PATH="/usr/lib/alluxio/bin/alluxio-start.sh"
+EXEC_PATH="/usr/lib/alluxio/bin"
 WORKING_DIR="/var/lib/alluxio"
-DAEMON_FLAGS="worker Mount"
-KEYWORD="alluxio.worker.AlluxioWorker"
+DAEMON_FLAGS="job_worker"
+KEYWORD="alluxio.worker.AlluxioJobWorker"
 CONF_DIR="/etc/alluxio/conf"
 PIDFILE="/var/run/alluxio/${DAEMON}.pid"
 
@@ -44,7 +44,7 @@ start() {
     fi
 
     /bin/bash -c "nohup nice -n 0 \
-        ${EXEC_PATH} ${DAEMON_FLAGS} \
+        ${EXEC_PATH}/alluxio-start.sh ${DAEMON_FLAGS} \
         > $LOG_FILE 2>&1 & "
 
     WAIT_TIMES=0
@@ -68,7 +68,7 @@ generate_stop() {
 cat <<'__EOT__'
 stop() {
     log_success_msg "Stopping $DESC (${DAEMON}): "
-    /usr/lib/alluxio/bin/alluxio-stop.sh worker 2>&1 > /dev/null
+    ${EXEC_PATH}/alluxio-stop.sh ${DAEMON_FLAGS} 2>&1 > /dev/null
     RETVAL=$?
 
     [ $RETVAL -eq $RETVAL_SUCCESS ] && rm -f $LOCKFILE $PIDFILE

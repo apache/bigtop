@@ -1,10 +1,10 @@
 diff --git a/pom.xml b/pom.xml
-index a959527aa2..1051f153e2 100644
+index 8b6440b7e7..4ecbca4be4 100644
 --- a/pom.xml
 +++ b/pom.xml
-@@ -1175,6 +1175,7 @@
-
+@@ -1214,6 +1214,7 @@
              <!-- Build and Packaging Exclusions -->
+             <exclude>webui/node_modules/*</exclude>
              <exclude>build/**/*</exclude>
 +            <exclude>debian/**/*</exclude>
              <exclude>conf/alluxio-env.sh</exclude>

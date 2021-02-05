@@ -29,9 +29,11 @@ Source2:       install_alluxio.sh
 Source3:       init.d.tmpl
 Source4:       alluxio-master.svc
 Source5:       alluxio-worker.svc
+Source6:       alluxio-job-master.svc
+Source7:       alluxio-job-worker.svc
 #BIGTOP_PATCH_FILES
 %define        alluxio_home /usr/lib/%{alluxio_name}
-%define        alluxio_services master worker
+%define        alluxio_services master worker job-master job-worker
 %define        var_lib /var/lib/%{alluxio_name}
 %define        var_run /var/run/%{alluxio_name}
 %define        var_log /var/log/%{alluxio_name}
@@ -136,6 +138,8 @@ done
 %config(noreplace) %{_sysconfdir}/%{alluxio_name}/conf.dist/core-site.xml
 %config(noreplace) %{initd_dir}/%{alluxio_name}-master
 %config(noreplace) %{initd_dir}/%{alluxio_name}-worker
+%config(noreplace) %{initd_dir}/%{alluxio_name}-job-master
+%config(noreplace) %{initd_dir}/%{alluxio_name}-job-worker
 %attr(0755,alluxio,alluxio) %{var_lib}
 %attr(0755,alluxio,alluxio) %{var_run}
 %attr(0755,alluxio,alluxio) %{var_log}

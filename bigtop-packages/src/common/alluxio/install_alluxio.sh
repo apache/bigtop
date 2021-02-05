@@ -124,14 +124,12 @@ cp -a lib/* $PREFIX/$LIB_DIR/lib
 cp -a libexec/* $PREFIX/$LIB_DIR/libexec
 cp -a client/* $PREFIX/$LIB_DIR/client
 cp -a integration/* $PREFIX/$LIB_DIR/integration
-cp integration/checker/target/alluxio-checker-*-jar-with-dependencies.jar $PREFIX/$LIB_DIR/integration/checker
 cp integration/fuse/target/alluxio-integration-fuse-*-jar-with-dependencies.jar $PREFIX/$LIB_DIR/integration/fuse
 cp integration/yarn/target/alluxio-integration-yarn-*-jar-with-dependencies.jar $PREFIX/$LIB_DIR/integration/yarn
 rm -rf $PREFIX/$LIB_DIR/integration/pom.xml $PREFIX/$LIB_DIR/integration/**/pom.xml
 rm -rf $PREFIX/$LIB_DIR/integration/target $PREFIX/$LIB_DIR/integration/**/target
 rm -rf $PREFIX/$LIB_DIR/integration/**/src
 rm -rf $PREFIX/$LIB_DIR/integration/**/README.md
-cp -rf core/server/common/src/main/webapp $PREFIX/$LIB_DIR/core/server/common/src/main
 
 # Copy in the configuration files
 install -m 0644 conf/log4j.properties $PREFIX/$CONF_DIST_DIR
@@ -144,9 +142,6 @@ cp conf/workers $PREFIX/$CONF_DIST_DIR/workers
 
 # Copy in the /usr/bin/alluxio wrapper
 install -d -m 0755 $PREFIX/$BIN_DIR
-
-# Copy in alluxio deploy scripts
-cp -rf deploy $PREFIX/$LIB_DIR/share
 
 # Prefix is correct at time of install,
 # but we dont want to escape it before that point.
