@@ -120,7 +120,7 @@ ln -s /etc/flink/conf $PREFIX/$LIB_DIR/conf
 
 cp -ra ${BUILD_DIR}/examples/* $PREFIX/${LIB_DIR}/examples/
 
-cp ${BUILD_DIR}/{LICENSE,NOTICE,README.txt} ${PREFIX}/${LIB_DIR}/
+cp ${BUILD_DIR}/{LICENSE,README.txt} ${PREFIX}/${LIB_DIR}/
 
 # Copy in the /usr/bin/flink wrapper
 install -d -m 0755 $PREFIX/$BIN_DIR
