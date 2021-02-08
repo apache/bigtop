@@ -89,7 +89,7 @@ CONF_DIR=${CONF_DIR:-/etc/livy/conf.dist}
 install -d -m 0755 $PREFIX/$LIB_DIR
 install -d -m 0755 $PREFIX/$LIB_DIR/bin
 install -d -m 0755 $PREFIX/$LIB_DIR/jars
-install -d -m 0755 $PREFIX/$LIB_DIR/repl_2.11-jars
+install -d -m 0755 $PREFIX/$LIB_DIR/repl_2.12-jars
 install -d -m 0755 $PREFIX/$LIB_DIR/rsc-jars
 install -d -m 0755 $PREFIX/$CONF_DIR
 install -d -m 0755 $PREFIX/var/log/livy
@@ -98,7 +98,7 @@ install -d -m 0755 $PREFIX/var/lib/livy
 
 # Copy the jar files
 cp -ra ${BUILD_DIR}/jars/* $PREFIX/${LIB_DIR}/jars/
-cp -ra ${BUILD_DIR}/repl_2.11-jars/* $PREFIX/${LIB_DIR}/repl_2.11-jars/
+cp -ra ${BUILD_DIR}/repl_2.12-jars/* $PREFIX/${LIB_DIR}/repl_2.12-jars/
 cp -ra ${BUILD_DIR}/rsc-jars/* $PREFIX/${LIB_DIR}/rsc-jars/
 
 # Copy the bin files
