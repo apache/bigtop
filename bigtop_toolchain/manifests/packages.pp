@@ -204,7 +204,6 @@ class bigtop_toolchain::packages {
         "bison",
         "flex",
         "python-dev",
-        "python-pip",
         "libffi-dev"
       ]
       file { '/etc/apt/apt.conf.d/01retries':
