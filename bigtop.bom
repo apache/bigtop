@@ -114,10 +114,10 @@ bigtop {
     'bigtop-groovy':['hadoop'],
     'bigtop-jsvc':['hadoop'],
     'bigtop-tomcat':['oozie', 'sqoop2'],
-    zookeeper:['hadoop', 'hbase'],
+    zookeeper:['hadoop', 'hbase', 'kafka'],
     hadoop:['ignite-hadoop', 'hbase', 'hive', 'tez', 'sqoop', 'sqoop2',
       'oozie', 'mahout', 'flume', 'giraph', 'solr', 'spark',
-      'phoenix', 'alluxio', 'kafka', 'ycsb', 'zeppelin'
+      'phoenix', 'alluxio', 'ycsb', 'zeppelin'
     ],
     hbase:['phoenix','giraph','ycsb','hive'],
     hive:['oozie', 'zeppelin'],
@@ -361,7 +361,7 @@ bigtop {
     'kafka' {
       name    = 'kafka'
       relNotes = 'Apache Kafka'
-      version { base = '2.4.0'; pkg = base; release = 1 }
+      version { base = '2.4.1'; pkg = base; release = 1 }
       tarball { destination = "$name-${version.base}.tar.gz"
                 source      = "$name-${version.base}-src.tgz" }
       url     { download_path = "/$name/${version.base}/"
