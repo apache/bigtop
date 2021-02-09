@@ -203,9 +203,12 @@ zeppelin::server::hiveserver2_password: "%{hiera('bigtop::hiveserver2_password')
 # Flink
 flink::common::jobmanager_host: "%{hiera('bigtop::hadoop_head_node')}"
 flink::common::jobmanager_port: "6123"
-
-flink::common::ui_port: "8081"
-flink::common::storage_dirs: "%{hiera('hadoop::hadoop_storage_dirs')}"
+flink::common::jobmanager_memory: "1600m"
+flink::common::taskmanager_memory: "1728m"
+flink::common::taskmanager_number_of_taskslots: "1"
+flink::common::parallelism_default: "1"
+flink::common::jobmanager_failover_strategy: "region"
+flink::common::rest_port: "8081"
 
 # GPDB
 # The first element is FQDN for master node and the succeeding ones are for segment nodes.
