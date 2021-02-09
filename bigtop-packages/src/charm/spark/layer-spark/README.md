@@ -19,7 +19,7 @@
 Apache Spark is a fast and general purpose engine for large-scale data
 processing. Learn more at [spark.apache.org][].
 
-This charm deploys version 2.1.1 of the Spark component from [Apache Bigtop][].
+This charm deploys version 2.2.3 of the Spark component from [Apache Bigtop][].
 
 [spark.apache.org]: http://spark.apache.org/
 [Apache Bigtop]: http://bigtop.apache.org/
@@ -348,6 +348,5 @@ affected version. Any uncertain fields may be left blank.
 - [Apache Bigtop home page](http://bigtop.apache.org/)
 - [Apache Bigtop issue tracking](http://bigtop.apache.org/issue-tracking.html)
 - [Apache Bigtop mailing lists](http://bigtop.apache.org/mail-lists.html)
-- [Juju Big Data](https://jujucharms.com/big-data)
-- [Juju Bigtop charms](https://jujucharms.com/q/bigtop)
-- [Juju mailing list](https://lists.ubuntu.com/mailman/listinfo/juju)
+- [Juju Big Data](https://jaas.ai/big-data)
+- [Juju Bigtop charms](https://jaas.ai/search?q=bigtop)

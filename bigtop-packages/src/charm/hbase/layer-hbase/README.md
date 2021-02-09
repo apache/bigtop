@@ -24,7 +24,7 @@ This project's goal is the hosting of very large tables -- billions of rows X
 millions of columns -- atop clusters of commodity hardware. Learn more at
 [hbase.apache.org][].
 
-This charm deploys version 1.1.9 of the HBase master, regionserver, and thrift
+This charm deploys version 1.3.2 of the HBase master, regionserver, and thrift
 components from [Apache Bigtop][].
 
 [hbase.apache.org]: http://hbase.apache.org/
@@ -230,6 +230,5 @@ affected version. Any uncertain fields may be left blank.
 - [Apache Bigtop home page](http://bigtop.apache.org/)
 - [Apache Bigtop issue tracking](http://bigtop.apache.org/issue-tracking.html)
 - [Apache Bigtop mailing lists](http://bigtop.apache.org/mail-lists.html)
-- [Juju Big Data](https://jujucharms.com/big-data)
-- [Juju Bigtop charms](https://jujucharms.com/q/bigtop)
-- [Juju mailing list](https://lists.ubuntu.com/mailman/listinfo/juju)
+- [Juju Big Data](https://jaas.ai/big-data)
+- [Juju Bigtop charms](https://jaas.ai/search?q=bigtop)

@@ -4,7 +4,7 @@ maintainer: Juju Big Data <bigdata@lists.ubuntu.com>
 description: >
   Kafka is a high-performance, scalable, distributed messaging system.
 
-  This charm provides version 0.10.1.1 of the Kafka application from Apache
+  This charm provides version 0.10.2.2 of the Kafka application from Apache
   Bigtop.
 tags: []
 provides:

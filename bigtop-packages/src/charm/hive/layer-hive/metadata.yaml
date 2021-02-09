@@ -7,7 +7,7 @@ description: >
   language called HiveQL that transparently converts queries to MapReduce for
   execution on large datasets stored in Hadoop's HDFS.
 
-  This charm provides version 1.2.1 of the Hive application from Apache Bigtop.
+  This charm provides version 2.3.3 of the Hive application from Apache Bigtop.
 tags: []
 provides:
   client:

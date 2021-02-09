@@ -20,7 +20,7 @@ Apache Zeppelin is a web-based notebook that enables interactive data analytics.
 It allows for beautiful data-driven, interactive, and collaborative documents
 with SQL, Scala and more. Learn more at [zeppelin.apache.org][].
 
-This charm deploys version 0.7.2 of the Zeppelin component from
+This charm deploys version 0.7.3 of the Zeppelin component from
 [Apache Bigtop][].
 
 [zeppelin.apache.org]: http://zeppelin.apache.org/
@@ -160,6 +160,5 @@ affected version. Any uncertain fields may be left blank.
 - [Apache Bigtop home page](http://bigtop.apache.org/)
 - [Apache Bigtop issue tracking](http://bigtop.apache.org/issue-tracking.html)
 - [Apache Bigtop mailing lists](http://bigtop.apache.org/mail-lists.html)
-- [Juju Big Data](https://jujucharms.com/big-data)
-- [Juju Bigtop charms](https://jujucharms.com/q/bigtop)
-- [Juju mailing list](https://lists.ubuntu.com/mailman/listinfo/juju)
+- [Juju Big Data](https://jaas.ai/big-data)
+- [Juju Bigtop charms](https://jaas.ai/search?q=bigtop)
