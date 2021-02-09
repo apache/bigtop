@@ -39,9 +39,9 @@ class TestYcsbSmoke {
   static final String create_tbl = "n_splits = 20; create 'usertable', 'cf', {SPLITS => (1..n_splits).map {|i| \"user#{1000+i*(9999-1000)/n_splits}\"}}";
 
   static final String basic_load = "ycsb load basic ";
-  static final String hbase_load = "ycsb load hbase10 ";
+  static final String hbase_load = "ycsb load hbase20 ";
   static final String basic_run = "ycsb run basic ";
-  static final String hbase_run = "ycsb run hbase10 ";
+  static final String hbase_run = "ycsb run hbase20 ";
 
   static final String record_cnt = "recordcount=500000 ";
   static final String op_cnt = "operationcount=500000 ";
@@ -50,8 +50,8 @@ class TestYcsbSmoke {
   static void YcsbSetUp() {
     shHBase.exec(create_tbl);
 
-    sh.exec("mkdir -p " + YCSB_HOME + "/hbase10-binding/conf");
-    sh.exec("cp /etc/hbase/conf/hbase-site.xml /usr/lib/ycsb/hbase10-binding/conf");
+    sh.exec("mkdir -p " + YCSB_HOME + "/hbase20-binding/conf");
+    sh.exec("cp /etc/hbase/conf/hbase-site.xml /usr/lib/ycsb/hbase20-binding/conf");
   }
 
   @Test
