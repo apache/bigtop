@@ -57,6 +57,13 @@ class alluxio {
         hasrestart => true,
         hasstatus => true,
       }
+      service { "alluxio-job-master":
+        ensure => running,
+        require => [ Package["alluxio"], Exec["daemon-reload"], Exec["alluxio formatting"] ],
+        subscribe => File["/etc/alluxio/conf/alluxio-site.properties"],
+        hasrestart => true,
+        hasstatus => true,
+      }
     }
 
   }
@@ -71,6 +78,13 @@ class alluxio {
     }
 
     service { "alluxio-worker":
+      ensure => running,
+      require => [ Package["alluxio"], Exec["daemon-reload"], File["/etc/alluxio/conf/alluxio-site.properties"] ],
+      subscribe => File["/etc/alluxio/conf/alluxio-site.properties"],
+      hasrestart => true,
+      hasstatus => true,
+    }
+    service { "alluxio-job-worker":
       ensure => running,
       require => [ Package["alluxio"], Exec["daemon-reload"], File["/etc/alluxio/conf/alluxio-site.properties"] ],
       subscribe => File["/etc/alluxio/conf/alluxio-site.properties"],

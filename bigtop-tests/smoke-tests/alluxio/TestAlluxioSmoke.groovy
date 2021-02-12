@@ -66,11 +66,12 @@ class TestAlluxioSmoke {
     sh.exec("""
       set -x
       # Clear test environment
-      $hadoop fs -rm $alluxioTestDir/hadoopLs/datafile
-      $alluxio fs rm $alluxioTestDir/hadoopLs/datafile
+      $hadoop fs -rm -r /underFSStorage/$alluxioTestDir
+      $alluxio fs rm -R $alluxioTestDir
 
       set -e
       # Test Alluxio and HDFS interoperability
+      $alluxio fs mkdir $alluxioTestDir/hadoopLs
       $alluxio fs copyFromLocal datafile $alluxioTestDir/hadoopLs/datafile
       $alluxio fs persist $alluxioTestDir/hadoopLs/datafile
       $hadoop fs -cat /underFSStorage/$alluxioTestDir/hadoopLs/datafile

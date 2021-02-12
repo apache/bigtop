@@ -13,13 +13,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-TYPE="worker"
+TYPE="job-master"
 DAEMON="alluxio-${TYPE}"
 DESC="Alluxio ${TYPE}"
-EXEC_PATH="/usr/lib/alluxio/bin/alluxio-start.sh"
+EXEC_PATH="/usr/lib/alluxio/bin"
 WORKING_DIR="/var/lib/alluxio"
-DAEMON_FLAGS="worker Mount"
-KEYWORD="alluxio.worker.AlluxioWorker"
+DAEMON_FLAGS="job_master"
+KEYWORD="alluxio.master.AlluxioJobMaster"
 CONF_DIR="/etc/alluxio/conf"
 PIDFILE="/var/run/alluxio/${DAEMON}.pid"
 
@@ -39,16 +39,12 @@ start() {
 
     LOG_FILE=/var/log/alluxio/${DAEMON}.out
 
-    if [ -f $CONF_DIR/alluxio-env.sh ]; then
-        . $CONF_DIR/alluxio-env.sh
-    fi
-
     /bin/bash -c "nohup nice -n 0 \
-        ${EXEC_PATH} ${DAEMON_FLAGS} \
+        ${EXEC_PATH}/alluxio-start.sh ${DAEMON_FLAGS} \
         > $LOG_FILE 2>&1 & "
 
     WAIT_TIMES=0
-    until ps -A -o pid,command | grep -i "[j]ava" | grep $KEYWORD || [ $WAIT_TIMES -eq 30 ]; do
+    until ps -A -o pid,command | grep -i "[j]ava" | grep $KEYWORD || [ $WAIT_TIMES -eq 10 ]; do
         (( WAIT_TIMES++ ))
         sleep 1
     done
@@ -68,7 +64,7 @@ generate_stop() {
 cat <<'__EOT__'
 stop() {
     log_success_msg "Stopping $DESC (${DAEMON}): "
-    /usr/lib/alluxio/bin/alluxio-stop.sh worker 2>&1 > /dev/null
+    ${EXEC_PATH}/alluxio-stop.sh ${DAEMON_FLAGS} 2>&1 > /dev/null
     RETVAL=$?
 
     [ $RETVAL -eq $RETVAL_SUCCESS ] && rm -f $LOCKFILE $PIDFILE
