@@ -39,13 +39,7 @@ override_dh_auto_build:
 	mkdir -p debian/tmp/bigtop-empty
 	bash debian/do-component-build -Dmaven.repo.local=${HOME}/.m2/repository
 
-.PHONY: queryserver
-	bash debian/init.d.tmpl debian/${phoenix_pkg_name}-queryserver.svc deb debian/${phoenix_pkg_name}-queryserver.init
-	
-override_dh_auto_install: queryserver
-	cp debian/phoenix.default debian/${phoenix_pkg_name}/etc/default/${phoenix_pkg_name}
-	cp debian/phoenix-queryserver.default debian/${phoenix_pkg_name}/etc/default/${phoenix_pkg_name}-queryserver
+override_dh_auto_install:
 	bash -x debian/install_phoenix.sh \
 	  --build-dir=$${PWD}/build     \
 	  --prefix=debian/tmp
-

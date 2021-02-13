@@ -33,10 +33,3 @@ Description: Phoenix is a SQL skin over HBase and client-embedded JDBC driver.
  tens of millions of rows. Applications interact with Phoenix through a
  standard JDBC interface; all the usual interfaces are supported.
 
-Package: phoenix-queryserver
-Architecture: all
-Depends: phoenix (= ${source:Version})
-Description: The Phoenix Query Server provides an alternative means for 
- interaction with Phoenix and HBase. Soon this will enable access from 
- environments other than the JVM.
-

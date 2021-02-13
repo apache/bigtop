@@ -116,10 +116,6 @@ install -d -m 0755 $PREFIX/var/log/phoenix
 cp $BUILD_DIR/*.jar $PREFIX/$LIB_DIR/
 cp -r $BUILD_DIR/bin $PREFIX/$LIB_DIR/
 chmod 755 $PREFIX/$BIN_DIR/*.py
-chmod 755 $PREFIX/$BIN_DIR/*.sh
-
-# Remove sources jar
-rm $PREFIX/$LIB_DIR/phoenix-*-sources.jar
 
 cp -a $BUILD_DIR/{LICENSE,NOTICE} $PREFIX/$DOC_DIR/
 cp -ra $BUILD_DIR/examples $PREFIX/$DOC_DIR
@@ -129,16 +125,7 @@ find $PREFIX/$LIB_DIR -name '*.jar' -exec chmod a-x {} \;
 
 # Create version independent symlinks
 # phoenix-client for clients like sqlline
-ln -s `cd $PREFIX/$LIB_DIR ; ls phoenix*-client.jar | grep -v thin` $PREFIX/$LIB_DIR/phoenix-client.jar
-
-# phoenix-thin-client
-ln -s `cd $PREFIX/$LIB_DIR ; ls phoenix*-thin-client.jar` $PREFIX/$LIB_DIR/phoenix-thin-client.jar
+ln -s `cd $PREFIX/$LIB_DIR ; ls phoenix-client*.jar` $PREFIX/$LIB_DIR/phoenix-client.jar
 
 # phoenix-server for placing on the HBase regionserver classpath
-ln -s `cd $PREFIX/$LIB_DIR ; ls phoenix*-server.jar` $PREFIX/$LIB_DIR/phoenix-server.jar
-
-# phoenix-hive
-ln -s `cd $PREFIX/$LIB_DIR ; ls phoenix*-hive.jar` $PREFIX/$LIB_DIR/phoenix-hive.jar
-
-# phoenix-pig
-ln -s `cd $PREFIX/$LIB_DIR ; ls phoenix*-pig.jar` $PREFIX/$LIB_DIR/phoenix-pig.jar
+ln -s `cd $PREFIX/$LIB_DIR ; ls phoenix-server*.jar` $PREFIX/$LIB_DIR/phoenix-server.jar
