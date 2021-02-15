@@ -34,7 +34,7 @@ case ${ID}-${VERSION_ID} in
         apt-get update
         apt-get -y install wget curl sudo unzip puppet software-properties-common puppet-module-puppetlabs-apt puppet-module-puppetlabs-stdlib
         ;;
-    ubuntu-18.04)
+    ubuntu-18.04|ubuntu-20.04)
         apt-get update
         apt-get -y install wget curl sudo unzip puppet software-properties-common puppet-module-puppetlabs-apt puppet-module-puppetlabs-stdlib systemd-sysv
         ;;
