@@ -299,11 +299,6 @@ bigtop {
     'phoenix' {
       name    = 'phoenix'
       relNotes = 'Apache Phoenix: A SQL skin over HBase'
-      /*
-       * phoenix.hbase is used to select the Phoenix release corresponding
-       * to the base HBase version. Update as needed whenever changing the
-       * HBase version in the BOM.
-       */
       version { base = "5.1.0"; pkg = base; release = 1 }
       tarball { destination = "$name-${version.base}-src.tar.gz"
                 source      = destination }
