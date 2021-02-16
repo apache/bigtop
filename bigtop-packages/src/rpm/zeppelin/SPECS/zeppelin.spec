@@ -41,7 +41,6 @@ Release: %{zeppelin_release}
 Summary: Web-based notebook for Apache Spark
 URL: http://zeppelin.apache.org/
 Group: Applications/Engineering
-BuildArch: noarch
 Buildroot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 License: ASL 2.0
 Source0: %{name}-%{zeppelin_base_version}.tar.gz
@@ -56,6 +55,7 @@ Requires: bigtop-utils >= 0.7, hadoop-client, spark-core >= 1.5, spark-python >=
 Requires(preun): /sbin/service
 AutoReq: no
 
+%global debug_package %{nil}
 %global initd_dir %{_sysconfdir}/init.d
 
 %if  %{?suse_version:1}0
@@ -123,16 +123,14 @@ chkconfig --del %{name}
 #######################
 %files
 %defattr(-,root,root,755)
-%config(noreplace) %{config_zeppelin}.dist
 %doc %{doc_zeppelin}
 %{lib_zeppelin}/*.war
 %{lib_zeppelin}/bin
 %{lib_zeppelin}/conf
 %{lib_zeppelin}/interpreter
 %{lib_zeppelin}/lib
-%attr(0755,zeppelin,zeppelin) %{etc_zeppelin}
+%config(noreplace) %attr(0755,zeppelin,zeppelin) %{etc_zeppelin}
 %attr(0755,zeppelin,zeppelin) %{var_lib_zeppelin}
 %attr(0755,zeppelin,zeppelin) %{var_run_zeppelin}
-%attr(0755,zeppelin,zeppelin) %{var_run_zeppelin}/webapps
 %attr(0755,zeppelin,zeppelin) %{var_log_zeppelin}
 %attr(0755,root,root)/%{initd_dir}/%{name}

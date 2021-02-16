@@ -18,20 +18,31 @@ set -ex
 
 . `dirname $0`/bigtop.bom
 
-./dev/change_scala_version.sh ${SCALA_VERSION%.*}
+# Zeppelin doesn't support Scala 2.12+ as of v0.9.0,
+# so we use Scala 2.11 here.
+# Though Zeppelin itself will be built with Scala 2.11,
+# it works with other components built with Scala 2.12,
+# e.g., Spark 3.x, through corresponding interpreters.
+ZEPPELIN_SCALA_BINARY_VERSION=2.11
+./dev/change_scala_version.sh ${ZEPPELIN_SCALA_BINARY_VERSION}
 
-BUILD_OPTS="-Dscala.version=${SCALA_VERSION} \
-            -Dscala.binary.version=${SCALA_VERSION%.*} \
-            -Dscala.macros.version=2.1.0 \
-            -Dspark.version=${SPARK_VERSION} \
-            -Dhadoop.version=${HADOOP_VERSION} \
-            -Dhbase.hbase.version=${HBASE_VERSION} \
-            -Dhbase.hadoop.version=${HADOOP_VERSION} \
-            -Dignite.version=${IGNITE_HADOOP_VERSION} \
-            -Dflink.version=${FLINK_VERSION} \
-            -Pspark-${SPARK_VERSION%.*} \
-            -Pscala-${SCALA_VERSION%.*} \
-            -Pr \
+# We build Zeppelin with minimal interpreters here
+# so as to reduce artifact size (cf. BIGTOP-2269).
+# If we include all of these interpreters into
+# the artifact, its size is 1.5GB as of v0.9.0,
+# while it's around 750MB without them.
+# Users can install them later via Zeppelin's "netinst" feature.
+EXCLUDE_INTERPRETERS=!beam,!hbase,!pig,!jdbc,!flink,!ignite,!kylin,!lens,!cassandra,!elasticsearch,!bigquery,!alluxio,!scio,!groovy,!sap,!java,!geode,!neo4j,!hazelcastjet,!submarine,!sparql,!mongodb,!ksql,!scalding
+
+# We don't specify scala.version or spark.version here,
+# because Zeppelin builds shims for all of Spark 1.x (w/ Scala 2.10),
+# Spark 2.x (w/ Scala 2.11), and Spark 3.x (w/ Scala 2.12) by default.
+# Rather, explicitly specifying their version seems to cause build failure.
+ZEPPELIN_LIVY_VERSION=${LIVY_VERSION}-incubating
+BUILD_OPTS="-Dhadoop3.2.version=${HADOOP_VERSION} \
+            -Dlivy.version=${ZEPPELIN_LIVY_VERSION} \
+            -Pscala-${ZEPPELIN_SCALA_BINARY_VERSION} \
+            -Phadoop3 \
             -Pbuild-distr"
 
 if [ "$ZEPPELIN_RUN_TESTS" = "true" ]; then
@@ -53,7 +64,7 @@ export MAVEN_OPTS="-Xmx1500m -Xms1500m"
 #   Request the issue to zeppelin upstream, If accepted, remove this workaround.
 sed -i "s/^.*ZEPPELIN_PID=.*$/ZEPPELIN_PID=\"\$\{ZEPPELIN_PID_DIR\}\/zeppelin\-\$\{ZEPPELIN_IDENT_STRING\}\.pid\"/" bin/zeppelin-daemon.sh
 
-mvn $BUILD_OPTS clean package
+mvn $BUILD_OPTS clean package -pl ''$EXCLUDE_INTERPRETERS'' -am
 
 mkdir -p build/dist
 tar -C build/dist --strip-components=1 -xzf zeppelin-distribution/target/zeppelin-*.tar.gz
