@@ -1,0 +1,10 @@
+diff --git a/Gemfile b/Gemfile
+index e6b55ded0..ee2f4ef0a 100644
+--- a/Gemfile
++++ b/Gemfile
+@@ -139,3 +139,5 @@ gem "poseidon", ">= 0"
+ gem "snappy", ">= 0"
+ gem "webmock", "~> 1.21.0"
+ gem "amazing_print", "= 1.2.1"
++gem "nokogiri", "~> 1.10.0"
++gem "msgpack", "<= 1.4.1"
