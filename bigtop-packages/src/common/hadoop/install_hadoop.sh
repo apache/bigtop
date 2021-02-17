@@ -193,9 +193,9 @@ install -d -m 0755 ${HADOOP_DIR}
 cp ${BUILD_DIR}/share/hadoop/common/*.jar ${HADOOP_DIR}/
 cp ${BUILD_DIR}/share/hadoop/common/lib/hadoop-auth*.jar ${HADOOP_DIR}/
 cp ${BUILD_DIR}/share/hadoop/common/lib/hadoop-annotations*.jar ${HADOOP_DIR}/
+install -d -m 0755 ${HADOOP_DIR}/tools
 install -d -m 0755 ${MAPREDUCE_DIR}
 cp ${BUILD_DIR}/share/hadoop/mapreduce/hadoop-mapreduce*.jar ${MAPREDUCE_DIR}
-cp ${BUILD_DIR}/share/hadoop/tools/lib/*.jar ${MAPREDUCE_DIR}
 install -d -m 0755 ${HDFS_DIR}
 cp ${BUILD_DIR}/share/hadoop/hdfs/*.jar ${HDFS_DIR}/
 install -d -m 0755 ${YARN_DIR}
@@ -207,6 +207,8 @@ chmod 644 ${HADOOP_DIR}/*.jar ${MAPREDUCE_DIR}/*.jar ${HDFS_DIR}/*.jar ${YARN_DI
 # lib jars
 install -d -m 0755 ${HADOOP_DIR}/lib
 cp ${BUILD_DIR}/share/hadoop/common/lib/*.jar ${HADOOP_DIR}/lib
+install -d -m 0755 ${HADOOP_DIR}/tools/lib
+cp ${BUILD_DIR}/share/hadoop/tools/lib/*.jar ${HADOOP_DIR}/tools/lib
 install -d -m 0755 ${MAPREDUCE_DIR}/lib
 cp ${BUILD_DIR}/share/hadoop/mapreduce/lib/*.jar ${MAPREDUCE_DIR}/lib
 install -d -m 0755 ${HDFS_DIR}/lib 

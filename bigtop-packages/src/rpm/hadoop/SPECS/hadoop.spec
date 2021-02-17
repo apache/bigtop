@@ -699,10 +699,12 @@ fi
 %{lib_hadoop}/bin
 %{lib_hadoop}/etc
 %{lib_hadoop}/logs
+%{lib_hadoop}/tools
 %{lib_hadoop}/libexec/hadoop-config.sh
 %{lib_hadoop}/libexec/hadoop-layout.sh
 %{lib_hadoop}/libexec/hadoop-functions.sh
 %{lib_hadoop}/libexec/shellprofile.d
+%{lib_hadoop}/libexec/tools
 %{bin_hadoop}/hadoop
 %{man_hadoop}/man1/hadoop.1.*
 %{man_hadoop}/man1/yarn.1.*

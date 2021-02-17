@@ -14,10 +14,12 @@
 /usr/lib/hadoop/libexec/hadoop-layout.sh
 /usr/lib/hadoop/libexec/hadoop-functions.sh
 /usr/lib/hadoop/libexec/shellprofile.d
+/usr/lib/hadoop/libexec/tools
 /usr/lib/hadoop/*.jar
 /usr/lib/hadoop/lib
 /usr/lib/hadoop/sbin
 /usr/lib/hadoop/bin
+/usr/lib/hadoop/tools
 /usr/bin/hadoop
 /usr/share/man/man1/hadoop.1.*
 /usr/share/man/man1/hdfs.1.*
