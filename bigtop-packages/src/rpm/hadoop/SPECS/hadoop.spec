@@ -29,7 +29,6 @@
 %define lib_hadoop_dirname /usr/lib
 %define lib_hadoop %{lib_hadoop_dirname}/%{name}
 %define lib_httpfs %{lib_hadoop_dirname}/%{name}-httpfs
-%define lib_kms %{lib_hadoop_dirname}/%{name}-kms
 %define lib_hdfs %{lib_hadoop_dirname}/%{name}-hdfs
 %define lib_yarn %{lib_hadoop_dirname}/%{name}-yarn
 %define lib_mapreduce %{lib_hadoop_dirname}/%{name}-mapreduce
@@ -511,7 +510,6 @@ env HADOOP_VERSION=%{hadoop_base_version} bash %{SOURCE2} \
   --distro-dir=$RPM_SOURCE_DIR \
   --build-dir=$PWD/build \
   --httpfs-dir=$RPM_BUILD_ROOT%{lib_httpfs} \
-  --kms-dir=$RPM_BUILD_ROOT%{lib_kms} \
   --system-include-dir=$RPM_BUILD_ROOT%{_includedir} \
   --system-lib-dir=$RPM_BUILD_ROOT%{_libdir} \
   --system-libexec-dir=$RPM_BUILD_ROOT/%{lib_hadoop}/libexec \
@@ -730,9 +728,10 @@ fi
 
 %files kms
 %defattr(-,root,root)
+%config(noreplace) %{etc_hadoop}/conf.empty/kms-acls.xml
+%config(noreplace) %{etc_hadoop}/conf.empty/kms-log4j.properties
 %config(noreplace) /etc/default/%{name}-kms
 %{initd_dir}/%{name}-kms
-%{lib_kms}
 %attr(0775,kms,kms) %{run_kms}
 %attr(0775,kms,kms) %{log_kms}
 %attr(0775,kms,kms) %{state_kms}

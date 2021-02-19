@@ -15,11 +15,11 @@
 HADOOP_NAME="kms"
 DAEMON="hadoop-$HADOOP_NAME"
 DESC="Hadoop $HADOOP_NAME"
-EXEC_PATH="/usr/lib/hadoop-kms/sbin/kms.sh"
+EXEC_PATH="/usr/lib/hadoop/sbin/kms.sh"
 SVC_USER="$HADOOP_NAME"
 WORKING_DIR="/var/run/hadoop-kms"
 DAEMON_FLAGS="$HADOOP_NAME"
-CONF_DIR="/etc/$DAEMON/conf"
+CONF_DIR="/etc/hadoop/conf"
 PIDFILE="/var/run/$DAEMON/hadoop-$SVC_USER-$HADOOP_NAME.pid"
 
 CHKCONFIG=${CHKCONFIG:-"2345 90 10"}
@@ -28,42 +28,27 @@ CHKCONFIG="${CHKCONFIG%% *} 90 10"
 generate_start() {
 
 cat <<'__EOT__'
+
 start() {
   [ -x $EXEC_PATH ] || exit $ERROR_PROGRAM_NOT_INSTALLED
   [ -d $CONF_DIR ] || exit $ERROR_PROGRAM_NOT_CONFIGURED
 
-  export KMS_USER="$SVC_USER"
-  export KMS_CONFIG="$CONF_DIR"
-  export KMS_LOG=${KMS_LOG:-"/var/log/hadoop-kms/"}
-  export KMS_TEMP="$(dirname $PIDFILE)"
-  export KMS_SLEEP_TIME="$SLEEP_TIME"
-  export CATALINA_BASE=${CATALINA_BASE:-"/var/lib/hadoop-kms/tomcat-deployment"}
-  export CATALINA_PID="$PIDFILE"
-  export CATALINA_TMPDIR="$KMS_TEMP"
+  runuser -s /bin/bash $SVC_USER -c "cd $WORKING_DIR && $EXEC_PATH start $DAEMON_FLAGS"
 
-  . /usr/lib/hadoop-kms/tomcat-deployment.sh
-
-  runuser -s /bin/bash -c "${EXEC_PATH} start $DAEMON_FLAGS" $KMS_USER
-
-  for second in {5..0}
-  do
-    checkstatusofproc
-    RETVAL=$?
-    if [ "$RETVAL" -eq $RETVAL_SUCCESS ] ; then
-      break
-    fi
-    sleep 1
-  done
+  # Some processes are slow to start
+  sleep $SLEEP_TIME
+  checkstatusofproc
+  RETVAL=$?
 
   if [ $RETVAL -eq $STATUS_RUNNING ]; then
     touch $LOCKFILE
-    log_success_msg "Started ${DESC} (${DAEMON}): "
+    log_success_msg "Started ${DESC}: "
   else
-    log_failure_msg "Failed to start ${DESC}. Return value: $RETVAL"
+	log_failure_msg "Failed to start ${DESC}. Return value: $RETVAL"
   fi
-
   return $RETVAL
 }
+
 __EOT__
 
 }
@@ -71,24 +56,19 @@ __EOT__
 generate_stop() {
 
 cat <<'__EOT__'
-stop() {
 
-  # FIXME: workaround for BIGTOP-537
-  checkstatusofproc
-  if [ "$?" = "$STATUS_RUNNING" ] ; then
-    su -s /bin/bash $SVC_USER -c "${EXEC_PATH} stop $SLEEP_TIME -force"
-    RETVAL=$?
-  else
-    RETVAL=$RETVAL_SUCCESS
-  fi
+stop() {
+  start_daemon $EXEC_PATH stop $DAEMON_FLAGS
+  RETVAL=$?
 
   if [ $RETVAL -eq $RETVAL_SUCCESS ]; then
-    log_success_msg "Stopped ${DESC}: "
-    rm -f $LOCKFILE $PIDFILE
-  else
-    log_failure_msg "Failure to stop ${DESC}. Return value: $RETVAL"
-  fi
+	 log_success_msg "Stopped ${DESC}: "
+	 rm -f $LOCKFILE $PIDFILE
+ else
+	 log_failure_msg "Failed to stop ${DESC}. Return value: $RETVAL."
+ fi
 }
+
 __EOT__
 
 }
