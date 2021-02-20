@@ -12,13 +12,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-export KMS_USER=kms
-export KMS_CONFIG=/etc/hadoop-kms/conf
-export KMS_LOG=/var/log/hadoop-kms/
-export KMS_TEMP=/var/run/hadoop-kms/
-export KMS_CATALINA_HOME=/usr/lib/bigtop-tomcat
-export CATALINA_PID=/var/run/hadoop-kms/hadoop-kms-kms.pid
-export CATALINA_BASE=/var/lib/hadoop-kms/tomcat-deployment
-export CATALINA_TMPDIR=/var/run/hadoop-kms/
-# KMS_HTTP_PORT
-# KMS_ADMIN_PORT
+export HADOOP_CONF_DIR=/etc/hadoop/conf
+export HADOOP_LOG_DIR=/var/log/hadoop-kms
+export HADOOP_PID_DIR=/var/run/hadoop-kms

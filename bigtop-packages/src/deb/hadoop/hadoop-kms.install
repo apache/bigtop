@@ -1,3 +1,5 @@
-/etc/default/hadoop-kms
-/usr/lib/hadoop-kms
+/etc/hadoop/conf.empty/kms-acls.xml
+/etc/hadoop/conf.empty/kms-env.sh
+/etc/hadoop/conf.empty/kms-log4j.properties
+/etc/hadoop/conf.empty/kms-site.xml
 /var/lib/hadoop-kms

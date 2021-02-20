@@ -1,0 +1,14 @@
+diff --git a/hadoop-common-project/hadoop-kms/src/main/libexec/shellprofile.d/hadoop-kms.sh b/hadoop-common-project/hadoop-kms/src/main/libexec/shellprofile.d/hadoop-kms.sh
+index 0d084bb36e6..dafe7459f4a 100755
+--- a/hadoop-common-project/hadoop-kms/src/main/libexec/shellprofile.d/hadoop-kms.sh
++++ b/hadoop-common-project/hadoop-kms/src/main/libexec/shellprofile.d/hadoop-kms.sh
+@@ -49,9 +49,4 @@ function hadoop_subcommand_kms
+     "-Dkms.config.dir=${HADOOP_CONF_DIR}"
+   hadoop_add_param HADOOP_OPTS "-Dkms.log.dir=" \
+     "-Dkms.log.dir=${HADOOP_LOG_DIR}"
+-
+-  if [[ "${HADOOP_DAEMON_MODE}" == "default" ]] ||
+-     [[ "${HADOOP_DAEMON_MODE}" == "start" ]]; then
+-    hadoop_mkdir "${KMS_TEMP:-${HADOOP_HOME}/temp}"
+-  fi
+ }

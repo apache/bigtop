@@ -41,7 +41,6 @@ OPTS=$(getopt \
   -l 'installed-lib-dir:' \
   -l 'hadoop-dir:' \
   -l 'httpfs-dir:' \
-  -l 'kms-dir:' \
   -l 'hdfs-dir:' \
   -l 'yarn-dir:' \
   -l 'mapreduce-dir:' \
@@ -71,9 +70,6 @@ while true ; do
         ;;
         --httpfs-dir)
         HTTPFS_DIR=$2 ; shift 2
-        ;;
-        --kms-dir)
-        KMS_DIR=$2 ; shift 2
         ;;
         --hadoop-dir)
         HADOOP_DIR=$2 ; shift 2
@@ -144,7 +140,6 @@ YARN_DIR=${YARN_DIR:-$PREFIX/usr/lib/hadoop-yarn}
 MAPREDUCE_DIR=${MAPREDUCE_DIR:-$PREFIX/usr/lib/hadoop-mapreduce}
 CLIENT_DIR=${CLIENT_DIR:-$PREFIX/usr/lib/hadoop/client}
 HTTPFS_DIR=${HTTPFS_DIR:-$PREFIX/usr/lib/hadoop-httpfs}
-KMS_DIR=${KMS_DIR:-$PREFIX/usr/lib/hadoop-kms}
 SYSTEM_LIB_DIR=${SYSTEM_LIB_DIR:-/usr/lib}
 BIN_DIR=${BIN_DIR:-$PREFIX/usr/bin}
 DOC_DIR=${DOC_DIR:-$PREFIX/usr/share/doc/hadoop}
@@ -236,7 +231,7 @@ cp -a ${BUILD_DIR}/bin/mapred ${YARN_DIR}/bin
 
 # sbin
 install -d -m 0755 ${HADOOP_DIR}/sbin
-cp -a ${BUILD_DIR}/sbin/{hadoop-daemon,hadoop-daemons,workers}.sh ${HADOOP_DIR}/sbin
+cp -a ${BUILD_DIR}/sbin/{hadoop-daemon,hadoop-daemons,workers,kms}.sh ${HADOOP_DIR}/sbin
 install -d -m 0755 ${HDFS_DIR}/sbin
 cp -a ${BUILD_DIR}/sbin/{distribute-exclude,refresh-namenodes}.sh ${HDFS_DIR}/sbin
 install -d -m 0755 ${YARN_DIR}/sbin
@@ -330,8 +325,6 @@ cp ${BUILD_DIR}/sbin/httpfs.sh ${HTTPFS_DIR}/sbin/
 install -d -m 0755 ${PREFIX}/var/lib/hadoop-httpfs
 
 # KMS
-install -d -m 0755 ${KMS_DIR}/sbin
-cp ${BUILD_DIR}/sbin/kms.sh ${KMS_DIR}/sbin/
 install -d -m 0755 ${PREFIX}/var/lib/hadoop-kms
 
 
@@ -362,7 +355,7 @@ install -d -m 0755 $PREFIX/var/{log,run,lib}/hadoop-yarn
 install -d -m 0755 $PREFIX/var/{log,run,lib}/hadoop-mapreduce
 
 # Remove all source and create version-less symlinks to offer integration point with other projects
-for DIR in ${HADOOP_DIR} ${HDFS_DIR} ${YARN_DIR} ${MAPREDUCE_DIR} ${HTTPFS_DIR} ${KMS_DIR}; do
+for DIR in ${HADOOP_DIR} ${HDFS_DIR} ${YARN_DIR} ${MAPREDUCE_DIR} ${HTTPFS_DIR} ; do
   (cd $DIR &&
    rm -fv *-sources.jar
    rm -fv lib/hadoop-*.jar
