@@ -729,6 +729,7 @@ fi
 %files kms
 %defattr(-,root,root)
 %config(noreplace) %{etc_hadoop}/conf.empty/kms-acls.xml
+%config(noreplace) %{etc_hadoop}/conf.empty/kms-env.sh
 %config(noreplace) %{etc_hadoop}/conf.empty/kms-log4j.properties
 %config(noreplace) %{etc_hadoop}/conf.empty/kms-site.xml
 %config(noreplace) /etc/default/%{name}-kms
