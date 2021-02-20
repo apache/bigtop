@@ -730,6 +730,7 @@ fi
 %defattr(-,root,root)
 %config(noreplace) %{etc_hadoop}/conf.empty/kms-acls.xml
 %config(noreplace) %{etc_hadoop}/conf.empty/kms-log4j.properties
+%config(noreplace) %{etc_hadoop}/conf.empty/kms-site.xml
 %config(noreplace) /etc/default/%{name}-kms
 %{initd_dir}/%{name}-kms
 %attr(0775,kms,kms) %{run_kms}
