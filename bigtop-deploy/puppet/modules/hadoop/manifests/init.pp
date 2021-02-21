@@ -543,13 +543,21 @@ class hadoop ($hadoop_security_authentication = "simple",
       require => Package["jdk"],
     }
 
-    file { "/etc/hadoop-kms/conf/kms-site.xml":
+    file { "/etc/hadoop/conf/kms-site.xml":
       content => template('hadoop/kms-site.xml'),
       require => [Package["hadoop-kms"]],
     }
 
-    file { "/etc/hadoop-kms/conf/kms-env.sh":
+    file { "/etc/hadoop/conf/kms-env.sh":
       content => template('hadoop/kms-env.sh'),
+      owner   => 'kms',
+      group   => 'kms',
+      mode    => '0400',
+      require => [Package["hadoop-kms"]],
+    }
+
+    file { "/etc/hadoop/conf/kms.keystore.password":
+      content => 'keystore-password',
       owner   => 'kms',
       group   => 'kms',
       mode    => '0400',
@@ -565,7 +573,7 @@ class hadoop ($hadoop_security_authentication = "simple",
       fail("KMS signature secret must be set")
     }
 
-    file { "/etc/hadoop-kms/conf/kms-signature.secret":
+    file { "/etc/hadoop/conf/kms-signature.secret":
       content => $kms_signature_secret,
       # it's a password file - do not filebucket
       backup => false,
@@ -575,7 +583,7 @@ class hadoop ($hadoop_security_authentication = "simple",
     service { "hadoop-kms":
       ensure => running,
       hasstatus => true,
-      subscribe => [Package["hadoop-kms"], File["/etc/hadoop-kms/conf/kms-site.xml"], File["/etc/hadoop-kms/conf/kms-env.sh"], File["/etc/hadoop-kms/conf/kms-signature.secret"],
+      subscribe => [Package["hadoop-kms"], File["/etc/hadoop/conf/kms-site.xml"], File["/etc/hadoop/conf/kms-env.sh"], File["/etc/hadoop/conf/kms-signature.secret"],
         File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"]],
       require => [ Package["hadoop-kms"] ],
     }
