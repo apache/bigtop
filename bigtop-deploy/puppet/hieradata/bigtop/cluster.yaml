@@ -122,7 +122,7 @@ hadoop::common_yarn::yarn_log_server_url: "%{hiera('bigtop::hadoop_history_serve
 hadoop::httpfs::hadoop_httpfs_port: "14000"
 
 hadoop::kms_host: "%{hiera('bigtop::hadoop_head_node')}"
-hadoop::kms_port: "16000"
+hadoop::kms_port: "9600"
 
 bigtop::hadoop_zookeeper_port: "2181"
 hadoop::zk: "%{hiera('bigtop::hadoop_head_node')}:%{hiera('bigtop::hadoop_zookeeper_port')}"
