@@ -56,6 +56,7 @@ Source2: install_%{name}.sh
 Source3: solr.default
 Source4: solr-server.init
 Source5: solrctl.sh
+#BIGTOP_PATCH_FILES
 Requires: bigtop-utils >= 0.7
 
 # CentOS 5 does not have any dist macro
@@ -104,6 +105,8 @@ Documentation for Apache Solr
 
 %prep
 %setup -n solr-%{solr_base_version}
+
+#BIGTOP_PATCH_COMMANDS
 
 %build
 env FULL_VERSION=%{solr_base_version} bash %{SOURCE1}
