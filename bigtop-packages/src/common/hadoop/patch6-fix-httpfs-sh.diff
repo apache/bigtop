@@ -1,0 +1,15 @@
+diff --git a/hadoop-hdfs-project/hadoop-hdfs-httpfs/src/main/sbin/httpfs.sh b/hadoop-hdfs-project/hadoop-hdfs-httpfs/src/main/sbin/httpfs.sh
+index 83e0b4382b9..56b451815f1 100755
+--- a/hadoop-hdfs-project/hadoop-hdfs-httpfs/src/main/sbin/httpfs.sh
++++ b/hadoop-hdfs-project/hadoop-hdfs-httpfs/src/main/sbin/httpfs.sh
+@@ -54,8 +54,8 @@ case $1 in
+ esac
+ 
+ # Locate bin
+-if [[ -n "${HADOOP_HOME}" ]]; then
+-  bin="${HADOOP_HOME}/bin"
++if [[ -n "${HADOOP_HDFS_HOME}" ]]; then
++  bin="${HADOOP_HFDS_HOME}/bin"
+ else
+   sbin=$(cd -P -- "$(dirname -- "$0")" >/dev/null && pwd -P)
+   bin=$(cd -P -- "${sbin}/../bin" >/dev/null && pwd -P)

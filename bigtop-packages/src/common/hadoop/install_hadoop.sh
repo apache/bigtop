@@ -40,7 +40,6 @@ OPTS=$(getopt \
   -l 'native-build-string:' \
   -l 'installed-lib-dir:' \
   -l 'hadoop-dir:' \
-  -l 'httpfs-dir:' \
   -l 'hdfs-dir:' \
   -l 'yarn-dir:' \
   -l 'mapreduce-dir:' \
@@ -67,9 +66,6 @@ while true ; do
         ;;
         --distro-dir)
         DISTRO_DIR=$2 ; shift 2
-        ;;
-        --httpfs-dir)
-        HTTPFS_DIR=$2 ; shift 2
         ;;
         --hadoop-dir)
         HADOOP_DIR=$2 ; shift 2
@@ -139,7 +135,6 @@ HDFS_DIR=${HDFS_DIR:-$PREFIX/usr/lib/hadoop-hdfs}
 YARN_DIR=${YARN_DIR:-$PREFIX/usr/lib/hadoop-yarn}
 MAPREDUCE_DIR=${MAPREDUCE_DIR:-$PREFIX/usr/lib/hadoop-mapreduce}
 CLIENT_DIR=${CLIENT_DIR:-$PREFIX/usr/lib/hadoop/client}
-HTTPFS_DIR=${HTTPFS_DIR:-$PREFIX/usr/lib/hadoop-httpfs}
 SYSTEM_LIB_DIR=${SYSTEM_LIB_DIR:-/usr/lib}
 BIN_DIR=${BIN_DIR:-$PREFIX/usr/bin}
 DOC_DIR=${DOC_DIR:-$PREFIX/usr/share/doc/hadoop}
@@ -231,7 +226,7 @@ cp -a ${BUILD_DIR}/bin/mapred ${YARN_DIR}/bin
 
 # sbin
 install -d -m 0755 ${HADOOP_DIR}/sbin
-cp -a ${BUILD_DIR}/sbin/{hadoop-daemon,hadoop-daemons,workers,kms}.sh ${HADOOP_DIR}/sbin
+cp -a ${BUILD_DIR}/sbin/{hadoop-daemon,hadoop-daemons,workers,httpfs,kms}.sh ${HADOOP_DIR}/sbin
 install -d -m 0755 ${HDFS_DIR}/sbin
 cp -a ${BUILD_DIR}/sbin/{distribute-exclude,refresh-namenodes}.sh ${HDFS_DIR}/sbin
 install -d -m 0755 ${YARN_DIR}/sbin
@@ -320,8 +315,6 @@ for manpage in hadoop hdfs yarn mapred; do
 done
 
 # HTTPFS
-install -d -m 0755 ${HTTPFS_DIR}/sbin
-cp ${BUILD_DIR}/sbin/httpfs.sh ${HTTPFS_DIR}/sbin/
 install -d -m 0755 ${PREFIX}/var/lib/hadoop-httpfs
 
 # KMS
@@ -355,7 +348,7 @@ install -d -m 0755 $PREFIX/var/{log,run,lib}/hadoop-yarn
 install -d -m 0755 $PREFIX/var/{log,run,lib}/hadoop-mapreduce
 
 # Remove all source and create version-less symlinks to offer integration point with other projects
-for DIR in ${HADOOP_DIR} ${HDFS_DIR} ${YARN_DIR} ${MAPREDUCE_DIR} ${HTTPFS_DIR} ; do
+for DIR in ${HADOOP_DIR} ${HDFS_DIR} ${YARN_DIR} ${MAPREDUCE_DIR} ; do
   (cd $DIR &&
    rm -fv *-sources.jar
    rm -fv lib/hadoop-*.jar

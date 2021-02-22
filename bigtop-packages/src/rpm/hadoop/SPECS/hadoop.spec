@@ -28,7 +28,6 @@
 %define config_yarn %{etc_yarn}/conf
 %define lib_hadoop_dirname /usr/lib
 %define lib_hadoop %{lib_hadoop_dirname}/%{name}
-%define lib_httpfs %{lib_hadoop_dirname}/%{name}-httpfs
 %define lib_hdfs %{lib_hadoop_dirname}/%{name}-hdfs
 %define lib_yarn %{lib_hadoop_dirname}/%{name}-yarn
 %define lib_mapreduce %{lib_hadoop_dirname}/%{name}-mapreduce
@@ -509,7 +508,6 @@ bash %{SOURCE1}
 env HADOOP_VERSION=%{hadoop_base_version} bash %{SOURCE2} \
   --distro-dir=$RPM_SOURCE_DIR \
   --build-dir=$PWD/build \
-  --httpfs-dir=$RPM_BUILD_ROOT%{lib_httpfs} \
   --system-include-dir=$RPM_BUILD_ROOT%{_includedir} \
   --system-lib-dir=$RPM_BUILD_ROOT%{_libdir} \
   --system-libexec-dir=$RPM_BUILD_ROOT/%{lib_hadoop}/libexec \
@@ -719,9 +717,13 @@ fi
 
 %files httpfs
 %defattr(-,root,root)
+
 %config(noreplace) /etc/default/%{name}-httpfs
+%config(noreplace) %{etc_hadoop}/conf.empty/httpfs-env.sh
+%config(noreplace) %{etc_hadoop}/conf.empty/httpfs-log4j.properties
+%config(noreplace) %{etc_hadoop}/conf.empty/httpfs-signature.secret
+%config(noreplace) %{etc_hadoop}/conf.empty/httpfs-site.xml
 %{initd_dir}/%{name}-httpfs
-%{lib_httpfs}
 %attr(0775,httpfs,httpfs) %{run_httpfs}
 %attr(0775,httpfs,httpfs) %{log_httpfs}
 %attr(0775,httpfs,httpfs) %{state_httpfs}
