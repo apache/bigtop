@@ -1,0 +1,4 @@
+/etc/phoenix/conf.dist
+/usr/lib/phoenix/bin
+/usr/lib/phoenix/phoenix-client*.jar
+/usr/share/doc/phoenix

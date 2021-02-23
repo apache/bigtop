@@ -1,2 +1,2 @@
-/etc/phoenix/conf.dist
-/usr/lib/phoenix
+/usr/lib/phoenix/phoenix-pherf*.jar
+/usr/lib/phoenix/phoenix-server*.jar

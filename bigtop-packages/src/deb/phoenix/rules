@@ -24,22 +24,16 @@ export DH_VERBOSE=1
 export DH_OPTIONS
 
 phoenix_pkg_name=phoenix
-zookeeper_home=/usr/lib/zookeeper
-hadoop_home=/usr/lib/hadoop
-hadoop_mapreduce_home=/usr/lib/hadoop-mapreduce
-hadoop_hdfs_home=/usr/lib/hadoop-hdfs
-hadoop_yarn_home=/usr/lib/hadoop-yarn
-hbase_home=/usr/lib/hbase
 
 %:
 	dh $@
 
 override_dh_auto_build:
 	# we'll just use the build from the tarball.
-	mkdir -p debian/tmp/bigtop-empty
 	bash debian/do-component-build -Dmaven.repo.local=${HOME}/.m2/repository
 
 override_dh_auto_install:
+	cp debian/phoenix.default debian/${phoenix_pkg_name}/etc/default/${phoenix_pkg_name}
 	bash -x debian/install_phoenix.sh \
-	  --build-dir=$${PWD}/build     \
-	  --prefix=debian/tmp
+		--build-dir=$${PWD}/build     \
+		--prefix=debian/tmp
