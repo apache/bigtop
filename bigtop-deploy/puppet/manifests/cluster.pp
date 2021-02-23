@@ -215,7 +215,6 @@ class node_with_roles ($roles = hiera("bigtop::roles")) inherits hadoop_cluster_
     "hadoop_flume",
     "hadoop_hive",
     "hadoop_oozie",
-    "sqoop2",
     "hadoop_zookeeper",
     "hcatalog",
     "livy",

@@ -113,9 +113,9 @@ bigtop {
                     'elasticsearch', 'flink', 'logstash', 'qfs', 'zookeeper'],
     'bigtop-groovy':['hadoop'],
     'bigtop-jsvc':['hadoop'],
-    'bigtop-tomcat':['oozie', 'sqoop2'],
+    'bigtop-tomcat':['oozie'],
     zookeeper:['hadoop', 'hbase', 'kafka'],
-    hadoop:['ignite-hadoop', 'hbase', 'hive', 'tez', 'sqoop', 'sqoop2',
+    hadoop:['ignite-hadoop', 'hbase', 'hive', 'tez', 'sqoop',
       'oozie', 'mahout', 'flume', 'giraph', 'solr', 'spark',
       'phoenix', 'alluxio', 'ycsb', 'zeppelin'
     ],
@@ -204,16 +204,6 @@ bigtop {
       tarball { destination = "${name}-${version.base}.tar.gz"
                 source      = destination }
       url     { download_path = "/$name/${version.base}/"
-                site = "${apache.APACHE_MIRROR}/${download_path}"
-                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
-    }
-    'sqoop2' {
-      name    = 'sqoop2'
-      relNotes = 'Apache Sqoop v2'
-      version { base = '1.99.4'; pkg = base; release = 1 }
-      tarball { destination = "${sqoop.name}-${version.base}.tar.gz"
-                source      = destination }
-      url     { download_path = "/${sqoop.name}/${version.base}/"
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }

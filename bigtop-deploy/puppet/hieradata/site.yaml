@@ -31,7 +31,6 @@ hadoop::hadoop_storage_dirs:
 #  - spark
 #  - spark-standalone
 #  - sqoop
-#  - sqoop2
 #  - tez
 #  - yarn
 #  - ycsb
