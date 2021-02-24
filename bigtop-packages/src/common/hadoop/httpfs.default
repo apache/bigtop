@@ -12,13 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-export HTTPFS_USER=httpfs
-export HTTPFS_CONFIG=/etc/hadoop-httpfs/conf
-export HTTPFS_LOG=/var/log/hadoop-httpfs/
-export HTTPFS_TEMP=/var/run/hadoop-httpfs/
-export HTTPFS_CATALINA_HOME=/usr/lib/bigtop-tomcat
-export CATALINA_PID=/var/run/hadoop-httpfs/hadoop-httpfs-httpfs.pid
-export CATALINA_BASE=/var/lib/hadoop-httpfs/tomcat-deployment
-export CATALINA_TMPDIR=/var/run/hadoop-httpfs/
-# HTTPFS_HTTP_PORT
-# HTTPFS_ADMIN_PORT
+export HADOOP_CONF_DIR=/etc/hadoop/conf
+export HADOOP_LOG_DIR=/var/log/hadoop-httpfs
+export HADOOP_PID_DIR=/var/run/hadoop-httpfs
+export HTTPFS_TEMP=/var/lib/hadoop-httpfs/temp

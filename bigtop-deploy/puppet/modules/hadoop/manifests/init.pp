@@ -485,12 +485,12 @@ class hadoop ($hadoop_security_authentication = "simple",
       require => Package["jdk"],
     }
 
-    file { "/etc/hadoop-httpfs/conf/httpfs-site.xml":
+    file { "/etc/hadoop/conf/httpfs-site.xml":
       content => template('hadoop/httpfs-site.xml'),
       require => [Package["hadoop-httpfs"]],
     }
 
-    file { "/etc/hadoop-httpfs/conf/httpfs-env.sh":
+    file { "/etc/hadoop/conf/httpfs-env.sh":
       content => template('hadoop/httpfs-env.sh'),
       require => [Package["hadoop-httpfs"]],
     }
@@ -504,7 +504,7 @@ class hadoop ($hadoop_security_authentication = "simple",
       fail("HTTPFS signature secret must be set")
     }
 
-    file { "/etc/hadoop-httpfs/conf/httpfs-signature.secret":
+    file { "/etc/hadoop/conf/httpfs-signature.secret":
       content => $httpfs_signature_secret,
       # it's a password file - do not filebucket
       backup => false,
@@ -514,7 +514,7 @@ class hadoop ($hadoop_security_authentication = "simple",
     service { "hadoop-httpfs":
       ensure => running,
       hasstatus => true,
-      subscribe => [Package["hadoop-httpfs"], File["/etc/hadoop-httpfs/conf/httpfs-site.xml"], File["/etc/hadoop-httpfs/conf/httpfs-env.sh"], File["/etc/hadoop-httpfs/conf/httpfs-signature.secret"],
+      subscribe => [Package["hadoop-httpfs"], File["/etc/hadoop/conf/httpfs-site.xml"], File["/etc/hadoop/conf/httpfs-env.sh"], File["/etc/hadoop/conf/httpfs-signature.secret"],
         File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"]],
       require => [ Package["hadoop-httpfs"] ],
     }
