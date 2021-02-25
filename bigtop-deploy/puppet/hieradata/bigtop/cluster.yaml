@@ -16,7 +16,7 @@
 # "$components" list. If $components isn't set then everything in the stack will
 # be installed as usual. Otherwise only a specified list will be set
 # Possible elements:
-# hadoop,yarn,hbase,alluxio,flink,flume,solrcloud,spark,oozie,hcat,sqoop,sqoop2,httpfs,
+# hadoop,yarn,hbase,alluxio,flink,flume,solrcloud,spark,oozie,hcat,sqoop,httpfs,
 # mahout,giraph,pig,hive,zookeeper,ycsb,qfs
 # Example (to deploy only HDFS and YARN server and gateway parts)
 # This can be a comma-separated list or an array.
@@ -168,7 +168,6 @@ hadoop_zookeeper::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 # those are only here because they were present as extlookup keys previously
 bigtop::hadoop_rm_http_port: "8088"
 bigtop::hadoop_rm_proxy_port: "8088"
-bigtop::sqoop2_server_port: "12000"
 bigtop::hbase_thrift_port: "9090"
 bigtop::hadoop_oozie_port: "11000"
 
