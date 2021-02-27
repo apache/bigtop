@@ -16,12 +16,6 @@
    limitations under the License.
 -->
 <packages>
-<mahout>
-  <content>
-    <file name="/." owners="0" perm="drwxr-xr-x" user="root" group="root"/>
-    <file name="/etc" owners="118" perm="drwxr-xr-x" user="root" group="root"/>
-  </content>
-</mahout>
 <flume>
   <users>
     <flume>

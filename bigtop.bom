@@ -116,14 +116,13 @@ bigtop {
     'bigtop-tomcat':['oozie'],
     zookeeper:['hadoop', 'hbase', 'kafka'],
     hadoop:['ignite-hadoop', 'hbase', 'hive', 'tez', 'sqoop',
-      'oozie', 'mahout', 'flume', 'giraph', 'solr', 'spark',
+      'oozie', 'flume', 'giraph', 'solr', 'spark',
       'phoenix', 'alluxio', 'ycsb', 'zeppelin'
     ],
     hbase:['phoenix','giraph','ycsb','hive'],
     hive:['oozie', 'zeppelin'],
     'ignite-hadoop':['zeppelin'],
-    spark:['livy', 'mahout', 'oozie', 'zeppelin'],
-    flink:['mahout']
+    spark:['livy', 'oozie', 'zeppelin'],
   ]
 
   components {
@@ -212,16 +211,6 @@ bigtop {
       relNotes = 'Apache Oozie'
       version { base = '4.3.0'; pkg = base; release = 1 }
       tarball { destination = "$name-${version.base}.tar.gz"
-                source      = destination }
-      url     { download_path = "/$name/${version.base}/"
-                site = "${apache.APACHE_MIRROR}/${download_path}"
-                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
-    }
-    'mahout' {
-      name    = 'mahout'
-      relNotes = 'Apache Mahout'
-      version { base = '0.13.0'; pkg = base; release = 1 }
-      tarball { destination = "apache-$name-distribution-${version.base}-src.tar.gz"
                 source      = destination }
       url     { download_path = "/$name/${version.base}/"
                 site = "${apache.APACHE_MIRROR}/${download_path}"
