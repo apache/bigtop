@@ -149,7 +149,7 @@ for i in sqoop sqoop-codegen sqoop-export sqoop-import-all-tables sqoop-version 
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
 
-SQOOP_JARS=\`ls /var/lib/sqoop/*.jar /usr/share/java/*.jar 2>/dev/null\`
+SQOOP_JARS=\`ls /var/lib/sqoop/*.jar 2>/dev/null\`
 if [ -n "\${SQOOP_JARS}" ]; then
     export HADOOP_CLASSPATH=\$(JARS=(\${SQOOP_JARS}); IFS=:; echo "\${HADOOP_CLASSPATH}:\${JARS[*]}")
 fi
