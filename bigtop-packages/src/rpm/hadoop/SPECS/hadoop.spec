@@ -58,8 +58,8 @@
 %define httpfs_services httpfs
 %define kms_services kms
 %define mapreduce_services mapreduce-historyserver
-%define hdfs_services hdfs-namenode hdfs-secondarynamenode hdfs-datanode hdfs-zkfc hdfs-journalnode
-%define yarn_services yarn-resourcemanager yarn-nodemanager yarn-proxyserver yarn-timelineserver
+%define hdfs_services hdfs-namenode hdfs-secondarynamenode hdfs-datanode hdfs-zkfc hdfs-journalnode hdfs-dfsrouter
+%define yarn_services yarn-resourcemanager yarn-nodemanager yarn-proxyserver yarn-timelineserver yarn-router
 %define hadoop_services %{hdfs_services} %{mapreduce_services} %{yarn_services} %{httpfs_services} %{kms_services}
 # Hadoop outputs built binaries into %{hadoop_build}
 %define hadoop_build_path build
@@ -333,6 +333,16 @@ The Data Nodes in the Hadoop Cluster are responsible for serving up
 blocks of data over the network to Hadoop Distributed Filesystem
 (HDFS) clients.
 
+%package hdfs-dfsrouter
+Summary: HDFS Router Server
+Group: System/Daemons
+Requires: %{name}-hdfs = %{version}-%{release}
+Requires(pre): %{name} = %{version}-%{release}
+Requires(pre): %{name}-hdfs = %{version}-%{release}
+
+%description hdfs-dfsrouter
+HDFS Router Server which supports Router Based Federation.
+
 %package httpfs
 Summary: HTTPFS for Hadoop
 Group: System/Daemons
@@ -402,6 +412,17 @@ Requires: %{name}-mapreduce = %{version}-%{release}
 Requires: %{name}-hdfs = %{version}-%{release}
 Requires(pre): %{name} = %{version}-%{release}
 Requires(pre): %{name}-mapreduce = %{version}-%{release}
+
+%package yarn-router
+Summary: YARN Router Server
+Group: System/Daemons
+Requires: %{name}-yarn = %{version}-%{release}
+Requires(pre): %{name} = %{version}-%{release}
+Requires(pre): %{name}-yarn = %{version}-%{release}
+
+%description yarn-router
+YARN Router Server which supports YARN Federation.
+
 
 %description mapreduce-historyserver
 The History server keeps records of the different activities being performed on a Apache Hadoop cluster
@@ -764,10 +785,12 @@ fi
 %service_macro hdfs-zkfc
 %service_macro hdfs-journalnode
 %service_macro hdfs-datanode
+%service_macro hdfs-dfsrouter
 %service_macro yarn-resourcemanager
 %service_macro yarn-nodemanager
 %service_macro yarn-proxyserver
 %service_macro yarn-timelineserver
+%service_macro yarn-router
 %service_macro mapreduce-historyserver
 
 # Pseudo-distributed Hadoop installation
