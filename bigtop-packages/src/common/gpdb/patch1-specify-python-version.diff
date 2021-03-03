@@ -108,8 +108,8 @@ index d0330c6cac..a81950c072 100644
  	elif [ "$(BLD_ARCH)" = 'aix7_ppc_64' ]; then \
  	    cd $(PYLIB_SRC)/$(PYGRESQL_DIR) && DESTDIR="$(DESTDIR)" CC="$(CC)" python_64 setup.py build; \
  	else \
--	    cd $(PYLIB_SRC)/$(PYGRESQL_DIR) && DESTDIR="$(DESTDIR)" CC="$(CC)" python setup.py build; \
-+	    cd $(PYLIB_SRC)/$(PYGRESQL_DIR) && DESTDIR="$(DESTDIR)" CC="$(CC)" python2 setup.py build; \
+-	    cd $(PYLIB_SRC)/$(PYGRESQL_DIR) && DESTDIR="$(DESTDIR)" CC="$(CC)" LDFLAGS='$(LDFLAGS) $(PYGRESQL_LDFLAGS)' python setup.py build; \
++	    cd $(PYLIB_SRC)/$(PYGRESQL_DIR) && DESTDIR="$(DESTDIR)" CC="$(CC)" LDFLAGS='$(LDFLAGS) $(PYGRESQL_LDFLAGS)' python2 setup.py build; \
  	fi
  	mkdir -p $(PYLIB_DIR)/pygresql
  	if [ `uname -s` = 'Darwin' ]; then \
@@ -147,8 +147,8 @@ index d0330c6cac..a81950c072 100644
 -		  cd $(PYLIB_SRC)/subprocess32 && CC="$(CC)" python setup.py build; \
 +		  cd $(PYLIB_SRC)/subprocess32 && CC="$(CC)" python2 setup.py build; \
  		  cp -f $(PYLIB_SRC)/subprocess32/build/lib.*/* $(PYLIB_DIR)/;  \
+ 		  cp -f $(PYLIB_SRC)/subprocess32/ChangeLog $(PYLIB_DIR)/subprocess32-ChangeLog;  \
  	  fi
- 
 @@ -187,7 +187,7 @@ SETUP_TOOLS_DIR=setuptools-$(SETUP_TOOLS_VERSION)
  PARSE_DIR=parse-$(PARSE_VERSION)
  ARG_PARSE_DIR=argparse-$(ARG_PARSE_VERSION)
@@ -1983,7 +1983,7 @@ index 40325782fc..40f366d806 100755
 --- a/gpMgmt/sbin/packcore
 +++ b/gpMgmt/sbin/packcore
 @@ -1,4 +1,4 @@
--#!/bin/env python
+-#!/usr/bin/env python
 +#!/usr/bin/env python2
  # Copyright Pivotal 2014
  

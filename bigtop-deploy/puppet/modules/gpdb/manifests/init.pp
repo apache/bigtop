@@ -40,7 +40,7 @@ class gpdb {
       gp_home             => $gp_home,
       master_port         => $master_db_port,
       segment_port_prefix => $segment_db_port_prefix,
-      require             => [Class['gpdb::common::prepare_file_structure'], Package["gpdb"]]
+      require             => [Class['gpdb::common::prepare_file_structure'], Exec["install_python_packages"]]
     }
 
     gpdb::server{"stop_if_running":
@@ -94,113 +94,25 @@ class gpdb {
     }
 
     class install_packages{
-      case $operatingsystem{
-        /(?i:(centos|fedora|redhat))/: {
-          if ($operatingsystem != 'Fedora') {
-            if (versioncmp($operatingsystemmajrelease, '8') < 0) {
-              $base_url = 'http://download.fedoraproject.org/pub/epel/$releasever/$basearch'
-              $python_devel = 'python-devel'
-              $python_lockfile = 'python-lockfile'
-            } else {
-              $base_url = 'http://download.fedoraproject.org/pub/epel/$releasever/Everything/$basearch'
-              $python_devel = 'python2-devel'
-              $python_lockfile = 'python2-lockfile'
-            }
-          } else {
-            # Looks like it works, at least with Fedora 31
-            $base_url = 'http://download.fedoraproject.org/pub/epel/7/$basearch'
-            $python_devel = 'python2-devel'
-            $python_lockfile = 'python2-lockfile'
-          }
-          yumrepo { "epel":
-            baseurl  => $base_url,
-            descr    => "epel packages",
-            enabled  => 1,
-            gpgcheck => 0,
-          }
-          package { [$python_devel]:
-            ensure => latest,
-          }
-          package { ["libffi-devel"]:
-            ensure => latest,
-          }
-          package { ["openssl-devel"]:
-            ensure => latest,
-          }
-          package { [$python_lockfile]:
-            ensure => latest,
-          }
-          package { ["gcc"]:
-            ensure => latest,
-          }
-          package { ["make"]:
-            ensure => latest,
-          }
-          package { ["python2-psutil"]:
-            ensure   => latest,
-          }
-          package { ["paramiko"]:
-            ensure   => latest,
-            provider => pip,
-            require  => Package["setuptools"],
-          }
-          package { ["setuptools"]:
-            ensure   => latest,
-            provider => pip,
-            require  => Package["pip"],
-          }
-          package { ["pip"]:
-            ensure   => latest,
-            provider => pip,
-            require  => File["/usr/bin/pip-python"],
-          }
-          package { ["python2-pip"]:
-            ensure  => latest,
-            require => [
-              Yumrepo["epel"],
-              Package["libffi-devel"],
-              Package["openssl-devel"],
-              Package[$python_lockfile],
-            ],
-          }
-	  file { '/usr/bin/pip-python':
-            ensure  => 'link',
-	    require => Package["python2-pip"],
-            target  => '/usr/bin/pip',
-          }
-        }
-        /(?i:(SLES|opensuse))/: {
-        }
-        /(Amazon)/: { }
-        /(Ubuntu|Debian)/: {
-          package { ["libffi-dev"]:
-            ensure => latest,
-          }
-          package { ["libssl-dev"]:
-            ensure => latest,
-          }
-          package { ["python-lockfile"]:
-            ensure => latest,
-          }
-          package { ["psutil"]:
-            ensure   => latest,
-            provider => pip,
-            require  => Package["python-pip"],
-          }
-          package { ["paramiko"]:
-            ensure   => latest,
-            provider => pip,
-            require  => Package["python-pip"],
-          }
-          package { ["python-pip"]:
-            ensure  => latest,
-            require => [
-              Package["libffi-dev"],
-              Package["libssl-dev"],
-              Package["python-lockfile"],
-            ],
-          }
-        }
+      # GPDB 5.x only supports Python 2.x, but we dropped pip for python2 in BIGTOP-3491.
+      # In addition, the latest versions of some distros (Fedora and Ubuntu, at least)
+      # doesn't seem to provide it as a standard package. So we use get-pip.py
+      # (https://pip.pypa.io/en/stable/installing/#installing-with-get-pip-py)
+      # here to install it on all distros.
+      exec { 'download_get_pip':
+        cwd => '/tmp',
+        command => '/usr/bin/curl -sLO https://bootstrap.pypa.io/2.7/get-pip.py'
+      }
+      exec { 'install_pip':
+        cwd => '/tmp',
+        command => '/usr/bin/python2 get-pip.py',
+        require => [Exec["download_get_pip"], Package["gpdb"]],
+      }
+      # GPDB requires the following python packages as of v5.28.5. See
+      # https://github.com/greenplum-db/gpdb/tree/5X_STABLE#building-greenplum-database-with-gporca.
+      exec { 'install_python_packages':
+        command => '/usr/bin/env pip install -q lockfile paramiko psutil',
+        require => [Exec["install_pip"]],
       }
       package { ["gpdb"]:
         ensure => latest,

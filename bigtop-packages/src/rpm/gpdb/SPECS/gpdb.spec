@@ -39,6 +39,7 @@ Source2: install_gpdb.sh
 Source3: do-component-configure
 #BIGTOP_PATCH_FILES
 AutoReqProv: %{autorequire}
+Requires: python2
 
 %description
 gpdb
