@@ -1,0 +1,14 @@
+diff --git a/bin/hive b/bin/hive
+index a7671c3950..508e73da75 100755
+--- a/bin/hive
++++ b/bin/hive
+@@ -351,7 +351,7 @@ fi
+ 
+ if [[ "$SERVICE" =~ ^(hiveserver2|beeline|cli)$ ]] ; then
+   # If process is backgrounded, don't change terminal settings
+-  if [[ ( ! $(ps -o stat= -p $$) =~ "+" ) && ! ( -p /dev/stdin ) ]]; then
++  if [[ ( ! $(ps -o stat= -p $$) =~ "+" ) && ! ( -p /dev/stdin ) && ( ! $(ps -o tty= -p $$) =~ "?" ) ]]; then
+     export HADOOP_CLIENT_OPTS="$HADOOP_CLIENT_OPTS -Djline.terminal=jline.UnsupportedTerminal"
+   fi
+ fi
+
