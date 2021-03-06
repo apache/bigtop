@@ -39,8 +39,8 @@ override_dh_auto_build:
 	env HADOOP_VERSION=${hadoop_version} HADOOP_ARCH=${native_dir} \
         bash debian/do-component-build -Divy.home=${HOME}/.ivy2
 
-hadoop_svcs=hdfs-namenode hdfs-secondarynamenode hdfs-datanode hdfs-zkfc hdfs-journalnode \
-            yarn-resourcemanager yarn-nodemanager yarn-proxyserver yarn-timelineserver\
+hadoop_svcs=hdfs-namenode hdfs-secondarynamenode hdfs-datanode hdfs-zkfc hdfs-journalnode hdfs-dfsrouter \
+            yarn-resourcemanager yarn-nodemanager yarn-proxyserver yarn-timelineserver yarn-router \
             mapreduce-historyserver httpfs kms
 
 $(hadoop_svcs): debian/init.d.tmpl

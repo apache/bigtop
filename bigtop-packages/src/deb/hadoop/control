@@ -138,6 +138,12 @@ Description: YARN Timeline Server
  information in a generic fashion is solved in YARN through the 
  Timeline Server.
  
+Package: hadoop-yarn-router
+Architecture: any
+Depends: hadoop-yarn (= ${binary:Version})
+Description: YARN Router Server
+ YARN Router Server which supports YARN Federation.
+
 Package: hadoop-hdfs-namenode
 Architecture: any
 Depends: hadoop-hdfs (= ${binary:Version})
@@ -179,6 +185,12 @@ Description: Hadoop Data Node
  The Data Nodes in the Hadoop Cluster are responsible for serving up
  blocks of data over the network to Hadoop Distributed Filesystem
  (HDFS) clients.
+
+Package: hadoop-hdfs-dfsrouter
+Architecture: any
+Depends: hadoop-hdfs (= ${binary:Version})
+Description: Hadoop HDFS Router
+ HDFS Router Server which supports Router Based Federation.
 
 Package: libhdfs0
 Architecture: any
