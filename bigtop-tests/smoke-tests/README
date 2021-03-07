@@ -24,7 +24,6 @@ export PIG_HOME=/usr/lib/pig/
 export FLUME_HOME=/usr/lib/flume/
 export HIVE_CONF_DIR=/etc/hive/conf/
 export JAVA_HOME="/usr/lib/jvm/java-openjdk/"
-export MAHOUT_HOME="/usr/lib/mahout"
 export SPARK_HOME="/usr/lib/spark"
 export OOZIE_TAR_HOME="/usr/lib/oozie/doc"
 ```
@@ -92,8 +91,7 @@ There are a lot of ways to run the bigtop tests, and not all are applicable to a
 So, below, we've accumulated some typical modifications which you can easily implement
 when running tests through this gradle interface (rather than as jars).
 
-1) Modify the TestMahoutExamples.groovy file to exclude clustering tests, and re run.
-2) Add new tests to hive , other than the "basic" hive test.
-3) Modify the Sqoop test to write more data via the embedded database.
-4) Add your own custom Groovy test in a directory which calls a shell script of your own desgn.
+1) Add new tests to hive , other than the "basic" hive test.
+2) Modify the Sqoop test to write more data via the embedded database.
+3) Add your own custom Groovy test in a directory which calls a shell script of your own desgn.
 And so on.

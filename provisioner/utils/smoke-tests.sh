@@ -50,7 +50,6 @@ export KAFKA_HOME=${KAFKA_HOME:-/usr/lib/kafka}
 export KIBANA_HOME=${KIBANA_HOME:-/usr/lib/kibana}
 export LIVY_HOME=${LIVY_HOME:-/usr/lib/livy}
 export LOGSTASH_HOME=${LOGSTASH_HOME:-/usr/lib/logstash}
-export MAHOUT_HOME=${MAHOUT_HOME:-/usr/lib/mahout}
 export OOZIE_TAR_HOME=${OOZIE_TAR_HOME:-/usr/lib/oozie}
 export OOZIE_URL=${OOZIE_URL:-http://localhost:11000/oozie}
 export SPARK_HOME=${SPARK_HOME:-/usr/lib/spark}

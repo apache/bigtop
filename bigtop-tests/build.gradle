@@ -50,7 +50,6 @@ distributions {
       from ('test-artifacts') {
         into 'bigtop-tests/test-artifacts'
         include 'hadoop/**'
-        include 'mahout/**'
         include 'pom.xml'
       }
     }

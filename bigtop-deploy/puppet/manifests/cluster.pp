@@ -106,9 +106,6 @@ $roles_map = {
   httpfs => {
     gateway_server => ["httpfs-server"],
   },
-  mahout => {
-    client => ["mahout-client"],
-  },
   giraph => {
     client => ["giraph-client"],
   },
@@ -218,7 +215,6 @@ class node_with_roles ($roles = hiera("bigtop::roles")) inherits hadoop_cluster_
     "hadoop_zookeeper",
     "hcatalog",
     "livy",
-    "mahout",
     "solr",
     "spark",
     "qfs",

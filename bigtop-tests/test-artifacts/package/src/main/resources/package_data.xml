@@ -50,39 +50,6 @@ Java Servlet and JavaServer Pages technologies.</description>
       <url>http://tomcat.apache.org/</url>
     </metadata>
   </bigtop-tomcat>
-  <mahout>
-    <metadata>
-      <summary>A set of Java libraries for scalable machine learning.</summary>
-      <description>Mahout's goal is to build scalable machine learning libraries.
- With scalable we mean:
- .
- Scalable to reasonably large data sets. Our core algorithms for clustering,
- classfication and batch based collaborative filtering are implemented on top of
- Apache Hadoop using the map/reduce paradigm. However we do not restrict
- contributions to Hadoop based implementations: Contributions that run on a
- single node or on a non-Hadoop cluster are welcome as well. The core libraries
- are highly optimized to allow for good performance also for non-distributed
- algorithms.
- Scalable to support your business case. Mahout is distributed under a
- commercially friendly Apache Software license.
- Scalable community. The goal of Mahout is to build a vibrant, responsive,
- diverse community to facilitate discussions not only on the project itself but
- also on potential use cases. Come to the mailing lists to find out more.</description>
-      <url>http://mahout.apache.org</url>
-    </metadata>
-    <deps>
-      <hadoop/>
-      <bigtop-utils/>
-    </deps>
-    <alternatives>
-      <mahout-conf>
-        <status>auto</status>
-        <link>/etc/mahout/conf</link>
-        <value>/etc/mahout/conf.dist</value>
-        <alt>/etc/mahout/conf.dist</alt>
-      </mahout-conf>
-    </alternatives>
-  </mahout>
   <giraph>
     <metadata>
       <summary>Giraph is a BSP inspired graph processing platform that runs on Hadoop</summary>
