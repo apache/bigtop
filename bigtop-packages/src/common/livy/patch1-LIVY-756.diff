@@ -1,15 +1,3 @@
-diff --git a/.gitignore b/.gitignore
-index d46d49f..b1045ea 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -24,6 +24,7 @@ metastore_db/
- derby.log
- dependency-reduced-pom.xml
- release-staging/
-+venv/
- 
- # For python setup.py, which pollutes the source dirs.
- python-api/dist
 diff --git a/.rat-excludes b/.rat-excludes
 index ac29fe6..1df6e9e 100644
 --- a/.rat-excludes
@@ -1597,13 +1585,13 @@ index 0000000..9f27512
 +  <modelVersion>4.0.0</modelVersion>
 +  <groupId>org.apache.livy</groupId>
 +  <artifactId>livy-core_2.12</artifactId>
-+  <version>0.7.0-incubating</version>
++  <version>0.7.1-incubating</version>
 +  <packaging>jar</packaging>
 +
 +  <parent>
 +    <groupId>org.apache.livy</groupId>
 +    <artifactId>livy-core-parent</artifactId>
-+    <version>0.7.0-incubating</version>
++    <version>0.7.1-incubating</version>
 +    <relativePath>../pom.xml</relativePath>
 +  </parent>
 +
@@ -1658,13 +1646,13 @@ index 0000000..4ddb528
 +  <modelVersion>4.0.0</modelVersion>
 +  <groupId>org.apache.livy</groupId>
 +  <artifactId>livy-repl_2.12</artifactId>
-+  <version>0.7.0-incubating</version>
++  <version>0.7.1-incubating</version>
 +  <packaging>jar</packaging>
 +
 +  <parent>
 +    <groupId>org.apache.livy</groupId>
 +    <artifactId>livy-repl-parent</artifactId>
-+    <version>0.7.0-incubating</version>
++    <version>0.7.1-incubating</version>
 +    <relativePath>../pom.xml</relativePath>
 +  </parent>
 +
@@ -1918,13 +1906,13 @@ index 0000000..e70f817
 +  <modelVersion>4.0.0</modelVersion>
 +  <groupId>org.apache.livy</groupId>
 +  <artifactId>livy-scala-api_2.12</artifactId>
-+  <version>0.7.0-incubating</version>
++  <version>0.7.1-incubating</version>
 +  <packaging>jar</packaging>
 +
 +  <parent>
 +    <groupId>org.apache.livy</groupId>
 +    <artifactId>livy-scala-api-parent</artifactId>
-+    <version>0.7.0-incubating</version>
++    <version>0.7.1-incubating</version>
 +    <relativePath>../pom.xml</relativePath>
 +  </parent>
 +
