@@ -21,7 +21,7 @@ if [ -f /etc/os-release ]; then
 fi
 
 case ${ID}-${VERSION_ID} in
-    fedora-31)
+    fedora-33)
         dnf -y install yum-utils
         dnf -y check-update
         dnf -y install hostname diffutils findutils curl sudo unzip wget puppet procps-ng libxcrypt-compat
