@@ -34,7 +34,6 @@ class bigtop_toolchain::packages {
         "fuse-devel",
         "cppunit-devel",
         "openssl-devel",
-        "python2-pip",
         "libxml2-devel",
         "libxslt-devel",
         "cyrus-sasl-devel",
