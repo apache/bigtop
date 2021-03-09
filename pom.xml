@@ -43,7 +43,6 @@
     <hbase.version>1.1.9</hbase.version>
     <sqoop.version>1.4.6</sqoop.version>
     <zookeeper.version>3.4.6</zookeeper.version>
-    <giraph.version>1.1.0</giraph.version>
     <solr.version>4.10.4</solr.version>
     <spark.version>2.1.0</spark.version>
     <kafka.version>0.10.1.1</kafka.version>
@@ -204,11 +203,6 @@
         <groupId>org.apache.zookeeper</groupId>
         <artifactId>zookeeper</artifactId>
         <version>${zookeeper.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.giraph</groupId>
-        <artifactId>giraph</artifactId>
-        <version>${giraph.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.solr</groupId>
