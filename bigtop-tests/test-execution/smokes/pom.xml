@@ -42,7 +42,6 @@
     <hbase-smoke.version>${project.version}</hbase-smoke.version>
     <hive-smoke.version>${project.version}</hive-smoke.version>
     <oozie-smoke.version>${project.version}</oozie-smoke.version>
-    <giraph-smoke.version>${project.version}</giraph-smoke.version>
     <hue-smoke.version>${project.version}</hue-smoke.version>
     <package-smoke.version>${project.version}</package-smoke.version>
     <solr-smoke.version>${project.version}</solr-smoke.version>
@@ -58,7 +57,6 @@
     <module>hadoop</module>
     <module>oozie</module>
     <module>hbase</module>
-    <module>giraph</module>
     <module>hue</module>
     <!--
     <module>httpfs</module>
@@ -100,12 +98,6 @@
         <groupId>org.apache.bigtop.itest</groupId>
         <artifactId>oozie-smoke</artifactId>
         <version>${oozie-smoke.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.bigtop.itest</groupId>
-        <artifactId>giraph-smoke</artifactId>
-        <version>${giraph-smoke.version}</version>
         <scope>test</scope>
       </dependency>
       <dependency>

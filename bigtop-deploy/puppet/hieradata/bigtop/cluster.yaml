@@ -17,7 +17,7 @@
 # be installed as usual. Otherwise only a specified list will be set
 # Possible elements:
 # hadoop,yarn,hbase,alluxio,flink,flume,solrcloud,spark,oozie,hcat,sqoop,httpfs,
-# giraph,pig,hive,zookeeper,ycsb,qfs
+# pig,hive,zookeeper,ycsb,qfs
 # Example (to deploy only HDFS and YARN server and gateway parts)
 # This can be a comma-separated list or an array.
 #hadoop_cluster_node::cluster_components:
@@ -170,8 +170,6 @@ bigtop::hadoop_rm_http_port: "8088"
 bigtop::hadoop_rm_proxy_port: "8088"
 bigtop::hbase_thrift_port: "9090"
 bigtop::hadoop_oozie_port: "11000"
-
-giraph::client::zookeeper_quorum: "%{hiera('bigtop::hadoop_head_node')}"
 
 hadoop_hive::common_config::hbase_zookeeper_quorum: "%{hiera('hadoop_hbase::common_config::zookeeper_quorum')}"
 hadoop_hive::common_config::kerberos_realm: "%{hiera('kerberos::site::realm')}"
