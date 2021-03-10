@@ -104,7 +104,7 @@ bigtop {
   /** Dependencies section defines the order in which packages should be built.
       The syntax is as follows:
            dependsOn := [list of dependents]
-      So, below phoenix and giraph ought to be build after the hbase has been built
+      So, below phoenix ought to be build after the hbase has been built
 
       To build a component with its dependencies, run build with -Dbuildwithdeps=true
   */
@@ -116,10 +116,10 @@ bigtop {
     'bigtop-tomcat':['oozie'],
     zookeeper:['hadoop', 'hbase', 'kafka'],
     hadoop:['ignite-hadoop', 'hbase', 'hive', 'tez', 'sqoop',
-      'oozie', 'flume', 'giraph', 'solr', 'spark',
+      'oozie', 'flume', 'solr', 'spark',
       'phoenix', 'alluxio', 'ycsb', 'zeppelin'
     ],
-    hbase:['phoenix','giraph','ycsb','hive'],
+    hbase:['phoenix', 'ycsb', 'hive'],
     hive:['oozie', 'zeppelin'],
     'ignite-hadoop':['zeppelin'],
     spark:['livy', 'oozie', 'zeppelin'],
@@ -223,16 +223,6 @@ bigtop {
       tarball { destination = "apache-$name-${version.base}-src.tar.gz"
                 source      = destination }
       url     { download_path = "/$name/${version.base}/"
-                site = "${apache.APACHE_MIRROR}/${download_path}"
-                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
-    }
-    'giraph' {
-      name    = 'giraph'
-      relNotes = 'Apache Giraph'
-      version { base = '1.2.0'; pkg = base; release = 1 }
-      tarball { destination = "$name-${version.base}.tar.gz"
-                source      = "$name-dist-${version.base}-src.tar.gz" }
-      url     { download_path = "/$name/$name-${version.base}/"
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }

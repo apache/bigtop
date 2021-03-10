@@ -50,25 +50,6 @@ Java Servlet and JavaServer Pages technologies.</description>
       <url>http://tomcat.apache.org/</url>
     </metadata>
   </bigtop-tomcat>
-  <giraph>
-    <metadata>
-      <summary>Giraph is a BSP inspired graph processing platform that runs on Hadoop</summary>
-      <description>Giraph implements a graph processing platform to run large scale algorithms (such as page rank, shared connections, personalization-based popularity, etc.) on top of Hadoop infrastructure. Giraph builds upon the graph-oriented nature of Pregel but additionally adds fault-tolerance to the coordinator process with the use of ZooKeeper as its centralized coordination service.</description>
-      <url>http://incubator.apache.org/giraph/</url>
-    </metadata>
-    <deps>
-      <hadoop-client/>
-      <bigtop-utils/>
-    </deps>
-    <alternatives>
-      <giraph-conf>
-        <status>auto</status>
-        <link>/etc/giraph/conf</link>
-        <value>/etc/giraph/conf.dist</value>
-        <alt>/etc/giraph/conf.dist</alt>
-      </giraph-conf>
-    </alternatives>
-  </giraph>
   <spark-core>
     <metadata>
       <summary>Lightning-Fast Cluster Computing</summary>

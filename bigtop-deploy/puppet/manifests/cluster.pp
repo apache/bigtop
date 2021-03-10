@@ -106,9 +106,6 @@ $roles_map = {
   httpfs => {
     gateway_server => ["httpfs-server"],
   },
-  giraph => {
-    client => ["giraph-client"],
-  },
   hive => {
     master => ["hive-server2", "hive-metastore"],
     client => ["hive-client"],
@@ -205,7 +202,6 @@ class node_with_roles ($roles = hiera("bigtop::roles")) inherits hadoop_cluster_
   $modules = [
     "alluxio",
     "flink",
-    "giraph",
     "hadoop",
     "hadoop_hbase",
     "ignite_hadoop",

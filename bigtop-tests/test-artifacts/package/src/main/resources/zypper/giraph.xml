@@ -1,5 +1,0 @@
-<giraph>
-  <content>
-    <file name='/etc/giraph/conf.dist' owners='1' perm='drwxr-xr-x' user='root' group='root' />
-  </content>
-</giraph>

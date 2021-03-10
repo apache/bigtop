@@ -77,11 +77,6 @@
 <% end %>
 <% if @mapreduce_jobhistory_host %>
   <property>
-    <name>mapred.job.tracker</name>
-    <value>BIGTOP-3137: Required by Giraph checkLocalJobRunnerConfiguration</value>
-  </property>
-
-  <property>
     <name>mapreduce.jobhistory.address</name>
     <value><%= @mapreduce_jobhistory_host %>:<%= @mapreduce_jobhistory_port %></value>
   </property>
