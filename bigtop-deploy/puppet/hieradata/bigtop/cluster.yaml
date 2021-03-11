@@ -16,7 +16,7 @@
 # "$components" list. If $components isn't set then everything in the stack will
 # be installed as usual. Otherwise only a specified list will be set
 # Possible elements:
-# hadoop,yarn,hbase,alluxio,flink,flume,solrcloud,spark,oozie,hcat,sqoop,httpfs,
+# hadoop,yarn,hbase,alluxio,flink,solrcloud,spark,oozie,hcat,sqoop,httpfs,
 # pig,hive,zookeeper,ycsb,qfs
 # Example (to deploy only HDFS and YARN server and gateway parts)
 # This can be a comma-separated list or an array.

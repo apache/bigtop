@@ -38,7 +38,6 @@
     <itest-common.version>${project.version}</itest-common.version>
     <hadoop-smoke.version>${project.version}</hadoop-smoke.version>
     <httpfs-smoke.version>${project.version}</httpfs-smoke.version>
-    <flume-smoke.version>${project.version}</flume-smoke.version>
     <hbase-smoke.version>${project.version}</hbase-smoke.version>
     <hive-smoke.version>${project.version}</hive-smoke.version>
     <oozie-smoke.version>${project.version}</oozie-smoke.version>
@@ -60,7 +59,6 @@
     <module>hue</module>
     <!--
     <module>httpfs</module>
-    <module>flume</module>
     <module>sqoop</module>
     -->
     <module>hcatalog</module>

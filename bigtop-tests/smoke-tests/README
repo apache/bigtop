@@ -21,7 +21,6 @@ export HADOOP_CONF_DIR=/etc/hadoop/conf/
 export HADOOP_MAPRED_HOME=/usr/lib/hadoop-mapreduce/
 export HIVE_HOME=/usr/lib/hive/
 export PIG_HOME=/usr/lib/pig/
-export FLUME_HOME=/usr/lib/flume/
 export HIVE_CONF_DIR=/etc/hive/conf/
 export JAVA_HOME="/usr/lib/jvm/java-openjdk/"
 export SPARK_HOME="/usr/lib/spark"
@@ -40,11 +39,11 @@ export SPARK_MASTER_PORT=7077
 Then, simply invoke the tests you want to run, as described below.
 
 Each directory is a gradle "subproject" mapping to an ecosystem component.
-Invoking test task of flume subproject will execute flume tests. To test hive as well,
+Invoking test task of hbase subproject will execute hbase tests. To test hive as well,
 you would add the invocation of hive:test, and so on. To run the tests from the top-level
 Bigtop folder, follow the example below:
 ```
-    ./gradlew bigtop-tests:smoke-tests:flume:test bigtop-tests:smoke-tests:hive:test -Psmoke.tests --info
+    ./gradlew bigtop-tests:smoke-tests:hbase:test bigtop-tests:smoke-tests:hive:test -Psmoke.tests --info
 ```
 You also can run smoke tests from bigtop-tests/smoke-tests directory,
 or from any subproject of it. E.g.

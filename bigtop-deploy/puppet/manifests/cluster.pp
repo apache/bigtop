@@ -85,9 +85,6 @@ $roles_map = {
     master => ["flink-jobmanager"],
     worker => ["flink-taskmanager"],
   },
-  flume => {
-    worker => ["flume-agent"],
-  },
   kerberos => {
     master => ["kerberos-server"],
   },
@@ -205,7 +202,6 @@ class node_with_roles ($roles = hiera("bigtop::roles")) inherits hadoop_cluster_
     "hadoop",
     "hadoop_hbase",
     "ignite_hadoop",
-    "hadoop_flume",
     "hadoop_hive",
     "hadoop_oozie",
     "hadoop_zookeeper",

@@ -116,7 +116,7 @@ bigtop {
     'bigtop-tomcat':['oozie'],
     zookeeper:['hadoop', 'hbase', 'kafka'],
     hadoop:['ignite-hadoop', 'hbase', 'hive', 'tez', 'sqoop',
-      'oozie', 'flume', 'solr', 'spark',
+      'oozie', 'solr', 'spark',
       'phoenix', 'alluxio', 'ycsb', 'zeppelin'
     ],
     hbase:['phoenix', 'ycsb', 'hive'],
@@ -211,16 +211,6 @@ bigtop {
       relNotes = 'Apache Oozie'
       version { base = '4.3.0'; pkg = base; release = 1 }
       tarball { destination = "$name-${version.base}.tar.gz"
-                source      = destination }
-      url     { download_path = "/$name/${version.base}/"
-                site = "${apache.APACHE_MIRROR}/${download_path}"
-                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
-    }
-    'flume' {
-      name    = 'flume'
-      relNotes = 'Apache Flume'
-      version { base = '1.9.0'; pkg = base; release = 1 }
-      tarball { destination = "apache-$name-${version.base}-src.tar.gz"
                 source      = destination }
       url     { download_path = "/$name/${version.base}/"
                 site = "${apache.APACHE_MIRROR}/${download_path}"
