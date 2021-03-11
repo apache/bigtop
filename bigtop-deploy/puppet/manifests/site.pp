@@ -16,13 +16,13 @@
 require jdk
 Class['jdk'] -> Service<||>
 
-$provision_repo = hiera("bigtop::provision_repo", true)
+$provision_repo = lookup("bigtop::provision_repo", { 'default_value' => true })
 if ($provision_repo) {
    require bigtop_repo
 }
 
 node default {
-  $roles_enabled = hiera("bigtop::roles_enabled", false)
+  $roles_enabled = lookup("bigtop::roles_enabled", { 'default_value' => false })
 
   if (!is_bool($roles_enabled)) {
     fail("bigtop::roles hiera conf is not of type boolean. It should be set to either true or false")
@@ -36,7 +36,7 @@ node default {
 }
 
 if versioncmp($::puppetversion,'3.6.1') >= 0 {
-  $allow_virtual_packages = hiera('bigtop::allow_virtual_packages',false)
+  $allow_virtual_packages = lookup('bigtop::allow_virtual_packages', { 'default_value' => false })
   Package {
     allow_virtual => $allow_virtual_packages,
   }

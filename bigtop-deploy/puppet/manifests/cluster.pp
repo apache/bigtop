@@ -158,7 +158,7 @@ $roles_map = {
 }
 
 class hadoop_cluster_node (
-  $hadoop_security_authentication = hiera("hadoop::hadoop_security_authentication", "simple"),
+  $hadoop_security_authentication = lookup("hadoop::hadoop_security_authentication", { 'default_value' => "simple" }),
   $bigtop_real_users = [ 'jenkins', 'testuser', 'hudson' ],
   $cluster_components = ["all"]
   ) {
@@ -175,9 +175,9 @@ class hadoop_cluster_node (
     include kerberos::client
   }
 
-  $hadoop_head_node = hiera("bigtop::hadoop_head_node")
-  $standby_head_node = hiera("bigtop::standby_head_node", "")
-  $hadoop_gateway_node = hiera("bigtop::hadoop_gateway_node", $hadoop_head_node)
+  $hadoop_head_node = lookup("bigtop::hadoop_head_node")
+  $standby_head_node = lookup("bigtop::standby_head_node", { 'default_value' =>  "" })
+  $hadoop_gateway_node = lookup("bigtop::hadoop_gateway_node", { 'default_value' => $hadoop_head_node })
 
   $ha_enabled = $standby_head_node ? {
     ""      => false,
@@ -192,7 +192,7 @@ class hadoop_cluster_node (
   }
 }
 
-class node_with_roles ($roles = hiera("bigtop::roles")) inherits hadoop_cluster_node {
+class node_with_roles ($roles = lookup("bigtop::roles")) inherits hadoop_cluster_node {
   define deploy_module($roles) {
     class { "${name}::deploy":
     roles => $roles,

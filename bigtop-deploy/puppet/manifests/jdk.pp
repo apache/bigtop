@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-$jdk_preinstalled = hiera("bigtop::jdk_preinstalled", false)
+$jdk_preinstalled = lookup("bigtop::jdk_preinstalled", { 'default_value' => false })
 
 class jdk {
   case $::operatingsystem {

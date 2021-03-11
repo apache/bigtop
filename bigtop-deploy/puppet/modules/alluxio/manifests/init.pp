@@ -22,7 +22,7 @@ class alluxio {
   }
 
   class common ($master_host,
-      $alluxio_underfs_address = hiera('bigtop::hadoop_namenode_uri'),
+      $alluxio_underfs_address = lookup('bigtop::hadoop_namenode_uri'),
   ) {
     package { "alluxio":
       ensure => latest,

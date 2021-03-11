@@ -14,14 +14,14 @@
 # limitations under the License.
 
 class bigtop_repo {
-  $bigtop_repo_default_version = hiera("bigtop::bigtop_repo_default_version")
-  $bigtop_repo_gpg_check = hiera("bigtop::bigtop_repo_gpg_check", true)
+  $bigtop_repo_default_version = lookup("bigtop::bigtop_repo_default_version")
+  $bigtop_repo_gpg_check = lookup("bigtop::bigtop_repo_gpg_check", { 'default_value' => true })
   $lower_os = downcase($operatingsystem)
   $default_repo = "http://repos.bigtop.apache.org/releases/${bigtop_repo_default_version}/${lower_os}/${operatingsystemmajrelease}/${architecture}"
 
   case $::operatingsystem {
     /(OracleLinux|Amazon|CentOS|Fedora|RedHat)/: {
-      $baseurls_array = any2array(hiera("bigtop::bigtop_repo_uri", $default_repo))
+      $baseurls_array = any2array(lookup("bigtop::bigtop_repo_uri", { 'default_value' => $default_repo }))
       each($baseurls_array) |$count, $baseurl| {
         notify { "Baseurl: $baseurl": }
 
@@ -31,7 +31,7 @@ class bigtop_repo {
             descr    => "Bigtop packages",
             enabled  => 1,
             gpgcheck => 1,
-            gpgkey   => hiera("bigtop::bigtop_repo_yum_key_url"),
+            gpgkey   => lookup("bigtop::bigtop_repo_yum_key_url"),
             priority => 10,
             ensure  => present,
           }
@@ -52,7 +52,7 @@ class bigtop_repo {
     /(Ubuntu|Debian)/: {
       include stdlib
       include apt
-      $baseurls_array = any2array(hiera("bigtop::bigtop_repo_uri", $default_repo))
+      $baseurls_array = any2array(lookup("bigtop::bigtop_repo_uri", { 'default_value' => $default_repo }))
 
       each($baseurls_array) |$count, $baseurl| {
         notify { "Baseurl: $baseurl": }
@@ -87,7 +87,7 @@ class bigtop_repo {
           ensure  => absent
         }
         apt::key { "add_key":
-          id => hiera("bigtop::bigtop_repo_apt_key"),
+          id => lookup("bigtop::bigtop_repo_apt_key"),
         }
 
         # BIGTOP-3343. This is a JDK-related stuff, but it's here for the same reason described above.

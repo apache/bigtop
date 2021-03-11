@@ -71,15 +71,15 @@
 #hadoop::hadoop_security_authentication: "kerberos"
 #kerberos::krb_site::domain: "bigtop.apache.org"
 #kerberos::krb_site::realm: "BIGTOP.APACHE.ORG"
-#kerberos::krb_site::kdc_server: "%{hiera('bigtop::hadoop_head_node')}"
+#kerberos::krb_site::kdc_server: "%{lookup('bigtop::hadoop_head_node')}"
 #kerberos::krb_site::kdc_port: "88"
 #kerberos::krb_site::admin_port: "749"
 #kerberos::krb_site::keytab_export_dir: "/var/lib/bigtop_keytabs"
 
 # applies to hdfs, yarn, mapred, kms and httpfs
-hadoop::kerberos_realm: "%{hiera('kerberos::krb_site::realm')}"
+hadoop::kerberos_realm: "%{lookup('kerberos::krb_site::realm')}"
 
-hadoop::common_hdfs::hadoop_namenode_host: "%{hiera('bigtop::hadoop_head_node')}"
+hadoop::common_hdfs::hadoop_namenode_host: "%{lookup('bigtop::hadoop_head_node')}"
 # actually default but needed for hadoop_namenode_uri here
 hadoop::common_hdfs::hadoop_namenode_port: "8020"
 
@@ -98,7 +98,7 @@ hadoop::common_hdfs::hadoop_namenode_port: "8020"
 # on the web GUIs of journalnode, namenode, datanode, resourcemanager and
 # nodemanager when you enable Kerberos for Hadoop API communication. This
 # intentionally is not the default right now.
-#hadoop::common_hdfs::hadoop_http_authentication_type: "%{hiera('hadoop::hadoop_security_authentication')}"
+#hadoop::common_hdfs::hadoop_http_authentication_type: "%{lookup('hadoop::hadoop_security_authentication')}"
 #
 # A secret is necessary for the cross-service-cross-node session cookie.
 # Provide this by setting the following to something long and secret:
@@ -108,53 +108,53 @@ hadoop::common_hdfs::hadoop_namenode_port: "8020"
 # this to work, the trocla puppet module must be installed.
 #hadoop::generate_secrets: true
 
-hadoop::common_yarn::hadoop_ps_host: "%{hiera('bigtop::hadoop_head_node')}"
-hadoop::common_yarn::hadoop_rm_host: "%{hiera('bigtop::hadoop_head_node')}"
+hadoop::common_yarn::hadoop_ps_host: "%{lookup('bigtop::hadoop_head_node')}"
+hadoop::common_yarn::hadoop_rm_host: "%{lookup('bigtop::hadoop_head_node')}"
 hadoop::common_yarn::hadoop_rm_port: "8032"
 
-hadoop::common_mapred_app::jobtracker_host: "%{hiera('bigtop::hadoop_head_node')}"
-hadoop::common_mapred_app::mapreduce_jobhistory_host: "%{hiera('bigtop::hadoop_head_node')}"
+hadoop::common_mapred_app::jobtracker_host: "%{lookup('bigtop::hadoop_head_node')}"
+hadoop::common_mapred_app::mapreduce_jobhistory_host: "%{lookup('bigtop::hadoop_head_node')}"
 # actually default but needed for hadoop::common_yarn::yarn_log_server_url here
 bigtop::hadoop_history_server_port: "19888"
-bigtop::hadoop_history_server_url: "http://%{hiera('hadoop::common_mapred_app::mapreduce_jobhistory_host')}:%{hiera('bigtop::hadoop_history_server_port')}"
-hadoop::common_yarn::yarn_log_server_url: "%{hiera('bigtop::hadoop_history_server_url')}/jobhistory/logs"
+bigtop::hadoop_history_server_url: "http://%{lookup('hadoop::common_mapred_app::mapreduce_jobhistory_host')}:%{lookup('bigtop::hadoop_history_server_port')}"
+hadoop::common_yarn::yarn_log_server_url: "%{lookup('bigtop::hadoop_history_server_url')}/jobhistory/logs"
 
 hadoop::httpfs::hadoop_httpfs_port: "14000"
 
-hadoop::kms_host: "%{hiera('bigtop::hadoop_head_node')}"
+hadoop::kms_host: "%{lookup('bigtop::hadoop_head_node')}"
 hadoop::kms_port: "9600"
 
 bigtop::hadoop_zookeeper_port: "2181"
-hadoop::zk: "%{hiera('bigtop::hadoop_head_node')}:%{hiera('bigtop::hadoop_zookeeper_port')}"
+hadoop::zk: "%{lookup('bigtop::hadoop_head_node')}:%{lookup('bigtop::hadoop_zookeeper_port')}"
 
-bigtop::hadoop_namenode_uri: "hdfs://%{hiera('hadoop::common_hdfs::hadoop_namenode_host')}:%{hiera('hadoop::common_hdfs::hadoop_namenode_port')}"
+bigtop::hadoop_namenode_uri: "hdfs://%{lookup('hadoop::common_hdfs::hadoop_namenode_host')}:%{lookup('hadoop::common_hdfs::hadoop_namenode_port')}"
 hadoop_hbase::base_relative_rootdir: "/hbase"
-hadoop_hbase::common_config::rootdir: "%{hiera('bigtop::hadoop_namenode_uri')}%{hiera('hadoop_hbase::base_relative_rootdir')}"
-hadoop_hbase::common_config::zookeeper_quorum: "%{hiera('bigtop::hadoop_head_node')}"
-hadoop_hbase::common_config::kerberos_realm: "%{hiera('kerberos::site::realm')}"
+hadoop_hbase::common_config::rootdir: "%{lookup('bigtop::hadoop_namenode_uri')}%{lookup('hadoop_hbase::base_relative_rootdir')}"
+hadoop_hbase::common_config::zookeeper_quorum: "%{lookup('bigtop::hadoop_head_node')}"
+hadoop_hbase::common_config::kerberos_realm: "%{lookup('kerberos::site::realm')}"
 hadoop_hbase::client::thrift: true
 hadoop_hbase::deploy::auxiliary: true
 
-solr::server::root_url: "%{hiera('bigtop::hadoop_namenode_uri')}"
-solr::server::zk: "%{hiera('hadoop::zk')}"
-solr::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
+solr::server::root_url: "%{lookup('bigtop::hadoop_namenode_uri')}"
+solr::server::zk: "%{lookup('hadoop::zk')}"
+solr::server::kerberos_realm: "%{lookup('kerberos::site::realm')}"
 # Default but needed here to make sure, hue uses the same port
 solr::server::port: "8983"
 
-hadoop_oozie::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
+hadoop_oozie::server::kerberos_realm: "%{lookup('kerberos::site::realm')}"
 
-hcatalog::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
-hcatalog::webhcat::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
+hcatalog::server::kerberos_realm: "%{lookup('kerberos::site::realm')}"
+hcatalog::webhcat::server::kerberos_realm: "%{lookup('kerberos::site::realm')}"
 
 # spark
-spark::common::master_host: "%{hiera('bigtop::hadoop_head_node')}"
+spark::common::master_host: "%{lookup('bigtop::hadoop_head_node')}"
 # to enable spark HA, ensure zookeeper is available and uncomment the line below
-#spark::common::zookeeper_connection_string: "%{hiera('hadoop::zk')}"
+#spark::common::zookeeper_connection_string: "%{lookup('hadoop::zk')}"
 
-alluxio::common::master_host: "%{hiera('bigtop::hadoop_head_node')}"
+alluxio::common::master_host: "%{lookup('bigtop::hadoop_head_node')}"
 
 # qfs
-qfs::common::metaserver_host: "%{hiera('bigtop::hadoop_head_node')}"
+qfs::common::metaserver_host: "%{lookup('bigtop::hadoop_head_node')}"
 qfs::common::metaserver_port: "30000"
 qfs::common::chunkserver_port: "30000"
 qfs::common::metaserver_client_port: "20000"
@@ -162,8 +162,8 @@ qfs::common::chunkserver_client_port: "22000"
 
 hadoop_zookeeper::server::myid: "0"
 hadoop_zookeeper::server::ensemble:
-  - ["0", "%{hiera('bigtop::hadoop_head_node')}:2888:3888"]
-hadoop_zookeeper::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
+  - ["0", "%{lookup('bigtop::hadoop_head_node')}:2888:3888"]
+hadoop_zookeeper::server::kerberos_realm: "%{lookup('kerberos::site::realm')}"
 
 # those are only here because they were present as extlookup keys previously
 bigtop::hadoop_rm_http_port: "8088"
@@ -171,9 +171,9 @@ bigtop::hadoop_rm_proxy_port: "8088"
 bigtop::hbase_thrift_port: "9090"
 bigtop::hadoop_oozie_port: "11000"
 
-hadoop_hive::common_config::hbase_zookeeper_quorum: "%{hiera('hadoop_hbase::common_config::zookeeper_quorum')}"
-hadoop_hive::common_config::kerberos_realm: "%{hiera('kerberos::site::realm')}"
-hadoop_hive::common_config::metastore_uris: "thrift://%{hiera('bigtop::hadoop_head_node')}:9083"
+hadoop_hive::common_config::hbase_zookeeper_quorum: "%{lookup('hadoop_hbase::common_config::zookeeper_quorum')}"
+hadoop_hive::common_config::kerberos_realm: "%{lookup('kerberos::site::realm')}"
+hadoop_hive::common_config::metastore_uris: "thrift://%{lookup('bigtop::hadoop_head_node')}:9083"
 # set this to true in production to avoid potential metastore corruption
 hadoop_hive::common_config::metastore_schema_verification: false
 
@@ -190,15 +190,15 @@ hadoop::common::tez_jars: "/usr/lib/tez"
 
 #kafka
 kafka::server::port: "9092"
-kafka::server::zookeeper_connection_string: "%{hiera('bigtop::hadoop_head_node')}:2181"
+kafka::server::zookeeper_connection_string: "%{lookup('bigtop::hadoop_head_node')}:2181"
 
 zeppelin::server::spark_master_url: "yarn-client"
-zeppelin::server::hiveserver2_url: "jdbc:hive2://%{hiera('hadoop-hive::common::hiveserver2_host')}:%{hiera('hadoop-hive::common::hiveserver2_port')}"
-zeppelin::server::hiveserver2_user: "%{hiera('bigtop::hiveserver2_user')}"
-zeppelin::server::hiveserver2_password: "%{hiera('bigtop::hiveserver2_password')}"
+zeppelin::server::hiveserver2_url: "jdbc:hive2://%{lookup('hadoop-hive::common::hiveserver2_host')}:%{lookup('hadoop-hive::common::hiveserver2_port')}"
+zeppelin::server::hiveserver2_user: "%{lookup('bigtop::hiveserver2_user')}"
+zeppelin::server::hiveserver2_password: "%{lookup('bigtop::hiveserver2_password')}"
 
 # Flink
-flink::common::jobmanager_host: "%{hiera('bigtop::hadoop_head_node')}"
+flink::common::jobmanager_host: "%{lookup('bigtop::hadoop_head_node')}"
 flink::common::jobmanager_port: "6123"
 flink::common::jobmanager_memory: "1600m"
 flink::common::taskmanager_memory: "1728m"
@@ -209,10 +209,10 @@ flink::common::rest_port: "8081"
 
 # GPDB
 # The first element is FQDN for master node and the succeeding ones are for segment nodes.
-gpdb::common::nodes: ["%{hiera('bigtop::hadoop_head_node')}", "%{hiera('bigtop::hadoop_head_node')}"]
+gpdb::common::nodes: ["%{lookup('bigtop::hadoop_head_node')}", "%{lookup('bigtop::hadoop_head_node')}"]
 gpdb::common::gp_home: "/usr/lib/gpdb"
 gpdb::common::db_base_dir: "/data_gp"
 gpdb::common::master_db_port: "5432"
 gpdb::common::segment_db_port_prefix: "4000"
 
-ambari::agent::server_host: "%{hiera('bigtop::hadoop_head_node')}"
+ambari::agent::server_host: "%{lookup('bigtop::hadoop_head_node')}"

@@ -21,8 +21,8 @@ class ignite_hadoop {
   }
 
   define server() {
-    $hadoop_head_node = hiera("bigtop::hadoop_head_node")
-    $hadoop_namenode_port = hiera("hadoop::common_hdfs::hadoop_namenode_port", "8020")
+    $hadoop_head_node = lookup("bigtop::hadoop_head_node")
+    $hadoop_namenode_port = lookup("hadoop::common_hdfs::hadoop_namenode_port", { 'default_value' => "8020" })
 
     package { "ignite-hadoop":
       ensure => latest,

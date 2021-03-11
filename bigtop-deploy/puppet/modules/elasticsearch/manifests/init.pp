@@ -23,7 +23,7 @@ class elasticsearch {
       ensure => latest
     }
     # read nodes in this cluster
-    $elasticsearch_cluster_nodes = hiera('hadoop_cluster_node::cluster_nodes')
+    $elasticsearch_cluster_nodes = lookup('hadoop_cluster_node::cluster_nodes')
     # minimum number of eligible master nodes, usually calced with N/2+1
     $elasticsearch_cluster_min_master = size($elasticsearch_cluster_nodes)/2 + 1
 
