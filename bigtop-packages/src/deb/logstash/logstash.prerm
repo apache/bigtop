@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# prerm script for ignite-hadoop
+# prerm script for logstash
 #
 # see: dh_installdeb(1)
 

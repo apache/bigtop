@@ -26,6 +26,6 @@ Architecture: all
 Depends: adduser, bigtop-utils (>= 0.8), hadoop-client, spark-core (>= 1.5), spark-python (>= 1.5)
 Description: Web-based notebook for data analysts
  Zeppelin is a web-based notebook that enables interactive data analytics with
- multiple data analytics projects including Apache Ignite, Apache Flink, Apache Spark,
+ multiple data analytics projects including Apache Flink, Apache Spark,
  Apache Kylin, Apache Hive, and others.
  You can make beautiful data-driven, interactive and collaborative documents with SQL, Scala and more.

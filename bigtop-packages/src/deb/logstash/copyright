@@ -1,5 +1,5 @@
 Format: http://dep.debian.net/deps/dep5
-Source: https://git-wip-us.apache.org/repos/asf/incubator-ignite
+Source: https://github.com/elastic/logstash
 Upstream-Name: none
 
 Files: *

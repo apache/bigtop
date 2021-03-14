@@ -49,31 +49,6 @@
         "remote": true
       }
     },
-    "2B44YVSN1": {
-      "id": "2B44YVSN1",
-      "name": "ignite",
-      "group": "ignite",
-      "properties": {
-        "ignite.peerClassLoadingEnabled": "true",
-        "ignite.config.url": "",
-        "ignite.jdbc.url": "jdbc:ignite://localhost:11211/default",
-        "ignite.clientMode": "true",
-        "ignite.addresses": "127.0.0.1:47500..47509"
-      },
-      "interpreterGroup": [
-        {
-          "class": "org.apache.zeppelin.ignite.IgniteInterpreter",
-          "name": "ignite"
-        },
-        {
-          "class": "org.apache.zeppelin.ignite.IgniteSqlInterpreter",
-          "name": "ignitesql"
-        }
-      ],
-      "option": {
-        "remote": true
-      }
-    },
     "2AKK3QQXU": {
       "id": "2AKK3QQXU",
       "name": "sh",
