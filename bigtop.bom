@@ -110,7 +110,7 @@ bigtop {
   */
   dependencies = [
     'bigtop-utils':['ambari', 'bigtop-groovy', 'bigtop-jsvc', 'bigtop-tomcat',
-                    'elasticsearch', 'flink', 'logstash', 'qfs', 'zookeeper'],
+                    'elasticsearch', 'flink', 'logstash', 'zookeeper'],
     'bigtop-groovy':['hadoop'],
     'bigtop-jsvc':['hadoop'],
     'bigtop-tomcat':['oozie'],
@@ -327,15 +327,6 @@ bigtop {
       url     { download_path = "/$name/$name-${version.base}/"
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
-    }
-    'qfs' {
-      name    = 'qfs'
-      relNotes = 'Quantcast Filesystem'
-      version { base = '2.0.0'; pkg = base; release = 1 }
-      tarball { destination = "$name-${version.base}.tar.gz"
-                source      = "${version.base}.tar.gz" }
-      url     { site = "https://github.com/quantcast/qfs/archive"
-                archive = site }
     }
     'gpdb' {
       name    = 'gpdb'
