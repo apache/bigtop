@@ -22,20 +22,20 @@ class bigtop_toolchain::protobuf {
   $protobuf8 = "protobuf-2.5.0.tar.gz"
   $protobuf8dir = "protobuf-2.5.0"
 
-  file { "/usr/src/0001-Add-generic-GCC-support-for-atomic-operations.patch":
-    source => "puppet:///modules/bigtop_toolchain/0001-Add-generic-GCC-support-for-atomic-operations.patch"
+  file { "/usr/src/0001-Backport-atomic-operations-with-support-of-arm64-and.patch":
+    source => "puppet:///modules/bigtop_toolchain/0001-Backport-atomic-operations-with-support-of-arm64-and.patch"
   }
 
   exec { "download protobuf":
      cwd  => "/usr/src",
-     command => "/usr/bin/wget $url/$protobuf8 && mkdir -p $protobuf8dir && /bin/tar -xvzf $protobuf8 -C $protobuf8dir --strip-components=1 && cd $protobuf8dir && /usr/bin/patch -p1 </usr/src/0001-Add-generic-GCC-support-for-atomic-operations.patch && curl -o config.guess 'http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD' && cp config.guess gtest/build-aux/",
+     command => "/usr/bin/wget $url/$protobuf8 && mkdir -p $protobuf8dir && /bin/tar -xvzf $protobuf8 -C $protobuf8dir --strip-components=1 && cd $protobuf8dir && /usr/bin/patch -p1 </usr/src/0001-Backport-atomic-operations-with-support-of-arm64-and.patch && curl -o config.guess 'http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD' && cp config.guess gtest/build-aux/",
      creates => "/usr/src/$protobuf8dir",
-     require => File["/usr/src/0001-Add-generic-GCC-support-for-atomic-operations.patch"]
+     require => File["/usr/src/0001-Backport-atomic-operations-with-support-of-arm64-and.patch"]
   }
 
   exec { "install protobuf":
      cwd => "/usr/src/$protobuf8dir",
-     command => "/usr/src/$protobuf8dir/configure --prefix=/usr/local --disable-shared --with-pic && /usr/bin/make install",
+     command => "/usr/src/$protobuf8dir/autogen.sh && /usr/src/$protobuf8dir/configure --prefix=/usr/local --disable-shared --with-pic && /usr/bin/make install",
      creates => "/usr/local/bin/protoc",
      require => EXEC["download protobuf"],
      timeout => 3000
