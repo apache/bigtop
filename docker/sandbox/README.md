@@ -77,7 +77,7 @@ docker run -d -p 50070:50070 -p 60010:60010 bigtop/sandbox:ubuntu-16.04_hdfs_hba
 
 ```
 export REPO=http://ci.bigtop.apache.org:8080/job/Bigtop-trunk-repos/BUILD_ENVIRONMENTS=centos-6%2Clabel=docker-slave-06//ws/output
-./build.sh -a bigtop -o centos-6 -c "hdfs, yarn, spark, ignite"
+./build.sh -a bigtop -o centos-6 -c "hdfs, yarn, spark"
 ```
 
 ### Customize your Big Data Stack
@@ -85,22 +85,14 @@ export REPO=http://ci.bigtop.apache.org:8080/job/Bigtop-trunk-repos/BUILD_ENVIRO
 * Edit *site.yaml.template.centos-6_hadoop* to create your own prefered stack
 
 ```
-cp site.yaml.template.centos-6_hadoop site.yaml.template.centos-6_hadoop_ignite
-vim site.yaml.template.centos-6_hadoop_ignite
-```
-
-* Add ignite in *hadoop_cluster_node::cluster_components* array and leave the other unchanged
-
-```
-...
-hadoop_cluster_node::cluster_components: [hdfs, yarn, ignite]
-...
+cp site.yaml.template.centos-6_hadoop site.yaml.template.centos-6_hadoop_hive
+vim site.yaml.template.centos-6_hadoop_hive
 ```
 
 * Build
 
 ```
-./build.sh -a bigtop -o centos-6 -f site.yaml.template.centos-6_hadoop_ignite -t my_ignite_stack
+./build.sh -a bigtop -o centos-6 -f site.yaml.template.centos-6_hadoop_hive -t my_hive_stack
 ```
 
 ## Known issues

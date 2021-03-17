@@ -115,13 +115,12 @@ bigtop {
     'bigtop-jsvc':['hadoop'],
     'bigtop-tomcat':['oozie'],
     zookeeper:['hadoop', 'hbase', 'kafka'],
-    hadoop:['ignite-hadoop', 'hbase', 'hive', 'tez', 'sqoop',
+    hadoop:['hbase', 'hive', 'tez', 'sqoop',
       'oozie', 'solr', 'spark',
       'phoenix', 'alluxio', 'ycsb', 'zeppelin'
     ],
     hbase:['phoenix', 'ycsb', 'hive'],
     hive:['oozie', 'zeppelin'],
-    'ignite-hadoop':['zeppelin'],
     spark:['livy', 'oozie', 'zeppelin'],
   ]
 
@@ -154,17 +153,6 @@ bigtop {
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }
-    'ignite-hadoop' {
-      name    = 'ignite-hadoop'
-      relNotes = 'Apache Ignite in-memory data fabric'
-      version { base = '2.7.6'; pkg = base; release = 1 }
-      tarball { destination = "${name}-${version.base}.tar.gz"
-                source      = "apache-ignite-${version.base}-src.zip" }
-      url     { download_path = "/ignite/${version.base}/"
-                site = "${apache.APACHE_MIRROR}/${download_path}"
-                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
-    }
-
     'hbase' {
       name    = 'hbase'
       relNotes = 'Apache HBase'

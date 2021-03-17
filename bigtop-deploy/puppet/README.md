@@ -131,7 +131,6 @@ hadoop::hadoop_storage_dirs:
   - "/data/1"
   - "/data/2"
 hadoop_cluster_node::cluster_components:
-  - ignite_hadoop
   - hive
   - spark
   - yarn
@@ -143,9 +142,6 @@ And finally execute
 ```
 puppet apply -d --parser future --modulepath="bigtop-deploy/puppet/modules:/etc/puppet/modules" bigtop-deploy/puppet/manifests
 ```
-When ignite-hadoop accelerator is deployed the client configs are placed under
-`/etc/hadoop/ignite.client.conf`. All one needs to do to run Mapreduce jobs on ignite-hadoop grid
-is to set `HADOOP_CONF_DIR=/etc/hadoop/ignite.client.conf` in the client session.
 
 ## Passwords
 

@@ -78,7 +78,6 @@ rat {
        "bigtop-tests/smoke-tests/hive/passwd.ql",
        "bigtop-tests/smoke-tests/phoenix/*.csv",
        "bigtop-tests/smoke-tests/phoenix/*.sql",
-       "bigtop-tests/smoke-tests/ignite-hadoop/*.data",
        "bigtop-tests/smoke-tests/odpi-runtime/src/test/resources/*.json",
        "bigtop-tests/smoke-tests/odpi-runtime/src/test/resources/*.list",
        "bigtop-tests/smoke-tests/logstash/resources/**",
