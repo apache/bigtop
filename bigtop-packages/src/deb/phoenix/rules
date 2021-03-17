@@ -46,6 +46,6 @@ override_dh_auto_install: queryserver
 	cp debian/phoenix.default debian/${phoenix_pkg_name}/etc/default/${phoenix_pkg_name}
 	cp debian/phoenix-queryserver.default debian/${phoenix_pkg_name}/etc/default/${phoenix_pkg_name}-queryserver
 	bash -x debian/install_phoenix.sh \
-	  --build-dir=$${PWD}/build     \
+	  --build-dir=${CURDIR}/build     \
 	  --prefix=debian/tmp
 
