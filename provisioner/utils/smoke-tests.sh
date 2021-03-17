@@ -59,28 +59,19 @@ export ZOOKEEPER_HOME=${ZOOKEEPER_HOME:-/usr/lib/zookeeper}
 
 echo -e "\n===== START TO RUN SMOKE TESTS: $SMOKE_TESTS =====\n"
 
-prep() {
-    HADOOP_COMMAND=$1
-    su -s /bin/bash $HCFS_USER -c "JAVA_LIBRARY_PATH=/usr/lib/qfs $HADOOP_COMMAND fs -mkdir -p /user/vagrant /user/root /user/yarn"
-    su -s /bin/bash $HCFS_USER -c "JAVA_LIBRARY_PATH=/usr/lib/qfs $HADOOP_COMMAND fs -chmod 777 /user/vagrant"
-    su -s /bin/bash $HCFS_USER -c "JAVA_LIBRARY_PATH=/usr/lib/qfs $HADOOP_COMMAND fs -chmod 777 /user/root"
-    su -s /bin/bash $HCFS_USER -c "JAVA_LIBRARY_PATH=/usr/lib/qfs $HADOOP_COMMAND fs -chown yarn:yarn /user/yarn"
-}
-
-prep hadoop
-if [[ $SMOKE_TESTS == *"qfs"* ]]; then
-    HCFS_USER=root
-    prep hadoop-qfs
-fi
+su -s /bin/bash $HCFS_USER -c "hadoop fs -mkdir -p /user/vagrant /user/root /user/yarn"
+su -s /bin/bash $HCFS_USER -c "hadoop fs -chmod 777 /user/vagrant"
+su -s /bin/bash $HCFS_USER -c "hadoop fs -chmod 777 /user/root"
+su -s /bin/bash $HCFS_USER -c "hadoop fs -chown yarn:yarn /user/yarn"
 
 if [[ $SMOKE_TESTS == *"alluxio"* ]]; then
-    su -s /bin/bash $HCFS_USER -c "$HADOOP_COMMAND fs -mkdir /underFSStorage"
-    su -s /bin/bash $HCFS_USER -c "$HADOOP_COMMAND fs -chmod 777 /underFSStorage"
+    su -s /bin/bash $HCFS_USER -c "hadoop fs -mkdir /underFSStorage"
+    su -s /bin/bash $HCFS_USER -c "hadoop fs -chmod 777 /underFSStorage"
 fi
 
 if [[ $SMOKE_TESTS == *"oozie"* ]]; then
-    su -s /bin/bash $HCFS_USER -c "$HADOOP_COMMAND fs -mkdir -p /user/oozie/share/lib"
-    su -s /bin/bash $HCFS_USER -c "$HADOOP_COMMAND fs -chown -R oozie:oozie /user/oozie"
+    su -s /bin/bash $HCFS_USER -c "hadoop fs -mkdir -p /user/oozie/share/lib"
+    su -s /bin/bash $HCFS_USER -c "hadoop fs -chown -R oozie:oozie /user/oozie"
     oozie-setup sharelib create -fs hdfs://$(hostname -f):8020/
     oozie admin -sharelibupdate
 fi
