@@ -56,7 +56,7 @@ override_dh_auto_install:
 	bash debian/install_hadoop.sh \
 	  --prefix=debian/tmp/ \
 	  --distro-dir=debian \
-	  --build-dir=${PWD}/build \
+	  --build-dir=${CURDIR}/build \
 	  --system-lib-dir=debian/tmp/usr/lib/ \
 	  --system-libexec-dir=debian/tmp/usr/lib/hadoop/libexec/ \
 	  --system-include-dir=debian/tmp/usr/include \
@@ -81,7 +81,7 @@ override_dh_auto_install:
 override_dh_install: $(hadoop_svcs)
 	dh_install
 	# Drop misc fuse_dfs directories
-	rm -Rf debian/hadoop/usr/lib/hadoop/bin/fuse_dfs 
+	rm -Rf debian/hadoop/usr/lib/hadoop/bin/fuse_dfs
 	rm -Rf debian/hadoop/usr/lib/hadoop/contrib/fuse-dfs
 	rm -Rf debian/hadoop/usr/lib/hadoop/hdfs/contrib/fuse-dfs
 

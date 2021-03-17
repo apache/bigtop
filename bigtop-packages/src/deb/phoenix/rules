@@ -41,5 +41,5 @@ override_dh_auto_build:
 
 override_dh_auto_install:
 	bash -x debian/install_phoenix.sh \
-	  --build-dir=$${PWD}/build     \
+	  --build-dir=${CURDIR}/build     \
 	  --prefix=debian/tmp
