@@ -1,0 +1,43 @@
+diff --git a/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-ui/src/main/webapp/yarn.lock b/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-ui/src/main/webapp/yarn.lock
+index a9b3ab758c3..94b6f4b5e04 100644
+--- a/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-ui/src/main/webapp/yarn.lock
++++ b/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-ui/src/main/webapp/yarn.lock
+@@ -1531,8 +1531,6 @@ em-helpers@^0.8.0:
+     ember-cli-htmlbars "^1.0.1"
+     ember-cli-less "^1.4.0"
+     source-map "^0.5.6"
+-  optionalDependencies:
+-    phantomjs-prebuilt "2.1.13"
+ 
+ em-table@0.12.0:
+   version "0.12.0"
+@@ -1541,8 +1539,6 @@ em-table@0.12.0:
+     ember-cli-htmlbars "^1.0.1"
+     ember-cli-less "^1.4.0"
+     source-map "^0.5.6"
+-  optionalDependencies:
+-    phantomjs-prebuilt "2.1.13"
+ 
+ ember-array-contains-helper@1.0.2:
+   version "1.0.2"
+@@ -4250,20 +4246,6 @@ performance-now@^2.1.0:
+   version "2.1.0"
+   resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
+ 
+-phantomjs-prebuilt@2.1.13:
+-  version "2.1.13"
+-  resolved "https://registry.yarnpkg.com/phantomjs-prebuilt/-/phantomjs-prebuilt-2.1.13.tgz#66556ad9e965d893ca5a7dc9e763df7e8697f76d"
+-  dependencies:
+-    es6-promise "~4.0.3"
+-    extract-zip "~1.5.0"
+-    fs-extra "~0.30.0"
+-    hasha "~2.2.0"
+-    kew "~0.7.0"
+-    progress "~1.1.8"
+-    request "~2.74.0"
+-    request-progress "~2.0.1"
+-    which "~1.2.10"
+-
+ pify@^2.0.0:
+   version "2.3.0"
+   resolved "https://registry.yarnpkg.com/pify/-/pify-2.3.0.tgz#ed141a6ac043a849ea588498e7dca8b15330e90c"
