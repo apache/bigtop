@@ -231,16 +231,6 @@
         <artifactId>phoenix-core</artifactId>
         <version>${phoenix.version}</version>
       </dependency>
-      <dependency>
-        <groupId>org.apache.phoenix</groupId>
-        <artifactId>phoenix-flume</artifactId>
-        <version>${phoenix.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.phoenix</groupId>
-        <artifactId>phoenix-pig</artifactId>
-        <version>${phoenix.version}</version>
-      </dependency>
     </dependencies>
   </dependencyManagement>
 

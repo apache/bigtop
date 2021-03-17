@@ -21,7 +21,7 @@ package org.apache.bigtop.itest.packagesmoke
 import org.apache.bigtop.itest.pmanager.PackageManager
 
 class BTServices {
-  static final List serviceDaemonUserNames = ["flume", "hbase", "hdfs", "hue", "mapred", "oozie", "sqoop",
+  static final List serviceDaemonUserNames = ["hbase", "hdfs", "hue", "mapred", "oozie", "sqoop",
     "zookeeper", "hadoop"];
 
   static final Map components = [
@@ -54,11 +54,6 @@ class BTServices {
       killIDs: ["hdfs", "mapred", "oozie"],
       verifier: new StateVerifierOozie(),
     ],
-    flume: [services: ["hadoop-namenode", "hadoop-datanode",
-      "flume-master", "flume-agent"],
-      killIDs: ["hdfs", "flume"],
-      verifier: new StateVerifierFlume(),
-    ],
     sqoop: [services: ["hadoop-namenode", "hadoop-datanode",
       "sqoop-metastore"],
       killIDs: ["hdfs", "sqoop"],
@@ -72,7 +67,7 @@ class BTServices {
   ];
 
   static final Map<String, List<String>> release2services = [
-    "bigtop": ["HDFS", "mapreduce", "hive", "HBase", "zookeeper", "oozie", "flume"],
+    "bigtop": ["HDFS", "mapreduce", "hive", "HBase", "zookeeper", "oozie"],
   ];
 
   public static Map getServices(String release) {

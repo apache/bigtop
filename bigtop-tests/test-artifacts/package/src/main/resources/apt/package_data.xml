@@ -16,41 +16,6 @@
    limitations under the License.
 -->
 <packages>
-  <flume>
-    <users>
-      <flume>
-        <home>/var/lib/flume</home>
-        <descr>Flume User</descr>
-        <shell>/bin/false</shell>
-      </flume>
-    </users>
-    <deps>
-      <adduser/>
-    </deps>
-  </flume>
-  <flume-agent>
-    <deps>
-      <tag name="/bin/bash"/>
-      <tag name="/bin/sh"/>
-      <tag name="/sbin/chkconfig"/>
-      <tag name="/sbin/service"/>
-      <tag name="/usr/bin/env"/>
-      <tag name="/usr/sbin/useradd"/>
-      <jre>&gt;=1.6</jre>
-      <sh-utils/>
-      <textutils/>
-    </deps>
-    <services>
-      <flume-agent>
-        <runlevel>2</runlevel>
-        <runlevel>3</runlevel>
-        <runlevel>4</runlevel>
-        <runlevel>5</runlevel>
-        <oninstall>start</oninstall>
-        <configured>true</configured>
-      </flume-agent>
-    </services>
-  </flume-agent>
   <solr>
     <users>
     </users>

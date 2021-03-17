@@ -33,12 +33,6 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.bigtop.itest</groupId>
-      <artifactId>flume-smoke</artifactId>
-      <version>${project.version}</version>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.bigtop.itest</groupId>
       <artifactId>hadoop-smoke</artifactId>
       <version>${project.version}</version>
       <optional>true</optional>

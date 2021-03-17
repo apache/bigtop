@@ -15,7 +15,6 @@ hadoop::hadoop_storage_dirs:
 #  - alluxio
 #  - ambari
 #  - flink
-#  - flume
 #  - gpdb
 #  - ignite_hadoop
 #  - hbase

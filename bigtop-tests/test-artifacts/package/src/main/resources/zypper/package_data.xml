@@ -16,48 +16,6 @@
    limitations under the License.
 -->
 <packages>
-  <flume>
-    <users>
-      <flume>
-        <home>/var/lib/flume</home>
-        <descr>Flume</descr>
-        <shell>/sbin/nologin</shell>
-      </flume>
-    </users>
-    <deps>
-      <sh-utils/>
-      <textutils/>
-      <tag name="/usr/sbin/useradd"/>
-      <tag name="/sbin/chkconfig"/>
-      <tag name="/sbin/service"/>
-      <jre>&gt;=1.6</jre>
-      <tag name="/bin/sh"/>
-      <tag name="/usr/bin/env"/>
-    </deps>
-  </flume>
-  <flume-agent>
-    <deps>
-      <sh-utils/>
-      <textutils/>
-      <tag name="/usr/sbin/useradd"/>
-      <tag name="/sbin/chkconfig"/>
-      <tag name="/sbin/service"/>
-      <jre>&gt;=1.6</jre>
-      <insserv/>
-      <tag name="/bin/sh"/>
-      <tag name="/bin/bash"/>
-      <tag name="/usr/bin/env"/>
-    </deps>
-    <services>
-      <flume-agent>
-        <runlevel>3</runlevel>
-        <runlevel>4</runlevel>
-        <runlevel>5</runlevel>
-        <oninstall>stop</oninstall>
-        <configured>true</configured>
-      </flume-agent>
-    </services>
-  </flume-agent>
   <solr>
     <users>
     </users>
