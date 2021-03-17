@@ -17,17 +17,10 @@
 %define etc_phoenix_conf %{_sysconfdir}/%{name}/conf
 %define etc_phoenix_conf_dist %{etc_phoenix_conf}.dist
 %define var_lib_phoenix /var/lib/%{name}
-%define var_log_phoenix /var/log/%{name}
-%define man_dir %{_mandir}
-%define zookeeper_home /usr/lib/zookeeper
-%define hadoop_home /usr/lib/hadoop
-%define hadoop_mapreduce_home /usr/lib/hadoop-mapreduce
-%define hadoop_yarn_home /usr/lib/hadoop-yarn
-%define hadoop_hdfs_home /usr/lib/hadoop-hdfs
 %define hbase_home /usr/lib/hbase
 #BIGTOP_PATCH_FILES
 
-%if  %{?suse_version:1}0
+%if %{?suse_version:1}0
 
 # Only tested on openSUSE 11.4. le'ts update it for previous release when confirmed
 %if 0%{suse_version} > 1130
@@ -82,17 +75,39 @@ License: ASL 2.0
 Source0: %{name}-%{phoenix_base_version}-src.tar.gz
 Source1: do-component-build
 Source2: install_phoenix.sh
-Source3: bigtop.bom
+Source3: phoenix.default
+Source4: bigtop.bom
 BuildArch: noarch
-Requires: hadoop, hadoop-mapreduce, hadoop-yarn, hbase, zookeeper
+Requires: hbase
 
-%if  0%{?mgaversion}
+%if 0%{?mgaversion}
 Requires: bsh-utils
 %else
 Requires: coreutils
 %endif
 
 %description
+Phoenix is a SQL skin over HBase, delivered as a client-embedded JDBC driver.
+The Phoenix query engine transforms an SQL query into one or more HBase scans,
+and orchestrates their execution to produce standard JDBC result sets. Direct
+use of the HBase API, along with coprocessors and custom filters, results in
+performance on the order of milliseconds for small queries, or seconds for
+tens of millions of rows. Applications interact with Phoenix through a
+standard JDBC interface; all the usual interfaces are supported.
+
+%package client
+Summary: Phoenix client tools and libraries
+Group: Development/Libraries
+BuildArch: noarch
+Requires: hbase
+
+%if 0%{?mgaversion}
+Requires: bsh-utils
+%else
+Requires: coreutils
+%endif
+
+%description client
 Phoenix is a SQL skin over HBase, delivered as a client-embedded JDBC driver.
 The Phoenix query engine transforms an SQL query into one or more HBase scans,
 and orchestrates their execution to produce standard JDBC result sets. Direct
@@ -115,15 +130,17 @@ bash %{SOURCE2} \
   --doc-dir=%{doc_phoenix} \
   --prefix=$RPM_BUILD_ROOT
 
-%pre
+%__install -d -m 0755 $RPM_BUILD_ROOT/etc/default/
+%__install -m 0644 %{SOURCE3} $RPM_BUILD_ROOT/etc/default/%{name}
+
+%pre client
 getent group phoenix >/dev/null || groupadd -r phoenix
 getent passwd phoenix >/dev/null || useradd -c "Phoenix" -s /sbin/nologin -g phoenix -r -d %{var_lib_phoenix} phoenix 2> /dev/null || :
 
-%post
+%post client
 %{alternatives_cmd} --install %{etc_phoenix_conf} %{name}-conf %{etc_phoenix_conf_dist} 30
 
-
-%preun
+%preun client
 if [ "$1" = 0 ]; then
   %{alternatives_cmd} --remove %{name}-conf %{etc_phoenix_conf_dist} || :
 fi
@@ -132,9 +149,15 @@ fi
 #######################
 #### FILES SECTION ####
 #######################
-%files 
+%files
+%defattr(-,root,root,755)
+%{phoenix_home}/phoenix-pherf*.jar
+%{phoenix_home}/phoenix-server*.jar
+%config(noreplace) %{_sysconfdir}/default/phoenix
+
+%files client
 %defattr(-,root,root,755)
 %doc %{doc_phoenix}
-%{phoenix_home}/phoenix-*.jar
+%{phoenix_home}/phoenix-client*.jar
 %{bin_phoenix}
 %config(noreplace) %{etc_phoenix_conf_dist}
