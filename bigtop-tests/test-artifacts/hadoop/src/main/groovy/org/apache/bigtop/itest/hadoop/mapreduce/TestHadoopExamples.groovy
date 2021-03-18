@@ -123,13 +123,7 @@ class TestHadoopExamples {
       aggregatewordhist: "$EXAMPLES/text $EXAMPLES_OUT/aggregatewordhist 2 textinputformat",
       grep: "$EXAMPLES/text $EXAMPLES_OUT/grep '[Cc]uriouser'",
       secondarysort: "$EXAMPLES/ints $EXAMPLES_OUT/secondarysort",
-      randomtextwriter: "-D $RANDOMTEXTWRITER_TOTALBYTES=1073741824 $EXAMPLES_OUT/randomtextwriter"
-    ];
-
-  // The following example MR jobs are enabled only when running without QFS,
-  // which doesn't seem to work with TeraOutputFormat. See BIGTOP-3413 for details.
-  static LinkedHashMap additional_examples =
-    [
+      randomtextwriter: "-D $RANDOMTEXTWRITER_TOTALBYTES=1073741824 $EXAMPLES_OUT/randomtextwriter",
       teragen: "${terasort_rows} teragen${terasortid}",
       terasort: "teragen${terasortid} terasort${terasortid}",
       teravalidate: "terasort${terasortid} tervalidate${terasortid}"
@@ -143,7 +137,6 @@ class TestHadoopExamples {
   public static LinkedHashMap<String, Object[]> generateTests() {
     LinkedHashMap<String, Object[]> res = [:];
     examples.each { k, v -> res[k] = [k.toString(), v.toString()] as Object[]; }
-    additional_examples.each { k, v -> res[k] = [k.toString(), v.toString()] as Object[]; }
     return res;
   }
 
