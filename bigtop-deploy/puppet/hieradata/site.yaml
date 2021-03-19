@@ -22,7 +22,6 @@ hadoop::hadoop_storage_dirs:
 #  - httpfs
 #  - mapred-app
 #  - oozie
-#  - qfs
 #  - solrcloud
 #  - spark
 #  - spark-standalone

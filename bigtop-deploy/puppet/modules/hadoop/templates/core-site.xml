@@ -158,18 +158,6 @@
   </property>
 <% end -%>
 
-<% if (scope['::hadoop_cluster_node::cluster_components']).include? 'qfs' -%>
-  <!-- run mapreduce over QFS -->
-  <property>
-    <name>fs.AbstractFileSystem.qfs.impl</name>
-    <value>com.quantcast.qfs.hadoop.Qfs</value>
-  </property>
-  <property>
-    <name>fs.qfs.impl</name>
-    <value>com.quantcast.qfs.hadoop.QuantcastFileSystem</value>
-  </property>
-<% end -%>
-
 <% if @kms_host %>
   <property>
     <name>hadoop.security.key.provider.path</name>

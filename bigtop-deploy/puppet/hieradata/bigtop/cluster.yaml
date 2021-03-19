@@ -17,7 +17,7 @@
 # be installed as usual. Otherwise only a specified list will be set
 # Possible elements:
 # hadoop,yarn,hbase,alluxio,flink,solrcloud,spark,oozie,hcat,sqoop,httpfs,
-# pig,hive,zookeeper,ycsb,qfs
+# pig,hive,zookeeper,ycsb
 # Example (to deploy only HDFS and YARN server and gateway parts)
 # This can be a comma-separated list or an array.
 #hadoop_cluster_node::cluster_components:
@@ -152,13 +152,6 @@ spark::common::master_host: "%{hiera('bigtop::hadoop_head_node')}"
 #spark::common::zookeeper_connection_string: "%{hiera('hadoop::zk')}"
 
 alluxio::common::master_host: "%{hiera('bigtop::hadoop_head_node')}"
-
-# qfs
-qfs::common::metaserver_host: "%{hiera('bigtop::hadoop_head_node')}"
-qfs::common::metaserver_port: "30000"
-qfs::common::chunkserver_port: "30000"
-qfs::common::metaserver_client_port: "20000"
-qfs::common::chunkserver_client_port: "22000"
 
 hadoop_zookeeper::server::myid: "0"
 hadoop_zookeeper::server::ensemble:
