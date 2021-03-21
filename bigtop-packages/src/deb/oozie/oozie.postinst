@@ -40,10 +40,6 @@ case "$1" in
         update-rc.d oozie defaults >/dev/null || exit 1
 
         update-alternatives --install /etc/oozie/conf oozie-conf /etc/oozie/conf.dist 30
-
-        conf_tomcat=/etc/oozie/tomcat-conf
-        update-alternatives --install ${conf_tomcat} oozie-tomcat-conf ${conf_tomcat}.http 30
-        update-alternatives --install ${conf_tomcat} oozie-tomcat-conf ${conf_tomcat}.https 20
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

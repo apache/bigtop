@@ -35,7 +35,7 @@ Description: Client for Oozie Workflow Engine
 
 Package: oozie
 Architecture: all
-Depends: oozie-client (= ${source:Version}), hadoop-client, bigtop-tomcat
+Depends: oozie-client (= ${source:Version}), hadoop-client
 Description: Oozie is a system that runs workflows of Hadoop jobs.
  Oozie is a system that runs workflows of Hadoop jobs.
  Oozie workflows are actions arranged in a control dependency DAG (Direct
