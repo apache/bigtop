@@ -1,0 +1,228 @@
+diff --git a/core/pom.xml b/core/pom.xml
+index a60d5b909..83f19b138 100644
+--- a/core/pom.xml
++++ b/core/pom.xml
+@@ -255,6 +255,12 @@
+             <scope>compile</scope>
+         </dependency>
+ 
++        <dependency>
++          <groupId>org.apache.logging.log4j</groupId>
++          <artifactId>log4j-1.2-api</artifactId>
++          <version>2.10.0</version>
++        </dependency>
++
+         <dependency>
+             <groupId>log4j</groupId>
+             <artifactId>apache-log4j-extras</artifactId>
+diff --git a/core/src/main/java/org/apache/oozie/dependency/HCatURIHandler.java b/core/src/main/java/org/apache/oozie/dependency/HCatURIHandler.java
+index c60c811ac..3ce6a3629 100644
+--- a/core/src/main/java/org/apache/oozie/dependency/HCatURIHandler.java
++++ b/core/src/main/java/org/apache/oozie/dependency/HCatURIHandler.java
+@@ -47,7 +47,7 @@ import org.apache.oozie.service.Services;
+ import org.apache.oozie.service.URIHandlerService;
+ import org.apache.oozie.util.HCatURI;
+ import org.apache.oozie.util.XLog;
+-import org.apache.hadoop.hive.thrift.DelegationTokenIdentifier;
++import org.apache.hadoop.hive.metastore.security.DelegationTokenIdentifier;
+ import org.apache.hadoop.io.Text;
+ import org.apache.hadoop.security.token.Token;
+ 
+diff --git a/core/src/test/java/org/apache/oozie/service/TestHAShareLibService.java b/core/src/test/java/org/apache/oozie/service/TestHAShareLibService.java
+index d7b637fec..7f70ad899 100644
+--- a/core/src/test/java/org/apache/oozie/service/TestHAShareLibService.java
++++ b/core/src/test/java/org/apache/oozie/service/TestHAShareLibService.java
+@@ -26,8 +26,10 @@ import java.net.URI;
+ import java.nio.charset.StandardCharsets;
+ import java.util.Date;
+ 
+-import org.apache.commons.httpclient.HttpClient;
+-import org.apache.commons.httpclient.methods.GetMethod;
++import org.apache.http.HttpResponse;
++import org.apache.http.client.HttpClient;
++import org.apache.http.client.methods.HttpGet;
++import org.apache.http.impl.client.DefaultHttpClient;
+ import org.apache.hadoop.fs.FileSystem;
+ import org.apache.hadoop.fs.Path;
+ import org.apache.oozie.client.rest.JsonTags;
+@@ -97,11 +99,12 @@ public class TestHAShareLibService extends ZKXTestCase {
+             dummyOozie_1 = new DummyZKOozie("9876", container.getServletURL("/other-oozie-server/*"));
+             String url = container.getServletURL("/v2/admin/*") + "update_sharelib?" + RestConstants.ALL_SERVER_REQUEST
+                     + "=true";
+-            HttpClient client = new HttpClient();
+-            GetMethod method = new GetMethod(url);
+-            int statusCode = client.executeMethod(method);
++            HttpClient client = new DefaultHttpClient();
++            HttpGet method = new HttpGet(url);
++            HttpResponse httpResponse = client.execute(method);
++            int statusCode = httpResponse.getStatusLine().getStatusCode();
+             assertEquals(HttpURLConnection.HTTP_OK, statusCode);
+-            Reader reader = new InputStreamReader(method.getResponseBodyAsStream(), StandardCharsets.UTF_8);
++            Reader reader = new InputStreamReader(httpResponse.getEntity().getContent(), StandardCharsets.UTF_8);
+             JSONArray sharelib = (JSONArray) JSONValue.parse(reader);
+             assertEquals(2, sharelib.size());
+             // 1st server update is successful
+@@ -117,9 +120,10 @@ public class TestHAShareLibService extends ZKXTestCase {
+             // 3rd server not defined.should throw exception.
+             dummyOozie_2 = new DummyZKOozie("9873", container.getServletURL("/") + "not-defined/");
+ 
+-            statusCode = client.executeMethod(method);
++            httpResponse = client.execute(method);
++            statusCode = httpResponse.getStatusLine().getStatusCode();
+             assertEquals(HttpURLConnection.HTTP_OK, statusCode);
+-            reader = new InputStreamReader(method.getResponseBodyAsStream(),StandardCharsets.UTF_8);
++            reader = new InputStreamReader(httpResponse.getEntity().getContent(), StandardCharsets.UTF_8);
+             sharelib = (JSONArray) JSONValue.parse(reader);
+             assertEquals(3, sharelib.size());
+ 
+diff --git a/core/src/test/java/org/apache/oozie/test/MiniHCatServer.java b/core/src/test/java/org/apache/oozie/test/MiniHCatServer.java
+index 85b0e97be..32155860b 100644
+--- a/core/src/test/java/org/apache/oozie/test/MiniHCatServer.java
++++ b/core/src/test/java/org/apache/oozie/test/MiniHCatServer.java
+@@ -37,6 +37,7 @@ import org.apache.hadoop.fs.FileSystem;
+ import org.apache.hadoop.fs.Path;
+ import org.apache.hadoop.hive.conf.HiveConf;
+ import org.apache.hadoop.hive.metastore.HiveMetaStore;
++import org.apache.hadoop.hive.metastore.security.HadoopThriftAuthBridge;
+ import org.apache.hadoop.hive.shims.ShimLoader;
+ import org.apache.hive.hcatalog.api.HCatAddPartitionDesc;
+ import org.apache.hive.hcatalog.api.HCatClient;
+@@ -131,7 +132,7 @@ public class MiniHCatServer {
+             @Override
+             public void run() {
+                 try {
+-                    HiveMetaStore.startMetaStore(msPort, ShimLoader.getHadoopThriftAuthBridge(), serverConf);
++                    HiveMetaStore.startMetaStore(msPort, HadoopThriftAuthBridge.getBridge(), serverConf);
+                     LOG.info("Started metastore server on port " + msPort);
+                 }
+                 catch (Throwable e) {
+diff --git a/core/src/test/java/org/apache/oozie/test/hive/MiniHS2.java b/core/src/test/java/org/apache/oozie/test/hive/MiniHS2.java
+index 6d663c375..3be398fbe 100644
+--- a/core/src/test/java/org/apache/oozie/test/hive/MiniHS2.java
++++ b/core/src/test/java/org/apache/oozie/test/hive/MiniHS2.java
+@@ -32,7 +32,7 @@ import org.apache.hadoop.fs.Path;
+ import org.apache.hadoop.hive.conf.HiveConf;
+ import org.apache.hadoop.hive.conf.HiveConf.ConfVars;
+ import org.apache.hadoop.hive.metastore.HiveMetaStore;
+-import org.apache.hadoop.hive.metastore.MetaStoreUtils;
++import org.apache.hadoop.hive.metastore.utils.MetaStoreUtils;
+ import org.apache.hadoop.hive.shims.HadoopShims.MiniDFSShim;
+ import org.apache.hadoop.hive.shims.HadoopShims.MiniMrShim;
+ import org.apache.hadoop.hive.shims.ShimLoader;
+diff --git a/sharelib/spark/pom.xml b/sharelib/spark/pom.xml
+index e506c8305..a71f08646 100644
+--- a/sharelib/spark/pom.xml
++++ b/sharelib/spark/pom.xml
+@@ -209,30 +209,6 @@
+             <version>${spark.version}</version>
+             <scope>compile</scope>
+         </dependency>
+-        <dependency>
+-            <groupId>org.apache.spark</groupId>
+-            <artifactId>spark-streaming-flume_${spark.scala.binary.version}</artifactId>
+-            <version>${spark.version}</version>
+-            <scope>compile</scope>
+-            <exclusions>
+-                <exclusion>
+-                    <groupId>org.mortbay.jetty</groupId>
+-                    <artifactId>jetty</artifactId>
+-                </exclusion>
+-            </exclusions>
+-        </dependency>
+-        <dependency>
+-            <groupId>org.apache.spark</groupId>
+-            <artifactId>spark-streaming-kafka_${spark.scala.binary.version}</artifactId>
+-            <version>${spark.streaming.kafka.version}</version>
+-            <scope>compile</scope>
+-        </dependency>
+-        <dependency>
+-            <groupId>org.apache.spark</groupId>
+-            <artifactId>spark-bagel_${spark.scala.binary.version}</artifactId>
+-            <version>${spark.bagel.version}</version>
+-            <scope>compile</scope>
+-        </dependency>
+         <dependency>
+             <groupId>org.apache.oozie</groupId>
+             <artifactId>oozie-core</artifactId>
+diff --git a/tools/src/test/java/org/apache/hadoop/hdfs/protocol/SystemErasureCodingPolicies.java b/tools/src/test/java/org/apache/hadoop/hdfs/protocol/SystemErasureCodingPolicies.java
+index d5c5f9ee6..f493c7c19 100644
+--- a/tools/src/test/java/org/apache/hadoop/hdfs/protocol/SystemErasureCodingPolicies.java
++++ b/tools/src/test/java/org/apache/hadoop/hdfs/protocol/SystemErasureCodingPolicies.java
+@@ -18,32 +18,34 @@
+ 
+ package org.apache.hadoop.hdfs.protocol;
+ 
++import org.apache.hadoop.io.erasurecode.ErasureCodeConstants;
+ 
+ /**
+  * Mock class for testing, called from ECPolicyDisabler with reflection.
+  *
+  */
+ public class SystemErasureCodingPolicies {
+-    private static ReplicationPolicy systemPolicy = ReplicationPolicy.DEFAULT;
++    private static ErasureCodingPolicy systemPolicy = ReplicationPolicy.DEFAULT;
+ 
+     public static class ReplicationPolicy {
+-        public final static ReplicationPolicy DEFAULT = new ReplicationPolicy("DEFAULT");
+-        public final static ReplicationPolicy OTHER = new ReplicationPolicy("OTHER");
+-        private String name;
+-        public ReplicationPolicy(String name) {
+-            this.name = name;
+-        }
+-
+-        public String getName() {
+-            return name;
+-        }
++      private static final int DEFAULT_CELLSIZE = 1024 * 1024;
++      public static final ErasureCodingPolicy DEFAULT =
++          new ErasureCodingPolicy("default",
++              ErasureCodeConstants.REPLICATION_1_2_SCHEMA,
++              DEFAULT_CELLSIZE,
++              ErasureCodeConstants.REPLICATION_POLICY_ID);
++      public static final ErasureCodingPolicy OTHER =
++          new ErasureCodingPolicy("other",
++              ErasureCodeConstants.REPLICATION_1_2_SCHEMA,
++              DEFAULT_CELLSIZE,
++              ErasureCodeConstants.REPLICATION_POLICY_ID);
+     }
+ 
+-    public static ReplicationPolicy getReplicationPolicy() {
++    public static ErasureCodingPolicy getReplicationPolicy() {
+         return systemPolicy;
+     }
+ 
+-    public static void setSystemPolicy(ReplicationPolicy systemPolicy) {
++    public static void setSystemPolicy(ErasureCodingPolicy systemPolicy) {
+         SystemErasureCodingPolicies.systemPolicy = systemPolicy;
+     }
+ }
+diff --git a/tools/src/test/java/org/apache/oozie/tools/TestECPolicyDisabler.java b/tools/src/test/java/org/apache/oozie/tools/TestECPolicyDisabler.java
+index c2ba314c8..e63b15e22 100644
+--- a/tools/src/test/java/org/apache/oozie/tools/TestECPolicyDisabler.java
++++ b/tools/src/test/java/org/apache/oozie/tools/TestECPolicyDisabler.java
+@@ -30,6 +30,7 @@ import static org.mockito.Mockito.when;
+ import org.apache.hadoop.fs.FileSystem;
+ import org.apache.hadoop.fs.Path;
+ import org.apache.hadoop.hdfs.DistributedFileSystem;
++import org.apache.hadoop.hdfs.protocol.ErasureCodingPolicy;
+ import org.apache.hadoop.hdfs.protocol.SystemErasureCodingPolicies;
+ import org.apache.hadoop.hdfs.protocol.SystemErasureCodingPolicies.ReplicationPolicy;
+ import org.apache.hadoop.ipc.RemoteException;
+@@ -47,7 +48,7 @@ import org.mockito.Mockito;
+ public class TestECPolicyDisabler  {
+ 
+     static abstract class MockDistributedFileSystem extends DistributedFileSystem {
+-        public abstract SystemErasureCodingPolicies.ReplicationPolicy getErasureCodingPolicy(Path path);
++        public abstract ErasureCodingPolicy getErasureCodingPolicy(Path path);
+         public abstract void setErasureCodingPolicy(Path path, String policy);
+     }
+ 
+@@ -111,7 +112,7 @@ public class TestECPolicyDisabler  {
+         MockDistributedFileSystem fs = mock(MockDistributedFileSystem.class);
+         when(fs.getErasureCodingPolicy(any())).thenReturn(ReplicationPolicy.OTHER);
+ 
+-        ReplicationPolicy mockPolicy = mock(ReplicationPolicy.class);
++        ErasureCodingPolicy mockPolicy = mock(ErasureCodingPolicy.class);
+         SystemErasureCodingPolicies.setSystemPolicy(mockPolicy);
+         when(mockPolicy.getName()).thenThrow(createNoSuchMethodException());
+         ECPolicyDisabler.Result result = ECPolicyDisabler.check(fs, null);
