@@ -109,11 +109,10 @@ bigtop {
       To build a component with its dependencies, run build with -Dbuildwithdeps=true
   */
   dependencies = [
-    'bigtop-utils':['ambari', 'bigtop-groovy', 'bigtop-jsvc', 'bigtop-tomcat',
+    'bigtop-utils':['ambari', 'bigtop-groovy', 'bigtop-jsvc',
                     'elasticsearch', 'flink', 'logstash', 'zookeeper'],
     'bigtop-groovy':['hadoop'],
     'bigtop-jsvc':['hadoop'],
-    'bigtop-tomcat':['oozie'],
     zookeeper:['hadoop', 'hbase', 'kafka'],
     hadoop:['hbase', 'hive', 'tez', 'sqoop',
       'oozie', 'solr', 'spark',
@@ -276,16 +275,6 @@ bigtop {
       tarball { source      = "commons-daemon-${version.base}-native-src.tar.gz"
                 destination = "commons-daemon-${version.base}.tar.gz" }
       url     { download_path = "/commons/daemon/source"
-                site = "${apache.APACHE_MIRROR}/${download_path}"
-                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
-    }
-    'bigtop-tomcat' {
-      name    = "bigtop-tomcat"
-      relNotes = "Apache Tomcat"
-      version { base = '8.5.57'; pkg = base; release = 1 }
-      tarball { source      = "apache-tomcat-${version.base}-src.tar.gz"
-                destination = "apache-tomcat-${version.base}.tar.gz" }
-      url     { download_path = "/tomcat/tomcat-8/v${version.base}/src"
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }
