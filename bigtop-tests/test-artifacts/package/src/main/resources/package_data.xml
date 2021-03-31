@@ -42,14 +42,6 @@
     </deps>
   </bigtop-groovy>
 
-  <bigtop-tomcat>
-    <metadata>
-      <summary>Apache Tomcat</summary>
-      <description>Apache Tomcat is an open source software implementation of the
-Java Servlet and JavaServer Pages technologies.</description>
-      <url>http://tomcat.apache.org/</url>
-    </metadata>
-  </bigtop-tomcat>
   <spark-core>
     <metadata>
       <summary>Lightning-Fast Cluster Computing</summary>
@@ -123,7 +115,6 @@ when more advanced customization is required.</description>
       <url>http://lucene.apache.org/solr</url>
     </metadata>
     <deps>
-      <bigtop-tomcat/>
       <bigtop-utils/>
     </deps>
     <alternatives>
@@ -158,7 +149,6 @@ when more advanced customization is required.</description>
       <url>http://sqoop.apache.org</url>
     </metadata>
     <deps>
-      <bigtop-tomcat/>
       <bigtop-utils/>
       <hadoop-client/>
       <sqoop-client>/self</sqoop-client>
