@@ -39,7 +39,7 @@ is_oozie_alive() {
   if [ ! -f "$OOZIE_PID" ]; then
     #not running
     STATUS=3
-  elif read pid < "$OOZIE_PID" && ps -p "$pid" > /dev/null 2>&1; then
+  elif ps -p "$(<${OOZIE_PID})" >/dev/null 2>&1; then
     #running
     STATUS=0
   else
@@ -49,7 +49,6 @@ is_oozie_alive() {
 }
 
 start_oozie() {
-  . /usr/lib/oozie/tomcat-deployment.sh
   install -d -o oozie -g oozie /var/run/oozie
   install -d -o oozie -g oozie /var/log/oozie
   install -d -o oozie -g oozie /var/tmp/oozie
@@ -65,8 +64,7 @@ stop_oozie() {
       if [ "${STATUS}" = "1" ]; then
         rm ${OOZIE_PID}
       elif [ "${STATUS}" = "0" ]; then
-        read pid < "$OOZIE_PID" && ps -p "$pid" > /dev/null 2>&1
-        kill -9 ${pid}
+        kill -9 "$(<${OOZIE_PID})"
         rm ${OOZIE_PID}
       fi
     fi
@@ -77,7 +75,7 @@ stop_oozie() {
 
 . /usr/lib/oozie/bin/oozie-env.sh
 
-OOZIE_PID=${CATALINA_PID}
+OOZIE_PID=${JETTY_PID_FILE}
 
 case "$1" in
   start)
@@ -135,7 +133,7 @@ case "$1" in
           echo "Error: Oozie is running. Stop it first."
           exit 1
         else
-          (cd /tmp ; su --shell=/bin/bash -l oozie -c "env JAVA_HOME=$JAVA_HOME /usr/lib/oozie/bin/ooziedb.sh create -run")
+          (cd /tmp ; runuser --shell=/bin/bash -l oozie -c "env JAVA_HOME=$JAVA_HOME /usr/lib/oozie/bin/ooziedb.sh create -run")
         fi
         exit 0
         ;;

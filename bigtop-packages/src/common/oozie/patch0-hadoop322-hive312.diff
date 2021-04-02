@@ -1,20 +1,3 @@
-diff --git a/core/pom.xml b/core/pom.xml
-index a60d5b909..83f19b138 100644
---- a/core/pom.xml
-+++ b/core/pom.xml
-@@ -255,6 +255,12 @@
-             <scope>compile</scope>
-         </dependency>
- 
-+        <dependency>
-+          <groupId>org.apache.logging.log4j</groupId>
-+          <artifactId>log4j-1.2-api</artifactId>
-+          <version>2.10.0</version>
-+        </dependency>
-+
-         <dependency>
-             <groupId>log4j</groupId>
-             <artifactId>apache-log4j-extras</artifactId>
 diff --git a/core/src/main/java/org/apache/oozie/dependency/HCatURIHandler.java b/core/src/main/java/org/apache/oozie/dependency/HCatURIHandler.java
 index c60c811ac..3ce6a3629 100644
 --- a/core/src/main/java/org/apache/oozie/dependency/HCatURIHandler.java
@@ -109,8 +92,208 @@ index 6d663c375..3be398fbe 100644
  import org.apache.hadoop.hive.shims.HadoopShims.MiniDFSShim;
  import org.apache.hadoop.hive.shims.HadoopShims.MiniMrShim;
  import org.apache.hadoop.hive.shims.ShimLoader;
+diff --git a/pom.xml b/pom.xml
+index 59f871266..110daeb21 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -128,6 +128,7 @@
+          <spotbugs-maven-plugin.version>3.1.11</spotbugs-maven-plugin.version>
+          <spotbugs.version>3.1.11</spotbugs.version>
+          <powermock.version>2.0.2</powermock.version>
++         <guava.version>27.0-jre</guava.version>
+     </properties>
+ 
+     <modules>
+@@ -254,6 +255,22 @@
+                             <groupId>joda-time</groupId>
+                             <artifactId>joda-time</artifactId>
+                     </exclusion>
++                    <exclusion>
++                        <groupId>org.apache.logging.log4j</groupId>
++                        <artifactId>log4j</artifactId>
++                    </exclusion>
++                    <exclusion>
++                        <groupId>org.apache.logging.log4j</groupId>
++                        <artifactId>log4j-1.2-api</artifactId>
++                    </exclusion>
++                    <exclusion>
++                        <groupId>org.apache.logging.log4j</groupId>
++                        <artifactId>log4j-web</artifactId>
++                    </exclusion>
++                    <exclusion>
++                        <groupId>org.apache.logging.log4j</groupId>
++                        <artifactId>log4j-slf4j-impl</artifactId>
++                    </exclusion>
+                 </exclusions>
+             </dependency>
+             <dependency>
+@@ -551,6 +568,22 @@
+                         <groupId>joda-time</groupId>
+                         <artifactId>joda-time</artifactId>
+                     </exclusion>
++                    <exclusion>
++                        <groupId>org.apache.logging.log4j</groupId>
++                        <artifactId>log4j</artifactId>
++                    </exclusion>
++                    <exclusion>
++                        <groupId>org.apache.logging.log4j</groupId>
++                        <artifactId>log4j-1.2-api</artifactId>
++                    </exclusion>
++                    <exclusion>
++                        <groupId>org.apache.logging.log4j</groupId>
++                        <artifactId>log4j-web</artifactId>
++                    </exclusion>
++                    <exclusion>
++                        <groupId>org.apache.logging.log4j</groupId>
++                        <artifactId>log4j-slf4j-impl</artifactId>
++                    </exclusion>
+                 </exclusions>
+             </dependency>
+ 
+@@ -1224,6 +1257,14 @@
+                         <artifactId>zookeeper</artifactId>
+                         <groupId>org.apache.zookeeper</groupId>
+                     </exclusion>
++                    <exclusion>
++                        <groupId>org.apache.logging.log4j</groupId>
++                        <artifactId>log4j-1.2-api</artifactId>
++                    </exclusion>
++                    <exclusion>
++                        <groupId>org.apache.logging.log4j</groupId>
++                        <artifactId>log4j-slf4j-impl</artifactId>
++                    </exclusion>
+                 </exclusions>
+             </dependency>
+ 
+@@ -1417,7 +1458,7 @@
+             <dependency>
+                 <groupId>com.google.guava</groupId>
+                 <artifactId>guava</artifactId>
+-                <version>11.0.2</version>
++                <version>${guava.version}</version>
+             </dependency>
+ 
+             <dependency>
+@@ -1506,6 +1547,24 @@
+                 <artifactId>hive-exec</artifactId>
+                 <version>${hive.version}</version>
+                 <classifier>${hive.classifier}</classifier>
++                <exclusions>
++                    <exclusion>
++                        <groupId>org.apache.logging.log4j</groupId>
++                        <artifactId>log4j</artifactId>
++                    </exclusion>
++                    <exclusion>
++                        <groupId>org.apache.logging.log4j</groupId>
++                        <artifactId>log4j-1.2-api</artifactId>
++                    </exclusion>
++                    <exclusion>
++                        <groupId>org.apache.logging.log4j</groupId>
++                        <artifactId>log4j-web</artifactId>
++                    </exclusion>
++                    <exclusion>
++                        <groupId>org.apache.logging.log4j</groupId>
++                        <artifactId>log4j-slf4j-impl</artifactId>
++                    </exclusion>
++                </exclusions>
+             </dependency>
+ 
+             <!-- examples -->
+diff --git a/sharelib/hive/pom.xml b/sharelib/hive/pom.xml
+index d50984566..408fb565d 100644
+--- a/sharelib/hive/pom.xml
++++ b/sharelib/hive/pom.xml
+@@ -129,6 +129,18 @@
+                     <groupId>javax.mail</groupId>
+                     <artifactId>mail</artifactId>
+                 </exclusion>
++                <exclusion>
++                    <groupId>org.apache.logging.log4j</groupId>
++                    <artifactId>log4j-1.2-api</artifactId>
++                </exclusion>
++                <exclusion>
++                    <groupId>org.apache.logging.log4j</groupId>
++                    <artifactId>log4j-web</artifactId>
++                </exclusion>
++                <exclusion>
++                    <groupId>org.apache.logging.log4j</groupId>
++                    <artifactId>log4j-slf4j-impl</artifactId>
++                </exclusion>
+             </exclusions>
+         </dependency>
+ 
+@@ -142,6 +154,14 @@
+                     <groupId>org.pentaho</groupId>
+                     <artifactId>pentaho-aggdesigner-algorithm</artifactId>
+                 </exclusion>
++                <exclusion>
++                    <groupId>org.apache.logging.log4j</groupId>
++                    <artifactId>log4j-1.2-api</artifactId>
++                </exclusion>
++                <exclusion>
++                    <groupId>org.apache.logging.log4j</groupId>
++                    <artifactId>log4j-slf4j-impl</artifactId>
++                </exclusion>
+             </exclusions>
+         </dependency>
+ 
+diff --git a/sharelib/hive2/pom.xml b/sharelib/hive2/pom.xml
+index 619768837..088ed8556 100644
+--- a/sharelib/hive2/pom.xml
++++ b/sharelib/hive2/pom.xml
+@@ -7,7 +7,7 @@
+   to you under the Apache License, Version 2.0 (the
+   "License"); you may not use this file except in compliance
+   with the License.  You may obtain a copy of the License at
+-
++e
+        http://www.apache.org/licenses/LICENSE-2.0
+ 
+   Unless required by applicable law or agreed to in writing, software
+@@ -133,6 +133,18 @@
+                     <groupId>javax.mail</groupId>
+                     <artifactId>mail</artifactId>
+                 </exclusion>
++                <exclusion>
++                    <groupId>org.apache.logging.log4j</groupId>
++                    <artifactId>log4j-1.2-api</artifactId>
++                </exclusion>
++                <exclusion>
++                    <groupId>org.apache.logging.log4j</groupId>
++                    <artifactId>log4j-web</artifactId>
++                </exclusion>
++                <exclusion>
++                    <groupId>org.apache.logging.log4j</groupId>
++                    <artifactId>log4j-slf4j-impl</artifactId>
++                </exclusion>
+             </exclusions>
+         </dependency>
+ 
+diff --git a/sharelib/pig/pom.xml b/sharelib/pig/pom.xml
+index d9fb408fe..01f0ff0a1 100644
+--- a/sharelib/pig/pom.xml
++++ b/sharelib/pig/pom.xml
+@@ -143,6 +143,18 @@
+                     <groupId>javax.mail</groupId>
+                     <artifactId>mail</artifactId>
+                 </exclusion>
++                <exclusion>
++                    <groupId>org.apache.logging.log4j</groupId>
++                    <artifactId>log4j-1.2-api</artifactId>
++                </exclusion>
++                <exclusion>
++                    <groupId>org.apache.logging.log4j</groupId>
++                    <artifactId>log4j-web</artifactId>
++                </exclusion>
++                <exclusion>
++                    <groupId>org.apache.logging.log4j</groupId>
++                    <artifactId>log4j-slf4j-impl</artifactId>
++                </exclusion>
+             </exclusions>
+         </dependency>
+         <dependency>
 diff --git a/sharelib/spark/pom.xml b/sharelib/spark/pom.xml
-index e506c8305..a71f08646 100644
+index 17a538a5e..9735e5365 100644
 --- a/sharelib/spark/pom.xml
 +++ b/sharelib/spark/pom.xml
 @@ -209,30 +209,6 @@

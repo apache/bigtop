@@ -75,3 +75,5 @@ export OOZIE_LOG=/var/log/oozie
 # The Oozie Instance ID
 #
 # export OOZIE_INSTANCE_ID="${OOZIE_HTTP_HOSTNAME}"
+
+export JETTY_PID_FILE=/var/run/oozie/oozie.pid

@@ -178,9 +178,8 @@ DATA_DIR=${SERVER_PREFIX}/var/lib/oozie
 
 install -d -m 0755 ${SERVER_LIB_DIR}
 install -d -m 0755 ${SERVER_LIB_DIR}/bin
-install -d -m 0755 ${SERVER_LIB_DIR}/lib
 install -d -m 0755 ${DATA_DIR}
-for file in ooziedb.sh oozied.sh oozie-sys.sh oozie-setup.sh ; do
+for file in ooziedb.sh oozied.sh oozie-jetty-server.sh oozie-sys.sh oozie-setup.sh ; do
   cp ${BUILD_DIR}/bin/$file ${SERVER_LIB_DIR}/bin
 done
 
@@ -201,11 +200,9 @@ fi
 cp -R ${BUILD_DIR}/oozie-sharelib*.tar.gz ${SERVER_LIB_DIR}/oozie-sharelib.tar.gz
 ln -s -f /etc/oozie/conf/oozie-env.sh ${SERVER_LIB_DIR}/bin
 
-cp -R ${BUILD_DIR}/embedded-oozie-server/webapp ${SERVER_LIB_DIR}/webapp
-cp ${BUILD_DIR}/embedded-oozie-server/dependency/* ${SERVER_LIB_DIR}/lib/
+cp -R ${BUILD_DIR}/embedded-oozie-server ${SERVER_LIB_DIR}/
 
 cp -R ${BUILD_DIR}/libtools ${SERVER_LIB_DIR}/
-cp ${BUILD_DIR}/oozie-core/* ${SERVER_LIB_DIR}/lib/
 
 # Provide a convenience symlink to be more consistent with tarball deployment
 ln -s ${DATA_DIR#${SERVER_PREFIX}} ${SERVER_LIB_DIR}/libext
