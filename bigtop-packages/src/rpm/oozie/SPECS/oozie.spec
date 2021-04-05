@@ -146,9 +146,6 @@ Requires: bigtop-utils >= 0.7
 %__rm  -rf $RPM_BUILD_ROOT/%{lib_oozie}/embedded-oozie-server/webapp/docs
 %__ln_s -f %{doc_oozie} $RPM_BUILD_ROOT/%{lib_oozie}/embedded-oozie-server/webapp/docs
 
-%__rm  -rf $RPM_BUILD_ROOT/%{lib_oozie}/lib
-%__ln_s -f %{lib_oozie}/embedded-oozie-server/webapp/WEB-INF/lib $RPM_BUILD_ROOT/%{lib_oozie}/
-
 # Oozie server
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/usr/bin

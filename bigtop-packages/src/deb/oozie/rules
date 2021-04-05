@@ -39,8 +39,5 @@ override_dh_auto_install:
 	sh -x debian/install_oozie.sh --extra-dir=debian/ --build-dir=$(PWD) --server-dir=./debian/oozie --client-dir=./debian/oozie-client --docs-dir=./debian/oozie-client/usr/share/doc/oozie --initd-dir=./debian/oozie/etc/init.d --conf-dir=./debian/oozie/etc/oozie/conf.dist
 	rm -rf                        debian/oozie/usr/lib/oozie/embedded-oozie-server/webapp/docs
 	ln -s -f /usr/share/doc/oozie debian/oozie/usr/lib/oozie/embedded-oozie-server/webapp/docs
-	rm -rf debian/oozie/usr/lib/oozie/lib
-	ln -s -f /usr/lib/oozie/embedded-oozie-server/webapp/WEB-INF/lib debian/oozie/usr/lib/oozie/
 
- verride_dh_strip_nondeterminism:
-	echo ""
+override_dh_strip_nondeterminism:

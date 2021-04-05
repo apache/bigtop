@@ -25,7 +25,8 @@ HIVE_MAVEN_OPTS=" -Dhbase.version=$HBASE_VERSION \
 -Dtez.version=${TEZ_VERSION} \
 -Dspark.version=${SPARK_VERSION} \
 -Dscala.binary.version=${SCALA_VERSION%.*} \
--Dscala.version=${SCALA_VERSION}
+-Dscala.version=${SCALA_VERSION} \
+-Dguava.version=27.0-jre
 "
 
 # Include common Maven Deployment logic
