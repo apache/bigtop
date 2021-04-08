@@ -103,6 +103,7 @@ BIN_DIR=${CLIENT_PREFIX}/usr/bin
 
 install -d -m 0755 ${CLIENT_LIB_DIR}
 tar --strip-components=1 -zxf ${BUILD_DIR}/oozie-client-*.tar.gz -C ${CLIENT_LIB_DIR}/
+mv ${CLIENT_LIB_DIR}/lib ${CLIENT_LIB_DIR}/lib-client
 cp ${BUILD_DIR}/oozie-examples.tar.gz ${CLIENT_LIB_DIR}/
 install -d -m 0755 ${DOC_DIR}
 mv ${CLIENT_LIB_DIR}/*.txt ${DOC_DIR}/
@@ -179,8 +180,9 @@ DATA_DIR=${SERVER_PREFIX}/var/lib/oozie
 install -d -m 0755 ${SERVER_LIB_DIR}
 install -d -m 0755 ${SERVER_LIB_DIR}/bin
 install -d -m 0755 ${SERVER_LIB_DIR}/lib
+install -d -m 0755 ${CLIENT_LIB_DIR}/lib
 install -d -m 0755 ${DATA_DIR}
-for file in ooziedb.sh oozied.sh oozie-sys.sh oozie-setup.sh ; do
+for file in ooziedb.sh oozied.sh oozie-jetty-server.sh oozie-sys.sh oozie-setup.sh ; do
   cp ${BUILD_DIR}/bin/$file ${SERVER_LIB_DIR}/bin
 done
 
@@ -201,19 +203,25 @@ fi
 cp -R ${BUILD_DIR}/oozie-sharelib*.tar.gz ${SERVER_LIB_DIR}/oozie-sharelib.tar.gz
 ln -s -f /etc/oozie/conf/oozie-env.sh ${SERVER_LIB_DIR}/bin
 
-cp -R ${BUILD_DIR}/embedded-oozie-server/webapp ${SERVER_LIB_DIR}/webapp
-cp ${BUILD_DIR}/embedded-oozie-server/dependency/* ${SERVER_LIB_DIR}/lib/
+cp -R ${BUILD_DIR}/embedded-oozie-server ${SERVER_LIB_DIR}/
 
 cp -R ${BUILD_DIR}/libtools ${SERVER_LIB_DIR}/
-cp ${BUILD_DIR}/oozie-core/* ${SERVER_LIB_DIR}/lib/
 
 # Provide a convenience symlink to be more consistent with tarball deployment
 ln -s ${DATA_DIR#${SERVER_PREFIX}} ${SERVER_LIB_DIR}/libext
 
+for f in $(find ${SERVER_LIB_DIR}/embedded-oozie-server/webapp/WEB-INF/lib -name '*.jar' -printf '%f\n') ; do
+  ln -s -f /usr/lib/oozie/embedded-oozie-server/webapp/WEB-INF/lib/$f ${SERVER_LIB_DIR}/lib/
+done
+
+for f in $(find ${CLIENT_LIB_DIR}/lib-client -name '*.jar' -printf '%f\n') ; do
+  ln -s -f /usr/lib/oozie/lib-client/$f ${CLIENT_LIB_DIR}/lib/
+done
+
 # Remove jars provided by 'oozie-client' from 'oozie' to avoid run-time issues
 # while installing the package.
 if [ "${SERVER_PREFIX}" != "${CLIENT_PREFIX}" ]; then
-  for oozie_client_jar_file in $(ls $CLIENT_LIB_DIR/lib); do
+  for oozie_client_jar_file in $(ls $CLIENT_LIB_DIR/lib-client); do
     rm -f $SERVER_LIB_DIR/lib/$oozie_client_jar_file
   done
 fi

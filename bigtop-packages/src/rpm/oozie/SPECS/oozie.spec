@@ -143,24 +143,10 @@ Requires: bigtop-utils >= 0.7
 %__rm -rf $RPM_BUILD_ROOT
     sh %{SOURCE2} --extra-dir=$RPM_SOURCE_DIR --build-dir=$PWD --server-dir=$RPM_BUILD_ROOT --client-dir=$RPM_BUILD_ROOT --docs-dir=$RPM_BUILD_ROOT%{doc_oozie} --initd-dir=$RPM_BUILD_ROOT%{initd_dir} --conf-dir=$RPM_BUILD_ROOT%{conf_oozie_dist}
 
-%__rm  -rf              $RPM_BUILD_ROOT/%{lib_oozie}/webapp/docs
-%__ln_s -f %{doc_oozie} $RPM_BUILD_ROOT/%{lib_oozie}/webapp/docs
+%__rm  -rf $RPM_BUILD_ROOT/%{lib_oozie}/embedded-oozie-server/webapp/docs
+%__ln_s -f %{doc_oozie} $RPM_BUILD_ROOT/%{lib_oozie}/embedded-oozie-server/webapp/docs
 
 # Oozie server
-%__rm  -rf $RPM_BUILD_ROOT/%{lib_oozie}/lib/hadoop-*.jar
-%__ln_s -f %{lib_hadoop}/client/hadoop-annotations.jar $RPM_BUILD_ROOT/%{lib_oozie}/lib/
-%__ln_s -f %{lib_hadoop}/client/hadoop-auth.jar $RPM_BUILD_ROOT/%{lib_oozie}/lib/
-%__ln_s -f %{lib_hadoop}/client/hadoop-common.jar $RPM_BUILD_ROOT/%{lib_oozie}/lib/
-%__ln_s -f %{lib_hadoop}/client/hadoop-hdfs-client.jar $RPM_BUILD_ROOT/%{lib_oozie}/lib/
-%__ln_s -f %{lib_hadoop}/client/hadoop-mapreduce-client-app.jar $RPM_BUILD_ROOT/%{lib_oozie}/lib/
-%__ln_s -f %{lib_hadoop}/client/hadoop-mapreduce-client-common.jar $RPM_BUILD_ROOT/%{lib_oozie}/lib/
-%__ln_s -f %{lib_hadoop}/client/hadoop-mapreduce-client-core.jar $RPM_BUILD_ROOT/%{lib_oozie}/lib/
-%__ln_s -f %{lib_hadoop}/client/hadoop-mapreduce-client-jobclient.jar $RPM_BUILD_ROOT/%{lib_oozie}/lib/
-%__ln_s -f %{lib_hadoop}/client/hadoop-mapreduce-client-shuffle.jar $RPM_BUILD_ROOT/%{lib_oozie}/lib/
-%__ln_s -f %{lib_hadoop}/client/hadoop-yarn-api.jar $RPM_BUILD_ROOT/%{lib_oozie}/lib/
-%__ln_s -f %{lib_hadoop}/client/hadoop-yarn-client.jar $RPM_BUILD_ROOT/%{lib_oozie}/lib/
-%__ln_s -f %{lib_hadoop}/client/hadoop-yarn-common.jar $RPM_BUILD_ROOT/%{lib_oozie}/lib/
-%__ln_s -f %{lib_hadoop}/client/hadoop-yarn-server-common.jar $RPM_BUILD_ROOT/%{lib_oozie}/lib/
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/usr/bin
 
@@ -192,15 +178,16 @@ fi
 %defattr(-,root,root)
 %config(noreplace) %{conf_oozie_dist}
 %{usr_bin}/oozie-setup
-%{lib_oozie}/bin/oozie-sys.sh
 %{lib_oozie}/bin/oozie-env.sh
+%{lib_oozie}/bin/oozie-jetty-server.sh
+%{lib_oozie}/bin/oozie-setup.sh
+%{lib_oozie}/bin/oozie-sys.sh
 %{lib_oozie}/bin/oozied.sh
 %{lib_oozie}/bin/ooziedb.sh
-%{lib_oozie}/bin/oozie-setup.sh
-%{lib_oozie}/webapp
+%{lib_oozie}/embedded-oozie-server
 %{lib_oozie}/libtools
 %{lib_oozie}/lib
-%{lib_oozie}/oozie-sharelib.tar.gz
+%{lib_oozie}/oozie-sharelib*.tar.gz
 %{lib_oozie}/libext
 %{initd_dir}/oozie
 %defattr(-, oozie, oozie)
@@ -216,6 +203,7 @@ fi
 %{lib_oozie}/bin/oozie
 %{lib_oozie}/conf/oozie-client-env.sh
 %{lib_oozie}/lib
+%{lib_oozie}/lib-client
 %{lib_oozie}/oozie-examples.tar.gz
 %doc %{doc_oozie}
 %{man_dir}/man1/oozie.1.*
