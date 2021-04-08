@@ -47,7 +47,6 @@ mvn install:install-file -DcreateChecksum=true -DgroupId=org.apache.solr -Dartif
 mvn install:install-file -DcreateChecksum=true -DgroupId=org.apache.solr -DartifactId=solr-dataimporthandler -Dversion=$SOLR_VERSION -Dpackaging=jar -Dfile=solr/dist/solr-dataimporthandler-$SOLR_VERSION.jar
 mvn install:install-file -DcreateChecksum=true -DgroupId=org.apache.solr -DartifactId=solr-analysis-extras -Dversion=$SOLR_VERSION -Dpackaging=jar -Dfile=solr/dist/solr-analysis-extras-$SOLR_VERSION.jar
 mvn install:install-file -DcreateChecksum=true -DgroupId=org.apache.solr -DartifactId=solr-solrj -Dversion=$SOLR_VERSION -Dpackaging=jar -Dfile=solr/dist/solr-solrj-$SOLR_VERSION.jar
-mvn install:install-file -DcreateChecksum=true -DgroupId=org.apache.solr -DartifactId=solr-uima -Dversion=$SOLR_VERSION -Dpackaging=jar -Dfile=solr/dist/solr-uima-$SOLR_VERSION.jar
 mvn install:install-file -DcreateChecksum=true -DgroupId=org.apache.solr -DartifactId=solr-test-framework -Dversion=$SOLR_VERSION -Dpackaging=jar -Dfile=solr/dist/solr-test-framework-$SOLR_VERSION.jar
 mvn install:install-file -DcreateChecksum=true -DgroupId=org.apache.solr -DartifactId=solr-cell -Dversion=$SOLR_VERSION -Dpackaging=jar -Dfile=solr/dist/solr-cell-$SOLR_VERSION.jar
 mvn install:install-file -DcreateChecksum=true -DgroupId=org.apache.solr -DartifactId=solr-clustering -Dversion=$SOLR_VERSION -Dpackaging=jar -Dfile=solr/dist/solr-clustering-$SOLR_VERSION.jar
