@@ -20,7 +20,7 @@ set -ex
 
 IVY_MIRROR_PROP=${IVY_MIRROR_PROP:-https://repo1.maven.org/maven2}
 BUILD_OPTS="-Dversion=${FULL_VERSION} -Dhadoop.version=${HADOOP_VERSION} \
-            -Dslf4j.binding=slf4j-log4j12 -Dexclude.from.war=nothing   \
+            -Dexclude.from.war=nothing   \
             -Divy.home=${HOME}/.ivy2 -Drepo.maven.org=$IVY_MIRROR_PROP \
             -Divy_bootstrap_url1=$IVY_MIRROR_PROP \
             -Divy_install_path=${HOME}/.ant/lib -lib ${HOME}/.ant/lib  \
