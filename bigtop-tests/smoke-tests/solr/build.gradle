@@ -29,6 +29,10 @@ def create_collection() {
     executable "/usr/bin/solrctl"
     args "collection", "--create", "smoke"
   }
+  exec {
+    executable "/usr/bin/solrctl"
+    args "collection", "--config", "smoke", '{"set-property": {"requestDispatcher.requestParsers.enableRemoteStreaming": true}, "set-property": {"requestDispatcher.requestParsers.enableStreamBody": true}}'
+  }
 }
 
 def junitVersion = '4.11'

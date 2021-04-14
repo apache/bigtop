@@ -46,6 +46,7 @@ Commands:
                 [--stat name]
                 [--deletedocs name]
                 [--list]
+                [--config name <json>]
 
     core        [--create name [-p name=value]...]
                 [--reload name]
@@ -340,6 +341,10 @@ while test $# != 0 ; do
 
             eval $SOLR_ADMIN_API_CMD "'/admin/collections?action=CREATE${COL_CREATE_CALL}'"
 
+            shift 4
+            ;;
+        --config)
+            eval $SOLR_ADMIN_API_CMD "'/$3/config'" -H "'Content-Type: application/json'" "--data-binary '$4'"
             shift 4
             ;;
         --delete|--reload)
