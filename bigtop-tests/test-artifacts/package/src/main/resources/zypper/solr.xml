@@ -108,7 +108,6 @@
     <file name='/usr/lib/solr/apache-solr-langid-4.0.0.jar' owners='-1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/solr/apache-solr-solrj-4.0.0.jar' owners='-1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/solr/apache-solr-test-framework-4.0.0.jar' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/lib/solr/apache-solr-uima-4.0.0.jar' owners='-1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/solr/apache-solr-velocity-4.0.0.jar' owners='-1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/lib/solr/bin' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/lib/solr/bin/solrd' owners='-1' perm='-rwxr-xr-x' user='root' group='root' />
