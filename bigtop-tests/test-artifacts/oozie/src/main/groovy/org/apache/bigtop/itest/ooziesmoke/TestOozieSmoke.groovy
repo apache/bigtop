@@ -53,7 +53,7 @@ class TestOozieSmoke {
     oozie_tar_home = System.getProperty("org.apache.bigtop.itest.oozie_tar_home",
       (new File("/usr/share/doc/packages/oozie/")).exists() ?
         "/usr/share/doc/packages/oozie/" :
-        "/usr/share/doc/oozie*/");
+        "/usr/lib/oozie");
 
     sh.exec("mkdir /tmp/${tmp_dir}",
       "cd /tmp/${tmp_dir}",
@@ -71,7 +71,7 @@ class TestOozieSmoke {
   }
 
   void testOozieExamplesCommon(String testname) {
-    sh.exec("oozie job -oozie ${oozie_url} -run -DjobTracker=${resourcemanager} -DnameNode=${namenode} " +
+    sh.exec("oozie job -oozie ${oozie_url} -run -DresourceManager=${resourcemanager} -DnameNode=${namenode} " +
       "-DexamplesRoot=${tmp_dir}/examples -config /tmp/${tmp_dir}/examples/apps/${testname}/job.properties");
     assertEquals("Oozie job submition ${testname} failed",
       0, sh.ret);
