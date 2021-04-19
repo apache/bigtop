@@ -1606,50 +1606,6 @@
     <file name='/usr/share/doc/solr-doc/solr-dataimporthandler/stylesheet.css' owners='-1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/share/doc/solr-doc/solr-dataimporthandler/deprecated-list.html' owners='-1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/share/doc/solr-doc/solr-dataimporthandler/help-doc.html' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/overview-frame.html' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/allclasses-noframe.html' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/org' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/org/apache' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/org/apache/solr' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/org/apache/solr/uima' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/org/apache/solr/uima/processor' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/org/apache/solr/uima/processor/SolrUIMAConfigurationReader.html' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/org/apache/solr/uima/processor/package-use.html' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/org/apache/solr/uima/processor/package-summary.html' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/org/apache/solr/uima/processor/UIMAUpdateRequestProcessorFactory.html' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/org/apache/solr/uima/processor/exception' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/org/apache/solr/uima/processor/exception/package-use.html' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/org/apache/solr/uima/processor/exception/package-summary.html' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/org/apache/solr/uima/processor/exception/FieldMappingException.html' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/org/apache/solr/uima/processor/exception/class-use' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/org/apache/solr/uima/processor/exception/class-use/FieldMappingException.html' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/org/apache/solr/uima/processor/exception/package-tree.html' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/org/apache/solr/uima/processor/exception/package-frame.html' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/org/apache/solr/uima/processor/class-use' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/org/apache/solr/uima/processor/class-use/SolrUIMAConfigurationReader.html' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/org/apache/solr/uima/processor/class-use/UIMAUpdateRequestProcessorFactory.html' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/org/apache/solr/uima/processor/class-use/UIMAToSolrMapper.html' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/org/apache/solr/uima/processor/class-use/UIMAUpdateRequestProcessor.html' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/org/apache/solr/uima/processor/class-use/SolrUIMAConfiguration.html' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/org/apache/solr/uima/processor/UIMAToSolrMapper.html' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/org/apache/solr/uima/processor/UIMAUpdateRequestProcessor.html' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/org/apache/solr/uima/processor/package-tree.html' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/org/apache/solr/uima/processor/package-frame.html' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/org/apache/solr/uima/processor/SolrUIMAConfiguration.html' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/resources' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/resources/inherit.gif' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/package-list' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/serialized-form.html' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/allclasses-frame.html' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/overview-tree.html' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/index.html' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/constant-values.html' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/prettify.js' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/overview-summary.html' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/stylesheet.css' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/deprecated-list.html' owners='-1' perm='-rw-r--r--' user='root' group='root' />
-    <file name='/usr/share/doc/solr-doc/solr-uima/help-doc.html' owners='-1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/share/doc/solr-doc/solr-velocity' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
     <file name='/usr/share/doc/solr-doc/solr-velocity/allclasses-noframe.html' owners='-1' perm='-rw-r--r--' user='root' group='root' />
     <file name='/usr/share/doc/solr-doc/solr-velocity/org' owners='-1' perm='drwxr-xr-x' user='root' group='root' />
