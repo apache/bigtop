@@ -48,6 +48,7 @@ class bigtop_toolchain::packages {
         "libyaml-devel",
         "gmp-devel",
         "snappy-devel",
+        "libzstd-devel",
         "boost-devel",
         "xfsprogs-devel",
         "libuuid-devel",
@@ -104,6 +105,7 @@ class bigtop_toolchain::packages {
         "xmlto",
         "libmysqlclient-devel",
         "snappy-devel",
+        "libzstd-devel",
         "boost-devel",
         "xfsprogs-devel",
         "libuuid-devel",
@@ -144,6 +146,7 @@ class bigtop_toolchain::packages {
       "fuse-libs",
       "gmp-devel",
       "snappy-devel",
+      "libzstd-devel",
       "bzip2-devel",
       "libffi-devel"
     ] }
@@ -191,6 +194,7 @@ class bigtop_toolchain::packages {
         "libyaml-dev",
         "libgmp3-dev",
         "libsnappy-dev",
+        "libzstd-dev",
         "libboost-regex-dev",
         "xfslibs-dev",
         "libbz2-dev",
