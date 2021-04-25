@@ -30,10 +30,6 @@ case ${ID}-${VERSION_ID} in
         # So we install that module in the same way as CentOS 7.
         puppet module install puppetlabs-stdlib --version 4.12.0
         ;;
-    ubuntu-16.04)
-        apt-get update
-        apt-get -y install wget curl sudo unzip puppet software-properties-common puppet-module-puppetlabs-apt puppet-module-puppetlabs-stdlib
-        ;;
     ubuntu-18.04|ubuntu-20.04)
         apt-get update
         apt-get -y install wget curl sudo unzip puppet software-properties-common puppet-module-puppetlabs-apt puppet-module-puppetlabs-stdlib systemd-sysv
