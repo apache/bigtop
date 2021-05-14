@@ -87,3 +87,6 @@ override_dh_install: $(hadoop_svcs)
 
 override_dh_strip:
 	dh_strip --no-automatic-dbgsym
+
+override_dh_shlibdeps:
+	dh_shlibdeps --dpkg-shlibdeps-params=--ignore-missing-info

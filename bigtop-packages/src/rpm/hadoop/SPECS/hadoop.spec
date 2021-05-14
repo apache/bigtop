@@ -478,6 +478,24 @@ Requires: hadoop = %{version}-%{release}, hadoop-libhdfs = %{version}-%{release}
 %description libhdfs-devel
 Includes examples and header files for accessing HDFS from C
 
+%package libhdfspp
+Summary: Hadoop Filesystem Library for C++
+Group: Development/Libraries
+
+%description libhdfs-devel
+Includes examples and header files for accessing HDFS from C
+
+%package libhdfspp-devel
+Summary: Development support for libhdfspp
+Group: Development/Libraries
+Requires: %{name}-libhdfspp = %{version}-%{release}
+
+%description libhdfspp
+Hadoop Filesystem Library for C++
+
+%description libhdfspp-devel
+Includes header files for accessing HDFS from C++
+
 %package hdfs-fuse
 Summary: Mountable HDFS
 Group: Development/Libraries
@@ -812,16 +830,21 @@ fi
 
 %files libhdfs
 %defattr(-,root,root)
-%{_libdir}/libhdfs*
+%{_libdir}/libhdfs.*
 
 %files libhdfs-devel
 %{_includedir}/hdfs.h
 #%doc %{_docdir}/libhdfs-%{hadoop_version}
+
+%files libhdfspp
+%defattr(-,root,root)
+%{_libdir}/libhdfspp.*
+
+%files libhdfspp-devel
+%{_includedir}/hdfspp
 
 %files hdfs-fuse
 %defattr(-,root,root)
 %attr(0644,root,root) %config(noreplace) /etc/default/hadoop-fuse
 %attr(0755,root,root) %{lib_hadoop}/bin/fuse_dfs
 %attr(0755,root,root) %{bin_hadoop}/hadoop-fuse-dfs
-
-

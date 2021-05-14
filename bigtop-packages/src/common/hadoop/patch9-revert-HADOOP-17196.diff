@@ -1,0 +1,73 @@
+commit f790a72a4c68e242b5d54323c607e18d5dbda394
+Author: Masatake Iwasaki <iwasakims@apache.org>
+Date:   Fri May 14 11:48:47 2021 +0000
+
+    Revert "HADOOP-17196. Fix C/C++ standard warnings (#2208)"
+    
+    This reverts commit ff907b310d905fde648dc6db8954e425c24e3bf3.
+
+diff --git a/hadoop-common-project/hadoop-common/HadoopCommon.cmake b/hadoop-common-project/hadoop-common/HadoopCommon.cmake
+index 7628ecf..4de70ac 100644
+--- a/hadoop-common-project/hadoop-common/HadoopCommon.cmake
++++ b/hadoop-common-project/hadoop-common/HadoopCommon.cmake
+@@ -193,7 +193,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+ elseif(CMAKE_SYSTEM_NAME STREQUAL "SunOS")
+     # Solaris flags. 64-bit compilation is mandatory, and is checked earlier.
+     hadoop_add_compiler_flags("-m64 -D_POSIX_C_SOURCE=200112L -D__EXTENSIONS__ -D_POSIX_PTHREAD_SEMANTICS")
+-    set(CMAKE_CXX_STANDARD 98)
++    set(CMAKE_CXX_FLAGS "-std=gnu++98 ${CMAKE_CXX_FLAGS}")
+     hadoop_add_linker_flags("-m64")
+ 
+     # CMAKE_SYSTEM_PROCESSOR is set to the output of 'uname -p', which on Solaris is
+@@ -212,4 +212,4 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "SunOS")
+ endif()
+ 
+ # Set GNU99 as the C standard to use
+-set(CMAKE_C_STANDARD 99)
+\ No newline at end of file
++set(CMAKE_C_FLAGS "-std=gnu99 ${CMAKE_C_FLAGS}")
+\ No newline at end of file
+diff --git a/hadoop-hdfs-project/hadoop-hdfs-native-client/src/CMakeLists.txt b/hadoop-hdfs-project/hadoop-hdfs-native-client/src/CMakeLists.txt
+index 18396c7..1676e31 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs-native-client/src/CMakeLists.txt
++++ b/hadoop-hdfs-project/hadoop-hdfs-native-client/src/CMakeLists.txt
+@@ -152,8 +152,7 @@ add_subdirectory(main/native/libhdfs-tests)
+ # Temporary fix to disable Libhdfs++ build on older systems that do not support thread_local
+ include(CheckCXXSourceCompiles)
+ unset (THREAD_LOCAL_SUPPORTED CACHE)
+-set (CMAKE_CXX_STANDARD 11)
+-set (CMAKE_CXX_STANDARD_REQUIRED ON)
++set (CMAKE_REQUIRED_DEFINITIONS "-std=c++11")
+ set (CMAKE_REQUIRED_LIBRARIES ${CMAKE_THREAD_LIBS_INIT})
+ check_cxx_source_compiles(
+     "#include <thread>
+diff --git a/hadoop-hdfs-project/hadoop-hdfs-native-client/src/main/native/libhdfspp/CMakeLists.txt b/hadoop-hdfs-project/hadoop-hdfs-native-client/src/main/native/libhdfspp/CMakeLists.txt
+index 2da5b6bb..c17f9d3 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs-native-client/src/main/native/libhdfspp/CMakeLists.txt
++++ b/hadoop-hdfs-project/hadoop-hdfs-native-client/src/main/native/libhdfspp/CMakeLists.txt
+@@ -51,8 +51,7 @@ include(CheckCXXSourceCompiles)
+ 
+ # Check if thread_local is supported
+ unset (THREAD_LOCAL_SUPPORTED CACHE)
+-set (CMAKE_CXX_STANDARD 11)
+-set (CMAKE_CXX_STANDARD_REQUIRED ON)
++set (CMAKE_REQUIRED_DEFINITIONS "-std=c++11")
+ set (CMAKE_REQUIRED_LIBRARIES ${CMAKE_THREAD_LIBS_INIT})
+ check_cxx_source_compiles(
+     "#include <thread>
+@@ -148,13 +147,12 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0")
+ set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O0")
+ 
+ if(UNIX)
+-set (CMAKE_CXX_STANDARD 11)
+-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -g -fPIC -fno-strict-aliasing")
++set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -std=c++11 -g -fPIC -fno-strict-aliasing")
+ set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -fPIC -fno-strict-aliasing")
+ endif()
+ 
+ if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+-    set(CMAKE_CXX_STANDARD 11)
++    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+     add_definitions(-DASIO_HAS_STD_ADDRESSOF -DASIO_HAS_STD_ARRAY -DASIO_HAS_STD_ATOMIC -DASIO_HAS_CSTDINT -DASIO_HAS_STD_SHARED_PTR -DASIO_HAS_STD_TYPE_TRAITS -DASIO_HAS_VARIADIC_TEMPLATES -DASIO_HAS_STD_FUNCTION -DASIO_HAS_STD_CHRONO -DASIO_HAS_STD_SYSTEM_ERROR)
+ endif ()
+ 

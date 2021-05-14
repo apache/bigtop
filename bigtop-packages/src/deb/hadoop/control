@@ -205,6 +205,18 @@ Depends: hadoop (= ${binary:Version}), libhdfs0 (= ${binary:Version})
 Description: Development support for libhdfs0
  Includes examples and header files for accessing HDFS from C
 
+Package: libhdfspp
+Architecture: any
+Description: Hadoop Filesystem Library for C++
+ Hadoop Filesystem Library for C++
+
+Package: libhdfspp-dev
+Architecture: any
+Section: libdevel
+Depends: libhdfspp (= ${binary:Version})
+Description: Development support for libhdfspp
+ Includes header files for accessing HDFS from C++
+
 Package: hadoop-httpfs
 Architecture: any
 Depends: hadoop-hdfs (= ${binary:Version})
