@@ -59,7 +59,7 @@ case ${ID}-${VERSION_ID} in
         puppet module install puppetlabs-stdlib --version 4.12.0
         # Enabling the PowerTools and EPEL repositories via Puppet doesn't seem to work in some cases.
         # As a workaround for that, enable the former here in advance of running the Puppet manifests.
-        dnf config-manager --set-enabled PowerTools
+        dnf config-manager --set-enabled powertools
         ;;
     rhel-8*)
         rpm -Uvh https://yum.puppet.com/puppet5-release-el-8.noarch.rpm
