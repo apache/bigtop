@@ -234,7 +234,7 @@ class bigtop_toolchain::packages {
     # On CentOS 8, EPEL requires that the PowerTools repository is enabled.
     # See https://fedoraproject.org/wiki/EPEL#How_can_I_use_these_extra_packages.3F
     if $operatingsystemmajrelease !~ /^[0-7]$/ {
-      yumrepo { 'PowerTools':
+      yumrepo { 'powertools':
         ensure  => 'present',
         enabled => '1'
       }
