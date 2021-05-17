@@ -16,4 +16,4 @@
 
 set -ex
 
-./configure --prefix=$1 --disable-orca
+./configure --prefix=$1 --disable-orca CFLAGS=-fcommon
