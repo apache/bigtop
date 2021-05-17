@@ -39,9 +39,9 @@ usage ()
   echo
   echo "   -j, --hivejdbc             hive jdbc url - default: e.g. jdbc:hive2://localhost:10000"
   echo "   -m, --hivemeta             hive metastore url - default: thrift://localhost:9083"
-  echo "   -l, --hivelocation         location of hdfs for hive to write to - default: /user/<current user>"
-  echo "   -u, --hiveuser             hive user - default: current user"
-  echo "   -p, --hivepassword         hive user password - default: current user"
+  echo "   -l, --hivelocation         location of hdfs for hive to write to - default: /tmp"
+  echo "   -u, --hiveuser             hive user - default: hive"
+  echo "   -p, --hivepassword         hive user password - default: hive"
   echo "   -t, --hivethrift           optional: true/false to test thrift, defaults to true"
   echo "   -c, --hivecatalog          optional: true/false to test HCatalog, default to true"
   echo "   -C, --hiveconf             hive conf dir - default: /etc/hive/conf"
@@ -92,11 +92,6 @@ case $1 in
     shift
 done
 
-if [ ! $(which links) ]; then
-    echo "PLEASE INSTALL LINKS: sudo yum|apt-get install -y links"
-    exit 1
-fi
-
 if [ "$LOGGING" == "info" ]; then
     LOGGING="--info --stacktrace"
 elif [ "$LOGGING" == "debug" ]; then
@@ -107,6 +102,40 @@ fi
 
 export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../.." && pwd )"
 
+pre_reqcheck() {
+    
+    sudo -v > /dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        echo "The current user $(whoami) is required to have passwordless sudo access."
+        exit 1
+    fi
+
+    if [ ! $(which links) ]; then
+        echo "PLEASE INSTALL LINKS: sudo yum|apt-get install -y links"
+        exit 1
+    fi
+
+    hadoop fs -ls /user/`id -u -n` > /dev/null 2>&1
+    if [ $? -ne 0 ]; then
+      if ( [ -z "$HADOOP_CONF_DIR" ] && [ -d /etc/hadoop/conf ] ); then
+        export HADOOP_CONF_DIR=/etc/hadoop/conf
+        HDFS_USER=`sed -n '/dfs.cluster.administrators/ {n;p}' $HADOOP_CONF_DIR/hdfs-site.xml | grep -oPm1 "(?<=<value>)[^<]+"`
+        if [ $? -eq 0 ]; then
+ 	  sudo -u $HDFS_USER hadoop fs -mkdir /user/`id -u -n`
+          sudo -u $HDFS_USER hadoop fs -chown `id -u -n` /user/`id -u -n`
+        else
+          echo -e "Please create the following home directory in hdfs /user/"`id -u -n` 
+	  exit 1
+        fi
+      else
+         echo -e "Please create the following home directory in hdfs /user/"`id -u -n`
+         exit 1
+      fi
+    fi 
+
+}
+
+
 set_java_home() {
 
     #####################################################################
@@ -114,7 +143,14 @@ set_java_home() {
     #####################################################################
 
     if [ -z "$JAVA_HOME" ]; then
-        source $DIR/bin/bigtop-detect-javahome
+        hadoop envvars | grep JAVA_HOME > /dev/null 2>&1
+        if [ $? -eq 0 ]; then
+            export `hadoop envvars | grep JAVA_HOME | sed "s/'//g"`
+	elif [ -f $DIR/bin/bigtop-detect-javahome ]; then
+            source $DIR/bin/bigtop-detect-javahome
+        elif [ -f $DIR/../../bigtop-packages/src/common/bigtop-utils/bigtop-detect-javahome ]; then
+            source $DIR/../../bigtop-packages/src/common/bigtop-utils/bigtop-detect-javahome
+        fi
     fi
 }
 
@@ -132,11 +168,32 @@ set_hadoop_vars() {
     fi
     if ( [ -z "$HADOOP_CONF_DIR" ] && [ -d /etc/hadoop/conf ] ); then
       export HADOOP_CONF_DIR=/etc/hadoop/conf
+      YARN_ADMIN_USERS=`sed -n '/yarn.admin.acl/ {n;p}' $HADOOP_CONF_DIR/yarn-site.xml | grep -oPm1 "(?<=<value>)[^<]+"`
+      if [ $? -eq 0 ]; then
+	CURRENT_USER=`id -u -n`
+	if ! ( [ "$YARN_ADMIN_USERS" = "*" ] || [[ "$YARN_ADMIN_USERS" == *"$CURRENT_USER"* ]] ); then
+          echo -e "\n**** Current user $CURRENT_USER is not part of yarn.admin.acl in $HADOOP_CONF_DIR/yarn-site.xml. Please add to acl or run with proper user '$YARN_ADMIN_USERS'. ****\n"
+	  exit 1
+        fi
+      fi
+    elif [ -n "$HADOOP_CONF_DIR" ]; then
+      YARN_ADMIN_USERS=`sed -n '/yarn.admin.acl/ {n;p}' $HADOOP_CONF_DIR/yarn-site.xml | grep -oPm1 "(?<=<value>)[^<]+"`
+      if [ $? -eq 0 ]; then
+	CURRENT_USER=`id -u -n`
+        if ! ( [ "$YARN_ADMIN_USERS" = "*" ] || [[ "$YARN_ADMIN_USERS" == *"$CURRENT_USER"* ]] ); then
+          echo -e "\n**** Current user $CURRENT_USER is not part of yarn.admin.acl in $HADOOP_CONF_DIR/yarn-site.xml. Please add to acl or run with proper user '$YARN_ADMIN_USERS'. ****\n"
+	  exit 1
+        fi
+      fi
     fi
     if ( [ -z "$HADOOP_MAPRED_HOME" ] && [ -d /usr/lib/hadoop-mapreduce-client ] ); then
       export HADOOP_MAPRED_HOME=/usr/lib/hadoop-mapreduce-client
     elif ( [ -z "$HADOOP_MAPRED_HOME" ] && [ -d /usr/lib/hadoop-mapreduce ] ); then
       export HADOOP_MAPRED_HOME=/usr/lib/hadoop-mapreduce
+    elif ( [ -z $"$HADOOP_MAPRED_HOME" ] && [[ -d `sudo find /usr/ -name hadoop-mapreduce-client | head -n 1` ]] ); then
+      export HADOOP_MAPRED_HOME=`sudo find /usr/ -name hadoop-mapreduce-client`
+    elif ( [ -z $"$HADOOP_MAPRED_HOME" ] && [[ -d `sudo find /usr/ -name hadoop-mapreduce | head -n 1` ]] ); then
+      export HADOOP_MAPRED_HOME=`sudo find /usr/ -name hadoop-mapreduce`
     fi
     if ( [ -z "$HIVE_HOME" ] && [ -d /usr/lib/hive ] ); then
       export HIVE_HOME=/usr/lib/hive
@@ -146,7 +203,7 @@ set_hadoop_vars() {
 set_hive_vars() {
     if [ -z "$HIVE_JDBC_URL" ]; then
         HIVE_PORT=`sed -n '/hive.server2.thrift.port/{n;p}' /etc/hive/conf/hive-site.xml | sed -n 's:.*<value>\(.*\)</value>.*:\1:p'`
-        netstat -nltp | grep $HIVE_PORT > /dev/null 2>&1
+        sudo netstat -nltp | grep $HIVE_PORT > /dev/null 2>&1
         if [ $? -eq 0 ]; then
             HIVE_JDBC_URL=jdbc:hive2://localhost:$HIVE_PORT
         else
@@ -161,10 +218,10 @@ set_hive_vars() {
         HIVE_HDFS_LOCATION=/tmp/`id -u -n`
     fi
     if [ -z "$HIVE_USER" ]; then
-        HIVE_USER=`id -u -n`
+        HIVE_USER=hive
     fi
     if [ -z "$HIVE_PASSWORD" ]; then
-        HIVE_PASSWORD=`id -u -n`
+        HIVE_PASSWORD=hive
     fi
     if [ -z "$HIVE_CONF_DIR" ]; then
         export HIVE_CONF_DIR=/etc/hive/conf
@@ -233,7 +290,11 @@ print_tests() {
   echo "######################################################"
 
   for TEST in $(echo $ITESTS | tr ',' '\n'); do
-    TESTDIR=$DIR/bigtop-tests/smoke-tests/$TEST/build
+    if [ -f $DIR/gradlew ]; then
+      TESTDIR=$DIR/bigtop-tests/smoke-tests/$TEST/build
+    else
+      TESTDIR=$DIR/$TEST/build   
+    fi
 
     if [ -d $TESTDIR ]; then
       cd $TESTDIR
@@ -246,6 +307,9 @@ print_tests() {
     fi
   done
 }
+
+# PREREQ CHECK
+pre_reqcheck
 
 # SET JAVA_HOME
 set_java_home
@@ -265,9 +329,6 @@ echo "# Use --debug/--info for more details"
 if [ -z "$ITESTS" ]; then
   export ITESTS="hive,hcfs,hdfs,yarn,mapreduce,odpi-runtime"
 fi
-for s in `echo $ITESTS | sed -e 's#,# #g'`; do
-  ALL_SMOKE_TASKS="$ALL_SMOKE_TASKS bigtop-tests:smoke-tests:$s:test"
-done
 
 case "$ITESTS" in
   *odpi-runtime*) set_hive_vars
@@ -278,7 +339,18 @@ case "$ITESTS" in
 esac
 
 # CALL THE GRADLE WRAPPER TO RUN THE FRAMEWORK
-$DIR/gradlew -q --continue clean -Psmoke.tests $TEST_SETTINGS $ALL_SMOKE_TASKS $LOGGING 1>&2
+
+if [ -f $DIR/gradlew ]; then
+  for s in `echo $ITESTS | sed -e 's#,# #g'`; do
+    ALL_SMOKE_TASKS="$ALL_SMOKE_TASKS bigtop-tests:smoke-tests:$s:test"
+  done
+  $DIR/gradlew -q --continue clean -Psmoke.tests $TEST_SETTINGS $ALL_SMOKE_TASKS $LOGGING
+elif [ -f $DIR/../../gradlew ]; then
+  for s in `echo $ITESTS | sed -e 's#,# #g'`; do
+    ALL_SMOKE_TASKS="$ALL_SMOKE_TASKS $s:test"
+  done
+  $DIR/../../gradlew -q --continue clean -Psmoke.tests $TEST_SETTINGS $ALL_SMOKE_TASKS $LOGGING
+fi
 
 # SHOW RESULTS (HTML)
 print_tests

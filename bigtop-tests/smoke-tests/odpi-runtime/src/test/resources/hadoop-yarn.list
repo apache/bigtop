@@ -50,7 +50,7 @@ lib/jackson-xc-1\.9\.13.*\.jar
 lib/jersey-json-1\.9.*\.jar
 lib/commons-codec-1\.4.*\.jar
 lib/jackson-core-asl-1\.9\.13.*\.jar
-lib/servlet-api-2\.5.*\.jar
+lib/.*servlet-api-[2-3]\.[0-9][\.\-_].*jar
 lib/jetty-6\.1\.26.*\.jar
 lib/jersey-server-1\.9.*\.jar
 lib/log4j-1\.2\.17.*\.jar

@@ -360,6 +360,14 @@ specs {
       arguments {
       }
     }
+    'HADOOP_USERS' {
+      name = 'HADOOP_USERS'
+      type = 'hadoop_users'
+      arguments {
+        envcmd = 'hadoop envvars'
+        confDir = 'HADOOP_CONF_DIR'
+      }
+    }
     'HADOOP_API1' {
       name = "HADOOP_API1"
       type = 'api_examination'

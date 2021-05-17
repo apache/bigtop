@@ -7,7 +7,7 @@ hadoop-mapreduce-client-common-2\.7\.[0-9][\.\-_].*jar
 commons-digester-1\.8[\.\-_].*jar
 curator-client-2\.7\.1[\.\-_].*jar
 commons-beanutils(-core)?-1\.[78]\.0[\.\-_].*jar
-jsp-api-2\.1[\.\-_].*jar
+jsp-api-2\.[1-9][\.\-_].*jar
 jets3t-0\.9\.0[\.\-_].*jar
 hadoop-sls-2\.7\.[0-9][\.\-_].*jar
 jackson-core-2\.2\.3[\.\-_].*jar
@@ -55,7 +55,7 @@ xmlenc-0\.52[\.\-_].*jar
 api-asn1-api-1\.0\.0-M20[\.\-_].*jar
 commons-codec-1\.4[\.\-_].*jar
 jackson-core-asl-1\.9\.13[\.\-_].*jar
-servlet-api-2\.5[\.\-_].*jar
+.*servlet-api-[2-3]\.[0-9][\.\-_].*jar
 paranamer-2\.3[\.\-_].*jar
 hadoop-datajoin-2\.7\.[0-9][\.\-_].*jar
 jetty-6\.1\.26[\.\-_].*jar
