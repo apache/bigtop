@@ -314,13 +314,13 @@ bigtop {
     }
     'bigtop-groovy' {
       name    = 'bigtop-groovy'
-      version { base = '2.5.4'; pkg = '2.5.4'; release = 1}
       relNotes = "Groovy: a dynamic language for the Java platform"
+      version { base = '2.5.4'; pkg = '2.5.4'; release = 1 }
       tarball { destination = "$name-${version.base}.tar.gz";
-                source      = "apache-groovy-binary-${version.base}.zip"}
-      url     { site = "https://dl.bintray.com/groovy/maven/"; archive = site }
-      // Optional, as only null values are specified
-      git     { repo = null; ref = null; dir = null}
+                source      = "apache-groovy-binary-${version.base}.zip" }
+      url     { download_path = "/groovy/${version.base}/distribution/"
+                site = "${apache.APACHE_MIRROR}/${download_path}"
+                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }
     'bigtop-utils' {
       name    = "bigtop-utils"
