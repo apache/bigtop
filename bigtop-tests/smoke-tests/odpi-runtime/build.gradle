@@ -21,7 +21,7 @@ apply plugin: 'java'
 
 repositories {
   maven {
-    url "https://conjars.org/repo/"
+    url "https://public.nexus.pentaho.org/repository/proxy-public-3rd-party-release"
   }
 }
 dependencies {
