@@ -30,8 +30,3 @@ Package: ambari-agent
 Architecture: all
 Depends: openssl, python (>= 2.6), curl
 Description: Ambari Agent 
-
-Package: ambari-client
-Architecture: all
-Depends: bigtop-utils (>= 0.7)
-Description: Ambari Client

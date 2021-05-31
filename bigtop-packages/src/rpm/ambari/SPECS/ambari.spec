@@ -441,13 +441,6 @@ fi
 
 exit 0
 
-%package client
-Summary: Ambari Client
-Group: Development/Libraries
-Requires: bigtop-utils >= 0.7
-%description client
-Ambari Client
-
 %files server
 %attr(644,root,root) /etc/init/ambari-server.conf
 %defattr(644,root,root,755)
@@ -465,7 +458,6 @@ Ambari Client
 %attr(755,root,root) /var/lib/ambari-server/resources/stacks/stack_advisor.py
 %dir %attr(755,root,root) /var/lib/ambari-server/data/tmp
 %dir %attr(700,root,root) /var/lib/ambari-server/data/cache
-%attr(755,root,root) /var/lib/ambari-server/resources/apps
 %attr(755,root,root) /var/lib/ambari-server/resources/scripts
 %attr(755,root,root) /var/lib/ambari-server/resources/views
 %attr(755,root,root) /var/lib/ambari-server/resources/custom_actions
@@ -475,11 +467,9 @@ Ambari Client
 %dir  /var/run/ambari-server/bootstrap
 %dir  /var/run/ambari-server/stack-recommendations
 %dir  /var/log/ambari-server
-%attr(755,root,root) /usr/lib/python2.6/site-packages/ambari_server
 
 %files agent
 %attr(644,root,root) /etc/init/ambari-agent.conf
-%attr(-,root,root) /usr/lib/python2.6/site-packages/ambari_agent
 %attr(755,root,root) /var/lib/ambari-agent/ambari-python-wrap
 %attr(755,root,root) /var/lib/ambari-agent/ambari-sudo.sh
 %attr(-,root,root) /usr/lib/ambari-agent/lib/ambari_commons
@@ -503,8 +493,3 @@ Ambari Client
 %attr(755,root,root) /var/lib/ambari-agent/cache
 %attr(755,root,root) /var/lib/ambari-agent/cred
 %attr(755,root,root) /var/lib/ambari-agent/tools
-
-%files client
-%defattr(644,root,root,755)
-/usr/lib/ambari-client
-%attr(755,root,root) /usr/bin/ambari-shell
