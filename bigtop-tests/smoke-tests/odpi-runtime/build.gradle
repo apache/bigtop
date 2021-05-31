@@ -34,7 +34,7 @@ dependencies {
   compile group: 'org.apache.thrift', name: 'libfb303', version: '0.9.3'
   compile group: 'org.apache.thrift', name: 'libthrift', version: '0.9.3'
   compile group: 'org.apache.hadoop', name: 'hadoop-common', version: '2.7.2'
-  compile group: 'org.apache.hive.hcatalog', name: 'hive-hcatalog-core', version: '1.2.1'
+  compile (group: 'org.apache.hive.hcatalog', name: 'hive-hcatalog-core', version: '1.2.1') { exclude group: 'org.pentaho' , module: 'pentaho-aggdesigner-algorithm'}
   testCompile group: 'org.apache.hadoop', name: 'hadoop-mapreduce-client-core', version: '2.7.2'
   compile group: 'org.apache.hadoop', name: 'hadoop-mapreduce-client-jobclient', version: '2.7.2'
   testCompile group: 'org.apache.hadoop', name: 'hadoop-mapreduce-client-common', version: '2.7.2'
