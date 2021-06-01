@@ -98,7 +98,6 @@ ETC_DIR=/etc/ambari-agent
 VAR_LIB_DIR=/var/lib/ambari-agent
 
 CONF_DIR=${ETC_DIR}/conf
-AGENT_BUILD_DIR=${BUILD_DIR}/ambari-agent/target/ambari-agent-*
 AGENT_BUILD_DIR=$(find ${BUILD_DIR}/ambari-agent/target -type d -name 'ambari-agent-*')
 
 cp -ra $AGENT_BUILD_DIR/* ${PREFIX}/
