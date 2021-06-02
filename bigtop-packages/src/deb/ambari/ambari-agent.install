@@ -2,7 +2,6 @@
 /etc/init.d/ambari-agent
 /var/lib/ambari-agent/bin/ambari-agent
 /usr/lib/ambari-agent
-/usr/lib/python2.6/site-packages/ambari_agent
 /var/run/
 /var/lib/ambari-agent
 /var/log/

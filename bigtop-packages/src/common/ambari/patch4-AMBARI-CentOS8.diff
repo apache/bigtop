@@ -1,5 +1,5 @@
 diff --git a/ambari-agent/src/main/package/dependencies.properties b/ambari-agent/src/main/package/dependencies.properties
-index 07b0b68319..9cfc2daeb5 100644
+index ec64264df4..0d4c64734f 100644
 --- a/ambari-agent/src/main/package/dependencies.properties
 +++ b/ambari-agent/src/main/package/dependencies.properties
 @@ -28,5 +28,5 @@
@@ -7,16 +7,28 @@ index 07b0b68319..9cfc2daeb5 100644
  # however should be encouraged manually in pom.xml.
  
 -rpm.dependency.list=openssl,\nRequires: rpm-python,\nRequires: zlib,\nRequires: python >= 2.6
--deb.dependency.list=openssl, zlibc, python (>= 2.6)
+-deb.dependency.list=openssl, python (>= 2.6)
 \ No newline at end of file
 +rpm.dependency.list=openssl,\nRequires: zlib,\nRequires: python2 >= 2.6
-+deb.dependency.list=openssl, zlibc, python (>= 2.6)
-diff --git a/ambari-common/src/main/python/resource_management/core/providers/package/__init__.py b/ambari-common/src/main/python/resource_management/core/providers/package/__init__.py
-index 799cf3eed0..bc066e6318 100644
---- a/ambari-common/src/main/python/resource_management/core/providers/package/__init__.py
-+++ b/ambari-common/src/main/python/resource_management/core/providers/package/__init__.py
-@@ -359,17 +359,13 @@ class RPMBasedPackageProvider(PackageProvider):
-   INSTALLED_PACKAGE_VERSION_COMMAND = "rpm -q --queryformat '%{{version}}-%{{release}}' \"{0}\""
++deb.dependency.list=openssl, python (>= 2.6)
+diff --git a/ambari-common/src/main/python/ambari_commons/repo_manager/yum_manager.py b/ambari-common/src/main/python/ambari_commons/repo_manager/yum_manager.py
+index e3df80ecea..392871c83f 100644
+--- a/ambari-common/src/main/python/ambari_commons/repo_manager/yum_manager.py
++++ b/ambari-common/src/main/python/ambari_commons/repo_manager/yum_manager.py
+@@ -274,10 +274,7 @@ class YumManager(GenericManager):
+     we should not rely on that.
+     """
+ 
+-    if os.geteuid() == 0:
+-      return self.yum_check_package_available(name)
+-    else:
+-      return self.rpm_check_package_available(name)
++    return self.rpm_check_package_available(name)
+ 
+   def yum_check_package_available(self, name):
+     """
+@@ -342,17 +339,13 @@ class YumManager(GenericManager):
+     return set(repo_ids)
  
    def rpm_check_package_available(self, name):
 -    import rpm # this is faster then calling 'rpm'-binary externally.
@@ -36,22 +48,6 @@ index 799cf3eed0..bc066e6318 100644
  
    def get_installed_package_version(self, package_name):
      version = None
-diff --git a/ambari-common/src/main/python/resource_management/core/providers/package/yumrpm.py b/ambari-common/src/main/python/resource_management/core/providers/package/yumrpm.py
-index da2a3b1de1..503644137c 100644
---- a/ambari-common/src/main/python/resource_management/core/providers/package/yumrpm.py
-+++ b/ambari-common/src/main/python/resource_management/core/providers/package/yumrpm.py
-@@ -305,10 +305,7 @@ class YumProvider(RPMBasedPackageProvider):
-     yum in inconsistant state (locked, used, having invalid repo). Once packages are installed
-     we should not rely on that.
-     """
--    if os.geteuid() == 0: 
--      return self.yum_check_package_available(name)
--    else:
--      return self.rpm_check_package_available(name)
-+    return self.rpm_check_package_available(name)
- 
-   def yum_check_package_available(self, name):
-     """
 diff --git a/ambari-server/src/main/package/dependencies.properties b/ambari-server/src/main/package/dependencies.properties
 index 01244a8375..70205d5dc6 100644
 --- a/ambari-server/src/main/package/dependencies.properties

@@ -1,5 +1,5 @@
 diff --git a/ambari-admin/src/main/resources/ui/admin-web/package.json b/ambari-admin/src/main/resources/ui/admin-web/package.json
-index efcd9d4..785e674 100644
+index 24cb68af32..2b4009d5f7 100644
 --- a/ambari-admin/src/main/resources/ui/admin-web/package.json
 +++ b/ambari-admin/src/main/resources/ui/admin-web/package.json
 @@ -23,8 +23,6 @@
@@ -7,30 +7,24 @@ index efcd9d4..785e674 100644
      "karma-jasmine": "0.1.5",
      "karma-ng-html2js-preprocessor": "^0.1.0",
 -    "karma-phantomjs-launcher": "0.1",
--    "phantomjs": "1.9.20",
+-    "phantomjs": "^2.1.7",
      "protractor": "1.0.0"
    },
    "scripts": {
 diff --git a/ambari-web/package.json b/ambari-web/package.json
-index 92ac968..7dd43f4 100644
+index 785925e80b..9cc8d76666 100644
 --- a/ambari-web/package.json
 +++ b/ambari-web/package.json
-@@ -19,10 +19,7 @@
-     "cssstyle": "0.2.3"
-   },
-   "devDependencies": {
--    "phantomjs": "~2.1.0",
-     "mocha":"2.5.3",
+@@ -33,12 +33,8 @@
+     "karma-coverage": "~0.2.0",
+     "karma-ember-precompiler-brunch": "^1.0.0",
+     "karma-mocha": "0.1.1",
+-    "karma-phantomjs-launcher": "1.0.2",
+     "karma-sinon": "~1.0.2",
+     "mocha": "2.5.3",
 -    "mocha-phantomjs": "~4.1.0",
 -    "mocha-phantomjs-core": "~2.1.0",
-     "chai":"~3.5.0",
-     "sinon":"=1.7.3",
-     "sinon-chai":"~2.8.0",
-@@ -31,7 +28,6 @@
-     "karma-mocha": "0.1.1",
-     "karma-chai": "~0.1.0",
-     "karma-sinon": "~1.0.2",
--    "karma-phantomjs-launcher": "1.0.2",
-     "karma-coverage": "~0.2.0",
-     "karma-commonjs-require": "~0.0.1",
-     "karma-ember-precompile-brunch": "^0.0.1"
+-    "phantomjs": "~2.1.0",
+     "sinon": "=1.7.3",
+     "sinon-chai": "~2.8.0"
+   },
