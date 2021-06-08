@@ -11,6 +11,18 @@ index 24cb68af32..2b4009d5f7 100644
      "protractor": "1.0.0"
    },
    "scripts": {
+diff --git a/ambari-logsearch/ambari-logsearch-web/package.json b/ambari-logsearch/ambari-logsearch-web/package.json
+index fb09f00e78..1974eaa07e 100644
+--- a/ambari-logsearch/ambari-logsearch-web/package.json
++++ b/ambari-logsearch/ambari-logsearch-web/package.json
+@@ -72,7 +72,6 @@
+     "karma-coverage-istanbul-reporter": "^0.2.0",
+     "karma-jasmine": "~1.1.0",
+     "karma-jasmine-html-reporter": "^0.2.2",
+-    "karma-phantomjs-launcher": "^1.0.4",
+     "less-loader": "^4.0.5",
+     "postcss-loader": "^1.3.3",
+     "postcss-url": "^5.1.2",
 diff --git a/ambari-web/package.json b/ambari-web/package.json
 index 785925e80b..9cc8d76666 100644
 --- a/ambari-web/package.json
