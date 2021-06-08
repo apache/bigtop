@@ -469,6 +469,7 @@ exit 0
 %dir  /var/log/ambari-server
 
 %files agent
+/usr/lib/ambari-agent
 %attr(644,root,root) /etc/init/ambari-agent.conf
 %attr(755,root,root) /var/lib/ambari-agent/ambari-python-wrap
 %attr(755,root,root) /var/lib/ambari-agent/ambari-sudo.sh
