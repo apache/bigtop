@@ -17,6 +17,15 @@
 set -ex
 . `dirname $0`/bigtop.bom
 
+# create com.google.protobuf:protoc artifact with local protoc built by toolchain
+if [ $HOSTTYPE = "powerpc64le" ] ; then
+  mvn install:install-file -DgroupId=com.google.protobuf -DartifactId=protoc -Dversion=2.5.0 \
+            -Dclassifier=linux-ppcle_64 -Dpackaging=exe -Dfile=/usr/local/bin/protoc
+elif [ $HOSTTYPE = "aarch64" ] ; then
+  mvn install:install-file -DgroupId=com.google.protobuf -DartifactId=protoc -Dversion=2.5.0 \
+            -Dclassifier=linux-aarch_64 -Dpackaging=exe -Dfile=/usr/local/bin/protoc
+fi
+
 mvn -DskipTests \
     -Dhadoop.version=$HADOOP_VERSION  \
     -Dhbase.version=$HBASE_VERSION  \
