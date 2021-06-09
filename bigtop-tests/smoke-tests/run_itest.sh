@@ -182,10 +182,6 @@ set_hive_vars() {
     TEST_SETTINGS="$TEST_SETTINGS -Dbigtop.test.hive.jdbc.url=$HIVE_JDBC_URL -Dbigtop.test.hive.metastore.url=$HIVE_METASTORE_URL -Dbigtop.test.hive.location=$HIVE_HDFS_LOCATION -Dbigtop.test.hive.jdbc.user=$HIVE_USER -Dbigtop.test.hive.jdbc.password=$HIVE_PASSWORD -Dbigtop.test.hive.conf.dir=$HIVE_CONF_DIR -Dbigtop.test.hadoop.conf.dir=$HADOOP_CONF_DIR -Dbigtop.test.hive.thrift.test=$TEST_THRIFT -Dbigtop.test.hive.hcatalog.test=$TEST_HCATALOG"
 }
 
-set_odpi_runtime_vars() {
-    TEST_SETTINGS="$TEST_SETTINGS -DHCFS_IMPLEMENTATION=HCFS"
-}
-
 print_cluster_info() {
 
   echo "######################################################"
@@ -263,16 +259,13 @@ echo "# Use --debug/--info for more details"
 
 # SET THE DEFAULT TESTS
 if [ -z "$ITESTS" ]; then
-  export ITESTS="hive,hcfs,hdfs,yarn,mapreduce,odpi-runtime"
+  export ITESTS="hive,hcfs,hdfs,yarn,mapreduce"
 fi
 for s in `echo $ITESTS | sed -e 's#,# #g'`; do
   ALL_SMOKE_TASKS="$ALL_SMOKE_TASKS bigtop-tests:smoke-tests:$s:test"
 done
 
 case "$ITESTS" in
-  *odpi-runtime*) set_hive_vars
-                  set_odpi_runtime_vars
-                  ;;
   *hive*)         set_hive_vars
                   ;;
 esac
