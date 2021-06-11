@@ -19,6 +19,12 @@ class bigtop_toolchain::cleanup {
     /(?i:(SLES|opensuse))/ => 'zypper clean -a',
     /Ubuntu|Debian/        => 'apt-get clean',
   } 
+
+  if ($operatingsystem == 'fedora' and versioncmp($operatingsystemmajrelease, '33')) {
+    exec { "Restore JDK to 8":
+      command => "/usr/sbin/alternatives --set java /usr/lib/jvm/java-1.8.0-openjdk-1.8.*/jre/bin/java",
+    }
+  }
   
   exec { 'remove archives':
     cwd         => '/usr/src',
