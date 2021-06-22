@@ -81,14 +81,14 @@ class bigtop_toolchain::renv {
 
     exec { "install_r_packages" :
       cwd     => "/usr/local/bin",
-      command => "/usr/local/bin/R -e \"install.packages(c('devtools', 'evaluate', 'rmarkdown', 'knitr', 'roxygen2', 'testthat', 'e1071'), repos = 'http://cran.r-project.org/')\"",
+      command => '/usr/local/bin/R -e \'pkgs <- c("devtools", "evaluate", "rmarkdown", "knitr", "roxygen2", "testthat", "e1071"); install.packages(pkgs, repo="http://cran.r-project.org/"); for (pkg in pkgs[pkgs != "devtools"]) if (!library(pkg, character.only=TRUE, logical.return=TRUE)) q(save="no", status=1)\'',
       require => [Exec["install_R"]],
       timeout => 6000
     }
   } else {
     exec { "install_r_packages" :
       cwd     => "/usr/bin",
-      command => "/usr/bin/R -e \"install.packages(c('devtools', 'evaluate', 'rmarkdown', 'knitr', 'roxygen2', 'testthat', 'e1071'), repos = 'http://cran.r-project.org/')\"",
+      command => '/usr/bin/R -e \'pkgs <- c("devtools", "evaluate", "rmarkdown", "knitr", "roxygen2", "testthat", "e1071"); install.packages(pkgs, repo="http://cran.r-project.org/"); for (pkg in pkgs[pkgs != "devtools"]) if (!library(pkg, character.only=TRUE, logical.return=TRUE)) q(save="no", status=1)\'',
       timeout => 6000
     }
   }
