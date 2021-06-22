@@ -101,7 +101,7 @@ class gpdb {
       # here to install it on all distros.
       exec { 'download_get_pip':
         cwd => '/tmp',
-        command => '/usr/bin/curl -sLO https://bootstrap.pypa.io/2.7/get-pip.py'
+        command => '/usr/bin/curl -sLO https://bootstrap.pypa.io/pip/2.7/get-pip.py'
       }
       exec { 'install_pip':
         cwd => '/tmp',
