@@ -40,4 +40,21 @@ class bigtop_toolchain::protobuf {
      require => EXEC["download protobuf"],
      timeout => 3000
   }
+
+  if ($architecture == 'ppc64le') {
+    exec { "download protobuf 3.5.1.1":
+      cwd  => "/usr/src",
+      command => "/usr/bin/wget https://github.com/protocolbuffers/protobuf/archive/refs/tags/v3.5.1.1.tar.gz && mkdir -p protobuf-3.5.1.1 && /bin/tar -xvzf v3.5.1.1.tar.gz -C protobuf-3.5.1.1 --strip-components=1",
+      creates => "/usr/src/protobuf-3.5.1.1",
+    }
+
+    exec { "install protobuf 3.5.1.1":
+      cwd => "/usr/src/protobuf-3.5.1.1",
+      command => "/usr/src/protobuf-3.5.1.1/autogen.sh && /usr/src/protobuf-3.5.1.1/configure --prefix=/usr/local/protobuf-3.5.1.1 --disable-shared --with-pic && /usr/bin/make install",
+      creates => "/usr/local/protobuf-3.5.1.1",
+      require => Exec["download protobuf 3.5.1.1"],
+      timeout => 3000
+    }
+  }
+
 }

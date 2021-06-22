@@ -53,6 +53,11 @@ MVN_ARGS+="-Dcheckstyle.skip=true "
 mvn install:install-file -DgroupId=com.google.protobuf -DartifactId=protoc -Dversion=2.5.0 \
             -Dclassifier=${CLASSIFIER} -Dpackaging=exe -Dfile=/usr/local/bin/protoc
 
+if [ $HOSTTYPE = "powerpc64le" ] ; then
+  mvn install:install-file -DgroupId=com.google.protobuf -DartifactId=protoc -Dversion=3.5.1-1 \
+      -Dclassifier=linux-ppcle_64 -Dpackaging=exe -Dfile=/usr/local/protobuf-3.5.1.1/bin/protoc
+fi
+
 # HBASE-21513: separate site and assembly:single to avoid assembly issues.
 mvn ${MVN_ARGS} ${MAVEN_ADDITIONAL} clean install "$@"
 mvn ${MVN_ARGS} ${MAVEN_ADDITIONAL} site "$@"
