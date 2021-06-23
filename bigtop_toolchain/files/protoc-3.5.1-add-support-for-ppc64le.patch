@@ -1,0 +1,65 @@
+diff --git a/protoc-artifacts/build-protoc.sh b/protoc-artifacts/build-protoc.sh
+index fe1dec2..f31597a 100755
+--- a/protoc-artifacts/build-protoc.sh
++++ b/protoc-artifacts/build-protoc.sh
+@@ -81,6 +81,8 @@ checkArch ()
+         assertEq $format "elf64-x86-64" $LINENO
+       elif [[ "$ARCH" == aarch_64 ]]; then
+         assertEq $format "elf64-little" $LINENO
++      elif [[ "$ARCH" == ppcle_64 ]]; then
++        assertEq $format "elf64-powerpcle" $LINENO
+       else
+         fail "Unsupported arch: $ARCH"
+       fi
+@@ -127,6 +129,8 @@ checkDependencies ()
+     elif [[ "$ARCH" == aarch_64 ]]; then
+       dump_cmd='objdump -p '"$1"' | grep NEEDED'
+       white_list="libpthread\.so\.0\|libc\.so\.6\|ld-linux-aarch64\.so\.1"
++    elif [[ "$ARCH" == ppcle_64 ]]; then
++      white_list="linux-vdso64\.so\.1\|libpthread\.so\.0\|libm\.so\.6\|libc\.so\.6\|libz\.so\.1\|ld64\.so\.2"
+     fi
+   elif [[ "$OS" == osx ]]; then
+     dump_cmd='otool -L '"$1"' | fgrep dylib'
+@@ -193,6 +197,8 @@ elif [[ "$(uname)" == Linux* ]]; then
+       CXXFLAGS="$CXXFLAGS -m32"
+     elif [[ "$ARCH" == aarch_64 ]]; then
+       CONFIGURE_ARGS="$CONFIGURE_ARGS --host=aarch64-linux-gnu"
++    elif [[ "$ARCH" == ppcle_64 ]]; then
++      CXXFLAGS="$CXXFLAGS -m64"
+     else
+       fail "Unsupported arch: $ARCH"
+     fi
+diff --git a/protoc-artifacts/build-zip.sh b/protoc-artifacts/build-zip.sh
+index f08e275..e87bb39 100755
+--- a/protoc-artifacts/build-zip.sh
++++ b/protoc-artifacts/build-zip.sh
+@@ -20,6 +20,7 @@ included. Each invocation will create 6 zip packages:
+   dist/<TARGET>-<VERSION_NUMBER>-linux-x86_32.zip
+   dist/<TARGET>-<VERSION_NUMBER>-linux-x86_64.zip
+   dist/<TARGET>-<VERSION_NUMBER>-linux-aarch_64.zip
++  dist/<TARGET>-<VERSION_NUMBER>-linux-ppcle_64.zip
+ EOF
+   exit 1
+ fi
+@@ -35,6 +36,8 @@ declare -a FILE_NAMES=( \
+   linux-x86_32.zip linux-x86_32.exe \
+   linux-x86_64.zip linux-x86_64.exe \
+   linux-aarch_64.zip linux-aarch_64.exe \
++  linux-ppcle_64.zip linux-ppcle_64.exe \
++
+ )
+ 
+ # List of all well-known types to be included.
+diff --git a/protoc-artifacts/pom.xml b/protoc-artifacts/pom.xml
+index 0f9dd9f..4a0892e 100644
+--- a/protoc-artifacts/pom.xml
++++ b/protoc-artifacts/pom.xml
+@@ -37,7 +37,7 @@
+       <extension>
+         <groupId>kr.motd.maven</groupId>
+         <artifactId>os-maven-plugin</artifactId>
+-        <version>1.2.3.Final</version>
++        <version>1.5.0.Final</version>
+       </extension>
+     </extensions>
+     <plugins>
