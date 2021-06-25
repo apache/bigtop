@@ -25,10 +25,13 @@ if [ "${BIGTOP_JDK:=8}" == "8" ]; then
 fi
 
 if [ $HOSTTYPE = "powerpc64le" ] ; then
-  sed  -i "s|<asciidoctor.plugin.version>.*</asciidoctor.plugin.version>|<asciidoctor.plugin.version>1.5.3</asciidoctor.plugin.version>|" pom.xml
+  sed -i "s|<asciidoctor.plugin.version>.*</asciidoctor.plugin.version>|<asciidoctor.plugin.version>1.5.3</asciidoctor.plugin.version>|" pom.xml
+  sed -i 's|<asciidoctorj.pdf.version>.*</asciidoctorj.pdf.version>|<asciidoctorj.pdf.version>1.5.0-alpha.11</asciidoctorj.pdf.version>|' pom.xml
   sed -i 's|<jruby.version>.*</jruby.version>|<jruby.version>1.7.23</jruby.version>|' pom.xml
-  sed  -i "s|<version>1.5.0-alpha.6</version>|<version>1.5.0-alpha.11</version>|" pom.xml
-  CLASSIFIER="linux-ppcle_64"
+  mvn install:install-file -DgroupId=com.google.protobuf -DartifactId=protoc -Dversion=2.5.0 \
+      -Dclassifier=linux-ppcle_64 -Dpackaging=exe -Dfile=/usr/local/bin/protoc
+  mvn install:install-file -DgroupId=com.google.protobuf -DartifactId=protoc -Dversion=3.5.1-1 \
+      -Dclassifier=linux-ppcle_64 -Dpackaging=exe -Dfile=/usr/local/protobuf-3.5.1.1/bin/protoc
 fi
 
 if [ $HOSTTYPE = "aarch64" ] ; then
@@ -38,7 +41,8 @@ if [ $HOSTTYPE = "aarch64" ] ; then
 '\             <artifactId>jruby-complete<\/artifactId>\n'\
 '\             <version>9.1.8.0</version>\n'\
 '\          <\/dependency>' pom.xml
-  CLASSIFIER="linux-aarch_64"
+  mvn install:install-file -DgroupId=com.google.protobuf -DartifactId=protoc -Dversion=2.5.0 \
+      -Dclassifier=linux-aarch_64 -Dpackaging=exe -Dfile=/usr/local/bin/protoc
 fi
 
 MVN_ARGS="-Phadoop-3.0 "
@@ -49,9 +53,6 @@ MVN_ARGS+="-Djetty.version=9.3.29.v20201019 "
 MVN_ARGS+="-Dzookeeper.version=${ZOOKEEPER_VERSION} "
 MVN_ARGS+="-DskipTests "
 MVN_ARGS+="-Dcheckstyle.skip=true "
-
-mvn install:install-file -DgroupId=com.google.protobuf -DartifactId=protoc -Dversion=2.5.0 \
-            -Dclassifier=${CLASSIFIER} -Dpackaging=exe -Dfile=/usr/local/bin/protoc
 
 # HBASE-21513: separate site and assembly:single to avoid assembly issues.
 mvn ${MVN_ARGS} ${MAVEN_ADDITIONAL} clean install "$@"
