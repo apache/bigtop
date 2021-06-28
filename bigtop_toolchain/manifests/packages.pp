@@ -232,14 +232,20 @@ class bigtop_toolchain::packages {
     package { 'epel-release':
       ensure => installed
     }
-    # On CentOS 8, EPEL requires that the PowerTools repository is enabled.
-    # See https://fedoraproject.org/wiki/EPEL#How_can_I_use_these_extra_packages.3F
     if $operatingsystemmajrelease !~ /^[0-7]$/ {
+      # On CentOS 8, EPEL requires that the PowerTools repository is enabled.
+      # See https://fedoraproject.org/wiki/EPEL#How_can_I_use_these_extra_packages.3F
       yumrepo { 'powertools':
         ensure  => 'present',
         enabled => '1'
       }
       Yumrepo<||> -> Package<||>
+
+      # On CentOS 8, cmake-3.18.2-9.el8 does not work without updated libarchive.
+      # https://bugs.centos.org/view.php?id=18212
+      package { libarchive:
+        ensure => latest
+      }
     }
   }
 
