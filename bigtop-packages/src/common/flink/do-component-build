@@ -20,6 +20,10 @@ set -ex
 #load versions
 . `dirname $0`/bigtop.bom
 
+if [ $HOSTTYPE = "powerpc64le" ] ; then
+  sed -i "s|<nodeVersion>v10.9.0</nodeVersion>|<nodeVersion>v12.22.1</nodeVersion>|" flink-runtime-web/pom.xml
+fi
+
 # Use Maven to build Flink from source
 mvn install $FLINK_BUILD_OPTS -Drat.skip=true -DskipTests -Dhadoop.version=$HADOOP_VERSION "$@"
 cd flink-dist
