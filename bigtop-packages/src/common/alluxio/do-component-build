@@ -18,4 +18,9 @@ set -ex
 
 . `dirname $0`/bigtop.bom
 
-mvn clean install -DskipTests -Dhadoop.version=3.2.2 -Phadoop-3 -Pyarn "$@"
+if [ $HOSTTYPE = "powerpc64le" ] ; then
+  sed -i "s|<nodeVersion>v10.11.0</nodeVersion>|<nodeVersion>v12.22.1</nodeVersion>|" webui/pom.xml
+  sed -i "s|<npmVersion>6.4.1</npmVersion>|<npmVersion>6.14.7</npmVersion>|" webui/pom.xml
+fi
+
+mvn clean install -DskipTests -Dhadoop.version=${HADOOP_VERSION} -Phadoop-3 -Pyarn "$@"
