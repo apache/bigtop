@@ -37,3 +37,8 @@ options:
         description: |
             Options are "local", "standalone", "yarn-client", and
             "yarn-cluster". Consult the readme for details on these options.
+    spark_enable_thriftserver:
+        type: boolean
+        default: false
+        description: |
+            Enable the thrift server for Spark SQL support. This will launch on port 10000.

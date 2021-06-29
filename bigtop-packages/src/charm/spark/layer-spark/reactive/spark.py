@@ -21,7 +21,7 @@ from charmhelpers.core import hookenv, host, unitdata
 from charms import leadership
 from charms.reactive.helpers import data_changed
 from jujubigdata import utils
-
+from subprocess import check_call
 
 ###############################################################################
 # Status methods
@@ -139,7 +139,6 @@ def set_deployment_mode_state(state):
     spark_version = get_package_version('spark-core') or 'unknown'
     hookenv.application_version_set(spark_version)
 
-
 ###############################################################################
 # Reactive methods
 ###############################################################################
@@ -236,7 +235,8 @@ def reconfigure_spark():
     # Almost all config changes should trigger a reinstall... except when
     # changing the bigtop repo version. Repo version changes require the user
     # to run an action, so we skip the reinstall in that case.
-    if not is_state('config.changed.bigtop_version'):
+    if not is_state('config.changed.bigtop_version') \
+            and not is_state('config.changed.spark_enable_thriftserver'):
         # Config changes should reinstall even if the deployment topology has
         # not changed. Hence, pass force=True.
         reinstall_spark(force=True)
@@ -318,3 +318,10 @@ def client_present(client):
 def client_should_stop(client):
     if is_state('leadership.is_leader'):
         client.clear_spark_started()
+
+@when('spark.started', 'config.changed.spark_enable_thriftserver')
+def start_thrift():
+    if hookenv.config()['spark_enable_thriftserver']:
+        check_call(['/usr/lib/spark/sbin/start-thriftserver.sh'])
+    else:
+        check_call(['/usr/lib/spark/sbin/stop-thriftserver.sh'])
