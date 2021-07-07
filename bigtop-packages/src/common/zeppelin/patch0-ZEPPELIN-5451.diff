@@ -1,0 +1,32 @@
+diff -ur zeppelin-0.9.0/shell/pom.xml zeppelin/shell/pom.xml
+--- zeppelin-0.9.0/shell/pom.xml	2020-12-20 14:38:40.000000000 +0900
++++ zeppelin/shell/pom.xml	2021-07-07 09:39:42.611786927 +0900
+@@ -46,9 +46,9 @@
+   <!-- pty4j library not in maven central repository (http://repo.maven.apache.org/maven2) -->
+   <repositories>
+     <repository>
+-      <id>bintray-jetbrains-pty4j</id>
+-      <name>bintray</name>
+-      <url>https://jetbrains.bintray.com/pty4j</url>
++      <id>jetbrains-intellij-dependencies</id>
++      <name>JetBrains Pty4j Repository</name>
++      <url>https://packages.jetbrains.team/maven/p/ij/intellij-dependencies</url>
+     </repository>
+   </repositories>
+ 
+diff -ur zeppelin-0.9.0/submarine/pom.xml zeppelin/submarine/pom.xml
+--- zeppelin-0.9.0/submarine/pom.xml	2020-12-20 14:38:40.000000000 +0900
++++ zeppelin/submarine/pom.xml	2021-07-07 09:40:00.128115536 +0900
+@@ -45,9 +45,9 @@
+ 
+   <repositories>
+     <repository>
+-      <id>bintray-jetbrains-pty4j</id>
+-      <name>bintray</name>
+-      <url>https://jetbrains.bintray.com/pty4j</url>
++      <id>jetbrains-intellij-dependencies</id>
++      <name>JetBrains Pty4j Repository</name>
++      <url>https://packages.jetbrains.team/maven/p/ij/intellij-dependencies</url>
+     </repository>
+   </repositories>
+   
