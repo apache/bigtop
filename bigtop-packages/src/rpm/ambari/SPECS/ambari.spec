@@ -226,7 +226,7 @@ exit 0
 # See the License for the specific language governing permissions and
 # limitations under the License
 
-PYPATH=`find /usr/lib -maxdepth 1 -name 'python*'`
+PYPATH=`find /usr/lib -maxdepth 1 -name 'python*' | sort`
 PYLIB_DIR=`echo ${PYPATH} | awk '{print $1}'`
 RESOURCE_MANAGEMENT_DIR= "${PYLIB_DIR}/site-packages/resource_management"
 RESOURCE_MANAGEMENT_DIR_SERVER="/usr/lib/ambari-server/lib/resource_management"
@@ -418,7 +418,7 @@ exit 0
 # See the License for the specific language governing permissions and
 # limitations under the License
 
-PYPATH=`find /usr/lib -maxdepth 1 -name 'python*'`
+PYPATH=`find /usr/lib -maxdepth 1 -name 'python*' | sort`
 PYLIB_DIR=`echo $PYPATH | awk '{print $1}'`
 RESOURCE_MANAGEMENT_DIR="$PYLIB_DIR/site-packages/resource_management"
 RESOURCE_MANAGEMENT_DIR_AGENT="/usr/lib/ambari-agent/lib/resource_management"
