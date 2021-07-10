@@ -111,7 +111,7 @@ class gpdb {
       # GPDB requires the following python packages as of v5.28.5. See
       # https://github.com/greenplum-db/gpdb/tree/5X_STABLE#building-greenplum-database-with-gporca.
       exec { 'install_python_packages':
-        command => '/usr/bin/env pip install -q lockfile paramiko psutil',
+        command => "/usr/bin/env pip install -q 'cryptography<3.3' lockfile paramiko psutil",
         require => [Exec["install_pip"]],
       }
       package { ["gpdb"]:
