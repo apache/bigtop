@@ -72,19 +72,19 @@ class TestSpark {
   @Test
   void testSparkSQL() {
     // Let's figure out the proper mode for the submission
-    // If SPARK_MASTER_IP nor SPARK_MASTER_PORT are set, we'll assume
-    // 'yarn-client' mode
-    String masterMode = 'yarn-client'
+    // If SPARK_MASTER_IP nor SPARK_MASTER_PORT are not set,
+    // we'll assume 'yarn' as the master URL.
+    String master = 'yarn'
     if (SPARK_MASTER_IP != null && SPARK_MASTER_PORT != null)
-      masterMode = "spark://$SPARK_MASTER_IP:$SPARK_MASTER_PORT"
+      master = "spark://$SPARK_MASTER_IP:$SPARK_MASTER_PORT"
     else
-      println("SPARK_MASTER isn't set. yarn-client submission will be used. " +
+      println("SPARK_MASTER isn't set. yarn will be used as the master URL. " +
           "Refer to smoke-tests/README If this isn't what you you expect.")
 
-    final String SPARK_SHELL = SPARK_HOME + "/bin/spark-shell --master $masterMode"
+    final String SPARK_SHELL = SPARK_HOME + "/bin/spark-shell --master $master"
     // Let's use time, 'cause the test has one job
     sh.exec("timeout 300 " + SPARK_SHELL +
-        " --class org.apache.spark.examples.sql.JavaSparkSQLExample " +
+        " --class org.apache.spark.examples.sql.SparkSQLExample " +
         " --jars " + SPARK_HOME + "/examples/jars/spark-examples*.jar > " +
         TEST_SPARKSQL_LOG + " 2>&1")
     logError(sh)
@@ -93,11 +93,11 @@ class TestSpark {
 
   @Test
   void testSparkR() {
-    String masterMode = 'yarn-client'
+    String master = 'yarn'
     if (SPARK_MASTER_IP != null && SPARK_MASTER_PORT != null)
-      masterMode = "spark://$SPARK_MASTER_IP:$SPARK_MASTER_PORT"
+      master = "spark://$SPARK_MASTER_IP:$SPARK_MASTER_PORT"
     else
-      println("SPARK_MASTER isn't set. yarn-client submission will be used. " +
+      println("SPARK_MASTER isn't set. yarn will be used as the master URL. " +
           "Refer to smoke-tests/README If this isn't what you you expect.")
 
     new File('/tmp/dataframe.R').withWriter { writer ->
@@ -107,7 +107,7 @@ class TestSpark {
       }
     }
 
-    final String SPARK_SUBMIT = SPARK_HOME + "/bin/spark-submit --master $masterMode"
+    final String SPARK_SUBMIT = SPARK_HOME + "/bin/spark-submit --master $master"
     sh.exec("timeout 300 " + SPARK_SUBMIT + " /tmp/dataframe.R > " + TEST_SPARKR_LOG + " 2>&1")
     logError(sh)
     assertTrue("Failed to execute SparkR script", sh.getRet() == 0);
