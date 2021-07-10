@@ -39,7 +39,7 @@ Source2: install_gpdb.sh
 Source3: do-component-configure
 #BIGTOP_PATCH_FILES
 AutoReqProv: %{autorequire}
-Requires: python2
+Requires: bigtop-utils >= 0.7, gcc, libffi-devel, make, openssl-devel, python2-devel
 
 %description
 gpdb
