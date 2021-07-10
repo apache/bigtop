@@ -226,10 +226,11 @@ exit 0
 # See the License for the specific language governing permissions and
 # limitations under the License
 
-
-RESOURCE_MANAGEMENT_DIR="/usr/lib/python2.6/site-packages/resource_management"
+PYPATH=`find /usr/lib -maxdepth 1 -name 'python*' | sort`
+PYLIB_DIR=`echo ${PYPATH} | awk '{print $1}'`
+RESOURCE_MANAGEMENT_DIR= "${PYLIB_DIR}/site-packages/resource_management"
 RESOURCE_MANAGEMENT_DIR_SERVER="/usr/lib/ambari-server/lib/resource_management"
-JINJA_DIR="/usr/lib/python2.6/site-packages/ambari_jinja2"
+JINJA_DIR="${PYLIB_DIR}/site-packages/ambari_jinja2"
 JINJA_SERVER_DIR="/usr/lib/ambari-server/lib/ambari_jinja2"
 AMBARI_SERVER_EXECUTABLE_LINK="/usr/sbin/ambari-server"
 AMBARI_SERVER_EXECUTABLE="/etc/init.d/ambari-server"
@@ -247,12 +248,12 @@ if [ -d "$RESOURCE_MANAGEMENT_DIR" ]; then  # resource_management dir exists
 fi
 # setting resource_management shared resource
 if [ ! -d "$RESOURCE_MANAGEMENT_DIR" ]; then
-  ln -s "$RESOURCE_MANAGEMENT_DIR_SERVER" "$RESOURCE_MANAGEMENT_DIR"
+  ln -s ${RESOURCE_MANAGEMENT_DIR_SERVER} ${RESOURCE_MANAGEMENT_DIR}
 fi
 
 # setting jinja2 shared resource
 if [ ! -d "$JINJA_DIR" ]; then
-  ln -s "$JINJA_SERVER_DIR" "$JINJA_DIR"
+  ln -s ${JINJA_SERVER_DIR} ${JINJA_DIR}
 fi
 
 exit 0
@@ -417,10 +418,11 @@ exit 0
 # See the License for the specific language governing permissions and
 # limitations under the License
 
-
-RESOURCE_MANAGEMENT_DIR="/usr/lib/python2.6/site-packages/resource_management"
+PYPATH=`find /usr/lib -maxdepth 1 -name 'python*' | sort`
+PYLIB_DIR=`echo $PYPATH | awk '{print $1}'`
+RESOURCE_MANAGEMENT_DIR="$PYLIB_DIR/site-packages/resource_management"
 RESOURCE_MANAGEMENT_DIR_AGENT="/usr/lib/ambari-agent/lib/resource_management"
-JINJA_DIR="/usr/lib/python2.6/site-packages/ambari_jinja2"
+JINJA_DIR="$PYLIB_DIR/site-packages/ambari_jinja2"
 JINJA_AGENT_DIR="/usr/lib/ambari-agent/lib/ambari_jinja2"
 
 # remove RESOURCE_MANAGEMENT_DIR if it's a directory
