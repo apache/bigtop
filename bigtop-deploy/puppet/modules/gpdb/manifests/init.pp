@@ -113,6 +113,7 @@ class gpdb {
       exec { 'install_python_packages':
         command => "/usr/bin/env pip install -q 'cryptography<3.3' lockfile paramiko psutil",
         require => [Exec["install_pip"]],
+        timeout => 600,
       }
       package { ["gpdb"]:
         ensure => latest,
