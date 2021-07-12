@@ -45,50 +45,71 @@ def nrpe_external_master_available(nagios):
 def setup_nagios(nagios):
     config = hookenv.config()
     unit_name = hookenv.local_unit()
-    checks = [
-        {
-            'name': 'zk_open_file_descriptor_coun',
-            'description': 'ZK_Open_File_Descriptors_Count',
-            'warn': config['open_file_descriptor_count_warn'],
-            'crit': config['open_file_descriptor_count_crit']
-        },
-        {
-            'name': 'zk_ephemerals_count',
-            'description': 'ZK_Ephemerals_Count',
-            'warn': config['ephemerals_count_warn'],
-            'crit': config['ephemerals_count_crit']
-        },
-        {
-            'name': 'zk_avg_latency',
-            'description': 'ZK_Avg_Latency',
-            'warn': config['avg_latency_warn'],
-            'crit': config['avg_latency_crit']
-        },
-        {
-            'name': 'zk_max_latency',
-            'description': 'ZK_Max_Latency',
-            'warn': config['max_latency_warn'],
-            'crit': config['max_latency_crit']
-        },
-        {
-            'name': 'zk_min_latency',
-            'description': 'ZK_Min_Latency',
-            'warn': config['min_latency_warn'],
-            'crit': config['min_latency_crit']
-        },
-        {
-            'name': 'zk_outstanding_requests',
-            'description': 'ZK_Outstanding_Requests',
-            'warn': config['outstanding_requests_warn'],
-            'crit': config['outstanding_requests_crit']
-        },
-        {
-            'name': 'zk_watch_count',
-            'description': 'ZK_Watch_Count',
-            'warn': config['watch_count_warn'],
-            'crit': config['watch_count_crit']
-        },
-    ]
+    checks = []
+    if config['open_file_descriptor_count_check']:
+        checks.append(
+            {
+                'name': 'zk_open_file_descriptor_count',
+                'description': 'ZK_Open_File_Descriptors_Count',
+                'warn': config['open_file_descriptor_count_warn'],
+                'crit': config['open_file_descriptor_count_crit']
+            }
+        )
+    if config['ephemerals_count_check']:
+        checks.append(
+            {
+                'name': 'zk_ephemerals_count',
+                'description': 'ZK_Ephemerals_Count',
+                'warn': config['ephemerals_count_warn'],
+                'crit': config['ephemerals_count_crit']
+            }
+        )
+    if config['avg_latency_check']:
+        checks.append(
+            {
+                'name': 'zk_avg_latency',
+                'description': 'ZK_Avg_Latency',
+                'warn': config['avg_latency_warn'],
+                'crit': config['avg_latency_crit']
+            }
+        )
+    if config['max_latency_check']:
+        checks.append(
+            {
+                'name': 'zk_max_latency',
+                'description': 'ZK_Max_Latency',
+                'warn': config['max_latency_warn'],
+                'crit': config['max_latency_crit']
+            }
+        )
+    if config['min_latency_check']:
+        checks.append(
+            {
+                'name': 'zk_min_latency',
+                'description': 'ZK_Min_Latency',
+                'warn': config['min_latency_warn'],
+                'crit': config['min_latency_crit']
+            }
+        )
+    if config['outstanding_requests_check']:
+        checks.append(
+            {
+                'name': 'zk_outstanding_requests',
+                'description': 'ZK_Outstanding_Requests',
+                'warn': config['outstanding_requests_warn'],
+                'crit': config['outstanding_requests_crit']
+            }
+        )
+    if config['watch_count_check']:
+        checks.append(
+            {
+                'name': 'zk_watch_count',
+                'description': 'ZK_Watch_Count',
+                'warn': config['watch_count_warn'],
+                'crit': config['watch_count_crit']
+            }
+        )
+
     check_cmd = ['/usr/local/lib/nagios/plugins/check_zookeeper.py',
                  '-o', 'nagios', '-s', 'localhost:2181']
     for check in checks:

@@ -39,6 +39,11 @@ options:
     description: |
       A comma-separated list of nagios servicegroups.
       If left empty, the nagios_context will be used as the servicegroup
+  open_file_descriptor_count_check:
+    default: true
+    type: boolean
+    description: |
+      Whether to enable the open file descriptor count check.
   open_file_descriptor_count_warn:
     default: 500
     type: int
@@ -49,6 +54,11 @@ options:
     type: int
     description: |
       The allowed open file descriptor count before a critical alert is triggered.
+  ephemerals_count_check:
+    default: true
+    type: boolean
+    description: |
+      Whether to enable the ephemerals count check.
   ephemerals_count_warn:
     default: 10000
     type: int
@@ -59,6 +69,11 @@ options:
     type: int
     description: |
       The allowed ephemerals count before a critical alert is triggered.
+  avg_latency_check:
+    default: true
+    type: boolean
+    description: |
+      Whether to enable the average latency check.
   avg_latency_warn:
     default: 500
     type: int
@@ -69,6 +84,11 @@ options:
     type: int
     description: |
       The allowed average latency before a critical alert is triggered.
+  max_latency_check:
+    default: true
+    type: boolean
+    description: |
+      Whether to enable the maximum latency check.
   max_latency_warn:
     default: 1000
     type: int
@@ -79,6 +99,11 @@ options:
     type: int
     description: |
       The allowed maximum latency before a critical alert is triggered.
+  min_latency_check:
+    default: true
+    type: boolean
+    description: |
+      Whether to enable the minimum latency check.
   min_latency_warn:
     default: 500
     type: int
@@ -89,6 +114,11 @@ options:
     type: int
     description: |
       The allowed minimum latency before a critical alert is triggered.
+  outstanding_requests_check:
+    default: true
+    type: boolean
+    description: |
+      Whether to enable the outstanding requests check.
   outstanding_requests_warn:
     default: 20
     type: int
@@ -99,6 +129,11 @@ options:
     type: int
     description: |
       The allowed outstanding requests before a critical alert is triggered.
+  watch_count_check:
+    default: true
+    type: boolean
+    description: |
+      Whether to enable the watch count check.
   watch_count_warn:
     default: 100
     type: int
