@@ -48,6 +48,8 @@ class flink {
       hasrestart => true,
       hasstatus => true
     }
+
+    Package<| title == 'hadoop-hdfs' |> -> Package['flink-jobmanager']
   }
 
   class taskmanager {
@@ -64,5 +66,7 @@ class flink {
       hasrestart => true,
       hasstatus => true,
     }
+
+    Package<| title == 'hadoop-hdfs' |> -> Package['flink-taskmanager']
   }
 }
