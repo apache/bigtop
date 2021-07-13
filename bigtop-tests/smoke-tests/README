@@ -27,7 +27,7 @@ export SPARK_HOME="/usr/lib/spark"
 export OOZIE_TAR_HOME="/usr/lib/oozie/doc"
 ```
 
-Fallback mode for shark-shell submission is 'yarn-client'. For a good reason,
+Fallback master URL for shark-shell submission is 'yarn'. For a good reason,
 we aren't using YARN to provision cluster services. Hence, in order to execute
 the test against a standalone Spark cluster, like we deploy would require two
 more environment variables:
