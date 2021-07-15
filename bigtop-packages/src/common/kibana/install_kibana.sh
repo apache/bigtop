@@ -113,6 +113,10 @@ fi
 if [ "${ARCH}" = "aarch64" ];then
   cp -ar $BUILD_DIR/kibana-*-linux-arm64/* $PREFIX/$LIB_DIR/
 fi
+if [ "${ARCH}" = "ppc64le" ];then
+  cp -ar $BUILD_DIR/kibana-*-linux-ppc64*/* $PREFIX/$LIB_DIR/
+fi
+
 
 chmod 755 $PREFIX/$LIB_DIR/* -R
 
