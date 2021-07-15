@@ -339,7 +339,7 @@ bigtop {
     'bigtop-ambari-mpack' {
       name    = 'bigtop-ambari-mpack'
       relNotes = 'Bigtop Mpack'
-      version { base = '2.6.1'; pkg = '2.6.1.0'; release = 1 }
+      version { base = '2.7.5'; pkg = '2.7.5.0'; release = 1 }
       tarball { destination = "apache-ambari-${version.base}-src.tar.gz"
                 source      = destination }
       url     { download_path = "/ambari/ambari-${version.base}/"

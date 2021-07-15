@@ -31,7 +31,7 @@ Summary: Bigtop Ambari Management Packages
 Group: Application/Internet
 Buildroot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 License: ASL 2.0
-Source0: apache-ambari-2.6.1-src.tar.gz
+Source0: apache-ambari-%{bigtop_ambari_mpack_base_version}-src.tar.gz
 Source1: do-component-build
 Source2: install_mpack.sh
 Requires: bigtop-utils >= 0.7
@@ -45,7 +45,7 @@ from stack management and definition. Mpack can bundle multiple service definiti
 stack add-on service definitions, view definitions services.
 
 %prep
-%setup -n apache-ambari-2.6.1-src
+%setup -n apache-ambari-%{bigtop_ambari_mpack_base_version}-src
 
 %build
 bash $RPM_SOURCE_DIR/do-component-build
