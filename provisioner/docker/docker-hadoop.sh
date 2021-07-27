@@ -145,6 +145,15 @@ generate-config() {
     cat $BIGTOP_PUPPET_DIR/hiera.yaml >> ./config/hiera.yaml
     cp -vfr $BIGTOP_PUPPET_DIR/hieradata ./config/
 
+    # A workaround for starting Elasticsearch on ppc64le.
+    # See BIGTOP-3574 for details.
+    running_arch=$(uname -m)
+    if [ "ppc64le" == ${running_arch} ]; then
+        elasticsearch_bootstrap_system_call_filter=false
+    else
+        elasticsearch_bootstrap_system_call_filter=true
+    fi
+
     # Using FairScheduler instead of CapacityScheduler here is a workaround for BIGTOP-3406.
     # Due to the default setting of the yarn.scheduler.capacity.maximum-am-resource-percent
     # property defined in capacity-scheduler.xml (=0.1), some oozie jobs are not assigned
@@ -158,6 +167,7 @@ bigtop::bigtop_repo_gpg_check: $gpg_check
 hadoop_cluster_node::cluster_components: $3
 hadoop_cluster_node::cluster_nodes: [$node_list]
 hadoop::common_yarn::yarn_resourcemanager_scheduler_class: org.apache.hadoop.yarn.server.resourcemanager.scheduler.fair.FairScheduler
+elasticsearch::bootstrap::system_call_filter: $elasticsearch_bootstrap_system_call_filter
 EOF
 }
 

@@ -100,3 +100,7 @@ gateway.recover_after_nodes: <%= @elasticsearch_cluster_min_master %>
 # Require explicit names when deleting indices:
 #
 #action.destructive_requires_name: true
+
+# Disable this setting at your own risk to run ES on the platform which is not officially supported, e.g., ppc64le.
+# See https://www.elastic.co/guide/en/elasticsearch/reference/5.6/system-call-filter-check.html for details.
+bootstrap.system_call_filter: <%= @elasticsearch_bootstrap_system_call_filter %>
