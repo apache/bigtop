@@ -207,9 +207,9 @@ For Developers: Building a component from Git repository
 --------------------------------------------------------
 
 Prerequisites
- * You will need git installed.
- * You will need java 8 installed.
- * You will need to use [gradlew](https://docs.gradle.org/current/userguide/gradle_wrapper.html) which is included in the source code. (Right in the root of the project folder)
+ * You will need Git installed.
+ * You will need Java 8 installed.
+ * You will need to use [Gradlew](https://docs.gradle.org/current/userguide/gradle_wrapper.html) which is included in the source code. (Right in the root of the project folder)
   * This project's gradlew has more documentation [here](https://cwiki.apache.org/confluence/display/BIGTOP/Quickstart+Guide%3A+Bigtop+Integration+Test+Framework+2.0)
  * Use git to download BigTop :
 
