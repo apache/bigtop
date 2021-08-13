@@ -136,6 +136,46 @@ class spark {
   }
 
   class sparkr {
+    # BIGTOP-3579. On these distros, the default version of R is earlier than 3.5.0,
+    # which is required to run SparkR. So the newer version of R is installed here.
+    if (($operatingsystem == 'Ubuntu' and versioncmp($operatingsystemmajrelease, '18.04') <= 0) or
+        ($operatingsystem == 'Debian' and versioncmp($operatingsystemmajrelease, '10') < 0)) {
+      $url = "http://cran.r-project.org/src/base/R-3/"
+      $rfile = "R-3.6.3.tar.gz"
+      $rdir = "R-3.6.3"
+
+      $pkgs = [
+        "g++",
+        "gcc",
+        "gfortran",
+        "libbz2-dev",
+        "libcurl4-gnutls-dev",
+        "liblzma-dev",
+        "libpcre3-dev",
+        "libreadline-dev",
+        "libz-dev",
+        "make",
+      ]
+      package { $pkgs:
+        ensure => installed,
+        before => [Exec["install_R"]],
+      }
+
+      exec { "download_R":
+        cwd  => "/usr/src",
+        command => "/usr/bin/wget $url/$rfile && mkdir -p $rdir && /bin/tar -xvzf $rfile -C $rdir --strip-components=1 && cd $rdir",
+        creates => "/usr/src/$rdir",
+      }
+      exec { "install_R":
+        cwd => "/usr/src/$rdir",
+        command => "/usr/src/$rdir/configure --with-recommended-packages=yes --without-x --with-cairo --with-libpng --with-libtiff --with-jpeglib --with-tcltk --with-blas --with-lapack --enable-R-shlib --prefix=/usr/local && /usr/bin/make && /usr/bin/make install && /sbin/ldconfig",
+        creates => "/usr/local/bin/R",
+        require => [Exec["download_R"]],
+        before  => [Package["spark-sparkr"]],
+        timeout => 3000
+      }
+    }
+
     package { 'spark-sparkr':
       ensure => latest,
     }
