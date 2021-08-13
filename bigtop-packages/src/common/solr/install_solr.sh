@@ -138,6 +138,7 @@ cp -ra ${BUILD_DIR}/example/ $PREFIX/$DOC_DIR/
 # Copy in the configuration files
 install -d -m 0755 $PREFIX/$DEFAULT_DIR
 cp $DISTRO_DIR/solr.default $PREFIX/$DEFAULT_DIR/solr
+cp $DISTRO_DIR/solr.in.sh $PREFIX/$DEFAULT_DIR/solr.in.sh
 install -d -m 0755 $PREFIX/${CONF_DIR}.dist
 cp -a ${BUILD_DIR}/server/resources/* $PREFIX/${CONF_DIR}.dist
 
