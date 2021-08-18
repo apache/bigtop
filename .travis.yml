@@ -20,3 +20,7 @@ install:
 
 script:
 - mvn test -B
+
+cache:
+  directories:
+  - $HOME/.m2
