@@ -75,12 +75,6 @@ class bigtop_repo {
         }
       }
 
-      # It seems that calling update explicitely isn't needed because as far I can see
-      # it is getting called automatically. Perhaps this was needed for older versions?
-      exec { 'bigtop-apt-update':
-        command => '/usr/bin/apt-get update'
-      }
-
       if ($bigtop_repo_gpg_check) {
         apt::conf { "remove_disable_keys":
           content => "APT::Get::AllowUnauthenticated 1;\nAcquire::AllowInsecureRepositories \"true\";",
@@ -103,7 +97,18 @@ class bigtop_repo {
           ensure  => present
         }
       }
-      Apt::Conf<||> -> Apt::Key<||> -> Apt::Source<||> -> Exec['bigtop-apt-update'] -> Package<||>
+
+      # BIGTOP-3580. After the Debian 11 release, `apt-get update` fails on Debian 10
+      # if its repository info is obsolete. In such case, the repository info
+      # should be updated by the `--allow-releaseinfo-change` option.
+      if ($operatingsystem == 'Debian' and 0 <= versioncmp($operatingsystemrelease, "10")) {
+        exec { 'bigtop-apt-update':
+          command => '/usr/bin/apt-get update --allow-releaseinfo-change'
+        }
+        Apt::Conf<||> -> Apt::Key<||> -> Exec['bigtop-apt-update'] -> Apt::Source<||> -> Package<||>
+      } else {
+        Apt::Conf<||> -> Apt::Key<||> -> Apt::Source<||> -> Package<||>
+      }
     }
     default: {
       notify { "WARNING: running on a neither yum nor apt platform -- make sure Bigtop repo is setup": }
