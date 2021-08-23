@@ -32,7 +32,7 @@ class TestKibanaSmoke {
   private static String KIBANA_HOME = System.getenv("KIBANA_HOME");
 
   static final String KIBANA_START =  KIBANA_HOME + "/bin/start-kibana;"
-  static final String WAIT_FOR_COMPLETION =  "sleep 10;"
+  static final String WAIT_FOR_COMPLETION =  "sleep 60;"
   static final String GET_KIBANA_STATUS =  "curl -i localhost:5601;"
 
   @Test

@@ -26,6 +26,8 @@ class elasticsearch {
     $elasticsearch_cluster_nodes = hiera('hadoop_cluster_node::cluster_nodes')
     # minimum number of eligible master nodes, usually calced with N/2+1
     $elasticsearch_cluster_min_master = size($elasticsearch_cluster_nodes)/2 + 1
+    # check if system_call_filter is available during bootstrap
+    $elasticsearch_bootstrap_system_call_filter = hiera('elasticsearch::bootstrap::system_call_filter')
 
     # set values in elasticsearch.yaml
     file { "/etc/elasticsearch/conf/elasticsearch.yml":

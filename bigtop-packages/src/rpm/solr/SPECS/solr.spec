@@ -56,6 +56,7 @@ Source2: install_%{name}.sh
 Source3: solr.default
 Source4: solr-server.init
 Source5: solrctl.sh
+Source6: solr.in.sh
 #BIGTOP_PATCH_FILES
 Requires: bigtop-utils >= 0.7
 
@@ -157,6 +158,7 @@ fi
 %defattr(-,root,root,755)
 %config(noreplace) %{config_solr}.dist
 %config(noreplace) /etc/default/solr 
+%config(noreplace) /etc/default/solr.in.sh
 %{lib_solr}
 %{bin_solr}/solrctl
 %defattr(-,solr,solr,755)
