@@ -45,6 +45,13 @@ BUILD_OPTS="-Dhadoop3.2.version=${HADOOP_VERSION} \
             -Phadoop3 \
             -Pbuild-distr"
 
+if [ $HOSTTYPE = "powerpc64le" ] ; then
+  mvn install:install-file -DgroupId=com.google.protobuf -DartifactId=protoc -Dversion=3.5.0 \
+      -Dclassifier=linux-ppcle_64 -Dpackaging=exe -Dfile=/usr/local/protobuf-3.5.1.1/bin/protoc
+  
+  mvn install:install-file -DgroupId=io.grpc -DartifactId=protoc-gen-grpc-java -Dversion=1.28.0 -Dclassifier=linux-ppcle_64 -Dpackaging=exe -Dfile=/usr/src/grpc-java-1.28.0/compiler/build/exe/java_plugin/protoc-gen-grpc-java
+fi
+
 if [ "$ZEPPELIN_RUN_TESTS" = "true" ]; then
   BUILD_OPTS="$BUILD_OPTS -DskipTests=false"
 else
