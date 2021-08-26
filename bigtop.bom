@@ -90,7 +90,7 @@
 
 bigtop {
 /** Base Configuration of the mirror and archives */
-  version = "1.6.0-SNAPSHOT"
+  version = "3.0.0"
   stack {
     'jdk' { version = "1." + ( System.getenv('BIGTOP_JDK') ?: "8" ); version_base = version }
     'scala' { version = '2.12.13'; version_base = version }

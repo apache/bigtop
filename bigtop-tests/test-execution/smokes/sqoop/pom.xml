@@ -22,14 +22,14 @@
   <parent>
     <groupId>org.apache.bigtop.itest</groupId>
     <artifactId>smoke-tests</artifactId>
-    <version>1.6.0-SNAPSHOT</version>
+    <version>3.0.0</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>sqoop-smoke-execution</artifactId>
-  <version>1.6.0-SNAPSHOT</version>
+  <version>3.0.0</version>
   <name>Sqoop smoke test execution</name>
   
   <properties>
@@ -40,7 +40,7 @@
     <!-- Integration tests are special -->
     <org.apache.maven-dependency-plugin.groupId>org.apache.bigtop.itest</org.apache.maven-dependency-plugin.groupId>
     <org.apache.maven-dependency-plugin.artifactId>sqoop-smoke</org.apache.maven-dependency-plugin.artifactId>
-    <org.apache.maven-dependency-plugin.version>1.6.0-SNAPSHOT</org.apache.maven-dependency-plugin.version>
+    <org.apache.maven-dependency-plugin.version>3.0.0</org.apache.maven-dependency-plugin.version>
     <org.apache.maven-dependency-plugin.type>jar</org.apache.maven-dependency-plugin.type>
   </properties>
 
