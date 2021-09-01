@@ -20,3 +20,10 @@ install:
 
 script:
 - mvn test -B
+
+arch: 
+  - ppc64le
+  
+cache:
+  directories:
+  - $HOME/.m2
