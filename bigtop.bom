@@ -310,7 +310,7 @@ bigtop {
     'zeppelin' {
       name    = 'zeppelin'
       relNotes = 'Apache Zeppelin'
-      version { base = '0.9.0'; pkg = base; release = 1 }
+      version { base = '0.10.0'; pkg = base; release = 1 }
       tarball { source      = "$name-${version.base}.tgz"
                 destination = "$name-${version.base}.tar.gz" }
       url     { download_path = "/$name/$name-${version.base}/"
