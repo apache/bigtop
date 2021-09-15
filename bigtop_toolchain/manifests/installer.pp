@@ -19,11 +19,11 @@ class bigtop_toolchain::installer {
   include bigtop_toolchain::ant
   include bigtop_toolchain::gradle
   include bigtop_toolchain::protobuf
-  include bigtop_toolchain::grpc
   include bigtop_toolchain::packages
   include bigtop_toolchain::env
   include bigtop_toolchain::user
   include bigtop_toolchain::renv
+  include bigtop_toolchain::grpc
 
   stage { 'last':
     require => Stage['main'],

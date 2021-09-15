@@ -15,7 +15,9 @@
 
 class bigtop_toolchain::grpc {
 
-  require bigtop_toolchain::packages
+  require bigtop_toolchain::jdk
+  require bigtop_toolchain::protobuf
+
   $grpc_version = '1.28.0'
   $proto_version = '3.5.1.1'
   $proto_home = "/usr/local/protobuf-3.5.1.1"
