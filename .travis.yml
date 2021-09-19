@@ -20,3 +20,6 @@ install:
 
 script:
 - mvn test -B
+
+arch:
+  - ppc64le
