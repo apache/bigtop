@@ -50,6 +50,9 @@ if [ $HOSTTYPE = "powerpc64le" ] ; then
       -Dclassifier=linux-ppcle_64 -Dpackaging=exe -Dfile=/usr/local/protobuf-3.5.1.1/bin/protoc
   
   mvn install:install-file -DgroupId=io.grpc -DartifactId=protoc-gen-grpc-java -Dversion=1.28.0 -Dclassifier=linux-ppcle_64 -Dpackaging=exe -Dfile=/usr/src/grpc-java-1.28.0/compiler/build/exe/java_plugin/protoc-gen-grpc-java
+sed -i "s|<node.version>v12.3.1</node.version>|<node.version>v12.22.1</node.version>|" pom.xml
+sed -i "s|<npm.version>6.9.0</npm.version>|<npm.version>6.14.12</npm.version>|" pom.xml
+
 fi
 
 if [ "$ZEPPELIN_RUN_TESTS" = "true" ]; then
