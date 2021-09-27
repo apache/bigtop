@@ -1,0 +1,52 @@
+diff --git a/ambari-metrics/ambari-metrics-timelineservice/pom.xml b/ambari-metrics/ambari-metrics-timelineservice/pom.xml
+index 95f9cac..f8e3449 100644
+--- a/ambari-metrics/ambari-metrics-timelineservice/pom.xml
++++ b/ambari-metrics/ambari-metrics-timelineservice/pom.xml
+@@ -368,6 +368,14 @@
+           <artifactId>javax.ws.rs-api</artifactId>
+           <groupId>javax.ws.rs</groupId>
+         </exclusion>
++        <exclusion>
++          <groupId>org.glassfish</groupId>
++          <artifactId>javax.el</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>org.glassfish.web</groupId>
++          <artifactId>javax.servlet.jsp</artifactId>
++        </exclusion>
+       </exclusions>
+     </dependency>
+ 
+@@ -760,6 +768,10 @@
+           <artifactId>javax.ws.rs-api</artifactId>
+           <groupId>javax.ws.rs</groupId>
+         </exclusion>
++        <exclusion>
++          <groupId>org.glassfish</groupId>
++          <artifactId>javax.el</artifactId>
++        </exclusion>
+       </exclusions>
+       <version>${phoenix.version}</version>
+       <scope>test</scope>
+@@ -782,6 +794,10 @@
+           <groupId>com.fasterxml.jackson.core</groupId>
+           <artifactId>jackson-databind</artifactId>
+         </exclusion>
++        <exclusion>
++          <groupId>org.glassfish</groupId>
++          <artifactId>javax.el</artifactId>
++        </exclusion>
+       </exclusions>
+       <classifier>tests</classifier>
+     </dependency>
+@@ -804,6 +820,10 @@
+           <groupId>com.fasterxml.jackson.core</groupId>
+           <artifactId>jackson-databind</artifactId>
+         </exclusion>
++        <exclusion>
++          <groupId>org.glassfish</groupId>
++          <artifactId>javax.el</artifactId>
++        </exclusion>
+       </exclusions>
+     </dependency>
+     <dependency>
