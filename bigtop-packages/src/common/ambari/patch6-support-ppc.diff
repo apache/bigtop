@@ -1,0 +1,48 @@
+diff --git a/ambari-common/src/main/python/ambari_commons/resources/os_family.json b/ambari-common/src/main/python/ambari_commons/resources/os_family.json
+index 0634988657..022037b552 100644
+--- a/ambari-common/src/main/python/ambari_commons/resources/os_family.json
++++ b/ambari-common/src/main/python/ambari_commons/resources/os_family.json
+@@ -25,6 +25,7 @@
+         "extends" : "redhat",
+         "distro": [
+           "redhat-ppc",
++          "fedora-ppc",
+           "centos-ppc"
+         ],
+         "versions": [
+@@ -51,6 +52,16 @@
+           9
+         ]
+       },
++      "debian-ppc": {
++        "extends" : "debian",
++        "distro": [
++          "debian-ppc"
++        ],
++        "versions": [
++          7,
++          9
++        ]
++      },
+       "ubuntu": {
+         "distro": [
+           "ubuntu"
+@@ -62,6 +73,18 @@
+           18
+         ]
+       },
++      "ubuntu-ppc": {
++        "extends" : "ubuntu",
++        "distro": [
++          "ubuntu-ppc"
++        ],
++        "versions": [
++          12,
++          14,
++          16,
++          18
++        ]
++      },
+       "suse": {
+         "distro": [
+           "sles",
