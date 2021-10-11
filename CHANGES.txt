@@ -15,7 +15,7 @@
 
 Bigtop Changelog
 
-* Release 1.6.0 (unreleased)
+* Release 3.0.0 (2021-10-12)
 
 * Release 1.5.0 (2020-12-07)
 
