@@ -17,7 +17,7 @@ docker:
         memory_limit: "4g"
         image:  "bigtop/puppet:trunk-ubuntu-18.04"
 
-repo: "http://repos.bigtop.apache.org/releases/1.5.0/ubuntu/18.04/$(ARCH)"
+repo: "http://repos.bigtop.apache.org/releases/3.0.0/ubuntu/18.04/$(ARCH)"
 distro: debian
 components: [hdfs, yarn, mapreduce]
 enable_local_repo: false
