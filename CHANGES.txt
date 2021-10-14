@@ -17,7 +17,7 @@ Bigtop Changelog
 
 * Release 3.1.0-SNAPSHOT (unreleased)
 
-* Release 3.0.0 (2021-10-12)
+* Release 3.0.0 (2021-10-15)
 
 Release Notes - Bigtop - Version 3.0.0
 
@@ -110,6 +110,7 @@ Release Notes - Bigtop - Version 3.0.0
     * [BIGTOP-3582] - Logstash RPM Build Fails
     * [BIGTOP-3584] - Fix build failure of Ambari due to missing dependency on javax.el
     * [BIGTOP-3587] - Deploying Ambari to Ubuntu 18.04 and 20.04 fails on ppc64le
+    * [BIGTOP-3588] - Pin redis-rb version for Logstash to 4.4.0
 
 ** Improvement
     * [BIGTOP-3383] - Update puppet manifest for deploying Flink 1.11.1
