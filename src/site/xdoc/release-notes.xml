@@ -199,6 +199,8 @@
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3587'>BIGTOP-3587</a>] -         Deploying Ambari to Ubuntu 18.04 and 20.04 fails on ppc64le
 </li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3588'>BIGTOP-3588</a>] -         Pin redis-rb version for Logstash to 4.4.0
+</li>
 </ul>
 
 <h2>        Improvement
