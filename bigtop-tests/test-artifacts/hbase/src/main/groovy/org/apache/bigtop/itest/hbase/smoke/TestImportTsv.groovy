@@ -92,8 +92,7 @@ public class TestImportTsv {
     // delete data and junk from HDFS
     sh.exec("hadoop fs -rm -r -skipTrash $DATADIR1",
       "hadoop fs -rm -r -skipTrash $DATADIR2",
-      "hadoop fs -rm -r -skipTrash /user/$USER/hbase*",
-      "hadoop fs -rm -r -skipTrash /user/$USER/orig_*");
+      "hadoop fs -rm -r -skipTrash '/user/$USER/hbase*'");
     assertTrue("teardown failed", sh.getRet() == 0);
   }
 
