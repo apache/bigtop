@@ -95,6 +95,7 @@ class TestHBaseImportExport {
     admin.deleteTable(orig)
     admin.disableTable(export)
     admin.deleteTable(export)
+    sh.exec("hadoop fs -rm -r -skipTrash 'orig_*'");
   }
 
   @Test
