@@ -17,7 +17,7 @@ limitations under the License.
 
 """
 
-import subprocess
+from ambari_commons import subprocess32
 
 from resource_management.core.logger import Logger
 from resource_management.core.exceptions import Fail
@@ -25,6 +25,7 @@ from resource_management.core.resources.system import Execute
 from resource_management.core import shell
 from resource_management.libraries.functions.decorator import retry
 from resource_management.libraries.functions.show_logs import show_logs
+from resource_management.libraries.functions.format import format
 
 
 def post_upgrade_check():

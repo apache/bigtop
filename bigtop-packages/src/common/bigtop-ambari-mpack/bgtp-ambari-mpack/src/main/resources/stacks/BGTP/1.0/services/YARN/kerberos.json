@@ -25,15 +25,16 @@
             "yarn.timeline-service.http-authentication.token.validity": "",
             "yarn.timeline-service.http-authentication.cookie.domain": "",
             "yarn.timeline-service.http-authentication.cookie.path": "",
-            "yarn.timeline-service.http-authentication.proxyusers.*.hosts": "",
-            "yarn.timeline-service.http-authentication.proxyusers.*.users": "",
-            "yarn.timeline-service.http-authentication.proxyusers.*.groups": "",
+            "yarn.timeline-service.http-authentication.proxyuser.*.hosts": "",
+            "yarn.timeline-service.http-authentication.proxyuser.*.users": "",
+            "yarn.timeline-service.http-authentication.proxyuser.*.groups": "",
             "yarn.timeline-service.http-authentication.kerberos.name.rules": "",
-            "yarn.resourcemanager.proxyusers.*.groups": "",
-            "yarn.resourcemanager.proxyusers.*.hosts": "",
-            "yarn.resourcemanager.proxyusers.*.users": "",
+            "yarn.resourcemanager.proxyuser.*.groups": "",
+            "yarn.resourcemanager.proxyuser.*.hosts": "",
+            "yarn.resourcemanager.proxyuser.*.users": "",
             "yarn.resourcemanager.proxy-user-privileges.enabled": "true",
-            "yarn.nodemanager.linux-container-executor.cgroups.mount-path": ""
+            "hadoop.registry.secure" : "true",
+            "hadoop.registry.system.accounts" : "sasl:yarn,sasl:mapred,sasl:hadoop,sasl:hdfs,sasl:rm"
           }
         },
         {
@@ -158,7 +159,7 @@
               }
             },
             {
-              "name": "yarn_app_timelineserver_hdfs",
+              "name": "yarn_app_timeline_server_hdfs",
               "reference": "/HDFS/NAMENODE/hdfs"
             }
           ]
@@ -182,7 +183,7 @@
           "name": "HISTORYSERVER",
           "identities": [
             {
-              "name": "mapreduce2_history_server_hdfs",
+              "name": "mapreduce2_historyserver_hdfs",
               "reference": "/HDFS/NAMENODE/hdfs"
             },
             {
@@ -207,7 +208,7 @@
               }
             },
             {
-              "name": "mapreduce2_history_server_spnego",
+              "name": "mapreduce2_historyserver_spnego",
               "reference": "/spnego",
               "principal": {
                 "configuration": "mapred-site/mapreduce.jobhistory.webapp.spnego-principal"

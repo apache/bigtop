@@ -23,29 +23,15 @@
       <name>YARN</name>
       <displayName>YARN</displayName>
       <comment>Apache Hadoop NextGen MapReduce (YARN)</comment>
-      <version>2.8.4+bigtop</version>
+      <version>2.1.0.2.0</version>
       <components>
-
-      <component>
-          <name>APP_TIMELINE_SERVER</name>
-          <displayName>App Timeline Server</displayName>
-          <category>MASTER</category>
-          <cardinality>0-1</cardinality>
-          <versionAdvertised>false</versionAdvertised>
-          <reassignAllowed>true</reassignAllowed>
-          <commandScript>
-            <script>scripts/application_timeline_server.py</script>
-            <scriptType>PYTHON</scriptType>
-            <timeout>1200</timeout>
-          </commandScript>
-        </component>
 
         <component>
           <name>RESOURCEMANAGER</name>
           <displayName>ResourceManager</displayName>
           <category>MASTER</category>
           <cardinality>1</cardinality>
-          <versionAdvertised>false</versionAdvertised>
+          <versionAdvertised>true</versionAdvertised>
           <reassignAllowed>true</reassignAllowed>
           <commandScript>
             <script>scripts/resourcemanager.py</script>
@@ -93,7 +79,7 @@
           <displayName>NodeManager</displayName>
           <category>SLAVE</category>
           <cardinality>1+</cardinality>
-          <versionAdvertised>false</versionAdvertised>
+          <versionAdvertised>true</versionAdvertised>
           <decommissionAllowed>true</decommissionAllowed>
           <commandScript>
             <script>scripts/nodemanager.py</script>
@@ -117,7 +103,7 @@
           <displayName>YARN Client</displayName>
           <category>CLIENT</category>
           <cardinality>1+</cardinality>
-          <versionAdvertised>false</versionAdvertised>
+          <versionAdvertised>true</versionAdvertised>
           <commandScript>
             <script>scripts/yarn_client.py</script>
             <scriptType>PYTHON</scriptType>
@@ -148,7 +134,7 @@
               <type>xml</type>
               <fileName>capacity-scheduler.xml</fileName>
               <dictionaryName>capacity-scheduler</dictionaryName>
-            </configFile> 
+            </configFile>                        
           </configFiles>
         </component>
       </components>
@@ -175,10 +161,11 @@
         <scriptType>PYTHON</scriptType>
         <timeout>300</timeout>
       </commandScript>
-
+      
       <requiredServices>
         <service>HDFS</service>
         <service>MAPREDUCE2</service>
+        <service>ZOOKEEPER</service>
       </requiredServices>
 
       <configuration-dependencies>
@@ -189,7 +176,6 @@
         <config-type>core-site</config-type>
         <config-type>mapred-site</config-type>
         <config-type>yarn-log4j</config-type>
-        <config-type>ams-ssl-client</config-type>
         <config-type>ranger-yarn-plugin-properties</config-type>
         <config-type>ranger-yarn-audit</config-type>
         <config-type>ranger-yarn-policymgr-ssl</config-type>
@@ -197,20 +183,26 @@
       </configuration-dependencies>
       <widgetsFileName>YARN_widgets.json</widgetsFileName>
       <metricsFileName>YARN_metrics.json</metricsFileName>
+      <themes>
+        <theme>
+          <fileName>directories.json</fileName>
+          <default>true</default>
+        </theme>
+      </themes>
     </service>
 
     <service>
       <name>MAPREDUCE2</name>
       <displayName>MapReduce2</displayName>
       <comment>Apache Hadoop NextGen MapReduce (YARN)</comment>
-      <version>2.8.4+bigtop</version>
+      <version>2.1.0.2.0.6.0</version>
       <components>
         <component>
           <name>HISTORYSERVER</name>
           <displayName>History Server</displayName>
           <category>MASTER</category>
           <cardinality>1</cardinality>
-          <versionAdvertised>false</versionAdvertised>
+          <versionAdvertised>true</versionAdvertised>
           <reassignAllowed>true</reassignAllowed>
           <auto-deploy>
             <enabled>true</enabled>
@@ -219,6 +211,20 @@
           <dependencies>
             <dependency>
               <name>HDFS/HDFS_CLIENT</name>
+              <scope>host</scope>
+              <auto-deploy>
+                <enabled>true</enabled>
+              </auto-deploy>
+            </dependency>
+            <dependency>
+              <name>TEZ/TEZ_CLIENT</name>
+              <scope>host</scope>
+              <auto-deploy>
+                <enabled>true</enabled>
+              </auto-deploy>
+            </dependency>
+            <dependency>
+              <name>SLIDER/SLIDER</name>
               <scope>host</scope>
               <auto-deploy>
                 <enabled>true</enabled>
@@ -243,7 +249,7 @@
           <displayName>MapReduce2 Client</displayName>
           <category>CLIENT</category>
           <cardinality>0+</cardinality>
-          <versionAdvertised>false</versionAdvertised>
+          <versionAdvertised>true</versionAdvertised>
           <commandScript>
             <script>scripts/mapreduce2_client.py</script>
             <scriptType>PYTHON</scriptType>
@@ -285,7 +291,7 @@
         <scriptType>PYTHON</scriptType>
         <timeout>300</timeout>
       </commandScript>
-
+      
       <requiredServices>
         <service>YARN</service>
       </requiredServices>
@@ -300,11 +306,19 @@
         <config-type>mapred-env</config-type>
         <config-type>ssl-client</config-type>
         <config-type>ssl-server</config-type>
-        <config-type>ams-ssl-client</config-type>
+        <config-type>yarn-site</config-type>
       </configuration-dependencies>
       <restartRequiredAfterRackChange>true</restartRequiredAfterRackChange>
       <widgetsFileName>MAPREDUCE2_widgets.json</widgetsFileName>
       <metricsFileName>MAPREDUCE2_metrics.json</metricsFileName>
+
+      <themes-dir>themes-mapred</themes-dir>
+      <themes>
+        <theme>
+          <fileName>directories.json</fileName>
+          <default>true</default>
+        </theme>
+      </themes>
     </service>
   </services>
 </metainfo>
