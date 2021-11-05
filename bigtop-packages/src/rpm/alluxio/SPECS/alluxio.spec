@@ -109,7 +109,7 @@ done
 
 %pre
 getent group alluxio >/dev/null || groupadd -r alluxio
-getent passwd alluxio >/dev/null || useradd -c "Alluxio" -s /sbin/nologin -g alluxio -r -d %{var_lib_alluxio} alluxio 2> /dev/null || :
+getent passwd alluxio >/dev/null || useradd -c "Alluxio" -s /sbin/nologin -g alluxio -r -d %{var_lib} alluxio 2> /dev/null || :
 
 %post
 %{alternatives_cmd} --install %{config_alluxio} %{alluxio_name}-conf %{config_alluxio}.dist 30
