@@ -17,8 +17,10 @@ limitations under the License.
 
 """
 
-from resource_management import *
-from shared_initialization import *
+
+from shared_initialization import setup_users, setup_hadoop_env, setup_java
+from resource_management import Hook
+
 
 class BeforeAnyHook(Hook):
 
@@ -27,9 +29,10 @@ class BeforeAnyHook(Hook):
     env.set_params(params)
 
     setup_users()
-    if params.has_namenode or params.dfs_type == 'HCFS':
+    if params.has_hdfs or params.dfs_type == 'HCFS':
       setup_hadoop_env()
     setup_java()
+
 
 if __name__ == "__main__":
   BeforeAnyHook().execute()

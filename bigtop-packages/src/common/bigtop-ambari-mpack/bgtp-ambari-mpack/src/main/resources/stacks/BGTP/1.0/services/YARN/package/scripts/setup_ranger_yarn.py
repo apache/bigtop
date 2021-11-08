@@ -19,7 +19,7 @@ from resource_management.core.logger import Logger
 def setup_ranger_yarn():
   import params
 
-  if params.has_ranger_admin:
+  if params.enable_ranger_yarn:
 
     from resource_management.libraries.functions.setup_ranger_plugin_xml import setup_ranger_plugin
 
@@ -55,9 +55,9 @@ def setup_ranger_yarn():
                         params.policy_user, params.policymgr_mgr_url,
                         params.enable_ranger_yarn, conf_dict=params.hadoop_conf_dir,
                         component_user=params.yarn_user, component_group=params.user_group, cache_service_list=['yarn'],
-                        plugin_audit_properties=params.config['configurations']['ranger-yarn-audit'], plugin_audit_attributes=params.config['configuration_attributes']['ranger-yarn-audit'],
-                        plugin_security_properties=params.config['configurations']['ranger-yarn-security'], plugin_security_attributes=params.config['configuration_attributes']['ranger-yarn-security'],
-                        plugin_policymgr_ssl_properties=params.config['configurations']['ranger-yarn-policymgr-ssl'], plugin_policymgr_ssl_attributes=params.config['configuration_attributes']['ranger-yarn-policymgr-ssl'],
+                        plugin_audit_properties=params.config['configurations']['ranger-yarn-audit'], plugin_audit_attributes=params.config['configurationAttributes']['ranger-yarn-audit'],
+                        plugin_security_properties=params.config['configurations']['ranger-yarn-security'], plugin_security_attributes=params.config['configurationAttributes']['ranger-yarn-security'],
+                        plugin_policymgr_ssl_properties=params.config['configurations']['ranger-yarn-policymgr-ssl'], plugin_policymgr_ssl_attributes=params.config['configurationAttributes']['ranger-yarn-policymgr-ssl'],
                         component_list=['hadoop-yarn-resourcemanager'], audit_db_is_enabled=params.xa_audit_db_is_enabled,
                         credential_file=params.credential_file, xa_audit_db_password=params.xa_audit_db_password, 
                         ssl_truststore_password=params.ssl_truststore_password, ssl_keystore_password=params.ssl_keystore_password,
@@ -68,4 +68,4 @@ def setup_ranger_yarn():
                         component_user_keytab=params.rm_keytab if params.security_enabled else None
       )
   else:
-    Logger.info('Ranger admin not installed')
+    Logger.info('Ranger Yarn plugin is not enabled')
