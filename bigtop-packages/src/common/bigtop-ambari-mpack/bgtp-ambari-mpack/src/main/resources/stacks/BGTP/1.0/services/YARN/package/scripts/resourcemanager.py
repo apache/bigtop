@@ -20,7 +20,6 @@ Ambari Agent
 """
 
 from resource_management.libraries.script.script import Script
-from resource_management.libraries.functions import conf_select
 from resource_management.libraries.functions import stack_select
 from resource_management.libraries.functions import StackFeature
 from resource_management.libraries.functions.stack_features import check_stack_feature
@@ -38,7 +37,8 @@ from resource_management.libraries.providers.hdfs_resource import WebHDFSUtil
 from resource_management.libraries.providers.hdfs_resource import HdfsResourceProvider
 from resource_management import is_empty
 from resource_management import shell
-
+from resource_management.core.resources.zkmigrator import ZkMigrator
+from resource_management.libraries.functions import namenode_ha_utils
 
 from yarn import yarn
 from service import service
@@ -93,10 +93,10 @@ class ResourcemanagerWindows(Resourcemanager):
 
     if params.include_hosts:
       File(params.include_file_path,
-           content=Template("include_hosts_list.j2"),
-           owner=yarn_user,
-           mode="f"
-           )
+         content=Template("include_hosts_list.j2"),
+         owner=yarn_user,
+         mode="f"
+    )
 
     if params.update_files_only == False:
       Execute(yarn_refresh_cmd, user=yarn_user)
@@ -105,23 +105,20 @@ class ResourcemanagerWindows(Resourcemanager):
 
 @OsFamilyImpl(os_family=OsFamilyImpl.DEFAULT)
 class ResourcemanagerDefault(Resourcemanager):
-  def get_component_name(self):
-    return "hadoop-yarn-resourcemanager"
-
   def pre_upgrade_restart(self, env, upgrade_type=None):
     Logger.info("Executing Stack Upgrade post-restart")
     import params
     env.set_params(params)
 
     if params.version and check_stack_feature(StackFeature.ROLLING_UPGRADE, params.version):
-      stack_select.select("hadoop-yarn-resourcemanager", params.version)
+      stack_select.select_packages(params.version)
 
   def start(self, env, upgrade_type=None):
     import params
 
     env.set_params(params)
     self.configure(env) # FOR SECURITY
-    if params.has_ranger_admin and params.is_supported_yarn_ranger:
+    if params.enable_ranger_yarn and params.is_supported_yarn_ranger:
       setup_ranger_yarn() #Ranger Yarn Plugin related calls
 
     # wait for active-dir and done-dir to be created by ATS if needed
@@ -137,66 +134,6 @@ class ResourcemanagerDefault(Resourcemanager):
     env.set_params(status_params)
     check_process_status(status_params.resourcemanager_pid_file)
     pass
-
-  def security_status(self, env):
-    import status_params
-    env.set_params(status_params)
-    if status_params.security_enabled:
-      props_value_check = {"yarn.timeline-service.http-authentication.type": "kerberos",
-                           "yarn.acl.enable": "true"}
-      props_empty_check = ["yarn.resourcemanager.principal",
-                           "yarn.resourcemanager.keytab",
-                           "yarn.resourcemanager.webapp.spnego-principal",
-                           "yarn.resourcemanager.webapp.spnego-keytab-file"]
-
-      props_read_check = ["yarn.resourcemanager.keytab",
-                          "yarn.resourcemanager.webapp.spnego-keytab-file"]
-      yarn_site_props = build_expectations('yarn-site', props_value_check, props_empty_check,
-                                           props_read_check)
-
-      yarn_expectations ={}
-      yarn_expectations.update(yarn_site_props)
-
-      security_params = get_params_from_filesystem(status_params.hadoop_conf_dir,
-                                                   {'yarn-site.xml': FILE_TYPE_XML})
-      result_issues = validate_security_config_properties(security_params, yarn_site_props)
-      if not result_issues: # If all validations passed successfully
-        try:
-          # Double check the dict before calling execute
-          if ( 'yarn-site' not in security_params
-               or 'yarn.resourcemanager.keytab' not in security_params['yarn-site']
-               or 'yarn.resourcemanager.principal' not in security_params['yarn-site']) \
-            or 'yarn.resourcemanager.webapp.spnego-keytab-file' not in security_params['yarn-site'] \
-            or 'yarn.resourcemanager.webapp.spnego-principal' not in security_params['yarn-site']:
-            self.put_structured_out({"securityState": "UNSECURED"})
-            self.put_structured_out(
-              {"securityIssuesFound": "Keytab file or principal are not set property."})
-            return
-
-          cached_kinit_executor(status_params.kinit_path_local,
-                                status_params.yarn_user,
-                                security_params['yarn-site']['yarn.resourcemanager.keytab'],
-                                security_params['yarn-site']['yarn.resourcemanager.principal'],
-                                status_params.hostname,
-                                status_params.tmp_dir)
-          cached_kinit_executor(status_params.kinit_path_local,
-                                status_params.yarn_user,
-                                security_params['yarn-site']['yarn.resourcemanager.webapp.spnego-keytab-file'],
-                                security_params['yarn-site']['yarn.resourcemanager.webapp.spnego-principal'],
-                                status_params.hostname,
-                                status_params.tmp_dir)
-          self.put_structured_out({"securityState": "SECURED_KERBEROS"})
-        except Exception as e:
-          self.put_structured_out({"securityState": "ERROR"})
-          self.put_structured_out({"securityStateErrorInfo": str(e)})
-      else:
-        issues = []
-        for cf in result_issues:
-          issues.append("Configuration file %s did not pass the validation. Reason: %s" % (cf, result_issues[cf]))
-        self.put_structured_out({"securityIssuesFound": ". ".join(issues)})
-        self.put_structured_out({"securityState": "UNSECURED"})
-    else:
-      self.put_structured_out({"securityState": "UNSECURED"})
 
   def refreshqueues(self, env):
     import params
@@ -239,8 +176,23 @@ class ResourcemanagerDefault(Resourcemanager):
       pass
     pass
 
-
-
+  def disable_security(self, env):
+    import params
+    if not params.stack_supports_zk_security:
+      Logger.info("Stack doesn't support zookeeper security")
+      return
+    if not params.rm_zk_address:
+      Logger.info("No zookeeper connection string. Skipping reverting ACL")
+      return
+    zkmigrator = ZkMigrator(
+      params.rm_zk_address, \
+      params.java_exec, \
+      params.java64_home, \
+      params.yarn_jaas_file, \
+      params.yarn_user)
+    zkmigrator.set_acls(params.rm_zk_znode, 'world:anyone:crdwa')
+    zkmigrator.set_acls(params.hadoop_registry_zk_root, 'world:anyone:crdwa')
+    zkmigrator.delete_node(params.rm_zk_failover_znode)
 
   def wait_for_dfs_directories_created(self, *dirs):
     import params
@@ -275,9 +227,12 @@ class ResourcemanagerDefault(Resourcemanager):
 
       dir_exists = None
 
-      if WebHDFSUtil.is_webhdfs_available(params.is_webhdfs_enabled, params.default_fs):
+      nameservices = namenode_ha_utils.get_nameservices(params.hdfs_site)
+      nameservice = None if not nameservices else nameservices[-1]
+      
+      if WebHDFSUtil.is_webhdfs_available(params.is_webhdfs_enabled, params.dfs_type):
         # check with webhdfs is much faster than executing hdfs dfs -test
-        util = WebHDFSUtil(params.hdfs_site, params.hdfs_user, params.security_enabled)
+        util = WebHDFSUtil(params.hdfs_site, nameservice, params.hdfs_user, params.security_enabled)
         list_status = util.run_command(dir_path, 'GETFILESTATUS', method='GET', ignore_status_codes=['404'], assertable_result=False)
         dir_exists = ('FileStatus' in list_status)
       else:
@@ -297,6 +252,10 @@ class ResourcemanagerDefault(Resourcemanager):
   def get_user(self):
     import params
     return params.yarn_user
+
+  def get_pid_files(self):
+    import status_params
+    return [status_params.resourcemanager_pid_file]
   
 if __name__ == "__main__":
   Resourcemanager().execute()
