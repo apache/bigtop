@@ -38,7 +38,7 @@ case ${ID}-${VERSION_ID} in
         apt-get update
         apt-get -y install wget curl sudo unzip puppet puppet-module-puppetlabs-apt puppet-module-puppetlabs-stdlib systemd-sysv
         ;;
-    debian-10*)
+    debian-10*|debian-11*)
         apt-get update
         apt-get -y install wget curl sudo unzip puppet puppet-module-puppetlabs-apt puppet-module-puppetlabs-stdlib systemd-sysv gnupg procps
         ;;
