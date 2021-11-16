@@ -151,7 +151,7 @@ class bigtop_toolchain::packages {
       "libffi-devel"
     ] }
     /(Ubuntu|Debian)/: {
-      $pkgs = [
+      $_pkgs = [
         "unzip",
         "curl",
         "wget",
@@ -181,7 +181,6 @@ class bigtop_toolchain::packages {
         "dh-python",
         "libfuse2",
         "libjansi-java",
-        "python2.7-dev",
         "libxml2-dev",
         "libxslt1-dev",
         "zlib1g-dev",
@@ -206,10 +205,14 @@ class bigtop_toolchain::packages {
         "libcurl4-gnutls-dev",
         "bison",
         "flex",
-        "python-dev",
         "python-setuptools",
         "libffi-dev"
       ]
+      if ($operatingsystem == 'Debian' and versioncmp($operatingsystemmajrelease, '10') < 0) {
+        $pkgs = concat($_pkgs, ["python-dev", "python2.7-dev"])
+      } else {
+        $pkgs = concat($_pkgs, ["python3-dev"])
+      }
       file { '/etc/apt/apt.conf.d/01retries':
         content => 'Aquire::Retries "5";'
       } -> Package <| |>
