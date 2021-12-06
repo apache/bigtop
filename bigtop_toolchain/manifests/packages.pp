@@ -151,7 +151,7 @@ class bigtop_toolchain::packages {
       "libffi-devel"
     ] }
     /(Ubuntu|Debian)/: {
-      $_pkgs = [
+      $pkgs = [
         "unzip",
         "curl",
         "wget",
@@ -206,13 +206,10 @@ class bigtop_toolchain::packages {
         "bison",
         "flex",
         "python-setuptools",
-        "libffi-dev"
+        "libffi-dev",
+        "python3-dev",
+        "python2.7-dev"
       ]
-      if ($operatingsystem == 'Debian' and versioncmp($operatingsystemmajrelease, '10') < 0) {
-        $pkgs = concat($_pkgs, ["python-dev", "python2.7-dev"])
-      } else {
-        $pkgs = concat($_pkgs, ["python3-dev"])
-      }
       file { '/etc/apt/apt.conf.d/01retries':
         content => 'Aquire::Retries "5";'
       } -> Package <| |>
