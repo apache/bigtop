@@ -16,31 +16,36 @@
 class bigtop_toolchain::maven {
 
   require bigtop_toolchain::gnupg
+  require bigtop_toolchain::packages
 
   $mvnversion = latest_maven_binary("3.6.[0-9]*")
   $mvn = "apache-maven-$mvnversion"
 
   $apache_prefix = nearest_apache_mirror()
 
-  exec {"/usr/bin/wget $apache_prefix/maven/maven-3/$mvnversion/binaries/$mvn-bin.tar.gz":
+  exec { 'Download Maven binaries':
+    command => "/usr/bin/wget $apache_prefix/maven/maven-3/$mvnversion/binaries/$mvn-bin.tar.gz",
     cwd     => "/usr/src",
     unless  => "/usr/bin/test -f /usr/src/$mvn-bin.tar.gz",
   } ~>
 
-  exec {"/usr/bin/wget https://www.apache.org/dist/maven/maven-3/$mvnversion/binaries/$mvn-bin.tar.gz.asc":
+  exec { 'Download Maven binaries signature':
+    command => "/usr/bin/wget https://www.apache.org/dist/maven/maven-3/$mvnversion/binaries/$mvn-bin.tar.gz.asc",
     cwd     => "/usr/src",
     unless  => "/usr/bin/test -f /usr/src/$mvn-bin.tar.gz.asc",
   } ~>
 
-  exec {"/usr/bin/$bigtop_toolchain::gnupg::cmd --no-tty -v --verify --auto-key-retrieve --keyserver hkp://keyserver.ubuntu.com:80 $mvn-bin.tar.gz.asc":
+  exec { 'Verify Maven binaries signature':
+    command => "/usr/bin/$bigtop_toolchain::gnupg::cmd --no-tty -v --verify --auto-key-retrieve --keyserver hkp://keyserver.ubuntu.com:80 $mvn-bin.tar.gz.asc",
     cwd     => "/usr/src",
   } ->
 
-  exec {"/bin/tar xvzf /usr/src/$mvn-bin.tar.gz":
+  exec { 'Extract Maven binaries':
+    command => "/bin/tar xvzf /usr/src/$mvn-bin.tar.gz",
     cwd     => '/usr/local',
     creates => "/usr/local/$mvn",
   } ->
-  
+
   file {'/usr/local/maven':
     ensure  => link,
     target  => "/usr/local/$mvn",
