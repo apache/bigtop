@@ -86,4 +86,3 @@ cp ${BUILD_DIR}/jsvc ${PREFIX}/${BIN_DIR}
 # docs
 install -d -m 0755 ${PREFIX}/${DOC_DIR}
 cp ${BUILD_DIR}/*.txt  ${PREFIX}/${DOC_DIR}/
-cp ${BUILD_DIR}/README  ${PREFIX}/${DOC_DIR}/
