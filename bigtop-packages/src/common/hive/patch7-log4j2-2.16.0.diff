@@ -1,0 +1,117 @@
+diff --git a/bin/hive-config.sh b/bin/hive-config.sh
+index d52b84eb5f..8381a25a05 100644
+--- a/bin/hive-config.sh
++++ b/bin/hive-config.sh
+@@ -68,3 +68,7 @@ export HIVE_AUX_JARS_PATH=$HIVE_AUX_JARS_PATH
+ 
+ # Default to use 256MB 
+ export HADOOP_HEAPSIZE=${HADOOP_HEAPSIZE:-256}
++
++# Disable the JNDI. This feature has critical RCE vulnerability.
++# when 2.x <= log4j.version <= 2.14.1
++export HADOOP_CLIENT_OPTS="$HADOOP_CLIENT_OPTS -Dlog4j2.formatMsgNoLookups=true"
+diff --git a/druid-handler/pom.xml b/druid-handler/pom.xml
+index 4af3d5f00b..349be6628d 100644
+--- a/druid-handler/pom.xml
++++ b/druid-handler/pom.xml
+@@ -223,6 +223,11 @@
+       <artifactId>calcite-druid</artifactId>
+       <version>${calcite.version}</version>
+     </dependency>
++    <dependency>
++      <groupId>com.lmax</groupId>
++      <artifactId>disruptor</artifactId>
++      <version>${disruptor.version}</version>
++    </dependency>
+     <!-- test inter-project -->
+     <dependency>
+       <groupId>junit</groupId>
+diff --git a/hbase-handler/pom.xml b/hbase-handler/pom.xml
+index 9b12f42651..0f009b6792 100644
+--- a/hbase-handler/pom.xml
++++ b/hbase-handler/pom.xml
+@@ -102,6 +102,11 @@
+       <artifactId>hbase-hadoop-compat</artifactId>
+       <version>${hbase.version}</version>
+     </dependency>
++    <dependency>
++      <groupId>com.lmax</groupId>
++      <artifactId>disruptor</artifactId>
++      <version>${disruptor.version}</version>
++    </dependency>
+ 
+     <!-- test inter-project -->
+     <dependency>
+diff --git a/llap-server/pom.xml b/llap-server/pom.xml
+index d73c733d3e..3ee1765a02 100644
+--- a/llap-server/pom.xml
++++ b/llap-server/pom.xml
+@@ -230,6 +230,11 @@
+       <groupId>org.codehaus.jettison</groupId>
+       <artifactId>jettison</artifactId>
+     </dependency>
++    <dependency>
++      <groupId>com.lmax</groupId>
++      <artifactId>disruptor</artifactId>
++      <version>${disruptor.version}</version>
++    </dependency>
+ 
+     <!-- test inter-project -->
+     <dependency>
+diff --git a/pom.xml b/pom.xml
+index f91f7f43a6..d3ef636c2b 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -98,7 +98,7 @@
+     <maven.install.plugin.version>2.4</maven.install.plugin.version>
+     <maven.jar.plugin.version>2.4</maven.jar.plugin.version>
+     <maven.javadoc.plugin.version>2.4</maven.javadoc.plugin.version>
+-    <maven.shade.plugin.version>2.4.3</maven.shade.plugin.version>
++    <maven.shade.plugin.version>3.2.0</maven.shade.plugin.version>
+     <maven.surefire.plugin.version>2.18.1</maven.surefire.plugin.version>
+     <maven.war.plugin.version>2.4</maven.war.plugin.version>
+     <maven.dependency.plugin.version>2.8</maven.dependency.plugin.version>
+@@ -143,7 +143,7 @@
+     <hamcrest.version>1.1</hamcrest.version>
+     <hbase.version>1.1.1</hbase.version>
+     <!-- required for logging test to avoid including hbase which pulls disruptor transitively -->
+-    <disruptor.version>3.3.0</disruptor.version>
++    <disruptor.version>3.3.7</disruptor.version>
+     <hikaricp.version>2.5.1</hikaricp.version>
+     <!-- httpcomponents are not always in version sync -->
+     <httpcomponents.client.version>4.4</httpcomponents.client.version>
+@@ -173,7 +173,7 @@
+     <kryo.version>3.0.3</kryo.version>
+     <libfb303.version>0.9.3</libfb303.version>
+     <libthrift.version>0.9.3</libthrift.version>
+-    <log4j2.version>2.6.2</log4j2.version>
++    <log4j2.version>2.17.0</log4j2.version>
+     <opencsv.version>2.3</opencsv.version>
+     <orc.version>1.3.4</orc.version>
+     <mockito-all.version>1.9.5</mockito-all.version>
+diff --git a/ql/src/java/org/apache/hadoop/hive/ql/log/NoDeleteRollingFileAppender.java b/ql/src/java/org/apache/hadoop/hive/ql/log/NoDeleteRollingFileAppender.java
+index be32f06e43..5d10233054 100644
+--- a/ql/src/java/org/apache/hadoop/hive/ql/log/NoDeleteRollingFileAppender.java
++++ b/ql/src/java/org/apache/hadoop/hive/ql/log/NoDeleteRollingFileAppender.java
+@@ -27,7 +27,7 @@
+ import org.apache.log4j.Layout;
+ import org.apache.log4j.helpers.CountingQuietWriter;
+ import org.apache.log4j.helpers.LogLog;
+-import org.apache.log4j.helpers.OptionConverter;
++import org.apache.logging.log4j.core.util.OptionConverter;
+ import org.apache.log4j.spi.LoggingEvent;
+ 
+ public class NoDeleteRollingFileAppender extends FileAppender {
+diff --git a/testutils/ptest2/pom.xml b/testutils/ptest2/pom.xml
+index e914e44c60..85035926a2 100644
+--- a/testutils/ptest2/pom.xml
++++ b/testutils/ptest2/pom.xml
+@@ -26,7 +26,7 @@ limitations under the License.
+   <name>hive-ptest</name>
+   <properties>
+     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+-    <log4j2.version>2.6.2</log4j2.version>
++    <log4j2.version>2.17.0</log4j2.version>
+     <spring.framework.version>3.2.16.RELEASE</spring.framework.version>
+     <jclouds.version>2.0.0</jclouds.version>
+   </properties>
