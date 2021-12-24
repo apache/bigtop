@@ -1,0 +1,140 @@
+commit b4348b7e562cded183aab6de1521ae364cc7fd14
+Author: Kousuke Saruta <sarutak@oss.nttdata.com>
+Date:   Mon May 17 21:46:35 2021 +0900
+
+    [SPARK-35420][BUILD] Replace the usage of toStringHelper with ToStringBuilder
+    
+    ### What changes were proposed in this pull request?
+    
+    This PR replaces `toStringHelper`, an API which breaks in Guava 27.
+    
+    ### Why are the changes needed?
+    
+    SPARK-30272 (#26911) removed usages which breaks in Guava 27 but `toStringHelper` is instroduced again.
+    
+    ### Does this PR introduce _any_ user-facing change?
+    
+    No.
+    
+    ### How was this patch tested?
+    
+    Build successfully finished with the following command.
+    ```
+    build/sbt -Dguava.version=27.0-jre -Phive -Phive-thriftserver -Pyarn -Pmesos -Pkubernetes -Phadoop-cloud -Pdocker-integration-tests -Pkubernetes-integration-tests -Pkinesis-asl -Pspark-ganglia-lgpl package
+    ```
+    
+    Closes #32567 from sarutak/remove-old-guava-usage.
+    
+    Authored-by: Kousuke Saruta <sarutak@oss.nttdata.com>
+    Signed-off-by: Kousuke Saruta <sarutak@oss.nttdata.com>
+
+diff --git a/common/network-shuffle/src/main/java/org/apache/spark/network/shuffle/RemoteBlockPushResolver.java b/common/network-shuffle/src/main/java/org/apache/spark/network/shuffle/RemoteBlockPushResolver.java
+index 9363efc58d..1ac33cdefe 100644
+--- a/common/network-shuffle/src/main/java/org/apache/spark/network/shuffle/RemoteBlockPushResolver.java
++++ b/common/network-shuffle/src/main/java/org/apache/spark/network/shuffle/RemoteBlockPushResolver.java
+@@ -47,6 +47,8 @@ import com.google.common.cache.Weigher;
+ import com.google.common.collect.Maps;
+ import com.google.common.primitives.Ints;
+ import com.google.common.primitives.Longs;
++import org.apache.commons.lang3.builder.ToStringBuilder;
++import org.apache.commons.lang3.builder.ToStringStyle;
+ import org.roaringbitmap.RoaringBitmap;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+@@ -770,9 +772,9 @@ public class RemoteBlockPushResolver implements MergedShuffleFileManager {
+ 
+     @Override
+     public String toString() {
+-      return Objects.toStringHelper(this)
+-        .add("appId", appId)
+-        .add("shuffleId", shuffleId)
++      return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
++        .append("appId", appId)
++        .append("shuffleId", shuffleId)
+         .toString();
+     }
+   }
+diff --git a/common/network-shuffle/src/main/java/org/apache/spark/network/shuffle/protocol/FinalizeShuffleMerge.java b/common/network-shuffle/src/main/java/org/apache/spark/network/shuffle/protocol/FinalizeShuffleMerge.java
+index 8427837d15..31efbb727b 100644
+--- a/common/network-shuffle/src/main/java/org/apache/spark/network/shuffle/protocol/FinalizeShuffleMerge.java
++++ b/common/network-shuffle/src/main/java/org/apache/spark/network/shuffle/protocol/FinalizeShuffleMerge.java
+@@ -19,6 +19,8 @@ package org.apache.spark.network.shuffle.protocol;
+ 
+ import com.google.common.base.Objects;
+ import io.netty.buffer.ByteBuf;
++import org.apache.commons.lang3.builder.ToStringBuilder;
++import org.apache.commons.lang3.builder.ToStringStyle;
+ 
+ import org.apache.spark.network.protocol.Encoders;
+ 
+@@ -51,9 +53,9 @@ public class FinalizeShuffleMerge extends BlockTransferMessage {
+ 
+   @Override
+   public String toString() {
+-    return Objects.toStringHelper(this)
+-      .add("appId", appId)
+-      .add("shuffleId", shuffleId)
++    return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
++      .append("appId", appId)
++      .append("shuffleId", shuffleId)
+       .toString();
+   }
+ 
+diff --git a/common/network-shuffle/src/main/java/org/apache/spark/network/shuffle/protocol/MergeStatuses.java b/common/network-shuffle/src/main/java/org/apache/spark/network/shuffle/protocol/MergeStatuses.java
+index d506d9eb2b..142ab73e79 100644
+--- a/common/network-shuffle/src/main/java/org/apache/spark/network/shuffle/protocol/MergeStatuses.java
++++ b/common/network-shuffle/src/main/java/org/apache/spark/network/shuffle/protocol/MergeStatuses.java
+@@ -21,6 +21,8 @@ import java.util.Arrays;
+ 
+ import com.google.common.base.Objects;
+ import io.netty.buffer.ByteBuf;
++import org.apache.commons.lang3.builder.ToStringBuilder;
++import org.apache.commons.lang3.builder.ToStringStyle;
+ import org.roaringbitmap.RoaringBitmap;
+ 
+ import org.apache.spark.network.protocol.Encoders;
+@@ -76,9 +78,9 @@ public class MergeStatuses extends BlockTransferMessage {
+ 
+   @Override
+   public String toString() {
+-    return Objects.toStringHelper(this)
+-      .add("shuffleId", shuffleId)
+-      .add("reduceId size", reduceIds.length)
++    return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
++      .append("shuffleId", shuffleId)
++      .append("reduceId size", reduceIds.length)
+       .toString();
+   }
+ 
+diff --git a/common/network-shuffle/src/main/java/org/apache/spark/network/shuffle/protocol/PushBlockStream.java b/common/network-shuffle/src/main/java/org/apache/spark/network/shuffle/protocol/PushBlockStream.java
+index 83fc7b23ac..559f88fc4e 100644
+--- a/common/network-shuffle/src/main/java/org/apache/spark/network/shuffle/protocol/PushBlockStream.java
++++ b/common/network-shuffle/src/main/java/org/apache/spark/network/shuffle/protocol/PushBlockStream.java
+@@ -19,6 +19,8 @@ package org.apache.spark.network.shuffle.protocol;
+ 
+ import com.google.common.base.Objects;
+ import io.netty.buffer.ByteBuf;
++import org.apache.commons.lang3.builder.ToStringBuilder;
++import org.apache.commons.lang3.builder.ToStringStyle;
+ 
+ import org.apache.spark.network.protocol.Encoders;
+ 
+@@ -59,12 +61,12 @@ public class PushBlockStream extends BlockTransferMessage {
+ 
+   @Override
+   public String toString() {
+-    return Objects.toStringHelper(this)
+-      .add("appId", appId)
+-      .add("shuffleId", shuffleId)
+-      .add("mapIndex", mapIndex)
+-      .add("reduceId", reduceId)
+-      .add("index", index)
++    return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
++      .append("appId", appId)
++      .append("shuffleId", shuffleId)
++      .append("mapIndex", mapIndex)
++      .append("reduceId", reduceId)
++      .append("index", index)
+       .toString();
+   }
+ 
