@@ -36,7 +36,7 @@ override_dh_auto_build:
 	tar cf - --exclude=debian/\* . | (cd debian/tmp && tar xf -)
 
 override_dh_auto_install:
-	sh -x debian/install_oozie.sh --extra-dir=debian/ --build-dir=$(PWD) --server-dir=./debian/oozie --client-dir=./debian/oozie-client --docs-dir=./debian/oozie-client/usr/share/doc/oozie --initd-dir=./debian/oozie/etc/init.d --conf-dir=./debian/oozie/etc/oozie/conf.dist
+	sh -x debian/install_oozie.sh --extra-dir=debian/ --build-dir=$(CURDIR) --server-dir=./debian/oozie --client-dir=./debian/oozie-client --docs-dir=./debian/oozie-client/usr/share/doc/oozie --initd-dir=./debian/oozie/etc/init.d --conf-dir=./debian/oozie/etc/oozie/conf.dist
 	ln -s -f /var/lib/oozie/ext-2.2 debian/oozie/usr/lib/oozie/webapps/oozie/ext-2.2
 	rm -rf                        debian/oozie/usr/lib/oozie/webapps/oozie/docs
 	ln -s -f /usr/share/doc/oozie debian/oozie/usr/lib/oozie/webapps/oozie/docs

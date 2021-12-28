@@ -220,7 +220,7 @@ bigtop {
     'oozie' {
       name    = 'oozie'
       relNotes = 'Apache Oozie'
-      version { base = '4.3.0'; pkg = base; release = 1 }
+      version { base = '4.3.0'; pkg = base; release = 2 }
       tarball { destination = "$name-${version.base}.tar.gz"
                 source      = destination }
       url     { download_path = "/$name/${version.base}/"
