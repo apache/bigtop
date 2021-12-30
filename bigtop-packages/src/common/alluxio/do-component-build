@@ -23,4 +23,4 @@ if [ $HOSTTYPE = "powerpc64le" ] ; then
   sed -i "s|<npmVersion>6.4.1</npmVersion>|<npmVersion>6.14.7</npmVersion>|" webui/pom.xml
 fi
 
-mvn clean install -DskipTests -Dhadoop.version=${HADOOP_VERSION} -Phadoop-3 -Pyarn "$@"
+mvn clean install -DskipTests -Dhadoop.version=${HADOOP_VERSION} -Dmaven.buildNumber.revisionOnScmFailure=v${ALLUXIO_VERSION} -Phadoop-3 -Pyarn "$@"
