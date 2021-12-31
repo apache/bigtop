@@ -371,7 +371,7 @@ bigtop {
     'ycsb' {
       name    = 'ycsb'
       relNotes = 'Yahoo! Cloud Serving Benchmark'
-      version { base = '0.12.0'; pkg = base; release = 1 }
+      version { base = '0.17.0'; pkg = base; release = 2 }
       tarball { destination = "$name-${version.base}.tar.gz"
                 source      = "${version.base}.tar.gz" }
       url     { site = "https://github.com/brianfrankcooper/YCSB/archive"
