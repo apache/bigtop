@@ -291,7 +291,7 @@ bigtop {
     'kafka' {
       name    = 'kafka'
       relNotes = 'Apache Kafka'
-      version { base = '2.4.1'; pkg = base; release = 1 }
+      version { base = '2.8.1'; pkg = base; release = 1 }
       tarball { destination = "$name-${version.base}.tar.gz"
                 source      = "$name-${version.base}-src.tgz" }
       url     { download_path = "/$name/${version.base}/"

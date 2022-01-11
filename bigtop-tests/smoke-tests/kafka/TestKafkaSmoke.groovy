@@ -32,20 +32,7 @@ class TestKafkaSmoke {
   static Shell sh = new Shell("/bin/bash -s");
 
   static final String KAFKA_HOME = "/usr/lib/kafka"
-  static final String KAFKA_CONFIG = KAFKA_HOME + "/config/server.properties "
   static final String KAFKA_TOPICS = KAFKA_HOME + "/bin/kafka-topics.sh "
-  static final String KAFKA_SERVER_START = KAFKA_HOME + "/bin/kafka-server-start.sh "
-  static final String KAFKA_SERVER_STOP = KAFKA_HOME + "/bin/kafka-server-stop.sh "
-
-  @BeforeClass
-  static void kafkaSetUp() {
-    /* Restart kafka server for Enabling 'delete.topic.enable' */
-    sh.exec(KAFKA_SERVER_STOP);
-    sh.exec(KAFKA_SERVER_START + KAFKA_CONFIG
-      + " --override delete.topic.enable=true &"
-    );
-    assertTrue("Restart Kafka server failed. ", sh.getRet() == 0);
-  }
 
   @AfterClass
   public static void deleteKafkaTopics() {
