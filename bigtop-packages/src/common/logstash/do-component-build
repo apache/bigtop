@@ -28,7 +28,7 @@ fi
 # IPv6 issues in docker containers:
 # https://rvm.io/rvm/security#ipv6-issues
 case ${ID}-${VERSION_ID} in
-    ubuntu-18* | debian-9)
+    ubuntu-18*)
     gpg2 --list-keys
     echo "disable-ipv6" >> ~/.gnupg/dirmngr.conf
     ;;
