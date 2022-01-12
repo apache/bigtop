@@ -16,8 +16,9 @@
 # limitations under the License.
 
 usage() {
-    echo "usage: $PROG [-C file] args"
+    echo "usage: $PROG [-C file] [-F file] args"
     echo "       -C file                                   - Use alternate file for config.yaml"
+    echo "       -F file, --docker-compose-yml file        - Use alternate file for docker-compose.yml"
     echo "  commands:"
     echo "       -c NUM_INSTANCES, --create NUM_INSTANCES  - Create a Docker based Bigtop Hadoop cluster"
     echo "       -d, --destroy                             - Destroy the cluster"
@@ -76,7 +77,7 @@ create() {
     export MEM_LIMIT=${memory_limit}
 
     # Startup instances
-    docker-compose -p $PROVISION_ID up -d --scale bigtop=$1 --no-recreate
+    $DOCKER_COMPOSE_CMD -p $PROVISION_ID up -d --scale bigtop=$1 --no-recreate
     if [ $? -ne 0 ]; then
         log "Docker container(s) startup failed!";
         exit 1;
@@ -84,7 +85,7 @@ create() {
 
     # Get the headnode FQDN
     # shellcheck disable=SC2207
-    NODES=(`docker-compose -p $PROVISION_ID ps -q`)
+    NODES=(`$DOCKER_COMPOSE_CMD -p $PROVISION_ID ps -q`)
     # shellcheck disable=SC1083
     hadoop_head_node=`docker inspect --format {{.Config.Hostname}}.{{.Config.Domainname}} ${NODES[0]}`
 
@@ -125,6 +126,7 @@ create() {
 }
 
 generate-hosts() {
+    get_nodes
     for node in ${NODES[*]}; do
         entry=`docker inspect --format "{{.NetworkSettings.IPAddress}} {{.Config.Hostname}}.{{.Config.Domainname}} {{.Config.Hostname}}" $node`
         docker exec ${NODES[0]} bash -c "echo $entry >> /etc/hosts"
@@ -137,9 +139,10 @@ generate-hosts() {
 generate-config() {
     log "Bigtop Puppet configurations are shared between instances, and can be modified under config/hieradata"
     # add ip of all nodes to config
+    get_nodes
     for node in ${NODES[*]}; do
         this_node_ip=`docker inspect --format "{{.NetworkSettings.IPAddress}}" $node`
-	node_list="$node_list$this_node_ip "
+        node_list="$node_list$this_node_ip "
     done
     node_list=$(echo "$node_list" | xargs | sed 's/ /, /g')
     cat $BIGTOP_PUPPET_DIR/hiera.yaml >> ./config/hiera.yaml
@@ -172,6 +175,7 @@ EOF
 }
 
 copy-to-instances() {
+    get_nodes
     for node in ${NODES[*]}; do
         docker cp  $1 $node:$2 &
     done
@@ -179,6 +183,7 @@ copy-to-instances() {
 }
 
 bootstrap() {
+    get_nodes
     for node in ${NODES[*]}; do
         docker exec $node bash -c "/bigtop-home/provisioner/utils/setup-env-$1.sh $2" &
     done
@@ -187,6 +192,7 @@ bootstrap() {
 
 provision() {
     rm -f .error_msg_*
+    get_nodes
     for node in ${NODES[*]}; do
         (
         bigtop-puppet $node
@@ -206,6 +212,7 @@ provision() {
 }
 
 smoke-tests() {
+    get_nodes
     hadoop_head_node=${NODES:0:12}
     if [ -z ${smoke_test_components+x} ]; then
         smoke_test_components="`echo $(get-yaml-config smoke_test_components) | sed 's/ /,/g'`"
@@ -217,10 +224,11 @@ destroy() {
     if [ -z ${PROVISION_ID+x} ]; then
         echo "No cluster exists!"
     else
+        get_nodes
         docker exec ${NODES[0]} bash -c "umount /etc/hosts; rm -f /etc/hosts"
         if [ -n "$PROVISION_ID" ]; then
-            docker-compose -p $PROVISION_ID stop
-            docker-compose -p $PROVISION_ID rm -f
+            $DOCKER_COMPOSE_CMD -p $PROVISION_ID stop
+            $DOCKER_COMPOSE_CMD -p $PROVISION_ID rm -f
         fi
         rm -rvf ./config .provision_id .error_msg*
     fi
@@ -252,6 +260,7 @@ execute() {
     if [[ $1 =~ $re ]] ; then
         no=$1
         shift
+        get_nodes
         docker exec -ti ${NODES[$((no-1))]} "$@"
     else
         name=$1
@@ -265,14 +274,14 @@ env-check() {
     echo "Check docker:"
     docker -v || exit 1
     echo "Check docker-compose:"
-    docker-compose -v || exit 1
+    $DOCKER_COMPOSE_CMD -v || exit 1
     echo "Check ruby:"
     ruby -v || exit 1
 }
 
 list() {
     local msg
-    msg=$(docker-compose -p $PROVISION_ID ps 2>&1)
+    msg=$($DOCKER_COMPOSE_CMD -p $PROVISION_ID ps 2>&1)
     if [ $? -ne 0 ]; then
         msg="Cluster hasn't been created yet."
     fi
@@ -284,12 +293,19 @@ log() {
 }
 
 configure-nexus() {
+    get_nodes
     for node in ${NODES[*]}; do
         docker exec $node bash -c "cd /bigtop-home; ./gradlew -PNEXUS_URL=$1 configure-nexus"
     done
     wait
 }
 
+get_nodes() {
+    if [ -n "$PROVISION_ID" ]; then
+        # shellcheck disable=SC2207
+        NODES=(`$DOCKER_COMPOSE_CMD -p $PROVISION_ID ps -q`)
+    fi
+}
 
 PROG=`basename $0`
 
@@ -298,14 +314,11 @@ if [ $# -eq 0 ]; then
 fi
 
 yamlconf="config.yaml"
+DOCKER_COMPOSE_CMD="docker-compose"
 
 BIGTOP_PUPPET_DIR=../../bigtop-deploy/puppet
 if [ -e .provision_id ]; then
     PROVISION_ID=`cat .provision_id`
-fi
-if [ -n "$PROVISION_ID" ]; then
-    # shellcheck disable=SC2207
-    NODES=(`docker-compose -p $PROVISION_ID ps -q`)
 fi
 
 while [ $# -gt 0 ]; do
@@ -324,7 +337,14 @@ while [ $# -gt 0 ]; do
           echo "Alternative config file for config.yaml" 1>&2
           usage
         fi
-	    yamlconf=$2
+	      yamlconf=$2
+        shift 2;;
+    -F|--docker-compose-yml)
+        if [ $# -lt 2 ]; then
+          echo "Alternative config file for docker-compose.yml" 1>&2
+          usage
+        fi
+	      DOCKER_COMPOSE_CMD="${DOCKER_COMPOSE_CMD} -f ${2}"
         shift 2;;
     -d|--destroy)
         destroy

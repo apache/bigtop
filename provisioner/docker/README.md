@@ -146,3 +146,8 @@ components: "hadoop, hbase, yarn,..."
 ```
 
 By default, Apache Hadoop and YARN will be installed.
+
+## Experimental
+
+With recent OS versions, like Debian 11, the cgroupsv2 settings are enabled by default. Running Docker compose seems to require different settings. For example, mounting /sys/fs/cgroup:ro to the containers breaks systemd and dbus when they are installed and started (in the container). The `docker-hadoop.sh` script offers an option, `-F`, to load a different configuration file for Docker compose (by default, `docker-compose.yml` is picked up). The configuration file to load is `docker-compose-cgroupsv2.yml`. More info in BIGTOP-3614.
+
