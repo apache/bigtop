@@ -29,7 +29,7 @@ Summary: Livy Server
 URL: http://livy.incubator.apache.org/
 Group: Development/Libraries
 License: ASL 2.0
-Source0: %{name}-%{livy_base_version}.tar.gz
+Source0: %{name}-%{livy_base_version}.zip
 Source1: do-component-build
 Source2: install_%{name}.sh
 Source3: livy-server.svc
