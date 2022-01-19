@@ -350,7 +350,7 @@ bigtop {
       name    = 'livy'
       relNotes = 'Apache Livy'
       version { base = '0.7.1'; pkg = base; release = 1 }
-      tarball { destination = "${name}-${version.base}.tar.gz"
+      tarball { destination = "${name}-${version.base}.zip"
                 source      = "apache-livy-${version.base}-incubating-src.zip" }
       url     { download_path = "incubator/livy/${version.base}-incubating/"
                 site = "${apache.APACHE_MIRROR}/${download_path}"
