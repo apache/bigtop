@@ -1,0 +1,107 @@
+diff --git a/buildSrc/version.properties b/buildSrc/version.properties
+index fea5aea..9b731d0 100644
+--- a/buildSrc/version.properties
++++ b/buildSrc/version.properties
+@@ -7,7 +7,7 @@ jts               = 1.13
+ jackson           = 2.8.6
+ snakeyaml         = 1.15
+ # when updating log4j, please update also docs/java-api/index.asciidoc
+-log4j             = 2.11.1
++log4j             = 2.17.0
+ slf4j             = 1.6.2
+ 
+ # when updating the JNA version, also update the version in buildSrc/build.gradle
+diff --git a/core/build.gradle b/core/build.gradle
+index 6a634c8..0f36e39 100644
+--- a/core/build.gradle
++++ b/core/build.gradle
+@@ -223,13 +223,11 @@ thirdPartyAudit.excludes = [
+   'org.apache.commons.compress.utils.IOUtils',
+   'org.apache.commons.csv.CSVFormat',
+   'org.apache.commons.csv.QuoteMode',
+-  'org.apache.kafka.clients.producer.Callback',
+   'org.apache.kafka.clients.producer.KafkaProducer',
+   'org.apache.kafka.clients.producer.Producer',
+   'org.apache.kafka.clients.producer.ProducerRecord',
+   'org.apache.kafka.clients.producer.RecordMetadata',
+   'org.codehaus.stax2.XMLStreamWriter2',
+-  'org.jctools.queues.MessagePassingQueue$Consumer',
+   'org.jctools.queues.MpscArrayQueue',
+   'org.osgi.framework.AdaptPermission',
+   'org.osgi.framework.AdminPermission',
+diff --git a/core/licenses/log4j-1.2-api-2.11.1.jar.sha1 b/core/licenses/log4j-1.2-api-2.11.1.jar.sha1
+deleted file mode 100644
+index 575d75d..0000000
+--- a/core/licenses/log4j-1.2-api-2.11.1.jar.sha1
++++ /dev/null
+@@ -1 +0,0 @@
+-3aba3398fe064a3eab4331f88161c7480e848418
+\ No newline at end of file
+diff --git a/core/licenses/log4j-1.2-api-2.17.0.jar.sha1 b/core/licenses/log4j-1.2-api-2.17.0.jar.sha1
+new file mode 100644
+index 0000000..e589ba5
+--- /dev/null
++++ b/core/licenses/log4j-1.2-api-2.17.0.jar.sha1
+@@ -0,0 +1 @@
++aaf998968370edf738322fb750fbda118055508b
+\ No newline at end of file
+diff --git a/core/licenses/log4j-api-2.11.1.jar.sha1 b/core/licenses/log4j-api-2.11.1.jar.sha1
+deleted file mode 100644
+index 4b1bfff..0000000
+--- a/core/licenses/log4j-api-2.11.1.jar.sha1
++++ /dev/null
+@@ -1 +0,0 @@
+-268f0fe4df3eefe052b57c87ec48517d64fb2a10
+\ No newline at end of file
+diff --git a/core/licenses/log4j-api-2.17.0.jar.sha1 b/core/licenses/log4j-api-2.17.0.jar.sha1
+new file mode 100644
+index 0000000..400d6bd
+--- /dev/null
++++ b/core/licenses/log4j-api-2.17.0.jar.sha1
+@@ -0,0 +1 @@
++bbd791e9c8c9421e45337c4fe0a10851c086e36c
+\ No newline at end of file
+diff --git a/core/licenses/log4j-core-2.11.1.jar.sha1 b/core/licenses/log4j-core-2.11.1.jar.sha1
+deleted file mode 100644
+index 2fb8589..0000000
+--- a/core/licenses/log4j-core-2.11.1.jar.sha1
++++ /dev/null
+@@ -1 +0,0 @@
+-592a48674c926b01a9a747c7831bcd82a9e6d6e4
+\ No newline at end of file
+diff --git a/core/licenses/log4j-core-2.17.0.jar.sha1 b/core/licenses/log4j-core-2.17.0.jar.sha1
+new file mode 100644
+index 0000000..933b970
+--- /dev/null
++++ b/core/licenses/log4j-core-2.17.0.jar.sha1
+@@ -0,0 +1 @@
++fe6e7a32c1228884b9691a744f953a55d0dd8ead
+\ No newline at end of file
+diff --git a/plugins/repository-hdfs/build.gradle b/plugins/repository-hdfs/build.gradle
+index fb0b1e1..fa75d94 100644
+--- a/plugins/repository-hdfs/build.gradle
++++ b/plugins/repository-hdfs/build.gradle
+@@ -561,7 +561,6 @@ thirdPartyAudit.excludes = [
+ 
+   'org.apache.log4j.AsyncAppender',
+   'org.apache.log4j.helpers.ISO8601DateFormat',
+-  'org.apache.log4j.spi.ThrowableInformation',
+ 
+   // New optional dependencies in 2.8
+   'com.nimbusds.jose.JWSObject$State',
+diff --git a/plugins/repository-hdfs/licenses/log4j-slf4j-impl-2.11.1.jar.sha1 b/plugins/repository-hdfs/licenses/log4j-slf4j-impl-2.11.1.jar.sha1
+deleted file mode 100644
+index 6178556..0000000
+--- a/plugins/repository-hdfs/licenses/log4j-slf4j-impl-2.11.1.jar.sha1
++++ /dev/null
+@@ -1 +0,0 @@
+-4b41b53a3a2d299ce381a69d165381ca19f62912
+\ No newline at end of file
+diff --git a/plugins/repository-hdfs/licenses/log4j-slf4j-impl-2.17.0.jar.sha1 b/plugins/repository-hdfs/licenses/log4j-slf4j-impl-2.17.0.jar.sha1
+new file mode 100644
+index 0000000..fad46c4
+--- /dev/null
++++ b/plugins/repository-hdfs/licenses/log4j-slf4j-impl-2.17.0.jar.sha1
+@@ -0,0 +1 @@
++1ec25ce0254749c94549ea9c3cea34bd0488c9c6
+\ No newline at end of file
