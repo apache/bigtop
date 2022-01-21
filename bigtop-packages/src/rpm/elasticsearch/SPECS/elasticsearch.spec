@@ -53,6 +53,7 @@ Source1: do-component-build
 Source2: install_%{name}.sh
 Source3: elasticsearch.default
 Source4: elasticsearch.init
+#BIGTOP_PATCH_FILES
 Requires: bigtop-utils >= 0.7
 
 # CentOS 5 does not have any dist macro
@@ -70,6 +71,8 @@ an HTTP web interface and schema-free JSON documents.
 
 %prep
 %setup -n elasticsearch-%{elasticsearch_base_version}
+
+#BIGTOP_PATCH_COMMANDS
 
 %build
 env FULL_VERSION=%{elasticsearch_base_version} bash %{SOURCE1}
