@@ -23,7 +23,7 @@ sed -ie 's#HOSTNAME=.*$#HOSTNAME='`hostname -f`'#' /etc/sysconfig/network
 
 # Setup rng-tools to improve virtual machine entropy performance.
 # The poor entropy performance will cause kerberos provisioning failed.
-yum -y install rng-tools
+yum -y install rng-tools yum-priorities
 if [ -x /usr/bin/systemctl ] ; then
     sed -i 's@ExecStart=/sbin/rngd -f@ExecStart=/sbin/rngd -f -r /dev/urandom@' /usr/lib/systemd/system/rngd.service
     systemctl daemon-reload
