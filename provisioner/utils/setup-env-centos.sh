@@ -23,7 +23,7 @@ sed -ie 's#HOSTNAME=.*$#HOSTNAME='`hostname -f`'#' /etc/sysconfig/network
 
 # Setup rng-tools to improve virtual machine entropy performance.
 # The poor entropy performance will cause kerberos provisioning failed.
-yum -y install rng-tools
+yum -y install rng-tools yum-priorities
 if [ -x /usr/bin/systemctl ] ; then
     sed -i 's@ExecStart=/sbin/rngd -f@ExecStart=/sbin/rngd -f -r /dev/urandom@' /usr/lib/systemd/system/rngd.service
     systemctl daemon-reload
@@ -51,7 +51,7 @@ if [ $enable_local_repo == "true" ]; then
 
     sudo yum-config-manager --add-repo file:///bigtop-home/output
     sudo echo "gpgcheck=0" >> /etc/yum.repos.d/bigtop-home_output.repo
-    sudo echo "priority=10" >> /etc/yum.repos.d/bigtop-home_output.repo
+    sudo echo "priority=9" >> /etc/yum.repos.d/bigtop-home_output.repo
 else
     echo "local yum = $enable_local_repo ; NOT Enabling local yum.  Packages will be pulled from remote..."
 fi
