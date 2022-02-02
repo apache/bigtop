@@ -66,6 +66,7 @@ Source2: install_%{kafka_name}.sh
 Source3: kafka-server.svc
 Source4: init.d.tmpl
 Source6: kafka.default
+#BIGTOP_PATCH_FILES
 Requires: zookeeper
 Requires: bigtop-utils >= 0.7
 Requires(preun): /sbin/service
@@ -94,6 +95,8 @@ Bundles the init script for kafka server.
 
 %prep
 %setup -n %{kafka_name}-%{kafka_base_version}-src
+
+#BIGTOP_PATCH_COMMANDS
 
 %build
 bash $RPM_SOURCE_DIR/do-component-build

@@ -65,6 +65,7 @@ class bigtop_toolchain::packages {
         "net-tools",
         "perl-Digest-SHA"
       ]
+
       if ($operatingsystem == 'Fedora' or $operatingsystemmajrelease !~ /^[0-7]$/) {
         $pkgs = concat($_pkgs, ["python2-devel", "libtirpc-devel", "cmake"])
       } else {
@@ -181,7 +182,6 @@ class bigtop_toolchain::packages {
         "dh-python",
         "libfuse2",
         "libjansi-java",
-        "python2.7-dev",
         "libxml2-dev",
         "libxslt1-dev",
         "zlib1g-dev",
@@ -206,9 +206,10 @@ class bigtop_toolchain::packages {
         "libcurl4-gnutls-dev",
         "bison",
         "flex",
-        "python-dev",
         "python-setuptools",
-        "libffi-dev"
+        "libffi-dev",
+        "python3-dev",
+        "python2.7-dev"
       ]
       file { '/etc/apt/apt.conf.d/01retries':
         content => 'Aquire::Retries "5";'
@@ -231,6 +232,13 @@ class bigtop_toolchain::packages {
   if $operatingsystem == 'CentOS' {
     package { 'epel-release':
       ensure => installed
+    }
+
+    if $operatingsystemmajrelease == 7 {
+      # https://access.redhat.com/errata/RHBA-2021:3649
+      package { 'ca-certificates':
+        ensure => latest
+      }
     }
     if $operatingsystemmajrelease !~ /^[0-7]$/ {
       # On CentOS 8, EPEL requires that the PowerTools repository is enabled.

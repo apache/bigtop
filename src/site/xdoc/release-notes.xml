@@ -17,6 +17,240 @@
 		<section name="Bigtop Project Release Notes">
 			<!-- Paste release notes from https://issues.apache.org/jira/browse/BIGTOP here. -->
 
+        <h3>Release Notes - Bigtop - Version 3.0.0</h3>
+
+<h2>        Sub-task
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3280'>BIGTOP-3280</a>] -         Bump Hadoop to 3.2.1
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3283'>BIGTOP-3283</a>] -         Bump HBase to 2.2.6
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3329'>BIGTOP-3329</a>] -         Bump ambari to v2.7.5
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3382'>BIGTOP-3382</a>] -         Upgrade Flink to 1.11.3
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3474'>BIGTOP-3474</a>] -         Bump Hadoop to 3.2.2
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3475'>BIGTOP-3475</a>] -          Bump ZooKeeper to 3.4.14
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3479'>BIGTOP-3479</a>] -         Bump Tez to 0.10.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3480'>BIGTOP-3480</a>] -         Bump Hive to 3.1.2
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3481'>BIGTOP-3481</a>] -         Bump Spark to 3.0.1
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3484'>BIGTOP-3484</a>] -         Bump Alluxio to 2.4.1
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3485'>BIGTOP-3485</a>] -         Bump Solr to v8.7.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3488'>BIGTOP-3488</a>] -         Bump Kafka to 2.4.1
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3490'>BIGTOP-3490</a>] -         Bump Sqoop to 1.4.7
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3491'>BIGTOP-3491</a>] -         Add Ubuntu 20.04 support to the Bigtop toolchain
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3492'>BIGTOP-3492</a>] -         Add Ubuntu 20.04 support to the Docker provisioner
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3493'>BIGTOP-3493</a>] -         Bump YCSB to 0.17.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3498'>BIGTOP-3498</a>] -         Bump Phoenix to 5.1.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3500'>BIGTOP-3500</a>] -         Bump Zeppelin to 0.9.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3510'>BIGTOP-3510</a>] -         Drop sqoop2
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3511'>BIGTOP-3511</a>] -         Drop Mahout
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3512'>BIGTOP-3512</a>] -         Drop Giraph
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3514'>BIGTOP-3514</a>] -         Bump GPDB to 5.28.5
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3517'>BIGTOP-3517</a>] -         Bump Livy to 0.7.1
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3519'>BIGTOP-3519</a>] -         Drop Flume
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3520'>BIGTOP-3520</a>] -         Drop ignite-hadoop
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3521'>BIGTOP-3521</a>] -         Drop QFS
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3522'>BIGTOP-3522</a>] -         Drop Fedora 31 and add Fedora 33 support
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3523'>BIGTOP-3523</a>] -         Drop Ubuntu 16.04 support
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3528'>BIGTOP-3528</a>] -         Bump Oozie to 5.2.1
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3529'>BIGTOP-3529</a>] -         Drop bigtop-tomcat
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3556'>BIGTOP-3556</a>] -         Minimum chnages for upgrading Bigtop-ambari-mpack aligned with Ambari 2.7.5
+</li>
+</ul>
+
+<h2>        Bug
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3472'>BIGTOP-3472</a>] -         Building Hadoop 3.2.1 fails on CentOS 7 due to cmake version mismatch
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3473'>BIGTOP-3473</a>] -         Building Hadoop 3.2.1 fails in checking jar contents
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3476'>BIGTOP-3476</a>] -         Fix build Oozie issues
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3477'>BIGTOP-3477</a>] -         Fix puppet manifests for hadoop-3
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3478'>BIGTOP-3478</a>] -         Fix version mismatch of Guava between Hadoop and HBase
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3482'>BIGTOP-3482</a>] -         Fix toolchain not to break cmake by creating unnecessary symlink
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3483'>BIGTOP-3483</a>] -         Upgrade R version on Ubuntu 18.04
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3486'>BIGTOP-3486</a>] -         Fix version mismatch of Jetty between Hadoop and HBase
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3489'>BIGTOP-3489</a>] -         Fix Livy build failure with Spark 3
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3494'>BIGTOP-3494</a>] -         Add MapReduce settings to yarn.nodemanager.env-whitelist in yarn-site.xml
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3497'>BIGTOP-3497</a>] -         libcrypto.so should be provided for libhadoop.so
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3499'>BIGTOP-3499</a>] -         Fix Logstash build failure due to gem version incompatibility
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3501'>BIGTOP-3501</a>] -         Update hadoop-kms resources based on hadoop-3
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3505'>BIGTOP-3505</a>] -         Update hadoop-kms puppet manifests based on hadoop-3
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3506'>BIGTOP-3506</a>] -         Update hadoop-httpfs resources based on hadoop-3
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3508'>BIGTOP-3508</a>] -         Sqoop bin script doesn&#39;t work on Debian 10 if libslf4j-java is installed
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3516'>BIGTOP-3516</a>] -         Remove dead HBase jar link for Hive
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3524'>BIGTOP-3524</a>] -         Hadoop 3.2.2 build failure on Arm
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3526'>BIGTOP-3526</a>] -         Remove phantomjs depdency from yarn-ui
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3531'>BIGTOP-3531</a>] -         Fix packaging of Oozie 5.2.1
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3532'>BIGTOP-3532</a>] -         Fix smoke-tests for Oozie 5.2.1
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3535'>BIGTOP-3535</a>] -         Add zstd compression headers to add native lib support
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3537'>BIGTOP-3537</a>] -         Fix puppetize.sh to work with the latest CentOS 8 Docker image
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3538'>BIGTOP-3538</a>] -         Building GPDB fails on Fedora 33
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3539'>BIGTOP-3539</a>] -         Building bigtop-groovy fails on all distros and platforms
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3540'>BIGTOP-3540</a>] -         Fix toolchain to abort if R installation failed
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3541'>BIGTOP-3541</a>] -         Smoke test on odpi-runtime failed
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3542'>BIGTOP-3542</a>] -         Fix build failure of Hadoop on ppc64le
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3543'>BIGTOP-3543</a>] -         Build failures on the ARM CI servers
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3544'>BIGTOP-3544</a>] -         Fix Spark build on Debian 9
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3545'>BIGTOP-3545</a>] -         Nexus configured by docker provisioner fails to download pentaho-aggdesigner-algorithm
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3546'>BIGTOP-3546</a>] -         Could not find org.pentaho:pentaho-aggdesigner-algorithm:5.1.5-jhyde.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3548'>BIGTOP-3548</a>] -         Hive build failure caused by protoc-jar-maven-plugin missing aarch64 support
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3549'>BIGTOP-3549</a>] -         HBase build failure caused by protobuf in xolstice
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3551'>BIGTOP-3551</a>] -         Phantomjs caused Ambari build failure on non-x86
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3554'>BIGTOP-3554</a>] -         Phoenix build failure caused by protoc-2.5.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3559'>BIGTOP-3559</a>] -         Fix the download URL for pip2 in the GPDB deployment manifest
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3562'>BIGTOP-3562</a>] -         Building Logstash is failing due to the unavailability of keyserver
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3563'>BIGTOP-3563</a>] -         Building Hadoop for CentOS 8 fails due to cmake error
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3567'>BIGTOP-3567</a>] -         Building Zeppelin fails due to the dependency downloading problem
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3568'>BIGTOP-3568</a>] -         Fix Ambari-2.7.5 installation issues
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3569'>BIGTOP-3569</a>] -         Applying GPDB Puppet manifest fails on arm64
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3570'>BIGTOP-3570</a>] -         Fix Spark smoke test failures
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3571'>BIGTOP-3571</a>] -         Ensure Hadoop and Flink are deployed in the correct order
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3573'>BIGTOP-3573</a>] -         Tez smoke test fails on the ARM platform
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3574'>BIGTOP-3574</a>] -         Starting Elasticsearch fails on ppc64le
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3575'>BIGTOP-3575</a>] -         Hive rpm build warning due to missing dependency
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3576'>BIGTOP-3576</a>] -         Deploying Ambari to Fedora 33 fails on ppc64le
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3577'>BIGTOP-3577</a>] -         HBase smoke test partially fails on ppc64le
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3578'>BIGTOP-3578</a>] -         Solr smoke test fails on ppc64le
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3579'>BIGTOP-3579</a>] -         Spark smoke test fails on Debian 9 and Ubuntu 18.04
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3580'>BIGTOP-3580</a>] -         Fix deployment failure on Debian 10 caused by the Debian 11 release
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3582'>BIGTOP-3582</a>] -         Logstash RPM Build Fails
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3584'>BIGTOP-3584</a>] -         Fix build failure of Ambari due to missing dependency on javax.el
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3587'>BIGTOP-3587</a>] -         Deploying Ambari to Ubuntu 18.04 and 20.04 fails on ppc64le
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3588'>BIGTOP-3588</a>] -         Pin redis-rb version for Logstash to 4.4.0
+</li>
+</ul>
+
+<h2>        Improvement
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3383'>BIGTOP-3383</a>] -         Update puppet manifest for deploying Flink 1.11.1
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3384'>BIGTOP-3384</a>] -         Update smoke test to work with Flink 1.11.1
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3400'>BIGTOP-3400</a>] -         Clean up or disable husky installed via packaging Kibana
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3456'>BIGTOP-3456</a>] -         Add hadoop-yarn-router and hadoop-hdfs-dfsrouter to hadoop services
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3457'>BIGTOP-3457</a>] -         Add libhdfspp packages to hadoop
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3495'>BIGTOP-3495</a>] -         Optional tools of hadoop-tools should be optional
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3507'>BIGTOP-3507</a>] -         Solr: CVE-2020-13957 mitigation backport
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3513'>BIGTOP-3513</a>] -         Update deb resources for hadoop-yarn-router and hadoop-hdfs-dfsrouter
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3527'>BIGTOP-3527</a>] -         hadoop package build failures for Debian 10
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3536'>BIGTOP-3536</a>] -         Fix build failure of Hadoop on Fedora 33
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3552'>BIGTOP-3552</a>] -         Add missing files to ambari-agent RPM
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3555'>BIGTOP-3555</a>] -         Drop smoke-tests/odpi-runtime
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3558'>BIGTOP-3558</a>] -         Fix build failure of HBase on ppc64le
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3560'>BIGTOP-3560</a>] -         Fix build failure of Zeppelin on ppc64le
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3561'>BIGTOP-3561</a>] -         Fix build failure of Kibana on ppc64le
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3564'>BIGTOP-3564</a>] -         Fix build failure of Flink on Cent OS 7 ppc64le
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3565'>BIGTOP-3565</a>] -         Fix build failure of Alluxio on Cent OS 7 ppc64le
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3585'>BIGTOP-3585</a>] -         Remove obsolete text replacement from do-component-build of Ambari
+</li>
+</ul>
+
+<h2>        Task
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3533'>BIGTOP-3533</a>] -         Enable Apache Bigtop CI/CD for ppc64le
+</li>
+</ul>
+
                     <h3>Release Notes - Bigtop - Version 1.5.0</h3>
 
 <h2>        Sub-task

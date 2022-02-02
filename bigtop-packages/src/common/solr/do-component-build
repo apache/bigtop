@@ -44,7 +44,6 @@ mvn install:install-file -DcreateChecksum=true -DgroupId=org.apache.solr -Dartif
 mvn install:install-file -DcreateChecksum=true -DgroupId=org.apache.solr -DartifactId=solr-solrj -Dversion=$SOLR_VERSION -Dpackaging=jar -Dfile=solr/dist/solr-solrj-$SOLR_VERSION.jar
 mvn install:install-file -DcreateChecksum=true -DgroupId=org.apache.solr -DartifactId=solr-test-framework -Dversion=$SOLR_VERSION -Dpackaging=jar -Dfile=solr/dist/solr-test-framework-$SOLR_VERSION.jar
 mvn install:install-file -DcreateChecksum=true -DgroupId=org.apache.solr -DartifactId=solr-cell -Dversion=$SOLR_VERSION -Dpackaging=jar -Dfile=solr/dist/solr-cell-$SOLR_VERSION.jar
-mvn install:install-file -DcreateChecksum=true -DgroupId=org.apache.solr -DartifactId=solr-clustering -Dversion=$SOLR_VERSION -Dpackaging=jar -Dfile=solr/dist/solr-clustering-$SOLR_VERSION.jar
 mvn install:install-file -DcreateChecksum=true -DgroupId=org.apache.solr -DartifactId=solr-core -Dversion=$SOLR_VERSION -Dpackaging=jar -Dfile=solr/dist/solr-core-$SOLR_VERSION.jar
 mvn install:install-file -DcreateChecksum=true -DgroupId=org.apache.solr -DartifactId=solr-velocity -Dversion=$SOLR_VERSION -Dpackaging=jar -Dfile=solr/dist/solr-velocity-$SOLR_VERSION.jar
 mvn install:install-file -DcreateChecksum=true -DgroupId=org.apache.solr -DartifactId=solr-langid -Dversion=$SOLR_VERSION -Dpackaging=jar -Dfile=solr/dist/solr-langid-$SOLR_VERSION.jar

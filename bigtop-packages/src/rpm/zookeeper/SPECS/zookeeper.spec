@@ -68,7 +68,7 @@ URL: http://zookeeper.apache.org/
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 License: ASL 2.0
-Source0: %{name}-%{zookeeper_base_version}.tar.gz
+Source0: apache-%{name}-%{zookeeper_base_version}.tar.gz
 Source1: do-component-build
 Source2: install_zookeeper.sh
 Source3: zookeeper-server.sh
@@ -143,7 +143,7 @@ Provides native libraries and development headers for C / C++ ZooKeeper clients.
 This package starts the zookeeper REST server on startup
 
 %prep
-%setup -n %{name}-%{zookeeper_base_version}
+%setup -n apache-%{name}-%{zookeeper_base_version}
 
 #BIGTOP_PATCH_COMMANDS
 

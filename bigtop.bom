@@ -90,7 +90,7 @@
 
 bigtop {
 /** Base Configuration of the mirror and archives */
-  version = "1.6.0-SNAPSHOT"
+  version = "3.1.0-SNAPSHOT"
   stack {
     'jdk' { version = "1." + ( System.getenv('BIGTOP_JDK') ?: "8" ); version_base = version }
     'scala' { version = '2.12.13'; version_base = version }
@@ -128,12 +128,12 @@ bigtop {
       name    = 'zookeeper'
       pkg     = name
       version {
-        base  = '3.4.14'
+        base  = '3.5.9'
         pkg   = base
         release = 1
       }
       tarball {
-        source      = "zookeeper-${version.base}.tar.gz"
+        source      = "apache-zookeeper-${version.base}.tar.gz"
         destination = source
       }
       url {
@@ -155,7 +155,7 @@ bigtop {
     'hbase' {
       name    = 'hbase'
       relNotes = 'Apache HBase'
-      version { base = '2.2.6'; pkg = base; release = 1 }
+      version { base = '2.4.8'; pkg = base; release = 1 }
       tarball { destination = "${name}-${version.base}.tar.gz"
                 source      = "${name}-${version.base}-src.tar.gz" }
       url     { download_path = "/$name/${version.base}/"
@@ -166,7 +166,7 @@ bigtop {
     'hive' {
       name    = 'hive'
       relNotes = 'Apache Hive'
-      version { base = '3.1.2'; pkg = base; release = 1 }
+      version { base = '3.1.2'; pkg = base; release = 2 }
       tarball { destination = "apache-${name}-${version.base}-src.tar.gz"
                 source      = destination }
       url     { download_path = "/$name/$name-${version.base}/"
@@ -206,7 +206,7 @@ bigtop {
     'solr' {
       name    = 'solr'
       relNotes = 'Apache Solr'
-      version { base = '8.7.0'; pkg = base; release = 1 }
+      version { base = '8.11.1'; pkg = base; release = 1 }
       tarball { destination = "$name-${version.base}-src.tgz"
                 source      = destination }
       url     { download_path = "lucene/$name/${version.base}"
@@ -222,7 +222,7 @@ bigtop {
        * when upgrading spark version.
        * See comments in [bigtop-packages/src/common/spark/install_spark.sh] for details.
        */
-      version { base = '3.0.1'; pkg = base; release = 1 }
+      version { base = '3.1.2'; pkg = base; release = 1 }
       tarball { destination = "$name-${version.base}.tar.gz"
                 source      = "$name-${version.base}.tgz" }
       url     { download_path = "/$name/$name-${version.base}"
@@ -233,7 +233,7 @@ bigtop {
     'flink' {
       name    = 'flink'
       relNotes = 'Apache Flink'
-      version { base = '1.11.3'; pkg = base; release = 1 }
+      version { base = '1.11.6'; pkg = base; release = 1 }
       tarball { destination = "$name-${version.base}.tar.gz"
                 source      = "$name-${version.base}-src.tgz" }
       url     { download_path = "/$name/$name-${version.base}"
@@ -245,7 +245,7 @@ bigtop {
     'phoenix' {
       name    = 'phoenix'
       relNotes = 'Apache Phoenix: A SQL skin over HBase'
-      version { base = "5.1.0"; pkg = base; release = 1 }
+      version { base = "5.1.2"; pkg = base; release = 1 }
       tarball { destination = "$name-${version.base}-src.tar.gz"
                 source      = destination }
       url     { download_path = "/$name/$name-${version.base}"
@@ -271,7 +271,7 @@ bigtop {
     'bigtop-jsvc' {
       name    = "bigtop-jsvc"
       relNotes = "Apache Common Daemon (jsvc) service package"
-      version { base = '1.0.15'; pkg = base; release = 1 }
+      version { base = '1.2.4'; pkg = base; release = 1 }
       tarball { source      = "commons-daemon-${version.base}-native-src.tar.gz"
                 destination = "commons-daemon-${version.base}.tar.gz" }
       url     { download_path = "/commons/daemon/source"
@@ -282,7 +282,7 @@ bigtop {
       name    = "alluxio"
       pkg     = "alluxio"
       relNotes = "Alluxio: a memory-centric distributed file system"
-      version { base = '2.4.1'; pkg = base; release = 1 }
+      version { base = '2.4.1'; pkg = base; release = 2 }
       tarball { destination = "$name-${version.base}.tar.gz"
                 source      = "v${version.base}.tar.gz" }
       url     { site = "https://github.com/Alluxio/alluxio/archive"
@@ -291,7 +291,7 @@ bigtop {
     'kafka' {
       name    = 'kafka'
       relNotes = 'Apache Kafka'
-      version { base = '2.4.1'; pkg = base; release = 1 }
+      version { base = '2.8.1'; pkg = base; release = 1 }
       tarball { destination = "$name-${version.base}.tar.gz"
                 source      = "$name-${version.base}-src.tgz" }
       url     { download_path = "/$name/${version.base}/"
@@ -301,7 +301,7 @@ bigtop {
     'ycsb' {
       name    = 'ycsb'
       relNotes = 'Yahoo! Cloud Serving Benchmark'
-      version { base = '0.17.0'; pkg = base; release = 1 }
+      version { base = '0.17.0'; pkg = base; release = 2 }
       tarball { destination = "$name-${version.base}.tar.gz"
                 source      = "${version.base}.tar.gz" }
       url     { site = "https://github.com/brianfrankcooper/YCSB/archive"
@@ -310,7 +310,7 @@ bigtop {
     'zeppelin' {
       name    = 'zeppelin'
       relNotes = 'Apache Zeppelin'
-      version { base = '0.9.0'; pkg = base; release = 1 }
+      version { base = '0.10.0'; pkg = base; release = 1 }
       tarball { source      = "$name-${version.base}.tgz"
                 destination = "$name-${version.base}.tar.gz" }
       url     { download_path = "/$name/$name-${version.base}/"
@@ -350,7 +350,7 @@ bigtop {
       name    = 'livy'
       relNotes = 'Apache Livy'
       version { base = '0.7.1'; pkg = base; release = 1 }
-      tarball { destination = "${name}-${version.base}.tar.gz"
+      tarball { destination = "${name}-${version.base}.zip"
                 source      = "apache-livy-${version.base}-incubating-src.zip" }
       url     { download_path = "incubator/livy/${version.base}-incubating/"
                 site = "${apache.APACHE_MIRROR}/${download_path}"
@@ -359,7 +359,7 @@ bigtop {
     'elasticsearch' {
       name    = 'elasticsearch'
       relNotes = 'Search and Analytics engine'
-      version { base = '5.6.14'; pkg = base; release = 1 }
+      version { base = '5.6.14'; pkg = base; release = 2 }
       tarball { destination = "$name-${version.base}.tar.gz"
                 source      = "v${version.base}.zip" }
       url     { site = "https://github.com/elastic/elasticsearch/archive"
@@ -368,7 +368,7 @@ bigtop {
     'logstash' {
       name    = 'logstash'
       relNotes = 'Data processing pipeline'
-      version { base = '5.4.1'; pkg = base; release = 1 }
+      version { base = '5.4.1'; pkg = base; release = 2 }
       tarball { destination = "$name-${version.base}.tar.gz"
                 source      = "v${version.base}.zip" }
       url     { site = "https://github.com/elastic/logstash/archive"

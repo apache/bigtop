@@ -51,16 +51,18 @@ class TestZookeeper {
     logError(sh);
     assertTrue("Failed ...", sh.getRet() == 0);
 
-    String out = sh.getOut()[0].trim();
-    assertTrue(out.contains("Mode"));
-    // If this is the only Zookeeper node, then we should be in
-    // "standalone" mode. If not, we should be in "leader" or
-    // "follower" mode.
-    assertTrue(
-      out.contains("follower") ||
-      out.contains("leader") ||
-      out.contains("standalone")
-    );
+    for (line in sh.getOut()) {
+      if (line.contains("Mode")) {
+        assertTrue(
+          // If this is the only Zookeeper node, then we should be in
+          // "standalone" mode. If not, we should be in "leader" or
+          // "follower" mode.
+          line.contains("follower") ||
+          line.contains("leader") ||
+          line.contains("standalone")
+        );
+      }
+    }
     LOG.info('zkServer.sh status checks out.');
   }
 }

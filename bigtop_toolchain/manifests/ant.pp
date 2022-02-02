@@ -16,26 +16,31 @@
 class bigtop_toolchain::ant {
 
   require bigtop_toolchain::gnupg
+  require bigtop_toolchain::packages
 
   # Ant version restricted to 1.9 because 1.10 supports Java>=8 only.
   $ant =  latest_ant_binary("1.9.[0-9]*")
   $apache_prefix = nearest_apache_mirror()
 
-  exec {"/usr/bin/wget $apache_prefix/ant/binaries/$ant-bin.tar.gz":
+  exec { 'Download Ant binaries':
+    command => "/usr/bin/wget $apache_prefix/ant/binaries/$ant-bin.tar.gz",
     cwd     => "/usr/src",
     unless  => "/usr/bin/test -f /usr/src/$ant-bin.tar.gz",
   } ~>
 
-  exec {"/usr/bin/wget https://www.apache.org/dist/ant/binaries/$ant-bin.tar.gz.asc":
+  exec { 'Download Ant binaries signature':
+    command => "/usr/bin/wget https://www.apache.org/dist/ant/binaries/$ant-bin.tar.gz.asc",
     cwd     => "/usr/src",
     unless  => "/usr/bin/test -f /usr/src/$ant-bin.tar.gz.asc",
   } ~>
 
-  exec {"/usr/bin/$bigtop_toolchain::gnupg::cmd -v --verify --auto-key-retrieve --keyserver hkp://keyserver.ubuntu.com:80 $ant-bin.tar.gz.asc":
+  exec { 'Verify Ant binaries':
+    command => "/usr/bin/$bigtop_toolchain::gnupg::cmd -v --verify --auto-key-retrieve --keyserver hkp://keyserver.ubuntu.com:80 $ant-bin.tar.gz.asc",
     cwd     => "/usr/src",
   } ->
 
-  exec {"/bin/tar xvzf /usr/src/$ant-bin.tar.gz":
+  exec { 'Extract Ant binaries':
+    command => "/bin/tar xvzf /usr/src/$ant-bin.tar.gz",
     cwd     => '/usr/local',
     creates => "/usr/local/$ant",
   } ->

@@ -101,6 +101,8 @@ install -d -m 0755 $PREFIX/$LIB_DIR/bin
 install -d -m 0755 $PREFIX/$LIB_DIR/libexec
 install -d -m 0755 $PREFIX/$LIB_DIR/lib
 install -d -m 0755 $PREFIX/$LIB_DIR/client
+install -d -m 0755 $PREFIX/$LIB_DIR/webui/master
+install -d -m 0755 $PREFIX/$LIB_DIR/webui/worker
 install -d -m 0755 $PREFIX/$LIB_DIR/integration
 install -d -m 0755 $PREFIX/$LIB_DIR/share
 install -d -m 0755 $PREFIX/$LIB_DIR/core/server/common/src/main/webapp
@@ -121,6 +123,8 @@ cp assembly/server/target/alluxio*dependencies.jar $PREFIX/$LIB_DIR/assembly/ser
 cp assembly/client/target/alluxio*dependencies.jar $PREFIX/$LIB_DIR/assembly/client/target
 cp -a bin/* $PREFIX/$LIB_DIR/bin
 cp -a lib/* $PREFIX/$LIB_DIR/lib
+cp -a webui/master/build $PREFIX/$LIB_DIR/webui/master
+cp -a webui/worker/build $PREFIX/$LIB_DIR/webui/worker
 cp -a libexec/* $PREFIX/$LIB_DIR/libexec
 cp -a client/* $PREFIX/$LIB_DIR/client
 cp -a integration/* $PREFIX/$LIB_DIR/integration

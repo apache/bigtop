@@ -131,8 +131,6 @@ ln -s $CONF_DIR $PREFIX/$LIB_DIR/conf
 
 # Copy in the /usr/bin/zookeeper-server wrapper
 install -d -m 0755 $PREFIX/$LIB_DIR/bin
-# FIXME: a workaround in preparation for Zookeeper 3.5
-echo '#!/bin/bash' > $BUILD_DIR/bin/zkServer-initialize.sh
 
 for i in zkServer.sh zkEnv.sh zkCli.sh zkCleanup.sh zkServer-initialize.sh
 	do cp $BUILD_DIR/bin/$i $PREFIX/$LIB_DIR/bin
@@ -198,10 +196,11 @@ install -d ${PREFIX}/$SYSTEM_INCLUDE_DIR
 install -d ${PREFIX}/$SYSTEM_LIB_DIR
 install -d ${PREFIX}/${LIB_DIR}-native
 
-(cd ${BUILD_DIR}/.. && tar xzf zookeeper-*-lib.tar.gz)
-cp -R ${BUILD_DIR}/../usr/include/* ${PREFIX}/${SYSTEM_INCLUDE_DIR}/
-cp -R ${BUILD_DIR}/../usr/lib*/* ${PREFIX}/${SYSTEM_LIB_DIR}/
-cp -R ${BUILD_DIR}/../usr/bin/* ${PREFIX}/${LIB_DIR}-native/
+mkdir ${BUILD_DIR}/../native
+(cd ${BUILD_DIR}/../native && tar xzf ../zookeeper-*-lib.tar.gz)
+cp -R ${BUILD_DIR}/../native/include/* ${PREFIX}/${SYSTEM_INCLUDE_DIR}/
+cp -R ${BUILD_DIR}/../native/lib*/* ${PREFIX}/${SYSTEM_LIB_DIR}/
+cp -R ${BUILD_DIR}/../native/bin/* ${PREFIX}/${LIB_DIR}-native/
 for binary in ${PREFIX}/${LIB_DIR}-native/*; do
   cat > ${PREFIX}/${BIN_DIR}/`basename ${binary}` <<EOF
 #!/bin/bash
@@ -213,4 +212,3 @@ export LD_LIBRARY_PATH=\${LD_LIBRARY_PATH}:\${PREFIX}/../lib:\${PREFIX}/../lib64
 EOF
 done
 chmod 755 ${PREFIX}/${BIN_DIR}/* ${PREFIX}/${LIB_DIR}-native/*
-

@@ -15,7 +15,126 @@
 
 Bigtop Changelog
 
-* Release 1.6.0 (unreleased)
+* Release 3.1.0-SNAPSHOT (unreleased)
+
+* Release 3.0.0 (2021-10-15)
+
+Release Notes - Bigtop - Version 3.0.0
+
+** Sub-task
+    * [BIGTOP-3280] - Bump Hadoop to 3.2.1
+    * [BIGTOP-3283] - Bump HBase to 2.2.6
+    * [BIGTOP-3329] - Bump ambari to v2.7.5
+    * [BIGTOP-3382] - Upgrade Flink to 1.11.3
+    * [BIGTOP-3474] - Bump Hadoop to 3.2.2
+    * [BIGTOP-3475] -  Bump ZooKeeper to 3.4.14
+    * [BIGTOP-3479] - Bump Tez to 0.10.0
+    * [BIGTOP-3480] - Bump Hive to 3.1.2
+    * [BIGTOP-3481] - Bump Spark to 3.0.1
+    * [BIGTOP-3484] - Bump Alluxio to 2.4.1
+    * [BIGTOP-3485] - Bump Solr to v8.7.0
+    * [BIGTOP-3488] - Bump Kafka to 2.4.1
+    * [BIGTOP-3490] - Bump Sqoop to 1.4.7
+    * [BIGTOP-3491] - Add Ubuntu 20.04 support to the Bigtop toolchain
+    * [BIGTOP-3492] - Add Ubuntu 20.04 support to the Docker provisioner
+    * [BIGTOP-3493] - Bump YCSB to 0.17.0
+    * [BIGTOP-3498] - Bump Phoenix to 5.1.0
+    * [BIGTOP-3500] - Bump Zeppelin to 0.9.0
+    * [BIGTOP-3510] - Drop sqoop2
+    * [BIGTOP-3511] - Drop Mahout
+    * [BIGTOP-3512] - Drop Giraph
+    * [BIGTOP-3514] - Bump GPDB to 5.28.5
+    * [BIGTOP-3517] - Bump Livy to 0.7.1
+    * [BIGTOP-3519] - Drop Flume
+    * [BIGTOP-3520] - Drop ignite-hadoop
+    * [BIGTOP-3521] - Drop QFS
+    * [BIGTOP-3522] - Drop Fedora 31 and add Fedora 33 support
+    * [BIGTOP-3523] - Drop Ubuntu 16.04 support
+    * [BIGTOP-3528] - Bump Oozie to 5.2.1
+    * [BIGTOP-3529] - Drop bigtop-tomcat
+    * [BIGTOP-3556] - Minimum chnages for upgrading Bigtop-ambari-mpack aligned with Ambari 2.7.5
+
+** Bug
+    * [BIGTOP-3472] - Building Hadoop 3.2.1 fails on CentOS 7 due to cmake version mismatch
+    * [BIGTOP-3473] - Building Hadoop 3.2.1 fails in checking jar contents
+    * [BIGTOP-3476] - Fix build Oozie issues
+    * [BIGTOP-3477] - Fix puppet manifests for hadoop-3
+    * [BIGTOP-3478] - Fix version mismatch of Guava between Hadoop and HBase
+    * [BIGTOP-3482] - Fix toolchain not to break cmake by creating unnecessary symlink
+    * [BIGTOP-3483] - Upgrade R version on Ubuntu 18.04
+    * [BIGTOP-3486] - Fix version mismatch of Jetty between Hadoop and HBase
+    * [BIGTOP-3489] - Fix Livy build failure with Spark 3
+    * [BIGTOP-3494] - Add MapReduce settings to yarn.nodemanager.env-whitelist in yarn-site.xml
+    * [BIGTOP-3497] - libcrypto.so should be provided for libhadoop.so
+    * [BIGTOP-3499] - Fix Logstash build failure due to gem version incompatibility
+    * [BIGTOP-3501] - Update hadoop-kms resources based on hadoop-3
+    * [BIGTOP-3505] - Update hadoop-kms puppet manifests based on hadoop-3
+    * [BIGTOP-3506] - Update hadoop-httpfs resources based on hadoop-3
+    * [BIGTOP-3508] - Sqoop bin script doesn't work on Debian 10 if libslf4j-java is installed
+    * [BIGTOP-3516] - Remove dead HBase jar link for Hive
+    * [BIGTOP-3524] - Hadoop 3.2.2 build failure on Arm
+    * [BIGTOP-3526] - Remove phantomjs depdency from yarn-ui
+    * [BIGTOP-3531] - Fix packaging of Oozie 5.2.1
+    * [BIGTOP-3532] - Fix smoke-tests for Oozie 5.2.1
+    * [BIGTOP-3535] - Add zstd compression headers to add native lib support
+    * [BIGTOP-3537] - Fix puppetize.sh to work with the latest CentOS 8 Docker image
+    * [BIGTOP-3538] - Building GPDB fails on Fedora 33
+    * [BIGTOP-3539] - Building bigtop-groovy fails on all distros and platforms
+    * [BIGTOP-3540] - Fix toolchain to abort if R installation failed
+    * [BIGTOP-3541] - Smoke test on odpi-runtime failed
+    * [BIGTOP-3542] - Fix build failure of Hadoop on ppc64le
+    * [BIGTOP-3543] - Build failures on the ARM CI servers
+    * [BIGTOP-3544] - Fix Spark build on Debian 9
+    * [BIGTOP-3545] - Nexus configured by docker provisioner fails to download pentaho-aggdesigner-algorithm
+    * [BIGTOP-3546] - Could not find org.pentaho:pentaho-aggdesigner-algorithm:5.1.5-jhyde.
+    * [BIGTOP-3548] - Hive build failure caused by protoc-jar-maven-plugin missing aarch64 support
+    * [BIGTOP-3549] - HBase build failure caused by protobuf in xolstice
+    * [BIGTOP-3551] - Phantomjs caused Ambari build failure on non-x86
+    * [BIGTOP-3554] - Phoenix build failure caused by protoc-2.5.0
+    * [BIGTOP-3559] - Fix the download URL for pip2 in the GPDB deployment manifest
+    * [BIGTOP-3562] - Building Logstash is failing due to the unavailability of keyserver
+    * [BIGTOP-3563] - Building Hadoop for CentOS 8 fails due to cmake error
+    * [BIGTOP-3567] - Building Zeppelin fails due to the dependency downloading problem
+    * [BIGTOP-3568] - Fix Ambari-2.7.5 installation issues
+    * [BIGTOP-3569] - Applying GPDB Puppet manifest fails on arm64
+    * [BIGTOP-3570] - Fix Spark smoke test failures
+    * [BIGTOP-3571] - Ensure Hadoop and Flink are deployed in the correct order
+    * [BIGTOP-3573] - Tez smoke test fails on the ARM platform
+    * [BIGTOP-3574] - Starting Elasticsearch fails on ppc64le
+    * [BIGTOP-3575] - Hive rpm build warning due to missing dependency
+    * [BIGTOP-3576] - Deploying Ambari to Fedora 33 fails on ppc64le
+    * [BIGTOP-3577] - HBase smoke test partially fails on ppc64le
+    * [BIGTOP-3578] - Solr smoke test fails on ppc64le
+    * [BIGTOP-3579] - Spark smoke test fails on Debian 9 and Ubuntu 18.04
+    * [BIGTOP-3580] - Fix deployment failure on Debian 10 caused by the Debian 11 release
+    * [BIGTOP-3582] - Logstash RPM Build Fails
+    * [BIGTOP-3584] - Fix build failure of Ambari due to missing dependency on javax.el
+    * [BIGTOP-3587] - Deploying Ambari to Ubuntu 18.04 and 20.04 fails on ppc64le
+    * [BIGTOP-3588] - Pin redis-rb version for Logstash to 4.4.0
+
+** Improvement
+    * [BIGTOP-3383] - Update puppet manifest for deploying Flink 1.11.1
+    * [BIGTOP-3384] - Update smoke test to work with Flink 1.11.1
+    * [BIGTOP-3400] - Clean up or disable husky installed via packaging Kibana
+    * [BIGTOP-3456] - Add hadoop-yarn-router and hadoop-hdfs-dfsrouter to hadoop services
+    * [BIGTOP-3457] - Add libhdfspp packages to hadoop
+    * [BIGTOP-3495] - Optional tools of hadoop-tools should be optional
+    * [BIGTOP-3507] - Solr: CVE-2020-13957 mitigation backport
+    * [BIGTOP-3513] - Update deb resources for hadoop-yarn-router and hadoop-hdfs-dfsrouter
+    * [BIGTOP-3527] - hadoop package build failures for Debian 10
+    * [BIGTOP-3536] - Fix build failure of Hadoop on Fedora 33
+    * [BIGTOP-3552] - Add missing files to ambari-agent RPM
+    * [BIGTOP-3555] - Drop smoke-tests/odpi-runtime
+    * [BIGTOP-3558] - Fix build failure of HBase on ppc64le
+    * [BIGTOP-3560] - Fix build failure of Zeppelin on ppc64le
+    * [BIGTOP-3561] - Fix build failure of Kibana on ppc64le
+    * [BIGTOP-3564] - Fix build failure of Flink on Cent OS 7 ppc64le
+    * [BIGTOP-3565] - Fix build failure of Alluxio on Cent OS 7 ppc64le
+    * [BIGTOP-3585] - Remove obsolete text replacement from do-component-build of Ambari
+
+** Task
+    * [BIGTOP-3533] - Enable Apache Bigtop CI/CD for ppc64le
+
 
 * Release 1.5.0 (2020-12-07)
 
