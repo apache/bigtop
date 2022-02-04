@@ -378,7 +378,7 @@ while [ $# -gt 0 ]; do
         image_name=$2
         # Determine distro to bootstrap provisioning environment
         case "${image_name}" in
-          *-centos-*|*-fedora-*|*-opensuse-*)
+          *-centos-*|*-fedora-*|*-opensuse-*|*-rockylinux-*)
             distro=centos
             ;;
           *-debian-*|*-ubuntu-*)
