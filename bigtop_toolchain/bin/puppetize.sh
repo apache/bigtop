@@ -47,7 +47,7 @@ case ${ID}-${VERSION_ID} in
         yum -y install hostname curl sudo unzip wget puppet
         puppet module install puppetlabs-stdlib --version 4.12.0
         ;;
-    centos-8*)
+    centos-8*|rocky-8*)
         rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
         dnf -y check-update
         dnf -y install glibc-langpack-en hostname diffutils curl sudo unzip wget puppet 'dnf-command(config-manager)'
