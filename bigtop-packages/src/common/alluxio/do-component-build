@@ -19,6 +19,8 @@ set -ex
 . `dirname $0`/bigtop.bom
 
 if [ $HOSTTYPE = "powerpc64le" ] ; then
+  mvn install:install-file -DgroupId=io.grpc -DartifactId=protoc-gen-grpc-java -Dversion=1.28.1 -Dclassifier=linux-ppcle_64 -Dpackaging=exe -Dfile=/usr/src/grpc-java-1.28.0/compiler/build/exe/java_plugin/protoc-gen-grpc-java
+
   sed -i "s|<nodeVersion>v10.11.0</nodeVersion>|<nodeVersion>v12.22.1</nodeVersion>|" webui/pom.xml
   sed -i "s|<npmVersion>6.4.1</npmVersion>|<npmVersion>6.14.7</npmVersion>|" webui/pom.xml
 fi
