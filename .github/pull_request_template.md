@@ -13,4 +13,4 @@
 ### For code changes:
 
 - [ ] Does the title or this PR starts with the corresponding JIRA issue id (e.g. 'BIGTOP-3638. Your PR title ...')?
-- [ ] If adding new dependencies to the code, are these dependencies licensed in a way that is compatible for inclusion under [ASF 2.0](http://www.apache.org/legal/resolved.html#category-a)?
+- [ ] Make sure that newly added files do not have any licensing issues. When in doubt refer to https://www.apache.org/licenses/
