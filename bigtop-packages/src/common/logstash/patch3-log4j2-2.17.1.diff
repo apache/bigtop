@@ -42,16 +42,16 @@ index 2968c3a..c8bd292 100644
  dependencies {
 -    compile 'org.apache.logging.log4j:log4j-api:2.6.2'
 -    compile 'org.apache.logging.log4j:log4j-core:2.6.2'
-+    compile 'org.apache.logging.log4j:log4j-api:2.17.0'
-+    compile 'org.apache.logging.log4j:log4j-core:2.17.0'
++    compile 'org.apache.logging.log4j:log4j-api:2.17.1'
++    compile 'org.apache.logging.log4j:log4j-core:2.17.1'
      compile 'com.fasterxml.jackson.core:jackson-core:2.7.4'
      compile 'com.fasterxml.jackson.core:jackson-databind:2.7.4'
      compile 'com.fasterxml.jackson.module:jackson-module-afterburner:2.7.4'
      compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:2.7.4'
 -    testCompile 'org.apache.logging.log4j:log4j-core:2.6.2:tests'
 -    testCompile 'org.apache.logging.log4j:log4j-api:2.6.2:tests'
-+    testCompile 'org.apache.logging.log4j:log4j-core:2.17.0:tests'
-+    testCompile 'org.apache.logging.log4j:log4j-api:2.17.0:tests'
++    testCompile 'org.apache.logging.log4j:log4j-core:2.17.1:tests'
++    testCompile 'org.apache.logging.log4j:log4j-api:2.17.1:tests'
      testCompile 'junit:junit:4.12'
      testCompile 'net.javacrumbs.json-unit:json-unit:1.9.0'
      provided 'org.jruby:jruby-core:9.1.9.0'
@@ -65,8 +65,8 @@ index 2459f5d..9f27b11 100644
  
 -gem.requirements << "jar org.apache.logging.log4j:log4j-api, 2.6.2"
 -gem.requirements << "jar org.apache.logging.log4j:log4j-core, 2.6.2"
-+gem.requirements << "jar org.apache.logging.log4j:log4j-api, 2.17.0"
-+gem.requirements << "jar org.apache.logging.log4j:log4j-core, 2.17.0"
++gem.requirements << "jar org.apache.logging.log4j:log4j-api, 2.17.1"
++gem.requirements << "jar org.apache.logging.log4j:log4j-core, 2.17.1"
  gem.requirements << "jar com.fasterxml.jackson.core:jackson-core, 2.7.4"
  gem.requirements << "jar com.fasterxml.jackson.core:jackson-databind, 2.7.4"
  gem.requirements << "jar com.fasterxml.jackson.module:jackson-module-afterburner, 2.7.4"
@@ -79,10 +79,10 @@ index 8ccd269..c9a9818 100644
    require 'jar_dependencies'
  rescue LoadError
 -  require 'org/apache/logging/log4j/log4j-core/2.6.2/log4j-core-2.6.2.jar'
-+  require 'org/apache/logging/log4j/log4j-core/2.17.0/log4j-core-2.17.0.jar'
++  require 'org/apache/logging/log4j/log4j-core/2.17.1/log4j-core-2.17.1.jar'
    require 'com/fasterxml/jackson/module/jackson-module-afterburner/2.7.4/jackson-module-afterburner-2.7.4.jar'
 -  require 'org/apache/logging/log4j/log4j-api/2.6.2/log4j-api-2.6.2.jar'
-+  require 'org/apache/logging/log4j/log4j-api/2.17.0/log4j-api-2.17.0.jar'
++  require 'org/apache/logging/log4j/log4j-api/2.17.1/log4j-api-2.17.1.jar'
    require 'com/fasterxml/jackson/core/jackson-core/2.7.4/jackson-core-2.7.4.jar'
    require 'com/fasterxml/jackson/core/jackson-annotations/2.7.0/jackson-annotations-2.7.0.jar'
    require 'com/fasterxml/jackson/dataformat/jackson-dataformat-cbor/2.7.4/jackson-dataformat-cbor-2.7.4.jar'
@@ -91,10 +91,10 @@ index 8ccd269..c9a9818 100644
  
  if defined? Jars
 -  require_jar( 'org.apache.logging.log4j', 'log4j-core', '2.6.2' )
-+  require_jar( 'org.apache.logging.log4j', 'log4j-core', '2.17.0' )
++  require_jar( 'org.apache.logging.log4j', 'log4j-core', '2.17.1' )
    require_jar( 'com.fasterxml.jackson.module', 'jackson-module-afterburner', '2.7.4' )
 -  require_jar( 'org.apache.logging.log4j', 'log4j-api', '2.6.2' )
-+  require_jar( 'org.apache.logging.log4j', 'log4j-api', '2.17.0' )
++  require_jar( 'org.apache.logging.log4j', 'log4j-api', '2.17.1' )
    require_jar( 'com.fasterxml.jackson.core', 'jackson-core', '2.7.4' )
    require_jar( 'com.fasterxml.jackson.core', 'jackson-annotations', '2.7.0' )
    require_jar( 'com.fasterxml.jackson.dataformat', 'jackson-dataformat-cbor', '2.7.4' )
