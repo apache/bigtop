@@ -1,0 +1,125 @@
+diff --git a/lucene/ivy-versions.properties b/lucene/ivy-versions.properties
+index 3b314c7..2ce0f2b 100644
+--- a/lucene/ivy-versions.properties
++++ b/lucene/ivy-versions.properties
+@@ -234,7 +234,7 @@ org.apache.kerby.version = 1.0.1
+ /org.apache.kerby/kerby-pkix = ${org.apache.kerby.version}
+ /org.apache.kerby/kerby-util = ${org.apache.kerby.version}
+ 
+-org.apache.logging.log4j.version = 2.16.0
++org.apache.logging.log4j.version = 2.17.1
+ /org.apache.logging.log4j/log4j-1.2-api = ${org.apache.logging.log4j.version}
+ /org.apache.logging.log4j/log4j-api = ${org.apache.logging.log4j.version}
+ /org.apache.logging.log4j/log4j-core = ${org.apache.logging.log4j.version}
+diff --git a/lucene/licenses/log4j-api-2.16.0.jar.sha1 b/lucene/licenses/log4j-api-2.16.0.jar.sha1
+deleted file mode 100644
+index b95c0d0..0000000
+--- a/lucene/licenses/log4j-api-2.16.0.jar.sha1
++++ /dev/null
+@@ -1 +0,0 @@
+-4727d93a76616ffc4149dffac5801827c0f4ac71
+diff --git a/lucene/licenses/log4j-api-2.17.1.jar.sha1 b/lucene/licenses/log4j-api-2.17.1.jar.sha1
+new file mode 100644
+index 0000000..acdf9dd
+--- /dev/null
++++ b/lucene/licenses/log4j-api-2.17.1.jar.sha1
+@@ -0,0 +1 @@
++d771af8e336e372fb5399c99edabe0919aeaf5b2
+diff --git a/lucene/licenses/log4j-core-2.16.0.jar.sha1 b/lucene/licenses/log4j-core-2.16.0.jar.sha1
+deleted file mode 100644
+index 953dbb9..0000000
+--- a/lucene/licenses/log4j-core-2.16.0.jar.sha1
++++ /dev/null
+@@ -1 +0,0 @@
+-ca12fb3902ecfcba1e1357ebfc55407acec30ede
+diff --git a/lucene/licenses/log4j-core-2.17.1.jar.sha1 b/lucene/licenses/log4j-core-2.17.1.jar.sha1
+new file mode 100644
+index 0000000..aa16b80
+--- /dev/null
++++ b/lucene/licenses/log4j-core-2.17.1.jar.sha1
+@@ -0,0 +1 @@
++779f60f3844dadc3ef597976fcb1e5127b1f343d
+diff --git a/solr/licenses/log4j-1.2-api-2.16.0.jar.sha1 b/solr/licenses/log4j-1.2-api-2.16.0.jar.sha1
+deleted file mode 100644
+index f5179d6..0000000
+--- a/solr/licenses/log4j-1.2-api-2.16.0.jar.sha1
++++ /dev/null
+@@ -1 +0,0 @@
+-ecbcfa4162e35b831705e97bbee546f81280ee6f
+diff --git a/solr/licenses/log4j-1.2-api-2.17.1.jar.sha1 b/solr/licenses/log4j-1.2-api-2.17.1.jar.sha1
+new file mode 100644
+index 0000000..99b2488
+--- /dev/null
++++ b/solr/licenses/log4j-1.2-api-2.17.1.jar.sha1
+@@ -0,0 +1 @@
++db3a7e7f07e878b92ac4a8f1100bee8325d5713a
+diff --git a/solr/licenses/log4j-api-2.16.0.jar.sha1 b/solr/licenses/log4j-api-2.16.0.jar.sha1
+deleted file mode 100644
+index b95c0d0..0000000
+--- a/solr/licenses/log4j-api-2.16.0.jar.sha1
++++ /dev/null
+@@ -1 +0,0 @@
+-4727d93a76616ffc4149dffac5801827c0f4ac71
+diff --git a/solr/licenses/log4j-api-2.17.1.jar.sha1 b/solr/licenses/log4j-api-2.17.1.jar.sha1
+new file mode 100644
+index 0000000..acdf9dd
+--- /dev/null
++++ b/solr/licenses/log4j-api-2.17.1.jar.sha1
+@@ -0,0 +1 @@
++d771af8e336e372fb5399c99edabe0919aeaf5b2
+diff --git a/solr/licenses/log4j-core-2.16.0.jar.sha1 b/solr/licenses/log4j-core-2.16.0.jar.sha1
+deleted file mode 100644
+index 953dbb9..0000000
+--- a/solr/licenses/log4j-core-2.16.0.jar.sha1
++++ /dev/null
+@@ -1 +0,0 @@
+-ca12fb3902ecfcba1e1357ebfc55407acec30ede
+diff --git a/solr/licenses/log4j-core-2.17.1.jar.sha1 b/solr/licenses/log4j-core-2.17.1.jar.sha1
+new file mode 100644
+index 0000000..aa16b80
+--- /dev/null
++++ b/solr/licenses/log4j-core-2.17.1.jar.sha1
+@@ -0,0 +1 @@
++779f60f3844dadc3ef597976fcb1e5127b1f343d
+diff --git a/solr/licenses/log4j-layout-template-json-2.16.0.jar.sha1 b/solr/licenses/log4j-layout-template-json-2.16.0.jar.sha1
+deleted file mode 100644
+index d97f9bc..0000000
+--- a/solr/licenses/log4j-layout-template-json-2.16.0.jar.sha1
++++ /dev/null
+@@ -1 +0,0 @@
+-257d34c9f0942a834ddd972f177c4e8c7da877cc
+diff --git a/solr/licenses/log4j-layout-template-json-2.17.1.jar.sha1 b/solr/licenses/log4j-layout-template-json-2.17.1.jar.sha1
+new file mode 100644
+index 0000000..10052b3
+--- /dev/null
++++ b/solr/licenses/log4j-layout-template-json-2.17.1.jar.sha1
+@@ -0,0 +1 @@
++fb9cdcd21b45a6da4eead9f6333e220f36ef2066
+diff --git a/solr/licenses/log4j-slf4j-impl-2.16.0.jar.sha1 b/solr/licenses/log4j-slf4j-impl-2.16.0.jar.sha1
+deleted file mode 100644
+index a34c4ea..0000000
+--- a/solr/licenses/log4j-slf4j-impl-2.16.0.jar.sha1
++++ /dev/null
+@@ -1 +0,0 @@
+-d4cc7712ebb4744681db815679248e4312f61b32
+diff --git a/solr/licenses/log4j-slf4j-impl-2.17.1.jar.sha1 b/solr/licenses/log4j-slf4j-impl-2.17.1.jar.sha1
+new file mode 100644
+index 0000000..b29c261
+--- /dev/null
++++ b/solr/licenses/log4j-slf4j-impl-2.17.1.jar.sha1
+@@ -0,0 +1 @@
++84692d456bcce689355d33d68167875e486954dd
+diff --git a/solr/licenses/log4j-web-2.16.0.jar.sha1 b/solr/licenses/log4j-web-2.16.0.jar.sha1
+deleted file mode 100644
+index 7624114..0000000
+--- a/solr/licenses/log4j-web-2.16.0.jar.sha1
++++ /dev/null
+@@ -1 +0,0 @@
+-4bf36dca045fa113f625324013fbf57f938cd1c3
+diff --git a/solr/licenses/log4j-web-2.17.1.jar.sha1 b/solr/licenses/log4j-web-2.17.1.jar.sha1
+new file mode 100644
+index 0000000..eefd0a0
+--- /dev/null
++++ b/solr/licenses/log4j-web-2.17.1.jar.sha1
+@@ -0,0 +1 @@
++1a9e4a6ba9ac4e82c9d57ba7425168555b636d4f
