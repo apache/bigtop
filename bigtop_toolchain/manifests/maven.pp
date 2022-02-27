@@ -30,7 +30,7 @@ class bigtop_toolchain::maven {
   } ~>
 
   exec { 'Download Maven binaries signature':
-    command => "/usr/bin/wget https://www.apache.org/dist/maven/maven-3/$mvnversion/binaries/$mvn-bin.tar.gz.asc",
+    command => "/usr/bin/wget $apache_prefix/maven/maven-3/$mvnversion/binaries/$mvn-bin.tar.gz.asc",
     cwd     => "/usr/src",
     unless  => "/usr/bin/test -f /usr/src/$mvn-bin.tar.gz.asc",
   } ~>

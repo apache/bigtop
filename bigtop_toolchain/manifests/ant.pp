@@ -29,7 +29,7 @@ class bigtop_toolchain::ant {
   } ~>
 
   exec { 'Download Ant binaries signature':
-    command => "/usr/bin/wget https://www.apache.org/dist/ant/binaries/$ant-bin.tar.gz.asc",
+    command => "/usr/bin/wget $apache_prefix/ant/binaries/$ant-bin.tar.gz.asc",
     cwd     => "/usr/src",
     unless  => "/usr/bin/test -f /usr/src/$ant-bin.tar.gz.asc",
   } ~>
