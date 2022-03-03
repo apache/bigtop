@@ -1,0 +1,22 @@
+diff --git a/pom.xml b/pom.xml
+index 4393b0502d..282e0c44ec 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -64,17 +64,6 @@
+     <eclipselink.version>2.6.2</eclipselink.version>
+   </properties>
+   <pluginRepositories>
+-    <pluginRepository>
+-      <id>maven2-repository.dev.java.net</id>
+-      <name>Java.net Repository for Maven</name>
+-      <url>https://download.java.net/maven/2/</url>
+-      <layout>default</layout>
+-    </pluginRepository>
+-    <pluginRepository>
+-      <id>maven2-glassfish-repository.dev.java.net</id>
+-      <name>Java.net Repository for Maven</name>
+-      <url>https://download.java.net/maven/glassfish/</url>
+-    </pluginRepository>
+     <pluginRepository>
+       <id>maven2-repository.atlassian</id>
+       <name>Atlassian Maven Repository</name>
