@@ -426,7 +426,6 @@ def generate_nexus_tasks = { name, url, snapshot ->
 			  "remoteStorage": ["remoteStorageUrl": url, "authentication": null,
 					    "connectionSettings": null]]]
     def root = new groovy.json.JsonBuilder(req)
-    def p = root.toString()
     def _NEXUS_USERPASS = project.hasProperty("NEXUS_USERPASS") ? NEXUS_USERPASS : "admin:admin123"
 
     File.createTempFile("temp",".tmp").with {
@@ -445,6 +444,9 @@ def generate_nexus_tasks = { name, url, snapshot ->
           case "200":
             println "Nexus proxy ${name} successfully configured"
             break
+          case "201":
+	        println "Got status 201 from nexus"
+            break
           case "400":
             println "Skipped because Nexus proxy ${name} already configured"
             break
@@ -462,27 +464,71 @@ def repos = [ [ "name": "conjars", "url" : "http://conjars.org", 'snapshot':'REL
           [ "name": "repository.jboss.org", "url": "http://repository.jboss.org/nexus/content/groups/public/", 'snapshot': 'RELEASE'],
           [ "name": "apache.snapshots.https", "url": "https://repository.apache.org/content/repositories/snapshots", "snapshot": 'SNAPSHOT'],
           [ "name": "apache.snapshots", "url": "https://repository.apache.org/content/repositories/snapshots", "snapshot": 'SNAPSHOT'],
+          [ "name": "apache-hadoop", "url": "https://nexus-private.hortonworks.com/nexus/content/groups/public/", "snapshot": 'RELEASE'],
+          [ "name": "oss.sonatype.org", "url": "https://oss.sonatype.org/content/groups/staging", "snapshot": 'RELEASE'],
+          [ "name": "spring-milestones", "url": "http://repo.spring.io/milestone", "snapshot": 'RELEASE'],
+          [ "name": "maven2-repository.dev.java.net", "url": "https://download.java.net/maven/2/"],
+          [ "name": "maven2-glassfish-repository.dev.java.net", "url": "https://download.java.net/maven/glassfish/"],
+          [ "name": "private-nexus", "url": "https://nexus-private.hortonworks.com/nexus/content/groups/public/", "snapshot": 'RELEASE'],
           [ "name": "maven2-repository.atlassian", "url": "https://maven.atlassian.com/repository/public", "snapshot": 'RELEASE']]
 
 repos.each { r->
   generate_nexus_tasks( r.name, r.url, r.snapshot)
 }
 
-task "configure-nexus"(dependsOn: tasks.findAll { alltask -> alltask.name.startsWith("configure-nexus-")}*.name,
+task "configure-nexus-public-group"(type: Exec, dependsOn: [  tasks.findAll { alltask -> alltask.name.startsWith("configure-nexus-")}*.name ]) {
+  def myrepos = []
+  repos.each {r->
+    myrepos.add (["id": r.name])
+  }
+
+  def req = [ data : [ id: "public", name: "Public Repositories", "format":"maven2","exposed":true,"provider":"maven2", "repositories": myrepos ] ]
+  def root = new groovy.json.JsonBuilder(req)
+  def _NEXUS_USERPASS = project.hasProperty("NEXUS_USERPASS") ? NEXUS_USERPASS : "admin:admin123"
+
+  File.createTempFile("temp",".tmp").with {
+    deleteOnExit()
+    write root.toString()
+    workingDir '.'
+    commandLine  "curl", "-o", "/dev/null", "-s", "-w", "%{http_code}", "-X", "PUT", "-d", "@$absolutePath",
+            "--header", "Content-Type: application/json", "-u", "$_NEXUS_USERPASS", "$_NEXUS_URL/service/local/repo_groups/public"
+    standardOutput = new ByteArrayOutputStream()
+
+    doLast {
+      def httpCode = standardOutput.toString()
+      switch (httpCode) {
+        case "200":
+          println "Nexus public group successfully configured"
+          break
+        case "201":
+          println "Got status 201 from nexus"
+          break
+        case "400":
+          println "Skipped because Nexus proxy was already configured"
+          break
+        default:
+          throw new GradleException("Failed to configure Nexus proxy ${name} with http code ${httpCode} returned. " +
+                  "Run with --info option to see the executed command")
+          break
+      }
+    }
+  }
+}
+
+task "configure-nexus"(dependsOn: [  tasks.findAll { alltask -> alltask.name.startsWith("configure-nexus-")}*.name ],
       description: 'configure build to use a sonatype nexus server.\n' +
         '  Use -PNEXUS_URL=http://server:8081 to overwrite default server http://localhost:8081/nexus\n' +
         '  Use -PNEXUS_USERPASS=user:passwd to overwrite default username passwd admin:admin123') doLast {
    def m2Dir = System.getProperty("user.home") + "/.m2"
    mkdir(m2Dir)
    def m2Writer = new File(m2Dir + "/settings.xml")
-   def writeMirrorLine = { name ->
-     m2Writer.append("<mirror><name>$name</name><url>$_NEXUS_URL/content/repositories/$name/</url><mirrorOf>$name</mirrorOf></mirror>")
-   }
    m2Writer.text = "<settings><mirrors>"
-   writeMirrorLine( "central")
-   repos.each{ r->
-     writeMirrorLine( r.name)
+   def repoString = ""
+   repos.each {r->
+     repoString +=r.name + ","
    }
+
+   m2Writer.append("<mirror><name>local</name><url>$_NEXUS_URL/content/groups/public/</url><mirrorOf>$repoString</mirrorOf></mirror>")
    m2Writer.append("</mirrors></settings>")
 
     def gradleDir = System.getProperty("user.home") + "/.gradle/init.d"
@@ -492,7 +538,7 @@ task "configure-nexus"(dependsOn: tasks.findAll { alltask -> alltask.name.starts
 allprojects {
     repositories {
         maven {
-            url "$_NEXUS_URL/content/repositories/central"
+            url "$_NEXUS_URL/content/groups/public/"
         }
     }
 }
