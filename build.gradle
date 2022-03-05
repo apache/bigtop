@@ -417,6 +417,9 @@ def artifactToInstall = {
 
 def _NEXUS_URL = project.hasProperty("NEXUS_URL") ? NEXUS_URL : "http://localhost:8081/nexus"
 
+/**
+ * Programatically create configure-nexus-* gradle tasks using a name, url and snapshot variable.
+ */
 def generate_nexus_tasks = { name, url, snapshot ->
   task "configure-nexus-${name}"(type: Exec) {
     def req = [ data : [ id: name, name: name, repoType: "proxy", repoPolicy : snapshot, browseable: true, "indexable": true, "notFoundCacheTTL": 1440,
@@ -473,17 +476,24 @@ def repos = [
           [ "name": "maven2-repository.atlassian", "url": "https://maven.atlassian.com/repository/public", "snapshot": 'RELEASE']
 ]
 
+/**
+ * For all repos in repos list, create configure-nexus-* gradle tasks
+ */
 repos.each { r->
   generate_nexus_tasks( r.name, r.url, r.snapshot)
 }
 
+/**
+ * Gradle task that updates the public group in Nexus. 'reposInGroup' is a JSON array containing the repo ids.
+ * Because of the 'dependsOn'-attribute, the task will always be executed after all configure-nexus-* tasks.
+ */
 task "configure-nexus-public-group"(type: Exec, dependsOn: [  tasks.findAll { alltask -> alltask.name.startsWith("configure-nexus-")}*.name ]) {
-  def myrepos = []
+  def reposInGroup = []
   repos.each {r->
-    myrepos.add (["id": r.name])
+    reposInGroup.add (["id": r.name])
   }
 
-  def req = [ data : [ id: "public", name: "Public Repositories", "format":"maven2","exposed":true,"provider":"maven2", "repositories": myrepos ] ]
+  def req = [ data : [ id: "public", name: "Public Repositories", "format":"maven2","exposed":true,"provider":"maven2", "repositories": reposInGroup ] ]
   def root = new groovy.json.JsonBuilder(req)
   def _NEXUS_USERPASS = project.hasProperty("NEXUS_USERPASS") ? NEXUS_USERPASS : "admin:admin123"
 
@@ -516,6 +526,12 @@ task "configure-nexus-public-group"(type: Exec, dependsOn: [  tasks.findAll { al
   }
 }
 
+/**
+ * 'Entry point' gradle task to configure Nexus. It will write a maven settings.xml file containing a single refrence to the
+ * Nexus 'public' group. The mirrorsOf-element contains a comma-separated string with repositoryIds (from the repos-variable).
+ * This makes sure that the build won't fail whenever the repos-variable gets outdated.
+ * The 'dependsOn' attribute makes sure all the above 'configure-nexus-*' tasks are executed first (in the right order).
+ */
 task "configure-nexus"(dependsOn: [  tasks.findAll { alltask -> alltask.name.startsWith("configure-nexus-")}*.name ],
       description: 'configure build to use a sonatype nexus server.\n' +
         '  Use -PNEXUS_URL=http://server:8081 to overwrite default server http://localhost:8081/nexus\n' +
