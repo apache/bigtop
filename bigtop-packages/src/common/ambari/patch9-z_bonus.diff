@@ -1,0 +1,446 @@
+diff --git a/ambari-agent/pom.xml b/ambari-agent/pom.xml
+index 214aa851..3b0bef2d 100644
+--- a/ambari-agent/pom.xml
++++ b/ambari-agent/pom.xml
+@@ -159,7 +159,7 @@
+       <groupId>org.apache.ambari</groupId>
+       <artifactId>ambari-utility</artifactId>
+       <scope>test</scope>
+-      <version>1.0.0.0-SNAPSHOT</version>
++      <version>2.7.5.0.0</version>
+     </dependency>
+     <dependency>
+       <groupId>junit</groupId>
+diff --git a/ambari-infra/pom.xml b/ambari-infra/pom.xml
+index 167bf5c6..c24bf9d3 100644
+--- a/ambari-infra/pom.xml
++++ b/ambari-infra/pom.xml
+@@ -33,7 +33,7 @@
+     <deb.dependency.list>${deb.python.ver}</deb.dependency.list>
+     <hadoop.version>3.0.0</hadoop.version>
+     <surefire.argLine>-Xmx1024m -Xms512m</surefire.argLine>
+-    <zookeeper.version>3.4.6.2.3.0.0-2557</zookeeper.version>
++    <zookeeper.version>3.4.6</zookeeper.version>
+     <skipSurefireTests>false</skipSurefireTests>
+     <log4j2.version>2.11.0</log4j2.version>
+   </properties>
+@@ -55,11 +55,6 @@
+   </issueManagement>
+ 
+   <repositories>
+-    <repository>
+-      <id>apache-hadoop</id>
+-      <name>hdp</name>
+-      <url>https://repo.hortonworks.com/content/groups/public/</url>
+-    </repository>
+     <repository>
+       <id>oss.sonatype.org</id>
+       <name>OSS Sonatype Staging</name>
+diff --git a/ambari-logsearch/pom.xml b/ambari-logsearch/pom.xml
+index c0f2494f..fd10e6b2 100644
+--- a/ambari-logsearch/pom.xml
++++ b/ambari-logsearch/pom.xml
+@@ -47,7 +47,7 @@
+     <solr.version>7.7.0</solr.version>
+     <hadoop.version>3.0.0</hadoop.version>
+     <common.io.version>2.5</common.io.version>
+-    <zookeeper.version>3.4.6.2.3.0.0-2557</zookeeper.version>
++    <zookeeper.version>3.4.6</zookeeper.version>
+     <forkCount>4</forkCount>
+     <reuseForks>false</reuseForks>
+     <surefire.argLine>-Xmx1024m -Xms512m</surefire.argLine>
+@@ -71,11 +71,6 @@
+   </issueManagement>
+ 
+   <repositories>
+-    <repository>
+-      <id>apache-hadoop</id>
+-      <name>hdp</name>
+-      <url>https://repo.hortonworks.com/content/groups/public/</url>
+-    </repository>
+     <repository>
+       <id>oss.sonatype.org</id>
+       <name>OSS Sonatype Staging</name>
+diff --git a/ambari-metrics/ambari-metrics-assembly/pom.xml b/ambari-metrics/ambari-metrics-assembly/pom.xml
+index d25b2926..2940d8a8 100644
+--- a/ambari-metrics/ambari-metrics-assembly/pom.xml
++++ b/ambari-metrics/ambari-metrics-assembly/pom.xml
+@@ -39,7 +39,6 @@
+     <grafana.dir>${project.basedir}/../ambari-metrics-grafana</grafana.dir>
+     <hadoop-sink.dir>${project.basedir}/../ambari-metrics-hadoop-sink</hadoop-sink.dir>
+     <storm-sink.dir>${project.basedir}/../ambari-metrics-storm-sink</storm-sink.dir>
+-    <storm-sink-legacy.dir>${project.basedir}/../ambari-metrics-storm-sink-legacy</storm-sink-legacy.dir>
+     <flume-sink.dir>${project.basedir}/../ambari-metrics-flume-sink</flume-sink.dir>
+     <kafka-sink.dir>${project.basedir}/../ambari-metrics-kafka-sink</kafka-sink.dir>
+     <python.ver>python &gt;= 2.6</python.ver>
+@@ -53,7 +52,6 @@
+     <deb.dependency.list>${deb.python.ver},python-dev,gcc</deb.dependency.list>
+     <hadoop.sink.jar>ambari-metrics-hadoop-sink-with-common-${project.version}.jar</hadoop.sink.jar>
+     <storm.sink.jar>ambari-metrics-storm-sink-with-common-${project.version}.jar</storm.sink.jar>
+-    <storm.sink.legacy.jar>ambari-metrics-storm-sink-legacy-with-common-${project.version}.jar</storm.sink.legacy.jar>
+     <flume.sink.jar>ambari-metrics-flume-sink-with-common-${project.version}.jar</flume.sink.jar>
+     <kafka.sink.jar>ambari-metrics-kafka-sink-with-common-${project.version}.jar</kafka.sink.jar>
+   </properties>
+@@ -423,14 +421,6 @@
+                         </source>
+                       </sources>
+                     </mapping>
+-                    <mapping>
+-                      <directory>/usr/lib/storm/lib</directory>
+-                      <sources>
+-                        <source>
+-                          <location>${storm-sink-legacy.dir}/target/ambari-metrics-storm-sink-legacy-with-common-${project.version}.jar</location>
+-                        </source>
+-                      </sources>
+-                    </mapping>
+                     <mapping>
+                       <directory>/usr/lib/ambari-metrics-kafka-sink</directory>
+                       <sources>
+@@ -1041,16 +1031,6 @@
+                     <prefix>/usr/lib/storm/lib</prefix>
+                   </mapper>
+                 </data>
+-                <data>
+-                  <src>${storm-sink-legacy.dir}/target/${storm.sink.legacy.jar}</src>
+-                  <type>file</type>
+-                  <mapper>
+-                    <type>perm</type>
+-                    <filemode>644</filemode>
+-                    <dirmode>755</dirmode>
+-                    <prefix>/usr/lib/storm/lib</prefix>
+-                  </mapper>
+-                </data>
+ 
+                 <!-- kafka sink -->
+ 
+@@ -1357,11 +1337,6 @@
+       <artifactId>ambari-metrics-storm-sink</artifactId>
+       <version>${project.version}</version>
+     </dependency>
+-    <dependency>
+-      <groupId>org.apache.ambari</groupId>
+-      <artifactId>ambari-metrics-storm-sink-legacy</artifactId>
+-      <version>${project.version}</version>
+-    </dependency>
+     <dependency>
+       <groupId>org.apache.ambari</groupId>
+       <artifactId>ambari-metrics-kafka-sink</artifactId>
+diff --git a/ambari-metrics/ambari-metrics-assembly/src/main/assembly/sink-windows.xml b/ambari-metrics/ambari-metrics-assembly/src/main/assembly/sink-windows.xml
+index 14b49b2b..5698a3b8 100644
+--- a/ambari-metrics/ambari-metrics-assembly/src/main/assembly/sink-windows.xml
++++ b/ambari-metrics/ambari-metrics-assembly/src/main/assembly/sink-windows.xml
+@@ -61,10 +61,6 @@
+       <source>${storm-sink.dir}/target/ambari-metrics-storm-sink-with-common-${project.version}.jar</source>
+       <outputDirectory>hadoop-sink</outputDirectory>
+     </file>
+-    <file>
+-      <source>${storm-sink-legacy.dir}/target/ambari-metrics-storm-sink-legacy-with-common-${project.version}.jar</source>
+-      <outputDirectory>hadoop-sink</outputDirectory>
+-    </file>
+     <file>
+       <source>${kafka-sink.dir}/target/ambari-metrics-kafka-sink-with-common-${project.version}.jar</source>
+       <outputDirectory>hadoop-sink</outputDirectory>
+diff --git a/ambari-metrics/ambari-metrics-assembly/src/main/assembly/sink.xml b/ambari-metrics/ambari-metrics-assembly/src/main/assembly/sink.xml
+index 34cdbc38..ac9f4ac8 100644
+--- a/ambari-metrics/ambari-metrics-assembly/src/main/assembly/sink.xml
++++ b/ambari-metrics/ambari-metrics-assembly/src/main/assembly/sink.xml
+@@ -64,11 +64,6 @@
+       <source>${storm-sink.dir}/target/ambari-metrics-storm-sink-with-common-${project.version}.jar</source>
+       <outputDirectory>hadoop-sink</outputDirectory>
+     </file>
+-    <file>
+-      <fileMode>644</fileMode>
+-      <source>${storm-sink-legacy.dir}/target/ambari-metrics-storm-sink-legacy-with-common-${project.version}.jar</source>
+-      <outputDirectory>hadoop-sink</outputDirectory>
+-    </file>
+     <file>
+       <fileMode>644</fileMode>
+       <source>${kafka-sink.dir}/target/ambari-metrics-kafka-sink-with-common-${project.version}.jar</source>
+diff --git a/ambari-metrics/ambari-metrics-storm-sink-legacy/src/main/java/org/apache/hadoop/metrics2/sink/storm/StormTimelineMetricsReporter.java b/ambari-metrics/ambari-metrics-storm-sink-legacy/src/main/java/org/apache/hadoop/metrics2/sink/storm/StormTimelineMetricsReporter.java
+index 842fad8f..9ed8bfeb 100644
+--- a/ambari-metrics/ambari-metrics-storm-sink-legacy/src/main/java/org/apache/hadoop/metrics2/sink/storm/StormTimelineMetricsReporter.java
++++ b/ambari-metrics/ambari-metrics-storm-sink-legacy/src/main/java/org/apache/hadoop/metrics2/sink/storm/StormTimelineMetricsReporter.java
+@@ -34,12 +34,10 @@ import org.apache.hadoop.metrics2.sink.timeline.UnableToConnectException;
+ import backtype.storm.generated.ClusterSummary;
+ import backtype.storm.generated.SupervisorSummary;
+ import backtype.storm.generated.TopologySummary;
+-import backtype.storm.metric.IClusterReporter;
+ import backtype.storm.utils.NimbusClient;
+ import backtype.storm.utils.Utils;
+ 
+-public class StormTimelineMetricsReporter extends AbstractTimelineMetricsSink
+-    implements IClusterReporter {
++public class StormTimelineMetricsReporter extends AbstractTimelineMetricsSink {
+ 
+   public static final String METRICS_COLLECTOR_CATEGORY = "metrics_collector";
+   public static final String APP_ID = "appId";
+@@ -113,7 +111,6 @@ public class StormTimelineMetricsReporter extends AbstractTimelineMetricsSink
+     return hostInMemoryAggregationProtocol;
+   }
+ 
+-  @Override
+   public void prepare(Map conf) {
+     LOG.info("Preparing Storm Metrics Reporter");
+     try {
+diff --git a/ambari-metrics/ambari-metrics-timelineservice/pom.xml b/ambari-metrics/ambari-metrics-timelineservice/pom.xml
+index f8e34490..6311107c 100644
+--- a/ambari-metrics/ambari-metrics-timelineservice/pom.xml
++++ b/ambari-metrics/ambari-metrics-timelineservice/pom.xml
+@@ -323,7 +323,7 @@
+     <dependency>
+       <groupId>org.apache.zookeeper</groupId>
+       <artifactId>zookeeper</artifactId>
+-      <version>3.4.5.1.3.0.0-107</version>
++      <version>3.4.5</version>
+       <exclusions>
+         <exclusion>
+           <artifactId>jline</artifactId>
+@@ -852,7 +852,7 @@
+     <dependency>
+       <groupId>org.apache.ambari</groupId>
+       <artifactId>ambari-utility</artifactId>
+-      <version>1.0.0.0-SNAPSHOT</version>
++      <version>2.7.5.0.0</version>
+       <scope>test</scope>
+     </dependency>
+     <dependency>
+diff --git a/ambari-metrics/pom.xml b/ambari-metrics/pom.xml
+index 1c499b1a..dd682fd2 100644
+--- a/ambari-metrics/pom.xml
++++ b/ambari-metrics/pom.xml
+@@ -28,7 +28,6 @@
+     <module>ambari-metrics-flume-sink</module>
+     <module>ambari-metrics-kafka-sink</module>
+     <module>ambari-metrics-storm-sink</module>
+-    <module>ambari-metrics-storm-sink-legacy</module>
+     <module>ambari-metrics-timelineservice</module>
+     <module>ambari-metrics-host-monitoring</module>
+     <module>ambari-metrics-grafana</module>
+@@ -71,18 +70,6 @@
+       <url>${distMgmtSnapshotsUrl}</url>
+     </snapshotRepository>
+   </distributionManagement>
+-  <repositories>
+-    <repository>
+-      <id>apache-hadoop</id>
+-      <name>hdp</name>
+-      <url>https://repo.hortonworks.com/content/groups/public/</url>
+-    </repository>
+-    <repository>
+-      <id>apache-snapshots</id>
+-      <name>snapshots</name>
+-      <url>https://repository.apache.org/content/repositories/snapshots</url>
+-    </repository>
+-  </repositories>
+   <dependencyManagement>
+     <dependencies>
+       <dependency>
+@@ -323,7 +310,7 @@
+     <dependency>
+       <groupId>org.apache.ambari</groupId>
+       <artifactId>ambari-utility</artifactId>
+-      <version>1.0.0.0-SNAPSHOT</version>
++      <version>2.7.5.0.0</version>
+       <scope>test</scope>
+     </dependency>
+   </dependencies>
+@@ -338,7 +325,7 @@
+         <dependency>
+           <groupId>org.apache.ambari</groupId>
+           <artifactId>ambari-utility</artifactId>
+-          <version>1.0.0.0-SNAPSHOT</version>
++          <version>2.7.5.0.0</version>
+         </dependency>
+       </dependencies>
+     </profile>
+diff --git a/ambari-project/pom.xml b/ambari-project/pom.xml
+index e2010e37..62efdea5 100644
+--- a/ambari-project/pom.xml
++++ b/ambari-project/pom.xml
+@@ -705,7 +705,7 @@
+             <dependency>
+               <groupId>org.apache.ambari</groupId>
+               <artifactId>ambari-utility</artifactId>
+-              <version>1.0.0.0-SNAPSHOT</version>
++              <version>2.7.5.0.0</version>
+             </dependency>
+           </dependencies>
+         </plugin>
+diff --git a/ambari-server/pom.xml b/ambari-server/pom.xml
+index 899c2641..d159e2ec 100644
+--- a/ambari-server/pom.xml
++++ b/ambari-server/pom.xml
+@@ -1776,7 +1776,7 @@
+     <dependency>
+       <groupId>org.apache.ambari</groupId>
+       <artifactId>ambari-serviceadvisor</artifactId>
+-      <version>1.0.0.0-SNAPSHOT</version>
++      <version>2.7.5.0.0</version>
+       <exclusions>
+         <exclusion>
+           <groupId>commons-httpclient</groupId>
+@@ -1789,7 +1789,7 @@
+     <dependency>
+       <groupId>org.apache.ambari</groupId>
+       <artifactId>ambari-utility</artifactId>
+-      <version>1.0.0.0-SNAPSHOT</version>
++      <version>2.7.5.0.0</version>
+       <scope>provided</scope> <!-- for @ApiIgnore -->
+       <exclusions>
+         <exclusion>
+diff --git a/ambari-server/pom.xml.orig b/ambari-server/pom.xml.orig
+index 63dd06fb..9ac41d7b 100644
+--- a/ambari-server/pom.xml.orig
++++ b/ambari-server/pom.xml.orig
+@@ -1776,7 +1776,7 @@
+     <dependency>
+       <groupId>org.apache.ambari</groupId>
+       <artifactId>ambari-serviceadvisor</artifactId>
+-      <version>1.0.0.0-SNAPSHOT</version>
++      <version>2.7.5.0.0</version>
+       <exclusions>
+         <exclusion>
+           <groupId>commons-httpclient</groupId>
+@@ -1789,7 +1789,7 @@
+     <dependency>
+       <groupId>org.apache.ambari</groupId>
+       <artifactId>ambari-utility</artifactId>
+-      <version>1.0.0.0-SNAPSHOT</version>
++      <version>2.7.5.0.0</version>
+       <scope>provided</scope> <!-- for @ApiIgnore -->
+       <exclusions>
+         <exclusion>
+diff --git a/ambari-serviceadvisor/pom.xml b/ambari-serviceadvisor/pom.xml
+index dbfbafad..68d24a97 100644
+--- a/ambari-serviceadvisor/pom.xml
++++ b/ambari-serviceadvisor/pom.xml
+@@ -16,7 +16,7 @@
+    limitations under the License.
+ -->
+ <project xmlns="http://maven.apache.org/POM/4.0.0"
+-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
++         xmlns:xsi="http://www  .w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+   <!-- Can compile this project independently, cd ambari-serviceadvisor ; mvn clean package install
+@@ -27,7 +27,7 @@
+   <groupId>org.apache.ambari</groupId>
+   <artifactId>ambari-serviceadvisor</artifactId>
+   <name>Ambari Service Advisor</name>
+-  <version>1.0.0.0-SNAPSHOT</version>
++  <version>2.7.5.0.0</version>
+   <description>Service Advisor</description>
+ 
+   <dependencies>
+diff --git a/ambari-serviceadvisor/pom.xml.orig b/ambari-serviceadvisor/pom.xml.orig
+index e8fc4f82..f53988c2 100644
+--- a/ambari-serviceadvisor/pom.xml.orig
++++ b/ambari-serviceadvisor/pom.xml.orig
+@@ -27,7 +27,7 @@
+   <groupId>org.apache.ambari</groupId>
+   <artifactId>ambari-serviceadvisor</artifactId>
+   <name>Ambari Service Advisor</name>
+-  <version>1.0.0.0-SNAPSHOT</version>
++  <version>2.7.5.0.0</version>
+   <description>Service Advisor</description>
+ 
+   <dependencies>
+diff --git a/ambari-utility/pom.xml b/ambari-utility/pom.xml
+index 6dc37d23..02b84151 100644
+--- a/ambari-utility/pom.xml
++++ b/ambari-utility/pom.xml
+@@ -29,7 +29,6 @@
+ 
+   <artifactId>ambari-utility</artifactId>
+   <groupId>org.apache.ambari</groupId>
+-  <version>1.0.0.0-SNAPSHOT</version>
+ 
+   <dependencies>
+     <dependency>
+@@ -50,6 +49,10 @@
+           <groupId>com.fasterxml.jackson.dataformat</groupId>
+           <artifactId>jackson-dataformat-xml</artifactId>
+         </exclusion>
++        <exclusion>
++          <groupId>org.apache.commons</groupId>
++          <artifactId>commons-lang3</artifactId>
++        </exclusion>
+       </exclusions>
+     </dependency>
+     <dependency>
+diff --git a/contrib/management-packs/microsoft-r_mpack/pom.xml b/contrib/management-packs/microsoft-r_mpack/pom.xml
+index 38381059..461b2d81 100644
+--- a/contrib/management-packs/microsoft-r_mpack/pom.xml
++++ b/contrib/management-packs/microsoft-r_mpack/pom.xml
+@@ -20,7 +20,7 @@
+   <modelVersion>4.0.0</modelVersion>
+   <groupId>org.apache.ambari.contrib.mpacks</groupId>
+   <artifactId>microsoft-r_mpack</artifactId>
+-  <version>1.0.0.0-SNAPSHOT</version>
++  <version>2.7.5.0.0</version>
+   <name>Micrsoft-R Management Pack</name>
+ 
+   <parent>
+diff --git a/contrib/management-packs/odpi-ambari-mpack/pom.xml b/contrib/management-packs/odpi-ambari-mpack/pom.xml
+index 6c0115ea..09e08b8c 100644
+--- a/contrib/management-packs/odpi-ambari-mpack/pom.xml
++++ b/contrib/management-packs/odpi-ambari-mpack/pom.xml
+@@ -19,7 +19,7 @@
+   <groupId>org.apache.ambari</groupId>
+   <artifactId>odpi-ambari-mpack</artifactId>
+   <packaging>pom</packaging>
+-  <version>1.0.0.0-SNAPSHOT</version>
++  <version>2.7.5.0.0</version>
+   <name>ODPi Ambari Management Pack</name>
+   <url>https://ambari.apache.org/</url>
+   <properties>
+diff --git a/contrib/views/capacity-scheduler/pom.xml b/contrib/views/capacity-scheduler/pom.xml
+index 8fa9e3b8..eb262e8f 100644
+--- a/contrib/views/capacity-scheduler/pom.xml
++++ b/contrib/views/capacity-scheduler/pom.xml
+@@ -19,7 +19,7 @@
+     <modelVersion>4.0.0</modelVersion>
+     <groupId>org.apache.ambari.contrib.views</groupId>
+     <artifactId>capacity-scheduler</artifactId>
+-    <version>1.0.0.0-SNAPSHOT</version>
++    <version>2.7.5.0.0</version>
+     <name>Capacity Scheduler</name>
+ 
+     <parent>
+diff --git a/contrib/views/files/pom.xml b/contrib/views/files/pom.xml
+index acaa04a4..0ab76d48 100644
+--- a/contrib/views/files/pom.xml
++++ b/contrib/views/files/pom.xml
+@@ -18,7 +18,7 @@
+          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+   <artifactId>files</artifactId>
+-  <version>1.0.0.0-SNAPSHOT</version>
++  <version>2.7.5.0.0</version>
+   <name>Files</name>
+ 
+   <parent>
+diff --git a/pom.xml b/pom.xml
+index d9be586d..0e07633b 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -114,19 +114,6 @@
+         <enabled>false</enabled>
+       </releases>
+     </repository>
+-    <!-- ToDo: remove after moving the Metrics HDP dependencies to the public nexus -->
+-    <repository>
+-      <id>private-nexus</id>
+-      <name>private-nexus</name>
+-      <url>https://nexus-private.hortonworks.com/nexus/content/groups/public/</url>
+-      <snapshots>
+-        <enabled>true</enabled>
+-      </snapshots>
+-      <releases>
+-        <enabled>true</enabled>
+-      </releases>
+-    </repository>
+-    <!-- //ToDo: END -->
+   </repositories>
+ 
+   <build>
