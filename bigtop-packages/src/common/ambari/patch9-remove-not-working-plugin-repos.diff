@@ -68,3 +68,20 @@ index 4393b0502d..d9be586dd1 100644
      <repository>
        <id>spring-milestones</id>
        <name>Spring Milestones</name>
+diff --git a/pom.xml b/pom.xml
+index d9be586..83b5aba 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -116,9 +116,9 @@
+     </repository>
+     <!-- ToDo: remove after moving the Metrics HDP dependencies to the public nexus -->
+     <repository>
+-      <id>private-nexus</id>
+-      <name>private-nexus</name>
+-      <url>https://nexus-private.hortonworks.com/nexus/content/groups/public/</url>
++      <id>apache-hadoop</id>
++      <name>apache-hadoop</name>
++      <url>https://repo.hortonworks.com/content/groups/public/</url>
+       <snapshots>
+         <enabled>true</enabled>
+       </snapshots>
