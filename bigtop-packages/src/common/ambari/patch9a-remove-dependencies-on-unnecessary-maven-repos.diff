@@ -292,15 +292,6 @@ diff --git a/ambari-serviceadvisor/pom.xml b/ambari-serviceadvisor/pom.xml
 index dbfbafad..68d24a97 100644
 --- a/ambari-serviceadvisor/pom.xml
 +++ b/ambari-serviceadvisor/pom.xml
-@@ -16,7 +16,7 @@
-    limitations under the License.
- -->
- <project xmlns="http://maven.apache.org/POM/4.0.0"
--         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-+         xmlns:xsi="http://www  .w3.org/2001/XMLSchema-instance"
-          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-   <modelVersion>4.0.0</modelVersion>
-   <!-- Can compile this project independently, cd ambari-serviceadvisor ; mvn clean package install
 @@ -27,7 +27,7 @@
    <groupId>org.apache.ambari</groupId>
    <artifactId>ambari-serviceadvisor</artifactId>
