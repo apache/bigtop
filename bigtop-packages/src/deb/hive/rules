@@ -40,6 +40,13 @@ override_dh_auto_build:
 server2 metastore hcatalog-server webhcat-server:
 	bash debian/init.d.tmpl debian/hive-$@.svc deb debian/${hive_pkg_name}-$@.init
 
+override_dh_strip_nondeterminism:
+	# This step is part of https://wiki.debian.org/ReproducibleBuilds
+	# Due to some big jars, the build times are 4/5x higher compared
+	# to a normal build. The aim of the project is really valuable
+	# so we should re-enable this at some point in the future,
+	# but for now it is better to concentrate on the rest of the packaging.
+
 override_dh_auto_install: server2 metastore hcatalog-server webhcat-server
 	cp debian/hive-site.xml .
 	cp debian/hive.1 .
