@@ -400,3 +400,35 @@ index d9be586d..0e07633b 100644
    </repositories>
  
    <build>
+diff --git a/ambari-infra/pom.xml b/ambari-infra/pom.xml
+index c24bf9d3..13fb6e93 100644
+--- a/ambari-infra/pom.xml
++++ b/ambari-infra/pom.xml
+@@ -55,11 +55,6 @@
+   </issueManagement>
+
+   <repositories>
+-    <repository>
+-      <id>oss.sonatype.org</id>
+-      <name>OSS Sonatype Staging</name>
+-      <url>https://oss.sonatype.org/content/groups/staging</url>
+-    </repository>
+     <repository>
+       <id>spring-milestones</id>
+       <name>Spring Milestones</name>
+diff --git a/ambari-logsearch/pom.xml b/ambari-logsearch/pom.xml
+index fd10e6b2..da5727c4 100644
+--- a/ambari-logsearch/pom.xml
++++ b/ambari-logsearch/pom.xml
+@@ -71,11 +71,6 @@
+   </issueManagement>
+
+   <repositories>
+-    <repository>
+-      <id>oss.sonatype.org</id>
+-      <name>OSS Sonatype Staging</name>
+-      <url>https://oss.sonatype.org/content/groups/staging</url>
+-    </repository>
+     <repository>
+       <id>spring-milestones</id>
+       <name>Spring Milestones</name>
