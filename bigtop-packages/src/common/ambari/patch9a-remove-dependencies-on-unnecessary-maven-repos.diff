@@ -288,28 +288,6 @@ index 899c2641..d159e2ec 100644
        <scope>provided</scope> <!-- for @ApiIgnore -->
        <exclusions>
          <exclusion>
-diff --git a/ambari-server/pom.xml.orig b/ambari-server/pom.xml.orig
-index 63dd06fb..9ac41d7b 100644
---- a/ambari-server/pom.xml.orig
-+++ b/ambari-server/pom.xml.orig
-@@ -1776,7 +1776,7 @@
-     <dependency>
-       <groupId>org.apache.ambari</groupId>
-       <artifactId>ambari-serviceadvisor</artifactId>
--      <version>1.0.0.0-SNAPSHOT</version>
-+      <version>2.7.5.0.0</version>
-       <exclusions>
-         <exclusion>
-           <groupId>commons-httpclient</groupId>
-@@ -1789,7 +1789,7 @@
-     <dependency>
-       <groupId>org.apache.ambari</groupId>
-       <artifactId>ambari-utility</artifactId>
--      <version>1.0.0.0-SNAPSHOT</version>
-+      <version>2.7.5.0.0</version>
-       <scope>provided</scope> <!-- for @ApiIgnore -->
-       <exclusions>
-         <exclusion>
 diff --git a/ambari-serviceadvisor/pom.xml b/ambari-serviceadvisor/pom.xml
 index dbfbafad..68d24a97 100644
 --- a/ambari-serviceadvisor/pom.xml
@@ -323,19 +301,6 @@ index dbfbafad..68d24a97 100644
           xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
    <modelVersion>4.0.0</modelVersion>
    <!-- Can compile this project independently, cd ambari-serviceadvisor ; mvn clean package install
-@@ -27,7 +27,7 @@
-   <groupId>org.apache.ambari</groupId>
-   <artifactId>ambari-serviceadvisor</artifactId>
-   <name>Ambari Service Advisor</name>
--  <version>1.0.0.0-SNAPSHOT</version>
-+  <version>2.7.5.0.0</version>
-   <description>Service Advisor</description>
- 
-   <dependencies>
-diff --git a/ambari-serviceadvisor/pom.xml.orig b/ambari-serviceadvisor/pom.xml.orig
-index e8fc4f82..f53988c2 100644
---- a/ambari-serviceadvisor/pom.xml.orig
-+++ b/ambari-serviceadvisor/pom.xml.orig
 @@ -27,7 +27,7 @@
    <groupId>org.apache.ambari</groupId>
    <artifactId>ambari-serviceadvisor</artifactId>
