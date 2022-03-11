@@ -152,7 +152,7 @@ class bigtop_toolchain::packages {
       "libffi-devel"
     ] }
     /(Ubuntu|Debian)/: {
-      $pkgs = [
+      $_pkgs = [
         "unzip",
         "curl",
         "wget",
@@ -211,6 +211,13 @@ class bigtop_toolchain::packages {
         "python3-dev",
         "python2.7-dev"
       ]
+
+      if ($operatingsystem == 'Ubuntu' and 0 <= versioncmp($operatingsystemmajrelease, '20.04')) {
+        $pkgs = concat($_pkgs, ["python-is-python2"])
+      } else {
+        $pkgs = $_pkgs
+      }
+
       file { '/etc/apt/apt.conf.d/01retries':
         content => 'Aquire::Retries "5";'
       } -> Package <| |>
