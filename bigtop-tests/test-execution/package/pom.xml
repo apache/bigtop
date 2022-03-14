@@ -23,13 +23,13 @@
   <parent>
     <groupId>org.apache.bigtop.itest</groupId>
     <artifactId>smoke-tests</artifactId>
-    <version>3.0.0</version>
+    <version>3.0.1</version>
     <relativePath>../smokes/pom.xml</relativePath>
   </parent>
 
   <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>package-smoke-execution</artifactId>
-  <version>3.0.0</version>
+  <version>3.0.1</version>
   <name>packagesmokes</name>
 
   <properties>
