@@ -20,7 +20,7 @@ set -ex
 # with version of leveldbjni-all library that is not x86 specific
 if [ $HOSTTYPE = "powerpc64le" ] ; then
         #download the POWER version of leveldb
-        git clone git://github.com/ibmsoe/leveldb.git
+        git clone https://github.com/ibmsoe/leveldb.git
         git clone https://github.com/ibmsoe/leveldbjni.git
         export SNAPPY_HOME=/usr/lib
         export LEVELDB_HOME=`cd leveldb; pwd`
