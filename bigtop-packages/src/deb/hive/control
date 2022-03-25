@@ -15,7 +15,7 @@
 
 Source: hive
 Section: misc
-Priority: extra
+Priority: optional
 Maintainer: Bigtop <dev@bigtop.apache.org>
 Build-Depends: debhelper (>= 7.0.50~)
 Standards-Version: 3.9.4
@@ -24,34 +24,39 @@ Homepage: http://hive.apache.org/
 
 Package: hive
 Architecture: all
-Depends: adduser, hadoop-client, bigtop-utils (>= 0.7), zookeeper, hive-jdbc (= ${source:Version}), python
-Description: Hive is a data warehouse infrastructure built on top of Hadoop
+Depends: adduser, hadoop-client, bigtop-utils (>= 0.7), zookeeper,
+         hive-jdbc (= ${source:Version}), python
+Description: Data warehouse infrastructure built on top of Hadoop
  Hive is a data warehouse infrastructure built on top of Hadoop that provides
  tools to enable easy data summarization, adhoc querying and analysis of large
  datasets data stored in Hadoop files. It provides a mechanism to put structure
  on this data and it also provides a simple query language called Hive QL which
  is based on SQL and which enables users familiar with SQL to query this data.
  At the same time, this language also allows traditional map/reduce programmers
- to be able to plug in their custom mappers and reducers to do more sophisticated 
- analysis which may not be supported by the built-in capabilities of the language.
+ to be able to plug in their custom mappers and reducers to do more
+ sophisticated analysis which may not be supported by the built-in
+ capabilities of the language.
 
 Package: hive-server2
 Architecture: all
-Depends: hive (= ${source:Version})
+Depends: hive (= ${source:Version}), lsb-base
 Description: Provides a Hive Thrift service with improved concurrency support.
- This optional package hosts a Thrift server for Hive clients across a network to use, with improved concurrency support.
+ This optional package hosts a Thrift server for Hive clients across a network
+ to use, with improved concurrency support.
 
 Package: hive-metastore
 Architecture: all
-Depends: hive (= ${source:Version})
+Depends: hive (= ${source:Version}), lsb-base
 Description: Shared metadata repository for Hive.
- This optional package hosts a metadata server for Hive clients across a network to use.
+ This optional package hosts a metadata server for Hive clients across
+ a network to use.
 
 Package: hive-hbase
 Architecture: all
 Depends: hive (= ${source:Version}), hbase
 Description: Provides integration between Apache HBase and Apache Hive
- This optional package provides integration between Apache HBase and Apache Hive
+ This optional package provides integration between Apache HBase and
+ Apache Hive
 
 Package: hive-jdbc
 Architecture: all
@@ -62,27 +67,29 @@ Description: Provides libraries necessary to connect to Apache Hive via JDBC
 Package: hive-hcatalog
 Architecture: all
 Depends: hadoop, hive, bigtop-utils (>= 0.6), python
-Description: Apache Hcatalog is a data warehouse infrastructure built on top of Hadoop
- Apache HCatalog is a table and storage management service for data created using Apache Hadoop.
+Description: Table and storage management service for Apache Hadoop.
  This includes:
    * Providing a shared schema and data type mechanism.
-   * Providing a table abstraction so that users need not be concerned with where or how their data is stored.
-   * Providing interoperability across data processing tools such as Pig, Map Reduce, Streaming, and Hive.
+   * Providing a table abstraction so that users need not be concerned
+     with where or how their data is stored.
+   * Providing interoperability across data processing tools such
+     as Pig, Map Reduce, Streaming, and Hive.
 
 Package: hive-hcatalog-server
 Architecture: all
-Depends: hive-hcatalog (= ${source:Version})
+Depends: hive-hcatalog (= ${source:Version}), lsb-base
 Description: Init scripts for HCatalog server
- Init scripts for HCatalog server
+ The package includes Init scripts to support the HCatalog server
 
 Package: hive-webhcat
 Architecture: all
 Depends: hive-hcatalog (= ${source:Version})
-Description: WebHcat provides a REST-like web API for HCatalog and related Hadoop components.
- WebHcat provides a REST-like web API for HCatalog and related Hadoop components.
+Description: A REST-like web API for HCatalog and related Hadoop components.
+ WebHcat provides a REST-like web API for HCatalog
+ and related Hadoop components.
 
 Package: hive-webhcat-server
 Architecture: all
-Depends: hive-webhcat (= ${source:Version})
+Depends: hive-webhcat (= ${source:Version}), lsb-base
 Description: Init scripts for WebHcat server
- Init scripts for WebHcat server.
+ The package includes Init scripts to support WebHcat server.

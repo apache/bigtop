@@ -68,6 +68,10 @@ case ${OS} in
             UPDATE_SOURCE="yum clean all \&\& yum updateinfo"
         fi
         ;;
+    rockylinux)
+        PUPPET_MODULES="/etc/puppetlabs/code/environments/production/modules/bigtop_toolchain"
+        UPDATE_SOURCE="dnf clean all \&\& dnf updateinfo"
+        ;;
     opensuse)
         PUPPET_MODULES="/etc/puppet/modules/bigtop_toolchain"
         UPDATE_SOURCE="zypper clean \&\& zypper refresh"

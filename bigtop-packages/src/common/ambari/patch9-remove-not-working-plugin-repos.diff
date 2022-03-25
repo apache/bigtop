@@ -1,0 +1,70 @@
+diff --git a/ambari-server/pom.xml b/ambari-server/pom.xml
+index 8ff399051c..b268337ac8 100644
+--- a/ambari-server/pom.xml
++++ b/ambari-server/pom.xml
+@@ -1739,12 +1739,4 @@
+     </dependency>
+   </dependencies>
+
+-  <pluginRepositories>
+-    <pluginRepository>
+-      <id>oss.sonatype.org</id>
+-      <name>OSS Sonatype Staging</name>
+-      <url>https://oss.sonatype.org/content/groups/staging</url>
+-    </pluginRepository>
+-  </pluginRepositories>
+-
+ </project>
+diff --git a/ambari-serviceadvisor/pom.xml b/ambari-serviceadvisor/pom.xml
+index 8719cd85de..58d5dc749c 100644
+--- a/ambari-serviceadvisor/pom.xml
++++ b/ambari-serviceadvisor/pom.xml
+@@ -47,14 +47,6 @@
+     </dependency>
+   </dependencies>
+
+-  <pluginRepositories>
+-    <pluginRepository>
+-      <id>oss.sonatype.org</id>
+-      <name>OSS Sonatype Staging</name>
+-      <url>https://oss.sonatype.org/content/groups/staging</url>
+-    </pluginRepository>
+-  </pluginRepositories>
+-
+   <packaging>jar</packaging>
+   <!-- Run with mvn clean package .
+   Execute as, java -jar serviceadvisor-$VERSION.jar
+diff --git a/pom.xml b/pom.xml
+index 4393b0502d..d9be586dd1 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -64,17 +64,6 @@
+     <eclipselink.version>2.6.2</eclipselink.version>
+   </properties>
+   <pluginRepositories>
+-    <pluginRepository>
+-      <id>maven2-repository.dev.java.net</id>
+-      <name>Java.net Repository for Maven</name>
+-      <url>https://download.java.net/maven/2/</url>
+-      <layout>default</layout>
+-    </pluginRepository>
+-    <pluginRepository>
+-      <id>maven2-glassfish-repository.dev.java.net</id>
+-      <name>Java.net Repository for Maven</name>
+-      <url>https://download.java.net/maven/glassfish/</url>
+-    </pluginRepository>
+     <pluginRepository>
+       <id>maven2-repository.atlassian</id>
+       <name>Atlassian Maven Repository</name>
+@@ -103,11 +92,6 @@
+   </distributionManagement>
+
+   <repositories>
+-    <repository>
+-      <id>oss.sonatype.org</id>
+-      <name>OSS Sonatype Staging</name>
+-      <url>https://oss.sonatype.org/content/groups/staging</url>
+-    </repository>
+     <repository>
+       <id>spring-milestones</id>
+       <name>Spring Milestones</name>
