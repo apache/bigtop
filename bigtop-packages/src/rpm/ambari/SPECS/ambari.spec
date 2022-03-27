@@ -447,6 +447,7 @@ exit 0
 %attr(644,root,root) /etc/init/ambari-server.conf
 %defattr(644,root,root,755)
 /usr/lib/ambari-server
+%attr(755,root,root) /usr/lib/ambari-server/lib/ambari_server/bootstrap.py
 %attr(755,root,root) /usr/sbin/ambari-server.py
 %attr(755,root,root) /usr/sbin/ambari_server_main.py
 %attr(755,root,root) %{initd_dir}/ambari-server
