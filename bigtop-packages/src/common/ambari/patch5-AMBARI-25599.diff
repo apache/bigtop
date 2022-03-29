@@ -64,7 +64,7 @@ index a0a11b8e6e..282041fab6 100644
 +    <hadoop.folder>hadoop-3.1.1</hadoop.folder>
 +    <grafana.folder>grafana-6.7.4</grafana.folder>
 +    <grafana.tar>https://dl.grafana.com/oss/release/grafana-6.7.4.linux-amd64.tar.gz</grafana.tar>
-+    <phoenix.tar>https://dlcdn.apache.org/phoenix/apache-phoenix-5.0.0-HBase-2.0/bin/apache-phoenix-5.0.0-HBase-2.0-bin.tar.gz</phoenix.tar>
++    <phoenix.tar>https://archive.apache.org/dist/phoenix/apache-phoenix-5.0.0-HBase-2.0/bin/apache-phoenix-5.0.0-HBase-2.0-bin.tar.gz</phoenix.tar>
 +    <phoenix.folder>apache-phoenix-5.0.0-HBase-2.0-bin</phoenix.folder>
      <resmonitor.install.dir>/usr/lib/python2.6/site-packages/resource_monitoring</resmonitor.install.dir>
      <powermock.version>1.6.2</powermock.version>
