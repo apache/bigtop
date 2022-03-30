@@ -297,5 +297,16 @@ class bigtop_toolchain::packages {
         target => '/usr/bin/cmake3',
       }
     }
+
+    # The rpm-build package had installed brp-python-bytecompile
+    # just under /usr/lib/rpm until Fedora 34,
+    # but it seems to have been removed in Fedora 35.
+    # So we manually create a symlink instead.
+    if ($operatingsystem == 'Fedora' and versioncmp($operatingsystemmajrelease, '35') >= 0) {
+      file { '/usr/lib/rpm/brp-python-bytecompile':
+        ensure => 'link',
+        target => '/usr/lib/rpm/redhat/brp-python-bytecompile',
+      }
+    }
   }
 }

@@ -56,7 +56,7 @@ case ${OS} in
         UPDATE_SOURCE="apt-get clean \&\& apt-get update"
         ;;
     fedora)
-        PUPPET_MODULES="/etc/puppet/modules/bigtop_toolchain"
+        PUPPET_MODULES="/etc/puppet/code/modules/bigtop_toolchain"
         UPDATE_SOURCE="dnf clean all \&\& dnf updateinfo"
         ;;
     centos)
