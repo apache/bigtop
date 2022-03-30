@@ -15,9 +15,9 @@
 
 docker:
         memory_limit: "4g"
-        image: "bigtop/puppet:trunk-fedora-33"
+        image: "bigtop/puppet:trunk-fedora-35"
 
-repo: "http://repos.bigtop.apache.org/releases/3.0.0/fedora/33/$basearch"
+repo: "http://repos.bigtop.apache.org/releases/3.1.0/fedora/35/$basearch"
 distro: centos
 components: [hdfs, yarn, mapreduce]
 enable_local_repo: false
