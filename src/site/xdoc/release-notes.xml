@@ -53,6 +53,10 @@
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3656'>BIGTOP-3656</a>] -         Fix Mpack&#39;s build and deployment problems on Ubuntu
 </li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3657'>BIGTOP-3657</a>] -         Revert the download site to archive.apache.org partially
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3659'>BIGTOP-3659</a>] -         Ambari deployment fails due to the odpi-ambari-mpack version mismatch
+</li>
 </ul>
 
 <h2>        New Feature

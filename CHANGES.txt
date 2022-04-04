@@ -33,6 +33,8 @@ Release Notes - Bigtop - Version 3.0.1
     * [BIGTOP-3653] - Building Kibana fails due to the npm error
     * [BIGTOP-3655] - Cluster deployment via Ambari fails on CentOS due to the lack of execute permission
     * [BIGTOP-3656] - Fix Mpack's build and deployment problems on Ubuntu
+    * [BIGTOP-3657] - Revert the download site to archive.apache.org partially
+    * [BIGTOP-3659] - Ambari deployment fails due to the odpi-ambari-mpack version mismatch
 
 ** New Feature
     * [BIGTOP-3600] - Add support for Debian 11 Bullseye
