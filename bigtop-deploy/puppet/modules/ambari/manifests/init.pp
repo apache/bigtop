@@ -29,7 +29,7 @@ class ambari {
 
     exec {
         "mpack install":
-           command => "/bin/bash -c 'echo yes | /usr/sbin/ambari-server install-mpack --purge --verbose --mpack=/var/lib/ambari-server/resources/odpi-ambari-mpack-1.0.0.0-SNAPSHOT.tar.gz'",
+           command => "/bin/bash -c 'echo yes | /usr/sbin/ambari-server install-mpack --purge --verbose --mpack=/var/lib/ambari-server/resources/odpi-ambari-mpack-2.7.5.0.0.tar.gz'",
            require => [ Package["ambari-server"] ]
     }
 
