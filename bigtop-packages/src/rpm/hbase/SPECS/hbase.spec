@@ -103,6 +103,9 @@ Requires: bsh-utils
 Requires: coreutils
 %endif
 
+%if %{?el7}0
+AutoReq: no
+%endif
 
 %description 
 HBase is an open-source, distributed, column-oriented store modeled after Google' Bigtable: A Distributed Storage System for Structured Data by Chang et al. Just as Bigtable leverages the distributed data storage provided by the Google File System, HBase provides Bigtable-like capabilities on top of Hadoop. HBase includes:
