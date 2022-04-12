@@ -39,7 +39,7 @@
   <inceptionYear>2011</inceptionYear>
 
   <properties>
-    <hadoop.version>2.7.3</hadoop.version>
+    <hadoop.version>3.2.3</hadoop.version>
     <hbase.version>1.1.9</hbase.version>
     <sqoop.version>1.4.6</sqoop.version>
     <zookeeper.version>3.4.6</zookeeper.version>
