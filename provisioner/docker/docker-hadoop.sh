@@ -239,7 +239,7 @@ bigtop-puppet() {
       future="--parser future"
     fi
     # BIGTOP-3401 Modify Puppet modulepath for puppetlabs-4.12
-    docker exec $1 bash -c "puppet apply --detailed-exitcodes $future --hiera_config=/etc/puppet/hiera.yaml --modulepath=/bigtop-home/bigtop-deploy/puppet/modules:/etc/puppet/modules:/usr/share/puppet/modules:/etc/puppetlabs/code/modules /bigtop-home/bigtop-deploy/puppet/manifests"
+    docker exec $1 bash -c "puppet apply --detailed-exitcodes $future --hiera_config=/etc/puppet/hiera.yaml --modulepath=/bigtop-home/bigtop-deploy/puppet/modules:/etc/puppet/modules:/usr/share/puppet/modules:/etc/puppetlabs/code/modules:/etc/puppet/code/modules /bigtop-home/bigtop-deploy/puppet/manifests"
 }
 
 get-yaml-config() {

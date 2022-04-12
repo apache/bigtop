@@ -208,6 +208,11 @@ BuildRequires: pkgconfig, libfuse-devel, libfuse2 , libopenssl-devel, gcc-c++, l
 Requires: chkconfig, xinetd-simple-services, zlib, initscripts
 %endif
 
+# Fedora 35: we need initscripts for /etc/init.d/functions and
+# initscripts-service for /sbin/service.
+%if %{?fc35}0
+Requires: initscripts, initscripts-service
+%endif
 
 %description
 Hadoop is a software platform that lets one easily write and
