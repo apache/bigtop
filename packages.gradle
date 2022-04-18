@@ -652,6 +652,9 @@ def genTasks = { target ->
           group: PACKAGES_GROUP) doLast {
     def _prefix = project.hasProperty("prefix") ? prefix : "trunk"
     def _OS = project.hasProperty("OS") ? OS : "centos-7"
+    if (_OS == "fedora-35") {
+      logger.warn('fedora-35 requires privileged mode, pass `-Pdocker-run-option="--privileged"` to gradle option')
+    }
     def _target_pkg = "$target-pkg"
     def _docker_run_option = project.hasProperty("docker-run-option") ? this.'docker-run-option' : ""
     def additionalConfigKeys = ['git_repo', 'git_ref', 'git_dir', 'git_commit_hash', 'base_version']
@@ -870,6 +873,9 @@ task "repo-ind" (
     group: PACKAGES_GROUP) doLast {
   def _prefix = project.hasProperty("prefix") ? prefix : "trunk"
   def _OS = project.hasProperty("OS") ? OS : "centos-7"
+  if (_OS == "fedora-35") {
+    logger.warn('fedora-35 requires privileged mode, pass `-Pdocker-run-option="--privileged"` to gradle option')
+  }
   def _docker_run_option = project.hasProperty("docker-run-option") ? this.'docker-run-option' : ""
   def command = [
       'bash', '-x',
