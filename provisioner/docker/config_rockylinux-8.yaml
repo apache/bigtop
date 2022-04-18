@@ -15,7 +15,7 @@
 
 docker:
         memory_limit: "4g"
-        image: "bigtop/puppet:trunk-centos-8"
+        image: "bigtop/puppet:trunk-rockylinux-8"
 
 repo: "http://repos.bigtop.apache.org/releases/3.0.0/centos/8/$basearch"
 distro: centos
