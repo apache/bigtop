@@ -48,7 +48,7 @@ case ${ID}-${VERSION_ID} in
         puppet module install puppetlabs-stdlib --version 4.12.0
         ;;
     centos-8*)
-        sed -i -e 's/^\(mirrorlist\)/#\1/' -e 's,^#baseurl=http://mirror.centos.org,baseurl=http://vault.centos.org,' /etc/yum.repos.d/CentOS-Linux-*
+        sed -i -e 's/^\(mirrorlist\)/#\1/' -e 's,^#baseurl=http://mirror.centos.org,baseurl=https://vault.centos.org,' /etc/yum.repos.d/CentOS-Linux-*
         ;&
     rocky-8*)
         rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
