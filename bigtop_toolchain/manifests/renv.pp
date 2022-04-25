@@ -62,7 +62,7 @@ class bigtop_toolchain::renv {
   # Then Install required R packages dependency
   if (($operatingsystem == 'Ubuntu' and versioncmp($operatingsystemmajrelease, '18.04') <= 0) or
       ($operatingsystem == 'Debian' and versioncmp($operatingsystemmajrelease, '10') < 0)) {
-    $url = "http://cran.r-project.org/src/base/R-3/"
+    $url = "https://cran.r-project.org/src/base/R-3/"
     $rfile = "R-3.6.3.tar.gz"
     $rdir = "R-3.6.3"
 
@@ -81,14 +81,14 @@ class bigtop_toolchain::renv {
 
     exec { "install_r_packages" :
       cwd     => "/usr/local/bin",
-      command => '/usr/local/bin/R -e \'pkgs <- c("devtools", "evaluate", "rmarkdown", "knitr", "roxygen2", "testthat", "e1071"); install.packages(pkgs, repo="http://cran.r-project.org/"); for (pkg in pkgs[pkgs != "devtools"]) if (!library(pkg, character.only=TRUE, logical.return=TRUE)) q(save="no", status=1)\'',
+      command => '/usr/local/bin/R -e \'pkgs <- c("devtools", "evaluate", "rmarkdown", "knitr", "roxygen2", "testthat", "e1071"); install.packages(pkgs, repo="https://cran.r-project.org/"); for (pkg in pkgs[pkgs != "devtools"]) if (!library(pkg, character.only=TRUE, logical.return=TRUE)) q(save="no", status=1)\'',
       require => [Exec["install_R"]],
       timeout => 6000
     }
   } else {
     exec { "install_r_packages" :
       cwd     => "/usr/bin",
-      command => '/usr/bin/R -e \'pkgs <- c("devtools", "evaluate", "rmarkdown", "knitr", "roxygen2", "testthat", "e1071"); install.packages(pkgs, repo="http://cran.r-project.org/"); for (pkg in pkgs[pkgs != "devtools"]) if (!library(pkg, character.only=TRUE, logical.return=TRUE)) q(save="no", status=1)\'',
+      command => '/usr/bin/R -e \'pkgs <- c("devtools", "evaluate", "rmarkdown", "knitr", "roxygen2", "testthat", "e1071"); install.packages(pkgs, repo="https://cran.r-project.org/"); for (pkg in pkgs[pkgs != "devtools"]) if (!library(pkg, character.only=TRUE, logical.return=TRUE)) q(save="no", status=1)\'',
       timeout => 6000
     }
   }

@@ -36,7 +36,7 @@ class bigtop_toolchain::maven {
   } ~>
 
   exec { 'Verify Maven binaries signature':
-    command => "/usr/bin/$bigtop_toolchain::gnupg::cmd --no-tty -v --verify --auto-key-retrieve --keyserver hkp://keyserver.ubuntu.com:80 $mvn-bin.tar.gz.asc",
+    command => "/usr/bin/$bigtop_toolchain::gnupg::cmd --no-tty -v --verify --auto-key-retrieve --keyserver hkp://keyserver.ubuntu.com $mvn-bin.tar.gz.asc",
     cwd     => "/usr/src",
   } ->
 

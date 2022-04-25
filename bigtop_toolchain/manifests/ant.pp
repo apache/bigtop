@@ -35,7 +35,7 @@ class bigtop_toolchain::ant {
   } ~>
 
   exec { 'Verify Ant binaries':
-    command => "/usr/bin/$bigtop_toolchain::gnupg::cmd -v --verify --auto-key-retrieve --keyserver hkp://keyserver.ubuntu.com:80 $ant-bin.tar.gz.asc",
+    command => "/usr/bin/$bigtop_toolchain::gnupg::cmd -v --verify --auto-key-retrieve --keyserver hkp://keyserver.ubuntu.com $ant-bin.tar.gz.asc",
     cwd     => "/usr/src",
   } ->
 
