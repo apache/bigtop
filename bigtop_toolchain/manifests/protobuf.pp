@@ -38,7 +38,7 @@ class bigtop_toolchain::protobuf {
                  cd $protobuf8dir && \
                  /usr/bin/patch -p1 </usr/src/0001-Backport-atomic-operations-with-support-of-arm64-and.patch && \
                  /usr/bin/patch -p1 </usr/src/0001-CVE-2021-22569-Improve-performance-of-parsing-unknow.patch && \
-                 curl -o config.guess 'http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD' && \
+                 curl -o config.guess 'https://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD' && \
                  cp config.guess gtest/build-aux/",
      creates => "/usr/src/$protobuf8dir",
      require => [File["/usr/src/0001-Backport-atomic-operations-with-support-of-arm64-and.patch"],
