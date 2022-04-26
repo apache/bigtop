@@ -15,9 +15,9 @@
 
 docker:
         memory_limit: "4g"
-        image: "bigtop/puppet:trunk-debian-10"
+        image: "bigtop/puppet:3.1.0-debian-10"
 
-repo: "http://repos.bigtop.apache.org/releases/3.0.0/debian/10/$(ARCH)"
+repo: "http://repos.bigtop.apache.org/releases/3.1.0/debian/10/$(ARCH)"
 distro: debian
 components: [hdfs, yarn, mapreduce]
 enable_local_repo: false
