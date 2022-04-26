@@ -17,6 +17,80 @@ Bigtop Changelog
 
 * Release 3.1.0 (2022-04-26)
 
+Release Notes - Bigtop - Version 3.1.0
+
+** Sub-task
+    * [BIGTOP-3583] - Bump Zeppelin to 0.10.0
+    * [BIGTOP-3596] - Bump ZooKeeper to 3.5.9
+    * [BIGTOP-3597] - Fix build failure of Hadoop 3.2 against ZooKeeper 3.5
+    * [BIGTOP-3598] - Bump HBase to 2.4.8
+    * [BIGTOP-3599] - Bump Phoenix to 5.1.2
+    * [BIGTOP-3601] - Bump Kafka to 2.8.1
+    * [BIGTOP-3602] - Bump Spark to 3.1.2
+    * [BIGTOP-3606] - Bump Hadoop to 3.2.3
+    * [BIGTOP-3610] - Use a stricter match for the zookeeper jar in hadoop packaging
+    * [BIGTOP-3613] - Review log4j configurations for CVE-2021-44228
+    * [BIGTOP-3649] - Nexus local mirror functionality doesn't work in CI build
+    * [BIGTOP-3662] - Bump HBase to 2.4.11
+
+** Bug
+    * [BIGTOP-3589] - Fix build failure of Alluxio caused by buildnumber-maven-plugin
+    * [BIGTOP-3595] - The webui module is missing in the RPM package and failed to create the alluxio user
+    * [BIGTOP-3604] - jsvc fails to find OpenJDK11
+    * [BIGTOP-3607] - Change the ambari metric repo to fix build error
+    * [BIGTOP-3609] - Update ca-certificates for CentOS 7
+    * [BIGTOP-3614] - Docker provisioner fails to start a cluster on Debian 10/11 images
+    * [BIGTOP-3622] - Remove usage of $(PWD) in Debian rules files
+    * [BIGTOP-3625] - Fix Livy's build failure
+    * [BIGTOP-3627] - Pinning the version of puppetlabs-stdlib
+    * [BIGTOP-3634] - enable_local_repo doesn't work for CentOS because of priority
+    * [BIGTOP-3639] - build failure of Alluxio  ppc64le
+    * [BIGTOP-3647] - Change RPM repository for CentOS 8 to Vault Mirror
+    * [BIGTOP-3652] - Add the python-is-python2 package to the toolchain for Ubuntu 20.04
+    * [BIGTOP-3653] - Building Kibana fails due to the npm error
+    * [BIGTOP-3655] - Cluster deployment via Ambari fails on CentOS due to the lack of execute permission
+    * [BIGTOP-3656] - Fix Mpack's build and deployment problems on Ubuntu
+    * [BIGTOP-3657] - Revert the download site to archive.apache.org partially
+    * [BIGTOP-3659] - Ambari deployment fails due to the odpi-ambari-mpack version mismatch
+    * [BIGTOP-3663] - Hadoop deployment fails on Fedora 35
+    * [BIGTOP-3664] - Building components in Docker requires additional parameters on Fedora 35
+    * [BIGTOP-3665] - Fix Docker provisioner to work with Fedora 35
+    * [BIGTOP-3666] - Replace the Docker provisioner config for CentOS 8 with Rocky 8
+    * [BIGTOP-3671] - Add a patch for CVE-2021-22569 to bigtop_toolchain
+    * [BIGTOP-3672] - Unable build bigtop-puppet/bigtop-slaves images
+
+** New Feature
+    * [BIGTOP-3600] - Add support for Debian 11 Bullseye
+    * [BIGTOP-3637] - Add Rocky Linux 8 support
+
+** Improvement
+    * [BIGTOP-3615] - Upgrade log4j2 of Hive 3.1.2 to 2.16.0
+    * [BIGTOP-3616] - Bump Flink to 1.11.6
+    * [BIGTOP-3618] - Bump Solr to 8.11.1
+    * [BIGTOP-3624] - Bump Alluxio's log4j dependencies to 2.17.0
+    * [BIGTOP-3626] - Patch log4j version of ycsb
+    * [BIGTOP-3629] - Drop Debian 9 support - second attempt
+    * [BIGTOP-3632] - Bump elasticsearch's log4j dependencies to 2.17.0
+    * [BIGTOP-3635] - Bump logstash's log4j dependencies to 2.17.0
+    * [BIGTOP-3638] - Add pull request template for GitHub
+    * [BIGTOP-3640] - Upgrade hive's log4j2 version to 2.17.1 for Bigtop 3.0.x
+    * [BIGTOP-3642] - Upgrade log4j to 2.17.1 on all components
+    * [BIGTOP-3643] - Upgrade ubuntu version  example in gradle task description
+    * [BIGTOP-3645] - Upgrade fedora version example in gradle task description
+    * [BIGTOP-3646] - Upgrade Geode and TableStore SDK version for YCSB
+    * [BIGTOP-3648] - Change download site to dlcdn.apache.org for installing Ant and Maven
+    * [BIGTOP-3658] - Add Fedora 35 support and drop 33
+
+** Task
+    * [BIGTOP-3586] - Upgrade Bigtop-ambari-mpack to support Ambari 2.7.5 and Hadoop3.x in BIGTOP-3.0 release
+    * [BIGTOP-3590] - Hbase smoke tests failed on Ubuntu 20.04
+    * [BIGTOP-3591] - Upgrading Bigtop-Mpack services deploying scripts aligned to Ambari-2.7.5
+    * [BIGTOP-3592] - Remove Ambari stack-select tool dependency from stack hooks
+    * [BIGTOP-3593] - Fix Bigtop Solr check Rat Issues
+    * [BIGTOP-3605] - Define Bigtop 3.1 release BOM
+    * [BIGTOP-3654] - Building Hadoop fails on ppc64le
+
+
 * Release 3.0.1 (2022-04-11)
 
 Release Notes - Bigtop - Version 3.0.1
