@@ -117,7 +117,7 @@ cp -r ${BUILD_DIR}/contrib/rest/lib ${PREFIX}/${LIB_DIR}/contrib/rest/
 cp -r ${BUILD_DIR}/contrib/rest/conf/* ${PREFIX}/${CONF_DIST_DIR}/rest/
 
 # Make a symlink of zookeeper.jar to zookeeper-version.jar
-for x in $PREFIX/$LIB_DIR/zookeeper-[:digit:]*.jar ; do
+for x in $PREFIX/$LIB_DIR/zookeeper-[[:digit:]]*.jar ; do
   x=$(basename $x)
   ln -s $x $PREFIX/$LIB_DIR/zookeeper.jar
 done
