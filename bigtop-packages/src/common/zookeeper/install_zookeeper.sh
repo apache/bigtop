@@ -106,17 +106,18 @@ CONF_DIST_DIR=/etc/zookeeper/conf.dist/
 SYSTEM_INCLUDE_DIR=${SYSTEM_INCLUDE_DIR:-/usr/include}
 SYSTEM_LIB_DIR=${SYSTEM_LIB_DIR:-/usr/lib}
 
+tar -z -x -f zookeeper-assembly/target/apache-zookeeper-*-bin.tar.gz
 install -d -m 0755 $PREFIX/$LIB_DIR/
 rm -f $BUILD_DIR/zookeeper-*-javadoc.jar $BUILD_DIR/zookeeper-*-bin.jar $BUILD_DIR/zookeeper-*-sources.jar $BUILD_DIR/zookeeper-*-test.jar
-cp $BUILD_DIR/zookeeper*.jar $PREFIX/$LIB_DIR/
+cp $BUILD_DIR/lib/zookeeper*.jar $PREFIX/$LIB_DIR/
 install -d -m 0755 ${PREFIX}/${LIB_DIR}/contrib/rest
 install -d -m 0755 ${PREFIX}/${CONF_DIST_DIR}/rest
-cp ${BUILD_DIR}/zookeeper-contrib/zookeeper-contrib-rest/zookeeper-*-rest.jar ${PREFIX}/${LIB_DIR}/contrib/rest/
-cp -r ${BUILD_DIR}/zookeeper-contrib/zookeeper-contrib-rest/lib ${PREFIX}/${LIB_DIR}/contrib/rest/
-cp -r ${BUILD_DIR}/zookeeper-contrib/zookeeper-contrib-rest/conf/* ${PREFIX}/${CONF_DIST_DIR}/rest/
+cp ${BUILD_DIR}/contrib/rest/zookeeper-contrib-rest-*.jar ${PREFIX}/${LIB_DIR}/contrib/rest/
+cp -r ${BUILD_DIR}/contrib/rest/lib ${PREFIX}/${LIB_DIR}/contrib/rest/
+cp -r ${BUILD_DIR}/contrib/rest/conf/* ${PREFIX}/${CONF_DIST_DIR}/rest/
 
 # Make a symlink of zookeeper.jar to zookeeper-version.jar
-for x in $PREFIX/$LIB_DIR/zookeeper*jar ; do
+for x in $PREFIX/$LIB_DIR/zookeeper-[:digit:]*.jar ; do
   x=$(basename $x)
   ln -s $x $PREFIX/$LIB_DIR/zookeeper.jar
 done
@@ -196,11 +197,9 @@ install -d ${PREFIX}/$SYSTEM_INCLUDE_DIR
 install -d ${PREFIX}/$SYSTEM_LIB_DIR
 install -d ${PREFIX}/${LIB_DIR}-native
 
-mkdir ${BUILD_DIR}/../native
-(cd ${BUILD_DIR}/../native && tar xzf ../zookeeper-*-lib.tar.gz)
-cp -R ${BUILD_DIR}/../native/include/* ${PREFIX}/${SYSTEM_INCLUDE_DIR}/
-cp -R ${BUILD_DIR}/../native/lib*/* ${PREFIX}/${SYSTEM_LIB_DIR}/
-cp -R ${BUILD_DIR}/../native/bin/* ${PREFIX}/${LIB_DIR}-native/
+cp -R ${BUILD_DIR}/native/include/* ${PREFIX}/${SYSTEM_INCLUDE_DIR}/
+cp -R ${BUILD_DIR}/native/lib*/* ${PREFIX}/${SYSTEM_LIB_DIR}/
+cp -R ${BUILD_DIR}/native/bin/* ${PREFIX}/${LIB_DIR}-native/
 for binary in ${PREFIX}/${LIB_DIR}-native/*; do
   cat > ${PREFIX}/${BIN_DIR}/`basename ${binary}` <<EOF
 #!/bin/bash
