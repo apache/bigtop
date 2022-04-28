@@ -212,7 +212,7 @@ class bigtop_toolchain::packages {
         "python2.7-dev"
       ]
 
-      if ($operatingsystem == 'Ubuntu' and 0 <= versioncmp($operatingsystemmajrelease, '20.04')) {
+      if (($operatingsystem == 'Ubuntu' and 0 <= versioncmp($operatingsystemmajrelease, '20.04')) or ($operatingsystem == 'Debian' and 0 <= versioncmp($operatingsystemmajrelease, '11'))) {
         $pkgs = concat($_pkgs, ["python-is-python2"])
       } else {
         $pkgs = $_pkgs
