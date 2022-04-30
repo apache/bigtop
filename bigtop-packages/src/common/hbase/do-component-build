@@ -20,6 +20,14 @@ set -ex
 
 export MAVEN_OPTS="-Xmx1024m"
 
+MVN_ARGS="-Phadoop-3.0 "
+MVN_ARGS+="-Dhadoop-three.version=${HADOOP_VERSION} "
+MVN_ARGS+="-Dhadoop.guava.version=27.0-jre "
+MVN_ARGS+="-Djetty.version=9.3.29.v20201019 "
+MVN_ARGS+="-Dzookeeper.version=${ZOOKEEPER_VERSION} "
+MVN_ARGS+="-DskipTests "
+MVN_ARGS+="-Dcheckstyle.skip=true "
+
 if [ "${BIGTOP_JDK:=8}" == "8" ]; then
     MAVEN_ADDITIONAL="-Dadditionalparam=-Xdoclint:none"
 fi
@@ -30,8 +38,9 @@ if [ $HOSTTYPE = "powerpc64le" ] ; then
   sed -i 's|<jruby.version>.*</jruby.version>|<jruby.version>1.7.23</jruby.version>|' pom.xml
   mvn install:install-file -DgroupId=com.google.protobuf -DartifactId=protoc -Dversion=2.5.0 \
       -Dclassifier=linux-ppcle_64 -Dpackaging=exe -Dfile=/usr/local/bin/protoc
-  mvn install:install-file -DgroupId=com.google.protobuf -DartifactId=protoc -Dversion=3.5.1-1 \
-      -Dclassifier=linux-ppcle_64 -Dpackaging=exe -Dfile=/usr/local/protobuf-3.5.1.1/bin/protoc
+  mvn install:install-file -DgroupId=com.google.protobuf -DartifactId=protoc -Dversion=3.17.3 \
+      -Dclassifier=linux-ppcle_64 -Dpackaging=exe -Dfile=/usr/local/protobuf-3.17.3/bin/protoc
+  MVN_ARGS+="-Dexternal.protobuf.groupid=com.google.protobuf -Dexternal.protoc.version=2.5.0 "
 fi
 
 if [ $HOSTTYPE = "aarch64" ] ; then
@@ -43,15 +52,8 @@ if [ $HOSTTYPE = "aarch64" ] ; then
 '\          <\/dependency>' pom.xml
   mvn install:install-file -DgroupId=com.google.protobuf -DartifactId=protoc -Dversion=2.5.0 \
       -Dclassifier=linux-aarch_64 -Dpackaging=exe -Dfile=/usr/local/bin/protoc
+  MVN_ARGS+="-Dexternal.protobuf.groupid=com.google.protobuf -Dexternal.protoc.version=2.5.0 "
 fi
-
-MVN_ARGS="-Phadoop-3.0 "
-MVN_ARGS+="-Dhadoop-three.version=${HADOOP_VERSION} "
-MVN_ARGS+="-Dhadoop.guava.version=27.0-jre "
-MVN_ARGS+="-Djetty.version=9.3.29.v20201019 "
-MVN_ARGS+="-Dzookeeper.version=${ZOOKEEPER_VERSION} "
-MVN_ARGS+="-DskipTests "
-MVN_ARGS+="-Dcheckstyle.skip=true "
 
 # HBASE-21513: separate site and assembly:single to avoid assembly issues.
 mvn ${MVN_ARGS} ${MAVEN_ADDITIONAL} clean install "$@"
