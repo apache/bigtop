@@ -38,8 +38,8 @@ if [ $HOSTTYPE = "powerpc64le" ] ; then
   sed -i 's|<jruby.version>.*</jruby.version>|<jruby.version>1.7.23</jruby.version>|' pom.xml
   mvn install:install-file -DgroupId=com.google.protobuf -DartifactId=protoc -Dversion=2.5.0 \
       -Dclassifier=linux-ppcle_64 -Dpackaging=exe -Dfile=/usr/local/bin/protoc
-  mvn install:install-file -DgroupId=com.google.protobuf -DartifactId=protoc -Dversion=3.5.1-1 \
-      -Dclassifier=linux-ppcle_64 -Dpackaging=exe -Dfile=/usr/local/protobuf-3.5.1.1/bin/protoc
+  mvn install:install-file -DgroupId=com.google.protobuf -DartifactId=protoc -Dversion=3.17.3 \
+      -Dclassifier=linux-ppcle_64 -Dpackaging=exe -Dfile=/usr/local/protobuf-3.17.3/bin/protoc
   MVN_ARGS+="-Dexternal.protobuf.groupid=com.google.protobuf -Dexternal.protoc.version=2.5.0 "
 fi
 
