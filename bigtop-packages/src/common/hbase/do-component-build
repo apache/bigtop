@@ -40,6 +40,7 @@ if [ $HOSTTYPE = "powerpc64le" ] ; then
       -Dclassifier=linux-ppcle_64 -Dpackaging=exe -Dfile=/usr/local/bin/protoc
   mvn install:install-file -DgroupId=com.google.protobuf -DartifactId=protoc -Dversion=3.5.1-1 \
       -Dclassifier=linux-ppcle_64 -Dpackaging=exe -Dfile=/usr/local/protobuf-3.5.1.1/bin/protoc
+  MVN_ARGS+="-Dexternal.protobuf.groupid=com.google.protobuf -Dexternal.protoc.version=2.5.0 "
 fi
 
 if [ $HOSTTYPE = "aarch64" ] ; then
