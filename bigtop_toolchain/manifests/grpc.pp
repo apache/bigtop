@@ -19,8 +19,8 @@ class bigtop_toolchain::grpc {
   require bigtop_toolchain::protobuf
 
   $grpc_version = '1.28.0'
-  $proto_version = '3.5.1.1'
-  $proto_home = "/usr/local/protobuf-3.5.1.1"
+  $proto_version = '3.17.3'
+  $proto_home = "/usr/local/protobuf-3.17.3"
 
   if ($architecture == 'ppc64le') {
 
