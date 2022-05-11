@@ -35,7 +35,6 @@ fi
 if [ $HOSTTYPE = "powerpc64le" ] ; then
   sed -i "s|<asciidoctor.plugin.version>.*</asciidoctor.plugin.version>|<asciidoctor.plugin.version>1.5.3</asciidoctor.plugin.version>|" pom.xml
   sed -i 's|<asciidoctorj.pdf.version>.*</asciidoctorj.pdf.version>|<asciidoctorj.pdf.version>1.5.0-alpha.11</asciidoctorj.pdf.version>|' pom.xml
-  sed -i 's|<jruby.version>.*</jruby.version>|<jruby.version>1.7.23</jruby.version>|' pom.xml
   mvn install:install-file -DgroupId=com.google.protobuf -DartifactId=protoc -Dversion=2.5.0 \
       -Dclassifier=linux-ppcle_64 -Dpackaging=exe -Dfile=/usr/local/bin/protoc
   mvn install:install-file -DgroupId=com.google.protobuf -DartifactId=protoc -Dversion=3.17.3 \
