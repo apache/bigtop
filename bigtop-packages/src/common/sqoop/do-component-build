@@ -17,6 +17,9 @@
 set -ex
 . `dirname ${0}`/bigtop.bom
 
+# BIGTOP-3682: Cannot run program "python" No such file or directory.
+sudo ln -s /usr/bin/python2.7 /usr/bin/python
+
 ant -f build.xml \
   -Dhadoop.version=$HADOOP_VERSION \
   -Dhbase.version=$HBASE_VERSION \
