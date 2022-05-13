@@ -53,7 +53,7 @@ create() {
         log "Cluster already exist! Run ./$PROG -d to destroy the cluster or delete .provision_id file and containers manually."
         exit 1;
     fi
-    echo "`date +'%Y%m%d_%H%M%S'`_R$RANDOM" > .provision_id
+    echo "`date +'%Y%m%d_%H%M%S'`_r$RANDOM" > .provision_id
     PROVISION_ID=`cat .provision_id`
     # Create a shared /etc/hosts and hiera.yaml that will be both mounted to each container soon
     mkdir -p config/hieradata 2> /dev/null
