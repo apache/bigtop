@@ -69,6 +69,7 @@ def final langLevel = "1.8"
 rat {
   excludes = [
       ".git/**",
+      ".github/**",
       ".idea/**",
        "**/.gitignore",
        /* Test data with rigid structure and/or binary */
