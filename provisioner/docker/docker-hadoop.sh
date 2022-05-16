@@ -128,7 +128,7 @@ create() {
 generate-hosts() {
     get_nodes
     for node in ${NODES[*]}; do
-        entry=`docker inspect --format "{{.NetworkSettings.IPAddress}} {{.Config.Hostname}}.{{.Config.Domainname}} {{.Config.Hostname}}" $node`
+        entry=`docker inspect --format "{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}} {{.Config.Hostname}}.{{.Config.Domainname}} {{.Config.Hostname}}" $node`
         docker exec ${NODES[0]} bash -c "echo $entry >> /etc/hosts"
     done
     wait
@@ -141,7 +141,7 @@ generate-config() {
     # add ip of all nodes to config
     get_nodes
     for node in ${NODES[*]}; do
-        this_node_ip=`docker inspect --format "{{.NetworkSettings.IPAddress}}" $node`
+        this_node_ip=`docker inspect -f "{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}" $node`
         node_list="$node_list$this_node_ip "
     done
     node_list=$(echo "$node_list" | xargs | sed 's/ /, /g')
@@ -405,7 +405,7 @@ while [ $# -gt 0 ]; do
         shift 2;;
     -n|--nexus)
         if [ $# -lt 2 ] || [[ $2 == -* ]]; then
-            NEXUS_IP=`docker inspect --format "{{.NetworkSettings.IPAddress}}" nexus`
+            NEXUS_IP=`docker inspect --format "{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}" nexus`
             if [ $? != 0 ]; then
                 log "No container named nexus exists. To create one:\n $ docker run -d --name nexus sonatype/nexus"
                 exit 1
