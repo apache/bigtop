@@ -13,14 +13,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-bigtop:
-    image: ${DOCKER_IMAGE}
-    command: /sbin/init
-    domainname: bigtop.apache.org
-    privileged: true
-    mem_limit: ${MEM_LIMIT}
-    volumes:
-    - ../../:/bigtop-home
-    - ./config/hiera.yaml:/etc/puppet/hiera.yaml
-    - ./config/hieradata:/etc/puppet/hieradata
-    - ./config/hosts:/etc/hosts
+services:
+    bigtop:
+        image: ${DOCKER_IMAGE}
+        command: /sbin/init
+        domainname: bigtop.apache.org
+        privileged: true
+        mem_limit: ${MEM_LIMIT}
+        volumes:
+        - ../../:/bigtop-home
+        - ./config/hiera.yaml:/etc/puppet/hiera.yaml
+        - ./config/hieradata:/etc/puppet/hieradata
+        - ./config/hosts:/etc/hosts
