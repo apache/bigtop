@@ -14,15 +14,15 @@
 # limitations under the License.
 
 services:
-  bigtop:
-    image: ${DOCKER_IMAGE}
-    command: /sbin/init
-    domainname: bigtop.apache.org
-    privileged: true
-    mem_limit: ${MEM_LIMIT}
-    volumes:
-    - ../../:/bigtop-home
-    - ./config/hiera.yaml:/etc/puppet/hiera.yaml
-    - ./config/hieradata:/etc/puppet/hieradata
-    - ./config/hosts:/etc/hosts
-    - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    bigtop:
+        image: ${DOCKER_IMAGE}
+        command: /sbin/init
+        domainname: bigtop.apache.org
+        privileged: true
+        mem_limit: ${MEM_LIMIT}
+        volumes:
+        - ../../:/bigtop-home
+        - ./config/hiera.yaml:/etc/puppet/hiera.yaml
+        - ./config/hieradata:/etc/puppet/hieradata
+        - ./config/hosts:/etc/hosts
+        - /sys/fs/cgroup:/sys/fs/cgroup:ro
