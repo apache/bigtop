@@ -15,7 +15,7 @@
 
 Bigtop Changelog
 
-* Release 3.1.0 (2022-04-26)
+* Release 3.1.0 (2022-05-17)
 
 Release Notes - Bigtop - Version 3.1.0
 
@@ -58,6 +58,12 @@ Release Notes - Bigtop - Version 3.1.0
     * [BIGTOP-3666] - Replace the Docker provisioner config for CentOS 8 with Rocky 8
     * [BIGTOP-3671] - Add a patch for CVE-2021-22569 to bigtop_toolchain
     * [BIGTOP-3672] - Unable build bigtop-puppet/bigtop-slaves images
+    * [BIGTOP-3675] - Building Tez fails due to broken dependency
+    * [BIGTOP-3676] - Building Ambari for Debian 11 on ppc64le fails due to missing python
+    * [BIGTOP-3677] - Building HBase for CentOS 7 on arm64 and ppc64le fails due to missing libraries
+    * [BIGTOP-3678] - Building Zeppelin fails due to dependency convergence error
+    * [BIGTOP-3679] - Building Phoenix for CentOS 7 fails on aarch64
+    * [BIGTOP-3680] - HBase smoke test fails on ppc64le
 
 ** New Feature
     * [BIGTOP-3600] - Add support for Debian 11 Bullseye
@@ -89,6 +95,7 @@ Release Notes - Bigtop - Version 3.1.0
     * [BIGTOP-3593] - Fix Bigtop Solr check Rat Issues
     * [BIGTOP-3605] - Define Bigtop 3.1 release BOM
     * [BIGTOP-3654] - Building Hadoop fails on ppc64le
+    * [BIGTOP-3684] - Fix RAT issues in Bigtop source tree
 
 
 * Release 3.0.1 (2022-04-11)

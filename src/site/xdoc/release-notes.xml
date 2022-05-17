@@ -99,6 +99,18 @@
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3672'>BIGTOP-3672</a>] -         Unable build bigtop-puppet/bigtop-slaves images
 </li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3675'>BIGTOP-3675</a>] -         Building Tez fails due to broken dependency
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3676'>BIGTOP-3676</a>] -         Building Ambari for Debian 11 on ppc64le fails due to missing python
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3677'>BIGTOP-3677</a>] -         Building HBase for CentOS 7 on arm64 and ppc64le fails due to missing libraries
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3678'>BIGTOP-3678</a>] -         Building Zeppelin fails due to dependency convergence error
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3679'>BIGTOP-3679</a>] -         Building Phoenix for CentOS 7 fails on aarch64
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3680'>BIGTOP-3680</a>] -         HBase smoke test fails on ppc64le
+</li>
 </ul>
 
 <h2>        New Feature
@@ -163,6 +175,8 @@
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3605'>BIGTOP-3605</a>] -         Define Bigtop 3.1 release BOM
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3654'>BIGTOP-3654</a>] -         Building Hadoop fails on ppc64le
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3684'>BIGTOP-3684</a>] -         Fix RAT issues in Bigtop source tree
 </li>
 </ul>
 
