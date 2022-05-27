@@ -25,7 +25,7 @@ BUILD_OPTS="-Divy.home=${HOME}/.ivy2 -Dsbt.ivy.home=${HOME}/.ivy2 -Duser.home=${
             -Dyarn.version=$HADOOP_VERSION \
             -Pyarn -Phadoop-3.2 \
             -Phive -Phive-thriftserver \
-            -Psparkr \
+            -Psparkr -Pkubernetes \
             -Pscala-${SCALA_VERSION%.*} \
             -Dguava.version=27.0-jre \
             $SPARK_BUILD_OPTS"

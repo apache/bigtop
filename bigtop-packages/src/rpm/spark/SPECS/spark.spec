@@ -231,6 +231,7 @@ done
 %{lib_spark}/licenses
 %{lib_spark}/sbin
 %{lib_spark}/work
+%{lib_spark}/kubernetes
 %{etc_spark}
 %attr(0755,spark,spark) %{var_lib_spark}
 %attr(0755,spark,spark) %{var_run_spark}
