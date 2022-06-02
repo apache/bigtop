@@ -16,22 +16,15 @@
 class bigtop_toolchain::puppet_modules {
 
   exec { 'install-puppet-stdlib':
-    path    => '/usr/bin:/bin',
-    command => 'puppet module install puppetlabs-stdlib --version 4.12.0',
-    creates => '/etc/puppet/modules/stdlib',
+    command => '/opt/puppetlabs/bin/puppet module install puppetlabs-stdlib',
+    creates => '/etc/puppetlabs/code/environments/production/modules/stdlib',
   }
 
   case $operatingsystem{
     /Ubuntu|Debian/: {
-      if versioncmp($::puppetversion, '4') < 0 {
-        $version = '--version 2.4.0'
-      } else {
-        $version = ''
-      }
       exec { 'install-puppet-apt':
-        path    => '/usr/bin:/bin',
-        command => "puppet module install puppetlabs-apt ${version}",
-        creates => '/etc/puppet/modules/apt',
+        command => "/opt/puppetlabs/bin/puppet module install puppetlabs-apt",
+        creates => '/etc/puppetlabs/code/environments/production/modules/apt',
       }
     }
   }

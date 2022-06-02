@@ -42,39 +42,21 @@ fi
 VERSION_INT=$(echo "$VERSION" | cut -d '.' -f 1)
 
 # setup puppet/modules path and update cmds
+PUPPET_MODULES="/etc/puppetlabs/code/environments/production/modules/bigtop_toolchain"
+
 case ${OS} in
-    ubuntu)
-        if [ "${VERSION_INT}" -gt "16" ]; then
-            PUPPET_MODULES="/usr/share/puppet/modules/bigtop_toolchain"
-        else
-            PUPPET_MODULES="/etc/puppet/modules/bigtop_toolchain"
-        fi
+    ubuntu|debian)
         UPDATE_SOURCE="apt-get clean \&\& apt-get update"
         ;;
-    debian)
-        PUPPET_MODULES="/usr/share/puppet/modules/bigtop_toolchain"
-        UPDATE_SOURCE="apt-get clean \&\& apt-get update"
-        ;;
-    fedora)
-        PUPPET_MODULES="/etc/puppet/code/modules/bigtop_toolchain"
+    fedora|rockylinux)
         UPDATE_SOURCE="dnf clean all \&\& dnf updateinfo"
         ;;
     centos)
         if [ "${VERSION_INT}" -gt "7" ]; then
-            PUPPET_MODULES="/etc/puppetlabs/code/environments/production/modules/bigtop_toolchain"
             UPDATE_SOURCE="dnf clean all \&\& dnf updateinfo"
         else
-            PUPPET_MODULES="/etc/puppet/modules/bigtop_toolchain"
             UPDATE_SOURCE="yum clean all \&\& yum updateinfo"
         fi
-        ;;
-    rockylinux)
-        PUPPET_MODULES="/etc/puppetlabs/code/environments/production/modules/bigtop_toolchain"
-        UPDATE_SOURCE="dnf clean all \&\& dnf updateinfo"
-        ;;
-    opensuse)
-        PUPPET_MODULES="/etc/puppet/modules/bigtop_toolchain"
-        UPDATE_SOURCE="zypper clean \&\& zypper refresh"
         ;;
     *)
         echo "[ERROR] Specified distro [${OS}] is not supported!"

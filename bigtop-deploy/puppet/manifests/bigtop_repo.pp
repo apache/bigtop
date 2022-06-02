@@ -20,7 +20,7 @@ class bigtop_repo {
   $default_repo = "http://repos.bigtop.apache.org/releases/${bigtop_repo_default_version}/${lower_os}/${operatingsystemmajrelease}/${architecture}"
 
   case $::operatingsystem {
-    /(OracleLinux|Amazon|CentOS|Fedora|RedHat)/: {
+    /(OracleLinux|Amazon|CentOS|Fedora|RedHat|Rocky)/: {
       $baseurls_array = any2array(hiera("bigtop::bigtop_repo_uri", $default_repo))
       each($baseurls_array) |$count, $baseurl| {
         notify { "Baseurl: $baseurl": }
@@ -98,17 +98,8 @@ class bigtop_repo {
         }
       }
 
-      # BIGTOP-3580. After the Debian 11 release, `apt-get update` fails on Debian 10
-      # if its repository info is obsolete. In such case, the repository info
-      # should be updated by the `--allow-releaseinfo-change` option.
-      if ($operatingsystem == 'Debian' and 0 <= versioncmp($operatingsystemrelease, "10")) {
-        exec { 'bigtop-apt-update':
-          command => '/usr/bin/apt-get update --allow-releaseinfo-change'
-        }
-        Apt::Conf<||> -> Apt::Key<||> -> Exec['bigtop-apt-update'] -> Apt::Source<||> -> Package<||>
-      } else {
-        Apt::Conf<||> -> Apt::Key<||> -> Apt::Source<||> -> Package<||>
-      }
+      Exec['apt_update'] -> Package<||>
+      
     }
     default: {
       notify { "WARNING: running on a neither yum nor apt platform -- make sure Bigtop repo is setup": }
