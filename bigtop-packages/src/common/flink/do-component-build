@@ -24,6 +24,21 @@ if [ $HOSTTYPE = "powerpc64le" ] ; then
   sed -i "s|<nodeVersion>v10.9.0</nodeVersion>|<nodeVersion>v12.22.1</nodeVersion>|" flink-runtime-web/pom.xml
 fi
 
+# husky have to be executed from the path that .git exists
+git_path="$(cd $(dirname $0)/../../../.. && pwd)"
+cmd_from="cd ../.. && husky install flink-runtime-web/web-dashboard/.husky"
+repl_from=$(sed -e 's/[&\\/]/\\&/g; s/$/\\/' -e '$s/\\$//' <<<"$cmd_from")
+if [[ "$0" == *rpm* ]]; then
+  package_json_path="build/flink/rpm/BUILD/flink-$FLINK_VERSION/flink-runtime-web/web-dashboard"
+  cmd_to="cd $git_path && husky install $package_json_path/.husky"
+  repl_to=$(sed -e 's/[&\\/]/\\&/g; s/$/\\/' -e '$s/\\$//' <<<"$cmd_to")
+elif [[ "$0" == *debian* ]]; then
+  package_json_path="output/flink/flink-$FLINK_VERSION/flink-runtime-web/web-dashboard"
+  cmd_to="cd $git_path && husky install $package_json_path/.husky"
+  repl_to=$(sed -e 's/[&\\/]/\\&/g; s/$/\\/' -e '$s/\\$//' <<<"$cmd_to")
+fi
+sed -i "s/$repl_from/$repl_to/" flink-runtime-web/web-dashboard/package.json
+
 # Use Maven to build Flink from source
 mvn install $FLINK_BUILD_OPTS -Drat.skip=true -DskipTests -Dhadoop.version=$HADOOP_VERSION "$@"
 cd flink-dist

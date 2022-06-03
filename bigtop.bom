@@ -233,7 +233,7 @@ bigtop {
     'flink' {
       name    = 'flink'
       relNotes = 'Apache Flink'
-      version { base = '1.11.6'; pkg = base; release = 1 }
+      version { base = '1.15.0'; pkg = base; release = 1 }
       tarball { destination = "$name-${version.base}.tar.gz"
                 source      = "$name-${version.base}-src.tgz" }
       url     { download_path = "/$name/$name-${version.base}"
