@@ -21,6 +21,7 @@
 /usr/lib/spark/data
 /usr/lib/spark/examples
 /usr/lib/spark/jars
+/usr/lib/spark/kubernetes
 /usr/lib/spark/licenses
 /usr/lib/spark/sbin
 /usr/lib/spark/work
