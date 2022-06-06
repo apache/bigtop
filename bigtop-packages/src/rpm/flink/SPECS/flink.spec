@@ -22,6 +22,7 @@
 %define flink_services flink-jobmanager flink-taskmanager
 %define var_log_flink /var/log/%{flink_name}
 %define build_target_flink flink-dist/target/%{flink_name}-%{flink_version}-bin/%{flink_name}-%{flink_version}/
+%global __python %{__python3}
 
 
 %if  %{!?suse_version:1}0
