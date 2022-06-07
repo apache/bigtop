@@ -273,8 +273,8 @@ env-check() {
     echo "Environment check..."
     echo "Check docker:"
     docker -v || exit 1
-    echo "Check docker-compose:"
-    $DOCKER_COMPOSE_CMD -v || exit 1
+    echo "Check docker compose:"
+    $DOCKER_COMPOSE_CMD version || exit 1
     echo "Check ruby:"
     ruby -v || exit 1
 }
@@ -314,7 +314,7 @@ if [ $# -eq 0 ]; then
 fi
 
 yamlconf="config.yaml"
-DOCKER_COMPOSE_CMD="docker-compose"
+DOCKER_COMPOSE_CMD="docker compose"
 
 BIGTOP_PUPPET_DIR=../../bigtop-deploy/puppet
 if [ -e .provision_id ]; then
