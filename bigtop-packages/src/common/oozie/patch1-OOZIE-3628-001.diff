@@ -1,0 +1,76 @@
+From ba2f992ed2a89307c7c6948042240886c74609c5 Mon Sep 17 00:00:00 2001
+From: Denes Bodo <dionusos@apache.org>
+Date: Mon, 21 Jun 2021 16:27:43 +0200
+Subject: [PATCH] OOZIE-3628 Fix Oozie build errors caused by Maven 3.8.1
+
+---
+ core/pom.xml                      | 6 ++++++
+ fluent-job/fluent-job-api/pom.xml | 2 +-
+ sharelib/hcatalog/pom.xml         | 4 ++++
+ zookeeper-security-tests/pom.xml  | 6 ++++++
+ 4 files changed, 17 insertions(+), 1 deletion(-)
+
+diff --git a/core/pom.xml b/core/pom.xml
+index 649cdd04c..6fe0a00af 100644
+--- a/core/pom.xml
++++ b/core/pom.xml
+@@ -185,6 +185,12 @@
+             <groupId>org.apache.hive.hcatalog</groupId>
+             <artifactId>hive-hcatalog-server-extensions</artifactId>
+             <scope>compile</scope>
++            <exclusions>
++                <exclusion>
++                    <groupId>org.pentaho</groupId>
++                    <artifactId>pentaho-aggdesigner-algorithm</artifactId>
++                </exclusion>
++            </exclusions>
+         </dependency>
+ 
+         <dependency>
+diff --git a/fluent-job/fluent-job-api/pom.xml b/fluent-job/fluent-job-api/pom.xml
+index 1f98a7180..dadc081bb 100644
+--- a/fluent-job/fluent-job-api/pom.xml
++++ b/fluent-job/fluent-job-api/pom.xml
+@@ -118,7 +118,7 @@
+             <plugin>
+                 <groupId>com.github.davidmoten</groupId>
+                 <artifactId>jax-maven-plugin</artifactId>
+-                <version>0.1.6</version>
++                <version>0.1.8</version>
+                 <dependencies>
+                     <dependency>
+                         <groupId>org.jvnet.jaxb2_commons</groupId>
+diff --git a/sharelib/hcatalog/pom.xml b/sharelib/hcatalog/pom.xml
+index 5cfcff4b0..9f48a5ce5 100644
+--- a/sharelib/hcatalog/pom.xml
++++ b/sharelib/hcatalog/pom.xml
+@@ -254,6 +254,10 @@
+                     <groupId>javax.jms</groupId>
+                     <artifactId>jms</artifactId>
+                 </exclusion>
++                <exclusion>
++                    <groupId>org.pentaho</groupId>
++                    <artifactId>pentaho-aggdesigner-algorithm</artifactId>
++                </exclusion>
+             </exclusions>
+         </dependency>
+ 
+diff --git a/zookeeper-security-tests/pom.xml b/zookeeper-security-tests/pom.xml
+index 8754dbc0b..0b5530114 100644
+--- a/zookeeper-security-tests/pom.xml
++++ b/zookeeper-security-tests/pom.xml
+@@ -77,6 +77,12 @@
+             <groupId>org.apache.hive.hcatalog</groupId>
+             <artifactId>hive-webhcat-java-client</artifactId>
+             <scope>test</scope>
++            <exclusions>
++                <exclusion>
++                    <groupId>org.pentaho</groupId>
++                    <artifactId>pentaho-aggdesigner-algorithm</artifactId>
++                </exclusion>
++            </exclusions>
+         </dependency>
+     </dependencies>
+ 
+-- 
+2.30.0
