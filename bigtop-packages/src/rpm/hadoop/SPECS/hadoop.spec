@@ -652,6 +652,13 @@ if [ "$1" = 0 ]; then
   %{alternatives_cmd} --remove %{name}-conf %{etc_hadoop}/conf.empty || :
 fi
 
+%preun hdfs
+if [ $1 = 0 ]; then
+  if [ -d "/hadoop/hdfs" ]; then
+      rm -rf /hadoop/hdfs
+  fi
+fi
+
 %preun httpfs
 if [ $1 = 0 ]; then
   service %{name}-httpfs stop > /dev/null 2>&1
