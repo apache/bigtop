@@ -1,52 +1,3 @@
-commit 8db99c4a896b2cb5261d6e31e961835778129e9d
-Author: David Lavati <david.lavati@gmail.com>
-Date:   Tue Oct 8 12:54:24 2019 +0000
-
-    HIVE-22278: Upgrade log4j to 2.12.1 (David Lavati via Zoltan Haindrich)
-    
-    Signed-off-by: Zoltan Haindrich <kirk@rxd.hu>
-    (cherry picked from commit caf7ac0099645ac8500d824556941447e66e25e3)
-    
-     Conflicts:
-            pom.xml
-            standalone-metastore/metastore-common/pom.xml
-            standalone-metastore/pom.xml
-
-diff --git a/itests/hive-unit/src/test/java/org/apache/hive/service/cli/operation/TestOperationLoggingLayout.java b/itests/hive-unit/src/test/java/org/apache/hive/service/cli/operation/TestOperationLoggingLayout.java
-index d90d590e29..6972ddef9b 100644
---- a/itests/hive-unit/src/test/java/org/apache/hive/service/cli/operation/TestOperationLoggingLayout.java
-+++ b/itests/hive-unit/src/test/java/org/apache/hive/service/cli/operation/TestOperationLoggingLayout.java
-@@ -188,7 +188,7 @@ private void checkAppenderState(String msg, String routingAppenderName, String q
-     Map<String, Appender> appendersMap = loggerConfig.getAppenders();
-     RoutingAppender routingAppender = (RoutingAppender) appendersMap.get(routingAppenderName);
-     Assert.assertNotNull(msg + "could not find routingAppender " + routingAppenderName, routingAppender);
--    Field defaultsField = RoutingAppender.class.getDeclaredField("appenders");
-+    Field defaultsField = RoutingAppender.class.getDeclaredField("createdAppenders");
-     defaultsField.setAccessible(true);
-     ConcurrentHashMap appenders = (ConcurrentHashMap) defaultsField.get(routingAppender);
-     AppenderControl appenderControl = (AppenderControl) appenders.get(queryId);
-@@ -219,7 +219,7 @@ private Appender getAppender(String routingAppenderName, String queryId)
-     Map<String, Appender> appendersMap = loggerConfig.getAppenders();
-     RoutingAppender routingAppender = (RoutingAppender) appendersMap.get(routingAppenderName);
-     Assert.assertNotNull("could not find routingAppender " + routingAppenderName, routingAppender);
--    Field defaultsField = RoutingAppender.class.getDeclaredField("appenders");
-+    Field defaultsField = RoutingAppender.class.getDeclaredField("createdAppenders");
-     defaultsField.setAccessible(true);
-     ConcurrentHashMap appenders = (ConcurrentHashMap) defaultsField.get(routingAppender);
-     AppenderControl appenderControl = (AppenderControl) appenders.get(queryId);
-diff --git a/pom.xml b/pom.xml
-index 17dd2cf886..123c642c13 100644
---- a/pom.xml
-+++ b/pom.xml
-@@ -181,7 +181,7 @@
-     <kryo.version>3.0.3</kryo.version>
-     <libfb303.version>0.9.3</libfb303.version>
-     <libthrift.version>0.9.3</libthrift.version>
--    <log4j2.version>2.10.0</log4j2.version>
-+    <log4j2.version>2.12.1</log4j2.version>
-     <opencsv.version>2.3</opencsv.version>
-     <orc.version>1.5.6</orc.version>
-     <mockito-all.version>1.10.19</mockito-all.version>
 diff --git a/ql/pom.xml b/ql/pom.xml
 index 1b49ec8b5a..2a99fd52c3 100644
 --- a/ql/pom.xml
@@ -63,35 +14,10 @@ index 1b49ec8b5a..2a99fd52c3 100644
      <dependency>
        <groupId>org.apache.logging.log4j</groupId>
        <artifactId>log4j-slf4j-impl</artifactId>
-diff --git a/ql/src/java/org/apache/hadoop/hive/ql/log/SlidingFilenameRolloverStrategy.java b/ql/src/java/org/apache/hadoop/hive/ql/log/SlidingFilenameRolloverStrategy.java
-index 664734c7bc..67bbd8eb07 100644
---- a/ql/src/java/org/apache/hadoop/hive/ql/log/SlidingFilenameRolloverStrategy.java
-+++ b/ql/src/java/org/apache/hadoop/hive/ql/log/SlidingFilenameRolloverStrategy.java
-@@ -73,6 +73,10 @@ public String getCurrentFileName(RollingFileManager rollingFileManager) {
-     return getLogFileName(pattern);
-   }
- 
-+  @Override public void clearCurrentFileName() {
-+    // no rename is needed
-+  }
-+
-   /**
-    * @return Mangled file name formed by appending the current timestamp
-    */
 diff --git a/standalone-metastore/pom.xml b/standalone-metastore/pom.xml
 index bd2e51edeb..e74a3b6ebe 100644
 --- a/standalone-metastore/pom.xml
 +++ b/standalone-metastore/pom.xml
-@@ -78,8 +78,8 @@
-     <junit.version>4.11</junit.version>
-     <libfb303.version>0.9.3</libfb303.version>
-     <libthrift.version>0.9.3</libthrift.version>
--    <log4j2.version>2.8.2</log4j2.version>
-     <mockito-all.version>1.10.19</mockito-all.version>
-+    <log4j2.version>2.12.1</log4j2.version>
-     <orc.version>1.5.1</orc.version>
-     <protobuf.version>2.5.0</protobuf.version>
-     <sqlline.version>1.3.0</sqlline.version>
 @@ -254,6 +254,11 @@
        <artifactId>hive-storage-api</artifactId>
        <version>${storage-api.version}</version>
@@ -104,16 +30,3 @@ index bd2e51edeb..e74a3b6ebe 100644
      <dependency>
        <groupId>org.apache.logging.log4j</groupId>
        <artifactId>log4j-slf4j-impl</artifactId>
-diff --git a/testutils/ptest2/pom.xml b/testutils/ptest2/pom.xml
-index 10dda97248..f4ec5a57c6 100644
---- a/testutils/ptest2/pom.xml
-+++ b/testutils/ptest2/pom.xml
-@@ -26,7 +26,7 @@ limitations under the License.
-   <name>hive-ptest</name>
-   <properties>
-     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
--    <log4j2.version>2.10.0</log4j2.version>
-+    <log4j2.version>2.12.1</log4j2.version>
-     <spring.framework.version>3.2.16.RELEASE</spring.framework.version>
-     <jclouds.version>2.0.0</jclouds.version>
-     <checkstyle.conf.dir>${basedir}/../../checkstyle/</checkstyle.conf.dir>

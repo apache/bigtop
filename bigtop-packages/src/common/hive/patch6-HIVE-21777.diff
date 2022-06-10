@@ -2,7 +2,7 @@ diff --git a/service/pom.xml b/service/pom.xml
 index 6723a70098..fdbecfaf84 100644
 --- a/service/pom.xml
 +++ b/service/pom.xml
-@@ -299,6 +299,12 @@
+@@ -303,6 +303,12 @@
        <artifactId>apacheds-server-integ</artifactId>
        <version>${apache-directory-server.version}</version>
        <scope>test</scope>
