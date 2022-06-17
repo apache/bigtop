@@ -17,32 +17,17 @@ class bigtop_toolchain::protobuf {
 
   require bigtop_toolchain::packages
 
-  $url = "https://github.com/google/protobuf/releases/download/v2.5.0/"
+  $url = "https://github.com/protocolbuffers/protobuf/archive/refs/tags/"
 
-  $protobuf8 = "protobuf-2.5.0.tar.gz"
-  $protobuf8dir = "protobuf-2.5.0"
-
-  file { "/usr/src/0001-Backport-atomic-operations-with-support-of-arm64-and.patch":
-    source => "puppet:///modules/bigtop_toolchain/0001-Backport-atomic-operations-with-support-of-arm64-and.patch"
-  }
-
-  file { "/usr/src/0001-CVE-2021-22569-Improve-performance-of-parsing-unknow.patch":
-    source => "puppet:///modules/bigtop_toolchain/0001-CVE-2021-22569-Improve-performance-of-parsing-unknow.patch"
-  }
+  $protobuf8 = "v3.7.1.tar.gz"
+  $protobuf8dir = "protobuf-3.7.1"
 
   exec { "download protobuf":
      cwd  => "/usr/src",
      command => "/usr/bin/wget $url/$protobuf8 && \
                  mkdir -p $protobuf8dir && \
-                 /bin/tar -xvzf $protobuf8 -C $protobuf8dir --strip-components=1 && \
-                 cd $protobuf8dir && \
-                 /usr/bin/patch -p1 </usr/src/0001-Backport-atomic-operations-with-support-of-arm64-and.patch && \
-                 /usr/bin/patch -p1 </usr/src/0001-CVE-2021-22569-Improve-performance-of-parsing-unknow.patch && \
-                 curl -o config.guess 'https://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD' && \
-                 cp config.guess gtest/build-aux/",
+                 /bin/tar -xvzf $protobuf8 -C $protobuf8dir --strip-components=1",
      creates => "/usr/src/$protobuf8dir",
-     require => [File["/usr/src/0001-Backport-atomic-operations-with-support-of-arm64-and.patch"],
-                 File["/usr/src/0001-CVE-2021-22569-Improve-performance-of-parsing-unknow.patch"]]
   }
 
   exec { "install protobuf":
