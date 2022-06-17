@@ -1,5 +1,4 @@
 /etc/hadoop/conf.empty/httpfs-env.sh
 /etc/hadoop/conf.empty/httpfs-log4j.properties
-/etc/hadoop/conf.empty/httpfs-signature.secret
 /etc/hadoop/conf.empty/httpfs-site.xml
 /var/lib/hadoop-httpfs

@@ -199,15 +199,13 @@ install -d -m 0755 ${HADOOP_DIR}/lib
 cp ${BUILD_DIR}/share/hadoop/common/lib/*.jar ${HADOOP_DIR}/lib
 install -d -m 0755 ${HADOOP_DIR}/tools/lib
 cp ${BUILD_DIR}/share/hadoop/tools/lib/*.jar ${HADOOP_DIR}/tools/lib
-install -d -m 0755 ${MAPREDUCE_DIR}/lib
-cp ${BUILD_DIR}/share/hadoop/mapreduce/lib/*.jar ${MAPREDUCE_DIR}/lib
 install -d -m 0755 ${HDFS_DIR}/lib 
 cp ${BUILD_DIR}/share/hadoop/hdfs/lib/*.jar ${HDFS_DIR}/lib
 install -d -m 0755 ${YARN_DIR}/lib
 cp ${BUILD_DIR}/share/hadoop/yarn/lib/*.jar ${YARN_DIR}/lib
 install -d -m 0755 ${YARN_DIR}/timelineservice/lib
 cp ${BUILD_DIR}/share/hadoop/yarn/timelineservice/lib/*.jar ${YARN_DIR}/timelineservice/lib
-chmod 644 ${HADOOP_DIR}/lib/*.jar ${MAPREDUCE_DIR}/lib/*.jar ${HDFS_DIR}/lib/*.jar ${YARN_DIR}/lib/*.jar ${YARN_DIR}/timelineservice/lib/*.jar
+chmod 644 ${HADOOP_DIR}/lib/*.jar ${HDFS_DIR}/lib/*.jar ${YARN_DIR}/lib/*.jar ${YARN_DIR}/timelineservice/lib/*.jar
 
 # Install webapps
 cp -ra ${BUILD_DIR}/share/hadoop/hdfs/webapps ${HDFS_DIR}/
@@ -354,7 +352,6 @@ install -d -m 0755 $PREFIX/var/{log,run,lib}/hadoop-mapreduce
 for DIR in ${HADOOP_DIR} ${HDFS_DIR} ${YARN_DIR} ${MAPREDUCE_DIR} ; do
   (cd $DIR &&
    rm -fv *-sources.jar
-   rm -fv lib/hadoop-*.jar
    for j in hadoop-*.jar; do
      if [[ $j =~ hadoop-(.*)-${HADOOP_VERSION}.jar ]]; then
        name=${BASH_REMATCH[1]}

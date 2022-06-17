@@ -39,8 +39,6 @@ if [ $HOSTTYPE = "powerpc64le" ] ; then
         #cleanup
         rm -rf ${LEVELDBJNI_HOME}
         rm -rf ${LEVELDB_HOME}
-        mvn install:install-file -DgroupId=com.google.protobuf -DartifactId=protoc -Dversion=2.5.0 \
-            -Dclassifier=linux-ppcle_64 -Dpackaging=exe -Dfile=/usr/local/bin/protoc
 fi
 ## BIGTOP-2288
 
@@ -103,8 +101,6 @@ EOF
         #cleanup
         rm -rf ${LEVELDBJNI_HOME}
         rm -rf ${LEVELDB_HOME}
-        mvn install:install-file -DgroupId=com.google.protobuf -DartifactId=protoc -Dversion=2.5.0 \
-            -Dclassifier=linux-aarch_64 -Dpackaging=exe -Dfile=/usr/local/bin/protoc
 fi
 ## BIGTOP-3027
 
@@ -122,13 +118,13 @@ mkdir build/src
  
 # Build artifacts
 MAVEN_OPTS="-Dzookeeper.version=$ZOOKEEPER_VERSION "
-MAVEN_OPTS+="-DskipTests -DskipTest -DskipITs "
+MAVEN_OPTS+="-DskipTests -DskipITs "
 
 # Include common Maven Deployment logic
 . $(dirname ${0})/maven_deploy.sh
 
 # Build artifacts
-mvn $ANT_OPTS $BUNDLE_SNAPPY -Pdist -Pnative -Psrc -Pyarn-ui -Dtar ${MAVEN_OPTS} install package ${EXTRA_GOALS} "$@"
+mvn $BUNDLE_SNAPPY -Pdist -Pnative -Psrc -Pyarn-ui -Dtar ${MAVEN_OPTS} install ${EXTRA_GOALS} "$@"
 mvn site site:stage ${MAVEN_OPTS} $@
 
 (cd build ; tar --strip-components=1 -xzvf  ../hadoop-dist/target/hadoop-${HADOOP_VERSION}.tar.gz)
