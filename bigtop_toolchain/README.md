@@ -28,7 +28,7 @@ Puppet module for configuring a host for building BigTop. It installs:
 
 **Gradle 2.4**
 
-**Protobuf 2.5.0**
+**Protobuf 3.7.1**
 
 ##Usage
 
