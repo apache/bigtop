@@ -157,11 +157,6 @@ generate-config() {
         elasticsearch_bootstrap_system_call_filter=true
     fi
 
-    # Using FairScheduler instead of CapacityScheduler here is a workaround for BIGTOP-3406.
-    # Due to the default setting of the yarn.scheduler.capacity.maximum-am-resource-percent
-    # property defined in capacity-scheduler.xml (=0.1), some oozie jobs are not assigned
-    # enough resource to succeed. But this property can't be set via hiera for now,
-    # so we use FairScheduler as an easy workaround.
     cat > ./config/hieradata/site.yaml << EOF
 bigtop::hadoop_head_node: $1
 hadoop::hadoop_storage_dirs: [/data/1, /data/2]
@@ -169,7 +164,7 @@ bigtop::bigtop_repo_uri: $2
 bigtop::bigtop_repo_gpg_check: $gpg_check
 hadoop_cluster_node::cluster_components: $3
 hadoop_cluster_node::cluster_nodes: [$node_list]
-hadoop::common_yarn::yarn_resourcemanager_scheduler_class: org.apache.hadoop.yarn.server.resourcemanager.scheduler.fair.FairScheduler
+hadoop::common_yarn::yarn_resourcemanager_scheduler_class: org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacityScheduler
 elasticsearch::bootstrap::system_call_filter: $elasticsearch_bootstrap_system_call_filter
 EOF
 }
