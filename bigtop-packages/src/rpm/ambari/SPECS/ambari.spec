@@ -199,7 +199,11 @@ if [ "$1" -eq 0 ]; then  # Action is uninstall
         rm /usr/sbin/ambari-server
     fi
 
-    mv /etc/ambari-server/conf /etc/ambari-server/conf.save
+    if [ -d "/etc/ambari-server/conf" ]; then
+        # Save conf files here instead of '%config'(auto generating xxx.rpmsave)
+        # '/etc/ambari-server/conf' would be auto-removed in '%files'
+        cp -rp /etc/ambari-server/conf /etc/ambari-server/conf.save
+    fi
 
     if [ -f "/var/lib/ambari-server/install-helper.sh" ]; then
       /var/lib/ambari-server/install-helper.sh remove
@@ -391,7 +395,10 @@ if [ "$1" -eq 0 ]; then  # Action is uninstall
     if [ -d "/etc/ambari-agent/conf.save" ]; then
         mv /etc/ambari-agent/conf.save /etc/ambari-agent/conf_$(date '+%d_%m_%y_%H_%M').save
     fi
-    mv /etc/ambari-agent/conf /etc/ambari-agent/conf.save
+
+    if [ -d "/etc/ambari-agent/conf" ]; then
+        cp -rp /etc/ambari-agent/conf /etc/ambari-agent/conf.save
+    fi
 
     if [ -f "/var/lib/ambari-agent/install-helper.sh" ]; then
       /var/lib/ambari-agent/install-helper.sh remove
@@ -453,7 +460,7 @@ exit 0
 %attr(755,root,root) %{initd_dir}/ambari-server
 /var/lib/ambari-server
 %attr(755,root,root) /var/lib/ambari-server/ambari-python-wrap
-%config  /etc/ambari-server/conf
+/etc/ambari-server/conf
 %config %attr(700,root,root) /var/lib/ambari-server//ambari-env.sh
 %attr(700,root,root) /var/lib/ambari-server//ambari-sudo.sh
 %attr(700,root,root) /var/lib/ambari-server//install-helper.sh
@@ -481,6 +488,7 @@ exit 0
 %attr(755,root,root) /usr/lib/ambari-agent/lib/ambari_jinja2
 %attr(755,root,root) /usr/lib/ambari-agent/lib/ambari_simplejson
 %attr(755,root,root) /usr/lib/ambari-agent/lib/examples
+/etc/ambari-agent/conf
 %attr(755,root,root) /etc/ambari-agent/conf/ambari-agent.ini
 %attr(755,root,root) /etc/ambari-agent/conf/logging.conf.sample
 %attr(755,root,root) /var/lib/ambari-agent/bin/ambari-agent 
