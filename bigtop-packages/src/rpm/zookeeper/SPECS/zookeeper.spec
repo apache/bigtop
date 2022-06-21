@@ -154,7 +154,7 @@ bash %{SOURCE1}
 %__rm -rf $RPM_BUILD_ROOT
 cp $RPM_SOURCE_DIR/zookeeper.1 $RPM_SOURCE_DIR/zoo.cfg $RPM_SOURCE_DIR/zookeeper.default .
 bash %{SOURCE2} \
-          --build-dir=build/%{name}-%{zookeeper_base_version} \
+          --build-dir=build \
           --doc-dir=%{doc_zookeeper} \
           --prefix=$RPM_BUILD_ROOT \
           --system-include-dir=%{_includedir} \
