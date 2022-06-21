@@ -18,10 +18,19 @@ set -ex
 
 . `dirname ${0}`/bigtop.bom
 
-ANT_OPTS="-Dversion=$ZOOKEEPER_VERSION -f build.xml $@"
-sed -i.orig -e 's#test-jar,api-report#test-jar#g' build.xml
-ant compile ${ANT_OPTS}
-ant package package-native tar ${ANT_OPTS}
+mvn clean install -DskipTests -Pfull-build
+(cd zookeeper-contrib/zookeeper-contrib-rest ; mvn dependency:copy-dependencies)
 
-mvn install:install-file -DcreateChecksum=true -DgroupId=org.apache.zookeeper -DartifactId=zookeeper -Dversion=$ZOOKEEPER_VERSION -Dpackaging=jar -Dfile=build/zookeeper-$ZOOKEEPER_VERSION.jar -DpomFile=build/zookeeper-$ZOOKEEPER_VERSION/dist-maven/zookeeper-$ZOOKEEPER_VERSION.pom
-mvn install:install-file -DcreateChecksum=true -DgroupId=org.apache.zookeeper -DartifactId=zookeeper -Dversion=$ZOOKEEPER_VERSION -Dclassifier=tests -Dpackaging=jar -Dfile=build/zookeeper-$ZOOKEEPER_VERSION-test.jar -DpomFile=build/zookeeper-$ZOOKEEPER_VERSION/dist-maven/zookeeper-$ZOOKEEPER_VERSION.pom
+mkdir -p build
+(cd build ; tar --strip-components=1 -xzvf  ../zookeeper-assembly/target/apache-zookeeper-${ZOOKEEPER_VERSION}-bin.tar.gz)
+
+mkdir -p build/native
+cp -R zookeeper-client/zookeeper-client-c/target/c/include build/native/
+cp -R zookeeper-client/zookeeper-client-c/target/c/lib build/native/
+cp -R zookeeper-client/zookeeper-client-c/target/c/bin build/native/
+
+mkdir -p build/contrib/rest
+mkdir -p build/contrib/rest/lib
+cp -R zookeeper-contrib/zookeeper-contrib-rest/conf build/contrib/rest/
+cp zookeeper-contrib/zookeeper-contrib-rest/target/zookeeper-contrib-rest-${ZOOKEEPER_VERSION}.jar build/contrib/rest/
+cp zookeeper-contrib/zookeeper-contrib-rest/target/dependency/* build/contrib/rest/lib/
