@@ -765,7 +765,6 @@ fi
 %config(noreplace) /etc/default/%{name}-httpfs
 %config(noreplace) %{etc_hadoop}/conf.empty/httpfs-env.sh
 %config(noreplace) %{etc_hadoop}/conf.empty/httpfs-log4j.properties
-%config(noreplace) %{etc_hadoop}/conf.empty/httpfs-signature.secret
 %config(noreplace) %{etc_hadoop}/conf.empty/httpfs-site.xml
 %{initd_dir}/%{name}-httpfs
 %attr(0775,httpfs,httpfs) %{run_httpfs}
