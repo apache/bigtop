@@ -36,7 +36,7 @@ if [ $HOSTTYPE = "powerpc64le" ] ; then
   sed -i "s|<asciidoctor.plugin.version>.*</asciidoctor.plugin.version>|<asciidoctor.plugin.version>1.5.3</asciidoctor.plugin.version>|" pom.xml
   sed -i 's|<asciidoctorj.pdf.version>.*</asciidoctorj.pdf.version>|<asciidoctorj.pdf.version>1.5.0-alpha.11</asciidoctorj.pdf.version>|' pom.xml
   mvn install:install-file -DgroupId=com.google.protobuf -DartifactId=protoc -Dversion=2.5.0 \
-      -Dclassifier=linux-ppcle_64 -Dpackaging=exe -Dfile=/usr/local/bin/protoc
+      -Dclassifier=linux-ppcle_64 -Dpackaging=exe -Dfile=/usr/local/protobuf-2.5.0/bin/protoc
   mvn install:install-file -DgroupId=com.google.protobuf -DartifactId=protoc -Dversion=3.17.3 \
       -Dclassifier=linux-ppcle_64 -Dpackaging=exe -Dfile=/usr/local/protobuf-3.17.3/bin/protoc
   MVN_ARGS+="-Dexternal.protobuf.groupid=com.google.protobuf -Dexternal.protoc.version=2.5.0 "
@@ -50,7 +50,7 @@ if [ $HOSTTYPE = "aarch64" ] ; then
 '\             <version>9.1.8.0</version>\n'\
 '\          <\/dependency>' pom.xml
   mvn install:install-file -DgroupId=com.google.protobuf -DartifactId=protoc -Dversion=2.5.0 \
-      -Dclassifier=linux-aarch_64 -Dpackaging=exe -Dfile=/usr/local/bin/protoc
+      -Dclassifier=linux-aarch_64 -Dpackaging=exe -Dfile=/usr/local/protobuf-2.5.0/bin/protoc
   MVN_ARGS+="-Dexternal.protobuf.groupid=com.google.protobuf -Dexternal.protoc.version=2.5.0 "
 fi
 
