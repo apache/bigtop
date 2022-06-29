@@ -18,17 +18,18 @@
 
 package org.apache.bigtop.itest.kafka
 
-import org.junit.BeforeClass
-import org.junit.AfterClass
-import org.apache.bigtop.itest.shell.Shell
-import static org.junit.Assert.assertNotNull
-import static org.junit.Assert.assertTrue
-import org.junit.Test
 import org.apache.bigtop.itest.JarContent
 import org.apache.bigtop.itest.TestUtils
+import org.apache.bigtop.itest.shell.Shell
+import org.junit.AfterClass
+import org.junit.BeforeClass
+import org.junit.FixMethodOrder
+import org.junit.Test
 import org.junit.runner.RunWith
-import org.junit.runners.MethodSorters;
-import org.junit.FixMethodOrder;
+import org.junit.runners.MethodSorters
+
+import static org.junit.Assert.assertNotNull
+import static org.junit.Assert.assertTrue
 
 @FixMethodOrder (MethodSorters.NAME_ASCENDING)
 class TestKafkaSmoke {
