@@ -38,6 +38,41 @@ class bigtop_toolchain::protobuf {
      timeout => 3000
   }
 
+  if ($architecture in ['aarch64', 'ppc64le']) {
+    file { "/usr/src/0001-Backport-atomic-operations-with-support-of-arm64-and.patch":
+      source => "puppet:///modules/bigtop_toolchain/0001-Backport-atomic-operations-with-support-of-arm64-and.patch"
+    }
+
+    file { "/usr/src/0001-CVE-2021-22569-Improve-performance-of-parsing-unknow.patch":
+      source => "puppet:///modules/bigtop_toolchain/0001-CVE-2021-22569-Improve-performance-of-parsing-unknow.patch"
+    }
+
+    exec { "download protobuf 2.5.0":
+      cwd  => "/usr/src",
+      command => "/usr/bin/wget https://github.com/google/protobuf/releases/download/v2.5.0/protobuf-2.5.0.tar.gz && \
+                  mkdir -p /usr/src/protobuf-2.5.0 && \
+                  /bin/tar -xvzf protobuf-2.5.0.tar.gz -C /usr/src/protobuf-2.5.0 --strip-components=1 && \
+                  cd /usr/src/protobuf-2.5.0 && \
+                  /usr/bin/patch -p1 </usr/src/0001-Backport-atomic-operations-with-support-of-arm64-and.patch && \
+                  /usr/bin/patch -p1 </usr/src/0001-CVE-2021-22569-Improve-performance-of-parsing-unknow.patch && \
+                  curl -o config.guess 'https://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD' && \
+                  cp config.guess gtest/build-aux/",
+      creates => "/usr/src/protobuf-2.5.0",
+      require => [File["/usr/src/0001-Backport-atomic-operations-with-support-of-arm64-and.patch"],
+                  File["/usr/src/0001-CVE-2021-22569-Improve-performance-of-parsing-unknow.patch"]]
+    }
+
+    exec { "install protobuf 2.5.0":
+      cwd => "/usr/src/protobuf-2.5.0",
+      command => "/usr/src/protobuf-2.5.0/autogen.sh && \
+                  /usr/src/protobuf-2.5.0/configure --prefix=/usr/local/protobuf-2.5.0 --disable-shared --with-pic && \
+                  /usr/bin/make install",
+      creates => "/usr/local/protobuf-2.5.0",
+      require => Exec["download protobuf 2.5.0"],
+      timeout => 3000
+    }
+  }
+  
   if ($architecture == 'ppc64le') {
     exec { "download protobuf 3.17.3":
       cwd  => "/usr/src",
