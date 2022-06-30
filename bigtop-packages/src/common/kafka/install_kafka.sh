@@ -164,6 +164,9 @@ ln -s /var/log/kafka ${PREFIX}/$LIB_DIR/logs
 rm -f ${PREFIX}/${LIB_DIR}/libs/zookeeper-*.jar
 ln -sf /usr/lib/zookeeper/zookeeper.jar ${PREFIX}/${LIB_DIR}/libs/
 
+# BIGTOP-3712
+ln -s /usr/lib/zookeeper/zookeeper-jute.jar ${PREFIX}/${LIB_DIR}/libs/
+
 # Copy in the defaults file
 install -d -m 0755 ${PREFIX}/etc/default
 cp ${SOURCE_DIR}/kafka.default ${PREFIX}/etc/default/kafka
