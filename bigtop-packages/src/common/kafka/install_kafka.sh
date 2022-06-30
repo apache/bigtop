@@ -89,6 +89,10 @@ for var in PREFIX BUILD_DIR SOURCE_DIR; do
   fi
 done
 
+if [ -f "$SOURCE_DIR/bigtop.bom" ]; then
+  . $SOURCE_DIR/bigtop.bom
+fi
+
 MAN_DIR=${MAN_DIR:-/usr/share/man/man1}
 DOC_DIR=${DOC_DIR:-/usr/share/doc/kafka}
 LIB_DIR=${LIB_DIR:-/usr/lib/kafka}
@@ -163,6 +167,9 @@ ln -s /var/log/kafka ${PREFIX}/$LIB_DIR/logs
 # Removing zookeeper*.jar from under libs and dropping a symlink in place
 rm -f ${PREFIX}/${LIB_DIR}/libs/zookeeper-*.jar
 ln -sf /usr/lib/zookeeper/zookeeper.jar ${PREFIX}/${LIB_DIR}/libs/
+
+# BIGTOP-3712
+ln -s /usr/lib/zookeeper/zookeeper-jute-${ZOOKEEPER_VERSION}.jar ${PREFIX}/${LIB_DIR}/libs/
 
 # Copy in the defaults file
 install -d -m 0755 ${PREFIX}/etc/default
