@@ -122,6 +122,12 @@ for x in $PREFIX/$LIB_DIR/zookeeper-[[:digit:]]*.jar ; do
   ln -s $x $PREFIX/$LIB_DIR/zookeeper.jar
 done
 
+# Make a symlink of zookeeper-jute.jar to zookeeper-jute-version.jar
+for x in $PREFIX/$LIB_DIR/zookeeper-jute-[[:digit:]]*.jar ; do
+  x=$(basename $x)
+  ln -s $x $PREFIX/$LIB_DIR/zookeeper-jute.jar
+done
+
 install -d -m 0755 $PREFIX/$LIB_DIR/lib
 cp $BUILD_DIR/lib/*.jar $PREFIX/$LIB_DIR/lib
 
