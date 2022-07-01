@@ -1,0 +1,34 @@
+diff --git a/hadoop-project/pom.xml b/hadoop-project/pom.xml
+index ce2a268..d1da396 100644
+--- a/hadoop-project/pom.xml
++++ b/hadoop-project/pom.xml
+@@ -1192,6 +1192,14 @@
+             <groupId>jline</groupId>
+             <artifactId>jline</artifactId>
+           </exclusion>
++          <exclusion>
++            <groupId>io.netty</groupId>
++            <artifactId>netty-handler</artifactId>
++          </exclusion>
++          <exclusion>
++            <groupId>io.netty</groupId>
++            <artifactId>netty-transport-native-epoll</artifactId>
++          </exclusion>
+         </exclusions>
+       </dependency>
+       <dependency>
+@@ -1208,6 +1216,14 @@
+             <groupId>jline</groupId>
+             <artifactId>jline</artifactId>
+           </exclusion>
++          <exclusion>
++            <groupId>io.netty</groupId>
++            <artifactId>netty-handler</artifactId>
++          </exclusion>
++          <exclusion>
++            <groupId>io.netty</groupId>
++            <artifactId>netty-transport-native-epoll</artifactId>
++          </exclusion>
+         </exclusions>
+       </dependency>
+       <dependency>
