@@ -68,7 +68,8 @@ class TestKafkaSmoke {
 
   @Test
   public void test2ReadKafkaTopics() {
-    sh.exec(KAFKA_CONSUMER + " --bootstrap-server localhost:9092 --topic test --partition 0 --offset 0 --max-messages 1");
+    sh.exec(KAFKA_CONSUMER + " --bootstrap-server localhost:9092 --topic test \
+            --partition 0 --offset 0 --max-messages 1 --timeout-ms 10000");
     assertTrue(
       " Read Kafka topics failed. " + sh.getOut() + " " + sh.getErr(),
       sh.getOut() == [TEST_MESSAGE]
