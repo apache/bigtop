@@ -483,10 +483,10 @@ public class TestWebHDFS {
   }
 
   /**
-   * testDelte() verifies the functionality of op=DELETE
+   * testDelete() verifies the functionality of op=DELETE
    */
   @Test
-  public void testDelte() {
+  public void testDelete() {
     println("testDelete");
     /*
      * First upload a file to hdfs
