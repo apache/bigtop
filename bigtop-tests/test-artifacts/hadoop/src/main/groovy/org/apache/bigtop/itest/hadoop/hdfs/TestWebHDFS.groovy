@@ -23,9 +23,9 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.apache.bigtop.itest.shell.Shell;
-import org.apache.hadoop.fs.*;
-import org.apache.hadoop.io.*;
 import org.apache.bigtop.itest.JarContent;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,28 +33,25 @@ public class TestWebHDFS {
 
   private static Shell sh = new Shell("/bin/bash -s");
   private static final String USERNAME = System.getProperty("user.name");
-  private static String WEBHDFSURL = System.getenv('WEBHDFSURL');
+  private static String WEBHDFS_URL = System.getenv('WEBHDFS_URL');
   private static String date = sh.exec("date").getOut().get(0).
                                replaceAll("\\s","").replaceAll(":","");
   private static String testDir = "/user/$USERNAME/webhdfs_$date";
-  private CommonFunctions scripts = new CommonFunctions();
   /**
    * To run the below tests please make sure the below:
    * 1. please set dfs.webhdfs.enabled to true.Else these tests will fail.
    * 2. Also make sure to run the tests using the user
    *    who has read/write permission to hdfs.
-   * 3. Make sure to set WEBHDFSURL environment varirable to the web hdfs url.
+   * 3. Make sure to set WEBHDFS_URL environment varirable to the web hdfs url.
    *    which is designated to handle the httpfs requests. The sample url
    *    should look like: http://https_host:14000/webhdfs/v1
    */
   @BeforeClass
   public static void setUp() {
-    // unpack resource
-    JarContent.unpackJarContainer(TestWebHDFS.class, "." , null);
     // check that webhdfs url is properly set
-    WEBHDFSURL = (WEBHDFSURL != null) ? WEBHDFSURL : System.getProperty("WEBHDFSURL");
-    assertNotNull("set WEBHDFSURL environment variable to correct web hdfs url",
-                  WEBHDFSURL);
+    WEBHDFS_URL = (WEBHDFS_URL != null) ? WEBHDFS_URL : System.getProperty("WEBHDFS_URL");
+    assertNotNull("set WEBHDFS_URL environment variable to correct web hdfs url",
+                  WEBHDFS_URL);
     // prepare the test directories
     sh.exec("hdfs dfs -test -d $testDir");
     if (sh.getRet() == 0) {
@@ -89,20 +86,20 @@ public class TestWebHDFS {
   @Test
   public void testMkdir() {
     println("testMkdir");
-    sh.exec("curl -u : --negotiate -i -X PUT \"${WEBHDFSURL}$testDir"+
+    sh.exec("curl -u : --negotiate -i -X PUT \"${WEBHDFS_URL}$testDir"+
             "?user.name=$USERNAME&op=MKDIRS\"");
-    if (!scripts.lookForGivenString(sh.getOut(), "HTTP/1.1 200 OK")) {
+    if (!lookForGivenString(sh.getOut(), "HTTP/1.1 200 OK")) {
       println("Failed to create directory");
-      println("cmd: curl -u : --negotiate -i -X PUT \"${WEBHDFSURL}$testDir"+
+      println("cmd: curl -u : --negotiate -i -X PUT \"${WEBHDFS_URL}$testDir"+
               "?user.name=$USERNAME&op=MKDIRS\"");
       println("output: " + sh.getOut());
       assertTrue("Unable to create directory using webhdfs", false);
     }
 
-    sh.exec("curl -u : --negotiate -i \"${WEBHDFSURL}$testDir"+
+    sh.exec("curl -u : --negotiate -i \"${WEBHDFS_URL}$testDir"+
             "?user.name=$USERNAME&op=LISTSTATUS\"");
     assertTrue("Unable to list directory using webhdfs",
-               scripts.lookForGivenString(sh.getOut(),"HTTP/1.1 200 OK"));
+               lookForGivenString(sh.getOut(),"HTTP/1.1 200 OK"));
   }
 
   /**
@@ -112,47 +109,48 @@ public class TestWebHDFS {
   @Test
   public void testCreateFile() {
     println("testCreateFile");
+    sh.exec("echo testCreateFile > test_create.txt");
     // create a file using op=CREATE
-    sh.exec("curl -u : --negotiate -i -X PUT \"${WEBHDFSURL}$testDir/"+
-            "webtest_1.txt?user.name=$USERNAME&op=CREATE\"");
+    sh.exec("curl -u : --negotiate -i -X PUT \"${WEBHDFS_URL}$testDir/"+
+            "webtest_create.txt?user.name=$USERNAME&op=CREATE\"");
     assertTrue("could not create file using webhdfs", sh.getRet() == 0);
     List out_msgs = sh.getOut();
     Iterator out_iter = out_msgs.iterator();
     Boolean success_1 =false;
-    String Write_url;
-    String OUTMSG = "HTTP/1.1 307 TEMPORARY_REDIRECT";
+    String write_url;
+    String OUTMSG = "HTTP/1.1 307 Temporary Redirect";
     while (out_iter.hasNext()) {
       String next_val = out_iter.next();
       if (next_val.toLowerCase().contains(OUTMSG.toLowerCase())) {
         success_1 =true;
       }
       if (next_val.contains("Location: http://")) {
-        Write_url = next_val.replaceAll("Location: ","");
+        write_url = next_val.replaceAll("Location: ","");
       }
     }
 
     if (!success_1) {
       println("Failed to create url");
-      println("cmd: curl -u : --negotiate -i -X PUT \"${WEBHDFSURL}$testDir/"+
-              "webtest_1.txt?user.name=$USERNAME&op=CREATE\"");
+      println("cmd: curl -u : --negotiate -i -X PUT \"${WEBHDFS_URL}$testDir/"+
+              "test_create.txt?user.name=$USERNAME&op=CREATE\"");
       println("output: " + sh.getOut());
       assertTrue("webhdfs didn't create url for file creation on hdfs",false);
     }
 
-    // now upload data from test_data/test_1.txt to the created file
-    sh.exec("curl -u : --negotiate -i -X PUT -T test_data/test_1.txt "+
-            "\"${Write_url}\"");
+    // now upload data from test_data/test_create.txt to the created file
+    sh.exec("curl -u : --negotiate -i -X PUT -T test_create.txt " +
+            "\"${write_url}\"");
     assertTrue("could not write to the file using webhdfs", sh.getRet() == 0);
     assertTrue("webhdfs did not write to the url on hdfs ",
-                 scripts.lookForGivenString(sh.getOut(), "Created")==true);
+                 lookForGivenString(sh.getOut(), "Created")==true);
 
     // now fetch the data from the file created above and verify
-    sh.exec("hdfs dfs -get $testDir/webtest_1.txt webtest_1.txt");
+    sh.exec("hdfs dfs -get $testDir/webtest_create.txt test_create_get.txt");
     assertTrue("could not copy the file from hdfs to local", sh.getRet() == 0);
-    sh.exec("diff test_data/test_1.txt webtest_1.txt");
+    sh.exec("diff test_create.txt test_create_get.txt");
     assertTrue("file written to hdfs and file copied from hdfs are different",
                sh.getRet() == 0);
-    sh.exec("rm -f webtest_1.txt");
+    sh.exec("rm -f test_create.txt test_create_get.txt");
   }
 
   /**
@@ -167,7 +165,7 @@ public class TestWebHDFS {
     assertTrue("Unable to upload file to hdfs?", sh.getRet() == 0);
 
     // using op=OPEN read the entire content of the file to test_1_2_read.txt
-    sh.exec("curl -u : --negotiate -L \"${WEBHDFSURL}$testDir/tempOpen?"+
+    sh.exec("curl -u : --negotiate -L \"${WEBHDFS_URL}$testDir/tempOpen?"+
             "user.name=$USERNAME&op=OPEN\" > test_1_2_read.txt");
     assertTrue("could not open a file using webhdfs", sh.getRet() == 0);
 
@@ -189,14 +187,14 @@ public class TestWebHDFS {
     // create webtest_1.txt file
     createTempFile("${testDir}", "webtest_1.txt");
     // rename webtest_1.txt to webtest_2.txt
-    sh.exec("curl -u : --negotiate -i -X PUT \"${WEBHDFSURL}$testDir/"+
+    sh.exec("curl -u : --negotiate -i -X PUT \"${WEBHDFS_URL}$testDir/"+
             "webtest_1.txt?user.name=$USERNAME&op=RENAME&destination="+
             "$testDir/webtest_2.txt\"");
     assertTrue("could not rename file using webhdfs", sh.getRet() == 0);
 
     String OUTMSG = "HTTP/1.1 200 OK";
     assertTrue("webhdfs did not rename the file opening on hdfs",
-               scripts.lookForGivenString(sh.getOut(),OUTMSG)==true);
+               lookForGivenString(sh.getOut(),OUTMSG)==true);
 
     // check that webtest_1.txt is not present
     sh.exec("hdfs dfs -ls $testDir");
@@ -207,21 +205,21 @@ public class TestWebHDFS {
     Boolean success_2 =false;
     String file1 = "$testDir/webtest_2.txt";
     String file2 = "$testDir/webtest_1.txt";
-    success_1 = scripts.lookForGivenString(sh.getOut(), file1);
-    success_2 = scripts.lookForGivenString(sh.getOut(), file2);
+    success_1 = lookForGivenString(sh.getOut(), file1);
+    success_2 = lookForGivenString(sh.getOut(), file2);
 
     if (!(success_1== true && success_2== false)) {
       assertTrue("$testDir/webtest_1.txt did not get renamed on hdfs ", false);
     }
 
     // rename folder
-    sh.exec("curl -u : --negotiate -i -X PUT \"${WEBHDFSURL}$testDir?"+
+    sh.exec("curl -u : --negotiate -i -X PUT \"${WEBHDFS_URL}$testDir?"+
             "user.name=$USERNAME&op=RENAME&destination=${testDir}_test\"");
     assertTrue("could not rename folder using webhdfs", sh.getRet() == 0);
 
     OUTMSG = "HTTP/1.1 200 OK";
     assertTrue("webhdfs did not rename the folder on hdfs",
-               scripts.lookForGivenString(sh.getOut(),OUTMSG)==true);
+               lookForGivenString(sh.getOut(),OUTMSG)==true);
 
     sh.exec("hdfs dfs -ls $testDir");
     assertTrue("webhdfs folder still present on hdfs", sh.getRet() == 1);
@@ -231,7 +229,7 @@ public class TestWebHDFS {
 
     OUTMSG = "${testDir}_test";
     assertTrue("webhdfs did not rename the folder on hdfs",
-               scripts.lookForGivenString(sh.getOut(),OUTMSG)==true);
+               lookForGivenString(sh.getOut(),OUTMSG)==true);
   }
 
   /**
@@ -245,22 +243,22 @@ public class TestWebHDFS {
      */
     createTempFile("${testDir}_test", "webtest_2.txt");
 
-    sh.exec("curl -u : --negotiate -i \"${WEBHDFSURL}${testDir}_test/"+
+    sh.exec("curl -u : --negotiate -i \"${WEBHDFS_URL}${testDir}_test/"+
             "webtest_2.txt?user.name=$USERNAME&op=GETFILESTATUS\"");
     assertTrue("could not get file status using webhdfs", sh.getRet() == 0);
 
     assertTrue("getfilestatus is not listing proper values",
-              scripts.lookForGivenString(sh.getOut(),"\"permission\":\"644\"") &&
-              scripts.lookForGivenString(sh.getOut(),"\"type\":\"FILE\""));
+              lookForGivenString(sh.getOut(),"\"permission\":\"644\"") &&
+              lookForGivenString(sh.getOut(),"\"type\":\"FILE\""));
 
-    sh.exec("curl -u : --negotiate -i \"${WEBHDFSURL}${testDir}_test?user.name="+
+    sh.exec("curl -u : --negotiate -i \"${WEBHDFS_URL}${testDir}_test?user.name="+
             "$USERNAME&op=GETFILESTATUS\"");
     assertTrue("could not get file status using webhdfs", sh.getRet() == 0);
 
     assertTrue("getfilestatus is not liisting proper values",
-               scripts.lookForGivenString(sh.getOut(),"\"owner\":\""+USERNAME+"\"") &&
-               scripts.lookForGivenString(sh.getOut(),"\"permission\":\"755\"") &&
-               scripts.lookForGivenString(sh.getOut(),"\"type\":\"DIRECTORY\""));
+               lookForGivenString(sh.getOut(),"\"owner\":\""+USERNAME+"\"") &&
+               lookForGivenString(sh.getOut(),"\"permission\":\"755\"") &&
+               lookForGivenString(sh.getOut(),"\"type\":\"DIRECTORY\""));
   }
 
   /**
@@ -274,25 +272,25 @@ public class TestWebHDFS {
      */
     createTempFile("${testDir}_test", "webtest_2.txt");
 
-    sh.exec("curl -u : --negotiate -i \"${WEBHDFSURL}${testDir}_test/"+
+    sh.exec("curl -u : --negotiate -i \"${WEBHDFS_URL}${testDir}_test/"+
             "webtest_2.txt?user.name=$USERNAME&op=GETCONTENTSUMMARY\"");
     assertTrue("could not get summary for a file using webhdfs",
                sh.getRet() == 0);
 
     assertTrue("getcontentsummary is not listing proper values for a file",
-                scripts.lookForGivenString(sh.getOut(),"\"directoryCount\":0") &&
-                scripts.lookForGivenString(sh.getOut(),"\"fileCount\":1") &&
-                scripts.lookForGivenString(sh.getOut(),"\"length\":0"));
+                lookForGivenString(sh.getOut(),"\"directoryCount\":0") &&
+                lookForGivenString(sh.getOut(),"\"fileCount\":1") &&
+                lookForGivenString(sh.getOut(),"\"length\":0"));
 
-    sh.exec("curl -u : --negotiate -i \"${WEBHDFSURL}${testDir}_test?"+
+    sh.exec("curl -u : --negotiate -i \"${WEBHDFS_URL}${testDir}_test?"+
             "user.name=$USERNAME&op=GETCONTENTSUMMARY\"");
     assertTrue("could not get summary for a folder using webhdfs",
                sh.getRet() == 0);
 
     assertTrue("getcontentsummary is not listing proper values for a folder",
-                scripts.lookForGivenString(sh.getOut(),"\"directoryCount\":1") &&
-                scripts.lookForGivenString(sh.getOut(),"\"fileCount\":1") &&
-                scripts.lookForGivenString(sh.getOut(),"\"length\":0"));
+                lookForGivenString(sh.getOut(),"\"directoryCount\":1") &&
+                lookForGivenString(sh.getOut(),"\"fileCount\":1") &&
+                lookForGivenString(sh.getOut(),"\"length\":0"));
   }
 
   /**
@@ -306,27 +304,27 @@ public class TestWebHDFS {
      */
     createTempFile("${testDir}_test", "webtest_2.txt");
 
-    sh.exec("curl -L -u : --negotiate -i \"${WEBHDFSURL}${testDir}_test/"+
+    sh.exec("curl -L -u : --negotiate -i \"${WEBHDFS_URL}${testDir}_test/"+
             "webtest_2.txt?user.name=$USERNAME&op=GETFILECHECKSUM\"");
     assertTrue("could not get checksum for a file using webhdfs",
                sh.getRet() == 0);
 
     Boolean success_1 =false;
-    success_1 = scripts.lookForGivenString(sh.getOut(),"\"FileChecksum\":") &&
-                scripts.lookForGivenString(sh.getOut(),"\"length\":28");
+    success_1 = lookForGivenString(sh.getOut(),"\"FileChecksum\":") &&
+                lookForGivenString(sh.getOut(),"\"length\":28");
     assertTrue("getchecksum failed for file", success_1);
 
     // now delete the created temp file
     sh.exec("hdfs dfs -rm -r ${testDir}_test/webtest_2.txt")
     assertTrue("Failed to clean test file?", sh.getRet() == 0);
 
-    sh.exec("curl -L -u : --negotiate -i \"${WEBHDFSURL}${testDir}_test?"+
+    sh.exec("curl -L -u : --negotiate -i \"${WEBHDFS_URL}${testDir}_test?"+
             "user.name=$USERNAME&op=GETFILECHECKSUM\"");
     assertTrue("could not get checksum for a folder using webhdfs",
                sh.getRet() == 0);
 
     assertTrue("getchecksum failed for folder?",
-                scripts.lookForGivenString(sh.getOut(),
+                lookForGivenString(sh.getOut(),
                 "\"message\":\"Path is not a file") == true);
   }
 
@@ -339,7 +337,7 @@ public class TestWebHDFS {
 
     createTempFile("${testDir}_test", "webtest_2.txt");
 
-    sh.exec("curl -u : --negotiate -i -X PUT \"${WEBHDFSURL}${testDir}_test/"+
+    sh.exec("curl -u : --negotiate -i -X PUT \"${WEBHDFS_URL}${testDir}_test/"+
             "webtest_2.txt?user.name=$USERNAME&op=SETREPLICATION&"+
             "replication=2\"");
     assertTrue("could not set replication for a file using webhdfs",
@@ -347,9 +345,9 @@ public class TestWebHDFS {
 
     String OUTMSG = "HTTP/1.1 200 OK";
     assertTrue("expected HTTP status of 200 not received",
-               scripts.lookForGivenString(sh.getOut(), OUTMSG) == true);
+               lookForGivenString(sh.getOut(), OUTMSG) == true);
 
-    sh.exec("curl -u : --negotiate -i \"${WEBHDFSURL}${testDir}_test/"+
+    sh.exec("curl -u : --negotiate -i \"${WEBHDFS_URL}${testDir}_test/"+
             "webtest_2.txt?user.name=$USERNAME&op=LISTSTATUS\"");
     assertTrue("could not list status for a file using webhdfs",
                sh.getRet() == 0);
@@ -357,29 +355,29 @@ public class TestWebHDFS {
     String msg1 = "\"owner\":\""+USERNAME+"\"";
     String msg2 = "\"permission\":\"644\"";
     String msg3 = "\"replication\":2";
-    boolean success_1 = scripts.lookForGivenString(sh.getOut(), msg1) &&
-                        scripts.lookForGivenString(sh.getOut(), msg2) &&
-                        scripts.lookForGivenString(sh.getOut(), msg3);
+    boolean success_1 = lookForGivenString(sh.getOut(), msg1) &&
+                        lookForGivenString(sh.getOut(), msg2) &&
+                        lookForGivenString(sh.getOut(), msg3);
     assertTrue("replication factor not set properly",success_1);
 
     // folder
-    sh.exec("curl -u : --negotiate -i -X PUT \"${WEBHDFSURL}${testDir}_test?"+
+    sh.exec("curl -u : --negotiate -i -X PUT \"${WEBHDFS_URL}${testDir}_test?"+
             "user.name=$USERNAME&op=SETREPLICATION&replication=2\"");
     assertTrue("could not set replication for a folder using webhdfs",
                sh.getRet() == 0);
 
     OUTMSG = "HTTP/1.1 200 OK";
     assertTrue("expected HTTP status of 200 not received for directory",
-               scripts.lookForGivenString(sh.getOut(), OUTMSG) == true);
+               lookForGivenString(sh.getOut(), OUTMSG) == true);
 
-    sh.exec("curl -u : --negotiate -i \"${WEBHDFSURL}{$testDir}_test?"+
+    sh.exec("curl -u : --negotiate -i \"${WEBHDFS_URL}{$testDir}_test?"+
             "user.name=$USERNAME&op=LISTSTATUS\"");
     assertTrue("could not list status for a directory using webhdfs",
                sh.getRet() == 0);
 
-    success_1 = scripts.lookForGivenString(sh.getOut(), msg1) &&
-                scripts.lookForGivenString(sh.getOut(), msg2) &&
-                scripts.lookForGivenString(sh.getOut(), msg3);
+    success_1 = lookForGivenString(sh.getOut(), msg1) &&
+                lookForGivenString(sh.getOut(), msg2) &&
+                lookForGivenString(sh.getOut(), msg3);
     assertTrue("replication factor not set proeprly for a directory",success_1);
   }
 
@@ -394,41 +392,41 @@ public class TestWebHDFS {
      */
     createTempFile("${testDir}_test", "webtest_2.txt");
 
-    sh.exec("curl -u : --negotiate -i -X PUT \"${WEBHDFSURL}${testDir}_test/"+
+    sh.exec("curl -u : --negotiate -i -X PUT \"${WEBHDFS_URL}${testDir}_test/"+
             "webtest_2.txt?user.name=$USERNAME&op=SETPERMISSION&"+
             "permission=600\"");
     assertTrue("could not set permissions for a file using webhdfs",
                sh.getRet() == 0);
 
     assertTrue("expected HTTP status of 200 not received",
-               scripts.lookForGivenString(sh.getOut(),"HTTP/1.1 200 OK")==true);
+               lookForGivenString(sh.getOut(),"HTTP/1.1 200 OK")==true);
 
-    sh.exec("curl -u : --negotiate -i \"${WEBHDFSURL}${testDir}_test/"+
+    sh.exec("curl -u : --negotiate -i \"${WEBHDFS_URL}${testDir}_test/"+
             "webtest_2.txt?user.name=$USERNAME&op=LISTSTATUS\"");
     assertTrue("could not list status for a file using webhdfs",
                sh.getRet() == 0);
 
     assertTrue("permissions not set properly",
-                scripts.lookForGivenString(sh.getOut(), "\"owner\":\""+USERNAME+"\"") &&
-                scripts.lookForGivenString(sh.getOut(), "\"permission\":\"600\""));
+                lookForGivenString(sh.getOut(), "\"owner\":\""+USERNAME+"\"") &&
+                lookForGivenString(sh.getOut(), "\"permission\":\"600\""));
 
     // test for folder
-    sh.exec("curl -u : --negotiate -i -X PUT \"${WEBHDFSURL}${testDir}_test?"+
+    sh.exec("curl -u : --negotiate -i -X PUT \"${WEBHDFS_URL}${testDir}_test?"+
             "user.name=$USERNAME&op=SETPERMISSION&replication=2\"");
     assertTrue("could not set permissions for a folder using webhdfs",
                sh.getRet() == 0);
 
     assertTrue("expected HTTP status of 200 not recieved  for directory",
-               scripts.lookForGivenString(sh.getOut(),"HTTP/1.1 200 OK")==true);
+               lookForGivenString(sh.getOut(),"HTTP/1.1 200 OK")==true);
 
-    sh.exec("curl -u : --negotiate -i \"${WEBHDFSURL}${testDir}_test?"+
+    sh.exec("curl -u : --negotiate -i \"${WEBHDFS_URL}${testDir}_test?"+
             "user.name=$USERNAME&op=LISTSTATUS\"");
     assertTrue("could not list status for a directory using webhdfs",
                sh.getRet() == 0);
 
-    boolean success_1 = scripts.lookForGivenString(sh.getOut(),
+    boolean success_1 = lookForGivenString(sh.getOut(),
                         "\"owner\":\""+USERNAME+"\"") &&
-                        scripts.lookForGivenString(sh.getOut(),
+                        lookForGivenString(sh.getOut(),
                         "\"permission\":\"600\"");
     assertTrue("permissions not set properly for a directory", success_1);
   }
@@ -444,7 +442,7 @@ public class TestWebHDFS {
      */
     createTempFile("${testDir}_test", "webtest_2.txt");
 
-    sh.exec("curl -u : --negotiate -i -X PUT \"${WEBHDFSURL}${testDir}_test/"+
+    sh.exec("curl -u : --negotiate -i -X PUT \"${WEBHDFS_URL}${testDir}_test/"+
             "webtest_2.txt?user.name=$USERNAME&op=SETTIMES&"+
             "modificationtime=1319575753923&accesstime=1369575753923\"");
     assertTrue("could not set times for a file using webhdfs",
@@ -452,66 +450,66 @@ public class TestWebHDFS {
 
     Boolean success_1 =false;
     assertTrue("expected HTTP status of 200 not received",
-               scripts.lookForGivenString(sh.getOut(),"HTTP/1.1 200 OK")==true);
+               lookForGivenString(sh.getOut(),"HTTP/1.1 200 OK")==true);
 
-    sh.exec("curl -u : --negotiate -i \"${WEBHDFSURL}${testDir}_test/"+
+    sh.exec("curl -u : --negotiate -i \"${WEBHDFS_URL}${testDir}_test/"+
             "webtest_2.txt?user.name=$USERNAME&op=LISTSTATUS\"");
     assertTrue("could not list status for a file using webhdfs",
                sh.getRet() == 0);
 
     assertTrue("times not set properly",
-               scripts.lookForGivenString(sh.getOut(), "\"owner\":\""+USERNAME+"\"") &&
-               scripts.lookForGivenString(sh.getOut(), "\"accessTime\":1369575753923") &&
-               scripts.lookForGivenString(sh.getOut(), "\"modificationTime\":1319575753923"));
+               lookForGivenString(sh.getOut(), "\"owner\":\""+USERNAME+"\"") &&
+               lookForGivenString(sh.getOut(), "\"accessTime\":1369575753923") &&
+               lookForGivenString(sh.getOut(), "\"modificationTime\":1319575753923"));
 
     // folder
-    sh.exec("curl -u : --negotiate -i -X PUT \"${WEBHDFSURL}${testDir}_test?"+
+    sh.exec("curl -u : --negotiate -i -X PUT \"${WEBHDFS_URL}${testDir}_test?"+
             "user.name=$USERNAME&op=SETTIMES&modificationtime=1319575753923&"+
             "accesstime=1369575753923\"");
     assertTrue("could not set times for a folder using webhdfs", sh.getRet() == 0);
 
     assertTrue("expected HTTP status of 200 not received for directory",
-               scripts.lookForGivenString(sh.getOut(),"HTTP/1.1 200 OK")==true);
+               lookForGivenString(sh.getOut(),"HTTP/1.1 200 OK")==true);
 
-    sh.exec("curl -u : --negotiate -i \"${WEBHDFSURL}${testDir}_test?"+
+    sh.exec("curl -u : --negotiate -i \"${WEBHDFS_URL}${testDir}_test?"+
             "user.name=$USERNAME&op=LISTSTATUS\"");
     assertTrue("could not list status for a directory using webhdfs",
                sh.getRet() == 0);
 
     assertTrue("times not set properly for a directory",
-              scripts.lookForGivenString(sh.getOut(), "\"owner\":\""+USERNAME+"\"") &&
-              scripts.lookForGivenString(sh.getOut(), "\"accessTime\":1369575753923") &&
-              scripts.lookForGivenString(sh.getOut(), "\"modificationTime\":1319575753923"));
+              lookForGivenString(sh.getOut(), "\"owner\":\""+USERNAME+"\"") &&
+              lookForGivenString(sh.getOut(), "\"accessTime\":1369575753923") &&
+              lookForGivenString(sh.getOut(), "\"modificationTime\":1319575753923"));
   }
 
   /**
-   * testDelte() verifies the functionality of op=DELETE
+   * testDelete() verifies the functionality of op=DELETE
    */
   @Test
-  public void testDelte() {
+  public void testDelete() {
     println("testDelete");
     /*
      * First upload a file to hdfs
      */
     createTempFile("${testDir}_test", "webtest_2.txt");
-    sh.exec("curl -u : --negotiate -i -X DELETE \"${WEBHDFSURL}${testDir}_test/"+
+    sh.exec("curl -u : --negotiate -i -X DELETE \"${WEBHDFS_URL}${testDir}_test/"+
             "webtest_2.txt?user.name=$USERNAME&op=DELETE\"");
     assertTrue("could not delete a file using webhdfs", sh.getRet() == 0);
 
     Boolean success_1 =false;
     assertTrue("expected HTTP status of 200 not received",
-               scripts.lookForGivenString(sh.getOut(),"HTTP/1.1 200 OK")==true);
+               lookForGivenString(sh.getOut(),"HTTP/1.1 200 OK")==true);
 
     sh.exec("hdfs dfs -ls ${testDir}_test/webtest_2.txt");
     assertTrue("webtest_2.txt should not be present", sh.getRet() == 1);
 
     // folder
-    sh.exec("curl -u : --negotiate -i -X DELETE \"${WEBHDFSURL}${testDir}_test?"+
+    sh.exec("curl -u : --negotiate -i -X DELETE \"${WEBHDFS_URL}${testDir}_test?"+
             "user.name=$USERNAME&op=DELETE\"");
     assertTrue("could not delete a directory using webhdfs", sh.getRet() == 0);
 
     assertTrue("expected HTTP status of 200 not recieved for directory",
-                scripts.lookForGivenString(sh.getOut(),"HTTP/1.1 200 OK"));
+                lookForGivenString(sh.getOut(),"HTTP/1.1 200 OK"));
 
     sh.exec("hdfs dfs -ls ${testDir}_test");
     assertTrue("webhdfs_tests directory still present on hdfs",
@@ -541,5 +539,20 @@ public class TestWebHDFS {
     sh.exec("hdfs dfs -touchz $parentDir/$fileName");
     assertTrue("Failed to create test file $parentDir/$fileName?",
                sh.getRet() == 0);
+  }
+
+  /**
+   * lookForGivenString check the given string is present in the list data
+   */
+  private boolean lookForGivenString(List<String> data,
+                                     String searchString) {
+    boolean result = false;
+    for( String output_String : data) {
+      if(output_String.toLowerCase().contains(searchString.toLowerCase())) {
+        result = true;
+        break;
+      }
+    }
+    return result;
   }
 }

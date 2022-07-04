@@ -26,6 +26,7 @@ def tests_to_include() {
       "TestTextSnappy.groovy",
       "TestDFSAdmin.groovy",
       "TestHDFSBalancer.groovy",
+      "TestWebHDFS.groovy",
       /*
       "TestDFSCLI.java",        // Can't run until we learn how to change
                                 // effective user in the runtime
