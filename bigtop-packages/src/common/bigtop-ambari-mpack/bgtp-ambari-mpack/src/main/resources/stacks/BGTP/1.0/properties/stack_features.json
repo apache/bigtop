@@ -47,6 +47,11 @@
       "name": "hive_metastore_site_support",
       "description": "Hive Metastore site support",
       "min_version": "2.5.0.0"
+    },
+    {
+      "name": "kafka_kerberos",
+      "description": "Kafka Kerberos support (AMBARI-10984)",
+      "min_version": "1.0.0.0"
     }
   ]
 }
