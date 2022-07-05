@@ -1,0 +1,22 @@
+diff --git a/plugin-solr/src/main/java/org/apache/ranger/authorization/solr/authorizer/RangerSolrAuthorizer.java b/plugin-solr/src/main/java/org/apache/ranger/authorization/solr/authorizer/RangerSolrAuthorizer.java
+index 200d03712..0147df423 100644
+--- a/plugin-solr/src/main/java/org/apache/ranger/authorization/solr/authorizer/RangerSolrAuthorizer.java
++++ b/plugin-solr/src/main/java/org/apache/ranger/authorization/solr/authorizer/RangerSolrAuthorizer.java
+@@ -428,7 +428,7 @@ public void prepare(ResponseBuilder rb) throws IOException {
+ 		if (httpServletRequest == null) {
+ 			SolrCore solrCore = rb.req.getCore();
+ 			StringBuilder builder = new StringBuilder("Unable to locate HttpServletRequest");
+-			if (solrCore != null && !solrCore.getSolrConfig().getBool("requestDispatcher/requestParsers/@addHttpRequestToContext", true)) {
++			if (solrCore != null && !solrCore.getSolrConfig().get("requestDispatcher/requestParsers/@addHttpRequestToContext").boolVal(true)) {
+ 				builder.append(", ensure requestDispatcher/requestParsers/@addHttpRequestToContext is set to true in solrconfig.xml");
+ 			}
+ 			throw new SolrException(SolrException.ErrorCode.UNAUTHORIZED, builder.toString());
+@@ -732,7 +732,7 @@ private final String getUserName(SolrQueryRequest req) {
+ 		HttpServletRequest httpServletRequest = (HttpServletRequest) req.getContext().get("httpRequest");
+ 		if (httpServletRequest == null) {
+ 			StringBuilder builder = new StringBuilder("Unable to locate HttpServletRequest");
+-			if (solrCore != null && !solrCore.getSolrConfig().getBool("requestDispatcher/requestParsers/@addHttpRequestToContext", true)) {
++			if (solrCore != null && !solrCore.getSolrConfig().get("requestDispatcher/requestParsers/@addHttpRequestToContext").boolVal(true)) {
+ 				builder.append(", ensure requestDispatcher/requestParsers/@addHttpRequestToContext is set to true in solrconfig.xml");
+ 			}
+ 			throw new SolrException(SolrException.ErrorCode.UNAUTHORIZED, builder.toString());

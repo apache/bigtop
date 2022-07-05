@@ -115,7 +115,7 @@ bigtop {
     'bigtop-jsvc':['hadoop'],
     zookeeper:['hadoop', 'hbase', 'kafka'],
     hadoop:['hbase', 'hive', 'tez', 'sqoop',
-      'oozie', 'solr', 'spark',
+      'oozie', 'solr', 'spark', 'ranger',
       'phoenix', 'alluxio', 'ycsb', 'zeppelin'
     ],
     hbase:['phoenix', 'ycsb', 'hive'],
@@ -381,6 +381,15 @@ bigtop {
       tarball { destination = "$name-${version.base}.tar.gz"
                 source      = "v${version.base}.zip" }
       url     { site = "https://github.com/elastic/kibana/archive"
+                archive = site }
+    }
+    'ranger' {
+      name    = 'ranger'
+      relNotes = 'Apache Ranger'
+      version { base = '2.2.0'; pkg = base; release = 1 }
+      tarball { destination = "release-$name-${version.base}.tar.gz"
+                source      = destination }
+      url     { site = "https://github.com/apache/ranger/archive/refs/tags"
                 archive = site }
     }
   }

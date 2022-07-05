@@ -1,0 +1,193 @@
+From b63924c717b1a394d693814d02a282a0aaa7dc97 Mon Sep 17 00:00:00 2001
+From: Viktor Somogyi-Vass <viktorsomogyi@gmail.com>
+Date: Mon, 20 Sep 2021 17:23:29 +0200
+Subject: [PATCH] RANGER-3459: Upgrade Kafka dependency to 2.8
+
+Co-authored-by: Andras Katona <akatona@cloudera.com>
+---
+ .../kafka/authorizer/KafkaRangerAuthorizerGSSTest.java    | 8 +++++---
+ .../authorizer/KafkaRangerAuthorizerSASLSSLTest.java      | 8 +++++---
+ .../kafka/authorizer/KafkaRangerAuthorizerTest.java       | 8 +++++---
+ .../kafka/authorizer/KafkaRangerTopicCreationTest.java    | 8 +++++---
+ pom.xml                                                   | 2 +-
+ 5 files changed, 21 insertions(+), 13 deletions(-)
+
+diff --git a/plugin-kafka/src/test/java/org/apache/ranger/authorization/kafka/authorizer/KafkaRangerAuthorizerGSSTest.java b/plugin-kafka/src/test/java/org/apache/ranger/authorization/kafka/authorizer/KafkaRangerAuthorizerGSSTest.java
+index fe600b1eaf..e82de18495 100644
+--- a/plugin-kafka/src/test/java/org/apache/ranger/authorization/kafka/authorizer/KafkaRangerAuthorizerGSSTest.java
++++ b/plugin-kafka/src/test/java/org/apache/ranger/authorization/kafka/authorizer/KafkaRangerAuthorizerGSSTest.java
+@@ -30,6 +30,7 @@
+ import java.util.Properties;
+ import java.util.concurrent.Future;
+ 
++import kafka.server.KafkaServer;
+ import org.apache.curator.test.InstanceSpec;
+ import org.apache.curator.test.TestingServer;
+ import org.apache.hadoop.security.UserGroupInformation;
+@@ -43,6 +44,7 @@
+ import org.apache.kafka.clients.producer.RecordMetadata;
+ import org.apache.kafka.common.PartitionInfo;
+ import org.apache.kafka.common.config.SaslConfigs;
++import org.apache.kafka.common.utils.Time;
+ import org.apache.kerby.kerberos.kerb.server.SimpleKdcServer;
+ import org.junit.Assert;
+ import org.junit.Test;
+@@ -50,7 +52,7 @@
+ import org.slf4j.LoggerFactory;
+ 
+ import kafka.server.KafkaConfig;
+-import kafka.server.KafkaServerStartable;
++import scala.Some;
+ 
+ /**
+  * A simple test that starts a Kafka broker, creates "test" and "dev" topics,
+@@ -69,7 +71,7 @@
+ public class KafkaRangerAuthorizerGSSTest {
+     private final static Logger LOG = LoggerFactory.getLogger(KafkaRangerAuthorizerGSSTest.class);
+ 
+-    private static KafkaServerStartable kafkaServer;
++    private static KafkaServer kafkaServer;
+     private static TestingServer zkServer;
+     private static int port;
+     private static Path tempDir;
+@@ -140,7 +142,7 @@ public static void setup() throws Exception {
+         UserGroupInformation.createUserForTesting("kafka/localhost@kafka.apache.org", new String[] {"IT"});
+ 
+         KafkaConfig config = new KafkaConfig(props);
+-        kafkaServer = new KafkaServerStartable(config);
++        kafkaServer = new KafkaServer(config, Time.SYSTEM, new Some<String>("KafkaRangerAuthorizerGSSTest"), false);
+         kafkaServer.startup();
+ 
+         // Create some topics
+diff --git a/plugin-kafka/src/test/java/org/apache/ranger/authorization/kafka/authorizer/KafkaRangerAuthorizerSASLSSLTest.java b/plugin-kafka/src/test/java/org/apache/ranger/authorization/kafka/authorizer/KafkaRangerAuthorizerSASLSSLTest.java
+index 6f4538549b..b25d1fdd10 100644
+--- a/plugin-kafka/src/test/java/org/apache/ranger/authorization/kafka/authorizer/KafkaRangerAuthorizerSASLSSLTest.java
++++ b/plugin-kafka/src/test/java/org/apache/ranger/authorization/kafka/authorizer/KafkaRangerAuthorizerSASLSSLTest.java
+@@ -27,6 +27,7 @@
+ import java.util.Properties;
+ import java.util.concurrent.Future;
+ 
++import kafka.server.KafkaServer;
+ import org.apache.commons.io.FileUtils;
+ import org.apache.curator.test.TestingServer;
+ import org.apache.hadoop.security.UserGroupInformation;
+@@ -40,11 +41,12 @@
+ import org.apache.kafka.clients.producer.RecordMetadata;
+ import org.apache.kafka.common.config.SaslConfigs;
+ import org.apache.kafka.common.config.SslConfigs;
++import org.apache.kafka.common.utils.Time;
+ import org.junit.Assert;
+ import org.junit.Test;
+ 
+ import kafka.server.KafkaConfig;
+-import kafka.server.KafkaServerStartable;
++import scala.Some;
+ 
+ /**
+  * A simple test that starts a Kafka broker, creates "test" and "dev" topics, sends a message to them and consumes it. We also plug in a 
+@@ -63,7 +65,7 @@
+ @org.junit.Ignore("Causing JVM to abort on some platforms")
+ public class KafkaRangerAuthorizerSASLSSLTest {
+     
+-    private static KafkaServerStartable kafkaServer;
++    private static KafkaServer kafkaServer;
+     private static TestingServer zkServer;
+     private static int port;
+     private static String serviceKeystorePath;
+@@ -139,7 +141,7 @@ public static void setup() throws Exception {
+         UserGroupInformation.createUserForTesting("alice", new String[] {"IT"});
+         
+         KafkaConfig config = new KafkaConfig(props);
+-        kafkaServer = new KafkaServerStartable(config);
++        kafkaServer = new KafkaServer(config, Time.SYSTEM, new Some<String>("KafkaRangerAuthorizerSASLSSLTest"), false);
+         kafkaServer.startup();
+ 
+         // Create some topics
+diff --git a/plugin-kafka/src/test/java/org/apache/ranger/authorization/kafka/authorizer/KafkaRangerAuthorizerTest.java b/plugin-kafka/src/test/java/org/apache/ranger/authorization/kafka/authorizer/KafkaRangerAuthorizerTest.java
+index 113ac36869..d24ee1e570 100644
+--- a/plugin-kafka/src/test/java/org/apache/ranger/authorization/kafka/authorizer/KafkaRangerAuthorizerTest.java
++++ b/plugin-kafka/src/test/java/org/apache/ranger/authorization/kafka/authorizer/KafkaRangerAuthorizerTest.java
+@@ -29,6 +29,7 @@
+ import java.util.Properties;
+ import java.util.concurrent.Future;
+ 
++import kafka.server.KafkaServer;
+ import org.apache.commons.io.FileUtils;
+ import org.apache.curator.test.TestingServer;
+ import org.apache.hadoop.security.UserGroupInformation;
+@@ -41,11 +42,12 @@
+ import org.apache.kafka.clients.producer.ProducerRecord;
+ import org.apache.kafka.clients.producer.RecordMetadata;
+ import org.apache.kafka.common.config.SslConfigs;
++import org.apache.kafka.common.utils.Time;
+ import org.junit.Assert;
+ import org.junit.Test;
+ 
+ import kafka.server.KafkaConfig;
+-import kafka.server.KafkaServerStartable;
++import scala.Some;
+ 
+ /**
+  * A simple test that starts a Kafka broker, creates "test" and "dev" topics, sends a message to them and consumes it. We also plug in a 
+@@ -65,7 +67,7 @@
+  */
+ public class KafkaRangerAuthorizerTest {
+     
+-    private static KafkaServerStartable kafkaServer;
++    private static KafkaServer kafkaServer;
+     private static TestingServer zkServer;
+     private static int port;
+     private static String serviceKeystorePath;
+@@ -133,7 +135,7 @@ public static void setup() throws Exception {
+         UserGroupInformation.createUserForTesting(serviceDN, new String[] {"IT"});
+         
+         KafkaConfig config = new KafkaConfig(props);
+-        kafkaServer = new KafkaServerStartable(config);
++        kafkaServer = new KafkaServer(config, Time.SYSTEM, new Some<String>("KafkaRangerAuthorizerTest"), false);
+         kafkaServer.startup();
+ 
+         // Create some topics
+diff --git a/plugin-kafka/src/test/java/org/apache/ranger/authorization/kafka/authorizer/KafkaRangerTopicCreationTest.java b/plugin-kafka/src/test/java/org/apache/ranger/authorization/kafka/authorizer/KafkaRangerTopicCreationTest.java
+index a12817ebab..201064970b 100644
+--- a/plugin-kafka/src/test/java/org/apache/ranger/authorization/kafka/authorizer/KafkaRangerTopicCreationTest.java
++++ b/plugin-kafka/src/test/java/org/apache/ranger/authorization/kafka/authorizer/KafkaRangerTopicCreationTest.java
+@@ -18,7 +18,7 @@
+ package org.apache.ranger.authorization.kafka.authorizer;
+ 
+ import kafka.server.KafkaConfig;
+-import kafka.server.KafkaServerStartable;
++import kafka.server.KafkaServer;
+ import org.apache.curator.test.InstanceSpec;
+ import org.apache.curator.test.TestingServer;
+ import org.apache.hadoop.security.UserGroupInformation;
+@@ -29,10 +29,12 @@
+ import org.apache.kafka.clients.admin.CreateTopicsResult;
+ import org.apache.kafka.clients.admin.NewTopic;
+ import org.apache.kafka.common.KafkaFuture;
++import org.apache.kafka.common.utils.Time;
+ import org.apache.kerby.kerberos.kerb.server.SimpleKdcServer;
+ import org.junit.Test;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
++import scala.Some;
+ 
+ import java.io.File;
+ import java.net.ServerSocket;
+@@ -49,7 +51,7 @@
+ public class KafkaRangerTopicCreationTest {
+     private final static Logger LOG = LoggerFactory.getLogger(KafkaRangerTopicCreationTest.class);
+ 
+-    private static KafkaServerStartable kafkaServer;
++    private static KafkaServer kafkaServer;
+     private static TestingServer zkServer;
+     private static int port;
+     private static Path tempDir;
+@@ -121,7 +123,7 @@ public static void setup() throws Exception {
+         UserGroupInformation.createUserForTesting("kafka/localhost@kafka.apache.org", new String[] {"IT"});
+ 
+         KafkaConfig config = new KafkaConfig(props);
+-        kafkaServer = new KafkaServerStartable(config);
++        kafkaServer = new KafkaServer(config, Time.SYSTEM, new Some<String>("KafkaRangerTopicCreationTest"), false);
+         kafkaServer.startup();
+    }
+ 
