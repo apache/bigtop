@@ -114,10 +114,11 @@ class KafkaBroker(Script):
         sudo.kill(pid, signal.SIGTERM)
       except OSError, e:
         Logger.info("Kafka Broker is not running, delete pid file: {0}".format(params.kafka_pid_file))
+        File(params.kafka_pid_file, action = "delete")
         return
         
       time.sleep(1)
-      
+
       try:
         check_process_status(params.kafka_pid_file)
       except ComponentIsNotRunning, e:
