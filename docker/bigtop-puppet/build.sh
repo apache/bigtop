@@ -37,9 +37,9 @@ else
 ARCH=""
 fi
 
-ENV_PATH=""
-if [ ${OS} = "centos" -a ${VERSION} -ge 8 ]; then
-  ENV_PATH='ENV PATH /opt/puppetlabs/bin:$PATH'
+ENV_PATH="ENV PATH /opt/puppetlabs/bin:$PATH"
+if [ ${OS} = "debian" -a ${VERSION} -ge 10 ] || [ ${OS} = "ubuntu" ]; then
+  ENV_PATH=''
 fi
 
 cp ../../bigtop_toolchain/bin/puppetize.sh .

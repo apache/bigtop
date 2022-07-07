@@ -230,11 +230,11 @@ destroy() {
 }
 
 bigtop-puppet() {
-    if docker exec $1 bash -c "puppet --version" | grep ^3 >/dev/null ; then
+    if docker exec $1 bash -c "/opt/puppetlabs/bin/puppet --version" | grep ^3 >/dev/null ; then
       future="--parser future"
     fi
-    # BIGTOP-3401 Modify Puppet modulepath for puppetlabs-4.12
-    docker exec $1 bash -c "puppet apply --detailed-exitcodes $future --hiera_config=/etc/puppet/hiera.yaml --modulepath=/bigtop-home/bigtop-deploy/puppet/modules:/etc/puppet/modules:/usr/share/puppet/modules:/etc/puppetlabs/code/modules:/etc/puppet/code/modules /bigtop-home/bigtop-deploy/puppet/manifests"
+    # BIGTOP-3691. Bump Puppet to Puppet7
+    docker exec $1 bash -c "/opt/puppetlabs/bin/puppet apply --detailed-exitcodes $future --hiera_config=/etc/puppetlabs/code/environments/production/hiera.yaml --modulepath=/bigtop-home/bigtop-deploy/puppet/modules:/etc/puppetlabs/code/environments/production/modules:/etc/puppetlabs/code/modules /bigtop-home/bigtop-deploy/puppet/manifests"
 }
 
 get-yaml-config() {

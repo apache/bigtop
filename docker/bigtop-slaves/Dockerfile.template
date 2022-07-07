@@ -19,7 +19,7 @@ MAINTAINER dev@bigtop.apache.org
 
 COPY bigtop_toolchain PUPPET_MODULES
 
-RUN if [ -f ~/.bash_profile ]; then . ~/.bash_profile; fi && \
+RUN if [ -f /etc/profile.d/puppet-agent.sh ]; then . /etc/profile.d/puppet-agent.sh; fi && \
     UPDATE_SOURCE && \
     puppet apply -e "include bigtop_toolchain::installer" || if [ $? -ne 2 ]; then exit 1; fi
 COPY . /tmp/bigtop

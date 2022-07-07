@@ -22,7 +22,7 @@ services:
         mem_limit: ${MEM_LIMIT}
         volumes:
         - ../../:/bigtop-home
-        - ./config/hiera.yaml:/etc/puppet/hiera.yaml
-        - ./config/hieradata:/etc/puppet/hieradata
+        - ./config/hiera.yaml:/etc/puppetlabs/code/environments/production/hiera.yaml
+        - ./config/hieradata:/etc/puppetlabs/code/environments/production/hieradata
         - ./config/hosts:/etc/hosts
         - /sys/fs/cgroup:/sys/fs/cgroup:ro

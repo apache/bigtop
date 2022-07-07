@@ -1,8 +1,21 @@
 ---
-:yaml:
-  :datadir: /etc/puppet/hieradata
-:hierarchy:
-  - site
-  - "bigtop/%{hadoop_hiera_ha_path}"
-  - bigtop/cluster
-  - bigtop/repo
+version: 5
+defaults:
+  datadir: /etc/puppetlabs/code/environments/production/hieradata
+  data_hash: yaml_data
+hierarchy:
+# the site path can be dynamic. here is an example
+# - name: "my node site path"
+#   path: "%{::fqdn}_site.yaml"
+# and in the hieradata dir, there should be such as
+#   bigtopc01.vm_site.yaml
+#   bigtopc02.vm_site.yaml
+
+  - name: "site hiera data path"
+    path: "site.yaml"
+#  - name: "hadoop hiera ha path"
+#    path: "bigtop/%{hadoop_hiera_ha_path}.yaml"
+  - name: "bigtop cluster hiera data path"
+    path: "bigtop/cluster.yaml"
+  - name: "bigtop repo hiera data path"
+    path: "bigtop/repo.yaml"
