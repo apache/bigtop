@@ -23,14 +23,19 @@ class ambari {
   }
 
   class server {
+
+    package { 'bigtop-ambari-mpack':
+      ensure => latest,
+    }
+
     package { "ambari-server":
       ensure => latest,
     }
 
     exec {
         "mpack install":
-           command => "/bin/bash -c 'echo yes | /usr/sbin/ambari-server install-mpack --purge --verbose --mpack=/var/lib/ambari-server/resources/odpi-ambari-mpack-2.7.5.0.0.tar.gz'",
-           require => [ Package["ambari-server"] ]
+           command => "/bin/bash -c 'echo yes | /usr/sbin/ambari-server install-mpack --purge --verbose --mpack=/usr/lib/bigtop-ambari-mpack/bgtp-ambari-mpack-1.0.0.0-SNAPSHOT-bgtp-ambari-mpack.tar.gz'",
+           require => [ Package["ambari-server"], Package['bigtop-ambari-mpack'] ]
     }
 
     exec {
