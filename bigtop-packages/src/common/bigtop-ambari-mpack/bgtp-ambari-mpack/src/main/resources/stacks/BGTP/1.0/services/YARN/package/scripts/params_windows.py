@@ -55,7 +55,7 @@ hs_port = config['configurations']['mapred-site']['mapreduce.jobhistory.webapp.a
 hs_webui_address = format("{hs_host}:{hs_port}")
 
 hadoop_mapred2_jar_location = os.path.join(os.environ["HADOOP_COMMON_HOME"], "share", "hadoop", "mapreduce")
-hadoopMapredExamplesJarName = "hadoop-mapreduce-examples-2.*.jar"
+hadoopMapredExamplesJarName = "hadoop-mapreduce-examples-3.*.jar"
 
 exclude_hosts = default("/clusterHostInfo/decom_nm_hosts", [])
 exclude_file_path = default("/configurations/yarn-site/yarn.resourcemanager.nodes.exclude-path","/etc/hadoop/conf/yarn.exclude")

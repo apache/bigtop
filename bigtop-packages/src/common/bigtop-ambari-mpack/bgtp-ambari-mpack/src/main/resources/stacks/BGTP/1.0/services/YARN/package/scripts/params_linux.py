@@ -127,8 +127,11 @@ def get_spark_version(service_name, component_name, yarn_version):
 # these are used to render the classpath for picking up Spark classes
 # in the event that spark is not installed, then we must default to the vesrion of YARN installed
 # since it will still load classes from its own spark version
-spark_version = get_spark_version("SPARK", "SPARK_CLIENT", version)
-spark2_version = get_spark_version("SPARK2", "SPARK2_CLIENT", version)
+
+# No Spark services in current Mpack;
+# TODO: Add Spark into stack;
+#spark_version = get_spark_version("SPARK", "SPARK_CLIENT", version)
+#spark2_version = get_spark_version("SPARK2", "SPARK2_CLIENT", version)
 
 stack_supports_ranger_kerberos = check_stack_feature(StackFeature.RANGER_KERBEROS_SUPPORT, version_for_stack_feature_checks)
 stack_supports_ranger_audit_db = check_stack_feature(StackFeature.RANGER_AUDIT_DB_SUPPORT, version_for_stack_feature_checks)
@@ -294,8 +297,8 @@ nm_log_dirs_list = nm_log_dirs.split(',')
 nm_log_dir_to_mount_file = "/var/lib/ambari-agent/data/yarn/yarn_log_dir_mount.hist"
 nm_local_dir_to_mount_file = "/var/lib/ambari-agent/data/yarn/yarn_local_dir_mount.hist"
 
-distrAppJarName = "hadoop-yarn-applications-distributedshell-2.*.jar"
-hadoopMapredExamplesJarName = "hadoop-mapreduce-examples-2.*.jar"
+distrAppJarName = "hadoop-yarn-applications-distributedshell-3.*.jar"
+hadoopMapredExamplesJarName = "hadoop-mapreduce-examples-3.*.jar"
 
 entity_file_history_directory = "/tmp/entity-file-history/active"
 

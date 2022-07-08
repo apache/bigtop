@@ -119,11 +119,18 @@ class MapReduce2ServiceCheckDefault(MapReduce2ServiceCheck):
     env.set_params(params)
 
     jar_path = format("{hadoop_mapred2_jar_location}/{hadoopMapredExamplesJarName}")
+    source_file = format("/etc/passwd")
     input_file = format("/user/{smokeuser}/mapredsmokeinput")
     output_file = format("/user/{smokeuser}/mapredsmokeoutput")
 
-    test_cmd = format("fs -test -e {output_file}")
+    hdfs_put_cmd = format("fs -put {source_file} {input_file}")
     run_wordcount_job = format("jar {jar_path} wordcount {input_file} {output_file}")
+    test_cmd = format("fs -test -e {output_file}")
+
+    ExecuteHadoop(hdfs_put_cmd,
+                  user=params.smokeuser,
+                  bin_dir=params.execute_path,
+                  conf_dir=params.hadoop_conf_dir)
 
     params.HdfsResource(format("/user/{smokeuser}"),
                       type="directory",
@@ -134,12 +141,6 @@ class MapReduce2ServiceCheckDefault(MapReduce2ServiceCheck):
     params.HdfsResource(output_file,
                         action = "delete_on_execute",
                         type = "directory",
-                        dfs_type = params.dfs_type,
-    )
-    params.HdfsResource(input_file,
-                        action = "create_on_execute",
-                        type = "file",
-                        source = "/etc/passwd",
                         dfs_type = params.dfs_type,
     )
     params.HdfsResource(None, action="execute")
