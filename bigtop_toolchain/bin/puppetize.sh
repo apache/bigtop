@@ -44,7 +44,8 @@ case ${ID}-${VERSION_ID} in
         # BIGTOP-3088: pin puppetlabs-stdlib to 4.12.0 as the one provided by
         # distro (4.25.0) has conflict with puppet<4. Should be removed once
         # puppet in distro is updated.
-        yum -y install hostname curl sudo unzip wget puppet
+        yum -y install hostname curl sudo unzip wget rubygems
+        gem install --bindir /usr/bin --no-ri --no-rdoc json_pure:2.5.1 puppet:3.6.2
         puppet module install puppetlabs-stdlib --version 4.12.0
         ;;
     centos-8*)
