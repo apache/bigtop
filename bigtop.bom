@@ -130,7 +130,7 @@ bigtop {
       version {
         base  = '3.5.9'
         pkg   = base
-        release = 1
+        release = 2
       }
       tarball {
         source      = "apache-zookeeper-${version.base}.tar.gz"
@@ -291,7 +291,7 @@ bigtop {
     'kafka' {
       name    = 'kafka'
       relNotes = 'Apache Kafka'
-      version { base = '2.8.1'; pkg = base; release = 1 }
+      version { base = '2.8.1'; pkg = base; release = 2 }
       tarball { destination = "$name-${version.base}.tar.gz"
                 source      = "$name-${version.base}-src.tgz" }
       url     { download_path = "/$name/${version.base}/"
