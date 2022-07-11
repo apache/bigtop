@@ -1,7 +1,7 @@
 echo -e "\033[32mCreating network ambari\033[0m"
 docker network create --driver bridge ambari
 
-echo -e "\033[32mCreating docker ambari-server\033[0m"
+echo -e "\033[32mCreating container ambari-server\033[0m"
 docker run -d -p 3306:3306 -p 5005:5005 -p 8080:8080 --name ambari-server --hostname ambari-server --network ambari --privileged -e "container=docker" -v /sys/fs/cgroup:/sys/fs/cgroup:ro ambari:2.7.5 /usr/sbin/init
 SERVER_PUB_KEY=`docker exec ambari-server /bin/cat /root/.ssh/id_rsa.pub`
 docker exec ambari-server bash -c "echo '$SERVER_PUB_KEY' > /root/.ssh/authorized_keys"
@@ -21,18 +21,15 @@ docker exec ambari-server bash -c "mysql --database=ambari -e  \"source /var/lib
 docker exec ambari-server bash -c "mysql -e \"FLUSH PRIVILEGES\""
 
 echo -e "\033[32mSetting up ambari-server\033[0m"
-docker exec ambari-server bash -c "ambari-server setup --java-home=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.332.b09-1.el7_9.x86_64 --database=mysql --databasehost=localhost --databaseport=3306 --databasename=ambari --databaseusername=root --databasepassword=root -s"
+docker exec ambari-server bash -c "ambari-server setup --java-home=/usr/lib/jvm/java --database=mysql --databasehost=localhost --databaseport=3306 --databasename=ambari --databaseusername=root --databasepassword=root -s"
 
-echo -e "\033[32mStarting ambari-server\033[0m"
-docker exec ambari-server bash -c "ambari-server start"
-
-echo -e "\033[32mCreating docker ambari-agent-01\033[0m"
+echo -e "\033[32mCreating container ambari-agent-01\033[0m"
 docker run -d --name ambari-agent-01 --hostname ambari-agent-01 --network ambari --privileged -e "container=docker" -v /sys/fs/cgroup:/sys/fs/cgroup:ro ambari:2.7.5 /usr/sbin/init
 docker exec ambari-agent-01 bash -c "echo '$SERVER_PUB_KEY' > /root/.ssh/authorized_keys"
 docker exec ambari-agent-01 /bin/systemctl enable sshd
 docker exec ambari-agent-01 /bin/systemctl start sshd
 
-echo -e "\033[32mCreating docker ambari-agent-02\033[0m"
+echo -e "\033[32mCreating container ambari-agent-02\033[0m"
 docker run -d --name ambari-agent-02 --hostname ambari-agent-02 --network ambari --privileged -e "container=docker" -v /sys/fs/cgroup:/sys/fs/cgroup:ro ambari:2.7.5 /usr/sbin/init
 docker exec ambari-agent-02 bash -c "echo '$SERVER_PUB_KEY' > /root/.ssh/authorized_keys"
 docker exec ambari-agent-02 /bin/systemctl enable sshd
