@@ -80,31 +80,22 @@ docker exec ambari-server bash -c "systemctl enable kadmin"
 # ADMIN PASSWORD: admin
 
 echo -e "\033[32mInstalling Bigtop Ambari Mpack\033[0m"
-
-MVN_BIN=$(command -v mvn || exit 1)
-if [[ -e $MVN_BIN ]]; then
-  echo -e "\033[32mMaven found, Installing Mpack by Maven\033[0m"
-  mvn clean install -DskipTests -Drat.skip -f ../../../bgtp-ambari-mpack/pom.xml
-  docker cp ../../../bgtp-ambari-mpack/target/bgtp-ambari-mpack-1.0.0.0-SNAPSHOT-bgtp-ambari-mpack.tar.gz ambari-server:/
-else
-  echo -e "\033[32mMaven not found, Installing Mpack by Bigtop trunk container\033[0m"
-  ARCH=`uname -m`
-  basearch=
-  if [ ${ARCH} == "aarch64" ]; then
-    basearch="-aarch64"
-  elif [ ${ARCH} == "ppc64le" ]; then
-    basearch="-ppc64le"
-  fi
-
-  cd ../../../../../../../
-  docker run --rm -v `pwd`:/ws --workdir /ws bigtop/slaves:trunk-centos-7${basearch} bash -c '. /etc/profile.d/bigtop.sh; ./gradlew bigtop-utils-clean bigtop-ambari-mpack-clean bigtop-utils-pkg bigtop-ambari-mpack-pkg'
-  docker cp output/bigtop-ambari-mpack/noarch/bigtop-ambari-mpack-2.7.5.0-*.rpm ambari-server:/
-  docker cp output/bigtop-utils/noarch/bigtop-utils-*.rpm ambari-server:/
-  cd -
-
-  docker exec ambari-server bash -c "rpm -ivh -f /bigtop-utils-*.rpm; rpm -ivh -f /bigtop-ambari-mpack-2.7.5.0-1.el7.noarch.rpm"
-  docker exec ambari-server bash -c "cp /usr/lib/bigtop-ambari-mpack/bgtp-ambari-mpack-1.0.0.0-SNAPSHOT-bgtp-ambari-mpack.tar.gz /"
+ARCH=`uname -m`
+basearch=
+if [ ${ARCH} == "aarch64" ]; then
+basearch="-aarch64"
+elif [ ${ARCH} == "ppc64le" ]; then
+basearch="-ppc64le"
 fi
+
+cd ../../../../../../../
+docker run --rm -v `pwd`:/ws --workdir /ws bigtop/slaves:trunk-centos-7${basearch} bash -c '. /etc/profile.d/bigtop.sh; ./gradlew bigtop-utils-clean bigtop-ambari-mpack-clean bigtop-utils-pkg bigtop-ambari-mpack-pkg'
+docker cp output/bigtop-ambari-mpack/noarch/bigtop-ambari-mpack-2.7.5.0-*.rpm ambari-server:/
+docker cp output/bigtop-utils/noarch/bigtop-utils-*.rpm ambari-server:/
+cd -
+
+docker exec ambari-server bash -c "rpm -ivh -f /bigtop-utils-*.rpm; rpm -ivh -f /bigtop-ambari-mpack-2.7.5.0-1.el7.noarch.rpm"
+docker exec ambari-server bash -c "cp /usr/lib/bigtop-ambari-mpack/bgtp-ambari-mpack-1.0.0.0-SNAPSHOT-bgtp-ambari-mpack.tar.gz /"
 
 docker exec ambari-server bash -c "ambari-server install-mpack --mpack=/bgtp-ambari-mpack-1.0.0.0-SNAPSHOT-bgtp-ambari-mpack.tar.gz"
 docker exec ambari-server bash -c "ambari-server restart --debug"
