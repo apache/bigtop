@@ -83,9 +83,9 @@ echo -e "\033[32mInstalling Bigtop Ambari Mpack\033[0m"
 ARCH=`uname -m`
 basearch=
 if [ ${ARCH} == "aarch64" ]; then
-basearch="-aarch64"
+  basearch="-aarch64"
 elif [ ${ARCH} == "ppc64le" ]; then
-basearch="-ppc64le"
+  basearch="-ppc64le"
 fi
 
 cd ../../../../../../../
