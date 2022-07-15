@@ -113,6 +113,6 @@ tar -C $PREFIX/$LIB_DIR -xzf $BUILD_DIR/tez-dist/target/tez*-minimal.tar.gz
 
 cp tez-site.xml $PREFIX/$CONF_DIR
 
-TEZ_TAR=`find $BUILD_DIR/tez-dist/target/ -name "tez-*.tar.gz" | grep -v "minimal"`
+TEZ_TAR=$BUILD_DIR/tez-dist/target/tez-[[:digit:]]*[[:digit:]].tar.gz
 cp $TEZ_TAR $PREFIX/$LIB_DIR/lib/tez.tar.gz
 
