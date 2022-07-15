@@ -45,7 +45,9 @@ class hadoop_hive {
     } 
   }
 
-  class common_config ($hbase_master = "",
+  class common_config ($hive_tez_container_size = undef,
+                       $hive_tez_cpu_vcores = undef,
+                       $hbase_master = "",
                        $hbase_zookeeper_quorum = "",
                        $hive_zookeeper_quorum = "",
                        $hive_support_concurrency = false,
