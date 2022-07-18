@@ -18,17 +18,9 @@
 <reposinfo>
   <os family="redhat7">
     <repo>
-      <baseurl>http://repos.bigtop.apache.org/releases/1.5.0/centos/7/$basearch</baseurl>
+      <baseurl>http://repos.bigtop.apache.org/releases/3.2.0/centos/7/$basearch</baseurl>
       <repoid>BGTP-1.0</repoid>
       <reponame>BGTP</reponame>
-    </repo>
-  </os>
-  <os family="ubuntu18">
-    <repo>
-      <baseurl>http://repos.bigtop.apache.org/releases/1.5.0/ubuntu/18.04/$(ARCH)</baseurl>
-      <repoid>BGTP-1.0</repoid>
-      <reponame>bigtop</reponame>
-      <components>contrib</components>
     </repo>
   </os>
 </reposinfo>
