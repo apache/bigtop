@@ -116,7 +116,7 @@ install -d -m 0755 $PREFIX/var/log/zeppelin/
 install -d -m 0755 $PREFIX/var/run/zeppelin/
 install -d -m 0755 $PREFIX/var/run/zeppelin/webapps
 
-cp -a ${BUILD_DIR}/build/dist/{bin,interpreter,lib,zeppelin-web-${ZEPPELIN_VERSION}.war} $PREFIX/$LIB_DIR/
+cp -a ${BUILD_DIR}/build/dist/{bin,interpreter,lib,plugins,zeppelin-web-${ZEPPELIN_VERSION}.war} $PREFIX/$LIB_DIR/
 cp -a ${BUILD_DIR}/build/dist/{LICENSE,NOTICE,README.md,licenses} $PREFIX/$DOC_DIR
 cp -a ${BUILD_DIR}/build/dist/conf/* $PREFIX/$CONF_DIR
 cp -a ${BUILD_DIR}/build/dist/notebook $PREFIX/var/lib/zeppelin/
