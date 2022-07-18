@@ -24,7 +24,7 @@ options:
       zeppelin_logs:
           path: '/var/log/zeppelin'
       zeppelin_notebooks:
-          path: '/var/lib/zeppelin/notebook'
+          path: '/usr/lib/zeppelin/notebook'
     ports:
       zeppelin:
           port: 9080

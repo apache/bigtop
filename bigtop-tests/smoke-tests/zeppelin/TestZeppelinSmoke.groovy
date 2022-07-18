@@ -43,7 +43,7 @@ class TestZeppelinSmoke {
     logError(sh);
     assertTrue("Install Interpreter failed." + sh.getOut() + " " + sh.getErr(), sh.getRet() == 0);
 
-    sh.exec("su -s /bin/bash zeppelin -c \"cd /var/lib/zeppelin && /usr/lib/zeppelin/bin/zeppelin-daemon.sh --config '/etc/zeppelin/conf' restart > /dev/null 2>&1\" ");
+    sh.exec("su -s /bin/bash zeppelin -c \"/usr/lib/zeppelin/bin/zeppelin-daemon.sh --config '/etc/zeppelin/conf' restart > /dev/null 2>&1\" ");
     logError(sh);
     assertTrue("Zeppelin restart failed." + sh.getOut() + " " + sh.getErr(), sh.getRet() == 0);
   }

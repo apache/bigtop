@@ -106,11 +106,10 @@ CONF_DIR=${CONF_DIR:-/etc/zeppelin/conf.dist}
 install -d -m 0755 $PREFIX/$LIB_DIR
 install -d -m 0755 $PREFIX/$LIB_DIR/bin
 install -d -m 0755 $PREFIX/$LIB_DIR/lib
+install -d -m 0755 $PREFIX/$LIB_DIR/notebook
 install -d -m 0755 $PREFIX/$CONF_DIR
 install -d -m 0755 $PREFIX/$DOC_DIR
 
-install -d -m 0755 $PREFIX/var/lib/zeppelin/
-install -d -m 0755 $PREFIX/var/lib/zeppelin/notebook/
 install -d -m 0755 $PREFIX/var/log/zeppelin/
 install -d -m 0755 $PREFIX/var/run/zeppelin/
 install -d -m 0755 $PREFIX/var/run/zeppelin/webapps
@@ -118,7 +117,7 @@ install -d -m 0755 $PREFIX/var/run/zeppelin/webapps
 cp -a ${BUILD_DIR}/build/dist/{bin,interpreter,lib,zeppelin-web-${ZEPPELIN_VERSION}.war} $PREFIX/$LIB_DIR/
 cp -a ${BUILD_DIR}/build/dist/{LICENSE,NOTICE,README.md,licenses} $PREFIX/$DOC_DIR
 cp -a ${BUILD_DIR}/build/dist/conf/* $PREFIX/$CONF_DIR
-cp -a ${BUILD_DIR}/build/dist/notebook $PREFIX/var/lib/zeppelin/
+cp -a ${BUILD_DIR}/build/dist/notebook $PREFIX/$LIB_DIR/
 
 rm -f $PREFIX/$LIB_DIR/bin/*.cmd
 chmod 755 $PREFIX/$LIB_DIR/bin/*

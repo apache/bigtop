@@ -14,7 +14,6 @@
 # limitations under the License.
 
 %define lib_zeppelin /usr/lib/%{name}
-%define var_lib_zeppelin /var/lib/%{name}
 %define var_run_zeppelin /var/run/%{name}
 %define var_log_zeppelin /var/log/%{name}
 %define bin_zeppelin /usr/lib/%{name}/bin
@@ -101,7 +100,7 @@ bash %{SOURCE3} $RPM_SOURCE_DIR/%{name}.svc rpm $initd_script
 
 %pre
 getent group zeppelin >/dev/null || groupadd -r zeppelin
-getent passwd zeppelin >/dev/null || useradd -c "Zeppelin" -s /sbin/nologin -g zeppelin -r -d %{var_lib_zeppelin} zeppelin 2> /dev/null || :
+getent passwd zeppelin >/dev/null || useradd -c "Zeppelin" -s /sbin/nologin -g zeppelin -r -d %{lib_zeppelin} zeppelin 2> /dev/null || :
 
 %post
 %{alternatives_cmd} --install %{config_zeppelin} %{name}-conf %{config_zeppelin}.dist 30
@@ -129,8 +128,8 @@ chkconfig --del %{name}
 %{lib_zeppelin}/conf
 %{lib_zeppelin}/interpreter
 %{lib_zeppelin}/lib
+%{lib_zeppelin}/notebook
 %config(noreplace) %attr(0755,zeppelin,zeppelin) %{etc_zeppelin}
-%attr(0755,zeppelin,zeppelin) %{var_lib_zeppelin}
 %attr(0755,zeppelin,zeppelin) %{var_run_zeppelin}
 %attr(0755,zeppelin,zeppelin) %{var_log_zeppelin}
 %attr(0755,root,root)/%{initd_dir}/%{name}

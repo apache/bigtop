@@ -38,7 +38,7 @@ case "$1" in
                 adduser \
                   --system \
                   --ingroup zeppelin \
-                  --home /var/lib/zeppelin \
+                  --home /usr/lib/zeppelin \
                   --gecos "Zeppelin" \
                   --shell /bin/false \
                   zeppelin >/dev/null

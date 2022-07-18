@@ -17,7 +17,7 @@ DAEMON="zeppelin"
 DESC="Zeppelin"
 EXEC_PATH="/usr/lib/zeppelin/bin/zeppelin-daemon.sh"
 SVC_USER="zeppelin"
-WORKING_DIR="/var/lib/zeppelin"
+WORKING_DIR="/usr/lib/zeppelin"
 CONF_DIR="/etc/zeppelin/conf"
 
 # PIDFILE="/var/run/zeppelin/zeppelin-${SVC_USER}-\$(hostname).pid"
