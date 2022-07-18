@@ -109,7 +109,10 @@ install -d -m 0755 $PREFIX/$DOC_DIR
 install -d -m 0755 $PREFIX/$CONF_DIR
 install -d -m 0755 $PREFIX/$MAN_DIR
 
-cp tez-site.xml  $PREFIX/$CONF_DIR
+tar -C $PREFIX/$LIB_DIR -xzf $BUILD_DIR/tez-dist/target/tez*-minimal.tar.gz
 
-tar -C  $PREFIX/$LIB_DIR -xzf  $BUILD_DIR/tez-dist/target/tez*-minimal.tar.gz
+cp tez-site.xml $PREFIX/$CONF_DIR
+
+TEZ_TAR=$BUILD_DIR/tez-dist/target/tez-[[:digit:]]*[[:digit:]].tar.gz
+cp $TEZ_TAR $PREFIX/$LIB_DIR/lib/tez.tar.gz
 
