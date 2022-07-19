@@ -207,7 +207,7 @@ class Master(Script):
       params.HdfsResource(format("{notebook_directory}"),
                           type="directory",
                           action="create_on_execute",
-                          source=params.zeppelin_notebook_dir,
+                          source=params.local_notebook_dir,
                           owner=params.zeppelin_user,
                           recursive_chown=True,
                           recursive_chmod=True
@@ -228,7 +228,7 @@ class Master(Script):
 
     Execute(("chown", "-R", format("{zeppelin_user}") + ":" + format("{zeppelin_group}"), "/etc/zeppelin"),
             sudo=True)
-    Execute(("chown", "-R", format("{zeppelin_user}") + ":" + format("{zeppelin_group}"), format("{zeppelin_notebook_dir}")), sudo=True)
+    Execute(("chown", "-R", format("{zeppelin_user}") + ":" + format("{zeppelin_group}"), format("{local_notebook_dir}")), sudo=True)
 
     if params.security_enabled:
       zeppelin_kinit_cmd = format("{kinit_path_local} -kt {zeppelin_kerberos_keytab} {zeppelin_kerberos_principal}; ")

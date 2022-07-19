@@ -65,23 +65,23 @@
   </property>
   <property>
     <name>zeppelin_log_dir</name>
-    <display-name>Zeppelin log dir</display-name>
+    <display-name>Zeppelin Log Dir</display-name>
     <value>/var/log/zeppelin</value>
     <description>Zeppelin Log dir</description>
     <on-ambari-upgrade add="false"/>
   </property>
   <property>
     <name>zeppelin_war_tempdir</name>
-    <display-name>Zeppelin war tempdir</display-name>
+    <display-name>Zeppelin War Temp Dir</display-name>
     <value>/var/run/zeppelin/webapps</value>
     <description>Zeppelin war tempdir</description>
     <on-ambari-upgrade add="false"/>
   </property>
   <property>
     <name>zeppelin_notebook_dir</name>
-    <display-name>Zeppelin notebook dir</display-name>
-    <value>/var/lib/zeppelin/notebook</value>
-    <description>Zeppelin notebook dir</description>
+    <display-name>Zeppelin Notebook Dir</display-name>
+    <value>/user/zeppelin/notebook</value>
+    <description>Zeppelin notebook directory path(default to HDFS path)</description>
     <on-ambari-upgrade add="false"/>
   </property>
   <property>
@@ -186,7 +186,6 @@
       export HBASE_CONF_DIR={{hbase_conf_dir}}
 
       # export ZEPPELIN_IMPERSONATE_CMD             # Optional, when user want to run interpreter as end web user. eg) 'sudo -H -u ${ZEPPELIN_IMPERSONATE_USER} bash -c '
-
     </value>
     <on-ambari-upgrade add="true"/>
   </property>

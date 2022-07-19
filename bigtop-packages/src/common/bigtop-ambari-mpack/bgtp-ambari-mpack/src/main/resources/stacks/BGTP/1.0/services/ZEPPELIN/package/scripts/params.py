@@ -99,6 +99,8 @@ zeppelin_log_dir = config['configurations']['zeppelin-env']['zeppelin_log_dir']
 zeppelin_pid_dir = config['configurations']['zeppelin-env']['zeppelin_pid_dir']
 zeppelin_war_tempdir = config['configurations']['zeppelin-env']['zeppelin_war_tempdir']
 zeppelin_notebook_dir = config['configurations']['zeppelin-env']['zeppelin_notebook_dir']
+local_notebook_dir = "/var/lib/zeppelin/notebook"
+
 hbase_home = config['configurations']['zeppelin-env']['hbase_home']
 hbase_conf_dir = config['configurations']['zeppelin-env']['hbase_conf_dir']
 
