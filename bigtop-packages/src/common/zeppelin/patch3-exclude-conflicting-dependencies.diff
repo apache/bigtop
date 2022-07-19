@@ -1,0 +1,109 @@
+diff --git a/zeppelin-interpreter/pom.xml b/zeppelin-interpreter/pom.xml
+index 48ce9aa44..560e7c001 100644
+--- a/zeppelin-interpreter/pom.xml
++++ b/zeppelin-interpreter/pom.xml
+@@ -218,6 +218,14 @@
+           <groupId>org.codehaus.woodstox</groupId>
+           <artifactId>stax2-api</artifactId>
+         </exclusion>
++        <exclusion>
++          <groupId>org.slf4j</groupId>
++          <artifactId>slf4j-reload4j</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>ch.qos.reload4j</groupId>
++          <artifactId>reload4j</artifactId>
++        </exclusion>
+       </exclusions>
+     </dependency>
+ 
+diff --git a/zeppelin-plugins/notebookrepo/filesystem/pom.xml b/zeppelin-plugins/notebookrepo/filesystem/pom.xml
+index f5cb1d579..7238bca20 100644
+--- a/zeppelin-plugins/notebookrepo/filesystem/pom.xml
++++ b/zeppelin-plugins/notebookrepo/filesystem/pom.xml
+@@ -47,6 +47,18 @@
+                     <groupId>org.codehaus.woodstox</groupId>
+                     <artifactId>stax2-api</artifactId>
+                 </exclusion>
++                <exclusion>
++                    <groupId>org.slf4j</groupId>
++                    <artifactId>slf4j-reload4j</artifactId>
++                </exclusion>
++                <exclusion>
++                    <groupId>ch.qos.reload4j</groupId>
++                    <artifactId>reload4j</artifactId>
++                </exclusion>
++                <exclusion>
++                    <groupId>org.eclipse.jetty.websocket</groupId>
++                    <artifactId>websocket-client</artifactId>
++                </exclusion>
+             </exclusions>
+         </dependency>
+     </dependencies>
+diff --git a/zeppelin-server/pom.xml b/zeppelin-server/pom.xml
+index f84f3e384..d6fef83e6 100644
+--- a/zeppelin-server/pom.xml
++++ b/zeppelin-server/pom.xml
+@@ -290,6 +290,24 @@
+     <dependency>
+       <groupId>org.apache.hadoop</groupId>
+       <artifactId>hadoop-client</artifactId>
++      <exclusions>
++        <exclusion>
++          <groupId>org.slf4j</groupId>
++          <artifactId>slf4j-reload4j</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>ch.qos.reload4j</groupId>
++          <artifactId>reload4j</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>javax.ws.rs</groupId>
++          <artifactId>javax.ws.rs-api</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>org.eclipse.jetty.websocket</groupId>
++          <artifactId>websocket-client</artifactId>
++        </exclusion>
++      </exclusions>
+     </dependency>
+ 
+     <!--test libraries-->
+@@ -303,6 +321,14 @@
+           <groupId>org.codehaus.woodstox</groupId>
+           <artifactId>stax2-api</artifactId>
+         </exclusion>
++        <exclusion>
++          <groupId>org.slf4j</groupId>
++          <artifactId>slf4j-reload4j</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>ch.qos.reload4j</groupId>
++          <artifactId>reload4j</artifactId>
++        </exclusion>
+       </exclusions>
+     </dependency>
+ 
+diff --git a/zeppelin-zengine/pom.xml b/zeppelin-zengine/pom.xml
+index 3e789968a..1ee305c3a 100644
+--- a/zeppelin-zengine/pom.xml
++++ b/zeppelin-zengine/pom.xml
+@@ -223,6 +223,18 @@
+           <groupId>org.codehaus.woodstox</groupId>
+           <artifactId>stax2-api</artifactId>
+         </exclusion>
++        <exclusion>
++          <groupId>org.slf4j</groupId>
++          <artifactId>slf4j-reload4j</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>ch.qos.reload4j</groupId>
++          <artifactId>reload4j</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>org.eclipse.jetty.websocket</groupId>
++          <artifactId>websocket-client</artifactId>
++        </exclusion>
+       </exclusions>
+     </dependency>
+ 
