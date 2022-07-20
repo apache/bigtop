@@ -105,25 +105,6 @@
               "keytab": {
                 "configuration": "ranger-hbase-audit/xasecure.audit.jaas.Client.option.keyTab"
               }
-            },
-            {
-              "name": "hbase_atlas_hook_kafka",
-              "reference": "/HBASE/HBASE_MASTER/hbase_master_hbase",
-              "principal":{
-                "configuration": "hbase-atlas-application-properties/atlas.jaas.KafkaClient.option.principal"
-              },
-              "keytab":{
-                "configuration": "hbase-atlas-application-properties/atlas.jaas.KafkaClient.option.keyTab"
-              }
-            }
-          ],
-          "configurations":[
-            {
-              "hbase-atlas-application-properties":{
-                "atlas.jaas.ticketBased-KafkaClient.loginModuleControlFlag" : "required",
-                "atlas.jaas.ticketBased-KafkaClient.loginModuleName" : "com.sun.security.auth.module.Krb5LoginModule",
-                "atlas.jaas.ticketBased-KafkaClient.option.useTicketCache" : "true"
-              }
             }
           ]
         },
@@ -159,21 +140,6 @@
               },
               "keytab": {
                 "configuration": "hbase-site/hbase.security.authentication.spnego.kerberos.keytab"
-              }
-            }
-          ]
-        },
-        {
-          "name": "PHOENIX_QUERY_SERVER",
-          "identities": [
-            {
-              "name": "phoenix_spnego",
-              "reference": "/spnego",
-              "principal": {
-                "configuration": "hbase-site/phoenix.queryserver.kerberos.principal"
-              },
-              "keytab": {
-                "configuration": "hbase-site/phoenix.queryserver.keytab.file"
               }
             }
           ]

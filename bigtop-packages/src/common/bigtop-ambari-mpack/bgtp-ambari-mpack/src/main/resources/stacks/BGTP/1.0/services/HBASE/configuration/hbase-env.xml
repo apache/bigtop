@@ -241,14 +241,12 @@ JDK_DEPENDED_OPTS="-XX:PermSize=128m -XX:MaxPermSize=128m -XX:ReservedCodeCacheS
 export HBASE_OPTS="$HBASE_OPTS -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:-ResizePLAB -XX:ErrorFile={{log_dir}}/hs_err_pid%p.log -Djava.io.tmpdir={{java_io_tmpdir}}"
 export HBASE_MASTER_OPTS="$HBASE_MASTER_OPTS -Xmx{{master_heapsize}} -XX:ParallelGCThreads={{parallel_gc_threads}} $JDK_DEPENDED_OPTS "
 export HBASE_REGIONSERVER_OPTS="$HBASE_REGIONSERVER_OPTS -Xms{{regionserver_heapsize}} -Xmx{{regionserver_heapsize}} -XX:ParallelGCThreads={{parallel_gc_threads}} $JDK_DEPENDED_OPTS"
-export PHOENIX_QUERYSERVER_OPTS="$PHOENIX_QUERYSERVER_OPTS -XX:ParallelGCThreads={{parallel_gc_threads}} $JDK_DEPENDED_OPTS"
 
 # Add Kerberos authentication-related configuration
 {% if security_enabled %}
 export HBASE_OPTS="$HBASE_OPTS -Djava.security.auth.login.config={{client_jaas_config_file}} {{zk_security_opts}}"
 export HBASE_MASTER_OPTS="$HBASE_MASTER_OPTS -Djava.security.auth.login.config={{master_jaas_config_file}} -Djavax.security.auth.useSubjectCredsOnly=false"
 export HBASE_REGIONSERVER_OPTS="$HBASE_REGIONSERVER_OPTS -Djava.security.auth.login.config={{regionserver_jaas_config_file}} -Djavax.security.auth.useSubjectCredsOnly=false"
-export PHOENIX_QUERYSERVER_OPTS="$PHOENIX_QUERYSERVER_OPTS -Djava.security.auth.login.config={{queryserver_jaas_config_file}}"
 {% endif %}
 
 # HBase off-heap MaxDirectMemorySize
@@ -274,7 +272,7 @@ export HBASE_MASTER_OPTS="$HBASE_MASTER_OPTS {% if hbase_max_direct_memory_size 
   </property>
   <property>
     <name>phoenix_sql_enabled</name>
-    <value>true</value>
+    <value>false</value>
     <description>Enable Phoenix SQL</description>
     <display-name>Enable Phoenix</display-name>
     <value-attributes>
