@@ -1,8 +1,8 @@
 diff --git a/pom.xml b/pom.xml
-index d9c3475caf..4fae9b8dfa 100755
+index 97d1c283dd..679206e019 100755
 --- a/pom.xml
 +++ b/pom.xml
-@@ -3139,6 +3139,14 @@
+@@ -3510,6 +3510,14 @@
                  <groupId>log4j</groupId>
                  <artifactId>log4j</artifactId>
                </exclusion>
@@ -14,25 +14,10 @@ index d9c3475caf..4fae9b8dfa 100755
 +                <groupId>org.slf4j</groupId>
 +                <artifactId>slf4j-reload4j</artifactId>
 +              </exclusion>
-            </exclusions>
-          </dependency>
-          <dependency>
-@@ -3171,6 +3179,14 @@
-                <groupId>log4j</groupId>
-                <artifactId>log4j</artifactId>
-              </exclusion>
-+              <exclusion>
-+                <groupId>ch.qos.reload4j</groupId>
-+                <artifactId>reload4j</artifactId>
-+              </exclusion>
-+              <exclusion>
-+                <groupId>org.slf4j</groupId>
-+                <artifactId>slf4j-reload4j</artifactId>
-+              </exclusion>
-            </exclusions>
-          </dependency>
-          <dependency>
-@@ -3204,6 +3220,14 @@
+             </exclusions>
+           </dependency>
+           <dependency>
+@@ -3542,6 +3550,14 @@
                  <groupId>log4j</groupId>
                  <artifactId>log4j</artifactId>
                </exclusion>
@@ -44,13 +29,28 @@ index d9c3475caf..4fae9b8dfa 100755
 +                <groupId>org.slf4j</groupId>
 +                <artifactId>slf4j-reload4j</artifactId>
 +              </exclusion>
-            </exclusions>
-          </dependency>
-          <dependency>
-@@ -3248,6 +3272,22 @@
-                <groupId>log4j</groupId>
-                <artifactId>log4j</artifactId>
-              </exclusion>
+             </exclusions>
+           </dependency>
+           <dependency>
+@@ -3575,6 +3591,14 @@
+                 <groupId>log4j</groupId>
+                 <artifactId>log4j</artifactId>
+               </exclusion>
++              <exclusion>
++                <groupId>ch.qos.reload4j</groupId>
++                <artifactId>reload4j</artifactId>
++              </exclusion>
++              <exclusion>
++                <groupId>org.slf4j</groupId>
++                <artifactId>slf4j-reload4j</artifactId>
++              </exclusion>
+             </exclusions>
+           </dependency>
+           <dependency>
+@@ -3619,6 +3643,22 @@
+                 <groupId>log4j</groupId>
+                 <artifactId>log4j</artifactId>
+               </exclusion>
 +              <exclusion>
 +                <groupId>ch.qos.reload4j</groupId>
 +                <artifactId>reload4j</artifactId>
@@ -67,13 +67,13 @@ index d9c3475caf..4fae9b8dfa 100755
 +                <groupId>org.openlabtesting.leveldbjni</groupId>
 +                <artifactId>leveldbjni-all</artifactId>
 +              </exclusion>
-            </exclusions>
-          </dependency>
-          <dependency>
-@@ -3299,6 +3339,22 @@
-                <groupId>log4j</groupId>
-                <artifactId>log4j</artifactId>
-              </exclusion>
+             </exclusions>
+           </dependency>
+           <dependency>
+@@ -3670,6 +3710,14 @@
+                 <groupId>log4j</groupId>
+                 <artifactId>log4j</artifactId>
+               </exclusion>
 +              <exclusion>
 +                <groupId>ch.qos.reload4j</groupId>
 +                <artifactId>reload4j</artifactId>
@@ -81,30 +81,14 @@ index d9c3475caf..4fae9b8dfa 100755
 +              <exclusion>
 +                <groupId>org.slf4j</groupId>
 +                <artifactId>slf4j-reload4j</artifactId>
-+              </exclusion>
-+              <exclusion>
-+                <groupId>org.fusesource.leveldbjni</groupId>
-+                <artifactId>leveldbjni-all</artifactId>
-+              </exclusion>
-+              <exclusion>
-+                <groupId>org.openlabtesting.leveldbjni</groupId>
-+                <artifactId>leveldbjni-all</artifactId>
 +              </exclusion>
                <exclusion>
                  <groupId>io.netty</groupId>
                  <artifactId>netty</artifactId>
-@@ -3356,6 +3412,22 @@
-                <groupId>log4j</groupId>
-                <artifactId>log4j</artifactId>
-              </exclusion>
-+              <exclusion>
-+                <groupId>ch.qos.reload4j</groupId>
-+                <artifactId>reload4j</artifactId>
-+              </exclusion>
-+              <exclusion>
-+                <groupId>org.slf4j</groupId>
-+                <artifactId>slf4j-reload4j</artifactId>
-+              </exclusion>
+@@ -3678,6 +3726,14 @@
+                 <groupId>io.netty</groupId>
+                 <artifactId>netty-all</artifactId>
+               </exclusion>
 +              <exclusion>
 +                <groupId>org.fusesource.leveldbjni</groupId>
 +                <artifactId>leveldbjni-all</artifactId>
@@ -113,13 +97,48 @@ index d9c3475caf..4fae9b8dfa 100755
 +                <groupId>org.openlabtesting.leveldbjni</groupId>
 +                <artifactId>leveldbjni-all</artifactId>
 +              </exclusion>
-              <exclusion>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-all</artifactId>
-@@ -3374,6 +3446,30 @@
-                <groupId>com.sun.jersey</groupId>
-                <artifactId>jersey-core</artifactId>
-              </exclusion>
+             </exclusions>
+           </dependency>
+           <dependency>
+@@ -3727,13 +3783,34 @@
+                 <groupId>log4j</groupId>
+                 <artifactId>log4j</artifactId>
+               </exclusion>
++              <exclusion>
++                <groupId>ch.qos.reload4j</groupId>
++                <artifactId>reload4j</artifactId>
++              </exclusion>
++              <exclusion>
++                <groupId>org.slf4j</groupId>
++                <artifactId>slf4j-reload4j</artifactId>
++              </exclusion>
++              <!--
++              Needed in test context when hadoop-3.3 runs.
+               <exclusion>
+                 <groupId>io.netty</groupId>
+                 <artifactId>netty-all</artifactId>
+               </exclusion>
++              -->
++              <exclusion>
++                <groupId>org.fusesource.leveldbjni</groupId>
++                <artifactId>leveldbjni-all</artifactId>
++              </exclusion>
++              <exclusion>
++                <groupId>org.openlabtesting.leveldbjni</groupId>
++                <artifactId>leveldbjni-all</artifactId>
++              </exclusion>
+             </exclusions>
+           </dependency>
+           <dependency>
++            <!-- Is this needed? Seems a duplicate of the above dependency but for the
++            classifier-->
+             <groupId>org.apache.hadoop</groupId>
+             <artifactId>hadoop-hdfs</artifactId>
+             <version>${hadoop-three.version}</version>
+@@ -3745,6 +3822,30 @@
+                 <groupId>com.sun.jersey</groupId>
+                 <artifactId>jersey-core</artifactId>
+               </exclusion>
 +              <exclusion>
 +                <groupId>org.slf4j</groupId>
 +                <artifactId>slf4j-log4j12</artifactId>
@@ -144,13 +163,13 @@ index d9c3475caf..4fae9b8dfa 100755
 +                <groupId>org.openlabtesting.leveldbjni</groupId>
 +                <artifactId>leveldbjni-all</artifactId>
 +              </exclusion>
-            </exclusions>
-          </dependency>
-          <dependency>
-@@ -3397,6 +3493,14 @@
-                <groupId>log4j</groupId>
-                <artifactId>log4j</artifactId>
-              </exclusion>
+             </exclusions>
+           </dependency>
+           <dependency>
+@@ -3768,6 +3869,14 @@
+                 <groupId>log4j</groupId>
+                 <artifactId>log4j</artifactId>
+               </exclusion>
 +              <exclusion>
 +                <groupId>ch.qos.reload4j</groupId>
 +                <artifactId>reload4j</artifactId>
@@ -159,13 +178,13 @@ index d9c3475caf..4fae9b8dfa 100755
 +                <groupId>org.slf4j</groupId>
 +                <artifactId>slf4j-reload4j</artifactId>
 +              </exclusion>
-            </exclusions>
-          </dependency>
-          <dependency>
-@@ -3464,6 +3568,14 @@
-                <groupId>log4j</groupId>
-                <artifactId>log4j</artifactId>
-              </exclusion>
+             </exclusions>
+           </dependency>
+           <dependency>
+@@ -3835,6 +3944,14 @@
+                 <groupId>log4j</groupId>
+                 <artifactId>log4j</artifactId>
+               </exclusion>
 +              <exclusion>
 +                <groupId>ch.qos.reload4j</groupId>
 +                <artifactId>reload4j</artifactId>
@@ -174,27 +193,13 @@ index d9c3475caf..4fae9b8dfa 100755
 +                <groupId>org.slf4j</groupId>
 +                <artifactId>slf4j-reload4j</artifactId>
 +              </exclusion>
-            </exclusions>
-          </dependency>
-          <dependency>
-@@ -3522,10 +3634,13 @@
-                <groupId>com.google.code.findbugs</groupId>
-                <artifactId>jsr305</artifactId>
-              </exclusion>
-+             <!--
-+              Needed in test context when hadoop-3.3 runs.
-              <exclusion>
-                <groupId>io.netty</groupId>
-                <artifactId>netty</artifactId>
-              </exclusion>
-+             -->
-              <exclusion>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-log4j12</artifactId>
-@@ -3534,6 +3649,14 @@
-                <groupId>log4j</groupId>
-                <artifactId>log4j</artifactId>
-              </exclusion>
+             </exclusions>
+           </dependency>
+           <dependency>
+@@ -3905,6 +4022,14 @@
+                 <groupId>log4j</groupId>
+                 <artifactId>log4j</artifactId>
+               </exclusion>
 +              <exclusion>
 +                <groupId>ch.qos.reload4j</groupId>
 +                <artifactId>reload4j</artifactId>
@@ -203,13 +208,13 @@ index d9c3475caf..4fae9b8dfa 100755
 +                <groupId>org.slf4j</groupId>
 +                <artifactId>slf4j-reload4j</artifactId>
 +              </exclusion>
-            </exclusions>
-          </dependency>
-          <dependency>
-@@ -3604,6 +3727,22 @@
-                <groupId>log4j</groupId>
-                <artifactId>log4j</artifactId>
-              </exclusion>
+             </exclusions>
+           </dependency>
+           <dependency>
+@@ -3975,6 +4100,22 @@
+                 <groupId>log4j</groupId>
+                 <artifactId>log4j</artifactId>
+               </exclusion>
 +              <exclusion>
 +                <groupId>ch.qos.reload4j</groupId>
 +                <artifactId>reload4j</artifactId>
@@ -226,13 +231,13 @@ index d9c3475caf..4fae9b8dfa 100755
 +                <groupId>org.openlabtesting.leveldbjni</groupId>
 +                <artifactId>leveldbjni-all</artifactId>
 +              </exclusion>
-            </exclusions>
-          </dependency>
-          <dependency>
-@@ -3620,6 +3759,14 @@
-                <groupId>log4j</groupId>
-                <artifactId>log4j</artifactId>
-              </exclusion>
+             </exclusions>
+           </dependency>
+           <dependency>
+@@ -3991,6 +4132,14 @@
+                 <groupId>log4j</groupId>
+                 <artifactId>log4j</artifactId>
+               </exclusion>
 +              <exclusion>
 +                <groupId>ch.qos.reload4j</groupId>
 +                <artifactId>reload4j</artifactId>
@@ -241,6 +246,6 @@ index d9c3475caf..4fae9b8dfa 100755
 +                <groupId>org.slf4j</groupId>
 +                <artifactId>slf4j-reload4j</artifactId>
 +              </exclusion>
-            </exclusions>
-          </dependency>
-          <dependency>
+             </exclusions>
+           </dependency>
+           <dependency>
