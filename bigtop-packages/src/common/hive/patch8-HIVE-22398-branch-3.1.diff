@@ -1,0 +1,379 @@
+diff --git a/common/src/java/org/apache/hadoop/hive/conf/HiveConf.java b/common/src/java/org/apache/hadoop/hive/conf/HiveConf.java
+index 0517dc0bbc..d055288e73 100644
+--- a/common/src/java/org/apache/hadoop/hive/conf/HiveConf.java
++++ b/common/src/java/org/apache/hadoop/hive/conf/HiveConf.java
+@@ -3350,12 +3350,6 @@ private static void populateLlapDaemonVarsSet(Set<String> llapDaemonVarsSetLocal
+         "SSL certificate keystore location."),
+     HIVE_SERVER2_SSL_KEYSTORE_PASSWORD("hive.server2.keystore.password", "",
+         "SSL certificate keystore password."),
+-    HIVE_SERVER2_MAP_FAIR_SCHEDULER_QUEUE("hive.server2.map.fair.scheduler.queue", true,
+-        "If the YARN fair scheduler is configured and HiveServer2 is running in non-impersonation mode,\n" +
+-        "this setting determines the user for fair scheduler queue mapping.\n" +
+-        "If set to true (default), the logged-in user determines the fair scheduler queue\n" +
+-        "for submitted jobs, so that map reduce resource usage can be tracked by user.\n" +
+-        "If set to false, all Hive jobs go to the 'hive' user's queue."),
+     HIVE_SERVER2_BUILTIN_UDF_WHITELIST("hive.server2.builtin.udf.whitelist", "",
+         "Comma separated list of builtin udf names allowed in queries.\n" +
+         "An empty whitelist allows all builtin udfs to be executed. " +
+diff --git a/itests/hive-unit-hadoop2/src/test/java/org/apache/hive/jdbc/TestSchedulerQueue.java b/itests/hive-unit-hadoop2/src/test/java/org/apache/hive/jdbc/TestSchedulerQueue.java
+deleted file mode 100644
+index 6e57e811fe..0000000000
+--- a/itests/hive-unit-hadoop2/src/test/java/org/apache/hive/jdbc/TestSchedulerQueue.java
++++ /dev/null
+@@ -1,175 +0,0 @@
+-/*
+- * Licensed to the Apache Software Foundation (ASF) under one
+- * or more contributor license agreements.  See the NOTICE file
+- * distributed with this work for additional information
+- * regarding copyright ownership.  The ASF licenses this file
+- * to you under the Apache License, Version 2.0 (the
+- * "License"); you may not use this file except in compliance
+- * with the License.  You may obtain a copy of the License at
+- *
+- *     http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS,
+- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+- * See the License for the specific language governing permissions and
+- * limitations under the License.
+- */
+-
+-package org.apache.hive.jdbc;
+-
+-import static org.junit.Assert.assertEquals;
+-import static org.junit.Assert.assertTrue;
+-
+-import java.io.IOException;
+-import java.sql.Connection;
+-import java.sql.DriverManager;
+-import java.sql.ResultSet;
+-import java.sql.Statement;
+-import java.util.ArrayList;
+-import java.util.HashMap;
+-import java.util.List;
+-
+-import org.apache.hadoop.hive.conf.HiveConf;
+-import org.apache.hadoop.security.GroupMappingServiceProvider;
+-import org.apache.hadoop.yarn.conf.YarnConfiguration;
+-import org.apache.hadoop.yarn.server.resourcemanager.scheduler.fair.FairSchedulerConfiguration;
+-import org.apache.hive.jdbc.miniHS2.MiniHS2;
+-import org.apache.hive.jdbc.miniHS2.MiniHS2.MiniClusterType;
+-import org.junit.After;
+-import org.junit.Before;
+-import org.junit.BeforeClass;
+-import org.junit.Test;
+-
+-public class TestSchedulerQueue {
+-
+-  // hadoop group mapping that maps user to same group
+-  public static class HiveTestSimpleGroupMapping implements GroupMappingServiceProvider {
+-    public static String primaryTag = "";
+-    @Override
+-    public List<String> getGroups(String user) throws IOException {
+-      List<String> results = new ArrayList<String>();
+-      results.add(user + primaryTag);
+-      results.add(user + "-group");
+-      return results;
+-    }
+-
+-    @Override
+-    public void cacheGroupsRefresh() throws IOException {
+-    }
+-
+-    @Override
+-    public void cacheGroupsAdd(List<String> groups) throws IOException {
+-    }
+-  }
+-
+-  private MiniHS2 miniHS2 = null;
+-  private static HiveConf conf = new HiveConf();
+-  private Connection hs2Conn = null;
+-
+-  @BeforeClass
+-  public static void beforeTest() throws Exception {
+-    Class.forName(MiniHS2.getJdbcDriverName());
+-    conf.set("hadoop.security.group.mapping",
+-        HiveTestSimpleGroupMapping.class.getName());
+-  }
+-
+-  @Before
+-  public void setUp() throws Exception {
+-    DriverManager.setLoginTimeout(0);
+-    miniHS2 = new MiniHS2(conf, MiniClusterType.MR);
+-    miniHS2.setConfProperty(HiveConf.ConfVars.HIVE_SERVER2_ENABLE_DOAS.varname, "false");
+-    miniHS2.setConfProperty(HiveConf.ConfVars.HIVE_SERVER2_MAP_FAIR_SCHEDULER_QUEUE.varname,
+-        "true");
+-    miniHS2.setConfProperty(YarnConfiguration.RM_SCHEDULER,
+-        "org.apache.hadoop.yarn.server.resourcemanager.scheduler.fair.FairScheduler");
+-    miniHS2.start(new HashMap<String, String>());
+-    HiveTestSimpleGroupMapping.primaryTag = "";
+-  }
+-
+-  @After
+-  public void tearDown() throws Exception {
+-    if (hs2Conn != null) {
+-      hs2Conn.close();
+-    }
+-    if (miniHS2 != null && miniHS2.isStarted()) {
+-      miniHS2.stop();
+-    }
+-    System.clearProperty("mapreduce.job.queuename");
+-  }
+-
+-  /**
+-   * Verify:
+-   *  Test is running with MR2 and queue mapping defaults are set.
+-   *  Queue mapping is set for the connected user.
+-   *
+-   * @throws Exception
+-   */
+-  @Test
+-  public void testFairSchedulerQueueMapping() throws Exception {
+-    hs2Conn = DriverManager.getConnection(miniHS2.getJdbcURL(), "user1", "bar");
+-    verifyProperty(HiveConf.ConfVars.HIVE_SERVER2_ENABLE_DOAS.varname, "false");
+-    verifyProperty("mapreduce.framework.name", "yarn");
+-    verifyProperty(HiveConf.ConfVars.HIVE_SERVER2_MAP_FAIR_SCHEDULER_QUEUE.varname,
+-        "true");
+-    verifyProperty(YarnConfiguration.RM_SCHEDULER,
+-        "org.apache.hadoop.yarn.server.resourcemanager.scheduler.fair.FairScheduler");
+-    verifyProperty("mapreduce.job.queuename", "root.user1");
+-  }
+-
+-  /**
+-   * Verify:
+-   *  Test is running with MR2 and queue mapping are set correctly for primary group rule.
+-   * @throws Exception
+-   */
+-  @Test
+-  public void testFairSchedulerPrimaryQueueMapping() throws Exception {
+-    miniHS2.setConfProperty(FairSchedulerConfiguration.ALLOCATION_FILE, "fair-scheduler-test.xml");
+-    HiveTestSimpleGroupMapping.primaryTag = "-test";
+-    hs2Conn = DriverManager.getConnection(miniHS2.getJdbcURL(), "user2", "bar");
+-    verifyProperty("mapreduce.job.queuename", "root.user2" + HiveTestSimpleGroupMapping.primaryTag);
+-  }
+-
+-  /**
+-   * Verify:
+-   *  Test is running with MR2 and queue mapping are set correctly for primary group rule.
+-   * @throws Exception
+-   */
+-  @Test
+-  public void testFairSchedulerSecondaryQueueMapping() throws Exception {
+-    miniHS2.setConfProperty(FairSchedulerConfiguration.ALLOCATION_FILE, "fair-scheduler-test.xml");
+-    hs2Conn = DriverManager.getConnection(miniHS2.getJdbcURL(), "user3", "bar");
+-    verifyProperty("mapreduce.job.queuename", "root.user3-group");
+-  }
+-
+-  /**
+-   * Verify that the queue refresh doesn't happen when configured to be off.
+-   *
+-   * @throws Exception
+-   */
+-  @Test
+-  public void testQueueMappingCheckDisabled() throws Exception {
+-    miniHS2.setConfProperty(
+-        HiveConf.ConfVars.HIVE_SERVER2_MAP_FAIR_SCHEDULER_QUEUE.varname, "false");
+-    hs2Conn = DriverManager.getConnection(miniHS2.getJdbcURL(), "user1", "bar");
+-    verifyProperty(HiveConf.ConfVars.HIVE_SERVER2_MAP_FAIR_SCHEDULER_QUEUE.varname,
+-        "false");
+-    verifyProperty("mapreduce.job.queuename", YarnConfiguration.DEFAULT_QUEUE_NAME);
+-  }
+-
+-  /**
+-   * Verify that the given property contains the expected value.
+-   *
+-   * @param propertyName
+-   * @param expectedValue
+-   * @throws Exception
+-   */
+-  private void verifyProperty(String propertyName, String expectedValue) throws Exception {
+-    Statement stmt = hs2Conn .createStatement();
+-    ResultSet res = stmt.executeQuery("set " + propertyName);
+-    assertTrue(res.next());
+-    String results[] = res.getString(1).split("=");
+-    assertEquals("Property should be set", results.length, 2);
+-    assertEquals("Property should be set", expectedValue, results[1]);
+-  }
+-}
+diff --git a/service/src/java/org/apache/hive/service/cli/session/HiveSessionImpl.java b/service/src/java/org/apache/hive/service/cli/session/HiveSessionImpl.java
+index b9a8537f5b..c7bec7138b 100644
+--- a/service/src/java/org/apache/hive/service/cli/session/HiveSessionImpl.java
++++ b/service/src/java/org/apache/hive/service/cli/session/HiveSessionImpl.java
+@@ -134,16 +134,6 @@ public HiveSessionImpl(SessionHandle sessionHandle, TProtocolVersion protocol,
+     this.forwardedAddresses = forwardedAddresses;
+     this.operationLock = serverConf.getBoolVar(
+         ConfVars.HIVE_SERVER2_PARALLEL_OPS_IN_SESSION) ? null : new Semaphore(1);
+-    try {
+-      // In non-impersonation mode, map scheduler queue to current user
+-      // if fair scheduler is configured.
+-      if (! sessionConf.getBoolVar(ConfVars.HIVE_SERVER2_ENABLE_DOAS) &&
+-        sessionConf.getBoolVar(ConfVars.HIVE_SERVER2_MAP_FAIR_SCHEDULER_QUEUE)) {
+-        ShimLoader.getHadoopShims().refreshDefaultQueue(sessionConf, username);
+-      }
+-    } catch (IOException e) {
+-      LOG.warn("Error setting scheduler queue: " + e, e);
+-    }
+     // Set an explicit session name to control the download directory name
+     sessionConf.set(ConfVars.HIVESESSIONID.varname,
+         this.sessionHandle.getHandleIdentifier().toString());
+diff --git a/shims/0.23/src/main/java/org/apache/hadoop/hive/shims/Hadoop23Shims.java b/shims/0.23/src/main/java/org/apache/hadoop/hive/shims/Hadoop23Shims.java
+index ec06a88dc2..232cf82617 100644
+--- a/shims/0.23/src/main/java/org/apache/hadoop/hive/shims/Hadoop23Shims.java
++++ b/shims/0.23/src/main/java/org/apache/hadoop/hive/shims/Hadoop23Shims.java
+@@ -257,9 +257,7 @@ public int compare(LongWritable o1, LongWritable o2) {
+    */
+   @Override
+   public void refreshDefaultQueue(Configuration conf, String userName) throws IOException {
+-    if (StringUtils.isNotBlank(userName) && isFairScheduler(conf)) {
+-      ShimLoader.getSchedulerShims().refreshDefaultQueue(conf, userName);
+-    }
++    //no op
+   }
+ 
+   private boolean isFairScheduler (Configuration conf) {
+diff --git a/shims/common/src/main/java/org/apache/hadoop/hive/shims/SchedulerShim.java b/shims/common/src/main/java/org/apache/hadoop/hive/shims/SchedulerShim.java
+deleted file mode 100644
+index ec8d1a0ff6..0000000000
+--- a/shims/common/src/main/java/org/apache/hadoop/hive/shims/SchedulerShim.java
++++ /dev/null
+@@ -1,37 +0,0 @@
+-/*
+- * Licensed to the Apache Software Foundation (ASF) under one
+- * or more contributor license agreements.  See the NOTICE file
+- * distributed with this work for additional information
+- * regarding copyright ownership.  The ASF licenses this file
+- * to you under the Apache License, Version 2.0 (the
+- * "License"); you may not use this file except in compliance
+- * with the License.  You may obtain a copy of the License at
+- *
+- *     http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS,
+- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+- * See the License for the specific language governing permissions and
+- * limitations under the License.
+- */
+-package org.apache.hadoop.hive.shims;
+-
+-import java.io.IOException;
+-
+-import org.apache.hadoop.conf.Configuration;
+-
+-/**
+- * Shim for Fair scheduler
+- * HiveServer2 uses fair scheduler API to resolve the queue mapping for non-impersonation
+- * mode. This shim is avoid direct dependency of yarn fair scheduler on Hive.
+- */
+-public interface SchedulerShim {
+-  /**
+-   * Reset the default fair scheduler queue mapping to end user.
+-   * @param conf
+-   * @param userName end user name
+-   */
+-  public void refreshDefaultQueue(Configuration conf, String userName)
+-      throws IOException;
+-}
+diff --git a/shims/common/src/main/java/org/apache/hadoop/hive/shims/ShimLoader.java b/shims/common/src/main/java/org/apache/hadoop/hive/shims/ShimLoader.java
+index 28ab7c4c60..2188426dcb 100644
+--- a/shims/common/src/main/java/org/apache/hadoop/hive/shims/ShimLoader.java
++++ b/shims/common/src/main/java/org/apache/hadoop/hive/shims/ShimLoader.java
+@@ -36,7 +36,6 @@
+   private static volatile HadoopShims hadoopShims;
+   private static JettyShims jettyShims;
+   private static AppenderSkeleton eventCounter;
+-  private static SchedulerShim schedulerShim;
+ 
+   /**
+    * The names of the classes for shimming Hadoop for each major version.
+@@ -101,13 +100,6 @@ public static synchronized AppenderSkeleton getEventCounter() {
+     return eventCounter;
+   }
+ 
+-  public static synchronized SchedulerShim getSchedulerShims() {
+-    if (schedulerShim == null) {
+-      schedulerShim = createShim(SCHEDULER_SHIM_CLASSE, SchedulerShim.class);
+-    }
+-    return schedulerShim;
+-  }
+-
+   private static <T> T loadShims(Map<String, String> classMap, Class<T> xface) {
+     String vers = getMajorVersion();
+     String className = classMap.get(vers);
+diff --git a/shims/scheduler/src/main/java/org/apache/hadoop/hive/schshim/FairSchedulerShim.java b/shims/scheduler/src/main/java/org/apache/hadoop/hive/schshim/FairSchedulerShim.java
+deleted file mode 100644
+index 6d12f05e69..0000000000
+--- a/shims/scheduler/src/main/java/org/apache/hadoop/hive/schshim/FairSchedulerShim.java
++++ /dev/null
+@@ -1,70 +0,0 @@
+-/*
+- * Licensed to the Apache Software Foundation (ASF) under one
+- * or more contributor license agreements.  See the NOTICE file
+- * distributed with this work for additional information
+- * regarding copyright ownership.  The ASF licenses this file
+- * to you under the Apache License, Version 2.0 (the
+- * "License"); you may not use this file except in compliance
+- * with the License.  You may obtain a copy of the License at
+- *
+- *     http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS,
+- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+- * See the License for the specific language governing permissions and
+- * limitations under the License.
+- */
+-package org.apache.hadoop.hive.schshim;
+-
+-import java.io.IOException;
+-import java.util.concurrent.atomic.AtomicReference;
+-
+-import org.apache.commons.lang.StringUtils;
+-import org.slf4j.Logger;
+-import org.slf4j.LoggerFactory;
+-import org.apache.hadoop.conf.Configuration;
+-import org.apache.hadoop.hive.shims.SchedulerShim;
+-import org.apache.hadoop.yarn.conf.YarnConfiguration;
+-import org.apache.hadoop.yarn.server.resourcemanager.scheduler.fair.AllocationConfiguration;
+-import org.apache.hadoop.yarn.server.resourcemanager.scheduler.fair.AllocationFileLoaderService;
+-import org.apache.hadoop.yarn.server.resourcemanager.scheduler.fair.QueuePlacementPolicy;
+-
+-public class FairSchedulerShim implements SchedulerShim {
+-  private static final Logger LOG = LoggerFactory.getLogger(FairSchedulerShim.class);
+-  private static final String MR2_JOB_QUEUE_PROPERTY = "mapreduce.job.queuename";
+-
+-  @Override
+-  public void refreshDefaultQueue(Configuration conf, String userName)
+-      throws IOException {
+-    String requestedQueue = YarnConfiguration.DEFAULT_QUEUE_NAME;
+-    final AtomicReference<AllocationConfiguration> allocConf = new AtomicReference<AllocationConfiguration>();
+-
+-    AllocationFileLoaderService allocsLoader = new AllocationFileLoaderService();
+-    allocsLoader.init(conf);
+-    allocsLoader.setReloadListener(new AllocationFileLoaderService.Listener() {
+-      @Override
+-      public void onReload(AllocationConfiguration allocs) {
+-        allocConf.set(allocs);
+-      }
+-    });
+-    try {
+-      allocsLoader.reloadAllocations();
+-    } catch (Exception ex) {
+-      throw new IOException("Failed to load queue allocations", ex);
+-    }
+-    if (allocConf.get() == null) {
+-      allocConf.set(new AllocationConfiguration(conf));
+-    }
+-    QueuePlacementPolicy queuePolicy = allocConf.get().getPlacementPolicy();
+-    if (queuePolicy != null) {
+-      requestedQueue = queuePolicy.assignAppToQueue(requestedQueue, userName);
+-      if (StringUtils.isNotBlank(requestedQueue)) {
+-        LOG.debug("Setting queue name to " + requestedQueue + " for user "
+-            + userName);
+-        conf.set(MR2_JOB_QUEUE_PROPERTY, requestedQueue);
+-      }
+-    }
+-  }
+-
+-}

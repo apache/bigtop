@@ -89,10 +89,16 @@ elif [ ${ARCH} == "ppc64le" ]; then
 fi
 
 cd ../../../../../../../
+# shellcheck disable=SC2046
 docker run --rm -v `pwd`:/ws --workdir /ws bigtop/slaves:trunk-centos-7${basearch} bash -c '. /etc/profile.d/bigtop.sh; ./gradlew bigtop-utils-clean bigtop-ambari-mpack-clean bigtop-utils-pkg bigtop-ambari-mpack-pkg'
 docker cp output/bigtop-ambari-mpack/noarch/bigtop-ambari-mpack-2.7.5.0-*.rpm ambari-server:/
 docker cp output/bigtop-utils/noarch/bigtop-utils-*.rpm ambari-server:/
-cd -
+cd -  || exit
+
+echo -e "\033[32mSynchronize Chrony\033[0m"
+docker exec ambari-server bash -c "systemctl enable chronyd; systemctl start chronyd; chronyc tracking"
+docker exec ambari-agent-01 bash -c "systemctl enable chronyd; systemctl start chronyd; chronyc tracking"
+docker exec ambari-agent-02 bash -c "systemctl enable chronyd; systemctl start chronyd; chronyc tracking"
 
 docker exec ambari-server bash -c "rpm -ivh -f /bigtop-utils-*.rpm; rpm -ivh -f /bigtop-ambari-mpack-2.7.5.0-1.el7.noarch.rpm"
 docker exec ambari-server bash -c "cp /usr/lib/bigtop-ambari-mpack/bgtp-ambari-mpack-1.0.0.0-SNAPSHOT-bgtp-ambari-mpack.tar.gz /"

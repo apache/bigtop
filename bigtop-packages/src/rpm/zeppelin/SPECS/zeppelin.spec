@@ -126,6 +126,7 @@ chkconfig --del %{name}
 %doc %{doc_zeppelin}
 %{lib_zeppelin}/*.war
 %{lib_zeppelin}/bin
+%{lib_zeppelin}/plugins
 %{lib_zeppelin}/conf
 %{lib_zeppelin}/interpreter
 %{lib_zeppelin}/lib
