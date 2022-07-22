@@ -148,8 +148,8 @@ bigtop {
       version { base = '3.2.4'; pkg = base; release = 1 }
       tarball { destination = "${name}-${version.base}.tar.gz"
                 source      = "${name}-${version.base}-src.tar.gz" }
-      url     { download_path = "/hadoop-3.2.4-RC0/"
-                site = "https://home.apache.org/~iwasakims/${download_path}"
+      url     { download_path = "/$name/common/$name-${version.base}"
+                site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }
     'hbase' {
