@@ -145,7 +145,7 @@ bigtop {
     'hadoop' {
       name    = 'hadoop'
       relNotes = 'Apache Hadoop'
-      version { base = '3.2.3'; pkg = base; release = 2 }
+      version { base = '3.2.4'; pkg = base; release = 1 }
       tarball { destination = "${name}-${version.base}.tar.gz"
                 source      = "${name}-${version.base}-src.tar.gz" }
       url     { download_path = "/$name/common/$name-${version.base}"
@@ -166,7 +166,7 @@ bigtop {
     'hive' {
       name    = 'hive'
       relNotes = 'Apache Hive'
-      version { base = '3.1.2'; pkg = base; release = 3 }
+      version { base = '3.1.2'; pkg = base; release = 4 }
       tarball { destination = "apache-${name}-${version.base}-src.tar.gz"
                 source      = destination }
       url     { download_path = "/$name/$name-${version.base}/"
