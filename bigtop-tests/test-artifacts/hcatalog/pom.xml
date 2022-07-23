@@ -21,13 +21,13 @@
   <parent>
     <groupId>org.apache.bigtop.itest</groupId>
     <artifactId>bigtop-smokes</artifactId>
-    <version>3.1.0</version>
+    <version>3.1.1</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>hcatalog-smoke</artifactId>
-  <version>3.1.0</version>
+  <version>3.1.1</version>
   <name>hcatalogsmoke</name>
 
   <build>

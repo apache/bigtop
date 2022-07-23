@@ -20,14 +20,14 @@
   <parent>
     <groupId>org.apache.bigtop.itest</groupId>
     <artifactId>bigtop-smokes</artifactId>
-    <version>3.1.0</version>
+    <version>3.1.1</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>package-smoke</artifactId>
-  <version>3.1.0</version>
+  <version>3.1.1</version>
   <name>packagesmoke</name> 
 
   <dependencies>

@@ -21,13 +21,13 @@
   <parent>
     <groupId>org.apache.bigtop.itest</groupId>
     <artifactId>stacks-common</artifactId>
-    <version>3.1.0</version>
+    <version>3.1.1</version>
     <relativePath>../common/pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>smoke-tests-conf</artifactId>
-  <version>3.1.0</version>
+  <version>3.1.1</version>
   <name>smoke-tests-conf</name>
 
   <dependencies>

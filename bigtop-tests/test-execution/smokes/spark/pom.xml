@@ -23,13 +23,13 @@
   <parent>
     <groupId>org.apache.bigtop.itest</groupId>
     <artifactId>smoke-tests</artifactId>
-    <version>3.1.0</version>
+    <version>3.1.1</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>spark-smoke-execution</artifactId>
-  <version>3.1.0</version>
+  <version>3.1.1</version>
   <name>Spark smoke test execution</name>
 
   <properties>
