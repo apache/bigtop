@@ -1,0 +1,21 @@
+diff --git a/hbase-shaded/pom.xml b/hbase-shaded/pom.xml
+index 5d3b66a9fe..ccce4b2642 100644
+--- a/hbase-shaded/pom.xml
++++ b/hbase-shaded/pom.xml
+@@ -449,6 +449,16 @@
+                                         <shadedPattern>${shaded.prefix}.net.</shadedPattern>
+                                     </relocation>
+ 
++                                    <!-- okhttp -->
++                                    <relocation>
++                                      <pattern>okhttp3.</pattern>
++                                      <shadedPattern>${shaded.prefix}.okhttp3.</shadedPattern>
++                                    </relocation>
++                                    <relocation>
++                                      <pattern>kotlin.</pattern>
++                                      <shadedPattern>${shaded.prefix}.kotlin.</shadedPattern>
++                                    </relocation>
++
+                                 </relocations>
+                                 <transformers>
+                                   <!-- Need to filter out some extraneous license files.
