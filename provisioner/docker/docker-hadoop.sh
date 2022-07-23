@@ -148,15 +148,6 @@ generate-config() {
     cat $BIGTOP_PUPPET_DIR/hiera.yaml >> ./config/hiera.yaml
     cp -vfr $BIGTOP_PUPPET_DIR/hieradata ./config/
 
-    # A workaround for starting Elasticsearch on ppc64le.
-    # See BIGTOP-3574 for details.
-    running_arch=$(uname -m)
-    if [ "ppc64le" == ${running_arch} ]; then
-        elasticsearch_bootstrap_system_call_filter=false
-    else
-        elasticsearch_bootstrap_system_call_filter=true
-    fi
-
     cat > ./config/hieradata/site.yaml << EOF
 bigtop::hadoop_head_node: $1
 hadoop::hadoop_storage_dirs: [/data/1, /data/2]
@@ -165,7 +156,6 @@ bigtop::bigtop_repo_gpg_check: $gpg_check
 hadoop_cluster_node::cluster_components: $3
 hadoop_cluster_node::cluster_nodes: [$node_list]
 hadoop::common_yarn::yarn_resourcemanager_scheduler_class: org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacityScheduler
-elasticsearch::bootstrap::system_call_filter: $elasticsearch_bootstrap_system_call_filter
 EOF
 }
 
