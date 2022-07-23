@@ -17,6 +17,52 @@
 		<section name="Bigtop Project Release Notes">
 			<!-- Paste release notes from https://issues.apache.org/jira/browse/BIGTOP here. -->
 
+        <h3>Release Notes - Bigtop - Version 3.1.1</h3>
+
+<h2>        Bug
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3712'>BIGTOP-3712</a>] -         Kafka smoke test failed with Zookeeper built with maven
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3714'>BIGTOP-3714</a>] -         Fix error of DataNode httpserver due to conflicting dependency on Netty in branch-3.1
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3724'>BIGTOP-3724</a>] -         Increment the release number of ZooKeeper and Kafka
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3725'>BIGTOP-3725</a>] -         Puppet 3 is removed from EPEL for CentOS 7
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3733'>BIGTOP-3733</a>] -         Building Logstash fails on Rocky 8
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3735'>BIGTOP-3735</a>] -         Sqoop bin script doesn&#39;t work on Bigtop-3.1.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3747'>BIGTOP-3747</a>] -         Zeppelin RPM package is missing notebookrepo-filesystem-0.10.0.jar
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3751'>BIGTOP-3751</a>] -         Fix build failure of Zeppelin due to dependency convergence error
+</li>
+</ul>
+
+<h2>        New Feature
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3736'>BIGTOP-3736</a>] -         Bump Hadoop to 3.2.4 in branch-3.1
+</li>
+</ul>
+
+<h2>        Improvement
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3669'>BIGTOP-3669</a>] -         Use maven instead of ant to build ZooKeeper
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3715'>BIGTOP-3715</a>] -         Add TestWebHDFS to smoke-tests
+</li>
+</ul>
+
+<h2>        Task
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3742'>BIGTOP-3742</a>] -         Add tez.tar.gz tarball in tez.rpm
+</li>
+</ul>
+
         <h3>Release Notes - Bigtop - Version 3.1.0</h3>
 
 <h2>        Sub-task
@@ -162,8 +208,6 @@
 <h2>        Task
 </h2>
 <ul>
-<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3586'>BIGTOP-3586</a>] -         Upgrade Bigtop-ambari-mpack to support Ambari 2.7.5 and Hadoop3.x in BIGTOP-3.0 release
-</li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3590'>BIGTOP-3590</a>] -         Hbase smoke tests failed on Ubuntu 20.04
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3591'>BIGTOP-3591</a>] -         Upgrading Bigtop-Mpack services deploying scripts aligned to Ambari-2.7.5

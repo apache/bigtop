@@ -15,6 +15,31 @@
 
 Bigtop Changelog
 
+* Release 3.1.1 (2022-07-23)
+
+Release Notes - Bigtop - Version 3.1.1
+
+** Bug
+    * [BIGTOP-3712] - Kafka smoke test failed with Zookeeper built with maven
+    * [BIGTOP-3714] - Fix error of DataNode httpserver due to conflicting dependency on Netty in branch-3.1
+    * [BIGTOP-3724] - Increment the release number of ZooKeeper and Kafka
+    * [BIGTOP-3725] - Puppet 3 is removed from EPEL for CentOS 7
+    * [BIGTOP-3733] - Building Logstash fails on Rocky 8
+    * [BIGTOP-3735] - Sqoop bin script doesn't work on Bigtop-3.1.0
+    * [BIGTOP-3747] - Zeppelin RPM package is missing notebookrepo-filesystem-0.10.0.jar
+    * [BIGTOP-3751] - Fix build failure of Zeppelin due to dependency convergence error
+
+** New Feature
+    * [BIGTOP-3736] - Bump Hadoop to 3.2.4 in branch-3.1
+
+** Improvement
+    * [BIGTOP-3669] - Use maven instead of ant to build ZooKeeper
+    * [BIGTOP-3715] - Add TestWebHDFS to smoke-tests
+
+** Task
+    * [BIGTOP-3742] - Add tez.tar.gz tarball in tez.rpm
+
+
 * Release 3.1.0 (2022-05-17)
 
 Release Notes - Bigtop - Version 3.1.0
@@ -88,7 +113,6 @@ Release Notes - Bigtop - Version 3.1.0
     * [BIGTOP-3658] - Add Fedora 35 support and drop 33
 
 ** Task
-    * [BIGTOP-3586] - Upgrade Bigtop-ambari-mpack to support Ambari 2.7.5 and Hadoop3.x in BIGTOP-3.0 release
     * [BIGTOP-3590] - Hbase smoke tests failed on Ubuntu 20.04
     * [BIGTOP-3591] - Upgrading Bigtop-Mpack services deploying scripts aligned to Ambari-2.7.5
     * [BIGTOP-3592] - Remove Ambari stack-select tool dependency from stack hooks
