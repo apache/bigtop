@@ -21,7 +21,7 @@ Summary:       Reliable file sharing at memory speed across cluster frameworks
 License:       ASL 2.0
 URL:           http://www.alluxio.org/
 Group:         Development/Libraries
-BuildArch:     noarch
+# BuildArch:     noarch
 
 Source0:       %{alluxio_name}-%{alluxio_base_version}.tar.gz
 Source1:       do-component-build
@@ -66,6 +66,9 @@ Requires: bigtop-utils
 
 # disable repacking jars
 %define __arch_install_post %{nil}
+
+# disable debug package
+%define debug_package %{nil}
 
 %description
 Alluxio is a fault tolerant distributed file system
@@ -132,6 +135,10 @@ done
 %doc LICENSE README.md
 %dir %{_sysconfdir}/%{alluxio_name}
 %config(noreplace) %{_sysconfdir}/%{alluxio_name}/conf.dist
+%exclude %{_sysconfdir}/%{alluxio_name}/conf.dist/log4j.properties
+%exclude %{_sysconfdir}/%{alluxio_name}/conf.dist/alluxio-env.sh
+%exclude %{_sysconfdir}/%{alluxio_name}/conf.dist/alluxio-site.properties
+%exclude %{_sysconfdir}/%{alluxio_name}/conf.dist/core-site.xml
 %config(noreplace) %{_sysconfdir}/%{alluxio_name}/conf.dist/log4j.properties
 %config(noreplace) %{_sysconfdir}/%{alluxio_name}/conf.dist/alluxio-env.sh
 %config(noreplace) %{_sysconfdir}/%{alluxio_name}/conf.dist/alluxio-site.properties

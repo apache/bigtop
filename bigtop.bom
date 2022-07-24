@@ -282,7 +282,7 @@ bigtop {
       name    = "alluxio"
       pkg     = "alluxio"
       relNotes = "Alluxio: a memory-centric distributed file system"
-      version { base = '2.4.1'; pkg = base; release = 2 }
+      version { base = '2.8.0'; pkg = base; release = 2 }
       tarball { destination = "$name-${version.base}.tar.gz"
                 source      = "v${version.base}.tar.gz" }
       url     { site = "https://github.com/Alluxio/alluxio/archive"
