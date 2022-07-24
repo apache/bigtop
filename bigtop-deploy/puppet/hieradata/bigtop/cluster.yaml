@@ -211,6 +211,3 @@ gpdb::common::master_db_port: "5432"
 gpdb::common::segment_db_port_prefix: "4000"
 
 ambari::agent::server_host: "%{hiera('bigtop::hadoop_head_node')}"
-
-# Elasticsearch
-elasticsearch::bootstrap::system_call_filter: true
