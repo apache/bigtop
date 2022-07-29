@@ -68,14 +68,18 @@ class bigtop_toolchain::packages {
       ]
 
       if ($operatingsystem == 'Fedora' or $operatingsystemmajrelease !~ /^[0-7]$/) {
-        $pkgs = concat($_pkgs, ["python2-devel", "libtirpc-devel", "cmake"])
+        $_pkgs_os = concat($_pkgs, ["python2-devel", "libtirpc-devel", "cmake"])
+      } elsif (($operatingsystem == 'CentOS' and $operatingsystemmajrelease == 7)) {
+        $_pkgs_os = concat($_pkgs, ["centos-release-scl", "python-devel", "cmake3"])
       } else {
-        $pkgs = concat($_pkgs, ["python-devel", "cmake3"])
+        $_pkgs_os = concat($_pkgs, ["python-devel", "cmake3"])
       }
 
       if ($architecture == "x86_64") {
-        $pkgs = concat($_pkgs, ["glibc-devel.i686"])
+        $_pkgs_all = concat($_pkgs_os, ["glibc-devel.i686"])
       }
+
+      $pkgs = $_pkgs_all
     }
     /(?i:(SLES|opensuse))/: { $pkgs = [
         "unzip",
