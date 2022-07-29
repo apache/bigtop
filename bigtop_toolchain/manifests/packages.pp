@@ -64,7 +64,6 @@ class bigtop_toolchain::packages {
         "krb5-devel",
         "net-tools",
         "perl-Digest-SHA",
-        "centos-release-scl",
         "ninja-build",
         "glibc-devel.i686"
       ]
@@ -222,6 +221,8 @@ class bigtop_toolchain::packages {
         $pkgs = $_pkgs
       } elsif (($operatingsystem == 'Ubuntu' and 0 <= versioncmp($operatingsystemmajrelease, '20.04')) or ($operatingsystem == 'Debian' and 0 <= versioncmp($operatingsystemmajrelease, '11'))) {
         $pkgs = concat($_pkgs, ["python-is-python2"])
+      } elsif (($operatingsystem == 'CentOS' and $operatingsystemmajrelease == 7)) {
+        $pkgs = concat($_pkgs, ["centos-release-scl"])
       } else {
         $pkgs = $_pkgs
       }
