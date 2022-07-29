@@ -63,7 +63,10 @@ class bigtop_toolchain::packages {
         "libffi-devel",
         "krb5-devel",
         "net-tools",
-        "perl-Digest-SHA"
+        "perl-Digest-SHA",
+        "centos-release-scl",
+        "ninja-build",
+        "glibc-devel.i686"
       ]
 
       if ($operatingsystem == 'Fedora' or $operatingsystemmajrelease !~ /^[0-7]$/) {
@@ -250,6 +253,11 @@ class bigtop_toolchain::packages {
       # https://access.redhat.com/errata/RHBA-2021:3649
       package { 'ca-certificates':
         ensure => latest
+      }
+
+      package { 'devtoolset-9':
+        ensure => installed,
+        require => Package['centos-release-scl']
       }
     }
     if $operatingsystemmajrelease !~ /^[0-7]$/ {

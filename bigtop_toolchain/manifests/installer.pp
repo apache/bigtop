@@ -24,6 +24,7 @@ class bigtop_toolchain::installer {
   include bigtop_toolchain::user
   include bigtop_toolchain::renv
   include bigtop_toolchain::grpc
+  include bigtop_toolchain::llvm
 
   stage { 'last':
     require => Stage['main'],
