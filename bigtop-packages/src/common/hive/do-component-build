@@ -41,7 +41,6 @@ elif [ $HOSTTYPE = "aarch64" ] ; then
   mvn install:install-file -DgroupId=com.google.protobuf -DartifactId=protoc -Dversion=2.5.0 \
     -Dclassifier=linux-aarch_64 -Dpackaging=exe -Dfile=/usr/local/protobuf-2.5.0/bin/protoc
 fi
-export MAVEN_OPTS="${MAVEN_OPTS} -Xmx2500m -Xms2500m"
 mvn ${HIVE_MAVEN_OPTS} clean install ${EXTRA_GOALS} -Pdist "$@"
 
 mkdir -p build/dist
