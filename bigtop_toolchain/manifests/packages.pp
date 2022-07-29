@@ -64,14 +64,17 @@ class bigtop_toolchain::packages {
         "krb5-devel",
         "net-tools",
         "perl-Digest-SHA",
-        "ninja-build",
-        "glibc-devel.i686"
+        "ninja-build"
       ]
 
       if ($operatingsystem == 'Fedora' or $operatingsystemmajrelease !~ /^[0-7]$/) {
         $pkgs = concat($_pkgs, ["python2-devel", "libtirpc-devel", "cmake"])
       } else {
         $pkgs = concat($_pkgs, ["python-devel", "cmake3"])
+      }
+
+      if ($architecture == "x86_64") {
+        $pkgs = concat($_pkgs, ["glibc-devel.i686"])
       }
     }
     /(?i:(SLES|opensuse))/: { $pkgs = [
@@ -211,7 +214,8 @@ class bigtop_toolchain::packages {
         "python-setuptools",
         "libffi-dev",
         "python3-dev",
-        "python2.7-dev"
+        "python2.7-dev",
+        "gcc-multilib"
       ]
       if (($operatingsystem == 'Ubuntu' and 0 <= versioncmp($operatingsystemmajrelease, '22.04'))) {
         file { '/usr/bin/python':
@@ -221,8 +225,6 @@ class bigtop_toolchain::packages {
         $pkgs = $_pkgs
       } elsif (($operatingsystem == 'Ubuntu' and 0 <= versioncmp($operatingsystemmajrelease, '20.04')) or ($operatingsystem == 'Debian' and 0 <= versioncmp($operatingsystemmajrelease, '11'))) {
         $pkgs = concat($_pkgs, ["python-is-python2"])
-      } elsif (($operatingsystem == 'CentOS' and $operatingsystemmajrelease == 7)) {
-        $pkgs = concat($_pkgs, ["centos-release-scl"])
       } else {
         $pkgs = $_pkgs
       }

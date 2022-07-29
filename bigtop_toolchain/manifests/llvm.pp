@@ -22,11 +22,11 @@ class bigtop_toolchain::llvm {
   $llvm = "${llvmproject}-${llvmversion}"
 
   if ($operatingsystem == 'CentOS' and $operatingsystemmajrelease == 7) {
-    $make = "/usr/bin/scl enable devtoolset-9 -- make -j ${processorcount} install"
-    $cmake = "/usr/bin/scl enable devtoolset-9 -- cmake -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_PROJECTS=\"clang;lld\" -DLLVM_ENABLE_RUNTIMES=\"compiler-rt;libc;libcxx;libcxxabi\" -DCMAKE_INSTALL_PREFIX=/usr/local ../llvm"
+    $make = "/usr/bin/scl enable devtoolset-9 -- make"
+    $cmake = "/usr/bin/scl enable devtoolset-9 -- cmake"
   } else {
-    $make = "/usr/bin/make -j ${processorcount} install"
-    $cmake = "/usr/bin/cmake -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_PROJECTS=\"clang;lld\" -DLLVM_ENABLE_RUNTIMES=\"compiler-rt;libc;libcxx;libcxxabi\" -DCMAKE_INSTALL_PREFIX=/usr/local ../llvm"
+    $make = "/usr/bin/make"
+    $cmake = "/usr/bin/cmake"
   }
 
   exec { 'Mkdirs':
@@ -58,13 +58,13 @@ class bigtop_toolchain::llvm {
   } ->
 
   exec { 'CMake LLVM':
-    command => "${cmake}",
+    command => "${cmake} -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_PROJECTS=\"clang;lld\" -DLLVM_ENABLE_RUNTIMES=\"compiler-rt;libc;libcxx;libcxxabi\" -DCMAKE_INSTALL_PREFIX=/usr/local ../llvm",
     cwd     => "/usr/src/${llvmproject}/build",
-    timeout => 3600
-  } -> 
+    timeout => 600
+  } ->
 
   exec { 'Make LLVM':
-    command => "${make}",
+    command => "${make} -j ${processorcount} install",
     cwd     => "/usr/src/${llvmproject}/build",
     timeout => 7200
   }
