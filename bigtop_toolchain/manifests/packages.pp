@@ -243,7 +243,8 @@ class bigtop_toolchain::packages {
 
   if $operatingsystem == 'CentOS' {
     package { 'epel-release':
-      ensure => installed
+      ensure => installed,
+      notify => Package[$pkgs]
     }
 
     if $operatingsystemmajrelease == 7 {
