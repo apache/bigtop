@@ -1,0 +1,304 @@
+From 57b6db1f552b356c87978fc7a04ccc8e5927d690 Mon Sep 17 00:00:00 2001
+From: S O'Donnell <sodonnell@cloudera.com>
+Date: Tue, 30 Mar 2021 12:17:46 +0100
+Subject: [PATCH 1/3] HDFS-15937. Reduce memory used during datanode layout
+ upgrade
+
+---
+ .../hdfs/server/datanode/DataStorage.java     | 92 ++++++++++++-------
+ 1 file changed, 60 insertions(+), 32 deletions(-)
+
+diff --git a/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/DataStorage.java b/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/DataStorage.java
+index 4e216db892f6..96fdd89cd6aa 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/DataStorage.java
++++ b/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/DataStorage.java
+@@ -1071,12 +1071,26 @@ private static void linkAllBlocks(File fromDir, File fromBbwDir, File toDir,
+   }
+ 
+   private static class LinkArgs {
+-    File src;
+-    File dst;
++    private File srcDir;
++    private File dstDir;
++    private String blockFile;
++
++    LinkArgs(File srcDir, File dstDir, String blockFile) {
++      this.srcDir = srcDir;
++      this.dstDir = dstDir;
++      this.blockFile = blockFile;
++    }
++
++    public File src() {
++      return new File(srcDir, blockFile);
++    }
++
++    public File dst() {
++      return new File(dstDir, blockFile);
++    }
+ 
+-    LinkArgs(File src, File dst) {
+-      this.src = src;
+-      this.dst = dst;
++    public String blockFile() {
++      return blockFile;
+     }
+   }
+ 
+@@ -1102,8 +1116,9 @@ private static void linkBlocks(File from, File to, int oldLV,
+     }
+ 
+     final ArrayList<LinkArgs> idBasedLayoutSingleLinks = Lists.newArrayList();
++    final Map<File, File> pathCache = new HashMap<>();
+     linkBlocksHelper(from, to, oldLV, hl, upgradeToIdBasedLayout, to,
+-        idBasedLayoutSingleLinks);
++        idBasedLayoutSingleLinks, pathCache);
+ 
+     // Detect and remove duplicate entries.
+     final ArrayList<LinkArgs> duplicates =
+@@ -1129,7 +1144,7 @@ public Void call() throws IOException {
+               idBasedLayoutSingleLinks.size());
+           for (int j = iCopy; j < upperBound; j++) {
+             LinkArgs cur = idBasedLayoutSingleLinks.get(j);
+-            HardLink.createHardLink(cur.src, cur.dst);
++            HardLink.createHardLink(cur.src(), cur.dst());
+           }
+           return null;
+         }
+@@ -1161,10 +1176,12 @@ static ArrayList<LinkArgs> findDuplicateEntries(ArrayList<LinkArgs> all) {
+        */
+       @Override
+       public int compare(LinkArgs a, LinkArgs b) {
++        File asrc = a.src();
++        File bsrc = b.src();
+         return ComparisonChain.start().
+-            compare(a.src.getName(), b.src.getName()).
+-            compare(a.src, b.src).
+-            compare(a.dst, b.dst).
++            compare(asrc.getName(), bsrc.getName()).
++            compare(asrc, bsrc).
++            compare(a.dst(), b.dst()).
+             result();
+       }
+     });
+@@ -1174,8 +1191,8 @@ public int compare(LinkArgs a, LinkArgs b) {
+     boolean addedPrev = false;
+     for (int i = 0; i < all.size(); i++) {
+       LinkArgs args = all.get(i);
+-      long blockId = Block.getBlockId(args.src.getName());
+-      boolean isMeta = Block.isMetaFilename(args.src.getName());
++      long blockId = Block.getBlockId(args.blockFile());
++      boolean isMeta = Block.isMetaFilename(args.blockFile());
+       if ((prevBlockId == null) ||
+           (prevBlockId.longValue() != blockId)) {
+         prevBlockId = blockId;
+@@ -1214,10 +1231,10 @@ private static void removeDuplicateEntries(ArrayList<LinkArgs> all,
+     TreeMap<Long, List<LinkArgs>> highestGenstamps =
+         new TreeMap<Long, List<LinkArgs>>();
+     for (LinkArgs duplicate : duplicates) {
+-      if (!Block.isMetaFilename(duplicate.src.getName())) {
++      if (!Block.isMetaFilename(duplicate.blockFile())) {
+         continue;
+       }
+-      long blockId = Block.getBlockId(duplicate.src.getName());
++      long blockId = Block.getBlockId(duplicate.blockFile());
+       List<LinkArgs> prevHighest = highestGenstamps.get(blockId);
+       if (prevHighest == null) {
+         List<LinkArgs> highest = new LinkedList<LinkArgs>();
+@@ -1226,8 +1243,8 @@ private static void removeDuplicateEntries(ArrayList<LinkArgs> all,
+         continue;
+       }
+       long prevGenstamp =
+-          Block.getGenerationStamp(prevHighest.get(0).src.getName());
+-      long genstamp = Block.getGenerationStamp(duplicate.src.getName());
++          Block.getGenerationStamp(prevHighest.get(0).blockFile());
++      long genstamp = Block.getGenerationStamp(duplicate.blockFile());
+       if (genstamp < prevGenstamp) {
+         continue;
+       }
+@@ -1241,19 +1258,19 @@ private static void removeDuplicateEntries(ArrayList<LinkArgs> all,
+     // from the duplicates list.
+     for (Iterator<LinkArgs> iter = duplicates.iterator(); iter.hasNext(); ) {
+       LinkArgs duplicate = iter.next();
+-      long blockId = Block.getBlockId(duplicate.src.getName());
++      long blockId = Block.getBlockId(duplicate.blockFile());
+       List<LinkArgs> highest = highestGenstamps.get(blockId);
+       if (highest != null) {
+         boolean found = false;
+         for (LinkArgs high : highest) {
+-          if (high.src.getParent().equals(duplicate.src.getParent())) {
++          if (high.src().getParent().equals(duplicate.src().getParent())) {
+             found = true;
+             break;
+           }
+         }
+         if (!found) {
+           LOG.warn("Unexpectedly low genstamp on {}.",
+-              duplicate.src.getAbsolutePath());
++              duplicate.src().getAbsolutePath());
+           iter.remove();
+         }
+       }
+@@ -1264,25 +1281,25 @@ private static void removeDuplicateEntries(ArrayList<LinkArgs> all,
+     // preserving one block file / metadata file pair.
+     TreeMap<Long, LinkArgs> longestBlockFiles = new TreeMap<Long, LinkArgs>();
+     for (LinkArgs duplicate : duplicates) {
+-      if (Block.isMetaFilename(duplicate.src.getName())) {
++      if (Block.isMetaFilename(duplicate.blockFile())) {
+         continue;
+       }
+-      long blockId = Block.getBlockId(duplicate.src.getName());
++      long blockId = Block.getBlockId(duplicate.blockFile());
+       LinkArgs prevLongest = longestBlockFiles.get(blockId);
+       if (prevLongest == null) {
+         longestBlockFiles.put(blockId, duplicate);
+         continue;
+       }
+-      long blockLength = duplicate.src.length();
+-      long prevBlockLength = prevLongest.src.length();
++      long blockLength = duplicate.src().length();
++      long prevBlockLength = prevLongest.src().length();
+       if (blockLength < prevBlockLength) {
+         LOG.warn("Unexpectedly short length on {}.",
+-            duplicate.src.getAbsolutePath());
++            duplicate.src().getAbsolutePath());
+         continue;
+       }
+       if (blockLength > prevBlockLength) {
+         LOG.warn("Unexpectedly short length on {}.",
+-            prevLongest.src.getAbsolutePath());
++            prevLongest.src().getAbsolutePath());
+       }
+       longestBlockFiles.put(blockId, duplicate);
+     }
+@@ -1291,13 +1308,13 @@ private static void removeDuplicateEntries(ArrayList<LinkArgs> all,
+     // arbitrarily selected by us.
+     for (Iterator<LinkArgs> iter = all.iterator(); iter.hasNext(); ) {
+       LinkArgs args = iter.next();
+-      long blockId = Block.getBlockId(args.src.getName());
++      long blockId = Block.getBlockId(args.blockFile());
+       LinkArgs bestDuplicate = longestBlockFiles.get(blockId);
+       if (bestDuplicate == null) {
+         continue; // file has no duplicates
+       }
+-      if (!bestDuplicate.src.getParent().equals(args.src.getParent())) {
+-        LOG.warn("Discarding {}.", args.src.getAbsolutePath());
++      if (!bestDuplicate.src().getParent().equals(args.src().getParent())) {
++        LOG.warn("Discarding {}.", args.src().getAbsolutePath());
+         iter.remove();
+       }
+     }
+@@ -1305,7 +1322,8 @@ private static void removeDuplicateEntries(ArrayList<LinkArgs> all,
+ 
+   static void linkBlocksHelper(File from, File to, int oldLV, HardLink hl,
+   boolean upgradeToIdBasedLayout, File blockRoot,
+-      List<LinkArgs> idBasedLayoutSingleLinks) throws IOException {
++      List<LinkArgs> idBasedLayoutSingleLinks,
++      Map<File, File> pathCache) throws IOException {
+     if (!from.exists()) {
+       return;
+     }
+@@ -1345,8 +1363,18 @@ public boolean accept(File dir, String name) {
+               throw new IOException("Failed to mkdirs " + blockLocation);
+             }
+           }
+-          idBasedLayoutSingleLinks.add(new LinkArgs(new File(from, blockName),
+-              new File(blockLocation, blockName)));
++          /**
++           * The destination path is 32x32, so 1024 distinct paths. Therefore
++           * we cache the destination path and reuse the same File object on
++           * potentially thousands of blocks located on this volume.
++           * This method is called recursively so the cache is passed through
++           * each recursive call. There is one cache per volume, and it is only
++           * accessed by a single thread so no locking is needed.
++           */
++          File cachedDest = pathCache
++              .computeIfAbsent(blockLocation, k -> blockLocation);
++          idBasedLayoutSingleLinks.add(new LinkArgs(from,
++              cachedDest, blockName));
+           hl.linkStats.countSingleLinks++;
+         }
+       } else {
+@@ -1370,7 +1398,7 @@ public boolean accept(File dir, String name) {
+       for (int i = 0; i < otherNames.length; i++) {
+         linkBlocksHelper(new File(from, otherNames[i]),
+             new File(to, otherNames[i]), oldLV, hl, upgradeToIdBasedLayout,
+-            blockRoot, idBasedLayoutSingleLinks);
++            blockRoot, idBasedLayoutSingleLinks, pathCache);
+       }
+     }
+   }
+
+From 6c30ed2108877a3e628a4f52b4e4578f769da7f7 Mon Sep 17 00:00:00 2001
+From: S O'Donnell <sodonnell@cloudera.com>
+Date: Tue, 30 Mar 2021 19:25:21 +0100
+Subject: [PATCH 2/3] Remove unused method parameter
+
+---
+ .../hadoop/hdfs/server/datanode/DataStorage.java     | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/DataStorage.java b/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/DataStorage.java
+index 96fdd89cd6aa..ef5a215baef1 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/DataStorage.java
++++ b/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/DataStorage.java
+@@ -1117,7 +1117,7 @@ private static void linkBlocks(File from, File to, int oldLV,
+ 
+     final ArrayList<LinkArgs> idBasedLayoutSingleLinks = Lists.newArrayList();
+     final Map<File, File> pathCache = new HashMap<>();
+-    linkBlocksHelper(from, to, oldLV, hl, upgradeToIdBasedLayout, to,
++    linkBlocksHelper(from, to, hl, upgradeToIdBasedLayout, to,
+         idBasedLayoutSingleLinks, pathCache);
+ 
+     // Detect and remove duplicate entries.
+@@ -1320,10 +1320,10 @@ private static void removeDuplicateEntries(ArrayList<LinkArgs> all,
+     }
+   }
+ 
+-  static void linkBlocksHelper(File from, File to, int oldLV, HardLink hl,
+-  boolean upgradeToIdBasedLayout, File blockRoot,
+-      List<LinkArgs> idBasedLayoutSingleLinks,
+-      Map<File, File> pathCache) throws IOException {
++  static void linkBlocksHelper(File from, File to, HardLink hl,
++      boolean upgradeToIdBasedLayout, File blockRoot,
++      List<LinkArgs> idBasedLayoutSingleLinks, Map<File, File> pathCache)
++      throws IOException {
+     if (!from.exists()) {
+       return;
+     }
+@@ -1397,7 +1397,7 @@ public boolean accept(File dir, String name) {
+     if (otherNames != null) {
+       for (int i = 0; i < otherNames.length; i++) {
+         linkBlocksHelper(new File(from, otherNames[i]),
+-            new File(to, otherNames[i]), oldLV, hl, upgradeToIdBasedLayout,
++            new File(to, otherNames[i]), hl, upgradeToIdBasedLayout,
+             blockRoot, idBasedLayoutSingleLinks, pathCache);
+       }
+     }
+
+From 559216c798b02b2b2803be64e978d263368e55ef Mon Sep 17 00:00:00 2001
+From: S O'Donnell <sodonnell@cloudera.com>
+Date: Wed, 31 Mar 2021 11:13:38 +0100
+Subject: [PATCH 3/3] Use a.blockFile() in duplicate compare
+
+---
+ .../org/apache/hadoop/hdfs/server/datanode/DataStorage.java | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/DataStorage.java b/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/DataStorage.java
+index ef5a215baef1..03e99864a07f 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/DataStorage.java
++++ b/hadoop-hdfs-project/hadoop-hdfs/src/main/java/org/apache/hadoop/hdfs/server/datanode/DataStorage.java
+@@ -1176,11 +1176,9 @@ static ArrayList<LinkArgs> findDuplicateEntries(ArrayList<LinkArgs> all) {
+        */
+       @Override
+       public int compare(LinkArgs a, LinkArgs b) {
+-        File asrc = a.src();
+-        File bsrc = b.src();
+         return ComparisonChain.start().
+-            compare(asrc.getName(), bsrc.getName()).
+-            compare(asrc, bsrc).
++            compare(a.blockFile(), b.blockFile()).
++            compare(a.src(), b.src()).
+             compare(a.dst(), b.dst()).
+             result();
+       }
