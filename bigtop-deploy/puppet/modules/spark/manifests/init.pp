@@ -39,6 +39,31 @@ class spark {
     if ('spark-history-server' in $roles) {
       include spark::history_server
     }
+
+    if ('spark-thriftserver' in $roles) {
+      include spark::spark_thriftserver
+    }
+    
+  }
+
+  class spark_thriftserver {
+    include spark::common
+    
+    package { 'spark-thriftserver': 
+      ensure => latest,
+    }
+
+    service { 'spark-thriftserver':
+      ensure     => running,
+      subscribe  => [
+        Package['spark-thriftserver'],
+        File['/etc/spark/conf/spark-env.sh'],
+        File['/etc/spark/conf/spark-defaults.conf'],
+      ],
+      hasrestart => true,
+      hasstatus  => true,
+    }
+    
   }
 
   class client {
@@ -182,6 +207,8 @@ class spark {
   }
 
   class common(
+      $spark_hive_server2_thrift_port = undef,
+      $spark_sql_warehouse_dir = undef,
       $master_url = undef,
       $master_host = $fqdn,
       $zookeeper_connection_string = undef,
