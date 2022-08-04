@@ -75,6 +75,7 @@
     ["/user/hue","777","hue","hue"],
     ["/user/livy","777","livy","livy"],
     ["/user/sqoop","777","sqoop",null],
+    ["/user/spark","777","spark"],
     ["/user/oozie","777","oozie"],
     ["/user/oozie/share",null,null,null],
     ["/user/oozie/share/lib",null,null,null],

@@ -211,8 +211,13 @@ class bigtop_toolchain::packages {
         "python3-dev",
         "python2.7-dev"
       ]
-
-      if (($operatingsystem == 'Ubuntu' and 0 <= versioncmp($operatingsystemmajrelease, '20.04')) or ($operatingsystem == 'Debian' and 0 <= versioncmp($operatingsystemmajrelease, '11'))) {
+      if (($operatingsystem == 'Ubuntu' and 0 <= versioncmp($operatingsystemmajrelease, '22.04'))) {
+        file { '/usr/bin/python':
+          ensure => 'link',
+          target => '/usr/bin/python2',
+        }
+        $pkgs = $_pkgs
+      } elsif (($operatingsystem == 'Ubuntu' and 0 <= versioncmp($operatingsystemmajrelease, '20.04')) or ($operatingsystem == 'Debian' and 0 <= versioncmp($operatingsystemmajrelease, '11'))) {
         $pkgs = concat($_pkgs, ["python-is-python2"])
       } else {
         $pkgs = $_pkgs
@@ -238,7 +243,8 @@ class bigtop_toolchain::packages {
 
   if $operatingsystem == 'CentOS' {
     package { 'epel-release':
-      ensure => installed
+      ensure => installed,
+      notify => Package[$pkgs]
     }
 
     if $operatingsystemmajrelease == 7 {

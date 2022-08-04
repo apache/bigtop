@@ -27,4 +27,3 @@ tez: evans ye, oflebbe
 vagrant recipes: jay vyas, evans ye
 ycsb: youngwoo kim
 zookeeper: sean mackrory, rvs
-elasticsearch: hernan vivani
