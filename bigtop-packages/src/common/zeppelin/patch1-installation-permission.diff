@@ -1,5 +1,5 @@
 diff --git a/zeppelin-web/package.json b/zeppelin-web/package.json
-index de83a629d..619a04d0c 100644
+index de83a629d..73d41a3f5 100644
 --- a/zeppelin-web/package.json
 +++ b/zeppelin-web/package.json
 @@ -7,7 +7,7 @@
@@ -12,10 +12,10 @@ index de83a629d..619a04d0c 100644
      "build:dist": "npm-run-all prebuild && grunt pre-webpack-dist && webpack && grunt post-webpack-dist",
      "build:ci": "npm-run-all prebuild && grunt pre-webpack-ci && webpack && grunt post-webpack-dist",
 diff --git a/zeppelin-web/pom.xml b/zeppelin-web/pom.xml
-index 54e97053d..2433addd5 100644
+index 679812435..068aba1a5 100644
 --- a/zeppelin-web/pom.xml
 +++ b/zeppelin-web/pom.xml
-@@ -83,7 +83,7 @@
+@@ -80,7 +80,7 @@
              </goals>
              <configuration>
                <skip>${web.e2e.enabled}</skip>
@@ -23,3 +23,4 @@ index 54e97053d..2433addd5 100644
 +              <arguments>install --no-lockfile --unsafe-perm</arguments>
              </configuration>
            </execution>
+ 
