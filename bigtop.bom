@@ -110,7 +110,7 @@ bigtop {
   */
   dependencies = [
     'bigtop-utils':['ambari', 'bigtop-groovy', 'bigtop-jsvc',
-                    'elasticsearch', 'flink', 'logstash', 'zookeeper'],
+                    'flink', 'zookeeper'],
     'bigtop-groovy':['hadoop'],
     'bigtop-jsvc':['hadoop'],
     zookeeper:['hadoop', 'hbase', 'kafka'],
@@ -155,7 +155,7 @@ bigtop {
     'hbase' {
       name    = 'hbase'
       relNotes = 'Apache HBase'
-      version { base = '2.4.12'; pkg = base; release = 1 }
+      version { base = '2.4.13'; pkg = base; release = 1 }
       tarball { destination = "${name}-${version.base}.tar.gz"
                 source      = "${name}-${version.base}-src.tar.gz" }
       url     { download_path = "/$name/${version.base}/"
@@ -282,7 +282,7 @@ bigtop {
       name    = "alluxio"
       pkg     = "alluxio"
       relNotes = "Alluxio: a memory-centric distributed file system"
-      version { base = '2.4.1'; pkg = base; release = 2 }
+      version { base = '2.8.0'; pkg = base; release = 2 }
       tarball { destination = "$name-${version.base}.tar.gz"
                 source      = "v${version.base}.tar.gz" }
       url     { site = "https://github.com/Alluxio/alluxio/archive"
@@ -355,33 +355,6 @@ bigtop {
       url     { download_path = "incubator/livy/${version.base}-incubating/"
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
-    }
-    'elasticsearch' {
-      name    = 'elasticsearch'
-      relNotes = 'Search and Analytics engine'
-      version { base = '5.6.14'; pkg = base; release = 2 }
-      tarball { destination = "$name-${version.base}.tar.gz"
-                source      = "v${version.base}.zip" }
-      url     { site = "https://github.com/elastic/elasticsearch/archive"
-                archive = site }
-    }
-    'logstash' {
-      name    = 'logstash'
-      relNotes = 'Data processing pipeline'
-      version { base = '5.4.1'; pkg = base; release = 2 }
-      tarball { destination = "$name-${version.base}.tar.gz"
-                source      = "v${version.base}.zip" }
-      url     { site = "https://github.com/elastic/logstash/archive"
-                archive = site }
-    }
-    'kibana' {
-      name    = 'kibana'
-      relNotes = 'A browser-based analytics and search dashboard'
-      version { base = '5.4.1'; pkg = base; release = 1 }
-      tarball { destination = "$name-${version.base}.tar.gz"
-                source      = "v${version.base}.zip" }
-      url     { site = "https://github.com/elastic/kibana/archive"
-                archive = site }
     }
     'ranger' {
       name    = 'ranger'

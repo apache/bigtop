@@ -26,6 +26,20 @@
 
 <!-- Hive Execution Parameters -->
 
+<% if @hive_tez_container_size %>
+<property>
+  <name>hive.tez.container.size</name>
+  <value><%= @hive_tez_container_size %></value>
+</property>
+<% end %>
+
+<% if @hive_tez_cpu_vcores %>
+<property>
+  <name>hive.tez.cpu.vcores</name>
+  <value><%= @hive_tez_cpu_vcores %></value>
+</property>
+<% end %>
+
 <% if @hbase_master != "" %>
 <property>
   <name>hbase.master</name>

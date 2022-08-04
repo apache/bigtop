@@ -129,7 +129,6 @@ cp -a libexec/* $PREFIX/$LIB_DIR/libexec
 cp -a client/* $PREFIX/$LIB_DIR/client
 cp -a integration/* $PREFIX/$LIB_DIR/integration
 cp integration/fuse/target/alluxio-integration-fuse-*-jar-with-dependencies.jar $PREFIX/$LIB_DIR/integration/fuse
-cp integration/yarn/target/alluxio-integration-yarn-*-jar-with-dependencies.jar $PREFIX/$LIB_DIR/integration/yarn
 rm -rf $PREFIX/$LIB_DIR/integration/pom.xml $PREFIX/$LIB_DIR/integration/**/pom.xml
 rm -rf $PREFIX/$LIB_DIR/integration/target $PREFIX/$LIB_DIR/integration/**/target
 rm -rf $PREFIX/$LIB_DIR/integration/**/src
