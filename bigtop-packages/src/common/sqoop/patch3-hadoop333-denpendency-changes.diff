@@ -24,10 +24,10 @@ index f0383c32..b9994c18 100644
    <property name="ivy.cache.dir" value="${user.home}/.ivy2/cache"/>
    <property name="maven2.pattern.ext"  value="${maven2.pattern}.[ext]"/>
 diff --git a/ivy/libraries.properties b/ivy/libraries.properties
-index 2ef04f4f..6fc2e122 100644
+index 2ef04f4f..db6dd61c 100644
 --- a/ivy/libraries.properties
 +++ b/ivy/libraries.properties
-@@ -31,6 +31,7 @@ commons-lang.version=2.4
+@@ -31,10 +31,11 @@ commons-lang.version=2.4
  commons-lang3.version=3.4
  commons-logging.version=1.0.4
  commons-net.version=3.1
@@ -35,3 +35,8 @@ index 2ef04f4f..6fc2e122 100644
  
  hsqldb.version=1.8.0.10
  
+-ivy.version=2.3.0
++ivy.version=2.5.0
+ 
+ junit.version=4.12
+ mockito-all.version=1.9.5
