@@ -186,7 +186,7 @@ bigtop {
     'sqoop' {
       name    = 'sqoop'
       relNotes = 'Apache Sqoop v1'
-      version { base = '1.4.7'; pkg = base; release = 4 }
+      version { base = '1.4.7'; pkg = base; release = 3 }
       tarball { destination = "${name}-${version.base}.tar.gz"
                 source      = destination }
       url     { download_path = "/$name/${version.base}/"
