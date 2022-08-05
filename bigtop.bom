@@ -145,11 +145,11 @@ bigtop {
     'hadoop' {
       name    = 'hadoop'
       relNotes = 'Apache Hadoop'
-      version { base = '3.3.3'; pkg = base; release = 1 }
+      version { base = '3.3.4'; pkg = base; release = 1 }
       tarball { destination = "${name}-${version.base}.tar.gz"
                 source      = "${name}-${version.base}-src.tar.gz" }
-      url     { download_path = "/$name/common/$name-${version.base}"
-                site = "${apache.APACHE_MIRROR}/${download_path}"
+      url     { download_path = "/$name/$name-${version.base}-RC1"
+                site = "https://dist.apache.org/repos/dist/dev/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }
     'hbase' {
