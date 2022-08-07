@@ -108,6 +108,78 @@
 
         
 <div class="section">
+<h3><a name="Release_Notes_-_Bigtop_-_Version_3.1.1"></a>Release Notes - Bigtop - Version 3.1.1</h3>
+
+</div>
+<div class="section">
+<h2><a name="Bug"></a>        Bug
+</h2>
+
+<ul>
+
+<li>[<a class="externalLink" href="https://issues.apache.org/jira/browse/BIGTOP-3712">BIGTOP-3712</a>] -         Kafka smoke test failed with Zookeeper built with maven
+</li>
+
+<li>[<a class="externalLink" href="https://issues.apache.org/jira/browse/BIGTOP-3714">BIGTOP-3714</a>] -         Fix error of DataNode httpserver due to conflicting dependency on Netty in branch-3.1
+</li>
+
+<li>[<a class="externalLink" href="https://issues.apache.org/jira/browse/BIGTOP-3724">BIGTOP-3724</a>] -         Increment the release number of ZooKeeper and Kafka
+</li>
+
+<li>[<a class="externalLink" href="https://issues.apache.org/jira/browse/BIGTOP-3725">BIGTOP-3725</a>] -         Puppet 3 is removed from EPEL for CentOS 7
+</li>
+
+<li>[<a class="externalLink" href="https://issues.apache.org/jira/browse/BIGTOP-3733">BIGTOP-3733</a>] -         Building Logstash fails on Rocky 8
+</li>
+
+<li>[<a class="externalLink" href="https://issues.apache.org/jira/browse/BIGTOP-3735">BIGTOP-3735</a>] -         Sqoop bin script doesn't work on Bigtop-3.1.0
+</li>
+
+<li>[<a class="externalLink" href="https://issues.apache.org/jira/browse/BIGTOP-3747">BIGTOP-3747</a>] -         Zeppelin RPM package is missing notebookrepo-filesystem-0.10.0.jar
+</li>
+
+<li>[<a class="externalLink" href="https://issues.apache.org/jira/browse/BIGTOP-3751">BIGTOP-3751</a>] -         Fix build failure of Zeppelin due to dependency convergence error
+</li>
+</ul>
+
+
+<div class="section">
+<h2><a name="New_Feature"></a>        New Feature
+</h2>
+
+<ul>
+
+<li>[<a class="externalLink" href="https://issues.apache.org/jira/browse/BIGTOP-3736">BIGTOP-3736</a>] -         Bump Hadoop to 3.2.4 in branch-3.1
+</li>
+</ul>
+
+
+<div class="section">
+<h2><a name="Improvement"></a>        Improvement
+</h2>
+
+<ul>
+
+<li>[<a class="externalLink" href="https://issues.apache.org/jira/browse/BIGTOP-3669">BIGTOP-3669</a>] -         Use maven instead of ant to build ZooKeeper
+</li>
+
+<li>[<a class="externalLink" href="https://issues.apache.org/jira/browse/BIGTOP-3715">BIGTOP-3715</a>] -         Add TestWebHDFS to smoke-tests
+</li>
+</ul>
+
+
+<div class="section">
+<h2><a name="Task"></a>        Task
+</h2>
+
+<ul>
+
+<li>[<a class="externalLink" href="https://issues.apache.org/jira/browse/BIGTOP-3742">BIGTOP-3742</a>] -         Add tez.tar.gz tarball in tez.rpm
+</li>
+</ul>
+
+        
+<div class="section">
 <h3><a name="Release_Notes_-_Bigtop_-_Version_3.1.0"></a>Release Notes - Bigtop - Version 3.1.0</h3>
 
 </div>
@@ -232,6 +304,24 @@
 
 <li>[<a class="externalLink" href="https://issues.apache.org/jira/browse/BIGTOP-3672">BIGTOP-3672</a>] -         Unable build bigtop-puppet/bigtop-slaves images
 </li>
+
+<li>[<a class="externalLink" href="https://issues.apache.org/jira/browse/BIGTOP-3675">BIGTOP-3675</a>] -         Building Tez fails due to broken dependency
+</li>
+
+<li>[<a class="externalLink" href="https://issues.apache.org/jira/browse/BIGTOP-3676">BIGTOP-3676</a>] -         Building Ambari for Debian 11 on ppc64le fails due to missing python
+</li>
+
+<li>[<a class="externalLink" href="https://issues.apache.org/jira/browse/BIGTOP-3677">BIGTOP-3677</a>] -         Building HBase for CentOS 7 on arm64 and ppc64le fails due to missing libraries
+</li>
+
+<li>[<a class="externalLink" href="https://issues.apache.org/jira/browse/BIGTOP-3678">BIGTOP-3678</a>] -         Building Zeppelin fails due to dependency convergence error
+</li>
+
+<li>[<a class="externalLink" href="https://issues.apache.org/jira/browse/BIGTOP-3679">BIGTOP-3679</a>] -         Building Phoenix for CentOS 7 fails on aarch64
+</li>
+
+<li>[<a class="externalLink" href="https://issues.apache.org/jira/browse/BIGTOP-3680">BIGTOP-3680</a>] -         HBase smoke test fails on ppc64le
+</li>
 </ul>
 
 
@@ -300,6 +390,9 @@
 <li>[<a class="externalLink" href="https://issues.apache.org/jira/browse/BIGTOP-3648">BIGTOP-3648</a>] -         Change download site to dlcdn.apache.org for installing Ant and Maven
 </li>
 
+<li>[<a class="externalLink" href="https://issues.apache.org/jira/browse/BIGTOP-3650">BIGTOP-3650</a>] -         Modernize deb packages
+</li>
+
 <li>[<a class="externalLink" href="https://issues.apache.org/jira/browse/BIGTOP-3658">BIGTOP-3658</a>] -         Add Fedora 35 support and drop 33
 </li>
 </ul>
@@ -310,9 +403,6 @@
 </h2>
 
 <ul>
-
-<li>[<a class="externalLink" href="https://issues.apache.org/jira/browse/BIGTOP-3586">BIGTOP-3586</a>] -         Upgrade Bigtop-ambari-mpack to support Ambari 2.7.5 and Hadoop3.x in BIGTOP-3.0 release
-</li>
 
 <li>[<a class="externalLink" href="https://issues.apache.org/jira/browse/BIGTOP-3590">BIGTOP-3590</a>] -         Hbase smoke tests failed on Ubuntu 20.04
 </li>
@@ -330,6 +420,9 @@
 </li>
 
 <li>[<a class="externalLink" href="https://issues.apache.org/jira/browse/BIGTOP-3654">BIGTOP-3654</a>] -         Building Hadoop fails on ppc64le
+</li>
+
+<li>[<a class="externalLink" href="https://issues.apache.org/jira/browse/BIGTOP-3684">BIGTOP-3684</a>] -         Fix RAT issues in Bigtop source tree
 </li>
 </ul>
 
