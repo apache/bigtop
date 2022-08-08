@@ -1,5 +1,5 @@
 diff --git a/zeppelin-interpreter/pom.xml b/zeppelin-interpreter/pom.xml
-index a7b36c92b..f866e33e5 100644
+index a7b36c92b..bfacb1586 100644
 --- a/zeppelin-interpreter/pom.xml
 +++ b/zeppelin-interpreter/pom.xml
 @@ -62,6 +62,10 @@
@@ -13,7 +13,7 @@ index a7b36c92b..f866e33e5 100644
        </exclusions>
      </dependency>
  
-@@ -209,6 +213,12 @@
+@@ -209,6 +213,20 @@
        <artifactId>hadoop-client</artifactId>
        <!-- Should always use provided, yarn container (YarnInterpreterLauncher) will provide all the hadoop jars -->
        <scope>provided</scope>
@@ -22,15 +22,23 @@ index a7b36c92b..f866e33e5 100644
 +          <groupId>org.codehaus.woodstox</groupId>
 +          <artifactId>stax2-api</artifactId>
 +        </exclusion>
++        <exclusion>
++          <groupId>org.slf4j</groupId>
++          <artifactId>slf4j-reload4j</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>ch.qos.reload4j</groupId>
++          <artifactId>reload4j</artifactId>
++        </exclusion>
 +      </exclusions>
      </dependency>
  
      <dependency>
 diff --git a/zeppelin-plugins/notebookrepo/filesystem/pom.xml b/zeppelin-plugins/notebookrepo/filesystem/pom.xml
-index 5c645738e..f5cb1d579 100644
+index 916c82769..ee134f0dd 100644
 --- a/zeppelin-plugins/notebookrepo/filesystem/pom.xml
 +++ b/zeppelin-plugins/notebookrepo/filesystem/pom.xml
-@@ -42,6 +42,12 @@
+@@ -42,6 +42,24 @@
          <dependency>
              <groupId>org.apache.hadoop</groupId>
              <artifactId>hadoop-client</artifactId>
@@ -39,15 +47,52 @@ index 5c645738e..f5cb1d579 100644
 +                    <groupId>org.codehaus.woodstox</groupId>
 +                    <artifactId>stax2-api</artifactId>
 +                </exclusion>
++                <exclusion>
++                    <groupId>org.slf4j</groupId>
++                    <artifactId>slf4j-reload4j</artifactId>
++                </exclusion>
++                <exclusion>
++                    <groupId>ch.qos.reload4j</groupId>
++                    <artifactId>reload4j</artifactId>
++                </exclusion>
++                <exclusion>
++                    <groupId>org.eclipse.jetty.websocket</groupId>
++                    <artifactId>websocket-client</artifactId>
++                </exclusion>
 +            </exclusions>
          </dependency>
      </dependencies>
-
+ 
 diff --git a/zeppelin-server/pom.xml b/zeppelin-server/pom.xml
-index f719b9b65..f84f3e384 100644
+index a186d208d..a724c7a63 100644
 --- a/zeppelin-server/pom.xml
 +++ b/zeppelin-server/pom.xml
-@@ -298,6 +298,12 @@
+@@ -290,6 +290,24 @@
+     <dependency>
+       <groupId>org.apache.hadoop</groupId>
+       <artifactId>hadoop-client</artifactId>
++      <exclusions>
++        <exclusion>
++          <groupId>org.slf4j</groupId>
++          <artifactId>slf4j-reload4j</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>ch.qos.reload4j</groupId>
++          <artifactId>reload4j</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>javax.ws.rs</groupId>
++          <artifactId>javax.ws.rs-api</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>org.eclipse.jetty.websocket</groupId>
++          <artifactId>websocket-client</artifactId>
++        </exclusion>
++      </exclusions>
+     </dependency>
+ 
+     <!--test libraries-->
+@@ -298,6 +316,20 @@
        <artifactId>hadoop-common</artifactId>
        <classifier>tests</classifier>
        <scope>test</scope>
@@ -56,15 +101,23 @@ index f719b9b65..f84f3e384 100644
 +          <groupId>org.codehaus.woodstox</groupId>
 +          <artifactId>stax2-api</artifactId>
 +        </exclusion>
++        <exclusion>
++          <groupId>org.slf4j</groupId>
++          <artifactId>slf4j-reload4j</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>ch.qos.reload4j</groupId>
++          <artifactId>reload4j</artifactId>
++        </exclusion>
 +      </exclusions>
      </dependency>
  
      <dependency>
 diff --git a/zeppelin-zengine/pom.xml b/zeppelin-zengine/pom.xml
-index b8c1be2f5..82b7e7171 100644
+index b8c1be2f5..9ef356384 100644
 --- a/zeppelin-zengine/pom.xml
 +++ b/zeppelin-zengine/pom.xml
-@@ -218,6 +218,12 @@
+@@ -218,6 +218,24 @@
      <dependency>
        <groupId>org.apache.hadoop</groupId>
        <artifactId>hadoop-client</artifactId>
@@ -72,6 +125,18 @@ index b8c1be2f5..82b7e7171 100644
 +        <exclusion>
 +          <groupId>org.codehaus.woodstox</groupId>
 +          <artifactId>stax2-api</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>org.slf4j</groupId>
++          <artifactId>slf4j-reload4j</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>ch.qos.reload4j</groupId>
++          <artifactId>reload4j</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>org.eclipse.jetty.websocket</groupId>
++          <artifactId>websocket-client</artifactId>
 +        </exclusion>
 +      </exclusions>
      </dependency>
