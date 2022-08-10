@@ -57,8 +57,7 @@ export ZOOKEEPER_HOME=${ZOOKEEPER_HOME:-/usr/lib/zookeeper}
 
 echo -e "\n===== START TO RUN SMOKE TESTS: $SMOKE_TESTS =====\n"
 
-su -s /bin/bash $HCFS_USER -c "hadoop fs -mkdir -p /user/vagrant /user/root /user/yarn"
-su -s /bin/bash $HCFS_USER -c "hadoop fs -chmod 777 /user/vagrant"
+su -s /bin/bash $HCFS_USER -c "hadoop fs -mkdir -p /user/root /user/yarn"
 su -s /bin/bash $HCFS_USER -c "hadoop fs -chmod 777 /user/root"
 su -s /bin/bash $HCFS_USER -c "hadoop fs -chown yarn:yarn /user/yarn"
 

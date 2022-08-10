@@ -26,7 +26,7 @@ The primary goal of Apache Bigtop is to build a community around the packaging a
 Immediately Get Started with Deployment and Smoke Testing of BigTop
 ===================================================================
 
-The simplest way to get a feel for how bigtop works, is to just cd into `provisioner` and try out the recipes under vagrant or docker.  Each one rapidly spins up, and runs the bigtop smoke tests on, a local bigtop based big data distribution. Once you get the gist, you can hack around with the recipes to learn how the puppet/rpm/smoke-tests all work together, going deeper into the components you are interested in as described below.
+The simplest way to get a feel for how bigtop works, is to just cd into `provisioner` and try out the docker recipes. It rapidly spins up, and runs the bigtop smoke tests on, a local bigtop based big data distribution. Once you get the gist, you can hack around with the recipes to learn how the puppet/rpm/smoke-tests all work together, going deeper into the components you are interested in as described below.
 
 Quick overview of source code directories
 =========================================
@@ -38,7 +38,7 @@ Quick overview of source code directories
 * __test-artifacts__ : source for tests.
 * __test-execution__ : maven pom drivers for running the integration tests found in test-artifacts.
 * __bigtop-toolchain__ : puppet scripts for setting up an instance which can build Apache Bigtop, sets up utils like jdk/maven/protobufs/...
-* __provisioner__ : Vagrant and Docker Provisioner that automatically spin up Hadoop environment with one click.
+* __provisioner__ : Docker Provisioner that automatically spin up Hadoop environment with one click.
 * __docker__ : Dockerfiles and Docker Sandbox build scripts.
 
 Also, there is a new project underway, Apache Bigtop blueprints, which aims to create templates/examples that demonstrate/compare various Apache Hadoop ecosystem components with one another.
