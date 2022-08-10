@@ -24,6 +24,5 @@ sqoop: sean mackrory, youngwoo kim
 tajo: yeongeon kim
 test-artifacts and test-execution repos:
 tez: evans ye, oflebbe
-vagrant recipes: jay vyas, evans ye
 ycsb: youngwoo kim
 zookeeper: sean mackrory, rvs

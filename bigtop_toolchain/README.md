@@ -69,15 +69,6 @@ standalone with a command such as:
 	
 where <path_to_bigtop> is the cloned git repo.
 
-## Installation of Tools for Bigtop Deployment
-
-This is a separated set of manifests that helps to setup tools for Bigtop deployment.
-The usage is as below:
-
-	puppet apply --modulepath=<path_to_bigtop> -e "include bigtop_toolchain::deployment_tools"
-
-By applying the snippet, Vagrant will be installed(the Docker installation will be added soon).
-
 ## Optional development tools
 
 This isn't a part of fundamental toolchain recipes as we are trying to contain the size of CI and dev-
