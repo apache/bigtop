@@ -25,7 +25,6 @@ hadoop::hadoop_storage_dirs:
 #  - solrcloud
 #  - spark
 #  - spark-standalone
-#  - sqoop
 #  - tez
 #  - yarn
 #  - ycsb

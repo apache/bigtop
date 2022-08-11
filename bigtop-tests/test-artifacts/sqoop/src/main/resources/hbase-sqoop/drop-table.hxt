@@ -1,2 +1,0 @@
-disable 'test_table'
-drop 'test_table'

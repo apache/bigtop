@@ -21,7 +21,7 @@ package org.apache.bigtop.itest.packagesmoke
 import org.apache.bigtop.itest.pmanager.PackageManager
 
 class BTServices {
-  static final List serviceDaemonUserNames = ["hbase", "hdfs", "hue", "mapred", "oozie", "sqoop",
+  static final List serviceDaemonUserNames = ["hbase", "hdfs", "hue", "mapred", "oozie",
     "zookeeper", "hadoop"];
 
   static final Map components = [
@@ -53,11 +53,6 @@ class BTServices {
       "oozie"],
       killIDs: ["hdfs", "mapred", "oozie"],
       verifier: new StateVerifierOozie(),
-    ],
-    sqoop: [services: ["hadoop-namenode", "hadoop-datanode",
-      "sqoop-metastore"],
-      killIDs: ["hdfs", "sqoop"],
-      verifier: new StateVerifierSqoop(),
     ],
     hue: [services: ["hadoop-namenode", "hadoop-datanode", "hadoop-jobtracker", "hadoop-tasktracker",
       "hue"],

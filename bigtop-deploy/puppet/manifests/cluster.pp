@@ -93,10 +93,6 @@ $roles_map = {
     master => ["hcatalog-server"],
     gateway_server => ["webhcat-server"],
   },
-  sqoop => {
-    gateway_server => ["sqoop-server"],
-    client => ["sqoop-client"],
-  },
   httpfs => {
     gateway_server => ["httpfs-server"],
   },

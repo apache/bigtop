@@ -91,6 +91,5 @@ So, below, we've accumulated some typical modifications which you can easily imp
 when running tests through this gradle interface (rather than as jars).
 
 1) Add new tests to hive , other than the "basic" hive test.
-2) Modify the Sqoop test to write more data via the embedded database.
-3) Add your own custom Groovy test in a directory which calls a shell script of your own desgn.
+2) Add your own custom Groovy test in a directory which calls a shell script of your own desgn.
 And so on.

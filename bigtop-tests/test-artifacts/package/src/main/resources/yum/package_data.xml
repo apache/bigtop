@@ -73,37 +73,6 @@
       </hive-webhcat-server>
     </services>
   </hive-webhcat-server>
-  <sqoop>
-    <deps>
-      <tag name="/bin/bash"/>
-      <tag name="/bin/sh"/>
-      <jre>&gt;=1.6</jre>
-    </deps>
-    <users>
-      <sqoop>
-        <home>/var/run/sqoop</home>
-        <descr>Sqoop User</descr>
-        <shell>/sbin/nologin</shell>
-      </sqoop>
-    </users>
-  </sqoop>
-  <sqoop-server>
-    <deps>
-      <redhat-lsb/>
-      <tag name="/bin/bash"/>
-      <tag name="/bin/sh"/>
-    </deps>
-    <services>
-      <sqoop-server>
-        <runlevel>2</runlevel> <!--workaround BIGTOP-644-->
-        <runlevel>3</runlevel>
-        <runlevel>4</runlevel>
-        <runlevel>5</runlevel>
-        <oninstall>stop</oninstall>
-        <configured>true</configured>
-      </sqoop-server>
-    </services>
-  </sqoop-server>
   <oozie>
     <users>
       <oozie>

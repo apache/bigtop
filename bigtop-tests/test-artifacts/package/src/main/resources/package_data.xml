@@ -142,48 +142,6 @@ when more advanced customization is required.</description>
     <alternatives>
     </alternatives>
   </solr-server>
-  <sqoop>
-    <metadata>
-      <summary>Tool for easy imports and exports of data sets between databases and the Hadoop ecosystem</summary>
-      <description>Sqoop is a tool that provides the ability to import and export data sets between the Hadoop Distributed File System (HDFS) and relational databases.</description>
-      <url>http://sqoop.apache.org</url>
-    </metadata>
-    <deps>
-      <bigtop-utils/>
-      <hadoop-client/>
-      <sqoop-client>/self</sqoop-client>
-    </deps>
-    <alternatives>
-      <sqoop-conf>
-        <status>auto</status>
-        <link>/etc/sqoop/conf</link>
-        <value>/etc/sqoop/conf.dist</value>
-        <alt>/etc/sqoop/conf.dist</alt>
-      </sqoop-conf>
-    </alternatives>
-    <groups>
-      <sqoop>
-        <user>sqoop</user>
-      </sqoop>
-    </groups>
-  </sqoop>
-  <sqoop-server>
-    <metadata>
-      <summary>Server for Sqoop.</summary>
-      <description>Centralized server for Sqoop.</description>
-      <url>http://sqoop.apache.org</url>
-    </metadata>
-    <deps>
-      <sqoop>/self</sqoop>
-    </deps>
-  </sqoop-server>
-  <sqoop-client>
-    <metadata>
-      <summary>Client for Sqoop.</summary>
-      <description>Lightweight client for Sqoop.</description>
-      <url>http://sqoop.apache.org</url>
-    </metadata>
-  </sqoop-client>
   <oozie>
     <metadata>
       <summary>Oozie is a system that runs workflows of Hadoop jobs.</summary>
@@ -196,7 +154,7 @@ when more advanced customization is required.</description>
 
  An Oozie workflow may contain the following types of actions nodes:
  map-reduce, map-reduce streaming, map-reduce pipes, pig, file-system,
- sub-workflows, java, hive, sqoop and ssh (deprecated).
+ sub-workflows, java, hive, and ssh (deprecated).
 
  Flow control operations within the workflow can be done using decision,
  fork and join nodes. Cycles in workflows are not supported.

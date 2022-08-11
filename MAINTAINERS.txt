@@ -20,7 +20,6 @@ puppet recipes: jay vyas, cos, evans ye, rvs
 qfs: kstinson <kstinson@quantcast.com>
 smoke-tests: jay vyas, david capwell
 spark: jay vyas, youngwoo kim
-sqoop: sean mackrory, youngwoo kim
 tajo: yeongeon kim
 test-artifacts and test-execution repos:
 tez: evans ye, oflebbe
