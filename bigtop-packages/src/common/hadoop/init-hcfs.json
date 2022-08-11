@@ -69,7 +69,6 @@
     ["/user","755","HCFS_SUPER_USER",null],
     ["/user/history","755","mapred","mapred"],
     ["/user/jenkins","777","jenkins",null],
-    ["/user/vagrant","777","vagrant",null],
     ["/user/hive","777",null,null],
     ["/user/root","777","root",null],
     ["/user/hue","777","hue","hue"],

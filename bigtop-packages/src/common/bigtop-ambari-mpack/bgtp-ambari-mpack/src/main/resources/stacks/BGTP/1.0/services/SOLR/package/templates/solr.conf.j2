@@ -13,11 +13,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-version: '2'
-
-services:
-  sandbox:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: ${ACCOUNT}/sandbox:${TAG}
+{{solr_user}}   - nofile {{solr_user_nofile_limit}}
+{{solr_user}}   - nproc  {{solr_user_nproc_limit}}

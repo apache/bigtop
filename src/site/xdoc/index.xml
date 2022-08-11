@@ -36,8 +36,7 @@
 						Bigtop provides an integrated smoke testing framework, alongside a suite of over 50 test files.
 					</td>
 					<td>
-						Bigtop provides vagrant recipes, raw images, and (work-in-progress) docker recipes for deploying 
-						Hadoop from zero.
+						Bigtop provides docker recipes and raw images for deploying Hadoop from zero.
 					</td>
 				</tr>
 			</table>

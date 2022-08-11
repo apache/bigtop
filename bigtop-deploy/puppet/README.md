@@ -22,7 +22,7 @@ When running puppet apply, note that puppet's confdir is *underneath* the `--con
 For example: If you have `site.csv` in `/etc/puppet/config`, 
 Then you should use `--confdir=/etc/puppet` , and puppet finds the config dir underneath.
 
-As an end to end example, you can follow the `vagrant-puppet-vm` recipes to see how to set up
+As an end to end example, you can follow the `provisioner/docker` recipes to see how to set up
 a puppet managed bigtop hadoop installation.  Those examples are gauranteed to work and 
 serve as a pedagogical round trip to the way bigtop integrates packaging, deployment, and 
 testing all into one package.
