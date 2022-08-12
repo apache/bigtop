@@ -25,11 +25,11 @@ MVN_ARGS+="-Dhbase.profile=${HBASE_VERSION%.*} "
 # create com.google.protobuf:protoc artifact with local protoc built by toolchain
 if [ $HOSTTYPE = "powerpc64le" ] ; then
   mvn install:install-file -DgroupId=com.google.protobuf -DartifactId=protoc -Dversion=2.5.0 \
-            -Dclassifier=linux-ppcle_64 -Dpackaging=exe -Dfile=/usr/local/bin/protoc
+            -Dclassifier=linux-ppcle_64 -Dpackaging=exe -Dfile=/usr/local/protobuf-2.5.0/bin/protoc
   MVN_ARGS+="-Dprotobuf.group=com.google.protobuf -Dprotoc.version=2.5.0 "
 elif [ $HOSTTYPE = "aarch64" ] ; then
   mvn install:install-file -DgroupId=com.google.protobuf -DartifactId=protoc -Dversion=2.5.0 \
-            -Dclassifier=linux-aarch_64 -Dpackaging=exe -Dfile=/usr/local/bin/protoc
+            -Dclassifier=linux-aarch_64 -Dpackaging=exe -Dfile=/usr/local/protobuf-2.5.0/bin/protoc
   MVN_ARGS+="-Dprotobuf.group=com.google.protobuf -Dprotoc.version=2.5.0 "
 fi
 
