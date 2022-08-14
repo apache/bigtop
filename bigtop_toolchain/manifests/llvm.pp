@@ -67,5 +67,10 @@ class bigtop_toolchain::llvm {
     command => "${make} -j ${processorcount} install",
     cwd     => "/usr/src/${llvmproject}/build",
     timeout => 7200
+  } -> 
+
+  exec { 'Remove LLVM Source Directory':
+    command => "/usr/bin/rm -rf ${llvmproject}",
+    cwd     => "/usr/src"
   }
 }
