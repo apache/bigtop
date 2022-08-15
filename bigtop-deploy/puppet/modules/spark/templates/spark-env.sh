@@ -27,7 +27,7 @@ export SPARK_MASTER_IP=$STANDALONE_SPARK_MASTER_HOST
 <% if @master_url -%>
 export SPARK_MASTER_URL=<%= @master_url %>
 <% else -%>
-<% if (scope['deploy::roles'] & ['spark-master', 'spark-worker']) != [] -%>
+<% if (scope['spark::deploy::roles'] & ['spark-master', 'spark-worker']) != [] -%>
 export SPARK_MASTER_URL=spark://<%= @master_host %>:<%= @master_port %>
 <% else -%>
 export SPARK_MASTER_URL=yarn
