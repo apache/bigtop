@@ -69,6 +69,7 @@ $roles_map = {
     worker => ["spark-on-yarn"],
     client => ["spark-client"],
     library => ["spark-yarn-slave"],
+    gateway_server => ["spark-thriftserver"],
   },
   spark-standalone => {
     master => ["spark-master"],
