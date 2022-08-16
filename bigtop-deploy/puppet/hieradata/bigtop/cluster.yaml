@@ -150,6 +150,10 @@ hcatalog::webhcat::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 spark::common::master_host: "%{hiera('bigtop::hadoop_head_node')}"
 spark::common::spark_sql_warehouse_dir: "/user/spark/spark-warehouse"
 spark::common::spark_hive_server2_thrift_port: 12000
+# to deploy spark thrift server with hive, you should uncomment the line below
+# spark::common::spark_thrift_server_without_hive: false
+spark::common::spark_hadoop_javax_jdo_option_ConnectionURL: "jdbc:derby:;databaseName=/var/lib/spark/metastore_db;create=true"
+spark::common::spark_hadoop_javax_jdo_option_ConnectionDriverName: "org.apache.derby.jdbc.EmbeddedDriver"
 # to enable spark HA, ensure zookeeper is available and uncomment the line below
 #spark::common::zookeeper_connection_string: "%{hiera('hadoop::zk')}"
 
