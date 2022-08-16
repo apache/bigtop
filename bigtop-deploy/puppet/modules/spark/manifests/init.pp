@@ -48,7 +48,7 @@ class spark {
 
   class spark_thriftserver {
     include spark::common
-    
+
     package { 'spark-thriftserver': 
       ensure => latest,
     }
@@ -207,6 +207,9 @@ class spark {
   }
 
   class common(
+      $spark_thrift_server_without_hive = true,
+      $spark_hadoop_javax_jdo_option_ConnectionURL = undef,
+      $spark_hadoop_javax_jdo_option_ConnectionDriverName = undef,
       $spark_hive_server2_thrift_port = undef,
       $spark_sql_warehouse_dir = undef,
       $master_url = undef,
