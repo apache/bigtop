@@ -205,8 +205,8 @@ spark_thrift_sparkconf = None
 spark_thrift_cmd_opts_properties = ''
 spark_thrift_fairscheduler_content = None
 
-if has_spark_thriftserver and 'spark-default' in config['configurations']:
-  spark_thrift_sparkconf = config['configurations']['spark-default']
+if has_spark_thriftserver and 'spark-defaults' in config['configurations']:
+  spark_thrift_sparkconf = config['configurations']['spark-defaults']
   spark_thrift_cmd_opts_properties = config['configurations']['spark-env']['spark_thrift_cmd_opts']
 
   if 'spark-thrift-fairscheduler' in config['configurations'] and 'fairscheduler_content' in config['configurations']['spark-thrift-fairscheduler']:
