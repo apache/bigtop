@@ -13,28 +13,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 %define hadoop_username hadoop
-%define etc_hive /etc/%{name}
+%define etc_default %{prefix}/etc/default
+%define etc_hive %{prefix}/etc/%{name}
 %define config_hive %{etc_hive}/conf
-%define conf_hcatalog %{_sysconfdir}/hive-hcatalog/conf
-%define conf_webhcat  %{_sysconfdir}/hive-webhcat/conf
-%define usr_lib_hive /usr/lib/%{name}
-%define usr_lib_hcatalog /usr/lib/hive-hcatalog
-%define var_lib_hive /var/lib/%{name}
-%define var_lib_hcatalog /var/lib/%{name}-hcatalog
-%define var_log_hcatalog /var/log/%{name}-hcatalog
-%define usr_bin /usr/bin
+%define conf_hcatalog %{prefix}/%{_sysconfdir}/hive-hcatalog/conf
+%define conf_webhcat  %{prefix}/%{_sysconfdir}/hive-webhcat/conf
+%define usr_lib_hive %{prefix}/usr/lib/%{name}
+%define usr_lib_hcatalog %{prefix}/usr/lib/hive-hcatalog
+%define var_lib_hive %{prefix}/var/lib/%{name}
+%define var_lib_hcatalog %{prefix}/var/lib/%{name}-hcatalog
+%define var_log_hcatalog %{prefix}/var/log/%{name}-hcatalog
+%define usr_bin %{prefix}/usr/bin
 %define hive_config_virtual hive_active_configuration
-%define man_dir %{_mandir}
+%define man_dir %{prefix}/%{_mandir}
 %define hive_services hive-metastore hive-server2 hive-hcatalog-server hive-webhcat-server
 # After we run "ant package" we'll find the distribution here
 %define hive_dist build/dist
 
 %if  %{!?suse_version:1}0
 
-%define doc_hive %{_docdir}/%{name}-%{hive_version}
+%define doc_hive %{prefix}/%{_docdir}/%{name}-%{hive_version}
 %define alternatives_cmd alternatives
 
-%global initd_dir %{_sysconfdir}/rc.d/init.d
+%global initd_dir %{prefix}/%{_sysconfdir}/rc.d/init.d
 
 %else
 
@@ -43,7 +44,7 @@
 %define suse_check \# Define an empty suse_check for compatibility with older sles
 %endif
 
-%define doc_hive %{_docdir}/%{name}
+%define doc_hive %{prefix}/%{_docdir}/%{name}
 %define alternatives_cmd update-alternatives
 
 %global initd_dir %{_sysconfdir}/rc.d
@@ -250,17 +251,17 @@ cp $RPM_SOURCE_DIR/hive.1 .
 cp $RPM_SOURCE_DIR/hive-hcatalog.1 .
 cp $RPM_SOURCE_DIR/hive-site.xml .
 /bin/bash %{SOURCE2} \
-  --prefix=$RPM_BUILD_ROOT \
+  --prefix=$RPM_BUILD_ROOT/%{prefix} \
   --build-dir=%{hive_dist} \
   --doc-dir=$RPM_BUILD_ROOT/%{doc_hive} \
   --hive-version=%{hive_base_version}
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
-%__install -d -m 0755 $RPM_BUILD_ROOT/etc/default/
-%__install -m 0644 $RPM_SOURCE_DIR/hive-metastore.default $RPM_BUILD_ROOT/etc/default/%{name}-metastore
-%__install -m 0644 $RPM_SOURCE_DIR/hive-server2.default $RPM_BUILD_ROOT/etc/default/%{name}-server2
-%__install -m 0644 $RPM_SOURCE_DIR/hive-hcatalog-server.default $RPM_BUILD_ROOT/etc/default/%{name}-hcatalog-server
-%__install -m 0644 $RPM_SOURCE_DIR/hive-webhcat-server.default $RPM_BUILD_ROOT/etc/default/%{name}-webhcat-server
+%__install -d -m 0755 $RPM_BUILD_ROOT/%{etc_default}/
+%__install -m 0644 $RPM_SOURCE_DIR/hive-metastore.default $RPM_BUILD_ROOT/%{etc_default}/%{name}-metastore
+%__install -m 0644 $RPM_SOURCE_DIR/hive-server2.default $RPM_BUILD_ROOT/%{etc_default}/%{name}-server2
+%__install -m 0644 $RPM_SOURCE_DIR/hive-hcatalog-server.default $RPM_BUILD_ROOT/%{etc_default}/%{name}-hcatalog-server
+%__install -m 0644 $RPM_SOURCE_DIR/hive-webhcat-server.default $RPM_BUILD_ROOT/%{etc_default}/%{name}-webhcat-server
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{_localstatedir}/log/%{name}
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{_localstatedir}/run/%{name}
@@ -379,7 +380,7 @@ fi
 %define service_macro() \
 %files %1 \
 %attr(0755,root,root)/%{initd_dir}/%{name}-%1 \
-%config(noreplace) /etc/default/%{name}-%1 \
+%config(noreplace) %{etc_default}/%{name}-%1 \
 %post %1 \
 chkconfig --add %{name}-%1 \
 \

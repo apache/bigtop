@@ -489,6 +489,7 @@ def genTasks = { target ->
     def final MAVEN_REPO_ID = project.hasProperty('mavenRepoId') ? project.property('mavenRepoId') : 'default'
     def final MAVEN_REPO_URI = project.hasProperty('mavenRepoUri') ? project.property('mavenRepoUri') : null
 
+    def final BUILD_PREFIX = project.hasProperty("prefix") ? "$prefix/$config.bigtop.version" : "%{nil}"
     def command = [
         '--define', "_topdir $PKG_BUILD_DIR/rpm/",
         '--define', "${NAME}_base_version $BASE_VERSION",
@@ -497,7 +498,8 @@ def genTasks = { target ->
         '--define', "${NAME}_release ${BIGTOP_BUILD_STAMP}%{?dist}",
         '--rebuild', SRCRPM,
         '--define', "do_maven_deploy ${DO_MAVEN_DEPLOY}",
-        '--define', "maven_deploy_source ${MAVEN_DEPLOY_SOURCE}"
+        '--define', "maven_deploy_source ${MAVEN_DEPLOY_SOURCE}",
+        "--define", "prefix ${BUILD_PREFIX}"
     ]
 
    if (MAVEN_REPO_URI != null) {
