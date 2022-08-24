@@ -41,7 +41,7 @@
   <properties>
     <hadoop.version>2.7.3</hadoop.version>
     <hbase.version>1.1.9</hbase.version>
-    <zookeeper.version>3.4.6</zookeeper.version>
+    <zookeeper.version>3.4.14</zookeeper.version>
     <solr.version>4.10.4</solr.version>
     <spark.version>2.1.0</spark.version>
     <kafka.version>0.10.1.1</kafka.version>
