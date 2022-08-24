@@ -63,12 +63,6 @@
     </dependency>
     <dependency>
       <groupId>org.apache.bigtop.itest</groupId>
-      <artifactId>sqoop-smoke</artifactId>
-      <version>${project.version}</version>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.bigtop.itest</groupId>
       <artifactId>io-longevity</artifactId>
       <version>${project.version}</version>
       <optional>true</optional>

@@ -59,7 +59,6 @@
     <module>hue</module>
     <!--
     <module>httpfs</module>
-    <module>sqoop</module>
     -->
     <module>hcatalog</module>
     <module>phoenix</module>

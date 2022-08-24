@@ -19,7 +19,7 @@
 def bigtopComponents = ["bigtop-groovy", "bigtop-jsvc", "bigtop-utils",
                         "zookeeper", "hadoop", "hbase", "hive",
                         "oozie", "phoenix",
-                        "solr", "spark", "sqoop", "alluxio"]
+                        "solr", "spark", "alluxio"]
 // FIXME: it would be nice to extract the following from some static configuration file
 def targetOS = ["fedora-20",  "opensuse-12.3",  "ubuntu-14.04"]
 def gitUrl = "https://gitbox.apache.org/repos/asf/bigtop.git"

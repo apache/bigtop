@@ -48,7 +48,6 @@ export LIVY_HOME=${LIVY_HOME:-/usr/lib/livy}
 export OOZIE_TAR_HOME=${OOZIE_TAR_HOME:-/usr/lib/oozie}
 export OOZIE_URL=${OOZIE_URL:-http://localhost:11000/oozie}
 export SPARK_HOME=${SPARK_HOME:-/usr/lib/spark}
-export SQOOP_HOME=${SQOOP_HOME:-/usr/lib/sqoop}
 export TEZ_HOME=${TEZ_HOME:-/usr/lib/tez}
 export WEBHDFS_URL=${WEBHDFS_URL:-$(hostname):50070/webhdfs/v1}
 export YCSB_HOME=${YCSB_HOME:-/usr/lib/ycsb}

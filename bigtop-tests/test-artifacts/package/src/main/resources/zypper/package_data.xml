@@ -70,36 +70,6 @@
       </hive-webhcat-server>
     </services>
   </hive-webhcat-server>
-  <sqoop>
-    <deps>
-      <jre>&gt;=1.6</jre>
-      <tag name="/bin/sh"/>
-      <tag name="/bin/bash"/>
-    </deps>
-    <users>
-      <sqoop>
-        <home>/var/run/sqoop</home>
-        <descr>Sqoop User</descr>
-        <shell>/sbin/nologin</shell>
-      </sqoop>
-    </users>
-  </sqoop>
-  <sqoop-server>
-    <deps>
-      <insserv/>
-      <tag name="/bin/bash"/>
-      <tag name="/bin/sh"/>
-    </deps>
-    <services>
-      <sqoop-server>
-        <runlevel>3</runlevel>
-        <runlevel>4</runlevel>
-        <runlevel>5</runlevel>
-        <oninstall>stop</oninstall>
-        <configured>true</configured>
-      </sqoop-server>
-    </services>
-  </sqoop-server>
   <oozie>
     <users>
       <oozie>

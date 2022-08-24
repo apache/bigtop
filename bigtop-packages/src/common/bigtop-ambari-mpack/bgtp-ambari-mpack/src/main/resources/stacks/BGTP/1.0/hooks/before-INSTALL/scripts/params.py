@@ -66,7 +66,6 @@ ganglia_server_hosts = default("/clusterHostInfo/ganglia_server_hosts", [])
 storm_server_hosts = default("/clusterHostInfo/nimbus_hosts", [])
 falcon_host =  default('/clusterHostInfo/falcon_server_hosts', [])
 
-has_sqoop_client = 'sqoop-env' in config['configurations']
 has_namenode = len(namenode_hosts) > 0
 has_hs = not len(hs_host) == 0
 has_resourcemanager = not len(rm_host) == 0
@@ -105,7 +104,7 @@ jdk_location = config['ambariLevelParams']['jdk_location']
 ignore_groupsusers_create = default("/configurations/cluster-env/ignore_groupsusers_create", False)
 host_sys_prepped = default("/ambariLevelParams/host_sys_prepped", False)
 
-smoke_user_dirs = format("/tmp/hadoop-{smoke_user},/tmp/hsperfdata_{smoke_user},/home/{smoke_user},/tmp/{smoke_user},/tmp/sqoop-{smoke_user}")
+smoke_user_dirs = format("/tmp/hadoop-{smoke_user},/tmp/hsperfdata_{smoke_user},/home/{smoke_user},/tmp/{smoke_user}")
 if has_hbase_masters:
   hbase_user_dirs = format("/home/{hbase_user},/tmp/{hbase_user},/usr/bin/{hbase_user},/var/log/{hbase_user},{hbase_tmp_dir}")
 #repo params

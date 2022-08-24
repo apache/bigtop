@@ -80,7 +80,7 @@ BuildArch: noarch
 
  An Oozie workflow may contain the following types of actions nodes:
  map-reduce, map-reduce streaming, map-reduce pipes, pig, file-system,
- sub-workflows, java, hive, sqoop and ssh (deprecated).
+ sub-workflows, java, hive and ssh (deprecated).
 
  Flow control operations within the workflow can be done using decision,
  fork and join nodes. Cycles in workflows are not supported.

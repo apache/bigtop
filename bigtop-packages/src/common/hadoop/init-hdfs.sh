@@ -19,7 +19,7 @@
 # Use this script to initialize HDFS directory structure for various components
 # to run. This script can be run from any node in the Hadoop cluster but should
 # only be run once by one node only. If you are planning on using oozie, we
-# recommend that you run this script from a node that has hive, pig, sqoop, etc.
+# recommend that you run this script from a node that has hive, pig, etc.
 # installed. Unless you are using psuedo distributed cluster, this node is most
 # likely NOT your namenode
 # Steps to be performed before running this script:

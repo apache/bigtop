@@ -36,15 +36,11 @@
   <properties>
     <itest-conf.version>${project.version}</itest-conf.version>
     <itest-common.version>${project.version}</itest-common.version>
-    <sqoop-integration.version>${project.version}</sqoop-integration.version>
   </properties>
 
   <!--
     List of modules which should be executed as a part of stack testing run
   -->
-  <modules>
-    <module>sqoop</module>
-  </modules>
 
   <dependencyManagement>
     <dependencies>
@@ -56,12 +52,6 @@
         <scope>test</scope>
       </dependency>
 
-      <dependency>
-        <groupId>org.apache.bigtop.itest</groupId>
-        <artifactId>sqoop-integration</artifactId>
-        <version>${sqoop-integration.version}</version>
-        <scope>test</scope>
-      </dependency>
     </dependencies>
   </dependencyManagement>
 
