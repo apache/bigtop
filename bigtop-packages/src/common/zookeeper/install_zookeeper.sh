@@ -28,6 +28,8 @@ usage: $0 <options>
      --doc-dir=DIR               path to install docs into [/usr/share/doc/zookeeper]
      --lib-dir=DIR               path to install zookeeper home [/usr/lib/zookeeper]
      --bin-dir=DIR               path to install bins [/usr/bin]
+     --man-dir=DIR               path to install bins [/usr/share/main]
+     --etc-default=DIR           path to install bins [/etc/default]
      --examples-dir=DIR          path to install examples [doc-dir/examples]
      --system-include-dir=DIR    path to install development headers [/usr/include]
      --system-lib-dir=DIR        path to install native libraries [/usr/lib]
@@ -43,6 +45,8 @@ OPTS=$(getopt \
   -l 'doc-dir:' \
   -l 'lib-dir:' \
   -l 'bin-dir:' \
+  -l 'man-dir:' \
+  -l 'etc-default:' \
   -l 'examples-dir:' \
   -l 'system-include-dir:' \
   -l 'system-lib-dir:' \
@@ -69,6 +73,12 @@ while true ; do
         ;;
         --bin-dir)
         BIN_DIR=$2 ; shift 2
+        ;;
+        --man-dir)
+        MAN_DIR=$2 ; shift 2
+        ;;
+        --etc-default)
+        ETC_DEFAULT=$2 ; shift 2
         ;;
         --examples-dir)
         EXAMPLES_DIR=$2 ; shift 2
@@ -97,14 +107,16 @@ for var in PREFIX BUILD_DIR ; do
   fi
 done
 
-MAN_DIR=/usr/share/man/man1
+MAN_DIR=${MAN_DIR:-/usr/share/man}/man1
 DOC_DIR=${DOC_DIR:-/usr/share/doc/zookeeper}
 LIB_DIR=${LIB_DIR:-/usr/lib/zookeeper}
 BIN_DIR=${BIN_DIR:-/usr/bin}
-CONF_DIR=/etc/zookeeper/conf
-CONF_DIST_DIR=/etc/zookeeper/conf.dist/
+ETC_DEFAULT=${ETC_DEFAULT:-/etc/default}
 SYSTEM_INCLUDE_DIR=${SYSTEM_INCLUDE_DIR:-/usr/include}
 SYSTEM_LIB_DIR=${SYSTEM_LIB_DIR:-/usr/lib}
+
+CONF_DIR=/etc/zookeeper/conf
+CONF_DIST_DIR=/etc/zookeeper/conf.dist/
 
 tar -z -x -f zookeeper-assembly/target/apache-zookeeper-*-bin.tar.gz
 install -d -m 0755 $PREFIX/$LIB_DIR/
@@ -144,7 +156,7 @@ for i in zkServer.sh zkEnv.sh zkCli.sh zkCleanup.sh zkServer-initialize.sh
 	chmod 755 $PREFIX/$LIB_DIR/bin/$i
 done
 
-wrapper=$PREFIX/usr/bin/zookeeper-client
+wrapper=$PREFIX/$BIN_DIR/zookeeper-client
 install -d -m 0755 `dirname $wrapper`
 cat > $wrapper <<EOF
 #!/bin/bash
@@ -161,7 +173,7 @@ EOF
 chmod 755 $wrapper
 
 for pairs in zkServer.sh/zookeeper-server zkServer-initialize.sh/zookeeper-server-initialize zkCleanup.sh/zookeeper-server-cleanup ; do
-  wrapper=$PREFIX/usr/bin/`basename $pairs`
+  wrapper=$PREFIX/$BIN_DIR/`basename $pairs`
   upstream_script=`dirname $pairs`
   cat > $wrapper <<EOF
 #!/bin/bash
@@ -188,8 +200,8 @@ install -d -m 0755 $PREFIX/$DOC_DIR
 cp -a $BUILD_DIR/docs/* $PREFIX/$DOC_DIR
 cp $BUILD_DIR/*.txt $PREFIX/$DOC_DIR/
 
-install -d -m 0755 ${PREFIX}/etc/default
-cp zookeeper.default ${PREFIX}/etc/default/zookeeper
+install -d -m 0755 $PREFIX/$ETC_DEFAULT
+cp zookeeper.default $PREFIX/$ETC_DEFAULT/zookeeper
 
 install -d -m 0755 $PREFIX/$MAN_DIR
 gzip -c zookeeper.1 > $PREFIX/$MAN_DIR/zookeeper.1.gz
@@ -212,7 +224,7 @@ for binary in ${PREFIX}/${LIB_DIR}-native/*; do
 
 PREFIX=\$(dirname \$(readlink -f \$0))
 export LD_LIBRARY_PATH=\${LD_LIBRARY_PATH}:\${PREFIX}/../lib:\${PREFIX}/../lib64
-/usr/lib/zookeeper-native/`basename ${binary}` \$@
+${LIB_DIR}-native/`basename ${binary}` \$@
 
 EOF
 done
