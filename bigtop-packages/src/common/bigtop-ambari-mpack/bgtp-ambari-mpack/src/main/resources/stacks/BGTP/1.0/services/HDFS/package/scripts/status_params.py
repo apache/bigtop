@@ -37,7 +37,14 @@ else:
   hadoop_pid_dir_prefix = config['configurations']['hadoop-env']['hadoop_pid_dir_prefix']
   hdfs_user = config['configurations']['hadoop-env']['hdfs_user']
   hadoop_pid_dir = format("{hadoop_pid_dir_prefix}/{hdfs_user}")
+
+  root_user = 'root'
+  security_enabled = config['configurations']['cluster-env']['security_enabled']
   datanode_pid_file = format("{hadoop_pid_dir}/hadoop-{hdfs_user}-datanode.pid")
+  datanode_secure_pid_file = format("{hadoop_pid_dir}/hadoop-{hdfs_user}-{root_user}-datanode.pid")
+  if security_enabled:
+    datanode_pid_file = datanode_secure_pid_file
+
   namenode_pid_file = format("{hadoop_pid_dir}/hadoop-{hdfs_user}-namenode.pid")
   snamenode_pid_file = format("{hadoop_pid_dir}/hadoop-{hdfs_user}-secondarynamenode.pid")
   journalnode_pid_file = format("{hadoop_pid_dir}/hadoop-{hdfs_user}-journalnode.pid")
