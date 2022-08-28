@@ -28,8 +28,8 @@ usage: $0 <options>
      --doc-dir=DIR               path to install docs into [/usr/share/doc/zookeeper]
      --lib-dir=DIR               path to install zookeeper home [/usr/lib/zookeeper]
      --bin-dir=DIR               path to install bins [/usr/bin]
-     --man-dir=DIR               path to install bins [/usr/share/main]
-     --etc-default=DIR           path to install bins [/etc/default]
+     --man-dir=DIR               path to install mans [/usr/share/man]
+     --etc-default=DIR           path to bigtop default dir [/etc/default]
      --examples-dir=DIR          path to install examples [doc-dir/examples]
      --system-include-dir=DIR    path to install development headers [/usr/include]
      --system-lib-dir=DIR        path to install native libraries [/usr/lib]
@@ -116,7 +116,7 @@ SYSTEM_INCLUDE_DIR=${SYSTEM_INCLUDE_DIR:-/usr/include}
 SYSTEM_LIB_DIR=${SYSTEM_LIB_DIR:-/usr/lib}
 
 CONF_DIR=/etc/zookeeper/conf
-CONF_DIST_DIR=/etc/zookeeper/conf.dist/
+CONF_DIST_DIR=/etc/zookeeper/conf.dist
 
 tar -z -x -f zookeeper-assembly/target/apache-zookeeper-*-bin.tar.gz
 install -d -m 0755 $PREFIX/$LIB_DIR/
