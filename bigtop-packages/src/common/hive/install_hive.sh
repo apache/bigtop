@@ -261,7 +261,7 @@ install -d -m 0755 $PREFIX/var/log/hive
 
 install -d -m 0755 $PREFIX/$VAR_LIB_HCATALOG
 install -d -m 0755 $PREFIX/var/log/hive-hcatalog
-for DIR in ${HCATALOG_SHARE_DIR} ; do
+for DIR in $PREFIX/$HCATALOG_SHARE_DIR ; do
     (cd $DIR &&
      for j in hive-hcatalog-*.jar; do
        if [[ $j =~ hive-hcatalog-(.*)-${HIVE_VERSION}.jar ]]; then
