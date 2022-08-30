@@ -115,6 +115,14 @@
     <on-ambari-upgrade add="true"/>
   </property>
   <property>
+    <name>hadoop.http.authentication.type</name>
+    <value>simple</value>
+    <description>
+      Defines authentication used for Oozie HTTP endpoint. Supported values are: simple | kerberos | #AUTHENTICATION_HANDLER_CLASSNAME#
+   </description>
+    <on-ambari-upgrade add="true"/>
+  </property>
+  <property>
     <name>hadoop.security.authentication</name>
     <value>simple</value>
     <description>

@@ -116,23 +116,23 @@ hadoop_lib_home = stack_select.get_hadoop_dir("lib")
 if stack_version_formatted and check_stack_feature(StackFeature.ROLLING_UPGRADE, stack_version_formatted):
   mapreduce_libs_path = format("{stack_root}/current/hadoop-mapreduce-client/*")
 
-  if not security_enabled:
-    hadoop_secure_dn_user = '""'
+if not security_enabled:
+  hadoop_secure_dn_user = '""'
+else:
+  dfs_dn_port = utils.get_port(dfs_dn_addr)
+  dfs_dn_http_port = utils.get_port(dfs_dn_http_addr)
+  dfs_dn_https_port = utils.get_port(dfs_dn_https_addr)
+  # We try to avoid inability to start datanode as a plain user due to usage of root-owned ports
+  if dfs_http_policy == "HTTPS_ONLY":
+    secure_dn_ports_are_in_use = utils.is_secure_port(dfs_dn_port) or utils.is_secure_port(dfs_dn_https_port)
+  elif dfs_http_policy == "HTTP_AND_HTTPS":
+    secure_dn_ports_are_in_use = utils.is_secure_port(dfs_dn_port) or utils.is_secure_port(dfs_dn_http_port) or utils.is_secure_port(dfs_dn_https_port)
+  else:   # params.dfs_http_policy == "HTTP_ONLY" or not defined:
+    secure_dn_ports_are_in_use = utils.is_secure_port(dfs_dn_port) or utils.is_secure_port(dfs_dn_http_port)
+  if secure_dn_ports_are_in_use:
+    hadoop_secure_dn_user = hdfs_user
   else:
-    dfs_dn_port = utils.get_port(dfs_dn_addr)
-    dfs_dn_http_port = utils.get_port(dfs_dn_http_addr)
-    dfs_dn_https_port = utils.get_port(dfs_dn_https_addr)
-    # We try to avoid inability to start datanode as a plain user due to usage of root-owned ports
-    if dfs_http_policy == "HTTPS_ONLY":
-      secure_dn_ports_are_in_use = utils.is_secure_port(dfs_dn_port) or utils.is_secure_port(dfs_dn_https_port)
-    elif dfs_http_policy == "HTTP_AND_HTTPS":
-      secure_dn_ports_are_in_use = utils.is_secure_port(dfs_dn_port) or utils.is_secure_port(dfs_dn_http_port) or utils.is_secure_port(dfs_dn_https_port)
-    else:   # params.dfs_http_policy == "HTTP_ONLY" or not defined:
-      secure_dn_ports_are_in_use = utils.is_secure_port(dfs_dn_port) or utils.is_secure_port(dfs_dn_http_port)
-    if secure_dn_ports_are_in_use:
-      hadoop_secure_dn_user = hdfs_user
-    else:
-      hadoop_secure_dn_user = '""'
+    hadoop_secure_dn_user = '""'
 
 # Parameters for upgrade packs
 skip_namenode_save_namespace_express = default("/configurations/cluster-env/stack_upgrade_express_skip_namenode_save_namespace", False)

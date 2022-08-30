@@ -127,17 +127,22 @@ class MapReduce2ServiceCheckDefault(MapReduce2ServiceCheck):
     run_wordcount_job = format("jar {jar_path} wordcount {input_file} {output_file}")
     test_cmd = format("fs -test -e {output_file}")
 
-    ExecuteHadoop(hdfs_put_cmd,
-                  user=params.smokeuser,
-                  bin_dir=params.execute_path,
-                  conf_dir=params.hadoop_conf_dir)
-
     params.HdfsResource(format("/user/{smokeuser}"),
                       type="directory",
                       action="create_on_execute",
                       owner=params.smokeuser,
                       mode=params.smoke_hdfs_user_mode,
     )
+
+    params.HdfsResource(input_file,
+                        action = "create_on_execute",
+                        type = "file",
+                        source = source_file,
+                        owner = params.smokeuser,
+                        mode = params.smoke_hdfs_user_mode,
+                        dfs_type = params.dfs_type,
+    )
+
     params.HdfsResource(output_file,
                         action = "delete_on_execute",
                         type = "directory",

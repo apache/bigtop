@@ -16,6 +16,16 @@
         {
           "name": "hdfs_smokeuser",
           "reference": "/smokeuser"
+        },
+        {
+          "name": "hadoop_http_spnego",
+          "reference": "/spnego",
+          "principal": {
+            "configuration": "core-site/hadoop.http.authentication.kerberos.principal"
+          },
+          "keytab": {
+            "configuration": "core-site/hadoop.http.authentication.kerberos.keytab"
+          }
         }
       ],
       "auth_to_local_properties" : [
@@ -25,6 +35,7 @@
         {
           "core-site": {
             "hadoop.security.authentication": "kerberos",
+            "hadoop.http.authentication.type": "kerberos",
             "hadoop.security.authorization": "true",
             "hadoop.proxyuser.HTTP.groups": "${hadoop-env/proxyuser_group}"
           }
