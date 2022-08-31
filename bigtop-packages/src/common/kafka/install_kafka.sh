@@ -181,6 +181,7 @@ EOF
 done
 
 # Copy in the configuration files
+install -d -m 0755 $PREFIX/etc/kafka
 install -d -m 0755 $PREFIX/$CONF_DIST_DIR
 cp -a ${BUILD_DIR}/config/{tools-log4j.properties,server.properties,log4j.properties} $PREFIX/$CONF_DIST_DIR/
 # BIGTOP-1886

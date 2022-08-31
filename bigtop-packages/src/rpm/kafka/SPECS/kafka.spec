@@ -30,7 +30,7 @@
 # No prefix directory
 %define np_var_run_kafka /var/run/%{kafka_name}
 %define np_var_log_kafka /var/log/%{kafka_name}
-%define np_etc_kafka_conf /etc/%{kafka_name}/conf
+%define np_etc_kafka /etc/%{kafka_name}
 
 %if  %{!?suse_version:1}0
 %define doc_kafka %{doc_dir}/%{kafka_name}-%{kafka_version}
@@ -140,7 +140,7 @@ getent group kafka >/dev/null || groupadd -r kafka
 getent passwd kafka >/dev/null || useradd -c "Kafka" -s /sbin/nologin -g kafka -r -d %{var_lib_kafka} kafka 2> /dev/null || :
 
 %post
-%{alternatives_cmd} --install %{np_etc_kafka_conf} %{kafka_name}-conf %{etc_kafka_conf_dist} 30
+%{alternatives_cmd} --install %{np_etc_kafka}/conf %{kafka_name}-conf %{etc_kafka_conf_dist} 30
 
 %preun
 if [ "$1" = 0 ]; then
@@ -181,6 +181,7 @@ fi
 %{bin_dir}/*
 %config(noreplace) %{etc_kafka_conf_dist}
 %config(noreplace) %{etc_default}/kafka
+%attr(0755,kafka,kafka) %{np_etc_kafka}
 %attr(0755,kafka,kafka) %{usr_lib_kafka}
 %attr(0755,kafka,kafka) %docdir %{doc_kafka}
 %attr(0755,kafka,kafka) %{var_lib_kafka}
