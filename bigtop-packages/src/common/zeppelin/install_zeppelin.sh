@@ -28,8 +28,8 @@ usage: $0 <options>
   Optional options:
      --doc-dir=DIR               path to install docs into [/usr/share/doc/zeppelin]
      --lib-dir=DIR               path to install Zeppelin home [/usr/lib/zeppelin]
-     --installed-lib-dir=DIR     path where lib-dir will end up on target system
-     --bin-dir=DIR               path to install bins [/usr/bin]
+     --var-dir=DIR               path to install Zeppelin home [/var/lib/kafka]
+     --man-dir=DIR               path to install mans [/usr/share/man]
      ... [ see source for more similar options ]
   "
   exit 1
@@ -41,8 +41,8 @@ OPTS=$(getopt \
   -l 'prefix:' \
   -l 'doc-dir:' \
   -l 'lib-dir:' \
-  -l 'installed-lib-dir:' \
-  -l 'bin-dir:' \
+  -l 'var-dir:' \
+  -l 'man-dir:' \
   -l 'source-dir:' \
   -l 'build-dir:' -- "$@")
 
@@ -68,11 +68,11 @@ while true ; do
         --lib-dir)
         LIB_DIR=$2 ; shift 2
         ;;
-        --installed-lib-dir)
-        INSTALLED_LIB_DIR=$2 ; shift 2
+        --var-dir)
+        VAR_DIR=$2 ; shift 2
         ;;
-        --bin-dir)
-        BIN_DIR=$2 ; shift 2
+        --man-dir)
+        MAN_DIR=$2 ; shift 2
         ;;
         --)
         shift ; break
@@ -96,34 +96,35 @@ if [ -f "$SOURCE_DIR/bigtop.bom" ]; then
   . $SOURCE_DIR/bigtop.bom
 fi
 
-MAN_DIR=${MAN_DIR:-/usr/share/man/man1}
+MAN_DIR=${MAN_DIR:-/usr/share/man}/man1
 DOC_DIR=${DOC_DIR:-/usr/share/doc/zeppelin}
 LIB_DIR=${LIB_DIR:-/usr/lib/zeppelin}
-INSTALLED_LIB_DIR=${INSTALLED_LIB_DIR:-/usr/lib/zeppelin}
-BIN_DIR=${BIN_DIR:-/usr/bin}
-CONF_DIR=${CONF_DIR:-/etc/zeppelin/conf.dist}
+VAR_DIR=${VAR_DIR:-/var/lib/zeppelin}
+
+CONF_DIR=/etc/zeppelin/conf
+CONF_DIST_DIR=/etc/zeppelin/conf.dist
 
 install -d -m 0755 $PREFIX/$LIB_DIR
 install -d -m 0755 $PREFIX/$LIB_DIR/bin
 install -d -m 0755 $PREFIX/$LIB_DIR/lib
 install -d -m 0755 $PREFIX/$LIB_DIR/plugins
-install -d -m 0755 $PREFIX/$CONF_DIR
+install -d -m 0755 $PREFIX/$CONF_DIST_DIR
 install -d -m 0755 $PREFIX/$DOC_DIR
 
-install -d -m 0755 $PREFIX/var/lib/zeppelin/
-install -d -m 0755 $PREFIX/var/lib/zeppelin/notebook/
+install -d -m 0755 $PREFIX/$VAR_DIR
+install -d -m 0755 $PREFIX/$VAR_DIR/notebook/
 install -d -m 0755 $PREFIX/var/log/zeppelin/
 install -d -m 0755 $PREFIX/var/run/zeppelin/
 install -d -m 0755 $PREFIX/var/run/zeppelin/webapps
 
 cp -a ${BUILD_DIR}/build/dist/{bin,interpreter,lib,plugins,zeppelin-web-${ZEPPELIN_VERSION}.war} $PREFIX/$LIB_DIR/
 cp -a ${BUILD_DIR}/build/dist/{LICENSE,NOTICE,README.md,licenses} $PREFIX/$DOC_DIR
-cp -a ${BUILD_DIR}/build/dist/conf/* $PREFIX/$CONF_DIR
-cp -a ${BUILD_DIR}/build/dist/notebook $PREFIX/var/lib/zeppelin/
+cp -a ${BUILD_DIR}/build/dist/conf/* $PREFIX/$CONF_DIST_DIR
+cp -a ${BUILD_DIR}/build/dist/notebook $PREFIX/$VAR_DIR/
 
 rm -f $PREFIX/$LIB_DIR/bin/*.cmd
 chmod 755 $PREFIX/$LIB_DIR/bin/*
 
-rm -f $PREFIX/$CONF_DIR/*.cmd.*
-cp -a ${SOURCE_DIR}/zeppelin-env.sh $PREFIX/$CONF_DIR
-ln -s /etc/zeppelin/conf $PREFIX/$LIB_DIR/conf
+rm -f $PREFIX/$CONF_DIST_DIR/*.cmd.*
+cp -a ${SOURCE_DIR}/zeppelin-env.sh $PREFIX/$CONF_DIST_DIR
+ln -s $CONF_DIR $PREFIX/$LIB_DIR/conf

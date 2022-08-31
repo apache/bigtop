@@ -13,21 +13,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-%define lib_zeppelin /usr/lib/%{name}
-%define var_lib_zeppelin /var/lib/%{name}
-%define var_run_zeppelin /var/run/%{name}
-%define var_log_zeppelin /var/log/%{name}
-%define bin_zeppelin /usr/lib/%{name}/bin
-%define etc_zeppelin /etc/%{name}
-%define config_zeppelin %{etc_zeppelin}/conf
-%define bin /usr/bin
-%define man_dir /usr/share/man
+%define etc_default %{prefix}/etc/default
+
+%define usr_lib_zeppelin %{prefix}/usr/lib/%{name}
+%define var_lib_zeppelin %{prefix}/var/lib/%{name}
+
+%define man_dir %{prefix}/%{_mandir}
+%define doc_dir %{prefix}/%{_docdir}
+%define lib_dir %{prefix}/%{_libdir}
+
+# No prefix directory
+%define np_var_log_zeppelin /var/log/%{name}
+%define np_var_run_zeppelin /var/run/%{name}
+%define np_etc_zeppelin /etc/%{name}
 
 %if  %{?suse_version:1}0
-%define doc_zeppelin %{_docdir}/%{name}
+%define doc_zeppelin %{doc_dir}/%{name}
 %define alternatives_cmd update-alternatives
 %else
-%define doc_zeppelin %{_docdir}/%{name}-%{zeppelin_version}
+%define doc_zeppelin %{doc_dir}/%{name}-%{zeppelin_version}
 %define alternatives_cmd alternatives
 %endif
 
@@ -93,7 +97,10 @@ bash $RPM_SOURCE_DIR/install_zeppelin.sh \
   --build-dir=`pwd`         \
   --source-dir=$RPM_SOURCE_DIR \
   --prefix=$RPM_BUILD_ROOT  \
-  --doc-dir=%{doc_zeppelin}
+  --doc-dir=%{doc_zeppelin} \
+  --lib-dir=%{usr_lib_zeppelin} \
+  --var-dir=%{var_lib_zeppelin} \
+  --man-dir=%{man_dir}
 
 # Install init script
 initd_script=$RPM_BUILD_ROOT/%{initd_dir}/%{name}
@@ -104,12 +111,12 @@ getent group zeppelin >/dev/null || groupadd -r zeppelin
 getent passwd zeppelin >/dev/null || useradd -c "Zeppelin" -s /sbin/nologin -g zeppelin -r -d %{var_lib_zeppelin} zeppelin 2> /dev/null || :
 
 %post
-%{alternatives_cmd} --install %{config_zeppelin} %{name}-conf %{config_zeppelin}.dist 30
+%{alternatives_cmd} --install %{np_etc_zeppelin}/conf %{name}-conf %{np_etc_zeppelin}/conf.dist 30
 chkconfig --add %{name}
 
 %preun
 if [ "$1" = 0 ]; then
-  %{alternatives_cmd} --remove %{name}-conf %{config_zeppelin}.dist || :
+  %{alternatives_cmd} --remove %{name}-conf %{np_etc_zeppelin}/conf.dist || :
 fi
 
 /sbin/service %{name} status > /dev/null 2>&1
@@ -124,14 +131,14 @@ chkconfig --del %{name}
 %files
 %defattr(-,root,root,755)
 %doc %{doc_zeppelin}
-%{lib_zeppelin}/*.war
-%{lib_zeppelin}/bin
-%{lib_zeppelin}/plugins
-%{lib_zeppelin}/conf
-%{lib_zeppelin}/interpreter
-%{lib_zeppelin}/lib
-%config(noreplace) %attr(0755,zeppelin,zeppelin) %{etc_zeppelin}
+%{usr_lib_zeppelin}/*.war
+%{usr_lib_zeppelin}/bin
+%{usr_lib_zeppelin}/plugins
+%{usr_lib_zeppelin}/conf
+%{usr_lib_zeppelin}/interpreter
+%{usr_lib_zeppelin}/lib
+%config(noreplace) %attr(0755,zeppelin,zeppelin) %{np_etc_zeppelin}
 %attr(0755,zeppelin,zeppelin) %{var_lib_zeppelin}
-%attr(0755,zeppelin,zeppelin) %{var_run_zeppelin}
-%attr(0755,zeppelin,zeppelin) %{var_log_zeppelin}
+%attr(0755,zeppelin,zeppelin) %{np_var_run_zeppelin}
+%attr(0755,zeppelin,zeppelin) %{np_var_log_zeppelin}
 %attr(0755,root,root)/%{initd_dir}/%{name}
