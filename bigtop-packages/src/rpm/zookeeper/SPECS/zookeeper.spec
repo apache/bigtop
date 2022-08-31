@@ -12,19 +12,30 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-%define etc_zookeeper /etc/%{name}
-%define bin_zookeeper %{_bindir}
-%define lib_zookeeper /usr/lib/%{name}
-%define log_zookeeper /var/log/%{name}
-%define run_zookeeper /var/run/%{name}
-%define vlb_zookeeper /var/lib/%{name}
+
+%define etc_default %{parent_dir}/etc/default
+
+%define usr_lib_zookeeper %{parent_dir}/usr/lib/%{name}
+%define var_lib_zookeeper %{parent_dir}/var/lib/%{name}
+%define etc_zookeeper_conf_dist %{parent_dir}/etc/zookeeper/conf.dist
+
+%define bin_dir %{parent_dir}/%{_bindir}
+%define man_dir %{parent_dir}/%{_mandir}
+%define doc_dir %{parent_dir}/%{_docdir}
+%define include_dir %{parent_dir}/%{_includedir}
+%define lib_dir %{parent_dir}/%{_libdir}
+
+# No prefix directory
+%define np_var_log_zookeeper /var/log/%{name}
+%define np_var_run_zookeeper /var/run/%{name}
+%define np_etc_zookeeper_conf /etc/%{name}/conf
+
 %define svc_zookeeper %{name}-server
 %define svc_zookeeper_rest %{name}-rest
-%define man_dir %{_mandir}
 
 %if  %{?suse_version:1}0
 
-# Only tested on openSUSE 11.4. le'ts update it for previous release when confirmed
+# Only tested on openSUSE 11.4. let's update it for previous release when confirmed
 %if 0%{suse_version} > 1130
 %define suse_check \# Define an empty suse_check for compatibility with older sles
 %endif
@@ -40,7 +51,7 @@
     %{nil}
 
 
-%define doc_zookeeper %{_docdir}/%{name}
+%define doc_zookeeper %{doc_dir}/%{name}
 %define alternatives_cmd update-alternatives
 %define alternatives_dep update-alternatives
 %define chkconfig_dep    aaa_base
@@ -49,7 +60,7 @@
 
 %else
 
-%define doc_zookeeper %{_docdir}/%{name}-%{zookeeper_version}
+%define doc_zookeeper %{doc_dir}/%{name}-%{zookeeper_version}
 %define alternatives_cmd alternatives
 %define alternatives_dep chkconfig 
 %define chkconfig_dep    chkconfig
@@ -155,10 +166,15 @@ bash %{SOURCE1}
 cp $RPM_SOURCE_DIR/zookeeper.1 $RPM_SOURCE_DIR/zoo.cfg $RPM_SOURCE_DIR/zookeeper.default .
 bash %{SOURCE2} \
           --build-dir=build \
-          --doc-dir=%{doc_zookeeper} \
           --prefix=$RPM_BUILD_ROOT \
-          --system-include-dir=%{_includedir} \
-          --system-lib-dir=%{_libdir}
+          --doc-dir=%{doc_zookeeper} \
+          --lib-dir=%{usr_lib_zookeeper} \
+          --bin-dir=%{bin_dir} \
+          --man-dir=%{man_dir} \
+          --conf-dist-dir=%{etc_zookeeper_conf_dist} \
+          --etc-default=%{etc_default} \
+          --system-include-dir=%{include_dir} \
+          --system-lib-dir=%{lib_dir}
 
 %if  %{?suse_version:1}0
 orig_init_file=%{SOURCE4}
@@ -177,19 +193,19 @@ bash $RPM_SOURCE_DIR/init.d.tmpl $RPM_SOURCE_DIR/zookeeper-rest.svc rpm $init_fi
 
 %pre
 getent group zookeeper >/dev/null || groupadd -r zookeeper
-getent passwd zookeeper > /dev/null || useradd -c "ZooKeeper" -s /sbin/nologin -g zookeeper -r -d %{vlb_zookeeper} zookeeper 2> /dev/null || :
+getent passwd zookeeper > /dev/null || useradd -c "ZooKeeper" -s /sbin/nologin -g zookeeper -r -d %{var_lib_zookeeper} zookeeper 2> /dev/null || :
 
-%__install -d -o zookeeper -g zookeeper -m 0755 %{run_zookeeper}
-%__install -d -o zookeeper -g zookeeper -m 0755 %{log_zookeeper}
+%__install -d -o zookeeper -g zookeeper -m 0755 %{np_var_run_zookeeper}
+%__install -d -o zookeeper -g zookeeper -m 0755 %{np_var_log_zookeeper}
 
 # Manage configuration symlink
 %post
-%{alternatives_cmd} --install %{etc_zookeeper}/conf %{name}-conf %{etc_zookeeper}/conf.dist 30
-%__install -d -o zookeeper -g zookeeper -m 0755 %{vlb_zookeeper}
+%{alternatives_cmd} --install %{np_etc_zookeeper_conf} %{name}-conf %{etc_zookeeper_conf_dist} 30
+%__install -d -o zookeeper -g zookeeper -m 0755 %{var_lib_zookeeper}
 
 %preun
 if [ "$1" = 0 ]; then
-        %{alternatives_cmd} --remove %{name}-conf %{etc_zookeeper}/conf.dist || :
+        %{alternatives_cmd} --remove %{name}-conf %{etc_zookeeper_conf_dist} || :
 fi
 
 %post server
@@ -225,13 +241,13 @@ fi
 #######################
 %files
 %defattr(-,root,root)
-%config(noreplace) %{etc_zookeeper}/conf.dist
-%config(noreplace) /etc/default/zookeeper
-%{lib_zookeeper}
-%{bin_zookeeper}/zookeeper-server
-%{bin_zookeeper}/zookeeper-server-initialize
-%{bin_zookeeper}/zookeeper-client
-%{bin_zookeeper}/zookeeper-server-cleanup
+%config(noreplace) %{etc_zookeeper_conf_dist}
+%config(noreplace) %{etc_default}/%{name}
+%{usr_lib_zookeeper}
+%{bin_dir}/zookeeper-server
+%{bin_dir}/zookeeper-server-initialize
+%{bin_dir}/zookeeper-client
+%{bin_dir}/zookeeper-server-cleanup
 %doc %{doc_zookeeper}
 %{man_dir}/man1/zookeeper.1.*
 
@@ -243,9 +259,9 @@ fi
 
 %files native
 %defattr(-,root,root)
-%{lib_zookeeper}-native
-%{bin_zookeeper}/cli_*
-%{bin_zookeeper}/load_gen*
-%{_includedir}/zookeeper
-%{_libdir}/*
+%{usr_lib_zookeeper}-native
+%{bin_dir}/cli_*
+%{bin_dir}/load_gen*
+%{include_dir}/zookeeper
+%{lib_dir}/*
 
