@@ -38,7 +38,7 @@
 %define suse_check \# Define an empty suse_check for compatibility with older sles
 %endif
 
-%define doc_tez %{_docdir}/%{name}-%{tez_version}
+%define doc_tez %{_docdir}/%{name}
 %define alternatives_cmd update-alternatives
 %define __os_install_post \
     %{suse_check} ; \
