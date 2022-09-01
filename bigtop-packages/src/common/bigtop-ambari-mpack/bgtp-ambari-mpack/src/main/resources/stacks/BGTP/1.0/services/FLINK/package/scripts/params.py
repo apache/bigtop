@@ -76,6 +76,7 @@ flink_user = config['configurations']['flink-env']['flink_user']
 user_group = config['configurations']['cluster-env']['user_group']
 flink_conf_template = config['configurations']['flink-conf']['content']
 flink_group = config['configurations']['flink-env']['flink_group']
+flink_hdfs_user_dir = format("/user/{flink_user}")
 flink_log4j_properties = config['configurations']['flink-log4j-properties']['content']
 
 jobmanager_archive_fs_dir = config['configurations']['flink-conf']['jobmanager.archive.fs.dir']
@@ -86,6 +87,9 @@ historyserver_archive_fs_refresh_interval = config['configurations']['flink-conf
 flink_history_server_start = format("export HADOOP_CLASSPATH=`hadoop classpath`;{flink_dir}/bin/historyserver.sh start")
 flink_history_server_stop = format("{flink_dir}/bin/historyserver.sh stop")
 flink_history_server_pid_file = status_params.flink_history_server_pid_file
+
+security_kerberos_login_principal = config['configurations']['flink-conf']['security.kerberos.login.principal']
+security_kerberos_login_keytab = config['configurations']['flink-conf']['security.kerberos.login.keytab']
 
 import functools
 #create partial functions with common arguments for every HdfsResource call

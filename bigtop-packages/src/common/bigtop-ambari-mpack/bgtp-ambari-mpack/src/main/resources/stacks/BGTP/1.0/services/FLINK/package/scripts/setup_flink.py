@@ -41,7 +41,18 @@ def setup_flink(env, type, upgrade_type = None, action = None):
             group = params.user_group,
             create_parents = True)
 
+  Directory(params.flink_log_dir,mode=0767)
   Link(params.flink_dir + '/log',to=params.flink_log_dir)
+
+  if type == 'historyserver' and action == 'config':
+    params.HdfsResource(params.flink_hdfs_user_dir,
+                     type="directory",
+                     action="create_on_execute",
+                     owner=params.flink_user,
+                     mode=0775
+    )
+
+    params.HdfsResource(None, action="execute")
 
   flink_conf_file_path = os.path.join(params.flink_config_dir, "flink-conf.yaml")
   File(flink_conf_file_path,

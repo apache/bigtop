@@ -44,6 +44,19 @@
     <description>Interval in milliseconds for refreshing the monitored directories.</description>
     <on-ambari-upgrade add="true" />
   </property>
+  <property>
+    <name>security.kerberos.login.keytab</name>
+    <description>Flink keytab path</description>
+    <value>none</value>
+    <on-ambari-upgrade add="true"/>
+  </property>
+  <property>
+    <name>security.kerberos.login.principal</name>
+    <description>Flink principal name</description>
+    <property-type>KERBEROS_PRINCIPAL</property-type>
+    <value>none</value>
+    <on-ambari-upgrade add="true"/>
+  </property>
   <!-- flink-conf.yaml -->
   <property>
     <name>content</name>
@@ -329,10 +342,15 @@ rest.bind-address: localhost
 # The below configure how Kerberos credentials are provided. A keytab will be used instead of
 # a ticket cache if the keytab path and principal are set.
 
+{% if security_enabled %}
+security.kerberos.login.use-ticket-cache: true
+security.kerberos.login.keytab: {{security_kerberos_login_keytab}}
+security.kerberos.login.principal: {{security_kerberos_login_principal}}
+{% else %}
 # security.kerberos.login.use-ticket-cache: true
 # security.kerberos.login.keytab: /path/to/kerberos/keytab
 # security.kerberos.login.principal: flink-user
-
+{% endif %}
 # The configuration below defines which JAAS login contexts
 
 # security.kerberos.login.contexts: Client,KafkaClient

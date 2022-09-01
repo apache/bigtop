@@ -23,6 +23,7 @@ import os
 from resource_management.libraries.functions.format import format
 from resource_management.core.resources import Execute
 from resource_management.libraries.script import Script
+from resource_management.core.resources.system import Directory
 
 class FlinkServiceCheck(Script):
   def service_check(self, env):
@@ -30,10 +31,11 @@ class FlinkServiceCheck(Script):
     env.set_params(params)
 
     if params.security_enabled:
-      kinit_cmd = format("{kinit_path_local} -kt {smoke_user_keytab} {smokeuser_principal};")
-      Execute(kinit_cmd, user=params.smokeuser)
+       flink_kinit_cmd = format("{kinit_path_local} -kt {smoke_user_keytab} {smokeuser_principal}; ")
+       Execute(flink_kinit_cmd, user=params.smokeuser)
 
     run_flink_wordcount_job = format("export HADOOP_CLASSPATH=`hadoop classpath`;{flink_bin_dir}/flink run -m yarn-cluster {flink_bin_dir}/../examples/batch/WordCount.jar")
+
     Execute(run_flink_wordcount_job,
       logoutput=True,
       environment={'JAVA_HOME':params.java_home,'HADOOP_CONF_DIR': params.hadoop_conf_dir},
