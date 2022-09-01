@@ -28,7 +28,7 @@
 # No prefix directory
 %define np_var_log_zookeeper /var/log/%{name}
 %define np_var_run_zookeeper /var/run/%{name}
-%define np_etc_zookeeper_conf /etc/%{name}/conf
+%define np_etc_zookeeper /etc/%{name}
 
 %define svc_zookeeper %{name}-server
 %define svc_zookeeper_rest %{name}-rest
@@ -200,7 +200,7 @@ getent passwd zookeeper > /dev/null || useradd -c "ZooKeeper" -s /sbin/nologin -
 
 # Manage configuration symlink
 %post
-%{alternatives_cmd} --install %{np_etc_zookeeper_conf} %{name}-conf %{etc_zookeeper_conf_dist} 30
+%{alternatives_cmd} --install %{np_etc_zookeeper}/conf %{name}-conf %{etc_zookeeper_conf_dist} 30
 %__install -d -o zookeeper -g zookeeper -m 0755 %{var_lib_zookeeper}
 
 %preun
@@ -243,6 +243,7 @@ fi
 %defattr(-,root,root)
 %config(noreplace) %{etc_zookeeper_conf_dist}
 %config(noreplace) %{etc_default}/%{name}
+%{np_etc_zookeeper}
 %{usr_lib_zookeeper}
 %{bin_dir}/zookeeper-server
 %{bin_dir}/zookeeper-server-initialize
