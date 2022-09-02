@@ -127,7 +127,10 @@
       <configuration-dependencies>
         <config-type>flink-conf</config-type>
         <config-type>flink-env</config-type>
+        <config-type>flink-log4j-cli-properties</config-type>
+        <config-type>flink-log4j-console-properties</config-type>
         <config-type>flink-log4j-properties</config-type>
+        <config-type>flink-log4j-session-properties</config-type>
       </configuration-dependencies>
 
       <commandScript>

@@ -68,3 +68,27 @@ def setup_flink(env, type, upgrade_type = None, action = None):
        content=params.flink_log4j_properties,
        mode=0644,
   )
+
+  #create log4j-cli.properties in /etc/conf dir
+  File(os.path.join(params.flink_config_dir, 'log4j-cli.properties'),
+       owner=params.flink_user,
+       group=params.flink_group,
+       content=params.flink_log4j_cli_properties,
+       mode=0644,
+  )
+
+  #create log4j-console.properties in /etc/conf dir
+  File(os.path.join(params.flink_config_dir, 'log4j-console.properties'),
+       owner=params.flink_user,
+       group=params.flink_group,
+       content=params.flink_log4j_console_properties,
+       mode=0644,
+  )
+
+  #create log4j-session.properties in /etc/conf dir
+  File(os.path.join(params.flink_config_dir, 'log4j-session.properties'),
+       owner=params.flink_user,
+       group=params.flink_group,
+       content=params.flink_log4j_session_properties,
+       mode=0644,
+  )
