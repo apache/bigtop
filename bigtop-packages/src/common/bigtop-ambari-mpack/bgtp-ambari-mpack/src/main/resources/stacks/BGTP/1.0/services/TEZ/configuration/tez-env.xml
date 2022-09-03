@@ -31,10 +31,6 @@
       <overridable>false</overridable>
       <user-groups>
         <property>
-          <type>hadoop-env</type>
-          <name>proxyuser_group</name>
-        </property>
-        <property>
           <type>cluster-env</type>
           <name>user_group</name>
         </property>

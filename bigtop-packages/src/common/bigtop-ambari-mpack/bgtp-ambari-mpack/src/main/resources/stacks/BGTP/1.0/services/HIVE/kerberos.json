@@ -115,36 +115,33 @@
                     ]
                 },
                 {
-                    "name": "HIVE_SERVER_INTERACTIVE",
+                    "name": "WEBHCAT_SERVER",
                     "identities": [
-                        {
-                            "name": "hive_hive_server_interactive_hdfs",
-                            "reference": "/HDFS/NAMENODE/hdfs"
+                      {
+                        "name": "hive_webhcat_server_spnego",
+                        "reference": "/spnego",
+                        "principal": {
+                          "configuration": "webhcat-site/templeton.kerberos.principal"
                         },
-                        {
-                            "name": "hive_hive_server_interactive_hive_server_hive",
-                            "reference": "/HIVE/HIVE_SERVER/hive_server_hive"
-                        },
-                        {
-                            "name": "hive_hive_server_interactive_spnego",
-                            "reference": "/HIVE/HIVE_SERVER/spnego"
-                        },
-                        {
-                            "name": "hive_hive_server_interactive_llap_zk_hive",
-                            "reference": "/YARN/NODEMANAGER/llap_zk_hive"
-                        },
-                        {
-                            "name": "hive_hive_server_interactive_task_scheduler_am_registry",
-                            "reference": "/HIVE/HIVE_SERVER/hive_server_hive",
-                            "principal": {
-                                "configuration": "hive-interactive-site/hive.llap.task.scheduler.am.registry.principal"
-                            },
-                            "keytab": {
-                                "configuration": "hive-interactive-site/hive.llap.task.scheduler.am.registry.keytab.file"
-                            }
+                        "keytab": {
+                          "configuration": "webhcat-site/templeton.kerberos.keytab"
                         }
+                      }
+                    ],
+                    "configurations": [
+                      {
+                        "core-site": {
+                          "hadoop.proxyuser.HTTP.hosts": "${clusterHostInfo/webhcat_server_hosts|append(core-site/hadoop.proxyuser.HTTP.hosts, \\\\,, true)}"
+                        }
+                      },
+                      {
+                        "webhcat-site": {
+                          "templeton.kerberos.secret": "secret",
+                          "templeton.hive.properties": "hive.metastore.local=false,hive.metastore.uris=${clusterHostInfo/hive_metastore_hosts|each(thrift://%s:9083, \\\\,, \\s*\\,\\s*)},hive.metastore.sasl.enabled=true,hive.metastore.execute.setugi=true,hive.metastore.warehouse.dir=/apps/hive/warehouse,hive.exec.mode.local.auto=false,hive.metastore.kerberos.principal=hive/_HOST@${realm}"
+                        }
+                      }
                     ]
-                }
+                  }
             ]
         }
     ]
