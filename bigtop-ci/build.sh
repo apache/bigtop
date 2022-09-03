@@ -17,7 +17,7 @@
 BIGTOP_HOME=`cd $(dirname $0)/.. && pwd`
 
 usage() {
-    echo "usage build.sh --prefix trunk|1.4.0|1.3.0|... --os debian-10|centos-7|... --target hadoop|tez|... [--nexus] [--docker-run-option ...]"
+    echo "usage build.sh --prefix trunk|1.4.0|1.3.0|... --os debian-10|centos-7|... --target hadoop|tez|... [--nexus] [--mvn-cache-volume true|false] [--docker-run-option ...]"
     exit 1 # unknown option
 }
 
@@ -44,6 +44,10 @@ case $key in
     -n|--nexus)
     NEXUS="--net=container:nexus"
     CONFIGURE_NEXUS="configure-nexus"
+    shift
+    ;;
+    --mvn-cache-volume)
+    MVN_CACHE_VOLUME="$2"
     shift
     ;;
     --docker-run-option)
@@ -73,6 +77,22 @@ IMAGE_NAME=bigtop/slaves:$PREFIX-$OS
 ARCH=$(uname -m)
 if [ "x86_64" != $ARCH ]; then
     IMAGE_NAME=$IMAGE_NAME-$ARCH
+fi
+
+# Add / Delete named volume for maven cache
+MVN_CACHE_VOLUME_NAME="bigtop-mvn-cache-${OS}"
+if [ "${MVN_CACHE_VOLUME}" == "true" ]; then
+    # Create volume and change the ownership if the volume does not exsit
+    if [ -z "$(docker volume ls -q -f name=${MVN_CACHE_VOLUME_NAME})" ]; then
+        docker volume create $MVN_CACHE_VOLUME_NAME
+        docker run --rm \
+          -v ${MVN_CACHE_VOLUME_NAME}:/var/lib/jenkins/.m2 \
+          --name bigtop-mvn-cache-init $IMAGE_NAME \
+          chown -R jenkins:jenkins /var/lib/jenkins/.m2
+    fi
+    DOCKER_RUN_OPTION="${DOCKER_RUN_OPTION} -v ${MVN_CACHE_VOLUME_NAME}:/var/lib/jenkins/.m2"
+elif [ "${MVN_CACHE_VOLUME}" == "false" ]; then
+  docker volume rm --force $MVN_CACHE_VOLUME_NAME
 fi
 
 # Start up build container
