@@ -651,7 +651,8 @@ def genTasks = { target ->
           description: "Invoking a native binary packaging for $target in Docker. Usage: \$ ./gradlew " +
                   "-POS=[centos-7|fedora-35|debian-10|ubuntu-18.04] " +
                   "-Pprefix=[trunk|1.4.0|1.3.0|1.2.1|...] $target-pkg-ind " +
-                  "-Pnexus=[true|false]",
+                  "-Pnexus=[true|false]" +
+                  "[-Pmvn-cache-volume=[true|false]]",
           group: PACKAGES_GROUP) doLast {
     def _prefix = project.hasProperty("prefix") ? prefix : "trunk"
     def _OS = project.hasProperty("OS") ? OS : "centos-7"
@@ -659,6 +660,7 @@ def genTasks = { target ->
       logger.warn(_OS + ' requires privileged mode, pass `-Pdocker-run-option="--privileged"` to gradle option')
     }
     def _target_pkg = "$target-pkg"
+    def _mvn_cache_volume = project.hasProperty("mvn-cache-volume") ? this.'mvn-cache-volume' : ""
     def _docker_run_option = project.hasProperty("docker-run-option") ? this.'docker-run-option' : ""
     def additionalConfigKeys = ['git_repo', 'git_ref', 'git_dir', 'git_commit_hash', 'base_version']
     additionalConfigKeys.each { key ->
@@ -676,6 +678,10 @@ def genTasks = { target ->
     ]
     if ( project.hasProperty("nexus") ) {
       command.add('--nexus')
+    }
+    if ( project.hasProperty("mvn-cache-volume") ) {
+      command.add('--mvn-cache-volume')
+      command.add(_mvn_cache_volume)
     }
 
     println "Building $_prefix $_target_pkg on $_OS in Docker...\n"
