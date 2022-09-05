@@ -34,7 +34,8 @@ class FlinkServiceCheck(Script):
        flink_kinit_cmd = format("{kinit_path_local} -kt {smoke_user_keytab} {smokeuser_principal}; ")
        Execute(flink_kinit_cmd, user=params.smokeuser)
 
-    run_flink_wordcount_job = format("export HADOOP_CLASSPATH=`hadoop classpath`;{flink_bin_dir}/flink run -m yarn-cluster {flink_bin_dir}/../examples/batch/WordCount.jar")
+    job_cmd_opts= "-m yarn-cluster -yD classloader.check-leaked-classloader=false "
+    run_flink_wordcount_job = format("export HADOOP_CLASSPATH=`hadoop classpath`;{flink_bin_dir}/flink run {job_cmd_opts} {flink_bin_dir}/../examples/batch/WordCount.jar")
 
     Execute(run_flink_wordcount_job,
       logoutput=True,
