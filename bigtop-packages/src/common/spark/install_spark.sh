@@ -28,8 +28,11 @@ usage: $0 <options>
   Optional options:
      --doc-dir=DIR               path to install docs into [/usr/share/doc/spark]
      --lib-dir=DIR               path to install Spark home [/usr/lib/spark]
-     --installed-lib-dir=DIR     path where lib-dir will end up on target system
+     --var-dir=DIR               path to install Spark contents [/var/lib/spark]
      --bin-dir=DIR               path to install bins [/usr/bin]
+     --man-dir=DIR               path to install mans [/usr/share/man]
+     --etc-default=DIR           path to bigtop default dir [/etc/default]
+     --etc-spark=DIR             path to install hive conf [/etc/spark]
      ... [ see source for more similar options ]
   "
   exit 1
@@ -41,8 +44,11 @@ OPTS=$(getopt \
   -l 'prefix:' \
   -l 'doc-dir:' \
   -l 'lib-dir:' \
-  -l 'installed-lib-dir:' \
+  -l 'var-dir:' \
   -l 'bin-dir:' \
+  -l 'man-dir:' \
+  -l 'etc-default:' \
+  -l 'etc-spark:' \
   -l 'source-dir:' \
   -l 'build-dir:' -- "$@")
 
@@ -68,11 +74,20 @@ while true ; do
         --lib-dir)
         LIB_DIR=$2 ; shift 2
         ;;
-        --installed-lib-dir)
-        INSTALLED_LIB_DIR=$2 ; shift 2
+        --var-dir)
+        VAR_DIR=$2 ; shift 2
         ;;
         --bin-dir)
         BIN_DIR=$2 ; shift 2
+        ;;
+        --man-dir)
+        MAN_DIR=$2 ; shift 2
+        ;;
+        --etc-default)
+        ETC_DEFAULT=$2 ; shift 2
+        ;;
+        --etc-spark)
+        ETC_SPARK=$2 ; shift 2
         ;;
         --)
         shift ; break
@@ -97,21 +112,26 @@ if [ -f "$SOURCE_DIR/bigtop.bom" ]; then
 fi
 
 DIST_DIR=${BUILD_DIR}/dist
-MAN_DIR=${MAN_DIR:-/usr/share/man/man1}
+
+MAN_DIR=${MAN_DIR:-/usr/share/man}/man1
 DOC_DIR=${DOC_DIR:-/usr/share/doc/spark}
 LIB_DIR=${LIB_DIR:-/usr/lib/spark}
-INSTALLED_LIB_DIR=${INSTALLED_LIB_DIR:-/usr/lib/spark}
+VAR_DIR=${VAR_DIR:-/var/lib/spark}
 BIN_DIR=${BIN_DIR:-/usr/bin}
-CONF_DIR=${CONF_DIR:-/etc/spark/conf.dist}
-PYSPARK_PYTHON=${PYSPARK_PYTHON:-python}
+ETC_DEFAULT=${ETC_DEFAULT:-/etc/default}
+
+ETC_SPARK=${ETC_SPARK:-/etc/spark}
+# No prefix
+NP_ETC_SPARK=/etc/spark
 
 install -d -m 0755 $PREFIX/$LIB_DIR
 install -d -m 0755 $PREFIX/$LIB_DIR/external/lib
 install -d -m 0755 $PREFIX/$LIB_DIR/yarn/lib
-install -d -m 0755 $PREFIX/$CONF_DIR
+install -d -m 0755 $PREFIX/$NP_ETC_SPARK
+install -d -m 0755 $PREFIX/$ETC_SPARK/conf.dist
 install -d -m 0755 $PREFIX/$DOC_DIR
 
-install -d -m 0755 $PREFIX/var/lib/spark/
+install -d -m 0755 $PREFIX/$VAR_DIR/
 install -d -m 0755 $PREFIX/var/log/spark/
 install -d -m 0755 $PREFIX/var/run/spark/
 install -d -m 0755 $PREFIX/var/run/spark/work/
@@ -134,10 +154,10 @@ copy_external_jars() {
 find_external_modules | copy_external_jars
 
 # Move the configuration files to the correct location
-mv $PREFIX/$LIB_DIR/conf/* $PREFIX/$CONF_DIR
-cp $SOURCE_DIR/spark-env.sh $PREFIX/$CONF_DIR
+mv $PREFIX/$LIB_DIR/conf/* $PREFIX/$ETC_SPARK/conf.dist
+cp $SOURCE_DIR/spark-env.sh $PREFIX/$ETC_SPARK/conf.dist
 rmdir $PREFIX/$LIB_DIR/conf
-ln -s /etc/spark/conf $PREFIX/$LIB_DIR/conf
+ln -s $NP_ETC_SPARK/conf $PREFIX/$LIB_DIR/conf
 
 # Copy in the wrappers
 install -d -m 0755 $PREFIX/$BIN_DIR
@@ -148,23 +168,23 @@ for wrap in bin/spark-class bin/spark-shell bin/spark-sql bin/spark-submit bin/f
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
 
-exec $INSTALLED_LIB_DIR/$wrap "\$@"
+exec $LIB_DIR/$wrap "\$@"
 EOF
   chmod 755 $PREFIX/$BIN_DIR/$(basename $wrap)
 done
 
 ln -s /var/run/spark/work $PREFIX/$LIB_DIR/work
 
-rm -f ${PREFIX}/${INSTALLED_LIB_DIR}/python/.gitignore
+rm -f $PREFIX/$LIB_DIR/python/.gitignore
 cat > $PREFIX/$BIN_DIR/pyspark <<EOF
 #!/bin/bash
 
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
 
-export PYSPARK_PYTHON=${PYSPARK_PYTHON}
+export PYSPARK_PYTHON=python
 
-exec $INSTALLED_LIB_DIR/bin/pyspark "\$@"
+exec $LIB_DIR/bin/pyspark "\$@"
 EOF
 chmod 755 $PREFIX/$BIN_DIR/pyspark
 
@@ -174,7 +194,7 @@ cat > $PREFIX/$BIN_DIR/spark-example <<EOF
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
 
-exec $INSTALLED_LIB_DIR/bin/run-example "\$@"
+exec $LIB_DIR/bin/run-example "\$@"
 EOF
 chmod 755 $PREFIX/$BIN_DIR/spark-example
 
@@ -189,7 +209,6 @@ cp ${BUILD_DIR}/NOTICE ${PREFIX}/${LIB_DIR}/
 #   - https://github.com/apache/spark/pull/22840
 #   - https://issues.apache.org/jira/browse/SPARK-24654
 # Remenber to fetch the new LICENSE-binary and licenses-binary files when upgrading Spark version.
-echo ${PWD}
 cp ${SOURCE_DIR}/LICENSE-binary ${PREFIX}/${LIB_DIR}/LICENSE
 cp -r ${SOURCE_DIR}/licenses-binary ${PREFIX}/${LIB_DIR}/licenses
 
