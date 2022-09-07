@@ -27,8 +27,8 @@ usage: $0 <options>
 
   Optional options:
      --lib-dir=DIR               path to install flink home [/usr/lib/flink]
-     --installed-lib-dir=DIR     path where lib-dir will end up on target system
      --bin-dir=DIR               path to install bins [/usr/bin]
+     --etc-flink=DIR             path to install flink conf [/etc/flink]
      ... [ see source for more similar options ]
   "
   exit 1
@@ -39,8 +39,8 @@ OPTS=$(getopt \
   -o '' \
   -l 'prefix:' \
   -l 'lib-dir:' \
-  -l 'installed-lib-dir:' \
   -l 'bin-dir:' \
+  -l 'etc-flink:' \
   -l 'source-dir:' \
   -l 'build-dir:' -- "$@")
 
@@ -63,11 +63,11 @@ while true ; do
         --lib-dir)
         LIB_DIR=$2 ; shift 2
         ;;
-        --installed-lib-dir)
-        INSTALLED_LIB_DIR=$2 ; shift 2
-        ;;
         --bin-dir)
         BIN_DIR=$2 ; shift 2
+        ;;
+        --etc-flink)
+        ETC_FLINK=$2 ; shift 2
         ;;
         --)
         shift ; break
@@ -94,15 +94,18 @@ fi
 
 
 LIB_DIR=${LIB_DIR:-/usr/lib/flink}
-INSTALLED_LIB_DIR=${INSTALLED_LIB_DIR:-/usr/lib/flink}
 BIN_DIR=${BIN_DIR:-/usr/bin}
-CONF_DIR=${CONF_DIR:-/etc/flink/conf.dist}
+
+ETC_FLINK=${ETC_FLINK:-/etc/flink}
+# No prefix
+NP_ETC_FLINK=/etc/flink
 
 install -d -m 0755 $PREFIX/$LIB_DIR
 install -d -m 0755 $PREFIX/$LIB_DIR/bin
 install -d -m 0755 $PREFIX/$LIB_DIR/lib
 install -d -m 0755 $PREFIX/$LIB_DIR/examples
-install -d -m 0755 $PREFIX/$CONF_DIR
+install -d -m 0755 $PREFIX/$NP_ETC_FLINK
+install -d -m 0755 $PREFIX/$ETC_FLINK/conf.dist
 install -d -m 0755 $PREFIX/var/log/flink
 install -d -m 0755 $PREFIX/var/log/flink-cli
 install -d -m 0755 $PREFIX/var/run/flink
@@ -115,8 +118,8 @@ rm -rf $PREFIX/${LIB_DIR}/bin/*.cmd
 rm -rf  $PREFIX/${LIB_DIR}/log
 
 # Copy the configuration files
-cp -a ${BUILD_DIR}/conf/* $PREFIX/$CONF_DIR
-ln -s /etc/flink/conf $PREFIX/$LIB_DIR/conf
+cp -a ${BUILD_DIR}/conf/* $PREFIX/$ETC_FLINK/conf.dist
+ln -s $NP_ETC_FLINK/conf $PREFIX/$LIB_DIR/conf
 
 cp -ra ${BUILD_DIR}/examples/* $PREFIX/${LIB_DIR}/examples/
 
@@ -132,10 +135,10 @@ cat > $PREFIX/$BIN_DIR/flink <<EOF
 
 export HADOOP_HOME=\${HADOOP_HOME:-/usr/lib/hadoop}
 export HADOOP_CONF_DIR=\${HADOOP_CONF_DIR:-/etc/hadoop/conf}
-export FLINK_HOME=\${FLINK_HOME:-$INSTALLED_LIB_DIR}
-export FLINK_CONF_DIR=\${FLINK_CONF_DIR:-$CONF_DIR}
+export FLINK_HOME=\${FLINK_HOME:-$LIB_DIR}
+export FLINK_CONF_DIR=\${FLINK_CONF_DIR:-$ETC_FLINK/conf.dist}
 export FLINK_LOG_DIR=\${FLINK_LOG_DIR:-/var/log/flink-cli}
 
-exec $INSTALLED_LIB_DIR/bin/flink "\$@"
+exec $LIB_DIR/bin/flink "\$@"
 EOF
 chmod 755 $PREFIX/$BIN_DIR/flink
