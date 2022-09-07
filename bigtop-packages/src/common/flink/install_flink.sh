@@ -28,7 +28,9 @@ usage: $0 <options>
   Optional options:
      --lib-dir=DIR               path to install flink home [/usr/lib/flink]
      --bin-dir=DIR               path to install bins [/usr/bin]
+     --lib-hadoop=DIR            path to hadoop home [/usr/lib/hadoop]
      --etc-flink=DIR             path to install flink conf [/etc/flink]
+     --etc-hadoop=DIR            path to hadoop conf [/etc/hadoop]
      ... [ see source for more similar options ]
   "
   exit 1
@@ -40,7 +42,9 @@ OPTS=$(getopt \
   -l 'prefix:' \
   -l 'lib-dir:' \
   -l 'bin-dir:' \
+  -l 'lib-hadoop:' \
   -l 'etc-flink:' \
+  -l 'etc-hadoop:' \
   -l 'source-dir:' \
   -l 'build-dir:' -- "$@")
 
@@ -66,8 +70,14 @@ while true ; do
         --bin-dir)
         BIN_DIR=$2 ; shift 2
         ;;
+        --lib-hadoop)
+        LIB_HADOOP=$2 ; shift 2
+        ;;
         --etc-flink)
         ETC_FLINK=$2 ; shift 2
+        ;;
+        --etc-hadoop)
+        ETC_HADOOP=$2 ; shift 2
         ;;
         --)
         shift ; break
@@ -95,8 +105,10 @@ fi
 
 LIB_DIR=${LIB_DIR:-/usr/lib/flink}
 BIN_DIR=${BIN_DIR:-/usr/bin}
+LIB_HADOOP=${LIB_HADOOP:-/usr/lib/hadoop}
 
 ETC_FLINK=${ETC_FLINK:-/etc/flink}
+ETC_HADOOP=${ETC_HADOOP:-/etc/hadoop}
 # No prefix
 NP_ETC_FLINK=/etc/flink
 
@@ -133,8 +145,8 @@ cat > $PREFIX/$BIN_DIR/flink <<EOF
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
 
-export HADOOP_HOME=\${HADOOP_HOME:-/usr/lib/hadoop}
-export HADOOP_CONF_DIR=\${HADOOP_CONF_DIR:-/etc/hadoop/conf}
+export HADOOP_HOME=\${HADOOP_HOME:-$LIB_HADOOP}
+export HADOOP_CONF_DIR=\${HADOOP_CONF_DIR:-$ETC_HADOOP/conf}
 export FLINK_HOME=\${FLINK_HOME:-$LIB_DIR}
 export FLINK_CONF_DIR=\${FLINK_CONF_DIR:-$ETC_FLINK/conf.dist}
 export FLINK_LOG_DIR=\${FLINK_LOG_DIR:-/var/log/flink-cli}

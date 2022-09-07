@@ -21,6 +21,9 @@
 %define var_lib_flink %{parent_dir}/var/lib/%{flink_name}
 %define etc_flink %{parent_dir}/etc/%{flink_name}
 
+%define usr_lib_hadoop %{parent_dir}/usr/lib/hadoop
+%define etc_hadoop %{parent_dir}/etc/hadoop
+
 %define bin_dir %{parent_dir}/%{_bindir}
 %define man_dir %{parent_dir}/%{_mandir}
 %define doc_dir %{parent_dir}/%{_docdir}
@@ -134,7 +137,9 @@ sh -x %{SOURCE2} \
     --build-dir=`pwd`/%{build_target_flink} \
     --lib-dir=%{usr_lib_flink} \
     --bin-dir=%{bin_dir} \
-    --etc-flink=%{etc_flink}
+    --lib-hadoop=%{usr_lib_hadoop} \
+    --etc-flink=%{etc_flink} \
+    --etc-hadoop=%{etc_hadoop}
 
 for service in %{flink_services}
 do
