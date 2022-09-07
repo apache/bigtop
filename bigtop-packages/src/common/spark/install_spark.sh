@@ -32,7 +32,7 @@ usage: $0 <options>
      --bin-dir=DIR               path to install bins [/usr/bin]
      --man-dir=DIR               path to install mans [/usr/share/man]
      --etc-default=DIR           path to bigtop default dir [/etc/default]
-     --etc-spark=DIR             path to install hive conf [/etc/spark]
+     --etc-spark=DIR             path to install spark conf [/etc/spark]
      ... [ see source for more similar options ]
   "
   exit 1
