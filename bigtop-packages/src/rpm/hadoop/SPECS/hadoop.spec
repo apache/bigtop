@@ -20,6 +20,7 @@
 # since Hadoop build system makes it difficult to pass the kind of flags
 # that would make newer RPM debuginfo generation scripts happy.
 %undefine _missing_build_ids_terminate_build
+%undefine _auto_set_build_flags
 
 %define hadoop_name hadoop
 %define etc_hadoop /etc/%{name}

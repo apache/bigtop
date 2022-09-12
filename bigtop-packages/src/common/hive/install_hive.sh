@@ -178,7 +178,7 @@ done
 install -d -m 0755 $PREFIX/$NP_ETC_HIVE
 install -d -m 0755 $PREFIX/$ETC_HIVE/conf.dist
 (cd ${BUILD_DIR}/conf && tar -cf - .)|(cd $PREFIX/$ETC_HIVE/conf.dist && tar -xf -)
-for template in hive-exec-log4j.properties hive-log4j.properties
+for template in hive-exec-log4j2.properties hive-log4j2.properties
 do
   mv $PREFIX/$ETC_HIVE/conf.dist/${template}.template $PREFIX/$ETC_HIVE/conf.dist/${template}
 done
