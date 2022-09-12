@@ -38,12 +38,17 @@
 %define suse_check \# Define an empty suse_check for compatibility with older sles
 %endif
 
-%define doc_tez %{_docdir}/tez
+%define doc_tez %{_docdir}/%{name}
 %define alternatives_cmd update-alternatives
 %define __os_install_post \
     %{suse_check} ; \
     /usr/lib/rpm/brp-compress ; \
     %{nil}
+
+%else
+
+%define doc_tez %{_docdir}/%{name}-%{tez_version}
+%define alternatives_cmd alternatives
 
 %endif
 
@@ -105,16 +110,21 @@ sh %{SOURCE2} \
 
 %pre
 
+# Manage configuration symlink
 %post
+%{alternatives_cmd} --install /etc/tez/conf %{name}-conf /etc/tez/conf.dist 30
 
 %preun
+if [ "$1" = 0 ]; then
+        %{alternatives_cmd} --remove %{name}-conf /etc/tez/conf.dist || :
+fi
 
 #######################
 #### FILES SECTION ####
 #######################
 %files
 %defattr(-,root,root)
+%config(noreplace) /etc/tez/conf.dist
 %{tez_home}
 %doc %{doc_tez}
 %{man_dir}/man1/tez.1.*
-%config(noreplace) /etc/tez/conf/tez-site.xml
