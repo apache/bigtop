@@ -20,7 +20,7 @@
     "class": "org.apache.solr.security.KerberosPlugin"
   },
   "authorization": {
-    "class": "org.apache.solr.security.InfraRuleBasedAuthorizationPlugin",
+    "class": "org.apache.solr.security.RuleBasedAuthorizationPlugin",
     "user-role": {
       "{{solr_kerberos_service_user}}@{{kerberos_realm}}": "admin",
 {% if solr_logsearch_service_users %}
@@ -28,7 +28,6 @@
       "{{logsearch_kerberos_service_user}}@{{kerberos_realm}}": ["{{solr_role_logsearch}}", "{{solr_role_ranger_admin}}", "{{solr_role_dev}}"],
 {%   endfor %}
 {% endif %}
-      "{{logfeeder_kerberos_service_user}}@{{kerberos_realm}}": ["{{solr_role_logfeeder}}", "{{solr_role_dev}}"],
       "{{atlas_kerberos_service_user}}@{{kerberos_realm}}": ["{{solr_role_atlas}}", "{{solr_role_ranger_audit}}", "{{solr_role_dev}}"],
 {% if solr_ranger_audit_service_users %}
 {%   for ranger_audit_service_user in solr_ranger_audit_service_users %}
@@ -51,7 +50,7 @@
       "role": "{{solr_role_dev}}"
     },
     {
-      "collection": ["{{logsearch_service_logs_collection}}", "{{logsearch_audit_logs_collection}}", "history"],
+      "collection": ["history"],
       "role": ["admin", "{{solr_role_logsearch}}", "{{solr_role_logfeeder}}"],
       "name": "logsearch-manager",
       "path": "/*"
