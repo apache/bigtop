@@ -620,7 +620,7 @@ getent passwd hdfs >/dev/null || /usr/sbin/useradd --comment "Hadoop HDFS" --she
 
 %pre httpfs
 getent group httpfs >/dev/null   || groupadd -r httpfs
-getent passwd httpfs >/dev/null || /usr/sbin/useradd --comment "Hadoop HTTPFS" --shell /bin/bash -M -r -g httpfs -G httpfs --home %{run_httpfs} httpfs
+getent passwd httpfs >/dev/null || /usr/sbin/useradd --comment "Hadoop HTTPFS" --shell /bin/bash -M -r -g httpfs -G httpfs --home %{state_httpfs} httpfs
 
 %pre kms
 getent group kms >/dev/null   || groupadd -r kms
