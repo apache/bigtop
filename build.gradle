@@ -137,6 +137,7 @@ rat {
        "provisioner/docker/config/hiera.yaml",
        "provisioner/docker/config/hieradata/PLACEHOLDER",
        "provisioner/docker/config/hosts",
+       "provisioner/bigtop-stack-provisioner/**",
        "bigtop_toolchain/files/*.patch",
        "bigtop-bigpetstore/bigpetstore-transaction-queue/.dockerignore",
   ]

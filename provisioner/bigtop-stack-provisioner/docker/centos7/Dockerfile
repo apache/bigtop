@@ -22,7 +22,7 @@ RUN /bin/sed -i 's,#   StrictHostKeyChecking ask,StrictHostKeyChecking no,g' /et
 
 RUN ssh-keygen -f "/root/.ssh/id_rsa" -N ""
 
-RUN wget https://downloads.apache.org/bigtop/bigtop-3.1.0/repos/centos-7/bigtop.repo -O /etc/yum.repos.d/bigtop.repo \
+RUN wget https://downloads.apache.org/bigtop/bigtop-3.1.1/repos/centos-7/bigtop.repo -O /etc/yum.repos.d/bigtop.repo \
     && yum -y install ambari-server ambari-agent \
     && rm -f /etc/yum.repos.d/bigtop.repo
 
