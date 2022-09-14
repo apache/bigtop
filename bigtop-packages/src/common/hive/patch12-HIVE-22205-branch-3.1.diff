@@ -1,0 +1,3460 @@
+commit 85da055e57b38e24af31e87869a1ad9cbaabeea1
+Author: Naveen Gangam <ngangam@apache.org>
+Date:   Wed Sep 25 21:34:19 2019 -0400
+
+    HIVE-22205: Upgrade Zookeeper and Curator libraries in Hive. (Naveen Gangam, reviewed by Sam An)
+    
+    (cherry picked from commit c660cba003f9b7fff29db2202b375982a8c03450)
+    
+     Conflicts:
+            accumulo-handler/pom.xml
+            itests/qtest-accumulo/pom.xml
+            itests/util/src/main/java/org/apache/hadoop/hive/accumulo/AccumuloTestSetup.java
+            itests/util/src/main/java/org/apache/hadoop/hive/ql/QTestMiniClusters.java
+            kafka-handler/pom.xml
+            llap-client/src/test/org/apache/hadoop/hive/llap/registry/impl/TestLlapZookeeperRegistryImpl.java
+            llap-server/pom.xml
+            ql/src/test/org/apache/hadoop/hive/ql/exec/tez/TestUtils.java
+            ql/src/test/org/apache/hive/testutils/MiniZooKeeperCluster.java
+            standalone-metastore/metastore-common/pom.xml
+            standalone-metastore/metastore-server/pom.xml
+            standalone-metastore/metastore-tools/metastore-benchmarks/pom.xml
+            standalone-metastore/metastore-tools/pom.xml
+            standalone-metastore/pom.xml
+            storage-api/pom.xml
+            upgrade-acid/pre-upgrade/pom.xml
+
+diff --git a/accumulo-handler/pom.xml b/accumulo-handler/pom.xml
+index 952e1defbf..52f91ce1b5 100644
+--- a/accumulo-handler/pom.xml
++++ b/accumulo-handler/pom.xml
+@@ -150,6 +150,13 @@
+       <artifactId>mockito-all</artifactId>
+       <scope>test</scope>
+     </dependency>
++    <dependency>
++      <groupId>org.apache.hive</groupId>
++      <artifactId>hive-exec</artifactId>
++      <version>${project.version}</version>
++      <type>test-jar</type>
++      <scope>test</scope>
++    </dependency>
+   </dependencies>
+ 
+   <build>
+diff --git a/itests/hcatalog-unit/pom.xml b/itests/hcatalog-unit/pom.xml
+index 810d57b550..e1dc706d39 100644
+--- a/itests/hcatalog-unit/pom.xml
++++ b/itests/hcatalog-unit/pom.xml
+@@ -309,6 +309,13 @@
+       <version>2.2</version>
+       <scope>test</scope>
+     </dependency>
++    <dependency>
++      <groupId>org.apache.hive</groupId>
++      <artifactId>hive-exec</artifactId>
++      <version>${project.version}</version>
++      <type>test-jar</type>
++      <scope>test</scope>
++    </dependency>
+   </dependencies>
+ 
+   <build>
+diff --git a/itests/hcatalog-unit/src/test/java/org/apache/hive/hcatalog/hbase/ManyMiniCluster.java b/itests/hcatalog-unit/src/test/java/org/apache/hive/hcatalog/hbase/ManyMiniCluster.java
+index 0a90bc473d..fc3d500621 100644
+--- a/itests/hcatalog-unit/src/test/java/org/apache/hive/hcatalog/hbase/ManyMiniCluster.java
++++ b/itests/hcatalog-unit/src/test/java/org/apache/hive/hcatalog/hbase/ManyMiniCluster.java
+@@ -29,12 +29,12 @@
+ import org.apache.hadoop.hbase.client.Connection;
+ import org.apache.hadoop.hbase.client.ConnectionFactory;
+ import org.apache.hadoop.hbase.client.Table;
+-import org.apache.hadoop.hbase.zookeeper.MiniZooKeeperCluster;
+ import org.apache.hadoop.hdfs.MiniDFSCluster;
+ import org.apache.hadoop.hive.conf.HiveConf;
+ import org.apache.hadoop.hive.metastore.HiveMetaStoreClient;
+ import org.apache.hadoop.mapred.JobConf;
+ import org.apache.hadoop.mapred.MiniMRCluster;
++import org.apache.hive.testutils.MiniZooKeeperCluster;
+ 
+ import java.io.File;
+ import java.io.IOException;
+diff --git a/itests/hive-unit/src/test/java/org/apache/hadoop/hive/metastore/security/TestZooKeeperTokenStore.java b/itests/hive-unit/src/test/java/org/apache/hadoop/hive/metastore/security/TestZooKeeperTokenStore.java
+index 4c4cf7c1e8..8c1fae97d8 100644
+--- a/itests/hive-unit/src/test/java/org/apache/hadoop/hive/metastore/security/TestZooKeeperTokenStore.java
++++ b/itests/hive-unit/src/test/java/org/apache/hadoop/hive/metastore/security/TestZooKeeperTokenStore.java
+@@ -28,12 +28,12 @@
+ import org.apache.curator.framework.CuratorFrameworkFactory;
+ import org.apache.curator.retry.ExponentialBackoffRetry;
+ import org.apache.hadoop.conf.Configuration;
+-import org.apache.hadoop.hbase.zookeeper.MiniZooKeeperCluster;
+ import org.apache.hadoop.hive.metastore.security.HadoopThriftAuthBridge.Server.ServerMode;
+ import org.apache.hadoop.hive.metastore.security.ZooKeeperTokenStore;
+ import org.apache.hadoop.io.Text;
+ import org.apache.hadoop.security.token.delegation.AbstractDelegationTokenSecretManager.DelegationTokenInformation;
+ import org.apache.hadoop.security.token.delegation.HiveDelegationTokenSupport;
++import org.apache.hive.testutils.MiniZooKeeperCluster;
+ import org.apache.zookeeper.KeeperException;
+ import org.apache.zookeeper.data.ACL;
+ import org.junit.Assert;
+diff --git a/itests/hive-unit/src/test/java/org/apache/hive/service/server/TestInformationSchemaWithPrivilege.java b/itests/hive-unit/src/test/java/org/apache/hive/service/server/TestInformationSchemaWithPrivilege.java
+index 610e6460a0..a2ee09cc5b 100644
+--- a/itests/hive-unit/src/test/java/org/apache/hive/service/server/TestInformationSchemaWithPrivilege.java
++++ b/itests/hive-unit/src/test/java/org/apache/hive/service/server/TestInformationSchemaWithPrivilege.java
+@@ -25,7 +25,7 @@
+ import java.util.List;
+ import java.util.Map;
+ 
+-import org.apache.hadoop.hbase.zookeeper.MiniZooKeeperCluster;
++import org.apache.hive.testutils.MiniZooKeeperCluster;
+ import org.apache.hadoop.fs.Path;
+ import org.apache.hadoop.hive.conf.HiveConf;
+ import org.apache.hadoop.hive.conf.HiveConf.ConfVars;
+diff --git a/itests/qtest-accumulo/pom.xml b/itests/qtest-accumulo/pom.xml
+index 76767d7a60..42e0c9b730 100644
+--- a/itests/qtest-accumulo/pom.xml
++++ b/itests/qtest-accumulo/pom.xml
+@@ -120,6 +120,13 @@
+       <scope>test</scope>
+       <classifier>tests</classifier>
+     </dependency>
++    <dependency>
++      <groupId>org.apache.hive</groupId>
++      <artifactId>hive-exec</artifactId>
++      <version>${project.version}</version>
++      <type>test-jar</type>
++      <scope>test</scope>
++    </dependency>
+     <!-- inter-project -->
+     <dependency>
+       <groupId>junit</groupId>
+@@ -164,34 +171,74 @@
+       <artifactId>hadoop-common</artifactId>
+       <version>${hadoop.version}</version>
+       <scope>test</scope>
+-        <exclusions>
+-             <exclusion>
+-            <groupId>org.slf4j</groupId>
+-            <artifactId>slf4j-log4j12</artifactId>
+-          </exclusion>
+-          <exclusion>
+-            <groupId>commmons-logging</groupId>
+-            <artifactId>commons-logging</artifactId>
+-          </exclusion>
++      <exclusions>
++        <exclusion>
++          <groupId>org.slf4j</groupId>
++          <artifactId>slf4j-log4j12</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>commons-logging</groupId>
++          <artifactId>commons-logging</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>org.apache.zookeeper</groupId>
++          <artifactId>zookeeper</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>org.apache.curator</groupId>
++          <artifactId>curator-test</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>org.apache.curator</groupId>
++          <artifactId>curator-client</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>org.apache.curator</groupId>
++          <artifactId>curator-framework</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>org.apache.curator</groupId>
++          <artifactId>curator-recipes</artifactId>
++        </exclusion>
+       </exclusions>
+-   </dependency>
++    </dependency>
+     <dependency>
+       <groupId>org.apache.hadoop</groupId>
+       <artifactId>hadoop-common</artifactId>
+       <version>${hadoop.version}</version>
+       <classifier>tests</classifier>
+       <scope>test</scope>
+-         <exclusions>
+-             <exclusion>
+-            <groupId>org.slf4j</groupId>
+-            <artifactId>slf4j-log4j12</artifactId>
+-          </exclusion>
+-          <exclusion>
+-            <groupId>commmons-logging</groupId>
+-            <artifactId>commons-logging</artifactId>
+-          </exclusion>
++      <exclusions>
++        <exclusion>
++          <groupId>org.slf4j</groupId>
++          <artifactId>slf4j-log4j12</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>commons-logging</groupId>
++          <artifactId>commons-logging</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>org.apache.zookeeper</groupId>
++          <artifactId>zookeeper</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>org.apache.curator</groupId>
++          <artifactId>curator-test</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>org.apache.curator</groupId>
++          <artifactId>curator-client</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>org.apache.curator</groupId>
++          <artifactId>curator-framework</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>org.apache.curator</groupId>
++          <artifactId>curator-recipes</artifactId>
++        </exclusion>
+       </exclusions>
+-  </dependency>
++    </dependency>
+     <dependency>
+       <groupId>org.apache.hadoop</groupId>
+       <artifactId>hadoop-hdfs</artifactId>
+diff --git a/itests/qtest/pom.xml b/itests/qtest/pom.xml
+index 5c8a6edf4e..1aa9110df3 100644
+--- a/itests/qtest/pom.xml
++++ b/itests/qtest/pom.xml
+@@ -128,6 +128,13 @@
+ 
+ 
+     <!-- test inter-project -->
++    <dependency>
++      <groupId>org.apache.hive</groupId>
++      <artifactId>hive-exec</artifactId>
++      <version>${project.version}</version>
++      <type>test-jar</type>
++      <scope>test</scope>
++    </dependency>
+     <dependency>
+       <groupId>junit</groupId>
+       <artifactId>junit</artifactId>
+diff --git a/itests/util/src/main/java/org/apache/hadoop/hive/accumulo/AccumuloTestSetup.java b/itests/util/src/main/java/org/apache/hadoop/hive/accumulo/AccumuloTestSetup.java
+index 47cf7ac79a..631f23aca9 100644
+--- a/itests/util/src/main/java/org/apache/hadoop/hive/accumulo/AccumuloTestSetup.java
++++ b/itests/util/src/main/java/org/apache/hadoop/hive/accumulo/AccumuloTestSetup.java
+@@ -16,7 +16,12 @@
+  */
+ package org.apache.hadoop.hive.accumulo;
+ 
++import java.io.BufferedWriter;
+ import java.io.File;
++import java.io.FileWriter;
++import java.io.PrintWriter;
++import java.util.Arrays;
++import java.util.List;
+ import java.sql.Date;
+ import java.sql.Timestamp;
+ 
+@@ -44,6 +49,10 @@
+ public class AccumuloTestSetup  {
+   public static final String PASSWORD = "password";
+   public static final String TABLE_NAME = "accumuloHiveTable";
++  public static final List<String> EXTRA_ZOOKEEPER_CONFIG = Arrays.asList(
++    "4lw.commands.whitelist=*",
++    "admin.enableServer=false"
++  );
+ 
+   protected MiniAccumuloCluster miniCluster;
+ 
+@@ -63,7 +72,7 @@ protected void setupWithHiveConf(HiveConf conf) throws Exception {
+       cfg.setNumTservers(1);
+ 
+       miniCluster = new MiniAccumuloCluster(cfg);
+-
++      appendZooKeeperConf(EXTRA_ZOOKEEPER_CONFIG, tmpDir);
+       miniCluster.start();
+ 
+       createAccumuloTable(miniCluster.getConnector("root", PASSWORD));
+@@ -72,6 +81,26 @@ protected void setupWithHiveConf(HiveConf conf) throws Exception {
+     updateConf(conf);
+   }
+ 
++  /**
++   * Update ZooKeeper config file with the provided lines
++   *
++   * (unfortunately Accumulo Mini Cluster does not allow to customize the ZooKeeper config
++   * or to add additional system properties for the JVM of ZooKeeper, so we have to append the
++   * ZooKeeper config file directly)
++   */
++  private void appendZooKeeperConf(List<String> newLines, File tmpDir) throws Exception {
++    try (FileWriter f = new FileWriter(tmpDir.getAbsolutePath()+"/conf/zoo.cfg", true);
++         BufferedWriter b = new BufferedWriter(f);
++         PrintWriter p = new PrintWriter(b);) {
++
++      p.println("");
++      for(String line : newLines) {
++        p.println(line);
++
++      }
++    }
++  }
++
+   /**
+    * Update hiveConf with the Accumulo specific parameters
+    * @param conf The hiveconf to update
+diff --git a/itests/util/src/main/java/org/apache/hadoop/hive/llap/LlapItUtils.java b/itests/util/src/main/java/org/apache/hadoop/hive/llap/LlapItUtils.java
+index 9d0ffd8eca..3f8b766973 100644
+--- a/itests/util/src/main/java/org/apache/hadoop/hive/llap/LlapItUtils.java
++++ b/itests/util/src/main/java/org/apache/hadoop/hive/llap/LlapItUtils.java
+@@ -25,7 +25,7 @@
+ import java.util.Map;
+ 
+ import org.apache.hadoop.conf.Configuration;
+-import org.apache.hadoop.hbase.zookeeper.MiniZooKeeperCluster;
++import org.apache.hive.testutils.MiniZooKeeperCluster;
+ import org.apache.hadoop.hive.conf.HiveConf;
+ import org.apache.hadoop.hive.llap.configuration.LlapDaemonConfiguration;
+ import org.apache.hadoop.hive.llap.daemon.MiniLlapCluster;
+diff --git a/itests/util/src/main/java/org/apache/hadoop/hive/ql/QTestMiniClusters.java b/itests/util/src/main/java/org/apache/hadoop/hive/ql/QTestMiniClusters.java
+new file mode 100644
+index 0000000000..997b35e18f
+--- /dev/null
++++ b/itests/util/src/main/java/org/apache/hadoop/hive/ql/QTestMiniClusters.java
+@@ -0,0 +1,618 @@
++/*
++ * Licensed to the Apache Software Foundation (ASF) under one
++ * or more contributor license agreements.  See the NOTICE file
++ * distributed with this work for additional information
++ * regarding copyright ownership.  The ASF licenses this file
++ * to you under the Apache License, Version 2.0 (the
++ * "License"); you may not use this file except in compliance
++ * with the License.  You may obtain a copy of the License at
++ *
++ *     http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package org.apache.hadoop.hive.ql;
++
++import java.io.File;
++import java.io.IOException;
++import java.net.URL;
++import java.nio.file.Files;
++import java.nio.file.Paths;
++import java.sql.Timestamp;
++import java.text.SimpleDateFormat;
++import java.util.EnumSet;
++import java.util.List;
++import java.util.Map;
++import java.util.concurrent.TimeUnit;
++import java.util.stream.Collectors;
++import java.util.stream.IntStream;
++
++import org.apache.avro.generic.GenericRecord;
++import org.apache.avro.io.BinaryEncoder;
++import org.apache.avro.io.DatumWriter;
++import org.apache.avro.io.EncoderFactory;
++import org.apache.avro.specific.SpecificDatumWriter;
++import org.apache.hadoop.conf.Configuration;
++import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
++import org.apache.hadoop.fs.FileSystem;
++import org.apache.hadoop.fs.Path;
++import org.apache.hadoop.hive.cli.CliSessionState;
++import org.apache.hadoop.hive.cli.control.AbstractCliConfig;
++import org.apache.hadoop.hive.conf.HiveConf;
++import org.apache.hadoop.hive.conf.HiveConf.ConfVars;
++import org.apache.hadoop.hive.llap.LlapItUtils;
++import org.apache.hadoop.hive.llap.daemon.MiniLlapCluster;
++import org.apache.hadoop.hive.llap.io.api.LlapProxy;
++import org.apache.hadoop.hive.ql.exec.Utilities;
++import org.apache.hadoop.hive.ql.exec.spark.session.SparkSession;
++import org.apache.hadoop.hive.ql.exec.spark.session.SparkSessionManagerImpl;
++import org.apache.hadoop.hive.ql.exec.tez.TezSessionState;
++import org.apache.hadoop.hive.ql.lockmgr.zookeeper.CuratorFrameworkSingleton;
++import org.apache.hadoop.hive.ql.lockmgr.zookeeper.ZooKeeperHiveLockManager;
++import org.apache.hadoop.hive.ql.session.SessionState;
++import org.apache.hadoop.hive.shims.HadoopShims;
++import org.apache.hadoop.hive.shims.ShimLoader;
++import org.apache.hadoop.hive.shims.HadoopShims.HdfsErasureCodingShim;
++import org.apache.hive.druid.MiniDruidCluster;
++import org.apache.hive.kafka.SingleNodeKafkaCluster;
++import org.apache.hive.kafka.Wikipedia;
++import org.apache.hive.testutils.MiniZooKeeperCluster;
++import org.apache.logging.log4j.util.Strings;
++import org.apache.zookeeper.WatchedEvent;
++import org.apache.zookeeper.Watcher;
++import org.apache.zookeeper.ZooKeeper;
++import org.slf4j.Logger;
++import org.slf4j.LoggerFactory;
++
++import com.google.common.base.Preconditions;
++
++/**
++ * QTestMiniClusters: decouples cluster details from QTestUtil (kafka/druid/spark/llap/tez/mr, file
++ * system)
++ */
++public class QTestMiniClusters {
++  private static final Logger LOG = LoggerFactory.getLogger("QTestMiniClusters");
++  private static final SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
++
++  // security property names
++  private static final String SECURITY_KEY_PROVIDER_URI_NAME = "dfs.encryption.key.provider.uri";
++  /**
++   * The default Erasure Coding Policy to use in Erasure Coding tests.
++   */
++  public static final String DEFAULT_TEST_EC_POLICY = "RS-3-2-1024k";
++
++  private QTestSetup setup;
++  private QTestArguments testArgs;
++  private MiniClusterType clusterType;
++
++  private HadoopShims shims;
++  private SparkSession sparkSession = null;
++  private FileSystem fs;
++  private HadoopShims.MiniMrShim mr = null;
++  private HadoopShims.MiniDFSShim dfs = null;
++  private HadoopShims.HdfsEncryptionShim hes = null;
++  private MiniLlapCluster llapCluster = null;
++  private MiniDruidCluster druidCluster = null;
++  private SingleNodeKafkaCluster kafkaCluster = null;
++
++  public enum CoreClusterType {
++    MR, TEZ, SPARK
++  }
++
++  public enum FsType {
++    LOCAL, HDFS, ENCRYPTED_HDFS, ERASURE_CODED_HDFS,
++  }
++
++  public enum MiniClusterType {
++    MR(CoreClusterType.MR, FsType.HDFS),
++    TEZ(CoreClusterType.TEZ, FsType.HDFS),
++    TEZ_LOCAL(CoreClusterType.TEZ, FsType.LOCAL),
++    SPARK(CoreClusterType.SPARK, FsType.LOCAL),
++    MINI_SPARK_ON_YARN(CoreClusterType.SPARK, FsType.HDFS), 
++    LLAP(CoreClusterType.TEZ, FsType.HDFS),
++    LLAP_LOCAL(CoreClusterType.TEZ, FsType.LOCAL), 
++    NONE(CoreClusterType.MR,FsType.LOCAL),
++    DRUID_LOCAL(CoreClusterType.TEZ, FsType.LOCAL),
++    DRUID(CoreClusterType.TEZ, FsType.HDFS),
++    DRUID_KAFKA(CoreClusterType.TEZ, FsType.HDFS),
++    KAFKA(CoreClusterType.TEZ, FsType.HDFS),
++    KUDU(CoreClusterType.TEZ, FsType.LOCAL);
++
++    private final CoreClusterType coreClusterType;
++    private final FsType defaultFsType;
++
++    MiniClusterType(CoreClusterType coreClusterType, FsType defaultFsType) {
++      this.coreClusterType = coreClusterType;
++      this.defaultFsType = defaultFsType;
++    }
++
++    public CoreClusterType getCoreClusterType() {
++      return coreClusterType;
++    }
++
++    public FsType getDefaultFsType() {
++      return defaultFsType;
++    }
++
++    public static MiniClusterType valueForString(String type) {
++      // Replace this with valueOf.
++      if (type.equals("miniMR")) {
++        return MR;
++      } else if (type.equals("tez")) {
++        return TEZ;
++      } else if (type.equals("tez_local")) {
++        return TEZ_LOCAL;
++      } else if (type.equals("spark")) {
++        return SPARK;
++      } else if (type.equals("miniSparkOnYarn")) {
++        return MINI_SPARK_ON_YARN;
++      } else if (type.equals("llap")) {
++        return LLAP;
++      } else if (type.equals("llap_local")) {
++        return LLAP_LOCAL;
++      } else if (type.equals("druidLocal")) {
++        return DRUID_LOCAL;
++      } else if (type.equals("druid")) {
++        return DRUID;
++      } else if (type.equals("druid-kafka")) {
++        return DRUID_KAFKA;
++      } else if (type.equals("kafka")) {
++        return KAFKA;
++      } else if (type.equals("kudu")) {
++        return KUDU;
++      } else {
++        throw new RuntimeException(String.format("cannot recognize MiniClusterType from '%s'", type));
++      }
++    }
++
++    public String getQOutFileExtensionPostfix() {
++      return toString().toLowerCase();
++    }
++  }
++
++  /**
++   * QTestSetup defines test fixtures which are reused across testcases, and are needed before any
++   * test can be run
++   */
++  public static class QTestSetup {
++    private MiniZooKeeperCluster zooKeeperCluster = null;
++    private int zkPort;
++    private ZooKeeper zooKeeper;
++
++    public QTestSetup() {
++    }
++
++    public void preTest(HiveConf conf) throws Exception {
++
++      if (zooKeeperCluster == null) {
++        // create temp dir
++        File tmpDir = Files
++            .createTempDirectory(Paths.get(QTestSystemProperties.getTempDir()), "tmp_").toFile();
++
++        zooKeeperCluster = new MiniZooKeeperCluster();
++        zkPort = zooKeeperCluster.startup(tmpDir);
++      }
++
++      if (zooKeeper != null) {
++        zooKeeper.close();
++      }
++
++      int sessionTimeout = (int) conf.getTimeVar(HiveConf.ConfVars.HIVE_ZOOKEEPER_SESSION_TIMEOUT,
++          TimeUnit.MILLISECONDS);
++      zooKeeper = new ZooKeeper("localhost:" + zkPort, sessionTimeout, new Watcher() {
++        @Override
++        public void process(WatchedEvent arg0) {
++        }
++      });
++
++      String zkServer = "localhost";
++      conf.set("hive.zookeeper.quorum", zkServer);
++      conf.set("hive.zookeeper.client.port", "" + zkPort);
++    }
++
++    public void postTest(HiveConf conf) throws Exception {
++      if (zooKeeperCluster == null) {
++        return;
++      }
++
++      if (zooKeeper != null) {
++        zooKeeper.close();
++      }
++
++      ZooKeeperHiveLockManager.releaseAllLocks(conf);
++    }
++
++    public void tearDown() throws Exception {
++      CuratorFrameworkSingleton.closeAndReleaseInstance();
++
++      if (zooKeeperCluster != null) {
++        zooKeeperCluster.shutdown();
++        zooKeeperCluster = null;
++      }
++    }
++  }
++
++  public void setup(QTestArguments testArgs, HiveConf conf, String scriptsDir,
++      String logDir) throws Exception {
++    this.shims = ShimLoader.getHadoopShims();
++    this.clusterType = testArgs.getClusterType();
++    this.testArgs = testArgs;
++
++    setupFileSystem(testArgs.getFsType(), conf);
++
++    this.setup = testArgs.getQTestSetup();
++    setup.preTest(conf);
++
++    String uriString = fs.getUri().toString();
++
++    if (clusterType == MiniClusterType.DRUID_KAFKA || clusterType == MiniClusterType.DRUID_LOCAL
++        || clusterType == MiniClusterType.DRUID) {
++      final String tempDir = QTestSystemProperties.getTempDir();
++      druidCluster = new MiniDruidCluster(
++          clusterType == MiniClusterType.DRUID ? "mini-druid" : "mini-druid-kafka", logDir, tempDir,
++          setup.zkPort, Utilities.jarFinderGetJar(MiniDruidCluster.class));
++      final Path druidDeepStorage = fs.makeQualified(new Path(druidCluster.getDeepStorageDir()));
++      fs.mkdirs(druidDeepStorage);
++      final Path scratchDir =
++          fs.makeQualified(new Path(QTestSystemProperties.getTempDir(), "druidStagingDir"));
++      fs.mkdirs(scratchDir);
++      conf.set("hive.druid.working.directory", scratchDir.toUri().getPath());
++      druidCluster.init(conf);
++      druidCluster.start();
++    }
++
++    if (clusterType == MiniClusterType.KAFKA || clusterType == MiniClusterType.DRUID_KAFKA) {
++      kafkaCluster =
++          new SingleNodeKafkaCluster("kafka", QTestSystemProperties.getTempDir() + "/kafka-cluster",
++              setup.zkPort, clusterType == MiniClusterType.KAFKA ? 9093 : 9092);
++      kafkaCluster.init(conf);
++      kafkaCluster.start();
++      kafkaCluster.createTopicWithData("test-topic", new File(scriptsDir, "kafka_init_data.json"));
++      kafkaCluster.createTopicWithData("wiki_kafka_csv",
++          new File(scriptsDir, "kafka_init_data.csv"));
++      kafkaCluster.createTopicWithData("wiki_kafka_avro_table", getAvroRows());
++    }
++
++    String confDir = testArgs.getConfDir();
++    if (clusterType.getCoreClusterType() == CoreClusterType.TEZ) {
++      if (confDir != null && !confDir.isEmpty()) {
++        conf.addResource(
++            new URL("file://" + new File(confDir).toURI().getPath() + "/tez-site.xml"));
++      }
++      int numTrackers = 2;
++      if (EnumSet
++          .of(MiniClusterType.LLAP, MiniClusterType.LLAP_LOCAL, MiniClusterType.DRUID_LOCAL,
++              MiniClusterType.DRUID_KAFKA, MiniClusterType.DRUID, MiniClusterType.KAFKA)
++          .contains(clusterType)) {
++        llapCluster = LlapItUtils.startAndGetMiniLlapCluster(conf, setup.zooKeeperCluster, confDir);
++      }
++      if (EnumSet
++          .of(MiniClusterType.LLAP_LOCAL, MiniClusterType.TEZ_LOCAL, MiniClusterType.DRUID_LOCAL)
++          .contains(clusterType)) {
++        mr = shims.getLocalMiniTezCluster(conf,
++            clusterType == MiniClusterType.LLAP_LOCAL || clusterType == MiniClusterType.DRUID_LOCAL);
++      } else {
++        mr = shims
++            .getMiniTezCluster(conf, numTrackers, uriString,
++                EnumSet
++                    .of(MiniClusterType.LLAP, MiniClusterType.LLAP_LOCAL,
++                        MiniClusterType.DRUID_KAFKA, MiniClusterType.DRUID, MiniClusterType.KAFKA)
++                    .contains(clusterType));
++      }
++    } else if (clusterType == MiniClusterType.MINI_SPARK_ON_YARN) {
++      mr = shims.getMiniSparkCluster(conf, 2, uriString, 1);
++    } else if (clusterType == MiniClusterType.MR) {
++      mr = shims.getMiniMrCluster(conf, 2, uriString, 1);
++    }
++
++    if (testArgs.isWithLlapIo() && (clusterType == MiniClusterType.NONE)) {
++      LOG.info("initializing llap IO");
++      LlapProxy.initializeLlapIo(conf);
++    }
++  }
++
++  public void initConf(HiveConf conf) throws IOException {
++    if (mr != null) {
++      mr.setupConfiguration(conf);
++
++      // TODO Ideally this should be done independent of whether mr is setup or not.
++      setFsRelatedProperties(conf, fs.getScheme().equals("file"), fs);
++    }
++
++    if (llapCluster != null) {
++      Configuration clusterSpecificConf = llapCluster.getClusterSpecificConfiguration();
++      for (Map.Entry<String, String> confEntry : clusterSpecificConf) {
++        // Conf.get takes care of parameter replacement, iterator.value does not.
++        conf.set(confEntry.getKey(), clusterSpecificConf.get(confEntry.getKey()));
++      }
++    }
++    if (druidCluster != null) {
++      final Path druidDeepStorage = fs.makeQualified(new Path(druidCluster.getDeepStorageDir()));
++      fs.mkdirs(druidDeepStorage);
++      conf.set("hive.druid.storage.storageDirectory", druidDeepStorage.toUri().getPath());
++      conf.set("hive.druid.metadata.db.type", "derby");
++      conf.set("hive.druid.metadata.uri", druidCluster.getMetadataURI());
++      conf.set("hive.druid.coordinator.address.default", druidCluster.getCoordinatorURI());
++      conf.set("hive.druid.overlord.address.default", druidCluster.getOverlordURI());
++      conf.set("hive.druid.broker.address.default", druidCluster.getBrokerURI());
++      final Path scratchDir =
++          fs.makeQualified(new Path(QTestSystemProperties.getTempDir(), "druidStagingDir"));
++      fs.mkdirs(scratchDir);
++      conf.set("hive.druid.working.directory", scratchDir.toUri().getPath());
++    }
++
++    if (testArgs.isWithLlapIo() && (clusterType == MiniClusterType.NONE)) {
++      LOG.info("initializing llap IO");
++      LlapProxy.initializeLlapIo(conf);
++    }
++  }
++
++  public void postInit(HiveConf conf) {
++    createRemoteDirs(conf);
++  }
++
++  public void preTest(HiveConf conf) throws Exception {
++    setup.preTest(conf);
++  }
++
++  public void postTest(HiveConf conf) throws Exception {
++    setup.postTest(conf);
++  }
++
++  public void restartSessions(boolean canReuseSession, CliSessionState ss, SessionState oldSs)
++      throws IOException {
++    if (oldSs != null && canReuseSession
++        && clusterType.getCoreClusterType() == CoreClusterType.TEZ) {
++      // Copy the tezSessionState from the old CliSessionState.
++      TezSessionState tezSessionState = oldSs.getTezSession();
++      oldSs.setTezSession(null);
++      ss.setTezSession(tezSessionState);
++      oldSs.close();
++    }
++
++    if (oldSs != null && clusterType.getCoreClusterType() == CoreClusterType.SPARK) {
++      sparkSession = oldSs.getSparkSession();
++      ss.setSparkSession(sparkSession);
++      oldSs.setSparkSession(null);
++      oldSs.close();
++    }
++  }
++
++  public void shutDown() throws Exception {
++    if (clusterType.getCoreClusterType() == CoreClusterType.TEZ
++        && SessionState.get().getTezSession() != null) {
++      SessionState.get().getTezSession().destroy();
++    }
++
++    if (druidCluster != null) {
++      druidCluster.stop();
++      druidCluster = null;
++    }
++
++    if (kafkaCluster != null) {
++      kafkaCluster.stop();
++      kafkaCluster = null;
++    }
++    setup.tearDown();
++    if (sparkSession != null) {
++      try {
++        SparkSessionManagerImpl.getInstance().closeSession(sparkSession);
++      } catch (Exception ex) {
++        LOG.error("Error closing spark session.", ex);
++      } finally {
++        sparkSession = null;
++      }
++    }
++    if (mr != null) {
++      mr.shutdown();
++      mr = null;
++    }
++    FileSystem.closeAll();
++    if (dfs != null) {
++      dfs.shutdown();
++      dfs = null;
++    }
++  }
++
++  public void setSparkSession(SparkSession sparkSession) {
++    this.sparkSession = sparkSession;
++  }
++
++  public SparkSession getSparkSession() {
++    return sparkSession;
++  }
++
++  public HadoopShims.HdfsEncryptionShim getHdfsEncryptionShim() {
++    return hes;
++  }
++
++  public HadoopShims.MiniMrShim getMr() {
++    return mr;
++  }
++
++  public MiniClusterType getClusterType() {
++    return this.clusterType;
++  }
++
++  /**
++   * Should deleted test tables have their data purged.
++   *
++   * @return true if data should be purged
++   */
++  public boolean fsNeedsPurge(FsType type) {
++    if (type == FsType.ENCRYPTED_HDFS || type == FsType.ERASURE_CODED_HDFS) {
++      return true;
++    }
++    return false;
++  }
++
++  private void createRemoteDirs(HiveConf conf) {
++    // Create remote dirs once.
++    if (getMr() != null) {
++      assert fs != null;
++      Path warehousePath = fs.makeQualified(new Path(conf.getVar(ConfVars.METASTOREWAREHOUSE)));
++      assert warehousePath != null;
++      Path hiveJarPath = fs.makeQualified(new Path(conf.getVar(ConfVars.HIVE_JAR_DIRECTORY)));
++      assert hiveJarPath != null;
++      Path userInstallPath =
++          fs.makeQualified(new Path(conf.getVar(ConfVars.HIVE_USER_INSTALL_DIR)));
++      assert userInstallPath != null;
++      try {
++        fs.mkdirs(warehousePath);
++      } catch (IOException e) {
++        LOG.error("Failed to create path={}. Continuing. Exception message={}", warehousePath,
++            e.getMessage());
++      }
++      try {
++        fs.mkdirs(hiveJarPath);
++      } catch (IOException e) {
++        LOG.error("Failed to create path={}. Continuing. Exception message={}", warehousePath,
++            e.getMessage());
++      }
++      try {
++        fs.mkdirs(userInstallPath);
++      } catch (IOException e) {
++        LOG.error("Failed to create path={}. Continuing. Exception message={}", warehousePath,
++            e.getMessage());
++      }
++    }
++  }
++
++  private void setupFileSystem(FsType fsType, HiveConf conf) throws IOException {
++    if (fsType == FsType.LOCAL) {
++      fs = FileSystem.getLocal(conf);
++    } else if (fsType == FsType.HDFS || fsType == FsType.ENCRYPTED_HDFS
++        || fsType == FsType.ERASURE_CODED_HDFS) {
++      int numDataNodes = 4;
++
++      // Setup before getting dfs
++      switch (fsType) {
++      case ENCRYPTED_HDFS:
++        // Set the security key provider so that the MiniDFS cluster is initialized
++        // with encryption
++        conf.set(SECURITY_KEY_PROVIDER_URI_NAME, getKeyProviderURI());
++        conf.setInt("fs.trash.interval", 50);
++        break;
++      case ERASURE_CODED_HDFS:
++        // We need more NameNodes for EC.
++        // To fully exercise hdfs code paths we need 5 NameNodes for the RS-3-2-1024k policy.
++        // With 6 NameNodes we can also run the RS-6-3-1024k policy.
++        numDataNodes = 6;
++        break;
++      default:
++        break;
++      }
++
++      dfs = shims.getMiniDfs(conf, numDataNodes, true, null);
++      fs = dfs.getFileSystem();
++
++      // Setup after getting dfs
++      switch (fsType) {
++      case ENCRYPTED_HDFS:
++        // set up the java key provider for encrypted hdfs cluster
++        hes = shims.createHdfsEncryptionShim(fs, conf);
++        LOG.info("key provider is initialized");
++        break;
++      case ERASURE_CODED_HDFS:
++        // The Erasure policy can't be set in a q_test_init script as QTestUtil runs that code in
++        // a mode that disallows test-only CommandProcessors.
++        // Set the default policy on the root of the file system here.
++        HdfsErasureCodingShim erasureCodingShim = shims.createHdfsErasureCodingShim(fs, conf);
++        erasureCodingShim.enableErasureCodingPolicy(DEFAULT_TEST_EC_POLICY);
++        erasureCodingShim.setErasureCodingPolicy(new Path("hdfs:///"), DEFAULT_TEST_EC_POLICY);
++        break;
++      default:
++        break;
++      }
++    } else {
++      throw new IllegalArgumentException("Unknown or unhandled fsType [" + fsType + "]");
++    }
++  }
++
++  private String getKeyProviderURI() {
++    // Use the target directory if it is not specified
++    String HIVE_ROOT = AbstractCliConfig.HIVE_ROOT;
++    String keyDir = HIVE_ROOT + "ql/target/";
++
++    // put the jks file in the current test path only for test purpose
++    return "jceks://file" + new Path(keyDir, "test.jks").toUri();
++  }
++
++  private static List<byte[]> getAvroRows() {
++    int numRows = 10;
++    List<byte[]> events;
++    final DatumWriter<GenericRecord> writer = new SpecificDatumWriter<>(Wikipedia.getClassSchema());
++    events = IntStream.rangeClosed(0, numRows)
++        .mapToObj(i -> Wikipedia.newBuilder()
++            // 1534736225090 -> 08/19/2018 20:37:05
++            .setTimestamp(formatter.format(new Timestamp(1534736225090L + 1000 * 3600 * i)))
++            .setAdded(i * 300).setDeleted(-i).setIsrobot(i % 2 == 0)
++            .setChannel("chanel number " + i).setComment("comment number " + i).setCommentlength(i)
++            .setDiffurl(String.format("url %s", i)).setFlags("flag").setIsminor(i % 2 > 0)
++            .setIsanonymous(i % 3 != 0).setNamespace("namespace")
++            .setIsunpatrolled(new Boolean(i % 3 == 0)).setIsnew(new Boolean(i % 2 > 0))
++            .setPage(String.format("page is %s", i * 100)).setDelta(i).setDeltabucket(i * 100.4)
++            .setUser("test-user-" + i).build())
++        .map(genericRecord -> {
++          java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
++          BinaryEncoder encoder = EncoderFactory.get().binaryEncoder(out, null);
++          try {
++            writer.write(genericRecord, encoder);
++            encoder.flush();
++            out.close();
++          } catch (IOException e) {
++            throw new RuntimeException(e);
++          }
++          return out.toByteArray();
++        }).collect(Collectors.toList());
++    return events;
++  }
++
++  private void setFsRelatedProperties(HiveConf conf, boolean isLocalFs, FileSystem fs) {
++    String fsUriString = fs.getUri().toString();
++
++    // Different paths if running locally vs a remote fileSystem. Ideally this difference should not
++    // exist.
++    Path warehousePath;
++    Path jarPath;
++    Path userInstallPath;
++    if (isLocalFs) {
++      String buildDir = QTestSystemProperties.getBuildDir();
++      Preconditions.checkState(Strings.isNotBlank(buildDir));
++      Path path = new Path(fsUriString, buildDir);
++
++      // Create a fake fs root for local fs
++      Path localFsRoot = new Path(path, "localfs");
++      warehousePath = new Path(localFsRoot, "warehouse");
++      jarPath = new Path(localFsRoot, "jar");
++      userInstallPath = new Path(localFsRoot, "user_install");
++    } else {
++      // TODO Why is this changed from the default in hive-conf?
++      warehousePath = new Path(fsUriString, "/build/ql/test/data/warehouse/");
++      jarPath = new Path(new Path(fsUriString, "/user"), "hive");
++      userInstallPath = new Path(fsUriString, "/user");
++    }
++
++    warehousePath = fs.makeQualified(warehousePath);
++    jarPath = fs.makeQualified(jarPath);
++    userInstallPath = fs.makeQualified(userInstallPath);
++
++    conf.set(CommonConfigurationKeysPublic.FS_DEFAULT_NAME_KEY, fsUriString);
++
++    // Remote dirs
++    conf.setVar(ConfVars.METASTOREWAREHOUSE, warehousePath.toString());
++    conf.setVar(ConfVars.HIVE_JAR_DIRECTORY, jarPath.toString());
++    conf.setVar(ConfVars.HIVE_USER_INSTALL_DIR, userInstallPath.toString());
++    // ConfVars.SCRATCHDIR - {test.tmp.dir}/scratchdir
++
++    // Local dirs
++    // ConfVars.LOCALSCRATCHDIR - {test.tmp.dir}/localscratchdir
++
++    // TODO Make sure to cleanup created dirs.
++  }
++}
+diff --git a/kafka-handler/pom.xml b/kafka-handler/pom.xml
+new file mode 100644
+index 0000000000..6c82f82f76
+--- /dev/null
++++ b/kafka-handler/pom.xml
+@@ -0,0 +1,195 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<!--
++  ~ Licensed to the Apache Software Foundation (ASF) under one
++  ~ or more contributor license agreements.  See the NOTICE file
++  ~ distributed with this work for additional information
++  ~ regarding copyright ownership.  The ASF licenses this file
++  ~ to you under the Apache License, Version 2.0 (the
++  ~ "License"); you may not use this file except in compliance
++  ~ with the License.  You may obtain a copy of the License at
++  ~
++  ~      http://www.apache.org/licenses/LICENSE-2.0
++  ~
++  ~ Unless required by applicable law or agreed to in writing, software
++  ~ distributed under the License is distributed on an "AS IS" BASIS,
++  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++  ~ See the License for the specific language governing permissions and
++  ~ limitations under the License.
++  -->
++
++<project xmlns="http://maven.apache.org/POM/4.0.0"
++         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
++         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
++  <parent>
++    <groupId>org.apache.hive</groupId>
++    <artifactId>hive</artifactId>
++    <version>4.0.0-SNAPSHOT</version>
++    <relativePath>../pom.xml</relativePath>
++  </parent>
++  <modelVersion>4.0.0</modelVersion>
++
++  <properties>
++    <hive.path.to.root>..</hive.path.to.root>
++    <kafka.version>2.3.0</kafka.version>
++  </properties>
++
++  <artifactId>kafka-handler</artifactId>
++  <packaging>jar</packaging>
++  <name>Hive Kafka Storage Handler</name>
++
++  <dependencies>
++    <!-- Intra-project -->
++    <dependency>
++      <groupId>org.apache.hive</groupId>
++      <artifactId>hive-exec</artifactId>
++      <scope>provided</scope>
++      <version>${project.version}</version>
++      <exclusions>
++        <exclusion>
++          <groupId>org.slf4j</groupId>
++          <artifactId>slf4j-api</artifactId>
++        </exclusion>
++      </exclusions>
++    </dependency>
++    <dependency>
++      <groupId>com.google.guava</groupId>
++      <artifactId>guava</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.hadoop</groupId>
++      <artifactId>hadoop-common</artifactId>
++      <exclusions>
++        <exclusion>
++        <groupId>org.slf4j</groupId>
++        <artifactId>slf4j-api</artifactId>
++      </exclusion>
++      </exclusions>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.hadoop</groupId>
++      <artifactId>hadoop-client</artifactId>
++      <exclusions>
++        <exclusion>
++          <groupId>org.slf4j</groupId>
++          <artifactId>slf4j-api</artifactId>
++        </exclusion>
++      </exclusions>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.kafka</groupId>
++      <artifactId>kafka-clients</artifactId>
++      <version>${kafka.version}</version>
++    </dependency>
++    <!-- test pkg-->
++    <dependency>
++      <groupId>junit</groupId>
++      <artifactId>junit</artifactId>
++      <version>${junit.version}</version>
++      <scope>test</scope>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.kafka</groupId>
++      <artifactId>kafka-clients</artifactId>
++      <version>${kafka.version}</version>
++      <scope>test</scope>
++      <classifier>test</classifier>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.kafka</groupId>
++      <artifactId>kafka_2.11</artifactId>
++      <version>${kafka.version}</version>
++      <classifier>test</classifier>
++      <scope>test</scope>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.kafka</groupId>
++      <artifactId>kafka_2.11</artifactId>
++      <version>${kafka.version}</version>
++      <scope>test</scope>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.zookeeper</groupId>
++      <artifactId>zookeeper</artifactId>
++      <version>3.5.5</version>
++      <scope>test</scope>
++    </dependency>
++    <dependency>
++      <groupId>org.slf4j</groupId>
++      <artifactId>slf4j-api</artifactId>
++      <version>1.7.25</version>
++      <scope>test</scope>
++    </dependency>
++  </dependencies>
++
++  <profiles>
++    <profile>
++      <id>dev-fast-build</id>
++      <activation>
++        <property>
++          <name>skipShade</name>
++          <value>!true</value>
++        </property>
++      </activation>
++      <build>
++        <plugins>
++          <plugin>
++            <groupId>org.apache.maven.plugins</groupId>
++            <artifactId>maven-shade-plugin</artifactId>
++            <version>${maven.shade.plugin.version}</version>
++            <executions>
++              <execution>
++                <phase>package</phase>
++                <goals>
++                  <goal>shade</goal>
++                </goals>
++                <configuration>
++                  <shadeTestJar>true</shadeTestJar>
++                  <createDependencyReducedPom>false</createDependencyReducedPom>
++                  <artifactSet>
++                    <includes>
++                      <include>org.apache.kafka:kafka-clients</include>
++                    </includes>
++                  </artifactSet>
++                  <relocations>
++                    <relocation>
++                      <pattern>org.apache.kafka</pattern>
++                      <shadedPattern>org.apache.kafkaesque</shadedPattern>
++                    </relocation>
++                  </relocations>
++                  <filters>
++                    <filter>
++                      <artifact>*:*</artifact>
++                      <excludes>
++                        <exclude>META-INF/*.SF</exclude>
++                        <exclude>META-INF/*.DSA</exclude>
++                        <exclude>META-INF/*.RSA</exclude>
++                        <exclude>static/</exclude>
++                      </excludes>
++                    </filter>
++                  </filters>
++                </configuration>
++              </execution>
++            </executions>
++          </plugin>
++        </plugins>
++      </build>
++    </profile>
++  </profiles>
++  <build>
++    <sourceDirectory>${basedir}/src/java</sourceDirectory>
++    <testSourceDirectory>${basedir}/src/test</testSourceDirectory>
++    <plugins>
++      <plugin>
++        <groupId>org.apache.maven.plugins</groupId>
++        <artifactId>maven-jar-plugin</artifactId>
++        <executions>
++          <execution>
++            <goals>
++              <goal>test-jar</goal>
++            </goals>
++          </execution>
++        </executions>
++      </plugin>
++    </plugins>
++  </build>
++</project>
+diff --git a/llap-server/pom.xml b/llap-server/pom.xml
+index 3c1518f8bd..4926989957 100644
+--- a/llap-server/pom.xml
++++ b/llap-server/pom.xml
+@@ -247,6 +247,13 @@
+       <type>test-jar</type>
+       <scope>test</scope>
+     </dependency>
++    <dependency>
++      <groupId>org.apache.hive</groupId>
++      <artifactId>hive-exec</artifactId>
++      <version>${project.version}</version>
++      <type>test-jar</type>
++      <scope>test</scope>
++    </dependency>
+     <!-- test inter-project -->
+     <dependency>
+       <groupId>org.apache.hadoop</groupId>
+diff --git a/llap-server/src/test/org/apache/hadoop/hive/llap/daemon/MiniLlapCluster.java b/llap-server/src/test/org/apache/hadoop/hive/llap/daemon/MiniLlapCluster.java
+index 6af230e7b4..be51bf8c91 100644
+--- a/llap-server/src/test/org/apache/hadoop/hive/llap/daemon/MiniLlapCluster.java
++++ b/llap-server/src/test/org/apache/hadoop/hive/llap/daemon/MiniLlapCluster.java
+@@ -19,7 +19,6 @@
+ import java.io.File;
+ import java.io.IOException;
+ 
+-import org.apache.hadoop.hbase.zookeeper.MiniZooKeeperCluster;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ import org.apache.hadoop.conf.Configuration;
+@@ -34,6 +33,7 @@
+ import org.apache.hadoop.service.Service;
+ import org.apache.hadoop.util.Shell;
+ import org.apache.hadoop.yarn.exceptions.YarnRuntimeException;
++import org.apache.hive.testutils.MiniZooKeeperCluster;
+ import org.apache.tez.runtime.library.api.TezRuntimeConfiguration;
+ 
+ import com.google.common.base.Preconditions;
+diff --git a/pom.xml b/pom.xml
+index 610bb17b3c..fb228f8442 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -206,10 +206,10 @@
+     <wadl-resourcedoc-doclet.version>1.4</wadl-resourcedoc-doclet.version>
+     <velocity.version>2.3</velocity.version>
+     <xerces.version>2.9.1</xerces.version>
+-    <zookeeper.version>3.4.6</zookeeper.version>
++    <zookeeper.version>3.5.5</zookeeper.version>
+     <jpam.version>1.1</jpam.version>
+     <felix.version>2.4.0</felix.version>
+-    <curator.version>2.12.0</curator.version>
++    <curator.version>4.2.0</curator.version>
+     <jsr305.version>3.0.0</jsr305.version>
+     <tephra.version>0.6.0</tephra.version>
+     <gson.version>2.2.4</gson.version>
+@@ -504,6 +504,20 @@
+         <groupId>org.apache.hive</groupId>
+         <artifactId>hive-storage-api</artifactId>
+         <version>${storage-api.version}</version>
++        <exclusions>
++          <exclusion>
++            <groupId>org.apache.zookeeper</groupId>
++            <artifactId>zookeeper</artifactId>
++          </exclusion>
++          <exclusion>
++            <groupId>org.apache.curator</groupId>
++            <artifactId>curator-client</artifactId>
++          </exclusion>
++          <exclusion>
++            <groupId>org.apache.curator</groupId>
++            <artifactId>curator-recipes</artifactId>
++          </exclusion>
++        </exclusions>
+       </dependency>
+       <dependency>
+         <groupId>org.apache.pig</groupId>
+@@ -708,6 +722,18 @@
+             <groupId>commmons-logging</groupId>
+             <artifactId>commons-logging</artifactId>
+           </exclusion>
++          <exclusion>
++            <groupId>org.apache.zookeeper</groupId>
++            <artifactId>zookeeper</artifactId>
++          </exclusion>
++          <exclusion>
++            <groupId>org.apache.curator</groupId>
++            <artifactId>curator-framework</artifactId>
++          </exclusion>
++          <exclusion>
++            <groupId>org.apache.curator</groupId>
++            <artifactId>curator-test</artifactId>
++          </exclusion>
+          </exclusions>
+       </dependency>
+       <dependency>
+@@ -735,6 +761,22 @@
+             <groupId>org.apache.httpcomponents</groupId>
+             <artifactId>httpclient</artifactId>
+           </exclusion>
++          <exclusion>
++            <groupId>org.apache.zookeeper</groupId>
++            <artifactId>zookeeper</artifactId>
++          </exclusion>
++          <exclusion>
++            <groupId>org.apache.curator</groupId>
++            <artifactId>curator-test</artifactId>
++          </exclusion>
++          <exclusion>
++            <groupId>org.apache.curator</groupId>
++            <artifactId>curator-client</artifactId>
++          </exclusion>
++          <exclusion>
++            <groupId>org.apache.curator</groupId>
++            <artifactId>curator-recipes</artifactId>
++          </exclusion>
+         </exclusions>
+       </dependency>
+       <dependency>
+diff --git a/ql/src/test/org/apache/hive/testutils/MiniZooKeeperCluster.java b/ql/src/test/org/apache/hive/testutils/MiniZooKeeperCluster.java
+index 6e9e6dd7a1..e5c5532d82 100644
+--- a/ql/src/test/org/apache/hive/testutils/MiniZooKeeperCluster.java
++++ b/ql/src/test/org/apache/hive/testutils/MiniZooKeeperCluster.java
+@@ -49,7 +49,7 @@
+  *
+  *XXX: copied from the only used class by qtestutil from hbase-tests
+  */
+-class MiniZooKeeperCluster {
++public class MiniZooKeeperCluster {
+   private static final Log LOG = LogFactory.getLog(MiniZooKeeperCluster.class);
+ 
+   private static final int TICK_TIME = 2000;
+@@ -381,7 +381,7 @@ public void killOneBackupZooKeeperServer() throws IOException, InterruptedExcept
+   }
+ 
+   // XXX: From o.a.zk.t.ClientBase
+-  private static boolean waitForServerDown(int port, long timeout) throws IOException {
++  public static boolean waitForServerDown(int port, long timeout) throws IOException {
+     long start = System.currentTimeMillis();
+     while (true) {
+       try {
+@@ -410,7 +410,7 @@ private static boolean waitForServerDown(int port, long timeout) throws IOExcept
+   }
+ 
+   // XXX: From o.a.zk.t.ClientBase
+-  private static boolean waitForServerUp(int port, long timeout) throws IOException {
++  public static boolean waitForServerUp(int port, long timeout) throws IOException {
+     long start = System.currentTimeMillis();
+     while (true) {
+       try {
+diff --git a/standalone-metastore/metastore-common/pom.xml b/standalone-metastore/metastore-common/pom.xml
+new file mode 100644
+index 0000000000..95e53b9502
+--- /dev/null
++++ b/standalone-metastore/metastore-common/pom.xml
+@@ -0,0 +1,659 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<!--
++  Licensed under the Apache License, Version 2.0 (the "License");
++  you may not use this file except in compliance with the License.
++  You may obtain a copy of the License at
++
++      http://www.apache.org/licenses/LICENSE-2.0
++
++  Unless required by applicable law or agreed to in writing, software
++  distributed under the License is distributed on an "AS IS" BASIS,
++  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++  See the License for the specific language governing permissions and
++  limitations under the License.
++-->
++<project xmlns="http://maven.apache.org/POM/4.0.0"
++         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
++         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
++  <parent>
++    <artifactId>hive-standalone-metastore</artifactId>
++    <groupId>org.apache.hive</groupId>
++    <version>4.0.0-SNAPSHOT</version>
++  </parent>
++  <modelVersion>4.0.0</modelVersion>
++
++  <artifactId>hive-standalone-metastore-common</artifactId>
++  <name>Hive Standalone Metastore Common Code</name>
++
++  <properties>
++    <standalone.metastore.path.to.root>..</standalone.metastore.path.to.root>
++  </properties>
++
++  <dependencies>
++    <dependency>
++      <groupId>org.apache.orc</groupId>
++      <artifactId>orc-core</artifactId>
++      <exclusions>
++        <exclusion>
++          <groupId>org.apache.hadoop</groupId>
++          <artifactId>hadoop-common</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>org.apache.hive</groupId>
++          <artifactId>hive-storage-api</artifactId>
++        </exclusion>
++      </exclusions>
++    </dependency>
++    <dependency>
++      <groupId>com.fasterxml.jackson.core</groupId>
++      <artifactId>jackson-databind</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>com.github.joshelser</groupId>
++      <artifactId>dropwizard-metrics-hadoop-metrics2-reporter</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>com.google.guava</groupId>
++      <artifactId>guava</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>com.google.protobuf</groupId>
++      <artifactId>protobuf-java</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>com.jolbox</groupId>
++      <artifactId>bonecp</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>com.zaxxer</groupId>
++      <artifactId>HikariCP</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>commons-dbcp</groupId>
++      <artifactId>commons-dbcp</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>io.dropwizard.metrics</groupId>
++      <artifactId>metrics-core</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>io.dropwizard.metrics</groupId>
++      <artifactId>metrics-jvm</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>io.dropwizard.metrics</groupId>
++      <artifactId>metrics-json</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>javolution</groupId>
++      <artifactId>javolution</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>org.antlr</groupId>
++      <artifactId>antlr-runtime</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.commons</groupId>
++      <artifactId>commons-lang3</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.derby</groupId>
++      <artifactId>derby</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.hadoop</groupId>
++      <artifactId>hadoop-common</artifactId>
++      <optional>true</optional>
++      <exclusions>
++        <exclusion>
++          <groupId>org.slf4j</groupId>
++          <artifactId>slf4j-log4j12</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>commons-logging</groupId>
++          <artifactId>commons-logging</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>org.apache.curator</groupId>
++          <artifactId>curator-framework</artifactId>
++        </exclusion>
++      </exclusions>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.hadoop</groupId>
++      <artifactId>hadoop-distcp</artifactId>
++      <scope>provided</scope>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.hadoop</groupId>
++      <artifactId>hadoop-hdfs</artifactId>
++      <optional>true</optional>
++      <exclusions>
++        <exclusion>
++          <groupId>org.slf4j</groupId>
++          <artifactId>slf4j-log4j12</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>commons-logging</groupId>
++          <artifactId>commons-logging</artifactId>
++        </exclusion>
++      </exclusions>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.hadoop</groupId>
++      <artifactId>hadoop-hdfs-client</artifactId>
++      <optional>true</optional>
++      <exclusions>
++        <exclusion>
++          <groupId>org.slf4j</groupId>
++          <artifactId>slf4j-log4j12</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>commons-logging</groupId>
++          <artifactId>commons-logging</artifactId>
++        </exclusion>
++      </exclusions>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.hadoop</groupId>
++      <artifactId>hadoop-mapreduce-client-core</artifactId>
++      <optional>true</optional>
++      <exclusions>
++        <exclusion>
++          <groupId>org.slf4j</groupId>
++          <artifactId>slf4j-log4j12</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>commons-logging</groupId>
++          <artifactId>commons-logging</artifactId>
++        </exclusion>
++      </exclusions>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.hive</groupId>
++      <artifactId>hive-storage-api</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.logging.log4j</groupId>
++      <artifactId>log4j-slf4j-impl</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.logging.log4j</groupId>
++      <artifactId>log4j-1.2-api</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.thrift</groupId>
++      <artifactId>libfb303</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.thrift</groupId>
++      <artifactId>libthrift</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>org.skyscreamer</groupId>
++      <artifactId>jsonassert</artifactId>
++      <scope>test</scope>
++    </dependency>
++    <dependency>
++      <groupId>commons-logging</groupId>
++      <artifactId>commons-logging</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.zookeeper</groupId>
++      <artifactId>zookeeper</artifactId>
++      <version>${zookeeper.version}</version>
++      <exclusions>
++        <exclusion>
++          <groupId>org.slf4j</groupId>
++          <artifactId>slf4j-log4j12</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>commons-logging</groupId>
++          <artifactId>commons-logging</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>org.apache.httpcomponents</groupId>
++          <artifactId>httpcore</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>org.apache.httpcomponents</groupId>
++          <artifactId>httpclient</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>org.jboss.netty</groupId>
++          <artifactId>netty</artifactId>
++        </exclusion>
++      </exclusions>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.curator</groupId>
++      <artifactId>curator-recipes</artifactId>
++      <version>${curator.version}</version>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.curator</groupId>
++      <artifactId>curator-framework</artifactId>
++      <version>${curator.version}</version>
++    </dependency>
++    <!-- test scope dependencies -->
++
++    <dependency>
++      <groupId>junit</groupId>
++      <artifactId>junit</artifactId>
++      <scope>test</scope>
++    </dependency>
++    <dependency>
++      <groupId>org.mockito</groupId>
++      <artifactId>mockito-core</artifactId>
++      <scope>test</scope>
++    </dependency>
++  </dependencies>
++
++  <profiles>
++    <profile>
++      <id>thriftif</id>
++      <build>
++        <plugins>
++          <plugin>
++            <groupId>org.apache.maven.plugins</groupId>
++            <artifactId>maven-antrun-plugin</artifactId>
++            <executions>
++              <execution>
++                <id>generate-thrift-sources</id>
++                <phase>generate-sources</phase>
++                <configuration>
++                  <target>
++                    <taskdef name="for" classname="net.sf.antcontrib.logic.ForTask"
++                             classpathref="maven.plugin.classpath" />
++                    <property name="thrift.args" value="${thrift.args}"/>
++                    <property name="thrift.gen.dir" value="${thrift.gen.dir}"/>
++                    <delete dir="${thrift.gen.dir}"/>
++                    <mkdir dir="${thrift.gen.dir}"/>
++                    <for param="thrift.file">
++                      <path>
++                        <fileset dir="." includes="src/main/thrift/*.thrift" />
++                      </path>
++                      <sequential>
++                        <echo message="Generating Thrift code for @{thrift.file}"/>
++                        <exec executable="${thrift.home}/bin/thrift"  failonerror="true" dir=".">
++                          <arg line="${thrift.args} -I ${basedir}/include -I ${basedir}/.. -o ${thrift.gen.dir} @{thrift.file} " />
++                        </exec>
++                      </sequential>
++                    </for>
++                  </target>
++                </configuration>
++                <goals>
++                  <goal>run</goal>
++                </goals>
++              </execution>
++            </executions>
++          </plugin>
++          <plugin>
++            <groupId>com.google.code.maven-replacer-plugin</groupId>
++            <artifactId>replacer</artifactId>
++            <version>1.5.3</version>
++            <executions>
++              <execution>
++                <id>process-thrift-sources-string-intern</id>
++                <phase>process-sources</phase>
++                <goals>
++                  <goal>replace</goal>
++                </goals>
++                <configuration>
++                  <basedir>${basedir}/src/gen/thrift/gen-javabean/org/apache/hadoop/hive/metastore/api/</basedir>
++                  <includes>
++                    <include>FieldSchema.java</include>
++                    <include>Partition.java</include>
++                    <include>SerDeInfo.java</include>
++                    <include>StorageDescriptor.java</include>
++                    <include>ColumnStatisticsDesc.java</include>
++                    <include>ColumnStatisticsObj.java</include>
++                  </includes>
++                  <tokenValueMap>${basedir}/src/main/resources/thrift-replacements.txt</tokenValueMap>
++                  <regex>true</regex>
++                  <quiet>false</quiet>
++                </configuration>
++              </execution>
++              <execution>
++                <id>process-thrift-sources-interface-annotations</id>
++                <phase>process-sources</phase>
++                <goals>
++                  <goal>replace</goal>
++                </goals>
++                <configuration>
++                  <basedir>${basedir}/src/gen/thrift/gen-javabean/org/apache/hadoop/hive/metastore/api/</basedir>
++                  <filesToInclude>*.java</filesToInclude>
++                  <replacements>
++                    <replacement>
++                      <token>public class</token>
++                      <value>@org.apache.hadoop.classification.InterfaceAudience.Public @org.apache.hadoop.classification.InterfaceStability.Stable public class</value>
++                      <unescape>true</unescape>
++                    </replacement>
++                    <replacement>
++                      <token>public static class</token>
++                      <value>@org.apache.hadoop.classification.InterfaceAudience.Public @org.apache.hadoop.classification.InterfaceStability.Stable public static class</value>
++                      <unescape>true</unescape>
++                    </replacement>
++                    <replacement>
++                      <token>public interface</token>
++                      <value>@org.apache.hadoop.classification.InterfaceAudience.Public @org.apache.hadoop.classification.InterfaceStability.Stable public interface</value>
++                      <unescape>true</unescape>
++                    </replacement>
++                  </replacements>
++                </configuration>
++              </execution>
++            </executions>
++          </plugin>
++        </plugins>
++      </build>
++    </profile>
++    <profile>
++      <id>findbugs</id>
++      <build>
++        <plugins>
++          <plugin>
++            <groupId>org.codehaus.mojo</groupId>
++            <artifactId>findbugs-maven-plugin</artifactId>
++            <version>3.0.0</version>
++            <configuration>
++              <fork>true</fork>
++              <maxHeap>2048</maxHeap>
++              <jvmArgs>-Djava.awt.headless=true -Xmx2048m -Xms512m</jvmArgs>
++              <excludeFilterFile>${basedir}/findbugs/findbugs-exclude.xml</excludeFilterFile>
++            </configuration>
++          </plugin>
++        </plugins>
++      </build>
++      <reporting>
++        <plugins>
++          <plugin>
++            <groupId>org.codehaus.mojo</groupId>
++            <artifactId>findbugs-maven-plugin</artifactId>
++            <version>3.0.0</version>
++            <configuration>
++              <fork>true</fork>
++              <maxHeap>2048</maxHeap>
++              <jvmArgs>-Djava.awt.headless=true -Xmx2048m -Xms512m</jvmArgs>
++              <excludeFilterFile>${basedir}/findbugs/findbugs-exclude.xml</excludeFilterFile>
++            </configuration>
++          </plugin>
++        </plugins>
++      </reporting>
++    </profile>
++  </profiles>
++
++  <build>
++    <resources>
++      <resource>
++        <directory>${basedir}/src/main/resources</directory>
++        <includes>
++          <include>package.jdo</include>
++        </includes>
++      </resource>
++    </resources>
++
++    <pluginManagement>
++      <plugins>
++        <plugin>
++          <groupId>org.apache.maven.plugins</groupId>
++          <artifactId>maven-antrun-plugin</artifactId>
++          <version>${maven.antrun.plugin.version}</version>
++          <dependencies>
++            <dependency>
++              <groupId>ant-contrib</groupId>
++              <artifactId>ant-contrib</artifactId>
++              <version>${ant.contrib.version}</version>
++              <exclusions>
++                <exclusion>
++                  <groupId>ant</groupId>
++                  <artifactId>ant</artifactId>
++                </exclusion>
++              </exclusions>
++            </dependency>
++          </dependencies>
++        </plugin>
++        <plugin>
++          <groupId>org.codehaus.mojo</groupId>
++          <artifactId>exec-maven-plugin</artifactId>
++          <version>${maven.exec.plugin.version}</version>
++        </plugin>
++      </plugins>
++    </pluginManagement>
++    <plugins>
++      <!-- plugins are always listed in sorted order by groupId, artifectId -->
++      <plugin>
++        <groupId>org.apache.maven.plugins</groupId>
++        <artifactId>maven-antrun-plugin</artifactId>
++        <executions>
++          <execution>
++            <id>setup-test-dirs</id>
++            <phase>process-test-resources</phase>
++            <goals>
++              <goal>run</goal>
++            </goals>
++            <configuration>
++              <target>
++                <delete dir="${test.tmp.dir}" />
++                <delete dir="${test.warehouse.dir}" />
++                <mkdir dir="${test.tmp.dir}" />
++                <mkdir dir="${test.warehouse.dir}" />
++              </target>
++            </configuration>
++          </execution>
++          <execution>
++            <id>generate-version-annotation</id>
++            <phase>generate-sources</phase>
++            <configuration>
++              <target>
++                <exec executable="bash" failonerror="true">
++                  <arg value="${basedir}/src/main/resources/saveVersion.sh"/>
++                  <arg value="${project.version}"/>
++                  <arg value="${hive.version.shortname}"/>
++                  <arg value="${basedir}/src"/>
++                </exec>
++              </target>
++            </configuration>
++            <goals>
++              <goal>run</goal>
++            </goals>
++          </execution>
++          <execution>
++            <id>setup-metastore-scripts</id>
++            <phase>process-test-resources</phase>
++            <goals>
++              <goal>run</goal>
++            </goals>
++          </execution>
++        </executions>
++      </plugin>
++      <plugin>
++        <groupId>com.github.os72</groupId>
++        <artifactId>protoc-jar-maven-plugin</artifactId>
++        <version>3.5.1.1</version>
++        <executions>
++          <execution>
++            <phase>generate-sources</phase>
++            <goals>
++              <goal>run</goal>
++            </goals>
++            <configuration>
++              <protocArtifact>com.google.protobuf:protoc:2.5.0</protocArtifact>
++              <addSources>none</addSources>
++              <inputDirectories>
++                <include>${basedir}/src/main/protobuf/org/apache/hadoop/hive/metastore</include>
++              </inputDirectories>
++            </configuration>
++          </execution>
++        </executions>
++      </plugin>
++      <!-- TODO MS-SPLIT javadoc plugin -->
++      <plugin>
++        <groupId>org.apache.maven.plugins</groupId>
++        <artifactId>maven-enforcer-plugin</artifactId>
++        <executions>
++          <execution>
++            <id>enforce-banned-dependencies</id>
++            <goals>
++              <goal>enforce</goal>
++            </goals>
++            <configuration>
++              <rules>
++                <bannedDependencies>
++                  <excludes>
++                    <!--LGPL licenced library-->
++                    <exclude>com.google.code.findbugs:annotations</exclude>
++                  </excludes>
++                </bannedDependencies>
++              </rules>
++              <fail>true</fail>
++            </configuration>
++          </execution>
++        </executions>
++      </plugin>
++      <plugin>
++        <groupId>org.apache.maven.plugins</groupId>
++        <artifactId>maven-failsafe-plugin</artifactId>
++        <version>2.20.1</version>
++        <executions>
++          <execution>
++            <goals>
++              <goal>integration-test</goal>
++              <goal>verify</goal>
++            </goals>
++          </execution>
++        </executions>
++        <configuration>
++          <redirectTestOutputToFile>true</redirectTestOutputToFile>
++          <reuseForks>false</reuseForks>
++          <argLine>-Xmx2048m</argLine>
++          <failIfNoTests>false</failIfNoTests>
++          <systemPropertyVariables>
++            <log4j.debug>true</log4j.debug>
++            <java.io.tmpdir>${test.tmp.dir}</java.io.tmpdir>
++            <test.tmp.dir>${test.tmp.dir}</test.tmp.dir>
++            <hive.in.test>true</hive.in.test>
++          </systemPropertyVariables>
++          <additionalClasspathElements>
++            <additionalClasspathElement>${log4j.conf.dir}</additionalClasspathElement>
++            <additionalClasspathElement>${itest.jdbc.jars}</additionalClasspathElement>
++          </additionalClasspathElements>
++          <skipITs>${skipITests}</skipITs> <!-- set this to false to run these tests -->
++        </configuration>
++      </plugin>
++      <plugin>
++        <groupId>org.apache.maven.plugins</groupId>
++        <artifactId>maven-surefire-plugin</artifactId>
++        <configuration>
++          <redirectTestOutputToFile>true</redirectTestOutputToFile>
++          <reuseForks>false</reuseForks>
++          <forkCount>${test.forkcount}</forkCount>
++          <argLine>-Xmx2048m</argLine>
++          <systemPropertyVariables>
++            <build.dir>${project.build.directory}</build.dir>
++            <datanucleus.schema.autoCreateAll>true</datanucleus.schema.autoCreateAll>
++            <derby.version>${derby.version}</derby.version>
++            <derby.stream.error.file>${test.tmp.dir}/derby.log</derby.stream.error.file>
++            <log4j.debug>true</log4j.debug>
++            <java.io.tmpdir>${test.tmp.dir}</java.io.tmpdir>
++            <javax.jdo.option.ConnectionURL>jdbc:derby:memory:${test.tmp.dir}/junit_metastore_db;create=true</javax.jdo.option.ConnectionURL>
++            <metastore.schema.verification>false</metastore.schema.verification>
++            <test.tmp.dir>${test.tmp.dir}</test.tmp.dir>
++            <metastore.warehouse.dir>${test.warehouse.scheme}${test.warehouse.dir}</metastore.warehouse.dir>
++          </systemPropertyVariables>
++          <additionalClasspathElements>
++            <additionalClasspathElement>${log4j.conf.dir}</additionalClasspathElement>
++          </additionalClasspathElements>
++          <groups>${test.groups}</groups>
++        </configuration>
++      </plugin>
++      <plugin>
++        <groupId>org.apache.rat</groupId>
++        <artifactId>apache-rat-plugin</artifactId>
++        <version>0.10</version>
++        <configuration>
++          <excludes>
++            <exclude>binary-package-licenses/**</exclude>
++            <exclude>DEV-README</exclude>
++            <exclude>**/src/main/sql/**</exclude>
++            <exclude>**/README.md</exclude>
++            <exclude>**/*.iml</exclude>
++            <exclude>**/*.txt</exclude>
++            <exclude>**/*.log</exclude>
++            <exclude>**/*.arcconfig</exclude>
++            <exclude>**/package-info.java</exclude>
++            <exclude>**/*.properties</exclude>
++            <exclude>**/*.q</exclude>
++            <exclude>**/*.q.out</exclude>
++            <exclude>**/*.xml</exclude>
++            <exclude>**/gen/**</exclude>
++            <exclude>**/patchprocess/**</exclude>
++            <exclude>**/metastore_db/**</exclude>
++          </excludes>
++        </configuration>
++      </plugin>
++      <plugin>
++        <groupId>org.apache.maven.plugins</groupId>
++        <artifactId>maven-jar-plugin</artifactId>
++        <executions>
++          <execution>
++            <goals>
++              <goal>test-jar</goal>
++            </goals>
++          </execution>
++        </executions>
++      </plugin>
++      <plugin>
++        <groupId>org.codehaus.mojo</groupId>
++        <artifactId>build-helper-maven-plugin</artifactId>
++        <version>3.0.0</version>
++        <executions>
++          <execution>
++            <id>add-source</id>
++            <phase>generate-sources</phase>
++            <goals>
++              <goal>add-source</goal>
++            </goals>
++            <configuration>
++              <sources>
++                <source>src/gen/thrift/gen-javabean</source>
++                <source>${project.build.directory}/generated-sources</source>
++                <source>src/gen/version</source>
++              </sources>
++            </configuration>
++          </execution>
++        </executions>
++      </plugin>
++      <plugin>
++        <groupId>org.antlr</groupId>
++        <artifactId>antlr3-maven-plugin</artifactId>
++        <version>${antlr.version}</version>
++        <executions>
++          <execution>
++            <goals>
++              <goal>antlr</goal>
++            </goals>
++          </execution>
++        </executions>
++        <configuration>
++          <outputDirectory>${project.build.directory}/generated-sources</outputDirectory>
++          <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
++        </configuration>
++      </plugin>
++      <plugin>
++        <!-- Suppress source assembly -->
++        <groupId>org.apache.maven.plugins</groupId>
++        <artifactId>maven-assembly-plugin</artifactId>
++        <executions>
++          <execution>
++            <id>assemble</id>
++            <phase>none</phase>
++            <goals>
++              <goal>single</goal>
++            </goals>
++          </execution>
++        </executions>
++      </plugin>
++    </plugins>
++  </build>
++
++</project>
+diff --git a/standalone-metastore/metastore-server/pom.xml b/standalone-metastore/metastore-server/pom.xml
+new file mode 100644
+index 0000000000..0ff1b32911
+--- /dev/null
++++ b/standalone-metastore/metastore-server/pom.xml
+@@ -0,0 +1,688 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<!--
++  Licensed under the Apache License, Version 2.0 (the "License");
++  you may not use this file except in compliance with the License.
++  You may obtain a copy of the License at
++
++      http://www.apache.org/licenses/LICENSE-2.0
++
++  Unless required by applicable law or agreed to in writing, software
++  distributed under the License is distributed on an "AS IS" BASIS,
++  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++  See the License for the specific language governing permissions and
++  limitations under the License.
++-->
++<project xmlns="http://maven.apache.org/POM/4.0.0"
++         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
++         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
++  <parent>
++    <artifactId>hive-standalone-metastore</artifactId>
++    <groupId>org.apache.hive</groupId>
++    <version>4.0.0-SNAPSHOT</version>
++  </parent>
++  <modelVersion>4.0.0</modelVersion>
++
++  <artifactId>hive-standalone-metastore-server</artifactId>
++  <name>Hive Metastore Server</name>
++
++  <properties>
++    <standalone.metastore.path.to.root>..</standalone.metastore.path.to.root>
++  </properties>
++
++  <dependencies>
++    <dependency>
++      <groupId>org.apache.hive</groupId>
++      <artifactId>hive-standalone-metastore-common</artifactId>
++      <version>4.0.0-SNAPSHOT</version>
++    </dependency>
++
++    <dependency>
++      <groupId>org.apache.orc</groupId>
++      <artifactId>orc-core</artifactId>
++      <exclusions>
++        <exclusion>
++          <groupId>org.apache.hadoop</groupId>
++          <artifactId>hadoop-common</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>org.apache.hive</groupId>
++          <artifactId>hive-storage-api</artifactId>
++        </exclusion>
++      </exclusions>
++    </dependency>
++    <dependency>
++      <groupId>com.fasterxml.jackson.core</groupId>
++      <artifactId>jackson-databind</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>com.github.joshelser</groupId>
++      <artifactId>dropwizard-metrics-hadoop-metrics2-reporter</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>com.google.guava</groupId>
++      <artifactId>guava</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>com.google.protobuf</groupId>
++      <artifactId>protobuf-java</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>com.jolbox</groupId>
++      <artifactId>bonecp</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>com.zaxxer</groupId>
++      <artifactId>HikariCP</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>commons-dbcp</groupId>
++      <artifactId>commons-dbcp</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>io.dropwizard.metrics</groupId>
++      <artifactId>metrics-core</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>io.dropwizard.metrics</groupId>
++      <artifactId>metrics-jvm</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>io.dropwizard.metrics</groupId>
++      <artifactId>metrics-json</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>javolution</groupId>
++      <artifactId>javolution</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>org.antlr</groupId>
++      <artifactId>antlr-runtime</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.commons</groupId>
++      <artifactId>commons-lang3</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.derby</groupId>
++      <artifactId>derby</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.hadoop</groupId>
++      <artifactId>hadoop-common</artifactId>
++      <optional>true</optional>
++      <exclusions>
++        <exclusion>
++          <groupId>org.slf4j</groupId>
++          <artifactId>slf4j-log4j12</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>commons-logging</groupId>
++          <artifactId>commons-logging</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>org.apache.curator</groupId>
++          <artifactId>curator-framework</artifactId>
++        </exclusion>
++      </exclusions>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.hadoop</groupId>
++      <artifactId>hadoop-distcp</artifactId>
++      <scope>provided</scope>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.hadoop</groupId>
++      <artifactId>hadoop-hdfs</artifactId>
++      <optional>true</optional>
++      <exclusions>
++        <exclusion>
++          <groupId>org.slf4j</groupId>
++          <artifactId>slf4j-log4j12</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>commons-logging</groupId>
++          <artifactId>commons-logging</artifactId>
++        </exclusion>
++      </exclusions>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.hadoop</groupId>
++      <artifactId>hadoop-hdfs-client</artifactId>
++      <optional>true</optional>
++      <exclusions>
++        <exclusion>
++          <groupId>org.slf4j</groupId>
++          <artifactId>slf4j-log4j12</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>commons-logging</groupId>
++          <artifactId>commons-logging</artifactId>
++        </exclusion>
++      </exclusions>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.hadoop</groupId>
++      <artifactId>hadoop-mapreduce-client-core</artifactId>
++      <optional>true</optional>
++      <exclusions>
++        <exclusion>
++          <groupId>org.slf4j</groupId>
++          <artifactId>slf4j-log4j12</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>commons-logging</groupId>
++          <artifactId>commons-logging</artifactId>
++        </exclusion>
++      </exclusions>
++    </dependency>
++    <!-- This is our one and only Hive dependency.-->
++    <dependency>
++      <groupId>org.apache.hive</groupId>
++      <artifactId>hive-storage-api</artifactId>
++      <version>${storage-api.version}</version>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.logging.log4j</groupId>
++      <artifactId>log4j-slf4j-impl</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.logging.log4j</groupId>
++      <artifactId>log4j-1.2-api</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.thrift</groupId>
++      <artifactId>libfb303</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.thrift</groupId>
++      <artifactId>libthrift</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>org.datanucleus</groupId>
++      <artifactId>datanucleus-api-jdo</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>org.datanucleus</groupId>
++      <artifactId>datanucleus-core</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>org.datanucleus</groupId>
++      <artifactId>datanucleus-rdbms</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>org.datanucleus</groupId>
++      <artifactId>javax.jdo</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>org.skyscreamer</groupId>
++      <artifactId>jsonassert</artifactId>
++      <scope>test</scope>
++    </dependency>
++    <dependency>
++      <groupId>sqlline</groupId>
++      <artifactId>sqlline</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>commons-logging</groupId>
++      <artifactId>commons-logging</artifactId>
++    </dependency>
++    <!-- test scope dependencies -->
++    <dependency>
++      <groupId>com.microsoft.sqlserver</groupId>
++      <artifactId>mssql-jdbc</artifactId>
++      <scope>test</scope>
++    </dependency>
++    <dependency>
++      <groupId>junit</groupId>
++      <artifactId>junit</artifactId>
++      <scope>test</scope>
++    </dependency>
++    <dependency>
++      <groupId>org.mockito</groupId>
++      <artifactId>mockito-core</artifactId>
++      <scope>test</scope>
++    </dependency>
++    <dependency>
++      <!-- Note, this is LGPL.  But we're only using it in a test and not changing it, so I
++      believe we are fine. -->
++      <groupId>org.mariadb.jdbc</groupId>
++      <artifactId>mariadb-java-client</artifactId>
++      <scope>test</scope>
++    </dependency>
++    <dependency>
++      <groupId>org.postgresql</groupId>
++      <artifactId>postgresql</artifactId>
++      <scope>test</scope>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.curator</groupId>
++      <artifactId>curator-test</artifactId>
++      <scope>test</scope>
++    </dependency>
++  </dependencies>
++
++  <profiles>
++    <profile>
++      <id>thriftif</id>
++      <build>
++        <plugins>
++          <plugin>
++            <groupId>org.apache.maven.plugins</groupId>
++            <artifactId>maven-antrun-plugin</artifactId>
++            <executions>
++            </executions>
++          </plugin>
++        </plugins>
++      </build>
++    </profile>
++    <profile>
++      <id>findbugs</id>
++      <build>
++        <plugins>
++          <plugin>
++            <groupId>org.codehaus.mojo</groupId>
++            <artifactId>findbugs-maven-plugin</artifactId>
++            <version>3.0.0</version>
++            <configuration>
++              <fork>true</fork>
++              <maxHeap>2048</maxHeap>
++              <jvmArgs>-Djava.awt.headless=true -Xmx2048m -Xms512m</jvmArgs>
++              <excludeFilterFile>${basedir}/findbugs/findbugs-exclude.xml</excludeFilterFile>
++            </configuration>
++          </plugin>
++        </plugins>
++      </build>
++      <reporting>
++        <plugins>
++          <plugin>
++            <groupId>org.codehaus.mojo</groupId>
++            <artifactId>findbugs-maven-plugin</artifactId>
++            <version>3.0.0</version>
++            <configuration>
++              <fork>true</fork>
++              <maxHeap>2048</maxHeap>
++              <jvmArgs>-Djava.awt.headless=true -Xmx2048m -Xms512m</jvmArgs>
++              <excludeFilterFile>${basedir}/findbugs/findbugs-exclude.xml</excludeFilterFile>
++            </configuration>
++          </plugin>
++        </plugins>
++      </reporting>
++    </profile>
++    <!--
++  <profile>
++    <id>checkin</id>
++    <build>
++      <plugins>
++        <plugin>
++          <groupId>org.apache.maven.plugins</groupId>
++          <artifactId>maven-surefire-plugin</artifactId>
++          <version>${maven.surefire.version}</version>
++          <configuration>
++            <includes>
++              <include>**/Test*</include>
++            </includes>
++            <redirectTestOutputToFile>true</redirectTestOutputToFile>
++            <reuseForks>false</reuseForks>
++            <forkCount>${test.forkcount}</forkCount>
++            <argLine>-Xmx2048m</argLine>
++            <failIfNoTests>false</failIfNoTests>
++            <systemPropertyVariables>
++              <build.dir>${project.build.directory}</build.dir>
++              <datanucleus.schema.autoCreateAll>true</datanucleus.schema.autoCreateAll>
++              <derby.version>${derby.version}</derby.version>
++              <derby.stream.error.file>${test.tmp.dir}/derby.log</derby.stream.error.file>
++              <log4j.debug>true</log4j.debug>
++              <java.io.tmpdir>${test.tmp.dir}</java.io.tmpdir>
++              <javax.jdo.option.ConnectionURL>jdbc:derby:memory:${test.tmp.dir}/junit_metastore_db;create=true</javax.jdo.option.ConnectionURL>
++              <metastore.schema.verification>false</metastore.schema.verification>
++              <test.tmp.dir>${test.tmp.dir}</test.tmp.dir>
++              <metastore.warehouse.dir>${test.warehouse.scheme}${test.warehouse.dir}</metastore.warehouse.dir>
++            </systemPropertyVariables>
++            <additionalClasspathElements>
++              <additionalClasspathElement>${log4j.conf.dir}</additionalClasspathElement>
++            </additionalClasspathElements>
++          </configuration>
++
++        </plugin>
++
++
++      </plugins>
++    </build>
++  </profile>
++  -->
++  </profiles>
++
++  <build>
++    <resources>
++      <resource>
++        <directory>${basedir}/src/main/resources</directory>
++        <includes>
++          <include>package.jdo</include>
++        </includes>
++      </resource>
++    </resources>
++
++    <pluginManagement>
++      <plugins>
++        <plugin>
++          <groupId>org.apache.maven.plugins</groupId>
++          <artifactId>maven-antrun-plugin</artifactId>
++          <version>${maven.antrun.plugin.version}</version>
++          <dependencies>
++            <dependency>
++              <groupId>ant-contrib</groupId>
++              <artifactId>ant-contrib</artifactId>
++              <version>${ant.contrib.version}</version>
++              <exclusions>
++                <exclusion>
++                  <groupId>ant</groupId>
++                  <artifactId>ant</artifactId>
++                </exclusion>
++              </exclusions>
++            </dependency>
++          </dependencies>
++        </plugin>
++        <plugin>
++          <groupId>org.codehaus.mojo</groupId>
++          <artifactId>exec-maven-plugin</artifactId>
++          <version>${maven.exec.plugin.version}</version>
++        </plugin>
++      </plugins>
++    </pluginManagement>
++    <plugins>
++      <!-- plugins are always listed in sorted order by groupId, artifectId -->
++      <plugin>
++        <groupId>org.apache.maven.plugins</groupId>
++        <artifactId>maven-antrun-plugin</artifactId>
++        <executions>
++          <execution>
++            <id>setup-test-dirs</id>
++            <phase>process-test-resources</phase>
++            <goals>
++              <goal>run</goal>
++            </goals>
++            <configuration>
++              <target>
++                <delete dir="${test.tmp.dir}"/>
++                <delete dir="${test.warehouse.dir}"/>
++                <mkdir dir="${test.tmp.dir}"/>
++                <mkdir dir="${test.warehouse.dir}"/>
++              </target>
++            </configuration>
++          </execution>
++          <execution>
++            <id>generate-version-annotation</id>
++            <phase>generate-sources</phase>
++            <configuration>
++              <target>
++                <exec executable="bash" failonerror="true">
++                  <arg value="${basedir}/src/main/resources/saveVersion.sh"/>
++                  <arg value="${project.version}"/>
++                  <arg value="${hive.version.shortname}"/>
++                  <arg value="${basedir}/src"/>
++                </exec>
++              </target>
++            </configuration>
++            <goals>
++              <goal>run</goal>
++            </goals>
++          </execution>
++          <execution>
++            <id>setup-metastore-scripts</id>
++            <phase>process-test-resources</phase>
++            <goals>
++              <goal>run</goal>
++            </goals>
++            <configuration>
++              <target>
++                <mkdir dir="${test.tmp.dir}/scripts/metastore/upgrade"/>
++                <copy todir="${test.tmp.dir}/scripts/metastore/upgrade">
++                  <fileset dir="${basedir}/src/main/sql/"/>
++                </copy>
++              </target>
++            </configuration>
++          </execution>
++        </executions>
++      </plugin>
++      <plugin>
++        <groupId>com.github.os72</groupId>
++        <artifactId>protoc-jar-maven-plugin</artifactId>
++        <version>3.5.1.1</version>
++        <executions>
++          <execution>
++            <phase>generate-sources</phase>
++            <goals>
++              <goal>run</goal>
++            </goals>
++            <configuration>
++              <protocArtifact>com.google.protobuf:protoc:2.5.0</protocArtifact>
++              <addSources>none</addSources>
++              <inputDirectories>
++                <include>${basedir}/src/main/protobuf/org/apache/hadoop/hive/metastore</include>
++              </inputDirectories>
++            </configuration>
++          </execution>
++        </executions>
++      </plugin>
++      <!-- TODO MS-SPLIT javadoc plugin -->
++      <plugin>
++        <groupId>org.apache.maven.plugins</groupId>
++        <artifactId>maven-assembly-plugin</artifactId>
++        <executions>
++          <execution>
++            <id>assemble</id>
++            <phase>package</phase>
++            <goals>
++              <goal>single</goal>
++            </goals>
++            <configuration>
++              <finalName>apache-${project.artifactId}-${project.version}</finalName>
++              <descriptors>
++                <descriptor>src/assembly/bin.xml</descriptor>
++              </descriptors>
++              <tarLongFileMode>posix</tarLongFileMode>
++            </configuration>
++          </execution>
++        </executions>
++      </plugin>
++      <plugin>
++        <groupId>org.apache.maven.plugins</groupId>
++        <artifactId>maven-enforcer-plugin</artifactId>
++        <executions>
++          <execution>
++            <id>enforce-banned-dependencies</id>
++            <goals>
++              <goal>enforce</goal>
++            </goals>
++            <configuration>
++              <rules>
++                <bannedDependencies>
++                  <excludes>
++                    <!--LGPL licenced library-->
++                    <exclude>com.google.code.findbugs:annotations</exclude>
++                  </excludes>
++                </bannedDependencies>
++              </rules>
++              <fail>true</fail>
++            </configuration>
++          </execution>
++        </executions>
++      </plugin>
++      <plugin>
++        <groupId>org.apache.maven.plugins</groupId>
++        <artifactId>maven-failsafe-plugin</artifactId>
++        <version>2.20.1</version>
++        <executions>
++          <execution>
++            <goals>
++              <goal>integration-test</goal>
++              <goal>verify</goal>
++            </goals>
++          </execution>
++        </executions>
++        <configuration>
++          <redirectTestOutputToFile>true</redirectTestOutputToFile>
++          <reuseForks>false</reuseForks>
++          <argLine>-Xmx2048m</argLine>
++          <failIfNoTests>false</failIfNoTests>
++          <systemPropertyVariables>
++            <log4j.debug>true</log4j.debug>
++            <java.io.tmpdir>${test.tmp.dir}</java.io.tmpdir>
++            <test.tmp.dir>${test.tmp.dir}</test.tmp.dir>
++            <hive.in.test>true</hive.in.test>
++          </systemPropertyVariables>
++          <additionalClasspathElements>
++            <additionalClasspathElement>${log4j.conf.dir}</additionalClasspathElement>
++            <additionalClasspathElement>${itest.jdbc.jars}</additionalClasspathElement>
++          </additionalClasspathElements>
++          <skipITs>${skipITests}</skipITs> <!-- set this to false to run these tests -->
++        </configuration>
++      </plugin>
++      <plugin>
++        <groupId>org.apache.maven.plugins</groupId>
++        <artifactId>maven-surefire-plugin</artifactId>
++        <configuration>
++          <redirectTestOutputToFile>true</redirectTestOutputToFile>
++          <reuseForks>false</reuseForks>
++          <forkCount>${test.forkcount}</forkCount>
++          <argLine>-Xmx2048m</argLine>
++          <systemPropertyVariables>
++            <build.dir>${project.build.directory}</build.dir>
++            <datanucleus.schema.autoCreateAll>true</datanucleus.schema.autoCreateAll>
++            <derby.version>${derby.version}</derby.version>
++            <derby.stream.error.file>${test.tmp.dir}/derby.log</derby.stream.error.file>
++            <log4j.debug>true</log4j.debug>
++            <java.io.tmpdir>${test.tmp.dir}</java.io.tmpdir>
++            <javax.jdo.option.ConnectionURL>
++              jdbc:derby:memory:${test.tmp.dir}/junit_metastore_db;create=true
++            </javax.jdo.option.ConnectionURL>
++            <metastore.schema.verification>false</metastore.schema.verification>
++            <test.tmp.dir>${test.tmp.dir}</test.tmp.dir>
++            <metastore.warehouse.dir>${test.warehouse.scheme}${test.warehouse.dir}
++            </metastore.warehouse.dir>
++          </systemPropertyVariables>
++          <additionalClasspathElements>
++            <additionalClasspathElement>${log4j.conf.dir}</additionalClasspathElement>
++          </additionalClasspathElements>
++          <groups>${test.groups}</groups>
++        </configuration>
++      </plugin>
++      <plugin>
++        <groupId>org.apache.rat</groupId>
++        <artifactId>apache-rat-plugin</artifactId>
++        <version>0.10</version>
++        <configuration>
++          <excludes>
++            <exclude>binary-package-licenses/**</exclude>
++            <exclude>DEV-README</exclude>
++            <exclude>**/src/main/sql/**</exclude>
++            <exclude>**/README.md</exclude>
++            <exclude>**/*.iml</exclude>
++            <exclude>**/*.txt</exclude>
++            <exclude>**/*.log</exclude>
++            <exclude>**/*.arcconfig</exclude>
++            <exclude>**/package-info.java</exclude>
++            <exclude>**/*.properties</exclude>
++            <exclude>**/*.q</exclude>
++            <exclude>**/*.q.out</exclude>
++            <exclude>**/*.xml</exclude>
++            <exclude>**/gen/**</exclude>
++            <exclude>**/patchprocess/**</exclude>
++            <exclude>**/metastore_db/**</exclude>
++          </excludes>
++        </configuration>
++      </plugin>
++      <plugin>
++        <groupId>org.apache.maven.plugins</groupId>
++        <artifactId>maven-jar-plugin</artifactId>
++        <executions>
++          <execution>
++            <goals>
++              <goal>test-jar</goal>
++            </goals>
++          </execution>
++        </executions>
++      </plugin>
++      <plugin>
++        <groupId>org.codehaus.mojo</groupId>
++        <artifactId>build-helper-maven-plugin</artifactId>
++        <version>3.0.0</version>
++        <executions>
++          <execution>
++            <id>add-source</id>
++            <phase>generate-sources</phase>
++            <goals>
++              <goal>add-source</goal>
++            </goals>
++            <configuration>
++              <sources>
++                <source>src/gen/thrift/gen-javabean</source>
++                <source>${project.build.directory}/generated-sources</source>
++                <source>src/gen/version</source>
++              </sources>
++            </configuration>
++          </execution>
++        </executions>
++      </plugin>
++      <plugin>
++        <groupId>org.codehaus.mojo</groupId>
++        <artifactId>exec-maven-plugin</artifactId>
++        <executions>
++          <execution>
++            <phase>prepare-package</phase>
++            <goals>
++              <goal>java</goal>
++            </goals>
++          </execution>
++        </executions>
++        <configuration>
++          <mainClass>org.apache.hadoop.hive.metastore.conf.ConfTemplatePrinter</mainClass>
++          <arguments>
++            <argument>
++              ${project.build.directory}/generated-sources/conf/metastore-site.xml.template
++            </argument>
++          </arguments>
++        </configuration>
++      </plugin>
++      <plugin>
++        <groupId>org.datanucleus</groupId>
++        <artifactId>datanucleus-maven-plugin</artifactId>
++        <version>4.0.5</version>
++        <configuration>
++          <api>JDO</api>
++          <verbose>false</verbose>
++          <log4jConfiguration>${basedir}/src/main/resources/datanucleus-log4j.properties
++          </log4jConfiguration>
++          <metadataIncludes>**/*.jdo</metadataIncludes>
++          <fork>false</fork>
++        </configuration>
++        <executions>
++          <execution>
++            <phase>process-classes</phase>
++            <goals>
++              <goal>enhance</goal>
++            </goals>
++          </execution>
++        </executions>
++      </plugin>
++      <plugin>
++        <groupId>org.antlr</groupId>
++        <artifactId>antlr3-maven-plugin</artifactId>
++        <version>${antlr.version}</version>
++        <executions>
++          <execution>
++            <goals>
++              <goal>antlr</goal>
++            </goals>
++          </execution>
++        </executions>
++        <configuration>
++          <outputDirectory>${project.build.directory}/generated-sources</outputDirectory>
++          <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
++        </configuration>
++      </plugin>
++    </plugins>
++  </build>
++
++
++</project>
+diff --git a/standalone-metastore/metastore-tools/metastore-benchmarks/pom.xml b/standalone-metastore/metastore-tools/metastore-benchmarks/pom.xml
+new file mode 100644
+index 0000000000..59b61e15a7
+--- /dev/null
++++ b/standalone-metastore/metastore-tools/metastore-benchmarks/pom.xml
+@@ -0,0 +1,196 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<!--
++  Licensed under the Apache License, Version 2.0 (the "License");
++  you may not use this file except in compliance with the License.
++  You may obtain a copy of the License at
++
++      http://www.apache.org/licenses/LICENSE-2.0
++
++  Unless required by applicable law or agreed to in writing, software
++  distributed under the License is distributed on an "AS IS" BASIS,
++  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++  See the License for the specific language governing permissions and
++  limitations under the License.
++-->
++<project xmlns="http://maven.apache.org/POM/4.0.0"
++         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
++         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
++  <parent>
++    <artifactId>hive-metastore-tools</artifactId>
++    <groupId>org.apache.hive</groupId>
++    <version>4.0.0-SNAPSHOT</version>
++  </parent>
++  <modelVersion>4.0.0</modelVersion>
++
++  <packaging>jar</packaging>
++
++  <artifactId>hive-metastore-benchmarks</artifactId>
++  <name>Hive metastore benchmarks</name>
++
++  <properties>
++    <standalone.metastore.path.to.root>../..</standalone.metastore.path.to.root>
++  </properties>
++
++  <dependencies>
++    <dependency>
++      <groupId>org.apache.hive</groupId>
++      <artifactId>metastore-tools-common</artifactId>
++      <version>${hive.version}</version>
++      <scope>compile</scope>
++      <exclusions>
++        <exclusion>
++          <groupId>org.apache.zookeeper</groupId>
++          <artifactId>zookeeper</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>org.apache.curator</groupId>
++          <artifactId>curator-client</artifactId>
++        </exclusion>
++      </exclusions>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.hive.hcatalog</groupId>
++      <artifactId>hive-hcatalog-server-extensions</artifactId>
++      <exclusions>
++        <exclusion>
++          <groupId>org.apache.zookeeper</groupId>
++          <artifactId>zookeeper</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>org.apache.curator</groupId>
++          <artifactId>curator-client</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>org.apache.curator</groupId>
++          <artifactId>curator-framework</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>org.apache.curator</groupId>
++          <artifactId>curator-recipes</artifactId>
++        </exclusion>
++      </exclusions>
++    </dependency>
++    <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-log4j12 -->
++    <dependency>
++      <groupId>org.slf4j</groupId>
++      <artifactId>slf4j-log4j12</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.logging.log4j</groupId>
++      <artifactId>log4j-slf4j-impl</artifactId>
++    </dependency>
++    <!-- https://mvnrepository.com/artifact/org.jetbrains/annotations -->
++    <dependency>
++      <groupId>org.jetbrains</groupId>
++      <artifactId>annotations</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>info.picocli</groupId>
++      <artifactId>picocli</artifactId>
++    </dependency>
++    <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-jxr-plugin -->
++    <dependency>
++      <groupId>org.apache.maven.plugins</groupId>
++      <artifactId>maven-jxr-plugin</artifactId>
++      <version>2.5</version>
++    </dependency>
++    <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
++    <dependency>
++      <groupId>org.junit.jupiter</groupId>
++      <artifactId>junit-jupiter-api</artifactId>
++      <scope>test</scope>
++    </dependency>
++    <!-- https://mvnrepository.com/artifact/org.junit.platform/junit-platform-runner -->
++    <dependency>
++      <groupId>org.junit.platform</groupId>
++      <artifactId>junit-platform-runner</artifactId>
++      <scope>test</scope>
++    </dependency>
++    <!-- https://mvnrepository.com/artifact/org.hamcrest/hamcrest-all -->
++    <dependency>
++      <groupId>org.hamcrest</groupId>
++      <artifactId>hamcrest-all</artifactId>
++      <scope>test</scope>
++    </dependency>
++  </dependencies>
++
++  <profiles>
++    <profile>
++      <!--
++      The dist profile generates two full jars with dependencies - obe for HMSBenchmarks and
++      another for HMSTool.
++      -->
++      <id>dist</id>
++      <build>
++        <plugins>
++          <plugin>
++            <artifactId>maven-assembly-plugin</artifactId>
++            <executions>
++              <execution>
++                <configuration>
++                  <archive>
++                    <manifest>
++                      <mainClass>org.apache.hadoop.hive.metastore.tools.BenchmarkTool</mainClass>
++                      <addClasspath>true</addClasspath>
++                    </manifest>
++                  </archive>
++                  <descriptorRefs>
++                    <descriptorRef>jar-with-dependencies</descriptorRef>
++                  </descriptorRefs>
++                  <finalName>hmsbench</finalName>
++                </configuration>
++                <id>make-assembly-hclient</id> <!-- this is used for inheritance merges -->
++                <phase>package</phase> <!-- bind to the packaging phase -->
++                <goals>
++                  <goal>single</goal>
++                </goals>
++              </execution>
++            </executions>
++          </plugin>
++        </plugins>
++      </build>
++    </profile>
++  </profiles>
++
++  <build>
++    <plugins>
++      <plugin>
++        <groupId>org.apache.maven.plugins</groupId>
++        <artifactId>maven-compiler-plugin</artifactId>
++        <configuration>
++          <source>1.8</source>
++          <target>1.8</target>
++          <compilerId>javac-with-errorprone</compilerId>
++          <forceJavacCompilerUse>true</forceJavacCompilerUse>
++        </configuration>
++        <!--
++        Error Prone integration
++        -->
++        <dependencies>
++          <dependency>
++            <groupId>org.codehaus.plexus</groupId>
++            <artifactId>plexus-compiler-javac-errorprone</artifactId>
++            <version>${javac.errorprone.version}</version>
++          </dependency>
++          <dependency>
++            <groupId>com.google.errorprone</groupId>
++            <artifactId>error_prone_core</artifactId>
++            <version>${errorprone.core.version}</version>
++          </dependency>
++        </dependencies>
++      </plugin>
++    </plugins>
++  </build>
++
++  <reporting>
++    <plugins>
++      <plugin>
++        <!-- This is needed for checkstyle -->
++        <groupId>org.apache.maven.plugins</groupId>
++        <artifactId>maven-jxr-plugin</artifactId>
++        <version>2.5</version>
++      </plugin>
++    </plugins>
++  </reporting>
++
++</project>
+diff --git a/standalone-metastore/metastore-tools/pom.xml b/standalone-metastore/metastore-tools/pom.xml
+new file mode 100644
+index 0000000000..63f2369a42
+--- /dev/null
++++ b/standalone-metastore/metastore-tools/pom.xml
+@@ -0,0 +1,174 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<!--
++  Licensed under the Apache License, Version 2.0 (the "License");
++  you may not use this file except in compliance with the License.
++  You may obtain a copy of the License at
++
++      http://www.apache.org/licenses/LICENSE-2.0
++
++  Unless required by applicable law or agreed to in writing, software
++  distributed under the License is distributed on an "AS IS" BASIS,
++  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++  See the License for the specific language governing permissions and
++  limitations under the License.
++-->
++<project xmlns="http://maven.apache.org/POM/4.0.0"
++         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
++         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
++  <parent>
++    <artifactId>hive-standalone-metastore</artifactId>
++    <groupId>org.apache.hive</groupId>
++    <version>4.0.0-SNAPSHOT</version>
++  </parent>
++  <modelVersion>4.0.0</modelVersion>
++
++  <artifactId>hive-metastore-tools</artifactId>
++  <name>Hive Metastore Tools</name>
++  <version>4.0.0-SNAPSHOT</version>
++
++  <packaging>pom</packaging>
++
++  <modules>
++    <module>metastore-benchmarks</module>
++    <module>tools-common</module>
++  </modules>
++
++  <properties>
++    <hive.version>4.0.0-SNAPSHOT</hive.version>
++    <maven.surefire.version>2.20.1</maven.surefire.version>
++    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
++    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
++    <javac.errorprone.version>2.8</javac.errorprone.version>
++    <errorprone.core.version>2.3.1</errorprone.core.version>
++    <picocli.version>3.1.0</picocli.version>
++    <junit.platform.runner.version>1.2.0</junit.platform.runner.version>
++    <junit.jupiter.api.version>5.2.0</junit.jupiter.api.version>
++    <commons-math3.version>3.6.1</commons-math3.version>
++    <jetbrain-annotation.version>16.0.2</jetbrain-annotation.version>
++    <standalone.metastore.path.to.root>..</standalone.metastore.path.to.root>
++  </properties>
++
++  <dependencyManagement>
++    <dependencies>
++      <dependency>
++        <groupId>org.apache.hive.hcatalog</groupId>
++        <artifactId>hive-hcatalog-server-extensions</artifactId>
++        <version>${hive.version}</version>
++        <exclusions>
++          <exclusion>
++            <groupId>org.apache.zookeeper</groupId>
++            <artifactId>zookeeper</artifactId>
++          </exclusion>
++          <exclusion>
++            <groupId>org.apache.curator</groupId>
++            <artifactId>curator-client</artifactId>
++          </exclusion>
++          <exclusion>
++            <groupId>org.apache.curator</groupId>
++            <artifactId>curator-framework</artifactId>
++          </exclusion>
++          <exclusion>
++            <groupId>org.apache.curator</groupId>
++            <artifactId>curator-recipes</artifactId>
++          </exclusion>
++        </exclusions>
++      </dependency>
++      <dependency>
++        <groupId>org.apache.hive</groupId>
++        <artifactId>hive-common</artifactId>
++        <version>${hive.version}</version>
++        <exclusions>
++          <exclusion>
++            <groupId>org.apache.zookeeper</groupId>
++            <artifactId>zookeeper</artifactId>
++          </exclusion>
++          <exclusion>
++            <groupId>org.apache.curator</groupId>
++            <artifactId>curator-client</artifactId>
++          </exclusion>
++        </exclusions>
++      </dependency>
++      <dependency>
++        <groupId>org.apache.hive</groupId>
++        <artifactId>hive-standalone-metastore-common</artifactId>
++        <version>${hive.version}</version>
++      </dependency>
++      <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-math3 -->
++      <dependency>
++        <groupId>org.apache.commons</groupId>
++        <artifactId>commons-math3</artifactId>
++        <version>${commons-math3.version}</version>
++      </dependency>
++      <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-log4j12 -->
++      <dependency>
++        <groupId>org.slf4j</groupId>
++        <artifactId>slf4j-log4j12</artifactId>
++        <version>1.7.25</version>
++      </dependency>
++      <!-- https://mvnrepository.com/artifact/org.jetbrains/annotations -->
++      <dependency>
++        <groupId>org.jetbrains</groupId>
++        <artifactId>annotations</artifactId>
++        <version>${jetbrain-annotation.version}</version>
++      </dependency>
++      <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-jxr-plugin -->
++      <dependency>
++        <groupId>org.apache.maven.plugins</groupId>
++        <artifactId>maven-jxr-plugin</artifactId>
++        <version>2.5</version>
++      </dependency>
++      <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
++      <dependency>
++        <groupId>org.junit.jupiter</groupId>
++        <artifactId>junit-jupiter-api</artifactId>
++        <version>${junit.jupiter.api.version}</version>
++        <scope>test</scope>
++      </dependency>
++      <!-- https://mvnrepository.com/artifact/org.junit.platform/junit-platform-runner -->
++      <dependency>
++        <groupId>org.junit.platform</groupId>
++        <artifactId>junit-platform-runner</artifactId>
++        <version>${junit.platform.runner.version}</version>
++      </dependency>
++      <dependency>
++        <groupId>junit</groupId>
++        <artifactId>junit</artifactId>
++        <version>${junit.version}</version>
++      </dependency>
++      <dependency>
++        <groupId>info.picocli</groupId>
++        <artifactId>picocli</artifactId>
++        <version>${picocli.version}</version>
++      </dependency>
++    </dependencies>
++  </dependencyManagement>
++
++  <build>
++    <pluginManagement>
++      <plugins>
++        <plugin>
++          <groupId>org.apache.maven.plugins</groupId>
++          <artifactId>maven-compiler-plugin</artifactId>
++          <version>3.7.0</version>
++        </plugin>
++      </plugins>
++    </pluginManagement>
++    <plugins>
++      <!-- Suppress source assembly -->
++      <plugin>
++        <groupId>org.apache.maven.plugins</groupId>
++        <artifactId>maven-assembly-plugin</artifactId>
++        <executions>
++          <execution>
++            <id>assemble</id>
++            <phase>none</phase>
++            <goals>
++              <goal>single</goal>
++            </goals>
++          </execution>
++        </executions>
++      </plugin>
++    </plugins>
++  </build>
++
++</project>
+diff --git a/standalone-metastore/pom.xml b/standalone-metastore/pom.xml
+index 9008a1a37d..37cda1a5c0 100644
+--- a/standalone-metastore/pom.xml
++++ b/standalone-metastore/pom.xml
+@@ -84,6 +84,8 @@
+     <protobuf.version>2.5.0</protobuf.version>
+     <sqlline.version>1.3.0</sqlline.version>
+     <storage-api.version>2.7.0</storage-api.version>
++    <curator.version>4.2.0</curator.version>
++    <zookeeper.version>3.5.5</zookeeper.version>
+ 
+     <!-- Thrift properties -->
+     <thrift.home>you-must-set-this-to-run-thrift</thrift.home>
+@@ -192,6 +194,26 @@
+           <groupId>commmons-logging</groupId>
+           <artifactId>commons-logging</artifactId>
+         </exclusion>
++        <exclusion>
++          <groupId>org.apache.zookeeper</groupId>
++          <artifactId>zookeeper</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>org.apache.curator</groupId>
++          <artifactId>curator-test</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>org.apache.curator</groupId>
++          <artifactId>curator-client</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>org.apache.curator</groupId>
++          <artifactId>curator-framework</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>org.apache.curator</groupId>
++          <artifactId>curator-recipes</artifactId>
++        </exclusion>
+       </exclusions>
+     </dependency>
+     <dependency>
+@@ -315,6 +337,16 @@
+       <artifactId>sqlline</artifactId>
+       <version>${sqlline.version}</version>
+     </dependency>
++    <dependency>
++      <groupId>org.apache.curator</groupId>
++      <artifactId>curator-recipes</artifactId>
++      <version>${curator.version}</version>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.curator</groupId>
++      <artifactId>curator-framework</artifactId>
++      <version>${curator.version}</version>
++    </dependency>
+ 
+     <!-- test scope dependencies -->
+ 
+diff --git a/storage-api/pom.xml b/storage-api/pom.xml
+index 799e541332..e74fac4764 100644
+--- a/storage-api/pom.xml
++++ b/storage-api/pom.xml
+@@ -97,6 +97,22 @@
+           <groupId>org.mortbay.jetty</groupId>
+           <artifactId>jetty-util</artifactId>
+         </exclusion>
++        <exclusion>
++          <groupId>org.apache.zookeeper</groupId>
++          <artifactId>zookeeper</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>org.apache.curator</groupId>
++          <artifactId>curator-framework</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>org.apache.curator</groupId>
++          <artifactId>curator-client</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>org.apache.curator</groupId>
++          <artifactId>curator-recipes</artifactId>
++        </exclusion>
+       </exclusions>
+     </dependency>
+     <dependency>
+diff --git a/upgrade-acid/pre-upgrade/pom.xml b/upgrade-acid/pre-upgrade/pom.xml
+new file mode 100644
+index 0000000000..3abe59675d
+--- /dev/null
++++ b/upgrade-acid/pre-upgrade/pom.xml
+@@ -0,0 +1,336 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<!--
++  Licensed under the Apache License, Version 2.0 (the "License");
++  you may not use this file except in compliance with the License.
++  You may obtain a copy of the License at
++
++      http://www.apache.org/licenses/LICENSE-2.0
++
++  Unless required by applicable law or agreed to in writing, software
++  distributed under the License is distributed on an "AS IS" BASIS,
++  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++  See the License for the specific language governing permissions and
++  limitations under the License.
++-->
++<project xmlns="http://maven.apache.org/POM/4.0.0"
++         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
++         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
++
++
++    <parent>
++        <groupId>org.apache.hive</groupId>
++        <artifactId>hive-upgrade-acid</artifactId>
++        <version>4.0.0-SNAPSHOT</version>
++        <relativePath>../pom.xml</relativePath>
++    </parent>
++
++
++    <modelVersion>4.0.0</modelVersion>
++    <!--this module is added to parent pom so that it builds and releases with the reset of Hive-->
++    <artifactId>hive-pre-upgrade</artifactId>
++    <name>Hive Pre Upgrade Acid</name>
++    <packaging>jar</packaging>
++
++    <properties>
++        <hive.path.to.root>../..</hive.path.to.root>
++
++        <!-- Test Properties -->
++        <test.conf.dir>${project.build.directory}/testconf</test.conf.dir>
++        <test.log4j.scheme>file://</test.log4j.scheme>
++        <log4j.conf.dir>${project.basedir}/src/test/resources</log4j.conf.dir>
++        <test.tmp.dir>${project.build.directory}/tmp</test.tmp.dir>
++        <test.warehouse.dir>${project.build.directory}/warehouse</test.warehouse.dir>
++        <test.warehouse.scheme>file://</test.warehouse.scheme>
++        <test.forkcount>1</test.forkcount>
++        <skipITests>true</skipITests>
++        <hdp.hive.version>2.3.3</hdp.hive.version>
++        <hdp.hadoop.version>2.7.2</hdp.hadoop.version>
++    </properties>
++    <dependencies>
++        <!--scope is 'provided' for all.  The UpgradeTool is provided as part of Hive 3.x and
++        supports 2 modes - preUpgrade which runs with 2.x jars on the classpath and postUpgrade
++        which runs with 3.x jars.  'provided' should pull these jars for compile/test but not
++        for packaging.-->
++        <dependency>
++            <groupId>commons-cli</groupId>
++            <artifactId>commons-cli</artifactId>
++            <version>1.2</version>
++            <scope>provided</scope>
++        </dependency>
++        <dependency>
++            <groupId>org.apache.hive</groupId>
++            <artifactId>hive-metastore</artifactId>
++            <version>${hdp.hive.version}</version>
++            <scope>provided</scope>
++            <exclusions>
++              <exclusion>
++                <groupId>tomcat</groupId>
++                <artifactId>jasper-compiler</artifactId>
++              </exclusion>
++              <exclusion>
++                <groupId>tomcat</groupId>
++                <artifactId>jasper-runtime</artifactId>
++              </exclusion>
++              <exclusion>
++                <groupId>org.apache.zookeeper</groupId>
++                <artifactId>zookeeper</artifactId>
++              </exclusion>
++              <exclusion>
++                <groupId>org.apache.curator</groupId>
++                <artifactId>curator-framework</artifactId>
++              </exclusion>
++            </exclusions>
++        </dependency>
++        <dependency>
++            <groupId>org.apache.hive</groupId>
++            <artifactId>hive-exec</artifactId>
++            <version>${hdp.hive.version}</version>
++            <scope>provided</scope>
++            <exclusions>
++              <exclusion>
++                <groupId>org.apache.zookeeper</groupId>
++                <artifactId>zookeeper</artifactId>
++              </exclusion>
++              <exclusion>
++                <groupId>org.apache.curator</groupId>
++                <artifactId>curator-framework</artifactId>
++              </exclusion>
++            </exclusions>
++        </dependency>
++        <dependency>
++            <groupId>org.apache.hadoop</groupId>
++            <artifactId>hadoop-common</artifactId>
++            <version>${hdp.hadoop.version}</version>
++            <scope>provided</scope>
++            <exclusions>
++              <exclusion>
++                <groupId>org.apache.zookeeper</groupId>
++                <artifactId>zookeeper</artifactId>
++              </exclusion>
++              <exclusion>
++                <groupId>org.apache.curator</groupId>
++                <artifactId>curator-client</artifactId>
++              </exclusion>
++              <exclusion>
++                <groupId>org.apache.curator</groupId>
++                <artifactId>curator-recipes</artifactId>
++              </exclusion>
++              <exclusion>
++                <groupId>org.apache.curator</groupId>
++                <artifactId>curator-framework</artifactId>
++              </exclusion>
++            </exclusions>
++        </dependency>
++        <dependency>
++            <!-- w/o this we get this, even though mapreduce.framework.name=mapred.job.tracker=local
++            https://stackoverflow.com/questions/24096834/org-apache-hadoop-mapred-localclientprotocolprovider-not-found
++
++            2018-05-23T13:01:50,122 ERROR [main] exec.Task: Job Submission failed with exception 'java.io.IOException(Cannot initialize Cluster. Please check yo\
++ur configuration for mapreduce.framework.name and the correspond server addresses.)'
++java.io.IOException: Cannot initialize Cluster. Please check your configuration for mapreduce.framework.name and the correspond server addresses.
++        at org.apache.hadoop.mapreduce.Cluster.initialize(Cluster.java:120)
++        at org.apache.hadoop.mapreduce.Cluster.<init>(Cluster.java:82)
++        at org.apache.hadoop.mapreduce.Cluster.<init>(Cluster.java:75)
++        at org.apache.hadoop.mapred.JobClient.init(JobClient.java:470)
++        at org.apache.hadoop.mapred.JobClient.<init>(JobClient.java:449)
++        at org.apache.hadoop.hive.ql.exec.mr.ExecDriver.execute(ExecDriver.java:369)
++        at org.apache.hadoop.hive.ql.exec.mr.MapRedTask.execute(MapRedTask.java:151)
++        at org.apache.hadoop.hive.ql.exec.Task.executeTask(Task.java:199)
++        at org.apache.hadoop.hive.ql.exec.TaskRunner.runSequential(TaskRunner.java:100)
++        at org.apache.hadoop.hive.ql.Driver.launchTask(Driver.java:2183)
++        at org.apache.hadoop.hive.ql.Driver.execute(Driver.java:1839)
++        at org.apache.hadoop.hive.ql.Driver.runInternal(Driver.java:1526)
++        at org.apache.hadoop.hive.ql.Driver.run(Driver.java:1237)
++
++            -->
++            <groupId>org.apache.hadoop</groupId>
++            <artifactId>hadoop-mapreduce-client-common</artifactId>
++            <version>2.7.2</version>
++            <scope>provided</scope>
++            <exclusions>
++              <exclusion>
++                <groupId>org.apache.zookeeper</groupId>
++                <artifactId>zookeeper</artifactId>
++              </exclusion>
++            </exclusions>
++        </dependency>
++        <dependency>
++            <groupId>org.apache.orc</groupId>
++            <artifactId>orc-core</artifactId>
++            <version>1.3.3</version>
++            <scope>provided</scope>
++        </dependency>
++    </dependencies>
++
++
++    <build>
++        <resources>
++            <resource>
++                <directory>${basedir}/src/main/resources</directory>
++                <includes>
++                    <include>package.jdo</include>
++                </includes>
++            </resource>
++        </resources>
++
++        <pluginManagement>
++            <plugins>
++                <plugin>
++                    <groupId>org.apache.maven.plugins</groupId>
++                    <artifactId>maven-antrun-plugin</artifactId>
++                    <version>${maven.antrun.plugin.version}</version>
++                    <dependencies>
++                        <dependency>
++                            <groupId>ant-contrib</groupId>
++                            <artifactId>ant-contrib</artifactId>
++                            <version>${ant.contrib.version}</version>
++                            <exclusions>
++                                <exclusion>
++                                    <groupId>ant</groupId>
++                                    <artifactId>ant</artifactId>
++                                </exclusion>
++                            </exclusions>
++                        </dependency>
++                    </dependencies>
++                </plugin>
++                <plugin>
++                    <groupId>org.apache.maven.plugins</groupId>
++                    <artifactId>maven-checkstyle-plugin</artifactId>
++                    <version>${maven.checkstyle.plugin.version}</version>
++                </plugin>
++                <plugin>
++                    <groupId>org.codehaus.mojo</groupId>
++                    <artifactId>exec-maven-plugin</artifactId>
++                    <version>${maven.exec.plugin.version}</version>
++                </plugin>
++            </plugins>
++        </pluginManagement>
++        <plugins>
++            <!-- plugins are always listed in sorted order by groupId, artifectId -->
++            <plugin>
++                <groupId>org.apache.maven.plugins</groupId>
++                <artifactId>maven-antrun-plugin</artifactId>
++                <executions>
++                    <execution>
++                        <id>setup-test-dirs</id>
++                        <phase>process-test-resources</phase>
++                        <goals>
++                            <goal>run</goal>
++                        </goals>
++                        <configuration>
++                            <target>
++                                <delete dir="${test.conf.dir}" />
++                                <delete dir="${test.tmp.dir}" />
++                                <delete dir="${test.warehouse.dir}" />
++                                <mkdir dir="${test.tmp.dir}" />
++                                <mkdir dir="${test.warehouse.dir}" />
++                                <mkdir dir="${test.conf.dir}" />
++                                <!-- copies hive-site.xml so it can be modified -->
++                                <copy todir="${test.conf.dir}">
++                                    <fileset dir="${basedir}/${hive.path.to.root}/data/conf/"/>
++                                </copy>
++                            </target>
++                        </configuration>
++                    </execution>
++                    <execution>
++                        <id>setup-metastore-scripts</id>
++                        <phase>process-test-resources</phase>
++                        <goals>
++                            <goal>run</goal>
++                        </goals>
++                        <configuration>
++                            <target>
++                                <mkdir dir="${test.tmp.dir}/scripts/metastore" />
++                                <copy todir="${test.tmp.dir}/scripts/metastore">
++                                    <fileset dir="${basedir}/${hive.path.to.root}/metastore/scripts/"/>
++                                </copy>
++                                <mkdir dir="${test.tmp.dir}/scripts/metastore/upgrade" />
++                                <copy todir="${test.tmp.dir}/scripts/metastore/upgrade">
++                                    <fileset dir="${basedir}/${hive.path.to.root}/standalone-metastore/metastore-server/src/main/sql/"/>
++                                </copy>
++                            </target>
++                        </configuration>
++                    </execution>
++                </executions>
++            </plugin>
++            <plugin>
++                <groupId>org.apache.maven.plugins</groupId>
++                <artifactId>maven-failsafe-plugin</artifactId>
++                <version>2.20.1</version>
++                <executions>
++                    <execution>
++                        <goals>
++                            <goal>integration-test</goal>
++                            <goal>verify</goal>
++                        </goals>
++                    </execution>
++                </executions>
++                <configuration>
++                    <redirectTestOutputToFile>true</redirectTestOutputToFile>
++                    <reuseForks>false</reuseForks>
++                    <argLine>-Xmx2048m</argLine>
++                    <failIfNoTests>false</failIfNoTests>
++                    <systemPropertyVariables>
++                        <log4j.debug>true</log4j.debug>
++                        <java.io.tmpdir>${test.tmp.dir}</java.io.tmpdir>
++                        <test.tmp.dir>${test.tmp.dir}</test.tmp.dir>
++                        <hive.in.test>true</hive.in.test>
++                    </systemPropertyVariables>
++                    <additionalClasspathElements>
++                        <additionalClasspathElement>${log4j.conf.dir}</additionalClasspathElement>
++                    </additionalClasspathElements>
++                    <skipITs>${skipITests}</skipITs> <!-- set this to false to run these tests -->
++                </configuration>
++            </plugin>
++            <plugin>
++                <groupId>org.apache.maven.plugins</groupId>
++                <artifactId>maven-surefire-plugin</artifactId>
++                <version>${maven.surefire.version}</version>
++                <configuration>
++                    <redirectTestOutputToFile>true</redirectTestOutputToFile>
++                    <reuseForks>false</reuseForks>
++                    <forkCount>${test.forkcount}</forkCount>
++                    <argLine>-Xmx2048m</argLine>
++                    <failIfNoTests>false</failIfNoTests>
++                    <systemPropertyVariables>
++                        <build.dir>${project.build.directory}</build.dir>
++                        <datanucleus.schema.autoCreateAll>true</datanucleus.schema.autoCreateAll>
++                        <derby.version>${derby.version}</derby.version>
++                        <derby.stream.error.file>${test.tmp.dir}/derby.log</derby.stream.error.file>
++                        <!--next line needed to get hive.log-->
++                        <log4j.configurationFile>${test.log4j.scheme}${test.conf.dir}/hive-log4j2.properties</log4j.configurationFile>
++                        <log4j.debug>true</log4j.debug>
++                        <java.io.tmpdir>${test.tmp.dir}</java.io.tmpdir>
++                        <!--
++                        use 'memory' to make it run faster
++                        <javax.jdo.option.ConnectionURL>jdbc:derby:memory:${test.tmp.dir}/junit_metastore_db;create=true</javax.jdo.option.ConnectionURL>-->
++                        <javax.jdo.option.ConnectionURL>jdbc:derby:${test.tmp.dir}/junit_metastore_db;create=true</javax.jdo.option.ConnectionURL>
++                        <metastore.schema.verification>false</metastore.schema.verification>
++                        <test.tmp.dir>${test.tmp.dir}</test.tmp.dir>
++                        <metastore.warehouse.dir>${test.warehouse.scheme}${test.warehouse.dir}</metastore.warehouse.dir>
++                        <!-- both default to 'local'
++                        <mapred.job.tracker>local</mapred.job.tracker>
++                        <mapreduce.framework.name>local</mapreduce.framework.name>-->
++                    </systemPropertyVariables>
++                    <additionalClasspathElements>
++                        <additionalClasspathElement>${log4j.conf.dir}</additionalClasspathElement>
++                        <additionalClasspathElement>${test.conf.dir}</additionalClasspathElement>
++                        <!--puts hive-site.xml on classpath - w/o HMS tables are not created-->
++                        <additionalClasspathElement>${test.conf.dir}/conf</additionalClasspathElement>
++                    </additionalClasspathElements>
++                </configuration>
++            </plugin>
++            <plugin>
++                <groupId>org.apache.maven.plugins</groupId>
++                <artifactId>maven-jar-plugin</artifactId>
++                <executions>
++                    <execution>
++                        <goals>
++                            <goal>test-jar</goal>
++                        </goals>
++                    </execution>
++                </executions>
++            </plugin>
++        </plugins>
++    </build>
++</project>
