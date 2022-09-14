@@ -15,40 +15,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# preinst script for hadoop-httpfs
+# prerm script for tez
 #
 # see: dh_installdeb(1)
 
+tez_pkg_name=tez
+
 set -e
 
-# summary of how this script can be called:
-#        * <new-preinst> `install'
-#        * <new-preinst> `install' <old-version>
-#        * <new-preinst> `upgrade' <old-version>
-#        * <old-preinst> `abort-upgrade' <new-version>
-# for details, see http://www.debian.org/doc/debian-policy/ or
-# the debian-policy package
-
-
 case "$1" in
-    install|upgrade)
-        getent group httpfs >/dev/null || groupadd -r httpfs
-        if ! getent passwd httpfs >/dev/null; then
-            adduser \
-                --system \
-                --ingroup httpfs \
-                --home /var/lib/hadoop-httpfs \
-                --gecos "Hadoop HTTPFS" \
-                --shell /bin/bash \
-                httpfs >/dev/null 2>/dev/null || :
-        fi
+    remove|upgrade|deconfigure)
+      update-alternatives --remove ${tez_pkg_name}-conf /etc/${tez_pkg_name}/conf.dist || :
     ;;
 
-    abort-upgrade)
+    failed-upgrade)
     ;;
 
     *)
-        echo "preinst called with unknown argument \`$1'" >&2
+        echo "prerm called with unknown argument \`$1'" >&2
         exit 1
     ;;
 esac
@@ -59,3 +43,5 @@ esac
 #DEBHELPER#
 
 exit 0
+
+

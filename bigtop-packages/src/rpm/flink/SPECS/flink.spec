@@ -14,24 +14,37 @@
 # limitations under the License.
 
 %define flink_name flink
-%define lib_flink /usr/lib/%{flink_name}
-%define bin_flink /usr/bin
-%define etc_flink /etc/%{flink_name}
-%define config_flink %{etc_flink}/conf
-%define man_dir %{_mandir}
+
+%define etc_default %{parent_dir}/etc/default
+
+%define usr_lib_flink %{parent_dir}/usr/lib/%{flink_name}
+%define var_lib_flink %{parent_dir}/var/lib/%{flink_name}
+%define etc_flink %{parent_dir}/etc/%{flink_name}
+
+%define usr_lib_hadoop %{parent_dir}/usr/lib/hadoop
+%define etc_hadoop %{parent_dir}/etc/hadoop
+
+%define bin_dir %{parent_dir}/%{_bindir}
+%define man_dir %{parent_dir}/%{_mandir}
+%define doc_dir %{parent_dir}/%{_docdir}
+
+# No prefix directory
+%define np_var_log_flink /var/log/%{flink_name}
+%define np_etc_flink /etc/%{flink_name}
+
 %define flink_services flink-jobmanager flink-taskmanager
-%define var_log_flink /var/log/%{flink_name}
 %define build_target_flink flink-dist/target/%{flink_name}-%{flink_version}-bin/%{flink_name}-%{flink_version}/
+
 %global __python %{__python3}
 
 
 %if  %{!?suse_version:1}0
-%define doc_flink %{_docdir}/%{flink_name}-%{flink_version}
+%define doc_flink %{doc_dir}/%{flink_name}-%{flink_version}
 %define alternatives_cmd alternatives
 %define build_flink %{_builddir}/%{flink_name}-%{flink_version}/flink-dist/target/%{flink_name}-%{flink_version}-bin/%{flink_name}-%{flink_version}/
 %global initd_dir %{_sysconfdir}/rc.d/init.d
 %else
-%define doc_flink %{_docdir}/%{flink_name}-%{flink_version}
+%define doc_flink %{doc_dir}/%{flink_name}-%{flink_version}
 %define alternatives_cmd update-alternatives
 %global initd_dir %{_sysconfdir}/rc.d
 %endif
@@ -118,7 +131,15 @@ bash $RPM_SOURCE_DIR/do-component-build
 %install
 %__rm -rf $RPM_BUILD_ROOT
 
-sh -x %{SOURCE2} --prefix=$RPM_BUILD_ROOT --source-dir=$RPM_SOURCE_DIR --build-dir=`pwd`/%{build_target_flink}
+sh -x %{SOURCE2} \
+    --prefix=$RPM_BUILD_ROOT \
+    --source-dir=$RPM_SOURCE_DIR \
+    --build-dir=`pwd`/%{build_target_flink} \
+    --lib-dir=%{usr_lib_flink} \
+    --bin-dir=%{bin_dir} \
+    --lib-hadoop=%{usr_lib_hadoop} \
+    --etc-flink=%{etc_flink} \
+    --etc-hadoop=%{etc_hadoop}
 
 for service in %{flink_services}
 do
@@ -129,23 +150,24 @@ done
 
 %pre
 getent group flink >/dev/null || groupadd -r flink
-getent passwd flink >/dev/null || useradd -c "Flink" -s /sbin/nologin -g flink -r -d %{lib_flink} flink 2> /dev/null || :
+getent passwd flink >/dev/null || useradd -c "Flink" -s /sbin/nologin -g flink -r -d %{usr_lib_flink} flink 2> /dev/null || :
 
 %post
-%{alternatives_cmd} --install %{config_flink} %{flink_name}-conf %{config_flink}.dist 30
+%{alternatives_cmd} --install %{np_etc_flink}/conf %{flink_name}-conf %{etc_flink}/conf.dist 30
 
 ###### FILES ###########
 
 %files
 %defattr(-,root,root,755)
-%config(noreplace) %{config_flink}.dist
+%config(noreplace) %{etc_flink}/conf.dist
+%attr(0755,flink,flink) %{np_etc_flink}
 
 %dir %{_sysconfdir}/%{flink_name}
 #%doc %{doc_flink}
-%attr(0755,flink,flink) %{var_log_flink}
+%attr(0755,flink,flink) %{np_var_log_flink}
 %attr(0767,flink,flink) /var/log/flink-cli
-%{lib_flink}
-%{bin_flink}/flink
+%{usr_lib_flink}
+%{bin_dir}/flink
 
 %define service_macro() \
 %files %1 \

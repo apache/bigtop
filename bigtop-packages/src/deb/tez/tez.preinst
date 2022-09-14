@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# preinst script for hadoop-httpfs
+# preinst script for tez
 #
 # see: dh_installdeb(1)
 
@@ -32,16 +32,19 @@ set -e
 
 case "$1" in
     install|upgrade)
-        getent group httpfs >/dev/null || groupadd -r httpfs
-        if ! getent passwd httpfs >/dev/null; then
-            adduser \
-                --system \
-                --ingroup httpfs \
-                --home /var/lib/hadoop-httpfs \
-                --gecos "Hadoop HTTPFS" \
-                --shell /bin/bash \
-                httpfs >/dev/null 2>/dev/null || :
+        getent group tez >/dev/null || groupadd -r tez
+        if ! getent passwd tez >/dev/null; then
+                # Adding system user: tez .
+                adduser \
+                  --system \
+                  --ingroup tez \
+                  --home /var/lib/tez \
+                  --gecos "Tez User" \
+                  --shell /bin/false \
+                  tez >/dev/null
         fi
+        install -d -m 0755 -o tez -g tez /var/log/tez
+        install -d -m 0755 -o tez -g tez /var/lib/tez
     ;;
 
     abort-upgrade)

@@ -1,3 +1,3 @@
-usr/lib/tez
-usr/share/man/man1
-etc/tez/conf
+/usr/lib/tez
+/usr/share/man/man1
+/etc/tez/conf.dist

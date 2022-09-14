@@ -12,38 +12,50 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 %define hadoop_username hadoop
-%define etc_hive /etc/%{name}
-%define config_hive %{etc_hive}/conf
-%define conf_hcatalog %{_sysconfdir}/hive-hcatalog/conf
-%define conf_webhcat  %{_sysconfdir}/hive-webhcat/conf
-%define usr_lib_hive /usr/lib/%{name}
-%define usr_lib_hcatalog /usr/lib/hive-hcatalog
-%define var_lib_hive /var/lib/%{name}
-%define var_lib_hcatalog /var/lib/%{name}-hcatalog
-%define var_log_hcatalog /var/log/%{name}-hcatalog
-%define usr_bin /usr/bin
+
+%define etc_default %{parent_dir}/etc/default
+
+%define usr_lib_hive %{parent_dir}/usr/lib/%{name}
+%define usr_lib_hcatalog %{parent_dir}/usr/lib/%{name}-hcatalog
+%define var_lib_hive %{parent_dir}/var/lib/%{name}
+%define var_lib_hcatalog %{parent_dir}/var/lib/%{name}-hcatalog
+%define etc_hive %{parent_dir}/etc/%{name}
+
+%define usr_lib_zookeeper %{parent_dir}/usr/lib/zookeeper
+%define usr_lib_hbase %{parent_dir}/usr/lib/hbase
+
+%define bin_dir %{parent_dir}/%{_bindir}
+%define man_dir %{parent_dir}/%{_mandir}
+%define doc_dir %{parent_dir}/%{_docdir}
+
+# No prefix directory
+%define np_var_log_hive /var/log/%{name}
+%define np_var_run_hive /var/run/%{name}
+%define np_var_log_hcatalog /var/log/%{name}-hcatalog
+%define np_etc_hive /etc/%{name}
+
 %define hive_config_virtual hive_active_configuration
-%define man_dir %{_mandir}
 %define hive_services hive-metastore hive-server2 hive-hcatalog-server hive-webhcat-server
 # After we run "ant package" we'll find the distribution here
 %define hive_dist build/dist
 
 %if  %{!?suse_version:1}0
 
-%define doc_hive %{_docdir}/%{name}-%{hive_version}
+%define doc_hive %{doc_dir}/%{name}-%{hive_version}
 %define alternatives_cmd alternatives
 
 %global initd_dir %{_sysconfdir}/rc.d/init.d
 
 %else
 
-# Only tested on openSUSE 11.4. le'ts update it for previous release when confirmed
+# Only tested on openSUSE 11.4. let's update it for previous release when confirmed
 %if 0%{suse_version} > 1130
 %define suse_check \# Define an empty suse_check for compatibility with older sles
 %endif
 
-%define doc_hive %{_docdir}/%{name}
+%define doc_hive %{doc_dir}/%{name}
 %define alternatives_cmd update-alternatives
 
 %global initd_dir %{_sysconfdir}/rc.d
@@ -250,26 +262,34 @@ cp $RPM_SOURCE_DIR/hive.1 .
 cp $RPM_SOURCE_DIR/hive-hcatalog.1 .
 cp $RPM_SOURCE_DIR/hive-site.xml .
 /bin/bash %{SOURCE2} \
-  --prefix=$RPM_BUILD_ROOT \
   --build-dir=%{hive_dist} \
-  --doc-dir=$RPM_BUILD_ROOT/%{doc_hive} \
+  --prefix=$RPM_BUILD_ROOT \
+  --doc-dir=%{doc_hive} \
+  --bin-dir=%{bin_dir} \
+  --man-dir=%{man_dir} \
+  --etc-default=%{etc_default} \
+  --hive-dir=%{usr_lib_hive} \
+  --var-hive-dir=%{var_lib_hive} \
+  --hcatalog-dir=%{usr_lib_hcatalog} \
+  --var-hcatalog-dir=%{var_lib_hcatalog} \
+  --etc-hive=%{etc_hive} \
   --hive-version=%{hive_base_version}
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
-%__install -d -m 0755 $RPM_BUILD_ROOT/etc/default/
-%__install -m 0644 $RPM_SOURCE_DIR/hive-metastore.default $RPM_BUILD_ROOT/etc/default/%{name}-metastore
-%__install -m 0644 $RPM_SOURCE_DIR/hive-server2.default $RPM_BUILD_ROOT/etc/default/%{name}-server2
-%__install -m 0644 $RPM_SOURCE_DIR/hive-hcatalog-server.default $RPM_BUILD_ROOT/etc/default/%{name}-hcatalog-server
-%__install -m 0644 $RPM_SOURCE_DIR/hive-webhcat-server.default $RPM_BUILD_ROOT/etc/default/%{name}-webhcat-server
+%__install -d -m 0755 $RPM_BUILD_ROOT/%{etc_default}/
+%__install -m 0644 $RPM_SOURCE_DIR/hive-metastore.default $RPM_BUILD_ROOT/%{etc_default}/%{name}-metastore
+%__install -m 0644 $RPM_SOURCE_DIR/hive-server2.default $RPM_BUILD_ROOT/%{etc_default}/%{name}-server2
+%__install -m 0644 $RPM_SOURCE_DIR/hive-hcatalog-server.default $RPM_BUILD_ROOT/%{etc_default}/%{name}-hcatalog-server
+%__install -m 0644 $RPM_SOURCE_DIR/hive-webhcat-server.default $RPM_BUILD_ROOT/%{etc_default}/%{name}-webhcat-server
 
-%__install -d -m 0755 $RPM_BUILD_ROOT/%{_localstatedir}/log/%{name}
-%__install -d -m 0755 $RPM_BUILD_ROOT/%{_localstatedir}/run/%{name}
+%__install -d -m 0755 $RPM_BUILD_ROOT/%{np_var_log_hive}
+%__install -d -m 0755 $RPM_BUILD_ROOT/%{np_var_run_hive}
 
 # We need to get rid of jars that happen to be shipped in other Bigtop packages
 %__rm -f $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/hbase-*.jar $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/zookeeper-*.jar
-%__ln_s  /usr/lib/zookeeper/zookeeper.jar  $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/
-%__ln_s  /usr/lib/hbase/hbase-common.jar /usr/lib/hbase/hbase-client.jar /usr/lib/hbase/hbase-hadoop-compat.jar /usr/lib/hbase/hbase-hadoop2-compat.jar $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/
-%__ln_s  /usr/lib/hbase/hbase-procedure.jar /usr/lib/hbase/hbase-protocol.jar /usr/lib/hbase/hbase-server.jar $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/
+%__ln_s  %{usr_lib_zookeeper}/zookeeper.jar  $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/
+%__ln_s  %{usr_lib_hbase}/hbase-common.jar %{usr_lib_hbase}/hbase-client.jar %{usr_lib_hbase}/hbase-hadoop-compat.jar %{usr_lib_hbase}/hbase-hadoop2-compat.jar $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/
+%__ln_s  %{usr_lib_hbase}/hbase-procedure.jar %{usr_lib_hbase}/hbase-protocol.jar %{usr_lib_hbase}/hbase-server.jar $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/
 
 # Workaround for BIGTOP-583
 %__rm -f $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/slf4j-log4j12-*.jar
@@ -289,7 +309,7 @@ getent passwd hive >/dev/null || useradd -c "Hive" -s /sbin/nologin -g hive -r -
 %post
 
 # Install config alternatives
-%{alternatives_cmd} --install %{config_hive} %{name}-conf %{etc_hive}/conf.dist 30
+%{alternatives_cmd} --install %{np_etc_hive}/conf %{name}-conf %{etc_hive}/conf.dist 30
 
 
 # Upgrade
@@ -308,19 +328,19 @@ fi
 
 
 %post hcatalog
-%{alternatives_cmd} --install %{conf_hcatalog} hive-hcatalog-conf %{conf_hcatalog}.dist 30
+%{alternatives_cmd} --install %{np_etc_hive}-hcatalog/conf hive-hcatalog-conf %{etc_hive}-hcatalog/conf.dist 30
 
 %preun hcatalog
 if [ "$1" = 0 ]; then
-        %{alternatives_cmd} --remove hive-hcatalog-conf %{conf_hcatalog}.dist || :
+        %{alternatives_cmd} --remove hive-hcatalog-conf %{etc_hive}-hcatalog/conf.dist || :
 fi
 
 %post webhcat
-%{alternatives_cmd} --install %{conf_webhcat} hive-webhcat-conf %{conf_webhcat}.dist 30
+%{alternatives_cmd} --install %{np_etc_hive}-webhcat/conf hive-webhcat-conf %{etc_hive}-webhcat/conf.dist 30
 
 %preun webhcat
 if [ "$1" = 0 ]; then
-        %{alternatives_cmd} --remove hive-webhcat-conf %{conf_webhcat}.dist || :
+        %{alternatives_cmd} --remove hive-webhcat-conf %{etc_hive}-webhcat/conf.dist || :
 fi
 
 #######################
@@ -330,13 +350,14 @@ fi
 %attr(1777,hive,hive) %dir %{var_lib_hive}/metastore
 %defattr(-,root,root,755)
 %config(noreplace) %{etc_hive}/conf.dist
+%attr(0755,hive,hive) %{np_etc_hive}
 %{usr_lib_hive}
-%{usr_bin}/hive
-%{usr_bin}/beeline
-%{usr_bin}/hiveserver2
+%{bin_dir}/hive
+%{bin_dir}/beeline
+%{bin_dir}/hiveserver2
 %attr(0755,hive,hive) %dir %{var_lib_hive}
-%attr(0755,hive,hive) %dir %{_localstatedir}/log/%{name}
-%attr(0755,hive,hive) %dir %{_localstatedir}/run/%{name}
+%attr(0755,hive,hive) %dir %{np_var_log_hive}
+%attr(0755,hive,hive) %dir %{np_var_run_hive}
 %doc %{doc_hive}
 %{man_dir}/man1/hive.1.*
 %exclude %dir %{usr_lib_hive}
@@ -356,9 +377,10 @@ fi
 
 %files hcatalog
 %defattr(-,root,root,755)
-%config(noreplace) %attr(755,root,root) %{conf_hcatalog}.dist
+%config(noreplace) %attr(755,root,root) %{etc_hive}-hcatalog/conf.dist
+%attr(0775,hive,hive) %{np_etc_hive}-hcatalog
 %attr(0775,hive,hive) %{var_lib_hcatalog}
-%attr(0775,hive,hive) %{var_log_hcatalog}
+%attr(0775,hive,hive) %{np_var_log_hcatalog}
 %dir %{usr_lib_hcatalog}
 %{usr_lib_hcatalog}/bin
 %{usr_lib_hcatalog}/etc/hcatalog
@@ -366,12 +388,13 @@ fi
 %{usr_lib_hcatalog}/share/hcatalog
 %{usr_lib_hcatalog}/sbin/update-hcatalog-env.sh
 %{usr_lib_hcatalog}/sbin/hcat*
-%{usr_bin}/hcat
+%{bin_dir}/hcat
 %{man_dir}/man1/hive-hcatalog.1.*
 
 %files webhcat
 %defattr(-,root,root,755)
-%config(noreplace) %attr(755,root,root) %{conf_webhcat}.dist
+%config(noreplace) %attr(755,root,root) %{etc_hive}-webhcat/conf.dist
+%attr(0775,hive,hive) %{np_etc_hive}-webhcat
 %{usr_lib_hcatalog}/share/webhcat
 %{usr_lib_hcatalog}/etc/webhcat
 %{usr_lib_hcatalog}/sbin/webhcat*
@@ -379,7 +402,7 @@ fi
 %define service_macro() \
 %files %1 \
 %attr(0755,root,root)/%{initd_dir}/%{name}-%1 \
-%config(noreplace) /etc/default/%{name}-%1 \
+%config(noreplace) %{etc_default}/%{name}-%1 \
 %post %1 \
 chkconfig --add %{name}-%1 \
 \

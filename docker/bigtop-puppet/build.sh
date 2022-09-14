@@ -51,5 +51,17 @@ ${ENV_PATH}
 RUN bash /tmp/puppetize.sh
 EOF
 
+# modify the Dockerfile according to the OS/version
+case "${OS}-${VERSION}" in
+  fedora-36*)
+    # use java 8 during build if the os's default java version is newer
+    sed -i -e "s|RUN bash /tmp/puppetize.sh|ENV PATH /usr/lib/jvm/java-1.8.0/bin:\$PATH\nRUN bash /tmp/puppetize.sh|" Dockerfile
+    # add initd
+    sed -i -e "s|RUN bash /tmp/puppetize.sh|RUN bash /tmp/puppetize.sh\nRUN dnf install -y initscripts|" Dockerfile
+    ;;
+  *)
+    ;;
+esac
+
 docker build -t bigtop/puppet:${PREFIX}-${OS}-${VERSION}${ARCH} .
 rm -f Dockerfile puppetize.sh

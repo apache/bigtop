@@ -20,6 +20,7 @@
 # since Hadoop build system makes it difficult to pass the kind of flags
 # that would make newer RPM debuginfo generation scripts happy.
 %undefine _missing_build_ids_terminate_build
+%undefine _auto_set_build_flags
 
 %define hadoop_name hadoop
 %define etc_hadoop /etc/%{name}
@@ -619,7 +620,7 @@ getent passwd hdfs >/dev/null || /usr/sbin/useradd --comment "Hadoop HDFS" --she
 
 %pre httpfs
 getent group httpfs >/dev/null   || groupadd -r httpfs
-getent passwd httpfs >/dev/null || /usr/sbin/useradd --comment "Hadoop HTTPFS" --shell /bin/bash -M -r -g httpfs -G httpfs --home %{run_httpfs} httpfs
+getent passwd httpfs >/dev/null || /usr/sbin/useradd --comment "Hadoop HTTPFS" --shell /bin/bash -M -r -g httpfs -G httpfs --home %{state_httpfs} httpfs
 
 %pre kms
 getent group kms >/dev/null   || groupadd -r kms
