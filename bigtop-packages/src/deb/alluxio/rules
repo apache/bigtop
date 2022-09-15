@@ -43,3 +43,5 @@ override_dh_auto_install:
 	bash debian/init.d.tmpl debian/alluxio-worker.svc deb debian/alluxio/etc/init.d/alluxio-worker
 	bash debian/init.d.tmpl debian/alluxio-job-master.svc deb debian/alluxio/etc/init.d/alluxio-job-master
 	bash debian/init.d.tmpl debian/alluxio-job-worker.svc deb debian/alluxio/etc/init.d/alluxio-job-worker
+
+override_dh_strip_nondeterminism:
