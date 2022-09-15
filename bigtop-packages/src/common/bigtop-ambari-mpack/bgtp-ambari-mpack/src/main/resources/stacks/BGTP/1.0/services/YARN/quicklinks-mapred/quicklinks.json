@@ -32,7 +32,7 @@
       },
       {
         "name": "jobhistory_logs",
-        "label": "JobHistory logs",
+        "label": "JobHistory Logs",
         "requires_user_name": "false",
         "component_name": "HISTORYSERVER",
         "url": "%@://%@:%@/logs",

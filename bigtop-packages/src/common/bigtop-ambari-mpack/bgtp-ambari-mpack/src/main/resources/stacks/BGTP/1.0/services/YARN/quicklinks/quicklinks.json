@@ -32,7 +32,7 @@
       },
       {
         "name": "resourcemanager_logs",
-        "label": "ResourceManager logs",
+        "label": "ResourceManager Logs",
         "requires_user_name": "false",
         "component_name": "RESOURCEMANAGER",
         "url": "%@://%@:%@/logs",
