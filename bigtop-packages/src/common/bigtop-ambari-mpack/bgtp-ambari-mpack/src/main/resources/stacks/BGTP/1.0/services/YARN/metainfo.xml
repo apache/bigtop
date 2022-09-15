@@ -168,6 +168,13 @@
         <service>ZOOKEEPER</service>
       </requiredServices>
 
+      <quickLinksConfigurations>
+        <quickLinksConfiguration>
+          <fileName>quicklinks.json</fileName>
+          <default>true</default>
+        </quickLinksConfiguration>
+      </quickLinksConfigurations>
+
       <configuration-dependencies>
         <config-type>yarn-site</config-type>
         <config-type>yarn-env</config-type>
@@ -295,6 +302,14 @@
       <requiredServices>
         <service>YARN</service>
       </requiredServices>
+
+      <quickLinksConfigurations-dir>quicklinks-mapred</quickLinksConfigurations-dir>
+      <quickLinksConfigurations>
+        <quickLinksConfiguration>
+          <fileName>quicklinks.json</fileName>
+          <default>true</default>
+        </quickLinksConfiguration>
+      </quickLinksConfigurations>
 
       <configuration-dir>configuration-mapred</configuration-dir>
 
