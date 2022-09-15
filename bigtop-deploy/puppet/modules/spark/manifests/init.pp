@@ -63,7 +63,8 @@ class spark {
       hasrestart => true,
       hasstatus  => true,
     }
-    
+
+    Exec<| title == "init hdfs" |> -> Service["spark-thriftserver"]
   }
 
   class client {
