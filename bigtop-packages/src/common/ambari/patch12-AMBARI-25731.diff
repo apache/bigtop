@@ -1,0 +1,14 @@
+diff --git a/ambari-common/src/main/python/resource_management/libraries/providers/hdfs_resource.py b/ambari-common/src/main/python/resource_management/libraries/providers/hdfs_resource.py
+index 301f2b8b63..59cab65d6a 100644
+--- a/ambari-common/src/main/python/resource_management/libraries/providers/hdfs_resource.py
++++ b/ambari-common/src/main/python/resource_management/libraries/providers/hdfs_resource.py
+@@ -533,6 +533,9 @@ class HdfsResourceWebHDFS:
+ 
+     self.util.run_command(target, 'CREATE', method='PUT', overwrite=True, assertable_result=False, file_to_put=source, **kwargs)
+ 
++    # Get file status again after file reupload
++    self.target_status = self._get_file_status(target)
++
+     if mode and file_status:
+       file_status['permission'] = mode
+ 
