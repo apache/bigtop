@@ -237,7 +237,6 @@ hdfs_principal_name = default('/configurations/hadoop-env/hdfs_principal_name', 
 
 user_group = config['configurations']['cluster-env']['user_group']
 root_group = "root"
-proxyuser_group =  config['configurations']['hadoop-env']['proxyuser_group']
 
 #hadoop params
 hdfs_log_dir_prefix = config['configurations']['hadoop-env']['hdfs_log_dir_prefix']
