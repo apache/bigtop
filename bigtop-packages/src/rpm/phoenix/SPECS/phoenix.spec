@@ -84,7 +84,7 @@ Source1: do-component-build
 Source2: install_phoenix.sh
 Source3: bigtop.bom
 BuildArch: noarch
-Requires: hadoop, hadoop-mapreduce, hadoop-yarn, hbase, zookeeper
+Requires: bigtop-utils >= 0.7
 
 %if  0%{?mgaversion}
 Requires: bsh-utils
