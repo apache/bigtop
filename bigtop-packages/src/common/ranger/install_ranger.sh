@@ -81,13 +81,6 @@ for var in PREFIX BUILD_DIR COMPONENT ; do
 done
 
 
-RANGER_HOME=${RANGER_HOME:-/usr/lib/ranger}
-ETC_DIR=${ETC_DIR:-/etc/ranger}
-ADMIN_CONF_DIR=${CONF_DIR:-${ETC_DIR}/admin/conf.dist}
-USERSYNC_CONF_DIR=${CONF_DIR:-${ETC_DIR}/usersync/conf.dist}
-KMS_CONF_DIR=${CONF_DIR:-${ETC_DIR}/kms/conf.dist}
-TAGSYNC_CONF_DIR=${CONF_DIR:-${ETC_DIR}/tagsync/conf.dist}
-
 if [ "${COMP_DIR}" == "" ]
 then
 	COMP_DIR=ranger-${COMPONENT}
@@ -96,47 +89,12 @@ fi
 # Create the required directories.
 install -d -m 0755 ${PREFIX}/usr/lib/$COMP_DIR
 
-install -d -m 0755 ${PREFIX}/$ETC_DIR/{admin,usersync,kms,tagsync}
-
-install -d -m 0755 ${PREFIX}/var/{log,run}/ranger/{admin,usersync,kms,tagsync}
+install -d -m 0755 ${PREFIX}/var/{lib,log,run}/ranger
 
 
 # Copy artifacts to the appropriate Linux locations.
 cp -r ${BUILD_DIR}/ranger-*-${COMPONENT}/* ${PREFIX}/usr/lib/${COMP_DIR}/
 
-
-if [[ "${COMPONENT}" = "admin" ]]
-then
-cp -a ${BUILD_DIR}/ranger-*-${COMPONENT}/ews/webapp/WEB-INF/classes/conf.dist ${PREFIX}/${ADMIN_CONF_DIR}
-ln -s /etc/ranger/admin/conf ${PREFIX}/usr/lib/${COMP_DIR}/conf
-ln -s /usr/lib/${COMP_DIR}/conf ${PREFIX}/usr/lib/${COMP_DIR}/ews/webapp/WEB-INF/classes/conf
-ln -s /usr/lib/${COMP_DIR}/ews/start-ranger-admin.sh ${PREFIX}/usr/lib/${COMP_DIR}/ews/ranger-admin-start
-ln -s /usr/lib/${COMP_DIR}/ews/stop-ranger-admin.sh ${PREFIX}/usr/lib/${COMP_DIR}/ews/ranger-admin-stop
-fi
-
-if [[ "${COMPONENT}" = "usersync" ]]
-then
-echo "usersync"
-cp -a ${BUILD_DIR}/ranger-*-${COMPONENT}/conf.dist ${PREFIX}/${USERSYNC_CONF_DIR}
-ln -s /etc/ranger/usersync/conf ${PREFIX}/usr/lib/${COMP_DIR}/conf
-ln -s /usr/lib/${COMP_DIR}/start.sh ${PREFIX}/usr/lib/${COMP_DIR}/ranger-usersync-start
-ln -s /usr/lib/${COMP_DIR}/stop.sh ${PREFIX}/usr/lib/${COMP_DIR}/ranger-usersync-stop
-fi
-
-if [[ "${COMPONENT}" = "kms" ]]
-then
-echo "kms"
-cp -a ${BUILD_DIR}/ranger-*-${COMPONENT}/ews/webapp/WEB-INF/classes/conf.dist ${PREFIX}/${KMS_CONF_DIR}
-ln -s /etc/ranger/kms/conf ${PREFIX}//usr/lib/${COMP_DIR}/conf
-ln -s /usr/lib/${COMP_DIR}/conf ${PREFIX}/usr/lib/${COMP_DIR}/ews/webapp/WEB-INF/classes/conf
-fi
-
-if [[ "${COMPONENT}" = "tagsync" ]]
-then
-echo "tagsync"
-cp -a ${BUILD_DIR}/ranger-*-${COMPONENT}/conf.dist ${PREFIX}/${TAGSYNC_CONF_DIR}
-ln -s /etc/ranger/tagsync/conf ${PREFIX}/usr/lib/${COMP_DIR}/conf
-fi
 
 # For other Components
 if [[ "${COMPONENT}" = "hive-plugin" || "${COMPONENT}" = "hbase-plugin" || "${COMPONENT}" = "storm-plugin" || "${COMPONENT}" = "hdfs-plugin" || "${COMPONENT}" = "yarn-plugin" || "${COMPONENT}" = "kafka-plugin" || "${COMPONENT}" = "atlas-plugin" || "${COMPONENT}" = "knox-plugin" ]]

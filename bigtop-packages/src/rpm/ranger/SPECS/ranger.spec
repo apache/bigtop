@@ -14,11 +14,8 @@
 %undefine _missing_build_ids_terminate_build
 
 %define ranger_name ranger
-%define etc_ranger /etc/%{ranger_name}
 %define ranger_home /usr/lib/%{ranger_name}
 %define ranger_user_home /var/lib/%{ranger_name}
-%define config_ranger %{etc_ranger}/conf
-%define config_ranger_dist %{config_ranger}.dist
 
 %define usr_lib_ranger /usr/lib/%{ranger_name}
 %define var_log_ranger /var/log/%{ranger_name}
@@ -91,7 +88,7 @@
 Name: %{ranger_name}
 Version: %{ranger_base_version}
 Release: %{ranger_release}
-Summary: Ranger is a security framework for securing Hadoop data
+Summary: Ranger is a framework for securing Hadoop data
 License: Apache License v2.0
 URL: http://ranger.apache.org/
 Group: Development/Libraries
@@ -110,14 +107,14 @@ AutoReq: no
 
 %if  %{?suse_version:1}0
 # Required for init scripts
-Requires: sh-utils, insserv
+Requires: coreutils, insserv
 %endif
 
 # CentOS 5 does not have any dist macro
 # So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
 %if %{!?suse_version:1}0 && %{!?mgaversion:1}0
 # Required for init scripts
-Requires: sh-utils, redhat-lsb
+Requires: coreutils, redhat-lsb
 %endif
 
 %if  0%{?mgaversion}
@@ -140,14 +137,14 @@ AutoReq: no
 
 %if  %{?suse_version:1}0
 # Required for init scripts
-Requires: sh-utils, insserv
+Requires: coreutils, insserv
 %endif
 
 # CentOS 5 does not have any dist macro
 # So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
 %if %{!?suse_version:1}0 && %{!?mgaversion:1}0
 # Required for init scripts
-Requires: sh-utils, redhat-lsb
+Requires: coreutils, redhat-lsb
 %endif
 
 %if  0%{?mgaversion}
@@ -170,14 +167,14 @@ AutoReq: no
 
 %if  %{?suse_version:1}0
 # Required for init scripts
-Requires: sh-utils, insserv
+Requires: coreutils, insserv
 %endif
 
 # CentOS 5 does not have any dist macro
 # So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
 %if %{!?suse_version:1}0 && %{!?mgaversion:1}0
 # Required for init scripts
-Requires: sh-utils, redhat-lsb
+Requires: coreutils, redhat-lsb
 %endif
 
 %if  0%{?mgaversion}
@@ -200,14 +197,14 @@ AutoReq: no
 
 %if  %{?suse_version:1}0
 # Required for init scripts
-Requires: sh-utils, insserv
+Requires: coreutils, insserv
 %endif
 
 # CentOS 5 does not have any dist macro
 # So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
 %if %{!?suse_version:1}0 && %{!?mgaversion:1}0
 # Required for init scripts
-Requires: sh-utils, redhat-lsb
+Requires: coreutils, redhat-lsb
 %endif
 
 %if  0%{?mgaversion}
@@ -229,13 +226,13 @@ Requires: psmisc
 AutoReq: no
 %if  %{?suse_version:1}0
 # Required for init scripts
-Requires: sh-utils, insserv
+Requires: coreutils, insserv
 %endif
 # CentOS 5 does not have any dist macro
 # So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
 %if %{!?suse_version:1}0 && %{!?mgaversion:1}0
 # Required for init scripts
-Requires: sh-utils, redhat-lsb
+Requires: coreutils, redhat-lsb
 %endif
 %if  0%{?mgaversion}
 Requires: chkconfig, xinetd-simple-services, zlib, initscripts
@@ -246,58 +243,98 @@ Ranger-tagsync is tag synchronizer component associated with the Ranger framewor
 %package hdfs-plugin
 Summary: ranger plugin for hdfs
 Group: System/Daemons
+# On Rocky 8, find-requires picks up /usr/bin/python, but it's not provided by any package.
+# So installing ranger-*-plugin fails with a "nothing provides /usr/bin/python" message,
+# even when python3 is installed and /usr/bin/python is created as a symlink to python3.
+# Therefore we disable find-requires for each plugins with the following option.
+AutoReq: no
 
 %description hdfs-plugin
-Ranger HDFS plugnin component runs within namenode to provoide enterprise security using ranger framework
+Ranger HDFS plugin component runs within namenode to provide enterprise security using ranger framework
 
 %package yarn-plugin
 Summary: ranger plugin for yarn
 Group: System/Daemons
+# On Rocky 8, find-requires picks up /usr/bin/python, but it's not provided by any package.
+# So installing ranger-*-plugin fails with a "nothing provides /usr/bin/python" message,
+# even when python3 is installed and /usr/bin/python is created as a symlink to python3.
+# Therefore we disable find-requires for each plugins with the following option.
+AutoReq: no
 
 %description yarn-plugin
-Ranger YARN plugnin component runs within namenode to provoide enterprise security using ranger framework
+Ranger YARN plugin component runs within resourcemanager to provide enterprise security using ranger framework
 
 %package hive-plugin
 Summary: ranger plugin for hive
 Group: System/Daemons
+# On Rocky 8, find-requires picks up /usr/bin/python, but it's not provided by any package.
+# So installing ranger-*-plugin fails with a "nothing provides /usr/bin/python" message,
+# even when python3 is installed and /usr/bin/python is created as a symlink to python3.
+# Therefore we disable find-requires for each plugins with the following option.
+AutoReq: no
 
 %description hive-plugin
-Ranger Hive plugnin component runs within hiveserver2 to provoide enterprise security using ranger framework
+Ranger Hive plugin component runs within hiveserver2 to provide enterprise security using ranger framework
 
 %package hbase-plugin
 Summary: ranger plugin for hbase
 Group: System/Daemons
+# On Rocky 8, find-requires picks up /usr/bin/python, but it's not provided by any package.
+# So installing ranger-*-plugin fails with a "nothing provides /usr/bin/python" message,
+# even when python3 is installed and /usr/bin/python is created as a symlink to python3.
+# Therefore we disable find-requires for each plugins with the following option.
+AutoReq: no
 
 %description hbase-plugin
-Ranger HBASE plugnin component runs within master and regional servers as co-processor to provoide enterprise security using ranger framework
+Ranger HBASE plugin component runs within master and region servers as co-processor to provide enterprise security using ranger framework
 
 %package knox-plugin
 Summary: ranger plugin for knox
 Group: System/Daemons
+# On Rocky 8, find-requires picks up /usr/bin/python, but it's not provided by any package.
+# So installing ranger-*-plugin fails with a "nothing provides /usr/bin/python" message,
+# even when python3 is installed and /usr/bin/python is created as a symlink to python3.
+# Therefore we disable find-requires for each plugins with the following option.
+AutoReq: no
 
 %description knox-plugin
-Ranger KNOX plugnin component runs within knox proxy server to provoide enterprise security using ranger framework
+Ranger KNOX plugin component runs within knox proxy server to provide enterprise security using ranger framework
 
 %package storm-plugin
 Summary: ranger plugin for storm
 Group: System/Daemons
+# On Rocky 8, find-requires picks up /usr/bin/python, but it's not provided by any package.
+# So installing ranger-*-plugin fails with a "nothing provides /usr/bin/python" message,
+# even when python3 is installed and /usr/bin/python is created as a symlink to python3.
+# Therefore we disable find-requires for each plugins with the following option.
+AutoReq: no
 
 %description storm-plugin
-Ranger STORM plugnin component runs within storm to provoide enterprise security using ranger framework
+Ranger STORM plugin component runs within storm to provide enterprise security using ranger framework
 
 %package kafka-plugin
 Summary: ranger plugin for kafka
 Group: System/Daemons
+# On Rocky 8, find-requires picks up /usr/bin/python, but it's not provided by any package.
+# So installing ranger-*-plugin fails with a "nothing provides /usr/bin/python" message,
+# even when python3 is installed and /usr/bin/python is created as a symlink to python3.
+# Therefore we disable find-requires for each plugins with the following option.
+AutoReq: no
 
 %description kafka-plugin
-Ranger KAFKA plugnin component runs within namenode to provoide enterprise security using ranger framework
+Ranger KAFKA plugin component runs within kafka to provide enterprise security using ranger framework
 
 %package atlas-plugin
 Summary: ranger plugin for atlas
 Group: System/Daemons
+# On Rocky 8, find-requires picks up /usr/bin/python, but it's not provided by any package.
+# So installing ranger-*-plugin fails with a "nothing provides /usr/bin/python" message,
+# even when python3 is installed and /usr/bin/python is created as a symlink to python3.
+# Therefore we disable find-requires for each plugins with the following option.
+AutoReq: no
 
 %description atlas-plugin
-Ranger ATLAS plugnin component runs within namenode to provoide enterprise security using ranger framework
+Ranger ATLAS plugin component runs within atlas to provide enterprise security using ranger framework
 
 %prep
 %setup -q -n %{ranger_name}-release-%{ranger_name}-%{ranger_base_version}
@@ -358,32 +395,22 @@ fi
 #######################
 %files admin
 %defattr(-,root,root,755)
-%attr(0775,ranger,ranger) %{var_run_ranger}/admin
-%attr(0775,ranger,ranger) %{var_log_ranger}/admin
+%attr(0775,ranger,ranger) %{ranger_user_home}
+%attr(0775,ranger,ranger) %{var_run_ranger}
 %{usr_lib_ranger}-admin
-%config(noreplace) /etc/ranger/admin/conf.dist
 
 %files usersync
 %defattr(-,root,root,755)
-%attr(0775,ranger,ranger) %{var_run_ranger}/usersync
-%attr(0775,ranger,ranger) %{var_log_ranger}/usersync
 %{usr_lib_ranger}-usersync
 %attr(750,root,ranger) %{usr_lib_ranger}-usersync/native/credValidator.uexe
-%config(noreplace) /etc/ranger/usersync/conf.dist
 
 %files kms
 %defattr(-,root,root,755)
-%attr(0775,ranger,ranger) %{var_run_ranger}/kms
-%attr(0775,ranger,ranger) %{var_log_ranger}/kms
 %{usr_lib_ranger}-kms
-%config(noreplace) /etc/ranger/kms/conf.dist
 
 %files tagsync
 %defattr(-,root,root,755)
-%attr(0775,ranger,ranger) %{var_run_ranger}/tagsync
-%attr(0775,ranger,ranger) %{var_log_ranger}/tagsync
 %{usr_lib_ranger}-tagsync
-%config(noreplace) /etc/ranger/tagsync/conf.dist
 
 %files hdfs-plugin
 %defattr(-,root,root,755)
