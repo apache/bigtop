@@ -106,8 +106,8 @@ env TEZ_VERSION=%{version} bash %{SOURCE1}
 
 cp %{SOURCE3} %{SOURCE4} .
 sh %{SOURCE2} \
-	--build-dir=. \
-	--prefix=$RPM_BUILD_ROOT \
+    --build-dir=. \
+    --prefix=$RPM_BUILD_ROOT \
     --man-dir=%{man_dir} \
     --doc-dir=%{doc_tez} \
     --lib-dir=%{usr_lib_tez} \
