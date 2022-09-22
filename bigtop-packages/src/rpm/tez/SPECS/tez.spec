@@ -12,10 +12,20 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-%define tez_home /usr/lib/%{name}
-%define lib_tez %{tez_home}/lib
-%define man_dir %{_mandir}
 
+%define usr_lib_tez %{parent_dir}/usr/lib/%{name}
+%define etc_tez %{parent_dir}/etc/%{name}
+
+%define usr_lib_hadoop %{parent_dir}/usr/lib/hadoop
+
+%define bin_dir %{parent_dir}/%{_bindir}
+%define man_dir %{parent_dir}/%{_mandir}
+%define doc_dir %{parent_dir}/%{_docdir}
+
+# No prefix directory
+%define np_var_log_tez /var/log/%{name}
+%define np_var_run_tez /var/run/%{name}
+%define np_etc_tez /etc/%{name}
 
 %if %{!?suse_version:1}0 && %{!?mgaversion:1}0
 
@@ -26,7 +36,7 @@
     /usr/lib/rpm/brp-python-bytecompile ; \
     %{nil}
 
-%define doc_tez %{_docdir}/tez-%{tez_version}
+%define doc_tez %{doc_dir}/tez-%{tez_version}
 
 %endif
 
@@ -38,7 +48,7 @@
 %define suse_check \# Define an empty suse_check for compatibility with older sles
 %endif
 
-%define doc_tez %{_docdir}/%{name}
+%define doc_tez %{doc_dir}/%{name}
 %define alternatives_cmd update-alternatives
 %define __os_install_post \
     %{suse_check} ; \
@@ -47,7 +57,7 @@
 
 %else
 
-%define doc_tez %{_docdir}/%{name}-%{tez_version}
+%define doc_tez %{doc_dir}/%{name}-%{tez_version}
 %define alternatives_cmd alternatives
 
 %endif
@@ -97,26 +107,28 @@ env TEZ_VERSION=%{version} bash %{SOURCE1}
 cp %{SOURCE3} %{SOURCE4} .
 sh %{SOURCE2} \
 	--build-dir=. \
-        --doc-dir=%{doc_tez} \
-        --libexec-dir=%{libexec_tez} \
-	--prefix=$RPM_BUILD_ROOT
+	--prefix=$RPM_BUILD_ROOT \
+    --man-dir=%{man_dir} \
+    --doc-dir=%{doc_tez} \
+    --lib-dir=%{usr_lib_tez} \
+    --etc-tez=%{etc_tez}
 
-%__rm -f $RPM_BUILD_ROOT/%{lib_tez}/slf4j-log4j12-*.jar
-%__ln_s -f /usr/lib/hadoop/hadoop-annotations.jar $RPM_BUILD_ROOT/%{lib_tez}/hadoop-annotations.jar
-%__ln_s -f /usr/lib/hadoop/hadoop-auth.jar $RPM_BUILD_ROOT/%{lib_tez}/hadoop-auth.jar
-%__ln_s -f /usr/lib/hadoop-mapreduce/hadoop-mapreduce-client-common.jar $RPM_BUILD_ROOT/%{lib_tez}/hadoop-mapreduce-client-common.jar
-%__ln_s -f /usr/lib/hadoop-mapreduce/hadoop-mapreduce-client-core.jar $RPM_BUILD_ROOT/%{lib_tez}/hadoop-mapreduce-client-core.jar
-%__ln_s -f /usr/lib/hadoop-yarn/hadoop-yarn-server-web-proxy.jar $RPM_BUILD_ROOT/%{lib_tez}/hadoop-yarn-server-web-proxy.jar
+%__rm -f $RPM_BUILD_ROOT/%{usr_lib_tez}/lib/slf4j-log4j12-*.jar
+%__ln_s -f %{usr_lib_hadoop}/hadoop-annotations.jar $RPM_BUILD_ROOT/%{usr_lib_tez}/lib/hadoop-annotations.jar
+%__ln_s -f %{usr_lib_hadoop}/hadoop-auth.jar $RPM_BUILD_ROOT/%{usr_lib_tez}/lib/hadoop-auth.jar
+%__ln_s -f %{usr_lib_hadoop}-mapreduce/hadoop-mapreduce-client-common.jar $RPM_BUILD_ROOT/%{usr_lib_tez}/lib/hadoop-mapreduce-client-common.jar
+%__ln_s -f %{usr_lib_hadoop}-mapreduce/hadoop-mapreduce-client-core.jar $RPM_BUILD_ROOT/%{usr_lib_tez}/lib/hadoop-mapreduce-client-core.jar
+%__ln_s -f %{usr_lib_hadoop}-yarn/hadoop-yarn-server-web-proxy.jar $RPM_BUILD_ROOT/%{usr_lib_tez}/lib/hadoop-yarn-server-web-proxy.jar
 
 %pre
 
 # Manage configuration symlink
 %post
-%{alternatives_cmd} --install /etc/tez/conf %{name}-conf /etc/tez/conf.dist 30
+%{alternatives_cmd} --install %{np_etc_tez}/conf %{name}-conf %{etc_tez}/conf.dist 30
 
 %preun
 if [ "$1" = 0 ]; then
-        %{alternatives_cmd} --remove %{name}-conf /etc/tez/conf.dist || :
+        %{alternatives_cmd} --remove %{name}-conf %{etc_tez}/conf.dist || :
 fi
 
 #######################
@@ -124,7 +136,8 @@ fi
 #######################
 %files
 %defattr(-,root,root)
-%config(noreplace) /etc/tez/conf.dist
-%{tez_home}
+%config(noreplace) %{etc_tez}/conf.dist
 %doc %{doc_tez}
+%dir %{np_etc_tez}
+%{usr_lib_tez}
 %{man_dir}/man1/tez.1.*
