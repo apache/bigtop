@@ -83,8 +83,20 @@ sed -i.bak "/http:\/\/repository.codehaus.org/a\\
             </releases>" ${WORKDIR}/pom.xml
 
 export MAVEN_OPTS="-Xmx2g"
+
 # Invoke Oozie build script
-${WORKDIR}/bin/mkdistro.sh -DjavaVersion=${JDK_VERSION} -DtargetJavaVersion=${JDK_VERSION} -DsourceJavaVersion=${JDK_VERSION} -DminJavaVersion=${JDK_VERSION} -DskipTests -Phadoop-3 -Pspark-2 -Puber -Dhadoop.version=${HADOOP_VERSION} -Dhadoop.auth.version=${HADOOP_VERSION} -Dhive.version=${HIVE_VERSION} -Dsqoop.version=${SQOOP_VERSION} -Dspark.version=${SPARK_VERSION} -Dspark.scala.binary.version=${SCALA_VERSION%.*} -Djackson.version=2.9.10 ${EXTRA_GOALS} -Dmaven.repo.local=${HOME}/.m2/repository "$@"
+MKDISTRO_ARGS=" -DjavaVersion=${JDK_VERSION} -DtargetJavaVersion=${JDK_VERSION} -DminJavaVersion=${JDK_VERSION} "
+MKDISTRO_ARGS+="-DskipTests -Phadoop-3 -Pspark-2 -Puber "
+MKDISTRO_ARGS+="-Dhadoop.version=${HADOOP_VERSION} "
+MKDISTRO_ARGS+="-Dhadoop.auth.version=${HADOOP_VERSION} "
+MKDISTRO_ARGS+="-Dhive.version=${HIVE_VERSION} "
+MKDISTRO_ARGS+="-Dsqoop.version=${SQOOP_VERSION} "
+MKDISTRO_ARGS+="-Dspark.version=${SPARK_VERSION} "
+MKDISTRO_ARGS+="-Dspark.scala.binary.version=${SCALA_VERSION%.*} "
+MKDISTRO_ARGS+="-Dspark.guava.version=27.0-jre "
+MKDISTRO_ARGS+="-Dcommons.lang3.version=3.10 "
+MKDISTRO_ARGS+="-Djackson.version=2.9.10 "
+${WORKDIR}/bin/mkdistro.sh ${MKDISTRO_ARGS} ${EXTRA_GOALS} -Dmaven.repo.local=${HOME}/.m2/repository "$@"
 MKDISTRO_RESULT=$?
 if [ "${MKDISTRO_RESULT}" != "0" ]; then
   echo "ERROR: mkdistro.sh failed with error ${MKDISTRO_RESULT}"
