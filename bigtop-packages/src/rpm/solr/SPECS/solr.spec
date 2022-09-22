@@ -14,24 +14,33 @@
 # limitations under the License.
 
 %define solr_name solr
-%define lib_solr /usr/lib/%{solr_name}
-%define etc_solr /etc/%{solr_name}
-%define config_solr %{etc_solr}/conf
-%define tomcat_deployment_solr %{etc_solr}/tomcat-conf
-%define log_solr /var/log/%{solr_name}
-%define bin_solr /usr/bin
-%define man_dir /usr/share/man
-%define run_solr /var/run/solr
+
+%define etc_default %{parent_dir}/etc/default
+
+%define usr_lib_solr %{parent_dir}/usr/lib/%{solr_name}
+%define var_lib_solr %{parent_dir}/var/lib/%{solr_name}
+%define etc_solr %{parent_dir}/etc/%{solr_name}
+
+%define bin_dir %{parent_dir}/%{_bindir}
+%define man_dir %{parent_dir}/%{_mandir}
+%define doc_dir %{parent_dir}/%{_docdir}
+
+# No prefix directory
+%define np_var_log_solr /var/log/%{solr_name}
+%define np_var_run_solr /var/run/%{solr_name}
+%define np_etc_solr /etc/%{solr_name}
+
 %define svc_solr %{name}-server
+%define tomcat_deployment_solr %{etc_solr}/tomcat-conf
 
 %if  %{?suse_version:1}0
-%define doc_solr %{_docdir}/solr-doc
+%define doc_solr %{doc_dir}/solr-doc
 %define alternatives_cmd update-alternatives
 %define chkconfig_dep    aaa_base
 %define service_dep      aaa_base
 %global initd_dir %{_sysconfdir}/rc.d
 %else
-%define doc_solr %{_docdir}/solr-doc-%{solr_version}
+%define doc_solr %{doc_dir}/solr-doc-%{solr_version}
 %define alternatives_cmd alternatives
 %define chkconfig_dep    chkconfig
 %define service_dep      initscripts
@@ -115,10 +124,16 @@ env FULL_VERSION=%{solr_base_version} bash %{SOURCE1}
 %install
 %__rm -rf $RPM_BUILD_ROOT
 sh $RPM_SOURCE_DIR/install_solr.sh \
-          --build-dir=solr/build/solr-%{solr_base_version} \
-          --prefix=$RPM_BUILD_ROOT \
-          --distro-dir=$RPM_SOURCE_DIR \
-          --doc-dir=%{doc_solr} 
+        --build-dir=solr/build/solr-%{solr_base_version} \
+        --prefix=$RPM_BUILD_ROOT \
+        --distro-dir=$RPM_SOURCE_DIR \
+        --doc-dir=%{doc_solr} \
+        --bin-dir=%{bin_dir} \
+        --man-dir=%{man_dir} \
+        --etc-default=%{etc_default} \
+        --lib-dir=%{usr_lib_solr} \
+        --var-dir=%{var_lib_solr} \
+        --etc-solr=%{etc_solr}
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
 init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{svc_solr}
@@ -127,14 +142,14 @@ chmod 755 $init_file
 
 %pre
 getent group solr >/dev/null || groupadd -r solr
-getent passwd solr > /dev/null || useradd -c "Solr" -s /sbin/nologin -g solr -r -d %{run_solr} solr 2> /dev/null || :
+getent passwd solr > /dev/null || useradd -c "Solr" -s /sbin/nologin -g solr -r -d %{np_var_run_solr} solr 2> /dev/null || :
 
 %post
-%{alternatives_cmd} --install %{config_solr} %{solr_name}-conf %{config_solr}.dist 30
+%{alternatives_cmd} --install %{np_etc_solr}/conf %{solr_name}-conf %{etc_solr}/conf.dist 30
 
 %preun
 if [ "$1" = 0 ]; then
-        %{alternatives_cmd} --remove %{solr_name}-conf %{config_solr}.dist || :
+        %{alternatives_cmd} --remove %{solr_name}-conf %{etc_solr}/conf.dist || :
 fi
 
 %post server
@@ -156,15 +171,16 @@ fi
 #######################
 %files 
 %defattr(-,root,root,755)
-%config(noreplace) %{config_solr}.dist
-%config(noreplace) /etc/default/solr 
-%config(noreplace) /etc/default/solr.in.sh
-%{lib_solr}
-%{bin_solr}/solrctl
+%config(noreplace) %{etc_solr}/conf.dist
+%config(noreplace) %{etc_default}/solr 
+%config(noreplace) %{etc_default}/solr.in.sh
+%dir %{np_etc_solr}
+%{usr_lib_solr}
+%{bin_dir}/solrctl
 %defattr(-,solr,solr,755)
-/var/lib/solr
-/var/run/solr
-/var/log/solr
+%{var_lib_solr}
+%{np_var_run_solr}
+%{np_var_log_solr}
 
 %files doc
 %defattr(-,root,root)
