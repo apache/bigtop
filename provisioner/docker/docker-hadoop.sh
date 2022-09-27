@@ -211,7 +211,7 @@ destroy() {
     else
         get_nodes
         docker exec ${NODES[0]} bash -c "umount /etc/hosts; rm -f /etc/hosts"
-        NETWORK_ID=`docker network ls | grep ${PROVISION_ID}_default`
+        NETWORK_ID=`docker network ls --quiet --filter name=${PROVISION_ID}_default`
 
         if [ -n "$PROVISION_ID" ]; then
             $DOCKER_COMPOSE_CMD -p $PROVISION_ID stop
