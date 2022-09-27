@@ -71,3 +71,5 @@ override_dh_auto_install:
 	### webapps should not be executable either
 	find debian/tmp/usr/lib/${hbase_pkg_name}/hbase-webapps -type f -exec chmod 644 {} \;
 	bash debian/install_init_scripts.sh
+
+override_dh_strip_nondeterminism:
