@@ -14,24 +14,29 @@
 # limitations under the License.
 
 %define spark_name spark
-%define lib_spark /usr/lib/%{spark_name}
-%define var_lib_spark /var/lib/%{spark_name}
-%define var_run_spark /var/run/%{spark_name}
-%define var_log_spark /var/log/%{spark_name}
-%define bin_spark /usr/lib/%{spark_name}/bin
-%define etc_spark /etc/%{spark_name}
-%define config_spark %{etc_spark}/conf
-%define bin /usr/bin
-%define man_dir /usr/share/man
+
+%define etc_default %{parent_dir}/etc/default
+
+%define usr_lib_spark %{parent_dir}/usr/lib/%{spark_name}
+%define var_lib_spark %{parent_dir}/var/lib/%{spark_name}
+%define etc_spark %{parent_dir}/etc/%{spark_name}
+
+%define bin_dir %{parent_dir}/%{_bindir}
+%define man_dir %{parent_dir}/%{_mandir}
+%define doc_dir %{parent_dir}/%{_docdir}
+
+# No prefix directory
+%define np_var_log_spark /var/log/%{spark_name}
+%define np_var_run_spark /var/run/%{spark_name}
+%define np_etc_spark /etc/%{spark_name}
+
 %define spark_services master worker history-server thriftserver
-%define lib_hadoop_client /usr/lib/hadoop/client
-%define lib_hadoop_yarn /usr/lib/hadoop-yarn/
 
 %if  %{?suse_version:1}0
-%define doc_spark %{_docdir}/spark
+%define doc_spark %{doc_dir}/spark
 %define alternatives_cmd update-alternatives
 %else
-%define doc_spark %{_docdir}/spark-%{spark_version}
+%define doc_spark %{doc_dir}/spark-%{spark_version}
 %define alternatives_cmd alternatives
 %endif
 
@@ -48,7 +53,7 @@ BuildArch: noarch
 Buildroot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 License: ASL 2.0
 Source0: %{spark_name}-%{spark_base_version}.tar.gz
-Source1: do-component-build 
+Source1: do-component-build
 Source2: install_%{spark_name}.sh
 Source3: spark-master.svc
 Source4: spark-worker.svc
@@ -173,16 +178,28 @@ PYSPARK_PYTHON=python2 bash $RPM_SOURCE_DIR/install_spark.sh \
           --build-dir=`pwd`         \
           --source-dir=$RPM_SOURCE_DIR \
           --prefix=$RPM_BUILD_ROOT  \
-          --doc-dir=%{doc_spark}
+          --doc-dir=%{doc_spark} \
+          --lib-dir=%{usr_lib_spark} \
+          --var-dir=%{var_lib_spark} \
+          --bin-dir=%{bin_dir} \
+          --man-dir=%{man_dir} \
+          --etc-default=%{etc_default} \
+          --etc-spark=%{etc_spark}
 %else
 bash $RPM_SOURCE_DIR/install_spark.sh \
           --build-dir=`pwd`         \
           --source-dir=$RPM_SOURCE_DIR \
           --prefix=$RPM_BUILD_ROOT  \
-          --doc-dir=%{doc_spark}
+          --doc-dir=%{doc_spark} \
+          --lib-dir=%{usr_lib_spark} \
+          --var-dir=%{var_lib_spark} \
+          --bin-dir=%{bin_dir} \
+          --man-dir=%{man_dir} \
+          --etc-default=%{etc_default} \
+          --etc-spark=%{etc_spark}
 %endif
 
-%__rm -f $RPM_BUILD_ROOT/%{lib_spark}/jars/hadoop-*.jar
+%__rm -f $RPM_BUILD_ROOT/%{usr_lib_spark}/jars/hadoop-*.jar
 
 for service in %{spark_services}
 do
@@ -196,11 +213,11 @@ getent group spark >/dev/null || groupadd -r spark
 getent passwd spark >/dev/null || useradd -c "Spark" -s /sbin/nologin -g spark -r -d %{var_lib_spark} spark 2> /dev/null || :
 
 %post
-%{alternatives_cmd} --install %{config_spark} %{spark_name}-conf %{config_spark}.dist 30
+%{alternatives_cmd} --install %{np_etc_spark}/conf %{spark_name}-conf %{etc_spark}/conf.dist 30
 
 %preun
 if [ "$1" = 0 ]; then
-        %{alternatives_cmd} --remove %{spark_name}-conf %{config_spark}.dist || :
+        %{alternatives_cmd} --remove %{spark_name}-conf %{etc_spark}/conf.dist || :
 fi
 
 for service in %{spark_services}; do
@@ -215,58 +232,58 @@ done
 #######################
 %files
 %defattr(-,root,root,755)
-%config(noreplace) %{config_spark}.dist
+%config(noreplace) %{etc_spark}/conf.dist
 %doc %{doc_spark}
-%{lib_spark}/LICENSE
-%{lib_spark}/NOTICE
-%{lib_spark}/README.md
-%{lib_spark}/RELEASE
-%{bin_spark}
-%exclude %{bin_spark}/pyspark
-%{lib_spark}/conf
-%{lib_spark}/data
-%{lib_spark}/examples
-%{lib_spark}/jars
-%exclude %{lib_spark}/jars/datanucleus-*.jar
-%{lib_spark}/licenses
-%{lib_spark}/sbin
-%{lib_spark}/work
-%{lib_spark}/kubernetes
-%{etc_spark}
+%{usr_lib_spark}/LICENSE
+%{usr_lib_spark}/NOTICE
+%{usr_lib_spark}/README.md
+%{usr_lib_spark}/RELEASE
+%{usr_lib_spark}/bin
+%exclude %{usr_lib_spark}/bin/pyspark
+%{usr_lib_spark}/conf
+%{usr_lib_spark}/data
+%{usr_lib_spark}/examples
+%{usr_lib_spark}/jars
+%exclude %{usr_lib_spark}/jars/datanucleus-*.jar
+%{usr_lib_spark}/licenses
+%{usr_lib_spark}/sbin
+%{usr_lib_spark}/work
+%{usr_lib_spark}/kubernetes
+%{np_etc_spark}
 %attr(0755,spark,spark) %{var_lib_spark}
-%attr(0755,spark,spark) %{var_run_spark}
-%attr(0755,spark,spark) %{var_log_spark}
-%{bin}/spark-*
-%{bin}/find-spark-home
-%exclude %{lib_spark}/R
-%exclude %{lib_spark}/bin/sparkR
-%exclude %{bin}/sparkR
+%attr(0755,spark,spark) %{np_var_run_spark}
+%attr(0755,spark,spark) %{np_var_log_spark}
+%{bin_dir}/spark-*
+%{bin_dir}/find-spark-home
+%exclude %{usr_lib_spark}/R
+%exclude %{usr_lib_spark}/bin/sparkR
+%exclude %{bin_dir}/sparkR
 
 %files -n spark-python
 %defattr(-,root,root,755)
-%attr(0755,root,root) %{bin}/pyspark
-%attr(0755,root,root) %{lib_spark}/bin/pyspark
-%{lib_spark}/python
+%attr(0755,root,root) %{bin_dir}/pyspark
+%attr(0755,root,root) %{usr_lib_spark}/bin/pyspark
+%{usr_lib_spark}/python
 
 %files -n spark-datanucleus
 %defattr(-,root,root,755)
-%{lib_spark}/jars/datanucleus-*.jar
-%{lib_spark}/yarn/lib/datanucleus-*.jar
+%{usr_lib_spark}/jars/datanucleus-*.jar
+%{usr_lib_spark}/yarn/lib/datanucleus-*.jar
 
 %files -n spark-external
 %defattr(-,root,root,755)
-%{lib_spark}/external
+%{usr_lib_spark}/external
 
 %files -n spark-yarn-shuffle
 %defattr(-,root,root,755)
-%{lib_spark}/yarn/spark-*-yarn-shuffle.jar
-%{lib_spark}/yarn/lib/spark-yarn-shuffle.jar
+%{usr_lib_spark}/yarn/spark-*-yarn-shuffle.jar
+%{usr_lib_spark}/yarn/lib/spark-yarn-shuffle.jar
 
 %files -n spark-sparkr
 %defattr(-,root,root,755)
-%{lib_spark}/R
-%{lib_spark}/bin/sparkR
-%{bin}/sparkR
+%{usr_lib_spark}/R
+%{usr_lib_spark}/bin/sparkR
+%{bin_dir}/sparkR
 
 %define service_macro() \
 %files -n %1 \

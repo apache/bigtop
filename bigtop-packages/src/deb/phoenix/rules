@@ -43,3 +43,5 @@ override_dh_auto_install:
 	bash -x debian/install_phoenix.sh \
 	  --build-dir=${CURDIR}/build     \
 	  --prefix=debian/tmp
+
+override_dh_strip_nondeterminism:

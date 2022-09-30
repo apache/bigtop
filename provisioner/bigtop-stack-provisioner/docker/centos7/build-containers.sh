@@ -88,7 +88,7 @@ elif [ ${ARCH} == "ppc64le" ]; then
   basearch="-ppc64le"
 fi
 
-cd ../../../../../../../
+cd ../../../../
 # shellcheck disable=SC2046
 docker run --rm -v `pwd`:/ws --workdir /ws bigtop/slaves:trunk-centos-7${basearch} bash -c '. /etc/profile.d/bigtop.sh; ./gradlew bigtop-utils-clean bigtop-ambari-mpack-clean bigtop-utils-pkg bigtop-ambari-mpack-pkg'
 docker cp output/bigtop-ambari-mpack/noarch/bigtop-ambari-mpack-2.7.5.0-*.rpm ambari-server:/

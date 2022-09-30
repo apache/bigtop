@@ -131,9 +131,12 @@ $roles_map = {
   livy => {
     master => ["livy-server"],
   },
+  phoenix => {
+    library => ["phoenix-server"],
+  },
   knox => {
     master => ["knox-gateway"],
-  },
+  }
 }
 
 class hadoop_cluster_node (
@@ -198,6 +201,7 @@ class node_with_roles ($roles = hiera("bigtop::roles")) inherits hadoop_cluster_
     "gpdb",
     "ambari",
     "bigtop_utils",
+    "phoenix",
     "knox",
   ]
 
