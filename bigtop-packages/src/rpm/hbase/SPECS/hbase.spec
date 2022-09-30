@@ -12,20 +12,28 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-%define etc_hbase_conf %{_sysconfdir}/%{name}/conf
-%define etc_hbase_conf_dist %{etc_hbase_conf}.dist
-%define hbase_home /usr/lib/%{name}
-%define bin_hbase %{hbase_home}/bin
-%define lib_hbase %{hbase_home}/lib
-%define conf_hbase %{hbase_home}/conf
-%define logs_hbase %{hbase_home}/logs
-%define pids_hbase %{hbase_home}/pids
-%define webapps_hbase %{hbase_home}/hbase-webapps
-%define man_dir %{_mandir}
+
+%define etc_default %{parent_dir}/etc/default
+
+%define usr_lib_hbase %{parent_dir}/usr/lib/%{name}
+%define var_lib_hbase %{parent_dir}/var/lib/%{name}
+%define etc_hbase %{parent_dir}/etc/%{name}
+
+%define usr_lib_hadoop %{parent_dir}/usr/lib/hadoop
+%define usr_lib_zookeeper %{parent_dir}/usr/lib/zookeeper
+
+%define bin_dir %{parent_dir}/%{_bindir}
+%define man_dir %{parent_dir}/%{_mandir}
+%define doc_dir %{parent_dir}/%{_docdir}
+
+# No prefix directory
+%define np_var_log_hbase /var/log/%{name}
+%define np_var_run_hbase /var/run/%{name}
+%define np_etc_hbase /etc/%{name}
+
 %define hbase_username hbase
 %define hbase_services master regionserver thrift thrift2 rest
-%define hadoop_home /usr/lib/hadoop
-%define zookeeper_home /usr/lib/zookeeper
+
 
 %if  %{?suse_version:1}0
 
@@ -44,7 +52,7 @@
     /usr/lib/rpm/brp-compress ; \
     %{nil}
 
-%define doc_hbase %{_docdir}/%{name}
+%define doc_hbase %{doc_dir}/%{name}
 %global initd_dir %{_sysconfdir}/rc.d
 %define alternatives_cmd update-alternatives
 
@@ -68,7 +76,7 @@
 %endif
 
 
-%define doc_hbase %{_docdir}/%{name}-%{hbase_version}
+%define doc_hbase %{doc_dir}/%{name}-%{hbase_version}
 %global initd_dir %{_sysconfdir}/rc.d/init.d
 %define alternatives_cmd alternatives
 
@@ -276,25 +284,30 @@ env HBASE_VERSION=%{version} bash %{SOURCE1}
 %__rm -rf $RPM_BUILD_ROOT
 bash %{SOURCE2} \
 	--build-dir=build \
-        --doc-dir=%{doc_hbase} \
-        --conf-dir=%{etc_hbase_conf_dist} \
+    --man-dir=%{man_dir} \
+    --bin-dir=%{bin_dir} \
+    --doc-dir=%{doc_hbase} \
+    --lib-dir=%{usr_lib_hbase} \
+    --etc-default=%{etc_default} \
+    --etc-hbase=%{etc_hbase} \
+    --lib-zookeeper-dir=%{usr_lib_zookeeper} \
 	--prefix=$RPM_BUILD_ROOT
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
 
-%__install -d -m 0755 $RPM_BUILD_ROOT/etc/default/
-%__install -m 0644 %{SOURCE5} $RPM_BUILD_ROOT/etc/default/%{name}
+%__install -d -m 0755 $RPM_BUILD_ROOT/%{etc_default}/
+%__install -m 0644 %{SOURCE5} $RPM_BUILD_ROOT/%{etc_default}/%{name}
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/etc/security/limits.d
 %__install -m 0644 %{SOURCE6} $RPM_BUILD_ROOT/etc/security/limits.d/%{name}.nofiles.conf
 
-%__install -d  -m 0755  %{buildroot}/%{_localstatedir}/log/%{name}
-ln -s %{_localstatedir}/log/%{name} %{buildroot}/%{logs_hbase}
+%__install -d  -m 0755  %{buildroot}/%{np_var_log_hbase}
+ln -s %{np_var_log_hbase} %{buildroot}/%{usr_lib_hbase}/logs
 
-%__install -d  -m 0755  %{buildroot}/%{_localstatedir}/run/%{name}
-ln -s %{_localstatedir}/run/%{name} %{buildroot}/%{pids_hbase}
+%__install -d  -m 0755  %{buildroot}/%{np_var_run_hbase}
+ln -s %{np_var_run_hbase} %{buildroot}/%{usr_lib_hbase}/pids
 
-%__install -d  -m 0755  %{buildroot}/%{_localstatedir}/lib/%{name}
+%__install -d  -m 0755  %{buildroot}/%{var_lib_hbase}
 
 for service in %{hbase_services}
 do
@@ -315,36 +328,36 @@ do
     chmod 755 $init_file
 done
 
-%__install -d -m 0755 $RPM_BUILD_ROOT/usr/bin
+%__install -d -m 0755 $RPM_BUILD_ROOT/%{bin_dir}
 
 # Pull zookeeper and hadoop from their packages
-rm -f $RPM_BUILD_ROOT/%{lib_hbase}/{hadoop,zookeeper,slf4j-log4j12-}*.jar
-ln -f -s %{zookeeper_home}/zookeeper.jar $RPM_BUILD_ROOT/%{lib_hbase}
+rm -f $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib/{hadoop,zookeeper,slf4j-log4j12-}*.jar
+ln -f -s %{usr_lib_zookeeper}/zookeeper.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
 
-ln -f -s %{hadoop_home}/client/hadoop-annotations.jar $RPM_BUILD_ROOT/%{lib_hbase}
-ln -f -s %{hadoop_home}/client/hadoop-auth.jar $RPM_BUILD_ROOT/%{lib_hbase}
-ln -f -s %{hadoop_home}/client/hadoop-common.jar $RPM_BUILD_ROOT/%{lib_hbase}
-ln -f -s %{hadoop_home}/client/hadoop-hdfs.jar $RPM_BUILD_ROOT/%{lib_hbase}
-ln -f -s %{hadoop_home}/client/hadoop-mapreduce-client-app.jar $RPM_BUILD_ROOT/%{lib_hbase}
-ln -f -s %{hadoop_home}/client/hadoop-mapreduce-client-common.jar $RPM_BUILD_ROOT/%{lib_hbase}
-ln -f -s %{hadoop_home}/client/hadoop-mapreduce-client-core.jar $RPM_BUILD_ROOT/%{lib_hbase}
-ln -f -s %{hadoop_home}/client/hadoop-mapreduce-client-jobclient.jar $RPM_BUILD_ROOT/%{lib_hbase}
-ln -f -s %{hadoop_home}/client/hadoop-mapreduce-client-shuffle.jar $RPM_BUILD_ROOT/%{lib_hbase}
-ln -f -s %{hadoop_home}/client/hadoop-yarn-api.jar $RPM_BUILD_ROOT/%{lib_hbase}
-ln -f -s %{hadoop_home}/client/hadoop-yarn-client.jar $RPM_BUILD_ROOT/%{lib_hbase}
-ln -f -s %{hadoop_home}/client/hadoop-yarn-common.jar $RPM_BUILD_ROOT/%{lib_hbase}
-ln -f -s %{hadoop_home}/client/hadoop-yarn-server-common.jar $RPM_BUILD_ROOT/%{lib_hbase}
+ln -f -s %{usr_lib_hadoop}/client/hadoop-annotations.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
+ln -f -s %{usr_lib_hadoop}/client/hadoop-auth.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
+ln -f -s %{usr_lib_hadoop}/client/hadoop-common.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
+ln -f -s %{usr_lib_hadoop}/client/hadoop-hdfs.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
+ln -f -s %{usr_lib_hadoop}/client/hadoop-mapreduce-client-app.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
+ln -f -s %{usr_lib_hadoop}/client/hadoop-mapreduce-client-common.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
+ln -f -s %{usr_lib_hadoop}/client/hadoop-mapreduce-client-core.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
+ln -f -s %{usr_lib_hadoop}/client/hadoop-mapreduce-client-jobclient.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
+ln -f -s %{usr_lib_hadoop}/client/hadoop-mapreduce-client-shuffle.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
+ln -f -s %{usr_lib_hadoop}/client/hadoop-yarn-api.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
+ln -f -s %{usr_lib_hadoop}/client/hadoop-yarn-client.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
+ln -f -s %{usr_lib_hadoop}/client/hadoop-yarn-common.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
+ln -f -s %{usr_lib_hadoop}/client/hadoop-yarn-server-common.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
 
 %pre
 getent group hbase 2>/dev/null >/dev/null || /usr/sbin/groupadd -r hbase
 getent passwd hbase 2>&1 > /dev/null || /usr/sbin/useradd -c "HBase" -s /sbin/nologin -g hbase -r -d /var/lib/hbase hbase 2> /dev/null || :
 
 %post
-%{alternatives_cmd} --install %{etc_hbase_conf} %{name}-conf %{etc_hbase_conf_dist} 30
+%{alternatives_cmd} --install %{np_etc_hbase}/conf %{name}-conf %{etc_hbase}/conf.dist 30
 
 %preun
 if [ "$1" = 0 ]; then
-        %{alternatives_cmd} --remove %{name}-conf %{etc_hbase_conf_dist} || :
+        %{alternatives_cmd} --remove %{name}-conf %{etc_hbase}/conf.dist || :
 fi
 
 
@@ -353,20 +366,21 @@ fi
 #######################
 %files 
 %defattr(-,hbase,hbase)
-%{logs_hbase}
-%{pids_hbase}
-%dir %{_localstatedir}/log/hbase
-%dir %{_localstatedir}/run/hbase
-%dir %{_localstatedir}/lib/hbase
+%{usr_lib_hbase}/logs
+%{usr_lib_hbase}/pids
+%dir %{np_var_log_hbase}
+%dir %{np_var_run_hbase}
+%dir %{var_lib_hbase}
+%dir %{np_etc_hbase}
 
 %defattr(-,root,root)
-%config(noreplace) %{_sysconfdir}/default/hbase
+%config(noreplace) %{etc_default}/hbase
 %config(noreplace) /etc/security/limits.d/hbase.nofiles.conf
-%{hbase_home}
-%{hbase_home}/hbase-*.jar
-%{webapps_hbase}
-/usr/bin/hbase
-%config(noreplace) %{etc_hbase_conf_dist}
+%{usr_lib_hbase}
+%{usr_lib_hbase}/hbase-*.jar
+%{usr_lib_hbase}/hbase-webapps
+%{bin_dir}/hbase
+%config(noreplace) %{etc_hbase}/conf.dist
 
 %files doc
 %defattr(-,root,root)

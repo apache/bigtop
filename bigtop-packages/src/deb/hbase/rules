@@ -39,7 +39,7 @@ override_dh_auto_install:
 	cp debian/hbase.default debian/${hbase_pkg_name}/etc/default/${hbase_pkg_name}
 	bash -x debian/install_hbase.sh \
 		--build-dir=build \
-		--conf-dir=/etc/hbase/conf.dist \
+		--etc-hbase=/etc/hbase \
 		--doc-dir=usr/share/doc/${hbase_pkg_name}-doc \
 		--prefix=debian/tmp
 	mkdir -p debian/tmp/etc/security/limits.d
