@@ -20,14 +20,14 @@ set -ex
 
 if [ $HOSTTYPE = "powerpc64le" ] ; then
   echo "Starting quick-package"
+  ant quick-package
   #replace build step with download for test purpases
-  #ant quick-package
-  mkdir -p target/1.6.1
-  wget --no-check-certificate https://dlcdn.apache.org/knox/1.6.1/knox-1.6.1.tar.gz -P target/1.6.1
+  #mkdir -p target/1.6.1
+  #wget --no-check-certificate https://dlcdn.apache.org/knox/1.6.1/knox-1.6.1.tar.gz -P target/1.6.1
 else
   echo "Starting quick-package"
+  ant quick-package
   #replace build step with download for test purpases
-  #ant quick-package
-  mkdir -p target/1.6.1
-  wget --no-check-certificate https://dlcdn.apache.org/knox/1.6.1/knox-1.6.1.tar.gz -P target/1.6.1
+  #mkdir -p target/1.6.1
+  #wget --no-check-certificate https://dlcdn.apache.org/knox/1.6.1/knox-1.6.1.tar.gz -P target/1.6.1
 fi
