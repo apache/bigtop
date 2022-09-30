@@ -1,0 +1,97 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+DAEMON="knox-gateway"
+DESC="Knox Gateway"
+EXEC_PATH="/usr/lib/knox/bin/gateway.sh"
+WORKING_DIR="/var/lib/knox"
+
+SVC_USER="knox"
+PIDFILE="/var/run/knox/knox-gateway.pid"
+
+generate_prestart_script() {
+cat <<'__EOT__'
+  runuser -s /bin/bash $SVC_USER -c "$EXEC_PATH start"
+__EOT__
+}
+
+generate_prestop_script() {
+cat <<'__EOT__'
+  su -s /bin/bash $SVC_USER -c "$EXEC_PATH stop"
+__EOT__
+}
+
+generate_start() {
+cat <<'__EOT__'
+start() {
+  [ -x $EXEC_PATH ] || exit $ERROR_PROGRAM_NOT_INSTALLED
+  [ -d $KNOX_GATEWAY_CONF_DIR ] || exit $ERROR_PROGRAM_NOT_CONFIGURED
+
+  export KNOX_GATEWAY_HOME_DIR=/usr/lib/knox
+  export KNOX_GATEWAY_DATA_DIR=/var/lib/knox/data
+  export KNOX_GATEWAY_CONF_DIR=/etc/knox
+  export KNOX_GATEWAY_BIN_DIR=/usr/lib/knox/bin
+  export KNOX_GATEWAY_LOG_DIR=/var/log/knox
+  export KNOX_GATEWAY_PID_DIR=/var/run/knox
+  export KNOX_GATEWAY_RUNNING_IN_FOREGROUND=false
+  set -x
+
+  LOG_FILE=/var/log/knox/${DAEMON}.out
+
+  if [ ! -f $KNOX_GATEWAY_DATA_DIR/security/master ]; then
+  runuser -s /bin/bash $SVC_USER -c \
+  "KNOX_CLI_LOG_OPTS='-Dapp.log.dir=$KNOX_GATEWAY_LOG_DIR -Dlauncher.name=knox-cli \
+   -Dlog4j.configuration=$KNOX_GATEWAY_CONF_DIR/knoxcli-log4j.properties' \
+   $KNOX_GATEWAY_BIN_DIR/knoxcli.sh create-master --generate --force"
+  fi
+
+  runuser -s /bin/bash $SVC_USER -c \
+  "nohup nice -n 0 java -cp '$KNOX_GATEWAY_HOME_DIR/lib/*:$KNOX_GATEWAY_HOME_DIR/dep/*' \
+  -Dapp.log.dir=$KNOX_GATEWAY_LOG_DIR \
+  -Dlauncher.name=knox-gateway \
+  -Dlog4j.configuration=$KNOX_GATEWAY_CONF_DIR/gateway-log4j.properties \
+  org.apache.knox.gateway.GatewayServer > $LOG_FILE 2>&1 < /dev/null & "'echo $! '"> $PIDFILE"
+
+  sleep 3
+  checkstatusofproc
+  RETVAL=$?
+
+  if [ $RETVAL -eq 0 ]; then
+    touch $LOCKFILE
+    log_success_msg "Started ${DESC}: "
+  else
+        log_failure_msg "Failed to start ${DESC}. Return value: $RETVAL"
+  fi
+  return $RETVAL
+}
+__EOT__
+}
+
+
+generate_stop() {
+cat <<'__EOT__'
+stop() {
+  runuser -s /bin/bash $SVC_USER -c "$EXEC_PATH stop"
+  RETVAL=$?
+
+  if [ $RETVAL -eq $RETVAL_SUCCESS ]; then
+         log_success_msg "Stopped ${DESC}: "
+         rm -f $LOCKFILE $PIDFILE
+ else
+         log_failure_msg "Failed to stop ${DESC}. Return value: $RETVAL."
+ fi
+}
+__EOT__
+}

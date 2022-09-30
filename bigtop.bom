@@ -355,5 +355,17 @@ bigtop {
       url     { site = "https://github.com/apache/ranger/archive/refs/tags"
                 archive = site }
     }
+    'knox' {
+      name    = 'knox'
+      relNotes = 'Apache Knox'
+      version { base = '1.6.1'; pkg = base-"-release"; release = 1 }
+      tarball { destination = "$name-${version.base}.zip"
+                source      = "$name-${version.base}-src.zip" }
+      url     { download_path = "$name/${version.base}"
+                site = "${apache.APACHE_MIRROR}/${download_path}"
+                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+    }
   }
 }
+
+

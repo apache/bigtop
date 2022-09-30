@@ -1,3 +1,4 @@
+#!/bin/bash
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -13,18 +14,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-services:
-    bigtop:
-        image: ${DOCKER_IMAGE}
-        command: /sbin/init
-        domainname: bigtop.apache.org
-        privileged: true
-        mem_limit: ${MEM_LIMIT}
-        volumes:
-        - ../../:/bigtop-home
-        - ./config/hiera.yaml:/etc/puppet/hiera.yaml
-        - ./config/hieradata:/etc/puppet/hieradata
-        - ./config/hosts:/etc/hosts
-        - /sys/fs/cgroup:/sys/fs/cgroup:ro
-        ports:
-        - 8443:8443
+set -ex
+
+. `dirname $0`/bigtop.bom
+
+if [ $HOSTTYPE = "powerpc64le" ] ; then
+  echo "Starting quick-package"
+  #replace build step with download for test purpases
+  #ant quick-package
+  mkdir -p target/1.6.1
+  wget https://dlcdn.apache.org/knox/1.6.1/knox-1.6.1.tar.gz -P target/1.6.1
+else
+  echo "Starting quick-package"
+  #replace build step with download for test purpases
+  #ant quick-package
+  mkdir -p target/1.6.1
+  wget https://dlcdn.apache.org/knox/1.6.1/knox-1.6.1.tar.gz -P target/1.6.1
+fi
