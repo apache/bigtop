@@ -258,6 +258,12 @@ bigtop {
       version { base = bigtop.version; pkg = base-"-SNAPSHOT"; release = 1 }
       tarball { destination = "bigtop-utils-${version.base}.tar.gz" }
     }
+    'bigtop-select' {
+      name    = "bigtop-select"
+      relNotes = "Service package for Apache Bigtop information to use Ambari"
+      version { base = bigtop.version; pkg = base-"-SNAPSHOT"; release = 1 }
+      tarball { destination = "bigtop-select-${version.base}.tar.gz" }
+    }
     'bigtop-jsvc' {
       name    = "bigtop-jsvc"
       relNotes = "Apache Common Daemon (jsvc) service package"
