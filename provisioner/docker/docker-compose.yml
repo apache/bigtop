@@ -26,5 +26,3 @@ services:
         - ./config/hieradata:/etc/puppet/hieradata
         - ./config/hosts:/etc/hosts
         - /sys/fs/cgroup:/sys/fs/cgroup:ro
-        ports:
-        - 8443:8443
