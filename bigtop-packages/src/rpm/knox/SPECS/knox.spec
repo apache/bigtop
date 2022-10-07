@@ -100,7 +100,7 @@ bash %{SOURCE1}
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{np_var_run_knox}
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{np_var_log_knox}
 
-bash -x %{SOURCE2} --prefix=$RPM_BUILD_ROOT --build-dir=build
+bash -x %{SOURCE2} --prefix=$RPM_BUILD_ROOT --build-dir=`pwd`
 
 for service in %{knox_services}
 do
