@@ -21,7 +21,6 @@ usage() {
 usage: $0 <options>
   Required not-so-options:
      --build-dir=DIR             path to knox dist.dir
-     --source-dir=DIR            path to package shared files dir
      --prefix=PREFIX             path to install into
 
   Optional options:
@@ -37,7 +36,6 @@ OPTS=$(getopt \
   -o '' \
   -l 'prefix:' \
   -l 'build-dir:' \
-  -l 'source-dir:' \
   -l 'home-dir:' \
   -l 'etc-knox:' -- "$@")
 
@@ -53,9 +51,6 @@ while true ; do
         ;;
         --build-dir)
         BUILD_DIR=$2 ; shift 2
-        ;;
-        --source-dir)
-        SOURCE_DIR=$2 ; shift 2
         ;;
         --home-dir)
         HOME_DIR=$2 ; shift 2
@@ -74,17 +69,12 @@ while true ; do
     esac
 done
 
-for var in PREFIX BUILD_DIR SOURCE_DIR ; do
+for var in PREFIX BUILD_DIR ; do
   if [ -z "$(eval "echo \$$var")" ]; then
     echo Missing param: $var
     usage
   fi
 done
-
-# load bigtop component versions
-if [ -f "$SOURCE_DIR/bigtop.bom" ]; then
-  . $SOURCE_DIR/bigtop.bom
-fi
 
 HOME_DIR=${HOME_DIR:-/usr/lib/knox}
 LIB_DIR=${LIB_DIR:-$HOME_DIR/lib}

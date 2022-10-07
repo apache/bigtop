@@ -38,6 +38,4 @@ override_dh_auto_install: $(svcs)
 	bash -x debian/install_knox.sh \
 	--build-dir=`pwd` \
 	--prefix=debian/tmp \
-	--distro-dir=debian
-
 

@@ -15,8 +15,6 @@
 
 %define knox_name knox
 %define home_dir %{parent_dir}/usr/lib/%{knox_name}
-%define bin_dir %{parent_dir}/usr/lib/%{knox_name}/bin
-%define etc_knox %{parent_dir}/etc/%{knox_name}
 
 %define np_var_lib_knox /var/lib/%{knox_name}
 %define np_var_run_knox /var/run/%{knox_name}
@@ -102,13 +100,7 @@ bash %{SOURCE1}
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{np_var_run_knox}
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{np_var_log_knox}
 
-
-sh -x %{SOURCE2} \
-    --prefix=$RPM_BUILD_ROOT \
-    --source-dir=$RPM_SOURCE_DIR \
-    --build-dir=`pwd` \
-    --home-dir=%{home_dir} \
-    --etc-knox=%{etc_knox}
+bash -x %{SOURCE2} --prefix=$RPM_BUILD_ROOT --build-dir=build
 
 for service in %{knox_services}
 do
