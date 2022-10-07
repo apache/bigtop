@@ -99,6 +99,8 @@ CONF_DIR=${CONF_DIR:-/etc/knox}
 SAMPLES_DIR=${SAMPLES_DIR:-/usr/lib/knox/samples}
 TEMPLATES_DIR=${TEMPLATES_DIR:-/usr/lib/knox/templates}
 DATA_DIR=${DATA_DIR:-/var/lib/knox/data}
+RUN_DIR=${RUN_DIR:-/var/run/knox}
+LOG_DIR=${LOG_DIR:-/var/log/knox}
 
 install -d -m 0755 $PREFIX/$LIB_DIR
 install -d -m 0755 $PREFIX/$DEP_DIR
@@ -107,6 +109,8 @@ install -d -m 0755 $PREFIX/$CONF_DIR
 install -d -m 0755 $PREFIX/$SAMPLES_DIR
 install -d -m 0755 $PREFIX/$TEMPLATES_DIR
 install -d -m 0755 $PREFIX/$DATA_DIR
+install -d -m 0755 $PREFIX/$RUN_DIR
+install -d -m 0755 $PREFIX/$LOG_DIR
 
 TMP_DIR=$BUILD_DIR/tmp
 mkdir -p $BUILD_DIR/tmp
@@ -120,8 +124,10 @@ cp -ra $TMP_DIR/knox-*/samples ${PREFIX}/${SAMPLES_DIR}
 cp -ra $TMP_DIR/knox-*/templates/* ${PREFIX}/${TEMPLATES_DIR}
 cp -ra $TMP_DIR/knox-*/data/* ${PREFIX}/${DATA_DIR}
 
-cp -ra $TMP_DIR/knox-*/logs ${PREFIX}/${LOG_DIR}
-cp -ra $TMP_DIR/knox-*/pids ${PREFIX}/${RUN_DIR}
+ln -s $CONF_DIR ${PREFIX}/$HOME_DIR/conf
+ln -s $LOG_DIR ${PREFIX}/$HOME_DIR/logs
+ln -s $DATA_DIR ${PREFIX}/$HOME_DIR/data
+ln -s $RUN_DIR ${PREFIX}/$HOME_DIR/pids
 
 rm -rf ${PREFIX}/README
 rm -rf ${PREFIX}/native

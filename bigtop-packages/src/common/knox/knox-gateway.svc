@@ -16,8 +16,6 @@
 DAEMON="knox-gateway"
 DESC="Knox Gateway"
 EXEC_PATH="/usr/lib/knox/bin/gateway.sh"
-WORKING_DIR="/var/lib/knox"
-
 SVC_USER="knox"
 PIDFILE="/var/run/knox/knox-gateway.pid"
 
@@ -36,33 +34,22 @@ __EOT__
 generate_start() {
 cat <<'__EOT__'
 start() {
-  [ -x $EXEC_PATH ] || exit $ERROR_PROGRAM_NOT_INSTALLED
-  [ -d $KNOX_GATEWAY_CONF_DIR ] || exit $ERROR_PROGRAM_NOT_CONFIGURED
-
-  export KNOX_GATEWAY_HOME_DIR=/usr/lib/knox
-  export KNOX_GATEWAY_DATA_DIR=/var/lib/knox/data
-  export KNOX_GATEWAY_CONF_DIR=/etc/knox
-  export KNOX_GATEWAY_BIN_DIR=/usr/lib/knox/bin
-  export KNOX_GATEWAY_LOG_DIR=/var/log/knox
-  export KNOX_GATEWAY_PID_DIR=/var/run/knox
-  export KNOX_GATEWAY_RUNNING_IN_FOREGROUND=false
-  set -x
-
+  KNOX_HOME_DIR="/usr/lib/knox"
+  CLI_PATH="$KNOX_HOME_DIR/bin/knoxcli.sh"
   LOG_FILE=/var/log/knox/${DAEMON}.out
+  DATA_DIR="/var/lib/knox/data"
 
-  if [ ! -f $KNOX_GATEWAY_DATA_DIR/security/master ]; then
+  [ -x ${EXEC_PATH} ] || exit $ERROR_PROGRAM_NOT_INSTALLED
+  [ -d $KNOX_HOME_DIR/conf ] || exit $ERROR_PROGRAM_NOT_CONFIGURED
+
+  if [ ! -f $DATA_DIR/security/master ]; then
   runuser -s /bin/bash $SVC_USER -c \
-  "KNOX_CLI_LOG_OPTS='-Dapp.log.dir=$KNOX_GATEWAY_LOG_DIR -Dlauncher.name=knox-cli \
-   -Dlog4j.configuration=$KNOX_GATEWAY_CONF_DIR/knoxcli-log4j.properties' \
-   $KNOX_GATEWAY_BIN_DIR/knoxcli.sh create-master --generate --force"
+  "$CLI_PATH create-master --generate --force"
   fi
 
   runuser -s /bin/bash $SVC_USER -c \
-  "nohup nice -n 0 java -cp '$KNOX_GATEWAY_HOME_DIR/lib/*:$KNOX_GATEWAY_HOME_DIR/dep/*' \
-  -Dapp.log.dir=$KNOX_GATEWAY_LOG_DIR \
-  -Dlauncher.name=knox-gateway \
-  -Dlog4j.configuration=$KNOX_GATEWAY_CONF_DIR/gateway-log4j.properties \
-  org.apache.knox.gateway.GatewayServer > $LOG_FILE 2>&1 < /dev/null & "'echo $! '"> $PIDFILE"
+  "KNOX_GATEWAY_RUNNING_IN_FOREGROUND=true \
+  nohup nice -n 0 $EXEC_PATH start > $LOG_FILE 2>&1 < /dev/null & "'echo $! '"> $PIDFILE"
 
   sleep 3
   checkstatusofproc
