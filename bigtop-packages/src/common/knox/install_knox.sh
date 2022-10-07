@@ -15,21 +15,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -ex
 
 usage() {
   echo "
 usage: $0 <options>
   Required not-so-options:
-     --distro-dir=DIR            path to distro specific files (debian/RPM)
-     --build-dir=DIR             path to dist dir
+     --build-dir=DIR             path to knox dist.dir
+     --source-dir=DIR            path to package shared files dir
      --prefix=PREFIX             path to install into
 
   Optional options:
-     --lib-dir=DIR               path to install bits [/usr/lib/knox]
-     --installed-lib-dir=DIR     path where lib-dir will end up on target system
-     --bin-dir=DIR               path to install bins [/usr/bin]
-     --examples-dir=DIR          path to install examples [doc-dir/examples]
+     --home-dir=DIR               path to install knox home [/usr/lib/knox]
+     --etc-knox=DIR             path to install knox conf [/etc/knox]
      ... [ see source for more similar options ]
   "
   exit 1
@@ -39,12 +36,10 @@ OPTS=$(getopt \
   -n $0 \
   -o '' \
   -l 'prefix:' \
-  -l 'distro-dir:' \
-  -l 'lib-dir:' \
-  -l 'installed-lib-dir:' \
-  -l 'bin-dir:' \
-  -l 'examples-dir:' \
-  -l 'build-dir:' -- "$@")
+  -l 'build-dir:' \
+  -l 'source-dir:' \
+  -l 'home-dir:' \
+  -l 'etc-knox:' -- "$@")
 
 if [ $? != 0 ] ; then
     usage
@@ -56,23 +51,17 @@ while true ; do
         --prefix)
         PREFIX=$2 ; shift 2
         ;;
-        --distro-dir)
-        DISTRO_DIR=$2 ; shift 2
-        ;;
         --build-dir)
         BUILD_DIR=$2 ; shift 2
         ;;
-        --lib-dir)
-        LIB_DIR=$2 ; shift 2
+        --source-dir)
+        SOURCE_DIR=$2 ; shift 2
         ;;
-        --installed-lib-dir)
-        INSTALLED_LIB_DIR=$2 ; shift 2
+        --home-dir)
+        HOME_DIR=$2 ; shift 2
         ;;
-        --bin-dir)
-        BIN_DIR=$2 ; shift 2
-        ;;
-        --examples-dir)
-        EXAMPLES_DIR=$2 ; shift 2
+        --etc-knox)
+        ETC_KNOX=$2 ; shift 2
         ;;
         --)
         shift ; break
@@ -85,26 +74,36 @@ while true ; do
     esac
 done
 
-for var in PREFIX BUILD_DIR DISTRO_DIR ; do
+for var in PREFIX BUILD_DIR SOURCE_DIR ; do
   if [ -z "$(eval "echo \$$var")" ]; then
     echo Missing param: $var
     usage
   fi
 done
+
+# load bigtop component versions
+if [ -f "$SOURCE_DIR/bigtop.bom" ]; then
+  . $SOURCE_DIR/bigtop.bom
+fi
+
 HOME_DIR=${HOME_DIR:-/usr/lib/knox}
-LIB_DIR=${LIB_DIR:-/usr/lib/knox/lib}
-DEP_DIR=${DEP_DIR:-/usr/lib/knox/dep}
-BIN_DIR=${BIN_DIR:-/usr/lib/knox/bin}
+LIB_DIR=${LIB_DIR:-$HOME_DIR/lib}
+DEP_DIR=${DEP_DIR:-$HOME_DIR/dep}
+BIN_DIR=${BIN_DIR:-$HOME_DIR/bin}
 CONF_DIR=${CONF_DIR:-/etc/knox}
-SAMPLES_DIR=${SAMPLES_DIR:-/usr/lib/knox/samples}
-TEMPLATES_DIR=${TEMPLATES_DIR:-/usr/lib/knox/templates}
+SAMPLES_DIR=${SAMPLES_DIR:-$HOME_DIR/samples}
+TEMPLATES_DIR=${TEMPLATES_DIR:-$HOME_DIR/templates}
+
 DATA_DIR=${DATA_DIR:-/var/lib/knox/data}
 RUN_DIR=${RUN_DIR:-/var/run/knox}
 LOG_DIR=${LOG_DIR:-/var/log/knox}
+NP_ETC_KNOX=/etc/knox
 
+install -d -m 0755 $PREFIX/$HOME_DIR
 install -d -m 0755 $PREFIX/$LIB_DIR
 install -d -m 0755 $PREFIX/$DEP_DIR
 install -d -m 0755 $PREFIX/$BIN_DIR
+install -d -m 0755 $PREFIX/$NP_ETC_KNOX
 install -d -m 0755 $PREFIX/$CONF_DIR
 install -d -m 0755 $PREFIX/$SAMPLES_DIR
 install -d -m 0755 $PREFIX/$TEMPLATES_DIR
@@ -128,6 +127,7 @@ ln -s $CONF_DIR ${PREFIX}/$HOME_DIR/conf
 ln -s $LOG_DIR ${PREFIX}/$HOME_DIR/logs
 ln -s $DATA_DIR ${PREFIX}/$HOME_DIR/data
 ln -s $RUN_DIR ${PREFIX}/$HOME_DIR/pids
+ln -s $NP_ETC_KNOX/conf $PREFIX/$LIB_DIR/conf
 
 rm -rf ${PREFIX}/README
 rm -rf ${PREFIX}/native
