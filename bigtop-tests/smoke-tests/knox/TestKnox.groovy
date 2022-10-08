@@ -47,7 +47,7 @@ class TestKnox {
     // Basic test to verify that Knox cli can list its topologies.
 
 
-    sh.exec("export KNOX_GATEWAY_CONF_DIR=/etc/knox && export KNOX_GATEWAY_DATA_DIR=/var/lib/knox/data && export APP_JAVA_LIB_PATH=/usr/lib/knox/lib && export KNOX_GATEWAY_HOME_DIR=/usr/lib/knox && export KNOX_CLI_LOG_OPTS=\"-Dapp.log.dir=/var/log/knox -Dlauncher.name=knoxcli -Dlog4j.configuration=/etc/knox/knoxcli-log4j.properties\" && /usr/lib/knox/bin/knoxcli.sh list-topologies");
+    sh.exec("/usr/lib/knox/bin/knoxcli.sh list-topologies");
     String ret = sh.getOut()
     assertTrue(ret.contains("sandbox"));
     LOG.info('Test Knox cli finished');

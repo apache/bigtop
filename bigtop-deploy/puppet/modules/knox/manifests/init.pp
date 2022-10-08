@@ -22,32 +22,38 @@ class knox {
   }
 
   class gateway(
-      $broker_id = undef,
-      $log_dirs = undef,
-      $bind_addr = undef,
-      $port = "9092",
-      $zookeeper_connection_string = "localhost:2181",
+      $port = "8443",
     ) {
 
     package { 'knox':
       ensure => latest,
     }
 
-#    file { '/etc/kafka/conf/server.properties':
-#      content => template('kafka/server.properties'),
-#      require => [ Package['kafka'], Package['kafka-server'] ],
-#      owner   => 'kafka',
-#      group   => 'kafka',
-#    }
+    file { '/usr/lib/knox/conf/gateway-site.xml':
+      content => template('knox/gateway-site.xml'),
+      require => [ Package['knox'] ],
+      owner   => 'knox',
+      group   => 'knox',
+    }
 
     service { 'knox-gateway':
       ensure     => running,
       subscribe  => [
           Package['knox'],
-#          File['/etc/kafka/conf/server.properties'],
+          File['/usr/lib/knox/conf/gateway-site.xml'],
        ],
       hasrestart => true,
       hasstatus  => true,
+    }
+
+    if ($kerberos_realm and $kerberos_realm != "") {
+      require kerberos::client
+
+      kerberos::host_keytab { "knox":
+        spnego  => true,
+        require => Package["knox"],
+        before  => Service["knox-gateway"],
+      }
     }
   }
 }

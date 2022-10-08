@@ -141,6 +141,11 @@ solr::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 # Default but needed here to make sure, hue uses the same port
 solr::server::port: "8983"
 
+
+knox::gateway::kerberos_realm: "%{hiera('kerberos::site::realm')}"
+# Default but needed here to make sure, hue uses the same port
+knox::gateway::port: "8443"
+
 hadoop_oozie::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 
 hcatalog::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
