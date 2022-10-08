@@ -17,7 +17,7 @@ DAEMON="knox-gateway"
 DESC="Knox Gateway"
 EXEC_PATH="/usr/lib/knox/bin/gateway.sh"
 SVC_USER="knox"
-PIDFILE="/var/run/knox/knox-gateway.pid"
+PIDFILE="/var/run/knox/gateway.pid"
 
 generate_prestart_script() {
 cat <<'__EOT__'
@@ -47,21 +47,7 @@ start() {
   "$CLI_PATH create-master --generate --force"
   fi
 
-  runuser -s /bin/bash $SVC_USER -c \
-  "KNOX_GATEWAY_RUNNING_IN_FOREGROUND=true \
-  nohup nice -n 0 $EXEC_PATH start > $LOG_FILE 2>&1 < /dev/null & "'echo $! '"> $PIDFILE"
-
-  sleep 3
-  checkstatusofproc
-  RETVAL=$?
-
-  if [ $RETVAL -eq 0 ]; then
-    touch $LOCKFILE
-    log_success_msg "Started ${DESC}: "
-  else
-        log_failure_msg "Failed to start ${DESC}. Return value: $RETVAL"
-  fi
-  return $RETVAL
+  runuser -s /bin/bash $SVC_USER -c "$EXEC_PATH start"
 }
 __EOT__
 }
@@ -71,14 +57,6 @@ generate_stop() {
 cat <<'__EOT__'
 stop() {
   runuser -s /bin/bash $SVC_USER -c "$EXEC_PATH stop"
-  RETVAL=$?
-
-  if [ $RETVAL -eq $RETVAL_SUCCESS ]; then
-         log_success_msg "Stopped ${DESC}: "
-         rm -f $LOCKFILE $PIDFILE
- else
-         log_failure_msg "Failed to stop ${DESC}. Return value: $RETVAL."
- fi
 }
 __EOT__
 }

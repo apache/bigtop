@@ -36,6 +36,13 @@ class knox {
       group   => 'knox',
     }
 
+    file { '/usr/lib/knox/conf/topologies/sandbox.xml':
+      content => template('knox/sandbox.xml'),
+      require => [ Package['knox'] ],
+      owner   => 'knox',
+      group   => 'knox',
+    }
+
     service { 'knox-gateway':
       ensure     => running,
       subscribe  => [
