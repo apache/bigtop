@@ -122,3 +122,17 @@ ln -s $NP_ETC_KNOX/conf $PREFIX/$LIB_DIR/conf
 rm -rf ${PREFIX}/README
 rm -rf ${PREFIX}/native
 rm -rf $TMP_DIR
+
+# Copy in the /usr/bin/knox wrapper
+install -d -m 0755 $PREFIX/bin
+cat > $PREFIX/usr/bin/gateway <<EOF
+#!/bin/bash
+
+# Autodetect JAVA_HOME if not defined
+. /usr/lib/bigtop-utils/bigtop-detect-javahome
+
+export HOME_DIR=\${HOME_DIR}
+
+exec $HOME_DIR/bin/gateway.sh \$@
+EOF
+chmod 755 $PREFIX/usr/bin/gateway
