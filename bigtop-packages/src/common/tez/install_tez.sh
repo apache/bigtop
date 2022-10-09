@@ -25,11 +25,10 @@ usage: $0 <options>
      --prefix=PREFIX             path to install into
 
   Optional options:
+     --man-dir=DIR               path to install mans [/usr/share/man]
      --doc-dir=DIR               path to install docs into [/usr/share/doc/tez]
      --lib-dir=DIR               path to install tez home [/usr/lib/tez]
-     --installed-lib-dir=DIR     path where lib-dir will end up on target system
-     --bin-dir=DIR               path to install bins [/usr/bin]
-     --examples-dir=DIR          path to install examples [doc-dir/examples]
+     --etc-tez=DIR               path to install tez conf [/etc/tez]
      ... [ see source for more similar options ]
   "
   exit 1
@@ -39,14 +38,10 @@ OPTS=$(getopt \
   -n $0 \
   -o '' \
   -l 'prefix:' \
+  -l 'man-dir:' \
   -l 'doc-dir:' \
   -l 'lib-dir:' \
-  -l 'installed-lib-dir:' \
-  -l 'bin-dir:' \
-  -l 'examples-dir:' \
-  -l 'conf-dir:' \
-  -l 'sbin-dir:' \
-  -l 'libexec-dir:' \
+  -l 'etc-tez:' \
   -l 'build-dir:' -- "$@")
 
 if [ $? != 0 ] ; then
@@ -62,20 +57,17 @@ while true ; do
         --build-dir)
         BUILD_DIR=$2 ; shift 2
         ;;
+        --man-dir)
+        MAN_DIR=$2 ; shift 2
+        ;;
         --doc-dir)
         DOC_DIR=$2 ; shift 2
         ;;
         --lib-dir)
         LIB_DIR=$2 ; shift 2
         ;;
-        --installed-lib-dir)
-        INSTALLED_LIB_DIR=$2 ; shift 2
-        ;;
-        --examples-dir)
-        EXAMPLES_DIR=$2 ; shift 2
-        ;;
-        --libexec-dir)
-        LIBEXEC_DIR=$2 ; shift 2
+        --etc-tez)
+        ETC_TEZ=$2 ; shift 2
         ;;
         --)
         shift ; break
@@ -95,12 +87,13 @@ for var in PREFIX BUILD_DIR ; do
   fi
 done
 
-MAN_DIR=${MAN_DIR:-/usr/share/man/man1}
+MAN_DIR=${MAN_DIR:-/usr/share/man}/man1
 DOC_DIR=${DOC_DIR:-/usr/share/doc/tez}
 LIB_DIR=${LIB_DIR:-/usr/lib/tez}
 
-CONF_DIR=/etc/tez/conf
-CONF_DIST_DIR=/etc/tez/conf.dist/
+ETC_TEZ=${ETC_TEZ:-/etc/tez}
+# No prefix
+NP_ETC_TEZ=/etc/tez
 
 install -d -m 0755 $PREFIX/$MAN_DIR
 gzip -c tez.1 > $PREFIX/$MAN_DIR/tez.1.gz
@@ -108,13 +101,14 @@ gzip -c tez.1 > $PREFIX/$MAN_DIR/tez.1.gz
 install -d -m 0755 $PREFIX/$LIB_DIR
 install -d -m 0755 $PREFIX/$LIB_DIR/lib
 install -d -m 0755 $PREFIX/$DOC_DIR
-install -d -m 0755 $PREFIX/$CONF_DIST_DIR
+install -d -m 0755 $PREFIX/$NP_ETC_TEZ
+install -d -m 0755 $PREFIX/$ETC_TEZ/conf.dist
 install -d -m 0755 $PREFIX/$MAN_DIR
 
 tar -C $PREFIX/$LIB_DIR -xzf $BUILD_DIR/tez-dist/target/tez*-minimal.tar.gz
 
-cp tez-site.xml $PREFIX/$CONF_DIST_DIR
-ln -s $CONF_DIR $PREFIX/$LIB_DIR/conf
+cp tez-site.xml $PREFIX/$ETC_TEZ/conf.dist/
+ln -s $NP_ETC_TEZ/conf $PREFIX/$LIB_DIR/conf
 
 TEZ_TAR=$BUILD_DIR/tez-dist/target/tez-[[:digit:]]*[[:digit:]].tar.gz
 cp $TEZ_TAR $PREFIX/$LIB_DIR/lib/tez.tar.gz
