@@ -143,5 +143,6 @@ done
 %attr(0755,knox,knox) %{np_var_lib_knox}
 %attr(0755,knox,knox) %{np_var_run_knox}
 %attr(0755,knox,knox) %{np_var_log_knox}
+%attr(0755,root,root) /usr/bin/gateway
 %attr(0755,root,root) %{initd_dir}/%{name}*
 

@@ -124,7 +124,7 @@ rm -rf ${PREFIX}/native
 rm -rf $TMP_DIR
 
 # Copy in the /usr/bin/knox wrapper
-install -d -m 0755 $PREFIX/bin
+install -d -m 0755 $PREFIX/usr/bin
 cat > $PREFIX/usr/bin/gateway <<EOF
 #!/bin/bash
 
