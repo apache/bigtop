@@ -152,9 +152,6 @@ cp $DISTRO_DIR/solr.in.sh $PREFIX/$ETC_DEFAULT/solr.in.sh
 install -d -m 0755 $PREFIX/$NP_ETC_SOLR
 install -d -m 0755 $PREFIX/$ETC_SOLR/conf.dist
 cp -a ${BUILD_DIR}/server/resources/* $PREFIX/$ETC_SOLR/conf.dist
-echo 111111
-ls -R $PREFIX/$ETC_SOLR/conf.dist
-echo 222222
 
 # Copy in the wrapper
 cp -a ${DISTRO_DIR}/solrd $PREFIX/$LIB_DIR/bin/solrd
