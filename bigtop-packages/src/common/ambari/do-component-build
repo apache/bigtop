@@ -19,6 +19,28 @@ set -ex
 
 export _JAVA_OPTIONS="-Xmx2048m -Djava.awt.headless=true"
 
+. /etc/os-release
+OS="$ID"
+ARCH=`uname -m`
+RPM_DIR=../../../../../output/ambari
+
 mvn clean package -DskipTests -Drat.skip
+
+# BIGTOP-3800:
+# Build Ambari-mertics RPMs for Mpack deployment;
+# Ambari DO NOT support debian deployment in current version (2.7.5);
+# So just only add x86 RPMs support for Bigtop 3.2+ Mpack (Centos-7).
+if [ $HOSTTYPE = "x86_64" ] ; then
+if [ "${OS}" = "centos" ]; then
+  mkdir -p ${RPM_DIR}/${ARCH}
+  cd ambari-metrics
+  mvn clean package -Dbuild-rpm -DskipTests
+  cd -
+  cp ambari-metrics/ambari-metrics-assembly/target/rpm/ambari-metrics-collector/RPMS/${ARCH}/ambari-metrics-collector*.rpm ${RPM_DIR}/${ARCH}
+  cp ambari-metrics/ambari-metrics-assembly/target/rpm/ambari-metrics-monitor/RPMS/${ARCH}/ambari-metrics-monitor*.rpm ${RPM_DIR}/${ARCH}
+  cp ambari-metrics/ambari-metrics-assembly/target/rpm/ambari-metrics-hadoop-sink/RPMS/${ARCH}/ambari-metrics-hadoop-sink*.rpm ${RPM_DIR}/${ARCH}
+  cp ambari-metrics/ambari-metrics-assembly/target/rpm/ambari-metrics-grafana/RPMS/${ARCH}/ambari-metrics-grafana*.rpm ${RPM_DIR}/${ARCH}
+fi
+fi
 
 (cd contrib/management-packs/odpi-ambari-mpack ; mvn clean package -DskipTests -Drat.skip)
