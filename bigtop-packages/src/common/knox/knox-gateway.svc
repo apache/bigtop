@@ -36,7 +36,7 @@ cat <<'__EOT__'
 start() {
   KNOX_HOME_DIR="/usr/lib/knox"
   CLI_PATH="$KNOX_HOME_DIR/bin/knoxcli.sh"
-  LOG_FILE=/var/log/knox/${DAEMON}.out
+  LOG_FILE="$KNOX_HOME_DIR/log/${DAEMON}.out"
   DATA_DIR="/var/lib/knox/data"
 
   [ -x ${EXEC_PATH} ] || exit $ERROR_PROGRAM_NOT_INSTALLED

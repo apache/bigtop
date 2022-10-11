@@ -14,9 +14,13 @@
 # limitations under the License.
 
 %define knox_name knox
-%define home_dir %{parent_dir}/usr/lib/%{knox_name}
 
-%define np_var_lib_knox /var/lib/%{knox_name}
+%define etc_default %{parent_dir}/etc/default
+%define usr_lib_knox %{parent_dir}/usr/lib/%{knox_name}
+%define etc_knox %{parent_dir}/etc/%{knox_name}
+%define bin_dir %{parent_dir}/%{_bindir}
+
+%define np_var_lib_knox_data /var/lib/%{knox_name}/data
 %define np_var_run_knox /var/run/%{knox_name}
 %define np_var_log_knox /var/log/%{knox_name}
 %define np_etc_knox /etc/%{knox_name}
@@ -97,10 +101,13 @@ bash %{SOURCE1}
 %install
 # Init.d scripts
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
-%__install -d -m 0755 $RPM_BUILD_ROOT/%{np_var_run_knox}
-%__install -d -m 0755 $RPM_BUILD_ROOT/%{np_var_log_knox}
 
-bash -x %{SOURCE2} --prefix=$RPM_BUILD_ROOT --build-dir=`pwd`
+bash -x %{SOURCE2} \
+    --prefix=$RPM_BUILD_ROOT \
+    --etc-knox=%{etc_knox} \
+    --lib-dir=%{usr_lib_knox} \
+    --bin-dir=%{bin_dir} \
+    --build-dir=`pwd`
 
 for service in %{knox_services}
 do
@@ -120,12 +127,14 @@ for service in %{knox_services}; do
 done
 
 getent group knox >/dev/null || groupadd -r knox
-getent passwd knox >/dev/null || useradd -c "Knox" -s /sbin/nologin -g knox -r -d %{home_dir} knox 2> /dev/null || :
+getent passwd knox >/dev/null || useradd -c "Knox" -s /sbin/nologin -g knox -r -d %{usr_lib_knox} knox 2> /dev/null || :
 
 %post
 for service in %{knox_services}; do
   chkconfig --add %{name}-${service}
 done
+%{alternatives_cmd} --install %{np_etc_knox}/conf %{knox_name}-conf %{etc_knox}/conf.dist 30
+
 
 %postun
 for service in %{knox_services}; do
@@ -136,13 +145,23 @@ done
 
 %files
 %defattr(-,root,root)
+%attr(0755,knox,knox) %config(noreplace) %{np_etc_knox}
+%attr(0755,knox,knox) %config(noreplace) %{initd_dir}/%{name}-gateway
+%dir %{_sysconfdir}/%{knox_name}
 
-
-%{home_dir}
-%attr(0755,knox,knox) %{np_etc_knox}
-%attr(0755,knox,knox) %{np_var_lib_knox}
-%attr(0755,knox,knox) %{np_var_run_knox}
 %attr(0755,knox,knox) %{np_var_log_knox}
-%attr(0755,root,root) /usr/bin/gateway
-%attr(0755,root,root) %{initd_dir}/%{name}*
+%attr(0755,knox,knox) %{np_var_lib_knox_data}
+%attr(0755,knox,knox) %{np_var_run_knox}
 
+%{usr_lib_knox}/data
+%{usr_lib_knox}/conf
+%{usr_lib_knox}/logs
+%{usr_lib_knox}/pids
+%{usr_lib_knox}/bin
+%{usr_lib_knox}/dep
+%{usr_lib_knox}/lib
+%{usr_lib_knox}/native
+%{usr_lib_knox}/samples
+%{usr_lib_knox}/templates
+
+%{bin_dir}/gateway

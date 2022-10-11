@@ -24,7 +24,8 @@ usage: $0 <options>
      --prefix=PREFIX             path to install into
 
   Optional options:
-     --home-dir=DIR               path to install knox home [/usr/lib/knox]
+     --lib-dir=DIR               path to install knox home [/usr/lib/knox]
+     --bin-dir=DIR               path to install bins [/usr/bin]
      --etc-knox=DIR             path to install knox conf [/etc/knox]
      ... [ see source for more similar options ]
   "
@@ -36,7 +37,8 @@ OPTS=$(getopt \
   -o '' \
   -l 'prefix:' \
   -l 'build-dir:' \
-  -l 'home-dir:' \
+  -l 'bin-dir:' \
+  -l 'lib-dir:' \
   -l 'etc-knox:' -- "$@")
 
 if [ $? != 0 ] ; then
@@ -52,8 +54,11 @@ while true ; do
         --build-dir)
         BUILD_DIR=$2 ; shift 2
         ;;
-        --home-dir)
-        HOME_DIR=$2 ; shift 2
+        --bin-dir)
+        BIN_DIR=$2 ; shift 2
+        ;;
+        --lib-dir)
+        LIB_DIR=$2 ; shift 2
         ;;
         --etc-knox)
         ETC_KNOX=$2 ; shift 2
@@ -76,28 +81,26 @@ for var in PREFIX BUILD_DIR ; do
   fi
 done
 
-HOME_DIR=${HOME_DIR:-/usr/lib/knox}
-LIB_DIR=${LIB_DIR:-$HOME_DIR/lib}
-DEP_DIR=${DEP_DIR:-$HOME_DIR/dep}
-BIN_DIR=${BIN_DIR:-$HOME_DIR/bin}
-CONF_DIR=${CONF_DIR:-/etc/knox}
-SAMPLES_DIR=${SAMPLES_DIR:-$HOME_DIR/samples}
-TEMPLATES_DIR=${TEMPLATES_DIR:-$HOME_DIR/templates}
-
-DATA_DIR=${DATA_DIR:-/var/lib/knox/data}
+LIB_DIR=${LIB_DIR:-/usr/lib/knox}
+BIN_DIR=${BIN_DIR:-/usr/bin}
+ETC_KNOX=${ETC_KNOX:-/etc/knox}
 RUN_DIR=${RUN_DIR:-/var/run/knox}
 LOG_DIR=${LOG_DIR:-/var/log/knox}
-NP_ETC_KNOX=/etc/knox
 
-install -d -m 0755 $PREFIX/$HOME_DIR
+NP_ETC_KNOX=/etc/knox
+NP_VAR_LIB_KNOX_DATA=/var/lib/knox/data
+
+
 install -d -m 0755 $PREFIX/$LIB_DIR
-install -d -m 0755 $PREFIX/$DEP_DIR
-install -d -m 0755 $PREFIX/$BIN_DIR
+install -d -m 0755 $PREFIX/$LIB_DIR/bin
+install -d -m 0755 $PREFIX/$LIB_DIR/lib
+install -d -m 0755 $PREFIX/$LIB_DIR/dep
 install -d -m 0755 $PREFIX/$NP_ETC_KNOX
-install -d -m 0755 $PREFIX/$CONF_DIR
-install -d -m 0755 $PREFIX/$SAMPLES_DIR
-install -d -m 0755 $PREFIX/$TEMPLATES_DIR
-install -d -m 0755 $PREFIX/$DATA_DIR
+install -d -m 0755 $PREFIX/$NP_VAR_LIB_KNOX_DATA
+install -d -m 0755 $PREFIX/$ETC_KNOX/conf.dist
+install -d -m 0755 $PREFIX/$LIB_DIR/samples
+install -d -m 0755 $PREFIX/$LIB_DIR/templates
+install -d -m 0755 $PREFIX/$LIB_DIR/native
 install -d -m 0755 $PREFIX/$RUN_DIR
 install -d -m 0755 $PREFIX/$LOG_DIR
 
@@ -105,22 +108,21 @@ TMP_DIR=$BUILD_DIR/tmp
 mkdir -p $BUILD_DIR/tmp
 tar -zxf $BUILD_DIR/target/*.*.*/knox-*.tar.gz -C $TMP_DIR
 
-cp -ra $TMP_DIR/knox-*/lib/* ${PREFIX}/${LIB_DIR}
-cp -ra $TMP_DIR/knox-*/dep/* ${PREFIX}/${DEP_DIR}
-cp -ra $TMP_DIR/knox-*/bin/* ${PREFIX}/${BIN_DIR}
-cp -ra $TMP_DIR/knox-*/conf/* ${PREFIX}/${CONF_DIR}
-cp -ra $TMP_DIR/knox-*/samples ${PREFIX}/${SAMPLES_DIR}
-cp -ra $TMP_DIR/knox-*/templates/* ${PREFIX}/${TEMPLATES_DIR}
-cp -ra $TMP_DIR/knox-*/data/* ${PREFIX}/${DATA_DIR}
+cp -ra ${TMP_DIR}/knox-*/dep/* ${PREFIX}/${LIB_DIR}/dep/
+cp -ra ${TMP_DIR}/knox-*/lib/* ${PREFIX}/${LIB_DIR}/lib/
+cp -a ${TMP_DIR}/knox-*/bin/* ${PREFIX}/${LIB_DIR}/bin/
+cp -a ${TMP_DIR}/knox-*/samples/* ${PREFIX}/${LIB_DIR}/samples/
+cp -a ${TMP_DIR}/knox-*/templates/* ${PREFIX}/${LIB_DIR}/templates/
+cp -a ${TMP_DIR}/knox-*/native/* ${PREFIX}/${LIB_DIR}/native/
+cp -ra ${TMP_DIR}/knox-*/data/* ${PREFIX}/${NP_VAR_LIB_KNOX_DATA}
+cp -ra ${TMP_DIR}/knox-*/conf/* ${PREFIX}/${ETC_KNOX}/conf.dist
+cp ${TMP_DIR}/{LICENSE,README} ${PREFIX}/${LIB_DIR}/
 
-ln -s $CONF_DIR ${PREFIX}/$HOME_DIR/conf
-ln -s $LOG_DIR ${PREFIX}/$HOME_DIR/logs
-ln -s $DATA_DIR ${PREFIX}/$HOME_DIR/data
-ln -s $RUN_DIR ${PREFIX}/$HOME_DIR/pids
 ln -s $NP_ETC_KNOX/conf $PREFIX/$LIB_DIR/conf
+ln -s $NP_VAR_LIB_KNOX_DATA $PREFIX/$LIB_DIR/data
+ln -s $LOG_DIR $PREFIX/$LIB_DIR/logs
+ln -s $RUN_DIR $PREFIX/$LIB_DIR/pids
 
-rm -rf ${PREFIX}/README
-rm -rf ${PREFIX}/native
 rm -rf $TMP_DIR
 
 # Copy in the /usr/bin/knox wrapper
@@ -131,8 +133,6 @@ cat > $PREFIX/usr/bin/gateway <<EOF
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
 
-export HOME_DIR=\${HOME_DIR}
-
-exec $HOME_DIR/bin/gateway.sh \$@
+exec $LIB_DIR/bin/gateway.sh \$@
 EOF
-chmod 755 $PREFIX/usr/bin/gateway
+chmod 755 $PREFIX/$BIN_DIR/gateway

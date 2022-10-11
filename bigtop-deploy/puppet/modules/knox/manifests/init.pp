@@ -29,14 +29,14 @@ class knox {
       ensure => latest,
     }
 
-    file { '/usr/lib/knox/conf/gateway-site.xml':
+    file { '/etc/knox/conf/gateway-site.xml':
       content => template('knox/gateway-site.xml'),
       require => [ Package['knox'] ],
       owner   => 'knox',
       group   => 'knox',
     }
 
-    file { '/usr/lib/knox/conf/topologies/sandbox.xml':
+    file { '/etc/knox/conf/topologies/sandbox.xml':
       content => template('knox/sandbox.xml'),
       require => [ Package['knox'] ],
       owner   => 'knox',
@@ -47,7 +47,7 @@ class knox {
       ensure     => running,
       subscribe  => [
           Package['knox'],
-          File['/usr/lib/knox/conf/gateway-site.xml'],
+          File['/etc/knox/conf/gateway-site.xml'],
        ],
       hasrestart => true,
       hasstatus  => true,
