@@ -29,7 +29,7 @@ BuildArch:  noarch
 Source0:    install_select.sh
 Source1:    LICENSE
 Source2:    conf-select
-Source3:    bigtop-select
+Source3:    distro-select
 Requires:   bash
 
 # "which" command is needed for a lot of projects.
