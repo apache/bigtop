@@ -18,7 +18,7 @@ set -e
 
 case "$1" in
     remove|upgrade|deconfigure)
-      update-alternatives --remove knox-conf /etc/knox || :
+      update-alternatives --remove knox-conf /etc/knox/conf.dist || :
     ;;
 
     failed-upgrade)
