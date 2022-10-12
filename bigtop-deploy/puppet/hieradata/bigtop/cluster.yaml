@@ -94,6 +94,8 @@ hadoop::common_hdfs::hadoop_namenode_port: "8020"
 # See also dfs.client.block.write.replace-datanode-on-failure.policy
 # hadoop::common_hdfs::hdfs_replace_datanode_on_failure: "false"
 
+hadoop::common_hdfs::hdfs_shortcut_reader: true
+
 # Set as shown below in site.yaml to also enable Kerberos authentication
 # on the web GUIs of journalnode, namenode, datanode, resourcemanager and
 # nodemanager when you enable Kerberos for Hadoop API communication. This
