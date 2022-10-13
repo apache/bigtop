@@ -60,8 +60,7 @@ override_dh_auto_install:
 	  --system-lib-dir=/usr/lib/ \
 	  --system-include-dir=/usr/include \
 	  --doc-dir=/usr/share/doc/hadoop-doc \
-      --man-dir=/usr/share/man \
-	  --installed-lib-dir=/usr/lib/hadoop
+	  --man-dir=/usr/share/man
 	# Forcing Zookeeper dependency to be on the packaged jar
 	ln -sf /usr/lib/zookeeper/zookeeper.jar debian/tmp/usr/lib/hadoop/lib/zookeeper-[[:digit:]]*.jar
 	# Workaround for BIGTOP-583

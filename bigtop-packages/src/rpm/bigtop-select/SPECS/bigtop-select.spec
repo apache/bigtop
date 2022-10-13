@@ -13,8 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-%define lib_dir /usr/lib/bigtop-select
-%define bin_dir /usr/bin
+%define lib_dir        /usr/lib/bigtop-select
+%define bin_dir        /usr/bin
+%define stack_root_dir /usr/bigtop
 
 Name: bigtop-select
 Version: %{bigtop_select_version}
@@ -29,7 +30,7 @@ BuildArch:  noarch
 Source0:    install_select.sh
 Source1:    LICENSE
 Source2:    conf-select
-Source3:    bigtop-select
+Source3:    distro-select
 Requires:   bash
 
 # "which" command is needed for a lot of projects.
@@ -69,7 +70,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc LICENSE
 
 %{lib_dir}
-#%{bin_dir}
+%{stack_root_dir}
 
 %changelog
 
