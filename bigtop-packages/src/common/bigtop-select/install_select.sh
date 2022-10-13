@@ -67,10 +67,12 @@ LIB_DIR=${LIB_DIR:-/usr/lib/bigtop-select}
 BIN_DIR=${BIN_DIR:-/usr/bin}
 CONF_DIR=${CONF_DIR:-/etc/bigtop-select/conf.dist}
 
+STACK_ROOT_DIR=/usr/bigtop
 STACK_SELECTOR=distro-select
 CONF_SELECTOR=conf-select
 
 # Install packages
 install -d -p -m 755 $PREFIX${LIB_DIR}/
+install -d -p -m 755 $PREFIX${STACK_ROOT_DIR}/
 install -p -m 755 ${DISTRO_DIR}/${STACK_SELECTOR} $PREFIX${LIB_DIR}/
 install -p -m 755 ${DISTRO_DIR}/${CONF_SELECTOR} $PREFIX${LIB_DIR}/
