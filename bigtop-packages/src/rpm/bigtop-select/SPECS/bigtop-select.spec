@@ -13,9 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-%define lib_dir        /usr/lib/bigtop-select
-%define bin_dir        /usr/bin
-%define stack_root_dir %{parent_dir}
+%define lib_dir              /usr/lib/bigtop-select
+%define bin_dir              /usr/bin
 
 Name: bigtop-select
 Version: %{bigtop_select_version}
@@ -60,7 +59,8 @@ bash %{SOURCE0} \
   --distro-dir=${RPM_SOURCE_DIR} \
   --build-dir=${PWD} \
   --prefix=${RPM_BUILD_ROOT} \
-  --stack-root-dir=%{stack_root_dir}
+  --parent-dir=%{parent_dir} \
+  --bigtop-base-version=%{bigtop_base_version}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -71,7 +71,6 @@ rm -rf $RPM_BUILD_ROOT
 %doc LICENSE
 
 %{lib_dir}
-%{stack_root_dir}
 
 %changelog
 

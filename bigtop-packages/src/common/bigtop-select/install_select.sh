@@ -21,10 +21,11 @@ usage() {
   echo "
 usage: $0 <options>
   Required not-so-options:
-     --distro-dir=DIR                      path to distro specific files (debian/RPM)
-     --build-dir=DIR                       path to build directory
-     --prefix=PREFIX                       path to install into
-     --stack-root-dir=STACK_ROOT_DIR       path to install stack-root
+     --distro-dir=DIR                             path to distro specific files (debian/RPM)
+     --build-dir=DIR                              path to build directory
+     --prefix=PREFIX                              path to install into
+     --parent-dir=PARENT_DIR                      path to install stack-root/stack-version
+     --bigtop-base-version=BIGTOP_BASE_VERSION    Bigtop Base Version
   "
   exit 1
 }
@@ -34,7 +35,8 @@ OPTS=$(getopt \
   -l 'prefix:' \
   -l 'distro-dir:' \
   -l 'build-dir:' \
-  -l 'stack-root-dir:' \
+  -l 'parent-dir:' \
+  -l 'bigtop-base-version:' \
   -- "$@")
 if [ $? != 0 ] ; then
     usage
@@ -42,8 +44,11 @@ fi
 eval set -- "$OPTS"
 while true ; do
     case "$1" in
-        --stack-root-dir)
-        STACK_ROOT_DIR=$2 ; shift 2
+        --parent-dir)
+        PARENT_DIR=$2 ; shift 2
+        ;;
+        --bigtop-base-version)
+        BIGTOP_BASE_VERSION=$2 ; shift 2
         ;;
         --prefix)
         PREFIX=$2 ; shift 2
@@ -72,6 +77,7 @@ LIB_DIR=${LIB_DIR:-/usr/lib/bigtop-select}
 BIN_DIR=${BIN_DIR:-/usr/bin}
 CONF_DIR=${CONF_DIR:-/etc/bigtop-select/conf.dist}
 
+STACK_ROOT_DIR=$(echo ${PARENT_DIR} | sed -e "s/\/${BIGTOP_BASE_VERSION}$//")
 STACK_ROOT_DIR=${STACK_ROOT_DIR:-/usr/bigtop}
 STACK_SELECTOR=distro-select
 CONF_SELECTOR=conf-select
@@ -101,15 +107,8 @@ cat > $PREFIX${LIB_DIR}/params.py <<EOF
 # limitations under the License.
 #
 
-import re
-stack_root_dir = '${STACK_ROOT_DIR}'
-pattern = re.compile(r'^(?P<stack_root>.+)/(?P<stack_version>[0-9]+\.[0-9]+\.[0-9]+)$')
-stack_root = '/usr/bigtop'
-stack_version = None
-m = pattern.search(stack_root_dir)
-if m:
-  stack_version = m.group('stack_version')
-  stack_root = m.group('stack_root')
+stack_root = '${STACK_ROOT_DIR}'
+stack_version = '${BIGTOP_BASE_VERSION}'
 
 EOF
 chmod 755 $PREFIX${LIB_DIR}/params.py
