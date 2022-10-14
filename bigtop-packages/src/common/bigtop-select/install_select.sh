@@ -21,9 +21,10 @@ usage() {
   echo "
 usage: $0 <options>
   Required not-so-options:
-     --distro-dir=DIR            path to distro specific files (debian/RPM)
-     --build-dir=DIR             path to build directory
-     --prefix=PREFIX             path to install into
+     --distro-dir=DIR                      path to distro specific files (debian/RPM)
+     --build-dir=DIR                       path to build directory
+     --prefix=PREFIX                       path to install into
+     --stack-root-dir=STACK_ROOT_DIR       path to install stack-root
   "
   exit 1
 }
@@ -33,6 +34,7 @@ OPTS=$(getopt \
   -l 'prefix:' \
   -l 'distro-dir:' \
   -l 'build-dir:' \
+  -l 'stack-root-dir:' \
   -- "$@")
 if [ $? != 0 ] ; then
     usage
@@ -40,6 +42,9 @@ fi
 eval set -- "$OPTS"
 while true ; do
     case "$1" in
+        --stack-root-dir)
+        STACK_ROOT_DIR=$2 ; shift 2
+        ;;
         --prefix)
         PREFIX=$2 ; shift 2
         ;;
@@ -67,7 +72,7 @@ LIB_DIR=${LIB_DIR:-/usr/lib/bigtop-select}
 BIN_DIR=${BIN_DIR:-/usr/bin}
 CONF_DIR=${CONF_DIR:-/etc/bigtop-select/conf.dist}
 
-STACK_ROOT_DIR=/usr/bigtop
+STACK_ROOT_DIR=${STACK_ROOT_DIR:-/usr/bigtop}
 STACK_SELECTOR=distro-select
 CONF_SELECTOR=conf-select
 
@@ -76,3 +81,35 @@ install -d -p -m 755 $PREFIX${LIB_DIR}/
 install -d -p -m 755 $PREFIX${STACK_ROOT_DIR}/
 install -p -m 755 ${DISTRO_DIR}/${STACK_SELECTOR} $PREFIX${LIB_DIR}/
 install -p -m 755 ${DISTRO_DIR}/${CONF_SELECTOR} $PREFIX${LIB_DIR}/
+cat > $PREFIX${LIB_DIR}/params.py <<EOF
+#!/usr/bin/env python2
+#
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+import re
+stack_root_dir = '${STACK_ROOT_DIR}'
+pattern = re.compile(r'^(?P<stack_root>.+)/(?P<stack_version>[0-9]+\.[0-9]+\.[0-9]+)$')
+stack_root = '/usr/bigtop'
+stack_version = None
+m = pattern.search(stack_root_dir)
+if m:
+  stack_version = m.group('stack_version')
+  stack_root = m.group('stack_root')
+
+EOF
+chmod 755 $PREFIX${LIB_DIR}/params.py

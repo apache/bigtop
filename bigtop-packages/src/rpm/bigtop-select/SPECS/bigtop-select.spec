@@ -15,7 +15,7 @@
 
 %define lib_dir        /usr/lib/bigtop-select
 %define bin_dir        /usr/bin
-%define stack_root_dir /usr/bigtop
+%define stack_root_dir %{parent_dir}
 
 Name: bigtop-select
 Version: %{bigtop_select_version}
@@ -59,7 +59,8 @@ install -p -m 755 %{SOURCE3} .
 bash %{SOURCE0} \
   --distro-dir=${RPM_SOURCE_DIR} \
   --build-dir=${PWD} \
-  --prefix=${RPM_BUILD_ROOT}
+  --prefix=${RPM_BUILD_ROOT} \
+  --stack-root-dir=%{stack_root_dir}
 
 %clean
 rm -rf $RPM_BUILD_ROOT

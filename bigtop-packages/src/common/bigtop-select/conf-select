@@ -22,9 +22,10 @@ import os
 import re
 import sys
 import errno
+from params import stack_root
 
 # The global prefix and current directory
-root = "/usr/bigtop"
+root = stack_root
 current = root + "/current"
 vconfroot = 'etc'
 lib_root = "usr/lib"

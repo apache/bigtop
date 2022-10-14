@@ -490,6 +490,14 @@ def genTasks = { target ->
     def final MAVEN_REPO_URI = project.hasProperty('mavenRepoUri') ? project.property('mavenRepoUri') : null
 
     def final PARENT_DIR = project.hasProperty("parentDir") ? project.property('parentDir') : "%{nil}"
+    def final mpackVersionRegex = /^(?<version>[0-9]+\.[0-9]+\.[0-9]+)-.*/
+    def FULL_PARENT_DIR = "${PARENT_DIR}"
+    if (PARENT_DIR != "%{nil}") {
+      def matcher = "${config.bigtop.version}" =~ mpackVersionRegex
+      matcher.matches()
+      def BIGTOP_BASE_VERSION = matcher.group("version")
+      FULL_PARENT_DIR = "${PARENT_DIR}/${BIGTOP_BASE_VERSION}"
+    }
 
     def command = [
         '--define', "_topdir $PKG_BUILD_DIR/rpm/",
@@ -500,7 +508,7 @@ def genTasks = { target ->
         '--rebuild', SRCRPM,
         '--define', "do_maven_deploy ${DO_MAVEN_DEPLOY}",
         '--define', "maven_deploy_source ${MAVEN_DEPLOY_SOURCE}",
-        "--define", "parent_dir ${PARENT_DIR}"
+        "--define", "parent_dir ${FULL_PARENT_DIR}"
     ]
 
    if (MAVEN_REPO_URI != null) {
