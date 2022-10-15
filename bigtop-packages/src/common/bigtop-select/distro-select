@@ -21,10 +21,11 @@ import copy
 import os
 import re
 import sys
+from params import stack_root, stack_version
 
 # The global prefix and current directory
-root = "/usr/bigtop"
-bigtop_version = "3.2.0"
+root = stack_root
+bigtop_version = stack_version
 current = root + "/current"
 lib_root = "/usr/lib"
 bin_directory = "/usr/bin"
