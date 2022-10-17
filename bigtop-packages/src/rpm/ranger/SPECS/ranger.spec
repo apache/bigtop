@@ -14,25 +14,25 @@
 %undefine _missing_build_ids_terminate_build
 
 %define ranger_name ranger
-%define ranger_home /usr/lib/%{ranger_name}
-%define ranger_user_home /var/lib/%{ranger_name}
 
-%define usr_lib_ranger /usr/lib/%{ranger_name}
-%define var_log_ranger /var/log/%{ranger_name}
-%define var_run_ranger /var/run/%{ranger_name}
-%define usr_bin /usr/bin
-%define man_dir %{ranger_home}/man
+%define usr_lib_ranger %{parent_dir}/usr/lib/%{ranger_name}
+%define var_lib_ranger %{parent_dir}/var/lib/%{ranger_name}
+
+%define usr_lib_hadoop %{parent_dir}/usr/lib/hadoop
+%define usr_lib_hive %{parent_dir}/usr/lib/hive
+%define usr_lib_knox %{parent_dir}/usr/lib/knox
+%define usr_lib_storm %{parent_dir}/usr/lib/storm
+%define usr_lib_hbase %{parent_dir}/usr/lib/hbase
+%define usr_lib_kafka %{parent_dir}/usr/lib/kafka
+%define usr_lib_atlas %{parent_dir}/usr/lib/atlas
+
+%define doc_dir %{parent_dir}/%{_docdir}
+
+# No prefix directory
+%define np_var_run_ranger /var/run/%{ranger_name}
+
 %define ranger_services ranger-admin ranger-usersync ranger-tagsync ranger-kms
 %define ranger_dist build
-
-%define hadoop_home /usr/lib/hadoop
-%define hive_home /usr/lib/hive
-%define knox_home /usr/lib/knox
-%define storm_home /usr/lib/storm
-%define hbase_home /usr/lib/hbase
-%define kafka_home /usr/lib/kafka
-%define atlas_home /usr/lib/atlas
-
 
 %if %{!?suse_version:1}0 && %{!?mgaversion:1}0
 %define __os_install_post \
@@ -42,7 +42,7 @@
     /usr/lib/rpm/brp-python-bytecompile ; \
     %{nil}
 
-%define doc_ranger %{_docdir}/%{ranger_name}-%{ranger_version}
+%define doc_ranger %{doc_dir}/%{ranger_name}-%{ranger_version}
 %define alternatives_cmd alternatives
 %global initd_dir %{_sysconfdir}/rc.d/init.d
 
@@ -55,7 +55,7 @@
 %define suse_check \# Define an empty suse_check for compatibility with older sles
 %endif
 
-%define doc_ranger %{_docdir}/%{ranger_name}
+%define doc_ranger %{doc_dir}/%{ranger_name}
 %define alternatives_cmd update-alternatives
 
 %global initd_dir %{_sysconfdir}/rc.d
@@ -125,7 +125,7 @@ Requires: chkconfig, xinetd-simple-services, zlib, initscripts
 Ranger is a framework to secure hadoop data 
 
 %package admin
-Summary: Web Interface for Ranger 
+Summary: Web Interface for Ranger
 Group: System/Daemons
 Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service
 Requires: psmisc
@@ -352,34 +352,34 @@ bash %{SOURCE1}
 #########################
 %install
 %__rm -rf $RPM_BUILD_ROOT
-echo
 for comp in admin usersync kms tagsync hdfs-plugin yarn-plugin hive-plugin hbase-plugin knox-plugin storm-plugin kafka-plugin atlas-plugin
 do
 	env RANGER_VERSION=%{ranger_base_version} /bin/bash %{SOURCE2} \
   		--prefix=$RPM_BUILD_ROOT \
   		--build-dir=%{ranger_dist} \
   		--component=${comp} \
+        --comp-dir=%{usr_lib_ranger}-${comp} \
+        --var-ranger=%{var_lib_ranger} \
   		--doc-dir=$RPM_BUILD_ROOT/%{doc_ranger}
-echo;echo
 done
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
 
 %pre admin
 getent group ranger >/dev/null || groupadd -r ranger
-getent passwd ranger >/dev/null || useradd -c "Ranger" -s /bin/bash -g ranger -m -d /var/lib/%{ranger_name} ranger 2> /dev/null || :
+getent passwd ranger >/dev/null || useradd -c "Ranger" -s /bin/bash -g ranger -m -d %{var_lib_ranger} ranger 2> /dev/null || :
 
 %pre usersync
 getent group ranger >/dev/null || groupadd -r ranger
-getent passwd ranger >/dev/null || useradd -c "Ranger" -s /bin/bash -g ranger -m -d /var/lib/%{ranger_name} ranger 2> /dev/null || :
+getent passwd ranger >/dev/null || useradd -c "Ranger" -s /bin/bash -g ranger -m -d %{var_lib_ranger}} ranger 2> /dev/null || :
 
 %pre kms
 getent group ranger >/dev/null || groupadd -r ranger
-getent passwd ranger >/dev/null || useradd -c "Ranger" -s /bin/bash -g ranger -m -d /var/lib/%{ranger_name} ranger 2> /dev/null || :
+getent passwd ranger >/dev/null || useradd -c "Ranger" -s /bin/bash -g ranger -m -d %{var_lib_ranger} ranger 2> /dev/null || :
 
 %pre tagsync
 getent group ranger >/dev/null || groupadd -r ranger
-getent passwd ranger >/dev/null || useradd -c "Ranger" -s /bin/bash -g ranger -m -d /var/lib/%{ranger_name} ranger 2> /dev/null || :
+getent passwd ranger >/dev/null || useradd -c "Ranger" -s /bin/bash -g ranger -m -d %{var_lib_ranger} ranger 2> /dev/null || :
 
 %post usersync
 if [ -f %{usr_lib_ranger}-usersync/native/credValidator.uexe ]; then
@@ -395,8 +395,8 @@ fi
 #######################
 %files admin
 %defattr(-,root,root,755)
-%attr(0775,ranger,ranger) %{ranger_user_home}
-%attr(0775,ranger,ranger) %{var_run_ranger}
+%attr(0775,ranger,ranger) %{var_lib_ranger}
+%attr(0775,ranger,ranger) %{np_var_run_ranger}
 %{usr_lib_ranger}-admin
 
 %files usersync
@@ -415,39 +415,39 @@ fi
 %files hdfs-plugin
 %defattr(-,root,root,755)
 %{usr_lib_ranger}-hdfs-plugin
-%{hadoop_home}/lib
+%{usr_lib_hadoop}/lib
 
 %files yarn-plugin
 %defattr(-,root,root,755)
 %{usr_lib_ranger}-yarn-plugin
-%{hadoop_home}/lib
+%{usr_lib_hadoop}/lib
 
 %files hive-plugin
 %defattr(-,root,root,755)
 %{usr_lib_ranger}-hive-plugin
-%{hive_home}/lib
+%{usr_lib_hive}/lib
 
 %files hbase-plugin
 %defattr(-,root,root,755)
 %{usr_lib_ranger}-hbase-plugin
-%{hbase_home}/lib
+%{usr_lib_hbase}/lib
 
 %files knox-plugin
 %defattr(-,root,root,755)
 %{usr_lib_ranger}-knox-plugin
-%{knox_home}/lib
+%{usr_lib_knox}/lib
 
 %files storm-plugin
 %defattr(-,root,root,755)
 %{usr_lib_ranger}-storm-plugin
-%{storm_home}/lib
+%{usr_lib_storm}/lib
 
 %files kafka-plugin
 %defattr(-,root,root,755)
 %{usr_lib_ranger}-kafka-plugin
-%{kafka_home}/lib
+%{usr_lib_kafka}/lib
 
 %files atlas-plugin
 %defattr(-,root,root,755)
 %{usr_lib_ranger}-atlas-plugin
-%{atlas_home}/lib
+%{usr_lib_atlas}/lib
