@@ -123,7 +123,7 @@ if [[ "${COMPONENT}" =~ ^(admin|usersync|tagsync|kms)$ ]]; then
 else
   RANGER_COMPONENT=${COMPONENT}
   if [[ "${COMPONENT}" = "hdfs-plugin" || "${COMPONENT}" = "yarn-plugin" ]];then
-    RANGER_COMPONENT="hadoop"
+    RANGER_COMPONENT="hadoop-$(echo $COMPONENT | cut -d '-' -f 1)"
   else
     RANGER_COMPONENT=$(echo $COMPONENT | cut -d '-' -f 1)
   fi

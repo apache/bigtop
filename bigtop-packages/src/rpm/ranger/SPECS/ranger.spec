@@ -21,6 +21,8 @@
 %define np_etc_ranger /etc/%{ranger_name}
 
 %define usr_lib_hadoop %{parent_dir}/usr/lib/hadoop
+%define usr_lib_hdfs %{hadoop_home}-hdfs
+%define usr_lib_yarn %{hadoop_home}-yarn
 %define usr_lib_hive %{parent_dir}/usr/lib/hive
 %define usr_lib_knox %{parent_dir}/usr/lib/knox
 %define usr_lib_storm %{parent_dir}/usr/lib/storm
@@ -536,12 +538,12 @@ fi
 %files hdfs-plugin
 %defattr(-,root,root,755)
 %{usr_lib_ranger}-hdfs-plugin
-%{usr_lib_hadoop}/lib
+%{usr_lib_hdfs}/lib
 
 %files yarn-plugin
 %defattr(-,root,root,755)
 %{usr_lib_ranger}-yarn-plugin
-%{usr_lib_hadoop}/lib
+%{usr_lib_yarn}/lib
 
 %files hive-plugin
 %defattr(-,root,root,755)
