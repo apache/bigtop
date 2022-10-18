@@ -15,6 +15,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+set -e 
+
 usage() {
     echo "usage: $PROG [-C file] [-F file] args"
     echo "       -C file                                   - Use alternate file for config.yaml"
@@ -22,6 +24,7 @@ usage() {
     echo "  commands:"
     echo "       -c NUM_INSTANCES, --create NUM_INSTANCES  - Create a Docker based Bigtop Hadoop cluster"
     echo "       -d, --destroy                             - Destroy the cluster"
+    echo "       -dcp, --docker-compose-plugin             - Execute docker compose plugin command 'docker compose'"
     echo "       -e, --exec INSTANCE_NO|INSTANCE_NAME      - Execute command on a specific instance. Instance can be specified by name or number"
     echo "                                                   For example: $PROG --exec 1 bash"
     echo "                                                                $PROG --exec docker_bigtop_1 bash"
@@ -211,10 +214,17 @@ destroy() {
     else
         get_nodes
         docker exec ${NODES[0]} bash -c "umount /etc/hosts; rm -f /etc/hosts"
+        NETWORK_ID=`docker network ls --quiet --filter name=${PROVISION_ID}_default`
+
         if [ -n "$PROVISION_ID" ]; then
             $DOCKER_COMPOSE_CMD -p $PROVISION_ID stop
             $DOCKER_COMPOSE_CMD -p $PROVISION_ID rm -f
+            
         fi
+
+        if [ -n "$NETWORK_ID" ]; then
+            docker network rm ${PROVISION_ID}_default
+        fi 
         rm -rvf ./config .provision_id .error_msg*
     fi
 }
@@ -292,6 +302,10 @@ get_nodes() {
     fi
 }
 
+change_docker_compose_cmd() {
+    DOCKER_COMPOSE_CMD="docker compose"
+}
+
 PROG=`basename $0`
 
 if [ $# -eq 0 ]; then
@@ -300,6 +314,13 @@ fi
 
 yamlconf="config.yaml"
 DOCKER_COMPOSE_CMD="docker-compose"
+
+for arg in $@
+do
+   if [ "$arg" == "-dcp" ] || [ "$arg" == "--docker-compose-plugin" ]; then 
+       change_docker_compose_cmd
+   fi
+done
 
 BIGTOP_PUPPET_DIR=../../bigtop-deploy/puppet
 if [ -e .provision_id ]; then
@@ -333,6 +354,8 @@ while [ $# -gt 0 ]; do
         shift 2;;
     -d|--destroy)
         destroy
+        shift;;
+    -dcp|--docker-compose-plugin)
         shift;;
     -e|--exec)
         if [ $# -lt 3 ]; then

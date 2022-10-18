@@ -186,7 +186,7 @@ bigtop {
     'oozie' {
       name    = 'oozie'
       relNotes = 'Apache Oozie'
-      version { base = '5.2.1'; pkg = base; release = 1 }
+      version { base = '5.2.1'; pkg = base; release = 2 }
       tarball { destination = "$name-${version.base}.tar.gz"
                 source      = destination }
       url     { download_path = "/$name/${version.base}/"
@@ -257,6 +257,12 @@ bigtop {
       relNotes = "Service package for Apache Bigtop runtime"
       version { base = bigtop.version; pkg = base-"-SNAPSHOT"; release = 1 }
       tarball { destination = "bigtop-utils-${version.base}.tar.gz" }
+    }
+    'bigtop-select' {
+      name    = "bigtop-select"
+      relNotes = "Service package for Apache Bigtop information to use Ambari"
+      version { base = bigtop.version; pkg = base-"-SNAPSHOT"; release = 1 }
+      tarball { destination = "bigtop-select-${version.base}.tar.gz" }
     }
     'bigtop-jsvc' {
       name    = "bigtop-jsvc"
@@ -349,7 +355,7 @@ bigtop {
     'ranger' {
       name    = 'ranger'
       relNotes = 'Apache Ranger'
-      version { base = '2.2.0'; pkg = base; release = 1 }
+      version { base = '2.3.0'; pkg = base; release = 1 }
       tarball { destination = "release-$name-${version.base}.tar.gz"
                 source      = destination }
       url     { site = "https://github.com/apache/ranger/archive/refs/tags"

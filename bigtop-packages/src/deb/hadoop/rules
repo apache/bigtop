@@ -57,14 +57,10 @@ override_dh_auto_install:
 	  --prefix=debian/tmp/ \
 	  --distro-dir=debian \
 	  --build-dir=${CURDIR}/build \
-	  --system-lib-dir=debian/tmp/usr/lib/ \
-	  --system-libexec-dir=debian/tmp/usr/lib/hadoop/libexec/ \
-	  --system-include-dir=debian/tmp/usr/include \
-	  --doc-dir=debian/tmp/usr/share/doc/hadoop-doc \
-          --man-dir=debian/tmp/usr/share/man \
-	  --example-dir=debian/tmp/usr/share/doc/hadoop/examples \
-	  --native-build-string=${native_dir} \
-	  --installed-lib-dir=/usr/lib/hadoop
+	  --system-lib-dir=/usr/lib/ \
+	  --system-include-dir=/usr/include \
+	  --doc-dir=/usr/share/doc/hadoop-doc \
+	  --man-dir=/usr/share/man
 	# Forcing Zookeeper dependency to be on the packaged jar
 	ln -sf /usr/lib/zookeeper/zookeeper.jar debian/tmp/usr/lib/hadoop/lib/zookeeper-[[:digit:]]*.jar
 	# Workaround for BIGTOP-583

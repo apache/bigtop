@@ -40,3 +40,5 @@ override_dh_auto_install: $(svcs)
 	--doc-dir=/usr/share/doc/zeppelin \
 	--source-dir=debian \
 	--prefix=debian/tmp
+
+override_dh_strip_nondeterminism:

@@ -27,10 +27,12 @@ usage: $0 <options>
 
   Optional options:
      --doc-dir=DIR               path to install docs into [/usr/share/doc/solr]
-     --lib-dir=DIR               path to install bits [/usr/lib/solr]
-     --installed-lib-dir=DIR     path where lib-dir will end up on target system
      --bin-dir=DIR               path to install bins [/usr/bin]
-     --examples-dir=DIR          path to install examples [doc-dir/examples]
+     --man-dir=DIR               path to install mans [/usr/share/man]
+     --etc-default=DIR           path to bigtop default dir [/etc/default]
+     --lib-dir=DIR               path to install solr home [/usr/lib/solr]
+     --var-dir=DIR               path to install solr contents [/var/lib/solr]
+     --etc-solr=DIR              path to install solr conf [/etc/solr]
      ... [ see source for more similar options ]
   "
   exit 1
@@ -42,10 +44,12 @@ OPTS=$(getopt \
   -l 'prefix:' \
   -l 'distro-dir:' \
   -l 'doc-dir:' \
-  -l 'lib-dir:' \
-  -l 'installed-lib-dir:' \
   -l 'bin-dir:' \
-  -l 'examples-dir:' \
+  -l 'man-dir:' \
+  -l 'etc-default:' \
+  -l 'lib-dir:' \
+  -l 'var-dir:' \
+  -l 'etc-solr:' \
   -l 'build-dir:' -- "$@")
 
 if [ $? != 0 ] ; then
@@ -67,17 +71,23 @@ while true ; do
         --doc-dir)
         DOC_DIR=$2 ; shift 2
         ;;
-        --lib-dir)
-        LIB_DIR=$2 ; shift 2
-        ;;
-        --installed-lib-dir)
-        INSTALLED_LIB_DIR=$2 ; shift 2
-        ;;
         --bin-dir)
         BIN_DIR=$2 ; shift 2
         ;;
-        --examples-dir)
-        EXAMPLES_DIR=$2 ; shift 2
+        --man-dir)
+        MAN_DIR=$2 ; shift 2
+        ;;
+        --etc-default)
+        ETC_DEFAULT=$2 ; shift 2
+        ;;
+        --lib-dir)
+        LIB_DIR=$2 ; shift 2
+        ;;
+        --var-dir)
+        VAR_DIR=$2 ; shift 2
+        ;;
+        --etc-solr)
+        ETC_SOLR=$2 ; shift 2
         ;;
         --)
         shift ; break
@@ -97,16 +107,16 @@ for var in PREFIX BUILD_DIR DISTRO_DIR ; do
   fi
 done
 
-MAN_DIR=${MAN_DIR:-/usr/share/man/man1}
+MAN_DIR=${MAN_DIR:-/usr/share/man}/man1
 DOC_DIR=${DOC_DIR:-/usr/share/doc/solr}
-LIB_DIR=${LIB_DIR:-/usr/lib/solr}
-INSTALLED_LIB_DIR=${INSTALLED_LIB_DIR:-/usr/lib/solr}
-EXAMPLES_DIR=${EXAMPLES_DIR:-$DOC_DIR/examples}
 BIN_DIR=${BIN_DIR:-/usr/bin}
-CONF_DIR=${CONF_DIR:-/etc/solr/conf}
-DEFAULT_DIR=${ETC_DIR:-/etc/default}
+ETC_DEFAULT=${ETC_DEFAULT:-/etc/default}
+LIB_DIR=${LIB_DIR:-/usr/lib/solr}
+VAR_DIR=${VAR_DIR:-/var/lib/solr}
 
-VAR_DIR=$PREFIX/var
+ETC_SOLR=${ETC_SOLR:-/etc/solr}
+# No prefix
+NP_ETC_SOLR=/etc/solr
 
 install -d -m 0755 $PREFIX/$LIB_DIR
 cp -ra ${BUILD_DIR}/dist $PREFIX/$LIB_DIR/lib
@@ -136,20 +146,21 @@ cp -ra ${BUILD_DIR}/docs/* $PREFIX/$DOC_DIR
 cp -ra ${BUILD_DIR}/example/ $PREFIX/$DOC_DIR/
 
 # Copy in the configuration files
-install -d -m 0755 $PREFIX/$DEFAULT_DIR
-cp $DISTRO_DIR/solr.default $PREFIX/$DEFAULT_DIR/solr
-cp $DISTRO_DIR/solr.in.sh $PREFIX/$DEFAULT_DIR/solr.in.sh
-install -d -m 0755 $PREFIX/${CONF_DIR}.dist
-cp -a ${BUILD_DIR}/server/resources/* $PREFIX/${CONF_DIR}.dist
+install -d -m 0755 $PREFIX/$ETC_DEFAULT
+cp $DISTRO_DIR/solr.default $PREFIX/$ETC_DEFAULT/solr
+cp $DISTRO_DIR/solr.in.sh $PREFIX/$ETC_DEFAULT/solr.in.sh
+install -d -m 0755 $PREFIX/$NP_ETC_SOLR
+install -d -m 0755 $PREFIX/$ETC_SOLR/conf.dist
+cp -a ${BUILD_DIR}/server/resources/* $PREFIX/$ETC_SOLR/conf.dist
 
 # Copy in the wrapper
 cp -a ${DISTRO_DIR}/solrd $PREFIX/$LIB_DIR/bin/solrd
 chmod 755 $PREFIX/$LIB_DIR/bin/solrd
 
 # installing the only script that goes into /usr/bin
-install -D -m 0755 $DISTRO_DIR/solrctl.sh $PREFIX/usr/bin/solrctl
+install -D -m 0755 $DISTRO_DIR/solrctl.sh $PREFIX/$BIN_DIR/solrctl
 
 # precreating /var layout
-install -d -m 0755 $VAR_DIR/log/solr
-install -d -m 0755 $VAR_DIR/run/solr
-install -d -m 0755 $VAR_DIR/lib/solr
+install -d -m 0755 $PREFIX/$VAR_DIR
+install -d -m 0755 $PREFIX/var/log/solr
+install -d -m 0755 $PREFIX/var/run/solr
