@@ -13,21 +13,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class bigtop_toolchain::installer {
-  include bigtop_toolchain::jdk11
-  include bigtop_toolchain::jdk
-  include bigtop_toolchain::maven
-  include bigtop_toolchain::ant
-  include bigtop_toolchain::gradle
-  include bigtop_toolchain::protobuf
-  include bigtop_toolchain::packages
-  include bigtop_toolchain::env
-  include bigtop_toolchain::user
-  include bigtop_toolchain::renv
-  include bigtop_toolchain::grpc
+class bigtop_toolchain::jdk11 {
+  case $::operatingsystem {
+    /(Debian|Ubuntu)/: {
+      include apt
 
-  stage { 'last':
-    require => Stage['main'],
+      package { 'openjdk-11-jdk' :
+        ensure  => present,
+      }
+    }
+    /(CentOS|Fedora|RedHat)/: {
+      package { 'java-11-openjdk-devel' :
+        ensure => present
+      }
+    }
   }
-  class { 'bigtop_toolchain::cleanup': stage => 'last' }
 }
