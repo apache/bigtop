@@ -25,6 +25,32 @@ class bigtop_toolchain::installer {
   include bigtop_toolchain::user
   include bigtop_toolchain::renv
   include bigtop_toolchain::grpc
+  Class['bigtop_toolchain::jdk11']->Class['bigtop_toolchain::jdk']
+
+  case $::operatingsystem {
+    /Debian/: {
+      exec { 'ensure java 8 is set as default':
+        command => "update-java-alternatives --set adoptopenjdk-8*",
+        path    => ['/usr/sbin', '/usr/bin', '/bin'],
+        require => Class['bigtop_toolchain::jdk'],
+      }
+    }
+    /Ubuntu/: {
+      exec { 'ensure java 8 is set as default':
+        command => "update-java-alternatives --set java-1.8.0-openjdk*",
+        path    => ['/usr/sbin', '/usr/bin', '/bin'],
+        require => Class['bigtop_toolchain::jdk'],
+      }
+    }
+    /(CentOS|Fedora|RedHat)/: {
+      exec { 'ensure java 8 is set as default':
+        command => "update-alternatives --set java $(readlink -f /usr/lib/jvm/jre-1.8.0/bin/java) \
+                    && update-alternatives --set javac $(readlink -f /usr/lib/jvm/java-1.8.0/bin/javac)",
+        path    => ['/usr/sbin', '/usr/bin', '/bin'],
+        require => Class['bigtop_toolchain::jdk'],
+      }
+    }
+  }
 
   stage { 'last':
     require => Stage['main'],
