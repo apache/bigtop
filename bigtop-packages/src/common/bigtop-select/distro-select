@@ -55,6 +55,7 @@ leaves = {
            "hive-metastore": "hive",
            "hive-server2": "hive",
            "hive-webhcat": "hive-hcatalog",
+           "hive-hcat-client": "hive-hcatalog",
            "kafka-broker": "kafka",
            "oozie-client": "oozie",
            "oozie-server": "oozie",
@@ -78,6 +79,7 @@ aliases = {
               "hbase-client",
               "tez-client",
               "hive-client",
+              "hive-hcat-client",
               "oozie-client",
               "phoenix-client",
               "zookeeper-client",
@@ -101,6 +103,7 @@ locked_contexts = {
                     ("hadoop-yarn-client", "hadoop-yarn"),
                     ("hadoop-mapreduce-client", "hadoop-mapreduce"),
                     ("hive-client", "hive"),
+                    ("hive-hcat-client", "hive-hcatalog"),
                     ("tez-client", "tez"),
                     ("spark-client", "spark")]
 }
@@ -114,7 +117,7 @@ command_symlinks = {
   "beeline" : "hive-client/../../bin/beeline",
   "hive" : "hive-client/../../bin/hive",
   "hiveserver2" : "hive-server2/../../bin/hiveserver2",
-  "hcat" : "hive-webhcat/../../bin/hcat",
+  "hcat" : "hive-hcat-client/../../bin/hcat",
   "zookeeper-client" : "zookeeper-client/../../bin/zookeeper-client",
   "zookeeper-server" : "zookeeper-server/../../bin/zookeeper-server",
   "zookeeper-server-cleanup" : "zookeeper-server/../../bin/zookeeper-server-cleanup",
