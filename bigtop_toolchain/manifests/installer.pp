@@ -37,15 +37,15 @@ class bigtop_toolchain::installer {
     }
     /Ubuntu/: {
       exec { 'ensure java 8 is set as default':
-        command => "update-java-alternatives --set java-1.8.0-openjdk*",
+        command => "update-java-alternatives --set java-1.8.0-openjdk-$(dpkg --print-architecture)",
         path    => ['/usr/sbin', '/usr/bin', '/bin'],
         require => Class['bigtop_toolchain::jdk'],
       }
     }
     /(CentOS|Fedora|RedHat)/: {
       exec { 'ensure java 8 is set as default':
-        command => "update-alternatives --set java $(readlink -f /usr/lib/jvm/jre-1.8.0/bin/java) \
-                    && update-alternatives --set javac $(readlink -f /usr/lib/jvm/java-1.8.0/bin/javac)",
+        command => "update-alternatives --set java java-1.8.0-openjdk.$(uname -m) \
+                    && update-alternatives --set javac java-1.8.0-openjdk.$(uname -m)",
         path    => ['/usr/sbin', '/usr/bin', '/bin'],
         require => Class['bigtop_toolchain::jdk'],
       }
