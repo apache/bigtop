@@ -17,7 +17,8 @@
 BIGTOP_HOME=`cd $(dirname $0)/.. && pwd`
 
 usage() {
-    echo "usage build.sh --prefix trunk|1.4.0|1.3.0|... --os debian-10|centos-7|... --target hadoop|tez|... [--nexus] [--mvn-cache-volume true|false] [--docker-run-option ...]"
+    echo "usage build.sh --prefix trunk|1.4.0|1.3.0|... --os debian-10|centos-7|... --target hadoop|tez|..."
+    echo "   [--nexus] [--preferred-java-version 8|11] [--mvn-cache-volume true|false] [--docker-run-option ...]"
     exit 1 # unknown option
 }
 
@@ -44,6 +45,10 @@ case $key in
     -n|--nexus)
     NEXUS="--net=container:nexus"
     CONFIGURE_NEXUS="configure-nexus"
+    shift
+    ;;
+    --preferred-java-version)
+    BIGTOP_PREFERRED_JAVA_VERSION="$2"
     shift
     ;;
     --mvn-cache-volume)
@@ -77,6 +82,13 @@ IMAGE_NAME=bigtop/slaves:$PREFIX-$OS
 ARCH=$(uname -m)
 if [ "x86_64" != $ARCH ]; then
     IMAGE_NAME=$IMAGE_NAME-$ARCH
+fi
+
+if [ -n "${BIGTOP_PREFERRED_JAVA_VERSION}" ]; then
+  if [ "${BIGTOP_PREFERRED_JAVA_VERSION}" == "8" ]; then
+    BIGTOP_PREFERRED_JAVA_VERSION="1.8.0"
+  fi
+  DOCKER_RUN_OPTION="${DOCKER_RUN_OPTION} -e BIGTOP_PREFERRED_JAVA_VERSION=${BIGTOP_PREFERRED_JAVA_VERSION}"
 fi
 
 # Add / Delete named volume for maven cache

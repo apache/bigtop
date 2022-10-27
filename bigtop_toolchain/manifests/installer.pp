@@ -14,6 +14,7 @@
 # limitations under the License.
 
 class bigtop_toolchain::installer {
+  include bigtop_toolchain::jdk11
   include bigtop_toolchain::jdk
   include bigtop_toolchain::maven
   include bigtop_toolchain::ant
@@ -24,6 +25,32 @@ class bigtop_toolchain::installer {
   include bigtop_toolchain::user
   include bigtop_toolchain::renv
   include bigtop_toolchain::grpc
+  Class['bigtop_toolchain::jdk11']->Class['bigtop_toolchain::jdk']
+
+  case $::operatingsystem {
+    /Debian/: {
+      exec { 'ensure java 8 is set as default':
+        command => "update-java-alternatives --set adoptopenjdk-8*",
+        path    => ['/usr/sbin', '/usr/bin', '/bin'],
+        require => Class['bigtop_toolchain::jdk'],
+      }
+    }
+    /Ubuntu/: {
+      exec { 'ensure java 8 is set as default':
+        command => "update-java-alternatives --set java-1.8.0-openjdk-$(dpkg --print-architecture)",
+        path    => ['/usr/sbin', '/usr/bin', '/bin'],
+        require => Class['bigtop_toolchain::jdk'],
+      }
+    }
+    /(CentOS|Fedora|RedHat)/: {
+      exec { 'ensure java 8 is set as default':
+        command => "update-alternatives --set java java-1.8.0-openjdk.$(uname -m) \
+                    && update-alternatives --set javac java-1.8.0-openjdk.$(uname -m)",
+        path    => ['/usr/sbin', '/usr/bin', '/bin'],
+        require => Class['bigtop_toolchain::jdk'],
+      }
+    }
+  }
 
   stage { 'last':
     require => Stage['main'],

@@ -23,6 +23,12 @@ BUILD_OPTS="-Divy.home=${HOME}/.ivy2 -Dsbt.ivy.home=${HOME}/.ivy2 -Duser.home=${
             -Dreactor.repo=file://${HOME}/.m2/repository \
             -DskipTests -DrecompileMode=all"
 
+# if BIGTOP_PREFERRED_JAVA_VERSION is set, switch java version for the build
+if [ -n "${BIGTOP_PREFERRED_JAVA_VERSION}" ]; then
+  export JAVA_HOME="/usr/lib/jvm/java-${BIGTOP_PREFERRED_JAVA_VERSION}"
+  export PATH=$JAVA_HOME/bin:$PATH
+fi
+
 ## this might be an issue at times
 #        http://maven.40175.n5.nabble.com/Not-finding-artifact-in-local-repo-td3727753.html
 export MAVEN_OPTS="-Xmx2g -XX:ReservedCodeCacheSize=512m"
