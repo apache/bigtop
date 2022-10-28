@@ -13,12 +13,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-docker:
-        memory_limit: "4g"
-        image: "bigtop/puppet:trunk-rockylinux-8"
+class bigtop_toolchain::jdk11 {
+  case $::operatingsystem {
+    /(Debian|Ubuntu)/: {
+      include apt
 
-repo: "http://repos.bigtop.apache.org/releases/3.1.0/rockylinux/8/$basearch"
-distro: centos
-components: [hdfs, yarn, mapreduce]
-enable_local_repo: false
-smoke_test_components: [hdfs, yarn, mapreduce]
+      package { 'openjdk-11-jdk' :
+        ensure  => present,
+      }
+    }
+    /(CentOS|Fedora|RedHat)/: {
+      package { 'java-11-openjdk-devel' :
+        ensure => present
+      }
+    }
+  }
+}
