@@ -92,7 +92,7 @@ Requires: bsh-utils
 Requires: coreutils
 %endif
 
-%if  0%{?rocky} >= 8
+%if  0%{?rhel} >= 8
 Requires: python3
 %else
 Requires: python
