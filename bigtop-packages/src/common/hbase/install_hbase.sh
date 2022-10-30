@@ -178,3 +178,52 @@ install -d -m 0755 $PREFIX/$BIN_DIR
 rm -f $PREFIX/$ETC_HBASE/conf.dist/*.cmd
 rm -f $PREFIX/$LIB_DIR/bin/*.cmd
 
+# Install default wrapper
+install -d -m 0755 $PREFIX/$ETC_DEFAULT
+default_hbase_wrapper=$PREFIX/$ETC_DEFAULT/hbase
+cat > $default_hbase_wrapper << EOF
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+export HBASE_HOME="${LIB_DIR}"
+export HBASE_CONF_DIR="/etc/hbase/conf"
+
+export HBASE_PID_DIR="/var/run/hbase"
+export HBASE_LOG_DIR="/var/log/hbase"
+export HBASE_IDENT_STRING=hbase
+
+# Up to 100 region servers can be run on a single host by specifying offsets
+# here or as CLI args when using init scripts. Each offset identifies an
+# instance and is used to determine the network ports it uses. Each instance
+# will have have its own log and pid files.
+#
+# REGIONSERVER_OFFSETS="1 2 3"
+
+#
+# Set the starting port to be assigned for HBASE RS JMX monitoring when  
+# running multiple region servers on a node. Each RS will be assigned a JMX port
+# which will be equal to starting JMX port + offset
+# 
+# export JMXPORT=10103
+
+#
+# Set a directory which will be used for Java temp directory. For multi RS the
+# directory will be appended with offset to make it unique for each JVM process
+#
+# export JAVA_TMP_DIR="/tmp/java_tmp_dir"
+
+EOF
+
+chmod 644 $default_hbase_wrapper
