@@ -100,8 +100,8 @@ cp -r ${BUILD_DIR}/ranger-*-${COMPONENT}/* ${PREFIX}/usr/lib/${COMP_DIR}/
 if [[ "${COMPONENT}" = "hive-plugin" || "${COMPONENT}" = "hbase-plugin" || "${COMPONENT}" = "storm-plugin" || "${COMPONENT}" = "hdfs-plugin" || "${COMPONENT}" = "yarn-plugin" || "${COMPONENT}" = "kafka-plugin" || "${COMPONENT}" = "atlas-plugin" || "${COMPONENT}" = "knox-plugin" ]]
 then
   RANGER_COMPONENT=${COMPONENT}
-  [[ "${COMPONENT}" = "hdfs-plugin" ]] && RANGER_COMPONENT="hadoop"
-  [[ "${COMPONENT}" = "yarn-plugin" ]] && RANGER_COMPONENT="hadoop"
+  [[ "${COMPONENT}" = "hdfs-plugin" ]] && RANGER_COMPONENT="hadoop-hdfs"
+  [[ "${COMPONENT}" = "yarn-plugin" ]] && RANGER_COMPONENT="hadoop-yarn"
   [[ "${COMPONENT}" = "storm-plugin" ]] && RANGER_COMPONENT="storm"
   [[ "${COMPONENT}" = "hbase-plugin" ]] && RANGER_COMPONENT="hbase"
   [[ "${COMPONENT}" = "hive-plugin" ]] && RANGER_COMPONENT="hive"

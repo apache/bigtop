@@ -26,6 +26,8 @@
 %define ranger_dist build
 
 %define hadoop_home /usr/lib/hadoop
+%define hdfs_home %{hadoop_home}-hdfs
+%define yarn_home %{hadoop_home}-yarn
 %define hive_home /usr/lib/hive
 %define knox_home /usr/lib/knox
 %define storm_home /usr/lib/storm
@@ -415,12 +417,12 @@ fi
 %files hdfs-plugin
 %defattr(-,root,root,755)
 %{usr_lib_ranger}-hdfs-plugin
-%{hadoop_home}/lib
+%{hdfs_home}/lib
 
 %files yarn-plugin
 %defattr(-,root,root,755)
 %{usr_lib_ranger}-yarn-plugin
-%{hadoop_home}/lib
+%{yarn_home}/lib
 
 %files hive-plugin
 %defattr(-,root,root,755)
