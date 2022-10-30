@@ -148,7 +148,6 @@ Group: Development/Libraries
 Source0: %{name}-%{hadoop_base_version}.tar.gz
 Source1: do-component-build
 Source2: install_%{name}.sh
-Source3: hadoop.default
 Source4: hadoop-fuse.default
 Source5: httpfs.default
 Source6: hadoop.1
