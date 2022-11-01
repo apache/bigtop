@@ -24,6 +24,9 @@ if [ $HOSTTYPE = "powerpc64le" ] ; then
   sed -i "s|<nodeVersion>v10.9.0</nodeVersion>|<nodeVersion>v12.22.1</nodeVersion>|" flink-runtime-web/pom.xml
 fi
 
+git_path="$(cd $(dirname $0)/../../../.. && pwd)"
+chmod -R 777 $git_path
+
 # husky have to be executed from the path that .git exists
 git_path="$(cd $(dirname $0)/../../../.. && pwd)"
 cmd_from="cd ../.. && husky install flink-runtime-web/web-dashboard/.husky"
@@ -35,6 +38,76 @@ if [[ "$0" == *rpm* ]]; then
 elif [[ "$0" == *debian* ]]; then
   package_json_path="output/flink/flink-$FLINK_VERSION/flink-runtime-web/web-dashboard"
   cmd_to="cd $git_path && husky install $package_json_path/.husky"
+  repl_to=$(sed -e 's/[&\\/]/\\&/g; s/$/\\/' -e '$s/\\$//' <<<"$cmd_to")
+fi
+sed -i "s/$repl_from/$repl_to/" flink-runtime-web/web-dashboard/package.json
+
+# "ng"
+cmd_from="node node_modules/@angular/cli/bin/ng"
+repl_from=$(sed -e 's/[&\\/]/\\&/g; s/$/\\/' -e '$s/\\$//' <<<"$cmd_from")
+if [[ "$0" == *rpm* ]]; then
+  node_dir="build/flink/rpm/BUILD/flink-$FLINK_VERSION/flink-runtime-web/web-dashboard/node"
+  cmd_to="$git_path/$node_dir/node node_modules/@angular/cli/bin/ng"
+  repl_to=$(sed -e 's/[&\\/]/\\&/g; s/$/\\/' -e '$s/\\$//' <<<"$cmd_to")
+fi
+sed -i "s/$repl_from/$repl_to/" flink-runtime-web/web-dashboard/package.json
+
+# ng serve
+cmd_from="ng serve"
+repl_from=$(sed -e 's/[&\\/]/\\&/g; s/$/\\/' -e '$s/\\$//' <<<"$cmd_from")
+if [[ "$0" == *rpm* ]]; then
+  node_modules_dir="build/flink/rpm/BUILD/flink-$FLINK_VERSION/flink-runtime-web/web-dashboard/node_modules/.bin"
+  cmd_to="$git_path/$node_modules_dir/ng serve"
+  repl_to=$(sed -e 's/[&\\/]/\\&/g; s/$/\\/' -e '$s/\\$//' <<<"$cmd_to")
+fi
+sed -i "s/$repl_from/$repl_to/" flink-runtime-web/web-dashboard/package.json
+
+# ng build
+cmd_from="ng build"
+repl_from=$(sed -e 's/[&\\/]/\\&/g; s/$/\\/' -e '$s/\\$//' <<<"$cmd_from")
+if [[ "$0" == *rpm* ]]; then
+  node_modules_dir="build/flink/rpm/BUILD/flink-$FLINK_VERSION/flink-runtime-web/web-dashboard/node_modules/.bin"
+  cmd_to="$git_path/$node_modules_dir/ng build"
+  repl_to=$(sed -e 's/[&\\/]/\\&/g; s/$/\\/' -e '$s/\\$//' <<<"$cmd_to")
+fi
+sed -i "s/$repl_from/$repl_to/" flink-runtime-web/web-dashboard/package.json
+
+# ng test
+cmd_from="ng test"
+repl_from=$(sed -e 's/[&\\/]/\\&/g; s/$/\\/' -e '$s/\\$//' <<<"$cmd_from")
+if [[ "$0" == *rpm* ]]; then
+  node_modules_dir="build/flink/rpm/BUILD/flink-$FLINK_VERSION/flink-runtime-web/web-dashboard/node_modules/.bin"
+  cmd_to="$git_path/$node_modules_dir/ng test"
+  repl_to=$(sed -e 's/[&\\/]/\\&/g; s/$/\\/' -e '$s/\\$//' <<<"$cmd_to")
+fi
+sed -i "s/$repl_from/$repl_to/" flink-runtime-web/web-dashboard/package.json
+
+# eslint --cache src --ext .ts,.html && stylelint \"**/*.less\"
+cmd_from="eslint --cache src --ext .ts,.html && stylelint "
+repl_from=$(sed -e 's/[&\\/]/\\&/g; s/$/\\/' -e '$s/\\$//' <<<"$cmd_from")
+if [[ "$0" == *rpm* ]]; then
+  node_modules_dir="build/flink/rpm/BUILD/flink-$FLINK_VERSION/flink-runtime-web/web-dashboard/node_modules/.bin"
+  cmd_to="$git_path/$node_modules_dir/eslint --cache src --ext .ts,.html && $git_path/$node_modules_dir/stylelint "
+  repl_to=$(sed -e 's/[&\\/]/\\&/g; s/$/\\/' -e '$s/\\$//' <<<"$cmd_to")
+fi
+sed -i "s/$repl_from/$repl_to/" flink-runtime-web/web-dashboard/package.json
+
+# eslint --fix --cache src --ext .ts,.html && stylelint \"**/*.less\" --fix
+cmd_from="eslint --fix --cache src --ext .ts,.html && stylelint "
+repl_from=$(sed -e 's/[&\\/]/\\&/g; s/$/\\/' -e '$s/\\$//' <<<"$cmd_from")
+if [[ "$0" == *rpm* ]]; then
+  node_modules_dir="build/flink/rpm/BUILD/flink-$FLINK_VERSION/flink-runtime-web/web-dashboard/node_modules/.bin"
+  cmd_to="$git_path/$node_modules_dir/eslint --fix --cache src --ext .ts,.html && $git_path/$node_modules_dir/stylelint "
+  repl_to=$(sed -e 's/[&\\/]/\\&/g; s/$/\\/' -e '$s/\\$//' <<<"$cmd_to")
+fi
+sed -i "s/$repl_from/$repl_to/" flink-runtime-web/web-dashboard/package.json
+
+# npm run lint && npm run build
+cmd_from="npm run lint && npm run build"
+repl_from=$(sed -e 's/[&\\/]/\\&/g; s/$/\\/' -e '$s/\\$//' <<<"$cmd_from")
+if [[ "$0" == *rpm* ]]; then
+  node_dir="build/flink/rpm/BUILD/flink-$FLINK_VERSION/flink-runtime-web/web-dashboard/node"
+  cmd_to="$git_path/$node_dir/npm run lint && $git_path/$node_dir/npm run build"
   repl_to=$(sed -e 's/[&\\/]/\\&/g; s/$/\\/' -e '$s/\\$//' <<<"$cmd_to")
 fi
 sed -i "s/$repl_from/$repl_to/" flink-runtime-web/web-dashboard/package.json
