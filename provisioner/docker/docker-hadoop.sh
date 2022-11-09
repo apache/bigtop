@@ -196,7 +196,9 @@ provision() {
         ) &
     done
     wait
-    cat .error_msg_* 2>/dev/null && exit 1
+    if [ -f .error_msg_* ]; then
+      cat .error_msg_* 2>/dev/null && exit 1
+    fi
 }
 
 smoke-tests() {
