@@ -196,7 +196,7 @@ provision() {
         ) &
     done
     wait
-    if [ -f .error_msg_* ]; then
+    if [ `find . -maxdepth 1 -type f -name ".error_msg_*" | wc -l` -gt 0 ]; then
       cat .error_msg_* 2>/dev/null && exit 1
     fi
 }
