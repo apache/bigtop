@@ -205,7 +205,7 @@ is_hbase_distributed = config['configurations']['ams-hbase-site']['hbase.cluster
 is_local_fs_rootdir = hbase_root_dir.startswith('file://')
 
 # security is disabled for embedded mode, when HBase is backed by file
-security_enabled = False if not is_hbase_distributed else config['configurations']['cluster-env']['security_enabled']
+security_enabled = False
 
 # this is "hadoop-metrics.properties" for 1.x stacks
 metric_prop_file_name = "hadoop-metrics2-hbase.properties"
