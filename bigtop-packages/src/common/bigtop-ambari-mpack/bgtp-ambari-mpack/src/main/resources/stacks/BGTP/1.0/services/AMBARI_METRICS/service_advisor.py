@@ -216,11 +216,11 @@ class AMBARI_METRICSServiceAdvisor(service_advisor.ServiceAdvisor):
     #Logger.info("Class: %s, Method: %s. Validating Configurations." %
     #            (self.__class__.__name__, inspect.stack()[0][3]))
 
-    validator = self.getAMBARI_METRICSValidator()
+    #validator = self.getAMBARI_METRICSValidator()
     # Calls the methods of the validator using arguments,
     # method(siteProperties, siteRecommendations, configurations, services, hosts)
-    return validator.validateListOfConfigUsingMethod(configurations, recommendedDefaults, services, hosts, validator.validators)
-
+    #return validator.validateListOfConfigUsingMethod(configurations, recommendedDefaults, services, hosts, validator.validators)
+    return []
 
   def getAMBARI_METRICSValidator(self):
     return AMBARI_METRICSValidator()
