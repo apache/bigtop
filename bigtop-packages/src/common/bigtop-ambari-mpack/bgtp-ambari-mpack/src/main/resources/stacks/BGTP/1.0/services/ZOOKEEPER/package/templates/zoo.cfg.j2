@@ -45,6 +45,8 @@
 server.{{loop.index}}={{host}}:2888:3888
 {% endfor %}
 
+4lw.commands.whitelist=*
+
 {% if security_enabled -%}
 authProvider.1=org.apache.zookeeper.server.auth.SASLAuthenticationProvider
 jaasLoginRenew=3600000
