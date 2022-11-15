@@ -92,6 +92,12 @@ Requires: bsh-utils
 Requires: coreutils
 %endif
 
+%if  0%{?rhel} >= 8
+Requires: python3
+%else
+Requires: python
+%endif
+
 %description
 Phoenix is a SQL skin over HBase, delivered as a client-embedded JDBC driver.
 The Phoenix query engine transforms an SQL query into one or more HBase scans,

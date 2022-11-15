@@ -148,7 +148,6 @@ Group: Development/Libraries
 Source0: %{name}-%{hadoop_base_version}.tar.gz
 Source1: do-component-build
 Source2: install_%{name}.sh
-Source3: hadoop.default
 Source4: hadoop-fuse.default
 Source5: httpfs.default
 Source6: hadoop.1
@@ -580,10 +579,7 @@ env HADOOP_VERSION=%{hadoop_base_version} bash %{SOURCE2} \
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
 
 # Install top level /etc/default files
-%__install -d -m 0755 $RPM_BUILD_ROOT/%{etc_default}
-%__cp $RPM_SOURCE_DIR/hadoop.default $RPM_BUILD_ROOT/%{etc_default}/hadoop
-# FIXME: BIGTOP-463
-echo 'export JSVC_HOME=/usr/lib/bigtop-utils' >> $RPM_BUILD_ROOT/%{etc_default}/hadoop
+# %__install -d -m 0755 $RPM_BUILD_ROOT/%{etc_default}
 %__cp $RPM_SOURCE_DIR/%{name}-fuse.default $RPM_BUILD_ROOT/%{etc_default}/%{name}-fuse
 
 # Generate the init.d scripts

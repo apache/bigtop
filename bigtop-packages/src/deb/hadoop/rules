@@ -66,9 +66,7 @@ override_dh_auto_install:
 	# Workaround for BIGTOP-583
 	rm -f debian/tmp/usr/lib/hadoop-*/lib/slf4j-log4j12-*.jar
 	# FIXME: BIGTOP-463
-	mkdir -p debian/tmp/etc/default
-	echo 'export JSVC_HOME=/usr/lib/bigtop-utils' >> debian/hadoop.default
-	cp debian/hadoop.default debian/tmp/etc/default/hadoop
+	# mkdir -p debian/tmp/etc/default
 	# Refactored from install-arch
 	cp debian/hadoop-fuse.default debian/tmp/etc/default/hadoop-fuse
 	mkdir -p debian/tmp/etc/security/limits.d

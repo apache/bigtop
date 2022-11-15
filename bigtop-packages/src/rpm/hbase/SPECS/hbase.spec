@@ -98,7 +98,6 @@ Source1: do-component-build
 Source2: install_hbase.sh
 Source3: hbase.svc
 Source4: init.d.tmpl
-Source5: hbase.default
 Source6: hbase.nofiles.conf
 Source7: regionserver-init.d.tpl
 #BIGTOP_PATCH_FILES
@@ -296,7 +295,6 @@ bash %{SOURCE2} \
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{etc_default}/
-%__install -m 0644 %{SOURCE5} $RPM_BUILD_ROOT/%{etc_default}/%{name}
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/etc/security/limits.d
 %__install -m 0644 %{SOURCE6} $RPM_BUILD_ROOT/etc/security/limits.d/%{name}.nofiles.conf

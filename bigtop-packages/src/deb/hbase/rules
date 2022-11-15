@@ -36,7 +36,6 @@ override_dh_auto_build:
 
 	
 override_dh_auto_install:
-	cp debian/hbase.default debian/${hbase_pkg_name}/etc/default/${hbase_pkg_name}
 	bash -x debian/install_hbase.sh \
 		--build-dir=build \
 		--etc-hbase=/etc/hbase \
