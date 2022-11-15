@@ -76,6 +76,10 @@ case ${OS} in
         PUPPET_MODULES="/etc/puppet/modules/bigtop_toolchain"
         UPDATE_SOURCE="zypper clean \&\& zypper refresh"
         ;;
+    openEuler)
+        PUPPET_MODULES="/etc/puppet/modules/bigtop_toolchain"
+        UPDATE_SOURCE="yum clean all \&\& yum updateinfo"
+        ;;
     *)
         echo "[ERROR] Specified distro [${OS}] is not supported!"
         exit 1
