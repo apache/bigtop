@@ -40,7 +40,7 @@ if [ $enable_local_repo == "true" ]; then
         . /etc/os-release
     fi
 
-	sudo echo "gpgcheck=0" >> /etc/yum.conf
+    sudo echo "gpgcheck=0" >> /etc/yum.conf
 
     mv /etc/yum.repos.d/openEuler.repo /etc/yum.repos.d/openEuler.repo-bak
     sudo echo "[bigtop-home_output]" >> /etc/yum.repos.d/bigtop-home_output.repo
