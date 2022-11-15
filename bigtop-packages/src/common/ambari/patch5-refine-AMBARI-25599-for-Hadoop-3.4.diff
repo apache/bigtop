@@ -29,7 +29,7 @@ index 5551b3966f..66d5e8ebc9 100644
  
  </project>
 diff --git a/ambari-metrics/ambari-metrics-timelineservice/pom.xml b/ambari-metrics/ambari-metrics-timelineservice/pom.xml
-index f8423b3806..b20fc15dbb 100644
+index f8423b3806..c8da1a469c 100644
 --- a/ambari-metrics/ambari-metrics-timelineservice/pom.xml
 +++ b/ambari-metrics/ambari-metrics-timelineservice/pom.xml
 @@ -33,10 +33,10 @@
@@ -47,9 +47,11 @@ index f8423b3806..b20fc15dbb 100644
    </properties>
  
    <build>
-@@ -372,9 +372,15 @@
+@@ -371,10 +371,18 @@
+       </exclusions>
      </dependency>
  
++<!--
      <dependency>
 -      <groupId>commons-lang</groupId>
 -      <artifactId>commons-lang</artifactId>
@@ -58,6 +60,7 @@ index f8423b3806..b20fc15dbb 100644
 +      <artifactId>phoenix-hbase-compat-2.4.1</artifactId>
 +      <version>5.1.2</version>
 +    </dependency>
++-->
 +
 +    <dependency>
 +      <groupId>org.apache.commons</groupId>
@@ -66,7 +69,7 @@ index f8423b3806..b20fc15dbb 100644
      </dependency>
  
      <dependency>
-@@ -926,8 +932,8 @@
+@@ -926,8 +934,8 @@
                          compression="gzip"
                      />
                      <move
@@ -78,7 +81,7 @@ index f8423b3806..b20fc15dbb 100644
                    </target>
                  </configuration>
 diff --git a/ambari-metrics/pom.xml b/ambari-metrics/pom.xml
-index a0a11b8e6e..f33479844a 100644
+index a0a11b8e6e..6770d86080 100644
 --- a/ambari-metrics/pom.xml
 +++ b/ambari-metrics/pom.xml
 @@ -40,14 +40,14 @@
@@ -93,13 +96,13 @@ index a0a11b8e6e..f33479844a 100644
 -    <grafana.tar>https://dl.grafana.com/oss/release/grafana-6.4.2.linux-amd64.tar.gz</grafana.tar>
 -    <phoenix.tar>https://s3.amazonaws.com/dev.hortonworks.com/HDP/centos7/3.x/BUILDS/3.1.4.0-315/tars/phoenix/phoenix-5.0.0.3.1.4.0-315.tar.gz</phoenix.tar>
 -    <phoenix.folder>phoenix-5.0.0.3.1.4.0-315</phoenix.folder>
-+    <hbase.tar>https://archive.apache.org/dist/hbase/2.4.13/hbase-2.4.13-bin.tar.gz</hbase.tar>
++    <hbase.tar>http://10.169.206.131/yum-bigtop/centos/7/x86_64/hbase-2.4.13-bin.tar.gz</hbase.tar>
 +    <hbase.folder>hbase-2.4.13</hbase.folder>
-+    <hadoop.tar>https://archive.apache.org/dist/hadoop/common/hadoop-3.3.4/hadoop-3.3.4.tar.gz</hadoop.tar>
++    <hadoop.tar>http://10.169.206.131/yum-bigtop/centos/7/x86_64/hadoop-3.3.4.tar.gz</hadoop.tar>
 +    <hadoop.folder>hadoop-3.3.4</hadoop.folder>
 +    <grafana.folder>grafana-9.1.2</grafana.folder>
 +    <grafana.tar>https://dl.grafana.com/enterprise/release/grafana-enterprise-9.1.2.linux-amd64.tar.gz</grafana.tar>
-+    <phoenix.tar>https://archive.apache.org/dist/phoenix/phoenix-5.1.2/phoenix-hbase-2.4-5.1.2-bin.tar.gz</phoenix.tar>
++    <phoenix.tar>http://10.169.206.131/yum-bigtop/centos/7/x86_64/phoenix-hbase-2.4-5.1.2-bin.tar.gz</phoenix.tar>
 +    <phoenix.folder>phoenix-hbase-2.4-5.1.2-bin</phoenix.folder>
      <resmonitor.install.dir>/usr/lib/python2.6/site-packages/resource_monitoring</resmonitor.install.dir>
      <powermock.version>1.6.2</powermock.version>
