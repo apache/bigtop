@@ -1,0 +1,69 @@
+diff --git a/phoenix-hbase-compat-2.4.1/pom.xml b/phoenix-hbase-compat-2.4.1/pom.xml
+index de397d869..ead8bcf9c 100644
+--- a/phoenix-hbase-compat-2.4.1/pom.xml
++++ b/phoenix-hbase-compat-2.4.1/pom.xml
+@@ -31,7 +31,7 @@
+   <description>Compatibility module for HBase 2.4.1+</description>
+ 
+   <properties>
+-    <hbase24.compat.version>2.4.1</hbase24.compat.version>
++    <hbase24.compat.version>2.4.13</hbase24.compat.version>
+   </properties>
+ 
+   <dependencies>
+diff --git a/pom.xml b/pom.xml
+index b0a36925e..7a7887170 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -80,10 +80,11 @@
+     <!-- Hadoop and Hbase-thirdparty version -->
+     <!-- These are expected to be overridden to conform to cluster versions
+     along with hbase.version (defined in profiles) -->
+-    <hadoop.version>3.1.4</hadoop.version>
+-    <hbase.thirdparty.version>2.2.1</hbase.thirdparty.version>
++    <hadoop.version>3.3.4</hadoop.version>
++    <hbase.thirdparty.version>4.1.2</hbase.thirdparty.version>
+ 
+     <phoenix.thirdparty.version>1.1.0</phoenix.thirdparty.version>
++    <phoenix.thirdparty.guava.version>2.0.0</phoenix.thirdparty.guava.version>
+     <hbase.suffix>hbase-${hbase.profile}</hbase.suffix>
+ 
+     <!-- This is used by the release script only -->
+@@ -93,7 +94,7 @@
+     <hbase-2.2.runtime.version>2.2.6</hbase-2.2.runtime.version>
+     <hbase-2.3.runtime.version>2.3.5</hbase-2.3.runtime.version>
+     <hbase-2.4.0.runtime.version>2.4.0</hbase-2.4.0.runtime.version>
+-    <hbase-2.4.runtime.version>2.4.2</hbase-2.4.runtime.version>
++    <hbase-2.4.runtime.version>2.4.13</hbase-2.4.runtime.version>
+ 
+     <!-- General Properties -->
+     <antlr-input.dir>src/main/antlr3</antlr-input.dir>
+@@ -122,6 +123,7 @@
+     <snappy.version>0.3</snappy.version>
+     <commons-codec.version>1.7</commons-codec.version>
+     <htrace.version>3.1.0-incubating</htrace.version>
++    <htrace.version4>4.2.0-incubating</htrace.version4>
+     <collections.version>3.2.2</collections.version>
+     <jodatime.version>2.10.5</jodatime.version>
+     <joni.version>2.1.31</joni.version>
+@@ -685,7 +687,7 @@
+       <dependency>
+         <groupId>org.apache.phoenix.thirdparty</groupId>
+         <artifactId>phoenix-shaded-guava</artifactId>
+-        <version>${phoenix.thirdparty.version}</version>
++        <version>${phoenix.thirdparty.guava.version}</version>
+       </dependency>
+       <dependency>
+         <groupId>org.apache.phoenix</groupId>
+@@ -1357,6 +1359,11 @@
+         <artifactId>htrace-core</artifactId>
+         <version>${htrace.version}</version>
+       </dependency>
++      <dependency>
++        <groupId>org.apache.htrace</groupId>
++        <artifactId>htrace-core4</artifactId>
++	<version>${htrace.version4}</version>
++      </dependency>
+       <dependency>
+         <groupId>commons-codec</groupId>
+         <artifactId>commons-codec</artifactId>
