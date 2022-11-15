@@ -31,7 +31,7 @@ def hbase_service(
     cmd = format("{daemon_script} --config {hbase_conf_dir}")
     pid_file = format("{hbase_pid_dir}/hbase-{hbase_user}-{role}.pid")
     no_op_test = format("ls {pid_file} >/dev/null 2>&1 && ps `cat {pid_file}` >/dev/null 2>&1")
-    
+
     if action == 'start':
 
       daemon_cmd = format("{cmd} start {role}")
@@ -52,4 +52,27 @@ def hbase_service(
       
       File(pid_file,
         action = "delete",
+      )
+    elif action == 'metricsFIX':
+      Execute(format("{sudo} cp /usr/lib/ambari-server/htrace-core-3*.jar /usr/lib/ams-hbase/lib/client-facing-thirdparty")
+      )
+      Execute(format("{sudo} rm -f /usr/lib/ambari-metrics-collector/phoenix-core-*.jar")
+      )
+      Execute(format("{sudo} rm -f /usr/lib/ambari-metrics-collector/protobuf-java-3*.jar")
+      )
+      Execute(format("{sudo} rm -f /usr/lib/ambari-metrics-collector/jakarta.ws.rs-api*.jar")
+      )
+      Execute(format("{sudo} rm -f /usr/lib/ambari-metrics-collector/servlet*.jar")
+      )
+      Execute(format("{sudo} wget http://10.169.206.131/yum-bigtop/centos/7/x86_64/phoenix-hbase-compat-2.4.1-5.1.2.jar -P /usr/lib/ambari-metrics-collector")
+      )
+      Execute(format("{sudo} wget http://10.169.206.131/yum-bigtop/centos/7/x86_64/phoenix-core-5.1.2.jar -P /usr/lib/ambari-metrics-collector")
+      )
+      Execute(format("{sudo} wget https://repo1.maven.org/maven2/com/google/protobuf/protobuf-java/2.6.1/protobuf-java-2.6.1.jar -P /usr/lib/ambari-metrics-collector")
+      )
+      Execute(format("{sudo} cp /usr/lib/ambari-metrics-collector/phoenix-*.jar /usr/lib/ambari-metrics-collector/omid*.jar /usr/lib/ambari-metrics-collector/joda-time-*.jar /usr/lib/ams-hbase/lib/client-facing-thirdparty")
+      )
+      Execute(format("{sudo} cp /usr/lib/ams-hbase/lib/client-facing-thirdparty/*.jar /usr/lib/ams-hbase/lib")
+      )
+      Execute(format("{sudo} cp /usr/lib/ams-hbase/lib/hbase-*.jar /usr/lib/ams-hbase/lib/hadoop-*.jar /usr/lib/ambari-metrics-collector")
       )

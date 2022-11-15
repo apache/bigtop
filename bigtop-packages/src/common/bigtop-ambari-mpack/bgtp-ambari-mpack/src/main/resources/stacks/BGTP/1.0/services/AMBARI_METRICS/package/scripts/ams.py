@@ -27,6 +27,7 @@ from resource_management.libraries.functions.format import format
 from ambari_commons import OSConst
 from ambari_commons.os_family_impl import OsFamilyFuncImpl, OsFamilyImpl
 from ambari_commons.str_utils import compress_backslashes
+from hbase_service import hbase_service
 import glob
 import os
 
@@ -343,6 +344,9 @@ def ams(name=None, action=None):
          mode=0644,
          content=Template("ams.conf.j2")
     )
+
+    # FIX dependency and cyclic reference issues
+    hbase_service('depnd_cyclic', action = 'metricsFIX')
 
     # Phoenix spool file dir if not /tmp
     if not os.path.exists(params.phoenix_client_spool_dir):
