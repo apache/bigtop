@@ -49,6 +49,12 @@ class bigtop_toolchain::renv {
         ]
       }
     }
+    /openEuler/: {
+      $pkgs = [
+        "R",
+        "pandoc"
+      ]
+    }
   }
 
   package { $pkgs:
