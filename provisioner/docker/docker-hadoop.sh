@@ -391,6 +391,9 @@ while [ $# -gt 0 ]; do
           *-centos-*|*-fedora-*|*-opensuse-*|*-rockylinux-*)
             distro=centos
             ;;
+	  *-openEuler-*|*openEuler-*)
+	    distro=openEuler
+	    ;;
           *-debian-*|*-ubuntu-*)
             distro=debian
             ;;
