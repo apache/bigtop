@@ -12,24 +12,8 @@ index 65a630069e..ef4a062960 100644
      <solr.mapping.path>${mapping.base.path}/ambari-infra-solr</solr.mapping.path>
      <solr.package.name>ambari-infra-solr</solr.package.name>
      <solr.client.package.name>ambari-infra-solr-client</solr.client.package.name>
-diff --git a/ambari-metrics/ambari-metrics-hadoop-sink/pom.xml b/ambari-metrics/ambari-metrics-hadoop-sink/pom.xml
-index 5551b3966f..66d5e8ebc9 100644
---- a/ambari-metrics/ambari-metrics-hadoop-sink/pom.xml
-+++ b/ambari-metrics/ambari-metrics-hadoop-sink/pom.xml
-@@ -199,6 +199,11 @@ limitations under the License.
-       <artifactId>powermock-module-junit4</artifactId>
-       <scope>test</scope>
-     </dependency>
-+    <dependency>
-+      <groupId>org.apache.commons</groupId>
-+      <artifactId>commons-lang3</artifactId>
-+      <version>3.12.0</version>
-+    </dependency>
-   </dependencies>
- 
- </project>
 diff --git a/ambari-metrics/ambari-metrics-timelineservice/pom.xml b/ambari-metrics/ambari-metrics-timelineservice/pom.xml
-index f8423b3806..c8da1a469c 100644
+index f8423b3806..e37072e9f8 100644
 --- a/ambari-metrics/ambari-metrics-timelineservice/pom.xml
 +++ b/ambari-metrics/ambari-metrics-timelineservice/pom.xml
 @@ -33,10 +33,10 @@
@@ -47,29 +31,7 @@ index f8423b3806..c8da1a469c 100644
    </properties>
  
    <build>
-@@ -371,10 +371,18 @@
-       </exclusions>
-     </dependency>
- 
-+<!--
-     <dependency>
--      <groupId>commons-lang</groupId>
--      <artifactId>commons-lang</artifactId>
--      <version>2.6</version>
-+      <groupId>org.apache.phoenix</groupId>
-+      <artifactId>phoenix-hbase-compat-2.4.1</artifactId>
-+      <version>5.1.2</version>
-+    </dependency>
-+-->
-+
-+    <dependency>
-+      <groupId>org.apache.commons</groupId>
-+      <artifactId>commons-lang3</artifactId>
-+      <version>3.12.0</version>
-     </dependency>
- 
-     <dependency>
-@@ -926,8 +934,8 @@
+@@ -926,8 +926,8 @@
                          compression="gzip"
                      />
                      <move
