@@ -472,6 +472,16 @@ def genTasks = { target ->
       println "\tNothing to do. Exiting..."
       return
     }
+    def final BIGTOP_BASE_VERSION = "${config.bigtop.base_version}"
+
+    def final PKG_NAME_SUFFIX = config.bigtop.components[target].rpm_pkg_suffix
+    def RPM_PKG_NAME_SUFFIX = PKG_NAME_SUFFIX
+    def GRADLE_PKG_NAME_SUFFIX = PKG_NAME_SUFFIX
+    if (!project.hasProperty("pkgSuffix") || !PKG_NAME_SUFFIX) {
+      RPM_PKG_NAME_SUFFIX = "%{nil}"
+      GRADLE_PKG_NAME_SUFFIX = ""
+    }
+
     def final BIGTOP_BUILD_STAMP = System.getenv('BIGTOP_BUILD_STAMP') ?:
             config.bigtop.components[target].version.release
     def final PKG_BUILD_DIR = config.bigtop.components[target].builddir
@@ -482,7 +492,7 @@ def genTasks = { target ->
     def final BASE_VERSION = config.bigtop.components[target].version.base
     def final HADOOP_VERSION = config.bigtop.components["hadoop"].version.pkg
     def RELEASE_DIST = "rpmbuild --eval '%{?dist}' 2>/dev/null".execute().text.trim().replaceAll("'",'')
-    def SRCRPM="$PKG_OUTPUT_DIR/$PKG_NAME-${PKG_VERSION}-$BIGTOP_BUILD_STAMP${RELEASE_DIST}.src.rpm"
+    def SRCRPM = "$PKG_OUTPUT_DIR/${PKG_NAME}${GRADLE_PKG_NAME_SUFFIX}-${PKG_VERSION}-$BIGTOP_BUILD_STAMP${RELEASE_DIST}.src.rpm"
 
     def final DO_MAVEN_DEPLOY = project.findProperty('doMavenDeploy') == 'true'
     def final MAVEN_DEPLOY_SOURCE = project.findProperty('mavenDeploySource') == 'true'
@@ -490,11 +500,7 @@ def genTasks = { target ->
     def final MAVEN_REPO_URI = project.hasProperty('mavenRepoUri') ? project.property('mavenRepoUri') : null
 
     def final PARENT_DIR = project.hasProperty("parentDir") ? project.property('parentDir') : "%{nil}"
-    def final mpackVersionRegex = /^(?<version>[0-9]+\.[0-9]+\.[0-9]+)-.*/
     def FULL_PARENT_DIR = "${PARENT_DIR}"
-    def matcher = "${config.bigtop.version}" =~ mpackVersionRegex
-    matcher.matches()
-    def BIGTOP_BASE_VERSION = matcher.group("version")
     if (PARENT_DIR != "%{nil}") {
       FULL_PARENT_DIR = "${PARENT_DIR}/${BIGTOP_BASE_VERSION}"
     }
@@ -509,7 +515,8 @@ def genTasks = { target ->
         '--define', "do_maven_deploy ${DO_MAVEN_DEPLOY}",
         '--define', "maven_deploy_source ${MAVEN_DEPLOY_SOURCE}",
         "--define", "parent_dir ${FULL_PARENT_DIR}",
-        "--define", "bigtop_base_version ${BIGTOP_BASE_VERSION}"
+        "--define", "bigtop_base_version ${BIGTOP_BASE_VERSION}",
+        "--define", "pkg_name_suffix ${RPM_PKG_NAME_SUFFIX}",
     ]
 
    if (MAVEN_REPO_URI != null) {
@@ -546,6 +553,15 @@ def genTasks = { target ->
     if (new File(config.bigtop.components[target].targetsrpm)?.exists()) {
       println "\tNothing to do. Exiting..."
       return
+    }
+    def final BIGTOP_BASE_VERSION = "${config.bigtop.base_version}"
+
+    def final PKG_NAME_SUFFIX = config.bigtop.components[target].rpm_pkg_suffix
+    def RPM_PKG_NAME_SUFFIX = PKG_NAME_SUFFIX
+    def GRADLE_PKG_NAME_SUFFIX = PKG_NAME_SUFFIX
+    if (!project.hasProperty("pkgSuffix") || !PKG_NAME_SUFFIX) {
+      RPM_PKG_NAME_SUFFIX = "%{nil}"
+      GRADLE_PKG_NAME_SUFFIX = ""
     }
     def final BIGTOP_BUILD_STAMP = System.getenv('BIGTOP_BUILD_STAMP') ?:
             config.bigtop.components[target].version.release
@@ -631,6 +647,7 @@ def genTasks = { target ->
         '--define', "${PKG_NAME_FOR_PKG}_release ${BIGTOP_BUILD_STAMP}%{?dist}",
         '-bs', '--nodeps', "--buildroot=${PKG_BUILD_DIR}/rpm/INSTALL",
         specFileName,
+        '--define', "pkg_name_suffix ${RPM_PKG_NAME_SUFFIX}",
     ]
     exec {
       workingDir BASE_DIR
@@ -640,7 +657,7 @@ def genTasks = { target ->
     mkdir(PKG_OUTPUT_DIR)
     def RELEASE_DIST = "rpmbuild --eval '%{?dist}' 2>/dev/null".execute().text.trim().replaceAll("'",'')
     copy {
-      from "$PKG_BUILD_DIR/rpm/SRPMS/${PKG_NAME}-${PKG_VERSION}-${BIGTOP_BUILD_STAMP}${RELEASE_DIST}.src.rpm"
+      from "$PKG_BUILD_DIR/rpm/SRPMS/${PKG_NAME}${GRADLE_PKG_NAME_SUFFIX}-${PKG_VERSION}-${BIGTOP_BUILD_STAMP}${RELEASE_DIST}.src.rpm"
       into PKG_OUTPUT_DIR
     }
     touchTargetFile(config.bigtop.components[target].targetsrpm)
