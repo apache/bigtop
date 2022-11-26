@@ -288,6 +288,7 @@ bigtop {
     }
     'kafka' {
       name    = 'kafka'
+      rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
       relNotes = 'Apache Kafka'
       version { base = '2.8.1'; pkg = base; release = 2 }
       tarball { destination = "$name-${version.base}.tar.gz"
