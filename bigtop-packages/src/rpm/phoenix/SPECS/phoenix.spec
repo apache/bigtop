@@ -14,6 +14,7 @@
 # limitations under the License.
 %define phoenix_home /usr/lib/%{name}
 %define bin_phoenix %{phoenix_home}/bin
+%define examples_phoenix %{phoenix_home}/examples
 %define etc_phoenix_conf %{_sysconfdir}/%{name}/conf
 %define etc_phoenix_conf_dist %{etc_phoenix_conf}.dist
 %define var_lib_phoenix /var/lib/%{name}
@@ -143,4 +144,5 @@ fi
 %doc %{doc_phoenix}
 %{phoenix_home}/phoenix-*.jar
 %{bin_phoenix}
+%{examples_phoenix}
 %config(noreplace) %{etc_phoenix_conf_dist}
