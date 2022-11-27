@@ -156,6 +156,7 @@ bigtop {
     }
     'hbase' {
       name    = 'hbase'
+      rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
       relNotes = 'Apache HBase'
       version { base = '2.4.13'; pkg = base; release = 1 }
       tarball { destination = "${name}-${version.base}.tar.gz"
