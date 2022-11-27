@@ -179,6 +179,7 @@ bigtop {
     }
     'tez' {
       name    = 'tez'
+      rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
       relNotes = 'Apache TEZ'
       version { base = '0.10.1'; pkg = base; release = 1 }
       tarball { destination = "apache-${name}-${version.base}-src.tar.gz"
