@@ -21,7 +21,7 @@
     <service>
       <name>AMBARI_METRICS</name>
       <displayName>Ambari Metrics</displayName>
-      <version>0.1.0</version>
+      <version>Bigtop+3.2</version>
       <comment>A system for metrics collection that provides storage and retrieval capability for metrics collected from the cluster
       </comment>
       <components>

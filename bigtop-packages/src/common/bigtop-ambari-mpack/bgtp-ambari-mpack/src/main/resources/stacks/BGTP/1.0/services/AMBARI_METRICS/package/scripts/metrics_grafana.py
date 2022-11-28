@@ -43,10 +43,13 @@ class AmsGrafana(Script):
     self.configure(env, action = 'start')
 
     start_cmd = format("{ams_grafana_script} start")
-    Execute(start_cmd,
-            user=params.ams_user,
-            not_if = params.grafana_process_exists_cmd,
-            )
+    try:
+      Execute(start_cmd,
+              user=params.ams_user,
+              not_if = params.grafana_process_exists_cmd,
+             )
+    except:
+      raise
     pidfile = format("{ams_grafana_pid_dir}/grafana-server.pid")
     if not sudo.path_exists(pidfile):
       Logger.warning("Pid file doesn't exist after starting of the component.")
