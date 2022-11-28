@@ -23,6 +23,7 @@
 %undefine _auto_set_build_flags
 
 %define hadoop_name hadoop
+%define hadoop_pkg_name hadoop%{pkg_name_suffix}
 
 %define etc_default %{parent_dir}/etc/default
 
@@ -44,7 +45,7 @@
 %define doc_dir %{parent_dir}/%{_docdir}
 %define include_dir %{parent_dir}/%{_includedir}
 %define lib_dir %{parent_dir}/%{_libdir}
-%define doc_hadoop %{doc_dir}/%{name}-%{hadoop_version}
+%define doc_hadoop %{doc_dir}/%{hadoop_name}-%{hadoop_version}
 
 # No prefix directory
 %define np_var_log_yarn /var/log/%{hadoop_name}-yarn
@@ -93,7 +94,7 @@
     %{nil}
 
 %define netcat_package nc
-%define doc_hadoop %{doc_dir}/%{name}-%{hadoop_version}
+%define doc_hadoop %{doc_dir}/%{hadoop_name}-%{hadoop_version}
 %define alternatives_cmd alternatives
 %global initd_dir %{_sysconfdir}/rc.d/init.d
 %endif
@@ -113,14 +114,14 @@
     %{nil}
 
 %define netcat_package netcat-openbsd
-%define doc_hadoop %{doc_dir}/%{name}
+%define doc_hadoop %{doc_dir}/%{hadoop_name}
 %define alternatives_cmd update-alternatives
 %global initd_dir %{_sysconfdir}/rc.d
 %endif
 
 %if  0%{?mgaversion}
 %define netcat_package netcat-openbsd
-%define doc_hadoop %{doc_dir}/%{name}-%{hadoop_version}
+%define doc_hadoop %{doc_dir}/%{hadoop_name}-%{hadoop_version}
 %define alternatives_cmd update-alternatives
 %global initd_dir %{_sysconfdir}/rc.d/init.d
 %endif
@@ -138,16 +139,16 @@
 # BIGTOP-3359
 %define _build_id_links none
 
-Name: %{hadoop_name}
+Name: %{hadoop_pkg_name}
 Version: %{hadoop_version}
 Release: %{hadoop_release}
 Summary: Hadoop is a software platform for processing vast amounts of data
 License: ASL 2.0
 URL: http://hadoop.apache.org/core/
 Group: Development/Libraries
-Source0: %{name}-%{hadoop_base_version}.tar.gz
+Source0: %{hadoop_name}-%{hadoop_base_version}.tar.gz
 Source1: do-component-build
-Source2: install_%{name}.sh
+Source2: install_%{hadoop_name}.sh
 Source4: hadoop-fuse.default
 Source5: httpfs.default
 Source6: hadoop.1
@@ -519,7 +520,7 @@ These projects (enumerated below) allow HDFS to be mounted (on most flavors of U
 
 
 %prep
-%setup -n %{name}-%{hadoop_base_version}-src
+%setup -n %{hadoop_name}-%{hadoop_base_version}-src
 
 #BIGTOP_PATCH_COMMANDS
 %build
@@ -577,14 +578,14 @@ env HADOOP_VERSION=%{hadoop_base_version} bash %{SOURCE2} \
 
 # Install top level /etc/default files
 # %__install -d -m 0755 $RPM_BUILD_ROOT/%{etc_default}
-%__cp $RPM_SOURCE_DIR/%{name}-fuse.default $RPM_BUILD_ROOT/%{etc_default}/%{name}-fuse
+%__cp $RPM_SOURCE_DIR/%{hadoop_name}-fuse.default $RPM_BUILD_ROOT/%{etc_default}/%{hadoop_name}-fuse
 
 # Generate the init.d scripts
 for service in %{hadoop_services}
 do
-       bash %{SOURCE11} $RPM_SOURCE_DIR/%{name}-${service}.svc rpm $RPM_BUILD_ROOT/%{initd_dir}/%{name}-${service}
-       cp $RPM_SOURCE_DIR/${service/-*/}.default $RPM_BUILD_ROOT/%{etc_default}/%{name}-${service}
-       chmod 644 $RPM_BUILD_ROOT/%{etc_default}/%{name}-${service}
+       bash %{SOURCE11} $RPM_SOURCE_DIR/%{hadoop_name}-${service}.svc rpm $RPM_BUILD_ROOT/%{initd_dir}/%{hadoop_name}-${service}
+       cp $RPM_SOURCE_DIR/${service/-*/}.default $RPM_BUILD_ROOT/%{etc_default}/%{hadoop_name}-${service}
+       chmod 644 $RPM_BUILD_ROOT/%{etc_default}/%{hadoop_name}-${service}
 done
 
 # Install security limits
@@ -640,39 +641,39 @@ getent group mapred >/dev/null  || groupadd -r mapred
 getent passwd mapred >/dev/null || /usr/sbin/useradd --comment "Hadoop MapReduce" --shell /bin/bash -M -r -g mapred -G hadoop --home %{var_lib_mapreduce} mapred
 
 %post
-%{alternatives_cmd} --install %{np_etc_hadoop}/conf %{name}-conf %{etc_hadoop}/conf.empty 10
+%{alternatives_cmd} --install %{np_etc_hadoop}/conf %{hadoop_name}-conf %{etc_hadoop}/conf.empty 10
 
 %post httpfs
-chkconfig --add %{name}-httpfs
+chkconfig --add %{hadoop_name}-httpfs
 
 %post kms
-chkconfig --add %{name}-kms
+chkconfig --add %{hadoop_name}-kms
 
 %preun
 if [ "$1" = 0 ]; then
-  %{alternatives_cmd} --remove %{name}-conf %{etc_hadoop}/conf.empty || :
+  %{alternatives_cmd} --remove %{hadoop_name}-conf %{etc_hadoop}/conf.empty || :
 fi
 
 %preun httpfs
 if [ $1 = 0 ]; then
-  service %{name}-httpfs stop > /dev/null 2>&1
-  chkconfig --del %{name}-httpfs
+  service %{hadoop_name}-httpfs stop > /dev/null 2>&1
+  chkconfig --del %{hadoop_name}-httpfs
 fi
 
 %postun httpfs
 if [ $1 -ge 1 ]; then
-  service %{name}-httpfs condrestart >/dev/null 2>&1
+  service %{hadoop_name}-httpfs condrestart >/dev/null 2>&1
 fi
 
 %preun kms
 if [ $1 = 0 ]; then
-  service %{name}-kms stop > /dev/null 2>&1
-  chkconfig --del %{name}-kms
+  service %{hadoop_name}-kms stop > /dev/null 2>&1
+  chkconfig --del %{hadoop_name}-kms
 fi
 
 %postun kms
 if [ $1 -ge 1 ]; then
-  service %{name}-kms condrestart >/dev/null 2>&1
+  service %{hadoop_name}-kms condrestart >/dev/null 2>&1
 fi
 
 %files yarn
@@ -764,11 +765,11 @@ fi
 %files httpfs
 %defattr(-,root,root)
 
-%config(noreplace) %{etc_default}/%{name}-httpfs
+%config(noreplace) %{etc_default}/%{hadoop_name}-httpfs
 %config(noreplace) %{etc_hadoop}/conf.empty/httpfs-env.sh
 %config(noreplace) %{etc_hadoop}/conf.empty/httpfs-log4j.properties
 %config(noreplace) %{etc_hadoop}/conf.empty/httpfs-site.xml
-%{initd_dir}/%{name}-httpfs
+%{initd_dir}/%{hadoop_name}-httpfs
 %attr(0775,httpfs,httpfs) %{np_var_run_httpfs}
 %attr(0775,httpfs,httpfs) %{np_var_log_httpfs}
 %attr(0775,httpfs,httpfs) %{var_lib_httpfs}
@@ -779,8 +780,8 @@ fi
 %config(noreplace) %{etc_hadoop}/conf.empty/kms-env.sh
 %config(noreplace) %{etc_hadoop}/conf.empty/kms-log4j.properties
 %config(noreplace) %{etc_hadoop}/conf.empty/kms-site.xml
-%config(noreplace) %{etc_default}/%{name}-kms
-%{initd_dir}/%{name}-kms
+%config(noreplace) %{etc_default}/%{hadoop_name}-kms
+%{initd_dir}/%{hadoop_name}-kms
 %attr(0775,kms,kms) %{np_var_run_kms}
 %attr(0775,kms,kms) %{np_var_log_kms}
 %attr(0775,kms,kms) %{var_lib_kms}
@@ -789,19 +790,19 @@ fi
 %define service_macro() \
 %files %1 \
 %defattr(-,root,root) \
-%{initd_dir}/%{name}-%1 \
-%config(noreplace) %{etc_default}/%{name}-%1 \
+%{initd_dir}/%{hadoop_name}-%1 \
+%config(noreplace) %{etc_default}/%{hadoop_name}-%1 \
 %post %1 \
-chkconfig --add %{name}-%1 \
+chkconfig --add %{hadoop_name}-%1 \
 \
 %preun %1 \
 if [ $1 = 0 ]; then \
-  service %{name}-%1 stop > /dev/null 2>&1 \
-  chkconfig --del %{name}-%1 \
+  service %{hadoop_name}-%1 stop > /dev/null 2>&1 \
+  chkconfig --del %{hadoop_name}-%1 \
 fi \
 %postun %1 \
 if [ $1 -ge 1 ]; then \
-  service %{name}-%1 condrestart >/dev/null 2>&1 \
+  service %{hadoop_name}-%1 condrestart >/dev/null 2>&1 \
 fi
 
 %service_macro hdfs-namenode
@@ -819,11 +820,11 @@ fi
 
 # Pseudo-distributed Hadoop installation
 %post conf-pseudo
-%{alternatives_cmd} --install %{np_etc_hadoop}/conf %{name}-conf %{etc_hadoop}/conf.pseudo 30
+%{alternatives_cmd} --install %{np_etc_hadoop}/conf %{hadoop_name}-conf %{etc_hadoop}/conf.pseudo 30
 
 %preun conf-pseudo
 if [ "$1" = 0 ]; then
-        %{alternatives_cmd} --remove %{name}-conf %{etc_hadoop}/conf.pseudo
+        %{alternatives_cmd} --remove %{hadoop_name}-conf %{etc_hadoop}/conf.pseudo
 fi
 
 %files conf-pseudo
