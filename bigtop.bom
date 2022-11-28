@@ -211,7 +211,8 @@ bigtop {
     }
     'spark' {
       name    = 'spark'
-      pkg     = 'spark-core'
+      pkg     = 'spark'
+      rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
       relNotes = 'Apache Spark'
       /*
        * Remember to fetch the new LICENSE-binary and licenses-binary files
