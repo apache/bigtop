@@ -1,0 +1,44 @@
+diff --git a/ambari-metrics/ambari-metrics-grafana/conf/unix/ambari-metrics-grafana b/ambari-metrics/ambari-metrics-grafana/conf/unix/ambari-metrics-grafana
+index dba2f5ff55..edd3ec1a09 100644
+--- a/ambari-metrics/ambari-metrics-grafana/conf/unix/ambari-metrics-grafana
++++ b/ambari-metrics/ambari-metrics-grafana/conf/unix/ambari-metrics-grafana
+@@ -118,7 +118,7 @@ case "$1" in
+     then
+       for i in {1..10}
+       do
+-        sleep 2
++        sleep 12
+         # check if pid file has been written to
+         if [ -s $PID_FILE ]; then
+           echo " $(date) pid_file has been written to" >> $LOG_FILE
+@@ -131,18 +131,19 @@ case "$1" in
+         echo " $(date) Start FAILED because daemon did not write pid in pid_file after 20 seconds" >> $LOG_FILE
+         exit 1
+       fi
+-      i=0
+-      timeout=60
++      #i=0
++      #timeout=60
+       # Wait for the process to be properly started before exiting
+-      until { cat "$PID_FILE" | xargs kill -0; } >/dev/null 2>&1
+-      do
+-        sleep 1
+-        i=$(($i + 1))
+-        if [ $i -gt $timeout ]; then
+-          echo "FAILED"
+-          exit 1
+-        fi
+-      done
++      sleep 120
++      #until { cat "$PID_FILE" | xargs kill -0; } >/dev/null 2>&1
++      #do
++      #  sleep 1
++      #  i=$(($i + 1))
++      #  if [ $i -gt $timeout ]; then
++      #    echo "FAILED"
++      #    exit 1
++      #  fi
++      #done
+     fi
+ 
+     echo "OK" >> $LOG_FILE
