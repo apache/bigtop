@@ -24,6 +24,7 @@
 
 %define hadoop_name hadoop
 %define hadoop_pkg_name hadoop%{pkg_name_suffix}
+%define zookeeper_pkg_name zookeeper%{pkg_name_suffix}
 
 %define etc_default %{parent_dir}/etc/default
 
@@ -179,7 +180,7 @@ Source31: kms.default
 #BIGTOP_PATCH_FILES
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
 BuildRequires: fuse-devel, fuse
-Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils >= 0.7, zookeeper >= 3.4.0
+Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils >= 0.7, %{zookeeper_pkg_name} >= 3.4.0
 Requires: psmisc, %{netcat_package}
 Requires: openssl-devel
 # Sadly, Sun/Oracle JDK in RPM form doesn't provide libjvm.so, which means we have
@@ -476,7 +477,7 @@ Hadoop Filesystem Library
 %package libhdfs-devel
 Summary: Development support for libhdfs
 Group: Development/Libraries
-Requires: hadoop = %{version}-%{release}, hadoop-libhdfs = %{version}-%{release}
+Requires: %{name} = %{version}-%{release}, %{name}-libhdfs = %{version}-%{release}
 
 %description libhdfs-devel
 Includes examples and header files for accessing HDFS from C

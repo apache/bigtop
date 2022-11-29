@@ -15,6 +15,8 @@
 
 %define hbase_name hbase
 %define hbase_pkg_name hbase%{pkg_name_suffix}
+%define hadoop_pkg_name hadoop%{pkg_name_suffix}
+%define zookeeper_pkg_name zookeeper%{pkg_name_suffix}
 
 %define etc_default %{parent_dir}/etc/default
 
@@ -105,7 +107,7 @@ Source6: hbase.nofiles.conf
 Source7: regionserver-init.d.tpl
 #BIGTOP_PATCH_FILES
 Requires: coreutils, /usr/sbin/useradd, /sbin/chkconfig, /sbin/service
-Requires: hadoop-client, zookeeper >= 3.3.1, bigtop-utils >= 0.7
+Requires: %{hadoop_pkg_name}-client, %{zookeeper_pkg_name} >= 3.3.1, bigtop-utils >= 0.7
 
 %if  0%{?mgaversion}
 Requires: bsh-utils

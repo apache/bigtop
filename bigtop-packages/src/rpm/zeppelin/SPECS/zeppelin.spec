@@ -15,6 +15,8 @@
 
 %define zeppelin_name zeppelin
 %define zeppelin_pkg_name zeppelin%{pkg_name_suffix}
+%define hadoop_pkg_name hadoop%{pkg_name_suffix}
+%define spark_pkg_name spark%{pkg_name_suffix}
 
 %define etc_default %{parent_dir}/etc/default
 
@@ -59,7 +61,7 @@ Source4: install_zeppelin.sh
 Source5: zeppelin-env.sh
 Source6: zeppelin.svc
 #BIGTOP_PATCH_FILES
-Requires: bigtop-utils >= 0.7, hadoop-client, spark-core >= 1.5, spark-python >= 1.5
+Requires: bigtop-utils >= 0.7, %{hadoop_pkg_name}-client, %{spark_pkg_name}-core >= 1.5, %{spark_pkg_name}-python >= 1.5
 Requires(preun): /sbin/service
 AutoReq: no
 
