@@ -24,7 +24,7 @@
       <comment>Non-relational distributed database and centralized service for configuration management &amp;
         synchronization
       </comment>
-      <version>Bigtop+3.1</version>
+      <version>Bigtop+3.2</version>
       <components>
         <component>
           <name>HBASE_MASTER</name>
