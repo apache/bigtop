@@ -170,6 +170,7 @@ class bigtop_toolchain::packages {
        "createrepo_c-devel",
        "lzo-devel",
        "fuse-devel",
+       "fuse3-devel",
        "cppunit-devel",
        "openssl-devel",
        "libxml2-devel",
