@@ -195,7 +195,11 @@ Requires: sh-utils, insserv
 # CentOS 5 does not have any dist macro
 # So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
 %if %{!?suse_version:1}0 && %{!?mgaversion:1}0
+%if 0%{?openEuler}
+BuildRequires: pkgconfig, fuse-libs, openEuler-rpm-config, lzo-devel, openssl-devel
+%else
 BuildRequires: pkgconfig, fuse-libs, redhat-rpm-config, lzo-devel, openssl-devel
+%endif
 # Required for init scripts
 Requires: coreutils, /lib/lsb/init-functions
 %endif
