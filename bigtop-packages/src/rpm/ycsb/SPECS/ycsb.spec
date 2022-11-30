@@ -36,7 +36,11 @@ Source3: bigtop.bom
 #BIGTOP_PATCH_FILES
 ## This package _explicitly_ turns off the auto-discovery of required dependencies
 ## to work around OSGI corner case, added to RPM lately. See BIGTOP-2421 for more info.
+%if 0%{?openEuler}
+Requires: coreutils, bigtop-utils >= 0.7, python3
+%else
 Requires: coreutils, bigtop-utils >= 0.7, python2
+%endif
 AutoReq: no
 
 %description 
@@ -51,6 +55,11 @@ performance of NoSQL database management systems.
 #BIGTOP_PATCH_COMMANDS
 
 %build
+# openEuler use python3 ,support ycsb python3
+%if 0%{?openEuler}
+patch -p1 < $RPM_SOURCE_DIR/openEuler-python3.9-executable-version.diff
+%endif
+
 bash $RPM_SOURCE_DIR/do-component-build
 
 %install
