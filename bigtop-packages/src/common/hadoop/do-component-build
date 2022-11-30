@@ -124,6 +124,12 @@ MAVEN_OPTS+="-DskipTests -DskipITs "
 # Include common Maven Deployment logic
 . $(dirname ${0})/maven_deploy.sh
 
+. /etc/os-release
+OS="$ID"
+if [ "${OS}" = "openEuler" ] ; then
+  sed -i 's|node-gyp "^3.8.0"|node-gyp "^6.0.0"|g' hadoop-yarn-project/hadoop-yarn/hadoop-yarn-ui/src/main/webapp/yarn.lock 
+fi
+
 # Build artifacts
 mvn $BUNDLE_SNAPPY -Pdist -Pnative -Psrc -Pyarn-ui -Dtar ${MAVEN_OPTS} install ${EXTRA_GOALS} "$@"
 mvn site site:stage ${MAVEN_OPTS} $@
