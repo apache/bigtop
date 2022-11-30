@@ -23,7 +23,6 @@ if [ $# != 1 ]; then
   echo "Usage: build.sh <PREIX-OS-VERSION>"
   echo
   echo "Example: build.sh trunk-centos-7"
-  echo "openeuler: Example: build.sh trunk-openeuler/openeuler-22.03"
   echo "       : build.sh 1.0.0-centos-7"
   exit 1
 fi
@@ -64,10 +63,10 @@ case "${OS}-${VERSION}" in
     ;;
 esac
 
-if [ $OS == "openeuler/openeuler" ];then
-  docker build -t ${PREFIX}-${OS}-${VERSION}${ARCH} .
-  docker tag ${PREFIX}-${OS}-${VERSION}${ARCH} bigtop/puppet:${PREFIX}-openEuler-${VERSION}${ARCH}
-else
-  docker build -t bigtop/puppet:${PREFIX}-${OS}-${VERSION}${ARCH} .
+if [ $OS == "openeuler" ];then
+  OPENEULER_OS="${OS}/${OS}"
+  sed -i -e "s|${OS}:${VERSION}|$OPENEULER_OS:${VERSION}|" ./Dockerfile
 fi
+
+docker build -t bigtop/puppet:${PREFIX}-${OS}-${VERSION}${ARCH} .
 rm -f Dockerfile puppetize.sh
