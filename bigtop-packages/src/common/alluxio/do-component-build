@@ -17,6 +17,8 @@
 set -ex
 
 . `dirname $0`/bigtop.bom
+. /etc/os-release
+OS="$ID"
 
 if [ $HOSTTYPE = "powerpc64le" ] ; then
   mvn install:install-file -DgroupId=io.grpc -DartifactId=protoc-gen-grpc-java -Dversion=1.28.0 -Dclassifier=linux-ppcle_64 -Dpackaging=exe -Dfile=/usr/src/grpc-java-1.28.0/compiler/build/exe/java_plugin/protoc-gen-grpc-java "$@"
@@ -26,6 +28,15 @@ if [ $HOSTTYPE = "powerpc64le" ] ; then
   mvn clean install -DskipTests -Dhadoop.version=${HADOOP_VERSION} -Dgrpc.version=1.28.0 -Dmaven.buildNumber.revisionOnScmFailure=v${ALLUXIO_VERSION} -Phadoop-3 -Pyarn "$@"
 
 else
+  if [ "${OS}" = "openEuler" ] ; then
+    sed -i "s|<nodeVersion>v10.11.0</nodeVersion>|<nodeVersion>v12.22.1</nodeVersion>|" webui/pom.xml
+    sed -i "s|<npmVersion>6.4.1</npmVersion>|<npmVersion>6.14.7</npmVersion>|" webui/pom.xml
+    sed -i "s|<activeByDefault>false</activeByDefault>|<activeByDefault>true</activeByDefault>|g" integration/jnifuse/native/pom.xml
+    sed -i 's|"node-gyp": "^3.8.0",|"node-gyp": "^6.0.0",|g'  `find -name npm-shrinkwrap.json`
+    sed -i 's|"version": "3.8.0",|"version": "6.0.0",|g' `find -name npm-shrinkwrap.json`
+    sed -i 's|node-gyp-3.8.0.tgz|node-gyp-6.0.0.tgz|g'  `find -name npm-shrinkwrap.json`
+    sed -i 's|sha512-3g8lYefrRRzvGeSowdJKAKyks8oUpLEd/DyPV4eMhVlhJ0aNaZqIrNUIPuEWWTAoPqyFkfGrM67MC69baqn6vA==|sha512-Qz6Xda2bKzdsooXITarGf2uaCJcYh7ua+jeRMifBFmTz0peo0JW6IjpqELlX+ZiHXphsKzISgaCsZeQch5a+NA==|g' `find -name npm-shrinkwrap.json`
+  fi
   mvn clean install -DskipTests -Dhadoop.version=${HADOOP_VERSION} -Dmaven.buildNumber.revisionOnScmFailure=v${ALLUXIO_VERSION} -Phadoop-3 -Pyarn "$@"
 
 fi
