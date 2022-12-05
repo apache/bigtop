@@ -99,14 +99,23 @@ class gpdb {
       # doesn't seem to provide it as a standard package. So we use get-pip.py
       # (https://pip.pypa.io/en/stable/installing/#installing-with-get-pip-py)
       # here to install it on all distros.
-      exec { 'download_get_pip':
-        cwd => '/tmp',
-        command => '/usr/bin/curl -sLO https://bootstrap.pypa.io/pip/2.7/get-pip.py'
-      }
-      exec { 'install_pip':
-        cwd => '/tmp',
-        command => '/usr/bin/python2 get-pip.py',
-        require => [Exec["download_get_pip"], Package["gpdb"]],
+      if ($operatingsystem == 'openEuler') {
+         exec { 'install_python_packages':
+           command => "/usr/bin/env pip install -q lockfile paramiko psutil",
+           timeout => 600,
+         }
+         package { ["gpdb"]:
+           ensure => latest,
+         }
+      } else {
+         exec { 'download_get_pip':
+           cwd => '/tmp',
+           command => '/usr/bin/curl -sLO https://bootstrap.pypa.io/pip/2.7/get-pip.py'
+         }
+        exec { 'install_pip':
+          cwd => '/tmp',
+          command => '/usr/bin/python2 get-pip.py',
+          require => [Exec["download_get_pip"], Package["gpdb"]],
       }
       # GPDB requires the following python packages as of v5.28.5. See
       # https://github.com/greenplum-db/gpdb/tree/5X_STABLE#building-greenplum-database-with-gporca.
