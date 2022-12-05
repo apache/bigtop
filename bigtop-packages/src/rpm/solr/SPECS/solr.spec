@@ -14,6 +14,7 @@
 # limitations under the License.
 
 %define solr_name solr
+%define solr_pkg_name %{solr_name}%{pkg_name_suffix}
 
 %define etc_default %{parent_dir}/etc/default
 
@@ -30,7 +31,7 @@
 %define np_var_run_solr /var/run/%{solr_name}
 %define np_etc_solr /etc/%{solr_name}
 
-%define svc_solr %{name}-server
+%define svc_solr %{solr_name}-server
 %define tomcat_deployment_solr %{etc_solr}/tomcat-conf
 
 %if  %{?suse_version:1}0
@@ -50,7 +51,7 @@
 # disable repacking jars
 %define __os_install_post %{nil}
 
-Name: solr
+Name: %{solr_pkg_name}
 Version: %{solr_version}
 Release: %{solr_release}
 Summary: Apache Solr is the popular, blazing fast open source enterprise search platform
@@ -61,7 +62,7 @@ Buildroot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 License: ASL 2.0
 Source0: solr-%{solr_base_version}-src.tgz
 Source1: do-component-build 
-Source2: install_%{name}.sh
+Source2: install_%{solr_name}.sh
 Source3: solr.default
 Source4: solr-server.init
 Source5: solrctl.sh
