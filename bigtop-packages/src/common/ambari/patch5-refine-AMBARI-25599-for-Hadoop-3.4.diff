@@ -43,7 +43,7 @@ index f8423b3806..e37072e9f8 100644
                    </target>
                  </configuration>
 diff --git a/ambari-metrics/pom.xml b/ambari-metrics/pom.xml
-index a0a11b8e6e..909a297c1c 100644
+index a0a11b8e6e..7b0b1df2c7 100644
 --- a/ambari-metrics/pom.xml
 +++ b/ambari-metrics/pom.xml
 @@ -40,14 +40,14 @@
@@ -58,13 +58,13 @@ index a0a11b8e6e..909a297c1c 100644
 -    <grafana.tar>https://dl.grafana.com/oss/release/grafana-6.4.2.linux-amd64.tar.gz</grafana.tar>
 -    <phoenix.tar>https://s3.amazonaws.com/dev.hortonworks.com/HDP/centos7/3.x/BUILDS/3.1.4.0-315/tars/phoenix/phoenix-5.0.0.3.1.4.0-315.tar.gz</phoenix.tar>
 -    <phoenix.folder>phoenix-5.0.0.3.1.4.0-315</phoenix.folder>
-+    <hbase.tar>http://bigtop-snapshot.s3.amazonaws.com/centos-7/x86_64/bigtop-stack-binary/hbase-2.4.13-bin.tar.gz</hbase.tar>
++    <hbase.tar>http://repo.bigtop.apache.org.s3.amazonaws.com/bigtop-stack-binary/3.2.0/centos-7/x86_64/hbase-2.4.13-bin.tar.gz</hbase.tar>
 +    <hbase.folder>hbase-2.4.13</hbase.folder>
-+    <hadoop.tar>http://bigtop-snapshot.s3.amazonaws.com/centos-7/x86_64/bigtop-stack-binary/hadoop-3.3.4.tar.gz</hadoop.tar>
++    <hadoop.tar>http://repo.bigtop.apache.org.s3.amazonaws.com/bigtop-stack-binary/3.2.0/centos-7/x86_64/hadoop-3.3.4.tar.gz</hadoop.tar>
 +    <hadoop.folder>hadoop-3.3.4</hadoop.folder>
 +    <grafana.folder>grafana-9.1.2</grafana.folder>
 +    <grafana.tar>https://dl.grafana.com/enterprise/release/grafana-enterprise-9.1.2.linux-amd64.tar.gz</grafana.tar>
-+    <phoenix.tar>http://bigtop-snapshot.s3.amazonaws.com/centos-7/x86_64/bigtop-stack-binary/phoenix-hbase-2.4-5.1.2-bin.tar.gz</phoenix.tar>
++    <phoenix.tar>http://repo.bigtop.apache.org.s3.amazonaws.com/bigtop-stack-binary/3.2.0/centos-7/x86_64/phoenix-hbase-2.4-5.1.2-bin.tar.gz</phoenix.tar>
 +    <phoenix.folder>phoenix-hbase-2.4-5.1.2-bin</phoenix.folder>
      <resmonitor.install.dir>/usr/lib/python2.6/site-packages/resource_monitoring</resmonitor.install.dir>
      <powermock.version>1.6.2</powermock.version>
