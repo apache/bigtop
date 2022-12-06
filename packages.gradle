@@ -136,6 +136,7 @@ task "bom-json" (description: "List the components of the stack in json format")
         project: it.value.name,
         pkg: it.value.pkg,
         relNotes: it.value.relNotes,
+        packaging: it.value.packaging,
       ],
       tarball: [
         destination: it.value.tarball.destination,
@@ -168,7 +169,8 @@ task "bom-json" (description: "List the components of the stack in json format")
 task "all-components" (description: "List the components of the stack") doLast {
   println "${project.name} ${config.bigtop.version} stack includes the following components"
   config.bigtop.components.sort().each { label, comp ->
-    println sprintf ('\t%1$s %2$s', comp.name.padRight(20), comp.version.base.padLeft(15))
+    println sprintf('\t%1$s %2$s%3$s', comp.name.padRight(20), comp.version.base.padLeft(15),
+      comp.packaging ? " (${comp.packaging.toUpperCase()} only)" : '')
   }
 }
 
@@ -819,7 +821,9 @@ project.afterEvaluate {
   doValidateBOM(config)
   config.bigtop.components.each { component_label, comp ->
     assert component_label == comp.name
-    genTasks(comp.name)
+    if (!comp.packaging || comp.packaging.equalsIgnoreCase(nativePackaging.pkg)) {
+      genTasks(comp.name)
+    }
   }
   // Versions need to be preserved for more than just component:
   //  - there are JDK version requirement
