@@ -1,5 +1,5 @@
 bigtop::bigtop_repo_gpg_check: true
 bigtop::bigtop_repo_apt_key: "01621A73025BDCA30F4159C62922A48261524827"
 bigtop::bigtop_repo_yum_key_url: "https://dlcdn.apache.org/bigtop/KEYS"
-bigtop::bigtop_repo_default_version: "3.1.1"
+bigtop::bigtop_repo_default_version: "3.2.0"
 
