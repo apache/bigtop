@@ -15,7 +15,7 @@
 
 Bigtop Changelog
 
-* Release 3.2.0-SNAPSHOT (unreleased)
+* Release 3.2.0 (2022-12-8)
 
 * Release 3.1.1 (2022-08-07)
 
