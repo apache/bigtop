@@ -26,7 +26,6 @@ if [ $HOSTTYPE = "powerpc64le" ] ; then
   # BIGTOP-3894
   # protobuf-3.19.2/3.17.3 doesn't offically support ppc64le;
   # Skip protoc backwards compatibility check here.
-  sed -i 's/3.19.2/3.17.3/g' pom.xml
   sed -i -e :a -e '$!N;s/.*\n\(.*salesforce\)/\1/;ta' -e 'P;D' pom.xml
   sed -i '/com.salesforce.servicelibs/,+3d' pom.xml
   sed -i '/Proto lock for preventing/,+14d' core/transport/pom.xml
@@ -35,6 +34,7 @@ if [ $HOSTTYPE = "powerpc64le" ] ; then
   # And protoc grpc-java-1.28.0 was also built based on protobuf-3.17.3 in Bigtop toolchain.
   # So manually install 3.17.3 here to workaound the GLIBC issue on Centos-7.
   if [ "${OS}" = "centos" ]; then
+    sed -i 's/3.19.2/3.17.3/g' pom.xml
     mvn install:install-file -DgroupId=com.google.protobuf -DartifactId=protoc -Dversion=3.17.3 \
       -Dclassifier=linux-ppcle_64 -Dpackaging=exe -Dfile=/usr/local/protobuf-3.17.3/bin/protoc "$@"
   fi
