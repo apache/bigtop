@@ -195,7 +195,6 @@ export CLASSPATH=\$CLASSPATH:\$ZOOKEEPER_CONF:\$ZOOKEEPER_HOME/*:\$ZOOKEEPER_HOM
 export ZOO_LOG_DIR=\${ZOO_LOG_DIR:-/var/log/zookeeper}
 export ZOO_LOG4J_PROP=\${ZOO_LOG4J_PROP:-INFO,ROLLINGFILE}
 export JVMFLAGS=\${JVMFLAGS:--Dzookeeper.log.threshold=INFO}
-export ZOO_DATADIR_AUTOCREATE_DISABLE=\${ZOO_DATADIR_AUTOCREATE_DISABLE:-true}
 env CLASSPATH=\$CLASSPATH /usr/lib/zookeeper/bin/${upstream_script} "\$@"
 EOF
   chmod 755 $wrapper
