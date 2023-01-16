@@ -15,12 +15,11 @@
 
 Bigtop Changelog
 
-* Release 3.2.0 (2022-12-30)
+* Release 3.2.0 (2023-01-16)
 
 Release Notes - Bigtop - Version 3.2.0
 
 ** Sub-task
-    * [BIGTOP-2971] - rpm packaging for Ranger
     * [BIGTOP-3438] - Upgrade protobuf-2.5.0 to 3.7.1 for Hadoop-3.3.0
     * [BIGTOP-3692] - upgrade flink version to 1.15.0
     * [BIGTOP-3696] - Bump Alluxio to 2.8.0
@@ -29,28 +28,52 @@ Release Notes - Bigtop - Version 3.2.0
     * [BIGTOP-3699] - Bump Spark to 3.2.1
     * [BIGTOP-3700] - Bump Zeppelin to 0.10.1
     * [BIGTOP-3701] - Remove deprecated Hadoop fs-image file after uninstalling HDFS-namenode
+    * [BIGTOP-3704] - Update Yarn service configuration in Mpack
+    * [BIGTOP-3705] - Refine the Ambari RPM spec to fix warning after rpm uninstallation
     * [BIGTOP-3706] - Bump Hadoop to 3.3.3
     * [BIGTOP-3716] - Rename the Yarn/MapReduce historyserver PID file
     * [BIGTOP-3717] - Update MapReduce service configuration in Mpack
     * [BIGTOP-3718] - Fix MapReduce2 service-check in Amabri Mpack
     * [BIGTOP-3719] - Decouple Mpack HDFS services from Ambari Core
+    * [BIGTOP-3721] - Add Kafka support for Bigtop 3.1.0 Mpack
+    * [BIGTOP-3726] - Align the version of the components in Mpack.
+    * [BIGTOP-3727] - Add HBase support for Bigtop 3.1.0 Mpack
+    * [BIGTOP-3728] - Docker dev/test env for centos7
+    * [BIGTOP-3734] - Add Sqoop support for Bigtop 3.1.0 Mpack
+    * [BIGTOP-3738] - Add Hive support for Bigtop 3.1.0 Mpack
+    * [BIGTOP-3739] - Add Tez support for Bigtop 3.1.0 Mpack
+    * [BIGTOP-3740] - Add Zeppelin support for Bigtop 3.1.0 Mpack
     * [BIGTOP-3741] - Add Flink support for Bigtop 3.1.0 Mpack
+    * [BIGTOP-3750] - Add Chrony synchronization to fix hostcheck issue in Mpack docker provisioner
+    * [BIGTOP-3752] - Ambari query webhdfs failed with Zeppelin notebook
     * [BIGTOP-3753] - Bump Solr to 8.11.2
     * [BIGTOP-3755] - Bump HBase to 2.4.13
+    * [BIGTOP-3760] - Bump Hadoop to 3.3.4
     * [BIGTOP-3763] - Fix Hive build issues about protobuf 2.5.0 on Arm64 and PPC64le
     * [BIGTOP-3765] - Remove cmake conditional for Hadoop rpm spec
     * [BIGTOP-3770] - Remove Sqoop from Bigtop stack
     * [BIGTOP-3771] - Fix failure of sqlline.py bundled with Phoenix
+    * [BIGTOP-3772] - Add Solr support for Bigtop 3.1.0 Mpack
     * [BIGTOP-3775] - Failed to build Phoenix on Arm64/powerpc64le
+    * [BIGTOP-3777] - Add Spark support for Bigtop 3.1.0 Mpack
+    * [BIGTOP-3778] - Hive 3.1.3 WebHCat service is not compatible with Hadoop 3.3.x
+    * [BIGTOP-3780] - Add Ambari_metrics to Bigtop Mpack
+    * [BIGTOP-3786] - Improve the build scripts to append suffix to the rpm package name
+    * [BIGTOP-3788] - Fix Ambari-HDFS components fail to start when kerberos enabled
+    * [BIGTOP-3789] - Decouple Kerberos services from Ambari Core
+    * [BIGTOP-3792] - Mpack solr fail to start when kerberos enabled
     * [BIGTOP-3795] - Add parameter to configure parent directory for RPM packages
     * [BIGTOP-3796] - Support parent directory configuration for Zookeeper rpm build script
     * [BIGTOP-3797] - Support parent directory configuration for Kafka rpm build script
     * [BIGTOP-3798] - Support parent directory configuration for Zeppelin rpm build script
     * [BIGTOP-3799] - Support parent directory configuration for Hive rpm build script
+    * [BIGTOP-3800] - Add extra Ambari-metrics RPMs packages in Ambari build for Mpack
+    * [BIGTOP-3802] - Fix Mpack Hive fail to start when kerberos enabled
     * [BIGTOP-3804] - Add quicklinks for HDFS/YARN/MapReduce
     * [BIGTOP-3805] - Support parent directory configuration for Spark rpm build script
     * [BIGTOP-3806] - Support parent directory configuration for Flink rpm build script
-    * [BIGTOP-3820] - Upgrade Ranger to 2.3.0
+    * [BIGTOP-3812] - Building bigtop-ambari-mpack fails on Debian/Ubuntu due to unwanted binary files
+    * [BIGTOP-3816] - Fails to enable NameNode HA
     * [BIGTOP-3821] - Support parent directory configuration for Hadoop rpm build script
     * [BIGTOP-3823] - Support parent directory configuration for HBase rpm build script
     * [BIGTOP-3825] - Support parent directory configuration for Solr rpm build script
@@ -59,16 +82,20 @@ Release Notes - Bigtop - Version 3.2.0
     * [BIGTOP-3839] - Rename bin file bigtop-select to distro-select on rpm package
     * [BIGTOP-3845] - Add the command to create the '/usr/bigtop' folder in the bigtop-select rpm package
     * [BIGTOP-3847] - Set bigtop-select to be consistent with -PparentDir
-    * [BIGTOP-3849] - Support parent directory configuration for Ranger rpm build script
     * [BIGTOP-3851] - Fix fail to start Namenode because of bigtop-select
     * [BIGTOP-3856] - Add hive-hcat-client in distro-select
     * [BIGTOP-3857] - Support parent directory default configuration for Hadoop rpm
     * [BIGTOP-3861] - Support parent directory default configuration for Hbase rpm
+    * [BIGTOP-3869] - Decouple mpack Zookeeper service from Ambari Core.
     * [BIGTOP-3872] - Adjust Ambari-2.7.5 dependency to fix the deployment issues of Ambari metrics
     * [BIGTOP-3874] - Bump Flink to 1.15.3
     * [BIGTOP-3887] - Fix Phoenix smoke-test is failed
+    * [BIGTOP-3888] - Bump Spark to 3.2.3
+    * [BIGTOP-3889] - Update S3 bucket links of Jars downloading for Metrics in Mpack
+    * [BIGTOP-3890] - Failed to build gpdb on Fedora-36
     * [BIGTOP-3891] - Fix build issues of Spark  in Debian11/Ubuntu22 packaging 
     * [BIGTOP-3893] - Fix Hadoop3.3.4 build issues on ppc64le
+    * [BIGTOP-3894] - Failed to build Alluxio on Centos-7 for ppcle64
     * [BIGTOP-3895] - Use OSS version of Grafana for Ambari Metrics
 
 ** Bug
@@ -93,6 +120,7 @@ Release Notes - Bigtop - Version 3.2.0
     * [BIGTOP-3776] - spark-thriftserver should work without external hive-metastore
     * [BIGTOP-3787] - Add docs in Phoenix .deb package
     * [BIGTOP-3790] - Tez didn't create symlink for conf dir like other components
+    * [BIGTOP-3791] - Hive package still using log4j while it's already upgrade to log4j2
     * [BIGTOP-3803] - Fix Hive3.1.3 Metastore service compatible issue with Hadoop3.3.x when kerberos enabled
     * [BIGTOP-3809] - Tez deb package build fails after add conf symlink
     * [BIGTOP-3810] - Hadoop build scripts use wrong home configuration for user httpfs

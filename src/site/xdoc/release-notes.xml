@@ -17,6 +17,296 @@
 		<section name="Bigtop Project Release Notes">
 			<!-- Paste release notes from https://issues.apache.org/jira/browse/BIGTOP here. -->
 
+        <h3>Release Notes - Bigtop - Version 3.2.0</h3>
+
+<h2>        Sub-task
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3438'>BIGTOP-3438</a>] -         Upgrade protobuf-2.5.0 to 3.7.1 for Hadoop-3.3.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3692'>BIGTOP-3692</a>] -         upgrade flink version to 1.15.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3696'>BIGTOP-3696</a>] -         Bump Alluxio to 2.8.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3697'>BIGTOP-3697</a>] -         Bump HBase to 2.4.12
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3698'>BIGTOP-3698</a>] -         Bump Hive to 3.1.3
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3699'>BIGTOP-3699</a>] -         Bump Spark to 3.2.1
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3700'>BIGTOP-3700</a>] -         Bump Zeppelin to 0.10.1
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3701'>BIGTOP-3701</a>] -         Remove deprecated Hadoop fs-image file after uninstalling HDFS-namenode
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3704'>BIGTOP-3704</a>] -         Update Yarn service configuration in Mpack
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3705'>BIGTOP-3705</a>] -         Refine the Ambari RPM spec to fix warning after rpm uninstallation
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3706'>BIGTOP-3706</a>] -         Bump Hadoop to 3.3.3
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3716'>BIGTOP-3716</a>] -         Rename the Yarn/MapReduce historyserver PID file
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3717'>BIGTOP-3717</a>] -         Update MapReduce service configuration in Mpack
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3718'>BIGTOP-3718</a>] -         Fix MapReduce2 service-check in Amabri Mpack
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3719'>BIGTOP-3719</a>] -         Decouple Mpack HDFS services from Ambari Core
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3721'>BIGTOP-3721</a>] -         Add Kafka support for Bigtop 3.1.0 Mpack
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3726'>BIGTOP-3726</a>] -         Align the version of the components in Mpack.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3727'>BIGTOP-3727</a>] -         Add HBase support for Bigtop 3.1.0 Mpack
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3728'>BIGTOP-3728</a>] -         Docker dev/test env for centos7
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3734'>BIGTOP-3734</a>] -         Add Sqoop support for Bigtop 3.1.0 Mpack
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3738'>BIGTOP-3738</a>] -         Add Hive support for Bigtop 3.1.0 Mpack
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3739'>BIGTOP-3739</a>] -         Add Tez support for Bigtop 3.1.0 Mpack
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3740'>BIGTOP-3740</a>] -         Add Zeppelin support for Bigtop 3.1.0 Mpack
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3741'>BIGTOP-3741</a>] -         Add Flink support for Bigtop 3.1.0 Mpack
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3750'>BIGTOP-3750</a>] -         Add Chrony synchronization to fix hostcheck issue in Mpack docker provisioner
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3752'>BIGTOP-3752</a>] -         Ambari query webhdfs failed with Zeppelin notebook
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3753'>BIGTOP-3753</a>] -         Bump Solr to 8.11.2
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3755'>BIGTOP-3755</a>] -         Bump HBase to 2.4.13
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3760'>BIGTOP-3760</a>] -         Bump Hadoop to 3.3.4
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3763'>BIGTOP-3763</a>] -         Fix Hive build issues about protobuf 2.5.0 on Arm64 and PPC64le
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3765'>BIGTOP-3765</a>] -         Remove cmake conditional for Hadoop rpm spec
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3770'>BIGTOP-3770</a>] -         Remove Sqoop from Bigtop stack
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3771'>BIGTOP-3771</a>] -         Fix failure of sqlline.py bundled with Phoenix
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3772'>BIGTOP-3772</a>] -         Add Solr support for Bigtop 3.1.0 Mpack
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3775'>BIGTOP-3775</a>] -         Failed to build Phoenix on Arm64/powerpc64le
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3777'>BIGTOP-3777</a>] -         Add Spark support for Bigtop 3.1.0 Mpack
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3778'>BIGTOP-3778</a>] -         Hive 3.1.3 WebHCat service is not compatible with Hadoop 3.3.x
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3780'>BIGTOP-3780</a>] -         Add Ambari_metrics to Bigtop Mpack
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3786'>BIGTOP-3786</a>] -         Improve the build scripts to append suffix to the rpm package name
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3788'>BIGTOP-3788</a>] -         Fix Ambari-HDFS components fail to start when kerberos enabled
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3789'>BIGTOP-3789</a>] -         Decouple Kerberos services from Ambari Core
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3792'>BIGTOP-3792</a>] -         Mpack solr fail to start when kerberos enabled
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3795'>BIGTOP-3795</a>] -         Add parameter to configure parent directory for RPM packages
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3796'>BIGTOP-3796</a>] -         Support parent directory configuration for Zookeeper rpm build script
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3797'>BIGTOP-3797</a>] -         Support parent directory configuration for Kafka rpm build script
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3798'>BIGTOP-3798</a>] -         Support parent directory configuration for Zeppelin rpm build script
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3799'>BIGTOP-3799</a>] -         Support parent directory configuration for Hive rpm build script
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3800'>BIGTOP-3800</a>] -         Add extra Ambari-metrics RPMs packages in Ambari build for Mpack
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3802'>BIGTOP-3802</a>] -         Fix Mpack Hive fail to start when kerberos enabled
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3804'>BIGTOP-3804</a>] -         Add quicklinks for HDFS/YARN/MapReduce
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3805'>BIGTOP-3805</a>] -         Support parent directory configuration for Spark rpm build script
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3806'>BIGTOP-3806</a>] -         Support parent directory configuration for Flink rpm build script
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3812'>BIGTOP-3812</a>] -         Building bigtop-ambari-mpack fails on Debian/Ubuntu due to unwanted binary files
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3816'>BIGTOP-3816</a>] -         Fails to enable NameNode HA
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3821'>BIGTOP-3821</a>] -         Support parent directory configuration for Hadoop rpm build script
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3823'>BIGTOP-3823</a>] -         Support parent directory configuration for HBase rpm build script
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3825'>BIGTOP-3825</a>] -         Support parent directory configuration for Solr rpm build script
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3826'>BIGTOP-3826</a>] -         Support parent directory configuration for Tez rpm build script
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3831'>BIGTOP-3831</a>] -         Introduce bigtop-select rpm package to Bigtop
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3839'>BIGTOP-3839</a>] -         Rename bin file bigtop-select to distro-select on rpm package
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3845'>BIGTOP-3845</a>] -         Add the command to create the &#39;/usr/bigtop&#39; folder in the bigtop-select rpm package
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3847'>BIGTOP-3847</a>] -         Set bigtop-select to be consistent with -PparentDir
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3851'>BIGTOP-3851</a>] -         Fix fail to start Namenode because of bigtop-select
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3856'>BIGTOP-3856</a>] -         Add hive-hcat-client in distro-select
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3857'>BIGTOP-3857</a>] -         Support parent directory default configuration for Hadoop rpm
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3861'>BIGTOP-3861</a>] -         Support parent directory default configuration for Hbase rpm
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3869'>BIGTOP-3869</a>] -         Decouple mpack Zookeeper service from Ambari Core.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3872'>BIGTOP-3872</a>] -         Adjust Ambari-2.7.5 dependency to fix the deployment issues of Ambari metrics
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3874'>BIGTOP-3874</a>] -         Bump Flink to 1.15.3
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3887'>BIGTOP-3887</a>] -         Fix Phoenix smoke-test is failed
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3888'>BIGTOP-3888</a>] -         Bump Spark to 3.2.3
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3889'>BIGTOP-3889</a>] -         Update S3 bucket links of Jars downloading for Metrics in Mpack
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3890'>BIGTOP-3890</a>] -         Failed to build gpdb on Fedora-36
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3891'>BIGTOP-3891</a>] -         Fix build issues of Spark  in Debian11/Ubuntu22 packaging
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3893'>BIGTOP-3893</a>] -         Fix Hadoop3.3.4 build issues on ppc64le
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3894'>BIGTOP-3894</a>] -         Failed to build Alluxio on Centos-7 for ppcle64
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3895'>BIGTOP-3895</a>] -         Use OSS version of Grafana for Ambari Metrics
+</li>
+</ul>
+
+<h2>        Bug
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3685'>BIGTOP-3685</a>] -         make docker-provisioner to be used both in docker-compose v1 and v2
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3694'>BIGTOP-3694</a>] -         Fix Oozie build errors
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3707'>BIGTOP-3707</a>] -         Update latest repo url for Provisioner docker yamls
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3708'>BIGTOP-3708</a>] -         Fix build failure of Hive against Hadoop 3.3.3
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3709'>BIGTOP-3709</a>] -         Bring protobuf 2.5.0 back for building HBase on aarch64 and ppc64le
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3710'>BIGTOP-3710</a>] -         Fix build failure of HBase on aarch64 due to error in check-aggregate-license
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3712'>BIGTOP-3712</a>] -         Kafka smoke test failed with Zookeeper built with maven
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3724'>BIGTOP-3724</a>] -         Increment the release number of ZooKeeper and Kafka
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3725'>BIGTOP-3725</a>] -         Puppet 3 is removed from EPEL for CentOS 7
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3733'>BIGTOP-3733</a>] -         Building Logstash fails on Rocky 8
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3735'>BIGTOP-3735</a>] -         Sqoop bin script doesn&#39;t work on Bigtop-3.1.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3737'>BIGTOP-3737</a>] -         Fix build failure of Sqoop due to unresolved dependency on javax.activation-api
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3747'>BIGTOP-3747</a>] -         Zeppelin RPM package is missing notebookrepo-filesystem-0.10.0.jar
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3751'>BIGTOP-3751</a>] -         Fix build failure of Zeppelin due to dependency convergence error
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3758'>BIGTOP-3758</a>] -         Fix build failure of Tez against Hadoop 3.3
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3761'>BIGTOP-3761</a>] -         Fix bigtop_toolchain to enable EPEL before downloading packages
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3762'>BIGTOP-3762</a>] -         Building Spark fails on master due to StackOverflowError
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3769'>BIGTOP-3769</a>] -         Building Sqoop fails due to dependency download failure
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3776'>BIGTOP-3776</a>] -         spark-thriftserver should work without external hive-metastore
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3787'>BIGTOP-3787</a>] -         Add docs in Phoenix .deb package
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3790'>BIGTOP-3790</a>] -         Tez didn&#39;t create symlink for conf dir like other components
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3791'>BIGTOP-3791</a>] -         Hive package still using log4j while it&#39;s already upgrade to log4j2
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3803'>BIGTOP-3803</a>] -         Fix Hive3.1.3 Metastore service compatible issue with Hadoop3.3.x when kerberos enabled
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3809'>BIGTOP-3809</a>] -         Tez deb package build fails after add conf symlink
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3810'>BIGTOP-3810</a>] -         Hadoop build scripts use wrong home configuration for user httpfs
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3813'>BIGTOP-3813</a>] -         Incompatible guava &amp; commons-lang3 Versions in Oozie Sharelib
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3814'>BIGTOP-3814</a>] -         Deploying Spark ThriftServer fails because it&#39;s launched too early
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3815'>BIGTOP-3815</a>] -         Fix failure of installing hadoop-httpfs deb due to chagen of httpfs home dir
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3828'>BIGTOP-3828</a>] -         Docker network resource continues to remain when use docker provisioner.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3842'>BIGTOP-3842</a>] -         Fix failure of deb packaging of  Hadoop
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3854'>BIGTOP-3854</a>] -         Hadoop Smoke test failed in openEuler
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3858'>BIGTOP-3858</a>] -         Invalid repository URL is set in rockylinux8 config
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3868'>BIGTOP-3868</a>] -         Docker provisioner fails when it is executed from gradle
+</li>
+</ul>
+
+<h2>        Improvement
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3623'>BIGTOP-3623</a>] -         dh_strip_nondeterminism spends too much time on deb packaging
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3669'>BIGTOP-3669</a>] -         Use maven instead of ant to build ZooKeeper
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3687'>BIGTOP-3687</a>] -         Add kubernetes client jar to Spark package
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3689'>BIGTOP-3689</a>] -         Upgrade Mpack services stack to Bigtop 3.2
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3693'>BIGTOP-3693</a>] -         Support Docker Compose V2
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3711'>BIGTOP-3711</a>] -         Add read/write smoke tests for Kafka
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3715'>BIGTOP-3715</a>] -         Add TestWebHDFS to smoke-tests
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3744'>BIGTOP-3744</a>] -         Puppet Deploy Hive on Tez add Resource Resizing Configs
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3748'>BIGTOP-3748</a>] -         Upgrade Bigtop components for 3.2-release
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3754'>BIGTOP-3754</a>] -         Add Ubuntu 22.04 support
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3756'>BIGTOP-3756</a>] -         Add Fedora 36 support
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3767'>BIGTOP-3767</a>] -         Add Spark Thrift Server Puppet Deploy Code
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3768'>BIGTOP-3768</a>] -         Add Spark User Hdfs Folder for Deploy Spark Thrift Server
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3774'>BIGTOP-3774</a>] -         Drop Docker Sandbox and Vagrant Provisioner
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3801'>BIGTOP-3801</a>] -         Add maven cache volume for docker provisioner
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3808'>BIGTOP-3808</a>] -         Add Phoenix support for Bigtop 3.1.0 Mpack
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3818'>BIGTOP-3818</a>] -         Phoenix Don&#39;t Requre Hadoop and Zookeeper Installed
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3819'>BIGTOP-3819</a>] -         Adding Puppet Recipes for Apache Phoenix
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3827'>BIGTOP-3827</a>] -         Skip dh_strip_nondeterminism for HBase, Phoenix and Zeppelin
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3840'>BIGTOP-3840</a>] -         Enable short circuit local read in HDFS deployment by default
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3852'>BIGTOP-3852</a>] -         Add Java 11 to bigtop-toolchain to use it in docker container during packaging
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3892'>BIGTOP-3892</a>] -         Fix build scripts so that we can define components which only supports deb or rpm
+</li>
+</ul>
+
+<h2>        Task
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3742'>BIGTOP-3742</a>] -         Add tez.tar.gz tarball in tez.rpm
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3759'>BIGTOP-3759</a>] -         Remove ELK from Bigtop 3.2.0 stack
+</li>
+</ul>
+
         <h3>Release Notes - Bigtop - Version 3.1.1</h3>
 
 <h2>        Bug
