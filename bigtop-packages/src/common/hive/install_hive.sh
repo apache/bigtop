@@ -166,7 +166,7 @@ if [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
 fi
 
 BIGTOP_DEFAULTS_DIR=\${BIGTOP_DEFAULTS_DIR-$ETC_DEFAULT}
-[ -n "\${BIGTOP_DEFAULTS_DIR}" -a -r \${BIGTOP_DEFAULTS_DIR}/hbase ] && . \${BIGTOP_DEFAULTS_DIR}/hbase
+[ -n "\${BIGTOP_DEFAULTS_DIR}" -a -r \${BIGTOP_DEFAULTS_DIR}/hive ] && . \${BIGTOP_DEFAULTS_DIR}/hive
 
 export HIVE_HOME=$HIVE_DIR
 exec $HIVE_DIR/bin/$file "\$@"
@@ -238,7 +238,7 @@ cat >>$wrapper <<EOF
 
 
 BIGTOP_DEFAULTS_DIR=\${BIGTOP_DEFAULTS_DIR-$ETC_DEFAULT}
-[ -n "\${BIGTOP_DEFAULTS_DIR}" -a -r \${BIGTOP_DEFAULTS_DIR}/hadoop ] && . \${BIGTOP_DEFAULTS_DIR}/hadoop
+[ -n "\${BIGTOP_DEFAULTS_DIR}" -a -r \${BIGTOP_DEFAULTS_DIR}/hive ] && . \${BIGTOP_DEFAULTS_DIR}/hive
 
 # Autodetect JAVA_HOME if not defined
 if [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
