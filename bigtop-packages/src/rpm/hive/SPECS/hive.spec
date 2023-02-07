@@ -15,13 +15,18 @@
 
 %define hadoop_username hadoop
 
+%define hive_name hive
+%define hive_pkg_name hive%{pkg_name_suffix}
+%define hadoop_pkg_name hadoop%{pkg_name_suffix}
+%define zookeeper_pkg_name zookeeper%{pkg_name_suffix}
+
 %define etc_default %{parent_dir}/etc/default
 
-%define usr_lib_hive %{parent_dir}/usr/lib/%{name}
-%define usr_lib_hcatalog %{parent_dir}/usr/lib/%{name}-hcatalog
-%define var_lib_hive %{parent_dir}/var/lib/%{name}
-%define var_lib_hcatalog %{parent_dir}/var/lib/%{name}-hcatalog
-%define etc_hive %{parent_dir}/etc/%{name}
+%define usr_lib_hive %{parent_dir}/usr/lib/%{hive_name}
+%define usr_lib_hcatalog %{parent_dir}/usr/lib/%{hive_name}-hcatalog
+%define var_lib_hive %{parent_dir}/var/lib/%{hive_name}
+%define var_lib_hcatalog %{parent_dir}/var/lib/%{hive_name}-hcatalog
+%define etc_hive %{parent_dir}/etc/%{hive_name}
 
 %define usr_lib_zookeeper %{parent_dir}/usr/lib/zookeeper
 %define usr_lib_hbase %{parent_dir}/usr/lib/hbase
@@ -31,10 +36,10 @@
 %define doc_dir %{parent_dir}/%{_docdir}
 
 # No prefix directory
-%define np_var_log_hive /var/log/%{name}
-%define np_var_run_hive /var/run/%{name}
-%define np_var_log_hcatalog /var/log/%{name}-hcatalog
-%define np_etc_hive /etc/%{name}
+%define np_var_log_hive /var/log/%{hive_name}
+%define np_var_run_hive /var/run/%{hive_name}
+%define np_var_log_hcatalog /var/log/%{hive_name}-hcatalog
+%define np_etc_hive /etc/%{hive_name}
 
 %define hive_config_virtual hive_active_configuration
 %define hive_services hive-metastore hive-server2 hive-hcatalog-server hive-webhcat-server
@@ -43,7 +48,7 @@
 
 %if  %{!?suse_version:1}0
 
-%define doc_hive %{doc_dir}/%{name}-%{hive_version}
+%define doc_hive %{doc_dir}/%{hive_name}-%{hive_version}
 %define alternatives_cmd alternatives
 
 %global initd_dir %{_sysconfdir}/rc.d/init.d
@@ -55,7 +60,7 @@
 %define suse_check \# Define an empty suse_check for compatibility with older sles
 %endif
 
-%define doc_hive %{doc_dir}/%{name}
+%define doc_hive %{doc_dir}/%{hive_name}
 %define alternatives_cmd update-alternatives
 
 %global initd_dir %{_sysconfdir}/rc.d
@@ -68,7 +73,7 @@
 %endif
 
 
-Name: hive
+Name: %{hive_pkg_name}
 Version: %{hive_version}
 Release: %{hive_release}
 Summary: Hive is a data warehouse infrastructure built on top of Hadoop
@@ -77,7 +82,7 @@ URL: http://hive.apache.org/
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 BuildArch: noarch
-Source0: apache-%{name}-%{hive_base_version}-src.tar.gz
+Source0: apache-%{hive_name}-%{hive_base_version}-src.tar.gz
 Source1: do-component-build
 Source2: install_hive.sh
 Source3: init.d.tmpl
@@ -95,8 +100,8 @@ Source16: hive-hcatalog-server.default
 Source17: hive-webhcat-server.default
 Source18: bigtop.bom
 #BIGTOP_PATCH_FILES
-Requires: hadoop-client, bigtop-utils >= 0.7, zookeeper, hive-jdbc = %{version}-%{release}
-Conflicts: hadoop-hive
+Requires: %{hadoop_pkg_name}-client, bigtop-utils >= 0.7, %{zookeeper_pkg_name}, %{name}-jdbc = %{version}-%{release}
+Conflicts: %{hadoop_pkg_name}-hive
 Obsoletes: %{name}-webinterface
 
 %description 
@@ -147,7 +152,7 @@ This optional package hosts a metadata server for Hive clients across a network 
 %package hbase
 Summary: Provides integration between Apache HBase and Apache Hive
 Group: Development/Libraries
-Requires: hive = %{version}-%{release}, hbase
+Requires: %{name} = %{version}-%{release}, hbase
 
 %description hbase
 This optional package provides integration between Apache HBase and Apache Hive
@@ -155,7 +160,7 @@ This optional package provides integration between Apache HBase and Apache Hive
 %package jdbc
 Summary: Provides libraries necessary to connect to Apache Hive via JDBC
 Group: Development/Libraries
-Requires: hadoop-client
+Requires: %{hadoop_pkg_name}-client
 
 %description jdbc
 This package provides libraries necessary to connect to Apache Hive via JDBC
@@ -163,7 +168,7 @@ This package provides libraries necessary to connect to Apache Hive via JDBC
 %package hcatalog
 Summary: Apache Hcatalog is a data warehouse infrastructure built on top of Hadoop
 Group: Development/Libraries
-Requires: hadoop, hive, bigtop-utils >= 0.7
+Requires: %{hadoop_pkg_name}, %{name}, bigtop-utils >= 0.7
 
 %description hcatalog
 Apache HCatalog is a table and storage management service for data created using Apache Hadoop.
@@ -240,7 +245,7 @@ Requires: /lib/lsb/init-functions
 Init scripts for WebHcat server.
 
 %prep
-%setup -q -n apache-%{name}-%{hive_base_version}-src
+%setup -q -n apache-%{hive_name}-%{hive_base_version}-src
 
 #BIGTOP_PATCH_COMMANDS
 
@@ -277,10 +282,10 @@ cp $RPM_SOURCE_DIR/hive-site.xml .
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{etc_default}/
-%__install -m 0644 $RPM_SOURCE_DIR/hive-metastore.default $RPM_BUILD_ROOT/%{etc_default}/%{name}-metastore
-%__install -m 0644 $RPM_SOURCE_DIR/hive-server2.default $RPM_BUILD_ROOT/%{etc_default}/%{name}-server2
-%__install -m 0644 $RPM_SOURCE_DIR/hive-hcatalog-server.default $RPM_BUILD_ROOT/%{etc_default}/%{name}-hcatalog-server
-%__install -m 0644 $RPM_SOURCE_DIR/hive-webhcat-server.default $RPM_BUILD_ROOT/%{etc_default}/%{name}-webhcat-server
+%__install -m 0644 $RPM_SOURCE_DIR/hive-metastore.default $RPM_BUILD_ROOT/%{etc_default}/%{hive_name}-metastore
+%__install -m 0644 $RPM_SOURCE_DIR/hive-server2.default $RPM_BUILD_ROOT/%{etc_default}/%{hive_name}-server2
+%__install -m 0644 $RPM_SOURCE_DIR/hive-hcatalog-server.default $RPM_BUILD_ROOT/%{etc_default}/%{hive_name}-hcatalog-server
+%__install -m 0644 $RPM_SOURCE_DIR/hive-webhcat-server.default $RPM_BUILD_ROOT/%{etc_default}/%{hive_name}-webhcat-server
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{np_var_log_hive}
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{np_var_run_hive}
@@ -309,7 +314,7 @@ getent passwd hive >/dev/null || useradd -c "Hive" -s /sbin/nologin -g hive -r -
 %post
 
 # Install config alternatives
-%{alternatives_cmd} --install %{np_etc_hive}/conf %{name}-conf %{etc_hive}/conf.dist 30
+%{alternatives_cmd} --install %{np_etc_hive}/conf %{hive_name}-conf %{etc_hive}/conf.dist 30
 
 
 # Upgrade
@@ -323,7 +328,7 @@ fi
 
 %preun
 if [ "$1" = 0 ]; then
-  %{alternatives_cmd} --remove %{name}-conf %{etc_hive}/conf.dist || :
+  %{alternatives_cmd} --remove %{hive_name}-conf %{etc_hive}/conf.dist || :
 fi
 
 
@@ -401,19 +406,19 @@ fi
 
 %define service_macro() \
 %files %1 \
-%attr(0755,root,root)/%{initd_dir}/%{name}-%1 \
-%config(noreplace) %{etc_default}/%{name}-%1 \
+%attr(0755,root,root)/%{initd_dir}/%{hive_name}-%1 \
+%config(noreplace) %{etc_default}/%{hive_name}-%1 \
 %post %1 \
-chkconfig --add %{name}-%1 \
+chkconfig --add %{hive_name}-%1 \
 \
 %preun %1 \
 if [ "$1" = 0 ] ; then \
-        service %{name}-%1 stop > /dev/null \
-        chkconfig --del %{name}-%1 \
+        service %{hive_name}-%1 stop > /dev/null \
+        chkconfig --del %{hive_name}-%1 \
 fi \
 %postun %1 \
 if [ $1 -ge 1 ]; then \
-   service %{name}-%1 condrestart >/dev/null 2>&1 || : \
+   service %{hive_name}-%1 condrestart >/dev/null 2>&1 || : \
 fi
 %service_macro server2
 %service_macro metastore

@@ -79,6 +79,19 @@
 # applies to hdfs, yarn, mapred, kms and httpfs
 hadoop::kerberos_realm: "%{hiera('kerberos::krb_site::realm')}"
 
+# skip hostname verification for testing deployment.
+hadoop::hadoop_ssl_hostname_verifier: "ALLOW_ALL"
+
+# Set as shown below in site.yaml to also enable Kerberos authentication
+# on the web GUIs of journalnode, namenode, datanode, resourcemanager and
+# nodemanager when you enable Kerberos for Hadoop API communication. This
+# intentionally is not the default right now.
+#hadoop::hadoop_http_authentication_type: "%{hiera('hadoop::hadoop_security_authentication')}"
+
+# A secret is necessary for the cross-service-cross-node session cookie.
+# Provide this by setting the following to something long and secret:
+#hadoop::hadoop_http_authentication_signature_secret: changeit
+
 hadoop::common_hdfs::hadoop_namenode_host: "%{hiera('bigtop::hadoop_head_node')}"
 # actually default but needed for hadoop_namenode_uri here
 hadoop::common_hdfs::hadoop_namenode_port: "8020"
@@ -94,15 +107,7 @@ hadoop::common_hdfs::hadoop_namenode_port: "8020"
 # See also dfs.client.block.write.replace-datanode-on-failure.policy
 # hadoop::common_hdfs::hdfs_replace_datanode_on_failure: "false"
 
-# Set as shown below in site.yaml to also enable Kerberos authentication
-# on the web GUIs of journalnode, namenode, datanode, resourcemanager and
-# nodemanager when you enable Kerberos for Hadoop API communication. This
-# intentionally is not the default right now.
-#hadoop::common_hdfs::hadoop_http_authentication_type: "%{hiera('hadoop::hadoop_security_authentication')}"
-#
-# A secret is necessary for the cross-service-cross-node session cookie.
-# Provide this by setting the following to something long and secret:
-#hadoop::common_hdfs::hadoop_http_authentication_signature_secret:
+hadoop::common_hdfs::hdfs_shortcut_reader: true
 
 # ... or have trocla generate secrets for Hadoop components automatically. For
 # this to work, the trocla puppet module must be installed.
@@ -216,4 +221,8 @@ gpdb::common::db_base_dir: "/data_gp"
 gpdb::common::master_db_port: "5432"
 gpdb::common::segment_db_port_prefix: "4000"
 
+# Ambari
 ambari::agent::server_host: "%{hiera('bigtop::hadoop_head_node')}"
+
+# Ranger
+ranger::admin::admin_password: "Admin01234"

@@ -68,7 +68,7 @@ class kerberos {
     }
 
     # Required for SPNEGO
-    @principal { "HTTP": 
+    @kerberos::principal { "HTTP":
 
     }
   }
@@ -111,7 +111,7 @@ class kerberos {
       subscribe => File["${kdc_etc_path}/kdc.conf"],
       # refreshonly => true, 
 
-      require => [Package["$package_name_kdc"], File["${kdc_etc_path}/kdc.conf"], File["/etc/krb5.conf"]],
+      require => [Package["$package_name_kdc"], Package["$package_name_admin"], File["${kdc_etc_path}/kdc.conf"], File["/etc/krb5.conf"]],
     }
 
     service { $service_name_kdc:
