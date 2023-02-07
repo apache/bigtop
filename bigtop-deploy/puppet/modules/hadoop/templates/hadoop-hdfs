@@ -18,9 +18,3 @@ export HADOOP_NAMENODE_USER=hdfs
 export HADOOP_SECONDARYNAMENODE_USER=hdfs
 export HADOOP_DATANODE_USER=hdfs
 export HADOOP_IDENT_STRING=hdfs
-
-<% if @hadoop_security_authentication == "kerberos" %>
-export HADOOP_SECURE_DN_USER=hdfs
-export HADOOP_SECURE_DN_PID_DIR=$HADOOP_PID_DIR
-export HADOOP_SECURE_DN_LOG_DIR=$HADOOP_LOG_DIR
-<% end %>
