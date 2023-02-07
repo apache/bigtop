@@ -41,6 +41,7 @@ export HADOOP_CONF_DIR=${HADOOP_CONF_DIR:-/etc/hadoop/conf}
 export HADOOP_MAPRED_HOME=${HADOOP_MAPRED_HOME:-/usr/lib/hadoop-mapreduce}
 export HBASE_HOME=${HBASE_HOME:-/usr/lib/hbase}
 export HBASE_CONF_DIR=${HBASE_CONF_DIR:-/usr/lib/hbase/conf}
+export PHOENIX_HOME=${PHOENIX_HOME:-/usr/lib/phoenix}
 export HIVE_HOME=${HIVE_HOME:-/usr/lib/hive}
 export HIVE_CONF_DIR=${HIVE_CONF_DIR:-/etc/hive/conf}
 export KAFKA_HOME=${KAFKA_HOME:-/usr/lib/kafka}
