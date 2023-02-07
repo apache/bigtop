@@ -211,6 +211,10 @@ class bigtop_toolchain::packages {
        "libtiff-devel",
        "libjpeg-turbo-devel",
        "leveldbjni",
+       "psmisc",
+       "nc",
+       "initscripts",
+       "openeuler-lsb",
        "rpmdevtools"
       ]
        file { '/usr/bin/python':
