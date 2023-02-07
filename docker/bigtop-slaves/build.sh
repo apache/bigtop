@@ -76,7 +76,7 @@ case ${OS} in
         PUPPET_MODULES="/etc/puppet/modules/bigtop_toolchain"
         UPDATE_SOURCE="zypper clean \&\& zypper refresh"
         ;;
-    openEuler)
+    openeuler)
         PUPPET_MODULES="/etc/puppet/modules/bigtop_toolchain"
         UPDATE_SOURCE="yum clean all \&\& yum updateinfo"
         ;;
@@ -93,7 +93,7 @@ fi
 sed -e "s|PREFIX|${PREFIX}|;s|OS|${OS}|;s|VERSION|${VERSION}|" Dockerfile.template | \
   sed -e "s|PUPPET_MODULES|${PUPPET_MODULES}|;s|UPDATE_SOURCE|${UPDATE_SOURCE}|" > Dockerfile
 
-if [ $OS == "openEuler" ];then
+if [ $OS == "openeuler" ];then
   sed -i "s|\"include bigtop_toolchain::installer\"|\"include bigtop_toolchain::installer\" --modulepath=/etc/puppet/modules/|g" Dockerfile
 fi
 docker build ${NETWORK} --rm -t bigtop/slaves:${PREFIX}-${OS}-${VERSION} -f Dockerfile ../..
