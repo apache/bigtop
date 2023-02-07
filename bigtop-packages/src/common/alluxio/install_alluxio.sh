@@ -132,7 +132,7 @@ cp -a libexec/* $PREFIX/$LIB_DIR/libexec
 cp -a client/* $PREFIX/$LIB_DIR/client
 cp -a integration/* $PREFIX/$LIB_DIR/integration
 cp integration/fuse/target/alluxio-integration-fuse-*-jar-with-dependencies.jar $PREFIX/$LIB_DIR/integration/fuse
-if [${OS} = "openEuler"] ; then
+if [ ${OS} = "openEuler" ]; then
    cp integration/jnifuse/native/src/main/resources/libjnifuse*.so $PREFIX/$LIB_DIR/integration/jnifuse/native/target/classes/
 fi
 rm -rf $PREFIX/$LIB_DIR/integration/pom.xml $PREFIX/$LIB_DIR/integration/**/pom.xml
