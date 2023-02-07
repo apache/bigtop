@@ -18,6 +18,68 @@ set -ex
 
 . `dirname $0`/bigtop.bom
 
+# BIGTOP-3907: Build native library/jars for aarch64
+if [ $HOSTTYPE = "aarch64" ] ; then
+        # download leveldbjni 1.8 from original repo
+        git clone https://github.com/chirino/leveldb.git
+        git clone https://github.com/fusesource/leveldbjni.git --branch leveldbjni-1.8 --single-branch
+        export SNAPPY_HOME=/usr/lib
+        export LEVELDB_HOME=`cd leveldb; pwd`
+        export LEVELDBJNI_HOME=`cd leveldbjni; pwd`
+        export LIBRARY_PATH=${SNAPPY_HOME}
+        cd ${LEVELDB_HOME}
+        export C_INCLUDE_PATH=${LIBRARY_PATH}
+        export CPLUS_INCLUDE_PATH=${LIBRARY_PATH}
+        # apply ARM64 specific patch
+        patch -p1 -E << 'EOF'
+diff a/port/atomic_pointer.h b/port/atomic_pointer.h
+--- a/port/atomic_pointer.h
++++ b/port/atomic_pointer.h
+@@ -36,6 +36,8 @@
+ #define ARCH_CPU_X86_FAMILY 1
+ #elif defined(__ARMEL__)
+ #define ARCH_CPU_ARM_FAMILY 1
++#elif defined(__aarch64__)
++#define ARCH_CPU_ARM64_FAMILY 1
+ #elif defined(__ppc__) || defined(__powerpc__) || defined(__powerpc64__)
+ #define ARCH_CPU_PPC_FAMILY 1
+ #endif
+@@ -93,6 +95,13 @@ inline void MemoryBarrier() {
+ }
+ #define LEVELDB_HAVE_MEMORY_BARRIER
+
++// ARM64
++#elif defined(ARCH_CPU_ARM64_FAMILY) && defined(__linux__)
++inline void MemoryBarrier() {
++  asm volatile("dmb sy" : : : "memory");
++}
++#define LEVELDB_HAVE_MEMORY_BARRIER
++
+ // PPC
+ #elif defined(ARCH_CPU_PPC_FAMILY) && defined(__GNUC__)
+ inline void MemoryBarrier() {
+@@ -216,6 +225,7 @@ class AtomicPointer {
+ #undef LEVELDB_HAVE_MEMORY_BARRIER
+ #undef ARCH_CPU_X86_FAMILY
+ #undef ARCH_CPU_ARM_FAMILY
++#undef ARCH_CPU_ARM64_FAMILY
+ #undef ARCH_CPU_PPC_FAMILY
+
+ }  // namespace port
+EOF
+        git apply ../leveldbjni/leveldb.patch
+        make libleveldb.a
+        # Now use maven to build and update the local maven repository with
+        # aarch64 version of leveldbjni.
+        cd ${LEVELDBJNI_HOME}
+        mvn clean install -DskipTests -P download -Plinux64,all
+        cd ..
+        #cleanup
+        rm -rf ${LEVELDBJNI_HOME}
+        rm -rf ${LEVELDB_HOME}
+fi
+## BIGTOP-3907
+
 BUILD_OPTS="-Divy.home=${HOME}/.ivy2 -Dsbt.ivy.home=${HOME}/.ivy2 -Duser.home=${HOME} \
             -Drepo.maven.org=$IVY_MIRROR_PROP \
             -Dreactor.repo=file://${HOME}/.m2/repository \
