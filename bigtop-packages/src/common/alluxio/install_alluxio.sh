@@ -47,6 +47,9 @@ if [ $? != 0 ] ; then
     usage
 fi
 
+. /etc/os-release
+OS="$ID"
+
 eval set -- "$OPTS"
 while true ; do
     case "$1" in
