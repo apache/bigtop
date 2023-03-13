@@ -66,8 +66,6 @@ config = Script.get_config()
 tmp_dir = Script.get_tmp_dir()
 architecture = get_architecture()
 sudo = AMBARI_SUDO_BINARY
-cred_lib_path_override='/usr/lib/ranger-hive-plugin/install/lib/*'
-cred_setup_prefix_override='/usr/lib/ranger-hive-plugin/ranger_credential_helper.py'
 credential_store_enabled = False
 if 'credentialStoreEnabled' in config:
   credential_store_enabled = config['credentialStoreEnabled']
