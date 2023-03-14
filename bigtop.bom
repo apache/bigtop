@@ -135,7 +135,7 @@ bigtop {
       version {
         base  = '3.5.9'
         pkg   = base
-        release = 2
+        release = 3
       }
       tarball {
         source      = "apache-zookeeper-${version.base}.tar.gz"
