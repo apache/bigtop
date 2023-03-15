@@ -116,6 +116,8 @@ install -d -m 0755 $PREFIX/$LIB_DIR
 install -d -m 0755 $PREFIX/$LIB_DIR/bin
 install -d -m 0755 $PREFIX/$LIB_DIR/lib
 install -d -m 0755 $PREFIX/$LIB_DIR/examples
+install -d -m 0755 $PREFIX/$LIB_DIR/opt
+install -d -m 0755 $PREFIX/$LIB_DIR/plugins
 install -d -m 0755 $PREFIX/$NP_ETC_FLINK
 install -d -m 0755 $PREFIX/$ETC_FLINK/conf.dist
 install -d -m 0755 $PREFIX/var/log/flink
@@ -134,6 +136,9 @@ cp -a ${BUILD_DIR}/conf/* $PREFIX/$ETC_FLINK/conf.dist
 ln -s $NP_ETC_FLINK/conf $PREFIX/$LIB_DIR/conf
 
 cp -ra ${BUILD_DIR}/examples/* $PREFIX/${LIB_DIR}/examples/
+
+cp -ra ${BUILD_DIR}/opt/* $PREFIX/${LIB_DIR}/opt/
+cp -ra ${BUILD_DIR}/plugins/* $PREFIX/${LIB_DIR}/plugins/
 
 cp ${BUILD_DIR}/{LICENSE,README.txt} ${PREFIX}/${LIB_DIR}/
 
