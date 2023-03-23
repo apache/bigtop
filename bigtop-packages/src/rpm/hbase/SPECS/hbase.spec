@@ -25,6 +25,9 @@
 %define etc_hbase %{parent_dir}/etc/%{hbase_name}
 
 %define usr_lib_hadoop %{parent_dir}/usr/lib/hadoop
+%define usr_lib_hadoop_hdfs %{parent_dir}/usr/lib/hadoop-hdfs
+%define usr_lib_hadoop_mapreduce %{parent_dir}/usr/lib/hadoop-mapreduce
+%define usr_lib_hadoop_yarn %{parent_dir}/usr/lib/hadoop-yarn
 %define usr_lib_zookeeper %{parent_dir}/usr/lib/zookeeper
 
 %define bin_dir %{parent_dir}/%{_bindir}
@@ -340,15 +343,15 @@ ln -f -s %{usr_lib_zookeeper}/zookeeper.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
 ln -f -s %{usr_lib_hadoop}/client/hadoop-annotations.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
 ln -f -s %{usr_lib_hadoop}/client/hadoop-auth.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
 ln -f -s %{usr_lib_hadoop}/client/hadoop-common.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
-ln -f -s %{usr_lib_hadoop}/client/hadoop-hdfs.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
-ln -f -s %{usr_lib_hadoop}/client/hadoop-mapreduce-client-app.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
+ln -f -s %{usr_lib_hadoop_hdfs}/hadoop-hdfs.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
+ln -f -s %{usr_lib_hadoop_mapreduce}/hadoop-mapreduce-client-app.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
 ln -f -s %{usr_lib_hadoop}/client/hadoop-mapreduce-client-common.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
 ln -f -s %{usr_lib_hadoop}/client/hadoop-mapreduce-client-core.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
 ln -f -s %{usr_lib_hadoop}/client/hadoop-mapreduce-client-jobclient.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
-ln -f -s %{usr_lib_hadoop}/client/hadoop-mapreduce-client-shuffle.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
+ln -f -s %{usr_lib_hadoop_mapreduce}/hadoop-mapreduce-client-shuffle.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
 ln -f -s %{usr_lib_hadoop}/client/hadoop-yarn-api.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
 ln -f -s %{usr_lib_hadoop}/client/hadoop-yarn-client.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
-ln -f -s %{usr_lib_hadoop}/client/hadoop-yarn-common.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
+ln -f -s %{usr_lib_hadoop_yarn}/hadoop-yarn-common.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
 ln -f -s %{usr_lib_hadoop}/client/hadoop-yarn-server-common.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
 
 %pre
