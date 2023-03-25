@@ -68,6 +68,15 @@ class bigtop_toolchain::packages {
 
       if ($operatingsystem == 'Fedora' or $operatingsystemmajrelease !~ /^[0-7]$/) {
         $pkgs = concat($_pkgs, ["python2-devel", "libtirpc-devel", "cmake"])
+        $__pkgs = concat($_pkgs, ["python2-devel", "libtirpc-devel", "cmake"])
+        if ($operatingsystem == 'Fedora' 
+            and versioncmp($operatingsystemmajrelease, '36') >= 0 
+            and $architecture in ['aarch64', 'ppc64le']
+        ){
+          $pkgs = concat($__pkgs, ["fuse3", "fuse3-devel"])
+        } else {
+          $pkgs = $__pkgs
+        }
       } else {
         $pkgs = concat($_pkgs, ["python-devel", "cmake3"])
       }
