@@ -352,7 +352,7 @@ ln -f -s %{usr_lib_hadoop_mapreduce}/hadoop-mapreduce-client-shuffle.jar $RPM_BU
 ln -f -s %{usr_lib_hadoop}/client/hadoop-yarn-api.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
 ln -f -s %{usr_lib_hadoop}/client/hadoop-yarn-client.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
 ln -f -s %{usr_lib_hadoop}/client/hadoop-yarn-common.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
-ln -f -s %{sr_lib_hadoop_yarn}/hadoop-yarn-server-common.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
+ln -f -s %{usr_lib_hadoop_yarn}/hadoop-yarn-server-common.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
 
 %pre
 getent group hbase 2>/dev/null >/dev/null || /usr/sbin/groupadd -r hbase
