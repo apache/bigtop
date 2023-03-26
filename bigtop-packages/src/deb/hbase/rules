@@ -61,8 +61,8 @@ override_dh_auto_install:
 	ln -f -s ${hadoop_mapreduce_path}/hadoop-mapreduce-client-shuffle.jar debian/tmp/usr/lib/${hbase_pkg_name}/lib/
 	ln -f -s ${hadoop_home}/client/hadoop-yarn-api.jar debian/tmp/usr/lib/${hbase_pkg_name}/lib/
 	ln -f -s ${hadoop_home}/client/hadoop-yarn-client.jar debian/tmp/usr/lib/${hbase_pkg_name}/lib/
-	ln -f -s ${hadoop_yarn_path}/hadoop-yarn-common.jar debian/tmp/usr/lib/${hbase_pkg_name}/lib/
-	ln -f -s ${hadoop_home}/client/hadoop-yarn-server-common.jar debian/tmp/usr/lib/${hbase_pkg_name}/lib/
+	ln -f -s ${hadoop_home}/client/hadoop-yarn-common.jar debian/tmp/usr/lib/${hbase_pkg_name}/lib/
+	ln -f -s ${hadoop_yarn_path}/hadoop-yarn-server-common.jar debian/tmp/usr/lib/${hbase_pkg_name}/lib/
 	ln -s /var/log/${hbase_pkg_name} debian/tmp/usr/lib/${hbase_pkg_name}/logs
 	ln -s /var/run/${hbase_pkg_name} debian/tmp/usr/lib/${hbase_pkg_name}/pids
 
