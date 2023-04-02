@@ -136,6 +136,7 @@ cp -a ${BUILD_DIR}/bin/oom_solr.sh $PREFIX/$LIB_DIR/bin
 #cp -a ${BUILD_DIR}/server/scripts/cloud-scripts/*.sh $PREFIX/$LIB_DIR/bin
 #cp -a $DISTRO_DIR/zkcli.sh $PREFIX/$LIB_DIR/bin
 chmod 755 $PREFIX/$LIB_DIR/bin/*
+chmod 755 $PREFIX/$LIB_DIR/server/scripts/cloud-scripts/*
 
 install -d -m 0755 $PREFIX/$LIB_DIR/licenses
 cp -a  ${BUILD_DIR}/licenses/* $PREFIX/$LIB_DIR/licenses
