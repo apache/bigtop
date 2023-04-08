@@ -369,8 +369,9 @@ bigtop {
     }
     'ranger' {
       name    = 'ranger'
+      rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
       relNotes = 'Apache Ranger'
-      version { base = '2.3.0'; pkg = base; release = 1 }
+      version { base = '2.4.0'; pkg = base; release = 1 }
       tarball { destination = "release-$name-${version.base}.tar.gz"
                 source      = destination }
       url     { site = "https://github.com/apache/ranger/archive/refs/tags"
