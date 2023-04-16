@@ -46,12 +46,12 @@ class TestGpdb {
   void testGpdb() {
     // Basic test to verify that the server is running, and is in a
     // state that we expect.
-    LOG.info('Test gp_segment_configuration');
+    LOG.info('Test GPDB column query');
     sh.exec("runuser -l gpadmin /home/gpadmin/test-master-db.sh");
     logError(sh);
-    int count = sh.getOut()[2].trim().toInteger()
-    assertFalse(count == 0);
-    LOG.info('Test gp_segment_configuration finished');
-    LOG.info('Configured segments count is '+count);
+    int age = sh.getOut()[2].trim().toInteger()
+    assertFalse(age == 0);
+    LOG.info('Test GPDB column query finished');
+    LOG.info('age is '+age);
   }
 }
