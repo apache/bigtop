@@ -206,7 +206,7 @@ bigtop {
       name    = 'solr'
       rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
       relNotes = 'Apache Solr'
-      version { base = '8.11.2'; pkg = base; release = 2 }
+      version { base = '8.11.2'; pkg = base; release = 1 }
       tarball { destination = "$name-${version.base}-src.tgz"
                 source      = destination }
       url     { download_path = "lucene/$name/${version.base}"
@@ -331,7 +331,7 @@ bigtop {
     'gpdb' {
       name    = 'gpdb'
       relNotes = 'GreenPlum'
-      version { base = '5.28.5'; pkg = '5.28.5'; release = 1 }
+      version { base = '6.23.4'; pkg = '6.23.4'; release = 1 }
       tarball { destination = "$name-${version.base}.tar.gz"
                 source      = "${version.base}.tar.gz" }
       url     { site = "https://github.com/greenplum-db/gpdb/archive/"
