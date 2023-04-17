@@ -48,6 +48,7 @@ export KAFKA_HOME=${KAFKA_HOME:-/usr/lib/kafka}
 export LIVY_HOME=${LIVY_HOME:-/usr/lib/livy}
 export OOZIE_TAR_HOME=${OOZIE_TAR_HOME:-/usr/lib/oozie}
 export OOZIE_URL=${OOZIE_URL:-http://localhost:11000/oozie}
+export RANGER_URL=${RANGER_URL:-http://localhost:6080}
 export SPARK_HOME=${SPARK_HOME:-/usr/lib/spark}
 export TEZ_HOME=${TEZ_HOME:-/usr/lib/tez}
 export WEBHDFS_URL=${WEBHDFS_URL:-$(hostname):50070/webhdfs/v1}

@@ -172,13 +172,20 @@ __On all systems, Building Apache Bigtop requires certain set of tools__
 
 * __Building packages__ : `gradle [component-name]-pkg`
 
-  If -Dbuildwithdeps=true is set, the Gradle will follow the order of the build specified in
+  If `-Dbuildwithdeps=true` is set, the Gradle will follow the order of the build specified in
   the "dependencies" section of bigtop.bom file. Otherwise just a single component will get build (original behavior).
 
   To use an alternative definition of a stack composition (aka BOM), specify its
-  name with -Dbomfile=<filename> system property in the build time.
+  name with `-Dbomfile=<filename>` system property in the build time.
 
   You can visualize all tasks dependencies by running `gradle tasks --all`
+
+* __Customize build packages(BIGTOP-3784)__
+
+  By default, the installation path of components will follow [Filesystem Hierarchy Standard](https://refspecs.linuxfoundation.org/FHS_3.0/fhs/index.html), but you can use `-PparentDir=/path` to add prefix to the path, in this example, prefix `/path/${bigtop_version}` will be added
+
+  To avoid download wrong version of components when you have multiple repositories configured on your machine, you can use `-PpkgSuffix` to add bigtop version to package suffix, for example, package name `zookeeper` will be changed to `zookeeper_3_2_0` when using `Bigtop-3.2.0`
+  
 * __Building local YUM/APT repositories__ : `gradle [yum|apt]`
 
 * __Recommended build environments__
@@ -188,10 +195,10 @@ __On all systems, Building Apache Bigtop requires certain set of tools__
   environment configured and cached. All currently supported OSes could be pulled
   from official Bigtop repository at https://hub.docker.com/r/bigtop/slaves/tags/
 
-  To build a component (bigtop-groovy) for a particular OS (ubuntu-16.04) you can
+  To build a component (bigtop-groovy) for a particular OS (ubuntu-20.04) you can
   run the following from a clone of Bigtop workspace (assuming your system has
   Docker engine setup and working)
-  ```docker run --rm -u jenkins:jenkins -v `pwd`:/ws --workdir /ws bigtop/slaves:trunk-ubuntu-16.04
+  ```docker run --rm -u jenkins:jenkins -v `pwd`:/ws --workdir /ws bigtop/slaves:trunk-ubuntu-20.04
   bash -l -c './gradlew allclean ; ./gradlew bigtop-groovy-pkg'```
 
 For Developers: Building and modifying the web site

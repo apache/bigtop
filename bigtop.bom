@@ -135,7 +135,7 @@ bigtop {
       version {
         base  = '3.5.9'
         pkg   = base
-        release = 2
+        release = 3
       }
       tarball {
         source      = "apache-zookeeper-${version.base}.tar.gz"
@@ -162,7 +162,7 @@ bigtop {
       name    = 'hbase'
       rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
       relNotes = 'Apache HBase'
-      version { base = '2.4.13'; pkg = base; release = 1 }
+      version { base = '2.4.13'; pkg = base; release = 2 }
       tarball { destination = "${name}-${version.base}.tar.gz"
                 source      = "${name}-${version.base}-src.tar.gz" }
       url     { download_path = "/$name/${version.base}/"
@@ -206,7 +206,7 @@ bigtop {
       name    = 'solr'
       rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
       relNotes = 'Apache Solr'
-      version { base = '8.11.2'; pkg = base; release = 1 }
+      version { base = '8.11.2'; pkg = base; release = 2 }
       tarball { destination = "$name-${version.base}-src.tgz"
                 source      = destination }
       url     { download_path = "lucene/$name/${version.base}"
