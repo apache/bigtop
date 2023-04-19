@@ -39,7 +39,6 @@ if [ $HOSTTYPE = "powerpc64le" ] ; then
         #cleanup
         rm -rf ${LEVELDBJNI_HOME}
         rm -rf ${LEVELDB_HOME}
-
         mvn install:install-file -DgroupId=com.google.protobuf -DartifactId=protoc -Dversion=2.5.0 \
                 -Dclassifier=linux-ppcle_64 -Dpackaging=exe -Dfile=/usr/local/protobuf-2.5.0/bin/protoc
         mvn install:install-file -DgroupId=com.google.protobuf -DartifactId=protoc -Dversion=3.6.1 \
@@ -48,7 +47,28 @@ if [ $HOSTTYPE = "powerpc64le" ] ; then
                 -Dclassifier=linux-ppcle_64 -Dpackaging=exe -Dfile=/usr/src/grpc-java-1.26.0/compiler/build/exe/java_plugin/protoc-gen-grpc-java
 fi
 ## BIGTOP-2288
-
+if [ $HOSTTYPE = "x86_64" ] ; then
+        #download the POWER version of ISA-L
+        yum remove nasm -y
+        yum install yasm autoconf automake libtool -y
+        wget https://www.nasm.us/pub/nasm/releasebuilds/2.14.02/nasm-2.14.02.tar.gz
+        tar -xvf nasm-2.14.02.tar.gz
+        export NASM_HOME=`cd nasm-2.14.02; pwd`
+        cd ${NASM_HOME}
+        ./autogen.sh && ./configure
+        make
+        make install
+        cd ..
+        git clone https://github.com/intel/isa-l.git
+        export ISAL_HOME=`cd isa-l; pwd`
+        cd ${ISAL_HOME}
+        ./autogen.sh && ./configure
+        make
+        make install
+        cd ..
+        #cleanup ISA-L
+        rm -rf ${ISAL_HOME}
+fi
 # BIGTOP-3027: Build native library/jars for aarch64
 if [ $HOSTTYPE = "aarch64" ] ; then
         # download leveldbjni 1.8 from original repo
@@ -120,6 +140,11 @@ if [ -z "$BUNDLE_SNAPPY" ] ; then
   [ -f /usr/lib/${HOSTTYPE}-linux-gnu/libsnappy.so ] && BUNDLE_SNAPPY="-Dsnappy.prefix=x -Dbundle.snappy=true -Dsnappy.lib=/usr/lib/${HOSTTYPE}-linux-gnu"
 fi
 
+if [ -z "$BUNDLE_ISAL" ] ; then
+  [ -f /usr/lib/libisal.so ] && BUNDLE_ISAL="-Dbundle.isal=true -Disal.lib=/usr/lib"
+  [ -f /usr/lib64/libisal.so ] && BUNDLE_ISAL="-Dbundle.isal=true -Disal.lib=/usr/lib64"
+  [ -f /usr/lib/${HOSTTYPE}-linux-gnu/libisal.so ] && BUNDLE_ISAL="-Dbundle.isal=true -Disal.lib=/usr/lib/${HOSTTYPE}-linux-gnu"
+fi
 mkdir build
 mkdir build/src
  
@@ -132,7 +157,7 @@ MAVEN_OPTS+="-DskipTests -DskipITs "
 . $(dirname ${0})/maven_deploy.sh
 
 # Build artifacts
-mvn $BUNDLE_SNAPPY -Pdist -Pnative -Psrc -Pyarn-ui -Dtar ${MAVEN_OPTS} install ${EXTRA_GOALS} "$@"
+mvn $BUNDLE_SNAPPY $BUNDLE_ISAL -Pdist -Pnative -Psrc -Pyarn-ui -Dtar ${MAVEN_OPTS} install ${EXTRA_GOALS} "$@"
 mvn site site:stage ${MAVEN_OPTS} $@
 
 (cd build ; tar --strip-components=1 -xzvf  ../hadoop-dist/target/hadoop-${HADOOP_VERSION}.tar.gz)
