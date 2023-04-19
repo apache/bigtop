@@ -275,7 +275,7 @@ cp ${BUILD_DIR}/include/hdfs.h $PREFIX/$SYSTEM_INCLUDE_DIR/
 cp -r ${BUILD_DIR}/include/hdfspp $PREFIX/$SYSTEM_INCLUDE_DIR/
 
 cp ${BUILD_DIR}/lib/native/*.a $PREFIX/$HADOOP_NATIVE_LIB_DIR/
-for library in `cd ${BUILD_DIR}/lib/native ; ls libsnappy.so.1.* 2>/dev/null；ls libzstd.so.1.* 2>/dev/null；ls libisal.so.2.* 2>/dev/null` libhadoop.so.1.0.0 libnativetask.so.1.0.0; do
+for library in `cd ${BUILD_DIR}/lib/native ; ls libsnappy.so.1.* 2>/dev/null；ls libisal.so.2.* 2>/dev/null` libhadoop.so.1.0.0 libnativetask.so.1.0.0; do
   cp ${BUILD_DIR}/lib/native/${library} $PREFIX/$HADOOP_NATIVE_LIB_DIR/
   ldconfig -vlN $PREFIX/$HADOOP_NATIVE_LIB_DIR/${library}
   ln -s ${library} $PREFIX/$HADOOP_NATIVE_LIB_DIR/${library/.so.*/}.so
