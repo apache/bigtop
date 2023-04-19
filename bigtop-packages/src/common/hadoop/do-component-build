@@ -140,11 +140,6 @@ if [ -z "$BUNDLE_SNAPPY" ] ; then
   [ -f /usr/lib/${HOSTTYPE}-linux-gnu/libsnappy.so ] && BUNDLE_SNAPPY="-Dsnappy.prefix=x -Dbundle.snappy=true -Dsnappy.lib=/usr/lib/${HOSTTYPE}-linux-gnu"
 fi
 
-if [ -z "$BUNDLE_ZSTD" ] ; then
-  [ -f /usr/lib/libzstd.so ] && BUNDLE_ZSTD="-Dbundle.zstd=true -Dzstd.lib=/usr/lib"
-  [ -f /usr/lib64/libzstd.so ] && BUNDLE_ZSTD="-Dbundle.zstd=true -Dzstd.lib=/usr/lib64"
-  [ -f /usr/lib/${HOSTTYPE}-linux-gnu/libzstd.so ] && BUNDLE_ZSTD="-Dbundle.zstd=true -Dzstd.lib=/usr/lib/${HOSTTYPE}-linux-gnu"
-fi
 if [ -z "$BUNDLE_ISAL" ] ; then
   [ -f /usr/lib/libisal.so ] && BUNDLE_ISAL="-Dbundle.isal=true -Disal.lib=/usr/lib"
   [ -f /usr/lib64/libisal.so ] && BUNDLE_ISAL="-Dbundle.isal=true -Disal.lib=/usr/lib64"
@@ -162,7 +157,7 @@ MAVEN_OPTS+="-DskipTests -DskipITs "
 . $(dirname ${0})/maven_deploy.sh
 
 # Build artifacts
-mvn $BUNDLE_SNAPPY $BUNDLE_ZSTD $BUNDLE_ISAL -Pdist -Pnative -Psrc -Pyarn-ui -Dtar ${MAVEN_OPTS} install ${EXTRA_GOALS} "$@"
+mvn $BUNDLE_SNAPPY $BUNDLE_ISAL -Pdist -Pnative -Psrc -Pyarn-ui -Dtar ${MAVEN_OPTS} install ${EXTRA_GOALS} "$@"
 mvn site site:stage ${MAVEN_OPTS} $@
 
 (cd build ; tar --strip-components=1 -xzvf  ../hadoop-dist/target/hadoop-${HADOOP_VERSION}.tar.gz)
