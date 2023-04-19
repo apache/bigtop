@@ -1,0 +1,107 @@
+.\" Licensed to the Apache Software Foundation (ASF) under one or more
+.\" contributor license agreements.  See the NOTICE file distributed with
+.\" this work for additional information regarding copyright ownership.
+.\" The ASF licenses this file to You under the Apache License, Version 2.0
+.\" (the "License"); you may not use this file except in compliance with
+.\" the License.  You may obtain a copy of the License at
+.\"
+.\"     http://www.apache.org/licenses/LICENSE-2.0
+.\"
+.\" Unless required by applicable law or agreed to in writing, software
+.\" distributed under the License is distributed on an "AS IS" BASIS,
+.\" WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+.\" See the License for the specific language governing permissions and
+.\" limitations under the License.
+.\"
+.\" Process this file with
+.\" groff -man -Tascii fuse_dfs.1
+.\"
+.TH hadoop-fuse-dfs 1 "April 2010 " Linux "User Manuals"
+
+.SH NAME
+hadoop-fuse-dfs \- Mount an HDFS cluster as if it was a block device.
+
+.SH SYNOPSIS
+
+.B hadoop-fuse-dfs [ -d ]
+dfs://<server>:<port> <mnt_destination>
+
+.SH DESCRIPTION
+
+.B hadoop-fuse-dfs 
+allows users to use an HDFS filesystem as a traditional filesystem in linux. 
+
+.SH OPTIONS
+
+.IP "-d, -odebug"
+Keep hadoop-fuse-dfs running in the foreground and print debug messages
+
+.IP "-oserver \fIserver_address"
+Alternative place to specify the server in which the namenode would be listening to. This is useful for creating entries in fstab.
+
+.IP "-oport \fIserver_port"
+Alternative place to specify the port in which the namenode would be listening to. This is useful for creating entries in fstab.
+
+.IP "-oentry_timeout \fIseconds"
+How long directory entries are cached
+
+.IP "-oattribute_timeout \fIseconds"
+How long attributes are cached
+
+.IP -oprotected
+a colon separated list of directories that fuse-dfs should not allow to be deleted or moved - e.g., /user:/tmp
+
+.IP -oprivate
+Restricts filesystem operations to the owner of the fuse process
+
+.IP "-ordbuffer \fIKBs"
+How large a buffer should fuse-dfs use when doing hdfs reads(KB)
+
+.IP -ro 
+Mount read only 
+
+.IP -rw
+Mout read/write
+
+.IP -ousetrash
+Enables the HDFS trashcan
+
+.IP -onotrash
+Disables the HDFS trashcan
+
+.IP -obig_writes
+Use fuse big_writes option so as to allow better performance of writes on kernels >= 2.6.26
+
+.SH FILES
+
+.I /etc/default/hadoop-fuse
+
+.RS
+Fuse_dfs can pull in alternative environment variabels exported from this file
+
+
+.SH EXAMPLES
+
+.B hadoop-fuse-dfs dfs://namenode_address:9000 /export/hdfs -d 
+
+This would connect to the server namenode_address on port 9000 and attempt to
+mount its hdfs on port 9000. The -d causes fuse to not background. This is 
+useful for testing the mount before adding it to /etc/fstab. 
+
+.B Mounting on bootup with /etc/fstab 
+
+hadoop-fuse-dfs#dfs://namenode_address:9000 /export/hdfs fuse -oallow_other,rw,-ousetrash 0 0
+
+.SH ENVIRONMENT
+
+.IP HADOOP_HOME
+The location of the system wide hadoop distribution
+
+.IP JAVA_HOME
+The location of the default sun jdk used by hadoop and fuse
+
+.IP LD_LIBRARY_PATH
+A colon seperated set of directories that hadoop-fuse-dfs will use. This must contain native dfs libraries, and the java dynamic library.
+
+.SH AUTHOR
+	Apache Bigtop Project <dev@bigtop.apache.org>
