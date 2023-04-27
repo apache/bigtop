@@ -1,8 +1,8 @@
 diff --git a/distro/src/main/assembly/admin-web.xml b/distro/src/main/assembly/admin-web.xml
-index 81a41d37f..3dafeffa7 100644
+index 6a498153d..092379ed0 100644
 --- a/distro/src/main/assembly/admin-web.xml
 +++ b/distro/src/main/assembly/admin-web.xml
-@@ -230,6 +230,7 @@
+@@ -231,6 +231,7 @@
            <include>org.apache.ranger:ranger-plugins-common</include>
            <include>org.slf4j:slf4j-api:jar:${slf4j.version}</include>
            <include>org.apache.hadoop:hadoop-common</include>
@@ -10,7 +10,7 @@ index 81a41d37f..3dafeffa7 100644
            <include>commons-logging:commons-logging</include>
            <include>com.sun.jersey.contribs:jersey-multipart</include>
            <include>com.google.guava:guava</include>
-@@ -243,8 +244,8 @@
+@@ -244,8 +245,8 @@
            <include>org.apache.httpcomponents:httpmime</include>
            <include>commons-codec:commons-codec</include>
            <include>org.apache.htrace:htrace-core4:jar:${htrace-core.version}</include>
@@ -21,7 +21,7 @@ index 81a41d37f..3dafeffa7 100644
            <include>org.apache.commons:commons-configuration2:jar:${commons.configuration.version}</include>
            <include>org.apache.commons:commons-lang3:jar:${commons.lang3.version}</include>
            <include>com.kstruct:gethostname4j:jar:${kstruct.gethostname4j.version}</include>
-@@ -297,10 +298,11 @@
+@@ -298,10 +299,11 @@
            <include>org.slf4j:slf4j-api:jar:${slf4j.version}</include>
            <include>org.apache.commons:commons-lang3</include>
            <include>org.apache.hadoop:hadoop-common</include>
@@ -35,6 +35,18 @@ index 81a41d37f..3dafeffa7 100644
            <include>org.apache.commons:commons-configuration2:jar:${commons.configuration.version}</include>
            <include>org.apache.commons:commons-compress:jar:${commons.compress.version}</include>
          </includes>
+diff --git a/distro/src/main/assembly/kms.xml b/distro/src/main/assembly/kms.xml
+index 0387dc6b5..d58234889 100755
+--- a/distro/src/main/assembly/kms.xml
++++ b/distro/src/main/assembly/kms.xml
+@@ -378,6 +378,7 @@
+                     <include>com.google.guava:guava</include>
+                     <include>org.slf4j:slf4j-api</include>
+                     <include>org.apache.hadoop:hadoop-common</include>
++                    <include>org.apache.hadoop.thirdparty:hadoop-shaded-guava</include>
+                     <include>org.apache.hadoop:hadoop-auth</include>
+                     <include>org.apache.htrace:htrace-core4</include>
+                     <include>org.codehaus.woodstox:stax2-api</include>
 diff --git a/distro/src/main/assembly/plugin-atlas.xml b/distro/src/main/assembly/plugin-atlas.xml
 index d35061274..3d7b5346b 100644
 --- a/distro/src/main/assembly/plugin-atlas.xml
@@ -117,36 +129,50 @@ index 241eea629..8aad0df7b 100644
                  </includes>
              </binaries>
          </moduleSet>
+diff --git a/distro/src/main/assembly/storm-agent.xml b/distro/src/main/assembly/storm-agent.xml
+index 908415ffa..b8fac8054 100644
+--- a/distro/src/main/assembly/storm-agent.xml
++++ b/distro/src/main/assembly/storm-agent.xml
+@@ -59,6 +59,7 @@
+             <includes>
+               <include>commons-configuration:commons-configuration</include>
+               <include>org.apache.hadoop:hadoop-common</include>
++              <include>org.apache.hadoop.thirdparty:hadoop-shaded-guava</include>
+               <include>org.apache.hadoop:hadoop-common-plus</include>
+               <include>com.google.code.gson:gson</include>
+               <include>org.eclipse.jetty:jetty-client:jar:${jetty-client.version}</include>
 diff --git a/distro/src/main/assembly/tagsync.xml b/distro/src/main/assembly/tagsync.xml
-index c467e5a97..905a0c61d 100644
+index 44a8233cc..9b6ae78db 100644
 --- a/distro/src/main/assembly/tagsync.xml
 +++ b/distro/src/main/assembly/tagsync.xml
 @@ -52,6 +52,7 @@
  							<include>org.apache.atlas:atlas-common:jar:${atlas.version}</include>
  							<include>org.apache.hadoop:hadoop-auth</include>
  							<include>org.apache.hadoop:hadoop-common</include>
-+							<include>org.apache.hadoop.thirdparty:hadoop-shaded-guava</include>
++              <include>org.apache.hadoop.thirdparty:hadoop-shaded-guava</include>
  							<include>org.apache.commons:commons-compress</include>
- 							<include>org.apache.kafka:kafka_${scala.binary.version}:jar:${kafka.version}</include>
  							<include>org.apache.kafka:kafka-clients:jar:${kafka.version}</include>
-@@ -88,8 +89,6 @@
+ 							<include>org.apache.ranger:credentialbuilder</include>
+@@ -87,8 +88,8 @@
  							<include>com.kstruct:gethostname4j:jar:${kstruct.gethostname4j.version}</include>
  							<include>net.java.dev.jna:jna:jar:${jna.version}</include>
  							<include>net.java.dev.jna:jna-platform:jar:${jna-platform.version}</include>
 -							<include>com.fasterxml.woodstox:woodstox-core:jar:${fasterxml.woodstox.version}</include>
 -							<include>org.codehaus.woodstox:stax2-api:jar:${codehaus.woodstox.stax2api.version}</include>
++							<include>com.fasterxml.woodstox:woodstox-core</include>
++							<include>org.codehaus.woodstox:stax2-api</include>
  							<include>org.apache.commons:commons-configuration2:jar:${commons.configuration.version}</include>
  							<include>org.cloudera.logredactor:logredactor</include>
  							<include>org.apache.commons:commons-lang3</include>
 diff --git a/distro/src/main/assembly/usersync.xml b/distro/src/main/assembly/usersync.xml
-index 03667ad4e..bb59f0d0a 100644
+index 03667ad4e..eff87ca5d 100644
 --- a/distro/src/main/assembly/usersync.xml
 +++ b/distro/src/main/assembly/usersync.xml
 @@ -51,6 +51,7 @@
  							<include>org.apache.hadoop:hadoop-auth</include>
  							<include>org.slf4j:slf4j-api:jar:${slf4j.version}</include>
  							<include>org.apache.hadoop:hadoop-common</include>
-+							<include>org.apache.hadoop.thirdparty:hadoop-shaded-guava</include>
++              <include>org.apache.hadoop.thirdparty:hadoop-shaded-guava</include>
  							<include>org.apache.commons:commons-csv</include>
  							<include>org.apache.ranger:credentialbuilder</include>
  							<include>org.apache.ranger:ranger-util</include>
