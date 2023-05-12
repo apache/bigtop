@@ -18,7 +18,7 @@ set -ex
 
 . `dirname $0`/bigtop.bom
 
-export MAVEN_OPTS="-Xmx1024m"
+export MAVEN_OPTS="$MAVEN_OPTS -Xmx1024m"
 
 MVN_ARGS="-Phadoop-3.0 "
 MVN_ARGS+="-Dhadoop-three.version=${HADOOP_VERSION} "
