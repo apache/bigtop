@@ -16,13 +16,4 @@
 
 set -ex
 
-if [ -f /etc/os-release ]; then
-    . /etc/os-release
-fi
-
-OS="$ID"
-if [ "${OS}" = "fedora" ]; then
-  ./configure --prefix=$1 --with-python --with-libxml --with-gssapi --disable-orca --disable-rpath CFLAGS='-fcommon -Wno-implicit-fallthrough'
-else
-  ./configure --prefix=$1 --with-python --with-libxml --with-gssapi --disable-orca CFLAGS='-fcommon -Wno-implicit-fallthrough'
-fi
+./configure --prefix=$1 --with-python --with-libxml --with-gssapi --disable-orca CFLAGS='-fcommon -Wno-implicit-fallthrough'
