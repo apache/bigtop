@@ -16,4 +16,4 @@
 
 set -ex
 
-./configure --prefix=$1 --disable-orca CFLAGS=-fcommon
+./configure --prefix=$1 --with-python --with-libxml --with-gssapi --disable-orca CFLAGS='-fcommon -Wno-implicit-fallthrough'
