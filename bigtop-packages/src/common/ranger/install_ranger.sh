@@ -109,16 +109,16 @@ cp -r ${BUILD_DIR}/ranger-*-${COMPONENT}/* ${PREFIX}/${COMP_DIR}/
 
 # Config
 if [[ "${COMPONENT}" =~ ^(admin|usersync|tagsync|kms)$ ]]; then
-  install -d -m 0755 ${PREFIX}/${NP_ETC_RANGER}-${COMPONENT}
+  install -d -m 0755 ${PREFIX}/${NP_ETC_RANGER}/${COMPONENT}
   install -d -m 0755 ${PREFIX}/${ETC_RANGER}-${COMPONENT}/conf.dist
 
   if [[ "${COMPONENT}" = "admin" || "${COMPONENT}" = "kms" ]]; then
     cp -a ${PREFIX}/${COMP_DIR}/ews/webapp/WEB-INF/classes/conf.dist/* ${PREFIX}/${ETC_RANGER}-${COMPONENT}/conf.dist
-    ln -s ${NP_ETC_RANGER}-${COMPONENT}/conf ${PREFIX}/${COMP_DIR}/conf
-    ln -s ${NP_ETC_RANGER}-${COMPONENT}/conf ${PREFIX}/$COMP_DIR/ews/webapp/WEB-INF/classes/conf
+    ln -s ${NP_ETC_RANGER}/${COMPONENT}/conf ${PREFIX}/${COMP_DIR}/conf
+    ln -s ${NP_ETC_RANGER}/${COMPONENT}/conf ${PREFIX}/$COMP_DIR/ews/webapp/WEB-INF/classes/conf
   else
     cp -a ${PREFIX}/${COMP_DIR}/conf.dist/* ${PREFIX}/${ETC_RANGER}-${COMPONENT}/conf.dist
-    ln -s ${NP_ETC_RANGER}-${COMPONENT}/conf ${PREFIX}/${COMP_DIR}/conf
+    ln -s ${NP_ETC_RANGER}/${COMPONENT}/conf ${PREFIX}/${COMP_DIR}/conf
   fi
 else
   RANGER_COMPONENT=${COMPONENT}
