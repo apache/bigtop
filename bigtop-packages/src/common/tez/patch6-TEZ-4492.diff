@@ -1,0 +1,17 @@
+commit ccad71dabceb850b58ff38e77fd206e68f62ce4b
+Author: AnmolSun <124231245+AnmolSun@users.noreply.github.com>
+Date:   Thu May 4 13:26:14 2023 +0530
+
+    TEZ-4492: Update Bowerrc to use bower.herokuapp mirror to avoid Bower Registry CERT_EXPIRE issue (BOWER-2608) (#284) (Anmol Sundaram reviewed by Laszlo Bodor)
+
+diff --git a/tez-ui/src/main/webapp/.bowerrc b/tez-ui/src/main/webapp/.bowerrc
+index 5b0b07d75..b798d4977 100644
+--- a/tez-ui/src/main/webapp/.bowerrc
++++ b/tez-ui/src/main/webapp/.bowerrc
+@@ -1,5 +1,6 @@
+ {
+   "directory": "bower_components",
++  "registry": "https://bower.herokuapp.com",
+   "analytics": false,
+   "resolvers": [
+     "bower-shrinkwrap-resolver-ext"
