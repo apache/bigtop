@@ -484,7 +484,7 @@ getent passwd ranger >/dev/null || useradd -c "Ranger" -s /bin/bash -g ranger -m
 %preun tagsync
 if [ "$1" = 0 ]; then
         %{alternatives_cmd} --remove ranger-tagsync-conf %{etc_ranger}/tagsync/conf.dist || :
-
+fi
 
 %preun
 
