@@ -17,7 +17,7 @@ docker:
         memory_limit: "4g"
         image: "bigtop/puppet:trunk-rockylinux-8"
 
-repo: "http://repos.bigtop.apache.org/releases/3.1.0/rockylinux/8/$basearch"
+repo: "http://repos.bigtop.apache.org/releases/3.2.0/rockylinux/8/$basearch"
 distro: centos
 components: [hdfs, yarn, mapreduce]
 enable_local_repo: false
