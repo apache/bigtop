@@ -42,7 +42,7 @@ class bigtop_toolchain::installer {
         require => Class['bigtop_toolchain::jdk'],
       }
     }
-    /(CentOS|Fedora|RedHat)/: {
+    /(CentOS|Fedora|RedHat|Rocky)/: {
       exec { 'ensure java 8 is set as default':
         command => "update-alternatives --set java java-1.8.0-openjdk.$(uname -m) \
                     && update-alternatives --set javac java-1.8.0-openjdk.$(uname -m)",
