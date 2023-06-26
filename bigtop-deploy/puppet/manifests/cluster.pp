@@ -133,6 +133,9 @@ $roles_map = {
   },
   phoenix => {
     library => ["phoenix-server"],
+  },
+  ranger => {
+    master => ["ranger-server"],
   }
 }
 
@@ -199,6 +202,7 @@ class node_with_roles ($roles = hiera("bigtop::roles")) inherits hadoop_cluster_
     "ambari",
     "bigtop_utils",
     "phoenix",
+    "ranger",
   ]
 
   node_with_roles::deploy_module { $modules:

@@ -1,0 +1,39 @@
+commit f9f989d99b9da64a0cf65e7e19faba3d967a9b8b
+Author: Sergey Nuyanzin <snuyanzin@gmail.com>
+Date:   Wed Mar 29 21:30:46 2023 +0200
+
+    [FLINK-27640][Connector/Hive][SQL Client] Exclude Pentaho dependency from Hive to avoid build problems with newer Maven versions. Newer Maven versions block http repositories such as conjars. Conjars is where Pentaho artifacts are stored (#22299)
+    
+    Co-authored-by: Martijn Visser <martijnvisser@apache.org>
+    (cherry picked from commit 36f39712d289b6b7b0b957a33bd1891266e3f992)
+
+diff --git a/flink-connectors/flink-connector-hive/pom.xml b/flink-connectors/flink-connector-hive/pom.xml
+index 7d0c36f..81f6a0c 100644
+--- a/flink-connectors/flink-connector-hive/pom.xml
++++ b/flink-connectors/flink-connector-hive/pom.xml
+@@ -508,6 +508,10 @@ under the License.
+ 					<groupId>org.slf4j</groupId>
+ 					<artifactId>slf4j-log4j12</artifactId>
+ 				</exclusion>
++				<exclusion>
++					<groupId>org.pentaho</groupId>
++					<artifactId>pentaho-aggdesigner-algorithm</artifactId>
++				</exclusion>
+ 			</exclusions>
+ 		</dependency>
+ 
+diff --git a/flink-table/flink-sql-client/pom.xml b/flink-table/flink-sql-client/pom.xml
+index f6a0675..9224bd5 100644
+--- a/flink-table/flink-sql-client/pom.xml
++++ b/flink-table/flink-sql-client/pom.xml
+@@ -425,6 +425,10 @@ under the License.
+ 					<groupId>commons-lang</groupId>
+ 					<artifactId>commons-lang</artifactId>
+ 				</exclusion>
++				<exclusion>
++					<groupId>org.pentaho</groupId>
++					<artifactId>pentaho-aggdesigner-algorithm</artifactId>
++				</exclusion>
+ 			</exclusions>
+ 		</dependency>
+ 

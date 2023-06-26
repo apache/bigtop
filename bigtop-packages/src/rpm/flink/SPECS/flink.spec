@@ -14,6 +14,7 @@
 # limitations under the License.
 
 %define flink_name flink
+%define flink_pkg_name flink%{pkg_name_suffix}
 
 %define etc_default %{parent_dir}/etc/default
 
@@ -49,7 +50,7 @@
 %global initd_dir %{_sysconfdir}/rc.d
 %endif
 
-Name: %{flink_name}
+Name: %{flink_pkg_name}
 Version: %{flink_version}
 Release: %{flink_release}
 Summary: Apache Flink is an open source platform for distributed stream and batch data processing.
@@ -117,7 +118,7 @@ Apache Flink Task Manager service.
 ##############################################
 
 %prep
-%setup -n %{name}-%{flink_base_version}
+%setup -n %{flink_name}-%{flink_base_version}
 #BIGTOP_PATCH_COMMANDS
 
 %build
@@ -171,18 +172,18 @@ getent passwd flink >/dev/null || useradd -c "Flink" -s /sbin/nologin -g flink -
 
 %define service_macro() \
 %files %1 \
-%config(noreplace) %{initd_dir}/%{name}-%1 \
+%config(noreplace) %{initd_dir}/%{flink_name}-%1 \
 %post %1 \
-chkconfig --add %{name}-%1 \
+chkconfig --add %{flink_name}-%1 \
 %preun %1 \
-/sbin/service ${name}-%1 status > /dev/null 2>&1 \
+/sbin/service %{flink_name}-%1 status > /dev/null 2>&1 \
 if [ "$?" -eq 0 ]; then \
-  service ${name}-%1 stop > /dev/null 2>&1 \
-  chkconfig --del %{name}-%1 \
+  service %{flink_name}-%1 stop > /dev/null 2>&1 \
+  chkconfig --del %{flink_name}-%1 \
 fi \
 %postun %1 \
 if [ "$?" -ge 1 ]; then \
-   service %{name}-%1 condrestart > /dev/null 2>&1 || : \
+   service %{flink_name}-%1 condrestart > /dev/null 2>&1 || : \
 fi
 %service_macro jobmanager 
 %service_macro taskmanager

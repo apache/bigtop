@@ -87,6 +87,20 @@ class bigtop_toolchain::protobuf {
       require => Exec["download protobuf 3.17.3"],
       timeout => 3000
     }
+
+    exec { "download protobuf 3.6.1":
+      cwd  => "/usr/src",
+      command => "/usr/bin/wget https://github.com/protocolbuffers/protobuf/archive/refs/tags/v3.6.1.tar.gz && mkdir -p protobuf-3.6.1 && /bin/tar -xvzf v3.6.1.tar.gz -C protobuf-3.6.1 --strip-components=1",
+      creates => "/usr/src/protobuf-3.6.1",
+    }
+
+    exec { "install protobuf 3.6.1":
+      cwd => "/usr/src/protobuf-3.6.1",
+      command => "/usr/src/protobuf-3.6.1/autogen.sh && /usr/src/protobuf-3.6.1/configure --prefix=/usr/local/protobuf-3.6.1 --disable-shared --with-pic && /usr/bin/make install",
+      creates => "/usr/local/protobuf-3.6.1",
+      require => Exec["download protobuf 3.6.1"],
+      timeout => 3000
+    }
   }
 
 }

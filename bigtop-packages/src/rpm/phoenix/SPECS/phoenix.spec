@@ -14,6 +14,7 @@
 # limitations under the License.
 %define phoenix_home /usr/lib/%{name}
 %define bin_phoenix %{phoenix_home}/bin
+%define examples_phoenix %{phoenix_home}/examples
 %define etc_phoenix_conf %{_sysconfdir}/%{name}/conf
 %define etc_phoenix_conf_dist %{etc_phoenix_conf}.dist
 %define var_lib_phoenix /var/lib/%{name}
@@ -128,6 +129,10 @@ getent passwd phoenix >/dev/null || useradd -c "Phoenix" -s /sbin/nologin -g pho
 %post
 %{alternatives_cmd} --install %{etc_phoenix_conf} %{name}-conf %{etc_phoenix_conf_dist} 30
 
+%if  0%{?rhel} >= 8
+%{alternatives_cmd} --set python /usr/bin/python3
+%endif
+
 
 %preun
 if [ "$1" = 0 ]; then
@@ -143,4 +148,5 @@ fi
 %doc %{doc_phoenix}
 %{phoenix_home}/phoenix-*.jar
 %{bin_phoenix}
+%{examples_phoenix}
 %config(noreplace) %{etc_phoenix_conf_dist}

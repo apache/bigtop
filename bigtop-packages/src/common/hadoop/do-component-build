@@ -39,6 +39,13 @@ if [ $HOSTTYPE = "powerpc64le" ] ; then
         #cleanup
         rm -rf ${LEVELDBJNI_HOME}
         rm -rf ${LEVELDB_HOME}
+
+        mvn install:install-file -DgroupId=com.google.protobuf -DartifactId=protoc -Dversion=2.5.0 \
+                -Dclassifier=linux-ppcle_64 -Dpackaging=exe -Dfile=/usr/local/protobuf-2.5.0/bin/protoc
+        mvn install:install-file -DgroupId=com.google.protobuf -DartifactId=protoc -Dversion=3.6.1 \
+                -Dclassifier=linux-ppcle_64 -Dpackaging=exe -Dfile=/usr/local/protobuf-3.6.1/bin/protoc
+        mvn install:install-file -DgroupId=io.grpc -DartifactId=protoc-gen-grpc-java -Dversion=1.26.0 \
+                -Dclassifier=linux-ppcle_64 -Dpackaging=exe -Dfile=/usr/src/grpc-java-1.26.0/compiler/build/exe/java_plugin/protoc-gen-grpc-java
 fi
 ## BIGTOP-2288
 
