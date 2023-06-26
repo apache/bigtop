@@ -1,1 +1,0 @@
-<%= @gp_home %>/bin/postgres -D <%= @db_dir %> -p <%= @port %> --gp_dbid=<%= @dbid %> --gp_num_contents_in_cluster=<%= @z_options %> --silent-mode=true -i -M <%= @m_options %> --gp_contentid=<%= @content %> <%= @x_options %>

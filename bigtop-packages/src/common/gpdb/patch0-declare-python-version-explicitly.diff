@@ -1,0 +1,530 @@
+diff --git a/gpMgmt/bin/analyzedb b/gpMgmt/bin/analyzedb
+index 462a207cc0..551d1c842a 100755
+--- a/gpMgmt/bin/analyzedb
++++ b/gpMgmt/bin/analyzedb
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # -*- coding: utf-8 -*-
+ 
+ # Copyright (c) 2015 Pivotal Software, Inc. All Rights Reserved
+diff --git a/gpMgmt/bin/gpactivatestandby b/gpMgmt/bin/gpactivatestandby
+index 0f1dd22fb5..2ae64ee220 100755
+--- a/gpMgmt/bin/gpactivatestandby
++++ b/gpMgmt/bin/gpactivatestandby
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # -*- coding: utf-8 -*-
+ # Line too long - pylint: disable=C0301
+ # Invalid name  - pylint: disable=C0103
+diff --git a/gpMgmt/bin/gpaddmirrors b/gpMgmt/bin/gpaddmirrors
+index a7c368071e..1f4e7665c6 100755
+--- a/gpMgmt/bin/gpaddmirrors
++++ b/gpMgmt/bin/gpaddmirrors
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Recovers Greenplum segment instances that are marked as invalid, if
+ # mirroring is configured and operational
+diff --git a/gpMgmt/bin/gpcheckcat b/gpMgmt/bin/gpcheckcat
+index a2c5f29377..98dc067abc 100755
+--- a/gpMgmt/bin/gpcheckcat
++++ b/gpMgmt/bin/gpcheckcat
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ '''
+ Usage: gpcheckcat [<option>] [dbname]
+ 
+diff --git a/gpMgmt/bin/gpcheckcat_modules/foreign_key_check.py b/gpMgmt/bin/gpcheckcat_modules/foreign_key_check.py
+index 5259974af9..7996d8eed0 100644
+--- a/gpMgmt/bin/gpcheckcat_modules/foreign_key_check.py
++++ b/gpMgmt/bin/gpcheckcat_modules/foreign_key_check.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ from gppylib.gplog import *
+ from gppylib.gpcatalog import *
+diff --git a/gpMgmt/bin/gpcheckcat_modules/orphan_toast_table_issues.py b/gpMgmt/bin/gpcheckcat_modules/orphan_toast_table_issues.py
+index b25af69351..976ad0ed15 100644
+--- a/gpMgmt/bin/gpcheckcat_modules/orphan_toast_table_issues.py
++++ b/gpMgmt/bin/gpcheckcat_modules/orphan_toast_table_issues.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ 
+ class OrphanToastTableIssue(object):
+diff --git a/gpMgmt/bin/gpcheckcat_modules/orphaned_toast_tables_check.py b/gpMgmt/bin/gpcheckcat_modules/orphaned_toast_tables_check.py
+index bb0df7f52b..b3df5ab0a7 100644
+--- a/gpMgmt/bin/gpcheckcat_modules/orphaned_toast_tables_check.py
++++ b/gpMgmt/bin/gpcheckcat_modules/orphaned_toast_tables_check.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import itertools
+ 
+diff --git a/gpMgmt/bin/gpcheckcat_modules/repair.py b/gpMgmt/bin/gpcheckcat_modules/repair.py
+index b46fe6c1c8..7298a17fde 100644
+--- a/gpMgmt/bin/gpcheckcat_modules/repair.py
++++ b/gpMgmt/bin/gpcheckcat_modules/repair.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ """
+ Purpose : Creates the repair dir and the corresponding sql/bash scripts for
+           repairing some of the catalog issues(see the list below) reported by gpcheckcat.
+diff --git a/gpMgmt/bin/gpcheckcat_modules/repair_missing_extraneous.py b/gpMgmt/bin/gpcheckcat_modules/repair_missing_extraneous.py
+index dbd040dbe9..623ce7f8f0 100644
+--- a/gpMgmt/bin/gpcheckcat_modules/repair_missing_extraneous.py
++++ b/gpMgmt/bin/gpcheckcat_modules/repair_missing_extraneous.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ from gppylib.utils import escapeDoubleQuoteInSQLString
+ 
+ class RepairMissingExtraneous:
+diff --git a/gpMgmt/bin/gpcheckcat_modules/unique_index_violation_check.py b/gpMgmt/bin/gpcheckcat_modules/unique_index_violation_check.py
+index 8bf847a839..e385eaca5f 100644
+--- a/gpMgmt/bin/gpcheckcat_modules/unique_index_violation_check.py
++++ b/gpMgmt/bin/gpcheckcat_modules/unique_index_violation_check.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ class UniqueIndexViolationCheck:
+     unique_indexes_query = """
+diff --git a/gpMgmt/bin/gpcheckperf b/gpMgmt/bin/gpcheckperf
+index 798e815aa4..6615365c60 100755
+--- a/gpMgmt/bin/gpcheckperf
++++ b/gpMgmt/bin/gpcheckperf
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ """
+ gpcheckperf -- Check the hardware for Greenplum Database
+ 
+diff --git a/gpMgmt/bin/gpcheckresgroupimpl b/gpMgmt/bin/gpcheckresgroupimpl
+index c451ee64fc..9a9394d1a5 100755
+--- a/gpMgmt/bin/gpcheckresgroupimpl
++++ b/gpMgmt/bin/gpcheckresgroupimpl
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) 2017, Pivotal Software Inc.
+ #
+diff --git a/gpMgmt/bin/gpconfig b/gpMgmt/bin/gpconfig
+index b31a6d38f2..a65a118809 100755
+--- a/gpMgmt/bin/gpconfig
++++ b/gpMgmt/bin/gpconfig
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2009. All Rights Reserved.
+ #
+diff --git a/gpMgmt/bin/gpdeletesystem b/gpMgmt/bin/gpdeletesystem
+index 145709b627..0811ef5a87 100755
+--- a/gpMgmt/bin/gpdeletesystem
++++ b/gpMgmt/bin/gpdeletesystem
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # -*- coding: utf-8 -*-
+ #
+ # Copyright (c) Greenplum Inc 2010. All Rights Reserved.
+diff --git a/gpMgmt/bin/gpexpand b/gpMgmt/bin/gpexpand
+index 7e9e5be6dc..0c36dbc332 100755
+--- a/gpMgmt/bin/gpexpand
++++ b/gpMgmt/bin/gpexpand
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # Line too long            - pylint: disable=C0301
+ # Invalid name             - pylint: disable=C0103
+ #
+diff --git a/gpMgmt/bin/gpinitstandby b/gpMgmt/bin/gpinitstandby
+index d3a36ea993..2e9b7157df 100755
+--- a/gpMgmt/bin/gpinitstandby
++++ b/gpMgmt/bin/gpinitstandby
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # -*- coding: utf-8 -*-
+ #
+ # Copyright (c) Greenplum Inc 2010. All Rights Reserved. 
+diff --git a/gpMgmt/bin/gpload.py b/gpMgmt/bin/gpload.py
+index d96b78694e..9668fc0fae 100755
+--- a/gpMgmt/bin/gpload.py
++++ b/gpMgmt/bin/gpload.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # -*- coding: utf-8 -*-
+ # gpload - load file(s) into Greenplum Database
+ # Copyright Greenplum 2008
+diff --git a/gpMgmt/bin/gplogfilter b/gpMgmt/bin/gplogfilter
+index 09f36cf2f1..abd086283e 100755
+--- a/gpMgmt/bin/gplogfilter
++++ b/gpMgmt/bin/gplogfilter
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # -*- coding: utf-8 -*-
+ #
+ # gplogfilter [options] [inputfile]...
+diff --git a/gpMgmt/bin/gpmemreport b/gpMgmt/bin/gpmemreport
+index c9a9df5e76..d3e36c7f51 100755
+--- a/gpMgmt/bin/gpmemreport
++++ b/gpMgmt/bin/gpmemreport
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright 2021 VMware, Inc.
+ # SPDX-License-Identifier: Apache-2.0
+diff --git a/gpMgmt/bin/gpmemwatcher b/gpMgmt/bin/gpmemwatcher
+index e99cfd3564..dd8fc4b7ad 100755
+--- a/gpMgmt/bin/gpmemwatcher
++++ b/gpMgmt/bin/gpmemwatcher
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright 2021 VMware, Inc.
+ # SPDX-License-Identifier: Apache-2.0
+diff --git a/gpMgmt/bin/gpmovemirrors b/gpMgmt/bin/gpmovemirrors
+index eda5f226d0..22760982f5 100755
+--- a/gpMgmt/bin/gpmovemirrors
++++ b/gpMgmt/bin/gpmovemirrors
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # Line too long            - pylint: disable=C0301
+ # Invalid name             - pylint: disable=C0103
+ #
+diff --git a/gpMgmt/bin/gppkg b/gpMgmt/bin/gppkg
+index 24a09b2dae..f789e141ee 100755
+--- a/gpMgmt/bin/gppkg
++++ b/gpMgmt/bin/gppkg
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python 
++#!/usr/bin/env python2 
+ #
+ # Copyright (c) Greenplum Inc 2010. All Rights Reserved.
+ #
+diff --git a/gpMgmt/bin/gppylib/commands/base.py b/gpMgmt/bin/gppylib/commands/base.py
+index 138ffc679c..4ac17e982b 100755
+--- a/gpMgmt/bin/gppylib/commands/base.py
++++ b/gpMgmt/bin/gppylib/commands/base.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2008. All Rights Reserved.
+ #
+diff --git a/gpMgmt/bin/gppylib/gparray.py b/gpMgmt/bin/gppylib/gparray.py
+index 4b50da8a5d..d680038228 100755
+--- a/gpMgmt/bin/gppylib/gparray.py
++++ b/gpMgmt/bin/gppylib/gparray.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2008. All Rights Reserved.
+ #
+diff --git a/gpMgmt/bin/gppylib/gpunit b/gpMgmt/bin/gppylib/gpunit
+index 4ea2e2ccea..806c542a2d 100755
+--- a/gpMgmt/bin/gppylib/gpunit
++++ b/gpMgmt/bin/gppylib/gpunit
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#! /usr/bin/env python2
+ 
+ """
+ gpunit is similar to unit2 in python but runs with our GpMgmtTestRunner and GpMgmtTextTestResult.
+diff --git a/gpMgmt/bin/gppylib/operations/initstandby.py b/gpMgmt/bin/gppylib/operations/initstandby.py
+index 1b508aa748..33fc7f574b 100755
+--- a/gpMgmt/bin/gppylib/operations/initstandby.py
++++ b/gpMgmt/bin/gppylib/operations/initstandby.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import os
+ import base64
+diff --git a/gpMgmt/bin/gppylib/system/ComputeCatalogUpdate.py b/gpMgmt/bin/gppylib/system/ComputeCatalogUpdate.py
+index fda2e70b6c..dd3e348a2d 100755
+--- a/gpMgmt/bin/gppylib/system/ComputeCatalogUpdate.py
++++ b/gpMgmt/bin/gppylib/system/ComputeCatalogUpdate.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # Line too long - pylint: disable=C0301
+ # Invalid name  - pylint: disable=C0103
+ 
+diff --git a/gpMgmt/bin/gppylib/unit2 b/gpMgmt/bin/gppylib/unit2
+index 08d1006a20..cc4e857ad4 100755
+--- a/gpMgmt/bin/gppylib/unit2
++++ b/gpMgmt/bin/gppylib/unit2
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#! /usr/bin/env python2
+ 
+ __unittest = True
+ 
+diff --git a/gpMgmt/bin/gprecoverseg b/gpMgmt/bin/gprecoverseg
+index 777852a0ba..7a3fbbf545 100755
+--- a/gpMgmt/bin/gprecoverseg
++++ b/gpMgmt/bin/gprecoverseg
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ """
+ gprecoverseg
+ 
+diff --git a/gpMgmt/bin/gpreload b/gpMgmt/bin/gpreload
+index c2a5765255..cffc4a592d 100755
+--- a/gpMgmt/bin/gpreload
++++ b/gpMgmt/bin/gpreload
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ from gppylib.mainUtils import simple_main
+ from gppylib.operations.reload import GpReload
+diff --git a/gpMgmt/bin/gpscp b/gpMgmt/bin/gpscp
+index 882139c82e..f43cddf0c7 100755
+--- a/gpMgmt/bin/gpscp
++++ b/gpMgmt/bin/gpscp
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ '''
+ gpscp -- scp to multiple hosts at once
+diff --git a/gpMgmt/bin/gpsd b/gpMgmt/bin/gpsd
+index 3599bd1192..1da50c58d3 100755
+--- a/gpMgmt/bin/gpsd
++++ b/gpMgmt/bin/gpsd
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # Copyright (c) 2014 Pivotal inc.
+ 
+ 
+diff --git a/gpMgmt/bin/gpssh b/gpMgmt/bin/gpssh
+index fd8cab3ae0..ef0b81f532 100755
+--- a/gpMgmt/bin/gpssh
++++ b/gpMgmt/bin/gpssh
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ '''
+ gpssh -- ssh access to multiple hosts at once
+diff --git a/gpMgmt/bin/gpssh-exkeys b/gpMgmt/bin/gpssh-exkeys
+index 2eb9acb73c..68a3acb21f 100755
+--- a/gpMgmt/bin/gpssh-exkeys
++++ b/gpMgmt/bin/gpssh-exkeys
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # -*- indent-tabs-mode: nil; tab-width:4 -*-
+ # vim:set tabstop=4 expandtab:
+ '''
+diff --git a/gpMgmt/bin/gpstart b/gpMgmt/bin/gpstart
+index ad9ee9c297..7ad8530d84 100755
+--- a/gpMgmt/bin/gpstart
++++ b/gpMgmt/bin/gpstart
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2008. All Rights Reserved.
+ #
+diff --git a/gpMgmt/bin/gpstate b/gpMgmt/bin/gpstate
+index bbbf8c4383..d0f45d048e 100755
+--- a/gpMgmt/bin/gpstate
++++ b/gpMgmt/bin/gpstate
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Displays system status information
+ #
+diff --git a/gpMgmt/bin/gpstop b/gpMgmt/bin/gpstop
+index 1b1afdbb77..89c974724b 100755
+--- a/gpMgmt/bin/gpstop
++++ b/gpMgmt/bin/gpstop
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2008. All Rights Reserved.
+ #
+diff --git a/gpMgmt/bin/gpsys1 b/gpMgmt/bin/gpsys1
+index e57ebc6c08..44999548a9 100755
+--- a/gpMgmt/bin/gpsys1
++++ b/gpMgmt/bin/gpsys1
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ """
+ gpsys1 -- print system info on a host
+ 
+diff --git a/gpMgmt/bin/lib/gpconfigurenewsegment b/gpMgmt/bin/lib/gpconfigurenewsegment
+index fe4eb85807..b9435d9565 100755
+--- a/gpMgmt/bin/lib/gpconfigurenewsegment
++++ b/gpMgmt/bin/lib/gpconfigurenewsegment
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import datetime
+ import sys
+diff --git a/gpMgmt/bin/lib/gppinggpfdist.py b/gpMgmt/bin/lib/gppinggpfdist.py
+index 419fdaad39..6ba80cb18b 100644
+--- a/gpMgmt/bin/lib/gppinggpfdist.py
++++ b/gpMgmt/bin/lib/gppinggpfdist.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ import sys, httplib, getopt, socket
+ 
+diff --git a/gpMgmt/bin/lib/gpstate.py b/gpMgmt/bin/lib/gpstate.py
+index 33d19e80fc..b9c64dc157 100755
+--- a/gpMgmt/bin/lib/gpstate.py
++++ b/gpMgmt/bin/lib/gpstate.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Recovers Greenplum segment instances that are marked as invalid, if
+ # mirroring is configured and operational
+diff --git a/gpMgmt/bin/lib/multidd b/gpMgmt/bin/lib/multidd
+index 59703f2c92..efa4b2858d 100755
+--- a/gpMgmt/bin/lib/multidd
++++ b/gpMgmt/bin/lib/multidd
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ """
+ multidd - run multiple dd concurrently to determine disk throughput
+ 
+diff --git a/gpMgmt/bin/minirepro b/gpMgmt/bin/minirepro
+index bdeea5911d..27a33ebbd3 100755
+--- a/gpMgmt/bin/minirepro
++++ b/gpMgmt/bin/minirepro
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ '''
+ minirepro utility
+ 
+diff --git a/gpMgmt/sbin/gpcleansegmentdir.py b/gpMgmt/sbin/gpcleansegmentdir.py
+index 29e2b47c8f..b0d54abb5a 100755
+--- a/gpMgmt/sbin/gpcleansegmentdir.py
++++ b/gpMgmt/sbin/gpcleansegmentdir.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2010. All Rights Reserved.
+ #
+diff --git a/gpMgmt/sbin/gpconfig_helper.py b/gpMgmt/sbin/gpconfig_helper.py
+index bac06f4f25..3f1bee8b44 100755
+--- a/gpMgmt/sbin/gpconfig_helper.py
++++ b/gpMgmt/sbin/gpconfig_helper.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2009. All Rights Reserved.
+ #
+diff --git a/gpMgmt/sbin/gpgetstatususingtransition.py b/gpMgmt/sbin/gpgetstatususingtransition.py
+index 5bde9e13ae..fdde978592 100755
+--- a/gpMgmt/sbin/gpgetstatususingtransition.py
++++ b/gpMgmt/sbin/gpgetstatususingtransition.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2010. All Rights Reserved. 
+ #
+diff --git a/gpMgmt/sbin/gpoperation.py b/gpMgmt/sbin/gpoperation.py
+index 2383a807b2..639e2ed1ed 100755
+--- a/gpMgmt/sbin/gpoperation.py
++++ b/gpMgmt/sbin/gpoperation.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ import sys
+ import pickle
+ import traceback
+diff --git a/gpMgmt/sbin/gpsegrecovery.py b/gpMgmt/sbin/gpsegrecovery.py
+index 16b85a3e68..50bc781c5d 100644
+--- a/gpMgmt/sbin/gpsegrecovery.py
++++ b/gpMgmt/sbin/gpsegrecovery.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ 
+ from gppylib.recoveryinfo import RecoveryErrorType
+ from gppylib.commands.pg import PgBaseBackup, PgRewind
+diff --git a/gpMgmt/sbin/gpsegsetuprecovery.py b/gpMgmt/sbin/gpsegsetuprecovery.py
+index 7da69d06f7..adb5a38810 100644
+--- a/gpMgmt/sbin/gpsegsetuprecovery.py
++++ b/gpMgmt/sbin/gpsegsetuprecovery.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ import os
+ 
+ from gppylib import recoveryinfo
+diff --git a/gpMgmt/sbin/gpsegstart.py b/gpMgmt/sbin/gpsegstart.py
+index 0dee2d6f9e..bb2fd8f23c 100755
+--- a/gpMgmt/sbin/gpsegstart.py
++++ b/gpMgmt/sbin/gpsegstart.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # Line too long - pylint: disable=C0301
+ # Invalid name  - pylint: disable=C0103
+ #
+diff --git a/gpMgmt/sbin/gpsegstop.py b/gpMgmt/sbin/gpsegstop.py
+index 5a88775dc2..b4c7fccbd1 100755
+--- a/gpMgmt/sbin/gpsegstop.py
++++ b/gpMgmt/sbin/gpsegstop.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ #
+ # Copyright (c) Greenplum Inc 2008. All Rights Reserved.
+ #
+diff --git a/gpMgmt/sbin/packcore b/gpMgmt/sbin/packcore
+index e65355cd24..9ade7c266e 100755
+--- a/gpMgmt/sbin/packcore
++++ b/gpMgmt/sbin/packcore
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ # Copyright Pivotal 2014
+ 
+ 
+diff --git a/gpMgmt/sbin/seg_update_pg_hba.py b/gpMgmt/sbin/seg_update_pg_hba.py
+index 8ef70ac1a0..e4cd1c6840 100755
+--- a/gpMgmt/sbin/seg_update_pg_hba.py
++++ b/gpMgmt/sbin/seg_update_pg_hba.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ import os
+ import re
+ import sys

@@ -68,7 +68,10 @@ leaves = {
            "flink-historyserver" : "flink",
            "spark-client" : "spark",
            "spark-thriftserver" : "spark",
-           "spark-historyserver" : "spark"
+           "spark-historyserver" : "spark",
+           "ranger-admin" : "ranger-admin",
+           "ranger-usersync" : "ranger-usersync",
+           "ranger-tagsync" : "ranger-tagsync"
 }
 
 # Define the aliases and the list of leaves they correspond to

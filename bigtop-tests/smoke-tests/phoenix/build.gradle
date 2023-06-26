@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 def tests_to_include() {
-  return ["TestPhoenixQueryServer.groovy"];
+  return ["TestPhoenixSimple.groovy"];
 }
 
 sourceSets {

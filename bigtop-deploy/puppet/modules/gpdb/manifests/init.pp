@@ -43,41 +43,13 @@ class gpdb {
       require             => [Class['gpdb::common::prepare_file_structure'], Exec["install_python_packages"]]
     }
 
-    gpdb::server{"stop_if_running":
-      nodes                   => $gpdb::common::nodes,
-      gp_home                 => $gpdb::common::gp_home,
-      db_base_dir             => $gpdb::common::db_base_dir,
-      master_db_port          => $gpdb::common::master_db_port,
-      segment_db_port_prefix  => $gpdb::common::segment_db_port_prefix,
-      require                 => Class['gpdb::common::prepare_db_dirs'],
-      start_or_stop           => stopped,
-    }
-
-    class { 'gpdb::common::configure_master_node':
+    class { 'gpdb::common::start_master_node':
       base_dir            => "$db_base_dir",
       nodes               => $nodes,
       gp_home             => $gp_home,
       master_port         => $master_db_port,
       segment_port_prefix => $segment_db_port_prefix,
       require             => Class['gpdb::common::prepare_db_dirs']
-    }
-
-    class { 'gpdb::common::stop_master_in_admin_mode':
-      base_dir      => "$db_base_dir",
-      nodes         => $nodes,
-      gp_home       => $gp_home,
-      master_port   => $master_db_port,
-      require       => Class['gpdb::common::configure_master_node']
-    }
-
-    gpdb::server{"start":
-      nodes                   => $gpdb::common::nodes,
-      gp_home                 => $gpdb::common::gp_home,
-      db_base_dir             => $gpdb::common::db_base_dir,
-      master_db_port          => $gpdb::common::master_db_port,
-      segment_db_port_prefix  => $gpdb::common::segment_db_port_prefix,
-      require                 => [ Gpdb::Server["stop_if_running"], Class['gpdb::common::stop_master_in_admin_mode'] ],
-      start_or_stop           => running,
     }
 
     class gpadmin_user{
@@ -110,10 +82,18 @@ class gpdb {
       }
       # GPDB requires the following python packages as of v5.28.5. See
       # https://github.com/greenplum-db/gpdb/tree/5X_STABLE#building-greenplum-database-with-gporca.
-      exec { 'install_python_packages':
-        command => "/usr/bin/env pip install -q 'cryptography<3.3' lockfile paramiko psutil",
-        require => [Exec["install_pip"]],
-        timeout => 600,
+      if ($operatingsystem == 'CentOS') {
+        exec { 'install_python_packages':
+          command => "/usr/bin/env pip install -q 'cryptography<3.3' lockfile paramiko psutil",
+          require => [Exec["install_pip"]],
+          timeout => 600,
+        }
+      } else {
+        exec { 'install_python_packages':
+          command => "/usr/bin/env pip install -q lockfile paramiko psutil",
+          require => [Exec["install_pip"]],
+          timeout => 600,
+        }
       }
       package { ["gpdb"]:
         ensure => latest,
@@ -201,6 +181,11 @@ class gpdb {
             line    => "port=${port}",
             require => [Exec["create_master_db${db_dir}"]],
           }
+          file_line { "add 4 conf${db_dir}":
+            path    => "${db_dir}/postgresql.conf",
+            line    => 'logging_collector = off',
+            require => [Exec["create_master_db${db_dir}"]],
+          }
           file { "${db_dir}/gp_dbid":
             content => template('gpdb/gp_dbid'),
             require => [Exec["create_master_db${db_dir}"]],
@@ -215,40 +200,12 @@ class gpdb {
             group   => 'gpadmin',
             mode    => '0700',
           }
-          file { "${db_dir}/postmaster.opts":
-            content => template('gpdb/postmaster.opts'),
-            require => [Exec["create_master_db${db_dir}"]],
-            owner   => 'gpadmin',
-            group   => 'gpadmin',
-            mode    => '0700',
-          }
-          file { "${db_dir}/run.opts":
-            source  => "${db_dir}/postmaster.opts",
-            ensure  => present,
-            require => [File["${db_dir}/postmaster.opts"]],
-            owner   => 'gpadmin',
-            group   => 'gpadmin',
-            mode    => '0700',
-          }
         }
       }
     }
 
-    class stop_master_in_admin_mode($nodes = undef, $base_dir = undef, $gp_home = undef, $master_port = undef){
-      if ($::fqdn == $nodes[0]) {
-        exec { 'stop-master-db-in-admin-mode':
-          command => "stop-db.sh $base_dir/master/gpseg-1 $master_port",
-          path    => '/home/gpadmin',
-          user    => 'gpadmin',
-          require => [
-            Exec["create_master_db$base_dir/master/gpseg-1"],
-            File['/home/gpadmin/stop-db.sh']
-          ],
-        }
-      }
-    }
 
-    class configure_master_node($nodes = undef, $base_dir = undef, $gp_home = undef, $master_port = undef, $segment_port_prefix = undef){
+    class start_master_node($nodes = undef, $base_dir = undef, $gp_home = undef, $master_port = undef, $segment_port_prefix = undef){
       if ($::fqdn == $nodes[0]) {
         notice("must make admin")
         file { '/home/gpadmin/start-master-db-in-admin-mode.sh':
@@ -274,83 +231,39 @@ class gpdb {
             File['/home/gpadmin/start-master-db-in-admin-mode.sh']
           ],
         }
-        file { '/home/gpadmin/insert-to-segmentConfig-table.sh':
-          content => template('gpdb/insert-to-segmentConfig-table.sh'),
+        file { '/home/gpadmin/creat-new-table.sh':
+          content => template('gpdb/creat-new-table.sh'),
           require => [Exec["start-master-db-in-admin-mode"]],
           owner   => 'gpadmin',
           group   => 'gpadmin',
           mode    => '0700',
         }
-        file { '/home/gpadmin/insert-to-faultStrategy-table.sh':
-          content => template('gpdb/insert-to-faultStrategy-table.sh'),
+        file { '/home/gpadmin/insert-to-new-table.sh':
+          content => template('gpdb/insert-to-new-table.sh'),
           require => [Exec["start-master-db-in-admin-mode"]],
           owner   => 'gpadmin',
           group   => 'gpadmin',
           mode    => '0700',
         }
-        exec { "insert-to-faultStrategy-table":
+        exec { "creat-new-table":
           environment => ["PGOPTIONS=-c gp_session_role=utility"],
-          command     => "insert-to-faultStrategy-table.sh",
+          command     => "creat-new-table.sh",
           path        => '/home/gpadmin',
           user        => 'gpadmin',
           require     => [
-            File["/home/gpadmin/insert-to-faultStrategy-table.sh"],
+            File["/home/gpadmin/creat-new-table.sh"],
             Exec['start-master-db-in-admin-mode'],
           ],
         }
-        each($nodes) |$index, $value| {
-          $dbid = $index+1
-          $content = $index-1
-          $hostname = $value
-          if ($dbid == 1){
-            $port = $master_port
-            $db_sub_dir = "master"
-            $m_options = "master"
-            $x_options = "\"-x\" \"0\" \"-c\" \"gp_role=utility\""
-            $z_options = "0"
-          } else{
-            $port = "$segment_port_prefix${content}"
-            $db_sub_dir = "primary"
-            $m_options = "mirrorless"
-            $x_options = ""
-            $z_options = "3"
-          }
-          $db_dir = "$base_dir/${db_sub_dir}/gpseg${content}"
-          notice("${dbid} - ${content} - ${port} - ${hostname} - ${db_dir}")
-          exec { "insert-to-segmentConfig-table${dbid}":
-            environment => ["PGOPTIONS=-c gp_session_role=utility"],
-            command     => "insert-to-segmentConfig-table.sh ${dbid} ${content} ${port} ${value} ${db_dir}",
-            path        => '/home/gpadmin',
-            user        => 'gpadmin',
-            require     => [
-              File["/home/gpadmin/insert-to-segmentConfig-table.sh"],
-              Exec['start-master-db-in-admin-mode'],
-            ],
-          }
-        }
-      }
-    }
-  }
-
-  define server($nodes, $gp_home, $db_base_dir, $master_db_port, $segment_db_port_prefix, $start_or_stop){
-    each($nodes) |$index, $value| {
-      $content = $index-1
-      if ($::fqdn == $value) {
-        if ($index == 0){
-          $db_sub_dir = "master"
-          $port = $master_db_port
-        }else{
-          $db_sub_dir = "primary"
-          $port = "$segment_db_port_prefix${content}"
-        }
-        $db_dir = "$db_base_dir/${db_sub_dir}/gpseg${content}"
-        service { "gpdb${content}${start_or_stop}":
-          provider  => base,
-          ensure    => $start_or_stop,
-          start     => "su -l gpadmin -m $db_dir/run.opts",
-          stop      => "su -l gpadmin -m /home/gpadmin/stop-db.sh $db_dir $port",
-          hasstatus => false,
-          pattern   => "${db_dir}",
+        exec { "insert-to-new-table${dbid}":
+          environment => ["PGOPTIONS=-c gp_session_role=utility"],
+          command     => "insert-to-new-table.sh",
+          path        => '/home/gpadmin',
+          user        => 'gpadmin',
+          require     => [
+            File["/home/gpadmin/insert-to-new-table.sh"],
+            Exec['creat-new-table'],
+          ],
         }
       }
     }

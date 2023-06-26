@@ -25,6 +25,10 @@
 %endif
 %define  debug_package %{nil}
 
+%undefine _auto_set_build_flags
+
+%global __brp_check_rpaths %{nil}
+
 Name: gpdb
 Version: %{gpdb_version}
 Release: %{gpdb_release}

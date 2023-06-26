@@ -14,6 +14,8 @@
 # limitations under the License.
 
 %define kafka_name kafka
+%define kafka_pkg_name kafka%{pkg_name_suffix}
+%define zookeeper_pkg_name zookeeper%{pkg_name_suffix}
 
 %define etc_default %{parent_dir}/etc/default
 
@@ -59,14 +61,14 @@
 # disable repacking jars
 %define __os_install_post %{nil}
 
-Name: kafka
+Name: %{kafka_pkg_name}
 Version: %{kafka_version}
 Release: %{kafka_release}
 Summary: Apache Kafka is publish-subscribe messaging rethought as a distributed commit log.
 URL: http://kafka.apache.org/
 Group: Development/Libraries
 BuildArch: noarch
-Buildroot: %(mktemp -ud %{_tmppath}/%{kafka_name}-%{version}-%{release}-XXXXXX)
+Buildroot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 License: ASL 2.0
 Source0: %{kafka_name}-%{kafka_base_version}.tar.gz
 Source1: do-component-build
@@ -75,7 +77,7 @@ Source3: kafka-server.svc
 Source4: init.d.tmpl
 Source6: kafka.default
 #BIGTOP_PATCH_FILES
-Requires: zookeeper
+Requires: %{zookeeper_pkg_name}
 Requires: bigtop-utils >= 0.7
 Requires(preun): /sbin/service
 
@@ -89,7 +91,7 @@ larger than the capability of any single machine and to allow clusters of co-ord
 %package server
 Summary: Server for kafka
 Group: System/Daemons
-Requires: kafka = %{version}-%{release}
+Requires: %{name} = %{version}-%{release}
 
 # CentOS 5 does not have any dist macro
 # So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
@@ -182,12 +184,11 @@ fi
 
 %files
 %defattr(-,root,root,755)
+%{usr_lib_kafka}
 %{bin_dir}/*
 %config(noreplace) %{etc_kafka_conf_dist}
 %config(noreplace) %{etc_default}/kafka
 %attr(0755,kafka,kafka) %{np_etc_kafka}
-%attr(0755,kafka,kafka) %{usr_lib_kafka}
-%attr(0755,kafka,kafka) %docdir %{doc_kafka}
 %attr(0755,kafka,kafka) %{var_lib_kafka}
 %attr(0755,kafka,kafka) %{np_var_run_kafka}
 %attr(0755,kafka,kafka) %{np_var_log_kafka}

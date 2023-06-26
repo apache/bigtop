@@ -15,6 +15,6 @@
 
 module Puppet::Parser::Functions
     newfunction(:nearest_apache_mirror, :type => :rvalue) do |args|
-        %x( curl --stderr /dev/null https://www.apache.org/dyn/closer.cgi?as_json=1 | grep preferred |cut -d '"' -f 4 | tr -d '\r').chomp
+        'https://archive.apache.org/dist'
     end
 end
