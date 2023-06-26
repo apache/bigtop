@@ -16,7 +16,7 @@
 class bigtop_toolchain::gnupg {
 
   case $operatingsystem {
-    /(?i:(centos|fedora|redhat))/: {
+    /(?i:(centos|fedora|redhat|rocky))/: {
        $pkg = "gnupg2"
        $cmd = "gpg2"
     }

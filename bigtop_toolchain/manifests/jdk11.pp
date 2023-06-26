@@ -22,7 +22,7 @@ class bigtop_toolchain::jdk11 {
         ensure  => present,
       }
     }
-    /(CentOS|Fedora|RedHat)/: {
+    /(CentOS|Fedora|RedHat|Rocky)/: {
       package { 'java-11-openjdk-devel' :
         ensure => present
       }
