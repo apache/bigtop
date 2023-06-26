@@ -440,11 +440,11 @@ getent group ranger >/dev/null || groupadd -r ranger
 getent passwd ranger >/dev/null || useradd -c "Ranger" -s /bin/bash -g ranger -m -d %{var_lib_ranger} ranger 2> /dev/null || :
 
 %post admin
-%{alternatives_cmd} --install %{np_etc_ranger}-admin/conf ranger-admin-conf %{etc_ranger}-admin/conf.dist 30
+%{alternatives_cmd} --install %{np_etc_ranger}/admin/conf ranger-admin-conf %{etc_ranger}/admin/conf.dist 30
 
 %preun admin
 if [ "$1" = 0 ]; then
-        %{alternatives_cmd} --remove ranger-admin-conf %{etc_ranger}-admin/conf.dist || :
+        %{alternatives_cmd} --remove ranger-admin-conf %{etc_ranger}/admin/conf.dist || :
 fi
 
 %pre usersync
@@ -452,14 +452,14 @@ getent group ranger >/dev/null || groupadd -r ranger
 getent passwd ranger >/dev/null || useradd -c "Ranger" -s /bin/bash -g ranger -m -d %{var_lib_ranger}} ranger 2> /dev/null || :
 
 %post usersync
-%{alternatives_cmd} --install %{np_etc_ranger}-usersync/conf ranger-usersync-conf %{etc_ranger}-usersync/conf.dist 30
+%{alternatives_cmd} --install %{np_etc_ranger}/usersync/conf ranger-usersync-conf %{etc_ranger}/usersync/conf.dist 30
 if [ -f %{usr_lib_ranger}-usersync/native/credValidator.uexe ]; then
     chmod u+s %{usr_lib_ranger}-usersync/native/credValidator.uexe
 fi
 
 %preun usersync
 if [ "$1" = 0 ]; then
-        %{alternatives_cmd} --remove ranger-usersync-conf %{etc_ranger}-usersync/conf.dist || :
+        %{alternatives_cmd} --remove ranger-usersync-conf %{etc_ranger}/usersync/conf.dist || :
 fi
 
 %pre kms
@@ -467,11 +467,11 @@ getent group ranger >/dev/null || groupadd -r ranger
 getent passwd ranger >/dev/null || useradd -c "Ranger" -s /bin/bash -g ranger -m -d %{var_lib_ranger} ranger 2> /dev/null || :
 
 %post kms
-%{alternatives_cmd} --install %{np_etc_ranger}-kms/conf ranger-kms-conf %{etc_ranger}-kms/conf.dist 30
+%{alternatives_cmd} --install %{np_etc_ranger}/kms/conf ranger-kms-conf %{etc_ranger}/kms/conf.dist 30
 
 %preun kms
 if [ "$1" = 0 ]; then
-        %{alternatives_cmd} --remove ranger-kms-conf %{etc_ranger}-kms/conf.dist || :
+        %{alternatives_cmd} --remove ranger-kms-conf %{etc_ranger}/kms/conf.dist || :
 fi
 
 %pre tagsync
@@ -479,12 +479,12 @@ getent group ranger >/dev/null || groupadd -r ranger
 getent passwd ranger >/dev/null || useradd -c "Ranger" -s /bin/bash -g ranger -m -d %{var_lib_ranger} ranger 2> /dev/null || :
 
 %post tagsync
-%{alternatives_cmd} --install %{np_etc_ranger}-tagsync/conf ranger-tagsync-conf %{etc_ranger}-tagsync/conf.dist 30
+%{alternatives_cmd} --install %{np_etc_ranger}/tagsync/conf ranger-tagsync-conf %{etc_ranger}/tagsync/conf.dist 30
 
 %preun tagsync
 if [ "$1" = 0 ]; then
-        %{alternatives_cmd} --remove ranger-tagsync-conf %{etc_ranger}-tagsync/conf.dist || :
-
+        %{alternatives_cmd} --remove ranger-tagsync-conf %{etc_ranger}/tagsync/conf.dist || :
+fi
 
 %preun
 
@@ -497,28 +497,28 @@ if [ "$1" = 0 ]; then
 %defattr(-,root,root,755)
 %attr(0775,ranger,ranger) %{var_lib_ranger}
 %attr(0775,ranger,ranger) %{np_var_run_ranger}
-%config(noreplace) %{etc_ranger}-admin/conf.dist
-%attr(0755,ranger,ranger) %{np_etc_ranger}-admin
+%config(noreplace) %{etc_ranger}/admin/conf.dist
+%attr(0755,ranger,ranger) %{np_etc_ranger}/admin
 %{usr_lib_ranger}-admin
 
 %files usersync
 %defattr(-,root,root,755)
 %{usr_lib_ranger}-usersync
 %attr(750,root,ranger) %{usr_lib_ranger}-usersync/native/credValidator.uexe
-%config(noreplace) %{etc_ranger}-usersync/conf.dist
-%attr(0755,ranger,ranger) %{np_etc_ranger}-usersync
+%config(noreplace) %{etc_ranger}/usersync/conf.dist
+%attr(0755,ranger,ranger) %{np_etc_ranger}/usersync
 
 %files kms
 %defattr(-,root,root,755)
 %{usr_lib_ranger}-kms
-%config(noreplace) %{etc_ranger}-kms/conf.dist
-%attr(0755,ranger,ranger) %{np_etc_ranger}-kms
+%config(noreplace) %{etc_ranger}/kms/conf.dist
+%attr(0755,ranger,ranger) %{np_etc_ranger}/kms
 
 %files tagsync
 %defattr(-,root,root,755)
 %{usr_lib_ranger}-tagsync
-%config(noreplace) %{etc_ranger}-tagsync/conf.dist
-%attr(0755,ranger,ranger) %{np_etc_ranger}-tagsync
+%config(noreplace) %{etc_ranger}/tagsync/conf.dist
+%attr(0755,ranger,ranger) %{np_etc_ranger}/tagsync
 
 %files hdfs-plugin
 %defattr(-,root,root,755)
