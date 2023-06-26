@@ -49,17 +49,13 @@ class bigtop_toolchain::renv {
         ]
       }
     }
-    /openEuler/: {
-      $pkgs = [
-        "R",
-        "pandoc"
-      ]
-    }
   }
 
-  package { $pkgs:
-    ensure => installed,
-    before => [Exec["install_r_packages"]]
+  if ($operatingsystem != 'openEuler') {
+    package { $pkgs:
+      ensure => installed,
+      before => [Exec["install_r_packages"]]
+   }
   }
 
   # BIGTOP-3483:
