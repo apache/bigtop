@@ -20,7 +20,7 @@ class bigtop_repo {
   $default_repo = "http://repos.bigtop.apache.org/releases/${bigtop_repo_default_version}/${lower_os}/${operatingsystemmajrelease}/${architecture}"
 
   case $::operatingsystem {
-    /(OracleLinux|Amazon|CentOS|Fedora|RedHat)/: {
+    /(OracleLinux|Amazon|CentOS|Fedora|RedHat|Rocky)/: {
       $baseurls_array = any2array(hiera("bigtop::bigtop_repo_uri", $default_repo))
       each($baseurls_array) |$count, $baseurl| {
         notify { "Baseurl: $baseurl": }
