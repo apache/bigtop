@@ -180,12 +180,11 @@ fi
 
 %files
 %defattr(-,root,root,755)
+%{usr_lib_kafka}
 %{bin_dir}/*
 %config(noreplace) %{etc_kafka_conf_dist}
 %config(noreplace) %{etc_default}/kafka
 %attr(0755,kafka,kafka) %{np_etc_kafka}
-%attr(0755,kafka,kafka) %{usr_lib_kafka}
-%attr(0755,kafka,kafka) %docdir %{doc_kafka}
 %attr(0755,kafka,kafka) %{var_lib_kafka}
 %attr(0755,kafka,kafka) %{np_var_run_kafka}
 %attr(0755,kafka,kafka) %{np_var_log_kafka}
