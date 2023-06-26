@@ -24,9 +24,8 @@ class ranger {
 
   class prerequisites {
     # Before Facter 3.14.17, Rocky Linux 8 is detected as 'RedHat'.
-    # At the time of writing, Facter 3.14.2 is installed on Rocky Linux 8 by default.
     # https://puppet.com/docs/pe/2019.8/osp/release_notes_facter.html#enhancements-3-14-17
-    if ($operatingsystem == 'RedHat' and 0 <= versioncmp($operatingsystemmajrelease, '8')) {
+    if (($operatingsystem == 'RedHat' or $operatingsystem == 'Rocky') and 0 <= versioncmp($operatingsystemmajrelease, '8')) {
       # For some reason, 'python3' doesn't seem to work on Rocky Linux 8.
       $python = 'python36'
     } else {

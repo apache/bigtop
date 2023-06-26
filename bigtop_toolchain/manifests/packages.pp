@@ -15,7 +15,7 @@
 
 class bigtop_toolchain::packages {
   case $operatingsystem{
-    /(?i:(centos|fedora|redhat))/: {
+    /(?i:(centos|fedora|redhat|rocky))/: {
       $_pkgs = [
         "unzip",
         "rsync",
