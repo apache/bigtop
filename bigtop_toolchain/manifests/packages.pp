@@ -215,6 +215,7 @@ class bigtop_toolchain::packages {
        "nc",
        "initscripts",
        "openeuler-lsb",
+       "pcre-devel",
        "rpmdevtools"
       ]
        file { '/usr/bin/python':
