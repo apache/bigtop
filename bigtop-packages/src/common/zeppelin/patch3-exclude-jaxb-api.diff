@@ -1,0 +1,15 @@
+diff --git a/zeppelin-server/pom.xml b/zeppelin-server/pom.xml
+index a724c7a63..3f9d7f7ef 100644
+--- a/zeppelin-server/pom.xml
++++ b/zeppelin-server/pom.xml
+@@ -329,6 +329,10 @@
+           <groupId>ch.qos.reload4j</groupId>
+           <artifactId>reload4j</artifactId>
+         </exclusion>
++        <exclusion>
++          <groupId>javax.xml.bind</groupId>
++          <artifactId>jaxb-api</artifactId>
++        </exclusion>
+       </exclusions>
+     </dependency>
+ 
