@@ -135,7 +135,7 @@ bigtop {
       version {
         base  = '3.5.9'
         pkg   = base
-        release = 2
+        release = 3
       }
       tarball {
         source      = "apache-zookeeper-${version.base}.tar.gz"
@@ -151,7 +151,7 @@ bigtop {
       name    = 'hadoop'
       rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
       relNotes = 'Apache Hadoop'
-      version { base = '3.3.4'; pkg = base; release = 1 }
+      version { base = '3.3.5'; pkg = base; release = 1 }
       tarball { destination = "${name}-${version.base}.tar.gz"
                 source      = "${name}-${version.base}-src.tar.gz" }
       url     { download_path = "/$name/common/$name-${version.base}"
@@ -162,7 +162,7 @@ bigtop {
       name    = 'hbase'
       rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
       relNotes = 'Apache HBase'
-      version { base = '2.4.13'; pkg = base; release = 1 }
+      version { base = '2.4.13'; pkg = base; release = 2 }
       tarball { destination = "${name}-${version.base}.tar.gz"
                 source      = "${name}-${version.base}-src.tar.gz" }
       url     { download_path = "/$name/${version.base}/"
@@ -206,7 +206,7 @@ bigtop {
       name    = 'solr'
       rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
       relNotes = 'Apache Solr'
-      version { base = '8.11.2'; pkg = base; release = 1 }
+      version { base = '8.11.2'; pkg = base; release = 2 }
       tarball { destination = "$name-${version.base}-src.tgz"
                 source      = destination }
       url     { download_path = "lucene/$name/${version.base}"
@@ -301,7 +301,7 @@ bigtop {
       name    = 'kafka'
       rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
       relNotes = 'Apache Kafka'
-      version { base = '2.8.1'; pkg = base; release = 2 }
+      version { base = '2.8.1'; pkg = base; release = 3 }
       tarball { destination = "$name-${version.base}.tar.gz"
                 source      = "$name-${version.base}-src.tgz" }
       url     { download_path = "/$name/${version.base}/"
@@ -331,7 +331,7 @@ bigtop {
     'gpdb' {
       name    = 'gpdb'
       relNotes = 'GreenPlum'
-      version { base = '5.28.5'; pkg = '5.28.5'; release = 1 }
+      version { base = '6.23.4'; pkg = '6.23.4'; release = 1 }
       tarball { destination = "$name-${version.base}.tar.gz"
                 source      = "${version.base}.tar.gz" }
       url     { site = "https://github.com/greenplum-db/gpdb/archive/"
@@ -369,8 +369,9 @@ bigtop {
     }
     'ranger' {
       name    = 'ranger'
+      rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
       relNotes = 'Apache Ranger'
-      version { base = '2.3.0'; pkg = base; release = 1 }
+      version { base = '2.4.0'; pkg = base; release = 1 }
       tarball { destination = "release-$name-${version.base}.tar.gz"
                 source      = destination }
       url     { site = "https://github.com/apache/ranger/archive/refs/tags"
