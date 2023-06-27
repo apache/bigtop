@@ -13,15 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-Source: bigtop-ambari-mpack
-Section: misc
-Priority: extra
-Maintainer: Bigtop <dev@bigtop.apache.org>
-Build-Depends: debhelper (>= 6)
-Standards-Version: 3.8.0
-Homepage: http://ambari.apache.org/
-
-Package: bigtop-ambari-mpack
-Architecture: all
-Depends: openssl, postgresql (>= 8.1), python (>= 2.6) | python2 (>= 2.6), curl
-Description: Ambari Mpack 
+class python {
+    if (($operatingsystem == 'Ubuntu' and 0 <= versioncmp($operatingsystemmajrelease, '22.04'))) {
+        file { '/usr/bin/python':
+          ensure => 'link',
+          target => '/usr/bin/python2',
+        }
+    }
+}
