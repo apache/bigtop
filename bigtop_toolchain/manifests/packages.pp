@@ -216,6 +216,7 @@ class bigtop_toolchain::packages {
        "initscripts",
        "openeuler-lsb",
        "pcre-devel",
+       "texlive",
        "rpmdevtools"
       ]
        file { '/usr/bin/python':
