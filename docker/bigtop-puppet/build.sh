@@ -59,14 +59,13 @@ case "${OS}-${VERSION}" in
     # add initd
     sed -i -e "s|RUN bash /tmp/puppetize.sh|RUN bash /tmp/puppetize.sh\nRUN dnf install -y initscripts|" Dockerfile
     ;;
+  openeuler-22.03*)
+    OPENEULER_OS="${OS}/${OS}"
+    sed -i -e "s|${OS}:${VERSION}|$OPENEULER_OS:${VERSION}|" ./Dockerfile
+    ;;
   *)
     ;;
 esac
-
-if [ $OS == "openeuler" ];then
-  OPENEULER_OS="${OS}/${OS}"
-  sed -i -e "s|${OS}:${VERSION}|$OPENEULER_OS:${VERSION}|" ./Dockerfile
-fi
 
 docker build -t bigtop/puppet:${PREFIX}-${OS}-${VERSION}${ARCH} .
 rm -f Dockerfile puppetize.sh
