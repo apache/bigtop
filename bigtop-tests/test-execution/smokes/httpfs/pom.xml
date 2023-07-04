@@ -22,14 +22,14 @@
   <parent>
     <groupId>org.apache.bigtop.itest</groupId>
     <artifactId>smoke-tests</artifactId>
-    <version>3.2.0</version>
+    <version>3.2.1</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>httpfs-smoke-execution</artifactId>
-  <version>3.2.0</version>
+  <version>3.2.1</version>
   <name>Httpfs smoke test execution</name>
 
   <properties>

@@ -23,13 +23,13 @@
   <parent>
     <groupId>org.apache.bigtop.itest</groupId>
     <artifactId>smoke-tests</artifactId>
-    <version>3.2.0</version>
+    <version>3.2.1</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>hadoop-smoke-execution</artifactId>
-  <version>3.2.0</version>
+  <version>3.2.1</version>
   <name>Hadoop smoke test execution</name>
 
   <properties>

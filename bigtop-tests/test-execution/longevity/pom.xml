@@ -22,7 +22,7 @@
   <parent>
     <groupId>org.apache.bigtop.itest</groupId>
     <artifactId>stacks-common</artifactId>
-    <version>3.2.0</version>
+    <version>3.2.1</version>
     <relativePath>../common/pom.xml</relativePath>
   </parent>
 
@@ -30,7 +30,7 @@
   <groupId>org.apache.bigtop.itest</groupId>
   <artifactId>longevity-tests</artifactId>
   <packaging>pom</packaging>
-  <version>3.2.0</version>
+  <version>3.2.1</version>
   <name>longevity</name>
 
   <properties>

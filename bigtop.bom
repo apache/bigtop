@@ -93,7 +93,7 @@
 
 bigtop {
 /** Base Configuration of the mirror and archives */
-  version = "3.2.0-SNAPSHOT"
+  version = "3.2.1-SNAPSHOT"
   base_version = version.takeWhile { it != '-' }
   stack {
     'jdk' { version = "1." + ( System.getenv('BIGTOP_JDK') ?: "8" ); version_base = version }

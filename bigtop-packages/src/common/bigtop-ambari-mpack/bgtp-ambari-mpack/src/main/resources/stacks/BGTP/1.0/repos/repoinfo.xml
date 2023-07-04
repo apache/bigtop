@@ -18,7 +18,7 @@
 <reposinfo>
   <os family="redhat7">
     <repo>
-      <baseurl>http://repos.bigtop.apache.org/releases/3.2.0/centos/7/$basearch</baseurl>
+      <baseurl>http://repos.bigtop.apache.org/releases/3.2.1/centos/7/$basearch</baseurl>
       <repoid>BGTP-1.0</repoid>
       <reponame>BGTP</reponame>
     </repo>
