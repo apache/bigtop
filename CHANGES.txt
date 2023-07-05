@@ -15,6 +15,35 @@
 
 Bigtop Changelog
 
+* Release 3.2.1 (2023-07-05)
+
+Release Notes - Bigtop - Version 3.2.1
+
+** Sub-task
+    * [BIGTOP-3920] - Upgrade Hadoop to 3.3.5
+
+** Bug
+    * [BIGTOP-3897] - Failed to deploy gpdb on Fedora-36 for arm64/ppc64le
+    * [BIGTOP-3901] - Fix failure of Kerberos deployment on Rocky Linux 8 and Ubuntu 22.04
+    * [BIGTOP-3905] - Update Bigtop-stack-provisioner repo for the latest 3.2.0 release
+    * [BIGTOP-3926] - Fix build failure of Hive against Hadoop 3.3.5
+    * [BIGTOP-3927] - Fix build failure of HBase against Hadoop 3.3.5
+    * [BIGTOP-3929] - Fix build failure of Flink due to transitive dependency on pentaho-aggdesigner-algorithm
+    * [BIGTOP-3930] - Fix deployment failure on Ubuntu 22.04 due to unavailable dependency on python
+    * [BIGTOP-3945] - Fix YCSB build issues for deprecated mapr repo url
+    * [BIGTOP-3946] - Fix build failure of Ambari due to expired certificate of bower repo
+    * [BIGTOP-3947] - Fix build failure of Oozie due to insufficient test scope dependency on hive-service
+    * [BIGTOP-3948] - Fix build failure of Tez due to expired certificate of bower repo
+    * [BIGTOP-3949] - Fix dependency convergence error of Zeppelin
+    * [BIGTOP-3952] - Fix toolchain to download Maven from archive.apache.org instead of dlcdn.apache.org
+    * [BIGTOP-3954] - Fix the version definition in bigtop.bom so that `./gradlew setversion` works
+
+** Improvement
+    * [BIGTOP-3900] - Migrate secure DataNode settings from jsvc to SASL
+    * [BIGTOP-3915] - soft link error about jar of hadoop in {hbase_home}/lib
+    * [BIGTOP-3951] - Fix toolchain to work with the recent version of facter
+
+
 * Release 3.2.0 (2023-01-16)
 
 Release Notes - Bigtop - Version 3.2.0
