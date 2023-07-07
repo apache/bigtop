@@ -51,9 +51,11 @@ class bigtop_toolchain::renv {
     }
   }
 
-  package { $pkgs:
-    ensure => installed,
-    before => [Exec["install_r_packages"]]
+  if ($operatingsystem != 'openEuler') {
+    package { $pkgs:
+      ensure => installed,
+      before => [Exec["install_r_packages"]]
+    }
   }
 
   # BIGTOP-3483:
@@ -61,7 +63,8 @@ class bigtop_toolchain::renv {
   #
   # Then Install required R packages dependency
   if (($operatingsystem == 'Ubuntu' and versioncmp($operatingsystemmajrelease, '18.04') <= 0) or
-      ($operatingsystem == 'Debian' and versioncmp($operatingsystemmajrelease, '10') < 0)) {
+      ($operatingsystem == 'Debian' and versioncmp($operatingsystemmajrelease, '10') < 0) or
+      ($operatingsystem == 'openEuler')) {
     $url = "https://cran.r-project.org/src/base/R-3/"
     $rfile = "R-3.6.3.tar.gz"
     $rdir = "R-3.6.3"
