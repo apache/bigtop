@@ -39,7 +39,7 @@ class bigtop_toolchain::jdk {
         ensure  => present,
       }
     }
-    /(CentOS|Amazon|Fedora|RedHat|Rocky)/: {
+    /(CentOS|Amazon|Fedora|RedHat|Rocky|openEuler)/: {
       package { 'java-1.8.0-openjdk-devel' :
         ensure => present
       }
