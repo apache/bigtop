@@ -15,7 +15,7 @@
 
 class nfs::client::params {
   case "$::operatingsystem $::operatingsystemrelease" {
-    /(CentOS|RedHat) 6/: {
+    /(CentOS|RedHat|openEuler) 6/: {
       $package_names   = [ "rpcbind", "nfs-utils" ]
       $portmap_service = "rpcbind"
       $idmapd_service  = "rpcidmapd"

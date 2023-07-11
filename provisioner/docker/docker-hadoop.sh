@@ -394,6 +394,9 @@ while [ $# -gt 0 ]; do
           *-debian-*|*-ubuntu-*)
             distro=debian
             ;;
+          *-openeuler-*)
+            distro=openeuler
+            ;;
           *)
             echo "Unsupported distro [${image_name}]"
             exit 1
