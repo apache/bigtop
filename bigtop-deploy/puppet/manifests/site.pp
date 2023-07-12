@@ -28,7 +28,6 @@ node default {
     fail("bigtop::roles hiera conf is not of type boolean. It should be set to either true or false")
   }
 
-
   if ($roles_enabled) {
     include node_with_roles
   } else {
