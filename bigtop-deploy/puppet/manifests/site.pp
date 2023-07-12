@@ -24,11 +24,10 @@ if ($provision_repo) {
 node default {
   $roles_enabled = hiera("bigtop::roles_enabled", false)
 
-  if ($operatingsystem != 'openEuler') {
-    if (!is_bool($roles_enabled)) {
-      fail("bigtop::roles hiera conf is not of type boolean. It should be set to either true or false")
-    }
+  if (!is_bool($roles_enabled)) {
+    fail("bigtop::roles hiera conf is not of type boolean. It should be set to either true or false")
   }
+
 
   if ($roles_enabled) {
     include node_with_roles
