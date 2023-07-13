@@ -16,8 +16,6 @@
 docker:
         memory_limit: "4g"
         image: "bigtop/slaves:trunk-openeuler-22.03"
-        #repo: "http://repios.bigtop.apache.org/releases/3.1.0/openEuler/22.03/$basearch"
-repo: "file:///bigtop-home/output/"
 distro: openeuler
 components: [hdfs ,yarn ,mapreduce]
 enable_local_repo: true
