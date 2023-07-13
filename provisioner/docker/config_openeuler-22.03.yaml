@@ -18,7 +18,7 @@ docker:
         image: "bigtop/slaves:trunk-openeuler-22.03"
 
 repo: "http://repios.bigtop.apache.org/releases/3.2.0/openEuler/22.03/$basearch"
-distro: openeuler
+distro: centos
 components: [hdfs ,yarn ,mapreduce]
-enable_local_repo: true
+enable_local_repo: false
 smoke_test_components: [hdfs, yarn, mapreduce]
