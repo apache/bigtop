@@ -41,7 +41,7 @@ class jdk {
         noop => $jdk_preinstalled,
       }
     }
-    /(CentOS|Amazon|Fedora|RedHat|Rocky)/: {
+    /(CentOS|Amazon|Fedora|RedHat|Rocky|openEuler)/: {
       package { 'jdk':
         name => 'java-1.8.0-openjdk-devel',
         ensure => present,
