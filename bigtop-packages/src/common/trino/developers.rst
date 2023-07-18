@@ -25,12 +25,3 @@ commit_hash - [OPTIONAL] a commit hash to reset to.
 Some packages have different names for source directory and source tarball (hbase-0.98.5-src.tar.gz contains hbase-0.98.5 directory). By default source will be fetched in a directory named by tarball { source = TARBALL_SRC } without .t* extension. To explicitly set directory name use the dir option.
 
 When commit_hash specified, the repo to build the package will be reset to the commit hash.
-
-Example for trino:
-
-     name    = 'trino'
-     relNotes = 'trino is an open source distributed SQL query engine'
-     version { base = '345.0'; pkg = base; vdp_version_with_bn = '3.2.2.0-1'; release = 1 }
-     git     { repo = "https://github.trusted.visa.com/opensource/trino.git"
-                                    ref = "345.0"
-                                    dir = "$name-${version.base}.${version.vdp_version_with_bn}" }
