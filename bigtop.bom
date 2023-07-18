@@ -378,5 +378,14 @@ bigtop {
                 archive = site }
       packaging = 'rpm'
     }
+    'trino' {
+      name    = 'trino'
+                      relNotes = 'Trino is an open source distributed SQL query engine'
+                      version { base = '415'; pkg = base; release = 1 }
+                      tarball { destination = "$name-${version.base}-src.tar.gz"
+                                source = "trino-${version.base}.tar.gz" }t
+                      url     { site = "https://github.com/trinodb/trino.git"
+                                archive = site }
+      }
   }
 }

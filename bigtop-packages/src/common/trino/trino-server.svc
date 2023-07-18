@@ -1,0 +1,96 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+TYPE="server"
+DAEMON="trino-${TYPE}"
+DESC="trino ${TYPE}"
+EXEC_PATH="/usr/vdp/current/trino-coordinator/bin/launcher.py"
+SVC_USER="trino"
+WORKING_DIR="$TRINO_HOME"
+DAEMON_FLAGS=""
+CONF_DIR="${TRINO_HOME}/bin"
+PIDFILE="$trino_PID_DIR'/${DAEMON}.pid"
+
+
+generate_home() {
+cat <<'__EOT__'
+
+export TRINO_HOME="/usr/vdp/current/trino/"
+
+__EOT__
+
+}
+
+generate_load_config() {
+
+cat << '__EOT__'
+
+USER="$SVC_USER"
+CONF_DIR="${TRINO_HOME}/bin/"
+. $CONF_DIR/launcher start
+
+trino_PID_DIR="${trino_PID_DIR:-/var/run/trino}"
+trino_LOG_DIR="${HIVE_LOG_DIR:-/var/log/trino}"
+
+install -d -m 0755 -o ${SVC_USER} -g ${SVC_USER} ${trino_LOG_DIR} 1>/dev/null 2>&1 || :
+
+__EOT__
+
+}
+
+generate_start() {
+
+cat <<'__EOT__'
+start() {
+    # node.id
+    sed -i -e "s#ffffffff-ffff-ffff-ffff-ffffffffffff#$(cat /proc/sys/kernel/random/uuid)#" ${CONF_DIR}/node.properties
+
+    [ -x $EXE_FILE ] || exit $ERROR_PROGRAM_NOT_INSTALLED
+    log_success_msg "Starting $DESC (${DAEMON}): "
+
+    checkstatusofproc
+    status=$?
+    if [ "$status" -eq "$STATUS_RUNNING" ]; then
+        log_success_msg "${DESC} is running"
+        exit 0
+    fi
+
+    su -s /bin/bash $SVC_USER -c "${EXEC_PATH} start $DAEMON_FLAGS"
+
+    sleep 3
+
+    checkstatusofproc
+    RETVAL=$?
+    [ $RETVAL -eq $STATUS_RUNNING ] && touch $LOCKFILE
+    return $RETVAL
+}
+__EOT__
+
+}
+
+generate_stop() {
+
+cat <<'__EOT__'
+stop() {
+    log_success_msg "Stopping $DESC (${DAEMON}): "
+    su -s /bin/bash $SVC_USER -c "${EXEC_PATH} stop $DAEMON_FLAGS"
+    RETVAL=$?
+
+    [ $RETVAL -eq $RETVAL_SUCCESS ] && rm -f $LOCKFILE $PIDFILE
+    return $RETVAL
+}
+__EOT__
+
+}

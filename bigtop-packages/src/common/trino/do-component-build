@@ -1,0 +1,48 @@
+#!/bin/bash
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+set -ex
+
+
+. `dirname $0`/bigtop.bom
+mkdir trino-${trino_jar_version}
+wget --user="${PIPER_CUSTOM_USER}" --password="${PIPER_CUSTOM_PASSWORD}" -O java.tar.gz "${trino_java_url}" --no-check-certificate
+tar zxvf java.tar.gz && rm -rf java.tar.gz
+echo JAVA_HOME=`pwd`/`ls | grep "jdk-*"` >> ~/.bash_profile
+source ~/.bash_profile
+
+# Setting versions for trino build
+ # Package Distribution
+mvn versions:set -DgenerateBackupPoms=false -DnewVersion=${trino_jar_version} -Dhadoop.version=${hadoop_jar_version} -Dzookeeper.version=${zookeeper_jar_version} -Dhbase2.version=${hbase_jar_version}
+
+mvn clean -pl !trino-docs install -DskipTests -Dcheckstyle.skipExec -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true
+
+sed -i '$ d' ~/.bash_profile
+rm -rf `pwd`/`ls | grep "jdk-*"`
+
+#To remove jdk11 from environment variables
+source ~/.bash_profile
+. /etc/profile.d/bigtop.sh
+
+mkdir -p build/trino-${trino_jar_version}
+mkdir -p build/trino-cli-${trino_jar_version}
+
+# Server
+tar -C build/trino-${trino_jar_version} --strip-components=1 -xzf trino-server/target/*.tar.gz
+# CLI
+cp -ra trino-cli/target/*-executable.jar build/trino-cli-${trino_jar_version}/trino
+# Validation.txt
+cp validation.txt build/trino-${trino_jar_version}/
