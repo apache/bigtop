@@ -58,6 +58,8 @@
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3954'>BIGTOP-3954</a>] -         Fix the version definition in bigtop.bom so that `./gradlew setversion` works
 </li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3956'>BIGTOP-3956</a>] -         hadoop-deb FAILED on project hadoop-yarn-applications-catalog-webapp
+</li>
 </ul>
                 
 <h2>        Improvement
