@@ -38,6 +38,8 @@ Release Notes - Bigtop - Version 3.2.1
     * [BIGTOP-3952] - Fix toolchain to download Maven from archive.apache.org instead of dlcdn.apache.org
     * [BIGTOP-3954] - Fix the version definition in bigtop.bom so that `./gradlew setversion` works
     * [BIGTOP-3956] - hadoop-deb FAILED on project hadoop-yarn-applications-catalog-webapp
+    * [BIGTOP-3962] - Fix setup failure of Ant due to unresolved gpg public key
+
 
 ** Improvement
     * [BIGTOP-3900] - Migrate secure DataNode settings from jsvc to SASL

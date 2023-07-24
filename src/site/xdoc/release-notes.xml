@@ -60,6 +60,8 @@
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3956'>BIGTOP-3956</a>] -         hadoop-deb FAILED on project hadoop-yarn-applications-catalog-webapp
 </li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3962'>BIGTOP-3962</a>] -         Fix setup failure of Ant due to unresolved gpg public key
+</li>
 </ul>
                 
 <h2>        Improvement
