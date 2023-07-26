@@ -77,7 +77,7 @@ class ranger {
     }
     
     if ($operatingsystem == 'openEuler') {
-      service { 'ranger-admin':
+      exec { 'ranger-admin':
         command => "/usr/sbin/usermod -G root ranger && /sbin/service ranger-admin start",
         require => Exec['systemctl daemon-reload'],
       }
