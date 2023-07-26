@@ -120,7 +120,10 @@ Requires: coreutils, insserv
 
 # CentOS 5 does not have any dist macro
 # So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
-%if %{!?suse_version:1}0 && %{!?mgaversion:1}0
+# using the openeuler-lsb replace redhat-lsb in openEuler
+%if 0%{?openEuler}
+Requires: coreutils, openeuler-lsb
+%elif %{!?suse_version:1}0 && %{!?mgaversion:1}0
 # Required for init scripts
 Requires: coreutils, redhat-lsb
 %endif
@@ -150,7 +153,10 @@ Requires: coreutils, insserv
 
 # CentOS 5 does not have any dist macro
 # So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
-%if %{!?suse_version:1}0 && %{!?mgaversion:1}0
+# using the openeuler-lsb replace redhat-lsb in openEuler
+%if 0%{?openEuler}
+Requires: coreutils, openeuler-lsb
+%elif %{!?suse_version:1}0 && %{!?mgaversion:1}0
 # Required for init scripts
 Requires: coreutils, redhat-lsb
 %endif
@@ -180,7 +186,10 @@ Requires: coreutils, insserv
 
 # CentOS 5 does not have any dist macro
 # So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
-%if %{!?suse_version:1}0 && %{!?mgaversion:1}0
+# using the openeuler-lsb replace redhat-lsb in openEuler
+%if 0%{?openEuler}
+Requires: coreutils, openeuler-lsb
+%elif %{!?suse_version:1}0 && %{!?mgaversion:1}0
 # Required for init scripts
 Requires: coreutils, redhat-lsb
 %endif
@@ -210,7 +219,10 @@ Requires: coreutils, insserv
 
 # CentOS 5 does not have any dist macro
 # So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
-%if %{!?suse_version:1}0 && %{!?mgaversion:1}0
+# using the openeuler-lsb replace redhat-lsb in openEuler
+%if 0%{?openEuler}
+Requires: coreutils, openeuler-lsb
+%elif %{!?suse_version:1}0 && %{!?mgaversion:1}0
 # Required for init scripts
 Requires: coreutils, redhat-lsb
 %endif
@@ -236,12 +248,17 @@ AutoReq: no
 # Required for init scripts
 Requires: coreutils, insserv
 %endif
+
 # CentOS 5 does not have any dist macro
 # So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
-%if %{!?suse_version:1}0 && %{!?mgaversion:1}0
+# using the openeuler-lsb replace redhat-lsb in openEuler
+%if 0%{?openEuler}
+Requires: coreutils, openeuler-lsb
+%elif %{!?suse_version:1}0 && %{!?mgaversion:1}0
 # Required for init scripts
 Requires: coreutils, redhat-lsb
 %endif
+
 %if  0%{?mgaversion}
 Requires: chkconfig, xinetd-simple-services, zlib, initscripts
 %endif
