@@ -13,53 +13,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 class bigtop_toolchain::isal {
-
   require bigtop_toolchain::packages
   $url = "https://github.com/intel/isa-l/archive/refs/tags/v2.29.0.tar.gz"
-
   $isal = "v2.29.0.tar.gz"
   $isaldir = "isa-l-2.29.0"
-
   exec { "download isal":
     cwd     => "/usr/src",
     command => "/usr/bin/wget $url && mkdir -p $isaldir && /bin/tar -xvzf $isal -C $isaldir --strip-components=1",
     creates => "/usr/src/$isaldir",
   }
-
   exec { "install isal":
     cwd     => "/usr/src/$isaldir",
     command => "/usr/src/$isaldir/autogen.sh && /usr/src/$isaldir/configure && /usr/bin/make && /usr/bin/make install",
     require => EXEC["download isal"],
     timeout => 3000
   }
-
-  if ($architecture in ['aarch64', 'ppc64le']) {
-    exec { "download isal":
-    command => "/usr/bin/wget $url && mkdir -p $isaldir && /bin/tar -xvzf $isal -C $isaldir --strip-components=1",
-      creates => "/usr/src/$isaldir",
-    }
-
-    exec { "install isal":
-      cwd     => "/usr/src/$isaldir",
-      command => "/usr/src/$isaldir/autogen.sh && /usr/src/$isaldir/configure && /usr/bin/make && /usr/bin/make install",
-      require => EXEC["download isal"],
-      timeout => 3000
-    }
-  }
-
-  if ($architecture == 'ppc64le') {
-    exec { "download isal":
-      cwd     => "/usr/src",
-      command => "/usr/bin/wget $url && mkdir -p $isaldir && /bin/tar -xvzf $isal -C $isaldir --strip-components=1",
-      creates => "/usr/src/$isaldir",
-    }
-
-    exec { "install isal":
-      cwd     => "/usr/src/$isaldir",
-      command => "/usr/src/$isaldir/autogen.sh && /usr/src/$isaldir/configure && /usr/bin/make && /usr/bin/make install",
-      require => EXEC["download isal"],
-      timeout => 3000
-    }
-  }
-
 }
