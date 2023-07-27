@@ -125,6 +125,7 @@ mkdir build/src
  
 # Build artifacts
 MAVEN_OPTS="-Dzookeeper.version=$ZOOKEEPER_VERSION "
+MAVEN_OPTS+="-Dhbase.profile=2.0 "
 MAVEN_OPTS+="-Dleveldbjni.group=org.fusesource.leveldbjni "
 MAVEN_OPTS+="-DskipTests -DskipITs "
 
