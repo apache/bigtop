@@ -202,6 +202,20 @@ class spark {
       }
     }
 
+    # install R by dnf in openEuler
+    case $architecture{
+      'aarch64' : { $arch= "aarch64"}
+      'x86_64' : { $arch= "x86_64"}
+    }
+
+    if ($operatingsystem == 'openEuler'){
+       exec {"install_R":
+         command => "/usr/bin/dnf install 'dnf-command(config-manager)' -y && /usr/bin/dnf config-manager --add-repo https://repo.oepkgs.net/openeuler/rpm/openEuler-22.03-LTS/extras/$arch && /usr/bin/dnf clean all && /usr/bin/dnf makecache && /usr/bin/dnf install -y R",
+         before  => [Package["spark-sparkr"]],
+         timeout => 6000
+       }
+    }
+
     package { 'spark-sparkr':
       ensure => latest,
     }

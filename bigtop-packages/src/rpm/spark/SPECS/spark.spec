@@ -118,6 +118,8 @@ Summary: Python client for Spark
 Group: Development/Libraries
 %if 0%{?rhel} >= 8
 Requires: %{spark_pkg_name}-core = %{version}-%{release}, python2
+%elif 0%{?openEuler}
+Requires: %{spark_pkg_name}-core = %{version}-%{release}, python3
 %else
 Requires: %{spark_pkg_name}-core = %{version}-%{release}, python
 %endif

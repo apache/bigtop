@@ -30,6 +30,22 @@ BUILD_OPTS="-Divy.home=${HOME}/.ivy2 -Dsbt.ivy.home=${HOME}/.ivy2 -Duser.home=${
             -Dguava.version=27.0-jre \
             $SPARK_BUILD_OPTS"
 
+#add pandoc by wget and install in openEuler
+. /etc/os-release
+OS="$ID"
+
+if [ "${OS}" = "openEuler" ]; then
+  if [ $HOSTTYPE = "aarch64" ]; then
+    wget https://github.com/jgm/pandoc/releases/download/2.19.2/pandoc-2.19.2-linux-arm64.tar.gz
+    tar -xf pandoc-2.19.2-linux-arm64.tar.gz
+    cp -r pandoc-2.19.2/bin/pandoc /usr/bin/
+  else
+    wget https://github.com/jgm/pandoc/releases/download/2.19.2/pandoc-2.19.2-linux-amd64.tar.gz
+    tar -xf pandoc-2.19.2-linux-amd64.tar.gz
+    cp -r pandoc-2.19.2/bin/pandoc /usr/bin/
+  fi
+fi
+
 # BIGTOP-3762
 export MAVEN_OPTS="${MAVEN_OPTS:--Xss64m -Xmx4g -XX:ReservedCodeCacheSize=1g}"
 
