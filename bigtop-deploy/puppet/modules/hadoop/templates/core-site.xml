@@ -164,4 +164,12 @@
     <value>kms://http@<%= @kms_host %>:<%= @kms_port %>/kms</value>
   </property>
 <% end -%>
+
+<% if @hadoop_ssl_hostname_verifier %>
+  <property>
+    <name>hadoop.ssl.hostname.verifier</name>
+    <value><%= @hadoop_ssl_hostname_verifier %></value>
+  </property>
+<% end -%>
+
 </configuration>

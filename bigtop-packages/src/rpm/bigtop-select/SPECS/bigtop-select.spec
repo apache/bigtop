@@ -13,8 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-%define lib_dir /usr/lib/bigtop-select
-%define bin_dir /usr/bin
+%define lib_dir              /usr/lib/bigtop-select
+%define bin_dir              /usr/bin
+%define default_parent_dir   /usr/bigtop/%{bigtop_base_version}
+%if "%{parent_dir}" != ""
+%define default_parent_dir   %{parent_dir}
+%endif
 
 Name: bigtop-select
 Version: %{bigtop_select_version}
@@ -29,7 +33,7 @@ BuildArch:  noarch
 Source0:    install_select.sh
 Source1:    LICENSE
 Source2:    conf-select
-Source3:    bigtop-select
+Source3:    distro-select
 Requires:   bash
 
 # "which" command is needed for a lot of projects.
@@ -51,6 +55,7 @@ install -p -m 755 %{SOURCE1} .
 install -p -m 755 %{SOURCE2} .
 install -p -m 755 %{SOURCE3} .
 
+
 %build
 
 
@@ -58,7 +63,9 @@ install -p -m 755 %{SOURCE3} .
 bash %{SOURCE0} \
   --distro-dir=${RPM_SOURCE_DIR} \
   --build-dir=${PWD} \
-  --prefix=${RPM_BUILD_ROOT}
+  --prefix=${RPM_BUILD_ROOT} \
+  --parent-dir=%{default_parent_dir} \
+  --bigtop-base-version=%{bigtop_base_version}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -69,7 +76,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc LICENSE
 
 %{lib_dir}
-#%{bin_dir}
+%{default_parent_dir}
 
 %changelog
 

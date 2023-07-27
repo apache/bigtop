@@ -60,16 +60,13 @@ override_dh_auto_install:
 	  --system-lib-dir=/usr/lib/ \
 	  --system-include-dir=/usr/include \
 	  --doc-dir=/usr/share/doc/hadoop-doc \
-      --man-dir=/usr/share/man \
-	  --installed-lib-dir=/usr/lib/hadoop
+	  --man-dir=/usr/share/man
 	# Forcing Zookeeper dependency to be on the packaged jar
 	ln -sf /usr/lib/zookeeper/zookeeper.jar debian/tmp/usr/lib/hadoop/lib/zookeeper-[[:digit:]]*.jar
 	# Workaround for BIGTOP-583
 	rm -f debian/tmp/usr/lib/hadoop-*/lib/slf4j-log4j12-*.jar
 	# FIXME: BIGTOP-463
-	mkdir -p debian/tmp/etc/default
-	echo 'export JSVC_HOME=/usr/lib/bigtop-utils' >> debian/hadoop.default
-	cp debian/hadoop.default debian/tmp/etc/default/hadoop
+	# mkdir -p debian/tmp/etc/default
 	# Refactored from install-arch
 	cp debian/hadoop-fuse.default debian/tmp/etc/default/hadoop-fuse
 	mkdir -p debian/tmp/etc/security/limits.d

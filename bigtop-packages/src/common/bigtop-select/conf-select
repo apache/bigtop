@@ -22,16 +22,17 @@ import os
 import re
 import sys
 import errno
+from params import stack_root
 
 # The global prefix and current directory
-root = "/usr/bigtop"
+root = stack_root
 current = root + "/current"
 vconfroot = 'etc'
 lib_root = "usr/lib"
 vconf_name = "conf.dist"
 packages = ("hadoop", "hbase", "hive", "hive-hcatalog",
             "kafka", "oozie", "spark", "tez",
-            "zookeeper", "zeppelin", "flink", "solr")
+            "zookeeper", "zeppelin", "flink", "solr", "ranger-admin", "ranger-usersync", "ranger-tagsync")
 ''' conf link
 /usr/bigtop/3.2.0/usr/lib/${pname}/conf -> /etc/${pname}/conf -> /etc/alternatives/${pname}-conf -> /usr/bigtop/3.2.0/etc/${pname}/conf.dist.0
 '''

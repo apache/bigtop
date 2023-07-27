@@ -26,6 +26,9 @@ export DH_OPTIONS
 
 zookeeper_home=/usr/lib/zookeeper
 hadoop_home=/usr/lib/hadoop
+hadoop_hdfs_path=/usr/lib/hadoop-hdfs
+hadoop_yarn_path=/usr/lib/hadoop-yarn
+hadoop_mapreduce_path=/usr/lib/hadoop-mapreduce
 hbase_pkg_name=hbase
 
 %:
@@ -36,7 +39,6 @@ override_dh_auto_build:
 
 	
 override_dh_auto_install:
-	cp debian/hbase.default debian/${hbase_pkg_name}/etc/default/${hbase_pkg_name}
 	bash -x debian/install_hbase.sh \
 		--build-dir=build \
 		--etc-hbase=/etc/hbase \
@@ -51,16 +53,16 @@ override_dh_auto_install:
 	ln -f -s ${hadoop_home}/client/hadoop-annotations.jar debian/tmp/usr/lib/${hbase_pkg_name}/lib/
 	ln -f -s ${hadoop_home}/client/hadoop-auth.jar debian/tmp/usr/lib/${hbase_pkg_name}/lib/
 	ln -f -s ${hadoop_home}/client/hadoop-common.jar debian/tmp/usr/lib/${hbase_pkg_name}/lib/
-	ln -f -s ${hadoop_home}/client/hadoop-hdfs.jar debian/tmp/usr/lib/${hbase_pkg_name}/lib/
-	ln -f -s ${hadoop_home}/client/hadoop-mapreduce-client-app.jar debian/tmp/usr/lib/${hbase_pkg_name}/lib/
+	ln -f -s ${hadoop_hdfs_path}/hadoop-hdfs.jar debian/tmp/usr/lib/${hbase_pkg_name}/lib/
+	ln -f -s ${hadoop_mapreduce_path}/hadoop-mapreduce-client-app.jar debian/tmp/usr/lib/${hbase_pkg_name}/lib/
 	ln -f -s ${hadoop_home}/client/hadoop-mapreduce-client-common.jar debian/tmp/usr/lib/${hbase_pkg_name}/lib/
 	ln -f -s ${hadoop_home}/client/hadoop-mapreduce-client-core.jar debian/tmp/usr/lib/${hbase_pkg_name}/lib/
 	ln -f -s ${hadoop_home}/client/hadoop-mapreduce-client-jobclient.jar debian/tmp/usr/lib/${hbase_pkg_name}/lib/
-	ln -f -s ${hadoop_home}/client/hadoop-mapreduce-client-shuffle.jar debian/tmp/usr/lib/${hbase_pkg_name}/lib/
+	ln -f -s ${hadoop_mapreduce_path}/hadoop-mapreduce-client-shuffle.jar debian/tmp/usr/lib/${hbase_pkg_name}/lib/
 	ln -f -s ${hadoop_home}/client/hadoop-yarn-api.jar debian/tmp/usr/lib/${hbase_pkg_name}/lib/
 	ln -f -s ${hadoop_home}/client/hadoop-yarn-client.jar debian/tmp/usr/lib/${hbase_pkg_name}/lib/
 	ln -f -s ${hadoop_home}/client/hadoop-yarn-common.jar debian/tmp/usr/lib/${hbase_pkg_name}/lib/
-	ln -f -s ${hadoop_home}/client/hadoop-yarn-server-common.jar debian/tmp/usr/lib/${hbase_pkg_name}/lib/
+	ln -f -s ${hadoop_yarn_path}/hadoop-yarn-server-common.jar debian/tmp/usr/lib/${hbase_pkg_name}/lib/
 	ln -s /var/log/${hbase_pkg_name} debian/tmp/usr/lib/${hbase_pkg_name}/logs
 	ln -s /var/run/${hbase_pkg_name} debian/tmp/usr/lib/${hbase_pkg_name}/pids
 

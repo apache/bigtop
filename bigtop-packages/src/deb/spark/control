@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-Source: spark-core
+Source: spark
 Section: misc
 Priority: extra
 Maintainer: Bigtop <dev@bigtop.apache.org>
@@ -45,7 +45,7 @@ Description: Server for Spark worker
 
 Package: spark-python
 Architecture: all
-Depends: spark-core (= ${source:Version}), python
+Depends: spark-core (= ${source:Version}), python | python2
 Description: Python client for Spark
  Includes PySpark, an interactive Python shell for Spark, and related libraries
 

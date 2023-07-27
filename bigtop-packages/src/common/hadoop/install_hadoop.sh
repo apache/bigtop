@@ -161,7 +161,7 @@ HDFS_DIR=${HDFS_DIR:-/usr/lib/hadoop-hdfs}
 YARN_DIR=${YARN_DIR:-/usr/lib/hadoop-yarn}
 MAPREDUCE_DIR=${MAPREDUCE_DIR:-/usr/lib/hadoop-mapreduce}
 VAR_HDFS=${VAR_HDFS:-/var/lib/hadoop-hdfs}
-VAR_YARN=${VAR_YARN:-/var/lib/hadoop-hdfs}
+VAR_YARN=${VAR_YARN:-/var/lib/hadoop-yarn}
 VAR_MAPREDUCE=${VAR_MAPREDUCE:-/var/lib/hadoop-mapreduce}
 VAR_HTTPFS=${VAR_HTTPFS:-/var/lib/hadoop-httpfs}
 VAR_KMS=${VAR_KMS:-/var/lib/hadoop-kms}
@@ -331,6 +331,38 @@ cp ${DISTRO_DIR}/conf.empty/mapred-site.xml $PREFIX/$ETC_HADOOP/conf.empty
 sed -i -e '/^[^#]/s,^,#,' ${BUILD_DIR}/etc/hadoop/hadoop-env.sh
 cp -r ${BUILD_DIR}/etc/hadoop/* $PREFIX/$ETC_HADOOP/conf.empty
 rm -rf $PREFIX/$ETC_HADOOP/conf.empty/*.cmd
+
+# Install default wrapper
+install -d -m 0755 $PREFIX/$ETC_DEFAULT
+default_hadoop_wrapper=$PREFIX/$ETC_DEFAULT/hadoop
+cat > $default_hadoop_wrapper << EOF
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+export HADOOP_HOME=${HADOOP_DIR}
+
+export HADOOP_LIBEXEC_DIR=${HADOOP_DIR}/libexec
+export HADOOP_CONF_DIR=/etc/hadoop/conf
+
+export HADOOP_COMMON_HOME=${HADOOP_DIR}
+export HADOOP_HDFS_HOME=${HDFS_DIR}
+export HADOOP_MAPRED_HOME=${MAPREDUCE_DIR}
+export HADOOP_YARN_HOME=${YARN_DIR}
+export JSVC_HOME=/usr/lib/bigtop-utils
+EOF
+
+chmod 644 $default_hadoop_wrapper
 
 # docs
 install -d -m 0755 $PREFIX/$DOC_DIR

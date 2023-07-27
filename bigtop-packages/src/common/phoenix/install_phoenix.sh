@@ -118,7 +118,7 @@ cp -r $BUILD_DIR/bin $PREFIX/$LIB_DIR/
 chmod 755 $PREFIX/$BIN_DIR/*.py
 
 cp -a $BUILD_DIR/{LICENSE,NOTICE} $PREFIX/$DOC_DIR/
-cp -ra $BUILD_DIR/examples $PREFIX/$DOC_DIR
+cp -ra $BUILD_DIR/examples $PREFIX/$LIB_DIR/
 
 # Remove the executable bit from jars to avoid lintian warnings
 find $PREFIX/$LIB_DIR -name '*.jar' -exec chmod a-x {} \;

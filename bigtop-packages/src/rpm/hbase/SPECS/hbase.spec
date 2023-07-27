@@ -13,13 +13,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+%define hbase_name hbase
+%define hbase_pkg_name hbase%{pkg_name_suffix}
+%define hadoop_pkg_name hadoop%{pkg_name_suffix}
+%define zookeeper_pkg_name zookeeper%{pkg_name_suffix}
+
 %define etc_default %{parent_dir}/etc/default
 
-%define usr_lib_hbase %{parent_dir}/usr/lib/%{name}
-%define var_lib_hbase %{parent_dir}/var/lib/%{name}
-%define etc_hbase %{parent_dir}/etc/%{name}
+%define usr_lib_hbase %{parent_dir}/usr/lib/%{hbase_name}
+%define var_lib_hbase %{parent_dir}/var/lib/%{hbase_name}
+%define etc_hbase %{parent_dir}/etc/%{hbase_name}
 
 %define usr_lib_hadoop %{parent_dir}/usr/lib/hadoop
+%define usr_lib_hadoop_hdfs %{parent_dir}/usr/lib/hadoop-hdfs
+%define usr_lib_hadoop_mapreduce %{parent_dir}/usr/lib/hadoop-mapreduce
+%define usr_lib_hadoop_yarn %{parent_dir}/usr/lib/hadoop-yarn
 %define usr_lib_zookeeper %{parent_dir}/usr/lib/zookeeper
 
 %define bin_dir %{parent_dir}/%{_bindir}
@@ -27,9 +35,9 @@
 %define doc_dir %{parent_dir}/%{_docdir}
 
 # No prefix directory
-%define np_var_log_hbase /var/log/%{name}
-%define np_var_run_hbase /var/run/%{name}
-%define np_etc_hbase /etc/%{name}
+%define np_var_log_hbase /var/log/%{hbase_name}
+%define np_var_run_hbase /var/run/%{hbase_name}
+%define np_etc_hbase /etc/%{hbase_name}
 
 %define hbase_username hbase
 %define hbase_services master regionserver thrift thrift2 rest
@@ -52,7 +60,7 @@
     /usr/lib/rpm/brp-compress ; \
     %{nil}
 
-%define doc_hbase %{doc_dir}/%{name}
+%define doc_hbase %{doc_dir}/%{hbase_name}
 %global initd_dir %{_sysconfdir}/rc.d
 %define alternatives_cmd update-alternatives
 
@@ -76,7 +84,7 @@
 %endif
 
 
-%define doc_hbase %{doc_dir}/%{name}-%{hbase_version}
+%define doc_hbase %{doc_dir}/%{hbase_name}-%{hbase_version}
 %global initd_dir %{_sysconfdir}/rc.d/init.d
 %define alternatives_cmd alternatives
 
@@ -85,7 +93,7 @@
 # Disable debuginfo package
 %define debug_package %{nil}
 
-Name: hbase
+Name: %{hbase_pkg_name}
 Version: %{hbase_version}
 Release: %{hbase_release}
 Summary: HBase is the Hadoop database. Use it when you need random, realtime read/write access to your Big Data. This project's goal is the hosting of very large tables -- billions of rows X millions of columns -- atop clusters of commodity hardware. 
@@ -93,17 +101,16 @@ URL: http://hbase.apache.org/
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 License: ASL 2.0
-Source0: %{name}-%{hbase_base_version}.tar.gz
+Source0: %{hbase_name}-%{hbase_base_version}.tar.gz
 Source1: do-component-build
 Source2: install_hbase.sh
 Source3: hbase.svc
 Source4: init.d.tmpl
-Source5: hbase.default
 Source6: hbase.nofiles.conf
 Source7: regionserver-init.d.tpl
 #BIGTOP_PATCH_FILES
 Requires: coreutils, /usr/sbin/useradd, /sbin/chkconfig, /sbin/service
-Requires: hadoop-client, zookeeper >= 3.3.1, bigtop-utils >= 0.7
+Requires: %{hadoop_pkg_name}-client, %{zookeeper_pkg_name} >= 3.3.1, bigtop-utils >= 0.7
 
 %if  0%{?mgaversion}
 Requires: bsh-utils
@@ -273,7 +280,7 @@ Requires: /lib/lsb/init-functions
 The Apache HBase REST gateway
 
 %prep
-%setup -n %{name}-%{hbase_base_version}
+%setup -n %{hbase_name}-%{hbase_base_version}
 
 #BIGTOP_PATCH_COMMANDS
 
@@ -296,10 +303,9 @@ bash %{SOURCE2} \
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{etc_default}/
-%__install -m 0644 %{SOURCE5} $RPM_BUILD_ROOT/%{etc_default}/%{name}
 
 %__install -d -m 0755 $RPM_BUILD_ROOT/etc/security/limits.d
-%__install -m 0644 %{SOURCE6} $RPM_BUILD_ROOT/etc/security/limits.d/%{name}.nofiles.conf
+%__install -m 0644 %{SOURCE6} $RPM_BUILD_ROOT/etc/security/limits.d/%{hbase_name}.nofiles.conf
 
 %__install -d  -m 0755  %{buildroot}/%{np_var_log_hbase}
 ln -s %{np_var_log_hbase} %{buildroot}/%{usr_lib_hbase}/logs
@@ -311,7 +317,7 @@ ln -s %{np_var_run_hbase} %{buildroot}/%{usr_lib_hbase}/pids
 
 for service in %{hbase_services}
 do
-    init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{name}-${service}
+    init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{hbase_name}-${service}
     if [[ "$service" = "regionserver" ]] ; then
         # Region servers start from a different template that allows
         # them to run multiple concurrent instances of the daemon
@@ -337,27 +343,27 @@ ln -f -s %{usr_lib_zookeeper}/zookeeper.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
 ln -f -s %{usr_lib_hadoop}/client/hadoop-annotations.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
 ln -f -s %{usr_lib_hadoop}/client/hadoop-auth.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
 ln -f -s %{usr_lib_hadoop}/client/hadoop-common.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
-ln -f -s %{usr_lib_hadoop}/client/hadoop-hdfs.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
-ln -f -s %{usr_lib_hadoop}/client/hadoop-mapreduce-client-app.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
+ln -f -s %{usr_lib_hadoop_hdfs}/hadoop-hdfs.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
+ln -f -s %{usr_lib_hadoop_mapreduce}/hadoop-mapreduce-client-app.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
 ln -f -s %{usr_lib_hadoop}/client/hadoop-mapreduce-client-common.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
 ln -f -s %{usr_lib_hadoop}/client/hadoop-mapreduce-client-core.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
 ln -f -s %{usr_lib_hadoop}/client/hadoop-mapreduce-client-jobclient.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
-ln -f -s %{usr_lib_hadoop}/client/hadoop-mapreduce-client-shuffle.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
+ln -f -s %{usr_lib_hadoop_mapreduce}/hadoop-mapreduce-client-shuffle.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
 ln -f -s %{usr_lib_hadoop}/client/hadoop-yarn-api.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
 ln -f -s %{usr_lib_hadoop}/client/hadoop-yarn-client.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
 ln -f -s %{usr_lib_hadoop}/client/hadoop-yarn-common.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
-ln -f -s %{usr_lib_hadoop}/client/hadoop-yarn-server-common.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
+ln -f -s %{usr_lib_hadoop_yarn}/hadoop-yarn-server-common.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
 
 %pre
 getent group hbase 2>/dev/null >/dev/null || /usr/sbin/groupadd -r hbase
 getent passwd hbase 2>&1 > /dev/null || /usr/sbin/useradd -c "HBase" -s /sbin/nologin -g hbase -r -d /var/lib/hbase hbase 2> /dev/null || :
 
 %post
-%{alternatives_cmd} --install %{np_etc_hbase}/conf %{name}-conf %{etc_hbase}/conf.dist 30
+%{alternatives_cmd} --install %{np_etc_hbase}/conf %{hbase_name}-conf %{etc_hbase}/conf.dist 30
 
 %preun
 if [ "$1" = 0 ]; then
-        %{alternatives_cmd} --remove %{name}-conf %{etc_hbase}/conf.dist || :
+        %{alternatives_cmd} --remove %{hbase_name}-conf %{etc_hbase}/conf.dist || :
 fi
 
 
@@ -389,18 +395,18 @@ fi
 
 %define service_macro() \
 %files %1 \
-%attr(0755,root,root)/%{initd_dir}/%{name}-%1 \
+%attr(0755,root,root)/%{initd_dir}/%{hbase_name}-%1 \
 %post %1 \
-chkconfig --add %{name}-%1 \
+chkconfig --add %{hbase_name}-%1 \
 \
 %preun %1 \
 if [ $1 = 0 ] ; then \
-        service %{name}-%1 stop > /dev/null 2>&1 \
-        chkconfig --del %{name}-%1 \
+        service %{hbase_name}-%1 stop > /dev/null 2>&1 \
+        chkconfig --del %{hbase_name}-%1 \
 fi \
 %postun %1 \
 if [ $1 -ge 1 ]; then \
-        service %{name}-%1 condrestart >/dev/null 2>&1 \
+        service %{hbase_name}-%1 condrestart >/dev/null 2>&1 \
 fi
 %service_macro master
 %service_macro thrift

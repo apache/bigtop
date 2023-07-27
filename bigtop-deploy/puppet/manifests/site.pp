@@ -33,6 +33,8 @@ node default {
   } else {
     include node_with_components
   }
+
+  include python
 }
 
 if versioncmp($::puppetversion,'3.6.1') >= 0 {

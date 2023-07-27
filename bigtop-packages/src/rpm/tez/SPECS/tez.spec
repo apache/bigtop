@@ -13,8 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-%define usr_lib_tez %{parent_dir}/usr/lib/%{name}
-%define etc_tez %{parent_dir}/etc/%{name}
+%define tez_name tez
+%define tez_pkg_name tez%{pkg_name_suffix}
+%define hadoop_pkg_name hadoop%{pkg_name_suffix}
+
+%define usr_lib_tez %{parent_dir}/usr/lib/%{tez_name}
+%define etc_tez %{parent_dir}/etc/%{tez_name}
 
 %define usr_lib_hadoop %{parent_dir}/usr/lib/hadoop
 
@@ -23,9 +27,9 @@
 %define doc_dir %{parent_dir}/%{_docdir}
 
 # No prefix directory
-%define np_var_log_tez /var/log/%{name}
-%define np_var_run_tez /var/run/%{name}
-%define np_etc_tez /etc/%{name}
+%define np_var_log_tez /var/log/%{tez_name}
+%define np_var_run_tez /var/run/%{tez_name}
+%define np_etc_tez /etc/%{tez_name}
 
 %if %{!?suse_version:1}0 && %{!?mgaversion:1}0
 
@@ -48,7 +52,7 @@
 %define suse_check \# Define an empty suse_check for compatibility with older sles
 %endif
 
-%define doc_tez %{doc_dir}/%{name}
+%define doc_tez %{doc_dir}/%{tez_name}
 %define alternatives_cmd update-alternatives
 %define __os_install_post \
     %{suse_check} ; \
@@ -57,12 +61,12 @@
 
 %else
 
-%define doc_tez %{doc_dir}/%{name}-%{tez_version}
+%define doc_tez %{doc_dir}/%{tez_name}-%{tez_version}
 %define alternatives_cmd alternatives
 
 %endif
 
-Name: tez
+Name: %{tez_pkg_name}
 Version: %{tez_version}
 Release: %{tez_release}
 Summary:Apache Tez is the Hadoop enhanced Map/Reduce module.
@@ -70,7 +74,7 @@ URL: http://tez.apache.org
 Group: Development/Libraries
 Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
 License: Apache License v2.0
-Source0: apache-%{name}-%{tez_base_version}-src.tar.gz
+Source0: apache-%{tez_name}-%{tez_base_version}-src.tar.gz
 Source1: do-component-build
 Source2: install_tez.sh
 Source3: tez.1
@@ -79,7 +83,7 @@ Source5: bigtop.bom
 Source6: init.d.tmpl
 #BIGTOP_PATCH_FILES
 BuildArch: noarch
-Requires: hadoop hadoop-hdfs hadoop-yarn hadoop-mapreduce
+Requires: %{hadoop_pkg_name} %{hadoop_pkg_name}-hdfs %{hadoop_pkg_name}-yarn %{hadoop_pkg_name}-mapreduce
 
 %if  0%{?mgaversion}
 Requires: bsh-utils
@@ -94,7 +98,7 @@ which allows for a complex directed-acyclic-graph of tasks for
 processing data. It is currently built atop Apache Hadoop YARN
 
 %prep
-%setup -q -n apache-%{name}-%{tez_base_version}-src
+%setup -q -n apache-%{tez_name}-%{tez_base_version}-src
 
 #BIGTOP_PATCH_COMMANDS
 
@@ -124,11 +128,11 @@ sh %{SOURCE2} \
 
 # Manage configuration symlink
 %post
-%{alternatives_cmd} --install %{np_etc_tez}/conf %{name}-conf %{etc_tez}/conf.dist 30
+%{alternatives_cmd} --install %{np_etc_tez}/conf %{tez_name}-conf %{etc_tez}/conf.dist 30
 
 %preun
 if [ "$1" = 0 ]; then
-        %{alternatives_cmd} --remove %{name}-conf %{etc_tez}/conf.dist || :
+        %{alternatives_cmd} --remove %{tez_name}-conf %{etc_tez}/conf.dist || :
 fi
 
 #######################

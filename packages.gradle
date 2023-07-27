@@ -136,6 +136,7 @@ task "bom-json" (description: "List the components of the stack in json format")
         project: it.value.name,
         pkg: it.value.pkg,
         relNotes: it.value.relNotes,
+        packaging: it.value.packaging,
       ],
       tarball: [
         destination: it.value.tarball.destination,
@@ -168,7 +169,8 @@ task "bom-json" (description: "List the components of the stack in json format")
 task "all-components" (description: "List the components of the stack") doLast {
   println "${project.name} ${config.bigtop.version} stack includes the following components"
   config.bigtop.components.sort().each { label, comp ->
-    println sprintf ('\t%1$s %2$s', comp.name.padRight(20), comp.version.base.padLeft(15))
+    println sprintf('\t%1$s %2$s%3$s', comp.name.padRight(20), comp.version.base.padLeft(15),
+      comp.packaging ? " (${comp.packaging.toUpperCase()} only)" : '')
   }
 }
 
@@ -472,6 +474,16 @@ def genTasks = { target ->
       println "\tNothing to do. Exiting..."
       return
     }
+    def final BIGTOP_BASE_VERSION = "${config.bigtop.base_version}"
+
+    def final PKG_NAME_SUFFIX = config.bigtop.components[target].rpm_pkg_suffix
+    def RPM_PKG_NAME_SUFFIX = PKG_NAME_SUFFIX
+    def GRADLE_PKG_NAME_SUFFIX = PKG_NAME_SUFFIX
+    if (!project.hasProperty("pkgSuffix") || !PKG_NAME_SUFFIX) {
+      RPM_PKG_NAME_SUFFIX = "%{nil}"
+      GRADLE_PKG_NAME_SUFFIX = ""
+    }
+
     def final BIGTOP_BUILD_STAMP = System.getenv('BIGTOP_BUILD_STAMP') ?:
             config.bigtop.components[target].version.release
     def final PKG_BUILD_DIR = config.bigtop.components[target].builddir
@@ -482,7 +494,7 @@ def genTasks = { target ->
     def final BASE_VERSION = config.bigtop.components[target].version.base
     def final HADOOP_VERSION = config.bigtop.components["hadoop"].version.pkg
     def RELEASE_DIST = "rpmbuild --eval '%{?dist}' 2>/dev/null".execute().text.trim().replaceAll("'",'')
-    def SRCRPM="$PKG_OUTPUT_DIR/$PKG_NAME-${PKG_VERSION}-$BIGTOP_BUILD_STAMP${RELEASE_DIST}.src.rpm"
+    def SRCRPM = "$PKG_OUTPUT_DIR/${PKG_NAME}${GRADLE_PKG_NAME_SUFFIX}-${PKG_VERSION}-$BIGTOP_BUILD_STAMP${RELEASE_DIST}.src.rpm"
 
     def final DO_MAVEN_DEPLOY = project.findProperty('doMavenDeploy') == 'true'
     def final MAVEN_DEPLOY_SOURCE = project.findProperty('mavenDeploySource') == 'true'
@@ -490,6 +502,10 @@ def genTasks = { target ->
     def final MAVEN_REPO_URI = project.hasProperty('mavenRepoUri') ? project.property('mavenRepoUri') : null
 
     def final PARENT_DIR = project.hasProperty("parentDir") ? project.property('parentDir') : "%{nil}"
+    def FULL_PARENT_DIR = "${PARENT_DIR}"
+    if (PARENT_DIR != "%{nil}") {
+      FULL_PARENT_DIR = "${PARENT_DIR}/${BIGTOP_BASE_VERSION}"
+    }
 
     def command = [
         '--define', "_topdir $PKG_BUILD_DIR/rpm/",
@@ -500,7 +516,9 @@ def genTasks = { target ->
         '--rebuild', SRCRPM,
         '--define', "do_maven_deploy ${DO_MAVEN_DEPLOY}",
         '--define', "maven_deploy_source ${MAVEN_DEPLOY_SOURCE}",
-        "--define", "parent_dir ${PARENT_DIR}"
+        "--define", "parent_dir ${FULL_PARENT_DIR}",
+        "--define", "bigtop_base_version ${BIGTOP_BASE_VERSION}",
+        "--define", "pkg_name_suffix ${RPM_PKG_NAME_SUFFIX}",
     ]
 
    if (MAVEN_REPO_URI != null) {
@@ -537,6 +555,15 @@ def genTasks = { target ->
     if (new File(config.bigtop.components[target].targetsrpm)?.exists()) {
       println "\tNothing to do. Exiting..."
       return
+    }
+    def final BIGTOP_BASE_VERSION = "${config.bigtop.base_version}"
+
+    def final PKG_NAME_SUFFIX = config.bigtop.components[target].rpm_pkg_suffix
+    def RPM_PKG_NAME_SUFFIX = PKG_NAME_SUFFIX
+    def GRADLE_PKG_NAME_SUFFIX = PKG_NAME_SUFFIX
+    if (!project.hasProperty("pkgSuffix") || !PKG_NAME_SUFFIX) {
+      RPM_PKG_NAME_SUFFIX = "%{nil}"
+      GRADLE_PKG_NAME_SUFFIX = ""
     }
     def final BIGTOP_BUILD_STAMP = System.getenv('BIGTOP_BUILD_STAMP') ?:
             config.bigtop.components[target].version.release
@@ -622,6 +649,7 @@ def genTasks = { target ->
         '--define', "${PKG_NAME_FOR_PKG}_release ${BIGTOP_BUILD_STAMP}%{?dist}",
         '-bs', '--nodeps', "--buildroot=${PKG_BUILD_DIR}/rpm/INSTALL",
         specFileName,
+        '--define', "pkg_name_suffix ${RPM_PKG_NAME_SUFFIX}",
     ]
     exec {
       workingDir BASE_DIR
@@ -631,7 +659,7 @@ def genTasks = { target ->
     mkdir(PKG_OUTPUT_DIR)
     def RELEASE_DIST = "rpmbuild --eval '%{?dist}' 2>/dev/null".execute().text.trim().replaceAll("'",'')
     copy {
-      from "$PKG_BUILD_DIR/rpm/SRPMS/${PKG_NAME}-${PKG_VERSION}-${BIGTOP_BUILD_STAMP}${RELEASE_DIST}.src.rpm"
+      from "$PKG_BUILD_DIR/rpm/SRPMS/${PKG_NAME}${GRADLE_PKG_NAME_SUFFIX}-${PKG_VERSION}-${BIGTOP_BUILD_STAMP}${RELEASE_DIST}.src.rpm"
       into PKG_OUTPUT_DIR
     }
     touchTargetFile(config.bigtop.components[target].targetsrpm)
@@ -652,6 +680,7 @@ def genTasks = { target ->
                   "-POS=[centos-7|fedora-35|debian-10|ubuntu-18.04] " +
                   "-Pprefix=[trunk|1.4.0|1.3.0|1.2.1|...] $target-pkg-ind " +
                   "-Pnexus=[true|false]" +
+                  "[-Ppreferred-java-version=[8|11]]" +
                   "[-Pmvn-cache-volume=[true|false]]",
           group: PACKAGES_GROUP) doLast {
     def _prefix = project.hasProperty("prefix") ? prefix : "trunk"
@@ -660,6 +689,7 @@ def genTasks = { target ->
       logger.warn(_OS + ' requires privileged mode, pass `-Pdocker-run-option="--privileged"` to gradle option')
     }
     def _target_pkg = "$target-pkg"
+    def _preferred_java_version = project.hasProperty("preferred-java-version") ? this.'preferred-java-version' : "8"
     def _mvn_cache_volume = project.hasProperty("mvn-cache-volume") ? this.'mvn-cache-volume' : ""
     def _docker_run_option = project.hasProperty("docker-run-option") ? this.'docker-run-option' : ""
     def additionalConfigKeys = ['git_repo', 'git_ref', 'git_dir', 'git_commit_hash', 'base_version']
@@ -678,6 +708,10 @@ def genTasks = { target ->
     ]
     if ( project.hasProperty("nexus") ) {
       command.add('--nexus')
+    }
+    if ( _preferred_java_version.toInteger() > 8 ) {
+      command.add('--preferred-java-version')
+      command.add( _preferred_java_version)
     }
     if ( project.hasProperty("mvn-cache-volume") ) {
       command.add('--mvn-cache-volume')
@@ -787,7 +821,9 @@ project.afterEvaluate {
   doValidateBOM(config)
   config.bigtop.components.each { component_label, comp ->
     assert component_label == comp.name
-    genTasks(comp.name)
+    if (!comp.packaging || comp.packaging.equalsIgnoreCase(nativePackaging.pkg)) {
+      genTasks(comp.name)
+    }
   }
   // Versions need to be preserved for more than just component:
   //  - there are JDK version requirement

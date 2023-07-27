@@ -26,6 +26,11 @@ class hadoop ($hadoop_security_authentication = "simple",
   $generate_secrets = false,
   $kms_host = undef,
   $kms_port = undef,
+  $hadoop_ssl_hostname_verifier = undef,
+  $hadoop_http_authentication_type = undef,
+  $hadoop_http_authentication_signature_secret = undef,
+  $hadoop_http_authentication_signature_secret_file = "/etc/hadoop/conf/hadoop-http-authentication-signature-secret",
+  $hadoop_http_authentication_cookie_domain = regsubst($fqdn, "^[^\\.]+\\.", ""),
 ) {
 
   include stdlib
@@ -236,10 +241,6 @@ class hadoop ($hadoop_security_authentication = "simple",
       $hadoop_snappy_codec = undef,
       $hadoop_security_authentication = $hadoop::hadoop_security_authentication,
       $kerberos_realm = $hadoop::kerberos_realm,
-      $hadoop_http_authentication_type = undef,
-      $hadoop_http_authentication_signature_secret = undef,
-      $hadoop_http_authentication_signature_secret_file = "/etc/hadoop/conf/hadoop-http-authentication-signature-secret",
-      $hadoop_http_authentication_cookie_domain = regsubst($fqdn, "^[^\\.]+\\.", ""),
       $generate_secrets = $hadoop::generate_secrets,
       $namenode_datanode_registration_ip_hostname_check = undef,
       $kms_host = $hadoop::kms_host,
@@ -316,6 +317,42 @@ class hadoop ($hadoop_security_authentication = "simple",
     file {
       "/etc/hadoop/conf/hdfs-site.xml":
         content => template('hadoop/hdfs-site.xml'),
+        require => [Package["hadoop"]],
+    }
+
+    file {
+      "/etc/hadoop/conf/ssl-client.xml":
+        content => template('hadoop/ssl-client.xml'),
+        owner   => 'root',
+        group   => 'hadoop',
+        mode    => '0660',
+        require => [Package["hadoop"]],
+    }
+
+    file {
+      "/etc/hadoop/conf/ssl-server.xml":
+        content => template('hadoop/ssl-server.xml'),
+        owner   => 'root',
+        group   => 'hadoop',
+        mode    => '0660',
+        require => [Package["hadoop"]],
+    }
+
+    file {
+      "/etc/hadoop/conf/http.keystore":
+        source  => "puppet:///modules/hadoop/http.keystore",
+        owner   => 'root',
+        group   => 'hadoop',
+        mode    => '0660',
+        require => [Package["hadoop"]],
+    }
+
+    file {
+      "/etc/hadoop/conf/http.truststore":
+        source  => "puppet:///modules/hadoop/http.truststore",
+        owner   => 'root',
+        group   => 'hadoop',
+        mode    => '0660',
         require => [Package["hadoop"]],
     }
 
@@ -961,10 +998,10 @@ class hadoop ($hadoop_security_authentication = "simple",
       include hadoop::common_yarn
 
       $hadoop_client_packages = $operatingsystem ? {
-        /(OracleLinux|CentOS|RedHat|Fedora)/  => [ "hadoop-doc", "hadoop-hdfs-fuse", "hadoop-client", "hadoop-libhdfs", "hadoop-debuginfo" ],
-        /(SLES|OpenSuSE)/                     => [ "hadoop-doc", "hadoop-hdfs-fuse", "hadoop-client", "hadoop-libhdfs" ],
-        /(Ubuntu|Debian)/                     => [ "hadoop-doc", "hadoop-hdfs-fuse", "hadoop-client", "libhdfs0-dev"   ],
-        default                               => [ "hadoop-doc", "hadoop-hdfs-fuse", "hadoop-client" ],
+        /(OracleLinux|CentOS|RedHat|Fedora|Rocky)/ => [ "hadoop-doc", "hadoop-hdfs-fuse", "hadoop-client", "hadoop-libhdfs", "hadoop-debuginfo" ],
+        /(SLES|OpenSuSE)/                          => [ "hadoop-doc", "hadoop-hdfs-fuse", "hadoop-client", "hadoop-libhdfs" ],
+        /(Ubuntu|Debian)/                          => [ "hadoop-doc", "hadoop-hdfs-fuse", "hadoop-client", "libhdfs0-dev"   ],
+        default                                    => [ "hadoop-doc", "hadoop-hdfs-fuse", "hadoop-client" ],
       }
 
       package { $hadoop_client_packages:

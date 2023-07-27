@@ -170,11 +170,11 @@ cat > $wrapper <<EOF
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
 
-export ZOOKEEPER_HOME=\${ZOOKEEPER_CONF:-/usr/lib/zookeeper}
+export ZOOKEEPER_HOME=\${ZOOKEEPER_CONF:-${LIB_DIR}}
 export ZOOKEEPER_CONF=\${ZOOKEEPER_CONF:-/etc/zookeeper/conf}
 export CLASSPATH=\$CLASSPATH:\$ZOOKEEPER_CONF:\$ZOOKEEPER_HOME/*:\$ZOOKEEPER_HOME/lib/*
 export ZOOCFGDIR=\${ZOOCFGDIR:-\$ZOOKEEPER_CONF}
-env CLASSPATH=\$CLASSPATH /usr/lib/zookeeper/bin/zkCli.sh "\$@"
+env CLASSPATH=\$CLASSPATH \${ZOOKEEPER_HOME}/bin/zkCli.sh "\$@"
 EOF
 chmod 755 $wrapper
 
@@ -188,7 +188,7 @@ for pairs in zkServer.sh/zookeeper-server zkServer-initialize.sh/zookeeper-serve
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
 
 export ZOOPIDFILE=\${ZOOPIDFILE:-/var/run/zookeeper/zookeeper_server.pid}
-export ZOOKEEPER_HOME=\${ZOOKEEPER_CONF:-/usr/lib/zookeeper}
+export ZOOKEEPER_HOME=\${ZOOKEEPER_CONF:-${LIB_DIR}}
 export ZOOKEEPER_CONF=\${ZOOKEEPER_CONF:-/etc/zookeeper/conf}
 export ZOOCFGDIR=\${ZOOCFGDIR:-\$ZOOKEEPER_CONF}
 export CLASSPATH=\$CLASSPATH:\$ZOOKEEPER_CONF:\$ZOOKEEPER_HOME/*:\$ZOOKEEPER_HOME/lib/*
@@ -196,7 +196,7 @@ export ZOO_LOG_DIR=\${ZOO_LOG_DIR:-/var/log/zookeeper}
 export ZOO_LOG4J_PROP=\${ZOO_LOG4J_PROP:-INFO,ROLLINGFILE}
 export JVMFLAGS=\${JVMFLAGS:--Dzookeeper.log.threshold=INFO}
 export ZOO_DATADIR_AUTOCREATE_DISABLE=\${ZOO_DATADIR_AUTOCREATE_DISABLE:-true}
-env CLASSPATH=\$CLASSPATH /usr/lib/zookeeper/bin/${upstream_script} "\$@"
+env CLASSPATH=\$CLASSPATH \${ZOOKEEPER_HOME}/bin/${upstream_script} "\$@"
 EOF
   chmod 755 $wrapper
 done

@@ -151,6 +151,10 @@
     <name>dfs.block.access.token.enable</name>
     <value>true</value>
   </property>
+  <property>
+    <name>dfs.http.policy</name>
+    <value>HTTPS_ONLY</value>
+  </property>
   
   <!-- NameNode security config -->
   <property>
@@ -215,12 +219,8 @@
     <value>700</value> 
   </property>
   <property>
-    <name>dfs.datanode.address</name>
-    <value>0.0.0.0:1004</value>
-  </property>
-  <property>
-    <name>dfs.datanode.http.address</name>
-    <value>0.0.0.0:1006</value>
+    <name>dfs.data.transfer.protection</name>
+    <value>privacy</value>
   </property>
   <property>
     <name>dfs.datanode.keytab.file</name>

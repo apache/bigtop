@@ -34,6 +34,11 @@ class bigtop_toolchain::ant {
     unless  => "/usr/bin/test -f /usr/src/$ant-bin.tar.gz.asc",
   } ~>
 
+  exec { 'Import KEYS to verify signature':
+    command => "/usr/bin/curl -q $apache_prefix/ant/KEYS | /usr/bin/$bigtop_toolchain::gnupg::cmd --import -",
+    cwd     => "/usr/src",
+  } ->
+
   exec { 'Verify Ant binaries':
     command => "/usr/bin/$bigtop_toolchain::gnupg::cmd -v --verify --auto-key-retrieve --keyserver hkp://keyserver.ubuntu.com $ant-bin.tar.gz.asc",
     cwd     => "/usr/src",
