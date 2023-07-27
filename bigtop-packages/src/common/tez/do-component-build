@@ -33,4 +33,11 @@ BUILD_TEZ_OPTS="clean package \
 -Phadoop28 \
 -DskipTests"
 
+# install tez-ui by bower need the root permissions in openEuler
+. /etc/os-release
+OS="$ID"
+if [ "${OS}" = "openEuler" ]; then
+  sed -i 's|--allow-root=false|--allow-root=true|g'  tez-ui/pom.xml
+fi
+
 mvn ${BUILD_TEZ_OPTS} "$@"
