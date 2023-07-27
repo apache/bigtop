@@ -1,0 +1,78 @@
+diff -Naur apache-ambari-2.7.5-src/ambari-common/src/main/python/ambari_commons/os_check.py apache-ambari-2.7.5-src-openeuler/ambari-common/src/main/python/ambari_commons/os_check.py
+--- apache-ambari-2.7.5-src/ambari-common/src/main/python/ambari_commons/os_check.py	2019-12-13 10:48:37.000000000 +0000
++++ apache-ambari-2.7.5-src-openeuler/ambari-common/src/main/python/ambari_commons/os_check.py	2023-07-24 06:26:20.728000000 +0000
+@@ -77,6 +77,7 @@
+ # Linux specific releases, caching them since they are execution invariants
+ _IS_ORACLE_LINUX = os.path.exists('/etc/oracle-release')
+ _IS_REDHAT_LINUX = os.path.exists('/etc/redhat-release')
++_IS_OPENEULER_LINUX = os.path.exists('/etc/openEuler-release')
+ 
+ OS_RELEASE_FILE = "/etc/os-release"
+ 
+@@ -89,6 +90,9 @@
+ def _is_powerpc():
+   return platform.processor() == 'powerpc' or platform.machine().startswith('ppc')
+ 
++def _is_openEuler_linux():
++  return _IS_OPENEULER_LINUX
++
+ def advanced_check(distribution):
+   distribution = list(distribution)
+   if os.path.exists(OS_RELEASE_FILE):
+@@ -201,6 +205,8 @@
+         distribution = platform.dist()
+       elif _is_redhat_linux():
+         distribution = platform.dist()
++      elif _is_openEuler_linux():
++        distribution = platform.dist('openEuler','22.03','')
+       else:
+         distribution = platform.linux_distribution()
+         
+@@ -258,6 +264,8 @@
+       operatingSystem = 'sles'
+     elif operatingSystem.startswith('red hat enterprise linux'):
+       operatingSystem = 'redhat'
++    elif operatingSystem.startswith('openEuler release 22.03 LTS'):
++      operatingSystem = 'openEuler'
+     elif operatingSystem.startswith('darwin'):
+       operatingSystem = 'mac'
+ 
+@@ -367,6 +375,15 @@
+      This is safe check for redhat family, doesn't generate exception
+     """
+     return OSCheck.is_in_family(OSCheck.get_os_family(), OSConst.REDHAT_FAMILY)
++ 
++  @staticmethod
++  def is_openeuler_family():
++    """
++     Return true if it is so or false if not
++
++     This is safe check for openeuler family, doesn't generate exception
++    """
++    return OSCheck.is_in_family(OSCheck.get_os_family(), OSConst.OPENEULER_FAMILY)
+   
+   @staticmethod
+   def is_in_family(current_family, family):
+diff -Naur apache-ambari-2.7.5-src/ambari-common/src/main/python/ambari_commons/os_utils.py apache-ambari-2.7.5-src-openeuler/ambari-common/src/main/python/ambari_commons/os_utils.py
+--- apache-ambari-2.7.5-src/ambari-common/src/main/python/ambari_commons/os_utils.py	2019-12-13 10:48:37.000000000 +0000
++++ apache-ambari-2.7.5-src-openeuler/ambari-common/src/main/python/ambari_commons/os_utils.py	2023-07-24 06:26:20.728000000 +0000
+@@ -164,6 +164,8 @@
+     ambari_repo_file = "/etc/yum.repos.d/ambari.repo"
+   elif OSCheck.is_suse_family():
+     ambari_repo_file = "/etc/zypp/repos.d/ambari.repo"
++  elif OSCheck.is_openeuler_family():
++    ambari_repo_file = "/etc/yum.repos.d/ambari.repo"
+   elif OSCheck.is_windows_family():
+     ambari_repo_file = os.path.join(os.environ[ChocolateyConsts.CHOCOLATEY_INSTALL_VAR_NAME],
+                                     ChocolateyConsts.CHOCOLATEY_CONFIG_DIR, ChocolateyConsts.CHOCOLATEY_CONFIG_FILENAME)
+diff -Naur apache-ambari-2.7.5-src/ambari-server/src/main/python/ambari_server/utils.py apache-ambari-2.7.5-src-openeuler/ambari-server/src/main/python/ambari_server/utils.py
+--- apache-ambari-2.7.5-src/ambari-server/src/main/python/ambari_server/utils.py        2023-07-26 08:20:14.876732315 +0000
++++ apache-ambari-2.7.5-src-openeuler/ambari-server/src/main/python/ambari_server/utils.py      2023-07-26 08:22:27.891724387 +0000
+@@ -57,6 +57,8 @@
+     return '/etc/rc.d/init.d/postgresql'
+   elif OSCheck.is_suse_family():
+     return '/etc/init.d/postgresql'
++  elif OSCheck.is_openeuler_family():
++    return '/etc/pam.d/postgresql'
+   else:
+     raise Exception("Unsupported OS family '{0}'".format(OSCheck.get_os_family()))
