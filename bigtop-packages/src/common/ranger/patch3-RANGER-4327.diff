@@ -1,0 +1,37 @@
+From eabfa05567270fd2ef98a327f327ff651a5f280e Mon Sep 17 00:00:00 2001
+From: jialiang <jialiangcaimd@gmail.com>
+Date: Wed, 26 Jul 2023 11:38:55 +0800
+Subject: [PATCH] Make ranger hdfs plugin support hadoop 3.3.5 +
+
+---
+ distro/src/main/assembly/hdfs-agent.xml  | 1 +
+ distro/src/main/assembly/plugin-yarn.xml | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/distro/src/main/assembly/hdfs-agent.xml b/distro/src/main/assembly/hdfs-agent.xml
+index 15254c9da..a23b9fca9 100644
+--- a/distro/src/main/assembly/hdfs-agent.xml
++++ b/distro/src/main/assembly/hdfs-agent.xml
+@@ -84,6 +84,7 @@
+         <fileMode>644</fileMode>
+         <includes>
+           <include>commons-lang:commons-lang</include>
++          <include>org.codehaus.jackson:jackson-jaxrs:jar:${codehaus.jackson.version}</include>
+           <include>org.eclipse.jetty:jetty-client:jar:${jetty-client.version}</include>
+           <include>org.apache.httpcomponents:httpmime:jar:${httpcomponents.httpmime.version}</include>
+           <include>org.apache.httpcomponents:httpclient:jar:${httpcomponents.httpclient.version}</include>
+diff --git a/distro/src/main/assembly/plugin-yarn.xml b/distro/src/main/assembly/plugin-yarn.xml
+index c0a8ca3af..7f4a95925 100644
+--- a/distro/src/main/assembly/plugin-yarn.xml
++++ b/distro/src/main/assembly/plugin-yarn.xml
+@@ -54,6 +54,7 @@
+         <fileMode>644</fileMode>
+         <includes>
+           <include>commons-lang:commons-lang:jar:${commons.lang.version}</include>
++          <include>org.codehaus.jackson:jackson-jaxrs:jar:${codehaus.jackson.version}</include>
+           <include>org.eclipse.jetty:jetty-client:jar:${jetty-client.version}</include>
+           <include>org.apache.httpcomponents:httpmime:jar:${httpcomponents.httpmime.version}</include>
+           <include>org.apache.httpcomponents:httpclient:jar:${httpcomponents.httpclient.version}</include>
+-- 
+2.37.0
+
