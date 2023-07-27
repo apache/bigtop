@@ -1,0 +1,12 @@
+diff --git a/distro/src/main/assembly/hive-agent.xml b/distro/src/main/assembly/hive-agent.xml
+index 5bae92ac5..68a037cff 100644
+--- a/distro/src/main/assembly/hive-agent.xml
++++ b/distro/src/main/assembly/hive-agent.xml
+@@ -53,6 +53,7 @@
+         <directoryMode>755</directoryMode>
+         <fileMode>644</fileMode>
+         <includes>
++          <include>org.codehaus.jackson:jackson-jaxrs:jar:${codehaus.jackson.version}</include>
+           <include>org.eclipse.jetty:jetty-client:jar:${jetty-client.version}</include>
+           <include>org.apache.httpcomponents:httpmime:jar:${httpcomponents.httpmime.version}</include>
+           <include>org.apache.httpcomponents:httpclient:jar:${httpcomponents.httpclient.version}</include>
