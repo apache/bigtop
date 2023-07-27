@@ -1,0 +1,13 @@
+diff --git a/pom.xml b/pom.xml
+index cb54806ef5..475b379d1c 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -169,7 +169,7 @@
+     <jdo-api.version>3.0.1</jdo-api.version>
+     <jettison.version>1.1</jettison.version>
+     <jetty.version>9.3.20.v20170531</jetty.version>
+-    <jersey.version>1.19</jersey.version>
++    <jersey.version>1.19.4</jersey.version>
+     <!-- Glassfish jersey is included for Spark client test only -->
+     <glassfish.jersey.version>2.22.2</glassfish.jersey.version>
+     <jline.version>2.12</jline.version>
