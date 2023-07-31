@@ -122,6 +122,7 @@ fi
 if [ -z "$BUNDLE_ISAL" ] ; then
   [ -f /usr/lib/libisal.so ] && BUNDLE_ISAL="-Dbundle.isal=true -Disal.lib=/usr/lib"
   [ -f /usr/lib64/libisal.so ] && BUNDLE_ISAL="-Dbundle.isal=true -Disal.lib=/usr/lib64"
+  [ -f /usr/local/lib/libisal.so ] && BUNDLE_ISAL="-Dbundle.isal=true -Disal.lib=/usr/local/lib/"
   [ -f /usr/lib/${HOSTTYPE}-linux-gnu/libisal.so ] && BUNDLE_ISAL="-Dbundle.isal=true -Disal.lib=/usr/lib/${HOSTTYPE}-linux-gnu"
 fi
 mkdir build
