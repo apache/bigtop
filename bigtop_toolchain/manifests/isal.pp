@@ -24,7 +24,7 @@ class bigtop_toolchain::isal {
   }
   exec { "install isal":
     cwd     => "/usr/src/$isaldir",
-    command => "/usr/src/$isaldir/autogen.sh && /usr/src/$isaldir/configure  --prefix=/usr/local --disable-shared --with-pic && /usr/bin/make && /usr/bin/make install",
+    command => "/usr/src/$isaldir/autogen.sh && /usr/src/$isaldir/configure  --prefix=/usr/local && /usr/bin/make && /usr/bin/make install",
     creates => "/usr/local/bin/$isaldir",
     require => EXEC["download isal"],
     timeout => 3000
