@@ -62,6 +62,8 @@
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3962'>BIGTOP-3962</a>] -         Fix setup failure of Ant due to unresolved gpg public key
 </li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3970'>BIGTOP-3970</a>] -         Fix build failure of Zeppelin due to missing grpc-java-1.26.0 on ppc64le
+</li>
 </ul>
                 
 <h2>        Improvement
