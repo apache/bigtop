@@ -54,12 +54,22 @@ class hadoop_oozie {
       require => Package["oozie"],
     }
 
-    exec { "Oozie DB init":
-      command => "/etc/init.d/oozie init",
-      cwd     => "/var/lib/oozie",
-      creates => "/var/lib/oozie/derby.log",
-      require => Package["oozie"],
-      unless => "/etc/init.d/oozie status",
+    if ($operatingsystem == "openEuler") {
+      exec { "Oozie DB init":
+        command => "/usr/sbin/usermod -G hadoop oozie && /etc/init.d/oozie init",
+        cwd     => "/var/lib/oozie",
+        creates => "/var/lib/oozie/derby.log",
+        require => Package["oozie"],
+        unless => "/etc/init.d/oozie status",
+      }
+    } else {
+      exec { "Oozie DB init":
+        command => "/etc/init.d/oozie init",
+        cwd     => "/var/lib/oozie",
+        creates => "/var/lib/oozie/derby.log",
+        require => Package["oozie"],
+        unless => "/etc/init.d/oozie status",
+      }
     }
 
     service { "oozie":
