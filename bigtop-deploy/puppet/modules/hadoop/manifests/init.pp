@@ -325,7 +325,7 @@ class hadoop ($hadoop_security_authentication = "simple",
         content => template('hadoop/ssl-client.xml'),
         owner   => 'root',
         group   => 'hadoop',
-        mode    => '0660',
+        mode    => '0664',
         require => [Package["hadoop"]],
     }
 
