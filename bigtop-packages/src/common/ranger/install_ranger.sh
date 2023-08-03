@@ -146,7 +146,7 @@ else
     COMPONENT_LIB_DIR=${PREFIX}/${RANGER_COMPONENT_DIR}/tomcat/webapps/kylin/WEB-INF/lib
   elif [ "${RANGER_COMPONENT}" = "elasticsearch" ]; then
     COMPONENT_LIB_DIR=${PREFIX}/${RANGER_COMPONENT_DIR}/plugins
-  elif [ "${RANGER_COMPONENT}" = "presto" ]; then
+  elif [ "${RANGER_COMPONENT}" = "trino" ]; then
     COMPONENT_LIB_DIR=${PREFIX}/${RANGER_COMPONENT_DIR}/plugin/ranger
     if [ ! -d "${COMPONENT_LIB_DIR}" ]; then
       echo "INFO: Creating ${COMPONENT_LIB_DIR}"

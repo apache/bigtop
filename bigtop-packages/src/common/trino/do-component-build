@@ -1,0 +1,41 @@
+#!/bin/bash
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+set -ex
+
+
+. `dirname $0`/bigtop.bom
+mkdir trino
+export trino_java_url=https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_linux-x64_bin.tar.gz
+wget -O java.tar.gz "${trino_java_url}" --no-check-certificate
+tar zxvf java.tar.gz && rm -rf java.tar.gz
+OLD_JAVA=$JAVA_HOME
+echo JAVA_HOME=`pwd`/`ls | grep "jdk-*"` >> ~/.bash_profile
+source ~/.bash_profile
+
+# Setting versions for trino build
+mvn clean -pl !plugin/trino-kafka,!testing/trino-benchto-benchmarks,!docs install -DskipTests -Dcheckstyle.skipExec -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true -Djavax.net.ssl.trustStore=/home/akedia/bigtop/cacerts -Djavax.net.ssl.trustStorePassword=changeit
+sed -i '$ d' ~/.bash_profile
+source ~/.bash_profile
+rm -rf `pwd`/`ls | grep "jdk-*"`
+
+mkdir -p build/trino
+mkdir -p build/trino-cli
+
+# Server
+tar -C build/trino --strip-components=1 -xzf core/trino-server/target/*.tar.gz
+# CLI
+cp -ra client/trino-cli/target/*-executable.jar build/trino-cli/trino

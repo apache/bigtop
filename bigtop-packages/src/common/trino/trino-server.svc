@@ -1,0 +1,125 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+TYPE="server"
+DAEMON="launcher"
+DESC="trino"
+EXEC_PATH="/usr/lib/trino/bin/launcher.py"
+SVC_USER="root"
+WORKING_DIR="$TRINO_HOME"
+DAEMON_FLAGS=""
+CONF_DIR="/usr/lib/trino/etc"
+PIDFILE="/var/trino/data/var/run/${DAEMON}.pid"
+
+
+generate_home() {
+cat <<'__EOT__'
+
+export TRINO_HOME="/usr/lib/trino/"
+
+__EOT__
+
+}
+
+generate_functions() {
+cat <<'__EOT__'
+
+trino_env() {
+    export trino_java_url=https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_linux-x64_bin.tar.gz
+    wget -O /tmp/java.tar.gz "${trino_java_url}" --no-check-certificate
+    tar  -zxvf /tmp/java.tar.gz -C /tmp/
+    #rm -rf /tmp/java.tar.gz
+    export JAVA_HOME=/tmp/jdk-17.0.7
+    echo $JAVA_HOME
+    export PATH=/tmp/jdk-17.0.7/bin:$PATH
+    echo $PATH
+}
+
+__EOT__
+}
+
+generate_load_config() {
+
+cat << '__EOT__'
+
+USER="$SVC_USER"
+CONF_DIR="${TRINO_HOME}/bin/"
+. $CONF_DIR/launcher start
+
+trino_PID_DIR="${trino_PID_DIR:-/var/run/trino}"
+
+__EOT__
+
+}
+
+generate_start() {
+
+cat <<'__EOT__'
+start() {
+    trino_env
+    # node.id
+    sed -i -e "s#ffffffff-ffff-ffff-ffff-ffffffffffff#$(cat /proc/sys/kernel/random/uuid)#" ${CONF_DIR}/node.properties
+
+    [ -x $EXEC_PATH ] || exit $ERROR_PROGRAM_NOT_INSTALLED
+    log_success_msg "Starting $DESC (${DAEMON}): "
+
+    checkstatusofproc
+    status=$?
+    if [ "$status" -eq "$STATUS_RUNNING" ]; then
+        log_success_msg "${DESC} is running"
+        exit 0
+    fi
+
+    runuser -s /bin/bash $SVC_USER -c "${EXEC_PATH} start $DAEMON_FLAGS"
+
+    sleep 3
+
+    checkstatusofproc
+    RETVAL=$?
+    if [ $RETVAL -eq $STATUS_RUNNING ]; then
+          touch $LOCKFILE
+          log_success_msg "Started ${DESC} (${DAEMON}): "
+        else
+          log_failure_msg "Failed to start ${DESC}. Return value: $RETVAL"
+        fi
+
+        return $RETVAL
+}
+__EOT__
+
+}
+
+generate_stop() {
+
+cat <<'__EOT__'
+stop() {
+    log_success_msg "Stopping $DESC (${DAEMON}): "
+    runuser -s /bin/bash $SVC_USER -c "${EXEC_PATH} stop $DAEMON_FLAGS"
+    sleep 3
+    RETVAL=$?
+
+    if [ $RETVAL -eq $RETVAL_SUCCESS ]; then
+          log_success_msg "Stopped ${DESC}: "
+          rm -f $LOCKFILE $PIDFILE
+        else
+          log_failure_msg "Failure to stop ${DESC}. Return value: $RETVAL"
+        fi
+
+        return $RETVAL
+}
+__EOT__
+
+}
+

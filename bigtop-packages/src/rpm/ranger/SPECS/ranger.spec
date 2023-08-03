@@ -31,7 +31,7 @@
 %define usr_lib_sqoop %{parent_dir}/usr/lib/sqoop
 %define usr_lib_kylin %{parent_dir}/usr/lib/kylin
 %define usr_lib_elasticsearch %{parent_dir}/usr/lib/elasticsearch
-%define usr_lib_presto %{parent_dir}/usr/lib/presto
+%define usr_lib_trino %{parent_dir}/usr/lib/trino
 
 %define doc_dir %{parent_dir}/%{_docdir}
 
@@ -392,8 +392,8 @@ AutoReq: no
 %description elasticsearch-plugin
 Ranger ELASTICSEARCH plugin component runs within elasticsearch to provide enterprise security using ranger framework
 
-%package presto-plugin
-Summary: ranger plugin for presto
+%package trino-plugin
+Summary: ranger plugin for trino
 Group: System/Daemons
 # On Rocky 8, find-requires picks up /usr/bin/python, but it's not provided by any package.
 # So installing ranger-*-plugin fails with a "nothing provides /usr/bin/python" message,
@@ -401,8 +401,8 @@ Group: System/Daemons
 # Therefore we disable find-requires for each plugins with the following option.
 AutoReq: no
 
-%description presto-plugin
-Ranger PRESTO plugin component runs within presto to provide enterprise security using ranger framework
+%description trino-plugin
+Ranger trino plugin component runs within trino to provide enterprise security using ranger framework
 
 
 %prep
@@ -421,7 +421,7 @@ bash %{SOURCE1}
 #########################
 %install
 %__rm -rf $RPM_BUILD_ROOT
-for comp in admin usersync kms tagsync hdfs-plugin yarn-plugin hive-plugin hbase-plugin knox-plugin storm-plugin kafka-plugin atlas-plugin sqoop-plugin solr-plugin kylin-plugin elasticsearch-plugin presto-plugin
+for comp in admin usersync kms tagsync hdfs-plugin yarn-plugin hive-plugin hbase-plugin knox-plugin storm-plugin kafka-plugin atlas-plugin sqoop-plugin solr-plugin kylin-plugin elasticsearch-plugin trino-plugin
 do
 	env RANGER_VERSION=%{ranger_base_version} /bin/bash %{SOURCE2} \
   		--prefix=$RPM_BUILD_ROOT \
@@ -580,7 +580,7 @@ fi
 %{usr_lib_ranger}-elasticsearch-plugin
 %{usr_lib_elasticsearch}/plugins
 
-%files presto-plugin
+%files trino-plugin
 %defattr(-,root,root,755)
-%{usr_lib_ranger}-presto-plugin
-%{usr_lib_presto}/plugin/ranger
+%{usr_lib_ranger}-trino-plugin
+%{usr_lib_trino}/plugin/ranger
