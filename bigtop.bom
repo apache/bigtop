@@ -246,6 +246,7 @@ bigtop {
 
     'phoenix' {
       name    = 'phoenix'
+      rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
       relNotes = 'Apache Phoenix: A SQL skin over HBase'
       version { base = "5.1.2"; pkg = base; release = 1 }
       tarball { destination = "$name-${version.base}-src.tar.gz"
