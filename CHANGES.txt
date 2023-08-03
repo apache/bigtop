@@ -42,6 +42,7 @@ Release Notes - Bigtop - Version 3.2.1
     * [BIGTOP-3962] - Fix setup failure of Ant due to unresolved gpg public key
     * [BIGTOP-3966] - Make hive  3.1.3  compatible with hadoop 3.3.5
     * [BIGTOP-3970] - Fix build failure of Zeppelin due to missing grpc-java-1.26.0 on ppc64le
+    * [BIGTOP-3972] - Fix startup failure of Oozie due to permission error on reading ssl-client.xml
 
 
 ** Improvement

@@ -68,6 +68,8 @@
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3970'>BIGTOP-3970</a>] -         Fix build failure of Zeppelin due to missing grpc-java-1.26.0 on ppc64le
 </li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3972'>BIGTOP-3972</a>] -         Fix startup failure of Oozie due to permission error on reading ssl-client.xml
+</li>
 </ul>
                 
 <h2>        Improvement
