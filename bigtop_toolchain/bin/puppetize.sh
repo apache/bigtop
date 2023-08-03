@@ -71,11 +71,13 @@ case ${ID}-${VERSION_ID} in
         dnf config-manager --set-enabled codeready-builder-for-rhel-8-rhui-rpms
         ;;
     openEuler-*)
-        yum -y install hostname curl sudo unzip wget ruby vim patch systemd-devel rng-tools findutils
+        dnf -y install hostname curl sudo unzip wget ruby vim patch systemd-devel rng-tools findutils 'dnf-command(config-manager)'
+        dnf config-manager --add-repo https://repo.oepkgs.net/openeuler/rpm/openEuler-22.03-LTS/extras/$HOSTTYPE
+        dnf clean all
+        dnf makecache
+        echo "gpgcheck=0" >> /etc/yum.repos.d/repo.oepkgs.net_openeuler_rpm_openEuler-22.03-LTS_extras_$HOSTTYPE.repo
         # openEuler ruby version is 3.X,so use puppet-7.22.0.
-        gem install puppet -v 7.22.0
-        gem install xmlrpc
-        gem install sync
+        gem install puppet:7.22.0 xmlrpc sync
         puppet module install puppetlabs-stdlib --version 4.12.0
         #openEuler dnf defaulted is not use module,so comment module in puppet-7.22.0
         sed -i "91c execute([command(:dnf), 'install', '-d', '0', '-e', self.class.error_level, '-y', args])" /usr/local/share/gems/gems/puppet-7.22.0/lib/puppet/provider/package/dnfmodule.rb
