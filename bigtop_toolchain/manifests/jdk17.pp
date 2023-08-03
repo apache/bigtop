@@ -1,4 +1,3 @@
-#!/bin/sh
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -14,27 +13,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -e
+class bigtop_toolchain::jdk17 {
+  $jdk_version = '17.0.2'
+  $jdk_url = "https://download.java.net/java/GA/jdk${jdk_version}/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-${jdk_version}_linux-x64_bin.tar.gz"
+  $download_path = "/tmp/java${jdk_version}.tar.gz"
+  $extract_dir = "/opt/jdk-${jdk_version}"
 
-. `dirname $0`/bigtop.bom
+  exec { 'download_jdk':
+    command => "/usr/bin/wget ${jdk_url} -O ${download_path}",
+    creates => $download_path,
+  }
 
-mvn clean compile package install \
-        -DskipTests=true       \
-        -Dcheckstyle.skip=true \
-        -Djacoco.skip=true     \
-        -Dpmd.skip=true        \
-        -Drat.skip=true        \
-        -Dspotbugs.skip=true   \
-        -Dhadoop.version=${HADOOP_VERSION} \
-        -Dhbase.version=${HBASE_VERSION}   \
-        -Dhive.version=${HIVE_VERSION}     \
-        -Dkafka.version=${KAFKA_VERSION}   \
-        -Dsolr.version=${SOLR_VERSION}     \
-        -Dzookeeper.version=${ZOOKEEPER_VERSION} \
-        "$@"
-
-mkdir build
-for f in target/ranger*.tar.gz
-do
-	tar -C build -xf ${f}
-done
+  exec { 'extract_jdk':
+    command => "/bin/tar -xzf ${download_path} -C /opt",
+    creates => $extract_dir,
+    require => Exec['download_jdk'],
+  }
+}

@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/usr/bin/make -f
+
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -13,28 +14,32 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+# -*- makefile -*-
 
-set -e
+# Uncomment this to turn on verbose mode.
+export DH_VERBOSE=1
 
-. `dirname $0`/bigtop.bom
+# This has to be exported to make some magic below work.
+export DH_OPTIONS
 
-mvn clean compile package install \
-        -DskipTests=true       \
-        -Dcheckstyle.skip=true \
-        -Djacoco.skip=true     \
-        -Dpmd.skip=true        \
-        -Drat.skip=true        \
-        -Dspotbugs.skip=true   \
-        -Dhadoop.version=${HADOOP_VERSION} \
-        -Dhbase.version=${HBASE_VERSION}   \
-        -Dhive.version=${HIVE_VERSION}     \
-        -Dkafka.version=${KAFKA_VERSION}   \
-        -Dsolr.version=${SOLR_VERSION}     \
-        -Dzookeeper.version=${ZOOKEEPER_VERSION} \
-        "$@"
+%:
+	dh $@
 
-mkdir build
-for f in target/ranger*.tar.gz
-do
-	tar -C build -xf ${f}
-done
+override_dh_auto_build:
+	bash debian/do-component-build
+
+svcs=trino-server
+
+$(svcs): debian/init.d.tmpl
+	bash $< debian/$@.svc deb debian/$@.init
+	touch $@
+
+override_dh_auto_install: $(svcs)
+	bash -x debian/install_trino.sh \
+	--build-dir=build/trino-${trino_VERSION} \
+	--doc-dir=/usr/share/doc/trino \
+	--source-dir=debian \
+	--prefix=debian/tmp
+
+	mkdir -p debian/tmp/etc/security/limits.d
+	cp debian/trino.conf debian/tmp/etc/security/limits.d

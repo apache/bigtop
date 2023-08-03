@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -14,27 +14,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -e
+set -ex
+
 
 . `dirname $0`/bigtop.bom
+mkdir trino
+# Apply the Puppet manifest to download and extract JDK
+sudo puppet apply jdk17_download.pp
+# Set JAVA_HOME for this session to the JDK downloaded by the Puppet manifest
+export JAVA_HOME=/opt/jdk-17.0.2
+echo JAVA_HOME=`pwd`/`ls | grep "jdk-*"` >> ~/.bash_profile
+source ~/.bash_profile
 
-mvn clean compile package install \
-        -DskipTests=true       \
-        -Dcheckstyle.skip=true \
-        -Djacoco.skip=true     \
-        -Dpmd.skip=true        \
-        -Drat.skip=true        \
-        -Dspotbugs.skip=true   \
-        -Dhadoop.version=${HADOOP_VERSION} \
-        -Dhbase.version=${HBASE_VERSION}   \
-        -Dhive.version=${HIVE_VERSION}     \
-        -Dkafka.version=${KAFKA_VERSION}   \
-        -Dsolr.version=${SOLR_VERSION}     \
-        -Dzookeeper.version=${ZOOKEEPER_VERSION} \
-        "$@"
+# Setting versions for trino build
+mvn clean -pl !plugin/trino-kafka,!testing/trino-benchto-benchmarks,!docs install -DskipTests -Dcheckstyle.skipExec -Dmaven.wagon.http.ssl.allowall=true
+sed -i '$ d' ~/.bash_profile
+source ~/.bash_profile
+rm -rf `pwd`/`ls | grep "jdk-*"`
 
-mkdir build
-for f in target/ranger*.tar.gz
-do
-	tar -C build -xf ${f}
-done
+mkdir -p build/trino
+mkdir -p build/trino-cli
+
+# Server
+tar -C build/trino --strip-components=1 -xzf core/trino-server/target/*.tar.gz
+# CLI
+cp -ra client/trino-cli/target/*-executable.jar build/trino-cli/trino

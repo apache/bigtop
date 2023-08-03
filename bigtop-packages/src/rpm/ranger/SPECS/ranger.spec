@@ -402,7 +402,7 @@ Group: System/Daemons
 AutoReq: no
 
 %description presto-plugin
-Ranger PRESTO plugin component runs within presto to provide enterprise security using ranger framework
+Ranger presto plugin component runs within presto to provide enterprise security using ranger framework
 
 
 %prep

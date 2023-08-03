@@ -1,4 +1,3 @@
-#!/bin/sh
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -14,27 +13,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -e
+Source: trino
+Section: misc
+Priority: extra
+Maintainer: Bigtop <dev@bigtop.apache.org>
+Build-Depends: debhelper (>= 9)
+Standards-Version: 3.4.5
 
-. `dirname $0`/bigtop.bom
+Package: trino
+Architecture: any
+Depends: adduser, bigtop-utils (>= 0.7)
+Description:
+ trino is an open source distributed SQL query engine for running
+ interactive analytic queries against data sources of all sizes ranging
+ from gigabytes to petabytes.
 
-mvn clean compile package install \
-        -DskipTests=true       \
-        -Dcheckstyle.skip=true \
-        -Djacoco.skip=true     \
-        -Dpmd.skip=true        \
-        -Drat.skip=true        \
-        -Dspotbugs.skip=true   \
-        -Dhadoop.version=${HADOOP_VERSION} \
-        -Dhbase.version=${HBASE_VERSION}   \
-        -Dhive.version=${HIVE_VERSION}     \
-        -Dkafka.version=${KAFKA_VERSION}   \
-        -Dsolr.version=${SOLR_VERSION}     \
-        -Dzookeeper.version=${ZOOKEEPER_VERSION} \
-        "$@"
+Package: trino-server
+Architecture: all
+Depends: trino (= ${source:Version}), python | python2
+Description: Server for trino
+ Server for trino
 
-mkdir build
-for f in target/ranger*.tar.gz
-do
-	tar -C build -xf ${f}
-done
+Package: trino-cli
+Architecture: all
+Depends: trino (= ${source:Version})
+Description: trino CLI
+ trino CLI
