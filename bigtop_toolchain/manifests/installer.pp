@@ -25,6 +25,7 @@ class bigtop_toolchain::installer {
   include bigtop_toolchain::user
   include bigtop_toolchain::renv
   include bigtop_toolchain::grpc
+  include bigtop_toolchain::isal
   Class['bigtop_toolchain::jdk11']->Class['bigtop_toolchain::jdk']
 
   case $::operatingsystem {

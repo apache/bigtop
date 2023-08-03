@@ -63,7 +63,9 @@ class bigtop_toolchain::packages {
         "libffi-devel",
         "krb5-devel",
         "net-tools",
-        "perl-Digest-SHA"
+        "perl-Digest-SHA",
+        "nasm",
+        "yasm"
       ]
 
       if ($operatingsystem == 'Fedora' or $operatingsystemmajrelease !~ /^[0-7]$/) {
@@ -118,7 +120,9 @@ class bigtop_toolchain::packages {
         "libffi48-devel",
         "texlive-latex-bin-bin",
         "libapr1",
-        "libapr1-devel"
+        "libapr1-devel",
+        "nasm",
+        "yasm"
       ]
       # fix package dependencies: BIGTOP-2120 and BIGTOP-2152 and BIGTOP-2471
       exec { '/usr/bin/zypper -n install  --force-resolution krb5 libopenssl-devel libxml2-devel libxslt-devel boost-devel':
@@ -149,7 +153,9 @@ class bigtop_toolchain::packages {
       "snappy-devel",
       "libzstd-devel",
       "bzip2-devel",
-      "libffi-devel"
+      "libffi-devel",
+      "nasm",
+      "yasm"
     ] }
     /(Ubuntu|Debian)/: {
       $_pkgs = [
@@ -209,7 +215,9 @@ class bigtop_toolchain::packages {
         "python-setuptools",
         "libffi-dev",
         "python3-dev",
-        "python2.7-dev"
+        "python2.7-dev",
+        "nasm",
+        "yasm"
       ]
       if (($operatingsystem == 'Ubuntu' and 0 <= versioncmp($operatingsystemmajrelease, '22.04'))) {
         file { '/usr/bin/python':
