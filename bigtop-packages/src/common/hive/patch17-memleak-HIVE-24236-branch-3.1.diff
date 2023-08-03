@@ -1,0 +1,42 @@
+diff --git a/ql/src/test/org/apache/hadoop/hive/metastore/txn/TestTxnHandler.java b/ql/src/test/org/apache/hadoop/hive/metastore/txn/TestTxnHandler.java
+index 9294c2b32c..ec258b5e9d 100644
+--- a/ql/src/test/org/apache/hadoop/hive/metastore/txn/TestTxnHandler.java
++++ b/ql/src/test/org/apache/hadoop/hive/metastore/txn/TestTxnHandler.java
+@@ -1370,21 +1370,25 @@ public void showLocks() throws Exception {
+   @Ignore("Wedges Derby")
+   public void deadlockDetected() throws Exception {
+     LOG.debug("Starting deadlock test");
++
+     if (txnHandler instanceof TxnHandler) {
+       final TxnHandler tHndlr = (TxnHandler)txnHandler;
+       Connection conn = tHndlr.getDbConn(Connection.TRANSACTION_SERIALIZABLE);
+-      Statement stmt = conn.createStatement();
+-      long now = tHndlr.getDbTime(conn);
+-      stmt.executeUpdate("insert into TXNS (txn_id, txn_state, txn_started, txn_last_heartbeat, " +
+-          "txn_user, txn_host) values (1, 'o', " + now + ", " + now + ", 'shagy', " +
+-          "'scooby.com')");
+-      stmt.executeUpdate("insert into HIVE_LOCKS (hl_lock_ext_id, hl_lock_int_id, hl_txnid, " +
+-          "hl_db, hl_table, hl_partition, hl_lock_state, hl_lock_type, hl_last_heartbeat, " +
+-          "hl_user, hl_host) values (1, 1, 1, 'mydb', 'mytable', 'mypartition', '" +
+-          tHndlr.LOCK_WAITING + "', '" + tHndlr.LOCK_EXCLUSIVE + "', " + now + ", 'fred', " +
+-          "'scooby.com')");
+-      conn.commit();
+-      tHndlr.closeDbConn(conn);
++      try {
++        Statement stmt = conn.createStatement();
++        long now = tHndlr.getDbTime(conn);
++        stmt.executeUpdate("INSERT INTO \"TXNS\" (\"TXN_ID\", \"TXN_STATE\", \"TXN_STARTED\", \"TXN_LAST_HEARTBEAT\", " +
++                "txn_user, txn_host) values (1, 'o', " + now + ", " + now + ", 'shagy', " +
++                "'scooby.com')");
++        stmt.executeUpdate("INSERT INTO \"HIVE_LOCKS\" (\"HL_LOCK_EXT_ID\", \"HL_LOCK_INT_ID\", \"HL_TXNID\", " +
++                "\"HL_DB\", \"HL_TABLE\", \"HL_PARTITION\", \"HL_LOCK_STATE\", \"HL_LOCK_TYPE\", \"HL_LAST_HEARTBEAT\", " +
++                "\"HL_USER\", \"HL_HOST\") VALUES (1, 1, 1, 'MYDB', 'MYTABLE', 'MYPARTITION', '" +
++                tHndlr.LOCK_WAITING + "', '" + tHndlr.LOCK_EXCLUSIVE + "', " + now + ", 'fred', " +
++                "'scooby.com')");
++        conn.commit();
++      } finally {
++        tHndlr.closeDbConn(conn);
++      }
+ 
+       final AtomicBoolean sawDeadlock = new AtomicBoolean();
+ 
