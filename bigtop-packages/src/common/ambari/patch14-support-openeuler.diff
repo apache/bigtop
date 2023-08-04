@@ -1,6 +1,6 @@
-diff -Naur apache-ambari-2.7.5-src/ambari-common/src/main/python/ambari_commons/os_check.py apache-ambari-2.7.5-src-openeuler/ambari-common/src/main/python/ambari_commons/os_check.py
+diff -Naur apache-ambari-2.7.5-src/ambari-common/src/main/python/ambari_commons/os_check.py apache-ambari-2.7.5-src-openEuler/ambari-common/src/main/python/ambari_commons/os_check.py
 --- apache-ambari-2.7.5-src/ambari-common/src/main/python/ambari_commons/os_check.py	2019-12-13 10:48:37.000000000 +0000
-+++ apache-ambari-2.7.5-src-openeuler/ambari-common/src/main/python/ambari_commons/os_check.py	2023-07-24 06:26:20.728000000 +0000
++++ apache-ambari-2.7.5-src-openEuler/ambari-common/src/main/python/ambari_commons/os_check.py	2023-08-04 08:41:06.538247662 +0000
 @@ -77,6 +77,7 @@
  # Linux specific releases, caching them since they are execution invariants
  _IS_ORACLE_LINUX = os.path.exists('/etc/oracle-release')
@@ -53,9 +53,9 @@ diff -Naur apache-ambari-2.7.5-src/ambari-common/src/main/python/ambari_commons/
    
    @staticmethod
    def is_in_family(current_family, family):
-diff -Naur apache-ambari-2.7.5-src/ambari-common/src/main/python/ambari_commons/os_utils.py apache-ambari-2.7.5-src-openeuler/ambari-common/src/main/python/ambari_commons/os_utils.py
+diff -Naur apache-ambari-2.7.5-src/ambari-common/src/main/python/ambari_commons/os_utils.py apache-ambari-2.7.5-src-openEuler/ambari-common/src/main/python/ambari_commons/os_utils.py
 --- apache-ambari-2.7.5-src/ambari-common/src/main/python/ambari_commons/os_utils.py	2019-12-13 10:48:37.000000000 +0000
-+++ apache-ambari-2.7.5-src-openeuler/ambari-common/src/main/python/ambari_commons/os_utils.py	2023-07-24 06:26:20.728000000 +0000
++++ apache-ambari-2.7.5-src-openEuler/ambari-common/src/main/python/ambari_commons/os_utils.py	2023-08-04 08:41:06.538247662 +0000
 @@ -164,6 +164,8 @@
      ambari_repo_file = "/etc/yum.repos.d/ambari.repo"
    elif OSCheck.is_suse_family():
@@ -65,9 +65,27 @@ diff -Naur apache-ambari-2.7.5-src/ambari-common/src/main/python/ambari_commons/
    elif OSCheck.is_windows_family():
      ambari_repo_file = os.path.join(os.environ[ChocolateyConsts.CHOCOLATEY_INSTALL_VAR_NAME],
                                      ChocolateyConsts.CHOCOLATEY_CONFIG_DIR, ChocolateyConsts.CHOCOLATEY_CONFIG_FILENAME)
-diff -Naur apache-ambari-2.7.5-src/ambari-server/src/main/python/ambari_server/utils.py apache-ambari-2.7.5-src-openeuler/ambari-server/src/main/python/ambari_server/utils.py
---- apache-ambari-2.7.5-src/ambari-server/src/main/python/ambari_server/utils.py        2023-07-26 08:20:14.876732315 +0000
-+++ apache-ambari-2.7.5-src-openeuler/ambari-server/src/main/python/ambari_server/utils.py      2023-07-26 08:22:27.891724387 +0000
+diff -Naur apache-ambari-2.7.5-src/ambari-common/src/main/python/ambari_commons/resources/os_family.json apache-ambari-2.7.5-src-openEuler/ambari-common/src/main/python/ambari_commons/resources/os_family.json
+--- apache-ambari-2.7.5-src/ambari-common/src/main/python/ambari_commons/resources/os_family.json	2023-08-04 07:39:22.186599350 +0000
++++ apache-ambari-2.7.5-src-openEuler/ambari-common/src/main/python/ambari_commons/resources/os_family.json	2023-08-04 08:43:25.035635479 +0000
+@@ -97,6 +97,14 @@
+           12
+         ]
+       },
++      "openeuler": {
++        "distro": [
++          "openeuler"
++        ],
++        "versions": [
++	  22
++	]
++      },
+       "winsrv": {
+         "distro": [
+           "win2008server",
+diff -Naur apache-ambari-2.7.5-src/ambari-server/src/main/python/ambari_server/utils.py apache-ambari-2.7.5-src-openEuler/ambari-server/src/main/python/ambari_server/utils.py
+--- apache-ambari-2.7.5-src/ambari-server/src/main/python/ambari_server/utils.py	2019-12-13 10:52:14.000000000 +0000
++++ apache-ambari-2.7.5-src-openEuler/ambari-server/src/main/python/ambari_server/utils.py	2023-08-04 08:41:06.538247662 +0000
 @@ -57,6 +57,8 @@
      return '/etc/rc.d/init.d/postgresql'
    elif OSCheck.is_suse_family():
@@ -76,3 +94,4 @@ diff -Naur apache-ambari-2.7.5-src/ambari-server/src/main/python/ambari_server/u
 +    return '/etc/pam.d/postgresql'
    else:
      raise Exception("Unsupported OS family '{0}'".format(OSCheck.get_os_family()))
+ 
