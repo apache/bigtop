@@ -57,6 +57,7 @@ class bigtop_toolchain::renv {
     }
   }
 
+  #BIGTOP-3967: openEuler not support PowerPC currently.
   if ($operatingsystem == 'openEuler'){
     if ($architecture == "aarch64") {
         $url = "https://github.com/jgm/pandoc/releases/download/2.19.2/pandoc-2.19.2-linux-arm64.tar.gz"
