@@ -397,6 +397,12 @@ for conf in conf.pseudo ; do
 done
 cp ${BUILD_DIR}/etc/hadoop/log4j.properties $PREFIX/$ETC_HADOOP/conf.pseudo
 
+# Make a symlink of hadoop-yarn-server-timelineservice-hbase-coprocessor.jar to hadoop-yarn-server-timelineservice-hbase-coprocessor-version.jar
+for x in $PREFIX/$YARN_DIR/timelineservice/hadoop-yarn-server-timelineservice-hbase-coprocessor-[[:digit:]]*.jar ; do
+  x=$(basename $x)
+  ln -s $x  $PREFIX/$YARN_DIR/timelineservice/hadoop-yarn-server-timelineservice-hbase-coprocessor.jar
+done
+
 # FIXME: Provide a convenience link for configuration (HADOOP-7939)
 install -d -m 0755 $PREFIX/$HADOOP_DIR/etc
 ln -s $NP_ETC_HADOOP/conf $PREFIX/$HADOOP_DIR/etc/hadoop
