@@ -93,7 +93,7 @@ fi
 sed -e "s|PREFIX|${PREFIX}|;s|OS|${OS}|;s|VERSION|${VERSION}|" Dockerfile.template | \
   sed -e "s|PUPPET_MODULES|${PUPPET_MODULES}|;s|UPDATE_SOURCE|${UPDATE_SOURCE}|" > Dockerfile
 
-if [ $OS == "openeuler" ];then
+if [ "$OS" = "openeuler" ];then
   sed -i "s|\"include bigtop_toolchain::installer\"|\"include bigtop_toolchain::installer\" --modulepath=/etc/puppet/modules/|g" Dockerfile
 fi
 
