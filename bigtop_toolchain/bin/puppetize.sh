@@ -71,7 +71,7 @@ case ${ID}-${VERSION_ID} in
         dnf config-manager --set-enabled codeready-builder-for-rhel-8-rhui-rpms
         ;;
     openEuler-*)
-        dnf -y install hostname curl sudo unzip wget ruby vim patch systemd-devel rng-tools findutils 'dnf-command(config-manager)'
+        dnf -y install hostname curl sudo unzip wget ruby vim patch systemd-devel rng-tools findutils 'dnf-command(config-manager)' nc initscripts openeuler-lsb psmisc openssl-devel
         dnf config-manager --add-repo https://repo.oepkgs.net/openeuler/rpm/openEuler-22.03-LTS/extras/$HOSTTYPE
         echo "gpgcheck=0" >> /etc/yum.repos.d/repo.oepkgs.net_openeuler_rpm_openEuler-22.03-LTS_extras_$HOSTTYPE.repo
         sed -i "s|enabled=1|enabled=1 \npriority=10|g" /etc/yum.repos.d/openEuler.repo
