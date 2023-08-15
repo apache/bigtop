@@ -831,9 +831,9 @@ class hadoop ($hadoop_security_authentication = "simple",
   define create_storage_dir {
     # change the cgroup of hdfs and yarn from hadoop to root in openeuler,
     # otherwise, the namemode of hdfs has not the permission to create directories during smoke test.
-    if ($operatingsystem == 'openEuler'){
+    if ($operatingsystem == 'openEuler') {
       exec { "mkdir $name":
-        command => "/usr/sbin/usermod -G root yarn && /usr/sbin/usermod -G root hdfs && /bin/mkdir -p $name",
+        command => "/usr/sbin/usermod -G root hdfs && /bin/mkdir -p $name",
         creates => $name,
         user =>"root",
       }
@@ -987,6 +987,13 @@ class hadoop ($hadoop_security_authentication = "simple",
       group => yarn,
       mode => '755',
       require => [Package["hadoop-yarn"]],
+    }
+
+    if ($operatingsystem == 'openEuler') {
+      exec { "usermod yarn":
+        command => "/usr/sbin/usermod -G root yarn",
+        require => Package["hadoop-yarn-nodemanager"],
+      }
     }
   }
 
