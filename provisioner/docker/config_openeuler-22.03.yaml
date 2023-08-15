@@ -15,7 +15,7 @@
 
 docker:
         memory_limit: "4g"
-        image: "bigtop/slaves:trunk-openeuler-22.03"
+        image: "bigtop/puppet:trunk-openeuler-22.03"
 
 repo: "http://repios.bigtop.apache.org/releases/3.2.0/openEuler/22.03/$basearch"
 distro: centos
