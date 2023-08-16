@@ -43,17 +43,41 @@ Source2: install_gpdb.sh
 Source3: do-component-configure
 #BIGTOP_PATCH_FILES
 AutoReqProv: %{autorequire}
+%if 0%{?openEuler}
+Requires: bigtop-utils >= 0.7, gcc, libffi-devel, make, openssl-devel, python3-devel
+%else
 Requires: bigtop-utils >= 0.7, gcc, libffi-devel, make, openssl-devel, python2-devel
+%endif
 
 %description
 gpdb
 
 %prep
+%if 0%{?openEuler}
+sed -i "s/python2/python3/g" $RPM_SOURCE_DIR/patch1-specify-python-version.diff 
+sed -i "s/python3.7/python2.7/g" $RPM_SOURCE_DIR/patch1-specify-python-version.diff
+%endif
+
 %setup -n %{name}-%{gpdb_base_version}
 
 #BIGTOP_PATCH_COMMANDS
 
 %build
+%if 0%{?openEuler}
+rm gpMgmt/bin/pythonSrc/PyGreSQL-4.0 -rf
+cd gpMgmt/bin/pythonSrc/
+wget https://github.com/PyGreSQL/PyGreSQL/archive/refs/tags/5.1.2.tar.gz  --no-check-certificate
+tar -xf 5.1.2.tar.gz
+rm -rf 5.1.2.tar.gz
+cd ../../../
+pip install 2to3
+python3 %{_bindir}/2to3 -w .
+for i in `find . -name "*.bak"`;do rm -rf $i ;done
+sed -i 's|PYGRESQL_VERSION=4.0|PYGRESQL_VERSION=5.1.2|g' gpMgmt/bin/Makefile
+sed -i '191 c PYTHON_VERSION=$(shell python3 -c "import sys; print ('%s.%s' % (sys.version_info[0:2])"))' gpMgmt/bin/Makefile
+sed -i "91 c inc_dirs = [os.path.join(pkginc.decode(encoding='UTF-8'), 'server'), os.path.join(pkginc.decode(encoding='UTF-8'), 'internal')]" src/test/regress/checkinc.py
+sed -i 's|if os.path.exists(os.path.join(inc,i)):|if os.path.exists(os.path.join(inc.decode(encoding="UTF-8"),i)):|g' src/test/regress/checkinc.py
+%endif
 bash %{SOURCE3} %{bin_gpdb}
 bash %{SOURCE1}
 
