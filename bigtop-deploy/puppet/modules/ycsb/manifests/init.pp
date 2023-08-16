@@ -24,6 +24,10 @@ class ycsb {
   class client {
     # install python2 in openEuler
     if ($operatingsystem == 'openEuler') {
+       package { ['gcc-c++', 'make', 'cmake']:
+         ensure => latest,
+         before => Exec['download_python2.7'],
+       }
        exec { "download_python2.7":
          cwd     => "/usr/src",
          command => "/usr/bin/wget https://www.python.org/ftp/python/2.7.14/Python-2.7.14.tgz --no-check-certificate && /usr/bin/mkdir Python-2.7.14 && /bin/tar -xvzf Python-2.7.14.tgz -C Python-2.7.14 --strip-components=1 && cd Python-2.7.14",
