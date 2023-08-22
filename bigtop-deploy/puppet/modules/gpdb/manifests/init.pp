@@ -71,46 +71,14 @@ class gpdb {
       # doesn't seem to provide it as a standard package. So we use get-pip.py
       # (https://pip.pypa.io/en/stable/installing/#installing-with-get-pip-py)
       # here to install it on all distros.
-      # add the compile of python2 and install pip3 in openEuler.
-      if ($operatingsystem == 'openEuler') {
-         package { ['gcc-c++', 'make', 'cmake']:
-           ensure => latest,
-           before => Exec['download_python2.7'],
-         }
-         exec { "download_python2.7":
-           cwd     => "/usr/src",
-           command => "/usr/bin/wget https://www.python.org/ftp/python/2.7.14/Python-2.7.14.tgz --no-check-certificate && /usr/bin/mkdir Python-2.7.14 && /bin/tar -xvzf Python-2.7.14.tgz -C Python-2.7.14 --strip-components=1 && cd Python-2.7.14",
-           creates => "/usr/src/Python-2.7.14",
-         }
-
-         exec { "install_python2.7":
-           cwd     => "/usr/src/Python-2.7.14",
-           command => "/usr/src/Python-2.7.14/configure --prefix=/usr/local/python2.7.14 --enable-optimizations && /usr/bin/make -j8 && /usr/bin/make install -j8",
-           require => [Exec["download_python2.7"]],
-           timeout => 3000,
-         }
-
-         exec { "ln python2.7":
-           cwd     => "/usr/bin",
-           command => "/usr/bin/ln -s /usr/local/python2.7.14/bin/python2.7 python2.7 && /usr/bin/ln -snf python2.7 python2 && /usr/bin/ln -snf python2 python",
-           require => Exec["install_python2.7"],
-         }
+      exec { 'download_get_pip':
+        cwd => '/tmp',
+        command => '/usr/bin/curl -sLO https://bootstrap.pypa.io/pip/2.7/get-pip.py'
       }
-
-      if ($operatingsystem == 'openEuler') {
-         package { ['python3-pip']:
-           ensure => latest,
-         }
-      } else {
-         exec { 'download_get_pip':
-           cwd => '/tmp',
-           command => '/usr/bin/curl -sLO https://bootstrap.pypa.io/pip/2.7/get-pip.py'
-         }
-         exec { 'install_pip':
-           cwd => '/tmp',
-           command => '/usr/bin/python2 get-pip.py',
-           require => [Exec["download_get_pip"], Package["gpdb"]],
-         }
+      exec { 'install_pip':
+        cwd => '/tmp',
+        command => '/usr/bin/python2 get-pip.py',
+        require => [Exec["download_get_pip"], Package["gpdb"]],
       }
       # GPDB requires the following python packages as of v5.28.5. See
       # https://github.com/greenplum-db/gpdb/tree/5X_STABLE#building-greenplum-database-with-gporca.
@@ -121,18 +89,10 @@ class gpdb {
           timeout => 600,
         }
       } else {
-        if ($operatingsystem == 'openEuler') {
-           exec { 'install_python_packages':
-             command => "/usr/bin/env pip install lockfile paramiko psutil",
-             require => Package['python3-pip'],
-             timeout => 600,
-           }
-        } else {
-           exec { 'install_python_packages':
-             command => "/usr/bin/env pip install -q lockfile paramiko psutil",
-             require => [Exec["install_pip"]],
-             timeout => 600,
-           }
+        exec { 'install_python_packages':
+          command => "/usr/bin/env pip install -q lockfile paramiko psutil",
+          require => [Exec["install_pip"]],
+          timeout => 600,
         }
       }
       package { ["gpdb"]:
