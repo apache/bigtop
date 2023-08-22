@@ -71,17 +71,24 @@ case ${ID}-${VERSION_ID} in
         dnf config-manager --set-enabled codeready-builder-for-rhel-8-rhui-rpms
         ;;
     openEuler-*)
-        dnf -y install hostname curl sudo unzip wget ruby vim patch systemd-devel findutils 'dnf-command(config-manager)' nc initscripts openeuler-lsb psmisc openssl-devel
+        dnf -y install hostname curl sudo unzip wget ruby ruby-devel vim systemd-devel findutils 'dnf-command(config-manager)' nc initscripts openeuler-lsb openssl-devel make gcc-c++ openEuler-rpm-config python3-pip python3-devel
         dnf config-manager --add-repo https://repo.oepkgs.net/openeuler/rpm/openEuler-22.03-LTS/extras/$HOSTTYPE
         echo "gpgcheck=0" >> /etc/yum.repos.d/repo.oepkgs.net_openeuler_rpm_openEuler-22.03-LTS_extras_$HOSTTYPE.repo
         sed -i "s|enabled=1|enabled=1 \npriority=10|g" /etc/yum.repos.d/openEuler.repo
         dnf clean all
         dnf makecache
         # openEuler ruby version is 3.X,so use puppet-7.22.0.
-        gem install puppet:7.22.0 xmlrpc sync
+        gem install puppet:7.22.0 xmlrpc sync sys-filesystem
         puppet module install puppetlabs-stdlib --version 4.12.0
         #openEuler dnf defaulted is not use module,so comment module in puppet-7.22.0
         sed -i "91c execute([command(:dnf), 'install', '-d', '0', '-e', self.class.error_level, '-y', args])" /usr/local/share/gems/gems/puppet-7.22.0/lib/puppet/provider/package/dnfmodule.rb
+        #add python2 in openeuler
+        wget -P /usr/src/ https://www.python.org/ftp/python/2.7.14/Python-2.7.14.tgz
+        tar -xf /usr/src/Python-2.7.14.tgz -C  /usr/src/
+        cd /usr/src/Python-2.7.14
+        ./configure --prefix=/usr/local/python2.7.14 --enable-optimizations
+        make && make install
+        ln -s /usr/local/python2.7.14/bin/python2.7 /usr/bin/python2
         ;;
     *)
         echo "Unsupported OS ${ID}-${VERSION_ID}."

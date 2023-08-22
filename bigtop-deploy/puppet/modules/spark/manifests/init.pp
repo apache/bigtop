@@ -202,16 +202,6 @@ class spark {
       }
     }
 
-    if ($operatingsystem == 'openEuler'){
-      $pkgs = [
-        "R-devel",
-      ]
-      package { $pkgs:
-        ensure => installed,
-        before => [Package["spark-sparkr"]],
-      }
-    }
-
     package { 'spark-sparkr':
       ensure => latest,
     }
