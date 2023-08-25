@@ -1,0 +1,41 @@
+commit 0b97707a62a5d41896ddbc20a649d892a2d5b886
+Author: Masatake Iwasaki <iwasakims@apache.org>
+Date:   Fri Aug 25 21:44:32 2023 +0900
+
+    patch0-HADOOP-18867-branch-3.3.diff
+
+diff --git a/hadoop-project/pom.xml b/hadoop-project/pom.xml
+index f1ac43ed5b3..1503a86f15c 100644
+--- a/hadoop-project/pom.xml
++++ b/hadoop-project/pom.xml
+@@ -99,7 +99,7 @@
+     <hadoop-thirdparty-shaded-protobuf-prefix>${hadoop-thirdparty-shaded-prefix}.protobuf</hadoop-thirdparty-shaded-protobuf-prefix>
+     <hadoop-thirdparty-shaded-guava-prefix>${hadoop-thirdparty-shaded-prefix}.com.google.common</hadoop-thirdparty-shaded-guava-prefix>
+ 
+-    <zookeeper.version>3.6.3</zookeeper.version>
++    <zookeeper.version>3.6.4</zookeeper.version>
+     <curator.version>5.2.0</curator.version>
+     <findbugs.version>3.0.5</findbugs.version>
+     <dnsjava.version>2.1.7</dnsjava.version>
+@@ -1740,6 +1740,10 @@
+             <groupId>log4j</groupId>
+             <artifactId>log4j</artifactId>
+           </exclusion>
++          <exclusion>
++            <groupId>org.apache.yetus</groupId>
++            <artifactId>audience-annotations</artifactId>
++          </exclusion>
+         </exclusions>
+       </dependency>
+       <dependency>
+@@ -1769,6 +1773,10 @@
+             <groupId>jdk.tools</groupId>
+             <artifactId>jdk.tools</artifactId>
+           </exclusion>
++          <exclusion>
++            <groupId>org.apache.yetus</groupId>
++            <artifactId>audience-annotations</artifactId>
++          </exclusion>
+         </exclusions>
+       </dependency>
+       <dependency>
