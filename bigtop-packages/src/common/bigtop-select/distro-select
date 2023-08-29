@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 #
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
@@ -76,7 +76,7 @@ leaves = {
 
 # Define the aliases and the list of leaves they correspond to
 aliases = {
-  "all": leaves.keys(),
+  "all": list(leaves.keys()),
   "client" : ["hadoop-client",
               "hbase-client",
               "tez-client",
@@ -141,7 +141,7 @@ command_symlinks = {
 # Given a package or alias name, get the full list of packages
 def getPackages( name ):
   if name == None:
-    return leaves.keys()
+    return list(leaves.keys())
   if name in aliases:
     return aliases[name]
   if name in leaves:
@@ -168,12 +168,12 @@ def listPackages( packages ):
 
 # Print the avaialable package names
 def printPackages():
-  packages = leaves.keys()
+  packages = list(leaves.keys())
   packages.sort()
   print("Packages:")
   for pkg in packages:
      print(" " + pkg)
-  groups = aliases.keys()
+  groups = list(aliases.keys())
   groups.sort()
   print("Aliases:")
   for pkg in groups:
@@ -181,7 +181,7 @@ def printPackages():
 
 #Print whether given package is supported or not
 def isSupportedPacakge(package):
-    packages = leaves.keys()
+    packages = list(leaves.keys())
     if package in packages:
       print("%s" % package)
     else:
@@ -199,7 +199,7 @@ def printVersions():
         print("ERROR: Unexpected file/directory found in %s: %s" % (root, f))
         sys.exit(1)
 
-  keys = result.keys()
+  keys = list(result.keys())
   keys.sort()
   for k in keys:
      print(result[k])
@@ -221,7 +221,7 @@ def setPackages(packages, version, rpm_mode):
     sys.exit(1)
 
   if not os.path.isdir(current):
-    os.mkdir(current, 0755)
+    os.mkdir(current, 0o755)
 
   packages.sort()
   for pkg in packages:
