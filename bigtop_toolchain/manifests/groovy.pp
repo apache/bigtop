@@ -27,7 +27,7 @@ class bigtop_toolchain::groovy {
   } ~>
 
   exec {'Extract Groovy':
-    command => /usr/bin/unzip -x -o /usr/src/${groovy}.zip":
+    command => "/usr/bin/unzip -x -o /usr/src/${groovy}.zip",
     cwd     => '/usr/local',
   } ->
 
