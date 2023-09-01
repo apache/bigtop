@@ -133,9 +133,9 @@ bigtop {
       pkg     = name
       rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
       version {
-        base  = '3.5.9'
+        base  = '3.6.4'
         pkg   = base
-        release = 3
+        release = 1
       }
       tarball {
         source      = "apache-zookeeper-${version.base}.tar.gz"
