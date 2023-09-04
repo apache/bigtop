@@ -43,7 +43,13 @@ Source2: install_gpdb.sh
 Source3: do-component-configure
 #BIGTOP_PATCH_FILES
 AutoReqProv: %{autorequire}
+
+#python2 be compiled manually and install, not installed by rpm in openEuler
+%if 0%{?openEuler}
+Requires: bigtop-utils >= 0.7, gcc, libffi-devel, make, openssl-devel
+%else
 Requires: bigtop-utils >= 0.7, gcc, libffi-devel, make, openssl-devel, python2-devel
+%endif
 
 %description
 gpdb

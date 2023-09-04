@@ -44,6 +44,11 @@ if [ $HOSTTYPE = "powerpc64le" ] ; then
   mvn clean install -DskipTests -Dhadoop.version=${HADOOP_VERSION} -Dgrpc.version=1.28.0 -Dmaven.buildNumber.revisionOnScmFailure=v${ALLUXIO_VERSION} -Phadoop-3 -Pyarn "$@"
 
 else
+  #need to manually compile the libjnifuse*.so in openEuler
+  if [ "${OS}" = "openEuler" ] ; then
+    sed -i "s|<activeByDefault>false</activeByDefault>|<activeByDefault>true</activeByDefault>|g" integration/jnifuse/native/pom.xml
+  fi
+
   mvn clean install -DskipTests -Dhadoop.version=${HADOOP_VERSION} -Dmaven.buildNumber.revisionOnScmFailure=v${ALLUXIO_VERSION} -Phadoop-3 -Pyarn "$@"
 
 fi

@@ -829,10 +829,20 @@ class hadoop ($hadoop_security_authentication = "simple",
   }
 
   define create_storage_dir {
-    exec { "mkdir $name":
-      command => "/bin/mkdir -p $name",
-      creates => $name,
-      user =>"root",
+    # change the cgroup of hdfs and yarn from hadoop to root in openeuler,
+    # otherwise, the namemode of hdfs has not the permission to create directories during smoke test.
+    if ($operatingsystem == 'openEuler'){
+      exec { "mkdir $name":
+        command => "/usr/sbin/usermod -G root yarn && /usr/sbin/usermod -G root hdfs && /bin/mkdir -p $name",
+        creates => $name,
+        user =>"root",
+      }
+    } else {
+      exec { "mkdir $name":
+        command => "/bin/mkdir -p $name",
+        creates => $name,
+        user =>"root",
+      }
     }
   }
 

@@ -23,7 +23,7 @@ Homepage: http://labs.yahoo.com/news/yahoo-cloud-serving-benchmark
 
 Package: ycsb
 Architecture: all
-Depends: python
+Depends: python | python2
 Description: The Yahoo! Cloud Serving Benchmark (YCSB) is an open-source
  specification and program suite for evaluating retrieval and 
  maintenance capabilities of computer programs. It is often used to 

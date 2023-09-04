@@ -16,4 +16,12 @@
 
 set -ex
 
+#specify the verion of python for openEuler
+. /etc/os-release
+OS="$ID"
+if [ "${OS}" = "openEuler" ]; then
+  sed -i 's|python setup.py build|python2 setup.py build|g'  gpMgmt/bin/Makefile
+  sed -i 's|python gpconfig_modules|python2 gpconfig_modules|g' gpMgmt/bin/Makefile
+fi
+
 ./configure --prefix=$1 --with-python --with-libxml --with-gssapi --disable-orca CFLAGS='-fcommon -Wno-implicit-fallthrough'

@@ -13,15 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-Source: bigtop-ambari-mpack
-Section: misc
-Priority: extra
-Maintainer: Bigtop <dev@bigtop.apache.org>
-Build-Depends: debhelper (>= 6)
-Standards-Version: 3.8.0
-Homepage: http://ambari.apache.org/
+docker:
+        memory_limit: "4g"
+        image: "bigtop/slaves:trunk-openeuler-22.03"
 
-Package: bigtop-ambari-mpack
-Architecture: all
-Depends: openssl, postgresql (>= 8.1), python (>= 2.6) | python2 (>= 2.6), curl
-Description: Ambari Mpack 
+repo: "http://repios.bigtop.apache.org/releases/3.2.0/openEuler/22.03/$basearch"
+distro: centos
+components: [hdfs ,yarn ,mapreduce]
+enable_local_repo: false
+smoke_test_components: [hdfs, yarn, mapreduce]

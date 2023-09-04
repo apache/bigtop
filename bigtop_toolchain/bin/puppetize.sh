@@ -70,6 +70,16 @@ case ${ID}-${VERSION_ID} in
         # As a workaround for that, enable the former here in advance of running the Puppet manifests.
         dnf config-manager --set-enabled codeready-builder-for-rhel-8-rhui-rpms
         ;;
+    openEuler-*)
+        yum -y install hostname curl sudo unzip wget ruby vim patch systemd-devel rng-tools findutils
+        # openEuler ruby version is 3.X,so use puppet-7.22.0.
+        gem install puppet -v 7.22.0
+        gem install xmlrpc
+        gem install sync
+        puppet module install puppetlabs-stdlib --version 4.12.0
+        #openEuler dnf defaulted is not use module,so comment module in puppet-7.22.0
+        sed -i "91c execute([command(:dnf), 'install', '-d', '0', '-e', self.class.error_level, '-y', args])" /usr/local/share/gems/gems/puppet-7.22.0/lib/puppet/provider/package/dnfmodule.rb
+        ;;
     *)
         echo "Unsupported OS ${ID}-${VERSION_ID}."
         exit 1
