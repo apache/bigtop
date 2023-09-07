@@ -25,7 +25,7 @@ BUILD_OPTS="-Divy.home=${HOME}/.ivy2 -Dsbt.ivy.home=${HOME}/.ivy2 -Duser.home=${
             -Dyarn.version=$HADOOP_VERSION \
             -Pyarn -Phadoop-3.2 \
             -Phive -Phive-thriftserver \
-            -Psparkr -Pkubernetes \
+            -Pkubernetes \
             -Pscala-${SCALA_VERSION%.*} \
             -Dguava.version=27.0-jre \
             $SPARK_BUILD_OPTS"
@@ -33,7 +33,7 @@ BUILD_OPTS="-Divy.home=${HOME}/.ivy2 -Dsbt.ivy.home=${HOME}/.ivy2 -Duser.home=${
 # BIGTOP-3762
 export MAVEN_OPTS="${MAVEN_OPTS:--Xss64m -Xmx4g -XX:ReservedCodeCacheSize=1g}"
 
-./dev/make-distribution.sh --mvn mvn --r $BUILD_OPTS -DskipTests
+./dev/make-distribution.sh --mvn mvn  $BUILD_OPTS -DskipTests
 
 SPARK_SKIP_TESTS=$([ "$SPARK_RUN_TESTS" = "true" ] && echo false || echo true)
 
