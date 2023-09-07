@@ -40,7 +40,6 @@ dependencies {
   compile group: 'junit', name: 'junit', version: junitVersion, transitive: 'true'
   compile group: 'org.apache.solr', name: 'solr-solrj', version: solrVersion, transitive: 'true'
   compile group: 'org.slf4j', name: 'slf4j-simple', version: slf4jVersion, transitive: 'true'
-  if (System.env.HADOOP_CONF_DIR) testRuntime files(System.env.HADOOP_CONF_DIR)
 }
 
 sourceSets {
@@ -54,7 +53,6 @@ sourceSets {
 }
 
 test.doFirst {
-  checkEnv(["HADOOP_CONF_DIR"])
   create_collection()
 }
 

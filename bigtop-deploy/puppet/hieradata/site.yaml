@@ -22,7 +22,7 @@ hadoop::hadoop_storage_dirs:
 #  - httpfs
 #  - mapred-app
 #  - oozie
-#  - solrcloud
+#  - solr
 #  - spark
 #  - spark-standalone
 #  - tez
