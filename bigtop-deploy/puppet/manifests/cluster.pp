@@ -62,7 +62,7 @@ $roles_map = {
     worker => ["hbase-server"],
     client => ["hbase-client"],
   },
-  solrcloud => {
+  solr => {
     worker => ["solr-server"],
   },
   spark => {
