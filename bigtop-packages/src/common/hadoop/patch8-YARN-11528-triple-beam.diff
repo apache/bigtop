@@ -1,0 +1,14 @@
+diff --git a/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-applications/hadoop-yarn-applications-catalog/hadoop-yarn-applications-catalog-webapp/package.json b/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-applications/hadoop-yarn-applications-catalog/hadoop-yarn-applications-catalog-webapp/package.json
+index f09442cfc4e87..59cc3da179fd0 100644
+--- a/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-applications/hadoop-yarn-applications-catalog/hadoop-yarn-applications-catalog-webapp/package.json
++++ b/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-applications/hadoop-yarn-applications-catalog/hadoop-yarn-applications-catalog-webapp/package.json
+@@ -19,6 +19,9 @@
+         "shelljs": "^0.2.6",
+         "apidoc": "0.17.7"
+     },
++    "resolutions": {
++        "triple-beam": "1.3.0"
++    },
+     "scripts": {
+         "prestart": "npm install & mvn clean package",
+         "pretest": "npm install"

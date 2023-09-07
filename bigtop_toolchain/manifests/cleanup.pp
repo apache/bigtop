@@ -15,7 +15,7 @@
 
 class bigtop_toolchain::cleanup {
   $packager_cleanup = $operatingsystem ? {
-    /(?i:(centos|fedora|redhat|amazon|rocky))/ => 'yum clean all',
+    /(?i:(centos|fedora|redhat|amazon|rocky|openEuler))/ => 'yum clean all',
     /(?i:(SLES|opensuse))/ => 'zypper clean -a',
     /Ubuntu|Debian/        => 'apt-get clean',
   } 

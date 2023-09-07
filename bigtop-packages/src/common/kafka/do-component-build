@@ -19,7 +19,7 @@ set -ex
 . `dirname ${0}`/bigtop.bom
 
 BUILD_OPTS="-Divy.home=${HOME}/.ivy2 -Dsbt.ivy.home=${HOME}/.ivy2 -Duser.home=${HOME} \
-            -Drepo.maven.org=$IVY_MIRROR_PROP \
+            -Drepo.maven.org=https://maven.aliyun.com/repository/central \
             -Dreactor.repo=file://${HOME}/.m2/repository \
             -DskipTests -DrecompileMode=all"
 

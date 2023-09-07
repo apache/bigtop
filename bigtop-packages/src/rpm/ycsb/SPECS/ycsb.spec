@@ -36,7 +36,12 @@ Source3: bigtop.bom
 #BIGTOP_PATCH_FILES
 ## This package _explicitly_ turns off the auto-discovery of required dependencies
 ## to work around OSGI corner case, added to RPM lately. See BIGTOP-2421 for more info.
+## python2 be compiled manually and install, not installed by rpm in openEuler
+%if 0%{?openEuler}
+Requires: coreutils, bigtop-utils >= 0.7
+%else
 Requires: coreutils, bigtop-utils >= 0.7, python2
+%endif
 AutoReq: no
 
 %description 
