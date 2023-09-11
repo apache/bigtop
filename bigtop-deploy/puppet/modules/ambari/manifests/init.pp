@@ -23,12 +23,15 @@ class ambari {
   }
 
   class server {
-    #BIGTOP-3883:Init postgresql for openEuler using pg_ctl mode
+    #BIGTOP-3883:install and start the dbus service for openEuler
     if $operatingsystem == 'openEuler' {
-      exec {'initdb':
-        command => '/usr/bin/pg_ctl initdb -D /var/lib/pgsql/data',
-        user    => 'postgres',
-        require => Package['ambari-server'],
+      package { ["dbus"]:
+        ensure => latest,
+      }
+
+      service { "dbus":
+        ensure => running,
+        require => [ Package["dbus"] ],
       }
     }
 
