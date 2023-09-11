@@ -23,19 +23,12 @@ class ambari {
   }
 
   class server {
-    #install and init postgresql for openEuler
+    #BIGTOP-3883:Init postgresql for openEuler using pg_ctl mode
     if $operatingsystem == 'openEuler' {
-      package { ['postgresql-jdbc', 'postgresql-server']:
-        ensure => latest,
-      }
       exec {'initdb':
         command => '/usr/bin/pg_ctl initdb -D /var/lib/pgsql/data',
         user    => 'postgres',
-        require => Package['postgresql-jdbc', 'postgresql-server'],
-      }
-      service { 'postgresql':
-        ensure  => running,
-        require => Exec['initdb'],
+        require => Package['ambari-server'],
       }
     }
 
