@@ -23,18 +23,6 @@ class ambari {
   }
 
   class server {
-    #BIGTOP-3883:install and start the dbus service for openEuler
-    if $operatingsystem == 'openEuler' {
-      package { ["dbus"]:
-        ensure => latest,
-      }
-
-      service { "dbus":
-        ensure => running,
-        require => [ Package["dbus"] ],
-      }
-    }
-
     package { "ambari-server":
       ensure => latest,
     }
