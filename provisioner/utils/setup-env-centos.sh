@@ -31,7 +31,7 @@ fi
 # BIGTOP-3883:
 # yum-utils, yum-priorities and yum-config-manager are NOT available in openEuler 22.03
 if [ "${ID}" = "openEuler" ];then
-    dnf install rng-tools 'dnf-command(config-manager)' -y
+    dnf install rng-tools -y
 else
     yum -y install rng-tools yum-priorities
 fi
