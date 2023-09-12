@@ -75,10 +75,17 @@ class ranger {
       path    => ["/bin", "/usr/bin"],
       require => Exec['/usr/lib/ranger-admin/set_globals.sh'],
     }
-
-    service { 'ranger-admin':
-      ensure  => running,
-      require => Exec['systemctl daemon-reload'],
+    
+    if ($operatingsystem == 'openEuler') {
+      exec { 'ranger-admin':
+        command => "/usr/sbin/usermod -G root ranger && /sbin/service ranger-admin start",
+        require => Exec['systemctl daemon-reload'],
+      }
+    } else {
+      service { 'ranger-admin':
+        ensure  => running,
+        require => Exec['systemctl daemon-reload'],
+      }
     }
   }
 }
