@@ -24,6 +24,13 @@ OS="$ID"
 ARCH=`uname -m`
 RPM_DIR=../../../../../output/ambari
 
+if [ "${OS}" = "openEuler" ]; then
+  for i in `grep -rn "/usr/bin/env python"|awk -F ":" '{print $1}'`;
+  do
+    sed -i "s|/usr/bin/env python|/usr/bin/env python2|g" $i;
+  done
+fi
+
 mvn clean package -DskipTests -Drat.skip
 
 # BIGTOP-3800:
