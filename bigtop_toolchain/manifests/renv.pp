@@ -49,22 +49,43 @@ class bigtop_toolchain::renv {
         ]
       }
     }
-  }
-
-  if ($operatingsystem != 'openEuler') {
-    package { $pkgs:
-      ensure => installed,
-      before => [Exec["install_r_packages"]]
+    /openEuler/: {
+      $pkgs = [
+        "R",
+        "R-devel",
+      ]
     }
   }
+
+  #BIGTOP-3967: openEuler not support PowerPC currently.
+  if ($operatingsystem == 'openEuler'){
+    if ($architecture == "aarch64") {
+        $url = "https://github.com/jgm/pandoc/releases/download/2.19.2/pandoc-2.19.2-linux-arm64.tar.gz"
+        $pandoctar = "pandoc-2.19.2-linux-arm64.tar.gz"
+    } else{
+        $url = "https://github.com/jgm/pandoc/releases/download/2.19.2/pandoc-2.19.2-linux-amd64.tar.gz"
+        $pandoctar = "pandoc-2.19.2-linux-amd64.tar.gz"
+    }
+
+    exec {"down_pandoc":
+      cwd => "/usr/src",
+      command => "/usr/bin/wget $url && /bin/tar -xvzf $pandoctar && ln -s /usr/src/pandoc-2.19.2/bin/pandoc /usr/bin/pandoc",
+    }
+  }
+
+
+  package { $pkgs:
+    ensure => installed,
+    before => [Exec["install_r_packages"]]
+  }
+
 
   # BIGTOP-3483:
   #   Upgrade R version to 3.6.3 to build Spark 3.0.1 on Ubuntu 16.04 and 18.04
   #
   # Then Install required R packages dependency
   if (($operatingsystem == 'Ubuntu' and versioncmp($operatingsystemmajrelease, '18.04') <= 0) or
-      ($operatingsystem == 'Debian' and versioncmp($operatingsystemmajrelease, '10') < 0) or
-      ($operatingsystem == 'openEuler')) {
+      ($operatingsystem == 'Debian' and versioncmp($operatingsystemmajrelease, '10') < 0)) {
     $url = "https://cran.r-project.org/src/base/R-3/"
     $rfile = "R-3.6.3.tar.gz"
     $rdir = "R-3.6.3"
