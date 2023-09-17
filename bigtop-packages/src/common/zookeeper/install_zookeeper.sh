@@ -170,7 +170,7 @@ cat > $wrapper <<EOF
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
 
-export ZOOKEEPER_HOME=\${ZOOKEEPER_CONF:-${LIB_DIR}}
+export ZOOKEEPER_HOME=\${ZOOKEEPER_HOME:-${LIB_DIR}}
 export ZOOKEEPER_CONF=\${ZOOKEEPER_CONF:-/etc/zookeeper/conf}
 export CLASSPATH=\$CLASSPATH:\$ZOOKEEPER_CONF:\$ZOOKEEPER_HOME/*:\$ZOOKEEPER_HOME/lib/*
 export ZOOCFGDIR=\${ZOOCFGDIR:-\$ZOOKEEPER_CONF}
@@ -188,7 +188,7 @@ for pairs in zkServer.sh/zookeeper-server zkServer-initialize.sh/zookeeper-serve
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
 
 export ZOOPIDFILE=\${ZOOPIDFILE:-/var/run/zookeeper/zookeeper_server.pid}
-export ZOOKEEPER_HOME=\${ZOOKEEPER_CONF:-${LIB_DIR}}
+export ZOOKEEPER_HOME=\${ZOOKEEPER_HOME:-${LIB_DIR}}
 export ZOOKEEPER_CONF=\${ZOOKEEPER_CONF:-/etc/zookeeper/conf}
 export ZOOCFGDIR=\${ZOOCFGDIR:-\$ZOOKEEPER_CONF}
 export CLASSPATH=\$CLASSPATH:\$ZOOKEEPER_CONF:\$ZOOKEEPER_HOME/*:\$ZOOKEEPER_HOME/lib/*
