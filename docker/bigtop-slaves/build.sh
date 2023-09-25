@@ -89,5 +89,5 @@ fi
 sed -e "s|PREFIX|${PREFIX}|;s|OS|${OS}|;s|VERSION|${VERSION}|" Dockerfile.template | \
   sed -e "s|PUPPET_MODULES|${PUPPET_MODULES}|;s|UPDATE_SOURCE|${UPDATE_SOURCE}|" > Dockerfile
 
-docker build ${NETWORK} --rm -t bigtop/slaves:${PREFIX}-${OS}-${VERSION} -f Dockerfile ../..
+docker build ${NETWORK} --rm --no-cache -t bigtop/slaves:${PREFIX}-${OS}-${VERSION} -f Dockerfile ../..
 rm -f Dockerfile
