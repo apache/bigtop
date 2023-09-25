@@ -16,6 +16,20 @@
 # limitations under the License.
 # 
 
+github:
+  description: "Bigtop is an Apache Foundation project for Infrastructure Engineers and Data Scientists looking for comprehensive packaging, testing, and configuration of the leading open source big data components."
+  homepage: https://bigtop.apache.org
+  labels:
+    - java
+    - big-data
+    - bigtop
+  enabled_merge_buttons:
+    squash: true
+    merge: false
+    rebase: false
+notifications:
+  commits: commits@bigtop.apache.org
+
 staging:
   whoami: asf-staging
 

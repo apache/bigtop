@@ -1,0 +1,26 @@
+diff --git a/zeppelin-server/pom.xml b/zeppelin-server/pom.xml
+index 3f9d7f7ef..d3386499f 100644
+--- a/zeppelin-server/pom.xml
++++ b/zeppelin-server/pom.xml
+@@ -307,6 +307,10 @@
+           <groupId>org.eclipse.jetty.websocket</groupId>
+           <artifactId>websocket-client</artifactId>
+         </exclusion>
++        <exclusion>
++          <groupId>io.dropwizard.metrics</groupId>
++          <artifactId>metrics-core</artifactId>
++        </exclusion>
+       </exclusions>
+     </dependency>
+ 
+@@ -333,6 +337,10 @@
+           <groupId>javax.xml.bind</groupId>
+           <artifactId>jaxb-api</artifactId>
+         </exclusion>
++        <exclusion>
++          <groupId>io.dropwizard.metrics</groupId>
++          <artifactId>metrics-core</artifactId>
++        </exclusion>
+       </exclusions>
+     </dependency>
+ 
