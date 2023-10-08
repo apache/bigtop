@@ -67,5 +67,5 @@ case "${OS}-${VERSION}" in
     ;;
 esac
 
-docker build -t --no-cache bigtop/puppet:${PREFIX}-${OS}-${VERSION}${ARCH} .
+docker build --no-cache -t bigtop/puppet:${PREFIX}-${OS}-${VERSION}${ARCH} .
 rm -f Dockerfile puppetize.sh
