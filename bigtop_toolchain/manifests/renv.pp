@@ -34,7 +34,7 @@ class bigtop_toolchain::renv {
     }
     /(Ubuntu|Debian)/: {
       if (($operatingsystem == 'Ubuntu' and versioncmp($operatingsystemmajrelease, '18.04') <= 0) or
-          ($operatingsystem == 'Debian' and versioncmp($operatingsystemmajrelease, '10') < 0)) {
+          ($operatingsystem == 'Debian' and versioncmp($operatingsystemmajrelease, '10') <= 0)) {
         $pkgs = [
           "r-base-dev",
           "libcairo2-dev",
@@ -85,7 +85,7 @@ class bigtop_toolchain::renv {
   #
   # Then Install required R packages dependency
   if (($operatingsystem == 'Ubuntu' and versioncmp($operatingsystemmajrelease, '18.04') <= 0) or
-      ($operatingsystem == 'Debian' and versioncmp($operatingsystemmajrelease, '10') < 0)) {
+      ($operatingsystem == 'Debian' and versioncmp($operatingsystemmajrelease, '10') <= 0)) {
     $url = "https://cran.r-project.org/src/base/R-3/"
     $rfile = "R-3.6.3.tar.gz"
     $rdir = "R-3.6.3"
