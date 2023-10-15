@@ -223,7 +223,7 @@ bigtop {
        * when upgrading spark version.
        * See comments in [bigtop-packages/src/common/spark/install_spark.sh] for details.
        */
-      version { base = '3.2.3'; pkg = base; release = 1 }
+      version { base = '3.3.3'; pkg = base; release = 1 }
       tarball { destination = "$name-${version.base}.tar.gz"
                 source      = "$name-${version.base}.tgz" }
       url     { download_path = "/$name/$name-${version.base}"
