@@ -1,5 +1,7 @@
---- apache-tez-0.9.0-src/tez-ui/src/main/webapp/package.json_	2017-11-25 17:52:37.868021145 +0000
-+++ apache-tez-0.9.0-src/tez-ui/src/main/webapp/package.json	2017-11-25 17:55:49.390774359 +0000
+diff --git a/tez-ui/src/main/webapp/package.json b/tez-ui/src/main/webapp/package.json
+index 3500b8aaf..bafe7bf61 100644
+--- a/tez-ui/src/main/webapp/package.json
++++ b/tez-ui/src/main/webapp/package.json
 @@ -57,8 +57,7 @@
      "ember-truth-helpers": "1.3.0",
      "bower-shrinkwrap-resolver-ext": "^0.1.0",
@@ -9,4 +11,4 @@
 +    "testem": "0.9.11"
    },
    "dependencies": {
-     "em-helpers": "0.8.0",
+     "em-tgraph": "0.0.14"
