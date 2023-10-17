@@ -1,0 +1,85 @@
+diff --git a/cassandra/pom.xml b/cassandra/pom.xml
+index 1b6c1ca..ef3a50d 100644
+--- a/cassandra/pom.xml
++++ b/cassandra/pom.xml
+@@ -97,7 +97,7 @@ LICENSE file.
+ 		<repository>
+ 			<id>central2</id>
+ 			<name>sigar Repository</name>
+-			<url>http://repository.jboss.org/nexus/content/groups/public-jboss/</url>
++			<url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
+ 			<layout>default</layout>
+ 			<snapshots>
+ 				<enabled>false</enabled>
+diff --git a/distribution/pom.xml b/distribution/pom.xml
+index f4b1346..4951f37 100644
+--- a/distribution/pom.xml
++++ b/distribution/pom.xml
+@@ -211,11 +211,6 @@
+     </dependency>
+     <dependency>
+       <groupId>site.ycsb</groupId>
+-      <artifactId>mongodb-binding</artifactId>
+-      <version>${project.version}</version>
+-    </dependency>
+-    <dependency>
+-      <groupId>site.ycsb</groupId>
+       <artifactId>nosqldb-binding</artifactId>
+       <version>${project.version}</version>
+     </dependency>
+@@ -260,16 +255,6 @@
+       <version>${project.version}</version>
+     </dependency>
+     <dependency>
+-      <groupId>site.ycsb</groupId>
+-      <artifactId>solr-binding</artifactId>
+-      <version>${project.version}</version>
+-    </dependency>
+-    <dependency>
+-      <groupId>site.ycsb</groupId>
+-      <artifactId>solr6-binding</artifactId>
+-      <version>${project.version}</version>
+-    </dependency>
+-    <dependency>
+       <groupId>site.ycsb</groupId>
+       <artifactId>tarantool-binding</artifactId>
+       <version>${project.version}</version>
+diff --git a/hypertable/pom.xml b/hypertable/pom.xml
+index def12ae..2de1c0c 100644
+--- a/hypertable/pom.xml
++++ b/hypertable/pom.xml
+@@ -52,7 +52,7 @@ LICENSE file.
+   <repositories>
+     <repository>
+       <id>clojars.org</id>
+-      <url>http://clojars.org/repo</url>
++      <url>https://clojars.org/repo</url>
+     </repository>
+   </repositories>
+ </project>
+diff --git a/maprdb/pom.xml b/maprdb/pom.xml
+index 253eca4..e121543 100644
+--- a/maprdb/pom.xml
++++ b/maprdb/pom.xml
+@@ -25,7 +25,7 @@
+ 	<repositories>
+ 		<repository>
+ 			<id>mapr-releases</id>
+-			<url>http://repository.mapr.com/maven/</url>
++			<url>https://repository.mapr.com/maven/</url>
+ 			<snapshots>
+ 				<enabled>false</enabled>
+ 			</snapshots>
+diff --git a/maprjsondb/pom.xml b/maprjsondb/pom.xml
+index a9d66d9..0c38afb 100644
+--- a/maprjsondb/pom.xml
++++ b/maprjsondb/pom.xml
+@@ -25,7 +25,7 @@
+ 	<repositories>
+ 		<repository>
+ 			<id>mapr-releases</id>
+-			<url>http://repository.mapr.com/maven/</url>
++			<url>https://repository.mapr.com/maven/</url>
+ 			<snapshots>
+ 				<enabled>false</enabled>
+ 			</snapshots>
