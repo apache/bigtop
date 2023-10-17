@@ -33,3 +33,5 @@ override_dh_auto_install:
 	sh -x debian/install_ycsb.sh \
 	  --build-dir=build/dist \
 	  --prefix=debian/tmp
+
+override_dh_strip_nondeterminism:
