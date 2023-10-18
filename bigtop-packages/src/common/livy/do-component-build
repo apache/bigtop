@@ -23,12 +23,17 @@ LIVY_BUILD_OPTS="-Drat.skip=true \
                  -Dskip=true \
                  -DskipITs=true \
                  -Dscala-${SCALA_VERSION%.*}.version=${SCALA_VERSION} \
-                 -Dscala-2.12.version=2.12.15 \
+                 -Dscala.binary.version=${SCALA_VERSION%.*} \
+                 -Dscala.version=${SCALA_VERSION} \
                  -Dzookeeper.version=${ZOOKEEPER_VERSION} \
                  -Dhadoop.version=${HADOOP_VERSION} \
+                 -Dhadoop.major-minor.version=${HADOOP_VERSION%%.*} \
+                 -Dhive.version=${HIVE_VERSION} \
                  -Dspark.scala-${SCALA_VERSION%.*}.version=${SPARK_VERSION} \
-                 -Pspark-3.0"
+                 -Dspark.version=${SPARK_VERSION} \
+                 -Pspark3"
 
 mvn install $LIVY_BUILD_OPTS "$@"
 
-unzip assembly/target/apache-livy-$LIVY_VERSION-incubating-bin.zip && mv apache-livy-$LIVY_VERSION-incubating-bin build
+unzip assembly/target/apache-livy-$LIVY_VERSION-incubating_${SCALA_VERSION%.*}-bin.zip
+mv apache-livy-$LIVY_VERSION-incubating_${SCALA_VERSION%.*}-bin build
