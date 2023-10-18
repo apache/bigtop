@@ -23,7 +23,6 @@
 %define etc_flink %{parent_dir}/etc/%{flink_name}
 
 %define usr_lib_hadoop %{parent_dir}/usr/lib/hadoop
-%define etc_hadoop %{parent_dir}/etc/hadoop
 
 %define bin_dir %{parent_dir}/%{_bindir}
 %define man_dir %{parent_dir}/%{_mandir}
@@ -139,8 +138,7 @@ sh -x %{SOURCE2} \
     --lib-dir=%{usr_lib_flink} \
     --bin-dir=%{bin_dir} \
     --lib-hadoop=%{usr_lib_hadoop} \
-    --etc-flink=%{etc_flink} \
-    --etc-hadoop=%{etc_hadoop}
+    --etc-flink=%{etc_flink}
 
 for service in %{flink_services}
 do
