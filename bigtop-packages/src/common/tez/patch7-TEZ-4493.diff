@@ -1,27 +1,3 @@
-commit 0fc920ec3739a766dfac82120c3c17a091d13213
-Author: Ayush Saxena <ayushsaxena@apache.org>
-Date:   Fri Jun 30 01:24:00 2023 +0530
-
-    TEZ-4493: Upgrade Hadoop to 3.3.6. (#285) (Ayush Saxena reviewed by Laszlo Bodor)
-    
-    (cherry picked from commit 50380751b7e7e628aeb40a985b94aba98d2a88db)
-    
-     Conflicts:
-            pom.xml
-
-diff --git a/pom.xml b/pom.xml
-index f5a526ae2..25efcea21 100644
---- a/pom.xml
-+++ b/pom.xml
-@@ -58,7 +58,7 @@
- 
-     <clover.license>${user.home}/clover.license</clover.license>
-     <guava.version>27.0-jre</guava.version>
--    <hadoop.version>3.1.3</hadoop.version>
-+    <hadoop.version>3.3.6</hadoop.version>
-     <netty.version>4.0.52.Final</netty.version>
-     <pig.version>0.13.0</pig.version>
-     <jersey.version>1.19</jersey.version>
 diff --git a/tez-dag/src/main/java/org/apache/tez/state/StateMachineTez.java b/tez-dag/src/main/java/org/apache/tez/state/StateMachineTez.java
 index 3be771892..cbb838d7f 100644
 --- a/tez-dag/src/main/java/org/apache/tez/state/StateMachineTez.java

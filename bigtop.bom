@@ -133,7 +133,7 @@ bigtop {
       pkg     = name
       rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
       version {
-        base  = '3.6.4'
+        base  = '3.7.2'
         pkg   = base
         release = 1
       }
@@ -185,7 +185,7 @@ bigtop {
       name    = 'tez'
       rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
       relNotes = 'Apache TEZ'
-      version { base = '0.10.1'; pkg = base; release = 1 }
+      version { base = '0.10.2'; pkg = base; release = 1 }
       tarball { destination = "apache-${name}-${version.base}-src.tar.gz"
                 source      = destination }
       url     { download_path = "/$name/${version.base}/"
@@ -223,7 +223,7 @@ bigtop {
        * when upgrading spark version.
        * See comments in [bigtop-packages/src/common/spark/install_spark.sh] for details.
        */
-      version { base = '3.2.3'; pkg = base; release = 1 }
+      version { base = '3.3.3'; pkg = base; release = 1 }
       tarball { destination = "$name-${version.base}.tar.gz"
                 source      = "$name-${version.base}.tgz" }
       url     { download_path = "/$name/$name-${version.base}"
@@ -235,7 +235,7 @@ bigtop {
       name    = 'flink'
       rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
       relNotes = 'Apache Flink'
-      version { base = '1.15.3'; pkg = base; release = 1 }
+      version { base = '1.16.2'; pkg = base; release = 1 }
       tarball { destination = "$name-${version.base}.tar.gz"
                 source      = "$name-${version.base}-src.tgz" }
       url     { download_path = "/$name/$name-${version.base}"
@@ -291,7 +291,7 @@ bigtop {
       name    = "alluxio"
       pkg     = "alluxio"
       relNotes = "Alluxio: a memory-centric distributed file system"
-      version { base = '2.8.0'; pkg = base; release = 2 }
+      version { base = '2.9.3'; pkg = base; release = 1 }
       tarball { destination = "$name-${version.base}.tar.gz"
                 source      = "v${version.base}.tar.gz" }
       url     { site = "https://github.com/Alluxio/alluxio/archive"
@@ -360,7 +360,7 @@ bigtop {
     'livy' {
       name    = 'livy'
       relNotes = 'Apache Livy'
-      version { base = '0.7.1'; pkg = base; release = 1 }
+      version { base = '0.8.0'; pkg = base; release = 1 }
       tarball { destination = "${name}-${version.base}.zip"
                 source      = "apache-livy-${version.base}-incubating-src.zip" }
       url     { download_path = "incubator/livy/${version.base}-incubating/"

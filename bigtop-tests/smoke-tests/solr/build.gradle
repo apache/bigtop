@@ -35,6 +35,26 @@ def create_collection() {
   }
 }
 
+def delete_collection() {
+  exec {
+    executable "/usr/bin/solrctl"
+    args "collection", "--delete", "smoke"
+  }
+  exec {
+    executable "/usr/bin/solrctl"
+    args "instancedir", "--delete", "smoke"
+  }
+}
+
+def clean() {
+  if (file("/tmp/smoke_data").exists()) {
+    exec {
+      executable "/usr/bin/rm"
+      args "-rf", "/tmp/smoke_data"
+    }
+  }
+}
+
 def junitVersion = '4.11'
 dependencies {
   compile group: 'junit', name: 'junit', version: junitVersion, transitive: 'true'
@@ -54,6 +74,11 @@ sourceSets {
 
 test.doFirst {
   create_collection()
+}
+
+test.doLast {
+  delete_collection()
+  clean()
 }
 
 test {

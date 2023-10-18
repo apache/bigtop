@@ -197,7 +197,11 @@ Requires: sh-utils, insserv
 # CentOS 5 does not have any dist macro
 # So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
 %if %{!?suse_version:1}0 && %{!?mgaversion:1}0
+%if 0%{?openEuler}
+BuildRequires: pkgconfig, fuse-libs, openEuler-rpm-config, lzo-devel, openssl-devel
+%else
 BuildRequires: pkgconfig, fuse-libs, redhat-rpm-config, lzo-devel, openssl-devel
+%endif
 # Required for init scripts
 Requires: coreutils, /lib/lsb/init-functions
 %endif
@@ -561,7 +565,7 @@ env HADOOP_VERSION=%{hadoop_base_version} bash %{SOURCE2} \
   --yarn-dir=%{usr_lib_yarn} \
   --mapreduce-dir=%{usr_lib_mapreduce} \
   --var-hdfs=%{var_lib_hdfs} \
-  --var-yarn=%{var_lib_uarn} \
+  --var-yarn=%{var_lib_yarn} \
   --var-mapreduce=%{var_lib_mapreduce} \
   --var-httpfs=%{var_lib_httpfs} \
   --var-kms=%{var_lib_kms} \

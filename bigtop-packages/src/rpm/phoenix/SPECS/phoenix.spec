@@ -93,7 +93,7 @@ Requires: bsh-utils
 Requires: coreutils
 %endif
 
-%if  0%{?rhel} >= 8
+%if  0%{?rhel} >= 8 || 0%{?openEuler}
 Requires: python3
 %else
 Requires: python

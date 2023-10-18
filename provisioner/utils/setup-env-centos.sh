@@ -21,9 +21,21 @@ enable_local_repo=${1:-false}
 # revert back to localhost.localdomain
 sed -ie 's#HOSTNAME=.*$#HOSTNAME='`hostname -f`'#' /etc/sysconfig/network
 
+if [ -f /etc/os-release ]; then
+    . /etc/os-release
+fi
+
 # Setup rng-tools to improve virtual machine entropy performance.
 # The poor entropy performance will cause kerberos provisioning failed.
-yum -y install rng-tools yum-priorities
+
+# BIGTOP-3883:
+# yum-utils, yum-priorities and yum-config-manager are NOT available in openEuler 22.03
+if [ "${ID}" = "openEuler" ];then
+    dnf install rng-tools -y
+else
+    yum -y install rng-tools yum-priorities
+fi
+
 if [ -x /usr/bin/systemctl ] ; then
     sed -i 's@ExecStart=/sbin/rngd -f@ExecStart=/sbin/rngd -f -r /dev/urandom@' /usr/lib/systemd/system/rngd.service
     systemctl daemon-reload
@@ -35,13 +47,12 @@ fi
 
 if [ $enable_local_repo == "true" ]; then
     echo "Enabling local yum."
-    yum -y install yum-utils
-
-    if [ -f /etc/os-release ]; then
-        . /etc/os-release
+    if [ "${ID}" != "openEuler" ];then
+        yum -y install yum-utils
     fi
+
     case ${ID} in
-        fedora)
+        fedora | openEuler)
             sed -i 's/gpgcheck=1/gpgcheck=0/g' /etc/dnf/dnf.conf
             ;;
         centos)
@@ -49,7 +60,12 @@ if [ $enable_local_repo == "true" ]; then
             ;;
     esac
 
-    sudo yum-config-manager --add-repo file:///bigtop-home/output
+    if [ "${ID}" = "openEuler" ];then
+        sudo dnf config-manager --add-repo file:///bigtop-home/output
+    else
+        sudo yum-config-manager --add-repo file:///bigtop-home/output
+    fi
+
     sudo echo "gpgcheck=0" >> /etc/yum.repos.d/bigtop-home_output.repo
     sudo echo "priority=9" >> /etc/yum.repos.d/bigtop-home_output.repo
 else

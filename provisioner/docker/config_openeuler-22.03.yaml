@@ -1,5 +1,3 @@
-#!/usr/bin/make -f
-
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -14,30 +12,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# -*- makefile -*-
 
-# Uncomment this to turn on verbose mode.
-export DH_VERBOSE=1
+docker:
+        memory_limit: "4g"
+        image: "bigtop/puppet:trunk-openeuler-22.03"
 
-# This has to be exported to make some magic below work.
-export DH_OPTIONS
-
-%:
-	dh $@
-
-override_dh_auto_build:
-	bash debian/do-component-build
-
-
-.PHONY: jobmanager
-.PHONY: taskmanager
-jobmanager taskmanager:
-	bash debian/init.d.tmpl debian/flink-$@.svc deb debian/flink-$@.init
-
-override_dh_auto_install: jobmanager taskmanager
-	bash -x debian/install_flink.sh \
-	--build-dir=`pwd`/flink-dist/target/flink-${FLINK_VERSION}-bin/flink-${FLINK_VERSION} \
-	--source-dir=debian \
-	--prefix=debian/tmp
-
-override_dh_strip_nondeterminism:
+repo: "http://repios.bigtop.apache.org/releases/3.2.0/openEuler/22.03/$basearch"
+distro: centos
+components: [hdfs ,yarn ,mapreduce]
+enable_local_repo: false
+smoke_test_components: [hdfs, yarn, mapreduce]
