@@ -133,7 +133,7 @@ bigtop {
       pkg     = name
       rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
       version {
-        base  = '3.6.4'
+        base  = '3.7.2'
         pkg   = base
         release = 1
       }
