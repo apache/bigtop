@@ -32,14 +32,14 @@ class ranger {
       $python = 'python3'
     }
 
-    package { ['postgresql-jdbc', 'postgresql-server', $python]:
+    package { [$python]:
       ensure => latest,
     }
 
     exec { 'initdb':
       command => '/usr/bin/pg_ctl initdb -D /var/lib/pgsql/data',
       user    => 'postgres',
-      require => Package['postgresql-jdbc', 'postgresql-server', $python],
+      require => Package[$python],
     }
 
     service { 'postgresql':
