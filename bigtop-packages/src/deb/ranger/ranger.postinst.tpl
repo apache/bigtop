@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# postinst script for hbase
+# postinst script for ranger
 
 set -e
 

@@ -1,13 +1,9 @@
 Format: http://dep.debian.net/deps/dep5
-Source: http://hive.apache.org/
-Upstream-Name: Apache Hive
+Source: http://ranger.apache.org/
+Upstream-Name: Apache Ranger
 
 Files: *
-Copyright: 2008-2014, The Apache Software Foundation
-License: Apache-2.0
-
-Files debian/*
-Copyright: 2014, The Apache Software Foundation
+Copyright: 2014-2019, The Apache Software Foundation
 License: Apache-2.0
 
 License: Apache-2.0
