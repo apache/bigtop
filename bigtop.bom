@@ -376,7 +376,6 @@ bigtop {
                 source      = destination }
       url     { site = "https://github.com/apache/ranger/archive/refs/tags"
                 archive = site }
-      packaging = 'rpm'
     }
   }
 }
