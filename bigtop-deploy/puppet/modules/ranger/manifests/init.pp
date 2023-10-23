@@ -26,7 +26,7 @@ class ranger {
     # Before Facter 3.14.17, Rocky Linux 8 is detected as 'RedHat'.
     # https://puppet.com/docs/pe/2019.8/osp/release_notes_facter.html#enhancements-3-14-17
     case $operatingsystem {
-        'ubuntu','debian': {
+      /(?i:(ubuntu|debian))/: {
             $postgres_packages = ['postgresql']
             $python = 'python3'
             $java_home_env = 'JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64'
@@ -38,13 +38,12 @@ class ranger {
         }
     }
 
-    package { ['ranger-admin', $python, 'libpostgresql-jdbc-java']:
+    package { ['ranger-admin', $python]:
           ensure => latest,
     }
 
-
-
-    if ($operatingsystem == 'Ubuntu' or $operatingsystem == 'Debian') {
+    if ($operatingsystem =~ /^(?i:(ubuntu|debian))$/) {
+      notice("Matched ubuntu or debian")
       service { 'postgresql':
         ensure  => running,
         require => Package[$python, 'ranger-admin'],
@@ -56,6 +55,7 @@ class ranger {
         require => Package[$python, 'ranger-admin'],
       }
     } else {
+      notice("Did not match ubuntu or debian")
       exec { 'initdb':
         command => '/usr/bin/pg_ctl initdb -D /var/lib/pgsql/data',
         user    => 'postgres',
@@ -69,22 +69,20 @@ class ranger {
     }
 
     exec { 'change_postgres_password':
-      command => "echo \"ALTER USER postgres WITH PASSWORD 'admin';\" | su - postgres -c psql",
-      path    => ['/bin', '/usr/bin'],
-      unless  => "echo \"SELECT 1 FROM pg_roles WHERE rolname='postgres' AND rolpassword='md5'||md5('admin'||'postgres')\" | su - postgres -c psql",
+      command => "/bin/sudo -u postgres /usr/bin/psql -c \"ALTER USER postgres WITH PASSWORD 'admin';\"",
       require => Service['postgresql'],
     }
 
-
+    notice("Before defining file resource")
     file { '/usr/lib/ranger-admin/install.properties':
       content => template('ranger/ranger-admin/install.properties'),
-      require => Package['ranger-admin'],
+      require => [Package['ranger-admin'], Exec['change_postgres_password']]
     }
 
     exec { '/usr/lib/ranger-admin/setup.sh':
       cwd         => '/usr/lib/ranger-admin',
       environment => $java_home_env,
-      require     => [Exec['change_postgres_password'], File['/usr/lib/ranger-admin/install.properties']],
+      require     => File['/usr/lib/ranger-admin/install.properties'],
     }
 
     exec { '/usr/lib/ranger-admin/set_globals.sh':
