@@ -1,0 +1,50 @@
+diff --git a/pom.xml b/pom.xml
+index 43a758944..29cf64081 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -844,7 +844,24 @@
+             <url>${distMgmtStagingUrl}</url>
+         </repository>
+     </distributionManagement>
++
+     <repositories>
++        <repository>
++            <id>central</id>
++            <url>https://maven.aliyun.com/repository/central</url>
++        </repository>
++         <repository>
++            <id>public</id>
++            <url>https://maven.aliyun.com/repository/public</url>
++        </repository>
++         <repository>
++            <id>apache snapshots</id>
++            <url>https://maven.aliyun.com/repository/apache-snapshots</url>
++        </repository>
++          <repository>
++            <id>apache spring</id>
++            <url>https://maven.aliyun.com/repository/spring-plugin</url>
++        </repository>
+         <repository>
+             <id>apache.snapshots.https</id>
+             <name>Apache Development Snapshot Repository</name>
+@@ -874,6 +891,20 @@
+   </repository>
+   -->
+     </repositories>
++    <pluginRepositories>
++        <pluginRepository> 
++          <id>public</id>
++          <name>aliyun nexus</name>
++          <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
++          <releases>
++              <enabled>true</enabled>
++          </releases>
++          <snapshots>
++              <enabled>false</enabled>
++          </snapshots>
++      </pluginRepository>
++    </pluginRepositories>
++
+     <dependencyManagement>
+         <dependencies>
+             <dependency>

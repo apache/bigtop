@@ -1,0 +1,45 @@
+diff --git a/pom.xml b/pom.xml
+index 986a13cba20..3e552fa2e19 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -285,6 +285,22 @@
+     <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss z</maven.build.timestamp.format>
+   </properties>
+   <repositories>
++    <repository>
++        <id>central</id>
++        <url>https://maven.aliyun.com/repository/central</url>
++    </repository>
++     <repository>
++        <id>public</id>
++        <url>https://maven.aliyun.com/repository/public</url>
++    </repository>
++     <repository>
++        <id>apache snapshots</id>
++        <url>https://maven.aliyun.com/repository/apache-snapshots</url>
++    </repository>
++      <repository>
++        <id>apache spring</id>
++        <url>https://maven.aliyun.com/repository/spring-plugin</url>
++    </repository>
+     <repository>
+       <id>gcs-maven-central-mirror</id>
+       <!--
+@@ -316,6 +332,17 @@
+     </repository>
+   </repositories>
+   <pluginRepositories>
++    <pluginRepository> 
++      <id>public</id>
++      <name>aliyun nexus</name>
++      <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
++      <releases>
++          <enabled>true</enabled>
++      </releases>
++      <snapshots>
++          <enabled>false</enabled>
++      </snapshots>
++    </pluginRepository>
+     <pluginRepository>
+       <id>gcs-maven-central-mirror</id>
+       <!--

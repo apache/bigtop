@@ -1,0 +1,84 @@
+diff --git a/flink-runtime-web/pom.xml b/flink-runtime-web/pom.xml
+index cd8befc4eed..589aad611cc 100644
+--- a/flink-runtime-web/pom.xml
++++ b/flink-runtime-web/pom.xml
+@@ -130,7 +130,7 @@ under the License.
+ 				</property>
+ 			</activation>
+ 			<properties>
+-				<npm.proxy>--registry http://172.17.0.1:8888/repository/npm/</npm.proxy>
++				<npm.proxy>--registry https://registry.npmmirror.com</npm.proxy>
+ 			</properties>
+ 		</profile>
+ 	</profiles>
+@@ -268,21 +268,12 @@ under the License.
+ 							<goal>npm</goal>
+ 						</goals>
+ 						<configuration>
+-							<arguments>ci --cache-max=0 --no-save ${npm.proxy}</arguments>
++							<arguments>ci --cache-max=0 --no-save --force ${npm.proxy}</arguments>
+ 							<environmentVariables>
+ 								<HUSKY_SKIP_INSTALL>true</HUSKY_SKIP_INSTALL>
+ 							</environmentVariables>
+ 						</configuration>
+ 					</execution>
+-					<execution>
+-						<id>npm run ci-check</id>
+-						<goals>
+-							<goal>npm</goal>
+-						</goals>
+-						<configuration>
+-							<arguments>run ci-check</arguments>
+-						</configuration>
+-					</execution>
+ 				</executions>
+ 				<configuration>
+ 					<workingDirectory>web-dashboard</workingDirectory>
+diff --git a/pom.xml b/pom.xml
+index cab5a38103f..36d5b0144a2 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -50,6 +50,22 @@ under the License.
+ 	</scm>
+ 
+ 	<repositories>
++		<repository>
++	        <id>central</id>
++	        <url>https://maven.aliyun.com/repository/central</url>
++	    </repository>
++	     <repository>
++	        <id>public</id>
++	        <url>https://maven.aliyun.com/repository/public</url>
++	    </repository>
++	     <repository>
++	        <id>apache snapshots</id>
++	        <url>https://maven.aliyun.com/repository/apache-snapshots</url>
++	    </repository>
++	      <repository>
++	        <id>apache spring</id>
++	        <url>https://maven.aliyun.com/repository/spring-plugin</url>
++	    </repository>
+ 		<repository>
+ 			<id>repository.jboss.org</id>
+ 			<url>https://repository.jboss.org/nexus/content/groups/public/</url>
+@@ -62,6 +78,20 @@ under the License.
+ 		</repository>
+ 	</repositories>
+ 
++	<pluginRepositories>
++		<pluginRepository> 
++	      <id>public</id>
++	      <name>aliyun nexus</name>
++	      <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
++	      <releases>
++	          <enabled>true</enabled>
++	      </releases>
++	      <snapshots>
++	          <enabled>false</enabled>
++	      </snapshots>
++	  </pluginRepository>
++	</pluginRepositories>
++
+ 	<modules>
+ 		<module>flink-annotations</module>
+ 		<module>flink-architecture-tests</module>

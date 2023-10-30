@@ -1,0 +1,44 @@
+diff --git a/pom.xml b/pom.xml
+index 5e322a86a8..4fe352c4ab 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -226,8 +226,39 @@
+     <jansi.version>2.4.0</jansi.version>
+     <spring.version>5.2.24.RELEASE</spring.version>
+   </properties>
++
++  <pluginRepositories>
++    <pluginRepository> 
++        <id>public</id>
++        <name>aliyun nexus</name>
++        <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
++        <releases>
++            <enabled>true</enabled>
++        </releases>
++        <snapshots>
++            <enabled>false</enabled>
++        </snapshots>
++    </pluginRepository>
++  </pluginRepositories>
++  
+   <repositories>
+     <!-- This needs to be removed before checking in-->
++   <repository>
++        <id>central</id>
++        <url>https://maven.aliyun.com/repository/central</url>
++    </repository>
++     <repository>
++        <id>public</id>
++        <url>https://maven.aliyun.com/repository/public</url>
++    </repository>
++     <repository>
++        <id>apache snapshots</id>
++        <url>https://maven.aliyun.com/repository/apache-snapshots</url>
++    </repository>
++      <repository>
++        <id>apache spring</id>
++        <url>https://maven.aliyun.com/repository/spring-plugin</url>
++    </repository>
+     <repository>
+       <id>central</id>
+       <name>central</name>

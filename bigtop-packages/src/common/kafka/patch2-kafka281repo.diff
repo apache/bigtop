@@ -1,0 +1,22 @@
+diff --git a/build.gradle b/build.gradle
+index fbda13d5a7..ee619cb4a9 100644
+--- a/build.gradle
++++ b/build.gradle
+@@ -20,7 +20,7 @@ import java.nio.charset.StandardCharsets
+ 
+ buildscript {
+   repositories {
+-    mavenCentral()
++    maven{url "https://maven.aliyun.com/repository/central"}
+   }
+   apply from: "$rootDir/gradle/dependencies.gradle"
+ 
+@@ -117,7 +117,7 @@ ext {
+ allprojects {
+ 
+   repositories {
+-    mavenCentral()
++    maven{url "https://maven.aliyun.com/repository/central"}
+   }
+ 
+   dependencyUpdates {
