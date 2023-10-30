@@ -1,0 +1,59 @@
+#!/bin/bash
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+set -ex
+. `dirname $0`/bigtop.bom
+
+export _JAVA_OPTIONS="-Xmx2048m -Djava.awt.headless=true"
+
+. /etc/os-release
+OS="$ID"
+ARCH=`uname -m`
+DL_DIR=../../../../../dl/
+
+mvn clean install package -Drat.skip=true -DskipTests -Dmaven.test.skip=true -Dfindbugs.skip=true
+
+#todo addjust grafana_tar by os
+phoenix_version=5.1.2
+grafana_tar=grafana-9.3.2.linux-amd64.tar.gz
+phoenix_tar=phoenix-hbase-2.4-${phoenix_version}-bin.tar.gz
+phoenix_folder=phoenix-hbase-2.4-${phoenix_version}-bin
+hbase_folder=hbase-2.4.13
+
+embedded_dir=./embedded
+mkdir $embedded_dir
+cp -r $DL_DIR/hadoop_ambari_metrics $embedded_dir/
+hadoop_folder=$embedded_dir/hadoop_ambari_metrics
+
+for f in ${hadoop_folder}/lib/native/libsnappy.so.1.*.*; do
+	if [ -f "$f" ]; then
+    	mv -- "$f" "${hadoop_folder}/lib/native/libsnappy.so.1"
+	fi
+done
+mv $hadoop_folder/lib/native/libhdfs.so.0.0.0 $hadoop_folder/lib/native/libhdfs.so
+mv $hadoop_folder/lib/native/libhadoop.so.1.0.0 $hadoop_folder/lib/native/libhadoop.so
+
+[ -f "${hadoop_folder}/lib/native/libsnappy.so" ] && rm -f "${hadoop_folder}/lib/native/libsnappy.so"
+
+tar -xzvf  ${DL_DIR}/hbase-${HBASE_VERSION}-bin.tar.gz -C $embedded_dir/
+tar -xzvf ${DL_DIR}/$phoenix_tar -C $embedded_dir/
+# 移动文件
+mv $embedded_dir/${phoenix_folder}/phoenix-server-hbase-2.4-*.jar $embedded_dir/${hbase_folder}/lib/phoenix-${phoenix_version}-server.jar
+
+
+tar -xzvf ${DL_DIR}/$grafana_tar -C $embedded_dir/
+
+#编译 psutils 需要python3-devel

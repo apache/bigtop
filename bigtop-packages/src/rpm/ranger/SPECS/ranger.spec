@@ -11,7 +11,11 @@
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
+
 %undefine _missing_build_ids_terminate_build
+# disable repacking jars
+%define __os_install_post %{nil}
+%define __jar_repack %{nil}
 
 %define ranger_name ranger
 %define ranger_pkg_name ranger%{pkg_name_suffix}

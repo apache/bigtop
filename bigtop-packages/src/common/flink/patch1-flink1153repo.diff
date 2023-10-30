@@ -1,8 +1,8 @@
 diff --git a/flink-runtime-web/pom.xml b/flink-runtime-web/pom.xml
-index cd8befc4eed..589aad611cc 100644
+index 497da94e74b..0eb2a3c547b 100644
 --- a/flink-runtime-web/pom.xml
 +++ b/flink-runtime-web/pom.xml
-@@ -130,7 +130,7 @@ under the License.
+@@ -139,7 +139,7 @@ under the License.
  				</property>
  			</activation>
  			<properties>
@@ -11,7 +11,7 @@ index cd8befc4eed..589aad611cc 100644
  			</properties>
  		</profile>
  	</profiles>
-@@ -268,21 +268,12 @@ under the License.
+@@ -282,21 +282,12 @@ under the License.
  							<goal>npm</goal>
  						</goals>
  						<configuration>
@@ -35,7 +35,7 @@ index cd8befc4eed..589aad611cc 100644
  				<configuration>
  					<workingDirectory>web-dashboard</workingDirectory>
 diff --git a/pom.xml b/pom.xml
-index cab5a38103f..36d5b0144a2 100644
+index a5a1792d68c..610a2ed0b8b 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -50,6 +50,22 @@ under the License.
@@ -60,7 +60,7 @@ index cab5a38103f..36d5b0144a2 100644
 +	    </repository>
  		<repository>
  			<id>repository.jboss.org</id>
- 			<url>https://repository.jboss.org/nexus/content/groups/public/</url>
+ 			<url>http://repository.jboss.org/nexus/content/groups/public/</url>
 @@ -62,6 +78,20 @@ under the License.
  		</repository>
  	</repositories>

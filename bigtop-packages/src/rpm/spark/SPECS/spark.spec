@@ -13,6 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# disable repacking jars
+%define __os_install_post %{nil}
+%define __jar_repack %{nil}
+
 %define spark_name spark
 %define spark_pkg_name spark%{pkg_name_suffix}
 %define hadoop_pkg_name hadoop%{pkg_name_suffix}
@@ -41,9 +45,6 @@
 %define doc_spark %{doc_dir}/spark-%{spark_version}
 %define alternatives_cmd alternatives
 %endif
-
-# disable repacking jars
-%define __os_install_post %{nil}
 
 Name: %{spark_pkg_name}
 Version: %{spark_version}
@@ -116,7 +117,7 @@ Server for Spark worker
 %package -n %{spark_pkg_name}-python
 Summary: Python client for Spark
 Group: Development/Libraries
-Requires: %{spark_pkg_name}-core = %{version}-%{release}, python3 >=3.6
+Requires: %{spark_pkg_name}-core = %{version}-%{release}
 
 %description -n %{spark_pkg_name}-python
 Includes PySpark, an interactive Python shell for Spark, and related libraries

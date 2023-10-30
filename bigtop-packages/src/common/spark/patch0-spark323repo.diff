@@ -1,5 +1,5 @@
 diff --git a/pom.xml b/pom.xml
-index 986a13cba20..3e552fa2e19 100644
+index 986a13cba20..db605a0e134 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -285,6 +285,22 @@
@@ -7,19 +7,19 @@ index 986a13cba20..3e552fa2e19 100644
    </properties>
    <repositories>
 +    <repository>
-+        <id>central</id>
++        <id>ali central</id>
 +        <url>https://maven.aliyun.com/repository/central</url>
 +    </repository>
 +     <repository>
-+        <id>public</id>
++        <id>ali public</id>
 +        <url>https://maven.aliyun.com/repository/public</url>
 +    </repository>
 +     <repository>
-+        <id>apache snapshots</id>
++        <id>ali apache snapshots</id>
 +        <url>https://maven.aliyun.com/repository/apache-snapshots</url>
 +    </repository>
 +      <repository>
-+        <id>apache spring</id>
++        <id>ali apache spring</id>
 +        <url>https://maven.aliyun.com/repository/spring-plugin</url>
 +    </repository>
      <repository>
@@ -43,3 +43,12 @@ index 986a13cba20..3e552fa2e19 100644
      <pluginRepository>
        <id>gcs-maven-central-mirror</id>
        <!--
+@@ -2892,7 +2919,7 @@
+         <plugin>
+           <groupId>org.apache.maven.plugins</groupId>
+           <artifactId>maven-shade-plugin</artifactId>
+-          <version>3.2.4</version>
++          <version>3.5.0</version>
+           <dependencies>
+             <dependency>
+               <groupId>org.ow2.asm</groupId>

@@ -19,7 +19,7 @@ set -e
 . `dirname $0`/bigtop.bom
 
 
-mvn clean compile package install \
+mvn clean compile package  \
         -DskipTests=true       \
         -Dcheckstyle.skip=true \
         -Djacoco.skip=true     \

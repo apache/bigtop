@@ -1,10 +1,10 @@
 diff --git a/pom.xml b/pom.xml
-index e197d350e..a9f533d42 100644
+index e197d350e..874c32ecb 100644
 --- a/pom.xml
 +++ b/pom.xml
-@@ -95,6 +95,22 @@
+@@ -95,6 +97,22 @@
    </distributionManagement>
- 
+
    <repositories>
 +    <repository>
 +        <id>central</id>
@@ -25,21 +25,22 @@ index e197d350e..a9f533d42 100644
      <repository>
        <id>${distMgmtSnapshotsId}</id>
        <name>${distMgmtSnapshotsName}</name>
-@@ -103,6 +119,17 @@
+@@ -103,6 +121,17 @@
    </repositories>
- 
+
    <pluginRepositories>
-+    <pluginRepository> 
-+      <id>public</id>
-+      <name>aliyun nexus</name>
-+      <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
-+      <releases>
-+          <enabled>true</enabled>
-+      </releases>
-+      <snapshots>
-+          <enabled>false</enabled>
-+      </snapshots>
++    <pluginRepository>
++        <id>public</id>
++        <name>aliyun nexus</name>
++        <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
++        <releases>
++            <enabled>true</enabled>
++        </releases>
++        <snapshots>
++            <enabled>false</enabled>
++        </snapshots>
 +    </pluginRepository>
      <pluginRepository>
        <id>maven2-repository.atlassian</id>
        <name>Atlassian Maven Repository</name>
+

@@ -1,0 +1,119 @@
+diff --git a/hadoop-assemblies/src/main/resources/assemblies/hadoop-yarn-dist.xml b/hadoop-assemblies/src/main/resources/assemblies/hadoop-yarn-dist.xml
+index cd86ce4e4176..c55ca8eb88d0 100644
+--- a/hadoop-assemblies/src/main/resources/assemblies/hadoop-yarn-dist.xml
++++ b/hadoop-assemblies/src/main/resources/assemblies/hadoop-yarn-dist.xml
+@@ -181,13 +181,6 @@
+         <include>**/*</include>
+       </includes>
+     </fileSet>
+-    <fileSet>
+-      <directory>${basedir}</directory>
+-      <outputDirectory>/share/doc/hadoop/${hadoop.component}</outputDirectory>
+-      <includes>
+-        <include>*.txt</include>
+-      </includes>
+-    </fileSet>
+     <fileSet>
+       <directory>${project.build.directory}/webapps</directory>
+       <outputDirectory>/share/hadoop/${hadoop.component}/webapps</outputDirectory>
+@@ -201,10 +194,6 @@
+       <outputDirectory>/share/hadoop/${hadoop.component}/jdiff</outputDirectory>
+     </fileSet>
+     <fileSet>
+-      <directory>${project.build.directory}/site</directory>
+-      <outputDirectory>/share/doc/hadoop/${hadoop.component}</outputDirectory>
+-    </fileSet>
+-      <fileSet>
+       <directory>hadoop-yarn/hadoop-yarn-ui/target/hadoop-yarn-ui-${project.version}</directory>
+       <outputDirectory>/share/hadoop/${hadoop.component}/webapps/ui2</outputDirectory>
+       <includes>
+diff --git a/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-jobclient/pom.xml b/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-jobclient/pom.xml
+index caf5412ad5fe..627ff28eb15f 100644
+--- a/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-jobclient/pom.xml
++++ b/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-jobclient/pom.xml
+@@ -35,6 +35,10 @@
+   </properties>
+ 
+   <dependencies>
++    <dependency>
++      <groupId>org.apache.hadoop</groupId>
++      <artifactId>hadoop-mapreduce-client-core</artifactId>
++    </dependency>
+     <dependency>
+       <groupId>org.apache.hadoop</groupId>
+       <artifactId>hadoop-mapreduce-client-common</artifactId>
+diff --git a/hadoop-mapreduce-project/pom.xml b/hadoop-mapreduce-project/pom.xml
+index 166fc7292299..508fa1d0edad 100644
+--- a/hadoop-mapreduce-project/pom.xml
++++ b/hadoop-mapreduce-project/pom.xml
+@@ -42,6 +42,41 @@
+   </modules>
+ 
+   <dependencies>
++    <dependency>
++      <groupId>org.apache.hadoop</groupId>
++      <artifactId>hadoop-mapreduce-client-shuffle</artifactId>
++      <version>${project.version}</version>
++      <scope>provided</scope>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.hadoop</groupId>
++      <artifactId>hadoop-mapreduce-client-jobclient</artifactId>
++      <version>${project.version}</version>
++      <scope>provided</scope>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.hadoop</groupId>
++      <artifactId>hadoop-mapreduce-client-hs-plugins</artifactId>
++      <version>${project.version}</version>
++      <scope>provided</scope>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.hadoop</groupId>
++      <artifactId>hadoop-mapreduce-client-nativetask</artifactId>
++      <version>${project.version}</version>
++      <scope>provided</scope>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.hadoop</groupId>
++      <artifactId>hadoop-mapreduce-client-uploader</artifactId>
++      <version>${project.version}</version>
++      <scope>provided</scope>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.hadoop</groupId>
++      <artifactId>hadoop-mapreduce-examples</artifactId>
++      <scope>provided</scope>
++    </dependency>
+     <dependency>
+       <groupId>com.google.protobuf</groupId>
+       <artifactId>protobuf-java</artifactId>
+diff --git a/hadoop-yarn-project/pom.xml b/hadoop-yarn-project/pom.xml
+index 4d593edd35aa..8f95854bef86 100644
+--- a/hadoop-yarn-project/pom.xml
++++ b/hadoop-yarn-project/pom.xml
+@@ -80,7 +80,23 @@
+     </dependency>
+     <dependency>
+       <groupId>org.apache.hadoop</groupId>
+-      <artifactId>hadoop-yarn-services-core</artifactId>
++      <artifactId>hadoop-yarn-applications-catalog-docker</artifactId>
++      <version>${project.version}</version>
++      <scope>provided</scope>
++      <type>pom</type>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.hadoop</groupId>
++      <artifactId>hadoop-yarn-applications-distributedshell</artifactId>
++      <version>${project.version}</version>
++      <scope>provided</scope>
++    </dependency>
++    <dependency>
++      <groupId>org.apache.hadoop</groupId>
++      <artifactId>hadoop-yarn-ui</artifactId>
++      <version>${project.version}</version>
++      <scope>provided</scope>
++      <type>war</type>
+     </dependency>
+   </dependencies>
+ 

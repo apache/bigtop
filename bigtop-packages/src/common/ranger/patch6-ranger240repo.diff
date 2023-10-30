@@ -1,12 +1,10 @@
 diff --git a/pom.xml b/pom.xml
-index 43a758944..29cf64081 100644
+index 43a758944..c655d94b1 100644
 --- a/pom.xml
 +++ b/pom.xml
-@@ -844,7 +844,24 @@
-             <url>${distMgmtStagingUrl}</url>
+@@ -845,6 +845,22 @@
          </repository>
      </distributionManagement>
-+
      <repositories>
 +        <repository>
 +            <id>central</id>
@@ -27,12 +25,12 @@ index 43a758944..29cf64081 100644
          <repository>
              <id>apache.snapshots.https</id>
              <name>Apache Development Snapshot Repository</name>
-@@ -874,6 +891,20 @@
+@@ -874,6 +890,19 @@
    </repository>
    -->
      </repositories>
 +    <pluginRepositories>
-+        <pluginRepository> 
++        <pluginRepository>
 +          <id>public</id>
 +          <name>aliyun nexus</name>
 +          <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
@@ -44,7 +42,6 @@ index 43a758944..29cf64081 100644
 +          </snapshots>
 +      </pluginRepository>
 +    </pluginRepositories>
-+
      <dependencyManagement>
          <dependencies>
              <dependency>

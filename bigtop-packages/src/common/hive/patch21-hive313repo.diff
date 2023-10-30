@@ -1,12 +1,11 @@
 diff --git a/pom.xml b/pom.xml
-index 5e322a86a8..4fe352c4ab 100644
+index cb54806ef5..c2dd05747d 100644
 --- a/pom.xml
 +++ b/pom.xml
-@@ -226,8 +226,39 @@
-     <jansi.version>2.4.0</jansi.version>
-     <spring.version>5.2.24.RELEASE</spring.version>
+@@ -215,16 +215,36 @@
+     <gson.version>2.2.4</gson.version>
    </properties>
-+
+ 
 +  <pluginRepositories>
 +    <pluginRepository> 
 +        <id>public</id>
@@ -19,10 +18,18 @@ index 5e322a86a8..4fe352c4ab 100644
 +            <enabled>false</enabled>
 +        </snapshots>
 +    </pluginRepository>
-+  </pluginRepositories>
-+  
++  </pluginRepositories>  
    <repositories>
-     <!-- This needs to be removed before checking in-->
+-    <repository>
+-      <id>central</id>
+-      <name>central</name>
+-      <url>https://repo.maven.apache.org/maven2</url>
+-      <layout>default</layout>
+-      <releases>
+-        <enabled>true</enabled>
+-        <checksumPolicy>warn</checksumPolicy>
+-      </releases>
++    <!-- This needs to be removed before checking in-->
 +   <repository>
 +        <id>central</id>
 +        <url>https://maven.aliyun.com/repository/central</url>
@@ -38,7 +45,6 @@ index 5e322a86a8..4fe352c4ab 100644
 +      <repository>
 +        <id>apache spring</id>
 +        <url>https://maven.aliyun.com/repository/spring-plugin</url>
-+    </repository>
-     <repository>
-       <id>central</id>
-       <name>central</name>
+     </repository>
+   </repositories>
+ 

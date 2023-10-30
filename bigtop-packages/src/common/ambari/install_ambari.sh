@@ -86,11 +86,6 @@ SERVER_DIR=$BUILD_DIR/ambari-server/target/ambari-server-*-dist
 
 cp -ra $SERVER_DIR/* ${PREFIX}/
 cp -a  $SOURCE_DIR/ambari-common/src/main/unix/ambari-python-wrap ${PREFIX}/${VAR_LIB_DIR}
-# Both of these are a stopgap before we get our own stack
-rm -rf ${PREFIX}/var/lib/ambari-server/resources/stacks/HDP*
-mkdir -p ${PREFIX}/var/lib/ambari-server/resources/stacks/Bigtop/2.1
-cp $BUILD_DIR/contrib/management-packs/odpi-ambari-mpack/target/odpi-ambari-mpack-*.tar.gz ${PREFIX}/var/lib/ambari-server/resources
-
 # End of Ambari Server
 
 LIB_DIR=/usr/lib/ambari-agent
@@ -102,4 +97,4 @@ AGENT_BUILD_DIR=$(find ${BUILD_DIR}/ambari-agent/target -type d -name 'ambari-ag
 
 cp -ra $AGENT_BUILD_DIR/* ${PREFIX}/
 cp -a $SOURCE_DIR/ambari-common/src/main/unix/ambari-python-wrap ${PREFIX}/${VAR_LIB_DIR}
-rm -rf ${PREFIX}/var/lib/ambari-agent/cache/stacks/HDP*
+install -d -m 0755 ${PREFIX}/${VAR_LIB_DIR}/lib

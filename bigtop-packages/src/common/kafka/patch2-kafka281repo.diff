@@ -1,17 +1,25 @@
 diff --git a/build.gradle b/build.gradle
-index fbda13d5a7..ee619cb4a9 100644
+index e21609fd49..7ca47dfcff 100644
 --- a/build.gradle
 +++ b/build.gradle
-@@ -20,7 +20,7 @@ import java.nio.charset.StandardCharsets
+@@ -19,13 +19,10 @@ import java.nio.charset.StandardCharsets
  
  buildscript {
    repositories {
 -    mavenCentral()
+-    jcenter()
+-    maven {
+-      url "https://plugins.gradle.org/m2/"
+-    }
 +    maven{url "https://maven.aliyun.com/repository/central"}
++    maven{ url 'http://maven.aliyun.com/nexus/content/repositories/jcenter'}
++    maven{url "https://maven.aliyun.com/repository/gradle-plugin"}
    }
+-  apply from: file('gradle/buildscript.gradle'), to: buildscript
    apply from: "$rootDir/gradle/dependencies.gradle"
  
-@@ -117,7 +117,7 @@ ext {
+   dependencies {
+@@ -54,7 +51,7 @@ spotless {
  allprojects {
  
    repositories {
@@ -19,4 +27,45 @@ index fbda13d5a7..ee619cb4a9 100644
 +    maven{url "https://maven.aliyun.com/repository/central"}
    }
  
-   dependencyUpdates {
+   apply plugin: 'idea'
+diff --git a/gradle/buildscript.gradle b/gradle/buildscript.gradle
+index 83967bb47d..e69de29bb2 100644
+--- a/gradle/buildscript.gradle
++++ b/gradle/buildscript.gradle
+@@ -1,23 +0,0 @@
+-// Licensed to the Apache Software Foundation (ASF) under one or more
+-// contributor license agreements.  See the NOTICE file distributed with
+-// this work for additional information regarding copyright ownership.
+-// The ASF licenses this file to You under the Apache License, Version 2.0
+-// (the "License"); you may not use this file except in compliance with
+-// the License.  You may obtain a copy of the License at
+-//
+-//    http://www.apache.org/licenses/LICENSE-2.0
+-//
+-// Unless required by applicable law or agreed to in writing, software
+-// distributed under the License is distributed on an "AS IS" BASIS,
+-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-// See the License for the specific language governing permissions and
+-// limitations under the License.
+-
+-repositories {
+-  repositories {
+-    // For license plugin.
+-    maven {
+-      url 'https://dl.bintray.com/content/netflixoss/external-gradle-plugins/'
+-    }
+-  }
+-}
+diff --git a/gradle/wrapper/gradle-wrapper.properties b/gradle/wrapper/gradle-wrapper.properties
+index 1c4bcc29e1..46c0582c4b 100644
+--- a/gradle/wrapper/gradle-wrapper.properties
++++ b/gradle/wrapper/gradle-wrapper.properties
+@@ -1,5 +1,5 @@
+ distributionBase=GRADLE_USER_HOME
+ distributionPath=wrapper/dists
+-distributionUrl=https\://services.gradle.org/distributions/gradle-6.8.1-all.zip
++distributionUrl=https\://mirrors.aliyun.com/macports/distfiles/gradle/gradle-6.8.1-all.zip
+ zipStoreBase=GRADLE_USER_HOME
+-zipStorePath=wrapper/dists
++zipStorePath=wrapper/dists
+\ No newline at end of file

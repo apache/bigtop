@@ -1,0 +1,24 @@
+diff --git a/.mvn/extensions.xml b/.mvn/extensions.xml
+new file mode 100644
+index 00000000000..3d45a9dfdcb
+--- /dev/null
++++ b/.mvn/extensions.xml
+@@ -0,0 +1,8 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<extensions>
++    <extension>
++        <groupId>io.takari.maven</groupId>
++        <artifactId>takari-smart-builder</artifactId>
++        <version>0.6.4</version>
++    </extension>
++</extensions>
+\ No newline at end of file
+diff --git a/.mvn/maven.config b/.mvn/maven.config
+new file mode 100644
+index 00000000000..f8927de24ee
+--- /dev/null
++++ b/.mvn/maven.config
+@@ -0,0 +1,2 @@
++-b smart
++-T2C
+\ No newline at end of file

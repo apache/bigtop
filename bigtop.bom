@@ -340,13 +340,54 @@ bigtop {
     'ambari' {
       name    = 'ambari'
       relNotes = 'Apache Ambari'
-      version { base = '2.7.5'; pkg = '2.7.5.0'; release = 1 }
-      tarball { destination = "apache-$name-${version.base}-src.tar.gz"
-                source      = destination }
-      url     { download_path = "/$name/$name-${version.base}/"
-                site = "${apache.APACHE_MIRROR}/${download_path}"
-                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+      version { base = '3.1'; pkg = '3.1'; release = 1 }
+      tarball { destination = "apache-ambari-${version.base}.tar.gz"
+                source = destination}
+      git {
+          //repo = "http://172.27.17.200/RDC/bigdata/ambari.git"
+          repo = "https://github.com/JiaLiangC/ambari.git"
+          ref  = "udh3"
+          dir  = "apache-ambari-${version.base}"
+          commit_hash = "origin/udh3"
+          //user="caijialiang"
+          //token="J3sxFsV9T5ahRjaQ7AG2"
+      }
     }
+
+    'ambari-infra' {
+      name    = 'ambari-infra'
+      relNotes = 'Apache Ambari Infra'
+      version { base = '3.1'; pkg = '3.1'; release = 1 }
+      tarball { destination = "apache-ambari-infra-${version.base}.tar.gz"
+                source = destination}
+      git {
+          //repo = "http://172.27.17.200/RDC/bigdata/ambari-infra.git"
+          repo = "https://github.com/JiaLiangC/ambari-infra.git"
+          ref  = "udh3"
+          dir  = "apache-ambari-infra-${version.base}"
+          commit_hash = "origin/udh3"
+          //user="caijialiang"
+          //token="J3sxFsV9T5ahRjaQ7AG2"
+      }
+    }
+
+        'ambari-metrics' {
+          name    = 'ambari-metrics'
+          relNotes = 'Apache Ambari Metrics'
+          version { base = '3.1'; pkg = '3.1'; release = 1 }
+          tarball { destination = "apache-ambari-metrics-${version.base}.tar.gz"
+                    source = destination}
+          git {
+              //repo = "http://172.27.17.200/RDC/bigdata/ambari-metrics.git"
+              repo = "https://github.com/JiaLiangC/ambari-metrics.git"
+              ref  = "udh3"
+              dir  = "apache-ambari-metrics-${version.base}"
+              commit_hash = "origin/udh3"
+              //user="caijialiang"
+              //token="J3sxFsV9T5ahRjaQ7AG2"
+          }
+        }
+
     'bigtop-ambari-mpack' {
       name    = 'bigtop-ambari-mpack'
       relNotes = 'Bigtop Mpack'
@@ -377,6 +418,16 @@ bigtop {
       url     { site = "https://github.com/apache/ranger/archive/refs/tags"
                 archive = site }
       packaging = 'rpm'
+    }
+    'kyuubi' {
+      name    = 'kyuubi'
+      rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
+      relNotes = 'Apache Kyuubi'
+      version { base = '1.8.0'; pkg = base; release = 1 }
+      tarball { destination = "$name-${version.base}.tar.gz"
+                source      = "v${version.base}.tar.gz" }
+      url     { site = "https://github.com/apache/kyuubi/archive/refs/tags"
+                archive = site }
     }
   }
 }

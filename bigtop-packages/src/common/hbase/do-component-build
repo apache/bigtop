@@ -53,11 +53,16 @@ if [ $HOSTTYPE = "aarch64" ] ; then
       -Dclassifier=linux-aarch_64 -Dpackaging=exe -Dfile=/usr/local/protobuf-2.5.0/bin/protoc
   MVN_ARGS+="-Dexternal.protobuf.groupid=com.google.protobuf -Dexternal.protoc.version=2.5.0 "
 fi
+DL_DIR=../../../../../dl/
 
 # HBASE-21513: separate site and assembly:single to avoid assembly issues.
 mvn ${MVN_ARGS} ${MAVEN_ADDITIONAL} clean install "$@"
-mvn ${MVN_ARGS} ${MAVEN_ADDITIONAL} site "$@"
+#skip doc build
+#mvn ${MVN_ARGS} ${MAVEN_ADDITIONAL} site "$@"
 mvn ${MVN_ARGS} ${MAVEN_ADDITIONAL} package assembly:single "$@"
+
+#do this for ambari metrics packaging
+\cp -r hbase-assembly/target/hbase-${HBASE_VERSION}-bin.tar.gz $DL_DIR
 
 rm -rf build
 mkdir build

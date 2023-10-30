@@ -17,6 +17,11 @@
 %define _binaries_in_noarch_packages_terminate_build   0
 %define _unpackaged_files_terminate_build 0
 
+# disable repacking jars
+%define __os_install_post %{nil}
+%define __jar_repack %{nil}
+%define  debug_package %{nil}
+
 %if  %{?suse_version:1}0
 %define doc_ambari %{_docdir}/ambari-doc
 %global initd_dir %{_sysconfdir}/rc.d
@@ -24,9 +29,6 @@
 %define doc_ambari %{_docdir}/ambari-doc-%{ambari_version}
 %global initd_dir %{_sysconfdir}/rc.d/init.d
 %endif
-
-# disable repacking jars
-%define __os_install_post %{nil}
 
 Name: ambari
 Version: %{ambari_version}
@@ -37,7 +39,7 @@ Group: Development
 BuildArch: noarch
 Buildroot: %(mktemp -ud %{_tmppath}/apache-%{ambari_name}-%{version}-%{release}-XXXXXX)
 License: ASL 2.0 
-Source0: apache-%{ambari_name}-%{ambari_base_version}-src.tar.gz
+Source0: apache-%{ambari_name}-%{ambari_base_version}.tar.gz
 Source1: do-component-build 
 Source2: install_%{ambari_name}.sh
 Source3: bigtop.bom
@@ -50,7 +52,7 @@ AutoReqProv: no
 Ambari
 
 %prep
-%setup -n apache-%{ambari_name}-%{ambari_base_version}-src
+%setup -n apache-%{ambari_name}-%{ambari_base_version}
 
 #BIGTOP_PATCH_COMMANDS
 
@@ -230,35 +232,11 @@ exit 0
 # See the License for the specific language governing permissions and
 # limitations under the License
 
-PYPATH=`find /usr/lib -maxdepth 1 -name 'python*' | sort`
-PYLIB_DIR=`echo ${PYPATH} | awk '{print $1}'`
-RESOURCE_MANAGEMENT_DIR= "${PYLIB_DIR}/site-packages/resource_management"
-RESOURCE_MANAGEMENT_DIR_SERVER="/usr/lib/ambari-server/lib/resource_management"
-JINJA_DIR="${PYLIB_DIR}/site-packages/ambari_jinja2"
-JINJA_SERVER_DIR="/usr/lib/ambari-server/lib/ambari_jinja2"
 AMBARI_SERVER_EXECUTABLE_LINK="/usr/sbin/ambari-server"
 AMBARI_SERVER_EXECUTABLE="/etc/init.d/ambari-server"
-
-
 # needed for upgrade though ambari-2.2.2
 rm -f "$AMBARI_SERVER_EXECUTABLE_LINK"
 ln -s "$AMBARI_SERVER_EXECUTABLE" "$AMBARI_SERVER_EXECUTABLE_LINK"
-
-# remove RESOURCE_MANAGEMENT_DIR if it's a directory
-if [ -d "$RESOURCE_MANAGEMENT_DIR" ]; then  # resource_management dir exists
-  if [ ! -L "$RESOURCE_MANAGEMENT_DIR" ]; then # resource_management dir is not link
-    rm -rf "$RESOURCE_MANAGEMENT_DIR"
-  fi
-fi
-# setting resource_management shared resource
-if [ ! -d "$RESOURCE_MANAGEMENT_DIR" ]; then
-  ln -s ${RESOURCE_MANAGEMENT_DIR_SERVER} ${RESOURCE_MANAGEMENT_DIR}
-fi
-
-# setting jinja2 shared resource
-if [ ! -d "$JINJA_DIR" ]; then
-  ln -s ${JINJA_SERVER_DIR} ${JINJA_DIR}
-fi
 
 exit 0
 
@@ -425,28 +403,11 @@ exit 0
 # See the License for the specific language governing permissions and
 # limitations under the License
 
-PYPATH=`find /usr/lib -maxdepth 1 -name 'python*' | sort`
-PYLIB_DIR=`echo $PYPATH | awk '{print $1}'`
-RESOURCE_MANAGEMENT_DIR="$PYLIB_DIR/site-packages/resource_management"
-RESOURCE_MANAGEMENT_DIR_AGENT="/usr/lib/ambari-agent/lib/resource_management"
-JINJA_DIR="$PYLIB_DIR/site-packages/ambari_jinja2"
-JINJA_AGENT_DIR="/usr/lib/ambari-agent/lib/ambari_jinja2"
+AMBARI_AGENT_BINARY="/etc/init.d/ambari-agent"
+AMBARI_AGENT_BINARY_SYMLINK="/usr/sbin/ambari-agent"
 
-# remove RESOURCE_MANAGEMENT_DIR if it's a directory
-if [ -d "$RESOURCE_MANAGEMENT_DIR" ]; then  # resource_management dir exists
-  if [ ! -L "$RESOURCE_MANAGEMENT_DIR" ]; then # resource_management dir is not link
-    rm -rf "$RESOURCE_MANAGEMENT_DIR"
-  fi
-fi
-# setting resource_management shared resource
-if [ ! -d "$RESOURCE_MANAGEMENT_DIR" ]; then
-  ln -s "$RESOURCE_MANAGEMENT_DIR_AGENT" "$RESOURCE_MANAGEMENT_DIR"
-fi
-
-# setting jinja2 shared resource
-if [ ! -d "$JINJA_DIR" ]; then
-  ln -s "$JINJA_AGENT_DIR" "$JINJA_DIR"
-fi
+rm -f "$AMBARI_AGENT_BINARY_SYMLINK"
+ln -s "$AMBARI_AGENT_BINARY" "$AMBARI_AGENT_BINARY_SYMLINK"
 
 exit 0
 
@@ -479,7 +440,12 @@ exit 0
 %dir  /var/log/ambari-server
 
 %files agent
+%defattr(-,root,root,-)
 /usr/lib/ambari-agent
+/etc/ambari-agent
+/var/lib/ambari-agent
+/var/run/ambari-agent
+/var/log/ambari-agent
 %attr(644,root,root) /etc/init/ambari-agent.conf
 %attr(755,root,root) /var/lib/ambari-agent/ambari-python-wrap
 %attr(755,root,root) /var/lib/ambari-agent/ambari-sudo.sh
@@ -491,7 +457,7 @@ exit 0
 /etc/ambari-agent/conf
 %attr(755,root,root) /etc/ambari-agent/conf/ambari-agent.ini
 %attr(755,root,root) /etc/ambari-agent/conf/logging.conf.sample
-%attr(755,root,root) /var/lib/ambari-agent/bin/ambari-agent 
+%attr(755,root,root) /var/lib/ambari-agent/bin/ambari-agent
 %config %attr(700,root,root) /var/lib/ambari-agent/ambari-env.sh
 %attr(700,root,root) /var/lib/ambari-agent/install-helper.sh
 %attr(700,root,root) /var/lib/ambari-agent/upgrade_agent_configs.py
