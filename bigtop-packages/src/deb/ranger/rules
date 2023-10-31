@@ -1,0 +1,197 @@
+#!/usr/bin/make -f
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# -*- makefile -*-
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+# This has to be exported to make some magic below work.
+export DH_OPTIONS
+
+ranger_pkg_name=ranger
+
+%:
+	dh $@
+
+ranger_name=ranger
+
+man_dir=/usr/share/man
+bin_dir=/usr/bin
+doc_ranger=/usr/share/doc/${ranger_name}
+usr_lib_ranger=/usr/lib/${ranger_name}
+etc_default=/etc/default
+etc_ranger=/etc/${ranger_name}
+var_lib_ranger=/var/lib/${ranger_name}
+var_run_ranger=/var/run/${ranger_name}
+var_log_ranger=/var/log/${ranger_name}
+
+usr_lib_hadoop=/usr/lib/hadoop
+usr_lib_hive=/usr/lib/hive
+usr_lib_knox=/usr/lib/knox
+usr_lib_storm=/usr/lib/storm
+usr_lib_hbase=/usr/lib/hbase
+usr_lib_kafka=/usr/lib/kafka
+usr_lib_atlas=/usr/lib/atlas
+usr_lib_solr=/usr/lib/solr
+usr_lib_sqoop=/usr/lib/sqoop
+usr_lib_kylin=/usr/lib/kylin
+usr_lib_elasticsearch=/usr/lib/elasticsearch
+usr_lib_presto=/usr/lib/presto
+
+
+define ranger_admin_install
+${var_lib_ranger}
+${var_run_ranger}
+${etc_ranger}/admin
+${usr_lib_ranger}-admin
+${var_log_ranger}
+endef
+
+define ranger_usersync_install
+${usr_lib_ranger}-usersync
+${usr_lib_ranger}-usersync/native/credValidator.uexe
+${etc_ranger}/usersync
+${var_log_ranger}
+endef
+
+define ranger_kms_install
+${usr_lib_ranger}-kms
+${etc_ranger}/kms
+${var_log_ranger}
+endef
+
+define ranger_tagsync_install
+${usr_lib_ranger}-tagsync
+${etc_ranger}/tagsync
+${var_log_ranger}
+endef
+
+define ranger_hdfs_plugin_install
+${usr_lib_ranger}-hdfs-plugin
+${usr_lib_hadoop}/lib
+endef
+
+define ranger_yarn_plugin_install
+${usr_lib_ranger}-yarn-plugin
+${usr_lib_hadoop}/lib
+endef
+
+define ranger_hive_plugin_install
+${usr_lib_ranger}-hive-plugin
+${usr_lib_hive}/lib
+endef
+
+define ranger_hbase_plugin_install
+${usr_lib_ranger}-hbase-plugin
+${usr_lib_hbase}/lib
+endef
+
+define ranger_knox_plugin_install
+${usr_lib_ranger}-knox-plugin
+${usr_lib_knox}/ext
+endef
+
+define ranger_storm_plugin_install
+${usr_lib_ranger}-storm-plugin
+${usr_lib_storm}/extlib-daemon
+endef
+
+define ranger_kafka_plugin_install
+${usr_lib_ranger}-kafka-plugin
+${usr_lib_kafka}/libs
+endef
+
+define ranger_atlas_plugin_install
+${usr_lib_ranger}-atlas-plugin
+${usr_lib_atlas}/libext
+endef
+
+define ranger_solr_plugin_install
+${usr_lib_ranger}-solr-plugin
+${usr_lib_solr}/server/solr-webapp/webapp/WEB-INF/lib/
+endef
+
+define ranger_sqoop_plugin_install
+${usr_lib_ranger}-sqoop-plugin
+${usr_lib_sqoop}/server/lib
+endef
+
+define ranger_kylin_plugin_install
+${usr_lib_ranger}-kylin-plugin
+${usr_lib_kylin}/tomcat/webapps/kylin/WEB-INF/lib
+endef
+
+define ranger_elasticsearch_plugin_install
+${usr_lib_ranger}-elasticsearch-plugin
+${usr_lib_elasticsearch}/plugins
+endef
+
+define ranger_presto_plugin_install
+${usr_lib_ranger}-presto-plugin
+${usr_lib_presto}/plugin/ranger
+endef
+
+define get_install_name
+$(ranger_$(subst -,_,$(1))_install)
+endef
+
+define gen_install
+$(foreach item,$(call get_install_name,$(1)),echo $(item) >> debian/ranger-$(1).install;)
+endef
+
+define gen_rule
+$(foreach item, postinst preinst prerm,\
+	cp debian/ranger.$(item).tpl debian/ranger-$(1).$(item);\
+	sed -i -e 's:@var_lib_ranger@:${var_lib_ranger}:g' -e 's:@etc_ranger@:${etc_ranger}:g' -e 's:@component_name@:$(1):g' debian/ranger-$(1).$(item);\
+)
+endef
+
+define comp_install
+	env RANGER_VERSION=${RANGER_BASE_VERSION} \
+	bash debian/install_ranger.sh \
+		--prefix=debian/tmp \
+		--build-dir=build \
+		--component=$(1) \
+		--comp-dir=${usr_lib_ranger}-$(1) \
+		--var-ranger=${var_lib_ranger} \
+		--etc-ranger=${etc_ranger} \
+		--doc-dir=${doc_ranger}
+endef
+
+COMPS = admin usersync kms tagsync hdfs-plugin yarn-plugin hive-plugin hbase-plugin knox-plugin storm-plugin kafka-plugin atlas-plugin sqoop-plugin solr-plugin kylin-plugin elasticsearch-plugin presto-plugin
+
+
+.PHONY: gen_files
+
+
+gen_files:
+	$(foreach item,$(COMPS), $(call gen_install,$(item)))
+	$(foreach item, admin usersync kms tagsync, $(call gen_rule,$(item)))
+
+override_dh_auto_build:
+	bash -x debian/do-component-build -Dmaven.repo.local=${HOME}/.m2/repository
+
+override_dh_auto_install: gen_files
+	for comp in $(COMPS); do \
+		$(call comp_install,$$comp); \
+	done
+
+override_dh_install:
+	dh_install
+
+override_dh_strip_nondeterminism:

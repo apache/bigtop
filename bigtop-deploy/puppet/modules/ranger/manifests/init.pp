@@ -25,25 +25,13 @@ class ranger {
   class admin($admin_password) {
     # Before Facter 3.14.17, Rocky Linux 8 is detected as 'RedHat'.
     # https://puppet.com/docs/pe/2019.8/osp/release_notes_facter.html#enhancements-3-14-17
-    case $operatingsystem {
-      /(?i:(ubuntu|debian))/: {
-            $postgres_packages = ['postgresql']
-            $python = 'python3'
-            $java_home_env = 'JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64'
-        }
-        default: {
-            $postgres_packages = ['postgresql-jdbc', 'postgresql-server']
-            $python = 'python36'
-            $java_home_env = 'JAVA_HOME=/usr/lib/jvm/java-1.8.0'
-        }
-    }
+    $python = 'python3'
 
     package { ['ranger-admin', $python]:
           ensure => latest,
     }
 
     if ($operatingsystem =~ /^(?i:(ubuntu|debian))$/) {
-      notice("Matched ubuntu or debian")
       service { 'postgresql':
         ensure  => running,
         require => Package[$python, 'ranger-admin'],
@@ -55,7 +43,6 @@ class ranger {
         require => Package[$python, 'ranger-admin'],
       }
     } else {
-      notice("Did not match ubuntu or debian")
       exec { 'initdb':
         command => '/usr/bin/pg_ctl initdb -D /var/lib/pgsql/data',
         user    => 'postgres',
@@ -69,33 +56,34 @@ class ranger {
     }
 
     exec { 'change_postgres_password':
-      command => "/bin/sudo -u postgres /usr/bin/psql -c \"ALTER USER postgres WITH PASSWORD 'admin';\"",
+      path    => ['/usr/bin', '/bin','/sbin'],
+      command => "sudo -u postgres psql -c \"ALTER USER postgres WITH PASSWORD 'admin';\"",
       require => Service['postgresql'],
     }
 
-    notice("Before defining file resource")
     file { '/usr/lib/ranger-admin/install.properties':
       content => template('ranger/ranger-admin/install.properties'),
       require => [Package['ranger-admin'], Exec['change_postgres_password']]
     }
 
-    exec { '/usr/lib/ranger-admin/setup.sh':
-      cwd         => '/usr/lib/ranger-admin',
-      environment => $java_home_env,
-      require     => File['/usr/lib/ranger-admin/install.properties'],
+    exec { 'setup.sh':
+      command => '/bin/bash -c "source /usr/lib/bigtop-utils/bigtop-detect-javahome && /usr/lib/ranger-admin/setup.sh"',
+      cwd     => '/usr/lib/ranger-admin',
+      require => File['/usr/lib/ranger-admin/install.properties'],
     }
 
-    exec { '/usr/lib/ranger-admin/set_globals.sh':
-      cwd         => '/usr/lib/ranger-admin',
-      environment => $java_home_env,
-      require     => Exec['/usr/lib/ranger-admin/setup.sh'],
+    exec { 'set_globals.sh':
+      command => '/bin/bash -c "source /usr/lib/bigtop-utils/bigtop-detect-javahome && /usr/lib/ranger-admin/set_globals.sh"',
+      cwd     => '/usr/lib/ranger-admin',
+      require => Exec['setup.sh'],
     }
 
     exec { 'systemctl daemon-reload':
       path    => ["/bin", "/usr/bin"],
-      require => Exec['/usr/lib/ranger-admin/set_globals.sh'],
+      command => "systemctl daemon-reload",
+      require => Exec['set_globals.sh'],
     }
-    
+
     if ($operatingsystem == 'openEuler') {
       exec { 'ranger-admin':
         command => "/usr/sbin/usermod -G root ranger && /sbin/service ranger-admin start",
