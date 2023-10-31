@@ -21,7 +21,7 @@ set -e
 
 case "$1" in
 	configure)
-                update-alternatives --install /etc/ranger/conf ranger-conf @etc_ranger@/conf.dist 30
+                update-alternatives --install /etc/ranger/@component_name@/conf ranger-@component_name@-conf @etc_ranger@/@component_name@/conf.dist 30
 		chown ranger:ranger -R /var/run/ranger /var/log/ranger @var_lib_ranger@
 	;;
 
