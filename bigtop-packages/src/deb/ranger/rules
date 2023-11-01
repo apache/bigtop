@@ -38,6 +38,7 @@ etc_default=/etc/default
 etc_ranger=/etc/${ranger_name}
 var_lib_ranger=/var/lib/${ranger_name}
 var_run_ranger=/var/run/${ranger_name}
+var_log_ranger=/var/log/${ranger_name}
 
 usr_lib_hadoop=/usr/lib/hadoop
 usr_lib_hive=/usr/lib/hive
@@ -56,28 +57,28 @@ usr_lib_presto=/usr/lib/presto
 define ranger_admin_install
 ${var_lib_ranger}
 ${var_run_ranger}
-${etc_ranger}/admin/conf.dist
 ${etc_ranger}/admin
 ${usr_lib_ranger}-admin
+${var_log_ranger}
 endef
 
 define ranger_usersync_install
 ${usr_lib_ranger}-usersync
 ${usr_lib_ranger}-usersync/native/credValidator.uexe
-${etc_ranger}/usersync/conf.dist
 ${etc_ranger}/usersync
+${var_log_ranger}
 endef
 
 define ranger_kms_install
 ${usr_lib_ranger}-kms
-${etc_ranger}/kms/conf.dist
 ${etc_ranger}/kms
+${var_log_ranger}
 endef
 
 define ranger_tagsync_install
 ${usr_lib_ranger}-tagsync
-${etc_ranger}/tagsync/conf.dist
 ${etc_ranger}/tagsync
+${var_log_ranger}
 endef
 
 define ranger_hdfs_plugin_install
@@ -155,8 +156,8 @@ endef
 
 define gen_rule
 $(foreach item, postinst preinst prerm,\
-	cp debian/ranger.$(item).tpl debian/range-$(1).$(item);\
-	sed -i -e 's:@var_lib_ranger@:${var_lib_ranger}:g' -e 's:@etc_ranger@:${etc_ranger}:g' debian/range-$(1).$(item);\
+	cp debian/ranger.$(item).tpl debian/ranger-$(1).$(item);\
+	sed -i -e 's:@var_lib_ranger@:${var_lib_ranger}:g' -e 's:@etc_ranger@:${etc_ranger}:g' -e 's:@component_name@:$(1):g' debian/ranger-$(1).$(item);\
 )
 endef
 

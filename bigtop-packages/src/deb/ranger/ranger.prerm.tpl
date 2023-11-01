@@ -35,7 +35,7 @@ set -e
 
 case "$1" in
     remove|upgrade|deconfigure)
-      update-alternatives --remove ranger-conf @etc_ranger@/conf.dist || :
+      update-alternatives --remove ranger-@component_name@-conf @etc_ranger@/@component_name@/conf.dist || :
     ;;
 
     failed-upgrade)

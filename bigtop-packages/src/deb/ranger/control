@@ -35,7 +35,7 @@ Description: Apache Ranger is a framework to enable,
 
 Package: ranger-admin
 Architecture: all
-Depends: adduser, postgresql (>= 8.1), bigtop-utils (>= 0.7), python | python2
+Depends: adduser, postgresql (>= 8.1), libpostgresql-jdbc-java, bigtop-utils (>= 0.7), python | python2
 Description: Ranger-admin is admin component associated with the Ranger framework
 
 Package: ranger-usersync
