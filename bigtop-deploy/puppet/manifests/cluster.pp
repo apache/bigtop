@@ -108,9 +108,6 @@ $roles_map = {
     worker => ["zookeeper-server"],
     client => ["zookeeper-client"],
   },
-  ycsb => {
-    client => ["ycsb-client"],
-  },
   zeppelin => {
     master => ["zeppelin-server"],
   },
@@ -194,7 +191,6 @@ class node_with_roles ($roles = hiera("bigtop::roles")) inherits hadoop_cluster_
     "solr",
     "spark",
     "tez",
-    "ycsb",
     "kerberos",
     "zeppelin",
     "kafka",

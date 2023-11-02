@@ -17,7 +17,7 @@
 # be installed as usual. Otherwise only a specified list will be set
 # Possible elements:
 # hadoop,yarn,hbase,alluxio,flink,solr,spark,oozie,hcat,httpfs,
-# pig,hive,zookeeper,ycsb
+# pig,hive,zookeeper
 # Example (to deploy only HDFS and YARN server and gateway parts)
 # This can be a comma-separated list or an array.
 #hadoop_cluster_node::cluster_components:

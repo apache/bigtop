@@ -27,7 +27,6 @@ hadoop::hadoop_storage_dirs:
 #  - spark-standalone
 #  - tez
 #  - yarn
-#  - ycsb
 #  - zookeeper
 
 #bigtop::roles_enabled: false

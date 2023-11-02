@@ -52,7 +52,6 @@ export RANGER_URL=${RANGER_URL:-http://localhost:6080}
 export SPARK_HOME=${SPARK_HOME:-/usr/lib/spark}
 export TEZ_HOME=${TEZ_HOME:-/usr/lib/tez}
 export WEBHDFS_URL=${WEBHDFS_URL:-$(hostname):50070/webhdfs/v1}
-export YCSB_HOME=${YCSB_HOME:-/usr/lib/ycsb}
 export ZEPPELIN_HOME=${ZEPPELIN_HOME:-/usr/lib/zeppelin}
 export ZOOKEEPER_HOME=${ZOOKEEPER_HOME:-/usr/lib/zookeeper}
 
