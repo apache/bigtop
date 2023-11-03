@@ -120,9 +120,9 @@ bigtop {
     zookeeper:['hadoop', 'hbase', 'kafka'],
     hadoop:['hbase', 'hive', 'tez',
       'oozie', 'solr', 'spark', 'ranger',
-      'phoenix', 'alluxio', 'ycsb', 'zeppelin'
+      'phoenix', 'alluxio', 'zeppelin'
     ],
-    hbase:['phoenix', 'ycsb', 'hive'],
+    hbase:['phoenix', 'hive'],
     hive:['oozie', 'zeppelin'],
     spark:['livy', 'oozie', 'zeppelin'],
   ]
@@ -307,15 +307,6 @@ bigtop {
       url     { download_path = "/$name/${version.base}/"
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
-    }
-    'ycsb' {
-      name    = 'ycsb'
-      relNotes = 'Yahoo! Cloud Serving Benchmark'
-      version { base = '0.17.0'; pkg = base; release = 2 }
-      tarball { destination = "$name-${version.base}.tar.gz"
-                source      = "${version.base}.tar.gz" }
-      url     { site = "https://github.com/brianfrankcooper/YCSB/archive"
-                archive = site }
     }
     'zeppelin' {
       name    = 'zeppelin'
