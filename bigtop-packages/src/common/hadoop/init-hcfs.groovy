@@ -90,7 +90,7 @@ def final USAGE = """\
  *
  *   1) Create a file system skeleton.
  *   2) Create users with home dirs in /user.
- *   3) Copy jars and libs into the DFS for oozie.
+ *   3) Copy jars and libs into the DFS.
  *
  *   In the future maybe we will add more optional steps (i.e. adding libs to
  *   the distribtued cache, mounting FUSE over HDFS, etc...).
@@ -241,90 +241,6 @@ users.each() {
   FsPermission perm = readPerm(permission);
   fs.setPermission(homedir, perm);
 }
-
-
-/**
- * Copys jar files from a destination into the distributed FS.
- * Build specifically for the common task of getting jars into
- * oozies classpath so that oozie can run pig/hive/etc based
- * applications. Directories and broken symlinks will be skipped.
- *
- * @param fs An instance of an HCFS FileSystem .
- *
- * @param input The LOCAL DIRECTORY containing jar files.
- *
- * @param jarstr A jar file name filter used to reject/accept jar names.
- * See the script below for example of how it's used. Jars matching this
- * string will be copied into the specified path on the "target" directory.
- *
- * @param target The path on the DISTRIBUTED FS where jars should be copied
- * to.
- *
- * @return The total number of jars copied into the DFS.
- */
-def copyJars = { FileSystem fsys, File input, String jarstr, Path target ->
-  int copied = 0;
-  input.listFiles(new FileFilter() {
-    public boolean accept(File f) {
-      String filename = f.getName();
-      boolean validJar = filename.endsWith("jar") && f.isFile();
-      return validJar && filename.contains(jarstr)
-    }
-  }).each({ jar_file ->
-    boolean success = false;
-    for(i = 1; i <= maxBackOff; i*=2) {
-      try {
-        fsys.copyFromLocalFile(new Path(jar_file.getAbsolutePath()), target)
-        copied++;
-        success = true;
-        break;
-      } catch(Exception e) {
-        LOG.info("Failed to upload " + jar_file.getAbsolutePath() + " to " + target + "... Retry after " + i + " second(s)");
-        Thread.sleep(i*1000);
-      }
-      if (!success) {
-        LOG.info("Can not upload " + jar_file.getAbsolutePath() + " to " + target + " on " + fsys.getClass());
-      }
-    }
-  });
-  return copied;
-}
-
-/**
- *  Copy shared libraries into oozie.
- *  Particular applications might want to modify this for example
- *  if one wanted to add a custom file system or always available
- *  custom library to be used in oozie workflows.
- * */
-total_jars = 0;
-
-LOG.info("Now copying Jars into the DFS for oozie ");
-LOG.info("This might take a few seconds...");
-
-def final OOZIE_SHARE = "/user/oozie/share/lib/";
-def final MAPREDUCE = "/usr/lib/hadoop-mapreduce/";
-def final PIG_HOME = "/usr/lib/pig/";
-def final HIVE_HOME = "/usr/lib/hive/";
-
-total_jars += copyJars(fs,
-    new File(HIVE_HOME, "lib"), "",
-    new Path(OOZIE_SHARE, "hive/"))
-
-total_jars += copyJars(fs,
-    new File(MAPREDUCE), "hadoop-streaming",
-    new Path(OOZIE_SHARE, "mapreduce-streaming/"))
-
-total_jars += copyJars(fs,
-    new File(MAPREDUCE), "hadoop-distcp",
-    new Path(OOZIE_SHARE, "distcp"))
-
-total_jars += copyJars(fs,
-    new File(PIG_HOME, "lib/"), "",
-    new Path(OOZIE_SHARE, "pig"))
-
-total_jars += copyJars(fs,
-    new File(PIG_HOME), "",
-    new Path(OOZIE_SHARE, "pig"))
 
 LOG.info("Now copying Jars into the DFS for tez ");
 LOG.info("This might take a few seconds...");

@@ -19,10 +19,9 @@ class hadoop ($hadoop_security_authentication = "simple",
   # Set from facter if available
   $hadoop_storage_dirs = split($::hadoop_storage_dirs, ";"),
   $proxyusers = {
-    spark => { groups => 'hudson,testuser,root,hadoop,jenkins,oozie,hive,httpfs,users,spark', hosts => "*" },
-    oozie => { groups => 'hudson,testuser,root,hadoop,jenkins,oozie,hive,httpfs,users,spark', hosts => "*" },
-     hive => { groups => 'hudson,testuser,root,hadoop,jenkins,oozie,hive,httpfs,users,spark', hosts => "*" },
-   httpfs => { groups => 'hudson,testuser,root,hadoop,jenkins,oozie,hive,httpfs,users,spark', hosts => "*" } },
+    spark => { groups => 'hudson,testuser,root,hadoop,jenkins,hive,httpfs,users,spark', hosts => "*" },
+     hive => { groups => 'hudson,testuser,root,hadoop,jenkins,hive,httpfs,users,spark', hosts => "*" },
+   httpfs => { groups => 'hudson,testuser,root,hadoop,jenkins,hive,httpfs,users,spark', hosts => "*" } },
   $generate_secrets = false,
   $kms_host = undef,
   $kms_port = undef,

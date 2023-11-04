@@ -100,30 +100,6 @@
       </zookeeper-server>
     </services>
   </zookeeper-server>
-  <oozie>
-    <users>
-      <oozie>
-        <home>/var/lib/oozie</home>
-        <descr>Oozie User</descr>
-        <shell>/bin/false</shell>
-      </oozie>
-    </users>
-    <deps>
-      <adduser/>
-      <zip/>
-      <unzip/>
-    </deps>
-    <services>
-      <oozie>
-        <runlevel>2</runlevel>
-        <runlevel>3</runlevel>
-        <runlevel>4</runlevel>
-        <runlevel>5</runlevel>
-        <oninstall>stop</oninstall>
-        <configured>true</configured>
-      </oozie>
-    </services>
-  </oozie>
   <hive>
     <deps>
       <adduser/>

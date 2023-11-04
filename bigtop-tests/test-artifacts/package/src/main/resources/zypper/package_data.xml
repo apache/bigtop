@@ -70,39 +70,6 @@
       </hive-webhcat-server>
     </services>
   </hive-webhcat-server>
-  <oozie>
-    <users>
-      <oozie>
-        <home>/var/lib/oozie</home>
-        <descr>Oozie User</descr>
-        <shell>/bin/false</shell>
-      </oozie>
-    </users>
-    <deps>
-      <tag name="/usr/sbin/groupadd"/>
-      <tag name="/usr/sbin/useradd"/>
-      <tag name="/sbin/chkconfig"/>
-      <tag name="/sbin/service"/>
-      <jre>&gt;=1.6</jre>
-      <tag name="/bin/sh"/>
-      <tag name="/bin/bash"/>
-    </deps>
-    <services>
-      <oozie>
-        <runlevel>3</runlevel>
-        <runlevel>4</runlevel>
-        <runlevel>5</runlevel>
-        <oninstall>stop</oninstall>
-        <configured>true</configured>
-      </oozie>
-    </services>
-  </oozie>
-  <oozie-client>
-    <deps>
-      <tag name="/bin/bash"/>
-      <tag name="/bin/sh"/>
-    </deps>
-  </oozie-client>
   <zookeeper>
     <users>
       <zookeeper>

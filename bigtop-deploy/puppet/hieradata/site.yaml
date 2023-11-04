@@ -21,7 +21,6 @@ hadoop::hadoop_storage_dirs:
 #  - hive
 #  - httpfs
 #  - mapred-app
-#  - oozie
 #  - solr
 #  - spark
 #  - spark-standalone

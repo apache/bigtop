@@ -24,7 +24,6 @@ export PIG_HOME=/usr/lib/pig/
 export HIVE_CONF_DIR=/etc/hive/conf/
 export JAVA_HOME="/usr/lib/jvm/java-openjdk/"
 export SPARK_HOME="/usr/lib/spark"
-export OOZIE_TAR_HOME="/usr/lib/oozie/doc"
 ```
 
 Fallback master URL for shark-shell submission is 'yarn'. For a good reason,

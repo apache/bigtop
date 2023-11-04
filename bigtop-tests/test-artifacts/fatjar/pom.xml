@@ -51,12 +51,6 @@
     </dependency>
     <dependency>
       <groupId>org.apache.bigtop.itest</groupId>
-      <artifactId>oozie-smoke</artifactId>
-      <version>${project.version}</version>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.bigtop.itest</groupId>
       <artifactId>solr-smoke</artifactId>
       <version>${project.version}</version>
       <optional>true</optional>

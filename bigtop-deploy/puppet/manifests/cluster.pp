@@ -86,10 +86,6 @@ $roles_map = {
   kerberos => {
     master => ["kerberos-server"],
   },
-  oozie => {
-    master => ["oozie-server"],
-    client => ["oozie-client"],
-  },
   hcat => {
     master => ["hcatalog-server"],
     gateway_server => ["webhcat-server"],
@@ -184,7 +180,6 @@ class node_with_roles ($roles = hiera("bigtop::roles")) inherits hadoop_cluster_
     "hadoop",
     "hadoop_hbase",
     "hadoop_hive",
-    "hadoop_oozie",
     "hadoop_zookeeper",
     "hcatalog",
     "livy",
