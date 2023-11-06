@@ -90,7 +90,6 @@ def final USAGE = """\
  *
  *   1) Create a file system skeleton.
  *   2) Create users with home dirs in /user.
- *   3) Copy jars and libs into the DFS.
  *
  *   In the future maybe we will add more optional steps (i.e. adding libs to
  *   the distribtued cache, mounting FUSE over HDFS, etc...).
@@ -241,6 +240,54 @@ users.each() {
   FsPermission perm = readPerm(permission);
   fs.setPermission(homedir, perm);
 }
+
+
+/**
+ * Copys jar files from a destination into the distributed FS.
+ * Directories and broken symlinks will be skipped.
+ *
+ * @param fs An instance of an HCFS FileSystem .
+ *
+ * @param input The LOCAL DIRECTORY containing jar files.
+ *
+ * @param jarstr A jar file name filter used to reject/accept jar names.
+ * See the script below for example of how it's used. Jars matching this
+ * string will be copied into the specified path on the "target" directory.
+ *
+ * @param target The path on the DISTRIBUTED FS where jars should be copied
+ * to.
+ *
+ * @return The total number of jars copied into the DFS.
+ */
+def copyJars = { FileSystem fsys, File input, String jarstr, Path target ->
+  int copied = 0;
+  input.listFiles(new FileFilter() {
+    public boolean accept(File f) {
+      String filename = f.getName();
+      boolean validJar = filename.endsWith("jar") && f.isFile();
+      return validJar && filename.contains(jarstr)
+    }
+  }).each({ jar_file ->
+    boolean success = false;
+    for(i = 1; i <= maxBackOff; i*=2) {
+      try {
+        fsys.copyFromLocalFile(new Path(jar_file.getAbsolutePath()), target)
+        copied++;
+        success = true;
+        break;
+      } catch(Exception e) {
+        LOG.info("Failed to upload " + jar_file.getAbsolutePath() + " to " + target + "... Retry after " + i + " second(s)");
+        Thread.sleep(i*1000);
+      }
+      if (!success) {
+        LOG.info("Can not upload " + jar_file.getAbsolutePath() + " to " + target + " on " + fsys.getClass());
+      }
+    }
+  });
+  return copied;
+}
+
+total_jars = 0;
 
 LOG.info("Now copying Jars into the DFS for tez ");
 LOG.info("This might take a few seconds...");
