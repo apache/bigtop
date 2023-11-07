@@ -32,7 +32,6 @@ public class TestChgrp {
 
   private static Shell sh = new Shell("/bin/bash -s");
   private static Shell shHDFS = new Shell("/bin/bash -s","hdfs");
-  private static Shell shOOZIE = new Shell("/bin/bash -s","oozie");
   // extracting user identity for ls absolute path
   private static final String USERNAME = System.getProperty("user.name");
   private static final String USERDIR = System.getProperty("user.dir");
@@ -206,29 +205,6 @@ public class TestChgrp {
     searchString = "$USERNAME $group_name";
     assertTrue("chgrp failed to execute recursively on directory",
                lookForGivenString(shHDFS.getOut(), searchString) == false);
-  }
-
-  @Test
-  public void testChgrpWithUnauthorizedUser() {
-    println("testChgrpWithUnauthorizedUser");
-    // remove write permission for others
-    sh.exec("hdfs dfs -chmod -R o-w $TESTDIR/$testChgrpInputs");
-    assertTrue("Could not change permissions", sh.getRet() == 0);
-
-    // now try to change group as oozie user
-    shOOZIE.exec("hdfs dfs -chgrp oozie $TESTDIR/$testChgrpInputs");
-    assertTrue("chgrp command with oozie user failed on HDFS",
-               shOOZIE.getRet() == 1);
-
-    List err_msgs = shOOZIE.getErr();
-    String failure_msg = "chgrp: changing ownership of " +
-                         "\'$TESTDIR/$testChgrpInputs\': Permission denied";
-    Boolean failure = false;
-    if (err_msgs.get(0).toString().contains(failure_msg)){
-      failure = true;
-    }
-    assertTrue("chgrp command with oozie user failed on HDFS",
-               failure == true);
   }
 
   /**

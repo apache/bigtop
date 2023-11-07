@@ -14,7 +14,7 @@
 # limitations under the License.
 
 hadoop_zookeeper::client { "zoo visitor": }
-hadoop_zookeeper::server { "test-oozie-server":
+hadoop_zookeeper::server { "test-server":
   myid => "0",
   ensemble => [[0, "foo:2888:3888"], [1, "bar:2888:3888"], [2, "baz:2888:3888"]],
 }

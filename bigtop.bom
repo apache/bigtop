@@ -119,12 +119,12 @@ bigtop {
     'bigtop-jsvc':['hadoop'],
     zookeeper:['hadoop', 'hbase', 'kafka'],
     hadoop:['hbase', 'hive', 'tez',
-      'oozie', 'solr', 'spark', 'ranger',
+      'solr', 'spark', 'ranger',
       'phoenix', 'alluxio', 'zeppelin'
     ],
     hbase:['phoenix', 'hive'],
-    hive:['oozie', 'zeppelin'],
-    spark:['livy', 'oozie', 'zeppelin'],
+    hive:['zeppelin'],
+    spark:['livy', 'zeppelin'],
   ]
 
   components {
@@ -187,16 +187,6 @@ bigtop {
       relNotes = 'Apache TEZ'
       version { base = '0.10.2'; pkg = base; release = 1 }
       tarball { destination = "apache-${name}-${version.base}-src.tar.gz"
-                source      = destination }
-      url     { download_path = "/$name/${version.base}/"
-                site = "${apache.APACHE_MIRROR}/${download_path}"
-                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
-    }
-    'oozie' {
-      name    = 'oozie'
-      relNotes = 'Apache Oozie'
-      version { base = '5.2.1'; pkg = base; release = 2 }
-      tarball { destination = "$name-${version.base}.tar.gz"
                 source      = destination }
       url     { download_path = "/$name/${version.base}/"
                 site = "${apache.APACHE_MIRROR}/${download_path}"
