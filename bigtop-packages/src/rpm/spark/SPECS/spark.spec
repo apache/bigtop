@@ -239,9 +239,6 @@ done
 %attr(0755,spark,spark) %{np_var_log_spark}
 %{bin_dir}/spark-*
 %{bin_dir}/find-spark-home
-%exclude %{usr_lib_spark}/R
-%exclude %{usr_lib_spark}/bin/sparkR
-%exclude %{bin_dir}/sparkR
 
 %files -n %{spark_pkg_name}-core
 %defattr(-,root,root,755)
