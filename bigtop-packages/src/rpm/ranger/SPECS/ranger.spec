@@ -11,7 +11,6 @@
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
-
 %undefine _missing_build_ids_terminate_build
 # disable repacking jars
 %define __os_install_post %{nil}
@@ -124,7 +123,12 @@ Requires: coreutils, insserv
 
 # CentOS 5 does not have any dist macro
 # So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
-%if %{!?suse_version:1}0 && %{!?mgaversion:1}0
+# using the openeuler-lsb replace redhat-lsb in openEuler
+%if 0%{?openEuler}
+Requires: coreutils, openeuler-lsb
+%elif 0%{?kylin}
+Requires: coreutils, kylin-lsb
+%elif %{!?suse_version:1}0 && %{!?mgaversion:1}0
 # Required for init scripts
 Requires: coreutils, redhat-lsb
 %endif
@@ -133,13 +137,13 @@ Requires: coreutils, redhat-lsb
 Requires: chkconfig, xinetd-simple-services, zlib, initscripts
 %endif
 
-%description 
-Ranger is a framework to secure hadoop data 
+%description
+Ranger is a framework to secure hadoop data
 
 %package admin
 Summary: Web Interface for Ranger
 Group: System/Daemons
-Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service
+Requires: coreutils, postgresql-server >= 8.1, postgresql-jdbc, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service
 Requires: psmisc
 # Sadly, Sun/Oracle JDK in RPM form doesn't provide libjvm.so, which means we have
 # to set AutoReq to no in order to minimize confusion. Not ideal, but seems to work.
@@ -154,7 +158,12 @@ Requires: coreutils, insserv
 
 # CentOS 5 does not have any dist macro
 # So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
-%if %{!?suse_version:1}0 && %{!?mgaversion:1}0
+# using the openeuler-lsb replace redhat-lsb in openEuler
+%if 0%{?openEuler}
+Requires: coreutils, openeuler-lsb
+%elif 0%{?kylin}
+Requires: coreutils, kylin-lsb
+%elif %{!?suse_version:1}0 && %{!?mgaversion:1}0
 # Required for init scripts
 Requires: coreutils, redhat-lsb
 %endif
@@ -184,7 +193,12 @@ Requires: coreutils, insserv
 
 # CentOS 5 does not have any dist macro
 # So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
-%if %{!?suse_version:1}0 && %{!?mgaversion:1}0
+# using the openeuler-lsb replace redhat-lsb in openEuler
+%if 0%{?openEuler}
+Requires: coreutils, openeuler-lsb
+%elif 0%{?kylin}
+Requires: coreutils, kylin-lsb
+%elif %{!?suse_version:1}0 && %{!?mgaversion:1}0
 # Required for init scripts
 Requires: coreutils, redhat-lsb
 %endif
@@ -214,7 +228,12 @@ Requires: coreutils, insserv
 
 # CentOS 5 does not have any dist macro
 # So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
-%if %{!?suse_version:1}0 && %{!?mgaversion:1}0
+# using the openeuler-lsb replace redhat-lsb in openEuler
+%if 0%{?openEuler}
+Requires: coreutils, openeuler-lsb
+%elif 0%{?kylin}
+Requires: coreutils, kylin-lsb
+%elif %{!?suse_version:1}0 && %{!?mgaversion:1}0
 # Required for init scripts
 Requires: coreutils, redhat-lsb
 %endif
@@ -240,12 +259,19 @@ AutoReq: no
 # Required for init scripts
 Requires: coreutils, insserv
 %endif
+
 # CentOS 5 does not have any dist macro
 # So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
-%if %{!?suse_version:1}0 && %{!?mgaversion:1}0
+# using the openeuler-lsb replace redhat-lsb in openEuler
+%if 0%{?openEuler}
+Requires: coreutils, openeuler-lsb
+%elif 0%{?kylin}
+Requires: coreutils, kylin-lsb
+%elif %{!?suse_version:1}0 && %{!?mgaversion:1}0
 # Required for init scripts
 Requires: coreutils, redhat-lsb
 %endif
+
 %if  0%{?mgaversion}
 Requires: chkconfig, xinetd-simple-services, zlib, initscripts
 %endif
