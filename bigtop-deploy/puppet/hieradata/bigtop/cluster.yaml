@@ -218,8 +218,5 @@ gpdb::common::db_base_dir: "/data_gp"
 gpdb::common::master_db_port: "5432"
 gpdb::common::segment_db_port_prefix: "4000"
 
-# Ambari
-ambari::agent::server_host: "%{hiera('bigtop::hadoop_head_node')}"
-
 # Ranger
 ranger::admin::admin_password: "Admin01234"

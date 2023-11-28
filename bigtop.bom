@@ -113,7 +113,7 @@ bigtop {
       To build a component with its dependencies, run build with -Dbuildwithdeps=true
   */
   dependencies = [
-    'bigtop-utils':['ambari', 'bigtop-groovy', 'bigtop-jsvc',
+    'bigtop-utils':['bigtop-groovy', 'bigtop-jsvc',
                     'flink', 'zookeeper'],
     'bigtop-groovy':['hadoop'],
     'bigtop-jsvc':['hadoop'],
@@ -317,26 +317,6 @@ bigtop {
                 source      = "${version.base}.tar.gz" }
       url     { site = "https://github.com/greenplum-db/gpdb/archive/"
                 archive = site }
-    }
-    'ambari' {
-      name    = 'ambari'
-      relNotes = 'Apache Ambari'
-      version { base = '2.7.5'; pkg = '2.7.5.0'; release = 1 }
-      tarball { destination = "apache-$name-${version.base}-src.tar.gz"
-                source      = destination }
-      url     { download_path = "/$name/$name-${version.base}/"
-                site = "${apache.APACHE_MIRROR}/${download_path}"
-                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
-    }
-    'bigtop-ambari-mpack' {
-      name    = 'bigtop-ambari-mpack'
-      relNotes = 'Bigtop Mpack'
-      version { base = '2.7.5'; pkg = '2.7.5.0'; release = 1 }
-      tarball { destination = "apache-ambari-${version.base}-src.tar.gz"
-                source      = destination }
-      url     { download_path = "/ambari/ambari-${version.base}/"
-                site = "${apache.APACHE_MIRROR}/${download_path}"
-                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }
     'livy' {
       name    = 'livy'

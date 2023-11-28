@@ -13,7 +13,6 @@ hadoop::hadoop_storage_dirs:
 
 #hadoop_cluster_node::cluster_components:
 #  - alluxio
-#  - ambari
 #  - flink
 #  - gpdb
 #  - hbase
