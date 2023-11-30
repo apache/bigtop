@@ -28,7 +28,11 @@ mvn clean install package -Drat.skip=true -DskipTests -Dmaven.test.skip=true -Df
 
 #todo addjust grafana_tar by os
 phoenix_version=5.1.2
-grafana_tar=grafana-9.3.2.linux-amd64.tar.gz
+if [ "$HOSTTYPE" = "aarch64" ] ; then
+  grafana_tar=grafana-9.3.2.linux-arm64.tar.gz
+else
+  grafana_tar=grafana-9.3.2.linux-amd64.tar.gz
+fi
 phoenix_tar=phoenix-hbase-2.4-${phoenix_version}-bin.tar.gz
 phoenix_folder=phoenix-hbase-2.4-${phoenix_version}-bin
 hbase_folder=hbase-2.4.13
