@@ -174,6 +174,8 @@ do
 
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
+# Overwrite JAVA_HOME if BIGTOP_KAFKA_JAVA_VERSION is set
+. /usr/lib/bigtop-utils/bigtop-detect-component-specific-javahome kafka
 
 exec $LIB_DIR/bin/$file "\$@"
 EOF
