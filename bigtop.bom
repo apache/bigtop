@@ -343,15 +343,18 @@ bigtop {
       version { base = '3.1'; pkg = '3.1'; release = 1 }
       tarball { destination = "apache-ambari-${version.base}.tar.gz"
                 source = destination}
-      git {
-          //repo = "http://172.27.17.200/RDC/bigdata/ambari.git"
-          repo = "https://github.com/JiaLiangC/ambari.git"
-          ref  = "udh3"
-          dir  = "apache-ambari-${version.base}"
-          commit_hash = "origin/udh3"
-          //user="caijialiang"
-          //token="J3sxFsV9T5ahRjaQ7AG2"
-      }
+      url     { site = "https://github.com/JiaLiangC/ambari/archive/refs/heads/"
+                      archive = site }
+      /** git {
+      *    //repo = "http://172.27.17.200/RDC/bigdata/ambari.git"
+      *    repo = "https://github.com/JiaLiangC/ambari.git"
+      *    ref  = "udh3"
+      *    dir  = "apache-ambari-${version.base}"
+      *    commit_hash = "origin/udh3"
+      *    //user="caijialiang"
+      *    //token="J3sxFsV9T5ahRjaQ7AG2"
+      *}
+      */
     }
 
     'ambari-infra' {
