@@ -223,7 +223,9 @@ class bigtop_toolchain::packages {
        "openeuler-lsb",
        "pcre-devel",
        "texlive",
-       "rpmdevtools"
+       "rpmdevtools",
+       "nasm",
+       "yasm"
     ] }
     /(Ubuntu|Debian)/: {
       $_pkgs = [
