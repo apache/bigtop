@@ -1,0 +1,48 @@
+diff --git a/hadoop-hdfs-project/hadoop-hdfs-native-client/src/main/native/libhdfspp/include/hdfspp/content_summary.h b/hadoop-hdfs-project/hadoop-hdfs-native-client/src/main/native/libhdfspp/include/hdfspp/content_summary.h
+index 6762a65ca908b..d9809bab59291 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs-native-client/src/main/native/libhdfspp/include/hdfspp/content_summary.h
++++ b/hadoop-hdfs-project/hadoop-hdfs-native-client/src/main/native/libhdfspp/include/hdfspp/content_summary.h
+@@ -19,6 +19,7 @@
+ #define HDFSPP_CONTENT_SUMMARY_H_
+ 
+ #include <string>
++#include <cstdint>
+ 
+ namespace hdfs {
+ 
+diff --git a/hadoop-hdfs-project/hadoop-hdfs-native-client/src/main/native/libhdfspp/include/hdfspp/fsinfo.h b/hadoop-hdfs-project/hadoop-hdfs-native-client/src/main/native/libhdfspp/include/hdfspp/fsinfo.h
+index 103cf133bec22..156ed445181a3 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs-native-client/src/main/native/libhdfspp/include/hdfspp/fsinfo.h
++++ b/hadoop-hdfs-project/hadoop-hdfs-native-client/src/main/native/libhdfspp/include/hdfspp/fsinfo.h
+@@ -19,6 +19,7 @@
+ #define HDFSPP_FSINFO_H_
+ 
+ #include <string>
++#include <cstdint>
+ 
+ namespace hdfs {
+ 
+diff --git a/hadoop-hdfs-project/hadoop-hdfs-native-client/src/main/native/libhdfspp/include/hdfspp/statinfo.h b/hadoop-hdfs-project/hadoop-hdfs-native-client/src/main/native/libhdfspp/include/hdfspp/statinfo.h
+index 1da1f18a592bd..5924d1db00587 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs-native-client/src/main/native/libhdfspp/include/hdfspp/statinfo.h
++++ b/hadoop-hdfs-project/hadoop-hdfs-native-client/src/main/native/libhdfspp/include/hdfspp/statinfo.h
+@@ -19,6 +19,7 @@
+ #define HDFSPP_STATINFO_H_
+ 
+ #include <string>
++#include <cstdint>
+ 
+ namespace hdfs {
+ 
+diff --git a/hadoop-hdfs-project/hadoop-hdfs-native-client/src/main/native/libhdfspp/include/hdfspp/uri.h b/hadoop-hdfs-project/hadoop-hdfs-native-client/src/main/native/libhdfspp/include/hdfspp/uri.h
+index bc3d8b96d3f66..a7f735afb5dbc 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs-native-client/src/main/native/libhdfspp/include/hdfspp/uri.h
++++ b/hadoop-hdfs-project/hadoop-hdfs-native-client/src/main/native/libhdfspp/include/hdfspp/uri.h
+@@ -22,6 +22,7 @@
+ #include <iostream>
+ #include <string>
+ #include <vector>
++#include <cstdint>
+ #include <stdexcept>
+ 
+ namespace hdfs

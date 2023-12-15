@@ -31,7 +31,7 @@ class bigtop_toolchain::installer {
   case $::operatingsystem {
     /Debian/: {
       exec { 'ensure java 8 is set as default':
-        command => "update-java-alternatives --set adoptopenjdk-8*",
+        command => "update-java-alternatives --set temurin-8*",
         path    => ['/usr/sbin', '/usr/bin', '/bin'],
         require => Class['bigtop_toolchain::jdk'],
       }

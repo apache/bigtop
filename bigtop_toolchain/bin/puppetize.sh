@@ -21,7 +21,7 @@ if [ -f /etc/os-release ]; then
 fi
 
 case ${ID}-${VERSION_ID} in
-    fedora-35|fedora-36)
+    fedora-38)
         dnf -y install yum-utils
         dnf -y check-update
         dnf -y install hostname diffutils findutils curl sudo unzip wget puppet procps-ng libxcrypt-compat systemd
@@ -30,11 +30,11 @@ case ${ID}-${VERSION_ID} in
         # So we install that module in the same way as CentOS 7.
         puppet module install puppetlabs-stdlib --version 4.12.0
         ;;
-    ubuntu-18.04|ubuntu-20.04|ubuntu-22.04)
+    ubuntu-18.04|ubuntu-22.04)
         apt-get update
         apt-get -y install wget curl sudo unzip puppet software-properties-common puppet-module-puppetlabs-apt puppet-module-puppetlabs-stdlib systemd-sysv
         ;;
-    debian-10*|debian-11*)
+    debian-11*)
         apt-get update
         apt-get -y install wget curl sudo unzip puppet puppet-module-puppetlabs-apt puppet-module-puppetlabs-stdlib systemd-sysv gnupg procps
         ;;

@@ -76,6 +76,27 @@ def safeDelete = { fileName ->
 def getDate() {
   new Date().format('E, dd MMM yyyy HH:mm:ss Z')
 }
+
+def generatePatch(String threadCount, String path) {
+    def patchContent = """
+        diff --git a/.mvn/maven.config b/.mvn/maven.config
+        new file mode 100644
+        index 00000000..e69de29b
+        diff --git a/.mvn/maven.config b/.mvn/maven.config
+        index e69de29b..0bea21c9 100644
+        --- a/.mvn/maven.config
+        +++ b/.mvn/maven.config
+        @@ -0,0 +1 @@
+        +-T${threadCount}
+        \\ No newline at end of file
+    """.stripIndent()
+
+    new File(path, "patch0-maven-parallel-build.diff").with {
+        write(patchContent)
+        println "Patch file created at: ${absolutePath}"
+    }
+}
+
 /**
  * To avoid breaking the compat with existing packages let's use the old style names
  */
@@ -137,6 +158,7 @@ task "bom-json" (description: "List the components of the stack in json format")
         pkg: it.value.pkg,
         relNotes: it.value.relNotes,
         packaging: it.value.packaging,
+        maven_parallel_build: it.value.maven_parallel_build
       ],
       tarball: [
         destination: it.value.tarball.destination,
@@ -394,6 +416,8 @@ def genTasks = { target ->
     delete ("$PKG_BUILD_DIR/deb")
     def final DEB_BLD_DIR = "$PKG_BUILD_DIR/deb/$NAME-${PKG_VERSION}"
     def final DEB_PKG_DIR = "$PKG_BUILD_DIR/deb/$PKG_NAME-${PKG_VERSION}-${BIGTOP_BUILD_STAMP}"
+    def final ENABLE_MAVEN_PARALLEL_BUILD = config.bigtop.components[target].maven_parallel_build
+    def final MAVEN_BUILD_THREADS = project.hasProperty('buildThreads') ? project.property('buildThreads') : null
     mkdir (DEB_BLD_DIR)
     copy {
       from SEED_TAR
@@ -427,6 +451,12 @@ def genTasks = { target ->
         include '**/*'
       }
       into "$DEB_BLD_DIR/debian"
+    }
+    if (MAVEN_BUILD_THREADS && ENABLE_MAVEN_PARALLEL_BUILD) {
+      if (!MAVEN_BUILD_THREADS.matches("\\d+C")) {
+        throw new GradleException("Invalid MAVEN_BUILD_THREADS parameter. It must be a combination of numbers and 'C', such as '2C'.")
+      }
+      generatePatch(MAVEN_BUILD_THREADS, "$DEB_BLD_DIR/debian")
     }
     // Prepeare bom file with all the versions
     def bomWriter = new File("$DEB_BLD_DIR/debian/bigtop.bom").newWriter()
@@ -575,6 +605,8 @@ def genTasks = { target ->
     def final PKG_VERSION = config.bigtop.components[target].version.pkg
     def final BASE_VERSION = config.bigtop.components[target].version.base
     def final PKG_OUTPUT_DIR = config.bigtop.components[target].outputdir
+    def final ENABLE_MAVEN_PARALLEL_BUILD = config.bigtop.components[target].maven_parallel_build
+    def final MAVEN_BUILD_THREADS = project.hasProperty('buildThreads') ? project.property('buildThreads') : null
     safeDelete ("$PKG_BUILD_DIR/rpm")
     ['INSTALL','SOURCES','BUILD','SRPMS','RPMS'].each { rpmdir ->
       mkdir("$PKG_BUILD_DIR/rpm/$rpmdir")
@@ -608,6 +640,12 @@ def genTasks = { target ->
         include '**/*'
       }
       into "$PKG_BUILD_DIR/rpm/SOURCES"
+    }
+    if (MAVEN_BUILD_THREADS && ENABLE_MAVEN_PARALLEL_BUILD) {
+      if (!MAVEN_BUILD_THREADS.matches("\\d+C")) {
+        throw new GradleException("Invalid MAVEN_BUILD_THREADS parameter. It must be a combination of numbers and 'C', such as '2C'.")
+      }
+      generatePatch(MAVEN_BUILD_THREADS, "$PKG_BUILD_DIR/rpm/SOURCES")
     }
     // Writing bigtop.bom files with all the versions
     def bomWriter = new File("$PKG_BUILD_DIR/rpm/SOURCES/bigtop.bom").newWriter()
@@ -677,7 +715,7 @@ def genTasks = { target ->
   }
   task "$target-pkg-ind" (
           description: "Invoking a native binary packaging for $target in Docker. Usage: \$ ./gradlew " +
-                  "-POS=[centos-7|fedora-35|debian-10|ubuntu-18.04] " +
+                  "-POS=[centos-7|fedora-38|debian-11|ubuntu-18.04] " +
                   "-Pprefix=[trunk|1.4.0|1.3.0|1.2.1|...] $target-pkg-ind " +
                   "-Pnexus=[true|false]" +
                   "[-Ppreferred-java-version=[8|11]]" +
@@ -685,7 +723,7 @@ def genTasks = { target ->
           group: PACKAGES_GROUP) doLast {
     def _prefix = project.hasProperty("prefix") ? prefix : "trunk"
     def _OS = project.hasProperty("OS") ? OS : "centos-7"
-    if (_OS == "fedora-35" || _OS == "ubuntu-22.04") {
+    if (_OS == "fedora-38" || _OS == "ubuntu-22.04") {
       logger.warn(_OS + ' requires privileged mode, pass `-Pdocker-run-option="--privileged"` to gradle option')
     }
     def _target_pkg = "$target-pkg"
@@ -913,13 +951,13 @@ if (nativePackaging) {
 
 task "repo-ind" (
     description: "Invoking a native repository in Docker. Usage: \$ ./gradlew " +
-            "-POS=[centos-7|fedora-35|debian-10|ubuntu-18.04] " +
+            "-POS=[centos-7|fedora-38|debian-11|ubuntu-18.04] " +
             "-Pprefix=[trunk|1.4.0|1.3.0|1.2.1|...] repo-ind",
     group: PACKAGES_GROUP) doLast {
   def _prefix = project.hasProperty("prefix") ? prefix : "trunk"
   def _OS = project.hasProperty("OS") ? OS : "centos-7"
-  if (_OS == "fedora-35") {
-    logger.warn('fedora-35 requires privileged mode, pass `-Pdocker-run-option="--privileged"` to gradle option')
+  if (_OS == "fedora-38") {
+    logger.warn('fedora-38 requires privileged mode, pass `-Pdocker-run-option="--privileged"` to gradle option')
   }
   def _docker_run_option = project.hasProperty("docker-run-option") ? this.'docker-run-option' : ""
   def command = [

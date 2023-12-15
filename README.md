@@ -195,10 +195,10 @@ __On all systems, Building Apache Bigtop requires certain set of tools__
   environment configured and cached. All currently supported OSes could be pulled
   from official Bigtop repository at https://hub.docker.com/r/bigtop/slaves/tags/
 
-  To build a component (bigtop-groovy) for a particular OS (ubuntu-20.04) you can
+  To build a component (bigtop-groovy) for a particular OS (ubuntu-22.04) you can
   run the following from a clone of Bigtop workspace (assuming your system has
   Docker engine setup and working)
-  ```docker run --rm -u jenkins:jenkins -v `pwd`:/ws --workdir /ws bigtop/slaves:trunk-ubuntu-20.04
+  ```docker run --rm -u jenkins:jenkins -v `pwd`:/ws --workdir /ws bigtop/slaves:trunk-ubuntu-22.04
   bash -l -c './gradlew allclean ; ./gradlew bigtop-groovy-pkg'```
 
 For Developers: Building and modifying the web site

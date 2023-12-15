@@ -86,6 +86,7 @@
        packaging = 'rpm' // *optional* If this component can be built only as either
                          // DEB or RPM, specify that packaging format explicitly.
                          // If both formats are supported, omit this option.
+       maven_parallel_build = true
      }
    }
  }
@@ -146,6 +147,7 @@ bigtop {
         site          = "${apache.APACHE_MIRROR}/${download_path}"
         archive       = "${apache.APACHE_ARCHIVE}/${download_path}"
       }
+      maven_parallel_build = true
     }
     'hadoop' {
       name    = 'hadoop'
@@ -168,6 +170,7 @@ bigtop {
       url     { download_path = "/$name/${version.base}/"
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+      maven_parallel_build = true
     }
 
     'hive' {
@@ -180,6 +183,7 @@ bigtop {
       url     { download_path = "/$name/$name-${version.base}/"
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+      maven_parallel_build = true
     }
     'tez' {
       name    = 'tez'
@@ -191,6 +195,7 @@ bigtop {
       url     { download_path = "/$name/${version.base}/"
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+      maven_parallel_build = true
     }
     'solr' {
       name    = 'solr'
@@ -231,6 +236,7 @@ bigtop {
       url     { download_path = "/$name/$name-${version.base}"
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+      maven_parallel_build = true
     }
 
 
@@ -243,6 +249,7 @@ bigtop {
       url     { download_path = "/$name/$name-${version.base}"
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+      maven_parallel_build = true
     }
     'bigtop-groovy' {
       name    = 'bigtop-groovy'
@@ -286,6 +293,7 @@ bigtop {
                 source      = "v${version.base}.tar.gz" }
       url     { site = "https://github.com/Alluxio/alluxio/archive"
                 archive = site }
+      maven_parallel_build = true
     }
     'kafka' {
       name    = 'kafka'
@@ -308,6 +316,7 @@ bigtop {
       url     { download_path = "/$name/$name-${version.base}/"
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+      maven_parallel_build = true
     }
     'gpdb' {
       name    = 'gpdb'
@@ -327,6 +336,7 @@ bigtop {
       url     { download_path = "incubator/livy/${version.base}-incubating/"
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+      maven_parallel_build = true
     }
     'ranger' {
       name    = 'ranger'
