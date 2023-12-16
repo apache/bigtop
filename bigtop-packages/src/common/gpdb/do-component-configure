@@ -24,4 +24,4 @@ if [ "${OS}" = "openEuler" ]; then
   sed -i 's|python gpconfig_modules|python2 gpconfig_modules|g' gpMgmt/bin/Makefile
 fi
 
-./configure --prefix=$1 --with-python --with-libxml --with-gssapi --disable-orca CFLAGS='-fcommon -Wno-implicit-fallthrough'
+PYTHON=/usr/bin/python3 ./configure --prefix=$1 --with-python --with-libxml --with-gssapi --disable-orca CFLAGS='-fcommon -Wno-implicit-fallthrough'

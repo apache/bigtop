@@ -22,6 +22,6 @@ Homepage: https://github.com/greenplum-db/gpdb
 
 Package: gpdb
 Architecture: any
-Depends: ${shlibs:Depends}, bigtop-utils (>= 0.7), gcc, libffi-dev, libssl-dev, make, python-dev (>= 2.6) | python2-dev (>= 2.6), python-dev (<< 3) | python2-dev
+Depends: ${shlibs:Depends}, bigtop-utils (>= 0.7), gcc, libffi-dev, libssl-dev, make, python3-dev
 Description: Greenplum MPP database engine
   Provides the Greenplum MPP database engine

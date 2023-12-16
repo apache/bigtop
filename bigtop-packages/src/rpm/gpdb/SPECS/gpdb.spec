@@ -48,7 +48,7 @@ AutoReqProv: %{autorequire}
 %if 0%{?openEuler}
 Requires: bigtop-utils >= 0.7, gcc, libffi-devel, make, openssl-devel
 %else
-Requires: bigtop-utils >= 0.7, gcc, libffi-devel, make, openssl-devel, python2-devel
+Requires: bigtop-utils >= 0.7, gcc, libffi-devel, make, openssl-devel, python3-devel
 %endif
 
 %description

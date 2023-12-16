@@ -64,6 +64,7 @@ class bigtop_toolchain::packages {
         "krb5-devel",
         "net-tools",
         "perl-Digest-SHA",
+        "python3-devel",
         "nasm",
         "yasm"
       ]

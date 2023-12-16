@@ -4,7 +4,7 @@ index 462a207cc0..551d1c842a 100755
 +++ b/gpMgmt/bin/analyzedb
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  # -*- coding: utf-8 -*-
  
  # Copyright (c) 2015 Pivotal Software, Inc. All Rights Reserved
@@ -14,7 +14,7 @@ index 0f1dd22fb5..2ae64ee220 100755
 +++ b/gpMgmt/bin/gpactivatestandby
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  # -*- coding: utf-8 -*-
  # Line too long - pylint: disable=C0301
  # Invalid name  - pylint: disable=C0103
@@ -24,7 +24,7 @@ index a7c368071e..1f4e7665c6 100755
 +++ b/gpMgmt/bin/gpaddmirrors
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  #
  # Recovers Greenplum segment instances that are marked as invalid, if
  # mirroring is configured and operational
@@ -34,7 +34,7 @@ index a2c5f29377..98dc067abc 100755
 +++ b/gpMgmt/bin/gpcheckcat
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  '''
  Usage: gpcheckcat [<option>] [dbname]
  
@@ -44,7 +44,7 @@ index 5259974af9..7996d8eed0 100644
 +++ b/gpMgmt/bin/gpcheckcat_modules/foreign_key_check.py
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  
  from gppylib.gplog import *
  from gppylib.gpcatalog import *
@@ -54,7 +54,7 @@ index b25af69351..976ad0ed15 100644
 +++ b/gpMgmt/bin/gpcheckcat_modules/orphan_toast_table_issues.py
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  
  
  class OrphanToastTableIssue(object):
@@ -64,7 +64,7 @@ index bb0df7f52b..b3df5ab0a7 100644
 +++ b/gpMgmt/bin/gpcheckcat_modules/orphaned_toast_tables_check.py
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  
  import itertools
  
@@ -74,7 +74,7 @@ index b46fe6c1c8..7298a17fde 100644
 +++ b/gpMgmt/bin/gpcheckcat_modules/repair.py
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  """
  Purpose : Creates the repair dir and the corresponding sql/bash scripts for
            repairing some of the catalog issues(see the list below) reported by gpcheckcat.
@@ -84,7 +84,7 @@ index dbd040dbe9..623ce7f8f0 100644
 +++ b/gpMgmt/bin/gpcheckcat_modules/repair_missing_extraneous.py
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  from gppylib.utils import escapeDoubleQuoteInSQLString
  
  class RepairMissingExtraneous:
@@ -94,7 +94,7 @@ index 8bf847a839..e385eaca5f 100644
 +++ b/gpMgmt/bin/gpcheckcat_modules/unique_index_violation_check.py
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  
  class UniqueIndexViolationCheck:
      unique_indexes_query = """
@@ -104,7 +104,7 @@ index 798e815aa4..6615365c60 100755
 +++ b/gpMgmt/bin/gpcheckperf
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  """
  gpcheckperf -- Check the hardware for Greenplum Database
  
@@ -114,7 +114,7 @@ index c451ee64fc..9a9394d1a5 100755
 +++ b/gpMgmt/bin/gpcheckresgroupimpl
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  #
  # Copyright (c) 2017, Pivotal Software Inc.
  #
@@ -124,7 +124,7 @@ index b31a6d38f2..a65a118809 100755
 +++ b/gpMgmt/bin/gpconfig
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  #
  # Copyright (c) Greenplum Inc 2009. All Rights Reserved.
  #
@@ -134,7 +134,7 @@ index 145709b627..0811ef5a87 100755
 +++ b/gpMgmt/bin/gpdeletesystem
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  # -*- coding: utf-8 -*-
  #
  # Copyright (c) Greenplum Inc 2010. All Rights Reserved.
@@ -144,7 +144,7 @@ index 7e9e5be6dc..0c36dbc332 100755
 +++ b/gpMgmt/bin/gpexpand
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  # Line too long            - pylint: disable=C0301
  # Invalid name             - pylint: disable=C0103
  #
@@ -154,7 +154,7 @@ index d3a36ea993..2e9b7157df 100755
 +++ b/gpMgmt/bin/gpinitstandby
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  # -*- coding: utf-8 -*-
  #
  # Copyright (c) Greenplum Inc 2010. All Rights Reserved. 
@@ -164,7 +164,7 @@ index d96b78694e..9668fc0fae 100755
 +++ b/gpMgmt/bin/gpload.py
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  # -*- coding: utf-8 -*-
  # gpload - load file(s) into Greenplum Database
  # Copyright Greenplum 2008
@@ -174,7 +174,7 @@ index 09f36cf2f1..abd086283e 100755
 +++ b/gpMgmt/bin/gplogfilter
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  # -*- coding: utf-8 -*-
  #
  # gplogfilter [options] [inputfile]...
@@ -184,7 +184,7 @@ index c9a9df5e76..d3e36c7f51 100755
 +++ b/gpMgmt/bin/gpmemreport
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  #
  # Copyright 2021 VMware, Inc.
  # SPDX-License-Identifier: Apache-2.0
@@ -194,7 +194,7 @@ index e99cfd3564..dd8fc4b7ad 100755
 +++ b/gpMgmt/bin/gpmemwatcher
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  #
  # Copyright 2021 VMware, Inc.
  # SPDX-License-Identifier: Apache-2.0
@@ -204,7 +204,7 @@ index eda5f226d0..22760982f5 100755
 +++ b/gpMgmt/bin/gpmovemirrors
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  # Line too long            - pylint: disable=C0301
  # Invalid name             - pylint: disable=C0103
  #
@@ -214,7 +214,7 @@ index 24a09b2dae..f789e141ee 100755
 +++ b/gpMgmt/bin/gppkg
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python 
-+#!/usr/bin/env python2 
++#!/usr/bin/env python3 
  #
  # Copyright (c) Greenplum Inc 2010. All Rights Reserved.
  #
@@ -224,7 +224,7 @@ index 138ffc679c..4ac17e982b 100755
 +++ b/gpMgmt/bin/gppylib/commands/base.py
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  #
  # Copyright (c) Greenplum Inc 2008. All Rights Reserved.
  #
@@ -234,7 +234,7 @@ index 4b50da8a5d..d680038228 100755
 +++ b/gpMgmt/bin/gppylib/gparray.py
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  #
  # Copyright (c) Greenplum Inc 2008. All Rights Reserved.
  #
@@ -244,7 +244,7 @@ index 4ea2e2ccea..806c542a2d 100755
 +++ b/gpMgmt/bin/gppylib/gpunit
 @@ -1,4 +1,4 @@
 -#! /usr/bin/env python
-+#! /usr/bin/env python2
++#! /usr/bin/env python3
  
  """
  gpunit is similar to unit2 in python but runs with our GpMgmtTestRunner and GpMgmtTextTestResult.
@@ -254,7 +254,7 @@ index 1b508aa748..33fc7f574b 100755
 +++ b/gpMgmt/bin/gppylib/operations/initstandby.py
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  
  import os
  import base64
@@ -264,7 +264,7 @@ index fda2e70b6c..dd3e348a2d 100755
 +++ b/gpMgmt/bin/gppylib/system/ComputeCatalogUpdate.py
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  # Line too long - pylint: disable=C0301
  # Invalid name  - pylint: disable=C0103
  
@@ -274,7 +274,7 @@ index 08d1006a20..cc4e857ad4 100755
 +++ b/gpMgmt/bin/gppylib/unit2
 @@ -1,4 +1,4 @@
 -#! /usr/bin/env python
-+#! /usr/bin/env python2
++#! /usr/bin/env python3
  
  __unittest = True
  
@@ -284,7 +284,7 @@ index 777852a0ba..7a3fbbf545 100755
 +++ b/gpMgmt/bin/gprecoverseg
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  """
  gprecoverseg
  
@@ -294,7 +294,7 @@ index c2a5765255..cffc4a592d 100755
 +++ b/gpMgmt/bin/gpreload
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  
  from gppylib.mainUtils import simple_main
  from gppylib.operations.reload import GpReload
@@ -304,7 +304,7 @@ index 882139c82e..f43cddf0c7 100755
 +++ b/gpMgmt/bin/gpscp
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  
  '''
  gpscp -- scp to multiple hosts at once
@@ -314,7 +314,7 @@ index 3599bd1192..1da50c58d3 100755
 +++ b/gpMgmt/bin/gpsd
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  # Copyright (c) 2014 Pivotal inc.
  
  
@@ -324,7 +324,7 @@ index fd8cab3ae0..ef0b81f532 100755
 +++ b/gpMgmt/bin/gpssh
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  
  '''
  gpssh -- ssh access to multiple hosts at once
@@ -334,7 +334,7 @@ index 2eb9acb73c..68a3acb21f 100755
 +++ b/gpMgmt/bin/gpssh-exkeys
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  # -*- indent-tabs-mode: nil; tab-width:4 -*-
  # vim:set tabstop=4 expandtab:
  '''
@@ -344,7 +344,7 @@ index ad9ee9c297..7ad8530d84 100755
 +++ b/gpMgmt/bin/gpstart
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  #
  # Copyright (c) Greenplum Inc 2008. All Rights Reserved.
  #
@@ -354,7 +354,7 @@ index bbbf8c4383..d0f45d048e 100755
 +++ b/gpMgmt/bin/gpstate
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  #
  # Displays system status information
  #
@@ -364,7 +364,7 @@ index 1b1afdbb77..89c974724b 100755
 +++ b/gpMgmt/bin/gpstop
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  #
  # Copyright (c) Greenplum Inc 2008. All Rights Reserved.
  #
@@ -374,7 +374,7 @@ index e57ebc6c08..44999548a9 100755
 +++ b/gpMgmt/bin/gpsys1
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  """
  gpsys1 -- print system info on a host
  
@@ -384,7 +384,7 @@ index fe4eb85807..b9435d9565 100755
 +++ b/gpMgmt/bin/lib/gpconfigurenewsegment
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  
  import datetime
  import sys
@@ -394,7 +394,7 @@ index 419fdaad39..6ba80cb18b 100644
 +++ b/gpMgmt/bin/lib/gppinggpfdist.py
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  
  import sys, httplib, getopt, socket
  
@@ -404,7 +404,7 @@ index 33d19e80fc..b9c64dc157 100755
 +++ b/gpMgmt/bin/lib/gpstate.py
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  #
  # Recovers Greenplum segment instances that are marked as invalid, if
  # mirroring is configured and operational
@@ -414,7 +414,7 @@ index 59703f2c92..efa4b2858d 100755
 +++ b/gpMgmt/bin/lib/multidd
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  """
  multidd - run multiple dd concurrently to determine disk throughput
  
@@ -424,7 +424,7 @@ index bdeea5911d..27a33ebbd3 100755
 +++ b/gpMgmt/bin/minirepro
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  '''
  minirepro utility
  
@@ -434,7 +434,7 @@ index 29e2b47c8f..b0d54abb5a 100755
 +++ b/gpMgmt/sbin/gpcleansegmentdir.py
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  #
  # Copyright (c) Greenplum Inc 2010. All Rights Reserved.
  #
@@ -444,7 +444,7 @@ index bac06f4f25..3f1bee8b44 100755
 +++ b/gpMgmt/sbin/gpconfig_helper.py
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  #
  # Copyright (c) Greenplum Inc 2009. All Rights Reserved.
  #
@@ -454,7 +454,7 @@ index 5bde9e13ae..fdde978592 100755
 +++ b/gpMgmt/sbin/gpgetstatususingtransition.py
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  #
  # Copyright (c) Greenplum Inc 2010. All Rights Reserved. 
  #
@@ -464,7 +464,7 @@ index 2383a807b2..639e2ed1ed 100755
 +++ b/gpMgmt/sbin/gpoperation.py
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  import sys
  import pickle
  import traceback
@@ -474,7 +474,7 @@ index 16b85a3e68..50bc781c5d 100644
 +++ b/gpMgmt/sbin/gpsegrecovery.py
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  
  from gppylib.recoveryinfo import RecoveryErrorType
  from gppylib.commands.pg import PgBaseBackup, PgRewind
@@ -484,7 +484,7 @@ index 7da69d06f7..adb5a38810 100644
 +++ b/gpMgmt/sbin/gpsegsetuprecovery.py
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  import os
  
  from gppylib import recoveryinfo
@@ -494,7 +494,7 @@ index 0dee2d6f9e..bb2fd8f23c 100755
 +++ b/gpMgmt/sbin/gpsegstart.py
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  # Line too long - pylint: disable=C0301
  # Invalid name  - pylint: disable=C0103
  #
@@ -504,7 +504,7 @@ index 5a88775dc2..b4c7fccbd1 100755
 +++ b/gpMgmt/sbin/gpsegstop.py
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  #
  # Copyright (c) Greenplum Inc 2008. All Rights Reserved.
  #
@@ -514,7 +514,7 @@ index e65355cd24..9ade7c266e 100755
 +++ b/gpMgmt/sbin/packcore
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  # Copyright Pivotal 2014
  
  
@@ -524,7 +524,7 @@ index 8ef70ac1a0..e4cd1c6840 100755
 +++ b/gpMgmt/sbin/seg_update_pg_hba.py
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env python
-+#!/usr/bin/env python2
++#!/usr/bin/env python3
  import os
  import re
  import sys
