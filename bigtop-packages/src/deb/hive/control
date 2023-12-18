@@ -25,7 +25,7 @@ Homepage: http://hive.apache.org/
 Package: hive
 Architecture: all
 Depends: adduser, hadoop-client, bigtop-utils (>= 0.7), zookeeper,
-         hive-jdbc (= ${source:Version}), python | python2
+         hive-jdbc (= ${source:Version})
 Description: Data warehouse infrastructure built on top of Hadoop
  Hive is a data warehouse infrastructure built on top of Hadoop that provides
  tools to enable easy data summarization, adhoc querying and analysis of large
@@ -66,7 +66,7 @@ Description: Provides libraries necessary to connect to Apache Hive via JDBC
 
 Package: hive-hcatalog
 Architecture: all
-Depends: hadoop, hive, bigtop-utils (>= 0.6), python | python2
+Depends: hadoop, hive, bigtop-utils (>= 0.6)
 Description: Table and storage management service for Apache Hadoop.
  This includes:
    * Providing a shared schema and data type mechanism.
