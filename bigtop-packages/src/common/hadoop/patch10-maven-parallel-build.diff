@@ -1,0 +1,10 @@
+diff --git a/.mvn/maven.config b/.mvn/maven.config
+new file mode 100644
+index 00000000..e69de29b
+diff --git a/.mvn/maven.config b/.mvn/maven.config
+index e69de29b..0bea21c9 100644
+--- a/.mvn/maven.config
++++ b/.mvn/maven.config
+@@ -0,0 +1 @@
++-T@CORES@
+\ No newline at end of file
