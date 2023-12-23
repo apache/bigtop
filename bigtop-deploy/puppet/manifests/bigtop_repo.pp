@@ -70,8 +70,8 @@ class bigtop_repo {
       # BIGTOP-3343. This is a JDK-related stuff, so it should be in jdk.pp ordinarily.
       # But it looks like that this definition must be here to avoid cyclic resource dependencies.
       if ($operatingsystem == 'Debian' and 0 <= versioncmp($operatingsystemrelease, "10")) {
-        apt::source { 'adoptopenjdk':
-          location => 'https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/',
+        apt::source { 'adoptium':
+          location => 'https://packages.adoptium.net/artifactory/deb/',
         }
       }
 
@@ -86,9 +86,9 @@ class bigtop_repo {
 
         # BIGTOP-3343. This is a JDK-related stuff, but it's here for the same reason described above.
         if ($operatingsystem == 'Debian' and 0 <= versioncmp($operatingsystemrelease, "10")) {
-          apt::key { "add_adoptopenjdk_key":
-            id => "8ED17AF5D7E675EB3EE3BCE98AC3B29174885C03",
-            source => "https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public",
+          apt::key { "add_adoptium_key":
+            id => "3B04D753C9050D9A5D343F39843C48A565F8F04B",
+            source => "https://packages.adoptium.net/artifactory/api/gpg/key/public",
           }
         }
       } else {

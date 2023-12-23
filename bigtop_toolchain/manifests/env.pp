@@ -29,7 +29,7 @@ class bigtop_toolchain::env {
       if $::operatingsystemmajrelease =~ /^\d$/ {
         $javahome = "/usr/lib/jvm/${java}-openjdk-$arch"
       } else {
-        $javahome = "/usr/lib/jvm/adoptopenjdk-8-hotspot-$arch"
+        $javahome = "/usr/lib/jvm/temurin-8-jdk-$arch"
       }
     }
     'Ubuntu': {

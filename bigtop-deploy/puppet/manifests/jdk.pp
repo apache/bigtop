@@ -23,7 +23,7 @@ class jdk {
       if versioncmp($operatingsystemrelease, "10") < 0 {
         $jdk_pkg_name = 'openjdk-8-jdk'
       } else {
-        $jdk_pkg_name = 'adoptopenjdk-8-hotspot'
+        $jdk_pkg_name = 'temurin-8-jdk'
       }
       package { 'jdk':
         name => $jdk_pkg_name,
