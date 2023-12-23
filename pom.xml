@@ -43,7 +43,7 @@
     <hbase.version>1.1.9</hbase.version>
     <zookeeper.version>3.4.6</zookeeper.version>
     <solr.version>4.10.4</solr.version>
-    <spark.version>2.1.0</spark.version>
+    <spark.version>2.2.2</spark.version>
     <kafka.version>0.10.1.1</kafka.version>
     <phoenix.version>4.9.0-HBase-1.1</phoenix.version>
     <spark-smoke.version>${project.version}</spark-smoke.version>
