@@ -677,7 +677,7 @@ def genTasks = { target ->
   }
   task "$target-pkg-ind" (
           description: "Invoking a native binary packaging for $target in Docker. Usage: \$ ./gradlew " +
-                  "-POS=[centos-7|fedora-35|debian-10|ubuntu-18.04] " +
+                  "-POS=[centos-7|fedora-38|debian-10|ubuntu-18.04] " +
                   "-Pprefix=[trunk|1.4.0|1.3.0|1.2.1|...] $target-pkg-ind " +
                   "-Pnexus=[true|false]" +
                   "[-Ppreferred-java-version=[8|11]]" +
@@ -685,7 +685,7 @@ def genTasks = { target ->
           group: PACKAGES_GROUP) doLast {
     def _prefix = project.hasProperty("prefix") ? prefix : "trunk"
     def _OS = project.hasProperty("OS") ? OS : "centos-7"
-    if (_OS == "fedora-35" || _OS == "ubuntu-22.04") {
+    if (_OS == "fedora-38" || _OS == "ubuntu-22.04") {
       logger.warn(_OS + ' requires privileged mode, pass `-Pdocker-run-option="--privileged"` to gradle option')
     }
     def _target_pkg = "$target-pkg"
@@ -913,13 +913,13 @@ if (nativePackaging) {
 
 task "repo-ind" (
     description: "Invoking a native repository in Docker. Usage: \$ ./gradlew " +
-            "-POS=[centos-7|fedora-35|debian-10|ubuntu-18.04] " +
+            "-POS=[centos-7|fedora-38|debian-10|ubuntu-18.04] " +
             "-Pprefix=[trunk|1.4.0|1.3.0|1.2.1|...] repo-ind",
     group: PACKAGES_GROUP) doLast {
   def _prefix = project.hasProperty("prefix") ? prefix : "trunk"
   def _OS = project.hasProperty("OS") ? OS : "centos-7"
-  if (_OS == "fedora-35") {
-    logger.warn('fedora-35 requires privileged mode, pass `-Pdocker-run-option="--privileged"` to gradle option')
+  if (_OS == "fedora-38") {
+    logger.warn('fedora-38 requires privileged mode, pass `-Pdocker-run-option="--privileged"` to gradle option')
   }
   def _docker_run_option = project.hasProperty("docker-run-option") ? this.'docker-run-option' : ""
   def command = [
