@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -13,14 +14,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Override JAVA_HOME detection for all bigtop packages
-# export JAVA_HOME
 
-# Override PYTHON3_PATH detection for all bigtop packages
-# export PYTHON3_PATH
+# Override python3 in the file below if you want to disable
+# automatic python3 detection
+BIGTOP_DEFAULTS_DIR=${BIGTOP_DEFAULTS_DIR-/etc/default}
+[ -n "${BIGTOP_DEFAULTS_DIR}" -a -r ${BIGTOP_DEFAULTS_DIR}/bigtop-utils ] && . ${BIGTOP_DEFAULTS_DIR}/bigtop-utils
 
-# Provide a colon-delimited list of directories to search for native Java libraries (e.g. libjvm.so)
-# export JAVA_NATIVE_PATH
+PYTHON3_PATH_CANDIDATES=(
+    '/usr/bin/python3'
+    '/opt/python3/bin/python3'
+    '/usr/lib/python3/bin/python3'
+)
 
-# Add common dependencies to the classpath (/var/lib/bigtop will already be included)
-# export BIGTOP_CLASSPATH
+# attempt to find python3
+if [ -z "${PYTHON3_PATH}" ]; then
+  for candidate in ${PYTHON3_PATH_CANDIDATES[@]} ; do
+    if [ -e ${candidate} ]; then
+      export PYTHON3_PATH=${candidate}
+      break
+    fi
+  done
+fi
