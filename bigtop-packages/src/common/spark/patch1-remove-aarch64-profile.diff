@@ -1,0 +1,24 @@
+diff --git a/pom.xml b/pom.xml
+index 183d258840..0a5df7944d 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -3506,19 +3506,6 @@
+     <profile>
+       <id>sparkr</id>
+     </profile>
+-    <!-- use org.openlabtesting.leveldbjni on aarch64 platform -->
+-    <profile>
+-      <id>aarch64</id>
+-      <properties>
+-        <leveldbjni.group>org.openlabtesting.leveldbjni</leveldbjni.group>
+-      </properties>
+-      <activation>
+-        <os>
+-          <family>linux</family>
+-          <arch>aarch64</arch>
+-        </os>
+-      </activation>
+-    </profile>
+     <profile>
+       <id>jdwp-test-debug</id>
+       <properties>
