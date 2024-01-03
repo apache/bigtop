@@ -29,6 +29,8 @@ class bigtop_toolchain::packages {
         "gcc",
         "gcc-c++",
         "fuse",
+        "fuse3",
+        "fuse3-devel",
         "createrepo",
         "lzo-devel",
         "fuse-devel",

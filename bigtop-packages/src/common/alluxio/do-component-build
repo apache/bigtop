@@ -45,7 +45,7 @@ if [ $HOSTTYPE = "powerpc64le" ] ; then
 
 else
   #need to manually compile the libjnifuse*.so in openEuler
-  if [ "${OS}" = "openEuler" ] ; then
+  if [ "${OS}" = "openEuler" ] || [ "${OS}" = "fedora" ]; then
     sed -i "s|<activeByDefault>false</activeByDefault>|<activeByDefault>true</activeByDefault>|g" integration/jnifuse/native/pom.xml
   fi
 
