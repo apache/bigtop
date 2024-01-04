@@ -89,6 +89,9 @@ for var in PREFIX BUILD_DIR ; do
   fi
 done
 
+. /etc/os-release
+OS="$ID"
+
 LIB_DIR=${LIB_DIR:-/usr/lib/alluxio}
 LIBEXEC_DIR=${INSTALLED_LIB_DIR:-/usr/libexec}
 BIN_DIR=${BIN_DIR:-/usr/bin}
@@ -130,8 +133,10 @@ cp -a client/* $PREFIX/$LIB_DIR/client
 cp -a integration/* $PREFIX/$LIB_DIR/integration
 cp integration/fuse/target/alluxio-integration-fuse-*-jar-with-dependencies.jar $PREFIX/$LIB_DIR/integration/fuse
 
-# replace the original libjnifuse*.so file with the manually compiled in openEuler
-if [ ${OS} = "openEuler" ]; then
+# replace the original libjnifuse*.so file with the manually compiled in openEuler and fedora
+# The libjnifuse*.so files which alluxio need is not compiled by default, and uses the x86 ARCH version
+# so we need to compile libjnifuse*.so and copy it to the corresponding directory of alluxio
+if [ ${OS} = "openEuler" ] || [ "${OS}" = "fedora" ]; then
   cp integration/jnifuse/native/src/main/resources/libjnifuse*.so $PREFIX/$LIB_DIR/integration/jnifuse/native/target/classes/
 fi
 
