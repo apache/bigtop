@@ -146,6 +146,7 @@ done
 %files
 %defattr(-,root,root)
 %attr(0755,knox,knox) %config(noreplace) %{np_etc_knox}
+%config(noreplace) %{etc_knox}/conf.dist
 %attr(0755,knox,knox) %config(noreplace) %{initd_dir}/%{name}-gateway
 %dir %{_sysconfdir}/%{knox_name}
 
