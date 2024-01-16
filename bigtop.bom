@@ -432,5 +432,15 @@ bigtop {
       url     { site = "https://github.com/apache/kyuubi/archive/refs/tags"
                 archive = site }
     }
+    'knox' {
+      name    = 'knox'
+      relNotes = 'Apache Knox'
+      version { base = '2.0.0'; pkg = base-"-release"; release = 1 }
+      tarball { destination = "$name-${version.base}.zip"
+                source      = "$name-${version.base}-src.zip" }
+      url     { download_path = "$name/${version.base}"
+                site = "${apache.APACHE_MIRROR}/${download_path}"
+                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+    }
   }
 }
