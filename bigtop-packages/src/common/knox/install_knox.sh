@@ -131,6 +131,6 @@ cat > $PREFIX/$BIN_DIR/gateway <<EOF
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
 
-exec ${PREFIX}/$LIB_DIR/bin/gateway.sh \$@
+exec $LIB_DIR/bin/gateway.sh \$@
 EOF
 chmod 755 $PREFIX/$BIN_DIR/gateway
