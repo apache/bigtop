@@ -124,13 +124,13 @@ ln -s $RUN_DIR $PREFIX/$LIB_DIR/pids
 rm -rf $TMP_DIR
 
 # Copy in the /usr/bin/knox wrapper
-install -d -m 0755 $PREFIX/usr/bin
-cat > $PREFIX/usr/bin/gateway <<EOF
+install -d -m 0755 $PREFIX/$BIN_DIR
+cat > $PREFIX/$BIN_DIR/gateway <<EOF
 #!/bin/bash
 
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
 
-exec $LIB_DIR/bin/gateway.sh \$@
+exec ${PREFIX}/$LIB_DIR/bin/gateway.sh \$@
 EOF
 chmod 755 $PREFIX/$BIN_DIR/gateway
