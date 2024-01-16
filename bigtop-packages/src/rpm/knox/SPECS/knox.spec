@@ -14,7 +14,7 @@
 # limitations under the License.
 
 %define knox_name knox
-
+%define knox_pkg_name knox%{pkg_name_suffix}
 %define etc_default %{parent_dir}/etc/default
 %define usr_lib_knox %{parent_dir}/usr/lib/%{knox_name}
 %define etc_knox %{parent_dir}/etc/%{knox_name}
@@ -27,7 +27,7 @@
 
 %define knox_services gateway
 
-Name: knox
+Name: %{knox_pkg_name}
 Version: %{knox_version}
 Release: %{knox_release}
 BuildArch: noarch
