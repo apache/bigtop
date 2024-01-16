@@ -100,7 +100,6 @@ install -d -m 0755 $PREFIX/$NP_VAR_LIB_KNOX_DATA
 install -d -m 0755 $PREFIX/$ETC_KNOX/conf.dist
 install -d -m 0755 $PREFIX/$LIB_DIR/samples
 install -d -m 0755 $PREFIX/$LIB_DIR/templates
-install -d -m 0755 $PREFIX/$LIB_DIR/native
 install -d -m 0755 $PREFIX/$RUN_DIR
 install -d -m 0755 $PREFIX/$LOG_DIR
 
@@ -113,10 +112,9 @@ cp -ra ${TMP_DIR}/knox-*/lib/* ${PREFIX}/${LIB_DIR}/lib/
 cp -a ${TMP_DIR}/knox-*/bin/* ${PREFIX}/${LIB_DIR}/bin/
 cp -a ${TMP_DIR}/knox-*/samples/* ${PREFIX}/${LIB_DIR}/samples/
 cp -a ${TMP_DIR}/knox-*/templates/* ${PREFIX}/${LIB_DIR}/templates/
-cp -a ${TMP_DIR}/knox-*/native/* ${PREFIX}/${LIB_DIR}/native/
+#cp -a ${TMP_DIR}/knox-*/native/* ${PREFIX}/${LIB_DIR}/native/
 cp -ra ${TMP_DIR}/knox-*/data/* ${PREFIX}/${NP_VAR_LIB_KNOX_DATA}
 cp -ra ${TMP_DIR}/knox-*/conf/* ${PREFIX}/${ETC_KNOX}/conf.dist
-cp ${TMP_DIR}/{LICENSE,README} ${PREFIX}/${LIB_DIR}/
 
 ln -s $NP_ETC_KNOX/conf $PREFIX/$LIB_DIR/conf
 ln -s $NP_VAR_LIB_KNOX_DATA $PREFIX/$LIB_DIR/data

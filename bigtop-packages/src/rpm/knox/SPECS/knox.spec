@@ -160,7 +160,6 @@ done
 %{usr_lib_knox}/bin
 %{usr_lib_knox}/dep
 %{usr_lib_knox}/lib
-%{usr_lib_knox}/native
 %{usr_lib_knox}/samples
 %{usr_lib_knox}/templates
 
