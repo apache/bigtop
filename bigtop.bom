@@ -434,6 +434,7 @@ bigtop {
     }
     'knox' {
       name    = 'knox'
+      rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
       relNotes = 'Apache Knox'
       version { base = '2.0.0'; pkg = base-"-release"; release = 1 }
       tarball { destination = "$name-${version.base}.zip"
