@@ -35,9 +35,9 @@ Summary: Knox Gateway
 URL: https://knox.apache.org/
 Group: Development/Libraries
 License: ASL 2.0
-Source0: %{name}-%{knox_base_version}.zip
+Source0: %{knox_name}-%{knox_base_version}.zip
 Source1: do-component-build
-Source2: install_%{name}.sh
+Source2: install_%{knox_name}.sh
 Source3: knox-gateway.svc
 Source4: bigtop.bom
 Source6: init.d.tmpl
@@ -92,7 +92,7 @@ Requires: /lib/lsb/init-functions
 %__rm -rf $RPM_BUILD_ROOT
 
 %prep
-%setup -n %{name}-%{version}
+%setup -n %{knox_name}-%{version}
 #BIGTOP_PATCH_COMMANDS
 
 %build
@@ -112,18 +112,18 @@ bash -x %{SOURCE2} \
 for service in %{knox_services}
 do
   # Install init script
-  initd_script=$RPM_BUILD_ROOT/%{initd_dir}/%{name}-${service}
-  bash %{SOURCE6} $RPM_SOURCE_DIR/%{name}-${service}.svc rpm $initd_script
+  initd_script=$RPM_BUILD_ROOT/%{initd_dir}/%{knox_name}-${service}
+  bash %{SOURCE6} $RPM_SOURCE_DIR/%{knox_name}-${service}.svc rpm $initd_script
 done
 
 
 %pre
 for service in %{knox_services}; do
-  /sbin/service %{name}-${service} status > /dev/null 2>&1
+  /sbin/service %{knox_name}-${service} status > /dev/null 2>&1
   if [ $? -eq 0 ]; then
-    /sbin/service %{name}-${service} stop > /dev/null 2>&1
+    /sbin/service %{knox_name}-${service} stop > /dev/null 2>&1
   fi
-  chkconfig --del %{name}-${service}
+  chkconfig --del %{knox_name}-${service}
 done
 
 getent group knox >/dev/null || groupadd -r knox
@@ -131,7 +131,7 @@ getent passwd knox >/dev/null || useradd -c "Knox" -s /sbin/nologin -g knox -r -
 
 %post
 for service in %{knox_services}; do
-  chkconfig --add %{name}-${service}
+  chkconfig --add %{knox_name}-${service}
 done
 %{alternatives_cmd} --install %{np_etc_knox}/conf %{knox_name}-conf %{etc_knox}/conf.dist 30
 
@@ -139,7 +139,7 @@ done
 %postun
 for service in %{knox_services}; do
   if [ $1 -ge 1 ]; then
-    service %{name}-${service} condrestart >/dev/null 2>&1
+    service %{knox_name}-${service} condrestart >/dev/null 2>&1
   fi
 done
 
@@ -147,7 +147,7 @@ done
 %defattr(-,root,root)
 %attr(0755,knox,knox) %config(noreplace) %{np_etc_knox}
 %config(noreplace) %{etc_knox}/conf.dist
-%attr(0755,knox,knox) %config(noreplace) %{initd_dir}/%{name}-gateway
+%attr(0755,knox,knox) %config(noreplace) %{initd_dir}/%{knox_name}-gateway
 %dir %{_sysconfdir}/%{knox_name}
 
 %attr(0755,knox,knox) %{np_var_log_knox}
