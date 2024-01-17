@@ -14,14 +14,25 @@
 # limitations under the License.
 
 %define kyuubi_name kyuubi
+%define kyuubi_pkg_name kyuubi%{pkg_name_suffix}
 %define _binaries_in_noarch_packages_terminate_build   0
 %define _unpackaged_files_terminate_build 0
+
+%define etc_default %{parent_dir}/etc/default
+%define usr_lib_kyuubi %{parent_dir}/usr/lib/%{kyuubi_name}
+%define etc_kyuubi %{parent_dir}/etc/%{kyuubi_name}
+%define bin_dir %{parent_dir}/%{_bindir}
+
+%define np_var_lib_kyuubi_data /var/lib/%{kyuubi_name}/data
+%define np_var_run_kyuubi /var/run/%{kyuubi_name}
+%define np_var_log_kyuubi /var/log/%{kyuubi_name}
+%define np_etc_kyuubi /etc/%{kyuubi_name}
 
 
 # disable repacking jars
 %define __os_install_post %{nil}
 
-Name: kyuubi
+Name: %{kyuubi_pkg_name}
 Version: %{kyuubi_version}
 Release: %{kyuubi_release}
 Summary: Apache Kyuubi
@@ -52,31 +63,49 @@ bash $RPM_SOURCE_DIR/do-component-build
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
-AMBARI_VERSION=%{ambari_version} bash $RPM_SOURCE_DIR/install_kyuubi.sh \
-          --build-dir=`pwd` \
-          --distro-dir=$RPM_SOURCE_DIR \
-          --source-dir=`pwd` \
-          --prefix=$RPM_BUILD_ROOT
-
-
-%package kyuubi
-Summary: Apache Kyuubi
-Group: Development/Libraries
-AutoProv: no
-AutoReqProv: no
-%description kyuubi
-Apache Kyuubi
+bash -x %{SOURCE2} \
+    --prefix=$RPM_BUILD_ROOT \
+    --etc-kyuubi=%{etc_kyuubi} \
+    --lib-dir=%{usr_lib_kyuubi} \
+    --bin-dir=%{bin_dir} \
+    --build-dir=`pwd`
 
 
 
+
+%pre
+getent group kyuubi >/dev/null || groupadd -r kyuubi
+getent passwd kyuubi >/dev/null || useradd -c "kyuubi" -s /sbin/nologin -g kyuubi -r -d %{var_lib_kafka} kyuubi 2> /dev/null || :
+
+
+%post
+%{alternatives_cmd} --install %{np_etc_kyuubi}/conf %{kyuubi_name}-conf %{etc_kyuubi}/conf.dist 30
 
 
 #######################
 #### FILES SECTION ####
 #######################
 
-%files kyuubi
-%defattr(644,root,root,755)
-/usr/lib/kyuubi
+%files
+%defattr(-,root,root)
+%attr(0755,kyuubi,kyuubi) %config(noreplace) %{np_etc_kyuubi}
+%config(noreplace) %{etc_kyuubi}/conf.dist
+%dir %{_sysconfdir}/%{kyuubi_name}
 
+%attr(0755,kyuubi,kyuubi) %{np_var_log_kyuubi}
+%attr(0755,kyuubi,kyuubi) %{np_var_run_kyuubi}
 
+%{usr_lib_kyuubi}/beeline-jars
+%{usr_lib_kyuubi}/conf
+%{usr_lib_kyuubi}/logs
+%{usr_lib_kyuubi}/pids
+%{usr_lib_kyuubi}/bin
+%{usr_lib_kyuubi}/charts
+%{usr_lib_kyuubi}/lib
+%{usr_lib_kyuubi}/db-scripts
+%{usr_lib_kyuubi}/docker
+%{usr_lib_kyuubi}/extension
+%{usr_lib_kyuubi}/externals
+%{usr_lib_kyuubi}/jars
+%{usr_lib_kyuubi}/web-ui
+%{usr_lib_kyuubi}/work
