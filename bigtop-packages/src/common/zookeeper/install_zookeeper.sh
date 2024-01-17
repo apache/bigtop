@@ -113,12 +113,12 @@ for var in PREFIX BUILD_DIR ; do
 done
 
 MAN_DIR=${MAN_DIR:-/usr/share/man}/man1
-DOC_DIR=${DOC_DIR:-/usr/share/doc/zookeeper}
-LIB_DIR=${LIB_DIR:-/usr/lib/zookeeper}
-BIN_DIR=${BIN_DIR:-/usr/bin}
+DOC_DIR=${DOC_DIR:-/zookeeper/doc}
+LIB_DIR=${LIB_DIR:-/zookeeper/lib}
+BIN_DIR=${BIN_DIR:-/zookeeper/bin}
 ETC_DEFAULT=${ETC_DEFAULT:-/etc/default}
-SYSTEM_INCLUDE_DIR=${SYSTEM_INCLUDE_DIR:-/usr/include}
-SYSTEM_LIB_DIR=${SYSTEM_LIB_DIR:-/usr/lib}
+SYSTEM_INCLUDE_DIR=${SYSTEM_INCLUDE_DIR:-/zookeeper/include}
+SYSTEM_LIB_DIR=${SYSTEM_LIB_DIR:-/zookeeper/lib}
 
 CONF_DIR=/etc/zookeeper/conf
 CONF_DIST_DIR=${CONF_DIST_DIR:-/etc/zookeeper/conf.dist}
@@ -145,8 +145,7 @@ for x in $PREFIX/$LIB_DIR/zookeeper-jute-[[:digit:]]*.jar ; do
   ln -s $x $PREFIX/$LIB_DIR/zookeeper-jute.jar
 done
 
-install -d -m 0755 $PREFIX/$LIB_DIR/lib
-cp $BUILD_DIR/lib/*.jar $PREFIX/$LIB_DIR/lib
+cp $BUILD_DIR/lib/*.jar $PREFIX/$LIB_DIR
 
 # Copy in the configuration files
 install -d -m 0755 $PREFIX/etc/zookeeper
@@ -155,11 +154,12 @@ cp zoo.cfg $BUILD_DIR/conf/* $PREFIX/$CONF_DIST_DIR/
 ln -s $CONF_DIR $PREFIX/$LIB_DIR/conf
 
 # Copy in the /usr/bin/zookeeper-server wrapper
-install -d -m 0755 $PREFIX/$LIB_DIR/bin
+install -d -m 0755 $PREFIX/$BIN_DIR
 
 for i in zkServer.sh zkEnv.sh zkCli.sh zkCleanup.sh zkServer-initialize.sh
-	do cp $BUILD_DIR/bin/$i $PREFIX/$LIB_DIR/bin
-	chmod 755 $PREFIX/$LIB_DIR/bin/$i
+	do cp $BUILD_DIR/bin/$i $PREFIX/$BIN_DIR
+	ls $PREFIX/$BIN_DIR/$i
+	chmod 755 $PREFIX/$BIN_DIR/$i
 done
 
 wrapper=$PREFIX/$BIN_DIR/zookeeper-client
@@ -213,8 +213,8 @@ install -d -m 0755 $PREFIX/$MAN_DIR
 gzip -c zookeeper.1 > $PREFIX/$MAN_DIR/zookeeper.1.gz
 
 # Zookeeper log and tx log directory
-install -d -m 1766 $PREFIX/var/log/zookeeper
-install -d -m 1766 $PREFIX/var/log/zookeeper/txlog
+# install -d -m 1766 /var/log/zookeeper
+# install -d -m 1766 /var/log/zookeeper/txlog
 
 # ZooKeeper native libraries
 install -d ${PREFIX}/$SYSTEM_INCLUDE_DIR

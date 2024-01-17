@@ -110,6 +110,6 @@ tar -C $PREFIX/$LIB_DIR -xzf $BUILD_DIR/tez-dist/target/tez*-minimal.tar.gz
 cp tez-site.xml $PREFIX/$ETC_TEZ/conf.dist/
 ln -s $NP_ETC_TEZ/conf $PREFIX/$LIB_DIR/conf
 
-TEZ_TAR=$BUILD_DIR/tez-dist/target/tez-[[:digit:]]*[[:digit:]].tar.gz
+TEZ_TAR=$BUILD_DIR/tez-dist/target/tez-*1.tar.gz
 cp $TEZ_TAR $PREFIX/$LIB_DIR/lib/tez.tar.gz
 

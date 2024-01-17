@@ -103,7 +103,7 @@ processing data. It is currently built atop Apache Hadoop YARN
 #BIGTOP_PATCH_COMMANDS
 
 %build
-env TEZ_VERSION=%{version} bash %{SOURCE1}
+env TEZ_VERSION=%{version} VDP_RELEASE=%{vdp_release} bash %{SOURCE1}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT

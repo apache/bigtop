@@ -93,7 +93,9 @@
 
 bigtop {
 /** Base Configuration of the mirror and archives */
-  version = "3.3.0-SNAPSHOT"
+  version = "3.3.6.0"
+  vdp_version=version
+  minor_release="1"
   base_version = version.takeWhile { it != '-' }
   stack {
     'jdk' { version = "1." + ( System.getenv('BIGTOP_JDK') ?: "8" ); version_base = version }
@@ -131,11 +133,11 @@ bigtop {
     'zookeeper' {
       name    = 'zookeeper'
       pkg     = name
-      rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
+      rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")+"_"+bigtop.minor_release
       version {
         base  = '3.7.2'
         pkg   = base
-        release = 1
+        release = bigtop.minor_release
       }
       tarball {
         source      = "apache-zookeeper-${version.base}.tar.gz"
@@ -145,6 +147,10 @@ bigtop {
         download_path = "/zookeeper/zookeeper-${version.base}"
         site          = "${apache.APACHE_MIRROR}/${download_path}"
         archive       = "${apache.APACHE_ARCHIVE}/${download_path}"
+      }
+      git {
+	repo="https://github.com/apache/zookeeper.git"
+        ref = "release-3.7.2"
       }
     }
     'hadoop' {
@@ -157,6 +163,10 @@ bigtop {
       url     { download_path = "/$name/common/$name-${version.base}"
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+      git {
+	repo="https://github.com/apache/hadoop.git"
+        ref = "branch-3.3.6"
+      }
     }
     'hbase' {
       name    = 'hbase'
@@ -187,10 +197,15 @@ bigtop {
       relNotes = 'Apache TEZ'
       version { base = '0.10.2'; pkg = base; release = 1 }
       tarball { destination = "apache-${name}-${version.base}-src.tar.gz"
-                source      = destination }
+                source = destination }
       url     { download_path = "/$name/${version.base}/"
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+      git {
+       repo="https://github.com/apache/tez.git"
+       ref = "branch-0.10.2"
+      }
+
     }
     'solr' {
       name    = 'solr'

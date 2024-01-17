@@ -18,11 +18,12 @@ set -ex
 
 . `dirname ${0}`/bigtop.bom
 
-mvn clean install -DskipTests -Pfull-build
-(cd zookeeper-contrib/zookeeper-contrib-rest ; mvn dependency:copy-dependencies)
+mvn versions:set -DnewVersion=${ZOOKEEPER_VERSION}.${VDP_RELEASE}
+mvn clean install -DskipTests -Pfull-build  -Dmaven.repo.local="/var/lib/jenkins/murali/repository"
+(cd zookeeper-contrib/zookeeper-contrib-rest ; mvn dependency:copy-dependencies -Dmaven.repo.local="/var/lib/jenkins/murali/repository")
 
 mkdir -p build
-(cd build ; tar --strip-components=1 -xzvf  ../zookeeper-assembly/target/apache-zookeeper-${ZOOKEEPER_VERSION}-bin.tar.gz)
+(cd build ; tar --strip-components=1 -xzvf  ../zookeeper-assembly/target/apache-zookeeper-${ZOOKEEPER_VERSION}.${VDP_RELEASE}-bin.tar.gz)
 
 mkdir -p build/native
 cp -R zookeeper-client/zookeeper-client-c/target/c/include build/native/
@@ -32,5 +33,5 @@ cp -R zookeeper-client/zookeeper-client-c/target/c/bin build/native/
 mkdir -p build/contrib/rest
 mkdir -p build/contrib/rest/lib
 cp -R zookeeper-contrib/zookeeper-contrib-rest/conf build/contrib/rest/
-cp zookeeper-contrib/zookeeper-contrib-rest/target/zookeeper-contrib-rest-${ZOOKEEPER_VERSION}.jar build/contrib/rest/
+cp zookeeper-contrib/zookeeper-contrib-rest/target/zookeeper-contrib-rest-${ZOOKEEPER_VERSION}.${VDP_RELEASE}.jar build/contrib/rest/
 cp zookeeper-contrib/zookeeper-contrib-rest/target/dependency/* build/contrib/rest/lib/

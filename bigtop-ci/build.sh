@@ -108,7 +108,7 @@ elif [ "${MVN_CACHE_VOLUME}" == "false" ]; then
 fi
 
 # Start up build container
-CONTAINER_ID=`docker run -d $DOCKER_RUN_OPTION $NEXUS $IMAGE_NAME /sbin/init`
+CONTAINER_ID=`docker run -d -v "/home/murali/.m2/repository/:/var/lib/jenkins/murali/repository:cached" $DOCKER_RUN_OPTION $NEXUS $IMAGE_NAME /sbin/init`
 trap "docker rm -f $CONTAINER_ID" EXIT
 
 # Copy bigtop repo into container

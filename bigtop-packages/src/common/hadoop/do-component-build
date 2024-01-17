@@ -66,7 +66,7 @@ mkdir build
 mkdir build/src
  
 # Build artifacts
-MAVEN_OPTS="-Dzookeeper.version=$ZOOKEEPER_VERSION "
+MAVEN_OPTS="-Dzookeeper.version=$ZOOKEEPER_VERSION.$VDP_RELEASE "
 MAVEN_OPTS+="-Dhbase.profile=2.0 "
 MAVEN_OPTS+="-DskipTests -DskipITs "
 
@@ -78,13 +78,15 @@ OS="$ID"
 if [ "${OS}" = "openEuler" ] ; then
   sed -i 's|node-gyp "^3.8.0"|node-gyp "^6.0.0"|g' hadoop-yarn-project/hadoop-yarn/hadoop-yarn-ui/src/main/webapp/yarn.lock 
 fi
+mvn versions:set -DnewVersion=${HADOOP_VERSION}.${VDP_RELEASE} -Dmaven.repo.local="/var/lib/jenkins/murali/repository"
 
 # Build artifacts
-mvn $BUNDLE_SNAPPY $BUNDLE_ISAL -Pdist -Pnative -Psrc -Pyarn-ui -Dtar ${MAVEN_OPTS} install ${EXTRA_GOALS} "$@"
-mvn site site:stage ${MAVEN_OPTS} $@
+mvn $BUNDLE_SNAPPY $BUNDLE_ISAL -Pdist -Pnative -Psrc -Pyarn-ui -Dtar ${MAVEN_OPTS} install ${EXTRA_GOALS} "$@" -Dhadoop.version=${HADOOP_VERSION}.${VDP_RELEASE} -Dmaven.repo.local="/var/lib/jenkins/murali/repository"
 
-(cd build ; tar --strip-components=1 -xzvf  ../hadoop-dist/target/hadoop-${HADOOP_VERSION}.tar.gz)
-(cd build/src ; tar --strip-components=1 -xzvf  ../../hadoop-dist/target/hadoop-${HADOOP_VERSION}-src.tar.gz)
+mvn site site:stage ${MAVEN_OPTS} $@ -Dmaven.repo.local="/var/lib/jenkins/murali/repository" -Dhadoop.version=${HADOOP_VERSION}.${VDP_RELEASE}
+
+(cd build ; tar --strip-components=1 -xzvf  ../hadoop-dist/target/hadoop-${HADOOP_VERSION}.$VDP_RELEASE.tar.gz)
+(cd build/src ; tar --strip-components=1 -xzvf  ../../hadoop-dist/target/hadoop-${HADOOP_VERSION}.$VDP_RELEASE-src.tar.gz)
 
 # Copy generated docs
 mkdir -p build/share

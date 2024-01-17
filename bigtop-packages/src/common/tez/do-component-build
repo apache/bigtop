@@ -27,10 +27,12 @@ if [ $HOSTTYPE = "aarch64" ] ; then
   mvn install:install-file -DgroupId=com.google.protobuf -DartifactId=protoc -Dversion=2.5.0 \
       -Dclassifier=linux-aarch_64 -Dpackaging=exe -Dfile=/usr/local/protobuf-2.5.0/bin/protoc
 fi
+mvn versions:set -DnewVersion=${TEZ_VERSION}.${VDP_RELEASE} -Dmaven.repo.local="/var/lib/jenkins/murali/repository"
 
 BUILD_TEZ_OPTS="clean package \
 -Dtar -Dhadoop.version=${HADOOP_VERSION} \
 -Phadoop28 \
--DskipTests"
+-DskipTests -Pnoui"
 
-mvn ${BUILD_TEZ_OPTS} "$@"
+mvn ${BUILD_TEZ_OPTS} "$@"  -Dmaven.repo.local="/var/lib/jenkins/murali/repository"
+

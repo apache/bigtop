@@ -13,19 +13,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-%define etc_default %{parent_dir}/etc/default
+%define etc_default %{parent_dir}/%{zookeeper_name}/etc/default
 %define zookeeper_name zookeeper
 %define zookeeper_pkg_name zookeeper%{pkg_name_suffix}
 
-%define usr_lib_zookeeper %{parent_dir}/usr/lib/%{zookeeper_name}
+%define usr_lib_zookeeper %{parent_dir}/%{zookeeper_name}/lib
 %define var_lib_zookeeper %{parent_dir}/var/lib/%{zookeeper_name}
 %define etc_zookeeper_conf_dist %{parent_dir}/etc/zookeeper/conf.dist
 
-%define bin_dir %{parent_dir}/%{_bindir}
-%define man_dir %{parent_dir}/%{_mandir}
-%define doc_dir %{parent_dir}/%{_docdir}
-%define include_dir %{parent_dir}/%{_includedir}
-%define lib_dir %{parent_dir}/%{_libdir}
+%define bin_dir %{parent_dir}/%{zookeeper_name}/bin
+%define man_dir %{parent_dir}/%{zookeeper_name}/man
+%define doc_dir %{parent_dir}/%{zookeeper_name}/doc
+%define include_dir %{parent_dir}/%{zookeeper_name}/include
+%define lib_dir %{parent_dir}/%{zookeeper_name}/lib
 
 # No prefix directory
 %define np_var_log_zookeeper /var/log/%{zookeeper_name}
@@ -53,7 +53,7 @@
     %{nil}
 
 
-%define doc_zookeeper %{doc_dir}/%{zookeeper_name}
+%define doc_zookeeper %{doc_dir}
 %define alternatives_cmd update-alternatives
 %define alternatives_dep update-alternatives
 %define chkconfig_dep    aaa_base
@@ -62,7 +62,7 @@
 
 %else
 
-%define doc_zookeeper %{doc_dir}/%{zookeeper_name}-%{zookeeper_version}
+%define doc_zookeeper %{doc_dir}
 %define alternatives_cmd alternatives
 %define alternatives_dep chkconfig 
 %define chkconfig_dep    chkconfig
@@ -161,7 +161,7 @@ This package starts the zookeeper REST server on startup
 #BIGTOP_PATCH_COMMANDS
 
 %build
-bash %{SOURCE1}
+env VDP_RELEASE=%{vdp_release} bash %{SOURCE1}
 
 %install
 %__rm -rf $RPM_BUILD_ROOT
@@ -251,6 +251,7 @@ fi
 %{bin_dir}/zookeeper-server-initialize
 %{bin_dir}/zookeeper-client
 %{bin_dir}/zookeeper-server-cleanup
+%{bin_dir}/*
 %doc %{doc_zookeeper}
 %{man_dir}/man1/zookeeper.1.*
 

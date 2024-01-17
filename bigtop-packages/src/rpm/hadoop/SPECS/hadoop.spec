@@ -28,10 +28,10 @@
 
 %define etc_default %{parent_dir}/etc/default
 
-%define usr_lib_hadoop %{parent_dir}/usr/lib/%{hadoop_name}
-%define usr_lib_hdfs %{parent_dir}/usr/lib/%{hadoop_name}-hdfs
-%define usr_lib_yarn %{parent_dir}/usr/lib/%{hadoop_name}-yarn
-%define usr_lib_mapreduce %{parent_dir}/usr/lib/%{hadoop_name}-mapreduce
+%define usr_lib_hadoop %{parent_dir}/%{hadoop_name}
+%define usr_lib_hdfs %{parent_dir}/%{hadoop_name}-hdfs
+%define usr_lib_yarn %{parent_dir}/%{hadoop_name}-yarn
+%define usr_lib_mapreduce %{parent_dir}/%{hadoop_name}-mapreduce
 %define var_lib_yarn %{parent_dir}/var/lib/%{hadoop_name}-yarn
 %define var_lib_hdfs %{parent_dir}/var/lib/%{hadoop_name}-hdfs
 %define var_lib_mapreduce %{parent_dir}/var/lib/%{hadoop_name}-mapreduce
@@ -39,13 +39,13 @@
 %define var_lib_kms %{parent_dir}/var/lib/%{hadoop_name}-kms
 %define etc_hadoop %{parent_dir}/etc/%{hadoop_name}
 
-%define usr_lib_zookeeper %{parent_dir}/usr/lib/zookeeper
+%define usr_lib_zookeeper %{parent_dir}/zookeeper
 
-%define bin_dir %{parent_dir}/%{_bindir}
-%define man_dir %{parent_dir}/%{_mandir}
-%define doc_dir %{parent_dir}/%{_docdir}
-%define include_dir %{parent_dir}/%{_includedir}
-%define lib_dir %{parent_dir}/%{_libdir}
+%define bin_dir %{parent_dir}/%{hadoop_name}/bin
+%define man_dir %{parent_dir}/%{hadoop_name}/man
+%define doc_dir %{parent_dir}/%{hadoop_name}/doc
+%define include_dir %{parent_dir}/%{hadoop_name}/include
+%define lib_dir %{parent_dir}/%{hadoop_name}/lib
 %define doc_hadoop %{doc_dir}/%{hadoop_name}-%{hadoop_version}
 
 # No prefix directory
@@ -539,7 +539,7 @@ env \
   MAVEN_DEPLOY_SOURCE=%{?maven_deploy_source} \
   MAVEN_REPO_ID=%{?maven_repo_id} \
   MAVEN_REPO_URI=%{?maven_repo_uri} \
-bash %{SOURCE1}
+env VDP_RELEASE=%{vdp_release} bash %{SOURCE1}
 
 %clean
 %__rm -rf $RPM_BUILD_ROOT

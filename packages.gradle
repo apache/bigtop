@@ -48,6 +48,8 @@ def final BUILD_DIR = config.bigtop.builddir
 def final OUTPUT_DIR = config.bigtop.outputdir
 def final DIST_DIR = config.bigtop.distdir
 def final DL_DIR = config.bigtop.dldir
+def final VDP_VERSION = config.bigtop.vdp_version
+def final MINOR_RELEASE = config.bigtop.minor_release
 
 // List of tasks derived from the BOM file is used to preserve the natural order
 def bomTasks = []
@@ -474,7 +476,7 @@ def genTasks = { target ->
       println "\tNothing to do. Exiting..."
       return
     }
-    def final BIGTOP_BASE_VERSION = "${config.bigtop.base_version}"
+    def final BIGTOP_BASE_VERSION = "${config.bigtop.base_version}"+"-${MINOR_RELEASE}"
 
     def final PKG_NAME_SUFFIX = config.bigtop.components[target].rpm_pkg_suffix
     def RPM_PKG_NAME_SUFFIX = PKG_NAME_SUFFIX
@@ -490,12 +492,11 @@ def genTasks = { target ->
     def final NAME = config.bigtop.components[target].name
     def final PKG_NAME = config.bigtop.components[target].pkg
     def final PKG_OUTPUT_DIR = config.bigtop.components[target].outputdir
-    def final PKG_VERSION = config.bigtop.components[target].version.pkg
+    def final PKG_VERSION = config.bigtop.components[target].version.pkg+".${VDP_VERSION}"
     def final BASE_VERSION = config.bigtop.components[target].version.base
-    def final HADOOP_VERSION = config.bigtop.components["hadoop"].version.pkg
+    def final HADOOP_VERSION = config.bigtop.components["hadoop"].version.pkg+".${VDP_VERSION}"
     def RELEASE_DIST = "rpmbuild --eval '%{?dist}' 2>/dev/null".execute().text.trim().replaceAll("'",'')
     def SRCRPM = "$PKG_OUTPUT_DIR/${PKG_NAME}${GRADLE_PKG_NAME_SUFFIX}-${PKG_VERSION}-$BIGTOP_BUILD_STAMP${RELEASE_DIST}.src.rpm"
-
     def final DO_MAVEN_DEPLOY = project.findProperty('doMavenDeploy') == 'true'
     def final MAVEN_DEPLOY_SOURCE = project.findProperty('mavenDeploySource') == 'true'
     def final MAVEN_REPO_ID = project.hasProperty('mavenRepoId') ? project.property('mavenRepoId') : 'default'
@@ -519,6 +520,7 @@ def genTasks = { target ->
         "--define", "parent_dir ${FULL_PARENT_DIR}",
         "--define", "bigtop_base_version ${BIGTOP_BASE_VERSION}",
         "--define", "pkg_name_suffix ${RPM_PKG_NAME_SUFFIX}",
+	"--define", "vdp_release ${VDP_VERSION}-${MINOR_RELEASE}",
     ]
 
    if (MAVEN_REPO_URI != null) {
@@ -556,7 +558,7 @@ def genTasks = { target ->
       println "\tNothing to do. Exiting..."
       return
     }
-    def final BIGTOP_BASE_VERSION = "${config.bigtop.base_version}"
+    def final BIGTOP_BASE_VERSION = "${config.bigtop.base_version}"+"-${MINOR_RELEASE}"
 
     def final PKG_NAME_SUFFIX = config.bigtop.components[target].rpm_pkg_suffix
     def RPM_PKG_NAME_SUFFIX = PKG_NAME_SUFFIX
@@ -565,6 +567,7 @@ def genTasks = { target ->
       RPM_PKG_NAME_SUFFIX = "%{nil}"
       GRADLE_PKG_NAME_SUFFIX = ""
     }
+
     def final BIGTOP_BUILD_STAMP = System.getenv('BIGTOP_BUILD_STAMP') ?:
             config.bigtop.components[target].version.release
     def final NAME = config.bigtop.components[target].name
@@ -572,9 +575,10 @@ def genTasks = { target ->
     def final PKG_NAME_FOR_PKG = NAME.replaceAll("-", "_")
     def final PKG_BUILD_DIR = config.bigtop.components[target].builddir
     def final SEED_TAR = config.bigtop.components[target].seedtar
-    def final PKG_VERSION = config.bigtop.components[target].version.pkg
+    def final PKG_VERSION = config.bigtop.components[target].version.pkg+".${VDP_VERSION}"
     def final BASE_VERSION = config.bigtop.components[target].version.base
     def final PKG_OUTPUT_DIR = config.bigtop.components[target].outputdir
+
     safeDelete ("$PKG_BUILD_DIR/rpm")
     ['INSTALL','SOURCES','BUILD','SRPMS','RPMS'].each { rpmdir ->
       mkdir("$PKG_BUILD_DIR/rpm/$rpmdir")
@@ -650,6 +654,7 @@ def genTasks = { target ->
         '-bs', '--nodeps', "--buildroot=${PKG_BUILD_DIR}/rpm/INSTALL",
         specFileName,
         '--define', "pkg_name_suffix ${RPM_PKG_NAME_SUFFIX}",
+	"--define", "vdp_release  ${VDP_VERSION}-${MINOR_RELEASE}",
     ]
     exec {
       workingDir BASE_DIR
@@ -692,7 +697,7 @@ def genTasks = { target ->
     def _preferred_java_version = project.hasProperty("preferred-java-version") ? this.'preferred-java-version' : "8"
     def _mvn_cache_volume = project.hasProperty("mvn-cache-volume") ? this.'mvn-cache-volume' : ""
     def _docker_run_option = project.hasProperty("docker-run-option") ? this.'docker-run-option' : ""
-    def additionalConfigKeys = ['git_repo', 'git_ref', 'git_dir', 'git_commit_hash', 'base_version']
+    def additionalConfigKeys = ['git_repo', 'git_ref', 'git_dir', 'git_commit_hash', 'base_version', 'pkgSuffix', 'parentDir']
     additionalConfigKeys.each { key ->
       if (project.hasProperty(key)) {
         _target_pkg += " -P${key}=" + project.property(key)

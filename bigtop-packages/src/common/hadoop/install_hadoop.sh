@@ -153,19 +153,19 @@ for var in PREFIX BUILD_DIR; do
 done
 
 MAN_DIR=${MAN_DIR:-/usr/share/man}/man1
-DOC_DIR=${DOC_DIR:-/usr/share/doc/hadoop}
-BIN_DIR=${BIN_DIR:-/usr/bin}
+DOC_DIR=${DOC_DIR:-/hadoop/doc}
+BIN_DIR=${BIN_DIR:-/hadoop/bin}
 ETC_DEFAULT=${ETC_DEFAULT:-/etc/default}
-HADOOP_DIR=${HADOOP_DIR:-/usr/lib/hadoop}
-HDFS_DIR=${HDFS_DIR:-/usr/lib/hadoop-hdfs}
-YARN_DIR=${YARN_DIR:-/usr/lib/hadoop-yarn}
-MAPREDUCE_DIR=${MAPREDUCE_DIR:-/usr/lib/hadoop-mapreduce}
+HADOOP_DIR=${HADOOP_DIR:-/hadoop/lin}
+HDFS_DIR=${HDFS_DIR:-/hadoop-hdfs}
+YARN_DIR=${YARN_DIR:-/hadoop-yarn}
+MAPREDUCE_DIR=${MAPREDUCE_DIR:-/hadoop-mapreduce}
 VAR_HDFS=${VAR_HDFS:-/var/lib/hadoop-hdfs}
 VAR_YARN=${VAR_YARN:-/var/lib/hadoop-yarn}
 VAR_MAPREDUCE=${VAR_MAPREDUCE:-/var/lib/hadoop-mapreduce}
 VAR_HTTPFS=${VAR_HTTPFS:-/var/lib/hadoop-httpfs}
 VAR_KMS=${VAR_KMS:-/var/lib/hadoop-kms}
-SYSTEM_INCLUDE_DIR=${SYSTEM_INCLUDE_DIR:-/usr/include}
+SYSTEM_INCLUDE_DIR=${SYSTEM_INCLUDE_DIR:-/hadoop/include}
 SYSTEM_LIB_DIR=${SYSTEM_LIB_DIR:-/usr/lib}
 
 BASH_COMPLETION_DIR=${BASH_COMPLETION_DIR:-/etc/bash_completion.d}
