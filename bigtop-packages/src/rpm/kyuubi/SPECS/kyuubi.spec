@@ -28,6 +28,12 @@
 %define np_var_log_kyuubi /var/log/%{kyuubi_name}
 %define np_etc_kyuubi /etc/%{kyuubi_name}
 
+%if  %{?suse_version:1}0
+%define alternatives_cmd update-alternatives
+%else
+%define alternatives_cmd alternatives
+%endif
+
 
 # disable repacking jars
 %define __os_install_post %{nil}

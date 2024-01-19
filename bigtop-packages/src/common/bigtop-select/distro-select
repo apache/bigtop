@@ -71,7 +71,9 @@ leaves = {
            "spark-historyserver" : "spark",
            "ranger-admin" : "ranger-admin",
            "ranger-usersync" : "ranger-usersync",
-           "ranger-tagsync" : "ranger-tagsync"
+           "ranger-tagsync" : "ranger-tagsync",
+           "knox-server": "knox",
+           "kyuubi-server": "kyuubi"
 }
 
 # Define the aliases and the list of leaves they correspond to
