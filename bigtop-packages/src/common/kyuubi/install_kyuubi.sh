@@ -110,7 +110,7 @@ install -d -m 0755 $PREFIX/$LOG_DIR
 
 TMP_DIR=$BUILD_DIR/tmp
 mkdir -p $BUILD_DIR/tmp
-tar -zxf $BUILD_DIR/apache-kyuubi-*-bin.tar.gz -C $TMP_DIR
+tar -zxf $BUILD_DIR/apache-kyuubi*.tgz -C $TMP_DIR
 
 cp -ra ${TMP_DIR}/apache-kyuubi-*-bin/beeline-jars/* ${PREFIX}/${LIB_DIR}/beeline-jars/
 cp -a ${TMP_DIR}/apache-kyuubi-*-bin/bin/* ${PREFIX}/${LIB_DIR}/bin/
@@ -121,7 +121,6 @@ cp -a ${TMP_DIR}/apache-kyuubi-*-bin/extension/* ${PREFIX}/${LIB_DIR}/extension/
 cp -a ${TMP_DIR}/apache-kyuubi-*-bin/externals/* ${PREFIX}/${LIB_DIR}/externals/
 cp -a ${TMP_DIR}/apache-kyuubi-*-bin/jars/* ${PREFIX}/${LIB_DIR}/jars/
 cp -a ${TMP_DIR}/apache-kyuubi-*-bin/web-ui/* ${PREFIX}/${LIB_DIR}/web-ui/
-cp -a ${TMP_DIR}/apache-kyuubi-*-bin/work/* ${PREFIX}/${LIB_DIR}/work/
 
 cp -ra ${TMP_DIR}/apache-kyuubi-*-bin/conf/* ${PREFIX}/${ETC_KNOX}/conf.dist
 
