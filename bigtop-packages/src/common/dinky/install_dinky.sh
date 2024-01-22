@@ -61,7 +61,7 @@ while true ; do
         LIB_DIR=$2 ; shift 2
         ;;
         --etc-dinky)
-        ETC_KNOX=$2 ; shift 2
+        ETC_DINKY=$2 ; shift 2
         ;;
         --)
         shift ; break
@@ -83,54 +83,40 @@ done
 
 LIB_DIR=${LIB_DIR:-/usr/lib/dinky}
 BIN_DIR=${BIN_DIR:-/usr/bin}
-ETC_KNOX=${ETC_KNOX:-/etc/dinky}
+ETC_DINKY=${ETC_DINKY:-/etc/dinky}
 RUN_DIR=${RUN_DIR:-/var/run/dinky}
 LOG_DIR=${LOG_DIR:-/var/log/dinky}
 
-NP_ETC_KNOX=/etc/dinky
-NP_VAR_LIB_KNOX_DATA=/var/lib/dinky/data
+NP_ETC_DINKY=/etc/dinky
+NP_VAR_LIB_DINKY_DATA=/var/lib/dinky/data
 
 
 install -d -m 0755 $PREFIX/$LIB_DIR
-install -d -m 0755 $PREFIX/$LIB_DIR/bin
+install -d -m 0755 $PREFIX/$LIB_DIR/extends
+install -d -m 0755 $PREFIX/$LIB_DIR/jar
+install -d -m 0755 $PREFIX/$LIB_DIR/sql
 install -d -m 0755 $PREFIX/$LIB_DIR/lib
-install -d -m 0755 $PREFIX/$LIB_DIR/dep
-install -d -m 0755 $PREFIX/$NP_ETC_KNOX
-install -d -m 0755 $PREFIX/$NP_VAR_LIB_KNOX_DATA
-install -d -m 0755 $PREFIX/$ETC_KNOX/conf.dist
-install -d -m 0755 $PREFIX/$LIB_DIR/samples
-install -d -m 0755 $PREFIX/$LIB_DIR/templates
+install -d -m 0755 $PREFIX/$LIB_DIR/dink-loader
+install -d -m 0755 $PREFIX/$LIB_DIR/config
+install -d -m 0755 $PREFIX/$NP_ETC_DINKY
+install -d -m 0755 $PREFIX/$ETC_DINKY/conf.dist
 install -d -m 0755 $PREFIX/$RUN_DIR
 install -d -m 0755 $PREFIX/$LOG_DIR
 
 TMP_DIR=$BUILD_DIR/tmp
 mkdir -p $BUILD_DIR/tmp
-tar -zxf $BUILD_DIR/target/*.*.*/dinky-*.tar.gz -C $TMP_DIR
+tar -zxf $BUILD_DIR/build/dinky-release*.tar.gz -C $TMP_DIR
 
-cp -ra ${TMP_DIR}/dinky-*/dep/* ${PREFIX}/${LIB_DIR}/dep/
+cp -ra ${TMP_DIR}/dinky-*/extends/* ${PREFIX}/${LIB_DIR}/extends/
+cp -ra ${TMP_DIR}/dinky-*/jar/* ${PREFIX}/${LIB_DIR}/jar/
 cp -ra ${TMP_DIR}/dinky-*/lib/* ${PREFIX}/${LIB_DIR}/lib/
-cp -a ${TMP_DIR}/dinky-*/bin/* ${PREFIX}/${LIB_DIR}/bin/
-cp -a ${TMP_DIR}/dinky-*/samples/* ${PREFIX}/${LIB_DIR}/samples/
-cp -a ${TMP_DIR}/dinky-*/templates/* ${PREFIX}/${LIB_DIR}/templates/
-#cp -a ${TMP_DIR}/dinky-*/native/* ${PREFIX}/${LIB_DIR}/native/
-cp -ra ${TMP_DIR}/dinky-*/data/* ${PREFIX}/${NP_VAR_LIB_KNOX_DATA}
-cp -ra ${TMP_DIR}/dinky-*/conffig/* ${PREFIX}/${ETC_KNOX}/conf.dist
+cp -ra ${TMP_DIR}/dinky-*/sql/* ${PREFIX}/${LIB_DIR}/sql/
+cp -ra ${TMP_DIR}/dinky-*/dink-loader/* ${PREFIX}/${LIB_DIR}/dink-loader/
+cp -ra ${TMP_DIR}/dinky-*/config/* ${PREFIX}/${LIB_DIR}/conf.dist/
+cp -ra ${TMP_DIR}/dinky-*/auto.sh ${PREFIX}/${ETC_DINKY}/auto.sh
 
-ln -s $NP_ETC_KNOX/conf $PREFIX/$LIB_DIR/conf
-ln -s $NP_VAR_LIB_KNOX_DATA $PREFIX/$LIB_DIR/data
+ln -s $NP_ETC_DINKY/conf $PREFIX/$LIB_DIR/config
 ln -s $LOG_DIR $PREFIX/$LIB_DIR/logs
-ln -s $RUN_DIR $PREFIX/$LIB_DIR/pids
+ln -s $RUN_DIR $PREFIX/$LIB_DIR/run
 
 rm -rf $TMP_DIR
-
-# Copy in the /usr/bin/dinky wrapper
-install -d -m 0755 $PREFIX/$BIN_DIR
-cat > $PREFIX/$BIN_DIR/gateway <<EOF
-#!/bin/bash
-
-# Autodetect JAVA_HOME if not defined
-. /usr/lib/bigtop-utils/bigtop-detect-javahome
-
-exec $LIB_DIR/bin/gateway.sh \$@
-EOF
-chmod 755 $PREFIX/$BIN_DIR/gateway

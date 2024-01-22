@@ -18,15 +18,4 @@ set -ex
 
 . `dirname $0`/bigtop.bom
 
-if [ $HOSTTYPE = "powerpc64le" ] ; then
-  echo "Starting quick-package"
-  ant quick-package
-  #replace build step with download for test purpases
-  #mkdir -p target/1.6.1
-  #wget --no-check-certificate https://dlcdn.apache.org/knox/1.6.1/knox-1.6.1.tar.gz -P target/1.6.1
-else
-  mvn clean package -Dmaven.test.skip=true -P aliyun,prod,scala-2.12,web,flink-1.15
-  #replace build step with download for test purpases
-  #mkdir -p target/1.6.1
-  #wget --no-check-certificate https://dlcdn.apache.org/knox/1.6.1/knox-1.6.1.tar.gz -P target/1.6.1
-fi
+mvn clean install -Dmaven.test.skip=true -Dspotless.check.skip=true -P aliyun,prod,scala-2.12,web,fast,flink-1.15,flink-single-version
