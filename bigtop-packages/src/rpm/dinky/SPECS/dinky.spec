@@ -35,7 +35,7 @@ Summary: Knox Gateway
 URL: https://dinky.apache.org/
 Group: Development/Libraries
 License: ASL 2.0
-Source0: %{dinky_name}-%{dinky_base_version}.zip
+Source0: %{dinky_base_version}.tar.gz
 Source1: do-component-build
 Source2: install_%{dinky_name}.sh
 Source3: dinky-gateway.svc

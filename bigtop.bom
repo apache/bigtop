@@ -447,12 +447,13 @@ bigtop {
       name    = 'dinky'
       rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
       relNotes = 'Dinky'
-      version { base = 'v1.0.0-rc3'; pkg = base-"-release"; release = 1 }
-      tarball { destination = "$name-${version.base}.zip"
-                source      = "$name-${version.base}-src.zip" }
+      version { base = 'v1.0.0_rc3'; pkg = base-"-release"; release = 1 }
+      tarball { destination = "${version.base}.tar.gz"
+                source      = "${version.base.replace("_", "-")}.tar.gz" }
       url     { download_path = "$name/${version.base}"
-                site = "https://github.com/DataLinkDC/dinky/archive/refs/heads/"
-                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+                site = "https://github.com/DataLinkDC/dinky/archive/refs/tags"
+                archive = site
+               }
     }
   }
 }
