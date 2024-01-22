@@ -443,5 +443,16 @@ bigtop {
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }
+    'dinky' {
+      name    = 'dinky'
+      rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
+      relNotes = 'Dinky'
+      version { base = 'v1.0.0-rc3'; pkg = base-"-release"; release = 1 }
+      tarball { destination = "$name-${version.base}.zip"
+                source      = "$name-${version.base}-src.zip" }
+      url     { download_path = "$name/${version.base}"
+                site = "https://github.com/DataLinkDC/dinky/archive/refs/heads/"
+                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+    }
   }
 }
