@@ -113,7 +113,7 @@ cp -ra ${TMP_DIR}/dinky-*/lib/* ${PREFIX}/${LIB_DIR}/lib/
 cp -ra ${TMP_DIR}/dinky-*/sql/* ${PREFIX}/${LIB_DIR}/sql/
 cp -ra ${TMP_DIR}/dinky-*/dink-loader/* ${PREFIX}/${LIB_DIR}/dink-loader/
 cp -ra ${TMP_DIR}/dinky-*/config/* ${PREFIX}/${LIB_DIR}/conf.dist/
-cp -ra ${TMP_DIR}/dinky-*/auto.sh ${PREFIX}/${ETC_DINKY}/auto.sh
+cp -ra ${TMP_DIR}/dinky-*/auto.sh ${PREFIX}/${LIB_DIR}/auto.sh
 
 ln -s $NP_ETC_DINKY/conf $PREFIX/$LIB_DIR/config
 ln -s $LOG_DIR $PREFIX/$LIB_DIR/logs

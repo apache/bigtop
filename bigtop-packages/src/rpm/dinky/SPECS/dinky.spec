@@ -106,7 +106,7 @@ getent passwd dinky >/dev/null || useradd -c "dinky" -s /sbin/nologin -g dinky -
 %{usr_lib_dinky}/sql
 %{usr_lib_dinky}/lib
 %{usr_lib_dinky}/dink-loader
-%{usr_lib_dinky}/conf
+%{usr_lib_dinky}/config
 %{usr_lib_dinky}/logs
-%{usr_lib_dinky}/pids
+%{usr_lib_dinky}/run
 %{usr_lib_dinky}/auto.sh
