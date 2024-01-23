@@ -98,6 +98,7 @@ install -d -m 0755 $PREFIX/$LIB_DIR/sql
 install -d -m 0755 $PREFIX/$LIB_DIR/lib
 install -d -m 0755 $PREFIX/$LIB_DIR/dink-loader
 install -d -m 0755 $PREFIX/$LIB_DIR/config
+
 install -d -m 0755 $PREFIX/$NP_ETC_DINKY
 install -d -m 0755 $PREFIX/$ETC_DINKY/conf.dist
 install -d -m 0755 $PREFIX/$RUN_DIR
@@ -112,7 +113,7 @@ cp -ra ${TMP_DIR}/dinky-*/jar/* ${PREFIX}/${LIB_DIR}/jar/
 cp -ra ${TMP_DIR}/dinky-*/lib/* ${PREFIX}/${LIB_DIR}/lib/
 cp -ra ${TMP_DIR}/dinky-*/sql/* ${PREFIX}/${LIB_DIR}/sql/
 cp -ra ${TMP_DIR}/dinky-*/dink-loader/* ${PREFIX}/${LIB_DIR}/dink-loader/
-cp -ra ${TMP_DIR}/dinky-*/config/* ${PREFIX}/${LIB_DIR}/conf.dist/
+cp -ra ${TMP_DIR}/dinky-*/config/* $PREFIX/$ETC_DINKY/conf.dist/
 cp -ra ${TMP_DIR}/dinky-*/auto.sh ${PREFIX}/${LIB_DIR}/auto.sh
 
 ln -s $NP_ETC_DINKY/conf $PREFIX/$LIB_DIR/config
