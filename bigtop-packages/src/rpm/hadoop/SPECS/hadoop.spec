@@ -749,7 +749,7 @@ fi
 %{usr_lib_hadoop}/logs
 %{usr_lib_hadoop}/tools
 %{usr_lib_hadoop}/libexec/hadoop-config.sh
-%{usr_lib_hadoop}/libexec/hadoop-layout.sh
+%attr(0755,root,root) %{usr_lib_hadoop}/libexec/hadoop-layout.sh
 %{usr_lib_hadoop}/libexec/hadoop-functions.sh
 %{usr_lib_hadoop}/libexec/shellprofile.d
 %{usr_lib_hadoop}/libexec/tools
