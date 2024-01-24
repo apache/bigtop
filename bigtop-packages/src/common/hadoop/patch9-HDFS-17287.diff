@@ -40,7 +40,7 @@ index 45ea915b62b1..426baaf90db8 100644
  
    <build>
 diff --git a/hadoop-yarn-project/pom.xml b/hadoop-yarn-project/pom.xml
-index 74c774e8cf83..1ca0d5393736 100644
+index 74c774e8cf83..8d50d39ca7b3 100644
 --- a/hadoop-yarn-project/pom.xml
 +++ b/hadoop-yarn-project/pom.xml
 @@ -33,6 +33,7 @@
@@ -51,48 +51,56 @@ index 74c774e8cf83..1ca0d5393736 100644
    </properties>
  
    <modules>
-@@ -82,6 +83,52 @@
+@@ -82,6 +83,61 @@
        <groupId>org.apache.hadoop</groupId>
        <artifactId>hadoop-yarn-services-core</artifactId>
      </dependency>
 +    <dependency>
 +      <groupId>org.apache.hadoop</groupId>
 +      <artifactId>hadoop-yarn-applications-distributedshell</artifactId>
++      <scope>provided</scope>
 +    </dependency>
 +    <dependency>
 +      <groupId>org.apache.hadoop</groupId>
 +      <artifactId>hadoop-yarn-applications-unmanaged-am-launcher</artifactId>
 +      <version>${project.version}</version>
++      <scope>provided</scope>
 +    </dependency>
 +    <dependency>
 +      <groupId>org.apache.hadoop</groupId>
 +      <artifactId>hadoop-yarn-server-tests</artifactId>
 +      <version>${project.version}</version>
++      <scope>provided</scope>
 +    </dependency>
 +    <dependency>
 +      <groupId>org.apache.hadoop</groupId>
 +      <artifactId>hadoop-yarn-server-timelineservice-hbase-client</artifactId>
 +      <version>${project.version}</version>
++      <scope>provided</scope>
 +    </dependency>
 +    <dependency>
 +      <groupId>org.apache.hadoop</groupId>
 +      <artifactId>hadoop-yarn-csi</artifactId>
 +      <version>${project.version}</version>
++      <scope>provided</scope>
 +    </dependency>
 +    <dependency>
 +      <groupId>org.apache.hadoop</groupId>
 +      <artifactId>hadoop-yarn-server-timelineservice-documentstore</artifactId>
 +      <version>${project.version}</version>
++      <scope>provided</scope>
 +    </dependency>
 +    <dependency>
 +      <groupId>org.apache.hadoop</groupId>
 +      <artifactId>hadoop-yarn-server-timelineservice-hbase-tests</artifactId>
 +      <version>${project.version}</version>
++      <scope>provided</scope>
 +    </dependency>
 +    <dependency>
 +      <groupId>org.apache.hadoop</groupId>
 +      <artifactId>hadoop-yarn-applications-catalog-webapp</artifactId>
 +      <version>${hadoop.version}</version>
++      <scope>provided</scope>
 +      <type>war</type>
 +    </dependency>
 +    <dependency>
@@ -100,11 +108,12 @@ index 74c774e8cf83..1ca0d5393736 100644
 +      <artifactId>hadoop-yarn-ui</artifactId>
 +      <version>${project.version}</version>
 +      <type>${yarn.ui.packaging}</type>
++      <scope>provided</scope>
 +    </dependency>
    </dependencies>
  
    <build>
-@@ -115,6 +162,32 @@
+@@ -115,6 +171,32 @@
    </build>
  
    <profiles>
