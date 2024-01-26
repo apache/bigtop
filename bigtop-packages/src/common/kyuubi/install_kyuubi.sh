@@ -61,7 +61,7 @@ while true ; do
         LIB_DIR=$2 ; shift 2
         ;;
         --etc-kyuubi)
-        ETC_KNOX=$2 ; shift 2
+        ETC_KYUUBI=$2 ; shift 2
         ;;
         --)
         shift ; break
@@ -83,11 +83,11 @@ done
 
 LIB_DIR=${LIB_DIR:-/usr/lib/kyuubi}
 BIN_DIR=${BIN_DIR:-/usr/bin}
-ETC_KNOX=${ETC_KNOX:-/etc/kyuubi}
+ETC_KYUUBI=${ETC_KYUUBI:-/etc/kyuubi}
 RUN_DIR=${RUN_DIR:-/var/run/kyuubi}
 LOG_DIR=${LOG_DIR:-/var/log/kyuubi}
 
-NP_ETC_KNOX=/etc/kyuubi
+NP_ETC_KYUUBI=/etc/kyuubi
 
 install -d -m 0755 $PREFIX/$LIB_DIR
 install -d -m 0755 $PREFIX/$LIB_DIR/beeline-jars
@@ -102,8 +102,8 @@ install -d -m 0755 $PREFIX/$LIB_DIR/web-ui
 install -d -m 0755 $PREFIX/$LIB_DIR/work
 
 
-install -d -m 0755 $PREFIX/$NP_ETC_KNOX
-install -d -m 0755 $PREFIX/$ETC_KNOX/conf.dist
+install -d -m 0755 $PREFIX/$NP_ETC_KYUUBI
+install -d -m 0755 $PREFIX/$ETC_KYUUBI/conf.dist
 install -d -m 0755 $PREFIX/$RUN_DIR
 install -d -m 0755 $PREFIX/$LOG_DIR
 
@@ -122,9 +122,9 @@ cp -a ${TMP_DIR}/apache-kyuubi-*-bin/externals/* ${PREFIX}/${LIB_DIR}/externals/
 cp -a ${TMP_DIR}/apache-kyuubi-*-bin/jars/* ${PREFIX}/${LIB_DIR}/jars/
 cp -a ${TMP_DIR}/apache-kyuubi-*-bin/web-ui/* ${PREFIX}/${LIB_DIR}/web-ui/
 
-cp -ra ${TMP_DIR}/apache-kyuubi-*-bin/conf/* ${PREFIX}/${ETC_KNOX}/conf.dist
+cp -ra ${TMP_DIR}/apache-kyuubi-*-bin/conf/* ${PREFIX}/${ETC_KYUUBI}/conf.dist
 
-ln -s $NP_ETC_KNOX/conf $PREFIX/$LIB_DIR/conf
+ln -s $NP_ETC_KYUUBI/conf $PREFIX/$LIB_DIR/conf
 ln -s $LOG_DIR $PREFIX/$LIB_DIR/logs
 ln -s $RUN_DIR $PREFIX/$LIB_DIR/pids
 
