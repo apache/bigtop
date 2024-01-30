@@ -87,7 +87,7 @@ def generatePatch(String threadCount, String path) {
         --- a/.mvn/maven.config
         +++ b/.mvn/maven.config
         @@ -0,0 +1 @@
-        +-T${threadCount}
+        +-T ${threadCount}
         \\ No newline at end of file
     """.stripIndent()
 
@@ -95,6 +95,10 @@ def generatePatch(String threadCount, String path) {
         write(patchContent)
         println "Patch file created at: ${absolutePath}"
     }
+}
+
+def isValidMavenBuildThreads(threads) {
+    return threads.matches("\\d+C") || threads.matches("\\d+")
 }
 
 /**
@@ -453,8 +457,8 @@ def genTasks = { target ->
       into "$DEB_BLD_DIR/debian"
     }
     if (MAVEN_BUILD_THREADS && ENABLE_MAVEN_PARALLEL_BUILD) {
-      if (!MAVEN_BUILD_THREADS.matches("\\d+C")) {
-        throw new GradleException("Invalid MAVEN_BUILD_THREADS parameter. It must be a combination of numbers and 'C', such as '2C'.")
+      if (!isValidMavenBuildThreads(MAVEN_BUILD_THREADS)) {
+        throw new GradleException("Invalid MAVEN_BUILD_THREADS parameter. It must be either a number or a combination of numbers followed by 'C', such as '2' or '2C'.")
       }
       generatePatch(MAVEN_BUILD_THREADS, "$DEB_BLD_DIR/debian")
     }
@@ -642,8 +646,8 @@ def genTasks = { target ->
       into "$PKG_BUILD_DIR/rpm/SOURCES"
     }
     if (MAVEN_BUILD_THREADS && ENABLE_MAVEN_PARALLEL_BUILD) {
-      if (!MAVEN_BUILD_THREADS.matches("\\d+C")) {
-        throw new GradleException("Invalid MAVEN_BUILD_THREADS parameter. It must be a combination of numbers and 'C', such as '2C'.")
+      if (!isValidMavenBuildThreads(MAVEN_BUILD_THREADS)) {
+        throw new GradleException("Invalid MAVEN_BUILD_THREADS parameter. It must be either a number or a combination of numbers followed by 'C', such as '2' or '2C'.")
       }
       generatePatch(MAVEN_BUILD_THREADS, "$PKG_BUILD_DIR/rpm/SOURCES")
     }
