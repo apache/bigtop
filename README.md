@@ -185,7 +185,15 @@ __On all systems, Building Apache Bigtop requires certain set of tools__
   By default, the installation path of components will follow [Filesystem Hierarchy Standard](https://refspecs.linuxfoundation.org/FHS_3.0/fhs/index.html), but you can use `-PparentDir=/path` to add prefix to the path, in this example, prefix `/path/${bigtop_version}` will be added
 
   To avoid download wrong version of components when you have multiple repositories configured on your machine, you can use `-PpkgSuffix` to add bigtop version to package suffix, for example, package name `zookeeper` will be changed to `zookeeper_3_2_0` when using `Bigtop-3.2.0`
+
+* __Enabling Parallel Build for packages(BIGTOP-4044)__
+
+  Apache Bigtop defaults to non-parallel builds. Use -PbuildThreads=2C to activate Maven's parallel build feature and expedite compilation for compatible components.
   
+  Append a digit and 'C' to -PbuildThreads= to set the CPU core count for concurrent builds.
+  
+  Consult the bigtop.bom file to verify component compatibility with parallel builds; those marked with maven_parallel_build = true support this option.
+
 * __Building local YUM/APT repositories__ : `gradle [yum|apt]`
 
 * __Recommended build environments__

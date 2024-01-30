@@ -86,7 +86,10 @@
        packaging = 'rpm' // *optional* If this component can be built only as either
                          // DEB or RPM, specify that packaging format explicitly.
                          // If both formats are supported, omit this option.
-       maven_parallel_build = true
+       maven_parallel_build = true // *optional* maven_parallel_build indicates whether the component can be built in parallel.
+                                   // Components with this flag can have the Maven parallel build parameter -PbuildThreads=2C or -PbuildThreads=2
+                                   // passed during compilation to enable parallel building and speed up the process.
+
      }
    }
  }
