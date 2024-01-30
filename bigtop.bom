@@ -86,6 +86,9 @@
        packaging = 'rpm' // *optional* If this component can be built only as either
                          // DEB or RPM, specify that packaging format explicitly.
                          // If both formats are supported, omit this option.
+       maven_parallel_build = true // *optional* maven_parallel_build indicates whether the component can be built in parallel.
+                                  // Components with this flag can have the Maven parallel build parameter -PbuildThreads=2C or -PbuildThreads=2
+                                  // passed during compilation to enable parallel building and speed up the process.
      }
    }
  }
@@ -132,6 +135,7 @@ bigtop {
       name    = 'zookeeper'
       pkg     = name
       rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
+      maven_parallel_build = true
       version {
         base  = '3.5.9'
         pkg   = base
@@ -150,6 +154,7 @@ bigtop {
     'hadoop' {
       name    = 'hadoop'
       rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
+      maven_parallel_build = true
       relNotes = 'Apache Hadoop'
       version { base = '3.3.5'; pkg = base; release = 1 }
       tarball { destination = "${name}-${version.base}.tar.gz"
@@ -161,6 +166,7 @@ bigtop {
     'hbase' {
       name    = 'hbase'
       rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
+      maven_parallel_build = true
       relNotes = 'Apache HBase'
       version { base = '2.4.13'; pkg = base; release = 2 }
       tarball { destination = "${name}-${version.base}.tar.gz"
@@ -173,6 +179,7 @@ bigtop {
     'hive' {
       name    = 'hive'
       rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
+      maven_parallel_build = true
       relNotes = 'Apache Hive'
       version { base = '3.1.3'; pkg = base; release = 1 }
       tarball { destination = "apache-${name}-${version.base}-src.tar.gz"
@@ -184,6 +191,7 @@ bigtop {
     'tez' {
       name    = 'tez'
       rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
+      maven_parallel_build = true
       relNotes = 'Apache TEZ'
       version { base = '0.10.1'; pkg = base; release = 1 }
       tarball { destination = "apache-${name}-${version.base}-src.tar.gz"
@@ -205,6 +213,7 @@ bigtop {
     'solr' {
       name    = 'solr'
       rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
+      maven_parallel_build = true
       relNotes = 'Apache Solr'
       version { base = '8.11.2'; pkg = base; release = 2 }
       tarball { destination = "$name-${version.base}-src.tgz"
@@ -216,6 +225,7 @@ bigtop {
     'spark' {
       name    = 'spark'
       pkg     = 'spark'
+      maven_parallel_build = true
       rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
       relNotes = 'Apache Spark'
       /*
@@ -234,6 +244,7 @@ bigtop {
     'flink' {
       name    = 'flink'
       rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
+      maven_parallel_build = true
       relNotes = 'Apache Flink'
       version { base = '1.15.3'; pkg = base; release = 1 }
       tarball { destination = "$name-${version.base}.tar.gz"
@@ -290,6 +301,7 @@ bigtop {
     'alluxio' {
       name    = "alluxio"
       pkg     = "alluxio"
+      maven_parallel_build = true
       relNotes = "Alluxio: a memory-centric distributed file system"
       version { base = '2.8.0'; pkg = base; release = 2 }
       tarball { destination = "$name-${version.base}.tar.gz"
@@ -300,6 +312,7 @@ bigtop {
     'kafka' {
       name    = 'kafka'
       rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
+      maven_parallel_build = true
       relNotes = 'Apache Kafka'
       version { base = '2.8.1'; pkg = base; release = 3 }
       tarball { destination = "$name-${version.base}.tar.gz"
@@ -321,6 +334,7 @@ bigtop {
       name    = 'zeppelin'
       rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
       relNotes = 'Apache Zeppelin'
+      maven_parallel_build = true
       version { base = '0.10.1'; pkg = base; release = 1 }
       tarball { source      = "$name-${version.base}.tgz"
                 destination = "$name-${version.base}.tar.gz" }
@@ -340,6 +354,7 @@ bigtop {
     'ambari' {
       name    = 'ambari'
       relNotes = 'Apache Ambari'
+      maven_parallel_build = true
       version { base = '3.1'; pkg = '3.1'; release = 1 }
       tarball { destination = "apache-ambari-${version.base}.tar.gz"
                 source = destination}
@@ -360,6 +375,7 @@ bigtop {
     'ambari-infra' {
       name    = 'ambari-infra'
       relNotes = 'Apache Ambari Infra'
+      maven_parallel_build = true
       version { base = '3.1'; pkg = '3.1'; release = 1 }
       tarball { destination = "apache-ambari-infra-${version.base}.tar.gz"
                 source = destination}
@@ -374,22 +390,23 @@ bigtop {
       }
     }
 
-        'ambari-metrics' {
-          name    = 'ambari-metrics'
-          relNotes = 'Apache Ambari Metrics'
-          version { base = '3.1'; pkg = '3.1'; release = 1 }
-          tarball { destination = "apache-ambari-metrics-${version.base}.tar.gz"
-                    source = destination}
-          git {
-              //repo = "http://172.27.17.200/RDC/bigdata/ambari-metrics.git"
-              repo = "https://github.com/JiaLiangC/ambari-metrics.git"
-              ref  = "udh3"
-              dir  = "apache-ambari-metrics-${version.base}"
-              commit_hash = "origin/udh3"
-              //user="caijialiang"
-              //token="J3sxFsV9T5ahRjaQ7AG2"
-          }
-        }
+    'ambari-metrics' {
+      name    = 'ambari-metrics'
+      maven_parallel_build = true
+      relNotes = 'Apache Ambari Metrics'
+      version { base = '3.1'; pkg = '3.1'; release = 1 }
+      tarball { destination = "apache-ambari-metrics-${version.base}.tar.gz"
+                source = destination}
+      git {
+          //repo = "http://172.27.17.200/RDC/bigdata/ambari-metrics.git"
+          repo = "https://github.com/JiaLiangC/ambari-metrics.git"
+          ref  = "udh3"
+          dir  = "apache-ambari-metrics-${version.base}"
+          commit_hash = "origin/udh3"
+          //user="caijialiang"
+          //token="J3sxFsV9T5ahRjaQ7AG2"
+      }
+    }
 
     'bigtop-ambari-mpack' {
       name    = 'bigtop-ambari-mpack'
@@ -414,6 +431,7 @@ bigtop {
     'ranger' {
       name    = 'ranger'
       rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
+      maven_parallel_build = true
       relNotes = 'Apache Ranger'
       version { base = '2.4.0'; pkg = base; release = 1 }
       tarball { destination = "release-$name-${version.base}.tar.gz"
@@ -425,6 +443,7 @@ bigtop {
     'kyuubi' {
       name    = 'kyuubi'
       rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
+      maven_parallel_build = true
       relNotes = 'Apache Kyuubi'
       version { base = '1.8.0'; pkg = base; release = 1 }
       tarball { destination = "$name-${version.base}.tar.gz"
@@ -435,6 +454,7 @@ bigtop {
     'knox' {
       name    = 'knox'
       rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
+      maven_parallel_build = true
       relNotes = 'Apache Knox'
       version { base = '2.0.0'; pkg = base-"-release"; release = 1 }
       tarball { destination = "$name-${version.base}.zip"
@@ -446,6 +466,7 @@ bigtop {
     'dinky' {
       name    = 'dinky'
       rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
+      maven_parallel_build = true
       relNotes = 'Dinky'
       version { base = '1.0.0'; pkg = base-"-release"; release = 1 }
       tarball {
