@@ -12,6 +12,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 %undefine _missing_build_ids_terminate_build
+# disable repacking jars
+%define __os_install_post %{nil}
+%define __jar_repack %{nil}
 
 %define ranger_name ranger
 %define ranger_pkg_name ranger%{pkg_name_suffix}
@@ -123,6 +126,8 @@ Requires: coreutils, insserv
 # using the openeuler-lsb replace redhat-lsb in openEuler
 %if 0%{?openEuler}
 Requires: coreutils, openeuler-lsb
+%elif 0%{?kylin}
+Requires: coreutils, kylin-lsb
 %elif %{!?suse_version:1}0 && %{!?mgaversion:1}0
 # Required for init scripts
 Requires: coreutils, redhat-lsb
@@ -132,8 +137,8 @@ Requires: coreutils, redhat-lsb
 Requires: chkconfig, xinetd-simple-services, zlib, initscripts
 %endif
 
-%description 
-Ranger is a framework to secure hadoop data 
+%description
+Ranger is a framework to secure hadoop data
 
 %package admin
 Summary: Web Interface for Ranger
@@ -156,6 +161,11 @@ Requires: coreutils, insserv
 # using the openeuler-lsb replace redhat-lsb in openEuler
 %if 0%{?openEuler}
 Requires: coreutils, openeuler-lsb
+<<<<<<< HEAD
+=======
+%elif 0%{?kylin}
+Requires: coreutils, kylin-lsb
+>>>>>>> udh3
 %elif %{!?suse_version:1}0 && %{!?mgaversion:1}0
 # Required for init scripts
 Requires: coreutils, redhat-lsb
@@ -189,6 +199,11 @@ Requires: coreutils, insserv
 # using the openeuler-lsb replace redhat-lsb in openEuler
 %if 0%{?openEuler}
 Requires: coreutils, openeuler-lsb
+<<<<<<< HEAD
+=======
+%elif 0%{?kylin}
+Requires: coreutils, kylin-lsb
+>>>>>>> udh3
 %elif %{!?suse_version:1}0 && %{!?mgaversion:1}0
 # Required for init scripts
 Requires: coreutils, redhat-lsb
@@ -222,6 +237,11 @@ Requires: coreutils, insserv
 # using the openeuler-lsb replace redhat-lsb in openEuler
 %if 0%{?openEuler}
 Requires: coreutils, openeuler-lsb
+<<<<<<< HEAD
+=======
+%elif 0%{?kylin}
+Requires: coreutils, kylin-lsb
+>>>>>>> udh3
 %elif %{!?suse_version:1}0 && %{!?mgaversion:1}0
 # Required for init scripts
 Requires: coreutils, redhat-lsb
@@ -254,6 +274,11 @@ Requires: coreutils, insserv
 # using the openeuler-lsb replace redhat-lsb in openEuler
 %if 0%{?openEuler}
 Requires: coreutils, openeuler-lsb
+<<<<<<< HEAD
+=======
+%elif 0%{?kylin}
+Requires: coreutils, kylin-lsb
+>>>>>>> udh3
 %elif %{!?suse_version:1}0 && %{!?mgaversion:1}0
 # Required for init scripts
 Requires: coreutils, redhat-lsb

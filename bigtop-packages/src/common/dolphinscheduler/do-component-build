@@ -1,0 +1,45 @@
+#!/bin/bash
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+set -ex
+. `dirname $0`/bigtop.bom
+
+export _JAVA_OPTIONS="-Xmx2048m -Djava.awt.headless=true"
+
+. /etc/os-release
+OS="$ID"
+ARCH=`uname -m`
+DL_DIR=../../../../../dl/
+
+mvn clean install package -Drat.skip=true -DskipTests -Dmaven.test.skip=true -Dfindbugs.skip=true
+
+solr_version=8.11.2
+assembly_target_dir=./ambari-infra-assembly/target/
+infra_solr_plugin_dir=./ambari-infra-solr-plugin
+
+cp ${DL_DIR}/solr-${solr_version}.tgz ./solr.tgz
+
+tar -xzf ./solr.tgz -C ./ambari-infra-assembly/target/
+
+mv ${assembly_target_dir}/solr-${solr_version} ${assembly_target_dir}/solr
+
+cp ${infra_solr_plugin_dir}/target/ambari-infra-solr-plugin-*.jar ${assembly_target_dir}/solr/server/solr-webapp/webapp/WEB-INF/lib/
+cp ${infra_solr_plugin_dir}/target/libs/ambari-metrics-common-*.jar ${assembly_target_dir}/solr/server/solr-webapp/webapp/WEB-INF/lib/
+cp ${infra_solr_plugin_dir}/target/libs/commons-logging-1.1.1.jar ${assembly_target_dir}/solr/server/solr-webapp/webapp/WEB-INF/lib/
+
+# 修改文件权限
+chmod 755 ${assembly_target_dir}/solr/bin/**
+chmod 755 ${assembly_target_dir}/solr/server/scripts/**

@@ -366,7 +366,7 @@ chmod 644 $default_hadoop_wrapper
 
 # docs
 install -d -m 0755 $PREFIX/$DOC_DIR
-cp -r ${BUILD_DIR}/share/doc/* $PREFIX/$DOC_DIR/
+#cp -r ${BUILD_DIR}/share/doc/* $PREFIX/$DOC_DIR/
 
 # man pages
 mkdir -p $PREFIX/$MAN_DIR

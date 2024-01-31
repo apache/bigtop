@@ -13,6 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# disable repacking jars
+%define __os_install_post %{nil}
+%define __jar_repack %{nil}
+
 %define flink_name flink
 %define flink_pkg_name flink%{pkg_name_suffix}
 

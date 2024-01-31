@@ -199,6 +199,8 @@ Requires: sh-utils, insserv
 %if %{!?suse_version:1}0 && %{!?mgaversion:1}0
 %if 0%{?openEuler}
 BuildRequires: pkgconfig, fuse-libs, openEuler-rpm-config, lzo-devel, openssl-devel
+%elif 0%{?kylin}
+BuildRequires: pkgconfig, fuse-libs, kylin-rpm-config, lzo-devel, openssl-devel
 %else
 BuildRequires: pkgconfig, fuse-libs, redhat-rpm-config, lzo-devel, openssl-devel
 %endif

@@ -18,7 +18,7 @@
 
 buildscript {
   repositories {
-    mavenCentral()
+    maven{url "https://maven.aliyun.com/repository/central"}
   }
 }
 
@@ -156,7 +156,7 @@ allprojects {
   targetCompatibility = langLevel
 
   repositories {
-    mavenCentral()
+    maven{url "https://maven.aliyun.com/repository/central"}
   }
 }
 
@@ -463,7 +463,7 @@ def generate_nexus_tasks = { name, url, snapshot ->
 }
 
 def repos = [
-          [ "name": "central", "url" : "https://repo.maven.apache.org/maven2/", 'snapshot':'RELEASE'],
+          [ "name": "central", "url" : "https://maven.aliyun.com/repository/central", 'snapshot':'RELEASE'],
           [ "name": "conjars", "url" : "http://conjars.org", 'snapshot':'RELEASE'],
           [ "name": "repository.jboss.org", "url": "http://repository.jboss.org/nexus/content/groups/public/", 'snapshot': 'RELEASE'],
           [ "name": "apache.snapshots.https", "url": "https://repository.apache.org/content/repositories/snapshots", "snapshot": 'SNAPSHOT'],

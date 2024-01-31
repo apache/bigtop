@@ -127,8 +127,8 @@ install -d -m 0755 $PREFIX/$THRIFT_DIR
 
 cp -ra $BUILD_DIR/lib/* ${PREFIX}/${LIB_DIR}/lib/
 cp $BUILD_DIR/lib/hbase*.jar $PREFIX/$LIB_DIR
-cp -a $BUILD_DIR/docs/* $PREFIX/$DOC_DIR
-cp $BUILD_DIR/*.txt $PREFIX/$DOC_DIR/
+#cp -a $BUILD_DIR/docs/* $PREFIX/$DOC_DIR
+#cp $BUILD_DIR/*.txt $PREFIX/$DOC_DIR/
 cp -a $BUILD_DIR/hbase-webapps $PREFIX/$LIB_DIR
 
 cp -a $BUILD_DIR/conf $PREFIX/$ETC_HBASE/conf.dist

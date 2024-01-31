@@ -188,9 +188,7 @@ __On all systems, Building Apache Bigtop requires certain set of tools__
 
 * __Enabling Parallel Build for packages(BIGTOP-4044)__
 
-  Apache Bigtop defaults to non-parallel builds. Use -PbuildThreads=2C to activate Maven's parallel build feature and expedite compilation for compatible components.
-  
-  Append a digit and 'C' to -PbuildThreads= to set the CPU core count for concurrent builds.
+  Apache Bigtop defaults to non-parallel builds. Use -PbuildThreads with a number or a combination of numbers followed by 'C', such as '-PbuildThreads=2' or '-PbuildThreads=2C', to specify the number of CPU cores for Maven's parallel build feature, which can speed up the compilation process for compatible components.
   
   Consult the bigtop.bom file to verify component compatibility with parallel builds; those marked with maven_parallel_build = true support this option.
 

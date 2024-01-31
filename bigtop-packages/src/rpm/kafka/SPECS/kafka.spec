@@ -99,6 +99,8 @@ Requires: %{name} = %{version}-%{release}
 # Required for init scripts
 %if 0%{?openEuler}
 Requires: openeuler-lsb
+%elif 0%{?kylin}
+Requires: kylin-lsb
 %else
 Requires: redhat-lsb
 %endif

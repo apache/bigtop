@@ -19,8 +19,7 @@ set -ex
 . `dirname ${0}`/bigtop.bom
 
 BUILD_OPTS="-Divy.home=${HOME}/.ivy2 -Dsbt.ivy.home=${HOME}/.ivy2 -Duser.home=${HOME} \
-            -Drepo.maven.org=$IVY_MIRROR_PROP \
-            -Dreactor.repo=file://${HOME}/.m2/repository \
+            -Drepo.maven.org=https://maven.aliyun.com/repository/central \
             -DskipTests -DrecompileMode=all"
 
 # if BIGTOP_PREFERRED_JAVA_VERSION is set, switch java version for the build
@@ -36,6 +35,9 @@ export MAVEN_OPTS="-Xmx2g -XX:ReservedCodeCacheSize=512m"
 # Rewrite the zookeeper version defined in gradle/dependencies.gradle directly
 # with $ZOOKEEPER_VERSION, because we can't override it via command line option.
 sed -i -e 's/zookeeper: *"\([0-9]\{1,\}\.\)*[0-9]\{1,\}"/zookeeper: "'${ZOOKEEPER_VERSION}'"/' gradle/dependencies.gradle
+wrapper_jar=../../../../../bigtop-packages/src/common/kafka/gradle-wrapper.jar
+\cp $wrapper_jar gradle/wrapper/
+
 ./gradlew -PscalaVersion=${SCALA_VERSION} clean releaseTarGz -x signArchives
 
 rm -rf build

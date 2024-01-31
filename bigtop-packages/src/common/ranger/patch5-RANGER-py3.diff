@@ -1,0 +1,2741 @@
+From 7471012c597abd12d56304eceed70165c64d4b5d Mon Sep 17 00:00:00 2001
+From: jialiang <jialiangcaimd@gmail.com>
+Date: Tue, 26 Sep 2023 14:52:34 +0800
+Subject: [PATCH] update ranger python2 scripts to python3
+
+---
+ agents-common/scripts/upgrade-plugin.py       |  16 +-
+ .../apache_ranger/client/ranger_client.py     |   4 +-
+ intg/src/main/python/apache_ranger/utils.py   |   4 +-
+ kms/scripts/db_setup.py                       |   8 +-
+ kms/scripts/dba_script.py                     |  24 +-
+ .../bin/import_ranger_to_ambari.py            | 132 ++++-----
+ .../bin/import_ranger_to_ambari.py            | 272 +++++++++---------
+ .../src/main/python/sample_client.py          | 116 ++++----
+ ranger-tools/scripts/create_requests.py       |   2 +-
+ .../src/main/python/performance_analyzer.py   |  16 +-
+ .../main/python/setup_performance_analyzer.py |   8 +-
+ ranger-util/src/scripts/saveVersion.py        |   6 +-
+ security-admin/scripts/changepasswordutil.py  |   4 +-
+ security-admin/scripts/changeusernameutil.py  |   4 +-
+ security-admin/scripts/db_setup.py            |  10 +-
+ security-admin/scripts/dba_script.py          |  28 +-
+ .../scripts/ranger_credential_helper.py       |  10 +-
+ .../scripts/restrict_permissions.py           |  26 +-
+ .../scripts/rolebasedusersearchutil.py        |  10 +-
+ .../scripts/updateUserAndGroupNamesInJson.py  |   2 +-
+ security-admin/scripts/update_property.py     |   2 +-
+ security-admin/scripts/upgrade_admin.py       |   8 +-
+ security-admin/src/bin/ranger_install.py      |  24 +-
+ .../ranger-policy/test-hdfs-policy.py         |   2 +-
+ tagsync/scripts/setup.py                      |  30 +-
+ tagsync/scripts/updatetagadminpassword.py     |  10 +-
+ unixauthservice/scripts/setup.py              |  60 ++--
+ .../scripts/updatepolicymgrpassword.py        |  14 +-
+ 28 files changed, 426 insertions(+), 426 deletions(-)
+
+diff --git a/agents-common/scripts/upgrade-plugin.py b/agents-common/scripts/upgrade-plugin.py
+index d865ee366..72cb35944 100755
+--- a/agents-common/scripts/upgrade-plugin.py
++++ b/agents-common/scripts/upgrade-plugin.py
+@@ -21,7 +21,7 @@
+ try:
+ 	from urllib.parse import urlparse
+ except ImportError:
+-	from urlparse import urlparse
++	from urllib.parse import urlparse
+ 
+ debugLevel = 1
+ 
+@@ -36,7 +36,7 @@
+ def showUsage():
+ 	print("This script must be run with a <componentName> as parameter")
+ 	print("USAGE: upgrade-plugin.py <componentName>")
+-	print(" <componentName> could be any one of the following: %s" % (SUPPORTED_COMPONENTS))
++	print((" <componentName> could be any one of the following: %s" % (SUPPORTED_COMPONENTS)))
+ 
+ if (len(sys.argv) == 1):
+ 	showUsage()
+@@ -45,7 +45,7 @@ def showUsage():
+ componentName = sys.argv[1]
+ 
+ if (componentName not in SUPPORTED_COMPONENTS):
+-	print("Invalid componentName passed as parameter: %s" % (componentName))
++	print(("Invalid componentName passed as parameter: %s" % (componentName)))
+ 	showUsage()
+ 	sys.exit(1)
+ 
+@@ -95,8 +95,8 @@ def writeXMLUsingProperties(xmlTemplateFileName,prop,xmlOutputFileName):
+ 
+ def rewriteConfig(props,newProps):
+ 	if (debugLevel > 0):
+-		for k,v in props.items():
+-			print("old config[%s] = [%s]" % (k,v))
++		for k,v in list(props.items()):
++			print(("old config[%s] = [%s]" % (k,v)))
+ 	#
+ 	# Derived fields
+ 	#
+@@ -140,10 +140,10 @@ def main():
+ 			r = getXMLConfigMap(file)
+ 			props.update(r)
+ 	if (len(foundFiles) == 0):
+-		print("INFO: Previous version of ranger is not enabled/configured for component [%s]" % (componentName))
++		print(("INFO: Previous version of ranger is not enabled/configured for component [%s]" % (componentName)))
+ 		sys.exit(0)
+ 	if (len(foundFiles) != 3):
+-		print("ERROR: Expected to find three files matching xasecure-*.xml files under the folder (%s) - found %s" % (configDirectory,foundFiles))
++		print(("ERROR: Expected to find three files matching xasecure-*.xml files under the folder (%s) - found %s" % (configDirectory,foundFiles)))
+ 		sys.exit(1)
+ 	for fn in listdir(xmlTemplateDirectory):
+ 		file = join(xmlTemplateDirectory,fn)
+@@ -152,7 +152,7 @@ def main():
+ 			newProps.update(r)
+ 			newConfigFile = join(configDirectory,fn)
+ 			if isfile(newConfigFile):
+-				print("ERROR: new config file [%s] already exists. Upgrade script can not overwrite an existing config file." % (newConfigFile))
++				print(("ERROR: new config file [%s] already exists. Upgrade script can not overwrite an existing config file." % (newConfigFile)))
+ 				sys.exit(1)
+ 	rewriteConfig(props,newProps)
+ 
+diff --git a/intg/src/main/python/apache_ranger/client/ranger_client.py b/intg/src/main/python/apache_ranger/client/ranger_client.py
+index 4680e2d8e..b4cfe498f 100644
+--- a/intg/src/main/python/apache_ranger/client/ranger_client.py
++++ b/intg/src/main/python/apache_ranger/client/ranger_client.py
+@@ -36,7 +36,7 @@
+ 
+ LOG = logging.getLogger(__name__)
+ 
+-QUERY_PARAM_USER_DOT_NAME = 'user.name'.encode("utf-8")
++QUERY_PARAM_USER_DOT_NAME = 'user.name'
+ 
+ 
+ class RangerClient:
+@@ -397,7 +397,7 @@ def delete_policy_deltas(self, days, reloadServicePoliciesCache):
+ 
+ class HadoopSimpleAuth(AuthBase):
+   def __init__(self, user_name):
+-    self.user_name = user_name.encode("utf-8")
++    self.user_name = user_name
+ 
+   def __call__(self, req):
+     sep_char = '?'
+diff --git a/intg/src/main/python/apache_ranger/utils.py b/intg/src/main/python/apache_ranger/utils.py
+index 28e0e4b60..0cf2bd878 100644
+--- a/intg/src/main/python/apache_ranger/utils.py
++++ b/intg/src/main/python/apache_ranger/utils.py
+@@ -45,7 +45,7 @@ def type_coerce_list(obj, objType):
+ def type_coerce_dict(obj, objType):
+     if isinstance(obj, dict):
+         ret = {}
+-        for k, v in obj.items():
++        for k, v in list(obj.items()):
+             ret[k] = type_coerce(v, objType)
+     else:
+         ret = None
+@@ -55,7 +55,7 @@ def type_coerce_dict(obj, objType):
+ def type_coerce_dict_list(obj, objType):
+     if isinstance(obj, dict):
+         ret = {}
+-        for k, v in obj.items():
++        for k, v in list(obj.items()):
+             ret[k] = type_coerce_list(v, objType)
+     else:
+         ret = None
+diff --git a/kms/scripts/db_setup.py b/kms/scripts/db_setup.py
+index d21a6ac75..8e8d02739 100644
+--- a/kms/scripts/db_setup.py
++++ b/kms/scripts/db_setup.py
+@@ -40,11 +40,11 @@
+ 
+ def check_output(query):
+ 	if is_unix:
+-		p = subprocess.Popen(shlex.split(query), stdout=subprocess.PIPE)
++		p = subprocess.Popen(shlex.split(query), stdout=subprocess.PIPE, universal_newlines=True)
+ 	elif os_name == "WINDOWS":
+-		p = subprocess.Popen(query, stdout=subprocess.PIPE, shell=True)
+-	output = p.communicate ()[0]
+-	return output.decode()
++		p = subprocess.Popen(query, stdout=subprocess.PIPE, shell=True, universal_newlines=True)
++	output = p.communicate()[0]
++	return output
+ 
+ def log(msg,type):
+ 	if type == 'info':
+diff --git a/kms/scripts/dba_script.py b/kms/scripts/dba_script.py
+index 544c1201b..70b43173b 100755
+--- a/kms/scripts/dba_script.py
++++ b/kms/scripts/dba_script.py
+@@ -42,11 +42,11 @@
+ 
+ def check_output(query):
+ 	if is_unix:
+-		p = subprocess.Popen(shlex.split(query), stdout=subprocess.PIPE)
++		p = subprocess.Popen(shlex.split(query), stdout=subprocess.PIPE, universal_newlines=True)
+ 	elif os_name == "WINDOWS":
+-		p = subprocess.Popen(query, stdout=subprocess.PIPE, shell=True)
+-	output = p.communicate ()[0]
+-	return output.decode()
++		p = subprocess.Popen(query, stdout=subprocess.PIPE, shell=True, universal_newlines=True)
++	output = p.communicate()[0]
++	return output
+ 
+ def log(msg,type):
+ 	if type == 'info':
+@@ -1285,7 +1285,7 @@ def main(argv):
+ 			else :
+ 				while os.path.isfile(JAVA_BIN) == False:
+ 					log("Enter java executable path: :","info")
+-					JAVA_BIN=input()
++					JAVA_BIN=eval(input())
+ 			log("[I] Using Java:" + str(JAVA_BIN),"info")
+ 
+ 	if (quiteMode):
+@@ -1294,7 +1294,7 @@ def main(argv):
+ 		XA_DB_FLAVOR=''
+ 		while XA_DB_FLAVOR == "":
+ 			log("Enter db flavour{MYSQL|ORACLE|POSTGRES|MSSQL|SQLA} :","info")
+-			XA_DB_FLAVOR=input()
++			XA_DB_FLAVOR=eval(input())
+ 
+ 	XA_DB_FLAVOR = XA_DB_FLAVOR.upper()
+ 	log("[I] DB FLAVOR:" + str(XA_DB_FLAVOR),"info")
+@@ -1306,10 +1306,10 @@ def main(argv):
+ 		if not dryMode:
+ 			if XA_DB_FLAVOR == "MYSQL" or XA_DB_FLAVOR == "ORACLE" or XA_DB_FLAVOR == "POSTGRES" or XA_DB_FLAVOR == "MSSQL":
+ 				log("Enter JDBC connector file for :"+XA_DB_FLAVOR,"info")
+-				CONNECTOR_JAR=input()
++				CONNECTOR_JAR=eval(input())
+ 				while os.path.isfile(CONNECTOR_JAR) == False:
+ 					log("JDBC connector file "+CONNECTOR_JAR+" does not exist, Please enter connector path :","error")
+-					CONNECTOR_JAR=input()
++					CONNECTOR_JAR=eval(input())
+ 			else:
+ 				log("[E] ---------- NO SUCH SUPPORTED DB FLAVOUR.. ----------", "error")
+ 				sys.exit(1)
+@@ -1324,7 +1324,7 @@ def main(argv):
+ 			xa_db_host=''
+ 			while xa_db_host == "":
+ 				log("Enter DB Host :","info")
+-				xa_db_host=input()
++				xa_db_host=eval(input())
+ 
+ 	if (quiteMode):
+ 		xa_db_root_user = globalDict['db_root_user']
+@@ -1337,7 +1337,7 @@ def main(argv):
+ 			xa_db_root_user=''
+ 			while xa_db_root_user == "":
+ 				log("Enter db root user:","info")
+-				xa_db_root_user=input()
++				xa_db_root_user=eval(input())
+ 				log("Enter db root password:","info")
+ 				xa_db_root_password = getpass.getpass("Enter db root password:")
+ 
+@@ -1350,7 +1350,7 @@ def main(argv):
+ 			db_name = ''
+ 			while db_name == "":
+ 				log("Enter DB Name :","info")
+-				db_name=input()
++				db_name=eval(input())
+ 
+ 	if (quiteMode):
+ 		db_user = globalDict['db_user']
+@@ -1361,7 +1361,7 @@ def main(argv):
+ 			db_user=''
+ 			while db_user == "":
+ 				log("Enter db user name:","info")
+-				db_user=input()
++				db_user=eval(input())
+ 
+ 	if (quiteMode):
+ 		db_password = globalDict['db_password']
+diff --git a/migration-util/ambari2.0-hdp2.2-ranger0.40/bin/import_ranger_to_ambari.py b/migration-util/ambari2.0-hdp2.2-ranger0.40/bin/import_ranger_to_ambari.py
+index 615eb358d..7093c31db 100755
+--- a/migration-util/ambari2.0-hdp2.2-ranger0.40/bin/import_ranger_to_ambari.py
++++ b/migration-util/ambari2.0-hdp2.2-ranger0.40/bin/import_ranger_to_ambari.py
+@@ -14,9 +14,9 @@
+ 
+ import os
+ import sys
+-import urllib2
++import urllib.request, urllib.error, urllib.parse
+ import base64
+-import httplib
++import http.client
+ import json
+ import time
+ from xml.etree import ElementTree as ET
+@@ -102,13 +102,13 @@ def create_ranger_service_components_in_ambari(ranger_service_component_name):
+ 		response_code = request_result.getcode()
+ 		response = json.loads(json.JSONEncoder().encode(request_result.read()))
+ 		if (response_code == 201 and response is not None):
+-			print('ranger service component : ' + ranger_service_component_name + ', created successfully in ambari.')
++			print(('ranger service component : ' + ranger_service_component_name + ', created successfully in ambari.'))
+ 			return True
+ 		elif (response_code == 409 and response is not None):
+-			print('ranger service component : ' + ranger_service_component_name + ',  is already present in ambari.')
++			print(('ranger service component : ' + ranger_service_component_name + ',  is already present in ambari.'))
+ 			return True
+ 		else:
+-			print('ranger service component creation for : ' + ranger_service_component_name + ',  failed in ambari.')
++			print(('ranger service component creation for : ' + ranger_service_component_name + ',  failed in ambari.'))
+ 			return False
+ 
+ def register_ranger_admin_host_in_ambari():
+@@ -213,15 +213,15 @@ def add_advanced_ranger_configurations(add_admin_or_usersync, ranger_service_pro
+ 
+ 			print ('####################### admin_properties configuration :')
+ 			for each_key in advanced_admin_properties:
+-				print str(each_key) + ' = ' + str(advanced_admin_properties[each_key])
++				print(str(each_key) + ' = ' + str(advanced_admin_properties[each_key]))
+ 
+ 			print ('####################### ranger_site_properties configuration :')
+ 			for each_key in advanced_ranger_site_properties:
+-				print str(each_key) + ' = ' + str(advanced_ranger_site_properties[each_key])
++				print(str(each_key) + ' = ' + str(advanced_ranger_site_properties[each_key]))
+ 
+ 			print ('####################### ranger_env_properties configuration :')
+ 			for each_key in advanced_ranger_env_properties:
+-				print str(each_key) + ' = ' + str(advanced_ranger_env_properties[each_key])
++				print(str(each_key) + ' = ' + str(advanced_ranger_env_properties[each_key]))
+ 
+ 
+ 		else:
+@@ -256,17 +256,17 @@ def add_advanced_ranger_configurations(add_admin_or_usersync, ranger_service_pro
+ 
+ 		print ('####################### user_sync_properties configuration :')
+ 		for each_key in advanced_user_sync_properties:
+-			print str(each_key) + ' = ' + str(advanced_user_sync_properties[each_key])
++			print(str(each_key) + ' = ' + str(advanced_user_sync_properties[each_key]))
+ 
+ 	else:
+ 		print ('invalid option for to add configuration to ranger.')
+ 		sys.exit(1)
+ 
+ 
+-	confirm_configurations = raw_input('please confirm the above configuration values y/n (n) : ')
++	confirm_configurations = input('please confirm the above configuration values y/n (n) : ')
+ 	if(confirm_configurations == ''):
+ 		confirm_configurations = 'n'
+-	print ('input registered as ' + str(confirm_configurations))
++	print(('input registered as ' + str(confirm_configurations)))
+ 
+ 	if(confirm_configurations.lower() == 'y'):
+ 		ranger_config_request_url = ambari_cluster_url
+@@ -371,11 +371,11 @@ def get_ranger_admin_install_properties():
+ 				print('ranger_install_properties_path exists, getting existing properties for ambari port')
+ 				ranger_admin_properties_from_file = import_properties_from_file("ranger_admin_install.properties")
+ 				if not (ranger_admin_properties_from_file['db_root_user'] == '' or ranger_admin_properties_from_file['db_root_password'] == ''):
+-					print 'db_root_username and db_root_password are not blank.'
+-					print 'value for db_root_user = ' + str(ranger_admin_properties_from_file['db_root_user'])
+-					print 'value for db_root_password = ' + str(ranger_admin_properties_from_file['db_root_password'])
++					print('db_root_username and db_root_password are not blank.')
++					print('value for db_root_user = ' + str(ranger_admin_properties_from_file['db_root_user']))
++					print('value for db_root_password = ' + str(ranger_admin_properties_from_file['db_root_password']))
+ 				else:
+-					print 'db_root_username or db_root_password are blank, please provide proper values in ranger_admin_install.properties. exiting installation without any changes.'
++					print('db_root_username or db_root_password are blank, please provide proper values in ranger_admin_install.properties. exiting installation without any changes.')
+ 					sys.exit(1)
+ 
+ 				print('got ranger admin values from ranger_admin_install.properties file, need to configure ambari for ranger service.')
+@@ -432,14 +432,14 @@ def get_additional_properties_for_admin(ranger_admin_properties_from_file):
+ 	    ranger_admin_properties_from_file = import_properties_from_file(ranger_ldap_properties_path, ranger_admin_properties_from_file)
+ 	    ranger_admin_properties_from_file = import_properties_from_file(ranger_system_properties_path, ranger_admin_properties_from_file)
+ 	    ranger_admin_properties_from_file = import_properties_from_file(ranger_unixauth_properties_path, ranger_admin_properties_from_file)
+-        except Exception, e:
+-            print "Error loading property files: ", str(e)
++        except Exception as e:
++            print("Error loading property files: ", str(e))
+ 
+ 	print('getting db flavor, library and command invoker')
+ 	xa_system_properties_db_dialect = ranger_admin_properties_from_file['jdbc.dialect']
+-	print('xa_system_properties_db_dialect = ' + xa_system_properties_db_dialect)
++	print(('xa_system_properties_db_dialect = ' + xa_system_properties_db_dialect))
+ 	xa_system_properties_url = ranger_admin_properties_from_file['jdbc.url']
+-	print('xa_system_properties_url = ' + xa_system_properties_url)
++	print(('xa_system_properties_url = ' + xa_system_properties_url))
+ 	if ('mysql'.lower() in xa_system_properties_db_dialect.lower() and 'mysql'.lower() in xa_system_properties_url.lower()):
+ 		print('db dialect and jdbc url are set as MYSQL setting db_flavour and sql command invoker as mysql')
+ 		ranger_admin_properties_from_file['DB_FLAVOR'] = 'MYSQL'
+@@ -455,22 +455,22 @@ def get_additional_properties_for_admin(ranger_admin_properties_from_file):
+ 		sys.exit(1)
+ 
+ 	xa_system_properties_jdbc_url = ranger_admin_properties_from_file['jdbc.url']
+-	print('found jdbc url configured as : ' + str(xa_system_properties_jdbc_url) + ' , getting db host from configured jdbc url')
++	print(('found jdbc url configured as : ' + str(xa_system_properties_jdbc_url) + ' , getting db host from configured jdbc url'))
+ 	xa_database_host_name = xa_system_properties_jdbc_url.split(':')
+ 	xa_database_host = xa_database_host_name[3].split('/')[2]
+ 	xa_database_name = xa_database_host_name[3].split('/')[3]
+-	print('found db host as : ' + str(xa_database_host))
+-	print('found db name as : ' + str(xa_database_name))
++	print(('found db host as : ' + str(xa_database_host)))
++	print(('found db name as : ' + str(xa_database_name)))
+ 	ranger_admin_properties_from_file['db_host'] = xa_database_host
+ 	ranger_admin_properties_from_file['db_name'] = xa_database_name
+ 
+ 	xa_system_properties_audit_jdbc_url = ranger_admin_properties_from_file['auditDB.jdbc.url']
+-	print('found audit jdbc url configured as : ' + str(xa_system_properties_audit_jdbc_url) + ' , getting db host from configured jdbc url')
++	print(('found audit jdbc url configured as : ' + str(xa_system_properties_audit_jdbc_url) + ' , getting db host from configured jdbc url'))
+ 	xa_audit_database_host_name = xa_system_properties_audit_jdbc_url.split(':')
+ 
+ 	xa_audit_database_host = xa_audit_database_host_name[3].split('/')[2]
+ 	xa_audit_database_name = xa_audit_database_host_name[3].split('/')[3]
+-	print('found xa_audit_database_name as : ' + str(xa_audit_database_name))
++	print(('found xa_audit_database_name as : ' + str(xa_audit_database_name)))
+ 	ranger_admin_properties_from_file['audit_db_host'] = xa_audit_database_host
+ 	ranger_admin_properties_from_file['audit_db_name'] = xa_audit_database_name
+ 
+@@ -551,16 +551,16 @@ def port_ranger_hdfs_plugin_to_ambari():
+ 
+ 		print ('####################### hdfs_site_xml configuration :')
+ 		for each_key in hdfs_site_xml_properties:
+-			print str(each_key) + ' = ' + str(hdfs_site_xml_properties[each_key])
++			print(str(each_key) + ' = ' + str(hdfs_site_xml_properties[each_key]))
+ 
+ 		print ('####################### ranger_hdfs_plugin_properties configuration :')
+ 		for each_key in advanced_ranger_hdfs_plugin_properties:
+-			print str(each_key) + ' = ' + str(advanced_ranger_hdfs_plugin_properties[each_key])
++			print(str(each_key) + ' = ' + str(advanced_ranger_hdfs_plugin_properties[each_key]))
+ 
+-		confirm_configurations = raw_input('please confirm the above configuration values y/n (n) : ')
++		confirm_configurations = input('please confirm the above configuration values y/n (n) : ')
+ 		if(confirm_configurations == ''):
+ 			confirm_configurations = 'n'
+-		print ('Input registered as ' + str(confirm_configurations))
++		print(('Input registered as ' + str(confirm_configurations)))
+ 
+ 
+ 		if(confirm_configurations.lower() == 'y'):
+@@ -632,16 +632,16 @@ def port_ranger_hive_plugin_to_ambari():
+ 
+ 		print ('####################### hive_server2_xml configuration :')
+ 		for each_key in hive_server2_xml_properties:
+-			print str(each_key) + ' = ' + str(hive_server2_xml_properties[each_key])
++			print(str(each_key) + ' = ' + str(hive_server2_xml_properties[each_key]))
+ 
+ 		print ('####################### ranger_hive_plugin_properties configuration :')
+ 		for each_key in advanced_ranger_hive_plugin_properties:
+-			print str(each_key) + ' = ' + str(advanced_ranger_hive_plugin_properties[each_key])
++			print(str(each_key) + ' = ' + str(advanced_ranger_hive_plugin_properties[each_key]))
+ 
+-		confirm_configurations = raw_input('please confirm the above configuration values y/n (n) : ')
++		confirm_configurations = input('please confirm the above configuration values y/n (n) : ')
+ 		if(confirm_configurations == ''):
+ 			confirm_configurations = 'n'
+-		print ('Input registered as ' + str(confirm_configurations))
++		print(('Input registered as ' + str(confirm_configurations)))
+ 
+ 
+ 		if(confirm_configurations.lower() == 'y'):
+@@ -707,16 +707,16 @@ def port_ranger_hbase_plugin_to_ambari():
+ 
+ 		print ('####################### hbase_site_xml configuration :')
+ 		for each_key in hbase_site_xml_properties:
+-			print str(each_key) + ' = ' + str(hbase_site_xml_properties[each_key])
++			print(str(each_key) + ' = ' + str(hbase_site_xml_properties[each_key]))
+ 
+ 		print ('####################### ranger_hbase_plugin_properties configuration :')
+ 		for each_key in advanced_ranger_hbase_plugin_properties:
+-			print str(each_key) + ' = ' + str(advanced_ranger_hbase_plugin_properties[each_key])
++			print(str(each_key) + ' = ' + str(advanced_ranger_hbase_plugin_properties[each_key]))
+ 
+-		confirm_configurations = raw_input('please confirm the above configuration values y/n (n) : ')
++		confirm_configurations = input('please confirm the above configuration values y/n (n) : ')
+ 		if(confirm_configurations == ''):
+ 			confirm_configurations = 'n'
+-		print ('Input registered as ' + str(confirm_configurations))
++		print(('Input registered as ' + str(confirm_configurations)))
+ 
+ 
+ 		if(confirm_configurations.lower() == 'y'):
+@@ -802,12 +802,12 @@ def port_ranger_knox_plugin_to_ambari():
+ 
+ 		print ('####################### ranger_knox_plugin_properties configuration :')
+ 		for each_key in advanced_ranger_knox_plugin_properties:
+-			print str(each_key) + ' = ' + str(advanced_ranger_knox_plugin_properties[each_key])
++			print(str(each_key) + ' = ' + str(advanced_ranger_knox_plugin_properties[each_key]))
+ 
+-		confirm_configurations = raw_input('please confirm the above configuration values y/n (n) : ')
++		confirm_configurations = input('please confirm the above configuration values y/n (n) : ')
+ 		if(confirm_configurations == ''):
+ 			confirm_configurations = 'n'
+-		print ('input registered as ' + str(confirm_configurations))
++		print(('input registered as ' + str(confirm_configurations)))
+ 
+ 
+ 		if(confirm_configurations.lower() == 'y'):
+@@ -870,12 +870,12 @@ def port_ranger_storm_plugin_to_ambari():
+ 
+ 		print ('####################### ranger_storm_plugin_properties configuration :')
+ 		for each_key in advanced_ranger_storm_plugin_properties:
+-			print str(each_key) + ' = ' + str(advanced_ranger_storm_plugin_properties[each_key])
++			print(str(each_key) + ' = ' + str(advanced_ranger_storm_plugin_properties[each_key]))
+ 
+-		confirm_configurations = raw_input('please confirm the above configuration values y/n (n) : ')
++		confirm_configurations = input('please confirm the above configuration values y/n (n) : ')
+ 		if(confirm_configurations == ''):
+ 			confirm_configurations = 'n'
+-		print ('Input registered as ' + str(confirm_configurations))
++		print(('Input registered as ' + str(confirm_configurations)))
+ 
+ 
+ 		if(confirm_configurations.lower() == 'y'):
+@@ -1004,9 +1004,9 @@ def check_plugin_enabled(component_name, component_plugin_install_properties):
+ 	flag_plugin_installed = False
+ 	if not (str(component_plugin_install_properties['xasecure.audit.repository.name']).strip() == ''):
+ 		repo_base_path = os.path.join('/etc/ranger', component_plugin_install_properties['xasecure.audit.repository.name'])
+-		print('repo_base_path = ' + str(repo_base_path))
++		print(('repo_base_path = ' + str(repo_base_path)))
+ 		if os.path.exists(repo_base_path):
+-			print('Plugin is installed for component ' + component_name)
++			print(('Plugin is installed for component ' + component_name))
+ 			flag_plugin_installed = True
+ 	return flag_plugin_installed
+ 
+@@ -1016,21 +1016,21 @@ def call_ambari_api(ambari_url, method, username_password, data):
+ 		url = ambari_url
+ 		base64string = base64.encodestring('{0}'.format(username_password)).replace('\n', '')
+ 		headers = {"X-Requested-By": "ambari"}
+-		request = urllib2.Request(url, data, headers, 'compressed')
++		request = urllib.request.Request(url, data, headers, 'compressed')
+ 		request.get_method = lambda: method
+ 		request.add_header("Authorization", "Basic {0}".format(base64string))
+-		result = urllib2.urlopen(request)
++		result = urllib.request.urlopen(request)
+ 		return result
+-	except urllib2.URLError, e:
+-		if isinstance(e, urllib2.HTTPError):
+-			print("HTTP Code: {0}".format(e.code))
+-			print("HTTP Data: {0}".format(e.read()))
++	except urllib.error.URLError as e:
++		if isinstance(e, urllib.error.HTTPError):
++			print(("HTTP Code: {0}".format(e.code)))
++			print(("HTTP Data: {0}".format(e.read())))
+ 			return e
+ 		else:
+-			print("Error: {0}".format(e.reason))
++			print(("Error: {0}".format(e.reason)))
+ 			print ('ambari server is not reachable, please make sure valid ambari server url has been provided and ambari server is started.')
+ 			return e
+-	except httplib.BadStatusLine:
++	except http.client.BadStatusLine:
+ 		print("ambari service is not reachable, please restart the service and then try again")
+ 		return None
+ 
+@@ -1052,12 +1052,12 @@ def import_properties_from_file(install_properties_path, properties_from_file=No
+ 			value = value.strip()
+ 			properties_from_file[key] = value
+ 	else:
+-		print('Property file not found at path : ' + str(install_properties_path))
++		print(('Property file not found at path : ' + str(install_properties_path)))
+ 	return properties_from_file
+ 
+ 
+ def import_properties_from_xml(xml_path, properties_from_xml=None):
+-	print('getting values from file : ' + str(xml_path))
++	print(('getting values from file : ' + str(xml_path)))
+ 	if os.path.isfile(xml_path):
+ 		xml = ET.parse(xml_path)
+ 		root = xml.getroot()
+@@ -1068,7 +1068,7 @@ def import_properties_from_xml(xml_path, properties_from_xml=None):
+ 			value = child.find("value").text.strip() if child.find("value").text is not None  else ""
+ 			properties_from_xml[name] = value
+ 	else:
+-		print('XML file not found at path : ' + str(xml_path))
++		print(('XML file not found at path : ' + str(xml_path)))
+ 	return properties_from_xml
+ 
+ 
+@@ -1076,7 +1076,7 @@ def get_authentication_method():
+ 	print('Getting authentication method for ranger services')
+ 	ranger_conf_path = '/etc/ranger/admin/conf'
+ 	security_appln_context_path = os.path.join(ranger_conf_path,'security-applicationContext.xml')
+-	print ('security_appln_context_path = ' + security_appln_context_path)
++	print(('security_appln_context_path = ' + security_appln_context_path))
+ 	app_context_xml_tree = ET.parse(security_appln_context_path)
+ 	app_context_xml_root = app_context_xml_tree.getroot()
+ 	reference_auth_method = None
+@@ -1134,15 +1134,15 @@ def get_hdp_version():
+ 		output = Popen(command_to_run, stdin=PIPE, stdout=PIPE, stderr=PIPE, shell=True)
+ 		return_code, error = output.communicate()
+ 		statuscode = output.returncode
+-	except Exception, e:
+-		print('Error : ' + str(e))
++	except Exception as e:
++		print(('Error : ' + str(e)))
+ 	if statuscode == 0:
+ 		hdp_version = re.sub('hadoop-client - ', '', return_code)
+ 		hdp_version = hdp_version.rstrip()
+ 		match = re.match('[0-9]+.[0-9]+.[0-9]+.[0-9]+-[0-9]+', hdp_version)
+-		print ('hdp_version = ' + hdp_version)
++		print(('hdp_version = ' + hdp_version))
+ 	else:
+-		print('Unable to determine the current version because of a non-zero return code of {0}'.format(str(return_code)))
++		print(('Unable to determine the current version because of a non-zero return code of {0}'.format(str(return_code))))
+ 
+ 	if match is None:
+ 		print('Failed to get extracted version')
+@@ -1160,13 +1160,13 @@ def getDateTimeNow():
+ 	if len(sys.argv) > 1:
+ 		function_to_call = sys.argv[1] if len(sys.argv) > 1  else None
+ 		base_url = sys.argv[2] if len(sys.argv) > 2  else None
+-		print ('base url = ' + base_url)
++		print(('base url = ' + base_url))
+ 		ambari_username_password = sys.argv[3] if len(sys.argv) > 3  else None
+-		print ('ambari_username_password = ' + ambari_username_password)
++		print(('ambari_username_password = ' + ambari_username_password))
+ 		cluster_name = sys.argv[4] if len(sys.argv) > 4  else None
+-		print ('cluster_name = ' + cluster_name)
++		print(('cluster_name = ' + cluster_name))
+ 		ranger_admin_fqdn = sys.argv[5] if len(sys.argv) > 5 else None
+-		print ('ranger_admin_fqdn = ' + ranger_admin_fqdn)
++		print(('ranger_admin_fqdn = ' + ranger_admin_fqdn))
+ 		ranger_service_name = 'RANGER'
+ 		admin_component_name = 'RANGER_ADMIN'
+ 		usersync_component_name = 'RANGER_USERSYNC'
+@@ -1175,10 +1175,10 @@ def getDateTimeNow():
+ 		hdp_dir = os.path.join('/usr', 'hdp')
+ 		hdp_current_dir = os.path.join(hdp_dir, 'current')
+ 		hdp_version = get_hdp_version()
+-		print('Found hdp_version = ' + str(hdp_version))
++		print(('Found hdp_version = ' + str(hdp_version)))
+ 		hdp_version_dir = os.path.join(hdp_dir, hdp_version)
+ 		if function_to_call is not None and len(function_to_call) > 0:
+-			print('Found first argument as : ' + function_to_call)
++			print(('Found first argument as : ' + function_to_call))
+ 			function_to_call = int(function_to_call)
+ 			if function_to_call == 1:
+ 				print('Porting ranger admin installation details to ambari.')
+diff --git a/migration-util/ambari2.1-hdp2.3-ranger0.50/bin/import_ranger_to_ambari.py b/migration-util/ambari2.1-hdp2.3-ranger0.50/bin/import_ranger_to_ambari.py
+index 195a116dd..4f7fc8864 100755
+--- a/migration-util/ambari2.1-hdp2.3-ranger0.50/bin/import_ranger_to_ambari.py
++++ b/migration-util/ambari2.1-hdp2.3-ranger0.50/bin/import_ranger_to_ambari.py
+@@ -14,9 +14,9 @@
+ 
+ import os
+ import sys
+-import urllib2
++import urllib.request, urllib.error, urllib.parse
+ import base64
+-import httplib
++import http.client
+ import json
+ import time
+ from xml.etree import ElementTree as ET
+@@ -149,33 +149,33 @@ def create_ranger_service_components_in_ambari(ranger_service_component_name):
+ 		response_code = request_result.getcode()
+ 		response = json.loads(json.JSONEncoder().encode(request_result.read()))
+ 		if (response_code == 201 and response is not None):
+-			print('ranger service component : ' + ranger_service_component_name + ', created successfully in ambari.')
++			print(('ranger service component : ' + ranger_service_component_name + ', created successfully in ambari.'))
+ 			return True
+ 		elif (response_code == 409 and response is not None):
+-			print('ranger service component : ' + ranger_service_component_name + ',  is already present in ambari.')
++			print(('ranger service component : ' + ranger_service_component_name + ',  is already present in ambari.'))
+ 			return True
+ 		else:
+-			print('ranger service component creation for : ' + ranger_service_component_name + ',  failed in ambari.')
++			print(('ranger service component creation for : ' + ranger_service_component_name + ',  failed in ambari.'))
+ 			return False
+ 
+ def create_kms_service_components_in_ambari(ranger_service_component_name):
+ 	print('adding ranger service components in ambari')
+ 	ranger_service_components = '{"components":[{"ServiceComponentInfo":{"component_name":"' + ranger_service_component_name + '"}}]}'
+-	print('creating ranger kms service in ambari -> ' + str(ranger_service_components))	
++	print(('creating ranger kms service in ambari -> ' + str(ranger_service_components)))	
+ 	ranger_service_component_create_url = ambari_service_url + '?ServiceInfo/service_name=RANGER_KMS'
+-	print('ranger_service_component_create_url -> ' + str(ranger_service_component_create_url))
++	print(('ranger_service_component_create_url -> ' + str(ranger_service_component_create_url)))
+ 	request_result = call_ambari_api(ranger_service_component_create_url, 'POST', ambari_username_password, ranger_service_components)
+ 	if request_result is not None:
+ 		response_code = request_result.getcode()
+ 		response = json.loads(json.JSONEncoder().encode(request_result.read()))
+ 		if (response_code == 201 and response is not None):
+-			print('ranger service component : ' + ranger_service_component_name + ', created successfully in ambari.')
++			print(('ranger service component : ' + ranger_service_component_name + ', created successfully in ambari.'))
+ 			return True
+ 		elif (response_code == 409 and response is not None):
+-			print('ranger service component : ' + ranger_service_component_name + ',  is already present in ambari.')
++			print(('ranger service component : ' + ranger_service_component_name + ',  is already present in ambari.'))
+ 			return True
+ 		else:
+-			print('ranger service component creation for : ' + ranger_service_component_name + ',  failed in ambari.')
++			print(('ranger service component creation for : ' + ranger_service_component_name + ',  failed in ambari.'))
+ 			return False
+ 
+ def register_ranger_admin_host_in_ambari():
+@@ -324,19 +324,19 @@ def add_advanced_ranger_configurations(add_admin_or_usersync, ranger_service_pro
+ 
+ 			print ('####################### admin_properties configuration :')
+ 			for each_key in advanced_admin_properties:
+-				print str(each_key) + ' = ' + str(advanced_admin_properties[each_key])
++				print(str(each_key) + ' = ' + str(advanced_admin_properties[each_key]))
+ 
+ 			print ('####################### ranger_site_properties configuration :')
+ 			for each_key in advanced_ranger_site_properties:
+-				print str(each_key) + ' = ' + str(advanced_ranger_site_properties[each_key])
++				print(str(each_key) + ' = ' + str(advanced_ranger_site_properties[each_key]))
+ 
+ 			print ('####################### ranger_env_properties configuration :')
+ 			for each_key in advanced_ranger_env_properties:
+-				print str(each_key) + ' = ' + str(advanced_ranger_env_properties[each_key])
++				print(str(each_key) + ' = ' + str(advanced_ranger_env_properties[each_key]))
+ 			
+ 			print ('####################### ranger_admin_site_properties configuration :')
+ 			for each_key in advanced_ranger_env_properties:
+-				print str(each_key) + ' = ' + str(advanced_ranger_env_properties[each_key])
++				print(str(each_key) + ' = ' + str(advanced_ranger_env_properties[each_key]))
+ 
+ 
+ 		else:
+@@ -392,17 +392,17 @@ def add_advanced_ranger_configurations(add_admin_or_usersync, ranger_service_pro
+ 
+ 		print ('####################### user_sync_properties configuration :')
+ 		for each_key in advanced_user_sync_properties:
+-			print str(each_key) + ' = ' + str(advanced_user_sync_properties[each_key])
++			print(str(each_key) + ' = ' + str(advanced_user_sync_properties[each_key]))
+ 
+ 	else:
+ 		print ('invalid option for to add configuration to ranger.')
+ 		sys.exit(1)
+ 
+ 
+-	confirm_configurations = raw_input('please confirm the above configuration values y/n (n) : ')
++	confirm_configurations = input('please confirm the above configuration values y/n (n) : ')
+ 	if(confirm_configurations == ''):
+ 		confirm_configurations = 'n'
+-	print ('input registered as ' + str(confirm_configurations))
++	print(('input registered as ' + str(confirm_configurations)))
+ 
+ 	if(confirm_configurations.lower() == 'y'):
+ 		ranger_config_request_url = ambari_cluster_url
+@@ -545,46 +545,46 @@ def add_advanced_ranger_kms_configurations(ranger_kms_properties_from_file):
+ 
+ 	print ('####################### kms_properties configuration :')
+ 	for each_key in advanced_kms_properties:
+-		print str(each_key) + ' = ' + str(advanced_kms_properties[each_key])
++		print(str(each_key) + ' = ' + str(advanced_kms_properties[each_key]))
+ 
+ 	print ('####################### kms_site_properties configuration :')
+ 	for each_key in advanced_kms_site_properties:
+-		print str(each_key) + ' = ' + str(advanced_kms_site_properties[each_key])
++		print(str(each_key) + ' = ' + str(advanced_kms_site_properties[each_key]))
+ 
+ 	print ('####################### kms_env_properties configuration :')
+ 	for each_key in advanced_kms_env_properties:
+-		print str(each_key) + ' = ' + str(advanced_kms_env_properties[each_key])
++		print(str(each_key) + ' = ' + str(advanced_kms_env_properties[each_key]))
+ 
+ 	print ('####################### ranger_kms_site_properties configuration :')
+ 	for each_key in advanced_ranger_kms_site_properties:
+-		print str(each_key) + ' = ' + str(advanced_ranger_kms_site_properties[each_key])
++		print(str(each_key) + ' = ' + str(advanced_ranger_kms_site_properties[each_key]))
+ 
+ 	print ('####################### kms_dbks_site_properties configuration :')
+ 	for each_key in advanced_dbks_site_properties:
+-		print str(each_key) + ' = ' + str(advanced_dbks_site_properties[each_key])
++		print(str(each_key) + ' = ' + str(advanced_dbks_site_properties[each_key]))
+ 
+ 	print ('####################### ranger_kms_audit_properties configuration :')
+ 	for each_key in advanced_ranger_kms_audit_properties:
+-		print str(each_key) + ' = ' + str(advanced_ranger_kms_audit_properties[each_key])
++		print(str(each_key) + ' = ' + str(advanced_ranger_kms_audit_properties[each_key]))
+ 	
+ 	print ('####################### ranger_kms_policymgr_ssl_properties configuration :')
+ 	for each_key in advanced_ranger_kms_policymgr_ssl_properties:
+-		print str(each_key) + ' = ' + str(advanced_ranger_kms_policymgr_ssl_properties[each_key])
++		print(str(each_key) + ' = ' + str(advanced_ranger_kms_policymgr_ssl_properties[each_key]))
+ 	
+ 	
+ 	print ('####################### ranger_kms_security_properties configuration :')
+ 	for each_key in advanced_ranger_kms_security_properties:
+-		print str(each_key) + ' = ' + str(advanced_ranger_kms_security_properties[each_key])
++		print(str(each_key) + ' = ' + str(advanced_ranger_kms_security_properties[each_key]))
+ 	
+ 	print ('####################### ranger_kms_log4j_properties configuration :')
+ 	for each_key in advanced_kms_log4j_properties:
+-		print str(each_key) + ' = ' + str(advanced_kms_log4j_properties[each_key])
++		print(str(each_key) + ' = ' + str(advanced_kms_log4j_properties[each_key]))
+ 
+ 	
+-	confirm_configurations = raw_input('please confirm the above configuration values y/n (n) : ')
++	confirm_configurations = input('please confirm the above configuration values y/n (n) : ')
+ 	if(confirm_configurations == ''):
+ 		confirm_configurations = 'n'
+-	print ('input registered as ' + str(confirm_configurations))
++	print(('input registered as ' + str(confirm_configurations)))
+ 
+ 	if(confirm_configurations.lower() == 'y'):
+ 		ranger_config_request_url = ambari_cluster_url
+@@ -741,11 +741,11 @@ def get_ranger_admin_install_properties():
+ 				print('ranger_install_properties_path exists, getting existing properties for ambari port')
+ 				ranger_admin_properties_from_file = import_properties_from_file("ranger_admin_install.properties")
+ 				if not (ranger_admin_properties_from_file['db_root_user'] == '' or ranger_admin_properties_from_file['db_root_password'] == ''):
+-					print 'db_root_username and db_root_password are not blank.'
+-					print 'value for db_root_user = ' + str(ranger_admin_properties_from_file['db_root_user'])
+-					print 'value for db_root_password = ' + str(ranger_admin_properties_from_file['db_root_password'])
++					print('db_root_username and db_root_password are not blank.')
++					print('value for db_root_user = ' + str(ranger_admin_properties_from_file['db_root_user']))
++					print('value for db_root_password = ' + str(ranger_admin_properties_from_file['db_root_password']))
+ 				else:
+-					print 'db_root_username or db_root_password are blank, please provide proper values in ranger_admin_install.properties. exiting installation without any changes.'
++					print('db_root_username or db_root_password are blank, please provide proper values in ranger_admin_install.properties. exiting installation without any changes.')
+ 					sys.exit(1)
+ 
+ 				print('got ranger admin values from ranger_admin_install.properties file, need to configure ambari for ranger service.')
+@@ -770,11 +770,11 @@ def get_ranger_kms_install_properties():
+ 				print('ranger_install_properties_path exists, getting existing properties for ambari port')
+ 				ranger_kms_properties_from_file = import_properties_from_file("ranger_admin_install.properties")
+ 				if not (ranger_kms_properties_from_file['db_root_user'] == '' or ranger_kms_properties_from_file['db_root_password'] == ''):
+-					print 'db_root_username and db_root_password are not blank.'
+-					print 'value for db_root_user = ' + str(ranger_kms_properties_from_file['db_root_user'])
+-					print 'value for db_root_password = ' + str(ranger_kms_properties_from_file['db_root_password'])
++					print('db_root_username and db_root_password are not blank.')
++					print('value for db_root_user = ' + str(ranger_kms_properties_from_file['db_root_user']))
++					print('value for db_root_password = ' + str(ranger_kms_properties_from_file['db_root_password']))
+ 				else:
+-					print 'db_root_username or db_root_password are blank, please provide proper values in ranger_admin_install.properties. exiting installation without any changes.'
++					print('db_root_username or db_root_password are blank, please provide proper values in ranger_admin_install.properties. exiting installation without any changes.')
+ 					sys.exit(1)
+ 
+ 				print('got ranger admin values from ranger_admin_install.properties file, need to configure ambari for ranger service.')
+@@ -842,14 +842,14 @@ def get_additional_properties_for_admin(ranger_admin_properties_from_file):
+         	
+ 		ranger_admin_properties_from_file =  import_properties_from_xml(ranger_admin_default_site_xml_properties, ranger_admin_properties_from_file)
+ 		ranger_admin_properties_from_file =  import_properties_from_xml(ranger_admin_site_xml_properties, ranger_admin_properties_from_file)
+-        except Exception, e:
+-            print "Error loading ranger-admin properties from xml files : ", str(e)
++        except Exception as e:
++            print("Error loading ranger-admin properties from xml files : ", str(e))
+ 
+ 	print('getting db flavor, library and command invoker')
+ 	ranger_jpa_jdbc_dialect = ranger_admin_properties_from_file['ranger.jpa.jdbc.dialect']
+-	print('ranger_jpa_jdbc_dialect = ' + ranger_jpa_jdbc_dialect)
++	print(('ranger_jpa_jdbc_dialect = ' + ranger_jpa_jdbc_dialect))
+ 	ranger_jpa_jdbc_url = ranger_admin_properties_from_file['ranger.jpa.jdbc.url']
+-	print('ranger_jpa_jdbc_url = ' + ranger_jpa_jdbc_url)
++	print(('ranger_jpa_jdbc_url = ' + ranger_jpa_jdbc_url))
+ 	if ('mysql'.lower() in ranger_jpa_jdbc_dialect.lower() and 'mysql'.lower() in ranger_jpa_jdbc_url.lower()):
+ 		print('db dialect and jdbc url are set as MYSQL setting db_flavour and sql command invoker as mysql')
+ 		ranger_admin_properties_from_file['DB_FLAVOR'] = 'MYSQL'
+@@ -867,22 +867,22 @@ def get_additional_properties_for_admin(ranger_admin_properties_from_file):
+ 		sys.exit(1)
+ 
+ 	ranger_jpa_jdbc_url = ranger_admin_properties_from_file['ranger.jpa.jdbc.url']
+-	print('found jdbc url configured as : ' + str(ranger_jpa_jdbc_url) + ' , getting db host from configured jdbc url')
++	print(('found jdbc url configured as : ' + str(ranger_jpa_jdbc_url) + ' , getting db host from configured jdbc url'))
+ 	ranger_database_host_name = ranger_jpa_jdbc_url.split(':')
+ 	ranger_database_host = ranger_database_host_name[3].split('/')[2]
+ 	ranger_database_name = ranger_database_host_name[3].split('/')[3]
+-	print('found db host as : ' + str(ranger_database_host))
+-	print('found db name as : ' + str(ranger_database_name))
++	print(('found db host as : ' + str(ranger_database_host)))
++	print(('found db name as : ' + str(ranger_database_name)))
+ 	ranger_admin_properties_from_file['db_host'] = ranger_database_host
+ 	ranger_admin_properties_from_file['db_name'] = ranger_database_name
+ 
+ 	ranger_audit_jdbc_url = ranger_admin_properties_from_file['ranger.jpa.audit.jdbc.url']
+-	print('found audit jdbc url configured as : ' + str(ranger_audit_jdbc_url) + ' , getting db host from configured jdbc url')
++	print(('found audit jdbc url configured as : ' + str(ranger_audit_jdbc_url) + ' , getting db host from configured jdbc url'))
+ 	ranger_audit_database_host_name = ranger_audit_jdbc_url.split(':')
+ 
+ 	ranger_audit_database_host = ranger_audit_database_host_name[3].split('/')[2]
+ 	ranger_audit_database_name = ranger_audit_database_host_name[3].split('/')[3]
+-	print('found ranger_audit_database_name as : ' + str(ranger_audit_database_name))
++	print(('found ranger_audit_database_name as : ' + str(ranger_audit_database_name)))
+ 	ranger_admin_properties_from_file['audit_db_host'] = ranger_audit_database_host
+ 	ranger_admin_properties_from_file['audit_db_name'] = ranger_audit_database_name
+ 
+@@ -933,7 +933,7 @@ def get_additional_properties_for_kms(ranger_kms_properties_from_file):
+ 	ranger_kms_properties_from_file['kms.log4j.properties'] = read_properties_file(kms_log4j_properties)
+ 	
+ 	kms_jpa_jdbc_dialect = ranger_kms_properties_from_file['ranger.ks.jpa.jdbc.dialect']
+-	print('kms_jpa_jdbc_dialect = ' + str(kms_jpa_jdbc_dialect))
++	print(('kms_jpa_jdbc_dialect = ' + str(kms_jpa_jdbc_dialect)))
+ 	kms_jpa_jdbc_url = ranger_kms_properties_from_file['ranger.ks.jpa.jdbc.url']
+ 	if ('mysql'.lower() in kms_jpa_jdbc_dialect.lower() and 'mysql'.lower() in kms_jpa_jdbc_url.lower()):
+ 		print('db dialect and jdbc url are set as MYSQL setting db_flavour and sql command invoker as mysql')
+@@ -955,8 +955,8 @@ def get_additional_properties_for_kms(ranger_kms_properties_from_file):
+ 	
+ 	kms_jpa_jdbc_hostname = kms_jpa_db_hostname[3].split('/')[2]
+ 	kms_jpa_jdbc_db_name = kms_jpa_db_hostname[3].split('/')[3]
+-	print('found db hostname = ' + kms_jpa_jdbc_hostname )
+-	print('found db name = ' + kms_jpa_jdbc_db_name )
++	print(('found db hostname = ' + kms_jpa_jdbc_hostname ))
++	print(('found db name = ' + kms_jpa_jdbc_db_name ))
+ 	
+ 	ranger_kms_properties_from_file['db_host'] = kms_jpa_jdbc_hostname
+ 	ranger_kms_properties_from_file['db_name'] = kms_jpa_jdbc_db_name
+@@ -978,7 +978,7 @@ def get_additional_properties_for_kms(ranger_kms_properties_from_file):
+ 	statuscode, value = call_keystore(libpath, aliasKey, aliasValue, filepath, getorcreateorlist)
+ 	if statuscode == 0:
+ 		kms_database_password = value.strip()
+-	print('kms_database_password = ' + kms_database_password)
++	print(('kms_database_password = ' + kms_database_password))
+ 	aliasKey = ranger_kms_properties_from_file['ranger.ks.masterkey.credential.alias']
+ 	if(aliasKey is None or len(aliasKey) == 0):
+ 		aliasKey = 'ranger.ks.masterkey.password'
+@@ -987,7 +987,7 @@ def get_additional_properties_for_kms(ranger_kms_properties_from_file):
+ 	if statuscode == 0:
+ 		kms_keystore_masterkey_password = value.strip()
+ 	
+-	print('kms_keystore_masterkey_password = ' + kms_keystore_masterkey_password)
++	print(('kms_keystore_masterkey_password = ' + kms_keystore_masterkey_password))
+ 
+ 	if str(ranger_kms_properties_from_file['ranger.ks.jpa.jdbc.password']) == '_' or str(ranger_kms_properties_from_file['ranger.ks.jpa.jdbc.password']).lower() == 'crypted':
+ 		ranger_kms_properties_from_file['ranger.ks.jpa.jdbc.password'] = kms_database_password
+@@ -1075,28 +1075,28 @@ def port_ranger_hdfs_plugin_to_ambari():
+ 
+ 		print ('####################### hdfs_site_xml configuration :')
+ 		for each_key in hdfs_site_xml_properties:
+-			print str(each_key) + ' = ' + str(hdfs_site_xml_properties[each_key])
++			print(str(each_key) + ' = ' + str(hdfs_site_xml_properties[each_key]))
+ 
+ 		print ('####################### ranger_hdfs_plugin_properties configuration :')
+ 		for each_key in advanced_ranger_hdfs_plugin_properties:
+-			print str(each_key) + ' = ' + str(advanced_ranger_hdfs_plugin_properties[each_key])
++			print(str(each_key) + ' = ' + str(advanced_ranger_hdfs_plugin_properties[each_key]))
+ 
+ 		print ('####################### ranger_hdfs_audit_properties configuration :')
+ 		for each_key in advanced_ranger_hdfs_audit_properties:
+-			print str(each_key) + ' = ' + str(advanced_ranger_hdfs_audit_properties[each_key])
++			print(str(each_key) + ' = ' + str(advanced_ranger_hdfs_audit_properties[each_key]))
+ 
+ 		print ('####################### ranger_hdfs_policymgr_ssl_properties configuration :')
+ 		for each_key in advanced_ranger_hdfs_policymgr_ssl_properties:
+-			print str(each_key) + ' = ' + str(advanced_ranger_hdfs_policymgr_ssl_properties[each_key])
++			print(str(each_key) + ' = ' + str(advanced_ranger_hdfs_policymgr_ssl_properties[each_key]))
+ 
+ 		print ('####################### ranger_hdfs_security_properties configuration :')
+ 		for each_key in advanced_ranger_hdfs_security_properties:
+-			print str(each_key) + ' = ' + str(advanced_ranger_hdfs_security_properties[each_key])
++			print(str(each_key) + ' = ' + str(advanced_ranger_hdfs_security_properties[each_key]))
+ 
+-		confirm_configurations = raw_input('please confirm the above configuration values y/n (n) : ')
++		confirm_configurations = input('please confirm the above configuration values y/n (n) : ')
+ 		if(confirm_configurations == ''):
+ 			confirm_configurations = 'n'
+-		print ('Input registered as ' + str(confirm_configurations))
++		print(('Input registered as ' + str(confirm_configurations)))
+ 
+ 
+ 		if(confirm_configurations.lower() == 'y'):
+@@ -1180,29 +1180,29 @@ def port_ranger_yarn_plugin_to_ambari():
+ 		
+ 		print ('####################### yarn_site_xml configuration :')
+ 		for each_key in yarn_site_xml_properties:
+-			print str(each_key) + ' = ' + str(yarn_site_xml_properties[each_key])
++			print(str(each_key) + ' = ' + str(yarn_site_xml_properties[each_key]))
+ 
+ 		print ('####################### ranger_yarn_plugin_properties configuration :')
+ 		for each_key in advanced_ranger_yarn_plugin_properties:
+-			print str(each_key) + ' = ' + str(advanced_ranger_yarn_plugin_properties[each_key])
++			print(str(each_key) + ' = ' + str(advanced_ranger_yarn_plugin_properties[each_key]))
+ 
+ 		print ('####################### ranger_yarn_audit_properties configuration :')
+ 		for each_key in advanced_ranger_yarn_audit_properties:
+-			print str(each_key) + ' = ' + str(advanced_ranger_yarn_audit_properties[each_key])
++			print(str(each_key) + ' = ' + str(advanced_ranger_yarn_audit_properties[each_key]))
+ 
+ 		print ('####################### ranger_yarn_policymgr_ssl_properties configuration :')
+ 		for each_key in advanced_ranger_yarn_policymgr_ssl_properties:
+-			print str(each_key) + ' = ' + str(advanced_ranger_yarn_policymgr_ssl_properties[each_key])
++			print(str(each_key) + ' = ' + str(advanced_ranger_yarn_policymgr_ssl_properties[each_key]))
+ 
+ 		print ('####################### ranger_hdfs_security_properties configuration :')
+ 		for each_key in advanced_ranger_yarn_security_properties:
+-			print str(each_key) + ' = ' + str(advanced_ranger_yarn_security_properties[each_key])
++			print(str(each_key) + ' = ' + str(advanced_ranger_yarn_security_properties[each_key]))
+ 		
+ 		
+-		confirm_configurations = raw_input('please confirm the above configuration values y/n (n) : ')
++		confirm_configurations = input('please confirm the above configuration values y/n (n) : ')
+ 		if(confirm_configurations == ''):
+ 			confirm_configurations = 'n'
+-		print ('Input registered as ' + str(confirm_configurations))
++		print(('Input registered as ' + str(confirm_configurations)))
+ 		
+ 		if(confirm_configurations.lower() == 'y'):
+ 			ranger_config_request_url = ambari_cluster_url
+@@ -1300,37 +1300,37 @@ def port_ranger_hive_plugin_to_ambari():
+ 
+ 		print ('####################### hive_server2_xml configuration :')
+ 		for each_key in hive_server2_xml_properties:
+-			print str(each_key) + ' = ' + str(hive_server2_xml_properties[each_key])
++			print(str(each_key) + ' = ' + str(hive_server2_xml_properties[each_key]))
+ 
+ 		print ('####################### ranger_hive_plugin_properties configuration :')
+ 		for each_key in advanced_ranger_hive_plugin_properties:
+-			print str(each_key) + ' = ' + str(advanced_ranger_hive_plugin_properties[each_key])
++			print(str(each_key) + ' = ' + str(advanced_ranger_hive_plugin_properties[each_key]))
+ 
+ 		print ('####################### ranger_hive_audit_properties configuration :')
+ 		for each_key in advanced_ranger_hive_audit_properties:
+-			print str(each_key) + ' = ' + str(advanced_ranger_hive_audit_properties[each_key])
++			print(str(each_key) + ' = ' + str(advanced_ranger_hive_audit_properties[each_key]))
+ 
+ 		print ('####################### ranger_hive_policymgr_ssl configuration :')
+ 		for each_key in advanced_ranger_hive_policymgr_ssl_properties:
+-			print str(each_key) + ' = ' + str(advanced_ranger_hive_policymgr_ssl_properties[each_key])
++			print(str(each_key) + ' = ' + str(advanced_ranger_hive_policymgr_ssl_properties[each_key]))
+ 
+ 		print ('####################### ranger_hive_security_properties configuration :')
+ 		for each_key in advanced_ranger_hive_security_properties:
+-			print str(each_key) + ' = ' + str(advanced_ranger_hive_security_properties[each_key])
++			print(str(each_key) + ' = ' + str(advanced_ranger_hive_security_properties[each_key]))
+ 
+ 		print ('####################### ranger_hive_env_properties configuration :')
+ 		for each_key in hive_env_properties:
+-			print str(each_key) + ' = ' + str(hive_env_properties[each_key])
++			print(str(each_key) + ' = ' + str(hive_env_properties[each_key]))
+ 
+ 		print ('####################### ranger_hive_site_properties configuration :')
+ 		for each_key in hive_site_properties:
+-			print str(each_key) + ' = ' + str(hive_site_properties[each_key])
++			print(str(each_key) + ' = ' + str(hive_site_properties[each_key]))
+ 
+ 
+-		confirm_configurations = raw_input('please confirm the above configuration values y/n (n) : ')
++		confirm_configurations = input('please confirm the above configuration values y/n (n) : ')
+ 		if(confirm_configurations == ''):
+ 			confirm_configurations = 'n'
+-		print ('Input registered as ' + str(confirm_configurations))
++		print(('Input registered as ' + str(confirm_configurations)))
+ 
+ 
+ 		if(confirm_configurations.lower() == 'y'):
+@@ -1415,28 +1415,28 @@ def port_ranger_hbase_plugin_to_ambari():
+ 
+ 		print ('####################### hbase_site_xml configuration :')
+ 		for each_key in hbase_site_xml_properties:
+-			print str(each_key) + ' = ' + str(hbase_site_xml_properties[each_key])
++			print(str(each_key) + ' = ' + str(hbase_site_xml_properties[each_key]))
+ 
+ 		print ('####################### ranger_hbase_plugin_properties configuration :')
+ 		for each_key in advanced_ranger_hbase_plugin_properties:
+-			print str(each_key) + ' = ' + str(advanced_ranger_hbase_plugin_properties[each_key])
++			print(str(each_key) + ' = ' + str(advanced_ranger_hbase_plugin_properties[each_key]))
+ 
+ 		print ('####################### ranger_hbase_audit_properties configuration :')
+ 		for each_key in advanced_ranger_hbase_audit_properties:
+-			print str(each_key) + ' = ' + str(advanced_ranger_hbase_audit_properties[each_key])
++			print(str(each_key) + ' = ' + str(advanced_ranger_hbase_audit_properties[each_key]))
+ 
+ 		print ('####################### ranger_hbase_policymgr_ssl_properties configuration :')
+ 		for each_key in advanced_ranger_hbase_policymgr_ssl_properties:
+-			print str(each_key) + ' = ' + str(advanced_ranger_hbase_policymgr_ssl_properties[each_key])
++			print(str(each_key) + ' = ' + str(advanced_ranger_hbase_policymgr_ssl_properties[each_key]))
+ 
+ 		print ('####################### ranger_hbase_security_properties configuration :')
+ 		for each_key in advanced_ranger_hbase_security_properties:
+-			print str(each_key) + ' = ' + str(advanced_ranger_hbase_security_properties[each_key])
++			print(str(each_key) + ' = ' + str(advanced_ranger_hbase_security_properties[each_key]))
+ 
+-		confirm_configurations = raw_input('please confirm the above configuration values y/n (n) : ')
++		confirm_configurations = input('please confirm the above configuration values y/n (n) : ')
+ 		if(confirm_configurations == ''):
+ 			confirm_configurations = 'n'
+-		print ('Input registered as ' + str(confirm_configurations))
++		print(('Input registered as ' + str(confirm_configurations)))
+ 
+ 
+ 		if(confirm_configurations.lower() == 'y'):
+@@ -1519,24 +1519,24 @@ def port_ranger_knox_plugin_to_ambari():
+ 
+ 		print ('####################### ranger_knox_plugin_properties configuration :')
+ 		for each_key in advanced_ranger_knox_plugin_properties:
+-			print str(each_key) + ' = ' + str(advanced_ranger_knox_plugin_properties[each_key])
++			print(str(each_key) + ' = ' + str(advanced_ranger_knox_plugin_properties[each_key]))
+ 
+ 		print ('####################### ranger_knox_audit_properties configuration :')
+ 		for each_key in advanced_ranger_knox_audit_properties:
+-			print str(each_key) + ' = ' + str(advanced_ranger_knox_audit_properties[each_key])
++			print(str(each_key) + ' = ' + str(advanced_ranger_knox_audit_properties[each_key]))
+ 
+ 		print ('####################### ranger_knox_policymgr_ssl_properties configuration :')
+ 		for each_key in advanced_ranger_knox_policymgr_ssl_properties:
+-			print str(each_key) + ' = ' + str(advanced_ranger_knox_policymgr_ssl_properties[each_key])
++			print(str(each_key) + ' = ' + str(advanced_ranger_knox_policymgr_ssl_properties[each_key]))
+ 
+ 		print ('####################### ranger_knox_security_properties configuration :')
+ 		for each_key in advanced_ranger_knox_security_properties:
+-			print str(each_key) + ' = ' + str(advanced_ranger_knox_security_properties[each_key])
++			print(str(each_key) + ' = ' + str(advanced_ranger_knox_security_properties[each_key]))
+ 
+-		confirm_configurations = raw_input('please confirm the above configuration values y/n (n) : ')
++		confirm_configurations = input('please confirm the above configuration values y/n (n) : ')
+ 		if(confirm_configurations == ''):
+ 			confirm_configurations = 'n'
+-		print ('input registered as ' + str(confirm_configurations))
++		print(('input registered as ' + str(confirm_configurations)))
+ 
+ 
+ 		if(confirm_configurations.lower() == 'y'):
+@@ -1623,26 +1623,26 @@ def port_ranger_storm_plugin_to_ambari():
+ 
+ 		print ('####################### ranger_storm_plugin_properties configuration :')
+ 		for each_key in advanced_ranger_storm_plugin_properties:
+-			print str(each_key) + ' = ' + str(advanced_ranger_storm_plugin_properties[each_key])
++			print(str(each_key) + ' = ' + str(advanced_ranger_storm_plugin_properties[each_key]))
+ 
+ 		print ('####################### ranger_storm_audit_properties configuration :')
+ 		for each_key in advanced_ranger_storm_audit_properties:
+-			print str(each_key) + ' = ' + str(advanced_ranger_storm_audit_properties[each_key])
++			print(str(each_key) + ' = ' + str(advanced_ranger_storm_audit_properties[each_key]))
+ 
+ 		print ('####################### ranger_storm_policymgr_ssl_properties configuration :')
+ 		for each_key in advanced_ranger_storm_policymgr_ssl_properties:
+-			print str(each_key) + ' = ' + str(advanced_ranger_storm_policymgr_ssl_properties[each_key])
++			print(str(each_key) + ' = ' + str(advanced_ranger_storm_policymgr_ssl_properties[each_key]))
+ 
+ 		print ('####################### ranger_storm_security_properties configuration :')
+ 		for each_key in advanced_ranger_storm_security_properties:
+-			print str(each_key) + ' = ' + str(advanced_ranger_storm_security_properties[each_key])
++			print(str(each_key) + ' = ' + str(advanced_ranger_storm_security_properties[each_key]))
+ 
+ 		
+ 
+-		confirm_configurations = raw_input('please confirm the above configuration values y/n (n) : ')
++		confirm_configurations = input('please confirm the above configuration values y/n (n) : ')
+ 		if(confirm_configurations == ''):
+ 			confirm_configurations = 'n'
+-		print ('Input registered as ' + str(confirm_configurations))
++		print(('Input registered as ' + str(confirm_configurations)))
+ 
+ 
+ 		if(confirm_configurations.lower() == 'y'):
+@@ -1734,33 +1734,33 @@ def port_ranger_kafka_plugin_to_ambari():
+ 		
+ 		print ('####################### kafka_broker_properties configuration :')
+ 		for each_key in advanced_kafka_broker_properties:
+-			print str(each_key) + ' = ' + str(advanced_kafka_broker_properties[each_key])
++			print(str(each_key) + ' = ' + str(advanced_kafka_broker_properties[each_key]))
+ 
+ 		print ('####################### kafka_log4j_properties configuration :')
+ 		for each_key in advanced_kafka_log4j_properties:
+-			print str(each_key) + ' = ' + str(advanced_kafka_log4j_properties[each_key])
++			print(str(each_key) + ' = ' + str(advanced_kafka_log4j_properties[each_key]))
+ 
+ 		
+ 		print ('####################### ranger_kafka_plugin_properties configuration :')
+ 		for each_key in advanced_ranger_kafka_plugin_properties:
+-			print str(each_key) + ' = ' + str(advanced_ranger_kafka_plugin_properties[each_key])
++			print(str(each_key) + ' = ' + str(advanced_ranger_kafka_plugin_properties[each_key]))
+ 
+ 		print ('####################### ranger_kafka_audit_properties configuration :')
+ 		for each_key in advanced_ranger_kafka_audit_properties:
+-			print str(each_key) + ' = ' + str(advanced_ranger_kafka_audit_properties[each_key])
++			print(str(each_key) + ' = ' + str(advanced_ranger_kafka_audit_properties[each_key]))
+ 
+ 		print ('####################### ranger_kafka_policymgr_ssl_properties configuration :')
+ 		for each_key in advanced_ranger_kafka_policymgr_ssl_properties:
+-			print str(each_key) + ' = ' + str(advanced_ranger_kafka_policymgr_ssl_properties[each_key])
++			print(str(each_key) + ' = ' + str(advanced_ranger_kafka_policymgr_ssl_properties[each_key]))
+ 
+ 		print ('####################### ranger_kafka_security_properties configuration :')
+ 		for each_key in advanced_ranger_kafka_security_properties:
+-			print str(each_key) + ' = ' + str(advanced_ranger_kafka_security_properties[each_key])
++			print(str(each_key) + ' = ' + str(advanced_ranger_kafka_security_properties[each_key]))
+ 
+-		confirm_configurations = raw_input('please confirm the above configuration values y/n (n) : ')
++		confirm_configurations = input('please confirm the above configuration values y/n (n) : ')
+ 		if(confirm_configurations == ''):
+ 			confirm_configurations = 'n'
+-		print ('input registered as ' + str(confirm_configurations))
++		print(('input registered as ' + str(confirm_configurations)))
+ 
+ 
+ 		if(confirm_configurations.lower() == 'y'):
+@@ -1858,14 +1858,14 @@ def get_hive_configs_from_ambari():
+ 	
+ 	hive_env_properties_url = ambari_cluster_url + '/configurations?type=hive-env&tag='+hive_env_tag
+ 	hive_env_properties_response = None
+-	print ('hive_env_properties_url = ' + str(hive_env_properties_url))
++	print(('hive_env_properties_url = ' + str(hive_env_properties_url)))
+ 	request_result = call_ambari_api(hive_env_properties_url,'GET',ambari_username_password,None)
+ 	if request_result is not None:
+ 		response_code = request_result.getcode()
+ 		hive_env_properties_response = json.loads(json.JSONEncoder().encode(request_result.read()))
+-	print 'hive-env len response = ' , len(json.loads(hive_env_properties_response)['items'])
++	print('hive-env len response = ' , len(json.loads(hive_env_properties_response)['items']))
+ 	hive_env_properties =  json.loads(hive_env_properties_response)['items'][0]['properties']
+-	print ('hive_env_properties = ' + str(hive_env_properties))
++	print(('hive_env_properties = ' + str(hive_env_properties)))
+ 	
+ 	hive_site_properties_url = ambari_cluster_url + '/configurations?type=hive-site&tag='+hive_site_tag
+ 	hive_site_properties_response = None
+@@ -1873,9 +1873,9 @@ def get_hive_configs_from_ambari():
+ 	if request_result is not None:
+ 		response_code = request_result.getcode()
+ 		hive_site_properties_response = json.loads(json.JSONEncoder().encode(request_result.read()))
+-	print 'hive-site len response = ' , len(json.loads(hive_site_properties_response)['items'])
++	print('hive-site len response = ' , len(json.loads(hive_site_properties_response)['items']))
+ 	hive_site_properties =  json.loads(hive_site_properties_response)['items'][0]['properties']
+-	print ('hive_site_properties = ' + str(hive_site_properties))
++	print(('hive_site_properties = ' + str(hive_site_properties)))
+ 		
+ 	return hive_env_properties,hive_site_properties
+ 
+@@ -1945,7 +1945,7 @@ def get_storm_configs_from_ambari():
+ 		desired_configs_response = json.loads(json.JSONEncoder().encode(request_result.read()))
+ 	
+ 	storm_site_tag = str(json.loads(desired_configs_response)['Clusters']['desired_configs']['storm-site']['tag'])
+-	print ('storm_site_tag = ' + storm_site_tag)
++	print(('storm_site_tag = ' + storm_site_tag))
+ 
+ 	kafka_broker_properties_url = ambari_cluster_url + '/configurations?type=storm-site&tag='+storm_site_tag
+ 
+@@ -1953,9 +1953,9 @@ def get_storm_configs_from_ambari():
+ 	if request_result is not None:
+ 		response_code = request_result.getcode()
+ 		response = json.loads(json.JSONEncoder().encode(request_result.read()))
+-	print 'storm-site len response = ' , len(json.loads(response)['items'])
++	print('storm-site len response = ' , len(json.loads(response)['items']))
+ 	storm_site_properties =  json.loads(response)['items'][0]['properties']
+-	print ('storm_site_properties = ' + str(storm_site_properties))
++	print(('storm_site_properties = ' + str(storm_site_properties)))
+ 	
+ 	return storm_site_properties
+ 
+@@ -1991,7 +1991,7 @@ def get_kafka_configs_from_ambari():
+ 		desired_configs_response = json.loads(json.JSONEncoder().encode(request_result.read()))
+ 
+ 	kafka_broker_tag = str(json.loads(desired_configs_response)['Clusters']['desired_configs']['kafka-broker']['tag'])
+-	print ('kafka_broker_tag = ' + kafka_broker_tag)
++	print(('kafka_broker_tag = ' + kafka_broker_tag))
+ 
+ 	kafka_broker_properties_url = ambari_cluster_url + '/configurations?type=kafka-broker&tag='+kafka_broker_tag
+ 
+@@ -1999,9 +1999,9 @@ def get_kafka_configs_from_ambari():
+ 	if request_result is not None:
+ 		response_code = request_result.getcode()
+ 		response = json.loads(json.JSONEncoder().encode(request_result.read()))
+-	print 'kafka-broker len response = ' , len(json.loads(response)['items'])
++	print('kafka-broker len response = ' , len(json.loads(response)['items']))
+ 	kafka_broker_properties =  json.loads(response)['items'][0]['properties']
+-	print ('kafka_broker_properties = ' + str(kafka_broker_properties))
++	print(('kafka_broker_properties = ' + str(kafka_broker_properties)))
+ 	
+ 	return kafka_broker_properties
+ 
+@@ -2012,9 +2012,9 @@ def check_plugin_enabled(component_name, component_plugin_install_properties):
+ 	repository_key = 'ranger.plugin.' + component_name +  '.service.name'
+ 	if not (str(component_plugin_install_properties[repository_key]).strip() == ''):
+ 		repo_base_path = os.path.join('/etc/ranger', component_plugin_install_properties[repository_key])
+-		print('repo_base_path = ' + str(repo_base_path))
++		print(('repo_base_path = ' + str(repo_base_path)))
+ 		if os.path.exists(repo_base_path):
+-			print('Plugin is installed for component ' + component_name)
++			print(('Plugin is installed for component ' + component_name))
+ 			flag_plugin_installed = True
+ 	return flag_plugin_installed
+ 
+@@ -2024,21 +2024,21 @@ def call_ambari_api(ambari_url, method, username_password, data):
+ 		url = ambari_url
+ 		base64string = base64.encodestring('{0}'.format(username_password)).replace('\n', '')
+ 		headers = {"X-Requested-By": "ambari"}
+-		request = urllib2.Request(url, data, headers, 'compressed')
++		request = urllib.request.Request(url, data, headers, 'compressed')
+ 		request.get_method = lambda: method
+ 		request.add_header("Authorization", "Basic {0}".format(base64string))
+-		result = urllib2.urlopen(request)
++		result = urllib.request.urlopen(request)
+ 		return result
+-	except urllib2.URLError, e:
+-		if isinstance(e, urllib2.HTTPError):
+-			print("HTTP Code: {0}".format(e.code))
+-			print("HTTP Data: {0}".format(e.read()))
++	except urllib.error.URLError as e:
++		if isinstance(e, urllib.error.HTTPError):
++			print(("HTTP Code: {0}".format(e.code)))
++			print(("HTTP Data: {0}".format(e.read())))
+ 			return e
+ 		else:
+-			print("Error: {0}".format(e.reason))
++			print(("Error: {0}".format(e.reason)))
+ 			print ('ambari server is not reachable, please make sure valid ambari server url has been provided and ambari server is started.')
+ 			return e
+-	except httplib.BadStatusLine:
++	except http.client.BadStatusLine:
+ 		print("ambari service is not reachable, please restart the service and then try again")
+ 		return None
+ 
+@@ -2060,7 +2060,7 @@ def import_properties_from_file(install_properties_path, properties_from_file=No
+ 			value = value.strip()
+ 			properties_from_file[key] = value
+ 	else:
+-		print('Property file not found at path : ' + str(install_properties_path))
++		print(('Property file not found at path : ' + str(install_properties_path)))
+ 	return properties_from_file
+ 
+ def read_properties_file(properties_file_path):
+@@ -2069,13 +2069,13 @@ def read_properties_file(properties_file_path):
+ 		print('property file exists reading file content')
+ 		file_text = open(properties_file_path,'r').read()
+ 	else:
+-		print('file not found at path : ' + str(properties_file_path))
++		print(('file not found at path : ' + str(properties_file_path)))
+ 	return file_text
+ 		
+ 
+ 
+ def import_properties_from_xml(xml_path, properties_from_xml=None):
+-	print('getting values from file : ' + str(xml_path))
++	print(('getting values from file : ' + str(xml_path)))
+ 	if os.path.isfile(xml_path):
+ 		xml = ET.parse(xml_path)
+ 		root = xml.getroot()
+@@ -2086,7 +2086,7 @@ def import_properties_from_xml(xml_path, properties_from_xml=None):
+ 			value = child.find("value").text.strip() if child.find("value").text is not None  else ""
+ 			properties_from_xml[name] = value
+ 	else:
+-		print('XML file not found at path : ' + str(xml_path))
++		print(('XML file not found at path : ' + str(xml_path)))
+ 	return properties_from_xml
+ 
+ 
+@@ -2094,7 +2094,7 @@ def get_authentication_method():
+ 	print('Getting authentication method for ranger services')
+ 	ranger_conf_path = '/etc/ranger/admin/conf'
+ 	security_appln_context_path = os.path.join(ranger_conf_path,'security-applicationContext.xml')
+-	print ('security_appln_context_path = ' + security_appln_context_path)
++	print(('security_appln_context_path = ' + security_appln_context_path))
+ 	app_context_xml_tree = ET.parse(security_appln_context_path)
+ 	app_context_xml_root = app_context_xml_tree.getroot()
+ 	reference_auth_method = None
+@@ -2152,15 +2152,15 @@ def get_hdp_version():
+ 		output = Popen(command_to_run, stdin=PIPE, stdout=PIPE, stderr=PIPE, shell=True)
+ 		return_code, error = output.communicate()
+ 		statuscode = output.returncode
+-	except Exception, e:
+-		print('Error : ' + str(e))
++	except Exception as e:
++		print(('Error : ' + str(e)))
+ 	if statuscode == 0:
+ 		hdp_version = re.sub('hadoop-client - ', '', return_code)
+ 		hdp_version = hdp_version.rstrip()
+ 		match = re.match('[0-9]+.[0-9]+.[0-9]+.[0-9]+-[0-9]+', hdp_version)
+-		print ('hdp_version = ' + hdp_version)
++		print(('hdp_version = ' + hdp_version))
+ 	else:
+-		print('Unable to determine the current version because of a non-zero return code of {0}'.format(str(return_code)))
++		print(('Unable to determine the current version because of a non-zero return code of {0}'.format(str(return_code))))
+ 
+ 	if match is None:
+ 		print('Failed to get extracted version')
+@@ -2178,13 +2178,13 @@ def getDateTimeNow():
+ 	if len(sys.argv) > 1:
+ 		function_to_call = sys.argv[1] if len(sys.argv) > 1  else None
+ 		base_url = sys.argv[2] if len(sys.argv) > 2  else None
+-		print ('base url = ' + base_url)
++		print(('base url = ' + base_url))
+ 		ambari_username_password = sys.argv[3] if len(sys.argv) > 3  else None
+-		print ('ambari_username_password = ' + ambari_username_password)
++		print(('ambari_username_password = ' + ambari_username_password))
+ 		cluster_name = sys.argv[4] if len(sys.argv) > 4  else None
+-		print ('cluster_name = ' + cluster_name)
++		print(('cluster_name = ' + cluster_name))
+ 		ranger_admin_fqdn = sys.argv[5] if len(sys.argv) > 5 else None
+-		print ('ranger_admin_fqdn = ' + ranger_admin_fqdn)
++		print(('ranger_admin_fqdn = ' + ranger_admin_fqdn))
+ 		ranger_service_name = 'RANGER'
+ 		admin_component_name = 'RANGER_ADMIN'
+ 		usersync_component_name = 'RANGER_USERSYNC'
+@@ -2193,10 +2193,10 @@ def getDateTimeNow():
+ 		hdp_dir = os.path.join('/usr', 'hdp')
+ 		hdp_current_dir = os.path.join(hdp_dir, 'current')
+ 		hdp_version = get_hdp_version()
+-		print('Found hdp_version = ' + str(hdp_version))
++		print(('Found hdp_version = ' + str(hdp_version)))
+ 		hdp_version_dir = os.path.join(hdp_dir, hdp_version)
+ 		if function_to_call is not None and len(function_to_call) > 0:
+-			print('Found first argument as : ' + function_to_call)
++			print(('Found first argument as : ' + function_to_call))
+ 			function_to_call = int(function_to_call)
+ 			if function_to_call == 1:
+ 				print('Porting ranger admin installation details to ambari.')
+diff --git a/ranger-examples/sample-client/src/main/python/sample_client.py b/ranger-examples/sample-client/src/main/python/sample_client.py
+index 1f4ed353a..407a17b6d 100644
+--- a/ranger-examples/sample-client/src/main/python/sample_client.py
++++ b/ranger-examples/sample-client/src/main/python/sample_client.py
+@@ -39,7 +39,7 @@
+ # ranger_auth = HTTPKerberosAuth()
+ 
+ 
+-print('Using Ranger at ' + ranger_url);
++print(('Using Ranger at ' + ranger_url));
+ 
+ ranger = RangerClient(ranger_url, ranger_auth)
+ 
+@@ -51,101 +51,101 @@
+ print('Listing service-defs..')
+ service_defs = ranger.find_service_defs()
+ 
+-print('    ' + str(len(service_defs)) + ' service-defs found')
++print(('    ' + str(len(service_defs)) + ' service-defs found'))
+ for service_def in service_defs:
+-    print('        ' + 'id: ' + str(service_def.id) + ', name: ' + service_def.name)
++    print(('        ' + 'id: ' + str(service_def.id) + ', name: ' + service_def.name))
+ 
+ now = datetime.now()
+ 
+ service_name = 'dev_hive-' + now.strftime('%Y%m%d-%H%M%S-%f')
+ 
+-print('Creating service: name=' + service_name)
++print(('Creating service: name=' + service_name))
+ 
+ service         = RangerService({'name': service_name, 'type': 'hive'})
+ service.configs = {'username':'hive', 'password':'hive', 'jdbc.driverClassName': 'org.apache.hive.jdbc.HiveDriver', 'jdbc.url': 'jdbc:hive2://ranger-hadoop:10000', 'hadoop.security.authorization': 'true'}
+ 
+ created_service = ranger.create_service(service)
+ 
+-print('    created service: id: ' + str(created_service.id) + ', name: ' + created_service.name)
++print(('    created service: id: ' + str(created_service.id) + ', name: ' + created_service.name))
+ 
+ service_id = created_service.id
+ 
+ 
+-print('Retrieving service: id=' + str(service_id))
++print(('Retrieving service: id=' + str(service_id)))
+ 
+ retrieved_service = ranger.get_service_by_id(service_id)
+ 
+-print('    retrieved service: id: ' + str(retrieved_service.id) + ', name: ' + retrieved_service.name)
++print(('    retrieved service: id: ' + str(retrieved_service.id) + ', name: ' + retrieved_service.name))
+ 
+ 
+-print('Retrieving service: name=' + service_name)
++print(('Retrieving service: name=' + service_name))
+ 
+ retrieved_service = ranger.get_service(service_name)
+ 
+-print('    retrieved service: id: ' + str(retrieved_service.id) + ', name: ' + retrieved_service.name)
++print(('    retrieved service: id: ' + str(retrieved_service.id) + ', name: ' + retrieved_service.name))
+ 
+ 
+-print('Updating service: id=' + str(service_id))
++print(('Updating service: id=' + str(service_id)))
+ 
+ saved_value                 = created_service.displayName
+ created_service.displayName = service_name + '-UPDATE1'
+ 
+ updated_service1 = ranger.update_service_by_id(service_id, created_service)
+ 
+-print('    updated service: id: ' + str(updated_service1.id) + ', displayName: ' + saved_value + ', updatedDisplayName: ' + updated_service1.displayName)
++print(('    updated service: id: ' + str(updated_service1.id) + ', displayName: ' + saved_value + ', updatedDisplayName: ' + updated_service1.displayName))
+ 
+ 
+-print('Updating service: name=' + service_name)
++print(('Updating service: name=' + service_name))
+ 
+ saved_value                  = updated_service1.displayName
+ updated_service1.displayName = service_name + '-UPDATE2'
+ 
+ updated_service2 = ranger.update_service(service_name, updated_service1)
+ 
+-print('    updated service: id: ' + str(updated_service2.id) + ', displayName: ' + saved_value + ', updatedDisplayName: ' + updated_service2.displayName)
++print(('    updated service: id: ' + str(updated_service2.id) + ', displayName: ' + saved_value + ', updatedDisplayName: ' + updated_service2.displayName))
+ 
+ 
+ print('Listing services..')
+ services = ranger.find_services()
+ 
+-print('    ' + str(len(services)) + ' services found')
++print(('    ' + str(len(services)) + ' services found'))
+ for svc in services:
+-    print('        ' + 'id: ' + str(svc.id) + ', type: ' + svc.type + ', name: ' + svc.name)
++    print(('        ' + 'id: ' + str(svc.id) + ', type: ' + svc.type + ', name: ' + svc.name))
+ 
+ 
+-print('Deleting service id=' + str(service_id))
++print(('Deleting service id=' + str(service_id)))
+ 
+ ranger.delete_service_by_id(service_id)
+ 
+-print('    deleted service: id: ' + str(service_id) + ', name: ' + updated_service2.name)
++print(('    deleted service: id: ' + str(service_id) + ', name: ' + updated_service2.name))
+ 
+ 
+-print('Deleting service: name=' + service.name)
++print(('Deleting service: name=' + service.name))
+ 
+ service_to_delete = ranger.create_service(service)
+ 
+-print('    created service: id: ' + str(service_to_delete.id) + ', name: ' + service_to_delete.name)
++print(('    created service: id: ' + str(service_to_delete.id) + ', name: ' + service_to_delete.name))
+ 
+ ranger.delete_service(service_to_delete.name)
+ 
+-print('    deleted service: id: ' + str(service_to_delete.id) + ', name: ' + service_to_delete.name)
++print(('    deleted service: id: ' + str(service_to_delete.id) + ', name: ' + service_to_delete.name))
+ 
+ 
+ print('Listing services..')
+ services = ranger.find_services()
+ 
+-print('    ' + str(len(services)) + ' services found')
++print(('    ' + str(len(services)) + ' services found'))
+ for svc in services:
+-    print('        ' + 'id: ' + str(svc.id) + ', type: ' + svc.type + ', name: ' + svc.name)
++    print(('        ' + 'id: ' + str(svc.id) + ', type: ' + svc.type + ', name: ' + svc.name))
+ 
+ 
+ policy_name = 'test policy'
+ 
+-print('Creating policy: name=' + policy_name)
++print(('Creating policy: name=' + policy_name))
+ 
+ created_service = ranger.create_service(service)
+ 
+-print('    created service: id: ' + str(created_service.id) + ', name: ' + created_service.name)
++print(('    created service: id: ' + str(created_service.id) + ', name: ' + created_service.name))
+ 
+ service_id   = created_service.id
+ service_name = created_service.name
+@@ -181,14 +181,14 @@
+ 
+ created_policy = ranger.create_policy(policy)
+ 
+-print('    created policy: id: ' + str(created_policy.id) + ', name: ' + created_policy.name)
++print(('    created policy: id: ' + str(created_policy.id) + ', name: ' + created_policy.name))
+ 
+ policy_id = created_policy.id
+ 
+ 
+ data_mask_policy_name = 'test masking policy'
+ 
+-print('Creating data-masking policy: name=' + data_mask_policy_name)
++print(('Creating data-masking policy: name=' + data_mask_policy_name))
+ 
+ data_mask_policy             = RangerPolicy()
+ data_mask_policy.service     = service_name
+@@ -208,12 +208,12 @@
+ 
+ created_data_mask_policy = ranger.create_policy(data_mask_policy)
+ 
+-print('    created data-masking policy: id: ' + str(created_data_mask_policy.id) + ', name: ' + created_data_mask_policy.name)
++print(('    created data-masking policy: id: ' + str(created_data_mask_policy.id) + ', name: ' + created_data_mask_policy.name))
+ 
+ 
+ row_filter_policy_name = 'test row filter policy'
+ 
+-print('Creating row-filtering policy: name=' + row_filter_policy_name)
++print(('Creating row-filtering policy: name=' + row_filter_policy_name))
+ 
+ row_filter_policy             = RangerPolicy()
+ row_filter_policy.service     = service_name
+@@ -232,57 +232,57 @@
+ 
+ create_row_filter_policy = ranger.create_policy(row_filter_policy)
+ 
+-print('    created row-filtering policy: id: ' + str(create_row_filter_policy.id) + ', name: ' + create_row_filter_policy.name)
++print(('    created row-filtering policy: id: ' + str(create_row_filter_policy.id) + ', name: ' + create_row_filter_policy.name))
+ 
+ 
+-print('Retrieving policy: id=' + str(policy_id))
++print(('Retrieving policy: id=' + str(policy_id)))
+ 
+ retrieved_policy = ranger.get_policy_by_id(policy_id)
+ 
+-print('    retrieved policy: id: ' + str(retrieved_policy.id) + ', name: ' + retrieved_policy.name)
++print(('    retrieved policy: id: ' + str(retrieved_policy.id) + ', name: ' + retrieved_policy.name))
+ 
+ 
+-print('Retrieving policy: service_name=' + service_name + ', policy_name=' + data_mask_policy.name)
++print(('Retrieving policy: service_name=' + service_name + ', policy_name=' + data_mask_policy.name))
+ 
+ retrieved_policy = ranger.get_policy(service_name, data_mask_policy.name)
+ 
+-print('    retrieved policy: id: ' + str(retrieved_policy.id) + ', name: ' + retrieved_policy.name)
++print(('    retrieved policy: id: ' + str(retrieved_policy.id) + ', name: ' + retrieved_policy.name))
+ 
+ 
+-print('Retrieving policy: service_name=' + service_name + ', policy_name=' + row_filter_policy.name)
++print(('Retrieving policy: service_name=' + service_name + ', policy_name=' + row_filter_policy.name))
+ 
+ retrieved_policy = ranger.get_policy(service_name, row_filter_policy.name)
+ 
+-print('    retrieved policy: id: ' + str(retrieved_policy.id) + ', name: ' + retrieved_policy.name)
++print(('    retrieved policy: id: ' + str(retrieved_policy.id) + ', name: ' + retrieved_policy.name))
+ 
+ 
+-print('Retrieving policies in service ' + created_policy.service + '..')
++print(('Retrieving policies in service ' + created_policy.service + '..'))
+ 
+ policies = ranger.get_policies_in_service(created_policy.service)
+ 
+-print('    ' + str(len(policies)) + ' policies found')
++print(('    ' + str(len(policies)) + ' policies found'))
+ for plcy in policies:
+-    print('        id: ' + str(plcy.id) + ', service: ' + plcy.service + ', name: ' + plcy.name)
++    print(('        id: ' + str(plcy.id) + ', service: ' + plcy.service + ', name: ' + plcy.name))
+ 
+ 
+-print('Updating policy: id=' + str(policy_id))
++print(('Updating policy: id=' + str(policy_id)))
+ 
+ saved_value                = created_policy.description
+ created_policy.description = 'updated description - #1'
+ 
+ updated_policy1 = ranger.update_policy_by_id(policy_id, created_policy)
+ 
+-print('    updated policy: id: ' + str(updated_policy1.id) + ', description: ' + saved_value + ', updatedDescription: ' + updated_policy1.description)
++print(('    updated policy: id: ' + str(updated_policy1.id) + ', description: ' + saved_value + ', updatedDescription: ' + updated_policy1.description))
+ 
+ 
+-print('Updating policy: service_name=' + service_name + ', policy_name=' + policy_name)
++print(('Updating policy: service_name=' + service_name + ', policy_name=' + policy_name))
+ 
+ saved_value                 = updated_policy1.description
+ updated_policy1.description = 'updated description - #2'
+ 
+ updated_policy2 = ranger.update_policy(service_name, policy_name, updated_policy1)
+ 
+-print('    updated policy: id: ' + str(updated_policy2.id) + ', description: ' + saved_value + ', updatedDescription: ' + updated_policy2.description)
++print(('    updated policy: id: ' + str(updated_policy2.id) + ', description: ' + saved_value + ', updatedDescription: ' + updated_policy2.description))
+ 
+ 
+ tagdef_test1 = RangerTagDef({'name': 'test1', 'attributeDefs': [ RangerTagAttributeDef({'name': 'attr1', 'type': 'string'}) ]})
+@@ -305,46 +305,46 @@
+ tags.serviceResources = [ db1, db2 ]
+ tags.resourceToTagIds = { 1: [ 0, 2 ], 2: [ 1, 2 ]}
+ 
+-print('Importing tags: ' + str(tags))
++print(('Importing tags: ' + str(tags)))
+ 
+ ranger.import_service_tags(service_name, tags)
+ 
+ service_tags = ranger.get_service_tags(service_name)
+ 
+-print('Imported tags: ' + str(service_tags))
++print(('Imported tags: ' + str(service_tags)))
+ 
+ tags.op               = RangerServiceTags.OP_DELETE
+ tags.tagDefinitions   = None
+ tags.tags             = None
+ tags.resourceToTagIds = None
+ 
+-print('Deleting tags: ' + str(tags))
++print(('Deleting tags: ' + str(tags)))
+ 
+ ranger.import_service_tags(service_name, tags)
+ 
+ service_tags = ranger.get_service_tags(service_name)
+ 
+-print('Service tags after delete: ' + str(service_tags))
++print(('Service tags after delete: ' + str(service_tags)))
+ 
+-print('Deleting policy: id=' + str(policy_id))
++print(('Deleting policy: id=' + str(policy_id)))
+ 
+ ranger.delete_policy_by_id(policy_id)
+ 
+-print('    deleted policy: id: ' + str(policy_id) + ', name: ' + updated_policy2.name)
++print(('    deleted policy: id: ' + str(policy_id) + ', name: ' + updated_policy2.name))
+ 
+ 
+-print('Deleting policy: service_name=' + data_mask_policy.service + ', policy_name=' + data_mask_policy.name)
++print(('Deleting policy: service_name=' + data_mask_policy.service + ', policy_name=' + data_mask_policy.name))
+ 
+ ranger.delete_policy(data_mask_policy.service, data_mask_policy.name)
+ 
+-print('    deleted policy: id: ' + str(data_mask_policy.id) + ', name: ' + data_mask_policy.name)
++print(('    deleted policy: id: ' + str(data_mask_policy.id) + ', name: ' + data_mask_policy.name))
+ 
+ 
+-print('Deleting policy: service_name=' + row_filter_policy.service + ', policy_name=' + row_filter_policy.name)
++print(('Deleting policy: service_name=' + row_filter_policy.service + ', policy_name=' + row_filter_policy.name))
+ 
+ ranger.delete_policy(row_filter_policy.service, row_filter_policy.name)
+ 
+-print('    deleted policy: id: ' + str(row_filter_policy.id) + ', name: ' + row_filter_policy.name)
++print(('    deleted policy: id: ' + str(row_filter_policy.id) + ', name: ' + row_filter_policy.name))
+ 
+ ranger.delete_service_by_id(service_id)
+ 
+@@ -352,23 +352,23 @@
+ print('Listing policies..')
+ policies = ranger.find_policies()
+ 
+-print('    ' + str(len(policies)) + ' policies found')
++print(('    ' + str(len(policies)) + ' policies found'))
+ for policy in policies:
+-    print('        id: ' + str(policy.id) + ', service: ' + policy.service + ', name: ' + policy.name)
++    print(('        id: ' + str(policy.id) + ', service: ' + policy.service + ', name: ' + policy.name))
+ 
+ 
+ print('Listing security zones..')
+ security_zones = ranger.find_security_zones()
+ 
+-print('    ' + str(len(security_zones)) + ' security zones found')
++print(('    ' + str(len(security_zones)) + ' security zones found'))
+ for security_zone in security_zones:
+-    print('        id: ' + str(security_zone.id) + ', name: ' + security_zone.name)
++    print(('        id: ' + str(security_zone.id) + ', name: ' + security_zone.name))
+ 
+ 
+ print('Listing roles..')
+ roles = ranger.find_roles()
+ 
+-print('    ' + str(len(roles)) + ' roles found')
++print(('    ' + str(len(roles)) + ' roles found'))
+ for role in roles:
+-    print('        id: ' + str(role.id) + ', name: ' + role.name)
++    print(('        id: ' + str(role.id) + ', name: ' + role.name))
+ 
+diff --git a/ranger-tools/scripts/create_requests.py b/ranger-tools/scripts/create_requests.py
+index a3335510f..523f9ad9b 100755
+--- a/ranger-tools/scripts/create_requests.py
++++ b/ranger-tools/scripts/create_requests.py
+@@ -28,7 +28,7 @@
+     resource_elements = i['resourceElements']
+     temp = {'name': "request-" + str(resource_id), 'request': {'resource': {'elements': {}}, 'accessType': "select", 'user': "hrt_1", 'userGroups': [], 'requestData': "request-" + str(resource_id)}, 'result': {'isAudited': 'true', 'isAllowed': 'false', 'policyId': resource_id}}
+ 
+-    resource_keys = resource_elements.keys()
++    resource_keys = list(resource_elements.keys())
+     for resource_key in resource_keys:
+         resource_item = resource_elements[resource_key]
+         resource_value = resource_item['values'][0]
+diff --git a/ranger-tools/src/main/python/performance_analyzer.py b/ranger-tools/src/main/python/performance_analyzer.py
+index e437d77d8..ead5fb069 100644
+--- a/ranger-tools/src/main/python/performance_analyzer.py
++++ b/ranger-tools/src/main/python/performance_analyzer.py
+@@ -53,7 +53,7 @@ def performance_analyzer_main(argv_dict):
+ 
+     object_store = perf_globals.OBJECT_STORE
+ 
+-    if len(argv_dict.keys()) != 0:
++    if len(list(argv_dict.keys())) != 0:
+         configparser.override_with_command_line_args(argv_dict)
+ 
+     clear = configparser.get_config_value("primary", "clear")
+@@ -85,7 +85,7 @@ def performance_analyzer_main(argv_dict):
+         for i in range(num_calls):
+             try:
+                 params = object_store.get_api_param_dict(api)
+-                print(api, i, params)
++                print((api, i, params))
+                 resp = object_store.get_api(ranger, api)(**params)
+                 time.sleep(sleep_seconds)
+                 print(resp)
+@@ -104,7 +104,7 @@ def performance_analyzer_main(argv_dict):
+                                                                     "remote_access_log_location"
+                                                                 ))
+     access_df = log_parser.parse_access_logs(access_log_file, configparser.get_config_value("primary", "client_ip"))
+-    print(access_df.to_string())
++    print((access_df.to_string()))
+ 
+     if sys_logger:
+         sys_logger.stop_system_log_service()
+@@ -119,7 +119,7 @@ def performance_analyzer_main(argv_dict):
+         else:
+             main_system_df = log_parser.parse_system_logs(sys_log_file)
+ 
+-        print("system stats = \n",main_system_df.to_string())
++        print(("system stats = \n",main_system_df.to_string()))
+         secondary_sys_log_df = log_parser.parse_secondary_system_logs(secondary_sys_log_file)
+         system_df = df_utils.combine_system_logs_dataframe(main_system_df, secondary_sys_log_df)
+ 
+@@ -130,7 +130,7 @@ def performance_analyzer_main(argv_dict):
+             aligned_df = df_utils.align_dataframes(system_df, access_df, system_logs_timestamp_col_name='UTC',
+                                                    access_logs_timestamp_col_name='time', merge=True)
+             df_utils.rename_columns(aligned_df, LogParser.header_mapping_system_logs)
+-            print(aligned_df.to_string())
++            print((aligned_df.to_string()))
+ 
+             statistics_df = aligned_df.describe()
+             df_utils.rename_rows(statistics_df, {"25%": "25th_percentile", "50%": "median", "75%": "75th_percentile"})
+@@ -152,7 +152,7 @@ def performance_analyzer_main(argv_dict):
+         else:
+             aligned_df = df_utils.align_dataframes(system_df, access_df, system_logs_timestamp_col_name='UTC',
+                                                    access_logs_timestamp_col_name='time', merge=False)
+-            print(aligned_df.to_string())
++            print((aligned_df.to_string()))
+ 
+             statistics_df_access = aligned_df.describe()
+             statistics_df_system = system_df.describe()
+@@ -220,9 +220,9 @@ def main(argv):
+     ns = parser.parse_args(argv)
+     commandline_argument_dict = vars(ns)
+     try:
+-        if None in commandline_argument_dict.values() and all(i is None for i in commandline_argument_dict.values()):
++        if None in list(commandline_argument_dict.values()) and all(i is None for i in list(commandline_argument_dict.values())):
+             commandline_argument_dict = {}
+-        if None in commandline_argument_dict.values() and not all(i is None for i in commandline_argument_dict.values()):
++        if None in list(commandline_argument_dict.values()) and not all(i is None for i in list(commandline_argument_dict.values())):
+             commandline_argument_dict = {}
+             print_usage()
+             raise ValueError("Either all the commandline arguments are provided or none are provided to run the script."
+diff --git a/ranger-tools/src/main/python/setup_performance_analyzer.py b/ranger-tools/src/main/python/setup_performance_analyzer.py
+index 687fc4776..aa531662e 100644
+--- a/ranger-tools/src/main/python/setup_performance_analyzer.py
++++ b/ranger-tools/src/main/python/setup_performance_analyzer.py
+@@ -43,10 +43,10 @@ def read_config(config_file):
+         return json.load(f)
+ 
+ 
+-print("Reading default primary config file from {}".format(DEFAULT_PRIMARY_CONFIG_PATH))
+-print("Reading default secondary config file from {}".format(DEFAULT_SECONDARY_CONFIG_PATH))
+-print("Writing to primary config path: {}".format(to_write_primary_config))
+-print("Writing to secondary config path: {}".format(to_write_secondary_config))
++print(("Reading default primary config file from {}".format(DEFAULT_PRIMARY_CONFIG_PATH)))
++print(("Reading default secondary config file from {}".format(DEFAULT_SECONDARY_CONFIG_PATH)))
++print(("Writing to primary config path: {}".format(to_write_primary_config)))
++print(("Writing to secondary config path: {}".format(to_write_secondary_config)))
+ 
+ default_primary_json = read_config(DEFAULT_PRIMARY_CONFIG_PATH)
+ overwrite_config(to_write_primary_config, default_primary_json)
+diff --git a/ranger-util/src/scripts/saveVersion.py b/ranger-util/src/scripts/saveVersion.py
+index 51227542d..3fea794b9 100644
+--- a/ranger-util/src/scripts/saveVersion.py
++++ b/ranger-util/src/scripts/saveVersion.py
+@@ -38,8 +38,8 @@ def isWindowsSystem():
+ 
+ def check_output(query):
+ 	try:
+-		output = subprocess.check_output(query)
+-		return output.decode("UTF-8")
++		output = subprocess.check_output(query, universal_newlines=True)
++		return output
+ 	except CalledProcessError:
+ 		# Not a git repository, or no git is installed
+ 		return ''
+@@ -108,7 +108,7 @@ def main():
+ 		c.append(f)
+ 
+ 	srcChecksum = hashlib.sha512(''.join(c).encode('UTF-8')).hexdigest()
+-	print('hash of the ' + str(len(sortedList)) + '\n\t file from: ' + parent_dir + '\n\t is ' + srcChecksum)
++	print(('hash of the ' + str(len(sortedList)) + '\n\t file from: ' + parent_dir + '\n\t is ' + srcChecksum))
+ 
+ 	dir = os.path.join(src_dir,"target","gen","org","apache","ranger","common")
+ 	if not os.path.exists(dir):
+diff --git a/security-admin/scripts/changepasswordutil.py b/security-admin/scripts/changepasswordutil.py
+index e45dab643..04f5dd2ea 100644
+--- a/security-admin/scripts/changepasswordutil.py
++++ b/security-admin/scripts/changepasswordutil.py
+@@ -75,7 +75,7 @@ def main(argv):
+ 	else:
+ 		while os.path.isfile(JAVA_BIN) == False:
+ 			log("Enter java executable path: :","info")
+-			JAVA_BIN=input()
++			JAVA_BIN=eval(input())
+ 	log("[I] Using Java:" + str(JAVA_BIN),"info")
+ 
+ 	USERNAME = ''
+@@ -93,7 +93,7 @@ def main(argv):
+ 
+ 	while userName == "":
+ 		print("Enter user name:")
+-		userName=input()
++		userName=eval(input())
+ 
+ 	while oldPassword == "":
+ 		oldPassword=getpass.getpass("Enter current password:")
+diff --git a/security-admin/scripts/changeusernameutil.py b/security-admin/scripts/changeusernameutil.py
+index 699f945f0..7867b5eb4 100644
+--- a/security-admin/scripts/changeusernameutil.py
++++ b/security-admin/scripts/changeusernameutil.py
+@@ -75,7 +75,7 @@ def main(argv):
+         else:
+                 while os.path.isfile(JAVA_BIN) == False:
+                         log("Enter java executable path: :","info")
+-                        JAVA_BIN=input()
++                        JAVA_BIN=eval(input())
+         log("[I] Using Java:" + str(JAVA_BIN),"info")
+ 
+         USERNAME = ''
+@@ -93,7 +93,7 @@ def main(argv):
+ 
+         while userName == "":
+                 print("Enter user name:")
+-                userName=input()
++                userName=eval(input())
+ 
+         while oldPassword == "":
+                 oldPassword=getpass.getpass("Enter current password:")
+diff --git a/security-admin/scripts/db_setup.py b/security-admin/scripts/db_setup.py
+index 10acb5375..8d5307baa 100644
+--- a/security-admin/scripts/db_setup.py
++++ b/security-admin/scripts/db_setup.py
+@@ -57,11 +57,11 @@
+ 
+ def check_output(query):
+ 	if is_unix:
+-		p = subprocess.Popen(shlex.split(query), stdout=subprocess.PIPE)
++		p = subprocess.Popen(shlex.split(query), stdout=subprocess.PIPE, universal_newlines=True)
+ 	elif os_name == "WINDOWS":
+-		p = subprocess.Popen(query, stdout=subprocess.PIPE, shell=True)
+-	output = p.communicate ()[0]
+-	return output.decode()
++		p = subprocess.Popen(query, stdout=subprocess.PIPE, shell=True, universal_newlines=True)
++	output = p.communicate()[0]
++	return output
+ 
+ def log(msg,type):
+ 	if type == 'info':
+@@ -147,7 +147,7 @@ def dbversionBasedOnUserName(userName):
+ 	return version
+ 
+ def set_env_val(command):
+-	proc = subprocess.Popen(command, stdout = subprocess.PIPE)
++	proc = subprocess.Popen(command, stdout = subprocess.PIPE, universal_newlines=True)
+ 	for line in proc.stdout:
+ 		(key, _, value) = line.partition("=")
+ 		os.environ[key] = value.rstrip()
+diff --git a/security-admin/scripts/dba_script.py b/security-admin/scripts/dba_script.py
+index 0ba396944..c0039ec6a 100644
+--- a/security-admin/scripts/dba_script.py
++++ b/security-admin/scripts/dba_script.py
+@@ -51,11 +51,11 @@
+ 
+ def check_output(query):
+ 	if is_unix:
+-		p = subprocess.Popen(shlex.split(query), stdout=subprocess.PIPE)
++		p = subprocess.Popen(shlex.split(query), stdout=subprocess.PIPE, universal_newlines=True)
+ 	elif os_name == "WINDOWS":
+-		p = subprocess.Popen(query, stdout=subprocess.PIPE, shell=True)
+-	output = p.communicate ()[0]
+-	return output.decode()
++		p = subprocess.Popen(query, stdout=subprocess.PIPE, shell=True, universal_newlines=True)
++	output = p.communicate()[0]
++	return output
+ 
+ def log(msg,type):
+ 	if type == 'info':
+@@ -1496,7 +1496,7 @@ def main(argv):
+ 			else :
+ 				while os.path.isfile(JAVA_BIN) == False:
+ 					log("Enter java executable path: :","info")
+-					JAVA_BIN=input()
++					JAVA_BIN=eval(input())
+ 			log("[I] Using Java:" + str(JAVA_BIN),"info")
+ 
+ 
+@@ -1507,7 +1507,7 @@ def main(argv):
+ 		XA_DB_FLAVOR=''
+ 		while XA_DB_FLAVOR == "":
+ 			log("Enter db flavour{MYSQL|ORACLE|POSTGRES|MSSQL|SQLA} :","info")
+-			XA_DB_FLAVOR=input()
++			XA_DB_FLAVOR=eval(input())
+ 			AUDIT_DB_FLAVOR = XA_DB_FLAVOR
+ 
+ 	XA_DB_FLAVOR = XA_DB_FLAVOR.upper()
+@@ -1521,10 +1521,10 @@ def main(argv):
+ 		if not dryMode:
+ 			if XA_DB_FLAVOR == "MYSQL" or XA_DB_FLAVOR == "ORACLE" or XA_DB_FLAVOR == "POSTGRES" or XA_DB_FLAVOR == "MSSQL" or XA_DB_FLAVOR == "SQLA":
+ 				log("Enter JDBC connector file for :"+XA_DB_FLAVOR,"info")
+-				CONNECTOR_JAR=input()
++				CONNECTOR_JAR=eval(input())
+ 				while os.path.isfile(CONNECTOR_JAR) == False:
+ 					log("JDBC connector file "+CONNECTOR_JAR+" does not exist, Please enter connector path :","error")
+-					CONNECTOR_JAR=input()
++					CONNECTOR_JAR=eval(input())
+ 			else:
+ 				log("[E] ---------- NO SUCH SUPPORTED DB FLAVOUR.. ----------", "error")
+ 				sys.exit(1)
+@@ -1541,7 +1541,7 @@ def main(argv):
+ 			xa_db_host=''
+ 			while xa_db_host == "":
+ 				log("Enter DB Host :","info")
+-				xa_db_host=input()
++				xa_db_host=eval(input())
+ 				audit_db_host=xa_db_host
+ 			log("[I] DB Host:" + str(xa_db_host),"info")
+ 
+@@ -1556,7 +1556,7 @@ def main(argv):
+ 			xa_db_root_user=''
+ 			while xa_db_root_user == "":
+ 				log("Enter db root user:","info")
+-				xa_db_root_user=input()
++				xa_db_root_user=eval(input())
+ 				log("Enter db root password:","info")
+ 				xa_db_root_password = getpass.getpass("Enter db root password:")
+ 
+@@ -1569,7 +1569,7 @@ def main(argv):
+ 			db_name = ''
+ 			while db_name == "":
+ 				log("Enter DB Name :","info")
+-				db_name=input()
++				db_name=eval(input())
+ 
+ 	if (quiteMode):
+ 		db_user = globalDict['db_user']
+@@ -1580,7 +1580,7 @@ def main(argv):
+ 			db_user=''
+ 			while db_user == "":
+ 				log("Enter db user name:","info")
+-				db_user=input()
++				db_user=eval(input())
+ 
+ 	if (quiteMode):
+ 		db_password = globalDict['db_password']
+@@ -1612,7 +1612,7 @@ def main(argv):
+ 				audit_db_name=''
+ 				while audit_db_name == "":
+ 					log("Enter audit db name:","info")
+-					audit_db_name = input()
++					audit_db_name = eval(input())
+ 
+ 		if (quiteMode):
+ 			if 'audit_db_user' in globalDict:
+@@ -1624,7 +1624,7 @@ def main(argv):
+ 				audit_db_user=''
+ 				while audit_db_user == "":
+ 					log("Enter audit user name:","info")
+-					audit_db_user = input()
++					audit_db_user = eval(input())
+ 
+ 		if (quiteMode):
+ 			if 'audit_db_password' in globalDict:
+diff --git a/security-admin/scripts/ranger_credential_helper.py b/security-admin/scripts/ranger_credential_helper.py
+index 85f29ac43..e4f50e412 100644
+--- a/security-admin/scripts/ranger_credential_helper.py
++++ b/security-admin/scripts/ranger_credential_helper.py
+@@ -24,7 +24,7 @@
+ 	sys.exit(1)
+ else:
+ 	JAVA_BIN=os.path.join(os.getenv('JAVA_HOME'),'bin','java')
+-print("Using Java:" + str(JAVA_BIN))
++print(("Using Java:" + str(JAVA_BIN)))
+ 
+ def main():
+ 
+@@ -54,9 +54,9 @@ def call_keystore(libpath, filepath, aliasKey, aliasValue='', getorcreate='get')
+ 		output, error = p.communicate()
+ 		statuscode = p.returncode
+ 		if statuscode == 0:
+-			print("Alias " + aliasKey + " created successfully!")
++			print(("Alias " + aliasKey + " created successfully!"))
+ 		else :
+-			print("Error creating Alias!! Error: " + str(error))
++			print(("Error creating Alias!! Error: " + str(error)))
+ 
+ 	elif getorcreate == 'get':
+ 		commandtorun = [JAVA_BIN, '-cp', finalLibPath, 'org.apache.ranger.credentialapi.buildks' ,'get', aliasKey, '-provider',finalFilePath]
+@@ -64,9 +64,9 @@ def call_keystore(libpath, filepath, aliasKey, aliasValue='', getorcreate='get')
+ 		output, error = p.communicate()
+ 		statuscode = p.returncode
+ 		if statuscode == 0:
+-			print("Alias : " + aliasKey + " Value : " + str(output))
++			print(("Alias : " + aliasKey + " Value : " + str(output)))
+ 		else :
+-			print("Error getting value!! Error: " + str(error))
++			print(("Error getting value!! Error: " + str(error)))
+ 
+ 	else:
+ 		print('Invalid Arguments!!')
+diff --git a/security-admin/scripts/restrict_permissions.py b/security-admin/scripts/restrict_permissions.py
+index b19bafe9b..d2a88208f 100644
+--- a/security-admin/scripts/restrict_permissions.py
++++ b/security-admin/scripts/restrict_permissions.py
+@@ -35,10 +35,10 @@
+ 
+ def check_output(query):
+ 	if os_name == "LINUX":
+-		p = subprocess.Popen(shlex.split(query), stdout=subprocess.PIPE)
++		p = subprocess.Popen(shlex.split(query), stdout=subprocess.PIPE, universal_newlines=True)
+ 	elif os_name == "WINDOWS":	
+-		p = subprocess.Popen(query, stdout=subprocess.PIPE, shell=True)
+-	output = p.communicate ()[0]
++		p = subprocess.Popen(query, stdout=subprocess.PIPE, shell=True, universal_newlines=True)
++	output = p.communicate()[0]
+ 	return output
+ 
+ def log(msg,type):
+@@ -308,7 +308,7 @@ def main(argv):
+ 		else :
+ 			while os.path.isfile(JAVA_BIN) == False:
+ 				log("Enter java executable path: :","info")
+-				JAVA_BIN=input()
++				JAVA_BIN=eval(input())
+ 	log("[I] Using Java:" + str(JAVA_BIN),"info")
+ 
+ 	if (quiteMode):
+@@ -318,7 +318,7 @@ def main(argv):
+ 		XA_DB_FLAVOR=''
+ 		while XA_DB_FLAVOR == "":
+ 			log("Enter db flavour{MYSQL} :","info")
+-			XA_DB_FLAVOR=input()
++			XA_DB_FLAVOR=eval(input())
+ 			AUDIT_DB_FLAVOR = XA_DB_FLAVOR
+ 			XA_DB_FLAVOR = XA_DB_FLAVOR.upper()
+ 			AUDIT_DB_FLAVOR = AUDIT_DB_FLAVOR.upper()
+@@ -330,10 +330,10 @@ def main(argv):
+ 	else:
+ 		if XA_DB_FLAVOR == "MYSQL":
+ 			log("Enter JDBC connector file for :"+XA_DB_FLAVOR,"info")
+-			CONNECTOR_JAR=input()
++			CONNECTOR_JAR=eval(input())
+ 			while os.path.isfile(CONNECTOR_JAR) == False:
+ 				log("JDBC connector file "+CONNECTOR_JAR+" does not exist, Please enter connector path :","error")
+-				CONNECTOR_JAR=input()
++				CONNECTOR_JAR=eval(input())
+ 		else:
+ 			log("[E] ---------- NO SUCH SUPPORTED DB FLAVOUR.. ----------", "error")
+ 			sys.exit(1)
+@@ -345,7 +345,7 @@ def main(argv):
+ 		xa_db_host=''
+ 		while xa_db_host == "":
+ 			log("Enter DB Host :","info")
+-			xa_db_host=input()
++			xa_db_host=eval(input())
+ 			audit_db_host=xa_db_host
+ 	log("[I] DB Host:" + str(xa_db_host),"info")
+ 
+@@ -356,7 +356,7 @@ def main(argv):
+ 		xa_db_root_user=''
+ 		while xa_db_root_user == "":
+ 			log("Enter db root user:","info")
+-			xa_db_root_user=input()
++			xa_db_root_user=eval(input())
+ 			log("Enter db root password:","info")
+ 			xa_db_root_password = getpass.getpass("Enter db root password:")
+ 
+@@ -366,7 +366,7 @@ def main(argv):
+ 		db_name = ''
+ 		while db_name == "":
+ 			log("Enter DB Name :","info")
+-			db_name=input()
++			db_name=eval(input())
+ 
+ 	if (quiteMode):
+ 		db_user = globalDict['db_user']
+@@ -374,7 +374,7 @@ def main(argv):
+ 		db_user=''
+ 		while db_user == "":
+ 			log("Enter db user name:","info")
+-			db_user=input()
++			db_user=eval(input())
+ 
+ 	if (quiteMode):
+ 		db_password = globalDict['db_password']
+@@ -390,7 +390,7 @@ def main(argv):
+ 		audit_db_name=''
+ 		while audit_db_name == "":
+ 			log("Enter audit db name:","info")
+-			audit_db_name = input()
++			audit_db_name = eval(input())
+ 
+ 	if (quiteMode):
+ 		audit_db_user = globalDict['audit_db_user']
+@@ -398,7 +398,7 @@ def main(argv):
+ 		audit_db_user=''
+ 		while audit_db_user == "":
+ 			log("Enter audit user name:","info")
+-			audit_db_user = input()
++			audit_db_user = eval(input())
+ 
+ 	if (quiteMode):
+ 		audit_db_password = globalDict['audit_db_password']
+diff --git a/security-admin/scripts/rolebasedusersearchutil.py b/security-admin/scripts/rolebasedusersearchutil.py
+index 612db33df..235fa0bbb 100644
+--- a/security-admin/scripts/rolebasedusersearchutil.py
++++ b/security-admin/scripts/rolebasedusersearchutil.py
+@@ -78,7 +78,7 @@ def main(argv):
+     else:
+         while os.path.isfile(JAVA_BIN) == False:
+             log("Enter java executable path: :","info")
+-            JAVA_BIN=input()
++            JAVA_BIN=eval(input())
+     log("[I] Using Java:" + str(JAVA_BIN),"info")
+     userName = ""
+     password = ""
+@@ -90,9 +90,9 @@ def main(argv):
+ 
+     if len(argv) == 1:
+         log("[I] " +msgPrompt + " or \n" + msgCommand + "\n " +msgRoleList, "info")
+-        userName = input('Enter a user name: ')
++        userName = eval(input('Enter a user name: '))
+         password = getpass.getpass('Enter a user password:')
+-        userRole = input('Enter a role: ')
++        userRole = eval(input('Enter a role: '))
+     elif len(argv) > 1 and len(argv) < 8 :
+         for i in range(1, len(sys.argv)) :
+             if sys.argv[i] == "-u" :
+@@ -131,11 +131,11 @@ def main(argv):
+     if userNameMsgFlag == True or  passwordMsgFlag == True or userRoleMsgFlag == True :
+         log("[I] "+msgPrompt + " or \n" + msgCommand + "\n  " +msgRoleList, "info")
+     if userNameMsgFlag == True :
+-        userName = input('Enter a user name: ')
++        userName = eval(input('Enter a user name: '))
+     if passwordMsgFlag == True :
+         password = getpass.getpass("Enter user password:")
+     if userRoleMsgFlag == True :
+-        userRole = input('Enter a role: ')
++        userRole = eval(input('Enter a role: '))
+     if userName != "" and password != "" :
+         if os_name == "LINUX":
+             path = os.path.join("%s","WEB-INF","classes","conf:%s","WEB-INF","classes","lib","*:%s","WEB-INF",":%s","META-INF",":%s","WEB-INF","lib","*:%s","WEB-INF","classes",":%s","WEB-INF","classes","META-INF:%s/*")%(app_home ,app_home ,app_home, app_home, app_home, app_home ,app_home,ews_lib)
+diff --git a/security-admin/scripts/updateUserAndGroupNamesInJson.py b/security-admin/scripts/updateUserAndGroupNamesInJson.py
+index c40ec4406..fb80f006b 100644
+--- a/security-admin/scripts/updateUserAndGroupNamesInJson.py
++++ b/security-admin/scripts/updateUserAndGroupNamesInJson.py
+@@ -74,7 +74,7 @@ def main(argv):
+ 	else:
+ 		while os.path.isfile(JAVA_BIN) == False:
+ 			log("Enter java executable path: :","info")
+-			JAVA_BIN=input()
++			JAVA_BIN=eval(input())
+ 	log("[I] Using Java:" + str(JAVA_BIN),"info")
+ 
+ 	if os_name == "LINUX":
+diff --git a/security-admin/scripts/update_property.py b/security-admin/scripts/update_property.py
+index fc2a3105b..13dcda8e4 100644
+--- a/security-admin/scripts/update_property.py
++++ b/security-admin/scripts/update_property.py
+@@ -23,7 +23,7 @@ def write_properties_to_xml(xml_path, property_name='', property_value=''):
+ 		try:
+ 			xml = ET.parse(xml_path)
+ 		except ExpatError:
+-			print("Error while parsing file:"+xml_path)
++			print(("Error while parsing file:"+xml_path))
+ 			return -1
+ 		root = xml.getroot()
+ 		for child in root.findall('property'):
+diff --git a/security-admin/scripts/upgrade_admin.py b/security-admin/scripts/upgrade_admin.py
+index 85f57b8ce..8f3407c37 100755
+--- a/security-admin/scripts/upgrade_admin.py
++++ b/security-admin/scripts/upgrade_admin.py
+@@ -13,13 +13,13 @@
+ # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ # See the License for the specific language governing permissions and
+ # limitations under the License.
+-from __future__ import print_function
++
+ try:
+-	from StringIO import StringIO
++	from io import StringIO
+ except ImportError:
+ 	from io import StringIO
+ try:
+-	from ConfigParser import ConfigParser
++	from configparser import ConfigParser
+ except ImportError:
+ 	from configparser import ConfigParser
+ import xml.etree.ElementTree as ET
+@@ -310,7 +310,7 @@ def main():
+ 	defValMap = getPropertiesConfigMap(installFileName)
+ 
+ 
+-	for wk,wv in webconfig.items():
++	for wk,wv in list(webconfig.items()):
+ 		nk = "ranger." + wk
+ 		nk = nk.replace('.','_')
+ 		installProps[nk] = wv
+diff --git a/security-admin/src/bin/ranger_install.py b/security-admin/src/bin/ranger_install.py
+index 39b9d1f81..8a4d7f7a6 100644
+--- a/security-admin/src/bin/ranger_install.py
++++ b/security-admin/src/bin/ranger_install.py
+@@ -17,11 +17,11 @@
+ import logging
+ import zipfile
+ try:
+-    from StringIO import StringIO
++    from io import StringIO
+ except ImportError:
+     from io import StringIO
+ try:
+-    from ConfigParser import ConfigParser
++    from configparser import ConfigParser
+ except ImportError:
+     from configparser import ConfigParser
+ import subprocess
+@@ -83,9 +83,9 @@ def getstatusoutput(cmd):
+     """
+     ret = subprocess.call(cmd, shell=True)
+     print("------------------")
+-    print(" cmd: " + str(cmd))
++    print((" cmd: " + str(cmd)))
+     #print " output: " + output
+-    print(" ret: " + str(ret))
++    print((" ret: " + str(ret)))
+     print("------------------")
+     return ret, ret
+     #if sts is None:
+@@ -383,7 +383,7 @@ def write_config_to_file():
+     file_path = os.path.dirname(os.path.realpath(__file__))
+     write_conf_to_file = os.path.join(file_path, "install_config.properties")
+     open(write_conf_to_file,'wb')
+-    for key,value in conf_dict.items():
++    for key,value in list(conf_dict.items()):
+         if 'PASSWORD' in key :
+             #call_keystore(library_path,key,value,jceks_file_path,'create')
+             value=''
+@@ -489,8 +489,8 @@ def check_mysql_password ():
+ 
+     cmdStr = "\""+MYSQL_BIN+"\""+" -u root --password="+db_root_password+" -h "+MYSQL_HOST+" -s -e \"select version();\""
+     status, output = getstatusoutput(cmdStr)
+-    print("Status: " + str(status))
+-    print("output: " + str(output))
++    print(("Status: " + str(status)))
++    print(("output: " + str(output)))
+ 
+     if status == 0:
+         log("Checking MYSQL root password DONE", "info")
+@@ -563,7 +563,7 @@ def upgrade_db():
+         #import sql file
+         proc = subprocess.Popen([MYSQL_BIN, "--user=%s" % db_user, "--host=%s" %MYSQL_HOST, "--password=%s" % db_password, db_name],
+             stdin=subprocess.PIPE,
+-            stdout=subprocess.PIPE)
++            stdout=subprocess.PIPE, universal_newlines=True)
+         out, err = proc.communicate(file(DBVERSION_CATALOG_CREATION).read())
+         log("\nBaseline DB upgraded successfully\n", "info")
+ 
+@@ -577,7 +577,7 @@ def upgrade_db():
+             #apply_patches(cursor,currentPatch)
+             proc = subprocess.Popen([MYSQL_BIN, "--user=%s" % db_user, "--host=%s" %MYSQL_HOST, "--password=%s" % db_password, db_name],
+                         stdin=subprocess.PIPE,
+-                        stdout=subprocess.PIPE)
++                        stdout=subprocess.PIPE, universal_newlines=True)
+             out, err = proc.communicate(file(currentPatch).read())
+             log( "\nPatch applied: " +  currentPatch +"\n", "debug")
+ 
+@@ -628,7 +628,7 @@ def import_db ():
+             log("Importing database : " + db_name + " from file: " + db_core_file,"info")
+             proc = subprocess.Popen([MYSQL_BIN, "--user=%s" % db_user, "--host=%s" %MYSQL_HOST, "--password=%s" % db_password, db_name],
+                         stdin=subprocess.PIPE,
+-                        stdout=subprocess.PIPE)
++                        stdout=subprocess.PIPE, universal_newlines=True)
+             out, err = proc.communicate(file(db_core_file).read())
+             if (proc.returncode == 0):
+                 log("\nAdmin db file Imported successfully\n","info")
+@@ -642,7 +642,7 @@ def import_db ():
+         if os.path.isfile(db_asset_file):
+             proc = subprocess.Popen([MYSQL_BIN, "--user=%s" % db_user, "--host=%s" %MYSQL_HOST, "--password=%s" % db_password, db_name],
+                         stdin=subprocess.PIPE,
+-                        stdout=subprocess.PIPE)
++                        stdout=subprocess.PIPE, universal_newlines=True)
+             out, err = proc.communicate(file(db_asset_file).read())
+             if (proc.returncode == 0):
+                 log("\nAsset file Imported successfully\n","info")
+@@ -1221,7 +1221,7 @@ def setup_audit_user_db():
+         if os.path.isfile(db_audit_file):
+             proc = subprocess.Popen([MYSQL_BIN, "--user=%s" % audit_db_user, "--host=%s" %MYSQL_HOST, "--password=%s" % audit_db_password, audit_db_name],
+                 stdin=subprocess.PIPE,
+-                stdout=subprocess.PIPE)
++                stdout=subprocess.PIPE, universal_newlines=True)
+             out, err = proc.communicate(file(db_audit_file).read())
+             if (proc.returncode == 0):
+                 log("\nAudit file Imported successfully\n","info")
+diff --git a/security-admin/src/test/resources/stability-tests/ranger-policy/test-hdfs-policy.py b/security-admin/src/test/resources/stability-tests/ranger-policy/test-hdfs-policy.py
+index 8c2ac1d38..7e143b7e3 100755
+--- a/security-admin/src/test/resources/stability-tests/ranger-policy/test-hdfs-policy.py
++++ b/security-admin/src/test/resources/stability-tests/ranger-policy/test-hdfs-policy.py
+@@ -66,7 +66,7 @@
+ admin_delete_rol_url_template = "{}/service/roles/roles/name/{}".format(args.host.rstrip('/'), "{}")
+ 
+ def log(log_group, message):
+-   print(str(datetime.now()) + " [" + log_group + "] " + message)
++   print((str(datetime.now()) + " [" + log_group + "] " + message))
+ 
+ def get_policy_version():
+    resp = session.get(admin_get_service_url)
+diff --git a/tagsync/scripts/setup.py b/tagsync/scripts/setup.py
+index 6ac30565f..c70bddc3a 100755
+--- a/tagsync/scripts/setup.py
++++ b/tagsync/scripts/setup.py
+@@ -15,15 +15,15 @@
+ # limitations under the License.
+ 
+ try:
+-	from StringIO import StringIO
++	from io import StringIO
+ except ImportError:
+ 	from io import StringIO
+ try:
+-	from ConfigParser import ConfigParser
++	from configparser import ConfigParser
+ except ImportError:
+ 	from configparser import ConfigParser
+ try:
+-	from urlparse import urlparse
++	from urllib.parse import urlparse
+ except ImportError:
+ 	from urllib.parse import urlparse
+ import re
+@@ -129,7 +129,7 @@ def archiveFile(originalFileName):
+     archiveDir = dirname(originalFileName)
+     archiveFileName = "." + basename(originalFileName) + "." + (strftime("%d%m%Y%H%M%S", localtime()))
+     movedFileName = join(archiveDir,archiveFileName)
+-    print("INFO: moving [%s] to [%s] ......." % (originalFileName,movedFileName))
++    print(("INFO: moving [%s] to [%s] ......." % (originalFileName,movedFileName)))
+     os.rename(originalFileName, movedFileName)
+ 
+ def getXMLConfigKeys(xmlFileName):
+@@ -201,7 +201,7 @@ def writeXMLUsingProperties(xmlTemplateFileName,prop,xmlOutputFileName):
+ 							newName.text = TAGSYNC_INSTALL_PROP_PREFIX_FOR_ATLAS_RANGER_MAPPING + str(parts[1]) + TAGSYNC_ATLAS_CLUSTER_IDENTIFIER + str(parts[0]) + TAGSYNC_INSTALL_PROP_SUFFIX_FOR_ATLAS_RANGER_MAPPING
+ 							newValue.text = str(parts[2])
+ 						else:
+-							print("ERROR: incorrect syntax for %s, value=%s" % (TAGSYNC_ATLAS_TO_RANGER_SERVICE_MAPPING, multiValues[index]))
++							print(("ERROR: incorrect syntax for %s, value=%s" % (TAGSYNC_ATLAS_TO_RANGER_SERVICE_MAPPING, multiValues[index])))
+ 						index += 1
+ 				root.remove(config)
+ 			else:
+@@ -219,7 +219,7 @@ def updatePropertyInJCKSFile(jcksFileName,propName,value):
+ 	cmd = "java -cp './lib/*' %s create '%s' -value '%s' -provider jceks://file%s 2>&1" % (credUpdateClassName,propName,value,fn)
+ 	ret = os.system(cmd)
+ 	if (ret != 0):
+-		print("ERROR: Unable to update the JCKSFile (%s) for aliasName (%s)" % (fn,propName))
++		print(("ERROR: Unable to update the JCKSFile (%s) for aliasName (%s)" % (fn,propName)))
+ 		sys.exit(1)
+ 	return ret
+ 
+@@ -233,7 +233,7 @@ def convertInstallPropsToXML(props):
+ 	atlas_principal = ''
+ 	atlas_keytab = ''
+ 
+-	for k,v in props.items():
++	for k,v in list(props.items()):
+ 		if (k in list(directKeyMap)):
+ 			newKey = directKeyMap[k]
+ 			if (k == TAGSYNC_ATLAS_KAFKA_ENDPOINTS_KEY):
+@@ -253,7 +253,7 @@ def convertInstallPropsToXML(props):
+ 			else:
+ 				ret[newKey] = v
+ 		else:
+-			print("INFO: Direct Key not found:%s" % (k))
++			print(("INFO: Direct Key not found:%s" % (k)))
+ 
+ 	if (configure_security):
+ 		atlasOutFile.write("atlas.jaas.KafkaClient.loginModuleName = com.sun.security.auth.module.Krb5LoginModule" + "\n")
+@@ -284,26 +284,26 @@ def createUser(username,groupname):
+ 	cmd = "useradd -g %s %s -m" % (groupname,username)
+ 	ret = os.system(cmd)
+ 	if (ret != 0):
+-		print("ERROR: os command execution (%s) failed. error code = %d " % (cmd, ret))
++		print(("ERROR: os command execution (%s) failed. error code = %d " % (cmd, ret)))
+ 		sys.exit(1)
+ 	try:
+ 		ret = pwd.getpwnam(username).pw_uid
+ 		return ret
+ 	except KeyError as e:
+-		print("ERROR: Unable to create a new user account: %s with group %s - error [%s]" % (username,groupname,e))
++		print(("ERROR: Unable to create a new user account: %s with group %s - error [%s]" % (username,groupname,e)))
+ 		sys.exit(1)
+ 
+ def createGroup(groupname):
+ 	cmd = "groupadd %s" % (groupname)
+ 	ret = os.system(cmd)
+ 	if (ret != 0):
+-		print("ERROR: os command execution (%s) failed. error code = %d " % (cmd, ret))
++		print(("ERROR: os command execution (%s) failed. error code = %d " % (cmd, ret)))
+ 		sys.exit(1)
+ 	try:
+ 		ret = grp.getgrnam(groupname).gr_gid
+ 		return ret
+ 	except KeyError as e:
+-		print("ERROR: Unable to create a new group: %s" % (groupname,e))
++		print(("ERROR: Unable to create a new group: %s" % (groupname,e)))
+ 		sys.exit(1)
+ 
+ def initializeInitD():
+@@ -330,7 +330,7 @@ def initializeInitD():
+ def write_env_files(exp_var_name, log_path, file_name):
+         final_path = "{0}/{1}".format(confBaseDirName,file_name)
+         if not os.path.isfile(final_path):
+-            print("INFO: Creating %s file" % file_name)
++            print(("INFO: Creating %s file" % file_name))
+         f = open(final_path, "w")
+         f.write("export {0}={1}".format(exp_var_name,log_path))
+         f.close()
+@@ -521,9 +521,9 @@ def main():
+ 	if rangerTagsync_password != "" :
+ 		output = os.system(cmd)
+ 		if (output == 0):
+-			print("[I] Successfully updated password of " + rangerTagsync_name +" user")
++			print(("[I] Successfully updated password of " + rangerTagsync_name +" user"))
+ 		else:
+-			print("[ERROR] Unable to change password of " + rangerTagsync_name +" user.")
++			print(("[ERROR] Unable to change password of " + rangerTagsync_name +" user."))
+ 	print("\nINFO: Completed ranger-tagsync installation.....\n")
+ 
+ main()
+diff --git a/tagsync/scripts/updatetagadminpassword.py b/tagsync/scripts/updatetagadminpassword.py
+index ff0cce13f..2f3141b2c 100644
+--- a/tagsync/scripts/updatetagadminpassword.py
++++ b/tagsync/scripts/updatetagadminpassword.py
+@@ -38,10 +38,10 @@
+ 
+ def check_output(query):
+ 	if os_name == "LINUX":
+-		p = subprocess.Popen(shlex.split(query), stdout=subprocess.PIPE)
++		p = subprocess.Popen(shlex.split(query), stdout=subprocess.PIPE, universal_newlines=True)
+ 	elif os_name == "WINDOWS":	
+-		p = subprocess.Popen(query, stdout=subprocess.PIPE, shell=True)
+-	output = p.communicate ()[0]
++		p = subprocess.Popen(query, stdout=subprocess.PIPE, shell=True, universal_newlines=True)
++	output = p.communicate()[0]
+ 	return output
+ 
+ def log(msg,type):
+@@ -107,7 +107,7 @@ def main(argv):
+ 	else:
+ 		while os.path.isfile(JAVA_BIN) == False:
+ 			log("Enter java executable path: :","info")
+-			JAVA_BIN=input()
++			JAVA_BIN=eval(input())
+ 	log("[I] Using Java:" + str(JAVA_BIN),"info")
+ 
+ 	globalDict=import_properties_from_xml(CFG_FILE,globalDict)
+@@ -128,7 +128,7 @@ def main(argv):
+ 	while ENDPOINT == "" or not (ENDPOINT == "ATLAS" or ENDPOINT == "RANGER"):
+ 		sys.stdout.write('Enter Destination NAME (Ranger/Atlas):')
+ 		sys.stdout.flush()
+-		ENDPOINT=input()
++		ENDPOINT=eval(input())
+ 		ENDPOINT = ENDPOINT.upper()
+ 
+ 	if ENDPOINT == "ATLAS":
+diff --git a/unixauthservice/scripts/setup.py b/unixauthservice/scripts/setup.py
+index 1ddeb0ce8..8d3442913 100755
+--- a/unixauthservice/scripts/setup.py
++++ b/unixauthservice/scripts/setup.py
+@@ -16,15 +16,15 @@
+ 
+ 
+ try:
+-    from StringIO import StringIO
++    from io import StringIO
+ except ImportError:
+     from io import StringIO
+ try:
+-    from ConfigParser import ConfigParser
++    from configparser import ConfigParser
+ except ImportError:
+     from configparser import ConfigParser
+ try:
+-    import commands as commands
++    import subprocess as commands
+ except ImportError:
+     import subprocess as commands
+ 
+@@ -133,7 +133,7 @@ def initvariable():
+             rangerBaseDirName = ranger_base_dir
+     except:
+         info = sys.exc_info()
+-        print(info[0], ":", info[1])
++        print((info[0], ":", info[1]))
+ 
+     usersyncBaseDirFullName = join(rangerBaseDirName, usersyncBaseDirName)
+     confFolderName = join(usersyncBaseDirFullName, confBaseDirName)
+@@ -145,7 +145,7 @@ def archiveFile(originalFileName):
+     archiveDir = dirname(originalFileName)
+     archiveFileName = "." + basename(originalFileName) + "." + (strftime("%d%m%Y%H%M%S", localtime()))
+     movedFileName = join(archiveDir, archiveFileName)
+-    print("INFO: moving [%s] to [%s] ......." % (originalFileName, movedFileName))
++    print(("INFO: moving [%s] to [%s] ......." % (originalFileName, movedFileName)))
+     os.rename(originalFileName, movedFileName)
+ 
+ 
+@@ -225,7 +225,7 @@ def updatePropertyInJCKSFile(jcksFileName, propName, value):
+     credUpdateClassName, propName, value, fn)
+     ret = os.system(cmd)
+     if (ret != 0):
+-        print("ERROR: Unable update the JCKSFile(%s) for aliasName (%s)" % (fn, propName))
++        print(("ERROR: Unable update the JCKSFile(%s) for aliasName (%s)" % (fn, propName)))
+         sys.exit(1)
+     return ret
+ 
+@@ -233,24 +233,24 @@ def updatePropertyInJCKSFile(jcksFileName, propName, value):
+ def password_validation(password, userType):
+     if password:
+         if re.search("[\\\`'\"]", password):
+-            print("[E] " + userType + " property contains one of the unsupported special characters like \" ' \ `")
++            print(("[E] " + userType + " property contains one of the unsupported special characters like \" ' \ `"))
+             sys.exit(1)
+         else:
+-            print("[I] " + userType + " property is verified.")
++            print(("[I] " + userType + " property is verified."))
+     else:
+-        print("[E] Blank password is not allowed for property " + userType + ",please enter valid password.")
++        print(("[E] Blank password is not allowed for property " + userType + ",please enter valid password."))
+         sys.exit(1)
+ 
+ 
+ def convertInstallPropsToXML(props):
+     directKeyMap = getPropertiesConfigMap(join(installTemplateDirName, install2xmlMapFileName))
+     ret = {}
+-    for k, v in props.items():
++    for k, v in list(props.items()):
+         if (k in list(directKeyMap)):
+             newKey = directKeyMap[k]
+             ret[newKey] = v
+         else:
+-            print("Direct Key not found:%s" % (k))
++            print(("Direct Key not found:%s" % (k)))
+ 
+     ret['ranger.usersync.sink.impl.class'] = 'org.apache.ranger.unixusersync.process.PolicyMgrUserGroupBuilder'
+     if (SYNC_SOURCE_KEY in ret):
+@@ -274,14 +274,14 @@ def convertInstallPropsToXML(props):
+             else:
+                 ret[SYNC_INTERVAL_NEW_KEY] = int(ret[SYNC_INTERVAL_NEW_KEY]) * 60000
+         else:
+-            print("ERROR: Invalid value (%s) defined for %s in install.properties. Only valid values are %s" % (
+-            syncSource, SYNC_SOURCE_KEY, SYNC_SOURCE_LIST))
++            print(("ERROR: Invalid value (%s) defined for %s in install.properties. Only valid values are %s" % (
++            syncSource, SYNC_SOURCE_KEY, SYNC_SOURCE_LIST)))
+             sys.exit(1)
+         ret['ranger.usersync.sync.source'] = syncSource
+         del ret['SYNC_SOURCE']
+     else:
+-        print("ERROR: No value defined for SYNC_SOURCE in install.properties. valid values are %s" % (
+-        SYNC_SOURCE_KEY, SYNC_SOURCE_LIST))
++        print(("ERROR: No value defined for SYNC_SOURCE in install.properties. valid values are %s" % (
++        SYNC_SOURCE_KEY, SYNC_SOURCE_LIST)))
+         sys.exit(1)
+ 
+     return ret
+@@ -294,13 +294,13 @@ def createUser(username, groupname):
+         cmd = "useradd -g %s %s -m" % (groupname, username)
+         ret = os.system(cmd)
+         if (ret != 0):
+-            print("ERROR: os command execution (%s) failed. error code = %d " % (cmd, ret))
++            print(("ERROR: os command execution (%s) failed. error code = %d " % (cmd, ret)))
+             sys.exit(1)
+     try:
+         ret = pwd.getpwnam(username).pw_uid
+         return ret
+     except KeyError as e:
+-        print("ERROR: Unable to create a new user account: %s with group %s - error [%s]" % (username, groupname, e))
++        print(("ERROR: Unable to create a new user account: %s with group %s - error [%s]" % (username, groupname, e)))
+         sys.exit(1)
+ 
+ 
+@@ -311,13 +311,13 @@ def createGroup(groupname):
+         cmd = "groupadd %s" % (groupname)
+         ret = os.system(cmd)
+         if (ret != 0):
+-            print("ERROR: os command execution (%s) failed. error code = %d " % (cmd, ret))
++            print(("ERROR: os command execution (%s) failed. error code = %d " % (cmd, ret)))
+             sys.exit(1)
+     try:
+         ret = grp.getgrnam(groupname).gr_gid
+         return ret
+     except KeyError as e:
+-        print("ERROR: Unable to create a new group: %s" % (groupname, e))
++        print(("ERROR: Unable to create a new group: %s" % (groupname, e)))
+         sys.exit(1)
+ 
+ 
+@@ -357,7 +357,7 @@ def createJavaKeystoreForSSL(fn, passwd):
+     fn, passwd, passwd, defaultDNAME)
+     ret = os.system(cmd)
+     if (ret != 0):
+-        print("ERROR: unable to create JavaKeystore for SSL: file (%s)" % (fn))
++        print(("ERROR: unable to create JavaKeystore for SSL: file (%s)" % (fn)))
+         sys.exit(1)
+     return ret
+ 
+@@ -365,7 +365,7 @@ def createJavaKeystoreForSSL(fn, passwd):
+ def write_env_files(exp_var_name, log_path, file_name):
+     final_path = "{0}/{1}".format(confBaseDirName, file_name)
+     if not os.path.isfile(final_path):
+-        print("Creating %s file" % file_name)
++        print(("Creating %s file" % file_name))
+     f = open(final_path, "w")
+     f.write("export {0}={1}".format(exp_var_name, log_path))
+     f.close()
+@@ -512,7 +512,7 @@ def main():
+ 
+     cryptPath = mergeProps['ranger.usersync.credstore.filename']
+ 
+-    for keyName, aliasName in PROP2ALIASMAP.items():
++    for keyName, aliasName in list(PROP2ALIASMAP.items()):
+         if (keyName in mergeProps):
+             keyPassword = mergeProps[keyName]
+             updatePropertyInJCKSFile(cryptPath, aliasName, keyPassword)
+@@ -577,20 +577,20 @@ def main():
+                 os.chown(nativeAuthProgramName, rootOwnerId, groupId)
+                 os.chmod(nativeAuthProgramName, 0o750)
+         except PermissionError:
+-                print("WARNING: chmod(4550), chown(%s:%s) failed for Unix Authentication Program (%s) " % ("root", groupName, nativeAuthProgramName))
++                print(("WARNING: chmod(4550), chown(%s:%s) failed for Unix Authentication Program (%s) " % ("root", groupName, nativeAuthProgramName)))
+     else:
+-        print("WARNING: Unix Authentication Program (%s) is not available for setting chmod(4550), chown(%s:%s) " % (
+-        nativeAuthProgramName, "root", groupName))
++        print(("WARNING: Unix Authentication Program (%s) is not available for setting chmod(4550), chown(%s:%s) " % (
++        nativeAuthProgramName, "root", groupName)))
+ 
+     if isfile(pamAuthProgramName):
+         try:
+                 os.chown(pamAuthProgramName, rootOwnerId, groupId)
+                 os.chmod(pamAuthProgramName, 0o750)
+         except PermissionError:
+-                print("WARNING: chmod(0o750), chown(%s:%s) failed for Unix Authentication Program (%s) " % ("root", groupName, pamAuthProgramName))
++                print(("WARNING: chmod(0o750), chown(%s:%s) failed for Unix Authentication Program (%s) " % ("root", groupName, pamAuthProgramName)))
+     else:
+-        print("WARNING: Unix Authentication Program (%s) is not available for setting chmod(4550), chown(%s:%s) " % (
+-        pamAuthProgramName, "root", groupName))
++        print(("WARNING: Unix Authentication Program (%s) is not available for setting chmod(4550), chown(%s:%s) " % (
++        pamAuthProgramName, "root", groupName)))
+ 
+     write_env_files("logdir", logFolderName, ENV_LOGDIR_FILE);
+     write_env_files("RANGER_USERSYNC_HADOOP_CONF_DIR", hadoop_conf, ENV_HADOOP_CONF_FILE);
+@@ -618,8 +618,8 @@ def main():
+     if rangerUsersync_password != "" :
+         output = os.system(cmd)
+         if (output == 0):
+-          print("[I] Successfully updated password of " + rangerUsersync_name +" user")
++          print(("[I] Successfully updated password of " + rangerUsersync_name +" user"))
+         else:
+-          print("[ERROR] Unable to change password of " + rangerUsersync_name +" user.")
++          print(("[ERROR] Unable to change password of " + rangerUsersync_name +" user."))
+ 
+ main()
+diff --git a/unixauthservice/scripts/updatepolicymgrpassword.py b/unixauthservice/scripts/updatepolicymgrpassword.py
+index 42d44a82a..8f6f49029 100644
+--- a/unixauthservice/scripts/updatepolicymgrpassword.py
++++ b/unixauthservice/scripts/updatepolicymgrpassword.py
+@@ -43,10 +43,10 @@
+ 
+ def check_output(query):
+ 	if os_name == "LINUX":
+-		p = subprocess.Popen(shlex.split(query), stdout=subprocess.PIPE)
++		p = subprocess.Popen(shlex.split(query), stdout=subprocess.PIPE, universal_newlines=True)
+ 	elif os_name == "WINDOWS":
+-		p = subprocess.Popen(query, stdout=subprocess.PIPE, shell=True)
+-	output = p.communicate ()[0]
++		p = subprocess.Popen(query, stdout=subprocess.PIPE, shell=True, universal_newlines=True)
++	output = p.communicate()[0]
+ 	return output
+ 
+ def log(msg,type):
+@@ -62,7 +62,7 @@ def log(msg,type):
+ 		logging.error(" %s",msg)
+ 
+ def import_properties_from_xml(xml_path, properties_from_xml=None):
+-	print('getting values from file : ' + str(xml_path))
++	print(('getting values from file : ' + str(xml_path)))
+ 	if os.path.isfile(xml_path):
+ 		xml = ET.parse(xml_path)
+ 		root = xml.getroot()
+@@ -73,7 +73,7 @@ def import_properties_from_xml(xml_path, properties_from_xml=None):
+ 			value = child.find("value").text.strip() if child.find("value").text is not None  else ""
+ 			properties_from_xml[name] = value
+ 	else:
+-		print('XML file not found at path : ' + str(xml_path))
++		print(('XML file not found at path : ' + str(xml_path)))
+ 	return properties_from_xml
+ 
+ def populate_global_install_dict():
+@@ -118,7 +118,7 @@ def main(argv):
+ 	else:
+ 		while os.path.isfile(JAVA_BIN) == False:
+ 			log("Enter java executable path: :","info")
+-			JAVA_BIN=input()
++			JAVA_BIN=eval(input())
+ 	log("[I] Using Java:" + str(JAVA_BIN),"info")
+ 
+ 	globalDict=import_properties_from_xml(CFG_FILE,globalDict)
+@@ -136,7 +136,7 @@ def main(argv):
+ 
+ 	while SYNC_POLICY_MGR_USERNAME == "":
+ 		print("Enter policymgr user name:")
+-		SYNC_POLICY_MGR_USERNAME=input()
++		SYNC_POLICY_MGR_USERNAME=eval(input())
+ 
+ 	while SYNC_POLICY_MGR_PASSWORD == "":
+ 		SYNC_POLICY_MGR_PASSWORD=getpass.getpass("Enter policymgr user password:")
+-- 
+2.37.0
+

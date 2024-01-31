@@ -1,0 +1,26 @@
+diff --git a/service/src/java/org/apache/hive/service/cli/operation/Operation.java b/service/src/java/org/apache/hive/service/cli/operation/Operation.java
+index d866881b1a..d711a36569 100644
+--- a/service/src/java/org/apache/hive/service/cli/operation/Operation.java
++++ b/service/src/java/org/apache/hive/service/cli/operation/Operation.java
+@@ -409,4 +409,8 @@ protected void markOperationStartTime() {
+   protected void markOperationCompletedTime() {
+     operationComplete = System.currentTimeMillis();
+   }
++
++  public String getQueryId() {
++    return queryState.getQueryId();
++  }
+ }
+diff --git a/service/src/java/org/apache/hive/service/cli/operation/OperationManager.java b/service/src/java/org/apache/hive/service/cli/operation/OperationManager.java
+index 5336034839..a5435a6805 100644
+--- a/service/src/java/org/apache/hive/service/cli/operation/OperationManager.java
++++ b/service/src/java/org/apache/hive/service/cli/operation/OperationManager.java
+@@ -186,7 +186,7 @@ private Operation getOperationInternal(OperationHandle operationHandle) {
+   }
+ 
+   private String getQueryId(Operation operation) {
+-    return operation.getParentSession().getHiveConf().getVar(ConfVars.HIVEQUERYID);
++    return operation.getQueryId();
+   }
+ 
+   private void addOperation(Operation operation) {
