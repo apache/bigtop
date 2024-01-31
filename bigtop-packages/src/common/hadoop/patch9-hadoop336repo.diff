@@ -1,0 +1,50 @@
+diff --git a/pom.xml b/pom.xml
+index aaa420301241..d884c3b54c66 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -52,6 +52,22 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/x
+   </distributionManagement>
+ 
+   <repositories>
++    <repository>
++        <id>central</id>
++        <url>https://maven.aliyun.com/repository/central</url>
++    </repository>
++     <repository>
++        <id>public</id>
++        <url>https://maven.aliyun.com/repository/public</url>
++    </repository>
++     <repository>
++        <id>apache snapshots</id>
++        <url>https://maven.aliyun.com/repository/apache-snapshots</url>
++    </repository>
++      <repository>
++        <id>apache spring</id>
++        <url>https://maven.aliyun.com/repository/spring-plugin</url>
++    </repository>
+     <repository>
+       <id>${distMgmtSnapshotsId}</id>
+       <name>${distMgmtSnapshotsName}</name>
+@@ -65,7 +81,21 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/x
+       </snapshots>
+     </repository>
+   </repositories>
+-
++  
++  <pluginRepositories>
++    <pluginRepository> 
++        <id>public</id>
++        <name>aliyun nexus</name>
++        <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
++        <releases>
++            <enabled>true</enabled>
++        </releases>
++        <snapshots>
++            <enabled>false</enabled>
++        </snapshots>
++    </pluginRepository>
++  </pluginRepositories>
++  
+   <licenses>
+     <license>
+       <name>Apache License, Version 2.0</name>

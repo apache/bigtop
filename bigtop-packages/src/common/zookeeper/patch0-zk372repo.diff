@@ -1,0 +1,44 @@
+diff --git a/pom.xml b/pom.xml
+index 99f89a9ed..455c29011 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -56,6 +56,39 @@
+     </license>
+   </licenses>
+ 
++  <repositories>
++      <repository>
++          <id>central</id>
++          <url>https://maven.aliyun.com/repository/central</url>
++      </repository>
++       <repository>
++          <id>public</id>
++          <url>https://maven.aliyun.com/repository/public</url>
++      </repository>
++       <repository>
++          <id>apache snapshots</id>
++          <url>https://maven.aliyun.com/repository/apache-snapshots</url>
++      </repository>
++        <repository>
++          <id>apache spring</id>
++          <url>https://maven.aliyun.com/repository/spring-plugin</url>
++      </repository>
++  </repositories>
++
++  <pluginRepositories>
++    <pluginRepository> 
++        <id>public</id>
++        <name>aliyun nexus</name>
++        <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
++        <releases>
++            <enabled>true</enabled>
++        </releases>
++        <snapshots>
++            <enabled>false</enabled>
++        </snapshots>
++    </pluginRepository>
++  </pluginRepositories>
++
+   <modules>
+     <module>zookeeper-docs</module>
+     <module>zookeeper-jute</module>
