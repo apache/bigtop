@@ -77,7 +77,7 @@ project_version=3.1.0-SNAPSHOT
 
 embedded_dir=$BUILD_DIR/embedded
 hadoop_folder=$embedded_dir/hadoop_ambari_metrics
-hbase_folder=$embedded_dir/hbase-$HBASE_VERSION
+hbase_folder=$embedded_dir/hbase-${HBASE_VERSION}
 grafana_folder=$embedded_dir/grafana-9.3.2
 hadoop_version=3.3.5
 
