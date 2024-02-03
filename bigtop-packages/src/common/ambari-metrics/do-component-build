@@ -35,7 +35,7 @@ else
 fi
 phoenix_tar=phoenix-hbase-2.4-${phoenix_version}-bin.tar.gz
 phoenix_folder=phoenix-hbase-2.4-${phoenix_version}-bin
-hbase_folder=hbase-2.4.13
+hbase_folder=hbase-2.4.17
 
 embedded_dir=./embedded
 mkdir $embedded_dir
