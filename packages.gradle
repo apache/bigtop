@@ -362,6 +362,8 @@ def genTasks = { target ->
     def final BASE_VERSION = config.bigtop.components[target].version.base
     def final SRCDEB = "${PKG_NAME}_$PKG_VERSION-${BIGTOP_BUILD_STAMP}.dsc"
     def final HADOOP_VERSION = config.bigtop.components["hadoop"].version.pkg
+    def final ALIAS_VERSION = config.bigtop.components[target].version.alias
+
 
     exec {
       workingDir PKG_OUTPUT_DIR
@@ -527,6 +529,7 @@ def genTasks = { target ->
     def final PKG_OUTPUT_DIR = config.bigtop.components[target].outputdir
     def final PKG_VERSION = config.bigtop.components[target].version.pkg
     def final BASE_VERSION = config.bigtop.components[target].version.base
+    def final ALIAS_VERSION = config.bigtop.components[target].version.alias
     def final HADOOP_VERSION = config.bigtop.components["hadoop"].version.pkg
     def RELEASE_DIST = "rpmbuild --eval '%{?dist}' 2>/dev/null".execute().text.trim().replaceAll("'",'')
     def SRCRPM = "$PKG_OUTPUT_DIR/${PKG_NAME}${GRADLE_PKG_NAME_SUFFIX}-${PKG_VERSION}-$BIGTOP_BUILD_STAMP${RELEASE_DIST}.src.rpm"
@@ -545,6 +548,7 @@ def genTasks = { target ->
     def command = [
         '--define', "_topdir $PKG_BUILD_DIR/rpm/",
         '--define', "${NAME}_base_version $BASE_VERSION",
+        '--define', "${NAME}_alias_version $ALIAS_VERSION",
         '--define', "hadoop_version ${HADOOP_VERSION}",
         '--define', "${NAME}_version ${PKG_VERSION}",
         '--define', "${NAME}_release ${BIGTOP_BUILD_STAMP}%{?dist}",
@@ -610,6 +614,7 @@ def genTasks = { target ->
     def final PKG_VERSION = config.bigtop.components[target].version.pkg
     def final BASE_VERSION = config.bigtop.components[target].version.base
     def final PKG_OUTPUT_DIR = config.bigtop.components[target].outputdir
+    def final ALIAS_VERSION = config.bigtop.components[target].version.alias
     def final ENABLE_MAVEN_PARALLEL_BUILD = config.bigtop.components[target].maven_parallel_build
     def final MAVEN_BUILD_THREADS = project.hasProperty('buildThreads') ? project.property('buildThreads') : null
     safeDelete ("$PKG_BUILD_DIR/rpm")
@@ -687,6 +692,7 @@ def genTasks = { target ->
 
     def command = [
         '--define', "_topdir $PKG_BUILD_DIR/rpm/",
+        '--define', "${PKG_NAME_FOR_PKG}_alias_version $ALIAS_VERSION",
         '--define', "${PKG_NAME_FOR_PKG}_base_version $BASE_VERSION",
         '--define', "${PKG_NAME_FOR_PKG}_version ${PKG_VERSION}",
         '--define', "${PKG_NAME_FOR_PKG}_release ${BIGTOP_BUILD_STAMP}%{?dist}",
@@ -781,6 +787,7 @@ def genTasks = { target ->
       config.bigtop.components[target].tarball.destination = config.bigtop.components[target].tarball.destination
               .replaceAll(config.bigtop.components[target].version.base, BASE_VERSION)
 
+      config.bigtop.components[target].version.alias = ALIAS_VERSION
       config.bigtop.components[target].version.base = BASE_VERSION
       config.bigtop.components[target].version.pkg = BASE_VERSION
     }

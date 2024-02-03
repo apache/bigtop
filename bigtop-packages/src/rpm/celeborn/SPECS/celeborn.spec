@@ -47,7 +47,7 @@ Group: Development
 BuildArch: noarch
 Buildroot: %{_topdir}/INSTALL/%{celeborn_name}-%{version}
 License: ASL 2.0
-Source0: %{celeborn_name}-%{celeborn_base_version}.tar.gz
+Source0: %{celeborn_alias_version}.tar.gz
 Source1: do-component-build
 Source2: install_celeborn.sh
 Source3: bigtop.bom

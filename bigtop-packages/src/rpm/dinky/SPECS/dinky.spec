@@ -47,7 +47,7 @@ Group: Development
 BuildArch: noarch
 Buildroot: %{_topdir}/INSTALL/%{dinky_name}-%{version}
 License: ASL 2.0
-Source0: %{dinky_name}-%{dinky_base_version}.tar.gz
+Source0: %{dinky_name}-release-%{dinky_alias_version}.tar.gz
 Source1: do-component-build
 Source2: install_dinky.sh
 Source3: bigtop.bom
