@@ -28,6 +28,9 @@
 %define np_var_log_celeborn /var/log/%{celeborn_name}
 %define np_etc_celeborn /etc/%{celeborn_name}
 
+%define strip_v() %{lua:print(string.gsub(rpm.expand('%{1}'), '^v', ''))}
+
+
 %if  %{?suse_version:1}0
 %define alternatives_cmd update-alternatives
 %else
@@ -60,7 +63,7 @@ AutoReqProv: no
 Ambari
 
 %prep
-%setup -n %{celeborn_name}-%{celeborn_base_version}
+%setup -n incubator-%{celeborn_name}-%{strip_v %{celeborn_alias_version}}
 
 #BIGTOP_PATCH_COMMANDS
 
