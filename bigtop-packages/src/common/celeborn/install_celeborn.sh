@@ -89,19 +89,7 @@ LOG_DIR=${LOG_DIR:-/var/log/celeborn}
 
 NP_ETC_CELEBORN=/etc/celeborn
 
-
-
 install -d -m 0755 $PREFIX/$LIB_DIR
-install -d -m 0755 $PREFIX/$LIB_DIR/bin
-install -d -m 0755 $PREFIX/$LIB_DIR/charts
-install -d -m 0755 $PREFIX/$LIB_DIR/docker
-install -d -m 0755 $PREFIX/$LIB_DIR/flink
-install -d -m 0755 $PREFIX/$LIB_DIR/jars
-install -d -m 0755 $PREFIX/$LIB_DIR/master-jars
-install -d -m 0755 $PREFIX/$LIB_DIR/mr
-install -d -m 0755 $PREFIX/$LIB_DIR/sbin
-install -d -m 0755 $PREFIX/$LIB_DIR/spark
-install -d -m 0755 $PREFIX/$LIB_DIR/worker-jars
 
 install -d -m 0755 $PREFIX/$NP_ETC_CELEBORN
 install -d -m 0755 $PREFIX/$ETC_CELEBORN/conf.dist
@@ -111,20 +99,9 @@ install -d -m 0755 $PREFIX/$LOG_DIR
 TMP_DIR=$BUILD_DIR/tmp
 mkdir -p $BUILD_DIR/tmp
 tar -zxf $BUILD_DIR/apache-celeborn-*-bin.tgz -C $TMP_DIR
-
-cp -ra ${TMP_DIR}/apache-celeborn-*-bin/bin/* ${PREFIX}/${LIB_DIR}/bin/
-cp -ra ${TMP_DIR}/apache-celeborn-*-bin/charts/* ${PREFIX}/${LIB_DIR}/charts/
-cp -ra ${TMP_DIR}/apache-celeborn-*-bin/docker/* ${PREFIX}/${LIB_DIR}/docker/
-cp -ra ${TMP_DIR}/apache-celeborn-*-bin/flink/* ${PREFIX}/${LIB_DIR}/flink/
-cp -ra ${TMP_DIR}/apache-celeborn-*-bin/jars/* ${PREFIX}/${LIB_DIR}/jars/
-cp -ra ${TMP_DIR}/apache-celeborn-*-bin/master-jars/* ${PREFIX}/${LIB_DIR}/master-jars/
-cp -ra ${TMP_DIR}/apache-celeborn-*-bin/mr/* ${PREFIX}/${LIB_DIR}/mr/
-cp -ra ${TMP_DIR}/apache-celeborn-*-bin/sbin/* ${PREFIX}/${LIB_DIR}/sbin/
-cp -ra ${TMP_DIR}/apache-celeborn-*-bin/spark/* ${PREFIX}/${LIB_DIR}/spark/
-cp -ra ${TMP_DIR}/apache-celeborn-*-bin/worker-jars/* ${PREFIX}/${LIB_DIR}/worker-jars/
-
+cp -ra ${TMP_DIR}/apache-celeborn-*-bin/* ${PREFIX}/${LIB_DIR}/
 cp -ra ${TMP_DIR}/apache-celeborn-*-bin/conf/* $PREFIX/$ETC_CELEBORN/conf.dist/
-
+rm -rf  $PREFIX/$LIB_DIR/conf
 
 ln -s $NP_ETC_CELEBORN/conf $PREFIX/$LIB_DIR/conf
 ln -s $LOG_DIR $PREFIX/$LIB_DIR/logs

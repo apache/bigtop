@@ -14,20 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-<<<<<<<< HEAD:provisioner/docker/config_fedora-38.yaml
-docker:
-        memory_limit: "4g"
-        image: "bigtop/puppet:trunk-fedora-38"
-
-repo: "http://repos.bigtop.apache.org/releases/3.3.0/fedora/38/$basearch"
-distro: centos
-components: [hdfs, yarn, mapreduce]
-enable_local_repo: false
-smoke_test_components: [hdfs, yarn, mapreduce]
-========
 set -ex
 
 . `dirname $0`/bigtop.bom
 
 ./build/make-distribution.sh --sbt-enabled --release
->>>>>>>> udh3:bigtop-packages/src/common/celeborn/do-component-build
