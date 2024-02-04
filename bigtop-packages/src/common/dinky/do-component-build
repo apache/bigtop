@@ -13,21 +13,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-<<<<<<<< HEAD:provisioner/docker/config_openeuler-22.03.yaml
-docker:
-        memory_limit: "4g"
-        image: "bigtop/puppet:trunk-openeuler-22.03"
-
-repo: "http://repios.bigtop.apache.org/releases/3.2.0/openEuler/22.03/$basearch"
-distro: centos
-components: [hdfs ,yarn ,mapreduce]
-enable_local_repo: false
-smoke_test_components: [hdfs, yarn, mapreduce]
-========
 set -ex
 
 . `dirname $0`/bigtop.bom
 
 mvn clean install -Dmaven.test.skip=true -Dspotless.check.skip=true -P web,aliyun,prod,scala-2.12,web,fast,flink-1.15,flink-single-version
->>>>>>>> udh3:bigtop-packages/src/common/dinky/do-component-build

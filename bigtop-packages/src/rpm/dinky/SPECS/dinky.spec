@@ -34,6 +34,7 @@
 %define alternatives_cmd alternatives
 %endif
 
+%define strip_v() %{lua:print(string.gsub(rpm.expand('%{1}'), '^v', ''))}
 
 # disable repacking jars
 %define __os_install_post %{nil}
@@ -47,7 +48,7 @@ Group: Development
 BuildArch: noarch
 Buildroot: %{_topdir}/INSTALL/%{dinky_name}-%{version}
 License: ASL 2.0
-Source0: %{dinky_name}-release-%{dinky_alias_version}.tar.gz
+Source0: %{dinky_alias_version}.tar.gz
 Source1: do-component-build
 Source2: install_dinky.sh
 Source3: bigtop.bom
@@ -60,7 +61,7 @@ AutoReqProv: no
 Ambari
 
 %prep
-%setup -n %{dinky_name}-%{dinky_base_version}
+%setup -n %{dinky_name}-%{strip_v %{dinky_alias_version}}
 
 #BIGTOP_PATCH_COMMANDS
 

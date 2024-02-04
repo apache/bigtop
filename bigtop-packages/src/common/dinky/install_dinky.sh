@@ -92,12 +92,12 @@ NP_VAR_LIB_DINKY_DATA=/var/lib/dinky/data
 
 
 install -d -m 0755 $PREFIX/$LIB_DIR
-install -d -m 0755 $PREFIX/$LIB_DIR/extends
-install -d -m 0755 $PREFIX/$LIB_DIR/jar
-install -d -m 0755 $PREFIX/$LIB_DIR/sql
-install -d -m 0755 $PREFIX/$LIB_DIR/lib
-install -d -m 0755 $PREFIX/$LIB_DIR/dinky-loader
-install -d -m 0755 $PREFIX/$LIB_DIR/config
+#install -d -m 0755 $PREFIX/$LIB_DIR/extends
+#install -d -m 0755 $PREFIX/$LIB_DIR/jar
+#install -d -m 0755 $PREFIX/$LIB_DIR/sql
+#install -d -m 0755 $PREFIX/$LIB_DIR/lib
+#install -d -m 0755 $PREFIX/$LIB_DIR/dinky-loader
+#install -d -m 0755 $PREFIX/$LIB_DIR/config
 
 install -d -m 0755 $PREFIX/$NP_ETC_DINKY
 install -d -m 0755 $PREFIX/$ETC_DINKY/conf.dist
@@ -108,13 +108,15 @@ TMP_DIR=$BUILD_DIR/tmp
 mkdir -p $BUILD_DIR/tmp
 tar -zxf $BUILD_DIR/build/dinky-release*.tar.gz -C $TMP_DIR
 
-cp -ra ${TMP_DIR}/dinky-*/extends/* ${PREFIX}/${LIB_DIR}/extends/
-cp -ra ${TMP_DIR}/dinky-*/jar/* ${PREFIX}/${LIB_DIR}/jar/
-cp -ra ${TMP_DIR}/dinky-*/lib/* ${PREFIX}/${LIB_DIR}/lib/
-cp -ra ${TMP_DIR}/dinky-*/sql/* ${PREFIX}/${LIB_DIR}/sql/
-cp -ra ${TMP_DIR}/dinky-*/dinky-loader/* ${PREFIX}/${LIB_DIR}/dinky-loader/
+cp -ra ${TMP_DIR}/dinky-*/* ${PREFIX}/${LIB_DIR}/
+#cp -ra ${TMP_DIR}/dinky-*/jar/* ${PREFIX}/${LIB_DIR}/jar/
+#cp -ra ${TMP_DIR}/dinky-*/lib/* ${PREFIX}/${LIB_DIR}/lib/
+#cp -ra ${TMP_DIR}/dinky-*/sql/* ${PREFIX}/${LIB_DIR}/sql/
+#cp -ra ${TMP_DIR}/dinky-*/dinky-loader/* ${PREFIX}/${LIB_DIR}/dinky-loader/
+#cp -ra ${TMP_DIR}/dinky-*/auto.sh ${PREFIX}/${LIB_DIR}/auto.sh
+
 cp -ra ${TMP_DIR}/dinky-*/config/* $PREFIX/$ETC_DINKY/conf.dist/
-cp -ra ${TMP_DIR}/dinky-*/auto.sh ${PREFIX}/${LIB_DIR}/auto.sh
+rm -rf ${PREFIX}/${LIB_DIR}/config
 
 ln -s $NP_ETC_DINKY/conf $PREFIX/$LIB_DIR/config
 ln -s $LOG_DIR $PREFIX/$LIB_DIR/logs
