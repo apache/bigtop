@@ -109,7 +109,6 @@ getent passwd kyuubi >/dev/null || useradd -c "kyuubi" -s /sbin/nologin -g kyuub
 %{usr_lib_kyuubi}/charts
 %{usr_lib_kyuubi}/db-scripts
 %{usr_lib_kyuubi}/docker
-%{usr_lib_kyuubi}/extension
 %{usr_lib_kyuubi}/externals
 %{usr_lib_kyuubi}/jars
 %{usr_lib_kyuubi}/web-ui

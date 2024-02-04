@@ -90,16 +90,16 @@ LOG_DIR=${LOG_DIR:-/var/log/kyuubi}
 NP_ETC_KYUUBI=/etc/kyuubi
 
 install -d -m 0755 $PREFIX/$LIB_DIR
-install -d -m 0755 $PREFIX/$LIB_DIR/beeline-jars
-install -d -m 0755 $PREFIX/$LIB_DIR/bin
-install -d -m 0755 $PREFIX/$LIB_DIR/charts
-install -d -m 0755 $PREFIX/$LIB_DIR/db-scripts
-install -d -m 0755 $PREFIX/$LIB_DIR/docker
-install -d -m 0755 $PREFIX/$LIB_DIR/extension
-install -d -m 0755 $PREFIX/$LIB_DIR/externals
-install -d -m 0755 $PREFIX/$LIB_DIR/jars
-install -d -m 0755 $PREFIX/$LIB_DIR/web-ui
-install -d -m 0755 $PREFIX/$LIB_DIR/work
+#install -d -m 0755 $PREFIX/$LIB_DIR/beeline-jars
+#install -d -m 0755 $PREFIX/$LIB_DIR/bin
+#install -d -m 0755 $PREFIX/$LIB_DIR/charts
+#install -d -m 0755 $PREFIX/$LIB_DIR/db-scripts
+#install -d -m 0755 $PREFIX/$LIB_DIR/docker
+#install -d -m 0755 $PREFIX/$LIB_DIR/extension
+#install -d -m 0755 $PREFIX/$LIB_DIR/externals
+#install -d -m 0755 $PREFIX/$LIB_DIR/jars
+#install -d -m 0755 $PREFIX/$LIB_DIR/web-ui
+#install -d -m 0755 $PREFIX/$LIB_DIR/work
 
 
 install -d -m 0755 $PREFIX/$NP_ETC_KYUUBI
@@ -112,17 +112,9 @@ TMP_DIR=$BUILD_DIR/tmp
 mkdir -p $BUILD_DIR/tmp
 tar -zxf $BUILD_DIR/apache-kyuubi*.tgz -C $TMP_DIR
 
-cp -ra ${TMP_DIR}/apache-kyuubi-*-bin/beeline-jars/* ${PREFIX}/${LIB_DIR}/beeline-jars/
-cp -a ${TMP_DIR}/apache-kyuubi-*-bin/bin/* ${PREFIX}/${LIB_DIR}/bin/
-cp -ra ${TMP_DIR}/apache-kyuubi-*-bin/charts/* ${PREFIX}/${LIB_DIR}/charts/
-cp -ra ${TMP_DIR}/apache-kyuubi-*-bin/db-scripts/* ${PREFIX}/${LIB_DIR}/db-scripts/
-cp -ra ${TMP_DIR}/apache-kyuubi-*-bin/docker/* ${PREFIX}/${LIB_DIR}/docker/
-cp -a ${TMP_DIR}/apache-kyuubi-*-bin/extension/* ${PREFIX}/${LIB_DIR}/extension/
-cp -a ${TMP_DIR}/apache-kyuubi-*-bin/externals/* ${PREFIX}/${LIB_DIR}/externals/
-cp -a ${TMP_DIR}/apache-kyuubi-*-bin/jars/* ${PREFIX}/${LIB_DIR}/jars/
-cp -a ${TMP_DIR}/apache-kyuubi-*-bin/web-ui/* ${PREFIX}/${LIB_DIR}/web-ui/
-
+cp -ra ${TMP_DIR}/apache-kyuubi-*-bin/* ${PREFIX}/${LIB_DIR}/
 cp -ra ${TMP_DIR}/apache-kyuubi-*-bin/conf/* ${PREFIX}/${ETC_KYUUBI}/conf.dist
+rm -rf  ${PREFIX}/${LIB_DIR}/conf
 
 ln -s $NP_ETC_KYUUBI/conf $PREFIX/$LIB_DIR/conf
 ln -s $LOG_DIR $PREFIX/$LIB_DIR/logs
