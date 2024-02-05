@@ -1,31 +1,31 @@
 diff --git a/pom.xml b/pom.xml
-index 986a13cba20..db605a0e134 100644
+index dafecb0c55a..7367b78fb66 100644
 --- a/pom.xml
 +++ b/pom.xml
-@@ -285,6 +285,22 @@
-     <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss z</maven.build.timestamp.format>
+@@ -310,6 +310,22 @@
+     </extraJavaTestArgs>
    </properties>
    <repositories>
 +    <repository>
-+        <id>ali central</id>
-+        <url>https://maven.aliyun.com/repository/central</url>
++       <id>ali central</id>
++       <url>https://maven.aliyun.com/repository/central</url>
++    </repository>
++    <repository>
++       <id>ali public</id>
++       <url>https://maven.aliyun.com/repository/public</url>
++    </repository>
++    <repository>
++       <id>ali apache snapshots</id>
++       <url>https://maven.aliyun.com/repository/apache-snapshots</url>
 +    </repository>
 +     <repository>
-+        <id>ali public</id>
-+        <url>https://maven.aliyun.com/repository/public</url>
-+    </repository>
-+     <repository>
-+        <id>ali apache snapshots</id>
-+        <url>https://maven.aliyun.com/repository/apache-snapshots</url>
-+    </repository>
-+      <repository>
-+        <id>ali apache spring</id>
-+        <url>https://maven.aliyun.com/repository/spring-plugin</url>
++       <id>ali apache spring</id>
++       <url>https://maven.aliyun.com/repository/spring-plugin</url>
 +    </repository>
      <repository>
        <id>gcs-maven-central-mirror</id>
        <!--
-@@ -316,6 +332,17 @@
+@@ -341,6 +357,17 @@
      </repository>
    </repositories>
    <pluginRepositories>
@@ -43,7 +43,7 @@ index 986a13cba20..db605a0e134 100644
      <pluginRepository>
        <id>gcs-maven-central-mirror</id>
        <!--
-@@ -2892,7 +2919,7 @@
+@@ -3104,7 +3131,7 @@
          <plugin>
            <groupId>org.apache.maven.plugins</groupId>
            <artifactId>maven-shade-plugin</artifactId>
