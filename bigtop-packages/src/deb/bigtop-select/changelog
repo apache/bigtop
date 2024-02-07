@@ -1,0 +1,5 @@
+bigtop-select (3.2.1-1) unstable; urgency=medium
+
+  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+
+ -- Bigtop <dev@bigtop.apache.org>  Wed, 01 Feb 2023 12:51:18 +0000

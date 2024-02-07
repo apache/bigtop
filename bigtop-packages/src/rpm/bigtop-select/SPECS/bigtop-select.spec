@@ -15,10 +15,6 @@
 
 %define lib_dir              /usr/lib/bigtop-select
 %define bin_dir              /usr/bin
-%define default_parent_dir   /usr/bigtop/%{bigtop_base_version}
-%if "%{parent_dir}" != ""
-%define default_parent_dir   %{parent_dir}
-%endif
 
 Name: bigtop-select
 Version: %{bigtop_select_version}
@@ -64,7 +60,7 @@ bash %{SOURCE0} \
   --distro-dir=${RPM_SOURCE_DIR} \
   --build-dir=${PWD} \
   --prefix=${RPM_BUILD_ROOT} \
-  --parent-dir=%{default_parent_dir} \
+  --parent-dir=%{parent_dir} \
   --bigtop-base-version=%{bigtop_base_version}
 
 %clean
@@ -76,7 +72,6 @@ rm -rf $RPM_BUILD_ROOT
 %doc LICENSE
 
 %{lib_dir}
-%{default_parent_dir}
 
 %changelog
 

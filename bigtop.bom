@@ -276,7 +276,6 @@ bigtop {
       relNotes = "Service package for Apache Bigtop information to use Ambari"
       version { base = bigtop.version; pkg = base-"-SNAPSHOT"; release = 1 }
       tarball { destination = "bigtop-select-${version.base}.tar.gz" }
-      packaging = 'rpm'
     }
     'bigtop-jsvc' {
       name    = "bigtop-jsvc"
