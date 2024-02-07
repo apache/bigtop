@@ -71,7 +71,8 @@ leaves = {
            "ranger-usersync" : "ranger-usersync",
            "ranger-tagsync" : "ranger-tagsync",
            "knox-server": "knox",
-           "kyuubi-server": "kyuubi"
+           "kyuubi-server": "kyuubi",
+           "celeborn": "celeborn",
 }
 
 # Define the aliases and the list of leaves they correspond to
