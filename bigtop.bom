@@ -217,7 +217,6 @@ bigtop {
     'spark' {
       name    = 'spark'
       pkg     = 'spark'
-      maven_parallel_build = true
       rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
       relNotes = 'Apache Spark'
       /*
@@ -360,7 +359,6 @@ bigtop {
     'ambari-infra' {
       name    = 'ambari-infra'
       relNotes = 'Apache Ambari Infra'
-      maven_parallel_build = true
       version { base = '3.1'; pkg = '3.1'; release = 1 }
       tarball { destination = "apache-ambari-infra-${version.base}.tar.gz"
                 source = destination}
