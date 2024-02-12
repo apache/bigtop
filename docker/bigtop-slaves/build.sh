@@ -69,8 +69,13 @@ case ${OS} in
         fi
         ;;
     rockylinux)
-        PUPPET_MODULES="/etc/puppetlabs/code/environments/production/modules/bigtop_toolchain"
-        UPDATE_SOURCE="dnf clean all \&\& dnf updateinfo"
+        if [ "${VERSION_INT}" -ge "9" ]; then
+           PUPPET_MODULES="/etc/puppet/code/environments/production/modules/bigtop_toolchain"
+           UPDATE_SOURCE="dnf clean all \&\& dnf updateinfo"
+        else
+           PUPPET_MODULES="/etc/puppetlabs/code/environments/production/modules/bigtop_toolchain"
+           UPDATE_SOURCE="dnf clean all \&\& dnf updateinfo"
+        fi
         ;;
     opensuse)
         PUPPET_MODULES="/etc/puppet/modules/bigtop_toolchain"

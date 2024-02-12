@@ -70,10 +70,16 @@ class bigtop_toolchain::packages {
         "yasm"
       ]
 
-      if ($operatingsystem == 'Fedora' or $operatingsystemmajrelease !~ /^[0-7]$/) {
+		notify{"$operatingsystem and $operatingsystemmajrelease":}
+      if (/redhat|centos|rocky/ in downcase($operatingsystem) and Integer($operatingsystemmajrelease) >= 9) {
+        $pkgs = $_pkgs + ['cmake']
+        notify{"# redhat and derivatives": before => Package[$pkgs]}
+      } elsif ($operatingsystem == 'Fedora' or $operatingsystemmajrelease !~ /^[0-7]$/) {
         $pkgs = concat($_pkgs, ["python2-devel", "libtirpc-devel", "cmake"])
+        notify{"# Fedora": before => Package[$pkgs]}
       } else {
         $pkgs = concat($_pkgs, ["python-devel", "cmake3"])
+        notify{"# all else": before => Package[$pkgs]}
       }
     }
     /(?i:(SLES|opensuse))/: { $pkgs = [
@@ -397,7 +403,9 @@ class bigtop_toolchain::packages {
   }
 
   # download python 2.7.14 for openEuler docker slaves
-  if $operatingsystem == 'openEuler' {
+  # and RHEL9 based distros
+  if $operatingsystem == 'openEuler'
+     or (/redhat|centos|rocky/ in $operatingsystem and Integer($operatingsystemmajrelease) >= 9) {
     exec { "download_python2.7":
       cwd => "/usr/src",
       command => "/usr/bin/wget https://www.python.org/ftp/python/2.7.14/Python-2.7.14.tgz --no-check-certificate && /usr/bin/mkdir Python-2.7.14 && /bin/tar -xvzf Python-2.7.14.tgz -C Python-2.7.14 --strip-components=1 && cd Python-2.7.14",
