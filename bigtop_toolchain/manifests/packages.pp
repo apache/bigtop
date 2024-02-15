@@ -70,16 +70,12 @@ class bigtop_toolchain::packages {
         "yasm"
       ]
 
-		notify{"$operatingsystem and $operatingsystemmajrelease":}
       if (/redhat|centos|rocky/ in downcase($operatingsystem) and Integer($operatingsystemmajrelease) >= 9) {
         $pkgs = $_pkgs + ['cmake']
-        notify{"# redhat and derivatives": before => Package[$pkgs]}
       } elsif ($operatingsystem == 'Fedora' or $operatingsystemmajrelease !~ /^[0-7]$/) {
         $pkgs = concat($_pkgs, ["python2-devel", "libtirpc-devel", "cmake"])
-        notify{"# Fedora": before => Package[$pkgs]}
       } else {
         $pkgs = concat($_pkgs, ["python-devel", "cmake3"])
-        notify{"# all else": before => Package[$pkgs]}
       }
     }
     /(?i:(SLES|opensuse))/: { $pkgs = [
