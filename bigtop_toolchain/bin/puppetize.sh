@@ -64,7 +64,6 @@ case ${ID}-${VERSION_ID} in
     rocky-9*)
         rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
         dnf -y check-update
-        #dnf -y install glibc-langpack-en hostname diffutils curl sudo unzip wget puppet procps-ng 'dnf-command(config-manager)'
         dnf -y install glibc-langpack-en hostname diffutils sudo unzip wget puppet procps-ng 'dnf-command(config-manager)'
         # Install the module in the same way as Fedora 31 and CentOS 7 for compatibility issues.
         puppet module install puppetlabs-stdlib --version 4.12.0
