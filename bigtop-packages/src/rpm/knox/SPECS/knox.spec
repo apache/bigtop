@@ -43,13 +43,6 @@ Source4: bigtop.bom
 Source6: init.d.tmpl
 Requires: bigtop-utils >= 0.7
 Requires(preun): /sbin/service
-%if  %{?suse_version:1}0
-# Required for init scripts
-Requires: insserv
-%else
-Requires: /lib/lsb/init-functions
-Requires: sh-utils, redhat-lsb
-%endif
 
 AutoProv: no
 AutoReqProv: no
