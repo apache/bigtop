@@ -13,6 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+%undefine __brp_mangle_shebangs
+
 %define lib_dir              /usr/lib/bigtop-select
 %define bin_dir              /usr/bin
 %define default_parent_dir   /usr/bigtop/%{bigtop_base_version}
