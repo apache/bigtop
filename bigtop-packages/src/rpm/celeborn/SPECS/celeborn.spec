@@ -105,6 +105,7 @@ getent passwd celeborn >/dev/null || useradd -c "celeborn" -s /sbin/nologin -g c
 %attr(0755,celeborn,celeborn) %{np_var_run_celeborn}
 
 %{usr_lib_celeborn}/bin
+%{usr_lib_celeborn}/conf
 %{usr_lib_celeborn}/charts
 %{usr_lib_celeborn}/docker
 %{usr_lib_celeborn}/flink
