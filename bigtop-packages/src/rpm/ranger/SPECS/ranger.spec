@@ -161,11 +161,8 @@ Requires: coreutils, insserv
 # using the openeuler-lsb replace redhat-lsb in openEuler
 %if 0%{?openEuler}
 Requires: coreutils, openeuler-lsb
-<<<<<<< HEAD
-=======
 %elif 0%{?kylin}
 Requires: coreutils, kylin-lsb
->>>>>>> udh3
 %elif %{!?suse_version:1}0 && %{!?mgaversion:1}0
 # Required for init scripts
 Requires: coreutils, redhat-lsb
@@ -199,11 +196,8 @@ Requires: coreutils, insserv
 # using the openeuler-lsb replace redhat-lsb in openEuler
 %if 0%{?openEuler}
 Requires: coreutils, openeuler-lsb
-<<<<<<< HEAD
-=======
 %elif 0%{?kylin}
 Requires: coreutils, kylin-lsb
->>>>>>> udh3
 %elif %{!?suse_version:1}0 && %{!?mgaversion:1}0
 # Required for init scripts
 Requires: coreutils, redhat-lsb
@@ -237,11 +231,8 @@ Requires: coreutils, insserv
 # using the openeuler-lsb replace redhat-lsb in openEuler
 %if 0%{?openEuler}
 Requires: coreutils, openeuler-lsb
-<<<<<<< HEAD
-=======
 %elif 0%{?kylin}
 Requires: coreutils, kylin-lsb
->>>>>>> udh3
 %elif %{!?suse_version:1}0 && %{!?mgaversion:1}0
 # Required for init scripts
 Requires: coreutils, redhat-lsb
@@ -274,11 +265,8 @@ Requires: coreutils, insserv
 # using the openeuler-lsb replace redhat-lsb in openEuler
 %if 0%{?openEuler}
 Requires: coreutils, openeuler-lsb
-<<<<<<< HEAD
-=======
 %elif 0%{?kylin}
 Requires: coreutils, kylin-lsb
->>>>>>> udh3
 %elif %{!?suse_version:1}0 && %{!?mgaversion:1}0
 # Required for init scripts
 Requires: coreutils, redhat-lsb
