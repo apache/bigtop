@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 #
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
@@ -154,7 +154,7 @@ def listPackages( packages ):
   if packages == None:
     packages = leaves
 
-  packages.sort()
+  sorted(packages)
   for pkg in packages:
     linkname = current + "/" + pkg
     if os.path.isdir(linkname):
@@ -166,12 +166,12 @@ def listPackages( packages ):
 # Print the avaialable package names
 def printPackages():
   packages = leaves.keys()
-  packages.sort()
+  sorted(packages)
   print("Packages:")
   for pkg in packages:
      print(" " + pkg)
   groups = aliases.keys()
-  groups.sort()
+  sorted(groups)
   print("Aliases:")
   for pkg in groups:
     print(" " + pkg)
@@ -197,7 +197,7 @@ def printVersions():
         sys.exit(1)
 
   keys = result.keys()
-  keys.sort()
+  sorted(keys)
   for k in keys:
      print(result[k])
 
@@ -218,9 +218,9 @@ def setPackages(packages, version, rpm_mode):
     sys.exit(1)
 
   if not os.path.isdir(current):
-    os.mkdir(current, 0755)
+    os.mkdir(current, 0o755)
 
-  packages.sort()
+  sorted(packages)
   for pkg in packages:
     linkname = current + "/" + pkg
     if os.path.islink(linkname) and rpm_mode:

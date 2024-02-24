@@ -32,8 +32,7 @@ BuildRoot:  %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 BuildArch:  noarch
 Source0:    install_select.sh
 Source1:    LICENSE
-Source2:    conf-select
-Source3:    distro-select
+Source2:    distro-select
 Requires:   bash
 
 # "which" command is needed for a lot of projects.
@@ -41,7 +40,7 @@ Requires:   bash
 %if  %{?suse_version:1}0
 Requires:  util-linux
 %else
-Requires:       which
+Requires:       which, python3
 %endif
 
 %description
@@ -53,7 +52,6 @@ This includes a collection of useful tools and files for Bigtop and Ambari
 install -p -m 755 %{SOURCE0} .
 install -p -m 755 %{SOURCE1} .
 install -p -m 755 %{SOURCE2} .
-install -p -m 755 %{SOURCE3} .
 
 
 %build

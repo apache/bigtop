@@ -79,13 +79,11 @@ CONF_DIR=${CONF_DIR:-/etc/bigtop-select/conf.dist}
 
 STACK_ROOT_DIR=$(echo ${PARENT_DIR} | sed -e "s/\/${BIGTOP_BASE_VERSION}$//")
 STACK_SELECTOR=distro-select
-CONF_SELECTOR=conf-select
 
 # Install packages
 install -d -p -m 755 $PREFIX${LIB_DIR}/
 install -d -p -m 755 $PREFIX${PARENT_DIR}/
 install -p -m 755 ${DISTRO_DIR}/${STACK_SELECTOR} $PREFIX${LIB_DIR}/
-install -p -m 755 ${DISTRO_DIR}/${CONF_SELECTOR} $PREFIX${LIB_DIR}/
 cat > $PREFIX${LIB_DIR}/params.py <<EOF
 #!/usr/bin/env python2
 #
