@@ -91,6 +91,11 @@ getent passwd celeborn >/dev/null || useradd -c "celeborn" -s /sbin/nologin -g c
 %{alternatives_cmd} --install %{np_etc_celeborn}/conf %{celeborn_name}-conf %{etc_celeborn}/conf.dist 30
 
 
+%preun
+if [ "$1" = 0 ]; then
+  %{alternatives_cmd} --remove %{celeborn_name}-conf %{etc_celeborn}/conf.dist || :
+fi
+
 #######################
 #### FILES SECTION ####
 #######################

@@ -87,6 +87,10 @@ getent passwd kyuubi >/dev/null || useradd -c "kyuubi" -s /sbin/nologin -g kyuub
 %post
 %{alternatives_cmd} --install %{np_etc_kyuubi}/conf %{kyuubi_name}-conf %{etc_kyuubi}/conf.dist 30
 
+%preun
+if [ "$1" = 0 ]; then
+  %{alternatives_cmd} --remove %{kyuubi_name}-conf %{etc_kyuubi}/conf.dist || :
+fi
 
 #######################
 #### FILES SECTION ####

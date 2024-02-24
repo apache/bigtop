@@ -128,6 +128,10 @@ for service in %{knox_services}; do
 done
 %{alternatives_cmd} --install %{np_etc_knox}/conf %{knox_name}-conf %{etc_knox}/conf.dist 30
 
+%preun
+if [ "$1" = 0 ]; then
+  %{alternatives_cmd} --remove %{knox_name}-conf %{etc_knox}/conf.dist || :
+fi
 
 %postun
 for service in %{knox_services}; do

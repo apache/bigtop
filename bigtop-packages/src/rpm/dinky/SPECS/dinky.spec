@@ -88,6 +88,10 @@ getent passwd dinky >/dev/null || useradd -c "dinky" -s /sbin/nologin -g dinky -
 %post
 %{alternatives_cmd} --install %{np_etc_dinky}/conf %{dinky_name}-conf %{etc_dinky}/conf.dist 30
 
+%preun
+if [ "$1" = 0 ]; then
+  %{alternatives_cmd} --remove %{dinky_name}-conf %{etc_dinky}/conf.dist || :
+fi
 
 #######################
 #### FILES SECTION ####
