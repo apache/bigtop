@@ -154,7 +154,7 @@ def listPackages( packages ):
   if packages == None:
     packages = leaves
 
-  sorted(packages)
+  packages = sorted(packages)
   for pkg in packages:
     linkname = current + "/" + pkg
     if os.path.isdir(linkname):
@@ -165,13 +165,11 @@ def listPackages( packages ):
 
 # Print the avaialable package names
 def printPackages():
-  packages = leaves.keys()
-  sorted(packages)
+  packages = sorted(leaves.keys())
   print("Packages:")
   for pkg in packages:
      print(" " + pkg)
-  groups = aliases.keys()
-  sorted(groups)
+  groups = sorted(aliases.keys())
   print("Aliases:")
   for pkg in groups:
     print(" " + pkg)
@@ -196,8 +194,7 @@ def printVersions():
         print("ERROR: Unexpected file/directory found in %s: %s" % (root, f))
         sys.exit(1)
 
-  keys = result.keys()
-  sorted(keys)
+  keys = sorted(result.keys())
   for k in keys:
      print(result[k])
 
@@ -220,7 +217,7 @@ def setPackages(packages, version, rpm_mode):
   if not os.path.isdir(current):
     os.mkdir(current, 0o755)
 
-  sorted(packages)
+  packages = sorted(packages)
   for pkg in packages:
     linkname = current + "/" + pkg
     if os.path.islink(linkname) and rpm_mode:
