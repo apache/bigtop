@@ -154,6 +154,11 @@ getent passwd flink >/dev/null || useradd -c "Flink" -s /sbin/nologin -g flink -
 %post
 %{alternatives_cmd} --install %{np_etc_flink}/conf %{flink_name}-conf %{etc_flink}/conf.dist 30
 
+%preun
+if [ "$1" = 0 ]; then
+        %{alternatives_cmd} --remove %{flink_name}-conf %{etc_flink}/conf.dist || :
+fi
+
 ###### FILES ###########
 
 %files
