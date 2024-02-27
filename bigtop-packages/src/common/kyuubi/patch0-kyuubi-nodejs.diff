@@ -1,0 +1,13 @@
+diff --git a/pom.xml b/pom.xml
+index cde5d636f..7411c7736 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -214,7 +214,7 @@
+ 
+         <!-- webui -->
+         <webui.skip>true</webui.skip>
+-        <node.version>v18.16.0</node.version>
++        <node.version>v16.15.1</node.version>
+         <pnpm.version>v8.6.1</pnpm.version>
+ 
+         <!-- apply to kyuubi-hive-jdbc/kyuubi-hive-beeline module -->
