@@ -429,7 +429,7 @@ bigtop {
       rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
       maven_parallel_build = true
       relNotes = 'Apache Kyuubi'
-      version { base = '1.8.0'; pkg = base; release = 1 }
+      version { base = '1.8.1'; pkg = base; release = 1 }
       tarball { destination = "$name-${version.base}.tar.gz"
                 source      = "v${version.base}.tar.gz" }
       url     { site = "https://github.com/apache/kyuubi/archive/refs/tags"
