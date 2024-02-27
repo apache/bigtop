@@ -120,6 +120,7 @@ install -d -m 0755 $PREFIX/$LIB_DIR/core/server/common/src/main/webapp
 install -d -m 0755 $PREFIX/$DATA_DIR
 install -d -m 0755 $PREFIX/$DATA_DIR/alluxio
 
+install -d -m 0755 $PREFIX/$VAR_DIR
 install -d -m 0755 $PREFIX/$NP_VAR_DIR/run/alluxio
 install -d -m 0755 $PREFIX/$NP_VAR_DIR/log/alluxio
 
