@@ -47,6 +47,9 @@ leaves = {
            "hadoop-yarn-nodemanager": "hadoop-yarn",
            "hadoop-mapreduce-client": "hadoop-mapreduce",
            "hadoop-mapreduce-historyserver": "hadoop-mapreduce",
+           "hadoop-yarn-timelineserver": "hadoop-yarn",
+           "hadoop-yarn-timelinereader": "hadoop-yarn",
+           "hadoop-yarn-registrydns": "hadoop-yarn",
            "hbase-client": "hbase",
            "hbase-master": "hbase",
            "hbase-regionserver": "hbase",
@@ -72,12 +75,12 @@ leaves = {
            "ranger-tagsync" : "ranger-tagsync",
            "knox-server": "knox",
            "kyuubi-server": "kyuubi",
-            "alluxio": "alluxio",
-            "alluxio-master": "alluxio",
-            "alluxio-worker": "alluxio",
-            "celeborn": "celeborn",
-            "celeborn-master": "celeborn",
-            "celeborn-worker": "celeborn"
+           "alluxio": "alluxio",
+           "alluxio-master": "alluxio",
+           "alluxio-worker": "alluxio",
+           "celeborn": "celeborn",
+           "celeborn-master": "celeborn",
+           "celeborn-worker": "celeborn"
 }
 
 # Define the aliases and the list of leaves they correspond to
@@ -98,7 +101,10 @@ aliases = {
                          "hadoop-hdfs-secondarynamenode"],
   "hadoop-mapreduce-server": ["hadoop-mapreduce-historyserver"],
   "hadoop-yarn-server": ["hadoop-yarn-resourcemanager",
-                         "hadoop-yarn-nodemanager"],
+                         "hadoop-yarn-nodemanager",
+                         "hadoop-yarn-timelineserver",
+                         "hadoop-yarn-timelinereader",
+                         "hadoop-yarn-registrydns"],
   "hive-server": ["hive-metastore",
                   "hive-server2",
                   "hive-webhcat"],
@@ -139,7 +145,8 @@ command_symlinks = {
   "spark-shell" : "spark-client/../../bin/spark-shell",
   "spark-sql" : "spark-client/../../bin/spark-sql",
   "spark-submit" : "spark-client/../../bin/spark-submit",
-  "pyspark" : "spark-client/../../bin/pyspark"
+  "pyspark" : "spark-client/../../bin/pyspark",
+  "alluxio" : "alluxio/bin/alluxio"
 }
 
 
