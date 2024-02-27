@@ -82,7 +82,9 @@ Requires: initscripts
 Requires: bigtop-utils
 
 # disable repacking jars
-%define __arch_install_post %{nil}
+%define __os_install_post %{nil}
+%define __jar_repack %{nil}
+%define  debug_package %{nil}
 
 # disable debug package
 %define debug_package %{nil}

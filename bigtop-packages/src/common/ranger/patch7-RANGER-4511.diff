@@ -1,8 +1,8 @@
 diff --git a/distro/pom.xml b/distro/pom.xml
-index f1dff0b72..d8e5c1634 100644
+index f1dff0b72..5b1b2ffae 100644
 --- a/distro/pom.xml
 +++ b/distro/pom.xml
-@@ -728,10 +728,312 @@
+@@ -728,10 +728,319 @@
  
      <!--Add a dependency here to ensure this module is the final one built-->
      <dependencies>
@@ -312,6 +312,53 @@ index f1dff0b72..d8e5c1634 100644
 +            <artifactId>unixauthservice</artifactId>
 +            <version>${project.version}</version>
 +            <scope>provided</scope>
++        </dependency>
++        <dependency>
++            <groupId>org.apache.ranger</groupId>
++            <artifactId>ranger-sampleapp-plugin</artifactId>
++            <version>${project.version}</version>
++            <scope>provided</scope>
          </dependency>
++        
      </dependencies>
  </project>
+diff --git a/plugin-kylin/pom.xml b/plugin-kylin/pom.xml
+index 376f166d8..5e920f6aa 100644
+--- a/plugin-kylin/pom.xml
++++ b/plugin-kylin/pom.xml
+@@ -31,6 +31,15 @@
+         <version>2.4.0</version>
+         <relativePath>..</relativePath>
+     </parent>
++    <dependencyManagement>
++        <dependencies>
++          <dependency>
++            <groupId>org.apache.kafka</groupId>
++            <artifactId>kafka_2.11</artifactId>
++            <version>2.1.1</version>
++          </dependency>
++        </dependencies>
++    </dependencyManagement>
+     <dependencies>
+         <dependency>
+             <groupId>org.springframework.security</groupId>
+diff --git a/ranger-kylin-plugin-shim/pom.xml b/ranger-kylin-plugin-shim/pom.xml
+index b82616dc8..98aef7752 100644
+--- a/ranger-kylin-plugin-shim/pom.xml
++++ b/ranger-kylin-plugin-shim/pom.xml
+@@ -31,6 +31,15 @@
+         <version>2.4.0</version>
+         <relativePath>..</relativePath>
+     </parent>
++    <dependencyManagement>
++        <dependencies>
++          <dependency>
++            <groupId>org.apache.kafka</groupId>
++            <artifactId>kafka_2.11</artifactId>
++            <version>2.1.1</version>
++          </dependency>
++        </dependencies>
++    </dependencyManagement>
+     <dependencies>
+         <dependency>
+             <groupId>org.apache.calcite</groupId>
