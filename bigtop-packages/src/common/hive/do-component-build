@@ -22,6 +22,7 @@ HIVE_MAVEN_OPTS=" -Dhbase.version=$HBASE_VERSION \
 -Dzookeeper.version=$ZOOKEEPER_VERSION \
 -Dhadoop.version=$HADOOP_VERSION \
 -DskipTests \
+-Dmaven.test.skip=true \
 -Dtez.version=${TEZ_VERSION} \
 -Dspark.version=${SPARK_VERSION} \
 -Dscala.binary.version=${SCALA_VERSION%.*} \
