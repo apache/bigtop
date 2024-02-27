@@ -168,7 +168,6 @@ done
 %{alluxio_home}
 %{_datadir}/%{alluxio_name}
 %{bin_dir}/alluxio
-%{var_lib_alluxio}/journal
 
 
 %clean
