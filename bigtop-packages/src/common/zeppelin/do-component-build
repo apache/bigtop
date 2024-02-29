@@ -18,32 +18,28 @@ set -ex
 
 . `dirname $0`/bigtop.bom
 
-# Zeppelin doesn't support Scala 2.12+ as of v0.9.0,
-# so we use Scala 2.11 here.
-# Though Zeppelin itself will be built with Scala 2.11,
-# it works with other components built with Scala 2.12,
-# e.g., Spark 3.x, through corresponding interpreters.
-ZEPPELIN_SCALA_BINARY_VERSION=2.11
-./dev/change_scala_version.sh ${ZEPPELIN_SCALA_BINARY_VERSION}
-
 # We build Zeppelin with minimal interpreters here
 # so as to reduce artifact size (cf. BIGTOP-2269).
 # If we include all of these interpreters into
 # the artifact, its size is 1.5GB as of v0.9.0,
 # while it's around 750MB without them.
 # Users can install them later via Zeppelin's "netinst" feature.
-EXCLUDE_INTERPRETERS=!beam,!hbase,!pig,!jdbc,!flink,!ignite,!kylin,!lens,!cassandra,!elasticsearch,!bigquery,!alluxio,!scio,!groovy,!sap,!java,!geode,!neo4j,!hazelcastjet,!submarine,!sparql,!mongodb,!ksql,!scalding
+EXCLUDE_INTERPRETERS=!hbase,!jdbc,!cassandra,!elasticsearch,!bigquery,!alluxio,!groovy,!java,!neo4j,!submarine,!sparql,!mongodb
 
-# We don't specify scala.version or spark.version here,
-# because Zeppelin builds shims for all of Spark 1.x (w/ Scala 2.10),
-# Spark 2.x (w/ Scala 2.11), and Spark 3.x (w/ Scala 2.12) by default.
-# Rather, explicitly specifying their version seems to cause build failure.
 ZEPPELIN_LIVY_VERSION=${LIVY_VERSION}-incubating
-BUILD_OPTS="-Dhadoop3.2.version=${HADOOP_VERSION} \
+ZEPPELIN_SCALA_BINARY_VERSION=${SCALA_VERSION%.*}
+ZEPPELIN_SPARK_VERSION=${SPARK_VERSION%.*}
+
+BUILD_OPTS="-Dhadoop3.3.version=${HADOOP_VERSION} \
+            -Dflink1.16.version=${FLINK_VERSION} \
+            -Dflink.scala.version=${SCALA_VERSION} \
             -Dlivy.version=${ZEPPELIN_LIVY_VERSION} \
-            -Pscala-${ZEPPELIN_SCALA_BINARY_VERSION} \
+            -Pbuild-distr \
             -Phadoop3 \
-            -Pbuild-distr"
+            -Pflink-116 \
+            -Pspark-scala-${ZEPPELIN_SCALA_BINARY_VERSION} \
+            -Pspark-${ZEPPELIN_SPARK_VERSION} \
+            -Pweb-dist"
 
 if [ $HOSTTYPE = "powerpc64le" ] ; then
   mvn install:install-file -DgroupId=com.google.protobuf -DartifactId=protoc -Dversion=3.5.0 \
