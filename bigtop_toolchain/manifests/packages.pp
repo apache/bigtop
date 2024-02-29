@@ -412,11 +412,23 @@ class bigtop_toolchain::packages {
       creates => "/usr/src/Python-2.7.14",
     }
 
-    exec { "install_python2.7":
-      cwd => "/usr/src/Python-2.7.14",
-      command => "/usr/src/Python-2.7.14/configure --prefix=/usr/local/python2.7.14 --enable-optimizations && /usr/bin/make -j8 && /usr/bin/make install -j8",
-      require => [Exec["download_python2.7"]],
-      timeout => 3000
+    case $operatingsystem {
+      'openEuler': {
+        exec { "install_python2.7":
+          cwd => "/usr/src/Python-2.7.14",
+          command => "/usr/src/Python-2.7.14/configure --prefix=/usr/local/python2.7.14 --enable-optimizations && /usr/bin/make -j8 && /usr/bin/make install -j8",
+          require => [Exec["download_python2.7"]],
+          timeout => 3000
+        }
+      }
+      default: {
+        exec { "install_python2.7":
+          cwd => "/usr/src/Python-2.7.14",
+          command => "/usr/src/Python-2.7.14/configure --prefix=/usr/local/python2.7.14 && /usr/bin/make -j8 && /usr/bin/make install -j8",
+          require => [Exec["download_python2.7"]],
+          timeout => 3000
+        }
+      }
     }
 
     exec { "ln python2.7":
