@@ -1,12 +1,40 @@
 diff --git a/distro/src/main/assembly/kms.xml b/distro/src/main/assembly/kms.xml
-index 0387dc6b5..7c29608a1 100755
+index 0387dc6b5..fc55b8f1c 100755
 --- a/distro/src/main/assembly/kms.xml
 +++ b/distro/src/main/assembly/kms.xml
 @@ -203,6 +203,7 @@
                      <include>org.apache.hadoop:hadoop-hdfs:jar:${hadoop.version}</include>
                      <include>org.apache.hadoop:hadoop-common:jar:${hadoop.version}</include>
                      <include>org.apache.hadoop:hadoop-auth:jar:${hadoop.version}</include>
-+                    <include>org.apache.hadoop:hadoop-shaded-guava</include>
++                    <include>org.apache.hadoop.thirdparty:hadoop-shaded-guava</include>
                      <include>org.apache.htrace:htrace-core4:jar:${htrace-core.version}</include>
                      <include>org.apache.solr:solr-solrj:jar:${solr.version}</include>
                      <include>org.apache.ranger:ranger-plugins-common</include>
+diff --git a/kms/pom.xml b/kms/pom.xml
+index 4cfa9df44..c2187289c 100644
+--- a/kms/pom.xml
++++ b/kms/pom.xml
+@@ -232,6 +232,11 @@
+                 </exclusion>
+              </exclusions>
+         </dependency>
++        <dependency>
++            <groupId>org.apache.hadoop.thirdparty</groupId>
++            <artifactId>hadoop-shaded-guava</artifactId>
++            <version>${hadoop-shaded-guava}</version>
++        </dependency>
+         <dependency>
+             <groupId>com.google.guava</groupId>
+             <artifactId>guava</artifactId>
+diff --git a/pom.xml b/pom.xml
+index 43a758944..4089e7662 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -122,6 +122,7 @@
+         <gson.version>2.9.0</gson.version>
+         <guice.version>4.0</guice.version>
+         <hadoop.version>3.3.0</hadoop.version>
++        <hadoop-shaded-guava>1.1.1</hadoop-shaded-guava>
+         <ozone.version>1.0.0</ozone.version>
+         <hamcrest.version>2.2</hamcrest.version>
+         <hbase.version>2.4.6</hbase.version>
