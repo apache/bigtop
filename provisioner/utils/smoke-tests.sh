@@ -67,6 +67,14 @@ ALL_SMOKE_TASKS=""
 for s in `echo $SMOKE_TESTS | sed -e 's#,# #g'`; do
   ALL_SMOKE_TASKS="$ALL_SMOKE_TASKS bigtop-tests:smoke-tests:$s:test"
 done
+
+# BIGTOP-4069 create the soft link of python for openEuler smoke-tests
+. /etc/os-release
+OS="$ID"
+if [[ $SMOKE_TESTS == *"phoenix"* && $OS == "openEuler" ]]; then
+    ln -s /usr/bin/python3 /usr/bin/python
+fi
+
 rm -rf /bigtop-home/.gradle
 cd /bigtop-home && ./gradlew clean $ALL_SMOKE_TASKS -Psmoke.tests -Duser.dir=/bigtop-home --info
 # BIGTOP-2244 workaround: clean the top level buildSrc/build with the same
