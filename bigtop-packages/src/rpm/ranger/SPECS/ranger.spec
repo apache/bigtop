@@ -421,7 +421,6 @@ AutoReq: no
 %description presto-plugin
 Ranger presto plugin component runs within presto to provide enterprise security using ranger framework
 
-
 %prep
 %setup -q -n %{ranger_name}-release-%{ranger_name}-%{ranger_base_version}
 

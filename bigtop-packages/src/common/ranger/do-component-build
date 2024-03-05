@@ -18,6 +18,7 @@ set -e
 
 . `dirname $0`/bigtop.bom
 
+
 mvn clean compile package install \
         -DskipTests=true       \
         -Dcheckstyle.skip=true \
