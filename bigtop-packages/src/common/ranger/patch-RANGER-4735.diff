@@ -1,0 +1,12 @@
+diff --git a/distro/src/main/assembly/kms.xml b/distro/src/main/assembly/kms.xml
+index 0387dc6b5..7c29608a1 100755
+--- a/distro/src/main/assembly/kms.xml
++++ b/distro/src/main/assembly/kms.xml
+@@ -203,6 +203,7 @@
+                     <include>org.apache.hadoop:hadoop-hdfs:jar:${hadoop.version}</include>
+                     <include>org.apache.hadoop:hadoop-common:jar:${hadoop.version}</include>
+                     <include>org.apache.hadoop:hadoop-auth:jar:${hadoop.version}</include>
++                    <include>org.apache.hadoop:hadoop-shaded-guava</include>
+                     <include>org.apache.htrace:htrace-core4:jar:${htrace-core.version}</include>
+                     <include>org.apache.solr:solr-solrj:jar:${solr.version}</include>
+                     <include>org.apache.ranger:ranger-plugins-common</include>
