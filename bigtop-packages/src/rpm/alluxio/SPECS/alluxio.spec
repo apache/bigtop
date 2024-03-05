@@ -14,7 +14,32 @@
 # limitations under the License.
 %define        alluxio_name alluxio
 
-Name:           alluxio
+%define alluxio_pkg_name alluxio%{pkg_name_suffix}
+%define _binaries_in_noarch_packages_terminate_build   0
+%define _unpackaged_files_terminate_build 0
+
+%define etc_default %{parent_dir}/etc/default
+%define usr_lib_alluxio %{parent_dir}/usr/lib/%{alluxio_name}
+%define etc_alluxio %{parent_dir}/etc/%{alluxio_name}
+%define etc_alluxio_conf_dist %{parent_dir}/etc/%{alluxio_name}/conf.dist
+%define bin_dir %{parent_dir}/%{_bindir}
+
+%define libexec_dir %{usr_lib_alluxio}/libexec
+
+%define np_var_lib_alluxio_data /var/lib/%{alluxio_name}/data
+%define np_var_run_alluxio /var/run/%{alluxio_name}
+%define np_var_log_alluxio /var/log/%{alluxio_name}
+%define np_etc_alluxio /etc/%{alluxio_name}
+
+
+%define        alluxio_home %{parent_dir}/usr/lib/%{alluxio_name}
+%define        alluxio_services master worker job-master job-worker
+
+%global        initd_dir %{_sysconfdir}/init.d
+
+
+
+Name:           %{alluxio_pkg_name}
 Version:        %{alluxio_version}
 Release:        %{alluxio_release}
 Summary:       Reliable file sharing at memory speed across cluster frameworks
@@ -32,15 +57,6 @@ Source5:       alluxio-worker.svc
 Source6:       alluxio-job-master.svc
 Source7:       alluxio-job-worker.svc
 #BIGTOP_PATCH_FILES
-%define        alluxio_home /usr/lib/%{alluxio_name}
-%define        alluxio_services master worker job-master job-worker
-%define        var_lib /var/lib/%{alluxio_name}
-%define        var_run /var/run/%{alluxio_name}
-%define        var_log /var/log/%{alluxio_name}
-%define        etc_alluxio /etc/%{alluxio_name}
-%define        config_alluxio %{etc_alluxio}/conf
-
-%global        initd_dir %{_sysconfdir}/init.d
 
 %if  %{?suse_version:1}0
 %define alternatives_cmd update-alternatives
@@ -65,7 +81,9 @@ Requires: initscripts
 Requires: bigtop-utils
 
 # disable repacking jars
-%define __arch_install_post %{nil}
+%define __os_install_post %{nil}
+%define __jar_repack %{nil}
+%define  debug_package %{nil}
 
 # disable debug package
 %define debug_package %{nil}
@@ -97,11 +115,12 @@ rm -rf $RPM_BUILD_ROOT
 # Here we run the alluxio installation script.
 bash %{SOURCE2} \
     --build-dir=%{buildroot} \
-    --bin-dir=%{_bindir} \
+    --lib-dir=%{usr_lib_alluxio}  \
+    --bin-dir=%{bin_dir} \
     --data-dir=%{_datadir} \
-    --libexec-dir=%{_libexecdir} \
-    --var-dir=%{_var}  \
-    --prefix="${RPM_BUILD_ROOT}"
+    --libexec-dir=%{libexec_dir} \
+    --prefix="${RPM_BUILD_ROOT}" \
+    --conf-dist-dir=%{etc_alluxio_conf_dist}
 
 for service in %{alluxio_services}
 do
@@ -115,11 +134,11 @@ getent group alluxio >/dev/null || groupadd -r alluxio
 getent passwd alluxio >/dev/null || useradd -c "Alluxio" -s /sbin/nologin -g alluxio -r -d %{var_lib} alluxio 2> /dev/null || :
 
 %post
-%{alternatives_cmd} --install %{config_alluxio} %{alluxio_name}-conf %{config_alluxio}.dist 30
+%{alternatives_cmd} --install %{np_etc_alluxio}/conf %{alluxio_name}-conf %{etc_alluxio}/conf.dist 30
 
 %preun
 if [ "$1" = 0 ]; then
-        %{alternatives_cmd} --remove %{alluxio_name}-conf %{config_alluxio}.dist || :
+        %{alternatives_cmd} --remove %{alluxio_name}-conf %{etc_alluxio}/conf.dist || :
 fi
 
 for service in %{alluxio_services}; do
@@ -133,26 +152,19 @@ done
 %files
 %defattr(-,root,root,-)
 %doc LICENSE README.md
-%dir %{_sysconfdir}/%{alluxio_name}
-%config(noreplace) %{_sysconfdir}/%{alluxio_name}/conf.dist
-%exclude %{_sysconfdir}/%{alluxio_name}/conf.dist/log4j.properties
-%exclude %{_sysconfdir}/%{alluxio_name}/conf.dist/alluxio-env.sh
-%exclude %{_sysconfdir}/%{alluxio_name}/conf.dist/alluxio-site.properties
-%exclude %{_sysconfdir}/%{alluxio_name}/conf.dist/core-site.xml
-%config(noreplace) %{_sysconfdir}/%{alluxio_name}/conf.dist/log4j.properties
-%config(noreplace) %{_sysconfdir}/%{alluxio_name}/conf.dist/alluxio-env.sh
-%config(noreplace) %{_sysconfdir}/%{alluxio_name}/conf.dist/alluxio-site.properties
-%config(noreplace) %{_sysconfdir}/%{alluxio_name}/conf.dist/core-site.xml
+%dir %{np_etc_alluxio}
+%config(noreplace) %{etc_alluxio}/conf.dist
+
 %config(noreplace) %{initd_dir}/%{alluxio_name}-master
 %config(noreplace) %{initd_dir}/%{alluxio_name}-worker
 %config(noreplace) %{initd_dir}/%{alluxio_name}-job-master
 %config(noreplace) %{initd_dir}/%{alluxio_name}-job-worker
-%attr(0755,alluxio,alluxio) %{var_lib}
-%attr(0755,alluxio,alluxio) %{var_run}
-%attr(0755,alluxio,alluxio) %{var_log}
+
+%attr(0755,alluxio,alluxio) %{np_var_run_alluxio}
+%attr(0755,alluxio,alluxio) %{np_var_log_alluxio}
 %{alluxio_home}
 %{_datadir}/%{alluxio_name}
-/usr/bin/alluxio
+%{bin_dir}/alluxio
 
 
 %clean
