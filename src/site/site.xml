@@ -75,7 +75,8 @@
       <item name="3.0.1" href="https://archive.apache.org/dist/bigtop/bigtop-3.0.1/"/>
       <item name="3.1.0" href="https://archive.apache.org/dist/bigtop/bigtop-3.1.0/"/>
       <item name="3.1.1" href="https://archive.apache.org/dist/bigtop/bigtop-3.1.1/"/>
-      <item name="3.2.0" href="https://www.apache.org/dyn/closer.lua/bigtop/bigtop-3.2.0/"/>
+      <item name="3.2.0" href="https://archive.apache.org/dist/bigtop/bigtop-3.2.0/"/>
+      <item name="3.2.1" href="https://www.apache.org/dyn/closer.lua/bigtop/bigtop-3.2.1/"/>
     </menu>
 
     <menu name="Project Information">

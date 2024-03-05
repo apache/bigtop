@@ -115,6 +115,7 @@ install -d -m 0755 $PREFIX/var/log/phoenix
 
 cp $BUILD_DIR/*.jar $PREFIX/$LIB_DIR/
 cp -r $BUILD_DIR/bin $PREFIX/$LIB_DIR/
+cp -r $BUILD_DIR/lib $PREFIX/$LIB_DIR/
 chmod 755 $PREFIX/$BIN_DIR/*.py
 
 cp -a $BUILD_DIR/{LICENSE,NOTICE} $PREFIX/$DOC_DIR/
@@ -125,7 +126,7 @@ find $PREFIX/$LIB_DIR -name '*.jar' -exec chmod a-x {} \;
 
 # Create version independent symlinks
 # phoenix-client for clients like sqlline
-ln -s `cd $PREFIX/$LIB_DIR ; ls phoenix-client*.jar` $PREFIX/$LIB_DIR/phoenix-client.jar
+ln -s `cd $PREFIX/$LIB_DIR ; ls phoenix-client-embedded-hbase-*-*.jar` $PREFIX/$LIB_DIR/phoenix-client.jar
 
 # phoenix-server for placing on the HBase regionserver classpath
-ln -s `cd $PREFIX/$LIB_DIR ; ls phoenix-server*.jar` $PREFIX/$LIB_DIR/phoenix-server.jar
+ln -s `cd $PREFIX/$LIB_DIR ; ls phoenix-server-hbase-*-*.jar` $PREFIX/$LIB_DIR/phoenix-server.jar

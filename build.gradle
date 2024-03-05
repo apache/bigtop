@@ -111,7 +111,6 @@ rat {
        "bigtop-packages/src/**/*.diff",
        "bigtop-packages/src/common/*/*.json",
        "bigtop-packages/src/common/**/*.default",
-       "bigtop-packages/src/common/bigtop-ambari-mpack/bgtp-ambari-mpack/src/main/resources/**",
        "bigtop-repos/apt/distributions",
        /* Juju charm files with rigid structure */
        "bigtop-packages/src/charm/**/wheelhouse.txt",
@@ -268,7 +267,7 @@ Properties:
   -Pmemory=[4g|8g|...]
   -Pnum_instances=[NUM_INSTANCES]
   -Pnexus=[NEXUS_URL] (NEXUS_URL is optional)
-  -POS=[centos-7|fedora-35|debian-10|ubuntu-18.04|opensuse-42.3]
+  -POS=[centos-7|fedora-35|ubuntu-18.04|opensuse-42.3|openeuler-22.03]
   -Pprefix=[trunk|1.2.1|1.2.0|1.1.0|...]
   -Prepository=[REPO_URL]
   -Prun_smoke_tests (run test components defined in config file)
@@ -284,7 +283,7 @@ Create a 3 node cluster:
 Run smoke tests on 3 node cluster:
   $ ./gradlew -Pnum_instances=3 -Prun_smoke_tests docker-provisioner
 Specify custom configuration file:
-  $ ./gradlew -Pconfig=config_debian-10.yaml docker-provisioner
+  $ ./gradlew -Pconfig=config_debian-11.yaml docker-provisioner
 ''',
     group: DEPLOY_GROUP) {
   def _config = project.hasProperty("config") ? config : "config.yaml"
@@ -563,10 +562,10 @@ task "bigtop-puppet"(type:Exec,
     description: '''
 Build bigtop/puppet images
 Usage:
-  $ ./gradlew -POS=[centos-7|fedora-35|debian-10|ubuntu-18.04|opensuse-42.3] -Pprefix=[trunk|1.2.1|1.2.0|1.1.0|...] bigtop-puppet
+  $ ./gradlew -POS=[centos-7|fedora-35|debian-11|ubuntu-18.04|opensuse-42.3|openeuler-22.03] -Pprefix=[trunk|1.2.1|1.2.0|1.1.0|...] bigtop-puppet
 Example:
-  $ ./gradlew -POS=debian-10 -Pprefix=3.0.0 bigtop-puppet
-  The built image name: bigtop/puppet:3.0.0-debian-10
+  $ ./gradlew -POS=debian-11 -Pprefix=3.0.0 bigtop-puppet
+  The built image name: bigtop/puppet:3.0.0-debian-11
       ''',
     group: DOCKERBUILD_GROUP) {
   def _prefix = project.hasProperty("prefix") ? prefix : "trunk"
@@ -582,10 +581,10 @@ task "bigtop-slaves"(type:Exec,
     description: '''
 Build bigtop/slaves images
 Usage:
-  $ ./gradlew -POS=[centos-7|fedora-35|debian-10|ubuntu-18.04|opensuse-42.3] -Pprefix=[trunk|1.2.1|1.2.0|1.1.0|...] bigtop-slaves
+  $ ./gradlew -POS=[centos-7|fedora-35|debian-11|ubuntu-18.04|opensuse-42.3|openeuler-22.03] -Pprefix=[trunk|1.2.1|1.2.0|1.1.0|...] bigtop-slaves
 Example:
-  $ ./gradlew -POS=debian-10 -Pprefix=3.0.0 bigtop-slaves
-  The built image name: bigtop/slaves:3.0.0-debian-10
+  $ ./gradlew -POS=debian-11 -Pprefix=3.0.0 bigtop-slaves
+  The built image name: bigtop/slaves:3.0.0-debian-11
       ''',
     group: DOCKERBUILD_GROUP) {
   def _prefix = project.hasProperty("prefix") ? prefix : "trunk"

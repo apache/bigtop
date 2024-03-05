@@ -18,7 +18,7 @@
 // FIXME: it would be nice to extract the following from bigtop.mk on the fly
 def bigtopComponents = ["bigtop-groovy", "bigtop-jsvc", "bigtop-utils",
                         "zookeeper", "hadoop", "hbase", "hive",
-                        "oozie", "phoenix",
+                        "phoenix",
                         "solr", "spark", "alluxio"]
 // FIXME: it would be nice to extract the following from some static configuration file
 def targetOS = ["fedora-20",  "opensuse-12.3",  "ubuntu-14.04"]

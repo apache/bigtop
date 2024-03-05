@@ -19,10 +19,9 @@ class hadoop ($hadoop_security_authentication = "simple",
   # Set from facter if available
   $hadoop_storage_dirs = split($::hadoop_storage_dirs, ";"),
   $proxyusers = {
-    spark => { groups => 'hudson,testuser,root,hadoop,jenkins,oozie,hive,httpfs,users,spark', hosts => "*" },
-    oozie => { groups => 'hudson,testuser,root,hadoop,jenkins,oozie,hive,httpfs,users,spark', hosts => "*" },
-     hive => { groups => 'hudson,testuser,root,hadoop,jenkins,oozie,hive,httpfs,users,spark', hosts => "*" },
-   httpfs => { groups => 'hudson,testuser,root,hadoop,jenkins,oozie,hive,httpfs,users,spark', hosts => "*" } },
+    spark => { groups => 'hudson,testuser,root,hadoop,jenkins,hive,httpfs,users,spark', hosts => "*" },
+     hive => { groups => 'hudson,testuser,root,hadoop,jenkins,hive,httpfs,users,spark', hosts => "*" },
+   httpfs => { groups => 'hudson,testuser,root,hadoop,jenkins,hive,httpfs,users,spark', hosts => "*" } },
   $generate_secrets = false,
   $kms_host = undef,
   $kms_port = undef,
@@ -829,10 +828,20 @@ class hadoop ($hadoop_security_authentication = "simple",
   }
 
   define create_storage_dir {
-    exec { "mkdir $name":
-      command => "/bin/mkdir -p $name",
-      creates => $name,
-      user =>"root",
+    # change the cgroup of hdfs and yarn from hadoop to root in openeuler,
+    # otherwise, the namemode of hdfs has not the permission to create directories during smoke test.
+    if ($operatingsystem == 'openEuler'){
+      exec { "mkdir $name":
+        command => "/usr/sbin/usermod -G root hdfs && /bin/mkdir -p $name",
+        creates => $name,
+        user =>"root",
+      }
+    } else {
+      exec { "mkdir $name":
+        command => "/bin/mkdir -p $name",
+        creates => $name,
+        user =>"root",
+      }
     }
   }
 
@@ -977,6 +986,13 @@ class hadoop ($hadoop_security_authentication = "simple",
       group => yarn,
       mode => '755',
       require => [Package["hadoop-yarn"]],
+    }
+
+    if ($operatingsystem == 'openEuler') {
+      exec { "usermod yarn":
+        command => "/usr/sbin/usermod -G root yarn",
+        require => Package["hadoop-yarn-nodemanager"],
+      }
     }
   }
 

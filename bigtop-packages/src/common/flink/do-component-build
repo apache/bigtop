@@ -20,10 +20,6 @@ set -ex
 #load versions
 . `dirname $0`/bigtop.bom
 
-if [ $HOSTTYPE = "powerpc64le" ] ; then
-  sed -i "s|<nodeVersion>v10.9.0</nodeVersion>|<nodeVersion>v12.22.1</nodeVersion>|" flink-runtime-web/pom.xml
-fi
-
 # husky have to be executed from the path that .git exists
 git_path="$(cd $(dirname $0)/../../../.. && pwd)"
 cmd_from="cd ../.. && husky install flink-runtime-web/web-dashboard/.husky"

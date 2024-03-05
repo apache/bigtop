@@ -22,8 +22,10 @@ BUILD_OPTS="-Divy.home=${HOME}/.ivy2 -Dsbt.ivy.home=${HOME}/.ivy2 -Duser.home=${
             -Drepo.maven.org=$IVY_MIRROR_PROP \
             -Dreactor.repo=file://${HOME}/.m2/repository \
             -Dhadoop.version=$HADOOP_VERSION \
+            -Dkafka.version=$KAFKA_VERSION \
+            -Dzookeeper.version=$ZOOKEEPER_VERSION \
             -Dyarn.version=$HADOOP_VERSION \
-            -Pyarn -Phadoop-3.2 \
+            -Pyarn -Phadoop-3 \
             -Phive -Phive-thriftserver \
             -Psparkr -Pkubernetes \
             -Pscala-${SCALA_VERSION%.*} \

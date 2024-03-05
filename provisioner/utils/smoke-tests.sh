@@ -33,7 +33,6 @@ fi
 echo -e "\n===== EXPORTING VARIABLES =====\n"
 
 export ALLUXIO_HOME=${ALLUXIO_HOME:-/usr/lib/alluxio}
-export AMBARI_URL=${AMBARI_URL:-http://localhost:8080}
 export FLINK_HOME=${FLINK_HOME:-/usr/lib/flink}
 export GPDB_HOME=${GPDB_HOME:-/usr/lib/gpdb}
 export HADOOP_HOME=${HADOOP_HOME:-/usr/lib/hadoop}
@@ -46,13 +45,10 @@ export HIVE_HOME=${HIVE_HOME:-/usr/lib/hive}
 export HIVE_CONF_DIR=${HIVE_CONF_DIR:-/etc/hive/conf}
 export KAFKA_HOME=${KAFKA_HOME:-/usr/lib/kafka}
 export LIVY_HOME=${LIVY_HOME:-/usr/lib/livy}
-export OOZIE_TAR_HOME=${OOZIE_TAR_HOME:-/usr/lib/oozie}
-export OOZIE_URL=${OOZIE_URL:-http://localhost:11000/oozie}
 export RANGER_URL=${RANGER_URL:-http://localhost:6080}
 export SPARK_HOME=${SPARK_HOME:-/usr/lib/spark}
 export TEZ_HOME=${TEZ_HOME:-/usr/lib/tez}
 export WEBHDFS_URL=${WEBHDFS_URL:-$(hostname):50070/webhdfs/v1}
-export YCSB_HOME=${YCSB_HOME:-/usr/lib/ycsb}
 export ZEPPELIN_HOME=${ZEPPELIN_HOME:-/usr/lib/zeppelin}
 export ZOOKEEPER_HOME=${ZOOKEEPER_HOME:-/usr/lib/zookeeper}
 
@@ -65,13 +61,6 @@ su -s /bin/bash $HCFS_USER -c "hadoop fs -chown yarn:yarn /user/yarn"
 if [[ $SMOKE_TESTS == *"alluxio"* ]]; then
     su -s /bin/bash $HCFS_USER -c "hadoop fs -mkdir /underFSStorage"
     su -s /bin/bash $HCFS_USER -c "hadoop fs -chmod 777 /underFSStorage"
-fi
-
-if [[ $SMOKE_TESTS == *"oozie"* ]]; then
-    su -s /bin/bash $HCFS_USER -c "hadoop fs -mkdir -p /user/oozie/share/lib"
-    su -s /bin/bash $HCFS_USER -c "hadoop fs -chown -R oozie:oozie /user/oozie"
-    oozie-setup sharelib create -fs hdfs://$(hostname -f):8020/
-    oozie admin -sharelibupdate
 fi
 
 ALL_SMOKE_TASKS=""

@@ -29,6 +29,8 @@ class bigtop_toolchain::packages {
         "gcc",
         "gcc-c++",
         "fuse",
+        "fuse3",
+        "fuse3-devel",
         "createrepo",
         "lzo-devel",
         "fuse-devel",
@@ -68,10 +70,16 @@ class bigtop_toolchain::packages {
         "yasm"
       ]
 
-      if ($operatingsystem == 'Fedora' or $operatingsystemmajrelease !~ /^[0-7]$/) {
+      if ($operatingsystem == 'Fedora') {
         $pkgs = concat($_pkgs, ["python2-devel", "libtirpc-devel", "cmake"])
-      } else {
-        $pkgs = concat($_pkgs, ["python-devel", "cmake3"])
+      } else { # RedHat, CentOS, Rocky
+        if (0 <= versioncmp($operatingsystemmajrelease, '9')) {
+          $pkgs = concat($_pkgs, ["libtirpc-devel", "cmake"])
+        } elsif (0 == versioncmp($operatingsystemmajrelease, '8')) {
+          $pkgs = concat($_pkgs, ["python2-devel", "libtirpc-devel", "cmake"])
+        } elsif (0 == versioncmp($operatingsystemmajrelease, '7')) {
+          $pkgs = concat($_pkgs, ["python-devel", "cmake3"])
+        }
       }
     }
     /(?i:(SLES|opensuse))/: { $pkgs = [
@@ -156,6 +164,76 @@ class bigtop_toolchain::packages {
       "libffi-devel",
       "nasm",
       "yasm"
+    ] }
+    /openEuler/: { $pkgs = [
+       "unzip",
+       "cmake",
+       "rsync",
+       "curl",
+       "wget",
+       "git",
+       "make",
+       "autoconf",
+       "automake",
+       "libtool",
+       "libtool-devel",
+       "gcc",
+       "gcc-c++",
+       "gcc-gfortran",
+       "doxygen",
+       "createrepo_c-devel",
+       "lzo-devel",
+       "fuse-devel",
+       "fuse3-devel",
+       "cppunit-devel",
+       "openssl-devel",
+       "libxml2-devel",
+       "libxslt-devel",
+       "cyrus-sasl-devel",
+       "sqlite-devel",
+       "openldap-devel",
+       "mariadb-devel",
+       "rpm-build",
+       "openEuler-rpm-config",
+       "asciidoc",
+       "xmlto",
+       "libyaml-devel",
+       "gmp-devel",
+       "snappy-devel",
+       "zstd-devel",
+       "boost-devel",
+       "xfsprogs-devel",
+       "libuuid",
+       "bzip2-devel",
+       "readline-devel",
+       "ncurses-devel",
+       "libidn-devel",
+       "libcurl-devel",
+       "libevent-devel",
+       "apr-devel",
+       "bison-devel",
+       "libffi-devel",
+       "krb5-devel",
+       "net-tools",
+       "perl-Digest-SHA",
+       "python3-devel",
+       "libtirpc-devel",
+       "libgit2-devel",
+       "libgit2-glib-devel",
+       "libxml2",
+       "libpng-devel",
+       "libtiff-devel",
+       "libjpeg-turbo-devel",
+       "leveldbjni",
+       "psmisc",
+       "nc",
+       "initscripts",
+       "openeuler-lsb",
+       "pcre-devel",
+       "texlive",
+       "rpmdevtools",
+       "nasm",
+       "yasm"
     ] }
     /(Ubuntu|Debian)/: {
       $_pkgs = [
@@ -321,6 +399,42 @@ class bigtop_toolchain::packages {
         ensure => 'link',
         target => '/usr/lib/rpm/redhat/brp-python-bytecompile',
       }
+    }
+  }
+
+  # download python 2.7.14 for openEuler docker slaves
+  # and RHEL9 based distros
+  if ($operatingsystem == 'openEuler' or
+      ($osfamily == 'RedHat' and $operatingsystem != 'Fedora' and 0 <= versioncmp($operatingsystemmajrelease, '9'))) {
+    exec { "download_python2.7":
+      cwd => "/usr/src",
+      command => "/usr/bin/wget https://www.python.org/ftp/python/2.7.14/Python-2.7.14.tgz --no-check-certificate && /usr/bin/mkdir Python-2.7.14 && /bin/tar -xvzf Python-2.7.14.tgz -C Python-2.7.14 --strip-components=1 && cd Python-2.7.14",
+      creates => "/usr/src/Python-2.7.14",
+    }
+
+    case $operatingsystem {
+      'openEuler': {
+        exec { "install_python2.7":
+          cwd => "/usr/src/Python-2.7.14",
+          command => "/usr/src/Python-2.7.14/configure --prefix=/usr/local/python2.7.14 --enable-optimizations && /usr/bin/make -j8 && /usr/bin/make install -j8",
+          require => [Exec["download_python2.7"]],
+          timeout => 3000
+        }
+      }
+      default: {
+        exec { "install_python2.7":
+          cwd => "/usr/src/Python-2.7.14",
+          command => "/usr/src/Python-2.7.14/configure --prefix=/usr/local/python2.7.14 && /usr/bin/make -j8 && /usr/bin/make install -j8",
+          require => [Exec["download_python2.7"]],
+          timeout => 3000
+        }
+      }
+    }
+
+    exec { "ln python2.7":
+      cwd => "/usr/bin",
+      command => "/usr/bin/ln -s /usr/local/python2.7.14/bin/python2.7 python2.7 && /usr/bin/ln -snf python2.7 python2",
+      require => Exec["install_python2.7"],
     }
   }
 }

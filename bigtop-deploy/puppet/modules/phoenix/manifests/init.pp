@@ -28,28 +28,54 @@ class phoenix {
   }
 
   class hbase_master_restart {
-    exec { "hbase_master_restart":
-      command => "systemctl restart hbase-master",
-      path    => ['/usr/bin', '/bin'],
-      cwd     => '/tmp',
-      timeout => 3000,
-      require => [
-        File['phoenix-server-lib'],
-        Service['hbase-master'],
-        ],
+    if ($operatingsystem == 'openEuler') {
+      exec { "hbase_master_restart":
+        command => "/sbin/service hbase-master restart",
+        path    => ['/usr/bin', '/bin','/sbin'],
+        cwd     => '/tmp',
+        timeout => 3000,
+        require => [
+          File['phoenix-server-lib'],
+          Service['hbase-master'],
+         ],
+     }
+    } else {
+        exec { "hbase_master_restart":
+          command => "systemctl restart hbase-master",
+          path    => ['/usr/bin', '/bin'],
+          cwd     => '/tmp',
+          timeout => 3000,
+          require => [
+            File['phoenix-server-lib'],
+            Service['hbase-master'],
+          ],
+        }
     }
   }
 
   class hbase_server_restart {
-    exec { "hbase_server_restart":
-      command => "systemctl restart hbase-regionserver",
-      path    => ['/usr/bin', '/bin'],
-      cwd     => '/tmp',
-      timeout => 3000,
-      require => [
-        File['phoenix-server-lib'],
-        Service['hbase-regionserver'],
-        ],
+    if ($operatingsystem == 'openEuler') {
+      exec { "hbase_server_restart":
+        command => "/sbin/service hbase-regionserver restart",
+        path    => ['/usr/bin', '/bin','/sbin'],
+        cwd     => '/tmp',
+        timeout => 3000,
+        require => [
+          File['phoenix-server-lib'],
+          Service['hbase-regionserver'],
+         ],
+     }
+    } else {
+        exec { "hbase_server_restart":
+          command => "systemctl restart hbase-regionserver",
+          path    => ['/usr/bin', '/bin'],
+          cwd     => '/tmp',
+          timeout => 3000,
+          require => [
+            File['phoenix-server-lib'],
+            Service['hbase-regionserver'],
+          ],
+        }
     }
   }
 

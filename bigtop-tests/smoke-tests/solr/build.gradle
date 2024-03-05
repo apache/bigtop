@@ -35,12 +35,31 @@ def create_collection() {
   }
 }
 
+def delete_collection() {
+  exec {
+    executable "/usr/bin/solrctl"
+    args "collection", "--delete", "smoke"
+  }
+  exec {
+    executable "/usr/bin/solrctl"
+    args "instancedir", "--delete", "smoke"
+  }
+}
+
+def clean() {
+  if (file("/tmp/smoke_data").exists()) {
+    exec {
+      executable "/usr/bin/rm"
+      args "-rf", "/tmp/smoke_data"
+    }
+  }
+}
+
 def junitVersion = '4.11'
 dependencies {
   compile group: 'junit', name: 'junit', version: junitVersion, transitive: 'true'
   compile group: 'org.apache.solr', name: 'solr-solrj', version: solrVersion, transitive: 'true'
   compile group: 'org.slf4j', name: 'slf4j-simple', version: slf4jVersion, transitive: 'true'
-  if (System.env.HADOOP_CONF_DIR) testRuntime files(System.env.HADOOP_CONF_DIR)
 }
 
 sourceSets {
@@ -54,8 +73,12 @@ sourceSets {
 }
 
 test.doFirst {
-  checkEnv(["HADOOP_CONF_DIR"])
   create_collection()
+}
+
+test.doLast {
+  delete_collection()
+  clean()
 }
 
 test {

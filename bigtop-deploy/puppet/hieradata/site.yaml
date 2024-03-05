@@ -13,7 +13,6 @@ hadoop::hadoop_storage_dirs:
 
 #hadoop_cluster_node::cluster_components:
 #  - alluxio
-#  - ambari
 #  - flink
 #  - gpdb
 #  - hbase
@@ -21,13 +20,11 @@ hadoop::hadoop_storage_dirs:
 #  - hive
 #  - httpfs
 #  - mapred-app
-#  - oozie
-#  - solrcloud
+#  - solr
 #  - spark
 #  - spark-standalone
 #  - tez
 #  - yarn
-#  - ycsb
 #  - zookeeper
 
 #bigtop::roles_enabled: false

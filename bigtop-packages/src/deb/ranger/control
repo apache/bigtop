@@ -1,0 +1,120 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+Source: ranger
+Section: misc
+Priority: optional
+Maintainer: Bigtop <dev@bigtop.apache.org>
+Build-Depends: debhelper (>= 7.0.50~)
+Standards-Version: 3.9.4
+Homepage: http://ranger.apache.org/
+
+Package: ranger
+Architecture: all
+Depends: adduser, bigtop-utils (>= 0.7), python | python2
+Description: Apache Ranger is a framework to enable,
+ monitor and manage comprehensive data security across the Hadoop platform.
+ The vision with Ranger is to provide comprehensive security across the Apache Hadoop ecosystem.
+ With the advent of Apache YARN, the Hadoop platform can now support a true data lake architecture.
+ Enterprises can potentially run multiple workloads, in a multi tenant environment.
+ Data security within Hadoop needs to evolve to support multiple use cases for data access,
+ while also providing a framework for central administration of security policies and monitoring of user access.
+
+
+Package: ranger-admin
+Architecture: all
+Depends: adduser, postgresql (>= 8.1), libpostgresql-jdbc-java, bigtop-utils (>= 0.7), python | python2
+Description: Ranger-admin is admin component associated with the Ranger framework
+
+Package: ranger-usersync
+Architecture: all
+Depends: adduser, bigtop-utils (>= 0.7), python | python2
+Description: Ranger-usersync is user/group synchronization component associated with the Ranger framework
+
+Package: ranger-kms
+Architecture: all
+Depends: adduser, bigtop-utils (>= 0.7), python | python2
+Description: Ranger-kms is key management server component associated with the Ranger framework
+
+
+Package: ranger-tagsync
+Architecture: all
+Depends: adduser, bigtop-utils (>= 0.7), python | python2
+Description: Ranger-tagsync is tag synchronizer component associated with the Ranger framework
+
+Package: ranger-hdfs-plugin
+Architecture: all
+Depends: adduser, bigtop-utils (>= 0.7), python | python2
+Description: Ranger HDFS plugin component runs within namenode to provide enterprise security using ranger framework
+
+Package: ranger-yarn-plugin
+Architecture: all
+Depends: adduser, bigtop-utils (>= 0.7), python | python2
+Description: Ranger YARN plugin component runs within resourcemanager to provide enterprise security using ranger framework
+
+Package: ranger-hive-plugin
+Architecture: all
+Depends: adduser, bigtop-utils (>= 0.7), python | python2
+Description: Ranger Hive plugin component runs within hiveserver2 to provide enterprise security using ranger framework
+
+Package: ranger-hbase-plugin
+Architecture: all
+Depends: adduser, bigtop-utils (>= 0.7), python | python2
+Description: Ranger HBASE plugin component runs within master and region servers as co-processor to provide enterprise security using ranger framework
+
+Package: ranger-knox-plugin
+Architecture: all
+Depends: adduser, bigtop-utils (>= 0.7), python | python2
+Description: Ranger KNOX plugin component runs within knox proxy server to provide enterprise security using ranger framework
+
+Package: ranger-storm-plugin
+Architecture: all
+Depends: adduser, bigtop-utils (>= 0.7), python | python2
+Description: Ranger STORM plugin component runs within storm to provide enterprise security using ranger framework
+
+Package: ranger-kafka-plugin
+Architecture: all
+Depends: adduser, bigtop-utils (>= 0.7), python | python2
+Description: Ranger KAFKA plugin component runs within kafka to provide enterprise security using ranger framework
+
+Package: ranger-atlas-plugin
+Architecture: all
+Depends: adduser, bigtop-utils (>= 0.7), python | python2
+Description: Ranger ATLAS plugin component runs within atlas to provide enterprise security using ranger framework
+
+Package: ranger-solr-plugin
+Architecture: all
+Depends: adduser, bigtop-utils (>= 0.7), python | python2
+Description: Ranger SOLR plugin component runs within solr to provide enterprise security using ranger framework
+
+Package: ranger-sqoop-plugin
+Architecture: all
+Depends: adduser, bigtop-utils (>= 0.7), python | python2
+Description: Ranger SQOOP plugin component runs within sqoop to provide enterprise security using ranger framework
+
+Package: ranger-kylin-plugin
+Architecture: all
+Depends: adduser, bigtop-utils (>= 0.7), python | python2
+Description: Ranger KYLIN plugin component runs within kylin to provide enterprise security using ranger framework
+
+Package: ranger-elasticsearch-plugin
+Architecture: all
+Depends: adduser, bigtop-utils (>= 0.7), python | python2
+Description: Ranger ELASTICSEARCH plugin component runs within elasticsearch to provide enterprise security using ranger framework
+
+Package: ranger-presto-plugin
+Architecture: all
+Depends: adduser, bigtop-utils (>= 0.7), python | python2
+Description: Ranger PRESTO plugin component runs within presto to provide enterprise security using ranger framework

@@ -38,9 +38,9 @@ OPTS=$(getopt \
   -l 'prefix:' \
   -l 'bin-dir:' \
   -l 'libexec-dir:' \
-  -l 'var-dir:' \
   -l 'lib-dir:' \
   -l 'data-dir:' \
+  -l 'conf-dist-dir:' \
   -l 'build-dir:' -- "$@")
 
 if [ $? != 0 ] ; then
@@ -65,11 +65,11 @@ while true ; do
         --bin-dir)
         BIN_DIR=$2 ; shift 2
         ;;
-        --var-dir)
-        VAR_DIR=$2 ; shift 2
-        ;;
         --data-dir)
         DATA_DIR=$2 ; shift 2
+        ;;
+        --conf-dist-dir)
+        CONF_DIST_DIR=$2 ; shift 2
         ;;
         --)
         shift ; break
@@ -89,10 +89,17 @@ for var in PREFIX BUILD_DIR ; do
   fi
 done
 
+. /etc/os-release
+OS="$ID"
+
 LIB_DIR=${LIB_DIR:-/usr/lib/alluxio}
 LIBEXEC_DIR=${INSTALLED_LIB_DIR:-/usr/libexec}
 BIN_DIR=${BIN_DIR:-/usr/bin}
-CONF_DIST_DIR=/etc/alluxio/conf.dist/
+ETC_ALLUXIO=${ETC_ALLUXIO:-/etc/alluxio}
+# No prefix
+NP_ETC_ALLUXIO=/etc/alluxio
+CONF_DIST_DIR=${CONF_DIST_DIR:-/etc/alluxio/conf.dist}
+NP_VAR_DIR=/var
 
 install -d -m 0755 $PREFIX/$LIB_DIR
 install -d -m 0755 $PREFIX/$LIB_DIR/assembly/client/target
@@ -106,18 +113,18 @@ install -d -m 0755 $PREFIX/$LIB_DIR/webui/worker
 install -d -m 0755 $PREFIX/$LIB_DIR/integration
 install -d -m 0755 $PREFIX/$LIB_DIR/share
 install -d -m 0755 $PREFIX/$LIB_DIR/core/server/common/src/main/webapp
+install -d -m 0755 $PREFIX/$LIB_DIR/journal
 install -d -m 0755 $PREFIX/$DATA_DIR
 install -d -m 0755 $PREFIX/$DATA_DIR/alluxio
-install -d -m 0755 $PREFIX/etc
-install -d -m 0755 $PREFIX/etc/alluxio
-install -d -m 0755 $PREFIX/etc/alluxio/conf
-install -d -m 0755 $PREFIX/$VAR_DIR/log/alluxio
-install -d -m 0755 $PREFIX/$VAR_DIR/lib/alluxio/journal
-install -d -m 0755 $PREFIX/$VAR_DIR/run/alluxio
+install -d -m 0755 $PREFIX/$NP_ETC_ALLUXIO
+install -d -m 0755 $PREFIX/$NP_VAR_DIR/run/alluxio
+install -d -m 0755 $PREFIX/$NP_VAR_DIR/log/alluxio
+
+
 install -d -m 0755 $PREFIX/$CONF_DIST_DIR
 
-ln -s $CONF_DIST_DIR $PREFIX/$LIB_DIR/conf
-ln -s $VAR_DIR/log/alluxio $PREFIX/$LIB_DIR/logs
+ln -s $NP_ETC_ALLUXIO/conf $PREFIX/$LIB_DIR/conf
+ln -s $NP_VAR_DIR/log/alluxio $PREFIX/$LIB_DIR/logs
 
 cp assembly/server/target/alluxio*dependencies.jar $PREFIX/$LIB_DIR/assembly/server/target
 cp assembly/client/target/alluxio*dependencies.jar $PREFIX/$LIB_DIR/assembly/client/target
@@ -129,6 +136,14 @@ cp -a libexec/* $PREFIX/$LIB_DIR/libexec
 cp -a client/* $PREFIX/$LIB_DIR/client
 cp -a integration/* $PREFIX/$LIB_DIR/integration
 cp integration/fuse/target/alluxio-integration-fuse-*-jar-with-dependencies.jar $PREFIX/$LIB_DIR/integration/fuse
+
+# replace the original libjnifuse*.so file with the manually compiled in openEuler and fedora
+# The libjnifuse*.so files which alluxio need is not compiled by default, and uses the x86 ARCH version
+# so we need to compile libjnifuse*.so and copy it to the corresponding directory of alluxio
+if [ ${OS} = "openEuler" ] || [ "${OS}" = "fedora" ]; then
+  cp integration/jnifuse/native/src/main/resources/libjnifuse*.so $PREFIX/$LIB_DIR/integration/jnifuse/native/target/classes/
+fi
+
 rm -rf $PREFIX/$LIB_DIR/integration/pom.xml $PREFIX/$LIB_DIR/integration/**/pom.xml
 rm -rf $PREFIX/$LIB_DIR/integration/target $PREFIX/$LIB_DIR/integration/**/target
 rm -rf $PREFIX/$LIB_DIR/integration/**/src

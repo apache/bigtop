@@ -36,7 +36,6 @@ public class TestHueSmoke {
     "jobsub": "<title>Job Designer</title>",
     "useradmin": "<title>Hue Users</title>",
     "beeswax": "<title>Hive Query</title>",
-    "oozie": "<title>Oozie App</title>"];
 
   Shell sh = new Shell();
 

@@ -23,7 +23,7 @@ class jdk {
       if versioncmp($operatingsystemrelease, "10") < 0 {
         $jdk_pkg_name = 'openjdk-8-jdk'
       } else {
-        $jdk_pkg_name = 'adoptopenjdk-8-hotspot'
+        $jdk_pkg_name = 'temurin-8-jdk'
       }
       package { 'jdk':
         name => $jdk_pkg_name,
@@ -41,7 +41,7 @@ class jdk {
         noop => $jdk_preinstalled,
       }
     }
-    /(CentOS|Amazon|Fedora|RedHat|Rocky)/: {
+    /(CentOS|Amazon|Fedora|RedHat|Rocky|openEuler)/: {
       package { 'jdk':
         name => 'java-1.8.0-openjdk-devel',
         ensure => present,

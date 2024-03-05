@@ -1,7 +1,0 @@
-/etc/ambari-agent
-/etc/init.d/ambari-agent
-/var/lib/ambari-agent/bin/ambari-agent
-/usr/lib/ambari-agent
-/var/run/
-/var/lib/ambari-agent
-/var/log/

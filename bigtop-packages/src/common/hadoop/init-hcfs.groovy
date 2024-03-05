@@ -90,7 +90,6 @@ def final USAGE = """\
  *
  *   1) Create a file system skeleton.
  *   2) Create users with home dirs in /user.
- *   3) Copy jars and libs into the DFS for oozie.
  *
  *   In the future maybe we will add more optional steps (i.e. adding libs to
  *   the distribtued cache, mounting FUSE over HDFS, etc...).
@@ -245,9 +244,7 @@ users.each() {
 
 /**
  * Copys jar files from a destination into the distributed FS.
- * Build specifically for the common task of getting jars into
- * oozies classpath so that oozie can run pig/hive/etc based
- * applications. Directories and broken symlinks will be skipped.
+ * Directories and broken symlinks will be skipped.
  *
  * @param fs An instance of an HCFS FileSystem .
  *
@@ -290,41 +287,7 @@ def copyJars = { FileSystem fsys, File input, String jarstr, Path target ->
   return copied;
 }
 
-/**
- *  Copy shared libraries into oozie.
- *  Particular applications might want to modify this for example
- *  if one wanted to add a custom file system or always available
- *  custom library to be used in oozie workflows.
- * */
 total_jars = 0;
-
-LOG.info("Now copying Jars into the DFS for oozie ");
-LOG.info("This might take a few seconds...");
-
-def final OOZIE_SHARE = "/user/oozie/share/lib/";
-def final MAPREDUCE = "/usr/lib/hadoop-mapreduce/";
-def final PIG_HOME = "/usr/lib/pig/";
-def final HIVE_HOME = "/usr/lib/hive/";
-
-total_jars += copyJars(fs,
-    new File(HIVE_HOME, "lib"), "",
-    new Path(OOZIE_SHARE, "hive/"))
-
-total_jars += copyJars(fs,
-    new File(MAPREDUCE), "hadoop-streaming",
-    new Path(OOZIE_SHARE, "mapreduce-streaming/"))
-
-total_jars += copyJars(fs,
-    new File(MAPREDUCE), "hadoop-distcp",
-    new Path(OOZIE_SHARE, "distcp"))
-
-total_jars += copyJars(fs,
-    new File(PIG_HOME, "lib/"), "",
-    new Path(OOZIE_SHARE, "pig"))
-
-total_jars += copyJars(fs,
-    new File(PIG_HOME), "",
-    new Path(OOZIE_SHARE, "pig"))
 
 LOG.info("Now copying Jars into the DFS for tez ");
 LOG.info("This might take a few seconds...");

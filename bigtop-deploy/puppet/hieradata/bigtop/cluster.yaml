@@ -16,8 +16,8 @@
 # "$components" list. If $components isn't set then everything in the stack will
 # be installed as usual. Otherwise only a specified list will be set
 # Possible elements:
-# hadoop,yarn,hbase,alluxio,flink,solrcloud,spark,oozie,hcat,httpfs,
-# pig,hive,zookeeper,ycsb
+# hadoop,yarn,hbase,alluxio,flink,solr,spark,hcat,httpfs,
+# pig,hive,zookeeper
 # Example (to deploy only HDFS and YARN server and gateway parts)
 # This can be a comma-separated list or an array.
 #hadoop_cluster_node::cluster_components:
@@ -146,8 +146,6 @@ solr::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 # Default but needed here to make sure, hue uses the same port
 solr::server::port: "8983"
 
-hadoop_oozie::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
-
 hcatalog::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 hcatalog::webhcat::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 
@@ -173,7 +171,6 @@ hadoop_zookeeper::server::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 bigtop::hadoop_rm_http_port: "8088"
 bigtop::hadoop_rm_proxy_port: "8088"
 bigtop::hbase_thrift_port: "9090"
-bigtop::hadoop_oozie_port: "11000"
 
 hadoop_hive::common_config::hbase_zookeeper_quorum: "%{hiera('hadoop_hbase::common_config::zookeeper_quorum')}"
 hadoop_hive::common_config::kerberos_realm: "%{hiera('kerberos::site::realm')}"
@@ -220,9 +217,6 @@ gpdb::common::gp_home: "/usr/lib/gpdb"
 gpdb::common::db_base_dir: "/data_gp"
 gpdb::common::master_db_port: "5432"
 gpdb::common::segment_db_port_prefix: "4000"
-
-# Ambari
-ambari::agent::server_host: "%{hiera('bigtop::hadoop_head_node')}"
 
 # Ranger
 ranger::admin::admin_password: "Admin01234"

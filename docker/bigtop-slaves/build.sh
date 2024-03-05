@@ -69,12 +69,21 @@ case ${OS} in
         fi
         ;;
     rockylinux)
-        PUPPET_MODULES="/etc/puppetlabs/code/environments/production/modules/bigtop_toolchain"
-        UPDATE_SOURCE="dnf clean all \&\& dnf updateinfo"
+        if [ "${VERSION_INT}" -ge "9" ]; then
+           PUPPET_MODULES="/etc/puppet/code/environments/production/modules/bigtop_toolchain"
+           UPDATE_SOURCE="dnf clean all \&\& dnf updateinfo"
+        else
+           PUPPET_MODULES="/etc/puppetlabs/code/environments/production/modules/bigtop_toolchain"
+           UPDATE_SOURCE="dnf clean all \&\& dnf updateinfo"
+        fi
         ;;
     opensuse)
         PUPPET_MODULES="/etc/puppet/modules/bigtop_toolchain"
         UPDATE_SOURCE="zypper clean \&\& zypper refresh"
+        ;;
+    openeuler)
+        PUPPET_MODULES="/etc/puppet/modules/bigtop_toolchain"
+        UPDATE_SOURCE="yum clean all \&\& yum updateinfo"
         ;;
     *)
         echo "[ERROR] Specified distro [${OS}] is not supported!"
@@ -89,5 +98,9 @@ fi
 sed -e "s|PREFIX|${PREFIX}|;s|OS|${OS}|;s|VERSION|${VERSION}|" Dockerfile.template | \
   sed -e "s|PUPPET_MODULES|${PUPPET_MODULES}|;s|UPDATE_SOURCE|${UPDATE_SOURCE}|" > Dockerfile
 
-docker build ${NETWORK} --rm -t bigtop/slaves:${PREFIX}-${OS}-${VERSION} -f Dockerfile ../..
+if [ "$OS" = "openeuler" ];then
+  sed -i "s|\"include bigtop_toolchain::installer\"|\"include bigtop_toolchain::installer\" --modulepath=/etc/puppet/modules/|g" Dockerfile
+fi
+
+docker build ${NETWORK} --rm --no-cache -t bigtop/slaves:${PREFIX}-${OS}-${VERSION} -f Dockerfile ../..
 rm -f Dockerfile

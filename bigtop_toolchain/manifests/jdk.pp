@@ -16,19 +16,19 @@
 class bigtop_toolchain::jdk {
   case $::operatingsystem {
     /Debian/: {
-      # We need JDK 8, but Debian 10 only provides the openjdk-11-jdk package in the official repo.
-      # So we use AdoptOpenJDK instead, following the steps described on:
-      # https://adoptopenjdk.net/installation.html#linux-pkg
+      # We need JDK 8, but Debian 10+ only provides the openjdk-11-jdk package (or greater) in the official repo.
+      # So we use Eclipse Temurin instead, following the steps described on:
+      # https://adoptium.net/installation/linux/#_deb_installation_on_debian_or_ubuntu
       include apt
 
-      apt::source { 'adoptopenjdk':
-        location => 'https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/',
+      apt::source { 'adoptium':
+        location => 'https://packages.adoptium.net/artifactory/deb/',
         key      => {
-          id     => '8ED17AF5D7E675EB3EE3BCE98AC3B29174885C03',
-          source => 'https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public',
+          id     => '3B04D753C9050D9A5D343F39843C48A565F8F04B',
+          source => 'https://packages.adoptium.net/artifactory/api/gpg/key/public',
         },
       } ->
-      package { 'adoptopenjdk-8-hotspot' :
+      package { 'temurin-8-jdk' :
         ensure => present,
       }
     }
@@ -39,7 +39,7 @@ class bigtop_toolchain::jdk {
         ensure  => present,
       }
     }
-    /(CentOS|Amazon|Fedora|RedHat|Rocky)/: {
+    /(CentOS|Amazon|Fedora|RedHat|Rocky|openEuler)/: {
       package { 'java-1.8.0-openjdk-devel' :
         ensure => present
       }

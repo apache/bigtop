@@ -185,7 +185,13 @@ __On all systems, Building Apache Bigtop requires certain set of tools__
   By default, the installation path of components will follow [Filesystem Hierarchy Standard](https://refspecs.linuxfoundation.org/FHS_3.0/fhs/index.html), but you can use `-PparentDir=/path` to add prefix to the path, in this example, prefix `/path/${bigtop_version}` will be added
 
   To avoid download wrong version of components when you have multiple repositories configured on your machine, you can use `-PpkgSuffix` to add bigtop version to package suffix, for example, package name `zookeeper` will be changed to `zookeeper_3_2_0` when using `Bigtop-3.2.0`
+
+* __Enabling Parallel Build for packages(BIGTOP-4044)__
+
+  Apache Bigtop defaults to non-parallel builds. Use -PbuildThreads with a number or a combination of numbers followed by 'C', such as '-PbuildThreads=2' or '-PbuildThreads=2C', to specify the number of CPU cores for Maven's parallel build feature, which can speed up the compilation process for compatible components.
   
+  Consult the bigtop.bom file to verify component compatibility with parallel builds; those marked with maven_parallel_build = true support this option.
+
 * __Building local YUM/APT repositories__ : `gradle [yum|apt]`
 
 * __Recommended build environments__
@@ -195,10 +201,10 @@ __On all systems, Building Apache Bigtop requires certain set of tools__
   environment configured and cached. All currently supported OSes could be pulled
   from official Bigtop repository at https://hub.docker.com/r/bigtop/slaves/tags/
 
-  To build a component (bigtop-groovy) for a particular OS (ubuntu-20.04) you can
+  To build a component (bigtop-groovy) for a particular OS (ubuntu-22.04) you can
   run the following from a clone of Bigtop workspace (assuming your system has
   Docker engine setup and working)
-  ```docker run --rm -u jenkins:jenkins -v `pwd`:/ws --workdir /ws bigtop/slaves:trunk-ubuntu-20.04
+  ```docker run --rm -u jenkins:jenkins -v `pwd`:/ws --workdir /ws bigtop/slaves:trunk-ubuntu-22.04
   bash -l -c './gradlew allclean ; ./gradlew bigtop-groovy-pkg'```
 
 For Developers: Building and modifying the web site

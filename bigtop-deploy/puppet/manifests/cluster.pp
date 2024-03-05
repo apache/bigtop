@@ -62,7 +62,7 @@ $roles_map = {
     worker => ["hbase-server"],
     client => ["hbase-client"],
   },
-  solrcloud => {
+  solr => {
     worker => ["solr-server"],
   },
   spark => {
@@ -86,10 +86,6 @@ $roles_map = {
   kerberos => {
     master => ["kerberos-server"],
   },
-  oozie => {
-    master => ["oozie-server"],
-    client => ["oozie-client"],
-  },
   hcat => {
     master => ["hcatalog-server"],
     gateway_server => ["webhcat-server"],
@@ -108,9 +104,6 @@ $roles_map = {
     worker => ["zookeeper-server"],
     client => ["zookeeper-client"],
   },
-  ycsb => {
-    client => ["ycsb-client"],
-  },
   zeppelin => {
     master => ["zeppelin-server"],
   },
@@ -120,10 +113,6 @@ $roles_map = {
   },
   kafka => {
     worker => ["kafka-server"],
-  },
-  ambari => {
-    master => ["ambari-server"],
-    worker => ["ambari-agent"],
   },
   bigtop-utils => {
     client => ["bigtop-utils"],
@@ -187,19 +176,16 @@ class node_with_roles ($roles = hiera("bigtop::roles")) inherits hadoop_cluster_
     "hadoop",
     "hadoop_hbase",
     "hadoop_hive",
-    "hadoop_oozie",
     "hadoop_zookeeper",
     "hcatalog",
     "livy",
     "solr",
     "spark",
     "tez",
-    "ycsb",
     "kerberos",
     "zeppelin",
     "kafka",
     "gpdb",
-    "ambari",
     "bigtop_utils",
     "phoenix",
     "ranger",

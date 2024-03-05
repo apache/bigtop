@@ -14,6 +14,7 @@
 # limitations under the License.
 %define phoenix_home /usr/lib/%{name}
 %define bin_phoenix %{phoenix_home}/bin
+%define lib_phoenix %{phoenix_home}/lib
 %define examples_phoenix %{phoenix_home}/examples
 %define etc_phoenix_conf %{_sysconfdir}/%{name}/conf
 %define etc_phoenix_conf_dist %{etc_phoenix_conf}.dist
@@ -93,7 +94,7 @@ Requires: bsh-utils
 Requires: coreutils
 %endif
 
-%if  0%{?rhel} >= 8
+%if  0%{?rhel} >= 8 || 0%{?openEuler}
 Requires: python3
 %else
 Requires: python
@@ -148,5 +149,6 @@ fi
 %doc %{doc_phoenix}
 %{phoenix_home}/phoenix-*.jar
 %{bin_phoenix}
+%{lib_phoenix}
 %{examples_phoenix}
 %config(noreplace) %{etc_phoenix_conf_dist}

@@ -36,7 +36,6 @@
     <module>hadoop</module>
     <module>package</module>
     <module>httpfs</module>
-    <module>oozie</module>
     <module>hbase</module>
     <module>hue</module>
     <module>solr</module>
