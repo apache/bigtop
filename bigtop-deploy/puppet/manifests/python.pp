@@ -20,4 +20,12 @@ class python {
           target => '/usr/bin/python2',
         }
     }
+    
+    # BIGTOP-4069 create the soft link of python for openEuler smoke-tests
+    if (($operatingsystem == 'openEuler' )) {
+        file { '/usr/bin/python':
+          ensure => 'link',
+          target => '/usr/bin/python3',
+        }
+    }
 }
