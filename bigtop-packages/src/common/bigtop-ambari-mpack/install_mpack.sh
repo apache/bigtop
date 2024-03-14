@@ -76,5 +76,5 @@ done
 LIB_DIR=${LIB_DIR:-/usr/lib/bigtop-ambari-mpack}
 install -d -m 0755 $PREFIX/$LIB_DIR
 
-cp $BUILD_DIR/ambari-mpack-*-bgtp-ambari-mpack.tar.gz $PREFIX/$LIB_DIR/
+cp $BUILD_DIR/ambari-mpack-*.tar.gz $PREFIX/$LIB_DIR/
 chmod 755 $PREFIX/$LIB_DIR/* -R

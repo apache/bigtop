@@ -394,7 +394,7 @@ bigtop {
     'bigtop-ambari-mpack' {
       name    = 'bigtop-ambari-mpack'
       relNotes = 'Bigtop Mpack'
-      version { base = '3.1'; pkg = '3.1'; release = 1 }
+      version { base = '3.1'; pkg = '3.1'; alias="apache-ambari-${version.base}"; release = 1 }
       tarball { destination = "apache-ambari-${version.base}.tar.gz"
               source = destination}
       url     { site = "https://github.com/JiaLiangC/ambari/archive/refs/heads/"
