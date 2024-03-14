@@ -391,16 +391,14 @@ bigtop {
           //token="J3sxFsV9T5ahRjaQ7AG2"
       }
     }
-
     'bigtop-ambari-mpack' {
       name    = 'bigtop-ambari-mpack'
       relNotes = 'Bigtop Mpack'
-      version { base = '2.7.5'; pkg = '2.7.5.0'; release = 1 }
-      tarball { destination = "apache-ambari-${version.base}-src.tar.gz"
-                source      = destination }
-      url     { download_path = "/ambari/ambari-${version.base}/"
-                site = "${apache.APACHE_MIRROR}/${download_path}"
-                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+      version { base = '3.1'; pkg = '3.1'; release = 1 }
+      tarball { destination = "apache-ambari-${version.base}.tar.gz"
+              source = destination}
+      url     { site = "https://github.com/JiaLiangC/ambari/archive/refs/heads/"
+                    archive = site }
     }
     'livy' {
       name    = 'livy'
