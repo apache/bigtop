@@ -1,0 +1,22 @@
+diff --git a/pom.xml b/pom.xml
+index 7189fd2e093..fa4a8c1c987 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -3023,7 +3023,7 @@
+         <plugin>
+           <groupId>org.apache.maven.plugins</groupId>
+           <artifactId>maven-clean-plugin</artifactId>
+-          <version>3.1.0</version>
++          <version>3.3.1</version>
+           <configuration>
+             <filesets>
+               <fileset>
+@@ -3103,7 +3103,7 @@
+         <plugin>
+           <groupId>org.apache.maven.plugins</groupId>
+           <artifactId>maven-shade-plugin</artifactId>
+-          <version>3.2.4</version>
++          <version>3.5.0</version>
+           <dependencies>
+             <dependency>
+               <groupId>org.ow2.asm</groupId>
