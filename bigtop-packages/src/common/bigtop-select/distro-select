@@ -79,6 +79,8 @@ leaves = {
            "alluxio": "alluxio",
            "alluxio-master": "alluxio",
            "alluxio-worker": "alluxio",
+           "trino": "trino",
+           "trino-cli": "trino-cli",
            "celeborn": "celeborn",
            "celeborn-master": "celeborn",
            "celeborn-worker": "celeborn"

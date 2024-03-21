@@ -474,5 +474,21 @@ bigtop {
                 archive = site
                }
     }
+    'trino' {
+        name    = 'trino'
+        rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
+        relNotes = 'Trino is an open source distributed SQL query engine'
+        version { base = '428'; pkg = base; release = 1 }
+        tarball { destination = "trino.tar.gz"
+                  source = "trino.tar.gz" }
+        url     { site = "https://github.com/trinodb/trino.git"
+                              archive = site }
+        /*git {
+        *    repo = "https://github.com/trinodb/trino.git"
+        *    ref = "428"
+        *   dir = "$name"
+        *}
+        */
+    }
   }
 }
