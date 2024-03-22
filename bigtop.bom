@@ -230,6 +230,7 @@ bigtop {
       url     { download_path = "/$name/$name-${version.base}"
                 site = "${apache.APACHE_MIRROR}/${download_path}"
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+      maven_parallel_build = true
     }
 
     'flink' {
@@ -483,6 +484,7 @@ bigtop {
                   source = "trino.tar.gz" }
         url     { site = "https://github.com/trinodb/trino.git"
                               archive = site }
+        maven_parallel_build = true
         /*git {
         *    repo = "https://github.com/trinodb/trino.git"
         *    ref = "428"
