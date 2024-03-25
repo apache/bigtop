@@ -1,8 +1,8 @@
 diff --git a/pom.xml b/pom.xml
-index dafecb0c55a..7367b78fb66 100644
+index 0f504dbee85..0bd134b1f83 100644
 --- a/pom.xml
 +++ b/pom.xml
-@@ -310,6 +310,22 @@
+@@ -317,6 +317,22 @@
      </extraJavaTestArgs>
    </properties>
    <repositories>
@@ -25,7 +25,7 @@ index dafecb0c55a..7367b78fb66 100644
      <repository>
        <id>gcs-maven-central-mirror</id>
        <!--
-@@ -341,6 +357,17 @@
+@@ -348,6 +364,17 @@
      </repository>
    </repositories>
    <pluginRepositories>
@@ -43,12 +43,3 @@ index dafecb0c55a..7367b78fb66 100644
      <pluginRepository>
        <id>gcs-maven-central-mirror</id>
        <!--
-@@ -3104,7 +3131,7 @@
-         <plugin>
-           <groupId>org.apache.maven.plugins</groupId>
-           <artifactId>maven-shade-plugin</artifactId>
--          <version>3.2.4</version>
-+          <version>3.5.0</version>
-           <dependencies>
-             <dependency>
-               <groupId>org.ow2.asm</groupId>
