@@ -17,4 +17,4 @@ set -ex
 
 . `dirname $0`/bigtop.bom
 
-mvn clean install -Dmaven.test.skip=true -Dspotless.check.skip=true -P web,aliyun,prod,scala-2.12,web,fast,flink-1.15,flink-single-version
+mvn clean install -Dmaven.test.skip=true -Dspotless.check.skip=true -P web,aliyun,prod,scala-2.12,web,fast,flink-1.17,flink-single-version

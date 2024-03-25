@@ -106,12 +106,4 @@ fi
 %attr(0755,dinky,dinky) %{np_var_log_dinky}
 %attr(0755,dinky,dinky) %{np_var_run_dinky}
 
-%{usr_lib_dinky}/extends
-%{usr_lib_dinky}/jar
-%{usr_lib_dinky}/sql
-%{usr_lib_dinky}/lib
-%{usr_lib_dinky}/dinky-loader
-%{usr_lib_dinky}/config
-%{usr_lib_dinky}/logs
-%{usr_lib_dinky}/run
-%{usr_lib_dinky}/auto.sh
+%{usr_lib_dinky}
