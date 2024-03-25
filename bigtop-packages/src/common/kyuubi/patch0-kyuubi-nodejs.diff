@@ -1,8 +1,8 @@
 diff --git a/pom.xml b/pom.xml
-index cde5d636f..7411c7736 100644
+index 3c8391e01..484abc449 100644
 --- a/pom.xml
 +++ b/pom.xml
-@@ -214,7 +214,7 @@
+@@ -215,7 +215,7 @@
  
          <!-- webui -->
          <webui.skip>true</webui.skip>
@@ -10,4 +10,4 @@ index cde5d636f..7411c7736 100644
 +        <node.version>v16.15.1</node.version>
          <pnpm.version>v8.6.1</pnpm.version>
  
-         <!-- apply to kyuubi-hive-jdbc/kyuubi-hive-beeline module -->
+         <hive.jdbc.artifact>kyuubi-hive-jdbc</hive.jdbc.artifact>
