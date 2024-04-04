@@ -39,5 +39,5 @@ test {
 }
 
 test.doFirst {
-  checkEnv(["HIVE_HOME", "HIVE_CONF_DIR"])
+  checkEnv(["HIVE_HOME", "HIVE_CONF_DIR", "HIVE_JDBC_URL"])
 }

@@ -42,6 +42,7 @@ export HBASE_CONF_DIR=${HBASE_CONF_DIR:-/usr/lib/hbase/conf}
 export PHOENIX_HOME=${PHOENIX_HOME:-/usr/lib/phoenix}
 export HIVE_HOME=${HIVE_HOME:-/usr/lib/hive}
 export HIVE_CONF_DIR=${HIVE_CONF_DIR:-/etc/hive/conf}
+export HIVE_JDBC_URL=${HIVE_JDBC_URL:-jdbc:hive2://localhost:10000/default}
 export KAFKA_HOME=${KAFKA_HOME:-/usr/lib/kafka}
 export LIVY_HOME=${LIVY_HOME:-/usr/lib/livy}
 export RANGER_URL=${RANGER_URL:-http://localhost:6080}
