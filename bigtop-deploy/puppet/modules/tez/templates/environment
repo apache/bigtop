@@ -15,3 +15,4 @@
 
 PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 HADOOP_CLASSPATH="/etc/tez/conf:/usr/lib/tez/*:/usr/lib/tez/lib/*"
+HADOOP_USER_CLASSPATH_FIRST="true"
