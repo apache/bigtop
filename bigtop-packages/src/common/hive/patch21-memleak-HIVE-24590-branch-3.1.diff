@@ -85,6 +85,265 @@ index 0c3adb4b0f..0057f71933 100644
 +    <value>5s</value>
 +  </property>
  </configuration>
+diff --git a/itests/hive-minikdc/src/test/java/org/apache/hadoop/hive/ql/txn/compactor/TestCleanerWithSecureDFS.java b/itests/hive-minikdc/src/test/java/org/apache/hadoop/hive/ql/txn/compactor/TestCleanerWithSecureDFS.java
+new file mode 100644
+index 0000000000..f9f185454e
+--- /dev/null
++++ b/itests/hive-minikdc/src/test/java/org/apache/hadoop/hive/ql/txn/compactor/TestCleanerWithSecureDFS.java
+@@ -0,0 +1,184 @@
++/*
++ * Licensed to the Apache Software Foundation (ASF) under one or more
++ * contributor license agreements.  See the NOTICE file distributed with
++ * this work for additional information regarding copyright ownership.
++ * The ASF licenses this file to you under the Apache License, Version 2.0
++ * (the "License"); you may not use this file except in compliance with
++ * the License.  You may obtain a copy of the License at
++ *
++ * http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++package org.apache.hadoop.hive.ql.txn.compactor;
++
++import org.apache.hadoop.conf.Configuration;
++import org.apache.hadoop.hdfs.MiniDFSCluster;
++import org.apache.hadoop.hive.conf.HiveConf;
++import org.apache.hadoop.hive.metastore.api.CompactionRequest;
++import org.apache.hadoop.hive.metastore.api.CompactionType;
++import org.apache.hadoop.hive.metastore.api.Table;
++import org.apache.hadoop.http.HttpConfig;
++import org.apache.hadoop.minikdc.MiniKdc;
++import org.apache.hadoop.security.SecurityUtil;
++import org.apache.hadoop.security.UserGroupInformation;
++import org.apache.hadoop.security.ssl.KeyStoreTestUtil;
++
++import org.junit.AfterClass;
++import org.junit.Assert;
++import org.junit.BeforeClass;
++import org.junit.Test;
++import org.mockito.internal.util.reflection.FieldSetter;
++
++import java.io.IOException;
++import java.nio.file.Path;
++import java.nio.file.Paths;
++import java.util.UUID;
++import java.util.concurrent.atomic.AtomicBoolean;
++
++import static org.apache.hadoop.fs.CommonConfigurationKeys.IPC_CLIENT_CONNECT_MAX_RETRIES_ON_SASL_KEY;
++import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_BLOCK_ACCESS_TOKEN_ENABLE_KEY;
++import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_DATANODE_HTTPS_ADDRESS_KEY;
++import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_DATANODE_KERBEROS_PRINCIPAL_KEY;
++import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_DATANODE_KEYTAB_FILE_KEY;
++import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_DATA_TRANSFER_PROTECTION_KEY;
++import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_HTTP_POLICY_KEY;
++import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_HTTPS_ADDRESS_KEY;
++import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_KERBEROS_PRINCIPAL_KEY;
++import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_NAMENODE_KEYTAB_FILE_KEY;
++import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_WEB_AUTHENTICATION_KERBEROS_PRINCIPAL_KEY;
++
++public class TestCleanerWithSecureDFS extends CompactorTest {
++    private static final Path KEYSTORE_DIR =
++            Paths.get(System.getProperty("test.tmp.dir"), "kdc_root_dir" + UUID.randomUUID());
++    private static final String SUPER_USER_NAME = "hdfs";
++    private static final Path SUPER_USER_KEYTAB = KEYSTORE_DIR.resolve(SUPER_USER_NAME + ".keytab");
++
++    private static MiniDFSCluster dfsCluster = null;
++    private static MiniKdc kdc = null;
++    private static HiveConf secureConf = null;
++
++    private static MiniKdc initKDC() {
++        try {
++            MiniKdc kdc = new MiniKdc(MiniKdc.createConf(), KEYSTORE_DIR.toFile());
++            kdc.start();
++            kdc.createPrincipal(SUPER_USER_KEYTAB.toFile(), SUPER_USER_NAME + "/localhost", "HTTP/localhost");
++            return kdc;
++        } catch (Exception e) {
++            throw new RuntimeException(e);
++        }
++    }
++
++    private static MiniDFSCluster initDFS(Configuration c) {
++        try {
++            MiniDFSCluster cluster = new MiniDFSCluster.Builder(c).numDataNodes(1).skipFsyncForTesting(true).build();
++            cluster.waitActive();
++            return cluster;
++        } catch (IOException e) {
++            throw new RuntimeException(e);
++        }
++    }
++
++    @BeforeClass
++    public static void startCluster() throws Exception {
++        kdc = initKDC();
++        secureConf = createSecureDFSConfig(kdc);
++        dfsCluster = initDFS(secureConf);
++    }
++
++    @AfterClass
++    public static void stopCluster() {
++        secureConf = null;
++        try {
++            if (dfsCluster != null) {
++                dfsCluster.close();
++            }
++        } finally {
++            dfsCluster = null;
++            if (kdc != null) {
++                kdc.stop();
++            }
++            kdc = null;
++        }
++    }
++
++    @Override
++    public void setup() throws Exception {
++        HiveConf conf = new HiveConf(secureConf);
++        conf.set("fs.defaultFS", dfsCluster.getFileSystem().getUri().toString());
++        setup(new HiveConf(secureConf));
++    }
++
++    private static HiveConf createSecureDFSConfig(MiniKdc kdc) throws Exception {
++        HiveConf conf = new HiveConf();
++        SecurityUtil.setAuthenticationMethod(UserGroupInformation.AuthenticationMethod.KERBEROS, conf);
++        String suPrincipal = SUPER_USER_NAME + "/localhost@" + kdc.getRealm();
++        String suKeyTab = SUPER_USER_KEYTAB.toAbsolutePath().toString();
++        conf.set(DFS_NAMENODE_KERBEROS_PRINCIPAL_KEY, suPrincipal);
++        conf.set(DFS_NAMENODE_KEYTAB_FILE_KEY, suKeyTab);
++        conf.set(DFS_DATANODE_KERBEROS_PRINCIPAL_KEY, suPrincipal);
++        conf.set(DFS_DATANODE_KEYTAB_FILE_KEY, suKeyTab);
++        conf.set(DFS_WEB_AUTHENTICATION_KERBEROS_PRINCIPAL_KEY, "HTTP/localhost@" + kdc.getRealm());
++        conf.setBoolean(DFS_BLOCK_ACCESS_TOKEN_ENABLE_KEY, true);
++        conf.set(DFS_DATA_TRANSFER_PROTECTION_KEY, "authentication,integrity,privacy");
++        conf.set(DFS_HTTP_POLICY_KEY, HttpConfig.Policy.HTTPS_ONLY.name());
++        conf.set(DFS_NAMENODE_HTTPS_ADDRESS_KEY, "localhost:0");
++        conf.set(DFS_DATANODE_HTTPS_ADDRESS_KEY, "localhost:0");
++        conf.setInt(IPC_CLIENT_CONNECT_MAX_RETRIES_ON_SASL_KEY, 10);
++        conf.set("hadoop.proxyuser.hdfs.groups", "*");
++        conf.set("hadoop.proxyuser.hdfs.hosts", "*");
++
++        String sslConfDir = KeyStoreTestUtil.getClasspathDir(TestCleanerWithSecureDFS.class);
++        KeyStoreTestUtil.setupSSLConfig(KEYSTORE_DIR.toAbsolutePath().toString(), sslConfDir, conf, false);
++        return conf;
++    }
++
++    @Test
++    public void testLeakAfterHistoryException() throws Exception {
++        final String tblNamePrefix = "tbl_hive_26404_";
++        // Generate compaction requests that will fail cause the base file will not meet the expectations
++        for (int i = 0; i < 5; i++) {
++            Table t = newTable("default", tblNamePrefix + i, false);
++            CompactionRequest rqst = new CompactionRequest("default", t.getTableName(), CompactionType.MAJOR);
++            // The requests should come from different users in order to trigger the leak
++            rqst.setRunas("user" + i);
++            long cTxn = compactInTxn(rqst);
++            // We need at least a base compacted file in order to trigger the exception.
++            // It must not be a valid base otherwise the cleaner will not throw.
++            addBaseFile(t, null, 1, 1, cTxn);
++        }
++        Cleaner cleaner = new Cleaner();
++        // Create a big configuration, (by adding lots of properties) to trigger the memory
++        // leak fast. The problem can still be reproduced with small configurations but it requires more
++        // compaction requests to fail and its not practical to have in a unit test.
++        // The size of the configuration, measured by taking heapdump and inspecting the objects, is
++        // roughly 190MB.
++        HiveConf cleanerConf = new HiveConf(conf);
++        for (int i = 0; i < 1_000_000; i++) {
++            cleanerConf.set("hive.random.property.with.id." + i, Integer.toString(i));
++        }
++        cleaner.setConf(cleanerConf);
++        cleaner.init(new AtomicBoolean(true));
++        FieldSetter.setField(cleaner, MetaStoreCompactorThread.class.getDeclaredField("txnHandler"), txnHandler);
++        Runtime.getRuntime().gc();
++        long startMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
++        cleaner.run();
++        Runtime.getRuntime().gc();
++        long endMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
++        long diffMem = Math.abs(endMem - startMem);
++        // 5 failed compactions X 190MB leak per config ~ 1GB leak
++        // Depending on the Xmx value the leak may lead to OOM; if you definitely want to see the OOM
++        // increase the size of the configuration or the number of failed compactions.
++        Assert.assertTrue("Allocated memory, " + diffMem + "bytes , exceeds acceptable variance of 250MB.",
++                diffMem < 250_000_000);
++    }
++
++    @Override
++    boolean useHive130DeltaDirName() {
++        return false;
++    }
++}
+diff --git a/itests/hive-unit/src/test/java/org/apache/hadoop/hive/ql/txn/compactor/TestCleanerWithReplication.java b/itests/hive-unit/src/test/java/org/apache/hadoop/hive/ql/txn/compactor/TestCleanerWithReplication.java
+index 14d389464f..154dccb6d4 100644
+--- a/itests/hive-unit/src/test/java/org/apache/hadoop/hive/ql/txn/compactor/TestCleanerWithReplication.java
++++ b/itests/hive-unit/src/test/java/org/apache/hadoop/hive/ql/txn/compactor/TestCleanerWithReplication.java
+@@ -18,11 +18,9 @@
+ package org.apache.hadoop.hive.ql.txn.compactor;
+ 
+ import org.apache.hadoop.conf.Configuration;
+-import org.apache.hadoop.fs.FileSystem;
+ import org.apache.hadoop.fs.Path;
+ import org.apache.hadoop.hdfs.MiniDFSCluster;
+ import org.apache.hadoop.hive.conf.HiveConf;
+-import org.apache.hadoop.hive.metastore.HiveMetaStoreClient;
+ import org.apache.hadoop.hive.metastore.api.CompactionRequest;
+ import org.apache.hadoop.hive.metastore.api.CompactionType;
+ import org.apache.hadoop.hive.metastore.api.Partition;
+@@ -34,7 +32,6 @@
+ import org.apache.hadoop.hive.metastore.txn.CompactionInfo;
+ import org.apache.hadoop.hive.metastore.txn.TxnDbUtil;
+ import org.apache.hadoop.hive.metastore.txn.TxnStore;
+-import org.apache.hadoop.hive.metastore.txn.TxnUtils;
+ import org.apache.hadoop.hive.shims.Utils;
+ import org.junit.After;
+ import org.junit.AfterClass;
+@@ -44,33 +41,25 @@
+ import org.junit.Test;
+ 
+ import javax.security.auth.login.LoginException;
+-import java.io.File;
+ import java.io.IOException;
+-import java.nio.file.Files;
+ 
+ import static org.junit.Assert.assertEquals;
+ 
+ public class TestCleanerWithReplication extends CompactorTest {
+   private Path cmRootDirectory;
+-  private static FileSystem fs;
+   private static MiniDFSCluster miniDFSCluster;
+   private final String dbName = "TestCleanerWithReplication";
+ 
+   @Before
+   public void setup() throws Exception {
+-    conf = new HiveConf();
+-    TxnDbUtil.setConfValues(conf);
+-    TxnDbUtil.cleanDb(conf);
+-    conf.set("fs.defaultFS", fs.getUri().toString());
++    HiveConf conf = new HiveConf();
++    conf.set("fs.defaultFS", miniDFSCluster.getFileSystem().getUri().toString());
+     conf.setBoolVar(HiveConf.ConfVars.REPLCMENABLED, true);
+-    TxnDbUtil.prepDb(conf);
+-    ms = new HiveMetaStoreClient(conf);
+-    txnHandler = TxnUtils.getTxnStore(conf);
++    setup(conf)
+     cmRootDirectory = new Path(conf.get(HiveConf.ConfVars.REPLCMDIR.varname));
+     if (!fs.exists(cmRootDirectory)) {
+       fs.mkdirs(cmRootDirectory);
+     }
+-    tmpdir = new File(Files.createTempDirectory("compactor_test_table_").toString());
+     Database db = new Database();
+     db.putToParameters(SOURCE_OF_REPLICATION, "1,2,3");
+     db.setName(dbName);
+@@ -84,7 +73,6 @@ public static void classLevelSetup() throws LoginException, IOException {
+     hadoopConf.set("hadoop.proxyuser." + Utils.getUGI().getShortUserName() + ".hosts", "*");
+     miniDFSCluster =
+         new MiniDFSCluster.Builder(hadoopConf).numDataNodes(1).format(true).build();
+-    fs = miniDFSCluster.getFileSystem();
+   }
+ 
+   @After
 diff --git a/ql/src/java/org/apache/hadoop/hive/ql/log/LogDivertAppender.java b/ql/src/java/org/apache/hadoop/hive/ql/log/LogDivertAppender.java
 index b5e8b95744..76d7f458d0 100644
 --- a/ql/src/java/org/apache/hadoop/hive/ql/log/LogDivertAppender.java
@@ -127,8 +386,197 @@ index b5e8b95744..76d7f458d0 100644
          null);
  
      LoggerConfig loggerConfig = configuration.getRootLogger();
+diff --git a/ql/src/java/org/apache/hadoop/hive/ql/metadata/Hive.java b/ql/src/java/org/apache/hadoop/hive/ql/metadata/Hive.java
+index 4d2e1a4e9a..78b523e350 100644
+--- a/ql/src/java/org/apache/hadoop/hive/ql/metadata/Hive.java
++++ b/ql/src/java/org/apache/hadoop/hive/ql/metadata/Hive.java
+@@ -2274,6 +2274,9 @@ public Void call() throws Exception {
+                   + " isAcid=" + isAcid + ", "
+                   + " hasFollowingStatsTask=" + hasFollowingStatsTask, t);
+               throw t;
++            } finally {
++              // get(conf).getMSC can be called in this task, Close the HMS connection right after use, do not wait for finalizer to close it.
++              closeCurrent();
+             }
+           }
+         }));
+diff --git a/ql/src/java/org/apache/hadoop/hive/ql/session/SessionState.java b/ql/src/java/org/apache/hadoop/hive/ql/session/SessionState.java
+index 7a5866cb1c..1888e6eac4 100644
+--- a/ql/src/java/org/apache/hadoop/hive/ql/session/SessionState.java
++++ b/ql/src/java/org/apache/hadoop/hive/ql/session/SessionState.java
+@@ -1746,7 +1746,9 @@ public void close() throws IOException {
+     if (txnMgr != null) {
+       txnMgr.closeTxnManager();
+     }
++    delete_resources(ResourceType.JAR);
+     JavaUtils.closeClassLoadersTo(sessionConf.getClassLoader(), parentLoader);
++    Utilities.restoreSessionSpecifiedClassLoader(getClass().getClassLoader());
+     File resourceDir =
+         new File(getConf().getVar(HiveConf.ConfVars.DOWNLOADED_RESOURCES_DIR));
+     LOG.debug("Removing resource dir " + resourceDir);
+diff --git a/ql/src/java/org/apache/hadoop/hive/ql/txn/compactor/Cleaner.java b/ql/src/java/org/apache/hadoop/hive/ql/txn/compactor/Cleaner.java
+index f26920cf43..294c36089a 100644
+--- a/ql/src/java/org/apache/hadoop/hive/ql/txn/compactor/Cleaner.java
++++ b/ql/src/java/org/apache/hadoop/hive/ql/txn/compactor/Cleaner.java
+@@ -298,18 +298,25 @@ private void clean(CompactionInfo ci) throws MetaException {
+         LOG.info("Cleaning as user " + ci.runAs + " for " + ci.getFullPartitionName());
+         UserGroupInformation ugi = UserGroupInformation.createProxyUser(ci.runAs,
+             UserGroupInformation.getLoginUser());
+-        ugi.doAs(new PrivilegedExceptionAction<Object>() {
+-          @Override
+-          public Object run() throws Exception {
+-            removeFiles(location, validWriteIdList, ci);
+-            return null;
+-          }
+-        });
+         try {
+           FileSystem.closeAllForUGI(ugi);
+         } catch (IOException exception) {
+           LOG.error("Could not clean up file-system handles for UGI: " + ugi + " for " +
+               ci.getFullPartitionName() + idWatermark(ci), exception);
++          ugi.doAs(new PrivilegedExceptionAction<Object>() {
++            @Override
++            public Object run() throws Exception {
++              removeFiles(location, validWriteIdList, ci);
++              return null;
++            }
++          });
++        } finally {
++          try {
++            FileSystem.closeAllForUGI(ugi);
++          } catch (IOException exception) {
++            LOG.error("Could not clean up file-system handles for UGI: " + ugi + " for " +
++                ci.getFullPartitionName() + idWatermark(ci), exception);
++          }
+         }
+       }
+       txnHandler.markCleaned(ci);
+diff --git a/ql/src/test/org/apache/hadoop/hive/metastore/txn/TestTxnHandler.java b/ql/src/test/org/apache/hadoop/hive/metastore/txn/TestTxnHandler.java
+index 9294c2b32c..ec258b5e9d 100644
+--- a/ql/src/test/org/apache/hadoop/hive/metastore/txn/TestTxnHandler.java
++++ b/ql/src/test/org/apache/hadoop/hive/metastore/txn/TestTxnHandler.java
+@@ -1370,21 +1370,25 @@ public void showLocks() throws Exception {
+   @Ignore("Wedges Derby")
+   public void deadlockDetected() throws Exception {
+     LOG.debug("Starting deadlock test");
++
+     if (txnHandler instanceof TxnHandler) {
+       final TxnHandler tHndlr = (TxnHandler)txnHandler;
+       Connection conn = tHndlr.getDbConn(Connection.TRANSACTION_SERIALIZABLE);
+-      Statement stmt = conn.createStatement();
+-      long now = tHndlr.getDbTime(conn);
+-      stmt.executeUpdate("insert into TXNS (txn_id, txn_state, txn_started, txn_last_heartbeat, " +
+-          "txn_user, txn_host) values (1, 'o', " + now + ", " + now + ", 'shagy', " +
+-          "'scooby.com')");
+-      stmt.executeUpdate("insert into HIVE_LOCKS (hl_lock_ext_id, hl_lock_int_id, hl_txnid, " +
+-          "hl_db, hl_table, hl_partition, hl_lock_state, hl_lock_type, hl_last_heartbeat, " +
+-          "hl_user, hl_host) values (1, 1, 1, 'mydb', 'mytable', 'mypartition', '" +
+-          tHndlr.LOCK_WAITING + "', '" + tHndlr.LOCK_EXCLUSIVE + "', " + now + ", 'fred', " +
+-          "'scooby.com')");
+-      conn.commit();
+-      tHndlr.closeDbConn(conn);
++      try {
++        Statement stmt = conn.createStatement();
++        long now = tHndlr.getDbTime(conn);
++        stmt.executeUpdate("INSERT INTO \"TXNS\" (\"TXN_ID\", \"TXN_STATE\", \"TXN_STARTED\", \"TXN_LAST_HEARTBEAT\", " +
++                "txn_user, txn_host) values (1, 'o', " + now + ", " + now + ", 'shagy', " +
++                "'scooby.com')");
++        stmt.executeUpdate("INSERT INTO \"HIVE_LOCKS\" (\"HL_LOCK_EXT_ID\", \"HL_LOCK_INT_ID\", \"HL_TXNID\", " +
++                "\"HL_DB\", \"HL_TABLE\", \"HL_PARTITION\", \"HL_LOCK_STATE\", \"HL_LOCK_TYPE\", \"HL_LAST_HEARTBEAT\", " +
++                "\"HL_USER\", \"HL_HOST\") VALUES (1, 1, 1, 'MYDB', 'MYTABLE', 'MYPARTITION', '" +
++                tHndlr.LOCK_WAITING + "', '" + tHndlr.LOCK_EXCLUSIVE + "', " + now + ", 'fred', " +
++                "'scooby.com')");
++        conn.commit();
++      } finally {
++        tHndlr.closeDbConn(conn);
++      }
+ 
+       final AtomicBoolean sawDeadlock = new AtomicBoolean();
+ 
+diff --git a/ql/src/test/org/apache/hadoop/hive/ql/txn/compactor/CompactorTest.java b/ql/src/test/org/apache/hadoop/hive/ql/txn/compactor/CompactorTest.java
+index 124c97e092..4347e2a6ee 100644
+--- a/ql/src/test/org/apache/hadoop/hive/ql/txn/compactor/CompactorTest.java
++++ b/ql/src/test/org/apache/hadoop/hive/ql/txn/compactor/CompactorTest.java
+@@ -17,7 +17,6 @@
+  */
+ package org.apache.hadoop.hive.ql.txn.compactor;
+ 
+-import org.apache.commons.io.FileUtils;
+ import org.apache.hadoop.conf.Configuration;
+ import org.apache.hadoop.fs.FSDataInputStream;
+ import org.apache.hadoop.fs.FSDataOutputStream;
+@@ -71,9 +70,7 @@
+ import org.slf4j.LoggerFactory;
+ 
+ import java.io.EOFException;
+-import java.io.File;
+ import java.io.IOException;
+-import java.nio.file.Files;
+ import java.util.ArrayList;
+ import java.util.Collections;
+ import java.util.HashMap;
+@@ -83,6 +80,7 @@
+ import java.util.Set;
+ import java.util.Stack;
+ import java.util.concurrent.atomic.AtomicBoolean;
++import java.util.concurrent.atomic.AtomicInteger;
+ 
+ /**
+  * Super class for all of the compactor test modules.
+@@ -90,26 +88,31 @@
+ public abstract class CompactorTest {
+   static final private String CLASS_NAME = CompactorTest.class.getName();
+   static final private Logger LOG = LoggerFactory.getLogger(CLASS_NAME);
++  private static final AtomicInteger TMP_DIR_ID = new AtomicInteger();
+ 
+   protected TxnStore txnHandler;
+   protected IMetaStoreClient ms;
+   protected HiveConf conf;
+ 
+   private final AtomicBoolean stop = new AtomicBoolean();
+-  protected File tmpdir;
++  private Path tmpdir;
++  FileSystem fs;
+ 
+   @Before
+-  public void setup() throws Exception {
++  public final void setup() throws Exception {
+     conf = new HiveConf();
++    fs = FileSystem.get(conf);
+     TxnDbUtil.setConfValues(conf);
+     TxnDbUtil.cleanDb(conf);
+     ms = new HiveMetaStoreClient(conf);
+     txnHandler = TxnUtils.getTxnStore(conf);
+-    tmpdir = new File(Files.createTempDirectory("compactor_test_table_").toString());
++    Path tmpPath = new Path(System.getProperty("test.tmp.dir"), "compactor_test_table_" + TMP_DIR_ID.getAndIncrement());
++    fs.mkdirs(tmpPath);
++    tmpdir = fs.resolvePath(tmpPath);
+   }
+ 
+   protected void compactorTestCleanup() throws IOException {
+-    FileUtils.deleteDirectory(tmpdir);
++    fs.delete(tmpdir, true);
+   }
+ 
+   protected void startInitiator() throws Exception {
+@@ -320,12 +323,11 @@ private void startThread(char type, boolean stopAfterOne, AtomicBoolean looped)
+   }
+ 
+   private String getLocation(String tableName, String partValue) {
+-    String location =  tmpdir.getAbsolutePath() +
+-      System.getProperty("file.separator") + tableName;
++    Path tblLocation = new Path(tmpdir, tableName);
+     if (partValue != null) {
+-      location += System.getProperty("file.separator") + "ds=" + partValue;
++      tblLocation = new Path(tblLocation, "ds=" + partValue);
+     }
+-    return location;
++    return tblLocation.toString();
+   }
+ 
+   private enum FileType {BASE, DELTA, LEGACY, LENGTH_FILE};
 diff --git a/service/src/java/org/apache/hive/service/cli/operation/Operation.java b/service/src/java/org/apache/hive/service/cli/operation/Operation.java
-index d711a36569..7098970a39 100644
+index d866881b1a..7098970a39 100644
 --- a/service/src/java/org/apache/hive/service/cli/operation/Operation.java
 +++ b/service/src/java/org/apache/hive/service/cli/operation/Operation.java
 @@ -34,8 +34,6 @@
@@ -151,3 +599,131 @@ index d711a36569..7098970a39 100644
      if (isOperationLogEnabled) {
        if (opHandle == null) {
          LOG.warn("Operation seems to be in invalid state, opHandle is null");
+@@ -409,4 +403,8 @@ protected void markOperationStartTime() {
+   protected void markOperationCompletedTime() {
+     operationComplete = System.currentTimeMillis();
+   }
++
++  public String getQueryId() {
++    return queryState.getQueryId();
++  }
+ }
+diff --git a/service/src/java/org/apache/hive/service/cli/operation/OperationManager.java b/service/src/java/org/apache/hive/service/cli/operation/OperationManager.java
+index 5336034839..a5435a6805 100644
+--- a/service/src/java/org/apache/hive/service/cli/operation/OperationManager.java
++++ b/service/src/java/org/apache/hive/service/cli/operation/OperationManager.java
+@@ -186,7 +186,7 @@ private Operation getOperationInternal(OperationHandle operationHandle) {
+   }
+ 
+   private String getQueryId(Operation operation) {
+-    return operation.getParentSession().getHiveConf().getVar(ConfVars.HIVEQUERYID);
++    return operation.getQueryId();
+   }
+ 
+   private void addOperation(Operation operation) {
+diff --git a/standalone-metastore/src/main/java/org/apache/hadoop/hive/metastore/txn/TxnHandler.java b/standalone-metastore/src/main/java/org/apache/hadoop/hive/metastore/txn/TxnHandler.java
+index 38db1c97da..f911acba58 100644
+--- a/standalone-metastore/src/main/java/org/apache/hadoop/hive/metastore/txn/TxnHandler.java
++++ b/standalone-metastore/src/main/java/org/apache/hadoop/hive/metastore/txn/TxnHandler.java
+@@ -4775,6 +4775,7 @@ public LockHandle acquireLock(String key) throws MetaException {
+     Connection dbConn = null;
+     Statement stmt = null;
+     ResultSet rs = null;
++    boolean needToCloseConn = true;
+     try {
+       try {
+         String sqlStmt = sqlGenerator.addForUpdateClause("select MT_COMMENT from AUX_TABLE where MT_KEY1=" + quoteString(key) + " and MT_KEY2=0");
+@@ -4812,20 +4813,21 @@ public LockHandle acquireLock(String key) throws MetaException {
+           derbySemaphore.acquire();
+         }
+         LOG.debug(quoteString(key) + " locked by " + quoteString(TxnHandler.hostname));
++        needToCloseConn = false;  //The connection is good, we need not close it
+         //OK, so now we have a lock
+         return new LockHandleImpl(dbConn, stmt, rs, key, derbySemaphore);
+       } catch (SQLException ex) {
+-        rollbackDBConn(dbConn);
+-        close(rs, stmt, dbConn);
+         checkRetryable(dbConn, ex, "acquireLock(" + key + ")");
+         throw new MetaException("Unable to lock " + quoteString(key) + " due to: " + getMessage(ex) + "; " + StringUtils.stringifyException(ex));
+       }
+       catch(InterruptedException ex) {
+-        rollbackDBConn(dbConn);
+-        close(rs, stmt, dbConn);
+         throw new MetaException("Unable to lock " + quoteString(key) + " due to: " + ex.getMessage() + StringUtils.stringifyException(ex));
+       }
+       finally {
++        if (needToCloseConn) {
++          rollbackDBConn(dbConn);
++          close(rs, stmt, dbConn);
++        }
+         unlockInternal();
+       }
+     }
+diff --git a/upgrade-acid/pom.xml b/upgrade-acid/pom.xml
+index f95117e07d..eb0c45ec04 100644
+--- a/upgrade-acid/pom.xml
++++ b/upgrade-acid/pom.xml
+@@ -80,6 +80,12 @@
+             <artifactId>hive-exec</artifactId>
+             <version>2.3.3</version>
+             <scope>provided</scope>
++            <exclusions>
++                <exclusion>
++                    <groupId>org.pentaho</groupId>
++                    <artifactId>pentaho-aggdesigner-algorithm</artifactId>
++                </exclusion>
++            </exclusions>
+         </dependency>
+         <dependency>
+             <groupId>org.apache.hadoop</groupId>
+@@ -179,12 +185,12 @@ java.io.IOException: Cannot initialize Cluster. Please check your configuration
+                         </goals>
+                         <configuration>
+                             <target>
+-                                <delete dir="${test.conf.dir}" />
+-                                <delete dir="${test.tmp.dir}" />
+-                                <delete dir="${test.warehouse.dir}" />
+-                                <mkdir dir="${test.tmp.dir}" />
+-                                <mkdir dir="${test.warehouse.dir}" />
+-                                <mkdir dir="${test.conf.dir}" />
++                                <delete dir="${test.conf.dir}"/>
++                                <delete dir="${test.tmp.dir}"/>
++                                <delete dir="${test.warehouse.dir}"/>
++                                <mkdir dir="${test.tmp.dir}"/>
++                                <mkdir dir="${test.warehouse.dir}"/>
++                                <mkdir dir="${test.conf.dir}"/>
+                                 <!-- copies hive-site.xml so it can be modified -->
+                                 <copy todir="${test.conf.dir}">
+                                     <fileset dir="${basedir}/${hive.path.to.root}/data/conf/"/>
+@@ -200,11 +206,11 @@ java.io.IOException: Cannot initialize Cluster. Please check your configuration
+                         </goals>
+                         <configuration>
+                             <target>
+-                                <mkdir dir="${test.tmp.dir}/scripts/metastore" />
++                                <mkdir dir="${test.tmp.dir}/scripts/metastore"/>
+                                 <copy todir="${test.tmp.dir}/scripts/metastore">
+                                     <fileset dir="${basedir}/${hive.path.to.root}/metastore/scripts/"/>
+                                 </copy>
+-                                <mkdir dir="${test.tmp.dir}/scripts/metastore/upgrade" />
++                                <mkdir dir="${test.tmp.dir}/scripts/metastore/upgrade"/>
+                                 <copy todir="${test.tmp.dir}/scripts/metastore/upgrade">
+                                     <fileset dir="${basedir}/${hive.path.to.root}/standalone-metastore/src/main/sql/"/>
+                                 </copy>
+@@ -258,13 +264,15 @@ java.io.IOException: Cannot initialize Cluster. Please check your configuration
+                         <derby.version>${derby.version}</derby.version>
+                         <derby.stream.error.file>${test.tmp.dir}/derby.log</derby.stream.error.file>
+                         <!--next line needed to get hive.log-->
+-                        <log4j.configurationFile>${test.log4j.scheme}${test.conf.dir}/hive-log4j2.properties</log4j.configurationFile>
++                        <log4j.configurationFile>${test.log4j.scheme}${test.conf.dir}/hive-log4j2.properties
++                        </log4j.configurationFile>
+                         <log4j.debug>true</log4j.debug>
+                         <java.io.tmpdir>${test.tmp.dir}</java.io.tmpdir>
+                         <!--
+                         use 'memory' to make it run faster
+                         <javax.jdo.option.ConnectionURL>jdbc:derby:memory:${test.tmp.dir}/junit_metastore_db;create=true</javax.jdo.option.ConnectionURL>-->
+-                        <javax.jdo.option.ConnectionURL>jdbc:derby:${test.tmp.dir}/junit_metastore_db;create=true</javax.jdo.option.ConnectionURL>
++                        <javax.jdo.option.ConnectionURL>jdbc:derby:${test.tmp.dir}/junit_metastore_db;create=true
++                        </javax.jdo.option.ConnectionURL>
+                         <metastore.schema.verification>false</metastore.schema.verification>
+                         <test.tmp.dir>${test.tmp.dir}</test.tmp.dir>
+                         <metastore.warehouse.dir>${test.warehouse.scheme}${test.warehouse.dir}</metastore.warehouse.dir>
