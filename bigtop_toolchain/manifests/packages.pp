@@ -338,6 +338,18 @@ class bigtop_toolchain::packages {
       package { 'ca-certificates':
         ensure => latest
       }
+
+      # BIGTOP-4076: newer g++ is required for rebuilding watcher used by flink-runtime-web
+      if ($architecture in ['aarch64']) {
+        package { 'centos-release-scl':
+          ensure => latest
+        }
+
+        package { 'devtoolset-9-gcc-c++':
+          ensure => latest,
+          require => Package['centos-release-scl']
+        }
+      }
     }
     if $operatingsystemmajrelease !~ /^[0-7]$/ {
       # On CentOS 8, EPEL requires that the PowerTools repository is enabled.

@@ -16,9 +16,15 @@
 
 set -ex
 
-
 #load versions
 . `dirname $0`/bigtop.bom
+
+. /etc/os-release
+
+if [[ $ID = "centos" && $VERSION_ID = "7" && $HOSTTYPE = "aarch64" ]]; then
+  # BIGTOP-4076: newer g++ is required for rebuilding watcher used by flink-runtime-web    
+  BUILD_ENV="scl enable devtoolset-9 -- "
+fi
 
 # husky have to be executed from the path that .git exists
 git_path="$(cd $(dirname $0)/../../../.. && pwd)"
@@ -36,6 +42,6 @@ fi
 sed -i "s/$repl_from/$repl_to/" flink-runtime-web/web-dashboard/package.json
 
 # Use Maven to build Flink from source
-mvn install $FLINK_BUILD_OPTS -Drat.skip=true -DskipTests -Dhadoop.version=$HADOOP_VERSION "$@"
+${BUILD_ENV} mvn install $FLINK_BUILD_OPTS -Drat.skip=true -DskipTests -Dhadoop.version=$HADOOP_VERSION "$@"
 cd flink-dist
-mvn install $FLINK_BUILD_OPTS -Drat.skip=true -DskipTests -Dhadoop.version=$HADOOP_VERSION "$@"
+${BUILD_ENV} mvn install $FLINK_BUILD_OPTS -Drat.skip=true -DskipTests -Dhadoop.version=$HADOOP_VERSION "$@"
