@@ -334,6 +334,7 @@ bigtop {
     }
     'livy' {
       name    = 'livy'
+      rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
       relNotes = 'Apache Livy'
       version { base = '0.8.0'; pkg = base; release = 1 }
       tarball { destination = "${name}-${version.base}.zip"
