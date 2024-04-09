@@ -255,8 +255,9 @@ class spark {
       require => Package['spark-core'],
     }
 
-    file { '/etc/spark/conf/log4j.properties':
-      source  => '/etc/spark/conf/log4j.properties.template',
+    # BIGTOP-4077 modify from log4j.properties.template to log4j2.properties.template
+    file { '/etc/spark/conf/log4j2.properties':
+      source  => '/etc/spark/conf/log4j2.properties.template',
       require => Package['spark-core'],
     }
   }
