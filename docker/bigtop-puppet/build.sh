@@ -61,7 +61,8 @@ case "${OS}-${VERSION}" in
     ;;
   openeuler-22.03*)
     OPENEULER_OS="${OS}/${OS}"
-    sed -i -e "s|${OS}:${VERSION}|$OPENEULER_OS:${VERSION}|" ./Dockerfile
+    # BIGTOP-4082 specify the openEuler OS version is : 22.03-lts-sp1
+    sed -i -e "s|${OS}:${VERSION}|$OPENEULER_OS:${VERSION}-lts-sp1|" ./Dockerfile
     ;;
   *)
     ;;
