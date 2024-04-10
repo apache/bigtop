@@ -43,3 +43,9 @@ else
     echo "local apt = $enable_local_repo ; NOT Enabling local apt. Packages will be pulled from remote..."
 fi
 
+# BIGTOP-4078 fix the solr smoketest need rm command
+. /etc/os-release
+OS="$ID"
+if [ "${OS}" == "debian" ]; then
+    ln -s /bin/rm /usr/bin/rm
+fi
