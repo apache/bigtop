@@ -29,7 +29,14 @@ fi
 
 PREFIX=$(echo "$1" | cut -d '-' -f 1)
 OS=$(echo "$1" | cut -d '-' -f 2)
+
+# BIGTOP-4082 get the openEuler OS version
+if [ "${OS}" == "openeuler" ];then
+VERSION=$(echo "$1" | cut -d '-' -f 3-5)
+else
 VERSION=$(echo "$1" | cut -d '-' -f 3)
+fi
+
 ARCH=$(uname -m)
 if [ "${ARCH}" != "x86_64" ];then
 ARCH="-${ARCH}"
@@ -61,8 +68,7 @@ case "${OS}-${VERSION}" in
     ;;
   openeuler-22.03*)
     OPENEULER_OS="${OS}/${OS}"
-    # BIGTOP-4082 specify the openEuler OS version is : 22.03-lts-sp1
-    sed -i -e "s|${OS}:${VERSION}|$OPENEULER_OS:${VERSION}-lts-sp1|" ./Dockerfile
+    sed -i -e "s|${OS}:${VERSION}|$OPENEULER_OS:${VERSION}|" ./Dockerfile
     ;;
   *)
     ;;

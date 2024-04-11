@@ -29,7 +29,12 @@ fi
 
 PREFIX=$(echo "$1" | cut -d '-' -f 1)
 OS=$(echo "$1" | cut -d '-' -f 2)
+# BIGTOP-4082 get the openEuler OS version
+if [ "${OS}" == "openeuler" ];then
+VERSION=$(echo "$1" | cut -d '-' -f 3-5)
+else
 VERSION=$(echo "$1" | cut -d '-' -f 3)
+fi
 ARCH=$(uname -m)
 
 ## Workaround for docker defect on linaros cloud
