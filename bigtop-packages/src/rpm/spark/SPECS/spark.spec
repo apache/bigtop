@@ -116,8 +116,9 @@ Server for Spark worker
 %package -n %{spark_pkg_name}-python
 Summary: Python client for Spark
 Group: Development/Libraries
+# BIGTOP-4073 rockylinux 8 use python2, rockylinux 9 use python3
 %if 0%{?rhel} >= 8 || 0%{?openEuler}
-%if 0%{?rhel} >= 8
+%if 0%{?rhel} == 8
 Requires: %{spark_pkg_name}-core = %{version}-%{release}, python2
 %else
 Requires: %{spark_pkg_name}-core = %{version}-%{release}, python3
