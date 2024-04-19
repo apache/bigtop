@@ -21,7 +21,7 @@ set -ex
 
 . /etc/os-release
 
-if [[ $ID = "centos" && $VERSION_ID = "7" && $HOSTTYPE = "aarch64" ]]; then
+if [[ $ID = "centos" && $VERSION_ID = "7" && ( $HOSTTYPE = "aarch64" || $HOSTTYPE = "powerpc64le" ) ]]; then
   # BIGTOP-4076: newer g++ is required for rebuilding watcher used by flink-runtime-web    
   BUILD_ENV="scl enable devtoolset-9 -- "
 fi

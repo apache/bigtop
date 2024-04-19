@@ -340,7 +340,7 @@ class bigtop_toolchain::packages {
       }
 
       # BIGTOP-4076: newer g++ is required for rebuilding watcher used by flink-runtime-web
-      if ($architecture in ['aarch64']) {
+      if ($architecture in ['aarch64', 'ppc64le']) {
         package { 'centos-release-scl':
           ensure => latest
         }
