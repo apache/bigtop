@@ -42,4 +42,3 @@ else
     apt-get install -y apt-transport-https gnupg
     echo "local apt = $enable_local_repo ; NOT Enabling local apt. Packages will be pulled from remote..."
 fi
-
