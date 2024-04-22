@@ -1,0 +1,26 @@
+diff --git a/LICENSE-binary b/LICENSE-binary
+index 834eeb2625b5..2e9c30282888 100644
+--- a/LICENSE-binary
++++ b/LICENSE-binary
+@@ -307,7 +307,7 @@ net.minidev:accessors-smart:2.4.7
+ org.apache.avro:avro:1.7.7
+ org.apache.commons:commons-collections4:4.2
+ org.apache.commons:commons-compress:1.21
+-org.apache.commons:commons-configuration2:2.8.0
++org.apache.commons:commons-configuration2:2.10.1
+ org.apache.commons:commons-csv:1.9.0
+ org.apache.commons:commons-digester:1.8.1
+ org.apache.commons:commons-lang3:3.12.0
+diff --git a/hadoop-project/pom.xml b/hadoop-project/pom.xml
+index f1ac43ed5b38..6e33c827eb7d 100644
+--- a/hadoop-project/pom.xml
++++ b/hadoop-project/pom.xml
+@@ -1200,7 +1200,7 @@
+       <dependency>
+         <groupId>org.apache.commons</groupId>
+         <artifactId>commons-configuration2</artifactId>
+-        <version>2.8.0</version>
++        <version>2.10.1</version>
+         <exclusions>
+           <exclusion>
+             <groupId>org.apache.commons</groupId>
