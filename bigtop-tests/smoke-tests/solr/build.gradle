@@ -48,16 +48,10 @@ def delete_collection() {
 
 def clean() {
   if (file("/tmp/smoke_data").exists()) {
-    if (file("/usr/bin/rm").exists()) {
-      exec {
-        executable "/usr/bin/rm"
-        args "-rf", "/tmp/smoke_data"
-       }
-    }else{
-      exec {
-        executable "/bin/rm"
-        args "-rf", "/tmp/smoke_data"
-      }
+    String rmCmd = file("/usr/bin/rm").exists() ? "/usr/bin/rm" : "/bin/rm"
+    exec {
+      executable rmCmd
+      args "-rf", "/tmp/smoke_data"
     }
   }
 }
