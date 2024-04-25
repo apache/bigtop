@@ -20,4 +20,10 @@ class python {
           target => '/usr/bin/python2',
         }
     }
+    
+    if ($operatingsystem == 'openEuler') {
+        package { 'python3-unversioned-command':
+          ensure => 'present'
+        }
+    }
 }
