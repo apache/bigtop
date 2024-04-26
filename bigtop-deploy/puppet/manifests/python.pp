@@ -14,16 +14,70 @@
 # limitations under the License.
 
 class python {
-    if (($operatingsystem == 'Ubuntu' and 0 <= versioncmp($operatingsystemmajrelease, '22.04'))) {
-        file { '/usr/bin/python':
-          ensure => 'link',
-          target => '/usr/bin/python2',
+
+    define set_python_alternatives($command) {
+        exec { $name:
+          command => $command,
+          unless  => "/usr/sbin/update-alternatives --display python | grep '/usr/bin/python3'",
+          path    => ['/bin', '/usr/bin', '/sbin', '/usr/sbin'],
         }
     }
-    
-    if ($operatingsystem == 'openEuler') {
-        package { 'python3-unversioned-command':
-          ensure => 'present'
+
+    define change_python_interpreter($file, $interpreter) {
+        file_line { "change_interpreter_in_${name}":
+          path  => $file,
+          line  => "#!${interpreter}",
+          match => '^#!.*python.*$',
+        }
+    }
+
+    case $operatingsystem {
+        /(?i:(centos|fedora|redhat|rocky))/: {
+            if ($operatingsystem != 'Fedora') {
+                case $operatingsystemmajrelease {
+                    '9': {
+                        package { 'python3-unversioned-command':
+                          ensure => 'present',
+                        }
+                    }
+                    '8': {
+                        set_python_alternatives { 'set-python3':
+                          command => '/usr/sbin/update-alternatives --set python /usr/bin/python3',
+                        }
+                    }
+                    '7': {
+                        change_python_interpreter { 'yum':
+                          file        => '/usr/bin/yum',
+                          interpreter => '/usr/bin/python2.7',
+                        }
+                        change_python_interpreter { 'urlgrabber-ext-down':
+                          file        => '/usr/libexec/urlgrabber-ext-down',
+                          interpreter => '/usr/bin/python2.7',
+                        }
+
+                        set_python_alternatives { 'install-python3':
+                          command => '/usr/sbin/update-alternatives --install /usr/bin/python python /usr/bin/python3 1',
+                        }
+                    }
+                }
+            }else {
+                set_python_alternatives { 'install-python3':
+                  command => '/usr/sbin/update-alternatives --install /usr/bin/python python /usr/bin/python3 1',
+                }
+            }
+        }
+
+        /(Ubuntu|Debian)/: {
+            set_python_alternatives { 'install-python3-debian':
+              command => '/usr/sbin/update-alternatives --install /usr/bin/python python /usr/bin/python3 1',
+            }
+        }
+
+        /openEuler/: {
+            package { 'python3-unversioned-command':
+              ensure => 'present',
+            }
         }
     }
 }
+
