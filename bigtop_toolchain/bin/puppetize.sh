@@ -87,13 +87,6 @@ case ${ID}-${VERSION_ID} in
         puppet module install puppetlabs-stdlib --version 4.12.0
         #openEuler dnf defaulted is not use module,so comment module in puppet-7.22.0
         sed -i "91c execute([command(:dnf), 'install', '-d', '0', '-e', self.class.error_level, '-y', args])" /usr/local/share/gems/gems/puppet-7.22.0/lib/puppet/provider/package/dnfmodule.rb
-        #add python2 in openeuler
-        wget -P /usr/src/ https://www.python.org/ftp/python/2.7.14/Python-2.7.14.tgz
-        tar -xf /usr/src/Python-2.7.14.tgz -C  /usr/src/
-        cd /usr/src/Python-2.7.14
-        ./configure --prefix=/usr/local/python2.7.14 --enable-optimizations
-        make && make install
-        ln -s /usr/local/python2.7.14/bin/python2.7 /usr/bin/python2
         ;;
     *)
         echo "Unsupported OS ${ID}-${VERSION_ID}."
