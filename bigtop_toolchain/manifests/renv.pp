@@ -51,6 +51,11 @@ class bigtop_toolchain::renv {
     }
   }
 
+  package { $pkgs:
+    ensure => installed,
+    before => [Exec["install_r_packages"]]
+  }
+
   #BIGTOP-3967: openEuler not support PowerPC currently.
   if ($operatingsystem == 'openEuler'){
     if ($architecture == "aarch64") {
