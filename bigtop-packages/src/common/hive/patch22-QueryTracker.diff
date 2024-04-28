@@ -1,0 +1,13 @@
+diff --git a/llap-server/src/java/org/apache/hadoop/hive/llap/daemon/impl/QueryTracker.java b/llap-server/src/java/org/apache/hadoop/hive/llap/daemon/impl/QueryTracker.java
+index 3cf5d5c773..64d80a3edf 100644
+--- a/llap-server/src/java/org/apache/hadoop/hive/llap/daemon/impl/QueryTracker.java
++++ b/llap-server/src/java/org/apache/hadoop/hive/llap/daemon/impl/QueryTracker.java
+@@ -64,7 +64,7 @@
+ public class QueryTracker extends AbstractService {
+ 
+   private static final Logger LOG = LoggerFactory.getLogger(QueryTracker.class);
+-  private static final Marker QUERY_COMPLETE_MARKER = new Log4jMarker(new Log4jQueryCompleteMarker());
++  private static final Marker QUERY_COMPLETE_MARKER = MarkerFactory.getMarker("QueryTracker_MARKER");
+ 
+   private final ScheduledExecutorService executorService;
+ 
