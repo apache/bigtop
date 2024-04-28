@@ -27,6 +27,8 @@ MVN_ARGS+="-Djetty.version=9.3.29.v20201019 "
 MVN_ARGS+="-Dzookeeper.version=${ZOOKEEPER_VERSION} "
 MVN_ARGS+="-DskipTests "
 MVN_ARGS+="-Dcheckstyle.skip=true "
+MVN_ARGS+="-Dskip.license.check=true "
+
 
 if [ "${BIGTOP_JDK:=8}" == "8" ]; then
     MAVEN_ADDITIONAL="-Dadditionalparam=-Xdoclint:none"
