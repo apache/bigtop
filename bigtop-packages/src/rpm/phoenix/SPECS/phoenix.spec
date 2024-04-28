@@ -94,12 +94,6 @@ Requires: bsh-utils
 Requires: coreutils
 %endif
 
-%if  0%{?rhel} >= 8 || 0%{?openEuler}
-Requires: python3
-%else
-Requires: python
-%endif
-
 %description
 Phoenix is a SQL skin over HBase, delivered as a client-embedded JDBC driver.
 The Phoenix query engine transforms an SQL query into one or more HBase scans,
@@ -129,10 +123,6 @@ getent passwd phoenix >/dev/null || useradd -c "Phoenix" -s /sbin/nologin -g pho
 
 %post
 %{alternatives_cmd} --install %{etc_phoenix_conf} %{name}-conf %{etc_phoenix_conf_dist} 30
-
-%if  0%{?rhel} >= 8
-%{alternatives_cmd} --set python /usr/bin/python3
-%endif
 
 
 %preun
