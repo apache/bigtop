@@ -35,10 +35,7 @@ export MAVEN_OPTS="-Xmx2g -XX:ReservedCodeCacheSize=512m"
 # Rewrite the zookeeper version defined in gradle/dependencies.gradle directly
 # with $ZOOKEEPER_VERSION, because we can't override it via command line option.
 sed -i -e 's/zookeeper: *"\([0-9]\{1,\}\.\)*[0-9]\{1,\}"/zookeeper: "'${ZOOKEEPER_VERSION}'"/' gradle/dependencies.gradle
-wrapper_jar=../../../../../bigtop-packages/src/common/kafka/gradle-wrapper.jar
-\cp $wrapper_jar gradle/wrapper/
-
-./gradlew -PscalaVersion=${SCALA_VERSION} clean releaseTarGz -x signArchives
+./gradlew -PscalaVersion=2.12 clean releaseTarGz -PskipSigning=true
 
 rm -rf build
 mkdir build
