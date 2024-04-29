@@ -236,7 +236,7 @@ class bigtop_toolchain::packages {
        "yasm"
     ] }
     /(Ubuntu|Debian)/: {
-      $_pkgs = [
+      $pkgs = [
         "unzip",
         "curl",
         "wget",
@@ -296,7 +296,6 @@ class bigtop_toolchain::packages {
         "nasm",
         "yasm"
       ]
-      $pkgs = $_pkgs
 
       file { '/etc/apt/apt.conf.d/01retries':
         content => 'Aquire::Retries "5";'
