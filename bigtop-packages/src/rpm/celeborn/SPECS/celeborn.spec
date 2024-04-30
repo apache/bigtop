@@ -63,7 +63,7 @@ AutoReqProv: no
 Ambari
 
 %prep
-%setup -n incubator-%{celeborn_name}-%{strip_v %{celeborn_alias_version}}
+%setup -n %{celeborn_name}-%{strip_v %{celeborn_alias_version}}
 
 #BIGTOP_PATCH_COMMANDS
 
