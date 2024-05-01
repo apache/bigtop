@@ -29,6 +29,7 @@ case ${ID}-${VERSION_ID} in
         # into /usr/share/puppet/modules, but it's not recognized as the default module path.
         # So we install that module in the same way as CentOS 7.
         puppet module install puppetlabs-stdlib --version 4.12.0
+        echo 'include_legacy_facts=true' >> /etc/puppet/puppet.conf
         ;;
     ubuntu-18.04|ubuntu-22.04)
         apt-get update
