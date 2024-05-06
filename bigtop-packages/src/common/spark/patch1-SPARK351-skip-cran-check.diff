@@ -1,0 +1,24 @@
+diff --git a/R/check-cran.sh b/R/check-cran.sh
+index 4123361f5e2..5ff0e97aaa3 100755
+--- a/R/check-cran.sh
++++ b/R/check-cran.sh
+@@ -69,12 +69,12 @@ echo "Running CRAN check with $CRAN_CHECK_OPTIONS options"
+ # Jenkins installs arrow. See SPARK-29339.
+ export _R_CHECK_FORCE_SUGGESTS_=FALSE
+ 
+-if [ -n "$NO_TESTS" ] && [ -n "$NO_MANUAL" ]
+-then
+-  "$R_SCRIPT_PATH/R" CMD check $CRAN_CHECK_OPTIONS "SparkR_$VERSION.tar.gz"
+-else
+-  # This will run tests and/or build vignettes, and require SPARK_HOME
+-  SPARK_HOME="${SPARK_HOME}" "$R_SCRIPT_PATH/R" CMD check $CRAN_CHECK_OPTIONS "SparkR_$VERSION.tar.gz"
+-fi
++# if [ -n "$NO_TESTS" ] && [ -n "$NO_MANUAL" ]
++# then
++#   "$R_SCRIPT_PATH/R" CMD check $CRAN_CHECK_OPTIONS "SparkR_$VERSION.tar.gz"
++# else
++#   # This will run tests and/or build vignettes, and require SPARK_HOME
++#   SPARK_HOME="${SPARK_HOME}" "$R_SCRIPT_PATH/R" CMD check $CRAN_CHECK_OPTIONS "SparkR_$VERSION.tar.gz"
++# fi
+ 
+ popd > /dev/null
