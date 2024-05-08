@@ -308,7 +308,7 @@ bigtop {
       rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
       maven_parallel_build = true
       relNotes = 'Apache Kafka'
-      version { base = '2.8.2'; pkg = base; release = 1 }
+      version { base = '3.6.2'; pkg = base; release = 1 }
       tarball { destination = "$name-${version.base}.tar.gz"
                 source      = "$name-${version.base}-src.tgz" }
       url     { download_path = "/$name/${version.base}/"
