@@ -1,0 +1,11 @@
+t a/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-ui/src/main/webapp/.bowerrc b/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-ui/src/main/webapp/.bowerrc
+index daf4462c44ac..6518ee5990b1 100644
+--- a/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-ui/src/main/webapp/.bowerrc
++++ b/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-ui/src/main/webapp/.bowerrc
+@@ -1,5 +1,5 @@
+ {
+   "directory": "bower_components",
+   "analytics": false,
+-  "registry": "https://registry.bower.io"
++  "registry": "https://bower.herokuapp.com"
+ }
