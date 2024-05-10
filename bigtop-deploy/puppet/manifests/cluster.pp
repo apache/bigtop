@@ -154,13 +154,6 @@ class hadoop_cluster_node (
     ""      => false,
     default => true,
   }
-
-  # look into alternate hiera datasources configured using this path in
-  # hiera.yaml
-  $hadoop_hiera_ha_path = $ha_enabled ? {
-    false => "noha",
-    true  => "ha",
-  }
 }
 
 class node_with_roles ($roles = hiera("bigtop::roles")) inherits hadoop_cluster_node {
