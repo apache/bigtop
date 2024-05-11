@@ -11,6 +11,12 @@ hadoop::hadoop_storage_dirs:
   - /data/3
   - /data/4
 
+#hadoop::common_hdfs::ha: "auto"
+#hadoop::common_hdfs::hadoop_namenode_host:
+#  - "%{hiera('bigtop::hadoop_head_node')}"
+#  - "%{hiera('bigtop::standby_head_node')}"
+#hadoop_cluster_node::hadoop_namenode_uri: "hdfs://ha-nn-uri:8020"
+
 #hadoop_cluster_node::cluster_components:
 #  - alluxio
 #  - flink
