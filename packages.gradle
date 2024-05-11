@@ -102,7 +102,7 @@ def isValidMavenBuildThreads(threads) {
 }
 
 def getPkgNameSuffix(component, type) {
-    def originalSuffix = type.equalsIgnoreCase("deb") ? component.deb_pkg_suffix : component.rpm_pkg_suffix
+    def originalSuffix = type.equalsIgnoreCase("deb") ? component.deb_pkg_suffix?:"" : component.rpm_pkg_suffix?:"%{nil}"
     def defaultSuffix = type.equalsIgnoreCase("deb") ?  "" : "%{nil}"
     def pkgNameSuffix = project.hasProperty("pkgSuffix")? originalSuffix : defaultSuffix
     def gradlePkgNameSuffix = pkgNameSuffix == defaultSuffix ? "" : pkgNameSuffix
