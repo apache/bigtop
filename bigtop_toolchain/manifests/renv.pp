@@ -49,6 +49,9 @@ class bigtop_toolchain::renv {
         ]
       }
     }
+    default: {
+      $pkgs = []
+    }
   }
 
   package { $pkgs:
