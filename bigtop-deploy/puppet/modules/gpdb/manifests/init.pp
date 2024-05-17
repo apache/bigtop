@@ -226,7 +226,7 @@ class gpdb {
             Exec['start-master-db-in-admin-mode'],
           ],
         }
-        exec { "insert-to-new-table${dbid}":
+        exec { "insert-to-new-table":
           environment => ["PGOPTIONS=-c gp_session_role=utility"],
           command     => "insert-to-new-table.sh",
           path        => '/home/gpadmin',
