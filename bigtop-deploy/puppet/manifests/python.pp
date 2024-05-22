@@ -29,7 +29,7 @@ class python {
                     '8': {
                         exec { 'set-python3':
                           command => '/usr/sbin/update-alternatives --set python /usr/bin/python3',
-                          unless  => "/usr/sbin/update-alternatives --display python | grep  '/usr/bin/python3'",
+                          unless  => "/usr/sbin/update-alternatives --display python | grep  'link currently points to /usr/bin/python3'",
                           path    => ['/bin', '/usr/bin', '/sbin', '/usr/sbin'],
                         }
                     }
