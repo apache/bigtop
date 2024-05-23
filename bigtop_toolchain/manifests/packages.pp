@@ -72,7 +72,7 @@ class bigtop_toolchain::packages {
       ]
 
       if ($operatingsystem == 'Fedora') {
-        $pkgs = concat($_pkgs, ["libtirpc-devel", "cmake"])
+        $pkgs = concat($_pkgs, ["libtirpc-devel", "cmake", "perl-FindBin"])
       } else { # RedHat, CentOS, Rocky
         if (0 <= versioncmp($operatingsystemmajrelease, '9')) {
           $pkgs = concat($_pkgs, ["libtirpc-devel", "cmake"])
