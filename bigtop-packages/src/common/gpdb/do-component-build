@@ -18,4 +18,4 @@ set -ex
 
 rm -f gpdb
 
-make
+PYTHON=/usr/bin/python3 make MAKELEVEL=0

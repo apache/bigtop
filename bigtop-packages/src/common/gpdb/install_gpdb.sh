@@ -16,4 +16,4 @@
 
 set -ex
 
-make install DESTDIR=$1
+PYTHON=/usr/bin/python3 make install DESTDIR=$1

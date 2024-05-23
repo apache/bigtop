@@ -40,7 +40,7 @@ class gpdb {
       gp_home             => $gp_home,
       master_port         => $master_db_port,
       segment_port_prefix => $segment_db_port_prefix,
-      require             => [Class['gpdb::common::prepare_file_structure'], Exec["install_python_packages"]]
+      require             => [Class['gpdb::common::prepare_file_structure'], Class['gpdb::common::install_packages']]
     }
 
     class { 'gpdb::common::start_master_node':
@@ -66,35 +66,6 @@ class gpdb {
     }
 
     class install_packages{
-      # GPDB 5.x only supports Python 2.x, but we dropped pip for python2 in BIGTOP-3491.
-      # In addition, the latest versions of some distros (Fedora and Ubuntu, at least)
-      # doesn't seem to provide it as a standard package. So we use get-pip.py
-      # (https://pip.pypa.io/en/stable/installing/#installing-with-get-pip-py)
-      # here to install it on all distros.
-      exec { 'download_get_pip':
-        cwd => '/tmp',
-        command => '/usr/bin/curl -sLO https://bootstrap.pypa.io/pip/2.7/get-pip.py'
-      }
-      exec { 'install_pip':
-        cwd => '/tmp',
-        command => '/usr/bin/python2 get-pip.py',
-        require => [Exec["download_get_pip"], Package["gpdb"]],
-      }
-      # GPDB requires the following python packages as of v5.28.5. See
-      # https://github.com/greenplum-db/gpdb/tree/5X_STABLE#building-greenplum-database-with-gporca.
-      if ($operatingsystem == 'CentOS') {
-        exec { 'install_python_packages':
-          command => "/usr/bin/env pip install -q 'cryptography<3.3' lockfile paramiko psutil",
-          require => [Exec["install_pip"]],
-          timeout => 600,
-        }
-      } else {
-        exec { 'install_python_packages':
-          command => "/usr/bin/env pip install -q lockfile paramiko psutil",
-          require => [Exec["install_pip"]],
-          timeout => 600,
-        }
-      }
       package { ["gpdb"]:
         ensure => latest,
       }
@@ -173,7 +144,7 @@ class gpdb {
           }
           file_line { "add 2 conf${db_dir}":
             path    => "${db_dir}/postgresql.conf",
-            line    => 'checkpoint_segments=8',
+            line    => 'max_wal_size=384MB',
             require => [Exec["create_master_db${db_dir}"]],
           }
           file_line { "add 3 conf${db_dir}":
@@ -255,7 +226,7 @@ class gpdb {
             Exec['start-master-db-in-admin-mode'],
           ],
         }
-        exec { "insert-to-new-table${dbid}":
+        exec { "insert-to-new-table":
           environment => ["PGOPTIONS=-c gp_session_role=utility"],
           command     => "insert-to-new-table.sh",
           path        => '/home/gpadmin',
