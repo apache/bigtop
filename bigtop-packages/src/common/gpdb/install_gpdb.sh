@@ -16,4 +16,10 @@
 
 set -ex
 
-PYTHON=/usr/bin/python3 make install DESTDIR=$1
+. /etc/os-release
+
+if [[ ${HOSTTYPE} = "aarch64" && ${ID} = "centos" && ${VERSION_ID} = "7" ]] ; then
+  BUILD_ENV="scl enable devtoolset-9 -- "
+fi
+
+${BUILD_ENV} make install DESTDIR=$1 PYTHON=/usr/bin/python3

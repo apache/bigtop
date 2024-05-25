@@ -16,4 +16,10 @@
 
 set -ex
 
-PYTHON=/usr/bin/python3 ./configure --prefix=$1 --with-python --with-libxml --with-gssapi --disable-orca CFLAGS='-fcommon -Wno-implicit-fallthrough'
+. /etc/os-release
+
+if [[ ${HOSTTYPE} = "aarch64" && ${ID} = "centos" && ${VERSION_ID} = "7" ]] ; then
+  BUILD_ENV="scl enable devtoolset-9 -- "
+fi
+
+${BUILD_ENV} ./configure --prefix=$1 --with-python --with-libxml --with-gssapi --disable-orca PYTHON=/usr/bin/python3 CFLAGS='-fcommon -Wno-implicit-fallthrough'

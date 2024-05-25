@@ -18,4 +18,10 @@ set -ex
 
 rm -f gpdb
 
-PYTHON=/usr/bin/python3 make MAKELEVEL=0
+. /etc/os-release
+
+if [[ ${HOSTTYPE} = "aarch64" && ${ID} = "centos" && ${VERSION_ID} = "7" ]] ; then
+  BUILD_ENV="scl enable devtoolset-9 -- "
+fi
+
+${BUILD_ENV} make MAKELEVEL=0 PYTHON=/usr/bin/python3
