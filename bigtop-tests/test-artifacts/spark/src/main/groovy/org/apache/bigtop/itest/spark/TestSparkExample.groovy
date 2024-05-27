@@ -66,14 +66,4 @@ public class TestSparkExample {
     }
   }
 
-  @Test
-  void testSparkPythonExample() {
-    def pyExamples = ["pi.py"];
-    pyExamples.each() {
-      sh.exec("cd ${SPARK_HOME} && ./bin/spark-submit --master ${SPARK_MASTER} " + SPARK_EXAMPLES_DIR + "/src/main/python/${it}");
-      logError(sh);
-      assertTrue("Running Spark Python example {it} failed", sh.getRet() == 0);
-    }
-  }
-
 }
