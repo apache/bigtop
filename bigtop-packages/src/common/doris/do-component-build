@@ -1,3 +1,4 @@
+#!/bin/bash
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -13,11 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-export MAVEN_HOME=/usr/local/maven
-export JAVA_HOME=<%= @javahome %>
-export ANT_HOME=/usr/local/ant
-export GRADLE_HOME=/usr/local/gradle
-export NODE_HOME=/usr/local/node
-export PATH=$MAVEN_HOME/bin:$ANT_HOME/bin:$GRADLE_HOME/bin:$NODE_HOME/bin:$PATH
+set -ex
 
-export GRADLE_OPTS="-Dorg.gradle.daemon=true"
+#load versions
+. `dirname $0`/bigtop.bom
+
+export DORIS_BUILD_PYTHON_VERSION="python3"
+export DORIS_TOOLCHAIN="clang"
+export REPOSITORY_URL="https://doris-thirdparty-repo.bj.bcebos.com/thirdparty"
+export CUSTOM_NPM_REGISTRY="https://registry.npmmirror.com"
+
+sh build.sh --fe --be --clean

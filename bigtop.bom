@@ -354,5 +354,15 @@ bigtop {
                 archive = site }
       maven_parallel_build = true
     }
+    'doris' {
+      name    = 'doris'
+      relNotes = 'Apache Doris'
+      version { base = '2.0.9'; pkg = base; release = 1 }
+      tarball { destination = "$name-${version.base}.tar.gz"
+                source      = "apache-$name-${version.base}-src.tar.gz" }
+      url     { download_path =  String.format("%s/%s/%s/", name, version.base.substring(0, version.base.lastIndexOf(".")), version.base)
+                site = "${apache.APACHE_MIRROR}/${download_path}"
+                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+    }
   }
 }

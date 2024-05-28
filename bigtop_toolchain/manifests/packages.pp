@@ -68,7 +68,13 @@ class bigtop_toolchain::packages {
         "perl-Digest-SHA",
         "nasm",
         "yasm",
-        "python3-devel"
+        "python3-devel",
+        "clang",
+        "byacc",
+        "binutils-devel",
+        "libstdc++-static",
+        "glibc-static",
+        "gettext-devel"
       ]
 
       if ($operatingsystem == 'Fedora') {
