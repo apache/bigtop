@@ -15,6 +15,7 @@
 
 %define flink_name flink
 %define flink_pkg_name flink%{pkg_name_suffix}
+%define __jar_repack 0
 
 %define etc_default %{parent_dir}/etc/default
 
