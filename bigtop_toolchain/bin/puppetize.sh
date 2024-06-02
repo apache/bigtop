@@ -86,6 +86,7 @@ case ${ID}-${VERSION_ID} in
         # openEuler ruby version is 3.X,so use puppet-7.22.0.
         gem install puppet:7.22.0 xmlrpc sync sys-filesystem
         puppet module install puppetlabs-stdlib --version 4.12.0
+        puppet module install puppetlabs-yumrepo_core --version 2.1.0
         #openEuler dnf defaulted is not use module,so comment module in puppet-7.22.0
         sed -i "91c execute([command(:dnf), 'install', '-d', '0', '-e', self.class.error_level, '-y', args])" /usr/local/share/gems/gems/puppet-7.22.0/lib/puppet/provider/package/dnfmodule.rb
         ;;
