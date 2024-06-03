@@ -210,13 +210,6 @@ flink::common::parallelism_default: "1"
 flink::common::jobmanager_failover_strategy: "region"
 flink::common::rest_port: "8081"
 
-# GPDB
-# The first element is FQDN for master node and the succeeding ones are for segment nodes.
-gpdb::common::nodes: ["%{hiera('bigtop::hadoop_head_node')}", "%{hiera('bigtop::hadoop_head_node')}"]
-gpdb::common::gp_home: "/usr/lib/gpdb"
-gpdb::common::db_base_dir: "/data_gp"
-gpdb::common::master_db_port: "5432"
-gpdb::common::segment_db_port_prefix: "4000"
 
 # Ranger
 ranger::admin::admin_password: "Admin01234"

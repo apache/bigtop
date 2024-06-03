@@ -34,7 +34,6 @@ echo -e "\n===== EXPORTING VARIABLES =====\n"
 
 export ALLUXIO_HOME=${ALLUXIO_HOME:-/usr/lib/alluxio}
 export FLINK_HOME=${FLINK_HOME:-/usr/lib/flink}
-export GPDB_HOME=${GPDB_HOME:-/usr/lib/gpdb}
 export HADOOP_HOME=${HADOOP_HOME:-/usr/lib/hadoop}
 export HADOOP_CONF_DIR=${HADOOP_CONF_DIR:-/etc/hadoop/conf}
 export HADOOP_MAPRED_HOME=${HADOOP_MAPRED_HOME:-/usr/lib/hadoop-mapreduce}

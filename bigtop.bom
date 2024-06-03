@@ -323,15 +323,6 @@ bigtop {
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
       maven_parallel_build = true
     }
-    'gpdb' {
-      name    = 'gpdb'
-      relNotes = 'GreenPlum'
-      version { base = '7.1.0'; pkg = base; release = 1 }
-      tarball { destination = "$name-${version.base}.tar.gz"
-                source      = "${version.base}.tar.gz" }
-      url     { site = "https://github.com/greenplum-db/gpdb/archive/"
-                archive = site }
-    }
     'livy' {
       name    = 'livy'
       relNotes = 'Apache Livy'
