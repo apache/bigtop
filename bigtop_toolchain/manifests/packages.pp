@@ -68,7 +68,6 @@ class bigtop_toolchain::packages {
         "perl-Digest-SHA",
         "nasm",
         "yasm",
-        "python3-devel"
       ]
 
       if ($operatingsystem == 'Fedora') {
@@ -104,8 +103,6 @@ class bigtop_toolchain::packages {
         "rpm-build",
         "pkg-config",
         "gmp-devel",
-        "python3-devel",
-        "python3-pip",
         "libxml2-devel",
         "libxslt-devel",
         "cyrus-sasl-devel",
@@ -216,7 +213,6 @@ class bigtop_toolchain::packages {
        "krb5-devel",
        "net-tools",
        "perl-Digest-SHA",
-       "python3-devel",
        "libtirpc-devel",
        "libgit2-devel",
        "libgit2-glib-devel",
@@ -263,7 +259,6 @@ class bigtop_toolchain::packages {
         "devscripts",
         "build-essential",
         "dh-make",
-        "dh-python",
         "libfuse2",
         "libjansi-java",
         "libxml2-dev",
@@ -290,9 +285,7 @@ class bigtop_toolchain::packages {
         "libcurl4-gnutls-dev",
         "bison",
         "flex",
-        "python-setuptools",
         "libffi-dev",
-        "python3-dev",
         "nasm",
         "yasm"
       ]
@@ -357,27 +350,7 @@ class bigtop_toolchain::packages {
   }
 
 
-  # BIGTOP-3364: Failed to install setuptools by pip/pip2
-  # on Ubuntu-16.04/18.04 and centos-7.
-  # From https://packaging.python.org/tutorials/installing-packages/#requirements-for-installing-packages,
-  # it suggests to leverage python3/pip3 to install setuptools.
-  #
-  # "provider => 'pip3'" is not available for puppet 3.8.5,
-  #  Workaround: Exec {pip3 install setuptools} directly insead of Package{}.
-  package { 'python3-pip':
-    ensure => installed
-  }
-
-  exec { "Setuptools Installation":
-    command => "/usr/bin/pip3 install -q --upgrade setuptools",
-  }
-
-  exec { "flake8 and whell Installation":
-    command => "/usr/bin/pip3 freeze --all; /usr/bin/pip3 --version; /usr/bin/pip3 install -q flake8 wheel",
-  }
-
   if $osfamily == 'RedHat' {
-
     if ! (($operatingsystem == 'Fedora' and versioncmp($operatingsystemmajrelease, '31') >= 0) or
       ($operatingsystem != 'Fedora' and versioncmp($operatingsystemmajrelease, '8') >= 0)) {
       file { '/usr/bin/cmake':
@@ -385,17 +358,5 @@ class bigtop_toolchain::packages {
         target => '/usr/bin/cmake3',
       }
     }
-
-    # The rpm-build package had installed brp-python-bytecompile
-    # just under /usr/lib/rpm until Fedora 34,
-    # but it seems to have been removed in Fedora 35.
-    # So we manually create a symlink instead.
-    if ($operatingsystem == 'Fedora' and versioncmp($operatingsystemmajrelease, '35') >= 0) {
-      file { '/usr/lib/rpm/brp-python-bytecompile':
-        ensure => 'link',
-        target => '/usr/lib/rpm/redhat/brp-python-bytecompile',
-      }
-    }
   }
-
 }
