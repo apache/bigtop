@@ -107,10 +107,6 @@ $roles_map = {
   zeppelin => {
     master => ["zeppelin-server"],
   },
-  gpdb => {
-    master => ["gpdb-master"],
-    worker => ["gpdb-segment"],
-  },
   kafka => {
     worker => ["kafka-server"],
   },
@@ -178,7 +174,6 @@ class node_with_roles ($roles = hiera("bigtop::roles")) inherits hadoop_cluster_
     "kerberos",
     "zeppelin",
     "kafka",
-    "gpdb",
     "bigtop_utils",
     "phoenix",
     "ranger",
