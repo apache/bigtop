@@ -162,25 +162,20 @@ class spark {
   }
 
   class sparkr {
-    # BIGTOP-3579. On these distros, the default version of R is earlier than 3.5.0,
-    # which is required to run SparkR. So the newer version of R is installed here.
-    if (($operatingsystem == 'Ubuntu' and versioncmp($operatingsystemmajrelease, '18.04') <= 0) or
-        ($operatingsystem == 'Debian' and versioncmp($operatingsystemmajrelease, '10') < 0)) {
-      $url = "http://cran.r-project.org/src/base/R-3/"
-      $rfile = "R-3.6.3.tar.gz"
-      $rdir = "R-3.6.3"
+    if ($operatingsystem == 'openEuler') {
+      $rurl = "https://cran.r-project.org/src/base/R-4/"
+      $rfile = "R-4.4.3.tar.gz"
+      $rdir = "R-4.4.3"
 
       $pkgs = [
-        "g++",
-        "gcc",
-        "gfortran",
-        "libbz2-dev",
-        "libcurl4-gnutls-dev",
-        "liblzma-dev",
-        "libpcre3-dev",
-        "libreadline-dev",
-        "libz-dev",
-        "make",
+        "bzip2-devel",
+        "gcc-c++",
+        "gcc-gfortran",
+        "libcurl-devel",
+        "perl-Digest-SHA",
+        "pcre-devel",
+        "readline-devel",
+        "xz-devel",
       ]
       package { $pkgs:
         ensure => installed,

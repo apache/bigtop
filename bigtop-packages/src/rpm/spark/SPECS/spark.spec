@@ -165,7 +165,12 @@ Spark YARN Shuffle Service
 %package -n %{spark_pkg_name}-sparkr
 Summary: R package for Apache Spark
 Group: Development/Libraries
+
+%if 0%{?openEuler}
+Requires: %{spark_pkg_name}-core = %{version}-%{release}
+%else
 Requires: %{spark_pkg_name}-core = %{version}-%{release}, R
+%endif
 
 %description -n %{spark_pkg_name}-sparkr
 SparkR is an R package that provides a light-weight frontend to use Apache Spark from R.
