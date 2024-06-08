@@ -60,7 +60,7 @@ case ${ID}-${VERSION_ID} in
         puppet module install puppetlabs-stdlib --version 4.12.0
         # Enabling the PowerTools and EPEL repositories via Puppet doesn't seem to work in some cases.
         # As a workaround for that, enable the former here in advance of running the Puppet manifests.
-        dnf config-manager --set-enabled powertools
+        dnf config-manager --set-enabled powertools devel
         ;;
     rocky-9*)
         rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
