@@ -17,6 +17,265 @@
 		<section name="Bigtop Project Release Notes">
 			<!-- Paste release notes from https://issues.apache.org/jira/browse/BIGTOP here. -->
 
+        <h3>Release Notes - Bigtop - Version 3.3.0</h3>
+                
+<h2>        Bug
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3896'>BIGTOP-3896</a>] -         Failed to deploy Alluxio on Arm64/ppc64le Fedora-38
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3897'>BIGTOP-3897</a>] -         Failed to deploy gpdb on Fedora-36 for arm64/ppc64le
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3901'>BIGTOP-3901</a>] -         Fix failure of Kerberos deployment on Rocky Linux 8 and Ubuntu 22.04
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3905'>BIGTOP-3905</a>] -         Update Bigtop-stack-provisioner repo for the latest 3.2.0 release
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3913'>BIGTOP-3913</a>] -         The path information is incorrect in the zookeeper-client script file by building with -PparentDir
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3914'>BIGTOP-3914</a>] -         Add missing jars to Flink to fix sql-client.sh execution errors
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3923'>BIGTOP-3923</a>] -         Add missing jars for Ranger caused by the component version specified
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3926'>BIGTOP-3926</a>] -         Fix build failure of Hive against Hadoop 3.3.5
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3927'>BIGTOP-3927</a>] -         Fix build failure of HBase against Hadoop 3.3.5
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3929'>BIGTOP-3929</a>] -         Fix build failure of Flink due to transitive dependency on pentaho-aggdesigner-algorithm
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3930'>BIGTOP-3930</a>] -         Fix deployment failure on Ubuntu 22.04 due to unavailable dependency on python
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3931'>BIGTOP-3931</a>] -         Kafka directory permission error
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3937'>BIGTOP-3937</a>] -         Executing smoke_tests of Solr repeatedly would be failed
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3942'>BIGTOP-3942</a>] -         Solr incompatible names on deployment and test module
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3945'>BIGTOP-3945</a>] -         Fix YCSB build issues for deprecated mapr repo url
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3946'>BIGTOP-3946</a>] -         Fix build failure of Ambari due to expired certificate of bower repo
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3947'>BIGTOP-3947</a>] -         Fix build failure of Oozie due to insufficient test scope dependency on hive-service
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3948'>BIGTOP-3948</a>] -         Fix build failure of Tez due to expired certificate of bower repo
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3949'>BIGTOP-3949</a>] -         Fix dependency convergence error of Zeppelin
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3950'>BIGTOP-3950</a>] -         Ranger conf dir not consistent with ranger scripts
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3952'>BIGTOP-3952</a>] -         Fix toolchain to download Maven from archive.apache.org instead of dlcdn.apache.org
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3954'>BIGTOP-3954</a>] -         Fix the version definition in bigtop.bom so that `./gradlew setversion` works
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3956'>BIGTOP-3956</a>] -         hadoop-deb FAILED on project hadoop-yarn-applications-catalog-webapp
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3961'>BIGTOP-3961</a>] -         Fix version mismatch of hbase-client used by hadoop-yarn-server-timelineservice-hbase
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3962'>BIGTOP-3962</a>] -         Fix setup failure of Ant due to unresolved gpg public key
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3966'>BIGTOP-3966</a>] -         Make hive  3.1.3  compatible with hadoop 3.3.5
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3970'>BIGTOP-3970</a>] -         Fix build failure of Zeppelin due to missing grpc-java-1.26.0 on ppc64le
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3972'>BIGTOP-3972</a>] -         Fix startup failure of Oozie due to permission error on reading ssl-client.xml
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3983'>BIGTOP-3983</a>] -         Fix the Ranger-2.4 deploying issue in Fedora-36
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4000'>BIGTOP-4000</a>] -         Fix build failure of Tez against Hadoop 3.3.6
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4002'>BIGTOP-4002</a>] -         Fix build failure of Zeppelin against Hadoop 3.3.6 due to dependency convergence error
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4007'>BIGTOP-4007</a>] -         The home path information is incorrect in the zookeeper-client script file
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4009'>BIGTOP-4009</a>] -         Fixing variable name error in Hadoop spec file
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4012'>BIGTOP-4012</a>] -         Update Adoptium repository settings for Debian 11 in bigtop_toolchain
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4022'>BIGTOP-4022</a>] -         Fix build failure of Hive against Tez 0.10.2
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4024'>BIGTOP-4024</a>] -         Fix build failure of YCSB with Maven 3.8
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4030'>BIGTOP-4030</a>] -         Error building Ranger deb using bigtop
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4035'>BIGTOP-4035</a>] -         Fix ranger deb packaging and puppet script
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4042'>BIGTOP-4042</a>] -         Fix ISAL Compilation Failure in openEuler System Slave Docker Image Due to Missing nasm and yasm Libraries
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4064'>BIGTOP-4064</a>] -         Fix Bigtop toolchain to work with Puppet 3.x
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4065'>BIGTOP-4065</a>] -         Fixing BUG caused by the lack of preun logic in Flink spec
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4067'>BIGTOP-4067</a>] -         Fix build failure of Python 2.7 on Rocky Linux 9
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4068'>BIGTOP-4068</a>] -         Alluxio smoketest failed in rockylinux 9
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4069'>BIGTOP-4069</a>] -         Phoenix smoketest failed in openeuler
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4073'>BIGTOP-4073</a>] -         Spark-python smoketest failed in rockylinux 9
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4076'>BIGTOP-4076</a>] -         Fix compilation failure of Flink on centos 7 aarch64
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4077'>BIGTOP-4077</a>] -         Fix error on deploying Spark due to missing log4j.properties.template
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4078'>BIGTOP-4078</a>] -         Solr smoketest failed in debian 11 
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4082'>BIGTOP-4082</a>] -         Fix installation failure or R by bigtop_toolchain on openEuler
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4086'>BIGTOP-4086</a>] -         When using &#39;brp java repeat jars&#39; in Flink, the version cannot be obtained correctly
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4097'>BIGTOP-4097</a>] -         Fix missing R package resource in toolchain manifest
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4101'>BIGTOP-4101</a>] -         Fix undefined variable in toolchain manifest for openEuler
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4102'>BIGTOP-4102</a>] -         Fix failure of toolchain manifest on Fedora 38 due to unresolved facter variable
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4105'>BIGTOP-4105</a>] -         Build fails when &#39;-DpkgSuffix&#39; is specified and &#39;(rpm|deb)_pkg_suffix&#39;  is not specified in bigtop.bom
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4106'>BIGTOP-4106</a>] -         Upgrade GPDB to 7.1.0 with Python 3 enabled
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4108'>BIGTOP-4108</a>] -         Add support for openEuler to the manifest of bigtop-deploy to set up Bigtop Yum repository
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4109'>BIGTOP-4109</a>] -         Fix deployment failure of Spark on Fedora 38 due to manifest incompatible with Puppet 8
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4121'>BIGTOP-4121</a>] -         Fix test failure of Phoenix on rockylinux-8 due to deployment issue of python3
+</li>
+</ul>
+            
+<h2>        New Feature
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3702'>BIGTOP-3702</a>] -         Add puppet manifests for Ranger
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3703'>BIGTOP-3703</a>] -         Add smoke tests for Ranger
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3875'>BIGTOP-3875</a>] -         Support openEuler OS for Bigtop
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3910'>BIGTOP-3910</a>] -         Bigtop-select support Ranger
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3917'>BIGTOP-3917</a>] -         Add Apache Ranger Debian packages support
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3991'>BIGTOP-3991</a>] -         Add Rocky Linux 9 support
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4023'>BIGTOP-4023</a>] -         Add ranger deb packaging support
+</li>
+</ul>
+    
+<h2>        Improvement
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3900'>BIGTOP-3900</a>] -         Migrate secure DataNode settings from jsvc to SASL
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3915'>BIGTOP-3915</a>] -         soft link error about jar of hadoop in {hbase_home}/lib
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3919'>BIGTOP-3919</a>] -         Bump GPDB to 6.23.4
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3920'>BIGTOP-3920</a>] -         Upgrade Hadoop to 3.3.5
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3922'>BIGTOP-3922</a>] -         zkcli.sh of Solr does not have executable permissions
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3925'>BIGTOP-3925</a>] -         Add support for ranger 2.4
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3951'>BIGTOP-3951</a>] -         Fix toolchain to work with the recent version of facter
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3953'>BIGTOP-3953</a>] -         Update base version to 3.3.0 in bigtop.bom file
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3963'>BIGTOP-3963</a>] -         merge hive memory leak PRs
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3964'>BIGTOP-3964</a>] -         Add isal installation in bigtop toolchain and use isal library when compiling hadoop
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3978'>BIGTOP-3978</a>] -         Drop debian-10 support
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3979'>BIGTOP-3979</a>] -         Drop ubuntu-20.04 support
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3981'>BIGTOP-3981</a>] -         Get rid of building patched leveldbjni in Hadoop packaging on aarch64
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3985'>BIGTOP-3985</a>] -         Make a symlink of hadoop-yarn-server-timelineservice-hbase-coprocessor.jar to hadoop-yarn-server-timelineservice-hbase-coprocessor-version.jar
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3987'>BIGTOP-3987</a>] -         Upgrade phoenix version to  5.1.3
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3993'>BIGTOP-3993</a>] -         Bump ZooKeeper to 3.6.4
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3994'>BIGTOP-3994</a>] -         Bump Hadoop to 3.3.6
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3999'>BIGTOP-3999</a>] -         Make docker provisioner of upstream aware of Bigtop 3.2.1
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4001'>BIGTOP-4001</a>] -         Bump HBase to 2.4.17
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4005'>BIGTOP-4005</a>] -         Bump Kafka version to 2.8.2
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4010'>BIGTOP-4010</a>] -         Improve Debian Packaging Speed by Adding dh_strip_nondeterminism
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4013'>BIGTOP-4013</a>] -         Fix toolchain to install R 3.6.0+ into Debian 10
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4014'>BIGTOP-4014</a>] -         Add Fedora 38 support and drop 36
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4015'>BIGTOP-4015</a>] -         Upgrade Maven to 3.8.x
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4016'>BIGTOP-4016</a>] -         Upgrade Spark to 3.3.3
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4017'>BIGTOP-4017</a>] -         Upgrade Livy to 0.8.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4018'>BIGTOP-4018</a>] -         Upgrade Alluxio to 2.9.3
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4019'>BIGTOP-4019</a>] -         Upgrade Flink to 1.16.2
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4020'>BIGTOP-4020</a>] -         Upgrade Tez to 0.10.2
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4021'>BIGTOP-4021</a>] -         Upgrade ZooKeeper to 3.7.2
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4025'>BIGTOP-4025</a>] -         Improve the relevant conf directory for Flink rpm build scripts
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4029'>BIGTOP-4029</a>] -         Upgrade Zeppelin to 0.11.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4031'>BIGTOP-4031</a>] -         Remove Ambari from Bigtop 3.3.0 stack
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4032'>BIGTOP-4032</a>] -         Remove Oozie from Bigtop 3.3.0 stack
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4033'>BIGTOP-4033</a>] -         Remove YCSB from Bigtop 3.3.0 stack
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4037'>BIGTOP-4037</a>] -         Enable Parallel Compilation for Multiple Modules in Ranger
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4044'>BIGTOP-4044</a>] -         Enhance Bigtop with Concurrent Compilation Support for Additional Components
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4045'>BIGTOP-4045</a>] -         Enable Parallel Compilation for Multiple Modules in TEZ
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4049'>BIGTOP-4049</a>] -         Remove python dependency from Hive deb
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4050'>BIGTOP-4050</a>] -         Remove python dependency from Ranger deb
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4051'>BIGTOP-4051</a>] -         Drop python dependency in Phoenix Package
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4053'>BIGTOP-4053</a>] -         Remove Python as Spark Installation Dependency
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4059'>BIGTOP-4059</a>] -         Add Documentation for Parallel Maven Compilation in Bigtop
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4061'>BIGTOP-4061</a>] -         Improve support for Maven parallel build parameters
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4062'>BIGTOP-4062</a>] -         Upgrade Spark to 3.3.4
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4072'>BIGTOP-4072</a>] -         Add pkgsuffix to Alluxio to support Ambari installation and deployment
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4088'>BIGTOP-4088</a>] -         Refactor PKG_NAME_SUFFIX and  PARENT_DIR 
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4093'>BIGTOP-4093</a>] -         Avoid oepkgs for installing R on openEuler
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4098'>BIGTOP-4098</a>] -         Drop python2 in bigtop-toolchain
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4100'>BIGTOP-4100</a>] -         Set default python to python3 in bigtop deploy
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4112'>BIGTOP-4112</a>] -         Fix Spark RPM installation related to removing python dependency
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4113'>BIGTOP-4113</a>] -         Drop GPDB
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4114'>BIGTOP-4114</a>] -         Fix build failure of Hadoop and Alluxio due to node-gyp error on rockylinux-8 and fedora-38 aarch64
+</li>
+</ul>
+            
+<h2>        Task
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3944'>BIGTOP-3944</a>] -         Enable squash and merge in GitHub
+</li>
+</ul>
 
         <h3>Release Notes - Bigtop - Version 3.2.1</h3>
     
