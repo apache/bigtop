@@ -453,15 +453,4 @@
       <jre>&gt;=1.6</jre>
     </deps>
   </hadoop-libhdfs>
-  <hue-server>
-    <services>
-      <hue>
-        <runlevel>3</runlevel>
-        <runlevel>4</runlevel>
-        <runlevel>5</runlevel>
-        <oninstall>stop</oninstall>
-        <configured>true</configured>
-      </hue>
-     </services>
-  </hue-server>
 </packages>
