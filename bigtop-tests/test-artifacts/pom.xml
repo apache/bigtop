@@ -37,7 +37,6 @@
     <module>package</module>
     <module>httpfs</module>
     <module>hbase</module>
-    <module>hue</module>
     <module>solr</module>
     <module>longevity</module>
     <module>hcatalog</module>
