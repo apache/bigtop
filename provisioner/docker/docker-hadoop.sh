@@ -271,11 +271,11 @@ env-check() {
     echo "Check docker:"
     docker -v || exit 1
     echo "Check docker-compose:"
-	if [ "$DOCKER_COMPOSE_CMD" == "docker-compose" ]; then
+  if [ "$DOCKER_COMPOSE_CMD" == "docker-compose" ]; then
       $DOCKER_COMPOSE_CMD -v || exit 1
-	elif [ "$DOCKER_COMPOSE_CMD" == "docker compose" ]; then
+  elif [ "$DOCKER_COMPOSE_CMD" == "docker compose" ]; then
       $DOCKER_COMPOSE_CMD version || exit 1
-	fi 
+  fi
     echo "Check ruby:"
     ruby -v || exit 1
 }
