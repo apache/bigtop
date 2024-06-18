@@ -472,15 +472,4 @@ package or when debugging this package.</description>
       <url>http://hadoop.apache.org/core/</url>
     </metadata>
   </hadoop-debuginfo>
-  <hue-server>
-    <services>
-      <hue>
-        <runlevel>3</runlevel>
-        <runlevel>4</runlevel>
-        <runlevel>5</runlevel>
-        <oninstall>stop</oninstall>
-        <configured>true</configured>
-      </hue>
-     </services>
-  </hue-server>
 </packages>
