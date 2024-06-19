@@ -138,6 +138,10 @@
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4121'>BIGTOP-4121</a>] -         Fix test failure of Phoenix on rockylinux-8 due to deployment issue of python3
 </li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4126'>BIGTOP-4126</a>] -         Remove obsolete test resources for Hue
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4128'>BIGTOP-4128</a>] -         Docker compose plugin doesn&#39;t have &quot;-v&quot; option
+</li>
 </ul>
             
 <h2>        New Feature

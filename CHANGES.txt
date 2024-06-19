@@ -81,6 +81,8 @@ Release Notes - Bigtop - Version 3.3.0
     * [BIGTOP-4108] - Add support for openEuler to the manifest of bigtop-deploy to set up Bigtop Yum repository
     * [BIGTOP-4109] - Fix deployment failure of Spark on Fedora 38 due to manifest incompatible with Puppet 8
     * [BIGTOP-4121] - Fix test failure of Phoenix on rockylinux-8 due to deployment issue of python3
+    * [BIGTOP-4126] - Remove obsolete test resources for Hue
+    * [BIGTOP-4128] - Docker compose plugin doesn't have "-v" option
 
 ** New Feature
     * [BIGTOP-3702] - Add puppet manifests for Ranger
