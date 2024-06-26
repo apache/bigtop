@@ -49,34 +49,30 @@ class bigtop_toolchain::renv {
         ]
       }
     }
-    /openEuler/: {
-      $pkgs = [
-        "R",
-        "R-devel",
-      ]
+    default: {
+      $pkgs = []
     }
+  }
+
+  package { $pkgs:
+    ensure => installed,
+    before => [Exec["install_r_packages"]]
   }
 
   #BIGTOP-3967: openEuler not support PowerPC currently.
   if ($operatingsystem == 'openEuler'){
     if ($architecture == "aarch64") {
-        $url = "https://github.com/jgm/pandoc/releases/download/2.19.2/pandoc-2.19.2-linux-arm64.tar.gz"
+        $pandocurl = "https://github.com/jgm/pandoc/releases/download/2.19.2/pandoc-2.19.2-linux-arm64.tar.gz"
         $pandoctar = "pandoc-2.19.2-linux-arm64.tar.gz"
     } else{
-        $url = "https://github.com/jgm/pandoc/releases/download/2.19.2/pandoc-2.19.2-linux-amd64.tar.gz"
+        $pandocurl = "https://github.com/jgm/pandoc/releases/download/2.19.2/pandoc-2.19.2-linux-amd64.tar.gz"
         $pandoctar = "pandoc-2.19.2-linux-amd64.tar.gz"
     }
 
     exec {"down_pandoc":
       cwd => "/usr/src",
-      command => "/usr/bin/wget $url && /bin/tar -xvzf $pandoctar && ln -s /usr/src/pandoc-2.19.2/bin/pandoc /usr/bin/pandoc",
+      command => "/usr/bin/wget $pandocurl && /bin/tar -xvzf $pandoctar && ln -s /usr/src/pandoc-2.19.2/bin/pandoc /usr/bin/pandoc",
     }
-  }
-
-
-  package { $pkgs:
-    ensure => installed,
-    before => [Exec["install_r_packages"]]
   }
 
 
@@ -85,14 +81,15 @@ class bigtop_toolchain::renv {
   #
   # Then Install required R packages dependency
   if (($operatingsystem == 'Ubuntu' and versioncmp($operatingsystemmajrelease, '18.04') <= 0) or
-      ($operatingsystem == 'Debian' and versioncmp($operatingsystemmajrelease, '10') <= 0)) {
-    $url = "https://cran.r-project.org/src/base/R-3/"
+      ($operatingsystem == 'Debian' and versioncmp($operatingsystemmajrelease, '10') <= 0) or
+      ($operatingsystem == 'openEuler')) {
+    $rurl = "https://cran.r-project.org/src/base/R-3/"
     $rfile = "R-3.6.3.tar.gz"
     $rdir = "R-3.6.3"
 
     exec { "download_R":
       cwd  => "/usr/src",
-      command => "/usr/bin/wget $url/$rfile && mkdir -p $rdir && /bin/tar -xvzf $rfile -C $rdir --strip-components=1 && cd $rdir",
+      command => "/usr/bin/wget $rurl/$rfile && mkdir -p $rdir && /bin/tar -xvzf $rfile -C $rdir --strip-components=1 && cd $rdir",
       creates => "/usr/src/$rdir",
     }
     exec { "install_R":

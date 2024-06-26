@@ -1,3 +1,0 @@
-# Greenplum Database identifier for this master/segment.
-# Do not change the contents of this file.
-dbid = <%= @dbid %>

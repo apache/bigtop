@@ -14,10 +14,50 @@
 # limitations under the License.
 
 class python {
-    if (($operatingsystem == 'Ubuntu' and 0 <= versioncmp($operatingsystemmajrelease, '22.04'))) {
-        file { '/usr/bin/python':
-          ensure => 'link',
-          target => '/usr/bin/python2',
+    case $operatingsystem {
+        /(?i:(centos|fedora|redhat|rocky))/: {
+            package { 'python3-devel':
+              ensure => 'present',
+            }
+            if ($operatingsystem != 'Fedora') {
+                case $operatingsystemmajrelease {
+                    '9': {
+                        package { 'python-unversioned-command':
+                          ensure => 'present',
+                        }
+                    }
+                    '8': {
+                        exec { 'set-python3':
+                          command => '/usr/sbin/update-alternatives --set python /usr/bin/python3',
+                          unless  => "/usr/sbin/update-alternatives --display python | grep  'link currently points to /usr/bin/python3'",
+                          path    => ['/bin', '/usr/bin', '/sbin', '/usr/sbin'],
+                        }
+                    }
+                }
+            }else {
+                package { 'python-unversioned-command':
+                  ensure => 'present',
+                }
+            }
+        }
+
+        /(Ubuntu|Debian)/: {
+            package { 'python3-dev':
+              ensure => 'present',
+            }
+            package { 'python-is-python3':
+              ensure => 'present',
+            }
+        }
+
+        /openEuler/: {
+            package { 'python3-devel':
+              ensure => 'present',
+            }
+            package { 'python3-unversioned-command':
+              ensure => 'present',
+            }
         }
     }
 }
+

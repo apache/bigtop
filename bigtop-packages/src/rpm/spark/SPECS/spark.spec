@@ -116,15 +116,9 @@ Server for Spark worker
 %package -n %{spark_pkg_name}-python
 Summary: Python client for Spark
 Group: Development/Libraries
-%if 0%{?rhel} >= 8 || 0%{?openEuler}
-%if 0%{?rhel} >= 8
-Requires: %{spark_pkg_name}-core = %{version}-%{release}, python2
-%else
-Requires: %{spark_pkg_name}-core = %{version}-%{release}, python3
-%endif
-%else
-Requires: %{spark_pkg_name}-core = %{version}-%{release}, python
-%endif
+# No python dependency. You might need to install Python by yourself.
+# See BIGTOP-4052 for details.
+Requires: %{spark_pkg_name}-core = %{version}-%{release}
 
 %description -n %{spark_pkg_name}-python
 Includes PySpark, an interactive Python shell for Spark, and related libraries
@@ -187,19 +181,6 @@ bash $RPM_SOURCE_DIR/do-component-build
 %__rm -rf $RPM_BUILD_ROOT
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
 
-%if 0%{?rhel} >= 8
-PYSPARK_PYTHON=python2 bash $RPM_SOURCE_DIR/install_spark.sh \
-          --build-dir=`pwd`         \
-          --source-dir=$RPM_SOURCE_DIR \
-          --prefix=$RPM_BUILD_ROOT  \
-          --doc-dir=%{doc_spark} \
-          --lib-dir=%{usr_lib_spark} \
-          --var-dir=%{var_lib_spark} \
-          --bin-dir=%{bin_dir} \
-          --man-dir=%{man_dir} \
-          --etc-default=%{etc_default} \
-          --etc-spark=%{etc_spark}
-%else
 bash $RPM_SOURCE_DIR/install_spark.sh \
           --build-dir=`pwd`         \
           --source-dir=$RPM_SOURCE_DIR \
@@ -211,7 +192,6 @@ bash $RPM_SOURCE_DIR/install_spark.sh \
           --man-dir=%{man_dir} \
           --etc-default=%{etc_default} \
           --etc-spark=%{etc_spark}
-%endif
 
 %__rm -f $RPM_BUILD_ROOT/%{usr_lib_spark}/jars/hadoop-*.jar
 

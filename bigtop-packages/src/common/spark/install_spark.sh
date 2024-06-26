@@ -182,8 +182,6 @@ cat > $PREFIX/$BIN_DIR/pyspark <<EOF
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
 
-export PYSPARK_PYTHON=python
-
 exec $LIB_DIR/bin/pyspark "\$@"
 EOF
 chmod 755 $PREFIX/$BIN_DIR/pyspark

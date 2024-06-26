@@ -132,7 +132,6 @@ rat {
        "bigtop-deploy/puppet/README.md",
        "bigtop-deploy/puppet/config/site.csv.example",
        "dl/**",
-       "bigtop-deploy/puppet/modules/gpdb/templates/**",
        "provisioner/docker/config/hiera.yaml",
        "provisioner/docker/config/hieradata/PLACEHOLDER",
        "provisioner/docker/config/hosts",
@@ -148,7 +147,7 @@ allprojects {
   apply plugin: 'maven'
 
   group = 'org.apache.bigtop'
-  version = '3.3.0-SNAPSHOT'
+  version = '3.4.0-SNAPSHOT'
 
   description = """Bigtop"""
 
