@@ -16,7 +16,7 @@
 %define phoenix_home %{parent_dir}/usr/lib/%{phoenix_name}
 %define phoenix_pkg_name phoenix%{pkg_name_suffix}
 %define bin_phoenix %{phoenix_home}/bin
-%define lib_phoenix %{phoenix_home}/lib
+%define lib_phoenix %{phoenix_home}
 %define examples_phoenix %{phoenix_home}/examples
 %define np_etc_phoenix = %{_sysconfdir}/%{phoenix_name}
 %define etc_phoenix_conf = %{parent_dir}/%{_sysconfdir}/%{phoenix_name}/conf
