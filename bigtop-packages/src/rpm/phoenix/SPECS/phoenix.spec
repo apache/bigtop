@@ -12,21 +12,23 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-%define phoenix_home /usr/lib/%{name}
+%define phoenix_home %{parent_dir}/usr/lib/%{name}
+%define phoenix_pkg_name phoenix%{pkg_name_suffix}
 %define bin_phoenix %{phoenix_home}/bin
 %define lib_phoenix %{phoenix_home}/lib
 %define examples_phoenix %{phoenix_home}/examples
-%define etc_phoenix_conf %{_sysconfdir}/%{name}/conf
-%define etc_phoenix_conf_dist %{etc_phoenix_conf}.dist
-%define var_lib_phoenix /var/lib/%{name}
+%define np_etc_phoenix = %{_sysconfdir}/%{name}
+%define etc_phoenix_conf = %{parent_dir}/%{_sysconfdir}/%{name}/conf
+%define etc_phoenix_conf_dist %{parent_dir}/%{np_etc_phoenix_conf}.dist
+%define var_lib_phoenix %{parent_dir}/var/lib/%{name}
 %define var_log_phoenix /var/log/%{name}
 %define man_dir %{_mandir}
-%define zookeeper_home /usr/lib/zookeeper
-%define hadoop_home /usr/lib/hadoop
-%define hadoop_mapreduce_home /usr/lib/hadoop-mapreduce
-%define hadoop_yarn_home /usr/lib/hadoop-yarn
-%define hadoop_hdfs_home /usr/lib/hadoop-hdfs
-%define hbase_home /usr/lib/hbase
+%define zookeeper_home %{parent_dir}/usr/lib/zookeeper
+%define hadoop_home %{parent_dir}/usr/lib/hadoop
+%define hadoop_mapreduce_home %{parent_dir}/usr/lib/hadoop-mapreduce
+%define hadoop_yarn_home %{parent_dir}/usr/lib/hadoop-yarn
+%define hadoop_hdfs_home %{parent_dir}/usr/lib/hadoop-hdfs
+%define hbase_home %{parent_dir}/usr/lib/hbase
 #BIGTOP_PATCH_FILES
 
 %if  %{?suse_version:1}0
@@ -73,7 +75,7 @@
 
 %endif
 
-Name: phoenix
+Name: %{phoenix_pkg_name}
 Version: %{phoenix_version}
 Release: %{phoenix_release}
 Summary: Phoenix is a SQL skin over HBase and client-embedded JDBC driver.
@@ -94,11 +96,7 @@ Requires: bsh-utils
 Requires: coreutils
 %endif
 
-%if  0%{?rhel} >= 8 || 0%{?openEuler}
-Requires: python3
-%else
-Requires: python
-%endif
+
 
 %description
 Phoenix is a SQL skin over HBase, delivered as a client-embedded JDBC driver.
@@ -121,6 +119,9 @@ bash %{SOURCE1}
 bash %{SOURCE2} \
   --build-dir=build \
   --doc-dir=%{doc_phoenix} \
+  --lib-dir=%{lib_phoenix}\
+  --bin-dir=%{bin_phoenix}\
+  --var-dir=%{var_lib_phoenix}\
   --prefix=$RPM_BUILD_ROOT
 
 %pre
@@ -129,11 +130,6 @@ getent passwd phoenix >/dev/null || useradd -c "Phoenix" -s /sbin/nologin -g pho
 
 %post
 %{alternatives_cmd} --install %{etc_phoenix_conf} %{name}-conf %{etc_phoenix_conf_dist} 30
-
-%if  0%{?rhel} >= 8
-%{alternatives_cmd} --set python /usr/bin/python3
-%endif
-
 
 %preun
 if [ "$1" = 0 ]; then
@@ -148,6 +144,7 @@ fi
 %defattr(-,root,root,755)
 %doc %{doc_phoenix}
 %{phoenix_home}/phoenix-*.jar
+%{np_etc_phoenix}
 %{bin_phoenix}
 %{lib_phoenix}
 %{examples_phoenix}
