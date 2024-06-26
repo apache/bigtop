@@ -12,16 +12,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-%define phoenix_home %{parent_dir}/usr/lib/%{name}
+%define phoenix_name phoenix
+%define phoenix_home %{parent_dir}/usr/lib/%{phoenix_name}
 %define phoenix_pkg_name phoenix%{pkg_name_suffix}
 %define bin_phoenix %{phoenix_home}/bin
 %define lib_phoenix %{phoenix_home}/lib
 %define examples_phoenix %{phoenix_home}/examples
-%define np_etc_phoenix = %{_sysconfdir}/%{name}
-%define etc_phoenix_conf = %{parent_dir}/%{_sysconfdir}/%{name}/conf
+%define np_etc_phoenix = %{_sysconfdir}/%{phoenix_name}
+%define etc_phoenix_conf = %{parent_dir}/%{_sysconfdir}/%{phoenix_name}/conf
 %define etc_phoenix_conf_dist %{parent_dir}/%{np_etc_phoenix_conf}.dist
-%define var_lib_phoenix %{parent_dir}/var/lib/%{name}
-%define var_log_phoenix /var/log/%{name}
+%define var_lib_phoenix %{parent_dir}/var/lib/%{phoenix_name}
+%define var_log_phoenix /var/log/%{phoenix_name}
 %define man_dir %{_mandir}
 %define zookeeper_home %{parent_dir}/usr/lib/zookeeper
 %define hadoop_home %{parent_dir}/usr/lib/hadoop
@@ -48,7 +49,7 @@
     /usr/lib/rpm/brp-compress ; \
     %{nil}
 
-%define doc_phoenix %{_docdir}/%{name}
+%define doc_phoenix %{_docdir}/%{phoenix_name}
 %define alternatives_cmd update-alternatives
 
 %else
@@ -70,7 +71,7 @@
     %{nil}
 %endif
 
-%define doc_phoenix %{_docdir}/%{name}-%{phoenix_version}
+%define doc_phoenix %{_docdir}/%{phoenix_name}-%{phoenix_version}
 %define alternatives_cmd alternatives
 
 %endif
@@ -81,9 +82,9 @@ Release: %{phoenix_release}
 Summary: Phoenix is a SQL skin over HBase and client-embedded JDBC driver.
 URL: http://phoenix.apache.org
 Group: Development/Libraries
-Buildroot: %{_topdir}/INSTALL/%{name}-%{version}
+Buildroot: %{_topdir}/INSTALL/%{phoenix_name}-%{version}
 License: ASL 2.0
-Source0: %{name}-%{phoenix_base_version}-src.tar.gz
+Source0: %{phoenix_name}-%{phoenix_base_version}-src.tar.gz
 Source1: do-component-build
 Source2: install_phoenix.sh
 Source3: bigtop.bom
@@ -108,7 +109,7 @@ tens of millions of rows. Applications interact with Phoenix through a
 standard JDBC interface; all the usual interfaces are supported.
 
 %prep
-%setup -n %{name}-%{phoenix_base_version}
+%setup -n %{phoenix_name}-%{phoenix_base_version}
 #BIGTOP_PATCH_COMMANDS
 
 %build
@@ -129,11 +130,11 @@ getent group phoenix >/dev/null || groupadd -r phoenix
 getent passwd phoenix >/dev/null || useradd -c "Phoenix" -s /sbin/nologin -g phoenix -r -d %{var_lib_phoenix} phoenix 2> /dev/null || :
 
 %post
-%{alternatives_cmd} --install %{etc_phoenix_conf} %{name}-conf %{etc_phoenix_conf_dist} 30
+%{alternatives_cmd} --install %{etc_phoenix_conf} %{phoenix_name}-conf %{etc_phoenix_conf_dist} 30
 
 %preun
 if [ "$1" = 0 ]; then
-  %{alternatives_cmd} --remove %{name}-conf %{etc_phoenix_conf_dist} || :
+  %{alternatives_cmd} --remove %{phoenix_name}-conf %{etc_phoenix_conf_dist} || :
 fi
 
 
