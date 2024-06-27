@@ -18,9 +18,9 @@
 %define bin_phoenix %{phoenix_home}/bin
 %define lib_phoenix %{phoenix_home}
 %define examples_phoenix %{phoenix_home}/examples
-%define np_etc_phoenix = %{_sysconfdir}/%{phoenix_name}
-%define etc_phoenix_conf = %{parent_dir}/%{_sysconfdir}/%{phoenix_name}/conf
-%define etc_phoenix_conf_dist %{parent_dir}/%{np_etc_phoenix_conf}.dist
+%define np_etc_phoenix  %{_sysconfdir}/%{phoenix_name}
+%define etc_phoenix_conf  %{np_etc_phoenix}/conf
+%define etc_phoenix_conf_dist %{etc_phoenix_conf}.dist
 %define var_lib_phoenix %{parent_dir}/var/lib/%{phoenix_name}
 %define var_log_phoenix /var/log/%{phoenix_name}
 %define man_dir %{_mandir}
