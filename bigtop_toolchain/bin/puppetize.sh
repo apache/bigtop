@@ -58,9 +58,6 @@ case ${ID}-${VERSION_ID} in
         dnf -y install glibc-langpack-en hostname diffutils curl sudo unzip wget puppet procps-ng 'dnf-command(config-manager)'
         # Install the module in the same way as Fedora 31 and CentOS 7 for compatibility issues.
         puppet module install puppetlabs-stdlib --version 4.12.0
-        # Enabling the PowerTools and EPEL repositories via Puppet doesn't seem to work in some cases.
-        # As a workaround for that, enable the former here in advance of running the Puppet manifests.
-        dnf config-manager --set-enabled powertools devel
         ;;
     rocky-9*)
         rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
@@ -68,9 +65,6 @@ case ${ID}-${VERSION_ID} in
         dnf -y install glibc-langpack-en hostname diffutils sudo unzip wget puppet procps-ng 'dnf-command(config-manager)'
         # Install the module in the same way as Fedora 31 and CentOS 7 for compatibility issues.
         puppet module install puppetlabs-stdlib --version 4.12.0
-        # Enabling the PowerTools and EPEL repositories via Puppet doesn't seem to work in some cases.
-        # As a workaround for that, enable the former here in advance of running the Puppet manifests.
-        dnf config-manager --set-enabled crb devel
         ;;
     rhel-8*)
         rpm -Uvh https://yum.puppet.com/puppet5-release-el-8.noarch.rpm

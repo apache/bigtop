@@ -348,6 +348,37 @@ class bigtop_toolchain::packages {
       }
     }
   }
+  if $operatingsystem == 'Rocky' {
+    package { 'epel-release':
+      ensure => installed,
+      notify => Package[$pkgs]
+    }
+    if versioncmp($operatingsystemmajrelease, '8') == 0 {
+      # On Rocky 8, EPEL requires that the PowerTools repository is enabled.
+      # See https://fedoraproject.org/wiki/EPEL#How_can_I_use_these_extra_packages.3F
+      yumrepo { 'powertools':
+        ensure  => 'present',
+        enabled => '1'
+      }
+      yumrepo { 'devel':
+        ensure  => 'present',
+        enabled => '1'
+      }
+      Yumrepo<||> -> Package<||>
+    }
+    if versioncmp($operatingsystemmajrelease, '9') == 0 {
+      # On Rocky 9, EPEL requires that the crb repository is enabled.
+      yumrepo { 'crb':
+        ensure  => 'present',
+        enabled => '1'
+      }
+      yumrepo { 'devel':
+        ensure  => 'present',
+        enabled => '1'
+      }
+      Yumrepo<||> -> Package<||>
+    }
+  }
 
 
   if $osfamily == 'RedHat' {
