@@ -38,13 +38,13 @@ case "$1" in
                 adduser \
                   --system \
                   --ingroup zookeeper \
-                  --home /var/lib/zookeeper \
+                  --home @var_lib_zookeeper@ \
                   --gecos "ZooKeeper User" \
                   --shell /bin/false \
                   zookeeper >/dev/null
         fi
         install -d -m 0755 -o zookeeper -g zookeeper /var/log/zookeeper
-        install -d -m 0755 -o zookeeper -g zookeeper /var/lib/zookeeper
+        install -d -m 0755 -o zookeeper -g zookeeper @var_lib_zookeeper@
     ;;
 
     abort-upgrade)

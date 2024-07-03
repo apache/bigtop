@@ -136,6 +136,7 @@ bigtop {
       name    = 'zookeeper'
       pkg     = name
       rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
+      deb_pkg_suffix = "-" + bigtop.base_version.replace(".", "-")
       version {
         base  = '3.7.2'
         pkg   = base

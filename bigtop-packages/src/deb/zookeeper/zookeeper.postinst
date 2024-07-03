@@ -25,7 +25,7 @@ case "$1" in
     configure)
         # Install config alternatives
         chown -R zookeeper:zookeeper /var/log/zookeeper
-        update-alternatives  --install /etc/${zookeeper_pkg_name}/conf ${zookeeper_pkg_name}-conf /etc/${zookeeper_pkg_name}/conf.dist 30
+        update-alternatives  --install /etc/${zookeeper_pkg_name}/conf ${zookeeper_pkg_name}-conf @etc_zookeeper@/conf.dist 30
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
