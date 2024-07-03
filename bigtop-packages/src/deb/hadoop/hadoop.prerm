@@ -35,7 +35,7 @@ set -e
 
 case "$1" in
     remove|upgrade|deconfigure)
-      update-alternatives --remove hadoop-conf /etc/hadoop/conf.empty || :
+      update-alternatives --remove hadoop-conf @etc_hadoop@/conf.empty || :
     ;;
 
     failed-upgrade)

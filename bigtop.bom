@@ -155,6 +155,7 @@ bigtop {
     'hadoop' {
       name    = 'hadoop'
       rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
+      deb_pkg_suffix = "-" + bigtop.base_version.replace(".", "-")
       relNotes = 'Apache Hadoop'
       version { base = '3.3.6'; pkg = base; release = 1 }
       tarball { destination = "${name}-${version.base}.tar.gz"

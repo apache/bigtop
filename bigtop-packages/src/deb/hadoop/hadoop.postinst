@@ -24,7 +24,7 @@ case "$1" in
 	# We used to chown /usr/lib/hadoop here, but with security we don't want to do that -
 	# things like task-controller are very particular about ownership
 	chown -R root:hadoop /etc/hadoop
-	update-alternatives --install /etc/hadoop/conf hadoop-conf /etc/hadoop/conf.empty 10
+	update-alternatives --install /etc/hadoop/conf hadoop-conf @etc_hadoop@/conf.empty 10
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

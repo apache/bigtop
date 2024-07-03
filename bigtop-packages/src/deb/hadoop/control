@@ -21,7 +21,7 @@ Build-Depends: debhelper (>= 7.0.50~), liblzo2-dev, libzip-dev, sharutils, g++ (
 Standards-Version: 3.9.1
 Homepage: http://hadoop.apache.org/core/
 
-Package: hadoop
+Package: hadoop-pkgsuffix
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, adduser, bigtop-utils (>= 0.7), zookeeper (>= 3.4.0), psmisc, netcat-openbsd, libssl-dev
 Description: Hadoop is a software platform for processing vast amounts of data
@@ -45,123 +45,123 @@ Description: Hadoop is a software platform for processing vast amounts of data
  nodes around the cluster. MapReduce can then process the data where it is
  located.
 
-Package: hadoop-hdfs
+Package: hadoop-pkgsuffix-hdfs
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, adduser, bigtop-utils (>= 0.7), bigtop-groovy, hadoop (= ${binary:Version}), bigtop-jsvc
+Depends: ${shlibs:Depends}, ${misc:Depends}, adduser, bigtop-utils (>= 0.7), bigtop-groovy, hadoop-pkgsuffix (= ${binary:Version}), bigtop-jsvc
 Description: The Hadoop Distributed File System
- Hadoop Distributed File System (HDFS) is the primary storage system used by 
- Hadoop applications. HDFS creates multiple replicas of data blocks and distributes 
- them on compute nodes throughout a cluster to enable reliable, extremely rapid 
+ Hadoop Distributed File System (HDFS) is the primary storage system used by
+ Hadoop applications. HDFS creates multiple replicas of data blocks and distributes
+ them on compute nodes throughout a cluster to enable reliable, extremely rapid
  computations.
 
-Package: hadoop-yarn
+Package: hadoop-pkgsuffix-yarn
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, adduser, bigtop-utils (>= 0.7), hadoop (= ${binary:Version})
+Depends: ${shlibs:Depends}, ${misc:Depends}, adduser, bigtop-utils (>= 0.7), hadoop-pkgsuffix (= ${binary:Version})
 Description: The Hadoop NextGen MapReduce (YARN)
  YARN (Hadoop NextGen MapReduce) is a general purpose data-computation framework.
- The fundamental idea of YARN is to split up the two major functionalities of the 
+ The fundamental idea of YARN is to split up the two major functionalities of the
  JobTracker, resource management and job scheduling/monitoring, into separate daemons:
  ResourceManager and NodeManager.
  .
- The ResourceManager is the ultimate authority that arbitrates resources among all 
+ The ResourceManager is the ultimate authority that arbitrates resources among all
  the applications in the system. The NodeManager is a per-node slave managing allocation
- of computational resources on a single node. Both work in support of per-application 
+ of computational resources on a single node. Both work in support of per-application
  ApplicationMaster (AM).
  .
- An ApplicationMaster is, in effect, a framework specific library and is tasked with 
- negotiating resources from the ResourceManager and working with the NodeManager(s) to 
- execute and monitor the tasks. 
+ An ApplicationMaster is, in effect, a framework specific library and is tasked with
+ negotiating resources from the ResourceManager and working with the NodeManager(s) to
+ execute and monitor the tasks.
 
-Package: hadoop-mapreduce
+Package: hadoop-pkgsuffix-mapreduce
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, adduser, bigtop-utils (>= 0.7), hadoop-yarn (= ${binary:Version})
+Depends: ${shlibs:Depends}, ${misc:Depends}, adduser, bigtop-utils (>= 0.7), hadoop-pkgsuffix-yarn (= ${binary:Version})
 Description: The Hadoop MapReduce (MRv2)
- Hadoop MapReduce is a programming model and software framework for writing applications 
+ Hadoop MapReduce is a programming model and software framework for writing applications
  that rapidly process vast amounts of data in parallel on large clusters of compute nodes.
 
-Package: hadoop-hdfs-fuse
+Package: hadoop-pkgsuffix-hdfs-fuse
 Architecture: any
-Depends: ${shlibs:Depends}, hadoop-hdfs (= ${binary:Version}), hadoop-client (= ${binary:Version}), bigtop-utils (>= 0.7)
+Depends: ${shlibs:Depends}, hadoop-pkgsuffix-hdfs (= ${binary:Version}), hadoop-pkgsuffix-client (= ${binary:Version}), bigtop-utils (>= 0.7)
 Pre-Depends: fuse
 Enhances: hadoop
 Description: Mountable HDFS
  These projects (enumerated below) allow HDFS to be mounted (on most flavors of Unix) as a standard file system using
 
-Package: hadoop-doc
+Package: hadoop-pkgsuffix-doc
 Architecture: all
 Section: doc
 Description: Hadoop Documentation
  Documentation for Hadoop
 
-Package: hadoop-conf-pseudo
+Package: hadoop-pkgsuffix-conf-pseudo
 Architecture: any
-Depends: hadoop (= ${binary:Version}), hadoop-hdfs-namenode (= ${binary:Version}),
-         hadoop-hdfs-datanode (= ${binary:Version}), hadoop-hdfs-secondarynamenode (= ${binary:Version}),
-         hadoop-yarn-resourcemanager (= ${binary:Version}), hadoop-yarn-nodemanager (= ${binary:Version}),
-         hadoop-mapreduce-historyserver (= ${binary:Version})
+Depends: hadoop-pkgsuffix (= ${binary:Version}), hadoop-pkgsuffix-hdfs-namenode (= ${binary:Version}),
+         hadoop-pkgsuffix-hdfs-datanode (= ${binary:Version}), hadoop-pkgsuffix-hdfs-secondarynamenode (= ${binary:Version}),
+         hadoop-pkgsuffix-yarn-resourcemanager (= ${binary:Version}), hadoop-pkgsuffix-yarn-nodemanager (= ${binary:Version}),
+         hadoop-pkgsuffix-mapreduce-historyserver (= ${binary:Version})
 Description: Pseudo-distributed Hadoop configuration
  Contains configuration files for a "pseudo-distributed" Hadoop deployment.
  In this mode, each of the hadoop components runs as a separate Java process,
  but all on the same machine.
 
-Package: hadoop-mapreduce-historyserver
+Package: hadoop-pkgsuffix-mapreduce-historyserver
 Architecture: any
-Depends: hadoop-mapreduce (= ${binary:Version}), hadoop-hdfs (= ${binary:Version})
+Depends: hadoop-pkgsuffix-mapreduce (= ${binary:Version}), hadoop-pkgsuffix-hdfs (= ${binary:Version})
 Description: MapReduce History Server
  The History server keeps records of the different activities being performed on a Apache Hadoop cluster
 
-Package: hadoop-yarn-nodemanager
+Package: hadoop-pkgsuffix-yarn-nodemanager
 Architecture: any
-Depends: hadoop-yarn (= ${binary:Version})
+Depends: hadoop-pkgsuffix-yarn (= ${binary:Version})
 Description: YARN Node Manager
  The NodeManager is the per-machine framework agent who is responsible for
  containers, monitoring their resource usage (cpu, memory, disk, network) and
  reporting the same to the ResourceManager/Scheduler.
 
-Package: hadoop-yarn-resourcemanager
+Package: hadoop-pkgsuffix-yarn-resourcemanager
 Architecture: any
-Depends: hadoop-yarn (= ${binary:Version})
+Depends: hadoop-pkgsuffix-yarn (= ${binary:Version})
 Description: YARN Resource Manager
  The resource manager manages the global assignment of compute resources to applications
 
-Package: hadoop-yarn-proxyserver
+Package: hadoop-pkgsuffix-yarn-proxyserver
 Architecture: any
-Depends: hadoop-yarn (= ${binary:Version})
+Depends: hadoop-pkgsuffix-yarn (= ${binary:Version})
 Description: YARN Web Proxy
  The web proxy server sits in front of the YARN application master web UI.
 
-Package: hadoop-yarn-timelineserver
+Package: hadoop-pkgsuffix-yarn-timelineserver
 Architecture: any
-Depends: hadoop-yarn (= ${binary:Version})
+Depends: hadoop-pkgsuffix-yarn (= ${binary:Version})
 Description: YARN Timeline Server
- Storage and retrieval of applications' current as well as historic 
- information in a generic fashion is solved in YARN through the 
+ Storage and retrieval of applications' current as well as historic
+ information in a generic fashion is solved in YARN through the
  Timeline Server.
- 
-Package: hadoop-yarn-router
+
+Package: hadoop-pkgsuffix-yarn-router
 Architecture: any
-Depends: hadoop-yarn (= ${binary:Version})
+Depends: hadoop-pkgsuffix-yarn (= ${binary:Version})
 Description: YARN Router Server
  YARN Router Server which supports YARN Federation.
 
-Package: hadoop-hdfs-namenode
+Package: hadoop-pkgsuffix-hdfs-namenode
 Architecture: any
-Depends: hadoop-hdfs (= ${binary:Version})
+Depends: hadoop-pkgsuffix-hdfs (= ${binary:Version})
 Description: The Hadoop namenode manages the block locations of HDFS files
  The Hadoop Distributed Filesystem (HDFS) requires one unique server, the
  namenode, which manages the block locations of files on the filesystem.
 
-Package: hadoop-hdfs-secondarynamenode
+Package: hadoop-pkgsuffix-hdfs-secondarynamenode
 Architecture: any
-Depends: hadoop-hdfs (= ${binary:Version})
+Depends: hadoop-pkgsuffix-hdfs (= ${binary:Version})
 Description: Hadoop Secondary namenode
  The Secondary Name Node periodically compacts the Name Node EditLog
  into a checkpoint.  This compaction ensures that Name Node restarts
  do not incur unnecessary downtime.
 
-Package: hadoop-hdfs-zkfc
+Package: hadoop-pkgsuffix-hdfs-zkfc
 Architecture: any
-Depends: hadoop-hdfs (= ${binary:Version})
+Depends: hadoop-pkgsuffix-hdfs (= ${binary:Version})
 Description: Hadoop HDFS failover controller
  The Hadoop HDFS failover controller is a ZooKeeper client which also
  monitors and manages the state of the NameNode. Each of the machines
@@ -169,39 +169,39 @@ Description: Hadoop HDFS failover controller
  for: Health monitoring, ZooKeeper session management, ZooKeeper-based
  election.
 
-Package: hadoop-hdfs-journalnode
-Provides: hadoop-hdfs-journalnode
+Package: hadoop-pkgsuffix-hdfs-journalnode
+Provides: hadoop-pkgsuffix-hdfs-journalnode
 Architecture: any
-Depends: hadoop-hdfs (= ${binary:Version})
-Description: Hadoop HDFS JournalNode 
- The HDFS JournalNode is responsible for persisting NameNode edit logs. 
- In a typical deployment the JournalNode daemon runs on at least three 
+Depends: hadoop-pkgsuffix-hdfs (= ${binary:Version})
+Description: Hadoop HDFS JournalNode
+ The HDFS JournalNode is responsible for persisting NameNode edit logs.
+ In a typical deployment the JournalNode daemon runs on at least three
  separate machines in the cluster.
 
-Package: hadoop-hdfs-datanode
+Package: hadoop-pkgsuffix-hdfs-datanode
 Architecture: any
-Depends: hadoop-hdfs (= ${binary:Version})
+Depends: hadoop-pkgsuffix-hdfs (= ${binary:Version})
 Description: Hadoop Data Node
  The Data Nodes in the Hadoop Cluster are responsible for serving up
  blocks of data over the network to Hadoop Distributed Filesystem
  (HDFS) clients.
 
-Package: hadoop-hdfs-dfsrouter
+Package: hadoop-pkgsuffix-hdfs-dfsrouter
 Architecture: any
-Depends: hadoop-hdfs (= ${binary:Version})
+Depends: hadoop-pkgsuffix-hdfs (= ${binary:Version})
 Description: Hadoop HDFS Router
  HDFS Router Server which supports Router Based Federation.
 
 Package: libhdfs0
 Architecture: any
-Depends: hadoop (= ${binary:Version}), ${shlibs:Depends}
+Depends: hadoop-pkgsuffix (= ${binary:Version}), ${shlibs:Depends}
 Description: Hadoop Filesystem Library
  Hadoop Filesystem Library
 
 Package: libhdfs0-dev
 Architecture: any
 Section: libdevel
-Depends: hadoop (= ${binary:Version}), libhdfs0 (= ${binary:Version})
+Depends: hadoop-pkgsuffix (= ${binary:Version}), libhdfs0 (= ${binary:Version})
 Description: Development support for libhdfs0
  Includes examples and header files for accessing HDFS from C
 
@@ -217,22 +217,22 @@ Depends: libhdfspp (= ${binary:Version})
 Description: Development support for libhdfspp
  Includes header files for accessing HDFS from C++
 
-Package: hadoop-httpfs
+Package: hadoop-pkgsuffix-httpfs
 Architecture: any
-Depends: hadoop-hdfs (= ${binary:Version})
+Depends: hadoop-pkgsuffix-hdfs (= ${binary:Version})
 Description: HTTPFS for Hadoop
   The server providing HTTP REST API support for the complete FileSystem/FileContext
   interface in HDFS.
 
-Package: hadoop-kms
+Package: hadoop-pkgsuffix-kms
 Architecture: any
-Depends: hadoop (= ${binary:Version}), adduser
+Depends: hadoop-pkgsuffix (= ${binary:Version}), adduser
 Description: KMS for Hadoop
   The server providing cryptographic key management based on Hadoop KeyProvider API.
 
-Package: hadoop-client
+Package: hadoop-pkgsuffix-client
 Architecture: any
-Depends: hadoop (= ${binary:Version}), hadoop-hdfs (= ${binary:Version}),
-         hadoop-yarn (= ${binary:Version}), hadoop-mapreduce (= ${binary:Version})
+Depends: hadoop-pkgsuffix (= ${binary:Version}), hadoop-pkgsuffix-hdfs (= ${binary:Version}),
+         hadoop-pkgsuffix-yarn (= ${binary:Version}), hadoop-pkgsuffix-mapreduce (= ${binary:Version})
 Description: Hadoop client side dependencies
  Installation of this package will provide you with all the dependencies for Hadoop clients.

@@ -27,6 +27,255 @@ export DH_OPTIONS
 	dh $@
 
 hadoop_version=${HADOOP_BASE_VERSION}
+hadoop_name=hadoop
+parent_dir=${PARENT_DIR}
+pkg_name_suffix=${PKG_NAME_SUFFIX}
+
+lib_dir=${parent_dir}/usr/lib
+include_dir=${parent_dir}/usr/include
+man_dir=${parent_dir}/usr/share/man
+bin_dir=${parent_dir}/usr/bin
+doc_hadoop=${parent_dir}/usr/share/doc/${hadoop_name}-doc
+usr_lib_hadoop=${lib_dir}/${hadoop_name}
+etc_default=${parent_dir}/etc/default
+etc_hadoop=${parent_dir}/etc/${hadoop_name}
+var_lib_hadoop=${parent_dir}/var/lib/${hadoop_name}
+np_etc_hadoop=/etc/${hadoop_name}
+np_var_run_hadoop=/var/run/${hadoop_name}
+
+usr_lib_hdfs=${lib_dir}/${hadoop_name}-hdfs
+usr_lib_yarn=${lib_dir}/${hadoop_name}-yarn
+usr_lib_mapreduce=${lib_dir}/${hadoop_name}-mapreduce
+var_lib_yarn=${parent_dir}/var/lib/${hadoop_name}-yarn
+var_lib_hdfs=${parent_dir}/var/lib/${hadoop_name}-hdfs
+var_lib_mapreduce=${parent_dir}/var/lib/${hadoop_name}-mapreduce
+var_lib_httpfs=${parent_dir}/var/lib/${hadoop_name}-httpfs
+var_lib_kms=${parent_dir}/var/lib/${hadoop_name}-kms
+
+
+define hadoop_install
+${etc_hadoop}/conf.empty/hadoop-metrics2.properties
+${etc_hadoop}/conf.empty/log4j.properties
+${etc_hadoop}/conf.empty/workers
+${etc_hadoop}/conf.empty/ssl-client.xml.example
+${etc_hadoop}/conf.empty/ssl-server.xml.example
+${etc_hadoop}/conf.empty/core-site.xml
+${etc_hadoop}/conf.empty/configuration.xsl
+${etc_hadoop}/conf.empty/hadoop-env.sh
+${etc_hadoop}/conf.empty/hadoop-policy.xml
+${etc_default}/hadoop
+/etc/bash_completion.d/hadoop
+${usr_lib_hadoop}/etc
+${usr_lib_hadoop}/libexec/hadoop-config.sh
+${usr_lib_hadoop}/libexec/hadoop-layout.sh
+${usr_lib_hadoop}/libexec/hadoop-functions.sh
+${usr_lib_hadoop}/libexec/shellprofile.d
+${usr_lib_hadoop}/libexec/tools
+${usr_lib_hadoop}/*.jar
+${usr_lib_hadoop}/lib
+${usr_lib_hadoop}/sbin
+${usr_lib_hadoop}/bin
+${usr_lib_hadoop}/tools
+${bin_dir}/hadoop
+${man_dir}/man1/hadoop.1.*
+${man_dir}/man1/hdfs.1.*
+${man_dir}/man1/yarn.1.*
+${man_dir}/man1/mapred.1.*
+endef
+
+define hadoop_dirs
+${etc_hadoop}/conf.empty/
+${usr_lib_hadoop}
+${bin_dir}
+${doc_hadoop}
+endef
+
+define hadoop_client_install
+${usr_lib_hadoop}/client
+endef
+
+define hadoop_conf_pseudo_install
+${etc_hadoop}/conf.pseudo
+endef
+
+define hadoop_doc_install
+${doc_hadoop}
+endef
+
+define hadoop_doc_dirs
+${doc_hadoop}/
+endef
+
+define hadoop_hdfs_install
+/etc/security/limits.d/hdfs.conf
+${etc_hadoop}/conf.empty/hdfs-site.xml
+${usr_lib_hadoop}-hdfs
+${usr_lib_hadoop}/libexec/hdfs-config.sh
+${usr_lib_hadoop}/libexec/init-hdfs.sh
+${usr_lib_hadoop}/libexec/init-hcfs.json
+${usr_lib_hadoop}/libexec/init-hcfs.groovy
+${bin_dir}/hdfs
+${var_lib_hdfs}
+/var/log/hadoop-hdfs
+/var/run/hadoop-hdfs
+endef
+
+define hadoop_hdfs_dirs
+${etc_hadoop}/conf.empty/
+${usr_lib_hadoop}/libexec
+${usr_lib_hadoop}-hdfs
+${bin_dir}
+${var_lib_hdfs}/cache
+/var/log/hadoop-hdfs
+endef
+
+
+define hadoop_hdfs_fuse_install
+${etc_default}/hadoop-fuse
+${bin_dir}/hadoop-fuse-dfs
+${usr_lib_hadoop}/bin/fuse_dfs
+endef
+
+define hadoop_httpfs_install
+${etc_hadoop}/conf.empty/httpfs-env.sh
+${etc_hadoop}/conf.empty/httpfs-log4j.properties
+${etc_hadoop}/conf.empty/httpfs-site.xml
+${var_lib_httpfs}
+endef
+
+define hadoop_httpfs_dirs
+/var/log/hadoop-httpfs
+endef
+
+define hadoop_kms_install
+${etc_hadoop}/conf.empty/kms-acls.xml
+${etc_hadoop}/conf.empty/kms-env.sh
+${etc_hadoop}/conf.empty/kms-log4j.properties
+${etc_hadoop}/conf.empty/kms-site.xml
+${var_lib_kms}
+endef
+
+define hadoop_kms_dirs
+/var/log/hadoop-kms
+endef
+
+define hadoop_mapreduce_dirs
+${etc_hadoop}/conf.empty/
+${usr_lib_hadoop}/libexec
+${usr_lib_hadoop}-mapreduce
+${bin_dir}
+${var_lib_mapreduce}/cache
+/var/log/hadoop-mapreduce
+endef
+
+define hadoop_mapreduce_install
+/etc/security/limits.d/mapreduce.conf
+${etc_hadoop}/conf.empty/mapred-site.xml
+${etc_hadoop}/conf.empty/mapred-env.sh
+${etc_hadoop}/conf.empty/mapred-queues.xml.template
+${usr_lib_hadoop}-mapreduce
+${usr_lib_hadoop}/libexec/mapred-config.sh
+${bin_dir}/mapred
+${var_lib_mapreduce}
+/var/log/hadoop-mapreduce
+/var/run/hadoop-mapreduce
+endef
+
+define hadoop_yarn_dirs
+${etc_hadoop}/conf.empty/
+${usr_lib_hadoop}/libexec
+${usr_lib_hadoop}-yarn
+${bin_dir}
+${var_lib_yarn}/cache
+/var/log/hadoop-yarn
+endef
+
+define hadoop_yarn_install
+/etc/security/limits.d/yarn.conf
+${etc_hadoop}/conf.empty/yarn-env.sh
+${etc_hadoop}/conf.empty/yarn-site.xml
+${etc_hadoop}/conf.empty/capacity-scheduler.xml
+${etc_hadoop}/conf.empty/container-executor.cfg
+${usr_lib_hadoop}-yarn
+${usr_lib_hadoop}/libexec/yarn-config.sh
+${bin_dir}/yarn
+${var_lib_yarn}
+/var/log/hadoop-yarn
+/var/run/hadoop-yarn
+endef
+
+define libhdfs0_install
+${lib_dir}/libhdfs.*
+endef
+
+define libhdfs0_dirs
+${lib_dir}
+endef
+
+define libhdfs0_dev_install
+${include_dir}/hdfs.h
+endef
+
+define libhdfspp_install
+${lib_dir}/libhdfspp.*
+endef
+
+define libhdfspp_dirs
+${lib_dir}
+endef
+
+define libhdfspp_dev_install
+${include_dir}/hdfspp
+endef
+
+define libhdfspp_dev_dirs
+${include_dir}/hdfspp
+endef
+
+define gen_rule
+	$(foreach item, postinst preinst prerm,\
+    	if [ -f debian/hadoop$(1).$(item) ]; then \
+        	sed -i -e 's:@usr_lib_hadoop@:${usr_lib_hadoop}:g' -e 's:@var_lib_hdfs@:${var_lib_hdfs}:g' -e 's:@var_lib_hadoop@:${var_lib_hadoop}:g' -e 's:@etc_hadoop@:${etc_hadoop}:g' -e 's:@var_lib_httpfs@:${var_lib_httpfs}:g' -e 's:@var_lib_kms@:${var_lib_kms}:g' \
+        	-e 's:@var_lib_mapreduce@:${var_lib_mapreduce}:g' -e 's:@usr_lib_yarn@:${usr_lib_yarn}:g' -e 's:@var_lib_yarn@:${var_lib_yarn}:g' -e 's:@etc_hadoop@:${etc_hadoop}:g' \
+        	debian/hadoop$(1).$(item); \
+        	if [ "${pkg_name_suffix}" != "" ] ;then mv debian/hadoop$(1).$(item) debian/hadoop${pkg_name_suffix}$(1).$(item);fi \
+    	fi; \
+	)
+endef
+
+
+.PHONY: gen_files
+gen_files:
+	$(foreach item,'' -conf -hdfs -httpfs -kms -mapreduce -yarn, $(call gen_rule,$(item)))
+
+	$(foreach item,$(hadoop_install),echo $(item) >> debian/hadoop${pkg_name_suffix}.install;)
+	$(foreach item,$(hadoop_dirs),echo $(item) >> debian/hadoop${pkg_name_suffix}.dirs;)
+	$(foreach item,$(hadoop_client_install),echo $(item) >> debian/hadoop${pkg_name_suffix}-client.install;)
+	$(foreach item,$(hadoop_conf_pseudo_install),echo $(item) >> debian/hadoop${pkg_name_suffix}-conf-pseudo.install;)
+	$(foreach item,$(hadoop_doc_install),echo $(item) >> debian/hadoop${pkg_name_suffix}-doc.install;)
+	$(foreach item,$(hadoop_doc_dirs),echo $(item) >> debian/hadoop${pkg_name_suffix}-doc.dirs;)
+	$(foreach item,$(hadoop_hdfs_install),echo $(item) >> debian/hadoop${pkg_name_suffix}-hdfs.install;)
+	$(foreach item,$(hadoop_hdfs_dirs),echo $(item) >> debian/hadoop${pkg_name_suffix}-hdfs.dirs;)
+	$(foreach item,$(hadoop_hdfs_fuse_install),echo $(item) >> debian/hadoop${pkg_name_suffix}-hdfs-fuse.install;)
+	$(foreach item,$(hadoop_httpfs_install),echo $(item) >> debian/hadoop${pkg_name_suffix}-httpfs.install;)
+	$(foreach item,$(hadoop_httpfs_dirs),echo $(item) >> debian/hadoop${pkg_name_suffix}-httpfs.dirs;)
+	$(foreach item,$(hadoop_kms_install),echo $(item) >> debian/hadoop${pkg_name_suffix}-kms.install;)
+	$(foreach item,$(hadoop_kms_dirs),echo $(item) >> debian/hadoop${pkg_name_suffix}-kms.dirs;)
+	$(foreach item,$(hadoop_mapreduce_install),echo $(item) >> debian/hadoop${pkg_name_suffix}-mapreduce.install;)
+	$(foreach item,$(hadoop_mapreduce_dirs),echo $(item) >> debian/hadoop${pkg_name_suffix}-mapreduce.dirs;)
+	$(foreach item,$(hadoop_yarn_install),echo $(item) >> debian/hadoop${pkg_name_suffix}-yarn.install;)
+	$(foreach item,$(hadoop_yarn_dirs),echo $(item) >> debian/hadoop${pkg_name_suffix}-yarn.dirs;)
+	$(foreach item,$(libhdfs0_install),echo $(item) >> debian/libhdfs0.install;)
+	$(foreach item,$(libhdfs0_dirs),echo $(item) >> debian/libhdfs0.dirs;)
+	$(foreach item,$(libhdfs0_dev_install),echo $(item) >> debian/libhdfs0-dev.install;)
+	$(foreach item,$(libhdfspp_install),echo $(item) >> debian/libhdfspp.install;)
+	$(foreach item,$(libhdfspp_dirs),echo $(item) >> debian/libhdfspp.dirs;)
+	$(foreach item,$(libhdfspp_dev_install),echo $(item) >> debian/libhdfspp-dev.install;)
+	$(foreach item,$(libhdfspp_dev_dirs),echo $(item) >> debian/libhdfspp-dev.dirs;)
+
+.PHONY: update_control
+update_control:
+	sed -i 's/-pkgsuffix/${pkg_name_suffix}/g' debian/control
 
 ifeq (${DEB_BUILD_ARCH},amd64)
   native_dir=Linux-amd64-64
@@ -34,6 +283,10 @@ endif
 ifeq (${DEB_BUILD_ARCH},i386)
   native_dir=Linux-i386-32
 endif
+
+override_dh_auto_clean: update_control
+	dh_auto_clean
+
 
 override_dh_auto_build:
 	env HADOOP_VERSION=${hadoop_version} HADOOP_ARCH=${native_dir} \
@@ -45,44 +298,60 @@ hadoop_svcs=hdfs-namenode hdfs-secondarynamenode hdfs-datanode hdfs-zkfc hdfs-jo
 
 $(hadoop_svcs): debian/init.d.tmpl
 	bash $< debian/hadoop-$@.svc deb debian/hadoop-$@.init
-	cp debian/$(firstword $(subst -, ,$@)).default debian/tmp/etc/default/hadoop-$@
-	echo /etc/default/hadoop-$@ >> debian/hadoop-$@.install
+	cp debian/$(firstword $(subst -, ,$@)).default debian/tmp/${etc_default}/hadoop-$@
+	echo ${etc_default}/hadoop-$@ >> debian/hadoop${pkg_name_suffix}-$@.install
 	# FIXME: workaround for BIGTOP-105
-	[ -f debian/hadoop-$@.postinst ] || cp debian/hadoop.daemon.postinst.tpl debian/hadoop-$@.postinst
-	sed -i -e "s|@HADOOP_DAEMON@|$@|" debian/hadoop-$@.postinst
+	[ -f debian/hadoop${pkg_name_suffix}-$@.postinst ] || cp debian/hadoop.daemon.postinst.tpl debian/hadoop${pkg_name_suffix}-$@.postinst
+	sed -i -e "s|@HADOOP_DAEMON@|$@|" debian/hadoop${pkg_name_suffix}-$@.postinst
 
-override_dh_auto_install:
+
+override_dh_auto_install: gen_files
 	env HADOOP_VERSION=${hadoop_version} \
 	bash debian/install_hadoop.sh \
-	  --prefix=debian/tmp/ \
-	  --distro-dir=debian \
-	  --build-dir=${CURDIR}/build \
-	  --system-lib-dir=/usr/lib/ \
-	  --system-include-dir=/usr/include \
-	  --doc-dir=/usr/share/doc/hadoop-doc \
-	  --man-dir=/usr/share/man
+		--distro-dir=debian \
+		--build-dir=${CURDIR}/build \
+		--prefix=debian/tmp/ \
+		--doc-dir=${doc_hadoop} \
+		--bin-dir=${bin_dir} \
+		--man-dir=${man_dir} \
+		--etc-default=${etc_default} \
+		--hadoop-dir=${usr_lib_hadoop} \
+		--hdfs-dir=${usr_lib_hdfs} \
+		--yarn-dir=${usr_lib_yarn} \
+		--mapreduce-dir=${usr_lib_mapreduce} \
+		--var-hdfs=${var_lib_hdfs} \
+		--var-yarn=${var_lib_yarn} \
+		--var-mapreduce=${var_lib_mapreduce} \
+		--var-httpfs=${var_lib_httpfs} \
+		--var-kms=${var_lib_kms} \
+		--system-include-dir=${include_dir} \
+		--system-lib-dir=${lib_dir} \
+		--etc-hadoop=${etc_hadoop}
 	# Forcing Zookeeper dependency to be on the packaged jar
-	ln -sf /usr/lib/zookeeper/zookeeper.jar debian/tmp/usr/lib/hadoop/lib/zookeeper-[[:digit:]]*.jar
+	ln -sf ${lib_dir}/zookeeper/zookeeper.jar debian/tmp/${usr_lib_hadoop}/lib/zookeeper-[[:digit:]]*.jar
 	# Workaround for BIGTOP-583
-	rm -f debian/tmp/usr/lib/hadoop-*/lib/slf4j-log4j12-*.jar
+	rm -f debian/tmp/${usr_lib_hadoop}-*/lib/slf4j-log4j12-*.jar
 	# FIXME: BIGTOP-463
 	# mkdir -p debian/tmp/etc/default
 	# Refactored from install-arch
-	cp debian/hadoop-fuse.default debian/tmp/etc/default/hadoop-fuse
+	cp debian/hadoop-fuse.default debian/tmp/${etc_default}/hadoop-fuse
 	mkdir -p debian/tmp/etc/security/limits.d
 	cp debian/hdfs.conf debian/yarn.conf debian/mapreduce.conf debian/tmp/etc/security/limits.d
 
 override_dh_install: $(hadoop_svcs)
 	dh_install
 	# Drop misc fuse_dfs directories
-	rm -Rf debian/hadoop/usr/lib/hadoop/bin/fuse_dfs
-	rm -Rf debian/hadoop/usr/lib/hadoop/contrib/fuse-dfs
-	rm -Rf debian/hadoop/usr/lib/hadoop/hdfs/contrib/fuse-dfs
+	rm -Rf debian/hadoop${pkg_name_suffix}/${usr_lib_hadoop}/bin/fuse_dfs
+	rm -Rf debian/hadoop${pkg_name_suffix}/${usr_lib_hadoop}/contrib/fuse-dfs
+	rm -Rf debian/hadoop${pkg_name_suffix}/${usr_lib_hadoop}/hdfs/contrib/fuse-dfs
 
 override_dh_strip:
 	dh_strip --no-automatic-dbgsym
 
 override_dh_shlibdeps:
 	dh_shlibdeps --dpkg-shlibdeps-params=--ignore-missing-info
+
+override_dh_shlibdeps:
+	dh_shlibdeps -l${lib_dir}
 
 override_dh_strip_nondeterminism:

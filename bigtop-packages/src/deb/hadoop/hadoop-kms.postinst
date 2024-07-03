@@ -22,7 +22,7 @@ set -e
 case "$1" in
     configure)
         mkdir -p /var/log/hadoop-kms /var/run/hadoop-kms || :
-        chown kms:kms /var/lib/hadoop-kms /var/log/hadoop-kms /var/run/hadoop-kms
+        chown kms:kms  @var_lib_kms@ /var/log/hadoop-kms /var/run/hadoop-kms
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

@@ -37,7 +37,7 @@ case "$1" in
             adduser \
                 --system \
                 --ingroup mapred \
-                --home /var/lib/hadoop-mapreduce \
+                --home  @var_lib_mapreduce@ \
                 --gecos "Hadoop MapReduce" \
                 --shell /bin/bash \
                 mapred >/dev/null 2>/dev/null || :
