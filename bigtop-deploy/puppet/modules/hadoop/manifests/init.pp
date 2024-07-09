@@ -90,11 +90,42 @@ class hadoop ($hadoop_security_authentication = "simple",
     }
   }
 
+
+  $package_suffix = hiera("bigtop::package_suffix", "")
+  $parent_dir = hiera("bigtop::parent_dir", "")
+  $bigtop_base_version = hiera("bigtop::base_version", "")
+
+  if $package_suffix and $package_suffix != '' and $parent_dir and $parent_dir != '' {
+    $bin_home = "${parent_dir}/${bigtop_base_version}/usr/bin"
+    $hadoop_home = "${parent_dir}/${bigtop_base_version}/usr/lib/hadoop"
+  } else {
+    $bin_home = '/usr/bin'
+    $hadoop_home = '/usr/lib/hadoop'
+  }
+
+  $hadoop_package="hadoop$package_suffix"
+  $hadoop_hdfs_package="hadoop$package_suffix-hdfs"
+  $hadoop_hdfs_secondarynamenode_package="hadoop$package_suffix-hdfs-secondarynamenode"
+  $hadoop_hdfs_zkfc_package="hadoop$package_suffix-hdfs-zkfc"
+  $hadoop_hdfs_namenode_package="hadoop$package_suffix-hdfs-namenode"
+  $hadoop_kms_package="hadoop$package_suffix-kms"
+  $hadoop_httpfs_package="hadoop$package_suffix-httpfs"
+  $hadoop_hdfs_datanode_package="hadoop$package_suffix-hdfs-datanode"
+  $hadoop_hdfs_journalnode_package="hadoop$package_suffix-hdfs-journalnode"
+
+  $hadoop_yarn_package="hadoop$package_suffix-yarn"
+  $hadoop_yarn_nodemanager_package="hadoop$package_suffix-yarn-nodemanager"
+  $hadoop_yarn_resourcemanager_package="hadoop$package_suffix-yarn-resourcemanager"
+  $hadoop_yarn_proxyserver_package="hadoop$package_suffix-yarn-proxyserver"
+  $hadoop_mapreduce_package="hadoop$package_suffix-mapreduce"
+  $hadoop_mapreduce_historyserver_package="hadoop$package_suffix-mapreduce-historyserver"
+
+
   class init_hdfs {
     exec { "init hdfs":
       path    => ['/bin','/sbin','/usr/bin','/usr/sbin'],
-      command => 'bash -x /usr/lib/hadoop/libexec/init-hdfs.sh',
-      require => Package['hadoop-hdfs']
+      command => "bash -x $hadoop_home/libexec/init-hdfs.sh",
+      require => Package[$hadoop_hdfs_package]
     }
   }
 
@@ -125,17 +156,17 @@ class hadoop ($hadoop_security_authentication = "simple",
     file {
       "/etc/hadoop/conf/hadoop-env.sh":
         content => template('hadoop/hadoop-env.sh'),
-        require => [Package["hadoop"]],
+        require => [Package[$hadoop_package]],
     }
 
-    package { "hadoop":
+    package { $hadoop_package:
       ensure => latest,
       require => Package["jdk"],
     }
 
     #FIXME: package { "hadoop-native":
     #  ensure => latest,
-    #  require => [Package["hadoop"]],
+    #  require => [Package[$hadoop_package]],
     #}
   }
 
@@ -168,9 +199,9 @@ class hadoop ($hadoop_security_authentication = "simple",
 
     include hadoop::common
 
-    package { "hadoop-yarn":
+    package { $hadoop_yarn_package:
       ensure => latest,
-      require => [Package["jdk"], Package["hadoop"]],
+      require => [Package["jdk"], Package[$hadoop_package]],
     }
 
     if ($hadoop_security_authentication == "kerberos") {
@@ -181,19 +212,19 @@ class hadoop ($hadoop_security_authentication = "simple",
         # we don't actually need this package as long as we don't put the
         # keytab in a directory managed by it. But it creates user mapred whom we
         # wan't to give the keytab to.
-        require => Package["hadoop-yarn"],
+        require => Package[$hadoop_yarn_package],
       }
     }
 
     file {
       "/etc/hadoop/conf/yarn-site.xml":
         content => template('hadoop/yarn-site.xml'),
-        require => [Package["hadoop"]],
+        require => [Package[$hadoop_package]],
     }
 
     file { "/etc/hadoop/conf/container-executor.cfg":
       content => template('hadoop/container-executor.cfg'), 
-      require => [Package["hadoop"]],
+      require => [Package[$hadoop_package]],
     }
   }
 
@@ -267,7 +298,7 @@ class hadoop ($hadoop_security_authentication = "simple",
         owner   => 'hdfs',
         group   => 'hdfs',
         mode    => '0700',
-        require => Package["hadoop-hdfs"],
+        require => Package[$hadoop_hdfs_package],
       }
 
       file { $ssh_keypath:
@@ -290,9 +321,9 @@ class hadoop ($hadoop_security_authentication = "simple",
       fail("High-availability secure clusters are not currently supported")
     }
 
-    package { "hadoop-hdfs":
+    package { $hadoop_hdfs_package:
       ensure => latest,
-      require => [Package["jdk"], Package["hadoop"]],
+      require => [Package["jdk"], Package[$hadoop_package]],
     }
 
     if ($hadoop_security_authentication == "kerberos") {
@@ -303,20 +334,20 @@ class hadoop ($hadoop_security_authentication = "simple",
         # we don't actually need this package as long as we don't put the
         # keytab in a directory managed by it. But it creates user hdfs whom we
         # wan't to give the keytab to.
-        require => Package["hadoop-hdfs"],
+        require => Package[$hadoop_hdfs_package],
       }
     }
 
     file {
       "/etc/hadoop/conf/core-site.xml":
         content => template('hadoop/core-site.xml'),
-        require => [Package["hadoop"]],
+        require => [Package[$hadoop_package]],
     }
 
     file {
       "/etc/hadoop/conf/hdfs-site.xml":
         content => template('hadoop/hdfs-site.xml'),
-        require => [Package["hadoop"]],
+        require => [Package[$hadoop_package]],
     }
 
     file {
@@ -325,7 +356,7 @@ class hadoop ($hadoop_security_authentication = "simple",
         owner   => 'root',
         group   => 'hadoop',
         mode    => '0664',
-        require => [Package["hadoop"]],
+        require => [Package[$hadoop_package]],
     }
 
     file {
@@ -334,7 +365,7 @@ class hadoop ($hadoop_security_authentication = "simple",
         owner   => 'root',
         group   => 'hadoop',
         mode    => '0660',
-        require => [Package["hadoop"]],
+        require => [Package[$hadoop_package]],
     }
 
     file {
@@ -343,7 +374,7 @@ class hadoop ($hadoop_security_authentication = "simple",
         owner   => 'root',
         group   => 'hadoop',
         mode    => '0660',
-        require => [Package["hadoop"]],
+        require => [Package[$hadoop_package]],
     }
 
     file {
@@ -352,7 +383,7 @@ class hadoop ($hadoop_security_authentication = "simple",
         owner   => 'root',
         group   => 'hadoop',
         mode    => '0660',
-        require => [Package["hadoop"]],
+        require => [Package[$hadoop_package]],
     }
 
     if $hadoop_http_authentication_type == "kerberos" {
@@ -374,7 +405,7 @@ class hadoop ($hadoop_security_authentication = "simple",
         # allows access by hdfs and yarn (and mapred - mhmm...)
         group => "hadoop",
         content => $http_auth_sig_secret,
-        require => [Package["hadoop"]],
+        require => [Package[$hadoop_package]],
       }
 
       # all the services will need this
@@ -395,7 +426,7 @@ class hadoop ($hadoop_security_authentication = "simple",
         # we don't actually need this package as long as we don't put the
         # keytab in a directory managed by it. But it creates group hadoop which
         # we wan't to give the keytab to.
-        require => Package["hadoop"],
+        require => Package[$hadoop_package],
       }
 
       # all the services will need this as well
@@ -436,9 +467,9 @@ class hadoop ($hadoop_security_authentication = "simple",
   ) inherits hadoop {
     include hadoop::common_hdfs
 
-    package { "hadoop-mapreduce":
+    package { $hadoop_mapreduce_package:
       ensure => latest,
-      require => [Package["jdk"], Package["hadoop"]],
+      require => [Package["jdk"], Package[$hadoop_package]],
     }
 
     if ($hadoop_security_authentication == "kerberos") {
@@ -450,19 +481,19 @@ class hadoop ($hadoop_security_authentication = "simple",
         # we don't actually need this package as long as we don't put the
         # keytab in a directory managed by it. But it creates user yarn whom we
         # wan't to give the keytab to.
-        require => Package["hadoop-mapreduce"],
+        require => Package[$hadoop_mapreduce_package],
       }
     }
 
     file {
       "/etc/hadoop/conf/mapred-site.xml":
         content => template('hadoop/mapred-site.xml'),
-        require => [Package["hadoop"]],
+        require => [Package[$hadoop_package]],
     }
 
     file { "/etc/hadoop/conf/taskcontroller.cfg":
       content => template('hadoop/taskcontroller.cfg'), 
-      require => [Package["hadoop"]],
+      require => [Package[$hadoop_package]],
     }
   }
 
@@ -471,7 +502,7 @@ class hadoop ($hadoop_security_authentication = "simple",
   ) inherits hadoop {
     include hadoop::common_hdfs
 
-    package { "hadoop-hdfs-datanode":
+    package { $hadoop_hdfs_datanode_package:
       ensure => latest,
       require => Package["jdk"],
     }
@@ -479,14 +510,14 @@ class hadoop ($hadoop_security_authentication = "simple",
     file {
       "/etc/default/hadoop-hdfs-datanode":
         content => template('hadoop/hadoop-hdfs'),
-        require => [Package["hadoop-hdfs-datanode"]],
+        require => [Package[$hadoop_hdfs_datanode_package]],
     }
 
     service { "hadoop-hdfs-datanode":
       ensure => running,
       hasstatus => true,
-      subscribe => [Package["hadoop-hdfs-datanode"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
-      require => [ Package["hadoop-hdfs-datanode"], File["/etc/default/hadoop-hdfs-datanode"], File[$hadoop::common_hdfs::hdfs_data_dirs] ],
+      subscribe => [Package[$hadoop_hdfs_datanode_package], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
+      require => [ Package[$hadoop_hdfs_datanode_package], File["/etc/default/hadoop-hdfs-datanode"], File[$hadoop::common_hdfs::hdfs_data_dirs] ],
     }
     Kerberos::Host_keytab <| title == "hdfs" |> -> Service["hadoop-hdfs-datanode"]
     Service<| title == 'hadoop-hdfs-namenode' |> -> Service['hadoop-hdfs-datanode']
@@ -497,7 +528,7 @@ class hadoop ($hadoop_security_authentication = "simple",
       owner => hdfs,
       group => hdfs,
       mode => '755',
-      require => [ Package["hadoop-hdfs"] ],
+      require => [ Package[$hadoop_hdfs_package] ],
     }
   }
 
@@ -513,23 +544,23 @@ class hadoop ($hadoop_security_authentication = "simple",
     if ($hadoop_security_authentication == "kerberos") {
       kerberos::host_keytab { "httpfs":
         spnego => true,
-        require => Package["hadoop-httpfs"],
+        require => Package[$hadoop_httpfs_package],
       }
     }
 
-    package { "hadoop-httpfs":
+    package { $hadoop_httpfs_package:
       ensure => latest,
       require => Package["jdk"],
     }
 
     file { "/etc/hadoop/conf/httpfs-site.xml":
       content => template('hadoop/httpfs-site.xml'),
-      require => [Package["hadoop-httpfs"]],
+      require => [Package[$hadoop_httpfs_package]],
     }
 
     file { "/etc/hadoop/conf/httpfs-env.sh":
       content => template('hadoop/httpfs-env.sh'),
-      require => [Package["hadoop-httpfs"]],
+      require => [Package[$hadoop_httpfs_package]],
     }
 
     if $generate_secrets {
@@ -545,15 +576,15 @@ class hadoop ($hadoop_security_authentication = "simple",
       content => $httpfs_signature_secret,
       # it's a password file - do not filebucket
       backup => false,
-      require => [Package["hadoop-httpfs"]],
+      require => [Package[$hadoop_httpfs_package]],
     }
 
     service { "hadoop-httpfs":
       ensure => running,
       hasstatus => true,
-      subscribe => [Package["hadoop-httpfs"], File["/etc/hadoop/conf/httpfs-site.xml"], File["/etc/hadoop/conf/httpfs-env.sh"], File["/etc/hadoop/conf/httpfs-signature.secret"],
+      subscribe => [Package[$hadoop_httpfs_package], File["/etc/hadoop/conf/httpfs-site.xml"], File["/etc/hadoop/conf/httpfs-env.sh"], File["/etc/hadoop/conf/httpfs-signature.secret"],
         File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"]],
-      require => [ Package["hadoop-httpfs"] ],
+      require => [ Package[$hadoop_httpfs_package] ],
     }
     Kerberos::Host_keytab <| title == "httpfs" |> -> Service["hadoop-httpfs"]
   }
@@ -571,18 +602,18 @@ class hadoop ($hadoop_security_authentication = "simple",
     if ($hadoop_security_authentication == "kerberos") {
       kerberos::host_keytab { "kms":
         spnego => true,
-        require => Package["hadoop-kms"],
+        require => Package[$hadoop_kms_package],
       }
     }
 
-    package { "hadoop-kms":
+    package { $hadoop_kms_package:
       ensure => latest,
       require => Package["jdk"],
     }
 
     file { "/etc/hadoop/conf/kms-site.xml":
       content => template('hadoop/kms-site.xml'),
-      require => [Package["hadoop-kms"]],
+      require => [Package[$hadoop_kms_package]],
     }
 
     file { "/etc/hadoop/conf/kms-env.sh":
@@ -590,7 +621,7 @@ class hadoop ($hadoop_security_authentication = "simple",
       owner   => 'kms',
       group   => 'kms',
       mode    => '0400',
-      require => [Package["hadoop-kms"]],
+      require => [Package[$hadoop_kms_package]],
     }
 
     file { "/etc/hadoop/conf/kms.keystore.password":
@@ -598,7 +629,7 @@ class hadoop ($hadoop_security_authentication = "simple",
       owner   => 'kms',
       group   => 'kms',
       mode    => '0400',
-      require => [Package["hadoop-kms"]],
+      require => [Package[$hadoop_kms_package]],
     }
 
     if $generate_secrets {
@@ -614,15 +645,15 @@ class hadoop ($hadoop_security_authentication = "simple",
       content => $kms_signature_secret,
       # it's a password file - do not filebucket
       backup => false,
-      require => [Package["hadoop-kms"]],
+      require => [Package[$hadoop_kms_package]],
     }
 
     service { "hadoop-kms":
       ensure => running,
       hasstatus => true,
-      subscribe => [Package["hadoop-kms"], File["/etc/hadoop/conf/kms-site.xml"], File["/etc/hadoop/conf/kms-env.sh"], File["/etc/hadoop/conf/kms-signature.secret"],
+      subscribe => [Package[$hadoop_kms_package], File["/etc/hadoop/conf/kms-site.xml"], File["/etc/hadoop/conf/kms-env.sh"], File["/etc/hadoop/conf/kms-signature.secret"],
         File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"]],
-      require => [ Package["hadoop-kms"] ],
+      require => [ Package[$hadoop_kms_package] ],
     }
     Kerberos::Host_keytab <| title == "kms" |> -> Service["hadoop-kms"]
   }
@@ -684,7 +715,7 @@ class hadoop ($hadoop_security_authentication = "simple",
         owner   => 'hdfs',
         group   => 'hdfs',
         mode    => '0700',
-        require => Package["hadoop-hdfs"],
+        require => Package[$hadoop_hdfs_package],
       }
 
       file { $hadoop::common_hdfs::sshfence_keypath:
@@ -731,7 +762,7 @@ class hadoop ($hadoop_security_authentication = "simple",
       }
     }
 
-    package { "hadoop-hdfs-namenode":
+    package { $hadoop_hdfs_namenode_package:
       ensure => latest,
       require => Package["jdk"],
     }
@@ -739,13 +770,13 @@ class hadoop ($hadoop_security_authentication = "simple",
     service { "hadoop-hdfs-namenode":
       ensure => running,
       hasstatus => true,
-      subscribe => [Package["hadoop-hdfs-namenode"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
-      require => [Package["hadoop-hdfs-namenode"]],
+      subscribe => [Package[$hadoop_hdfs_namenode_package], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
+      require => [Package[$hadoop_hdfs_namenode_package]],
     } 
     Kerberos::Host_keytab <| title == "hdfs" |> -> Exec <| tag == "namenode-format" |> -> Service["hadoop-hdfs-namenode"]
 
     if ($hadoop::common_hdfs::ha == "auto") {
-      package { "hadoop-hdfs-zkfc":
+      package { $hadoop_hdfs_zkfc_package:
         ensure => latest,
         require => Package["jdk"],
       }
@@ -753,8 +784,8 @@ class hadoop ($hadoop_security_authentication = "simple",
       service { "hadoop-hdfs-zkfc":
         ensure => running,
         hasstatus => true,
-        subscribe => [Package["hadoop-hdfs-zkfc"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
-        require => [Package["hadoop-hdfs-zkfc"]],
+        subscribe => [Package[$hadoop_hdfs_zkfc_package], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
+        require => [Package[$hadoop_hdfs_zkfc_package]],
       } 
       Service <| title == "hadoop-hdfs-zkfc" |> -> Service <| title == "hadoop-hdfs-namenode" |>
     }
@@ -767,7 +798,7 @@ class hadoop ($hadoop_security_authentication = "simple",
         command => "/bin/bash -c 'hdfs namenode -format -nonInteractive >> /var/lib/hadoop-hdfs/nn.format.log 2>&1'",
         returns => [ 0, 1],
         creates => "${hadoop::common_hdfs::namenode_data_dirs[0]}/current/VERSION",
-        require => [ Package["hadoop-hdfs-namenode"], File[$hadoop::common_hdfs::namenode_data_dirs], File["/etc/hadoop/conf/hdfs-site.xml"] ],
+        require => [ Package[$hadoop_hdfs_namenode_package], File[$hadoop::common_hdfs::namenode_data_dirs], File["/etc/hadoop/conf/hdfs-site.xml"] ],
         tag     => "namenode-format",
       }
 
@@ -777,7 +808,7 @@ class hadoop ($hadoop_security_authentication = "simple",
             user => "hdfs",
             command => "/bin/bash -c 'hdfs zkfc -formatZK -nonInteractive >> /var/lib/hadoop-hdfs/zk.format.log 2>&1'",
             returns => [ 0, 2],
-            require => [ Package["hadoop-hdfs-zkfc"], File["/etc/hadoop/conf/hdfs-site.xml"] ],
+            require => [ Package[$hadoop_hdfs_zkfc_package], File["/etc/hadoop/conf/hdfs-site.xml"] ],
             tag     => "namenode-format",
           }
           Service <| title == "zookeeper-server" |> -> Exec <| title == "namenode zk format" |>
@@ -800,7 +831,7 @@ class hadoop ($hadoop_security_authentication = "simple",
         # first namenode might be rebooting just now so try for some time
         command => "/bin/bash -c 'hdfs namenode -bootstrapStandby $retry_params >> /var/lib/hadoop-hdfs/nn.bootstrap-standby.log 2>&1'",
         creates => "${hadoop::common_hdfs::namenode_data_dirs[0]}/current/VERSION",
-        require => [ Package["hadoop-hdfs-namenode"], File[$hadoop::common_hdfs::namenode_data_dirs], File["/etc/hadoop/conf/hdfs-site.xml"] ],
+        require => [ Package[$hadoop_hdfs_namenode_package], File[$hadoop::common_hdfs::namenode_data_dirs], File["/etc/hadoop/conf/hdfs-site.xml"] ],
         tag     => "namenode-format",
       }
     } elsif ($hadoop::common_hdfs::ha != "disabled") {
@@ -814,7 +845,7 @@ class hadoop ($hadoop_security_authentication = "simple",
     file {
       "/etc/default/hadoop-hdfs-namenode":
         content => template('hadoop/hadoop-hdfs'),
-        require => [Package["hadoop-hdfs-namenode"]],
+        require => [Package[$hadoop_hdfs_namenode_package]],
     }
 
     hadoop::create_storage_dir { $hadoop::common_hdfs::namenode_data_dirs: } ->
@@ -823,7 +854,7 @@ class hadoop ($hadoop_security_authentication = "simple",
       owner => hdfs,
       group => hdfs,
       mode => '700',
-      require => [Package["hadoop-hdfs"]], 
+      require => [Package[$hadoop_hdfs_package]],
     }
   }
 
@@ -857,7 +888,7 @@ class hadoop ($hadoop_security_authentication = "simple",
   class secondarynamenode {
     include hadoop::common_hdfs
 
-    package { "hadoop-hdfs-secondarynamenode":
+    package { $hadoop_hdfs_secondarynamenode_package:
       ensure => latest,
       require => Package["jdk"],
     }
@@ -865,14 +896,14 @@ class hadoop ($hadoop_security_authentication = "simple",
     file {
       "/etc/default/hadoop-hdfs-secondarynamenode":
         content => template('hadoop/hadoop-hdfs'),
-        require => [Package["hadoop-hdfs-secondarynamenode"]],
+        require => [Package[$hadoop_hdfs_secondarynamenode_package]],
     }
 
     service { "hadoop-hdfs-secondarynamenode":
       ensure => running,
       hasstatus => true,
-      subscribe => [Package["hadoop-hdfs-secondarynamenode"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
-      require => [Package["hadoop-hdfs-secondarynamenode"]],
+      subscribe => [Package[$hadoop_hdfs_secondarynamenode_package], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
+      require => [Package[$hadoop_hdfs_secondarynamenode_package]],
     }
     Kerberos::Host_keytab <| title == "hdfs" |> -> Service["hadoop-hdfs-secondarynamenode"]
   }
@@ -880,7 +911,7 @@ class hadoop ($hadoop_security_authentication = "simple",
   class journalnode {
     include hadoop::common_hdfs
 
-    package { "hadoop-hdfs-journalnode":
+    package { $hadoop_hdfs_journalnode_package:
       ensure => latest,
       require => Package["jdk"],
     }
@@ -890,9 +921,9 @@ class hadoop ($hadoop_security_authentication = "simple",
     service { "hadoop-hdfs-journalnode":
       ensure => running,
       hasstatus => true,
-      subscribe => [Package["hadoop-hdfs-journalnode"], File["/etc/hadoop/conf/hadoop-env.sh"],
+      subscribe => [Package[$hadoop_hdfs_journalnode_package], File["/etc/hadoop/conf/hadoop-env.sh"],
                     File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/core-site.xml"]],
-      require => [ Package["hadoop-hdfs-journalnode"], File[$journalnode_cluster_journal_dir] ],
+      require => [ Package[$hadoop_hdfs_journalnode_package], File[$journalnode_cluster_journal_dir] ],
     }
 
     hadoop::create_storage_dir { [$hadoop::common_hdfs::journalnode_edits_dir, $journalnode_cluster_journal_dir]: } ->
@@ -901,7 +932,7 @@ class hadoop ($hadoop_security_authentication = "simple",
       owner => 'hdfs',
       group => 'hdfs',
       mode => '755',
-      require => [Package["hadoop-hdfs"]],
+      require => [Package[$hadoop_hdfs_package]],
     }
   }
 
@@ -909,7 +940,7 @@ class hadoop ($hadoop_security_authentication = "simple",
   class resourcemanager {
     include hadoop::common_yarn
 
-    package { "hadoop-yarn-resourcemanager":
+    package { $hadoop_yarn_resourcemanager_package:
       ensure => latest,
       require => Package["jdk"],
     }
@@ -917,9 +948,9 @@ class hadoop ($hadoop_security_authentication = "simple",
     service { "hadoop-yarn-resourcemanager":
       ensure => running,
       hasstatus => true,
-      subscribe => [Package["hadoop-yarn-resourcemanager"], File["/etc/hadoop/conf/hadoop-env.sh"], 
+      subscribe => [Package[$hadoop_yarn_resourcemanager_package], File["/etc/hadoop/conf/hadoop-env.sh"],
                     File["/etc/hadoop/conf/yarn-site.xml"], File["/etc/hadoop/conf/core-site.xml"]],
-      require => [ Package["hadoop-yarn-resourcemanager"] ],
+      require => [ Package[$hadoop_yarn_resourcemanager_package] ],
     }
     Kerberos::Host_keytab <| tag == "mapreduce" |> -> Service["hadoop-yarn-resourcemanager"]
   }
@@ -927,7 +958,7 @@ class hadoop ($hadoop_security_authentication = "simple",
   class proxyserver {
     include hadoop::common_yarn
 
-    package { "hadoop-yarn-proxyserver":
+    package { $hadoop_yarn_proxyserver_package:
       ensure => latest,
       require => Package["jdk"],
     }
@@ -935,9 +966,9 @@ class hadoop ($hadoop_security_authentication = "simple",
     service { "hadoop-yarn-proxyserver":
       ensure => running,
       hasstatus => true,
-      subscribe => [Package["hadoop-yarn-proxyserver"], File["/etc/hadoop/conf/hadoop-env.sh"], 
+      subscribe => [Package[$hadoop_yarn_proxyserver_package], File["/etc/hadoop/conf/hadoop-env.sh"],
                     File["/etc/hadoop/conf/yarn-site.xml"], File["/etc/hadoop/conf/core-site.xml"]],
-      require => [ Package["hadoop-yarn-proxyserver"] ],
+      require => [ Package[$hadoop_yarn_proxyserver_package] ],
     }
     Kerberos::Host_keytab <| tag == "mapreduce" |> -> Service["hadoop-yarn-proxyserver"]
   }
@@ -945,7 +976,7 @@ class hadoop ($hadoop_security_authentication = "simple",
   class historyserver {
     include hadoop::common_mapred_app
 
-    package { "hadoop-mapreduce-historyserver":
+    package { $hadoop_mapreduce_historyserver_package:
       ensure => latest,
       require => Package["jdk"],
     }
@@ -953,9 +984,9 @@ class hadoop ($hadoop_security_authentication = "simple",
     service { "hadoop-mapreduce-historyserver":
       ensure => running,
       hasstatus => true,
-      subscribe => [Package["hadoop-mapreduce-historyserver"], File["/etc/hadoop/conf/hadoop-env.sh"], 
+      subscribe => [Package[$hadoop_mapreduce_historyserver_package], File["/etc/hadoop/conf/hadoop-env.sh"],
                     File["/etc/hadoop/conf/yarn-site.xml"], File["/etc/hadoop/conf/core-site.xml"]],
-      require => [Package["hadoop-mapreduce-historyserver"]],
+      require => [Package[$hadoop_mapreduce_historyserver_package]],
     }
     Kerberos::Host_keytab <| tag == "mapreduce" |> -> Service["hadoop-mapreduce-historyserver"]
   }
@@ -965,17 +996,17 @@ class hadoop ($hadoop_security_authentication = "simple",
     include hadoop::common_mapred_app
     include hadoop::common_yarn
 
-    package { "hadoop-yarn-nodemanager":
+    package { $hadoop_yarn_nodemanager_package:
       ensure => latest,
       require => Package["jdk"],
     }
  
-    service { "hadoop-yarn-nodemanager":
+    service { $hadoop_yarn_nodemanager_package:
       ensure => running,
       hasstatus => true,
-      subscribe => [Package["hadoop-yarn-nodemanager"], File["/etc/hadoop/conf/hadoop-env.sh"], 
+      subscribe => [Package[$hadoop_yarn_nodemanager_package], File["/etc/hadoop/conf/hadoop-env.sh"],
                     File["/etc/hadoop/conf/yarn-site.xml"], File["/etc/hadoop/conf/core-site.xml"]],
-      require => [ Package["hadoop-yarn-nodemanager"], File[$hadoop::common_yarn::yarn_data_dirs] ],
+      require => [ Package[$hadoop_yarn_nodemanager_package], File[$hadoop::common_yarn::yarn_data_dirs] ],
     }
     Kerberos::Host_keytab <| tag == "mapreduce" |> -> Service["hadoop-yarn-nodemanager"]
 
@@ -985,13 +1016,13 @@ class hadoop ($hadoop_security_authentication = "simple",
       owner => yarn,
       group => yarn,
       mode => '755',
-      require => [Package["hadoop-yarn"]],
+      require => [Package[$hadoop_yarn_package]],
     }
 
     if ($operatingsystem == 'openEuler') {
       exec { "usermod yarn":
         command => "/usr/sbin/usermod -G root yarn",
-        require => Package["hadoop-yarn-nodemanager"],
+        require => Package[$hadoop_yarn_nodemanager_package],
       }
     }
   }
@@ -1005,7 +1036,7 @@ class hadoop ($hadoop_security_authentication = "simple",
       owner => yarn,
       group => yarn,
       mode => '755',
-      require => [Package["hadoop-mapreduce"]],
+      require => [Package[$hadoop_mapreduce_package]],
     }
   }
 
@@ -1022,7 +1053,7 @@ class hadoop ($hadoop_security_authentication = "simple",
 
       package { $hadoop_client_packages:
         ensure => latest,
-        require => [Package["jdk"], Package["hadoop"], Package["hadoop-hdfs"], Package["hadoop-mapreduce"]],  
+        require => [Package["jdk"], Package[$hadoop_package], Package[$hadoop_hdfs_package], Package[$hadoop_mapreduce_package]],
       }
   }
 
