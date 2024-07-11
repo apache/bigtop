@@ -31,12 +31,12 @@ ZEPPELIN_SCALA_BINARY_VERSION=${SCALA_VERSION%.*}
 ZEPPELIN_SPARK_VERSION=${SPARK_VERSION%.*}
 
 BUILD_OPTS="-Dhadoop3.3.version=${HADOOP_VERSION} \
-            -Dflink1.16.version=${FLINK_VERSION} \
+            -Dflink1.17.version=${FLINK_VERSION} \
             -Dflink.scala.version=${SCALA_VERSION} \
             -Dlivy.version=${ZEPPELIN_LIVY_VERSION} \
             -Pbuild-distr \
             -Phadoop3 \
-            -Pflink-116 \
+            -Pflink-117 \
             -Pspark-scala-${ZEPPELIN_SCALA_BINARY_VERSION} \
             -Pspark-${ZEPPELIN_SPARK_VERSION} \
             -Pweb-dist"

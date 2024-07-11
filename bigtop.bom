@@ -234,7 +234,7 @@ bigtop {
       name    = 'flink'
       rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
       relNotes = 'Apache Flink'
-      version { base = '1.16.2'; pkg = base; release = 1 }
+      version { base = '1.17.2'; pkg = base; release = 1 }
       tarball { destination = "$name-${version.base}.tar.gz"
                 source      = "$name-${version.base}-src.tgz" }
       url     { download_path = "/$name/$name-${version.base}"
@@ -315,7 +315,7 @@ bigtop {
       name    = 'zeppelin'
       rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
       relNotes = 'Apache Zeppelin'
-      version { base = '0.11.0'; pkg = base; release = 1 }
+      version { base = '0.11.0'; pkg = base; release = 2 }
       tarball { source      = "$name-${version.base}.tgz"
                 destination = "$name-${version.base}.tar.gz" }
       url     { download_path = "/$name/$name-${version.base}/"
