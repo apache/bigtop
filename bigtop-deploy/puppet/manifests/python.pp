@@ -16,6 +16,7 @@
 class python {
     case $operatingsystem {
         /(?i:(centos|fedora|redhat|rocky))/: {
+            require yumrepo
             package { 'python3-devel':
               ensure => 'present',
             }
