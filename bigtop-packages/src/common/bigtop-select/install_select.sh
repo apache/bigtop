@@ -77,6 +77,10 @@ LIB_DIR=${LIB_DIR:-/usr/lib/bigtop-select}
 BIN_DIR=${BIN_DIR:-/usr/bin}
 CONF_DIR=${CONF_DIR:-/etc/bigtop-select/conf.dist}
 
+if [[ ${PARENT_DIR} == "" ]];then
+  PARENT_DIR=/usr/bigtop/${BIGTOP_BASE_VERSION}
+fi
+
 STACK_ROOT_DIR=$(echo ${PARENT_DIR} | sed -e "s/\/${BIGTOP_BASE_VERSION}$//")
 STACK_SELECTOR=distro-select
 CONF_SELECTOR=conf-select

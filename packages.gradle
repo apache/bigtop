@@ -383,6 +383,13 @@ def genTasks = { target ->
     def final SRCDEB = "${PKG_NAME}_$PKG_VERSION-${BIGTOP_BUILD_STAMP}.dsc"
     def final HADOOP_VERSION = config.bigtop.components["hadoop"].version.pkg
 
+    def final BIGTOP_BASE_VERSION = "${config.bigtop.base_version}"
+    def final PARENT_DIR = project.hasProperty("parentDir") ? project.property('parentDir') : ""
+    def FULL_PARENT_DIR = "${PARENT_DIR}"
+    if (PARENT_DIR != "") {
+      FULL_PARENT_DIR = "${PARENT_DIR}/${BIGTOP_BASE_VERSION}"
+    }
+
     exec {
       workingDir PKG_OUTPUT_DIR
       commandLine "dpkg-source -x $SRCDEB".split(' ')
@@ -399,6 +406,8 @@ def genTasks = { target ->
 --set-envvar=${toOldStyleName(target)}_BASE_VERSION=$BASE_VERSION \
 --set-envvar=${toOldStyleName(target)}_VERSION=$PKG_VERSION \
 --set-envvar=${toOldStyleName(target)}_RELEASE=$BIGTOP_BUILD_STAMP \
+--set-envvar=PARENT_DIR=$FULL_PARENT_DIR \
+--set-envvar=BIGTOP_BASE_VERSION=$BIGTOP_BASE_VERSION \
 -uc -us -b
 """
     exec {

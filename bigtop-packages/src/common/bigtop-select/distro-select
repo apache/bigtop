@@ -328,6 +328,9 @@ def checkCommandParameters(cmd, realLen, rightLen):
  #
  # Start of main
 
+if not os.path.exists(root):
+  os.makedirs(root)
+
 sanityCheckTables()
 
 parser = optparse.OptionParser(add_help_option=False)
