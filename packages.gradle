@@ -384,8 +384,8 @@ def genTasks = { target ->
     def final HADOOP_VERSION = config.bigtop.components["hadoop"].version.pkg
     def final FULL_PARENT_DIR = getParentDir(config.bigtop.base_version, "deb")
     def final DEB_PKG_NAME_SUFFIX =  getPkgNameSuffix(config.bigtop.components[target], "deb").pkgNameSuffix
-
     def final BIGTOP_BASE_VERSION = "${config.bigtop.base_version}"
+    
     exec {
       workingDir PKG_OUTPUT_DIR
       commandLine "dpkg-source -x $SRCDEB".split(' ')
@@ -523,8 +523,8 @@ def genTasks = { target ->
       workingDir DEB_BLD_DIR
       environment 'PARENT_DIR', FULL_PARENT_DIR
       environment 'PKG_NAME_SUFFIX', DEB_PKG_NAME_SUFFIX
-      commandLine "dpkg-buildpackage -uc -us -sa -S".split(' ')
       environment 'bigtop_base_version', BIGTOP_BASE_VERSION
+      commandLine "dpkg-buildpackage -uc -us -sa -S".split(' ')
     }
     mkdir(PKG_OUTPUT_DIR)
     copy {
