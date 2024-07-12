@@ -585,6 +585,14 @@ env HADOOP_VERSION=%{hadoop_base_version} bash %{SOURCE2} \
 # %__install -d -m 0755 $RPM_BUILD_ROOT/%{etc_default}
 %__cp $RPM_SOURCE_DIR/%{hadoop_name}-fuse.default $RPM_BUILD_ROOT/%{etc_default}/%{hadoop_name}-fuse
 
+
+
+for service in %{hadoop_services}
+	sed -i -e "s|@hadoop_home|$usr_lib_hadoop|" $RPM_SOURCE_DIR/%{hadoop_name}-${service}.svc
+	sed -i -e "s|@hadoop_mapreduce_home|$usr_lib_mapreduce|" $RPM_SOURCE_DIR/%{hadoop_name}-${service}.svc
+	sed -i -e "s|@hadoop_yarn_home|$usr_lib_yarn|" $RPM_SOURCE_DIR/%{hadoop_name}-${service}.svc
+
+
 # Generate the init.d scripts
 for service in %{hadoop_services}
 do

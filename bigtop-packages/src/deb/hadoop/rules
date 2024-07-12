@@ -277,6 +277,7 @@ gen_files:
 update_control:
 	sed -i 's/-pkgsuffix/${pkg_name_suffix}/g' debian/control
 
+
 ifeq (${DEB_BUILD_ARCH},amd64)
   native_dir=Linux-amd64-64
 endif
@@ -297,6 +298,9 @@ hadoop_svcs=hdfs-namenode hdfs-secondarynamenode hdfs-datanode hdfs-zkfc hdfs-jo
             mapreduce-historyserver httpfs kms
 
 $(hadoop_svcs): debian/init.d.tmpl
+	sed -i -e "s|@hadoop_home|${usr_lib_hadoop}|" $RPM_SOURCE_DIR/%{hadoop_name}-${service}.svc
+    sed -i -e "s|@hadoop_mapreduce_home|${usr_lib_mapreduce}|" $RPM_SOURCE_DIR/%{hadoop_name}-${service}.svc
+    sed -i -e "s|@hadoop_yarn_home|${usr_lib_yarn}|" $RPM_SOURCE_DIR/%{hadoop_name}-${service}.svc
 	bash $< debian/hadoop-$@.svc deb debian/hadoop-$@.init
 	cp debian/$(firstword $(subst -, ,$@)).default debian/tmp/${etc_default}/hadoop-$@
 	echo ${etc_default}/hadoop-$@ >> debian/hadoop${pkg_name_suffix}-$@.install

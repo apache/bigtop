@@ -15,7 +15,7 @@
 HADOOP_NAME="dfsrouter"
 DAEMON="hadoop-hdfs-$HADOOP_NAME"
 DESC="Hadoop $HADOOP_NAME"
-EXEC_PATH="/usr/lib/hadoop/sbin/hadoop-daemon.sh"
+EXEC_PATH="@hadoop_home/sbin/hadoop-daemon.sh"
 SVC_USER="hdfs"
 WORKING_DIR="/var/lib/hadoop-hdfs"
 DAEMON_FLAGS="$HADOOP_NAME"
