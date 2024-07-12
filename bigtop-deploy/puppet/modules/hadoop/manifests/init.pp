@@ -34,6 +34,35 @@ class hadoop ($hadoop_security_authentication = "simple",
 
   include stdlib
 
+  $package_suffix = hiera("bigtop::package_suffix", "")
+  $parent_dir = hiera("bigtop::parent_dir", "")
+  $bigtop_base_version = hiera("bigtop::base_version", "")
+
+  if $package_suffix and $package_suffix != '' and $parent_dir and $parent_dir != '' {
+    $bin_home = "${parent_dir}/${bigtop_base_version}/usr/bin"
+    $hadoop_home = "${parent_dir}/${bigtop_base_version}/usr/lib/hadoop"
+  } else {
+    $bin_home = '/usr/bin'
+    $hadoop_home = '/usr/lib/hadoop'
+  }
+
+  $hadoop_package="hadoop$package_suffix"
+  $hadoop_hdfs_package="hadoop$package_suffix-hdfs"
+  $hadoop_hdfs_secondarynamenode_package="hadoop$package_suffix-hdfs-secondarynamenode"
+  $hadoop_hdfs_zkfc_package="hadoop$package_suffix-hdfs-zkfc"
+  $hadoop_hdfs_namenode_package="hadoop$package_suffix-hdfs-namenode"
+  $hadoop_kms_package="hadoop$package_suffix-kms"
+  $hadoop_httpfs_package="hadoop$package_suffix-httpfs"
+  $hadoop_hdfs_datanode_package="hadoop$package_suffix-hdfs-datanode"
+  $hadoop_hdfs_journalnode_package="hadoop$package_suffix-hdfs-journalnode"
+
+  $hadoop_yarn_package="hadoop$package_suffix-yarn"
+  $hadoop_yarn_nodemanager_package="hadoop$package_suffix-yarn-nodemanager"
+  $hadoop_yarn_resourcemanager_package="hadoop$package_suffix-yarn-resourcemanager"
+  $hadoop_yarn_proxyserver_package="hadoop$package_suffix-yarn-proxyserver"
+  $hadoop_mapreduce_package="hadoop$package_suffix-mapreduce"
+  $hadoop_mapreduce_historyserver_package="hadoop$package_suffix-mapreduce-historyserver"
+
   class deploy ($roles) {
 
     if ("datanode" in $roles) {
@@ -89,36 +118,6 @@ class hadoop ($hadoop_security_authentication = "simple",
       include hadoop::client
     }
   }
-
-
-  $package_suffix = hiera("bigtop::package_suffix", "")
-  $parent_dir = hiera("bigtop::parent_dir", "")
-  $bigtop_base_version = hiera("bigtop::base_version", "")
-
-  if $package_suffix and $package_suffix != '' and $parent_dir and $parent_dir != '' {
-    $bin_home = "${parent_dir}/${bigtop_base_version}/usr/bin"
-    $hadoop_home = "${parent_dir}/${bigtop_base_version}/usr/lib/hadoop"
-  } else {
-    $bin_home = '/usr/bin'
-    $hadoop_home = '/usr/lib/hadoop'
-  }
-
-  $hadoop_package="hadoop$package_suffix"
-  $hadoop_hdfs_package="hadoop$package_suffix-hdfs"
-  $hadoop_hdfs_secondarynamenode_package="hadoop$package_suffix-hdfs-secondarynamenode"
-  $hadoop_hdfs_zkfc_package="hadoop$package_suffix-hdfs-zkfc"
-  $hadoop_hdfs_namenode_package="hadoop$package_suffix-hdfs-namenode"
-  $hadoop_kms_package="hadoop$package_suffix-kms"
-  $hadoop_httpfs_package="hadoop$package_suffix-httpfs"
-  $hadoop_hdfs_datanode_package="hadoop$package_suffix-hdfs-datanode"
-  $hadoop_hdfs_journalnode_package="hadoop$package_suffix-hdfs-journalnode"
-
-  $hadoop_yarn_package="hadoop$package_suffix-yarn"
-  $hadoop_yarn_nodemanager_package="hadoop$package_suffix-yarn-nodemanager"
-  $hadoop_yarn_resourcemanager_package="hadoop$package_suffix-yarn-resourcemanager"
-  $hadoop_yarn_proxyserver_package="hadoop$package_suffix-yarn-proxyserver"
-  $hadoop_mapreduce_package="hadoop$package_suffix-mapreduce"
-  $hadoop_mapreduce_historyserver_package="hadoop$package_suffix-mapreduce-historyserver"
 
 
   class init_hdfs {
