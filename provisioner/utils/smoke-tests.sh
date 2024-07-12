@@ -40,6 +40,8 @@ echo -e "\n===== EXPORTING VARIABLES =====\n"
 
 if [ -n "$PARENT_DIR" ]; then
   ZOOKEEPER_HOME="${PARENT_DIR}/${BIGTOP_BASE_VERSION}/usr/lib/zookeeper"
+  HADOOP_HOME="${PARENT_DIR}/${BIGTOP_BASE_VERSION}/usr/lib/hadoop"
+  HADOOP_MAPRED_HOME="${PARENT_DIR}/${BIGTOP_BASE_VERSION}/usr/lib/hadoop-mapreduce"
 fi
 
 export ALLUXIO_HOME=${ALLUXIO_HOME:-/usr/lib/alluxio}
