@@ -302,7 +302,7 @@ $(hadoop_svcs): debian/init.d.tmpl
 	sed -i -e "s|@hadoop_home|${usr_lib_hadoop}|"  debian/hadoop-$@.svc
 	sed -i -e "s|@hadoop_mapreduce_home|${usr_lib_mapreduce}|"  debian/hadoop-$@.svc
 	sed -i -e "s|@hadoop_yarn_home|${usr_lib_yarn}|"  debian/hadoop-$@.svc
-	bash $< debian/hadoop-$@.svc deb debian/hadoop${pkg_name_suffix}-$@.init
+	BIGTOP_DEFAULTS_DIR=${etc_default} bash $< debian/hadoop-$@.svc deb debian/hadoop${pkg_name_suffix}-$@.init
 	cp debian/$(firstword $(subst -, ,$@)).default debian/tmp/${etc_default}/hadoop-$@
 	echo ${etc_default}/hadoop-$@ >> debian/hadoop${pkg_name_suffix}-$@.install
 	# FIXME: workaround for BIGTOP-105
