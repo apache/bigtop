@@ -64,6 +64,7 @@ ${etc_hadoop}/conf.empty/configuration.xsl
 ${etc_hadoop}/conf.empty/hadoop-env.sh
 ${etc_hadoop}/conf.empty/hadoop-policy.xml
 ${etc_default}/hadoop
+${np_etc_hadoop}
 /etc/bash_completion.d/hadoop
 ${usr_lib_hadoop}/etc
 ${usr_lib_hadoop}/libexec/hadoop-config.sh
