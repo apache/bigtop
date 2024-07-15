@@ -38,7 +38,7 @@ case "$1" in
             adduser \
                 --system \
                 --ingroup hdfs \
-                --home /var/lib/hadoop-hdfs \
+                --home  @var_lib_hdfs@ \
                 --gecos "Hadoop HDFS" \
                 --shell /bin/bash \
                 hdfs >/dev/null 2>/dev/null || :

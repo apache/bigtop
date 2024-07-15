@@ -37,7 +37,7 @@ case "$1" in
             adduser \
                 --system \
                 --ingroup kms \
-                --home /var/lib/hadoop-kms \
+                --home  @var_lib_kms@ \
                 --gecos "Hadoop KMS" \
                 --shell /bin/bash \
                 kms >/dev/null 2>/dev/null || :

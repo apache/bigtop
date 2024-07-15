@@ -1,3 +1,0 @@
-/etc/default/hadoop-fuse
-/usr/bin/hadoop-fuse-dfs
-/usr/lib/hadoop/bin/fuse_dfs

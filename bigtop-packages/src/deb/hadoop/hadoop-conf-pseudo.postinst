@@ -36,7 +36,7 @@ set -e
 
 case "$1" in
     configure)
-        update-alternatives --install /etc/hadoop/conf hadoop-conf /etc/hadoop/conf.pseudo 30
+        update-alternatives --install /etc/hadoop/conf hadoop-conf @etc_hadoop@/conf.pseudo 30
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

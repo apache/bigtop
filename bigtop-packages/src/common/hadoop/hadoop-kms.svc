@@ -15,7 +15,7 @@
 HADOOP_NAME="kms"
 DAEMON="hadoop-$HADOOP_NAME"
 DESC="Hadoop $HADOOP_NAME"
-EXEC_PATH="/usr/lib/hadoop/sbin/kms.sh"
+EXEC_PATH="@hadoop_home/sbin/kms.sh"
 SVC_USER="$HADOOP_NAME"
 WORKING_DIR="/var/run/hadoop-kms"
 DAEMON_FLAGS="$HADOOP_NAME"

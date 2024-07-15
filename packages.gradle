@@ -115,7 +115,7 @@ def getPkgNameSuffix(component, type) {
 def getParentDir(bigtopBaseVersion, type) {
     def defaultParentDirValue = type.equalsIgnoreCase("deb") ? "" : "%{nil}"
     def parentDir = project.hasProperty("parentDir") ? project.property('parentDir') : defaultParentDirValue
-    if (parentDir && parentDir != "%{nil}") {
+    if (parentDir != defaultParentDirValue) {
         parentDir = "${parentDir}/${bigtopBaseVersion}"
     }
     return parentDir
@@ -382,7 +382,10 @@ def genTasks = { target ->
     def final BASE_VERSION = config.bigtop.components[target].version.base
     def final SRCDEB = "${PKG_NAME}_$PKG_VERSION-${BIGTOP_BUILD_STAMP}.dsc"
     def final HADOOP_VERSION = config.bigtop.components["hadoop"].version.pkg
+    def final FULL_PARENT_DIR = getParentDir(config.bigtop.base_version, "deb")
+    def final DEB_PKG_NAME_SUFFIX =  getPkgNameSuffix(config.bigtop.components[target], "deb").pkgNameSuffix
 
+    def final BIGTOP_BASE_VERSION = "${config.bigtop.base_version}"
     exec {
       workingDir PKG_OUTPUT_DIR
       commandLine "dpkg-source -x $SRCDEB".split(' ')
@@ -399,6 +402,9 @@ def genTasks = { target ->
 --set-envvar=${toOldStyleName(target)}_BASE_VERSION=$BASE_VERSION \
 --set-envvar=${toOldStyleName(target)}_VERSION=$PKG_VERSION \
 --set-envvar=${toOldStyleName(target)}_RELEASE=$BIGTOP_BUILD_STAMP \
+--set-envvar=PARENT_DIR=$FULL_PARENT_DIR \
+--set-envvar=PKG_NAME_SUFFIX=$DEB_PKG_NAME_SUFFIX \
+--set-envvar=bigtop_base_version=${BIGTOP_BASE_VERSION} \
 -uc -us -b
 """
     exec {
@@ -428,6 +434,8 @@ def genTasks = { target ->
       println "\tNothing to do. Exiting..."
       return
     }
+
+    def final BIGTOP_BASE_VERSION = "${config.bigtop.base_version}"
      def final BIGTOP_BUILD_STAMP = System.getenv('BIGTOP_BUILD_STAMP') ?:
              config.bigtop.components[target].version.release
     def final TARBALL_SRC = config.bigtop.components[target].tarball.source
@@ -443,6 +451,8 @@ def genTasks = { target ->
     def final DEB_PKG_DIR = "$PKG_BUILD_DIR/deb/$PKG_NAME-${PKG_VERSION}-${BIGTOP_BUILD_STAMP}"
     def final ENABLE_MAVEN_PARALLEL_BUILD = config.bigtop.components[target].maven_parallel_build
     def final MAVEN_BUILD_THREADS = project.hasProperty('buildThreads') ? project.property('buildThreads') : null
+    def final FULL_PARENT_DIR = getParentDir(config.bigtop.base_version, "deb")
+    def final DEB_PKG_NAME_SUFFIX =  getPkgNameSuffix(config.bigtop.components[target], "deb").pkgNameSuffix
 
     mkdir (DEB_BLD_DIR)
     copy {
@@ -511,7 +521,10 @@ def genTasks = { target ->
     // Creating source package
     exec {
       workingDir DEB_BLD_DIR
+      environment 'PARENT_DIR', FULL_PARENT_DIR
+      environment 'PKG_NAME_SUFFIX', DEB_PKG_NAME_SUFFIX
       commandLine "dpkg-buildpackage -uc -us -sa -S".split(' ')
+      environment 'bigtop_base_version', BIGTOP_BASE_VERSION
     }
     mkdir(PKG_OUTPUT_DIR)
     copy {

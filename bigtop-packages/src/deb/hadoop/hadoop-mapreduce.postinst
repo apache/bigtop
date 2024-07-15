@@ -21,12 +21,12 @@ set -e
 
 case "$1" in
     configure)
-	mkdir -p /var/log/hadoop-mapreduce /var/run/hadoop-mapreduce /var/lib/hadoop-mapreduce/cache || :
+	mkdir -p /var/log/hadoop-mapreduce /var/run/hadoop-mapreduce  @var_lib_mapreduce@/cache || :
 	chgrp -R hadoop /var/log/hadoop-mapreduce /var/run/hadoop-mapreduce
 	chmod g+w /var/run/hadoop-mapreduce /var/log/hadoop-mapreduce
-	chown mapred:hadoop /var/lib/hadoop-mapreduce /var/lib/hadoop-mapreduce/cache
-	chmod 0755 /var/lib/hadoop-mapreduce
-	chmod 1777 /var/lib/hadoop-mapreduce/cache
+	chown mapred:hadoop  @var_lib_mapreduce@  @var_lib_mapreduce@/cache
+	chmod 0755  @var_lib_mapreduce@
+	chmod 1777  @var_lib_mapreduce@/cache
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
