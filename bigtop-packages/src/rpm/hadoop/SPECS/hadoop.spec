@@ -588,9 +588,12 @@ env HADOOP_VERSION=%{hadoop_base_version} bash %{SOURCE2} \
 
 
 for service in %{hadoop_services}
-	sed -i -e "s|@hadoop_home|$usr_lib_hadoop|" $RPM_SOURCE_DIR/%{hadoop_name}-${service}.svc
-	sed -i -e "s|@hadoop_mapreduce_home|$usr_lib_mapreduce|" $RPM_SOURCE_DIR/%{hadoop_name}-${service}.svc
-	sed -i -e "s|@hadoop_yarn_home|$usr_lib_yarn|" $RPM_SOURCE_DIR/%{hadoop_name}-${service}.svc
+	sed -i -e "s|@hadoop_home|%usr_lib_hadoop|" $RPM_SOURCE_DIR/%{hadoop_name}-${service}.svc
+	sed -i -e "s|@hadoop_mapreduce_home|%usr_lib_mapreduce|" $RPM_SOURCE_DIR/%{hadoop_name}-${service}.svc
+	sed -i -e "s|@hadoop_yarn_home|%usr_lib_yarn|" $RPM_SOURCE_DIR/%{hadoop_name}-${service}.svc
+    sed -i -e "s|@var_lib_hadoop_hdfs|%{var_lib_hdfs}|"  $RPM_SOURCE_DIR/%{hadoop_name}-${service}.svc
+	sed -i -e "s|@var_lib_hadoop_yarn|%{var_lib_yarn}|"  $RPM_SOURCE_DIR/%{hadoop_name}-${service}.svc
+	sed -i -e "s|@var_lib_hadoop_mapreduce|%{var_lib_mapreduce}|"  $RPM_SOURCE_DIR/%{hadoop_name}-${service}.svc
 
 
 # Generate the init.d scripts
