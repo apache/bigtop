@@ -42,6 +42,7 @@ class jdk {
       }
     }
     /(CentOS|Amazon|Fedora|RedHat|Rocky|openEuler)/: {
+      require yumrepo
       package { 'jdk':
         name => 'java-1.8.0-openjdk-devel',
         ensure => present,

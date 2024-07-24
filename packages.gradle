@@ -115,7 +115,7 @@ def getPkgNameSuffix(component, type) {
 def getParentDir(bigtopBaseVersion, type) {
     def defaultParentDirValue = type.equalsIgnoreCase("deb") ? "" : "%{nil}"
     def parentDir = project.hasProperty("parentDir") ? project.property('parentDir') : defaultParentDirValue
-    if (parentDir && parentDir != "%{nil}") {
+    if (parentDir != defaultParentDirValue) {
         parentDir = "${parentDir}/${bigtopBaseVersion}"
     }
     return parentDir
@@ -434,8 +434,10 @@ def genTasks = { target ->
       println "\tNothing to do. Exiting..."
       return
     }
+
+
     def final BIGTOP_BASE_VERSION = "${config.bigtop.base_version}"
-    def final BIGTOP_BUILD_STAMP = System.getenv('BIGTOP_BUILD_STAMP') ?:
+     def final BIGTOP_BUILD_STAMP = System.getenv('BIGTOP_BUILD_STAMP') ?:
              config.bigtop.components[target].version.release
     def final TARBALL_SRC = config.bigtop.components[target].tarball.source
     def final TARBALL_DST = config.bigtop.components[target].tarball.destination ?: TARBALL_SRC

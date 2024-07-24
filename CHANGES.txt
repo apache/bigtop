@@ -18,7 +18,138 @@ Bigtop Changelog
 * Release 3.4.0-SNAPSHOT (unreleased)
 
 
-* Release 3.3.0 (unreleased)
+* Release 3.3.0 (2024-07-08)
+
+Release Notes - Bigtop - Version 3.3.0
+
+** Bug
+    * [BIGTOP-3896] - Failed to deploy Alluxio on Arm64/ppc64le Fedora-38
+    * [BIGTOP-3897] - Failed to deploy gpdb on Fedora-36 for arm64/ppc64le
+    * [BIGTOP-3901] - Fix failure of Kerberos deployment on Rocky Linux 8 and Ubuntu 22.04
+    * [BIGTOP-3905] - Update Bigtop-stack-provisioner repo for the latest 3.2.0 release
+    * [BIGTOP-3913] - The path information is incorrect in the zookeeper-client script file by building with -PparentDir
+    * [BIGTOP-3914] - Add missing jars to Flink to fix sql-client.sh execution errors
+    * [BIGTOP-3923] - Add missing jars for Ranger caused by the component version specified
+    * [BIGTOP-3926] - Fix build failure of Hive against Hadoop 3.3.5
+    * [BIGTOP-3927] - Fix build failure of HBase against Hadoop 3.3.5
+    * [BIGTOP-3929] - Fix build failure of Flink due to transitive dependency on pentaho-aggdesigner-algorithm
+    * [BIGTOP-3930] - Fix deployment failure on Ubuntu 22.04 due to unavailable dependency on python
+    * [BIGTOP-3931] - Kafka directory permission error
+    * [BIGTOP-3937] - Executing smoke_tests of Solr repeatedly would be failed
+    * [BIGTOP-3942] - Solr incompatible names on deployment and test module
+    * [BIGTOP-3945] - Fix YCSB build issues for deprecated mapr repo url
+    * [BIGTOP-3946] - Fix build failure of Ambari due to expired certificate of bower repo
+    * [BIGTOP-3947] - Fix build failure of Oozie due to insufficient test scope dependency on hive-service
+    * [BIGTOP-3948] - Fix build failure of Tez due to expired certificate of bower repo
+    * [BIGTOP-3949] - Fix dependency convergence error of Zeppelin
+    * [BIGTOP-3950] - Ranger conf dir not consistent with ranger scripts
+    * [BIGTOP-3952] - Fix toolchain to download Maven from archive.apache.org instead of dlcdn.apache.org
+    * [BIGTOP-3954] - Fix the version definition in bigtop.bom so that `./gradlew setversion` works
+    * [BIGTOP-3956] - hadoop-deb FAILED on project hadoop-yarn-applications-catalog-webapp
+    * [BIGTOP-3961] - Fix version mismatch of hbase-client used by hadoop-yarn-server-timelineservice-hbase
+    * [BIGTOP-3962] - Fix setup failure of Ant due to unresolved gpg public key
+    * [BIGTOP-3966] - Make hive  3.1.3  compatible with hadoop 3.3.5
+    * [BIGTOP-3970] - Fix build failure of Zeppelin due to missing grpc-java-1.26.0 on ppc64le
+    * [BIGTOP-3972] - Fix startup failure of Oozie due to permission error on reading ssl-client.xml
+    * [BIGTOP-3983] - Fix the Ranger-2.4 deploying issue in Fedora-36
+    * [BIGTOP-4000] - Fix build failure of Tez against Hadoop 3.3.6
+    * [BIGTOP-4002] - Fix build failure of Zeppelin against Hadoop 3.3.6 due to dependency convergence error
+    * [BIGTOP-4007] - The home path information is incorrect in the zookeeper-client script file
+    * [BIGTOP-4009] - Fixing variable name error in Hadoop spec file
+    * [BIGTOP-4012] - Update Adoptium repository settings for Debian 11 in bigtop_toolchain
+    * [BIGTOP-4022] - Fix build failure of Hive against Tez 0.10.2
+    * [BIGTOP-4024] - Fix build failure of YCSB with Maven 3.8
+    * [BIGTOP-4030] - Error building Ranger deb using bigtop
+    * [BIGTOP-4035] - Fix ranger deb packaging and puppet script
+    * [BIGTOP-4042] - Fix ISAL Compilation Failure in openEuler System Slave Docker Image Due to Missing nasm and yasm Libraries
+    * [BIGTOP-4064] - Fix Bigtop toolchain to work with Puppet 3.x
+    * [BIGTOP-4065] - Fixing BUG caused by the lack of preun logic in Flink spec
+    * [BIGTOP-4067] - Fix build failure of Python 2.7 on Rocky Linux 9
+    * [BIGTOP-4068] - Alluxio smoketest failed in rockylinux 9
+    * [BIGTOP-4069] - Phoenix smoketest failed in openeuler
+    * [BIGTOP-4073] - Spark-python smoketest failed in rockylinux 9
+    * [BIGTOP-4076] - Fix compilation failure of Flink on centos 7 aarch64
+    * [BIGTOP-4077] - Fix error on deploying Spark due to missing log4j.properties.template
+    * [BIGTOP-4078] - Solr smoketest failed in debian 11
+    * [BIGTOP-4082] - Fix installation failure or R by bigtop_toolchain on openEuler
+    * [BIGTOP-4086] - When using 'brp java repeat jars' in Flink, the version cannot be obtained correctly
+    * [BIGTOP-4097] - Fix missing R package resource in toolchain manifest
+    * [BIGTOP-4101] - Fix undefined variable in toolchain manifest for openEuler
+    * [BIGTOP-4102] - Fix failure of toolchain manifest on Fedora 38 due to unresolved facter variable
+    * [BIGTOP-4105] - Build fails when '-DpkgSuffix' is specified and '(rpm|deb)_pkg_suffix'  is not specified in bigtop.bom
+    * [BIGTOP-4106] - Upgrade GPDB to 7.1.0 with Python 3 enabled
+    * [BIGTOP-4108] - Add support for openEuler to the manifest of bigtop-deploy to set up Bigtop Yum repository
+    * [BIGTOP-4109] - Fix deployment failure of Spark on Fedora 38 due to manifest incompatible with Puppet 8
+    * [BIGTOP-4121] - Fix test failure of Phoenix on rockylinux-8 due to deployment issue of python3
+    * [BIGTOP-4126] - Remove obsolete test resources for Hue
+    * [BIGTOP-4128] - Docker compose plugin doesn't have "-v" option
+
+** New Feature
+    * [BIGTOP-3702] - Add puppet manifests for Ranger
+    * [BIGTOP-3703] - Add smoke tests for Ranger
+    * [BIGTOP-3875] - Support openEuler OS for Bigtop
+    * [BIGTOP-3910] - Bigtop-select support Ranger
+    * [BIGTOP-3917] - Add Apache Ranger Debian packages support
+    * [BIGTOP-3991] - Add Rocky Linux 9 support
+    * [BIGTOP-4023] - Add ranger deb packaging support
+
+** Improvement
+    * [BIGTOP-3900] - Migrate secure DataNode settings from jsvc to SASL
+    * [BIGTOP-3915] - soft link error about jar of hadoop in {hbase_home}/lib
+    * [BIGTOP-3919] - Bump GPDB to 6.23.4
+    * [BIGTOP-3920] - Upgrade Hadoop to 3.3.5
+    * [BIGTOP-3922] - zkcli.sh of Solr does not have executable permissions
+    * [BIGTOP-3925] - Add support for ranger 2.4
+    * [BIGTOP-3951] - Fix toolchain to work with the recent version of facter
+    * [BIGTOP-3953] - Update base version to 3.3.0 in bigtop.bom file
+    * [BIGTOP-3963] - merge hive memory leak PRs
+    * [BIGTOP-3964] - Add isal installation in bigtop toolchain and use isal library when compiling hadoop
+    * [BIGTOP-3978] - Drop debian-10 support
+    * [BIGTOP-3979] - Drop ubuntu-20.04 support
+    * [BIGTOP-3981] - Get rid of building patched leveldbjni in Hadoop packaging on aarch64
+    * [BIGTOP-3985] - Make a symlink of hadoop-yarn-server-timelineservice-hbase-coprocessor.jar to hadoop-yarn-server-timelineservice-hbase-coprocessor-version.jar
+    * [BIGTOP-3987] - Upgrade phoenix version to  5.1.3
+    * [BIGTOP-3993] - Bump ZooKeeper to 3.6.4
+    * [BIGTOP-3994] - Bump Hadoop to 3.3.6
+    * [BIGTOP-3999] - Make docker provisioner of upstream aware of Bigtop 3.2.1
+    * [BIGTOP-4001] - Bump HBase to 2.4.17
+    * [BIGTOP-4005] - Bump Kafka version to 2.8.2
+    * [BIGTOP-4010] - Improve Debian Packaging Speed by Adding dh_strip_nondeterminism
+    * [BIGTOP-4013] - Fix toolchain to install R 3.6.0+ into Debian 10
+    * [BIGTOP-4014] - Add Fedora 38 support and drop 36
+    * [BIGTOP-4015] - Upgrade Maven to 3.8.x
+    * [BIGTOP-4016] - Upgrade Spark to 3.3.3
+    * [BIGTOP-4017] - Upgrade Livy to 0.8.0
+    * [BIGTOP-4018] - Upgrade Alluxio to 2.9.3
+    * [BIGTOP-4019] - Upgrade Flink to 1.16.2
+    * [BIGTOP-4020] - Upgrade Tez to 0.10.2
+    * [BIGTOP-4021] - Upgrade ZooKeeper to 3.7.2
+    * [BIGTOP-4025] - Improve the relevant conf directory for Flink rpm build scripts
+    * [BIGTOP-4029] - Upgrade Zeppelin to 0.11.0
+    * [BIGTOP-4031] - Remove Ambari from Bigtop 3.3.0 stack
+    * [BIGTOP-4032] - Remove Oozie from Bigtop 3.3.0 stack
+    * [BIGTOP-4033] - Remove YCSB from Bigtop 3.3.0 stack
+    * [BIGTOP-4037] - Enable Parallel Compilation for Multiple Modules in Ranger
+    * [BIGTOP-4044] - Enhance Bigtop with Concurrent Compilation Support for Additional Components
+    * [BIGTOP-4045] - Enable Parallel Compilation for Multiple Modules in TEZ
+    * [BIGTOP-4049] - Remove python dependency from Hive deb
+    * [BIGTOP-4050] - Remove python dependency from Ranger deb
+    * [BIGTOP-4051] - Drop python dependency in Phoenix Package
+    * [BIGTOP-4053] - Remove Python as Spark Installation Dependency
+    * [BIGTOP-4059] - Add Documentation for Parallel Maven Compilation in Bigtop
+    * [BIGTOP-4061] - Improve support for Maven parallel build parameters
+    * [BIGTOP-4062] - Upgrade Spark to 3.3.4
+    * [BIGTOP-4072] - Add pkgsuffix to Alluxio to support Ambari installation and deployment
+    * [BIGTOP-4088] - Refactor PKG_NAME_SUFFIX and  PARENT_DIR
+    * [BIGTOP-4093] - Avoid oepkgs for installing R on openEuler
+    * [BIGTOP-4098] - Drop python2 in bigtop-toolchain
+    * [BIGTOP-4100] - Set default python to python3 in bigtop deploy
+    * [BIGTOP-4112] - Fix Spark RPM installation related to removing python dependency
+    * [BIGTOP-4113] - Drop GPDB
+    * [BIGTOP-4114] - Fix build failure of Hadoop and Alluxio due to node-gyp error on rockylinux-8 and fedora-38 aarch64
+
+** Task
+    * [BIGTOP-3944] - Enable squash and merge in GitHub
 
 
 * Release 3.2.1 (2023-07-05)

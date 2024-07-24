@@ -17,7 +17,7 @@ docker:
         memory_limit: "4g"
         image:  "bigtop/puppet:trunk-ubuntu-22.04"
 
-repo: "http://repos.bigtop.apache.org/releases/3.2.1/ubuntu/22.04/$(ARCH)"
+repo: "http://repos.bigtop.apache.org/releases/3.3.0/ubuntu/22.04/$(ARCH)"
 distro: debian
 components: [hdfs, yarn, mapreduce]
 enable_local_repo: false
