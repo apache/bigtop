@@ -71,7 +71,7 @@ leaves = {
            "ranger-usersync" : "ranger-usersync",
            "ranger-tagsync" : "ranger-tagsync",
            "livy-server" : "livy",
-           "livy-client" : "livy"
+           "livy-client" : "livy",
            "alluxio": "alluxio",
            "alluxio-master": "alluxio",
            "alluxio-worker": "alluxio"
