@@ -465,16 +465,4 @@
       <libhdfs0>/self</libhdfs0>
     </deps>
   </libhdfs0-dev>
-  <hue-server>
-    <services>
-      <hue>
-        <runlevel>2</runlevel>
-        <runlevel>3</runlevel>
-        <runlevel>4</runlevel>
-        <runlevel>5</runlevel>
-        <oninstall>start</oninstall>
-        <configured>true</configured>
-      </hue>
-     </services>
-  </hue-server>
 </packages>

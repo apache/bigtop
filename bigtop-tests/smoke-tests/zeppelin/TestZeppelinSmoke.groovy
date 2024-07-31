@@ -38,7 +38,7 @@ class TestZeppelinSmoke {
   public void InstallIntperTest() {
     sh.exec(ZEPPELIN_HOME
       + "/bin/install-interpreter.sh "
-      + "--name cassandra,scio,md,python,flink,hbase,bigquery,jdbc"
+      + "--name cassandra,md,python,flink,hbase,bigquery,jdbc"
     );
     logError(sh);
     assertTrue("Install Interpreter failed." + sh.getOut() + " " + sh.getErr(), sh.getRet() == 0);

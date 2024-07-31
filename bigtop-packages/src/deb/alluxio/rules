@@ -36,7 +36,6 @@ override_dh_auto_install:
     --bin-dir=/usr/bin \
     --data-dir=/usr/share \
     --libexec-dir=/usr/lib/alluxio/libexec \
-    --var-dir=/var \
     --prefix=debian/tmp
 	mkdir -p debian/alluxio/etc/init.d/
 	bash debian/init.d.tmpl debian/alluxio-master.svc deb debian/alluxio/etc/init.d/alluxio-master

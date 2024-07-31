@@ -67,15 +67,19 @@ class bigtop_toolchain::packages {
         "net-tools",
         "perl-Digest-SHA",
         "nasm",
-        "yasm"
+        "yasm",
       ]
 
-      if (/redhat|centos|rocky/ in downcase($operatingsystem) and Integer($operatingsystemmajrelease) >= 9) {
-        $pkgs = $_pkgs + ['cmake']
-      } elsif ($operatingsystem == 'Fedora' or $operatingsystemmajrelease !~ /^[0-7]$/) {
-        $pkgs = concat($_pkgs, ["python2-devel", "libtirpc-devel", "cmake"])
-      } else {
-        $pkgs = concat($_pkgs, ["python-devel", "cmake3"])
+      if ($operatingsystem == 'Fedora') {
+        $pkgs = concat($_pkgs, ["libtirpc-devel", "cmake", "perl-FindBin"])
+      } else { # RedHat, CentOS, Rocky
+        if (0 <= versioncmp($operatingsystemmajrelease, '9')) {
+          $pkgs = concat($_pkgs, ["libtirpc-devel", "cmake"])
+        } elsif (0 == versioncmp($operatingsystemmajrelease, '8')) {
+          $pkgs = concat($_pkgs, ["libtirpc-devel", "cmake"])
+        } elsif (0 == versioncmp($operatingsystemmajrelease, '7')) {
+          $pkgs = concat($_pkgs, ["cmake3"])
+        }
       }
     }
     /(?i:(SLES|opensuse))/: { $pkgs = [
@@ -99,8 +103,6 @@ class bigtop_toolchain::packages {
         "rpm-build",
         "pkg-config",
         "gmp-devel",
-        "python-devel",
-        "python-pip",
         "libxml2-devel",
         "libxslt-devel",
         "cyrus-sasl-devel",
@@ -149,7 +151,6 @@ class bigtop_toolchain::packages {
       "lzo-devel",
       "fuse-devel",
       "openssl-devel",
-      "python27-pip",
       "rpm-build",
       "system-rpm-config",
       "fuse-libs",
@@ -212,7 +213,6 @@ class bigtop_toolchain::packages {
        "krb5-devel",
        "net-tools",
        "perl-Digest-SHA",
-       "python3-devel",
        "libtirpc-devel",
        "libgit2-devel",
        "libgit2-glib-devel",
@@ -232,7 +232,7 @@ class bigtop_toolchain::packages {
        "yasm"
     ] }
     /(Ubuntu|Debian)/: {
-      $_pkgs = [
+      $pkgs = [
         "unzip",
         "curl",
         "wget",
@@ -259,7 +259,6 @@ class bigtop_toolchain::packages {
         "devscripts",
         "build-essential",
         "dh-make",
-        "dh-python",
         "libfuse2",
         "libjansi-java",
         "libxml2-dev",
@@ -286,24 +285,10 @@ class bigtop_toolchain::packages {
         "libcurl4-gnutls-dev",
         "bison",
         "flex",
-        "python-setuptools",
         "libffi-dev",
-        "python3-dev",
-        "python2.7-dev",
         "nasm",
         "yasm"
       ]
-      if (($operatingsystem == 'Ubuntu' and 0 <= versioncmp($operatingsystemmajrelease, '22.04'))) {
-        file { '/usr/bin/python':
-          ensure => 'link',
-          target => '/usr/bin/python2',
-        }
-        $pkgs = $_pkgs
-      } elsif (($operatingsystem == 'Ubuntu' and 0 <= versioncmp($operatingsystemmajrelease, '20.04')) or ($operatingsystem == 'Debian' and 0 <= versioncmp($operatingsystemmajrelease, '11'))) {
-        $pkgs = concat($_pkgs, ["python-is-python2"])
-      } else {
-        $pkgs = $_pkgs
-      }
 
       file { '/etc/apt/apt.conf.d/01retries':
         content => 'Aquire::Retries "5";'
@@ -334,6 +319,18 @@ class bigtop_toolchain::packages {
       package { 'ca-certificates':
         ensure => latest
       }
+
+      # BIGTOP-4076: newer g++ is required for rebuilding watcher used by flink-runtime-web
+      if ($architecture in ['aarch64', 'ppc64le']) {
+        package { 'centos-release-scl':
+          ensure => latest
+        }
+
+        package { 'devtoolset-9-gcc-c++':
+          ensure => latest,
+          require => Package['centos-release-scl']
+        }
+      }
     }
     if $operatingsystemmajrelease !~ /^[0-7]$/ {
       # On CentOS 8, EPEL requires that the PowerTools repository is enabled.
@@ -351,74 +348,46 @@ class bigtop_toolchain::packages {
       }
     }
   }
-
-
-  # BIGTOP-3364: Failed to install setuptools by pip/pip2
-  # on Ubuntu-16.04/18.04 and centos-7.
-  # From https://packaging.python.org/tutorials/installing-packages/#requirements-for-installing-packages,
-  # it suggests to leverage python3/pip3 to install setuptools.
-  #
-  # "provider => 'pip3'" is not available for puppet 3.8.5,
-  #  Workaround: Exec {pip3 install setuptools} directly insead of Package{}.
-  package { 'python3-pip':
-    ensure => installed
+  if $operatingsystem == 'Rocky' {
+    package { 'epel-release':
+      ensure => installed,
+      notify => Package[$pkgs]
+    }
+    if versioncmp($operatingsystemmajrelease, '8') == 0 {
+      # On Rocky 8, EPEL requires that the PowerTools repository is enabled.
+      # See https://fedoraproject.org/wiki/EPEL#How_can_I_use_these_extra_packages.3F
+      yumrepo { 'powertools':
+        ensure  => 'present',
+        enabled => '1'
+      }
+      yumrepo { 'devel':
+        ensure  => 'present',
+        enabled => '1'
+      }
+      Yumrepo<||> -> Package<||>
+    }
+    if versioncmp($operatingsystemmajrelease, '9') == 0 {
+      # On Rocky 9, EPEL requires that the crb repository is enabled.
+      yumrepo { 'crb':
+        ensure  => 'present',
+        enabled => '1'
+      }
+      yumrepo { 'devel':
+        ensure  => 'present',
+        enabled => '1'
+      }
+      Yumrepo<||> -> Package<||>
+    }
   }
 
-  exec { "Setuptools Installation":
-    command => "/usr/bin/pip3 install -q --upgrade setuptools",
-  }
-
-  exec { "flake8 and whell Installation":
-    command => "/usr/bin/pip3 freeze --all; /usr/bin/pip3 --version; /usr/bin/pip3 install -q flake8 wheel",
-  }
 
   if $osfamily == 'RedHat' {
-    if ($operatingsystem == 'Fedora' and versioncmp($operatingsystemmajrelease, '31') >= 0) or
-       ($operatingsystem != 'Fedora' and versioncmp($operatingsystemmajrelease, '8' ) >= 0) {
-      file { '/usr/bin/python':
-        ensure => 'link',
-        target => '/usr/bin/python2',
-      }
-    } else {
+    if ! (($operatingsystem == 'Fedora' and versioncmp($operatingsystemmajrelease, '31') >= 0) or
+      ($operatingsystem != 'Fedora' and versioncmp($operatingsystemmajrelease, '8') >= 0)) {
       file { '/usr/bin/cmake':
         ensure => 'link',
         target => '/usr/bin/cmake3',
       }
-    }
-
-    # The rpm-build package had installed brp-python-bytecompile
-    # just under /usr/lib/rpm until Fedora 34,
-    # but it seems to have been removed in Fedora 35.
-    # So we manually create a symlink instead.
-    if ($operatingsystem == 'Fedora' and versioncmp($operatingsystemmajrelease, '35') >= 0) {
-      file { '/usr/lib/rpm/brp-python-bytecompile':
-        ensure => 'link',
-        target => '/usr/lib/rpm/redhat/brp-python-bytecompile',
-      }
-    }
-  }
-
-  # download python 2.7.14 for openEuler docker slaves
-  # and RHEL9 based distros
-  if $operatingsystem == 'openEuler'
-     or (/redhat|centos|rocky/ in $operatingsystem and Integer($operatingsystemmajrelease) >= 9) {
-    exec { "download_python2.7":
-      cwd => "/usr/src",
-      command => "/usr/bin/wget https://www.python.org/ftp/python/2.7.14/Python-2.7.14.tgz --no-check-certificate && /usr/bin/mkdir Python-2.7.14 && /bin/tar -xvzf Python-2.7.14.tgz -C Python-2.7.14 --strip-components=1 && cd Python-2.7.14",
-      creates => "/usr/src/Python-2.7.14",
-    }
-
-    exec { "install_python2.7":
-      cwd => "/usr/src/Python-2.7.14",
-      command => "/usr/src/Python-2.7.14/configure --prefix=/usr/local/python2.7.14 --enable-optimizations && /usr/bin/make -j8 && /usr/bin/make install -j8",
-      require => [Exec["download_python2.7"]],
-      timeout => 3000
-    }
-
-    exec { "ln python2.7":
-      cwd => "/usr/bin",
-      command => "/usr/bin/ln -s /usr/local/python2.7.14/bin/python2.7 python2.7 && /usr/bin/ln -snf python2.7 python2",
-      require => Exec["install_python2.7"],
     }
   }
 }

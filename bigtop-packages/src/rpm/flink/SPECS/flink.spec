@@ -15,6 +15,7 @@
 
 %define flink_name flink
 %define flink_pkg_name flink%{pkg_name_suffix}
+%define __jar_repack 0
 
 %define etc_default %{parent_dir}/etc/default
 
@@ -153,6 +154,11 @@ getent passwd flink >/dev/null || useradd -c "Flink" -s /sbin/nologin -g flink -
 
 %post
 %{alternatives_cmd} --install %{np_etc_flink}/conf %{flink_name}-conf %{etc_flink}/conf.dist 30
+
+%preun
+if [ "$1" = 0 ]; then
+        %{alternatives_cmd} --remove %{flink_name}-conf %{etc_flink}/conf.dist || :
+fi
 
 ###### FILES ###########
 

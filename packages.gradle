@@ -101,6 +101,27 @@ def isValidMavenBuildThreads(threads) {
     return threads.matches("\\d+C") || threads.matches("\\d+")
 }
 
+def getPkgNameSuffix(component, type) {
+    def originalSuffix = type.equalsIgnoreCase("deb") ?
+            component.deb_pkg_suffix ?: "" :
+            component.rpm_pkg_suffix ?: "%{nil}"
+    def defaultSuffix = type.equalsIgnoreCase("deb") ?  "" : "%{nil}"
+    def pkgNameSuffix = project.hasProperty("pkgSuffix")? originalSuffix : defaultSuffix
+    def gradlePkgNameSuffix = pkgNameSuffix == defaultSuffix ? "" : pkgNameSuffix
+
+    return [pkgNameSuffix: pkgNameSuffix, gradlePkgNameSuffix: gradlePkgNameSuffix]
+}
+
+def getParentDir(bigtopBaseVersion, type) {
+    def defaultParentDirValue = type.equalsIgnoreCase("deb") ? "" : "%{nil}"
+    def parentDir = project.hasProperty("parentDir") ? project.property('parentDir') : defaultParentDirValue
+    if (parentDir != defaultParentDirValue) {
+        parentDir = "${parentDir}/${bigtopBaseVersion}"
+    }
+    return parentDir
+}
+
+
 /**
  * To avoid breaking the compat with existing packages let's use the old style names
  */
@@ -361,7 +382,10 @@ def genTasks = { target ->
     def final BASE_VERSION = config.bigtop.components[target].version.base
     def final SRCDEB = "${PKG_NAME}_$PKG_VERSION-${BIGTOP_BUILD_STAMP}.dsc"
     def final HADOOP_VERSION = config.bigtop.components["hadoop"].version.pkg
-
+    def final FULL_PARENT_DIR = getParentDir(config.bigtop.base_version, "deb")
+    def final DEB_PKG_NAME_SUFFIX =  getPkgNameSuffix(config.bigtop.components[target], "deb").pkgNameSuffix
+    def final BIGTOP_BASE_VERSION = "${config.bigtop.base_version}"
+    
     exec {
       workingDir PKG_OUTPUT_DIR
       commandLine "dpkg-source -x $SRCDEB".split(' ')
@@ -378,6 +402,9 @@ def genTasks = { target ->
 --set-envvar=${toOldStyleName(target)}_BASE_VERSION=$BASE_VERSION \
 --set-envvar=${toOldStyleName(target)}_VERSION=$PKG_VERSION \
 --set-envvar=${toOldStyleName(target)}_RELEASE=$BIGTOP_BUILD_STAMP \
+--set-envvar=PARENT_DIR=$FULL_PARENT_DIR \
+--set-envvar=PKG_NAME_SUFFIX=$DEB_PKG_NAME_SUFFIX \
+--set-envvar=bigtop_base_version=${BIGTOP_BASE_VERSION} \
 -uc -us -b
 """
     exec {
@@ -407,6 +434,8 @@ def genTasks = { target ->
       println "\tNothing to do. Exiting..."
       return
     }
+
+    def final BIGTOP_BASE_VERSION = "${config.bigtop.base_version}"
      def final BIGTOP_BUILD_STAMP = System.getenv('BIGTOP_BUILD_STAMP') ?:
              config.bigtop.components[target].version.release
     def final TARBALL_SRC = config.bigtop.components[target].tarball.source
@@ -422,6 +451,9 @@ def genTasks = { target ->
     def final DEB_PKG_DIR = "$PKG_BUILD_DIR/deb/$PKG_NAME-${PKG_VERSION}-${BIGTOP_BUILD_STAMP}"
     def final ENABLE_MAVEN_PARALLEL_BUILD = config.bigtop.components[target].maven_parallel_build
     def final MAVEN_BUILD_THREADS = project.hasProperty('buildThreads') ? project.property('buildThreads') : null
+    def final FULL_PARENT_DIR = getParentDir(config.bigtop.base_version, "deb")
+    def final DEB_PKG_NAME_SUFFIX =  getPkgNameSuffix(config.bigtop.components[target], "deb").pkgNameSuffix
+
     mkdir (DEB_BLD_DIR)
     copy {
       from SEED_TAR
@@ -489,6 +521,9 @@ def genTasks = { target ->
     // Creating source package
     exec {
       workingDir DEB_BLD_DIR
+      environment 'PARENT_DIR', FULL_PARENT_DIR
+      environment 'PKG_NAME_SUFFIX', DEB_PKG_NAME_SUFFIX
+      environment 'bigtop_base_version', BIGTOP_BASE_VERSION
       commandLine "dpkg-buildpackage -uc -us -sa -S".split(' ')
     }
     mkdir(PKG_OUTPUT_DIR)
@@ -510,13 +545,11 @@ def genTasks = { target ->
     }
     def final BIGTOP_BASE_VERSION = "${config.bigtop.base_version}"
 
-    def final PKG_NAME_SUFFIX = config.bigtop.components[target].rpm_pkg_suffix
-    def RPM_PKG_NAME_SUFFIX = PKG_NAME_SUFFIX
-    def GRADLE_PKG_NAME_SUFFIX = PKG_NAME_SUFFIX
-    if (!project.hasProperty("pkgSuffix") || !PKG_NAME_SUFFIX) {
-      RPM_PKG_NAME_SUFFIX = "%{nil}"
-      GRADLE_PKG_NAME_SUFFIX = ""
-    }
+
+    def suffixes = getPkgNameSuffix(config.bigtop.components[target], "rpm")
+    def RPM_PKG_NAME_SUFFIX =  suffixes.pkgNameSuffix
+    def GRADLE_PKG_NAME_SUFFIX = suffixes.gradlePkgNameSuffix
+    def final FULL_PARENT_DIR = getParentDir(BIGTOP_BASE_VERSION, "rpm")
 
     def final BIGTOP_BUILD_STAMP = System.getenv('BIGTOP_BUILD_STAMP') ?:
             config.bigtop.components[target].version.release
@@ -535,11 +568,6 @@ def genTasks = { target ->
     def final MAVEN_REPO_ID = project.hasProperty('mavenRepoId') ? project.property('mavenRepoId') : 'default'
     def final MAVEN_REPO_URI = project.hasProperty('mavenRepoUri') ? project.property('mavenRepoUri') : null
 
-    def final PARENT_DIR = project.hasProperty("parentDir") ? project.property('parentDir') : "%{nil}"
-    def FULL_PARENT_DIR = "${PARENT_DIR}"
-    if (PARENT_DIR != "%{nil}") {
-      FULL_PARENT_DIR = "${PARENT_DIR}/${BIGTOP_BASE_VERSION}"
-    }
 
     def command = [
         '--define', "_topdir $PKG_BUILD_DIR/rpm/",
@@ -592,13 +620,11 @@ def genTasks = { target ->
     }
     def final BIGTOP_BASE_VERSION = "${config.bigtop.base_version}"
 
-    def final PKG_NAME_SUFFIX = config.bigtop.components[target].rpm_pkg_suffix
-    def RPM_PKG_NAME_SUFFIX = PKG_NAME_SUFFIX
-    def GRADLE_PKG_NAME_SUFFIX = PKG_NAME_SUFFIX
-    if (!project.hasProperty("pkgSuffix") || !PKG_NAME_SUFFIX) {
-      RPM_PKG_NAME_SUFFIX = "%{nil}"
-      GRADLE_PKG_NAME_SUFFIX = ""
-    }
+
+    def suffixes = getPkgNameSuffix(config.bigtop.components[target], "rpm")
+    def RPM_PKG_NAME_SUFFIX =  suffixes.pkgNameSuffix
+    def GRADLE_PKG_NAME_SUFFIX = suffixes.gradlePkgNameSuffix
+
     def final BIGTOP_BUILD_STAMP = System.getenv('BIGTOP_BUILD_STAMP') ?:
             config.bigtop.components[target].version.release
     def final NAME = config.bigtop.components[target].name

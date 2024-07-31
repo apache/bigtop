@@ -40,7 +40,7 @@ Requires:   bash
 %if  %{?suse_version:1}0
 Requires:  util-linux
 %else
-Requires:       which, python3
+Requires:       which
 %endif
 
 %description
