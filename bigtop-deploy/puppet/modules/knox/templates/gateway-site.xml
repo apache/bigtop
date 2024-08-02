@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<configuration>
+
+    <property>
+        <name>gateway.service.alias.impl</name>
+        <value>org.apache.knox.gateway.services.security.impl.RemoteAliasService</value>
+    </property>
+    <property>
+        <name>gateway.port</name>
+        <value><%= @port %></value>
+        <description>The HTTP port for the Gateway.</description>
+    </property>
+
+    <property>
+        <name>gateway.path</name>
+        <value>gateway</value>
+        <description>The default context path for the gateway.</description>
+    </property>
+
+    <property>
+        <name>gateway.gateway.conf.dir</name>
+        <value>deployments</value>
+        <description>The directory within GATEWAY_HOME that contains gateway topology files and deployments.</description>
+    </property>
+
+    <property>
+        <name>gateway.hadoop.kerberos.secured</name>
+        <value><% if @hadoop_security_authentication == "kerberos" %>true<% else %>false<% end %></value>
+        <description>Boolean flag indicating whether the Hadoop cluster protected by Gateway is secured with Kerberos</description>
+    </property>
+<%   if @hadoop_security_authentication == "kerberos" -%>
+    <property>
+        <name>java.security.krb5.conf</name>
+        <value>/etc/krb5.conf</value>
+        <description>Absolute path to krb5.conf file</description>
+    </property>
+
+    <property>
+        <name>java.security.auth.login.config</name>
+        <value>/etc/knox/conf/krb5JAASLogin.conf</value>
+        <description>Absolute path to JAAS login config file</description>
+    </property>
+
+    <property>
+        <name>sun.security.krb5.debug</name>
+        <value>false</value>
+        <description>Boolean flag indicating whether to enable debug messages for krb5 authentication</description>
+    </property>
+<%   end -%>
+
+    <!-- @since 0.10 Websocket configs -->
+    <property>
+        <name>gateway.websocket.feature.enabled</name>
+        <value>false</value>
+        <description>Enable/Disable websocket feature.</description>
+    </property>
+
+    <property>
+        <name>gateway.scope.cookies.feature.enabled</name>
+        <value>false</value>
+        <description>Enable/Disable cookie scoping feature.</description>
+    </property>
+
+    <property>
+        <name>gateway.cluster.config.monitor.ambari.enabled</name>
+        <value>false</value>
+        <description>Enable/disable Ambari cluster configuration monitoring.</description>
+    </property>
+
+    <property>
+        <name>gateway.cluster.config.monitor.ambari.interval</name>
+        <value>60</value>
+        <description>The interval (in seconds) for polling Ambari for cluster configuration changes.</description>
+    </property>
+
+    <!-- @since 1.5.0 homepage logout -->
+    <property>
+        <name>knox.homepage.logout.enabled</name>
+        <value>true</value>
+        <description>Enable/disable logout from the Knox Homepage.</description>
+    </property>
+
+    <!-- @since 1.6.0 token management related properties -->
+    <property>
+        <name>gateway.knox.token.eviction.grace.period</name>
+        <value>0</value>
+        <description>A duration (in seconds) beyond a token’s expiration to wait before evicting its state. This configuration only applies when server-managed token state is enabled either in gateway-site or at the topology level.</description>
+    </property>
+
+    <!-- Knox Admin related config -->
+    <property>
+        <name>gateway.knox.admin.groups</name>
+        <value>admin</value>
+    </property>
+
+    <!-- DEMO LDAP config for Hadoop Group Provider -->
+    <property>
+        <name>gateway.group.config.hadoop.security.group.mapping</name>
+        <value>org.apache.hadoop.security.LdapGroupsMapping</value>
+    </property>
+    <property>
+        <name>gateway.group.config.hadoop.security.group.mapping.ldap.bind.user</name>
+        <value>uid=guest,ou=people,dc=hadoop,dc=apache,dc=org</value>
+    </property>
+    <property>
+        <name>gateway.group.config.hadoop.security.group.mapping.ldap.bind.password</name>
+        <value>guest-password</value>
+    </property>
+    <property>
+        <name>gateway.group.config.hadoop.security.group.mapping.ldap.url</name>
+        <value>ldap://localhost:33389</value>
+    </property>
+    <property>
+        <name>gateway.group.config.hadoop.security.group.mapping.ldap.base</name>
+        <value></value>
+    </property>
+    <property>
+        <name>gateway.group.config.hadoop.security.group.mapping.ldap.search.filter.user</name>
+        <value>(&amp;(|(objectclass=person)(objectclass=applicationProcess))(cn={0}))</value>
+    </property>
+    <property>
+        <name>gateway.group.config.hadoop.security.group.mapping.ldap.search.filter.group</name>
+        <value>(objectclass=groupOfNames)</value>
+    </property>
+    <property>
+        <name>gateway.group.config.hadoop.security.group.mapping.ldap.search.attr.member</name>
+        <value>member</value>
+    </property>
+    <property>
+        <name>gateway.group.config.hadoop.security.group.mapping.ldap.search.attr.group.name</name>
+        <value>cn</value>
+    </property>
+    <property>
+        <name>gateway.dispatch.whitelist.services</name>
+        <value>DATANODE,HBASEUI,HDFSUI,JOBHISTORYUI,NODEUI,YARNUI,knoxauth</value>
+        <description>The comma-delimited list of service roles for which the gateway.dispatch.whitelist should be applied.</description>
+    </property>
+    <property>
+        <name>gateway.dispatch.whitelist</name>
+        <value>DEFAULT</value>
+        <description>The whitelist to be applied for dispatches associated with the service roles specified by gateway.dispatch.whitelist.services.
+        If the value is DEFAULT, a domain-based whitelist will be derived from the Knox host.</description>
+    </property>
+    <property>
+        <name>gateway.xforwarded.header.context.append.servicename</name>
+        <value>LIVYSERVER</value>
+        <description>Add service name to x-forward-context header for the list of services defined above.</description>
+    </property>
+
+</configuration>
