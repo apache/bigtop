@@ -43,6 +43,8 @@ usage() {
     echo "       -p, --provision                           - Deploy configuration changes"
     echo "       -r, --repo REPO_URL                       - Overwrite the yum/apt repo defined in config file"
     echo "       -s, --smoke-tests COMPONENTS              - Run Bigtop smoke tests"
+    echo "       -ps, --pkg-suffix                  	   - Use this if you build with pkgSuffix, and want to deploy or run smoke  tests with your custom package"
+    echo "       -pd, --parent-dir PARENT_DIR              - PARENT_DIR is parentDir build arguments, use this if you build with parentDir, and want to deploy or run smoke  tests"
     echo "                                                   COMPONENTS is optional. If not specified, default to smoke_test_components in config file"
     echo "                                                   COMPONENTS is a comma separated string"
     echo "                                                   For example: $PROG -c 3 --smoke-tests hdfs"
@@ -120,7 +122,9 @@ create() {
             gpg_check=true
         fi
     fi
-    generate-config "$hadoop_head_node" "$repo" "$components"
+    bigtop_base_version=$(get_base_version)
+    package_suffix=$(get_package_suffix)
+    generate-config "$hadoop_head_node" "$repo" "$components" "$package_suffix" "$bigtop_base_version" "$parent_dir"
 
     # Start provisioning
     generate-hosts
@@ -159,6 +163,9 @@ bigtop::bigtop_repo_gpg_check: $gpg_check
 hadoop_cluster_node::cluster_components: $3
 hadoop_cluster_node::cluster_nodes: [$node_list]
 hadoop::common_yarn::yarn_resourcemanager_scheduler_class: org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacityScheduler
+bigtop::package_suffix: $4
+bigtop::base_version: $5
+bigtop::parent_dir: $6
 EOF
 }
 
@@ -207,7 +214,7 @@ smoke-tests() {
     if [ -z ${smoke_test_components+x} ]; then
         smoke_test_components="`echo $(get-yaml-config smoke_test_components) | sed 's/ /,/g'`"
     fi
-    docker exec $hadoop_head_node bash -c "bash -x /bigtop-home/provisioner/utils/smoke-tests.sh $smoke_test_components"
+    docker exec $hadoop_head_node bash -c "bash -x /bigtop-home/provisioner/utils/smoke-tests.sh $smoke_test_components $bigtop_base_version $parent_dir"
 }
 
 destroy() {
@@ -310,6 +317,36 @@ get_nodes() {
 
 change_docker_compose_cmd() {
     DOCKER_COMPOSE_CMD="docker compose"
+}
+
+get_base_version() {
+    local file=../../pom.xml
+    local version
+
+    version=$(sed -n '
+        /<groupId>org.apache.bigtop<\/groupId>/ {
+            N
+            N
+            s/.*<version>\(.*\)<\/version>.*/\1/p
+        }' "$file")
+
+    base_version=$(echo "$version" | cut -d'-' -f1)
+    echo "$base_version"
+}
+
+get_package_suffix() {
+    base_version=$(get_base_version)
+    if [ "$pkg_suffix" = true ]; then
+		#todo Temporarily hard-coding pkg_suffix because currently all pkg_suffix values in bigtop.bom are fixed
+		if [ "$distro" = "centos" ]; then
+			package_suffix="_$(echo $base_version | tr '.' '_')"
+		elif [ "$distro" = "debian" ]; then
+			package_suffix="-$(echo $base_version | tr '.' '-')"
+		fi
+		echo "$package_suffix"
+    else
+        echo ""
+    fi
 }
 
 PROG=`basename $0`
@@ -450,6 +487,17 @@ while [ $# -gt 0 ]; do
         fi
         READY_TO_TEST=true
         ;;
+	-ps|--pkg-suffix)
+		pkg_suffix=true
+		log "pkg-suffix specified"
+		shift ;;
+	-pd|--parent-dir)
+		if [ $# -lt 2 ]; then
+		  log "No parent-dir specified"
+		  parent_dir=""
+		fi
+		parent_dir="$2"
+		shift 2;;
     -h|--help)
         usage
         shift;;

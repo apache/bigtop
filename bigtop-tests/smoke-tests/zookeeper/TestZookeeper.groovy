@@ -29,7 +29,7 @@ import static org.apache.bigtop.itest.LogErrorsUtils.logError
 
 class TestZookeeper {
   static private Log LOG = LogFactory.getLog(Object.class)
-
+  static final String ZK_HOME = System.getenv("ZOOKEEPER_HOME") ?: "/usr/lib/zookeeper"
   static Shell sh = new Shell("/bin/bash -s")
 
   @BeforeClass
@@ -47,7 +47,7 @@ class TestZookeeper {
     // Basic test to verify that the server is running, and is in a
     // state that we expect.
     LOG.info('Running zkServer.sh status');
-    sh.exec("/usr/lib/zookeeper/bin/zkServer.sh status");
+    sh.exec("${ZK_HOME}/bin/zkServer.sh status");
     logError(sh);
     assertTrue("Failed ...", sh.getRet() == 0);
 

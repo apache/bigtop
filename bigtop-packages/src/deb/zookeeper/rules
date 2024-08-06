@@ -28,24 +28,77 @@ zookeeper_pkg_name=zookeeper
 %:
 	dh $@
 
+parent_dir=${PARENT_DIR}
+pkg_name_suffix=${PKG_NAME_SUFFIX}
+
+zookeeper_name=zookeeper
+doc_zookeeper=${parent_dir}/usr/share/doc/${zookeeper_name}
+usr_lib_zookeeper=${parent_dir}/usr/lib/${zookeeper_name}
+var_lib_zookeeper=${parent_dir}/var/lib/${zookeeper_name}
+bin_dir=${parent_dir}/usr/bin
+man_dir=${parent_dir}/usr/share/man
+etc_zookeeper=${parent_dir}/etc/${zookeeper_name}
+etc_zookeeper_conf_dist=${parent_dir}/etc/${zookeeper_name}/conf.dist
+etc_default=${parent_dir}/etc/default
+etc_default_zookeeper=${etc_default}/${zookeeper_name}
+include_dir=${parent_dir}/usr/include
+lib_dir=${parent_dir}/usr/lib/
+
+define gen_rule
+    $(foreach item,postinst preinst prerm,\
+        if [ -f debian/zookeeper$(1).$(item) ]; then \
+            sed -i -e 's:@etc_zookeeper@:${etc_zookeeper}:g' -e 's:@var_lib_zookeeper@:${var_lib_zookeeper}:g' debian/zookeeper$(1).$(item); \
+            if [ "${pkg_name_suffix}" != "" ] ;then mv debian/zookeeper$(1).$(item) debian/zookeeper${pkg_name_suffix}$(1).$(item);fi \
+        fi; \
+    )
+endef
+
+.PHONY: update_control
+.PHONY: gen_files
+
+update_control:
+	sed -i 's/-pkgsuffix/${pkg_name_suffix}/g' debian/control
+	if [ "${pkg_name_suffix}" != "" ] && [ -e debian/zookeeper-server.init ]; then mv debian/zookeeper-server.init debian/zookeeper${pkg_name_suffix}-server.init; fi
+	sed -i  -e 's:@etc_default_zookeeper:${etc_default_zookeeper}:g' debian/zookeeper${pkg_name_suffix}-server.init
+	sed -i -e 's:@bin_home:${bin_dir}:g' debian/zookeeper${pkg_name_suffix}-server.init
+
+
+gen_files:
+	$(call gen_rule,)
+
+
+override_dh_auto_clean: update_control
+	dh_auto_clean
+
 override_dh_auto_build:
 	bash debian/do-component-build -Divy.home=${HOME}/.ivy2
 	mkdir -p debian/tmp
 	tar cf - --exclude=debian/\* . | (cd debian/tmp && tar xf -)
 
-override_dh_auto_install:
+override_dh_auto_install: gen_files
 	cp debian/zookeeper.1 debian/zoo.cfg debian/zookeeper.default .
 	bash -x debian/install_zookeeper.sh \
-	  --build-dir=build \
-	  --prefix=debian/$(zookeeper_pkg_name)
+		--build-dir=build \
+		--prefix=debian/$(zookeeper_pkg_name)${pkg_name_suffix} \
+		--doc-dir=${doc_zookeeper} \
+		--lib-dir=${usr_lib_zookeeper} \
+		--bin-dir=${bin_dir} \
+		--man-dir=${man_dir} \
+		--conf-dist-dir=${etc_zookeeper_conf_dist} \
+		--etc-default=${etc_default} \
+		--system-include-dir=${include_dir} \
+		--system-lib-dir=${lib_dir}
 	   # Move native files to a dedicated package
-	   mkdir -p debian/zookeeper-native/usr/bin
-	   mkdir -p debian/zookeeper-native/usr/lib
-	   mv debian/zookeeper/usr/bin/cli_* debian/zookeeper/usr/bin/load_gen debian/zookeeper-native/usr/bin/
-	   mv debian/zookeeper/usr/lib/libzookeeper* debian/zookeeper-native/usr/lib/
-	   mv debian/zookeeper/usr/lib/zookeeper-native debian/zookeeper-native/usr/lib/
-	   mv debian/zookeeper/usr/include debian/zookeeper-native/usr/include
+	   mkdir -p debian/zookeeper${pkg_name_suffix}-native/${bin_dir}
+	   mkdir -p debian/zookeeper${pkg_name_suffix}-native/${lib_dir}
+	   mv debian/zookeeper${pkg_name_suffix}/${bin_dir}/cli_* debian/zookeeper${pkg_name_suffix}/${bin_dir}/load_gen debian/zookeeper${pkg_name_suffix}-native/${bin_dir}
+	   mv debian/zookeeper${pkg_name_suffix}/${lib_dir}/libzookeeper* debian/zookeeper${pkg_name_suffix}-native/${lib_dir}
+	   mv debian/zookeeper${pkg_name_suffix}/${lib_dir}/zookeeper-native debian/zookeeper${pkg_name_suffix}-native/${lib_dir}
+	   mv debian/zookeeper${pkg_name_suffix}/${include_dir} debian/zookeeper${pkg_name_suffix}-native/${include_dir}
 	bash debian/init.d.tmpl debian/zookeeper-rest.svc deb debian/zookeeper-rest.init
 
 override_dh_strip:
 	dh_strip --no-automatic-dbgsym
+
+
+override_dh_strip_nondeterminism:
