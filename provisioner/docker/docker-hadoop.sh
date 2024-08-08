@@ -124,7 +124,7 @@ create() {
 
 	output=""
 	for node in ${NODES[*]}; do
-		ip_hostname=$(docker inspect --format "{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}} {{.Config.Hostname}}" $node)
+		ip_hostname=$(docker inspect --format "{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}} {{.Config.Hostname}}.{{.Config.Domainname}}" $node)
 		output+="  - $ip_hostname B767610qa4Z\n"
 	done
 
