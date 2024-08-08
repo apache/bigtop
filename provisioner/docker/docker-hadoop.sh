@@ -28,7 +28,6 @@ usage() {
     echo "       -e, --exec INSTANCE_NO|INSTANCE_NAME      - Execute command on a specific instance. Instance can be specified by name or number"
     echo "                                                   For example: $PROG --exec 1 bash"
     echo "                                                                $PROG --exec docker_bigtop_1 bash"
-    echo "       -E, --env-check                           - Check whether required tools has been installed"
     echo "       -G, --disable-gpg-check                   - Disable gpg check for the Bigtop repository"
     echo "       -k, --stack COMPONENTS                    - Overwrite the components to deploy defined in config file"
     echo "                                                   COMPONENTS is a comma separated string"
@@ -37,16 +36,7 @@ usage() {
     echo "       -l, --list                                - List out container status for the cluster"
     echo "       -L, --enable-local-repo                   - Whether to use repo created at local file system. You can get one by $ ./gradlew repo"
     echo "       -m, --memory MEMORY_LIMIT                 - Overwrite the memory_limit defined in config file"
-    echo "       -n, --nexus NEXUS_URL                     - Configure Nexus proxy to speed up test execution"
-    echo "                                                   NEXUS_URL is optional. If not specified, default to http://NEXUS_IP:8081/nexus"
-    echo "                                                   Where NEXUS_IP is the ip of container named nexus"
-    echo "       -p, --provision                           - Deploy configuration changes"
     echo "       -r, --repo REPO_URL                       - Overwrite the yum/apt repo defined in config file"
-    echo "       -s, --smoke-tests COMPONENTS              - Run Bigtop smoke tests"
-    echo "                                                   COMPONENTS is optional. If not specified, default to smoke_test_components in config file"
-    echo "                                                   COMPONENTS is a comma separated string"
-    echo "                                                   For example: $PROG -c 3 --smoke-tests hdfs"
-    echo "                                                                $PROG -c 3 --smoke-tests 'hdfs, yarn, mapreduce'"
     echo "       -h, --help"
     exit 1
 }
@@ -79,6 +69,8 @@ create() {
     fi
     export MEM_LIMIT=${memory_limit}
 
+    export HOST_PORT=8082
+    export HOST_PORT HOST_PORT_END=8089
     # Startup instances
     $DOCKER_COMPOSE_CMD -p $PROVISION_ID up -d --scale bigtop=$1 --no-recreate
     if [ $? -ne 0 ]; then
@@ -120,12 +112,51 @@ create() {
             gpg_check=true
         fi
     fi
-    generate-config "$hadoop_head_node" "$repo" "$components"
+#    generate-config "$hadoop_head_node" "$repo" "$components"
 
     # Start provisioning
     generate-hosts
     bootstrap $distro $enable_local_repo
-    provision
+
+    DEST_DIR="/bigtop-home/bigdata-deploy"
+    CONF_DIR="/bigtop-home/bigdata-deploy/conf"
+    FILENAME="base_conf.yml"
+
+	output=""
+	for node in ${NODES[*]}; do
+		ip_hostname=$(docker inspect --format "{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}} {{.Config.Hostname}}" $node)
+		output+="  - $ip_hostname B767610qa4Z\n"
+	done
+
+
+
+	echo "Configuration file has been generated at $CONF_DIR/$FILENAME"
+
+    get_nodes
+    for node in ${NODES[*]}; do
+    	docker exec $node bash -c "echo -e \"default_password: 'B767610qa4Z'
+stack_version: '3.3.0'
+data_dirs: ['/data/sdv1']
+repos:
+
+user: root
+hosts:
+$output
+components_to_install: ['zookeeper','ambari']
+
+backup_old_repo: no
+should_deploy_ambari_mpack: false
+deploy_ambari_only: false
+prepare_nodes_only: false
+
+cluster_name: 'cluster'
+hdfs_ha_name: 'c1'
+ansible_ssh_port: 22\" > $CONF_DIR/$FILENAME" &
+        docker exec $node bash -c "/bigtop-home/provisioner/utils/install_cluster.sh $DEST_DIR" &
+        break  # 只在第一台机器上执行
+    done
+    wait
+#    provision
 }
 
 generate-hosts() {
@@ -367,12 +398,6 @@ while [ $# -gt 0 ]; do
         shift
         execute "$@"
         shift $#;;
-    -E|--env-check)
-        env-check
-        shift;;
-    -G|--disable-gpg-check)
-        gpg_check=false
-        shift;;
     -k|--stack)
         if [ $# -lt 2 ]; then
           log "No stack specified"
@@ -413,20 +438,6 @@ while [ $# -gt 0 ]; do
         fi
         memory_limit=$2
         shift 2;;
-    -n|--nexus)
-        if [ $# -lt 2 ] || [[ $2 == -* ]]; then
-            NEXUS_IP=`docker inspect --format "{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}" nexus`
-            if [ $? != 0 ]; then
-                log "No container named nexus exists. To create one:\n $ docker run -d --name nexus sonatype/nexus"
-                exit 1
-            fi
-            configure-nexus "http://$NEXUS_IP:8081/nexus"
-            shift
-        else
-            configure-nexus $2
-            shift 2
-        fi
-        ;;
     -p|--provision)
         provision
         shift;;
@@ -437,15 +448,6 @@ while [ $# -gt 0 ]; do
         fi
         repo=$2
         shift 2;;
-    -s|--smoke-tests)
-        if [ $# -lt 2 ] || [[ $2 == -* ]]; then
-            shift
-        else
-            smoke_test_components=$2
-            shift 2
-        fi
-        READY_TO_TEST=true
-        ;;
     -h|--help)
         usage
         shift;;

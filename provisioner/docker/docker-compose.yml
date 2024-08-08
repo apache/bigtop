@@ -26,3 +26,5 @@ services:
         - ./config/hieradata:/etc/puppet/hieradata
         - ./config/hosts:/etc/hosts
         - /sys/fs/cgroup:/sys/fs/cgroup:ro
+        ports:
+          - "${HOST_PORT}-${HOST_PORT_END}:8080"
