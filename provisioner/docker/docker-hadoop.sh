@@ -216,7 +216,7 @@ destroy() {
     else
         get_nodes
         if [ -z ${NODES} ]; then
-          echo "No cluster running, but provision id is exists."
+          echo "No cluster is running but .provision_id is exists."
         else
           docker exec ${NODES[0]} bash -c "umount /etc/hosts; rm -f /etc/hosts"
         fi
