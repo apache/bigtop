@@ -222,7 +222,11 @@ destroy() {
         echo "No cluster exists!"
     else
         get_nodes
-        docker exec ${NODES[0]} bash -c "umount /etc/hosts; rm -f /etc/hosts"
+        if [ -z ${NODES} ]; then
+          echo "No cluster is running but .provision_id is exists."
+        else
+          docker exec ${NODES[0]} bash -c "umount /etc/hosts; rm -f /etc/hosts"
+        fi
         NETWORK_ID=`docker network ls --quiet --filter name=${PROVISION_ID}_default`
 
         if [ -n "$PROVISION_ID" ]; then
