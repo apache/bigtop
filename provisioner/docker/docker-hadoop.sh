@@ -79,6 +79,22 @@ create() {
     fi
     export MEM_LIMIT=${memory_limit}
 
+    if [ -z ${distro+x} ]; then
+        distro=$(get-yaml-config distro)
+    fi
+
+    if [ "${enable_manual_docker_compose}" != true ]; then
+      docker_cgroup_version=`docker info | grep "Cgroup Version:" | awk '{print $3}'`
+      if [ ${docker_cgroup_version} == "1" ]; then
+        DOCKER_COMPOSE_CMD="${DOCKER_COMPOSE_CMD} -f docker-compose.yml"
+      elif [ ${docker_cgroup_version} == "2" ]; then
+        DOCKER_COMPOSE_CMD="${DOCKER_COMPOSE_CMD} -f docker-compose-cgroupv2.yml"
+      else
+        log "Unknown cgroup version. cgroup v1 is used as default."
+      fi
+    fi
+
+
     # Startup instances
     $DOCKER_COMPOSE_CMD -p $PROVISION_ID up -d --scale bigtop=$1 --no-recreate
     if [ $? -ne 0 ]; then
@@ -98,9 +114,6 @@ create() {
     fi
     if [ -z ${components+x} ]; then
         components="[`echo $(get-yaml-config components) | sed 's/ /, /g'`]"
-    fi
-    if [ -z ${distro+x} ]; then
-        distro=$(get-yaml-config distro)
     fi
     if [ -z ${enable_local_repo+x} ]; then
         enable_local_repo=$(get-yaml-config enable_local_repo)
@@ -353,14 +366,15 @@ while [ $# -gt 0 ]; do
           echo "Alternative config file for config.yaml" 1>&2
           usage
         fi
-	      yamlconf=$2
+        yamlconf=$2
         shift 2;;
     -F|--docker-compose-yml)
         if [ $# -lt 2 ]; then
           echo "Alternative config file for docker-compose.yml" 1>&2
           usage
         fi
-	      DOCKER_COMPOSE_CMD="${DOCKER_COMPOSE_CMD} -f ${2}"
+        enable_manual_docker_compose=true
+        DOCKER_COMPOSE_CMD="${DOCKER_COMPOSE_CMD} -f ${2}"
         shift 2;;
     -d|--destroy)
         destroy
