@@ -87,7 +87,6 @@ create() {
       docker_cgroup_version=`docker info | grep "Cgroup Version:" | awk '{print $3}'`
       if [ ${docker_cgroup_version} == "1" ]; then
         DOCKER_COMPOSE_CMD="${DOCKER_COMPOSE_CMD} -f docker-compose.yml"
-        log "Unknown cgroup version. cgroup v1 is used as default."
       elif [ ${docker_cgroup_version} == "2" ]; then
         DOCKER_COMPOSE_CMD="${DOCKER_COMPOSE_CMD} -f docker-compose-cgroupv2.yml"
       else
