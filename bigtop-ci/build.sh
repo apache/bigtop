@@ -17,7 +17,7 @@
 BIGTOP_HOME=`cd $(dirname $0)/.. && pwd`
 
 usage() {
-    echo "usage build.sh --prefix trunk|1.4.0|1.3.0|... --os debian-11|centos-7|... --target hadoop|tez|..."
+    echo "usage build.sh --prefix trunk|1.4.0|1.3.0|... --os debian-11|centos-8|... --target hadoop|tez|..."
     echo "   [--nexus] [--preferred-java-version 8|11] [--mvn-cache-volume true|false] [--docker-run-option ...]"
     exit 1 # unknown option
 }

@@ -39,16 +39,6 @@ case ${ID}-${VERSION_ID} in
         apt-get update
         apt-get -y install wget curl sudo unzip puppet puppet-module-puppetlabs-apt puppet-module-puppetlabs-stdlib systemd-sysv gnupg procps
         ;;
-    centos-7*)
-        rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-        yum updateinfo
-        # BIGTOP-3088: pin puppetlabs-stdlib to 4.12.0 as the one provided by
-        # distro (4.25.0) has conflict with puppet<4. Should be removed once
-        # puppet in distro is updated.
-        yum -y install hostname curl sudo unzip wget rubygems
-        gem install --bindir /usr/bin --no-ri --no-rdoc json_pure:2.5.1 puppet:3.6.2
-        puppet module install puppetlabs-stdlib --version 4.12.0
-        ;;
     centos-8*)
         sed -i -e 's/^\(mirrorlist\)/#\1/' -e 's,^#baseurl=http://mirror.centos.org,baseurl=https://vault.centos.org,' /etc/yum.repos.d/CentOS-Linux-*
         ;&
