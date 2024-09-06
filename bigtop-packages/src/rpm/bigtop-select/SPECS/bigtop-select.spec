@@ -46,6 +46,8 @@ Requires:       which
 %description
 This includes a collection of useful tools and files for Bigtop and Ambari
 
+# disable shebang mangling of python scripts
+%undefine __brp_mangle_shebangs
 
 %prep
 %setup -q -T -c
