@@ -266,7 +266,7 @@ Properties:
   -Pmemory=[4g|8g|...]
   -Pnum_instances=[NUM_INSTANCES]
   -Pnexus=[NEXUS_URL] (NEXUS_URL is optional)
-  -POS=[centos-8|fedora-35|ubuntu-18.04|opensuse-42.3|openeuler-22.03]
+  -POS=[rockylinux-8|fedora-35|ubuntu-18.04|opensuse-42.3|openeuler-22.03]
   -Pprefix=[trunk|1.2.1|1.2.0|1.1.0|...]
   -Prepository=[REPO_URL]
   -Prun_smoke_tests (run test components defined in config file)
@@ -287,7 +287,7 @@ Specify custom configuration file:
     group: DEPLOY_GROUP) {
   def _config = project.hasProperty("config") ? config : "config.yaml"
   def _num_instances = project.hasProperty("num_instances") ? num_instances : 1
-  def _OS = project.hasProperty("OS") ? OS : 'centos-8'
+  def _OS = project.hasProperty("OS") ? OS : 'ubuntu-22.04'
   def _prefix = project.hasProperty("prefix") ? prefix : 'trunk'
   def command = [
       './docker-hadoop.sh',
@@ -561,14 +561,14 @@ task "bigtop-puppet"(type:Exec,
     description: '''
 Build bigtop/puppet images
 Usage:
-  $ ./gradlew -POS=[centos-8|fedora-35|debian-11|ubuntu-18.04|opensuse-42.3|openeuler-22.03] -Pprefix=[trunk|1.2.1|1.2.0|1.1.0|...] bigtop-puppet
+  $ ./gradlew -POS=[rockylinux-8|fedora-35|debian-11|ubuntu-18.04|opensuse-42.3|openeuler-22.03] -Pprefix=[trunk|1.2.1|1.2.0|1.1.0|...] bigtop-puppet
 Example:
   $ ./gradlew -POS=debian-11 -Pprefix=3.0.0 bigtop-puppet
   The built image name: bigtop/puppet:3.0.0-debian-11
       ''',
     group: DOCKERBUILD_GROUP) {
   def _prefix = project.hasProperty("prefix") ? prefix : "trunk"
-  def _OS = project.hasProperty("OS") ? OS : "centos-8"
+  def _OS = project.hasProperty("OS") ? OS : "ubuntu-22.04"
   def command = [
       './build.sh', _prefix + '-' + _OS,
   ]
@@ -580,14 +580,14 @@ task "bigtop-slaves"(type:Exec,
     description: '''
 Build bigtop/slaves images
 Usage:
-  $ ./gradlew -POS=[centos-8|fedora-35|debian-11|ubuntu-18.04|opensuse-42.3|openeuler-22.03] -Pprefix=[trunk|1.2.1|1.2.0|1.1.0|...] bigtop-slaves
+  $ ./gradlew -POS=[rockylinux-8|fedora-35|debian-11|ubuntu-18.04|opensuse-42.3|openeuler-22.03] -Pprefix=[trunk|1.2.1|1.2.0|1.1.0|...] bigtop-slaves
 Example:
   $ ./gradlew -POS=debian-11 -Pprefix=3.0.0 bigtop-slaves
   The built image name: bigtop/slaves:3.0.0-debian-11
       ''',
     group: DOCKERBUILD_GROUP) {
   def _prefix = project.hasProperty("prefix") ? prefix : "trunk"
-  def _OS = project.hasProperty("OS") ? OS : "centos-8"
+  def _OS = project.hasProperty("OS") ? OS : "ubuntu-22.04"
   def command = [
       './build.sh', _prefix + '-' + _OS,
   ]
