@@ -22,8 +22,8 @@ if [ $# != 1 ]; then
   echo
   echo "Usage: build.sh <PREFIX-OS-VERSION>"
   echo
-  echo "Example: build.sh trunk-centos-7"
-  echo "       : build.sh 1.0.0-centos-7"
+  echo "Example: build.sh trunk-ubuntu-22.04"
+  echo "       : build.sh 1.0.0-ubuntu-22.04"
   exit 1
 fi
 
