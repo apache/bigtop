@@ -31,7 +31,7 @@ case ${ID}-${VERSION_ID} in
         puppet module install puppetlabs-stdlib --version 4.12.0
         echo 'include_legacy_facts=true' >> /etc/puppet/puppet.conf
         ;;
-    ubuntu-18.04|ubuntu-22.04)
+    ubuntu-22.04)
         apt-get update
         apt-get -y install wget curl sudo unzip puppet software-properties-common puppet-module-puppetlabs-apt puppet-module-puppetlabs-stdlib systemd-sysv
         ;;
