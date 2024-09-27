@@ -118,7 +118,7 @@ bigtop {
   */
   dependencies = [
     'bigtop-utils':['bigtop-groovy', 'bigtop-jsvc',
-                    'flink', 'zookeeper'],
+                    'flink', 'zookeeper', 'knox'],
     'bigtop-groovy':['hadoop'],
     'bigtop-jsvc':['hadoop'],
     zookeeper:['hadoop', 'hbase', 'kafka'],
@@ -345,6 +345,17 @@ bigtop {
       url     { site = "https://github.com/apache/ranger/archive/refs/tags"
                 archive = site }
       maven_parallel_build = true
+    }
+    'knox' {
+      name    = 'knox'
+      rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
+      relNotes = 'Apache Knox'
+      version { base = '2.0.0'; pkg = base-"-release"; release = 1 }
+      tarball { destination = "$name-${version.base}.zip"
+                source      = "$name-${version.base}-src.zip" }
+      url     { download_path = "$name/${version.base}"
+                site = "${apache.APACHE_MIRROR}/${download_path}"
+                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
     }
   }
 }

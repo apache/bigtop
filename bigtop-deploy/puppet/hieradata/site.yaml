@@ -24,6 +24,7 @@ hadoop::hadoop_storage_dirs:
 #  - hcat
 #  - hive
 #  - httpfs
+#  - knox
 #  - mapred-app
 #  - solr
 #  - spark
