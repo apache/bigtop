@@ -16,6 +16,12 @@
 
 HCFS_USER="hdfs"
 SMOKE_TESTS=$1
+BIGTOP_BASE_VERSION=$2
+PARENT_DIR=$3
+
+echo "Smoke Tests Parameter: $SMOKE_TESTS"
+echo "Bigtop Base Version Parameter: $BIGTOP_BASE_VERSION"
+echo "Parent Directory Parameter: $PARENT_DIR"
 
 if [ -z "$SMOKE_TESTS" ]; then
   >&2 echo -e "\nSMOKE_TESTS VARIABLE IS NOT DEFINED. CHECK THE INPUT OF `basename $0` \n"
@@ -31,6 +37,10 @@ else
 fi
 
 echo -e "\n===== EXPORTING VARIABLES =====\n"
+
+if [ -n "$PARENT_DIR" ]; then
+  ZOOKEEPER_HOME="${PARENT_DIR}/${BIGTOP_BASE_VERSION}/usr/lib/zookeeper"
+fi
 
 export ALLUXIO_HOME=${ALLUXIO_HOME:-/usr/lib/alluxio}
 export FLINK_HOME=${FLINK_HOME:-/usr/lib/flink}

@@ -385,7 +385,7 @@ def genTasks = { target ->
     def final FULL_PARENT_DIR = getParentDir(config.bigtop.base_version, "deb")
     def final DEB_PKG_NAME_SUFFIX =  getPkgNameSuffix(config.bigtop.components[target], "deb").pkgNameSuffix
     def final BIGTOP_BASE_VERSION = "${config.bigtop.base_version}"
-    
+
     exec {
       workingDir PKG_OUTPUT_DIR
       commandLine "dpkg-source -x $SRCDEB".split(' ')
@@ -434,6 +434,7 @@ def genTasks = { target ->
       println "\tNothing to do. Exiting..."
       return
     }
+
 
     def final BIGTOP_BASE_VERSION = "${config.bigtop.base_version}"
      def final BIGTOP_BUILD_STAMP = System.getenv('BIGTOP_BUILD_STAMP') ?:
