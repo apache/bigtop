@@ -28,7 +28,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<slf4j.version>1.7.5</slf4j.version>
 		<guava.version>15.0</guava.version>
-		<hadoop.version>2.2.0</hadoop.version>
+		<hadoop.version>2.7.0</hadoop.version>
 		<hive.version>0.12.0</hive.version>
 		<datanucleus.version>3.2.2</datanucleus.version>
 		<datanucleus.jpa.version>3.2.1</datanucleus.jpa.version>
