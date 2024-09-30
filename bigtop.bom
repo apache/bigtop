@@ -346,5 +346,14 @@ bigtop {
                 archive = site }
       maven_parallel_build = true
     }
+   'elasticsearch' {
+      name    = 'elasticsearch'
+      relNotes = 'Search and Analytics engine'
+      version { base = '1.6.0'; pkg = base; release = 1 }
+      tarball { destination = "$name-${version.base}.tar.gz"
+                source      = "v${version.base}.zip" }
+      url     { site = "https://github.com/elastic/elasticsearch/archive"
+                archive = site }
+    }
   }
 }
