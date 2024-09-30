@@ -1,0 +1,37 @@
+diff --git a/hadoop-client-modules/hadoop-client-minicluster/pom.xml b/hadoop-client-modules/hadoop-client-minicluster/pom.xml
+index 2619603c0f87..9a9b0c126996 100644
+--- a/hadoop-client-modules/hadoop-client-minicluster/pom.xml
++++ b/hadoop-client-modules/hadoop-client-minicluster/pom.xml
+@@ -763,6 +763,14 @@
+                       </excludes>
+                     </filter>
+ 
++                    <filter>
++                      <artifact>*:*</artifact>
++                      <excludes>
++                        <exclude>META-INF/versions/9/module-info.class</exclude>
++                        <exclude>META-INF/versions/11/module-info.class</exclude>
++                      </excludes>
++                    </filter>
++
+                     <!-- Mockito tries to include its own unrelocated copy of hamcrest. :( -->
+                     <filter>
+                       <artifact>org.mockito:mockito-core</artifact>
+diff --git a/hadoop-client-modules/hadoop-client-runtime/pom.xml b/hadoop-client-modules/hadoop-client-runtime/pom.xml
+index 440bbfcdc04a..933e68353c52 100644
+--- a/hadoop-client-modules/hadoop-client-runtime/pom.xml
++++ b/hadoop-client-modules/hadoop-client-runtime/pom.xml
+@@ -242,6 +242,13 @@
+                         <exclude>google/protobuf/**/*.proto</exclude>
+                       </excludes>
+                     </filter>
++                    <filter>
++                      <artifact>*:*</artifact>
++                      <excludes>
++                        <exclude>META-INF/versions/9/module-info.class</exclude>
++                        <exclude>META-INF/versions/11/module-info.class</exclude>
++                      </excludes>
++                    </filter>
+                     <filter>
+                       <artifact>com.fasterxml.jackson.*:*</artifact>
+                       <excludes>
