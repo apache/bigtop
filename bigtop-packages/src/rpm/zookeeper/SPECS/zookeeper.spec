@@ -91,8 +91,9 @@ Source6: zoo.cfg
 Source7: zookeeper.default
 Source8: init.d.tmpl
 Source9: zookeeper-rest.svc
+Source10: zookeeper-server.service
 #BIGTOP_PATCH_FILES
-BuildRequires: autoconf, automake, cppunit-devel
+BuildRequires: autoconf, automake, cppunit-devel, systemd
 Requires(pre): coreutils, /usr/sbin/groupadd, /usr/sbin/useradd
 Requires(post): %{alternatives_dep}
 Requires(preun): %{alternatives_dep}
@@ -193,6 +194,9 @@ chmod 755 $init_file
 init_file=$RPM_BUILD_ROOT/%{initd_dir}/zookeeper-rest
 bash $RPM_SOURCE_DIR/init.d.tmpl $RPM_SOURCE_DIR/zookeeper-rest.svc rpm $init_file
 
+# Install ZooKeeper Server systemd service file
+%__install -D -m 0644 %{SOURCE10} $RPM_BUILD_ROOT/%{_unitdir}/zookeeper-server.service
+
 %pre
 getent group zookeeper >/dev/null || groupadd -r zookeeper
 getent passwd zookeeper > /dev/null || useradd -c "ZooKeeper" -s /sbin/nologin -g zookeeper -r -d %{var_lib_zookeeper} zookeeper 2> /dev/null || :
@@ -205,24 +209,29 @@ getent passwd zookeeper > /dev/null || useradd -c "ZooKeeper" -s /sbin/nologin -
 %{alternatives_cmd} --install %{np_etc_zookeeper}/conf %{zookeeper_name}-conf %{etc_zookeeper_conf_dist} 30
 %__install -d -o zookeeper -g zookeeper -m 0755 %{var_lib_zookeeper}
 
+
 %preun
 if [ "$1" = 0 ]; then
         %{alternatives_cmd} --remove %{zookeeper_name}-conf %{etc_zookeeper_conf_dist} || :
 fi
 
+
 %post server
-	chkconfig --add %{svc_zookeeper}
+chkconfig --add %{svc_zookeeper}
+%systemd_post zookeeper-server.service
 
 %preun server
 if [ $1 = 0 ] ; then
 	service %{svc_zookeeper} stop > /dev/null 2>&1
 	chkconfig --del %{svc_zookeeper}
 fi
+%systemd_preun zookeeper-server.service
 
 %postun server
 if [ $1 -ge 1 ]; then
         service %{svc_zookeeper} condrestart > /dev/null 2>&1
 fi
+%systemd_postun zookeeper-server.service
 
 %post rest
 	chkconfig --add %{svc_zookeeper_rest}
@@ -256,6 +265,7 @@ fi
 
 %files server
 %attr(0755,root,root) %{initd_dir}/%{svc_zookeeper}
+%attr(0644,root,root) %{_unitdir}/zookeeper-server.service
 
 %files rest
 %attr(0755,root,root) %{initd_dir}/%{svc_zookeeper_rest}
