@@ -1,0 +1,13 @@
+diff --git a/bin/hive b/bin/hive
+index 1ade51e..f645ef1 100755
+--- a/bin/hive
++++ b/bin/hive
+@@ -293,7 +293,7 @@ if [ "$SKIP_HBASECP" = false ]; then
+     # exclude ZK, PB, and Guava (See HIVE-2055)
+     # depends on HBASE-8438 (hbase-0.94.14+, hbase-0.96.1+) for `hbase mapredcp` command
+     for x in $($HBASE_BIN mapredcp 2>&2 | tr ':' '\n') ; do
+-      if [[ $x == *zookeeper* || $x == *protobuf-java* || $x == *guava* ]] ; then
++      if [[ $x == *zookeeper* || $x == *protobuf-java* || $x == *guava*  || $x == *log* || $x == *slf4j* ]] ; then
+         continue
+       fi
+       # TODO: should these should be added to AUX_PARAM as well?
