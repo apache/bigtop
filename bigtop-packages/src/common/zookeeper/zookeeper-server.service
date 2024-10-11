@@ -23,6 +23,8 @@ After=nss-lookup.target
 Wants=network-online.target
 
 [Service]
+User=zookeeper
+Group=zookeeper
 Type=forking
 Restart=no
 TimeoutSec=5min
@@ -30,7 +32,7 @@ IgnoreSIGPIPE=no
 KillMode=process
 GuessMainPID=no
 RemainAfterExit=no
-PIDFile=/var/run/zookeeper/zookeeper_server.pid
+PIDFile=/run/zookeeper/zookeeper_server.pid
 SuccessExitStatus=5 6
-ExecStart=/etc/rc.d/init.d/zookeeper-server start
-ExecStop=/etc/rc.d/init.d/zookeeper-server stop
+ExecStart=/usr/bin/zookeeper-server start
+ExecStop=/usr/bin/zookeeper-server stop

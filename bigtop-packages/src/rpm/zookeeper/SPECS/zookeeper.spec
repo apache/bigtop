@@ -29,7 +29,7 @@
 
 # No prefix directory
 %define np_var_log_zookeeper /var/log/%{zookeeper_name}
-%define np_var_run_zookeeper /var/run/%{zookeeper_name}
+%define np_run_zookeeper /run/%{zookeeper_name}
 %define np_etc_zookeeper /etc/%{zookeeper_name}
 
 %define svc_zookeeper %{zookeeper_name}-server
@@ -84,7 +84,7 @@ License: ASL 2.0
 Source0: apache-%{zookeeper_name}-%{zookeeper_base_version}.tar.gz
 Source1: do-component-build
 Source2: install_zookeeper.sh
-Source3: zookeeper-server.sh
+#Source3: zookeeper-server.sh
 Source4: zookeeper-server.sh.suse
 Source5: zookeeper.1
 Source6: zoo.cfg
@@ -180,16 +180,16 @@ bash %{SOURCE2} \
           --system-lib-dir=%{lib_dir}
 
 %if  %{?suse_version:1}0
-orig_init_file=%{SOURCE4}
+     orig_init_file=%{SOURCE4}
+     %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
+     init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{svc_zookeeper}
+     %__cp $orig_init_file $init_file
+     chmod 755 $init_file
 %else
-orig_init_file=%{SOURCE3}
+#orig_init_file=%{SOURCE3}
 %endif
 
-%__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
-init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{svc_zookeeper}
-%__cp $orig_init_file $init_file
-chmod 755 $init_file
-
+    
 # Install Zookeeper REST server init script
 init_file=$RPM_BUILD_ROOT/%{initd_dir}/zookeeper-rest
 bash $RPM_SOURCE_DIR/init.d.tmpl $RPM_SOURCE_DIR/zookeeper-rest.svc rpm $init_file
@@ -201,7 +201,7 @@ bash $RPM_SOURCE_DIR/init.d.tmpl $RPM_SOURCE_DIR/zookeeper-rest.svc rpm $init_fi
 getent group zookeeper >/dev/null || groupadd -r zookeeper
 getent passwd zookeeper > /dev/null || useradd -c "ZooKeeper" -s /sbin/nologin -g zookeeper -r -d %{var_lib_zookeeper} zookeeper 2> /dev/null || :
 
-%__install -d -o zookeeper -g zookeeper -m 0755 %{np_var_run_zookeeper}
+%__install -d -o zookeeper -g zookeeper -m 0755 %{np_run_zookeeper}
 %__install -d -o zookeeper -g zookeeper -m 0755 %{np_var_log_zookeeper}
 
 # Manage configuration symlink
@@ -264,7 +264,6 @@ fi
 %{man_dir}/man1/zookeeper.1.*
 
 %files server
-%attr(0755,root,root) %{initd_dir}/%{svc_zookeeper}
 %attr(0644,root,root) %{_unitdir}/zookeeper-server.service
 
 %files rest
