@@ -30,7 +30,9 @@ class bigtop_toolchain::gnupg {
     }
   }
 
-  package { $pkg:
-    ensure => installed
+  if !defined(Package[$pkg]) {
+    package { $pkg:
+      ensure => installed
+    }
   }
 }

@@ -144,7 +144,7 @@ def devNull = new OutputStream() {
 def nativePackaging = {
   def result = exec {
     commandLine "/bin/bash", "-c",
-    """dpkg-query -S /bin/sh && exit 1
+    """(dpkg-query -S `realpath /bin/sh` || dpkg-query -S /bin/sh) && exit 1
        rpm -qf /bin/sh && exit 2
        exit 0
     """
