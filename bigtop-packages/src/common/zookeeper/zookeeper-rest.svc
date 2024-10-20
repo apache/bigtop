@@ -16,10 +16,10 @@
 DAEMON="zookeeper-rest"
 DESC="ZooKeeper REST Server"
 SVC_USER="${ZOOKEEPER_USER:-zookeeper}"
-WORKING_DIR="/var/run/zookeeper"
+WORKING_DIR="/run/zookeeper"
 DAEMON_FLAGS=""
 CONF_DIR="/etc/zookeeper/conf/rest"
-PIDFILE="/var/run/zookeeper/zookeeper-rest-$SVC_USER.pid"
+PIDFILE="/run/zookeeper/zookeeper-rest-$SVC_USER.pid"
 
 generate_start() {
 
