@@ -35,6 +35,11 @@ case ${ID}-${VERSION_ID} in
         apt-get update
         apt-get -y install wget curl sudo unzip puppet software-properties-common puppet-module-puppetlabs-apt puppet-module-puppetlabs-stdlib systemd-sysv
         ;;
+    ubuntu-24.04)
+        apt-get update
+        apt-get -y install wget curl sudo unzip puppet software-properties-common puppet-module-puppetlabs-apt puppet-module-puppetlabs-stdlib systemd-sysv
+        echo 'include_legacy_facts=true' >> /etc/puppet/puppet.conf
+        ;;
     debian-11*)
         apt-get update
         apt-get -y install wget curl sudo unzip puppet puppet-module-puppetlabs-apt puppet-module-puppetlabs-stdlib systemd-sysv gnupg procps
