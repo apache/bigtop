@@ -84,8 +84,6 @@ License: ASL 2.0
 Source0: apache-%{zookeeper_name}-%{zookeeper_base_version}.tar.gz
 Source1: do-component-build
 Source2: install_zookeeper.sh
-#Source3: zookeeper-server.sh
-Source4: zookeeper-server.sh.suse
 Source5: zookeeper.1
 Source6: zoo.cfg
 Source7: zookeeper.default
@@ -179,15 +177,6 @@ bash %{SOURCE2} \
           --system-include-dir=%{include_dir} \
           --system-lib-dir=%{lib_dir}
 
-%if  %{?suse_version:1}0
-     orig_init_file=%{SOURCE4}
-     %__install -d -m 0755 $RPM_BUILD_ROOT/%{initd_dir}/
-     init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{svc_zookeeper}
-     %__cp $orig_init_file $init_file
-     chmod 755 $init_file
-%else
-#orig_init_file=%{SOURCE3}
-%endif
 
     
 # Install Zookeeper REST server init script
