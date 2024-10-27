@@ -33,7 +33,7 @@ class TestTezSmoke {
   static final String HADDOP_CMD = "hadoop jar "
   static final String TEZ_EXMP_JAR = TEZ_HOME + "/tez-examples-*.jar "
   static final String TEZ_TEST_JAR = TEZ_HOME + "/tez-tests-*.jar "
-  static final String SET_HADOOP_CLASSPATH = "export HADOOP_CLASSPATH=/etc/tez/conf:/usr/lib/tez/*:/usr/lib/tez/lib/*;"
+  static final String SET_HADOOP_CLASSPATH = "export HADOOP_CLASSPATH=/etc/tez/conf:/usr/lib/tez/*:/usr/lib/tez/lib/*; export HADOOP_USER_CLASSPATH_FIRST=true; "
 
   @BeforeClass
   static void TezSetUp() {

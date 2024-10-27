@@ -17,11 +17,11 @@
 <configuration>
 <property>
 <name>tez.lib.uris</name>
-<value>${fs.default.name}/apps/tez/,${fs.default.name}/apps/tez/lib/</value>
+<value>${fs.default.name}/apps/tez/lib/tez.tar.gz</value>
 </property>
 
 <property>
 <name>tez.use.cluster.hadoop-libs</name>
-<value>true</value>
+<value>false</value>
 </property>
 </configuration>

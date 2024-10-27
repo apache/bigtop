@@ -304,3 +304,8 @@ total_jars += copyJars(fs,
     new Path(TEZ_APPS, "tez"))
 
 LOG.info("Total jars copied into the DFS : " + total_jars);
+
+def tez_tar_gz = TEZ_HOME + "lib/tez.tar.gz"
+if (new File(tez_tar_gz).exists()) {
+    fs.copyFromLocalFile(new Path(tez_tar_gz), new Path(TEZ_APPS, "tez/lib"))
+}
