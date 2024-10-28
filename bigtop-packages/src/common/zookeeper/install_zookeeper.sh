@@ -187,7 +187,7 @@ for pairs in zkServer.sh/zookeeper-server zkServer-initialize.sh/zookeeper-serve
 # Autodetect JAVA_HOME if not defined
 . /usr/lib/bigtop-utils/bigtop-detect-javahome
 
-export ZOOPIDFILE=\${ZOOPIDFILE:-/var/run/zookeeper/zookeeper_server.pid}
+export ZOOPIDFILE=\${ZOOPIDFILE:-/run/zookeeper/zookeeper_server.pid}
 export ZOOKEEPER_HOME=\${ZOOKEEPER_HOME:-${LIB_DIR}}
 export ZOOKEEPER_CONF=\${ZOOKEEPER_CONF:-/etc/zookeeper/conf}
 export ZOOCFGDIR=\${ZOOCFGDIR:-\$ZOOKEEPER_CONF}

@@ -82,6 +82,7 @@ class hadoop_zookeeper (
                      File["/var/lib/zookeeper/myid"] ],
       hasrestart => true,
       hasstatus => true,
+      provider => systemd,
     }
 
     file { "/etc/zookeeper/conf/zoo.cfg":
