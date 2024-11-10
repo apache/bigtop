@@ -34,7 +34,7 @@ override_dh_auto_build:
 	tar cf - --exclude=debian/\* . | (cd debian/tmp && tar xf -)
 
 override_dh_auto_install:
-	cp debian/zookeeper.1 debian/zoo.cfg debian/zookeeper.default .
+	cp debian/zookeeper.1 debian/zoo.cfg debian/zookeeper.default debian/zookeeper-server.service debian/zookeeper-server.tmpfile .
 	bash -x debian/install_zookeeper.sh \
 	  --build-dir=build \
 	  --prefix=debian/$(zookeeper_pkg_name)
