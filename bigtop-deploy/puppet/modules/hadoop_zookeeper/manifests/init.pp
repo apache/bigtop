@@ -17,6 +17,20 @@ class hadoop_zookeeper (
   $kerberos_realm = "",
 ) {
 
+  $package_suffix = hiera("bigtop::package_suffix", "")
+  $parent_dir = hiera("bigtop::parent_dir", "")
+  $bigtop_base_version = hiera("bigtop::base_version", "")
+
+  if $package_suffix and $package_suffix != '' and $parent_dir and $parent_dir != '' {
+    $bin_home = "${parent_dir}/${bigtop_base_version}/usr/bin"
+  } else {
+    $bin_home = '/usr/bin'
+  }
+
+  $zookeeper_package = "zookeeper${package_suffix}"
+  $zookeeper_server_package = "zookeeper${package_suffix}-server"
+  $zookeeper_service_name = "zookeeper${package_suffix}-server"
+
   class deploy ($roles) {
     if ("zookeeper-client" in $roles) {
       include hadoop_zookeeper::client
@@ -45,7 +59,9 @@ class hadoop_zookeeper (
   ) inherits hadoop_zookeeper {
     include hadoop_zookeeper::common
 
-    package { "zookeeper":
+
+
+    package { $zookeeper_package:
       ensure => latest,
       require => Package["jdk"],
     }
@@ -53,7 +69,7 @@ class hadoop_zookeeper (
     if ($kerberos_realm and $kerberos_realm != "") {
       file { '/etc/zookeeper/conf/client-jaas.conf':
         content => template('hadoop_zookeeper/client-jaas.conf'),
-        require => Package['zookeeper'],
+        require => Package[$zookeeper_package],
       }
     }
   }
@@ -69,17 +85,26 @@ class hadoop_zookeeper (
   ) inherits hadoop_zookeeper {
     include hadoop_zookeeper::common
 
-    package { "zookeeper-server":
+
+    package { $zookeeper_server_package:
       ensure => latest,
       require => Package["jdk"],
     }
 
-    service { "zookeeper-server":
+    file { $datadir:
+      ensure => directory,
+      owner  => 'zookeeper',
+      group  => 'zookeeper',
+      mode   => '0755',
+      require => Package[$zookeeper_server_package],
+    }
+
+    service { $zookeeper_service_name:
       ensure => running,
-      require => [ Package["zookeeper-server"],
+      require => [ Package[$zookeeper_server_package],
                    Exec["zookeeper-server-initialize"] ],
       subscribe => [ File["/etc/zookeeper/conf/zoo.cfg"],
-                     File["/var/lib/zookeeper/myid"] ],
+                     File["${datadir}/myid"] ],
       hasrestart => true,
       hasstatus => true,
       provider => systemd,
@@ -87,19 +112,19 @@ class hadoop_zookeeper (
 
     file { "/etc/zookeeper/conf/zoo.cfg":
       content => template("hadoop_zookeeper/zoo.cfg"),
-      require => Package["zookeeper-server"],
+      require => Package[$zookeeper_server_package],
     }
 
-    file { "/var/lib/zookeeper/myid":
+    file { "${datadir}/myid":
       content => inline_template("<%= @myid %>"),
-      require => Package["zookeeper-server"],
+      require => [Package[$zookeeper_server_package], File[$datadir]],
     }
 
     exec { "zookeeper-server-initialize":
-      command => "/usr/bin/zookeeper-server-initialize",
+      command => "$bin_home/zookeeper-server-initialize",
       user    => "zookeeper",
-      creates => "/var/lib/zookeeper/version-2",
-      require => Package["zookeeper-server"],
+      creates => "${datadir}/version-2",
+      require => [Package[$zookeeper_server_package], File[$datadir]],
     }
 
     if ($kerberos_realm and $kerberos_realm != "") {
@@ -107,14 +132,14 @@ class hadoop_zookeeper (
 
       kerberos::host_keytab { "zookeeper":
         spnego  => true,
-        require => Package["zookeeper-server"],
-        before  => Service["zookeeper-server"],
+        require => Package[$zookeeper_server_package],
+        before  => Service[$zookeeper_service_name],
       }
 
       file { "/etc/zookeeper/conf/server-jaas.conf":
         content => template("hadoop_zookeeper/server-jaas.conf"),
-        require => Package["zookeeper-server"],
-        notify  => Service["zookeeper-server"],
+        require => Package[$zookeeper_server_package],
+        notify  => Service[$zookeeper_service_name],
       }
     }
   }
