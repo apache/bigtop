@@ -45,6 +45,7 @@ case "$1" in
         fi
         install -d -m 0755 -o zookeeper -g zookeeper /var/log/zookeeper
         install -d -m 0755 -o zookeeper -g zookeeper /var/lib/zookeeper
+        install -d -m 0755 -o zookeeper -g zookeeper /run/zookeeper
     ;;
 
     abort-upgrade)
