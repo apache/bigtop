@@ -15,7 +15,30 @@
 
 class bigtop_toolchain::jdk11 {
   case $::operatingsystem {
-    /(Debian|Ubuntu)/: {
+    /Debian/: {
+      # We need JDK 11, but Debian 12 only provides the openjdk-17-jdk package (or greater) in the official repo.
+      # So we use Eclipse Temurin instead, following the steps described on:
+      # https://adoptium.net/installation/linux/#_deb_installation_on_debian_or_ubuntu
+      include apt
+
+      apt::source { 'adoptium':
+        location => 'https://packages.adoptium.net/artifactory/deb/',
+        key      => {
+          id     => '3B04D753C9050D9A5D343F39843C48A565F8F04B',
+          source => 'https://packages.adoptium.net/artifactory/api/gpg/key/public',
+        },
+      } -> if $::operatingsystemmajrelease =~ /^1[^1\D]$/ {
+        package { 'temurin-11-jdk' :
+          ensure => present,
+        }
+      }
+      else {
+        package { 'openjdk-11-jdk' :
+          ensure => present,
+        }
+      }
+    }
+    /(Ubuntu)/: {
       include apt
 
       package { 'openjdk-11-jdk' :
