@@ -323,6 +323,30 @@ bigtop {
                 archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
       maven_parallel_build = true
     }
+    'ambari' {
+      name    = 'ambari'
+      relNotes = 'Apache Ambari'
+      version { base = '3.0.0'; pkg = base; release = 1 }
+      tarball { destination = "apache-$name-${version.base}-src.tar.gz"
+                source      = destination }
+      git {
+         repo  = "https://github.com/eubnara/ambari.git"
+         ref   = "eub-trunk"
+         dir   = "apache-ambari-${version.base}-src"
+      }
+    }
+    'bigtop-ambari-mpack' {
+      name    = 'bigtop-ambari-mpack'
+      relNotes = 'Bigtop Mpack'
+      version { base = '3.3.0'; pkg = base; release = 1 }
+      tarball { destination = "apache-ambari-src.tar.gz"
+                source      = destination }
+      git {
+         repo  = "https://github.com/eubnara/ambari.git"
+         ref   = "eub-BIGTOP-3.3.0-stack"
+         dir   = "apache-ambari-src"
+      }
+    }
     'livy' {
       name    = 'livy'
       rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
