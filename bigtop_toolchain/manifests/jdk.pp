@@ -16,18 +16,8 @@
 class bigtop_toolchain::jdk {
   case $::operatingsystem {
     /Debian/: {
-      # We need JDK 8, but Debian 10+ only provides the openjdk-11-jdk package (or greater) in the official repo.
-      # So we use Eclipse Temurin instead, following the steps described on:
-      # https://adoptium.net/installation/linux/#_deb_installation_on_debian_or_ubuntu
       include apt
 
-      apt::source { 'adoptium':
-        location => 'https://packages.adoptium.net/artifactory/deb/',
-        key      => {
-          id     => '3B04D753C9050D9A5D343F39843C48A565F8F04B',
-          source => 'https://packages.adoptium.net/artifactory/api/gpg/key/public',
-        },
-      } ->
       package { 'temurin-8-jdk' :
         ensure => present,
       }
