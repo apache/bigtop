@@ -89,9 +89,10 @@ Source6: zoo.cfg
 Source7: zookeeper.default
 Source8: init.d.tmpl
 Source9: zookeeper-rest.svc
-Source10: zookeeper-server.service
+Source10: %{svc_zookeeper}.service
+Source11: %{svc_zookeeper}.tmpfile
 #BIGTOP_PATCH_FILES
-BuildRequires: autoconf, automake, cppunit-devel, systemd
+BuildRequires: autoconf, automake, cppunit-devel, systemd, systemd-rpm-macros
 Requires(pre): coreutils, /usr/sbin/groupadd, /usr/sbin/useradd
 Requires(post): %{alternatives_dep}
 Requires(preun): %{alternatives_dep}
@@ -184,7 +185,10 @@ init_file=$RPM_BUILD_ROOT/%{initd_dir}/zookeeper-rest
 bash $RPM_SOURCE_DIR/init.d.tmpl $RPM_SOURCE_DIR/zookeeper-rest.svc rpm $init_file
 
 # Install ZooKeeper Server systemd service file
-%__install -D -m 0644 %{SOURCE10} $RPM_BUILD_ROOT/%{_unitdir}/zookeeper-server.service
+%__install -D -m 0644 %{SOURCE10} $RPM_BUILD_ROOT/%{_unitdir}/%{svc_zookeeper}.service
+
+# Install ZooKeeper Server systemd-tmpfile file
+%__install -D -m 0644 %{SOURCE11} $RPM_BUILD_ROOT/%{_tmpfilesdir}/%{svc_zookeeper}.conf
 
 %pre
 getent group zookeeper >/dev/null || groupadd -r zookeeper
@@ -254,6 +258,7 @@ fi
 
 %files server
 %attr(0644,root,root) %{_unitdir}/zookeeper-server.service
+%attr(0644,root,root) %{_tmpfilesdir}/zookeeper-server.conf
 
 %files rest
 %attr(0755,root,root) %{initd_dir}/%{svc_zookeeper_rest}
