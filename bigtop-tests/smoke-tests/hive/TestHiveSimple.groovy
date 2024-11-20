@@ -51,7 +51,7 @@ class TestHiveSmoke {
 
   @Test
   void test() {
-    sh.exec("hive -f passwd.ql");
+    sh.exec("hive -u ${System.getenv('HIVE_JDBC_URL')} -f passwd.ql");
     assertTrue("Example hive count failed. " + sh.getOut() + " " + sh.getErr(), sh.getRet() == 0);
     //since every /etc/passwd has a root user, we should see it in the output.
     assertTrue("Hive contained meaningfull results out=" + sh.getOut() + " err=" + sh.getErr(), sh.getOut().toString().contains("root"));

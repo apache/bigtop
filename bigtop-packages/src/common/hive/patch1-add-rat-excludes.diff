@@ -1,0 +1,13 @@
+diff --git a/pom.xml b/pom.xml
+index 1898adeebe..6ef35c3931 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -1849,6 +1849,8 @@
+             <exclude>**/PriorityBlockingDeque.java</exclude>
+             <exclude>**/StringToDouble.java</exclude>
+             <exclude>LICENSE-binary</exclude>
++            <exclude>debian/**</exclude>
++            <exclude>.pc/**</exclude>
+           </excludes>
+         </configuration>
+       </plugin>

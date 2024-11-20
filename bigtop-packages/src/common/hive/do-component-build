@@ -30,22 +30,7 @@ HIVE_MAVEN_OPTS=" -Dhbase.version=$HBASE_VERSION \
 -Dcurator.version=4.2.0
 "
 
-# Include common Maven Deployment logic
-. $(dirname ${0})/maven_deploy.sh
-
-# create com.google.protobuf:protoc artifact with local protoc built by toolchain
-# for non-x86 platforms
-if [ $HOSTTYPE = "powerpc64le" ] ; then
-  mvn install:install-file -DgroupId=com.google.protobuf -DartifactId=protoc -Dversion=2.5.0 \
-    -Dclassifier=linux-ppcle_64 -Dpackaging=exe -Dfile=/usr/local/protobuf-2.5.0/bin/protoc
-elif [ $HOSTTYPE = "aarch64" ] ; then
-  mvn install:install-file -DgroupId=com.google.protobuf -DartifactId=protoc -Dversion=2.5.0 \
-    -Dclassifier=linux-aarch_64 -Dpackaging=exe -Dfile=/usr/local/protobuf-2.5.0/bin/protoc
-fi
 mvn ${HIVE_MAVEN_OPTS} clean install ${EXTRA_GOALS} -Pdist "$@"
 
 mkdir -p build/dist
 tar -C build/dist --strip-components=1 -xzf packaging/target/apache-hive-${HIVE_VERSION}-bin.tar.gz
-
-# HIVE-13177
-sed -i "s#jdbcStandaloneJarPath=\`ls \${HIVE_LIB}/hive-jdbc-\*-standalone.jar\`#jdbcStandaloneJarPath=#" build/dist/bin/ext/beeline.sh
