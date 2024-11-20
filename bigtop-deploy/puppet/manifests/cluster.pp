@@ -187,7 +187,7 @@ class node_with_roles ($roles = hiera("bigtop::roles")) inherits hadoop_cluster_
 class node_with_components inherits hadoop_cluster_node {
 
   # Ensure (even if a single value) that the type is an array.
-  if (is_array($cluster_components)) {
+  if ($cluster_components =~ Array) {
     $components_array = $cluster_components
   } else {
     if ($cluster_components == undef) {
