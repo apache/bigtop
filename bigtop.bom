@@ -293,7 +293,7 @@ bigtop {
       pkg     = "alluxio"
       rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
       relNotes = "Alluxio: a memory-centric distributed file system"
-      version { base = '2.9.3'; pkg = base; release = 1 }
+      version { base = '2.9.6'; pkg = base; release = 1 }
       tarball { destination = "$name-${version.base}.tar.gz"
                 source      = "v${version.base}.tar.gz" }
       url     { site = "https://github.com/Alluxio/alluxio/archive"
