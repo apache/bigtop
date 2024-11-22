@@ -232,7 +232,7 @@ class bigtop_toolchain::packages {
        "yasm"
     ] }
     /(Ubuntu|Debian)/: {
-      $pkgs = [
+      $_pkgs = [
         "unzip",
         "curl",
         "wget",
@@ -289,6 +289,11 @@ class bigtop_toolchain::packages {
         "nasm",
         "yasm"
       ]
+      if ($operatingsystem == 'Ubuntu' and versioncmp($operatingsystemmajrelease, '24.04') >= 0) {
+        $pkgs = concat($_pkgs, ["libtirpc-dev"])
+      } else {
+        $pkgs = $_pkgs
+      }
 
       file { '/etc/apt/apt.conf.d/01retries':
         content => 'Aquire::Retries "5";'
