@@ -64,6 +64,7 @@ class alluxio {
         hasrestart => true,
         hasstatus => true,
       }
+      Exec<| title == "init hdfs" |> -> Service["alluxio-master"]
     }
 
   }
