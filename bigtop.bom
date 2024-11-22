@@ -247,7 +247,7 @@ bigtop {
     'phoenix' {
       name    = 'phoenix'
       relNotes = 'Apache Phoenix: A SQL skin over HBase'
-      version { base = "5.1.3"; pkg = base; release = 1 }
+      version { base = "5.2.1"; pkg = base; release = 1 }
       tarball { destination = "$name-${version.base}-src.tar.gz"
                 source      = destination }
       url     { download_path = "/$name/$name-${version.base}"
