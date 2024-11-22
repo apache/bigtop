@@ -18,7 +18,7 @@ class bigtop_toolchain::maven {
   require bigtop_toolchain::gnupg
   require bigtop_toolchain::packages
 
-  $mvnversion = latest_maven_binary("3.8.[0-9]*")
+  $mvnversion = latest_maven_binary("3.9.[0-9]*")
   $mvn = "apache-maven-$mvnversion"
 
   $apache_prefix = nearest_apache_mirror()
