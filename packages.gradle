@@ -294,7 +294,7 @@ def genTasks = { target ->
           standardOutput devNull
         }
       }
-      delete("${DL_DIR}/${dir}/.git")
+      // delete("${DL_DIR}/${dir}/.git")
       exec {
         workingDir DL_DIR
         commandLine "tar -czf ${TARBALL_DST} ${dir}".split()
