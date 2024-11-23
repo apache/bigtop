@@ -899,6 +899,9 @@ project.afterEvaluate {
   bomVersions = config.bigtop.components.collect {
     "${toOldStyleName(it.value.name)}_VERSION=${it.value.version.base}"
   }
+  bomVersions = config.bigtop.components.collect {
+    "${toOldStyleName(it.value.name)}_VERSION_WITH_RELEASE=${it.value.version.base}-${it.value.version.release}"
+  }
   bomVersions += config.bigtop.stack.collect { // Version of the stack have different syntax
     "${toOldStyleName(it.key)}_VERSION=${it.value.version_base}"
   }

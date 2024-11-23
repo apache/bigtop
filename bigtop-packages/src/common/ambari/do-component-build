@@ -19,4 +19,5 @@ set -ex
 
 export _JAVA_OPTIONS="-Xmx2048m -Djava.awt.headless=true"
 
+mvn versions:set -DnewVersion=$AMBARI_VERSION_WITH_RELEASE
 mvn clean package -DskipTests -Drat.skip
