@@ -1,0 +1,10 @@
+<add>
+  <doc>
+    <field name="id">doc1</field>
+    <field name="name">first test document</field>
+  </doc>
+  <doc>
+    <field name="id">doc2</field>
+    <field name="name">second test document</field>
+  </doc>
+</add>

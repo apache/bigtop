@@ -24,10 +24,7 @@ class TestIndexing extends SolrTestBase {
   @BeforeClass
   static void before() {
     // Index a couple of documents
-    def builder = new groovy.json.JsonBuilder()
-    builder([["id": "doc1", "name": URLEncoder.encode("first test document")],
-      ["id": "doc2", "name": URLEncoder.encode("second test document")]])
-    doReq(_updatePathJSON + builder.toString() + "&commit=true")
+    sh.exec("/usr/lib/solr/bin/post -c smoke indexing.json")
   }
 
   @Test

@@ -16,24 +16,19 @@
  */
 package org.apache.bigtop.itest.solr.smoke
 
+import org.junit.BeforeClass
 import org.junit.Test
 
 class TestSimple extends SolrTestBase {
-  static public final String _updatePathXML = "/update?commit=true&stream.body="
+
+  @BeforeClass
+  static void before() {
+    // Index a couple of documents
+    sh.exec("/usr/lib/solr/bin/post -c smoke simple.xml")
+  }
 
   @Test
   public void testSearch() {
-    // Index a couple of documents, move to beforeClass?
-    // NOTE: JSON update handler isn't enabled in this distro, should it be?
-    //def builder = new groovy.json.JsonBuilder()
-    //builder([["id": "doc1", "name": URLEncoder.encode("first test document")],
-    //        ["id": "doc2", "name": URLEncoder.encode("second test document")]])
-    //doReq(_updatePathJSON + builder.toString())
-    StringBuilder sb = new StringBuilder()
-    sb.append("<add><doc><field name=\"id\">doc1</field><field name=\"name\">first test document").
-      append("</field></doc><doc><field name=\"id\">doc2</field><field name=\"name\">second test document").
-      append("</field></doc></add>")
-    doReq(_updatePathXML + URLEncoder.encode(sb.toString()))
     testEquals(doReq("/select?q=*:*"), "response.numFound", "2")
     testEquals(doReq("/select?q=name:\"first+test+document\""), "response.numFound", "1")
     testEquals(doReq("/select?q=none"), "response.numFound", "0")

@@ -205,7 +205,7 @@ bigtop {
       name    = 'solr'
       rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
       relNotes = 'Apache Solr'
-      version { base = '8.11.2'; pkg = base; release = 2 }
+      version { base = '8.11.4'; pkg = base; release = 1 }
       tarball { destination = "$name-${version.base}-src.tgz"
                 source      = destination }
       url     { download_path = "lucene/$name/${version.base}"
