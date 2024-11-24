@@ -77,7 +77,7 @@ class bigtop_repo {
 
       if ($bigtop_repo_gpg_check) {
         apt::conf { "remove_disable_keys":
-          content => "APT::Get::AllowUnauthenticated 1;\nAcquire::AllowInsecureRepositories \"true\";",
+          content => "APT::Get::AllowUnauthenticated 1;\nAcquire::AllowInsecureRepositories \"true\";\nAPT::AllowInsecureRepositories \"true\";",
           ensure  => absent
         }
         apt::key { "add_key":
@@ -93,7 +93,7 @@ class bigtop_repo {
         }
       } else {
         apt::conf { "disable_keys":
-          content => "APT::Get::AllowUnauthenticated 1;\nAcquire::AllowInsecureRepositories \"true\";",
+          content => "APT::Get::AllowUnauthenticated 1;\nAcquire::AllowInsecureRepositories \"true\";\nAPT::AllowInsecureRepositories \"true\";",
           ensure  => present
         }
       }

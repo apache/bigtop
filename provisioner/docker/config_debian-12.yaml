@@ -13,33 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-require jdk
-Class['jdk'] -> Service<||>
+docker:
+        memory_limit: "4g"
+        image: "bigtop/puppet:trunk-debian-12"
 
-$provision_repo = hiera("bigtop::provision_repo", true)
-if ($provision_repo) {
-   require bigtop_repo
-}
-
-node default {
-  $roles_enabled = hiera("bigtop::roles_enabled", false)
-
-  if ($roles_enabled !~ Boolean) {
-    fail("bigtop::roles hiera conf is not of type boolean. It should be set to either true or false")
-  }
-
-  if ($roles_enabled) {
-    include node_with_roles
-  } else {
-    include node_with_components
-  }
-
-  include python
-}
-
-if versioncmp($::puppetversion,'3.6.1') >= 0 {
-  $allow_virtual_packages = hiera('bigtop::allow_virtual_packages',false)
-  Package {
-    allow_virtual => $allow_virtual_packages,
-  }
-}
+repo: "http://repos.bigtop.apache.org/releases/3.3.0/debian/12/$(ARCH)"
+distro: debian
+components: [hdfs, yarn, mapreduce]
+enable_local_repo: false
+smoke_test_components: [hdfs, yarn, mapreduce]
