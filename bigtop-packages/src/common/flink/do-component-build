@@ -42,6 +42,6 @@ fi
 sed -i "s/$repl_from/$repl_to/" flink-runtime-web/web-dashboard/package.json
 
 # Use Maven to build Flink from source
-${BUILD_ENV} mvn install $FLINK_BUILD_OPTS -Drat.skip=true -DskipTests -Dhadoop.version=$HADOOP_VERSION "$@"
+${BUILD_ENV} ./mvnw install $FLINK_BUILD_OPTS -Drat.skip=true -DskipTests -Dhadoop.version=$HADOOP_VERSION "$@"
 cd flink-dist
-${BUILD_ENV} mvn install $FLINK_BUILD_OPTS -Drat.skip=true -DskipTests -Dhadoop.version=$HADOOP_VERSION "$@"
+${BUILD_ENV} ../mvnw install $FLINK_BUILD_OPTS -Drat.skip=true -DskipTests -Dhadoop.version=$HADOOP_VERSION "$@"
