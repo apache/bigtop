@@ -13,11 +13,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-export MAVEN_HOME=/usr/local/maven
-export JAVA_HOME=<%= @javahome %>
-export ANT_HOME=/usr/local/ant
-export GRADLE_HOME=/usr/local/gradle
-export NODE_HOME=/usr/local/node
-export PATH=$MAVEN_HOME/bin:$ANT_HOME/bin:$GRADLE_HOME/bin:$NODE_HOME/bin:$PATH
+class bigtop_toolchain::node {
+   case $architecture {
+      /amd64|x86_64/ : { $arch = "x64" }
+      'ppc64le' : { $arch = "ppc64le" }
+      'aarch64' : { $arch = "arm64" }
+  }
+  $node_version = "16.20.2"
+  $node_name = "node-v${node_version}-linux-$arch"
+  $node_dl_url = 'https://nodejs.org/dist/v$node_version/'
 
-export GRADLE_OPTS="-Dorg.gradle.daemon=true"
+  exec { "get node":
+    command => "/usr/bin/wget -O - https://nodejs.org/dist/v${node_version}/${node_name}.tar.gz | /bin/tar xzf -",
+    cwd     => "/usr/local",
+    unless  => "/usr/bin/test -x /usr/local/${node_name}/bin/npm",
+  }
+
+  file { "/usr/local/node":
+    ensure  => link,
+    target  => "/usr/local/${node_name}",
+    require => Exec["get node"],
+  }
+
+}
