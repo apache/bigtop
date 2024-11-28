@@ -1,0 +1,59 @@
+diff --git a/LICENSE-binary b/LICENSE-binary
+index 834eeb2625b5..02dd142cc14e 100644
+--- a/LICENSE-binary
++++ b/LICENSE-binary
+@@ -306,8 +306,8 @@ net.java.dev.jna:jna:5.2.0
+ net.minidev:accessors-smart:2.4.7
+ org.apache.avro:avro:1.7.7
+ org.apache.commons:commons-collections4:4.2
+-org.apache.commons:commons-compress:1.21
+-org.apache.commons:commons-configuration2:2.8.0
++org.apache.commons:commons-compress:1.26.1
++org.apache.commons:commons-configuration2:2.10.1
+ org.apache.commons:commons-csv:1.9.0
+ org.apache.commons:commons-digester:1.8.1
+ org.apache.commons:commons-lang3:3.12.0
+diff --git a/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-uploader/src/main/java/org/apache/hadoop/mapred/uploader/FrameworkUploader.java b/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-uploader/src/main/java/org/apache/hadoop/mapred/uploader/FrameworkUploader.java
+index 8509e829f489..baca9ac14513 100644
+--- a/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-uploader/src/main/java/org/apache/hadoop/mapred/uploader/FrameworkUploader.java
++++ b/hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-uploader/src/main/java/org/apache/hadoop/mapred/uploader/FrameworkUploader.java
+@@ -22,7 +22,7 @@
+ import org.apache.commons.cli.HelpFormatter;
+ import org.apache.commons.cli.OptionBuilder;
+ import org.apache.commons.cli.Options;
+-import org.apache.commons.compress.archivers.ArchiveEntry;
++import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+ import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
+ import org.apache.hadoop.conf.Configuration;
+ import org.apache.hadoop.fs.BlockLocation;
+@@ -335,7 +335,7 @@ void buildPackage()
+         LOG.info("Adding " + fullPath);
+         File file = new File(fullPath);
+         try (FileInputStream inputStream = new FileInputStream(file)) {
+-          ArchiveEntry entry = out.createArchiveEntry(file, file.getName());
++          TarArchiveEntry entry = out.createArchiveEntry(file, file.getName());
+           out.putArchiveEntry(entry);
+           IOUtils.copyBytes(inputStream, out, 1024 * 1024);
+           out.closeArchiveEntry();
+diff --git a/hadoop-project/pom.xml b/hadoop-project/pom.xml
+index f1ac43ed5b38..732a47f5bcb7 100644
+--- a/hadoop-project/pom.xml
++++ b/hadoop-project/pom.xml
+@@ -119,7 +119,7 @@
+     <commons-cli.version>1.2</commons-cli.version>
+     <commons-codec.version>1.15</commons-codec.version>
+     <commons-collections.version>3.2.2</commons-collections.version>
+-    <commons-compress.version>1.21</commons-compress.version>
++    <commons-compress.version>1.26.1</commons-compress.version>
+     <commons-csv.version>1.9.0</commons-csv.version>
+     <commons-io.version>2.8.0</commons-io.version>
+     <commons-lang3.version>3.12.0</commons-lang3.version>
+@@ -1200,7 +1200,7 @@
+       <dependency>
+         <groupId>org.apache.commons</groupId>
+         <artifactId>commons-configuration2</artifactId>
+-        <version>2.8.0</version>
++        <version>2.10.1</version>
+         <exclusions>
+           <exclusion>
+             <groupId>org.apache.commons</groupId>
