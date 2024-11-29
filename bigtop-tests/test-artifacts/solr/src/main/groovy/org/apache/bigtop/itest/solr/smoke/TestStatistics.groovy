@@ -31,7 +31,7 @@ class TestStatistics extends SolrTestBase {
       if (beans[idx] instanceof String && "CACHE".equals(beans[idx])) {
         // Next object is the stats data for caches.
         Object hits = beans[idx + 1].filterCache.stats.hits
-        break;
+        break
       }
     }
   }

@@ -15,20 +15,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.bigtop.itest.solr.smoke;
+package org.apache.bigtop.itest.solr.smoke
 
 import groovy.json.JsonSlurper
 import org.junit.AfterClass
 import org.junit.BeforeClass
+import org.apache.bigtop.itest.shell.Shell
 import org.apache.commons.logging.Log
 import org.apache.commons.logging.LogFactory
 
 public class SolrTestBase {
-  static private Log LOG = LogFactory.getLog(SolrTestBase.class);
-  static public final String _updatePathJSON = "/update/json?stream.body="
+  static private Log LOG = LogFactory.getLog(SolrTestBase.class)
+  static public final Shell sh = new Shell("/bin/bash -s")
   static public final String _adminPath = "/admin"
-
-  static public final String _baseURL = System.getProperty("org.apache.bigtop.itest.solr_url", "http://localhost:8983/");
+  static public final String _baseURL = System.getProperty("org.apache.bigtop.itest.solr_url", "http://localhost:8983/")
 
   @BeforeClass
   static void before() {
@@ -39,7 +39,7 @@ public class SolrTestBase {
 
     // The pattern should be to index everything in the local BeforeClass perhaps?
     if (doReq("/select?q=*:*").response.numFound != 0) {
-      LOG.warn("There's a bad citizen in the tests");
+      LOG.warn("There's a bad citizen in the tests")
     }
 
     deleteAllDocs() // guard against bad citizens
@@ -52,8 +52,7 @@ public class SolrTestBase {
 
   private static void deleteAllDocs() {
     // Insure that the index is empty
-    doReq("/update?stream.body=<delete><query>*:*</query></delete>")
-    doReq("/update?stream.body=<commit/>")
+    sh.exec("/usr/lib/solr/bin/post -c smoke delete.xml")
     // Best check to insure we're empty!
     testEquals(doReq("/select?q=*:*"), "response.numFound", "0")
   }

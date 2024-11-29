@@ -24,6 +24,6 @@ import org.junit.Test
 class TestPing extends SolrTestBase {
   @Test
   void testPing() {
-    testEquals(doReq("/admin/ping"), "status", "OK");
+    testEquals(doReq("/admin/ping"), "status", "OK")
   }
 }
