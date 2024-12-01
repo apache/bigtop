@@ -71,6 +71,13 @@ override_dh_auto_install:
 	cp debian/hadoop-fuse.default debian/tmp/etc/default/hadoop-fuse
 	mkdir -p debian/tmp/etc/security/limits.d
 	cp debian/hdfs.conf debian/yarn.conf debian/mapreduce.conf debian/tmp/etc/security/limits.d
+	cp debian/hadoop-mapreduce-historyserver.service .
+	cp debian/hadoop-yarn-router.service .
+	cp debian/hadoop-yarn-proxyserver.service .
+	cp debian/hadoop-yarn-timelineserver.service .
+	cp debian/hadoop-yarn-nodemanager.service .
+	cp debian/hadoop-yarn-resourcemanager.service .
+	cp debian/hadoop-yarn.tmpfile .
 
 override_dh_install: $(hadoop_svcs)
 	dh_install

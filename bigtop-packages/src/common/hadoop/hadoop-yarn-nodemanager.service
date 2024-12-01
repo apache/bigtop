@@ -1,5 +1,3 @@
-#!/bin/bash
-#
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -15,27 +13,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# postinst script for hadoop
+[Unit]
+Documentation=https://hadoop.apache.org/
+Description=Hadoop NodeManager
+Before=multi-user.target
+Before=graphical.target
+After=remote-fs.target
 
-set -e
-
-case "$1" in
-    configure)
-	mkdir -p /var/log/hadoop-mapreduce /run/hadoop-mapreduce /var/lib/hadoop-mapreduce/cache || :
-	chgrp -R hadoop /var/log/hadoop-mapreduce /run/hadoop-mapreduce
-	chmod g+w /run/hadoop-mapreduce /var/log/hadoop-mapreduce
-	chown mapred:hadoop /var/lib/hadoop-mapreduce /var/lib/hadoop-mapreduce/cache
-	chmod 0755 /var/lib/hadoop-mapreduce
-	chmod 1777 /var/lib/hadoop-mapreduce/cache
-    ;;
-
-    abort-upgrade|abort-remove|abort-deconfigure)
-    ;;
-
-    *)
-        echo "postinst called with unknown argument \`$1'" >&2
-        exit 1
-    ;;
-esac
-
-#DEBHELPER#
+[Service]
+User=yarn
+Group=yarn
+Type=forking
+Restart=no
+TimeoutSec=5min
+IgnoreSIGPIPE=no
+KillMode=process
+GuessMainPID=no
+RemainAfterExit=no
+PIDFile=/run/hadoop-yarn/hadoop-yarn-nodemanager.pid
+SuccessExitStatus=5 6
+ExecStart=/usr/bin/yarn --config /etc/hadoop/conf --daemon start nodemanager
+ExecStop=/usr/bin/yarn --config /etc/hadoop/conf --daemon stop nodemanager

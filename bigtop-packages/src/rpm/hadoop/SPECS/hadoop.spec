@@ -54,7 +54,7 @@
 %define np_var_log_httpfs /var/log/%{hadoop_name}-httpfs
 %define np_var_log_kms /var/log/%{hadoop_name}-kms
 %define np_var_log_mapreduce /var/log/%{hadoop_name}-mapreduce
-%define np_var_run_yarn /var/run/%{hadoop_name}-yarn
+%define np_run_yarn /run/%{hadoop_name}-yarn
 %define np_var_run_hdfs /var/run/%{hadoop_name}-hdfs
 %define np_var_run_httpfs /var/run/%{hadoop_name}-httpfs
 %define np_var_run_kms /var/run/%{hadoop_name}-kms
@@ -177,9 +177,17 @@ Source28: mapred.1
 Source29: hadoop-yarn-timelineserver.svc
 Source30: hadoop-kms.svc
 Source31: kms.default
+Source32: hadoop-mapreduce-historyserver.service
+Source33: hadoop-yarn-resourcemanager.service
+Source34: hadoop-yarn-nodemanager.service
+Source35: hadoop-yarn-router.service
+Source36: hadoop-yarn-proxyserver.service
+Source37: hadoop-yarn-timelineserver.service
+Source38: hadoop-yarn.tmpfile
+
 #BIGTOP_PATCH_FILES
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
-BuildRequires: fuse-devel, fuse
+BuildRequires: fuse-devel, fuse, systemd, systemd-rpm-macros
 Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils >= 0.7, %{zookeeper_pkg_name} >= 3.4.0
 Requires: psmisc, %{netcat_package}
 Requires: openssl-devel
@@ -593,6 +601,14 @@ do
        chmod 644 $RPM_BUILD_ROOT/%{etc_default}/%{hadoop_name}-${service}
 done
 
+%__install -D -m 0644 %{SOURCE32} $RPM_BUILD_ROOT/%{_unitdir}/hadoop-mapreduce-historyserver.service
+%__install -D -m 0644 %{SOURCE38} $RPM_BUILD_ROOT/%{_tmpfilesdir}/hadoop-yarn.conf
+%__install -D -m 0644 %{SOURCE33} $RPM_BUILD_ROOT/%{_unitdir}/hadoop-yarn-resourcemanager.service
+%__install -D -m 0644 %{SOURCE34} $RPM_BUILD_ROOT/%{_unitdir}/hadoop-yarn-nodemanager.service
+%__install -D -m 0644 %{SOURCE35} $RPM_BUILD_ROOT/%{_unitdir}/hadoop-yarn-router.service
+%__install -D -m 0644 %{SOURCE36} $RPM_BUILD_ROOT/%{_unitdir}/hadoop-yarn-proxyserver.service
+%__install -D -m 0644 %{SOURCE37} $RPM_BUILD_ROOT/%{_unitdir}/hadoop-yarn-timelineserver.service
+
 # Install security limits
 %__install -d -m 0755 $RPM_BUILD_ROOT/etc/security/limits.d
 %__install -m 0644 %{SOURCE8} $RPM_BUILD_ROOT/etc/security/limits.d/hdfs.conf
@@ -614,11 +630,12 @@ done
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{np_var_log_httpfs}
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{np_var_log_kms}
 # /var/run/*
-%__install -d -m 0755 $RPM_BUILD_ROOT/%{np_var_run_yarn}
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{np_var_run_hdfs}
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{np_var_run_mapreduce}
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{np_var_run_httpfs}
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{np_var_run_kms}
+# /run/*
+%__install -d -m 0755 $RPM_BUILD_ROOT/%{np_run_yarn}
 
 %__install -d -m 1777 $RPM_BUILD_ROOT/%{usr_lib_hadoop}/logs
 
@@ -688,14 +705,15 @@ fi
 %config(noreplace) %{etc_hadoop}/conf.empty/capacity-scheduler.xml
 %config(noreplace) %{etc_hadoop}/conf.empty/container-executor.cfg
 %config(noreplace) /etc/security/limits.d/yarn.conf
+%config(noreplace) %{_tmpfilesdir}/hadoop-yarn.conf
 %{usr_lib_hadoop}/libexec/yarn-config.sh
 %{usr_lib_yarn}
 %attr(4754,root,yarn) %{usr_lib_yarn}/bin/container-executor
 %{bin_dir}/yarn
-%attr(0775,yarn,hadoop) %{np_var_run_yarn}
 %attr(0775,yarn,hadoop) %{np_var_log_yarn}
 %attr(0755,yarn,hadoop) %{var_lib_yarn}
 %attr(1777,yarn,hadoop) %{var_lib_yarn}/cache
+%attr(0775,yarn,hadoop) %{np_run_yarn}
 
 %files hdfs
 %defattr(-,root,root)
@@ -816,12 +834,31 @@ fi
 %service_macro hdfs-journalnode
 %service_macro hdfs-datanode
 %service_macro hdfs-dfsrouter
-%service_macro yarn-resourcemanager
-%service_macro yarn-nodemanager
-%service_macro yarn-proxyserver
-%service_macro yarn-timelineserver
-%service_macro yarn-router
-%service_macro mapreduce-historyserver
+
+# Systemd unit file management RPMs
+%define systemd_macro() \
+%files %1 \
+%attr(0644,root,root) %{_unitdir}/%{hadoop_name}-%1.service \
+%config(noreplace) %{etc_default}/%{hadoop_name}-%1 \
+%post %1 \
+%systemd_post %{hadoop_name}-%1.service \
+\
+%preun %1 \
+%systemd_preun %{hadoop_name}-%1.service \
+if [ $1 = 0 ]; then \
+  %systemd_preun %{hadoop_name}-%1.service \
+fi \
+%postun %1 \
+if [ $1 -ge 1 ]; then \
+  %systemd_postun_with_restart %{hadoop_name}-%1.service \
+fi
+
+%systemd_macro mapreduce-historyserver
+%systemd_macro yarn-resourcemanager
+%systemd_macro yarn-nodemanager
+%systemd_macro yarn-proxyserver
+%systemd_macro yarn-timelineserver
+%systemd_macro yarn-router
 
 # Pseudo-distributed Hadoop installation
 %post conf-pseudo
@@ -846,7 +883,6 @@ fi
 
 %files libhdfs-devel
 %{include_dir}/hdfs.h
-#%doc %{doc_dir}/libhdfs-%{hadoop_version}
 
 %files libhdfspp
 %defattr(-,root,root)
