@@ -12,7 +12,25 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-export HADOOP_IDENT_STRING=yarn
-export HADOOP_PID_DIR=/run/hadoop-yarn
-export HADOOP_LOG_DIR=/var/log/hadoop-yarn
-export HADOOP_CONF_DIR=/etc/hadoop/conf
+
+[Unit]
+Documentation=https://hadoop.apache.org/
+Description=Hadoop NodeManager
+Before=multi-user.target
+Before=graphical.target
+After=remote-fs.target
+
+[Service]
+User=yarn
+Group=yarn
+Type=forking
+Restart=no
+TimeoutSec=5min
+IgnoreSIGPIPE=no
+KillMode=process
+GuessMainPID=no
+RemainAfterExit=no
+PIDFile=/run/hadoop-yarn/hadoop-yarn-timelineserver.pid
+SuccessExitStatus=5 6
+ExecStart=/usr/bin/yarn --config /etc/hadoop/conf --daemon start timelineserver
+ExecStop=/usr/bin/yarn --config /etc/hadoop/conf --daemon stop timelineserver

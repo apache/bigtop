@@ -8,4 +8,4 @@
 /usr/bin/yarn
 /var/lib/hadoop-yarn
 /var/log/hadoop-yarn
-/var/run/hadoop-yarn
+/run/hadoop-yarn
