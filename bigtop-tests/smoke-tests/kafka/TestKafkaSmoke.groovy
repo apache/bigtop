@@ -44,7 +44,7 @@ class TestKafkaSmoke {
   @AfterClass
   public static void deleteKafkaTopics() {
     sh.exec(KAFKA_TOPICS
-      + " --zookeeper localhost:2181"
+      + " --bootstrap-server localhost:9092"
       + " --delete --topic test"
     );
     assertTrue("Delete Kafka topics failed. ", sh.getRet() == 0);
@@ -52,8 +52,8 @@ class TestKafkaSmoke {
 
   @Test
   public void test0CreateTopics() {
-    sh.exec(KAFKA_TOPICS + " --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic test");
-    sh.exec(KAFKA_TOPICS + " --list --zookeeper localhost:2181");
+    sh.exec(KAFKA_TOPICS + " --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic test");
+    sh.exec(KAFKA_TOPICS + " --list --bootstrap-server localhost:9092");
     assertTrue(" Create Kafka topics failed. " + sh.getOut() + " " + sh.getErr(), sh.getRet() == 0);
   }
 
