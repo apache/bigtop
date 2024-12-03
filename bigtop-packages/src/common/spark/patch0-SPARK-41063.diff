@@ -1,0 +1,18 @@
+diff --git a/pom.xml b/pom.xml
+index c005af470cc..db404288adf 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -2931,6 +2931,13 @@
+           <groupId>net.alchim31.maven</groupId>
+           <artifactId>scala-maven-plugin</artifactId>
+           <version>${scala-maven-plugin.version}</version>
++          <dependencies>
++            <dependency>
++              <groupId>org.scala-sbt</groupId>
++              <artifactId>zinc_2.13</artifactId>
++              <version>1.8.1</version>
++            </dependency>
++          </dependencies>
+           <executions>
+             <execution>
+               <id>eclipse-add-source</id>
