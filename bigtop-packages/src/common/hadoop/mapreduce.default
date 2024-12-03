@@ -14,5 +14,5 @@
 # limitations under the License.
 
 export HADOOP_IDENT_STRING=mapred
-export HADOOP_PID_DIR=/var/run/hadoop-mapreduce
+export HADOOP_PID_DIR=/run/hadoop-mapreduce
 export HADOOP_LOG_DIR=/var/log/hadoop-mapreduce

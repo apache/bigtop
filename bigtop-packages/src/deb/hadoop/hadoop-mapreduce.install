@@ -7,4 +7,4 @@
 /usr/bin/mapred
 /var/lib/hadoop-mapreduce
 /var/log/hadoop-mapreduce
-/var/run/hadoop-mapreduce
+/run/hadoop-mapreduce
