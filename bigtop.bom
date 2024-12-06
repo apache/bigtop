@@ -281,7 +281,7 @@ bigtop {
     'bigtop-jsvc' {
       name    = "bigtop-jsvc"
       relNotes = "Apache Common Daemon (jsvc) service package"
-      version { base = '1.2.4'; pkg = base; release = 1 }
+      version { base = '1.4.0'; pkg = base; release = 1 }
       tarball { source      = "commons-daemon-${version.base}-native-src.tar.gz"
                 destination = "commons-daemon-${version.base}.tar.gz" }
       url     { download_path = "/commons/daemon/source"
