@@ -29,7 +29,6 @@ mvn clean compile package install \
         -Dhadoop.version=${HADOOP_VERSION} \
         -Dhbase.version=${HBASE_VERSION}   \
         -Dhive.version=${HIVE_VERSION}     \
-        -Dkafka.version=${KAFKA_VERSION}   \
         -Dsolr.version=${SOLR_VERSION}     \
         -Dzookeeper.version=${ZOOKEEPER_VERSION} \
         "$@"
