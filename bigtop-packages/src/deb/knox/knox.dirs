@@ -1,0 +1,6 @@
+/usr/lib/knox
+/var/log/knox
+/var/run/knox
+/var/lib/knox
+/usr/bin
+/etc/knox
