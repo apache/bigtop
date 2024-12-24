@@ -265,6 +265,8 @@ cp -a ${BUILD_DIR}/bin/hdfs $PREFIX/$HDFS_DIR/bin
 install -d -m 0755 $PREFIX/$YARN_DIR/bin
 cp -a ${BUILD_DIR}/bin/{yarn,container-executor} $PREFIX/$YARN_DIR/bin
 install -d -m 0755 $PREFIX/$MAPREDUCE_DIR/bin
+# Fix: BIGTOP-4310
+sed -i "s#\${bin}/../libexec#\${bin}/../../hadoop/libexec#g" ${BUILD_DIR}/bin/mapred
 cp -a ${BUILD_DIR}/bin/mapred $PREFIX/$MAPREDUCE_DIR/bin
 # FIXME: MAPREDUCE-3980
 cp -a ${BUILD_DIR}/bin/mapred $PREFIX/$YARN_DIR/bin
