@@ -75,14 +75,7 @@ class bigtop_toolchain::renv {
     }
   }
 
-
-  # BIGTOP-3483:
-  #   Upgrade R version to 3.6.3 to build Spark 3.0.1 on Ubuntu 16.04 and 18.04
-  #
-  # Then Install required R packages dependency
-  if (($operatingsystem == 'Ubuntu' and versioncmp($operatingsystemmajrelease, '18.04') <= 0) or
-      ($operatingsystem == 'Debian' and versioncmp($operatingsystemmajrelease, '10') <= 0) or
-      ($operatingsystem == 'openEuler')) {
+  if ($operatingsystem == 'openEuler') {
     $rurl = "https://cran.r-project.org/src/base/R-3/"
     $rfile = "R-3.6.3.tar.gz"
     $rdir = "R-3.6.3"
