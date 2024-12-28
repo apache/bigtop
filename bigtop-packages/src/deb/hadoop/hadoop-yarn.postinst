@@ -23,9 +23,9 @@ case "$1" in
     configure)
 	chown root:yarn /usr/lib/hadoop-yarn/bin/container-executor
 	chmod 4754 /usr/lib/hadoop-yarn/bin/container-executor
-	mkdir -p /var/log/hadoop-yarn /var/run/hadoop-yarn /var/lib/hadoop-yarn/cache || :
-	chown yarn:hadoop /var/log/hadoop-yarn /var/run/hadoop-yarn
-	chmod g+w /var/log/hadoop-yarn /var/run/hadoop-yarn
+	mkdir -p /var/log/hadoop-yarn /run/hadoop-yarn /var/lib/hadoop-yarn/cache || :
+	chown yarn:hadoop /var/log/hadoop-yarn /run/hadoop-yarn
+	chmod g+w /var/log/hadoop-yarn /run/hadoop-yarn
 	chown yarn:hadoop /var/lib/hadoop-yarn/ /var/lib/hadoop-yarn/cache
 	chmod 0755 /var/lib/hadoop-yarn
 	chmod 1777 /var/lib/hadoop-yarn/cache
