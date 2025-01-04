@@ -1,5 +1,3 @@
-#!/bin/bash
-#
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -15,28 +13,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# postinst script for hadoop
+[Unit]
+Documentation=https://hadoop.apache.org/
+Description=Hadoop NameNode
+Before=multi-user.target
+Before=graphical.target
+After=remote-fs.target
 
-set -e
-
-case "$1" in
-    configure)
-	mkdir -p /var/log/hadoop-hdfs /run/hadoop-hdfs /var/lib/hadoop-hdfs/cache /usr/lib/hadoop/logs || :
-	chgrp -R hadoop /var/log/hadoop-hdfs /run/hadoop-hdfs
-	chmod g+w /run/hadoop-hdfs /var/log/hadoop-hdfs
-	chown hdfs:hadoop /var/lib/hadoop-hdfs/ /var/lib/hadoop-hdfs/cache
-	chmod 0755 /var/lib/hadoop-hdfs
-	chmod 1777 /var/lib/hadoop-hdfs/cache
-	chmod 1777 /usr/lib/hadoop/logs
-    ;;
-
-    abort-upgrade|abort-remove|abort-deconfigure)
-    ;;
-
-    *)
-        echo "postinst called with unknown argument \`$1'" >&2
-        exit 1
-    ;;
-esac
-
-#DEBHELPER#
+[Service]
+User=hdfs
+Group=hdfs
+Type=forking
+Restart=no
+TimeoutSec=5min
+IgnoreSIGPIPE=no
+KillMode=process
+RemainAfterExit=no
+SuccessExitStatus=5 6
+ExecStart=/usr/bin/hdfs --config /etc/hadoop/conf --daemon start namenode
+ExecStop=/usr/bin/hdfs --config /etc/hadoop/conf --daemon stop namenode

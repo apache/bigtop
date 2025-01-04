@@ -181,7 +181,7 @@ export PATH="/sbin/:$PATH"
 # Make bin wrappers
 mkdir -p $PREFIX/$BIN_DIR
 
-for component in $PREFIX/$HADOOP_DIR/bin/hadoop $PREFIX/$HDFS_DIR/bin/hdfs ; do
+for component in $PREFIX/$HADOOP_DIR/bin/hadoop ; do
   wrapper=$PREFIX/$BIN_DIR/${component#*/bin/}
   cat > $wrapper <<EOF
 #!/bin/bash
@@ -227,6 +227,27 @@ cat > $wrapper <<EOF
 export HADOOP_IDENT_STRING=\${HADOOP_IDENT_STRING:-yarn}
 export HADOOP_PID_DIR=\${HADOOP_PID_DIR:-/run/hadoop-yarn}
 export HADOOP_LOG_DIR=\${HADOOP_LOG_DIR:-/var/log/hadoop-yarn}
+export HADOOP_CONF_DIR=\${HADOOP_CONF_DIR:-/etc/hadoop/conf}
+
+export HADOOP_LIBEXEC_DIR=/$HADOOP_DIR/libexec
+
+exec ${component#${PREFIX}} "\$@"
+EOF
+chmod 755 $wrapper
+
+
+#hdfs
+component=$PREFIX/$HDFS_DIR/bin/hdfs
+wrapper=$PREFIX/$BIN_DIR/${component#*/bin/}
+cat > $wrapper <<EOF
+#!/bin/bash
+
+# Autodetect JAVA_HOME if not defined
+. /usr/lib/bigtop-utils/bigtop-detect-javahome
+
+export HADOOP_IDENT_STRING=\${HADOOP_IDENT_STRING:-hdfs}
+export HADOOP_PID_DIR=\${HADOOP_PID_DIR:-/run/hadoop-hdfs}
+export HADOOP_LOG_DIR=\${HADOOP_LOG_DIR:-/var/log/hadoop-hdfs}
 export HADOOP_CONF_DIR=\${HADOOP_CONF_DIR:-/etc/hadoop/conf}
 
 export HADOOP_LIBEXEC_DIR=/$HADOOP_DIR/libexec
@@ -452,7 +473,8 @@ ln -s $NP_ETC_HADOOP/conf $PREFIX/$YARN_DIR/etc/hadoop
 install -d -m 0755 ${PREFIX}/${VAR_HDFS}
 install -d -m 0755 ${PREFIX}/${VAR_YARN}
 install -d -m 0755 ${PREFIX}/${VAR_MAPREDUCE}
-install -d -m 0755 $PREFIX/var/{log,run}/hadoop-hdfs
+install -d -m 0755 $PREFIX/var/log/hadoop-hdfs
+install -d -m 0755 $PREFIX/run/hadoop-hdfs
 install -d -m 0755 $PREFIX/var/log/hadoop-yarn
 install -d -m 0755 $PREFIX/run/hadoop-yarn
 install -d -m 0755 $PREFIX/var/log/hadoop-mapreduce
