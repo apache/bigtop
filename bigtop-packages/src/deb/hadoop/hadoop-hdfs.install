@@ -8,4 +8,4 @@
 /usr/bin/hdfs
 /var/lib/hadoop-hdfs
 /var/log/hadoop-hdfs
-/var/run/hadoop-hdfs
+/run/hadoop-hdfs

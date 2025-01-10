@@ -55,7 +55,7 @@
 %define np_var_log_kms /var/log/%{hadoop_name}-kms
 %define np_var_log_mapreduce /var/log/%{hadoop_name}-mapreduce
 %define np_run_yarn /run/%{hadoop_name}-yarn
-%define np_var_run_hdfs /var/run/%{hadoop_name}-hdfs
+%define np_run_hdfs /run/%{hadoop_name}-hdfs
 %define np_var_run_httpfs /var/run/%{hadoop_name}-httpfs
 %define np_var_run_kms /var/run/%{hadoop_name}-kms
 %define np_var_run_mapreduce /var/run/%{hadoop_name}-mapreduce
@@ -184,6 +184,13 @@ Source35: hadoop-yarn-router.service
 Source36: hadoop-yarn-proxyserver.service
 Source37: hadoop-yarn-timelineserver.service
 Source38: hadoop-yarn.tmpfile
+Source39: hadoop-hdfs-namenode.service
+Source40: hadoop-hdfs-datanode.service
+Source41: hadoop-hdfs-secondarynamenode.service
+Source42: hadoop-hdfs-journalnode.service
+Source43: hadoop-hdfs-zkfc.service
+Source44: hadoop-hdfs-dfsrouter.service
+Source45: hadoop-hdfs.tmpfile
 
 #BIGTOP_PATCH_FILES
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
@@ -601,13 +608,25 @@ do
        chmod 644 $RPM_BUILD_ROOT/%{etc_default}/%{hadoop_name}-${service}
 done
 
+# mapredudce
 %__install -D -m 0644 %{SOURCE32} $RPM_BUILD_ROOT/%{_unitdir}/hadoop-mapreduce-historyserver.service
+
+# yarn
 %__install -D -m 0644 %{SOURCE38} $RPM_BUILD_ROOT/%{_tmpfilesdir}/hadoop-yarn.conf
 %__install -D -m 0644 %{SOURCE33} $RPM_BUILD_ROOT/%{_unitdir}/hadoop-yarn-resourcemanager.service
 %__install -D -m 0644 %{SOURCE34} $RPM_BUILD_ROOT/%{_unitdir}/hadoop-yarn-nodemanager.service
 %__install -D -m 0644 %{SOURCE35} $RPM_BUILD_ROOT/%{_unitdir}/hadoop-yarn-router.service
 %__install -D -m 0644 %{SOURCE36} $RPM_BUILD_ROOT/%{_unitdir}/hadoop-yarn-proxyserver.service
 %__install -D -m 0644 %{SOURCE37} $RPM_BUILD_ROOT/%{_unitdir}/hadoop-yarn-timelineserver.service
+
+# hdfs
+%__install -D -m 0644 %{SOURCE39} $RPM_BUILD_ROOT/%{_unitdir}/hadoop-hdfs-namenode.service
+%__install -D -m 0644 %{SOURCE40} $RPM_BUILD_ROOT/%{_unitdir}/hadoop-hdfs-datanode.service
+%__install -D -m 0644 %{SOURCE41} $RPM_BUILD_ROOT/%{_unitdir}/hadoop-hdfs-secondarynamenode.service
+%__install -D -m 0644 %{SOURCE42} $RPM_BUILD_ROOT/%{_unitdir}/hadoop-hdfs-journalnode.service
+%__install -D -m 0644 %{SOURCE43} $RPM_BUILD_ROOT/%{_unitdir}/hadoop-hdfs-zkfc.service
+%__install -D -m 0644 %{SOURCE44} $RPM_BUILD_ROOT/%{_unitdir}/hadoop-hdfs-dfsrouter.service
+%__install -D -m 0644 %{SOURCE45} $RPM_BUILD_ROOT/%{_tmpfilesdir}/hadoop-hdfs.conf
 
 # Install security limits
 %__install -d -m 0755 $RPM_BUILD_ROOT/etc/security/limits.d
@@ -630,12 +649,12 @@ done
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{np_var_log_httpfs}
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{np_var_log_kms}
 # /var/run/*
-%__install -d -m 0755 $RPM_BUILD_ROOT/%{np_var_run_hdfs}
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{np_var_run_mapreduce}
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{np_var_run_httpfs}
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{np_var_run_kms}
 # /run/*
 %__install -d -m 0755 $RPM_BUILD_ROOT/%{np_run_yarn}
+%__install -d -m 0755 $RPM_BUILD_ROOT/%{np_run_hdfs}
 
 %__install -d -m 1777 $RPM_BUILD_ROOT/%{usr_lib_hadoop}/logs
 
@@ -719,10 +738,11 @@ fi
 %defattr(-,root,root)
 %config(noreplace) %{etc_hadoop}/conf.empty/hdfs-site.xml
 %config(noreplace) /etc/security/limits.d/hdfs.conf
+%config(noreplace) %{_tmpfilesdir}/hadoop-hdfs.conf
 %{usr_lib_hdfs}
 %{usr_lib_hadoop}/libexec/hdfs-config.sh
 %{bin_dir}/hdfs
-%attr(0775,hdfs,hadoop) %{np_var_run_hdfs}
+%attr(0775,hdfs,hadoop) %{np_run_hdfs}
 %attr(0775,hdfs,hadoop) %{np_var_log_hdfs}
 %attr(0755,hdfs,hadoop) %{var_lib_hdfs}
 %attr(1777,hdfs,hadoop) %{var_lib_hdfs}/cache
@@ -828,12 +848,6 @@ if [ $1 -ge 1 ]; then \
   service %{hadoop_name}-%1 condrestart >/dev/null 2>&1 \
 fi
 
-%service_macro hdfs-namenode
-%service_macro hdfs-secondarynamenode
-%service_macro hdfs-zkfc
-%service_macro hdfs-journalnode
-%service_macro hdfs-datanode
-%service_macro hdfs-dfsrouter
 
 # Systemd unit file management RPMs
 %define systemd_macro() \
@@ -859,6 +873,12 @@ fi
 %systemd_macro yarn-proxyserver
 %systemd_macro yarn-timelineserver
 %systemd_macro yarn-router
+%systemd_macro hdfs-namenode
+%systemd_macro hdfs-secondarynamenode
+%systemd_macro hdfs-zkfc
+%systemd_macro hdfs-journalnode
+%systemd_macro hdfs-datanode
+%systemd_macro hdfs-dfsrouter
 
 # Pseudo-distributed Hadoop installation
 %post conf-pseudo
