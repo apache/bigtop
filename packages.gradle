@@ -506,7 +506,22 @@ def genTasks = { target ->
     changelog.close()
 
     // Move patches and create "series"
-    def patches = new File( "$DEB_BLD_DIR/debian").list({ d, f -> f ==~ /patch.*diff/}).sort()
+    def patches = new File( "$DEB_BLD_DIR/debian").list({ d, f -> f ==~ /patch.*diff/})
+
+    // sort patches files in numberic sequence
+    def fileListWithNumbers = patches.collect { fileName ->
+        def matcher = (fileName =~ /patch(\d+)-.*/)
+        if (matcher.find()) {
+            return [fileName: fileName, number: matcher.group(1).toInteger()]
+        } else {
+            return [fileName: fileName, number: 0]
+        }
+    }
+    def sortedPatches = fileListWithNumbers.sort { a, b ->
+        a.number <=> b.number
+    }.collect { it.fileName }
+    patches = sortedPatches
+
     if (patches.size() > 0) {
       mkdir("$DEB_BLD_DIR/debian/patches")
       def seriesWriter = new File("$DEB_BLD_DIR/debian/patches/series").newWriter()
@@ -686,7 +701,22 @@ def genTasks = { target ->
     def specTmpFileName = "${PKG_BUILD_DIR}/rpm/SPECS/tmp_${NAME}.spec"
     def specFile = new File(specFileName)
     def specWriter = new File(specTmpFileName).newWriter()
-    def patches = new File("${PKG_BUILD_DIR}/rpm/SOURCES").list({ d, f -> f ==~ /patch.*diff/}).sort()
+    def patches = new File("${PKG_BUILD_DIR}/rpm/SOURCES").list({ d, f -> f ==~ /patch.*diff/})
+
+    // sort patches files in numberic sequence
+    def fileListWithNumbers = patches.collect { fileName ->
+        def matcher = (fileName =~ /patch(\d+)-.*/)
+        if (matcher.find()) {
+            return [fileName: fileName, number: matcher.group(1).toInteger()]
+        } else {
+            return [fileName: fileName, number: 0]
+        }
+    }
+    def sortedPatches = fileListWithNumbers.sort { a, b ->
+        a.number <=> b.number
+    }.collect { it.fileName }
+    patches = sortedPatches
+
     specFile.eachLine { line ->
       if (line.startsWith("#BIGTOP_PATCH_FILES")) {
         def patchNum = 0
