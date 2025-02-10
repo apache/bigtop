@@ -60,6 +60,7 @@ override_dh_auto_install: server2 metastore hcatalog-server webhcat-server
 	ln -s /usr/lib/hbase/hbase-common.jar /usr/lib/hbase/hbase-client.jar /usr/lib/hbase/hbase-hadoop-compat.jar /usr/lib/hbase/hbase-hadoop2-compat.jar debian/tmp/usr/lib/hive/lib
 	ln -s /usr/lib/hbase/hbase-procedure.jar /usr/lib/hbase/hbase-protocol.jar /usr/lib/hbase/hbase-server.jar debian/tmp/usr/lib/hive/lib/
 	ln -s /usr/lib/zookeeper/zookeeper.jar debian/tmp/usr/lib/hive/lib
+	ln -s /usr/lib/zookeeper/zookeeper-jute.jar debian/tmp/usr/lib/hive/lib
 	# Workaround for BIGTOP-583
 	rm -f debian/tmp/usr/lib/hive/lib/slf4j-log4j12-*.jar
 	bash debian/build-hive-install-file.sh >> debian/hive.install
