@@ -30,6 +30,7 @@
 
 %define usr_lib_zookeeper %{parent_dir}/usr/lib/zookeeper
 %define usr_lib_hbase %{parent_dir}/usr/lib/hbase
+%define usr_lib_hadoop %{parent_dir}/usr/lib/hadoop
 
 %define bin_dir %{parent_dir}/%{_bindir}
 %define man_dir %{parent_dir}/%{_mandir}
@@ -295,6 +296,7 @@ cp $RPM_SOURCE_DIR/hive-site.xml .
 %__ln_s  %{usr_lib_zookeeper}/zookeeper.jar  $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/
 %__ln_s  %{usr_lib_hbase}/hbase-common.jar %{usr_lib_hbase}/hbase-client.jar %{usr_lib_hbase}/hbase-hadoop-compat.jar %{usr_lib_hbase}/hbase-hadoop2-compat.jar $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/
 %__ln_s  %{usr_lib_hbase}/hbase-procedure.jar %{usr_lib_hbase}/hbase-protocol.jar %{usr_lib_hbase}/hbase-server.jar $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/
+%__ln_s  %{usr_lib_hadoop}/tools/lib/hadoop-distcp-*.jar $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/
 
 # Workaround for BIGTOP-583
 %__rm -f $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/slf4j-log4j12-*.jar
