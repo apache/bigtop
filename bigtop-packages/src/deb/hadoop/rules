@@ -63,6 +63,7 @@ override_dh_auto_install:
 	  --man-dir=/usr/share/man
 	# Forcing Zookeeper dependency to be on the packaged jar
 	ln -sf /usr/lib/zookeeper/zookeeper.jar debian/tmp/usr/lib/hadoop/lib/zookeeper-[[:digit:]]*.jar
+	ln -sf /usr/lib/zookeeper/zookeeper-jute.jar debian/tmp/usr/lib/hadoop/lib/zookeeper-jute-[[:digit:]]*.jar
 	# Workaround for BIGTOP-583
 	rm -f debian/tmp/usr/lib/hadoop-*/lib/slf4j-log4j12-*.jar
 	# FIXME: BIGTOP-463

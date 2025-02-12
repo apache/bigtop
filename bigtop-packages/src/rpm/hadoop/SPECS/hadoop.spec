@@ -590,6 +590,7 @@ env HADOOP_VERSION=%{hadoop_base_version} bash %{SOURCE2} \
 
 # Forcing Zookeeper dependency to be on the packaged jar
 %__ln_s -f %{usr_lib_zookeeper}/zookeeper.jar $RPM_BUILD_ROOT/%{usr_lib_hadoop}/lib/zookeeper-[[:digit:]]*.jar
+%__ln_s -f %{usr_lib_zookeeper}/zookeeper-jute.jar $RPM_BUILD_ROOT/%{usr_lib_hadoop}/lib/zookeeper-jute-[[:digit:]]*.jar
 # Workaround for BIGTOP-583
 %__rm -f $RPM_BUILD_ROOT/%{usr_lib_hadoop}-*/lib/slf4j-log4j12-*.jar
 

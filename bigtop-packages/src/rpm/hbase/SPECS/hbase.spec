@@ -339,6 +339,7 @@ done
 # Pull zookeeper and hadoop from their packages
 rm -f $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib/{hadoop,zookeeper,slf4j-log4j12-}*.jar
 ln -f -s %{usr_lib_zookeeper}/zookeeper.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
+ln -f -s %{usr_lib_zookeeper}/zookeeper-jute.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
 
 ln -f -s %{usr_lib_hadoop}/client/hadoop-annotations.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib
 ln -f -s %{usr_lib_hadoop}/client/hadoop-auth.jar $RPM_BUILD_ROOT/%{usr_lib_hbase}/lib

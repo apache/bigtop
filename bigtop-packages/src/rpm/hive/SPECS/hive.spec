@@ -293,6 +293,7 @@ cp $RPM_SOURCE_DIR/hive-site.xml .
 # We need to get rid of jars that happen to be shipped in other Bigtop packages
 %__rm -f $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/hbase-*.jar $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/zookeeper-*.jar
 %__ln_s  %{usr_lib_zookeeper}/zookeeper.jar  $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/
+%__ln_s  %{usr_lib_zookeeper}/zookeeper-jute.jar  $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/
 %__ln_s  %{usr_lib_hbase}/hbase-common.jar %{usr_lib_hbase}/hbase-client.jar %{usr_lib_hbase}/hbase-hadoop-compat.jar %{usr_lib_hbase}/hbase-hadoop2-compat.jar $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/
 %__ln_s  %{usr_lib_hbase}/hbase-procedure.jar %{usr_lib_hbase}/hbase-protocol.jar %{usr_lib_hbase}/hbase-server.jar $RPM_BUILD_ROOT/%{usr_lib_hive}/lib/
 

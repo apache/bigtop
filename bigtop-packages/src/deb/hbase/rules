@@ -50,6 +50,7 @@ override_dh_auto_install:
 	# provide an unversioned symlink foo.jar -> foo-0.1.2.jar.
 	rm -f debian/tmp/usr/lib/${hbase_pkg_name}/lib/{hadoop,zookeeper,slf4j-log4j12-}*.jar
 	ln -f -s ${zookeeper_home}/zookeeper.jar debian/tmp/usr/lib/${hbase_pkg_name}/lib/
+	ln -f -s ${zookeeper_home}/zookeeper-jute.jar debian/tmp/usr/lib/${hbase_pkg_name}/lib/
 	ln -f -s ${hadoop_home}/client/hadoop-annotations.jar debian/tmp/usr/lib/${hbase_pkg_name}/lib/
 	ln -f -s ${hadoop_home}/client/hadoop-auth.jar debian/tmp/usr/lib/${hbase_pkg_name}/lib/
 	ln -f -s ${hadoop_home}/client/hadoop-common.jar debian/tmp/usr/lib/${hbase_pkg_name}/lib/
