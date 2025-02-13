@@ -42,9 +42,9 @@ override_dh_auto_install:
 		--build-dir=. \
 		--doc-dir=usr/share/doc/${tez_pkg_name}-doc \
 		--prefix=debian/tmp
-	rm -f debian/tmp/usr/lib/${tez_pkg_name}/lib/slf4j-log4j12-*.jar
-	ln -sf /usr/lib/hadoop/hadoop-annotations.jar debian/tmp/${lib_tez}/hadoop-annotations.jar
-	ln -sf /usr/lib/hadoop/hadoop-auth.jar debian/tmp/${lib_tez}/hadoop-auth.jar
+	rm -f debian/tmp/usr/lib/${tez_pkg_name}/lib/slf4j-reload4j-*.jar
+	rm -f debian/tmp/usr/lib/${tez_pkg_name}/lib/hadoop-*.jar
+	ln -sf /usr/lib/hadoop-hdfs/hadoop-hdfs-client.jar debian/tmp/${lib_tez}/hadoop-hdfs-client.jar
 	ln -sf /usr/lib/hadoop-mapreduce/hadoop-mapreduce-client-common.jar debian/tmp/${lib_tez}/hadoop-mapreduce-client-common.jar
 	ln -sf /usr/lib/hadoop-mapreduce/hadoop-mapreduce-client-core.jar debian/tmp/${lib_tez}/hhadoop-mapreduce-client-core.jar
-	ln -sf /usr/lib/hadoop-yarn/hadoop-yarn-server-web-proxy.jar debian/tmp/${lib_tez}/hadoop-yarn-server-web-proxy.jar
+	ln -sf /usr/lib/hadoop-yarn/hadoop-yarn-server-timeline-pluginstorage.jar debian/tmp/${lib_tez}/hadoop-yarn-server-timeline-pluginstorage.jar

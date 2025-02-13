@@ -117,12 +117,12 @@ sh %{SOURCE2} \
     --lib-dir=%{usr_lib_tez} \
     --etc-tez=%{etc_tez}
 
-%__rm -f $RPM_BUILD_ROOT/%{usr_lib_tez}/lib/slf4j-log4j12-*.jar
-%__ln_s -f %{usr_lib_hadoop}/hadoop-annotations.jar $RPM_BUILD_ROOT/%{usr_lib_tez}/lib/hadoop-annotations.jar
-%__ln_s -f %{usr_lib_hadoop}/hadoop-auth.jar $RPM_BUILD_ROOT/%{usr_lib_tez}/lib/hadoop-auth.jar
+%__rm -f $RPM_BUILD_ROOT/%{usr_lib_tez}/lib/slf4j-reload4j-*.jar
+%__rm -f $RPM_BUILD_ROOT/%{usr_lib_tez}/lib/hadoop-*.jar
+%__ln_s -f %{usr_lib_hadoop}-hdfs/hadoop-hdfs-client.jar $RPM_BUILD_ROOT/%{usr_lib_tez}/lib/hadoop-hdfs-client.jar
 %__ln_s -f %{usr_lib_hadoop}-mapreduce/hadoop-mapreduce-client-common.jar $RPM_BUILD_ROOT/%{usr_lib_tez}/lib/hadoop-mapreduce-client-common.jar
 %__ln_s -f %{usr_lib_hadoop}-mapreduce/hadoop-mapreduce-client-core.jar $RPM_BUILD_ROOT/%{usr_lib_tez}/lib/hadoop-mapreduce-client-core.jar
-%__ln_s -f %{usr_lib_hadoop}-yarn/hadoop-yarn-server-web-proxy.jar $RPM_BUILD_ROOT/%{usr_lib_tez}/lib/hadoop-yarn-server-web-proxy.jar
+%__ln_s -f %{usr_lib_hadoop}-yarn/hadoop-yarn-server-timeline-pluginstorage.jar $RPM_BUILD_ROOT/%{usr_lib_tez}/lib/hadoop-yarn-server-timeline-pluginstorage.jar
 
 %pre
 
