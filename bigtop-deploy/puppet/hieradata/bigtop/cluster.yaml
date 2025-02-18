@@ -195,7 +195,7 @@ hadoop::common::tez_jars: "/usr/lib/tez"
 kafka::server::port: "9092"
 kafka::server::zookeeper_connection_string: "%{hiera('bigtop::hadoop_head_node')}:2181"
 
-zeppelin::server::spark_master_url: "yarn-client"
+zeppelin::server::spark_master_url: "yarn"
 zeppelin::server::hiveserver2_url: "jdbc:hive2://%{hiera('hadoop-hive::common::hiveserver2_host')}:%{hiera('hadoop-hive::common::hiveserver2_port')}"
 zeppelin::server::hiveserver2_user: "%{hiera('bigtop::hiveserver2_user')}"
 zeppelin::server::hiveserver2_password: "%{hiera('bigtop::hiveserver2_password')}"

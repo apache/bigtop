@@ -34,8 +34,13 @@ class zeppelin {
     }
 
     file { '/etc/zeppelin/conf/zeppelin-env.sh':
-      content   => template('zeppelin/zeppelin-env.sh'),
-      require   => Package['zeppelin'],
+      content => template('zeppelin/zeppelin-env.sh'),
+      require => Package['zeppelin'],
+    }
+
+    file { '/etc/zeppelin/conf/zeppelin-site.xml':
+      content => template('zeppelin/zeppelin-site.xml'),
+      require => Package['zeppelin'],
     }
 
     file { '/etc/zeppelin/conf/interpreter.json':
@@ -50,6 +55,7 @@ class zeppelin {
       subscribe  => [
           Package['zeppelin'],
           File['/etc/zeppelin/conf/zeppelin-env.sh'],
+          File['/etc/zeppelin/conf/zeppelin-site.xml'],
           File['/etc/zeppelin/conf/interpreter.json'],
       ],
       hasrestart => true,
