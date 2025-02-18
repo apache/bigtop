@@ -17,17 +17,14 @@
 
 package org.apache.bigtop.bigpetstore.spark.etl
 
-import org.apache.spark.rdd.RDD
-
-import Array._
-
 import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
 
 import org.apache.spark.{SparkContext, SparkConf}
-import org.scalatest._
-import org.scalatest.junit.JUnitRunner
+import org.scalatest.BeforeAndAfterAll
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatestplus.junit.JUnitRunner
 import org.junit.runner.RunWith
 
 import org.apache.bigtop.bigpetstore.spark.datamodel._
@@ -44,7 +41,7 @@ import org.apache.bigtop.bigpetstore.spark.datamodel._
  * RunWith annotation is just a hack for running tests with Gradle
  */
 @RunWith(classOf[JUnitRunner])
-class ETLSuite extends FunSuite with BeforeAndAfterAll {
+class ETLSuite extends AnyFunSuite with BeforeAndAfterAll {
 
   /**
    * TODO : We are using Option monads as a replacement for nulls.
@@ -75,7 +72,7 @@ class ETLSuite extends FunSuite with BeforeAndAfterAll {
     "1,98110,Bainbridge Islan,WA,999,Cesareo,Lamplough,20152,Chantilly,VA,31,Mon Nov 02 17:51:37 EST 2015,category=poop bags;brand=Dog Days;color=Blue;size=60.0;per_unit_cost=0.21;",
     "6,66067,Ottawa,KS,999,Cesareo,Lamplough,20152,Chantilly,VA,30,Mon Oct 12 04:29:46 EDT 2015,category=dry cat food;brand=Feisty Feline;flavor=Chicken & Rice;size=14.0;per_unit_cost=2.14;")
 
-  override def beforeAll() {
+  override def beforeAll(): Unit = {
 
     val cal1 = Calendar.getInstance(TimeZone.getTimeZone("America/New_York"), Locale.US)
     val cal2 = Calendar.getInstance(TimeZone.getTimeZone("America/New_York"), Locale.US)
@@ -104,7 +101,7 @@ class ETLSuite extends FunSuite with BeforeAndAfterAll {
   }
 
 
-  override def afterAll() {
+  override def afterAll(): Unit = {
     sc.stop()
   }
 
@@ -113,7 +110,7 @@ class ETLSuite extends FunSuite with BeforeAndAfterAll {
     val expectedRecords = rawRecords.get
 
     //Goal: Confirm that these RDD's are identical to the expected ones.
-    val rdd = SparkETL.parseRawData(rawRDD).collect
+    val rdd = SparkETL.parseRawData(rawRDD).collect()
 
     /**
      * Assumption: Order of RDD elements will be same as the mock records.
@@ -136,12 +133,12 @@ class ETLSuite extends FunSuite with BeforeAndAfterAll {
       assert(rawRecord._5.storeId === expectedRecord._5.storeId)
 
       //BIGTOP-1586 : We want granular assertions, and we don't care to compare millisecond timestamps.
-      assert(rawRecord._5.dateTime.getTime.getYear === expectedRecord._5.dateTime.getTime.getYear)
-      assert(rawRecord._5.dateTime.getTime.getMonth === expectedRecord._5.dateTime.getTime.getMonth)
-      assert(rawRecord._5.dateTime.getTime.getDay === expectedRecord._5.dateTime.getTime.getDay)
-      assert(rawRecord._5.dateTime.getTime.getHours === expectedRecord._5.dateTime.getTime.getHours)
-      assert(rawRecord._5.dateTime.getTime.getMinutes === expectedRecord._5.dateTime.getTime.getMinutes)
-      assert(rawRecord._5.dateTime.getTime.getSeconds=== expectedRecord._5.dateTime.getTime.getSeconds)
+      assert(rawRecord._5.dateTime.get(Calendar.YEAR) === expectedRecord._5.dateTime.get(Calendar.YEAR))
+      assert(rawRecord._5.dateTime.get(Calendar.MONTH) === expectedRecord._5.dateTime.get(Calendar.MONTH))
+      assert(rawRecord._5.dateTime.get(Calendar.DAY_OF_MONTH) === expectedRecord._5.dateTime.get(Calendar.DAY_OF_MONTH))
+      assert(rawRecord._5.dateTime.get(Calendar.HOUR_OF_DAY) === expectedRecord._5.dateTime.get(Calendar.HOUR_OF_DAY))
+      assert(rawRecord._5.dateTime.get(Calendar.MINUTE) === expectedRecord._5.dateTime.get(Calendar.MINUTE))
+      assert(rawRecord._5.dateTime.get(Calendar.SECOND) === expectedRecord._5.dateTime.get(Calendar.SECOND))
     }
 
   }

@@ -19,7 +19,6 @@ package org.apache.bigtop.bigpetstore.spark.analytics
 
 import org.apache.bigtop.bigpetstore.spark.datamodel._
 import org.apache.spark.{SparkContext, SparkConf}
-import org.apache.spark.SparkContext._
 import org.apache.spark.rdd._
 import org.apache.spark.mllib.recommendation._
 
@@ -29,7 +28,7 @@ case class PRParameters(inputDir: String, outputFile: String)
 
 object RecommendProducts {
 
-  private def printUsage() {
+  private def printUsage(): Unit = {
     val usage = "BigPetStore Product Recommendation Module\n" +
     "\n" +
     "Usage: transformed_data recommendations\n" +
@@ -51,7 +50,7 @@ object RecommendProducts {
 
   def prepareRatings(tx: RDD[Transaction]): RDD[Rating] = {
     val productPairs = tx.map { t => ((t.customerId, t.productId), 1) }
-    val pairCounts = productPairs.reduceByKey { case (v1, v2) => v1 + v2 }
+    val pairCounts = productPairs.reduceByKey { (v1, v2) => v1 + v2 }
     val ratings = pairCounts.map { p => Rating(p._1._1.toInt, p._1._2.toInt, p._2) }
 
     ratings
@@ -83,7 +82,7 @@ object RecommendProducts {
     */
   def run(txInputDir: String, recOutputFile: String, sc: SparkContext,
   nIterations: Int = 20, alpha: Double = 40.0, rank:Int = 10, lambda: Double = 1.0,
-  nRecommendations: Int = 5) {
+  nRecommendations: Int = 5): Unit = {
 
     println("input : " + txInputDir)
     println(sc)
@@ -104,7 +103,7 @@ object RecommendProducts {
     IOUtils.saveLocalAsJSON(new File(recOutputFile), prodRec)
   }
 
-  def main(args: Array[String]) {
+  def main(args: Array[String]): Unit = {
     val params: PRParameters = parseArgsOrDie(args)
 
     val conf = new SparkConf().setAppName("BPS Product Recommendations")

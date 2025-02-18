@@ -17,29 +17,25 @@
 
 package org.apache.bigtop.bigpetstore.spark.datamodel
 
-import Array._
-
-import java.io.File
 import java.nio.file.Files
 import java.util.Calendar
 import java.util.Locale
 
 import org.apache.spark.{SparkContext, SparkConf}
 
-import org.scalatest.{BeforeAndAfterAll, FunSuite}
-import org.scalatest.junit.JUnitRunner
+import org.scalatest.BeforeAndAfterAll
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatestplus.junit.JUnitRunner
 import org.junit.runner.RunWith
-
-import org.apache.bigtop.bigpetstore.spark.datamodel._
 
 // hack for running tests with Gradle
 @RunWith(classOf[JUnitRunner])
-class IOUtilsSuite extends FunSuite with BeforeAndAfterAll {
+class IOUtilsSuite extends AnyFunSuite with BeforeAndAfterAll {
 
   val conf = new SparkConf().setAppName("BPS Data Generator Test Suite").setMaster("local[2]")
   val sc = new SparkContext(conf)
 
-  override def afterAll() {
+  override def afterAll(): Unit = {
     sc.stop()
   }
 
@@ -92,6 +88,5 @@ class IOUtilsSuite extends FunSuite with BeforeAndAfterAll {
     assert(customerRDD.collect().toSet === readCustomerRDD.collect().toSet)
     assert(productRDD.collect().toSet === readProductRDD.collect().toSet)
     assert(transactionRDD.collect().toSet === readTransactionRDD.collect().toSet)
-
   }
 }

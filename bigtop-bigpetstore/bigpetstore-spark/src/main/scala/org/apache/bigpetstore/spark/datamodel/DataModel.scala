@@ -20,10 +20,7 @@ package org.apache.bigtop.bigpetstore.spark.datamodel
 import java.sql.Timestamp
 import java.util.Calendar
 
-import org.apache.spark.sql
 import org.joda.time.DateTime
-import org.json4s.CustomSerializer
-import org.json4s.JsonAST.{JString, JField, JInt, JObject}
 
 /**
  * Statistics phase.  Represents JSON for a front end.
@@ -58,8 +55,7 @@ case class Transaction(customerId: Long, transactionId: Long, storeId: Long, dat
    */
   def toSQL(): TransactionSQL = {
     val dt = new DateTime(dateTime)
-    val ts = new Timestamp(dt.getMillis)
-    return TransactionSQL(customerId,transactionId,storeId,
+    TransactionSQL(customerId,transactionId,storeId,
       new Timestamp(
         new DateTime(dateTime).getMillis),
         productId,

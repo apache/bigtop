@@ -18,23 +18,18 @@
 package org.apache.bigtop.bigpetstore.spark.analytics
 
 import java.io.File
-import java.sql.Timestamp
 
-import scala.Nothing
+import scala.language.postfixOps
 
 import org.apache.spark.sql._
 import org.apache.spark.{SparkContext, SparkConf}
-import org.apache.spark.SparkContext._
 import org.apache.spark.rdd._
-
-import org.joda.time.DateTime
-import org.json4s.JsonDSL.WithBigDecimal._
 
 import org.apache.bigtop.bigpetstore.spark.datamodel._
 
 object PetStoreStatistics {
 
-    private def printUsage() {
+    private def printUsage(): Unit = {
       val usage: String = "BigPetStore Analytics Module." +
       "\n" +
       "Usage: spark-submit ... inputDir outputFile\n " +
@@ -119,26 +114,24 @@ GROUP BY productId, zipcode""")
   def runQueries(r:(RDD[Location], RDD[Store], RDD[Customer], RDD[Product],
     RDD[Transaction]), sc: SparkContext): Statistics = {
 
-    val sqlContext = new org.apache.spark.sql.SQLContext(sc)
-    import sqlContext._
-    import sqlContext.implicits._
+    val spark = SparkSession.builder().config(sc.getConf).getOrCreate()
 
     // Transform the Non-SparkSQL Calendar into a SparkSQL-friendly field.
     val mappableTransactions:RDD[TransactionSQL] =
       r._5.map { trans => trans.toSQL() }
 
-    r._1.toDF().registerTempTable("Locations")
-    r._2.toDF().registerTempTable("Stores")
-    r._3.toDF().registerTempTable("Customers")
-    r._4.toDF().registerTempTable("Product")
-    mappableTransactions.toDF().registerTempTable("Transactions")
+    spark.createDataFrame(r._1).toDF().createOrReplaceTempView("Locations")
+    spark.createDataFrame(r._2).createOrReplaceTempView("Stores")
+    spark.createDataFrame(r._3).createOrReplaceTempView("Customers")
+    spark.createDataFrame(r._4).createOrReplaceTempView("Product")
+    spark.createDataFrame(mappableTransactions).createOrReplaceTempView("Transactions")
 
 
-    val txByMonth = queryTxByMonth(sqlContext)
-    val txByProduct = queryTxByProduct(sqlContext)
-    val txByProductZip = queryTxByProductZip(sqlContext)
+    val txByMonth = queryTxByMonth(spark.sqlContext)
+    val txByProduct = queryTxByProduct(spark.sqlContext)
+    val txByProductZip = queryTxByProductZip(spark.sqlContext)
 
-    return Statistics(
+    Statistics(
       txByMonth.map { s => s.count }.reduce(_+_),  // Total number of transactions
       txByMonth,
       txByProduct,
@@ -150,7 +143,7 @@ GROUP BY productId, zipcode""")
     * We keep a "run" method which can be called easily from tests and also is used by main.
     */
     def run(txInputDir:String, statsOutputFile:String,
-      sc:SparkContext) {
+      sc:SparkContext): Unit = {
 
       System.out.println("Running w/ input = " + txInputDir)
 
@@ -164,7 +157,7 @@ GROUP BY productId, zipcode""")
       System.out.println("Output JSON Stats stored : " + statsOutputFile)
     }
 
-  def main(args: Array[String]) {
+  def main(args: Array[String]): Unit = {
     // Get or else : On failure (else) we exit.
     val (inputPath,outputPath) = parseArgs(args)
 
