@@ -20,7 +20,6 @@ package org.apache.bigtop.bigpetstore.qstream;
 import com.github.rnowling.bps.datagenerator.datamodels.inputs.InputData;
 import com.github.rnowling.bps.datagenerator.datamodels.inputs.ProductCategory;
 import com.github.rnowling.bps.datagenerator.datamodels.*;
-//import com.github.rnowling.bps.datagenerator.*{DataLoader,StoreGenerator,CustomerGenerator => CustGen, PurchasingProfileGenerator,TransactionGenerator}
 import com.github.rnowling.bps.datagenerator.*;
 import com.github.rnowling.bps.datagenerator.framework.SeedFactory;
 import com.google.common.collect.Lists;
