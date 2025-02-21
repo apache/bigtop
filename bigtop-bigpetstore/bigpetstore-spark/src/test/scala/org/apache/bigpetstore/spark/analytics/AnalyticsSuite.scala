@@ -17,24 +17,16 @@ package org.apache.bigpetstore.spark.analytics
  *  limitations under the License.
  */
 
-import com.google.common.collect.ImmutableMap
 import org.apache.bigtop.bigpetstore.spark.analytics.PetStoreStatistics
 import org.apache.bigtop.bigpetstore.spark.datamodel.Product
 import org.junit.runner.RunWith
-import org.scalatest.{BeforeAndAfterAll, FunSuite}
-import org.scalatest.junit.JUnitRunner
-
-import Array._
-
-import java.io.File
-import java.nio.file.Files
-import java.util.Calendar
-import java.util.Locale
-
+import org.scalatest.BeforeAndAfterAll
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatestplus.junit.JUnitRunner
 
 // hack for running tests with Gradle
 @RunWith(classOf[JUnitRunner])
-class AnalyticsSuite extends FunSuite with BeforeAndAfterAll {
+class AnalyticsSuite extends AnyFunSuite with BeforeAndAfterAll {
 
   test("product mapper") {
     val p = Product(1L, "cat1", Map(("a","a1"), ("b","b1")))

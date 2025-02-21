@@ -22,32 +22,25 @@ import org.apache.bigtop.bigpetstore.spark.analytics.RecommendProducts
 import org.apache.bigtop.bigpetstore.spark.datamodel.{Statistics, IOUtils}
 import org.apache.bigtop.bigpetstore.spark.etl.ETLParameters
 import org.apache.bigtop.bigpetstore.spark.etl.SparkETL
-import org.apache.bigtop.bigpetstore.spark.etl.{ETLParameters, SparkETL}
 import org.apache.bigtop.bigpetstore.spark.generator.SparkDriver
 import org.apache.spark.SparkConf
 import org.apache.spark.SparkContext
 import org.junit.runner.RunWith
-import org.scalatest.{BeforeAndAfterAll, FunSuite}
-import org.scalatest.junit.JUnitRunner
-
-import Array._
+import org.scalatest.BeforeAndAfterAll
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatestplus.junit.JUnitRunner
 
 import java.io.File
 import java.nio.file.Files
 
-import org.apache.spark.{SparkContext, SparkConf}
-import org.scalatest.junit.JUnitRunner
-import org.junit.runner.RunWith
-
-
 // hack for running tests with Gradle
 @RunWith(classOf[JUnitRunner])
-class TestFullPipeline extends FunSuite with BeforeAndAfterAll {
+class TestFullPipeline extends AnyFunSuite with BeforeAndAfterAll {
 
   val conf = new SparkConf().setAppName("BPS Data Generator Test Suite").setMaster("local[2]")
   val sc = new SparkContext(conf)
 
-  override def afterAll() {
+  override def afterAll(): Unit = {
     sc.stop()
   }
 
@@ -96,7 +89,6 @@ class TestFullPipeline extends FunSuite with BeforeAndAfterAll {
     RecommendProducts.run(etlDir.getAbsolutePath,
       recommJson.getAbsolutePath,
       sc, nIterations=5)
-
 
     sc.stop()
   }

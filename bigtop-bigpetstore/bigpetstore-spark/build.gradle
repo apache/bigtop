@@ -24,12 +24,11 @@ apply plugin: "scala"
 apply plugin: 'com.github.johnrengelman.shadow'
 
 buildscript {
-  repositories { jcenter() }
+  repositories { gradlePluginPortal() }
   dependencies {
-    classpath 'com.github.jengelman.gradle.plugins:shadow:1.0.2'
+    classpath "com.github.johnrengelman.shadow:com.github.johnrengelman.shadow.gradle.plugin:5.2.0"
   }
 }
-
 
 // Read the groupId and version properties from the "parent" bigtop project.
 // It would be better if there was some better way of doing this. Howvever,
@@ -45,17 +44,13 @@ def setProjectProperties() {
 setProjectProperties()
 description = """"""
 
-// We are using 1.7 as gradle can't play well when java 8 and scala are combined.
-// There is an open issue here: http://issues.gradle.org/browse/GRADLE-3023
-// There is talk of this being resolved in the next version of gradle. Till then,
-// we are stuck with java 7. But we do have scala if we want more syntactic sugar.
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 // Specify any additional project properties.
 ext {
-    sparkVersion = "1.3.0"
-    scalaVersion = "2.10"
+    sparkVersion = "3.5.4"
+    scalaVersion = "2.12"
 }
 
 shadowJar {
@@ -63,21 +58,13 @@ shadowJar {
 }
 
 repositories {
+    mavenLocal()
     mavenCentral()
-    maven {
-        url "http://dl.bintray.com/rnowling/bigpetstore"
-    }
 }
 
 tasks.withType(AbstractCompile) {
     options.encoding = 'UTF-8'
     options.compilerArgs << "-Xlint:all"
-}
-
-tasks.withType(ScalaCompile) {
-    // Enables incremental compilation.
-    // http://www.gradle.org/docs/current/userguide/userguide_single.html#N12F78
-    scalaCompileOptions.useAnt = false
 }
 
 tasks.withType(Test) {
@@ -100,42 +87,19 @@ sourceSets {
     }
 }
 
-
-// To see the API that is being used here, consult the following docs
-// http://www.gradle.org/docs/current/dsl/org.gradle.api.artifacts.ResolutionStrategy.html
-def updateDependencyVersion(dependencyDetails, dependencyString) {
-    def parts = dependencyString.split(':')
-    def group = parts[0]
-    def name = parts[1]
-    def version = parts[2]
-    if (dependencyDetails.requested.group == group
-            && dependencyDetails.requested.name == name) {
-        dependencyDetails.useVersion version
-    }
-}
-
-
 dependencies {
-    compile "org.apache.spark:spark-core_${scalaVersion}:${sparkVersion}"
-    compile "org.apache.spark:spark-mllib_${scalaVersion}:${sparkVersion}"
-    compile "org.apache.spark:spark-network-shuffle_${scalaVersion}:${sparkVersion}"
-    compile "org.apache.spark:spark-sql_${scalaVersion}:${sparkVersion}"
-    compile "org.apache.spark:spark-graphx_${scalaVersion}:${sparkVersion}"
-    compile "org.apache.spark:spark-hive_${scalaVersion}:${sparkVersion}"
+    compile("org.apache.spark:spark-core_${scalaVersion}:${sparkVersion}")
+    compile("org.apache.spark:spark-mllib_${scalaVersion}:${sparkVersion}")
+    compile("org.apache.spark:spark-sql_${scalaVersion}:${sparkVersion}")
     compile "com.github.rnowling.bigpetstore:bigpetstore-data-generator:0.2.1"
-    compile "joda-time:joda-time:2.7"
-    compile "org.json4s:json4s-jackson_2.10:3.1.0"
+    compile "joda-time:joda-time:2.13.1"
+    compile "org.json4s:json4s-jackson_${scalaVersion}:3.6.12"
 
-    testCompile "junit:junit:4.11"
-    testCompile "org.hamcrest:hamcrest-all:1.3"
-    testCompile "org.scalatest:scalatest_${scalaVersion}:2.2.1"
-    testCompile "joda-time:joda-time:2.7"
+    testCompile "junit:junit:4.13.2"
+    testCompile "org.scalatest:scalatest_${scalaVersion}:3.2.19"
+    testCompile "org.scalatestplus:junit-4-13_${scalaVersion}:3.2.19.0"
+    testCompile "joda-time:joda-time:2.13.1"
 }
-
-task listJars << {
-    configurations.shadow.each { println it.name }
-}
-
 
 eclipse {
     classpath {

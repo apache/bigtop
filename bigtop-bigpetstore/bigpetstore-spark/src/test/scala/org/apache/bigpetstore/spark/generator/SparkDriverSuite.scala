@@ -17,28 +17,25 @@
 
 package org.apache.bigtop.bigpetstore.spark.generator
 
-import org.apache.bigtop.bigpetstore.spark.etl.{ETLParameters, SparkETL}
-
-import Array._
-
 import java.io.File
 import java.nio.file.Files
 
 import org.apache.spark.{SparkContext, SparkConf}
 
-import org.scalatest.{BeforeAndAfterAll, FunSuite}
-import org.scalatest.junit.JUnitRunner
+import org.scalatest.BeforeAndAfterAll
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatestplus.junit.JUnitRunner
 import org.junit.runner.RunWith
 
 
 // hack for running tests with Gradle
 @RunWith(classOf[JUnitRunner])
-class SparkDriverSuite extends FunSuite  with BeforeAndAfterAll {
+class SparkDriverSuite extends AnyFunSuite  with BeforeAndAfterAll {
 
   val conf = new SparkConf().setAppName("BPS Data Generator Test Suite").setMaster("local[2]")
   val sc = new SparkContext(conf);
 
-  override def afterAll() {
+  override def afterAll(): Unit = {
       sc.stop();
   }
 
