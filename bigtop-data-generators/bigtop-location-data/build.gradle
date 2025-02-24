@@ -27,8 +27,8 @@ jar {
 }
 
 dependencies {
-  compile 'com.google.guava:guava:18.0'
-  compile 'org.apache.commons:commons-lang3:3.4'
+  compile 'com.google.guava:guava:33.4.0-jre'
+  compile 'org.apache.commons:commons-lang3:3.17.0'
 
   testCompile 'junit:junit:4.+'
 }
