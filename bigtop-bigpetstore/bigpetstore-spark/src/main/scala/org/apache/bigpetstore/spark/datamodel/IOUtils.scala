@@ -18,22 +18,14 @@
 package org.apache.bigtop.bigpetstore.spark.datamodel
 
 import java.io.File
-import java.util.Date
-import java.nio.file.{Path, Paths, Files}
+import java.nio.file.Files
 import java.nio.charset.StandardCharsets
 
-import org.apache.spark.{SparkContext, SparkConf}
-import org.apache.spark.SparkContext._
+import org.apache.spark.SparkContext
 import org.apache.spark.rdd._
 
-import org.apache.bigtop.bigpetstore.spark.datamodel._
-import org.json4s.JsonDSL._
-import org.json4s.JsonDSL.WithDouble._
-import org.json4s.JsonDSL.WithBigDecimal._
 import org.json4s.jackson.Serialization
 import org.json4s._
-import org.json4s.JsonDSL._
-import org.json4s.jackson.JsonMethods._
 import org.json4s.jackson.Serialization.{read, write}
 
 /**
@@ -60,7 +52,7 @@ object IOUtils {
     */
   def save(outputDir: String, locationRDD: RDD[Location],
     storeRDD: RDD[Store], customerRDD: RDD[Customer],
-    productRDD: RDD[Product], transactionRDD: RDD[Transaction]) {
+    productRDD: RDD[Product], transactionRDD: RDD[Transaction]): Unit = {
 
     locationRDD.saveAsObjectFile(outputDir + "/" + LOCATION_DIR)
     storeRDD.saveAsObjectFile(outputDir + "/" + STORE_DIR)
@@ -69,7 +61,7 @@ object IOUtils {
     transactionRDD.saveAsObjectFile(outputDir + "/" + TRANSACTION_DIR)
   }
 
-  def saveLocalAsJSON(outputDir: File, statistics: Statistics) {
+  def saveLocalAsJSON(outputDir: File, statistics: Statistics): Unit = {
     //load the write/read methods.
     implicit val formats = Serialization.formats(NoTypeHints)
     val json:String = write(statistics)
@@ -81,10 +73,10 @@ object IOUtils {
     implicit val formats = Serialization.formats(NoTypeHints)
     //Read file as String, and serialize it into Stats object.
     //See http://json4s.org/ examples.
-    read[Statistics](scala.io.Source.fromFile(jsonFile).getLines.reduceLeft(_+_))
+    read[Statistics](scala.io.Source.fromFile(jsonFile).getLines().reduceLeft(_+_))
   }
 
-  def saveLocalAsJSON(outputDir: File, recommendations:ProductRecommendations) {
+  def saveLocalAsJSON(outputDir: File, recommendations:ProductRecommendations): Unit = {
     //load the write/read methods.
     implicit val formats = Serialization.formats(NoTypeHints)
     val json:String = write(recommendations)
@@ -96,7 +88,7 @@ object IOUtils {
     implicit val formats = Serialization.formats(NoTypeHints)
     //Read file as String, and serialize it into Stats object.
     //See http://json4s.org/ examples.
-    read[ProductRecommendations](scala.io.Source.fromFile(jsonFile).getLines.reduceLeft(_+_))
+    read[ProductRecommendations](scala.io.Source.fromFile(jsonFile).getLines().reduceLeft(_+_))
   }
 
 

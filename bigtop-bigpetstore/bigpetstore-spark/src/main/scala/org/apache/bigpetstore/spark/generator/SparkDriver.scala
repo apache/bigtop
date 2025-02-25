@@ -17,19 +17,17 @@
 
 package org.apache.bigtop.bigpetstore.spark.generator
 
-import com.github.rnowling.bps.datagenerator.datamodels.inputs.ZipcodeRecord
 import com.github.rnowling.bps.datagenerator.datamodels._
-import com.github.rnowling.bps.datagenerator.{DataLoader,StoreGenerator,CustomerGenerator => CustGen, PurchasingProfileGenerator,TransactionGenerator}
+import com.github.rnowling.bps.datagenerator.{DataLoader, PurchasingProfileGenerator, StoreGenerator, TransactionGenerator, CustomerGenerator => CustGen}
 import com.github.rnowling.bps.datagenerator.framework.SeedFactory
-import scala.collection.JavaConversions._
-import org.apache.spark.{SparkContext, SparkConf}
-import org.apache.spark.SparkContext._
+
+import scala.jdk.CollectionConverters._
+import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.rdd._
 
 import java.util.ArrayList
-import scala.util.Random
-import java.io.File
 import java.util.Date
+import scala.util.Random
 
 /**
  * This driver uses the data generator API to generate
@@ -50,7 +48,7 @@ object SparkDriver {
   private val NPARAMS = 5
   private val BURNIN_TIME = 7.0 // days
 
-  private def printUsage() {
+  private def printUsage(): Unit = {
     val usage: String =
       "BigPetStore Data Generator.\n" +
       "Usage: spark-submit ... outputDir nStores nCustomers simulationLength [seed]\n" +
@@ -62,7 +60,7 @@ object SparkDriver {
     System.err.println(usage)
   }
 
-  def parseArgs(args: Array[String]) {
+  def parseArgs(args: Array[String]): Unit = {
     if(args.length != NPARAMS && args.length != (NPARAMS - 1)) {
       printUsage()
       System.exit(1)
@@ -109,7 +107,7 @@ object SparkDriver {
       }
     }
     else {
-      seed = (new Random()).nextLong
+      seed = (new Random()).nextLong()
     }
   }
 
@@ -199,7 +197,7 @@ object SparkDriver {
   }
 
   def lineItem(t: Transaction, date:Date, p:Product): String = {
-      t.getStore.getId + "," +
+      t.getStore.getId.toString + "," +
       t.getStore.getLocation.getZipcode + "," +
       t.getStore.getLocation.getCity + "," +
       t.getStore.getLocation.getState + "," +
@@ -211,7 +209,7 @@ object SparkDriver {
       t.getId + "," +
       date + "," + p
   }
-  def writeData(transactionRDD : RDD[Transaction]) {
+  def writeData(transactionRDD : RDD[Transaction]): Unit = {
     val initialDate : Long = new Date().getTime()
 
     val transactionStringsRDD = transactionRDD.flatMap {
@@ -225,7 +223,7 @@ object SparkDriver {
         * So we ultimately define an RDD of strings, where each string represents
         * an instance where of a item purchase.
         * ********************************************************/
-        val records = products.map{
+        val records = products.asScala.map {
           product =>
             val storeLocation = transaction.getStore().getLocation()
             // days -> milliseconds = days * 24 h / day * 60 min / hr * 60 sec / min * 1000 ms / sec
@@ -240,7 +238,7 @@ object SparkDriver {
     transactionStringsRDD.saveAsTextFile(outputDir + "/transactions")
   }
 
-  def main(args: Array[String]) {
+  def main(args: Array[String]): Unit = {
     parseArgs(args)
     val conf = new SparkConf().setAppName("BPS Data Generator")
     val sc = new SparkContext(conf)

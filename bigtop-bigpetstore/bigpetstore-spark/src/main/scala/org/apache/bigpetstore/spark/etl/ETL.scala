@@ -20,11 +20,8 @@ package org.apache.bigtop.bigpetstore.spark.etl
 import org.apache.bigtop.bigpetstore.spark.datamodel._
 
 import org.apache.spark.{SparkContext, SparkConf}
-import org.apache.spark.SparkContext._
 import org.apache.spark.rdd._
 
-import java.io.File
-import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util._
 
@@ -37,7 +34,7 @@ object SparkETL {
 
   private val NPARAMS = 2
 
-  private def printUsage() {
+  private def printUsage(): Unit = {
     val usage: String = "BigPetStore Spark ETL\n" +
       "\n" +
       "Usage: spark-submit ... inputDir outputDir\n" +
@@ -92,7 +89,7 @@ object SparkETL {
       val txId = cols(10).toInt
       val df = new SimpleDateFormat("EEE MMM dd kk:mm:ss z yyyy", Locale.US)
       val txDate = df.parse(cols(11))
-      val txCal = Calendar.getInstance(Locale.US)
+      val txCal = Calendar.getInstance(TimeZone.getTimeZone("America/New_York"), Locale.US)
       txCal.setTime(txDate)
       txCal.set(Calendar.MILLISECOND, 0)
       val txProduct = cols(12)
@@ -196,15 +193,11 @@ object SparkETL {
     IOUtils.save(parameters.outputDir, locationRDD, storeRDD,
       customerRDD, productRDD, transactionRDD)
 
-    return (locationRDD.count(),
-        storeRDD.count(),
-        customerRDD.count(),
-        productRDD.count(),
-        transactionRDD.count()
-        );
+    (locationRDD.count(), storeRDD.count(), customerRDD.count(),
+      productRDD.count(), transactionRDD.count())
   }
 
-  def main(args: Array[String]) {
+  def main(args: Array[String]): Unit = {
     val parameters = parseArgs(args)
 
     println("Creating SparkConf")
