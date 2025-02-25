@@ -210,6 +210,10 @@ flink::common::parallelism_default: "1"
 flink::common::jobmanager_failover_strategy: "region"
 flink::common::rest_port: "8081"
 
-
 # Ranger
 ranger::admin::admin_password: "Admin01234"
+
+# Airflow
+airflow::server::executor: "SequentialExecutor"
+airflow::server::load_examples: "True"
+airflow::server::sql_alchemy_conn: "sqlite:////var/lib/airflow/airflow.db"

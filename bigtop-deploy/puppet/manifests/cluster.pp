@@ -121,7 +121,10 @@ $roles_map = {
   },
   ranger => {
     master => ["ranger-server"],
-  }
+  },
+  airflow => {
+    master => ["airflow"],
+  },
 }
 
 class hadoop_cluster_node (
@@ -177,6 +180,7 @@ class node_with_roles ($roles = hiera("bigtop::roles")) inherits hadoop_cluster_
     "bigtop_utils",
     "phoenix",
     "ranger",
+    "airflow",
   ]
 
   node_with_roles::deploy_module { $modules:
