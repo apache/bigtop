@@ -34,14 +34,14 @@ class bigtop_toolchain::installer {
       exec { 'ensure java 8 is set as default':
         command => "update-java-alternatives --set temurin-8*",
         path    => ['/usr/sbin', '/usr/bin', '/bin'],
-        require => Class['bigtop_toolchain::jdk'],
+        require => [Class['bigtop_toolchain::jdk'], Class['bigtop_toolchain::jdk11']],
       }
     }
     /Ubuntu/: {
       exec { 'ensure java 8 is set as default':
         command => "update-java-alternatives --set java-1.8.0-openjdk-$(dpkg --print-architecture)",
         path    => ['/usr/sbin', '/usr/bin', '/bin'],
-        require => Class['bigtop_toolchain::jdk'],
+        require => [Class['bigtop_toolchain::jdk'], Class['bigtop_toolchain::jdk11']],
       }
     }
     /(CentOS|Fedora|RedHat|Rocky)/: {
@@ -49,7 +49,7 @@ class bigtop_toolchain::installer {
         command => "update-alternatives --set java java-1.8.0-openjdk.$(uname -m) \
                     && update-alternatives --set javac java-1.8.0-openjdk.$(uname -m)",
         path    => ['/usr/sbin', '/usr/bin', '/bin'],
-        require => Class['bigtop_toolchain::jdk'],
+        require => [Class['bigtop_toolchain::jdk'], Class['bigtop_toolchain::jdk11']],
       }
     }
   }
