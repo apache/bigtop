@@ -78,7 +78,7 @@ class bigtop_toolchain::jdk {
     /Fedora/: {
       exec { 'ensure java 8 is set as default':
         command => "update-alternatives --set java /usr/lib/jvm/java-1.8.0-openjdk/jre/bin/java \
-                    && update-alternatives --set javac /usr/lib/jvm/java-1.8.0-openjdk/jre/bin/javac",
+                    && update-alternatives --set javac /usr/lib/jvm/java-1.8.0-openjdk/bin/javac",
         path    => ['/usr/sbin', '/usr/bin', '/bin'],
         require => Package['jdk8'],
       }
