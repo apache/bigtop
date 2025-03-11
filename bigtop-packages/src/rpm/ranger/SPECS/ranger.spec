@@ -470,9 +470,6 @@ getent passwd ranger >/dev/null || useradd -c "Ranger" -s /bin/bash -g ranger -m
 
 %post usersync
 %{alternatives_cmd} --install %{np_etc_ranger}/usersync/conf ranger-usersync-conf %{etc_ranger}/usersync/conf.dist 30
-if [ -f %{usr_lib_ranger}-usersync/native/credValidator.uexe ]; then
-    chmod u+s %{usr_lib_ranger}-usersync/native/credValidator.uexe
-fi
 
 %preun usersync
 if [ "$1" = 0 ]; then
@@ -521,7 +518,6 @@ fi
 %files usersync
 %defattr(-,root,root,755)
 %{usr_lib_ranger}-usersync
-%attr(750,root,ranger) %{usr_lib_ranger}-usersync/native/credValidator.uexe
 %config(noreplace) %{etc_ranger}/usersync/conf.dist
 %attr(0755,ranger,ranger) %{np_etc_ranger}/usersync
 
