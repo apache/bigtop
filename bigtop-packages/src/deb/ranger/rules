@@ -64,7 +64,6 @@ endef
 
 define ranger_usersync_install
 ${usr_lib_ranger}-usersync
-${usr_lib_ranger}-usersync/native/credValidator.uexe
 ${etc_ranger}/usersync
 ${var_log_ranger}
 endef

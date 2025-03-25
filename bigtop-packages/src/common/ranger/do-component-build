@@ -26,6 +26,7 @@ mvn clean compile package install \
         -Dpmd.skip=true        \
         -Drat.skip=true        \
         -Dspotbugs.skip=true   \
+        -Denunciate.skip=true  \
         -Dhadoop.version=${HADOOP_VERSION} \
         -Dhbase.version=${HBASE_VERSION}   \
         -Dhive.version=${HIVE_VERSION}     \
