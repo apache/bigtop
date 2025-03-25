@@ -25,7 +25,7 @@ class bigtop_toolchain::renv {
         "pandoc"
       ]
     }
-    /(?i:(SLES|opensuse))/: { 
+    /(?i:(SLES|opensuse))/: {
       $pkgs = [
         "R-base",
         "R-base-devel",
@@ -33,21 +33,11 @@ class bigtop_toolchain::renv {
       ]
     }
     /(Ubuntu|Debian)/: {
-      if (($operatingsystem == 'Ubuntu' and versioncmp($operatingsystemmajrelease, '18.04') <= 0) or
-          ($operatingsystem == 'Debian' and versioncmp($operatingsystemmajrelease, '10') <= 0)) {
-        $pkgs = [
-          "r-base-dev",
-          "libcairo2-dev",
-          "pandoc",
-          "pandoc-citeproc",
-        ]
-      } else {
-        $pkgs = [
-          "r-base",
-          "r-base-dev",
-          "pandoc",
-        ]
-      }
+      $pkgs = [
+        "r-base",
+        "r-base-dev",
+        "pandoc",
+      ]
     }
     default: {
       $pkgs = []
@@ -73,30 +63,26 @@ class bigtop_toolchain::renv {
       cwd => "/usr/src",
       command => "/usr/bin/wget $pandocurl && /bin/tar -xvzf $pandoctar && ln -s /usr/src/pandoc-2.19.2/bin/pandoc /usr/bin/pandoc",
     }
-  }
 
-
-  # BIGTOP-3483:
-  #   Upgrade R version to 3.6.3 to build Spark 3.0.1 on Ubuntu 16.04 and 18.04
-  #
-  # Then Install required R packages dependency
-  if (($operatingsystem == 'Ubuntu' and versioncmp($operatingsystemmajrelease, '18.04') <= 0) or
-      ($operatingsystem == 'Debian' and versioncmp($operatingsystemmajrelease, '10') <= 0) or
-      ($operatingsystem == 'openEuler')) {
-    $rurl = "https://cran.r-project.org/src/base/R-3/"
-    $rfile = "R-3.6.3.tar.gz"
-    $rdir = "R-3.6.3"
+    $rurl = "https://cran.r-project.org/src/base/R-4/"
+    $rfile = "R-4.4.3.tar.gz"
+    $rdir = "R-4.4.3"
 
     exec { "download_R":
       cwd  => "/usr/src",
       command => "/usr/bin/wget $rurl/$rfile && mkdir -p $rdir && /bin/tar -xvzf $rfile -C $rdir --strip-components=1 && cd $rdir",
       creates => "/usr/src/$rdir",
     }
+
+    package { "cairo-devel":
+      ensure => installed,
+    }
+
     exec { "install_R":
       cwd => "/usr/src/$rdir",
       command => "/usr/src/$rdir/configure --with-recommended-packages=yes --without-x --with-cairo --with-libpng --with-libtiff --with-jpeglib --with-tcltk --with-blas --with-lapack --enable-R-shlib --prefix=/usr/local && /usr/bin/make && /usr/bin/make install && /sbin/ldconfig",
       creates => "/usr/local/bin/R",
-      require => [Exec["download_R"]],
+      require => [Exec["download_R"], Package["cairo-devel"]],
       timeout => 3000
     }
 
