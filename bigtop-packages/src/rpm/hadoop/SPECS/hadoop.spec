@@ -194,7 +194,7 @@ Source45: hadoop-hdfs.tmpfile
 
 #BIGTOP_PATCH_FILES
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id} -u -n)
-BuildRequires: fuse-devel, fuse, systemd, systemd-rpm-macros
+BuildRequires: fuse-devel, fuse, systemd
 Requires: coreutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service, bigtop-utils >= 0.7, %{zookeeper_pkg_name} >= 3.4.0
 Requires: psmisc, %{netcat_package}
 Requires: openssl-devel
@@ -215,7 +215,7 @@ Requires: sh-utils, insserv
 %if 0%{?openEuler}
 BuildRequires: pkgconfig, fuse-libs, openEuler-rpm-config, lzo-devel, openssl-devel
 %else
-BuildRequires: pkgconfig, fuse-libs, redhat-rpm-config, lzo-devel, openssl-devel
+BuildRequires: pkgconfig, fuse-libs, redhat-rpm-config, lzo-devel, openssl-devel, systemd-rpm-macros
 %endif
 # Required for init scripts
 Requires: coreutils, /lib/lsb/init-functions
