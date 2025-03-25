@@ -92,7 +92,12 @@ Source9: zookeeper-rest.svc
 Source10: %{svc_zookeeper}.service
 Source11: %{svc_zookeeper}.tmpfile
 #BIGTOP_PATCH_FILES
-BuildRequires: autoconf, automake, cppunit-devel, systemd, systemd-rpm-macros
+BuildRequires: autoconf, automake, cppunit-devel, systemd
+
+%if 0%{?openEuler} == 0
+BuildRequires: systemd-rpm-macros
+%endif
+
 Requires(pre): coreutils, /usr/sbin/groupadd, /usr/sbin/useradd
 Requires(post): %{alternatives_dep}
 Requires(preun): %{alternatives_dep}
