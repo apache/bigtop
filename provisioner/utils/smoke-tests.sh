@@ -32,6 +32,7 @@ fi
 
 echo -e "\n===== EXPORTING VARIABLES =====\n"
 
+export AIRFLOW_HOME=${AIRFLOW_HOME:-/var/lib/airflow}
 export ALLUXIO_HOME=${ALLUXIO_HOME:-/usr/lib/alluxio}
 export FLINK_HOME=${FLINK_HOME:-/usr/lib/flink}
 export HADOOP_HOME=${HADOOP_HOME:-/usr/lib/hadoop}

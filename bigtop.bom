@@ -346,5 +346,15 @@ bigtop {
                 archive = site }
       maven_parallel_build = true
     }
+    'airflow' {
+      name    = "airflow"
+      relNotes = "Apache Airflow"
+      version { base = '2.10.4'; pkg = base; release = 1 }
+      tarball { source      = "apache_airflow-${version.base}.tar.gz"
+                destination = source }
+      url     { download_path = "/${name}/${version.base}/"
+                site = "${apache.APACHE_MIRROR}/${download_path}"
+                archive = "${apache.APACHE_ARCHIVE}/${download_path}" }
+    }
   }
 }
