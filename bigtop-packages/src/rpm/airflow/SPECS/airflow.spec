@@ -76,4 +76,4 @@ chown -R airflow:airflow %{var_dir}
 %attr(0644,root,root) %{_unitdir}/airflow-webserver.service
 
 %config(noreplace) /etc/default/airflow
-%config(noreplace) /usr/lib/tmpfiles.d/airflow.conf
+%config(noreplace) %{_tmpfilesdir}/airflow.conf
