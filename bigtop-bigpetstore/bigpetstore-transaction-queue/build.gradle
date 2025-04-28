@@ -50,6 +50,6 @@ dependencies {
     compile 'commons-io:commons-io:2.18.0'
     compile 'org.apache.httpcomponents:httpclient:4.5.14'
     compile 'org.apache.commons:commons-lang3:3.17.0'
-    compile "com.github.rnowling.bigpetstore:bigpetstore-data-generator:0.2.1"
+    compile "org.apache.bigtop:bigpetstore-data-generator:3.5.0-SNAPSHOT"
     testCompile group: 'junit', name: 'junit', version: '4.13.2'
 }

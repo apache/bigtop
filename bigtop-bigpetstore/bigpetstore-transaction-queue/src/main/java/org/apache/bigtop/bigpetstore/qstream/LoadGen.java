@@ -17,11 +17,12 @@
 
 package org.apache.bigtop.bigpetstore.qstream;
 
-import com.github.rnowling.bps.datagenerator.datamodels.inputs.InputData;
-import com.github.rnowling.bps.datagenerator.datamodels.inputs.ProductCategory;
-import com.github.rnowling.bps.datagenerator.datamodels.*;
-import com.github.rnowling.bps.datagenerator.*;
-import com.github.rnowling.bps.datagenerator.framework.SeedFactory;
+import org.apache.bigtop.datagenerators.bigpetstore.datamodels.inputs.InputData;
+import org.apache.bigtop.datagenerators.bigpetstore.datamodels.inputs.ProductCategory;
+import org.apache.bigtop.datagenerators.bigpetstore.datamodels.*;
+import org.apache.bigtop.datagenerators.bigpetstore.generators.purchase.PurchasingModel;
+import org.apache.bigtop.datagenerators.bigpetstore.*;
+import org.apache.bigtop.datagenerators.samplers.SeedFactory;
 import com.google.common.collect.Lists;
 
 import java.util.*;
@@ -46,7 +47,7 @@ public abstract class LoadGen {
         return 100*1000;
     }
 
-    public abstract LinkedBlockingQueue<Transaction> startWriteQueue(int qSize);
+    public abstract LinkedBlockingQueue<Transaction> startWriteQueue(int milliseconds);
 
     public static boolean TESTING=false;
 
@@ -95,10 +96,9 @@ public abstract class LoadGen {
     public static void main(String[] args){
         try {
             LoadGen lg = LoadGenFactory.parseArgs(args);
-            long start=System.currentTimeMillis();
             int runs = 0;
-            //write everything to /tmp, every 20 seconds.
-            LinkedBlockingQueue<Transaction> q = lg.startWriteQueue(10000);
+            //write everything to /tmp, every second.
+            LinkedBlockingQueue<Transaction> q = lg.startWriteQueue(1000);
             while(true){
                 lg.iterateData(q, System.currentTimeMillis());
                 runs++;
@@ -152,8 +152,8 @@ public abstract class LoadGen {
         if(! custIter.hasNext())
             throw new RuntimeException("No customer data ");
         //Create a new purchasing profile.
-        PurchasingProfileGenerator profileGen = new PurchasingProfileGenerator(products, seedFactory);
-        PurchasingProfile profile = profileGen.generate();
+        PurchasingModelGenerator profileGen = new PurchasingModelGenerator(products, seedFactory);
+        PurchasingModel profile = profileGen.generate();
 
         /** Stop either if
         * 1) the queue is full
@@ -162,7 +162,7 @@ public abstract class LoadGen {
         while(queue.remainingCapacity()>0 && custIter.hasNext()){
             Customer cust = custIter.next();
             int transactionsForThisCustomer = 0;
-            TransactionGenerator transGen = new TransactionGenerator(cust, profile, stores, products, seedFactory);
+            TransactionGenerator transGen = new TransactionGenerator(cust, profile, products, seedFactory);
             Transaction trC = transGen.generate();
             while(trC.getDateTime()<simulationLength) {
                 queue.put(trC);
