@@ -16,9 +16,12 @@
 package org.apache.bigtop.datagenerators.bigpetstore.datamodels.inputs;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.bigtop.datagenerators.bigpetstore.Constants;
+import org.apache.bigtop.datagenerators.bigpetstore.ProductGenerator;
 import org.apache.bigtop.datagenerators.locations.Location;
 
 public class InputData implements Serializable
@@ -26,14 +29,26 @@ public class InputData implements Serializable
 	private static final long serialVersionUID = 9078989799806707788L;
 
 	List<Location> zipcodeTable;
+	Collection<ProductCategory> productCategories;
 
 	public InputData(List<Location> zipcodeTable)
 	{
+		this(zipcodeTable, new ProductGenerator(Constants.PRODUCTS_COLLECTION).generate());
+	}
+
+	public InputData(List<Location> zipcodeTable, Collection<ProductCategory> productCategories)
+	{
 		this.zipcodeTable = Collections.unmodifiableList(zipcodeTable);
+		this.productCategories = Collections.unmodifiableCollection(productCategories);
 	}
 
 	public List<Location> getZipcodeTable()
 	{
 		return zipcodeTable;
+	}
+
+	public Collection<ProductCategory> getProductCategories()
+	{
+		return productCategories;
 	}
 }

@@ -17,9 +17,9 @@
 
 package org.apache.bigtop.bigpetstore.spark.generator
 
-import com.github.rnowling.bps.datagenerator.datamodels._
-import com.github.rnowling.bps.datagenerator.{DataLoader, PurchasingProfileGenerator, StoreGenerator, TransactionGenerator, CustomerGenerator => CustGen}
-import com.github.rnowling.bps.datagenerator.framework.SeedFactory
+import org.apache.bigtop.datagenerators.bigpetstore.datamodels._
+import org.apache.bigtop.datagenerators.bigpetstore.{DataLoader, PurchasingModelGenerator, StoreGenerator, TransactionGenerator, CustomerGenerator => CustGen}
+import org.apache.bigtop.datagenerators.samplers.SeedFactory
 
 import scala.jdk.CollectionConverters._
 import org.apache.spark.{SparkConf, SparkContext}
@@ -138,13 +138,12 @@ object SparkDriver {
     }
     println("...Done generating customers.")
 
-    println("Broadcasting stores and products...")
-    val storesBC = sc.broadcast(stores)
+    println("Broadcasting products...")
     val productBC = sc.broadcast(inputData.getProductCategories())
     val customerRDD = sc.parallelize(customers)
     val simLen = simulationLength
     val nextSeed = seedFactory.getNextSeed()
-    println("...Done broadcasting stores and products.")
+    println("...Done broadcasting products.")
 
     println("Defining transaction DAG...")
 
@@ -160,9 +159,9 @@ object SparkDriver {
         customer =>
 	  val products = productBC.value
           //Create a new purchasing profile.
-          val profileGen = new PurchasingProfileGenerator(products, seedFactory)
+          val profileGen = new PurchasingModelGenerator(products, seedFactory)
           val profile = profileGen.generate()
-          val transGen = new TransactionGenerator(customer, profile, storesBC.value, products, seedFactory)
+          val transGen = new TransactionGenerator(customer, profile, products, seedFactory)
           var transactions : List[Transaction] = List()
 	  var transaction = transGen.generate()
 
@@ -202,7 +201,7 @@ object SparkDriver {
       t.getStore.getLocation.getCity + "," +
       t.getStore.getLocation.getState + "," +
       t.getCustomer.getId + "," +
-      t.getCustomer.getName.getFirst + "," +t.getCustomer.getName.getSecond + "," +
+      t.getCustomer.getName.getKey + "," +t.getCustomer.getName.getValue + "," +
       t.getCustomer.getLocation.getZipcode + "," +
       t.getCustomer.getLocation.getCity + "," +
       t.getCustomer.getLocation.getState + "," +

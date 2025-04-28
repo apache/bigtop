@@ -1,6 +1,6 @@
 package org.apache.bigtop.bigpetstore.qstream;
 
-import com.github.rnowling.bps.datagenerator.datamodels.Transaction;
+import org.apache.bigtop.datagenerators.bigpetstore.datamodels.Transaction;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
