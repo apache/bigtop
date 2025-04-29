@@ -1,6 +1,6 @@
 package org.apache.bigtop.bigpetstore.qstream;
 
-import com.github.rnowling.bps.datagenerator.datamodels.Transaction;
+import org.apache.bigtop.datagenerators.bigpetstore.datamodels.Transaction;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -39,7 +39,7 @@ public class FileLoadGen extends LoadGen{
         }
 
         /**
-         * Write queue.   Every 5 seconds, write
+         * Write queue.
          */
         final LinkedBlockingQueue<Transaction> transactionQueue = new LinkedBlockingQueue<Transaction>(getQueueSize());
         new Thread(){

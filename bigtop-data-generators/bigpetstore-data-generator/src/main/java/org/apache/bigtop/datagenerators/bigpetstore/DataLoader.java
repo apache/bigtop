@@ -26,7 +26,7 @@ public class DataLoader
 	public InputData loadData() throws Exception
 	{
 		List<Location> locations = new LocationReader().readData();
-		InputData inputData = new InputData(locations);
+		InputData inputData = new InputData(locations, new ProductGenerator(Constants.PRODUCTS_COLLECTION).generate());
 
 		return inputData;
 	}

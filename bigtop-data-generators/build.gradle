@@ -17,6 +17,15 @@
 subprojects {
   apply plugin: 'eclipse'
   apply plugin: 'java'
+  apply plugin: 'maven-publish'
+
+  publishing {
+    publications {
+      mavenJava(MavenPublication) {
+        artifact jar
+      }
+    }
+  }
 
   Node xml = new XmlParser().parse("../pom.xml")
   group = xml.groupId.first().value().first()
