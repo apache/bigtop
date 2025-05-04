@@ -47,6 +47,16 @@ class bigtop_repo {
         }
       }
       Yumrepo<||> -> Package<||>
+
+      if versioncmp($operatingsystemmajrelease, '9') == 0 {
+        # SHA-1 for package signing was deprecated in RHEL 9.
+        # https://www.redhat.com/en/blog/rhel-security-sha-1-package-signatures-distrusted-rhel-9
+        exec { 'update_crypto_policies_legacy':
+          command => '/usr/bin/update-crypto-policies --set LEGACY'
+        }
+
+        Exec['update_crypto_policies_legacy'] -> Yumrepo<||>
+      }
     }
 
     /(Ubuntu|Debian)/: {
