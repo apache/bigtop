@@ -218,7 +218,11 @@ BuildRequires: pkgconfig, fuse-libs, openEuler-rpm-config, lzo-devel, openssl-de
 BuildRequires: pkgconfig, fuse-libs, redhat-rpm-config, lzo-devel, openssl-devel, systemd-rpm-macros
 %endif
 # Required for init scripts
-Requires: coreutils, /lib/lsb/init-functions
+%if 0%{?fedora} >= 40
+Requires: redhat-lsb-core
+%else
+Requires: /lib/lsb/init-functions
+%endif
 %endif
 
 %if  0%{?mgaversion}

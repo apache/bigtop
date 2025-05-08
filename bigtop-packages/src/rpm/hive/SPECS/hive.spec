@@ -112,7 +112,11 @@ Hive is a data warehouse infrastructure built on top of Hadoop that provides too
 Requires: insserv
 %else
 # Required for init scripts
+%if 0%{?fedora} >= 40
+Requires: redhat-lsb-core
+%else
 Requires: /lib/lsb/init-functions
+%endif
 %endif
 
 %package server2
@@ -126,7 +130,11 @@ Requires(pre): %{name} = %{version}-%{release}
 Requires: insserv
 %else
 # Required for init scripts
+%if 0%{?fedora} >= 40
+Requires: redhat-lsb-core
+%else
 Requires: /lib/lsb/init-functions
+%endif
 %endif
 
 %description server2
