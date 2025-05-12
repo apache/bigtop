@@ -135,7 +135,11 @@ Requires: initscripts
 # So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
 %if %{!?suse_version:1}0 && %{!?mgaversion:1}0
 # Required for init scripts
+%if 0%{?fedora} >= 40
+Requires: redhat-lsb-core
+%else
 Requires: /lib/lsb/init-functions
+%endif
 %endif
 
 

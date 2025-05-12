@@ -57,13 +57,14 @@ It supports executing snippets of code or programs in a Spark context that runs 
 # Required for init scripts
 Requires: insserv
 %global        initd_dir %{_sysconfdir}/rc.d
-
 %else
 # Required for init scripts
+%if 0%{?fedora} >= 40
+Requires: redhat-lsb-core
+%else
 Requires: /lib/lsb/init-functions
-
+%endif
 %global        initd_dir %{_sysconfdir}/init.d
-
 %endif
 
 # disable repacking jars

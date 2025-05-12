@@ -68,14 +68,15 @@ Source7:       alluxio-job-worker.svc
 # Required for init scripts
 Requires: insserv
 %global        initd_dir %{_sysconfdir}/rc.d
-
 %else
 # Required for init scripts
+%if 0%{?fedora} >= 40
+Requires: redhat-lsb-core
+%else
 Requires: /lib/lsb/init-functions
+%endif
 Requires: initscripts
-
 %global        initd_dir %{_sysconfdir}/rc.d/init.d
-
 %endif
 
 Requires: bigtop-utils

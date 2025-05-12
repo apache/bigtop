@@ -75,7 +75,11 @@ Requires(preun): /sbin/service
 Requires: insserv
 %else
 # Required for init scripts
+%if 0%{?fedora} >= 40
+Requires: redhat-lsb-core
+%else
 Requires: /lib/lsb/init-functions
+%endif
 %endif
 
 %description
