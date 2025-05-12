@@ -29,7 +29,7 @@ class hadoop ($hadoop_security_authentication = "simple",
   $hadoop_http_authentication_type = undef,
   $hadoop_http_authentication_signature_secret = undef,
   $hadoop_http_authentication_signature_secret_file = "/etc/hadoop/conf/hadoop-http-authentication-signature-secret",
-  $hadoop_http_authentication_cookie_domain = $fqdn.split("\\.")[1, -1].join("."),
+  $hadoop_http_authentication_cookie_domain = regsubst($fqdn, "^[^\\.]+\\.", ""),
 ) {
 
   include stdlib
