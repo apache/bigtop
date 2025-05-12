@@ -59,8 +59,6 @@ Requires: insserv
 %global        initd_dir %{_sysconfdir}/rc.d
 %else
 # Required for init scripts
-%if %{!?suse_version:1}0 && %{!?mgaversion:1}0
-# Required for init scripts
 %if 0%{?fedora} >= 40
 Requires: redhat-lsb-core
 %else
