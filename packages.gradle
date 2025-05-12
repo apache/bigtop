@@ -221,7 +221,7 @@ task "all-components" (description: "List the components of the stack") doLast {
   }
 }
 
-def genTasks = { target ->
+def genTasks = { target, packaging ->
   Task t = task "${target}-download" (dependsOn: "${target}_vardefines",
       description: "Download $target artifacts",
       group: PACKAGES_GROUP) doLast {
@@ -734,13 +734,15 @@ def genTasks = { target ->
   }
   if (nativePackaging) {
     def ptype = nativePackaging.pkg
-    task "$target-pkg" (dependsOn: "$target-$ptype",
-        description: "Invoking a native binary packaging target $ptype",
-        group: PACKAGES_GROUP) doLast {
-    }
-    task "$target-spkg" (dependsOn: "$target-s$ptype",
-        description: "Invoking a native binary packaging target s$ptype",
-        group: PACKAGES_GROUP) doLast {
+    if (ptype.equals(packaging)) {
+      task "$target-pkg" (dependsOn: "$target-$ptype",
+          description: "Invoking a native binary packaging target $ptype",
+          group: PACKAGES_GROUP) doLast {
+      }
+      task "$target-spkg" (dependsOn: "$target-s$ptype",
+          description: "Invoking a native binary packaging target s$ptype",
+          group: PACKAGES_GROUP) doLast {
+      }
     }
   }
   task "$target-pkg-ind" (
@@ -889,9 +891,7 @@ project.afterEvaluate {
   doValidateBOM(config)
   config.bigtop.components.each { component_label, comp ->
     assert component_label == comp.name
-    if (!comp.packaging || comp.packaging.equalsIgnoreCase(nativePackaging.pkg)) {
-      genTasks(comp.name)
-    }
+    genTasks(comp.name, comp.packaging)
   }
   // Versions need to be preserved for more than just component:
   //  - there are JDK version requirement
