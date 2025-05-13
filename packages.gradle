@@ -734,7 +734,7 @@ def genTasks = { target, packaging ->
   }
   if (nativePackaging) {
     def ptype = nativePackaging.pkg
-    if (ptype.equals(packaging)) {
+    if (!packaging || ptype.equalsIgnoreCase(packaging)) {
       task "$target-pkg" (dependsOn: "$target-$ptype",
           description: "Invoking a native binary packaging target $ptype",
           group: PACKAGES_GROUP) doLast {
