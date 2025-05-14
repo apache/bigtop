@@ -40,7 +40,7 @@ class bigtop_toolchain::python {
     ensure => present
   }
 
-  if ($architecture in ['aarch64']) {
+  if ($architecture in ['aarch64', 'ppc64le']) {
     exec { "download_python2.7":
       cwd => "/usr/src",
       command => "/usr/bin/wget https://www.python.org/ftp/python/2.7.18/Python-2.7.18.tgz --no-check-certificate && /usr/bin/mkdir Python-2.7.18 && /bin/tar -xvzf Python-2.7.18.tgz -C Python-2.7.18 --strip-components=1 && cd Python-2.7.18",
