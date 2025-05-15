@@ -184,7 +184,7 @@ class spark {
 
       exec { "download_R":
         cwd  => "/usr/src",
-        command => "/usr/bin/wget $url/$rfile && mkdir -p $rdir && /bin/tar -xvzf $rfile -C $rdir --strip-components=1 && cd $rdir",
+        command => "/usr/bin/wget $rurl/$rfile && mkdir -p $rdir && /bin/tar -xvzf $rfile -C $rdir --strip-components=1 && cd $rdir",
         creates => "/usr/src/$rdir",
       }
       exec { "install_R":
