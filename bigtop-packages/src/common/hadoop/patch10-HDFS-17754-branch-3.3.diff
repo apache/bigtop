@@ -1,0 +1,77 @@
+commit 79fe8bef3b24901d3eb5d0d0de74cc4e03dbebce
+Author: Chris Nauroth <cnauroth@apache.org>
+Date:   Tue Mar 11 03:32:10 2025 -0700
+
+    HDFS-17754. Add uriparser2 to notices (#7481)
+    
+    Contributed by Chris Nauroth
+    
+    (cherry picked from commit 2b32e46f666c7645f5d1e026be3982b99319ccb8)
+    
+     Conflicts:
+            NOTICE-binary
+
+diff --git a/NOTICE-binary b/NOTICE-binary
+index 2189de34e37e..b1e1dc7692f6 100644
+--- a/NOTICE-binary
++++ b/NOTICE-binary
+@@ -822,7 +822,7 @@ This product includes software developed by Apache
+  PureJavaCrc32C from apache-hadoop-common http://hadoop.apache.org/
+  (Apache 2.0 license)
+ 
+-This library containd statically linked libstdc++. This inclusion is allowed by
++This library contains statically linked libstdc++. This inclusion is allowed by
+ "GCC RUntime Library Exception"
+ http://gcc.gnu.org/onlinedocs/libstdc++/manual/license.html
+ 
+@@ -890,4 +890,11 @@ may have restrictions on the import, possession, and use, and/or re-export to
+ another country, of encryption software. BEFORE using any encryption software,
+ please check the country's laws, regulations and policies concerning the import,
+ possession, or use, and re-export of encryption software, to see if this is
+-permitted.
+\ No newline at end of file
++permitted.
++
++This product includes code from uriparser2, a C and C++ library for URI parsing.
++
++  * LICENSE:
++    * license/LICENSE-uriparser2.txt (MIT License)
++  * HOMEPAGE:
++    * https://github.com/bnoordhuis/uriparser2
+diff --git a/hadoop-hdfs-project/hadoop-hdfs-native-client/src/main/native/libhdfspp/third_party/uriparser2/uriparser2/uriparser/UriQuery.c b/hadoop-hdfs-project/hadoop-hdfs-native-client/src/main/native/libhdfspp/third_party/uriparser2/uriparser2/uriparser/UriQuery.c
+index 7cb031dda5c1..35793d20ef13 100644
+--- a/hadoop-hdfs-project/hadoop-hdfs-native-client/src/main/native/libhdfspp/third_party/uriparser2/uriparser2/uriparser/UriQuery.c
++++ b/hadoop-hdfs-project/hadoop-hdfs-native-client/src/main/native/libhdfspp/third_party/uriparser2/uriparser2/uriparser/UriQuery.c
+@@ -219,6 +219,7 @@ int URI_FUNC(ComposeQueryEngine)(URI_CHAR * dest,
+ 
+ 			/* Copy key */
+ 			if (firstItem == URI_TRUE) {
++				ampersandLen = 1;
+ 				firstItem = URI_FALSE;
+ 			} else {
+ 				write[0] = _UT('&');
+diff --git a/licenses-binary/LICENSE-uriparser2.txt b/licenses-binary/LICENSE-uriparser2.txt
+new file mode 100644
+index 000000000000..c662ad5d20e4
+--- /dev/null
++++ b/licenses-binary/LICENSE-uriparser2.txt
+@@ -0,0 +1,19 @@
++Copyright (c) 2010 Ben Noordhuis
++
++Permission is hereby granted, free of charge, to any person obtaining a copy
++of this software and associated documentation files (the "Software"), to deal
++in the Software without restriction, including without limitation the rights
++to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
++copies of the Software, and to permit persons to whom the Software is
++furnished to do so, subject to the following conditions:
++
++The above copyright notice and this permission notice shall be included in
++all copies or substantial portions of the Software.
++
++THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
++AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
++THE SOFTWARE.
