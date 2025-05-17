@@ -56,7 +56,7 @@ class bigtop_toolchain::python {
 
     exec { "ln python2.7":
       cwd => "/usr/bin",
-      command => "/usr/bin/ln -s /usr/local/python2.7.18/bin/python2.7 python2.7 && /usr/bin/ln -snf python2.7 python2",
+      command => "/usr/bin/ln -snf /usr/local/python2.7.18/bin/python2.7 python2.7 && /usr/bin/ln -snf python2.7 python2",
       require => Exec["install_python2.7"],
     }
   }
