@@ -43,13 +43,13 @@ class bigtop_toolchain::python {
   if ($architecture in ['aarch64', 'ppc64le']) {
     exec { "download_python2.7":
       cwd => "/usr/src",
-      command => "/usr/bin/wget https://www.python.org/ftp/python/2.7.18/Python-2.7.18.tgz --no-check-certificate && /usr/bin/mkdir Python-2.7.18 && /bin/tar -xvzf Python-2.7.18.tgz -C Python-2.7.18 --strip-components=1 && cd Python-2.7.18",
+      command => "/usr/bin/wget https://www.python.org/ftp/python/2.7.18/Python-2.7.18.tgz && /usr/bin/mkdir Python-2.7.18 && /bin/tar -xvzf Python-2.7.18.tgz -C Python-2.7.18 --strip-components=1 && cd Python-2.7.18",
       creates => "/usr/src/Python-2.7.18",
     }
 
     exec { "install_python2.7":
       cwd => "/usr/src/Python-2.7.18",
-      command => "/usr/src/Python-2.7.18/configure --prefix=/usr/local/python2.7.18 && /usr/bin/make -j8 && /usr/bin/make install -j8",
+      command => "/usr/src/Python-2.7.18/configure --prefix=/usr/local/python2.7.18 && /usr/bin/make -j${processors['cores']} && /usr/bin/make install -j${processors['cores']}",
       require => [Exec["download_python2.7"]],
       timeout => 3000
     }
