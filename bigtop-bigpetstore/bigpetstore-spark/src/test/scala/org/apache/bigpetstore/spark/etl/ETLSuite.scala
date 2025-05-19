@@ -20,14 +20,14 @@ package org.apache.bigtop.bigpetstore.spark.etl
 import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
-
-import org.apache.spark.{SparkContext, SparkConf}
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatestplus.junit.JUnitRunner
 import org.junit.runner.RunWith
-
 import org.apache.bigtop.bigpetstore.spark.datamodel._
+import org.apache.spark.sql.SparkSession
+
+import java.sql.Timestamp
 
 /**
  * This class tests that, when we read records from the generator, the
@@ -43,34 +43,31 @@ import org.apache.bigtop.bigpetstore.spark.datamodel._
 @RunWith(classOf[JUnitRunner])
 class ETLSuite extends AnyFunSuite with BeforeAndAfterAll {
 
+  case class TransactionProduct(customerId: Long, transactionId: Long,
+                                storeId: Long, dateTime: Timestamp, product: String)
+
   /**
    * TODO : We are using Option monads as a replacement for nulls.
    * Lets move towards immutable spark context instead, if possible ?
    */
-  val conf = new SparkConf().setAppName("BPS Data Generator Test Suite").setMaster("local[2]")
-  val sc = new SparkContext(conf)
+  private val spark = SparkSession.builder.appName("BPS Data Generator Test Suite").master("local[*]").getOrCreate()
 
-  var rawRecords: Option[Array[(Store, Location, Customer, Location, TransactionProduct)]] = None
+  var rawRecords: Option[Array[RawData]] = None
   var transactions: Option[Array[Transaction]] = None
 
-  val stores = Array(Store(5L, "11553"), Store(1L, "98110"), Store(6L, "66067"))
-  val locations =
+  private val stores = Array(Store(5L, "11553"), Store(1L, "98110"), Store(6L, "66067"))
+  private val locations =
     Array(
       Location("11553", "Uniondale", "NY"),
       Location("98110", "Bainbridge Islan", "WA"),
       Location("66067", "Ottawa", "KS"),
       Location("20152", "Chantilly", "VA"))
-  val customers = Array(Customer(999L, "Cesareo", "Lamplough", "20152"))
-  val products =
+  private val customers = Array(Customer(999L, "Cesareo", "Lamplough", "20152"))
+  private val products =
     Array(
-      Product(1L, "dry dog food", Map("category" -> "dry dog food", "brand" -> "Happy Pup", "flavor" -> "Fish & Potato", "size" -> "30.0", "per_unit_cost" -> "2.67")),
-      Product(0L, "poop bags", Map("category" -> "poop bags", "brand" -> "Dog Days", "color" -> "Blue", "size" -> "60.0", "per_unit_cost" -> "0.21")),
-      Product(2L, "dry cat food", Map("category" -> "dry cat food", "brand" -> "Feisty Feline", "flavor" -> "Chicken & Rice", "size" -> "14.0", "per_unit_cost" -> "2.14")))
-
-  val rawLines = Array(
-    "5,11553,Uniondale,NY,999,Cesareo,Lamplough,20152,Chantilly,VA,32,Tue Nov 03 01:08:11 EST 2015,category=dry dog food;brand=Happy Pup;flavor=Fish & Potato;size=30.0;per_unit_cost=2.67;",
-    "1,98110,Bainbridge Islan,WA,999,Cesareo,Lamplough,20152,Chantilly,VA,31,Mon Nov 02 17:51:37 EST 2015,category=poop bags;brand=Dog Days;color=Blue;size=60.0;per_unit_cost=0.21;",
-    "6,66067,Ottawa,KS,999,Cesareo,Lamplough,20152,Chantilly,VA,30,Mon Oct 12 04:29:46 EDT 2015,category=dry cat food;brand=Feisty Feline;flavor=Chicken & Rice;size=14.0;per_unit_cost=2.14;")
+      Product(2L, "dry dog food", Map("category" -> "dry dog food", "brand" -> "Happy Pup", "flavor" -> "Fish & Potato", "size" -> "30.0", "per_unit_cost" -> "2.67")),
+      Product(3L, "poop bags", Map("category" -> "poop bags", "brand" -> "Dog Days", "color" -> "Blue", "size" -> "60.0", "per_unit_cost" -> "0.21")),
+      Product(1L, "dry cat food", Map("category" -> "dry cat food", "brand" -> "Feisty Feline", "flavor" -> "Chicken & Rice", "size" -> "14.0", "per_unit_cost" -> "2.14")))
 
   override def beforeAll(): Unit = {
 
@@ -79,83 +76,46 @@ class ETLSuite extends AnyFunSuite with BeforeAndAfterAll {
     val cal3 = Calendar.getInstance(TimeZone.getTimeZone("America/New_York"), Locale.US)
 
     cal1.set(2015, 10, 3, 1, 8, 11)
-
     cal2.set(2015, 10, 2, 17, 51, 37)
-
     cal3.set(2015, 9, 12, 4, 29, 46)
 
+    val ts1 = new Timestamp(cal1.getTimeInMillis)
+    val ts2 = new Timestamp(cal2.getTimeInMillis)
+    val ts3 = new Timestamp(cal3.getTimeInMillis)
+
     rawRecords = Some(Array(
-      (stores(0), locations(0), customers(0), locations(3),
-        TransactionProduct(999L, 32L, 5L, cal1, "category=dry dog food;brand=Happy Pup;flavor=Fish & Potato;size=30.0;per_unit_cost=2.67;")),
+      RawData(stores(0).storeId, stores(0).zipcode, locations(0).city, locations(0).state, customers(0).customerId,
+        customers(0).firstName, customers(0).lastName, customers(0).zipcode, locations(3).city, locations(3).state,
+        32L, ts1, "category=dry dog food;brand=Happy Pup;flavor=Fish & Potato;size=30.0;per_unit_cost=2.67;"),
 
-      (stores(1), locations(1), customers(0), locations(3),
-        TransactionProduct(999L, 31L, 1L, cal2, "category=poop bags;brand=Dog Days;color=Blue;size=60.0;per_unit_cost=0.21;")),
+      RawData(stores(1).storeId, stores(1).zipcode, locations(1).city, locations(1).state, customers(0).customerId,
+        customers(0).firstName, customers(0).lastName, customers(0).zipcode, locations(3).city, locations(3).state,
+        31L, ts2, "category=poop bags;brand=Dog Days;color=Blue;size=60.0;per_unit_cost=0.21;"),
 
-      (stores(2), locations(2), customers(0), locations(3),
-        TransactionProduct(999L, 30L, 6L, cal3, "category=dry cat food;brand=Feisty Feline;flavor=Chicken & Rice;size=14.0;per_unit_cost=2.14;"))))
+      RawData(stores(2).storeId, stores(2).zipcode, locations(2).city, locations(2).state, customers(0).customerId,
+        customers(0).firstName, customers(0).lastName, customers(0).zipcode, locations(3).city, locations(3).state,
+        30L, ts3, "category=dry cat food;brand=Feisty Feline;flavor=Chicken & Rice;size=14.0;per_unit_cost=2.14;"),
+    ))
 
     transactions = Some(Array(
-      Transaction(999L, 31L, 1L, cal2, 0L),
-      Transaction(999L, 30L, 6L, cal3, 2L),
-      Transaction(999L, 32L, 5L, cal1, 1L)))
+      Transaction(999L, 31L, 1L, ts2, 3L),
+      Transaction(999L, 30L, 6L, ts3, 1L),
+      Transaction(999L, 32L, 5L, ts1, 2L)))
   }
-
 
   override def afterAll(): Unit = {
-    sc.stop()
-  }
-
-  test("Parsing Generated Strings into Transaction Objects") {
-    val rawRDD = sc.parallelize(rawLines)
-    val expectedRecords = rawRecords.get
-
-    //Goal: Confirm that these RDD's are identical to the expected ones.
-    val rdd = SparkETL.parseRawData(rawRDD).collect()
-
-    /**
-     * Assumption: Order of RDD elements will be same as the mock records.
-     * This assumption seems to hold, but probably would break down if input size was large
-     * or running this test on distributed cluster.
-     */
-    for(i <- 0 to expectedRecords.length-1) {
-      val rawRecord = rdd(i)
-      val expectedRecord = expectedRecords(i)
-
-      //Store, Location, Customer, TransactionProduct
-      assert(rawRecord._1===expectedRecord._1)
-      assert(rawRecord._2===expectedRecord._2)
-      assert(rawRecord._3===expectedRecord._3)
-      assert(rawRecord._4===expectedRecord._4)
-
-      //Transaction
-      assert(rawRecord._5.customerId === expectedRecord._5.customerId)
-      assert(rawRecord._5.product === expectedRecord._5.product)
-      assert(rawRecord._5.storeId === expectedRecord._5.storeId)
-
-      //BIGTOP-1586 : We want granular assertions, and we don't care to compare millisecond timestamps.
-      assert(rawRecord._5.dateTime.get(Calendar.YEAR) === expectedRecord._5.dateTime.get(Calendar.YEAR))
-      assert(rawRecord._5.dateTime.get(Calendar.MONTH) === expectedRecord._5.dateTime.get(Calendar.MONTH))
-      assert(rawRecord._5.dateTime.get(Calendar.DAY_OF_MONTH) === expectedRecord._5.dateTime.get(Calendar.DAY_OF_MONTH))
-      assert(rawRecord._5.dateTime.get(Calendar.HOUR_OF_DAY) === expectedRecord._5.dateTime.get(Calendar.HOUR_OF_DAY))
-      assert(rawRecord._5.dateTime.get(Calendar.MINUTE) === expectedRecord._5.dateTime.get(Calendar.MINUTE))
-      assert(rawRecord._5.dateTime.get(Calendar.SECOND) === expectedRecord._5.dateTime.get(Calendar.SECOND))
-    }
-
+    spark.stop()
   }
 
   test("Generation of unique sets of transaction attributes") {
-    val rawRDD = sc.parallelize(rawRecords.get)
-    val rdds = SparkETL.normalizeData(rawRDD)
-    val locationRDD = rdds._1
-    val storeRDD = rdds._2
-    val customerRDD = rdds._3
-    val productRDD = rdds._4
-    val transactionRDD = rdds._5
+    val rawDF = spark.createDataFrame(rawRecords.get)
+    val (locationRDD, storeRDD, customerRDD, productRDD, transactionRDD) = SparkETL.normalizeData(spark, rawDF)
 
-    assert(storeRDD.collect().toSet === stores.toSet)
-    assert(locationRDD.collect().toSet === locations.toSet)
-    assert(customerRDD.collect().toSet === customers.toSet)
-    assert(productRDD.collect().toSet === products.toSet)
-    assert(transactionRDD.collect().toSet === transactions.get.toSet)
+    import spark.implicits._
+    assert(storeRDD.as[Store].collect().toSet === stores.toSet)
+    assert(locationRDD.as[Location].collect().toSet === locations.toSet)
+    assert(customerRDD.as[Customer].collect().toSet === customers.toSet)
+    assert(productRDD.as[Product].collect().toSet === products.toSet)
+    assert(transactionRDD.as[Transaction].collect().toSet === transactions.get.toSet)
   }
 }

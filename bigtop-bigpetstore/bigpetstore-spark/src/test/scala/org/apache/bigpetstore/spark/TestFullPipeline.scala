@@ -19,12 +19,11 @@ package org.apache.bigpetstore.spark
 
 import org.apache.bigtop.bigpetstore.spark.analytics.PetStoreStatistics
 import org.apache.bigtop.bigpetstore.spark.analytics.RecommendProducts
-import org.apache.bigtop.bigpetstore.spark.datamodel.{Statistics, IOUtils}
+import org.apache.bigtop.bigpetstore.spark.datamodel.{IOUtils, Statistics}
 import org.apache.bigtop.bigpetstore.spark.etl.ETLParameters
 import org.apache.bigtop.bigpetstore.spark.etl.SparkETL
 import org.apache.bigtop.bigpetstore.spark.generator.SparkDriver
-import org.apache.spark.SparkConf
-import org.apache.spark.SparkContext
+import org.apache.spark.sql.SparkSession
 import org.junit.runner.RunWith
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.funsuite.AnyFunSuite
@@ -37,44 +36,44 @@ import java.nio.file.Files
 @RunWith(classOf[JUnitRunner])
 class TestFullPipeline extends AnyFunSuite with BeforeAndAfterAll {
 
-  val conf = new SparkConf().setAppName("BPS Data Generator Test Suite").setMaster("local[2]")
-  val sc = new SparkContext(conf)
+  private val spark = SparkSession.builder.appName("BPS Data Generator Test Suite").master("local[2]")
+    .config("spark.sql.legacy.timeParserPolicy", "LEGACY").getOrCreate()
 
   override def afterAll(): Unit = {
-    sc.stop()
+    spark.stop()
   }
 
   test("Full integration test.") {
 
     // First generate the data.
-    val tmpDir:File = Files.createTempDirectory("sparkDriverSuiteGeneratedData2").toFile()
+    val tmpDir: File = Files.createTempDirectory("sparkDriverSuiteGeneratedData2").toFile()
 
-    //stores, customers, days, randomSeed
-    val parameters:Array[String] = Array(tmpDir.toString(), "10", "1000", "365.0","123456789")
+    // stores, customers, days, randomSeed
+    val parameters: Array[String] = Array(tmpDir.toString(), "10", "1000", "365.0", "123456789")
     SparkDriver.parseArgs(parameters)
 
-    val transactionRDD = SparkDriver.generateData(sc)
+    val transactionRDD = SparkDriver.generateData(spark.sparkContext)
     SparkDriver.writeData(transactionRDD)
 
-    //Now ETL the data
-    val etlDir:File = Files.createTempDirectory("BPSTest_ETL2").toFile()
-    System.out.println(etlDir.getAbsolutePath + "== "+etlDir.list())
+    // Now ETL the data
+    val etlDir: File = Files.createTempDirectory("BPSTest_ETL2").toFile()
+    System.out.println(etlDir.getAbsolutePath + "== " + etlDir.list())
 
-    val (locations,stores,customers,products,transactions) = SparkETL.run(sc, new ETLParameters(tmpDir.getAbsolutePath,etlDir.getAbsolutePath))
+    val (locations, stores, customers, products, transactions) = SparkETL.run(spark, ETLParameters(tmpDir.getAbsolutePath, etlDir.getAbsolutePath))
 
-    // assert(locations==400L) TODO : This seems to vary (325,400,)
-    assert(stores==10L)
-    assert(customers==1000L)
+    //assert(locations==400L) TODO : This seems to vary (325,400,)
+    assert(stores == 10L)
+    assert(customers == 1000L)
     //assert(products==55L)
     //assert(transactions==45349L)
 
-    //Now do the analytics.
-    val analyticsJson = new File(tmpDir,"analytics.json")
+    // Now do the analytics.
+    val analyticsJson = new File(tmpDir, "analytics.json")
 
     PetStoreStatistics.run(etlDir.getAbsolutePath,
-      analyticsJson.getAbsolutePath, sc)
+      analyticsJson.getAbsolutePath, spark)
 
-    val stats:Statistics = IOUtils.readLocalAsStatistics(analyticsJson)
+    val stats: Statistics = IOUtils.readLocalAsStatistics(analyticsJson)
 
     /**
      * Assert some very generic features.  We will refine this later once
@@ -85,11 +84,11 @@ class TestFullPipeline extends AnyFunSuite with BeforeAndAfterAll {
     assert(stats.productDetails.length === products)
     assert(stats.transactionsByMonth.length === 12)
 
-    val recommJson = new File(tmpDir,"recommendations.json")
+    val recommJson = new File(tmpDir, "recommendations.json")
     RecommendProducts.run(etlDir.getAbsolutePath,
       recommJson.getAbsolutePath,
-      sc, nIterations=5)
+      spark, nIterations = 5)
 
-    sc.stop()
+    spark.stop()
   }
 }
