@@ -130,6 +130,7 @@ Requires(pre): %{name} = %{version}-%{release}
 Requires: insserv
 %else
 # Required for init scripts
+Requires: initscripts
 %if 0%{?fedora} >= 40
 Requires: redhat-lsb-core
 %else
@@ -139,6 +140,7 @@ Requires: /lib/lsb/init-functions
 
 %description server2
 This optional package hosts a Thrift server for Hive clients across a network to use with improved concurrency support.
+
 %package metastore
 Summary: Shared metadata repository for Hive.
 Group: System/Daemons
@@ -150,7 +152,12 @@ Requires(pre): %{name} = %{version}-%{release}
 Requires: insserv
 %else
 # Required for init scripts
+Requires: initscripts
+%if 0%{?fedora} >= 40
+Requires: redhat-lsb-core
+%else
 Requires: /lib/lsb/init-functions
+%endif
 %endif
 
 
@@ -205,16 +212,16 @@ Requires: %{name}-hcatalog = %{version}-%{release}
 Requires: insserv
 %endif
 
-%if  0%{?mgaversion}
-# Required for init scripts
-Requires: initscripts
-%endif
-
 # CentOS 5 does not have any dist macro
 # So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
 %if %{!?suse_version:1}0 && %{!?mgaversion:1}0
 # Required for init scripts
+Requires: initscripts
+%if 0%{?fedora} >= 40
+Requires: redhat-lsb-core
+%else
 Requires: /lib/lsb/init-functions
+%endif
 %endif
 
 %description hcatalog-server
@@ -231,11 +238,6 @@ Requires: %{name}-webhcat = %{version}-%{release}
 Requires: insserv
 %endif
 
-%if  0%{?mgaversion}
-# Required for init scripts
-Requires: initscripts
-%endif
-
 # CentOS 5 does not have any dist macro
 # So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
 %if %{!?suse_version:1}0 && %{!?mgaversion:1}0
@@ -246,7 +248,12 @@ Requires: initscripts
     /usr/lib/rpm/brp-python-bytecompile ; \
     %{nil}
 # Required for init scripts
+Requires: initscripts
+%if 0%{?fedora} >= 40
+Requires: redhat-lsb-core
+%else
 Requires: /lib/lsb/init-functions
+%endif
 %endif
 
 %description webhcat-server
