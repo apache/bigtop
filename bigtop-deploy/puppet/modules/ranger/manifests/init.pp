@@ -25,7 +25,7 @@ class ranger {
   class admin($admin_password) {
     # Before Facter 3.14.17, Rocky Linux 8 is detected as 'RedHat'.
     # https://puppet.com/docs/pe/2019.8/osp/release_notes_facter.html#enhancements-3-14-17
-    if ( $operatingsystem =~ /^(?i:(redhat|rocky))$/ and 0 <= versioncmp($operatingsystemmajrelease, '8')) {
+    if ( $operatingsystem =~ /^(?i:(redhat|rocky))$/ and 0 == versioncmp($operatingsystemmajrelease, '8')) {
       $python = 'python36'
     } else {
       $python = 'python3'
