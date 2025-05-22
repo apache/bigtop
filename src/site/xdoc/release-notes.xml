@@ -17,6 +17,151 @@
 		<section name="Bigtop Project Release Notes">
 			<!-- Paste release notes from https://issues.apache.org/jira/browse/BIGTOP here. -->
 
+        Release Notes - Bigtop - Version 3.4.0
+    
+<h2>        Sub-task
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4367'>BIGTOP-4367</a>] -         Remove bigpetstore-mapreduce
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4368'>BIGTOP-4368</a>] -         Fix bigpetstore-spark to be built with the recent version of Spark and related libraries
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4369'>BIGTOP-4369</a>] -         Upgrade dependencies of bigtop-data-generators and bigpetstore-transaction-queue
+</li>
+</ul>
+            
+<h2>        Bug
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3974'>BIGTOP-3974</a>] -         Fix failure of loading OpenSSL by libhadoop.so due to version mismatch
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4122'>BIGTOP-4122</a>] -         Fix test failure of SparkR on openEuler due to lack of R deployment
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4171'>BIGTOP-4171</a>] -         fix the docker repo of openeuler
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4249'>BIGTOP-4249</a>] -         Fix build failure of Hadoop 3.3.6 against ZooKeeper 3.8.4
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4263'>BIGTOP-4263</a>] -         Add systemd-tmpfiles for zookeeper-server RPM
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4268'>BIGTOP-4268</a>] -         Add libtirpc-dev to the toolchain for Ubuntu 24.04
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4289'>BIGTOP-4289</a>] -         Fix Hadoop build on Fedora 40
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4356'>BIGTOP-4356</a>] -         Ensure zookeeper-jute.jar is on the classpath along with zookeeper.jar
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4364'>BIGTOP-4364</a>] -         Fix Zeppelin&#39;s default settings
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4385'>BIGTOP-4385</a>] -         Fix build failure of Hadoop on openeuler-22.03
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4386'>BIGTOP-4386</a>] -         Fix build failure of ZooKeeper on openeuler-22.03
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4393'>BIGTOP-4393</a>] -         Fix build failure of Spark on openeuler-22.03
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4417'>BIGTOP-4417</a>] -         Fix failure of importing package signining keys on Rocky Linux 9
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4418'>BIGTOP-4418</a>] -         Fix installation failure of packages on Fedora 40 due to lack of /lib/lsb/init-functions
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4419'>BIGTOP-4419</a>] -         Fix deployment failure due to Puppet incompatibility with Ruby 3.3
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4420'>BIGTOP-4420</a>] -         Fix packaging failure of bigtop-select using container due to undefined Gradle tasks
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4421'>BIGTOP-4421</a>] -         Fix build failure of Hadoop and Alluxio due to node-gyp error
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4428'>BIGTOP-4428</a>] -         Starting Hive services depends on initscripts on rockylinux-9 and fedora-40
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4429'>BIGTOP-4429</a>] -         Fix deployment failure of Ranger on rockylinux-9 due to mismatch of python package
+</li>
+</ul>
+            
+<h2>        New Feature
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-3990'>BIGTOP-3990</a>] -         Add Debian 12 (bookworm) as a development environment
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4195'>BIGTOP-4195</a>] -         Provide systemd service unit files: Hadoop(MapReduce)
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4197'>BIGTOP-4197</a>] -         Provide systemd service unit files(RPM): ZooKeeper
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4239'>BIGTOP-4239</a>] -         Add Ubuntu 24.04 Support as a development enviornment
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4261'>BIGTOP-4261</a>] -         Provide systemd service unit files(Deb): ZooKeeper
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4271'>BIGTOP-4271</a>] -         Provide systemd service unit files: Hadoop(HDFS)
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4279'>BIGTOP-4279</a>] -         Provide systemd service unit files: Hadoop(YARN)
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4309'>BIGTOP-4309</a>] -         Add Fedora 40 support to toolchain
+</li>
+</ul>
+    
+<h2>        Improvement
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4083'>BIGTOP-4083</a>] -         Upgrade Hive to 4.0.1
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4084'>BIGTOP-4084</a>] -         Upgrade Tez to 0.10.4
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4099'>BIGTOP-4099</a>] -         Upgrade Flink to 1.17.2
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4148'>BIGTOP-4148</a>] -         Replace adding repo in puppetize.sh with puppet manifest
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4149'>BIGTOP-4149</a>] -         Support Livy in bigtop-select and pkgSuffix and parentDir build arguments
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4150'>BIGTOP-4150</a>] -         Add missing component in bigtop-select 
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4153'>BIGTOP-4153</a>] -         Enhance Bigtop package.gradle: Add pkgSuffix and parentDir Build Arguments for Deb Package
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4157'>BIGTOP-4157</a>] -         Drop CentOS 7
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4160'>BIGTOP-4160</a>] -         Auto switch docker compose yaml with host&#39;s cgroup version
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4161'>BIGTOP-4161</a>] -         Make docker provisioner of upstream aware of Bigtop 3.3.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4183'>BIGTOP-4183</a>] -         Docker provisioner can&#39;t destroy when container is stopped
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4232'>BIGTOP-4232</a>] -         Drop Ubuntu 18.04
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4269'>BIGTOP-4269</a>] -         Add provisioner config for Debian 12 and Ubuntu 24.04
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4272'>BIGTOP-4272</a>] -         Upgrade Alluxio to 2.9.6
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4273'>BIGTOP-4273</a>] -         Upgrade HBase to 2.6.1
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4274'>BIGTOP-4274</a>] -         Upgrade Phoenix to 5.2.1
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4275'>BIGTOP-4275</a>] -         Upgrade Flink to 1.20.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4278'>BIGTOP-4278</a>] -         Upgrade Kafka to 3.4.1
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4281'>BIGTOP-4281</a>] -         Upgrade Spark to 3.5.3
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4282'>BIGTOP-4282</a>] -         Upgrade Zeppelin to 0.11.2
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4283'>BIGTOP-4283</a>] -         Upgrade Solr to 8.11.4
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4288'>BIGTOP-4288</a>] -         Upgrade Commons Daemon to 1.4.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4327'>BIGTOP-4327</a>] -         Enable GuessMainPID with YARN and MapReduce
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4354'>BIGTOP-4354</a>] -         Update packaging scripts for Tez 0.10.4
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4373'>BIGTOP-4373</a>] -         jenkins user/group creation fails due to conflict of uid/gid on Ubuntu 24.04
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4382'>BIGTOP-4382</a>] -         Fix error on updating java alternatives on fedora-40
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4388'>BIGTOP-4388</a>] -         Upgrade Ranger to 2.6.0
+</li>
+</ul>
+            
+<h2>        Task
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4063'>BIGTOP-4063</a>] -         Adapt bigtop-select to Python 3
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4345'>BIGTOP-4345</a>] -         Remove spark and scala from Hive Maven opts
+</li>
+</ul>
+
         <h3>Release Notes - Bigtop - Version 3.3.0</h3>
 
 <h2>        Bug
