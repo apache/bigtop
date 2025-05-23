@@ -17,16 +17,8 @@
 
 package org.apache.bigtop.bigpetstore.spark.etl
 
-import org.apache.bigtop.bigpetstore.spark.datamodel._
-
-import org.apache.spark.{SparkContext, SparkConf}
-import org.apache.spark.rdd._
-
-import java.text.SimpleDateFormat
-import java.util._
-
-case class TransactionProduct(customerId: Long, transactionId: Long,
-  storeId: Long, dateTime: Calendar, product: String)
+import org.apache.bigtop.bigpetstore.spark.datamodel.{IOUtils, RawData}
+import org.apache.spark.sql.{DataFrame, Encoders, SparkSession}
 
 case class ETLParameters(inputDir: String, outputDir: String)
 
@@ -46,7 +38,7 @@ object SparkETL {
   }
 
   def parseArgs(args: Array[String]): ETLParameters = {
-    if(args.length != NPARAMS) {
+    if (args.length != NPARAMS) {
       printUsage()
       System.exit(1)
     }
@@ -54,162 +46,70 @@ object SparkETL {
     ETLParameters(args(0), args(1))
   }
 
-  def readRawData(sc: SparkContext, inputDir: String): RDD[String] = {
-    val rawRecords = sc.textFile(inputDir + "/transactions")
-      .flatMap(_.split("\n"))
+  def readRawData(spark: SparkSession, inputDir: String) =
+    spark.read.option("timestampFormat", "EEE MMM dd kk:mm:ss z yyyy").schema(Encoders.product[RawData].schema).csv(inputDir + "/transactions")
 
-    rawRecords
-  }
+  def normalizeData(spark: SparkSession, rawDF: DataFrame) = {
+    rawDF.createOrReplaceTempView("RawData")
 
-  def parseRawData(rawRecords: RDD[String]):
-      RDD[(Store, Location, Customer, Location, TransactionProduct)] = {
-    val splitRecords = rawRecords.map { r =>
-      val cols = r.split(",")
+    val storeDF = spark.sql("SELECT DISTINCT storeId, storeZipcode zipcode FROM RawData")
 
-      val storeId = cols(0).toInt
-      val storeZipcode = cols(1)
-      val storeCity = cols(2)
-      val storeState = cols(3)
+    val locationDF = spark.sql(
+      """SELECT DISTINCT(*) FROM (
+        |  SELECT storeZipcode zipcode, storeCity city, storeState state FROM RawData
+        |  UNION
+        |  SELECT customerZipcode zipcode, customerCity city, customerState state FROM RawData
+        |)
+        |""".stripMargin)
 
-      val storeLocation = Location(storeZipcode, storeCity, storeState)
-      val store = Store(storeId, storeZipcode)
+    val customerDF = spark.sql("SELECT DISTINCT customerId, firstName, lastName, customerZipcode zipcode FROM RawData")
 
-      val customerId = cols(4).toInt
-      val firstName = cols(5)
-      val lastName = cols(6)
-      val customerZipcode = cols(7)
-      val customerCity = cols(8)
-      val customerState = cols(9)
+    val indexedRawProductDF = spark.sql(
+      """SELECT cast(ROW_NUMBER() OVER (ORDER BY product) as BIGINT) productId, product
+        |FROM (SELECT DISTINCT txProduct product FROM RawData)
+        |""".stripMargin)
+    indexedRawProductDF.createOrReplaceTempView("Product")
 
-      val customerLocation = Location(customerZipcode, customerCity,
-        customerState)
-      val customer = Customer(customerId, firstName, lastName,
-        customerZipcode)
+    val transactionDF = spark.sql(
+      """SELECT customerId, txId transactionId, storeId, txDate dateTime, productId
+        |FROM RawData a
+        |JOIN Product b
+        |  ON a.txProduct = b.product
+        |""".stripMargin)
 
-      val txId = cols(10).toInt
-      val df = new SimpleDateFormat("EEE MMM dd kk:mm:ss z yyyy", Locale.US)
-      val txDate = df.parse(cols(11))
-      val txCal = Calendar.getInstance(TimeZone.getTimeZone("America/New_York"), Locale.US)
-      txCal.setTime(txDate)
-      txCal.set(Calendar.MILLISECOND, 0)
-      val txProduct = cols(12)
+    val productDF = spark.sql(
+      """SELECT productId, attributes['category'] category, attributes
+        |FROM (
+        |  SELECT productId, map_filter(str_to_map(product, ';', '='), (k, v) -> 0 < length(k)) attributes
+        |  FROM Product
+        |)
+        |""".stripMargin)
 
-      val transaction = TransactionProduct(customerId, txId,
-        storeId, txCal, txProduct)
-
-      (store, storeLocation, customer, customerLocation, transaction)
-    }
-
-    splitRecords
-  }
-
-  def normalizeData(rawRecords: RDD[(Store, Location, Customer,
-    Location, TransactionProduct)]): (RDD[Location], RDD[Store],
-      RDD[Customer], RDD[Product], RDD[Transaction]) = {
-    // extract stores
-    val storeRDD = rawRecords.map {
-      case (store, _, _, _, _) =>
-        store
-    }.distinct()
-
-    // extract store locations
-    val storeLocationRDD = rawRecords.map {
-      case (_, location, _, _, _) =>
-        location
-    }.distinct()
-
-    // extract customers
-    val customerRDD = rawRecords.map {
-      case (_, _, customer, _, _) =>
-        customer
-    }.distinct()
-
-    // extract customer locations
-    val customerLocationRDD = rawRecords.map {
-      case (_, _, _, location, _) =>
-        location
-    }.distinct()
-
-    // extract and normalize products
-    val productStringRDD = rawRecords.map {
-      case (_, _, _, _, tx) =>
-        tx.product
-    }
-    .distinct()
-    .zipWithUniqueId()
-
-    val productRDD = productStringRDD.map {
-      case (productString, id) =>
-        // products are key-value pairs of the form:
-        // key=value;key=value;
-        val prodKV = productString
-          .split(";")
-          .filter(_.trim().length > 0)
-          .map { pair =>
-            val pairString = pair.split("=")
-            (pairString(0), pairString(1))
-           }
-          .toMap
-
-        Product(id, prodKV("category"), prodKV)
-    }
-
-    // extract transactions, map products to productIds
-    val productTransactionRDD = rawRecords.map {
-      case (_, _, _, _, tx) =>
-       (tx.product, tx)
-    }
-
-    val joinedRDD: RDD[(String, (TransactionProduct, Long))]
-      = productTransactionRDD.join(productStringRDD)
-
-    val transactionRDD = joinedRDD.map {
-      case (productString, (tx, productId)) =>
-        Transaction(tx.customerId, tx.transactionId,
-          tx.storeId, tx.dateTime, productId)
-    }
-
-    val locationRDD = storeLocationRDD.
-      union(customerLocationRDD).
-      distinct()
-
-    (locationRDD, storeRDD, customerRDD, productRDD, transactionRDD)
+    (locationDF, storeDF, customerDF, productDF, transactionDF)
   }
 
   /**
-   * Runs the ETL and returns the total number of locations,stores,customers,products,transactions.
+   * Runs the ETL and returns the total number of locations, stores, customers, products, transactions.
    */
-  def run(sc:SparkContext, parameters:ETLParameters) : (Long,Long,Long,Long,Long) = {
-    val rawStringRDD = readRawData(sc, parameters.inputDir)
-    val rawRecordRDD = parseRawData(rawStringRDD)
-    val normalizedRDDs = normalizeData(rawRecordRDD)
+  def run(spark: SparkSession, parameters: ETLParameters): (Long, Long, Long, Long, Long) = {
+    val rawDF = readRawData(spark, parameters.inputDir)
+    val (locationDF, storeDF, customerDF, productDF, transactionDF) = normalizeData(spark, rawDF)
 
-    val locationRDD = normalizedRDDs._1
-    val storeRDD = normalizedRDDs._2
-    val customerRDD = normalizedRDDs._3
-    val productRDD = normalizedRDDs._4
-    val transactionRDD = normalizedRDDs._5
+    IOUtils.save(parameters.outputDir, locationDF, storeDF, customerDF, productDF, transactionDF)
 
-    IOUtils.save(parameters.outputDir, locationRDD, storeRDD,
-      customerRDD, productRDD, transactionRDD)
-
-    (locationRDD.count(), storeRDD.count(), customerRDD.count(),
-      productRDD.count(), transactionRDD.count())
+    (locationDF.count(), storeDF.count(), customerDF.count(), productDF.count(), transactionDF.count())
   }
 
   def main(args: Array[String]): Unit = {
     val parameters = parseArgs(args)
 
-    println("Creating SparkConf")
+    println("Creating SparkSession")
 
-    val conf = new SparkConf().setAppName("BPS Data Generator")
+    val spark = SparkSession.builder.appName("BPS Data Generator")
+      .config("spark.sql.legacy.timeParserPolicy", "LEGACY").getOrCreate()
 
-    println("Creating SparkContext")
+    run(spark, parameters)
 
-    val sc = new SparkContext(conf)
-
-    run(sc, parameters)
-
-    sc.stop()
+    spark.stop()
   }
 }

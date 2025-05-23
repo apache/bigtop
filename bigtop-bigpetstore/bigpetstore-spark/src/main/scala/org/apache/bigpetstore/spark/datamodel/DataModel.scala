@@ -18,17 +18,13 @@
 package org.apache.bigtop.bigpetstore.spark.datamodel
 
 import java.sql.Timestamp
-import java.util.Calendar
-
-import org.joda.time.DateTime
 
 /**
  * Statistics phase.  Represents JSON for a front end.
  */
-
 case class StatisticsTxByMonth(month: Int, count: Long)
 
-case class StatisticsTxByProductZip(productId:Long, zipcode:String, count:Long)
+case class StatisticsTxByProductZip(productId: Long, zipcode: String, count: Long)
 
 case class StatisticsTxByProduct(count: Long, productId: Long)
 
@@ -36,10 +32,14 @@ case class Statistics(totalTransactions: Long,
   transactionsByMonth: Array[StatisticsTxByMonth],
   transactionsByProduct: Array[StatisticsTxByProduct],
   transactionsByProductZip: Array[StatisticsTxByProductZip],
-  productDetails:Array[Product])
+  productDetails: Array[Product])
 
-case class Customer(customerId: Long, firstName: String,
-  lastName: String, zipcode: String)
+case class RawData(storeId: Long, storeZipcode: String, storeCity: String, storeState: String,
+  customerId: Long, firstName: String, lastName: String,
+  customerZipcode: String, customerCity: String, customerState: String,
+  txId: Long, txDate: Timestamp, txProduct: String)
+
+case class Customer(customerId: Long, firstName: String, lastName: String, zipcode: String)
 
 case class Location(zipcode: String, city: String, state: String)
 
@@ -47,27 +47,7 @@ case class Product(productId: Long, category: String, attributes: Map[String, St
 
 case class Store(storeId: Long, zipcode: String)
 
-case class Transaction(customerId: Long, transactionId: Long, storeId: Long, dateTime: Calendar, productId: Long){
-
-  /**
-   * Convert to TransactionSQL.
-   * There possibly could be a conversion.
-   */
-  def toSQL(): TransactionSQL = {
-    val dt = new DateTime(dateTime)
-    TransactionSQL(customerId,transactionId,storeId,
-      new Timestamp(
-        new DateTime(dateTime).getMillis),
-        productId,
-        dt.getYearOfEra,dt.getMonthOfYear,dt.getDayOfMonth,dt.getHourOfDay,dt.getMinuteOfHour)
-  }
-}
-
-/**
- * A Transaction which we can create from the natively stored transactions.
- */
-case class TransactionSQL(customerId: Long, transactionId: Long, storeId: Long, timestamp:Timestamp, productId: Long,
-                          year:Int, month:Int, day:Int, hour:Int, minute:Int )
+case class Transaction(customerId: Long, transactionId: Long, storeId: Long, dateTime: Timestamp, productId: Long)
 
 case class UserProductRecommendations(customerId: Long, productIds: Array[Long])
 

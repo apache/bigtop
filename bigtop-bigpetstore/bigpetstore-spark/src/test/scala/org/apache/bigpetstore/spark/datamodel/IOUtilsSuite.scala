@@ -20,13 +20,13 @@ package org.apache.bigtop.bigpetstore.spark.datamodel
 import java.nio.file.Files
 import java.util.Calendar
 import java.util.Locale
-
-import org.apache.spark.{SparkContext, SparkConf}
-
+import org.apache.spark.{SparkConf, SparkContext}
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatestplus.junit.JUnitRunner
 import org.junit.runner.RunWith
+
+import java.sql.Timestamp
 
 // hack for running tests with Gradle
 @RunWith(classOf[JUnitRunner])
@@ -56,9 +56,9 @@ class IOUtilsSuite extends AnyFunSuite with BeforeAndAfterAll {
 
     val stores = Array(Store(1L, "11111"), Store(2L, "22222"), Store(3L, "11111"))
 
-    val txDate1 = Calendar.getInstance(Locale.US)
-    val txDate2 = Calendar.getInstance(Locale.US)
-    val txDate3 = Calendar.getInstance(Locale.US)
+    val txDate1 = new Timestamp(Calendar.getInstance(Locale.US).getTimeInMillis)
+    val txDate2 = new Timestamp(Calendar.getInstance(Locale.US).getTimeInMillis)
+    val txDate3 = new Timestamp(Calendar.getInstance(Locale.US).getTimeInMillis)
 
     val transactions = Array(
       Transaction(1L, 1L, 1L, txDate1, 1L),

@@ -18,29 +18,28 @@
 package org.apache.bigtop.bigpetstore.spark.analytics
 
 import org.apache.bigtop.bigpetstore.spark.datamodel._
-import org.apache.spark.{SparkContext, SparkConf}
-import org.apache.spark.rdd._
-import org.apache.spark.mllib.recommendation._
+import org.apache.spark.ml.recommendation.{ALS, ALSModel}
+import org.apache.spark.sql.{DataFrame, SparkSession}
 
 import java.io.File
 
-case class PRParameters(inputDir: String, outputFile: String)
-
 object RecommendProducts {
+
+  case class PRParameters(inputDir: String, outputFile: String)
 
   private def printUsage(): Unit = {
     val usage = "BigPetStore Product Recommendation Module\n" +
-    "\n" +
-    "Usage: transformed_data recommendations\n" +
-    "\n" +
-    "transformed_data - (string) directory of ETL'd data\n" +
-    "recommendations - (string) output file of recommendations\n"
+      "\n" +
+      "Usage: transformed_data recommendations\n" +
+      "\n" +
+      "transformed_data - (string) directory of ETL'd data\n" +
+      "recommendations - (string) output file of recommendations\n"
 
     println(usage)
   }
 
   def parseArgsOrDie(args: Array[String]): PRParameters = {
-    if(args.length != 2) {
+    if (args.length != 2) {
       printUsage();
       System.exit(1)
     }
@@ -48,57 +47,54 @@ object RecommendProducts {
     PRParameters(args(0), args(1))
   }
 
-  def prepareRatings(tx: RDD[Transaction]): RDD[Rating] = {
-    val productPairs = tx.map { t => ((t.customerId, t.productId), 1) }
-    val pairCounts = productPairs.reduceByKey { (v1, v2) => v1 + v2 }
-    val ratings = pairCounts.map { p => Rating(p._1._1.toInt, p._1._2.toInt, p._2) }
-
-    ratings
+  def prepareRatings(spark: SparkSession, tx: DataFrame): DataFrame = {
+    tx.createOrReplaceTempView("Transactions")
+    spark.sql("SELECT customerId, productId, count(*) rating FROM Transactions GROUP BY customerId, productId")
   }
 
-  def trainModel(ratings: RDD[Rating], nIterations: Int, rank: Int, alpha: Double,
-    lambda: Double): MatrixFactorizationModel = {
-    ratings.cache()
-    val model = ALS.trainImplicit(ratings, nIterations, rank, lambda, alpha)
+  def trainModel(ratings: DataFrame, nIterations: Int, rank: Int, alpha: Double, lambda: Double) =
+    new ALS().setImplicitPrefs(true)
+      .setAlpha(alpha)
+      .setMaxIter(nIterations)
+      .setRank(rank)
+      .setRegParam(lambda)
+      .setUserCol("customerId")
+      .setItemCol("productId")
+      .setRatingCol("rating")
+      .fit(ratings.cache())
 
-    model
-  }
-
-  def recommendProducts(customers: RDD[Customer],
-    model: MatrixFactorizationModel, sc: SparkContext, nRecommendations: Int):
-      Array[UserProductRecommendations] = {
-
-    customers.collect().map { c =>
-      val ratings = model.recommendProducts(c.customerId.toInt, nRecommendations)
-
-      val productIds = ratings.map { r => r.product.toLong}
-
-      UserProductRecommendations(c.customerId, productIds.toArray)
-    }
+  def recommendProducts(spark: SparkSession, model: ALSModel, nRecommendations: Int) = {
+    model.recommendForAllUsers(nRecommendations).createOrReplaceTempView("Recommendations")
+    import spark.implicits._
+    spark.sql(
+      """SELECT customerId, collect_list(productId) productIds
+        |FROM (
+        |  SELECT customerId, productId, rating
+        |  FROM (SELECT customerId, inline(recommendations) FROM Recommendations)
+        |  DISTRIBUTE BY customerId SORT BY rating DESC
+        |)
+        |GROUP BY customerId
+        |""".stripMargin).as[UserProductRecommendations].collect()
   }
 
   /**
-    * We keep a "run" method which can be called easily from tests and also is used by main.
-    */
-  def run(txInputDir: String, recOutputFile: String, sc: SparkContext,
-  nIterations: Int = 20, alpha: Double = 40.0, rank:Int = 10, lambda: Double = 1.0,
-  nRecommendations: Int = 5): Unit = {
+   * We keep a "run" method which can be called easily from tests and also is used by main.
+   */
+  def run(txInputDir: String, recOutputFile: String, spark: SparkSession,
+          nIterations: Int = 20, alpha: Double = 40.0, rank: Int = 10, lambda: Double = 1.0,
+          nRecommendations: Int = 5): Unit = {
 
     println("input : " + txInputDir)
-    println(sc)
-    val rdds = IOUtils.load(sc, txInputDir)
-    val tx = rdds._5
-    val products = rdds._4
-    val customers = rdds._3
-    System.out.println("Transaction count = " + tx.count())
+    println(spark)
+    val (_, _, customerDF, productDF, transactionDF) = IOUtils.load(spark, txInputDir)
+    System.out.println("Transaction count = " + transactionDF.count())
 
-    val ratings = prepareRatings(tx)
+    val ratings = prepareRatings(spark, transactionDF)
     val model = trainModel(ratings, nIterations, rank, alpha, lambda)
-    val userProdRec = recommendProducts(customers, model, sc, nRecommendations)
+    val userProdRec = recommendProducts(spark, model, nRecommendations)
 
-    val prodRec = ProductRecommendations(customers.collect(),
-      products.collect(),
-      userProdRec)
+    import spark.implicits._
+    val prodRec = ProductRecommendations(customerDF.as[Customer].collect(), productDF.as[Product].collect(), userProdRec)
 
     IOUtils.saveLocalAsJSON(new File(recOutputFile), prodRec)
   }
@@ -106,12 +102,10 @@ object RecommendProducts {
   def main(args: Array[String]): Unit = {
     val params: PRParameters = parseArgsOrDie(args)
 
-    val conf = new SparkConf().setAppName("BPS Product Recommendations")
-    val sc = new SparkContext(conf)
+    val spark = SparkSession.builder.appName("BPS Product Recommendations").getOrCreate()
 
-    run(params.inputDir, params.outputFile, sc)
+    run(params.inputDir, params.outputFile, spark)
 
-    sc.stop()
+    spark.stop()
   }
-
 }

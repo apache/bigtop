@@ -20,17 +20,16 @@ package org.apache.bigtop.bigpetstore.spark.datamodel
 import java.io.File
 import java.nio.file.Files
 import java.nio.charset.StandardCharsets
-
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd._
-
+import org.apache.spark.sql.{DataFrame, Encoders, SparkSession}
 import org.json4s.jackson.Serialization
 import org.json4s._
 import org.json4s.jackson.Serialization.{read, write}
 
 /**
-  * Utility functions for loading and saving data model RDDs.
-  */
+ * Utility functions for loading and saving data model RDDs.
+ */
 object IOUtils {
   private val LOCATION_DIR = "locations"
   private val STORE_DIR = "stores"
@@ -38,21 +37,19 @@ object IOUtils {
   private val PRODUCT_DIR = "products"
   private val TRANSACTION_DIR = "transactions"
 
-  private val ANALYTICS_STATS_DIR = "analytics_stats"
-
   /**
-    * Save RDDs of the data model as Sequence files.
-    *
-    * @param outputDir Output directory
-    * @param locationRDD RDD of Location objects
-    * @param storeRDD RDD of Store objects
-    * @param customerRDD RDD of Customer objects
-    * @param productRDD RDD of Product objects
-    * @param transactionRDD RDD of Transaction objects
-    */
+   * Save RDDs of the data model as Sequence files.
+   *
+   * @param outputDir      Output directory
+   * @param locationRDD    RDD of Location objects
+   * @param storeRDD       RDD of Store objects
+   * @param customerRDD    RDD of Customer objects
+   * @param productRDD     RDD of Product objects
+   * @param transactionRDD RDD of Transaction objects
+   */
   def save(outputDir: String, locationRDD: RDD[Location],
-    storeRDD: RDD[Store], customerRDD: RDD[Customer],
-    productRDD: RDD[Product], transactionRDD: RDD[Transaction]): Unit = {
+           storeRDD: RDD[Store], customerRDD: RDD[Customer],
+           productRDD: RDD[Product], transactionRDD: RDD[Transaction]): Unit = {
 
     locationRDD.saveAsObjectFile(outputDir + "/" + LOCATION_DIR)
     storeRDD.saveAsObjectFile(outputDir + "/" + STORE_DIR)
@@ -61,45 +58,57 @@ object IOUtils {
     transactionRDD.saveAsObjectFile(outputDir + "/" + TRANSACTION_DIR)
   }
 
+  /**
+   * Save DataFrames of the data model as Parquet files.
+   *
+   * @param outputDir     Output directory
+   * @param locationDF    DataFrame of Location objects
+   * @param storeDF       DataFrame of Store objects
+   * @param customerDF    DataFrame of Customer objects
+   * @param productDF     DataFrame of Product objects
+   * @param transactionDF DataFrame of Transaction objects
+   */
+  def save(outputDir: String, locationDF: DataFrame,
+           storeDF: DataFrame, customerDF: DataFrame,
+           productDF: DataFrame, transactionDF: DataFrame): Unit = {
+
+    locationDF.write.parquet(outputDir + "/" + LOCATION_DIR)
+    storeDF.write.parquet(outputDir + "/" + STORE_DIR)
+    customerDF.write.parquet(outputDir + "/" + CUSTOMER_DIR)
+    productDF.write.parquet(outputDir + "/" + PRODUCT_DIR)
+    transactionDF.write.parquet(outputDir + "/" + TRANSACTION_DIR)
+  }
+
   def saveLocalAsJSON(outputDir: File, statistics: Statistics): Unit = {
     //load the write/read methods.
     implicit val formats = Serialization.formats(NoTypeHints)
-    val json:String = write(statistics)
+    val json: String = write(statistics)
     Files.write(outputDir.toPath, json.getBytes(StandardCharsets.UTF_8))
   }
 
-  def readLocalAsStatistics(jsonFile: File):Statistics = {
+  def readLocalAsStatistics(jsonFile: File): Statistics = {
     //load the write/read methods.
     implicit val formats = Serialization.formats(NoTypeHints)
     //Read file as String, and serialize it into Stats object.
     //See http://json4s.org/ examples.
-    read[Statistics](scala.io.Source.fromFile(jsonFile).getLines().reduceLeft(_+_))
+    read[Statistics](scala.io.Source.fromFile(jsonFile).getLines().reduceLeft(_ + _))
   }
 
-  def saveLocalAsJSON(outputDir: File, recommendations:ProductRecommendations): Unit = {
+  def saveLocalAsJSON(outputDir: File, recommendations: ProductRecommendations): Unit = {
     //load the write/read methods.
     implicit val formats = Serialization.formats(NoTypeHints)
-    val json:String = write(recommendations)
+    val json: String = write(recommendations)
     Files.write(outputDir.toPath, json.getBytes(StandardCharsets.UTF_8))
   }
-
-  def readLocalAsProductRecommendations(jsonFile: File):ProductRecommendations = {
-    //load the write/read methods.
-    implicit val formats = Serialization.formats(NoTypeHints)
-    //Read file as String, and serialize it into Stats object.
-    //See http://json4s.org/ examples.
-    read[ProductRecommendations](scala.io.Source.fromFile(jsonFile).getLines().reduceLeft(_+_))
-  }
-
 
   /**
-    * Load RDDs of the data model from Sequence files.
-    *
-    * @param sc SparkContext
-    * @param inputDir Directory containing Sequence files
-    *
-    * TODO Should take path, not string, this makes input validation complex.
-    */
+   * Load RDDs of the data model from Sequence files.
+   *
+   * @param sc       SparkContext
+   * @param inputDir Directory containing Sequence files
+   *
+   *                 TODO Should take path, not string, this makes input validation complex.
+   */
   def load(sc: SparkContext, inputDir: String): (RDD[Location], RDD[Store],
     RDD[Customer], RDD[Product], RDD[Transaction]) = {
 
@@ -121,4 +130,26 @@ object IOUtils {
     (locationRDD, storeRDD, customerRDD, productRDD, transactionRDD)
   }
 
+  /**
+   * Load DataFrames of the data model from Parquet files.
+   *
+   * @param spark    SparkSession
+   * @param inputDir Directory containing Parquet files
+   *
+   *                 TODO Should take path, not string, this makes input validation complex.
+   */
+  def load(spark: SparkSession, inputDir: String) = {
+
+    val locationDF = spark.read.schema(Encoders.product[Location].schema).parquet(inputDir + "/" + LOCATION_DIR)
+
+    val storeDF = spark.read.schema(Encoders.product[Store].schema).parquet(inputDir + "/" + STORE_DIR)
+
+    val customerDF = spark.read.schema(Encoders.product[Customer].schema).parquet(inputDir + "/" + CUSTOMER_DIR)
+
+    val productDF = spark.read.schema(Encoders.product[Product].schema).parquet(inputDir + "/" + PRODUCT_DIR)
+
+    val transactionDF = spark.read.schema(Encoders.product[Transaction].schema).parquet(inputDir + "/" + TRANSACTION_DIR)
+
+    (locationDF, storeDF, customerDF, productDF, transactionDF)
+  }
 }
