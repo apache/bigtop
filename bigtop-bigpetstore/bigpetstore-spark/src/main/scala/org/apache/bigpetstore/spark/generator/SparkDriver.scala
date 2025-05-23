@@ -131,6 +131,9 @@ object SparkDriver {
     println("Broadcasting products...")
     val productBC = sc.broadcast(inputData.getProductCategories)
     val customerRDD = sc.parallelize(customers)
+    // This substitution into a constant value is a must, since it is referred to in an RDD transformation function.
+    // See BIGTOP-2148 for details.
+    val simLen = simulationLength
     val nextSeed = seedFactory.getNextSeed()
     println("...Done broadcasting products.")
 
@@ -152,7 +155,7 @@ object SparkDriver {
             // Create a new purchasing profile.
             val transGen = new TransactionGenerator(customer, profile, products, seedFactory)
             // Create a list of this customer's transactions for the time period
-            Iterator.continually(transGen.generate()).takeWhile(_.getDateTime < simulationLength).foldLeft(Nil: List[Transaction])(
+            Iterator.continually(transGen.generate()).takeWhile(_.getDateTime < simLen).foldLeft(Nil: List[Transaction])(
               (transactions, transaction) => if (transaction.getDateTime > BURNIN_TIME) transaction :: transactions else transactions
             ).reverse
           }
