@@ -91,7 +91,7 @@ dependencies {
     compile("org.apache.spark:spark-core_${scalaVersion}:${sparkVersion}")
     compile("org.apache.spark:spark-mllib_${scalaVersion}:${sparkVersion}")
     compile("org.apache.spark:spark-sql_${scalaVersion}:${sparkVersion}")
-    compile "org.apache.bigtop:bigpetstore-data-generator:3.5.0-SNAPSHOT"
+    compile "org.apache.bigtop:bigpetstore-data-generator:3.6.0-SNAPSHOT"
     compile "org.json4s:json4s-jackson_${scalaVersion}:3.6.12"
 
     testCompile "junit:junit:4.13.2"
