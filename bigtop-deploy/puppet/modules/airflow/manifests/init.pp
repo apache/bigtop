@@ -20,7 +20,7 @@ class airflow {
     }
   }
 
-  class server($executor, $load_examples, $sql_alchemy_conn) {
+  class server($executor, $load_examples, $sql_alchemy_conn, $install_bigpetstore_example=False) {
     package { 'airflow':
       ensure => latest,
     }
@@ -54,6 +54,29 @@ class airflow {
     service { 'airflow-webserver':
       ensure  => running,
       require => Exec['airflow-db-init'],
+    }
+
+    if $install_bigpetstore_example {
+      exec { 'install-spark-provider':
+        command     => "/usr/lib/airflow/bin/python3 -m pip install apache-airflow-providers-apache-spark 'pyspark<4'",
+        environment => ['AIRFLOW_HOME=/var/lib/airflow'],
+        user        => 'root',
+        require     => Package['airflow'],
+      }
+
+      file { '/var/lib/airflow/dags':
+        ensure  => 'directory',
+        owner   => 'airflow',
+        group   => 'airflow',
+        require => Package['airflow'],
+      }
+
+      file { '/var/lib/airflow/dags/example_bigpetstore.py':
+        content => template('airflow/example_bigpetstore.py'),
+        owner   => 'airflow',
+        group   => 'airflow',
+        require => File['/var/lib/airflow/dags'],
+      }
     }
   }
 }
