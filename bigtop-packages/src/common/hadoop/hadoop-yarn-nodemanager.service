@@ -32,3 +32,7 @@ RemainAfterExit=no
 SuccessExitStatus=5 6
 ExecStart=/usr/bin/yarn --config /etc/hadoop/conf --daemon start nodemanager
 ExecStop=/usr/bin/yarn --config /etc/hadoop/conf --daemon stop nodemanager
+
+[Install]
+WantedBy=multi-user.target
+

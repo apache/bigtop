@@ -32,3 +32,7 @@ RemainAfterExit=no
 SuccessExitStatus=5 6
 ExecStart=/usr/bin/yarn --config /etc/hadoop/conf --daemon start router
 ExecStop=/usr/bin/yarn --config /etc/hadoop/conf --daemon stop router
+
+[Install]
+WantedBy=multi-user.target
+

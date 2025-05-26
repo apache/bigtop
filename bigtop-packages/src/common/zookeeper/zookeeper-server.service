@@ -36,3 +36,7 @@ PIDFile=/run/zookeeper/zookeeper_server.pid
 SuccessExitStatus=5 6
 ExecStart=/usr/bin/zookeeper-server start
 ExecStop=/usr/bin/zookeeper-server stop
+
+[Install]
+WantedBy=multi-user.target
+
