@@ -32,3 +32,7 @@ RemainAfterExit=no
 SuccessExitStatus=5 6
 ExecStart=/usr/bin/hdfs --config /etc/hadoop/conf --daemon start journalnode
 ExecStop=/usr/bin/hdfs --config /etc/hadoop/conf --daemon stop journalnode
+
+[Install]
+WantedBy=multi-user.target
+

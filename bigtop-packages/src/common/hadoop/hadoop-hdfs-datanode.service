@@ -32,3 +32,7 @@ RemainAfterExit=no
 SuccessExitStatus=5 6
 ExecStart=/usr/bin/hdfs --config /etc/hadoop/conf --daemon start datanode
 ExecStop=/usr/bin/hdfs --config /etc/hadoop/conf --daemon stop datanode
+
+[Install]
+WantedBy=multi-user.target
+
