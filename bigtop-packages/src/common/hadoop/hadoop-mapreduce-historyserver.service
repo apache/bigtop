@@ -33,3 +33,7 @@ RuntimeDirectory=hadoop-mapreduce
 SuccessExitStatus=5 6
 ExecStart=/usr/bin/mapred --config /etc/hadoop/conf --daemon start historyserver
 ExecStop=/usr/bin/mapred --config /etc/hadoop/conf --daemon stop historyserver
+
+[Install]
+WantedBy=multi-user.target
+
