@@ -17,7 +17,7 @@ Bigtop Changelog
 
 * Release 3.5.0-SNAPSHOT (unreleased)
 
-* Release 3.4.0 (2024-05-28)
+* Release 3.4.0 (2024-06-01)
 
 Release Notes - Bigtop - Version 3.4.0
 
@@ -46,6 +46,7 @@ Release Notes - Bigtop - Version 3.4.0
     * [BIGTOP-4421] - Fix build failure of Hadoop and Alluxio due to node-gyp error
     * [BIGTOP-4428] - Starting Hive services depends on initscripts on rockylinux-9 and fedora-40
     * [BIGTOP-4429] - Fix deployment failure of Ranger on rockylinux-9 due to mismatch of python package
+    * [BIGTOP-4433] - Enabling ZK and Hadoop services doesn't work
 
 ** New Feature
     * [BIGTOP-3990] - Add Debian 12 (bookworm) as a development environment
@@ -85,6 +86,7 @@ Release Notes - Bigtop - Version 3.4.0
     * [BIGTOP-4373] - jenkins user/group creation fails due to conflict of uid/gid on Ubuntu 24.04
     * [BIGTOP-4382] - Fix error on updating java alternatives on fedora-40
     * [BIGTOP-4388] - Upgrade Ranger to 2.6.0
+    * [BIGTOP-4431] - Upgrade Fedora's version in the docker provisioner config to 40
 
 ** Task
     * [BIGTOP-4063] - Adapt bigtop-select to Python 3
