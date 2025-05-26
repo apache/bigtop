@@ -71,6 +71,8 @@
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4429'>BIGTOP-4429</a>] -         Fix deployment failure of Ranger on rockylinux-9 due to mismatch of python package
 </li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4433'>BIGTOP-4433</a>] -         Enabling ZK and Hadoop services doesn&#39;t work
+</li>
 </ul>
             
 <h2>        New Feature
@@ -150,6 +152,8 @@
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4382'>BIGTOP-4382</a>] -         Fix error on updating java alternatives on fedora-40
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4388'>BIGTOP-4388</a>] -         Upgrade Ranger to 2.6.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4431'>BIGTOP-4431</a>] -         Upgrade Fedora&#39;s version in the docker provisioner config to 40
 </li>
 </ul>
             
