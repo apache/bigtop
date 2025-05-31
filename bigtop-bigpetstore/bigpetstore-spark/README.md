@@ -18,9 +18,9 @@ BigPetStore -- Spark
 ====================
 
 BigPetStore is a family of example applications for the Hadoop and Spark
-ecosystems.  BigPetStore is build around a fictional chain pet stores,
+ecosystems. BigPetStore is build around a fictional chain pet stores,
 providing generators for synthetic transaction data and pipelines for
-processing that data.  Each ecosystems has its own version of the
+processing that data. Each ecosystem has its own version of the
 application.
 
 The Spark application currently builds against Spark 3.5.4.
@@ -63,9 +63,8 @@ internal structured data model is defined as input for the analytics components:
 * Product(productId: Long, category: String, attributes: Map[String, String])
 * Transaction(customerId: Long, transactionId: Long, storeId: Long, dateTime: java.util.Calendar, productId: Long)
 
-The ETL stage parses and cleans up the dirty CSV and writes out RDDs for each data type in the data model, serialized using
-the `saveAsObjectFile()` method. The analytics components can use the `IOUtils.load()` method to de-serialize the structured
-data.
+The ETL stage parses and cleans up the dirty CSV and writes out DataFrames for each data type in the data model as
+Parquet files. The analytics components can use the `IOUtils.load()` method to de-serialize the structured data.
 
 Running Tests
 -------------
@@ -106,7 +105,7 @@ The ETL component:
 * Reads the raw data
 * Parses the data times and products
 * Normalizes the data
-* Writes out RDDs for each type of class (Store, Customer, Location, Product, Transaction) in the data model
+* Writes out DataFrames for each type of class (Store, Customer, Location, Product, Transaction) in the data model
 
 After building the jar (see above), you can run the ETL component like so:
 
@@ -118,7 +117,7 @@ Running the SparkSQL component
 -------------------------------
 
 Once ETL'd we can now process the data and do analytics on it. The DataModel.scala class itself is used to read/write classes
-from files.  To run the analytics job, which outputs a JSON file at the end, you now will run the following:
+from files. To run the analytics job, which outputs a JSON file at the end, you now will run the following:
 
 ```
 spark-submit --master local[2] --class org.apache.bigtop.bigpetstore.spark.analytics.PetStoreStatistics bigpetstore-spark-X.jar transformed_data PetStoreStats.json

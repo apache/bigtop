@@ -17,15 +17,14 @@
 
 package org.apache.bigtop.bigpetstore.spark.generator
 
-import com.github.rnowling.bps.datagenerator.datamodels._
-import com.github.rnowling.bps.datagenerator.{DataLoader, PurchasingProfileGenerator, StoreGenerator, TransactionGenerator, CustomerGenerator => CustGen}
-import com.github.rnowling.bps.datagenerator.framework.SeedFactory
+import org.apache.bigtop.datagenerators.bigpetstore.datamodels._
+import org.apache.bigtop.datagenerators.bigpetstore._
+import org.apache.bigtop.datagenerators.samplers.SeedFactory
 
 import scala.jdk.CollectionConverters._
 import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.rdd._
 
-import java.util.ArrayList
 import java.util.Date
 import scala.util.Random
 
@@ -37,7 +36,6 @@ import scala.util.Random
  * is stringified into what is often called a "line item".
  *
  * Then, spark writes those line items out as a distributed hadoop file glob.
- *
  */
 object SparkDriver {
   private var nStores: Int = -1
@@ -51,17 +49,17 @@ object SparkDriver {
   private def printUsage(): Unit = {
     val usage: String =
       "BigPetStore Data Generator.\n" +
-      "Usage: spark-submit ... outputDir nStores nCustomers simulationLength [seed]\n" +
-      "outputDir - (string) directory to write files\n" +
-      "nStores - (int) number of stores to generate\n" +
-      "nCustomers - (int) number of customers to generate\n" +
-      "simulationLength - (float) number of days to simulate\n" +
-      "seed - (long) seed for RNG. If not given, one is reandomly generated.\n"
+        "Usage: spark-submit ... outputDir nStores nCustomers simulationLength [seed]\n" +
+        "outputDir - (string) directory to write files\n" +
+        "nStores - (int) number of stores to generate\n" +
+        "nCustomers - (int) number of customers to generate\n" +
+        "simulationLength - (float) number of days to simulate\n" +
+        "seed - (long) seed for RNG. If not given, one is randomly generated.\n"
     System.err.println(usage)
   }
 
   def parseArgs(args: Array[String]): Unit = {
-    if(args.length != NPARAMS && args.length != (NPARAMS - 1)) {
+    if (args.length != NPARAMS && args.length != (NPARAMS - 1)) {
       printUsage()
       System.exit(1)
     }
@@ -70,7 +68,7 @@ object SparkDriver {
       nStores = args(1).toInt
     }
     catch {
-      case _ : NumberFormatException =>
+      case _: NumberFormatException =>
         System.err.println("Unable to parse '" + args(1) + "' as an integer for nStores.\n")
         printUsage()
         System.exit(1)
@@ -79,7 +77,7 @@ object SparkDriver {
       nCustomers = args(2).toInt
     }
     catch {
-      case _ : NumberFormatException =>
+      case _: NumberFormatException =>
         System.err.println("Unable to parse '" + args(2) + "' as an integer for nCustomers.\n")
         printUsage()
         System.exit(1)
@@ -88,26 +86,26 @@ object SparkDriver {
       simulationLength = args(3).toDouble
     }
     catch {
-      case _ : NumberFormatException =>
+      case _: NumberFormatException =>
         System.err.println("Unable to parse '" + args(3) + "' as a float for simulationLength.\n")
         printUsage()
         System.exit(1)
     }
 
-    //If seed isnt present, then no is used seed.
-    if(args.length == NPARAMS) {
+    //If seed isn't present, then no is used seed.
+    if (args.length == NPARAMS) {
       try {
         seed = args(4).toLong
       }
       catch {
-        case _ : NumberFormatException =>
+        case _: NumberFormatException =>
           System.err.println("Unable to parse '" + args(4) + "' as a long for seed.\n")
           printUsage()
           System.exit(1)
       }
     }
     else {
-      seed = (new Random()).nextLong()
+      seed = new Random().nextLong()
     }
   }
 
@@ -121,62 +119,49 @@ object SparkDriver {
     val seedFactory = new SeedFactory(seed)
 
     println("Generating stores...")
-    val stores : ArrayList[Store] = new ArrayList()
     val storeGenerator = new StoreGenerator(inputData, seedFactory)
-    for(i <- 1 to nStores) {
-      val store = storeGenerator.generate()
-      stores.add(store)
-    }
-    println("Done.")
+    val stores = (1 to nStores).foldLeft(Nil: List[Store])((stores, _) => storeGenerator.generate() :: stores)
+    println("...Done generating stores.")
 
     println("Generating customers...")
-    var customers: List[Customer] = List()
-    val custGen = new CustGen(inputData, stores, seedFactory)
-    for(i <- 1 to nCustomers) {
-      val customer = custGen.generate()
-      customers = customer :: customers
-    }
+    val customerGenerator = new CustomerGenerator(inputData, stores.asJava, seedFactory)
+    val customers = (1 to nCustomers).foldLeft(Nil: List[Customer])((customers, _) => customerGenerator.generate() :: customers)
     println("...Done generating customers.")
 
-    println("Broadcasting stores and products...")
-    val storesBC = sc.broadcast(stores)
-    val productBC = sc.broadcast(inputData.getProductCategories())
+    println("Broadcasting products...")
+    val productBC = sc.broadcast(inputData.getProductCategories)
     val customerRDD = sc.parallelize(customers)
+    // This substitution into a constant value is a must, since it is referred to in an RDD transformation function.
+    // See BIGTOP-2148 for details.
     val simLen = simulationLength
     val nextSeed = seedFactory.getNextSeed()
-    println("...Done broadcasting stores and products.")
+    println("...Done broadcasting products.")
 
     println("Defining transaction DAG...")
 
     /**
-     *  See inline comments below regarding how we
-     *  generate TRANSACTION objects from CUSTOMERs.
+     * See inline comments below regarding how we
+     * generate TRANSACTION objects from CUSTOMERs.
      */
-    val transactionRDD = customerRDD.mapPartitionsWithIndex{
-      (index, custIter) =>
+    val transactionRDD = customerRDD.mapPartitionsWithIndex {
+      (index, customers) => {
         // Create a new RNG
         val seedFactory = new SeedFactory(nextSeed ^ index)
-        val transactionIter = custIter.map{
-        customer =>
-	  val products = productBC.value
-          //Create a new purchasing profile.
-          val profileGen = new PurchasingProfileGenerator(products, seedFactory)
-          val profile = profileGen.generate()
-          val transGen = new TransactionGenerator(customer, profile, storesBC.value, products, seedFactory)
-          var transactions : List[Transaction] = List()
-	  var transaction = transGen.generate()
-
-          //Create a list of this customer's transactions for the time period
-          while(transaction.getDateTime() < simLen) {
-            if (transaction.getDateTime > BURNIN_TIME) {
-              transactions = transaction :: transactions
-            }
-            transaction = transGen.generate()
+        val products = productBC.value
+        val profileGen = new PurchasingModelGenerator(products, seedFactory)
+        val profile = profileGen.generate()
+        val transactions = customers.map {
+          customer => {
+            // Create a new purchasing profile.
+            val transGen = new TransactionGenerator(customer, profile, products, seedFactory)
+            // Create a list of this customer's transactions for the time period
+            Iterator.continually(transGen.generate()).takeWhile(_.getDateTime < simLen).foldLeft(Nil: List[Transaction])(
+              (transactions, transaction) => if (transaction.getDateTime > BURNIN_TIME) transaction :: transactions else transactions
+            ).reverse
           }
-          //The final result, we return the list of transactions produced above.
-	    transactions
         }
-      transactionIter
+        transactions
+      }
     }.flatMap(s => s)
 
     println("...Done defining transaction DAG.")
@@ -188,51 +173,39 @@ object SparkDriver {
     println(s"... Done Generating $nTrans transactions.")
 
     /**
-     *  Return the RDD representing all the petstore transactions.
-     *  This RDD contains a distributed collection of instances where
-     *  a customer went to a pet store, and bought a variable number of items.
-     *  We can then serialize all the contents to disk.
+     * Return the RDD representing all the petstore transactions.
+     * This RDD contains a distributed collection of instances where
+     * a customer went to a pet store, and bought a variable number of items.
+     * We can then serialize all the contents to disk.
      */
     transactionRDD
   }
 
-  def lineItem(t: Transaction, date:Date, p:Product): String = {
-      t.getStore.getId.toString + "," +
+  private def lineItem(t: Transaction, date: Date, p: Product): String = {
+    t.getStore.getId.toString + "," +
       t.getStore.getLocation.getZipcode + "," +
       t.getStore.getLocation.getCity + "," +
       t.getStore.getLocation.getState + "," +
       t.getCustomer.getId + "," +
-      t.getCustomer.getName.getFirst + "," +t.getCustomer.getName.getSecond + "," +
+      t.getCustomer.getName.getKey + "," +
+      t.getCustomer.getName.getValue + "," +
       t.getCustomer.getLocation.getZipcode + "," +
       t.getCustomer.getLocation.getCity + "," +
       t.getCustomer.getLocation.getState + "," +
       t.getId + "," +
       date + "," + p
   }
-  def writeData(transactionRDD : RDD[Transaction]): Unit = {
-    val initialDate : Long = new Date().getTime()
 
-    val transactionStringsRDD = transactionRDD.flatMap {
-      transaction =>
-        val products = transaction.getProducts()
+  def writeData(transactionRDD: RDD[Transaction]): Unit = {
+    val initialDate: Long = new Date().getTime
 
-        /*********************************************************
-        * we define a "records" RDD : Which is a
-        * mapping of products from each single transaction to strings.
-        *
-        * So we ultimately define an RDD of strings, where each string represents
-        * an instance where of a item purchase.
-        * ********************************************************/
-        val records = products.asScala.map {
-          product =>
-            val storeLocation = transaction.getStore().getLocation()
-            // days -> milliseconds = days * 24 h / day * 60 min / hr * 60 sec / min * 1000 ms / sec
-            val dateMS = (transaction.getDateTime * 24.0 * 60.0 * 60.0 * 1000.0).toLong
-            // Return a stringified "line item", which represents a single item bought.
-            lineItem(transaction, new Date(initialDate + dateMS), product)
-        }
-
-      records
+    val transactionStringsRDD = transactionRDD.flatMap { transaction =>
+      transaction.getProducts.asScala.map { product =>
+        // days -> milliseconds = days * 24 h / day * 60 min / hr * 60 sec / min * 1000 ms / sec
+        val dateMS = (transaction.getDateTime * 24.0 * 60.0 * 60.0 * 1000.0).toLong
+        // Return a stringified "line item", which represents a single item bought.
+        lineItem(transaction, new Date(initialDate + dateMS), product)
+      }
     }
     // Distributed serialization of the records to part-r-* files...
     transactionStringsRDD.saveAsTextFile(outputDir + "/transactions")

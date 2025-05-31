@@ -19,157 +19,119 @@ package org.apache.bigtop.bigpetstore.spark.analytics
 
 import java.io.File
 
-import scala.language.postfixOps
-
 import org.apache.spark.sql._
-import org.apache.spark.{SparkContext, SparkConf}
-import org.apache.spark.rdd._
 
 import org.apache.bigtop.bigpetstore.spark.datamodel._
 
 object PetStoreStatistics {
 
-    private def printUsage(): Unit = {
-      val usage: String = "BigPetStore Analytics Module." +
+  private def printUsage(): Unit = {
+    val usage: String = "BigPetStore Analytics Module." +
       "\n" +
       "Usage: spark-submit ... inputDir outputFile\n " +
       "inputDir - (string) Path to ETL'd data\n" +
       "outputFile - (string) is a JSON file.  For schema, see the code.\n"
 
-      System.err.println(usage)
-    }
+    System.err.println(usage)
+  }
 
   /**
    * Scala details. Some or None are an idiomatic way, in scala, to
    * return an optional value.  This allows us to signify, to the caller, that the
    * method may fail.  The caller can decide how to deal with failure (i.e. using getOrElse).
+   *
    * @param args
    * @return
    */
-    def parseArgs(args: Array[String]):(Option[String],Option[String]) = {
-      if(args.length < 1) {
-        (None, None)
-      } else if (args.length == 1) {
-        (Some(args(0)), None)
-      } else {
-        (Some(args(0)), Some(args(1)))
-      }
-    }
-
-  def productMap(r:Array[Product]) : Map[Long,Product] = {
-    r map (prod => prod.productId -> prod) toMap
-  }
-
-  def queryTxByMonth(sqlContext: SQLContext): Array[StatisticsTxByMonth] = {
-    import sqlContext._
-
-    val results: DataFrame = sql("SELECT count(*), month FROM Transactions GROUP BY month")
-    val transactionsByMonth = results.collect()
-    for(x<-transactionsByMonth){
-      println(x)
-    }
-
-    transactionsByMonth.map { r =>
-      StatisticsTxByMonth(r.getInt(1), r.getLong(0))
+  def parseArgs(args: Array[String]): (Option[String], Option[String]) = {
+    if (args.length < 1) {
+      (None, None)
+    } else if (args.length == 1) {
+      (Some(args(0)), None)
+    } else {
+      (Some(args(0)), Some(args(1)))
     }
   }
 
-  def queryTxByProductZip(sqlContext: SQLContext): Array[StatisticsTxByProductZip] = {
-    import sqlContext._
-
-    val results: DataFrame = sql(
-      """SELECT count(*) c, productId, zipcode
-FROM Transactions t
-JOIN Stores s ON t.storeId = s.storeId
-GROUP BY productId, zipcode""")
-
-    val groupedProductZips = results.collect()
-
-    //get list of all transactionsData
-    for(x<-groupedProductZips){
-      println("grouped product:zip " + x)
-    }
-
-    //Map JDBC Row into a Serializable case class.
-    groupedProductZips.map { r =>
-      StatisticsTxByProductZip(r.getLong(1),r.getString(2),r.getLong(0))
-    }
+  def queryTxByMonth(spark: SparkSession): Array[StatisticsTxByMonth] = {
+    import spark.implicits._
+    val results = spark.sql("SELECT month(dateTime) month, count(*) count FROM Transactions GROUP BY month")
+    results.show()
+    results.as[StatisticsTxByMonth].collect()
   }
 
-  def queryTxByProduct(sqlContext: SQLContext): Array[StatisticsTxByProduct] = {
-    import sqlContext._
+  def queryTxByProductZip(spark: SparkSession): Array[StatisticsTxByProductZip] = {
+    import spark.implicits._
+    val results: DataFrame = spark.sql(
+      """SELECT productId, zipcode, count(*) count
+        |FROM Transactions t
+        |JOIN Stores s
+        |ON t.storeId = s.storeId
+        |GROUP BY productId, zipcode""".stripMargin)
+    results.show()
+    results.as[StatisticsTxByProductZip].collect()
+  }
 
-    val results: DataFrame = sql(
-      """SELECT count(*) c, productId FROM Transactions GROUP BY productId""")
-
-    val groupedProducts = results.collect()
-
-    //Map JDBC Row into a Serializable case class.
-    groupedProducts.map { r =>
-      StatisticsTxByProduct(r.getLong(1),r.getLong(0))
-    }
+  def queryTxByProduct(spark: SparkSession): Array[StatisticsTxByProduct] = {
+    import spark.implicits._
+    val results = spark.sql("SELECT productId, count(*) count FROM Transactions GROUP BY productId")
+    results.show()
+    results.as[StatisticsTxByProduct].collect()
   }
 
 
-  def runQueries(r:(RDD[Location], RDD[Store], RDD[Customer], RDD[Product],
-    RDD[Transaction]), sc: SparkContext): Statistics = {
+  def runQueries(spark: SparkSession, locationDF: DataFrame, storeDF: DataFrame,
+                 customerDF: DataFrame, productDF: DataFrame, transactionDF: DataFrame): Statistics = {
+    import spark.implicits._
 
-    val spark = SparkSession.builder().config(sc.getConf).getOrCreate()
+    locationDF.createOrReplaceTempView("Locations")
+    storeDF.createOrReplaceTempView("Stores")
+    customerDF.createOrReplaceTempView("Customers")
+    productDF.createOrReplaceTempView("Product")
+    transactionDF.createOrReplaceTempView("Transactions")
 
-    // Transform the Non-SparkSQL Calendar into a SparkSQL-friendly field.
-    val mappableTransactions:RDD[TransactionSQL] =
-      r._5.map { trans => trans.toSQL() }
-
-    spark.createDataFrame(r._1).toDF().createOrReplaceTempView("Locations")
-    spark.createDataFrame(r._2).createOrReplaceTempView("Stores")
-    spark.createDataFrame(r._3).createOrReplaceTempView("Customers")
-    spark.createDataFrame(r._4).createOrReplaceTempView("Product")
-    spark.createDataFrame(mappableTransactions).createOrReplaceTempView("Transactions")
-
-
-    val txByMonth = queryTxByMonth(spark.sqlContext)
-    val txByProduct = queryTxByProduct(spark.sqlContext)
-    val txByProductZip = queryTxByProductZip(spark.sqlContext)
+    val txByMonth = queryTxByMonth(spark)
+    val txByProduct = queryTxByProduct(spark)
+    val txByProductZip = queryTxByProductZip(spark)
 
     Statistics(
-      txByMonth.map { s => s.count }.reduce(_+_),  // Total number of transactions
+      txByMonth.map(_.count).sum, // Total number of transactions
       txByMonth,
       txByProduct,
       txByProductZip,
-      r._4.collect()) // Product details
+      productDF.as[Product].collect()) // Product details
   }
 
-    /**
-    * We keep a "run" method which can be called easily from tests and also is used by main.
-    */
-    def run(txInputDir:String, statsOutputFile:String,
-      sc:SparkContext): Unit = {
+  /**
+   * We keep a "run" method which can be called easily from tests and also is used by main.
+   */
+  def run(txInputDir: String, statsOutputFile: String, spark: SparkSession): Unit = {
 
-      System.out.println("Running w/ input = " + txInputDir)
+    System.out.println("Running w/ input = " + txInputDir)
 
-      System.out.println("input : " + txInputDir)
-      val etlData = IOUtils.load(sc, txInputDir)
+    System.out.println("input : " + txInputDir)
+    val (locationDF, storeDF, customerDF, productDF, transactionDF) = IOUtils.load(spark, txInputDir)
 
-      val stats = runQueries(etlData, sc)
+    val stats = runQueries(spark, locationDF, storeDF, customerDF, productDF, transactionDF)
 
-      IOUtils.saveLocalAsJSON(new File(statsOutputFile), stats)
+    IOUtils.saveLocalAsJSON(new File(statsOutputFile), stats)
 
-      System.out.println("Output JSON Stats stored : " + statsOutputFile)
-    }
+    System.out.println("Output JSON Stats stored : " + statsOutputFile)
+  }
 
   def main(args: Array[String]): Unit = {
     // Get or else : On failure (else) we exit.
-    val (inputPath,outputPath) = parseArgs(args)
+    val (inputPath, outputPath) = parseArgs(args)
 
-    if(! (inputPath.isDefined && outputPath.isDefined)) {
+    if (!(inputPath.isDefined && outputPath.isDefined)) {
       printUsage()
       System.exit(1)
     }
 
-    val sc = new SparkContext(new SparkConf().setAppName("PetStoreStatistics"))
+    val spark = SparkSession.builder.appName("PetStoreStatistics").getOrCreate()
 
-    run(inputPath.get, outputPath.get, sc)
+    run(inputPath.get, outputPath.get, spark)
 
-    sc.stop()
+    spark.stop()
   }
 }

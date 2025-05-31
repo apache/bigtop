@@ -30,22 +30,22 @@ import org.junit.runner.RunWith
 
 // hack for running tests with Gradle
 @RunWith(classOf[JUnitRunner])
-class SparkDriverSuite extends AnyFunSuite  with BeforeAndAfterAll {
+class SparkDriverSuite extends AnyFunSuite with BeforeAndAfterAll {
 
   val conf = new SparkConf().setAppName("BPS Data Generator Test Suite").setMaster("local[2]")
   val sc = new SparkContext(conf);
 
   override def afterAll(): Unit = {
-      sc.stop();
+    sc.stop();
   }
 
   /**
    * Run the test, return outputdir of the raw data.
    */
-  def runGenerator(sc:SparkContext) : File = {
-    val tmpDir:File = Files.createTempDirectory("sparkDriverSuiteGeneratedData").toFile()
+  def runGenerator(sc: SparkContext): File = {
+    val tmpDir: File = Files.createTempDirectory("sparkDriverSuiteGeneratedData").toFile()
     // 10 stores, 1000 customers, 365.0 days
-    val parameters:Array[String] = Array(tmpDir.toString(), "10", "1000", "365.0")
+    val parameters: Array[String] = Array(tmpDir.toString(), "10", "1000", "365.0")
 
     SparkDriver.parseArgs(parameters)
 
@@ -54,14 +54,12 @@ class SparkDriverSuite extends AnyFunSuite  with BeforeAndAfterAll {
     assert(transactionCount > 0)
 
     SparkDriver.writeData(transactionRDD)
-    tmpDir;
-
+    tmpDir
   }
 
   test("Generating data") {
-
-    val tmpDir:File =runGenerator(sc);
-    val transactionDir:File = new File(tmpDir, "transactions")
+    val tmpDir: File = runGenerator(sc);
+    val transactionDir: File = new File(tmpDir, "transactions")
     assert(transactionDir.exists())
     assert(transactionDir.isDirectory())
     //TODO : Assert format is TextFile
