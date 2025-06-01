@@ -1,0 +1,5 @@
+/etc/default/airflow
+/usr/lib/airflow
+/usr/lib/systemd/system/airflow-scheduler.service
+/usr/lib/systemd/system/airflow-webserver.service
+/usr/lib/tmpfiles.d/airflow.conf
