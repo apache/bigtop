@@ -27,6 +27,9 @@ class bigtop_toolchain::python {
       package { 'python3-dev' :
         ensure => present
       }
+      package { 'python3-full' :
+        ensure => present
+      }
     }
   }
 
