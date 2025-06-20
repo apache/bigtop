@@ -245,7 +245,6 @@ class bigtop_toolchain::packages {
         "libtool",
         "gcc",
         "g++",
-        "fuse",
         "reprepro",
         "rsync",
         "liblzo2-dev",
