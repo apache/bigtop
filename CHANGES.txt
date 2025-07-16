@@ -15,7 +15,9 @@
 
 Bigtop Changelog
 
-* Release 3.5.0-SNAPSHOT (unreleased)
+* Release 3.6.0-SNAPSHOT (unreleased)
+
+* Release 3.5.0 (unreleased)
 
 * Release 3.4.0 (2024-06-01)
 
