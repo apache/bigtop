@@ -234,7 +234,7 @@ bigtop {
       name    = 'flink'
       rpm_pkg_suffix = "_" + bigtop.base_version.replace(".", "_")
       relNotes = 'Apache Flink'
-      version { base = '1.20.0'; pkg = base; release = 1 }
+      version { base = '1.20.1'; pkg = base; release = 1 }
       tarball { destination = "$name-${version.base}.tar.gz"
                 source      = "$name-${version.base}-src.tgz" }
       url     { download_path = "/$name/$name-${version.base}"
