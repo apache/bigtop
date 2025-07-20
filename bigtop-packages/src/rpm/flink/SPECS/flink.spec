@@ -106,6 +106,7 @@ Summary: Provides the Apache Flink Job Manager service.
 Group: System/Daemons
 Requires: %{name} = %{version}-%{release}
 Requires(pre): %{name} = %{version}-%{release}
+Requires: initscripts
 
 %description jobmanager
 Apache Flink Job Manager service.
@@ -115,6 +116,7 @@ Summary: Provides the Apache Flink Task Manager service.
 Group: System/Daemons
 Requires: %{name} = %{version}-%{release}
 Requires(pre): %{name} = %{version}-%{release}
+Requires: initscripts
 
 %description taskmanager
 Apache Flink Task Manager service.
