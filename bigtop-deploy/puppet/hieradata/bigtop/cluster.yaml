@@ -177,6 +177,7 @@ hadoop_hive::common_config::kerberos_realm: "%{hiera('kerberos::site::realm')}"
 hadoop_hive::common_config::metastore_uris: "thrift://%{hiera('bigtop::hadoop_head_node')}:9083"
 # set this to true in production to avoid potential metastore corruption
 hadoop_hive::common_config::metastore_schema_verification: false
+hadoop_hive::common_config::server2_sleep_interval_between_start_attempts: "1s"
 
 # tez
 hadoop::common::tez_conf_dir: "/etc/tez/conf"

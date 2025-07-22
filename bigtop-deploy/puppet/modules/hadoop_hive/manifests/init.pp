@@ -56,6 +56,7 @@ class hadoop_hive {
                        $metastore_schema_verification = true,
                        $server2_thrift_port = "10000",
                        $server2_thrift_http_port = "10001",
+                       $server2_sleep_interval_between_start_attempts = "60s",
                        $hive_execution_engine = "mr") {
     include hadoop_hive::client_package
     if ($kerberos_realm and $kerberos_realm != "") {

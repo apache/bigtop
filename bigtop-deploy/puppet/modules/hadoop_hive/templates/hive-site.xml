@@ -108,6 +108,11 @@
    <value><%= @server2_thrift_http_port %></value>
 </property>
 
+<property>
+   <name>hive.server2.sleep.interval.between.start.attempts</name>
+   <value><%= @server2_sleep_interval_between_start_attempts %></value>
+</property>
+
 <% if @metastore_uris != "" %>
 <property>
    <name>hive.metastore.uris</name>
