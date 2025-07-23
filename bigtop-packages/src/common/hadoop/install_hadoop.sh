@@ -259,7 +259,7 @@ chmod 755 $wrapper
 #libexec
 install -d -m 0755 $PREFIX/$HADOOP_DIR/libexec
 cp -r ${BUILD_DIR}/libexec/* $PREFIX/$HADOOP_DIR/libexec/
-cp ${DISTRO_DIR}/hadoop-layout.sh $PREFIX/$HADOOP_DIR/libexec/
+install -m 0755 ${DISTRO_DIR}/hadoop-layout.sh $PREFIX/$HADOOP_DIR/libexec/
 install -m 0755 ${DISTRO_DIR}/init-hdfs.sh $PREFIX/$HADOOP_DIR/libexec/
 install -m 0755 ${DISTRO_DIR}/init-hcfs.json $PREFIX/$HADOOP_DIR/libexec/
 install -m 0755 ${DISTRO_DIR}/init-hcfs.groovy $PREFIX/$HADOOP_DIR/libexec/
