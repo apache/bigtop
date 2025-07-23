@@ -349,7 +349,7 @@ bigtop {
     'airflow' {
       name    = "airflow"
       relNotes = "Apache Airflow"
-      version { base = '2.10.4'; pkg = base; release = 1 }
+      version { base = '2.10.5'; pkg = base; release = 1 }
       tarball { source      = "apache_airflow-${version.base}.tar.gz"
                 destination = source }
       url     { download_path = "/${name}/${version.base}/"
