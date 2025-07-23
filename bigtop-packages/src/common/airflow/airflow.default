@@ -21,4 +21,5 @@
 #
 # AIRFLOW_CONFIG=
 AIRFLOW_HOME=/var/lib/airflow
+HADOOP_CONF_DIR=/etc/hadoop/conf
 PATH=/usr/lib/airflow/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin

@@ -172,3 +172,48 @@ spark-submit --master local[2] --class org.apache.bigtop.bigpetstore.spark.analy
 ```
 
 The resulting json file will contain lists of customers, products, and products recommended to each customer.
+
+Airflow Integration
+--------------------------------------------
+
+The steps described above are consolidated into [a single Airflow DAG](../../bigtop-deploy/puppet/modules/airflow/templates/example_bigpetstore.py).
+You can try it as follows. The example here is tested on Debian 12, and assuming [Puppet](../../bigtop_toolchain/bin/puppetize.sh) and [Bigtop toolchain](../../bigtop_toolchain/README.md) are already installed and BPS Spark is built as a shadowed JAR in accordance with [the guide above](#building-and-running-with-spark).
+
+1. (Optional) build Airflow and Spark including their dependencies.
+   You can skip it if you use Bigtop's binary distribution packages on its public repository.
+
+```
+$ ./gradlew allclean airflow-pkg spark-pkg repo -Dbuildwithdeps=true
+```
+
+2. Deploy the packages above though Bigtop's Puppet manifests with appropriate parameters:
+
+```
+$ cat bigtop-deploy/puppet/hieradata/site.yaml
+bigtop::bigtop_repo_gpg_check: false
+bigtop::bigtop_repo_uri: [...]
+bigtop::hadoop_head_node: ...
+hadoop::hadoop_storage_dirs: [/data]
+hadoop_cluster_node::cluster_components: [bigtop-utils, hdfs, yarn, spark, airflow]
+airflow::server::install_bigpetstore_example: true  # Enable the BigPetStore DAG
+airflow::server::load_examples: false  # Disable Airflow's default examples for simplicity
+$ sudo cp -r bigtop-deploy/puppet/hiera* /etc/puppet
+$ sudo puppet apply --hiera_config=/etc/puppet/hiera.yaml --modulepath=/vagrant_data/bigtop/bigtop-deploy/puppet/modules:/etc/puppet/code/modules:/usr/share/puppet/modules /vagrant_data/bigtop/bigtop-deploy/puppet/manifests
+```
+
+3. Create output directories on HDFS with the airflow owner:
+
+```
+$ sudo -u hdfs hdfs dfs -mkdir /user/airflow
+$ sudo -u hdfs hdfs dfs -chown airflow:airflow /user/airflow
+```
+
+4. Login Airflow's web UI with admin/admin and wait for the DAG picked up for a while.
+   Once it's found, you can run it through the triangle button on the right.
+   ![dag_list](images/dag_list.png)
+
+5. Trigger the DAG with the path to the BPS Spark JAR.
+   ![trigger_dag](images/trigger_dag.png)
+
+6. If settings are appropriate, the BPS DAG should successfully run as follows:
+   ![running_dag](images/running_dag.png)
