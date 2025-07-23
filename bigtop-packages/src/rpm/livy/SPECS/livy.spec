@@ -39,6 +39,7 @@ Source4: bigtop.bom
 Source6: init.d.tmpl
 Requires: bigtop-utils >= 0.7
 Requires(preun): /sbin/service
+Requires: initscripts
 #BIGTOP_PATCH_FILES
 
 %if  %{?suse_version:1}0
