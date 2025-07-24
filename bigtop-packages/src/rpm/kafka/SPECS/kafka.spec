@@ -92,6 +92,7 @@ larger than the capability of any single machine and to allow clusters of co-ord
 Summary: Server for kafka
 Group: System/Daemons
 Requires: %{name} = %{version}-%{release}
+Requires: initscripts
 
 # CentOS 5 does not have any dist macro
 # So I will suppose anything that is not Mageia or a SUSE will be a RHEL/CentOS/Fedora
