@@ -102,6 +102,7 @@ Spark core
 Summary: Server for Spark master
 Group: Development/Libraries
 Requires: %{spark_pkg_name}-core = %{version}-%{release}
+Requires: initscripts
 
 %description -n %{spark_pkg_name}-master
 Server for Spark master
@@ -110,6 +111,7 @@ Server for Spark master
 Summary: Server for Spark worker
 Group: Development/Libraries
 Requires: %{spark_pkg_name}-core = %{version}-%{release}
+Requires: initscripts
 
 %description -n %{spark_pkg_name}-worker
 Server for Spark worker
@@ -128,6 +130,7 @@ Includes PySpark, an interactive Python shell for Spark, and related libraries
 Summary: History server for Apache Spark
 Group: Development/Libraries
 Requires: %{spark_pkg_name}-core = %{version}-%{release}
+Requires: initscripts
 
 %description -n %{spark_pkg_name}-history-server
 History server for Apache Spark
@@ -136,6 +139,7 @@ History server for Apache Spark
 Summary: Thrift server for Spark SQL
 Group: Development/Libraries
 Requires: %{spark_pkg_name}-core = %{version}-%{release}
+Requires: initscripts
 
 %description -n %{spark_pkg_name}-thriftserver
 Thrift server for Spark SQL
