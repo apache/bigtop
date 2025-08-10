@@ -132,5 +132,5 @@ rm -f $PREFIX/$LIB_DIR/bin/*.cmd
 chmod 755 $PREFIX/$LIB_DIR/bin/*
 
 rm -f $PREFIX/$CONF_DIST_DIR/*.cmd.*
-cp -a ${SOURCE_DIR}/zeppelin-env.sh $PREFIX/$CONF_DIST_DIR
+install -m 0755 ${SOURCE_DIR}/zeppelin-env.sh $PREFIX/$CONF_DIST_DIR
 ln -s $CONF_DIR $PREFIX/$LIB_DIR/conf
