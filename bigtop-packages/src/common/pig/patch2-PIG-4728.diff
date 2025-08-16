@@ -1,0 +1,36 @@
+diff --git a/ivy.xml b/ivy.xml
+index 96e9636..a9ccdf6 100644
+--- a/ivy.xml
++++ b/ivy.xml
+@@ -249,7 +249,8 @@
+     <dependency org="org.antlr" name="antlr-runtime" rev="${antlr.version}" conf="compile->default"/>
+     <dependency org="org.antlr" name="ST4" rev="${stringtemplate.version}" conf="compile->default"/>
+     <dependency org="org.apache.zookeeper" name="zookeeper" rev="${zookeeper.version}" conf="compile->master"/>
+-    <dependency org="io.netty" name="netty" rev="${netty.version}" conf="test->master"/>
++    <dependency org="io.netty" name="netty-all" rev="${netty.version}" conf="test->master"/>
++    <dependency org="io.netty" name="netty" rev="3.6.6.Final" conf="test->master"/>
+     <dependency org="dk.brics.automaton" name="automaton" rev="1.11-8" conf="compile->default"/>
+ 
+     <dependency org="org.jruby" name="jruby-complete" rev="${jruby.version}" conf="compile->master"/>
+@@ -354,6 +355,8 @@
+       <exclude org="asm" module="asm"/>
+     </dependency>
+ 
++    <dependency org="org.apache.hbase" name="hbase-procedure" rev="${hbase95.version}" conf="hbase95->master"/>
++
+     <dependency org="org.htrace" name="htrace-core" rev="3.0.4" conf="hadoop23->master"/>
+     <dependency org="org.apache.htrace" name="htrace-core" rev="${htrace.version}" conf="hadoop23->master"/>
+     <dependency org="org.fusesource.leveldbjni" name="leveldbjni-all" rev="${leveldbjni.version}"
+diff --git a/ivy/libraries.properties b/ivy/libraries.properties
+index 12e564b..65762d6 100644
+--- a/ivy/libraries.properties
++++ b/ivy/libraries.properties
+@@ -71,7 +71,7 @@ rhino.version=1.7R2
+ antlr.version=3.4
+ stringtemplate.version=4.0.4
+ log4j.version=1.2.16
+-netty.version=3.6.6.Final
++netty.version=4.0.23.Final
+ rats-lib.version=0.5.1
+ slf4j-api.version=1.6.1
+ slf4j-log4j12.version=1.6.1
