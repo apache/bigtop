@@ -17,6 +17,68 @@
 		<section name="Bigtop Project Release Notes">
 			<!-- Paste release notes from https://issues.apache.org/jira/browse/BIGTOP here. -->
 
+        <h3>Release Notes - Bigtop - Version 3.5.0</h3>
+    
+<h2>        Sub-task
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4370'>BIGTOP-4370</a>] -         Integrate the bigpetstore-spark workflow with Airflow
+</li>
+</ul>
+            
+<h2>        Bug
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4357'>BIGTOP-4357</a>] -         apply diff patches files sequence error using text sequence not number seq
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4432'>BIGTOP-4432</a>] -         Fix flaky smoke-test of Hive executing command before HiveServer2 is ready
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4434'>BIGTOP-4434</a>] -         Add necessary license headers and update RAT exclusion
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4469'>BIGTOP-4469</a>] -         Add dependency on initscripts to Flink RPM
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4472'>BIGTOP-4472</a>] -         Fix invalid permission of hadoop-layout.sh
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4473'>BIGTOP-4473</a>] -         Add dependency on initscripts to Spark RPM
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4474'>BIGTOP-4474</a>] -         Add dependency on initscripts to Kafka RPM
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4475'>BIGTOP-4475</a>] -         Add dependency on initscripts to Livy RPM
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4476'>BIGTOP-4476</a>] -         Fix invalid permission of conf files of ZooKeeper and Zeppelin
+</li>
+</ul>
+            
+<h2>        New Feature
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4360'>BIGTOP-4360</a>] -         Add Airflow to Bigtop
+</li>
+</ul>
+    
+<h2>        Improvement
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4387'>BIGTOP-4387</a>] -         Correct webpage to say &quot;bigtop supports&quot; vice &quot;bigtop support&quot;
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4424'>BIGTOP-4424</a>] -         Rewrite BPS Spark with the DataFrame API and spark.ml
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4446'>BIGTOP-4446</a>] -         Remove obsolete fuse from toolchain in Debian and Ubuntu
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4460'>BIGTOP-4460</a>] -         Upgrade Airflow to 2.10.5
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4461'>BIGTOP-4461</a>] -         Upgrade Flink to 1.20.1
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4462'>BIGTOP-4462</a>] -         Upgrade HBase to 2.6.2
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4463'>BIGTOP-4463</a>] -         Upgrade Spark to 3.5.6
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4471'>BIGTOP-4471</a>] -         Upgrade the Puppet manifest for Airflow to adopt PostgreSQL and LocalExecutor
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4484'>BIGTOP-4484</a>] -         Upgrade Ranger to 2.7.0
+</li>
+</ul>
+                                                                                                                                                                    
         <h3>Release Notes - Bigtop - Version 3.4.0</h3>
     
 <h2>        Sub-task
