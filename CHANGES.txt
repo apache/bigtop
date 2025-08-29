@@ -19,6 +19,37 @@ Bigtop Changelog
 
 * Release 3.5.0 (unreleased)
 
+Release Notes - Bigtop - Version 3.5.0
+
+** Sub-task
+    * [BIGTOP-4370] - Integrate the bigpetstore-spark workflow with Airflow
+
+** Bug
+    * [BIGTOP-4357] - apply diff patches files sequence error using text sequence not number seq
+    * [BIGTOP-4432] - Fix flaky smoke-test of Hive executing command before HiveServer2 is ready
+    * [BIGTOP-4434] - Add necessary license headers and update RAT exclusion
+    * [BIGTOP-4469] - Add dependency on initscripts to Flink RPM
+    * [BIGTOP-4472] - Fix invalid permission of hadoop-layout.sh
+    * [BIGTOP-4473] - Add dependency on initscripts to Spark RPM
+    * [BIGTOP-4474] - Add dependency on initscripts to Kafka RPM
+    * [BIGTOP-4475] - Add dependency on initscripts to Livy RPM
+    * [BIGTOP-4476] - Fix invalid permission of conf files of ZooKeeper and Zeppelin
+
+** New Feature
+    * [BIGTOP-4360] - Add Airflow to Bigtop
+
+** Improvement
+    * [BIGTOP-4387] - Correct webpage to say "bigtop supports" vice "bigtop support"
+    * [BIGTOP-4424] - Rewrite BPS Spark with the DataFrame API and spark.ml
+    * [BIGTOP-4446] - Remove obsolete fuse from toolchain in Debian and Ubuntu
+    * [BIGTOP-4460] - Upgrade Airflow to 2.10.5
+    * [BIGTOP-4461] - Upgrade Flink to 1.20.1
+    * [BIGTOP-4462] - Upgrade HBase to 2.6.2
+    * [BIGTOP-4463] - Upgrade Spark to 3.5.6
+    * [BIGTOP-4471] - Upgrade the Puppet manifest for Airflow to adopt PostgreSQL and LocalExecutor
+    * [BIGTOP-4484] - Upgrade Ranger to 2.7.0
+
+
 * Release 3.4.0 (2024-06-01)
 
 Release Notes - Bigtop - Version 3.4.0
