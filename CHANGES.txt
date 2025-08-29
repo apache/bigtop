@@ -17,7 +17,7 @@ Bigtop Changelog
 
 * Release 3.6.0-SNAPSHOT (unreleased)
 
-* Release 3.5.0 (unreleased)
+* Release 3.5.0 (2025-09-05)
 
 Release Notes - Bigtop - Version 3.5.0
 
