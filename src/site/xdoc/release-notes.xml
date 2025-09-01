@@ -47,6 +47,8 @@
 </li>
 <li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4476'>BIGTOP-4476</a>] -         Fix invalid permission of conf files of ZooKeeper and Zeppelin
 </li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4494'>BIGTOP-4494</a>] -         Fix compilation error of TestPing.groovy of test-artifacts
+</li>
 </ul>
             
 <h2>        New Feature

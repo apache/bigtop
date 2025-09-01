@@ -34,6 +34,7 @@ Release Notes - Bigtop - Version 3.5.0
     * [BIGTOP-4474] - Add dependency on initscripts to Kafka RPM
     * [BIGTOP-4475] - Add dependency on initscripts to Livy RPM
     * [BIGTOP-4476] - Fix invalid permission of conf files of ZooKeeper and Zeppelin
+    * [BIGTOP-4494] - Fix compilation error of TestPing.groovy of test-artifacts
 
 ** New Feature
     * [BIGTOP-4360] - Add Airflow to Bigtop
