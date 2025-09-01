@@ -30,7 +30,7 @@ subprojects {
   ext.groovyVersion = '2.5.4'
   ext.hadoopVersion = '2.7.4'
   ext.hbaseVersion = '1.1.9'
-  ext.solrVersion = '4.6.0'
+  ext.solrVersion = '8.11.4'
   ext.slf4jVersion = '1.6.6'
   // itest needs be greater than or equal to = 1.0.0
   ext.itestVersion = '1.0.0' // Might need to be able to read an input for alternate version?
