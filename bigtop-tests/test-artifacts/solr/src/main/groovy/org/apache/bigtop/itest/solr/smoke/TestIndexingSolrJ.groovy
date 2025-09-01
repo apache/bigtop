@@ -20,7 +20,7 @@ package org.apache.bigtop.itest.solr.smoke
 import org.apache.solr.client.solrj.SolrQuery
 import org.apache.solr.client.solrj.SolrRequest
 import org.apache.solr.client.solrj.SolrServerException
-import org.apache.solr.client.solrj.impl.HttpSolrServer
+import org.apache.solr.client.solrj.impl.HttpSolrClient
 import org.apache.solr.client.solrj.response.QueryResponse
 import org.apache.solr.common.SolrDocument
 import org.apache.solr.common.SolrDocumentList
@@ -41,18 +41,18 @@ import org.junit.Assert
  */
 class TestIndexingSolrJ extends SolrTestBase {
 
-  HttpSolrServer _server
+  HttpSolrClient _client
 
   @Before
   public void before2() {
-    _server = new HttpSolrServer(_baseURL)
+    _client = new HttpSolrClient.Builder(_baseURL).build()
   }
 
   @After
   public void after2() {
-    if (_server != null) {
-      _server.shutdown()
-      _server = null
+    if (_client != null) {
+      _client.close()
+      _client = null
     }
   }
 
@@ -68,8 +68,8 @@ class TestIndexingSolrJ extends SolrTestBase {
     doc.addField("id", "two")
     doc.addField("name", "Another document two")
     docs.add(doc)
-    _server.add(docs)
-    _server.commit()
+    _client.add(docs)
+    _client.commit()
 
     doQuery("*:*", "one", "two")
     // Now see if we can search them.
@@ -81,7 +81,7 @@ class TestIndexingSolrJ extends SolrTestBase {
     SolrQuery query = new SolrQuery()
     query.setQuery(queryString)
     query.setRows(1000)
-    QueryResponse qr = _server.query(query, SolrRequest.METHOD.POST)
+    QueryResponse qr = _client.query(query, SolrRequest.METHOD.POST)
     Object o = qr.getHeader().get("status")
     Assert.assertEquals(0, qr.getHeader().get("status"))
 
