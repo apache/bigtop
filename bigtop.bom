@@ -128,7 +128,7 @@ bigtop {
       name    = 'zookeeper'
       pkg     = name
       version {
-        base  = '3.4.14'
+        base  = '3.7.2'
         pkg   = base
         release = 1
       }
@@ -155,7 +155,7 @@ bigtop {
     'hbase' {
       name    = 'hbase'
       relNotes = 'Apache HBase'
-      version { base = '2.2.6'; pkg = base; release = 1 }
+      version { base = '2.2.6'; pkg = base; release = 2 }
       tarball { destination = "${name}-${version.base}.tar.gz"
                 source      = "${name}-${version.base}-src.tar.gz" }
       url     { download_path = "/$name/${version.base}/"
