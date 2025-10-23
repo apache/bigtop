@@ -274,6 +274,8 @@ class bigtop_toolchain::packages {
         "libsnappy-dev",
         "libzstd-dev",
         "libboost-regex-dev",
+        "libboost-date-time-dev",
+        "libboost-program-options-dev",
         "xfslibs-dev",
         "libbz2-dev",
         "libreadline-dev",

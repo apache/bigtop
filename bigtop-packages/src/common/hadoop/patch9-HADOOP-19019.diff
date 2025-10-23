@@ -1,46 +1,32 @@
+commit 14e781a026d16ce67f32e17a53df01d5b3f81716
+Author: jialiang <2510095164@qq.com>
+Date:   Tue Jan 23 14:51:20 2024 +0800
+
+    HADOOP-19019: Parallel Maven Build Support for Apache Hadoop (#6373). Contributed by JiaLiangC.
+    
+    Signed-off-by: Steve Loughran <stevel@apache.org>
+    Signed-off-by: He Xiaoqiao <hexiaoqiao@apache.org>
+    (cherry picked from commit b2fac14828b69c761858dd7cb9ab17313c28b161)
+
 diff --git a/hadoop-mapreduce-project/pom.xml b/hadoop-mapreduce-project/pom.xml
-index 45ea915b62b1..426baaf90db8 100644
+index 6e63dd82922..30b37c8f4c0 100644
 --- a/hadoop-mapreduce-project/pom.xml
 +++ b/hadoop-mapreduce-project/pom.xml
-@@ -148,7 +148,35 @@
-       <groupId>${leveldbjni.group}</groupId>
-       <artifactId>leveldbjni-all</artifactId>
+@@ -86,6 +86,12 @@
+       <artifactId>hadoop-mapreduce-examples</artifactId>
+       <version>${project.version}</version>
      </dependency>
--
-+    <dependency>
-+      <groupId>org.apache.hadoop</groupId>
-+      <artifactId>hadoop-mapreduce-client-shuffle</artifactId>
-+      <version>${project.version}</version>
-+      <scope>provided</scope>
-+    </dependency>
-+    <dependency>
-+      <groupId>org.apache.hadoop</groupId>
-+      <artifactId>hadoop-mapreduce-client-jobclient</artifactId>
-+      <version>${project.version}</version>
-+      <scope>provided</scope>
-+    </dependency>
 +    <dependency>
 +      <groupId>org.apache.hadoop</groupId>
 +      <artifactId>hadoop-mapreduce-client-hs-plugins</artifactId>
 +      <version>${project.version}</version>
 +      <scope>provided</scope>
 +    </dependency>
-+    <dependency>
-+      <groupId>org.apache.hadoop</groupId>
-+      <artifactId>hadoop-mapreduce-client-nativetask</artifactId>
-+      <version>${project.version}</version>
-+      <scope>provided</scope>
-+    </dependency>
-+    <dependency>
-+      <groupId>org.apache.hadoop</groupId>
-+      <artifactId>hadoop-mapreduce-examples</artifactId>
-+      <scope>provided</scope>
-+    </dependency>
    </dependencies>
  
    <build>
 diff --git a/hadoop-yarn-project/pom.xml b/hadoop-yarn-project/pom.xml
-index 74c774e8cf83..8d50d39ca7b3 100644
+index 94d7369fd82..3ced36748a8 100644
 --- a/hadoop-yarn-project/pom.xml
 +++ b/hadoop-yarn-project/pom.xml
 @@ -33,6 +33,7 @@
@@ -51,9 +37,9 @@ index 74c774e8cf83..8d50d39ca7b3 100644
    </properties>
  
    <modules>
-@@ -82,6 +83,61 @@
-       <groupId>org.apache.hadoop</groupId>
-       <artifactId>hadoop-yarn-services-core</artifactId>
+@@ -90,6 +91,64 @@
+       <artifactId>hadoop-yarn-applications-catalog-webapp</artifactId>
+       <type>war</type>
      </dependency>
 +    <dependency>
 +      <groupId>org.apache.hadoop</groupId>
@@ -77,6 +63,16 @@ index 74c774e8cf83..8d50d39ca7b3 100644
 +      <artifactId>hadoop-yarn-server-timelineservice-hbase-client</artifactId>
 +      <version>${project.version}</version>
 +      <scope>provided</scope>
++      <exclusions>
++        <exclusion>
++          <groupId>com.google.errorprone</groupId>
++          <artifactId>error_prone_annotations</artifactId>
++        </exclusion>
++        <exclusion>
++          <groupId>org.codehaus.mojo</groupId>
++          <artifactId>animal-sniffer-annotations</artifactId>
++        </exclusion>
++      </exclusions>
 +    </dependency>
 +    <dependency>
 +      <groupId>org.apache.hadoop</groupId>
@@ -98,13 +94,6 @@ index 74c774e8cf83..8d50d39ca7b3 100644
 +    </dependency>
 +    <dependency>
 +      <groupId>org.apache.hadoop</groupId>
-+      <artifactId>hadoop-yarn-applications-catalog-webapp</artifactId>
-+      <version>${hadoop.version}</version>
-+      <scope>provided</scope>
-+      <type>war</type>
-+    </dependency>
-+    <dependency>
-+      <groupId>org.apache.hadoop</groupId>
 +      <artifactId>hadoop-yarn-ui</artifactId>
 +      <version>${project.version}</version>
 +      <type>${yarn.ui.packaging}</type>
@@ -113,7 +102,7 @@ index 74c774e8cf83..8d50d39ca7b3 100644
    </dependencies>
  
    <build>
-@@ -115,6 +171,32 @@
+@@ -123,6 +182,32 @@
    </build>
  
    <profiles>
