@@ -41,6 +41,7 @@ usage() {
     echo "                                                   NEXUS_URL is optional. If not specified, default to http://NEXUS_IP:8081/nexus"
     echo "                                                   Where NEXUS_IP is the ip of container named nexus"
     echo "       -p, --provision                           - Deploy configuration changes"
+    echo "       --[component]-java-version JAVA_VERSION   - Configure preferable Java version that used by supported components"
     echo "       -r, --repo REPO_URL                       - Overwrite the yum/apt repo defined in config file"
     echo "       -s, --smoke-tests COMPONENTS              - Run Bigtop smoke tests"
     echo "                                                   COMPONENTS is optional. If not specified, default to smoke_test_components in config file"
@@ -172,6 +173,7 @@ bigtop::bigtop_repo_gpg_check: $gpg_check
 hadoop_cluster_node::cluster_components: $3
 hadoop_cluster_node::cluster_nodes: [$node_list]
 hadoop::common_yarn::yarn_resourcemanager_scheduler_class: org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacityScheduler
+$ADDITIONAL_CONFIG
 EOF
 }
 
@@ -350,6 +352,8 @@ if [ -e .provision_id ]; then
     PROVISION_ID=`cat .provision_id`
 fi
 
+ADDITIONAL_CONFIG=""  # placeholder to pass additional config to generate_config()
+
 while [ $# -gt 0 ]; do
     case "$1" in
     -c|--create)
@@ -452,6 +456,16 @@ while [ $# -gt 0 ]; do
     -p|--provision)
         provision
         shift;;
+    --*-java-version)
+        if [ $# -lt 2 ]; then
+          log "No java version specified"
+          usage
+        fi
+        java_version_component=$(echo "$1" | cut -d- -f3)
+        java_version_version="$2"
+        java_version_config="bigtop::${java_version_component}_java_version: \"${java_version_version}\"\n"
+        ADDITIONAL_CONFIG="${ADDITIONAL_CONFIG}${java_version_config}"
+        shift 2;;
     -r|--repo)
         if [ $# -lt 2 ]; then
           log "No yum/apt repo specified"
@@ -476,6 +490,8 @@ while [ $# -gt 0 ]; do
         usage;;
     esac
 done
+
+ADDITIONAL_CONFIG=$(echo -e $ADDITIONAL_CONFIG)  # process newline
 
 if [ "$READY_TO_LAUNCH" = true ]; then
     create $NUM_INSTANCES
