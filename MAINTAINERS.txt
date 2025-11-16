@@ -25,3 +25,4 @@ test-artifacts and test-execution repos:
 tez: evans ye, oflebbe
 ycsb: youngwoo kim
 zookeeper: sean mackrory, rvs
+elasticsearch: hernan vivani
