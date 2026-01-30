@@ -1,11 +1,11 @@
 diff --git a/hadoop-common-project/hadoop-kms/src/main/libexec/shellprofile.d/hadoop-kms.sh b/hadoop-common-project/hadoop-kms/src/main/libexec/shellprofile.d/hadoop-kms.sh
-index 0d084bb36e6..dafe7459f4a 100755
+index b54bf811d6b..bb860ce2d93 100755
 --- a/hadoop-common-project/hadoop-kms/src/main/libexec/shellprofile.d/hadoop-kms.sh
 +++ b/hadoop-common-project/hadoop-kms/src/main/libexec/shellprofile.d/hadoop-kms.sh
-@@ -49,9 +49,4 @@ function hadoop_subcommand_kms
-     "-Dkms.config.dir=${HADOOP_CONF_DIR}"
-   hadoop_add_param HADOOP_OPTS "-Dkms.log.dir=" \
+@@ -51,9 +51,4 @@ function hadoop_subcommand_kms
      "-Dkms.log.dir=${HADOOP_LOG_DIR}"
+   hadoop_add_param HADOOP_OPTS "-Dlog4j.configuration=" \
+     "-Dlog4j.configuration=file:${HADOOP_CONF_DIR}/kms-log4j.properties"
 -
 -  if [[ "${HADOOP_DAEMON_MODE}" == "default" ]] ||
 -     [[ "${HADOOP_DAEMON_MODE}" == "start" ]]; then
