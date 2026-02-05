@@ -20,10 +20,8 @@ set -ex
 
 export MAVEN_OPTS="-Xmx1024m"
 
-MVN_ARGS="-Phadoop-3.0 "
+MVN_ARGS="-Dhadoop.profile=3.0 "
 MVN_ARGS+="-Dhadoop-three.version=${HADOOP_VERSION} "
-MVN_ARGS+="-Dhadoop.guava.version=27.0-jre "
-MVN_ARGS+="-Djetty.version=9.3.29.v20201019 "
 MVN_ARGS+="-Dzookeeper.version=${ZOOKEEPER_VERSION} "
 MVN_ARGS+="-DskipTests "
 MVN_ARGS+="-Dcheckstyle.skip=true "

@@ -342,6 +342,7 @@ do
         # Region servers start from a different template that allows
         # them to run multiple concurrent instances of the daemon
         %__cp %{SOURCE7} $init_file
+        chmod 755 $init_file
         %__sed -i -e "s|@INIT_DEFAULT_START@|3 4 5|" $init_file
         %__sed -i -e "s|@INIT_DEFAULT_STOP@|0 1 2 6|" $init_file
         %__sed -i -e "s|@CHKCONFIG@|345 87 13|" $init_file
