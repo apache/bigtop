@@ -65,6 +65,9 @@ $roles_map = {
   solr => {
     worker => ["solr-server"],
   },
+  nutch => {
+    client => ["nutch-client"],
+  },
   spark => {
     worker => ["spark-on-yarn"],
     client => ["spark-client"],
@@ -171,6 +174,7 @@ class node_with_roles ($roles = hiera("bigtop::roles")) inherits hadoop_cluster_
     "hadoop_zookeeper",
     "hcatalog",
     "livy",
+    "nutch",
     "solr",
     "spark",
     "tez",
