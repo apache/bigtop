@@ -109,7 +109,12 @@ fi
 
 # Start up build container
 CONTAINER_ID=`docker run -d $DOCKER_RUN_OPTION $NEXUS $IMAGE_NAME /sbin/init`
-trap "docker rm -f $CONTAINER_ID" EXIT
+trap '[ -n "$CONTAINER_ID" ] && docker rm -f $CONTAINER_ID' EXIT
+
+if [ -z "$CONTAINER_ID" ]; then
+    echo "Failed to start Docker container (e.g. permission denied). Ensure the user is in the docker group."
+    exit 1
+fi
 
 # Copy bigtop repo into container
 docker cp $BIGTOP_HOME $CONTAINER_ID:/bigtop
@@ -124,7 +129,7 @@ RESULT=$?
 mkdir -p output
 docker cp $CONTAINER_ID:/bigtop/build .
 docker cp $CONTAINER_ID:/bigtop/output .
-docker rm -f $CONTAINER_ID
+[ -n "$CONTAINER_ID" ] && docker rm -f $CONTAINER_ID
 
 if [ $RESULT -ne 0 ]; then
     exit 1
