@@ -392,6 +392,7 @@ def genTasks = { target, packaging ->
     }
 // Order of debuild parameters is important; hence specifying explicitely rather
 // than in an array of args
+    def debuildDepsOpt = (target == 'nutch') ? ' -d' : ''
     def command = """debuild \
 --preserve-envvar PATH \
 --preserve-envvar MAVEN3_HOME \
@@ -405,7 +406,7 @@ def genTasks = { target, packaging ->
 --set-envvar=PARENT_DIR=$FULL_PARENT_DIR \
 --set-envvar=PKG_NAME_SUFFIX=$DEB_PKG_NAME_SUFFIX \
 --set-envvar=bigtop_base_version=${BIGTOP_BASE_VERSION} \
--uc -us -b
+-uc -us -b${debuildDepsOpt}
 """
     exec {
       workingDir "$PKG_OUTPUT_DIR/$PKG_NAME-$PKG_VERSION"
