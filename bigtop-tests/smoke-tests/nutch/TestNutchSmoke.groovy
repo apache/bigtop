@@ -60,7 +60,7 @@ class TestNutchSmoke {
   void testNutchInjectSubcommand() {
     sh.exec("${NUTCH_CMD} inject")
     assertTrue("nutch inject without args should fail with non-zero exit", sh.getRet() != 0)
-    String out = (sh.getOut() + " " + sh.getErr()).toLowerCase()
+    String out = (sh.getOut().toString() + " " + sh.getErr().toString()).toLowerCase()
     assertTrue("nutch inject should print usage or error (got: " + out + ")", out.contains("inject") || out.contains("usage") || out.contains("argument"))
   }
 
@@ -71,7 +71,7 @@ class TestNutchSmoke {
 
     sh.exec("${NUTCH_CMD} readdb ${HDFS_BASE}/crawldb -stats")
     assertTrue("nutch readdb -stats (HDFS) failed: " + sh.getErr(), sh.getRet() == 0)
-    String statsOut = sh.getOut() + " " + sh.getErr()
+    String statsOut = sh.getOut().toString() + " " + sh.getErr().toString()
     assertTrue("readdb output should show url/crawldb stats (got: " + statsOut + ")", statsOut.contains("url") || statsOut.contains("Number") || statsOut.contains("count") || statsOut.contains("1"))
   }
 
@@ -81,6 +81,6 @@ class TestNutchSmoke {
     assertTrue("nutch generate (HDFS) failed: " + sh.getErr(), sh.getRet() == 0)
 
     sh.exec("hadoop fs -ls ${HDFS_BASE}/segments")
-    assertTrue("generate should create at least one segment under ${HDFS_BASE}/segments: " + sh.getErr(), sh.getRet() == 0 && (sh.getOut() + sh.getErr()).trim().length() > 0)
+    assertTrue("generate should create at least one segment under ${HDFS_BASE}/segments: " + sh.getErr(), sh.getRet() == 0 && (sh.getOut().toString() + sh.getErr().toString()).trim().length() > 0)
   }
 }
