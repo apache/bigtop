@@ -27,6 +27,9 @@ service rng-tools start
 # The testing process would be broken due to "No such file or derictory: /etc/default/locale" in ubuntu16.04.
 apt-get install -y locales
 
+# OpenJDK 11 for components that require it (e.g. Nutch 1.22, class file version 55.0)
+apt-get install -y openjdk-11-jdk
+
 if [ $enable_local_repo == "true" ]; then
     echo "deb file:///bigtop-home/output/apt bigtop contrib" > /etc/apt/sources.list.d/bigtop-home_output.list
     # In BIGTOP-2796 repo installed by puppet has priority 900, here we set higher priority for local repo
