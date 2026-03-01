@@ -164,6 +164,8 @@ class hadoop ($hadoop_security_authentication = "simple",
       $hadoop_security_authentication = $hadoop::hadoop_security_authentication,
       $kerberos_realm = $hadoop::kerberos_realm,
       $yarn_nodemanager_vmem_check_enabled = undef,
+      # Ensure MR Application Master has log4j config (avoids exit code 1 in YARN containers)
+      $yarn_app_mapreduce_am_command_opts = "-Xmx1024m -Dlog4j.configuration=file:///etc/hadoop/conf/log4j.properties",
   ) inherits hadoop {
 
     include hadoop::common
@@ -429,8 +431,8 @@ class hadoop ($hadoop_security_authentication = "simple",
       $mapreduce_job_reduce_slowstart_completedmaps = undef,
       $mapreduce_map_memory_mb = undef,
       $mapreduce_reduce_memory_mb = undef,
-      $mapreduce_map_java_opts = "-Xmx1024m",
-      $mapreduce_reduce_java_opts = "-Xmx1024m",
+      $mapreduce_map_java_opts = "-Xmx1024m -Dlog4j.configuration=file:///etc/hadoop/conf/log4j.properties",
+      $mapreduce_reduce_java_opts = "-Xmx1024m -Dlog4j.configuration=file:///etc/hadoop/conf/log4j.properties",
       $hadoop_security_authentication = $hadoop::hadoop_security_authentication,
       $kerberos_realm = $hadoop::kerberos_realm,
   ) inherits hadoop {
