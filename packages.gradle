@@ -400,7 +400,7 @@ def genTasks = { target, packaging ->
       if (proc.exitValue() == 0 && proc.text?.trim()) debArch = proc.text.trim()
     } catch (Exception ignore) {}
     def debuildDepsOpt = (target == 'nutch') ? ' -d' : ''
-    def nutchJava11Env = (target == 'nutch') ? "--set-envvar=JAVA_HOME=/usr/lib/jvm/java-11-openjdk-${debArch} \\\n" : ''
+    def nutchJava11Env = (target == 'nutch') ? "--set-envvar=JAVA_HOME=/usr/lib/jvm/java-11-openjdk-${debArch} " : ''
     def command = """debuild \
 --preserve-envvar PATH \
 --preserve-envvar MAVEN3_HOME \
