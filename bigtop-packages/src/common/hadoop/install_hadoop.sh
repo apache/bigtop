@@ -391,6 +391,8 @@ cp ${DISTRO_DIR}/conf.empty/mapred-site.xml $PREFIX/$ETC_HADOOP/conf.empty
 sed -i -e '/^[^#]/s,^,#,' ${BUILD_DIR}/etc/hadoop/hadoop-env.sh
 cp -r ${BUILD_DIR}/etc/hadoop/* $PREFIX/$ETC_HADOOP/conf.empty
 rm -rf $PREFIX/$ETC_HADOOP/conf.empty/*.cmd
+# Overwrite with Bigtop log4j.properties (includes CLA for YARN containers, e.g. MR AM)
+cp $(dirname $0)/../conf.secure/log4j.properties $PREFIX/$ETC_HADOOP/conf.empty/log4j.properties
 
 # Install default wrapper
 install -d -m 0755 $PREFIX/$ETC_DEFAULT
