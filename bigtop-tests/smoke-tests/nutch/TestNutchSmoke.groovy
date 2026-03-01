@@ -50,10 +50,12 @@ class TestNutchSmoke {
     sh.exec("hadoop fs -rm -r -f ${HDFS_BASE} 2>/dev/null || true")
   }
 
-  @Test
+  @Test(timeout = 15000L)
   void testNutchUsage() {
-    sh.exec(NUTCH_CMD)
-    assertTrue("nutch usage failed: " + sh.getErr(), sh.getRet() == 0)
+    sh.exec("${NUTCH_CMD} showproperties")
+    assertTrue("nutch showproperties failed: " + sh.getErr(), sh.getRet() == 0)
+    String out = sh.getOut().toString() + " " + sh.getErr().toString()
+    assertTrue("nutch showproperties should print config (got: " + out + ")", out.contains("=") || out.contains("nutch"))
   }
 
   @Test
