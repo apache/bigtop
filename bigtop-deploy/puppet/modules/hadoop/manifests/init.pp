@@ -128,6 +128,12 @@ class hadoop ($hadoop_security_authentication = "simple",
         require => [Package["hadoop"]],
     }
 
+    # Deploy log4j.properties with CLA appender so YARN containers (e.g. MR AM) can use it
+    file { "/etc/hadoop/conf/log4j.properties":
+      source  => 'puppet:///modules/hadoop/log4j.properties',
+      require => [Package["hadoop"]],
+    }
+
     package { "hadoop":
       ensure => latest,
       require => Package["jdk"],

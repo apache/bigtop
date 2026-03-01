@@ -392,7 +392,11 @@ sed -i -e '/^[^#]/s,^,#,' ${BUILD_DIR}/etc/hadoop/hadoop-env.sh
 cp -r ${BUILD_DIR}/etc/hadoop/* $PREFIX/$ETC_HADOOP/conf.empty
 rm -rf $PREFIX/$ETC_HADOOP/conf.empty/*.cmd
 # Overwrite with Bigtop log4j.properties (includes CLA for YARN containers, e.g. MR AM)
-cp $(dirname $0)/../conf.secure/log4j.properties $PREFIX/$ETC_HADOOP/conf.empty/log4j.properties
+# If not found (e.g. DEB build layout), Puppet deploys it at provision time.
+BIGTOP_LOG4J="$(dirname $0)/../conf.secure/log4j.properties"
+if [ -f "$BIGTOP_LOG4J" ]; then
+  cp "$BIGTOP_LOG4J" $PREFIX/$ETC_HADOOP/conf.empty/log4j.properties
+fi
 
 # Install default wrapper
 install -d -m 0755 $PREFIX/$ETC_DEFAULT
