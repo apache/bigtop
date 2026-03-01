@@ -17,8 +17,6 @@
 hadoop.root.logger=INFO,console
 hadoop.log.dir=.
 hadoop.log.file=hadoop.log
-# Default for YARN container log dir (NodeManager sets yarn.app.container.log.dir when launching containers)
-yarn.app.container.log.dir=/tmp
 
 # Root logger: only console (EventCounter/CLA not on YARN container classpath; causes AM ClassNotFoundException)
 log4j.rootLogger=${hadoop.root.logger}
@@ -43,17 +41,7 @@ log4j.appender.DRFA.layout.ConversionPattern=%d{ISO8601} %p %c: %m%n
 # Debugging Pattern format
 #log4j.appender.DRFA.layout.ConversionPattern=%d{ISO8601} %-5p %c{2} (%F:%M(%L)) - %m%n
 
-#
-# ContainerLogAppender (CLA) - used by YARN containers (e.g. MR Application Master).
-# YARN NodeManager sets yarn.app.container.log.dir etc. when launching containers.
-# Must be defined so rootLogger can use CLA when this file is used for container log4j.
-#
-log4j.appender.CLA=org.apache.hadoop.yarn.util.ContainerLogAppender
-log4j.appender.CLA.containerLogDir=${yarn.app.container.log.dir}
-log4j.appender.CLA.containerLogFile=syslog
-log4j.appender.CLA.totalLogFileSize=10485760
-log4j.appender.CLA.layout=org.apache.log4j.PatternLayout
-log4j.appender.CLA.layout.ConversionPattern=%d{ISO8601} %p [%t] %c: %m%n
+# CLA (ContainerLogAppender) omitted: class not on MR AM container classpath, causes ClassNotFoundException
 
 #
 # console
