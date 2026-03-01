@@ -988,6 +988,7 @@ task "apt" (
     description: "Creating APT repository",
     group: PACKAGES_GROUP) doLast {
 
+  file(BUILD_DIR).mkdirs()
   delete ( "$OUTPUT_DIR/apt")
   mkdir ("$OUTPUT_DIR/apt/conf")
 
