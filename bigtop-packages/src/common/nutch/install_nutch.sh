@@ -78,6 +78,7 @@ install -d -m 0755 "$CONF_DIR/conf.dist"
 cp -a "$RUNTIME_LOCAL/conf/"* "$CONF_DIR/conf.dist/" 2>/dev/null || true
 
 install -d -m 0755 "$ETC_DEFAULT"
+mkdir -p "$ETC_DEFAULT"
 install -m 0644 "$DISTRO_DIR/nutch.default" "$ETC_DEFAULT/nutch"
 
 # Wrapper script for /usr/bin/nutch
