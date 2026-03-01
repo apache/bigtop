@@ -533,13 +533,14 @@ def genTasks = { target, packaging ->
     }
     // Deleting obsolete files
     delete fileTree(dir: "$DEB_BLD_DIR/debian", includes: ['*.ex', '*.EX', '*.~'])
-    // Creating source package
+    // Creating source package (-d for nutch: ant is provided by toolchain at /usr/local/ant, not by apt)
+    def dpkgBuildpackageArgs = (target == 'nutch') ? ['-uc', '-us', '-sa', '-S', '-d'] : ['-uc', '-us', '-sa', '-S']
     exec {
       workingDir DEB_BLD_DIR
       environment 'PARENT_DIR', FULL_PARENT_DIR
       environment 'PKG_NAME_SUFFIX', DEB_PKG_NAME_SUFFIX
       environment 'bigtop_base_version', BIGTOP_BASE_VERSION
-      commandLine "dpkg-buildpackage -uc -us -sa -S".split(' ')
+      commandLine (['dpkg-buildpackage'] + dpkgBuildpackageArgs)
     }
     mkdir(PKG_OUTPUT_DIR)
     copy {
