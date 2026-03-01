@@ -998,7 +998,7 @@ task "apt" (
   }.each  { changeFile ->
     exec {
       workingDir BUILD_DIR
-      commandLine "reprepro -Vb $OUTPUT_DIR/apt include bigtop $changeFile".split(' ')
+      commandLine "/usr/bin/reprepro", "-Vb", "$OUTPUT_DIR/apt", "include", "bigtop", changeFile.absolutePath
     }
   }
 }
