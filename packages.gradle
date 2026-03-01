@@ -386,6 +386,7 @@ def genTasks = { target, packaging ->
     def final DEB_PKG_NAME_SUFFIX =  getPkgNameSuffix(config.bigtop.components[target], "deb").pkgNameSuffix
     def final BIGTOP_BASE_VERSION = "${config.bigtop.base_version}"
     
+    delete "$PKG_OUTPUT_DIR/$PKG_NAME-$PKG_VERSION"
     exec {
       workingDir PKG_OUTPUT_DIR
       commandLine "dpkg-source -x $SRCDEB".split(' ')
