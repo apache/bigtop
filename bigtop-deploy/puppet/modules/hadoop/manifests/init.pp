@@ -128,7 +128,7 @@ class hadoop ($hadoop_security_authentication = "simple",
         require => [Package["hadoop"]],
     }
 
-    # Deploy log4j.properties with CLA appender so YARN containers (e.g. MR AM) can use it
+    # Deploy log4j.properties for YARN containers (no CLA appender; container-safe).
     file { "/etc/hadoop/conf/log4j.properties":
       content => template('hadoop/log4j.properties.erb'),
       require => [Package["hadoop"]],
