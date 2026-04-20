@@ -18,8 +18,7 @@ hadoop.root.logger=INFO,console
 hadoop.log.dir=.
 hadoop.log.file=hadoop.log
 
-# Define the root logger to the system property "hadoop.root.logger".
-# Container-safe: no CLA (ContainerLogAppender) or EventCounter in rootLogger.
+# Root logger: only console (EventCounter/CLA not on YARN container classpath; causes AM ClassNotFoundException)
 log4j.rootLogger=${hadoop.root.logger}
 
 # Logging Threshold
@@ -42,7 +41,7 @@ log4j.appender.DRFA.layout.ConversionPattern=%d{ISO8601} %p %c: %m%n
 # Debugging Pattern format
 #log4j.appender.DRFA.layout.ConversionPattern=%d{ISO8601} %-5p %c{2} (%F:%M(%L)) - %m%n
 
-# CLA (ContainerLogAppender) omitted: not on MR AM container classpath; causes errors in YARN containers.
+# CLA (ContainerLogAppender) omitted: class not on MR AM container classpath, causes ClassNotFoundException
 
 #
 # console

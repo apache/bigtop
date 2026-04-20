@@ -169,6 +169,7 @@ bigtop::hadoop_head_node: $1
 hadoop::hadoop_storage_dirs: [/data/1, /data/2]
 bigtop::bigtop_repo_uri: $2
 bigtop::bigtop_repo_gpg_check: $gpg_check
+hadoop::hadoop_java_home: "/usr/lib/jvm/java-11-openjdk-amd64"
 hadoop_cluster_node::cluster_components: $3
 hadoop_cluster_node::cluster_nodes: [$node_list]
 hadoop::common_yarn::yarn_resourcemanager_scheduler_class: org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacityScheduler
