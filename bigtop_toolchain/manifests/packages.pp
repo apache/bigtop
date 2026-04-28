@@ -288,7 +288,8 @@ class bigtop_toolchain::packages {
         "flex",
         "libffi-dev",
         "nasm",
-        "yasm"
+        "yasm",
+        "libuv1-dev"
       ]
       if ($operatingsystem == 'Ubuntu' and versioncmp($operatingsystemmajrelease, '24.04') >= 0) {
         $pkgs = concat($_pkgs, ["libtirpc-dev"])
