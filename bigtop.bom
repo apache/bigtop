@@ -258,7 +258,7 @@ bigtop {
     'bigtop-groovy' {
       name    = 'bigtop-groovy'
       relNotes = "Groovy: a dynamic language for the Java platform"
-      version { base = '2.5.4'; pkg = '2.5.4'; release = 1 }
+      version { base = '3.0.25'; pkg = '3.0.25'; release = 1 }
       tarball { destination = "$name-${version.base}.tar.gz";
                 source      = "apache-groovy-binary-${version.base}.zip" }
       url     { download_path = "/groovy/${version.base}/distribution/"

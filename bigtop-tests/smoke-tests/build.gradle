@@ -27,7 +27,7 @@ subprojects {
     }
   }
 
-  ext.groovyVersion = '2.5.4'
+  ext.groovyVersion = '3.0.25'
   ext.hadoopVersion = '2.7.4'
   ext.hbaseVersion = '1.1.9'
   ext.solrVersion = '8.11.4'
