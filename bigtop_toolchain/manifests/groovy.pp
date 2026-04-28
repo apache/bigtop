@@ -17,11 +17,11 @@ class bigtop_toolchain::groovy {
 
   require bigtop_toolchain::packages
 
-  $groovy_version = '2.5.4'
+  $groovy_version = '3.0.25'
   $groovy = "apache-groovy-binary-${groovy_version}"
 
   exec { 'Download Groovy':
-    command => "/usr/bin/wget https://dl.bintray.com/groovy/maven/${groovy}.zip",
+    command => "/usr/bin/wget https://archive.apache.org/dist/groovy/${groovy_version}/distribution/${groovy}.zip",
     cwd     => "/usr/src",
     unless  => "/usr/bin/test -f /usr/src/${groovy}.zip",
   } ~>
