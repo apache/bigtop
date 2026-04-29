@@ -71,7 +71,7 @@ case ${ID}-${VERSION_ID} in
         dnf config-manager --set-enabled codeready-builder-for-rhel-8-rhui-rpms
         ;;
     openEuler-*)
-        dnf -y install hostname curl sudo unzip wget ruby ruby-devel vim systemd-devel findutils 'dnf-command(config-manager)' nc initscripts openeuler-lsb openssl-devel make gcc-c++ openEuler-rpm-config python3-pip python3-devel dbus
+        dnf -y install hostname curl sudo unzip wget ruby ruby-devel vim systemd-devel findutils 'dnf-command(config-manager)' nc initscripts openeuler-lsb openssl-devel make gcc-c++ openEuler-rpm-config python3-pip python3-devel dbus libffi-devel
         # openEuler ruby version is 3.X,so use puppet-7.22.0.
         gem install puppet:7.22.0 xmlrpc sync sys-filesystem
         puppet module install puppetlabs-stdlib --version 4.12.0
