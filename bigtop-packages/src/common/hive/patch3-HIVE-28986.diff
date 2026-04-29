@@ -1,0 +1,98 @@
+commit e58f299603122b208f3134fd549b4a6e6124b047
+Author: Bodor Laszlo <bodorlaszlo0202@gmail.com>
+Date:   Fri Jun 13 20:00:46 2025 +0200
+
+    HIVE-28986: Upgrade to Tez 0.10.5 (#5802)
+    
+    (cherry picked from commit 8f9a59aa2e3b5059ae4f3105f858c64da3352a93)
+    
+     Conflicts:
+            pom.xml
+
+diff --git a/llap-client/src/java/org/apache/hadoop/hive/llap/tezplugins/helpers/LlapTaskUmbilicalServer.java b/llap-client/src/java/org/apache/hadoop/hive/llap/tezplugins/helpers/LlapTaskUmbilicalServer.java
+index 5bf615c7e6..efadff6346 100644
+--- a/llap-client/src/java/org/apache/hadoop/hive/llap/tezplugins/helpers/LlapTaskUmbilicalServer.java
++++ b/llap-client/src/java/org/apache/hadoop/hive/llap/tezplugins/helpers/LlapTaskUmbilicalServer.java
+@@ -56,7 +56,7 @@ public class LlapTaskUmbilicalServer {
+   private Map<String, int[]> tokenRefMap = new HashMap<String, int[]>();
+ 
+   public LlapTaskUmbilicalServer(Configuration conf, LlapTaskUmbilicalProtocol umbilical, int numHandlers) throws IOException {
+-    jobTokenSecretManager = new JobTokenSecretManager();
++    jobTokenSecretManager = new JobTokenSecretManager(conf);
+ 
+     String[] portRange =
+         conf.get(HiveConf.ConfVars.LLAP_TASK_UMBILICAL_SERVER_PORT.varname)
+diff --git a/llap-server/src/java/org/apache/hadoop/hive/llap/shufflehandler/ShuffleHandler.java b/llap-server/src/java/org/apache/hadoop/hive/llap/shufflehandler/ShuffleHandler.java
+index 9893210bd9..34445c628d 100644
+--- a/llap-server/src/java/org/apache/hadoop/hive/llap/shufflehandler/ShuffleHandler.java
++++ b/llap-server/src/java/org/apache/hadoop/hive/llap/shufflehandler/ShuffleHandler.java
+@@ -328,7 +328,7 @@ public Thread newThread(Runnable r) {
+             DEFAULT_SHUFFLE_MAPOUTPUT_META_INFO_CACHE_SIZE));
+ 
+     userRsrc = new ConcurrentHashMap<>();
+-    secretManager = new JobTokenSecretManager();
++    secretManager = new JobTokenSecretManager(conf);
+     shuffle = new Shuffle(conf);
+     if (conf.getBoolean(SHUFFLE_DIR_WATCHER_ENABLED, SHUFFLE_DIR_WATCHER_ENABLED_DEFAULT)) {
+       LOG.info("Attempting to start dirWatcher");
+diff --git a/llap-tez/src/java/org/apache/hadoop/hive/llap/tezplugins/LlapTaskCommunicator.java b/llap-tez/src/java/org/apache/hadoop/hive/llap/tezplugins/LlapTaskCommunicator.java
+index d850473ffb..f3f99e7e85 100644
+--- a/llap-tez/src/java/org/apache/hadoop/hive/llap/tezplugins/LlapTaskCommunicator.java
++++ b/llap-tez/src/java/org/apache/hadoop/hive/llap/tezplugins/LlapTaskCommunicator.java
+@@ -250,7 +250,7 @@ protected void startRpcServer() {
+     Configuration conf = getConf();
+     try {
+       JobTokenSecretManager jobTokenSecretManager =
+-          new JobTokenSecretManager();
++          new JobTokenSecretManager(conf);
+       jobTokenSecretManager.addTokenForJob(tokenIdentifier, sessionToken);
+ 
+       int numHandlers =
+diff --git a/llap-tez/src/java/org/apache/hadoop/hive/llap/tezplugins/LlapTaskSchedulerService.java b/llap-tez/src/java/org/apache/hadoop/hive/llap/tezplugins/LlapTaskSchedulerService.java
+index 8ead0f69f6..b0cb0e075f 100644
+--- a/llap-tez/src/java/org/apache/hadoop/hive/llap/tezplugins/LlapTaskSchedulerService.java
++++ b/llap-tez/src/java/org/apache/hadoop/hive/llap/tezplugins/LlapTaskSchedulerService.java
+@@ -372,7 +372,7 @@ public LlapTaskSchedulerService(TaskSchedulerContext taskSchedulerContext, Clock
+         Token<JobTokenIdentifier> token = createAmsToken(id);
+         serializedToken = serializeToken(token);
+         jobIdForToken = token.getService().toString();
+-        sm = new JobTokenSecretManager();
++        sm = new JobTokenSecretManager(conf);
+         sm.addTokenForJob(jobIdForToken, token);
+       } else {
+         serializedToken = jobIdForToken = null;
+@@ -565,7 +565,7 @@ private static Map<Integer, Set<Integer>> getTransitiveVertexOutputs(DagInfo inf
+   private static Token<JobTokenIdentifier> createAmsToken(ApplicationId id) {
+     if (!UserGroupInformation.isSecurityEnabled()) return null;
+     JobTokenIdentifier identifier = new JobTokenIdentifier(new Text(id.toString()));
+-    JobTokenSecretManager jobTokenManager = new JobTokenSecretManager();
++    JobTokenSecretManager jobTokenManager = new JobTokenSecretManager(new Configuration());
+     Token<JobTokenIdentifier> sessionToken = new Token<>(identifier, jobTokenManager);
+     sessionToken.setService(identifier.getJobId());
+     return sessionToken;
+diff --git a/pom.xml b/pom.xml
+index 0e4fde4d94..6b2731e30c 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -200,7 +200,7 @@
+     <slf4j.version>1.7.30</slf4j.version>
+     <ST4.version>4.0.4</ST4.version>
+     <storage-api.version>4.0.1</storage-api.version>
+-    <tez.version>0.10.4</tez.version>
++    <tez.version>0.10.5</tez.version>
+     <super-csv.version>2.2.0</super-csv.version>
+     <tempus-fugit.version>1.1</tempus-fugit.version>
+     <snappy.version>1.1.10.4</snappy.version>
+diff --git a/ql/src/java/org/apache/hadoop/hive/ql/udf/generic/GenericUDTFGetSplits.java b/ql/src/java/org/apache/hadoop/hive/ql/udf/generic/GenericUDTFGetSplits.java
+index b1c3b767de..39c78bcb88 100644
+--- a/ql/src/java/org/apache/hadoop/hive/ql/udf/generic/GenericUDTFGetSplits.java
++++ b/ql/src/java/org/apache/hadoop/hive/ql/udf/generic/GenericUDTFGetSplits.java
+@@ -618,7 +618,7 @@ private static Token<JobTokenIdentifier> createJobToken(ApplicationId applicatio
+       JobTokenIdentifier identifier = new JobTokenIdentifier(new Text(
+           tokenIdentifier));
+       Token<JobTokenIdentifier> sessionToken = new Token<JobTokenIdentifier>(identifier,
+-          new JobTokenSecretManager());
++          new JobTokenSecretManager(new Configuration()));
+       sessionToken.setService(identifier.getJobId());
+       return sessionToken;
+     }
