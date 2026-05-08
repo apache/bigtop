@@ -33,6 +33,7 @@ BuildArch:  noarch
 Source0:    install_select.sh
 Source1:    LICENSE
 Source2:    distro-select
+Source3:    conf-select
 Requires:   bash
 
 # "which" command is needed for a lot of projects.
@@ -54,6 +55,7 @@ This includes a collection of useful tools and files for Bigtop and Ambari
 install -p -m 755 %{SOURCE0} .
 install -p -m 755 %{SOURCE1} .
 install -p -m 755 %{SOURCE2} .
+install -p -m 755 %{SOURCE3} .
 
 
 %build
