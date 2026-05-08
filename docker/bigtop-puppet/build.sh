@@ -31,11 +31,10 @@ PREFIX=$(echo "$1" | cut -d '-' -f 1)
 OS=$(echo "$1" | cut -d '-' -f 2)
 VERSION=$(echo "$1" | cut -d '-' -f 3-)
 ARCH=$(uname -m)
-if [ "${ARCH}" != "x86_64" ];then
-ARCH="-${ARCH}"
-else
-ARCH=""
-fi
+case "$ARCH" in
+    aarch64|arm64)   ARCH="aarch64" ;;
+    *)               ARCH="$ARCH" ;;
+esac
 
 ENV_PATH=""
 if [ ${OS} = "centos" -a ${VERSION} -ge 8 ]; then
@@ -67,5 +66,8 @@ case "${OS}-${VERSION}" in
     ;;
 esac
 
-docker build --no-cache -t bigtop/puppet:${PREFIX}-${OS}-${VERSION}${ARCH} .
+if [ "${ARCH}" != "x86_64" ];then
+  VERSION="${VERSION}-${ARCH}"
+fi
+docker build --no-cache -t bigtop/puppet:${PREFIX}-${OS}-${VERSION} .
 rm -f Dockerfile puppetize.sh
