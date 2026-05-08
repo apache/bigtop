@@ -31,6 +31,10 @@ PREFIX=$(echo "$1" | cut -d '-' -f 1)
 OS=$(echo "$1" | cut -d '-' -f 2)
 VERSION=$(echo "$1" | cut -d '-' -f 3-)
 ARCH=$(uname -m)
+case "$ARCH" in
+    aarch64|arm64)   ARCH="aarch64" ;;
+    *)               ARCH="$ARCH" ;;
+esac
 
 ## Workaround for docker defect on linaros cloud
 if [ "${ARCH}" = "aarch64" ];then
