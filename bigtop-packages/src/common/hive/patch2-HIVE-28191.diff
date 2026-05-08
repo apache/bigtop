@@ -1,0 +1,229 @@
+commit 0c12488ce1cbae4cbae7f2af0d0b79b039855770
+Author: Butao Zhang <zhangbutao@cmss.chinamobile.com>
+Date:   Mon Feb 10 15:58:11 2025 +0800
+
+    HIVE-28191: Upgrade Hadoop Version to 3.4.1 (#5500). (Butao Zhang, reviewed by Ayush Saxena)
+    
+    (cherry picked from commit fdd48ef1777d14528a03bd44dc2668acb08c076e)
+    
+     Conflicts:
+            pom.xml
+
+diff --git a/common/src/java/org/apache/hadoop/hive/common/JvmMetrics.java b/common/src/java/org/apache/hadoop/hive/common/JvmMetrics.java
+index 6edf396288..521ea83525 100644
+--- a/common/src/java/org/apache/hadoop/hive/common/JvmMetrics.java
++++ b/common/src/java/org/apache/hadoop/hive/common/JvmMetrics.java
+@@ -20,7 +20,6 @@
+ 
+ import static org.apache.hadoop.hive.common.JvmMetricsInfo.*;
+ 
+-import org.apache.hadoop.log.metrics.EventCounter;
+ import org.apache.hadoop.metrics2.MetricsCollector;
+ import org.apache.hadoop.metrics2.MetricsInfo;
+ import org.apache.hadoop.metrics2.MetricsRecordBuilder;
+@@ -96,7 +95,6 @@ public void getMetrics(MetricsCollector collector, boolean all) {
+     getMemoryUsage(rb);
+     getGcUsage(rb);
+     getThreadUsage(rb);
+-    getEventCounters(rb);
+   }
+ 
+   private void getMemoryUsage(MetricsRecordBuilder rb) {
+@@ -177,11 +175,4 @@ private void getThreadUsage(MetricsRecordBuilder rb) {
+         .addGauge(ThreadsTimedWaiting, threadsTimedWaiting)
+         .addGauge(ThreadsTerminated, threadsTerminated);
+   }
+-
+-  private void getEventCounters(MetricsRecordBuilder rb) {
+-    rb.addCounter(LogFatal, EventCounter.getFatal())
+-        .addCounter(LogError, EventCounter.getError())
+-        .addCounter(LogWarn, EventCounter.getWarn())
+-        .addCounter(LogInfo, EventCounter.getInfo());
+-  }
+ }
+diff --git a/itests/hcatalog-unit/pom.xml b/itests/hcatalog-unit/pom.xml
+index dff17a670c..e668907ce0 100644
+--- a/itests/hcatalog-unit/pom.xml
++++ b/itests/hcatalog-unit/pom.xml
+@@ -350,23 +350,4 @@
+       </plugin>
+     </plugins>
+   </build>
+-  <profiles>
+-    <profile>
+-      <!-- See HIVE-24473 -->
+-      <id>gahbase</id>
+-      <activation>
+-        <property>
+-          <name>hbase.version</name>
+-        </property>
+-      </activation>
+-      <dependencies>
+-        <dependency>
+-          <groupId>org.apache.hbase</groupId>
+-          <artifactId>hbase-zookeeper</artifactId>
+-          <classifier>tests</classifier>
+-          <scope>test</scope>
+-        </dependency>
+-      </dependencies>
+-    </profile>
+-  </profiles>
+ </project>
+diff --git a/itests/hive-unit/src/test/java/org/apache/hive/service/auth/jwt/TestHttpJwtAuthentication.java b/itests/hive-unit/src/test/java/org/apache/hive/service/auth/jwt/TestHttpJwtAuthentication.java
+index 202ff0d481..0bf7be88b7 100644
+--- a/itests/hive-unit/src/test/java/org/apache/hive/service/auth/jwt/TestHttpJwtAuthentication.java
++++ b/itests/hive-unit/src/test/java/org/apache/hive/service/auth/jwt/TestHttpJwtAuthentication.java
+@@ -87,9 +87,7 @@ public class TestHttpJwtAuthentication {
+   public static void makeEnvModifiable() throws Exception {
+     envMap = new HashMap<>();
+     Class<?> envClass = Class.forName("java.lang.ProcessEnvironment");
+-    Field theEnvironmentField = envClass.getDeclaredField("theEnvironment");
+     Field theUnmodifiableEnvironmentField = envClass.getDeclaredField("theUnmodifiableEnvironment");
+-    removeStaticFinalAndSetValue(theEnvironmentField, envMap);
+     removeStaticFinalAndSetValue(theUnmodifiableEnvironmentField, envMap);
+   }
+ 
+diff --git a/itests/util/pom.xml b/itests/util/pom.xml
+index 3a24193203..85e6e6a678 100644
+--- a/itests/util/pom.xml
++++ b/itests/util/pom.xml
+@@ -258,22 +258,4 @@
+       </exclusions>
+     </dependency>
+   </dependencies>
+-  <profiles>
+-    <profile>
+-      <!-- See HIVE-24473 -->
+-      <id>gahbase</id>
+-      <activation>
+-        <property>
+-          <name>hbase.version</name>
+-        </property>
+-      </activation>
+-      <dependencies>
+-        <dependency>
+-          <groupId>org.apache.hbase</groupId>
+-          <artifactId>hbase-zookeeper</artifactId>
+-          <classifier>tests</classifier>
+-        </dependency>
+-      </dependencies>
+-    </profile>
+-  </profiles>
+ </project>
+diff --git a/itests/util/src/main/java/org/apache/hadoop/hive/hbase/HBaseTestSetup.java b/itests/util/src/main/java/org/apache/hadoop/hive/hbase/HBaseTestSetup.java
+index 202420854d..d7bc2880a9 100644
+--- a/itests/util/src/main/java/org/apache/hadoop/hive/hbase/HBaseTestSetup.java
++++ b/itests/util/src/main/java/org/apache/hadoop/hive/hbase/HBaseTestSetup.java
+@@ -106,6 +106,8 @@ private void setUpFixtures(HiveConf conf) throws Exception {
+         "org.apache.hadoop.hbase.shaded.");
+ 
+     Configuration hbaseConf = HBaseConfiguration.create(conf);
++    // A workaround for HBASE-28908. Should be removed once HBase 2.7.0 is released & HIVE-28740 is fixed.
++    hbaseConf.set("hbase.wal.provider", "filesystem");
+     util = new HBaseTestingUtility(hbaseConf);
+ 
+     util.startMiniDFSCluster(1);
+diff --git a/pom.xml b/pom.xml
+index 6ef35c3931..0e4fde4d94 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -140,7 +140,7 @@
+     <guava.version>22.0</guava.version>
+     <groovy.version>2.4.21</groovy.version>
+     <h2database.version>2.2.220</h2database.version>
+-    <hadoop.version>3.3.6</hadoop.version>
++    <hadoop.version>3.4.1</hadoop.version>
+     <hadoop.bin.path>${basedir}/${hive.path.to.root}/testutils/hadoop</hadoop.bin.path>
+     <hamcrest.version>1.3</hamcrest.version>
+     <hbase.version>2.5.6-hadoop3</hbase.version>
+@@ -2085,20 +2085,6 @@
+         <module>itests</module>
+       </modules>
+     </profile>
+-    <profile>
+-      <id>iceberg</id>
+-      <modules>
+-        <module>iceberg</module>
+-      </modules>
+-    </profile>
+-    <profile>
+-      <id>customhbase</id>
+-      <activation>
+-        <property>
+-          <name>hbase.version</name>
+-        </property>
+-      </activation>
+-    </profile>
+     <profile>
+       <id>dist</id>
+       <build>
+diff --git a/standalone-metastore/metastore-server/src/main/java/org/apache/hadoop/hive/metastore/tools/metatool/MetaToolTaskListExtTblLocs.java b/standalone-metastore/metastore-server/src/main/java/org/apache/hadoop/hive/metastore/tools/metatool/MetaToolTaskListExtTblLocs.java
+index f9d34ee13f..6eccfb6654 100644
+--- a/standalone-metastore/metastore-server/src/main/java/org/apache/hadoop/hive/metastore/tools/metatool/MetaToolTaskListExtTblLocs.java
++++ b/standalone-metastore/metastore-server/src/main/java/org/apache/hadoop/hive/metastore/tools/metatool/MetaToolTaskListExtTblLocs.java
+@@ -341,7 +341,7 @@ private void createOutputList(Set<String> locations, String outputDir, String db
+    * Table-name followed by "*" indicates that all partitions are inside table location.
+    * Otherwise, we record the number of partitions covered by table location.
+    */
+-  private JSONArray listOutputEntities(HashSet<String> locations) {
++  private JSONArray listOutputEntities(HashSet<String> locations) throws JSONException {
+     List<String> listEntities = new ArrayList<>();
+     for(String loc : locations) {
+       DataLocation data = inputLocations.get(loc);
+diff --git a/standalone-metastore/metastore-server/src/test/java/org/apache/hadoop/hive/metastore/TestRemoteHiveMetastoreWithHttpJwt.java b/standalone-metastore/metastore-server/src/test/java/org/apache/hadoop/hive/metastore/TestRemoteHiveMetastoreWithHttpJwt.java
+index c228e94fd4..39009f0942 100644
+--- a/standalone-metastore/metastore-server/src/test/java/org/apache/hadoop/hive/metastore/TestRemoteHiveMetastoreWithHttpJwt.java
++++ b/standalone-metastore/metastore-server/src/test/java/org/apache/hadoop/hive/metastore/TestRemoteHiveMetastoreWithHttpJwt.java
+@@ -49,7 +49,6 @@
+ import java.util.Date;
+ import java.util.UUID;
+ import java.util.concurrent.TimeUnit;
+-import org.junit.Ignore;
+ import org.junit.Test;
+ import org.junit.experimental.categories.Category;
+ import org.slf4j.Logger;
+@@ -58,8 +57,6 @@
+ import static com.github.tomakehurst.wiremock.client.WireMock.get;
+ import static com.github.tomakehurst.wiremock.client.WireMock.ok;
+ import static org.junit.Assert.assertEquals;
+-import static org.junit.Assert.assertFalse;
+-import static org.junit.Assert.assertTrue;
+ 
+ /*
+ Tests JWT auth in HiveMetastore server.
+@@ -94,9 +91,7 @@ public class TestRemoteHiveMetastoreWithHttpJwt {
+   public static void makeEnvModifiable() throws Exception {
+     envMap = new HashMap<>();
+     Class<?> envClass = Class.forName("java.lang.ProcessEnvironment");
+-    Field theEnvironmentField = envClass.getDeclaredField("theEnvironment");
+     Field theUnmodifiableEnvironmentField = envClass.getDeclaredField("theUnmodifiableEnvironment");
+-    removeStaticFinalAndSetValue(theEnvironmentField, envMap);
+     removeStaticFinalAndSetValue(theUnmodifiableEnvironmentField, envMap);
+   }
+ 
+diff --git a/standalone-metastore/pom.xml b/standalone-metastore/pom.xml
+index 744b88c6db..aa5fc326c6 100644
+--- a/standalone-metastore/pom.xml
++++ b/standalone-metastore/pom.xml
+@@ -78,7 +78,7 @@
+     </dropwizard-metrics-hadoop-metrics2-reporter.version>
+     <dropwizard.version>3.1.0</dropwizard.version>
+     <guava.version>22.0</guava.version>
+-    <hadoop.version>3.3.6</hadoop.version>
++    <hadoop.version>3.4.1</hadoop.version>
+     <hikaricp.version>4.0.3</hikaricp.version>
+     <jackson.version>2.16.1</jackson.version>
+     <jexl.version>3.3</jexl.version>
+diff --git a/storage-api/pom.xml b/storage-api/pom.xml
+index e008ffca0d..1b1cf6595b 100644
+--- a/storage-api/pom.xml
++++ b/storage-api/pom.xml
+@@ -30,7 +30,7 @@
+     <maven.compiler.target>1.8</maven.compiler.target>
+     <commons-logging.version>1.1.3</commons-logging.version>
+     <guava.version>22.0</guava.version>
+-    <hadoop.version>3.3.6</hadoop.version>
++    <hadoop.version>3.4.1</hadoop.version>
+     <junit.version>4.13.2</junit.version>
+     <junit.jupiter.version>5.6.3</junit.jupiter.version>
+     <junit.vintage.version>5.6.3</junit.vintage.version>
