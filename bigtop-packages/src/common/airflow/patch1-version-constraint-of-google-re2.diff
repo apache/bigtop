@@ -1,0 +1,44 @@
+diff --git a/generated/provider_dependencies.json b/generated/provider_dependencies.json
+index 1edf8dc5c1..c680ee77f6 100644
+--- a/generated/provider_dependencies.json
++++ b/generated/provider_dependencies.json
+@@ -340,7 +340,7 @@
+       "apache-airflow>=2.7.0",
+       "celery[redis]>=5.3.0,<6,!=5.3.3,!=5.3.2",
+       "flower>=1.0.0",
+-      "google-re2>=1.0"
++      "google-re2>=1.0,<1.1"
+     ],
+     "devel-deps": [],
+     "plugins": [],
+@@ -367,7 +367,7 @@
+       "apache-airflow>=2.7.0",
+       "asgiref>=3.5.2",
+       "cryptography>=41.0.0",
+-      "google-re2>=1.0",
++      "google-re2>=1.0,<1.1",
+       "kubernetes>=29.0.0,<=30.1.0",
+       "kubernetes_asyncio>=29.0.0,<=30.1.0"
+     ],
+@@ -553,7 +553,7 @@
+       "flask-appbuilder==4.5.2",
+       "flask-login>=0.6.2",
+       "flask>=2.2,<2.3",
+-      "google-re2>=1.0",
++      "google-re2>=1.0,<1.1",
+       "jmespath>=0.7.0"
+     ],
+     "devel-deps": [],
+diff --git a/hatch_build.py b/hatch_build.py
+index 13fa2a4433..6bb88ca1b8 100644
+--- a/hatch_build.py
++++ b/hatch_build.py
+@@ -442,7 +442,7 @@ DEPENDENCIES = [
+     # We should remove the limitation after 2.3 is released and our dependencies are updated to handle it
+     "flask>=2.2.1,<2.3",
+     "fsspec>=2023.10.0",
+-    'google-re2>=1.0;python_version<"3.12"',
++    'google-re2>=1.0,<1.1;python_version<"3.12"',
+     'google-re2>=1.1;python_version>="3.12"',
+     "gunicorn>=20.1.0",
+     "httpx>=0.25.0",
