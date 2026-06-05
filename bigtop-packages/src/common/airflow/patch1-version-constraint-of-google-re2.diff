@@ -1,0 +1,13 @@
+diff --git a/hatch_build.py b/hatch_build.py
+index 13fa2a4433..6bb88ca1b8 100644
+--- a/hatch_build.py
++++ b/hatch_build.py
+@@ -442,7 +442,7 @@ DEPENDENCIES = [
+     # We should remove the limitation after 2.3 is released and our dependencies are updated to handle it
+     "flask>=2.2.1,<2.3",
+     "fsspec>=2023.10.0",
+-    'google-re2>=1.0;python_version<"3.12"',
++    'google-re2>=1.0,<1.1;python_version<"3.12"',
+     'google-re2>=1.1;python_version>="3.12"',
+     "gunicorn>=20.1.0",
+     "httpx>=0.25.0",
