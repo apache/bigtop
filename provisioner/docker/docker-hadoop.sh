@@ -67,6 +67,10 @@ create() {
         image_name=$(get-yaml-config docker image)
     fi
     running_arch=$(uname -m)
+    case "$running_arch" in
+        aarch64|arm64)   running_arch="aarch64" ;;
+        *)               running_arch="$running_arch" ;;
+    esac
     if [ "x86_64" == ${running_arch} ]; then
         image_name=${image_name}
     else
