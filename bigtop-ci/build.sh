@@ -80,6 +80,10 @@ fi
 
 IMAGE_NAME=bigtop/slaves:$PREFIX-$OS
 ARCH=$(uname -m)
+case "$ARCH" in
+    aarch64|arm64)   ARCH="aarch64" ;;
+    *)               ARCH="$ARCH" ;;
+esac
 if [ "x86_64" != $ARCH ]; then
     IMAGE_NAME=$IMAGE_NAME-$ARCH
 fi
