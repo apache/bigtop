@@ -28,8 +28,15 @@ if [ $# != 1 ]; then
 fi
 
 PREFIX=$(echo "$1" | cut -d '-' -f 1)
+
 OS=$(echo "$1" | cut -d '-' -f 2)
+case "$OS" in
+    rockylinux)   REPO="rockylinux/rockylinux" ;;
+    *)            REPO="$OS" ;;
+esac
+
 VERSION=$(echo "$1" | cut -d '-' -f 3-)
+
 ARCH=$(uname -m)
 case "$ARCH" in
     aarch64|arm64)   ARCH="aarch64" ;;
@@ -43,7 +50,7 @@ fi
 
 cp ../../bigtop_toolchain/bin/puppetize.sh .
 cat >Dockerfile <<EOF
-FROM ${OS}:${VERSION}
+FROM ${REPO}:${VERSION}
 MAINTAINER dev@bigtop.apache.org
 COPY puppetize.sh /tmp/puppetize.sh
 ${ENV_PATH}
