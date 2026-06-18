@@ -1,0 +1,51 @@
+commit 85b7d983e593a96045979605bbb960c1d3c3ac85
+Author: Masatake Iwasaki <iwasakims@apache.org>
+Date:   Mon Jun 15 16:58:28 2026 +0900
+
+    Revert "HBASE-28290 Add 'TM' superscript to the index page title when generating javadoc (#5600)(#5601)(#5602)"
+    
+    This reverts commit d418378ebf43f34223cd68fba8b73ddd4316ae1b.
+
+diff --git a/pom.xml b/pom.xml
+index dcd7400835..af2d993648 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -2757,7 +2757,6 @@
+               <destDir>devapidocs</destDir>
+               <name>Developer API</name>
+               <description>The full HBase API, including private and unstable APIs</description>
+-              <doctitle>Apache HBase™ ${project.version} API</doctitle>
+               <sourceFileExcludes>
+                 <exclude>**/generated/*</exclude>
+                 <exclude>**/protobuf/*</exclude>
+@@ -2811,9 +2810,8 @@
+             </reports>
+             <configuration>
+               <destDir>testdevapidocs</destDir>
+-              <name>Test Developer API</name>
++              <name>Developer API</name>
+               <description>The full HBase API test code, including private and unstable APIs</description>
+-              <testDoctitle>Apache HBase™ ${project.version} Test API</testDoctitle>
+               <sourceFileExcludes>
+                 <exclude>**/generated/*</exclude>
+                 <exclude>**/protobuf/*</exclude>
+@@ -2878,7 +2876,6 @@
+               <destDir>apidocs</destDir>
+               <name>User API</name>
+               <description>The HBase Application Programmer's API</description>
+-              <doctitle>Apache HBase™ ${project.version} API</doctitle>
+               <excludePackageNames>org.apache.hadoop.hbase.backup*:org.apache.hadoop.hbase.catalog:org.apache.hadoop.hbase.client.coprocessor:org.apache.hadoop.hbase.client.metrics:org.apache.hadoop.hbase.codec*:org.apache.hadoop.hbase.constraint:org.apache.hadoop.hbase.coprocessor.*:org.apache.hadoop.hbase.executor:org.apache.hadoop.hbase.fs:*.generated.*:org.apache.hadoop.hbase.io.hfile.*:org.apache.hadoop.hbase.mapreduce.hadoopbackport:org.apache.hadoop.hbase.mapreduce.replication:org.apache.hadoop.hbase.master.*:org.apache.hadoop.hbase.metrics*:org.apache.hadoop.hbase.migration:org.apache.hadoop.hbase.monitoring:org.apache.hadoop.hbase.p*:org.apache.hadoop.hbase.regionserver.compactions:org.apache.hadoop.hbase.regionserver.handler:org.apache.hadoop.hbase.regionserver.snapshot:org.apache.hadoop.hbase.replication.*:org.apache.hadoop.hbase.rest.filter:org.apache.hadoop.hbase.rest.model:org.apache.hadoop.hbase.rest.p*:org.apache.hadoop.hbase.security.*:org.apache.hadoop.hbase.thrift*:org.apache.hadoop.hbase.tmpl.*:org.apache.hadoop.hbase.tool:org.apache.hadoop.hbase.trace:org.apache.hadoop.hbase.util.byterange*:org.apache.hadoop.hbase.util.test:org.apache.hadoop.hbase.util.vint:org.apache.hadoop.metrics2*:org.apache.hadoop.hbase.io.compress*</excludePackageNames>
+               <!-- switch on dependency-driven aggregation -->
+               <includeDependencySources>false</includeDependencySources>
+@@ -2939,9 +2936,8 @@
+               </docletArtifact>
+               <useStandardDocletOptions>true</useStandardDocletOptions>
+               <destDir>testapidocs</destDir>
+-              <name>Test User API</name>
+-              <description>The HBase Application Programmer's API test code</description>
+-              <testDoctitle>Apache HBase™ ${project.version} Test API</testDoctitle>
++              <name>User API</name>
++              <description>The HBase Application Programmer's API</description>
+               <excludePackageNames>org.apache.hadoop.hbase.backup*:org.apache.hadoop.hbase.catalog:org.apache.hadoop.hbase.client.coprocessor:org.apache.hadoop.hbase.client.metrics:org.apache.hadoop.hbase.codec*:org.apache.hadoop.hbase.constraint:org.apache.hadoop.hbase.coprocessor.*:org.apache.hadoop.hbase.executor:org.apache.hadoop.hbase.fs:*.generated.*:org.apache.hadoop.hbase.io.hfile.*:org.apache.hadoop.hbase.mapreduce.hadoopbackport:org.apache.hadoop.hbase.mapreduce.replication:org.apache.hadoop.hbase.master.*:org.apache.hadoop.hbase.metrics*:org.apache.hadoop.hbase.migration:org.apache.hadoop.hbase.monitoring:org.apache.hadoop.hbase.p*:org.apache.hadoop.hbase.regionserver.compactions:org.apache.hadoop.hbase.regionserver.handler:org.apache.hadoop.hbase.regionserver.snapshot:org.apache.hadoop.hbase.replication.*:org.apache.hadoop.hbase.rest.filter:org.apache.hadoop.hbase.rest.model:org.apache.hadoop.hbase.rest.p*:org.apache.hadoop.hbase.security.*:org.apache.hadoop.hbase.thrift*:org.apache.hadoop.hbase.tmpl.*:org.apache.hadoop.hbase.tool:org.apache.hadoop.hbase.trace:org.apache.hadoop.hbase.util.byterange*:org.apache.hadoop.hbase.util.test:org.apache.hadoop.hbase.util.vint:org.apache.hadoop.metrics2*:org.apache.hadoop.hbase.io.compress*</excludePackageNames>
+               <!-- switch on dependency-driven aggregation -->
+               <includeDependencySources>false</includeDependencySources>
