@@ -68,6 +68,14 @@ class bigtop_toolchain::packages {
         "perl-Digest-SHA",
         "nasm",
         "yasm",
+        "harfbuzz-devel",
+        "fribidi-devel",
+        "libuv-devel",
+        "libwebp-devel",
+        "freetype-devel",
+        "libpng-devel",
+        "libtiff-devel",
+        "libjpeg-devel",
       ]
 
       if ($operatingsystem == 'Fedora') {
@@ -217,9 +225,6 @@ class bigtop_toolchain::packages {
        "libgit2-devel",
        "libgit2-glib-devel",
        "libxml2",
-       "libpng-devel",
-       "libtiff-devel",
-       "libjpeg-turbo-devel",
        "leveldbjni",
        "psmisc",
        "nc",
@@ -229,7 +234,15 @@ class bigtop_toolchain::packages {
        "texlive",
        "rpmdevtools",
        "nasm",
-       "yasm"
+       "yasm",
+       "harfbuzz-devel",
+       "fribidi-devel",
+       "libuv-devel",
+       "libwebp-devel",
+       "freetype-devel",
+       "libpng-devel",
+       "libtiff-devel",
+       "libjpeg-devel",
     ] }
     /(Ubuntu|Debian)/: {
       $_pkgs = [
