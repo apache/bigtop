@@ -1,0 +1,221 @@
+commit 04b323f2aa2e0741d41e34e9c03ef9013ce0a976
+Author: sergey <sershe@apache.org>
+Date:   Tue May 22 12:01:29 2018 -0700
+
+    HIVE-19579 :  remove HBase transitive dependency that drags in some snapshot (Sergey Shelukhin, reviewed by Alan Gates)
+    
+    (cherry picked from commit 37e86e9581dfc02aea243eab05c8a15347f638d6)
+
+diff --git a/hbase-handler/pom.xml b/hbase-handler/pom.xml
+index e5a8f0b46e..b6f9cdb41e 100644
+--- a/hbase-handler/pom.xml
++++ b/hbase-handler/pom.xml
+@@ -90,6 +90,10 @@
+             <groupId>commmons-logging</groupId>
+             <artifactId>commons-logging</artifactId>
+           </exclusion>
++          <exclusion>
++            <groupId>org.glassfish.web</groupId>
++            <artifactId>javax.servlet.jsp</artifactId>
++          </exclusion>
+       </exclusions>
+     </dependency>
+     <dependency>
+@@ -155,6 +159,10 @@
+             <groupId>commmons-logging</groupId>
+             <artifactId>commons-logging</artifactId>
+           </exclusion>
++          <exclusion>
++            <groupId>org.glassfish.web</groupId>
++            <artifactId>javax.servlet.jsp</artifactId>
++          </exclusion>
+       </exclusions>
+     </dependency>
+     <dependency>
+diff --git a/itests/hcatalog-unit/pom.xml b/itests/hcatalog-unit/pom.xml
+index e1dc706d39..2ca227472c 100644
+--- a/itests/hcatalog-unit/pom.xml
++++ b/itests/hcatalog-unit/pom.xml
+@@ -280,6 +280,12 @@
+       <artifactId>hbase-server</artifactId>
+       <version>${hbase.version}</version>
+       <scope>test</scope>
++        <exclusions>
++          <exclusion>
++            <groupId>org.glassfish.web</groupId>
++            <artifactId>javax.servlet.jsp</artifactId>
++          </exclusion>
++        </exclusions>
+     </dependency>
+     <dependency>
+       <groupId>org.apache.hbase</groupId>
+diff --git a/itests/hive-minikdc/pom.xml b/itests/hive-minikdc/pom.xml
+index 7cf3c50e0f..0bbb15527d 100644
+--- a/itests/hive-minikdc/pom.xml
++++ b/itests/hive-minikdc/pom.xml
+@@ -217,6 +217,12 @@
+       <artifactId>hbase-server</artifactId>
+       <version>${hbase.version}</version>
+       <scope>test</scope>
++        <exclusions>
++          <exclusion>
++            <groupId>org.glassfish.web</groupId>
++            <artifactId>javax.servlet.jsp</artifactId>
++          </exclusion>
++        </exclusions>
+     </dependency>
+     <dependency>
+       <groupId>org.apache.hbase</groupId>
+diff --git a/itests/hive-unit-hadoop2/pom.xml b/itests/hive-unit-hadoop2/pom.xml
+index 4e99b78860..db9d7c24e6 100644
+--- a/itests/hive-unit-hadoop2/pom.xml
++++ b/itests/hive-unit-hadoop2/pom.xml
+@@ -221,6 +221,12 @@
+       <artifactId>hbase-server</artifactId>
+       <version>${hbase.version}</version>
+       <scope>test</scope>
++        <exclusions>
++          <exclusion>
++            <groupId>org.glassfish.web</groupId>
++            <artifactId>javax.servlet.jsp</artifactId>
++          </exclusion>
++        </exclusions>
+     </dependency>
+     <dependency>
+       <groupId>org.apache.hbase</groupId>
+diff --git a/itests/hive-unit/pom.xml b/itests/hive-unit/pom.xml
+index a5710f4b22..9ac1734053 100644
+--- a/itests/hive-unit/pom.xml
++++ b/itests/hive-unit/pom.xml
+@@ -272,6 +272,12 @@
+       <groupId>org.apache.hbase</groupId>
+       <artifactId>hbase-server</artifactId>
+       <version>${hbase.version}</version>
++        <exclusions>
++          <exclusion>
++            <groupId>org.glassfish.web</groupId>
++            <artifactId>javax.servlet.jsp</artifactId>
++          </exclusion>
++        </exclusions>
+     </dependency>
+     <dependency>
+       <groupId>org.apache.hbase</groupId>
+diff --git a/itests/qtest-accumulo/pom.xml b/itests/qtest-accumulo/pom.xml
+index 42e0c9b730..b1b92bd063 100644
+--- a/itests/qtest-accumulo/pom.xml
++++ b/itests/qtest-accumulo/pom.xml
+@@ -333,6 +333,12 @@
+       <artifactId>hbase-server</artifactId>
+       <version>${hbase.version}</version>
+       <scope>test</scope>
++        <exclusions>
++          <exclusion>
++            <groupId>org.glassfish.web</groupId>
++            <artifactId>javax.servlet.jsp</artifactId>
++          </exclusion>
++        </exclusions>
+     </dependency>
+     <dependency>
+       <groupId>org.apache.htrace</groupId>
+diff --git a/itests/qtest-spark/pom.xml b/itests/qtest-spark/pom.xml
+index 73e4e9435d..987f63c5d3 100644
+--- a/itests/qtest-spark/pom.xml
++++ b/itests/qtest-spark/pom.xml
+@@ -318,6 +318,12 @@
+       <artifactId>hbase-server</artifactId>
+       <version>${hbase.version}</version>
+       <scope>test</scope>
++        <exclusions>
++          <exclusion>
++            <groupId>org.glassfish.web</groupId>
++            <artifactId>javax.servlet.jsp</artifactId>
++          </exclusion>
++        </exclusions>
+     </dependency>
+     <dependency>
+       <groupId>org.apache.hbase</groupId>
+diff --git a/itests/qtest/pom.xml b/itests/qtest/pom.xml
+index 1aa9110df3..b8ee3233a1 100644
+--- a/itests/qtest/pom.xml
++++ b/itests/qtest/pom.xml
+@@ -326,6 +326,12 @@
+       <artifactId>hbase-server</artifactId>
+       <version>${hbase.version}</version>
+       <scope>test</scope>
++        <exclusions>
++          <exclusion>
++            <groupId>org.glassfish.web</groupId>
++            <artifactId>javax.servlet.jsp</artifactId>
++          </exclusion>
++        </exclusions>
+     </dependency>
+     <dependency>
+       <groupId>org.apache.hbase</groupId>
+diff --git a/itests/util/pom.xml b/itests/util/pom.xml
+index addf892f54..2030dde24e 100644
+--- a/itests/util/pom.xml
++++ b/itests/util/pom.xml
+@@ -164,6 +164,12 @@
+       <groupId>org.apache.hbase</groupId>
+       <artifactId>hbase-server</artifactId>
+       <version>${hbase.version}</version>
++        <exclusions>
++          <exclusion>
++            <groupId>org.glassfish.web</groupId>
++            <artifactId>javax.servlet.jsp</artifactId>
++          </exclusion>
++        </exclusions>
+     </dependency>
+     <dependency>
+       <groupId>org.apache.hbase</groupId>
+diff --git a/llap-server/pom.xml b/llap-server/pom.xml
+index 4926989957..2caceb0539 100644
+--- a/llap-server/pom.xml
++++ b/llap-server/pom.xml
+@@ -331,6 +331,12 @@
+       <groupId>org.apache.hbase</groupId>
+       <artifactId>hbase-client</artifactId>
+       <version>${hbase.version}</version>
++      <exclusions>
++        <exclusion>
++          <groupId>org.glassfish.web</groupId>
++          <artifactId>javax.servlet.jsp</artifactId>
++        </exclusion>
++      </exclusions> 
+     </dependency>
+     <dependency>
+       <groupId>org.apache.hbase</groupId>
+@@ -345,6 +351,10 @@
+           <groupId>commmons-logging</groupId>
+           <artifactId>commons-logging</artifactId>
+         </exclusion>
++        <exclusion>
++          <groupId>org.glassfish.web</groupId>
++          <artifactId>javax.servlet.jsp</artifactId>
++        </exclusion>
+       </exclusions>
+     </dependency>
+     <dependency>
+diff --git a/pom.xml b/pom.xml
+index fb228f8442..0036027039 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -950,10 +950,14 @@
+         <artifactId>hbase-server</artifactId>
+         <version>${hbase.version}</version>
+ 	<exclusions>
+-            <exclusion>
+-        	<groupId>org.glassfish</groupId>
+-		<artifactId>javax.el</artifactId>
+-            </exclusion>
++          <exclusion>
++            <groupId>org.glassfish</groupId>
++	    <artifactId>javax.el</artifactId>
++          </exclusion>
++          <exclusion>
++            <groupId>org.glassfish.web</groupId>
++            <artifactId>javax.servlet.jsp</artifactId>
++          </exclusion>
+         </exclusions>
+       </dependency>
+       <dependency>
