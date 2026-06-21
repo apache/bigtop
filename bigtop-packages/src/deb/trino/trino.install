@@ -1,0 +1,10 @@
+/etc/security/limits.d/trino.conf
+/etc/trino.dist
+/usr/lib/trino/README.txt
+/usr/lib/trino/NOTICE
+/usr/lib/trino/bin
+/usr/lib/trino/lib
+/usr/lib/trino/plugin
+/var/lib/trino
+/var/log/trino
+/var/run/trino
