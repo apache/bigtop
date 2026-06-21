@@ -29,6 +29,7 @@ usage: $0 <options>
      --lib-dir=DIR               path to install phoenix home [/usr/lib/phoenix]
      --installed-lib-dir=DIR     path where lib-dir will end up on target system
      --bin-dir=DIR               path to install bins [/usr/bin]
+     --var-lib-dir=DIR           path to install phoenix contents [/var/lib/phoenix]
      --examples-dir=DIR          path to install examples [doc-dir/examples]
      ... [ see source for more similar options ]
   "
@@ -45,6 +46,7 @@ OPTS=$(getopt \
   -l 'bin-dir:' \
   -l 'examples-dir:' \
   -l 'conf-dir:' \
+  -l 'var-lib-dir:' \
   -l 'build-dir:' -- "$@")
 
 if [ $? != 0 ] ; then
@@ -78,6 +80,9 @@ while true ; do
         --conf-dir)
         CONF_DIR=$2 ; shift 2
         ;;
+        --var-lib-dir)
+        VAR_LIB_DIR=$2 ; shift 2
+        ;;
         --)
         shift ; break
         ;;
@@ -102,6 +107,7 @@ LIB_DIR=${LIB_DIR:-/usr/lib/phoenix}
 BIN_DIR=${BIN_DIR:-/usr/lib/phoenix/bin}
 ETC_DIR=${ETC_DIR:-/etc/phoenix}
 CONF_DIR=${CONF_DIR:-${ETC_DIR}/conf.dist}
+VAR_LIB_DIR=${VAR_LIB_DIR:-/var/lib/phoenix}
 
 install -d -m 0755 $PREFIX/$BIN_DIR
 install -d -m 0755 $PREFIX/$LIB_DIR
@@ -110,7 +116,7 @@ install -d -m 0755 $PREFIX/$DOC_DIR
 install -d -m 0755 $PREFIX/$MAN_DIR
 install -d -m 0755 $PREFIX/$ETC_DIR
 install -d -m 0755 $PREFIX/$CONF_DIR
-install -d -m 0755 $PREFIX/var/lib/phoenix
+install -d -m 0755 $PREFIX/$VAR_LIB_DIR
 install -d -m 0755 $PREFIX/var/log/phoenix
 
 cp $BUILD_DIR/*.jar $PREFIX/$LIB_DIR/
