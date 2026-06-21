@@ -15,7 +15,26 @@
 
 class kafka {
 
+  class check_java_version() {
+    $version = hiera('bigtop::kafka_java_version')
+    if versioncmp($version, '8') > 0 {
+      jdk::add{"java $version for kafka":
+        version => $version,
+        before => Jdk::Use["java $version for kafka"],
+      }
+      jdk::use{"java $version for kafka":
+        version => $version,
+        before => Jdk::Set_Profile["BIGTOP_KAFKA_JAVA_VERSION"]
+      }
+      jdk::set_profile{"BIGTOP_KAFKA_JAVA_VERSION":
+        component => 'kafka', version => $version,
+        before => Service["kafka-server"],
+      }
+    }
+  }
+
   class deploy ($roles) {
+    require kafka::check_java_version
     if ('kafka-server' in $roles) {
       include kafka::server
     }
