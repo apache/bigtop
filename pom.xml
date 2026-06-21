@@ -348,7 +348,8 @@
   <scm>
     <connection>scm:git:https://gitbox.apache.org/repos/asf/bigtop.git
     </connection>
-    <url>https://gitbox.apache.org/repos/asf?p=bigtop.git</url>
+    <url>https://github.com/apache/bigtop/tree/${project.scm.tag}</url>
+    <tag>master</tag>
   </scm>
 
   <distributionManagement>
