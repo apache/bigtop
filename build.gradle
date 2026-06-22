@@ -573,6 +573,8 @@ Example:
   ]
   workingDir './docker/bigtop-puppet'
   commandLine command
+  //store the output instead of printing to the console:
+  standardOutput = new ByteArrayOutputStream()
 }
 
 task "bigtop-slaves"(type:Exec,
