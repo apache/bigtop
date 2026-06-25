@@ -211,6 +211,12 @@
         $HADOOP_YARN_HOME/*,$HADOOP_YARN_HOME/lib/*
      </value>
   </property>
+
+  <property>
+    <description>JVM options for the MapReduce Application Master (includes log4j config for container logs).</description>
+    <name>yarn.app.mapreduce.am.command-opts</name>
+    <value><%= @yarn_app_mapreduce_am_command_opts %></value>
+  </property>
 <% if @yarn_scheduler_minimum_allocation_mb -%>
 
   <property>

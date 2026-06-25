@@ -22,6 +22,11 @@ if [ -z "$SMOKE_TESTS" ]; then
   exit 2
 fi
 
+# Prefer Java 11 when available (required for Nutch 1.22 and other components with class file 55.0)
+if [ -d /usr/lib/jvm/java-11-openjdk-amd64 ]; then
+  export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+fi
+
 # Autodetect JAVA_HOME
 if [ -e /usr/lib/bigtop-utils/bigtop-detect-javahome ]; then
   . /usr/lib/bigtop-utils/bigtop-detect-javahome

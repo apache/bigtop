@@ -13,12 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-docker:
-        memory_limit: "4g"
-        image:  "bigtop/puppet:trunk-ubuntu-24.04"
+# Nutch installation directory (runtime/deploy for Hadoop cluster)
+export NUTCH_HOME=/usr/lib/nutch
 
-repo: "http://repos.bigtop.apache.org/releases/3.5.0/ubuntu/24.04/$(ARCH)"
-distro: debian
-components: [hdfs, yarn, mapreduce, nutch]
-enable_local_repo: false
-smoke_test_components: [hdfs, yarn, mapreduce, nutch]
+# Nutch configuration (required for deploy bin scripts)
+export NUTCH_CONF_DIR=/etc/nutch/conf.dist
+
+# Hadoop configuration (required for cluster mode)
+export HADOOP_CONF_DIR=/etc/hadoop/conf

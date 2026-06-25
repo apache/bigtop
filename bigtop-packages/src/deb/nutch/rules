@@ -1,3 +1,5 @@
+#!/usr/bin/make -f
+#
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -12,13 +14,24 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
+# -*- makefile -*-
 
-docker:
-        memory_limit: "4g"
-        image:  "bigtop/puppet:trunk-ubuntu-24.04"
+export DH_VERBOSE=1
+export DH_OPTIONS
 
-repo: "http://repos.bigtop.apache.org/releases/3.5.0/ubuntu/24.04/$(ARCH)"
-distro: debian
-components: [hdfs, yarn, mapreduce, nutch]
-enable_local_repo: false
-smoke_test_components: [hdfs, yarn, mapreduce, nutch]
+%:
+	dh $@
+
+override_dh_auto_build:
+	env FULL_VERSION=${NUTCH_BASE_VERSION} bash debian/do-component-build
+
+override_dh_auto_install:
+	sh debian/install_nutch.sh \
+	  --build-dir=. \
+	  --distro-dir=debian \
+	  --prefix=debian/tmp \
+	  --bin-dir=debian/tmp/usr/bin \
+	  --lib-dir=debian/tmp/usr/lib/nutch \
+	  --etc-default=debian/tmp/etc/default \
+	  --conf-dir=debian/tmp/etc/nutch
