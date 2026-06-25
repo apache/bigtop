@@ -1,0 +1,24 @@
+commit 55388d65d74613bdb2eda58c1f6c2b91d155628f
+Author: Abhishek Kumar <abhi@apache.org>
+Date:   Mon Apr 13 10:32:37 2026 -0700
+
+    RANGER-5552: Remove ozone-2.1.0-rc repository from pom.xml (#914)
+    
+    (cherry picked from commit 8e81392bdfc85244344d3ae92bb52a42dc015476)
+
+diff --git a/pom.xml b/pom.xml
+index 8eafa7833..3e13d5b36 100755
+--- a/pom.xml
++++ b/pom.xml
+@@ -765,11 +765,6 @@
+             <name>jetbrains-intellij-dependencies</name>
+             <url>https://packages.jetbrains.team/maven/p/ij/intellij-dependencies</url>
+         </repository>
+-        <repository>
+-            <id>ozone-2.1.0-rc</id>
+-            <name>ozone-2.1.0-rc</name>
+-            <url>https://repository.apache.org/content/repositories/orgapacheozone-1061</url>
+-        </repository>
+     </repositories>
+     <distributionManagement>
+         <repository>
