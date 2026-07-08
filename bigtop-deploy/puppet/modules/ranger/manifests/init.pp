@@ -61,7 +61,8 @@ class ranger {
 
     exec { 'change_postgres_password':
       path    => ['/usr/bin', '/bin','/sbin'],
-      command => "sudo -u postgres psql -c \"ALTER USER postgres WITH PASSWORD 'admin';\"",
+      command => "psql -c \"ALTER USER postgres WITH PASSWORD 'admin';\"",
+      user    => 'postgres',
       require => Service['postgresql'],
     }
 
