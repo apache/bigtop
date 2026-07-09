@@ -17,7 +17,6 @@
 # limitations under the License.
 #
 import optparse
-import copy
 import os
 import re
 import sys
@@ -256,7 +255,7 @@ def setPackages(packages, version, rpm_mode):
 
 # Create command symlinks
 def createCommandSymlinks(packages, rpm_mode):
-  work_packages = copy.copy(packages)
+  work_packages = list(packages)
   for pkg in packages:
     if pkg in locked_contexts:
       for (child, dir) in locked_contexts[pkg]:
