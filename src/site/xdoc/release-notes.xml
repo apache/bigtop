@@ -17,6 +17,61 @@
 		<section name="Bigtop Project Release Notes">
 			<!-- Paste release notes from https://issues.apache.org/jira/browse/BIGTOP here. -->
 
+
+        <h3>Release Notes - Bigtop - Version 3.6.0</h3>
+                
+<h2>        Bug
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4522'>BIGTOP-4522</a>] -         Fix installation failure of Puppet on openEuler 22.03
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4524'>BIGTOP-4524</a>] -         Add libuv1-dev to the toolchain for Debian 12
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4528'>BIGTOP-4528</a>] -         conf-select is missing
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4531'>BIGTOP-4531</a>] -         Fix build failure of Airflow due to compatibility of google-re2
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4533'>BIGTOP-4533</a>] -         Upgrade Airflow to 2.11.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4535'>BIGTOP-4535</a>] -         Fix installation failure of R packages in toolchain
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4536'>BIGTOP-4536</a>] -         Fix build failure of HBase due to maven-javadoc-plugin error inside container
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4537'>BIGTOP-4537</a>] -         Fix build failure of Ranger due to unresolvable dependency
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4538'>BIGTOP-4538</a>] -         Fix deployment error of Ranger on Red Hat distros in container
+</li>
+</ul>
+                
+<h2>        Improvement
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4515'>BIGTOP-4515</a>] -         Upgrade HBase to 2.6.5
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4516'>BIGTOP-4516</a>] -         Upgrade Tez to 0.10.5
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4517'>BIGTOP-4517</a>] -         Fix build failure of Hive 4.0.1 against Hadoop 3.4.2
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4519'>BIGTOP-4519</a>] -         Upgrade Groovy to 3.0.25
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4520'>BIGTOP-4520</a>] -         Upgrade Hadoop to 3.4.3
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4523'>BIGTOP-4523</a>] -         Make container tagging consistent between Linux and Mac OS on ARM
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4525'>BIGTOP-4525</a>] -         Upgrade Ranger to 2.8.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4526'>BIGTOP-4526</a>] -         Upgrade the base Docker image of Rocky 9
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4527'>BIGTOP-4527</a>] -         Upgrade Phoenix to 5.3.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4529'>BIGTOP-4529</a>] -         Upgrade Spark to 3.5.8
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4530'>BIGTOP-4530</a>] -         Upgrade Livy to 0.9.0
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/BIGTOP-4534'>BIGTOP-4534</a>] -         Make arch of docker image consistent for packaging on MacOS
+</li>
+</ul>
+
         <h3>Release Notes - Bigtop - Version 3.5.0</h3>
     
 <h2>        Sub-task

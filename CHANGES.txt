@@ -17,7 +17,35 @@ Bigtop Changelog
 
 * Release 3.7.0-SNAPSHOT (unreleased)
 
-* Release 3.6.0 (unreleased)
+* Release 3.6.0 (2026-07-14)
+
+Release Notes - Bigtop - Version 3.6.0
+
+** Bug
+    * [BIGTOP-4522] - Fix installation failure of Puppet on openEuler 22.03
+    * [BIGTOP-4524] - Add libuv1-dev to the toolchain for Debian 12
+    * [BIGTOP-4528] - conf-select is missing
+    * [BIGTOP-4531] - Fix build failure of Airflow due to compatibility of google-re2
+    * [BIGTOP-4533] - Upgrade Airflow to 2.11.0
+    * [BIGTOP-4535] - Fix installation failure of R packages in toolchain
+    * [BIGTOP-4536] - Fix build failure of HBase due to maven-javadoc-plugin error inside container
+    * [BIGTOP-4537] - Fix build failure of Ranger due to unresolvable dependency
+    * [BIGTOP-4538] - Fix deployment error of Ranger on Red Hat distros in container
+
+** Improvement
+    * [BIGTOP-4515] - Upgrade HBase to 2.6.5
+    * [BIGTOP-4516] - Upgrade Tez to 0.10.5
+    * [BIGTOP-4517] - Fix build failure of Hive 4.0.1 against Hadoop 3.4.2
+    * [BIGTOP-4519] - Upgrade Groovy to 3.0.25
+    * [BIGTOP-4520] - Upgrade Hadoop to 3.4.3
+    * [BIGTOP-4523] - Make container tagging consistent between Linux and Mac OS on ARM
+    * [BIGTOP-4525] - Upgrade Ranger to 2.8.0
+    * [BIGTOP-4526] - Upgrade the base Docker image of Rocky 9
+    * [BIGTOP-4527] - Upgrade Phoenix to 5.3.0
+    * [BIGTOP-4529] - Upgrade Spark to 3.5.8
+    * [BIGTOP-4530] - Upgrade Livy to 0.9.0
+    * [BIGTOP-4534] - Make arch of docker image consistent for packaging on MacOS
+
 
 * Release 3.5.0 (2025-09-05)
 
