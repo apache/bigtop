@@ -509,9 +509,6 @@ Includes examples and header files for accessing HDFS from C
 Summary: Hadoop Filesystem Library for C++
 Group: Development/Libraries
 
-%description libhdfs-devel
-Includes examples and header files for accessing HDFS from C
-
 %package libhdfspp-devel
 Summary: Development support for libhdfspp
 Group: Development/Libraries
